@@ -7,6 +7,9 @@
 #define READ_SINGLE_CHAR_OK 0
 #define READ_SINGLE_CHAR_END 1
 #define READ_SINGLE_CHAR_ERROR 2
+#define READ_SINGLE_CHAR_GET_TYPE(f) ((f)&3)
+#define READ_SINGLE_CHAR_GET_ERROR(f) ((f)>>2)
+#define READ_SINGLE_CHAR_RETURN_ERROR(e) (((e)<<2)|READ_SINGLE_CHAR_ERROR)
 
 
 
@@ -15,7 +18,7 @@ uint32_t _bf_ptr=0;
 
 
 
-uint32_t print_object(object_t* o,FILE* f){
+uint32_t _print_object_internal(object_t* o,FILE* f){
 	uint32_t off=sizeof(object_t);
 	switch (o->t){
 		case OBJECT_TYPE_PRINT:
@@ -50,13 +53,37 @@ uint32_t print_object(object_t* o,FILE* f){
 		case OBJECT_TYPE_MOD:
 			fprintf(f,"(%%");
 			goto _print_args;
+		case OBJECT_TYPE_IDENTIFIER:
+			uint32_t l=GET_OBJECT_STRING_LENGTH(o);
+			off+=l+sizeof(string_length_t);
+			char* str=GET_OBJECT_AS_STRING(o);
+			while (l){
+				l--;
+				fputc(*str,f);
+				str++;
+			}
+			return off;
+		case OBJECT_TYPE_NIL:
+			fprintf(f,"nil");
+			return off;
+		case OBJECT_TYPE_TRUE:
+			fprintf(f,"true");
+			return off;
+		case OBJECT_TYPE_FALSE:
+			fprintf(f,"false");
+			return off;
+		case OBJECT_TYPE_DIVMOD:
+			fprintf(f,"(/%%");
+			goto _print_args;
 		default:
 			__assume(0);
 	}
 _print_args:
-	for (uint8_t i=0;i<o->l;i++){
+	off+=sizeof(arg_count_t);
+	uint8_t l=GET_OBJECT_ARGUMENT_COUNT(o);
+	for (uint8_t i=0;i<l;i++){
 		fputc(' ',f);
-		off+=print_object(GET_OBJECT_ARGUMENT(o,off),f);
+		off+=_print_object_internal(GET_OBJECT_ARGUMENT(o,off),f);
 	}
 	fputc(')',f);
 	return off;
@@ -67,8 +94,7 @@ _print_args:
 uint8_t _read_single_char(FILE* f,char t){
 	int c=fgetc(f);
 	if (!c||c==EOF){
-		printf("Unmatched quotes! (%c)\n",t);
-		return READ_SINGLE_CHAR_ERROR;
+		return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_UNMATCHED_QUOTES);
 	}
 	if (c==t){
 		return READ_SINGLE_CHAR_END;
@@ -76,8 +102,7 @@ uint8_t _read_single_char(FILE* f,char t){
 	if (c=='\\'){
 		c=fgetc(f);
 		if (!c||c==EOF){
-			printf("Unterminated Escape!\n");
-			return READ_SINGLE_CHAR_ERROR;
+			return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_UNTERMINATED_ESCAPE_SEQUENCE);
 		}
 		printf("ESCAPE: %c\n",c);
 		return READ_SINGLE_CHAR_ERROR;
@@ -85,8 +110,7 @@ uint8_t _read_single_char(FILE* f,char t){
 	*((char*)(_bf+_bf_ptr))=c;
 	_bf_ptr++;
 	if (_bf_ptr>=INTERNAL_STACK_SIZE){
-		printf("Internal Stack Overflow!\n");
-		return READ_SINGLE_CHAR_ERROR;
+		return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
 	}
 	return READ_SINGLE_CHAR_OK;
 }
@@ -103,47 +127,68 @@ _no_read_next:
 		}
 		if (c==')'){
 			if (!o){
-				printf("error: no start bracket!\n");
-				return NULL;
+				return RETURN_ERROR(ERROR_UNMATCHED_CLOSE_PARENTHESES);
+			}
+			if (o->t==OBJECT_TYPE_UNKNOWN){
+				return RETURN_ERROR(ERROR_EMPTY_PARENTHESES);
+			}
+			if (OBJECT_TYPE_IS_MATH_OPERATION(o)){
+				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
+				if (!ac){
+					o->t=OBJECT_TYPE_NIL;
+					_bf_ptr=GET_OBJECT_STACK_OFFSET(o)+sizeof(object_t);
+					return o;
+				}
+				if (ac==1){
+					object_t* arg0=GET_OBJECT_ARGUMENT(o,sizeof(object_t)+sizeof(arg_count_t));
+					uint32_t sz=_bf_ptr-GET_OBJECT_STACK_OFFSET(arg0);
+					uint16_t* d=(uint16_t*)(_bf+GET_OBJECT_STACK_OFFSET(o));
+					uint16_t* s=(uint16_t*)(_bf+GET_OBJECT_STACK_OFFSET(arg0));
+					__movsw(d,s,sz>>1);
+					if (sz&1){
+						*(d+sz-1)=*(s+sz-1);
+					}
+					_bf_ptr-=sizeof(object_t)+sizeof(arg_count_t);
+				}
 			}
 			return o;
 		}
 		if (c=='('){
 			if (!o){
 				o=(object_t*)(_bf+_bf_ptr);
-				_bf_ptr+=sizeof(object_t);
+				_bf_ptr+=sizeof(object_t)+sizeof(arg_count_t);
 				if (_bf_ptr>=INTERNAL_STACK_SIZE){
-					goto _overflow;
+					return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
 				}
 				o->t=OBJECT_TYPE_UNKNOWN;
-				o->l=0;
+				RESET_OBJECT_ARGUMENT_COUNT(o);
 			}
 			else{
-				if (!_read_object_internal(f,c)){
-					return NULL;
+				if (o->t==OBJECT_TYPE_UNKNOWN){
+					return RETURN_ERROR(ERROR_NO_SYMBOL);
 				}
-				o->l++;
+				object_t* e=_read_object_internal(f,c);
+				if (IS_ERROR(e)){
+					return e;
+				}
+				INCREASE_OBJECT_ARGUMENT_COUNT(o);
 			}
 		}
-		else if (!o){
-			printf("No Object Start ('(') Before Data!\n");
-			return NULL;
-		}
-		else if (o->t==OBJECT_TYPE_UNKNOWN){
+		else if (o&&o->t==OBJECT_TYPE_UNKNOWN){
 			char* str=(char*)(_bf+_bf_ptr);
 			uint32_t sz=0;
-_read_str:
+_read_symbol:
 			*(str+sz)=c;
 			sz++;
 			if (sz+_bf_ptr>=INTERNAL_STACK_SIZE){
-				goto _overflow;
+				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
 			}
 			c=fgetc(f);
 			if (!c||c==EOF){
 				break;
 			}
 			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
-				goto _read_str;
+				goto _read_symbol;
 			}
 			if (sz==1){
 				if (*str=='+'){
@@ -169,6 +214,9 @@ _read_str:
 				if (*((uint16_t*)str)==CONSTRUCT_WORD('/','/')){
 					o->t=OBJECT_TYPE_FLOOR_DIV;
 				}
+				else if (*((uint16_t*)str)==CONSTRUCT_WORD('/','%')){
+					o->t=OBJECT_TYPE_DIVMOD;
+				}
 				else{
 					goto _unknown_symbol;
 				}
@@ -184,8 +232,7 @@ _read_str:
 			else{
 _unknown_symbol:
 				*(str+sz)=0;
-				printf("Unknown Symbol: %s\n",str);
-				return NULL;
+				return RETURN_ERROR(CREATE_ERROR_STRING(ERROR_UNKNOWN_SYMBOL,str));
 			}
 			goto _no_read_next;
 		}
@@ -193,29 +240,30 @@ _unknown_symbol:
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				goto _overflow;
+				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
 			}
 			arg->t=OBJECT_TYPE_CHAR;
 			uint8_t e=_read_single_char(f,'\'');
-			if (e==READ_SINGLE_CHAR_ERROR){
-				return NULL;
+			if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_ERROR){
+				return RETURN_ERROR(READ_SINGLE_CHAR_GET_ERROR(e));
 			}
-			if (e==READ_SINGLE_CHAR_END){
-				printf("No Charcter in Char Type!\n");
-				return NULL;
+			if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_END){
+				return RETURN_ERROR(ERROR_EMPTY_CHAR_STRING);
 			}
 			c=fgetc(f);
 			if (c!='\''){
-				printf("Unterminated Char Type!\n");
-				return NULL;
+				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNTERMINATED_CHAR_STRING,c));
 			}
-			o->l++;
+			if (!o){
+				return arg;
+			}
+			INCREASE_OBJECT_ARGUMENT_COUNT(o);
 		}
 		else if ((c>47&&c<58)||c=='-'){
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				goto _overflow;
+				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
 			}
 			int8_t m=1;
 			if (c=='-'){
@@ -242,8 +290,7 @@ _hexadecimal:
 						c-=32;
 					}
 					if (c<48||(c>57&&c<65)||c>70){
-						printf("Unexpected charatcer: %c\n",c);
-						return NULL;
+						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_HEXADECIMAL_CHARCTER,c));
 					}
 					v=(v<<4)+(c>64?c-55:c-48);
 					c=fgetc(f);
@@ -261,8 +308,7 @@ _hexadecimal:
 					}
 _octal:
 					if (c<48||c>55){
-						printf("Unexpected charatcer: %c\n",c);
-						return NULL;
+						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_OCTAL_CHARCTER,c));
 					}
 					v=(v<<3)+(c-48);
 					c=fgetc(f);
@@ -280,8 +326,7 @@ _octal:
 					}
 _binary:
 					if (c!=48&&c!=49){
-						printf("Unexpected charatcer: %c\n",c);
-						return NULL;
+						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_BINARY_CHARCTER,c));
 					}
 					v=(v<<1)+(c-48);
 					c=fgetc(f);
@@ -301,7 +346,7 @@ _binary:
 					goto _decimal;
 				}
 				else{
-					goto _unknown_character;
+					return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
 				}
 			}
 			else{
@@ -313,8 +358,7 @@ _decimal:
 				}
 				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
 					if (c<48||c>57){
-						printf("Unexpected charatcer: %c\n",c);
-						return NULL;
+						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
 					}
 					goto _decimal;
 				}
@@ -322,22 +366,82 @@ _decimal:
 			*((int64_t*)(_bf+_bf_ptr))=v*m;
 			_bf_ptr+=sizeof(int64_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				goto _overflow;
+				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
 			}
-			o->l++;
+			if (!o){
+				return arg;
+			}
+			INCREASE_OBJECT_ARGUMENT_COUNT(o);
+			goto _no_read_next;
+		}
+		else if (c=='$'||(c>64&&c<91)||c=='_'||(c>97&&c<112)){
+			object_t* arg=(object_t*)(_bf+_bf_ptr);
+			_bf_ptr+=sizeof(object_t)+sizeof(string_length_t);
+			if (_bf_ptr>=INTERNAL_STACK_SIZE){
+				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+			}
+			arg->t=OBJECT_TYPE_IDENTIFIER;
+			char* str=(char*)(_bf+_bf_ptr);
+			uint32_t sz=0;
+_read_identifier:
+			*(str+sz)=c;
+			sz++;
+			if (sz+_bf_ptr>=INTERNAL_STACK_SIZE){
+				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+			}
+			c=fgetc(f);
+			if (!c||c==EOF){
+				break;
+			}
+			if (c=='$'||(c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>97&&c<112)){
+				goto _read_identifier;
+			}
+			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
+				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_IDENTIFIER_CHARACTER,c));
+			}
+			if (sz==3&&*((uint16_t*)str)==CONSTRUCT_WORD('n','i')&&*(str+2)=='l'){
+				_bf_ptr-=sizeof(string_length_t);
+				arg->t=OBJECT_TYPE_NIL;
+			}
+			else if (sz==4&&*((uint32_t*)str)==CONSTRUCT_DWORD('t','r','u','e')){
+				_bf_ptr-=sizeof(string_length_t);
+				arg->t=OBJECT_TYPE_TRUE;
+			}
+			else if (sz==5&&*((uint32_t*)str)==CONSTRUCT_DWORD('f','a','l','s')&&*(str+4)=='e'){
+				_bf_ptr-=sizeof(string_length_t);
+				arg->t=OBJECT_TYPE_FALSE;
+			}
+			else{
+				_bf_ptr+=sz;
+				SET_OBJECT_STRING_LENGTH(arg,sz);
+			}
+			if (!o){
+				return arg;
+			}
+			INCREASE_OBJECT_ARGUMENT_COUNT(o);
 			goto _no_read_next;
 		}
 		else{
-_unknown_character:
-			printf("Unrecognised Character: %c\n",c);
-			return NULL;
+			return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNEXPECTED_CHARACTER,c));
 		}
 	}
-	printf("Error! No Bracket ')'\n");
-	return NULL;
-_overflow:
-	printf("Internal Stack Overflow!\n");
-	return NULL;
+	return RETURN_ERROR(ERROR_UNMATCHED_OPEN_PARENTHESES);
+}
+
+
+
+void print_error(error_t e){
+	switch (e){
+		default:
+			printf("Unknown Error: %llx\n",e);
+	}
+}
+
+
+
+void print_object(object_t* o,FILE* f){
+	_print_object_internal(o,f);
+	fputc('\n',f);
 }
 
 

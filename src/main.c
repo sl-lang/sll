@@ -14,7 +14,10 @@ int main(int argc,const char** argv){
 		return 1;
 	}
 	object_t* o=read_object(f);
-	if (o){
+	if (IS_ERROR(o)){
+		print_error(GET_ERROR(o));
+	}
+	else{
 		print_object(o,stdout);
 	}
 	fclose(f);
