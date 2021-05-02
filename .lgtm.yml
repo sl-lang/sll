@@ -1,0 +1,10 @@
+queries:
+  - include: "*"
+  - exclude: cpp/poorly-documented-function
+  - exclude: cpp/short-global-name
+  - exclude: py/empty-except
+  - exclude: py/redundant-global-declaration
+extraction:
+  python:
+    python_setup:
+      version: 3
