@@ -214,7 +214,7 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 uint64_t _read_single_char(FILE* f,char t){
 	int c=fgetc(f);
 	if (!c||c==EOF){
-		return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_UNMATCHED_QUOTES);
+		return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNMATCHED_QUOTES,t));
 	}
 	if (c==t){
 		return READ_SINGLE_CHAR_END;
@@ -318,10 +318,10 @@ _no_read_next:
 			else if (OBJECT_TYPE_IS_MATH_NO_CHAIN_OPERATION(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac<2){
-					return RETURN_ERROR(ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS);
+					return RETURN_ERROR(CREATE_ERROR_OBJECT(ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS,o));
 				}
 				if (ac>2){
-					return RETURN_ERROR(ERROR_MATH_OP_TOO_MANY_ARGUMENTS);
+					return RETURN_ERROR(CREATE_ERROR_OBJECT(ERROR_MATH_OP_TOO_MANY_ARGUMENTS,o));
 				}
 			}
 			return o;
@@ -710,9 +710,79 @@ _read_identifier:
 
 
 void print_error(error_t e){
-	switch (e){
+	switch (GET_ERROR_TYPE(e)){
 		default:
-			printf("Unknown Error: %llx\n",e);
+		case ERROR_UNKNOWN:
+			printf("Unknown Error: %.16llx\n",e);
+			return;
+		case ERROR_INTERNAL_STACK_OVERFLOW:
+			printf("Internal Stack Overflow\n");
+			return;
+		case ERROR_UNMATCHED_OPEN_PARENTHESES:
+			printf("Unmatched Left Parentheses\n");
+			return;
+		case ERROR_UNMATCHED_CLOSE_PARENTHESES:
+			printf("Unmatched Right Parentheses\n");
+			return;
+		case ERROR_EMPTY_PARENTHESES:
+			printf("Empty Expression\n");
+			return;
+		case ERROR_UNMATCHED_QUOTES:
+			char c=GET_ERROR_CHAR(e);
+			if (c=='\''){
+				printf("Unmatched Single Quotes\n");
+			}
+			else{
+				printf("Unmatched Double Quotes\n");
+			}
+			return;
+		case ERROR_EMPTY_CHAR_STRING:
+			printf("Empty Character String\n");
+			return;
+		case ERROR_UNTERMINATED_CHAR_STRING:
+			printf("Character String too Long\n");
+			return;
+		case ERROR_UNTERMINATED_ESCAPE_SEQUENCE:
+			printf("Unterminated Escape Sequence\n");
+			return;
+		case ERROR_UNKNOWN_ESCAPE_CHARACTER:
+			printf("Unknown Escape Character: '%c'\n",GET_ERROR_CHAR(e));
+			return;
+		case ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE:
+			printf("Unterminated Hexadecimal Escape Sequence\n");
+			return;
+		case ERROR_UNKNOWN_HEXADECIMAL_CHARCTER:
+			printf("Unknown Hexadecimal Character: '%c'\n",GET_ERROR_CHAR(e));
+			return;
+		case ERROR_UNKNOWN_DECIMAL_CHARCTER:
+			printf("Unknown Decimal Character: '%c'\n",GET_ERROR_CHAR(e));
+			return;
+		case ERROR_UNKNOWN_OCTAL_CHARCTER:
+			printf("Unknown Octal Character: '%c'\n",GET_ERROR_CHAR(e));
+			return;
+		case ERROR_UNKNOWN_BINARY_CHARCTER:
+			printf("Unknown Binary Character: '%c'\n",GET_ERROR_CHAR(e));
+			return;
+		case ERROR_UNKNOWN_SYMBOL:
+			printf("Unknown Symbol: '%s'\n",GET_ERROR_STRING(e));
+			return;
+		case ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
+			printf("Unknown Identifier Character: '%c'\n",GET_ERROR_CHAR(e));
+			return;
+		case ERROR_UNEXPECTED_CHARACTER:
+			printf("Unexpected Character: '%c'\n",GET_ERROR_CHAR(e));
+			return;
+		case ERROR_NO_SYMBOL:
+			printf("Expression Without a Symbol\n");
+			return;
+		case ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS:
+			printf("Math Expression Contains not Enough Symbols: ");
+			print_object(GET_ERROR_OBJECT(e),stdout);
+			return;
+		case ERROR_MATH_OP_TOO_MANY_ARGUMENTS:
+			printf("Math Expression Contains too Many Symbols: ");
+			print_object(GET_ERROR_OBJECT(e),stdout);
+			return;
 	}
 }
 
