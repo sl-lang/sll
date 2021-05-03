@@ -20,6 +20,9 @@ uint32_t _bf_ptr=0;
 
 uint32_t _print_object_internal(object_t* o,FILE* f){
 	uint32_t off=sizeof(object_t);
+	while (IS_OBJECT_REF(o)){
+		o=GET_OBJECT_REF(o);
+	}
 	switch (o->t){
 		case OBJECT_TYPE_UNKNOWN:
 			fprintf(f,"(unknown)");
@@ -294,7 +297,7 @@ _no_read_next:
 			if (o->t==OBJECT_TYPE_UNKNOWN){
 				return RETURN_ERROR(ERROR_EMPTY_PARENTHESES);
 			}
-			if (OBJECT_TYPE_IS_MATH_CHAIN_OPERATION(o)){
+			if (IS_OBJECT_TYPE_MATH_CHAIN_OPERATION(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (!ac){
 					o->t=OBJECT_TYPE_INT;
@@ -315,7 +318,7 @@ _no_read_next:
 					_bf_ptr-=sizeof(object_t)+sizeof(arg_count_t);
 				}
 			}
-			else if (OBJECT_TYPE_IS_MATH_NO_CHAIN_OPERATION(o)){
+			else if (IS_OBJECT_TYPE_MATH_NO_CHAIN_OPERATION(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac<2){
 					return RETURN_ERROR(CREATE_ERROR_OBJECT(ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS,o));
@@ -523,7 +526,7 @@ _unknown_symbol:
 			arg->t=OBJECT_TYPE_STRING;
 			uint32_t sz=0;
 			while (1){
-				uint64_t e=_read_single_char(f,'\"');
+				uint64_t e=_read_single_char(f,'"');
 				if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_ERROR){
 					return RETURN_ERROR(READ_SINGLE_CHAR_GET_ERROR(e));
 				}
