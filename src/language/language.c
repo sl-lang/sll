@@ -24,9 +24,6 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 		case OBJECT_TYPE_UNKNOWN:
 			fprintf(f,"(unknown)");
 			return off;
-		case OBJECT_TYPE_PRINT:
-			fprintf(f,"(print");
-			goto _print_args;
 		case OBJECT_TYPE_CHAR:
 			fprintf(f,"'%c'",GET_OBJECT_AS_CHAR(o));
 			return off+sizeof(char);
@@ -78,27 +75,6 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 		case OBJECT_TYPE_FLOAT:
 			fprintf(f,"%lf",GET_OBJECT_AS_FLOAT(o));
 			return off+sizeof(double);
-		case OBJECT_TYPE_ADD:
-			fprintf(f,"(+");
-			goto _print_args;
-		case OBJECT_TYPE_SUB:
-			fprintf(f,"(-");
-			goto _print_args;
-		case OBJECT_TYPE_MULT:
-			fprintf(f,"(*");
-			goto _print_args;
-		case OBJECT_TYPE_DIV:
-			fprintf(f,"(/");
-			goto _print_args;
-		case OBJECT_TYPE_FLOOR_DIV:
-			fprintf(f,"(//");
-			goto _print_args;
-		case OBJECT_TYPE_MOD:
-			fprintf(f,"(%%");
-			goto _print_args;
-		case OBJECT_TYPE_POW:
-			fprintf(f,"(**");
-			goto _print_args;
 		case OBJECT_TYPE_IDENTIFIER:
 			l=GET_OBJECT_STRING_LENGTH(o);
 			off+=l+sizeof(string_length_t);
@@ -118,13 +94,111 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 		case OBJECT_TYPE_FALSE:
 			fprintf(f,"false");
 			return off;
+		case OBJECT_TYPE_PAIR:
+			return off;
+		case OBJECT_TYPE_LIST:
+			return off;
+		case OBJECT_TYPE_MAP:
+			return off;
+		case OBJECT_TYPE_PRINT:
+			fprintf(f,"(print");
+			break;
+		case OBJECT_TYPE_PTR:
+			fprintf(f,"(ptr");
+			break;
+		case OBJECT_TYPE_AND:
+			fprintf(f,"(&&");
+			break;
+		case OBJECT_TYPE_OR:
+			fprintf(f,"(||");
+			break;
+		case OBJECT_TYPE_LET:
+			fprintf(f,"(let");
+			break;
+		case OBJECT_TYPE_SET:
+			fprintf(f,"(=");
+			break;
+		case OBJECT_TYPE_FUNC:
+			fprintf(f,"(func");
+			break;
+		case OBJECT_TYPE_IF:
+			fprintf(f,"(if");
+			break;
+		case OBJECT_TYPE_WHILE:
+			fprintf(f,"(while");
+			break;
+		case OBJECT_TYPE_LABEL:
+			fprintf(f,"(label");
+			break;
+		case OBJECT_TYPE_GOTO:
+			fprintf(f,"(goto");
+			break;
+		case OBJECT_TYPE_ADD:
+			fprintf(f,"(+");
+			break;
+		case OBJECT_TYPE_SUB:
+			fprintf(f,"(-");
+			break;
+		case OBJECT_TYPE_MULT:
+			fprintf(f,"(*");
+			break;
+		case OBJECT_TYPE_DIV:
+			fprintf(f,"(/");
+			break;
+		case OBJECT_TYPE_FLOOR_DIV:
+			fprintf(f,"(//");
+			break;
+		case OBJECT_TYPE_MOD:
+			fprintf(f,"(%%");
+			break;
+		case OBJECT_TYPE_BIT_AND:
+			fprintf(f,"(&");
+			break;
+		case OBJECT_TYPE_BIT_OR:
+			fprintf(f,"(|");
+			break;
+		case OBJECT_TYPE_BIT_XOR:
+			fprintf(f,"(^");
+			break;
+		case OBJECT_TYPE_BIT_NOT:
+			fprintf(f,"(!");
+			break;
 		case OBJECT_TYPE_DIV_MOD:
 			fprintf(f,"(/%%");
-			goto _print_args;
+			break;
+		case OBJECT_TYPE_POW:
+			fprintf(f,"(**");
+			break;
+		case OBJECT_TYPE_ROOT:
+			fprintf(f,"(*/");
+			break;
+		case OBJECT_TYPE_FLOOR_ROOT:
+			fprintf(f,"(*//");
+			break;
+		case OBJECT_TYPE_LOG:
+			fprintf(f,"(/_");
+			break;
+		case OBJECT_TYPE_LESS:
+			fprintf(f,"(<");
+			break;
+		case OBJECT_TYPE_LESS_EQUAL:
+			fprintf(f,"(<=");
+			break;
+		case OBJECT_TYPE_EQUAL:
+			fprintf(f,"(==");
+			break;
+		case OBJECT_TYPE_NOT_EQUAL:
+			fprintf(f,"(!=");
+			break;
+		case OBJECT_TYPE_MORE:
+			fprintf(f,"(>");
+			break;
+		case OBJECT_TYPE_MORE_EQUAL:
+			fprintf(f,"(>=");
+			break;
 		default:
 			__assume(0);
 	}
-_print_args:
 	off+=sizeof(arg_count_t);
 	uint8_t l=GET_OBJECT_ARGUMENT_COUNT(o);
 	for (uint8_t i=0;i<l;i++){
