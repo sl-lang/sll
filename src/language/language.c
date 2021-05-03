@@ -2,8 +2,19 @@
 
 
 
+#define CONSTRUCT_CHAR(c) ((#c)[0])
 #define CONSTRUCT_WORD(a,b) ((((uint16_t)(b))<<8)|(a))
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
+#define _FAST_COMPARE_JOIN_(l) FAST_COMPARE_##l
+#define _FAST_COMPARE_JOIN(l) _FAST_COMPARE_JOIN_(l)
+#define _FAST_COMPARE_COUNT_ARGS_(_1,_2,_3,_4,_5,n,...) n
+#define _FAST_COMPARE_COUNT_ARGS(...) _FAST_COMPARE_COUNT_ARGS_(__VA_ARGS__,5,4,3,2,1)
+#define FAST_COMPARE(s,...) _FAST_COMPARE_JOIN(_FAST_COMPARE_COUNT_ARGS(__VA_ARGS__))(s,__VA_ARGS__)
+#define FAST_COMPARE_1(s,a) (*(s)==CONSTRUCT_CHAR(a))
+#define FAST_COMPARE_2(s,a,b) (*((uint16_t*)(s))==CONSTRUCT_WORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b)))
+#define FAST_COMPARE_3(s,a,b,c) (*((uint16_t*)(s))==CONSTRUCT_WORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b))&&*((s)+2)==CONSTRUCT_CHAR(c))
+#define FAST_COMPARE_4(s,a,b,c,d) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d)))
+#define FAST_COMPARE_5(s,a,b,c,d,e) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((s)+4)==CONSTRUCT_CHAR(e))
 #define READ_SINGLE_CHAR_OK 0
 #define READ_SINGLE_CHAR_END 1
 #define READ_SINGLE_CHAR_ERROR 2
@@ -367,40 +378,40 @@ _read_symbol:
 				goto _read_symbol;
 			}
 			if (sz==1){
-				if (*str=='='){
+				if (FAST_COMPARE(str,=)){
 					o->t=OBJECT_TYPE_SET;
 				}
-				else if (*str=='+'){
+				else if (FAST_COMPARE(str,+)){
 					o->t=OBJECT_TYPE_ADD;
 				}
-				else if (*str=='-'){
+				else if (FAST_COMPARE(str,-)){
 					o->t=OBJECT_TYPE_SUB;
 				}
-				else if (*str=='*'){
+				else if (FAST_COMPARE(str,*)){
 					o->t=OBJECT_TYPE_MULT;
 				}
-				else if (*str=='/'){
+				else if (FAST_COMPARE(str,/)){
 					o->t=OBJECT_TYPE_DIV;
 				}
-				else if (*str=='%'){
+				else if (FAST_COMPARE(str,%)){
 					o->t=OBJECT_TYPE_MOD;
 				}
-				else if (*str=='&'){
+				else if (FAST_COMPARE(str,&)){
 					o->t=OBJECT_TYPE_BIT_AND;
 				}
-				else if (*str=='|'){
+				else if (FAST_COMPARE(str,|)){
 					o->t=OBJECT_TYPE_BIT_OR;
 				}
-				else if (*str=='^'){
+				else if (FAST_COMPARE(str,^)){
 					o->t=OBJECT_TYPE_BIT_XOR;
 				}
-				else if (*str=='!'){
+				else if (FAST_COMPARE(str,!)){
 					o->t=OBJECT_TYPE_BIT_NOT;
 				}
-				else if (*str=='<'){
+				else if (FAST_COMPARE(str,<)){
 					o->t=OBJECT_TYPE_LESS;
 				}
-				else if (*str=='>'){
+				else if (FAST_COMPARE(str,>)){
 					o->t=OBJECT_TYPE_MORE;
 				}
 				else{
@@ -408,40 +419,40 @@ _read_symbol:
 				}
 			}
 			else if (sz==2){
-				if (*((uint16_t*)str)==CONSTRUCT_WORD('&','&')){
+				if (FAST_COMPARE(str,&,&)){
 					o->t=OBJECT_TYPE_AND;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('|','|')){
+				else if (FAST_COMPARE(str,|,|)){
 					o->t=OBJECT_TYPE_OR;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('i','f')){
+				else if (FAST_COMPARE(str,i,f)){
 					o->t=OBJECT_TYPE_IF;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('/','/')){
+				else if (FAST_COMPARE(str,/,/)){
 					o->t=OBJECT_TYPE_FLOOR_DIV;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('/','%')){
+				else if (FAST_COMPARE(str,/,%)){
 					o->t=OBJECT_TYPE_DIV_MOD;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('*','*')){
+				else if (FAST_COMPARE(str,*,*)){
 					o->t=OBJECT_TYPE_POW;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('*','/')){
+				else if (FAST_COMPARE(str,*,/)){
 					o->t=OBJECT_TYPE_ROOT;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('/','_')){
+				else if (FAST_COMPARE(str,/,_)){
 					o->t=OBJECT_TYPE_LOG;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('<','=')){
+				else if (FAST_COMPARE(str,<,=)){
 					o->t=OBJECT_TYPE_LESS_EQUAL;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('=','=')){
+				else if (FAST_COMPARE(str,=,=)){
 					o->t=OBJECT_TYPE_EQUAL;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('!','=')){
+				else if (FAST_COMPARE(str,!,=)){
 					o->t=OBJECT_TYPE_NOT_EQUAL;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('>','=')){
+				else if (FAST_COMPARE(str,>,=)){
 					o->t=OBJECT_TYPE_MORE_EQUAL;
 				}
 				else{
@@ -449,13 +460,13 @@ _read_symbol:
 				}
 			}
 			else if (sz==3){
-				if (*((uint16_t*)str)==CONSTRUCT_WORD('p','t')&&*(str+2)=='r'){
+				if (FAST_COMPARE(str,p,t,r)){
 					o->t=OBJECT_TYPE_PTR;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('l','e')&&*(str+2)=='t'){
+				else if (FAST_COMPARE(str,l,e,t)){
 					o->t=OBJECT_TYPE_LET;
 				}
-				else if (*((uint16_t*)str)==CONSTRUCT_WORD('*','/')&&*(str+2)=='/'){
+				else if (FAST_COMPARE(str,*,/,/)){
 					o->t=OBJECT_TYPE_FLOOR_ROOT;
 				}
 				else{
@@ -463,10 +474,10 @@ _read_symbol:
 				}
 			}
 			else if (sz==4){
-				if (*((uint32_t*)str)==CONSTRUCT_DWORD('f','u','n','c')){
+				if (FAST_COMPARE(str,f,u,n,c)){
 					o->t=OBJECT_TYPE_FUNC;
 				}
-				else if (*((uint32_t*)str)==CONSTRUCT_DWORD('g','o','t','o')){
+				else if (FAST_COMPARE(str,g,o,t,o)){
 					o->t=OBJECT_TYPE_GOTO;
 				}
 				else{
@@ -474,13 +485,13 @@ _read_symbol:
 				}
 			}
 			else if (sz==5){
-				if (*((uint32_t*)str)==CONSTRUCT_DWORD('p','r','i','n')&&*(str+4)=='t'){
+				if (FAST_COMPARE(str,p,r,i,n,t)){
 					o->t=OBJECT_TYPE_PRINT;
 				}
-				else if (*((uint32_t*)str)==CONSTRUCT_DWORD('w','h','i','l')&&*(str+4)=='e'){
+				else if (FAST_COMPARE(str,w,h,i,l,e)){
 					o->t=OBJECT_TYPE_WHILE;
 				}
-				else if (*((uint32_t*)str)==CONSTRUCT_DWORD('l','a','b','e')&&*(str+4)=='l'){
+				else if (FAST_COMPARE(str,l,a,b,e,l)){
 					o->t=OBJECT_TYPE_LABEL;
 				}
 				else{
