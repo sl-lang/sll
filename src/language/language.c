@@ -312,9 +312,8 @@ _no_read_next:
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (!ac){
 					o->t=OBJECT_TYPE_INT;
-					_bf_ptr=GET_OBJECT_STACK_OFFSET(o)+sizeof(object_t);
-					*((int64_t*)(_bf+_bf_ptr))=0;
-					_bf_ptr+=sizeof(int64_t);
+					_bf_ptr=GET_OBJECT_STACK_OFFSET(o)+sizeof(object_t)+sizeof(int64_t);
+					SET_OBJECT_AS_INT(o,0);
 					return o;
 				}
 				if (ac==1){
@@ -554,7 +553,7 @@ _unknown_symbol:
 		}
 		else if ((c>47&&c<58)||c=='-'){
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
-			_bf_ptr+=sizeof(object_t);
+			_bf_ptr+=sizeof(object_t)+sizeof(int64_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
 				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
 			}
@@ -656,11 +655,7 @@ _decimal:
 					goto _decimal;
 				}
 			}
-			*((int64_t*)(_bf+_bf_ptr))=v*m;
-			_bf_ptr+=sizeof(int64_t);
-			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
-			}
+			SET_OBJECT_AS_INT(arg,v*m);
 			if (!o){
 				return arg;
 			}

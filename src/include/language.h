@@ -94,13 +94,15 @@
 #define GET_OBJECT_REF(o) ((object_t*)(((uint8_t*)(o))+((uint32_t)(*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t)))))))
 #define GET_OBJECT_ARGUMENT_COUNT(o) (*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_ARGUMENT(o,i) ((object_t*)(((uint8_t*)(o))+(i)))
-#define GET_OBJECT_AS_CHAR(o) ((char)(*((char*)(((uint8_t*)(o))+sizeof(object_t)))))
-#define GET_OBJECT_AS_INT(o) ((int64_t)(*((int64_t*)(((uint8_t*)(o))+sizeof(object_t)))))
-#define GET_OBJECT_AS_FLOAT(o) ((double)(*((double*)(((uint8_t*)(o))+sizeof(object_t)))))
+#define GET_OBJECT_AS_CHAR(o) (*((char*)(((uint8_t*)(o))+sizeof(object_t))))
+#define GET_OBJECT_AS_INT(o) (*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))
+#define GET_OBJECT_AS_FLOAT(o) (*((double*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_STRING_LENGTH(o) (*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AS_STRING(o) ((char*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(string_length_t)))
 #define RESET_OBJECT_ARGUMENT_COUNT(o) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=0)
 #define INCREASE_OBJECT_ARGUMENT_COUNT(o) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))++)
+#define SET_OBJECT_AS_INT(o,i) ((*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))=(i))
+#define SET_OBJECT_AS_FLOAT(o,f) ((*((double*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
 #define SET_OBJECT_STRING_LENGTH(o,sz) ((*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))=(sz))
 
 #define INTERNAL_STACK_SIZE 65536
