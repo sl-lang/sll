@@ -48,17 +48,18 @@
 #define OBJECT_TYPE_FALSE 8
 #define OBJECT_TYPE_PRINT 9
 #define OBJECT_TYPE_PTR 10
-#define OBJECT_TYPE_AND 11
-#define OBJECT_TYPE_OR 12
-#define OBJECT_TYPE_SET 13
-#define OBJECT_TYPE_FUNC 14
-#define OBJECT_TYPE_IF 15
-#define OBJECT_TYPE_ADD 16
-#define OBJECT_TYPE_SUB 17
-#define OBJECT_TYPE_MULT 18
-#define OBJECT_TYPE_DIV 19
-#define OBJECT_TYPE_FLOOR_DIV 20
-#define OBJECT_TYPE_MOD 21
+#define OBJECT_TYPE_OPERATION_LIST 11
+#define OBJECT_TYPE_AND 12
+#define OBJECT_TYPE_OR 13
+#define OBJECT_TYPE_SET 14
+#define OBJECT_TYPE_FUNC 15
+#define OBJECT_TYPE_IF 16
+#define OBJECT_TYPE_ADD 17
+#define OBJECT_TYPE_SUB 18
+#define OBJECT_TYPE_MULT 19
+#define OBJECT_TYPE_DIV 20
+#define OBJECT_TYPE_FLOOR_DIV 21
+#define OBJECT_TYPE_MOD 22
 #define OBJECT_TYPE_BIT_AND 23
 #define OBJECT_TYPE_BIT_OR 24
 #define OBJECT_TYPE_BIT_XOR 25
@@ -68,35 +69,49 @@
 #define OBJECT_TYPE_ROOT 29
 #define OBJECT_TYPE_FLOOR_ROOT 30
 #define OBJECT_TYPE_LOG 31
-#define OBJECT_TYPE_LESS 32
-#define OBJECT_TYPE_LESS_EQUAL 33
-#define OBJECT_TYPE_EQUAL 34
-#define OBJECT_TYPE_NOT_EQUAL 35
-#define OBJECT_TYPE_MORE 36
-#define OBJECT_TYPE_MORE_EQUAL 37
+#define OBJECT_TYPE_FLOOR_LOG 32
+#define OBJECT_TYPE_LESS 33
+#define OBJECT_TYPE_LESS_EQUAL 34
+#define OBJECT_TYPE_EQUAL 35
+#define OBJECT_TYPE_NOT_EQUAL 36
+#define OBJECT_TYPE_MORE 37
+#define OBJECT_TYPE_MORE_EQUAL 38
+#define OBJECT_TYPE_INT64_FLAG 0x40
+#define OBJECT_TYPE_FLOAT64_FLAG 0x40
 #define OBJECT_TYPE_REF_FLAG 0x80
 #define OBJECT_TYPE_MAX_TYPE OBJECT_TYPE_FALSE
-#define OBJECT_TYPE_MAX_FUNC OBJECT_TYPE_PTR
+#define OBJECT_TYPE_MAX_FUNC OBJECT_TYPE_OPERATION_LIST
 #define OBJECT_TYPE_MAX_FLOW OBJECT_TYPE_IF
-#define OBJECT_TYPE_MAX_MATH OBJECT_TYPE_LOG
+#define OBJECT_TYPE_MAX_MATH OBJECT_TYPE_FLOOR_LOG
 #define OBJECT_TYPE_MAX_MATH_CHAIN OBJECT_TYPE_BIT_NOT
+#define OBJECT_TYPE_MAX_COMPARE OBJECT_TYPE_MORE_EQUAL
+#define IS_OBJECT_INT64(o) ((o)->t&OBJECT_TYPE_INT64_FLAG)
+#define IS_OBJECT_FLOAT64(o) ((o)->t&OBJECT_TYPE_FLOAT64_FLAG)
 #define IS_OBJECT_REF(o) ((o)->t>>7)
+#define IS_OBJECT_TYPE_NOT_TYPE(o) (GET_OBJECT_TYPE(o)>OBJECT_TYPE_MAX_TYPE)
 #define IS_OBJECT_TYPE_MATH_CHAIN_OPERATION(o) (GET_OBJECT_TYPE(o)>OBJECT_TYPE_MAX_FLOW&&GET_OBJECT_TYPE(o)<=OBJECT_TYPE_MAX_MATH_CHAIN)
 #define IS_OBJECT_TYPE_MATH_NO_CHAIN_OPERATION(o) (GET_OBJECT_TYPE(o)>OBJECT_TYPE_MAX_MATH_CHAIN&&GET_OBJECT_TYPE(o)<=OBJECT_TYPE_MAX_MATH)
-#define GET_OBJECT_TYPE(o) ((o)->t&(OBJECT_TYPE_REF_FLAG-1))
+#define GET_OBJECT_TYPE(o) ((o)->t&0x3f)
 #define GET_OBJECT_REF(o) GET_OBJECT_FROM_STACK_OFFSET(*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_ARGUMENT_COUNT(o) (*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_ARGUMENT(o,i) ((object_t*)(((uint8_t*)(o))+(i)))
 #define GET_OBJECT_AS_CHAR(o) (*((char*)(((uint8_t*)(o))+sizeof(object_t))))
-#define GET_OBJECT_AS_INT(o) (*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))
-#define GET_OBJECT_AS_FLOAT(o) (*((double*)(((uint8_t*)(o))+sizeof(object_t))))
+#define GET_OBJECT_AS_INT32(o) (*((int32_t*)(((uint8_t*)(o))+sizeof(object_t))))
+#define GET_OBJECT_AS_INT64(o) (*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))
+#define GET_OBJECT_AS_FLOAT32(o) (*((float*)(((uint8_t*)(o))+sizeof(object_t))))
+#define GET_OBJECT_AS_FLOAT64(o) (*((double*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_STRING_LENGTH(o) (*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AS_STRING(o) ((char*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(string_length_t)))
 #define RESET_OBJECT_ARGUMENT_COUNT(o) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=0)
 #define INCREASE_OBJECT_ARGUMENT_COUNT(o) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))++)
-#define SET_OBJECT_AS_INT(o,i) ((*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))=(i))
-#define SET_OBJECT_AS_FLOAT(o,f) ((*((double*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
+#define SET_OBJECT_AS_INT32(o,i) ((*((int32_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int32_t)(i))
+#define SET_OBJECT_AS_INT64(o,i) ((*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int64_t)(i))
+#define SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
+#define SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
 #define SET_OBJECT_STRING_LENGTH(o,sz) ((*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))=(sz))
+
+#define FEATURE_EMPTY_EXPRESSION 1
+#define FEATURE_OPERATION_LIST 2
 
 #define INTERNAL_STACK_SIZE 65536
 #define GET_OBJECT_STACK_OFFSET(o) ((uint32_t)(((uint64_t)(o))-((uint64_t)_bf)))
@@ -119,6 +134,14 @@ typedef uint64_t error_t;
 typedef struct __OBJECT{
 	uint8_t t;
 } object_t;
+
+
+
+uint8_t get_feature(uint8_t f);
+
+
+
+void set_feature(uint8_t f,uint8_t st);
 
 
 

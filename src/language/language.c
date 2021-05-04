@@ -25,15 +25,29 @@
 
 uint8_t _bf[INTERNAL_STACK_SIZE];
 uint32_t _bf_ptr=0;
+uint8_t _fl=0;
+
+
+
+#ifdef _MSC_VER
+#include <intrin.h>
+#pragma intrinsic(__movsw)
+#else
+static inline void __movsw(unsigned short* d,unsigned short* s,size_t n){
+	__asm__("rep movsw":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n/2):"memory");
+}
+#endif
 
 
 
 uint32_t _print_object_internal(object_t* o,FILE* f){
 	uint32_t off=sizeof(object_t);
-	while (IS_OBJECT_REF(o)){
-		o=GET_OBJECT_REF(o);
+	if (IS_OBJECT_TYPE_NOT_TYPE(o)){
+		while (IS_OBJECT_REF(o)){
+			o=GET_OBJECT_REF(o);
+		}
 	}
-	switch (o->t){
+	switch (GET_OBJECT_TYPE(o)){
 		case OBJECT_TYPE_UNKNOWN:
 			fprintf(f,"(unknown)");
 			return off;
@@ -83,11 +97,19 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			fputc('"',f);
 			return off;
 		case OBJECT_TYPE_INT:
-			fprintf(f,"%lld",GET_OBJECT_AS_INT(o));
-			return off+sizeof(int64_t);
+			if (IS_OBJECT_INT64(o)){
+				fprintf(f,"%lld",GET_OBJECT_AS_INT64(o));
+				return off+sizeof(int64_t);
+			}
+			fprintf(f,"%d",GET_OBJECT_AS_INT32(o));
+			return off+sizeof(int32_t);
 		case OBJECT_TYPE_FLOAT:
-			fprintf(f,"%lf",GET_OBJECT_AS_FLOAT(o));
-			return off+sizeof(double);
+			if (IS_OBJECT_FLOAT64(o)){
+				fprintf(f,"%lf",GET_OBJECT_AS_FLOAT64(o));
+				return off+sizeof(double);
+			}
+			fprintf(f,"%f",GET_OBJECT_AS_FLOAT32(o));
+			return off+sizeof(float);
 		case OBJECT_TYPE_IDENTIFIER:
 			l=GET_OBJECT_STRING_LENGTH(o);
 			off+=l+sizeof(string_length_t);
@@ -112,6 +134,9 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			break;
 		case OBJECT_TYPE_PTR:
 			fprintf(f,"(ptr");
+			break;
+		case OBJECT_TYPE_OPERATION_LIST:
+			fprintf(f,"(<op list>");
 			break;
 		case OBJECT_TYPE_AND:
 			fprintf(f,"(&&");
@@ -171,7 +196,10 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			fprintf(f,"(*//");
 			break;
 		case OBJECT_TYPE_LOG:
-			fprintf(f,"(/_");
+			fprintf(f,"(_/");
+			break;
+		case OBJECT_TYPE_FLOOR_LOG:
+			fprintf(f,"(_//");
 			break;
 		case OBJECT_TYPE_LESS:
 			fprintf(f,"(<");
@@ -287,14 +315,20 @@ _no_read_next:
 				return RETURN_ERROR(ERROR_UNMATCHED_CLOSE_PARENTHESES);
 			}
 			if (o->t==OBJECT_TYPE_UNKNOWN){
-				return RETURN_ERROR(ERROR_EMPTY_PARENTHESES);
+				if (_fl&FEATURE_EMPTY_EXPRESSION){
+					o->t=OBJECT_TYPE_NIL;
+					_bf_ptr-=sizeof(arg_count_t);
+				}
+				else{
+					return RETURN_ERROR(ERROR_EMPTY_PARENTHESES);
+				}
 			}
 			if (IS_OBJECT_TYPE_MATH_CHAIN_OPERATION(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (!ac){
 					o->t=OBJECT_TYPE_INT;
-					_bf_ptr=GET_OBJECT_STACK_OFFSET(o)+sizeof(object_t)+sizeof(int64_t);
-					SET_OBJECT_AS_INT(o,0);
+					_bf_ptr=GET_OBJECT_STACK_OFFSET(o)+sizeof(object_t)+sizeof(int32_t);
+					SET_OBJECT_AS_INT32(o,0);
 					return o;
 				}
 				if (ac==1){
@@ -311,10 +345,10 @@ _no_read_next:
 			}
 			else if (IS_OBJECT_TYPE_MATH_NO_CHAIN_OPERATION(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
-				if (ac<2){
+				if (ac==1){
 					return RETURN_ERROR(CREATE_ERROR_OBJECT(ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS,o));
 				}
-				if (ac>2){
+				if (ac>(GET_OBJECT_TYPE(o)==OBJECT_TYPE_POW?3:2)){
 					return RETURN_ERROR(CREATE_ERROR_OBJECT(ERROR_MATH_OP_TOO_MANY_ARGUMENTS,o));
 				}
 			}
@@ -332,7 +366,12 @@ _no_read_next:
 			}
 			else{
 				if (o->t==OBJECT_TYPE_UNKNOWN){
-					return RETURN_ERROR(ERROR_NO_SYMBOL);
+					if (_fl&FEATURE_OPERATION_LIST){
+						o->t=OBJECT_TYPE_OPERATION_LIST;
+					}
+					else{
+						return RETURN_ERROR(ERROR_NO_SYMBOL);
+					}
 				}
 				object_t* e=_read_object_internal(f,c);
 				if (IS_ERROR(e)){
@@ -420,7 +459,7 @@ _read_symbol:
 				else if (FAST_COMPARE(str,*,/)){
 					o->t=OBJECT_TYPE_ROOT;
 				}
-				else if (FAST_COMPARE(str,/,_)){
+				else if (FAST_COMPARE(str,_,/)){
 					o->t=OBJECT_TYPE_LOG;
 				}
 				else if (FAST_COMPARE(str,<,=)){
@@ -445,6 +484,9 @@ _read_symbol:
 				}
 				else if (FAST_COMPARE(str,*,/,/)){
 					o->t=OBJECT_TYPE_FLOOR_ROOT;
+				}
+				else if (FAST_COMPARE(str,_,/,/)){
+					o->t=OBJECT_TYPE_FLOOR_LOG;
 				}
 				else{
 					goto _unknown_symbol;
@@ -624,7 +666,14 @@ _decimal:
 					goto _decimal;
 				}
 			}
-			SET_OBJECT_AS_INT(arg,v*m);
+			if (v>INT32_MAX){
+				arg->t|=OBJECT_TYPE_INT64_FLAG;
+				SET_OBJECT_AS_INT64(arg,v*m);
+			}
+			else{
+				_bf_ptr-=sizeof(int64_t)-sizeof(int32_t);
+				SET_OBJECT_AS_INT32(arg,v*m);
+			}
 			if (!o){
 				return arg;
 			}
@@ -691,7 +740,7 @@ void print_error(error_t e){
 	switch (GET_ERROR_TYPE(e)){
 		default:
 		case ERROR_UNKNOWN:
-			printf("Unknown Error: %.16llx\n",e);
+			printf("Unknown Error: %.8llx %.8llx\n",e>>32,e&0xffffffff);
 			return;
 		case ERROR_INTERNAL_STACK_OVERFLOW:
 			printf("Internal Stack Overflow\n");
@@ -761,6 +810,23 @@ void print_error(error_t e){
 			printf("Math Expression Contains too Many Symbols: ");
 			print_object(GET_ERROR_OBJECT(e),stdout);
 			return;
+	}
+}
+
+
+
+uint8_t get_feature(uint8_t f){
+	return _fl&f;
+}
+
+
+
+void set_feature(uint8_t f,uint8_t st){
+	if (st){
+		_fl|=f;
+	}
+	else{
+		_fl&=~f;
 	}
 }
 
