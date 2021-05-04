@@ -38,7 +38,6 @@ else:
 			for f in cfl:
 				if (f[-2:]==".c"):
 					fl.append(f"build/{(r+f).replace('/','$')}.o")
-					print(f"{r+f} -> {fl[-1]}")
 					if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O3","-c",r+f,"-o",f"build/{(r+f).replace('/','$')}.o","-Isrc/include"]).returncode!=0):
 						sys.exit(1)
 		if (subprocess.run(["gcc","-o","build/lisp_like_language"]+fl).returncode!=0):
@@ -50,7 +49,6 @@ else:
 			for f in cfl:
 				if (f[-2:]==".c"):
 					fl.append(f"build/{(r+f).replace('/','$')}.o")
-					print(f"{r+f} -> {fl[-1]}")
 					if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c",r+f,"-o",f"build/{(r+f).replace('/','$')}.o","-Isrc/include"]).returncode!=0):
 						sys.exit(1)
 		if (subprocess.run(["gcc","-o","build/lisp_like_language"]+fl).returncode!=0):
