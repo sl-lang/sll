@@ -1,4 +1,3 @@
-#define ALLOW_EMPTY_EXPRESSIONS 1
 #include <language.h>
 #include <stdio.h>
 
