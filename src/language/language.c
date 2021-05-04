@@ -1,4 +1,7 @@
 #include <language.h>
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
 
 
 
@@ -104,10 +107,10 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			return off;
 		case OBJECT_TYPE_INT:
 			if (IS_OBJECT_INT64(o)){
-				fprintf(f,"%ld",GET_OBJECT_AS_INT64(o));
+				fprintf(f,"%"PRId64,GET_OBJECT_AS_INT64(o));
 				return off+sizeof(int64_t);
 			}
-			fprintf(f,"%d",GET_OBJECT_AS_INT32(o));
+			fprintf(f,"%"PRId32,GET_OBJECT_AS_INT32(o));
 			return off+sizeof(int32_t);
 		case OBJECT_TYPE_FLOAT:
 			if (IS_OBJECT_FLOAT64(o)){
@@ -253,8 +256,7 @@ uint64_t _read_single_char(FILE* f,char t){
 		if (!c||c==EOF){
 			return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_UNTERMINATED_ESCAPE_SEQUENCE);
 		}
-		if (c=='\''||c=='"'||c=='\\'){
-		}
+		if (c=='\''||c=='"'||c=='\\');
 		else if (c=='x'){
 			c=fgetc(f);
 			if (!c||c==EOF){
@@ -310,10 +312,10 @@ uint64_t _read_single_char(FILE* f,char t){
 
 object_t* _read_object_internal(FILE* f,int c){
 	object_t* o=NULL;
-	goto _no_read_next;
-	while ((c=fgetc(f))&&c!=EOF){
+	while (c&&c!=EOF){
 _no_read_next:
 		if ((c>8&&c<14)||c==' '||c==';'){
+			c=fgetc(f);
 			continue;
 		}
 		if (c==')'){
@@ -736,6 +738,7 @@ _read_identifier:
 		else{
 			return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNEXPECTED_CHARACTER,c));
 		}
+		c=fgetc(f);
 	}
 	return RETURN_ERROR(ERROR_UNMATCHED_OPEN_PARENTHESES);
 }
@@ -746,7 +749,7 @@ void print_error(error_t e){
 	switch (GET_ERROR_TYPE(e)){
 		default:
 		case ERROR_UNKNOWN:
-			printf("Unknown Error: %.8lx %.8lx\n",e>>32,e&0xffffffff);
+			printf("Unknown Error: %.8"PRIx64" %.8"PRIx64"\n",e>>32,e&0xffffffff);
 			return;
 		case ERROR_INTERNAL_STACK_OVERFLOW:
 			printf("Internal Stack Overflow\n");

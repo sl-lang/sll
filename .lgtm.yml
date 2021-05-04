@@ -2,6 +2,7 @@ queries:
   - include: "*"
   - exclude: cpp/poorly-documented-function
   - exclude: cpp/short-global-name
+  - exclude: cpp/use-of-goto
   - exclude: py/empty-except
   - exclude: py/redundant-global-declaration
 extraction:
