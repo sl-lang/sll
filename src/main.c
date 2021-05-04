@@ -9,8 +9,8 @@ int main(int argc,const char** argv){
 		printf("Not Enough Arguments!\n");
 		return 1;
 	}
-	FILE* f;
-	if (fopen_s(&f,argv[1],"rb")){
+	FILE* f=fopen(argv[1],"rb");
+	if (!f){
 		printf("Unable to Open File '%s'!\n",argv[1]);
 		return 1;
 	}

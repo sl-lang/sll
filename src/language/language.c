@@ -34,8 +34,14 @@ uint8_t _fl=0;
 #pragma intrinsic(__movsw)
 #else
 static inline void __movsw(unsigned short* d,unsigned short* s,size_t n){
-	__asm__("rep movsw":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n/2):"memory");
+	__asm__("rep movsw":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
+#define __assume(x) \
+	do{ \
+		if (!(x)){ \
+			__builtin_unreachable(); \
+		} \
+	} while (0)
 #endif
 
 
@@ -98,7 +104,7 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			return off;
 		case OBJECT_TYPE_INT:
 			if (IS_OBJECT_INT64(o)){
-				fprintf(f,"%lld",GET_OBJECT_AS_INT64(o));
+				fprintf(f,"%ld",GET_OBJECT_AS_INT64(o));
 				return off+sizeof(int64_t);
 			}
 			fprintf(f,"%d",GET_OBJECT_AS_INT32(o));
@@ -740,7 +746,7 @@ void print_error(error_t e){
 	switch (GET_ERROR_TYPE(e)){
 		default:
 		case ERROR_UNKNOWN:
-			printf("Unknown Error: %.8llx %.8llx\n",e>>32,e&0xffffffff);
+			printf("Unknown Error: %.8lx %.8lx\n",e>>32,e&0xffffffff);
 			return;
 		case ERROR_INTERNAL_STACK_OVERFLOW:
 			printf("Internal Stack Overflow\n");
@@ -755,14 +761,16 @@ void print_error(error_t e){
 			printf("Empty Expression\n");
 			return;
 		case ERROR_UNMATCHED_QUOTES:
-			char c=GET_ERROR_CHAR(e);
-			if (c=='\''){
-				printf("Unmatched Single Quotes\n");
+			{
+				char c=GET_ERROR_CHAR(e);
+				if (c=='\''){
+					printf("Unmatched Single Quotes\n");
+				}
+				else{
+					printf("Unmatched Double Quotes\n");
+				}
+				return;
 			}
-			else{
-				printf("Unmatched Double Quotes\n");
-			}
-			return;
 		case ERROR_EMPTY_CHAR_STRING:
 			printf("Empty Character String\n");
 			return;
