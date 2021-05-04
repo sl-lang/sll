@@ -7,9 +7,8 @@
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
 #define _FAST_COMPARE_JOIN_(l) FAST_COMPARE_##l
 #define _FAST_COMPARE_JOIN(l) _FAST_COMPARE_JOIN_(l)
-#define _FAST_COMPARE_COUNT_ARGS_(_1,_2,_3,_4,_5,n,...) n
-#define _FAST_COMPARE_COUNT_ARGS(...) _FAST_COMPARE_COUNT_ARGS_(__VA_ARGS__,5,4,3,2,1)
-#define FAST_COMPARE(s,...) _FAST_COMPARE_JOIN(_FAST_COMPARE_COUNT_ARGS(__VA_ARGS__))(s,__VA_ARGS__)
+#define _FAST_COMPARE_COUNT_ARGS(_1,_2,_3,_4,_5,n,...) n
+#define FAST_COMPARE(s,...) _FAST_COMPARE_JOIN(_FAST_COMPARE_COUNT_ARGS(__VA_ARGS__,5,4,3,2,1))(s,__VA_ARGS__)
 #define FAST_COMPARE_1(s,a) (*(s)==CONSTRUCT_CHAR(a))
 #define FAST_COMPARE_2(s,a,b) (*((uint16_t*)(s))==CONSTRUCT_WORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b)))
 #define FAST_COMPARE_3(s,a,b,c) (*((uint16_t*)(s))==CONSTRUCT_WORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b))&&*((s)+2)==CONSTRUCT_CHAR(c))
@@ -108,12 +107,6 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 		case OBJECT_TYPE_FALSE:
 			fprintf(f,"false");
 			return off;
-		case OBJECT_TYPE_PAIR:
-			return off;
-		case OBJECT_TYPE_LIST:
-			return off;
-		case OBJECT_TYPE_MAP:
-			return off;
 		case OBJECT_TYPE_PRINT:
 			fprintf(f,"(print");
 			break;
@@ -126,9 +119,6 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 		case OBJECT_TYPE_OR:
 			fprintf(f,"(||");
 			break;
-		case OBJECT_TYPE_LET:
-			fprintf(f,"(let");
-			break;
 		case OBJECT_TYPE_SET:
 			fprintf(f,"(=");
 			break;
@@ -137,15 +127,6 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			break;
 		case OBJECT_TYPE_IF:
 			fprintf(f,"(if");
-			break;
-		case OBJECT_TYPE_WHILE:
-			fprintf(f,"(while");
-			break;
-		case OBJECT_TYPE_LABEL:
-			fprintf(f,"(label");
-			break;
-		case OBJECT_TYPE_GOTO:
-			fprintf(f,"(goto");
 			break;
 		case OBJECT_TYPE_ADD:
 			fprintf(f,"(+");
@@ -462,9 +443,6 @@ _read_symbol:
 				if (FAST_COMPARE(str,p,t,r)){
 					o->t=OBJECT_TYPE_PTR;
 				}
-				else if (FAST_COMPARE(str,l,e,t)){
-					o->t=OBJECT_TYPE_LET;
-				}
 				else if (FAST_COMPARE(str,*,/,/)){
 					o->t=OBJECT_TYPE_FLOOR_ROOT;
 				}
@@ -476,9 +454,6 @@ _read_symbol:
 				if (FAST_COMPARE(str,f,u,n,c)){
 					o->t=OBJECT_TYPE_FUNC;
 				}
-				else if (FAST_COMPARE(str,g,o,t,o)){
-					o->t=OBJECT_TYPE_GOTO;
-				}
 				else{
 					goto _unknown_symbol;
 				}
@@ -486,12 +461,6 @@ _read_symbol:
 			else if (sz==5){
 				if (FAST_COMPARE(str,p,r,i,n,t)){
 					o->t=OBJECT_TYPE_PRINT;
-				}
-				else if (FAST_COMPARE(str,w,h,i,l,e)){
-					o->t=OBJECT_TYPE_WHILE;
-				}
-				else if (FAST_COMPARE(str,l,a,b,e,l)){
-					o->t=OBJECT_TYPE_LABEL;
 				}
 				else{
 					goto _unknown_symbol;
@@ -687,15 +656,15 @@ _read_identifier:
 			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
 				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_IDENTIFIER_CHARACTER,c));
 			}
-			if (sz==3&&*((uint16_t*)str)==CONSTRUCT_WORD('n','i')&&*(str+2)=='l'){
+			if (sz==3&&FAST_COMPARE(str,n,i,l)){
 				_bf_ptr-=sizeof(string_length_t);
 				arg->t=OBJECT_TYPE_NIL;
 			}
-			else if (sz==4&&*((uint32_t*)str)==CONSTRUCT_DWORD('t','r','u','e')){
+			else if (sz==4&&FAST_COMPARE(str,t,r,u,e)){
 				_bf_ptr-=sizeof(string_length_t);
 				arg->t=OBJECT_TYPE_TRUE;
 			}
-			else if (sz==5&&*((uint32_t*)str)==CONSTRUCT_DWORD('f','a','l','s')&&*(str+4)=='e'){
+			else if (sz==5&&FAST_COMPARE(str,f,a,l,s,e)){
 				_bf_ptr-=sizeof(string_length_t);
 				arg->t=OBJECT_TYPE_FALSE;
 			}
