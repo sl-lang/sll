@@ -8,11 +8,11 @@ int main(int argc,const char** argv){
 		printf("Not Enough Arguments!\n");
 		return 1;
 	}
-	FILE* f;
+	FILE* f=NULL;
 #ifdef _MSC_VER
-	if (fopen_s(&f,argv[1],"rb")){
+	if (fopen_s(&f,argv[1],"rb")){// lgtm [cpp/path-injection]
 #else
-	if (!(f=fopen(argv[1],"rb"))){
+	if (!(f=fopen(argv[1],"rb"))){// lgtm [cpp/path-injection]
 #endif
 		printf("Unable to Open File '%s'!\n",argv[1]);
 		return 1;
