@@ -18,7 +18,6 @@ int main(int argc,const char** argv){
 		return 1;
 	}
 	set_feature(FEATURE_EMPTY_EXPRESSION,1);
-	set_feature(FEATURE_OPERATION_LIST,1);
 	object_t* o=read_object(f);
 	if (IS_ERROR(o)){
 		print_error(GET_ERROR(o));

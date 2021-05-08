@@ -35,16 +35,12 @@ uint8_t _fl=0;
 #ifdef _MSC_VER
 #include <intrin.h>
 #pragma intrinsic(__movsw)
+#define __unreachable() __assume(0)
 #else
 static inline void __movsw(unsigned short* d,unsigned short* s,size_t n){
 	__asm__("rep movsw":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
-#define __assume(x) \
-	do{ \
-		if (!(x)){ \
-			__builtin_unreachable(); \
-		} \
-	} while (0)
+#define __unreachable(x) __builtin_unreachable()
 #endif
 
 
@@ -144,14 +140,14 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 		case OBJECT_TYPE_PTR:
 			fprintf(f,"(ptr");
 			break;
-		case OBJECT_TYPE_OPERATION_LIST:
-			fprintf(f,"(<op list>");
-			break;
 		case OBJECT_TYPE_AND:
 			fprintf(f,"(&&");
 			break;
 		case OBJECT_TYPE_OR:
 			fprintf(f,"(||");
+			break;
+		case OBJECT_TYPE_NOT:
+			fprintf(f,"(!");
 			break;
 		case OBJECT_TYPE_SET:
 			fprintf(f,"(=");
@@ -161,6 +157,9 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			break;
 		case OBJECT_TYPE_IF:
 			fprintf(f,"(if");
+			break;
+		case OBJECT_TYPE_FOR:
+			fprintf(f,"(for");
 			break;
 		case OBJECT_TYPE_ADD:
 			fprintf(f,"(+");
@@ -190,7 +189,7 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			fprintf(f,"(^");
 			break;
 		case OBJECT_TYPE_BIT_NOT:
-			fprintf(f,"(!");
+			fprintf(f,"(~");
 			break;
 		case OBJECT_TYPE_DIV_MOD:
 			fprintf(f,"(/%%");
@@ -229,7 +228,7 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			fprintf(f,"(>=");
 			break;
 		default:
-			__assume(0);
+			__unreachable();
 	}
 	off+=sizeof(arg_count_t);
 	uint8_t l=GET_OBJECT_ARGUMENT_COUNT(o);
@@ -314,7 +313,29 @@ object_t* _read_object_internal(FILE* f,int c){
 	object_t* o=NULL;
 	while (c&&c!=EOF){
 _no_read_next:
-		if ((c>8&&c<14)||c==' '||c==';'){
+		if ((c>8&&c<14)||c==' '){
+			c=fgetc(f);
+			continue;
+		}
+		if (c==';'){
+			while (c!='\n'&&c!='\r'&&c!=EOF){
+				c=fgetc(f);
+			}
+			continue;
+		}
+		if (c=='|'){
+			c=fgetc(f);
+			if (c!='#'){
+				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNEXPECTED_CHARACTER,'|'));
+			}
+			int lc=c;
+			while (c!='|'||lc!='#'){
+				lc=c;
+				c=fgetc(f);
+				if (c==EOF){
+					return RETURN_ERROR(ERROR_UNMATCHED_SQUARE_OPEN_BRACKETS);
+				}
+			}
 			c=fgetc(f);
 			continue;
 		}
@@ -374,12 +395,7 @@ _no_read_next:
 			}
 			else{
 				if (o->t==OBJECT_TYPE_UNKNOWN){
-					if (_fl&FEATURE_OPERATION_LIST){
-						o->t=OBJECT_TYPE_OPERATION_LIST;
-					}
-					else{
-						return RETURN_ERROR(ERROR_NO_SYMBOL);
-					}
+					return RETURN_ERROR(ERROR_NO_SYMBOL);
 				}
 				object_t* e=_read_object_internal(f,c);
 				if (IS_ERROR(e)){
@@ -405,7 +421,10 @@ _read_symbol:
 				goto _read_symbol;
 			}
 			if (sz==1){
-				if (FAST_COMPARE(str,=)){
+				if (FAST_COMPARE(str,!)){
+					o->t=OBJECT_TYPE_NOT;
+				}
+				else if (FAST_COMPARE(str,=)){
 					o->t=OBJECT_TYPE_SET;
 				}
 				else if (FAST_COMPARE(str,+)){
@@ -432,7 +451,7 @@ _read_symbol:
 				else if (FAST_COMPARE(str,^)){
 					o->t=OBJECT_TYPE_BIT_XOR;
 				}
-				else if (FAST_COMPARE(str,!)){
+				else if (FAST_COMPARE(str,~)){
 					o->t=OBJECT_TYPE_BIT_NOT;
 				}
 				else if (FAST_COMPARE(str,<)){
@@ -489,6 +508,9 @@ _read_symbol:
 			else if (sz==3){
 				if (FAST_COMPARE(str,p,t,r)){
 					o->t=OBJECT_TYPE_PTR;
+				}
+				else if (FAST_COMPARE(str,f,o,r)){
+					o->t=OBJECT_TYPE_FOR;
 				}
 				else if (FAST_COMPARE(str,*,/,/)){
 					o->t=OBJECT_TYPE_FLOOR_ROOT;
@@ -759,6 +781,9 @@ void print_error(error_t e){
 			return;
 		case ERROR_UNMATCHED_CLOSE_PARENTHESES:
 			printf("Unmatched Right Parentheses\n");
+			return;
+		case ERROR_UNMATCHED_SQUARE_OPEN_BRACKETS:
+			printf("Unclosed Comment\n");
 			return;
 		case ERROR_EMPTY_PARENTHESES:
 			printf("Empty Expression\n");
