@@ -4,6 +4,7 @@
 #endif
 #include <language.h>
 #include <inttypes.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -37,24 +38,23 @@ uint32_t _bf_ptr=0;
 
 
 
+#define HIGHLIGHT_COLOR "\x1b[31m"
+#define HIGHLIGHT_COLOR_RESET "\x1b[0m"
 #ifdef _MSC_VER
 #pragma intrinsic(__movsw)
+#define REPEATE_WORD_COPY(d,s,sz) __movsw(d,s,sz)
 #define __unreachable() __assume(0)
 #define ENABLE_COLOR() \
 	do{ \
 		SetConsoleOutputCP(CP_UTF8); \
 		SetConsoleMode(GetStdHandle(-11),7); \
 	} while (0)
-#define HIGHLIGHT_COLOR "\x1b[31m"
-#define HIGHLIGHT_COLOR_RESET "\x1b[0m"
 #else
-static inline void __movsw(unsigned short* d,unsigned short* s,size_t n){
+static inline void REPEATE_WORD_COPY(unsigned short* d,unsigned short* s,size_t n){
 	__asm__("rep movsw":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
 #define __unreachable() __builtin_unreachable()
 #define ENABLE_COLOR()
-#define HIGHLIGHT_COLOR ""
-#define HIGHLIGHT_COLOR_RESET ""
 #endif
 
 
@@ -74,16 +74,15 @@ int _input_data_source_file_read(input_data_source_t* in){
 
 
 void _input_data_source_file_restart_line(input_data_source_t* in,uint32_t lp){
-	fpos_t p=lp;
 	FILE* f=(FILE*)(in->ctx);
-	fsetpos(f,&p);
+	fseek(f,lp,SEEK_SET);
 	int c=fgetc(f);
-	while (p&&c!='\n'&&c!='\r'){
-		p--;
-		fsetpos(f,&p);
+	while (lp&&c!='\n'&&c!='\r'){
+		lp--;
+		fseek(f,lp,SEEK_SET);
 		c=fgetc(f);
 	}
-	in->_off=(uint32_t)p;
+	in->_off=lp;
 }
 
 
@@ -401,7 +400,7 @@ uint64_t _read_single_char(input_data_source_t* in,char t,uint32_t st){
 
 
 object_t* _read_object_internal(input_data_source_t* in,int c){
-	uint32_t st_off;
+	uint32_t st_off=UINT32_MAX;
 	int ec=-1;
 	object_t* o=NULL;
 	while (c!=EOF){
@@ -453,7 +452,7 @@ _no_read_next:
 					uint32_t sz=_bf_ptr-GET_OBJECT_STACK_OFFSET(arg0);
 					uint16_t* d=(uint16_t*)(_bf+GET_OBJECT_STACK_OFFSET(o));
 					uint16_t* s=(uint16_t*)(_bf+GET_OBJECT_STACK_OFFSET(arg0));
-					__movsw(d,s,sz>>1);
+					REPEATE_WORD_COPY(d,s,sz>>1);
 					if (sz&1){
 						*(d+sz-1)=*(s+sz-1);
 					}
@@ -927,7 +926,7 @@ void print_error(input_data_source_t* in,error_t e){
 	uint32_t off=GET_INPUT_DATA_STREAM_OFFSET(in);
 	uint32_t s_off=off;
 	int c=READ_FROM_INPUT_DATA_STREAM(in);
-	char t;
+	char t=0;
 	char* sym=NULL;
 	char* sp=NULL;
 	if (GET_ERROR_TYPE(e)==ERROR_UNKNOWN_SYMBOL){
@@ -1063,3 +1062,11 @@ object_t* read_object(input_data_source_t* in){
 	}
 	return _read_object_internal(in,c);
 }
+
+
+
+#ifdef _MSC_VER
+BOOL WINAPI DllMain(HINSTANCE h,DWORD r,LPVOID rs){
+	return TRUE;
+}
+#endif
