@@ -5,6 +5,15 @@
 
 
 
+#ifdef _MSC_VER
+#ifdef DLL1_EXPORTS
+#define IMPORT_EXPORT __declspec(dllexport)
+#else
+#define IMPORT_EXPORT __declspec(dllimport)
+#endif
+#else
+#define IMPORT_EXPORT
+#endif
 #ifndef NULL
 #define NULL ((void*)0)
 #endif
@@ -198,19 +207,19 @@ typedef struct __OBJECT{
 
 
 
-void create_input_data_source(FILE* f,input_data_source_t* o);
+IMPORT_EXPORT void create_input_data_source(FILE* f,input_data_source_t* o);
 
 
 
-void print_error(input_data_source_t* in,error_t e);
+IMPORT_EXPORT void print_error(input_data_source_t* in,error_t e);
 
 
 
-void print_object(object_t* o,FILE* f);
+IMPORT_EXPORT void print_object(object_t* o,FILE* f);
 
 
 
-object_t* read_object(input_data_source_t* in);
+IMPORT_EXPORT object_t* read_object(input_data_source_t* in);
 
 
 
