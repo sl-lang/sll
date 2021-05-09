@@ -59,6 +59,11 @@ contexts:
         - include: numbers
         - include: strings
         - include: constants
+    - match: '(\()\s*(\))'
+      scope: meta.group.lll meta.parens.lll
+      captures:
+        1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
+        2: punctuation.section.group.end.lll punctuation.section.parens.end.lll
     - match: '\('
       push:
         - meta_scope: invalid.illegal.unknown-operator.lll

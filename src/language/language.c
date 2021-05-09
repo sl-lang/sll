@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#include <windows.h>
+#include <intrin.h>
+#endif
 #include <language.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -30,20 +34,57 @@
 
 uint8_t _bf[INTERNAL_STACK_SIZE];
 uint32_t _bf_ptr=0;
-uint8_t _fl=0;
 
 
 
 #ifdef _MSC_VER
-#include <intrin.h>
 #pragma intrinsic(__movsw)
 #define __unreachable() __assume(0)
+#define ENABLE_COLOR() \
+	do{ \
+		SetConsoleOutputCP(CP_UTF8); \
+		SetConsoleMode(GetStdHandle(-11),7); \
+	} while (0)
+#define HIGHLIGHT_COLOR "\x1b[31m"
+#define HIGHLIGHT_COLOR_RESET "\x1b[0m"
 #else
 static inline void __movsw(unsigned short* d,unsigned short* s,size_t n){
 	__asm__("rep movsw":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
-#define __unreachable(x) __builtin_unreachable()
+#define __unreachable() __builtin_unreachable()
+#define ENABLE_COLOR()
+#define HIGHLIGHT_COLOR ""
+#define HIGHLIGHT_COLOR_RESET ""
 #endif
+
+
+
+int _input_data_source_file_read(input_data_source_t* in){
+	int o=fgetc((FILE*)(in->ctx));
+	if (o==EOF){
+		return END_OF_DATA;
+	}
+	in->_off++;
+	if (o=='\n'){
+		in->_lc++;
+	}
+	return o;
+}
+
+
+
+void _input_data_source_file_restart_line(input_data_source_t* in,uint32_t lp){
+	fpos_t p=lp;
+	FILE* f=(FILE*)(in->ctx);
+	fsetpos(f,&p);
+	int c=fgetc(f);
+	while (p&&c!='\n'&&c!='\r'){
+		p--;
+		fsetpos(f,&p);
+		c=fgetc(f);
+	}
+	in->_off=(uint32_t)p;
+}
 
 
 
@@ -280,40 +321,52 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 
 
 
-uint64_t _read_single_char(FILE* f,char t){
-	int c=fgetc(f);
-	if (!c||c==EOF){
-		return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNMATCHED_QUOTES,t));
+uint64_t _read_single_char(input_data_source_t* in,char t,uint32_t st){
+	int c=READ_FROM_INPUT_DATA_STREAM(in);
+	if (c==END_OF_DATA){
+		return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_QUOTES,st,GET_INPUT_DATA_STREAM_OFFSET(in)-st-2));
 	}
 	if (c==t){
 		return READ_SINGLE_CHAR_END;
 	}
+	if (c=='\r'||c=='\n'){
+		return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_QUOTES,st,GET_INPUT_DATA_STREAM_OFFSET(in)-st-2));
+	}
 	if (c=='\\'){
-		c=fgetc(f);
-		if (!c||c==EOF){
-			return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_UNTERMINATED_ESCAPE_SEQUENCE);
+		c=READ_FROM_INPUT_DATA_STREAM(in);
+		if (c=='\r'||c=='\n'){
+			return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_QUOTES,st,GET_INPUT_DATA_STREAM_OFFSET(in)-st-2));
+		}
+		if (c==END_OF_DATA){
+			return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNTERMINATED_ESCAPE_SEQUENCE,st,GET_INPUT_DATA_STREAM_OFFSET(in)-st-2));
 		}
 		if (c=='\''||c=='"'||c=='\\');
 		else if (c=='x'){
-			c=fgetc(f);
-			if (!c||c==EOF){
-				return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE);
+			c=READ_FROM_INPUT_DATA_STREAM(in);
+			if (c==END_OF_DATA){
+				return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_QUOTES,st,GET_INPUT_DATA_STREAM_OFFSET(in)-st-2));
 			}
 			if (c>96){
 				c-=32;
 			}
 			if (c<48||(c>57&&c<65)||c>70){
+				if (c=='\r'||c=='\n'){
+					return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_QUOTES,st,GET_INPUT_DATA_STREAM_OFFSET(in)-st-2));
+				}
 				return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_HEXADECIMAL_CHARCTER,c));
 			}
 			uint8_t v=(c>64?c-55:c-48)<<4;
-			c=fgetc(f);
-			if (!c||c==EOF){
-				return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE);
+			c=READ_FROM_INPUT_DATA_STREAM(in);
+			if (c==END_OF_DATA){
+				return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_QUOTES,st,GET_INPUT_DATA_STREAM_OFFSET(in)-st-2));
 			}
 			if (c>96){
 				c-=32;
 			}
 			if (c<48||(c>57&&c<65)||c>70){
+				if (c=='\r'||c=='\n'){
+					return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_QUOTES,st,GET_INPUT_DATA_STREAM_OFFSET(in)-st-2));
+				}
 				return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_HEXADECIMAL_CHARCTER,c));
 			}
 			c=(c>64?c-55:c-48)|v;
@@ -340,42 +393,43 @@ uint64_t _read_single_char(FILE* f,char t){
 	*((char*)(_bf+_bf_ptr))=c;
 	_bf_ptr++;
 	if (_bf_ptr>=INTERNAL_STACK_SIZE){
-		return READ_SINGLE_CHAR_RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+		return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(in),0));
 	}
 	return READ_SINGLE_CHAR_OK;
 }
 
 
 
-object_t* _read_object_internal(FILE* f,int c){
+object_t* _read_object_internal(input_data_source_t* in,int c){
+	uint32_t st_off;
 	int ec=-1;
 	object_t* o=NULL;
-	while (c&&c!=EOF){
+	while (c!=EOF){
 _no_read_next:
 		if ((c>8&&c<14)||c==' '){
-			c=fgetc(f);
+			c=READ_FROM_INPUT_DATA_STREAM(in);
 			continue;
 		}
 		if (c==';'){
 			while (c!='\n'&&c!='\r'&&c!=EOF){
-				c=fgetc(f);
+				c=READ_FROM_INPUT_DATA_STREAM(in);
 			}
 			continue;
 		}
 		if (c=='|'){
-			c=fgetc(f);
+			c=READ_FROM_INPUT_DATA_STREAM(in);
 			if (c!='#'){
 				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNEXPECTED_CHARACTER,'|'));
 			}
 			int lc=c;
 			while (c!='|'||lc!='#'){
 				lc=c;
-				c=fgetc(f);
-				if (c==EOF){
-					return RETURN_ERROR(ERROR_UNMATCHED_SQUARE_OPEN_BRACKETS);
+				c=READ_FROM_INPUT_DATA_STREAM(in);
+				if (c==END_OF_DATA){
+					return RETURN_ERROR(ERROR_UNMATCHED_OPEN_QUOTE);
 				}
 			}
-			c=fgetc(f);
+			c=READ_FROM_INPUT_DATA_STREAM(in);
 			continue;
 		}
 		if (c==')'){
@@ -383,15 +437,10 @@ _no_read_next:
 				return RETURN_ERROR(ERROR_UNMATCHED_CLOSE_PARENTHESES);
 			}
 			if (o->t==OBJECT_TYPE_UNKNOWN){
-				if (_fl&FEATURE_EMPTY_EXPRESSION){
-					o->t=OBJECT_TYPE_NIL;
-					_bf_ptr-=sizeof(arg_count_t);
-				}
-				else{
-					return RETURN_ERROR(ERROR_EMPTY_PARENTHESES);
-				}
+				o->t=OBJECT_TYPE_NIL;
+				_bf_ptr-=sizeof(arg_count_t);
 			}
-			if (IS_OBJECT_TYPE_MATH_CHAIN_OPERATION(o)){
+			else if (IS_OBJECT_TYPE_MATH_CHAIN_OPERATION(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (!ac){
 					o->t=OBJECT_TYPE_INT;
@@ -414,65 +463,65 @@ _no_read_next:
 			else if (IS_OBJECT_TYPE_MATH_NO_CHAIN_OPERATION(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac==1){
-					return RETURN_ERROR(CREATE_ERROR_OBJECT(ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS,o));
+					return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS,st_off,GET_INPUT_DATA_STREAM_OFFSET(in)-st_off-1));
 				}
 				if (ac>(GET_OBJECT_TYPE(o)==OBJECT_TYPE_POW?3:2)){
-					return RETURN_ERROR(CREATE_ERROR_OBJECT(ERROR_MATH_OP_TOO_MANY_ARGUMENTS,o));
+					return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_MATH_OP_TOO_MANY_ARGUMENTS,st_off,GET_INPUT_DATA_STREAM_OFFSET(in)-st_off-1));
 				}
 			}
 			return o;
 		}
 		if (c=='}'){
 			if (!o||ec!='}'){
-				return RETURN_ERROR(ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS);
+				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS,in));
 			}
-			if (o->t==OBJECT_TYPE_UNKNOWN){
-				if (_fl&FEATURE_EMPTY_EXPRESSION){
-					o->t=OBJECT_TYPE_NIL;
-					_bf_ptr-=sizeof(arg_count_t);
-				}
-				else{
-					return RETURN_ERROR(ERROR_EMPTY_BRACKETS);
-				}
+			if (!GET_OBJECT_ARGUMENT_COUNT(o)){
+				o->t=OBJECT_TYPE_NIL;
+				_bf_ptr-=sizeof(arg_count_t);
 			}
 			return o;
 		}
 		if (c=='('||c=='{'){
 			if (!o){
+				st_off=GET_INPUT_DATA_STREAM_OFFSET(in)-2;
 				o=(object_t*)(_bf+_bf_ptr);
 				_bf_ptr+=sizeof(object_t)+sizeof(arg_count_t);
 				if (_bf_ptr>=INTERNAL_STACK_SIZE){
-					return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+					return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(in),0));
 				}
 				o->t=(c=='('?OBJECT_TYPE_UNKNOWN:OBJECT_TYPE_OPERATION_LIST);
 				ec=(c=='('?')':'}');
 				RESET_OBJECT_ARGUMENT_COUNT(o);
 			}
 			else{
+				uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(in)-2;
 				if (o->t==OBJECT_TYPE_UNKNOWN){
 					return RETURN_ERROR(ERROR_NO_SYMBOL);
 				}
-				object_t* e=_read_object_internal(f,c);
+				object_t* e=_read_object_internal(in,c);
 				if (IS_ERROR(e)){
 					return e;
 				}
-				INCREASE_OBJECT_ARGUMENT_COUNT(o);
+				INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(in)-1);
 			}
 		}
 		else if (o&&o->t==OBJECT_TYPE_UNKNOWN){
 			char* str=(char*)(_bf+_bf_ptr);
-			uint32_t sz=0;
+			uint16_t sz=0;
 _read_symbol:
+			if (sz==UINT16_MAX){
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_SYMBOL_TOO_LONG,GET_INPUT_DATA_STREAM_OFFSET(in)-sz,0));
+			}
 			*(str+sz)=c;
 			sz++;
 			if (sz+_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,in));
 			}
-			c=fgetc(f);
-			if (!c||c==EOF){
+			c=READ_FROM_INPUT_DATA_STREAM(in);
+			if (c==END_OF_DATA){
 				break;
 			}
-			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
+			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
 				goto _read_symbol;
 			}
 			if (sz==1){
@@ -624,44 +673,45 @@ _read_symbol:
 			}
 			else{
 _unknown_symbol:
-				*(str+sz)=0;
-				return RETURN_ERROR(CREATE_ERROR_STRING(ERROR_UNKNOWN_SYMBOL,str));
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNKNOWN_SYMBOL,GET_INPUT_DATA_STREAM_OFFSET(in)-sz-2,sz));
 			}
-			goto _no_read_next;
+			continue;
 		}
 		else if (c=='\''){
+			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(in)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(in),1));
 			}
 			arg->t=OBJECT_TYPE_CHAR;
-			uint64_t e=_read_single_char(f,'\'');
+			uint64_t e=_read_single_char(in,'\'',arg_s);
 			if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_ERROR){
 				return RETURN_ERROR(READ_SINGLE_CHAR_GET_ERROR(e));
 			}
 			if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_END){
 				return RETURN_ERROR(ERROR_EMPTY_CHAR_STRING);
 			}
-			c=fgetc(f);
+			c=READ_FROM_INPUT_DATA_STREAM(in);
 			if (c!='\''){
 				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNTERMINATED_CHAR_STRING,c));
 			}
 			if (!o){
 				return arg;
 			}
-			INCREASE_OBJECT_ARGUMENT_COUNT(o);
+			INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(in)-2);
 		}
 		else if (c=='"'){
+			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(in)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(string_length_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(in),1));
 			}
 			arg->t=OBJECT_TYPE_STRING;
 			uint32_t sz=0;
 			while (1){
-				uint64_t e=_read_single_char(f,'"');
+				uint64_t e=_read_single_char(in,'"',arg_s);
 				if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_ERROR){
 					return RETURN_ERROR(READ_SINGLE_CHAR_GET_ERROR(e));
 				}
@@ -674,32 +724,33 @@ _unknown_symbol:
 			if (!o){
 				return arg;
 			}
-			INCREASE_OBJECT_ARGUMENT_COUNT(o);
+			INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(in)-2);
 		}
 		else if ((c>47&&c<58)||c=='-'){
+			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(in)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(int64_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(in),1));
 			}
 			int8_t m=1;
 			if (c=='-'){
 				m=-1;
-				c=fgetc(f);
-				if (!c||c==EOF){
+				c=READ_FROM_INPUT_DATA_STREAM(in);
+				if (c==END_OF_DATA){
 					break;
 				}
 			}
 			arg->t=OBJECT_TYPE_INT;
 			int64_t v=0;
 			if (c=='0'){
-				c=fgetc(f);
-				if (!c||c==EOF){
+				c=READ_FROM_INPUT_DATA_STREAM(in);
+				if (c==END_OF_DATA){
 					break;
 				}
 				if (c=='x'||c=='X'){
-					c=fgetc(f);
-					if (!c||c==EOF){
+					c=READ_FROM_INPUT_DATA_STREAM(in);
+					if (c==END_OF_DATA){
 						break;
 					}
 _hexadecimal:
@@ -710,17 +761,17 @@ _hexadecimal:
 						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_HEXADECIMAL_CHARCTER,c));
 					}
 					v=(v<<4)+(c>64?c-55:c-48);
-					c=fgetc(f);
-					if (!c||c==EOF){
+					c=READ_FROM_INPUT_DATA_STREAM(in);
+					if (c==END_OF_DATA){
 						break;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
 						goto _hexadecimal;
 					}
 				}
 				else if (c=='o'||c=='O'){
-					c=fgetc(f);
-					if (!c||c==EOF){
+					c=READ_FROM_INPUT_DATA_STREAM(in);
+					if (c==END_OF_DATA){
 						break;
 					}
 _octal:
@@ -728,17 +779,17 @@ _octal:
 						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_OCTAL_CHARCTER,c));
 					}
 					v=(v<<3)+(c-48);
-					c=fgetc(f);
-					if (!c||c==EOF){
+					c=READ_FROM_INPUT_DATA_STREAM(in);
+					if (c==END_OF_DATA){
 						break;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
 						goto _octal;
 					}
 				}
 				else if (c=='b'||c=='B'){
-					c=fgetc(f);
-					if (!c||c==EOF){
+					c=READ_FROM_INPUT_DATA_STREAM(in);
+					if (c==END_OF_DATA){
 						break;
 					}
 _binary:
@@ -746,11 +797,11 @@ _binary:
 						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_BINARY_CHARCTER,c));
 					}
 					v=(v<<1)+(c-48);
-					c=fgetc(f);
-					if (!c||c==EOF){
+					c=READ_FROM_INPUT_DATA_STREAM(in);
+					if (c==END_OF_DATA){
 						break;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
 						goto _binary;
 					}
 				}
@@ -762,18 +813,18 @@ _binary:
 				else if (c>47&&c<58){
 					goto _decimal;
 				}
-				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
+				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
 					return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
 				}
 			}
 			else{
 _decimal:
 				v=v*10+(c-48);
-				c=fgetc(f);
-				if (!c||c==EOF){
+				c=READ_FROM_INPUT_DATA_STREAM(in);
+				if (c==END_OF_DATA){
 					break;
 				}
-				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
+				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
 					if (c<48||c>57){
 						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
 					}
@@ -791,14 +842,15 @@ _decimal:
 			if (!o){
 				return arg;
 			}
-			INCREASE_OBJECT_ARGUMENT_COUNT(o);
+			INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(in)-2);
 			goto _no_read_next;
 		}
-		else if (c=='$'||(c>64&&c<91)||c=='_'||(c>97&&c<112)){
+		else if (c=='$'||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
+			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(in)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(string_length_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,in));
 			}
 			arg->t=OBJECT_TYPE_IDENTIFIER;
 			char* str=(char*)(_bf+_bf_ptr);
@@ -807,17 +859,17 @@ _read_identifier:
 			*(str+sz)=c;
 			sz++;
 			if (sz+_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
+				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,in));
 			}
-			c=fgetc(f);
-			if (!c||c==EOF){
+			c=READ_FROM_INPUT_DATA_STREAM(in);
+			if (c==END_OF_DATA){
 				break;
 			}
-			if (c=='$'||(c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>97&&c<112)){
+			if (c=='$'||(c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
 				goto _read_identifier;
 			}
-			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
-				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_IDENTIFIER_CHARACTER,c));
+			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNKNOWN_IDENTIFIER_CHARACTER,GET_INPUT_DATA_STREAM_OFFSET(in)-2,1));
 			}
 			if (sz==3&&FAST_COMPARE(str,n,i,l)){
 				_bf_ptr-=sizeof(string_length_t);
@@ -838,20 +890,76 @@ _read_identifier:
 			if (!o){
 				return arg;
 			}
-			INCREASE_OBJECT_ARGUMENT_COUNT(o);
+			INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(in)-2);
 			goto _no_read_next;
 		}
 		else{
-			return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNEXPECTED_CHARACTER,c));
+			return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNEXPECTED_CHARACTER,GET_INPUT_DATA_STREAM_OFFSET(in)-2,1));
 		}
-		c=fgetc(f);
+		c=READ_FROM_INPUT_DATA_STREAM(in);
 	}
-	return RETURN_ERROR(ERROR_UNMATCHED_OPEN_PARENTHESES);
+	if (!o){
+		o=(object_t*)(_bf+_bf_ptr);
+		_bf_ptr+=sizeof(object_t);
+		o->t=OBJECT_TYPE_NIL;
+		return o;
+	}
+	return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_OPEN_PARENTHESES,st_off,GET_INPUT_DATA_STREAM_OFFSET(in)-st_off-1));
 }
 
 
 
-void print_error(error_t e){
+void create_input_data_source(FILE* f,input_data_source_t* o){
+	o->ctx=f;
+	o->rf=_input_data_source_file_read;
+	o->rlf=_input_data_source_file_restart_line;
+	o->_lc=0;
+	o->_off=0;
+}
+
+
+
+void print_error(input_data_source_t* in,error_t e){
+	ENABLE_COLOR();
+	uint32_t os=GET_ERROR_FILE_OFFSET(e);
+	uint32_t oe=os+GET_ERROR_SIZE(e);
+	INPUT_DATA_STREAM_RESTART_LINE(in,os);
+	uint32_t off=GET_INPUT_DATA_STREAM_OFFSET(in);
+	uint32_t s_off=off;
+	int c=READ_FROM_INPUT_DATA_STREAM(in);
+	char t;
+	char* sym=NULL;
+	char* sp=NULL;
+	if (GET_ERROR_TYPE(e)==ERROR_UNKNOWN_SYMBOL){
+		sym=malloc((oe-os+1)*sizeof(char));
+		sp=sym;
+	}
+	while (c!='\n'&&c!='\r'&&c!=END_OF_DATA){
+		if (off==os){
+			t=c;
+			printf(HIGHLIGHT_COLOR);
+		}
+		if (off>=os&&off<oe&&sp){
+			*sp=c;
+			sp++;
+		}
+		putchar(c);
+		c=READ_FROM_INPUT_DATA_STREAM(in);
+		off++;
+		if (off==oe){
+			printf(HIGHLIGHT_COLOR_RESET);
+		}
+	}
+	putchar('\n');
+	uint32_t i=s_off;
+	for (;i<os;i++){
+		putchar(' ');
+	}
+	printf(HIGHLIGHT_COLOR);
+	for (;i<oe;i++){
+		putchar('~');
+	}
+	printf(HIGHLIGHT_COLOR_RESET"\n");
 	switch (GET_ERROR_TYPE(e)){
 		default:
 		case ERROR_UNKNOWN:
@@ -866,23 +974,23 @@ void print_error(error_t e){
 		case ERROR_UNMATCHED_CLOSE_PARENTHESES:
 			printf("Unmatched Right Parentheses\n");
 			return;
-		case ERROR_UNMATCHED_SQUARE_OPEN_BRACKETS:
-			printf("Unclosed Comment\n");
+		case ERROR_UNMATCHED_OPEN_QUOTE:
+			printf("Unmatched Block Quote\n");
 			return;
-		case ERROR_EMPTY_PARENTHESES:
-			printf("Empty Expression\n");
+		case ERROR_UNMATCHED_CURLY_OPEN_BRACKETS:
+			printf("Unmatched Left Curly Brackets\n");
+			return;
+		case ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS:
+			printf("Unmatched Right Curly Brackets\n");
 			return;
 		case ERROR_UNMATCHED_QUOTES:
-			{
-				char c=GET_ERROR_CHAR(e);
-				if (c=='\''){
-					printf("Unmatched Single Quotes\n");
-				}
-				else{
-					printf("Unmatched Double Quotes\n");
-				}
-				return;
+			if (t=='\''){
+				printf("Unmatched Single Quotes\n");
 			}
+			else{
+				printf("Unmatched Double Quotes\n");
+			}
+			return;
 		case ERROR_EMPTY_CHAR_STRING:
 			printf("Empty Character String\n");
 			return;
@@ -893,60 +1001,46 @@ void print_error(error_t e){
 			printf("Unterminated Escape Sequence\n");
 			return;
 		case ERROR_UNKNOWN_ESCAPE_CHARACTER:
-			printf("Unknown Escape Character: '%c'\n",GET_ERROR_CHAR(e));
+			printf("Unknown Escape Character: '%c'\n",t);
 			return;
 		case ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE:
 			printf("Unterminated Hexadecimal Escape Sequence\n");
 			return;
 		case ERROR_UNKNOWN_HEXADECIMAL_CHARCTER:
-			printf("Unknown Hexadecimal Character: '%c'\n",GET_ERROR_CHAR(e));
+			printf("Unknown Hexadecimal Character: '%c'\n",t);
 			return;
 		case ERROR_UNKNOWN_DECIMAL_CHARCTER:
-			printf("Unknown Decimal Character: '%c'\n",GET_ERROR_CHAR(e));
+			printf("Unknown Decimal Character: '%c'\n",t);
 			return;
 		case ERROR_UNKNOWN_OCTAL_CHARCTER:
-			printf("Unknown Octal Character: '%c'\n",GET_ERROR_CHAR(e));
+			printf("Unknown Octal Character: '%c'\n",t);
 			return;
 		case ERROR_UNKNOWN_BINARY_CHARCTER:
-			printf("Unknown Binary Character: '%c'\n",GET_ERROR_CHAR(e));
+			printf("Unknown Binary Character: '%c'\n",t);
 			return;
 		case ERROR_UNKNOWN_SYMBOL:
-			printf("Unknown Symbol: '%s'\n",GET_ERROR_STRING(e));
+			*sp=0;
+			printf("Unknown Symbol: '%s'\n",sym);
+			free(sym);
 			return;
 		case ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
-			printf("Unknown Identifier Character: '%c'\n",GET_ERROR_CHAR(e));
+			printf("Unknown Identifier Character: '%c'\n",t);
 			return;
 		case ERROR_UNEXPECTED_CHARACTER:
-			printf("Unexpected Character: '%c'\n",GET_ERROR_CHAR(e));
+			printf("Unexpected Character: '%c'\n",t);
 			return;
 		case ERROR_NO_SYMBOL:
 			printf("Expression Without a Symbol\n");
 			return;
+		case ERROR_TOO_MANY_ARGUMENTS:
+			printf("Too Many Arguments\n");
+			return;
 		case ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS:
-			printf("Math Expression Contains not Enough Symbols: ");
-			print_object(GET_ERROR_OBJECT(e),stdout);
+			printf("Math Expression Contains not Enough Symbols\n");
 			return;
 		case ERROR_MATH_OP_TOO_MANY_ARGUMENTS:
-			printf("Math Expression Contains too Many Symbols: ");
-			print_object(GET_ERROR_OBJECT(e),stdout);
+			printf("Math Expression Contains too Many Symbols\n");
 			return;
-	}
-}
-
-
-
-uint8_t get_feature(uint8_t f){
-	return _fl&f;
-}
-
-
-
-void set_feature(uint8_t f,uint8_t st){
-	if (st){
-		_fl|=f;
-	}
-	else{
-		_fl&=~f;
 	}
 }
 
@@ -959,11 +1053,13 @@ void print_object(object_t* o,FILE* f){
 
 
 
-object_t* read_object(FILE* f){
-	int c=fgetc(f);
-	if (!c||c==EOF){
-		printf("Error! No Bracket ')'\n");
-		return NULL;
+object_t* read_object(input_data_source_t* in){
+	int c=READ_FROM_INPUT_DATA_STREAM(in);
+	if (c==END_OF_DATA){
+		object_t* o=(object_t*)(_bf+_bf_ptr);
+		_bf_ptr+=sizeof(object_t);
+		o->t=OBJECT_TYPE_NIL;
+		return o;
 	}
-	return _read_object_internal(f,c);
+	return _read_object_internal(in,c);
 }

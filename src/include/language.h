@@ -5,40 +5,52 @@
 
 
 
+#ifndef NULL
+#define NULL ((void*)0)
+#endif
+#ifdef IS_ERROR
+#undef IS_ERROR
+#endif
+
 #define ERROR_UNKNOWN 0
 #define ERROR_INTERNAL_STACK_OVERFLOW 1
 #define ERROR_UNMATCHED_OPEN_PARENTHESES 2
 #define ERROR_UNMATCHED_CLOSE_PARENTHESES 3
-#define ERROR_UNMATCHED_SQUARE_OPEN_BRACKETS 4
-#define ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS 5
-#define ERROR_EMPTY_PARENTHESES 6
-#define ERROR_EMPTY_BRACKETS 7
-#define ERROR_UNMATCHED_QUOTES 8
-#define ERROR_EMPTY_CHAR_STRING 9
-#define ERROR_UNTERMINATED_CHAR_STRING 10
-#define ERROR_UNTERMINATED_ESCAPE_SEQUENCE 11
-#define ERROR_UNKNOWN_ESCAPE_CHARACTER 12
-#define ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE 13
-#define ERROR_UNKNOWN_HEXADECIMAL_CHARCTER 14
-#define ERROR_UNKNOWN_DECIMAL_CHARCTER 15
-#define ERROR_UNKNOWN_OCTAL_CHARCTER 16
-#define ERROR_UNKNOWN_BINARY_CHARCTER 17
-#define ERROR_UNKNOWN_SYMBOL 18
-#define ERROR_UNKNOWN_IDENTIFIER_CHARACTER 19
-#define ERROR_UNEXPECTED_CHARACTER 20
+#define ERROR_UNMATCHED_OPEN_QUOTE 4
+#define ERROR_UNMATCHED_CURLY_OPEN_BRACKETS 5
+#define ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS 6
+#define ERROR_UNMATCHED_QUOTES 7
+#define ERROR_EMPTY_CHAR_STRING 8
+#define ERROR_UNTERMINATED_CHAR_STRING 9
+#define ERROR_UNTERMINATED_ESCAPE_SEQUENCE 10
+#define ERROR_UNKNOWN_ESCAPE_CHARACTER 11
+#define ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE 12
+#define ERROR_UNKNOWN_HEXADECIMAL_CHARCTER 13
+#define ERROR_UNKNOWN_DECIMAL_CHARCTER 14
+#define ERROR_UNKNOWN_OCTAL_CHARCTER 15
+#define ERROR_UNKNOWN_BINARY_CHARCTER 16
+#define ERROR_UNKNOWN_SYMBOL 17
+#define ERROR_UNKNOWN_IDENTIFIER_CHARACTER 18
+#define ERROR_UNEXPECTED_CHARACTER 19
+#define ERROR_SYMBOL_TOO_LONG 20
 #define ERROR_NO_SYMBOL 21
-#define ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS 22
-#define ERROR_MATH_OP_TOO_MANY_ARGUMENTS 23
+#define ERROR_TOO_MANY_ARGUMENTS 22
+#define ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS 23
+#define ERROR_MATH_OP_TOO_MANY_ARGUMENTS 24
 #define IS_ERROR(o) (((uint64_t)(void*)(o))>>63)
 #define GET_ERROR(o) ((error_t)(((uint64_t)(void*)(o))&0x7fffffffffffffffull))
 #define GET_ERROR_TYPE(e) ((e)&0x1f)
+#define GET_ERROR_FILE_OFFSET(e) (((e)>>5)&0xffffffff)
+#define GET_ERROR_SIZE(e) ((e)>>37)
 #define GET_ERROR_CHAR(e) ((char)((e)>>5))
 #define GET_ERROR_STRING(e) ((char*)(_bf+((uint32_t)((e)>>5))))
 #define GET_ERROR_OBJECT(e) ((object_t*)(_bf+((uint32_t)((e)>>5))))
 #define RETURN_ERROR(e) ((object_t*)((e)|0x8000000000000000ull))
+#define CREATE_ERROR_FILE_OFFSET(e,off,sz) ((((uint64_t)(sz))<<37)|(((uint64_t)(off))<<5)|(e))
 #define CREATE_ERROR_CHAR(e,c) ((((uint16_t)(c))<<5)|(e))
 #define CREATE_ERROR_STRING(e,s) (((((uint64_t)(void*)(s))-((uint64_t)(void*)_bf))<<5)|(e))
 #define CREATE_ERROR_OBJECT(e,o) (((((uint64_t)(void*)(o))-((uint64_t)(void*)_bf))<<5)|(e))
+#define CREATE_ERROR_SINGLE_CHAR(e,in) CREATE_ERROR_FILE_OFFSET(e,GET_INPUT_DATA_STREAM_OFFSET(in)-2,1)
 
 #define OBJECT_TYPE_UNKNOWN 0
 #define OBJECT_TYPE_CHAR 1
@@ -116,18 +128,37 @@
 #define GET_OBJECT_STRING_LENGTH(o) (*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AS_STRING(o) ((char*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(string_length_t)))
 #define RESET_OBJECT_ARGUMENT_COUNT(o) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=0)
-#define INCREASE_OBJECT_ARGUMENT_COUNT(o) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))++)
+#define INCREASE_OBJECT_ARGUMENT_COUNT(o,sp,ep) \
+	do{ \
+		arg_count_t* __ac=((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))); \
+		if (*__ac==UINT8_MAX){ \
+			return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_TOO_MANY_ARGUMENTS,sp,ep-sp)); \
+		} \
+		(*__ac)++; \
+	} while (0)
 #define SET_OBJECT_AS_INT32(o,i) ((*((int32_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int32_t)(i))
 #define SET_OBJECT_AS_INT64(o,i) ((*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int64_t)(i))
 #define SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
 #define SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
 #define SET_OBJECT_STRING_LENGTH(o,sz) ((*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))=(sz))
 
-#define FEATURE_EMPTY_EXPRESSION 1
-
+#ifndef INTERNAL_STACK_SIZE
 #define INTERNAL_STACK_SIZE 65536
+#endif
+#if INTERNAL_STACK_SIZE>=67108864
+#error Internal Stack Too Big!
+#endif
 #define GET_OBJECT_STACK_OFFSET(o) ((uint32_t)(((uint64_t)(o))-((uint64_t)_bf)))
 #define GET_OBJECT_FROM_STACK_OFFSET(i) ((object_t*)(_bf+(i)))
+
+#define END_OF_DATA -1
+#define READ_FROM_INPUT_DATA_STREAM(in) ((in)->rf((in)))
+#define GET_INPUT_DATA_STREAM_OFFSET(in) ((in)->_off)
+#define INPUT_DATA_STREAM_RESTART_LINE(in,lp) ((in)->rlf((in),(lp)))
+
+
+
+struct __INPUT_DATA_SOURCE;
 
 
 
@@ -143,21 +174,35 @@ typedef uint64_t error_t;
 
 
 
+typedef int (*input_data_source_read_t)(struct __INPUT_DATA_SOURCE* in);
+
+
+
+typedef void (*input_data_source_restart_line_t)(struct __INPUT_DATA_SOURCE* in,uint32_t lp);
+
+
+
+typedef struct __INPUT_DATA_SOURCE{
+	void* ctx;
+	input_data_source_read_t rf;
+	input_data_source_restart_line_t rlf;
+	uint32_t _lc;
+	uint32_t _off;
+} input_data_source_t;
+
+
+
 typedef struct __OBJECT{
 	uint8_t t;
 } object_t;
 
 
 
-uint8_t get_feature(uint8_t f);
+void create_input_data_source(FILE* f,input_data_source_t* o);
 
 
 
-void set_feature(uint8_t f,uint8_t st);
-
-
-
-void print_error(error_t e);
+void print_error(input_data_source_t* in,error_t e);
 
 
 
@@ -165,7 +210,7 @@ void print_object(object_t* o,FILE* f);
 
 
 
-object_t* read_object(FILE* f);
+object_t* read_object(input_data_source_t* in);
 
 
 

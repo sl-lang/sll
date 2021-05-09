@@ -17,10 +17,11 @@ int main(int argc,const char** argv){
 		printf("Unable to Open File '%s'!\n",argv[1]);
 		return 1;
 	}
-	set_feature(FEATURE_EMPTY_EXPRESSION,1);
-	object_t* o=read_object(f);
+	input_data_source_t in;
+	create_input_data_source(f,&in);
+	object_t* o=read_object(&in);
 	if (IS_ERROR(o)){
-		print_error(GET_ERROR(o));
+		print_error(&in,GET_ERROR(o));
 	}
 	else{
 		print_object(o,stdout);
