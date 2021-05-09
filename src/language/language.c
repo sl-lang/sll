@@ -10,13 +10,15 @@
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
 #define _FAST_COMPARE_JOIN_(l) FAST_COMPARE_##l
 #define _FAST_COMPARE_JOIN(l) _FAST_COMPARE_JOIN_(l)
-#define _FAST_COMPARE_COUNT_ARGS(_1,_2,_3,_4,_5,n,...) n
-#define FAST_COMPARE(s,...) _FAST_COMPARE_JOIN(_FAST_COMPARE_COUNT_ARGS(__VA_ARGS__,5,4,3,2,1))(s,__VA_ARGS__)
+#define _FAST_COMPARE_COUNT_ARGS(_1,_2,_3,_4,_5,_6,_7,n,...) n
+#define FAST_COMPARE(s,...) _FAST_COMPARE_JOIN(_FAST_COMPARE_COUNT_ARGS(__VA_ARGS__,7,6,5,4,3,2,1))(s,__VA_ARGS__)
 #define FAST_COMPARE_1(s,a) (*(s)==CONSTRUCT_CHAR(a))
 #define FAST_COMPARE_2(s,a,b) (*((uint16_t*)(s))==CONSTRUCT_WORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b)))
 #define FAST_COMPARE_3(s,a,b,c) (*((uint16_t*)(s))==CONSTRUCT_WORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b))&&*((s)+2)==CONSTRUCT_CHAR(c))
 #define FAST_COMPARE_4(s,a,b,c,d) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d)))
 #define FAST_COMPARE_5(s,a,b,c,d,e) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((s)+4)==CONSTRUCT_CHAR(e))
+#define FAST_COMPARE_6(s,a,b,c,d,e,f) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((uint16_t*)(s+4))==CONSTRUCT_WORD(CONSTRUCT_CHAR(e),CONSTRUCT_CHAR(f)))
+#define FAST_COMPARE_7(s,a,b,c,d,e,f,g) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((uint16_t*)(s+4))==CONSTRUCT_WORD(CONSTRUCT_CHAR(e),CONSTRUCT_CHAR(f))&&*((s)+6)==CONSTRUCT_CHAR(g))
 #define READ_SINGLE_CHAR_OK 0
 #define READ_SINGLE_CHAR_END 1
 #define READ_SINGLE_CHAR_ERROR 2
@@ -134,11 +136,35 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 		case OBJECT_TYPE_FALSE:
 			fprintf(f,"false");
 			return off;
-		case OBJECT_TYPE_PRINT:
+		case OBJECT_TYPE_CAST_CHAR:
+			fprintf(f,"(char");
+			break;
+		case OBJECT_TYPE_CAST_STRING:
+			fprintf(f,"(str");
+			break;
+		case OBJECT_TYPE_CAST_INT:
+			fprintf(f,"(int");
+			break;
+		case OBJECT_TYPE_CAST_INT64:
+			fprintf(f,"(int64");
+			break;
+		case OBJECT_TYPE_CAST_FLOAT:
+			fprintf(f,"(float");
+			break;
+		case OBJECT_TYPE_CAST_FLOAT64:
+			fprintf(f,"(float64");
+			break;
+		case OBJECT_TYPE_CAST_BOOL:
+			fprintf(f,"(bool");
+			break;
+		case OBJECT_TYPE_FUNC_PRINT:
 			fprintf(f,"(print");
 			break;
-		case OBJECT_TYPE_PTR:
+		case OBJECT_TYPE_FUNC_PTR:
 			fprintf(f,"(ptr");
+			break;
+		case OBJECT_TYPE_FUNC_TYPE:
+			fprintf(f,"(type");
 			break;
 		case OBJECT_TYPE_AND:
 			fprintf(f,"(&&");
@@ -227,6 +253,18 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 		case OBJECT_TYPE_MORE_EQUAL:
 			fprintf(f,"(>=");
 			break;
+		case OBJECT_TYPE_OPERATION_LIST:
+			fputc('{',f);
+			off+=sizeof(arg_count_t);
+			l=GET_OBJECT_ARGUMENT_COUNT(o);
+			for (uint8_t i=0;i<l;i++){
+				if (i){
+					fputc(' ',f);
+				}
+				off+=_print_object_internal(GET_OBJECT_ARGUMENT(o,off),f);
+			}
+			fputc('}',f);
+			return off;
 		default:
 			__unreachable();
 	}
@@ -310,6 +348,7 @@ uint64_t _read_single_char(FILE* f,char t){
 
 
 object_t* _read_object_internal(FILE* f,int c){
+	int ec=-1;
 	object_t* o=NULL;
 	while (c&&c!=EOF){
 _no_read_next:
@@ -340,7 +379,7 @@ _no_read_next:
 			continue;
 		}
 		if (c==')'){
-			if (!o){
+			if (!o||ec!=')'){
 				return RETURN_ERROR(ERROR_UNMATCHED_CLOSE_PARENTHESES);
 			}
 			if (o->t==OBJECT_TYPE_UNKNOWN){
@@ -383,14 +422,30 @@ _no_read_next:
 			}
 			return o;
 		}
-		if (c=='('){
+		if (c=='}'){
+			if (!o||ec!='}'){
+				return RETURN_ERROR(ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS);
+			}
+			if (o->t==OBJECT_TYPE_UNKNOWN){
+				if (_fl&FEATURE_EMPTY_EXPRESSION){
+					o->t=OBJECT_TYPE_NIL;
+					_bf_ptr-=sizeof(arg_count_t);
+				}
+				else{
+					return RETURN_ERROR(ERROR_EMPTY_BRACKETS);
+				}
+			}
+			return o;
+		}
+		if (c=='('||c=='{'){
 			if (!o){
 				o=(object_t*)(_bf+_bf_ptr);
 				_bf_ptr+=sizeof(object_t)+sizeof(arg_count_t);
 				if (_bf_ptr>=INTERNAL_STACK_SIZE){
 					return RETURN_ERROR(ERROR_INTERNAL_STACK_OVERFLOW);
 				}
-				o->t=OBJECT_TYPE_UNKNOWN;
+				o->t=(c=='('?OBJECT_TYPE_UNKNOWN:OBJECT_TYPE_OPERATION_LIST);
+				ec=(c=='('?')':'}');
 				RESET_OBJECT_ARGUMENT_COUNT(o);
 			}
 			else{
@@ -506,8 +561,14 @@ _read_symbol:
 				}
 			}
 			else if (sz==3){
-				if (FAST_COMPARE(str,p,t,r)){
-					o->t=OBJECT_TYPE_PTR;
+				if (FAST_COMPARE(str,s,t,r)){
+					o->t=OBJECT_TYPE_CAST_STRING;
+				}
+				else if (FAST_COMPARE(str,i,n,t)){
+					o->t=OBJECT_TYPE_CAST_INT;
+				}
+				else if (FAST_COMPARE(str,p,t,r)){
+					o->t=OBJECT_TYPE_FUNC_PTR;
 				}
 				else if (FAST_COMPARE(str,f,o,r)){
 					o->t=OBJECT_TYPE_FOR;
@@ -523,7 +584,16 @@ _read_symbol:
 				}
 			}
 			else if (sz==4){
-				if (FAST_COMPARE(str,f,u,n,c)){
+				if (FAST_COMPARE(str,c,h,a,r)){
+					o->t=OBJECT_TYPE_CAST_CHAR;
+				}
+				else if (FAST_COMPARE(str,b,o,o,l)){
+					o->t=OBJECT_TYPE_CAST_BOOL;
+				}
+				else if (FAST_COMPARE(str,t,y,p,e)){
+					o->t=OBJECT_TYPE_FUNC_TYPE;
+				}
+				else if (FAST_COMPARE(str,f,u,n,c)){
 					o->t=OBJECT_TYPE_FUNC;
 				}
 				else{
@@ -531,8 +601,22 @@ _read_symbol:
 				}
 			}
 			else if (sz==5){
-				if (FAST_COMPARE(str,p,r,i,n,t)){
-					o->t=OBJECT_TYPE_PRINT;
+				if (FAST_COMPARE(str,i,n,t,6,4)){
+					o->t=OBJECT_TYPE_CAST_INT64;
+				}
+				else if (FAST_COMPARE(str,f,l,o,a,t)){
+					o->t=OBJECT_TYPE_CAST_FLOAT;
+				}
+				else if (FAST_COMPARE(str,p,r,i,n,t)){
+					o->t=OBJECT_TYPE_FUNC_PRINT;
+				}
+				else{
+					goto _unknown_symbol;
+				}
+			}
+			else if (sz==7){
+				if (FAST_COMPARE(str,f,l,o,a,t,6,4)){
+					o->t=OBJECT_TYPE_CAST_FLOAT64;
 				}
 				else{
 					goto _unknown_symbol;
@@ -678,7 +762,7 @@ _binary:
 				else if (c>47&&c<58){
 					goto _decimal;
 				}
-				else{
+				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='(')){
 					return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
 				}
 			}

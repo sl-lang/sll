@@ -1,0 +1,130 @@
+%YAML 1.2
+name: Lisp Like Language
+file_extensions:
+  - lll
+scope: source.lll
+contexts:
+  main:
+    - include: comments
+    - include: objects
+
+  comments:
+    - match: '\|#'
+      scope: punctuation.definition.comment.begin.lll
+      push:
+        - meta_scope: comment.block.lll
+        - match: '#\|'
+          scope: punctuation.definition.comment.end.lll
+          pop: true
+    - match: '#\|'
+      scope: invalid.illegal.stray-comment-end.lll
+    - match: '(;).*$'
+      scope: comment.line.lll
+      captures:
+        1: punctuation.definition.comment.lll
+
+  objects:
+    - match: '\(\s*(?:(if|for|while)|(str|char|int|int64|float|float64|bool)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=))(?=\s|\))'
+      scope: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
+      captures:
+        1: keyword.control.conditional.lll
+        2: support.type.lll
+        3: keyword.operator.logical.lll
+        4: keyword.operator.bitwise.lll
+        5: keyword.operator.arithmetic.lll
+        6: keyword.operator.comparison.lll
+        7: keyword.operator.assignment.lll
+      push:
+        - meta_scope: meta.group.lll meta.parens.lll
+        - match: '\)'
+          scope: punctuation.section.group.end.lll punctuation.section.parens.end.lll
+          pop: true
+        - include: comments
+        - include: objects
+        - include: numbers
+        - include: strings
+        - include: constants
+    - match: '\(\s*(?:(print|ptr|type)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
+      scope: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
+      captures:
+        1: support.function.builtin.lll
+        2: variable.function.lll
+      push:
+        - meta_scope: meta.group.lll meta.parens.lll meta.function-call.lll
+        - match: '\)'
+          scope: punctuation.section.group.end.lll punctuation.section.parens.end.lll
+          pop: true
+        - include: comments
+        - include: objects
+        - include: numbers
+        - include: strings
+        - include: constants
+    - match: '\('
+      push:
+        - meta_scope: invalid.illegal.unknown-operator.lll
+        - match: '\)'
+          pop: true
+        - include: objects_no_highlight
+    - match: '\)'
+      scope: invalid.illegal.stray-bracket-end.lll
+    - match: '\{'
+      scope: punctuation.section.block.begin.lll punctuation.section.braces.begin.lll
+      push:
+        - meta_scope: meta.block.lll meta.braces.lll
+        - match: '\}'
+          scope: punctuation.section.block.end.lll punctuation.section.braces.end.lll
+          pop: true
+        - include: comments
+        - include: objects
+        - include: numbers
+        - include: strings
+        - include: constants
+    - match: '\}'
+      scope: invalid.illegal.stray-bracket-end.lll
+
+  objects_no_highlight:
+    - match: '\('
+      push:
+        - match: '\)'
+          pop: true
+        - include: objects_no_highlight
+
+  constants:
+    - match: '\b(nil|true|false)\b'
+      scope: constant.language.lll
+
+  numbers:
+    - match: '(\b|-)0[bB][01]+\b'
+      scope: constant.numeric.integer.binary.lll
+    - match: '(\b|-)0[oO][0-7]+\b'
+      scope: constant.numeric.integer.octal.lll
+    - match: '(\b|-)0[xX][0-9a-fA-F]+\b'
+      scope: constant.numeric.integer.hexadecimal.lll
+    - match: '(\b|-)([0-9]+\.[0-9]*|\.[0-9]+)([eE][\+\-]?[0-9]+)?\b'
+      scope: constant.numeric.float.lll
+    - match: '(\b|-)[0-9]+\b'
+      scope: constant.numeric.integer.decimal.lll
+
+  strings:
+    - match: '\'''
+      scope: punctuation.definition.string.begin.lll
+      push:
+        - meta_scope: string.quoted.single.lll
+        - match: '\\x[0-9a-f]{2}|\\[tnvfr"'']'
+          scope: constant.character.escape.lll
+        - match: '\'''
+          scope: punctuation.definition.string.end.lll
+          pop: true
+        - match: '\\.'
+          scope: invalid.illegal.escape.lll
+    - match: '"'
+      scope: punctuation.definition.string.begin.lll
+      push:
+        - meta_scope: string.quoted.double.lll
+        - match: '\\x[0-9a-f]{2}|\\[tnvfr"'']'
+          scope: constant.character.escape.lll
+        - match: '"'
+          scope: punctuation.definition.string.end.lll
+          pop: true
+        - match: '\\.'
+          scope: invalid.illegal.escape.lll
