@@ -318,7 +318,11 @@ IMPORT_EXPORT error_t optimize_object(object_t* o);
 
 
 
-IMPORT_EXPORT void remove_debug_data(object_t* o);
+IMPORT_EXPORT void remove_object_debug_data(object_t* o);
+
+
+
+IMPORT_EXPORT void remove_object_padding(object_t* o);
 
 
 

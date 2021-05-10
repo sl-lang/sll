@@ -36,7 +36,9 @@
 #define HIGHLIGHT_COLOR "\x1b[31m"
 #define HIGHLIGHT_COLOR_RESET "\x1b[0m"
 #ifdef _MSC_VER
+#pragma intrinsic(__movsb)
 #pragma intrinsic(__movsw)
+#define REPEATE_BYTE_COPY(d,s,sz) __movsb(d,s,sz)
 #define REPEATE_WORD_COPY(d,s,sz) __movsw(d,s,sz)
 #define __unreachable() __assume(0)
 #define ENABLE_COLOR() \
@@ -51,6 +53,9 @@
 		SetConsoleMode(GetStdHandle(-11),__tv); \
 	} while (0)
 #else
+static inline void REPEATE_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
+	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
+}
 static inline void REPEATE_WORD_COPY(unsigned short* d,unsigned short* s,size_t n){
 	__asm__("rep movsw":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
@@ -63,6 +68,12 @@ static inline void REPEATE_WORD_COPY(unsigned short* d,unsigned short* s,size_t 
 
 uint8_t _bf[INTERNAL_STACK_SIZE];
 uint32_t _bf_ptr=0;
+
+
+
+void _copy_data(uint8_t* d,uint8_t* s,uint64_t c){
+	REPEATE_BYTE_COPY(d,s,c);
+}
 
 
 
@@ -1222,7 +1233,7 @@ uint32_t _remove_debug_data_internal(object_t* o){
 			for (uint32_t i=0;i<sizeof(object_t)+3*sizeof(uint32_t);i++){
 				WRITE_OBJECT_NOP(o,i);
 			}
-			return sizeof(object_t)+3*sizeof(uint32_t)+_remove_debug_data_internal(GET_OBJECT_DEBUG_OBJECT(o))+eoff;
+			return sizeof(object_t)+3*sizeof(uint32_t)+eoff+_remove_debug_data_internal(GET_OBJECT_DEBUG_OBJECT(o));
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
@@ -1231,6 +1242,68 @@ uint32_t _remove_debug_data_internal(object_t* o){
 		off+=_remove_debug_data_internal(GET_OBJECT_ARGUMENT(o,off));
 	}
 	return off+eoff;
+}
+
+
+
+uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
+	uint8_t* d=(uint8_t*)o-(*rm);
+	uint32_t pad=0;
+	while (o->t==OBJECT_TYPE_NOP){
+		pad+=sizeof(object_t);
+		o=GET_OBJECT_AFTER_NOP(o);
+	}
+	uint8_t* s=(uint8_t*)o;
+	if (IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
+		while (IS_OBJECT_REF(o)){
+			o=GET_OBJECT_AS_REF(o);
+		}
+	}
+	(*rm)+=pad;
+	switch (GET_OBJECT_TYPE(o)){
+		case OBJECT_TYPE_UNKNOWN:
+		case OBJECT_TYPE_NIL:
+		case OBJECT_TYPE_TRUE:
+		case OBJECT_TYPE_FALSE:
+			_copy_data(d,s,sizeof(object_t));
+			return sizeof(object_t)+pad;
+		case OBJECT_TYPE_CHAR:
+			_copy_data(d,s,sizeof(object_t)+sizeof(char));
+			return sizeof(object_t)+sizeof(char)+pad;
+		case OBJECT_TYPE_STRING:
+		case OBJECT_TYPE_IDENTIFIER:
+			string_length_t sl=GET_OBJECT_STRING_LENGTH(o);
+			_copy_data(d,s,sizeof(object_t)+sizeof(string_length_t)+sl);
+			return sizeof(object_t)+sizeof(string_length_t)+sl+pad;
+		case OBJECT_TYPE_INT:
+			uint32_t w=GET_OBJECT_INTEGER_WIDTH(o);
+			_copy_data(d,s,sizeof(object_t)+w);
+			return sizeof(object_t)+w+pad;
+		case OBJECT_TYPE_FLOAT:
+			w=(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+			_copy_data(d,s,sizeof(object_t)+w);
+			return sizeof(object_t)+w+pad;
+		case OBJECT_TYPE_OPERATION_LIST:
+			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
+			_copy_data(d,s,sizeof(object_t)+sizeof(statement_count_t));
+			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
+			while (l){
+				l--;
+				off+=_remove_padding_internal(GET_OBJECT_STATEMENT(o,off),rm);
+			}
+			return off+pad;
+		case OBJECT_TYPE_DEBUG_DATA:
+			_copy_data(d,s,sizeof(object_t)+3*sizeof(uint32_t));
+			return sizeof(object_t)+3*sizeof(uint32_t)+_remove_padding_internal(GET_OBJECT_DEBUG_OBJECT(o),rm)+pad;
+	}
+	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
+	_copy_data(d,s,sizeof(object_t)+sizeof(arg_count_t));
+	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
+	while (l){
+		l--;
+		off+=_remove_padding_internal(GET_OBJECT_ARGUMENT(o,off),rm);
+	}
+	return off+pad;
 }
 
 
@@ -1469,8 +1542,15 @@ error_t optimize_object(object_t* o){
 
 
 
-void remove_debug_data(object_t* o){
+void remove_object_debug_data(object_t* o){
 	_remove_debug_data_internal(o);
+}
+
+
+
+void remove_object_padding(object_t* o){
+	uint32_t rm=0;
+	_remove_padding_internal(o,&rm);
 }
 
 

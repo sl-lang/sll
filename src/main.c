@@ -32,7 +32,8 @@ int main(int argc,const char** argv){
 			print_error(&is,GET_ERROR(e));
 		}
 		else{
-			remove_debug_data(c_dt.h);
+			remove_object_debug_data(c_dt.h);
+			remove_object_padding(c_dt.h);
 			print_object(c_dt.h,&c_dt,stdout);
 			FILE* of=NULL;
 			char o_fp[512];
