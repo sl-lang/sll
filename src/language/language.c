@@ -74,6 +74,7 @@ int _input_data_stream_file_read(input_data_stream_t* is){
 	is->_off++;
 	if (o=='\n'){
 		is->_lc++;
+		is->_loff=is->_off;
 	}
 	return o;
 }
@@ -100,24 +101,28 @@ uint8_t _output_data_stream_file_write(output_data_stream_t* os,uint8_t* bf,size
 
 
 
-uint32_t _print_object_internal(object_t* o,FILE* f){
-	uint32_t off=sizeof(object_t);
-	if (IS_OBJECT_TYPE_NOT_TYPE(o)){
+uint32_t _print_object_internal(object_t* o,compilation_data_t* c_dt,FILE* f){
+	uint32_t eoff=0;
+	while (o->t==OBJECT_TYPE_NOP){
+		eoff+=sizeof(object_t);
+		o=GET_OBJECT_AFTER_NOP(o);
+	}
+	if (IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
 		while (IS_OBJECT_REF(o)){
-			o=GET_OBJECT_REF(o);
+			o=GET_OBJECT_AS_REF(o);
 		}
 	}
 	switch (GET_OBJECT_TYPE(o)){
 		case OBJECT_TYPE_UNKNOWN:
 			fprintf(f,"(unknown)");
-			return off;
+			return sizeof(object_t)+eoff;
 		case OBJECT_TYPE_CHAR:
 			fprintf(f,"'%c'",GET_OBJECT_AS_CHAR(o));
-			return off+sizeof(char);
+			return sizeof(object_t)+eoff+sizeof(char);
 		case OBJECT_TYPE_STRING:
 			fputc('"',f);
-			uint32_t l=GET_OBJECT_STRING_LENGTH(o);
-			off+=l+sizeof(string_length_t);
+			string_length_t l=GET_OBJECT_STRING_LENGTH(o);
+			uint32_t off=sizeof(object_t)+l+sizeof(string_length_t);
 			char* str=GET_OBJECT_AS_STRING(o);
 			while (l){
 				l--;
@@ -155,48 +160,48 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 				str++;
 			}
 			fputc('"',f);
-			return off;
+			return off+eoff;
 		case OBJECT_TYPE_INT:
 			if (IS_OBJECT_INT16(o)){
 				fprintf(f,"%"PRId16,GET_OBJECT_AS_INT16(o));
-				return off+sizeof(int16_t);
+				return sizeof(object_t)+eoff+sizeof(int16_t);
 			}
 			if (IS_OBJECT_INT32(o)){
 				fprintf(f,"%"PRId32,GET_OBJECT_AS_INT32(o));
-				return off+sizeof(int32_t);
+				return sizeof(object_t)+eoff+sizeof(int32_t);
 			}
 			if (IS_OBJECT_INT64(o)){
 				fprintf(f,"%"PRId64,GET_OBJECT_AS_INT64(o));
-				return off+sizeof(int64_t);
+				return sizeof(object_t)+eoff+sizeof(int64_t);
 			}
 			fprintf(f,"%"PRId8,GET_OBJECT_AS_INT8(o));
-			return off+sizeof(int8_t);
+			return sizeof(object_t)+eoff+sizeof(int8_t);
 		case OBJECT_TYPE_FLOAT:
 			if (IS_OBJECT_FLOAT64(o)){
 				fprintf(f,"%lf",GET_OBJECT_AS_FLOAT64(o));
-				return off+sizeof(double);
+				return sizeof(object_t)+eoff+sizeof(double);
 			}
 			fprintf(f,"%f",GET_OBJECT_AS_FLOAT32(o));
-			return off+sizeof(float);
+			return sizeof(object_t)+eoff+sizeof(float);
 		case OBJECT_TYPE_IDENTIFIER:
 			l=GET_OBJECT_STRING_LENGTH(o);
-			off+=l+sizeof(string_length_t);
+			off=sizeof(object_t)+l+sizeof(string_length_t);
 			str=GET_OBJECT_AS_STRING(o);
 			while (l){
 				l--;
 				fputc(*str,f);
 				str++;
 			}
-			return off;
+			return off+eoff;
 		case OBJECT_TYPE_NIL:
 			fprintf(f,"nil");
-			return off;
+			return sizeof(object_t)+eoff;
 		case OBJECT_TYPE_TRUE:
 			fprintf(f,"true");
-			return off;
+			return sizeof(object_t)+eoff;
 		case OBJECT_TYPE_FALSE:
 			fprintf(f,"false");
-			return off;
+			return sizeof(object_t)+eoff;
 		case OBJECT_TYPE_CAST_CHAR:
 			fprintf(f,"(char");
 			break;
@@ -316,27 +321,30 @@ uint32_t _print_object_internal(object_t* o,FILE* f){
 			break;
 		case OBJECT_TYPE_OPERATION_LIST:
 			fputc('{',f);
-			off+=sizeof(arg_count_t);
-			l=GET_OBJECT_ARGUMENT_COUNT(o);
-			for (uint8_t i=0;i<l;i++){
+			off=sizeof(object_t)+sizeof(statement_count_t);
+			statement_count_t sc=GET_OBJECT_STATEMENT_COUNT(o);
+			for (statement_count_t i=0;i<sc;i++){
 				if (i){
 					fputc(' ',f);
 				}
-				off+=_print_object_internal(GET_OBJECT_ARGUMENT(o,off),f);
+				off+=_print_object_internal(GET_OBJECT_STATEMENT(o,off),c_dt,f);
 			}
 			fputc('}',f);
-			return off;
+			return off+eoff;
+		case OBJECT_TYPE_DEBUG_DATA:
+			fprintf(f,"@%u:%u<%u>@",GET_OBJECT_DEBUG_FILE_LINE(o),GET_OBJECT_DEBUG_FILE_COLUMN(o),GET_OBJECT_DEBUG_FILE_OFFSET(o));
+			return sizeof(object_t)+3*sizeof(uint32_t)+eoff+_print_object_internal(GET_OBJECT_DEBUG_OBJECT(o),c_dt,f);
 		default:
 			__unreachable();
 	}
-	off+=sizeof(arg_count_t);
-	uint8_t l=GET_OBJECT_ARGUMENT_COUNT(o);
-	for (uint8_t i=0;i<l;i++){
+	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
+	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
+	for (arg_count_t i=0;i<l;i++){
 		fputc(' ',f);
-		off+=_print_object_internal(GET_OBJECT_ARGUMENT(o,off),f);
+		off+=_print_object_internal(GET_OBJECT_ARGUMENT(o,off),c_dt,f);
 	}
 	fputc(')',f);
-	return off;
+	return off+eoff;
 }
 
 
@@ -420,17 +428,18 @@ uint64_t _read_single_char(input_data_stream_t* is,char t,uint32_t st){
 
 
 
-object_t* _read_object_internal(input_data_stream_t* is,int c){
+error_t _read_object_internal(compilation_data_t* c_dt,int c){
+	input_data_stream_t* is=c_dt->is;
 	uint32_t st_off=UINT32_MAX;
 	int ec=-1;
 	object_t* o=NULL;
-	while (c!=EOF){
+	while (c!=END_OF_DATA){
 		if ((c>8&&c<14)||c==' '){
 			c=READ_FROM_INPUT_DATA_STREAM(is);
 			continue;
 		}
 		if (c==';'){
-			while (c!='\n'&&c!='\r'&&c!=EOF){
+			while (c!='\n'&&c!='\r'&&c!=END_OF_DATA){
 				c=READ_FROM_INPUT_DATA_STREAM(is);
 			}
 			continue;
@@ -438,14 +447,14 @@ object_t* _read_object_internal(input_data_stream_t* is,int c){
 		if (c=='|'){
 			c=READ_FROM_INPUT_DATA_STREAM(is);
 			if (c!='#'){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_CHAR(ERROR_UNEXPECTED_CHARACTER,'|'));
+				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNEXPECTED_CHARACTER,'|'));
 			}
 			int lc=c;
 			while (c!='|'||lc!='#'){
 				lc=c;
 				c=READ_FROM_INPUT_DATA_STREAM(is);
 				if (c==END_OF_DATA){
-					return RETURN_ERROR_AS_OBJECT(ERROR_UNMATCHED_OPEN_QUOTE);
+					return RETURN_ERROR(ERROR_UNMATCHED_OPEN_QUOTE);
 				}
 			}
 			c=READ_FROM_INPUT_DATA_STREAM(is);
@@ -453,19 +462,19 @@ object_t* _read_object_internal(input_data_stream_t* is,int c){
 		}
 		if (c==')'){
 			if (!o||ec!=')'){
-				return RETURN_ERROR_AS_OBJECT(ERROR_UNMATCHED_CLOSE_PARENTHESES);
+				return RETURN_ERROR(ERROR_UNMATCHED_CLOSE_PARENTHESES);
 			}
 			if (o->t==OBJECT_TYPE_UNKNOWN){
 				o->t=OBJECT_TYPE_NIL;
 				_bf_ptr-=sizeof(arg_count_t);
 			}
-			else if (IS_OBJECT_TYPE_MATH_CHAIN_OPERATION(o)){
+			else if (IS_OBJECT_TYPE_MATH_CHAIN(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (!ac){
 					o->t=OBJECT_TYPE_INT;
 					_bf_ptr=GET_OBJECT_STACK_OFFSET(o)+sizeof(object_t)+sizeof(int8_t);
 					SET_OBJECT_AS_INT8(o,0);
-					return o;
+					return RETURN_NO_ERROR();
 				}
 				if (ac==1){
 					object_t* arg0=GET_OBJECT_ARGUMENT(o,sizeof(object_t)+sizeof(arg_count_t));
@@ -479,45 +488,58 @@ object_t* _read_object_internal(input_data_stream_t* is,int c){
 					_bf_ptr-=sizeof(object_t)+sizeof(arg_count_t);
 				}
 			}
-			else if (IS_OBJECT_TYPE_MATH_NO_CHAIN_OPERATION(o)){
+			else if (IS_OBJECT_TYPE_MATH_NO_CHAIN(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac==1){
-					return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS,st_off,GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1));
+					return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS,st_off,GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1));
 				}
 				if (ac>(GET_OBJECT_TYPE(o)==OBJECT_TYPE_POW?3:2)){
-					return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_MATH_OP_TOO_MANY_ARGUMENTS,st_off,GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1));
+					return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_MATH_OP_TOO_MANY_ARGUMENTS,st_off,GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1));
 				}
 			}
-			return o;
+			return RETURN_NO_ERROR();
 		}
 		if (c=='}'){
 			if (!o||ec!='}'){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_SINGLE_CHAR(ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS,is));
+				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS,is));
 			}
 			if (!GET_OBJECT_ARGUMENT_COUNT(o)){
 				o->t=OBJECT_TYPE_NIL;
-				_bf_ptr-=sizeof(arg_count_t);
+				_bf_ptr-=sizeof(statement_count_t);
 			}
-			return o;
+			return RETURN_NO_ERROR();
 		}
 		if (c=='('||c=='{'){
 			if (!o){
 				st_off=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+				object_t* dbg=(object_t*)(_bf+_bf_ptr);
+				dbg->t=OBJECT_TYPE_DEBUG_DATA;
+				SET_OBJECT_DEBUG_FILE_LINE(dbg,GET_INPUT_DATA_STREAM_LINE_NUMBER(is));
+				uint32_t ln=GET_INPUT_DATA_STREAM_LINE_OFFSET(is);
+				uint32_t off=GET_INPUT_DATA_STREAM_OFFSET(is)-1;
+				SET_OBJECT_DEBUG_FILE_COLUMN(dbg,off-ln);
+				SET_OBJECT_DEBUG_FILE_OFFSET(dbg,off);
+				_bf_ptr+=sizeof(object_t)+sizeof(uint32_t)*3;
 				o=(object_t*)(_bf+_bf_ptr);
-				_bf_ptr+=sizeof(object_t)+sizeof(arg_count_t);
+				_bf_ptr+=sizeof(object_t)+(c=='('?sizeof(arg_count_t):sizeof(statement_count_t));
 				if (_bf_ptr>=INTERNAL_STACK_SIZE){
-					return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),0));
+					return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),0));
 				}
 				o->t=(c=='('?OBJECT_TYPE_UNKNOWN:OBJECT_TYPE_OPERATION_LIST);
 				ec=(c=='('?')':'}');
-				RESET_OBJECT_ARGUMENT_COUNT(o);
+				if (c=='('){
+					RESET_OBJECT_ARGUMENT_COUNT(o);
+				}
+				else{
+					RESET_OBJECT_STATEMENT_COUNT(o);
+				}
 			}
 			else{
 				uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 				if (o->t==OBJECT_TYPE_UNKNOWN){
-					return RETURN_ERROR_AS_OBJECT(ERROR_NO_SYMBOL);
+					return RETURN_ERROR(ERROR_NO_SYMBOL);
 				}
-				object_t* e=_read_object_internal(is,c);
+				error_t e=_read_object_internal(c_dt,c);
 				if (IS_ERROR(e)){
 					return e;
 				}
@@ -529,12 +551,12 @@ object_t* _read_object_internal(input_data_stream_t* is,int c){
 			uint16_t sz=0;
 _read_symbol:
 			if (sz==UINT16_MAX){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_SYMBOL_TOO_LONG,GET_INPUT_DATA_STREAM_OFFSET(is)-sz,0));
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_SYMBOL_TOO_LONG,GET_INPUT_DATA_STREAM_OFFSET(is)-sz,0));
 			}
 			*(str+sz)=c;
 			sz++;
 			if (sz+_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,is));
+				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,is));
 			}
 			c=READ_FROM_INPUT_DATA_STREAM(is);
 			if (c==END_OF_DATA){
@@ -692,7 +714,7 @@ _read_symbol:
 			}
 			else{
 _unknown_symbol:
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_UNKNOWN_SYMBOL,GET_INPUT_DATA_STREAM_OFFSET(is)-sz-2,sz));
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNKNOWN_SYMBOL,GET_INPUT_DATA_STREAM_OFFSET(is)-sz-2,sz));
 			}
 			continue;
 		}
@@ -701,38 +723,43 @@ _unknown_symbol:
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),1));
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),1));
 			}
 			arg->t=OBJECT_TYPE_CHAR;
 			uint64_t e=_read_single_char(is,'\'',arg_s);
 			if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_ERROR){
-				return RETURN_ERROR_AS_OBJECT(READ_SINGLE_CHAR_GET_ERROR(e));
+				return RETURN_ERROR(READ_SINGLE_CHAR_GET_ERROR(e));
 			}
 			if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_END){
-				return RETURN_ERROR_AS_OBJECT(ERROR_EMPTY_CHAR_STRING);
+				return RETURN_ERROR(ERROR_EMPTY_CHAR_STRING);
 			}
 			c=READ_FROM_INPUT_DATA_STREAM(is);
 			if (c!='\''){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_CHAR(ERROR_UNTERMINATED_CHAR_STRING,c));
+				return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNTERMINATED_CHAR_STRING,c));
 			}
 			if (!o){
-				return arg;
+				return RETURN_NO_ERROR();
 			}
-			INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			if (o->t==OBJECT_TYPE_OPERATION_LIST){
+				INCREASE_OBJECT_STATEMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			}
+			else{
+				INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			}
 		}
 		else if (c=='"'){
 			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(string_length_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),1));
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),1));
 			}
 			arg->t=OBJECT_TYPE_STRING;
 			uint32_t sz=0;
 			while (1){
 				uint64_t e=_read_single_char(is,'"',arg_s);
 				if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_ERROR){
-					return RETURN_ERROR_AS_OBJECT(READ_SINGLE_CHAR_GET_ERROR(e));
+					return RETURN_ERROR(READ_SINGLE_CHAR_GET_ERROR(e));
 				}
 				if (READ_SINGLE_CHAR_GET_TYPE(e)==READ_SINGLE_CHAR_END){
 					break;
@@ -741,16 +768,21 @@ _unknown_symbol:
 			}
 			SET_OBJECT_STRING_LENGTH(arg,sz);
 			if (!o){
-				return arg;
+				return RETURN_NO_ERROR();
 			}
-			INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			if (o->t==OBJECT_TYPE_OPERATION_LIST){
+				INCREASE_OBJECT_STATEMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			}
+			else{
+				INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			}
 		}
 		else if ((c>47&&c<58)||c=='-'){
 			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(int64_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),1));
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),1));
 			}
 			int8_t m=1;
 			if (c=='-'){
@@ -777,7 +809,7 @@ _hexadecimal:
 						c-=32;
 					}
 					if (c<48||(c>57&&c<65)||c>70){
-						return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_CHAR(ERROR_UNKNOWN_HEXADECIMAL_CHARCTER,c));
+						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_HEXADECIMAL_CHARCTER,c));
 					}
 					v=(v<<4)+(c>64?c-55:c-48);
 					c=READ_FROM_INPUT_DATA_STREAM(is);
@@ -795,7 +827,7 @@ _hexadecimal:
 					}
 _octal:
 					if (c<48||c>55){
-						return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_CHAR(ERROR_UNKNOWN_OCTAL_CHARCTER,c));
+						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_OCTAL_CHARCTER,c));
 					}
 					v=(v<<3)+(c-48);
 					c=READ_FROM_INPUT_DATA_STREAM(is);
@@ -813,7 +845,7 @@ _octal:
 					}
 _binary:
 					if (c!=48&&c!=49){
-						return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_CHAR(ERROR_UNKNOWN_BINARY_CHARCTER,c));
+						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_BINARY_CHARCTER,c));
 					}
 					v=(v<<1)+(c-48);
 					c=READ_FROM_INPUT_DATA_STREAM(is);
@@ -827,13 +859,13 @@ _binary:
 				else if (c=='.'){
 					arg->t=OBJECT_TYPE_FLOAT;
 					printf("FLOAT!\n");
-					return NULL;
+					return RETURN_NO_ERROR();
 				}
 				else if (c>47&&c<58){
 					goto _decimal;
 				}
 				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-					return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
+					return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
 				}
 			}
 			else{
@@ -845,7 +877,7 @@ _decimal:
 				}
 				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
 					if (c<48||c>57){
-						return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
+						return RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_DECIMAL_CHARCTER,c));
 					}
 					goto _decimal;
 				}
@@ -869,9 +901,14 @@ _decimal:
 				SET_OBJECT_AS_INT8(arg,v*m);
 			}
 			if (!o){
-				return arg;
+				return RETURN_NO_ERROR();
 			}
-			INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			if (o->t==OBJECT_TYPE_OPERATION_LIST){
+				INCREASE_OBJECT_STATEMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			}
+			else{
+				INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			}
 			continue;
 		}
 		else if (c=='$'||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
@@ -879,7 +916,7 @@ _decimal:
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(string_length_t);
 			if (_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,is));
+				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,is));
 			}
 			arg->t=OBJECT_TYPE_IDENTIFIER;
 			char* str=(char*)(_bf+_bf_ptr);
@@ -888,7 +925,7 @@ _read_identifier:
 			*(str+sz)=c;
 			sz++;
 			if (sz+_bf_ptr>=INTERNAL_STACK_SIZE){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,is));
+				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,is));
 			}
 			c=READ_FROM_INPUT_DATA_STREAM(is);
 			if (c==END_OF_DATA){
@@ -898,7 +935,7 @@ _read_identifier:
 				goto _read_identifier;
 			}
 			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-				return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_UNKNOWN_IDENTIFIER_CHARACTER,GET_INPUT_DATA_STREAM_OFFSET(is)-2,1));
+				return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNKNOWN_IDENTIFIER_CHARACTER,GET_INPUT_DATA_STREAM_OFFSET(is)-2,1));
 			}
 			if (sz==3&&FAST_COMPARE(str,n,i,l)){
 				_bf_ptr-=sizeof(string_length_t);
@@ -917,32 +954,44 @@ _read_identifier:
 				SET_OBJECT_STRING_LENGTH(arg,sz);
 			}
 			if (!o){
-				return arg;
+				return RETURN_NO_ERROR();
 			}
-			INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			if (o->t==OBJECT_TYPE_OPERATION_LIST){
+				INCREASE_OBJECT_STATEMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			}
+			else{
+				INCREASE_OBJECT_ARGUMENT_COUNT(o,arg_s,GET_INPUT_DATA_STREAM_OFFSET(is)-2);
+			}
 			continue;
 		}
 		else{
-			return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_UNEXPECTED_CHARACTER,GET_INPUT_DATA_STREAM_OFFSET(is)-2,1));
+			return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNEXPECTED_CHARACTER,GET_INPUT_DATA_STREAM_OFFSET(is)-2,1));
 		}
 		c=READ_FROM_INPUT_DATA_STREAM(is);
 	}
 	if (!o){
 		o=(object_t*)(_bf+_bf_ptr);
 		_bf_ptr+=sizeof(object_t);
+		if (_bf_ptr>=INTERNAL_STACK_SIZE){
+			return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,is));
+		}
 		o->t=OBJECT_TYPE_NIL;
-		return o;
+		return RETURN_NO_ERROR();
 	}
-	return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_OPEN_PARENTHESES,st_off,GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1));
+	return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNMATCHED_OPEN_PARENTHESES,st_off,GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1));
 }
 
 
 
 uint32_t _get_object_size(object_t* o){
-	uint32_t off=sizeof(object_t);
-	if (IS_OBJECT_TYPE_NOT_TYPE(o)){
+	uint32_t eoff=0;
+	while (o->t==OBJECT_TYPE_NOP){
+		eoff+=sizeof(object_t);
+		o=GET_OBJECT_AFTER_NOP(o);
+	}
+	if (IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
 		while (IS_OBJECT_REF(o)){
-			o=GET_OBJECT_REF(o);
+			o=GET_OBJECT_AS_REF(o);
 		}
 	}
 	switch (GET_OBJECT_TYPE(o)){
@@ -950,23 +999,252 @@ uint32_t _get_object_size(object_t* o){
 		case OBJECT_TYPE_NIL:
 		case OBJECT_TYPE_TRUE:
 		case OBJECT_TYPE_FALSE:
-			return off;
+			return sizeof(object_t)+eoff;
 		case OBJECT_TYPE_CHAR:
-			return off+sizeof(char);
+			return sizeof(object_t)+eoff+sizeof(char);
 		case OBJECT_TYPE_STRING:
 		case OBJECT_TYPE_IDENTIFIER:
-			return off+GET_OBJECT_STRING_LENGTH(o)+sizeof(string_length_t);
+			return sizeof(object_t)+eoff+GET_OBJECT_STRING_LENGTH(o)+sizeof(string_length_t);
 		case OBJECT_TYPE_INT:
-			return off+GET_OBJECT_INTEGER_WIDTH(o);
+			return sizeof(object_t)+eoff+GET_OBJECT_INTEGER_WIDTH(o);
 		case OBJECT_TYPE_FLOAT:
-			return off+(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+			return sizeof(object_t)+eoff+(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+		case OBJECT_TYPE_OPERATION_LIST:
+			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
+			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
+			while (l){
+				l--;
+				off+=_get_object_size(GET_OBJECT_STATEMENT(o,off));
+			}
+			return off+eoff;
+		case OBJECT_TYPE_DEBUG_DATA:
+			return sizeof(object_t)+3*sizeof(uint32_t)+eoff+_get_object_size(GET_OBJECT_DEBUG_OBJECT(o));
 	}
-	off+=sizeof(arg_count_t);
-	uint8_t l=GET_OBJECT_ARGUMENT_COUNT(o);
-	for (uint8_t i=0;i<l;i++){
+	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
+	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
+	while (l){
+		l--;
 		off+=_get_object_size(GET_OBJECT_ARGUMENT(o,off));
 	}
-	return off;
+	return off+eoff;
+}
+
+
+
+uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
+	uint32_t eoff=0;
+	while (o->t==OBJECT_TYPE_NOP){
+		eoff+=sizeof(object_t);
+		o=GET_OBJECT_AFTER_NOP(o);
+	}
+	if (IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
+		while (IS_OBJECT_REF(o)){
+			o=GET_OBJECT_AS_REF(o);
+		}
+	}
+	switch (GET_OBJECT_TYPE(o)){
+		case OBJECT_TYPE_UNKNOWN:
+		case OBJECT_TYPE_NIL:
+		case OBJECT_TYPE_TRUE:
+		case OBJECT_TYPE_FALSE:
+			return sizeof(object_t)+eoff;
+		case OBJECT_TYPE_CHAR:
+			return sizeof(object_t)+eoff+sizeof(char);
+		case OBJECT_TYPE_STRING:
+		case OBJECT_TYPE_IDENTIFIER:
+			return sizeof(object_t)+eoff+sizeof(string_length_t)+GET_OBJECT_STRING_LENGTH(o);
+		case OBJECT_TYPE_INT:
+			return sizeof(object_t)+eoff+GET_OBJECT_INTEGER_WIDTH(o);
+		case OBJECT_TYPE_FLOAT:
+			return sizeof(object_t)+eoff+(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+		case OBJECT_TYPE_OPERATION_LIST:
+			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
+			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
+			for (statement_count_t i=l;i>0;i--){
+				uint32_t st_l=_optimize_object_internal(GET_OBJECT_STATEMENT(o,off),e,rj);
+				object_t* st=GET_OBJECT_STATEMENT(o,off);
+				off+=st_l;
+				if (IS_OBJECT_TYPE_TYPE(st)){
+					l--;
+					for (uint32_t j=off-st_l;j<off;j++){
+						WRITE_OBJECT_NOP(o,j);
+					}
+				}
+			}
+			if (!l){
+				o->t=OBJECT_TYPE_NIL;
+				for (uint32_t i=sizeof(object_t);i<sizeof(object_t)+sizeof(statement_count_t);i++){
+					WRITE_OBJECT_NOP(o,i);
+				}
+				return off+eoff;
+			}
+			if (l==1){
+				for (uint32_t i=0;i<sizeof(object_t)+sizeof(statement_count_t);i++){
+					WRITE_OBJECT_NOP(o,i);
+				}
+				return off+eoff;
+			}
+			SET_OBJECT_STATEMENT_COUNT(o,l);
+			return off+eoff;
+		case OBJECT_TYPE_DEBUG_DATA:
+			uint8_t ot=GET_OBJECT_TYPE(GET_OBJECT_DEBUG_OBJECT(o));
+			off=sizeof(object_t)+3*sizeof(uint32_t)+_optimize_object_internal(GET_OBJECT_DEBUG_OBJECT(o),e,rj);
+			if (GET_OBJECT_TYPE(GET_OBJECT_DEBUG_OBJECT(o))!=ot){
+				for (uint32_t i=0;i<sizeof(object_t)+3*sizeof(uint32_t);i++){
+					WRITE_OBJECT_NOP(o,i);
+				}
+			}
+			return off+eoff;
+	}
+	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
+	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
+	arg_count_t i=0;
+	while (i<l){
+		uint32_t al=_optimize_object_internal(GET_OBJECT_ARGUMENT(o,off),e,rj);
+		object_t* a=GET_OBJECT_ARGUMENT(o,off);
+		off+=al;
+		if (IS_OBJECT_TYPE_MATH_CHAIN(o)){
+			switch (GET_OBJECT_TYPE(a)){
+				case OBJECT_TYPE_CHAR:
+					break;
+				case OBJECT_TYPE_STRING:
+					break;
+				case OBJECT_TYPE_INT:
+					break;
+				case OBJECT_TYPE_FLOAT:
+					break;
+				case OBJECT_TYPE_NIL:
+					l--;
+					for (uint32_t j=off-al;j<off;j++){
+						WRITE_OBJECT_NOP(o,j);
+					}
+					break;
+				case OBJECT_TYPE_TRUE:
+					break;
+				case OBJECT_TYPE_FALSE:
+					switch (GET_OBJECT_TYPE(o)){
+						case OBJECT_TYPE_ADD:
+						case OBJECT_TYPE_SUB:
+						case OBJECT_TYPE_BIT_OR:
+						case OBJECT_TYPE_BIT_XOR:
+							l--;
+							for (uint32_t j=off-al;j<off;j++){
+								WRITE_OBJECT_NOP(o,j);
+							}
+							break;
+						case OBJECT_TYPE_DIV:
+						case OBJECT_TYPE_FLOOR_DIV:
+						case OBJECT_TYPE_MOD:
+							if (!i){
+								goto _set_to_0;
+							}
+							*e=RETURN_ERROR(ERROR_DIVISION_BY_ZERO);
+							longjmp(rj,1);
+							break;
+						case OBJECT_TYPE_MULT:
+						case OBJECT_TYPE_BIT_AND:
+_set_to_0:
+							while (i<l){
+								i++;
+								off+=_get_object_size(GET_OBJECT_ARGUMENT(o,off));
+							}
+							o->t=OBJECT_TYPE_INT;
+							SET_OBJECT_AS_INT8(o,0);
+							for (uint32_t j=sizeof(object_t)+sizeof(int8_t);j<off;j++){
+								WRITE_OBJECT_NOP(o,j);
+							}
+							return off+eoff;
+						case OBJECT_TYPE_BIT_NOT:
+							printf("SET OBJECT TO -1!\n");
+							break;
+					}
+					break;
+			}
+		}
+		i++;
+	}
+	if (l==1){
+		if (IS_OBJECT_TYPE_COMPARE(o)){
+			o->t=OBJECT_TYPE_TRUE;
+			for (uint32_t i=sizeof(object_t);i<off;i++){
+				WRITE_OBJECT_NOP(o,i);
+			}
+			return off+eoff;
+		}
+		if (IS_OBJECT_TYPE_MATH_CHAIN(o)){
+			for (uint32_t i=0;i<sizeof(object_t)+sizeof(arg_count_t);i++){
+				WRITE_OBJECT_NOP(o,i);
+			}
+			return off+eoff;
+		}
+	}
+	SET_OBJECT_ARGUMENT_COUNT(o,l);
+	return off+eoff;
+}
+
+
+
+uint32_t _remove_debug_data_internal(object_t* o){
+	uint32_t eoff=0;
+	while (o->t==OBJECT_TYPE_NOP){
+		eoff+=sizeof(object_t);
+		o=GET_OBJECT_AFTER_NOP(o);
+	}
+	if (IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
+		while (IS_OBJECT_REF(o)){
+			o=GET_OBJECT_AS_REF(o);
+		}
+	}
+	switch (GET_OBJECT_TYPE(o)){
+		case OBJECT_TYPE_UNKNOWN:
+		case OBJECT_TYPE_NIL:
+		case OBJECT_TYPE_TRUE:
+		case OBJECT_TYPE_FALSE:
+			return sizeof(object_t)+eoff;
+		case OBJECT_TYPE_CHAR:
+			return sizeof(object_t)+eoff+sizeof(char);
+		case OBJECT_TYPE_STRING:
+		case OBJECT_TYPE_IDENTIFIER:
+			return sizeof(object_t)+eoff+sizeof(string_length_t)+GET_OBJECT_STRING_LENGTH(o);
+		case OBJECT_TYPE_INT:
+			return sizeof(object_t)+eoff+GET_OBJECT_INTEGER_WIDTH(o);
+		case OBJECT_TYPE_FLOAT:
+			return sizeof(object_t)+eoff+(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+		case OBJECT_TYPE_OPERATION_LIST:
+			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
+			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
+			while (l){
+				l--;
+				off+=_remove_debug_data_internal(GET_OBJECT_STATEMENT(o,off));
+			}
+			return off+eoff;
+		case OBJECT_TYPE_DEBUG_DATA:
+			for (uint32_t i=0;i<sizeof(object_t)+3*sizeof(uint32_t);i++){
+				WRITE_OBJECT_NOP(o,i);
+			}
+			return sizeof(object_t)+3*sizeof(uint32_t)+_remove_debug_data_internal(GET_OBJECT_DEBUG_OBJECT(o))+eoff;
+	}
+	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
+	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
+	while (l){
+		l--;
+		off+=_remove_debug_data_internal(GET_OBJECT_ARGUMENT(o,off));
+	}
+	return off+eoff;
+}
+
+
+
+void init_compilation_data(const char* fp,input_data_stream_t* is,compilation_data_t* o){
+	o->fpl=0;
+	while (*fp){
+		o->fp[o->fpl]=*fp;
+		o->fpl++;
+		fp++;
+	}
+	o->fp[o->fpl]=0;
+	o->is=is;
+	o->h=NULL;
 }
 
 
@@ -975,13 +1253,14 @@ void create_input_data_stream(FILE* f,input_data_stream_t* o){
 	o->ctx=f;
 	o->rf=_input_data_stream_file_read;
 	o->rlf=_input_data_stream_file_restart_line;
-	o->_lc=0;
+	o->_lc=1;
 	o->_off=0;
+	o->_loff=0;
 }
 
 
 
-IMPORT_EXPORT void create_output_data_stream(FILE* f,output_data_stream_t* o){
+void create_output_data_stream(FILE* f,output_data_stream_t* o){
 	o->ctx=f;
 	o->wf=_output_data_stream_file_write;
 }
@@ -993,10 +1272,13 @@ void print_error(input_data_stream_t* is,error_t e){
 		switch (GET_ERROR_TYPE(e)){
 			default:
 			case ERROR_UNKNOWN:
-				printf("Unknown Error: %.8"PRIx64" %.8"PRIx64"\n",e>>32,e&0xffffffff);
+				printf("Unknown Error: %.16"PRIx64"\n",e);
 				return;
 			case ERROR_FAILED_FILE_WRITE:
 				printf("Failed to Write to File\n");
+				return;
+			case ERROR_DIVISION_BY_ZERO:
+				printf("Division By Zero\n");
 				return;
 		}
 	}
@@ -1115,6 +1397,9 @@ void print_error(input_data_stream_t* is,error_t e){
 		case ERROR_TOO_MANY_ARGUMENTS:
 			printf("Too Many Arguments\n");
 			return;
+		case ERROR_TOO_MANY_STATEMENTS:
+			printf("Too Many Statements\n");
+			return;
 		case ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS:
 			printf("Math Expression Contains not Enough Symbols\n");
 			return;
@@ -1126,22 +1411,66 @@ void print_error(input_data_stream_t* is,error_t e){
 
 
 
-void print_object(object_t* o,FILE* f){
-	_print_object_internal(o,f);
+void print_object(object_t* o,compilation_data_t* c_dt,FILE* f){
+	_print_object_internal(o,c_dt,f);
 	fputc('\n',f);
 }
 
 
 
-object_t* read_object(input_data_stream_t* is){
-	int c=READ_FROM_INPUT_DATA_STREAM(is);
+object_t* read_object(compilation_data_t* c_dt){
+	object_t* o=(object_t*)(_bf+_bf_ptr);
+	int c=READ_FROM_INPUT_DATA_STREAM(c_dt->is);
 	if (c==END_OF_DATA){
-		object_t* o=(object_t*)(_bf+_bf_ptr);
 		_bf_ptr+=sizeof(object_t);
 		o->t=OBJECT_TYPE_NIL;
 		return o;
 	}
-	return _read_object_internal(is,c);
+	error_t e=_read_object_internal(c_dt,c);
+	if (IS_ERROR(e)){
+		return RETURN_ERROR_AS_OBJECT(e);
+	}
+	return o;
+}
+
+
+
+error_t read_all_objects(compilation_data_t* c_dt){
+	c_dt->h=(object_t*)(_bf+_bf_ptr);
+	_bf_ptr+=sizeof(object_t)+sizeof(statement_count_t);
+	if (_bf_ptr>=INTERNAL_STACK_SIZE){
+		return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_INTERNAL_STACK_OVERFLOW,c_dt->is));
+	}
+	c_dt->h->t=OBJECT_TYPE_OPERATION_LIST;
+	RESET_OBJECT_STATEMENT_COUNT(c_dt->h);
+	while (1){
+		int c=READ_FROM_INPUT_DATA_STREAM(c_dt->is);
+		if (c==END_OF_DATA){
+			return RETURN_NO_ERROR();
+		}
+		error_t e=_read_object_internal(c_dt,c);
+		if (IS_ERROR(e)){
+			return e;
+		}
+		INCREASE_OBJECT_ARGUMENT_COUNT(c_dt->h,0,GET_INPUT_DATA_STREAM_OFFSET(c_dt->is)-2);
+	}
+}
+
+
+
+error_t optimize_object(object_t* o){
+	jmp_buf rj;
+	volatile error_t e=RETURN_NO_ERROR();
+	if (!setjmp(rj)){
+		_optimize_object_internal(o,&e,rj);
+	}
+	return e;
+}
+
+
+
+void remove_debug_data(object_t* o){
+	_remove_debug_data_internal(o);
 }
 
 

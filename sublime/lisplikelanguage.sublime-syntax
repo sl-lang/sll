@@ -24,16 +24,16 @@ contexts:
         1: punctuation.definition.comment.lll
 
   objects:
-    - match: '\(\s*(?:(if|for|while)|(str|char|int|int64|float|float64|bool)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=))(?=\s|\))'
-      scope: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
+    - match: '(\()\s*(?:(if|for|while)|(str|char|int|int64|float|float64|bool)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=))(?=\s|\))'
       captures:
-        1: keyword.control.conditional.lll
-        2: support.type.lll
-        3: keyword.operator.logical.lll
-        4: keyword.operator.bitwise.lll
-        5: keyword.operator.arithmetic.lll
-        6: keyword.operator.comparison.lll
-        7: keyword.operator.assignment.lll
+        1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
+        2: keyword.control.conditional.lll
+        3: support.type.lll
+        4: keyword.operator.logical.lll
+        5: keyword.operator.bitwise.lll
+        6: keyword.operator.arithmetic.lll
+        7: keyword.operator.comparison.lll
+        8: keyword.operator.assignment.lll
       push:
         - meta_scope: meta.group.lll meta.parens.lll
         - match: '\)'
@@ -44,11 +44,11 @@ contexts:
         - include: numbers
         - include: strings
         - include: constants
-    - match: '\(\s*(?:(print|ptr|type)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
-      scope: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
+    - match: '(\()\s*(?:(print|ptr|type)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
       captures:
-        1: support.function.builtin.lll
-        2: variable.function.lll
+        1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
+        2: support.function.builtin.lll
+        3: variable.function.lll
       push:
         - meta_scope: meta.group.lll meta.parens.lll meta.function-call.lll
         - match: '\)'
