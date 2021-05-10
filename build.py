@@ -45,25 +45,31 @@ if (os.name=="nt"):
 else:
 	if ("--release" in sys.argv):
 		fl=[]
-		for r,_,cfl in os.walk("src"):
-			r=r.replace("\\","/").strip("/")+"/"
-			for f in cfl:
-				if (f[-2:]==".c"):
-					fl.append(f"build/{(r+f).replace('/','$')}.o")
-					if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O3","-c",r+f,"-o",f"build/{(r+f).replace('/','$')}.o","-Isrc/include"]).returncode!=0):
-						sys.exit(1)
-		if (subprocess.run(["gcc","-o","build/lisp_like_language"]+fl).returncode!=0):
+		for f in os.listdir("src/language"):
+			if (f[-2:]==".c"):
+				fl.append(f"build/{f}.o")
+				if (subprocess.run(["gcc","-fPIC","-Wall","-lm","-Werror","-O3","-c","src/language/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
+					sys.exit(1)
+		if (subprocess.run(["gcc","-shared","-Wall","-O3","-Werror","-o","build/lisp_like_language.so"]+fl).returncode!=0):
+			sys.exit(1)
+		for k in os.listdir("build"):
+			if (k[-3:]!=".so"):
+				os.remove("build/"+k)
+		if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O3","-c","src/main.c","-o","build/main.o","-Isrc/include"]).returncode!=0 or subprocess.run(["gcc","-o","build/lisp_like_language","-O3","build/main.o","build/lisp_like_language.so"]).returncode!=0):
 			sys.exit(1)
 	else:
 		fl=[]
-		for r,_,cfl in os.walk("src"):
-			r=r.replace("\\","/").strip("/")+"/"
-			for f in cfl:
-				if (f[-2:]==".c"):
-					fl.append(f"build/{(r+f).replace('/','$')}.o")
-					if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c",r+f,"-o",f"build/{(r+f).replace('/','$')}.o","-Isrc/include"]).returncode!=0):
-						sys.exit(1)
-		if (subprocess.run(["gcc","-o","build/lisp_like_language"]+fl).returncode!=0):
+		for f in os.listdir("src/language"):
+			if (f[-2:]==".c"):
+				fl.append(f"build/{f}.o")
+				if (subprocess.run(["gcc","-fPIC","-Wall","-lm","-Werror","-O0","-c","src/language/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
+					sys.exit(1)
+		if (subprocess.run(["gcc","-shared","-Wall","-O0","-Werror","-o","build/lisp_like_language.so"]+fl).returncode!=0):
+			sys.exit(1)
+		for k in os.listdir("build"):
+			if (k[-3:]!=".so"):
+				os.remove("build/"+k)
+		if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Isrc/include"]).returncode!=0 or subprocess.run(["gcc","-o","build/lisp_like_language","-O0","build/main.o","build/lisp_like_language.so"]).returncode!=0):
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lisp_like_language","test.lll"])

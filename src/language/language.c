@@ -33,11 +33,6 @@
 
 
 
-uint8_t _bf[INTERNAL_STACK_SIZE];
-uint32_t _bf_ptr=0;
-
-
-
 #define HIGHLIGHT_COLOR "\x1b[31m"
 #define HIGHLIGHT_COLOR_RESET "\x1b[0m"
 #ifdef _MSC_VER
@@ -45,9 +40,15 @@ uint32_t _bf_ptr=0;
 #define REPEATE_WORD_COPY(d,s,sz) __movsw(d,s,sz)
 #define __unreachable() __assume(0)
 #define ENABLE_COLOR() \
+	uint32_t __tv; \
 	do{ \
 		SetConsoleOutputCP(CP_UTF8); \
+		GetConsoleMode(GetStdHandle(-11),&__tv); \
 		SetConsoleMode(GetStdHandle(-11),7); \
+	} while (0)
+#define DISABLE_COLOR() \
+	do{ \
+		SetConsoleMode(GetStdHandle(-11),__tv); \
 	} while (0)
 #else
 static inline void REPEATE_WORD_COPY(unsigned short* d,unsigned short* s,size_t n){
@@ -55,7 +56,13 @@ static inline void REPEATE_WORD_COPY(unsigned short* d,unsigned short* s,size_t 
 }
 #define __unreachable() __builtin_unreachable()
 #define ENABLE_COLOR()
+#define DISABLE_COLOR()
 #endif
+
+
+
+uint8_t _bf[INTERNAL_STACK_SIZE];
+uint32_t _bf_ptr=0;
 
 
 
@@ -959,6 +966,7 @@ void print_error(input_data_source_t* in,error_t e){
 		putchar('~');
 	}
 	printf(HIGHLIGHT_COLOR_RESET"\n");
+	DISABLE_COLOR();
 	switch (GET_ERROR_TYPE(e)){
 		default:
 		case ERROR_UNKNOWN:
