@@ -46,6 +46,8 @@
 #define ERROR_TOO_MANY_ARGUMENTS 22
 #define ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS 23
 #define ERROR_MATH_OP_TOO_MANY_ARGUMENTS 24
+#define ERROR_FAILED_FILE_WRITE 25
+#define MAX_SYNTAX_ERROR ERROR_MATH_OP_TOO_MANY_ARGUMENTS
 #define IS_ERROR(o) (((uint64_t)(void*)(o))>>63)
 #define GET_ERROR(o) ((error_t)(((uint64_t)(void*)(o))&0x7fffffffffffffffull))
 #define GET_ERROR_TYPE(e) ((e)&0x1f)
@@ -54,7 +56,9 @@
 #define GET_ERROR_CHAR(e) ((char)((e)>>5))
 #define GET_ERROR_STRING(e) ((char*)(_bf+((uint32_t)((e)>>5))))
 #define GET_ERROR_OBJECT(e) ((object_t*)(_bf+((uint32_t)((e)>>5))))
-#define RETURN_ERROR(e) ((object_t*)((e)|0x8000000000000000ull))
+#define RETURN_ERROR(e) ((e)|0x8000000000000000ull)
+#define RETURN_NO_ERROR() ((error_t)0)
+#define RETURN_ERROR_AS_OBJECT(e) ((object_t*)(RETURN_ERROR(e)))
 #define CREATE_ERROR_FILE_OFFSET(e,off,sz) ((((uint64_t)(sz))<<37)|(((uint64_t)(off))<<5)|(e))
 #define CREATE_ERROR_CHAR(e,c) ((((uint16_t)(c))<<5)|(e))
 #define CREATE_ERROR_STRING(e,s) (((((uint64_t)(void*)(s))-((uint64_t)(void*)_bf))<<5)|(e))
@@ -110,7 +114,10 @@
 #define OBJECT_TYPE_MORE 46
 #define OBJECT_TYPE_MORE_EQUAL 47
 #define OBJECT_TYPE_OPERATION_LIST 48
-#define OBJECT_TYPE_INT64_FLAG 0x40
+#define OBJECT_TYPE_INT16_FLAG 0x40
+#define OBJECT_TYPE_INT32_FLAG 0x80
+#define OBJECT_TYPE_INT64_FLAG 0xc0
+#define OBJECT_TYPE_INT_TYPE_MASK 0xc0
 #define OBJECT_TYPE_FLOAT64_FLAG 0x40
 #define OBJECT_TYPE_REF_FLAG 0x80
 #define OBJECT_TYPE_MAX_TYPE OBJECT_TYPE_FALSE
@@ -119,17 +126,22 @@
 #define OBJECT_TYPE_MAX_MATH OBJECT_TYPE_FLOOR_LOG
 #define OBJECT_TYPE_MAX_MATH_CHAIN OBJECT_TYPE_BIT_NOT
 #define OBJECT_TYPE_MAX_COMPARE OBJECT_TYPE_MORE_EQUAL
-#define IS_OBJECT_INT64(o) ((o)->t&OBJECT_TYPE_INT64_FLAG)
+#define IS_OBJECT_INT16(o) (((o)->t&OBJECT_TYPE_INT_TYPE_MASK)==OBJECT_TYPE_INT16_FLAG)
+#define IS_OBJECT_INT32(o) (((o)->t&OBJECT_TYPE_INT_TYPE_MASK)==OBJECT_TYPE_INT32_FLAG)
+#define IS_OBJECT_INT64(o) (((o)->t&OBJECT_TYPE_INT_TYPE_MASK)==OBJECT_TYPE_INT64_FLAG)
 #define IS_OBJECT_FLOAT64(o) ((o)->t&OBJECT_TYPE_FLOAT64_FLAG)
 #define IS_OBJECT_REF(o) ((o)->t>>7)
 #define IS_OBJECT_TYPE_NOT_TYPE(o) (GET_OBJECT_TYPE(o)>OBJECT_TYPE_MAX_TYPE)
 #define IS_OBJECT_TYPE_MATH_CHAIN_OPERATION(o) (GET_OBJECT_TYPE(o)>OBJECT_TYPE_MAX_FLOW&&GET_OBJECT_TYPE(o)<=OBJECT_TYPE_MAX_MATH_CHAIN)
 #define IS_OBJECT_TYPE_MATH_NO_CHAIN_OPERATION(o) (GET_OBJECT_TYPE(o)>OBJECT_TYPE_MAX_MATH_CHAIN&&GET_OBJECT_TYPE(o)<=OBJECT_TYPE_MAX_MATH)
 #define GET_OBJECT_TYPE(o) ((o)->t&0x3f)
+#define GET_OBJECT_INTEGER_WIDTH(o) (1<<((o)->t>>6))
 #define GET_OBJECT_REF(o) GET_OBJECT_FROM_STACK_OFFSET(*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_ARGUMENT_COUNT(o) (*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_ARGUMENT(o,i) ((object_t*)(((uint8_t*)(o))+(i)))
 #define GET_OBJECT_AS_CHAR(o) (*((char*)(((uint8_t*)(o))+sizeof(object_t))))
+#define GET_OBJECT_AS_INT8(o) (*((int8_t*)(((uint8_t*)(o))+sizeof(object_t))))
+#define GET_OBJECT_AS_INT16(o) (*((int16_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AS_INT32(o) (*((int32_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AS_INT64(o) (*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AS_FLOAT32(o) (*((float*)(((uint8_t*)(o))+sizeof(object_t))))
@@ -141,10 +153,12 @@
 	do{ \
 		arg_count_t* __ac=((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))); \
 		if (*__ac==UINT8_MAX){ \
-			return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_TOO_MANY_ARGUMENTS,sp,ep-sp)); \
+			return RETURN_ERROR_AS_OBJECT(CREATE_ERROR_FILE_OFFSET(ERROR_TOO_MANY_ARGUMENTS,sp,ep-sp)); \
 		} \
 		(*__ac)++; \
 	} while (0)
+#define SET_OBJECT_AS_INT8(o,i) ((*((int8_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int8_t)(i))
+#define SET_OBJECT_AS_INT16(o,i) ((*((int16_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int16_t)(i))
 #define SET_OBJECT_AS_INT32(o,i) ((*((int32_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int32_t)(i))
 #define SET_OBJECT_AS_INT64(o,i) ((*((int64_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int64_t)(i))
 #define SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
@@ -161,13 +175,16 @@
 #define GET_OBJECT_FROM_STACK_OFFSET(i) ((object_t*)(_bf+(i)))
 
 #define END_OF_DATA -1
-#define READ_FROM_INPUT_DATA_STREAM(in) ((in)->rf((in)))
-#define GET_INPUT_DATA_STREAM_OFFSET(in) ((in)->_off)
-#define INPUT_DATA_STREAM_RESTART_LINE(in,lp) ((in)->rlf((in),(lp)))
+#define READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
+#define GET_INPUT_DATA_STREAM_OFFSET(is) ((is)->_off)
+#define INPUT_DATA_STREAM_RESTART_LINE(is,lp) ((is)->rlf((is),(lp)))
+
+#define WRITE_TO_OUTPUT_DATA_STREAM(os,bf,sz) ((os)->wf((os),(bf),(sz)))
 
 
 
 struct __INPUT_DATA_SOURCE;
+struct __OUTPUT_DATA_STREAM;
 
 
 
@@ -183,21 +200,32 @@ typedef uint64_t error_t;
 
 
 
-typedef int (*input_data_source_read_t)(struct __INPUT_DATA_SOURCE* in);
+typedef int (*input_data_stream_read_t)(struct __INPUT_DATA_SOURCE* in);
 
 
 
-typedef void (*input_data_source_restart_line_t)(struct __INPUT_DATA_SOURCE* in,uint32_t lp);
+typedef void (*input_data_stream_restart_line_t)(struct __INPUT_DATA_SOURCE* in,uint32_t lp);
+
+
+
+typedef uint8_t (*output_data_stream_write_t)(struct __OUTPUT_DATA_STREAM* in,uint8_t* bf,size_t sz);
 
 
 
 typedef struct __INPUT_DATA_SOURCE{
 	void* ctx;
-	input_data_source_read_t rf;
-	input_data_source_restart_line_t rlf;
+	input_data_stream_read_t rf;
+	input_data_stream_restart_line_t rlf;
 	uint32_t _lc;
 	uint32_t _off;
-} input_data_source_t;
+} input_data_stream_t;
+
+
+
+typedef struct __OUTPUT_DATA_STREAM{
+	void* ctx;
+	output_data_stream_write_t wf;
+} output_data_stream_t;
 
 
 
@@ -207,11 +235,15 @@ typedef struct __OBJECT{
 
 
 
-IMPORT_EXPORT void create_input_data_source(FILE* f,input_data_source_t* o);
+IMPORT_EXPORT void create_input_data_stream(FILE* f,input_data_stream_t* o);
 
 
 
-IMPORT_EXPORT void print_error(input_data_source_t* in,error_t e);
+IMPORT_EXPORT void create_output_data_stream(FILE* f,output_data_stream_t* o);
+
+
+
+IMPORT_EXPORT void print_error(input_data_stream_t* in,error_t e);
 
 
 
@@ -219,7 +251,11 @@ IMPORT_EXPORT void print_object(object_t* o,FILE* f);
 
 
 
-IMPORT_EXPORT object_t* read_object(input_data_source_t* in);
+IMPORT_EXPORT object_t* read_object(input_data_stream_t* in);
+
+
+
+IMPORT_EXPORT error_t write_object(output_data_stream_t* os,object_t* o);
 
 
 
