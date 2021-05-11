@@ -43,9 +43,7 @@
 #define HIGHLIGHT_COLOR_RESET "\x1b[0m"
 #ifdef _MSC_VER
 #pragma intrinsic(__movsb)
-#pragma intrinsic(__movsw)
-#define REPEATE_BYTE_COPY(d,s,sz) __movsb(d,s,sz)
-#define REPEATE_WORD_COPY(d,s,sz) __movsw(d,s,sz)
+#define REPEAT_BYTE_COPY(d,s,sz) __movsb(d,s,sz)
 #define __unreachable() __assume(0)
 #define ENABLE_COLOR() \
 	uint32_t __tv; \
@@ -59,11 +57,8 @@
 		SetConsoleMode(GetStdHandle(-11),__tv); \
 	} while (0)
 #else
-static inline void REPEATE_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
+static inline void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
 	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
-}
-static inline void REPEATE_WORD_COPY(unsigned short* d,unsigned short* s,size_t n){
-	__asm__("rep movsw":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
 #define __unreachable() __builtin_unreachable()
 #define ENABLE_COLOR()
@@ -472,7 +467,9 @@ uint64_t _read_single_char(input_data_stream_t* is,char t,uint32_t st){
 		if (c==END_OF_DATA){
 			return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_UNTERMINATED_ESCAPE_SEQUENCE,st,GET_INPUT_DATA_STREAM_OFFSET(is)-st-2));
 		}
-		if (c=='\''||c=='"'||c=='\\');
+		if (c=='\''||c=='"'||c=='\\'){
+			goto _skip_parse;
+		}
 		else if (c=='x'){
 			c=READ_FROM_INPUT_DATA_STREAM(is);
 			if (c==END_OF_DATA){
@@ -522,6 +519,7 @@ uint64_t _read_single_char(input_data_stream_t* is,char t,uint32_t st){
 			return READ_SINGLE_CHAR_RETURN_ERROR(CREATE_ERROR_CHAR(ERROR_UNKNOWN_ESCAPE_CHARACTER,c));
 		}
 	}
+_skip_parse:
 	*((char*)(_bf+_bf_ptr))=c;
 	_bf_ptr++;
 	if (_bf_ptr>=INTERNAL_STACK_SIZE){
@@ -1390,17 +1388,17 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 		case OBJECT_TYPE_IDENTIFIER:;
 			string_length_t sl=GET_OBJECT_STRING_LENGTH(o);
 			FAST_DATA_COPY(d,s,sizeof(object_t)+sizeof(string_length_t));
-			REPEATE_BYTE_COPY(d+sizeof(object_t)+sizeof(string_length_t),s+sizeof(object_t)+sizeof(string_length_t),sl);
+			REPEAT_BYTE_COPY(d+sizeof(object_t)+sizeof(string_length_t),s+sizeof(object_t)+sizeof(string_length_t),sl);
 			return sizeof(object_t)+sizeof(string_length_t)+sl+pad;
 		case OBJECT_TYPE_INT:;
 			uint32_t w=GET_OBJECT_INTEGER_WIDTH(o);
 			FAST_DATA_COPY(d,s,sizeof(object_t));
-			REPEATE_BYTE_COPY(d+sizeof(object_t),s+sizeof(object_t),w);
+			REPEAT_BYTE_COPY(d+sizeof(object_t),s+sizeof(object_t),w);
 			return sizeof(object_t)+w+pad;
 		case OBJECT_TYPE_FLOAT:
 			w=(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
 			FAST_DATA_COPY(d,s,sizeof(object_t));
-			REPEATE_BYTE_COPY(d+sizeof(object_t),s+sizeof(object_t),w);
+			REPEAT_BYTE_COPY(d+sizeof(object_t),s+sizeof(object_t),w);
 			return sizeof(object_t)+w+pad;
 		case OBJECT_TYPE_OPERATION_LIST:;
 			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
@@ -1415,7 +1413,7 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 			debug_object_t* dbg=(debug_object_t*)o;
 			FAST_DATA_COPY(d,s,sizeof(debug_object_t));
 			uint32_t sz=GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-			REPEATE_BYTE_COPY(d+sizeof(debug_object_t),s+sizeof(debug_object_t),sz);
+			REPEAT_BYTE_COPY(d+sizeof(debug_object_t),s+sizeof(debug_object_t),sz);
 			return sizeof(debug_object_t)+sz+_remove_padding_internal(GET_DEBUG_OBJECT_CHILD(dbg,sizeof(debug_object_t)+sz),rm)+pad;
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
