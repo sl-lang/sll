@@ -71,6 +71,72 @@ uint32_t _bf_ptr=0;
 
 
 
+error_t _insert_debug_object(input_data_stream_t* is){
+	debug_object_t* dbg=(debug_object_t*)(_bf+_bf_ptr);
+	_bf_ptr+=sizeof(debug_object_t);
+	if (_bf_ptr>=INTERNAL_STACK_SIZE){
+		return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is)-2,0));
+	}
+	dbg->t=OBJECT_TYPE_DEBUG_DATA;
+	dbg->f=0;
+	uint32_t ln=GET_INPUT_DATA_STREAM_LINE_NUMBER(is);
+	uint32_t i=0;
+	if (ln>UINT16_MAX){
+		dbg->f|=DEBUG_OBJECT_LINE_NUMBER_INT32;
+		SET_DEBUG_OBJECT_DATA_INT32(dbg,0,ln);
+		i+=sizeof(uint32_t);
+	}
+	else if (ln>UINT8_MAX){
+		dbg->f|=DEBUG_OBJECT_LINE_NUMBER_INT16;
+		SET_DEBUG_OBJECT_DATA_INT16(dbg,0,ln);
+		i+=sizeof(uint16_t);
+	}
+	else{
+		dbg->f|=DEBUG_OBJECT_LINE_NUMBER_INT8;
+		SET_DEBUG_OBJECT_DATA_INT8(dbg,0,ln);
+		i+=sizeof(uint8_t);
+	}
+	uint32_t cl=GET_INPUT_DATA_STREAM_OFFSET(is)-GET_INPUT_DATA_STREAM_LINE_OFFSET(is)-1;
+	if (cl>UINT16_MAX){
+		dbg->f|=DEBUG_OBJECT_COLUMN_NUMBER_INT32;
+		SET_DEBUG_OBJECT_DATA_INT32(dbg,i,cl);
+		i+=sizeof(uint32_t);
+	}
+	else if (cl>UINT8_MAX){
+		dbg->f|=DEBUG_OBJECT_COLUMN_NUMBER_INT16;
+		SET_DEBUG_OBJECT_DATA_INT16(dbg,i,cl);
+		i+=sizeof(uint16_t);
+	}
+	else{
+		dbg->f|=DEBUG_OBJECT_COLUMN_NUMBER_INT8;
+		SET_DEBUG_OBJECT_DATA_INT8(dbg,i,cl);
+		i+=sizeof(uint8_t);
+	}
+	uint32_t ln_off=GET_INPUT_DATA_STREAM_LINE_OFFSET(is);
+	if (ln_off>UINT16_MAX){
+		dbg->f|=DEBUG_OBJECT_FILE_OFFSET_INT32;
+		SET_DEBUG_OBJECT_DATA_INT32(dbg,i,ln_off);
+		i+=sizeof(uint32_t);
+	}
+	else if (ln_off>UINT8_MAX){
+		dbg->f|=DEBUG_OBJECT_FILE_OFFSET_INT16;
+		SET_DEBUG_OBJECT_DATA_INT16(dbg,i,ln_off);
+		i+=sizeof(uint16_t);
+	}
+	else{
+		dbg->f|=DEBUG_OBJECT_FILE_OFFSET_INT8;
+		SET_DEBUG_OBJECT_DATA_INT8(dbg,i,ln_off);
+		i+=sizeof(uint8_t);
+	}
+	_bf_ptr+=i;
+	if (_bf_ptr>=INTERNAL_STACK_SIZE){
+		return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is)-2,0));
+	}
+	return RETURN_NO_ERROR();
+}
+
+
+
 void _copy_data(uint8_t* d,uint8_t* s,uint64_t c){
 	REPEATE_BYTE_COPY(d,s,c);
 }
@@ -344,14 +410,40 @@ uint32_t _print_object_internal(object_t* o,compilation_data_t* c_dt,FILE* f){
 			return off+eoff;
 		case OBJECT_TYPE_DEBUG_DATA:
 			debug_object_t* dbg=(debug_object_t*)o;
-			fprintf(f,"@%u:%u@",dbg->ln+1,dbg->cl+1);
-			return sizeof(debug_object_t)+eoff+_print_object_internal(GET_OBJECT_DEBUG_OBJECT(o),c_dt,f);
+			uint32_t i=0;
+			if (dbg->f&DEBUG_OBJECT_LINE_NUMBER_INT32){
+				fprintf(f,"@%u:",GET_DEBUG_OBJECT_DATA_INT32(dbg,0)+1);
+				i+=sizeof(uint32_t);
+			}
+			else if (dbg->f&DEBUG_OBJECT_LINE_NUMBER_INT16){
+				fprintf(f,"@%u:",GET_DEBUG_OBJECT_DATA_INT16(dbg,0)+1);
+				i+=sizeof(uint16_t);
+			}
+			else{
+				fprintf(f,"@%u:",GET_DEBUG_OBJECT_DATA_INT8(dbg,0)+1);
+				i+=sizeof(uint8_t);
+			}
+			if (dbg->f&DEBUG_OBJECT_COLUMN_NUMBER_INT32){
+				fprintf(f,"%u@",GET_DEBUG_OBJECT_DATA_INT32(dbg,i)+1);
+				i+=sizeof(uint32_t);
+			}
+			else if (dbg->f&DEBUG_OBJECT_COLUMN_NUMBER_INT16){
+				fprintf(f,"%u@",GET_DEBUG_OBJECT_DATA_INT16(dbg,i)+1);
+				i+=sizeof(uint16_t);
+			}
+			else{
+				fprintf(f,"%u@",GET_DEBUG_OBJECT_DATA_INT8(dbg,i)+1);
+				i+=sizeof(uint8_t);
+			}
+			i+=sizeof(debug_object_t)+GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
+			return i+eoff+_print_object_internal(GET_DEBUG_OBJECT_CHILD(dbg,i),c_dt,f);
 		default:
 			__unreachable();
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
-	for (arg_count_t i=0;i<l;i++){
+	while (l){
+		l--;
 		fputc(' ',f);
 		off+=_print_object_internal(GET_OBJECT_ARGUMENT(o,off),c_dt,f);
 	}
@@ -1003,7 +1095,9 @@ uint32_t _get_object_size(object_t* o){
 			}
 			return off+eoff;
 		case OBJECT_TYPE_DEBUG_DATA:
-			return sizeof(debug_object_t)+eoff+_get_object_size(GET_OBJECT_DEBUG_OBJECT(o));
+			debug_object_t* dbg=(debug_object_t*)o;
+			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
+			return sz+eoff+_get_object_size(GET_DEBUG_OBJECT_CHILD(dbg,sz));
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
@@ -1072,10 +1166,13 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 			SET_OBJECT_STATEMENT_COUNT(o,l);
 			return off+eoff;
 		case OBJECT_TYPE_DEBUG_DATA:
-			uint8_t ot=GET_OBJECT_TYPE(GET_OBJECT_DEBUG_OBJECT(o));
-			off=sizeof(debug_object_t)+_optimize_object_internal(GET_OBJECT_DEBUG_OBJECT(o),e,rj);
-			if (GET_OBJECT_TYPE(GET_OBJECT_DEBUG_OBJECT(o))!=ot){
-				for (uint32_t i=0;i<sizeof(debug_object_t);i++){
+			debug_object_t* dbg=(debug_object_t*)o;
+			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
+			object_t* c=GET_DEBUG_OBJECT_CHILD(dbg,sz);
+			uint8_t ot=GET_OBJECT_TYPE(c);
+			off=sz+_optimize_object_internal(c,e,rj);
+			if (GET_OBJECT_TYPE(c)!=ot){
+				for (uint32_t i=0;i<sz;i++){
 					WRITE_OBJECT_NOP(o,i);
 				}
 			}
@@ -1204,10 +1301,12 @@ uint32_t _remove_debug_data_internal(object_t* o){
 			}
 			return off+eoff;
 		case OBJECT_TYPE_DEBUG_DATA:
-			for (uint32_t i=0;i<sizeof(debug_object_t);i++){
+			debug_object_t* dbg=(debug_object_t*)o;
+			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
+			for (uint32_t i=0;i<sz;i++){
 				WRITE_OBJECT_NOP(o,i);
 			}
-			return sizeof(debug_object_t)+eoff+_remove_debug_data_internal(GET_OBJECT_DEBUG_OBJECT(o));
+			return sz+eoff+_remove_debug_data_internal(GET_DEBUG_OBJECT_CHILD(dbg,sz));
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
@@ -1267,8 +1366,10 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 			}
 			return off+pad;
 		case OBJECT_TYPE_DEBUG_DATA:
-			_copy_data(d,s,sizeof(debug_object_t));
-			return sizeof(debug_object_t)+_remove_padding_internal(GET_OBJECT_DEBUG_OBJECT(o),rm)+pad;
+			debug_object_t* dbg=(debug_object_t*)o;
+			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
+			_copy_data(d,s,sz);
+			return sz+_remove_padding_internal(GET_DEBUG_OBJECT_CHILD(dbg,sz),rm)+pad;
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	_copy_data(d,s,sizeof(object_t)+sizeof(arg_count_t));

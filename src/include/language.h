@@ -6,14 +6,12 @@
 
 
 #ifdef _MSC_VER
-#define PACKED_STRUCT(nm) __pragma(pack(push,1)) struct nm __pragma(pack(pop))
 #ifdef DLL1_EXPORTS
 #define IMPORT_EXPORT __declspec(dllexport)
 #else
 #define IMPORT_EXPORT __declspec(dllimport)
 #endif
 #else
-#define PACKED_STRUCT(nm) struct __attribute__((packed)) nm
 #define IMPORT_EXPORT
 #endif
 #ifndef NULL
@@ -160,7 +158,6 @@
 #define GET_OBJECT_AS_FLOAT64(o) (*((double*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_STRING_LENGTH(o) (*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AS_STRING(o) ((char*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(string_length_t)))
-#define GET_OBJECT_DEBUG_OBJECT(o) ((object_t*)(((uint8_t*)(o))+sizeof(debug_object_t)))
 #define GET_OBJECT_AS_REF(o) GET_OBJECT_FROM_STACK_OFFSET(*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AFTER_NOP(o) ((o)+1)
 #define RESET_OBJECT_ARGUMENT_COUNT(o) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=0)
@@ -183,15 +180,10 @@
 	} while (0)
 #define INSERT_DEBUG_OBJECT(is) \
 	do{ \
-		debug_object_t* __dbg=(debug_object_t*)(_bf+_bf_ptr); \
-		_bf_ptr+=sizeof(debug_object_t); \
-		if (_bf_ptr>=INTERNAL_STACK_SIZE){ \
-			return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),0)); \
+		error_t __dbg_e=_insert_debug_object(is); \
+		if (IS_ERROR(__dbg_e)){ \
+			return __dbg_e; \
 		} \
-		__dbg->t=OBJECT_TYPE_DEBUG_DATA; \
-		__dbg->ln=GET_INPUT_DATA_STREAM_LINE_NUMBER(is); \
-		__dbg->cl=GET_INPUT_DATA_STREAM_OFFSET(is)-GET_INPUT_DATA_STREAM_LINE_OFFSET(is)-1; \
-		__dbg->ln_off=GET_INPUT_DATA_STREAM_LINE_OFFSET(is); \
 	} while (0)
 #define SET_OBJECT_ARGUMENT_COUNT(o,c) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=(c))
 #define SET_OBJECT_STATEMENT_COUNT(o,c) ((*((statement_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=(c))
@@ -203,6 +195,27 @@
 #define SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
 #define SET_OBJECT_STRING_LENGTH(o,sz) ((*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))=(sz))
 #define WRITE_OBJECT_NOP(o,i) ((*(((uint8_t*)(o))+(i)))=OBJECT_TYPE_NOP)
+
+#define DEBUG_OBJECT_LINE_NUMBER_INT8 0x0
+#define DEBUG_OBJECT_LINE_NUMBER_INT16 0x1
+#define DEBUG_OBJECT_LINE_NUMBER_INT32 0x2
+#define DEBUG_OBJECT_COLUMN_NUMBER_INT8 0x0
+#define DEBUG_OBJECT_COLUMN_NUMBER_INT16 0x4
+#define DEBUG_OBJECT_COLUMN_NUMBER_INT32 0x8
+#define DEBUG_OBJECT_FILE_OFFSET_INT8 0x0
+#define DEBUG_OBJECT_FILE_OFFSET_INT16 0x10
+#define DEBUG_OBJECT_FILE_OFFSET_INT32 0x20
+#define GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(o) ((uint32_t)(1<<((o)->f&0x3)))
+#define GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(o) ((uint32_t)(1<<(((o)->f>>2)&0x3)))
+#define GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(o) ((uint32_t)(1<<((o)->f>>4)))
+#define GET_DEBUG_OBJECT_SIZE(o) (sizeof(debug_object_t)+GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(o)+GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(o)+GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(o))
+#define GET_DEBUG_OBJECT_DATA_INT8(o,i) (*(((uint8_t*)(o))+sizeof(debug_object_t)+(i)))
+#define GET_DEBUG_OBJECT_DATA_INT16(o,i) (*((uint16_t*)(((uint8_t*)(o))+sizeof(debug_object_t)+(i))))
+#define GET_DEBUG_OBJECT_DATA_INT32(o,i) (*((uint32_t*)(((uint8_t*)(o))+sizeof(debug_object_t)+(i))))
+#define GET_DEBUG_OBJECT_CHILD(o,i) ((object_t*)(((uint8_t*)(o))+(i)))
+#define SET_DEBUG_OBJECT_DATA_INT8(o,i,v) ((*((uint8_t*)(((uint8_t*)(o))+sizeof(debug_object_t)+(i))))=((uint8_t)(v)))
+#define SET_DEBUG_OBJECT_DATA_INT16(o,i,v) ((*((uint16_t*)(((uint8_t*)(o))+sizeof(debug_object_t)+(i))))=((uint16_t)(v)))
+#define SET_DEBUG_OBJECT_DATA_INT32(o,i,v) ((*((uint32_t*)(((uint8_t*)(o))+sizeof(debug_object_t)+(i))))=((uint32_t)(v)))
 
 #ifndef INTERNAL_STACK_SIZE
 #define INTERNAL_STACK_SIZE 65536
@@ -279,17 +292,15 @@ typedef struct __OUTPUT_DATA_STREAM{
 
 
 
-typedef PACKED_STRUCT(__OBJECT){
+typedef struct __OBJECT{
 	uint8_t t;
 } object_t;
 
 
 
-typedef PACKED_STRUCT(__DEBUG_OBJECT){
+typedef struct __DEBUG_OBJECT{
 	uint8_t t;
-	uint32_t ln;
-	uint32_t cl;
-	uint32_t ln_off;
+	uint8_t f;
 } debug_object_t;
 
 
