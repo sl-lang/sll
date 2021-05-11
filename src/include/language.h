@@ -330,7 +330,7 @@ IMPORT_EXPORT void print_error(input_data_stream_t* is,error_t e);
 
 
 
-IMPORT_EXPORT void print_object(object_t* o,compilation_data_t* c_dt,FILE* f);
+IMPORT_EXPORT void print_object(object_t* o,FILE* f);
 
 
 

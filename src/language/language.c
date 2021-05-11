@@ -25,6 +25,11 @@
 #define FAST_COMPARE_5(s,a,b,c,d,e) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((s)+4)==CONSTRUCT_CHAR(e))
 #define FAST_COMPARE_6(s,a,b,c,d,e,f) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((uint16_t*)(s+4))==CONSTRUCT_WORD(CONSTRUCT_CHAR(e),CONSTRUCT_CHAR(f)))
 #define FAST_COMPARE_7(s,a,b,c,d,e,f,g) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((uint16_t*)(s+4))==CONSTRUCT_WORD(CONSTRUCT_CHAR(e),CONSTRUCT_CHAR(f))&&*((s)+6)==CONSTRUCT_CHAR(g))
+#define FAST_DATA_COPY(d,s,sz) _Generic(&(char[(sz)]){0},char(*)[1]:FAST_DATA_COPY_1((d),(s),(sz)),char(*)[2]:FAST_DATA_COPY_2((d),(s),(sz)),char(*)[3]:FAST_DATA_COPY_3((d),(s),(sz)),char(*)[5]:FAST_DATA_COPY_5((d),(s),(sz)))
+#define FAST_DATA_COPY_1(d,s,sz) ((*((uint8_t*)(d)))=(*((uint8_t*)(s))))
+#define FAST_DATA_COPY_2(d,s,sz) ((*((uint16_t*)(d)))=(*((uint16_t*)(s))))
+#define FAST_DATA_COPY_3(d,s,sz) ((*((uint16_t*)(d)))=(*((uint16_t*)(s))),(*(((uint8_t*)(d))+2))=(*(((uint8_t*)(s))+2)))
+#define FAST_DATA_COPY_5(d,s,sz) ((*((uint64_t*)(d)))=(*((uint64_t*)(s))),(*(((uint8_t*)(d))+4))=(*(((uint8_t*)(s))+4)))
 #define READ_SINGLE_CHAR_OK 0
 #define READ_SINGLE_CHAR_END 1
 #define READ_SINGLE_CHAR_ERROR 2
@@ -138,12 +143,6 @@ error_t _insert_debug_object(input_data_stream_t* is){
 
 
 
-void _copy_data(uint8_t* d,uint8_t* s,uint64_t c){
-	REPEATE_BYTE_COPY(d,s,c);
-}
-
-
-
 int _input_data_stream_file_read(input_data_stream_t* is){
 	int o=fgetc((FILE*)(is->ctx));
 	if (o==EOF){
@@ -179,7 +178,7 @@ uint8_t _output_data_stream_file_write(output_data_stream_t* os,uint8_t* bf,size
 
 
 
-uint32_t _print_object_internal(object_t* o,compilation_data_t* c_dt,FILE* f){
+uint32_t _print_object_internal(object_t* o,FILE* f){
 	uint32_t eoff=0;
 	while (o->t==OBJECT_TYPE_NOP){
 		eoff+=sizeof(object_t);
@@ -405,7 +404,7 @@ uint32_t _print_object_internal(object_t* o,compilation_data_t* c_dt,FILE* f){
 				if (i){
 					fputc(' ',f);
 				}
-				off+=_print_object_internal(GET_OBJECT_STATEMENT(o,off),c_dt,f);
+				off+=_print_object_internal(GET_OBJECT_STATEMENT(o,off),f);
 			}
 			fputc('}',f);
 			return off+eoff;
@@ -437,7 +436,7 @@ uint32_t _print_object_internal(object_t* o,compilation_data_t* c_dt,FILE* f){
 				i+=sizeof(uint8_t);
 			}
 			i+=sizeof(debug_object_t)+GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-			return i+eoff+_print_object_internal(GET_DEBUG_OBJECT_CHILD(dbg,i),c_dt,f);
+			return i+eoff+_print_object_internal(GET_DEBUG_OBJECT_CHILD(dbg,i),f);
 		default:
 			__unreachable();
 	}
@@ -446,7 +445,7 @@ uint32_t _print_object_internal(object_t* o,compilation_data_t* c_dt,FILE* f){
 	while (l){
 		l--;
 		fputc(' ',f);
-		off+=_print_object_internal(GET_OBJECT_ARGUMENT(o,off),c_dt,f);
+		off+=_print_object_internal(GET_OBJECT_ARGUMENT(o,off),f);
 	}
 	fputc(')',f);
 	return off+eoff;
@@ -1113,13 +1112,17 @@ uint32_t _get_object_size(object_t* o){
 
 uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 	uint32_t eoff=0;
+_skip_empty:
 	while (o->t==OBJECT_TYPE_NOP){
 		eoff+=sizeof(object_t);
 		o=GET_OBJECT_AFTER_NOP(o);
 	}
 	if (IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
-		while (IS_OBJECT_REF(o)){
-			o=GET_OBJECT_AS_REF(o);
+		if (IS_OBJECT_REF(o)){
+			while (IS_OBJECT_REF(o)){
+				o=GET_OBJECT_AS_REF(o);
+			}
+			goto _skip_empty;
 		}
 	}
 	switch (GET_OBJECT_TYPE(o)){
@@ -1144,6 +1147,14 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 				uint32_t st_l=_optimize_object_internal(GET_OBJECT_STATEMENT(o,off),e,rj);
 				object_t* st=GET_OBJECT_STATEMENT(o,off);
 				off+=st_l;
+				while (st->t==OBJECT_TYPE_NOP||GET_OBJECT_TYPE(st)==OBJECT_TYPE_DEBUG_DATA){
+					if (st->t==OBJECT_TYPE_NOP){
+						st=GET_OBJECT_AFTER_NOP(st);
+						continue;
+					}
+					debug_object_t* dbg=(debug_object_t*)st;
+					st=GET_DEBUG_OBJECT_CHILD(dbg,GET_DEBUG_OBJECT_SIZE(dbg));
+				}
 				if (IS_OBJECT_TYPE_TYPE(st)){
 					l--;
 					for (uint32_t j=off-st_l;j<off;j++){
@@ -1181,12 +1192,17 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
+	arg_count_t nl=l;
 	arg_count_t i=0;
 	while (i<l){
 		uint32_t al=_optimize_object_internal(GET_OBJECT_ARGUMENT(o,off),e,rj);
 		object_t* a=GET_OBJECT_ARGUMENT(o,off);
 		off+=al;
-		if (IS_OBJECT_TYPE_MATH_CHAIN(o)){
+		if (0&&IS_OBJECT_TYPE_MATH_CHAIN(o)){
+			while (GET_OBJECT_TYPE(a)==OBJECT_TYPE_DEBUG_DATA){
+				debug_object_t* dbg=(debug_object_t*)a;
+				a=GET_DEBUG_OBJECT_CHILD(dbg,GET_DEBUG_OBJECT_SIZE(dbg));
+			}
 			switch (GET_OBJECT_TYPE(a)){
 				case OBJECT_TYPE_CHAR:
 					break;
@@ -1197,12 +1213,29 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 				case OBJECT_TYPE_FLOAT:
 					break;
 				case OBJECT_TYPE_NIL:
-					l--;
+					nl--;
 					for (uint32_t j=off-al;j<off;j++){
 						WRITE_OBJECT_NOP(o,j);
 					}
 					break;
 				case OBJECT_TYPE_TRUE:
+					switch (GET_OBJECT_TYPE(o)){
+						case OBJECT_TYPE_DIV:
+						case OBJECT_TYPE_FLOOR_DIV:
+						case OBJECT_TYPE_MOD:
+							if (!i){
+								break;
+							}
+						case OBJECT_TYPE_MULT:
+							nl--;
+							for (uint32_t j=off-al;j<off;j++){
+								WRITE_OBJECT_NOP(o,j);
+							}
+							break;
+						case OBJECT_TYPE_BIT_NOT:
+							printf("SET OBJECT TO -2!\n");
+							break;
+					}
 					break;
 				case OBJECT_TYPE_FALSE:
 					switch (GET_OBJECT_TYPE(o)){
@@ -1210,7 +1243,7 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 						case OBJECT_TYPE_SUB:
 						case OBJECT_TYPE_BIT_OR:
 						case OBJECT_TYPE_BIT_XOR:
-							l--;
+							nl--;
 							for (uint32_t j=off-al;j<off;j++){
 								WRITE_OBJECT_NOP(o,j);
 							}
@@ -1227,6 +1260,7 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 						case OBJECT_TYPE_MULT:
 						case OBJECT_TYPE_BIT_AND:
 _set_to_0:
+							i++;
 							while (i<l){
 								i++;
 								off+=_get_object_size(GET_OBJECT_ARGUMENT(o,off));
@@ -1246,7 +1280,15 @@ _set_to_0:
 		}
 		i++;
 	}
-	if (l==1){
+	if (!nl&&IS_OBJECT_TYPE_MATH_CHAIN(o)){
+		o->t=OBJECT_TYPE_INT;
+		SET_OBJECT_AS_INT8(o,0);
+		for (uint32_t i=sizeof(object_t)+sizeof(int8_t);i<off;i++){
+			WRITE_OBJECT_NOP(o,i);
+		}
+		return off+eoff;
+	}
+	if (nl==1){
 		if (IS_OBJECT_TYPE_COMPARE(o)){
 			o->t=OBJECT_TYPE_TRUE;
 			for (uint32_t i=sizeof(object_t);i<off;i++){
@@ -1261,7 +1303,7 @@ _set_to_0:
 			return off+eoff;
 		}
 	}
-	SET_OBJECT_ARGUMENT_COUNT(o,l);
+	SET_OBJECT_ARGUMENT_COUNT(o,nl);
 	return off+eoff;
 }
 
@@ -1339,27 +1381,30 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 		case OBJECT_TYPE_NIL:
 		case OBJECT_TYPE_TRUE:
 		case OBJECT_TYPE_FALSE:
-			_copy_data(d,s,sizeof(object_t));
+			FAST_DATA_COPY(d,s,sizeof(object_t));
 			return sizeof(object_t)+pad;
 		case OBJECT_TYPE_CHAR:
-			_copy_data(d,s,sizeof(object_t)+sizeof(char));
+			FAST_DATA_COPY(d,s,sizeof(object_t)+sizeof(char));
 			return sizeof(object_t)+sizeof(char)+pad;
 		case OBJECT_TYPE_STRING:
 		case OBJECT_TYPE_IDENTIFIER:;
 			string_length_t sl=GET_OBJECT_STRING_LENGTH(o);
-			_copy_data(d,s,sizeof(object_t)+sizeof(string_length_t)+sl);
+			FAST_DATA_COPY(d,s,sizeof(object_t)+sizeof(string_length_t));
+			REPEATE_BYTE_COPY(d+sizeof(object_t)+sizeof(string_length_t),s+sizeof(object_t)+sizeof(string_length_t),sl);
 			return sizeof(object_t)+sizeof(string_length_t)+sl+pad;
 		case OBJECT_TYPE_INT:;
 			uint32_t w=GET_OBJECT_INTEGER_WIDTH(o);
-			_copy_data(d,s,sizeof(object_t)+w);
+			FAST_DATA_COPY(d,s,sizeof(object_t));
+			REPEATE_BYTE_COPY(d+sizeof(object_t),s+sizeof(object_t),w);
 			return sizeof(object_t)+w+pad;
 		case OBJECT_TYPE_FLOAT:
 			w=(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
-			_copy_data(d,s,sizeof(object_t)+w);
+			FAST_DATA_COPY(d,s,sizeof(object_t));
+			REPEATE_BYTE_COPY(d+sizeof(object_t),s+sizeof(object_t),w);
 			return sizeof(object_t)+w+pad;
 		case OBJECT_TYPE_OPERATION_LIST:;
 			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
-			_copy_data(d,s,sizeof(object_t)+sizeof(statement_count_t));
+			FAST_DATA_COPY(d,s,sizeof(object_t)+sizeof(statement_count_t));
 			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
 			while (l){
 				l--;
@@ -1368,12 +1413,13 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 			return off+pad;
 		case OBJECT_TYPE_DEBUG_DATA:;
 			debug_object_t* dbg=(debug_object_t*)o;
-			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
-			_copy_data(d,s,sz);
-			return sz+_remove_padding_internal(GET_DEBUG_OBJECT_CHILD(dbg,sz),rm)+pad;
+			FAST_DATA_COPY(d,s,sizeof(debug_object_t));
+			uint32_t sz=GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
+			REPEATE_BYTE_COPY(d+sizeof(debug_object_t),s+sizeof(debug_object_t),sz);
+			return sizeof(debug_object_t)+sz+_remove_padding_internal(GET_DEBUG_OBJECT_CHILD(dbg,sizeof(debug_object_t)+sz),rm)+pad;
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
-	_copy_data(d,s,sizeof(object_t)+sizeof(arg_count_t));
+	FAST_DATA_COPY(d,s,sizeof(object_t)+sizeof(arg_count_t));
 	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
 	while (l){
 		l--;
@@ -1560,8 +1606,8 @@ void print_error(input_data_stream_t* is,error_t e){
 
 
 
-void print_object(object_t* o,compilation_data_t* c_dt,FILE* f){
-	_print_object_internal(o,c_dt,f);
+void print_object(object_t* o,FILE* f){
+	_print_object_internal(o,f);
 	fputc('\n',f);
 }
 
