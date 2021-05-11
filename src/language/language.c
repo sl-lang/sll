@@ -4,9 +4,10 @@
 #endif
 #include <language.h>
 #include <inttypes.h>
-#include <stdlib.h>
+#include <setjmp.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 
@@ -408,7 +409,7 @@ uint32_t _print_object_internal(object_t* o,compilation_data_t* c_dt,FILE* f){
 			}
 			fputc('}',f);
 			return off+eoff;
-		case OBJECT_TYPE_DEBUG_DATA:
+		case OBJECT_TYPE_DEBUG_DATA:;
 			debug_object_t* dbg=(debug_object_t*)o;
 			uint32_t i=0;
 			if (dbg->f&DEBUG_OBJECT_LINE_NUMBER_INT32){
@@ -1086,7 +1087,7 @@ uint32_t _get_object_size(object_t* o){
 			return sizeof(object_t)+eoff+GET_OBJECT_INTEGER_WIDTH(o);
 		case OBJECT_TYPE_FLOAT:
 			return sizeof(object_t)+eoff+(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
-		case OBJECT_TYPE_OPERATION_LIST:
+		case OBJECT_TYPE_OPERATION_LIST:;
 			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
 			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
 			while (l){
@@ -1094,7 +1095,7 @@ uint32_t _get_object_size(object_t* o){
 				off+=_get_object_size(GET_OBJECT_STATEMENT(o,off));
 			}
 			return off+eoff;
-		case OBJECT_TYPE_DEBUG_DATA:
+		case OBJECT_TYPE_DEBUG_DATA:;
 			debug_object_t* dbg=(debug_object_t*)o;
 			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
 			return sz+eoff+_get_object_size(GET_DEBUG_OBJECT_CHILD(dbg,sz));
@@ -1136,7 +1137,7 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 			return sizeof(object_t)+eoff+GET_OBJECT_INTEGER_WIDTH(o);
 		case OBJECT_TYPE_FLOAT:
 			return sizeof(object_t)+eoff+(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
-		case OBJECT_TYPE_OPERATION_LIST:
+		case OBJECT_TYPE_OPERATION_LIST:;
 			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
 			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
 			for (statement_count_t i=l;i>0;i--){
@@ -1165,7 +1166,7 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 			}
 			SET_OBJECT_STATEMENT_COUNT(o,l);
 			return off+eoff;
-		case OBJECT_TYPE_DEBUG_DATA:
+		case OBJECT_TYPE_DEBUG_DATA:;
 			debug_object_t* dbg=(debug_object_t*)o;
 			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
 			object_t* c=GET_DEBUG_OBJECT_CHILD(dbg,sz);
@@ -1292,7 +1293,7 @@ uint32_t _remove_debug_data_internal(object_t* o){
 			return sizeof(object_t)+eoff+GET_OBJECT_INTEGER_WIDTH(o);
 		case OBJECT_TYPE_FLOAT:
 			return sizeof(object_t)+eoff+(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
-		case OBJECT_TYPE_OPERATION_LIST:
+		case OBJECT_TYPE_OPERATION_LIST:;
 			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
 			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
 			while (l){
@@ -1300,7 +1301,7 @@ uint32_t _remove_debug_data_internal(object_t* o){
 				off+=_remove_debug_data_internal(GET_OBJECT_STATEMENT(o,off));
 			}
 			return off+eoff;
-		case OBJECT_TYPE_DEBUG_DATA:
+		case OBJECT_TYPE_DEBUG_DATA:;
 			debug_object_t* dbg=(debug_object_t*)o;
 			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
 			for (uint32_t i=0;i<sz;i++){
@@ -1344,11 +1345,11 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 			_copy_data(d,s,sizeof(object_t)+sizeof(char));
 			return sizeof(object_t)+sizeof(char)+pad;
 		case OBJECT_TYPE_STRING:
-		case OBJECT_TYPE_IDENTIFIER:
+		case OBJECT_TYPE_IDENTIFIER:;
 			string_length_t sl=GET_OBJECT_STRING_LENGTH(o);
 			_copy_data(d,s,sizeof(object_t)+sizeof(string_length_t)+sl);
 			return sizeof(object_t)+sizeof(string_length_t)+sl+pad;
-		case OBJECT_TYPE_INT:
+		case OBJECT_TYPE_INT:;
 			uint32_t w=GET_OBJECT_INTEGER_WIDTH(o);
 			_copy_data(d,s,sizeof(object_t)+w);
 			return sizeof(object_t)+w+pad;
@@ -1356,7 +1357,7 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 			w=(IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
 			_copy_data(d,s,sizeof(object_t)+w);
 			return sizeof(object_t)+w+pad;
-		case OBJECT_TYPE_OPERATION_LIST:
+		case OBJECT_TYPE_OPERATION_LIST:;
 			uint32_t off=sizeof(object_t)+sizeof(statement_count_t);
 			_copy_data(d,s,sizeof(object_t)+sizeof(statement_count_t));
 			statement_count_t l=GET_OBJECT_STATEMENT_COUNT(o);
@@ -1365,7 +1366,7 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 				off+=_remove_padding_internal(GET_OBJECT_STATEMENT(o,off),rm);
 			}
 			return off+pad;
-		case OBJECT_TYPE_DEBUG_DATA:
+		case OBJECT_TYPE_DEBUG_DATA:;
 			debug_object_t* dbg=(debug_object_t*)o;
 			uint32_t sz=GET_DEBUG_OBJECT_SIZE(dbg);
 			_copy_data(d,s,sz);
