@@ -4,7 +4,7 @@
 #include <linux/limits.h>
 #include <stdlib.h>
 #endif
-#include <language.h>
+#include <lll.h>
 #include <stdio.h>
 
 
@@ -22,6 +22,11 @@
 #define FLAG_COMPILE_ONLY 2
 #define FLAG_FULL_PATH 4
 #define DEFAULT_OPTIMIZE_LEVEL OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE
+#define COMPILER_STACK_SIZE 65536
+
+
+
+uint8_t st[COMPILER_STACK_SIZE];
 
 
 
@@ -111,6 +116,11 @@ _unkown_switch:
 		}
 		printf("Compiling File '%s'...\n",fp);
 	}
+	lll_error_t e=lll_set_internal_stack(st,COMPILER_STACK_SIZE);
+	if (LLL_IS_ERROR(e)){
+		lll_print_error(NULL,LLL_GET_ERROR(e));
+		return 1;
+	}
 	FILE* f=NULL;
 #ifdef _MSC_VER
 	if (fopen_s(&f,fp,"rb")){// lgtm [cpp/path-injection]
@@ -120,30 +130,40 @@ _unkown_switch:
 		printf("Unable to Open File '%s'!\n",fp);
 		return 1;
 	}
-	input_data_stream_t is;
-	create_input_data_stream(f,&is);
-	compilation_data_t c_dt;
-	init_compilation_data(fp,&is,&c_dt);
-	error_t e=read_all_objects(&c_dt);
-	if (IS_ERROR(e)){
-		print_error(&is,GET_ERROR(e));
+	lll_input_data_stream_t is;
+	lll_create_input_data_stream(f,&is);
+	lll_compilation_data_t c_dt;
+	lll_init_compilation_data(fp,&is,&c_dt);
+	e=lll_read_all_objects(&c_dt);
+	if (LLL_IS_ERROR(e)){
+		lll_print_error(&is,LLL_GET_ERROR(e));
 	}
 	else{
-		print_object(c_dt.h,stdout);
+		lll_print_object(c_dt.h,stdout);
+		putchar('\n');
 		if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
-			error_t e=optimize_object(c_dt.h);
-			if (IS_ERROR(e)){
-				print_error(&is,GET_ERROR(e));
+			e=lll_optimize_object(c_dt.h);
+			if (LLL_IS_ERROR(e)){
+				lll_print_error(&is,LLL_GET_ERROR(e));
 				return 1;
 			}
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
-			remove_object_debug_data(c_dt.h);
+			e=lll_remove_object_debug_data(c_dt.h);
+			if (LLL_IS_ERROR(e)){
+				lll_print_error(&is,LLL_GET_ERROR(e));
+				return 1;
+			}
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
-			remove_object_padding(c_dt.h);
+			e=lll_remove_object_padding(c_dt.h);
+			if (LLL_IS_ERROR(e)){
+				lll_print_error(&is,LLL_GET_ERROR(e));
+				return 1;
+			}
 		}
-		print_object(c_dt.h,stdout);
+		lll_print_object(c_dt.h,stdout);
+		putchar('\n');
 		FILE* of=NULL;
 		char o_fp[512];
 		uint16_t i=0;
@@ -166,9 +186,13 @@ _unkown_switch:
 			printf("Unable to Open File '%s'!\n",o_fp);
 			return 1;
 		}
-		output_data_stream_t os;
-		create_output_data_stream(of,&os);
-		write_object(&os,c_dt.h);
+		lll_output_data_stream_t os;
+		lll_create_output_data_stream(of,&os);
+		e=lll_write_object(&os,c_dt.h);
+		if (LLL_IS_ERROR(e)){
+			lll_print_error(&is,LLL_GET_ERROR(e));
+			return 1;
+		}
 		fclose(of);
 	}
 	fclose(f);
