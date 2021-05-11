@@ -61,8 +61,6 @@
 #define LLL_RETURN_ERROR_AS_OBJECT(e) ((lll_object_t*)(e))
 #define LLL_CREATE_ERROR_FILE_OFFSET(e,off,sz) ((((uint64_t)(sz))<<37)|(((uint64_t)(off))<<5)|(e))
 #define LLL_CREATE_ERROR_CHAR(e,c) ((((uint16_t)(c))<<5)|(e))
-#define LLL_CREATE_ERROR_STRING(e,s) (((((uint64_t)(void*)(s))-((uint64_t)(void*)_bf))<<5)|(e))
-#define LLL_CREATE_ERROR_OBJECT(e,o) (((((uint64_t)(void*)(o))-((uint64_t)(void*)_bf))<<5)|(e))
 #define LLL_CREATE_ERROR_SINGLE_CHAR(e,in) LLL_CREATE_ERROR_FILE_OFFSET(e,LLL_GET_INPUT_DATA_STREAM_OFFSET(in)-2,1)
 
 #define LLL_OBJECT_TYPE_UNKNOWN 0
@@ -143,49 +141,27 @@
 #define LLL_IS_OBJECT_REF(o) ((o)->t>>7)
 #define LLL_GET_OBJECT_TYPE(o) ((o)->t&0x3f)
 #define LLL_GET_OBJECT_INTEGER_WIDTH(o) (1ull<<((o)->t>>6))
-#define LLL_GET_OBJECT_ARGUMENT_COUNT(o) (*((lll_arg_count_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)(((uint8_t*)(o))+(i)))
-#define LLL_GET_OBJECT_STATEMENT_COUNT(o) (*((lll_statement_count_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)(((uint8_t*)(o))+(i)))
-#define LLL_GET_OBJECT_AS_CHAR(o) (*((char*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_INT8(o) (*((int8_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_INT16(o) (*((int16_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_INT32(o) (*((int32_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_INT64(o) (*((int64_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_FLOAT32(o) (*((float*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_FLOAT64(o) (*((double*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_STRING_LENGTH(o) (*((lll_string_length_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_STRING(o) ((char*)(((uint8_t*)(o))+sizeof(lll_object_t)+sizeof(lll_string_length_t)))
-#define LLL_GET_OBJECT_AS_REF(o) LLL_GET_OBJECT_FROM_STACK_OFFSET(*((uint32_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_ARGUMENT_COUNT(o) ((lll_arg_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
+#define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_GET_OBJECT_STATEMENT_COUNT(o) ((lll_statement_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
+#define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_GET_OBJECT_AS_CHAR(o) (*((char*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_AS_INT8(o) (*((int8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_AS_INT16(o) (*((int16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_AS_INT32(o) (*((int32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_AS_INT64(o) (*((int64_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_AS_FLOAT32(o) (*((float*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_AS_FLOAT64(o) (*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_STRING_LENGTH(o) (*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_AS_STRING(o) ((char*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_string_length_t)))
 #define LLL_GET_OBJECT_AFTER_NOP(o) ((o)+1)
-#define LLL_RESET_OBJECT_ARGUMENT_COUNT(o) ((*((lll_arg_count_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=0)
-#define LLL_RESET_OBJECT_STATEMENT_COUNT(o) ((*((lll_statement_count_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=0)
-#define LLL_INCREASE_OBJECT_ARGUMENT_COUNT(o,sp,ep) \
-	do{ \
-		lll_arg_count_t* __ac=((lll_arg_count_t*)(((uint8_t*)(o))+sizeof(lll_object_t))); \
-		if (*__ac==UINT8_MAX){ \
-			return LLL_RETURN_ERROR(LLL_CREATE_ERROR_FILE_OFFSET(LLL_ERROR_TOO_MANY_ARGUMENTS,sp,ep-sp)); \
-		} \
-		(*__ac)++; \
-	} while (0)
-#define LLL_INCREASE_OBJECT_STATEMENT_COUNT(o,sp,ep) \
-	do{ \
-		lll_statement_count_t* __sc=((lll_statement_count_t*)(((uint8_t*)(o))+sizeof(lll_object_t))); \
-		if (*__sc==UINT16_MAX){ \
-			return LLL_RETURN_ERROR(LLL_CREATE_ERROR_FILE_OFFSET(LLL_ERROR_TOO_MANY_STATEMENTS,sp,ep-sp)); \
-		} \
-		(*__sc)++; \
-	} while (0)
-#define LLL_SET_OBJECT_ARGUMENT_COUNT(o,c) ((*((lll_arg_count_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(c))
-#define LLL_SET_OBJECT_STATEMENT_COUNT(o,c) ((*((lll_statement_count_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(c))
-#define LLL_SET_OBJECT_AS_INT8(o,i) ((*((int8_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(int8_t)(i))
-#define LLL_SET_OBJECT_AS_INT16(o,i) ((*((int16_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(int16_t)(i))
-#define LLL_SET_OBJECT_AS_INT32(o,i) ((*((int32_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(int32_t)(i))
-#define LLL_SET_OBJECT_AS_INT64(o,i) ((*((int64_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(int64_t)(i))
-#define LLL_SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(f))
-#define LLL_SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(f))
-#define LLL_SET_OBJECT_STRING_LENGTH(o,sz) ((*((lll_string_length_t*)(((uint8_t*)(o))+sizeof(lll_object_t))))=(sz))
-#define LLL_WRITE_OBJECT_NOP(o,i) ((*(((uint8_t*)(o))+(i)))=LLL_OBJECT_TYPE_NOP)
+#define LLL_SET_OBJECT_AS_INT8(o,i) ((*((int8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=(int8_t)(i))
+#define LLL_SET_OBJECT_AS_INT16(o,i) ((*((int16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=(int16_t)(i))
+#define LLL_SET_OBJECT_AS_INT32(o,i) ((*((int32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=(int32_t)(i))
+#define LLL_SET_OBJECT_AS_INT64(o,i) ((*((int64_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=(int64_t)(i))
+#define LLL_SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=(f))
+#define LLL_SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=(f))
+#define LLL_SET_OBJECT_STRING_LENGTH(o,sz) ((*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=(sz))
 
 #define LLL_DEBUG_OBJECT_LINE_NUMBER_INT8 0x0
 #define LLL_DEBUG_OBJECT_LINE_NUMBER_INT16 0x1
@@ -199,17 +175,16 @@
 #define LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(o) (1ull<<((o)->f&0x3))
 #define LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(o) (1ull<<(((o)->f>>2)&0x3))
 #define LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(o) (1ull<<((o)->f>>4))
-#define LLL_GET_DEBUG_OBJECT_DATA_INT8(o,i) (*(((uint8_t*)(o))+(i)))
-#define LLL_GET_DEBUG_OBJECT_DATA_INT16(o,i) (*((uint16_t*)(((uint8_t*)(o))+(i))))
-#define LLL_GET_DEBUG_OBJECT_DATA_INT32(o,i) (*((uint32_t*)(((uint8_t*)(o))+(i))))
-#define LLL_GET_DEBUG_OBJECT_CHILD(o,i) ((lll_object_t*)(((uint8_t*)(o))+(i)))
-#define LLL_SET_DEBUG_OBJECT_DATA_INT8(o,i,v) ((*((uint8_t*)(((uint8_t*)(o))+(i))))=((uint8_t)(v)))
-#define LLL_SET_DEBUG_OBJECT_DATA_INT16(o,i,v) ((*((uint16_t*)(((uint8_t*)(o))+(i))))=((uint16_t)(v)))
-#define LLL_SET_DEBUG_OBJECT_DATA_INT32(o,i,v) ((*((uint32_t*)(((uint8_t*)(o))+(i))))=((uint32_t)(v)))
+#define LLL_GET_DEBUG_OBJECT_DATA_INT8(o,i) (*LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_GET_DEBUG_OBJECT_DATA_INT16(o,i) (*((uint16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))
+#define LLL_GET_DEBUG_OBJECT_DATA_INT32(o,i) (*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))
+#define LLL_GET_DEBUG_OBJECT_CHILD(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_SET_DEBUG_OBJECT_DATA_INT8(o,i,v) ((*LLL_GET_OBJECT_WITH_OFFSET((o),(i)))=((uint8_t)(v)))
+#define LLL_SET_DEBUG_OBJECT_DATA_INT16(o,i,v) ((*((uint16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint16_t)(v)))
+#define LLL_SET_DEBUG_OBJECT_DATA_INT32(o,i,v) ((*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint32_t)(v)))
 
 #define LLL_MAX_INTERNAL_STACK_SIZE 67108864
-#define LLL_GET_OBJECT_STACK_OFFSET(o) ((uint32_t)(((uint64_t)(o))-((uint64_t)_bf)))
-#define LLL_GET_OBJECT_FROM_STACK_OFFSET(i) ((lll_object_t*)(_bf+(i)))
+#define LLL_GET_OBJECT_WITH_OFFSET(o,i) (((uint8_t*)(o))+(i))
 
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
