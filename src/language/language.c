@@ -343,8 +343,9 @@ uint32_t _print_object_internal(object_t* o,compilation_data_t* c_dt,FILE* f){
 			fputc('}',f);
 			return off+eoff;
 		case OBJECT_TYPE_DEBUG_DATA:
-			fprintf(f,"@%u:%u<%u>@",GET_OBJECT_DEBUG_FILE_LINE(o),GET_OBJECT_DEBUG_FILE_COLUMN(o),GET_OBJECT_DEBUG_FILE_OFFSET(o));
-			return sizeof(object_t)+3*sizeof(uint32_t)+eoff+_print_object_internal(GET_OBJECT_DEBUG_OBJECT(o),c_dt,f);
+			debug_object_t* dbg=(debug_object_t*)o;
+			fprintf(f,"@%u:%u@",dbg->ln+1,dbg->cl+1);
+			return sizeof(debug_object_t)+eoff+_print_object_internal(GET_OBJECT_DEBUG_OBJECT(o),c_dt,f);
 		default:
 			__unreachable();
 	}
@@ -479,26 +480,6 @@ error_t _read_object_internal(compilation_data_t* c_dt,int c){
 				o->t=OBJECT_TYPE_NIL;
 				_bf_ptr-=sizeof(arg_count_t);
 			}
-			else if (IS_OBJECT_TYPE_MATH_CHAIN(o)){
-				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
-				if (!ac){
-					o->t=OBJECT_TYPE_INT;
-					_bf_ptr=GET_OBJECT_STACK_OFFSET(o)+sizeof(object_t)+sizeof(int8_t);
-					SET_OBJECT_AS_INT8(o,0);
-					return RETURN_NO_ERROR();
-				}
-				if (ac==1){
-					object_t* arg0=GET_OBJECT_ARGUMENT(o,sizeof(object_t)+sizeof(arg_count_t));
-					uint32_t sz=_bf_ptr-GET_OBJECT_STACK_OFFSET(arg0);
-					uint16_t* d=(uint16_t*)(_bf+GET_OBJECT_STACK_OFFSET(o));
-					uint16_t* s=(uint16_t*)(_bf+GET_OBJECT_STACK_OFFSET(arg0));
-					REPEATE_WORD_COPY(d,s,sz>>1);
-					if (sz&1){
-						*(d+sz-1)=*(s+sz-1);
-					}
-					_bf_ptr-=sizeof(object_t)+sizeof(arg_count_t);
-				}
-			}
 			else if (IS_OBJECT_TYPE_MATH_NO_CHAIN(o)){
 				uint8_t ac=GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac==1){
@@ -514,23 +495,12 @@ error_t _read_object_internal(compilation_data_t* c_dt,int c){
 			if (!o||ec!='}'){
 				return RETURN_ERROR(CREATE_ERROR_SINGLE_CHAR(ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS,is));
 			}
-			if (!GET_OBJECT_ARGUMENT_COUNT(o)){
-				o->t=OBJECT_TYPE_NIL;
-				_bf_ptr-=sizeof(statement_count_t);
-			}
 			return RETURN_NO_ERROR();
 		}
 		if (c=='('||c=='{'){
 			if (!o){
+				INSERT_DEBUG_OBJECT(is);
 				st_off=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				object_t* dbg=(object_t*)(_bf+_bf_ptr);
-				dbg->t=OBJECT_TYPE_DEBUG_DATA;
-				SET_OBJECT_DEBUG_FILE_LINE(dbg,GET_INPUT_DATA_STREAM_LINE_NUMBER(is));
-				uint32_t ln=GET_INPUT_DATA_STREAM_LINE_OFFSET(is);
-				uint32_t off=GET_INPUT_DATA_STREAM_OFFSET(is)-1;
-				SET_OBJECT_DEBUG_FILE_COLUMN(dbg,off-ln);
-				SET_OBJECT_DEBUG_FILE_OFFSET(dbg,off);
-				_bf_ptr+=sizeof(object_t)+sizeof(uint32_t)*3;
 				o=(object_t*)(_bf+_bf_ptr);
 				_bf_ptr+=sizeof(object_t)+(c=='('?sizeof(arg_count_t):sizeof(statement_count_t));
 				if (_bf_ptr>=INTERNAL_STACK_SIZE){
@@ -730,6 +700,7 @@ _unknown_symbol:
 			continue;
 		}
 		else if (c=='\''){
+			INSERT_DEBUG_OBJECT(is);
 			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t);
@@ -759,6 +730,7 @@ _unknown_symbol:
 			}
 		}
 		else if (c=='"'){
+			INSERT_DEBUG_OBJECT(is);
 			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(string_length_t);
@@ -789,6 +761,7 @@ _unknown_symbol:
 			}
 		}
 		else if ((c>47&&c<58)||c=='-'){
+			INSERT_DEBUG_OBJECT(is);
 			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(int64_t);
@@ -923,6 +896,7 @@ _decimal:
 			continue;
 		}
 		else if (c=='$'||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
+			INSERT_DEBUG_OBJECT(is);
 			uint32_t arg_s=GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 			object_t* arg=(object_t*)(_bf+_bf_ptr);
 			_bf_ptr+=sizeof(object_t)+sizeof(string_length_t);
@@ -1029,7 +1003,7 @@ uint32_t _get_object_size(object_t* o){
 			}
 			return off+eoff;
 		case OBJECT_TYPE_DEBUG_DATA:
-			return sizeof(object_t)+3*sizeof(uint32_t)+eoff+_get_object_size(GET_OBJECT_DEBUG_OBJECT(o));
+			return sizeof(debug_object_t)+eoff+_get_object_size(GET_OBJECT_DEBUG_OBJECT(o));
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
@@ -1099,9 +1073,9 @@ uint32_t _optimize_object_internal(object_t* o,volatile error_t* e,jmp_buf rj){
 			return off+eoff;
 		case OBJECT_TYPE_DEBUG_DATA:
 			uint8_t ot=GET_OBJECT_TYPE(GET_OBJECT_DEBUG_OBJECT(o));
-			off=sizeof(object_t)+3*sizeof(uint32_t)+_optimize_object_internal(GET_OBJECT_DEBUG_OBJECT(o),e,rj);
+			off=sizeof(debug_object_t)+_optimize_object_internal(GET_OBJECT_DEBUG_OBJECT(o),e,rj);
 			if (GET_OBJECT_TYPE(GET_OBJECT_DEBUG_OBJECT(o))!=ot){
-				for (uint32_t i=0;i<sizeof(object_t)+3*sizeof(uint32_t);i++){
+				for (uint32_t i=0;i<sizeof(debug_object_t);i++){
 					WRITE_OBJECT_NOP(o,i);
 				}
 			}
@@ -1230,10 +1204,10 @@ uint32_t _remove_debug_data_internal(object_t* o){
 			}
 			return off+eoff;
 		case OBJECT_TYPE_DEBUG_DATA:
-			for (uint32_t i=0;i<sizeof(object_t)+3*sizeof(uint32_t);i++){
+			for (uint32_t i=0;i<sizeof(debug_object_t);i++){
 				WRITE_OBJECT_NOP(o,i);
 			}
-			return sizeof(object_t)+3*sizeof(uint32_t)+eoff+_remove_debug_data_internal(GET_OBJECT_DEBUG_OBJECT(o));
+			return sizeof(debug_object_t)+eoff+_remove_debug_data_internal(GET_OBJECT_DEBUG_OBJECT(o));
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	arg_count_t l=GET_OBJECT_ARGUMENT_COUNT(o);
@@ -1293,8 +1267,8 @@ uint32_t _remove_padding_internal(object_t* o,uint32_t* rm){
 			}
 			return off+pad;
 		case OBJECT_TYPE_DEBUG_DATA:
-			_copy_data(d,s,sizeof(object_t)+3*sizeof(uint32_t));
-			return sizeof(object_t)+3*sizeof(uint32_t)+_remove_padding_internal(GET_OBJECT_DEBUG_OBJECT(o),rm)+pad;
+			_copy_data(d,s,sizeof(debug_object_t));
+			return sizeof(debug_object_t)+_remove_padding_internal(GET_OBJECT_DEBUG_OBJECT(o),rm)+pad;
 	}
 	uint32_t off=sizeof(object_t)+sizeof(arg_count_t);
 	_copy_data(d,s,sizeof(object_t)+sizeof(arg_count_t));
@@ -1326,7 +1300,7 @@ void create_input_data_stream(FILE* f,input_data_stream_t* o){
 	o->ctx=f;
 	o->rf=_input_data_stream_file_read;
 	o->rlf=_input_data_stream_file_restart_line;
-	o->_lc=1;
+	o->_lc=0;
 	o->_off=0;
 	o->_loff=0;
 }

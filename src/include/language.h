@@ -6,12 +6,14 @@
 
 
 #ifdef _MSC_VER
+#define PACKED_STRUCT(nm) __pragma(pack(push,1)) struct nm __pragma(pack(pop))
 #ifdef DLL1_EXPORTS
 #define IMPORT_EXPORT __declspec(dllexport)
 #else
 #define IMPORT_EXPORT __declspec(dllimport)
 #endif
 #else
+#define PACKED_STRUCT(nm) struct __attribute__((packed)) nm
 #define IMPORT_EXPORT
 #endif
 #ifndef NULL
@@ -158,10 +160,7 @@
 #define GET_OBJECT_AS_FLOAT64(o) (*((double*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_STRING_LENGTH(o) (*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AS_STRING(o) ((char*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(string_length_t)))
-#define GET_OBJECT_DEBUG_FILE_LINE(o) (*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t))))
-#define GET_OBJECT_DEBUG_FILE_COLUMN(o) (*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(uint32_t))))
-#define GET_OBJECT_DEBUG_FILE_OFFSET(o) (*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(uint32_t)*2)))
-#define GET_OBJECT_DEBUG_OBJECT(o) ((object_t*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(uint32_t)*3))
+#define GET_OBJECT_DEBUG_OBJECT(o) ((object_t*)(((uint8_t*)(o))+sizeof(debug_object_t)))
 #define GET_OBJECT_AS_REF(o) GET_OBJECT_FROM_STACK_OFFSET(*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t))))
 #define GET_OBJECT_AFTER_NOP(o) ((o)+1)
 #define RESET_OBJECT_ARGUMENT_COUNT(o) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=0)
@@ -182,6 +181,18 @@
 		} \
 		(*__sc)++; \
 	} while (0)
+#define INSERT_DEBUG_OBJECT(is) \
+	do{ \
+		debug_object_t* __dbg=(debug_object_t*)(_bf+_bf_ptr); \
+		_bf_ptr+=sizeof(debug_object_t); \
+		if (_bf_ptr>=INTERNAL_STACK_SIZE){ \
+			return RETURN_ERROR(CREATE_ERROR_FILE_OFFSET(ERROR_INTERNAL_STACK_OVERFLOW,GET_INPUT_DATA_STREAM_OFFSET(is),0)); \
+		} \
+		__dbg->t=OBJECT_TYPE_DEBUG_DATA; \
+		__dbg->ln=GET_INPUT_DATA_STREAM_LINE_NUMBER(is); \
+		__dbg->cl=GET_INPUT_DATA_STREAM_OFFSET(is)-GET_INPUT_DATA_STREAM_LINE_OFFSET(is)-1; \
+		__dbg->ln_off=GET_INPUT_DATA_STREAM_LINE_OFFSET(is); \
+	} while (0)
 #define SET_OBJECT_ARGUMENT_COUNT(o,c) ((*((arg_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=(c))
 #define SET_OBJECT_STATEMENT_COUNT(o,c) ((*((statement_count_t*)(((uint8_t*)(o))+sizeof(object_t))))=(c))
 #define SET_OBJECT_AS_INT8(o,i) ((*((int8_t*)(((uint8_t*)(o))+sizeof(object_t))))=(int8_t)(i))
@@ -191,9 +202,6 @@
 #define SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
 #define SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)(((uint8_t*)(o))+sizeof(object_t))))=(f))
 #define SET_OBJECT_STRING_LENGTH(o,sz) ((*((string_length_t*)(((uint8_t*)(o))+sizeof(object_t))))=(sz))
-#define SET_OBJECT_DEBUG_FILE_LINE(o,l) ((*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t))))=(l))
-#define SET_OBJECT_DEBUG_FILE_COLUMN(o,c) ((*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(uint32_t))))=(c))
-#define SET_OBJECT_DEBUG_FILE_OFFSET(o,i) ((*((uint32_t*)(((uint8_t*)(o))+sizeof(object_t)+sizeof(uint32_t)*2)))=(i))
 #define WRITE_OBJECT_NOP(o,i) ((*(((uint8_t*)(o))+(i)))=OBJECT_TYPE_NOP)
 
 #ifndef INTERNAL_STACK_SIZE
@@ -271,9 +279,18 @@ typedef struct __OUTPUT_DATA_STREAM{
 
 
 
-typedef struct __OBJECT{
+typedef PACKED_STRUCT(__OBJECT){
 	uint8_t t;
 } object_t;
+
+
+
+typedef PACKED_STRUCT(__DEBUG_OBJECT){
+	uint8_t t;
+	uint32_t ln;
+	uint32_t cl;
+	uint32_t ln_off;
+} debug_object_t;
 
 
 
