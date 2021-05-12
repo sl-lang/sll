@@ -509,7 +509,6 @@ lll_error_t _read_object_internal(lll_compilation_data_t* c_dt,int c){
 				_bf_off-=sizeof(lll_arg_count_t);
 			}
 			else if (LLL_IS_OBJECT_TYPE_MATH_NO_CHAIN(o)){
-				uint8_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac==1){
 					return LLL_RETURN_ERROR(LLL_CREATE_ERROR_FILE_OFFSET(LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS,st_off,LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1));
 				}
