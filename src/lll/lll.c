@@ -343,27 +343,27 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 			lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 			uint32_t i=sizeof(lll_debug_object_t);
 			if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
-				fprintf(f,"@%u:",LLL_GET_DEBUG_OBJECT_DATA_INT32(dbg,i)+1);
+				fprintf(f,"@%u:",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
 				i+=sizeof(uint32_t);
 			}
 			else if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT16){
-				fprintf(f,"@%u:",LLL_GET_DEBUG_OBJECT_DATA_INT16(dbg,i)+1);
+				fprintf(f,"@%u:",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
 				i+=sizeof(uint16_t);
 			}
 			else{
-				fprintf(f,"@%u:",LLL_GET_DEBUG_OBJECT_DATA_INT8(dbg,i)+1);
+				fprintf(f,"@%u:",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
 				i+=sizeof(uint8_t);
 			}
 			if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32){
-				fprintf(f,"%u@",LLL_GET_DEBUG_OBJECT_DATA_INT32(dbg,i)+1);
+				fprintf(f,"%u@",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
 				i+=sizeof(uint32_t);
 			}
 			else if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16){
-				fprintf(f,"%u@",LLL_GET_DEBUG_OBJECT_DATA_INT16(dbg,i)+1);
+				fprintf(f,"%u@",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
 				i+=sizeof(uint16_t);
 			}
 			else{
-				fprintf(f,"%u@",LLL_GET_DEBUG_OBJECT_DATA_INT8(dbg,i)+1);
+				fprintf(f,"%u@",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
 				i+=sizeof(uint8_t);
 			}
 			i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
@@ -1416,7 +1416,7 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm){
 
 
 
-LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_set_internal_stack(uint8_t* bf,uint32_t sz){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_set_internal_stack(uint8_t* bf,uint32_t sz){
 	if (sz>=LLL_MAX_INTERNAL_STACK_SIZE){
 		return LLL_RETURN_ERROR(LLL_ERROR_STACK_TOO_BIG);
 	}
@@ -1428,7 +1428,7 @@ LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_set_internal_stack(uint8_t* b
 
 
 
-LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
+__LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
 	o->fpl=0;
 	while (*fp){
 		o->fp[o->fpl]=*fp;
@@ -1442,7 +1442,7 @@ LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_s
 
 
 
-LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o){
+__LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o){
 	o->ctx=f;
 	o->rf=_input_data_stream_file_read;
 	o->rlf=_input_data_stream_file_restart_line;
@@ -1453,14 +1453,14 @@ LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_strea
 
 
 
-LLL_IMPORT_EXPORT void lll_create_output_data_stream(FILE* f,lll_output_data_stream_t* o){
+__LLL_IMPORT_EXPORT void lll_create_output_data_stream(FILE* f,lll_output_data_stream_t* o){
 	o->ctx=f;
 	o->wf=_output_data_stream_file_write;
 }
 
 
 
-LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t e){
+__LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t e){
 	if (LLL_GET_ERROR_TYPE(e)==LLL_ERROR_UNKNOWN||LLL_GET_ERROR_TYPE(e)>LLL_MAX_SYNTAX_ERROR){
 		switch (LLL_GET_ERROR_TYPE(e)){
 			default:
@@ -1610,13 +1610,13 @@ LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t e
 
 
 
-LLL_IMPORT_EXPORT void lll_print_object(lll_object_t* o,FILE* f){
+__LLL_IMPORT_EXPORT void lll_print_object(lll_object_t* o,FILE* f){
 	_print_object_internal(o,f);
 }
 
 
 
-LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_insert_debug_object(lll_input_data_stream_t* is){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_insert_debug_object(lll_input_data_stream_t* is){
 	if (!_bf){
 		return LLL_RETURN_ERROR(LLL_ERROR_NO_STACK);
 	}
@@ -1627,49 +1627,49 @@ LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_insert_debug_object(lll_input
 	uint32_t i=sizeof(lll_debug_object_t);
 	if (ln>UINT16_MAX){
 		dbg->f|=LLL_DEBUG_OBJECT_LINE_NUMBER_INT32;
-		LLL_SET_DEBUG_OBJECT_DATA_INT32(dbg,i,ln);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT32(dbg,i,ln);
 		i+=sizeof(uint32_t);
 	}
 	else if (ln>UINT8_MAX){
 		dbg->f|=LLL_DEBUG_OBJECT_LINE_NUMBER_INT16;
-		LLL_SET_DEBUG_OBJECT_DATA_INT16(dbg,i,ln);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT16(dbg,i,ln);
 		i+=sizeof(uint16_t);
 	}
 	else{
 		dbg->f|=LLL_DEBUG_OBJECT_LINE_NUMBER_INT8;
-		LLL_SET_DEBUG_OBJECT_DATA_INT8(dbg,i,ln);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT8(dbg,i,ln);
 		i+=sizeof(uint8_t);
 	}
 	uint32_t cl=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is)-1;
 	if (cl>UINT16_MAX){
 		dbg->f|=LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32;
-		LLL_SET_DEBUG_OBJECT_DATA_INT32(dbg,i,cl);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT32(dbg,i,cl);
 		i+=sizeof(uint32_t);
 	}
 	else if (cl>UINT8_MAX){
 		dbg->f|=LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16;
-		LLL_SET_DEBUG_OBJECT_DATA_INT16(dbg,i,cl);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT16(dbg,i,cl);
 		i+=sizeof(uint16_t);
 	}
 	else{
 		dbg->f|=LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT8;
-		LLL_SET_DEBUG_OBJECT_DATA_INT8(dbg,i,cl);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT8(dbg,i,cl);
 		i+=sizeof(uint8_t);
 	}
 	uint32_t ln_off=LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is);
 	if (ln_off>UINT16_MAX){
 		dbg->f|=LLL_DEBUG_OBJECT_FILE_OFFSET_INT32;
-		LLL_SET_DEBUG_OBJECT_DATA_INT32(dbg,i,ln_off);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT32(dbg,i,ln_off);
 		i+=sizeof(uint32_t);
 	}
 	else if (ln_off>UINT8_MAX){
 		dbg->f|=LLL_DEBUG_OBJECT_FILE_OFFSET_INT16;
-		LLL_SET_DEBUG_OBJECT_DATA_INT16(dbg,i,ln_off);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT16(dbg,i,ln_off);
 		i+=sizeof(uint16_t);
 	}
 	else{
 		dbg->f|=LLL_DEBUG_OBJECT_FILE_OFFSET_INT8;
-		LLL_SET_DEBUG_OBJECT_DATA_INT8(dbg,i,ln_off);
+		LLL_SET_DEBUG_OBJECT_DATA_UINT8(dbg,i,ln_off);
 		i+=sizeof(uint8_t);
 	}
 	_bf_off+=i;
@@ -1681,7 +1681,7 @@ LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_insert_debug_object(lll_input
 
 
 
-LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compilation_data_t* c_dt){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compilation_data_t* c_dt){
 	if (!_bf){
 		return LLL_RETURN_ERROR_AS_OBJECT(LLL_RETURN_ERROR(LLL_ERROR_NO_STACK));
 	}
@@ -1701,7 +1701,7 @@ LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compilation
 
 
 
-LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_read_all_objects(lll_compilation_data_t* c_dt){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_read_all_objects(lll_compilation_data_t* c_dt){
 	if (!_bf){
 		return LLL_RETURN_ERROR(LLL_ERROR_NO_STACK);
 	}
@@ -1731,7 +1731,7 @@ LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_read_all_objects(lll_compilat
 
 
 
-LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_optimize_object(lll_object_t* o){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_optimize_object(lll_object_t* o){
 	if (!_bf){
 		return LLL_RETURN_ERROR(LLL_ERROR_NO_STACK);
 	}
@@ -1745,7 +1745,7 @@ LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_optimize_object(lll_object_t*
 
 
 
-LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_remove_object_debug_data(lll_object_t* o){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_remove_object_debug_data(lll_object_t* o){
 	if (!_bf){
 		return LLL_RETURN_ERROR(LLL_ERROR_NO_STACK);
 	}
@@ -1755,7 +1755,7 @@ LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_remove_object_debug_data(lll_
 
 
 
-LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_remove_object_padding(lll_object_t* o){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_remove_object_padding(lll_object_t* o){
 	if (!_bf){
 		return LLL_RETURN_ERROR(LLL_ERROR_NO_STACK);
 	}
@@ -1766,7 +1766,7 @@ LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_remove_object_padding(lll_obj
 
 
 
-LLL_IMPORT_EXPORT LLL_CHECK_OUTPUT lll_error_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o){
 	if (!_bf){
 		return LLL_RETURN_ERROR(LLL_ERROR_NO_STACK);
 	}
