@@ -17,6 +17,65 @@ SPACE_CHARACTERS=b" \t\n\v\f\r"
 
 
 
+def _expand_macros(k,dm,dfm):
+	for e,v in dm.items():
+		k=re.sub(br"\b"+e+br"\b",v,k)
+	for e,v in dm.items():
+		i=0
+		while (i<len(k)):
+			if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k.startswith(e,i)):
+				j=i
+				i+=len(e)
+				while (k[i:i+1] in SPACE_CHARACTERS):
+					i+=1
+				if (k[i:i+1]!=b"("):
+					i=j+len(e)
+					k=k[:j]+v+k[i:]
+					i+=len(v)-(i-j)
+			i+=1
+	for e,v in dfm.items():
+		i=0
+		while (i<len(k)):
+			if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k.startswith(e,i)):
+				j=i
+				i+=len(e)
+				while (k[i:i+1] in SPACE_CHARACTERS):
+					i+=1
+				if (k[i:i+1]==b"("):
+					b=0
+					al=[b""]
+					ali=0
+					while (True):
+						if (k[i:i+1]==b"("):
+							b+=1
+							if (b==1):
+								i+=1
+								continue
+						elif (k[i:i+1]==b")"):
+							b-=1
+						if (b==0):
+							break
+						if (k[i:i+1]==b","):
+							al.append(b"")
+							ali+=1
+						else:
+							al[ali]+=k[i:i+1]
+						i+=1
+					if (len(al)!=len(v[0])):
+						raise RuntimeError("Invalid Macro Invocation (Argument Count Mismatch)")
+					s=b""
+					for st in v[1]:
+						if (type(st)==int):
+							s+=al[st]
+						else:
+							s+=st
+					k=k[:j]+s+k[i+1:]
+					i+=len(s)-(i-j)
+			i+=1
+	return k
+
+
+
 if (os.path.exists("build")):
 	dl=[]
 	for r,ndl,fl in os.walk("build"):
@@ -52,6 +111,7 @@ h_dt=DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX
 l=[]
 st=[True]
 dm={}
+dfm={}
 d_v=[]
 d_f=[]
 il=b""
@@ -85,7 +145,31 @@ for e in h_dt:
 				dm[f[1]]=b" ".join(f[2:])
 			else:
 				if (b"(" in f[1]):
-					d_f.append((f[1],b" ".join(f[2:])))
+					al=f[1].split(b"(")[1].split(b")")[0].split(b",")
+					if (al[-1]==b""):
+						al.pop(len(al)-1)
+					al=tuple(al)
+					k=b" ".join(f[2:])
+					d_f.append((f[1],k))
+					sl=[b""]
+					sli=0
+					i=0
+					while (i<len(k)):
+						if (i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS):
+							nxt=False
+							for j,e in enumerate(al):
+								if (k.startswith(e,i) and k[i+len(e):i+len(e)+1] not in IDENTIFIER_CHARACTERS):
+									sl.append(j)
+									sl.append(b"")
+									sli+=2
+									i+=len(e)
+									nxt=True
+									break
+							if (nxt):
+								continue
+						sl[sli]+=k[i:i+1]
+						i+=1
+					dfm[f[1].split(b"(")[0]]=(al,tuple(sl))
 				else:
 					dm[f[1]]=b" ".join(f[2:])
 					d_v.append((f[1],b" ".join(f[2:])))
@@ -96,29 +180,24 @@ d_s=b""
 o=b""
 for k,v in d_v:
 	while (True):
-		u=False
-		for e,sv in dm.items():
-			nv=re.sub(br"\b"+e+br"\b",sv,v)
-			if (nv!=v):
-				u=True
-			v=nv
-		if (u==False):
+		nv=_expand_macros(v,dm,dfm)
+		if (nv==v):
 			break
+		v=nv
 	d_s+=b"\n#define "+k+b" "+v
 for k,v in d_f:
 	while (True):
-		u=False
-		for e,sv in dm.items():
-			nv=re.sub(br"\b"+e+br"\b",sv,v)
-			if (nv!=v):
-				u=True
-			v=nv
-		if (u==False):
+		nv=_expand_macros(v,dm,dfm)
+		if (nv==v):
 			break
+		v=nv
 	d_s+=b"\n#define "+k+b" "+v
 for k in l:
-	for e,v in dm.items():
-		k=re.sub(br"\b"+e+br"\b",v,k)
+	while (True):
+		nk=_expand_macros(k,dm,dfm)
+		if (nk==k):
+			break
+		k=nk
 	o+=b"\n"+k
 i=0
 sd=b""
