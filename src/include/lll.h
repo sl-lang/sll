@@ -35,19 +35,22 @@
 #define LLL_ERROR_UNKNOWN_OCTAL_CHARCTER 15
 #define LLL_ERROR_UNKNOWN_BINARY_CHARCTER 16
 #define LLL_ERROR_UNKNOWN_SYMBOL 17
-#define LLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER 18
-#define LLL_ERROR_UNEXPECTED_CHARACTER 19
-#define LLL_ERROR_SYMBOL_TOO_LONG 20
-#define LLL_ERROR_NO_SYMBOL 21
-#define LLL_ERROR_TOO_MANY_ARGUMENTS 22
-#define LLL_ERROR_TOO_MANY_STATEMENTS 23
-#define LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS 24
-#define LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS 25
-#define LLL_ERROR_NO_STACK 26
-#define LLL_ERROR_STACK_TOO_BIG 27
-#define LLL_ERROR_FAILED_FILE_WRITE 28
-#define LLL_ERROR_DIVISION_BY_ZERO 29
-#define LLL_MAX_SYNTAX_ERROR LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS
+#define LLL_ERROR_UNKNOWN_MODIFIER 18
+#define LLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER 19
+#define LLL_ERROR_UNEXPECTED_CHARACTER 20
+#define LLL_ERROR_SYMBOL_TOO_LONG 21
+#define LLL_ERROR_MODIFIER_TOO_LONG 22
+#define LLL_ERROR_NO_SYMBOL 23
+#define LLL_ERROR_TOO_MANY_ARGUMENTS 24
+#define LLL_ERROR_TOO_MANY_STATEMENTS 25
+#define LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS 26
+#define LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS 27
+#define LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS 28
+#define LLL_ERROR_NO_STACK 29
+#define LLL_ERROR_STACK_TOO_BIG 30
+#define LLL_ERROR_FAILED_FILE_WRITE 31
+#define LLL_ERROR_DIVISION_BY_ZERO 32
+#define LLL_MAX_SYNTAX_ERROR LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS
 #define LLL_IS_ERROR(o) (((uint64_t)(void*)(o))>>63)
 #define LLL_GET_ERROR(o) ((lll_error_t)(((uint64_t)(void*)(o))&0x7fffffffffffffffull))
 #define LLL_GET_ERROR_TYPE(e) ((e)&0x1f)
@@ -81,7 +84,7 @@
 #define LLL_OBJECT_TYPE_CAST_BOOL 15
 #define LLL_OBJECT_TYPE_FUNC_PRINT 16
 #define LLL_OBJECT_TYPE_FUNC_PTR 17
-#define LLL_OBJECT_TYPE_FUNC_TYPE 18
+#define LLL_OBJECT_TYPE_FUNC_TYPEOF 18
 #define LLL_OBJECT_TYPE_AND 19
 #define LLL_OBJECT_TYPE_OR 20
 #define LLL_OBJECT_TYPE_NOT 21
@@ -111,22 +114,23 @@
 #define LLL_OBJECT_TYPE_NOT_EQUAL 45
 #define LLL_OBJECT_TYPE_MORE 46
 #define LLL_OBJECT_TYPE_MORE_EQUAL 47
-#define LLL_OBJECT_TYPE_OPERATION_LIST 48
+#define LLL_OBJECT_TYPE_OPERATION_LIST 62
 #define LLL_OBJECT_TYPE_DEBUG_DATA 63
-#define LLL_OBJECT_TYPE_NOP UINT8_MAX
+#define LLL_OBJECT_TYPE_NOP 0xff
 #define LLL_OBJECT_TYPE_INT16_FLAG 0x40
 #define LLL_OBJECT_TYPE_INT32_FLAG 0x80
 #define LLL_OBJECT_TYPE_INT64_FLAG 0xc0
 #define LLL_OBJECT_TYPE_INT_TYPE_MASK 0xc0
 #define LLL_OBJECT_TYPE_FLOAT64_FLAG 0x40
-#define LLL_OBJECT_TYPE_RET_FLAG 0x80
+#define LLL_OBJECT_TYPE_REF_FLAG 0x80
 #define LLL_OBJECT_TYPE_MAX_INTEGRAL_TYPE LLL_OBJECT_TYPE_FALSE
-#define LLL_OBJECT_TYPE_MAX_TYPE LLL_OBJECT_TYPE_FALSE
-#define LLL_OBJECT_TYPE_MAX_FUNC LLL_OBJECT_TYPE_PTR
+#define LLL_OBJECT_TYPE_MAX_TYPE LLL_OBJECT_TYPE_IDENTIFIER
+#define LLL_OBJECT_TYPE_MAX_FUNC LLL_OBJECT_TYPE_FUNC_TYPEOF
 #define LLL_OBJECT_TYPE_MAX_FLOW LLL_OBJECT_TYPE_FOR
 #define LLL_OBJECT_TYPE_MAX_MATH LLL_OBJECT_TYPE_FLOOR_LOG
 #define LLL_OBJECT_TYPE_MAX_MATH_CHAIN LLL_OBJECT_TYPE_BIT_NOT
 #define LLL_OBJECT_TYPE_MAX_COMPARE LLL_OBJECT_TYPE_MORE_EQUAL
+#define LLL_OBJECT_TYPE_MIN_EXTRA LLL_OBJECT_TYPE_OPERATION_LIST
 #define LLL_IS_OBJECT_INT16(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT16_FLAG)
 #define LLL_IS_OBJECT_INT32(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT32_FLAG)
 #define LLL_IS_OBJECT_INT64(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT64_FLAG)
@@ -154,7 +158,7 @@
 #define LLL_GET_OBJECT_AS_FLOAT64(o) (*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
 #define LLL_GET_OBJECT_STRING_LENGTH(o) (*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
 #define LLL_GET_OBJECT_AS_STRING(o) ((char*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_string_length_t)))
-#define LLL_GET_OBJECT_AFTER_NOP(o) ((o)+1)
+#define LLL_GET_OBJECT_AFTER_NOP(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_type_t)))
 #define LLL_SET_OBJECT_AS_INT8(o,i) ((*((int8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int8_t)(i)))
 #define LLL_SET_OBJECT_AS_INT16(o,i) ((*((int16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int16_t)(i)))
 #define LLL_SET_OBJECT_AS_INT32(o,i) ((*((int32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int32_t)(i)))
@@ -162,6 +166,13 @@
 #define LLL_SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((float)(f)))
 #define LLL_SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((double)(f)))
 #define LLL_SET_OBJECT_STRING_LENGTH(o,sz) ((*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_string_length_t)(sz)))
+
+#define LLL_OBJECT_MODIFIER_ARRAY 0x1
+#define LLL_OBJECT_MODIFIER_LIST 0x2
+#define LLL_OBJECT_MODIFIER_VECTOR 0x3
+#define LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK 0x3
+#define LLL_GET_MODIFIER_OBJECT_MODIFIER(o) ((lll_object_modifier_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
+#define LLL_GET_MODIFIER_OBJECT_CHILD(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_object_modifier_t)))
 
 #define LLL_DEBUG_OBJECT_LINE_NUMBER_INT8 0x0
 #define LLL_DEBUG_OBJECT_LINE_NUMBER_INT16 0x1
@@ -175,16 +186,16 @@
 #define LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(o) (1ull<<((o)->f&0x3))
 #define LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(o) (1ull<<(((o)->f>>2)&0x3))
 #define LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(o) (1ull<<((o)->f>>4))
-#define LLL_GET_DEBUG_OBJECT_DATA_UINT8(o,i) (*LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_GET_DEBUG_OBJECT_DATA_UINT8(o,i) (*((uint8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))
 #define LLL_GET_DEBUG_OBJECT_DATA_UINT16(o,i) (*((uint16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))
 #define LLL_GET_DEBUG_OBJECT_DATA_UINT32(o,i) (*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))
 #define LLL_GET_DEBUG_OBJECT_CHILD(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
-#define LLL_SET_DEBUG_OBJECT_DATA_UINT8(o,i,v) ((*LLL_GET_OBJECT_WITH_OFFSET((o),(i)))=((uint8_t)(v)))
+#define LLL_SET_DEBUG_OBJECT_DATA_UINT8(o,i,v) ((*((uint8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint8_t)(v)))
 #define LLL_SET_DEBUG_OBJECT_DATA_UINT16(o,i,v) ((*((uint16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint16_t)(v)))
 #define LLL_SET_DEBUG_OBJECT_DATA_UINT32(o,i,v) ((*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint32_t)(v)))
 
 #define LLL_MAX_INTERNAL_STACK_SIZE 67108864
-#define LLL_GET_OBJECT_WITH_OFFSET(o,i) (((uint8_t*)(o))+(i))
+#define LLL_GET_OBJECT_WITH_OFFSET(o,i) ((void*)(((uint64_t)(void*)(o))+(i)))
 
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
@@ -205,7 +216,15 @@ struct __LLL_COMPILATION_DATA;
 
 
 
+typedef uint8_t lll_object_type_t;
+
+
+
 typedef uint8_t lll_arg_count_t;
+
+
+
+typedef uint8_t lll_object_modifier_t;
 
 
 
@@ -252,13 +271,15 @@ typedef struct __LLL_OUTPUT_DATA_STREAM{
 
 
 typedef struct __LLL_OBJECT{
-	uint8_t t;
+	lll_object_type_t t;
+	lll_object_modifier_t m;
 } lll_object_t;
 
 
 
 typedef struct __LLL_DEBUG_OBJECT{
-	uint8_t t;
+	lll_object_type_t t;
+	lll_object_modifier_t m;
 	uint8_t f;
 } lll_debug_object_t;
 

@@ -7,7 +7,7 @@
 
 
 {
-	(char dd
+	(@list typeof dd
 		dd
 	) 0b1 {} {2}
 }

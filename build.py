@@ -6,7 +6,7 @@ import sys
 
 
 COMMENT_REGEX=re.compile(br"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
-COMPILATION_DEFINES=[b"__LLL_LIB_COMPILATION__"]+([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"DLL1_EXPORTS",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG"]) if os.name=="nt" else [])
+COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"DLL1_EXPORTS",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG"]) if os.name=="nt" else [])
 DEFAULT_ARGS=["test.lll","-v","-O3","-c","-fp"]
 DEFINE_LINE_CONTINUE_REGEX=re.compile(br"\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
@@ -52,7 +52,8 @@ h_dt=DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX
 l=[]
 st=[True]
 dm={}
-d=b""
+d_v=[]
+d_f=[]
 il=b""
 for e in h_dt:
 	e=e.strip()
@@ -83,11 +84,38 @@ for e in h_dt:
 			if (f[1][:2]==b"__" ):
 				dm[f[1]]=b" ".join(f[2:])
 			else:
-				d+=b"\n#define "+f[1]+b" "+b" ".join(f[2:])
+				if (b"(" in f[1]):
+					d_f.append((f[1],b" ".join(f[2:])))
+				else:
+					dm[f[1]]=b" ".join(f[2:])
+					d_v.append((f[1],b" ".join(f[2:])))
 			continue
 	if (st[-1] is True):
 		l.append(e)
+d_s=b""
 o=b""
+for k,v in d_v:
+	while (True):
+		u=False
+		for e,sv in dm.items():
+			nv=re.sub(br"\b"+e+br"\b",sv,v)
+			if (nv!=v):
+				u=True
+			v=nv
+		if (u==False):
+			break
+	d_s+=b"\n#define "+k+b" "+v
+for k,v in d_f:
+	while (True):
+		u=False
+		for e,sv in dm.items():
+			nv=re.sub(br"\b"+e+br"\b",sv,v)
+			if (nv!=v):
+				u=True
+			v=nv
+		if (u==False):
+			break
+	d_s+=b"\n#define "+k+b" "+v
 for k in l:
 	for e,v in dm.items():
 		k=re.sub(br"\b"+e+br"\b",v,k)
@@ -130,7 +158,7 @@ while (i<len(o)):
 				i+=1
 	i+=1
 with open("build/lll.h","wb") as wf:
-	wf.write(b"#ifndef __LLL_H__\n#define __LLL_H__ 1"+il+d+sd+b"\n"+o.strip()+b"\n#endif\n")
+	wf.write(b"#ifndef __LLL_H__\n#define __LLL_H__ 1"+il+d_s+sd+b"\n"+o.strip()+b"\n#endif\n")
 if (os.name=="nt"):
 	cd=os.getcwd()
 	os.chdir("build")
