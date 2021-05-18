@@ -24,7 +24,7 @@ contexts:
         1: punctuation.definition.comment.lll
 
   objects:
-    - match: '(\()\s*(@(?:list|array|vector)\b\s*)?(?:(if|for|while)|(str|char|int|int64|float|float64|bool)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=))(?=\s|\))'
+    - match: '(\()\s*((?:@(?:list|array|vector)\b\s*)*)(?:(if|for|while)|(str|char|int|int64|float|float64|bool)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
         2: storage.modifier.lll
@@ -45,7 +45,7 @@ contexts:
         - include: numbers
         - include: strings
         - include: constants
-    - match: '(\()\s*(@(?:list|array|vector)\b\s*)?(?:(print|ptr|typeof)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
+    - match: '(\()\s*((?:@(?:list|array|vector)\b\s*)*)(?:(print|ptr|typeof)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
         2: storage.modifier.lll
