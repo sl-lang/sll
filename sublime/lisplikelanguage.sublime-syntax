@@ -24,7 +24,7 @@ contexts:
         1: punctuation.definition.comment.lll
 
   objects:
-    - match: '(\()\s*((?:@(?:list|array|vector)\b\s*)*)(?:(if|for|while)|(str|char|int|int64|float|float64|bool)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=))(?=\s|\))'
+    - match: '(\()\s*((?:@[0-9a-zA-Z_-]+\s*)*)(?:(if|for|while)|(str|char|int|int64|float|float64|bool)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
         2: storage.modifier.lll
@@ -42,10 +42,11 @@ contexts:
           pop: true
         - include: comments
         - include: objects
+        - include: modifiers
         - include: numbers
         - include: strings
         - include: constants
-    - match: '(\()\s*((?:@(?:list|array|vector)\b\s*)*)(?:(print|ptr|typeof)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
+    - match: '(\()\s*((?:@[0-9a-zA-Z_-]+\s*)*)(?:(print|ptr|typeof)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
         2: storage.modifier.lll
@@ -58,6 +59,7 @@ contexts:
           pop: true
         - include: comments
         - include: objects
+        - include: modifiers
         - include: numbers
         - include: strings
         - include: constants
@@ -83,6 +85,7 @@ contexts:
           pop: true
         - include: comments
         - include: objects
+        - include: modifiers
         - include: numbers
         - include: strings
         - include: constants
@@ -101,15 +104,15 @@ contexts:
       scope: constant.language.lll
 
   numbers:
-    - match: '(\b|-)0[bB][01]+\b'
+    - match: '(?:\b|-)0[bB][01]+\b'
       scope: constant.numeric.integer.binary.lll
-    - match: '(\b|-)0[oO][0-7]+\b'
+    - match: '(?:\b|-)0[oO][0-7]+\b'
       scope: constant.numeric.integer.octal.lll
-    - match: '(\b|-)0[xX][0-9a-fA-F]+\b'
+    - match: '(?:\b|-)0[xX][0-9a-fA-F]+\b'
       scope: constant.numeric.integer.hexadecimal.lll
-    - match: '(\b|-)([0-9]+\.[0-9]*|\.[0-9]+)([eE][\+\-]?[0-9]+)?\b'
+    - match: '(?:\b|-)(?:[0-9]+\.[0-9]*|\.[0-9]+)(?:[eE][\+\-]?[0-9]+)?\b'
       scope: constant.numeric.float.lll
-    - match: '(\b|-)[0-9]+\b'
+    - match: '(?:\b|-)[0-9]+\b'
       scope: constant.numeric.integer.decimal.lll
 
   strings:
@@ -135,3 +138,7 @@ contexts:
           pop: true
         - match: '\\.'
           scope: invalid.illegal.escape.lll
+
+  modifiers:
+    - match: '@[0-9a-zA-Z_-]+\b'
+      scope: storage.modifiers.lll
