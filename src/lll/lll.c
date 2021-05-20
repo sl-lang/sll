@@ -537,7 +537,7 @@ lll_error_t _read_object_internal(lll_compilation_data_t* c_dt,int c){
 				return LLL_RETURN_ERROR(LLL_ERROR_UNMATCHED_CLOSE_PARENTHESES);
 			}
 			if (am){
-				printf("Extra Modifiers\n");
+				return LLL_RETURN_ERROR(LLL_CREATE_ERROR_FILE_OFFSET(LLL_ERROR_UNUSED_MODIFIERS,LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2,1));
 			}
 			if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
 				o->t=LLL_OBJECT_TYPE_NIL;
@@ -758,6 +758,7 @@ _read_modifier:
 _unknown_modifier:
 				return LLL_RETURN_ERROR(LLL_CREATE_ERROR_FILE_OFFSET((o->t==LLL_OBJECT_TYPE_UNKNOWN?LLL_ERROR_UNKNOWN_OUTPUT_MODIFIER:LLL_ERROR_UNKNOWN_MODIFIER),LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3,sz+1));
 			}
+			continue;
 		}
 		else if (o&&o->t==LLL_OBJECT_TYPE_UNKNOWN){
 			char* str=(char*)(_bf+_bf_off);
@@ -1914,6 +1915,9 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 			return;
 		case LLL_ERROR_MULTIPLE_SIZE_MODIFIERS:
 			printf("Multiple Size Modifiers\n");
+			return;
+		case LLL_ERROR_UNUSED_MODIFIERS:
+			printf("Unused Modifiers\n");
 			return;
 	}
 }
