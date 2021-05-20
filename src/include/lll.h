@@ -56,20 +56,10 @@
 #define LLL_ERROR_FAILED_FILE_WRITE 36
 #define LLL_ERROR_DIVISION_BY_ZERO 37
 #define LLL_MAX_SYNTAX_ERROR LLL_ERROR_UNUSED_MODIFIERS
-#define LLL_IS_ERROR(o) (((uint64_t)(void*)(o))>>63)
-#define LLL_GET_ERROR(o) ((lll_error_t)(((uint64_t)(void*)(o))&0x7fffffffffffffffull))
-#define LLL_GET_ERROR_TYPE(e) ((e)&0x3f)
-#define LLL_GET_ERROR_FILE_OFFSET(e) (((e)>>6)&0xffffffff)
-#define LLL_GET_ERROR_SIZE(e) ((e)>>38)
-#define LLL_GET_ERROR_CHAR(e) ((char)((e)>>6))
-#define LLL_GET_ERROR_STRING(e) ((char*)(_bf+((uint32_t)((e)>>6))))
-#define LLL_GET_ERROR_OBJECT(e) ((lll_object_t*)(_bf+((uint32_t)((e)>>6))))
-#define LLL_RETURN_ERROR(e) ((e)|0x8000000000000000ull)
-#define LLL_RETURN_NO_ERROR() ((lll_error_t)0)
-#define LLL_RETURN_ERROR_AS_OBJECT(e) ((lll_object_t*)(lll_error_t)(e))
-#define LLL_CREATE_ERROR_FILE_OFFSET(e,off,sz) ((((uint64_t)(sz))<<38)|(((uint64_t)(off))<<6)|(e))
-#define LLL_CREATE_ERROR_CHAR(e,c) ((((uint16_t)(c))<<6)|(e))
-#define LLL_CREATE_ERROR_SINGLE_CHAR(e,in) LLL_CREATE_ERROR_FILE_OFFSET(e,LLL_GET_INPUT_DATA_STREAM_OFFSET(in)-2,1)
+
+#define LLL_RETURN_ERROR 0
+#define LLL_RETURN_NO_ERROR 1
+#define LLL_RETURN_ERROR_AS_OBJECT(e) ((lll_object_t*)(e))
 
 #define LLL_OBJECT_TYPE_UNKNOWN 0
 #define LLL_OBJECT_TYPE_CHAR 1
@@ -226,6 +216,7 @@ struct __LLL_OUTPUT_DATA_STREAM;
 struct __LLL_OBJECT;
 struct __LLL_DEBUG_OBJECT;
 struct __LLL_COMPILATION_DATA;
+struct __LLL_ERROR;
 
 
 
@@ -241,15 +232,15 @@ typedef uint8_t lll_object_modifier_t;
 
 
 
+typedef uint8_t lll_error_type_t;
+
+
+
 typedef uint16_t lll_statement_count_t;
 
 
 
 typedef uint32_t lll_string_length_t;
-
-
-
-typedef uint64_t lll_error_t;
 
 
 
@@ -307,7 +298,16 @@ typedef struct __LLL_COMPILATION_DATA{
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_set_internal_stack(uint8_t* bf,uint32_t sz);
+typedef struct __LLL_ERROR{
+	lll_error_type_t t;
+	uint32_t off;
+	uint32_t sz;
+	char c;
+} lll_error_t;
+
+
+
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_set_internal_stack(uint8_t* bf,uint32_t sz,lll_error_t* e);
 
 
 
@@ -323,7 +323,7 @@ __LLL_IMPORT_EXPORT void lll_create_output_data_stream(FILE* f,lll_output_data_s
 
 
 
-__LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t e);
+__LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t* e);
 
 
 
@@ -331,31 +331,31 @@ __LLL_IMPORT_EXPORT void lll_print_object(lll_object_t* o,FILE* f);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_insert_debug_object(lll_input_data_stream_t* is);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_insert_debug_object(lll_input_data_stream_t* is,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compilation_data_t* c_dt);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compilation_data_t* c_dt,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_read_all_objects(lll_compilation_data_t* c_dt);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_read_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_optimize_object(lll_object_t* o);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_optimize_object(lll_object_t* o,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_remove_object_debug_data(lll_object_t* o);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_debug_data(lll_object_t* o,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_remove_object_padding(lll_object_t* o);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_padding(lll_object_t* o,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_error_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,lll_error_t* e);
 
 
 

@@ -116,9 +116,9 @@ _unkown_switch:
 		}
 		printf("Compiling File '%s'...\n",fp);
 	}
-	lll_error_t e=lll_set_internal_stack(st,COMPILER_STACK_SIZE);
-	if (LLL_IS_ERROR(e)){
-		lll_print_error(NULL,LLL_GET_ERROR(e));
+	lll_error_t e;
+	if (!lll_set_internal_stack(st,COMPILER_STACK_SIZE,&e)){
+		lll_print_error(NULL,&e);
 		return 1;
 	}
 	FILE* f=NULL;
@@ -134,31 +134,27 @@ _unkown_switch:
 	lll_create_input_data_stream(f,&is);
 	lll_compilation_data_t c_dt;
 	lll_init_compilation_data(fp,&is,&c_dt);
-	e=lll_read_all_objects(&c_dt);
-	if (LLL_IS_ERROR(e)){
-		lll_print_error(&is,LLL_GET_ERROR(e));
+	if (!lll_read_all_objects(&c_dt,&e)){
+		lll_print_error(&is,&e);
 	}
 	else{
 		lll_print_object(c_dt.h,stdout);
 		putchar('\n');
 		if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
-			e=lll_optimize_object(c_dt.h);
-			if (LLL_IS_ERROR(e)){
-				lll_print_error(&is,LLL_GET_ERROR(e));
+			if (!lll_optimize_object(c_dt.h,&e)){
+				lll_print_error(&is,&e);
 				return 1;
 			}
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
-			e=lll_remove_object_debug_data(c_dt.h);
-			if (LLL_IS_ERROR(e)){
-				lll_print_error(&is,LLL_GET_ERROR(e));
+			if (!lll_remove_object_debug_data(c_dt.h,&e)){
+				lll_print_error(&is,&e);
 				return 1;
 			}
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
-			e=lll_remove_object_padding(c_dt.h);
-			if (LLL_IS_ERROR(e)){
-				lll_print_error(&is,LLL_GET_ERROR(e));
+			if (!lll_remove_object_padding(c_dt.h,&e)){
+				lll_print_error(&is,&e);
 				return 1;
 			}
 		}
@@ -188,9 +184,8 @@ _unkown_switch:
 		}
 		lll_output_data_stream_t os;
 		lll_create_output_data_stream(of,&os);
-		e=lll_write_object(&os,c_dt.h);
-		if (LLL_IS_ERROR(e)){
-			lll_print_error(&is,LLL_GET_ERROR(e));
+		if (!lll_write_object(&os,c_dt.h,&e)){
+			lll_print_error(&is,&e);
 			return 1;
 		}
 		fclose(of);
