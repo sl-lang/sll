@@ -1,6 +1,6 @@
 #ifdef _MSC_VER
 #include <windows.h>
-#include <intrin.h>
+#include <immintrin.h>
 #endif
 #include <lll.h>
 #include <inttypes.h>
@@ -48,10 +48,7 @@
 		GetConsoleMode(GetStdHandle(-11),&__tv); \
 		SetConsoleMode(GetStdHandle(-11),7); \
 	} while (0)
-#define DISABLE_COLOR() \
-	do{ \
-		SetConsoleMode(GetStdHandle(-11),__tv); \
-	} while (0)
+#define DISABLE_COLOR() SetConsoleMode(GetStdHandle(-11),__tv)
 #else
 static inline void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
 	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
@@ -1691,7 +1688,7 @@ _skip_empty:
 		}
 		lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 		off+=al;
-		if (0&&LLL_IS_OBJECT_TYPE_MATH_CHAIN(o)){
+		if (LLL_IS_OBJECT_TYPE_MATH_CHAIN(o)){
 			while (LLL_GET_OBJECT_TYPE(a)==LLL_OBJECT_TYPE_DEBUG_DATA){
 				lll_debug_object_t* dbg=(lll_debug_object_t*)a;
 				a=LLL_GET_DEBUG_OBJECT_CHILD(dbg,sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg));
