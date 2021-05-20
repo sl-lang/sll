@@ -5,7 +5,6 @@
 #include <lll.h>
 #include <inttypes.h>
 #include <math.h>
-#include <setjmp.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1598,7 +1597,7 @@ uint32_t _get_object_size(lll_object_t* o){
 
 
 
-uint32_t _optimize_object_internal(lll_object_t* o,volatile lll_error_t* e,jmp_buf rj){
+uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 	uint32_t eoff=0;
 _skip_empty:
 	while (o->t==LLL_OBJECT_TYPE_NOP){
@@ -1632,7 +1631,7 @@ _skip_empty:
 			uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
 			lll_statement_count_t* l=LLL_GET_OBJECT_STATEMENT_COUNT(o);
 			for (lll_statement_count_t i=*l;i>0;i--){
-				uint32_t st_l=_optimize_object_internal(LLL_GET_OBJECT_STATEMENT(o,off),e,rj);
+				uint32_t st_l=_optimize_object_internal(LLL_GET_OBJECT_STATEMENT(o,off),e);
 				lll_object_t* st=LLL_GET_OBJECT_STATEMENT(o,off);
 				off+=st_l;
 				while (st->t==LLL_OBJECT_TYPE_NOP||LLL_GET_OBJECT_TYPE(st)==LLL_OBJECT_TYPE_DEBUG_DATA){
@@ -1669,7 +1668,11 @@ _skip_empty:
 			uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
 			lll_object_t* c=LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz);
 			uint8_t ot=LLL_GET_OBJECT_TYPE(c);
-			off=sz+_optimize_object_internal(c,e,rj);
+			off=_optimize_object_internal(c,e);
+			if (off==UINT32_MAX){
+				return UINT32_MAX;
+			}
+			off+=sz;
 			if (LLL_GET_OBJECT_TYPE(c)!=ot){
 				for (uint32_t i=0;i<sz;i++){
 					*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,i))=LLL_OBJECT_TYPE_NOP;
@@ -1682,7 +1685,10 @@ _skip_empty:
 	lll_arg_count_t cl=*l;
 	lll_arg_count_t i=0;
 	while (i<cl){
-		uint32_t al=_optimize_object_internal(LLL_GET_OBJECT_ARGUMENT(o,off),e,rj);
+		uint32_t al=_optimize_object_internal(LLL_GET_OBJECT_ARGUMENT(o,off),e);
+		if (al==UINT32_MAX){
+			return UINT32_MAX;
+		}
 		lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 		off+=al;
 		if (0&&LLL_IS_OBJECT_TYPE_MATH_CHAIN(o)){
@@ -1742,8 +1748,7 @@ _skip_empty:
 								goto _set_to_0;
 							}
 							e->t=LLL_ERROR_DIVISION_BY_ZERO;
-							longjmp(rj,1);
-							break;
+							return UINT32_MAX;
 						case LLL_OBJECT_TYPE_MULT:
 						case LLL_OBJECT_TYPE_BIT_AND:
 _set_to_0:
@@ -2290,11 +2295,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_optimize_object(lll_object_t*
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
 	}
-	jmp_buf rj;
-	if (!setjmp(rj)){
-		_optimize_object_internal(o,e,rj);
-	}
-	else{
+	if (_optimize_object_internal(o,e)==UINT32_MAX){
 		return LLL_RETURN_ERROR;
 	}
 	return LLL_RETURN_NO_ERROR;
