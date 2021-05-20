@@ -1322,7 +1322,7 @@ _decimal:
 				LLL_SET_OBJECT_AS_INT8(arg,v*m);
 			}
 			goto _skip_float_parse;
-_parse_float:
+_parse_float:;
 			int16_t ex=0;
 			if (c=='.'){
 _float:
@@ -1347,7 +1347,7 @@ _float:
 				}
 			}
 			else{
-_parse_float_exponent:
+_parse_float_exponent:;
 				int8_t em=1;
 				int16_t ev=0;
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
@@ -1950,7 +1950,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 		switch (e->t){
 			default:
 			case LLL_ERROR_UNKNOWN:
-				printf("Unknown Error: %.16"PRIx64"\n",e);
+				printf("Unknown Error: %.2"PRIx8"\n",e->t);
 				return;
 			case LLL_ERROR_NO_STACK:
 				printf("No Internal Stack\n");

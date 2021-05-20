@@ -274,12 +274,12 @@ else:
 				fl.append(f"build/{f}.o")
 				if (subprocess.run(["gcc","-fPIC","-D","__LLL_LIB_COMPILATION__","-Wall","-lm","-Werror","-O0","-c","src/lll/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
 					sys.exit(1)
-		if (subprocess.run(["gcc","-shared","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-o","build/lll_lib.so"]+fl).returncode!=0):
+		if (subprocess.run(["gcc","-shared","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0):
 			sys.exit(1)
 		for k in os.listdir("build"):
 			if (k[-2:]==".o"):
 				os.remove("build/"+k)
-		if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O0","build/main.o","build/lll_lib.so"]).returncode!=0):
+		if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O0","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lll"]+DEFAULT_ARGS)
