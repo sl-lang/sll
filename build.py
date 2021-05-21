@@ -93,7 +93,7 @@ inc_r=br""
 for r,_,fl in os.walk("src/include"):
 	r=r.replace("\\","/").rstrip("/")+"/"
 	for f in fl:
-		if (f[-2:]==".h"):
+		if (f[0]!="_" and f[-2:]==".h"):
 			with open(r+f,"rb") as rf:
 				if (len(inc_r)==0):
 					inc_r+=br"(?:^[ \t\f]*#include\s*(?:"
