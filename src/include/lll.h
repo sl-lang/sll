@@ -55,6 +55,7 @@
 #define LLL_ERROR_STACK_TOO_BIG 35
 #define LLL_ERROR_FAILED_FILE_WRITE 36
 #define LLL_ERROR_DIVISION_BY_ZERO 37
+#define LLL_ERROR_ASSERTION 255
 #define LLL_MAX_SYNTAX_ERROR LLL_ERROR_UNUSED_MODIFIERS
 
 #define LLL_RETURN_ERROR 0
@@ -172,7 +173,7 @@
 #define LLL_OBJECT_MODIFIER_SIZE_MASK 0x18
 #define LLL_OBJECT_MODIFIER_ARRAY 0x20
 #define LLL_OBJECT_MODIFIER_LIST 0x40
-#define LLL_OBJECT_MODIFIER_VECTOR 0x60
+#define LLL_OBJECT_MODIFIER_LAST 0x60
 #define LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK 0x60
 #define LLL_GET_MODIFIER_OBJECT_MODIFIER(o) ((lll_object_modifier_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
 #define LLL_GET_MODIFIER_OBJECT_CHILD(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_object_modifier_t)))
@@ -200,6 +201,9 @@
 #define LLL_MAX_INTERNAL_STACK_SIZE 67108864
 #define LLL_GET_OBJECT_WITH_OFFSET(o,i) ((void*)(((uint64_t)(void*)(o))+(i)))
 
+#define LLL_WRITE_MODE_RAW 0
+#define LLL_WRITE_MODE_C 1
+
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
 #define LLL_GET_INPUT_DATA_STREAM_OFFSET(is) ((is)->_off)
@@ -207,6 +211,8 @@
 #define LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is) ((is)->_loff)
 #define LLL_INPUT_DATA_STREAM_RESTART_LINE(is,lp) ((is)->rlf((is),(lp)))
 
+#define LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,c) ((os)->wcf((os),(c)))
+#define LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,s) ((os)->wsf((os),(s)))
 #define LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,bf,sz) ((os)->wf((os),(bf),(sz)))
 
 
@@ -240,6 +246,10 @@ typedef uint16_t lll_statement_count_t;
 
 
 
+typedef uint16_t lll_vector_length_t;
+
+
+
 typedef uint32_t lll_string_length_t;
 
 
@@ -249,6 +259,14 @@ typedef int (*lll_input_data_stream_read_t)(struct __LLL_INPUT_DATA_SOURCE* in);
 
 
 typedef void (*lll_input_data_stream_restart_line_t)(struct __LLL_INPUT_DATA_SOURCE* in,uint32_t lp);
+
+
+
+typedef uint8_t (*lll_output_data_stream_write_char_t)(struct __LLL_OUTPUT_DATA_STREAM* in,char c);
+
+
+
+typedef uint8_t (*lll_output_data_stream_write_string_t)(struct __LLL_OUTPUT_DATA_STREAM* in,char* s);
 
 
 
@@ -269,6 +287,8 @@ typedef struct __LLL_INPUT_DATA_SOURCE{
 
 typedef struct __LLL_OUTPUT_DATA_STREAM{
 	void* ctx;
+	lll_output_data_stream_write_char_t wcf;
+	lll_output_data_stream_write_string_t wsf;
 	lll_output_data_stream_write_t wf;
 } lll_output_data_stream_t;
 
@@ -302,6 +322,7 @@ typedef struct __LLL_ERROR{
 	lll_error_type_t t;
 	uint32_t off;
 	uint32_t sz;
+	char err[256];
 	char c;
 } lll_error_t;
 
@@ -355,7 +376,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_padding(lll_obj
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,uint8_t f,lll_error_t* e);
 
 
 

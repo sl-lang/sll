@@ -34,6 +34,7 @@ int main(int argc,const char** argv){
 	uint8_t ol=DEFAULT_OPTIMIZE_LEVEL;
 	uint8_t fl=0;
 	const char* fp=NULL;
+	const char* o_fp=NULL;
 	for (int i=1;i<argc;i++){
 		const char* e=argv[i];
 		if (*e=='-'&&*(e+1)=='O'&&*(e+3)==0){
@@ -62,6 +63,17 @@ int main(int argc,const char** argv){
 		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)=='p'&&*(e+3)==0){
 			fl|=FLAG_FULL_PATH;
 		}
+		else if (*e=='-'&&*(e+1)=='o'&&*(e+2)==0){
+			if (o_fp){
+				printf("Multplie Output Files Supplied\n");
+				return 1;
+			}
+			i++;
+			if (i==argc){
+				break;
+			}
+			o_fp=argv[i];
+		}
 		else if (*e=='-'){
 _unkown_switch:
 			printf("Unknown Switch: '%s'\n",e);
@@ -79,15 +91,37 @@ _unkown_switch:
 		printf("Not Input Files Supplied\n");
 		return 1;
 	}
-	char tmp[MAX_PATH_LENGTH];
+	char tmp0[MAX_PATH_LENGTH];
 	if (fl&FLAG_FULL_PATH){
 #ifdef _MSC_VER
-		if (GetFullPathNameA(fp,MAX_PATH_LENGTH,tmp,NULL)){
+		if (GetFullPathNameA(fp,MAX_PATH_LENGTH,tmp0,NULL)){
 #else
-		if (realpath(fp,tmp)){
+		if (realpath(fp,tmp0)){
 #endif
-			fp=tmp;
+			fp=tmp0;
 		}
+	}
+	char tmp1[MAX_PATH_LENGTH];
+	if (!o_fp){
+		uint16_t i=0;
+		while (*(fp+i)&&*(fp+i)!='.'){
+			*(tmp1+i)=*(fp+i);
+			i++;
+		}
+		if (fl&FLAG_COMPILE_ONLY){
+			tmp1[i]='.';
+			tmp1[i+1]='l';
+			tmp1[i+2]='l';
+			tmp1[i+3]='l';
+			tmp1[i+4]='c';
+			tmp1[i+5]=0;
+		}
+		else{
+			tmp1[i]='.';
+			tmp1[i+1]='c';
+			tmp1[i+2]=0;
+		}
+		o_fp=tmp1;
 	}
 	if (fl&FLAG_VERBOSE){
 		printf("Configuration:\n  Optimization Level: %c (",ol+48);
@@ -108,10 +142,9 @@ _unkown_switch:
 			printf("  Compile Only Mode\n");
 		}
 		else{
-			printf("  Non-Compilation Only Mode Not Supported\n");
-			return 1;
+			printf("  Compilation And Code Generation Mode\n");
 		}
-		if (fl&FLAG_COMPILE_ONLY){
+		if (fl&FLAG_FULL_PATH){
 			printf("  Full Path Mode\n");
 		}
 		printf("Compiling File '%s'...\n",fp);
@@ -161,19 +194,6 @@ _unkown_switch:
 		lll_print_object(c_dt.h,stdout);
 		putchar('\n');
 		FILE* of=NULL;
-		char o_fp[512];
-		uint16_t i=0;
-		while (*fp&&*fp!='.'){
-			*(o_fp+i)=*fp;
-			fp++;
-			i++;
-		}
-		o_fp[i]='.';
-		o_fp[i+1]='l';
-		o_fp[i+2]='l';
-		o_fp[i+3]='l';
-		o_fp[i+4]='c';
-		o_fp[i+5]=0;
 #ifdef _MSC_VER
 		if (fopen_s(&of,o_fp,"wb")){// lgtm [cpp/path-injection]
 #else
@@ -184,7 +204,7 @@ _unkown_switch:
 		}
 		lll_output_data_stream_t os;
 		lll_create_output_data_stream(of,&os);
-		if (!lll_write_object(&os,c_dt.h,&e)){
+		if (!lll_write_object(&os,c_dt.h,((fl&FLAG_COMPILE_ONLY)?LLL_WRITE_MODE_RAW:LLL_WRITE_MODE_C),&e)){
 			lll_print_error(&is,&e);
 			return 1;
 		}

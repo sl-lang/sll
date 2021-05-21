@@ -32,6 +32,30 @@
 #define READ_SINGLE_CHAR_ERROR 2
 #define READ_REF_FROM_STACK(o) ((lll_object_t*)(_bf+(*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))))
 #define ERROR_DISPLAY_TAB_WIDTH 4
+#define _ASSERT_STR_(l) #l
+#define _ASSERT_STR(l) _ASSERT_STR_(l)
+#define ASSERT(x,e,r) \
+	do{ \
+		if (!(x)){ \
+			e->t=LLL_ERROR_ASSERTION; \
+			const char __tmp0[]="File \""__FILE__"\", Line "_ASSERT_STR(__LINE__)" ("; \
+			uint32_t __i=0; \
+			for (uint32_t __j=0;__j<sizeof(__tmp0)/sizeof(char)-1;__j++){ \
+				e->err[__i]=__tmp0[__j]; \
+				__i++; \
+			} \
+			for (uint32_t __j=0;__j<sizeof(__func__)/sizeof(char)-1;__j++){ \
+				e->err[__i]=__func__[__j]; \
+				__i++; \
+			} \
+			const char __tmp1[]="): "_ASSERT_STR(x)": Assertion Failed"; \
+			for (uint32_t __j=0;__j<sizeof(__tmp1)/sizeof(char);__j++){ \
+				e->err[__i]=__tmp1[__j]; \
+				__i++; \
+			} \
+			return r; \
+		} \
+	} while (0)
 
 
 
@@ -95,6 +119,23 @@ void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t l
 
 
 
+uint8_t _output_data_stream_file_write_char(lll_output_data_stream_t* os,char c){
+	fputc(c,(FILE*)(os->ctx));
+	return 1;
+}
+
+
+
+uint8_t _output_data_stream_file_write_string(lll_output_data_stream_t* os,char* s){
+	while (*s){
+		fputc(*s,(FILE*)(os->ctx));
+		s++;
+	}
+	return 1;
+}
+
+
+
 uint8_t _output_data_stream_file_write(lll_output_data_stream_t* os,uint8_t* bf,size_t sz){
 	return (fwrite(bf,sizeof(uint8_t),sz,(FILE*)(os->ctx))==sz);
 }
@@ -142,8 +183,8 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 		else if ((o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK)==LLL_OBJECT_MODIFIER_LIST){
 			fprintf(f,"@list ");
 		}
-		else if ((o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK)==LLL_OBJECT_MODIFIER_VECTOR){
-			fprintf(f,"@vector ");
+		else if ((o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK)==LLL_OBJECT_MODIFIER_LAST){
+			fprintf(f,"@last ");
 		}
 	}
 	switch (LLL_GET_OBJECT_TYPE(o)){
@@ -153,6 +194,37 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 		case LLL_OBJECT_TYPE_CHAR:
 			fprintf(f,"'%c'",LLL_GET_OBJECT_AS_CHAR(o));
 			return sizeof(lll_object_t)+eoff+sizeof(char);
+		case LLL_OBJECT_TYPE_INT:
+			if (LLL_IS_OBJECT_INT16(o)){
+				fprintf(f,"%"PRId16,LLL_GET_OBJECT_AS_INT16(o));
+				return sizeof(lll_object_t)+eoff+sizeof(int16_t);
+			}
+			if (LLL_IS_OBJECT_INT32(o)){
+				fprintf(f,"%"PRId32,LLL_GET_OBJECT_AS_INT32(o));
+				return sizeof(lll_object_t)+eoff+sizeof(int32_t);
+			}
+			if (LLL_IS_OBJECT_INT64(o)){
+				fprintf(f,"%"PRId64,LLL_GET_OBJECT_AS_INT64(o));
+				return sizeof(lll_object_t)+eoff+sizeof(int64_t);
+			}
+			fprintf(f,"%"PRId8,LLL_GET_OBJECT_AS_INT8(o));
+			return sizeof(lll_object_t)+eoff+sizeof(int8_t);
+		case LLL_OBJECT_TYPE_FLOAT:
+			if (LLL_IS_OBJECT_FLOAT64(o)){
+				fprintf(f,"%lf",LLL_GET_OBJECT_AS_FLOAT64(o));
+				return sizeof(lll_object_t)+eoff+sizeof(double);
+			}
+			fprintf(f,"%f",LLL_GET_OBJECT_AS_FLOAT32(o));
+			return sizeof(lll_object_t)+eoff+sizeof(float);
+		case LLL_OBJECT_TYPE_NIL:
+			fprintf(f,"nil");
+			return sizeof(lll_object_t)+eoff;
+		case LLL_OBJECT_TYPE_TRUE:
+			fprintf(f,"true");
+			return sizeof(lll_object_t)+eoff;
+		case LLL_OBJECT_TYPE_FALSE:
+			fprintf(f,"false");
+			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
 			fputc('"',f);
 			lll_string_length_t l=LLL_GET_OBJECT_STRING_LENGTH(o);
@@ -195,28 +267,6 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 			}
 			fputc('"',f);
 			return off+eoff;
-		case LLL_OBJECT_TYPE_INT:
-			if (LLL_IS_OBJECT_INT16(o)){
-				fprintf(f,"%"PRId16,LLL_GET_OBJECT_AS_INT16(o));
-				return sizeof(lll_object_t)+eoff+sizeof(int16_t);
-			}
-			if (LLL_IS_OBJECT_INT32(o)){
-				fprintf(f,"%"PRId32,LLL_GET_OBJECT_AS_INT32(o));
-				return sizeof(lll_object_t)+eoff+sizeof(int32_t);
-			}
-			if (LLL_IS_OBJECT_INT64(o)){
-				fprintf(f,"%"PRId64,LLL_GET_OBJECT_AS_INT64(o));
-				return sizeof(lll_object_t)+eoff+sizeof(int64_t);
-			}
-			fprintf(f,"%"PRId8,LLL_GET_OBJECT_AS_INT8(o));
-			return sizeof(lll_object_t)+eoff+sizeof(int8_t);
-		case LLL_OBJECT_TYPE_FLOAT:
-			if (LLL_IS_OBJECT_FLOAT64(o)){
-				fprintf(f,"%lf",LLL_GET_OBJECT_AS_FLOAT64(o));
-				return sizeof(lll_object_t)+eoff+sizeof(double);
-			}
-			fprintf(f,"%f",LLL_GET_OBJECT_AS_FLOAT32(o));
-			return sizeof(lll_object_t)+eoff+sizeof(float);
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			l=LLL_GET_OBJECT_STRING_LENGTH(o);
 			off=sizeof(lll_object_t)+l+sizeof(lll_string_length_t);
@@ -227,15 +277,6 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 				str++;
 			}
 			return off+eoff;
-		case LLL_OBJECT_TYPE_NIL:
-			fprintf(f,"nil");
-			return sizeof(lll_object_t)+eoff;
-		case LLL_OBJECT_TYPE_TRUE:
-			fprintf(f,"true");
-			return sizeof(lll_object_t)+eoff;
-		case LLL_OBJECT_TYPE_FALSE:
-			fprintf(f,"false");
-			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CAST_CHAR:
 			fprintf(f,"char");
 			break;
@@ -369,27 +410,27 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 			lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 			uint32_t i=sizeof(lll_debug_object_t);
 			if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
-				fprintf(f,"<%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+				fprintf(f,"$%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
 				i+=sizeof(uint32_t);
 			}
 			else if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT16){
-				fprintf(f,"<%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+				fprintf(f,"$%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
 				i+=sizeof(uint16_t);
 			}
 			else{
-				fprintf(f,"<%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+				fprintf(f,"$%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
 				i+=sizeof(uint8_t);
 			}
 			if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32){
-				fprintf(f,"%"PRIu32">",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+				fprintf(f,"%"PRIu32"$",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
 				i+=sizeof(uint32_t);
 			}
 			else if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16){
-				fprintf(f,"%"PRIu16">",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+				fprintf(f,"%"PRIu16"$",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
 				i+=sizeof(uint16_t);
 			}
 			else{
-				fprintf(f,"%"PRIu8">",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+				fprintf(f,"%"PRIu8"$",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
 				i+=sizeof(uint8_t);
 			}
 			i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
@@ -750,6 +791,23 @@ _read_modifier:
 						return LLL_RETURN_ERROR;
 					}
 				}
+				else if (FAST_COMPARE(str,l,a,s,t)){
+					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+						if (o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK){
+							e->t=LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS;
+							e->off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
+							e->sz=sz+1;
+							return LLL_RETURN_ERROR;
+						}
+						o->m|=LLL_OBJECT_MODIFIER_LAST;
+					}
+					else{
+						e->t=LLL_ERROR_UNKNOWN_MODIFIER;
+						e->off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
+						e->sz=sz+1;
+						return LLL_RETURN_ERROR;
+					}
+				}
 				else{
 					goto _unknown_modifier;
 				}
@@ -832,28 +890,6 @@ _read_modifier:
 							return LLL_RETURN_ERROR;
 						}
 						o->m|=LLL_OBJECT_MODIFIER_ARRAY;
-					}
-					else{
-						e->t=LLL_ERROR_UNKNOWN_MODIFIER;
-						e->off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
-						e->sz=sz+1;
-						return LLL_RETURN_ERROR;
-					}
-				}
-				else{
-					goto _unknown_modifier;
-				}
-			}
-			else if (sz==6){
-				if (FAST_COMPARE(str,v,e,c,t,o,r)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
-						if (o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK){
-							e->t=LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS;
-							e->off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
-							e->sz=sz+1;
-							return LLL_RETURN_ERROR;
-						}
-						o->m|=LLL_OBJECT_MODIFIER_VECTOR;
 					}
 					else{
 						e->t=LLL_ERROR_UNKNOWN_MODIFIER;
@@ -1145,11 +1181,11 @@ _unknown_symbol:
 			am=0;
 			uint32_t sz=0;
 			while (1){
-				uint8_t ec=_read_single_char(is,'"',arg_s,e);
-				if (ec==READ_SINGLE_CHAR_ERROR){
+				uint8_t ce=_read_single_char(is,'"',arg_s,e);
+				if (ce==READ_SINGLE_CHAR_ERROR){
 					return LLL_RETURN_ERROR;
 				}
-				if (ec==READ_SINGLE_CHAR_END){
+				if (ce==READ_SINGLE_CHAR_END){
 					break;
 				}
 				sz++;
@@ -1954,6 +1990,8 @@ __LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_str
 
 __LLL_IMPORT_EXPORT void lll_create_output_data_stream(FILE* f,lll_output_data_stream_t* o){
 	o->ctx=f;
+	o->wcf=_output_data_stream_file_write_char;
+	o->wsf=_output_data_stream_file_write_string;
 	o->wf=_output_data_stream_file_write;
 }
 
@@ -1977,6 +2015,9 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 				return;
 			case LLL_ERROR_DIVISION_BY_ZERO:
 				printf("Division By Zero\n");
+				return;
+			case LLL_ERROR_ASSERTION:
+				printf("%s\n",e->err);
 				return;
 		}
 	}
@@ -2323,13 +2364,20 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_padding(lll_obj
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,uint8_t f,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
 	}
-	if (LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)o,_get_object_size(o))){
-		return LLL_RETURN_NO_ERROR;
+	if (f==LLL_WRITE_MODE_C){
+		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"#include <stdio.h>\n#include <stdint.h>\n\n\n\nint main(int argc,const char* argv){\n");
+		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'}');
+		ASSERT(!"Unimplemented",e,LLL_RETURN_ERROR);
+	}
+	else{
+		if (LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)o,_get_object_size(o))){
+			return LLL_RETURN_NO_ERROR;
+		}
 	}
 	e->t=LLL_ERROR_FAILED_FILE_WRITE;
 	return LLL_RETURN_ERROR;
