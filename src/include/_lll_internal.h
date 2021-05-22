@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <immintrin.h>
 #endif
-#include <lll.h>
+#include <lll_lib.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -42,16 +42,16 @@ static inline void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
 			const char __tmp0[]="File \""__FILE__"\", Line "_ASSERT_STR(__LINE__)" ("; \
 			uint32_t __i=0; \
 			for (uint32_t __j=0;__j<sizeof(__tmp0)/sizeof(char)-1;__j++){ \
-				e->err[__i]=__tmp0[__j]; \
+				e->dt.str[__i]=__tmp0[__j]; \
 				__i++; \
 			} \
 			for (uint32_t __j=0;__j<sizeof(__func__)/sizeof(char)-1;__j++){ \
-				e->err[__i]=__func__[__j]; \
+				e->dt.str[__i]=__func__[__j]; \
 				__i++; \
 			} \
 			const char __tmp1[]="): "_ASSERT_STR(x)": Assertion Failed"; \
 			for (uint32_t __j=0;__j<sizeof(__tmp1)/sizeof(char);__j++){ \
-				e->err[__i]=__tmp1[__j]; \
+				e->dt.str[__i]=__tmp1[__j]; \
 				__i++; \
 			} \
 			return r; \

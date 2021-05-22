@@ -1,4 +1,4 @@
-#include <lll.h>
+#include <lll_lib.h>
 #include <_lll_internal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -118,8 +118,8 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_insert_debug_object(lll_input
 	_bf_off+=i;
 	if (_bf_off>=_bf_sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
-		e->off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-		e->sz=1;
+		e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+		e->dt.r.sz=1;
 		return LLL_RETURN_ERROR;
 	}
 	return LLL_RETURN_NO_ERROR;

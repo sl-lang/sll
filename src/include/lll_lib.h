@@ -222,6 +222,8 @@ struct __LLL_OUTPUT_DATA_STREAM;
 struct __LLL_OBJECT;
 struct __LLL_DEBUG_OBJECT;
 struct __LLL_COMPILATION_DATA;
+struct __LLL_ERROR_DATA_RANGE;
+union __LLL_ERROR_DATA;
 struct __LLL_ERROR;
 
 
@@ -318,12 +320,23 @@ typedef struct __LLL_COMPILATION_DATA{
 
 
 
-typedef struct __LLL_ERROR{
-	lll_error_type_t t;
+typedef struct __LLL_ERROR_DATA_RANGE{
 	uint32_t off;
 	uint32_t sz;
-	char err[256];
-	char c;
+} lll_error_data_range_t;
+
+
+
+typedef union __LLL_ERROR_DATA{
+	char str[256];
+	lll_error_data_range_t r;
+} lll_error_data_t;
+
+
+
+typedef struct __LLL_ERROR{
+	lll_error_type_t t;
+	lll_error_data_t dt;
 } lll_error_t;
 
 

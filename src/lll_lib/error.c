@@ -1,4 +1,4 @@
-#include <lll.h>
+#include <lll_lib.h>
 #include <_lll_internal.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -27,13 +27,13 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 				printf("Division By Zero\n");
 				return;
 			case LLL_ERROR_ASSERTION:
-				printf("%s\n",e->err);
+				printf("%s\n",e->dt.str);
 				return;
 		}
 	}
 	ENABLE_COLOR();
-	uint32_t os=e->off;
-	uint32_t oe=os+e->sz;
+	uint32_t os=e->dt.r.off;
+	uint32_t oe=os+e->dt.r.sz;
 	LLL_INPUT_DATA_STREAM_RESTART_LINE(is,os);
 	uint32_t off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is);
 	uint32_t s_off=off;
