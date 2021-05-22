@@ -20,6 +20,12 @@ int _input_data_stream_file_read(lll_input_data_stream_t* is){
 
 
 
+uint8_t _input_data_stream_file_read_buffer(lll_input_data_stream_t* is,uint8_t* bf,uint32_t sz){
+	return (fread(bf,sizeof(uint8_t),sz,(FILE*)(is->ctx))==sz);
+}
+
+
+
 void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t lp){
 	FILE* f=(FILE*)(is->ctx);
 	fseek(f,lp,SEEK_SET);
@@ -35,8 +41,10 @@ void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t l
 
 
 __LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o){
+	rewind(f);
 	o->ctx=f;
 	o->rf=_input_data_stream_file_read;
+	o->rbf=_input_data_stream_file_read_buffer;
 	o->rlf=_input_data_stream_file_restart_line;
 	o->_lc=0;
 	o->_off=0;

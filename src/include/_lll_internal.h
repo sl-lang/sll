@@ -1,9 +1,5 @@
 #ifndef __LLL_INTERNAL_H__
 #define __LLL_INTERNAL_H__ 1
-#ifdef _MSC_VER
-#include <windows.h>
-#include <immintrin.h>
-#endif
 #include <lll_lib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -11,24 +7,9 @@
 
 
 #ifdef _MSC_VER
-#pragma intrinsic(__movsb)
-#define REPEAT_BYTE_COPY(d,s,sz) __movsb(d,s,sz)
-#define UNREACHABLE() __assume(0)
-#define ENABLE_COLOR() \
-	uint32_t __tv; \
-	do{ \
-		SetConsoleOutputCP(CP_UTF8); \
-		GetConsoleMode(GetStdHandle(-11),&__tv); \
-		SetConsoleMode(GetStdHandle(-11),7); \
-	} while (0)
-#define DISABLE_COLOR() SetConsoleMode(GetStdHandle(-11),__tv)
+#define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
 #else
-static inline void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
-	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
-}
-#define UNREACHABLE() __builtin_unreachable()
-#define ENABLE_COLOR()
-#define DISABLE_COLOR()
+#define PACKED(s) s __attribute__((__packed__))
 #endif
 
 
@@ -57,6 +38,7 @@ static inline void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
 			return r; \
 		} \
 	} while (0)
+#define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','L',0)
 #define CONSTRUCT_CHAR(c) ((#c)[0])
 #define CONSTRUCT_WORD(a,b) ((((uint16_t)(b))<<8)|(a))
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
@@ -76,10 +58,18 @@ static inline void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
 #define FAST_COMPARE_8(s,a,b,c,d,e,f,g,h) (*((uint64_t*)(s))==CONSTRUCT_QWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d),CONSTRUCT_CHAR(e),CONSTRUCT_CHAR(f),CONSTRUCT_CHAR(g),CONSTRUCT_CHAR(h)))
 #define HIGHLIGHT_COLOR "\x1b[31m"
 #define HIGHLIGHT_COLOR_RESET "\x1b[0m"
-#define READ_REF_FROM_STACK(o) ((lll_object_t*)(_bf+(*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))))
 #define READ_SINGLE_CHAR_OK 0
 #define READ_SINGLE_CHAR_END 1
 #define READ_SINGLE_CHAR_ERROR 2
+
+
+
+typedef PACKED(struct __COMPILED_OBJECT_FILE{
+	uint32_t m;
+	uint32_t sz;
+	uint64_t t;
+	uint16_t fpl;
+}) compiled_object_file_t;
 
 
 

@@ -10,11 +10,6 @@ uint32_t _get_object_size(lll_object_t* o){
 		eoff+=sizeof(lll_object_type_t);
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
 	}
-	if (LLL_IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
-		while (LLL_IS_OBJECT_REF(o)){
-			o=READ_REF_FROM_STACK(o);
-		}
-	}
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_NIL:
@@ -59,13 +54,34 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
 	}
-	if (f==LLL_WRITE_MODE_C){
+	if (f==LLL_WRITE_MODE_ASSEMBLY){
 		ASSERT(!"Unimplemented",e,LLL_RETURN_ERROR);
 	}
 	else{
 		if (LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)o,_get_object_size(o))){
 			return LLL_RETURN_NO_ERROR;
 		}
+	}
+	e->t=LLL_ERROR_FAILED_FILE_WRITE;
+	return LLL_RETURN_ERROR;
+}
+
+
+
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,lll_error_t* e){
+	if (!_bf){
+		e->t=LLL_ERROR_NO_STACK;
+		return LLL_RETURN_ERROR;
+	}
+	uint32_t sz=_get_object_size(c_dt->h);
+	compiled_object_file_t dt={
+		COMPLIED_OBJECT_FILE_MAGIC_NUMBER,
+		sz,
+		c_dt->tm,
+		c_dt->fpl
+	};
+	if (LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&dt),sizeof(compiled_object_file_t))&&LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,c_dt->fp)&&LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(c_dt->h),sz)){
+		return LLL_RETURN_NO_ERROR;
 	}
 	e->t=LLL_ERROR_FAILED_FILE_WRITE;
 	return LLL_RETURN_ERROR;

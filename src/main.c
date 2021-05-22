@@ -2,10 +2,10 @@
 #include <windows.h>
 #else
 #include <linux/limits.h>
-#include <stdlib.h>
 #endif
 #include <lll_lib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 
@@ -33,8 +33,12 @@ uint8_t st[COMPILER_STACK_SIZE];
 int main(int argc,const char** argv){
 	uint8_t ol=DEFAULT_OPTIMIZE_LEVEL;
 	uint8_t fl=0;
-	const char* fp=NULL;
+	char** fp=NULL;
+	uint32_t fpl=0;
 	const char* o_fp=NULL;
+	char* ffp=NULL;
+	FILE* f=NULL;
+	FILE* of=NULL;
 	for (int i=1;i<argc;i++){
 		const char* e=argv[i];
 		if (*e=='-'&&*(e+1)=='O'&&*(e+3)==0){
@@ -66,7 +70,7 @@ int main(int argc,const char** argv){
 		else if (*e=='-'&&*(e+1)=='o'&&*(e+2)==0){
 			if (o_fp){
 				printf("Multplie Output Files Supplied\n");
-				return 1;
+				goto _cleanup;
 			}
 			i++;
 			if (i==argc){
@@ -77,51 +81,52 @@ int main(int argc,const char** argv){
 		else if (*e=='-'){
 _unkown_switch:
 			printf("Unknown Switch: '%s'\n",e);
-			return 1;
+			goto _cleanup;
 		}
 		else{
-			if (fp!=NULL){
-				printf("Multplie Input Files not Supported\n");
-				return 1;
-			}
-			fp=e;
+			fpl++;
+			fp=realloc(fp,fpl*sizeof(char*));
+			*(fp+fpl-1)=(char*)e;
 		}
 	}
-	if (fp==NULL){
+	if (!fpl){
 		printf("Not Input Files Supplied\n");
-		return 1;
+		goto _cleanup;
+	}
+	if (fl&FLAG_FULL_PATH){
+		ffp=malloc(fpl*MAX_PATH_LENGTH*sizeof(char));
+		for (uint32_t i=0;i<fpl;i++){
+#ifdef _MSC_VER
+			if (GetFullPathNameA(*(fp+i),MAX_PATH_LENGTH,ffp+i*MAX_PATH_LENGTH,NULL)){
+#else
+			if (realpath(*(fp+i),ffp+i*MAX_PATH_LENGTH)){
+#endif
+				*(fp+i)=ffp+i*MAX_PATH_LENGTH;
+			}
+		}
 	}
 	char tmp0[MAX_PATH_LENGTH];
-	if (fl&FLAG_FULL_PATH){
-#ifdef _MSC_VER
-		if (GetFullPathNameA(fp,MAX_PATH_LENGTH,tmp0,NULL)){
-#else
-		if (realpath(fp,tmp0)){
-#endif
-			fp=tmp0;
-		}
-	}
-	char tmp1[MAX_PATH_LENGTH];
 	if (!o_fp){
 		uint16_t i=0;
-		while (*(fp+i)&&*(fp+i)!='.'){
-			*(tmp1+i)=*(fp+i);
+		while (*(*fp+i)&&*(*fp+i)!='.'){
+			*(tmp0+i)=*(*fp+i);
 			i++;
 		}
+		tmp0[i]='.';
 		if (fl&FLAG_COMPILE_ONLY){
-			tmp1[i]='.';
-			tmp1[i+1]='l';
-			tmp1[i+2]='l';
-			tmp1[i+3]='l';
-			tmp1[i+4]='c';
-			tmp1[i+5]=0;
+			tmp0[i+1]='l';
+			tmp0[i+2]='l';
+			tmp0[i+3]='l';
+			tmp0[i+4]='c';
+			tmp0[i+5]=0;
 		}
 		else{
-			tmp1[i]='.';
-			tmp1[i+1]='c';
-			tmp1[i+2]=0;
+			tmp0[i+1]='a';
+			tmp0[i+2]='s';
+			tmp0[i+3]='m';
+			tmp0[i+4]=0;
 		}
-		o_fp=tmp1;
+		o_fp=tmp0;
 	}
 	if (fl&FLAG_VERBOSE){
 		printf("Configuration:\n  Optimization Level: %c (",ol+48);
@@ -147,69 +152,114 @@ _unkown_switch:
 		if (fl&FLAG_FULL_PATH){
 			printf("  Full Path Mode\n");
 		}
-		printf("Compiling File '%s'...\n",fp);
 	}
 	lll_error_t e;
 	if (!lll_set_internal_stack(st,COMPILER_STACK_SIZE,&e)){
 		lll_print_error(NULL,&e);
-		return 1;
-	}
-	FILE* f=NULL;
-#ifdef _MSC_VER
-	if (fopen_s(&f,fp,"rb")){// lgtm [cpp/path-injection]
-#else
-	if (!(f=fopen(fp,"rb"))){// lgtm [cpp/path-injection]
-#endif
-		printf("Unable to Open File '%s'!\n",fp);
-		return 1;
+		goto _cleanup;
 	}
 	lll_input_data_stream_t is;
-	lll_create_input_data_stream(f,&is);
 	lll_compilation_data_t c_dt;
-	lll_init_compilation_data(fp,&is,&c_dt);
-	if (!lll_read_all_objects(&c_dt,&e)){
-		lll_print_error(&is,&e);
-	}
-	else{
-		lll_print_object(c_dt.h,stdout);
-		putchar('\n');
+	for (uint32_t i=0;i<fpl;i++){
+		if (fl&FLAG_VERBOSE){
+			printf("Opening File '%s'...\n",*(fp+i));
+		}
+#ifdef _MSC_VER
+		if (fopen_s(&f,*(fp+i),"rb")){// lgtm [cpp/path-injection]
+#else
+		if (!(f=fopen(*(fp+i),"rb"))){// lgtm [cpp/path-injection]
+#endif
+			printf("Unable to Open File '%s'!\n",*(fp+i));
+			goto _cleanup;
+		}
+		lll_create_input_data_stream(f,&is);
+		if (fl&FLAG_VERBOSE){
+			printf("Trying to Load File as Compiled Object...\n");
+		}
+		if (!lll_load_compiled_object(&is,&c_dt,&e)){
+			if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
+				if (fl&FLAG_VERBOSE){
+					printf("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
+				}
+				lll_create_input_data_stream(f,&is);
+				lll_init_compilation_data(*(fp+i),&is,&c_dt);
+				if (!lll_read_all_objects(&c_dt,&e)){
+					lll_print_error(&is,&e);
+					goto _cleanup;
+				}
+			}
+			else{
+				lll_print_error(&is,&e);
+				goto _cleanup;
+			}
+		}
+		if (fl&FLAG_VERBOSE){
+			printf("File Successfully Read.\n");
+		}
 		if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
+			if (fl&FLAG_VERBOSE){
+				printf("Performing Global Optimization...\n");
+			}
 			if (!lll_optimize_object(c_dt.h,&e)){
 				lll_print_error(&is,&e);
-				return 1;
+				goto _cleanup;
 			}
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
+			if (fl&FLAG_VERBOSE){
+				printf("Removing Debug Data...\n");
+			}
 			if (!lll_remove_object_debug_data(c_dt.h,&e)){
 				lll_print_error(&is,&e);
-				return 1;
+				goto _cleanup;
 			}
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
+			if (fl&FLAG_VERBOSE){
+				printf("Removing Object Padding...\n");
+			}
 			if (!lll_remove_object_padding(c_dt.h,&e)){
 				lll_print_error(&is,&e);
-				return 1;
+				goto _cleanup;
 			}
 		}
-		lll_print_object(c_dt.h,stdout);
-		putchar('\n');
-		FILE* of=NULL;
 #ifdef _MSC_VER
 		if (fopen_s(&of,o_fp,"wb")){// lgtm [cpp/path-injection]
 #else
 		if (!(of=fopen(o_fp,"wb"))){// lgtm [cpp/path-injection]
 #endif
 			printf("Unable to Open File '%s'!\n",o_fp);
-			return 1;
+			goto _cleanup;
 		}
 		lll_output_data_stream_t os;
 		lll_create_output_data_stream(of,&os);
-		if (!lll_write_object(&os,c_dt.h,((fl&FLAG_COMPILE_ONLY)?LLL_WRITE_MODE_RAW:LLL_WRITE_MODE_C),&e)){
-			lll_print_error(&is,&e);
-			return 1;
+		if (fl&FLAG_COMPILE_ONLY){
+			if (!lll_write_compiled_object(&os,&c_dt,&e)){
+				lll_print_error(&is,&e);
+				goto _cleanup;
+			}
+		}
+		else{
+			if (!lll_write_object(&os,c_dt.h,LLL_WRITE_MODE_ASSEMBLY,&e)){
+				lll_print_error(&is,&e);
+				goto _cleanup;
+			}
 		}
 		fclose(of);
+		of=NULL;
+		fclose(f);
+		f=NULL;
 	}
-	fclose(f);
 	return 0;
+_cleanup:
+	if (f){
+		fclose(f);
+	}
+	if (of){
+		fclose(of);
+	}
+	if (ffp){
+		free(ffp);
+	}
+	return 1;
 }

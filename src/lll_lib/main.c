@@ -1,6 +1,11 @@
+#ifdef _MSC_VER
+#define WIN32_LEAN_AND_MEAN 1
+#include <windows.h>
+#endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <stdint.h>
+#include <time.h>
 
 
 
@@ -32,6 +37,7 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 	}
 	o->fp[o->fpl]=0;
 	o->is=is;
+	o->tm=(uint64_t)time(NULL);
 	o->h=NULL;
 }
 

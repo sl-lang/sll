@@ -178,7 +178,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,lll_error_t* e)
 				e->dt.r.sz=1;
 				return LLL_RETURN_ERROR;
 			}
-			if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+			if (LLL_IS_OBJECT_UNKNOWN(o)){
 				o->t=LLL_OBJECT_TYPE_NIL;
 				_bf_off-=sizeof(lll_arg_count_t);
 			}
@@ -191,6 +191,14 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,lll_error_t* e)
 				}
 				if (*ac>(LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_POW?3:2)){
 					e->t=LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS;
+					e->dt.r.off=st_off;
+					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
+					return LLL_RETURN_ERROR;
+				}
+			}
+			else if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_FOR){
+				if (*ac<2){
+					e->t=LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS;
 					e->dt.r.off=st_off;
 					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
 					return LLL_RETURN_ERROR;
@@ -227,7 +235,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,lll_error_t* e)
 					e->dt.r.sz=1;
 					return LLL_RETURN_ERROR;
 				}
-				o->t=(c=='('?LLL_OBJECT_TYPE_UNKNOWN:LLL_OBJECT_TYPE_OPERATION_LIST);
+				o->t=(c=='('?LLL_OBJECT_TYPE_UNKNOWN:LLL_OBJECT_TYPE_OPERATION_LIST|LLL_OBJECT_TYPE_CONST);
 				o->m=0;
 				ec=(c=='('?')':'}');
 				if (c=='('){
@@ -241,16 +249,24 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,lll_error_t* e)
 			}
 			else{
 				uint32_t arg_s=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+				if (LLL_IS_OBJECT_UNKNOWN(o)){
 					e->t=LLL_ERROR_NO_SYMBOL;
 					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 					e->dt.r.sz=1;
 					return LLL_RETURN_ERROR;
 				}
+				lll_object_t* so=(lll_object_t*)(_bf+_bf_off);
 				if (!_read_object_internal(c_dt,c,e)){
 					return LLL_RETURN_ERROR;
 				}
-				if (o->t==LLL_OBJECT_TYPE_OPERATION_LIST){
+				if (LLL_GET_OBJECT_TYPE(so)==LLL_OBJECT_TYPE_DEBUG_DATA){
+					lll_debug_object_t* dbg=(lll_debug_object_t*)so;
+					so=LLL_GET_DEBUG_OBJECT_CHILD(dbg,sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg));
+				}
+				if (LLL_IS_OBJECT_TYPE_NOT_TYPE(so)&&!LLL_IS_OBJECT_CONST(so)){
+					o->t&=~LLL_OBJECT_TYPE_CONST;
+				}
+				if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
 					if (*sc==UINT16_MAX){
 						e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
 						e->dt.r.off=arg_s;
@@ -305,7 +321,7 @@ _read_modifier:
 			str++;
 			if (sz==4){
 				if (FAST_COMPARE(str,8,b,i,t)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						if (o->m&LLL_OBJECT_MODIFIER_SIZE){
 							e->t=LLL_ERROR_MULTIPLE_SIZE_MODIFIERS;
 							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
@@ -325,7 +341,7 @@ _read_modifier:
 					}
 				}
 				else if (FAST_COMPARE(str,l,i,s,t)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						if (o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK){
 							e->t=LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS;
 							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
@@ -342,7 +358,7 @@ _read_modifier:
 					}
 				}
 				else if (FAST_COMPARE(str,l,a,s,t)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						if (o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK){
 							e->t=LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS;
 							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
@@ -364,7 +380,7 @@ _read_modifier:
 			}
 			else if (sz==5){
 				if (FAST_COMPARE(str,f,i,x,e,d)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						o->m|=LLL_OBJECT_MODIFIER_FIXED;
 					}
 					else{
@@ -372,7 +388,7 @@ _read_modifier:
 					}
 				}
 				else if (FAST_COMPARE(str,1,6,b,i,t)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						if (o->m&LLL_OBJECT_MODIFIER_SIZE){
 							e->t=LLL_ERROR_MULTIPLE_SIZE_MODIFIERS;
 							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
@@ -392,7 +408,7 @@ _read_modifier:
 					}
 				}
 				else if (FAST_COMPARE(str,3,2,b,i,t)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						if (o->m&LLL_OBJECT_MODIFIER_SIZE){
 							e->t=LLL_ERROR_MULTIPLE_SIZE_MODIFIERS;
 							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
@@ -412,7 +428,7 @@ _read_modifier:
 					}
 				}
 				else if (FAST_COMPARE(str,6,4,b,i,t)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						if (o->m&LLL_OBJECT_MODIFIER_SIZE){
 							e->t=LLL_ERROR_MULTIPLE_SIZE_MODIFIERS;
 							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
@@ -432,7 +448,7 @@ _read_modifier:
 					}
 				}
 				else if (FAST_COMPARE(str,a,r,r,a,y)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						if (o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK){
 							e->t=LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS;
 							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
@@ -454,7 +470,7 @@ _read_modifier:
 			}
 			else if (sz==8){
 				if (FAST_COMPARE(str,u,n,s,i,g,n,e,d)){
-					if (o->t==LLL_OBJECT_TYPE_UNKNOWN){
+					if (LLL_IS_OBJECT_UNKNOWN(o)){
 						o->m|=LLL_OBJECT_MODIFIER_UNSIGNED;
 					}
 					else{
@@ -467,14 +483,14 @@ _read_modifier:
 			}
 			else{
 _unknown_modifier:
-				e->t=(o->t==LLL_OBJECT_TYPE_UNKNOWN?LLL_ERROR_UNKNOWN_OUTPUT_MODIFIER:LLL_ERROR_UNKNOWN_MODIFIER);
+				e->t=(LLL_IS_OBJECT_UNKNOWN(o)?LLL_ERROR_UNKNOWN_OUTPUT_MODIFIER:LLL_ERROR_UNKNOWN_MODIFIER);
 				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
 				e->dt.r.sz=sz+1;
 				return LLL_RETURN_ERROR;
 			}
 			continue;
 		}
-		else if (o&&o->t==LLL_OBJECT_TYPE_UNKNOWN){
+		else if (o&&LLL_IS_OBJECT_UNKNOWN(o)){
 			char* str=(char*)(_bf+_bf_off);
 			uint16_t sz=0;
 _read_symbol:
@@ -658,6 +674,7 @@ _unknown_symbol:
 				e->dt.r.sz=sz;
 				return LLL_RETURN_ERROR;
 			}
+			o->t|=LLL_OBJECT_TYPE_CONST;
 			continue;
 		}
 		else if (c=='\''){
@@ -693,7 +710,7 @@ _unknown_symbol:
 			if (!o){
 				return LLL_RETURN_NO_ERROR;
 			}
-			if (o->t==LLL_OBJECT_TYPE_OPERATION_LIST){
+			if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
 				if (*sc==UINT16_MAX){
 					e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
 					e->dt.r.off=arg_s;
@@ -743,7 +760,7 @@ _unknown_symbol:
 			if (!o){
 				return LLL_RETURN_NO_ERROR;
 			}
-			if (o->t==LLL_OBJECT_TYPE_OPERATION_LIST){
+			if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
 				if (*sc==UINT16_MAX){
 					e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
 					e->dt.r.off=arg_s;
@@ -993,7 +1010,7 @@ _skip_float_parse:
 			if (!o){
 				return LLL_RETURN_NO_ERROR;
 			}
-			if (o->t==LLL_OBJECT_TYPE_OPERATION_LIST){
+			if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
 				if (*sc==UINT16_MAX){
 					e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
 					e->dt.r.off=arg_s;
@@ -1013,7 +1030,7 @@ _skip_float_parse:
 			}
 			continue;
 		}
-		else if (c=='$'||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
+		else if ((c>64&&c<91)||c=='_'||(c>96&&c<123)){
 			if (!lll_insert_debug_object(is,e)){
 				return LLL_RETURN_ERROR;
 			}
@@ -1044,7 +1061,7 @@ _read_identifier:
 			if (c==LLL_END_OF_DATA){
 				break;
 			}
-			if (c=='$'||(c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
+			if ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
 				goto _read_identifier;
 			}
 			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
@@ -1066,13 +1083,16 @@ _read_identifier:
 				arg->t=LLL_OBJECT_TYPE_FALSE;
 			}
 			else{
+				if (o){
+					o->t&=~LLL_OBJECT_TYPE_CONST;
+				}
 				_bf_off+=sz;
 				LLL_SET_OBJECT_STRING_LENGTH(arg,sz);
 			}
 			if (!o){
 				return LLL_RETURN_NO_ERROR;
 			}
-			if (o->t==LLL_OBJECT_TYPE_OPERATION_LIST){
+			if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
 				if (*sc==UINT16_MAX){
 					e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
 					e->dt.r.off=arg_s;
@@ -1173,4 +1193,33 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_read_all_objects(lll_compilat
 		}
 		(*sc)++;
 	}
+}
+
+
+
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t* e){
+	if (!_bf){
+		e->t=LLL_ERROR_NO_STACK;
+		return LLL_RETURN_ERROR;
+	}
+	compiled_object_file_t dt;
+	if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&dt),sizeof(compiled_object_file_t))||dt.m!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(c_dt->fp),dt.fpl)){
+		e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+		return LLL_RETURN_ERROR;
+	}
+	c_dt->fp[dt.fpl]=0;
+	c_dt->fpl=dt.fpl;
+	c_dt->is=NULL;
+	c_dt->tm=dt.t;
+	c_dt->h=(lll_object_t*)(_bf+_bf_off);
+	if (_bf_off+dt.sz>_bf_sz){
+		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+		return LLL_RETURN_ERROR;
+	}
+	if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,_bf+_bf_off,dt.sz)){
+		e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+		return LLL_RETURN_ERROR;
+	}
+	_bf_off+=dt.sz;
+	return LLL_RETURN_NO_ERROR;
 }

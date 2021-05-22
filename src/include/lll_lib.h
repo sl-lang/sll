@@ -49,12 +49,14 @@
 #define LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS 29
 #define LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS 30
 #define LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS 31
-#define LLL_ERROR_MULTIPLE_SIZE_MODIFIERS 32
-#define LLL_ERROR_UNUSED_MODIFIERS 33
-#define LLL_ERROR_NO_STACK 34
-#define LLL_ERROR_STACK_TOO_BIG 35
-#define LLL_ERROR_FAILED_FILE_WRITE 36
-#define LLL_ERROR_DIVISION_BY_ZERO 37
+#define LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS 32
+#define LLL_ERROR_MULTIPLE_SIZE_MODIFIERS 33
+#define LLL_ERROR_UNUSED_MODIFIERS 34
+#define LLL_ERROR_NO_STACK 35
+#define LLL_ERROR_STACK_TOO_BIG 36
+#define LLL_ERROR_FAILED_FILE_WRITE 37
+#define LLL_ERROR_DIVISION_BY_ZERO 38
+#define LLL_ERROR_INVALID_FILE_FORMAT 39
 #define LLL_ERROR_ASSERTION 255
 #define LLL_MAX_SYNTAX_ERROR LLL_ERROR_UNUSED_MODIFIERS
 
@@ -118,7 +120,7 @@
 #define LLL_OBJECT_TYPE_INT64_FLAG 0xc0
 #define LLL_OBJECT_TYPE_INT_TYPE_MASK 0xc0
 #define LLL_OBJECT_TYPE_FLOAT64_FLAG 0x40
-#define LLL_OBJECT_TYPE_REF_FLAG 0x80
+#define LLL_OBJECT_TYPE_CONST 0x80
 #define LLL_OBJECT_TYPE_MAX_INTEGRAL_TYPE LLL_OBJECT_TYPE_FALSE
 #define LLL_OBJECT_TYPE_MAX_TYPE LLL_OBJECT_TYPE_IDENTIFIER
 #define LLL_OBJECT_TYPE_MAX_FUNC LLL_OBJECT_TYPE_FUNC_TYPEOF
@@ -138,7 +140,8 @@
 #define LLL_IS_OBJECT_TYPE_MATH_CHAIN(o) (LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_FLOW&&LLL_GET_OBJECT_TYPE(o)<=LLL_OBJECT_TYPE_MAX_MATH_CHAIN)
 #define LLL_IS_OBJECT_TYPE_MATH_NO_CHAIN(o) (LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_MATH_CHAIN&&LLL_GET_OBJECT_TYPE(o)<=LLL_OBJECT_TYPE_MAX_MATH)
 #define LLL_IS_OBJECT_TYPE_COMPARE(o) (LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_MATH&&LLL_GET_OBJECT_TYPE(o)<=LLL_OBJECT_TYPE_MAX_COMPARE)
-#define LLL_IS_OBJECT_REF(o) ((o)->t>>7)
+#define LLL_IS_OBJECT_UNKNOWN(o) (!((o)->t&0x3f))
+#define LLL_IS_OBJECT_CONST(o) ((o)->t>>7)
 #define LLL_GET_OBJECT_TYPE(o) ((o)->t&0x3f)
 #define LLL_GET_OBJECT_INTEGER_WIDTH(o) (1ull<<((o)->t>>6))
 #define LLL_GET_OBJECT_ARGUMENT_COUNT(o) ((lll_arg_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
@@ -202,10 +205,11 @@
 #define LLL_GET_OBJECT_WITH_OFFSET(o,i) ((void*)(((uint64_t)(void*)(o))+(i)))
 
 #define LLL_WRITE_MODE_RAW 0
-#define LLL_WRITE_MODE_C 1
+#define LLL_WRITE_MODE_ASSEMBLY 1
 
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
+#define LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,bf,sz) ((is)->rbf((is),(bf),(sz)))
 #define LLL_GET_INPUT_DATA_STREAM_OFFSET(is) ((is)->_off)
 #define LLL_GET_INPUT_DATA_STREAM_LINE_NUMBER(is) ((is)->_lc)
 #define LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is) ((is)->_loff)
@@ -256,29 +260,34 @@ typedef uint32_t lll_string_length_t;
 
 
 
-typedef int (*lll_input_data_stream_read_t)(struct __LLL_INPUT_DATA_SOURCE* in);
+typedef int (*lll_input_data_stream_read_t)(struct __LLL_INPUT_DATA_SOURCE* is);
 
 
 
-typedef void (*lll_input_data_stream_restart_line_t)(struct __LLL_INPUT_DATA_SOURCE* in,uint32_t lp);
+typedef uint8_t (*lll_input_data_stream_read_buffer_t)(struct __LLL_INPUT_DATA_SOURCE* is,uint8_t* bf,uint32_t sz);
 
 
 
-typedef uint8_t (*lll_output_data_stream_write_char_t)(struct __LLL_OUTPUT_DATA_STREAM* in,char c);
+typedef void (*lll_input_data_stream_restart_line_t)(struct __LLL_INPUT_DATA_SOURCE* is,uint32_t lp);
 
 
 
-typedef uint8_t (*lll_output_data_stream_write_string_t)(struct __LLL_OUTPUT_DATA_STREAM* in,char* s);
+typedef uint8_t (*lll_output_data_stream_write_char_t)(struct __LLL_OUTPUT_DATA_STREAM* os,char c);
 
 
 
-typedef uint8_t (*lll_output_data_stream_write_t)(struct __LLL_OUTPUT_DATA_STREAM* in,uint8_t* bf,size_t sz);
+typedef uint8_t (*lll_output_data_stream_write_string_t)(struct __LLL_OUTPUT_DATA_STREAM* os,char* s);
+
+
+
+typedef uint8_t (*lll_output_data_stream_write_t)(struct __LLL_OUTPUT_DATA_STREAM* os,uint8_t* bf,size_t sz);
 
 
 
 typedef struct __LLL_INPUT_DATA_SOURCE{
 	void* ctx;
 	lll_input_data_stream_read_t rf;
+	lll_input_data_stream_read_buffer_t rbf;
 	lll_input_data_stream_restart_line_t rlf;
 	uint32_t _lc;
 	uint32_t _off;
@@ -313,8 +322,9 @@ typedef struct __LLL_DEBUG_OBJECT{
 
 typedef struct __LLL_COMPILATION_DATA{
 	char fp[512];
-	uint8_t fpl;
+	uint16_t fpl;
 	lll_input_data_stream_t* is;
+	uint64_t tm;
 	lll_object_t* h;
 } lll_compilation_data_t;
 
@@ -377,6 +387,10 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_read_all_objects(lll_compilat
 
 
 
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t*);
+
+
+
 __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_optimize_object(lll_object_t* o,lll_error_t* e);
 
 
@@ -390,6 +404,10 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_padding(lll_obj
 
 
 __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,uint8_t f,lll_error_t* e);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,lll_error_t* e);
 
 
 

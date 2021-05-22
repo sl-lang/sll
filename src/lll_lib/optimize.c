@@ -1,23 +1,29 @@
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <stdint.h>
 
 
 
+#ifdef _MSC_VER
+#pragma intrinsic(__movsb)
+#define REPEAT_BYTE_COPY(d,s,sz) __movsb(d,s,sz)
+#else
+static inline void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
+	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
+}
+#endif
+
+
+
+
 uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 	uint32_t eoff=0;
-_skip_empty:
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff+=sizeof(lll_object_type_t);
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
-	}
-	if (LLL_IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
-		if (LLL_IS_OBJECT_REF(o)){
-			while (LLL_IS_OBJECT_REF(o)){
-				o=READ_REF_FROM_STACK(o);
-			}
-			goto _skip_empty;
-		}
 	}
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
@@ -215,11 +221,6 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm){
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
 	}
 	uint8_t* s=(uint8_t*)o;
-	if (LLL_IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
-		while (LLL_IS_OBJECT_REF(o)){
-			o=READ_REF_FROM_STACK(o);
-		}
-	}
 	(*rm)+=pad;
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:

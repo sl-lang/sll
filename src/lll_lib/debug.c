@@ -11,11 +11,6 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 		eoff+=sizeof(lll_object_type_t);
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
 	}
-	if (LLL_IS_OBJECT_TYPE_NOT_INTEGRAL(o)){
-		while (LLL_IS_OBJECT_REF(o)){
-			o=READ_REF_FROM_STACK(o);
-		}
-	}
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_NIL:

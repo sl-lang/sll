@@ -1,9 +1,30 @@
+#ifdef _MSC_VER
+#define WIN32_LEAN_AND_MEAN 1
+#include <windows.h>
+#endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+
+
+#ifdef _MSC_VER
+#define UNREACHABLE() __assume(0)
+#define ENABLE_COLOR() \
+	uint32_t __tv; \
+	do{ \
+		SetConsoleOutputCP(CP_UTF8); \
+		GetConsoleMode(GetStdHandle(-11),&__tv); \
+		SetConsoleMode(GetStdHandle(-11),7); \
+	} while (0)
+#define DISABLE_COLOR() SetConsoleMode(GetStdHandle(-11),__tv)
+#else
+#define ENABLE_COLOR()
+#define DISABLE_COLOR()
+#endif
 
 
 
@@ -25,6 +46,9 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 				return;
 			case LLL_ERROR_DIVISION_BY_ZERO:
 				printf("Division By Zero\n");
+				return;
+			case LLL_ERROR_INVALID_FILE_FORMAT:
+				printf("Invalid File Format\n");
 				return;
 			case LLL_ERROR_ASSERTION:
 				printf("%s\n",e->dt.str);
@@ -187,10 +211,13 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 			printf("Too Many Statements\n");
 			return;
 		case LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS:
-			printf("Math Expression Contains not Enough Symbols\n");
+			printf("Math Expression Contains not Enough Arguments\n");
 			return;
 		case LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS:
-			printf("Math Expression Contains too Many Symbols\n");
+			printf("Math Expression Contains too Many Arguments\n");
+			return;
+		case LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS:
+			printf("For Loop Contains not Enough Arguments\n");
 			return;
 		case LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS:
 			printf("Multiple Output Type Modifiers\n");
