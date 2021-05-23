@@ -7,7 +7,7 @@
 
 
 
-uint8_t FAST_COMPARE_STR(char* a,char* b,uint32_t sz){
+uint8_t compare_str(char* a,char* b,uint32_t sz){
 	for (uint32_t i=0;i<sz;i++){
 		if (*(a+i)!=*(b+i)){
 			return 0;
@@ -25,7 +25,7 @@ uint8_t FAST_COMPARE_STR(char* a,char* b,uint32_t sz){
 		lll_identifier_index_t mx_i; \
 		for (uint32_t j=0;j<e->l;j++){ \
 			lll_small_identifier_t* si=e->dt+j; \
-			if (FAST_COMPARE_STR((str),si->v,(i))){ \
+			if (compare_str((str),si->v,(i))){ \
 				if (si->sc==(l_sc)){ \
 					LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(j,(i)-1)); \
 					goto _identifier_found; \
@@ -1180,7 +1180,7 @@ _read_identifier:
 						if (e->sz!=sz){
 							continue;
 						}
-						if (FAST_COMPARE_STR(str,e->v,sz)){
+						if (compare_str(str,e->v,sz)){
 							if (e->sc==l_sc){
 								LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
 								goto _identifier_found;
