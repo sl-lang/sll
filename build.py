@@ -284,8 +284,11 @@ if (os.name=="nt"):
 			sys.exit(1)
 	os.chdir(cd)
 	if ("--run" in sys.argv):
-		for k in DEFAULT_ARGS:
-			subprocess.run(["build/lll.exe"]+k)
+		os.chdir("build")
+		if (subprocess.run(["lll.exe","../test.lll","-v","-O0","-c","-o","test.lllc","-fp"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-fp"]).returncode!=0 or subprocess.run(["nasm","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","kernel32.lib","user32.lib","gdi32.lib","winspool.lib","comdlg32.lib","advapi32.lib","shell32.lib","ole32.lib","oleaut32.lib","uuid.lib","odbc32.lib","odbccp32.lib","msvcrt.lib","ucrt.lib","vcruntime.lib","legacy_stdio_definitions.lib","/ENTRY:main","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX",	"/OPT:REF","/INCREMENTAL:NO","/OPT:ICF"]).returncode!=0 or subprocess.run("test.exe").returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
+		os.chdir(cd)
 else:
 	if ("--release" in sys.argv):
 		fl=[]

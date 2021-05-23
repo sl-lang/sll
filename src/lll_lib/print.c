@@ -96,57 +96,61 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 			fprintf(f,"false");
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			fputc('"',f);
-			lll_string_length_t l=LLL_GET_OBJECT_STRING_LENGTH(o);
-			uint32_t off=sizeof(lll_object_t)+l+sizeof(lll_string_length_t);
-			char* str=LLL_GET_OBJECT_AS_STRING(o);
-			while (l){
-				l--;
-				char c=*str;
-				if (c=='\''||c=='"'||c=='\\'){
-					fputc('\\',f);
+			{
+				fputc('"',f);
+				lll_string_length_t l=LLL_GET_OBJECT_STRING_LENGTH(o);
+				uint32_t off=sizeof(lll_object_t)+l+sizeof(lll_string_length_t);
+				char* str=LLL_GET_OBJECT_AS_STRING(o);
+				while (l){
+					l--;
+					char c=*str;
+					if (c=='\''||c=='"'||c=='\\'){
+						fputc('\\',f);
+					}
+					else if (c=='\t'){
+						fputc('\\',f);
+						c='t';
+					}
+					else if (c=='\n'){
+						fputc('\\',f);
+						c='n';
+					}
+					else if (c=='\v'){
+						fputc('\\',f);
+						c='v';
+					}
+					else if (c=='\f'){
+						fputc('\\',f);
+						c='f';
+					}
+					else if (c=='\r'){
+						fputc('\\',f);
+						c='r';
+					}
+					else if (c<32||c>126){
+						fputc('\\',f);
+						fputc('x',f);
+						fputc((((uint8_t)c)>>4)+(((uint8_t)c)>159?87:48),f);
+						c=(c&0xf)+((c&0xf)>9?87:48);
+					}
+					fputc(c,f);
+					str++;
 				}
-				else if (c=='\t'){
-					fputc('\\',f);
-					c='t';
-				}
-				else if (c=='\n'){
-					fputc('\\',f);
-					c='n';
-				}
-				else if (c=='\v'){
-					fputc('\\',f);
-					c='v';
-				}
-				else if (c=='\f'){
-					fputc('\\',f);
-					c='f';
-				}
-				else if (c=='\r'){
-					fputc('\\',f);
-					c='r';
-				}
-				else if (c<32||c>126){
-					fputc('\\',f);
-					fputc('x',f);
-					fputc((((uint8_t)c)>>4)+(((uint8_t)c)>159?87:48),f);
-					c=(c&0xf)+((c&0xf)>9?87:48);
-				}
-				fputc(c,f);
-				str++;
+				fputc('"',f);
+				return off+eoff;
 			}
-			fputc('"',f);
-			return off+eoff;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			l=LLL_GET_OBJECT_STRING_LENGTH(o);
-			off=sizeof(lll_object_t)+l+sizeof(lll_string_length_t);
-			str=LLL_GET_OBJECT_AS_STRING(o);
-			while (l){
-				l--;
-				fputc(*str,f);
-				str++;
+			{
+				uint32_t l=LLL_GET_OBJECT_STRING_LENGTH(o);
+				uint32_t off=sizeof(lll_object_t)+l+sizeof(lll_string_length_t);
+				char* str=LLL_GET_OBJECT_AS_STRING(o);
+				while (l){
+					l--;
+					fputc(*str,f);
+					str++;
+				}
+				return off+eoff;
 			}
-			return off+eoff;
 		case LLL_OBJECT_TYPE_CAST_CHAR:
 			fprintf(f,"char");
 			break;
@@ -265,46 +269,50 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 			fprintf(f,">=");
 			break;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
-			fputc('{',f);
-			off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
-			lll_statement_count_t sc=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
-			for (lll_statement_count_t i=0;i<sc;i++){
-				if (i){
-					fputc(' ',f);
+			{
+				fputc('{',f);
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
+				lll_statement_count_t sc=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
+				for (lll_statement_count_t i=0;i<sc;i++){
+					if (i){
+						fputc(' ',f);
+					}
+					off+=_print_object_internal(LLL_GET_OBJECT_STATEMENT(o,off),f);
 				}
-				off+=_print_object_internal(LLL_GET_OBJECT_STATEMENT(o,off),f);
+				fputc('}',f);
+				return off+eoff;
 			}
-			fputc('}',f);
-			return off+eoff;
-		case LLL_OBJECT_TYPE_DEBUG_DATA:;
-			lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-			uint32_t i=sizeof(lll_debug_object_t);
-			if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
-				fprintf(f,"$%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
-				i+=sizeof(uint32_t);
+		case LLL_OBJECT_TYPE_DEBUG_DATA:
+			{
+				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
+				uint32_t i=sizeof(lll_debug_object_t);
+				if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
+					fprintf(f,"$%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+					i+=sizeof(uint32_t);
+				}
+				else if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT16){
+					fprintf(f,"$%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+					i+=sizeof(uint16_t);
+				}
+				else{
+					fprintf(f,"$%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+					i+=sizeof(uint8_t);
+				}
+				if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32){
+					fprintf(f,"%"PRIu32"$",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+					i+=sizeof(uint32_t);
+				}
+				else if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16){
+					fprintf(f,"%"PRIu16"$",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+					i+=sizeof(uint16_t);
+				}
+				else{
+					fprintf(f,"%"PRIu8"$",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+					i+=sizeof(uint8_t);
+				}
+				i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
+				return i+eoff+_print_object_internal(LLL_GET_DEBUG_OBJECT_CHILD(dbg,i),f);
 			}
-			else if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT16){
-				fprintf(f,"$%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
-				i+=sizeof(uint16_t);
-			}
-			else{
-				fprintf(f,"$%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
-				i+=sizeof(uint8_t);
-			}
-			if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32){
-				fprintf(f,"%"PRIu32"$",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
-				i+=sizeof(uint32_t);
-			}
-			else if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16){
-				fprintf(f,"%"PRIu16"$",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
-				i+=sizeof(uint16_t);
-			}
-			else{
-				fprintf(f,"%"PRIu8"$",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
-				i+=sizeof(uint8_t);
-			}
-			i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-			return i+eoff+_print_object_internal(LLL_GET_DEBUG_OBJECT_CHILD(dbg,i),f);
 		default:
 			UNREACHABLE();
 	}

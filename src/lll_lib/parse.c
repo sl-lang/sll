@@ -204,6 +204,25 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,lll_error_t* e)
 					return LLL_RETURN_ERROR;
 				}
 			}
+			else if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_SET){
+				if (*ac<2){
+					e->t=LLL_ERROR_SET_NOT_ENOUGH_ARGUMENTS;
+					e->dt.r.off=st_off;
+					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
+					return LLL_RETURN_ERROR;
+				}
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,sizeof(lll_object_t)+sizeof(lll_arg_count_t));
+				while (LLL_GET_OBJECT_TYPE(a)==LLL_OBJECT_TYPE_DEBUG_DATA){
+					lll_debug_object_t* dbg=(lll_debug_object_t*)a;
+					a=LLL_GET_DEBUG_OBJECT_CHILD(dbg,sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg));
+				}
+				if (LLL_GET_OBJECT_TYPE(a)!=LLL_OBJECT_TYPE_IDENTIFIER){
+					e->t=LLL_ERROR_SET_NO_INDENTIFIER;
+					e->dt.r.off=st_off;
+					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
+					return LLL_RETURN_ERROR;
+				}
+			}
 			return LLL_RETURN_NO_ERROR;
 		}
 		if (c=='}'){
