@@ -48,7 +48,6 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 	o->tm=(uint64_t)time(NULL);
 	o->h=NULL;
 	REPEAT_BYTE_SET((uint8_t*)(&(o->i_dt)),0,sizeof(lll_identifier_data_t));
-	o->_mx_v=0;
 }
 
 

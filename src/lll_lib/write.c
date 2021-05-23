@@ -218,8 +218,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		COMPLIED_OBJECT_FILE_MAGIC_NUMBER,
 		sz,
 		c_dt->tm,
-		c_dt->fpl,
-		c_dt->_mx_v
+		c_dt->fpl
 	};
 	if (LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&dt),sizeof(compiled_object_file_t))&&LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,c_dt->fp)&&LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(c_dt->h),sz)){
 		return LLL_RETURN_NO_ERROR;

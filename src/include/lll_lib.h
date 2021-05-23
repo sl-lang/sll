@@ -373,7 +373,6 @@ typedef struct __LLL_COMPILATION_DATA{
 	uint64_t tm;
 	lll_object_t* h;
 	lll_identifier_data_t i_dt;
-	uint32_t _mx_v;
 } lll_compilation_data_t;
 
 

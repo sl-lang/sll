@@ -69,7 +69,6 @@ typedef PACKED(struct __COMPILED_OBJECT_FILE{
 	uint32_t sz;
 	uint64_t t;
 	uint16_t fpl;
-	uint32_t mx_v;
 }) compiled_object_file_t;
 
 

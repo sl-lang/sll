@@ -1334,7 +1334,6 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_inpu
 	c_dt->is=NULL;
 	c_dt->tm=dt.t;
 	c_dt->h=(lll_object_t*)(_bf+_bf_off);
-	c_dt->_mx_v=dt.mx_v;
 	if (_bf_off+dt.sz>_bf_sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 		return LLL_RETURN_ERROR;
