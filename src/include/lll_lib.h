@@ -158,6 +158,7 @@
 #define LLL_GET_OBJECT_AS_FLOAT32(o) (*((float*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
 #define LLL_GET_OBJECT_AS_FLOAT64(o) (*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
 #define LLL_GET_OBJECT_STRING_LENGTH(o) (*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_AS_IDENTIFIER(o) (*((lll_identifier_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
 #define LLL_GET_OBJECT_AS_STRING(o) ((char*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_string_length_t)))
 #define LLL_GET_OBJECT_AFTER_NOP(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_type_t)))
 #define LLL_SET_OBJECT_AS_INT8(o,i) ((*((int8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int8_t)(i)))
@@ -167,6 +168,7 @@
 #define LLL_SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((float)(f)))
 #define LLL_SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((double)(f)))
 #define LLL_SET_OBJECT_STRING_LENGTH(o,sz) ((*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_string_length_t)(sz)))
+#define LLL_SET_OBJECT_AS_IDENTIFIER(o,sz) ((*((lll_identifier_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_identifier_index_t)(sz)))
 
 #define LLL_OBJECT_MODIFIER_FIXED 0x1
 #define LLL_OBJECT_MODIFIER_UNSIGNED 0x2
@@ -203,8 +205,12 @@
 #define LLL_SET_DEBUG_OBJECT_DATA_UINT16(o,i,v) ((*((uint16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint16_t)(v)))
 #define LLL_SET_DEBUG_OBJECT_DATA_UINT32(o,i,v) ((*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint32_t)(v)))
 
-#define LLL_MAX_INTERNAL_STACK_SIZE 67108864
 #define LLL_GET_OBJECT_WITH_OFFSET(o,i) ((void*)(((uint64_t)(void*)(o))+(i)))
+
+#define LLL_MAX_SHORT_IDENTIFIER_LENGTH 15
+#define LLL_IDENTIFIER_GET_ARRAY_ID(i) ((i)&0xf)
+#define LLL_IDENTIFIER_GET_ARRAY_INDEX(i) ((i)>>4)
+#define LLL_CREATE_IDENTIFIER(i,j) (((i)<<4)|(j))
 
 #define LLL_WRITE_MODE_RAW 0
 #define LLL_WRITE_MODE_ASSEMBLY 1
@@ -227,6 +233,10 @@ struct __LLL_INPUT_DATA_SOURCE;
 struct __LLL_OUTPUT_DATA_STREAM;
 struct __LLL_OBJECT;
 struct __LLL_DEBUG_OBJECT;
+struct __LLL_SMALL_IDENTIFIER;
+struct __LLL_IDENTIFIER_LIST;
+struct __LLL_IDENTIFIER;
+struct __LLL_IDENTIFIER_DATA;
 struct __LLL_COMPILATION_DATA;
 struct __LLL_ERROR_DATA_RANGE;
 union __LLL_ERROR_DATA;
@@ -259,6 +269,10 @@ typedef uint16_t lll_vector_length_t;
 
 
 typedef uint32_t lll_string_length_t;
+
+
+
+typedef uint32_t lll_identifier_index_t;
 
 
 
@@ -322,12 +336,44 @@ typedef struct __LLL_DEBUG_OBJECT{
 
 
 
+typedef struct __LLL_SMALL_IDENTIFIER{
+	char* v;
+	uint32_t sc;
+} lll_small_identifier_t;
+
+
+
+typedef struct __LLL_IDENTIFIER_LIST{
+	lll_small_identifier_t* dt;
+	uint32_t l;
+} lll_identifier_list_t;
+
+
+
+typedef struct __LLL_IDENTIFIER{
+	uint32_t sz;
+	uint32_t sc;
+	char v[];
+} lll_identifier_t;
+
+
+
+typedef struct __LLL_IDENTIFIER_DATA{
+	lll_identifier_list_t s[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	lll_identifier_t** il;
+	uint32_t ill;
+} lll_identifier_data_t;
+
+
+
 typedef struct __LLL_COMPILATION_DATA{
 	char fp[512];
 	uint16_t fpl;
 	lll_input_data_stream_t* is;
 	uint64_t tm;
 	lll_object_t* h;
+	lll_identifier_data_t i_dt;
+	uint32_t _mx_v;
 } lll_compilation_data_t;
 
 

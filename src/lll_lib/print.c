@@ -141,15 +141,14 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 			}
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			{
-				uint32_t l=LLL_GET_OBJECT_STRING_LENGTH(o);
-				uint32_t off=sizeof(lll_object_t)+l+sizeof(lll_string_length_t);
-				char* str=LLL_GET_OBJECT_AS_STRING(o);
-				while (l){
-					l--;
-					fputc(*str,f);
-					str++;
+				lll_identifier_index_t i=LLL_GET_OBJECT_AS_IDENTIFIER(o);
+				if (LLL_IDENTIFIER_GET_ARRAY_ID(i)==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
+					fprintf(f,"$long:%u",LLL_IDENTIFIER_GET_ARRAY_INDEX(i));
 				}
-				return off+eoff;
+				else{
+					fprintf(f,"$short-%u:%u",LLL_IDENTIFIER_GET_ARRAY_ID(i)+1,LLL_IDENTIFIER_GET_ARRAY_INDEX(i));
+				}
+				return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
 			}
 		case LLL_OBJECT_TYPE_CAST_CHAR:
 			fprintf(f,"char");
@@ -287,27 +286,27 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 				uint32_t i=sizeof(lll_debug_object_t);
 				if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
-					fprintf(f,"$%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+					fprintf(f,"<%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
 					i+=sizeof(uint32_t);
 				}
 				else if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT16){
-					fprintf(f,"$%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+					fprintf(f,"<%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
 					i+=sizeof(uint16_t);
 				}
 				else{
-					fprintf(f,"$%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+					fprintf(f,"<%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
 					i+=sizeof(uint8_t);
 				}
 				if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32){
-					fprintf(f,"%"PRIu32"$",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+					fprintf(f,"%"PRIu32">",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
 					i+=sizeof(uint32_t);
 				}
 				else if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16){
-					fprintf(f,"%"PRIu16"$",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+					fprintf(f,"%"PRIu16">",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
 					i+=sizeof(uint16_t);
 				}
 				else{
-					fprintf(f,"%"PRIu8"$",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+					fprintf(f,"%"PRIu8">",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
 					i+=sizeof(uint8_t);
 				}
 				i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);

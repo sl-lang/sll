@@ -3,6 +3,53 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+
+
+uint8_t FAST_COMPARE_STR(char* a,char* b,uint32_t sz){
+	for (uint32_t i=0;i<sz;i++){
+		if (*(a+i)!=*(b+i)){
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
+
+#define COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,i,l_sc) \
+	if ((sz)==(i)){ \
+		lll_identifier_list_t* e=(c_dt)->i_dt.s+((i)-1); \
+		uint32_t mx_sc=UINT32_MAX; \
+		lll_identifier_index_t mx_i; \
+		for (uint32_t j=0;j<e->l;j++){ \
+			lll_small_identifier_t* si=e->dt+j; \
+			if (FAST_COMPARE_STR((str),si->v,(i))){ \
+				if (si->sc==(l_sc)){ \
+					LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(j,(i)-1)); \
+					goto _identifier_found; \
+				} \
+				else if (mx_sc==UINT32_MAX||si->sc>mx_sc){ \
+					mx_sc=si->sc; \
+					mx_i=LLL_CREATE_IDENTIFIER(j,(i)-1); \
+				} \
+			} \
+		} \
+		if (mx_sc!=UINT32_MAX){ \
+			LLL_SET_OBJECT_AS_IDENTIFIER(o,mx_i); \
+			goto _identifier_found; \
+		} \
+		e->l++; \
+		e->dt=realloc(e->dt,e->l*sizeof(lll_small_identifier_t)); \
+		(e->dt+e->l-1)->v=malloc((i)*sizeof(char)); \
+		char* d=(e->dt+e->l-1)->v; \
+		for (uint32_t j=0;j<(i);j++){ \
+			*(d+j)=*((str)+j); \
+		} \
+		(e->dt+e->l-1)->sc=(l_sc); \
+		LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(e->l-1,(i)-1)); \
+	}
 
 
 
@@ -124,7 +171,7 @@ _skip_parse:
 
 
 
-uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,lll_error_t* e){
+uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,uint32_t l_sc,lll_error_t* e){
 	lll_input_data_stream_t* is=c_dt->is;
 	uint32_t st_off=UINT32_MAX;
 	int ec=-1;
@@ -275,7 +322,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,lll_error_t* e)
 					return LLL_RETURN_ERROR;
 				}
 				lll_object_t* so=(lll_object_t*)(_bf+_bf_off);
-				if (!_read_object_internal(c_dt,c,e)){
+				if (!_read_object_internal(c_dt,c,l_sc,e)){
 					return LLL_RETURN_ERROR;
 				}
 				if (LLL_GET_OBJECT_TYPE(so)==LLL_OBJECT_TYPE_DEBUG_DATA){
@@ -631,6 +678,7 @@ _read_symbol:
 				}
 				else if (FAST_COMPARE(str,f,o,r)){
 					o->t=LLL_OBJECT_TYPE_FOR;
+					l_sc++;
 				}
 				else if (FAST_COMPARE(str,*,/,/)){
 					o->t=LLL_OBJECT_TYPE_FLOOR_ROOT;
@@ -1055,7 +1103,7 @@ _skip_float_parse:
 			}
 			uint32_t arg_s=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 			lll_object_t* arg=(lll_object_t*)(_bf+_bf_off);
-			_bf_off+=sizeof(lll_object_t)+sizeof(lll_string_length_t);
+			_bf_off+=sizeof(lll_object_t);
 			if (_bf_off>=_bf_sz){
 				e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
@@ -1090,23 +1138,78 @@ _read_identifier:
 				return LLL_RETURN_ERROR;
 			}
 			if (sz==3&&FAST_COMPARE(str,n,i,l)){
-				_bf_off-=sizeof(lll_string_length_t);
 				arg->t=LLL_OBJECT_TYPE_NIL;
 			}
 			else if (sz==4&&FAST_COMPARE(str,t,r,u,e)){
-				_bf_off-=sizeof(lll_string_length_t);
 				arg->t=LLL_OBJECT_TYPE_TRUE;
 			}
 			else if (sz==5&&FAST_COMPARE(str,f,a,l,s,e)){
-				_bf_off-=sizeof(lll_string_length_t);
 				arg->t=LLL_OBJECT_TYPE_FALSE;
 			}
 			else{
+				_bf_off+=sizeof(lll_identifier_index_t);
+				if (_bf_off>=_bf_sz){
+					e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+					e->dt.r.sz=1;
+					return LLL_RETURN_ERROR;
+				}
+#if LLL_MAX_SHORT_IDENTIFIER_LENGTH!=15
+#error The following code is broken
+#endif
+				COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,1,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,2,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,3,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,4,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,5,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,6,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,7,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,8,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,9,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,10,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,11,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,12,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,13,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,14,l_sc)
+				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,15,l_sc)
+				else{
+					uint32_t mx_sc=UINT32_MAX;
+					lll_identifier_index_t mx_i;
+					for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
+						lll_identifier_t* e=*(c_dt->i_dt.il+i);
+						if (e->sz!=sz){
+							continue;
+						}
+						if (FAST_COMPARE_STR(str,e->v,sz)){
+							if (e->sc==l_sc){
+								LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
+								goto _identifier_found;
+							}
+							else if (mx_sc==UINT32_MAX||e->sc>mx_sc){
+								mx_sc=e->sc;
+								mx_i=LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
+							}
+						}
+					}
+					if (mx_sc!=UINT32_MAX){
+						LLL_SET_OBJECT_AS_IDENTIFIER(arg,mx_i);
+						goto _identifier_found;
+					}
+					c_dt->i_dt.ill++;
+					c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t*));
+					lll_identifier_t* n=malloc(sizeof(lll_identifier_t)+sz);
+					n->sz=sz;
+					n->sc=l_sc;
+					for (uint32_t i=0;i<sz;i++){
+						n->v[i]=*(str+i);
+					}
+					*(c_dt->i_dt.il+c_dt->i_dt.ill-1)=n;
+					LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
+				}
+_identifier_found:
 				if (o){
 					o->t&=~LLL_OBJECT_TYPE_CONST;
 				}
-				_bf_off+=sz;
-				LLL_SET_OBJECT_STRING_LENGTH(arg,sz);
 			}
 			if (!o){
 				return LLL_RETURN_NO_ERROR;
@@ -1171,7 +1274,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compila
 		o->t=LLL_OBJECT_TYPE_NIL;
 		return o;
 	}
-	if (!_read_object_internal(c_dt,c,e)){
+	if (!_read_object_internal(c_dt,c,0,e)){
 		return LLL_RETURN_ERROR_AS_OBJECT(LLL_RETURN_ERROR);
 	}
 	return o;
@@ -1201,7 +1304,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_read_all_objects(lll_compilat
 			return LLL_RETURN_NO_ERROR;
 		}
 		uint32_t off=LLL_GET_INPUT_DATA_STREAM_OFFSET(c_dt->is);
-		if (!_read_object_internal(c_dt,c,e)){
+		if (!_read_object_internal(c_dt,c,0,e)){
 			return LLL_RETURN_ERROR;
 		}
 		if (*sc==UINT16_MAX){
@@ -1231,6 +1334,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_inpu
 	c_dt->is=NULL;
 	c_dt->tm=dt.t;
 	c_dt->h=(lll_object_t*)(_bf+_bf_off);
+	c_dt->_mx_v=dt.mx_v;
 	if (_bf_off+dt.sz>_bf_sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 		return LLL_RETURN_ERROR;

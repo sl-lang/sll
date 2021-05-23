@@ -69,6 +69,7 @@ typedef PACKED(struct __COMPILED_OBJECT_FILE{
 	uint32_t sz;
 	uint64_t t;
 	uint16_t fpl;
+	uint32_t mx_v;
 }) compiled_object_file_t;
 
 
@@ -107,7 +108,7 @@ uint8_t _read_single_char(lll_input_data_stream_t* is,char t,uint32_t st,lll_err
 
 
 
-uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,lll_error_t* e);
+uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,uint32_t l_sc,lll_error_t* e);
 
 
 

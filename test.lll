@@ -1,3 +1,7 @@
 (for (= i 0) (< i 10) {
-	(print i)
+	(for (= very_very_long_name 0) (< very_very_long_name 10) {
+		(print i '*' very_very_long_name '=' (* i very_very_long_name))
+		(= very_very_long_name (+ very_very_long_name 1))
+	})
+	(= i (+ i 1))
 })

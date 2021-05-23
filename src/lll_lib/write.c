@@ -27,8 +27,9 @@ uint32_t _get_object_size(lll_object_t* o){
 		case LLL_OBJECT_TYPE_CHAR:
 			return sizeof(lll_object_t)+eoff+sizeof(char);
 		case LLL_OBJECT_TYPE_STRING:
+			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_STRING_LENGTH(o)+sizeof(lll_string_length_t);
+			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
 		case LLL_OBJECT_TYPE_INT:
 			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 		case LLL_OBJECT_TYPE_FLOAT:
@@ -217,7 +218,8 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		COMPLIED_OBJECT_FILE_MAGIC_NUMBER,
 		sz,
 		c_dt->tm,
-		c_dt->fpl
+		c_dt->fpl,
+		c_dt->_mx_v
 	};
 	if (LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&dt),sizeof(compiled_object_file_t))&&LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,c_dt->fp)&&LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(c_dt->h),sz)){
 		return LLL_RETURN_NO_ERROR;

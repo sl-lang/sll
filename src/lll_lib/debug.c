@@ -20,8 +20,9 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 		case LLL_OBJECT_TYPE_CHAR:
 			return sizeof(lll_object_t)+eoff+sizeof(char);
 		case LLL_OBJECT_TYPE_STRING:
-		case LLL_OBJECT_TYPE_IDENTIFIER:
 			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
 		case LLL_OBJECT_TYPE_INT:
 			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 		case LLL_OBJECT_TYPE_FLOAT:

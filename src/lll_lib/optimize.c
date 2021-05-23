@@ -11,7 +11,7 @@
 #pragma intrinsic(__movsb)
 #define REPEAT_BYTE_COPY(d,s,sz) __movsb(d,s,sz)
 #else
-static inline void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
+static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
 	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
 #endif
@@ -34,8 +34,9 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 		case LLL_OBJECT_TYPE_CHAR:
 			return sizeof(lll_object_t)+eoff+sizeof(char);
 		case LLL_OBJECT_TYPE_STRING:
-		case LLL_OBJECT_TYPE_IDENTIFIER:
 			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
 		case LLL_OBJECT_TYPE_INT:
 			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 		case LLL_OBJECT_TYPE_FLOAT:
@@ -143,7 +144,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 							}
 							break;
 						case LLL_OBJECT_TYPE_BIT_NOT:
-							printf("SET OBJECT TO -2!\n");
+							ASSERT(!"SET OBJECT TO -2!",e,UINT32_MAX);
 							break;
 					}
 					break;
@@ -181,7 +182,7 @@ _set_to_0:
 							}
 							return off+eoff;
 						case LLL_OBJECT_TYPE_BIT_NOT:
-							printf("SET OBJECT TO -1!\n");
+							ASSERT(!"SET OBJECT TO -1!",e,UINT32_MAX);
 							break;
 					}
 					break;
@@ -237,10 +238,14 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm){
 			REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(char));
 			return sizeof(lll_object_t)+sizeof(char)+pad;
 		case LLL_OBJECT_TYPE_STRING:
-		case LLL_OBJECT_TYPE_IDENTIFIER:;
-			lll_string_length_t sl=LLL_GET_OBJECT_STRING_LENGTH(o);
-			REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl);
-			return sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl+pad;
+			{
+				lll_string_length_t sl=LLL_GET_OBJECT_STRING_LENGTH(o);
+				REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl);
+				return sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl+pad;
+			}
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(lll_identifier_index_t));
+			return sizeof(lll_object_t)+sizeof(lll_identifier_index_t)+pad;
 		case LLL_OBJECT_TYPE_INT:
 			{
 				uint32_t w=LLL_GET_OBJECT_INTEGER_WIDTH(o);

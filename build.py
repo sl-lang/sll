@@ -7,7 +7,6 @@ import sys
 
 COMMENT_REGEX=re.compile(br"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
 COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"DLL1_EXPORTS",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG"]) if os.name=="nt" else [])
-DEFAULT_ARGS=[["test.lll","-v","-O0","-c","-o","build/test.lllc","-fp"],["build/test.lllc","-v","-O3","-fp"]]
 DEFINE_LINE_CONTINUE_REGEX=re.compile(br"\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
 HEADER_SINGLE_INCLUDE_REGEX=re.compile(br"^\s*#ifndef\s+(?P<h_nm>[a-zA-Z0-9_]+)\s+#define\s+(?P=h_nm)\s+(?:1\s+)?(.*)#endif\s*$",re.DOTALL)
@@ -309,5 +308,5 @@ else:
 		if (subprocess.run(["gcc","-shared","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O0","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
 			sys.exit(1)
 	if ("--run" in sys.argv):
-		for k in DEFAULT_ARGS:
-			subprocess.run(["build/lll"]+k)
+		if (subprocess.run(["build/lll","test.lll","-v","-O0","-c","-o","build/test.lllc","-fp"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-fp"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0):
+			sys.exit(1)
