@@ -418,7 +418,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 
 
 
-__LLL_IMPORT_EXPORT void lll_print_object(lll_object_t* o,FILE* f);
+__LLL_IMPORT_EXPORT void lll_print_object(lll_compilation_data_t*c_dt,lll_object_t* o,FILE* f);
 
 
 

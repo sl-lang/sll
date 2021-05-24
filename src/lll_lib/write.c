@@ -231,10 +231,17 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		lll_identifier_list_t* l=c_dt->i_dt.s+i;
 		for (uint32_t j=0;j<l->l;j++){
-			if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&((l->dt+j)->sc)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(l->dt+j)->v,(i+1)*sizeof(char))){
+			if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&((l->dt+j)->sc)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)((l->dt+j)->v),(i+1)*sizeof(char))){
 				e->t=LLL_ERROR_FAILED_FILE_WRITE;
 				return LLL_RETURN_ERROR;
 			}
+		}
+	}
+	for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
+		lll_identifier_t* k=*(c_dt->i_dt.il+i);
+		if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->sz)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->sc)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(k->v),k->sz*sizeof(char))){
+			e->t=LLL_ERROR_FAILED_FILE_WRITE;
+			return LLL_RETURN_ERROR;
 		}
 	}
 	if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(c_dt->h),sz)){

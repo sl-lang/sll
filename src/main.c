@@ -223,6 +223,8 @@ _unkown_switch:
 				goto _cleanup;
 			}
 		}
+		lll_print_object(&c_dt,c_dt.h,stdout);
+		putchar('\n');
 #ifdef _MSC_VER
 		if (fopen_s(&of,o_fp,"wb")){// lgtm [cpp/path-injection]
 #else

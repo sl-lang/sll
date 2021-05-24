@@ -14,7 +14,7 @@
 
 
 
-uint32_t _print_object_internal(lll_object_t* o,FILE* f){
+uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f){
 	uint32_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff+=sizeof(lll_object_type_t);
@@ -142,11 +142,23 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				lll_identifier_index_t i=LLL_GET_OBJECT_AS_IDENTIFIER(o);
-				if (LLL_IDENTIFIER_GET_ARRAY_ID(i)==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					fprintf(f,"$long:%u",LLL_IDENTIFIER_GET_ARRAY_INDEX(i));
+				uint32_t j=LLL_IDENTIFIER_GET_ARRAY_ID(i);
+				if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
+					lll_identifier_t* e=*(c_dt->i_dt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i));
+					char* s=e->v;
+					for (uint32_t k=0;k<e->sz;k++){
+						fputc(*s,f);
+						s++;
+					}
+					fprintf(f,"$%u",e->sc);
 				}
 				else{
-					fprintf(f,"$short-%u:%u",LLL_IDENTIFIER_GET_ARRAY_ID(i)+1,LLL_IDENTIFIER_GET_ARRAY_INDEX(i));
+					char* s=(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->v;
+					for (uint32_t k=0;k<j+1;k++){
+						fputc(*s,f);
+						s++;
+					}
+					fprintf(f,"$%u",(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc);
 				}
 				return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
 			}
@@ -276,7 +288,7 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 					if (i){
 						fputc(' ',f);
 					}
-					off+=_print_object_internal(LLL_GET_OBJECT_STATEMENT(o,off),f);
+					off+=_print_object_internal(c_dt,LLL_GET_OBJECT_STATEMENT(o,off),f);
 				}
 				fputc('}',f);
 				return off+eoff;
@@ -310,7 +322,7 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 					i+=sizeof(uint8_t);
 				}
 				i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				return i+eoff+_print_object_internal(LLL_GET_DEBUG_OBJECT_CHILD(dbg,i),f);
+				return i+eoff+_print_object_internal(c_dt,LLL_GET_DEBUG_OBJECT_CHILD(dbg,i),f);
 			}
 		default:
 			UNREACHABLE();
@@ -320,7 +332,7 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 	while (l){
 		l--;
 		fputc(' ',f);
-		off+=_print_object_internal(LLL_GET_OBJECT_ARGUMENT(o,off),f);
+		off+=_print_object_internal(c_dt,LLL_GET_OBJECT_ARGUMENT(o,off),f);
 	}
 	fputc(')',f);
 	return off+eoff;
@@ -328,6 +340,6 @@ uint32_t _print_object_internal(lll_object_t* o,FILE* f){
 
 
 
-__LLL_IMPORT_EXPORT void lll_print_object(lll_object_t* o,FILE* f){
-	_print_object_internal(o,f);
+__LLL_IMPORT_EXPORT void lll_print_object(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f){
+	_print_object_internal(c_dt,o,f);
 }

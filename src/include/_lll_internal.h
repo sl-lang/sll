@@ -119,7 +119,7 @@ uint8_t _output_data_stream_file_write(lll_output_data_stream_t* os,uint8_t* bf,
 
 
 
-uint32_t _print_object_internal(lll_object_t* o,FILE* f);
+uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f);
 
 
 

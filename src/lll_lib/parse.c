@@ -14,7 +14,7 @@
 #pragma intrinsic(__movsb)
 #define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
 #else
-static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
+static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(uint8_t* d,uint8_t* s,size_t n){
 	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
 #endif
@@ -46,7 +46,7 @@ static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(unsigned char
 		e->l++; \
 		e->dt=realloc(e->dt,e->l*sizeof(lll_small_identifier_t)); \
 		(e->dt+e->l-1)->v=malloc((i)*sizeof(char)); \
-		REPEAT_BYTE_COPY((e->dt+e->l-1)->v,(str),(i)); \
+		REPEAT_BYTE_COPY((uint8_t*)(e->dt+e->l-1)->v,(uint8_t*)(str),(i)); \
 		(e->dt+e->l-1)->sc=(l_sc); \
 		LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(e->l-1,(i)-1)); \
 	}
@@ -1204,7 +1204,7 @@ _next_long_identifier:;
 					lll_identifier_t* n=malloc(sizeof(lll_identifier_t)+sz);
 					n->sz=sz;
 					n->sc=l_sc;
-					REPEAT_BYTE_COPY(n->v,str,sz);
+					REPEAT_BYTE_COPY((uint8_t*)n->v,(uint8_t*)str,sz);
 					*(c_dt->i_dt.il+c_dt->i_dt.ill-1)=n;
 					LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
 				}
@@ -1336,6 +1336,34 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_inpu
 	c_dt->is=NULL;
 	c_dt->tm=dt.t;
 	c_dt->h=(lll_object_t*)(_bf+_bf_off);
+	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		c_dt->i_dt.s[i].l=dt.sil[i];
+		c_dt->i_dt.s[i].dt=malloc(c_dt->i_dt.s[i].l*sizeof(lll_small_identifier_t));
+		for (uint32_t j=0;j<dt.sil[i];j++){
+			lll_small_identifier_t* si=c_dt->i_dt.s[i].dt+j;
+			si->v=malloc((i+1)*sizeof(char));
+			if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&(si->sc)),sizeof(uint32_t))||!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(si->v),(i+1)*sizeof(char))){
+				e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+				return LLL_RETURN_ERROR;
+			}
+		}
+	}
+	c_dt->i_dt.ill=dt.ill;
+	c_dt->i_dt.il=malloc(dt.ill*sizeof(lll_identifier_t*));
+	for (uint32_t i=0;i<dt.ill;i++){
+		uint32_t sz;
+		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&sz),sizeof(uint32_t))){
+			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+			return LLL_RETURN_ERROR;
+		}
+		lll_identifier_t* k=malloc(sizeof(lll_identifier_t)+sz*sizeof(char));
+		k->sz=sz;
+		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&(k->sc)),sizeof(uint32_t))||!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(k->v),sz*sizeof(char))){
+			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+			return LLL_RETURN_ERROR;
+		}
+		*(c_dt->i_dt.il+i)=k;
+	}
 	if (_bf_off+dt.sz>_bf_sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 		return LLL_RETURN_ERROR;
