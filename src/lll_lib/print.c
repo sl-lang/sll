@@ -6,14 +6,6 @@
 
 
 
-#ifdef _MSC_VER
-#define UNREACHABLE() __assume(0)
-#else
-#define UNREACHABLE() __builtin_unreachable()
-#endif
-
-
-
 uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f){
 	uint32_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
@@ -298,27 +290,27 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 				uint32_t i=sizeof(lll_debug_object_t);
 				if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
-					fprintf(f,"<%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+					fprintf(f,"[%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
 					i+=sizeof(uint32_t);
 				}
 				else if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT16){
-					fprintf(f,"<%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+					fprintf(f,"[%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
 					i+=sizeof(uint16_t);
 				}
 				else{
-					fprintf(f,"<%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+					fprintf(f,"[%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
 					i+=sizeof(uint8_t);
 				}
 				if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32){
-					fprintf(f,"%"PRIu32">",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+					fprintf(f,"%"PRIu32"]",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
 					i+=sizeof(uint32_t);
 				}
 				else if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16){
-					fprintf(f,"%"PRIu16">",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+					fprintf(f,"%"PRIu16"]",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
 					i+=sizeof(uint16_t);
 				}
 				else{
-					fprintf(f,"%"PRIu8">",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+					fprintf(f,"%"PRIu8"]",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
 					i+=sizeof(uint8_t);
 				}
 				i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);

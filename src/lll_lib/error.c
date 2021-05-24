@@ -12,7 +12,6 @@
 
 
 #ifdef _MSC_VER
-#define UNREACHABLE() __assume(0)
 #define ENABLE_COLOR() \
 	uint32_t __tv; \
 	do{ \

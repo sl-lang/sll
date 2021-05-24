@@ -1,23 +1,12 @@
 #ifdef _MSC_VER
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
-#include <intrin.h>
 #endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <time.h>
-
-
-
-#ifdef _MSC_VER
-#pragma intrinsic(__stosb)
-#define REPEAT_BYTE_SET(d,v,sz) __stosb(d,v,sz)
-#else
-static inline void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
-	__asm__("rep stosb":"=D"(d),"=A"(v),"=c"(n):"0"(d),"1"(v),"2"(n):"memory");
-}
-#endif
 
 
 
@@ -48,6 +37,30 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 	o->tm=(uint64_t)time(NULL);
 	o->h=NULL;
 	REPEAT_BYTE_SET((uint8_t*)(&(o->i_dt)),0,sizeof(lll_identifier_data_t));
+}
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt){
+	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		lll_identifier_list_t* e=i_dt->s+i;
+		for (uint32_t j=0;j<e->l;j++){
+			free((e->dt+j)->v);
+		}
+		if (e->dt){
+			free(e->dt);
+			e->dt=NULL;
+		}
+		e->l=0;
+	}
+	for (uint32_t i=0;i<i_dt->ill;i++){
+		free(*(i_dt->il+i));
+	}
+	if (i_dt->il){
+		free(i_dt->il);
+		i_dt->il=NULL;
+	}
+	i_dt->ill=0;
 }
 
 

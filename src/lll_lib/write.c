@@ -4,14 +4,6 @@
 
 
 
-#ifdef _MSC_VER
-#define UNREACHABLE() __assume(0)
-#else
-#define UNREACHABLE() __builtin_unreachable()
-#endif
-
-
-
 uint32_t _get_object_size(lll_object_t* o){
 	uint32_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
@@ -171,11 +163,11 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				uint32_t o=_write_object_as_assembly(os,LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),e);
-				if (o==UINT32_MAX){
-					return o;
+				uint32_t off=_write_object_as_assembly(os,LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),e);
+				if (off==UINT32_MAX){
+					return off;
 				}
-				return sz+eoff+o;
+				return sz+eoff+off;
 			}
 		default:
 			UNREACHABLE();

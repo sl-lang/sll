@@ -1,23 +1,9 @@
-#ifdef _MSC_VER
-#include <intrin.h>
-#endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-
-
-#ifdef _MSC_VER
-#pragma intrinsic(__movsb)
-#define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
-#else
-static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(uint8_t* d,uint8_t* s,size_t n){
-	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
-}
-#endif
 
 
 
@@ -1176,21 +1162,21 @@ _read_identifier:
 					uint32_t mx_sc=UINT32_MAX;
 					lll_identifier_index_t mx_i;
 					for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
-						lll_identifier_t* e=*(c_dt->i_dt.il+i);
-						if (e->sz!=sz){
+						lll_identifier_t* k=*(c_dt->i_dt.il+i);
+						if (k->sz!=sz){
 							continue;
 						}
 						for (uint32_t i=0;i<sz;i++){
-							if (*(str+i)!=*(e->v+i)){
+							if (*(str+i)!=*(k->v+i)){
 								goto _next_long_identifier;
 							}
 						}
-						if (e->sc==l_sc){
+						if (k->sc==l_sc){
 							LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
 							goto _identifier_found;
 						}
-						else if (mx_sc==UINT32_MAX||e->sc>mx_sc){
-							mx_sc=e->sc;
+						else if (mx_sc==UINT32_MAX||k->sc>mx_sc){
+							mx_sc=k->sc;
 							mx_i=LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
 						}
 _next_long_identifier:;

@@ -39,7 +39,9 @@ int main(int argc,const char** argv){
 	char* ffp=NULL;
 	FILE* f=NULL;
 	FILE* of=NULL;
-	for (int i=1;i<argc;i++){
+	lll_compilation_data_t c_dt={0};
+	int i=1;
+	while (i<argc){
 		const char* e=argv[i];
 		if (*e=='-'&&*(e+1)=='O'&&*(e+3)==0){
 			if (*(e+2)=='0'){
@@ -88,10 +90,11 @@ _unkown_switch:
 			fp=realloc(fp,fpl*sizeof(char*));
 			*(fp+fpl-1)=(char*)e;
 		}
+		i++;
 	}
 	if (!fpl){
 		printf("Not Input Files Supplied\n");
-		goto _cleanup;
+		return 1;
 	}
 	if (fl&FLAG_FULL_PATH){
 		ffp=malloc(fpl*MAX_PATH_LENGTH*sizeof(char));
@@ -105,28 +108,28 @@ _unkown_switch:
 			}
 		}
 	}
-	char tmp0[MAX_PATH_LENGTH];
+	char tmp[MAX_PATH_LENGTH];
 	if (!o_fp){
 		uint16_t i=0;
 		while (*(*fp+i)&&*(*fp+i)!='.'){
-			*(tmp0+i)=*(*fp+i);
+			*(tmp+i)=*(*fp+i);
 			i++;
 		}
-		tmp0[i]='.';
+		tmp[i]='.';
 		if (fl&FLAG_COMPILE_ONLY){
-			tmp0[i+1]='l';
-			tmp0[i+2]='l';
-			tmp0[i+3]='l';
-			tmp0[i+4]='c';
-			tmp0[i+5]=0;
+			tmp[i+1]='l';
+			tmp[i+2]='l';
+			tmp[i+3]='l';
+			tmp[i+4]='c';
+			tmp[i+5]=0;
 		}
 		else{
-			tmp0[i+1]='a';
-			tmp0[i+2]='s';
-			tmp0[i+3]='m';
-			tmp0[i+4]=0;
+			tmp[i+1]='a';
+			tmp[i+2]='s';
+			tmp[i+3]='m';
+			tmp[i+4]=0;
 		}
-		o_fp=tmp0;
+		o_fp=tmp;
 	}
 	if (fl&FLAG_VERBOSE){
 		printf("Configuration:\n  Optimization Level: %c (",ol+48);
@@ -159,7 +162,6 @@ _unkown_switch:
 		goto _cleanup;
 	}
 	lll_input_data_stream_t is;
-	lll_compilation_data_t c_dt;
 	for (uint32_t i=0;i<fpl;i++){
 		if (fl&FLAG_VERBOSE){
 			printf("Opening File '%s'...\n",*(fp+i));
@@ -177,6 +179,7 @@ _unkown_switch:
 			printf("Trying to Load File as Compiled Object...\n");
 		}
 		if (!lll_load_compiled_object(&is,&c_dt,&e)){
+			lll_free_identifier_data(&(c_dt.i_dt));
 			if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
 				if (fl&FLAG_VERBOSE){
 					printf("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
@@ -247,13 +250,21 @@ _unkown_switch:
 				goto _cleanup;
 			}
 		}
+		lll_free_identifier_data(&(c_dt.i_dt));
 		fclose(of);
 		of=NULL;
 		fclose(f);
 		f=NULL;
 	}
+	if (fp){
+		free(fp);
+	}
 	return 0;
 _cleanup:
+	if (fp){
+		free(fp);
+	}
+	lll_free_identifier_data(&(c_dt.i_dt));
 	if (f){
 		fclose(f);
 	}

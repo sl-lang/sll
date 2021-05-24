@@ -406,6 +406,10 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 
 
 
+__LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt);
+
+
+
 __LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o);
 
 

@@ -1,21 +1,6 @@
-#ifdef _MSC_VER
-#include <intrin.h>
-#endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <stdint.h>
-
-
-
-#ifdef _MSC_VER
-#pragma intrinsic(__movsb)
-#define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
-#else
-static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
-	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
-}
-#endif
-
 
 
 

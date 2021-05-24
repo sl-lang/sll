@@ -1,5 +1,8 @@
 #ifndef __LLL_INTERNAL_H__
 #define __LLL_INTERNAL_H__ 1
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
 #include <lll_lib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -7,8 +10,20 @@
 
 
 #ifdef _MSC_VER
+#pragma intrinsic(__movsb)
+#pragma intrinsic(__stosb)
+#define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
+#define REPEAT_BYTE_SET(d,v,sz) __stosb(d,v,sz)
+#define UNREACHABLE() __assume(0)
 #define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
 #else
+static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
+	__asm__ volatile("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
+}
+static inline void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
+	__asm__ volatile("rep stosb":"=D"(d),"=A"(v),"=c"(n):"0"(d),"1"(v),"2"(n):"memory");
+}
+#define UNREACHABLE() __builtin_unreachable()
 #define PACKED(s) s __attribute__((__packed__))
 #endif
 
