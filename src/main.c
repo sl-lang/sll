@@ -226,8 +226,6 @@ _unkown_switch:
 				goto _cleanup;
 			}
 		}
-		lll_print_object(&c_dt,c_dt.h,stdout);
-		putchar('\n');
 #ifdef _MSC_VER
 		if (fopen_s(&of,o_fp,"wb")){// lgtm [cpp/path-injection]
 #else
@@ -238,17 +236,9 @@ _unkown_switch:
 		}
 		lll_output_data_stream_t os;
 		lll_create_output_data_stream(of,&os);
-		if (fl&FLAG_COMPILE_ONLY){
-			if (!lll_write_compiled_object(&os,&c_dt,&e)){
-				lll_print_error(&is,&e);
-				goto _cleanup;
-			}
-		}
-		else{
-			if (!lll_write_object(&os,c_dt.h,LLL_WRITE_MODE_ASSEMBLY,&e)){
-				lll_print_error(&is,&e);
-				goto _cleanup;
-			}
+		if (!lll_write_compiled_object(&os,&c_dt,(fl&FLAG_COMPILE_ONLY?LLL_WRITE_MODE_RAW:LLL_WRITE_MODE_ASSEMBLY),&e)){
+			lll_print_error(&is,&e);
+			goto _cleanup;
 		}
 		lll_free_identifier_data(&(c_dt.i_dt));
 		fclose(of);

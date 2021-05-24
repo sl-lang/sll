@@ -2,8 +2,10 @@
 #define __LLL_INTERNAL_H__ 1
 #ifdef _MSC_VER
 #include <intrin.h>
+#include <immintrin.h>
 #endif
 #include <lll_lib.h>
+#include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -12,19 +14,28 @@
 #ifdef _MSC_VER
 #pragma intrinsic(__movsb)
 #pragma intrinsic(__stosb)
-#define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
-#define REPEAT_BYTE_SET(d,v,sz) __stosb(d,v,sz)
+#pragma intrinsic(_BitScanForward)
+#define FORCE_INLINE __inline __forceinline
 #define UNREACHABLE() __assume(0)
 #define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
+#define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
+#define REPEAT_BYTE_SET(d,v,sz) __stosb(d,v,sz)
+static FORCE_INLINE unsigned int FIND_FIRST_SET_BIT(unsigned int m){
+	unsigned long o;
+	_BitScanForward	(&o,m);
+	return o;
+}
 #else
-static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
-	__asm__ volatile("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
-}
-static inline void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
-	__asm__ volatile("rep stosb":"=D"(d),"=A"(v),"=c"(n):"0"(d),"1"(v),"2"(n):"memory");
-}
+#define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
 #define PACKED(s) s __attribute__((__packed__))
+static FORCE_INLINE void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
+	__asm__ volatile("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
+}
+static FORCE_INLINE void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
+	__asm__ volatile("rep stosb":"=D"(d),"=A"(v),"=c"(n):"0"(d),"1"(v),"2"(n):"memory");
+}
+#define FIND_FIRST_SET_BIT(m) (__builtin_ffs((m))-1)
 #endif
 
 
@@ -53,12 +64,19 @@ static inline void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
 			return r; \
 		} \
 	} while (0)
-#define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','L',0)
+#define ASSERT_EXIT(x) \
+	do{ \
+		if (!(x)){ \
+			printf("File \"%s\", Line %u (%s): %s: Assertion Failed\n",__FILE__,__LINE__,__func__,_ASSERT_STR(x)); \
+			raise(SIGABRT); \
+		} \
+	} while (0)
+
 #define CONSTRUCT_CHAR(c) ((#c)[0])
 #define CONSTRUCT_WORD(a,b) ((((uint16_t)(b))<<8)|(a))
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
 #define CONSTRUCT_QWORD(a,b,c,d,e,f,g,h) ((((uint64_t)(h))<<56)|(((uint64_t)(g))<<48)|(((uint64_t)(f))<<40)|(((uint64_t)(e))<<32)|(((uint64_t)(d))<<24)|(((uint64_t)(c))<<16)|(((uint64_t)(b))<<8)|(a))
-#define ERROR_DISPLAY_TAB_WIDTH 4
+
 #define _FAST_COMPARE_JOIN_(l) FAST_COMPARE_##l
 #define _FAST_COMPARE_JOIN(l) _FAST_COMPARE_JOIN_(l)
 #define _FAST_COMPARE_COUNT_ARGS(_1,_2,_3,_4,_5,_6,_7,_8,n,...) n
@@ -89,11 +107,80 @@ static inline void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
 #define FAST_COMPARE_STR_13(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((a)+12)==*((b)+12))
 #define FAST_COMPARE_STR_14(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((uint16_t*)(a)+12)==*((uint16_t*)(b)+12))
 #define FAST_COMPARE_STR_15(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((uint16_t*)(a)+12)==*((uint16_t*)(b)+12)&&*((a)+14)==*((b)+14))
+
+#define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','L',0)
+
+#define ERROR_DISPLAY_TAB_WIDTH 4
+
 #define HIGHLIGHT_COLOR "\x1b[31m"
 #define HIGHLIGHT_COLOR_RESET "\x1b[0m"
+
 #define READ_SINGLE_CHAR_OK 0
 #define READ_SINGLE_CHAR_END 1
 #define READ_SINGLE_CHAR_ERROR 2
+
+#define REGISTER_CONST 0
+#define REGISTER_A 1
+#define REGISTER_B 2
+#define REGISTER_C 3
+#define REGISTER_D 4
+#define REGISTER_SI 5
+#define REGISTER_DI 6
+#define REGISTER_R8 7
+#define REGISTER_R9 8
+#define REGISTER_R10 9
+#define REGISTER_R11 10
+#define REGISTER_R12 11
+#define REGISTER_R13 12
+#define REGISTER_R14 13
+#define REGISTER_R15 14
+#define REGISTER_STACK 15
+#define REGISTER_8BIT 0x00
+#define REGISTER_16BIT 0x10
+#define REGISTER_32BIT 0x20
+#define REGISTER_64BIT 0x30
+#define REGISER_SIZE_MASK 0x30
+#define REGISTER_NONE 0xff
+#define MIN_REGISTER REGISTER_A
+#define MAX_REGISTER REGISTER_R15
+#define ALL_REGISTER_AVAIBLE_MASK ((1<<(MAX_REGISTER-MIN_REGISTER+1))-1)
+#define REGISTER_TO_MASK(r) (1<<((r)-MIN_REGISTER))
+#define REGISTER_FROM_BIT_INDER(r) ((r)+MIN_REGISTER)
+
+#define IDENTIFIER_INDEX_TO_MAP_OFFSET(i,im) (LLL_IDENTIFIER_GET_ARRAY_INDEX((i))+(im)->off[LLL_IDENTIFIER_GET_ARRAY_ID((i))])
+
+#define COMPARE_ALWAYS_TRUE 2
+#define COMPARE_ALWAYS_FALSE 3
+
+
+
+typedef uint8_t cpu_register_t;
+
+
+typedef uint32_t label_t;
+
+
+
+typedef union __IDENTIFIER_DATA_EXTRA{
+	int64_t v;
+	uint32_t st;
+} identifier_data_extra_t;
+
+
+
+typedef struct __IDENTIFIER_DATA{
+	cpu_register_t r;
+	identifier_data_extra_t e;
+} identifier_data_t;
+
+
+
+typedef struct __IDENTIFIER_MAP{
+	uint32_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
+	identifier_data_t* dt;
+	uint16_t rm;
+	label_t nl;
+} identifier_map_t;
 
 
 
@@ -147,6 +234,10 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,uint32_t l_sc,l
 
 
 uint32_t _get_object_size(lll_object_t* o);
+
+
+
+uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,identifier_map_t* im,lll_error_t* e);
 
 
 

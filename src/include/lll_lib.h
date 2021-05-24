@@ -117,6 +117,7 @@
 #define LLL_OBJECT_TYPE_OPERATION_LIST 62
 #define LLL_OBJECT_TYPE_DEBUG_DATA 63
 #define LLL_OBJECT_TYPE_NOP 0xff
+#define LLL_OBJECT_TYPE_INT8_FLAG 0x00
 #define LLL_OBJECT_TYPE_INT16_FLAG 0x40
 #define LLL_OBJECT_TYPE_INT32_FLAG 0x80
 #define LLL_OBJECT_TYPE_INT64_FLAG 0xc0
@@ -131,6 +132,7 @@
 #define LLL_OBJECT_TYPE_MAX_MATH_CHAIN LLL_OBJECT_TYPE_BIT_NOT
 #define LLL_OBJECT_TYPE_MAX_COMPARE LLL_OBJECT_TYPE_MORE_EQUAL
 #define LLL_OBJECT_TYPE_MIN_EXTRA LLL_OBJECT_TYPE_OPERATION_LIST
+#define LLL_IS_OBJECT_INT8(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT8_FLAG)
 #define LLL_IS_OBJECT_INT16(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT16_FLAG)
 #define LLL_IS_OBJECT_INT32(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT32_FLAG)
 #define LLL_IS_OBJECT_INT64(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT64_FLAG)
@@ -454,11 +456,11 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_padding(lll_obj
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,uint8_t f,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,uint8_t f,lll_error_t* e);
 
 
 
