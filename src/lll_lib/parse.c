@@ -1,3 +1,6 @@
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <math.h>
@@ -7,14 +10,14 @@
 
 
 
-uint8_t compare_str(char* a,char* b,uint32_t sz){
-	for (uint32_t i=0;i<sz;i++){
-		if (*(a+i)!=*(b+i)){
-			return 0;
-		}
-	}
-	return 1;
+#ifdef _MSC_VER
+#pragma intrinsic(__movsb)
+#define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
+#else
+static inline __attribute__((always_inline)) void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
+	__asm__("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
+#endif
 
 
 
@@ -25,7 +28,7 @@ uint8_t compare_str(char* a,char* b,uint32_t sz){
 		lll_identifier_index_t mx_i; \
 		for (uint32_t j=0;j<e->l;j++){ \
 			lll_small_identifier_t* si=e->dt+j; \
-			if (compare_str((str),si->v,(i))){ \
+			if (FAST_COMPARE_STR((str),si->v,i)){ \
 				if (si->sc==(l_sc)){ \
 					LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(j,(i)-1)); \
 					goto _identifier_found; \
@@ -43,10 +46,7 @@ uint8_t compare_str(char* a,char* b,uint32_t sz){
 		e->l++; \
 		e->dt=realloc(e->dt,e->l*sizeof(lll_small_identifier_t)); \
 		(e->dt+e->l-1)->v=malloc((i)*sizeof(char)); \
-		char* d=(e->dt+e->l-1)->v; \
-		for (uint32_t j=0;j<(i);j++){ \
-			*(d+j)=*((str)+j); \
-		} \
+		REPEAT_BYTE_COPY((e->dt+e->l-1)->v,(str),(i)); \
 		(e->dt+e->l-1)->sc=(l_sc); \
 		LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(e->l-1,(i)-1)); \
 	}
@@ -1180,16 +1180,20 @@ _read_identifier:
 						if (e->sz!=sz){
 							continue;
 						}
-						if (compare_str(str,e->v,sz)){
-							if (e->sc==l_sc){
-								LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
-								goto _identifier_found;
-							}
-							else if (mx_sc==UINT32_MAX||e->sc>mx_sc){
-								mx_sc=e->sc;
-								mx_i=LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
+						for (uint32_t i=0;i<sz;i++){
+							if (*(str+i)!=*(e->v+i)){
+								goto _next_long_identifier;
 							}
 						}
+						if (e->sc==l_sc){
+							LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
+							goto _identifier_found;
+						}
+						else if (mx_sc==UINT32_MAX||e->sc>mx_sc){
+							mx_sc=e->sc;
+							mx_i=LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
+						}
+_next_long_identifier:;
 					}
 					if (mx_sc!=UINT32_MAX){
 						LLL_SET_OBJECT_AS_IDENTIFIER(arg,mx_i);
@@ -1200,9 +1204,7 @@ _read_identifier:
 					lll_identifier_t* n=malloc(sizeof(lll_identifier_t)+sz);
 					n->sz=sz;
 					n->sc=l_sc;
-					for (uint32_t i=0;i<sz;i++){
-						n->v[i]=*(str+i);
-					}
+					REPEAT_BYTE_COPY(n->v,str,sz);
 					*(c_dt->i_dt.il+c_dt->i_dt.ill-1)=n;
 					LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
 				}
