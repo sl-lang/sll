@@ -15,6 +15,7 @@
 #pragma intrinsic(__movsb)
 #pragma intrinsic(__stosb)
 #pragma intrinsic(_BitScanForward)
+#pragma intrinsic(_BitScanReverse)
 #define FORCE_INLINE __inline __forceinline
 #define UNREACHABLE() __assume(0)
 #define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
@@ -22,9 +23,18 @@
 #define REPEAT_BYTE_SET(d,v,sz) __stosb(d,v,sz)
 static FORCE_INLINE unsigned int FIND_FIRST_SET_BIT(unsigned int m){
 	unsigned long o;
-	_BitScanForward	(&o,m);
+	_BitScanForward(&o,m);
 	return o;
 }
+static FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned int m){
+	unsigned long o;
+	_BitScanReverse(&o,m);
+	return o;
+}
+#define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
+#define _FUNCTION_CALL_REGISTERS {REGISTER_C,REGISTER_D,REGISTER_R8,REGISTER_R9}
+#define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nextern printf\nextern ExitProcess\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32\n"
+#define ASSEMBLY_EXIT_CODE "\txor rax,rax\n\tjmp ExitProcess\n"
 #else
 #define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
@@ -36,6 +46,11 @@ static FORCE_INLINE void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
 	__asm__ volatile("rep stosb":"=D"(d),"=A"(v),"=c"(n):"0"(d),"1"(v),"2"(n):"memory");
 }
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffs((m))-1)
+#define FIND_LAST_SET_BIT(m) (__builtin_clz((m))+1)
+#define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_SI)|REGISTER_TO_MASK(REGISTER_DI)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
+#define _FUNCTION_CALL_REGISTERS {REGISTER_DI,REGISTER_SI,REGISTER_D,REGISTER_C,REGISTER_R8,REGISTER_R9}
+#define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nextern printf\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32\n"
+#define ASSEMBLY_EXIT_CODE "\tmov rax,60\n\txor rdi,rdi\n\tsyscall\n"
 #endif
 
 
@@ -140,9 +155,12 @@ static FORCE_INLINE void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
 #define REGISTER_32BIT 0x20
 #define REGISTER_64BIT 0x30
 #define REGISER_SIZE_MASK 0x30
+#define REGISER_TEMPORARY 0x40
+#define REGISTER_COPY_IDENTIFIER 0xfe
 #define REGISTER_NONE 0xff
 #define MIN_REGISTER REGISTER_A
 #define MAX_REGISTER REGISTER_R15
+#define GET_BASE_REGISTER(r) ((r)&0xf)
 #define ALL_REGISTER_AVAIBLE_MASK ((1<<(MAX_REGISTER-MIN_REGISTER+1))-1)
 #define REGISTER_TO_MASK(r) (1<<((r)-MIN_REGISTER))
 #define REGISTER_FROM_BIT_INDER(r) ((r)+MIN_REGISTER)
@@ -152,24 +170,55 @@ static FORCE_INLINE void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
 #define COMPARE_ALWAYS_TRUE 2
 #define COMPARE_ALWAYS_FALSE 3
 
+#define IDENTIFIER_DATA_TYPE_CHAR 1
+#define IDENTIFIER_DATA_TYPE_INT8 2
+#define IDENTIFIER_DATA_TYPE_INT16 4
+#define IDENTIFIER_DATA_TYPE_INT32 8
+#define IDENTIFIER_DATA_TYPE_INT64 16
+#define IDENTIFIER_DATA_TYPE_UINT8 32
+#define IDENTIFIER_DATA_TYPE_UINT16 64
+#define IDENTIFIER_DATA_TYPE_UINT32 128
+#define IDENTIFIER_DATA_TYPE_UINT64 256
+#define IDENTIFIER_DATA_TYPE_FLOAT32 512
+#define IDENTIFIER_DATA_TYPE_FLOAT64 1024
+#define IDENTIFIER_DATA_TYPE_STRING 2048
+#define IDENTIFIER_DATA_TYPE_NIL 4096
+#define IS_IDENTIFIER_DATA_TYPE_SINGLE(t) (!((t)&((t)-1)))
+
+#define ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_INT32 1
+
 
 
 typedef uint8_t cpu_register_t;
+
+
+
+typedef uint16_t identifier_data_type_t;
+
 
 
 typedef uint32_t label_t;
 
 
 
+typedef struct __IDENTIFIER_DATA_EXTRA_STRING{
+	uint32_t l;
+	char* ptr;
+} identifier_data_extra_string_t;
+
+
+
 typedef union __IDENTIFIER_DATA_EXTRA{
 	int64_t v;
 	uint32_t st;
+	identifier_data_extra_string_t str;
 } identifier_data_extra_t;
 
 
 
 typedef struct __IDENTIFIER_DATA{
 	cpu_register_t r;
+	identifier_data_type_t t;
 	identifier_data_extra_t e;
 } identifier_data_t;
 
@@ -181,6 +230,29 @@ typedef struct __IDENTIFIER_MAP{
 	uint16_t rm;
 	label_t nl;
 } identifier_map_t;
+
+
+
+typedef struct __STRING_TABLE_ENTRY{
+	uint32_t sz;
+	uint8_t nb;
+	char v[];
+} string_table_entry_t;
+
+
+
+typedef struct __STRING_TABLE{
+	string_table_entry_t** dt;
+	uint32_t l;
+} string_table_t;
+
+
+
+typedef struct __ASSEMBLY_GENERATOR_DATA{
+	identifier_map_t im;
+	string_table_t st;
+	uint8_t f;
+} assembly_generator_data_t;
 
 
 
@@ -198,6 +270,10 @@ typedef PACKED(struct __COMPILED_OBJECT_FILE{
 extern uint8_t* _bf;
 extern uint32_t _bf_off;
 extern uint32_t _bf_sz;
+
+
+
+const static cpu_register_t FUNCTION_CALL_REGISTERS[]=_FUNCTION_CALL_REGISTERS;
 
 
 
@@ -237,7 +313,11 @@ uint32_t _get_object_size(lll_object_t* o);
 
 
 
-uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,identifier_map_t* im,lll_error_t* e);
+uint32_t _set_register_value(lll_output_data_stream_t* os,identifier_data_t* i_dt,assembly_generator_data_t* agd,lll_object_t* o,lll_error_t* e);
+
+
+
+uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,assembly_generator_data_t* agd,lll_error_t* e);
 
 
 
