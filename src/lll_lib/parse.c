@@ -7,19 +7,19 @@
 
 
 
-#define COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,i,l_sc) \
+#define COMPARE_IDENTIFIER_LIST(o,po,c_dt,sz,str,i,l_sc,e,is,arg_s) \
 	if ((sz)==(i)){ \
-		lll_identifier_list_t* e=(c_dt)->i_dt.s+((i)-1); \
+		lll_identifier_list_t* k=(c_dt)->i_dt.s+((i)-1); \
 		uint32_t mx_sc=UINT32_MAX; \
 		lll_identifier_index_t mx_i; \
-		for (uint32_t j=0;j<e->l;j++){ \
-			lll_small_identifier_t* si=e->dt+j; \
+		for (uint32_t j=0;j<k->l;j++){ \
+			lll_small_identifier_t* si=k->dt+j; \
 			if (FAST_COMPARE_STR((str),si->v,i)){ \
 				if (si->sc==(l_sc)){ \
 					LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(j,(i)-1)); \
 					goto _identifier_found; \
 				} \
-				else if (mx_sc==UINT32_MAX||si->sc>mx_sc){ \
+				else if (si->sc<(l_sc)&&(mx_sc==UINT32_MAX||si->sc>mx_sc)){ \
 					mx_sc=si->sc; \
 					mx_i=LLL_CREATE_IDENTIFIER(j,(i)-1); \
 				} \
@@ -29,12 +29,18 @@
 			LLL_SET_OBJECT_AS_IDENTIFIER(o,mx_i); \
 			goto _identifier_found; \
 		} \
-		e->l++; \
-		e->dt=realloc(e->dt,e->l*sizeof(lll_small_identifier_t)); \
-		(e->dt+e->l-1)->v=malloc((i)*sizeof(char)); \
-		REPEAT_BYTE_COPY((unsigned char*)(e->dt+e->l-1)->v,(unsigned char*)(str),(i)); \
-		(e->dt+e->l-1)->sc=(l_sc); \
-		LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(e->l-1,(i)-1)); \
+		if (LLL_GET_OBJECT_TYPE((po))!=LLL_OBJECT_TYPE_SET){ \
+			(e)->t=LLL_ERROR_UNKNOWN_IDENTIFIER; \
+			(e)->dt.r.off=(arg_s); \
+			(e)->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET((is))-(arg_s)-2; \
+			return LLL_RETURN_ERROR; \
+		} \
+		k->l++; \
+		k->dt=realloc(k->dt,k->l*sizeof(lll_small_identifier_t)); \
+		(k->dt+k->l-1)->v=malloc((i)*sizeof(char)); \
+		REPEAT_BYTE_COPY((unsigned char*)(k->dt+k->l-1)->v,(unsigned char*)(str),(i)); \
+		(k->dt+k->l-1)->sc=(l_sc); \
+		LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(k->l-1,(i)-1)); \
 	}
 
 
@@ -574,6 +580,9 @@ _read_symbol:
 				else if (FAST_COMPARE(str,=)){
 					o->t=LLL_OBJECT_TYPE_SET;
 				}
+				else if (FAST_COMPARE(str,?)){
+					o->t=LLL_OBJECT_TYPE_IF;
+				}
 				else if (FAST_COMPARE(str,+)){
 					o->t=LLL_OBJECT_TYPE_ADD;
 				}
@@ -618,8 +627,9 @@ _read_symbol:
 				else if (FAST_COMPARE(str,|,|)){
 					o->t=LLL_OBJECT_TYPE_OR;
 				}
-				else if (FAST_COMPARE(str,i,f)){
-					o->t=LLL_OBJECT_TYPE_IF;
+				else if (FAST_COMPARE(str,-,>)){
+					o->t=LLL_OBJECT_TYPE_FOR;
+					l_sc++;
 				}
 				else if (FAST_COMPARE(str,/,/)){
 					o->t=LLL_OBJECT_TYPE_FLOOR_DIV;
@@ -653,20 +663,7 @@ _read_symbol:
 				}
 			}
 			else if (sz==3){
-				if (FAST_COMPARE(str,s,t,r)){
-					o->t=LLL_OBJECT_TYPE_CAST_STRING;
-				}
-				else if (FAST_COMPARE(str,i,n,t)){
-					o->t=LLL_OBJECT_TYPE_CAST_INT;
-				}
-				else if (FAST_COMPARE(str,p,t,r)){
-					o->t=LLL_OBJECT_TYPE_FUNC_PTR;
-				}
-				else if (FAST_COMPARE(str,f,o,r)){
-					o->t=LLL_OBJECT_TYPE_FOR;
-					l_sc++;
-				}
-				else if (FAST_COMPARE(str,*,/,/)){
+				if (FAST_COMPARE(str,*,/,/)){
 					o->t=LLL_OBJECT_TYPE_FLOOR_ROOT;
 				}
 				else if (FAST_COMPARE(str,_,/,/)){
@@ -677,13 +674,7 @@ _read_symbol:
 				}
 			}
 			else if (sz==4){
-				if (FAST_COMPARE(str,c,h,a,r)){
-					o->t=LLL_OBJECT_TYPE_CAST_CHAR;
-				}
-				else if (FAST_COMPARE(str,b,o,o,l)){
-					o->t=LLL_OBJECT_TYPE_CAST_BOOL;
-				}
-				else if (FAST_COMPARE(str,f,u,n,c)){
+				if (FAST_COMPARE(str,f,u,n,c)){
 					o->t=LLL_OBJECT_TYPE_FUNC;
 				}
 				else{
@@ -691,13 +682,7 @@ _read_symbol:
 				}
 			}
 			else if (sz==5){
-				if (FAST_COMPARE(str,i,n,t,6,4)){
-					o->t=LLL_OBJECT_TYPE_CAST_INT64;
-				}
-				else if (FAST_COMPARE(str,f,l,o,a,t)){
-					o->t=LLL_OBJECT_TYPE_CAST_FLOAT;
-				}
-				else if (FAST_COMPARE(str,p,r,i,n,t)){
+				if (FAST_COMPARE(str,p,r,i,n,t)){
 					o->t=LLL_OBJECT_TYPE_FUNC_PRINT;
 				}
 				else{
@@ -707,14 +692,6 @@ _read_symbol:
 			else if (sz==6){
 				if (FAST_COMPARE(str,t,y,p,e,o,f)){
 					o->t=LLL_OBJECT_TYPE_FUNC_TYPEOF;
-				}
-				else{
-					goto _unknown_symbol;
-				}
-			}
-			else if (sz==7){
-				if (FAST_COMPARE(str,f,l,o,a,t,6,4)){
-					o->t=LLL_OBJECT_TYPE_CAST_FLOAT64;
 				}
 				else{
 					goto _unknown_symbol;
@@ -1143,21 +1120,21 @@ _read_identifier:
 #if LLL_MAX_SHORT_IDENTIFIER_LENGTH!=15
 #error The following code is broken
 #endif
-				COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,1,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,2,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,3,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,4,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,5,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,6,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,7,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,8,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,9,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,10,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,11,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,12,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,13,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,14,l_sc)
-				else COMPARE_IDENTIFIER_LIST(arg,c_dt,sz,str,15,l_sc)
+				COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,1,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,2,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,3,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,4,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,5,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,6,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,7,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,8,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,9,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,10,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,11,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,12,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,13,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,14,l_sc,e,is,arg_s)
+				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,15,l_sc,e,is,arg_s)
 				else{
 					uint32_t mx_sc=UINT32_MAX;
 					lll_identifier_index_t mx_i;
@@ -1175,7 +1152,7 @@ _read_identifier:
 							LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
 							goto _identifier_found;
 						}
-						else if (mx_sc==UINT32_MAX||k->sc>mx_sc){
+						else if (k->sc<l_sc&&(mx_sc==UINT32_MAX||k->sc>mx_sc)){
 							mx_sc=k->sc;
 							mx_i=LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
 						}
@@ -1184,6 +1161,12 @@ _next_long_identifier:;
 					if (mx_sc!=UINT32_MAX){
 						LLL_SET_OBJECT_AS_IDENTIFIER(arg,mx_i);
 						goto _identifier_found;
+					}
+					if (LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_SET){
+						e->t=LLL_ERROR_UNKNOWN_IDENTIFIER;
+						e->dt.r.off=arg_s;
+						e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
+						return LLL_RETURN_ERROR;
 					}
 					c_dt->i_dt.ill++;
 					c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t*));

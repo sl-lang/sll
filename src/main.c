@@ -21,6 +21,7 @@
 #define FLAG_VERBOSE 1
 #define FLAG_COMPILE_ONLY 2
 #define FLAG_FULL_PATH 4
+#define FLAG_PRINT_OBJECT 8
 #define DEFAULT_OPTIMIZE_LEVEL OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE
 #define COMPILER_STACK_SIZE 65536
 
@@ -62,6 +63,9 @@ int main(int argc,const char** argv){
 		}
 		else if (*e=='-'&&*(e+1)=='v'&&*(e+2)==0){
 			fl|=FLAG_VERBOSE;
+		}
+		else if (*e=='-'&&*(e+1)=='p'&&*(e+2)==0){
+			fl|=FLAG_PRINT_OBJECT;
 		}
 		else if (*e=='-'&&*(e+1)=='c'&&*(e+2)==0){
 			fl|=FLAG_COMPILE_ONLY;
@@ -155,6 +159,9 @@ _unkown_switch:
 		if (fl&FLAG_FULL_PATH){
 			printf("  Full Path Mode\n");
 		}
+		if (fl&FLAG_PRINT_OBJECT){
+			printf("  Object Print Mode\n");
+		}
 	}
 	lll_error_t e;
 	if (!lll_set_internal_stack(st,COMPILER_STACK_SIZE,&e)){
@@ -225,6 +232,10 @@ _unkown_switch:
 				lll_print_error(&is,&e);
 				goto _cleanup;
 			}
+		}
+		if (fl&FLAG_PRINT_OBJECT){
+			lll_print_object(&c_dt,c_dt.h,stdout);
+			putchar('\n');
 		}
 #ifdef _MSC_VER
 		if (fopen_s(&of,o_fp,"wb")){// lgtm [cpp/path-injection]

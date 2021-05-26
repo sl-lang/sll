@@ -1,7 +1,7 @@
-(for (= i 1) (< i 11) {
-	(for (= very_very_long_name 1) (< very_very_long_name 11) {
-		(print i '*' very_very_long_name " is equal to " (* i very_very_long_name) "\n")
-		(= very_very_long_name (+ very_very_long_name 1))
+(-> (= i 1) (< i 11) {
+	(-> (= j 1) (< j 11) {
+		(print i '*' j " is equal to " (* i j) "\n")
+		(= j (+ j 1))
 	})
 	(= i (+ i 1))
 })

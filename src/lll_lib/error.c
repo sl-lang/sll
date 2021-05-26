@@ -66,14 +66,14 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 	char t=0;
 	char* sym=NULL;
 	char* sp=NULL;
-	if (e->t==LLL_ERROR_UNKNOWN_SYMBOL||e->t==LLL_ERROR_UNKNOWN_MODIFIER||e->t==LLL_ERROR_UNKNOWN_OUTPUT_MODIFIER){
+	if (e->t==LLL_ERROR_UNKNOWN_SYMBOL||e->t==LLL_ERROR_UNKNOWN_MODIFIER||e->t==LLL_ERROR_UNKNOWN_OUTPUT_MODIFIER||e->t==LLL_ERROR_UNKNOWN_IDENTIFIER){
 		sym=malloc((oe-os+1)*sizeof(char));
 		sp=sym;
 	}
 	while (c!='\n'&&c!='\r'&&c!=LLL_END_OF_DATA){
 		if (off==os){
 			t=c;
-			printf(HIGHLIGHT_COLOR);
+			fputs(HIGHLIGHT_COLOR,stdout);
 		}
 		if (off>=os&&off<oe&&sp){
 			*sp=c;
@@ -96,7 +96,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 		c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 		off++;
 		if (off==oe){
-			printf(HIGHLIGHT_COLOR_RESET);
+			fputs(HIGHLIGHT_COLOR_RESET,stdout);
 		}
 	}
 	putchar('\n');
@@ -104,11 +104,11 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 	for (;i<os+os_tb;i++){
 		putchar(' ');
 	}
-	printf(HIGHLIGHT_COLOR);
+	fputs(HIGHLIGHT_COLOR,stdout);
 	for (;i<oe+oe_tb;i++){
 		putchar('~');
 	}
-	printf(HIGHLIGHT_COLOR_RESET"\n");
+	fputs(HIGHLIGHT_COLOR_RESET"\n",stdout);
 	DISABLE_COLOR();
 	switch (e->t){
 		default:
@@ -226,6 +226,11 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 			return;
 		case LLL_ERROR_UNUSED_MODIFIERS:
 			printf("Unused Modifiers\n");
+			return;
+		case LLL_ERROR_UNKNOWN_IDENTIFIER:
+			*sp=0;
+			printf("Unknown Identifier '%s'\n",sym);
+			free(sym);
 			return;
 	}
 }

@@ -284,7 +284,7 @@ if (os.name=="nt"):
 	os.chdir(cd)
 	if ("--run" in sys.argv):
 		os.chdir("build")
-		if (subprocess.run(["lll.exe","../test.lll","-v","-O0","-c","-o","test.lllc","-fp"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-fp"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["gcc","test.obj","-o","test.exe","-O3"]).returncode!=0 or subprocess.run("test.exe").returncode!=0):
+		if (subprocess.run(["lll.exe","../test.lll","-v","-O0","-c","-o","test.lllc","-fp"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["gcc","test.obj","-o","test.exe","-O3"]).returncode!=0 or subprocess.run("test.exe").returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		os.chdir(cd)
@@ -308,5 +308,5 @@ else:
 		if (subprocess.run(["gcc","-shared","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O0","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
 			sys.exit(1)
 	if ("--run" in sys.argv):
-		if (subprocess.run(["build/lll","test.lll","-v","-O0","-c","-o","build/test.lllc","-fp"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-fp"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0):
+		if (subprocess.run(["build/lll","test.lll","-v","-O0","-c","-o","build/test.lllc","-fp"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0):
 			sys.exit(1)
