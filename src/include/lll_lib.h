@@ -363,6 +363,7 @@ typedef struct __LLL_IDENTIFIER_DATA{
 
 typedef struct __LLL_COMPILATION_DATA{
 	char fp[512];
+	uint32_t _n_sc_id;
 	uint16_t fpl;
 	lll_input_data_stream_t* is;
 	uint64_t tm;

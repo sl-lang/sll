@@ -33,10 +33,16 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 		fp++;
 	}
 	o->fp[o->fpl]=0;
+	o->_n_sc_id=1;
 	o->is=is;
 	o->tm=(uint64_t)time(NULL);
 	o->h=NULL;
-	REPEAT_BYTE_SET((uint8_t*)(&(o->i_dt)),0,sizeof(lll_identifier_data_t));
+	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		o->i_dt.s[i].dt=NULL;
+		o->i_dt.s[i].l=0;
+	}
+	o->i_dt.il=NULL;
+	o->i_dt.ill=0;
 }
 
 

@@ -501,17 +501,9 @@ void FORCE_INLINE _release_identifier(identifier_data_t* dt,identifier_map_t* im
 
 void FORCE_INLINE _write_ensure_register(lll_output_data_stream_t* os,identifier_data_t* dt,cpu_register_t r,identifier_map_t* im){
 	if (GET_BASE_REGISTER(dt->r)!=r){
-		if (!(im->rm&REGISTER_TO_MASK(r))){
-			ASSERT_EXIT(!"Unimplemented");
-		}
 		identifier_data_t tmp={
 			r|(dt->r&REGISTER_SIZE_MASK)
 		};
-		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tmov ");
-		_write_identifier_data(os,&tmp);
-		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,',');
-		_write_identifier_data(os,dt);
-		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
 		dt->r=r;
 	}
 }
@@ -1264,9 +1256,22 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 						case IDENTIFIER_DATA_TYPE_CHAR:
 							{
 								tmp.r=(tmp.r&(~REGISTER_SIZE_MASK))|REGISTER_32BIT;
-								_write_ensure_register(os,&tmp,*FUNCTION_CALL_REGISTERS,im);
 								uint16_t f_r=(~im->rm)&FUNCTION_NON_VOLATILE_REGISTERS;
+								if (GET_BASE_REGISTER(tmp.r)!=*FUNCTION_CALL_REGISTERS&&!(im->rm&REGISTER_TO_MASK(*FUNCTION_CALL_REGISTERS))){
+									f_r|=REGISTER_TO_MASK(*FUNCTION_CALL_REGISTERS);
+								}
 								_write_save_context(os,f_r);
+								if (GET_BASE_REGISTER(tmp.r)!=*FUNCTION_CALL_REGISTERS){
+									identifier_data_t r_tmp={
+										(*FUNCTION_CALL_REGISTERS)|REGISTER_32BIT
+									};
+									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tmov ");
+									_write_identifier_data(os,&r_tmp);
+									LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,',');
+									_write_identifier_data(os,&tmp);
+									LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+									tmp.r=(*FUNCTION_CALL_REGISTERS)|REGISTER_32BIT;
+								}
 								LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tcall putchar\n");
 								_write_restore_context(os,f_r);
 								break;
@@ -1277,9 +1282,22 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 							{
 								agd->f|=ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_INT32;
 								tmp.r=(tmp.r&(~REGISTER_SIZE_MASK))|REGISTER_32BIT;
-								_write_ensure_register(os,&tmp,*FUNCTION_CALL_REGISTERS,im);
 								uint16_t f_r=(~im->rm)&FUNCTION_NON_VOLATILE_REGISTERS;
+								if (GET_BASE_REGISTER(tmp.r)!=*FUNCTION_CALL_REGISTERS&&!(im->rm&REGISTER_TO_MASK(*FUNCTION_CALL_REGISTERS))){
+									f_r|=REGISTER_TO_MASK(*FUNCTION_CALL_REGISTERS);
+								}
 								_write_save_context(os,f_r);
+								if (GET_BASE_REGISTER(tmp.r)!=*FUNCTION_CALL_REGISTERS){
+									identifier_data_t r_tmp={
+										(*FUNCTION_CALL_REGISTERS)|REGISTER_32BIT
+									};
+									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tmov ");
+									_write_identifier_data(os,&r_tmp);
+									LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,',');
+									_write_identifier_data(os,&tmp);
+									LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+									tmp.r=(*FUNCTION_CALL_REGISTERS)|REGISTER_32BIT;
+								}
 								LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tcall .__print_int32\n");
 								_write_restore_context(os,f_r);
 								break;
@@ -1309,6 +1327,9 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 									break;
 								}
 								uint16_t f_r=(~im->rm)&FUNCTION_NON_VOLATILE_REGISTERS;
+								if (!(im->rm&REGISTER_TO_MASK(*FUNCTION_CALL_REGISTERS))){
+									f_r|=REGISTER_TO_MASK(*FUNCTION_CALL_REGISTERS);
+								}
 								_write_save_context(os,f_r);
 								if (s.l==1){
 									char c=*(s.ptr);
@@ -1617,7 +1638,9 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		agd.im.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH]=off;
 		off+=c_dt->i_dt.ill;
 		agd.im.dt=malloc(off*sizeof(identifier_data_t));
-		REPEAT_BYTE_SET((unsigned char*)agd.im.dt,REGISTER_NONE,off*sizeof(identifier_data_t)/sizeof(uint8_t));
+		for (uint32_t i=0;i<off;i++){
+			(agd.im.dt+i)->r=REGISTER_NONE;
+		}
 		if (_write_object_as_assembly(os,c_dt->h,&agd,e)==UINT32_MAX){
 			free(agd.im.dt);
 			for (uint32_t i=0;i<agd.st.l;i++){

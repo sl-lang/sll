@@ -13,14 +13,14 @@
 
 #ifdef _MSC_VER
 #pragma intrinsic(__movsb)
-#pragma intrinsic(__stosb)
+#pragma intrinsic(__movsq)
 #pragma intrinsic(_BitScanForward)
 #pragma intrinsic(_BitScanReverse)
 #define FORCE_INLINE __inline __forceinline
 #define UNREACHABLE() __assume(0)
 #define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
 #define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
-#define REPEAT_BYTE_SET(d,v,sz) __stosb(d,v,sz)
+#define REPEAT_QWORD_COPY(d,s,sz) __movsq((d),(s),(sz))
 static FORCE_INLINE unsigned int FIND_FIRST_SET_BIT(unsigned int m){
 	unsigned long o;
 	_BitScanForward(&o,m);
@@ -47,8 +47,8 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 static FORCE_INLINE void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
 	__asm__ volatile("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
-static FORCE_INLINE void REPEAT_BYTE_SET(unsigned char* d,uint8_t v,size_t n){
-	__asm__ volatile("rep stosb":"=D"(d),"=A"(v),"=c"(n):"0"(d),"1"(v),"2"(n):"memory");
+static FORCE_INLINE void REPEAT_QWORD_COPY(unsigned long long int* d,unsigned long long int* s,size_t n){
+	__asm__ volatile("rep movsq":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffs((m))-1)
 #define FIND_LAST_SET_BIT(m) (__builtin_clz((m))+1)
@@ -277,6 +277,14 @@ typedef PACKED(struct __COMPILED_OBJECT_FILE{
 
 
 
+typedef struct __SCOPE_DATA{
+	uint64_t* m;
+	uint32_t l_sc;
+	uint16_t ml;
+} scope_data_t;
+
+
+
 extern uint8_t* _bf;
 extern uint32_t _bf_off;
 extern uint32_t _bf_sz;
@@ -315,7 +323,7 @@ uint8_t _read_single_char(lll_input_data_stream_t* is,char t,uint32_t st,lll_err
 
 
 
-uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,uint32_t l_sc,lll_error_t* e);
+uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l_sc,lll_error_t* e);
 
 
 
