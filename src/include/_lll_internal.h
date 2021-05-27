@@ -12,14 +12,13 @@
 
 
 #ifdef _MSC_VER
-#pragma intrinsic(__movsb)
 #pragma intrinsic(__movsq)
 #pragma intrinsic(_BitScanForward)
 #pragma intrinsic(_BitScanReverse)
+#pragma intrinsic(_BitScanReverse64)
 #define FORCE_INLINE __inline __forceinline
 #define UNREACHABLE() __assume(0)
 #define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
-#define REPEAT_BYTE_COPY(d,s,sz) __movsb((d),(s),(sz))
 #define REPEAT_QWORD_COPY(d,s,sz) __movsq((d),(s),(sz))
 static FORCE_INLINE unsigned int FIND_FIRST_SET_BIT(unsigned int m){
 	unsigned long o;
@@ -44,10 +43,7 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 #define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
 #define PACKED(s) s __attribute__((__packed__))
-static FORCE_INLINE void REPEAT_BYTE_COPY(unsigned char* d,unsigned char* s,size_t n){
-	__asm__ volatile("rep movsb":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
-}
-static FORCE_INLINE void REPEAT_QWORD_COPY(unsigned long long int* d,unsigned long long int* s,size_t n){
+static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 	__asm__ volatile("rep movsq":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffs((m))-1)

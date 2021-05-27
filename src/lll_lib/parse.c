@@ -41,7 +41,9 @@
 		k->l++; \
 		k->dt=realloc(k->dt,k->l*sizeof(lll_small_identifier_t)); \
 		(k->dt+k->l-1)->v=malloc((i)*sizeof(char)); \
-		REPEAT_BYTE_COPY((unsigned char*)(k->dt+k->l-1)->v,(unsigned char*)(str),(i)); \
+		for (uint32_t j=0;j<(i);j++){ \
+			*((k->dt+k->l-1)->v+j)=*((str)+j); \
+		} \
 		(k->dt+k->l-1)->sc=(l_sc_)->l_sc; \
 		LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_CREATE_IDENTIFIER(k->l-1,(i)-1)); \
 	}
@@ -1399,7 +1401,9 @@ _next_long_identifier:;
 					lll_identifier_t* n=malloc(sizeof(lll_identifier_t)+sz);
 					n->sz=sz;
 					n->sc=l_sc->l_sc;
-					REPEAT_BYTE_COPY((unsigned char*)n->v,(unsigned char*)str,sz);
+					for (uint32_t i=0;i<sz;i++){
+						*(n->v+i)=*(str+i);
+					}
 					*(c_dt->i_dt.il+c_dt->i_dt.ill-1)=n;
 					LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
 				}

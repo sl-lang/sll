@@ -217,36 +217,50 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm){
 		case LLL_OBJECT_TYPE_NIL:
 		case LLL_OBJECT_TYPE_TRUE:
 		case LLL_OBJECT_TYPE_FALSE:
-			REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t));
+			for (uint32_t i=0;i<sizeof(lll_object_t);i++){
+				*(d+i)=*(s+i);
+			}
 			return sizeof(lll_object_t)+pad;
 		case LLL_OBJECT_TYPE_CHAR:
-			REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(char));
+			for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(char);i++){
+				*(d+i)=*(s+i);
+			}
 			return sizeof(lll_object_t)+sizeof(char)+pad;
 		case LLL_OBJECT_TYPE_STRING:
 			{
 				lll_string_length_t sl=LLL_GET_OBJECT_STRING_LENGTH(o);
-				REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl);
+				for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl;i++){
+					*(d+i)=*(s+i);
+				}
 				return sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl+pad;
 			}
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(lll_identifier_index_t));
+			for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_identifier_index_t);i++){
+				*(d+i)=*(s+i);
+			}
 			return sizeof(lll_object_t)+sizeof(lll_identifier_index_t)+pad;
 		case LLL_OBJECT_TYPE_INT:
 			{
 				uint32_t w=LLL_GET_OBJECT_INTEGER_WIDTH(o);
-				REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+w);
+				for (uint32_t i=0;i<sizeof(lll_object_t)+w;i++){
+					*(d+i)=*(s+i);
+				}
 				return sizeof(lll_object_t)+w+pad;
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
 			{
 				uint32_t w=(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
-				REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+w);
+				for (uint32_t i=0;i<sizeof(lll_object_t)+w;i++){
+					*(d+i)=*(s+i);
+				}
 				return sizeof(lll_object_t)+w+pad;
 			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
+				for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_statement_count_t);i++){
+					*(d+i)=*(s+i);
+				}
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
-				REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(lll_statement_count_t));
 				lll_statement_count_t l=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
 				while (l){
 					l--;
@@ -258,12 +272,16 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm){
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				REPEAT_BYTE_COPY(d,s,sz);
+				for (uint32_t i=0;i<sz;i++){
+					*(d+i)=*(s+i);
+				}
 				return sz+_remove_padding_internal(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),rm)+pad;
 			}
 	}
 	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
-	REPEAT_BYTE_COPY(d,s,sizeof(lll_object_t)+sizeof(lll_arg_count_t));
+	for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_arg_count_t);i++){
+		*(d+i)=*(s+i);
+	}
 	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 	while (l){
 		l--;

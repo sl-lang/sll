@@ -102,36 +102,36 @@ _unkown_switch:
 	}
 	if (fl&FLAG_FULL_PATH){
 		ffp=malloc(fpl*MAX_PATH_LENGTH*sizeof(char));
-		for (uint32_t i=0;i<fpl;i++){
+		for (uint32_t j=0;j<fpl;j++){
 #ifdef _MSC_VER
-			if (GetFullPathNameA(*(fp+i),MAX_PATH_LENGTH,ffp+i*MAX_PATH_LENGTH,NULL)){
+			if (GetFullPathNameA(*(fp+j),MAX_PATH_LENGTH,ffp+j*MAX_PATH_LENGTH,NULL)){
 #else
-			if (realpath(*(fp+i),ffp+i*MAX_PATH_LENGTH)){
+			if (realpath(*(fp+j),ffp+j*MAX_PATH_LENGTH)){
 #endif
-				*(fp+i)=ffp+i*MAX_PATH_LENGTH;
+				*(fp+j)=ffp+j*MAX_PATH_LENGTH;
 			}
 		}
 	}
 	char tmp[MAX_PATH_LENGTH];
 	if (!o_fp){
-		uint16_t i=0;
-		while (*(*fp+i)&&*(*fp+i)!='.'){
-			*(tmp+i)=*(*fp+i);
-			i++;
+		uint16_t j=0;
+		while (*(*fp+j)&&*(*fp+j)!='.'){
+			*(tmp+j)=*(*fp+j);
+			j++;
 		}
-		tmp[i]='.';
+		tmp[j]='.';
 		if (fl&FLAG_COMPILE_ONLY){
-			tmp[i+1]='l';
-			tmp[i+2]='l';
-			tmp[i+3]='l';
-			tmp[i+4]='c';
-			tmp[i+5]=0;
+			tmp[j+1]='l';
+			tmp[j+2]='l';
+			tmp[j+3]='l';
+			tmp[j+4]='c';
+			tmp[j+5]=0;
 		}
 		else{
-			tmp[i+1]='a';
-			tmp[i+2]='s';
-			tmp[i+3]='m';
-			tmp[i+4]=0;
+			tmp[j+1]='a';
+			tmp[j+2]='s';
+			tmp[j+3]='m';
+			tmp[j+4]=0;
 		}
 		o_fp=tmp;
 	}
@@ -169,16 +169,16 @@ _unkown_switch:
 		goto _cleanup;
 	}
 	lll_input_data_stream_t is;
-	for (uint32_t i=0;i<fpl;i++){
+	for (uint32_t j=0;j<fpl;j++){
 		if (fl&FLAG_VERBOSE){
-			printf("Opening File '%s'...\n",*(fp+i));
+			printf("Opening File '%s'...\n",*(fp+j));
 		}
 #ifdef _MSC_VER
-		if (fopen_s(&f,*(fp+i),"rb")){// lgtm [cpp/path-injection]
+		if (fopen_s(&f,*(fp+j),"rb")){// lgtm [cpp/path-injection]
 #else
-		if (!(f=fopen(*(fp+i),"rb"))){// lgtm [cpp/path-injection]
+		if (!(f=fopen(*(fp+j),"rb"))){// lgtm [cpp/path-injection]
 #endif
-			printf("Unable to Open File '%s'!\n",*(fp+i));
+			printf("Unable to Open File '%s'!\n",*(fp+j));
 			goto _cleanup;
 		}
 		lll_create_input_data_stream(f,&is);
@@ -192,7 +192,7 @@ _unkown_switch:
 					printf("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
 				}
 				lll_create_input_data_stream(f,&is);
-				lll_init_compilation_data(*(fp+i),&is,&c_dt);
+				lll_init_compilation_data(*(fp+j),&is,&c_dt);
 				if (!lll_read_all_objects(&c_dt,&e)){
 					lll_print_error(&is,&e);
 					goto _cleanup;
