@@ -5,10 +5,10 @@
 	})
 	(= i (+ i 1))
 })
-|#############|
+(= FACTORIAL 20)
 (= i 1)
-(-> (= j 2) (< j 10) {
+(-> (= j 2) (< j FACTORIAL) {
 	(= i (* i j))
 	(= j (+ j 1))
 })
-(print i '\n')
+(print FACTORIAL "! = " i '\n')

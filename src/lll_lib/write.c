@@ -1375,12 +1375,13 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 
 
 
-uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,assembly_generator_data_t* agd,lll_error_t* e){
+uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,extended_assembly_generator_data_t* eagd,lll_error_t* e){
 	uint32_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff+=sizeof(lll_object_type_t);
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
 	}
+	assembly_generator_data_t* agd=eagd->agd;
 	identifier_map_t* im=&(agd->im);
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
@@ -1526,7 +1527,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 									};
 									_write_identifier_data(os,&tmp_r);
 									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,",[_str_");
-									uint8_t i=(FIND_LAST_SET_BIT64(id)+4)&0x7c;
+									uint8_t i=(!id?4:(FIND_LAST_SET_BIT((uint32_t)id)+4)&0x3c);
 									while (i){
 										i-=4;
 										uint8_t c=(id>>i)&0xf;
@@ -1624,6 +1625,11 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			ASSERT(!"'if' Operator Assembly Code Generation Not Implemented yet",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_FOR:
 			{
+				extended_assembly_generator_data_t n_eagd={
+					agd,
+					agd->n_sc
+				};
+				agd->n_sc++;
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				ASSERT(ac>1,e,UINT32_MAX);
 				ac-=2;
@@ -1631,7 +1637,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				lll_object_t* init=LLL_GET_OBJECT_ARGUMENT(o,off);
 				REMOVE_PADDING_DEBUG(init,off);
 				off+=_get_object_size(init);
-				if (_write_object_as_assembly(os,init,agd,e)==UINT32_MAX){
+				if (_write_object_as_assembly(os,init,&n_eagd,e)==UINT32_MAX){
 					return UINT32_MAX;
 				}
 				lll_object_t* cnd=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1650,7 +1656,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 						ac--;
 						lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 						REMOVE_PADDING_DEBUG(a,off);
-						uint32_t aoff=_write_object_as_assembly(os,a,agd,e);
+						uint32_t aoff=_write_object_as_assembly(os,a,&n_eagd,e);
 						if (aoff==UINT32_MAX){
 							return UINT32_MAX;
 						}
@@ -1669,7 +1675,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 						ac--;
 						lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 						REMOVE_PADDING_DEBUG(a,off);
-						uint32_t aoff=_write_object_as_assembly(os,a,agd,e);
+						uint32_t aoff=_write_object_as_assembly(os,a,&n_eagd,e);
 						if (aoff==UINT32_MAX){
 							return UINT32_MAX;
 						}
@@ -1683,6 +1689,11 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 					while (ac){
 						ac--;
 						off+=_get_object_size(LLL_GET_OBJECT_ARGUMENT(o,off));
+					}
+				}
+				for (uint32_t i=0;i<im->dtl;i++){
+					if ((im->dt+i)->sc==n_eagd.sc){
+						_release_identifier(im->dt+i,im);
 					}
 				}
 				return off+eoff;
@@ -1711,7 +1722,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 				while (ac){
 					ac--;
-					uint32_t aoff=_write_object_as_assembly(os,LLL_GET_OBJECT_ARGUMENT(o,off),agd,e);
+					uint32_t aoff=_write_object_as_assembly(os,LLL_GET_OBJECT_ARGUMENT(o,off),eagd,e);
 					if (aoff==UINT32_MAX){
 						return UINT32_MAX;
 					}
@@ -1738,7 +1749,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				while (sc){
 					sc--;
 					lll_object_t* s=LLL_GET_OBJECT_STATEMENT(o,off);
-					uint32_t aoff=_write_object_as_assembly(os,s,agd,e);
+					uint32_t aoff=_write_object_as_assembly(os,s,eagd,e);
 					if (aoff==UINT32_MAX){
 						return UINT32_MAX;
 					}
@@ -1750,7 +1761,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				uint32_t off=_write_object_as_assembly(os,LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),agd,e);
+				uint32_t off=_write_object_as_assembly(os,LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),eagd,e);
 				if (off==UINT32_MAX){
 					return off;
 				}
@@ -1792,7 +1803,9 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 			{
 				NULL,
 				0
-			}
+			},
+			1,
+			0
 		};
 		uint32_t off=0;
 		for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
@@ -1801,11 +1814,26 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		}
 		agd.im.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH]=off;
 		off+=c_dt->i_dt.ill;
+		agd.im.dtl=off;
 		agd.im.dt=malloc(off*sizeof(identifier_data_t));
-		for (uint32_t i=0;i<off;i++){
-			(agd.im.dt+i)->r=REGISTER_NONE;
+		uint32_t i=0;
+		for (uint32_t j=0;j<LLL_MAX_SHORT_IDENTIFIER_LENGTH;j++){
+			for (uint32_t k=0;k<c_dt->i_dt.s[j].l;k++){
+				(agd.im.dt+i)->r=REGISTER_NONE;
+				(agd.im.dt+i)->sc=(c_dt->i_dt.s[j].dt+k)->sc;
+				i++;
+			}
 		}
-		if (_write_object_as_assembly(os,c_dt->h,&agd,e)==UINT32_MAX){
+		for (uint32_t j=0;j<c_dt->i_dt.ill;j++){
+			(agd.im.dt+i)->r=REGISTER_NONE;
+			(agd.im.dt+i)->sc=(*(c_dt->i_dt.il+j))->sc;
+			i++;
+		}
+		extended_assembly_generator_data_t eagd={
+			&agd,
+			0
+		};
+		if (_write_object_as_assembly(os,c_dt->h,&eagd,e)==UINT32_MAX){
 			free(agd.im.dt);
 			for (uint32_t i=0;i<agd.st.l;i++){
 				free(*(agd.st.dt+i));
@@ -1828,7 +1856,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		}
 		for (uint32_t i=0;i<agd.st.l;i++){
 			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\t_str_");
-			uint8_t j=(FIND_LAST_SET_BIT(i)+4)&0x3c;
+			uint8_t j=(!i?4:(FIND_LAST_SET_BIT(i)+4)&0x3c);
 			while (j){
 				j-=4;
 				uint8_t c=(i>>j)&0xf;

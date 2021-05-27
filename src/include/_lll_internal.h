@@ -47,8 +47,8 @@ static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 	__asm__ volatile("rep movsq":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
 }
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffs((m))-1)
-#define FIND_LAST_SET_BIT(m) (__builtin_clz((m))+1)
-#define FIND_LAST_SET_BIT64(m) (__builtin_clzll((m))+1)
+#define FIND_LAST_SET_BIT(m) (31-__builtin_clz((m)))
+#define FIND_LAST_SET_BIT64(m) (63-__builtin_clzll((m)))
 #define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_SI)|REGISTER_TO_MASK(REGISTER_DI)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
 #define _FUNCTION_CALL_REGISTERS {REGISTER_DI,REGISTER_SI,REGISTER_D,REGISTER_C,REGISTER_R8,REGISTER_R9}
 #define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32\n"
@@ -226,6 +226,7 @@ typedef struct __IDENTIFIER_DATA{
 	cpu_register_t r;
 	identifier_data_type_t t;
 	identifier_data_extra_t e;
+	uint32_t sc;
 } identifier_data_t;
 
 
@@ -233,6 +234,7 @@ typedef struct __IDENTIFIER_DATA{
 typedef struct __IDENTIFIER_MAP{
 	uint32_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
 	identifier_data_t* dt;
+	uint32_t dtl;
 	uint16_t rm;
 	label_t nl;
 } identifier_map_t;
@@ -257,8 +259,16 @@ typedef struct __STRING_TABLE{
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	identifier_map_t im;
 	string_table_t st;
+	uint32_t n_sc;
 	uint8_t f;
 } assembly_generator_data_t;
+
+
+
+typedef struct __EXTENDED_ASSEMBLY_GENERATOR_DATA{
+	assembly_generator_data_t* agd;
+	uint32_t sc;
+} extended_assembly_generator_data_t;
 
 
 
@@ -331,7 +341,7 @@ uint32_t _set_register_value(lll_output_data_stream_t* os,identifier_data_t* i_d
 
 
 
-uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,assembly_generator_data_t* agd,lll_error_t* e);
+uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,extended_assembly_generator_data_t* eagd,lll_error_t* e);
 
 
 
