@@ -37,8 +37,8 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 }
 #define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
 #define _FUNCTION_CALL_REGISTERS {REGISTER_C,REGISTER_D,REGISTER_R8,REGISTER_R9}
-#define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nextern ExitProcess\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32\n"
-#define ASSEMBLY_EXIT_CODE "\txor rax,rax\n\tjmp ExitProcess\n"
+#define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nextern ExitProcess\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32"
+#define ASSEMBLY_EXIT_CODE "\txor rax,rax\n\tjmp ExitProcess"
 #else
 #define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
@@ -51,8 +51,8 @@ static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 #define FIND_LAST_SET_BIT64(m) (63-__builtin_clzll((m)))
 #define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_SI)|REGISTER_TO_MASK(REGISTER_DI)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
 #define _FUNCTION_CALL_REGISTERS {REGISTER_DI,REGISTER_SI,REGISTER_D,REGISTER_C,REGISTER_R8,REGISTER_R9}
-#define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32\n"
-#define ASSEMBLY_EXIT_CODE "\tmov rax,60\n\txor rdi,rdi\n\tsyscall\n"
+#define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32"
+#define ASSEMBLY_EXIT_CODE "\tmov rax,60\n\txor rdi,rdi\n\tsyscall"
 #endif
 
 
@@ -166,7 +166,7 @@ static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 #define GET_BASE_REGISTER(r) ((r)&0xf)
 #define ALL_REGISTER_AVAIBLE_MASK ((1<<(MAX_REGISTER-MIN_REGISTER+1))-1)
 #define REGISTER_TO_MASK(r) (1<<((r)-MIN_REGISTER))
-#define REGISTER_FROM_BIT_INDER(r) ((r)+MIN_REGISTER)
+#define REGISTER_FROM_BIT_INDEX(r) ((r)+MIN_REGISTER)
 
 #define IDENTIFIER_INDEX_TO_MAP_OFFSET(i,im) (LLL_IDENTIFIER_GET_ARRAY_INDEX((i))+(im)->off[LLL_IDENTIFIER_GET_ARRAY_ID((i))])
 
@@ -192,6 +192,9 @@ static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 
 #define ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_STRING 1
 #define ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_INT32 2
+
+#define ASSEMBLY_STRING_PRINT_FUNCTION ".__print_str:\n\tpush rsi\n\tmov rsi,rcx\n\txor eax,eax\n\tmov al,[rsi]\n.__print_str_loop:\n\tinc rsi\n\tmov ecx,eax\n\tcall putchar\n\tmov al,[rsi]\n\ttest al,al\n\tjne .__print_str_loop\n\tpop rsi\n\tret"
+#define ASSEMBLY_INT32_PRINT_FUNCTION ".__print_int32:\n\tpush rsi\n\tpush rbx\n\tsub rsp,0x38\n\tmov ebx,ecx\n\ttest ecx,ecx\n\tjs .__print_int32_neg\n\tje .__print_int32_zero\n.__print_int32_loop_setup:\n\txor edx,edx\n\tmov r9d,0xcccccccd\n.__print_int32_loop:\n\tmov eax,ebx\n\tmovzx r8d,dl\n\tadd edx,0x1\n\timul rax,r9\n\tshr rax,0x23\n\tlea ecx,[rax+rax*4]\n\tadd ecx,ecx\n\tsub ebx,ecx\n\tadd ebx,0x30\n\tmov BYTE [rsp+r8*1+0x26],bl\n\tmov ebx,eax\n\ttest eax,eax\n\tjne .__print_int32_loop\n\tlea rsi,[rsp+0x26]\n\tmov rbx,r8\n\tadd rbx,rsi\n.__print_int32_loop2:\n\tmovsx ecx,BYTE [rbx]\n\tcall putchar\n\tmov rax,rbx\n\tsub rbx,0x1\n\tcmp rsi,rax\n\tjne .__print_int32_loop2\n\tadd rsp,0x38\n\tpop rbx\n\tpop rsi\n\tret\n.__print_int32_neg:\n\tmov ecx,0x2d\n\tneg ebx\n\tcall putchar\n\tjmp .__print_int32_loop_setup\n.__print_int32_zero:\n\tmov ecx,0x30\n\tadd rsp,0x38\n\tpop rbx\n\tpop rsi\n\tjmp putchar"
 
 
 

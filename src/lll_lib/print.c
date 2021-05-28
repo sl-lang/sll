@@ -54,8 +54,42 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			fprintf(f,"(unknown)");
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			fprintf(f,"'%c'",LLL_GET_OBJECT_AS_CHAR(o));
-			return sizeof(lll_object_t)+eoff+sizeof(char);
+			{
+				fputc('\'',f);
+				char c=LLL_GET_OBJECT_AS_CHAR(o);
+				if (c=='\''||c=='"'||c=='\\'){
+					fputc('\\',f);
+				}
+				else if (c=='\t'){
+					fputc('\\',f);
+					c='t';
+				}
+				else if (c=='\n'){
+					fputc('\\',f);
+					c='n';
+				}
+				else if (c=='\v'){
+					fputc('\\',f);
+					c='v';
+				}
+				else if (c=='\f'){
+					fputc('\\',f);
+					c='f';
+				}
+				else if (c=='\r'){
+					fputc('\\',f);
+					c='r';
+				}
+				else if (c<32||c>126){
+					fputc('\\',f);
+					fputc('x',f);
+					fputc((((uint8_t)c)>>4)+(((uint8_t)c)>159?87:48),f);
+					c=(c&0xf)+((c&0xf)>9?87:48);
+				}
+				fputc(c,f);
+				fputc('\'',f);
+				return sizeof(lll_object_t)+eoff+sizeof(char);
+			}
 		case LLL_OBJECT_TYPE_INT:
 			if (LLL_IS_OBJECT_INT16(o)){
 				fprintf(f,"%"PRId16,LLL_GET_OBJECT_AS_INT16(o));
@@ -173,10 +207,10 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			fprintf(f,"=");
 			break;
 		case LLL_OBJECT_TYPE_FUNC:
-			fprintf(f,"func");
+			fprintf(f,"...");
 			break;
 		case LLL_OBJECT_TYPE_IF:
-			fprintf(f,"if");
+			fprintf(f,"?");
 			break;
 		case LLL_OBJECT_TYPE_FOR:
 			fprintf(f,"for");

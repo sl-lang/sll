@@ -5,10 +5,20 @@
 	})
 	(= i (+ i 1))
 })
-(= FACTORIAL 20)
-(= i 1)
+(= FACTORIAL 10)
+(= i 1 (print "After Var Init (i=" i ")\n"))
 (-> (= j 2) (< j FACTORIAL) {
+	(? (< j 5) {
+		(print "Small: " i "\n")
+	}
+	(< j 8) {
+		(print "Medium: " i "\n")
+	} {
+		(= unused_identifier 18900)
+		(print "End: " i "\n")
+	})
 	(= i (* i j))
+	(? (< j 5) (print j "! = " i "\n"))
 	(= j (+ j 1))
 })
 (print FACTORIAL "! = " i '\n')

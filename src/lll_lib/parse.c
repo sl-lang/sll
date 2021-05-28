@@ -188,9 +188,8 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 			while (c!='\n'&&c!='\r'&&c!=LLL_END_OF_DATA){
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 			}
-			continue;
 		}
-		if (c=='|'){
+		else if (c=='|'){
 			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 			if (c!='#'){
 				e->t=LLL_ERROR_UNEXPECTED_CHARACTER;
@@ -216,9 +215,8 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 				}
 			}
 			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-			continue;
 		}
-		if (c==')'){
+		else if (c==')'){
 			if (!o||ec!=')'){
 				e->t=LLL_ERROR_UNMATCHED_CLOSE_PARENTHESES;
 				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
@@ -299,7 +297,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 			}
 			return LLL_RETURN_NO_ERROR;
 		}
-		if (c=='}'){
+		else if (c=='}'){
 			if (!o||ec!='}'){
 				e->t=LLL_ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS;
 				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
@@ -320,7 +318,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 			}
 			return LLL_RETURN_NO_ERROR;
 		}
-		if (c=='('||c=='{'){
+		else if (c=='('||c=='{'){
 			if (!o){
 				if (!lll_insert_debug_object(is,e)){
 					if (n_l_sc.m){
@@ -402,6 +400,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 					(*ac)++;
 				}
 			}
+			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 		}
 		else if (c=='@'){
 			if (!o){
@@ -457,7 +456,7 @@ _read_modifier:
 							}
 							return LLL_RETURN_ERROR;
 						}
-						o->m=(o->m&(~LLL_OBJECT_MODIFIER_SIZE_MASK))|LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_8BIT;
+						o->m|=LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_8BIT;
 					}
 					else{
 						if (am&LLL_OBJECT_MODIFIER_SIZE){
@@ -469,7 +468,7 @@ _read_modifier:
 							}
 							return LLL_RETURN_ERROR;
 						}
-						am=(am&(~LLL_OBJECT_MODIFIER_SIZE_MASK))|LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_8BIT;
+						am|=LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_8BIT;
 					}
 				}
 				else if (FAST_COMPARE(str,l,i,s,t)){
@@ -542,7 +541,7 @@ _read_modifier:
 							}
 							return LLL_RETURN_ERROR;
 						}
-						o->m=(o->m&(~LLL_OBJECT_MODIFIER_SIZE_MASK))|LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_16BIT;
+						o->m|=LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_16BIT;
 					}
 					else{
 						if (am&LLL_OBJECT_MODIFIER_SIZE){
@@ -554,7 +553,7 @@ _read_modifier:
 							}
 							return LLL_RETURN_ERROR;
 						}
-						am=(am&(~LLL_OBJECT_MODIFIER_SIZE_MASK))|LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_16BIT;
+						am|=LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_16BIT;
 					}
 				}
 				else if (FAST_COMPARE(str,3,2,b,i,t)){
@@ -568,7 +567,7 @@ _read_modifier:
 							}
 							return LLL_RETURN_ERROR;
 						}
-						o->m=(o->m&(~LLL_OBJECT_MODIFIER_SIZE_MASK))|LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_32BIT;
+						o->m|=LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_32BIT;
 					}
 					else{
 						if (am&LLL_OBJECT_MODIFIER_SIZE){
@@ -580,7 +579,7 @@ _read_modifier:
 							}
 							return LLL_RETURN_ERROR;
 						}
-						am=(am&(~LLL_OBJECT_MODIFIER_SIZE_MASK))|LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_32BIT;
+						am|=LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_32BIT;
 					}
 				}
 				else if (FAST_COMPARE(str,6,4,b,i,t)){
@@ -594,7 +593,7 @@ _read_modifier:
 							}
 							return LLL_RETURN_ERROR;
 						}
-						o->m=(o->m&(~LLL_OBJECT_MODIFIER_SIZE_MASK))|LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_64BIT;
+						o->m|=LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_64BIT;
 					}
 					else{
 						if (am&LLL_OBJECT_MODIFIER_SIZE){
@@ -606,7 +605,7 @@ _read_modifier:
 							}
 							return LLL_RETURN_ERROR;
 						}
-						am=(am&(~LLL_OBJECT_MODIFIER_SIZE_MASK))|LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_64BIT;
+						am|=LLL_OBJECT_MODIFIER_SIZE|LLL_OBJECT_MODIFIER_64BIT;
 					}
 				}
 				else if (FAST_COMPARE(str,a,r,r,a,y)){
@@ -662,7 +661,6 @@ _unknown_modifier:
 				}
 				return LLL_RETURN_ERROR;
 			}
-			continue;
 		}
 		else if (o&&LLL_IS_OBJECT_UNKNOWN(o)){
 			char* str=(char*)(_bf+_bf_off);
@@ -792,19 +790,14 @@ _read_symbol:
 				}
 			}
 			else if (sz==3){
-				if (FAST_COMPARE(str,*,/,/)){
+				if (FAST_COMPARE(str,.,.,.)){
+					o->t=LLL_OBJECT_TYPE_FUNC;
+				}
+				else if (FAST_COMPARE(str,*,/,/)){
 					o->t=LLL_OBJECT_TYPE_FLOOR_ROOT;
 				}
 				else if (FAST_COMPARE(str,_,/,/)){
 					o->t=LLL_OBJECT_TYPE_FLOOR_LOG;
-				}
-				else{
-					goto _unknown_symbol;
-				}
-			}
-			else if (sz==4){
-				if (FAST_COMPARE(str,f,u,n,c)){
-					o->t=LLL_OBJECT_TYPE_FUNC;
 				}
 				else{
 					goto _unknown_symbol;
@@ -837,9 +830,8 @@ _unknown_symbol:
 				return LLL_RETURN_ERROR;
 			}
 			o->t|=LLL_OBJECT_TYPE_CONST;
-			continue;
 		}
-		else if (c=='\''){
+		else{
 			if (!lll_insert_debug_object(is,e)){
 				if (n_l_sc.m){
 					free(n_l_sc.m);
@@ -849,490 +841,7 @@ _unknown_symbol:
 			uint32_t arg_s=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 			lll_object_t* arg=(lll_object_t*)(_bf+_bf_off);
 			_bf_off+=sizeof(lll_object_t);
-			if (_bf_off>=_bf_sz){
-				e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
-				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			arg->t=LLL_OBJECT_TYPE_CHAR;
-			arg->m=am;
-			am=0;
-			uint8_t ce=_read_single_char(is,'\'',arg_s,e);
-			if (ce==READ_SINGLE_CHAR_ERROR){
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			if (ce==READ_SINGLE_CHAR_END){
-				e->t=LLL_ERROR_EMPTY_CHAR_STRING;
-				e->dt.r.off=arg_s;
-				e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-			if (c!='\''){
-				e->t=LLL_ERROR_UNTERMINATED_CHAR_STRING;
-				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			if (!o){
-				return LLL_RETURN_NO_ERROR;
-			}
-			if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
-				if (*sc==UINT16_MAX){
-					e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
-					e->dt.r.off=arg_s;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				(*sc)++;
-			}
-			else{
-				if (*ac==UINT8_MAX){
-					e->t=LLL_ERROR_TOO_MANY_ARGUMENTS;
-					e->dt.r.off=arg_s;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				(*ac)++;
-			}
-		}
-		else if (c=='"'){
-			if (!lll_insert_debug_object(is,e)){
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			uint32_t arg_s=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-			lll_object_t* arg=(lll_object_t*)(_bf+_bf_off);
-			_bf_off+=sizeof(lll_object_t)+sizeof(lll_string_length_t);
-			if (_bf_off>=_bf_sz){
-				e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
-				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			arg->t=LLL_OBJECT_TYPE_STRING;
-			arg->m=am;
-			am=0;
-			uint32_t sz=0;
-			while (1){
-				uint8_t ce=_read_single_char(is,'"',arg_s,e);
-				if (ce==READ_SINGLE_CHAR_ERROR){
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				if (ce==READ_SINGLE_CHAR_END){
-					break;
-				}
-				sz++;
-			}
-			LLL_SET_OBJECT_STRING_LENGTH(arg,sz);
-			if (!o){
-				return LLL_RETURN_NO_ERROR;
-			}
-			if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
-				if (*sc==UINT16_MAX){
-					e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
-					e->dt.r.off=arg_s;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				(*sc)++;
-			}
-			else{
-				if (*ac==UINT8_MAX){
-					e->t=LLL_ERROR_TOO_MANY_ARGUMENTS;
-					e->dt.r.off=arg_s;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				(*ac)++;
-			}
-		}
-		else if ((c>47&&c<58)||c=='-'){
-			if (!lll_insert_debug_object(is,e)){
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			uint32_t arg_s=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-			lll_object_t* arg=(lll_object_t*)(_bf+_bf_off);
-			_bf_off+=sizeof(lll_object_t)+sizeof(int64_t);
-			if (_bf_off>=_bf_sz){
-				e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
-				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			int8_t m=1;
-			if (c=='-'){
-				m=-1;
-				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==LLL_END_OF_DATA){
-					break;
-				}
-			}
-			arg->t=LLL_OBJECT_TYPE_INT;
-			arg->m=am;
-			int64_t v=0;
-			if (c=='0'){
-				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==LLL_END_OF_DATA){
-					break;
-				}
-				if (c=='x'||c=='X'){
-					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-					if (c==LLL_END_OF_DATA){
-						break;
-					}
-_hexadecimal:
-					if (c>96){
-						c-=32;
-					}
-					if (c<48||(c>57&&c<65)||c>70){
-						e->t=LLL_ERROR_UNKNOWN_HEXADECIMAL_CHARCTER;
-						e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-						e->dt.r.sz=1;
-						if (n_l_sc.m){
-							free(n_l_sc.m);
-						}
-						return LLL_RETURN_ERROR;
-					}
-					v=(v<<4)+(c>64?c-55:c-48);
-					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-					if (c==LLL_END_OF_DATA){
-						break;
-					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-						goto _hexadecimal;
-					}
-				}
-				else if (c=='o'||c=='O'){
-					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-					if (c==LLL_END_OF_DATA){
-						break;
-					}
-_octal:
-					if (c<48||c>55){
-						e->t=LLL_ERROR_UNKNOWN_OCTAL_CHARCTER;
-						e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-						e->dt.r.sz=1;
-						if (n_l_sc.m){
-							free(n_l_sc.m);
-						}
-						return LLL_RETURN_ERROR;
-					}
-					v=(v<<3)+(c-48);
-					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-					if (c==LLL_END_OF_DATA){
-						break;
-					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-						goto _octal;
-					}
-				}
-				else if (c=='b'||c=='B'){
-					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-					if (c==LLL_END_OF_DATA){
-						break;
-					}
-_binary:
-					if (c!=48&&c!=49){
-						e->t=LLL_ERROR_UNKNOWN_BINARY_CHARCTER;
-						e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-						e->dt.r.sz=1;
-						if (n_l_sc.m){
-							free(n_l_sc.m);
-						}
-						return LLL_RETURN_ERROR;
-					}
-					v=(v<<1)+(c-48);
-					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-					if (c==LLL_END_OF_DATA){
-						break;
-					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-						goto _binary;
-					}
-				}
-				else if (c=='.'||c=='e'||c=='E'){
-					arg->t=LLL_OBJECT_TYPE_FLOAT;
-					goto _parse_float;
-				}
-				else if (c>47&&c<58){
-					goto _decimal;
-				}
-				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-					e->t=LLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-					e->dt.r.sz=1;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-			}
-			else{
-_decimal:
-				v=v*10+(c-48);
-				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==LLL_END_OF_DATA){
-					break;
-				}
-				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-					if (c=='.'||c=='e'||c=='E'){
-						goto _parse_float;
-					}
-					if (c<48||c>57){
-						e->t=LLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-						e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-						e->dt.r.sz=1;
-						if (n_l_sc.m){
-							free(n_l_sc.m);
-						}
-						return LLL_RETURN_ERROR;
-					}
-					goto _decimal;
-				}
-			}
-			if (v>INT32_MAX){
-				arg->t|=LLL_OBJECT_TYPE_INT64_FLAG;
-				LLL_SET_OBJECT_AS_INT64(arg,v*m);
-			}
-			else if (v>INT16_MAX){
-				_bf_off-=sizeof(int64_t)-sizeof(int32_t);
-				arg->t|=LLL_OBJECT_TYPE_INT32_FLAG;
-				LLL_SET_OBJECT_AS_INT32(arg,v*m);
-			}
-			else if (v>INT8_MAX){
-				_bf_off-=sizeof(int64_t)-sizeof(int16_t);
-				arg->t|=LLL_OBJECT_TYPE_INT16_FLAG;
-				LLL_SET_OBJECT_AS_INT16(arg,v*m);
-			}
-			else{
-				_bf_off-=sizeof(int64_t)-sizeof(int8_t);
-				LLL_SET_OBJECT_AS_INT8(arg,v*m);
-			}
-			goto _skip_float_parse;
-_parse_float:;
-			int16_t ex=0;
-			if (c=='.'){
-_float:
-				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==LLL_END_OF_DATA){
-					break;
-				}
-				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-					if (c=='e'||c=='E'){
-						goto _parse_float_exponent;
-					}
-					if (c<48||c>57){
-						e->t=LLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-						e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-						e->dt.r.sz=1;
-						if (n_l_sc.m){
-							free(n_l_sc.m);
-						}
-						return LLL_RETURN_ERROR;
-					}
-					ex--;
-					v=v*10+(c-48);
-					goto _float;
-				}
-			}
-			else{
-_parse_float_exponent:;
-				int8_t em=1;
-				int16_t ev=0;
-				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==LLL_END_OF_DATA){
-					break;
-				}
-				if (c=='-'){
-					em=-1;
-				}
-				else if (c=='+');
-				else{
-					goto _add_exponent_char;
-				}
-_float_exponent:
-				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==LLL_END_OF_DATA){
-					break;
-				}
-_add_exponent_char:
-				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-					if (c<48||c>57){
-						e->t=LLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-						e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-						e->dt.r.sz=1;
-						if (n_l_sc.m){
-							free(n_l_sc.m);
-						}
-						return LLL_RETURN_ERROR;
-					}
-					ev=ev*10+(c-48);
-					goto _float_exponent;
-				}
-				ex+=ev*em;
-			}
-			if (am&LLL_OBJECT_MODIFIER_SIZE){
-				if ((am&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_8BIT){
-					e->t=LLL_ERROR_UNSUPPORTED_8BIT_FLOAT_SIZE;
-					e->dt.r.off=arg_s;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				else if ((am&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_16BIT){
-					e->t=LLL_ERROR_UNSUPPORTED_16BIT_FLOAT_SIZE;
-					e->dt.r.off=arg_s;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				else if ((am&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_32BIT){
-					_bf_off-=sizeof(double)-sizeof(float);
-					arg->t=LLL_OBJECT_TYPE_FLOAT;
-					LLL_SET_OBJECT_AS_FLOAT32(arg,((float)v)*powf(5,ex)*powf(2,ex)*m);
-					goto _skip_float_parse;
-				}
-			}
-			arg->t=LLL_OBJECT_TYPE_FLOAT|LLL_OBJECT_TYPE_FLOAT64_FLAG;
-			LLL_SET_OBJECT_AS_FLOAT64(arg,((double)v)*pow(5,ex)*pow(2,ex)*m);
-_skip_float_parse:
-			am=0;
-			if (!o){
-				return LLL_RETURN_NO_ERROR;
-			}
-			if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
-				if (*sc==UINT16_MAX){
-					e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
-					e->dt.r.off=arg_s;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				(*sc)++;
-			}
-			else{
-				if (*ac==UINT8_MAX){
-					e->t=LLL_ERROR_TOO_MANY_ARGUMENTS;
-					e->dt.r.off=arg_s;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				(*ac)++;
-			}
-			continue;
-		}
-		else if ((c>64&&c<91)||c=='_'||(c>96&&c<123)){
-			if (!lll_insert_debug_object(is,e)){
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			uint32_t arg_s=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-			lll_object_t* arg=(lll_object_t*)(_bf+_bf_off);
-			_bf_off+=sizeof(lll_object_t);
-			if (_bf_off>=_bf_sz){
-				e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
-				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			arg->t=LLL_OBJECT_TYPE_IDENTIFIER;
-			arg->m=am;
-			am=0;
-			char* str=(char*)(_bf+_bf_off);
-			uint32_t sz=0;
-_read_identifier:
-			*(str+sz)=c;
-			sz++;
-			if (sz+_bf_off>=_bf_sz){
-				e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
-				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-			if (c==LLL_END_OF_DATA){
-				break;
-			}
-			if ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
-				goto _read_identifier;
-			}
-			if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
-				e->t=LLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER;
-				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			if (sz==3&&FAST_COMPARE(str,n,i,l)){
-				arg->t=LLL_OBJECT_TYPE_NIL;
-			}
-			else if (sz==4&&FAST_COMPARE(str,t,r,u,e)){
-				arg->t=LLL_OBJECT_TYPE_TRUE;
-			}
-			else if (sz==5&&FAST_COMPARE(str,f,a,l,s,e)){
-				arg->t=LLL_OBJECT_TYPE_FALSE;
-			}
-			else{
-				_bf_off+=sizeof(lll_identifier_index_t);
+			if (c=='\''){
 				if (_bf_off>=_bf_sz){
 					e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
@@ -1342,53 +851,294 @@ _read_identifier:
 					}
 					return LLL_RETURN_ERROR;
 				}
-#if LLL_MAX_SHORT_IDENTIFIER_LENGTH!=15
-#error The following code is broken
-#endif
-				COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,1,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,2,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,3,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,4,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,5,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,6,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,7,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,8,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,9,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,10,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,11,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,12,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,13,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,14,l_sc,e,is,arg_s)
-				else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,15,l_sc,e,is,arg_s)
-				else{
-					uint32_t mx_sc=UINT32_MAX;
-					lll_identifier_index_t mx_i;
-					for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
-						lll_identifier_t* k=*(c_dt->i_dt.il+i);
-						if (k->sz!=sz){
-							continue;
+				arg->t=LLL_OBJECT_TYPE_CHAR;
+				arg->m=am;
+				am=0;
+				uint8_t ce=_read_single_char(is,'\'',arg_s,e);
+				if (ce==READ_SINGLE_CHAR_ERROR){
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				if (ce==READ_SINGLE_CHAR_END){
+					e->t=LLL_ERROR_EMPTY_CHAR_STRING;
+					e->dt.r.off=arg_s;
+					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+				if (c!='\''){
+					e->t=LLL_ERROR_UNTERMINATED_CHAR_STRING;
+					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+			}
+			else if (c=='"'){
+				_bf_off+=sizeof(lll_string_length_t);
+				if (_bf_off>=_bf_sz){
+					e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				arg->t=LLL_OBJECT_TYPE_STRING;
+				arg->m=am;
+				am=0;
+				uint32_t sz=0;
+				while (1){
+					uint8_t ce=_read_single_char(is,'"',arg_s,e);
+					if (ce==READ_SINGLE_CHAR_ERROR){
+						if (n_l_sc.m){
+							free(n_l_sc.m);
 						}
-						for (uint32_t i=0;i<sz;i++){
-							if (*(str+i)!=*(k->v+i)){
-								goto _next_long_identifier;
+						return LLL_RETURN_ERROR;
+					}
+					if (ce==READ_SINGLE_CHAR_END){
+						break;
+					}
+					sz++;
+				}
+				LLL_SET_OBJECT_STRING_LENGTH(arg,sz);
+				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+			}
+			else if ((c>47&&c<58)||c=='-'){
+				_bf_off+=sizeof(int64_t);
+				if (_bf_off>=_bf_sz){
+					e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				int8_t m=1;
+				if (c=='-'){
+					m=-1;
+					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+					if (c==LLL_END_OF_DATA){
+						break;
+					}
+				}
+				arg->t=LLL_OBJECT_TYPE_INT;
+				arg->m=am;
+				int64_t v=0;
+				if (c=='0'){
+					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+					if (c==LLL_END_OF_DATA){
+						break;
+					}
+					if (c=='x'||c=='X'){
+						c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+						if (c==LLL_END_OF_DATA){
+							break;
+						}
+_hexadecimal:
+						if (c>96){
+							c-=32;
+						}
+						if (c<48||(c>57&&c<65)||c>70){
+							e->t=LLL_ERROR_UNKNOWN_HEXADECIMAL_CHARCTER;
+							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+							e->dt.r.sz=1;
+							if (n_l_sc.m){
+								free(n_l_sc.m);
 							}
+							return LLL_RETURN_ERROR;
 						}
-						if (k->sc==l_sc->l_sc){
-							LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
-							goto _identifier_found;
+						v=(v<<4)+(c>64?c-55:c-48);
+						c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+						if (c==LLL_END_OF_DATA){
+							break;
 						}
-						else if (((l_sc)->m[k->sc>>6]&(1ull<<(k->sc&0x3f)))&&(mx_sc==UINT32_MAX||k->sc>mx_sc)){
-							mx_sc=k->sc;
-							mx_i=LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+							goto _hexadecimal;
 						}
-_next_long_identifier:;
 					}
-					if (mx_sc!=UINT32_MAX){
-						LLL_SET_OBJECT_AS_IDENTIFIER(arg,mx_i);
-						goto _identifier_found;
+					else if (c=='o'||c=='O'){
+						c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+						if (c==LLL_END_OF_DATA){
+							break;
+						}
+_octal:
+						if (c<48||c>55){
+							e->t=LLL_ERROR_UNKNOWN_OCTAL_CHARCTER;
+							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+							e->dt.r.sz=1;
+							if (n_l_sc.m){
+								free(n_l_sc.m);
+							}
+							return LLL_RETURN_ERROR;
+						}
+						v=(v<<3)+(c-48);
+						c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+						if (c==LLL_END_OF_DATA){
+							break;
+						}
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+							goto _octal;
+						}
 					}
-					if (LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_SET){
-						e->t=LLL_ERROR_UNKNOWN_IDENTIFIER;
+					else if (c=='b'||c=='B'){
+						c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+						if (c==LLL_END_OF_DATA){
+							break;
+						}
+_binary:
+						if (c!=48&&c!=49){
+							e->t=LLL_ERROR_UNKNOWN_BINARY_CHARCTER;
+							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+							e->dt.r.sz=1;
+							if (n_l_sc.m){
+								free(n_l_sc.m);
+							}
+							return LLL_RETURN_ERROR;
+						}
+						v=(v<<1)+(c-48);
+						c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+						if (c==LLL_END_OF_DATA){
+							break;
+						}
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+							goto _binary;
+						}
+					}
+					else if (c=='.'||c=='e'||c=='E'){
+						arg->t=LLL_OBJECT_TYPE_FLOAT;
+						goto _parse_float;
+					}
+					else if (c>47&&c<58){
+						goto _decimal;
+					}
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+						e->t=LLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
+						e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+						e->dt.r.sz=1;
+						if (n_l_sc.m){
+							free(n_l_sc.m);
+						}
+						return LLL_RETURN_ERROR;
+					}
+				}
+				else{
+_decimal:
+					v=v*10+(c-48);
+					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+					if (c==LLL_END_OF_DATA){
+						break;
+					}
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+						if (c=='.'||c=='e'||c=='E'){
+							goto _parse_float;
+						}
+						if (c<48||c>57){
+							e->t=LLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
+							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+							e->dt.r.sz=1;
+							if (n_l_sc.m){
+								free(n_l_sc.m);
+							}
+							return LLL_RETURN_ERROR;
+						}
+						goto _decimal;
+					}
+				}
+				if (v>INT32_MAX){
+					arg->t|=LLL_OBJECT_TYPE_INT64_FLAG;
+					LLL_SET_OBJECT_AS_INT64(arg,v*m);
+				}
+				else if (v>INT16_MAX){
+					_bf_off-=sizeof(int64_t)-sizeof(int32_t);
+					arg->t|=LLL_OBJECT_TYPE_INT32_FLAG;
+					LLL_SET_OBJECT_AS_INT32(arg,v*m);
+				}
+				else if (v>INT8_MAX){
+					_bf_off-=sizeof(int64_t)-sizeof(int16_t);
+					arg->t|=LLL_OBJECT_TYPE_INT16_FLAG;
+					LLL_SET_OBJECT_AS_INT16(arg,v*m);
+				}
+				else{
+					_bf_off-=sizeof(int64_t)-sizeof(int8_t);
+					LLL_SET_OBJECT_AS_INT8(arg,v*m);
+				}
+				goto _skip_float_parse;
+_parse_float:;
+				int16_t ex=0;
+				if (c=='.'){
+_float:
+					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+					if (c==LLL_END_OF_DATA){
+						break;
+					}
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+						if (c=='e'||c=='E'){
+							goto _parse_float_exponent;
+						}
+						if (c<48||c>57){
+							e->t=LLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
+							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+							e->dt.r.sz=1;
+							if (n_l_sc.m){
+								free(n_l_sc.m);
+							}
+							return LLL_RETURN_ERROR;
+						}
+						ex--;
+						v=v*10+(c-48);
+						goto _float;
+					}
+				}
+				else{
+_parse_float_exponent:;
+					int8_t em=1;
+					int16_t ev=0;
+					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+					if (c==LLL_END_OF_DATA){
+						break;
+					}
+					if (c=='-'){
+						em=-1;
+					}
+					else if (c=='+');
+					else{
+						goto _add_exponent_char;
+					}
+_float_exponent:
+					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+					if (c==LLL_END_OF_DATA){
+						break;
+					}
+_add_exponent_char:
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+						if (c<48||c>57){
+							e->t=LLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
+							e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+							e->dt.r.sz=1;
+							if (n_l_sc.m){
+								free(n_l_sc.m);
+							}
+							return LLL_RETURN_ERROR;
+						}
+						ev=ev*10+(c-48);
+						goto _float_exponent;
+					}
+					ex+=ev*em;
+				}
+				if (am&LLL_OBJECT_MODIFIER_SIZE){
+					if ((am&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_8BIT){
+						e->t=LLL_ERROR_UNSUPPORTED_8BIT_FLOAT_SIZE;
 						e->dt.r.off=arg_s;
 						e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
 						if (n_l_sc.m){
@@ -1396,21 +1146,169 @@ _next_long_identifier:;
 						}
 						return LLL_RETURN_ERROR;
 					}
-					c_dt->i_dt.ill++;
-					c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t*));
-					lll_identifier_t* n=malloc(sizeof(lll_identifier_t)+sz);
-					n->sz=sz;
-					n->sc=l_sc->l_sc;
-					for (uint32_t i=0;i<sz;i++){
-						*(n->v+i)=*(str+i);
+					else if ((am&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_16BIT){
+						e->t=LLL_ERROR_UNSUPPORTED_16BIT_FLOAT_SIZE;
+						e->dt.r.off=arg_s;
+						e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
+						if (n_l_sc.m){
+							free(n_l_sc.m);
+						}
+						return LLL_RETURN_ERROR;
 					}
-					*(c_dt->i_dt.il+c_dt->i_dt.ill-1)=n;
-					LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
+					else if ((am&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_32BIT){
+						_bf_off-=sizeof(double)-sizeof(float);
+						arg->t=LLL_OBJECT_TYPE_FLOAT;
+						LLL_SET_OBJECT_AS_FLOAT32(arg,((float)v)*powf(5,ex)*powf(2,ex)*m);
+						goto _skip_float_parse;
+					}
 				}
+				arg->t=LLL_OBJECT_TYPE_FLOAT|LLL_OBJECT_TYPE_FLOAT64_FLAG;
+				LLL_SET_OBJECT_AS_FLOAT64(arg,((double)v)*pow(5,ex)*pow(2,ex)*m);
+_skip_float_parse:
+				am=0;
+			}
+			else if ((c>64&&c<91)||c=='_'||(c>96&&c<123)){
+				if (_bf_off>=_bf_sz){
+					e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				arg->t=LLL_OBJECT_TYPE_IDENTIFIER;
+				arg->m=am;
+				am=0;
+				char* str=(char*)(_bf+_bf_off);
+				uint32_t sz=0;
+_read_identifier:
+				*(str+sz)=c;
+				sz++;
+				if (sz+_bf_off>=_bf_sz){
+					e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+				if (c==LLL_END_OF_DATA){
+					break;
+				}
+				if ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
+					goto _read_identifier;
+				}
+				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+					e->t=LLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER;
+					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				if (sz==3&&FAST_COMPARE(str,n,i,l)){
+					arg->t=LLL_OBJECT_TYPE_NIL;
+				}
+				else if (sz==4&&FAST_COMPARE(str,t,r,u,e)){
+					arg->t=LLL_OBJECT_TYPE_TRUE;
+				}
+				else if (sz==5&&FAST_COMPARE(str,f,a,l,s,e)){
+					arg->t=LLL_OBJECT_TYPE_FALSE;
+				}
+				else{
+					_bf_off+=sizeof(lll_identifier_index_t);
+					if (_bf_off>=_bf_sz){
+						e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+						e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+						e->dt.r.sz=1;
+						if (n_l_sc.m){
+							free(n_l_sc.m);
+						}
+						return LLL_RETURN_ERROR;
+					}
+#if LLL_MAX_SHORT_IDENTIFIER_LENGTH!=15
+#error The following code is broken
+#endif
+					COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,1,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,2,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,3,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,4,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,5,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,6,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,7,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,8,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,9,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,10,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,11,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,12,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,13,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,14,l_sc,e,is,arg_s)
+					else COMPARE_IDENTIFIER_LIST(arg,o,c_dt,sz,str,15,l_sc,e,is,arg_s)
+					else{
+						uint32_t mx_sc=UINT32_MAX;
+						lll_identifier_index_t mx_i;
+						for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
+							lll_identifier_t* k=*(c_dt->i_dt.il+i);
+							if (k->sz!=sz){
+								continue;
+							}
+							for (uint32_t i=0;i<sz;i++){
+								if (*(str+i)!=*(k->v+i)){
+									goto _next_long_identifier;
+								}
+							}
+							if (k->sc==l_sc->l_sc){
+								LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
+								goto _identifier_found;
+							}
+							else if (((l_sc)->m[k->sc>>6]&(1ull<<(k->sc&0x3f)))&&(mx_sc==UINT32_MAX||k->sc>mx_sc)){
+								mx_sc=k->sc;
+								mx_i=LLL_CREATE_IDENTIFIER(i,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
+							}
+_next_long_identifier:;
+						}
+						if (mx_sc!=UINT32_MAX){
+							LLL_SET_OBJECT_AS_IDENTIFIER(arg,mx_i);
+							goto _identifier_found;
+						}
+						if (LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_SET){
+							e->t=LLL_ERROR_UNKNOWN_IDENTIFIER;
+							e->dt.r.off=arg_s;
+							e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-2;
+							if (n_l_sc.m){
+								free(n_l_sc.m);
+							}
+							return LLL_RETURN_ERROR;
+						}
+						c_dt->i_dt.ill++;
+						c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t*));
+						lll_identifier_t* n=malloc(sizeof(lll_identifier_t)+sz);
+						n->sz=sz;
+						n->sc=l_sc->l_sc;
+						for (uint32_t i=0;i<sz;i++){
+							*(n->v+i)=*(str+i);
+						}
+						*(c_dt->i_dt.il+c_dt->i_dt.ill-1)=n;
+						LLL_SET_OBJECT_AS_IDENTIFIER(arg,LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH));
+					}
 _identifier_found:
-				if (o){
-					o->t&=~LLL_OBJECT_TYPE_CONST;
+					if (o){
+						o->t&=~LLL_OBJECT_TYPE_CONST;
+					}
 				}
+			}
+			else{
+				e->t=LLL_ERROR_UNEXPECTED_CHARACTER;
+				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
+				e->dt.r.sz=1;
+				if (n_l_sc.m){
+					free(n_l_sc.m);
+				}
+				return LLL_RETURN_ERROR;
 			}
 			if (!o){
 				return LLL_RETURN_NO_ERROR;
@@ -1439,18 +1337,7 @@ _identifier_found:
 				}
 				(*ac)++;
 			}
-			continue;
 		}
-		else{
-			e->t=LLL_ERROR_UNEXPECTED_CHARACTER;
-			e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
-			e->dt.r.sz=1;
-			if (n_l_sc.m){
-				free(n_l_sc.m);
-			}
-			return LLL_RETURN_ERROR;
-		}
-		c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 	}
 	if (!o){
 		o=(lll_object_t*)(_bf+_bf_off);

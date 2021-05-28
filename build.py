@@ -156,12 +156,12 @@ for e in h_dt:
 					while (i<len(k)):
 						if (i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS):
 							nxt=False
-							for j,e in enumerate(al):
-								if (k.startswith(e,i) and k[i+len(e):i+len(e)+1] not in IDENTIFIER_CHARACTERS):
+							for j,se in enumerate(al):
+								if (k.startswith(se,i) and k[i+len(se):i+len(se)+1] not in IDENTIFIER_CHARACTERS):
 									sl.append(j)
 									sl.append(b"")
 									sli+=2
-									i+=len(e)
+									i+=len(se)
 									nxt=True
 									break
 							if (nxt):
