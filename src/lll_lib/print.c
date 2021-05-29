@@ -91,20 +91,42 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 				return sizeof(lll_object_t)+eoff+sizeof(char);
 			}
 		case LLL_OBJECT_TYPE_INT:
-			if (LLL_IS_OBJECT_INT16(o)){
-				fprintf(f,"%"PRId16,LLL_GET_OBJECT_AS_INT16(o));
-				return sizeof(lll_object_t)+eoff+sizeof(int16_t);
+			{
+				int64_t v;
+				if (LLL_IS_OBJECT_INT8(o)){
+					v=LLL_GET_OBJECT_AS_INT8(o);
+				}
+				else if (LLL_IS_OBJECT_INT16(o)){
+					v=LLL_GET_OBJECT_AS_INT16(o);
+				}
+				else if (LLL_IS_OBJECT_INT32(o)){
+					v=LLL_GET_OBJECT_AS_INT32(o);
+				}
+				else{
+					v=LLL_GET_OBJECT_AS_INT64(o);
+				}
+				if (v<0){
+					fputc('-',f);
+					v=-v;
+				}
+				if (!v){
+					fputc('0',f);
+				}
+				else{
+					char bf[20];
+					uint8_t i=0;
+					while (v){
+						bf[i]=(v%10)+48;
+						v/=10;
+						i++;
+					}
+					while (i){
+						i--;
+						fputc(bf[i],f);
+					}
+				}
+				return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 			}
-			if (LLL_IS_OBJECT_INT32(o)){
-				fprintf(f,"%"PRId32,LLL_GET_OBJECT_AS_INT32(o));
-				return sizeof(lll_object_t)+eoff+sizeof(int32_t);
-			}
-			if (LLL_IS_OBJECT_INT64(o)){
-				fprintf(f,"%"PRId64,LLL_GET_OBJECT_AS_INT64(o));
-				return sizeof(lll_object_t)+eoff+sizeof(int64_t);
-			}
-			fprintf(f,"%"PRId8,LLL_GET_OBJECT_AS_INT8(o));
-			return sizeof(lll_object_t)+eoff+sizeof(int8_t);
 		case LLL_OBJECT_TYPE_FLOAT:
 			if (LLL_IS_OBJECT_FLOAT64(o)){
 				fprintf(f,"%lf",LLL_GET_OBJECT_AS_FLOAT64(o));

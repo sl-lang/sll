@@ -11,8 +11,12 @@
 
 #ifdef _MSC_VER
 #define MAX_PATH_LENGTH MAX_PATH
+#define EXPAND_FILE_PATH(s,d) GetFullPathNameA((s),MAX_PATH_LENGTH,(d),NULL)
+#define OPEN_FILE_SECURE(f,fp,m) fopen_s(&(f),(fp),(m))
 #else
 #define MAX_PATH_LENGTH PATH_MAX
+#define EXPAND_FILE_PATH(s,d) realpath((s),(d))
+#define OPEN_FILE_SECURE(f,fp,m) (!((f)=fopen((fp),(m))))
 #endif
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
@@ -91,7 +95,12 @@ _unkown_switch:
 		}
 		else{
 			fpl++;
-			fp=realloc(fp,fpl*sizeof(char*));
+			void* tmp=realloc(fp,fpl*sizeof(char*));
+			if (!tmp){
+				printf("Unable to Allocate Space for File Path\n");
+				goto _cleanup;
+			}
+			fp=tmp;
 			*(fp+fpl-1)=(char*)e;
 		}
 		i++;
@@ -103,11 +112,7 @@ _unkown_switch:
 	if (fl&FLAG_FULL_PATH){
 		ffp=malloc(fpl*MAX_PATH_LENGTH*sizeof(char));
 		for (uint32_t j=0;j<fpl;j++){
-#ifdef _MSC_VER
-			if (GetFullPathNameA(*(fp+j),MAX_PATH_LENGTH,ffp+j*MAX_PATH_LENGTH,NULL)){
-#else
-			if (realpath(*(fp+j),ffp+j*MAX_PATH_LENGTH)){
-#endif
+			if (EXPAND_FILE_PATH(*(fp+j),ffp+j*MAX_PATH_LENGTH)){
 				*(fp+j)=ffp+j*MAX_PATH_LENGTH;
 			}
 		}
@@ -173,11 +178,7 @@ _unkown_switch:
 		if (fl&FLAG_VERBOSE){
 			printf("Opening File '%s'...\n",*(fp+j));
 		}
-#ifdef _MSC_VER
-		if (fopen_s(&f,*(fp+j),"rb")){// lgtm [cpp/path-injection]
-#else
-		if (!(f=fopen(*(fp+j),"rb"))){// lgtm [cpp/path-injection]
-#endif
+		if (OPEN_FILE_SECURE(f,*(fp+j),"rb")){
 			printf("Unable to Open File '%s'!\n",*(fp+j));
 			goto _cleanup;
 		}
@@ -237,11 +238,7 @@ _unkown_switch:
 			lll_print_object(&c_dt,c_dt.h,stdout);
 			putchar('\n');
 		}
-#ifdef _MSC_VER
-		if (fopen_s(&of,o_fp,"wb")){// lgtm [cpp/path-injection]
-#else
-		if (!(of=fopen(o_fp,"wb"))){// lgtm [cpp/path-injection]
-#endif
+		if (OPEN_FILE_SECURE(of,o_fp,"wb")){
 			printf("Unable to Open File '%s'!\n",o_fp);
 			goto _cleanup;
 		}

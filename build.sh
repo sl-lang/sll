@@ -1,3 +1,4 @@
-@echo off
+#!/bin/bash
+echo off
 clear
-python build.py $@
+python build.py "$@"

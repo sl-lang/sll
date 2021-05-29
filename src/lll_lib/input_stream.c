@@ -41,7 +41,8 @@ void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t l
 
 
 __LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o){
-	rewind(f);
+	fseek(f,0,SEEK_SET);
+	clearerr(f);
 	o->ctx=f;
 	o->rf=_input_data_stream_file_read;
 	o->rbf=_input_data_stream_file_read_buffer;
