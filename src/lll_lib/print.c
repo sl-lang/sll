@@ -198,7 +198,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 						fputc(*s,f);
 						s++;
 					}
-					fprintf(f,"$%u",e->sc);
+					fprintf(f,"$%"PRIu32,e->sc);
 				}
 				else{
 					char* s=(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->v;
@@ -206,7 +206,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 						fputc(*s,f);
 						s++;
 					}
-					fprintf(f,"$%u",(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc);
+					fprintf(f,"$%"PRIu32,(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc);
 				}
 				return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
 			}
