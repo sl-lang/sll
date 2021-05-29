@@ -59,7 +59,11 @@ static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 
 #define _ASSERT_STR_(l) #l
 #define _ASSERT_STR(l) _ASSERT_STR_(l)
-#define ASSERT(x,e,r) \
+#define _ASSERT_JOIN_(l) ASSERT_##l
+#define _ASSERT_JOIN(l) _ASSERT_JOIN_(l)
+#define _ASSERT_COUNT_ARGS(_1,_2,_3,n,...) n
+#define ASSERT(...) _ASSERT_JOIN(_ASSERT_COUNT_ARGS(__VA_ARGS__,ERROR,ERROR,EXIT))(__VA_ARGS__)
+#define ASSERT_ERROR(x,e,r) \
 	do{ \
 		if (!(x)){ \
 			e->t=LLL_ERROR_ASSERTION; \

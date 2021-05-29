@@ -20,5 +20,6 @@
 	(= i (* i j))
 	(? (< j 5) (print j "! = " i "\n"))
 	(= j (+ j 1))
+	(? (> 3 10 -5) (print "This will Never Execute\n"))
 })
 (print FACTORIAL "! = " i '\n')

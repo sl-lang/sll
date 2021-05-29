@@ -22,6 +22,92 @@
 			break; \
 		} \
 	} while (0)
+#define GET_COMPARE_COND_TYPE(o,im,cmp) \
+	do{ \
+		lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT((o)); \
+		if (ac<2){ \
+			return COMPARE_ALWAYS_TRUE; \
+		} \
+		uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t); \
+		lll_object_t* ao=LLL_GET_OBJECT_ARGUMENT((o),off); \
+		off+=_get_object_size(ao); \
+		REMOVE_PADDING_DEBUG(ao,off); \
+		ac--; \
+		identifier_data_t a; \
+		identifier_data_t b; \
+		_get_object_as_const_identifier(ao,&a,(im)); \
+		if (((GET_BASE_REGISTER(a.r)!=REGISTER_CONST&&!(a.r&REGISTER_KNOWN_VALUE)))||!IS_IDENTIFIER_DATA_TYPE_SINGLE(a.t)){ \
+			return COMPARE_UNKNOWN; \
+		} \
+		uint8_t rt=(GET_BASE_REGISTER(a.r)==REGISTER_CONST?COMPARE_ALWAYS_TRUE:COMPARE_FIRST_TRUE); \
+		while (ac){ \
+			ac--; \
+			lll_object_t* bo=LLL_GET_OBJECT_ARGUMENT((o),off); \
+			off+=_get_object_size(bo); \
+			REMOVE_PADDING_DEBUG(bo,off); \
+			_get_object_as_const_identifier(bo,&b,(im)); \
+			if (GET_BASE_REGISTER(b.r)!=REGISTER_CONST&&!(b.r&REGISTER_KNOWN_VALUE)){ \
+				return COMPARE_UNKNOWN; \
+			} \
+			if (GET_BASE_REGISTER(b.r)!=REGISTER_CONST){ \
+				rt=COMPARE_FIRST_TRUE; \
+			} \
+			if (!IS_IDENTIFIER_DATA_TYPE_SINGLE(b.t)){ \
+				return COMPARE_UNKNOWN; \
+			} \
+			switch (a.t){ \
+				case IDENTIFIER_DATA_TYPE_CHAR: \
+				case IDENTIFIER_DATA_TYPE_INT8: \
+				case IDENTIFIER_DATA_TYPE_INT16: \
+				case IDENTIFIER_DATA_TYPE_INT32: \
+				case IDENTIFIER_DATA_TYPE_INT64: \
+				case IDENTIFIER_DATA_TYPE_UINT8: \
+				case IDENTIFIER_DATA_TYPE_UINT16: \
+				case IDENTIFIER_DATA_TYPE_UINT32: \
+					switch (b.t){ \
+						case IDENTIFIER_DATA_TYPE_CHAR: \
+						case IDENTIFIER_DATA_TYPE_INT8: \
+						case IDENTIFIER_DATA_TYPE_INT16: \
+						case IDENTIFIER_DATA_TYPE_INT32: \
+						case IDENTIFIER_DATA_TYPE_INT64: \
+						case IDENTIFIER_DATA_TYPE_UINT8: \
+						case IDENTIFIER_DATA_TYPE_UINT16: \
+						case IDENTIFIER_DATA_TYPE_UINT32: \
+							if (!(a.e.v cmp b.e.v)){ \
+								return COMPARE_ALWAYS_FALSE; \
+							} \
+							break; \
+						case IDENTIFIER_DATA_TYPE_UINT64: \
+							ASSERT(!"Unimplemented"); \
+						case IDENTIFIER_DATA_TYPE_FLOAT32: \
+							ASSERT(!"Unimplemented"); \
+						case IDENTIFIER_DATA_TYPE_FLOAT64: \
+							ASSERT(!"Unimplemented"); \
+						case IDENTIFIER_DATA_TYPE_STRING: \
+							ASSERT(!"Unimplemented"); \
+						case IDENTIFIER_DATA_TYPE_NIL: \
+							ASSERT(!"Unimplemented"); \
+						default: \
+							ASSERT(!"Should not happen"); \
+					} \
+					break; \
+				case IDENTIFIER_DATA_TYPE_UINT64: \
+					ASSERT(!"Unimplemented"); \
+				case IDENTIFIER_DATA_TYPE_FLOAT32: \
+					ASSERT(!"Unimplemented"); \
+				case IDENTIFIER_DATA_TYPE_FLOAT64: \
+					ASSERT(!"Unimplemented"); \
+				case IDENTIFIER_DATA_TYPE_STRING: \
+					ASSERT(!"Unimplemented"); \
+				case IDENTIFIER_DATA_TYPE_NIL: \
+					ASSERT(!"Unimplemented"); \
+				default: \
+					ASSERT(!"Should not happen"); \
+			} \
+			a=b; \
+		} \
+		return rt; \
+	} while (0)
 
 
 
@@ -423,7 +509,7 @@ void _write_identifier_data(lll_output_data_stream_t* os,identifier_data_t* dt){
 			}
 			return;
 		case REGISTER_STACK:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 	}
 }
 
@@ -492,7 +578,7 @@ void FORCE_INLINE _release_identifier(identifier_data_t* dt,identifier_map_t* im
 		return;
 	}
 	if (GET_BASE_REGISTER(dt->r)==REGISTER_STACK){
-		ASSERT_EXIT(!"Unimplemented");
+		ASSERT(!"Unimplemented");
 	}
 	im->rm|=REGISTER_TO_MASK(GET_BASE_REGISTER(dt->r));
 }
@@ -604,8 +690,6 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(o),im));
 			return 1;
 		case LLL_OBJECT_TYPE_FUNC_PRINT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FUNC_TYPEOF:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -869,13 +953,13 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 			}
 			return;
 		case LLL_OBJECT_TYPE_FLOAT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NIL:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_TRUE:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FALSE:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_STRING:
 			va->r=REGISTER_CONST;
 			va->t=IDENTIFIER_DATA_TYPE_STRING;
@@ -886,73 +970,71 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(o),im));
 			return;
 		case LLL_OBJECT_TYPE_FUNC_PRINT:
-			ASSERT_EXIT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_FUNC_TYPEOF:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_AND:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_OR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NOT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_SET:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FUNC:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_IF:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FOR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_ADD:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_SUB:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MULT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_DIV:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FLOOR_DIV:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MOD:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_AND:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_OR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_XOR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_NOT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_DIV_MOD:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_POW:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_ROOT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LOG:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FLOOR_LOG:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LESS:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_EQUAL:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MORE:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 		default:
-			ASSERT_EXIT(!"Unexpected lll_object_type_t Value");
+			ASSERT(!"Unexpected lll_object_type_t Value");
 	}
 }
 
@@ -961,7 +1043,7 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_CHAR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_INT:
 			if (LLL_IS_OBJECT_INT8(o)){
 				if (!LLL_GET_OBJECT_AS_INT8(o)){
@@ -985,7 +1067,7 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 			}
 			return COMPARE_ALWAYS_TRUE;
 		case LLL_OBJECT_TYPE_FLOAT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NIL:
 		case LLL_OBJECT_TYPE_FALSE:
 		case LLL_OBJECT_TYPE_FUNC_PRINT:
@@ -994,153 +1076,71 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 		case LLL_OBJECT_TYPE_TRUE:
 			return COMPARE_ALWAYS_TRUE;
 		case LLL_OBJECT_TYPE_STRING:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			ASSERT_EXIT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_FUNC_TYPEOF:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_AND:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_OR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NOT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_SET:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FUNC:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_IF:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FOR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_ADD:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_SUB:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MULT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_DIV:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FLOOR_DIV:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MOD:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_AND:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_OR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_XOR:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_NOT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_DIV_MOD:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_POW:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_ROOT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LOG:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FLOOR_LOG:
-			ASSERT_EXIT(!"Unimplemented");
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LESS:
-			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				if (ac<2){
-					return COMPARE_ALWAYS_TRUE;
-				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
-				lll_object_t* ao=LLL_GET_OBJECT_ARGUMENT(o,off);
-				off+=_get_object_size(ao);
-				REMOVE_PADDING_DEBUG(ao,off);
-				ac--;
-				identifier_data_t a;
-				identifier_data_t b;
-				_get_object_as_const_identifier(ao,&a,im);
-				if (((GET_BASE_REGISTER(a.r)!=REGISTER_CONST&&!(a.r&REGISTER_KNOWN_VALUE)))||!IS_IDENTIFIER_DATA_TYPE_SINGLE(a.t)){
-					return COMPARE_UNKNOWN;
-				}
-				while (ac){
-					ac--;
-					lll_object_t* bo=LLL_GET_OBJECT_ARGUMENT(o,off);
-					off+=_get_object_size(bo);
-					REMOVE_PADDING_DEBUG(bo,off);
-					_get_object_as_const_identifier(bo,&b,im);
-					if (GET_BASE_REGISTER(b.r)!=REGISTER_CONST&&!(b.r&REGISTER_KNOWN_VALUE)){
-						return COMPARE_UNKNOWN;
-					}
-					if (!IS_IDENTIFIER_DATA_TYPE_SINGLE(b.t)){
-						return COMPARE_UNKNOWN;
-					}
-					switch (a.t){
-						case IDENTIFIER_DATA_TYPE_CHAR:
-						case IDENTIFIER_DATA_TYPE_INT8:
-						case IDENTIFIER_DATA_TYPE_INT16:
-						case IDENTIFIER_DATA_TYPE_INT32:
-						case IDENTIFIER_DATA_TYPE_INT64:
-						case IDENTIFIER_DATA_TYPE_UINT8:
-						case IDENTIFIER_DATA_TYPE_UINT16:
-						case IDENTIFIER_DATA_TYPE_UINT32:
-							switch (b.t){
-								case IDENTIFIER_DATA_TYPE_CHAR:
-								case IDENTIFIER_DATA_TYPE_INT8:
-								case IDENTIFIER_DATA_TYPE_INT16:
-								case IDENTIFIER_DATA_TYPE_INT32:
-								case IDENTIFIER_DATA_TYPE_INT64:
-								case IDENTIFIER_DATA_TYPE_UINT8:
-								case IDENTIFIER_DATA_TYPE_UINT16:
-								case IDENTIFIER_DATA_TYPE_UINT32:
-									if (a.e.v>=b.e.v){
-										return COMPARE_ALWAYS_FALSE;
-									}
-									break;
-								case IDENTIFIER_DATA_TYPE_UINT64:
-									ASSERT_EXIT(!"Unimplemented");
-								case IDENTIFIER_DATA_TYPE_FLOAT32:
-									ASSERT_EXIT(!"Unimplemented");
-								case IDENTIFIER_DATA_TYPE_FLOAT64:
-									ASSERT_EXIT(!"Unimplemented");
-								case IDENTIFIER_DATA_TYPE_STRING:
-									ASSERT_EXIT(!"Unimplemented");
-								case IDENTIFIER_DATA_TYPE_NIL:
-									ASSERT_EXIT(!"Unimplemented");
-								default:
-									ASSERT_EXIT(!"Should not happen");
-							}
-							break;
-						case IDENTIFIER_DATA_TYPE_UINT64:
-							ASSERT_EXIT(!"Unimplemented");
-						case IDENTIFIER_DATA_TYPE_FLOAT32:
-							ASSERT_EXIT(!"Unimplemented");
-						case IDENTIFIER_DATA_TYPE_FLOAT64:
-							ASSERT_EXIT(!"Unimplemented");
-						case IDENTIFIER_DATA_TYPE_STRING:
-							ASSERT_EXIT(!"Unimplemented");
-						case IDENTIFIER_DATA_TYPE_NIL:
-							ASSERT_EXIT(!"Unimplemented");
-						default:
-							ASSERT_EXIT(!"Should not happen");
-					}
-					a=b;
-				}
-				return COMPARE_FIRST_TRUE;
-			}
+			GET_COMPARE_COND_TYPE(o,im,<);
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
-			ASSERT_EXIT(!"Unimplemented");
+			GET_COMPARE_COND_TYPE(o,im,<=);
 		case LLL_OBJECT_TYPE_EQUAL:
-			ASSERT_EXIT(!"Unimplemented");
+			GET_COMPARE_COND_TYPE(o,im,==);
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
-			ASSERT_EXIT(!"Unimplemented");
+			GET_COMPARE_COND_TYPE(o,im,!=);
 		case LLL_OBJECT_TYPE_MORE:
-			ASSERT_EXIT(!"Unimplemented");
+			GET_COMPARE_COND_TYPE(o,im,>);
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
-			ASSERT_EXIT(!"Unimplemented");
+			GET_COMPARE_COND_TYPE(o,im,>=);
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 		default:
-			ASSERT_EXIT(!"Unexpected lll_object_type_t Value");
+			ASSERT(!"Unexpected lll_object_type_t Value");
 	}
 	return COMPARE_UNKNOWN;
 }
@@ -1158,14 +1158,13 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 		case LLL_OBJECT_TYPE_NIL:
 		case LLL_OBJECT_TYPE_FALSE:
 		case LLL_OBJECT_TYPE_TRUE:
+		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			ASSERT(!"Should not happen",e,0);
 		case LLL_OBJECT_TYPE_STRING:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_FUNC_PRINT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FUNC_TYPEOF:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -1237,20 +1236,138 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 					a=b;
 					ac--;
 				}
-				return COMPARE_UNKNOWN;
+				return 1;
 			}
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should'n happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tjbe ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_EQUAL:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should'n happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tje ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should'n happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tjne ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_MORE:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should'n happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tja ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_OPERATION_LIST:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should'n happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tjae ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 		default:
@@ -1272,14 +1389,13 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 		case LLL_OBJECT_TYPE_NIL:
 		case LLL_OBJECT_TYPE_FALSE:
 		case LLL_OBJECT_TYPE_TRUE:
+		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			ASSERT(!"Should not happen",e,0);
 		case LLL_OBJECT_TYPE_STRING:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_FUNC_PRINT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FUNC_TYPEOF:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -1351,20 +1467,138 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 					a=b;
 					ac--;
 				}
-				return COMPARE_UNKNOWN;
+				return 1;
 			}
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should not happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tja ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_EQUAL:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should not happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tjne ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should not happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tje ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_MORE:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should not happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tjbe ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_OPERATION_LIST:
-			ASSERT(!"Unimplemented",e,0);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				if (ac<2){
+					ASSERT(!"Should not happen",e,0);
+				}
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				off+=_get_object_size(a);
+				REMOVE_PADDING_DEBUG(a,off);
+				ac--;
+				while (ac){
+					lll_object_t* b=LLL_GET_OBJECT_ARGUMENT(o,off);
+					off+=_get_object_size(b);
+					REMOVE_PADDING_DEBUG(b,off);
+					if (!_write_object_compare(os,a,b,agd,e)){
+						return 0;
+					}
+					LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tjb ");
+					_write_label(os,jl);
+					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
+					a=b;
+					ac--;
+				}
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 		default:
@@ -1548,8 +1782,6 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_FUNC_TYPEOF:
-			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_SET:
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
@@ -1642,22 +1874,37 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 					return off+eoff+aoff;
 				}
 				if (ac==2){
-					label_t el=im->nl;
-					im->nl++;
 					lll_object_t* cnd=LLL_GET_OBJECT_ARGUMENT(o,off);
 					REMOVE_PADDING_DEBUG(cnd,off);
 					off+=_get_object_size(cnd);
-					if (!_write_jump_if_false(os,cnd,agd,el,e)){
-						return UINT32_MAX;
+					uint8_t cnd_t=_get_cond_type(cnd,im);
+					if (cnd_t==COMPARE_ALWAYS_TRUE){
+						lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+						REMOVE_PADDING_DEBUG(a,off);
+						uint32_t aoff=_write_object_as_assembly(os,a,eagd,e);
+						if (aoff==UINT32_MAX){
+							return UINT32_MAX;
+						}
+						off+=aoff;
 					}
-					lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
-					REMOVE_PADDING_DEBUG(a,off);
-					uint32_t aoff=_write_object_as_assembly(os,a,eagd,e);
-					if (aoff==UINT32_MAX){
-						return UINT32_MAX;
+					else if (cnd_t!=COMPARE_ALWAYS_FALSE){
+						label_t el=im->nl;
+						im->nl++;
+						if (!_write_jump_if_false(os,cnd,agd,el,e)){
+							return UINT32_MAX;
+						}
+						lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+						REMOVE_PADDING_DEBUG(a,off);
+						uint32_t aoff=_write_object_as_assembly(os,a,eagd,e);
+						if (aoff==UINT32_MAX){
+							return UINT32_MAX;
+						}
+						off+=aoff;
+						_write_label_define(os,el);
 					}
-					off+=aoff;
-					_write_label_define(os,el);
+					else{
+						off+=_get_object_size(LLL_GET_OBJECT_ARGUMENT(o,off));
+					}
 					return off+eoff;
 				}
 				label_t el=im->nl;
