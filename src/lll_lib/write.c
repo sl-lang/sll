@@ -2011,7 +2011,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 						ac--;
 						lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 						REMOVE_PADDING_DEBUG(a,off);
-						uint32_t aoff=_write_object_as_assembly(os,a,&n_eagd,e);
+						aoff=_write_object_as_assembly(os,a,&n_eagd,e);
 						if (aoff==UINT32_MAX){
 							return UINT32_MAX;
 						}
