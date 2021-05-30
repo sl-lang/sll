@@ -1,8 +1,31 @@
 #include <lll_lib.h>
 #include <_lll_internal.h>
-#include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
+
+
+
+void _print_int64(int64_t v,FILE* f){
+	if (!v){
+		fputc('0',f);
+		return;
+	}
+	if (v<0){
+		v=-v;
+		fputc('-',f);
+	}
+	char bf[20];
+	uint8_t i=0;
+	while (v){
+		bf[i]=v%10;
+		v/=10;
+		i++;
+	}
+	while (i){
+		i--;
+		fputc(bf[i]+48,f);
+	}
+}
 
 
 
@@ -92,40 +115,22 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			}
 		case LLL_OBJECT_TYPE_INT:
 			{
-				int64_t v;
 				if (LLL_IS_OBJECT_INT8(o)){
-					v=LLL_GET_OBJECT_AS_INT8(o);
+					_print_int64(LLL_GET_OBJECT_AS_INT8(o),f);
+					return sizeof(lll_object_t)+eoff+sizeof(int8_t);
 				}
 				else if (LLL_IS_OBJECT_INT16(o)){
-					v=LLL_GET_OBJECT_AS_INT16(o);
+					_print_int64(LLL_GET_OBJECT_AS_INT16(o),f);
+					return sizeof(lll_object_t)+eoff+sizeof(int16_t);
 				}
 				else if (LLL_IS_OBJECT_INT32(o)){
-					v=LLL_GET_OBJECT_AS_INT32(o);
+					_print_int64(LLL_GET_OBJECT_AS_INT32(o),f);
+					return sizeof(lll_object_t)+eoff+sizeof(int32_t);
 				}
 				else{
-					v=LLL_GET_OBJECT_AS_INT64(o);
+					_print_int64(LLL_GET_OBJECT_AS_INT64(o),f);
+					return sizeof(lll_object_t)+eoff+sizeof(int64_t);
 				}
-				if (v<0){
-					fputc('-',f);
-					v=-v;
-				}
-				if (!v){
-					fputc('0',f);
-				}
-				else{
-					char bf[20];
-					uint8_t i=0;
-					while (v){
-						bf[i]=(v%10)+48;
-						v/=10;
-						i++;
-					}
-					while (i){
-						i--;
-						fputc(bf[i],f);
-					}
-				}
-				return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
 			if (LLL_IS_OBJECT_FLOAT64(o)){
@@ -198,7 +203,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 						fputc(*s,f);
 						s++;
 					}
-					fprintf(f,"$%"PRIu32,e->sc);
+					_print_int64(e->sc,f);
 				}
 				else{
 					char* s=(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->v;
@@ -206,7 +211,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 						fputc(*s,f);
 						s++;
 					}
-					fprintf(f,"$%"PRIu32,(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc);
+					_print_int64((c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
 				}
 				return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
 			}
@@ -318,30 +323,33 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 				uint32_t i=sizeof(lll_debug_object_t);
+				fputc('[',f);
 				if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
-					fprintf(f,"[%"PRIu32":",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1,f);
 					i+=sizeof(uint32_t);
 				}
 				else if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT16){
-					fprintf(f,"[%"PRIu16":",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1,f);
 					i+=sizeof(uint16_t);
 				}
 				else{
-					fprintf(f,"[%"PRIu8":",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1,f);
 					i+=sizeof(uint8_t);
 				}
+				fputc(':',f);
 				if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32){
-					fprintf(f,"%"PRIu32"]",LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1);
+					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1,f);
 					i+=sizeof(uint32_t);
 				}
 				else if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16){
-					fprintf(f,"%"PRIu16"]",LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1);
+					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1,f);
 					i+=sizeof(uint16_t);
 				}
 				else{
-					fprintf(f,"%"PRIu8"]",LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1);
+					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1,f);
 					i+=sizeof(uint8_t);
 				}
+				fputc(']',f);
 				i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
 				return i+eoff+_print_object_internal(c_dt,LLL_GET_DEBUG_OBJECT_CHILD(dbg,i),f);
 			}

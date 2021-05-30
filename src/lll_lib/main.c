@@ -1,7 +1,3 @@
-#ifdef _MSC_VER
-#define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
-#endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <stdint.h>
@@ -68,11 +64,3 @@ __LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt){
 	}
 	i_dt->ill=0;
 }
-
-
-
-#ifdef _MSC_VER
-BOOL WINAPI DllMain(HINSTANCE h,DWORD r,LPVOID rs){
-	return TRUE;
-}
-#endif

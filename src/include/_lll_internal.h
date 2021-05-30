@@ -300,7 +300,15 @@ const static cpu_register_t FUNCTION_CALL_REGISTERS[]=_FUNCTION_CALL_REGISTERS;
 
 
 
-int _input_data_stream_file_read(lll_input_data_stream_t* is);
+uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im);
+
+
+
+void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,identifier_map_t* im);
+
+
+
+uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,identifier_data_t* va,assembly_generator_data_t* agd,lll_error_t* e);
 
 
 
@@ -308,39 +316,19 @@ uint32_t _get_object_size(lll_object_t* o);
 
 
 
-uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e);
-
-
-
-uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f);
-
-
-
-uint32_t _remove_debug_data_internal(lll_object_t* o);
-
-
-
-uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm);
-
-
-
-uint32_t _set_register_value(lll_output_data_stream_t* os,identifier_data_t* i_dt,assembly_generator_data_t* agd,lll_object_t* o,lll_error_t* e);
-
-
-
-uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,extended_assembly_generator_data_t* eagd,lll_error_t* e);
-
-
-
 uint64_t _get_string_id(assembly_generator_data_t* agd,identifier_data_extra_string_t* s);
 
 
 
-uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im);
+int _input_data_stream_file_read(lll_input_data_stream_t* is);
 
 
 
-uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,identifier_data_t* va,assembly_generator_data_t* agd,lll_error_t* e);
+void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t lp);
+
+
+
+uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e);
 
 
 
@@ -356,11 +344,39 @@ uint8_t _output_data_stream_file_write_string(lll_output_data_stream_t* os,char*
 
 
 
+void _print_int64(int64_t v,FILE* f);
+
+
+
+uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f);
+
+
+
 uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l_sc,lll_error_t* e);
 
 
 
 uint8_t _read_single_char(lll_input_data_stream_t* is,char t,uint32_t st,lll_error_t* e);
+
+
+
+uint32_t _remove_debug_data_internal(lll_object_t* o);
+
+
+
+uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm);
+
+
+
+uint32_t _set_register_value(lll_output_data_stream_t* os,identifier_data_t* i_dt,assembly_generator_data_t* agd,lll_object_t* o,lll_error_t* e);
+
+
+
+void _write_hex(lll_output_data_stream_t* os,int64_t v);
+
+
+
+void _write_identifier_data(lll_output_data_stream_t* os,identifier_data_t* dt);
 
 
 
@@ -372,19 +388,7 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 
 
 
-void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,identifier_map_t* im);
-
-
-
-void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t lp);
-
-
-
-void _write_hex(lll_output_data_stream_t* os,int64_t v);
-
-
-
-void _write_identifier_data(lll_output_data_stream_t* os,identifier_data_t* dt);
+uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,extended_assembly_generator_data_t* eagd,lll_error_t* e);
 
 
 

@@ -1,4 +1,5 @@
 #ifdef _MSC_VER
+#define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
 #endif
 #include <lll_lib.h>

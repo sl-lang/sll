@@ -4,7 +4,6 @@
 #endif
 #include <lll_lib.h>
 #include <_lll_internal.h>
-#include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +31,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 		switch (e->t){
 			default:
 			case LLL_ERROR_UNKNOWN:
-				printf("Unknown Error: %.2"PRIx8"\n",e->t);
+				printf("Unknown Error: %c%c\n",(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
 				return;
 			case LLL_ERROR_NO_STACK:
 				printf("No Internal Stack\n");
@@ -112,7 +111,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 	DISABLE_COLOR();
 	switch (e->t){
 		default:
-			printf("Unknown Error: %.2"PRIx8"\n",e->t);
+			printf("Unknown Error: %c%c\n",(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
 			return;
 		case LLL_ERROR_INTERNAL_STACK_OVERFLOW:
 			printf("Internal Stack Overflow\n");
