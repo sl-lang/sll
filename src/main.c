@@ -1,4 +1,5 @@
 #ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #else
 #include <linux/limits.h>
@@ -12,11 +13,9 @@
 #ifdef _MSC_VER
 #define MAX_PATH_LENGTH MAX_PATH
 #define EXPAND_FILE_PATH(s,d) GetFullPathNameA((s),MAX_PATH,(d),NULL)
-#define OPEN_FILE_SECURE(f,fp,m) fopen_s(&(f),(fp),(m))
 #else
 #define MAX_PATH_LENGTH PATH_MAX
 #define EXPAND_FILE_PATH(s,d) realpath((s),(d))
-#define OPEN_FILE_SECURE(f,fp,m) (!((f)=fopen((fp),(m))))
 #endif
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
@@ -178,7 +177,7 @@ _unkown_switch:
 		if (fl&FLAG_VERBOSE){
 			printf("Opening File '%s'...\n",*(fp+j));
 		}
-		if (OPEN_FILE_SECURE(f,*(fp+j),"rb")){// lgtm [cpp/path-injection]
+		if (!(f=fopen(*(fp+j),"rb"))){// lgtm [cpp/path-injection]
 			printf("Unable to Open File '%s'!\n",*(fp+j));
 			goto _cleanup;
 		}
@@ -238,7 +237,7 @@ _unkown_switch:
 			lll_print_object(&c_dt,c_dt.h,stdout);
 			putchar('\n');
 		}
-		if (OPEN_FILE_SECURE(of,o_fp,"wb")){// lgtm [cpp/path-injection]
+		if (!(of=fopen(o_fp,"wb"))){// lgtm [cpp/path-injection]
 			printf("Unable to Open File '%s'!\n",o_fp);
 			goto _cleanup;
 		}
@@ -257,10 +256,16 @@ _unkown_switch:
 	if (fp){
 		free(fp);
 	}
+	if (ffp){
+		free(ffp);
+	}
 	return 0;
 _cleanup:
 	if (fp){
 		free(fp);
+	}
+	if (ffp){
+		free(ffp);
 	}
 	lll_free_identifier_data(&(c_dt.i_dt));
 	if (f){
@@ -268,9 +273,6 @@ _cleanup:
 	}
 	if (of){
 		fclose(of);
-	}
-	if (ffp){
-		free(ffp);
 	}
 	return 1;
 }

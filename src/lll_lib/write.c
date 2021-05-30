@@ -2159,7 +2159,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		return LLL_RETURN_ERROR;
 	}
 	if (f==LLL_WRITE_MODE_ASSEMBLY){
-		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"bits 64\ndefault rel\nsection .text\nglobal main\nextern __lll_api_init\nextern __lll_api_putchar\nextern __lll_api_print_string\nextern __lll_api_print_int32\nextern __lll_api_deinit\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32\n\tand rsp,0xfffffffffffffff0\n\tcall __lll_api_init\n");
+		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"bits 64\ndefault rel\nsection .text\nglobal main\nextern __lll_api_init\nextern __lll_api_putchar\nextern __lll_api_print_string\nextern __lll_api_print_int32\nextern __lll_api_deinit\nmain:\n\tand rsp,0xfffffffffffffff0\n\tcall __lll_api_init\n");
 		assembly_generator_data_t agd={
 			{
 				.rm=ALL_REGISTER_AVAIBLE_MASK,
