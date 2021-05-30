@@ -11,7 +11,7 @@
 
 #ifdef _MSC_VER
 #define MAX_PATH_LENGTH MAX_PATH
-#define EXPAND_FILE_PATH(s,d) GetFullPathNameA((s),MAX_PATH_LENGTH,(d),NULL)
+#define EXPAND_FILE_PATH(s,d) GetFullPathNameA((s),MAX_PATH,(d),NULL)
 #define OPEN_FILE_SECURE(f,fp,m) fopen_s(&(f),(fp),(m))
 #else
 #define MAX_PATH_LENGTH PATH_MAX
@@ -178,7 +178,7 @@ _unkown_switch:
 		if (fl&FLAG_VERBOSE){
 			printf("Opening File '%s'...\n",*(fp+j));
 		}
-		if (OPEN_FILE_SECURE(f,*(fp+j),"rb")){
+		if (OPEN_FILE_SECURE(f,*(fp+j),"rb")){// lgtm [cpp/path-injection]
 			printf("Unable to Open File '%s'!\n",*(fp+j));
 			goto _cleanup;
 		}
@@ -238,7 +238,7 @@ _unkown_switch:
 			lll_print_object(&c_dt,c_dt.h,stdout);
 			putchar('\n');
 		}
-		if (OPEN_FILE_SECURE(of,o_fp,"wb")){
+		if (OPEN_FILE_SECURE(of,o_fp,"wb")){// lgtm [cpp/path-injection]
 			printf("Unable to Open File '%s'!\n",o_fp);
 			goto _cleanup;
 		}
