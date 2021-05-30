@@ -86,7 +86,7 @@
 						case IDENTIFIER_DATA_TYPE_STRING: \
 							ASSERT(!"Unimplemented"); \
 						case IDENTIFIER_DATA_TYPE_NIL: \
-							ASSERT(!"Unimplemented"); \
+							break; \
 						default: \
 							ASSERT(!"Should not happen"); \
 					} \
@@ -100,7 +100,7 @@
 				case IDENTIFIER_DATA_TYPE_STRING: \
 					ASSERT(!"Unimplemented"); \
 				case IDENTIFIER_DATA_TYPE_NIL: \
-					ASSERT(!"Unimplemented"); \
+					break; \
 				default: \
 					ASSERT(!"Should not happen"); \
 			} \
@@ -517,6 +517,7 @@ void _write_identifier_data(lll_output_data_stream_t* os,identifier_data_t* dt){
 
 void FORCE_INLINE _write_save_context(lll_output_data_stream_t* os,uint16_t ctx){
 	identifier_data_t tmp;
+	uint8_t pd=PARITY16(ctx);
 	while (ctx){
 		tmp.r=REGISTER_FROM_BIT_INDEX(FIND_FIRST_SET_BIT(ctx));
 		ctx&=~REGISTER_TO_MASK(tmp.r);
@@ -525,12 +526,18 @@ void FORCE_INLINE _write_save_context(lll_output_data_stream_t* os,uint16_t ctx)
 		_write_identifier_data(os,&tmp);
 		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
 	}
+	if (pd){
+		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tsub rsp,8\n");
+	}
 }
 
 
 
 void FORCE_INLINE _write_restore_context(lll_output_data_stream_t* os,uint16_t ctx){
 	identifier_data_t tmp;
+	if (PARITY16(ctx)){
+		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tadd rsp,8\n");
+	}
 	while (ctx){
 		tmp.r=REGISTER_FROM_BIT_INDEX(FIND_LAST_SET_BIT(ctx));
 		ctx&=~REGISTER_TO_MASK(tmp.r);
@@ -955,7 +962,11 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 		case LLL_OBJECT_TYPE_FLOAT:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NIL:
-			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_FUNC_PRINT:
+		case LLL_OBJECT_TYPE_OPERATION_LIST:
+			va->r=REGISTER_CONST;
+			va->t=IDENTIFIER_DATA_TYPE_NIL;
+			return;
 		case LLL_OBJECT_TYPE_TRUE:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FALSE:
@@ -969,8 +980,6 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(o),im));
 			return;
-		case LLL_OBJECT_TYPE_FUNC_PRINT:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_OR:
@@ -1028,8 +1037,6 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 		case LLL_OBJECT_TYPE_MORE:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
@@ -1674,7 +1681,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 									LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
 									tmp.r=(*FUNCTION_CALL_REGISTERS)|REGISTER_32BIT;
 								}
-								LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tcall putchar\n");
+								LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tcall __lll_api_putchar\n");
 								_write_restore_context(os,f_r);
 								break;
 							}
@@ -1682,7 +1689,6 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 						case IDENTIFIER_DATA_TYPE_INT16:
 						case IDENTIFIER_DATA_TYPE_INT32:
 							{
-								agd->f|=ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_INT32;
 								tmp.r=(tmp.r&(~REGISTER_SIZE_MASK))|REGISTER_32BIT;
 								uint16_t f_r=(~im->rm)&FUNCTION_NON_VOLATILE_REGISTERS;
 								if (GET_BASE_REGISTER(tmp.r)!=*FUNCTION_CALL_REGISTERS&&!(im->rm&REGISTER_TO_MASK(*FUNCTION_CALL_REGISTERS))){
@@ -1700,7 +1706,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 									LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
 									tmp.r=(*FUNCTION_CALL_REGISTERS)|REGISTER_32BIT;
 								}
-								LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tcall .__print_int32\n");
+								LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tcall __lll_api_print_int32\n");
 								_write_restore_context(os,f_r);
 								break;
 							}
@@ -1743,10 +1749,9 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,",0x");
 									LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,((c>>4)<10?48:87)+(c>>4));
 									LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,((c&0xf)<10?48:87)+(c&0xf));
-									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\n\tcall putchar\n");
+									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\n\tcall __lll_api_putchar\n");
 								}
 								else{
-									agd->f|=ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_STRING;
 									uint64_t id=_get_string_id(agd,&s);
 									if (id>>32){
 										id&=0xffffffff;
@@ -1757,7 +1762,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 										(*FUNCTION_CALL_REGISTERS)|REGISTER_64BIT
 									};
 									_write_identifier_data(os,&tmp_r);
-									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,",[_str_");
+									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,",[s");
 									uint8_t i=(!id?4:(FIND_LAST_SET_BIT((uint32_t)id)+4)&0x3c);
 									while (i){
 										i-=4;
@@ -1769,7 +1774,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 											LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,48+c);
 										}
 									}
-									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"]\n\tcall .__print_str\n");
+									LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"]\n\tcall __lll_api_print_string\n");
 								}
 								_write_restore_context(os,f_r);
 								break;
@@ -2067,17 +2072,41 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_LESS:
-			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
-			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_EQUAL:
-			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
-			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_MORE:
-			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
-			ASSERT(!"Unimplemented",e,UINT32_MAX);
+			{
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				if (!ac){
+					return off+eoff;
+				}
+				if (ac==1){
+					uint32_t aoff=_write_object_as_assembly(os,LLL_GET_OBJECT_ARGUMENT(o,off),eagd,e);
+					if (aoff==UINT32_MAX){
+						return UINT32_MAX;
+					}
+					return off+aoff+eoff;
+				}
+				uint8_t t=_get_cond_type(o,im);
+				if (t==COMPARE_ALWAYS_TRUE||t==COMPARE_FIRST_TRUE){
+					while (ac){
+						ac--;
+						uint32_t aoff=_write_object_as_assembly(os,LLL_GET_OBJECT_ARGUMENT(o,off),eagd,e);
+						if (aoff==UINT32_MAX){
+							return UINT32_MAX;
+						}
+						off+=aoff;
+					}
+					return off+eoff;
+				}
+				if (t==COMPARE_UNKNOWN){
+					ASSERT(!"Unimplemented",e,UINT32_MAX);
+				}
+				return _get_object_size(o)+eoff;
+			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_statement_count_t sc=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
@@ -2130,7 +2159,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		return LLL_RETURN_ERROR;
 	}
 	if (f==LLL_WRITE_MODE_ASSEMBLY){
-		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,ASSEMBLY_INIT_CODE"\n");
+		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"bits 64\ndefault rel\nsection .text\nglobal main\nextern __lll_api_init\nextern __lll_api_putchar\nextern __lll_api_print_string\nextern __lll_api_print_int32\nextern __lll_api_deinit\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32\n\tand rsp,0xfffffffffffffff0\n\tcall __lll_api_init\n");
 		assembly_generator_data_t agd={
 			{
 				.rm=ALL_REGISTER_AVAIBLE_MASK,
@@ -2140,8 +2169,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 				NULL,
 				0
 			},
-			1,
-			0
+			1
 		};
 		uint32_t off=0;
 		for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
@@ -2180,18 +2208,12 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 			return LLL_RETURN_ERROR;
 		}
 		free(agd.im.dt);
-		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\n"ASSEMBLY_EXIT_CODE);
-		if (agd.f&ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_STRING){
-			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\n"ASSEMBLY_STRING_PRINT_FUNCTION"\n");
-		}
-		if (agd.f&ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_INT32){
-			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\n"ASSEMBLY_INT32_PRINT_FUNCTION"\n");
-		}
+		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tjmp __lll_api_deinit\n");
 		if (agd.st.l){
-			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"section .data\n");
+			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"section .rdata\n");
 		}
 		for (i=0;i<agd.st.l;i++){
-			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\t_str_");
+			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\ts");
 			uint8_t j=(!i?4:(FIND_LAST_SET_BIT(i)+4)&0x3c);
 			while (j){
 				j-=4;

@@ -15,7 +15,7 @@
 		(print "Medium: " i "\n")
 	} {
 		(= unused_identifier 18900)
-		(print "End: " i "\n")
+		(print "End: " i "(j=" j ")\n")
 	})
 	(= i (* i j))
 	(? (< j 5) (print j "! = " i "\n"))
@@ -23,3 +23,4 @@
 	(? (> 3 10 -5) (print "This will Never Execute\n"))
 })
 (print FACTORIAL "! = " i '\n')
+(< 10 5 (print "This Should Never Happen"))

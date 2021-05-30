@@ -13,6 +13,7 @@
 
 #ifdef _MSC_VER
 #pragma intrinsic(__movsq)
+#pragma intrinsic(__popcnt16)
 #pragma intrinsic(_BitScanForward)
 #pragma intrinsic(_BitScanReverse)
 #pragma intrinsic(_BitScanReverse64)
@@ -35,12 +36,9 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 	_BitScanReverse64(&o,m);
 	return o;
 }
+#define PARITY16(x) (__popcnt16((x))&1)
 #define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
 #define _FUNCTION_CALL_REGISTERS {REGISTER_C,REGISTER_D,REGISTER_R8,REGISTER_R9}
-#define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nextern ExitProcess\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32"
-#define ASSEMBLY_EXIT_CODE "\txor rax,rax\n\tjmp ExitProcess"
-#define ASSEMBLY_STRING_PRINT_FUNCTION ".__print_str:\n\tpush rsi\n\tmov rsi,rcx\n\txor eax,eax\n\tmov cl,[rsi]\n.__print_str_loop:\n\tinc rsi\n\tcall putchar\n\tmov cl,[rsi]\n\ttest cl,cl\n\tjne .__print_str_loop\n\tpop rsi\n\tret"
-#define ASSEMBLY_INT32_PRINT_FUNCTION ".__print_int32:\n\tpush rsi\n\tpush rbx\n\tsub rsp,0x38\n\tmov ebx,ecx\n\ttest ecx,ecx\n\tjs .__print_int32_neg\n\tje .__print_int32_zero\n.__print_int32_loop_setup:\n\txor edx,edx\n\tmov r9d,0xcccccccd\n.__print_int32_loop:\n\tmov eax,ebx\n\tmovzx r8d,dl\n\tadd edx,0x1\n\timul rax,r9\n\tshr rax,0x23\n\tlea ecx,[rax+rax*4]\n\tadd ecx,ecx\n\tsub ebx,ecx\n\tadd ebx,0x30\n\tmov byte [rsp+r8*1+0x26],bl\n\tmov ebx,eax\n\ttest eax,eax\n\tjne .__print_int32_loop\n\tlea rsi,[rsp+0x26]\n\tmov rbx,r8\n\tadd rbx,rsi\n.__print_int32_loop2:\n\tmovsx ecx,byte [rbx]\n\tcall putchar\n\tmov rax,rbx\n\tsub rbx,0x1\n\tcmp rsi,rax\n\tjne .__print_int32_loop2\n\tadd rsp,0x38\n\tpop rbx\n\tpop rsi\n\tret\n.__print_int32_neg:\n\tmov ecx,0x2d\n\tneg ebx\n\tcall putchar\n\tjmp .__print_int32_loop_setup\n.__print_int32_zero:\n\tmov ecx,0x30\n\tadd rsp,0x38\n\tpop rbx\n\tpop rsi\n\tjmp putchar"
 #else
 #define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
@@ -51,12 +49,9 @@ static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffs((m))-1)
 #define FIND_LAST_SET_BIT(m) (31-__builtin_clz((m)))
 #define FIND_LAST_SET_BIT64(m) (63-__builtin_clzll((m)))
+#define PARITY16(x) __builtin_parity((x))
 #define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_SI)|REGISTER_TO_MASK(REGISTER_DI)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
 #define _FUNCTION_CALL_REGISTERS {REGISTER_DI,REGISTER_SI,REGISTER_D,REGISTER_C,REGISTER_R8,REGISTER_R9}
-#define ASSEMBLY_INIT_CODE "bits 64\ndefault rel\nsection .text\nglobal main\nextern putchar\nmain:\n\tpush rbp\n\tmov rbp,rsp\n\tsub rsp,32"
-#define ASSEMBLY_EXIT_CODE "\tmov rax,60\n\txor rdi,rdi\n\tsyscall"
-#define ASSEMBLY_STRING_PRINT_FUNCTION ".__print_str:\n\tpush r12\n\tmov r12,rdi\n\txor edi,edi\n\tmov dil,byte [r12]\n.__print_str_loop:\n\tinc r12\n\tcall putchar\n\tmov dil,byte [r12]\n\ttest dil,dil\n\tjne .__print_str_loop\n\tpop r12\n\tret"
-#define ASSEMBLY_INT32_PRINT_FUNCTION ".__print_int32:\n\tpush rbp\n\tpush rbx\n\tmov ebx,edi\n\tsub rsp,0x28\n\txor eax,eax\n\ttest edi,edi\n\tjs .__print_int32_neg\n\tje .__print_int32_zero\n.__print_int32_setup:\n\txor ecx,ecx\n\tmov edi,0x66666667\n\tjmp .__print_int32_loop_start\n.__print_int32_loop:\n\tmov ecx,eax\n.__print_int32_loop_start:\n\tmov eax,ebx\n\tmovzx esi,cl\n\timul edi\n\tmov eax,ebx\n\tsar eax,0x1f\n\tsar edx,0x2\n\tsub edx,eax\n\tlea eax,[rdx+rdx*4]\n\tadd eax,eax\n\tsub ebx,eax\n\tlea eax,[rcx+0x1]\n\tadd ebx,0x30\n\ttest edx,edx\n\tmov byte [rsp+rsi*1],bl\n\tmov ebx,edx\n\tjne .__print_int32_loop\n\ttest al,al\n\tje .__print_int32_ret\n\tlea rbx,[rsp+rsi*1]\n\tlea rbp,[rsp-0x1]\n.__print_int32_loop2:\n\tmovsx edi,byte [rbx]\n\tsub rbx,0x1\n\tcall putchar\n\tcmp rbp,rbx\n\tjne .__print_int32_loop2\n.__print_int32_ret:\n\tadd rsp,0x28\n\tpop rbx\n\tpop rbp\n\tret\n.__print_int32_zero:\n\tadd rsp,0x28\n\tmov edi,0x30\n\tpop rbx\n\tpop rbp\n\tjmp putchar\n.__print_int32_neg:\n\tmov edi,0x2d\n\tneg ebx\n\tcall putchar\n\tjmp .__print_int32_setup"
 #endif
 
 
@@ -198,9 +193,6 @@ static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 #define IDENTIFIER_DATA_TYPE_NIL 4096
 #define IS_IDENTIFIER_DATA_TYPE_SINGLE(t) (!((t)&((t)-1)))
 
-#define ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_STRING 1
-#define ASSEMBLY_GENERATOR_DATA_FLAG_PRINT_INT32 2
-
 
 
 typedef uint8_t cpu_register_t;
@@ -268,7 +260,6 @@ typedef struct __ASSEMBLY_GENERATOR_DATA{
 	identifier_map_t im;
 	string_table_t st;
 	uint32_t n_sc;
-	uint8_t f;
 } assembly_generator_data_t;
 
 
@@ -381,10 +372,6 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 
 
 
-uint8_t FORCE_INLINE _write_object_compare(lll_output_data_stream_t* os,lll_object_t* a,lll_object_t* b,assembly_generator_data_t* agd,lll_error_t* e);
-
-
-
 void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,identifier_map_t* im);
 
 
@@ -398,26 +385,6 @@ void _write_hex(lll_output_data_stream_t* os,int64_t v);
 
 
 void _write_identifier_data(lll_output_data_stream_t* os,identifier_data_t* dt);
-
-
-
-void FORCE_INLINE _release_identifier(identifier_data_t* dt,identifier_map_t* im);
-
-
-
-void FORCE_INLINE _write_label(lll_output_data_stream_t* os,label_t id);
-
-
-
-void FORCE_INLINE _write_label_define(lll_output_data_stream_t* os,label_t id);
-
-
-
-void FORCE_INLINE _write_restore_context(lll_output_data_stream_t* os,uint16_t ctx);
-
-
-
-void FORCE_INLINE _write_save_context(lll_output_data_stream_t* os,uint16_t ctx);
 
 
 
