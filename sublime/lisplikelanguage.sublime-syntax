@@ -43,7 +43,7 @@ contexts:
         - include: numbers
         - include: strings
         - include: constants
-    - match: '(\()\s*((?:@\s*[0-9a-zA-Z_-]+\s*)*)(?:(print|typeof)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
+    - match: '(\()\s*((?:@\s*[0-9a-zA-Z_-]+\s*)*)(?:(<:|:>)|([$a-zA-Z_][$0-9a-zA-Z_]*))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
         2: storage.modifier.lll
@@ -95,7 +95,7 @@ contexts:
           pop: true
         - include: objects_no_highlight
   constants:
-    - match: '\b(nil|true|false)\b'
+    - match: '\b(nil|true|false|stdin|stdout|stderr)\b'
       scope: constant.language.lll
   numbers:
     - match: '(?:\b|-)0[bB][01]+\b'

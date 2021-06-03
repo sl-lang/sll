@@ -12,7 +12,6 @@
 
 
 #ifdef _MSC_VER
-#pragma intrinsic(__movsq)
 #pragma intrinsic(__popcnt16)
 #pragma intrinsic(_BitScanForward)
 #pragma intrinsic(_BitScanReverse)
@@ -20,7 +19,6 @@
 #define FORCE_INLINE __inline __forceinline
 #define UNREACHABLE() __assume(0)
 #define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
-#define REPEAT_QWORD_COPY(d,s,sz) __movsq((d),(s),(sz))
 static FORCE_INLINE unsigned int FIND_FIRST_SET_BIT(unsigned int m){
 	unsigned long o;
 	_BitScanForward(&o,m);
@@ -43,9 +41,6 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 #define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
 #define PACKED(s) s __attribute__((__packed__))
-static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
-	__asm__ volatile("rep movsq":"=D"(d),"=S"(s),"=c"(n):"0"(d),"1"(s),"2"(n):"memory");
-}
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffs((m))-1)
 #define FIND_LAST_SET_BIT(m) (31-__builtin_clz((m)))
 #define FIND_LAST_SET_BIT64(m) (63-__builtin_clzll((m)))
@@ -117,7 +112,7 @@ static FORCE_INLINE void REPEAT_QWORD_COPY(uint64_t* d,uint64_t* s,size_t n){
 #define FAST_COMPARE_STR_3(a,b) (*((uint16_t*)(a))==*((uint16_t*)(b))&&*((a)+2)==*((b)+2))
 #define FAST_COMPARE_STR_4(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b)))
 #define FAST_COMPARE_STR_5(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b))&&*((a)+4)==*((b)+4))
-#define FAST_COMPARE_STR_6(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b))&&*((uint16_t*)(a)+4)==*((uint16_t*)(b)+4))
+#define FAST_COMPARE_STR_6(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b))&&*((uint16_t*)((a)+4))==*((uint16_t*)((b)+4)))
 #define FAST_COMPARE_STR_7(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b))&&*((uint16_t*)(a)+4)==*((uint16_t*)(b)+4)&&*((a)+6)==*((b)+6))
 #define FAST_COMPARE_STR_8(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b)))
 #define FAST_COMPARE_STR_9(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((a)+8)==*((b)+8))

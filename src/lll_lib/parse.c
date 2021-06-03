@@ -361,7 +361,9 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 					n_l_sc.ml=(n_l_sc.l_sc+65)>>6;
 					n_l_sc.m=malloc(n_l_sc.ml*sizeof(uint64_t));
 					n_l_sc.m[n_l_sc.ml-1]=0;
-					REPEAT_QWORD_COPY(n_l_sc.m,l_sc->m,l_sc->ml);
+					for (uint32_t i=0;i<l_sc->ml;i++){
+						*(n_l_sc.m+i)=*(l_sc->m+i);
+					}
 					n_l_sc.m[n_l_sc.ml-1]|=1ull<<(n_l_sc.l_sc&63);
 					c_dt->_n_sc_id++;
 					b_l_sc=l_sc;
@@ -757,7 +759,13 @@ _read_symbol:
 				}
 			}
 			else if (sz==2){
-				if (FAST_COMPARE(str,&,&)){
+				if (FAST_COMPARE(str,:,>)){
+					o->t=LLL_OBJECT_TYPE_WRITE_BUFFER;
+				}
+				else if (FAST_COMPARE(str,<,:)){
+					o->t=LLL_OBJECT_TYPE_READ_BUFFER;
+				}
+				else if (FAST_COMPARE(str,&,&)){
 					o->t=LLL_OBJECT_TYPE_AND;
 				}
 				else if (FAST_COMPARE(str,|,|)){
@@ -769,7 +777,9 @@ _read_symbol:
 					n_l_sc.ml=(n_l_sc.l_sc+65)>>6;
 					n_l_sc.m=malloc(n_l_sc.ml*sizeof(uint64_t));
 					n_l_sc.m[n_l_sc.ml-1]=0;
-					REPEAT_QWORD_COPY(n_l_sc.m,l_sc->m,l_sc->ml);
+					for (uint32_t i=0;i<l_sc->ml;i++){
+						*(n_l_sc.m+i)=*(l_sc->m+i);
+					}
 					n_l_sc.m[n_l_sc.ml-1]|=1ull<<(n_l_sc.l_sc&63);
 					c_dt->_n_sc_id++;
 					l_sc=&n_l_sc;
@@ -814,14 +824,6 @@ _read_symbol:
 				}
 				else if (FAST_COMPARE(str,_,/,/)){
 					o->t=LLL_OBJECT_TYPE_FLOOR_LOG;
-				}
-				else{
-					goto _unknown_symbol;
-				}
-			}
-			else if (sz==5){
-				if (FAST_COMPARE(str,p,r,i,n,t)){
-					o->t=LLL_OBJECT_TYPE_FUNC_PRINT;
 				}
 				else{
 					goto _unknown_symbol;

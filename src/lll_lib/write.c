@@ -696,7 +696,9 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 			}
 			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(o),im));
 			return 1;
-		case LLL_OBJECT_TYPE_FUNC_PRINT:
+		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+			ASSERT(!"Unimplemented",e,0);
+		case LLL_OBJECT_TYPE_READ_BUFFER:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -962,7 +964,6 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 		case LLL_OBJECT_TYPE_FLOAT:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NIL:
-		case LLL_OBJECT_TYPE_FUNC_PRINT:
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			va->r=REGISTER_CONST;
 			va->t=IDENTIFIER_DATA_TYPE_NIL;
@@ -980,6 +981,10 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(o),im));
 			return;
+		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_READ_BUFFER:
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_OR:
@@ -1077,7 +1082,6 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NIL:
 		case LLL_OBJECT_TYPE_FALSE:
-		case LLL_OBJECT_TYPE_FUNC_PRINT:
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			return COMPARE_ALWAYS_FALSE;
 		case LLL_OBJECT_TYPE_TRUE:
@@ -1085,6 +1089,10 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 		case LLL_OBJECT_TYPE_STRING:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_IDENTIFIER:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_READ_BUFFER:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented");
@@ -1171,7 +1179,9 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FUNC_PRINT:
+		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+			ASSERT(!"Unimplemented",e,0);
+		case LLL_OBJECT_TYPE_READ_BUFFER:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -1223,7 +1233,7 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac<2){
-					ASSERT(!"Should'n happen",e,0);
+					ASSERT(!"Should not happen",e,0);
 				}
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1249,7 +1259,7 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac<2){
-					ASSERT(!"Should'n happen",e,0);
+					ASSERT(!"Should not happen",e,0);
 				}
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1275,7 +1285,7 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac<2){
-					ASSERT(!"Should'n happen",e,0);
+					ASSERT(!"Should not happen",e,0);
 				}
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1301,7 +1311,7 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac<2){
-					ASSERT(!"Should'n happen",e,0);
+					ASSERT(!"Should not happen",e,0);
 				}
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1327,7 +1337,7 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac<2){
-					ASSERT(!"Should'n happen",e,0);
+					ASSERT(!"Should not happen",e,0);
 				}
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1353,7 +1363,7 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				if (ac<2){
-					ASSERT(!"Should'n happen",e,0);
+					ASSERT(!"Should not happen",e,0);
 				}
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1402,7 +1412,9 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FUNC_PRINT:
+		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+			ASSERT(!"Unimplemented",e,0);
+		case LLL_OBJECT_TYPE_READ_BUFFER:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -1640,10 +1652,13 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 		case LLL_OBJECT_TYPE_FLOAT:
 			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
-		case LLL_OBJECT_TYPE_FUNC_PRINT:
+		case LLL_OBJECT_TYPE_WRITE_BUFFER:
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				if (!ac){
+					return off;
+				}
 				while (ac){
 					ac--;
 					lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1787,6 +1802,12 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				}
 				return off+eoff;
 			}
+		case LLL_OBJECT_TYPE_READ_BUFFER:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_AND:
+			ASSERT(!"Unimplemented",e,UINT32_MAX);
+		case LLL_OBJECT_TYPE_OR:
+			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_SET:
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
@@ -2039,8 +2060,6 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_AND:
-		case LLL_OBJECT_TYPE_OR:
 		case LLL_OBJECT_TYPE_NOT:
 		case LLL_OBJECT_TYPE_ADD:
 		case LLL_OBJECT_TYPE_SUB:
