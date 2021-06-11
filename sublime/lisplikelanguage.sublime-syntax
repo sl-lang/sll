@@ -22,16 +22,17 @@ contexts:
       captures:
         1: punctuation.definition.comment.lll
   objects:
-    - match: '(\()\s*((?:@\s*[0-9a-zA-Z_-]+\s*)*)(?:(\?|\-\>)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=))(?=\s|\))'
+    - match: '(\()\s*((?:@\s*[0-9a-zA-Z_-]+\s*)*)(?:(\?|\-\>)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
         2: storage.modifier.lll
         3: keyword.control.conditional.lll
-        5: keyword.operator.logical.lll
-        6: keyword.operator.bitwise.lll
-        7: keyword.operator.arithmetic.lll
-        8: keyword.operator.comparison.lll
-        9: keyword.operator.assignment.lll
+        4: keyword.operator.logical.lll
+        5: keyword.operator.bitwise.lll
+        6: keyword.operator.arithmetic.lll
+        7: keyword.operator.comparison.lll
+        8: keyword.operator.assignment.lll
+        9: keyword.control.import.lll
       push:
         - meta_scope: meta.group.lll meta.parens.lll
         - match: '\)'

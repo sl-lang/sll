@@ -231,5 +231,8 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 			printf("Unknown Identifier '%s'\n",sym);
 			free(sym);
 			return;
+		case LLL_ERROR_STRING_REQUIRED:
+			printf("Import File Path Must be a String\n");
+			return;
 	}
 }

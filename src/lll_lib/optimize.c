@@ -26,6 +26,8 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 		case LLL_OBJECT_TYPE_FLOAT:
 			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+		case LLL_OBJECT_TYPE_IMPORT:
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
@@ -255,6 +257,8 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm){
 				}
 				return sizeof(lll_object_t)+w+pad;
 			}
+		case LLL_OBJECT_TYPE_IMPORT:
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_statement_count_t);i++){

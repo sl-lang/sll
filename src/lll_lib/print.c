@@ -35,7 +35,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 		eoff+=sizeof(lll_object_type_t);
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
 	}
-	if (LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_TYPE&&LLL_GET_OBJECT_TYPE(o)<LLL_OBJECT_TYPE_MIN_EXTRA){
+	if ((LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_TYPE&&LLL_GET_OBJECT_TYPE(o)<LLL_OBJECT_TYPE_MIN_EXTRA)||LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_IMPORT){
 		fputc('(',f);
 	}
 	if (LLL_IS_OBJECT_CONST(o)){
@@ -310,6 +310,24 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
 			fprintf(f,">=");
 			break;
+		case LLL_OBJECT_TYPE_IMPORT:
+			{
+				fputc('-',f);
+				fputc('-',f);
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				for (lll_arg_count_t i=0;i<ac;i++){
+					fputc(' ',f);
+					fputc('"',f);
+					lll_import_data_path_t* dt=c_dt->im.dt+LLL_GET_OBJECT_IMPORT_INDEX(o,i);
+					for (uint32_t i=0;i<dt->sz;i++){
+						fputc(*(dt->nm+i),f);
+					}
+					fputc('"',f);
+				}
+				fputc(')',f);
+				return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*ac+eoff;
+			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				fputc('{',f);

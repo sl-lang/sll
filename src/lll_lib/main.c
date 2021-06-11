@@ -39,6 +39,8 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 	}
 	o->i_dt.il=NULL;
 	o->i_dt.ill=0;
+	o->im.dt=NULL;
+	o->im.l=0;
 }
 
 
@@ -63,4 +65,17 @@ __LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt){
 		i_dt->il=NULL;
 	}
 	i_dt->ill=0;
+}
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im){
+	for (uint32_t i=0;i<im->l;i++){
+		free((im->dt+i)->nm);
+	}
+	if (im->l){
+		free(im->dt);
+		im->dt=NULL;
+	}
+	im->l=0;
 }

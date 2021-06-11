@@ -59,13 +59,14 @@
 #define LLL_ERROR_MULTIPLE_SIZE_MODIFIERS 35
 #define LLL_ERROR_UNUSED_MODIFIERS 36
 #define LLL_ERROR_UNKNOWN_IDENTIFIER 37
-#define LLL_ERROR_NO_STACK 38
-#define LLL_ERROR_STACK_TOO_BIG 39
-#define LLL_ERROR_FAILED_FILE_WRITE 40
-#define LLL_ERROR_DIVISION_BY_ZERO 41
-#define LLL_ERROR_INVALID_FILE_FORMAT 42
+#define LLL_ERROR_STRING_REQUIRED 38
+#define LLL_ERROR_NO_STACK 39
+#define LLL_ERROR_STACK_TOO_BIG 40
+#define LLL_ERROR_FAILED_FILE_WRITE 41
+#define LLL_ERROR_DIVISION_BY_ZERO 42
+#define LLL_ERROR_INVALID_FILE_FORMAT 43
 #define LLL_ERROR_ASSERTION 255
-#define LLL_MAX_SYNTAX_ERROR LLL_ERROR_UNKNOWN_IDENTIFIER
+#define LLL_MAX_SYNTAX_ERROR LLL_ERROR_STRING_REQUIRED
 
 #define LLL_RETURN_ERROR 0
 #define LLL_RETURN_NO_ERROR 1
@@ -111,6 +112,7 @@
 #define LLL_OBJECT_TYPE_NOT_EQUAL 37
 #define LLL_OBJECT_TYPE_MORE 38
 #define LLL_OBJECT_TYPE_MORE_EQUAL 39
+#define LLL_OBJECT_TYPE_IMPORT 61
 #define LLL_OBJECT_TYPE_OPERATION_LIST 62
 #define LLL_OBJECT_TYPE_DEBUG_DATA 63
 #define LLL_OBJECT_TYPE_NOP 0xff
@@ -123,12 +125,11 @@
 #define LLL_OBJECT_TYPE_CONST 0x80
 #define LLL_OBJECT_TYPE_MAX_INTEGRAL_TYPE LLL_OBJECT_TYPE_FALSE
 #define LLL_OBJECT_TYPE_MAX_TYPE LLL_OBJECT_TYPE_IDENTIFIER
-#define LLL_OBJECT_TYPE_MAX_FUNC LLL_OBJECT_TYPE_FUNC_TYPEOF
 #define LLL_OBJECT_TYPE_MAX_FLOW LLL_OBJECT_TYPE_FOR
 #define LLL_OBJECT_TYPE_MAX_MATH LLL_OBJECT_TYPE_FLOOR_LOG
 #define LLL_OBJECT_TYPE_MAX_MATH_CHAIN LLL_OBJECT_TYPE_BIT_NOT
 #define LLL_OBJECT_TYPE_MAX_COMPARE LLL_OBJECT_TYPE_MORE_EQUAL
-#define LLL_OBJECT_TYPE_MIN_EXTRA LLL_OBJECT_TYPE_OPERATION_LIST
+#define LLL_OBJECT_TYPE_MIN_EXTRA LLL_OBJECT_TYPE_IMPORT
 #define LLL_IS_OBJECT_INT8(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT8_FLAG)
 #define LLL_IS_OBJECT_INT16(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT16_FLAG)
 #define LLL_IS_OBJECT_INT32(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT32_FLAG)
@@ -158,6 +159,7 @@
 #define LLL_GET_OBJECT_AS_FLOAT64(o) (*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
 #define LLL_GET_OBJECT_STRING_LENGTH(o) (*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
 #define LLL_GET_OBJECT_AS_IDENTIFIER(o) (*((lll_identifier_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
+#define LLL_GET_OBJECT_IMPORT_INDEX(o,i) (*((lll_import_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(i))))
 #define LLL_GET_OBJECT_AS_STRING(o) ((char*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_string_length_t)))
 #define LLL_GET_OBJECT_AFTER_NOP(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_type_t)))
 #define LLL_SET_OBJECT_AS_INT8(o,i) ((*((int8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int8_t)(i)))
@@ -168,6 +170,7 @@
 #define LLL_SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((double)(f)))
 #define LLL_SET_OBJECT_STRING_LENGTH(o,sz) ((*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_string_length_t)(sz)))
 #define LLL_SET_OBJECT_AS_IDENTIFIER(o,sz) ((*((lll_identifier_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_identifier_index_t)(sz)))
+#define LLL_SET_OBJECT_IMPORT_INDEX(o,i,v) ((*((lll_import_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(i))))=((lll_import_index_t)(v)))
 
 #define LLL_OBJECT_MODIFIER_FIXED 0x1
 #define LLL_OBJECT_MODIFIER_UNSIGNED 0x2
@@ -236,6 +239,8 @@ struct __LLL_SMALL_IDENTIFIER;
 struct __LLL_IDENTIFIER_LIST;
 struct __LLL_IDENTIFIER;
 struct __LLL_IDENTIFIER_DATA;
+struct __LLL_IMPORT_DATA_PATH;
+struct __LLL_IMPORT_DATA;
 struct __LLL_COMPILATION_DATA;
 struct __LLL_ERROR_DATA_RANGE;
 union __LLL_ERROR_DATA;
@@ -263,15 +268,15 @@ typedef uint16_t lll_statement_count_t;
 
 
 
-typedef uint16_t lll_vector_length_t;
-
-
-
 typedef uint32_t lll_string_length_t;
 
 
 
 typedef uint32_t lll_identifier_index_t;
+
+
+
+typedef uint32_t lll_import_index_t;
 
 
 
@@ -365,6 +370,21 @@ typedef struct __LLL_IDENTIFIER_DATA{
 
 
 
+typedef struct __LLL_IMPORT_DATA_PATH{
+	char* nm;
+	lll_object_t* o;
+	uint32_t sz;
+} lll_import_data_path_t;
+
+
+
+typedef struct __LLL_IMPORT_DATA{
+	lll_import_data_path_t* dt;
+	lll_import_index_t l;
+} lll_import_data_t;
+
+
+
 typedef struct __LLL_COMPILATION_DATA{
 	char fp[512];
 	uint32_t _n_sc_id;
@@ -373,6 +393,7 @@ typedef struct __LLL_COMPILATION_DATA{
 	uint64_t tm;
 	lll_object_t* h;
 	lll_identifier_data_t i_dt;
+	lll_import_data_t im;
 } lll_compilation_data_t;
 
 
@@ -407,6 +428,10 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 
 
 __LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt);
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im);
 
 
 

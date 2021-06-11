@@ -35,6 +35,7 @@ void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t l
 		fseek(f,lp,SEEK_SET);
 		c=fgetc(f);
 	}
+	fseek(f,lp,SEEK_SET);
 	is->_off=lp;
 }
 

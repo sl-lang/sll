@@ -269,6 +269,7 @@ _cleanup:
 		free(ffp);
 	}
 	lll_free_identifier_data(&(c_dt.i_dt));
+	lll_free_import_data(&(c_dt.im));
 	if (f){
 		fclose(f);
 	}
