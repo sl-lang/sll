@@ -66,7 +66,7 @@
 #define LLL_ERROR_DIVISION_BY_ZERO 42
 #define LLL_ERROR_INVALID_FILE_FORMAT 43
 #define LLL_ERROR_ASSERTION 255
-#define LLL_MAX_SYNTAX_ERROR LLL_ERROR_STRING_REQUIRED
+#define LLL_MAX_COMPILATION_ERROR LLL_ERROR_STRING_REQUIRED
 
 #define LLL_RETURN_ERROR 0
 #define LLL_RETURN_NO_ERROR 1
@@ -231,23 +231,6 @@
 
 
 
-struct __LLL_INPUT_DATA_SOURCE;
-struct __LLL_OUTPUT_DATA_STREAM;
-struct __LLL_OBJECT;
-struct __LLL_DEBUG_OBJECT;
-struct __LLL_SMALL_IDENTIFIER;
-struct __LLL_IDENTIFIER_LIST;
-struct __LLL_IDENTIFIER;
-struct __LLL_IDENTIFIER_DATA;
-struct __LLL_IMPORT_DATA_PATH;
-struct __LLL_IMPORT_DATA;
-struct __LLL_COMPILATION_DATA;
-struct __LLL_ERROR_DATA_RANGE;
-union __LLL_ERROR_DATA;
-struct __LLL_ERROR;
-
-
-
 typedef uint8_t lll_object_type_t;
 
 
@@ -280,35 +263,11 @@ typedef uint32_t lll_import_index_t;
 
 
 
-typedef int (*lll_input_data_stream_read_t)(struct __LLL_INPUT_DATA_SOURCE* is);
-
-
-
-typedef uint8_t (*lll_input_data_stream_read_buffer_t)(struct __LLL_INPUT_DATA_SOURCE* is,uint8_t* bf,uint32_t sz);
-
-
-
-typedef void (*lll_input_data_stream_restart_line_t)(struct __LLL_INPUT_DATA_SOURCE* is,uint32_t lp);
-
-
-
-typedef uint8_t (*lll_output_data_stream_write_char_t)(struct __LLL_OUTPUT_DATA_STREAM* os,char c);
-
-
-
-typedef uint8_t (*lll_output_data_stream_write_string_t)(struct __LLL_OUTPUT_DATA_STREAM* os,char* s);
-
-
-
-typedef uint8_t (*lll_output_data_stream_write_t)(struct __LLL_OUTPUT_DATA_STREAM* os,uint8_t* bf,size_t sz);
-
-
-
 typedef struct __LLL_INPUT_DATA_SOURCE{
 	void* ctx;
-	lll_input_data_stream_read_t rf;
-	lll_input_data_stream_read_buffer_t rbf;
-	lll_input_data_stream_restart_line_t rlf;
+	int (*rf)(struct __LLL_INPUT_DATA_SOURCE* is);
+	uint8_t (*rbf)(struct __LLL_INPUT_DATA_SOURCE* is,uint8_t* bf,uint32_t sz);
+	void (*rlf)(struct __LLL_INPUT_DATA_SOURCE* is,uint32_t lp);
 	uint32_t _lc;
 	uint32_t _off;
 	uint32_t _loff;
@@ -318,9 +277,9 @@ typedef struct __LLL_INPUT_DATA_SOURCE{
 
 typedef struct __LLL_OUTPUT_DATA_STREAM{
 	void* ctx;
-	lll_output_data_stream_write_char_t wcf;
-	lll_output_data_stream_write_string_t wsf;
-	lll_output_data_stream_write_t wf;
+	uint8_t (*wcf)(struct __LLL_OUTPUT_DATA_STREAM* os,char c);
+	uint8_t (*wsf)(struct __LLL_OUTPUT_DATA_STREAM* os,char* s);
+	uint8_t (*wf)(struct __LLL_OUTPUT_DATA_STREAM* os,uint8_t* bf,size_t sz);
 } lll_output_data_stream_t;
 
 

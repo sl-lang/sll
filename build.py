@@ -199,7 +199,6 @@ for k in l:
 		k=nk
 	o+=b"\n"+k
 i=0
-sd=b""
 while (i<len(o)):
 	if (i<len(o)-7 and o[i:i+1] not in IDENTIFIER_CHARACTERS and o[i+1:i+6]==b"union" and o[i+6:i+7] not in IDENTIFIER_CHARACTERS):
 		j=i
@@ -212,11 +211,6 @@ while (i<len(o)):
 		nm=o[k:i]
 		while (o[i] in SPACE_CHARACTERS):
 			i+=1
-		if (o[i:i+1]==b";"):
-			sd+=b"\nunion "+nm+b";"
-			o=o[:j]+o[i+1:]
-			i-=i-j
-			continue
 		if (o[i:i+1]==b"{"):
 			b=1
 			i+=1
@@ -245,11 +239,6 @@ while (i<len(o)):
 		nm=o[k:i]
 		while (o[i] in SPACE_CHARACTERS):
 			i+=1
-		if (o[i:i+1]==b";"):
-			sd+=b"\nstruct "+nm+b";"
-			o=o[:j]+o[i+1:]
-			i-=i-j
-			continue
 		if (o[i:i+1]==b"{"):
 			b=1
 			i+=1
@@ -269,7 +258,7 @@ while (i<len(o)):
 				i+=1
 	i+=1
 with open("build/lll_lib.h","wb") as wf:
-	wf.write(b"#ifndef __LLL_H__\n#define __LLL_H__ 1"+il+d_s+sd+b"\n"+o.strip()+b"\n#endif\n")
+	wf.write(b"#ifndef __LLL_H__\n#define __LLL_H__ 1"+il+d_s+b"\n"+o.strip()+b"\n#endif\n")
 if (os.name=="nt"):
 	cd=os.getcwd()
 	os.chdir("build")
