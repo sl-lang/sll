@@ -220,10 +220,10 @@
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
 #define LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,bf,sz) ((is)->rbf((is),(bf),(sz)))
+#define LLL_INPUT_DATA_STREAM_RESTART_LINE(is,lp) ((is)->rlf((is),(lp)))
 #define LLL_GET_INPUT_DATA_STREAM_OFFSET(is) ((is)->_off)
 #define LLL_GET_INPUT_DATA_STREAM_LINE_NUMBER(is) ((is)->_lc)
 #define LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is) ((is)->_loff)
-#define LLL_INPUT_DATA_STREAM_RESTART_LINE(is,lp) ((is)->rlf((is),(lp)))
 
 #define LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,c) ((os)->wcf((os),(c)))
 #define LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,s) ((os)->wsf((os),(s)))
@@ -331,7 +331,6 @@ typedef struct __LLL_IDENTIFIER_DATA{
 
 typedef struct __LLL_IMPORT_DATA_PATH{
 	char* nm;
-	lll_object_t* o;
 	uint32_t sz;
 } lll_import_data_path_t;
 
@@ -345,7 +344,7 @@ typedef struct __LLL_IMPORT_DATA{
 
 
 typedef struct __LLL_COMPILATION_DATA{
-	char fp[512];
+	char fp[4096];
 	uint32_t _n_sc_id;
 	uint16_t fpl;
 	lll_input_data_stream_t* is;

@@ -27,7 +27,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 		case LLL_OBJECT_TYPE_FLOAT:
 			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
 		case LLL_OBJECT_TYPE_IMPORT:
-			ASSERT(!"Unimplemented");
+			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
@@ -131,7 +131,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 							}
 							break;
 						case LLL_OBJECT_TYPE_BIT_NOT:
-							ASSERT(!"SET OBJECT TO -2!",e,UINT32_MAX);
+							ASSERT(!"Set Object To -2!",e,UINT32_MAX);
 							break;
 					}
 					break;
@@ -169,7 +169,7 @@ _set_to_0:
 							}
 							return off+eoff;
 						case LLL_OBJECT_TYPE_BIT_NOT:
-							ASSERT(!"SET OBJECT TO -1!",e,UINT32_MAX);
+							ASSERT(!"Set Object To -1!",e,UINT32_MAX);
 							break;
 					}
 					break;
@@ -258,7 +258,13 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm){
 				return sizeof(lll_object_t)+w+pad;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			ASSERT(!"Unimplemented");
+			{
+				uint32_t sz=sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o));
+				for (uint32_t i=0;i<sz;i++){
+					*(d+i)=*(s+i);
+				}
+				return sz+pad;
+			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_statement_count_t);i++){

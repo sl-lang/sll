@@ -1,4 +1,4 @@
-; (-- "import.lll")
+(-- "import.lll")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")

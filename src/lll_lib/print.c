@@ -314,7 +314,6 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			{
 				fputc('-',f);
 				fputc('-',f);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				for (lll_arg_count_t i=0;i<ac;i++){
 					fputc(' ',f);

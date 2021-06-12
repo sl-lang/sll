@@ -27,6 +27,8 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 		case LLL_OBJECT_TYPE_FLOAT:
 			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+		case LLL_OBJECT_TYPE_IMPORT:
+			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);

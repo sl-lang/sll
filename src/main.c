@@ -239,7 +239,7 @@ _unkown_switch:
 			putchar('\n');
 		}
 		if (!(of=fopen(o_fp,"wb"))){// lgtm [cpp/path-injection]
-			printf("Unable to Open File '%s'!\n",o_fp);
+			printf("Unable to Open Output File '%s'!\n",o_fp);
 			goto _cleanup;
 		}
 		lll_output_data_stream_t os;

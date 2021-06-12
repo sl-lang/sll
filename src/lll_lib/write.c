@@ -134,9 +134,7 @@ uint32_t _get_object_size(lll_object_t* o){
 		case LLL_OBJECT_TYPE_FLOAT:
 			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
 		case LLL_OBJECT_TYPE_IMPORT:
-			{
-				return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
-			}
+			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
@@ -1049,8 +1047,9 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
 			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_IMPORT:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 		default:
 			ASSERT(!"Unexpected lll_object_type_t Value");
@@ -1159,8 +1158,9 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 			GET_COMPARE_COND_TYPE(o,im,>);
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
 			GET_COMPARE_COND_TYPE(o,im,>=);
-		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_IMPORT:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 		default:
 			ASSERT(!"Unexpected lll_object_type_t Value");
@@ -1393,8 +1393,9 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 				}
 				return 1;
 			}
-		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_IMPORT:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 		default:
 			ASSERT(!"Unexpected lll_object_type_t Value",e,0);
@@ -1627,8 +1628,9 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 				}
 				return 1;
 			}
-		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_IMPORT:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 		default:
 			ASSERT(!"Unexpected lll_object_type_t Value",e,0);
@@ -2137,7 +2139,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				return _get_object_size(o)+eoff;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			ASSERT(!"Unimplemented",e,0);
+			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_statement_count_t sc=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
@@ -2286,7 +2288,8 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		sz,
 		c_dt->tm,
 		c_dt->fpl,
-		.ill=c_dt->i_dt.ill
+		.ill=c_dt->i_dt.ill,
+		.iml=c_dt->im.l
 	};
 	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		dt.sil[i]=c_dt->i_dt.s[i].l;
@@ -2307,6 +2310,13 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 	for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
 		lll_identifier_t* k=*(c_dt->i_dt.il+i);
 		if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->sz)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->sc)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(k->v),k->sz*sizeof(char))){
+			e->t=LLL_ERROR_FAILED_FILE_WRITE;
+			return LLL_RETURN_ERROR;
+		}
+	}
+	for (uint32_t i=0;i<c_dt->im.l;i++){
+		lll_import_data_path_t* k=c_dt->im.dt+i;
+		if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->sz)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(k->nm),k->sz*sizeof(char))){
 			e->t=LLL_ERROR_FAILED_FILE_WRITE;
 			return LLL_RETURN_ERROR;
 		}

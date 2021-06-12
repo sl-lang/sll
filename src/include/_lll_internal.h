@@ -273,6 +273,7 @@ typedef PACKED(struct __COMPILED_OBJECT_FILE{
 	uint16_t fpl;
 	uint32_t sil[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
 	uint32_t ill;
+	uint32_t iml;
 }) compiled_object_file_t;
 
 
