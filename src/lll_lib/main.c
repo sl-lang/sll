@@ -6,21 +6,6 @@
 
 
 
-uint8_t* _bf=NULL;
-uint32_t _bf_off;
-uint32_t _bf_sz;
-
-
-
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_set_internal_stack(uint8_t* bf,uint32_t sz,lll_error_t* e){
-	_bf=bf;
-	_bf_off=0;
-	_bf_sz=sz;
-	return LLL_RETURN_NO_ERROR;
-}
-
-
-
 __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
 	o->fpl=0;
 	while (*fp){

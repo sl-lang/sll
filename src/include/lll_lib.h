@@ -263,6 +263,14 @@ typedef uint32_t lll_import_index_t;
 
 
 
+typedef struct __LLL_STACK_CONTEXT{
+	uint8_t* ptr;
+	uint32_t off;
+	uint32_t sz;
+} lll_stack_context_t;
+
+
+
 typedef struct __LLL_INPUT_DATA_SOURCE{
 	void* ctx;
 	int (*rf)(struct __LLL_INPUT_DATA_SOURCE* is);
@@ -377,7 +385,15 @@ typedef struct __LLL_ERROR{
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_set_internal_stack(uint8_t* bf,uint32_t sz,lll_error_t* e);
+__LLL_IMPORT_EXPORT void lll_set_internal_stack(uint8_t* bf,uint32_t sz);
+
+
+
+__LLL_IMPORT_EXPORT void lll_save_stack_context(lll_stack_context_t* ctx);
+
+
+
+__LLL_IMPORT_EXPORT void lll_load_stack_context(lll_stack_context_t* ctx);
 
 
 
@@ -422,6 +438,10 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_read_all_objects(lll_compilat
 
 
 __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t*);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_merge_import(lll_compilation_data_t* c_dt,uint32_t im_i,lll_compilation_data_t* im,lll_error_t* e);
 
 
 

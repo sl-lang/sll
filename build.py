@@ -19,59 +19,64 @@ SPACE_CHARACTERS=b" \t\n\v\f\r"
 def _expand_macros(k,dm,dfm):
 	for e,v in dm.items():
 		k=re.sub(br"\b"+e+br"\b",v,k)
-	for e,v in dm.items():
-		i=0
-		while (i<len(k)):
-			if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k.startswith(e,i)):
-				j=i
-				i+=len(e)
-				while (k[i:i+1] in SPACE_CHARACTERS):
-					i+=1
-				if (k[i:i+1]!=b"("):
-					i=j+len(e)
-					k=k[:j]+v+k[i:]
-					i+=len(v)-(i-j)
-			i+=1
-	for e,v in dfm.items():
-		i=0
-		while (i<len(k)):
-			if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k.startswith(e,i)):
-				j=i
-				i+=len(e)
-				while (k[i:i+1] in SPACE_CHARACTERS):
-					i+=1
-				if (k[i:i+1]==b"("):
-					b=0
-					al=[b""]
-					ali=0
-					while (True):
-						if (k[i:i+1]==b"("):
-							b+=1
-							if (b==1):
-								i+=1
-								continue
-						elif (k[i:i+1]==b")"):
-							b-=1
-						if (b==0):
-							break
-						if (k[i:i+1]==b","):
-							al.append(b"")
-							ali+=1
-						else:
-							al[ali]+=k[i:i+1]
+	while (True):
+		u=False
+		for e,v in dm.items():
+			i=0
+			while (i<len(k)):
+				if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k.startswith(e,i)):
+					j=i
+					i+=len(e)
+					while (i<len(k) and k[i:i+1] in SPACE_CHARACTERS):
 						i+=1
-					if (len(al)!=len(v[0])):
-						raise RuntimeError("Invalid Macro Invocation (Argument Count Mismatch)")
-					s=b""
-					for st in v[1]:
-						if (type(st)==int):
-							s+=al[st]
-						else:
-							s+=st
-					k=k[:j]+s+k[i+1:]
-					i+=len(s)-(i-j)
-			i+=1
-	return k
+					if (k[i:i+1] not in b"("+IDENTIFIER_CHARACTERS):
+						i=j+len(e)
+						k=k[:j]+v+k[i:]
+						i+=len(v)-(i-j)
+						u=True
+				i+=1
+		for e,v in dfm.items():
+			i=0
+			while (i<len(k)):
+				if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k.startswith(e,i)):
+					j=i
+					i+=len(e)
+					while (k[i:i+1] in SPACE_CHARACTERS):
+						i+=1
+					if (k[i:i+1]==b"("):
+						b=0
+						al=[b""]
+						ali=0
+						while (True):
+							if (k[i:i+1]==b"("):
+								b+=1
+								if (b==1):
+									i+=1
+									continue
+							elif (k[i:i+1]==b")"):
+								b-=1
+							if (b==0):
+								break
+							if (k[i:i+1]==b","):
+								al.append(b"")
+								ali+=1
+							else:
+								al[ali]+=k[i:i+1]
+							i+=1
+						if (len(al)!=len(v[0])):
+							raise RuntimeError("Invalid Macro Invocation (Argument Count Mismatch)")
+						s=b""
+						for st in v[1]:
+							if (type(st)==int):
+								s+=al[st]
+							else:
+								s+=st
+						k=k[:j]+s+k[i+1:]
+						i+=len(s)-(i-j)
+						u=True
+				i+=1
+		if (u==False):
+			return k
 
 
 
@@ -134,13 +139,13 @@ for e in h_dt:
 			st[-1]=not st[-1]
 			continue
 		elif (f[0]==b"endif"):
-			st=st[:-1]
+			st.pop()
 			continue
-		elif (f[0]==b"include"and st[-1] is True):
+		elif (f[0]==b"include"and False not in st):
 			il+=b"\n#include "+b" ".join(f[1:])
 			continue
-		elif (f[0]==b"define"and st[-1] is True):
-			if (f[1][:2]==b"__" ):
+		elif (f[0]==b"define"and False not in st):
+			if (f[1][:2]==b"__"):
 				dm[f[1]]=b" ".join(f[2:])
 			else:
 				if (b"(" in f[1]):
@@ -173,31 +178,33 @@ for e in h_dt:
 					dm[f[1]]=b" ".join(f[2:])
 					d_v.append((f[1],b" ".join(f[2:])))
 			continue
-	if (st[-1] is True):
+	if (False not in st):
 		l.append(e)
 d_s=b""
 o=b""
-for k,v in d_v:
+for i,(k,v) in enumerate(sorted(d_v,key=lambda e:e[0])):
 	while (True):
 		nv=_expand_macros(v,dm,dfm)
 		if (nv==v):
 			break
 		v=nv
-	d_s+=b"\n#define "+k+b" "+v
-for k,v in d_f:
+	d_v[i]=(k,v)
+	d_s+=b"\n#define "+k+b" "+v.strip()
+for i,(k,v) in enumerate(sorted(d_f,key=lambda e:e[0])):
 	while (True):
 		nv=_expand_macros(v,dm,dfm)
 		if (nv==v):
 			break
 		v=nv
-	d_s+=b"\n#define "+k+b" "+v
+	d_f[i]=(k,v)
+	d_s+=b"\n#define "+k+b" "+v.strip()
 for k in l:
 	while (True):
 		nk=_expand_macros(k,dm,dfm)
 		if (nk==k):
 			break
 		k=nk
-	o+=b"\n"+k
+	o+=b"\n"+k.strip()
 i=0
 while (i<len(o)):
 	if (i<len(o)-7 and o[i:i+1] not in IDENTIFIER_CHARACTERS and o[i+1:i+6]==b"union" and o[i+6:i+7] not in IDENTIFIER_CHARACTERS):

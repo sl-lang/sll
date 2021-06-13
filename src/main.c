@@ -33,19 +33,23 @@
 
 
 uint8_t st[COMPILER_STACK_SIZE];
-uint8_t ol=DEFAULT_OPTIMIZE_LEVEL;
-uint8_t fl=0;
+uint8_t ol;
+uint8_t fl;
+char* i_fp;
+uint32_t i_fpl;
+char** fp;
+uint32_t fpl;
 
 
 
-uint8_t _find_in_include(char* i_fp,uint32_t i_fpl,char* fp,char* o_fp,FILE** o_f){
+uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_data_stream_t* is,char* f_fp){
 	char bf[MAX_PATH_LENGTH];
 	uint32_t j=0;
 	for (uint32_t i=0;i<i_fpl;i++){
 		if (!(*(i_fp+i))){
 			uint32_t k=0;
-			while (*(fp+k)){
-				*(bf+j)=*(fp+k);
+			while (*(f_nm+k)){
+				*(bf+j)=*(f_nm+k);
 				j++;
 				k++;
 			}
@@ -53,19 +57,112 @@ uint8_t _find_in_include(char* i_fp,uint32_t i_fpl,char* fp,char* o_fp,FILE** o_
 			if (fl&FLAG_VERBOSE){
 				printf("Trying to Open File '%s'...\n",bf);
 			}
-			FILE* f=fopen(bf,"rb");// lgtm [cpp/path-injection]
-			if (f){
-				if (!(fl&FLAG_FULL_PATH)||!EXPAND_FILE_PATH(bf,o_fp)){
-					*(o_fp+j)=0;
+			FILE* tf=fopen(bf,"rb");// lgtm [cpp/path-injection]
+			if (tf){
+				if (!(fl&FLAG_FULL_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
+					*(f_fp+j)=0;
 					while (j){
 						j--;
-						*(o_fp+j)=*(bf+j);
+						*(f_fp+j)=*(bf+j);
 					}
 				}
 				if (fl&FLAG_VERBOSE){
-					printf("Found File '%s'\n",o_fp);
+					printf("Found File '%s'\n",f_fp);
 				}
-				*o_f=f;
+				*f=tf;
+				lll_create_input_data_stream(*f,is);
+				if (fl&FLAG_VERBOSE){
+					printf("Trying to Load File as Compiled Object...\n");
+				}
+				lll_error_t e;
+				if (!lll_load_compiled_object(is,c_dt,&e)){
+					lll_free_identifier_data(&(c_dt->i_dt));
+					lll_free_import_data(&(c_dt->im));
+					if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
+						if (fl&FLAG_VERBOSE){
+							printf("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
+						}
+						lll_create_input_data_stream(*f,is);
+						lll_init_compilation_data(f_fp,is,c_dt);
+						if (!lll_read_all_objects(c_dt,&e)){
+							lll_print_error(is,&e);
+							return 0;
+						}
+						if (fl&FLAG_PRINT_OBJECT){
+							lll_print_object(c_dt,c_dt->h,stdout);
+							putchar('\n');
+						}
+						if (fl&FLAG_VERBOSE){
+							printf("File Successfully Read.\n");
+						}
+						if (fl&FLAG_MERGE_IMPORTS){
+							for (i=0;i<c_dt->im.l;i++){
+								char nm[MAX_PATH_LENGTH];
+								char* s=(c_dt->im.dt+i)->nm;
+								j=0;
+								for (;j<(c_dt->im.dt+i)->sz;j++){
+									*(nm+j)=*(s+j);
+								}
+								*(nm+j)=0;
+								lll_stack_context_t s_ctx;
+								lll_save_stack_context(&s_ctx);
+								lll_compilation_data_t n_c_dt={0};
+								FILE* n_f=NULL;
+								lll_input_data_stream_t n_is;
+								char n_f_fp[MAX_PATH_LENGTH];
+								if (!_load_file(nm,&n_c_dt,&n_f,&n_is,n_f_fp)){
+									if (n_f){
+										fclose(n_f);
+									}
+									lll_free_identifier_data(&(n_c_dt.i_dt));
+									lll_free_import_data(&(n_c_dt.im));
+									lll_load_stack_context(&s_ctx);
+									return 0;
+								}
+								if (n_f){
+									fclose(n_f);
+								}
+								if (!lll_merge_import(c_dt,i,&n_c_dt,&e)){
+									lll_free_identifier_data(&(n_c_dt.i_dt));
+									lll_free_import_data(&(n_c_dt.im));
+									lll_load_stack_context(&s_ctx);
+									lll_print_error(is,&e);
+									return 0;
+								}
+								lll_free_identifier_data(&(n_c_dt.i_dt));
+								lll_free_import_data(&(n_c_dt.im));
+								lll_load_stack_context(&s_ctx);
+							}
+						}
+						else{
+							for (i=0;i<c_dt->im.l;i++){
+								fpl++;
+								fp=realloc(fp,fpl*sizeof(char*));
+								char* d=malloc(((c_dt->im.dt+i)->sz+1)*sizeof(char));
+								char* s=(c_dt->im.dt+i)->nm;
+								j=0;
+								for (;j<(c_dt->im.dt+i)->sz;j++){
+									*(d+j)=*(s+j);
+								}
+								*(d+j)=0;
+								*(fp+fpl-1)=d;
+							}
+						}
+					}
+					else{
+						lll_print_error(is,&e);
+						return 0;
+					}
+				}
+				else{
+					if (fl&FLAG_PRINT_OBJECT){
+						lll_print_object(c_dt,c_dt->h,stdout);
+						putchar('\n');
+					}
+					if (fl&FLAG_VERBOSE){
+						printf("File Successfully Read.\n");
+					}
+				}
 				return 1;
 			}
 			j=0;
@@ -74,17 +171,20 @@ uint8_t _find_in_include(char* i_fp,uint32_t i_fpl,char* fp,char* o_fp,FILE** o_
 		*(bf+j)=*(i_fp+i);
 		j++;
 	}
+	printf("Unable to Find File '%s'\n",f_nm);
 	return 0;
 }
 
 
 
 int main(int argc,const char** argv){
-	char* i_fp=malloc(sizeof(char));
-	uint32_t i_fpl=1;
+	ol=DEFAULT_OPTIMIZE_LEVEL;
+	fl=0;
+	i_fp=malloc(sizeof(char));
 	*i_fp=0;
-	char** fp=NULL;
-	uint32_t fpl=0;
+	i_fpl=1;
+	fp=NULL;
+	fpl=0;
 	const char* o_fp=NULL;
 	FILE* f=NULL;
 	FILE* of=NULL;
@@ -239,57 +339,11 @@ _unkown_switch:
 	}
 	lll_error_t e;
 	for (uint32_t j=0;j<fpl;j++){
-		if (!lll_set_internal_stack(st,COMPILER_STACK_SIZE,&e)){
-			lll_print_error(NULL,&e);
-			goto _error;
-		}
+		lll_set_internal_stack(st,COMPILER_STACK_SIZE);
 		char f_fp[MAX_PATH_LENGTH];
-		if (!_find_in_include(i_fp,i_fpl,*(fp+j),f_fp,&f)){
-			printf("Unable to Find File '%s'\n",*(fp+j));
-			goto _error;
-		}
 		lll_input_data_stream_t is;
-		lll_create_input_data_stream(f,&is);
-		if (fl&FLAG_VERBOSE){
-			printf("Trying to Load File as Compiled Object...\n");
-		}
-		if (!lll_load_compiled_object(&is,&c_dt,&e)){
-			lll_free_identifier_data(&(c_dt.i_dt));
-			if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
-				if (fl&FLAG_VERBOSE){
-					printf("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
-				}
-				lll_create_input_data_stream(f,&is);
-				lll_init_compilation_data(f_fp,&is,&c_dt);
-				if (!lll_read_all_objects(&c_dt,&e)){
-					lll_print_error(&is,&e);
-					goto _error;
-				}
-				if (fl&FLAG_MERGE_IMPORTS){
-					printf("Object Import Merge not Implemented yet\n");
-					goto _error;
-				}
-				else{
-					for (uint32_t i=0;i<c_dt.im.l;i++){
-						fpl++;
-						fp=realloc(fp,fpl*sizeof(char*));
-						char* d=malloc(((c_dt.im.dt+i)->sz+1)*sizeof(char));
-						char* s=(c_dt.im.dt+i)->nm;
-						for (uint32_t j=0;j<(c_dt.im.dt+i)->sz;j++){
-							*(d+j)=*(s+j);
-						}
-						*(d+(c_dt.im.dt+i)->sz)=0;
-						*(fp+fpl-1)=d;
-					}
-				}
-			}
-			else{
-				lll_print_error(&is,&e);
-				goto _error;
-			}
-		}
-		if (fl&FLAG_VERBOSE){
-			printf("File Successfully Read.\n");
+		if (!_load_file(*(fp+j),&c_dt,&f,&is,f_fp)){
+			goto _error;
 		}
 		if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
 			if (fl&FLAG_VERBOSE){
@@ -317,10 +371,10 @@ _unkown_switch:
 				lll_print_error(&is,&e);
 				goto _error;
 			}
-		}
-		if (fl&FLAG_PRINT_OBJECT){
-			lll_print_object(&c_dt,c_dt.h,stdout);
-			putchar('\n');
+			if (fl&FLAG_PRINT_OBJECT){
+				lll_print_object(&c_dt,c_dt.h,stdout);
+				putchar('\n');
+			}
 		}
 		if (!o_fp){
 			char bf[MAX_PATH_LENGTH];
@@ -343,15 +397,21 @@ _unkown_switch:
 				bf[i+3]='m';
 				bf[i+4]=0;
 			}
+			if (fl&FLAG_VERBOSE){
+				printf("Writing Object to File '%s'...\n",bf);
+			}
 			if (!(of=fopen(bf,"wb"))){// lgtm [cpp/path-injection]
-				printf("Unable to Open Output File '%s'!\n",bf);
+				printf("Unable to Open Output File '%s'\n",bf);
 				goto _error;
 			}
 		}
 		else{
 			if (fpl==1){
+				if (fl&FLAG_VERBOSE){
+					printf("Writing Object to File '%s'...\n",o_fp);
+				}
 				if (!(of=fopen(o_fp,"wb"))){// lgtm [cpp/path-injection]
-					printf("Unable to Open Output File '%s'!\n",o_fp);
+					printf("Unable to Open Output File '%s'\n",o_fp);
 					goto _error;
 				}
 			}
@@ -399,8 +459,11 @@ _unkown_switch:
 					*(bf+i+3)='m';
 					*(bf+i+4)=0;
 				}
+				if (fl&FLAG_VERBOSE){
+					printf("Writing Object to File '%s'...\n",bf);
+				}
 				if (!(of=fopen(bf,"wb"))){// lgtm [cpp/path-injection]
-					printf("Unable to Open Output File '%s'!\n",bf);
+					printf("Unable to Open Output File '%s'\n",bf);
 					goto _error;
 				}
 			}
@@ -411,12 +474,15 @@ _unkown_switch:
 			lll_print_error(&is,&e);
 			goto _error;
 		}
-		lll_free_identifier_data(&(c_dt.i_dt));
-		lll_free_import_data(&(c_dt.im));
+		if (fl&FLAG_VERBOSE){
+			printf("File Successfully Written.\n");
+		}
 		fclose(of);
 		of=NULL;
 		fclose(f);
 		f=NULL;
+		lll_free_identifier_data(&(c_dt.i_dt));
+		lll_free_import_data(&(c_dt.im));
 	}
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));
