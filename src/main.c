@@ -193,9 +193,8 @@ int main(int argc,const char** argv){
 	FILE* f=NULL;
 	FILE* of=NULL;
 	lll_compilation_data_t c_dt={0};
-	int i=1;
 	uint32_t im_fpl=UINT32_MAX;
-	while (i<argc){
+	for (int i=1;i<argc;i++){
 		const char* e=argv[i];
 		if (*e=='-'&&*(e+1)=='O'&&*(e+3)==0){
 			if (*(e+2)=='0'){
@@ -289,7 +288,6 @@ _unkown_switch:
 			fp=tmp;
 			*(fp+fpl-1)=(char*)e;
 		}
-		i++;
 	}
 	if (!fpl){
 		printf("Not Input Files Supplied\n");

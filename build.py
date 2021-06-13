@@ -215,7 +215,6 @@ while (i<len(o)):
 		k=i
 		while (o[i] in IDENTIFIER_CHARACTERS):
 			i+=1
-		nm=o[k:i]
 		while (o[i] in SPACE_CHARACTERS):
 			i+=1
 		if (o[i:i+1]==b"{"):
@@ -243,7 +242,6 @@ while (i<len(o)):
 		k=i
 		while (o[i] in IDENTIFIER_CHARACTERS):
 			i+=1
-		nm=o[k:i]
 		while (o[i] in SPACE_CHARACTERS):
 			i+=1
 		if (o[i:i+1]==b"{"):
