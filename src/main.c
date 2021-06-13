@@ -141,8 +141,17 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 						else{
 							for (i=0;i<c_dt->im.l;i++){
 								fpl++;
-								fp=realloc(fp,fpl*sizeof(char*));
+								void* tmp=realloc(fp,fpl*sizeof(char*));
+								if (!tmp){
+									printf("Unable to Allocate Space for File Path Array\n");
+									return 0;
+								}
+								fp=tmp;
 								char* d=malloc(((c_dt->im.dt+i)->sz+1)*sizeof(char));
+								if (!d){
+									printf("Unable to Allocate Space for Module Name\n");
+									return 0;
+								}
 								char* s=(c_dt->im.dt+i)->nm;
 								j=0;
 								for (;j<(c_dt->im.dt+i)->sz;j++){
@@ -185,6 +194,10 @@ int main(int argc,const char** argv){
 	ol=DEFAULT_OPTIMIZE_LEVEL;
 	fl=0;
 	i_fp=malloc(sizeof(char));
+	if (!i_fp){
+		printf("Unable to Allocate Space for Include File Path Array\n");
+		return 1;
+	}
 	*i_fp=0;
 	i_fpl=1;
 	fp=NULL;
@@ -213,54 +226,57 @@ int main(int argc,const char** argv){
 				goto _unkown_switch;
 			}
 		}
-		else if (*e=='-'&&*(e+1)=='v'&&*(e+2)==0){
-			fl|=FLAG_VERBOSE;
-		}
 		else if (*e=='-'&&*(e+1)=='I'&&*(e+2)==0){
 			i++;
-			if (i<argc){
-				e=argv[i];
-				uint32_t sz=0;
-				while (*(e+sz)){
-					sz++;
-				}
-				if (sz){
-					if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
-						sz+=2;
-						uint32_t j=i_fpl;
-						i_fpl+=sz;
-						i_fp=realloc(i_fp,i_fpl*sizeof(char));
-						for (uint32_t k=0;k<sz-2;k++){
-							*(i_fp+j)=*(e+k);
-							j++;
-						}
-						*(i_fp+j)='/';
-						*(i_fp+j+1)=0;
+			if (i==argc){
+				break;
+			}
+			e=argv[i];
+			uint32_t sz=0;
+			while (*(e+sz)){
+				sz++;
+			}
+			if (sz){
+				if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
+					sz+=2;
+					uint32_t j=i_fpl;
+					i_fpl+=sz;
+					void* tmp=realloc(i_fp,i_fpl*sizeof(char));
+					if (!tmp){
+						printf("Unable to Allocate Space for Include File Path Array\n");
+						goto _error;
 					}
-					else{
-						sz++;
-						uint32_t j=i_fpl;
-						i_fpl+=sz;
-						i_fp=realloc(i_fp,i_fpl*sizeof(char));
-						for (uint32_t k=0;k<sz;k++){
-							*(i_fp+j)=*(e+k);
-							j++;
-						}
+					i_fp=tmp;
+					for (uint32_t k=0;k<sz-2;k++){
+						*(i_fp+j)=*(e+k);
+						j++;
+					}
+					*(i_fp+j)='/';
+					*(i_fp+j+1)=0;
+				}
+				else{
+					sz++;
+					uint32_t j=i_fpl;
+					i_fpl+=sz;
+					void* tmp=realloc(i_fp,i_fpl*sizeof(char));
+					if (!tmp){
+						printf("Unable to Allocate Space for Include File Path Array\n");
+						goto _error;
+					}
+					i_fp=tmp;
+					for (uint32_t k=0;k<sz;k++){
+						*(i_fp+j)=*(e+k);
+						j++;
 					}
 				}
 			}
 		}
-		else if (*e=='-'&&*(e+1)=='m'&&*(e+2)==0){
-			fl|=FLAG_MERGE_IMPORTS;
-		}
-		else if (*e=='-'&&*(e+1)=='p'&&*(e+2)==0){
-			fl|=FLAG_PRINT_OBJECT;
-		}
-		else if (*e=='-'&&*(e+1)=='c'&&*(e+2)==0){
-			fl|=FLAG_COMPILE_ONLY;
-		}
-		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)=='p'&&*(e+3)==0){
-			fl|=FLAG_FULL_PATH;
+		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)==0){
+			i++;
+			if (i==argc){
+				break;
+			}
+			goto _read_file_argument;
 		}
 		else if (*e=='-'&&*(e+1)=='o'&&*(e+2)==0){
 			if (o_fp){
@@ -273,12 +289,43 @@ int main(int argc,const char** argv){
 			}
 			o_fp=argv[i];
 		}
+		else if (*e=='-'&&*(e+1)=='v'&&*(e+2)==0){
+			fl|=FLAG_VERBOSE;
+		}
+		else if (*e=='-'&&*(e+1)=='v'&&*(e+2)=='0'&&*(e+3)==0){
+			fl&=~FLAG_VERBOSE;
+		}
+		else if (*e=='-'&&*(e+1)=='m'&&*(e+2)==0){
+			fl|=FLAG_MERGE_IMPORTS;
+		}
+		else if (*e=='-'&&*(e+1)=='m'&&*(e+2)=='0'&&*(e+3)==0){
+			fl&=~FLAG_MERGE_IMPORTS;
+		}
+		else if (*e=='-'&&*(e+1)=='p'&&*(e+2)==0){
+			fl|=FLAG_PRINT_OBJECT;
+		}
+		else if (*e=='-'&&*(e+1)=='p'&&*(e+2)=='0'&&*(e+3)==0){
+			fl&=~FLAG_PRINT_OBJECT;
+		}
+		else if (*e=='-'&&*(e+1)=='c'&&*(e+2)==0){
+			fl|=FLAG_COMPILE_ONLY;
+		}
+		else if (*e=='-'&&*(e+1)=='c'&&*(e+2)=='0'&&*(e+3)==0){
+			fl&=~FLAG_COMPILE_ONLY;
+		}
+		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)=='p'&&*(e+3)==0){
+			fl|=FLAG_FULL_PATH;
+		}
+		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)=='p'&&*(e+3)=='0'&&*(e+4)==0){
+			fl&=~FLAG_FULL_PATH;
+		}
 		else if (*e=='-'){
 _unkown_switch:
 			printf("Unknown Switch: '%s'\n",e);
 			goto _error;
 		}
 		else{
+_read_file_argument:
 			fpl++;
 			void* tmp=realloc(fp,fpl*sizeof(char*));
 			if (!tmp){

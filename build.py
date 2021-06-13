@@ -75,7 +75,7 @@ def _expand_macros(k,dm,dfm):
 						i+=len(s)-(i-j)
 						u=True
 				i+=1
-		if (u==False):
+		if (u is False):
 			return k
 
 
