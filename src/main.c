@@ -106,32 +106,36 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 								*(nm+j)=0;
 								lll_stack_context_t s_ctx;
 								lll_save_stack_context(&s_ctx);
+								uint8_t n_st[COMPILER_STACK_SIZE];
 								lll_compilation_data_t n_c_dt={0};
 								FILE* n_f=NULL;
 								lll_input_data_stream_t n_is;
 								char n_f_fp[MAX_PATH_LENGTH];
+								lll_set_internal_stack(n_st,COMPILER_STACK_SIZE);
 								if (!_load_file(nm,&n_c_dt,&n_f,&n_is,n_f_fp)){
 									if (n_f){
 										fclose(n_f);
 									}
+									lll_load_stack_context(&s_ctx);
 									lll_free_identifier_data(&(n_c_dt.i_dt));
 									lll_free_import_data(&(n_c_dt.im));
-									lll_load_stack_context(&s_ctx);
 									return 0;
 								}
 								if (n_f){
 									fclose(n_f);
 								}
+								lll_load_stack_context(&s_ctx);
+								if (fl&FLAG_VERBOSE){
+									printf("Merging Module '%s' ('%s', index %u) into '%s'...\n",n_f_fp,nm,i,f_fp);
+								}
 								if (!lll_merge_import(c_dt,i,&n_c_dt,&e)){
 									lll_free_identifier_data(&(n_c_dt.i_dt));
 									lll_free_import_data(&(n_c_dt.im));
-									lll_load_stack_context(&s_ctx);
 									lll_print_error(is,&e);
 									return 0;
 								}
 								lll_free_identifier_data(&(n_c_dt.i_dt));
 								lll_free_import_data(&(n_c_dt.im));
-								lll_load_stack_context(&s_ctx);
 							}
 						}
 						else{
@@ -337,7 +341,6 @@ _unkown_switch:
 			}
 		}
 	}
-	lll_error_t e;
 	for (uint32_t j=0;j<fpl;j++){
 		lll_set_internal_stack(st,COMPILER_STACK_SIZE);
 		char f_fp[MAX_PATH_LENGTH];
@@ -349,6 +352,7 @@ _unkown_switch:
 			if (fl&FLAG_VERBOSE){
 				printf("Performing Global Optimization...\n");
 			}
+			lll_error_t e;
 			if (!lll_optimize_object(c_dt.h,&e)){
 				lll_print_error(&is,&e);
 				goto _error;
@@ -358,6 +362,7 @@ _unkown_switch:
 			if (fl&FLAG_VERBOSE){
 				printf("Removing Debug Data...\n");
 			}
+			lll_error_t e;
 			if (!lll_remove_object_debug_data(c_dt.h,&e)){
 				lll_print_error(&is,&e);
 				goto _error;
@@ -367,14 +372,15 @@ _unkown_switch:
 			if (fl&FLAG_VERBOSE){
 				printf("Removing Object Padding...\n");
 			}
+			lll_error_t e;
 			if (!lll_remove_object_padding(c_dt.h,&e)){
 				lll_print_error(&is,&e);
 				goto _error;
 			}
-			if (fl&FLAG_PRINT_OBJECT){
-				lll_print_object(&c_dt,c_dt.h,stdout);
-				putchar('\n');
-			}
+		}
+		if (fl&FLAG_PRINT_OBJECT){
+			lll_print_object(&c_dt,c_dt.h,stdout);
+			putchar('\n');
 		}
 		if (!o_fp){
 			char bf[MAX_PATH_LENGTH];
@@ -470,6 +476,7 @@ _unkown_switch:
 		}
 		lll_output_data_stream_t os;
 		lll_create_output_data_stream(of,&os);
+		lll_error_t e;
 		if (!lll_write_compiled_object(&os,&c_dt,(fl&FLAG_COMPILE_ONLY?LLL_WRITE_MODE_RAW:LLL_WRITE_MODE_ASSEMBLY),&e)){
 			lll_print_error(&is,&e);
 			goto _error;
@@ -477,10 +484,10 @@ _unkown_switch:
 		if (fl&FLAG_VERBOSE){
 			printf("File Successfully Written.\n");
 		}
-		fclose(of);
-		of=NULL;
 		fclose(f);
 		f=NULL;
+		fclose(of);
+		of=NULL;
 		lll_free_identifier_data(&(c_dt.i_dt));
 		lll_free_import_data(&(c_dt.im));
 	}

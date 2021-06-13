@@ -1549,12 +1549,17 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_inpu
 			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 			return LLL_RETURN_ERROR;
 		}
-		(c_dt->im.dt+i)->nm=malloc((c_dt->im.dt+i)->sz*sizeof(char));
-		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)((c_dt->im.dt+i)->nm),(c_dt->im.dt+i)->sz*sizeof(char))){
-			free(c_dt->i_dt.il);
-			free(c_dt->im.dt);
-			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
-			return LLL_RETURN_ERROR;
+		if ((c_dt->im.dt+i)->sz==UINT32_MAX){
+			(c_dt->im.dt+i)->nm=NULL;
+		}
+		else{
+			(c_dt->im.dt+i)->nm=malloc((c_dt->im.dt+i)->sz*sizeof(char));
+			if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)((c_dt->im.dt+i)->nm),(c_dt->im.dt+i)->sz*sizeof(char))){
+				free(c_dt->i_dt.il);
+				free(c_dt->im.dt);
+				e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+				return LLL_RETURN_ERROR;
+			}
 		}
 	}
 	if (_bf_off+dt.sz>_bf_sz){

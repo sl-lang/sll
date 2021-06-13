@@ -48,6 +48,9 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 			case LLL_ERROR_INVALID_FILE_FORMAT:
 				printf("Invalid File Format\n");
 				return;
+			case LLL_ERROR_INVALID_IMPORT_INDEX:
+				printf("Unknown Module Index '%u'\n",e->dt.im_i);
+				return;
 			case LLL_ERROR_ASSERTION:
 				printf("%s\n",e->dt.str);
 				return;

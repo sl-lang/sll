@@ -1,5 +1,6 @@
 (-- "import.lll")
 (-> (= i 1) (< i 11) {
+	(-- "import.lll")
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
 		(= j (+ j 1))
@@ -16,7 +17,7 @@
 		(:> "Medium: " i "\n")
 	} {
 		(= unused_identifier 18900)
-		(:> "End: " i "(j=" j ")\n")
+		(:> "End: " i " (j=" j ")\n")
 	})
 	(= i (* i j))
 	(? (< j 5) (:> j "! = " i "\n"))

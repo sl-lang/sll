@@ -30,12 +30,10 @@ __LLL_IMPORT_EXPORT void __lll_api_putchar(int c){
 
 
 __LLL_IMPORT_EXPORT void __lll_api_print_string(char* s){
-_loop:
-	putchar(*s);
-	s++;
-	if (*s){
-		goto _loop;
-	}
+	do{
+		putchar(*s);
+		s++;
+	} while (*s);
 }
 
 
@@ -66,9 +64,11 @@ __LLL_IMPORT_EXPORT void __lll_api_print_int32(int32_t v){
 
 __LLL_IMPORT_EXPORT void __lll_api_deinit(void){
 	fflush(stdout);
+	fflush(stderr);
 #ifdef _MSC_VER
 	ExitProcess(0);
 #else
 	__asm__ volatile("mov $60,%rax\nxor %edi,%edi\nsyscall\n");
 #endif
+	UNREACHABLE();
 }

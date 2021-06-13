@@ -65,6 +65,7 @@
 #define LLL_ERROR_FAILED_FILE_WRITE 41
 #define LLL_ERROR_DIVISION_BY_ZERO 42
 #define LLL_ERROR_INVALID_FILE_FORMAT 43
+#define LLL_ERROR_INVALID_IMPORT_INDEX 44
 #define LLL_ERROR_ASSERTION 255
 #define LLL_MAX_COMPILATION_ERROR LLL_ERROR_STRING_REQUIRED
 
@@ -374,6 +375,7 @@ typedef struct __LLL_ERROR_DATA_RANGE{
 typedef union __LLL_ERROR_DATA{
 	char str[256];
 	lll_error_data_range_t r;
+	uint32_t im_i;
 } lll_error_data_t;
 
 

@@ -2316,7 +2316,11 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 	}
 	for (uint32_t i=0;i<c_dt->im.l;i++){
 		lll_import_data_path_t* k=c_dt->im.dt+i;
-		if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->sz)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(k->nm),k->sz*sizeof(char))){
+		if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->sz)),sizeof(uint32_t))){
+			e->t=LLL_ERROR_FAILED_FILE_WRITE;
+			return LLL_RETURN_ERROR;
+		}
+		if (k->sz!=UINT32_MAX&&!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(k->nm),k->sz*sizeof(char))){
 			e->t=LLL_ERROR_FAILED_FILE_WRITE;
 			return LLL_RETURN_ERROR;
 		}

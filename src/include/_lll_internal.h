@@ -286,6 +286,15 @@ typedef struct __SCOPE_DATA{
 
 
 
+typedef struct __IMPORT_DATA{
+	uint32_t i;
+	uint32_t off;
+	uint64_t b_off;
+	uint8_t rm;
+} import_data_t;
+
+
+
 extern uint8_t* _bf;
 extern uint32_t _bf_off;
 extern uint32_t _bf_sz;
