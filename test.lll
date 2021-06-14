@@ -1,6 +1,4 @@
-(-- "import.lll")
 (-> (= i 1) (< i 11) {
-	(-- "import.lll")
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
 		(= j (+ j 1))
@@ -26,3 +24,5 @@
 })
 (:> FACTORIAL "! = " i '\n')
 (< 10 5 (:> "This Should Never Happen"))
+(-- "import.lll")
+(:> "Program End\n")

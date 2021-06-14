@@ -212,7 +212,6 @@ while (i<len(o)):
 		i+=6
 		while (o[i] in SPACE_CHARACTERS):
 			i+=1
-		k=i
 		while (o[i] in IDENTIFIER_CHARACTERS):
 			i+=1
 		while (o[i] in SPACE_CHARACTERS):
@@ -239,7 +238,6 @@ while (i<len(o)):
 		i+=7
 		while (o[i] in SPACE_CHARACTERS):
 			i+=1
-		k=i
 		while (o[i] in IDENTIFIER_CHARACTERS):
 			i+=1
 		while (o[i] in SPACE_CHARACTERS):

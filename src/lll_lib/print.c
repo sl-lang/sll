@@ -345,7 +345,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 				uint32_t i=sizeof(lll_debug_object_t);
-				fputc('[',f);
+				fprintf(f,"[%s:",(c_dt->fp_dt.dt+dbg->fpi)->fp);
 				if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
 					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1,f);
 					i+=sizeof(uint32_t);

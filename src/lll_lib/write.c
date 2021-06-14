@@ -2287,16 +2287,23 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_out
 		COMPLIED_OBJECT_FILE_MAGIC_NUMBER,
 		sz,
 		c_dt->tm,
-		c_dt->fpl,
 		.ill=c_dt->i_dt.ill,
-		.iml=c_dt->im.l
+		.iml=c_dt->im.l,
+		.fp_dtl=c_dt->fp_dt.l
 	};
 	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		dt.sil[i]=c_dt->i_dt.s[i].l;
 	}
-	if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&dt),sizeof(compiled_object_file_t))||!LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,c_dt->fp)){
+	if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&dt),sizeof(compiled_object_file_t))){
 		e->t=LLL_ERROR_FAILED_FILE_WRITE;
 		return LLL_RETURN_ERROR;
+	}
+	for (uint32_t i=0;i<c_dt->fp_dt.l;i++){
+		lll_file_path_t* ifp=c_dt->fp_dt.dt+i;
+		if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(ifp->l)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(ifp->fp),ifp->l*sizeof(char))){
+			e->t=LLL_ERROR_FAILED_FILE_WRITE;
+			return LLL_RETURN_ERROR;
+		}
 	}
 	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		lll_identifier_list_t* l=c_dt->i_dt.s+i;

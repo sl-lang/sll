@@ -96,14 +96,14 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 							printf("File Successfully Read.\n");
 						}
 						if (fl&FLAG_MERGE_IMPORTS){
-							for (i=0;i<c_dt->im.l;i++){
+							for (uint32_t k=0;k<c_dt->im.l;k++){
 								char nm[MAX_PATH_LENGTH];
-								char* s=(c_dt->im.dt+i)->nm;
-								j=0;
-								for (;j<(c_dt->im.dt+i)->sz;j++){
-									*(nm+j)=*(s+j);
+								char* s=(c_dt->im.dt+k)->nm;
+								uint32_t l=0;
+								for (;l<(c_dt->im.dt+k)->sz;l++){
+									*(nm+l)=*(s+l);
 								}
-								*(nm+j)=0;
+								*(nm+l)=0;
 								lll_stack_context_t s_ctx;
 								lll_save_stack_context(&s_ctx);
 								uint8_t n_st[COMPILER_STACK_SIZE];
@@ -117,6 +117,7 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 										fclose(n_f);
 									}
 									lll_load_stack_context(&s_ctx);
+									lll_free_file_path_data(&(n_c_dt.fp_dt));
 									lll_free_identifier_data(&(n_c_dt.i_dt));
 									lll_free_import_data(&(n_c_dt.im));
 									return 0;
@@ -126,20 +127,22 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 								}
 								lll_load_stack_context(&s_ctx);
 								if (fl&FLAG_VERBOSE){
-									printf("Merging Module '%s' ('%s', index %u) into '%s'...\n",n_f_fp,nm,i,f_fp);
+									printf("Merging Module '%s' ('%s', index %u) into '%s'...\n",n_f_fp,nm,k,f_fp);
 								}
-								if (!lll_merge_import(c_dt,i,&n_c_dt,&e)){
+								if (!lll_merge_import(c_dt,k,&n_c_dt,&e)){
+									lll_free_file_path_data(&(n_c_dt.fp_dt));
 									lll_free_identifier_data(&(n_c_dt.i_dt));
 									lll_free_import_data(&(n_c_dt.im));
 									lll_print_error(is,&e);
 									return 0;
 								}
+								lll_free_file_path_data(&(n_c_dt.fp_dt));
 								lll_free_identifier_data(&(n_c_dt.i_dt));
 								lll_free_import_data(&(n_c_dt.im));
 							}
 						}
 						else{
-							for (i=0;i<c_dt->im.l;i++){
+							for (uint32_t k=0;k<c_dt->im.l;k++){
 								fpl++;
 								void* tmp=realloc(fp,fpl*sizeof(char*));
 								if (!tmp){
@@ -147,17 +150,17 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 									return 0;
 								}
 								fp=tmp;
-								char* d=malloc(((c_dt->im.dt+i)->sz+1)*sizeof(char));
+								char* d=malloc(((c_dt->im.dt+k)->sz+1)*sizeof(char));
 								if (!d){
 									printf("Unable to Allocate Space for Module Name\n");
 									return 0;
 								}
-								char* s=(c_dt->im.dt+i)->nm;
-								j=0;
-								for (;j<(c_dt->im.dt+i)->sz;j++){
-									*(d+j)=*(s+j);
+								char* s=(c_dt->im.dt+k)->nm;
+								uint32_t l=0;
+								for (;l<(c_dt->im.dt+k)->sz;l++){
+									*(d+l)=*(s+l);
 								}
-								*(d+j)=0;
+								*(d+l)=0;
 								*(fp+fpl-1)=d;
 							}
 						}
@@ -371,14 +374,14 @@ _read_file_argument:
 		if (fl&FLAG_MERGE_IMPORTS){
 			printf("  Import Merge Mode\n");
 		}
-		printf("Include Path: \n - '");
+		printf("Include Path: \n  - '");
 		for (uint32_t i=0;i<i_fpl;i++){
 			if (*(i_fp+i)){
 				putchar(*(i_fp+i));
 			}
 			else{
 				if (i+1<i_fpl){
-					printf("'\n - '");
+					printf("'\n  - '");
 				}
 				else{
 					printf("'\n");
@@ -533,6 +536,7 @@ _read_file_argument:
 		f=NULL;
 		fclose(of);
 		of=NULL;
+		lll_free_file_path_data(&(c_dt.fp_dt));
 		lll_free_identifier_data(&(c_dt.i_dt));
 		lll_free_import_data(&(c_dt.im));
 	}
@@ -554,6 +558,7 @@ _error:
 	if (fp){
 		free(fp);
 	}
+	lll_free_file_path_data(&(c_dt.fp_dt));
 	lll_free_identifier_data(&(c_dt.i_dt));
 	lll_free_import_data(&(c_dt.im));
 	if (f){

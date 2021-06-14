@@ -1,6 +1,7 @@
 #include <lll_lib.h>
 #include <_lll_internal.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 
 
@@ -96,6 +97,60 @@ uint32_t _patch_import(lll_object_t* o,import_data_t* dt){
 
 
 
+uint32_t _patch_module(lll_object_t* o,import_identifier_offset_list_t* i_off){
+	uint32_t eoff=0;
+	while (o->t==LLL_OBJECT_TYPE_NOP){
+		eoff+=sizeof(lll_object_type_t);
+		o=LLL_GET_OBJECT_AFTER_NOP(o);
+	}
+	switch (LLL_GET_OBJECT_TYPE(o)){
+		case LLL_OBJECT_TYPE_UNKNOWN:
+		case LLL_OBJECT_TYPE_NIL:
+		case LLL_OBJECT_TYPE_TRUE:
+		case LLL_OBJECT_TYPE_FALSE:
+			return sizeof(lll_object_t)+eoff;
+		case LLL_OBJECT_TYPE_CHAR:
+			return sizeof(lll_object_t)+eoff+sizeof(char);
+		case LLL_OBJECT_TYPE_STRING:
+			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_IDENTIFIER_ADD_INDEX(LLL_GET_OBJECT_AS_IDENTIFIER(o),i_off->off[LLL_IDENTIFIER_GET_ARRAY_ID(LLL_GET_OBJECT_AS_IDENTIFIER(o))]));
+			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
+		case LLL_OBJECT_TYPE_INT:
+			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
+		case LLL_OBJECT_TYPE_FLOAT:
+			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+		case LLL_OBJECT_TYPE_IMPORT:
+			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
+		case LLL_OBJECT_TYPE_OPERATION_LIST:
+			{
+				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
+				lll_statement_count_t l=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
+				while (l){
+					l--;
+					off+=_patch_module(LLL_GET_OBJECT_STATEMENT(o,off),i_off);
+				}
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_DEBUG_DATA:
+			{
+				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
+				dbg->fpi+=i_off->dbg_off;
+				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
+				return sz+eoff+_patch_module(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),i_off);
+			}
+	}
+	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+	while (l){
+		l--;
+		off+=_patch_module(LLL_GET_OBJECT_ARGUMENT(o,off),i_off);
+	}
+	return off+eoff;
+}
+
+
+
 __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_merge_import(lll_compilation_data_t* c_dt,uint32_t im_i,lll_compilation_data_t* im,lll_error_t* e){
 	if (im_i>=c_dt->im.l||(c_dt->im.dt+im_i)->sz==UINT32_MAX){
 		e->t=LLL_ERROR_INVALID_IMPORT_INDEX;
@@ -112,7 +167,67 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_merge_import(lll_compilation_
 		0
 	};
 	uint32_t sz=_patch_import(c_dt->h,&dt);
-	uint32_t m_sz=_get_object_size(im->h);
+	import_identifier_offset_list_t i_off={
+		.dbg_off=c_dt->fp_dt.l
+	};
+	uint32_t si=c_dt->fp_dt.l;
+	c_dt->fp_dt.l+=im->fp_dt.l;
+	void* tmp=realloc(c_dt->fp_dt.dt,c_dt->fp_dt.l*sizeof(lll_file_path_t));
+	if (!tmp){
+		ASSERT(!"Unable to Reallocate File Path Array",e,LLL_RETURN_ERROR);
+	}
+	c_dt->fp_dt.dt=tmp;
+	for (uint16_t i=0;i<im->fp_dt.l;i++){
+		lll_file_path_t* ifp=c_dt->fp_dt.dt+si+i;
+		lll_file_path_t* iifp=im->fp_dt.dt+i;
+		ifp->l=iifp->l;
+		for (uint16_t j=0;j<ifp->l+1;j++){
+			ifp->fp[j]=iifp->fp[j];
+		}
+	}
+	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		lll_identifier_list_t* il=c_dt->i_dt.s+i;
+		lll_identifier_list_t mil=im->i_dt.s[i];
+		i_off.off[i]=il->l;
+		if (mil.l){
+			si=il->l;
+			il->l+=mil.l;
+			void* tmp=realloc(il->dt,il->l*sizeof(lll_small_identifier_t));
+			if (!tmp){
+				ASSERT(!"Unable to Reallocate Short Identifier Array",e,LLL_RETURN_ERROR);
+			}
+			il->dt=tmp;
+			for (uint32_t j=0;j<mil.l;j++){
+				(il->dt+si+j)->v=malloc((i+1)*sizeof(char));
+				(il->dt+si+j)->sc=(mil.dt+j)->sc+c_dt->_n_sc_id;
+				for (uint8_t k=0;k<i+1;k++){
+					*((il->dt+si+j)->v+k)=*((mil.dt+j)->v+k);
+				}
+			}
+		}
+	}
+	i_off.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH]=c_dt->i_dt.ill;
+	if (im->i_dt.ill){
+		si=c_dt->i_dt.ill;
+		c_dt->i_dt.ill+=im->i_dt.ill;
+		void* tmp=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t*));
+		if (!tmp){
+			ASSERT(!"Unable to Reallocate Long Identifier Array",e,LLL_RETURN_ERROR);
+		}
+		c_dt->i_dt.il=tmp;
+		for (uint32_t j=0;j<im->i_dt.ill;j++){
+			lll_identifier_t* mid=*(im->i_dt.il+j);
+			lll_identifier_t* id=malloc(sizeof(lll_identifier_t)+mid->sz*sizeof(char));
+			id->sz=mid->sz;
+			id->sc=mid->sc+c_dt->_n_sc_id;
+			for (uint32_t k=0;k<id->sz;k++){
+				id->v[k]=mid->v[k];
+			}
+			*(c_dt->i_dt.il+si+j)=id;
+		}
+	}
+	c_dt->_n_sc_id+=im->_n_sc_id;
+	uint32_t m_sz=_patch_module(im->h,&i_off);
 	if (sz+m_sz>=_bf_sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 		e->dt.r.off=0;

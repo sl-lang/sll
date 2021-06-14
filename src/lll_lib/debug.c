@@ -67,6 +67,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_insert_debug_object(lll_input
 	}
 	lll_debug_object_t* dbg=(lll_debug_object_t*)(_bf+_bf_off);
 	dbg->t=LLL_OBJECT_TYPE_DEBUG_DATA;
+	dbg->fpi=0;
 	dbg->f=0;
 	uint32_t ln=LLL_GET_INPUT_DATA_STREAM_LINE_NUMBER(is);
 	uint32_t i=sizeof(lll_debug_object_t);

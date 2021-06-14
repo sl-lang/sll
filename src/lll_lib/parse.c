@@ -1408,6 +1408,7 @@ _found_import:;
 			return LLL_RETURN_ERROR;
 		}
 		o->t=LLL_OBJECT_TYPE_NIL;
+		o->m=0;
 		return LLL_RETURN_NO_ERROR;
 	}
 	e->t=LLL_ERROR_UNMATCHED_OPEN_PARENTHESES;
@@ -1501,12 +1502,20 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_inpu
 		return LLL_RETURN_ERROR;
 	}
 	compiled_object_file_t dt;
-	if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&dt),sizeof(compiled_object_file_t))||dt.m!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(c_dt->fp),dt.fpl)){
+	if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&dt),sizeof(compiled_object_file_t))||dt.m!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER){
 		e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 		return LLL_RETURN_ERROR;
 	}
-	c_dt->fp[dt.fpl]=0;
-	c_dt->fpl=dt.fpl;
+	c_dt->fp_dt.dt=malloc(dt.fp_dtl*sizeof(lll_file_path_t));
+	c_dt->fp_dt.l=dt.fp_dtl;
+	for (uint32_t i=0;i<dt.fp_dtl;i++){
+		lll_file_path_t* ifp=c_dt->fp_dt.dt+i;
+		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&(ifp->l)),sizeof(uint32_t))||!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(ifp->fp),ifp->l*sizeof(char))){
+			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+			return LLL_RETURN_ERROR;
+		}
+		ifp->fp[ifp->l]=0;
+	}
 	c_dt->is=NULL;
 	c_dt->tm=dt.t;
 	c_dt->h=(lll_object_t*)(_bf+_bf_off);

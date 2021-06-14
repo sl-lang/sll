@@ -170,7 +170,7 @@
 #define LLL_SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((float)(f)))
 #define LLL_SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((double)(f)))
 #define LLL_SET_OBJECT_STRING_LENGTH(o,sz) ((*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_string_length_t)(sz)))
-#define LLL_SET_OBJECT_AS_IDENTIFIER(o,sz) ((*((lll_identifier_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_identifier_index_t)(sz)))
+#define LLL_SET_OBJECT_AS_IDENTIFIER(o,i) ((*((lll_identifier_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_identifier_index_t)(i)))
 #define LLL_SET_OBJECT_IMPORT_INDEX(o,i,v) ((*((lll_import_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(i))))=((lll_import_index_t)(v)))
 
 #define LLL_OBJECT_MODIFIER_FIXED 0x1
@@ -213,6 +213,7 @@
 #define LLL_MAX_SHORT_IDENTIFIER_LENGTH 15
 #define LLL_IDENTIFIER_GET_ARRAY_ID(i) ((i)&0xf)
 #define LLL_IDENTIFIER_GET_ARRAY_INDEX(i) ((i)>>4)
+#define LLL_IDENTIFIER_ADD_INDEX(i,j) ((i)+((j)<<4))
 #define LLL_CREATE_IDENTIFIER(i,j) (((i)<<4)|(j))
 
 #define LLL_WRITE_MODE_RAW 0
@@ -303,8 +304,23 @@ typedef struct __LLL_OBJECT{
 typedef struct __LLL_DEBUG_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
+	uint16_t fpi;
 	uint8_t f;
 } lll_debug_object_t;
+
+
+
+typedef struct __lll_file_path{
+	char fp[4096];
+	uint16_t l;
+} lll_file_path_t;
+
+
+
+typedef struct __lll_file_path_DATA{
+	lll_file_path_t* dt;
+	uint16_t l;
+} lll_file_path_data_t;
 
 
 
@@ -353,14 +369,13 @@ typedef struct __LLL_IMPORT_DATA{
 
 
 typedef struct __LLL_COMPILATION_DATA{
-	char fp[4096];
-	uint32_t _n_sc_id;
-	uint16_t fpl;
+	lll_file_path_data_t fp_dt;
 	lll_input_data_stream_t* is;
 	uint64_t tm;
 	lll_object_t* h;
 	lll_identifier_data_t i_dt;
 	lll_import_data_t im;
+	uint32_t _n_sc_id;
 } lll_compilation_data_t;
 
 
@@ -400,6 +415,10 @@ __LLL_IMPORT_EXPORT void lll_load_stack_context(lll_stack_context_t* ctx);
 
 
 __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o);
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_file_path_data(lll_file_path_data_t* fp_dt);
 
 
 

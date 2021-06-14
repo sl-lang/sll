@@ -270,10 +270,10 @@ typedef PACKED(struct __COMPILED_OBJECT_FILE{
 	uint32_t m;
 	uint32_t sz;
 	uint64_t t;
-	uint16_t fpl;
 	uint32_t sil[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
 	uint32_t ill;
 	uint32_t iml;
+	uint16_t fp_dtl;
 }) compiled_object_file_t;
 
 
@@ -292,6 +292,13 @@ typedef struct __IMPORT_DATA{
 	uint64_t b_off;
 	uint8_t rm;
 } import_data_t;
+
+
+
+typedef struct __IMPORT_IDENTIFIER_OFFSET_LIST{
+	uint32_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
+	uint16_t dbg_off;
+} import_identifier_offset_list_t;
 
 
 

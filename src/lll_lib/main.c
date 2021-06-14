@@ -7,14 +7,16 @@
 
 
 __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
-	o->fpl=0;
+	o->fp_dt.dt=malloc(sizeof(lll_file_path_t));
+	lll_file_path_t* ifp=o->fp_dt.dt;
+	ifp->l=0;
 	while (*fp){
-		o->fp[o->fpl]=*fp;
-		o->fpl++;
+		ifp->fp[ifp->l]=*fp;
+		ifp->l++;
 		fp++;
 	}
-	o->fp[o->fpl]=0;
-	o->_n_sc_id=1;
+	ifp->fp[ifp->l]=0;
+	o->fp_dt.l=1;
 	o->is=is;
 	o->tm=(uint64_t)time(NULL);
 	o->h=NULL;
@@ -26,6 +28,17 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 	o->i_dt.ill=0;
 	o->im.dt=NULL;
 	o->im.l=0;
+	o->_n_sc_id=1;
+}
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_file_path_data(lll_file_path_data_t* fp_dt){
+	if (fp_dt->dt){
+		free(fp_dt->dt);
+		fp_dt->dt=NULL;
+	}
+	fp_dt->l=0;
 }
 
 
