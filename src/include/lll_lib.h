@@ -310,14 +310,14 @@ typedef struct __LLL_DEBUG_OBJECT{
 
 
 
-typedef struct __lll_file_path{
+typedef struct __LLL_FILE_PATH{
 	char fp[4096];
 	uint16_t l;
 } lll_file_path_t;
 
 
 
-typedef struct __lll_file_path_DATA{
+typedef struct __LLL_FILE_PATH_DATA{
 	lll_file_path_t* dt;
 	uint16_t l;
 } lll_file_path_data_t;
