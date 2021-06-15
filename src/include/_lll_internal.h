@@ -87,7 +87,12 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 		} \
 	} while (0)
 
-#define CONSTRUCT_CHAR(c) ((#c)[0])
+#define _CONSTRUCT_CHAR_JOIN_(l) _CONSTRUCT_CHAR_##l
+#define _CONSTRUCT_CHAR_JOIN(l) _CONSTRUCT_CHAR_JOIN_(l)
+#define _CONSTRUCT_CHAR_COUNT_ARGS(_1,_2,n,...) n
+#define CONSTRUCT_CHAR(...) _CONSTRUCT_CHAR_JOIN(_CONSTRUCT_CHAR_COUNT_ARGS(__VA_ARGS__,2,1))(__VA_ARGS__)
+#define _CONSTRUCT_CHAR_1(c) ((#c)[0])
+#define _CONSTRUCT_CHAR_2(...) (',')
 #define CONSTRUCT_WORD(a,b) ((((uint16_t)(b))<<8)|(a))
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
 #define CONSTRUCT_QWORD(a,b,c,d,e,f,g,h) ((((uint64_t)(h))<<56)|(((uint64_t)(g))<<48)|(((uint64_t)(f))<<40)|(((uint64_t)(e))<<32)|(((uint64_t)(d))<<24)|(((uint64_t)(c))<<16)|(((uint64_t)(b))<<8)|(a))
@@ -122,6 +127,7 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 #define FAST_COMPARE_STR_13(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((a)+12)==*((b)+12))
 #define FAST_COMPARE_STR_14(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((uint16_t*)(a)+12)==*((uint16_t*)(b)+12))
 #define FAST_COMPARE_STR_15(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((uint16_t*)(a)+12)==*((uint16_t*)(b)+12)&&*((a)+14)==*((b)+14))
+#define FAST_COMPARE_COMMA ,
 
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','L',0)
 

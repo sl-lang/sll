@@ -237,26 +237,6 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 				o->t=LLL_OBJECT_TYPE_NIL;
 				_bf_off-=sizeof(lll_arg_count_t);
 			}
-			else if (LLL_IS_OBJECT_TYPE_MATH_NO_CHAIN(o)){
-				if (*ac==1){
-					e->t=LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS;
-					e->dt.r.off=st_off;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-				if (*ac>(LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_POW?3:2)){
-					e->t=LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS;
-					e->dt.r.off=st_off;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-			}
 			else if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_FOR){
 				if (*ac<2){
 					e->t=LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS;
@@ -787,18 +767,6 @@ _read_symbol:
 				else if (FAST_COMPARE(str,/,/)){
 					o->t=LLL_OBJECT_TYPE_FLOOR_DIV;
 				}
-				else if (FAST_COMPARE(str,/,%)){
-					o->t=LLL_OBJECT_TYPE_DIV_MOD;
-				}
-				else if (FAST_COMPARE(str,*,*)){
-					o->t=LLL_OBJECT_TYPE_POW;
-				}
-				else if (FAST_COMPARE(str,*,/)){
-					o->t=LLL_OBJECT_TYPE_ROOT;
-				}
-				else if (FAST_COMPARE(str,_,/)){
-					o->t=LLL_OBJECT_TYPE_LOG;
-				}
 				else if (FAST_COMPARE(str,<,=)){
 					o->t=LLL_OBJECT_TYPE_LESS_EQUAL;
 				}
@@ -819,14 +787,8 @@ _read_symbol:
 				}
 			}
 			else if (sz==3){
-				if (FAST_COMPARE(str,.,.,.)){
+				if (FAST_COMPARE_3(str,FAST_COMPARE_COMMA,FAST_COMPARE_COMMA,FAST_COMPARE_COMMA)){
 					o->t=LLL_OBJECT_TYPE_FUNC;
-				}
-				else if (FAST_COMPARE(str,*,/,/)){
-					o->t=LLL_OBJECT_TYPE_FLOOR_ROOT;
-				}
-				else if (FAST_COMPARE(str,_,/,/)){
-					o->t=LLL_OBJECT_TYPE_FLOOR_LOG;
 				}
 				else{
 					goto _unknown_symbol;

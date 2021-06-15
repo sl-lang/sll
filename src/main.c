@@ -96,14 +96,14 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 							printf("File Successfully Read.\n");
 						}
 						if (fl&FLAG_MERGE_IMPORTS){
-							for (uint32_t k=0;k<c_dt->im.l;k++){
+							for (uint32_t l=0;l<c_dt->im.l;l++){
 								char nm[MAX_PATH_LENGTH];
-								char* s=(c_dt->im.dt+k)->nm;
-								uint32_t l=0;
-								for (;l<(c_dt->im.dt+k)->sz;l++){
-									*(nm+l)=*(s+l);
+								char* s=(c_dt->im.dt+l)->nm;
+								uint32_t m=0;
+								for (;m<(c_dt->im.dt+l)->sz;m++){
+									*(nm+m)=*(s+m);
 								}
-								*(nm+l)=0;
+								*(nm+m)=0;
 								lll_stack_context_t s_ctx;
 								lll_save_stack_context(&s_ctx);
 								uint8_t n_st[COMPILER_STACK_SIZE];
@@ -127,9 +127,9 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 								}
 								lll_load_stack_context(&s_ctx);
 								if (fl&FLAG_VERBOSE){
-									printf("Merging Module '%s' ('%s', index %u) into '%s'...\n",n_f_fp,nm,k,f_fp);
+									printf("Merging Module '%s' ('%s', index %u) into '%s'...\n",n_f_fp,nm,l,f_fp);
 								}
-								if (!lll_merge_import(c_dt,k,&n_c_dt,&e)){
+								if (!lll_merge_import(c_dt,l,&n_c_dt,&e)){
 									lll_free_file_path_data(&(n_c_dt.fp_dt));
 									lll_free_identifier_data(&(n_c_dt.i_dt));
 									lll_free_import_data(&(n_c_dt.im));
@@ -142,7 +142,7 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 							}
 						}
 						else{
-							for (uint32_t k=0;k<c_dt->im.l;k++){
+							for (uint32_t l=0;l<c_dt->im.l;l++){
 								fpl++;
 								void* tmp=realloc(fp,fpl*sizeof(char*));
 								if (!tmp){
@@ -150,17 +150,17 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 									return 0;
 								}
 								fp=tmp;
-								char* d=malloc(((c_dt->im.dt+k)->sz+1)*sizeof(char));
+								char* d=malloc(((c_dt->im.dt+l)->sz+1)*sizeof(char));
 								if (!d){
 									printf("Unable to Allocate Space for Module Name\n");
 									return 0;
 								}
-								char* s=(c_dt->im.dt+k)->nm;
-								uint32_t l=0;
-								for (;l<(c_dt->im.dt+k)->sz;l++){
-									*(d+l)=*(s+l);
+								char* s=(c_dt->im.dt+l)->nm;
+								uint32_t m=0;
+								for (;m<(c_dt->im.dt+l)->sz;m++){
+									*(d+m)=*(s+m);
 								}
-								*(d+l)=0;
+								*(d+m)=0;
 								*(fp+fpl-1)=d;
 							}
 						}

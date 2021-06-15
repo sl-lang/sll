@@ -10,6 +10,7 @@ COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"DLL1_EXPORT
 DEFINE_LINE_CONTINUE_REGEX=re.compile(br"\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
 HEADER_SINGLE_INCLUDE_REGEX=re.compile(br"^\s*#ifndef\s+(?P<h_nm>[a-zA-Z0-9_]+)\s+#define\s+(?P=h_nm)\s+(?:1\s+)?(.*)#endif\s*$",re.DOTALL)
+HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
 SPACE_CHARACTERS=b" \t\n\v\f\r"
@@ -188,6 +189,7 @@ for i,(k,v) in enumerate(sorted(d_v,key=lambda e:e[0])):
 		if (nv==v):
 			break
 		v=nv
+	v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),v)
 	d_v[i]=(k,v)
 	d_s+=b"\n#define "+k+b" "+v.strip()
 for i,(k,v) in enumerate(sorted(d_f,key=lambda e:e[0])):
@@ -196,6 +198,7 @@ for i,(k,v) in enumerate(sorted(d_f,key=lambda e:e[0])):
 		if (nv==v):
 			break
 		v=nv
+	v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),v)
 	d_f[i]=(k,v)
 	d_s+=b"\n#define "+k+b" "+v.strip()
 for k in l:

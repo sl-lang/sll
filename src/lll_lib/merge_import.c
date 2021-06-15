@@ -192,7 +192,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_merge_import(lll_compilation_
 		if (mil.l){
 			si=il->l;
 			il->l+=mil.l;
-			void* tmp=realloc(il->dt,il->l*sizeof(lll_small_identifier_t));
+			tmp=realloc(il->dt,il->l*sizeof(lll_small_identifier_t));
 			if (!tmp){
 				ASSERT(!"Unable to Reallocate Short Identifier Array",e,LLL_RETURN_ERROR);
 			}
@@ -210,7 +210,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_merge_import(lll_compilation_
 	if (im->i_dt.ill){
 		si=c_dt->i_dt.ill;
 		c_dt->i_dt.ill+=im->i_dt.ill;
-		void* tmp=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t*));
+		tmp=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t*));
 		if (!tmp){
 			ASSERT(!"Unable to Reallocate Long Identifier Array",e,LLL_RETURN_ERROR);
 		}

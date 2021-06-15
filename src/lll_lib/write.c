@@ -877,18 +877,6 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_BIT_NOT:
 			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_DIV_MOD:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_POW:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_ROOT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_LOG:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FLOOR_LOG:
-			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_LESS:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
@@ -1023,18 +1011,6 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_NOT:
 			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_DIV_MOD:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_POW:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_ROOT:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_LOG:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_FLOOR_LOG:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LESS:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
@@ -1134,18 +1110,6 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_NOT:
 			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_DIV_MOD:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_POW:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_ROOT:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_LOG:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_FLOOR_LOG:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LESS:
 			GET_COMPARE_COND_TYPE(o,im,<);
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
@@ -1224,18 +1188,6 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 		case LLL_OBJECT_TYPE_BIT_XOR:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_BIT_NOT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_DIV_MOD:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_POW:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_ROOT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_LOG:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FLOOR_LOG:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_LESS:
 			{
@@ -1459,18 +1411,6 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 		case LLL_OBJECT_TYPE_BIT_XOR:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_BIT_NOT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_DIV_MOD:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_POW:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_ROOT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_LOG:
-			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_FLOOR_LOG:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_LESS:
 			{
@@ -2083,12 +2023,6 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 		case LLL_OBJECT_TYPE_BIT_OR:
 		case LLL_OBJECT_TYPE_BIT_XOR:
 		case LLL_OBJECT_TYPE_BIT_NOT:
-		case LLL_OBJECT_TYPE_DIV_MOD:
-		case LLL_OBJECT_TYPE_POW:
-		case LLL_OBJECT_TYPE_ROOT:
-		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-		case LLL_OBJECT_TYPE_LOG:
-		case LLL_OBJECT_TYPE_FLOOR_LOG:
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);

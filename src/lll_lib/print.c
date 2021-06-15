@@ -274,24 +274,6 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 		case LLL_OBJECT_TYPE_BIT_NOT:
 			fprintf(f,"~");
 			break;
-		case LLL_OBJECT_TYPE_DIV_MOD:
-			fprintf(f,"/%%");
-			break;
-		case LLL_OBJECT_TYPE_POW:
-			fprintf(f,"**");
-			break;
-		case LLL_OBJECT_TYPE_ROOT:
-			fprintf(f,"*/");
-			break;
-		case LLL_OBJECT_TYPE_FLOOR_ROOT:
-			fprintf(f,"*//");
-			break;
-		case LLL_OBJECT_TYPE_LOG:
-			fprintf(f,"_/");
-			break;
-		case LLL_OBJECT_TYPE_FLOOR_LOG:
-			fprintf(f,"_//");
-			break;
 		case LLL_OBJECT_TYPE_LESS:
 			fprintf(f,"<");
 			break;

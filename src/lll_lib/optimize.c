@@ -96,7 +96,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 		}
 		lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 		off+=al;
-		if (LLL_IS_OBJECT_TYPE_MATH_CHAIN(o)){
+		if (LLL_IS_OBJECT_TYPE_MATH(o)){
 			while (LLL_GET_OBJECT_TYPE(a)==LLL_OBJECT_TYPE_DEBUG_DATA){
 				lll_debug_object_t* dbg=(lll_debug_object_t*)a;
 				a=LLL_GET_DEBUG_OBJECT_CHILD(dbg,sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg));
@@ -177,7 +177,7 @@ _set_to_0:
 		}
 		i++;
 	}
-	if (!(*l)&&LLL_IS_OBJECT_TYPE_MATH_CHAIN(o)){
+	if (!(*l)&&LLL_IS_OBJECT_TYPE_MATH(o)){
 		o->t=LLL_OBJECT_TYPE_INT;
 		LLL_SET_OBJECT_AS_INT8(o,0);
 		for (uint32_t j=sizeof(lll_object_t)+sizeof(int8_t);j<off;j++){
@@ -193,7 +193,7 @@ _set_to_0:
 			}
 			return off+eoff;
 		}
-		if (LLL_IS_OBJECT_TYPE_MATH_CHAIN(o)){
+		if (LLL_IS_OBJECT_TYPE_MATH(o)){
 			for (uint32_t j=0;j<sizeof(lll_object_t)+sizeof(lll_arg_count_t);j++){
 				*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
 			}
