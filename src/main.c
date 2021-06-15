@@ -272,7 +272,7 @@ int main(int argc,const char** argv){
 		}
 		else if (*e=='-'&&*(e+1)=='o'&&*(e+2)==0){
 			if (o_fp){
-				printf("Multplie Output Files Supplied\n\n");
+				printf("Multplie Output Files Supplied\n");
 				goto _help;
 			}
 			i++;
@@ -322,7 +322,7 @@ int main(int argc,const char** argv){
 		}
 		else if (*e=='-'){
 _unkown_switch:
-			printf("Unknown Switch: '%s'\n\n",e);
+			printf("Unknown Switch: '%s'\n",e);
 			goto _help;
 		}
 		else{
@@ -344,7 +344,7 @@ _read_file_argument:
 		goto _help;
 	}
 	if (!fpl){
-		printf("No Input Files Supplied\n\n");
+		printf("No Input Files Supplied\n");
 		goto _help;
 	}
 	im_fpl=fpl;
