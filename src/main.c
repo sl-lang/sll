@@ -27,8 +27,12 @@
 #define FLAG_FULL_PATH 4
 #define FLAG_PRINT_OBJECT 8
 #define FLAG_MERGE_IMPORTS 16
+#define FLAG_HELP 32
+#define FLAG_LOGO 64
 #define DEFAULT_OPTIMIZE_LEVEL OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE
 #define COMPILER_STACK_SIZE 65536
+#define _STR(x) #x
+#define STR(x) _STR(x)
 
 
 
@@ -195,7 +199,7 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 
 int main(int argc,const char** argv){
 	ol=DEFAULT_OPTIMIZE_LEVEL;
-	fl=0;
+	fl=FLAG_LOGO;
 	i_fp=malloc(sizeof(char));
 	if (!i_fp){
 		printf("Unable to Allocate Space for Include File Path Array\n");
@@ -240,9 +244,8 @@ int main(int argc,const char** argv){
 				sz++;
 			}
 			if (sz){
-				uint8_t d=(*(e+sz-1)!='\\'&&*(e+sz-1)!='/');
 				uint32_t j=i_fpl;
-				i_fpl+=sz+(d?2:1);
+				i_fpl+=sz+(*(e+sz-1)!='\\'&&*(e+sz-1)!='/'?2:1);
 				void* tmp=realloc(i_fp,i_fpl*sizeof(char));
 				if (!tmp){
 					printf("Unable to Allocate Space for Include File Path Array\n");
@@ -253,7 +256,7 @@ int main(int argc,const char** argv){
 					*(i_fp+j)=*(e+k);
 					j++;
 				}
-				if (d){
+				if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
 					*(i_fp+j)='/';
 					j++;
 				}
@@ -269,14 +272,23 @@ int main(int argc,const char** argv){
 		}
 		else if (*e=='-'&&*(e+1)=='o'&&*(e+2)==0){
 			if (o_fp){
-				printf("Multplie Output Files Supplied\n");
-				goto _error;
+				printf("Multplie Output Files Supplied\n\n");
+				goto _help;
 			}
 			i++;
 			if (i==argc){
 				break;
 			}
 			o_fp=argv[i];
+		}
+		else if (*e=='-'&&*(e+1)=='h'&&*(e+2)==0){
+			fl|=FLAG_HELP;
+		}
+		else if (*e=='-'&&*(e+1)=='L'&&*(e+2)==0){
+			fl|=FLAG_LOGO;
+		}
+		else if (*e=='-'&&*(e+1)=='L'&&*(e+2)=='0'&&*(e+3)==0){
+			fl&=~FLAG_LOGO;
 		}
 		else if (*e=='-'&&*(e+1)=='v'&&*(e+2)==0){
 			fl|=FLAG_VERBOSE;
@@ -310,8 +322,8 @@ int main(int argc,const char** argv){
 		}
 		else if (*e=='-'){
 _unkown_switch:
-			printf("Unknown Switch: '%s'\n",e);
-			goto _error;
+			printf("Unknown Switch: '%s'\n\n",e);
+			goto _help;
 		}
 		else{
 _read_file_argument:
@@ -325,40 +337,51 @@ _read_file_argument:
 			*(fp+fpl-1)=(char*)e;
 		}
 	}
+	if (fl&FLAG_LOGO){
+		printf("lll (Lisp Like Language) "STR(LLL_VERSION_MAJOR)"."STR(LLL_VERSION_MINOR)"."STR(LLL_VERSION_PATCH)" ("LLL_VERSION_BUILD_DATE", "LLL_VERSION_BUILD_TIME")\n");
+	}
+	if (fl&FLAG_HELP){
+		goto _help;
+	}
 	if (!fpl){
-		printf("Not Input Files Supplied\n");
-		goto _error;
+		printf("No Input Files Supplied\n\n");
+		goto _help;
 	}
 	im_fpl=fpl;
 	if (fl&FLAG_VERBOSE){
-		printf("Configuration:\n  Optimization Level: %c (",ol+48);
+		printf("Configuration:\n  Optimization Level:\n");
 		if (ol==OPTIMIZE_LEVEL_NO_OPTIMIZE){
-			printf("OPTIMIZE_LEVEL_NO_OPTIMIZE");
+			printf("    No Optimization\n");
 		}
-		else if (ol==OPTIMIZE_LEVEL_REMOVE_PADDING){
-			printf("OPTIMIZE_LEVEL_REMOVE_PADDING");
+		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
+			printf("    Padding Reduction (OPTIMIZE_LEVEL_REMOVE_PADDING)\n");
 		}
-		else if (ol==OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
-			printf("OPTIMIZE_LEVEL_REMOVE_PADDING, OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE");
+		if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
+			printf("    Global Optimization (OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE)\n");
 		}
-		else{
-			printf("OPTIMIZE_LEVEL_REMOVE_PADDING, OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE, OPTIMIZE_LEVEL_STRIP_DEBUG_DATA");
+		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
+			printf("    Debug Data Stripping (OPTIMIZE_LEVEL_STRIP_DEBUG_DATA)\n");
 		}
-		printf(")\n");
+		if (fl&FLAG_VERBOSE){
+			printf("  Verbose Mode (FLAG_VERBOSE)\n");
+		}
 		if (fl&FLAG_COMPILE_ONLY){
-			printf("  Compile Only Mode\n");
-		}
-		else{
-			printf("  Compilation And Code Generation Mode\n");
+			printf("  Compile Only Mode (FLAG_COMPILE_ONLY)\n");
 		}
 		if (fl&FLAG_FULL_PATH){
-			printf("  Full Path Mode\n");
+			printf("  Full Path Mode (FLAG_FULL_PATH)\n");
 		}
 		if (fl&FLAG_PRINT_OBJECT){
-			printf("  Object Print Mode\n");
+			printf("  Object Print Mode (FLAG_PRINT_OBJECT)\n");
 		}
 		if (fl&FLAG_MERGE_IMPORTS){
-			printf("  Import Merge Mode\n");
+			printf("  Import Merge Mode (FLAG_MERGE_IMPORTS)\n");
+		}
+		if (fl&FLAG_HELP){
+			printf("  Help Print Mode (FLAG_HELP)\n");
+		}
+		if (fl&FLAG_LOGO){
+			printf("  Compiler Logo Mode (FLAG_LOGO)\n");
 		}
 		printf("Include Path: \n  - '");
 		for (uint32_t i=0;i<i_fpl;i++){
@@ -535,6 +558,8 @@ _read_file_argument:
 		free(fp);
 	}
 	return 0;
+_help:
+	printf("\nUsage: lll [ <option1>, <option2>, <option3>, ... ] <file1>, <file2>, <file3>, ...\nOptions:\n  -O0 -> No optimization\n  -O1 -> Remove padding\n  -O2 -> Remove padding + Global optimization\n  -O3 -> Remove padding + Global optimization + Removal of debug data\n  -I <directory> -> Add <directory> to file include path\n  -f <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))\n  -o <output_file> -> Set output file to <output_file>\n  -h -> Print this message\n  -L -> Enable compiler logo (*1)\n  -L0 -> Disable compiler logo (*1)\n  -v -> Enable verbose mode (*1)\n  -v0 -> Disable verbose mode (*1)\n  -m -> Enable import merge mode (*1)\n  -m0 -> Disable import merge mode (*1)\n  -p -> Enable object print mode (*1)\n  -p0 -> Disable object print mode (*1)\n  -c -> Enable compilation only mode (*1)\n  -c0 -> Disable compilation only mode (*1)\n  -fp -> Expand all file paths (*1)\n  -fp0 -> Do not expand all file paths (*1)\n\n*1: Only the last -XXX/-XXX0 argument is interpreted\n\n");
 _error:
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));

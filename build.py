@@ -1,3 +1,4 @@
+import datetime
 import os
 import re
 import subprocess
@@ -115,7 +116,8 @@ inc_r+=br")|//[^\n]*)$"
 h_dt=DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX.sub(br"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(br"\n",re.sub(inc_r,br"",COMMENT_REGEX.sub(br"",h_dt)).strip().replace(b"\r\n",b"\n"))).split(b"\n")
 l=[]
 st=[True]
-dm={}
+tm=datetime.datetime.now()
+dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__DATE__":bytes(tm.strftime("\"%b %d %Y\""),"utf-8")}
 dfm={}
 d_v=[]
 d_f=[]
@@ -142,8 +144,10 @@ for e in h_dt:
 		elif (f[0]==b"endif"):
 			st.pop()
 			continue
-		elif (f[0]==b"include"and False not in st):
-			il+=b"\n#include "+b" ".join(f[1:])
+		elif (f[0]==b"include" and False not in st):
+			f_nm="src/include/"+str(b" ".join(f[1:]).strip(b"\"").strip(b"<").strip(b">"),"utf-8")
+			if (not os.path.exists(f_nm)):
+				il+=b"\n#include "+b" ".join(f[1:])
 			continue
 		elif (f[0]==b"define"and False not in st):
 			if (f[1][:2]==b"__"):
@@ -279,7 +283,8 @@ if (os.name=="nt"):
 	os.chdir(cd)
 	if ("--run" in sys.argv):
 		os.chdir("build")
-		if (subprocess.run(["lll.exe","../test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","..","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0):
+		subprocess.run(["lll.exe","-h"])
+		if (subprocess.run(["lll.exe","../test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","..","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L0"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		os.chdir(cd)
@@ -303,5 +308,6 @@ else:
 		if (subprocess.run(["gcc","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O0","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
 			sys.exit(1)
 	if ("--run" in sys.argv):
-		if (subprocess.run(["build/lll","test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","..","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0):
+		subprocess.run(["build/lll","-h"])
+		if (subprocess.run(["build/lll","test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","..","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L0"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0):
 			sys.exit(1)

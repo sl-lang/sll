@@ -1,0 +1,14 @@
+#ifndef __LLL_VERSION_H__
+#define __LLL_VERSION_H__ 1
+
+
+
+#define LLL_VERSION_MAJOR 0
+#define LLL_VERSION_MINOR 1
+#define LLL_VERSION_PATCH 3
+#define LLL_VERSION_BUILD_TIME __TIME__
+#define LLL_VERSION_BUILD_DATE __DATE__
+
+
+
+#endif
