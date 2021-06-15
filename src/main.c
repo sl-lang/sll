@@ -240,38 +240,24 @@ int main(int argc,const char** argv){
 				sz++;
 			}
 			if (sz){
-				if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
-					sz+=2;
-					uint32_t j=i_fpl;
-					i_fpl+=sz;
-					void* tmp=realloc(i_fp,i_fpl*sizeof(char));
-					if (!tmp){
-						printf("Unable to Allocate Space for Include File Path Array\n");
-						goto _error;
-					}
-					i_fp=tmp;
-					for (uint32_t k=0;k<sz-2;k++){
-						*(i_fp+j)=*(e+k);
-						j++;
-					}
+				uint8_t d=(*(e+sz-1)!='\\'&&*(e+sz-1)!='/');
+				uint32_t j=i_fpl;
+				i_fpl+=sz+(d?2:1);
+				void* tmp=realloc(i_fp,i_fpl*sizeof(char));
+				if (!tmp){
+					printf("Unable to Allocate Space for Include File Path Array\n");
+					goto _error;
+				}
+				i_fp=tmp;
+				for (uint32_t k=0;k<sz;k++){
+					*(i_fp+j)=*(e+k);
+					j++;
+				}
+				if (d){
 					*(i_fp+j)='/';
-					*(i_fp+j+1)=0;
+					j++;
 				}
-				else{
-					sz++;
-					uint32_t j=i_fpl;
-					i_fpl+=sz;
-					void* tmp=realloc(i_fp,i_fpl*sizeof(char));
-					if (!tmp){
-						printf("Unable to Allocate Space for Include File Path Array\n");
-						goto _error;
-					}
-					i_fp=tmp;
-					for (uint32_t k=0;k<sz;k++){
-						*(i_fp+j)=*(e+k);
-						j++;
-					}
-				}
+				*(i_fp+j)=0;
 			}
 		}
 		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)==0){
