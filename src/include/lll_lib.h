@@ -11,14 +11,14 @@
 #else
 #define __LLL_IMPORT_EXPORT __declspec(dllimport)
 #endif
-#define __LLL_CHECK_OUTPUT _Check_return_
+#define __LLL_RETURN _Check_return_ lll_return_t
 #else
 #ifdef __LLL_LIB_COMPILATION__
 #define __LLL_IMPORT_EXPORT __attribute__((visibility("default")))
 #else
 #define __LLL_IMPORT_EXPORT
 #endif
-#define __LLL_CHECK_OUTPUT __attribute__((warn_unused_result))
+#define __LLL_RETURN __attribute__((warn_unused_result)) lll_return_t
 #endif
 
 #define LLL_ERROR_UNKNOWN 0
@@ -71,7 +71,6 @@
 
 #define LLL_RETURN_ERROR 0
 #define LLL_RETURN_NO_ERROR 1
-#define LLL_RETURN_ERROR_AS_OBJECT(e) ((lll_object_t*)(e))
 
 #define LLL_OBJECT_TYPE_UNKNOWN 0
 #define LLL_OBJECT_TYPE_CHAR 1
@@ -221,6 +220,10 @@
 #define LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,c) ((os)->wcf((os),(c)))
 #define LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,s) ((os)->wsf((os),(s)))
 #define LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,bf,sz) ((os)->wf((os),(bf),(sz)))
+
+
+
+typedef uint8_t lll_return_t;
 
 
 
@@ -405,7 +408,7 @@ __LLL_IMPORT_EXPORT void lll_load_stack_context(lll_stack_context_t* ctx);
 
 
 
-__LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o);
+__LLL_IMPORT_EXPORT void lll_init_compilation_data(char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o);
 
 
 
@@ -437,43 +440,43 @@ __LLL_IMPORT_EXPORT void lll_print_object(lll_compilation_data_t*c_dt,lll_object
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_insert_debug_object(lll_input_data_stream_t* is,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_input_data_stream_t* is,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compilation_data_t* c_dt,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_read_object(lll_compilation_data_t* c_dt,lll_error_t* e,lll_object_t** o);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_read_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_read_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t*);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t*);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_merge_import(lll_compilation_data_t* c_dt,uint32_t im_i,lll_compilation_data_t* im,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,uint32_t im_i,lll_compilation_data_t* im,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_optimize_object(lll_object_t* o,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_object(lll_object_t* o,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_debug_data(lll_object_t* o,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_debug_data(lll_object_t* o,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_padding(lll_object_t* o,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_padding(lll_object_t* o,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_object(lll_output_data_stream_t* os,lll_object_t* o,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,uint8_t f,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,uint8_t f,lll_error_t* e);
 
 
 

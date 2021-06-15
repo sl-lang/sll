@@ -60,7 +60,7 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_insert_debug_object(lll_input_data_stream_t* is,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_input_data_stream_t* is,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -130,7 +130,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_insert_debug_object(lll_input
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_debug_data(lll_object_t* o,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_debug_data(lll_object_t* o,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;

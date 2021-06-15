@@ -302,7 +302,7 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_optimize_object(lll_object_t* o,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_object(lll_object_t* o,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -315,7 +315,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_optimize_object(lll_object_t*
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_remove_object_padding(lll_object_t* o,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_padding(lll_object_t* o,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;

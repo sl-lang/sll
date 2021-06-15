@@ -151,7 +151,7 @@ uint32_t _patch_module(lll_object_t* o,import_identifier_offset_list_t* i_off){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_merge_import(lll_compilation_data_t* c_dt,uint32_t im_i,lll_compilation_data_t* im,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,uint32_t im_i,lll_compilation_data_t* im,lll_error_t* e){
 	if (im_i>=c_dt->im.l||(c_dt->im.dt+im_i)->sz==UINT32_MAX){
 		e->t=LLL_ERROR_INVALID_IMPORT_INDEX;
 		e->dt.im_i=im_i;

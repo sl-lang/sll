@@ -1384,17 +1384,17 @@ _found_import:;
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compilation_data_t* c_dt,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_read_object(lll_compilation_data_t* c_dt,lll_error_t* e,lll_object_t** o){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
-		return LLL_RETURN_ERROR_AS_OBJECT(LLL_RETURN_ERROR);
+		return LLL_RETURN_ERROR;
 	}
-	lll_object_t* o=(lll_object_t*)(_bf+_bf_off);
+	lll_object_t* a=(lll_object_t*)(_bf+_bf_off);
 	int c=LLL_READ_FROM_INPUT_DATA_STREAM(c_dt->is);
 	if (c==LLL_END_OF_DATA){
 		_bf_off+=sizeof(lll_object_t);
-		o->t=LLL_OBJECT_TYPE_NIL;
-		return o;
+		a->t=LLL_OBJECT_TYPE_NIL;
+		return LLL_RETURN_NO_ERROR;
 	}
 	scope_data_t sc={
 		malloc(sizeof(uint64_t)),
@@ -1404,15 +1404,16 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT lll_object_t* lll_read_object(lll_compila
 	sc.m[0]=1;
 	if (!_read_object_internal(c_dt,c,&sc,e)){
 		free(sc.m);
-		return LLL_RETURN_ERROR_AS_OBJECT(LLL_RETURN_ERROR);
+		return LLL_RETURN_ERROR;
 	}
 	free(sc.m);
-	return o;
+	*o=a;
+	return LLL_RETURN_NO_ERROR;
 }
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_read_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_read_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -1458,7 +1459,7 @@ __LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_read_all_objects(lll_compilat
 
 
 
-__LLL_IMPORT_EXPORT __LLL_CHECK_OUTPUT uint8_t lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
