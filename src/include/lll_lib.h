@@ -89,24 +89,25 @@
 #define LLL_OBJECT_TYPE_NOT 13
 #define LLL_OBJECT_TYPE_SET 14
 #define LLL_OBJECT_TYPE_FUNC 15
-#define LLL_OBJECT_TYPE_IF 16
-#define LLL_OBJECT_TYPE_FOR 17
-#define LLL_OBJECT_TYPE_ADD 18
-#define LLL_OBJECT_TYPE_SUB 19
-#define LLL_OBJECT_TYPE_MULT 20
-#define LLL_OBJECT_TYPE_DIV 21
-#define LLL_OBJECT_TYPE_FLOOR_DIV 22
-#define LLL_OBJECT_TYPE_MOD 23
-#define LLL_OBJECT_TYPE_BIT_AND 24
-#define LLL_OBJECT_TYPE_BIT_OR 25
-#define LLL_OBJECT_TYPE_BIT_XOR 26
-#define LLL_OBJECT_TYPE_BIT_NOT 27
-#define LLL_OBJECT_TYPE_LESS 28
-#define LLL_OBJECT_TYPE_LESS_EQUAL 29
-#define LLL_OBJECT_TYPE_EQUAL 30
-#define LLL_OBJECT_TYPE_NOT_EQUAL 31
-#define LLL_OBJECT_TYPE_MORE 32
-#define LLL_OBJECT_TYPE_MORE_EQUAL 33
+#define LLL_OBJECT_TYPE_CALL 16
+#define LLL_OBJECT_TYPE_IF 17
+#define LLL_OBJECT_TYPE_FOR 18
+#define LLL_OBJECT_TYPE_ADD 19
+#define LLL_OBJECT_TYPE_SUB 20
+#define LLL_OBJECT_TYPE_MULT 21
+#define LLL_OBJECT_TYPE_DIV 22
+#define LLL_OBJECT_TYPE_FLOOR_DIV 23
+#define LLL_OBJECT_TYPE_MOD 24
+#define LLL_OBJECT_TYPE_BIT_AND 25
+#define LLL_OBJECT_TYPE_BIT_OR 26
+#define LLL_OBJECT_TYPE_BIT_XOR 27
+#define LLL_OBJECT_TYPE_BIT_NOT 28
+#define LLL_OBJECT_TYPE_LESS 29
+#define LLL_OBJECT_TYPE_LESS_EQUAL 30
+#define LLL_OBJECT_TYPE_EQUAL 31
+#define LLL_OBJECT_TYPE_NOT_EQUAL 32
+#define LLL_OBJECT_TYPE_MORE 33
+#define LLL_OBJECT_TYPE_MORE_EQUAL 34
 #define LLL_OBJECT_TYPE_IMPORT 61
 #define LLL_OBJECT_TYPE_OPERATION_LIST 62
 #define LLL_OBJECT_TYPE_DEBUG_DATA 63
@@ -363,6 +364,21 @@ typedef struct __LLL_IMPORT_DATA{
 
 
 
+typedef struct __LLL_FUNCTION{
+	uint32_t off;
+	uint16_t al;
+	lll_identifier_index_t a[];
+} lll_function_t;
+
+
+
+typedef struct __LLL_FUNCTION_DATA{
+	lll_function_t** dt;
+	uint32_t l;
+} lll_function_data_t;
+
+
+
 typedef struct __LLL_COMPILATION_DATA{
 	lll_file_path_data_t fp_dt;
 	lll_input_data_stream_t* is;
@@ -370,6 +386,7 @@ typedef struct __LLL_COMPILATION_DATA{
 	lll_object_t* h;
 	lll_identifier_data_t i_dt;
 	lll_import_data_t im;
+	lll_function_data_t f_dt;
 	uint32_t _n_sc_id;
 } lll_compilation_data_t;
 
@@ -422,6 +439,10 @@ __LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt);
 
 
 __LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im);
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_function_data(lll_function_data_t* f_dt);
 
 
 

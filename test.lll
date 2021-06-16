@@ -5,6 +5,9 @@
 	})
 	(= i (+ i 1))
 })
+(= func (,,, x y {
+	(:> "x = " y ", y = " y "\n")
+}))
 (= FACTORIAL 10)
 (= i 1 (:> "After Var Init (i=" i ")\n"))
 (-> (= j 2) (< j FACTORIAL) {
@@ -14,7 +17,6 @@
 	(< j 8) {
 		(:> "Medium: " i "\n")
 	} {
-		(= unused_identifier 18900)
 		(:> "End: " i " (j=" j ")\n")
 	})
 	(= i (* i j))
@@ -25,4 +27,5 @@
 (:> FACTORIAL "! = " i '\n')
 (< 10 5 (:> "This Should Never Happen"))
 (-- "import.lll")
+(<- func 10 2)
 (:> "Program End\n")

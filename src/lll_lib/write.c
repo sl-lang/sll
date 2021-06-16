@@ -712,6 +712,8 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_FUNC:
 			ASSERT(!"Unimplemented",e,0);
+		case LLL_OBJECT_TYPE_CALL:
+			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IF:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_FOR:
@@ -987,6 +989,8 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FUNC:
 			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_CALL:
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_IF:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FOR:
@@ -1086,6 +1090,8 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FUNC:
 			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_CALL:
+			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_IF:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FOR:
@@ -1164,6 +1170,8 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 		case LLL_OBJECT_TYPE_SET:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_FUNC:
+			ASSERT(!"Unimplemented",e,0);
+		case LLL_OBJECT_TYPE_CALL:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IF:
 			ASSERT(!"Unimplemented",e,0);
@@ -1387,6 +1395,8 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 		case LLL_OBJECT_TYPE_SET:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_FUNC:
+			ASSERT(!"Unimplemented",e,0);
+		case LLL_OBJECT_TYPE_CALL:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IF:
 			ASSERT(!"Unimplemented",e,0);
@@ -1834,6 +1844,8 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
+			ASSERT(!"Unimplemented",e,UINT32_MAX);
+		case LLL_OBJECT_TYPE_CALL:
 			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_IF:
 			{

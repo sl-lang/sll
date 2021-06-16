@@ -236,7 +236,10 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			fprintf(f,"=");
 			break;
 		case LLL_OBJECT_TYPE_FUNC:
-			fprintf(f,"...");
+			fprintf(f,",,,");
+			break;
+		case LLL_OBJECT_TYPE_CALL:
+			fprintf(f,"<-");
 			break;
 		case LLL_OBJECT_TYPE_IF:
 			fprintf(f,"?");

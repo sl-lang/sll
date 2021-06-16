@@ -29,7 +29,7 @@
 			LLL_SET_OBJECT_AS_IDENTIFIER(o,mx_i); \
 			goto _identifier_found; \
 		} \
-		if (LLL_GET_OBJECT_TYPE((po))!=LLL_OBJECT_TYPE_SET){ \
+		if (LLL_GET_OBJECT_TYPE((po))!=LLL_OBJECT_TYPE_SET&&LLL_GET_OBJECT_TYPE((po))!=LLL_OBJECT_TYPE_FUNC){ \
 			(e)->t=LLL_ERROR_UNKNOWN_IDENTIFIER; \
 			(e)->dt.r.off=(arg_s); \
 			(e)->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET((is))-(arg_s)-1; \
@@ -751,6 +751,9 @@ _read_symbol:
 				else if (FAST_COMPARE(str,|,|)){
 					o->t=LLL_OBJECT_TYPE_OR;
 				}
+				else if (FAST_COMPARE(str,<,-)){
+					o->t=LLL_OBJECT_TYPE_CALL;
+				}
 				else if (FAST_COMPARE(str,-,>)){
 					o->t=LLL_OBJECT_TYPE_FOR;
 					n_l_sc.l_sc=c_dt->_n_sc_id;
@@ -1253,7 +1256,7 @@ _next_long_identifier:;
 							LLL_SET_OBJECT_AS_IDENTIFIER(arg,mx_i);
 							goto _identifier_found;
 						}
-						if (LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_SET){
+						if (LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_SET&&LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_FUNC){
 							e->t=LLL_ERROR_UNKNOWN_IDENTIFIER;
 							e->dt.r.off=arg_s;
 							e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;

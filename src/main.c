@@ -124,6 +124,7 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 									lll_free_file_path_data(&(n_c_dt.fp_dt));
 									lll_free_identifier_data(&(n_c_dt.i_dt));
 									lll_free_import_data(&(n_c_dt.im));
+									lll_free_function_data(&(n_c_dt.f_dt));
 									return 0;
 								}
 								if (n_f){
@@ -137,12 +138,14 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 									lll_free_file_path_data(&(n_c_dt.fp_dt));
 									lll_free_identifier_data(&(n_c_dt.i_dt));
 									lll_free_import_data(&(n_c_dt.im));
+									lll_free_function_data(&(n_c_dt.f_dt));
 									lll_print_error(is,&e);
 									return 0;
 								}
 								lll_free_file_path_data(&(n_c_dt.fp_dt));
 								lll_free_identifier_data(&(n_c_dt.i_dt));
 								lll_free_import_data(&(n_c_dt.im));
+								lll_free_function_data(&(n_c_dt.f_dt));
 							}
 						}
 						else{
@@ -337,6 +340,7 @@ _read_file_argument:
 			*(fp+fpl-1)=(char*)e;
 		}
 	}
+	im_fpl=fpl;
 	if (fl&FLAG_LOGO){
 		printf("lll (Lisp Like Language) "STR(LLL_VERSION_MAJOR)"."STR(LLL_VERSION_MINOR)"."STR(LLL_VERSION_PATCH)" ("LLL_VERSION_BUILD_DATE", "LLL_VERSION_BUILD_TIME")\n");
 	}
@@ -347,7 +351,6 @@ _read_file_argument:
 		printf("No Input Files Supplied\n");
 		goto _help;
 	}
-	im_fpl=fpl;
 	if (fl&FLAG_VERBOSE){
 		printf("Configuration:\n  Optimization Level:\n");
 		if (ol==OPTIMIZE_LEVEL_NO_OPTIMIZE){
@@ -548,6 +551,7 @@ _read_file_argument:
 		lll_free_file_path_data(&(c_dt.fp_dt));
 		lll_free_identifier_data(&(c_dt.i_dt));
 		lll_free_import_data(&(c_dt.im));
+		lll_free_function_data(&(c_dt.f_dt));
 	}
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));
@@ -559,7 +563,7 @@ _read_file_argument:
 	}
 	return 0;
 _help:
-	printf("\nUsage: lll [ <option1>, <option2>, <option3>, ... ] <file1>, <file2>, <file3>, ...\nOptions:\n  -O0 -> No optimization\n  -O1 -> Remove padding\n  -O2 -> Remove padding + Global optimization\n  -O3 -> Remove padding + Global optimization + Removal of debug data\n  -I <directory> -> Add <directory> to file include path\n  -f <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))\n  -o <output_file> -> Set output file to <output_file>\n  -h -> Print this message\n  -L -> Enable compiler logo (*1)\n  -L0 -> Disable compiler logo (*1)\n  -v -> Enable verbose mode (*1)\n  -v0 -> Disable verbose mode (*1)\n  -m -> Enable import merge mode (*1)\n  -m0 -> Disable import merge mode (*1)\n  -p -> Enable object print mode (*1)\n  -p0 -> Disable object print mode (*1)\n  -c -> Enable compilation only mode (*1)\n  -c0 -> Disable compilation only mode (*1)\n  -fp -> Expand all file paths (*1)\n  -fp0 -> Do not expand all file paths (*1)\n\n*1: Only the last -XXX/-XXX0 argument is interpreted\n\n");
+	printf("Usage: lll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...\nOptions:\n  -O0 -> No optimization\n  -O1 -> Remove padding\n  -O2 -> Remove padding + Global optimization\n  -O3 -> Remove padding + Global optimization + Removal of debug data\n  -I <directory> -> Add <directory> to file include path\n  -f <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))\n  -o <output_file> -> Set output file to <output_file>. If there is only one <file>, the output\n                      is written to <output_file>. If there are multiple <file>s, each <file>\n                      output is written to <output_file_directory>/<base_file_name>[.lllc | .asm].\n                      If no <output_file> is supplied, then each <file> output is written to\n                      <file_without_extension>[.lllc | .asm]\n  -h -> Print this message\n  -L -> Enable compiler logo (*1)\n  -L0 -> Disable compiler logo (*1)\n  -v -> Enable verbose mode (*1)\n  -v0 -> Disable verbose mode (*1)\n  -m -> Enable import merge mode (*1)\n  -m0 -> Disable import merge mode (*1)\n  -p -> Enable object print mode (*1)\n  -p0 -> Disable object print mode (*1)\n  -c -> Enable compilation only mode (*1)\n  -c0 -> Disable compilation only mode (*1)\n  -fp -> Expand all file paths (*1)\n  -fp0 -> Do not expand all file paths (*1)\n\n*1: Only the last -xxx/-xxx0 argument is interpreted\n\n");
 _error:
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));
@@ -572,6 +576,7 @@ _error:
 	lll_free_file_path_data(&(c_dt.fp_dt));
 	lll_free_identifier_data(&(c_dt.i_dt));
 	lll_free_import_data(&(c_dt.im));
+	lll_free_function_data(&(c_dt.f_dt));
 	if (f){
 		fclose(f);
 	}

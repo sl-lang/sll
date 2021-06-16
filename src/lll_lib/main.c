@@ -77,3 +77,16 @@ __LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im){
 	}
 	im->l=0;
 }
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_function_data(lll_function_data_t* f_dt){
+	for (uint32_t i=0;i<f_dt->l;i++){
+		free(*(f_dt->dt+i));
+	}
+	if (f_dt->l){
+		free(f_dt->dt);
+		f_dt->dt=NULL;
+	}
+	f_dt->l=0;
+}
