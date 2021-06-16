@@ -13,6 +13,7 @@ DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t
 HEADER_SINGLE_INCLUDE_REGEX=re.compile(br"^\s*#ifndef\s+(?P<h_nm>[a-zA-Z0-9_]+)\s+#define\s+(?P=h_nm)\s+(?:1\s+)?(.*)#endif\s*$",re.DOTALL)
 HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
 SPACE_CHARACTERS=b" \t\n\v\f\r"
 
@@ -117,7 +118,7 @@ h_dt=DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX
 l=[]
 st=[True]
 tm=datetime.datetime.now()
-dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__DATE__":bytes(tm.strftime("\"%b %d %Y\""),"utf-8")}
+dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__DATE__":bytes(tm.strftime(f"\"{MONTHS[tm.month-1]} %d %Y\""),"utf-8")}
 dfm={}
 d_v=[]
 d_f=[]

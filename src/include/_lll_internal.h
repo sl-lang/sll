@@ -280,6 +280,7 @@ typedef PACKED(struct __COMPILED_OBJECT_FILE{
 	uint32_t ill;
 	uint32_t iml;
 	uint16_t fp_dtl;
+	uint16_t f_dtl;
 }) compiled_object_file_t;
 
 
@@ -382,7 +383,7 @@ uint32_t _remove_debug_data_internal(lll_object_t* o);
 
 
 
-uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm);
+uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_data_t* c_dt);
 
 
 

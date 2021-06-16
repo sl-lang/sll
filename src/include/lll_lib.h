@@ -366,7 +366,7 @@ typedef struct __LLL_IMPORT_DATA{
 
 typedef struct __LLL_FUNCTION{
 	uint32_t off;
-	uint16_t al;
+	lll_arg_count_t al;
 	lll_identifier_index_t a[];
 } lll_function_t;
 
@@ -374,7 +374,7 @@ typedef struct __LLL_FUNCTION{
 
 typedef struct __LLL_FUNCTION_DATA{
 	lll_function_t** dt;
-	uint32_t l;
+	uint16_t l;
 } lll_function_data_t;
 
 
@@ -490,7 +490,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_debug_data(lll_object_t* o,ll
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_padding(lll_object_t* o,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_padding(lll_compilation_data_t* c_dt,lll_object_t* o,lll_error_t* e);
 
 
 

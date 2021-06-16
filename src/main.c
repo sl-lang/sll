@@ -433,7 +433,7 @@ _read_file_argument:
 				printf("Removing Object Padding...\n");
 			}
 			lll_error_t e;
-			if (!lll_remove_object_padding(c_dt.h,&e)){
+			if (!lll_remove_object_padding(&c_dt,c_dt.h,&e)){
 				lll_print_error(&is,&e);
 				goto _error;
 			}

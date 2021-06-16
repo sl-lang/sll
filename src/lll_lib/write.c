@@ -2235,7 +2235,8 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 		c_dt->tm,
 		.ill=c_dt->i_dt.ill,
 		.iml=c_dt->im.l,
-		.fp_dtl=c_dt->fp_dt.l
+		.fp_dtl=c_dt->fp_dt.l,
+		.f_dtl=c_dt->f_dt.l
 	};
 	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		dt.sil[i]=c_dt->i_dt.s[i].l;
@@ -2274,6 +2275,13 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 			return LLL_RETURN_ERROR;
 		}
 		if (k->sz!=UINT32_MAX&&!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(k->nm),k->sz*sizeof(char))){
+			e->t=LLL_ERROR_FAILED_FILE_WRITE;
+			return LLL_RETURN_ERROR;
+		}
+	}
+	for (uint16_t i=0;i<c_dt->f_dt.l;i++){
+		lll_function_t* k=*(c_dt->f_dt.dt+i);
+		if (!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->off)),sizeof(uint32_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(k->al)),sizeof(lll_arg_count_t))||!LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(k->a),k->al*sizeof(lll_identifier_index_t))){
 			e->t=LLL_ERROR_FAILED_FILE_WRITE;
 			return LLL_RETURN_ERROR;
 		}
