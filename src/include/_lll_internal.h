@@ -16,6 +16,7 @@
 #pragma intrinsic(_BitScanForward)
 #pragma intrinsic(_BitScanReverse)
 #pragma intrinsic(_BitScanReverse64)
+#define __LLL_API_FUNCTION
 #define FORCE_INLINE __inline __forceinline
 #define UNREACHABLE() __assume(0)
 #define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
@@ -35,9 +36,8 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 	return o;
 }
 #define PARITY16(x) (__popcnt16((x))&1)
-#define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
-#define _FUNCTION_CALL_REGISTERS {REGISTER_C,REGISTER_D,REGISTER_R8,REGISTER_R9}
 #else
+#define __LLL_API_FUNCTION __attribute__((ms_abi))
 #define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
 #define PACKED(s) s __attribute__((__packed__))
@@ -45,8 +45,6 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 #define FIND_LAST_SET_BIT(m) (31-__builtin_clz((m)))
 #define FIND_LAST_SET_BIT64(m) (63-__builtin_clzll((m)))
 #define PARITY16(x) __builtin_parity((x))
-#define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_SI)|REGISTER_TO_MASK(REGISTER_DI)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
-#define _FUNCTION_CALL_REGISTERS {REGISTER_DI,REGISTER_SI,REGISTER_D,REGISTER_C,REGISTER_R8,REGISTER_R9}
 #endif
 
 
@@ -174,6 +172,9 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 
 #define IDENTIFIER_INDEX_TO_MAP_OFFSET(i,im) (LLL_IDENTIFIER_GET_ARRAY_INDEX((i))+(im)->off[LLL_IDENTIFIER_GET_ARRAY_ID((i))])
 
+#define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
+#define FUNCTION_CALL_REGISTER_COUNT (sizeof(FUNCTION_CALL_REGISTERS)/sizeof(cpu_register_t))
+
 #define COMPARE_UNKNOWN 1
 #define COMPARE_ALWAYS_TRUE 2
 #define COMPARE_ALWAYS_FALSE 3
@@ -192,6 +193,7 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 #define IDENTIFIER_DATA_TYPE_FLOAT64 1024
 #define IDENTIFIER_DATA_TYPE_STRING 2048
 #define IDENTIFIER_DATA_TYPE_NIL 4096
+#define IDENTIFIER_DATA_TYPE_FUNCTION 8192
 #define IS_IDENTIFIER_DATA_TYPE_SINGLE(t) (!((t)&((t)-1)))
 
 
@@ -219,6 +221,7 @@ typedef union __IDENTIFIER_DATA_EXTRA{
 	int64_t v;
 	uint32_t st;
 	identifier_data_extra_string_t str;
+	lll_function_index_t fn;
 } identifier_data_extra_t;
 
 
@@ -315,99 +318,11 @@ extern uint32_t _bf_sz;
 
 
 
-const static cpu_register_t FUNCTION_CALL_REGISTERS[]=_FUNCTION_CALL_REGISTERS;
-
-
-
-uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im);
-
-
-
-void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,identifier_map_t* im);
-
-
-
-uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,identifier_data_t* va,assembly_generator_data_t* agd,lll_error_t* e);
+const static cpu_register_t FUNCTION_CALL_REGISTERS[]={REGISTER_C,REGISTER_D,REGISTER_R8,REGISTER_R9};
 
 
 
 uint32_t _get_object_size(lll_object_t* o);
-
-
-
-uint64_t _get_string_id(assembly_generator_data_t* agd,identifier_data_extra_string_t* s);
-
-
-
-int _input_data_stream_file_read(lll_input_data_stream_t* is);
-
-
-
-void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t lp);
-
-
-
-uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e);
-
-
-
-uint8_t _output_data_stream_file_write(lll_output_data_stream_t* os,uint8_t* bf,size_t sz);
-
-
-
-uint8_t _output_data_stream_file_write_char(lll_output_data_stream_t* os,char c);
-
-
-
-uint8_t _output_data_stream_file_write_string(lll_output_data_stream_t* os,char* s);
-
-
-
-void _print_int64(int64_t v,FILE* f);
-
-
-
-uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f);
-
-
-
-uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l_sc,lll_error_t* e);
-
-
-
-uint8_t _read_single_char(lll_input_data_stream_t* is,char t,uint32_t st,lll_error_t* e);
-
-
-
-uint32_t _remove_debug_data_internal(lll_object_t* o);
-
-
-
-uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_data_t* c_dt);
-
-
-
-uint32_t _set_register_value(lll_output_data_stream_t* os,identifier_data_t* i_dt,assembly_generator_data_t* agd,lll_object_t* o,lll_error_t* e);
-
-
-
-void _write_hex(lll_output_data_stream_t* os,int64_t v);
-
-
-
-void _write_identifier_data(lll_output_data_stream_t* os,identifier_data_t* dt);
-
-
-
-uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assembly_generator_data_t* agd,label_t jl,lll_error_t* e);
-
-
-
-uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembly_generator_data_t* agd,label_t jl,lll_error_t* e);
-
-
-
-uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,extended_assembly_generator_data_t* eagd,lll_error_t* e);
 
 
 

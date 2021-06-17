@@ -15,7 +15,7 @@ extern void _CRT_INIT(void);
 
 
 
-__LLL_IMPORT_EXPORT void __lll_api_init(void){
+__LLL_IMPORT_EXPORT __LLL_API_FUNCTION void __lll_api_init(void){
 #ifdef _MSC_VER
 	_CRT_INIT();
 #endif
@@ -23,13 +23,13 @@ __LLL_IMPORT_EXPORT void __lll_api_init(void){
 
 
 
-__LLL_IMPORT_EXPORT void __lll_api_putchar(int c){
+__LLL_IMPORT_EXPORT __LLL_API_FUNCTION void __lll_api_putchar(int c){
 	putchar(c);
 }
 
 
 
-__LLL_IMPORT_EXPORT void __lll_api_print_string(char* s){
+__LLL_IMPORT_EXPORT __LLL_API_FUNCTION void __lll_api_print_string(char* s){
 	do{
 		putchar(*s);
 		s++;
@@ -38,7 +38,7 @@ __LLL_IMPORT_EXPORT void __lll_api_print_string(char* s){
 
 
 
-__LLL_IMPORT_EXPORT void __lll_api_print_int32(int32_t v){
+__LLL_IMPORT_EXPORT __LLL_API_FUNCTION void __lll_api_print_int32(int32_t v){
 	if (!v){
 		putchar('0');
 		return;
@@ -62,7 +62,7 @@ __LLL_IMPORT_EXPORT void __lll_api_print_int32(int32_t v){
 
 
 
-__LLL_IMPORT_EXPORT void __lll_api_deinit(void){
+__LLL_IMPORT_EXPORT __LLL_API_FUNCTION void __lll_api_deinit(void){
 	fflush(stdout);
 	fflush(stderr);
 #ifdef _MSC_VER

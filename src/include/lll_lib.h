@@ -249,6 +249,10 @@ typedef uint16_t lll_statement_count_t;
 
 
 
+typedef uint16_t lll_function_index_t;
+
+
+
 typedef uint32_t lll_string_length_t;
 
 
@@ -294,6 +298,15 @@ typedef struct __LLL_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 } lll_object_t;
+
+
+
+typedef struct __LLL_FUNCTION_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	lll_arg_count_t ac;
+	lll_function_index_t id;
+} lll_function_object_t;
 
 
 
@@ -374,7 +387,7 @@ typedef struct __LLL_FUNCTION{
 
 typedef struct __LLL_FUNCTION_DATA{
 	lll_function_t** dt;
-	uint16_t l;
+	lll_function_index_t l;
 } lll_function_data_t;
 
 

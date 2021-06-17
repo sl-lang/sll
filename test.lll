@@ -6,7 +6,7 @@
 	(= i (+ i 1))
 })
 (= func (,,, x y {
-	(:> "x = " y ", y = " y "\n")
+	(:> "x = " x ", y = " y "\n")
 }))
 (= FACTORIAL 10)
 (= i 1 (:> "After Var Init (i=" i ")\n"))

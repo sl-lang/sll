@@ -274,7 +274,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 				}
 			}
 			else if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_FUNC){
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_function_object_t);
 				lll_arg_count_t i=0;
 				for (;i<*ac;i++){
 					lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -290,6 +290,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 					off+=sizeof(lll_object_t)+sizeof(lll_identifier_index_t);
 				}
 				*ac-=i;
+				((lll_function_object_t*)o)->id=c_dt->f_dt.l;
 				c_dt->f_dt.l++;
 				void* tmp=realloc(c_dt->f_dt.dt,c_dt->f_dt.l*sizeof(lll_function_t*));
 				if (!tmp){
@@ -299,8 +300,8 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 				lll_function_t* f=malloc(sizeof(lll_function_t)+i*sizeof(lll_identifier_index_t));
 				f->off=(uint32_t)(((uint64_t)(void*)o)-((uint64_t)(void*)_bf));
 				f->al=i;
-				off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
-				uint32_t eoff=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				off=sizeof(lll_function_object_t);
+				uint32_t eoff=sizeof(lll_function_object_t);
 				for (lll_arg_count_t j=0;j<i;j++){
 					lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 					while (LLL_GET_OBJECT_TYPE(a)==LLL_OBJECT_TYPE_DEBUG_DATA){
@@ -316,7 +317,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 					off+=sizeof(lll_object_t)+sizeof(lll_identifier_index_t);
 					eoff=off;
 				}
-				for (off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);off<eoff;off+=sizeof(lll_object_type_t)){
+				for (off=sizeof(lll_function_object_t);off<eoff;off+=sizeof(lll_object_type_t)){
 					*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,off))=LLL_OBJECT_TYPE_NOP;
 				}
 				*(c_dt->f_dt.dt+c_dt->f_dt.l-1)=f;
@@ -833,6 +834,9 @@ _read_symbol:
 			else if (sz==3){
 				if (FAST_COMPARE_3(str,FAST_COMPARE_COMMA,FAST_COMPARE_COMMA,FAST_COMPARE_COMMA)){
 					o->t=LLL_OBJECT_TYPE_FUNC;
+					ac=&(((lll_function_object_t*)o)->ac);
+					*ac=0;
+					_bf_off+=sizeof(lll_function_object_t)-sizeof(lll_object_t)-sizeof(lll_arg_count_t);
 				}
 				else{
 					goto _unknown_symbol;

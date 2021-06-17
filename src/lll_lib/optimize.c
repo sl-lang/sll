@@ -26,6 +26,16 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 		case LLL_OBJECT_TYPE_FLOAT:
 			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+		case LLL_OBJECT_TYPE_FUNC:
+			{
+				uint32_t off=sizeof(lll_function_object_t);
+				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
+				while (l){
+					l--;
+					off+=_optimize_object_internal(LLL_GET_OBJECT_ARGUMENT(o,off),e);
+				}
+				return off+eoff;
+			}
 		case LLL_OBJECT_TYPE_IMPORT:
 			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
@@ -205,7 +215,7 @@ _set_to_0:
 
 
 
-uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_data_t* c_dt){
+uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_data_t* c_dt,uint64_t st){
 	uint8_t* d=(uint8_t*)o-(*rm);
 	uint32_t pad=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
@@ -259,14 +269,15 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 			}
 		case LLL_OBJECT_TYPE_FUNC:
 			{
-				for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_arg_count_t);i++){
+				for (uint32_t i=0;i<sizeof(lll_function_object_t);i++){
 					*(d+i)=*(s+i);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				(*(c_dt->f_dt.dt+((lll_function_object_t*)o)->id))->off-=(uint32_t)(((uint64_t)(void*)s)-((uint64_t)(void*)d));
+				uint32_t off=sizeof(lll_function_object_t);
 				lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 				while (l){
 					l--;
-					off+=_remove_padding_internal(LLL_GET_OBJECT_ARGUMENT(o,off),rm,c_dt);
+					off+=_remove_padding_internal(LLL_GET_OBJECT_ARGUMENT(o,off),rm,c_dt,st);
 				}
 				return off+pad;
 			}
@@ -287,7 +298,7 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 				lll_statement_count_t l=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
 				while (l){
 					l--;
-					off+=_remove_padding_internal(LLL_GET_OBJECT_STATEMENT(o,off),rm,c_dt);
+					off+=_remove_padding_internal(LLL_GET_OBJECT_STATEMENT(o,off),rm,c_dt,st);
 				}
 				return off+pad;
 			}
@@ -298,7 +309,7 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 				for (uint32_t i=0;i<sz;i++){
 					*(d+i)=*(s+i);
 				}
-				return sz+_remove_padding_internal(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),rm,c_dt)+pad;
+				return sz+_remove_padding_internal(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),rm,c_dt,st)+pad;
 			}
 	}
 	for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_arg_count_t);i++){
@@ -308,7 +319,7 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
 	while (l){
 		l--;
-		off+=_remove_padding_internal(LLL_GET_OBJECT_ARGUMENT(o,off),rm,c_dt);
+		off+=_remove_padding_internal(LLL_GET_OBJECT_ARGUMENT(o,off),rm,c_dt,st);
 	}
 	return off+pad;
 }
@@ -334,6 +345,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_padding(lll_compilation_data_
 		return LLL_RETURN_ERROR;
 	}
 	uint32_t rm=0;
-	_remove_padding_internal(o,&rm,c_dt);
+	_remove_padding_internal(o,&rm,c_dt,(uint64_t)(void*)(c_dt->h));
 	return LLL_RETURN_NO_ERROR;
 }

@@ -57,6 +57,22 @@ uint32_t _patch_import(lll_object_t* o,import_data_t* dt){
 				}
 				return sz+eoff;
 			}
+		case LLL_OBJECT_TYPE_FUNC:
+			{
+				uint32_t off=sizeof(lll_function_object_t);
+				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
+				lll_arg_count_t sz=l;
+				while (l){
+					l--;
+					off+=_patch_import(LLL_GET_OBJECT_ARGUMENT(o,off),dt);
+					if (dt->rm){
+						dt->rm=0;
+						sz--;
+					}
+				}
+				((lll_function_object_t*)o)->ac=sz;
+				return off+eoff;
+			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
@@ -120,6 +136,16 @@ uint32_t _patch_module(lll_object_t* o,import_identifier_offset_list_t* i_off){
 			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
 		case LLL_OBJECT_TYPE_FLOAT:
 			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+		case LLL_OBJECT_TYPE_FUNC:
+			{
+				uint32_t off=sizeof(lll_function_object_t);
+				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
+				while (l){
+					l--;
+					off+=_patch_module(LLL_GET_OBJECT_ARGUMENT(o,off),i_off);
+				}
+				return off+eoff;
+			}
 		case LLL_OBJECT_TYPE_IMPORT:
 			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
