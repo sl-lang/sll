@@ -2216,7 +2216,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 		return LLL_RETURN_ERROR;
 	}
 	if (f==LLL_WRITE_MODE_ASSEMBLY){
-		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"bits 64\ndefault rel\nsection .text\nglobal main\nextern __lll_api_init\nextern __lll_api_putchar\nextern __lll_api_print_string\nextern __lll_api_print_int32\nextern __lll_api_deinit\nmain:\n\tand rsp,0xfffffffffffffff0\n\tcall __lll_api_init\n");
+		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"bits 64\ndefault rel\nsection .text\nglobal main\nextern __lll_api_init\nextern __lll_api_putchar\nextern __lll_api_print_string\nextern __lll_api_print_int32\nextern __lll_api_deinit\nmain:\n\tand    rsp,0xfffffffffffffff0\n\tcall __lll_api_init\n");
 		assembly_generator_data_t agd={
 			{
 				.rm=ALL_REGISTER_AVAIBLE_MASK,
@@ -2264,12 +2264,41 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 			}
 			return LLL_RETURN_ERROR;
 		}
-		free(agd.im.dt);
 		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tjmp __lll_api_deinit\n");
 		for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
+			lll_function_t* f=*(c_dt->f_dt.dt+i);
+			if (f->al>FUNCTION_CALL_REGISTER_COUNT){
+				ASSERT(!"Unimplemented");
+			}
+			agd.im.rm=FUNCTION_NON_VOLATILE_REGISTERS;
+			for (lll_arg_count_t j=0;j<f->al;j++){
+				identifier_data_t* i_dt=agd.im.dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(f->a[j],&(agd.im));
+				i_dt->r=FUNCTION_CALL_REGISTERS[j];
+				i_dt->t=IDENTIFIER_DATA_TYPE_INT32;
+				agd.im.rm&=~REGISTER_TO_MASK(FUNCTION_CALL_REGISTERS[j]);
+			}
 			_write_label_define(os,i);
+			lll_function_object_t* o=(lll_function_object_t*)LLL_GET_OBJECT_WITH_OFFSET(c_dt->h,f->off);
+			uint32_t off=sizeof(lll_function_object_t);
+			for (lll_arg_count_t j=0;j<o->ac;j++){
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
+				REMOVE_PADDING_DEBUG(a,off);
+				uint32_t a_off=_write_object_as_assembly(os,a,&eagd,e);
+				if (a_off==UINT32_MAX){
+					free(agd.im.dt);
+					for (i=0;i<agd.st.l;i++){
+						free(*(agd.st.dt+i));
+					}
+					if (agd.st.dt){
+						free(agd.st.dt);
+					}
+					return LLL_RETURN_ERROR;
+				}
+				off+=a_off;
+			}
 			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\tret\n");
 		}
+		free(agd.im.dt);
 		if (agd.st.l){
 			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"section .rdata\n");
 			for (i=0;i<agd.st.l;i++){
