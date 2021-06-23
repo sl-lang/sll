@@ -2210,12 +2210,12 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_object(lll_output_data_stream_t* os,l
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,uint8_t f,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,uint8_t m,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
 	}
-	if (f==LLL_WRITE_MODE_ASSEMBLY){
+	if (m==LLL_WRITE_MODE_ASSEMBLY){
 		LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"bits 64\ndefault rel\nsection .text\nglobal main\nextern __lll_api_init\nextern __lll_api_putchar\nextern __lll_api_print_string\nextern __lll_api_print_int32\nextern __lll_api_deinit\nmain:\n\tand rsp,0xfffffffffffffff0\n\tcall __lll_api_init\n");
 		assembly_generator_data_t agd={
 			{
@@ -2237,18 +2237,16 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 		off+=c_dt->i_dt.ill;
 		agd.im.dtl=off;
 		agd.im.dt=malloc(off*sizeof(identifier_data_t));
-		uint32_t i=0;
-		for (uint32_t j=0;j<LLL_MAX_SHORT_IDENTIFIER_LENGTH;j++){
-			for (uint32_t k=0;k<c_dt->i_dt.s[j].l;k++){
-				(agd.im.dt+i)->r=REGISTER_NONE;
-				(agd.im.dt+i)->sc=(c_dt->i_dt.s[j].dt+k)->sc;
+		for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+			for (uint32_t j=0;j<c_dt->i_dt.s[i].l;j++){
+				(agd.im.dt+j+agd.im.off[i])->r=REGISTER_NONE;
+				(agd.im.dt+j+agd.im.off[i])->sc=(c_dt->i_dt.s[i].dt+j)->sc;
 				i++;
 			}
 		}
-		for (uint32_t j=0;j<c_dt->i_dt.ill;j++){
-			(agd.im.dt+i)->r=REGISTER_NONE;
-			(agd.im.dt+i)->sc=(*(c_dt->i_dt.il+j))->sc;
-			i++;
+		for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
+			(agd.im.dt+i+agd.im.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH])->r=REGISTER_NONE;
+			(agd.im.dt+i+agd.im.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH])->sc=(*(c_dt->i_dt.il+i))->sc;
 		}
 		extended_assembly_generator_data_t eagd={
 			&agd,
@@ -2256,7 +2254,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 		};
 		if (_write_object_as_assembly(os,c_dt->h,&eagd,e)==UINT32_MAX){
 			free(agd.im.dt);
-			for (i=0;i<agd.st.l;i++){
+			for (uint32_t i=0;i<agd.st.l;i++){
 				free(*(agd.st.dt+i));
 			}
 			if (agd.st.dt){
@@ -2286,8 +2284,8 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 				uint32_t a_off=_write_object_as_assembly(os,a,&eagd,e);
 				if (a_off==UINT32_MAX){
 					free(agd.im.dt);
-					for (i=0;i<agd.st.l;i++){
-						free(*(agd.st.dt+i));
+					for (uint32_t k=0;k<agd.st.l;k++){
+						free(*(agd.st.dt+k));
 					}
 					if (agd.st.dt){
 						free(agd.st.dt);
@@ -2301,7 +2299,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 		free(agd.im.dt);
 		if (agd.st.l){
 			LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"section .rdata\n");
-			for (i=0;i<agd.st.l;i++){
+			for (uint32_t i=0;i<agd.st.l;i++){
 				LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,"\ts");
 				uint8_t j=(!i?4:(FIND_LAST_SET_BIT(i)+4)&0x3c);
 				while (j){

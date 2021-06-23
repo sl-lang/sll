@@ -236,16 +236,18 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			fprintf(f,"=");
 			break;
 		case LLL_OBJECT_TYPE_FUNC:
-			fprintf(f,",,,");
-			uint32_t off=sizeof(lll_function_object_t);
-			lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-			while (l){
-				l--;
-				fputc(' ',f);
-				off+=_print_object_internal(c_dt,LLL_GET_OBJECT_ARGUMENT(o,off),f);
+			{
+				fprintf(f,",,,");
+				uint32_t off=sizeof(lll_function_object_t);
+				lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				while (l){
+					l--;
+					fputc(' ',f);
+					off+=_print_object_internal(c_dt,LLL_GET_OBJECT_ARGUMENT(o,off),f);
+				}
+				fputc(')',f);
+				return off+eoff;
 			}
-			fputc(')',f);
-			return off+eoff;
 		case LLL_OBJECT_TYPE_CALL:
 			fprintf(f,"<-");
 			break;
