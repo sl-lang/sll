@@ -2228,15 +2228,17 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 			},
 			1
 		};
-		uint32_t off=0;
-		for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-			agd.im.off[i]=off;
-			off+=c_dt->i_dt.s[i].l;
+		{
+			uint32_t off=0;
+			for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+				agd.im.off[i]=off;
+				off+=c_dt->i_dt.s[i].l;
+			}
+			agd.im.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH]=off;
+			off+=c_dt->i_dt.ill;
+			agd.im.dtl=off;
+			agd.im.dt=malloc(off*sizeof(identifier_data_t));
 		}
-		agd.im.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH]=off;
-		off+=c_dt->i_dt.ill;
-		agd.im.dtl=off;
-		agd.im.dt=malloc(off*sizeof(identifier_data_t));
 		for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 			for (uint32_t j=0;j<c_dt->i_dt.s[i].l;j++){
 				(agd.im.dt+j+agd.im.off[i])->r=REGISTER_NONE;
