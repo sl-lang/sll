@@ -100,7 +100,14 @@ if (os.path.exists("build")):
 else:
 	os.mkdir("build")
 with open(HELP_FILE_PATH,"rb") as rf,open(HELP_GENERATED_HEADER_FILE_PATH,"wb") as wf:
-	wf.write(b"#ifndef __HELP_GENERATED_H__\n#define __HELP_GENERATED_H__ 1\n\n\n\nconst char HELP_TEXT[]=\""+ESCAPE_CHARACTER_REGEX.sub(lambda m:bytes(f"\\x{hex(m.group(0)[0])[2:]}","utf-8"),rf.read().replace(b"\r\n",b"\n"))+b"\";\n\n\n\n#endif")
+	wf.write(b"#ifndef __HELP_GENERATED_H__\n#define __HELP_GENERATED_H__ 1\n\n\n\nconst char HELP_TEXT[]={")
+	st=True
+	for c in rf.read().replace(b"\r\n",b"\n"):
+		if (st is False):
+			wf.write(b",")
+		wf.write(b"0x"+bytearray([(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
+		st=False
+	wf.write(b",0x00};\n\n\n\n#endif")
 h_dt=b""
 inc_r=br""
 for r,_,fl in os.walk("src/include"):
@@ -291,7 +298,7 @@ if (os.name=="nt"):
 	if ("--run" in sys.argv):
 		os.chdir("build")
 		subprocess.run(["lll.exe","-h"])
-		if ((ENABLE_LLL_CODE_GENERATION is True and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","../example","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L0"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0)) or (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","../example","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L0","-r","-g0"]).returncode!=0)):
+		if ((ENABLE_LLL_CODE_GENERATION is True and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-r0","-o","test.lllc","-p","-fp","-I","../example","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L0","-r0"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0)) or (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","../example","-m","-r0"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L0","-g0"]).returncode!=0)):
 			os.chdir(cd)
 			sys.exit(1)
 		os.chdir(cd)
@@ -316,5 +323,5 @@ else:
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lll","-h"])
-		if ((ENABLE_LLL_CODE_GENERATION is True and (subprocess.run(["build/lll","rsrc/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","example","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L0"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0)) or (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","example","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L0","-r","-g0"]).returncode!=0)):
+		if ((ENABLE_LLL_CODE_GENERATION is True and (subprocess.run(["build/lll","rsrc/test.lll","-v","-O0","-c","-r0","-o","build/test.lllc","-p","-fp","-I","example","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L0","-r0"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0)) or (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","example","-m","-r0"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L0","-g0"]).returncode!=0)):
 			sys.exit(1)

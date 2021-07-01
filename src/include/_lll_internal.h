@@ -54,7 +54,7 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 #define _ASSERT_JOIN_(l) ASSERT_##l
 #define _ASSERT_JOIN(l) _ASSERT_JOIN_(l)
 #define _ASSERT_COUNT_ARGS(_1,_2,_3,n,...) n
-#define ASSERT(...) _ASSERT_JOIN(_ASSERT_COUNT_ARGS(__VA_ARGS__,ERROR,ERROR,EXIT))(__VA_ARGS__)
+#define ASSERT(...) _ASSERT_JOIN(_ASSERT_COUNT_ARGS(__VA_ARGS__,ERROR,EXIT,EXIT))(__VA_ARGS__)
 #define ASSERT_ERROR(x,e,r) \
 	do{ \
 		if (!(x)){ \
@@ -77,7 +77,7 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 			return r; \
 		} \
 	} while (0)
-#define ASSERT_EXIT(x) \
+#define ASSERT_EXIT(x,...) \
 	do{ \
 		if (!(x)){ \
 			printf("File \"%s\", Line %u (%s): %s: Assertion Failed\n",__FILE__,__LINE__,__func__,_ASSERT_STR(x)); \

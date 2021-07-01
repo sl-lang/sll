@@ -254,7 +254,7 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 int main(int argc,const char** argv){
 	int32_t ec=1;
 	ol=DEFAULT_OPTIMIZE_LEVEL;
-	fl=FLAG_LOGO|FLAG_GENERATE_OUTPUT;
+	fl=FLAG_LOGO|FLAG_RUN|FLAG_GENERATE_OUTPUT;
 	i_fp=malloc(sizeof(char));
 	if (!i_fp){
 		print_str_const("Unable to Allocate Space for Include File Path Array\n");
