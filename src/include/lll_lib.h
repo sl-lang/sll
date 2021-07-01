@@ -13,6 +13,7 @@
 #define __LLL_IMPORT_EXPORT __declspec(dllimport)
 #endif
 #define __LLL_RETURN _Check_return_ lll_return_t
+#define __LLL_RETURN_CODE _Check_return_ lll_return_code_t
 #else
 #ifdef __LLL_LIB_COMPILATION__
 #define __LLL_IMPORT_EXPORT __attribute__((visibility("default")))
@@ -20,6 +21,7 @@
 #define __LLL_IMPORT_EXPORT
 #endif
 #define __LLL_RETURN __attribute__((warn_unused_result)) lll_return_t
+#define __LLL_RETURN_CODE __attribute__((warn_unused_result)) lll_return_code_t
 #endif
 
 #define LLL_ERROR_UNKNOWN 0
@@ -262,6 +264,10 @@ typedef uint32_t lll_identifier_index_t;
 
 
 typedef uint32_t lll_import_index_t;
+
+
+
+typedef int32_t lll_return_code_t;
 
 
 
@@ -512,6 +518,10 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_object(lll_output_data_stream_t* os,l
 
 
 __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,lll_compilation_data_t* c_dt,uint8_t f,lll_error_t* e);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_run_compiled_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* in,lll_output_data_stream_t* out);
 
 
 

@@ -10,7 +10,11 @@ COMMENT_REGEX=re.compile(br"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
 COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"DLL1_EXPORTS",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG"]) if os.name=="nt" else [])
 DEFINE_LINE_CONTINUE_REGEX=re.compile(br"\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
+ENABLE_LLL_CODE_GENERATION=False
+ESCAPE_CHARACTER_REGEX=re.compile(br"[^\x20-~]")
 HEADER_SINGLE_INCLUDE_REGEX=re.compile(br"^\s*#ifndef\s+(?P<h_nm>[a-zA-Z0-9_]+)\s+#define\s+(?P=h_nm)\s+(?:1\s+)?(.*)#endif\s*$",re.DOTALL)
+HELP_FILE_PATH="rsrc/help.txt"
+HELP_GENERATED_HEADER_FILE_PATH="build/help_generated.h"
 HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -95,6 +99,10 @@ if (os.path.exists("build")):
 		os.rmdir(k)
 else:
 	os.mkdir("build")
+with open(HELP_FILE_PATH,"rb") as rf,open(HELP_GENERATED_HEADER_FILE_PATH,"wb") as wf:
+	wf.write(b"#ifndef __HELP_GENERATED_H__\n#define __HELP_GENERATED_H__ 1\n\n\n\nconst char HELP_TEXT[]=\"")
+	wf.write(ESCAPE_CHARACTER_REGEX.sub(lambda m:bytes(f"\\x{hex(m.group(0)[0])[2:]}","utf-8"),rf.read().replace(b"\r\n",b"\n")))
+	wf.write(b"\";\n\n\n\n#endif")
 h_dt=b""
 inc_r=br""
 for r,_,fl in os.walk("src/include"):
@@ -285,7 +293,7 @@ if (os.name=="nt"):
 	if ("--run" in sys.argv):
 		os.chdir("build")
 		subprocess.run(["lll.exe","-h"])
-		if (subprocess.run(["lll.exe","../test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","..","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L0"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0):
+		if ((ENABLE_LLL_CODE_GENERATION is True and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","../example","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L0"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0)) or (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","../example","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L0","-r","-g0"]).returncode!=0)):
 			os.chdir(cd)
 			sys.exit(1)
 		os.chdir(cd)
@@ -310,5 +318,5 @@ else:
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lll","-h"])
-		if (subprocess.run(["build/lll","test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","..","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L0"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0):
+		if ((ENABLE_LLL_CODE_GENERATION is True and subprocess.run(["build/lll","rsrc/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","example","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L0"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0) or (subprocess.run(["lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","example","-m"]).returncode!=0 or subprocess.run(["lll","build/test.lllc","-v","-O3","-p","-fp","-L0","-r","-g0"]).returncode!=0)):
 			sys.exit(1)

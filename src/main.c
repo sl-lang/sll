@@ -6,6 +6,7 @@
 #include <linux/limits.h>
 #endif
 #include <lll_lib.h>
+#include <help_generated.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -29,6 +30,8 @@
 #define FLAG_MERGE_IMPORTS 16
 #define FLAG_HELP 32
 #define FLAG_LOGO 64
+#define FLAG_RUN 128
+#define FLAG_GENERATE_OUTPUT 256
 #define DEFAULT_OPTIMIZE_LEVEL OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE
 #define COMPILER_STACK_SIZE 65536
 #define _STR(x) #x
@@ -38,7 +41,7 @@
 
 uint8_t st[COMPILER_STACK_SIZE];
 uint8_t ol;
-uint8_t fl;
+uint16_t fl;
 char* i_fp;
 uint32_t i_fpl;
 char** fp;
@@ -201,8 +204,9 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 
 
 int main(int argc,const char** argv){
+	int32_t ec=1;
 	ol=DEFAULT_OPTIMIZE_LEVEL;
-	fl=FLAG_LOGO;
+	fl=FLAG_LOGO|FLAG_GENERATE_OUTPUT;
 	i_fp=malloc(sizeof(char));
 	if (!i_fp){
 		printf("Unable to Allocate Space for Include File Path Array\n");
@@ -284,6 +288,9 @@ int main(int argc,const char** argv){
 			}
 			o_fp=argv[i];
 		}
+		else if (*e=='-'&&*(e+1)=='o'&&*(e+2)=='0'&&*(e+3)==0){
+			o_fp=NULL;
+		}
 		else if (*e=='-'&&*(e+1)=='h'&&*(e+2)==0){
 			fl|=FLAG_HELP;
 		}
@@ -317,11 +324,23 @@ int main(int argc,const char** argv){
 		else if (*e=='-'&&*(e+1)=='c'&&*(e+2)=='0'&&*(e+3)==0){
 			fl&=~FLAG_COMPILE_ONLY;
 		}
+		else if (*e=='-'&&*(e+1)=='r'&&*(e+2)==0){
+			fl|=FLAG_RUN;
+		}
+		else if (*e=='-'&&*(e+1)=='r'&&*(e+2)=='0'&&*(e+3)==0){
+			fl&=~FLAG_RUN;
+		}
 		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)=='p'&&*(e+3)==0){
 			fl|=FLAG_FULL_PATH;
 		}
 		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)=='p'&&*(e+3)=='0'&&*(e+4)==0){
 			fl&=~FLAG_FULL_PATH;
+		}
+		else if (*e=='-'&&*(e+1)=='g'&&*(e+2)==0){
+			fl|=FLAG_GENERATE_OUTPUT;
+		}
+		else if (*e=='-'&&*(e+1)=='g'&&*(e+2)=='0'&&*(e+3)==0){
+			fl&=~FLAG_GENERATE_OUTPUT;
 		}
 		else if (*e=='-'){
 _unkown_switch:
@@ -345,6 +364,10 @@ _read_file_argument:
 		printf("lll (Lisp Like Language) "STR(LLL_VERSION_MAJOR)"."STR(LLL_VERSION_MINOR)"."STR(LLL_VERSION_PATCH)" ("LLL_VERSION_BUILD_DATE", "LLL_VERSION_BUILD_TIME")\n");
 	}
 	if (fl&FLAG_HELP){
+		goto _help;
+	}
+	if ((fl&FLAG_COMPILE_ONLY)&&(fl&FLAG_RUN)){
+		printf("Option -c is not compatible with option -r\n");
 		goto _help;
 	}
 	if (!fpl){
@@ -385,6 +408,12 @@ _read_file_argument:
 		}
 		if (fl&FLAG_LOGO){
 			printf("  Compiler Logo Mode (FLAG_LOGO)\n");
+		}
+		if (fl&FLAG_RUN){
+			printf("  Program Run Mode (FLAG_RUN)\n");
+		}
+		if (fl&FLAG_GENERATE_OUTPUT){
+			printf("  Output Generation Mode (FLAG_GENERATE_OUTPUT)\n");
 		}
 		printf("Include Path: \n  - '");
 		for (uint32_t i=0;i<i_fpl;i++){
@@ -442,88 +471,27 @@ _read_file_argument:
 			lll_print_object(&c_dt,c_dt.h,stdout);
 			putchar('\n');
 		}
-		if (!o_fp){
-			char bf[MAX_PATH_LENGTH];
-			uint16_t i=0;
-			while (*(f_fp+i)&&*(f_fp+i)!='.'){
-				*(bf+i)=*(f_fp+i);
-				i++;
-			}
-			bf[i]='.';
-			if (fl&FLAG_COMPILE_ONLY){
-				bf[i+1]='l';
-				bf[i+2]='l';
-				bf[i+3]='l';
-				bf[i+4]='c';
-				bf[i+5]=0;
-			}
-			else{
-				bf[i+1]='a';
-				bf[i+2]='s';
-				bf[i+3]='m';
-				bf[i+4]=0;
-			}
-			if (fl&FLAG_VERBOSE){
-				printf("Writing Object to File '%s'...\n",bf);
-			}
-			if (!(of=fopen(bf,"wb"))){// lgtm [cpp/path-injection]
-				printf("Unable to Open Output File '%s'\n",bf);
-				goto _error;
-			}
-		}
-		else{
-			if (fpl==1){
-				if (fl&FLAG_VERBOSE){
-					printf("Writing Object to File '%s'...\n",o_fp);
-				}
-				if (!(of=fopen(o_fp,"wb"))){// lgtm [cpp/path-injection]
-					printf("Unable to Open Output File '%s'\n",o_fp);
-					goto _error;
-				}
-			}
-			else{
+		if (fl&FLAG_GENERATE_OUTPUT){
+			if (!o_fp){
 				char bf[MAX_PATH_LENGTH];
 				uint16_t i=0;
-				while (*(o_fp+i)&&*(o_fp+i)!='.'){
-					*(bf+i)=*(o_fp+i);
+				while (*(f_fp+i)&&*(f_fp+i)!='.'){
+					*(bf+i)=*(f_fp+i);
 					i++;
 				}
-				i--;
-				while (*(o_fp+i)!='\\'&&*(o_fp+i)!='/'){
-					if (i==0){
-						i--;
-						break;
-					}
-					i--;
-				}
-				i++;
-				uint32_t j=0;
-				uint32_t k=0;
-				while (*(f_fp+j)&&*(f_fp+j)!='.'){
-					if (*(f_fp+j)=='\\'||*(f_fp+j)=='/'){
-						k=j+1;
-					}
-					j++;
-				}
-				while (k<j){
-					*(bf+i)=*(f_fp+k);
-					i++;
-					k++;
-				}
-				*(bf+i)=0;
-				*(bf+i)='.';
+				bf[i]='.';
 				if (fl&FLAG_COMPILE_ONLY){
-					*(bf+i+1)='l';
-					*(bf+i+2)='l';
-					*(bf+i+3)='l';
-					*(bf+i+4)='c';
-					*(bf+i+5)=0;
+					bf[i+1]='l';
+					bf[i+2]='l';
+					bf[i+3]='l';
+					bf[i+4]='c';
+					bf[i+5]=0;
 				}
 				else{
-					*(bf+i+1)='a';
-					*(bf+i+2)='s';
-					*(bf+i+3)='m';
-					*(bf+i+4)=0;
+					bf[i+1]='a';
+					bf[i+2]='s';
+					bf[i+3]='m';
+					bf[i+4]=0;
 				}
 				if (fl&FLAG_VERBOSE){
 					printf("Writing Object to File '%s'...\n",bf);
@@ -533,21 +501,95 @@ _read_file_argument:
 					goto _error;
 				}
 			}
+			else{
+				if (fpl==1){
+					if (fl&FLAG_VERBOSE){
+						printf("Writing Object to File '%s'...\n",o_fp);
+					}
+					if (!(of=fopen(o_fp,"wb"))){// lgtm [cpp/path-injection]
+						printf("Unable to Open Output File '%s'\n",o_fp);
+						goto _error;
+					}
+				}
+				else{
+					char bf[MAX_PATH_LENGTH];
+					uint16_t i=0;
+					while (*(o_fp+i)&&*(o_fp+i)!='.'){
+						*(bf+i)=*(o_fp+i);
+						i++;
+					}
+					i--;
+					while (*(o_fp+i)!='\\'&&*(o_fp+i)!='/'){
+						if (i==0){
+							i--;
+							break;
+						}
+						i--;
+					}
+					i++;
+					uint32_t j=0;
+					uint32_t k=0;
+					while (*(f_fp+j)&&*(f_fp+j)!='.'){
+						if (*(f_fp+j)=='\\'||*(f_fp+j)=='/'){
+							k=j+1;
+						}
+						j++;
+					}
+					while (k<j){
+						*(bf+i)=*(f_fp+k);
+						i++;
+						k++;
+					}
+					*(bf+i)=0;
+					*(bf+i)='.';
+					if (fl&FLAG_COMPILE_ONLY){
+						*(bf+i+1)='l';
+						*(bf+i+2)='l';
+						*(bf+i+3)='l';
+						*(bf+i+4)='c';
+						*(bf+i+5)=0;
+					}
+					else{
+						*(bf+i+1)='a';
+						*(bf+i+2)='s';
+						*(bf+i+3)='m';
+						*(bf+i+4)=0;
+					}
+					if (fl&FLAG_VERBOSE){
+						printf("Writing Object to File '%s'...\n",bf);
+					}
+					if (!(of=fopen(bf,"wb"))){// lgtm [cpp/path-injection]
+						printf("Unable to Open Output File '%s'\n",bf);
+						goto _error;
+					}
+				}
+			}
+			lll_output_data_stream_t os;
+			lll_create_output_data_stream(of,&os);
+			lll_error_t e;
+			if (!lll_write_compiled_object(&os,&c_dt,(fl&FLAG_COMPILE_ONLY?LLL_WRITE_MODE_RAW:LLL_WRITE_MODE_ASSEMBLY),&e)){
+				lll_print_error(&is,&e);
+				goto _error;
+			}
+			if (fl&FLAG_VERBOSE){
+				printf("File Successfully Written.\n");
+			}
+			fclose(of);
+			of=NULL;
 		}
-		lll_output_data_stream_t os;
-		lll_create_output_data_stream(of,&os);
-		lll_error_t e;
-		if (!lll_write_compiled_object(&os,&c_dt,(fl&FLAG_COMPILE_ONLY?LLL_WRITE_MODE_RAW:LLL_WRITE_MODE_ASSEMBLY),&e)){
-			lll_print_error(&is,&e);
-			goto _error;
-		}
-		if (fl&FLAG_VERBOSE){
-			printf("File Successfully Written.\n");
+		if (fl&FLAG_RUN){
+			lll_input_data_stream_t ris;
+			lll_output_data_stream_t ros;
+			lll_create_input_data_stream(stdin,&ris);
+			lll_create_output_data_stream(stdout,&ros);
+			lll_return_code_t r=lll_run_compiled_object(&c_dt,&ris,&ros);
+			if (r){
+				ec=r;
+				goto _error;
+			}
 		}
 		fclose(f);
 		f=NULL;
-		fclose(of);
-		of=NULL;
 		lll_free_file_path_data(&(c_dt.fp_dt));
 		lll_free_identifier_data(&(c_dt.i_dt));
 		lll_free_import_data(&(c_dt.im));
@@ -563,7 +605,7 @@ _read_file_argument:
 	}
 	return 0;
 _help:
-	printf("Usage: lll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...\nOptions:\n  -O0 -> No optimization\n  -O1 -> Remove padding\n  -O2 -> Remove padding + Global optimization\n  -O3 -> Remove padding + Global optimization + Removal of debug data\n  -I <directory> -> Add <directory> to file include path\n  -f <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))\n  -o <output_file> -> Set output file to <output_file>. If there is only one <file>, the output\n                      is written to <output_file>. If there are multiple <file>s, each <file>\n                      output is written to <output_file_directory>/<base_file_name>[.lllc | .asm].\n                      If no <output_file> is supplied, then each <file> output is written to\n                      <file_without_extension>[.lllc | .asm]\n  -h -> Print this message\n  -L -> Enable compiler logo (*1)\n  -L0 -> Disable compiler logo (*1)\n  -v -> Enable verbose mode (*1)\n  -v0 -> Disable verbose mode (*1)\n  -m -> Enable import merge mode (*1)\n  -m0 -> Disable import merge mode (*1)\n  -p -> Enable object print mode (*1)\n  -p0 -> Disable object print mode (*1)\n  -c -> Enable compilation only mode (*1)\n  -c0 -> Disable compilation only mode (*1)\n  -fp -> Expand all file paths (*1)\n  -fp0 -> Do not expand all file paths (*1)\n\n*1: Only the last -xxx/-xxx0 argument is interpreted\n\n");
+	printf(HELP_TEXT);
 _error:
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));
@@ -583,5 +625,5 @@ _error:
 	if (of){
 		fclose(of);
 	}
-	return 1;
+	return ec;
 }
