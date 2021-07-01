@@ -100,9 +100,7 @@ if (os.path.exists("build")):
 else:
 	os.mkdir("build")
 with open(HELP_FILE_PATH,"rb") as rf,open(HELP_GENERATED_HEADER_FILE_PATH,"wb") as wf:
-	wf.write(b"#ifndef __HELP_GENERATED_H__\n#define __HELP_GENERATED_H__ 1\n\n\n\nconst char HELP_TEXT[]=\"")
-	wf.write(ESCAPE_CHARACTER_REGEX.sub(lambda m:bytes(f"\\x{hex(m.group(0)[0])[2:]}","utf-8"),rf.read().replace(b"\r\n",b"\n")))
-	wf.write(b"\";\n\n\n\n#endif")
+	wf.write(b"#ifndef __HELP_GENERATED_H__\n#define __HELP_GENERATED_H__ 1\n\n\n\nconst char HELP_TEXT[]=\""+ESCAPE_CHARACTER_REGEX.sub(lambda m:bytes(f"\\x{hex(m.group(0)[0])[2:]}","utf-8"),rf.read().replace(b"\r\n",b"\n"))+b"\";\n\n\n\n#endif")
 h_dt=b""
 inc_r=br""
 for r,_,fl in os.walk("src/include"):
