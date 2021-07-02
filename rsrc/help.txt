@@ -2,7 +2,7 @@ Usage: lll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...
 Options:
   -O0 -> No optimization
   -O1 -> Remove padding
-  -O2 -> Remove padding + Global optimization
+  -O2 -> Remove padding + Global optimization (2)
   -O3 -> Remove padding + Global optimization + Removal of debug data
   -I <directory> -> Add <directory> to file include path
   -f <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))
@@ -27,8 +27,8 @@ Options:
   -r0 -> Disable program execution mode (1)
   -fp -> Expand all file paths (1)
   -fp0 -> Do not expand all file paths (1)
-  -g -> Generate the output file (1, 2)
-  -g0 -> Do not generate the output file (1)
+  -g -> Generate the output files (1, 2)
+  -g0 -> Do not generate the output files (1)
 
 1: Only the last -xxx/-xxx0 argument is interpreted
 2: This is the default option

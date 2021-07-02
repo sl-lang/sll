@@ -6,7 +6,7 @@
 #include <linux/limits.h>
 #endif
 #include <lll_lib.h>
-#include <help_generated.h>
+#include <generated.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -32,7 +32,6 @@
 #define FLAG_LOGO 64
 #define FLAG_RUN 128
 #define FLAG_GENERATE_OUTPUT 256
-#define DEFAULT_OPTIMIZE_LEVEL OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE
 #define COMPILER_STACK_SIZE 65536
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -253,7 +252,7 @@ uint8_t _load_file(char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_input_da
 
 int main(int argc,const char** argv){
 	int32_t ec=1;
-	ol=DEFAULT_OPTIMIZE_LEVEL;
+	ol=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE;
 	fl=FLAG_LOGO|FLAG_RUN|FLAG_GENERATE_OUTPUT;
 	i_fp=malloc(sizeof(char));
 	if (!i_fp){
