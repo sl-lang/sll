@@ -15,9 +15,12 @@ HEADER_SINGLE_INCLUDE_REGEX=re.compile(br"^\s*#ifndef\s+(?P<h_nm>[a-zA-Z0-9_]+)\
 HELP_FILE_PATH="rsrc/help.txt"
 HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+LETTERS=b"abcdefghijklmnopqrstuvwxyz"
 MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
 SPACE_CHARACTERS=b" \t\n\v\f\r"
+SPACE_CHARACTERS_REGEX=re.compile(b" \t\n\v\f\r")
+IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z0-9_]+\b")
 
 
 
@@ -209,20 +212,44 @@ for i,(k,v) in enumerate(sorted(d_v,key=lambda e:e[0])):
 	d_v[i]=(k,v)
 	d_s+=b"\n#define "+k+b" "+v.strip()
 for i,(k,v) in enumerate(sorted(d_f,key=lambda e:e[0])):
+	k=SPACE_CHARACTERS_REGEX.sub(b"",k)
+	a={}
+	j=[0]
+	nk=k.split(b"(")[0]+b"("
+	for e in k[k.index(b"(")+1:-1].split(b","):
+		if (len(j)>1 or j[0]!=0):
+			nk+=b","
+		a[e]=b"".join([LETTERS[m:m+1] for m in j])
+		nk+=a[e]
+		j[-1]+=1
+		for m in range(len(j)-1,-1,-1):
+			if (j[m]==len(LETTERS)):
+				j[m]=0
+				if (m==0):
+					j.insert(0,0)
+				else:
+					j[m-1]+=1
+			else:
+				break
+	nk+=b")"
 	while (True):
 		nv=_expand_macros(v,dm,dfm)
 		if (nv==v):
 			break
 		v=nv
-	v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),v)
-	d_f[i]=(k,v)
-	d_s+=b"\n#define "+k+b" "+v.strip()
+	v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),v))
+	d_f[i]=(nk,v)
+	d_s+=b"\n#define "+nk+b" "+v.strip()
+fl=[]
 for k in l:
 	while (True):
 		nk=_expand_macros(k,dm,dfm)
 		if (nk==k):
 			break
 		k=nk
+	if (b"(" in k and b"(*" not in SPACE_CHARACTERS_REGEX.sub(b"",k)):
+		fl.append((k[:-len(k.split(b"(")[-1])-1].split(b" ")[-1],k))
+		continue
 	o+=b"\n"+k.strip()
 i=0
 while (i<len(o)):
@@ -279,8 +306,21 @@ while (i<len(o)):
 						continue
 				i+=1
 	i+=1
+for k,v in sorted(fl,key=lambda e:e[0]):
+	if (len(o)>0):
+		o+=b"\n"
+	ai=len(v.split(b"(")[-1])
+	o+=v[:-ai]
+	st=True
+	for a in v[-ai:].split(b")")[0].split(b","):
+		if (st is False):
+			o+=b","
+		st=False
+		o+=a[:-len(a.split(b" ")[-1])].strip()
+	o+=b");"
 with open("build/lll_lib.h","wb") as wf:
 	wf.write(b"#ifndef __LLL_H__\n#define __LLL_H__ 1"+il+d_s+b"\n"+o.strip()+b"\n#endif\n")
+# quit()################################################################################################
 if (os.name=="nt"):
 	cd=os.getcwd()
 	os.chdir("build")
