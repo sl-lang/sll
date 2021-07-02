@@ -320,7 +320,6 @@ for k,v in sorted(fl,key=lambda e:e[0]):
 	o+=b");"
 with open("build/lll_lib.h","wb") as wf:
 	wf.write(b"#ifndef __LLL_H__\n#define __LLL_H__ 1"+il+d_s+b"\n"+o.strip()+b"\n#endif\n")
-# quit()################################################################################################
 if (os.name=="nt"):
 	cd=os.getcwd()
 	os.chdir("build")
