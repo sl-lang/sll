@@ -145,27 +145,7 @@
 #define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
 #define LLL_GET_OBJECT_STATEMENT_COUNT(o) ((lll_statement_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
 #define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
-#define LLL_GET_OBJECT_AS_CHAR(o) (*((char*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_INT8(o) (*((int8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_INT16(o) (*((int16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_INT32(o) (*((int32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_INT64(o) (*((int64_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_FLOAT32(o) (*((float*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_FLOAT64(o) (*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_STRING_LENGTH(o) (*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_AS_IDENTIFIER(o) (*((lll_identifier_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))
-#define LLL_GET_OBJECT_IMPORT_INDEX(o,i) (*((lll_import_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(i))))
-#define LLL_GET_OBJECT_AS_STRING(o) ((char*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_string_length_t)))
 #define LLL_GET_OBJECT_AFTER_NOP(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_type_t)))
-#define LLL_SET_OBJECT_AS_INT8(o,i) ((*((int8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int8_t)(i)))
-#define LLL_SET_OBJECT_AS_INT16(o,i) ((*((int16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int16_t)(i)))
-#define LLL_SET_OBJECT_AS_INT32(o,i) ((*((int32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int32_t)(i)))
-#define LLL_SET_OBJECT_AS_INT64(o,i) ((*((int64_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((int64_t)(i)))
-#define LLL_SET_OBJECT_AS_FLOAT32(o,f) ((*((float*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((float)(f)))
-#define LLL_SET_OBJECT_AS_FLOAT64(o,f) ((*((double*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((double)(f)))
-#define LLL_SET_OBJECT_STRING_LENGTH(o,sz) ((*((lll_string_length_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_string_length_t)(sz)))
-#define LLL_SET_OBJECT_AS_IDENTIFIER(o,i) ((*((lll_identifier_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t))))=((lll_identifier_index_t)(i)))
-#define LLL_SET_OBJECT_IMPORT_INDEX(o,i,v) ((*((lll_import_index_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(i))))=((lll_import_index_t)(v)))
 
 #define LLL_OBJECT_MODIFIER_FIXED 0x1
 #define LLL_OBJECT_MODIFIER_UNSIGNED 0x2
@@ -307,12 +287,78 @@ typedef struct __LLL_OBJECT{
 
 
 
+typedef struct __LLL_CHAR_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	char v;
+} lll_char_object_t;
+
+
+
+typedef struct __LLL_INTEGER_OBJECT_DATA{
+	int8_t i8;
+	int16_t i16;
+	int32_t i32;
+	int64_t i64;
+} lll_integer_object_data_t;
+
+
+
+typedef struct __LLL_INTEGER_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	lll_integer_object_data_t v;
+} lll_integer_object_t;
+
+
+
+typedef struct __LLL_FLOAT_OBJECT_DATA{
+	float f32;
+	double f64;
+} lll_float_object_data_t;
+
+
+
+typedef struct __LLL_FLOAT_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	lll_float_object_data_t v;
+} lll_float_object_t;
+
+
+
+typedef struct __LLL_STRING_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	lll_string_length_t ln;
+	char v[];
+} lll_string_object_t;
+
+
+
+typedef struct __LLL_IDENTIFIER_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	lll_identifier_index_t idx;
+} lll_identifier_object_t;
+
+
+
 typedef struct __LLL_FUNCTION_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	lll_arg_count_t ac;
 	lll_function_index_t id;
 } lll_function_object_t;
+
+
+
+typedef struct __LLL_IMPORT_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	lll_arg_count_t ac;
+	lll_import_index_t idx[];
+} lll_import_object_t;
 
 
 

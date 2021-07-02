@@ -18,32 +18,31 @@ uint32_t _patch_import(lll_object_t* o,import_data_t* dt){
 		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_object_t)+eoff+sizeof(char);
+			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+			return sizeof(lll_string_object_t)+eoff+((lll_string_object_t*)o)->ln;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
+			return sizeof(lll_identifier_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
+			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_IMPORT:
 			{
-				lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				lll_arg_count_t i=l;
-				uint32_t sz=sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*l;
+				lll_import_object_t* io=(lll_import_object_t*)o;
+				uint32_t sz=sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*io->ac;
+				lll_arg_count_t i=io->ac;
 				while (i){
 					i--;
-					if (LLL_GET_OBJECT_IMPORT_INDEX(o,i)==dt->i){
-						for (lll_arg_count_t j=i+1;j<l;j++){
-							LLL_SET_OBJECT_IMPORT_INDEX(o,j-1,LLL_GET_OBJECT_IMPORT_INDEX(o,j));
+					if (io->idx[i]==dt->i){
+						for (lll_arg_count_t j=i+1;j<io->ac;j++){
+							io->idx[j-1]=io->idx[j];
 						}
-						l--;
+						io->ac--;
 					}
 				}
-				uint32_t j=(!l?0:sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*l);
+				uint32_t j=(!io->ac?0:sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*io->ac);
 				if (j!=sz){
-					*LLL_GET_OBJECT_ARGUMENT_COUNT(o)=l;
 					if (dt->off==UINT32_MAX){
 						dt->off=(uint32_t)(((uint64_t)(void*)o)-dt->b_off);
 					}
@@ -126,16 +125,19 @@ uint32_t _patch_module(lll_object_t* o,import_identifier_offset_list_t* i_off){
 		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_object_t)+eoff+sizeof(char);
+			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+			return sizeof(lll_string_object_t)+eoff+((lll_string_object_t*)o)->ln;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			LLL_SET_OBJECT_AS_IDENTIFIER(o,LLL_IDENTIFIER_ADD_INDEX(LLL_GET_OBJECT_AS_IDENTIFIER(o),i_off->off[LLL_IDENTIFIER_GET_ARRAY_ID(LLL_GET_OBJECT_AS_IDENTIFIER(o))]));
-			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
+			{
+				lll_identifier_object_t* io=(lll_identifier_object_t*)o;
+				io->idx=LLL_IDENTIFIER_ADD_INDEX(io->idx,i_off->off[LLL_IDENTIFIER_GET_ARRAY_ID(io->idx)]);
+				return sizeof(lll_identifier_object_t)+eoff;
+			}
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
+			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FUNC:
 			{
 				uint32_t off=sizeof(lll_function_object_t);
@@ -147,7 +149,7 @@ uint32_t _patch_module(lll_object_t* o,import_identifier_offset_list_t* i_off){
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
+			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);

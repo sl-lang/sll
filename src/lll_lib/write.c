@@ -124,15 +124,15 @@ uint32_t _get_object_size(lll_object_t* o){
 		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_object_t)+eoff+sizeof(char);
+			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+			return sizeof(lll_string_object_t)+eoff+((lll_string_object_t*)o)->ln;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
+			return sizeof(lll_identifier_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
+			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FUNC:
 			{
 				uint32_t off=sizeof(lll_function_object_t);
@@ -144,7 +144,7 @@ uint32_t _get_object_size(lll_object_t* o){
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
+			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
@@ -647,31 +647,34 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 		case LLL_OBJECT_TYPE_CHAR:
 			va->r=REGISTER_CONST|REGISTER_32BIT;
 			va->t=IDENTIFIER_DATA_TYPE_CHAR;
-			va->e.v=LLL_GET_OBJECT_AS_CHAR(o);
+			va->e.v=((lll_char_object_t*)o)->v;
 			return 1;
 		case LLL_OBJECT_TYPE_INT:
-			va->r=REGISTER_CONST;
-			if (LLL_IS_OBJECT_INT8(o)){
-				va->r|=REGISTER_32BIT;
-				va->t=IDENTIFIER_DATA_TYPE_INT32;
-				va->e.v=LLL_GET_OBJECT_AS_INT8(o);
+			{
+				lll_integer_object_t* io=(lll_integer_object_t*)o;
+				va->r=REGISTER_CONST;
+				if (LLL_IS_OBJECT_INT8(o)){
+					va->r|=REGISTER_32BIT;
+					va->t=IDENTIFIER_DATA_TYPE_INT32;
+					va->e.v=io->v.i8;
+				}
+				else if (LLL_IS_OBJECT_INT16(o)){
+					va->r|=REGISTER_32BIT;
+					va->t=IDENTIFIER_DATA_TYPE_INT32;
+					va->e.v=io->v.i16;
+				}
+				else if (LLL_IS_OBJECT_INT32(o)){
+					va->r|=REGISTER_32BIT;
+					va->t=IDENTIFIER_DATA_TYPE_INT32;
+					va->e.v=io->v.i32;
+				}
+				else{
+					va->r|=REGISTER_64BIT;
+					va->t=IDENTIFIER_DATA_TYPE_INT64;
+					va->e.v=io->v.i64;
+				}
+				return 1;
 			}
-			else if (LLL_IS_OBJECT_INT16(o)){
-				va->r|=REGISTER_32BIT;
-				va->t=IDENTIFIER_DATA_TYPE_INT32;
-				va->e.v=LLL_GET_OBJECT_AS_INT16(o);
-			}
-			else if (LLL_IS_OBJECT_INT32(o)){
-				va->r|=REGISTER_32BIT;
-				va->t=IDENTIFIER_DATA_TYPE_INT32;
-				va->e.v=LLL_GET_OBJECT_AS_INT32(o);
-			}
-			else{
-				va->r|=REGISTER_64BIT;
-				va->t=IDENTIFIER_DATA_TYPE_INT64;
-				va->e.v=LLL_GET_OBJECT_AS_INT64(o);
-			}
-			return 1;
 		case LLL_OBJECT_TYPE_FLOAT:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_NIL:
@@ -683,15 +686,15 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 		case LLL_OBJECT_TYPE_STRING:
 			va->r=REGISTER_CONST;
 			va->t=IDENTIFIER_DATA_TYPE_STRING;
-			va->e.str.l=LLL_GET_OBJECT_STRING_LENGTH(o);
-			va->e.str.ptr=LLL_GET_OBJECT_AS_STRING(o);
+			va->e.str.l=((lll_string_object_t*)o)->ln;
+			va->e.str.ptr=((lll_string_object_t*)o)->v;
 			return 1;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			if (va->r==REGISTER_COPY_IDENTIFIER){
 				if (!(im->rm)){
 					ASSERT(!"Move other Var to Stack",e,0);
 				}
-				identifier_data_t* id=im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(o),im);
+				identifier_data_t* id=im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(((lll_identifier_object_t*)o)->idx,im);
 				va->r=REGISTER_FROM_BIT_INDEX(FIND_FIRST_SET_BIT(im->rm));
 				va->t=id->t;
 				im->rm&=~REGISTER_TO_MASK(va->r);
@@ -706,7 +709,7 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 				LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
 				return 1;
 			}
-			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(o),im));
+			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(((lll_identifier_object_t*)o)->idx,im));
 			return 1;
 		case LLL_OBJECT_TYPE_WRITE_BUFFER:
 			ASSERT(!"Unimplemented",e,0);
@@ -944,31 +947,34 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 		case LLL_OBJECT_TYPE_CHAR:
 			va->r=REGISTER_CONST|REGISTER_32BIT;
 			va->t=IDENTIFIER_DATA_TYPE_CHAR;
-			va->e.v=LLL_GET_OBJECT_AS_CHAR(o);
+			va->e.v=((lll_char_object_t*)o)->v;
 			return;
 		case LLL_OBJECT_TYPE_INT:
-			va->r=REGISTER_CONST;
-			if (LLL_IS_OBJECT_INT8(o)){
-				va->r|=REGISTER_32BIT;
-				va->t=IDENTIFIER_DATA_TYPE_INT32;
-				va->e.v=LLL_GET_OBJECT_AS_INT8(o);
+			{
+				lll_integer_object_t* io=(lll_integer_object_t*)o;
+				va->r=REGISTER_CONST;
+				if (LLL_IS_OBJECT_INT8(o)){
+					va->r|=REGISTER_32BIT;
+					va->t=IDENTIFIER_DATA_TYPE_INT32;
+					va->e.v=io->v.i8;
+				}
+				else if (LLL_IS_OBJECT_INT16(o)){
+					va->r|=REGISTER_32BIT;
+					va->t=IDENTIFIER_DATA_TYPE_INT32;
+					va->e.v=io->v.i16;
+				}
+				else if (LLL_IS_OBJECT_INT32(o)){
+					va->r|=REGISTER_32BIT;
+					va->t=IDENTIFIER_DATA_TYPE_INT32;
+					va->e.v=io->v.i32;
+				}
+				else{
+					va->r|=REGISTER_64BIT;
+					va->t=IDENTIFIER_DATA_TYPE_INT64;
+					va->e.v=io->v.i64;
+				}
+				return;
 			}
-			else if (LLL_IS_OBJECT_INT16(o)){
-				va->r|=REGISTER_32BIT;
-				va->t=IDENTIFIER_DATA_TYPE_INT32;
-				va->e.v=LLL_GET_OBJECT_AS_INT16(o);
-			}
-			else if (LLL_IS_OBJECT_INT32(o)){
-				va->r|=REGISTER_32BIT;
-				va->t=IDENTIFIER_DATA_TYPE_INT32;
-				va->e.v=LLL_GET_OBJECT_AS_INT32(o);
-			}
-			else{
-				va->r|=REGISTER_64BIT;
-				va->t=IDENTIFIER_DATA_TYPE_INT64;
-				va->e.v=LLL_GET_OBJECT_AS_INT64(o);
-			}
-			return;
 		case LLL_OBJECT_TYPE_FLOAT:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NIL:
@@ -983,11 +989,11 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 		case LLL_OBJECT_TYPE_STRING:
 			va->r=REGISTER_CONST;
 			va->t=IDENTIFIER_DATA_TYPE_STRING;
-			va->e.str.l=LLL_GET_OBJECT_STRING_LENGTH(o);
-			va->e.str.ptr=LLL_GET_OBJECT_AS_STRING(o);
+			va->e.str.l=((lll_string_object_t*)o)->ln;
+			va->e.str.ptr=((lll_string_object_t*)o)->v;
 			return;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(o),im));
+			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(((lll_identifier_object_t*)o)->idx,im));
 			return;
 		case LLL_OBJECT_TYPE_WRITE_BUFFER:
 			ASSERT(!"Unimplemented");
@@ -1057,27 +1063,30 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 		case LLL_OBJECT_TYPE_CHAR:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_INT:
-			if (LLL_IS_OBJECT_INT8(o)){
-				if (!LLL_GET_OBJECT_AS_INT8(o)){
-					return COMPARE_ALWAYS_FALSE;
+			{
+				lll_integer_object_t* io=(lll_integer_object_t*)o;
+				if (LLL_IS_OBJECT_INT8(o)){
+					if (!io->v.i8){
+						return COMPARE_ALWAYS_FALSE;
+					}
 				}
-			}
-			else if (LLL_IS_OBJECT_INT16(o)){
-				if (!LLL_GET_OBJECT_AS_INT16(o)){
-					return COMPARE_ALWAYS_FALSE;
+				else if (LLL_IS_OBJECT_INT16(o)){
+					if (!io->v.i16){
+						return COMPARE_ALWAYS_FALSE;
+					}
 				}
-			}
-			else if (LLL_IS_OBJECT_INT32(o)){
-				if (!LLL_GET_OBJECT_AS_INT32(o)){
-					return COMPARE_ALWAYS_FALSE;
+				else if (LLL_IS_OBJECT_INT32(o)){
+					if (!io->v.i32){
+						return COMPARE_ALWAYS_FALSE;
+					}
 				}
-			}
-			else{
-				if (!LLL_GET_OBJECT_AS_INT64(o)){
-					return COMPARE_ALWAYS_FALSE;
+				else{
+					if (!io->v.i64){
+						return COMPARE_ALWAYS_FALSE;
+					}
 				}
+				return COMPARE_ALWAYS_TRUE;
 			}
-			return COMPARE_ALWAYS_TRUE;
 		case LLL_OBJECT_TYPE_FLOAT:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_NIL:
@@ -1619,15 +1628,15 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_object_t)+eoff+sizeof(char);
+			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+			return sizeof(lll_string_object_t)+eoff+((lll_string_object_t*)o)->ln;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
+			return sizeof(lll_identifier_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
+			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_WRITE_BUFFER:
 			{
 				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
@@ -1792,7 +1801,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 				off+=sizeof(lll_object_t)+sizeof(lll_identifier_index_t);
 				REMOVE_PADDING_DEBUG(va,off);
 				ASSERT(va->t==LLL_OBJECT_TYPE_IDENTIFIER,e,UINT32_MAX);
-				identifier_data_t* i_dt=im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(LLL_GET_OBJECT_AS_IDENTIFIER(va),im);
+				identifier_data_t* i_dt=im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(((lll_identifier_object_t*)va)->idx,im);
 				lll_object_t* dta=LLL_GET_OBJECT_ARGUMENT(o,off);
 				REMOVE_PADDING_DEBUG(dta,off);
 				if (i_dt->r==REGISTER_NONE){

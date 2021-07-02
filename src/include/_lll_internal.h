@@ -135,8 +135,7 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 #define HIGHLIGHT_COLOR_RESET "\x1b[0m"
 
 #define READ_SINGLE_CHAR_OK 0
-#define READ_SINGLE_CHAR_END 1
-#define READ_SINGLE_CHAR_ERROR 2
+#define READ_SINGLE_CHAR_ERROR 1
 
 #define REGISTER_CONST 0
 #define REGISTER_A 1

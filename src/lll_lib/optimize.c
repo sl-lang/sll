@@ -17,15 +17,15 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_object_t)+eoff+sizeof(char);
+			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+			return sizeof(lll_string_object_t)+eoff+((lll_string_object_t*)o)->ln;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
+			return sizeof(lll_identifier_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
+			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FUNC:
 			{
 				uint32_t off=sizeof(lll_function_object_t);
@@ -37,7 +37,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
+			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
@@ -172,11 +172,7 @@ _set_to_0:
 								i++;
 								off+=_get_object_size(LLL_GET_OBJECT_ARGUMENT(o,off));
 							}
-							o->t=LLL_OBJECT_TYPE_INT;
-							LLL_SET_OBJECT_AS_INT8(o,0);
-							for (uint32_t j=sizeof(lll_object_t)+sizeof(int8_t);j<off;j++){
-								*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
-							}
+							ASSERT(!"Set Object to 0!",e,UINT32_MAX);
 							return off+eoff;
 						case LLL_OBJECT_TYPE_BIT_NOT:
 							ASSERT(!"Set Object To -1!",e,UINT32_MAX);
@@ -188,11 +184,7 @@ _set_to_0:
 		i++;
 	}
 	if (!(*l)&&LLL_IS_OBJECT_TYPE_MATH(o)){
-		o->t=LLL_OBJECT_TYPE_INT;
-		LLL_SET_OBJECT_AS_INT8(o,0);
-		for (uint32_t j=sizeof(lll_object_t)+sizeof(int8_t);j<off;j++){
-			*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
-		}
+		ASSERT(!"Set Object to 0!",e,UINT32_MAX);
 		return off+eoff;
 	}
 	if (*l==1){
@@ -234,38 +226,36 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 			}
 			return sizeof(lll_object_t)+pad;
 		case LLL_OBJECT_TYPE_CHAR:
-			for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(char);i++){
+			for (uint32_t i=0;i<sizeof(lll_char_object_t);i++){
 				*(d+i)=*(s+i);
 			}
-			return sizeof(lll_object_t)+sizeof(char)+pad;
+			return sizeof(lll_char_object_t)+pad;
 		case LLL_OBJECT_TYPE_STRING:
 			{
-				lll_string_length_t sl=LLL_GET_OBJECT_STRING_LENGTH(o);
-				for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl;i++){
+				lll_string_length_t ln=((lll_string_object_t*)o)->ln;
+				for (uint32_t i=0;i<sizeof(lll_string_object_t)+ln;i++){
 					*(d+i)=*(s+i);
 				}
-				return sizeof(lll_object_t)+sizeof(lll_string_length_t)+sl+pad;
+				return sizeof(lll_string_object_t)+ln+pad;
 			}
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_identifier_index_t);i++){
+			for (uint32_t i=0;i<sizeof(lll_identifier_object_t);i++){
 				*(d+i)=*(s+i);
 			}
-			return sizeof(lll_object_t)+sizeof(lll_identifier_index_t)+pad;
+			return sizeof(lll_identifier_object_t)+pad;
 		case LLL_OBJECT_TYPE_INT:
 			{
-				uint32_t w=LLL_GET_OBJECT_INTEGER_WIDTH(o);
-				for (uint32_t i=0;i<sizeof(lll_object_t)+w;i++){
+				for (uint32_t i=0;i<sizeof(lll_integer_object_t);i++){
 					*(d+i)=*(s+i);
 				}
-				return sizeof(lll_object_t)+w+pad;
+				return sizeof(lll_integer_object_t)+pad;
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
 			{
-				uint32_t w=(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
-				for (uint32_t i=0;i<sizeof(lll_object_t)+w;i++){
+				for (uint32_t i=0;i<sizeof(lll_float_object_t);i++){
 					*(d+i)=*(s+i);
 				}
-				return sizeof(lll_object_t)+w+pad;
+				return sizeof(lll_float_object_t)+pad;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
 			{
@@ -283,7 +273,7 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
 			{
-				uint32_t sz=sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o));
+				uint32_t sz=sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac;
 				for (uint32_t i=0;i<sz;i++){
 					*(d+i)=*(s+i);
 				}

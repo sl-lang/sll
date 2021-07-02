@@ -79,7 +79,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 		case LLL_OBJECT_TYPE_CHAR:
 			{
 				fputc('\'',f);
-				char c=LLL_GET_OBJECT_AS_CHAR(o);
+				char c=((lll_char_object_t*)o)->v;
 				if (c=='\''||c=='"'||c=='\\'){
 					fputc('\\',f);
 				}
@@ -115,30 +115,29 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			}
 		case LLL_OBJECT_TYPE_INT:
 			{
+				lll_integer_object_t* io=(lll_integer_object_t*)o;
 				if (LLL_IS_OBJECT_INT8(o)){
-					_print_int64(LLL_GET_OBJECT_AS_INT8(o),f);
-					return sizeof(lll_object_t)+eoff+sizeof(int8_t);
+					_print_int64(io->v.i8,f);
 				}
 				else if (LLL_IS_OBJECT_INT16(o)){
-					_print_int64(LLL_GET_OBJECT_AS_INT16(o),f);
-					return sizeof(lll_object_t)+eoff+sizeof(int16_t);
+					_print_int64(io->v.i16,f);
 				}
 				else if (LLL_IS_OBJECT_INT32(o)){
-					_print_int64(LLL_GET_OBJECT_AS_INT32(o),f);
-					return sizeof(lll_object_t)+eoff+sizeof(int32_t);
+					_print_int64(io->v.i32,f);
 				}
 				else{
-					_print_int64(LLL_GET_OBJECT_AS_INT64(o),f);
-					return sizeof(lll_object_t)+eoff+sizeof(int64_t);
+					_print_int64(io->v.i64,f);
 				}
+				return sizeof(lll_integer_object_t)+eoff;
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
 			if (LLL_IS_OBJECT_FLOAT64(o)){
-				fprintf(f,"%lf",LLL_GET_OBJECT_AS_FLOAT64(o));
-				return sizeof(lll_object_t)+eoff+sizeof(double);
+				fprintf(f,"%lf",((lll_float_object_t*)o)->v.f64);
 			}
-			fprintf(f,"%f",LLL_GET_OBJECT_AS_FLOAT32(o));
-			return sizeof(lll_object_t)+eoff+sizeof(float);
+			else{
+				fprintf(f,"%f",((lll_float_object_t*)o)->v.f32);
+			}
+			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_NIL:
 			fprintf(f,"nil");
 			return sizeof(lll_object_t)+eoff;
@@ -151,11 +150,10 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 		case LLL_OBJECT_TYPE_STRING:
 			{
 				fputc('"',f);
-				lll_string_length_t l=LLL_GET_OBJECT_STRING_LENGTH(o);
-				uint32_t off=sizeof(lll_object_t)+l+sizeof(lll_string_length_t);
-				char* str=LLL_GET_OBJECT_AS_STRING(o);
-				while (l){
-					l--;
+				lll_string_length_t ln=((lll_string_object_t*)o)->ln;
+				char* str=((lll_string_object_t*)o)->v;
+				while (ln){
+					ln--;
 					char c=*str;
 					if (c=='\''||c=='"'||c=='\\'){
 						fputc('\\',f);
@@ -190,11 +188,11 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 					str++;
 				}
 				fputc('"',f);
-				return off+eoff;
+				return sizeof(lll_string_object_t)+((lll_string_object_t*)o)->ln+eoff;
 			}
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			{
-				lll_identifier_index_t i=LLL_GET_OBJECT_AS_IDENTIFIER(o);
+				lll_identifier_index_t i=((lll_identifier_object_t*)o)->idx;
 				uint32_t j=LLL_IDENTIFIER_GET_ARRAY_ID(i);
 				if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
 					lll_identifier_t* e=*(c_dt->i_dt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i));
@@ -215,7 +213,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 					fputc('$',f);
 					_print_int64((c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
 				}
-				return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
+				return sizeof(lll_identifier_object_t)+eoff;
 			}
 		case LLL_OBJECT_TYPE_WRITE_BUFFER:
 			fprintf(f,":>");
@@ -309,18 +307,18 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			{
 				fputc('-',f);
 				fputc('-',f);
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				for (lll_arg_count_t i=0;i<ac;i++){
+				lll_import_object_t* io=(lll_import_object_t*)o;
+				for (lll_arg_count_t i=0;i<io->ac;i++){
 					fputc(' ',f);
 					fputc('"',f);
-					lll_import_data_path_t* dt=c_dt->im.dt+LLL_GET_OBJECT_IMPORT_INDEX(o,i);
+					lll_import_data_path_t* dt=c_dt->im.dt+io->idx[i];
 					for (uint32_t i=0;i<dt->sz;i++){
 						fputc(*(dt->nm+i),f);
 					}
 					fputc('"',f);
 				}
 				fputc(')',f);
-				return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*ac+eoff;
+				return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*io->ac+eoff;
 			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{

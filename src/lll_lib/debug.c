@@ -18,17 +18,17 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_object_t)+eoff+sizeof(char);
+			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_string_length_t)+LLL_GET_OBJECT_STRING_LENGTH(o);
+			return sizeof(lll_string_object_t)+eoff+((lll_string_object_t*)o)->ln;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_object_t)+eoff+sizeof(lll_identifier_index_t);
+			return sizeof(lll_identifier_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_object_t)+eoff+LLL_GET_OBJECT_INTEGER_WIDTH(o);
+			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_object_t)+eoff+(LLL_IS_OBJECT_FLOAT64(o)?sizeof(double):sizeof(float));
+			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_IMPORT:
-			return sizeof(lll_object_t)+sizeof(lll_arg_count_t)+sizeof(lll_import_index_t)*(*LLL_GET_OBJECT_ARGUMENT_COUNT(o))+eoff;
+			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_FUNC:
 			{
 				uint32_t off=sizeof(lll_function_object_t);
