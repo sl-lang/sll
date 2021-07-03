@@ -55,21 +55,21 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 					}
 					if (LLL_IS_OBJECT_TYPE_TYPE(st)){
 						l--;
-						for (uint32_t j=off-st_l;j<off;j++){
+						for (uint32_t j=off-st_l;j<off;j+=sizeof(lll_object_type_t)){
 							LLL_SET_OBJECT_NOP(o,j);
 						}
 					}
 				}
 				if (!l){
 					o->t=LLL_OBJECT_TYPE_NIL;
-					for (uint32_t i=sizeof(lll_object_t);i<sizeof(lll_operation_list_object_t);i++){
+					for (uint32_t i=sizeof(lll_object_t);i<sizeof(lll_operation_list_object_t);i+=sizeof(lll_object_type_t)){
 						LLL_SET_OBJECT_NOP(o,i);
 					}
 					return off+eoff;
 				}
 				((lll_operation_list_object_t*)o)->sc=l;
 				if (l==1){
-					for (uint32_t i=0;i<sizeof(lll_operation_list_object_t);i++){
+					for (uint32_t i=0;i<sizeof(lll_operation_list_object_t);i+=sizeof(lll_object_type_t)){
 						LLL_SET_OBJECT_NOP(o,i);
 					}
 					return off+eoff;
@@ -85,7 +85,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 					return UINT32_MAX;
 				}
 				if (LLL_GET_OBJECT_TYPE(c)!=ot){
-					for (uint32_t i=0;i<sizeof(lll_debug_object_t);i++){
+					for (uint32_t i=0;i<sizeof(lll_debug_object_t);i+=sizeof(lll_object_type_t)){
 						LLL_SET_OBJECT_NOP(o,i);
 					}
 				}
@@ -118,7 +118,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 					break;
 				case LLL_OBJECT_TYPE_NIL:
 					l--;
-					for (uint32_t j=off-al;j<off;j++){
+					for (uint32_t j=off-al;j<off;j+=sizeof(lll_object_type_t)){
 						LLL_SET_OBJECT_NOP(o,j);
 					}
 					break;
@@ -132,7 +132,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 							}
 						case LLL_OBJECT_TYPE_MULT:
 							l--;
-							for (uint32_t j=off-al;j<off;j++){
+							for (uint32_t j=off-al;j<off;j+=sizeof(lll_object_type_t)){
 								LLL_SET_OBJECT_NOP(o,j);
 							}
 							break;
@@ -148,7 +148,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 						case LLL_OBJECT_TYPE_BIT_OR:
 						case LLL_OBJECT_TYPE_BIT_XOR:
 							l--;
-							for (uint32_t j=off-al;j<off;j++){
+							for (uint32_t j=off-al;j<off;j+=sizeof(lll_object_type_t)){
 								LLL_SET_OBJECT_NOP(o,j);
 							}
 							break;
@@ -187,13 +187,13 @@ _set_to_0:
 	if (l==1){
 		if (LLL_IS_OBJECT_TYPE_COMPARE(o)){
 			o->t=LLL_OBJECT_TYPE_TRUE;
-			for (uint32_t j=sizeof(lll_operator_object_t);j<off;j++){
+			for (uint32_t j=sizeof(lll_operator_object_t);j<off;j+=sizeof(lll_object_type_t)){
 				LLL_SET_OBJECT_NOP(o,j);
 			}
 			return off+eoff;
 		}
 		if (LLL_IS_OBJECT_TYPE_MATH(o)){
-			for (uint32_t j=0;j<sizeof(lll_operator_object_t);j++){
+			for (uint32_t j=0;j<sizeof(lll_operator_object_t);j+=sizeof(lll_object_type_t)){
 				LLL_SET_OBJECT_NOP(o,j);
 			}
 			return off+eoff;

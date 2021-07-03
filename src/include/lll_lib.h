@@ -133,10 +133,10 @@
 #define LLL_IS_OBJECT_UNKNOWN(o) (!((o)->t&0x3f))
 #define LLL_IS_OBJECT_CONST(o) ((o)->t>>7)
 #define LLL_GET_OBJECT_TYPE(o) ((o)->t&0x3f)
-#define LLL_GET_DEBUG_OBJECT_CHILD(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_debug_object_t)))
-#define LLL_GET_OBJECT_AFTER_NOP(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_type_t)))
-#define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
-#define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_GET_DEBUG_OBJECT_CHILD(o) ((lll_object_t*)(void*)(((uint64_t)(void*)(o))+sizeof(lll_debug_object_t)))
+#define LLL_GET_OBJECT_AFTER_NOP(o) ((lll_object_t*)(void*)(((uint64_t)(void*)(o))+sizeof(lll_object_type_t)))
+#define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)(void*)(((uint64_t)(void*)(o))+(i)))
+#define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)(void*)(((uint64_t)(void*)(o))+(i)))
 #define LLL_SET_OBJECT_NOP(o,i) ((*((lll_object_type_t*)(void*)((uint64_t)(void*)(o)+(i))))=LLL_OBJECT_TYPE_NOP)
 
 #define LLL_OBJECT_MODIFIER_FIXED 0x1
@@ -151,8 +151,6 @@
 #define LLL_OBJECT_MODIFIER_LIST 0x40
 #define LLL_OBJECT_MODIFIER_LAST 0x60
 #define LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK 0x60
-
-#define LLL_GET_OBJECT_WITH_OFFSET(o,i) ((void*)(((uint64_t)(void*)(o))+(i)))
 
 #define LLL_MAX_SHORT_IDENTIFIER_LENGTH 15
 #define LLL_IDENTIFIER_GET_ARRAY_ID(i) ((i)&0xf)
@@ -351,7 +349,7 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_DEBUG_OBJECT{
 
 
 typedef struct __LLL_FILE_PATH{
-	char fp[4096];
+	char fp[512];
 	uint16_t l;
 } lll_file_path_t;
 

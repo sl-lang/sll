@@ -50,8 +50,8 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			for (uint32_t i=0;i<sizeof(lll_debug_object_t);i++){
-				*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,i))=LLL_OBJECT_TYPE_NOP;
+			for (uint32_t i=0;i<sizeof(lll_debug_object_t);i+=sizeof(lll_object_type_t)){
+				LLL_SET_OBJECT_NOP(o,i);
 			}
 			return sizeof(lll_debug_object_t)+eoff+_remove_debug_data_internal(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o));
 	}

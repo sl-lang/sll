@@ -2227,7 +2227,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 				agd.im.rm&=~REGISTER_TO_MASK(FUNCTION_CALL_REGISTERS[j]);
 			}
 			_write_label_define(os,i);
-			lll_function_object_t* o=(lll_function_object_t*)LLL_GET_OBJECT_WITH_OFFSET(c_dt->h,f->off);
+			lll_function_object_t* o=(lll_function_object_t*)(void*)(((uint64_t)(void*)c_dt->h)+f->off);
 			uint32_t off=sizeof(lll_function_object_t);
 			for (lll_arg_count_t j=0;j<o->ac;j++){
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);

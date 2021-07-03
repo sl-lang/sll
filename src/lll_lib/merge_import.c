@@ -52,7 +52,7 @@ uint32_t _patch_import(lll_object_t* o,import_data_t* dt){
 				}
 				while (j<sz){
 					LLL_SET_OBJECT_NOP(o,j);
-					j++;
+					j+=sizeof(lll_object_type_t);
 				}
 				return sz+eoff;
 			}
@@ -261,16 +261,16 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,u
 		return LLL_RETURN_ERROR;
 	}
 	sz-=dt.off;
-	uint8_t* s=(uint8_t*)LLL_GET_OBJECT_WITH_OFFSET(c_dt->h,dt.off+sz);
-	uint8_t* d=(uint8_t*)LLL_GET_OBJECT_WITH_OFFSET(c_dt->h,dt.off+sz+m_sz);
+	uint8_t* s=(uint8_t*)(void*)(((uint64_t)(void*)c_dt->h)+dt.off+sz);
+	uint8_t* d=(uint8_t*)(void*)(((uint64_t)(void*)c_dt->h)+dt.off+sz+m_sz);
 	while (sz){
 		sz--;
 		s--;
 		d--;
 		*d=*s;
 	}
-	s=(uint8_t*)LLL_GET_OBJECT_WITH_OFFSET(im->h,m_sz);
-	d=(uint8_t*)LLL_GET_OBJECT_WITH_OFFSET(c_dt->h,dt.off+m_sz);
+	s=(uint8_t*)(void*)(((uint64_t)(void*)im->h)+m_sz);
+	d=(uint8_t*)(void*)(((uint64_t)(void*)c_dt->h)+dt.off+m_sz);
 	while (m_sz){
 		m_sz--;
 		s--;
