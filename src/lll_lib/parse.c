@@ -2,51 +2,7 @@
 #include <_lll_internal.h>
 #include <math.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
-
-
-
-#define COMPARE_IDENTIFIER_LIST(po,c_dt,sz,str,i,l_sc_,e,is,arg_s,iarg) \
-	if ((sz)==(i)){ \
-		lll_identifier_list_t* k=(c_dt)->i_dt.s+((i)-1); \
-		uint32_t mx_sc=UINT32_MAX; \
-		lll_identifier_index_t mx_i; \
-		for (uint32_t j=0;j<k->l;j++){ \
-			lll_small_identifier_t* si=k->dt+j; \
-			if (FAST_COMPARE_STR((str),si->v,i)){ \
-				if (si->sc==(l_sc_)->l_sc){ \
-					(iarg)->idx=LLL_CREATE_IDENTIFIER(j,(i)-1); \
-					goto _identifier_found; \
-				} \
-				else if (((l_sc_)->m[si->sc>>6]&(1ull<<(si->sc&0x3f)))&&(mx_sc==UINT32_MAX||si->sc>mx_sc)){ \
-					mx_sc=si->sc; \
-					mx_i=LLL_CREATE_IDENTIFIER(j,(i)-1); \
-				} \
-			} \
-		} \
-		if (mx_sc!=UINT32_MAX){ \
-			(iarg)->idx=mx_i; \
-			goto _identifier_found; \
-		} \
-		if (LLL_GET_OBJECT_TYPE((po))!=LLL_OBJECT_TYPE_SET&&LLL_GET_OBJECT_TYPE((po))!=LLL_OBJECT_TYPE_FUNC){ \
-			(e)->t=LLL_ERROR_UNKNOWN_IDENTIFIER; \
-			(e)->dt.r.off=(arg_s); \
-			(e)->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET((is))-(arg_s)-1; \
-			if (n_l_sc.m){ \
-				free(n_l_sc.m); \
-			} \
-			return LLL_RETURN_ERROR; \
-		} \
-		k->l++; \
-		k->dt=realloc(k->dt,k->l*sizeof(lll_small_identifier_t)); \
-		(k->dt+k->l-1)->v=malloc((i)*sizeof(char)); \
-		for (uint32_t j=0;j<(i);j++){ \
-			*((k->dt+k->l-1)->v+j)=*((str)+j); \
-		} \
-		(k->dt+k->l-1)->sc=(l_sc_)->l_sc; \
-		(iarg)->idx=LLL_CREATE_IDENTIFIER(k->l-1,(i)-1); \
-	}
 
 
 
@@ -225,7 +181,6 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 			}
 			if (LLL_IS_OBJECT_UNKNOWN(o)){
 				o->t=LLL_OBJECT_TYPE_NIL;
-				_bf_off-=sizeof(lll_arg_count_t);
 			}
 			else if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_FOR){
 				if (*ac<2){
@@ -248,14 +203,14 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 					}
 					return LLL_RETURN_ERROR;
 				}
-				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,sizeof(lll_object_t)+sizeof(lll_arg_count_t));
+				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,sizeof(lll_operator_object_t));
 				while (LLL_GET_OBJECT_TYPE(a)==LLL_OBJECT_TYPE_DEBUG_DATA){
 					a=LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)a);
 				}
 				if (LLL_GET_OBJECT_TYPE(a)!=LLL_OBJECT_TYPE_IDENTIFIER){
 					e->t=LLL_ERROR_SET_NO_INDENTIFIER;
 					e->dt.r.off=st_off;
-					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
+					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off;
 					if (n_l_sc.m){
 						free(n_l_sc.m);
 					}
@@ -274,7 +229,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 					if (LLL_GET_OBJECT_TYPE(a)!=LLL_OBJECT_TYPE_IDENTIFIER){
 						break;
 					}
-					off+=sizeof(lll_object_t)+sizeof(lll_identifier_index_t);
+					off+=sizeof(lll_identifier_object_t);
 				}
 				*ac-=i;
 				((lll_function_object_t*)o)->id=c_dt->f_dt.l;
@@ -299,11 +254,11 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 						break;
 					}
 					f->a[j]=((lll_identifier_object_t*)a)->idx;
-					off+=sizeof(lll_object_t)+sizeof(lll_identifier_index_t);
+					off+=sizeof(lll_identifier_object_t);
 					eoff=off;
 				}
 				for (off=sizeof(lll_function_object_t);off<eoff;off+=sizeof(lll_object_type_t)){
-					*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,off))=LLL_OBJECT_TYPE_NOP;
+					LLL_SET_OBJECT_NOP(o,off);
 				}
 				*(c_dt->f_dt.dt+c_dt->f_dt.l-1)=f;
 			}
@@ -346,7 +301,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 				}
 				st_off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
 				o=(lll_object_t*)(_bf+_bf_off);
-				_bf_off+=sizeof(lll_object_t)+(c=='('?sizeof(lll_arg_count_t):sizeof(lll_statement_count_t));
+				_bf_off+=(c=='('?sizeof(lll_object_t):sizeof(lll_operation_list_object_t));
 				if (_bf_off>=_bf_sz){
 					e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
@@ -359,12 +314,8 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l
 				o->t=(c=='('?LLL_OBJECT_TYPE_UNKNOWN:LLL_OBJECT_TYPE_OPERATION_LIST|LLL_OBJECT_TYPE_CONST);
 				o->m=0;
 				ec=(c=='('?')':'}');
-				if (c=='('){
-					ac=LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-					*ac=0;
-				}
-				else{
-					sc=LLL_GET_OBJECT_STATEMENT_COUNT(o);
+				if (c=='{'){
+					sc=&(((lll_operation_list_object_t*)o)->sc);
 					*sc=0;
 				}
 			}
@@ -812,7 +763,7 @@ _read_symbol:
 					o->t=LLL_OBJECT_TYPE_IMPORT;
 					ac=&(((lll_import_object_t*)o)->ac);
 					*ac=0;
-					_bf_off+=sizeof(lll_import_object_t)-sizeof(lll_object_t)-sizeof(lll_arg_count_t);
+					_bf_off+=sizeof(lll_import_object_t)-sizeof(lll_object_t);
 				}
 				else{
 					goto _unknown_symbol;
@@ -823,7 +774,7 @@ _read_symbol:
 					o->t=LLL_OBJECT_TYPE_FUNC;
 					ac=&(((lll_function_object_t*)o)->ac);
 					*ac=0;
-					_bf_off+=sizeof(lll_function_object_t)-sizeof(lll_object_t)-sizeof(lll_arg_count_t);
+					_bf_off+=sizeof(lll_function_object_t)-sizeof(lll_object_t);
 				}
 				else{
 					goto _unknown_symbol;
@@ -839,6 +790,11 @@ _unknown_symbol:
 				}
 				return LLL_RETURN_ERROR;
 			}
+			if (!ac){
+				ac=&(((lll_operator_object_t*)o)->ac);
+				*ac=0;
+				_bf_off+=sizeof(lll_operator_object_t)-sizeof(lll_object_t);
+			}
 			if (o->t==LLL_OBJECT_TYPE_FOR||o->t==LLL_OBJECT_TYPE_FUNC){
 				n_l_sc.l_sc=c_dt->_n_sc_id;
 				n_l_sc.ml=(n_l_sc.l_sc+65)>>6;
@@ -853,6 +809,15 @@ _unknown_symbol:
 			}
 			if (o->t!=LLL_OBJECT_TYPE_IMPORT){
 				o->t|=LLL_OBJECT_TYPE_CONST;
+			}
+			if (_bf_off>=_bf_sz){
+				e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
+				e->dt.r.sz=1;
+				if (n_l_sc.m){
+					free(n_l_sc.m);
+				}
+				return LLL_RETURN_ERROR;
 			}
 		}
 		else{
@@ -1251,34 +1216,59 @@ _read_identifier:
 						}
 						return LLL_RETURN_ERROR;
 					}
-#if LLL_MAX_SHORT_IDENTIFIER_LENGTH!=15
-#error The Following Code is Broken
-#endif
-					COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,1,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,2,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,3,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,4,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,5,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,6,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,7,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,8,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,9,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,10,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,11,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,12,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,13,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,14,l_sc,e,is,arg_s,iarg)
-					else COMPARE_IDENTIFIER_LIST(o,c_dt,sz,str,15,l_sc,e,is,arg_s,iarg)
+					if (sz<=LLL_MAX_SHORT_IDENTIFIER_LENGTH){
+						lll_identifier_list_t* k=c_dt->i_dt.s+sz-1;
+						uint32_t mx_sc=UINT32_MAX;
+						lll_identifier_index_t mx_i=0;
+						for (uint32_t i=0;i<k->l;i++){
+							lll_small_identifier_t* si=k->dt+i;
+							for (uint8_t j=0;j<sz;j++){
+								if (*(str+j)!=*(si->v+j)){
+									goto _next_short_identifier;
+								}
+							}
+							if (si->sc==l_sc->l_sc){
+								iarg->idx=LLL_CREATE_IDENTIFIER(i,sz-1);
+								goto _identifier_found;
+							}
+							else if ((l_sc->m[si->sc>>6]&(1ull<<(si->sc&0x3f)))&&(mx_sc==UINT32_MAX||si->sc>mx_sc)){
+								mx_sc=si->sc;
+								mx_i=LLL_CREATE_IDENTIFIER(i,sz-1);
+							}
+_next_short_identifier:;
+						}
+						if (mx_sc!=UINT32_MAX){
+							iarg->idx=mx_i;
+							goto _identifier_found;
+						}
+						if (LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_SET&&LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_FUNC){
+							e->t=LLL_ERROR_UNKNOWN_IDENTIFIER;
+							e->dt.r.off=arg_s;
+							e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
+							if (n_l_sc.m){
+								free(n_l_sc.m);
+							}
+							return LLL_RETURN_ERROR;
+						}
+						k->l++;
+						k->dt=realloc(k->dt,k->l*sizeof(lll_small_identifier_t));
+						(k->dt+k->l-1)->v=malloc(sz*sizeof(char));
+						for (uint32_t j=0;j<sz;j++){
+							*((k->dt+k->l-1)->v+j)=*(str+j);
+						}
+						(k->dt+k->l-1)->sc=l_sc->l_sc;
+						iarg->idx=LLL_CREATE_IDENTIFIER(k->l-1,sz-1);
+					}
 					else{
 						uint32_t mx_sc=UINT32_MAX;
-						lll_identifier_index_t mx_i;
+						lll_identifier_index_t mx_i=0;
 						for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
 							lll_identifier_t* k=*(c_dt->i_dt.il+i);
 							if (k->sz!=sz){
 								continue;
 							}
-							for (uint32_t i=0;i<sz;i++){
-								if (*(str+i)!=*(k->v+i)){
+							for (uint32_t j=0;j<sz;j++){
+								if (*(str+j)!=*(k->v+j)){
 									goto _next_long_identifier;
 								}
 							}
@@ -1463,7 +1453,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_read_all_objects(lll_compilation_data_t* c_
 		return LLL_RETURN_ERROR;
 	}
 	c_dt->h=(lll_object_t*)(_bf+_bf_off);
-	_bf_off+=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
+	_bf_off+=sizeof(lll_operation_list_object_t);
 	if (_bf_off>=_bf_sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 		e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(c_dt->is)-1;
@@ -1477,11 +1467,11 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_read_all_objects(lll_compilation_data_t* c_
 		1
 	};
 	l_sc.m[0]=1;
-	lll_statement_count_t* sc=LLL_GET_OBJECT_STATEMENT_COUNT(c_dt->h);
-	*sc=0;
+	lll_statement_count_t sc=0;
 	while (1){
 		int c=LLL_READ_FROM_INPUT_DATA_STREAM(c_dt->is);
 		if (c==LLL_END_OF_DATA){
+			((lll_operation_list_object_t*)c_dt->h)->sc=sc;
 			free(l_sc.m);
 			return LLL_RETURN_NO_ERROR;
 		}
@@ -1490,14 +1480,14 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_read_all_objects(lll_compilation_data_t* c_
 			free(l_sc.m);
 			return LLL_RETURN_ERROR;
 		}
-		if (*sc==UINT16_MAX){
+		if (sc==UINT16_MAX){
 			e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
 			e->dt.r.off=off-1;
 			e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(c_dt->is)-off-1;
 			free(l_sc.m);
 			return LLL_RETURN_ERROR;
 		}
-		(*sc)++;
+		sc++;
 	}
 }
 

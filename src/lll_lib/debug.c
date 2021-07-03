@@ -41,8 +41,8 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
-				lll_statement_count_t l=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
+				uint32_t off=sizeof(lll_operation_list_object_t);
+				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
 				while (l){
 					l--;
 					off+=_remove_debug_data_internal(LLL_GET_OBJECT_STATEMENT(o,off));
@@ -55,8 +55,8 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 			}
 			return sizeof(lll_debug_object_t)+eoff+_remove_debug_data_internal(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o));
 	}
-	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
-	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+	uint32_t off=sizeof(lll_operator_object_t);
+	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
 	while (l){
 		l--;
 		off+=_remove_debug_data_internal(LLL_GET_OBJECT_ARGUMENT(o,off));

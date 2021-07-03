@@ -40,9 +40,9 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
-				lll_statement_count_t* l=LLL_GET_OBJECT_STATEMENT_COUNT(o);
-				for (lll_statement_count_t i=*l;i>0;i--){
+				uint32_t off=sizeof(lll_operation_list_object_t);
+				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
+				for (lll_statement_count_t i=l;i>0;i--){
 					uint32_t st_l=_optimize_object_internal(LLL_GET_OBJECT_STATEMENT(o,off),e);
 					lll_object_t* st=LLL_GET_OBJECT_STATEMENT(o,off);
 					off+=st_l;
@@ -54,22 +54,23 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 						st=LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)st);
 					}
 					if (LLL_IS_OBJECT_TYPE_TYPE(st)){
-						(*l)--;
+						l--;
 						for (uint32_t j=off-st_l;j<off;j++){
-							*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
+							LLL_SET_OBJECT_NOP(o,j);
 						}
 					}
 				}
-				if (!(*l)){
+				if (!l){
 					o->t=LLL_OBJECT_TYPE_NIL;
-					for (uint32_t i=sizeof(lll_object_t);i<sizeof(lll_object_t)+sizeof(lll_statement_count_t);i++){
-						*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,i))=LLL_OBJECT_TYPE_NOP;
+					for (uint32_t i=sizeof(lll_object_t);i<sizeof(lll_operation_list_object_t);i++){
+						LLL_SET_OBJECT_NOP(o,i);
 					}
 					return off+eoff;
 				}
-				if (*l==1){
-					for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_statement_count_t);i++){
-						*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,i))=LLL_OBJECT_TYPE_NOP;
+				((lll_operation_list_object_t*)o)->sc=l;
+				if (l==1){
+					for (uint32_t i=0;i<sizeof(lll_operation_list_object_t);i++){
+						LLL_SET_OBJECT_NOP(o,i);
 					}
 					return off+eoff;
 				}
@@ -85,15 +86,15 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 				}
 				if (LLL_GET_OBJECT_TYPE(c)!=ot){
 					for (uint32_t i=0;i<sizeof(lll_debug_object_t);i++){
-						*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,i))=LLL_OBJECT_TYPE_NOP;
+						LLL_SET_OBJECT_NOP(o,i);
 					}
 				}
 				return sizeof(lll_debug_object_t)+off+eoff;
 			}
 	}
-	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
-	lll_arg_count_t* l=LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-	lll_arg_count_t cl=*l;
+	uint32_t off=sizeof(lll_operator_object_t);
+	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
+	lll_arg_count_t cl=l;
 	lll_arg_count_t i=0;
 	while (i<cl){
 		uint32_t al=_optimize_object_internal(LLL_GET_OBJECT_ARGUMENT(o,off),e);
@@ -116,9 +117,9 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 				case LLL_OBJECT_TYPE_FLOAT:
 					break;
 				case LLL_OBJECT_TYPE_NIL:
-					(*l)--;
+					l--;
 					for (uint32_t j=off-al;j<off;j++){
-						*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
+						LLL_SET_OBJECT_NOP(o,j);
 					}
 					break;
 				case LLL_OBJECT_TYPE_TRUE:
@@ -130,9 +131,9 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 								break;
 							}
 						case LLL_OBJECT_TYPE_MULT:
-							(*l)--;
+							l--;
 							for (uint32_t j=off-al;j<off;j++){
-								*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
+								LLL_SET_OBJECT_NOP(o,j);
 							}
 							break;
 						case LLL_OBJECT_TYPE_BIT_NOT:
@@ -146,9 +147,9 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 						case LLL_OBJECT_TYPE_SUB:
 						case LLL_OBJECT_TYPE_BIT_OR:
 						case LLL_OBJECT_TYPE_BIT_XOR:
-							(*l)--;
+							l--;
 							for (uint32_t j=off-al;j<off;j++){
-								*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
+								LLL_SET_OBJECT_NOP(o,j);
 							}
 							break;
 						case LLL_OBJECT_TYPE_DIV:
@@ -178,21 +179,22 @@ _set_to_0:
 		}
 		i++;
 	}
-	if (!(*l)&&LLL_IS_OBJECT_TYPE_MATH(o)){
+	if (!l&&LLL_IS_OBJECT_TYPE_MATH(o)){
 		ASSERT(!"Set Object to 0!",e,UINT32_MAX);
 		return off+eoff;
 	}
-	if (*l==1){
+	((lll_operator_object_t*)o)->ac=l;
+	if (l==1){
 		if (LLL_IS_OBJECT_TYPE_COMPARE(o)){
 			o->t=LLL_OBJECT_TYPE_TRUE;
-			for (uint32_t j=sizeof(lll_object_t);j<off;j++){
-				*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
+			for (uint32_t j=sizeof(lll_operator_object_t);j<off;j++){
+				LLL_SET_OBJECT_NOP(o,j);
 			}
 			return off+eoff;
 		}
 		if (LLL_IS_OBJECT_TYPE_MATH(o)){
-			for (uint32_t j=0;j<sizeof(lll_object_t)+sizeof(lll_arg_count_t);j++){
-				*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,j))=LLL_OBJECT_TYPE_NOP;
+			for (uint32_t j=0;j<sizeof(lll_operator_object_t);j++){
+				LLL_SET_OBJECT_NOP(o,j);
 			}
 			return off+eoff;
 		}
@@ -259,7 +261,7 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 				}
 				(*(c_dt->f_dt.dt+((lll_function_object_t*)o)->id))->off-=(uint32_t)(((uint64_t)(void*)s)-((uint64_t)(void*)d));
 				uint32_t off=sizeof(lll_function_object_t);
-				lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
 				while (l){
 					l--;
 					off+=_remove_padding_internal(LLL_GET_OBJECT_ARGUMENT(o,off),rm,c_dt,st);
@@ -276,11 +278,11 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_statement_count_t);i++){
+				for (uint32_t i=0;i<sizeof(lll_operation_list_object_t);i++){
 					*(d+i)=*(s+i);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
-				lll_statement_count_t l=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
+				uint32_t off=sizeof(lll_operation_list_object_t);
+				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
 				while (l){
 					l--;
 					off+=_remove_padding_internal(LLL_GET_OBJECT_STATEMENT(o,off),rm,c_dt,st);
@@ -293,11 +295,11 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 			}
 			return sizeof(lll_debug_object_t)+_remove_padding_internal(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o),rm,c_dt,st)+pad;
 	}
-	for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_arg_count_t);i++){
+	for (uint32_t i=0;i<sizeof(lll_operator_object_t);i++){
 		*(d+i)=*(s+i);
 	}
-	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
-	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+	uint32_t off=sizeof(lll_operator_object_t);
+	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
 	while (l){
 		l--;
 		off+=_remove_padding_internal(LLL_GET_OBJECT_ARGUMENT(o,off),rm,c_dt,st);

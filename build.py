@@ -247,20 +247,15 @@ for k in l:
 		if (nk==k):
 			break
 		k=nk
-	if (b"(" in k and b"(*" not in SPACE_CHARACTERS_REGEX.sub(b"",k)):
+	if (b"(" in k and b"(*" not in SPACE_CHARACTERS_REGEX.sub(b"",k) and k.count(b"(")==k.count(b")") and k.count(b"{")==k.count(b"}")):
 		fl.append((k[:-len(k.split(b"(")[-1])-1].split(b" ")[-1],k))
 		continue
 	o+=b"\n"+k.strip()
 i=0
 while (i<len(o)):
 	if (i<len(o)-7 and o[i:i+1] not in IDENTIFIER_CHARACTERS and o[i+1:i+6]==b"union" and o[i+6:i+7] not in IDENTIFIER_CHARACTERS):
-		j=i
 		i+=6
-		while (o[i] in SPACE_CHARACTERS):
-			i+=1
-		while (o[i] in IDENTIFIER_CHARACTERS):
-			i+=1
-		while (o[i] in SPACE_CHARACTERS):
+		while (o[i] not in b";{"):
 			i+=1
 		if (o[i:i+1]==b"{"):
 			b=1
@@ -280,13 +275,8 @@ while (i<len(o)):
 						continue
 				i+=1
 	elif (i<len(o)-8 and o[i:i+1] not in IDENTIFIER_CHARACTERS and o[i+1:i+7]==b"struct" and o[i+7:i+8] not in IDENTIFIER_CHARACTERS):
-		j=i
 		i+=7
-		while (o[i] in SPACE_CHARACTERS):
-			i+=1
-		while (o[i] in IDENTIFIER_CHARACTERS):
-			i+=1
-		while (o[i] in SPACE_CHARACTERS):
+		while (o[i] not in b";{"):
 			i+=1
 		if (o[i:i+1]==b"{"):
 			b=1

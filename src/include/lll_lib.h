@@ -14,6 +14,7 @@
 #endif
 #define __LLL_RETURN _Check_return_ lll_return_t
 #define __LLL_RETURN_CODE _Check_return_ lll_return_code_t
+#define __LLL_OBJECT_ALIGNMENT __declspec(align(8))
 #else
 #ifdef __LLL_LIB_COMPILATION__
 #define __LLL_IMPORT_EXPORT __attribute__((visibility("default")))
@@ -22,6 +23,7 @@
 #endif
 #define __LLL_RETURN __attribute__((warn_unused_result)) lll_return_t
 #define __LLL_RETURN_CODE __attribute__((warn_unused_result)) lll_return_code_t
+#define __LLL_OBJECT_ALIGNMENT __attribute__((aligned(8)))
 #endif
 
 #define LLL_ERROR_UNKNOWN 0
@@ -134,9 +136,8 @@
 #define LLL_GET_DEBUG_OBJECT_CHILD(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_debug_object_t)))
 #define LLL_GET_OBJECT_AFTER_NOP(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_type_t)))
 #define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
-#define LLL_GET_OBJECT_ARGUMENT_COUNT(o) ((lll_arg_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
 #define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
-#define LLL_GET_OBJECT_STATEMENT_COUNT(o) ((lll_statement_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
+#define LLL_SET_OBJECT_NOP(o,i) ((*((lll_object_type_t*)(void*)((uint64_t)(void*)(o)+(i))))=LLL_OBJECT_TYPE_NOP)
 
 #define LLL_OBJECT_MODIFIER_FIXED 0x1
 #define LLL_OBJECT_MODIFIER_UNSIGNED 0x2
@@ -249,14 +250,14 @@ typedef struct __LLL_OUTPUT_DATA_STREAM{
 
 
 
-typedef struct __LLL_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 } lll_object_t;
 
 
 
-typedef struct __LLL_CHAR_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_CHAR_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	char v;
@@ -264,7 +265,7 @@ typedef struct __LLL_CHAR_OBJECT{
 
 
 
-typedef struct __LLL_INTEGER_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_INTEGER_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	int64_t v;
@@ -279,7 +280,7 @@ typedef union __LLL_FLOAT_OBJECT_DATA{
 
 
 
-typedef struct __LLL_FLOAT_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_FLOAT_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	lll_float_object_data_t v;
@@ -287,7 +288,7 @@ typedef struct __LLL_FLOAT_OBJECT{
 
 
 
-typedef struct __LLL_STRING_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_STRING_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	lll_string_length_t ln;
@@ -296,7 +297,7 @@ typedef struct __LLL_STRING_OBJECT{
 
 
 
-typedef struct __LLL_IDENTIFIER_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_IDENTIFIER_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	lll_identifier_index_t idx;
@@ -304,7 +305,7 @@ typedef struct __LLL_IDENTIFIER_OBJECT{
 
 
 
-typedef struct __LLL_FUNCTION_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_FUNCTION_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	lll_arg_count_t ac;
@@ -313,7 +314,15 @@ typedef struct __LLL_FUNCTION_OBJECT{
 
 
 
-typedef struct __LLL_IMPORT_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OPERATOR_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	lll_arg_count_t ac;
+} lll_operator_object_t;
+
+
+
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_IMPORT_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	lll_arg_count_t ac;
@@ -322,7 +331,15 @@ typedef struct __LLL_IMPORT_OBJECT{
 
 
 
-typedef struct __LLL_DEBUG_OBJECT{
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OPERATION_LIST_OBJECT{
+	lll_object_type_t t;
+	lll_object_modifier_t m;
+	lll_statement_count_t sc;
+} lll_operation_list_object_t;
+
+
+
+typedef struct __LLL_OBJECT_ALIGNMENT __LLL_DEBUG_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	uint16_t fpi;

@@ -22,11 +22,11 @@
 	} while (0)
 #define GET_COMPARE_COND_TYPE(o,im,cmp) \
 	do{ \
-		lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT((o)); \
+		lll_arg_count_t ac=((lll_operator_object_t*)(o))->ac; \
 		if (ac<2){ \
 			return COMPARE_ALWAYS_TRUE; \
 		} \
-		uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t); \
+		uint32_t off=sizeof(lll_operator_object_t); \
 		lll_object_t* ao=LLL_GET_OBJECT_ARGUMENT((o),off); \
 		off+=_get_object_size(ao); \
 		REMOVE_PADDING_DEBUG(ao,off); \
@@ -145,8 +145,8 @@ uint32_t _get_object_size(lll_object_t* o){
 			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
-				lll_statement_count_t l=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
+				uint32_t off=sizeof(lll_operation_list_object_t);
+				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
 				while (l){
 					l--;
 					off+=_get_object_size(LLL_GET_OBJECT_STATEMENT(o,off));
@@ -156,8 +156,8 @@ uint32_t _get_object_size(lll_object_t* o){
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			return sizeof(lll_debug_object_t)+eoff+_get_object_size(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o));
 	}
-	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
-	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+	uint32_t off=sizeof(lll_operator_object_t);
+	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
 	while (l){
 		l--;
 		off+=_get_object_size(LLL_GET_OBJECT_ARGUMENT(o,off));
@@ -714,12 +714,12 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_ADD:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (!ac){
 					ASSERT(!"NIL Unimplemented",e,0);
 				}
 				va->r=REGISTER_COPY_IDENTIFIER;
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				while (ac){
 					ac--;
 					lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -787,12 +787,12 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_MULT:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (!ac){
 					ASSERT(!"NIL Unimplemented",e,0);
 				}
 				va->r=REGISTER_COPY_IDENTIFIER;
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				while (ac){
 					ac--;
 					lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1164,11 +1164,11 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_LESS:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1190,11 +1190,11 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			}
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1216,11 +1216,11 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			}
 		case LLL_OBJECT_TYPE_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1242,11 +1242,11 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			}
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1268,11 +1268,11 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			}
 		case LLL_OBJECT_TYPE_MORE:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1294,11 +1294,11 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,lll_object_t* o,assembl
 			}
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1389,11 +1389,11 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_LESS:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1415,11 +1415,11 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 			}
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1441,11 +1441,11 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 			}
 		case LLL_OBJECT_TYPE_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1467,11 +1467,11 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 			}
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1493,11 +1493,11 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 			}
 		case LLL_OBJECT_TYPE_MORE:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1519,11 +1519,11 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,lll_object_t* o,assemb
 			}
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				if (ac<2){
 					ASSERT(!"Should not happen",e,0);
 				}
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=_get_object_size(a);
 				REMOVE_PADDING_DEBUG(a,off);
@@ -1581,8 +1581,8 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_WRITE_BUFFER:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
+				uint32_t off=sizeof(lll_operator_object_t);
 				if (!ac){
 					return off;
 				}
@@ -1737,8 +1737,8 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_SET:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* va=LLL_GET_OBJECT_ARGUMENT(o,off);
 				off+=sizeof(lll_object_t)+sizeof(lll_identifier_index_t);
 				REMOVE_PADDING_DEBUG(va,off);
@@ -1826,8 +1826,8 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_CALL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
+				uint32_t off=sizeof(lll_operator_object_t);
 				if (!ac){
 					return off+eoff;
 				}
@@ -1878,8 +1878,8 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			}
 		case LLL_OBJECT_TYPE_IF:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
+				uint32_t off=sizeof(lll_operator_object_t);
 				if (!ac){
 					return off+eoff;
 				}
@@ -1940,7 +1940,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 					im->nl++;
 					off+=_get_object_size(LLL_GET_OBJECT_ARGUMENT(o,off));
 				}
-				ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				ac=((lll_operator_object_t*)o)->ac;
 				if (ac&1){
 					ac--;
 					lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,off);
@@ -1954,7 +1954,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 					_write_label(os,el);
 					LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\n');
 				}
-				uint32_t dt_off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t dt_off=sizeof(lll_operator_object_t);
 				label_t jl=el;
 				while (ac){
 					ac-=2;
@@ -1984,10 +1984,10 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 					agd->n_sc
 				};
 				agd->n_sc++;
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				ASSERT(ac>1,e,UINT32_MAX);
 				ac-=2;
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				uint32_t off=sizeof(lll_operator_object_t);
 				lll_object_t* init=LLL_GET_OBJECT_ARGUMENT(o,off);
 				REMOVE_PADDING_DEBUG(init,off);
 				uint32_t aoff=_write_object_as_assembly(os,init,&n_eagd,e);
@@ -2065,8 +2065,8 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 		case LLL_OBJECT_TYPE_BIT_XOR:
 		case LLL_OBJECT_TYPE_BIT_NOT:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
+				uint32_t off=sizeof(lll_operator_object_t);
 				while (ac){
 					ac--;
 					uint32_t aoff=_write_object_as_assembly(os,LLL_GET_OBJECT_ARGUMENT(o,off),eagd,e);
@@ -2084,8 +2084,8 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 		case LLL_OBJECT_TYPE_MORE:
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
 			{
-				lll_arg_count_t ac=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
+				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
+				uint32_t off=sizeof(lll_operator_object_t);
 				if (!ac){
 					return off+eoff;
 				}
@@ -2117,8 +2117,8 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			ASSERT(!"Unimplemented",e,UINT32_MAX);
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				lll_statement_count_t sc=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
+				lll_statement_count_t sc=((lll_operation_list_object_t*)o)->sc;
+				uint32_t off=sizeof(lll_operation_list_object_t);
 				while (sc){
 					sc--;
 					lll_object_t* s=LLL_GET_OBJECT_STATEMENT(o,off);

@@ -111,7 +111,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 				}
 				fputc(c,f);
 				fputc('\'',f);
-				return sizeof(lll_object_t)+eoff+sizeof(char);
+				return sizeof(lll_char_object_t)+eoff;
 			}
 		case LLL_OBJECT_TYPE_INT:
 			{
@@ -225,7 +225,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			{
 				fprintf(f,",,,");
 				uint32_t off=sizeof(lll_function_object_t);
-				lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
 				while (l){
 					l--;
 					fputc(' ',f);
@@ -311,8 +311,8 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				fputc('{',f);
-				uint32_t off=sizeof(lll_object_t)+sizeof(lll_statement_count_t);
-				lll_statement_count_t sc=*LLL_GET_OBJECT_STATEMENT_COUNT(o);
+				uint32_t off=sizeof(lll_operation_list_object_t);
+				lll_statement_count_t sc=((lll_operation_list_object_t*)o)->sc;
 				for (lll_statement_count_t i=0;i<sc;i++){
 					if (i){
 						fputc(' ',f);
@@ -331,8 +331,8 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 		default:
 			UNREACHABLE();
 	}
-	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
-	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
+	uint32_t off=sizeof(lll_operator_object_t);
+	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
 	while (l){
 		l--;
 		fputc(' ',f);

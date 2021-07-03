@@ -217,11 +217,17 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t
 		case LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS:
 			printf("Math Expression Contains too Many Arguments\n");
 			return;
-		case LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS:
-			printf("For Loop Contains not Enough Arguments\n");
-			return;
 		case LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS:
 			printf("Multiple Output Type Modifiers\n");
+			return;
+		case LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS:
+			printf("Not Enought Arguments for a For Loop\n");
+			return;
+		case LLL_ERROR_SET_NOT_ENOUGH_ARGUMENTS:
+			printf("Not Enough Arguments for an Assignment\n");
+			return;
+		case LLL_ERROR_SET_NO_INDENTIFIER:
+			printf("Identifier Requierd for Assignment\n");
 			return;
 		case LLL_ERROR_MULTIPLE_SIZE_MODIFIERS:
 			printf("Multiple Size Modifiers\n");
