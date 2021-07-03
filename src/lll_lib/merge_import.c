@@ -91,8 +91,7 @@ uint32_t _patch_import(lll_object_t* o,import_data_t* dt){
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				return sz+eoff+_patch_import(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),dt);
+				return sizeof(lll_debug_object_t)+eoff+_patch_import(LLL_GET_DEBUG_OBJECT_CHILD(dbg),dt);
 			}
 	}
 	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
@@ -164,8 +163,7 @@ uint32_t _patch_module(lll_object_t* o,import_identifier_offset_list_t* i_off){
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
 				dbg->fpi+=i_off->dbg_off;
-				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				return sz+eoff+_patch_module(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),i_off);
+				return sizeof(lll_debug_object_t)+eoff+_patch_module(LLL_GET_DEBUG_OBJECT_CHILD(dbg),i_off);
 			}
 	}
 	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);

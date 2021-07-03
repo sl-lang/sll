@@ -115,19 +115,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 			}
 		case LLL_OBJECT_TYPE_INT:
 			{
-				lll_integer_object_t* io=(lll_integer_object_t*)o;
-				if (LLL_IS_OBJECT_INT8(o)){
-					_print_int64(io->v.i8,f);
-				}
-				else if (LLL_IS_OBJECT_INT16(o)){
-					_print_int64(io->v.i16,f);
-				}
-				else if (LLL_IS_OBJECT_INT32(o)){
-					_print_int64(io->v.i32,f);
-				}
-				else{
-					_print_int64(io->v.i64,f);
-				}
+				_print_int64(((lll_integer_object_t*)o)->v,f);
 				return sizeof(lll_integer_object_t)+eoff;
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
@@ -337,36 +325,8 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				uint32_t i=sizeof(lll_debug_object_t);
-				fprintf(f,"[%s:",(c_dt->fp_dt.dt+dbg->fpi)->fp);
-				if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT32){
-					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1,f);
-					i+=sizeof(uint32_t);
-				}
-				else if (dbg->f&LLL_DEBUG_OBJECT_LINE_NUMBER_INT16){
-					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1,f);
-					i+=sizeof(uint16_t);
-				}
-				else{
-					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1,f);
-					i+=sizeof(uint8_t);
-				}
-				fputc(':',f);
-				if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32){
-					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT32(dbg,i)+1,f);
-					i+=sizeof(uint32_t);
-				}
-				else if (dbg->f&LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16){
-					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT16(dbg,i)+1,f);
-					i+=sizeof(uint16_t);
-				}
-				else{
-					_print_int64(LLL_GET_DEBUG_OBJECT_DATA_UINT8(dbg,i)+1,f);
-					i+=sizeof(uint8_t);
-				}
-				fputc(']',f);
-				i+=LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				return i+eoff+_print_object_internal(c_dt,LLL_GET_DEBUG_OBJECT_CHILD(dbg,i),f);
+				fprintf(f,"[%s:%u:%u]",(c_dt->fp_dt.dt+dbg->fpi)->fp,dbg->ln,dbg->cn);
+				return sizeof(lll_debug_object_t)+eoff+_print_object_internal(c_dt,LLL_GET_DEBUG_OBJECT_CHILD(dbg),f);
 			}
 		default:
 			UNREACHABLE();

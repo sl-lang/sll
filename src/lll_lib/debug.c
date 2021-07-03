@@ -50,14 +50,10 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			{
-				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				for (uint32_t i=0;i<sz;i++){
-					*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,i))=LLL_OBJECT_TYPE_NOP;
-				}
-				return sz+eoff+_remove_debug_data_internal(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz));
+			for (uint32_t i=0;i<sizeof(lll_debug_object_t);i++){
+				*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,i))=LLL_OBJECT_TYPE_NOP;
 			}
+			return sizeof(lll_debug_object_t)+eoff+_remove_debug_data_internal(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o));
 	}
 	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
@@ -76,65 +72,19 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_input_data_stream_t
 		return LLL_RETURN_ERROR;
 	}
 	lll_debug_object_t* dbg=(lll_debug_object_t*)(_bf+_bf_off);
-	dbg->t=LLL_OBJECT_TYPE_DEBUG_DATA;
-	dbg->fpi=0;
-	dbg->f=0;
-	uint32_t ln=LLL_GET_INPUT_DATA_STREAM_LINE_NUMBER(is);
-	uint32_t i=sizeof(lll_debug_object_t);
-	if (ln>UINT16_MAX){
-		dbg->f|=LLL_DEBUG_OBJECT_LINE_NUMBER_INT32;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT32(dbg,i,ln);
-		i+=sizeof(uint32_t);
-	}
-	else if (ln>UINT8_MAX){
-		dbg->f|=LLL_DEBUG_OBJECT_LINE_NUMBER_INT16;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT16(dbg,i,ln);
-		i+=sizeof(uint16_t);
-	}
-	else{
-		dbg->f|=LLL_DEBUG_OBJECT_LINE_NUMBER_INT8;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT8(dbg,i,ln);
-		i+=sizeof(uint8_t);
-	}
-	uint32_t cl=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is)-1;
-	if (cl>UINT16_MAX){
-		dbg->f|=LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT32(dbg,i,cl);
-		i+=sizeof(uint32_t);
-	}
-	else if (cl>UINT8_MAX){
-		dbg->f|=LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT16(dbg,i,cl);
-		i+=sizeof(uint16_t);
-	}
-	else{
-		dbg->f|=LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT8;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT8(dbg,i,cl);
-		i+=sizeof(uint8_t);
-	}
-	uint32_t ln_off=LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is);
-	if (ln_off>UINT16_MAX){
-		dbg->f|=LLL_DEBUG_OBJECT_FILE_OFFSET_INT32;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT32(dbg,i,ln_off);
-		i+=sizeof(uint32_t);
-	}
-	else if (ln_off>UINT8_MAX){
-		dbg->f|=LLL_DEBUG_OBJECT_FILE_OFFSET_INT16;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT16(dbg,i,ln_off);
-		i+=sizeof(uint16_t);
-	}
-	else{
-		dbg->f|=LLL_DEBUG_OBJECT_FILE_OFFSET_INT8;
-		LLL_SET_DEBUG_OBJECT_DATA_UINT8(dbg,i,ln_off);
-		i+=sizeof(uint8_t);
-	}
-	_bf_off+=i;
+	_bf_off+=sizeof(lll_debug_object_t);
 	if (_bf_off>=_bf_sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 		e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 		e->dt.r.sz=1;
 		return LLL_RETURN_ERROR;
 	}
+	dbg->t=LLL_OBJECT_TYPE_DEBUG_DATA;
+	dbg->m=0;
+	dbg->fpi=0;
+	dbg->ln=LLL_GET_INPUT_DATA_STREAM_LINE_NUMBER(is);
+	dbg->cn=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is)-1;
+	dbg->ln_off=LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is);
 	return LLL_RETURN_NO_ERROR;
 }
 

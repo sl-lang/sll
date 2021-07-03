@@ -13,10 +13,8 @@
 				(o)=LLL_GET_OBJECT_AFTER_NOP((o)); \
 			} \
 			if (LLL_GET_OBJECT_TYPE((o))==LLL_OBJECT_TYPE_DEBUG_DATA){ \
-				lll_debug_object_t* __dbg=(lll_debug_object_t*)(o); \
-				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(__dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(__dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(__dbg); \
-				v+=sz; \
-				(o)=LLL_GET_DEBUG_OBJECT_CHILD(__dbg,sz); \
+				v+=sizeof(lll_debug_object_t); \
+				(o)=LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o); \
 				continue; \
 			} \
 			break; \
@@ -156,11 +154,7 @@ uint32_t _get_object_size(lll_object_t* o){
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			{
-				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				return sz+eoff+_get_object_size(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz));
-			}
+			return sizeof(lll_debug_object_t)+eoff+_get_object_size(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o));
 	}
 	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
 	lll_arg_count_t l=*LLL_GET_OBJECT_ARGUMENT_COUNT(o);
@@ -653,26 +647,9 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,lll_object_t* o,i
 			{
 				lll_integer_object_t* io=(lll_integer_object_t*)o;
 				va->r=REGISTER_CONST;
-				if (LLL_IS_OBJECT_INT8(o)){
-					va->r|=REGISTER_32BIT;
-					va->t=IDENTIFIER_DATA_TYPE_INT32;
-					va->e.v=io->v.i8;
-				}
-				else if (LLL_IS_OBJECT_INT16(o)){
-					va->r|=REGISTER_32BIT;
-					va->t=IDENTIFIER_DATA_TYPE_INT32;
-					va->e.v=io->v.i16;
-				}
-				else if (LLL_IS_OBJECT_INT32(o)){
-					va->r|=REGISTER_32BIT;
-					va->t=IDENTIFIER_DATA_TYPE_INT32;
-					va->e.v=io->v.i32;
-				}
-				else{
-					va->r|=REGISTER_64BIT;
-					va->t=IDENTIFIER_DATA_TYPE_INT64;
-					va->e.v=io->v.i64;
-				}
+				va->r|=REGISTER_64BIT;
+				va->t=IDENTIFIER_DATA_TYPE_INT64;
+				va->e.v=io->v;
 				return 1;
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
@@ -953,26 +930,9 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,ident
 			{
 				lll_integer_object_t* io=(lll_integer_object_t*)o;
 				va->r=REGISTER_CONST;
-				if (LLL_IS_OBJECT_INT8(o)){
-					va->r|=REGISTER_32BIT;
-					va->t=IDENTIFIER_DATA_TYPE_INT32;
-					va->e.v=io->v.i8;
-				}
-				else if (LLL_IS_OBJECT_INT16(o)){
-					va->r|=REGISTER_32BIT;
-					va->t=IDENTIFIER_DATA_TYPE_INT32;
-					va->e.v=io->v.i16;
-				}
-				else if (LLL_IS_OBJECT_INT32(o)){
-					va->r|=REGISTER_32BIT;
-					va->t=IDENTIFIER_DATA_TYPE_INT32;
-					va->e.v=io->v.i32;
-				}
-				else{
-					va->r|=REGISTER_64BIT;
-					va->t=IDENTIFIER_DATA_TYPE_INT64;
-					va->e.v=io->v.i64;
-				}
+				va->r|=REGISTER_64BIT;
+				va->t=IDENTIFIER_DATA_TYPE_INT64;
+				va->e.v=io->v;
 				return;
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
@@ -1064,26 +1024,8 @@ uint8_t _get_cond_type(lll_object_t* o,identifier_map_t* im){
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_INT:
 			{
-				lll_integer_object_t* io=(lll_integer_object_t*)o;
-				if (LLL_IS_OBJECT_INT8(o)){
-					if (!io->v.i8){
-						return COMPARE_ALWAYS_FALSE;
-					}
-				}
-				else if (LLL_IS_OBJECT_INT16(o)){
-					if (!io->v.i16){
-						return COMPARE_ALWAYS_FALSE;
-					}
-				}
-				else if (LLL_IS_OBJECT_INT32(o)){
-					if (!io->v.i32){
-						return COMPARE_ALWAYS_FALSE;
-					}
-				}
-				else{
-					if (!io->v.i64){
-						return COMPARE_ALWAYS_FALSE;
-					}
+				if (!((lll_integer_object_t*)o)->v){
+					return COMPARE_ALWAYS_FALSE;
 				}
 				return COMPARE_ALWAYS_TRUE;
 			}
@@ -2190,13 +2132,11 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,lll_object_t* o,
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			{
-				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				uint32_t off=_write_object_as_assembly(os,LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),eagd,e);
+				uint32_t off=_write_object_as_assembly(os,LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o),eagd,e);
 				if (off==UINT32_MAX){
 					return off;
 				}
-				return sz+eoff+off;
+				return sizeof(lll_debug_object_t)+eoff+off;
 			}
 		default:
 			UNREACHABLE();

@@ -114,11 +114,6 @@
 #define LLL_OBJECT_TYPE_OPERATION_LIST 62
 #define LLL_OBJECT_TYPE_DEBUG_DATA 63
 #define LLL_OBJECT_TYPE_NOP 0xff
-#define LLL_OBJECT_TYPE_INT8_FLAG 0x00
-#define LLL_OBJECT_TYPE_INT16_FLAG 0x40
-#define LLL_OBJECT_TYPE_INT32_FLAG 0x80
-#define LLL_OBJECT_TYPE_INT64_FLAG 0xc0
-#define LLL_OBJECT_TYPE_INT_TYPE_MASK 0xc0
 #define LLL_OBJECT_TYPE_FLOAT64_FLAG 0x40
 #define LLL_OBJECT_TYPE_CONST 0x80
 #define LLL_OBJECT_TYPE_MAX_INTEGRAL_TYPE LLL_OBJECT_TYPE_FALSE
@@ -127,10 +122,6 @@
 #define LLL_OBJECT_TYPE_MAX_MATH LLL_OBJECT_TYPE_BIT_NOT
 #define LLL_OBJECT_TYPE_MAX_COMPARE LLL_OBJECT_TYPE_MORE_EQUAL
 #define LLL_OBJECT_TYPE_MIN_EXTRA LLL_OBJECT_TYPE_IMPORT
-#define LLL_IS_OBJECT_INT8(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT8_FLAG)
-#define LLL_IS_OBJECT_INT16(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT16_FLAG)
-#define LLL_IS_OBJECT_INT32(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT32_FLAG)
-#define LLL_IS_OBJECT_INT64(o) (((o)->t&LLL_OBJECT_TYPE_INT_TYPE_MASK)==LLL_OBJECT_TYPE_INT64_FLAG)
 #define LLL_IS_OBJECT_FLOAT64(o) ((o)->t&LLL_OBJECT_TYPE_FLOAT64_FLAG)
 #define LLL_IS_OBJECT_TYPE_NOT_INTEGRAL(o) (LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_INTEGRAL_TYPE)
 #define LLL_IS_OBJECT_TYPE_TYPE(o) (LLL_GET_OBJECT_TYPE(o)<=LLL_OBJECT_TYPE_MAX_TYPE)
@@ -140,12 +131,12 @@
 #define LLL_IS_OBJECT_UNKNOWN(o) (!((o)->t&0x3f))
 #define LLL_IS_OBJECT_CONST(o) ((o)->t>>7)
 #define LLL_GET_OBJECT_TYPE(o) ((o)->t&0x3f)
-#define LLL_GET_OBJECT_INTEGER_WIDTH(o) (1ull<<((o)->t>>6))
-#define LLL_GET_OBJECT_ARGUMENT_COUNT(o) ((lll_arg_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
-#define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
-#define LLL_GET_OBJECT_STATEMENT_COUNT(o) ((lll_statement_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
-#define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_GET_DEBUG_OBJECT_CHILD(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_debug_object_t)))
 #define LLL_GET_OBJECT_AFTER_NOP(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_type_t)))
+#define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_GET_OBJECT_ARGUMENT_COUNT(o) ((lll_arg_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
+#define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
+#define LLL_GET_OBJECT_STATEMENT_COUNT(o) ((lll_statement_count_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
 
 #define LLL_OBJECT_MODIFIER_FIXED 0x1
 #define LLL_OBJECT_MODIFIER_UNSIGNED 0x2
@@ -159,28 +150,6 @@
 #define LLL_OBJECT_MODIFIER_LIST 0x40
 #define LLL_OBJECT_MODIFIER_LAST 0x60
 #define LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK 0x60
-#define LLL_GET_MODIFIER_OBJECT_MODIFIER(o) ((lll_object_modifier_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)))
-#define LLL_GET_MODIFIER_OBJECT_CHILD(o) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),sizeof(lll_object_t)+sizeof(lll_object_modifier_t)))
-
-#define LLL_DEBUG_OBJECT_LINE_NUMBER_INT8 0x0
-#define LLL_DEBUG_OBJECT_LINE_NUMBER_INT16 0x1
-#define LLL_DEBUG_OBJECT_LINE_NUMBER_INT32 0x2
-#define LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT8 0x0
-#define LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT16 0x4
-#define LLL_DEBUG_OBJECT_COLUMN_NUMBER_INT32 0x8
-#define LLL_DEBUG_OBJECT_FILE_OFFSET_INT8 0x0
-#define LLL_DEBUG_OBJECT_FILE_OFFSET_INT16 0x10
-#define LLL_DEBUG_OBJECT_FILE_OFFSET_INT32 0x20
-#define LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(o) (1ull<<((o)->f&0x3))
-#define LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(o) (1ull<<(((o)->f>>2)&0x3))
-#define LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(o) (1ull<<((o)->f>>4))
-#define LLL_GET_DEBUG_OBJECT_DATA_UINT8(o,i) (*((uint8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))
-#define LLL_GET_DEBUG_OBJECT_DATA_UINT16(o,i) (*((uint16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))
-#define LLL_GET_DEBUG_OBJECT_DATA_UINT32(o,i) (*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))
-#define LLL_GET_DEBUG_OBJECT_CHILD(o,i) ((lll_object_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i)))
-#define LLL_SET_DEBUG_OBJECT_DATA_UINT8(o,i,v) ((*((uint8_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint8_t)(v)))
-#define LLL_SET_DEBUG_OBJECT_DATA_UINT16(o,i,v) ((*((uint16_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint16_t)(v)))
-#define LLL_SET_DEBUG_OBJECT_DATA_UINT32(o,i,v) ((*((uint32_t*)LLL_GET_OBJECT_WITH_OFFSET((o),(i))))=((uint32_t)(v)))
 
 #define LLL_GET_OBJECT_WITH_OFFSET(o,i) ((void*)(((uint64_t)(void*)(o))+(i)))
 
@@ -295,24 +264,15 @@ typedef struct __LLL_CHAR_OBJECT{
 
 
 
-typedef struct __LLL_INTEGER_OBJECT_DATA{
-	int8_t i8;
-	int16_t i16;
-	int32_t i32;
-	int64_t i64;
-} lll_integer_object_data_t;
-
-
-
 typedef struct __LLL_INTEGER_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
-	lll_integer_object_data_t v;
+	int64_t v;
 } lll_integer_object_t;
 
 
 
-typedef struct __LLL_FLOAT_OBJECT_DATA{
+typedef union __LLL_FLOAT_OBJECT_DATA{
 	float f32;
 	double f64;
 } lll_float_object_data_t;
@@ -366,7 +326,9 @@ typedef struct __LLL_DEBUG_OBJECT{
 	lll_object_type_t t;
 	lll_object_modifier_t m;
 	uint16_t fpi;
-	uint8_t f;
+	uint32_t ln;
+	uint32_t cn;
+	uint32_t ln_off;
 } lll_debug_object_t;
 
 

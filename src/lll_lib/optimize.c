@@ -51,8 +51,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 							st=LLL_GET_OBJECT_AFTER_NOP(st);
 							continue;
 						}
-						lll_debug_object_t* dbg=(lll_debug_object_t*)st;
-						st=LLL_GET_DEBUG_OBJECT_CHILD(dbg,sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg));
+						st=LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)st);
 					}
 					if (LLL_IS_OBJECT_TYPE_TYPE(st)){
 						(*l)--;
@@ -78,21 +77,18 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			{
-				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				lll_object_t* c=LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz);
+				lll_object_t* c=LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o);
 				uint8_t ot=LLL_GET_OBJECT_TYPE(c);
 				uint32_t off=_optimize_object_internal(c,e);
 				if (off==UINT32_MAX){
 					return UINT32_MAX;
 				}
-				off+=sz;
 				if (LLL_GET_OBJECT_TYPE(c)!=ot){
-					for (uint32_t i=0;i<sz;i++){
+					for (uint32_t i=0;i<sizeof(lll_debug_object_t);i++){
 						*((lll_object_type_t*)LLL_GET_OBJECT_WITH_OFFSET(o,i))=LLL_OBJECT_TYPE_NOP;
 					}
 				}
-				return off+eoff;
+				return sizeof(lll_debug_object_t)+off+eoff;
 			}
 	}
 	uint32_t off=sizeof(lll_object_t)+sizeof(lll_arg_count_t);
@@ -108,8 +104,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 		off+=al;
 		if (LLL_IS_OBJECT_TYPE_MATH(o)){
 			while (LLL_GET_OBJECT_TYPE(a)==LLL_OBJECT_TYPE_DEBUG_DATA){
-				lll_debug_object_t* dbg=(lll_debug_object_t*)a;
-				a=LLL_GET_DEBUG_OBJECT_CHILD(dbg,sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg));
+				a=LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)a);
 			}
 			switch (LLL_GET_OBJECT_TYPE(a)){
 				case LLL_OBJECT_TYPE_CHAR:
@@ -293,14 +288,10 @@ uint32_t _remove_padding_internal(lll_object_t* o,uint32_t* rm,lll_compilation_d
 				return off+pad;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			{
-				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				uint32_t sz=sizeof(lll_debug_object_t)+LLL_GET_DEBUG_OBJECT_LINE_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_COLUMN_NUMBER_WIDTH(dbg)+LLL_GET_DEBUG_OBJECT_FILE_OFFSET_WIDTH(dbg);
-				for (uint32_t i=0;i<sz;i++){
-					*(d+i)=*(s+i);
-				}
-				return sz+_remove_padding_internal(LLL_GET_DEBUG_OBJECT_CHILD(dbg,sz),rm,c_dt,st)+pad;
+			for (uint32_t i=0;i<sizeof(lll_debug_object_t);i++){
+				*(d+i)=*(s+i);
 			}
+			return sizeof(lll_debug_object_t)+_remove_padding_internal(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o),rm,c_dt,st)+pad;
 	}
 	for (uint32_t i=0;i<sizeof(lll_object_t)+sizeof(lll_arg_count_t);i++){
 		*(d+i)=*(s+i);
