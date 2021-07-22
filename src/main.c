@@ -335,58 +335,58 @@ int main(int argc,const char** argv){
 			}
 			o_fp=argv[i];
 		}
-		else if (*e=='-'&&*(e+1)=='o'&&*(e+2)=='0'&&*(e+3)==0){
+		else if (*e=='-'&&*(e+1)=='O'&&*(e+2)==0){
 			o_fp=NULL;
 		}
 		else if (*e=='-'&&*(e+1)=='h'&&*(e+2)==0){
 			fl|=FLAG_HELP;
 		}
-		else if (*e=='-'&&*(e+1)=='L'&&*(e+2)==0){
+		else if (*e=='-'&&*(e+1)=='l'&&*(e+2)==0){
 			fl|=FLAG_LOGO;
 		}
-		else if (*e=='-'&&*(e+1)=='L'&&*(e+2)=='0'&&*(e+3)==0){
+		else if (*e=='-'&&*(e+1)=='L'&&*(e+2)==0){
 			fl&=~FLAG_LOGO;
 		}
 		else if (*e=='-'&&*(e+1)=='v'&&*(e+2)==0){
 			fl|=FLAG_VERBOSE;
 		}
-		else if (*e=='-'&&*(e+1)=='v'&&*(e+2)=='0'&&*(e+3)==0){
+		else if (*e=='-'&&*(e+1)=='V'&&*(e+2)==0){
 			fl&=~FLAG_VERBOSE;
 		}
 		else if (*e=='-'&&*(e+1)=='m'&&*(e+2)==0){
 			fl|=FLAG_MERGE_IMPORTS;
 		}
-		else if (*e=='-'&&*(e+1)=='m'&&*(e+2)=='0'&&*(e+3)==0){
+		else if (*e=='-'&&*(e+1)=='M'&&*(e+2)==0){
 			fl&=~FLAG_MERGE_IMPORTS;
 		}
 		else if (*e=='-'&&*(e+1)=='p'&&*(e+2)==0){
 			fl|=FLAG_PRINT_OBJECT;
 		}
-		else if (*e=='-'&&*(e+1)=='p'&&*(e+2)=='0'&&*(e+3)==0){
+		else if (*e=='-'&&*(e+1)=='P'&&*(e+2)==0){
 			fl&=~FLAG_PRINT_OBJECT;
 		}
 		else if (*e=='-'&&*(e+1)=='c'&&*(e+2)==0){
 			fl|=FLAG_COMPILE_ONLY;
 		}
-		else if (*e=='-'&&*(e+1)=='c'&&*(e+2)=='0'&&*(e+3)==0){
+		else if (*e=='-'&&*(e+1)=='C'&&*(e+2)==0){
 			fl&=~FLAG_COMPILE_ONLY;
 		}
 		else if (*e=='-'&&*(e+1)=='r'&&*(e+2)==0){
 			fl|=FLAG_RUN;
 		}
-		else if (*e=='-'&&*(e+1)=='r'&&*(e+2)=='0'&&*(e+3)==0){
+		else if (*e=='-'&&*(e+1)=='R'&&*(e+2)==0){
 			fl&=~FLAG_RUN;
 		}
 		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)=='p'&&*(e+3)==0){
 			fl|=FLAG_FULL_PATH;
 		}
-		else if (*e=='-'&&*(e+1)=='f'&&*(e+2)=='p'&&*(e+3)=='0'&&*(e+4)==0){
+		else if (*e=='-'&&*(e+1)=='F'&&*(e+2)=='P'&&*(e+3)==0){
 			fl&=~FLAG_FULL_PATH;
 		}
 		else if (*e=='-'&&*(e+1)=='g'&&*(e+2)==0){
 			fl|=FLAG_GENERATE_OUTPUT;
 		}
-		else if (*e=='-'&&*(e+1)=='g'&&*(e+2)=='0'&&*(e+3)==0){
+		else if (*e=='-'&&*(e+1)=='G'&&*(e+2)==0){
 			fl&=~FLAG_GENERATE_OUTPUT;
 		}
 		else if (*e=='-'){
