@@ -205,7 +205,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 			fprintf(f,"?");
 			break;
 		case LLL_OBJECT_TYPE_FOR:
-			fprintf(f,"for");
+			fprintf(f,"->");
 			break;
 		case LLL_OBJECT_TYPE_ADD:
 			fprintf(f,"+");

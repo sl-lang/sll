@@ -127,10 +127,11 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 	lll_statement_count_t* sc=NULL;
 	while (c!=LLL_END_OF_DATA){
 		if ((c>8&&c<14)||c==' '){
-			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-			continue;
+			while ((c>8&&c<14)||c==' '){
+				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+			}
 		}
-		if (c==';'){
+		else if (c==';'){
 			while (c!='\n'&&c!='\r'&&c!=LLL_END_OF_DATA){
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 			}
@@ -147,7 +148,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 				return LLL_RETURN_ERROR;
 			}
 			int lc=c;
-			while (c!='|'||lc!='#'){
+			do{
 				lc=c;
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 				if (c==LLL_END_OF_DATA){
@@ -159,10 +160,13 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 					}
 					return LLL_RETURN_ERROR;
 				}
-			}
+			} while (c!='|'||lc!='#');
 			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 		}
 		else if (c==')'){
+			if (n_l_sc.m){
+				free(n_l_sc.m);
+			}
 			if (!o||ec!=')'){
 				e->t=LLL_ERROR_UNMATCHED_CLOSE_PARENTHESES;
 				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
@@ -177,9 +181,6 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 					e->t=LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS;
 					e->dt.r.off=st_off;
 					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
 					return LLL_RETURN_ERROR;
 				}
 			}
@@ -188,9 +189,6 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 					e->t=LLL_ERROR_SET_NOT_ENOUGH_ARGUMENTS;
 					e->dt.r.off=st_off;
 					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
 					return LLL_RETURN_ERROR;
 				}
 				lll_object_t* a=LLL_GET_OBJECT_ARGUMENT(o,sizeof(lll_operator_object_t));
@@ -201,9 +199,6 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 					e->t=LLL_ERROR_SET_NO_INDENTIFIER;
 					e->dt.r.off=st_off;
 					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
 					return LLL_RETURN_ERROR;
 				}
 			}
@@ -252,23 +247,17 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 				}
 				*(c_dt->f_dt.dt+c_dt->f_dt.l-1)=f;
 			}
-			if (n_l_sc.m){
-				free(n_l_sc.m);
-			}
 			return LLL_RETURN_NO_ERROR;
 		}
 		else if (c=='}'){
+			if (n_l_sc.m){
+				free(n_l_sc.m);
+			}
 			if (!o||ec!='}'){
 				e->t=LLL_ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS;
 				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
 				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
 				return LLL_RETURN_ERROR;
-			}
-			if (n_l_sc.m){
-				free(n_l_sc.m);
 			}
 			return LLL_RETURN_NO_ERROR;
 		}
@@ -337,7 +326,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 				while (LLL_GET_OBJECT_TYPE(so)==LLL_OBJECT_TYPE_DEBUG_DATA){
 					so=LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)so);
 				}
-				if (LLL_IS_OBJECT_TYPE_NOT_TYPE(so)&&!LLL_IS_OBJECT_CONST(so)){
+				if (LLL_IS_OBJECT_TYPE_NOT_TYPE(so)&&LLL_GET_OBJECT_TYPE(so)!=LLL_OBJECT_TYPE_FUNC&&!LLL_IS_OBJECT_CONST(so)){
 					o->t&=~LLL_OBJECT_TYPE_CONST;
 				}
 				if (LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_OPERATION_LIST){
@@ -993,7 +982,7 @@ _next_long_identifier:;
 						iarg->idx=LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
 					}
 _identifier_found:
-					if (o){
+					if (o&&(LLL_GET_OBJECT_TYPE(o)!=LLL_OBJECT_TYPE_SET||*ac)){
 						o->t&=~LLL_OBJECT_TYPE_CONST;
 					}
 				}
