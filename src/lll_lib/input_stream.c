@@ -20,7 +20,7 @@ int _input_data_stream_file_read(lll_input_data_stream_t* is){
 
 
 
-uint8_t _input_data_stream_file_read_buffer(const lll_input_data_stream_t* is,uint8_t* bf,uint32_t sz){
+uint8_t _input_data_stream_file_read_buffer(lll_input_data_stream_t* is,uint8_t* bf,uint32_t sz){
 	return (fread(bf,sizeof(uint8_t),sz,(FILE*)(is->ctx))==sz);
 }
 

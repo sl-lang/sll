@@ -335,18 +335,18 @@ else:
 		for f in os.listdir("src/lll_lib"):
 			if (f[-2:]==".c"):
 				fl.append(f"build/{f}.o")
-				if (subprocess.run(["gcc","-eIC","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-lm","-Werror","-O3","-c","src/lll_lib/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
+				if (subprocess.run(["gcc","-eIC","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-fPIC","-Wall","-lm","-Werror","-O3","-c","src/lll_lib/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
 					sys.exit(1)
-		if (subprocess.run(["gcc","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O3","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O3","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O3","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
+		if (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O3","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O3","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O3","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
 			sys.exit(1)
 	else:
 		fl=[]
 		for f in os.listdir("src/lll_lib"):
 			if (f[-2:]==".c"):
 				fl.append(f"build/{f}.o")
-				if (subprocess.run(["gcc","-eIC","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-lm","-Werror","-O0","-c","src/lll_lib/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
+				if (subprocess.run(["gcc","-eIC","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-fPIC","-Wall","-lm","-Werror","-O0","-c","src/lll_lib/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
 					sys.exit(1)
-		if (subprocess.run(["gcc","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O0","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
+		if (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O0","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lll","-h"])
