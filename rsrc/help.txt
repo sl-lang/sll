@@ -1,24 +1,19 @@
 Usage: lll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...
 Options:
-  -c -> Enable compilation only mode
-  -e -> Expand file paths
-  -f <file> -> Treat <file> as input file (Usefull for files starting with a
-               dash ('-'))
-  -G -> Do not generate the output files
-  -h -> Print this message
-  -I <directory> -> Add <directory> to file include path
-  -L -> Disable compiler logo
-  -m -> Merge imports
-  -o <output_file> -> Set output file to <output_file>. If there is only one
-                      <file>, the output is written to <output_file>. If there
-                      are multiple <file>s, each <file> output is written to
-                      <output_file_directory>/<base_file_name>[.lllc | .asm].
-                      If no <output_file> is supplied, then each <file> output
-                      is written to <file_without_extension>[.lllc | .asm]
+  -a, --generate-assembly -> Generate assembly (.asm)
+  -b, --generate-c -> Generate C source code (.c)
+  -c, --generate-compiled-object -> Generate compiled objects (.lllc)
+  -e, --expand-file-paths -> Expand file paths
+  -f <file>, --file <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))
+  -h, --help -> Print this message
+  -I <directory>, --include <directory> -> Add <directory> to file include path
+  -L, --no-logo -> Disable compiler logo
+  -m, --merge-imports -> Merge imports
+  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.asm | .c | .lllc]. If no <output_file> is supplied, then each <file> output is written to <file_without_extension>[.asm | .c | .lllc]
   -O0 -> No optimization
   -O1 -> Remove padding
   -O2 -> Remove padding + Global optimization (default)
   -O3 -> Remove padding + Global optimization + Removal of debug data
-  -p -> Print objects
-  -R -> Disable program execution mode
-  -v -> Enable verbose mode
+  -p, --print-objects -> Print objects
+  -R, --no-run -> Disable program execution mode
+  -v, --verbose -> Enable verbose mode

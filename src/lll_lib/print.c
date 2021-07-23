@@ -41,37 +41,6 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 	if (LLL_IS_OBJECT_CONST(o)){
 		fprintf(f,"@const ");
 	}
-	if (LLL_GET_OBJECT_TYPE(o)<LLL_OBJECT_TYPE_MIN_EXTRA){
-		if (o->m&LLL_OBJECT_MODIFIER_FIXED){
-			fprintf(f,"@fixed ");
-		}
-		if (o->m&LLL_OBJECT_MODIFIER_UNSIGNED){
-			fprintf(f,"@unsigned ");
-		}
-		if (o->m&LLL_OBJECT_MODIFIER_SIZE){
-			if ((o->m&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_8BIT){
-				fprintf(f,"@8bit ");
-			}
-			else if ((o->m&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_16BIT){
-				fprintf(f,"@16bit ");
-			}
-			else if ((o->m&LLL_OBJECT_MODIFIER_SIZE_MASK)==LLL_OBJECT_MODIFIER_32BIT){
-				fprintf(f,"@32bit ");
-			}
-			else{
-				fprintf(f,"@64bit ");
-			}
-		}
-		if ((o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK)==LLL_OBJECT_MODIFIER_ARRAY){
-			fprintf(f,"@array ");
-		}
-		else if ((o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK)==LLL_OBJECT_MODIFIER_LIST){
-			fprintf(f,"@list ");
-		}
-		else if ((o->m&LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK)==LLL_OBJECT_MODIFIER_LAST){
-			fprintf(f,"@last ");
-		}
-	}
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 			fprintf(f,"(unknown)");
@@ -119,12 +88,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 				return sizeof(lll_integer_object_t)+eoff;
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
-			if (LLL_IS_OBJECT_FLOAT64(o)){
-				fprintf(f,"%lf",((lll_float_object_t*)o)->v.f64);
-			}
-			else{
-				fprintf(f,"%f",((lll_float_object_t*)o)->v.f32);
-			}
+			fprintf(f,"%lf",((lll_float_object_t*)o)->v);
 			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_NIL:
 			fprintf(f,"nil");
@@ -203,10 +167,10 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 				}
 				return sizeof(lll_identifier_object_t)+eoff;
 			}
-		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+		case LLL_OBJECT_TYPE_PRINT:
 			fprintf(f,":>");
 			break;
-		case LLL_OBJECT_TYPE_READ_BUFFER:
+		case LLL_OBJECT_TYPE_INPUT:
 			fprintf(f,"<:");
 			break;
 		case LLL_OBJECT_TYPE_AND:

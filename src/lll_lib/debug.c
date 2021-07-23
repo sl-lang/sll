@@ -80,7 +80,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_input_data_stream_t
 		return LLL_RETURN_ERROR;
 	}
 	dbg->t=LLL_OBJECT_TYPE_DEBUG_DATA;
-	dbg->m=0;
 	dbg->fpi=0;
 	dbg->ln=LLL_GET_INPUT_DATA_STREAM_LINE_NUMBER(is);
 	dbg->cn=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-LLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is)-1;

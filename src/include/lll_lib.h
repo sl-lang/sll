@@ -44,33 +44,25 @@
 #define LLL_ERROR_UNKNOWN_OCTAL_CHARCTER 15
 #define LLL_ERROR_UNKNOWN_BINARY_CHARCTER 16
 #define LLL_ERROR_UNKNOWN_SYMBOL 17
-#define LLL_ERROR_UNKNOWN_MODIFIER 18
-#define LLL_ERROR_UNKNOWN_OUTPUT_MODIFIER 19
-#define LLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER 20
-#define LLL_ERROR_UNEXPECTED_CHARACTER 21
-#define LLL_ERROR_UNSUPPORTED_8BIT_FLOAT_SIZE 22
-#define LLL_ERROR_UNSUPPORTED_16BIT_FLOAT_SIZE 23
-#define LLL_ERROR_SYMBOL_TOO_LONG 24
-#define LLL_ERROR_MODIFIER_TOO_LONG 25
-#define LLL_ERROR_NO_SYMBOL 26
-#define LLL_ERROR_TOO_MANY_ARGUMENTS 27
-#define LLL_ERROR_TOO_MANY_STATEMENTS 28
-#define LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS 29
-#define LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS 30
-#define LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS 31
-#define LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS 32
-#define LLL_ERROR_SET_NOT_ENOUGH_ARGUMENTS 33
-#define LLL_ERROR_SET_NO_INDENTIFIER 34
-#define LLL_ERROR_MULTIPLE_SIZE_MODIFIERS 35
-#define LLL_ERROR_UNUSED_MODIFIERS 36
-#define LLL_ERROR_UNKNOWN_IDENTIFIER 37
-#define LLL_ERROR_STRING_REQUIRED 38
-#define LLL_ERROR_NO_STACK 39
-#define LLL_ERROR_STACK_TOO_BIG 40
-#define LLL_ERROR_FAILED_FILE_WRITE 41
-#define LLL_ERROR_DIVISION_BY_ZERO 42
-#define LLL_ERROR_INVALID_FILE_FORMAT 43
-#define LLL_ERROR_INVALID_IMPORT_INDEX 44
+#define LLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER 18
+#define LLL_ERROR_UNEXPECTED_CHARACTER 19
+#define LLL_ERROR_SYMBOL_TOO_LONG 20
+#define LLL_ERROR_NO_SYMBOL 21
+#define LLL_ERROR_TOO_MANY_ARGUMENTS 22
+#define LLL_ERROR_TOO_MANY_STATEMENTS 23
+#define LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS 24
+#define LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS 25
+#define LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS 26
+#define LLL_ERROR_SET_NOT_ENOUGH_ARGUMENTS 27
+#define LLL_ERROR_SET_NO_INDENTIFIER 28
+#define LLL_ERROR_UNKNOWN_IDENTIFIER 29
+#define LLL_ERROR_STRING_REQUIRED 30
+#define LLL_ERROR_NO_STACK 31
+#define LLL_ERROR_STACK_TOO_BIG 32
+#define LLL_ERROR_FAILED_FILE_WRITE 33
+#define LLL_ERROR_DIVISION_BY_ZERO 34
+#define LLL_ERROR_INVALID_FILE_FORMAT 35
+#define LLL_ERROR_INVALID_IMPORT_INDEX 36
 #define LLL_ERROR_ASSERTION 255
 #define LLL_MAX_COMPILATION_ERROR LLL_ERROR_STRING_REQUIRED
 
@@ -86,8 +78,8 @@
 #define LLL_OBJECT_TYPE_FALSE 6
 #define LLL_OBJECT_TYPE_STRING 7
 #define LLL_OBJECT_TYPE_IDENTIFIER 8
-#define LLL_OBJECT_TYPE_WRITE_BUFFER 9
-#define LLL_OBJECT_TYPE_READ_BUFFER 10
+#define LLL_OBJECT_TYPE_PRINT 9
+#define LLL_OBJECT_TYPE_INPUT 10
 #define LLL_OBJECT_TYPE_AND 11
 #define LLL_OBJECT_TYPE_OR 12
 #define LLL_OBJECT_TYPE_NOT 13
@@ -116,7 +108,6 @@
 #define LLL_OBJECT_TYPE_OPERATION_LIST 62
 #define LLL_OBJECT_TYPE_DEBUG_DATA 63
 #define LLL_OBJECT_TYPE_NOP 0xff
-#define LLL_OBJECT_TYPE_FLOAT64_FLAG 0x40
 #define LLL_OBJECT_TYPE_CONST 0x80
 #define LLL_OBJECT_TYPE_MAX_INTEGRAL_TYPE LLL_OBJECT_TYPE_FALSE
 #define LLL_OBJECT_TYPE_MAX_TYPE LLL_OBJECT_TYPE_IDENTIFIER
@@ -124,7 +115,6 @@
 #define LLL_OBJECT_TYPE_MAX_MATH LLL_OBJECT_TYPE_BIT_NOT
 #define LLL_OBJECT_TYPE_MAX_COMPARE LLL_OBJECT_TYPE_MORE_EQUAL
 #define LLL_OBJECT_TYPE_MIN_EXTRA LLL_OBJECT_TYPE_IMPORT
-#define LLL_IS_OBJECT_FLOAT64(o) ((o)->t&LLL_OBJECT_TYPE_FLOAT64_FLAG)
 #define LLL_IS_OBJECT_TYPE_NOT_INTEGRAL(o) (LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_INTEGRAL_TYPE)
 #define LLL_IS_OBJECT_TYPE_TYPE(o) (LLL_GET_OBJECT_TYPE(o)<=LLL_OBJECT_TYPE_MAX_TYPE)
 #define LLL_IS_OBJECT_TYPE_NOT_TYPE(o) (LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_TYPE)
@@ -138,19 +128,6 @@
 #define LLL_GET_OBJECT_ARGUMENT(o,i) ((lll_object_t*)(void*)(((uint64_t)(void*)(o))+(i)))
 #define LLL_GET_OBJECT_STATEMENT(o,i) ((lll_object_t*)(void*)(((uint64_t)(void*)(o))+(i)))
 #define LLL_SET_OBJECT_NOP(o,i) ((*((lll_object_type_t*)(void*)((uint64_t)(void*)(o)+(i))))=LLL_OBJECT_TYPE_NOP)
-
-#define LLL_OBJECT_MODIFIER_FIXED 0x1
-#define LLL_OBJECT_MODIFIER_UNSIGNED 0x2
-#define LLL_OBJECT_MODIFIER_SIZE 0x4
-#define LLL_OBJECT_MODIFIER_8BIT 0x0
-#define LLL_OBJECT_MODIFIER_16BIT 0x8
-#define LLL_OBJECT_MODIFIER_32BIT 0x10
-#define LLL_OBJECT_MODIFIER_64BIT 0x18
-#define LLL_OBJECT_MODIFIER_SIZE_MASK 0x18
-#define LLL_OBJECT_MODIFIER_ARRAY 0x20
-#define LLL_OBJECT_MODIFIER_LIST 0x40
-#define LLL_OBJECT_MODIFIER_LAST 0x60
-#define LLL_OBJECT_MODIFIER_OUTPUT_TYPE_MASK 0x60
 
 #define LLL_MAX_SHORT_IDENTIFIER_LENGTH 15
 #define LLL_IDENTIFIER_GET_ARRAY_ID(i) ((i)&0xf)
@@ -184,10 +161,6 @@ typedef uint8_t lll_object_type_t;
 
 
 typedef uint8_t lll_arg_count_t;
-
-
-
-typedef uint8_t lll_object_modifier_t;
 
 
 
@@ -250,14 +223,12 @@ typedef struct __LLL_OUTPUT_DATA_STREAM{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 } lll_object_t;
 
 
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_CHAR_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	char v;
 } lll_char_object_t;
 
@@ -265,30 +236,20 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_CHAR_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_INTEGER_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	int64_t v;
 } lll_integer_object_t;
 
 
 
-typedef union __LLL_FLOAT_OBJECT_DATA{
-	float f32;
-	double f64;
-} lll_float_object_data_t;
-
-
-
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_FLOAT_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
-	lll_float_object_data_t v;
+	double v;
 } lll_float_object_t;
 
 
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_STRING_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	lll_string_length_t ln;
 	char v[];
 } lll_string_object_t;
@@ -297,7 +258,6 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_STRING_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_IDENTIFIER_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	lll_identifier_index_t idx;
 } lll_identifier_object_t;
 
@@ -305,7 +265,6 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_IDENTIFIER_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_FUNCTION_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	lll_arg_count_t ac;
 	lll_function_index_t id;
 } lll_function_object_t;
@@ -314,7 +273,6 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_FUNCTION_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OPERATOR_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	lll_arg_count_t ac;
 } lll_operator_object_t;
 
@@ -322,7 +280,6 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OPERATOR_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_IMPORT_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	lll_arg_count_t ac;
 	lll_import_index_t idx[];
 } lll_import_object_t;
@@ -331,7 +288,6 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_IMPORT_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OPERATION_LIST_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	lll_statement_count_t sc;
 } lll_operation_list_object_t;
 
@@ -339,7 +295,6 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OPERATION_LIST_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_DEBUG_OBJECT{
 	lll_object_type_t t;
-	lll_object_modifier_t m;
 	uint16_t fpi;
 	uint32_t ln;
 	uint32_t cn;

@@ -22,20 +22,19 @@ contexts:
       captures:
         1: punctuation.definition.comment.lll
   objects:
-    - match: '(\()\s*((?:@\s*[0-9a-zA-Z_-]+\s+)*)(?:(\?|->)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
-        2: storage.modifier.lll
-        3: keyword.control.conditional.lll
-        4: keyword.operator.logical.lll
-        5: keyword.operator.bitwise.lll
-        6: keyword.operator.arithmetic.lll
-        7: keyword.operator.comparison.lll
-        8: keyword.operator.assignment.lll
-        9: keyword.control.import.lll
-        10: keyword.declaration.function.lll
-        11: support.function.builtin.lll
-        12: variable.function.lll
+        2: keyword.control.conditional.lll
+        3: keyword.operator.logical.lll
+        4: keyword.operator.bitwise.lll
+        5: keyword.operator.arithmetic.lll
+        6: keyword.operator.comparison.lll
+        7: keyword.operator.assignment.lll
+        8: keyword.control.import.lll
+        9: keyword.declaration.function.lll
+        10: support.function.builtin.lll
+        11: variable.function.lll
       push:
         - meta_scope: meta.group.lll meta.parens.lll
         - match: '\)'
@@ -43,7 +42,6 @@ contexts:
           pop: true
         - include: comments
         - include: objects
-        - include: modifiers
         - include: numbers
         - include: strings
         - include: constants
@@ -69,7 +67,6 @@ contexts:
           pop: true
         - include: comments
         - include: objects
-        - include: modifiers
         - include: numbers
         - include: strings
         - include: constants
@@ -118,6 +115,3 @@ contexts:
           pop: true
         - match: '\\.'
           scope: invalid.illegal.escape.lll
-  modifiers:
-    - match: '@[0-9a-zA-Z_-]+\b'
-      scope: storage.modifiers.lll

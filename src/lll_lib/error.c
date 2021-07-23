@@ -68,7 +68,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 	char t=0;
 	char* sym=NULL;
 	char* sp=NULL;
-	if (e->t==LLL_ERROR_UNKNOWN_SYMBOL||e->t==LLL_ERROR_UNKNOWN_MODIFIER||e->t==LLL_ERROR_UNKNOWN_OUTPUT_MODIFIER||e->t==LLL_ERROR_UNKNOWN_IDENTIFIER){
+	if (e->t==LLL_ERROR_UNKNOWN_SYMBOL||e->t==LLL_ERROR_UNKNOWN_IDENTIFIER){
 		sym=malloc((oe-os+1)*sizeof(char));
 		sp=sym;
 	}
@@ -174,33 +174,14 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			printf("Unknown Symbol: '%s'\n",sym);
 			free(sym);
 			return;
-		case LLL_ERROR_UNKNOWN_MODIFIER:
-			*sp=0;
-			printf("Unknown Modifier: '%s'\n",sym);
-			free(sym);
-			return;
-		case LLL_ERROR_UNKNOWN_OUTPUT_MODIFIER:
-			*sp=0;
-			printf("Unknown Output Modifier: '%s'\n",sym);
-			free(sym);
-			return;
 		case LLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
 			printf("Unknown Identifier Character: '%c'\n",t);
 			return;
 		case LLL_ERROR_UNEXPECTED_CHARACTER:
 			printf("Unexpected Character: '%c'\n",t);
 			return;
-		case LLL_ERROR_UNSUPPORTED_8BIT_FLOAT_SIZE:
-			printf("8-bit Float not Supported\n");
-			return;
-		case LLL_ERROR_UNSUPPORTED_16BIT_FLOAT_SIZE:
-			printf("16-bit Float not Supported\n");
-			return;
 		case LLL_ERROR_SYMBOL_TOO_LONG:
 			printf("Symbol Too Long\n");
-			return;
-		case LLL_ERROR_MODIFIER_TOO_LONG:
-			printf("Modifier Too Long\n");
 			return;
 		case LLL_ERROR_NO_SYMBOL:
 			printf("Expression Without a Symbol\n");
@@ -217,9 +198,6 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 		case LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS:
 			printf("Math Expression Contains too Many Arguments\n");
 			return;
-		case LLL_ERROR_MULTIPLE_OUTPUT_TYPE_MODIFIERS:
-			printf("Multiple Output Type Modifiers\n");
-			return;
 		case LLL_ERROR_FOR_NOT_ENOUGH_ARGUMENTS:
 			printf("Not Enought Arguments for a For Loop\n");
 			return;
@@ -228,12 +206,6 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			return;
 		case LLL_ERROR_SET_NO_INDENTIFIER:
 			printf("Identifier Requierd for Assignment\n");
-			return;
-		case LLL_ERROR_MULTIPLE_SIZE_MODIFIERS:
-			printf("Multiple Size Modifiers\n");
-			return;
-		case LLL_ERROR_UNUSED_MODIFIERS:
-			printf("Unused Modifiers\n");
 			return;
 		case LLL_ERROR_UNKNOWN_IDENTIFIER:
 			*sp=0;

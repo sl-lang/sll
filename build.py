@@ -325,7 +325,7 @@ if (os.name=="nt"):
 	if ("--run" in sys.argv):
 		os.chdir("build")
 		subprocess.run(["lll.exe","-h"])
-		if (("--generate-code" in sys.argv and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-R","-o","test.lllc","-p","-e","-I","../example","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-e","-L","-R"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0)) or ("--generate-code" not in sys.argv and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-e","-I","../example","-m","-R"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-e","-L","-G"]).returncode!=0))):
+		if (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-e","-I","../example","-m","-R"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-e","-L"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		os.chdir(cd)
@@ -350,5 +350,5 @@ else:
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lll","-h"])
-		if (("--generate-code" in sys.argv and (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-R","-o","build/test.lllc","-p","-e","-I","example","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-e","-L","-R"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0)) or ("--generate-code" not in sys.argv and (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-e","-I","example","-m","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-e","-L","-G"]).returncode!=0))):
+		if (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-e","-I","example","-m","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-e","-L"]).returncode!=0):
 			sys.exit(1)

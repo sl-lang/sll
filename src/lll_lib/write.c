@@ -688,9 +688,9 @@ uint8_t _get_object_as_identifier(lll_output_data_stream_t* os,const lll_object_
 			}
 			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(((lll_identifier_object_t*)o)->idx,im));
 			return 1;
-		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+		case LLL_OBJECT_TYPE_PRINT:
 			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_READ_BUFFER:
+		case LLL_OBJECT_TYPE_INPUT:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -955,9 +955,9 @@ void _get_object_as_const_identifier(lll_object_t* o,identifier_data_t* va,const
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			*va=*(im->dt+IDENTIFIER_INDEX_TO_MAP_OFFSET(((lll_identifier_object_t*)o)->idx,im));
 			return;
-		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+		case LLL_OBJECT_TYPE_PRINT:
 			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_READ_BUFFER:
+		case LLL_OBJECT_TYPE_INPUT:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented");
@@ -1041,9 +1041,9 @@ uint8_t _get_cond_type(const lll_object_t* o,const identifier_map_t* im){
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+		case LLL_OBJECT_TYPE_PRINT:
 			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_READ_BUFFER:
+		case LLL_OBJECT_TYPE_INPUT:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented");
@@ -1122,9 +1122,9 @@ uint8_t _write_jump_if_true(lll_output_data_stream_t* os,const lll_object_t* o,a
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+		case LLL_OBJECT_TYPE_PRINT:
 			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_READ_BUFFER:
+		case LLL_OBJECT_TYPE_INPUT:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -1347,9 +1347,9 @@ uint8_t _write_jump_if_false(lll_output_data_stream_t* os,const lll_object_t* o,
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+		case LLL_OBJECT_TYPE_PRINT:
 			ASSERT(!"Unimplemented",e,0);
-		case LLL_OBJECT_TYPE_READ_BUFFER:
+		case LLL_OBJECT_TYPE_INPUT:
 			ASSERT(!"Unimplemented",e,0);
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,0);
@@ -1579,7 +1579,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,const lll_object
 			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
 			return sizeof(lll_float_object_t)+eoff;
-		case LLL_OBJECT_TYPE_WRITE_BUFFER:
+		case LLL_OBJECT_TYPE_PRINT:
 			{
 				lll_arg_count_t ac=((lll_operator_object_t*)o)->ac;
 				uint32_t off=sizeof(lll_operator_object_t);
@@ -1729,7 +1729,7 @@ uint32_t _write_object_as_assembly(lll_output_data_stream_t* os,const lll_object
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_READ_BUFFER:
+		case LLL_OBJECT_TYPE_INPUT:
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_AND:
 			ASSERT(!"Unimplemented",e,UINT32_MAX);
