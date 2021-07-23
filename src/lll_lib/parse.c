@@ -35,7 +35,8 @@ uint8_t _read_single_char(lll_input_data_stream_t* is,uint32_t st,lll_error_t* e
 			return READ_SINGLE_CHAR_ERROR;
 		}
 		if (c=='\''||c=='"'||c=='\\'){
-			goto _skip_parse;
+			*o=c;
+			return READ_SINGLE_CHAR_OK;
 		}
 		else if (c=='x'){
 			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
@@ -107,18 +108,17 @@ uint8_t _read_single_char(lll_input_data_stream_t* is,uint32_t st,lll_error_t* e
 			return READ_SINGLE_CHAR_ERROR;
 		}
 	}
-_skip_parse:
 	*o=c;
 	return READ_SINGLE_CHAR_OK;
 }
 
 
 
-uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,scope_data_t* l_sc,lll_error_t* e){
+uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_data_t* l_sc,lll_error_t* e){
 	scope_data_t n_l_sc={
 		NULL
 	};
-	scope_data_t* b_l_sc=NULL;
+	const scope_data_t* b_l_sc=NULL;
 	lll_input_data_stream_t* is=c_dt->is;
 	uint32_t st_off=UINT32_MAX;
 	int ec=-1;

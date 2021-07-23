@@ -29,7 +29,7 @@ __LLL_IMPORT_EXPORT __LLL_API_FUNCTION void __lll_api_putchar(int c){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_API_FUNCTION void __lll_api_print_string(char* s){
+__LLL_IMPORT_EXPORT __LLL_API_FUNCTION void __lll_api_print_string(const char* s){
 	do{
 		putchar(*s);
 		s++;

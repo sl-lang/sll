@@ -325,7 +325,7 @@ if (os.name=="nt"):
 	if ("--run" in sys.argv):
 		os.chdir("build")
 		subprocess.run(["lll.exe","-h"])
-		if (("--generate-code" in sys.argv and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-R","-o","test.lllc","-p","-fp","-I","../example","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L","-R"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0)) or ("--generate-code" not in sys.argv and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-fp","-I","../example","-m","-R"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-fp","-L","-G"]).returncode!=0))):
+		if (("--generate-code" in sys.argv and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-R","-o","test.lllc","-p","-e","-I","../example","-m"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-e","-L","-R"]).returncode!=0 or subprocess.run(["nasm","-O3","-f","win64","-o","test.obj","test.asm"]).returncode!=0 or subprocess.run(["link","test.obj","lll_lib.lib","msvcrt.lib","/DYNAMICBASE","/ENTRY:main","/OUT:test.exe","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run("test.exe").returncode!=0)) or ("--generate-code" not in sys.argv and (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-e","-I","../example","-m","-R"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-e","-L","-G"]).returncode!=0))):
 			os.chdir(cd)
 			sys.exit(1)
 		os.chdir(cd)
@@ -335,7 +335,7 @@ else:
 		for f in os.listdir("src/lll_lib"):
 			if (f[-2:]==".c"):
 				fl.append(f"build/{f}.o")
-				if (subprocess.run(["gcc","-fPIC","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-lm","-Werror","-O3","-c","src/lll_lib/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
+				if (subprocess.run(["gcc","-eIC","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-lm","-Werror","-O3","-c","src/lll_lib/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
 					sys.exit(1)
 		if (subprocess.run(["gcc","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O3","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O3","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O3","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
 			sys.exit(1)
@@ -344,11 +344,11 @@ else:
 		for f in os.listdir("src/lll_lib"):
 			if (f[-2:]==".c"):
 				fl.append(f"build/{f}.o")
-				if (subprocess.run(["gcc","-fPIC","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-lm","-Werror","-O0","-c","src/lll_lib/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
+				if (subprocess.run(["gcc","-eIC","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-lm","-Werror","-O0","-c","src/lll_lib/"+f,"-o",f"build/{f}.o","-Isrc/include"]).returncode!=0):
 					sys.exit(1)
 		if (subprocess.run(["gcc","-shared","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-o","build/lll_lib.so"]+fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","-c","src/main.c","-o","build/main.o","-Ibuild"]).returncode!=0 or subprocess.run(["gcc","-o","build/lll","-O0","build/main.o","build/lll_lib.so","-lm"]).returncode!=0):
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lll","-h"])
-		if (("--generate-code" in sys.argv and (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-R","-o","build/test.lllc","-p","-fp","-I","example","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L","-R"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0)) or ("--generate-code" not in sys.argv and (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-fp","-I","example","-m","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-fp","-L","-G"]).returncode!=0))):
+		if (("--generate-code" in sys.argv and (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-R","-o","build/test.lllc","-p","-e","-I","example","-m"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-e","-L","-R"]).returncode!=0 or subprocess.run(["nasm","-f","elf64","-o","build/test.o","build/test.asm"]).returncode!=0 or subprocess.run(["gcc","build/test.o","build/lll_lib.so","-o","build/test","-O3"]).returncode!=0 or subprocess.run("build/test").returncode!=0)) or ("--generate-code" not in sys.argv and (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-e","-I","example","-m","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-e","-L","-G"]).returncode!=0))):
 			sys.exit(1)

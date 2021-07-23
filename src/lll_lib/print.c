@@ -29,7 +29,7 @@ void _print_int64(int64_t v,FILE* f){
 
 
 
-uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f){
+uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f){
 	uint32_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff+=sizeof(lll_object_type_t);
@@ -344,6 +344,6 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,lll_object_t* o,FIL
 
 
 
-__LLL_IMPORT_EXPORT void lll_print_object(lll_compilation_data_t* c_dt,lll_object_t* o,FILE* f){
+__LLL_IMPORT_EXPORT void lll_print_object(lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f){
 	_print_object_internal(c_dt,o,f);
 }

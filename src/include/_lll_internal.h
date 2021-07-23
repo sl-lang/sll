@@ -321,7 +321,7 @@ const static cpu_register_t FUNCTION_CALL_REGISTERS[]={REGISTER_C,REGISTER_D,REG
 
 
 
-uint32_t _get_object_size(lll_object_t* o);
+uint32_t _get_object_size(const lll_object_t* o);
 
 
 

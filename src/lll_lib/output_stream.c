@@ -5,14 +5,14 @@
 
 
 
-uint8_t _output_data_stream_file_write_char(lll_output_data_stream_t* os,char c){
+uint8_t _output_data_stream_file_write_char(const lll_output_data_stream_t* os,char c){
 	fputc(c,(FILE*)(os->ctx));
 	return 1;
 }
 
 
 
-uint8_t _output_data_stream_file_write_string(lll_output_data_stream_t* os,char* s){
+uint8_t _output_data_stream_file_write_string(const lll_output_data_stream_t* os,const char* s){
 	while (*s){
 		fputc(*s,(FILE*)(os->ctx));
 		s++;
@@ -22,7 +22,7 @@ uint8_t _output_data_stream_file_write_string(lll_output_data_stream_t* os,char*
 
 
 
-uint8_t _output_data_stream_file_write(lll_output_data_stream_t* os,uint8_t* bf,size_t sz){
+uint8_t _output_data_stream_file_write(const lll_output_data_stream_t* os,const uint8_t* bf,size_t sz){
 	return (fwrite(bf,sizeof(uint8_t),sz,(FILE*)(os->ctx))==sz);
 }
 

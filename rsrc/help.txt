@@ -1,36 +1,24 @@
 Usage: lll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...
 Options:
-  -O0 -> No optimization
-  -O1 -> Remove padding
-  -O2 -> Remove padding + Global optimization (2)
-  -O3 -> Remove padding + Global optimization + Removal of debug data
-  -I <directory> -> Add <directory> to file include path
+  -c -> Enable compilation only mode
+  -e -> Expand file paths
   -f <file> -> Treat <file> as input file (Usefull for files starting with a
-              dash ('-'))
+               dash ('-'))
+  -G -> Do not generate the output files
+  -h -> Print this message
+  -I <directory> -> Add <directory> to file include path
+  -L -> Disable compiler logo
+  -m -> Merge imports
   -o <output_file> -> Set output file to <output_file>. If there is only one
                       <file>, the output is written to <output_file>. If there
                       are multiple <file>s, each <file> output is written to
                       <output_file_directory>/<base_file_name>[.lllc | .asm].
                       If no <output_file> is supplied, then each <file> output
                       is written to <file_without_extension>[.lllc | .asm]
-  -O -> Use an automatic output file
-  -h -> Print this message
-  -l -> Enable compiler logo (1, 2)
-  -L -> Disable compiler logo (1)
-  -v -> Enable verbose mode (1)
-  -V -> Disable verbose mode (1)
-  -m -> Enable import merge mode (1)
-  -M -> Disable import merge mode (1)
-  -p -> Enable object print mode (1)
-  -P -> Disable object print mode (1)
-  -c -> Enable compilation only mode (1)
-  -C -> Disable compilation only mode (1)
-  -r -> Enable program execution mode (1, 2)
-  -R -> Disable program execution mode (1)
-  -fp -> Expand all file paths (1)
-  -FP -> Do not expand all file paths (1)
-  -g -> Generate the output files (1, 2)
-  -G -> Do not generate the output files (1)
-
-1: Only the last -xxx/-XXX argument takes effect
-2: This is the default option
+  -O0 -> No optimization
+  -O1 -> Remove padding
+  -O2 -> Remove padding + Global optimization (default)
+  -O3 -> Remove padding + Global optimization + Removal of debug data
+  -p -> Print objects
+  -R -> Disable program execution mode
+  -v -> Enable verbose mode

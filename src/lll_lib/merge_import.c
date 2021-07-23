@@ -111,7 +111,7 @@ uint32_t _patch_import(lll_object_t* o,import_data_t* dt){
 
 
 
-uint32_t _patch_module(lll_object_t* o,import_identifier_offset_list_t* i_off){
+uint32_t _patch_module(lll_object_t* o,const import_identifier_offset_list_t* i_off){
 	uint32_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff+=sizeof(lll_object_type_t);

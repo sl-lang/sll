@@ -6,7 +6,7 @@
 
 
 
-__LLL_IMPORT_EXPORT void lll_init_compilation_data(char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
+__LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
 	o->fp_dt.dt=malloc(sizeof(lll_file_path_t));
 	lll_file_path_t* ifp=o->fp_dt.dt;
 	ifp->l=0;

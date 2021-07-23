@@ -26,7 +26,7 @@ __LLL_IMPORT_EXPORT void lll_save_stack_context(lll_stack_context_t* ctx){
 
 
 
-__LLL_IMPORT_EXPORT void lll_load_stack_context(lll_stack_context_t* ctx){
+__LLL_IMPORT_EXPORT void lll_load_stack_context(const lll_stack_context_t* ctx){
 	_bf=ctx->ptr;
 	_bf_off=ctx->off;
 	_bf_sz=ctx->sz;

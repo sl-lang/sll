@@ -26,7 +26,7 @@
 
 
 
-__LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,lll_error_t* e){
+__LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_error_t* e){
 	if (e->t==LLL_ERROR_UNKNOWN||e->t>LLL_MAX_COMPILATION_ERROR){
 		switch (e->t){
 			default:
