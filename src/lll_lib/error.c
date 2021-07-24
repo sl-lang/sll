@@ -3,7 +3,7 @@
 #include <windows.h>
 #endif
 #include <lll_lib.h>
-#include <_lll_internal.h>
+#include <_lll_lib_internal.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -269,16 +269,16 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 
 
 
-uint8_t write_asm(const char* fp,lll_compilation_data_t* c_dt,lll_error_t* e){
+uint8_t write_asm(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (fl&FLAG_VERBOSE){
 		PRINT_STR_CONST("Writing Object to File '");
-		print_str(fp);
+		print_str(o_fp);
 		PRINT_STR_CONST("'...\n");
 	}
-	FILE* f=fopen(fp,"wb");
-	if (!f){// lgtm [cpp/path-injection]
+	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
+	if (!f){
 		PRINT_STR_CONST("Unable to Open Output File '");
-		print_str(fp);
+		print_str(o_fp);
 		PRINT_STR_CONST("'\n");
 		return 0;
 	}
@@ -297,23 +297,23 @@ uint8_t write_asm(const char* fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 
 
 
-uint8_t write_c(const char* fp,lll_compilation_data_t* c_dt,lll_error_t* e){
+uint8_t write_c(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 	PRINT_STR_CONST("C Code Generation Unimplemented\n");
 	return 0;
 }
 
 
 
-uint8_t write_lllc(const char* fp,lll_compilation_data_t* c_dt,lll_error_t* e){
+uint8_t write_lllc(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (fl&FLAG_VERBOSE){
 		PRINT_STR_CONST("Writing Object to File '");
-		print_str(fp);
+		print_str(o_fp);
 		PRINT_STR_CONST("'...\n");
 	}
-	FILE* f=fopen(fp,"wb");
+	FILE* f=fopen(o_fp,"wb");
 	if (!f){// lgtm [cpp/path-injection]
 		PRINT_STR_CONST("Unable to Open Output File '");
-		print_str(fp);
+		print_str(o_fp);
 		PRINT_STR_CONST("'\n");
 		return 0;
 	}

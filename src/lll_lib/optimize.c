@@ -1,5 +1,5 @@
 #include <lll_lib.h>
-#include <_lll_internal.h>
+#include <_lll_lib_internal.h>
 #include <stdint.h>
 
 
@@ -62,7 +62,7 @@ uint32_t _optimize_object_internal(lll_object_t* o,lll_error_t* e){
 				}
 				if (!l){
 					o->t=LLL_OBJECT_TYPE_NIL;
-					for (uint32_t i=sizeof(lll_object_t);i<sizeof(lll_operation_list_object_t);i+=sizeof(lll_object_type_t)){
+					for (uint32_t i=sizeof(lll_object_t);i<sizeof(lll_operation_list_object_t);i+=sizeof(lll_object_type_t)){// lgtm [cpp/constant-comparison]
 						LLL_SET_OBJECT_NOP(o,i);
 					}
 					return off+eoff;

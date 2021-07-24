@@ -1,5 +1,5 @@
-#ifndef __LLL_INTERNAL_H__
-#define __LLL_INTERNAL_H__ 1
+#ifndef ___LLL_LIB_INTERNAL_H__
+#define ___LLL_LIB_INTERNAL_H__ 1
 #ifdef _MSC_VER
 #include <intrin.h>
 #include <immintrin.h>
