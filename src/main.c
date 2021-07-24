@@ -22,7 +22,7 @@
 
 
 
-#define PRINT_STR_CONST(s) fwrite((void*)(s),sizeof(char),sizeof((s))/sizeof(char)-1,stdout)
+#define PRINT_STATIC_STR(s) fwrite((void*)(s),sizeof(char),sizeof((s))/sizeof(char)-1,stdout)
 #define _STR(x) #x
 #define STR(x) _STR(x)
 #define COMPILER_STACK_SIZE 65536
@@ -114,9 +114,9 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 			}
 			*(bf+j)=0;
 			if (fl&FLAG_VERBOSE){
-				PRINT_STR_CONST("Trying to Open File '");
+				PRINT_STATIC_STR("Trying to Open File '");
 				print_str(bf);
-				PRINT_STR_CONST("'...\n");
+				PRINT_STATIC_STR("'...\n");
 			}
 			FILE* tf=fopen(bf,"rb");// lgtm [cpp/path-injection]
 			if (tf){
@@ -128,14 +128,14 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 					}
 				}
 				if (fl&FLAG_VERBOSE){
-					PRINT_STR_CONST("Found File '");
+					PRINT_STATIC_STR("Found File '");
 					print_str(f_fp);
-					PRINT_STR_CONST("'\n");
+					PRINT_STATIC_STR("'\n");
 				}
 				*f=tf;
 				lll_create_input_data_stream(*f,is);
 				if (fl&FLAG_VERBOSE){
-					PRINT_STR_CONST("Trying to Load File as Compiled Object...\n");
+					PRINT_STATIC_STR("Trying to Load File as Compiled Object...\n");
 				}
 				lll_error_t e;
 				if (!lll_load_compiled_object(is,c_dt,&e)){
@@ -143,7 +143,7 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 					lll_free_import_data(&(c_dt->im));
 					if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
 						if (fl&FLAG_VERBOSE){
-							PRINT_STR_CONST("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
+							PRINT_STATIC_STR("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
 						}
 						lll_create_input_data_stream(*f,is);
 						lll_init_compilation_data(f_fp,is,c_dt);
@@ -156,7 +156,7 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 							putchar('\n');
 						}
 						if (fl&FLAG_VERBOSE){
-							PRINT_STR_CONST("File Successfully Read.\n");
+							PRINT_STATIC_STR("File Successfully Read.\n");
 						}
 						if (fl&FLAG_MERGE_IMPORTS){
 							for (uint32_t l=0;l<c_dt->im.l;l++){
@@ -191,15 +191,15 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 								}
 								lll_load_stack_context(&s_ctx);
 								if (fl&FLAG_VERBOSE){
-									PRINT_STR_CONST("Merging Module '");
+									PRINT_STATIC_STR("Merging Module '");
 									print_str(n_f_fp);
-									PRINT_STR_CONST("' ('");
+									PRINT_STATIC_STR("' ('");
 									print_str(nm);
-									PRINT_STR_CONST("', index ");
+									PRINT_STATIC_STR("', index ");
 									print_int(l);
-									PRINT_STR_CONST(") into '");
+									PRINT_STATIC_STR(") into '");
 									print_str(f_fp);
-									PRINT_STR_CONST("'...\n");
+									PRINT_STATIC_STR("'...\n");
 								}
 								if (!lll_merge_import(c_dt,l,&n_c_dt,&e)){
 									lll_free_file_path_data(&(n_c_dt.fp_dt));
@@ -220,13 +220,13 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 								fpl++;
 								void* tmp=realloc(fp,fpl*sizeof(char*));
 								if (!tmp){
-									PRINT_STR_CONST("Unable to Allocate Space for File Path Array\n");
+									PRINT_STATIC_STR("Unable to Allocate Space for File Path Array\n");
 									return 0;
 								}
 								fp=tmp;
 								char* d=malloc(((c_dt->im.dt+l)->sz+1)*sizeof(char));
 								if (!d){
-									PRINT_STR_CONST("Unable to Allocate Space for Module Name\n");
+									PRINT_STATIC_STR("Unable to Allocate Space for Module Name\n");
 									return 0;
 								}
 								char* s=(c_dt->im.dt+l)->nm;
@@ -250,7 +250,7 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 						putchar('\n');
 					}
 					if (fl&FLAG_VERBOSE){
-						PRINT_STR_CONST("File Successfully Read.\n");
+						PRINT_STATIC_STR("File Successfully Read.\n");
 					}
 				}
 				return 1;
@@ -261,9 +261,9 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 		*(bf+j)=*(i_fp+i);
 		j++;
 	}
-	PRINT_STR_CONST("Unable to Find File '");
+	PRINT_STATIC_STR("Unable to Find File '");
 	print_str(f_nm);
-	PRINT_STR_CONST("'\n");
+	PRINT_STATIC_STR("'\n");
 	return 0;
 }
 
@@ -271,15 +271,15 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 
 uint8_t write_asm(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (fl&FLAG_VERBOSE){
-		PRINT_STR_CONST("Writing Object to File '");
+		PRINT_STATIC_STR("Writing Object to File '");
 		print_str(o_fp);
-		PRINT_STR_CONST("'...\n");
+		PRINT_STATIC_STR("'...\n");
 	}
 	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
 	if (!f){
-		PRINT_STR_CONST("Unable to Open Output File '");
+		PRINT_STATIC_STR("Unable to Open Output File '");
 		print_str(o_fp);
-		PRINT_STR_CONST("'\n");
+		PRINT_STATIC_STR("'\n");
 		return 0;
 	}
 	lll_output_data_stream_t os;
@@ -289,7 +289,7 @@ uint8_t write_asm(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 		return 0;
 	}
 	if (fl&FLAG_VERBOSE){
-		PRINT_STR_CONST("File Written Successfully.\n");
+		PRINT_STATIC_STR("File Written Successfully.\n");
 	}
 	fclose(f);
 	return 1;
@@ -298,7 +298,7 @@ uint8_t write_asm(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 
 
 uint8_t write_c(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
-	PRINT_STR_CONST("C Code Generation Unimplemented\n");
+	PRINT_STATIC_STR("C Code Generation Unimplemented\n");
 	return 0;
 }
 
@@ -306,15 +306,15 @@ uint8_t write_c(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 
 uint8_t write_lllc(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (fl&FLAG_VERBOSE){
-		PRINT_STR_CONST("Writing Object to File '");
+		PRINT_STATIC_STR("Writing Object to File '");
 		print_str(o_fp);
-		PRINT_STR_CONST("'...\n");
+		PRINT_STATIC_STR("'...\n");
 	}
 	FILE* f=fopen(o_fp,"wb");
 	if (!f){// lgtm [cpp/path-injection]
-		PRINT_STR_CONST("Unable to Open Output File '");
+		PRINT_STATIC_STR("Unable to Open Output File '");
 		print_str(o_fp);
-		PRINT_STR_CONST("'\n");
+		PRINT_STATIC_STR("'\n");
 		return 0;
 	}
 	lll_output_data_stream_t os;
@@ -324,7 +324,7 @@ uint8_t write_lllc(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e)
 		return 0;
 	}
 	if (fl&FLAG_VERBOSE){
-		PRINT_STR_CONST("File Written Successfully.\n");
+		PRINT_STATIC_STR("File Written Successfully.\n");
 	}
 	fclose(f);
 	return 1;
@@ -338,7 +338,7 @@ int main(int argc,const char** argv){
 	fl=0;
 	i_fp=malloc(sizeof(char));
 	if (!i_fp){
-		PRINT_STR_CONST("Unable to Allocate Space for Include File Path Array\n");
+		PRINT_STATIC_STR("Unable to Allocate Space for Include File Path Array\n");
 		return 1;
 	}
 	*i_fp=0;
@@ -388,7 +388,7 @@ int main(int argc,const char** argv){
 				i_fpl+=sz+(*(e+sz-1)!='\\'&&*(e+sz-1)!='/'?2:1);
 				void* tmp=realloc(i_fp,i_fpl*sizeof(char));
 				if (!tmp){
-					PRINT_STR_CONST("Unable to Allocate Space for Include File Path Array\n");
+					PRINT_STATIC_STR("Unable to Allocate Space for Include File Path Array\n");
 					goto _error;
 				}
 				i_fp=tmp;
@@ -411,7 +411,7 @@ int main(int argc,const char** argv){
 		}
 		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||cmp_str(e,"--output")){
 			if (o_fp){
-				PRINT_STR_CONST("Multplie Output Files Supplied\n");
+				PRINT_STATIC_STR("Multplie Output Files Supplied\n");
 				goto _help;
 			}
 			i++;
@@ -448,9 +448,9 @@ int main(int argc,const char** argv){
 		}
 		else if (*e=='-'){
 _unkown_switch:
-			PRINT_STR_CONST("Unknown Switch '");
+			PRINT_STATIC_STR("Unknown Switch '");
 			print_str((char*)e);
-			PRINT_STR_CONST("'\n");
+			PRINT_STATIC_STR("'\n");
 			goto _help;
 		}
 		else{
@@ -458,7 +458,7 @@ _read_file_argument:
 			fpl++;
 			void* tmp=realloc(fp,fpl*sizeof(char*));
 			if (!tmp){
-				PRINT_STR_CONST("Unable to Allocate Space for File Path Array\n");
+				PRINT_STATIC_STR("Unable to Allocate Space for File Path Array\n");
 				goto _error;
 			}
 			fp=tmp;
@@ -467,63 +467,63 @@ _read_file_argument:
 	}
 	im_fpl=fpl;
 	if (!(fl&FLAG_NO_LOGO)){
-		PRINT_STR_CONST("lll (Lisp Like Language) "STR(LLL_VERSION_MAJOR)"."STR(LLL_VERSION_MINOR)"."STR(LLL_VERSION_PATCH)" ("LLL_VERSION_BUILD_DATE", "LLL_VERSION_BUILD_TIME")\n");
+		PRINT_STATIC_STR("lll (Lisp Like Language) "STR(LLL_VERSION_MAJOR)"."STR(LLL_VERSION_MINOR)"."STR(LLL_VERSION_PATCH)" ("LLL_VERSION_BUILD_DATE", "LLL_VERSION_BUILD_TIME")\n");
 	}
 	if (fl&FLAG_VERBOSE){
-		PRINT_STR_CONST("Configuration:\n  Optimization Level:\n");
+		PRINT_STATIC_STR("Configuration:\n  Optimization Level:\n");
 		if (ol==OPTIMIZE_LEVEL_NO_OPTIMIZE){
-			PRINT_STR_CONST("    No Optimization\n");
+			PRINT_STATIC_STR("    No Optimization\n");
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
-			PRINT_STR_CONST("    Padding Reduction\n");
+			PRINT_STATIC_STR("    Padding Reduction\n");
 		}
 		if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
-			PRINT_STR_CONST("    Global Optimization\n");
+			PRINT_STATIC_STR("    Global Optimization\n");
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
-			PRINT_STR_CONST("    Debug Data Stripping\n");
+			PRINT_STATIC_STR("    Debug Data Stripping\n");
 		}
 		if (fl&FLAG_GENERATE_ASSEMBLY){
-			PRINT_STR_CONST("  Assembly Generation Mode\n");
+			PRINT_STATIC_STR("  Assembly Generation Mode\n");
 		}
 		if (fl&FLAG_GENERATE_C){
-			PRINT_STR_CONST("  C Soruce Code Generation Mode\n");
+			PRINT_STATIC_STR("  C Soruce Code Generation Mode\n");
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-			PRINT_STR_CONST("  Compiled Object Generation Mode\n");
+			PRINT_STATIC_STR("  Compiled Object Generation Mode\n");
 		}
 		if (fl&FLAG_EXPAND_PATH){
-			PRINT_STR_CONST("  Path Expand Mode\n");
+			PRINT_STATIC_STR("  Path Expand Mode\n");
 		}
 		if (fl&FLAG_HELP){
-			PRINT_STR_CONST("  Help Print Mode\n");
+			PRINT_STATIC_STR("  Help Print Mode\n");
 		}
 		if (!(fl&FLAG_NO_LOGO)){
-			PRINT_STR_CONST("  Compiler Logo Mode\n");
+			PRINT_STATIC_STR("  Compiler Logo Mode\n");
 		}
 		if (fl&FLAG_MERGE_IMPORTS){
-			PRINT_STR_CONST("  Import Merge Mode\n");
+			PRINT_STATIC_STR("  Import Merge Mode\n");
 		}
 		if (fl&FLAG_PRINT_OBJECT){
-			PRINT_STR_CONST("  Object Print Mode\n");
+			PRINT_STATIC_STR("  Object Print Mode\n");
 		}
 		if (!(fl&FLAG_NO_RUN)){
-			PRINT_STR_CONST("  Program Run Mode\n");
+			PRINT_STATIC_STR("  Program Run Mode\n");
 		}
 		if (fl&FLAG_VERBOSE){
-			PRINT_STR_CONST("  Verbose Mode\n");
+			PRINT_STATIC_STR("  Verbose Mode\n");
 		}
-		PRINT_STR_CONST("Include Path: \n  - '");
+		PRINT_STATIC_STR("Include Path: \n  - '");
 		for (uint32_t i=0;i<i_fpl;i++){
 			if (*(i_fp+i)){
 				putchar(*(i_fp+i));
 			}
 			else{
 				if (i+1<i_fpl){
-					PRINT_STR_CONST("'\n  - '");
+					PRINT_STATIC_STR("'\n  - '");
 				}
 				else{
-					PRINT_STR_CONST("'\n");
+					PRINT_STATIC_STR("'\n");
 				}
 			}
 		}
@@ -532,7 +532,7 @@ _read_file_argument:
 		goto _help;
 	}
 	if (!fpl){
-		PRINT_STR_CONST("No Input Files Supplied\n");
+		PRINT_STATIC_STR("No Input Files Supplied\n");
 		goto _help;
 	}
 	for (uint32_t j=0;j<fpl;j++){
@@ -544,7 +544,7 @@ _read_file_argument:
 		}
 		if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
 			if (fl&FLAG_VERBOSE){
-				PRINT_STR_CONST("Performing Global Optimization...\n");
+				PRINT_STATIC_STR("Performing Global Optimization...\n");
 			}
 			lll_error_t e;
 			if (!lll_optimize_object(c_dt.h,&e)){
@@ -554,7 +554,7 @@ _read_file_argument:
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
 			if (fl&FLAG_VERBOSE){
-				PRINT_STR_CONST("Removing Debug Data...\n");
+				PRINT_STATIC_STR("Removing Debug Data...\n");
 			}
 			lll_error_t e;
 			if (!lll_remove_object_debug_data(c_dt.h,&e)){
@@ -564,7 +564,7 @@ _read_file_argument:
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
 			if (fl&FLAG_VERBOSE){
-				PRINT_STR_CONST("Removing Object Padding...\n");
+				PRINT_STATIC_STR("Removing Object Padding...\n");
 			}
 			lll_error_t e;
 			if (!lll_remove_object_padding(&c_dt,c_dt.h,&e)){
@@ -723,7 +723,7 @@ _skip_write:;
 	}
 	return 0;
 _help:
-	PRINT_STR_CONST(HELP_TEXT);
+	PRINT_STATIC_STR(HELP_TEXT);
 _error:
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));
