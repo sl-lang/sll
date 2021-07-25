@@ -269,7 +269,7 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 
 
 
-uint8_t write_asm(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
+uint8_t write_object(const char* o_fp,const lll_compilation_data_t* c_dt,uint8_t m,lll_error_t* e){
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Writing Object to File '");
 		print_str(o_fp);
@@ -284,42 +284,7 @@ uint8_t write_asm(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
 	}
 	lll_output_data_stream_t os;
 	lll_create_output_data_stream(f,&os);
-	if (!lll_write_compiled_object(&os,c_dt,LLL_WRITE_MODE_ASSEMBLY,e)){
-		fclose(f);
-		return 0;
-	}
-	if (fl&FLAG_VERBOSE){
-		PRINT_STATIC_STR("File Written Successfully.\n");
-	}
-	fclose(f);
-	return 1;
-}
-
-
-
-uint8_t write_c(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
-	PRINT_STATIC_STR("C Code Generation Unimplemented\n");
-	return 0;
-}
-
-
-
-uint8_t write_lllc(const char* o_fp,lll_compilation_data_t* c_dt,lll_error_t* e){
-	if (fl&FLAG_VERBOSE){
-		PRINT_STATIC_STR("Writing Object to File '");
-		print_str(o_fp);
-		PRINT_STATIC_STR("'...\n");
-	}
-	FILE* f=fopen(o_fp,"wb");
-	if (!f){// lgtm [cpp/path-injection]
-		PRINT_STATIC_STR("Unable to Open Output File '");
-		print_str(o_fp);
-		PRINT_STATIC_STR("'\n");
-		return 0;
-	}
-	lll_output_data_stream_t os;
-	lll_create_output_data_stream(f,&os);
-	if (!lll_write_compiled_object(&os,c_dt,LLL_WRITE_MODE_RAW,e)){
+	if (!lll_write_compiled_object(&os,c_dt,m,e)){
 		fclose(f);
 		return 0;
 	}
@@ -592,7 +557,7 @@ _read_file_argument:
 						lll_error_t e={
 							LLL_ERROR_UNKNOWN
 						};
-						if (!write_asm(o_fp,&c_dt,&e)){
+						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
@@ -601,7 +566,7 @@ _read_file_argument:
 					}
 					else if (fl&FLAG_GENERATE_C){
 						lll_error_t e;
-						if (!write_c(o_fp,&c_dt,&e)){
+						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_CODE,&e)){
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
@@ -610,7 +575,7 @@ _read_file_argument:
 					}
 					else{
 						lll_error_t e;
-						if (!write_lllc(o_fp,&c_dt,&e)){
+						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_RAW,&e)){
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
@@ -657,7 +622,7 @@ _read_file_argument:
 				lll_error_t e={
 					LLL_ERROR_UNKNOWN
 				};
-				if (!write_asm(bf,&c_dt,&e)){
+				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
 					}
@@ -670,7 +635,7 @@ _read_file_argument:
 				lll_error_t e={
 					LLL_ERROR_UNKNOWN
 				};
-				if (!write_c(bf,&c_dt,&e)){
+				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_CODE,&e)){
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
 					}
@@ -686,7 +651,7 @@ _read_file_argument:
 				lll_error_t e={
 					LLL_ERROR_UNKNOWN
 				};
-				if (!write_lllc(bf,&c_dt,&e)){
+				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_RAW,&e)){
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
 					}

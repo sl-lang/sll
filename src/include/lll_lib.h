@@ -58,11 +58,9 @@
 #define LLL_ERROR_UNKNOWN_IDENTIFIER 29
 #define LLL_ERROR_STRING_REQUIRED 30
 #define LLL_ERROR_NO_STACK 31
-#define LLL_ERROR_STACK_TOO_BIG 32
-#define LLL_ERROR_FAILED_FILE_WRITE 33
-#define LLL_ERROR_DIVISION_BY_ZERO 34
-#define LLL_ERROR_INVALID_FILE_FORMAT 35
-#define LLL_ERROR_INVALID_IMPORT_INDEX 36
+#define LLL_ERROR_DIVISION_BY_ZERO 32
+#define LLL_ERROR_INVALID_FILE_FORMAT 33
+#define LLL_ERROR_INVALID_IMPORT_INDEX 34
 #define LLL_ERROR_ASSERTION 255
 #define LLL_MAX_COMPILATION_ERROR LLL_ERROR_STRING_REQUIRED
 
@@ -135,8 +133,9 @@
 #define LLL_IDENTIFIER_ADD_INDEX(i,j) ((i)+((j)<<4))
 #define LLL_CREATE_IDENTIFIER(i,j) (((i)<<4)|(j))
 
-#define LLL_WRITE_MODE_RAW 0
-#define LLL_WRITE_MODE_ASSEMBLY 1
+#define LLL_WRITE_MODE_ASSEMBLY 0
+#define LLL_WRITE_MODE_CODE 1
+#define LLL_WRITE_MODE_RAW 2
 
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
@@ -214,9 +213,9 @@ typedef struct __LLL_INPUT_DATA_SOURCE{
 
 typedef struct __LLL_OUTPUT_DATA_STREAM{
 	void* ctx;
-	uint8_t (*wcf)(struct __LLL_OUTPUT_DATA_STREAM* os,char c);
-	uint8_t (*wsf)(struct __LLL_OUTPUT_DATA_STREAM* os,const char* s);
-	uint8_t (*wf)(struct __LLL_OUTPUT_DATA_STREAM* os,const uint8_t* bf,size_t sz);
+	void (*wcf)(struct __LLL_OUTPUT_DATA_STREAM* os,char c);
+	void (*wsf)(struct __LLL_OUTPUT_DATA_STREAM* os,const char* s);
+	void (*wf)(struct __LLL_OUTPUT_DATA_STREAM* os,const uint8_t* bf,size_t sz);
 } lll_output_data_stream_t;
 
 

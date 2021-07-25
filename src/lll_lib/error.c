@@ -36,12 +36,6 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			case LLL_ERROR_NO_STACK:
 				printf("No Internal Stack\n");
 				return;
-			case LLL_ERROR_STACK_TOO_BIG:
-				printf("Stack Size Too Big\n");
-				return;
-			case LLL_ERROR_FAILED_FILE_WRITE:
-				printf("Failed to Write to File\n");
-				return;
 			case LLL_ERROR_DIVISION_BY_ZERO:
 				printf("Division By Zero\n");
 				return;

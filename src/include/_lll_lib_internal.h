@@ -19,32 +19,10 @@
 #define __LLL_API_FUNCTION
 #define FORCE_INLINE __inline __forceinline
 #define UNREACHABLE() __assume(0)
-#define PACKED(s) __pragma(pack(push,1)) s __pragma(pack(pop))
-static FORCE_INLINE unsigned int FIND_FIRST_SET_BIT(unsigned int m){
-	unsigned long o;
-	_BitScanForward(&o,m);
-	return o;
-}
-static FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned int m){
-	unsigned long o;
-	_BitScanReverse(&o,m);
-	return o;
-}
-static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
-	unsigned long o;
-	_BitScanReverse64(&o,m);
-	return o;
-}
-#define PARITY16(x) (__popcnt16((x))&1)
 #else
 #define __LLL_API_FUNCTION __attribute__((ms_abi))
 #define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
-#define PACKED(s) s __attribute__((__packed__))
-#define FIND_FIRST_SET_BIT(m) (__builtin_ffs((m))-1)
-#define FIND_LAST_SET_BIT(m) (31-__builtin_clz((m)))
-#define FIND_LAST_SET_BIT64(m) (63-__builtin_clzll((m)))
-#define PARITY16(x) __builtin_parity((x))
 #endif
 
 
@@ -137,153 +115,7 @@ static FORCE_INLINE unsigned int FIND_LAST_SET_BIT64(unsigned __int64 m){
 #define READ_SINGLE_CHAR_OK 0
 #define READ_SINGLE_CHAR_ERROR 1
 
-#define REGISTER_CONST 0
-#define REGISTER_A 1
-#define REGISTER_B 2
-#define REGISTER_C 3
-#define REGISTER_D 4
-#define REGISTER_SI 5
-#define REGISTER_DI 6
-#define REGISTER_R8 7
-#define REGISTER_R9 8
-#define REGISTER_R10 9
-#define REGISTER_R11 10
-#define REGISTER_R12 11
-#define REGISTER_R13 12
-#define REGISTER_R14 13
-#define REGISTER_R15 14
-#define REGISTER_STACK 15
-#define REGISTER_8BIT 0x00
-#define REGISTER_16BIT 0x10
-#define REGISTER_32BIT 0x20
-#define REGISTER_64BIT 0x30
-#define REGISTER_SIZE_MASK 0x30
-#define REGISTER_TEMPORARY 0x40
-#define REGISTER_KNOWN_VALUE 0x80
-#define REGISTER_COPY_IDENTIFIER 0xe0
-#define REGISTER_NONE 0xf0
-#define MIN_REGISTER REGISTER_A
-#define MAX_REGISTER REGISTER_R15
-#define GET_BASE_REGISTER(r) ((r)&0xf)
-#define ALL_REGISTER_AVAIBLE_MASK ((1<<(MAX_REGISTER-MIN_REGISTER+1))-1)
-#define REGISTER_TO_MASK(r) (1<<((r)-MIN_REGISTER))
-#define REGISTER_FROM_BIT_INDEX(r) ((r)+MIN_REGISTER)
-
-#define IDENTIFIER_INDEX_TO_MAP_OFFSET(i,im) (LLL_IDENTIFIER_GET_ARRAY_INDEX((i))+(im)->off[LLL_IDENTIFIER_GET_ARRAY_ID((i))])
-
-#define FUNCTION_NON_VOLATILE_REGISTERS (REGISTER_TO_MASK(REGISTER_A)|REGISTER_TO_MASK(REGISTER_C)|REGISTER_TO_MASK(REGISTER_D)|REGISTER_TO_MASK(REGISTER_R8)|REGISTER_TO_MASK(REGISTER_R9)|REGISTER_TO_MASK(REGISTER_R10)|REGISTER_TO_MASK(REGISTER_R11))
-#define FUNCTION_CALL_REGISTER_COUNT (sizeof(FUNCTION_CALL_REGISTERS)/sizeof(cpu_register_t))
-
-#define COMPARE_UNKNOWN 1
-#define COMPARE_ALWAYS_TRUE 2
-#define COMPARE_ALWAYS_FALSE 3
-#define COMPARE_FIRST_TRUE 4
-
-#define IDENTIFIER_DATA_TYPE_CHAR 1
-#define IDENTIFIER_DATA_TYPE_INT8 2
-#define IDENTIFIER_DATA_TYPE_INT16 4
-#define IDENTIFIER_DATA_TYPE_INT32 8
-#define IDENTIFIER_DATA_TYPE_INT64 16
-#define IDENTIFIER_DATA_TYPE_UINT8 32
-#define IDENTIFIER_DATA_TYPE_UINT16 64
-#define IDENTIFIER_DATA_TYPE_UINT32 128
-#define IDENTIFIER_DATA_TYPE_UINT64 256
-#define IDENTIFIER_DATA_TYPE_FLOAT32 512
-#define IDENTIFIER_DATA_TYPE_FLOAT64 1024
-#define IDENTIFIER_DATA_TYPE_STRING 2048
-#define IDENTIFIER_DATA_TYPE_NIL 4096
-#define IDENTIFIER_DATA_TYPE_FUNCTION 8192
-#define IS_IDENTIFIER_DATA_TYPE_SINGLE(t) (!((t)&((t)-1)))
-
-
-
-typedef uint8_t cpu_register_t;
-
-
-
-typedef uint16_t identifier_data_type_t;
-
-
-
-typedef uint32_t label_t;
-
-
-
-typedef struct __IDENTIFIER_DATA_EXTRA_STRING{
-	uint32_t l;
-	char* ptr;
-} identifier_data_extra_string_t;
-
-
-
-typedef union __IDENTIFIER_DATA_EXTRA{
-	int64_t v;
-	uint32_t st;
-	identifier_data_extra_string_t str;
-	lll_function_index_t fn;
-} identifier_data_extra_t;
-
-
-
-typedef struct __IDENTIFIER_DATA{
-	cpu_register_t r;
-	identifier_data_type_t t;
-	identifier_data_extra_t e;
-	uint32_t sc;
-} identifier_data_t;
-
-
-
-typedef struct __IDENTIFIER_MAP{
-	uint32_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
-	identifier_data_t* dt;
-	uint32_t dtl;
-	uint16_t rm;
-	label_t nl;
-} identifier_map_t;
-
-
-
-typedef struct __STRING_TABLE_ENTRY{
-	uint32_t sz;
-	uint8_t nb;
-	char v[];
-} string_table_entry_t;
-
-
-
-typedef struct __STRING_TABLE{
-	string_table_entry_t** dt;
-	uint32_t l;
-} string_table_t;
-
-
-
-typedef struct __ASSEMBLY_GENERATOR_DATA{
-	identifier_map_t im;
-	string_table_t st;
-	uint32_t n_sc;
-} assembly_generator_data_t;
-
-
-
-typedef struct __EXTENDED_ASSEMBLY_GENERATOR_DATA{
-	assembly_generator_data_t* agd;
-	uint32_t sc;
-} extended_assembly_generator_data_t;
-
-
-
-typedef PACKED(struct __COMPILED_OBJECT_FILE{
-	uint32_t m;
-	uint32_t sz;
-	uint64_t t;
-	uint32_t sil[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	uint32_t ill;
-	uint32_t iml;
-	uint16_t fp_dtl;
-	uint16_t f_dtl;
-}) compiled_object_file_t;
+#define READ_INTEGER_ERROR (-0x8000000000000000ll)
 
 
 
@@ -314,10 +146,6 @@ typedef struct __IMPORT_IDENTIFIER_OFFSET_LIST{
 extern uint8_t* _bf;
 extern uint32_t _bf_off;
 extern uint32_t _bf_sz;
-
-
-
-const static cpu_register_t FUNCTION_CALL_REGISTERS[]={REGISTER_C,REGISTER_D,REGISTER_R8,REGISTER_R9};
 
 
 
