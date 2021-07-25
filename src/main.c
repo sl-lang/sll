@@ -159,14 +159,13 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 							PRINT_STATIC_STR("File Successfully Read.\n");
 						}
 						if (fl&FLAG_MERGE_IMPORTS){
-							for (uint32_t l=0;l<c_dt->im.l;l++){
+							for (lll_import_index_t l=0;l<c_dt->im.l;l++){
 								char nm[MAX_PATH_LENGTH];
-								char* s=(c_dt->im.dt+l)->nm;
-								uint32_t m=0;
-								for (;m<(c_dt->im.dt+l)->sz;m++){
-									*(nm+m)=*(s+m);
+								lll_string_t* s=*(c_dt->st.dt+*(c_dt->im.dt+l));
+								for (lll_string_length_t m=0;m<s->l;m++){
+									nm[m]=s->v[m];
 								}
-								*(nm+m)=0;
+								nm[s->l]=0;
 								lll_stack_context_t s_ctx;
 								lll_save_stack_context(&s_ctx);
 								uint8_t n_st[COMPILER_STACK_SIZE];
@@ -180,10 +179,7 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 										fclose(n_f);
 									}
 									lll_load_stack_context(&s_ctx);
-									lll_free_file_path_data(&(n_c_dt.fp_dt));
-									lll_free_identifier_data(&(n_c_dt.i_dt));
-									lll_free_import_data(&(n_c_dt.im));
-									lll_free_function_data(&(n_c_dt.f_dt));
+									lll_free_compilation_data(&n_c_dt);
 									return 0;
 								}
 								if (n_f){
@@ -202,21 +198,15 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 									PRINT_STATIC_STR("'...\n");
 								}
 								if (!lll_merge_import(c_dt,l,&n_c_dt,&e)){
-									lll_free_file_path_data(&(n_c_dt.fp_dt));
-									lll_free_identifier_data(&(n_c_dt.i_dt));
-									lll_free_import_data(&(n_c_dt.im));
-									lll_free_function_data(&(n_c_dt.f_dt));
+									lll_free_compilation_data(&n_c_dt);
 									lll_print_error(is,&e);
 									return 0;
 								}
-								lll_free_file_path_data(&(n_c_dt.fp_dt));
-								lll_free_identifier_data(&(n_c_dt.i_dt));
-								lll_free_import_data(&(n_c_dt.im));
-								lll_free_function_data(&(n_c_dt.f_dt));
+								lll_free_compilation_data(&n_c_dt);
 							}
 						}
 						else{
-							for (uint32_t l=0;l<c_dt->im.l;l++){
+							for (lll_import_index_t l=0;l<c_dt->im.l;l++){
 								fpl++;
 								void* tmp=realloc(fp,fpl*sizeof(char*));
 								if (!tmp){
@@ -224,17 +214,12 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 									return 0;
 								}
 								fp=tmp;
-								char* d=malloc(((c_dt->im.dt+l)->sz+1)*sizeof(char));
-								if (!d){
-									PRINT_STATIC_STR("Unable to Allocate Space for Module Name\n");
-									return 0;
+								lll_string_t* s=*(c_dt->st.dt+*(c_dt->im.dt+l));
+								char* d=malloc((s->l+1)*sizeof(char));
+								for (lll_string_length_t m=0;m<s->l;m++){
+									*(d+m)=s->v[m];
 								}
-								char* s=(c_dt->im.dt+l)->nm;
-								uint32_t m=0;
-								for (;m<(c_dt->im.dt+l)->sz;m++){
-									*(d+m)=*(s+m);
-								}
-								*(d+m)=0;
+								*(d+s->l)=0;
 								*(fp+fpl-1)=d;
 							}
 						}
@@ -673,10 +658,7 @@ _skip_write:;
 		}
 		fclose(f);
 		f=NULL;
-		lll_free_file_path_data(&(c_dt.fp_dt));
-		lll_free_identifier_data(&(c_dt.i_dt));
-		lll_free_import_data(&(c_dt.im));
-		lll_free_function_data(&(c_dt.f_dt));
+		lll_free_compilation_data(&c_dt);
 	}
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));
@@ -698,10 +680,7 @@ _error:
 	if (fp){
 		free(fp);
 	}
-	lll_free_file_path_data(&(c_dt.fp_dt));
-	lll_free_identifier_data(&(c_dt.i_dt));
-	lll_free_import_data(&(c_dt.im));
-	lll_free_function_data(&(c_dt.f_dt));
+	lll_free_compilation_data(&c_dt);
 	if (f){
 		fclose(f);
 	}

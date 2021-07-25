@@ -119,37 +119,46 @@
 
 
 
+typedef uint16_t scope_data_mask_length_t;
+
+
+
 typedef struct __SCOPE_DATA{
 	uint64_t* m;
-	uint32_t l_sc;
-	uint16_t ml;
+	lll_scope_t l_sc;
+	scope_data_mask_length_t ml;
 } scope_data_t;
 
 
 
 typedef struct __IMPORT_DATA{
-	uint32_t i;
-	uint32_t off;
+	lll_import_index_t i;
+	lll_stack_offset_t off;
 	uint64_t b_off;
 	uint8_t rm;
 } import_data_t;
 
 
 
-typedef struct __IMPORT_IDENTIFIER_OFFSET_LIST{
-	uint32_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
-	uint16_t dbg_off;
-} import_identifier_offset_list_t;
+typedef struct __IMPORT_MODULE_DATA{
+	lll_identifier_list_length_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
+	lll_file_path_index_t dbg_off;
+	lll_string_index_t* sm;
+} import_module_data_t;
 
 
 
 extern uint8_t* _bf;
-extern uint32_t _bf_off;
-extern uint32_t _bf_sz;
+extern lll_stack_offset_t _bf_off;
+extern lll_stack_offset_t _bf_sz;
 
 
 
-uint32_t _get_object_size(const lll_object_t* o);
+lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const char* dt,lll_string_length_t l);
+
+
+
+lll_stack_offset_t _get_object_size(const lll_object_t* o);
 
 
 

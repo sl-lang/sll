@@ -29,8 +29,8 @@ void _print_int64(int64_t v,FILE* f){
 
 
 
-uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f){
-	uint32_t eoff=0;
+lll_stack_offset_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f){
+	lll_stack_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff+=sizeof(lll_object_type_t);
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
@@ -102,11 +102,9 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 		case LLL_OBJECT_TYPE_STRING:
 			{
 				fputc('"',f);
-				lll_string_length_t ln=((lll_string_object_t*)o)->ln;
-				char* str=((lll_string_object_t*)o)->v;
-				while (ln){
-					ln--;
-					char c=*str;
+				lll_string_t* s=*(c_dt->st.dt+((lll_string_object_t*)o)->i);
+				for (lll_string_length_t i=0;i<s->l;i++){
+					char c=s->v[i];
 					if (c=='\''||c=='"'||c=='\\'){
 						fputc('\\',f);
 					}
@@ -137,30 +135,26 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 						c=(c&0xf)+((c&0xf)>9?87:48);
 					}
 					fputc(c,f);
-					str++;
 				}
 				fputc('"',f);
-				return sizeof(lll_string_object_t)+((lll_string_object_t*)o)->ln+eoff;
+				return sizeof(lll_string_object_t)+eoff;
 			}
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				lll_identifier_index_t i=((lll_identifier_object_t*)o)->idx;
-				uint32_t j=LLL_IDENTIFIER_GET_ARRAY_ID(i);
+				lll_identifier_list_length_t j=LLL_IDENTIFIER_GET_ARRAY_ID(i);
 				if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					lll_identifier_t* e=*(c_dt->i_dt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i));
-					char* s=e->v;
-					for (uint32_t k=0;k<e->sz;k++){
-						fputc(*s,f);
-						s++;
+					lll_string_t* s=*(c_dt->st.dt+(c_dt->i_dt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i);
+					for (lll_string_length_t k=0;k<s->l;k++){
+						fputc(s->v[k],f);
 					}
 					fputc('$',f);
-					_print_int64(e->sc,f);
+					_print_int64((c_dt->i_dt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
 				}
 				else{
-					char* s=(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->v;
-					for (uint32_t k=0;k<j+1;k++){
-						fputc(*s,f);
-						s++;
+					char* s=(*(c_dt->st.dt+(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i))->v;
+					for (lll_string_length_t k=0;k<j+1;k++){
+						fputc(*(s+k),f);
 					}
 					fputc('$',f);
 					_print_int64((c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
@@ -188,7 +182,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 		case LLL_OBJECT_TYPE_FUNC:
 			{
 				fprintf(f,",,,");
-				uint32_t off=sizeof(lll_function_object_t);
+				lll_stack_offset_t off=sizeof(lll_function_object_t);
 				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
 				while (l){
 					l--;
@@ -263,9 +257,9 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 				for (lll_arg_count_t i=0;i<io->ac;i++){
 					fputc(' ',f);
 					fputc('"',f);
-					lll_import_data_path_t* dt=c_dt->im.dt+io->idx[i];
-					for (uint32_t i=0;i<dt->sz;i++){
-						fputc(*(dt->nm+i),f);
+					lll_string_t* dt=*(c_dt->st.dt+*(c_dt->im.dt+io->idx[i]));
+					for (lll_string_length_t i=0;i<dt->l;i++){
+						fputc(dt->v[i],f);
 					}
 					fputc('"',f);
 				}
@@ -275,7 +269,7 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				fputc('{',f);
-				uint32_t off=sizeof(lll_operation_list_object_t);
+				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
 				lll_statement_count_t sc=((lll_operation_list_object_t*)o)->sc;
 				for (lll_statement_count_t i=0;i<sc;i++){
 					if (i){
@@ -289,13 +283,13 @@ uint32_t _print_object_internal(lll_compilation_data_t* c_dt,const lll_object_t*
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				fprintf(f,"[%s:%u:%u]",(c_dt->fp_dt.dt+dbg->fpi)->fp,dbg->ln,dbg->cn);
+				fprintf(f,"[%s:%u:%u]",(*(c_dt->st.dt+*(c_dt->fp_dt.dt+dbg->fpi)))->v,dbg->ln,dbg->cn);
 				return sizeof(lll_debug_object_t)+eoff+_print_object_internal(c_dt,LLL_GET_DEBUG_OBJECT_CHILD(dbg),f);
 			}
 		default:
 			UNREACHABLE();
 	}
-	uint32_t off=sizeof(lll_operator_object_t);
+	lll_stack_offset_t off=sizeof(lll_operator_object_t);
 	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
 	while (l){
 		l--;

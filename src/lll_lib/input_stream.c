@@ -26,7 +26,7 @@ uint8_t _input_data_stream_file_read_buffer(lll_input_data_stream_t* is,uint8_t*
 
 
 
-void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,uint32_t lp){
+void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,lll_file_offset_t lp){
 	FILE* f=(FILE*)(is->ctx);
 	fseek(f,lp,SEEK_SET);
 	int c=fgetc(f);

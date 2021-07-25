@@ -149,13 +149,9 @@
 #define LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,s) ((os)->wsf((os),(s)))
 #define LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,bf,sz) ((os)->wf((os),(bf),(sz)))
 
-
-
-typedef uint8_t lll_return_t;
-
-
-
-typedef uint8_t lll_object_type_t;
+#define LLL_MAX_SCOPE UINT32_MAX
+#define LLL_MAX_STACK_OFFSET UINT32_MAX
+#define LLL_MAX_STRING_INDEX UINT32_MAX
 
 
 
@@ -167,7 +163,19 @@ typedef uint8_t lll_error_type_t;
 
 
 
-typedef uint16_t lll_statement_count_t;
+typedef uint8_t lll_object_type_t;
+
+
+
+typedef uint8_t lll_return_t;
+
+
+
+typedef uint8_t lll_string_checksum_t;
+
+
+
+typedef uint16_t lll_file_path_index_t;
 
 
 
@@ -175,15 +183,7 @@ typedef uint16_t lll_function_index_t;
 
 
 
-typedef uint32_t lll_string_length_t;
-
-
-
-typedef uint32_t lll_identifier_index_t;
-
-
-
-typedef uint32_t lll_import_index_t;
+typedef uint16_t lll_statement_count_t;
 
 
 
@@ -191,10 +191,50 @@ typedef int32_t lll_return_code_t;
 
 
 
+typedef uint32_t lll_column_number_t;
+
+
+
+typedef uint32_t lll_file_offset_t;
+
+
+
+typedef uint32_t lll_identifier_index_t;
+
+
+
+typedef uint32_t lll_identifier_list_length_t;
+
+
+
+typedef uint32_t lll_import_index_t;
+
+
+
+typedef uint32_t lll_line_number_t;
+
+
+
+typedef uint32_t lll_scope_t;
+
+
+
+typedef uint32_t lll_stack_offset_t;
+
+
+
+typedef uint32_t lll_string_index_t;
+
+
+
+typedef uint32_t lll_string_length_t;
+
+
+
 typedef struct __LLL_STACK_CONTEXT{
 	uint8_t* ptr;
-	uint32_t off;
-	uint32_t sz;
+	lll_stack_offset_t off;
+	lll_stack_offset_t sz;
 } lll_stack_context_t;
 
 
@@ -203,10 +243,10 @@ typedef struct __LLL_INPUT_DATA_SOURCE{
 	void* ctx;
 	int (*rf)(struct __LLL_INPUT_DATA_SOURCE* is);
 	uint8_t (*rbf)(struct __LLL_INPUT_DATA_SOURCE* is,uint8_t* bf,uint32_t sz);
-	void (*rlf)(struct __LLL_INPUT_DATA_SOURCE* is,uint32_t lp);
-	uint32_t _lc;
-	uint32_t _off;
-	uint32_t _loff;
+	void (*rlf)(struct __LLL_INPUT_DATA_SOURCE* is,lll_file_offset_t lp);
+	lll_line_number_t _lc;
+	lll_file_offset_t _off;
+	lll_file_offset_t _loff;
 } lll_input_data_stream_t;
 
 
@@ -249,8 +289,7 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_FLOAT_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_STRING_OBJECT{
 	lll_object_type_t t;
-	lll_string_length_t ln;
-	char v[];
+	lll_string_index_t i;
 } lll_string_object_t;
 
 
@@ -294,74 +333,52 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OPERATION_LIST_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_DEBUG_OBJECT{
 	lll_object_type_t t;
-	uint16_t fpi;
-	uint32_t ln;
-	uint32_t cn;
-	uint32_t ln_off;
+	lll_file_path_index_t fpi;
+	lll_line_number_t ln;
+	lll_column_number_t cn;
+	lll_file_offset_t ln_off;
 } lll_debug_object_t;
 
 
 
-typedef struct __LLL_FILE_PATH{
-	char fp[512];
-	uint16_t l;
-} lll_file_path_t;
-
-
-
 typedef struct __LLL_FILE_PATH_DATA{
-	lll_file_path_t* dt;
-	uint16_t l;
+	lll_string_index_t* dt;
+	lll_file_path_index_t l;
 } lll_file_path_data_t;
 
 
 
-typedef struct __LLL_SMALL_IDENTIFIER{
-	char* v;
-	uint32_t sc;
-} lll_small_identifier_t;
+typedef struct __LLL_IDENTIFIER{
+	lll_scope_t sc;
+	lll_string_index_t i;
+} lll_identifier_t;
 
 
 
 typedef struct __LLL_IDENTIFIER_LIST{
-	lll_small_identifier_t* dt;
-	uint32_t l;
+	lll_identifier_t* dt;
+	lll_identifier_list_length_t l;
 } lll_identifier_list_t;
-
-
-
-typedef struct __LLL_IDENTIFIER{
-	uint32_t sz;
-	uint32_t sc;
-	char v[];
-} lll_identifier_t;
 
 
 
 typedef struct __LLL_IDENTIFIER_DATA{
 	lll_identifier_list_t s[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	lll_identifier_t** il;
-	uint32_t ill;
+	lll_identifier_t* il;
+	lll_identifier_list_length_t ill;
 } lll_identifier_data_t;
 
 
 
-typedef struct __LLL_IMPORT_DATA_PATH{
-	char* nm;
-	uint32_t sz;
-} lll_import_data_path_t;
-
-
-
 typedef struct __LLL_IMPORT_DATA{
-	lll_import_data_path_t* dt;
+	lll_string_index_t* dt;
 	lll_import_index_t l;
 } lll_import_data_t;
 
 
 
 typedef struct __LLL_FUNCTION{
-	uint32_t off;
+	lll_stack_offset_t off;
 	lll_arg_count_t al;
 	lll_identifier_index_t a[];
 } lll_function_t;
@@ -375,6 +392,21 @@ typedef struct __LLL_FUNCTION_DATA{
 
 
 
+typedef struct __LLL_STRING{
+	lll_string_length_t l;
+	lll_string_checksum_t c;
+	char v[];
+} lll_string_t;
+
+
+
+typedef struct __LLL_STRING_TABLE{
+	lll_string_index_t l;
+	lll_string_t** dt;
+} lll_string_table_t;
+
+
+
 typedef struct __LLL_COMPILATION_DATA{
 	lll_file_path_data_t fp_dt;
 	lll_input_data_stream_t* is;
@@ -383,14 +415,15 @@ typedef struct __LLL_COMPILATION_DATA{
 	lll_identifier_data_t i_dt;
 	lll_import_data_t im;
 	lll_function_data_t f_dt;
-	uint32_t _n_sc_id;
+	lll_string_table_t st;
+	lll_scope_t _n_sc_id;
 } lll_compilation_data_t;
 
 
 
 typedef struct __LLL_ERROR_DATA_RANGE{
-	uint32_t off;
-	uint32_t sz;
+	lll_file_offset_t off;
+	lll_file_offset_t sz;
 } lll_error_data_range_t;
 
 
@@ -398,7 +431,7 @@ typedef struct __LLL_ERROR_DATA_RANGE{
 typedef union __LLL_ERROR_DATA{
 	char str[256];
 	lll_error_data_range_t r;
-	uint32_t im_i;
+	lll_import_index_t im_i;
 } lll_error_data_t;
 
 
@@ -418,6 +451,10 @@ __LLL_IMPORT_EXPORT void lll_create_output_data_stream(FILE* f,lll_output_data_s
 
 
 
+__LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt);
+
+
+
 __LLL_IMPORT_EXPORT void lll_free_file_path_data(lll_file_path_data_t* fp_dt);
 
 
@@ -431,6 +468,10 @@ __LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt);
 
 
 __LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im);
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_string_table(lll_string_table_t* st);
 
 
 
@@ -450,7 +491,7 @@ __LLL_IMPORT_EXPORT void lll_load_stack_context(const lll_stack_context_t* ctx);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,uint32_t im_i,lll_compilation_data_t* im,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,lll_import_index_t im_i,lll_compilation_data_t* im,lll_error_t* e);
 
 
 
@@ -490,11 +531,11 @@ __LLL_IMPORT_EXPORT void lll_save_stack_context(lll_stack_context_t* ctx);
 
 
 
-__LLL_IMPORT_EXPORT void lll_set_internal_stack(uint8_t* bf,uint32_t sz);
+__LLL_IMPORT_EXPORT void lll_set_internal_stack(uint8_t* bf,lll_stack_offset_t sz);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt,uint8_t f,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt,uint8_t m,lll_error_t* e);
 
 
 

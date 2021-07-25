@@ -75,11 +75,8 @@ uint8_t _read_object(lll_input_data_stream_t* is){
 			_bf_off+=sizeof(lll_float_object_t);
 			return 1;
 		case LLL_OBJECT_TYPE_STRING:
-			CHECK_ERROR2(is,o,lll_string_object_t,ln,lll_string_length_t);
-			if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(((lll_string_object_t*)o)->v),((lll_string_object_t*)o)->ln*sizeof(char))){
-				return 0;
-			}
-			_bf_off+=sizeof(lll_string_object_t)+((lll_string_object_t*)o)->ln*sizeof(char);
+			CHECK_ERROR2(is,o,lll_string_object_t,i,lll_string_index_t);
+			_bf_off+=sizeof(lll_string_object_t);
 			return 1;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			CHECK_ERROR2(is,o,lll_identifier_object_t,idx,lll_identifier_index_t);
@@ -131,10 +128,10 @@ uint8_t _read_object(lll_input_data_stream_t* is){
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			{
-				CHECK_ERROR2(is,o,lll_debug_object_t,fpi,uint16_t);
-				CHECK_ERROR2(is,o,lll_debug_object_t,ln,uint32_t);
-				CHECK_ERROR2(is,o,lll_debug_object_t,cn,uint32_t);
-				CHECK_ERROR2(is,o,lll_debug_object_t,ln_off,uint32_t);
+				CHECK_ERROR2(is,o,lll_debug_object_t,fpi,lll_file_path_index_t);
+				CHECK_ERROR2(is,o,lll_debug_object_t,ln,lll_line_number_t);
+				CHECK_ERROR2(is,o,lll_debug_object_t,cn,lll_column_number_t);
+				CHECK_ERROR2(is,o,lll_debug_object_t,ln_off,lll_file_offset_t);
 				_bf_off+=sizeof(lll_debug_object_t);
 				return _read_object(is);
 			}
@@ -167,66 +164,38 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 	}
 	c_dt->is=NULL;
 	CHECK_ERROR(is,c_dt->tm,uint64_t,e);
-	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		CHECK_ERROR(is,c_dt->i_dt.s[i].l,uint32_t,e);
+	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		CHECK_ERROR(is,c_dt->i_dt.s[i].l,lll_identifier_list_length_t,e);
 	}
-	CHECK_ERROR(is,c_dt->i_dt.ill,uint32_t,e);
+	CHECK_ERROR(is,c_dt->i_dt.ill,lll_identifier_list_length_t,e);
 	CHECK_ERROR(is,c_dt->im.l,lll_import_index_t,e);
-	CHECK_ERROR(is,c_dt->fp_dt.l,uint16_t,e);
+	CHECK_ERROR(is,c_dt->fp_dt.l,lll_function_index_t,e);
 	CHECK_ERROR(is,c_dt->f_dt.l,lll_function_index_t,e);
-	c_dt->fp_dt.dt=malloc(c_dt->fp_dt.l*sizeof(lll_file_path_t));
-	for (uint32_t i=0;i<c_dt->fp_dt.l;i++){
-		lll_file_path_t* ifp=c_dt->fp_dt.dt+i;
-		CHECK_ERROR(is,ifp->l,uint32_t,e);
-		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(ifp->fp),ifp->l*sizeof(char))){
-			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
-			return LLL_RETURN_ERROR;
-		}
-		ifp->fp[ifp->l]=0;
+	CHECK_ERROR(is,c_dt->st.l,lll_string_index_t,e);
+	c_dt->fp_dt.dt=malloc(c_dt->fp_dt.l*sizeof(lll_string_index_t));
+	for (lll_function_index_t i=0;i<c_dt->fp_dt.l;i++){
+		CHECK_ERROR(is,*(c_dt->fp_dt.dt+i),lll_string_index_t,e);
 	}
-	for (uint32_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		c_dt->i_dt.s[i].dt=malloc(c_dt->i_dt.s[i].l*sizeof(lll_small_identifier_t));
-		for (uint32_t j=0;j<c_dt->i_dt.s[i].l;j++){
-			lll_small_identifier_t* si=c_dt->i_dt.s[i].dt+j;
-			si->v=malloc((i+1)*sizeof(char));
-			CHECK_ERROR(is,si->sc,uint32_t,e);
-			if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(si->v),(i+1)*sizeof(char))){
-				e->t=LLL_ERROR_INVALID_FILE_FORMAT;
-				return LLL_RETURN_ERROR;
-			}
+	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		c_dt->i_dt.s[i].dt=malloc(c_dt->i_dt.s[i].l*sizeof(lll_identifier_t));
+		for (lll_identifier_list_length_t j=0;j<c_dt->i_dt.s[i].l;j++){
+			CHECK_ERROR(is,(c_dt->i_dt.s[i].dt+j)->sc,lll_scope_t,e);
+			CHECK_ERROR(is,(c_dt->i_dt.s[i].dt+j)->i,lll_string_index_t,e);
 		}
 	}
-	c_dt->i_dt.il=malloc(c_dt->i_dt.ill*sizeof(lll_identifier_t*));
-	for (uint32_t i=0;i<c_dt->i_dt.ill;i++){
-		uint32_t sz;
-		CHECK_ERROR(is,sz,uint32_t,e);
-		lll_identifier_t* k=malloc(sizeof(lll_identifier_t)+sz*sizeof(char));
-		k->sz=sz;
-		CHECK_ERROR(is,k->sc,uint32_t,e);
-		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(k->v),sz*sizeof(char))){
-			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
-			return LLL_RETURN_ERROR;
-		}
-		*(c_dt->i_dt.il+i)=k;
+	c_dt->i_dt.il=malloc(c_dt->i_dt.ill*sizeof(lll_identifier_t));
+	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
+		CHECK_ERROR(is,(c_dt->i_dt.il+i)->sc,lll_scope_t,e);
+		CHECK_ERROR(is,(c_dt->i_dt.il+i)->i,lll_string_index_t,e);
 	}
-	c_dt->im.dt=malloc(c_dt->im.l*sizeof(lll_import_data_path_t));
-	for (uint32_t i=0;i<c_dt->im.l;i++){
-		CHECK_ERROR(is,(c_dt->im.dt+i)->sz,uint32_t,e);
-		if ((c_dt->im.dt+i)->sz==UINT32_MAX){
-			(c_dt->im.dt+i)->nm=NULL;
-		}
-		else{
-			(c_dt->im.dt+i)->nm=malloc((c_dt->im.dt+i)->sz*sizeof(char));
-			if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)((c_dt->im.dt+i)->nm),(c_dt->im.dt+i)->sz*sizeof(char))){
-				e->t=LLL_ERROR_INVALID_FILE_FORMAT;
-				return LLL_RETURN_ERROR;
-			}
-		}
+	c_dt->im.dt=malloc(c_dt->im.l*sizeof(lll_string_index_t));
+	for (lll_import_index_t i=0;i<c_dt->im.l;i++){
+		CHECK_ERROR(is,*(c_dt->im.dt+i),lll_string_index_t,e);
 	}
 	c_dt->f_dt.dt=malloc(c_dt->f_dt.l*sizeof(lll_function_t*));
-	for (uint16_t i=0;i<c_dt->f_dt.l;i++){
-		uint32_t off;
-		CHECK_ERROR(is,off,uint32_t,e);
+	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
+		lll_stack_offset_t off;
+		CHECK_ERROR(is,off,lll_stack_offset_t,e);
 		lll_arg_count_t al;
 		CHECK_ERROR(is,al,lll_arg_count_t,e);
 		lll_function_t* k=malloc(sizeof(lll_function_t)+al*sizeof(lll_identifier_index_t));
@@ -236,6 +205,23 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 			CHECK_ERROR(is,k->a[i],lll_identifier_index_t,e);
 		}
 		*(c_dt->f_dt.dt+i)=k;
+	}
+	c_dt->st.dt=malloc(c_dt->st.l*sizeof(lll_string_t*));
+	for (lll_string_index_t i=0;i<c_dt->st.l;i++){
+		lll_string_length_t l;
+		CHECK_ERROR(is,l,lll_string_length_t,e);
+		lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(char));
+		s->l=l;
+		s->c=0;
+		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)s->v,s->l*sizeof(char))){
+			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+			return LLL_RETURN_ERROR;
+		}
+		s->v[s->l]=0;
+		for (lll_string_length_t j=0;j<s->l;j++){
+			s->c^=(lll_string_checksum_t)(s->v[j]);
+		}
+		*(c_dt->st.dt+i)=s;
 	}
 	c_dt->h=(lll_object_t*)(_bf+_bf_off);
 	if (!_read_object(is)){

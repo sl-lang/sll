@@ -5,12 +5,12 @@
 
 
 uint8_t* _bf=NULL;
-uint32_t _bf_off;
-uint32_t _bf_sz;
+lll_stack_offset_t _bf_off;
+lll_stack_offset_t _bf_sz;
 
 
 
-__LLL_IMPORT_EXPORT void lll_set_internal_stack(uint8_t* bf,uint32_t sz){
+__LLL_IMPORT_EXPORT void lll_set_internal_stack(uint8_t* bf,lll_stack_offset_t sz){
 	_bf=bf;
 	_bf_off=0;
 	_bf_sz=sz;

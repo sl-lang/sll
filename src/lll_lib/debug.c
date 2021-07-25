@@ -5,8 +5,8 @@
 
 
 
-uint32_t _remove_debug_data_internal(lll_object_t* o){
-	uint32_t eoff=0;
+lll_stack_offset_t _remove_debug_data_internal(lll_object_t* o){
+	lll_stack_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff+=sizeof(lll_object_type_t);
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
@@ -20,7 +20,7 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 		case LLL_OBJECT_TYPE_CHAR:
 			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			return sizeof(lll_string_object_t)+eoff+((lll_string_object_t*)o)->ln;
+			return sizeof(lll_string_object_t)+eoff;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			return sizeof(lll_identifier_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
@@ -31,7 +31,7 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_FUNC:
 			{
-				uint32_t off=sizeof(lll_function_object_t);
+				lll_stack_offset_t off=sizeof(lll_function_object_t);
 				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
 				while (l){
 					l--;
@@ -41,7 +41,7 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				uint32_t off=sizeof(lll_operation_list_object_t);
+				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
 				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
 				while (l){
 					l--;
@@ -50,12 +50,12 @@ uint32_t _remove_debug_data_internal(lll_object_t* o){
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			for (uint32_t i=0;i<sizeof(lll_debug_object_t);i+=sizeof(lll_object_type_t)){
+			for (lll_stack_offset_t i=0;i<sizeof(lll_debug_object_t);i+=sizeof(lll_object_type_t)){
 				LLL_SET_OBJECT_NOP(o,i);
 			}
 			return sizeof(lll_debug_object_t)+eoff+_remove_debug_data_internal(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o));
 	}
-	uint32_t off=sizeof(lll_operator_object_t);
+	lll_stack_offset_t off=sizeof(lll_operator_object_t);
 	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
 	while (l){
 		l--;

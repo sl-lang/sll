@@ -12,7 +12,7 @@
 
 #ifdef _MSC_VER
 #define ENABLE_COLOR() \
-	uint32_t __tv; \
+	DWORD __tv; \
 	do{ \
 		SetConsoleOutputCP(CP_UTF8); \
 		GetConsoleMode(GetStdHandle(-11),&__tv); \
@@ -51,11 +51,11 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 		}
 	}
 	ENABLE_COLOR();
-	uint32_t os=e->dt.r.off;
-	uint32_t oe=os+e->dt.r.sz;
+	lll_stack_offset_t os=e->dt.r.off;
+	lll_stack_offset_t oe=os+e->dt.r.sz;
 	LLL_INPUT_DATA_STREAM_RESTART_LINE(is,os);
-	uint32_t off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is);
-	uint32_t s_off=off;
+	lll_stack_offset_t off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is);
+	lll_stack_offset_t s_off=off;
 	uint32_t os_tb=0;
 	uint32_t oe_tb=0;
 	int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
@@ -96,7 +96,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 		}
 	}
 	putchar('\n');
-	uint32_t i=s_off;
+	lll_stack_offset_t i=s_off;
 	for (;i<os+os_tb;i++){
 		putchar(' ');
 	}
