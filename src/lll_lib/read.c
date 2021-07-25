@@ -47,10 +47,7 @@ int64_t _read_integer(lll_input_data_stream_t* is){
 		}
 	}
 	v|=c<<s;
-	if (v&1){
-		return -((int64_t)(v>>1));
-	}
-	return v>>1;
+	return (v>>1)^(-(v&1));
 }
 
 

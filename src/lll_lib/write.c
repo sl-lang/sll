@@ -68,7 +68,7 @@ uint32_t _get_object_size(const lll_object_t* o){
 
 
 void _write_integer(lll_output_data_stream_t* os,int64_t n){
-	uint64_t v=(n<0?((-n)<<1)|1:n<<1);
+	uint64_t v=(n<0?((~n)<<1)|1:n<<1);
 	while (v>0x7f){
 		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)((v&0x7f)|0x80));
 		v>>=7;
