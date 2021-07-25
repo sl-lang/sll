@@ -120,7 +120,7 @@ uint32_t _write_object(lll_output_data_stream_t* os,const lll_object_t* o){
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			_write_integer(os,((lll_import_object_t*)o)->ac);
+			LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,((lll_import_object_t*)o)->ac);
 			for (lll_arg_count_t i=0;i<((lll_import_object_t*)o)->ac;i++){
 				_write_integer(os,((lll_import_object_t*)o)->idx[i]);
 			}
@@ -147,7 +147,7 @@ uint32_t _write_object(lll_output_data_stream_t* os,const lll_object_t* o){
 	}
 	uint32_t off=sizeof(lll_operator_object_t);
 	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
-	_write_integer(os,l);
+	LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,l);
 	while (l){
 		l--;
 		off+=_write_object(os,LLL_GET_OBJECT_ARGUMENT(o,off));
