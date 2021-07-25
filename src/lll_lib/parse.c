@@ -6,38 +6,6 @@
 
 
 
-lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const char* dt,lll_string_length_t l){
-	lll_string_checksum_t c=0;
-	for (lll_string_length_t i=0;i<l;i++){
-		c^=(lll_string_checksum_t)(*(dt+i));
-	}
-	for (lll_string_index_t i=0;i<c_dt->st.l;i++){
-		lll_string_t* s=*(c_dt->st.dt+i);
-		if (s->c==c&&s->l==l){
-			for (lll_string_length_t j=0;j<l;j++){
-				if (*(dt+j)!=*(s->v+j)){
-					goto _check_next_string;
-				}
-			}
-			return i;
-		}
-_check_next_string:;
-	}
-	c_dt->st.l++;
-	c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
-	lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(char));
-	s->l=l;
-	s->c=c;
-	for (lll_string_length_t i=0;i<l;i++){
-		s->v[i]=*(dt+i);
-	}
-	s->v[l]=0;
-	*(c_dt->st.dt+c_dt->st.l-1)=s;
-	return c_dt->st.l-1;
-}
-
-
-
 uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_error_t* e,char* o){
 	int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==LLL_END_OF_DATA){
@@ -167,33 +135,6 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const scope_dat
 			while (c!='\n'&&c!='\r'&&c!=LLL_END_OF_DATA){
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 			}
-		}
-		else if (c=='|'){
-			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-			if (c!='#'){
-				e->t=LLL_ERROR_UNEXPECTED_CHARACTER;
-				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-3;
-				e->dt.r.sz=1;
-				if (n_l_sc.m){
-					free(n_l_sc.m);
-				}
-				return LLL_RETURN_ERROR;
-			}
-			int lc=c;
-			do{
-				lc=c;
-				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==LLL_END_OF_DATA){
-					e->t=LLL_ERROR_UNMATCHED_OPEN_QUOTE;
-					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-3;
-					e->dt.r.sz=1;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
-					return LLL_RETURN_ERROR;
-				}
-			} while (c!='|'||lc!='#');
-			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 		}
 		else if (c==')'){
 			if (n_l_sc.m){
@@ -560,6 +501,33 @@ _unknown_symbol:
 				}
 				return LLL_RETURN_ERROR;
 			}
+		}
+		else if (c=='|'){
+			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+			if (c!='#'){
+				e->t=LLL_ERROR_UNEXPECTED_CHARACTER;
+				e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-3;
+				e->dt.r.sz=1;
+				if (n_l_sc.m){
+					free(n_l_sc.m);
+				}
+				return LLL_RETURN_ERROR;
+			}
+			int lc=c;
+			do{
+				lc=c;
+				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+				if (c==LLL_END_OF_DATA){
+					e->t=LLL_ERROR_UNMATCHED_OPEN_QUOTE;
+					e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-3;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return LLL_RETURN_ERROR;
+				}
+			} while (c!='|'||lc!='#');
+			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 		}
 		else{
 			lll_stack_offset_t arg_bf_off=_bf_off;

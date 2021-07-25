@@ -231,6 +231,10 @@ typedef uint32_t lll_string_length_t;
 
 
 
+typedef uint64_t lll_time_t;
+
+
+
 typedef struct __LLL_STACK_CONTEXT{
 	uint8_t* ptr;
 	lll_stack_offset_t off;
@@ -410,7 +414,7 @@ typedef struct __LLL_STRING_TABLE{
 typedef struct __LLL_COMPILATION_DATA{
 	lll_file_path_data_t fp_dt;
 	lll_input_data_stream_t* is;
-	uint64_t tm;
+	lll_time_t tm;
 	lll_object_t* h;
 	lll_identifier_data_t i_dt;
 	lll_import_data_t im;
