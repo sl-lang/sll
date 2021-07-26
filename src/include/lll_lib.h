@@ -286,7 +286,7 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_INTEGER_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_FLOAT_OBJECT{
 	lll_object_type_t t;
-	double v;
+	lll_float_t v;
 } lll_float_object_t;
 
 
