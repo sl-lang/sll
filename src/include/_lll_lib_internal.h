@@ -105,15 +105,14 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define FAST_COMPARE_STR_15(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((uint16_t*)(a)+12)==*((uint16_t*)(b)+12)&&*((a)+14)==*((b)+14))
 #define FAST_COMPARE_COMMA ,
 
+#define MAX(a,b) ((a)>(b)?(a):(b))
+
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','L',0)
 
 #define ERROR_DISPLAY_TAB_WIDTH 4
 
 #define HIGHLIGHT_COLOR "\x1b[31m"
 #define HIGHLIGHT_COLOR_RESET "\x1b[0m"
-
-#define READ_SINGLE_CHAR_OK 0
-#define READ_SINGLE_CHAR_ERROR 1
 
 
 
