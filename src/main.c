@@ -53,7 +53,7 @@ uint32_t fpl;
 
 
 static const char* CODE_GENERATION_LANGUAGES[]={"c","c++","cpp","java","javascript","js","lisplikelanguage","lll","python","py"};
-static uint8_t CODE_GENERATION_LANGUAGE_VALUES[]={LLL_GENERATE_C,LLL_GENERATE_C,LLL_GENERATE_C,LLL_GENERATE_JAVA,LLL_GENERATE_JAVASCRIPT,LLL_GENERATE_JAVASCRIPT,LLL_GENERATE_LLL,LLL_GENERATE_PYTHON,LLL_GENERATE_PYTHON};
+static uint8_t CODE_GENERATION_LANGUAGE_VALUES[]={LLL_GENERATE_C,LLL_GENERATE_C,LLL_GENERATE_C,LLL_GENERATE_JAVA,LLL_GENERATE_JAVASCRIPT,LLL_GENERATE_JAVASCRIPT,LLL_GENERATE_LLL,LLL_GENERATE_LLL,LLL_GENERATE_PYTHON,LLL_GENERATE_PYTHON};
 static const char* CODE_GENERATION_LANGUAGES_EXTENSIONS[]={"c","cpp","cpp","java","js","js","lll","lll","py","py"};
 
 
@@ -301,6 +301,7 @@ uint8_t write_assembly(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t ext
 
 
 uint8_t write_code(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t t,uint8_t ext,lll_error_t* e){
+	printf("Generate Code For '%s' (Index %u) -> .%s\n",CODE_GENERATION_LANGUAGES[t],CODE_GENERATION_LANGUAGE_VALUES[t],CODE_GENERATION_LANGUAGES_EXTENSIONS[t]);
 	return 1;
 }
 
