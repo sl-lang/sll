@@ -28,14 +28,13 @@
 #define COMPILER_STACK_SIZE 65536
 #define FLAG_EXPAND_PATH 1
 #define FLAG_GENERATE_ASSEMBLY 2
-#define FLAG_GENERATE_C 4
-#define FLAG_GENERATE_COMPILED_OBJECT 8
-#define FLAG_HELP 16
-#define FLAG_MERGE_IMPORTS 32
-#define FLAG_NO_LOGO 64
-#define FLAG_NO_RUN 128
-#define FLAG_PRINT_OBJECT 256
-#define FLAG_VERBOSE 512
+#define FLAG_GENERATE_COMPILED_OBJECT 4
+#define FLAG_HELP 8
+#define FLAG_MERGE_IMPORTS 16
+#define FLAG_NO_LOGO 32
+#define FLAG_NO_RUN 64
+#define FLAG_PRINT_OBJECT 128
+#define FLAG_VERBOSE 256
 #define OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE 2
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
@@ -53,12 +52,41 @@ uint32_t fpl;
 
 
 
+static const char* CODE_GENERATION_LANGUAGES[]={"c","c++","cpp","java","javascript","js","lisplikelanguage","lll","python","py"};
+static uint8_t CODE_GENERATION_LANGUAGE_VALUES[]={LLL_GENERATE_C,LLL_GENERATE_C,LLL_GENERATE_C,LLL_GENERATE_JAVA,LLL_GENERATE_JAVASCRIPT,LLL_GENERATE_JAVASCRIPT,LLL_GENERATE_LLL,LLL_GENERATE_PYTHON,LLL_GENERATE_PYTHON};
+static const char* CODE_GENERATION_LANGUAGES_EXTENSIONS[]={"c","cpp","cpp","java","js","js","lll","lll","py","py"};
+
+
+
 uint8_t cmp_str(const char* a,const char* b){
 	while (1){
 		if (*a!=*b){
 			return 0;
 		}
 		if (!(*a)){
+			return 1;
+		}
+		a++;
+		b++;
+	}
+}
+
+
+
+uint8_t cmp_str_lower(const char* a,const char* b){
+	while (1){
+		char c=*a;
+		if (c>64&&c<91){
+			c+=32;
+		}
+		char d=*b;
+		if (d>64&&d<91){
+			d+=32;
+		}
+		if (c!=d){
+			return 0;
+		}
+		if (!c){
 			return 1;
 		}
 		a++;
@@ -254,7 +282,43 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 
 
 
-uint8_t write_object(const char* o_fp,const lll_compilation_data_t* c_dt,uint8_t m,lll_error_t* e){
+uint8_t write_assembly(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t ext,lll_error_t* e){
+	if (ext){
+		uint16_t i=0;
+		while (*(o_fp+i)){
+			i++;
+		}
+		*(o_fp+i)='.';
+		*(o_fp+i+1)='l';
+		*(o_fp+i+2)='l';
+		*(o_fp+i+3)='l';
+		*(o_fp+i+4)='a';
+		*(o_fp+i+5)=0;
+	}
+	return 1;
+}
+
+
+
+uint8_t write_code(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t t,uint8_t ext,lll_error_t* e){
+	return 1;
+}
+
+
+
+uint8_t write_compiled(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t ext,lll_error_t* e){
+	if (ext){
+		uint16_t i=0;
+		while (*(o_fp+i)){
+			i++;
+		}
+		*(o_fp+i)='.';
+		*(o_fp+i+1)='l';
+		*(o_fp+i+2)='l';
+		*(o_fp+i+3)='l';
+		*(o_fp+i+4)='c';
+		*(o_fp+i+5)=0;
+	}
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Writing Object to File '");
 		print_str(o_fp);
@@ -269,7 +333,7 @@ uint8_t write_object(const char* o_fp,const lll_compilation_data_t* c_dt,uint8_t
 	}
 	lll_output_data_stream_t os;
 	lll_create_output_data_stream(f,&os);
-	if (!lll_write_compiled_object(&os,c_dt,m,e)){
+	if (!lll_write_compiled_object(&os,c_dt,e)){
 		fclose(f);
 		return 0;
 	}
@@ -284,6 +348,7 @@ uint8_t write_object(const char* o_fp,const lll_compilation_data_t* c_dt,uint8_t
 
 int main(int argc,const char** argv){
 	int32_t ec=1;
+	uint16_t cg_l=0;
 	ol=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE;
 	fl=0;
 	i_fp=malloc(sizeof(char));
@@ -304,9 +369,6 @@ int main(int argc,const char** argv){
 		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||cmp_str(e,"--generate-assembly")){
 			fl|=FLAG_GENERATE_ASSEMBLY;
 		}
-		else if ((*e=='-'&&*(e+1)=='b'&&*(e+2)==0)||cmp_str(e,"--generate-c")){
-			fl|=FLAG_GENERATE_C;
-		}
 		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||cmp_str(e,"--generate-compiled-object")){
 			fl|=FLAG_GENERATE_COMPILED_OBJECT;
 		}
@@ -319,6 +381,22 @@ int main(int argc,const char** argv){
 				break;
 			}
 			goto _read_file_argument;
+		}
+		else if ((*e=='-'&&*(e+1)=='g'&&*(e+2)==0)||cmp_str(e,"--generate")){
+			i++;
+			if (i==argc){
+				break;
+			}
+			for (uint8_t j=0;j<sizeof(CODE_GENERATION_LANGUAGES)/sizeof(CODE_GENERATION_LANGUAGES[0]);j++){
+				if (cmp_str_lower(CODE_GENERATION_LANGUAGES[j],argv[i])){
+					cg_l|=1<<j;
+					goto _next_argument;
+				}
+			}
+			PRINT_STATIC_STR("Unknown Language '");
+			print_str(argv[i]);
+			PRINT_STATIC_STR("'\n");
+			goto _error;
 		}
 		else if ((*e=='-'&&*(e+1)=='h'&&*(e+2)==0)||cmp_str(e,"--help")){
 			fl|=FLAG_HELP;
@@ -414,6 +492,7 @@ _read_file_argument:
 			fp=tmp;
 			*(fp+fpl-1)=(char*)e;
 		}
+_next_argument:;
 	}
 	im_fpl=fpl;
 	if (!(fl&FLAG_NO_LOGO)){
@@ -435,9 +514,6 @@ _read_file_argument:
 		}
 		if (fl&FLAG_GENERATE_ASSEMBLY){
 			PRINT_STATIC_STR("  Assembly Generation Mode\n");
-		}
-		if (fl&FLAG_GENERATE_C){
-			PRINT_STATIC_STR("  C Soruce Code Generation Mode\n");
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
 			PRINT_STATIC_STR("  Compiled Object Generation Mode\n");
@@ -531,7 +607,7 @@ _read_file_argument:
 			lll_print_error(&is,&e);
 			goto _error;
 		}
-		if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_C|FLAG_GENERATE_COMPILED_OBJECT)){
+		if ((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT))||cg_l){
 			char bf[MAX_PATH_LENGTH];
 			uint16_t i=0;
 			if (!o_fp){
@@ -542,32 +618,43 @@ _read_file_argument:
 				bf[i]='.';
 			}
 			else{
-				if (fpl==1&&!((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_C|FLAG_GENERATE_COMPILED_OBJECT))&((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_C|FLAG_GENERATE_COMPILED_OBJECT))-1))){
+				if (fpl==1){
+					while (*(o_fp+i)){
+						bf[i]=*(o_fp+i);
+						i++;
+					}
+					bf[i]=0;
+					uint8_t ext=(!!((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT))&((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT))-1)));
+					if (cg_l&(cg_l-1)){
+						ext=1;
+					}
 					if (fl&FLAG_GENERATE_ASSEMBLY){
 						e.t=LLL_ERROR_UNKNOWN;
-						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){// lgtm [cpp/path-injection]
+						if (!write_assembly(bf,&c_dt,ext,&e)){// lgtm [cpp/path-injection]
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
 							goto _error;
 						}
 					}
-					else if (fl&FLAG_GENERATE_C){
+					if (fl&FLAG_GENERATE_COMPILED_OBJECT){
 						e.t=LLL_ERROR_UNKNOWN;
-						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_CODE,&e)){// lgtm [cpp/path-injection]
+						if (!write_compiled(bf,&c_dt,ext,&e)){// lgtm [cpp/path-injection]
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
 							goto _error;
 						}
 					}
-					else{
-						e.t=LLL_ERROR_UNKNOWN;
-						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_RAW,&e)){// lgtm [cpp/path-injection]
-							if (e.t!=LLL_ERROR_UNKNOWN){
-								lll_print_error(&is,&e);
+					for (uint8_t j=0;j<sizeof(CODE_GENERATION_LANGUAGES)/sizeof(CODE_GENERATION_LANGUAGES[0]);j++){
+						if (cg_l&(1<<j)){
+							e.t=LLL_ERROR_UNKNOWN;
+							if (!write_code(bf,&c_dt,j,ext,&e)){// lgtm [cpp/path-injection]
+								if (e.t!=LLL_ERROR_UNKNOWN){
+									lll_print_error(&is,&e);
+								}
+								goto _error;
 							}
-							goto _error;
 						}
 					}
 					goto _skip_write;
@@ -602,24 +689,10 @@ _read_file_argument:
 					bf[i]='.';
 				}
 			}
+			bf[i+1]=0;
 			if (fl&FLAG_GENERATE_ASSEMBLY){
-				bf[i+1]='a';
-				bf[i+2]='s';
-				bf[i+3]='m';
-				bf[i+4]=0;
 				e.t=LLL_ERROR_UNKNOWN;
-				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){// lgtm [cpp/path-injection]
-					if (e.t!=LLL_ERROR_UNKNOWN){
-						lll_print_error(&is,&e);
-					}
-					goto _error;
-				}
-			}
-			if (fl&FLAG_GENERATE_C){
-				bf[i+1]='c';
-				bf[i+2]=0;
-				e.t=LLL_ERROR_UNKNOWN;
-				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_CODE,&e)){// lgtm [cpp/path-injection]
+				if (!write_assembly(bf,&c_dt,1,&e)){// lgtm [cpp/path-injection]
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
 					}
@@ -627,17 +700,23 @@ _read_file_argument:
 				}
 			}
 			if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-				bf[i+1]='l';
-				bf[i+2]='l';
-				bf[i+3]='l';
-				bf[i+4]='c';
-				bf[i+5]=0;
 				e.t=LLL_ERROR_UNKNOWN;
-				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_RAW,&e)){// lgtm [cpp/path-injection]
+				if (!write_compiled(bf,&c_dt,1,&e)){// lgtm [cpp/path-injection]
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
 					}
 					goto _error;
+				}
+			}
+			for (uint8_t j=0;j<sizeof(CODE_GENERATION_LANGUAGES)/sizeof(CODE_GENERATION_LANGUAGES[0]);j++){
+				if (cg_l&(1<<j)){
+					e.t=LLL_ERROR_UNKNOWN;
+					if (!write_code(bf,&c_dt,j,1,&e)){// lgtm [cpp/path-injection]
+						if (e.t!=LLL_ERROR_UNKNOWN){
+							lll_print_error(&is,&e);
+						}
+						goto _error;
+					}
 				}
 			}
 _skip_write:;

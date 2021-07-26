@@ -133,9 +133,11 @@
 #define LLL_IDENTIFIER_ADD_INDEX(i,j) ((i)+((j)<<4))
 #define LLL_CREATE_IDENTIFIER(i,j) (((i)<<4)|(j))
 
-#define LLL_WRITE_MODE_ASSEMBLY 0
-#define LLL_WRITE_MODE_CODE 1
-#define LLL_WRITE_MODE_RAW 2
+#define LLL_GENERATE_C 0
+#define LLL_GENERATE_JAVA 1
+#define LLL_GENERATE_JAVASCRIPT 2
+#define LLL_GENERATE_LLL 3
+#define LLL_GENERATE_PYTHON 4
 
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
@@ -551,7 +553,7 @@ __LLL_IMPORT_EXPORT void lll_set_internal_stack(uint8_t* bf,lll_stack_offset_t s
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt,uint8_t m,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt,lll_error_t* e);
 
 
 

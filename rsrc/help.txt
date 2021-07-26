@@ -1,15 +1,15 @@
 Usage: lll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...
 Options:
   -a, --generate-assembly -> Generate assembly (.asm)
-  -b, --generate-c -> Generate C source code (.c)
   -c, --generate-compiled-object -> Generate compiled objects (.lllc)
   -e, --expand-file-paths -> Expand file paths
   -f <file>, --file <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))
+  -g <language>, --generate <language> -> Generate Code for Language <language>
   -h, --help -> Print this message
   -I <directory>, --include <directory> -> Add <directory> to file include path
   -L, --no-logo -> Disable compiler logo
   -m, --merge-imports -> Merge imports
-  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.asm | .c | .lllc]. If no <output_file> is supplied, then each <file> output is written to <file_without_extension>[.asm | .c | .lllc]
+  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.asm | .lllc | ...]. If no <output_file> is supplied, then each <file> output is written to <file_without_extension>[.asm | .lllc | ...]
   -O0 -> No optimization
   -O1 -> Remove padding
   -O2 -> Remove padding + Global optimization (default)
@@ -17,3 +17,11 @@ Options:
   -p, --print-objects -> Print objects
   -R, --no-run -> Disable program execution mode
   -v, --verbose -> Enable verbose mode
+
+Code can be Generated for the Following Languages (<language>):
+  - C (.c)
+  - C++ (.cpp)
+  - Java (.java)
+  - Javascript / Js (.js)
+  - LispLikeLanguage / Lll (.lll)
+  - Python / Py (.py)

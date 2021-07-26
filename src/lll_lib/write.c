@@ -109,16 +109,10 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_object(lll_output_data_stream_t* os,c
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt,uint8_t m,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
-	}
-	if (m==LLL_WRITE_MODE_ASSEMBLY){
-		return LLL_RETURN_NO_ERROR;
-	}
-	if (m==LLL_WRITE_MODE_CODE){
-		return LLL_RETURN_NO_ERROR;
 	}
 	uint32_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
