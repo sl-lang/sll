@@ -283,7 +283,7 @@ lll_stack_offset_t _print_object_internal(lll_compilation_data_t* c_dt,const lll
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				fprintf(f,"[%s:%u:%u]",(*(c_dt->st.dt+*(c_dt->fp_dt.dt+dbg->fpi)))->v,dbg->ln,dbg->cn);
+				fprintf(f,"[%s:%u:%u]",(*(c_dt->st.dt+dbg->fpi))->v,dbg->ln,dbg->cn);
 				return sizeof(lll_debug_object_t)+eoff+_print_object_internal(c_dt,LLL_GET_DEBUG_OBJECT_CHILD(dbg),f);
 			}
 		default:

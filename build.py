@@ -325,7 +325,7 @@ if (os.name=="nt"):
 	if ("--run" in sys.argv):
 		os.chdir("build")
 		subprocess.run(["lll.exe","-h"])
-		if (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-e","-I","../example","-m","-R"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-e","-L"]).returncode!=0):
+		if (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test.lllc","-p","-e","-I","../example","-m","-R"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-e","-L","-c","-o","test2.lllc"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		os.chdir(cd)
@@ -350,5 +350,5 @@ else:
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lll","-h"])
-		if (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-e","-I","example","-m","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-e","-L"]).returncode!=0):
+		if (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test.lllc","-p","-e","-I","example","-m","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-e","-L","-c","-o","build/test2.lllc"]).returncode!=0):
 			sys.exit(1)

@@ -163,7 +163,7 @@ lll_stack_offset_t _patch_module(lll_object_t* o,const import_module_data_t* im_
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			{
 				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				dbg->fpi+=im_dt->dbg_off;
+				dbg->fpi=*(im_dt->sm+dbg->fpi);
 				return sizeof(lll_debug_object_t)+eoff+_patch_module(LLL_GET_DEBUG_OBJECT_CHILD(dbg),im_dt);
 			}
 	}
@@ -193,7 +193,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,l
 	};
 	lll_stack_offset_t sz=_patch_import(c_dt->h,&dt);
 	import_module_data_t im_dt={
-		.dbg_off=c_dt->fp_dt.l,
 		.sm=malloc(im->st.l*sizeof(lll_string_index_t))
 	};
 	for (lll_string_index_t i=0;i<im->st.l;i++){
@@ -215,7 +214,7 @@ _check_next_string:;
 		*(im_dt.sm+i)=c_dt->st.l;
 		c_dt->st.l++;
 		c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
-		lll_string_t* n=malloc(sizeof(lll_string_t)+(s->l+1)*sizeof(char));
+		lll_string_t* n=malloc(sizeof(lll_string_t)+(s->l+1)*sizeof(lll_char_t));
 		n->l=s->l;
 		n->c=s->c;
 		for (lll_string_length_t j=0;j<s->l;j++){
@@ -225,24 +224,14 @@ _check_next_string:;
 		*(c_dt->st.dt+c_dt->st.l-1)=n;
 _merge_next_string:;
 	}
-	lll_file_path_index_t si=c_dt->fp_dt.l;
-	c_dt->fp_dt.l+=im->fp_dt.l;
-	void* tmp=realloc(c_dt->fp_dt.dt,c_dt->fp_dt.l*sizeof(lll_string_index_t));
-	if (!tmp){
-		ASSERT(!"Unable to Reallocate File Path Array",e,LLL_RETURN_ERROR);
-	}
-	c_dt->fp_dt.dt=tmp;
-	for (lll_file_path_index_t i=0;i<im->fp_dt.l;i++){
-		*(c_dt->fp_dt.dt+si+i)=*(im_dt.sm+*(im->fp_dt.dt+i));
-	}
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		lll_identifier_list_t* il=c_dt->i_dt.s+i;
 		lll_identifier_list_t mil=im->i_dt.s[i];
 		im_dt.off[i]=il->l;
 		if (mil.l){
-			si=il->l;
+			lll_identifier_list_length_t si=il->l;
 			il->l+=mil.l;
-			tmp=realloc(il->dt,il->l*sizeof(lll_identifier_t));
+			void* tmp=realloc(il->dt,il->l*sizeof(lll_identifier_t));
 			if (!tmp){
 				ASSERT(!"Unable to Reallocate Fixed-Length Identifier Array",e,LLL_RETURN_ERROR);
 			}
@@ -255,9 +244,9 @@ _merge_next_string:;
 	}
 	im_dt.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH]=c_dt->i_dt.ill;
 	if (im->i_dt.ill){
-		si=c_dt->i_dt.ill;
+		lll_identifier_list_length_t si=c_dt->i_dt.ill;
 		c_dt->i_dt.ill+=im->i_dt.ill;
-		tmp=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t));
+		void* tmp=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t));
 		if (!tmp){
 			ASSERT(!"Unable to Reallocate Variable-Length Identifier Array",e,LLL_RETURN_ERROR);
 		}

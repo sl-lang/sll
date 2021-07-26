@@ -7,7 +7,7 @@
 
 
 
-uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_error_t* e,char* o){
+uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_error_t* e,lll_char_t* o){
 	int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==LLL_END_OF_DATA){
 		e->t=LLL_ERROR_UNMATCHED_QUOTES;
@@ -36,7 +36,7 @@ uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_e
 			return READ_SINGLE_CHAR_ERROR;
 		}
 		if (c=='\''||c=='"'||c=='\\'){
-			*o=c;
+			*o=(lll_char_t)c;
 			return READ_SINGLE_CHAR_OK;
 		}
 		else if (c=='x'){
@@ -109,7 +109,7 @@ uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_e
 			return READ_SINGLE_CHAR_ERROR;
 		}
 	}
-	*o=c;
+	*o=(lll_char_t)c;
 	return READ_SINGLE_CHAR_OK;
 }
 
@@ -661,7 +661,7 @@ _unknown_symbol:
 				}
 				arg->t=LLL_OBJECT_TYPE_INT;
 				lll_integer_object_t* i_arg=(lll_integer_object_t*)arg;
-				int64_t v=0;
+				lll_integer_t v=0;
 				if (c=='0'){
 					c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 					if (c==LLL_END_OF_DATA){
@@ -846,7 +846,7 @@ _add_exponent_char:
 					ex+=ev*em;
 				}
 				arg->t=LLL_OBJECT_TYPE_FLOAT;
-				((lll_float_object_t*)arg)->v=((double)v)*pow(5,ex)*pow(2,ex)*m;
+				((lll_float_object_t*)arg)->v=((lll_float_t)v)*pow(5,ex)*pow(2,ex)*m;
 _skip_float_parse:;
 			}
 			else if ((c>64&&c<91)||c=='_'||(c>96&&c<123)){
@@ -1098,8 +1098,6 @@ _found_import:;
 
 
 __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
-	o->fp_dt.dt=malloc(sizeof(lll_string_index_t));
-	o->fp_dt.l=1;
 	o->is=is;
 	o->tm=(lll_time_t)time(NULL);
 	o->h=NULL;
@@ -1120,12 +1118,12 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 	while (*(fp+l)){
 		l++;
 	}
-	*(o->fp_dt.dt)=_create_string(o,fp,l);
+	_create_string(o,fp,l);
 }
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_read_object(lll_compilation_data_t* c_dt,lll_error_t* e,lll_object_t** o){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_error_t* e,lll_object_t** o){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -1154,7 +1152,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_read_object(lll_compilation_data_t* c_dt,ll
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_read_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (!_bf){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;

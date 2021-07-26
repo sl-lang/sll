@@ -155,6 +155,11 @@
 
 
 
+
+typedef char lll_char_t;
+
+
+
 typedef uint8_t lll_arg_count_t;
 
 
@@ -184,6 +189,10 @@ typedef uint16_t lll_function_index_t;
 
 
 typedef uint16_t lll_statement_count_t;
+
+
+
+typedef uint16_t lll_version_t;
 
 
 
@@ -231,7 +240,15 @@ typedef uint32_t lll_string_length_t;
 
 
 
+typedef int64_t lll_integer_t;
+
+
+
 typedef uint64_t lll_time_t;
+
+
+
+typedef double lll_float_t;
 
 
 
@@ -272,14 +289,14 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_CHAR_OBJECT{
 	lll_object_type_t t;
-	char v;
+	lll_char_t v;
 } lll_char_object_t;
 
 
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_INTEGER_OBJECT{
 	lll_object_type_t t;
-	int64_t v;
+	lll_integer_t v;
 } lll_integer_object_t;
 
 
@@ -337,18 +354,11 @@ typedef struct __LLL_OBJECT_ALIGNMENT __LLL_OPERATION_LIST_OBJECT{
 
 typedef struct __LLL_OBJECT_ALIGNMENT __LLL_DEBUG_OBJECT{
 	lll_object_type_t t;
-	lll_file_path_index_t fpi;
+	lll_string_index_t fpi;
 	lll_line_number_t ln;
 	lll_column_number_t cn;
 	lll_file_offset_t ln_off;
 } lll_debug_object_t;
-
-
-
-typedef struct __LLL_FILE_PATH_DATA{
-	lll_string_index_t* dt;
-	lll_file_path_index_t l;
-} lll_file_path_data_t;
 
 
 
@@ -399,7 +409,7 @@ typedef struct __LLL_FUNCTION_DATA{
 typedef struct __LLL_STRING{
 	lll_string_length_t l;
 	lll_string_checksum_t c;
-	char v[];
+	lll_char_t v[];
 } lll_string_t;
 
 
@@ -412,7 +422,6 @@ typedef struct __LLL_STRING_TABLE{
 
 
 typedef struct __LLL_COMPILATION_DATA{
-	lll_file_path_data_t fp_dt;
 	lll_input_data_stream_t* is;
 	lll_time_t tm;
 	lll_object_t* h;
@@ -459,10 +468,6 @@ __LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt)
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_file_path_data(lll_file_path_data_t* fp_dt);
-
-
-
 __LLL_IMPORT_EXPORT void lll_free_function_data(lll_function_data_t* f_dt);
 
 
@@ -491,6 +496,10 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 
 
 
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_load_object(lll_input_data_stream_t* is,lll_object_t** o,lll_error_t* e);
+
+
+
 __LLL_IMPORT_EXPORT void lll_load_stack_context(const lll_stack_context_t* ctx);
 
 
@@ -503,19 +512,23 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_object(lll_object_t* o,lll_error_t
 
 
 
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_string_table(lll_compilation_data_t* c_dt,lll_error_t* e);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_error_t* e,lll_object_t** o);
+
+
+
 __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_error_t* e);
 
 
 
 __LLL_IMPORT_EXPORT void lll_print_object(lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f);
-
-
-
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_read_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e);
-
-
-
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_read_object(lll_compilation_data_t* c_dt,lll_error_t* e,lll_object_t** o);
 
 
 

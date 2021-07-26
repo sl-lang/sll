@@ -2,7 +2,6 @@
 #define ___LLL_LIB_INTERNAL_H__ 1
 #ifdef _MSC_VER
 #include <intrin.h>
-#include <immintrin.h>
 #endif
 #include <lll_lib.h>
 #include <signal.h>
@@ -12,17 +11,18 @@
 
 
 #ifdef _MSC_VER
-#pragma intrinsic(__popcnt16)
-#pragma intrinsic(_BitScanForward)
-#pragma intrinsic(_BitScanReverse)
-#pragma intrinsic(_BitScanReverse64)
-#define __LLL_API_FUNCTION
-#define FORCE_INLINE __inline __forceinline
+#pragma intrinsic(_BitScanForward64)
 #define UNREACHABLE() __assume(0)
+static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m){
+	unsigned long o;
+	_BitScanForward64(&o,m);
+	return o;
+}
+#define POPCOUNT(m) __popcnt64(m)
 #else
-#define __LLL_API_FUNCTION __attribute__((ms_abi))
-#define FORCE_INLINE inline __attribute__((always_inline))
 #define UNREACHABLE() __builtin_unreachable()
+#define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
+#define POPCOUNT(m) __builtin_popcountll(m)
 #endif
 
 
@@ -142,7 +142,6 @@ typedef struct __IMPORT_DATA{
 
 typedef struct __IMPORT_MODULE_DATA{
 	lll_identifier_list_length_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
-	lll_file_path_index_t dbg_off;
 	lll_string_index_t* sm;
 } import_module_data_t;
 

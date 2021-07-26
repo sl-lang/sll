@@ -147,7 +147,7 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 						}
 						lll_create_input_data_stream(*f,is);
 						lll_init_compilation_data(f_fp,is,c_dt);
-						if (!lll_read_all_objects(c_dt,&e)){
+						if (!lll_parse_all_objects(c_dt,&e)){
 							lll_print_error(is,&e);
 							return 0;
 						}
@@ -526,6 +526,11 @@ _read_file_argument:
 			lll_print_object(&c_dt,c_dt.h,stdout);
 			putchar('\n');
 		}
+		lll_error_t e;
+		if (!lll_optimize_string_table(&c_dt,&e)){
+			lll_print_error(&is,&e);
+			goto _error;
+		}
 		if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_C|FLAG_GENERATE_COMPILED_OBJECT)){
 			char bf[MAX_PATH_LENGTH];
 			uint16_t i=0;
@@ -539,9 +544,7 @@ _read_file_argument:
 			else{
 				if (fpl==1&&!((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_C|FLAG_GENERATE_COMPILED_OBJECT))&((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_C|FLAG_GENERATE_COMPILED_OBJECT))-1))){
 					if (fl&FLAG_GENERATE_ASSEMBLY){
-						lll_error_t e={
-							LLL_ERROR_UNKNOWN
-						};
+						e.t=LLL_ERROR_UNKNOWN;
 						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
@@ -550,7 +553,7 @@ _read_file_argument:
 						}
 					}
 					else if (fl&FLAG_GENERATE_C){
-						lll_error_t e;
+						e.t=LLL_ERROR_UNKNOWN;
 						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_CODE,&e)){
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
@@ -559,7 +562,7 @@ _read_file_argument:
 						}
 					}
 					else{
-						lll_error_t e;
+						e.t=LLL_ERROR_UNKNOWN;
 						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_RAW,&e)){
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
@@ -604,9 +607,7 @@ _read_file_argument:
 				bf[i+2]='s';
 				bf[i+3]='m';
 				bf[i+4]=0;
-				lll_error_t e={
-					LLL_ERROR_UNKNOWN
-				};
+				e.t=LLL_ERROR_UNKNOWN;
 				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
@@ -617,9 +618,7 @@ _read_file_argument:
 			if (fl&FLAG_GENERATE_C){
 				bf[i+1]='c';
 				bf[i+2]=0;
-				lll_error_t e={
-					LLL_ERROR_UNKNOWN
-				};
+				e.t=LLL_ERROR_UNKNOWN;
 				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_CODE,&e)){
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
@@ -633,9 +632,7 @@ _read_file_argument:
 				bf[i+3]='l';
 				bf[i+4]='c';
 				bf[i+5]=0;
-				lll_error_t e={
-					LLL_ERROR_UNKNOWN
-				};
+				e.t=LLL_ERROR_UNKNOWN;
 				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_RAW,&e)){
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);

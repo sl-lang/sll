@@ -23,7 +23,7 @@ _check_next_string:;
 	}
 	c_dt->st.l++;
 	c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
-	lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(char));
+	lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
 	s->l=l;
 	s->c=c;
 	for (lll_string_length_t i=0;i<l;i++){

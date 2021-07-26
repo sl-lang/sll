@@ -6,7 +6,6 @@
 
 
 __LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt){
-	lll_free_file_path_data(&(c_dt->fp_dt));
 	c_dt->is=NULL;
 	c_dt->tm=0;
 	c_dt->h=NULL;
@@ -15,16 +14,6 @@ __LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt)
 	lll_free_import_data(&(c_dt->im));
 	lll_free_string_table(&(c_dt->st));
 	c_dt->_n_sc_id=1;
-}
-
-
-
-__LLL_IMPORT_EXPORT void lll_free_file_path_data(lll_file_path_data_t* fp_dt){
-	if (fp_dt->dt){
-		free(fp_dt->dt);
-		fp_dt->dt=NULL;
-	}
-	fp_dt->l=0;
 }
 
 
