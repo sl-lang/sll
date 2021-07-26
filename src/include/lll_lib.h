@@ -155,7 +155,6 @@
 
 
 
-
 typedef char lll_char_t;
 
 
@@ -512,7 +511,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_object(lll_object_t* o,lll_error_t
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_string_table(lll_compilation_data_t* c_dt,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_metadata(lll_compilation_data_t* c_dt,lll_error_t* e);
 
 
 

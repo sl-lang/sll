@@ -115,8 +115,6 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define READ_SINGLE_CHAR_OK 0
 #define READ_SINGLE_CHAR_ERROR 1
 
-#define READ_INTEGER_ERROR (-0x8000000000000000ll)
-
 
 
 typedef uint16_t scope_data_mask_length_t;

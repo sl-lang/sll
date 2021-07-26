@@ -6,11 +6,11 @@
 
 
 #define WRITE_FIELD(o,t,f,os) LLL_WRITE_TO_OUTPUT_DATA_STREAM((os),(uint8_t*)(&(((t*)(o))->f)),sizeof(((t*)(o))->f))
+#define WRITE_SIGNED_INTEGER(os,n) _write_integer((os),((n)<0?((~(n))<<1)|1:(n)<<1))
 
 
 
-void _write_integer(lll_output_data_stream_t* os,int64_t n){
-	uint64_t v=(n<0?((~n)<<1)|1:n<<1);
+void _write_integer(lll_output_data_stream_t* os,uint64_t v){
 	while (v>0x7f){
 		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)((v&0x7f)|0x80));
 		v>>=7;
@@ -37,7 +37,7 @@ lll_stack_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_t
 			WRITE_FIELD(o,lll_char_object_t,v,os);
 			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
-			_write_integer(os,((lll_integer_object_t*)o)->v);
+			WRITE_SIGNED_INTEGER(os,((lll_integer_object_t*)o)->v);
 			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
 			WRITE_FIELD(o,lll_float_object_t,v,os);
@@ -126,26 +126,23 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&v),sizeof(lll_version_t));
 	_write_integer(os,c_dt->tm);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		_write_integer(os,c_dt->i_dt.s[i].l);
-	}
-	_write_integer(os,c_dt->i_dt.ill);
-	_write_integer(os,c_dt->im.l);
-	_write_integer(os,c_dt->f_dt.l);
-	_write_integer(os,c_dt->st.l);
-	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		const lll_identifier_list_t* l=c_dt->i_dt.s+i;
+		_write_integer(os,l->l);
 		for (lll_identifier_list_length_t j=0;j<l->l;j++){
 			_write_integer(os,(l->dt+j)->sc);
 			_write_integer(os,(l->dt+j)->i);
 		}
 	}
+	_write_integer(os,c_dt->i_dt.ill);
 	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
 		_write_integer(os,(c_dt->i_dt.il+i)->sc);
 		_write_integer(os,(c_dt->i_dt.il+i)->i);
 	}
+	_write_integer(os,c_dt->im.l);
 	for (lll_import_index_t i=0;i<c_dt->im.l;i++){
 		_write_integer(os,*(c_dt->im.dt+i));
 	}
+	_write_integer(os,c_dt->f_dt.l);
 	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
 		const lll_function_t* k=*(c_dt->f_dt.dt+i);
 		_write_integer(os,k->off);
@@ -154,6 +151,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 			_write_integer(os,k->a[i]);
 		}
 	}
+	_write_integer(os,c_dt->st.l);
 	for (lll_string_index_t i=0;i<c_dt->st.l;i++){
 		const lll_string_t* s=*(c_dt->st.dt+i);
 		_write_integer(os,s->l);

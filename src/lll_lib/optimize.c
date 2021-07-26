@@ -212,7 +212,7 @@ _set_to_0:
 
 
 
-lll_stack_offset_t _mark_strings(const lll_object_t* o,uint64_t* m){
+lll_stack_offset_t _mark_strings_update_imports(const lll_object_t* o,uint64_t* m,lll_import_index_t* im){
 	lll_stack_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff+=sizeof(lll_object_type_t);
@@ -241,31 +241,37 @@ lll_stack_offset_t _mark_strings(const lll_object_t* o,uint64_t* m){
 				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
 				while (l){
 					l--;
-					off+=_mark_strings(LLL_GET_OBJECT_ARGUMENT(o,off),m);
+					off+=_mark_strings_update_imports(LLL_GET_OBJECT_ARGUMENT(o,off),m,im);
 				}
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
+			{
+				lll_import_object_t* im_o=(lll_import_object_t*)o;
+				for (lll_arg_count_t i=0;i<im_o->ac;i++){
+					im_o->idx[i]=*(im+im_o->idx[i]);
+				}
+				return sizeof(lll_import_object_t)+im_o->ac*sizeof(lll_import_index_t)+eoff;
+			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
 				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
 				while (l){
 					l--;
-					off+=_mark_strings(LLL_GET_OBJECT_STATEMENT(o,off),m);
+					off+=_mark_strings_update_imports(LLL_GET_OBJECT_STATEMENT(o,off),m,im);
 				}
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			*(m+(((lll_debug_object_t*)o)->fpi>>6))|=1ull<<(((lll_debug_object_t*)o)->fpi&63);
-			return sizeof(lll_debug_object_t)+eoff+_mark_strings(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o),m);
+			return sizeof(lll_debug_object_t)+eoff+_mark_strings_update_imports(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o),m,im);
 	}
 	lll_stack_offset_t off=sizeof(lll_operator_object_t);
 	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
 	while (l){
 		l--;
-		off+=_mark_strings(LLL_GET_OBJECT_ARGUMENT(o,off),m);
+		off+=_mark_strings_update_imports(LLL_GET_OBJECT_ARGUMENT(o,off),m,im);
 	}
 	return off+eoff;
 }
@@ -447,7 +453,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_object(lll_object_t* o,lll_error_t
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_string_table(lll_compilation_data_t* c_dt,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_metadata(lll_compilation_data_t* c_dt,lll_error_t* e){
 	uint32_t ml=(c_dt->st.l>>6)+1;
 	uint64_t* m=malloc(ml*sizeof(uint64_t));
 	for (uint32_t i=0;i<ml;i++){
@@ -462,19 +468,38 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_string_table(lll_compilation_data_
 	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
 		*(m+((c_dt->i_dt.il+i)->i>>6))|=1ull<<((c_dt->i_dt.il+i)->i&63);
 	}
+	lll_import_index_t* im=malloc(c_dt->im.l*sizeof(lll_import_index_t));
+	uint32_t k=0;
+	uint32_t l=0;
 	for (lll_import_index_t i=0;i<c_dt->im.l;i++){
 		lll_string_index_t j=*(c_dt->im.dt+i);
-		if (j!=LLL_MAX_STRING_INDEX){
+		if (j==LLL_MAX_STRING_INDEX){
+			for (uint32_t n=k;n<i;n++){
+				*(c_dt->im.dt+n-l)=*(c_dt->im.dt+n);
+				*(im+n)=n-l;
+			}
+			k=i+1;
+			l++;
+		}
+		else{
 			*(m+(j>>6))|=1ull<<(j&63);
 		}
 	}
-	_mark_strings(c_dt->h,m);
-	*(m+ml-1)=~*(m+ml-1);
+	for (uint32_t i=k;i<c_dt->im.l;i++){
+		*(c_dt->im.dt+i-l)=*(c_dt->im.dt+i);
+		*(im+i)=i-l;
+	}
+	if (l){
+		c_dt->im.l-=l;
+		c_dt->im.dt=realloc(c_dt->im.dt,c_dt->im.l*sizeof(lll_string_index_t));
+	}
+	_mark_strings_update_imports(c_dt->h,m,im);
+	free(im);
 	lll_string_index_t* sm=malloc(c_dt->st.l*sizeof(lll_string_index_t));
-	uint32_t k=0;
-	uint32_t l=0;
+	k=0;
+	l=0;
 	for (uint32_t i=0;i<ml;i++){
-		uint64_t v=*(m+i);
+		uint64_t v=~(*(m+i));
 		while (v){
 			lll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
 			if (j==c_dt->st.l){
@@ -489,14 +514,16 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_string_table(lll_compilation_data_
 			v&=v-1;
 		}
 	}
+	free(m);
 	for (uint32_t i=k;i<c_dt->st.l;i++){
 		*(c_dt->st.dt+i-l)=*(c_dt->st.dt+i);
 		*(sm+i)=i-l;
 	}
-	c_dt->st.l-=l;
-	c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
-	free(m);
-	_update_strings(c_dt->h,sm);
+	if (l){
+		c_dt->st.l-=l;
+		c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
+		_update_strings(c_dt->h,sm);
+	}
 	free(sm);
 	return LLL_RETURN_NO_ERROR;
 }

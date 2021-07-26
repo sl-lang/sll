@@ -7,20 +7,20 @@
 
 #define CHECK_ERROR(is,o,ot,e) \
 	do{ \
-		int64_t __v=_read_integer(is); \
-		if (__v==READ_INTEGER_ERROR){ \
+		uint8_t __e=0; \
+		(o)=(ot)_read_integer(is,&__e); \
+		if (__e){ \
 			e->t=LLL_ERROR_INVALID_FILE_FORMAT; \
 			return LLL_RETURN_ERROR; \
 		} \
-		(o)=(ot)__v; \
 	} while (0)
 #define CHECK_ERROR2(is,o,t,f,ft) \
 	do{ \
-		int64_t __v=_read_integer(is); \
-		if (__v==READ_INTEGER_ERROR){ \
+		uint8_t __e=0; \
+		((t*)(o))->f=(ft)_read_integer(is,&__e); \
+		if (__e){ \
 			return 0; \
 		} \
-		((t*)(o))->f=(ft)__v; \
 	} while (0)
 #define READ_FIELD(o,t,f,is) \
 	do{ \
@@ -31,10 +31,11 @@
 
 
 
-int64_t _read_integer(lll_input_data_stream_t* is){
+uint64_t _read_integer(lll_input_data_stream_t* is,uint8_t* e){
 	int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==LLL_END_OF_DATA){
-		return READ_INTEGER_ERROR;
+		*e=1;
+		return 0;
 	}
 	uint64_t v=0;
 	uint8_t s=0;
@@ -43,10 +44,20 @@ int64_t _read_integer(lll_input_data_stream_t* is){
 		s+=7;
 		c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 		if (c==LLL_END_OF_DATA){
-			return READ_INTEGER_ERROR;
+			*e=1;
+			return 0;
 		}
 	}
-	v|=((uint64_t)c)<<s;
+	return v|(((uint64_t)c)<<s);
+}
+
+
+
+int64_t _read_signed_integer(lll_input_data_stream_t* is,uint8_t* e){
+	uint64_t v=_read_integer(is,e);
+	if (*e){
+		return 0;
+	}
 	return (v>>1)^(-((int64_t)(v&1)));
 }
 
@@ -67,9 +78,15 @@ uint8_t _read_object(lll_input_data_stream_t* is){
 			_bf_off+=sizeof(lll_char_object_t);
 			return 1;
 		case LLL_OBJECT_TYPE_INT:
-			CHECK_ERROR2(is,o,lll_integer_object_t,v,lll_integer_t);
-			_bf_off+=sizeof(lll_integer_object_t);
-			return 1;
+			{
+				uint8_t e=0;
+				((lll_integer_object_t*)o)->v=(lll_integer_t)_read_signed_integer(is,&e);
+				if (e){
+					return 0;
+				}
+				_bf_off+=sizeof(lll_integer_object_t);
+				return 1;
+			}
 		case LLL_OBJECT_TYPE_FLOAT:
 			READ_FIELD(o,lll_float_object_t,v,is);
 			_bf_off+=sizeof(lll_float_object_t);
@@ -106,11 +123,11 @@ uint8_t _read_object(lll_input_data_stream_t* is){
 				}
 				((lll_import_object_t*)o)->ac=(lll_arg_count_t)c;
 				for (lll_arg_count_t i=0;i<((lll_import_object_t*)o)->ac;i++){
-					int64_t v=_read_integer(is);
-					if (v==READ_INTEGER_ERROR){
+					uint8_t e=0;
+					((lll_import_object_t*)o)->idx[i]=(lll_import_index_t)_read_integer(is,&e);
+					if (e){
 						return 0;
 					}
-					((lll_import_object_t*)o)->idx[i]=(lll_import_index_t)v;
 				}
 				_bf_off+=sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac;
 				return 1;
@@ -164,30 +181,27 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 		return LLL_RETURN_ERROR;
 	}
 	c_dt->is=NULL;
-	CHECK_ERROR(is,c_dt->tm,uint64_t,e);
+	CHECK_ERROR(is,c_dt->tm,lll_time_t,e);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		CHECK_ERROR(is,c_dt->i_dt.s[i].l,lll_identifier_list_length_t,e);
-	}
-	CHECK_ERROR(is,c_dt->i_dt.ill,lll_identifier_list_length_t,e);
-	CHECK_ERROR(is,c_dt->im.l,lll_import_index_t,e);
-	CHECK_ERROR(is,c_dt->f_dt.l,lll_function_index_t,e);
-	CHECK_ERROR(is,c_dt->st.l,lll_string_index_t,e);
-	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		c_dt->i_dt.s[i].dt=malloc(c_dt->i_dt.s[i].l*sizeof(lll_identifier_t));
 		for (lll_identifier_list_length_t j=0;j<c_dt->i_dt.s[i].l;j++){
 			CHECK_ERROR(is,(c_dt->i_dt.s[i].dt+j)->sc,lll_scope_t,e);
 			CHECK_ERROR(is,(c_dt->i_dt.s[i].dt+j)->i,lll_string_index_t,e);
 		}
 	}
+	CHECK_ERROR(is,c_dt->i_dt.ill,lll_identifier_list_length_t,e);
 	c_dt->i_dt.il=malloc(c_dt->i_dt.ill*sizeof(lll_identifier_t));
 	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
 		CHECK_ERROR(is,(c_dt->i_dt.il+i)->sc,lll_scope_t,e);
 		CHECK_ERROR(is,(c_dt->i_dt.il+i)->i,lll_string_index_t,e);
 	}
+	CHECK_ERROR(is,c_dt->im.l,lll_import_index_t,e);
 	c_dt->im.dt=malloc(c_dt->im.l*sizeof(lll_string_index_t));
 	for (lll_import_index_t i=0;i<c_dt->im.l;i++){
 		CHECK_ERROR(is,*(c_dt->im.dt+i),lll_string_index_t,e);
 	}
+	CHECK_ERROR(is,c_dt->f_dt.l,lll_function_index_t,e);
 	c_dt->f_dt.dt=malloc(c_dt->f_dt.l*sizeof(lll_function_t*));
 	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
 		lll_stack_offset_t off;
@@ -202,6 +216,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 		}
 		*(c_dt->f_dt.dt+i)=k;
 	}
+	CHECK_ERROR(is,c_dt->st.l,lll_string_index_t,e);
 	c_dt->st.dt=malloc(c_dt->st.l*sizeof(lll_string_t*));
 	for (lll_string_index_t i=0;i<c_dt->st.l;i++){
 		lll_string_length_t l;

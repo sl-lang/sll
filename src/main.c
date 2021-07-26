@@ -527,7 +527,7 @@ _read_file_argument:
 			putchar('\n');
 		}
 		lll_error_t e;
-		if (!lll_optimize_string_table(&c_dt,&e)){
+		if (!lll_optimize_metadata(&c_dt,&e)){
 			lll_print_error(&is,&e);
 			goto _error;
 		}
@@ -545,7 +545,7 @@ _read_file_argument:
 				if (fpl==1&&!((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_C|FLAG_GENERATE_COMPILED_OBJECT))&((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_C|FLAG_GENERATE_COMPILED_OBJECT))-1))){
 					if (fl&FLAG_GENERATE_ASSEMBLY){
 						e.t=LLL_ERROR_UNKNOWN;
-						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){
+						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){// lgtm [cpp/path-injection]
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
@@ -554,7 +554,7 @@ _read_file_argument:
 					}
 					else if (fl&FLAG_GENERATE_C){
 						e.t=LLL_ERROR_UNKNOWN;
-						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_CODE,&e)){
+						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_CODE,&e)){// lgtm [cpp/path-injection]
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
@@ -563,7 +563,7 @@ _read_file_argument:
 					}
 					else{
 						e.t=LLL_ERROR_UNKNOWN;
-						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_RAW,&e)){
+						if (!write_object(o_fp,&c_dt,LLL_WRITE_MODE_RAW,&e)){// lgtm [cpp/path-injection]
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
@@ -608,7 +608,7 @@ _read_file_argument:
 				bf[i+3]='m';
 				bf[i+4]=0;
 				e.t=LLL_ERROR_UNKNOWN;
-				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){
+				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_ASSEMBLY,&e)){// lgtm [cpp/path-injection]
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
 					}
@@ -619,7 +619,7 @@ _read_file_argument:
 				bf[i+1]='c';
 				bf[i+2]=0;
 				e.t=LLL_ERROR_UNKNOWN;
-				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_CODE,&e)){
+				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_CODE,&e)){// lgtm [cpp/path-injection]
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
 					}
@@ -633,7 +633,7 @@ _read_file_argument:
 				bf[i+4]='c';
 				bf[i+5]=0;
 				e.t=LLL_ERROR_UNKNOWN;
-				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_RAW,&e)){
+				if (!write_object(bf,&c_dt,LLL_WRITE_MODE_RAW,&e)){// lgtm [cpp/path-injection]
 					if (e.t!=LLL_ERROR_UNKNOWN){
 						lll_print_error(&is,&e);
 					}
