@@ -63,56 +63,16 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 		} \
 	} while (0)
 
-#define _CONSTRUCT_CHAR_JOIN_(l) _CONSTRUCT_CHAR_##l
-#define _CONSTRUCT_CHAR_JOIN(l) _CONSTRUCT_CHAR_JOIN_(l)
-#define _CONSTRUCT_CHAR_COUNT_ARGS(_1,_2,n,...) n
-#define CONSTRUCT_CHAR(...) _CONSTRUCT_CHAR_JOIN(_CONSTRUCT_CHAR_COUNT_ARGS(__VA_ARGS__,2,1))(__VA_ARGS__)
-#define _CONSTRUCT_CHAR_1(c) ((#c)[0])
-#define _CONSTRUCT_CHAR_2(...) (',')
-#define CONSTRUCT_WORD(a,b) ((((uint16_t)(b))<<8)|(a))
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
-#define CONSTRUCT_QWORD(a,b,c,d,e,f,g,h) ((((uint64_t)(h))<<56)|(((uint64_t)(g))<<48)|(((uint64_t)(f))<<40)|(((uint64_t)(e))<<32)|(((uint64_t)(d))<<24)|(((uint64_t)(c))<<16)|(((uint64_t)(b))<<8)|(a))
-
-#define _FAST_COMPARE_JOIN_(l) FAST_COMPARE_##l
-#define _FAST_COMPARE_JOIN(l) _FAST_COMPARE_JOIN_(l)
-#define _FAST_COMPARE_COUNT_ARGS(_1,_2,_3,_4,_5,_6,_7,_8,n,...) n
-#define FAST_COMPARE(s,...) _FAST_COMPARE_JOIN(_FAST_COMPARE_COUNT_ARGS(__VA_ARGS__,8,7,6,5,4,3,2,1))(s,__VA_ARGS__)
-#define FAST_COMPARE_1(s,a) (*(s)==CONSTRUCT_CHAR(a))
-#define FAST_COMPARE_2(s,a,b) (*((uint16_t*)(s))==CONSTRUCT_WORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b)))
-#define FAST_COMPARE_3(s,a,b,c) (*((uint16_t*)(s))==CONSTRUCT_WORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b))&&*((s)+2)==CONSTRUCT_CHAR(c))
-#define FAST_COMPARE_4(s,a,b,c,d) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d)))
-#define FAST_COMPARE_5(s,a,b,c,d,e) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((s)+4)==CONSTRUCT_CHAR(e))
-#define FAST_COMPARE_6(s,a,b,c,d,e,f) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((uint16_t*)(s+4))==CONSTRUCT_WORD(CONSTRUCT_CHAR(e),CONSTRUCT_CHAR(f)))
-#define FAST_COMPARE_7(s,a,b,c,d,e,f,g) (*((uint32_t*)(s))==CONSTRUCT_DWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d))&&*((uint16_t*)(s+4))==CONSTRUCT_WORD(CONSTRUCT_CHAR(e),CONSTRUCT_CHAR(f))&&*((s)+6)==CONSTRUCT_CHAR(g))
-#define FAST_COMPARE_8(s,a,b,c,d,e,f,g,h) (*((uint64_t*)(s))==CONSTRUCT_QWORD(CONSTRUCT_CHAR(a),CONSTRUCT_CHAR(b),CONSTRUCT_CHAR(c),CONSTRUCT_CHAR(d),CONSTRUCT_CHAR(e),CONSTRUCT_CHAR(f),CONSTRUCT_CHAR(g),CONSTRUCT_CHAR(h)))
-#define _FAST_COMPARE_STR_JOIN_(l) FAST_COMPARE_STR_##l
-#define _FAST_COMPARE_STR_JOIN(l) _FAST_COMPARE_STR_JOIN_(l)
-#define FAST_COMPARE_STR(a,b,l) _FAST_COMPARE_STR_JOIN(l)(a,b)
-#define FAST_COMPARE_STR_1(a,b) (*(a)==*(b))
-#define FAST_COMPARE_STR_2(a,b) (*((uint16_t*)(a))==*((uint16_t*)(b)))
-#define FAST_COMPARE_STR_3(a,b) (*((uint16_t*)(a))==*((uint16_t*)(b))&&*((a)+2)==*((b)+2))
-#define FAST_COMPARE_STR_4(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b)))
-#define FAST_COMPARE_STR_5(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b))&&*((a)+4)==*((b)+4))
-#define FAST_COMPARE_STR_6(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b))&&*((uint16_t*)((a)+4))==*((uint16_t*)((b)+4)))
-#define FAST_COMPARE_STR_7(a,b) (*((uint32_t*)(a))==*((uint32_t*)(b))&&*((uint16_t*)(a)+4)==*((uint16_t*)(b)+4)&&*((a)+6)==*((b)+6))
-#define FAST_COMPARE_STR_8(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b)))
-#define FAST_COMPARE_STR_9(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((a)+8)==*((b)+8))
-#define FAST_COMPARE_STR_10(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint16_t*)(a)+8)==*((uint16_t*)(b)+8))
-#define FAST_COMPARE_STR_11(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint16_t*)(a)+8)==*((uint16_t*)(b)+8)&&*((a)+10)==*((b)+10))
-#define FAST_COMPARE_STR_12(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8))
-#define FAST_COMPARE_STR_13(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((a)+12)==*((b)+12))
-#define FAST_COMPARE_STR_14(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((uint16_t*)(a)+12)==*((uint16_t*)(b)+12))
-#define FAST_COMPARE_STR_15(a,b) (*((uint64_t*)(a))==*((uint64_t*)(b))&&*((uint32_t*)(a)+8)==*((uint32_t*)(b)+8)&&*((uint16_t*)(a)+12)==*((uint16_t*)(b)+12)&&*((a)+14)==*((b)+14))
-#define FAST_COMPARE_COMMA ,
 
 #define MAX(a,b) ((a)>(b)?(a):(b))
 
-#define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','L',0)
+#define ASSEMBLY_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','A',0)
+#define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','C',0)
 
 #define ERROR_DISPLAY_TAB_WIDTH 4
 
-#define HIGHLIGHT_COLOR "\x1b[31m"
-#define HIGHLIGHT_COLOR_RESET "\x1b[0m"
+#define ASSEMBLY_INSTRUCTION_LABEL 128
 
 
 
@@ -144,13 +104,23 @@ typedef struct __IMPORT_MODULE_DATA{
 
 
 
-extern uint8_t* _bf;
-extern lll_stack_offset_t _bf_off;
-extern lll_stack_offset_t _bf_sz;
+typedef struct __ASSEMBLY_GENERATOR_DATA{
+	lll_assembly_data_t* a_dt;
+	const lll_compilation_data_t* c_dt;
+	_lll_assembly_instruction_label_t n_lbl;
+	lll_variable_index_t* s_im[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	lll_variable_index_t* l_im;
+	lll_variable_index_t _n_vi;
+	lll_scope_t _l_sc;
+	lll_variable_index_t* _sc_vi;
+	lll_scope_t _sc_vi_l;
+	lll_instruction_index_t* _lm;
+	_lll_assembly_instruction_label_t _lm_l;
+} assembly_generator_data_t;
 
 
 
-lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const char* dt,lll_string_length_t l);
+lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const lll_char_t* dt,lll_string_length_t l);
 
 
 

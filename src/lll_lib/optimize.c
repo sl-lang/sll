@@ -441,10 +441,6 @@ lll_stack_offset_t _remove_padding_internal(lll_object_t* o,lll_stack_offset_t* 
 
 
 __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_object(lll_object_t* o,lll_error_t* e){
-	if (!_bf){
-		e->t=LLL_ERROR_NO_STACK;
-		return LLL_RETURN_ERROR;
-	}
 	if (!_optimize_object_internal(o,e)){
 		return LLL_RETURN_ERROR;
 	}
@@ -509,6 +505,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_metadata(lll_compilation_data_t* c
 				*(c_dt->st.dt+n-l)=*(c_dt->st.dt+n);
 				*(sm+n)=n-l;
 			}
+			free(*(c_dt->st.dt+j));
 			k=j+1;
 			l++;
 			v&=v-1;
@@ -522,6 +519,18 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_metadata(lll_compilation_data_t* c
 	if (l){
 		c_dt->st.l-=l;
 		c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
+		for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+			lll_identifier_list_t* l=c_dt->i_dt.s+i;
+			for (lll_identifier_list_length_t j=0;j<l->l;j++){
+				(l->dt+j)->i=*(sm+(l->dt+j)->i);
+			}
+		}
+		for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
+			(c_dt->i_dt.il+i)->i=*(sm+(c_dt->i_dt.il+i)->i);
+		}
+		for (lll_import_index_t i=0;i<c_dt->im.l;i++){
+			*(c_dt->im.dt+i)=*(sm+(*(c_dt->im.dt+i)));
+		}
 		_update_strings(c_dt->h,sm);
 	}
 	free(sm);
@@ -530,12 +539,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_metadata(lll_compilation_data_t* c
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_padding(lll_compilation_data_t* c_dt,lll_object_t* o,lll_error_t* e){
-	if (!_bf){
-		e->t=LLL_ERROR_NO_STACK;
-		return LLL_RETURN_ERROR;
-	}
+__LLL_IMPORT_EXPORT void lll_remove_object_padding(lll_compilation_data_t* c_dt,lll_object_t* o){
 	lll_stack_offset_t rm=0;
 	_remove_padding_internal(o,&rm,c_dt,(uint64_t)(void*)(c_dt->h));
-	return LLL_RETURN_NO_ERROR;
 }

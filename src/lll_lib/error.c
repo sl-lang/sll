@@ -69,7 +69,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 	while (c!='\n'&&c!='\r'&&c!=LLL_END_OF_DATA){
 		if (off==os){
 			t=c;
-			fputs(HIGHLIGHT_COLOR,stdout);
+			fputs("\x1b[31m",stdout);
 		}
 		if (off>=os&&off<oe&&sp){
 			*sp=c;
@@ -92,7 +92,7 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 		c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 		off++;
 		if (off==oe){
-			fputs(HIGHLIGHT_COLOR_RESET,stdout);
+			fputs("\x1b[0m",stdout);
 		}
 	}
 	putchar('\n');
@@ -100,11 +100,11 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 	for (;i<os+os_tb;i++){
 		putchar(' ');
 	}
-	fputs(HIGHLIGHT_COLOR,stdout);
+	fputs("\x1b[31m",stdout);
 	for (;i<oe+oe_tb;i++){
 		putchar('~');
 	}
-	fputs(HIGHLIGHT_COLOR_RESET"\n",stdout);
+	fputs("\x1b[0m\n",stdout);
 	DISABLE_COLOR();
 	switch (e->t){
 		default:

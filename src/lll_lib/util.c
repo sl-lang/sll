@@ -4,7 +4,7 @@
 
 
 
-lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const char* dt,lll_string_length_t l){
+lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const lll_char_t* dt,lll_string_length_t l){
 	lll_string_checksum_t c=0;
 	for (lll_string_length_t i=0;i<l;i++){
 		c^=(lll_string_checksum_t)(*(dt+i));

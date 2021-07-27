@@ -259,7 +259,7 @@ _merge_next_string:;
 	c_dt->_n_sc_id+=im->_n_sc_id;
 	lll_stack_offset_t m_sz=_patch_module(im->h,&im_dt);
 	free(im_dt.sm);
-	if (sz+m_sz>=_bf_sz){
+	if (sz+m_sz>=c_dt->_s.sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 		e->dt.r.off=0;
 		e->dt.r.sz=1;

@@ -98,27 +98,35 @@ lll_stack_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_t
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_object(lll_output_data_stream_t* os,const lll_object_t* o,lll_error_t* e){
-	if (!_bf){
-		e->t=LLL_ERROR_NO_STACK;
-		return LLL_RETURN_ERROR;
+__LLL_IMPORT_EXPORT void lll_write_assembly(lll_output_data_stream_t* os,const lll_assembly_data_t* a_dt){
+	uint32_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
+	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
+	lll_version_t v=LLL_VERSION;
+	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&v),sizeof(lll_version_t));
+	_write_integer(os,a_dt->tm);
+	_write_integer(os,a_dt->st.l);
+	for (lll_string_index_t i=0;i<a_dt->st.l;i++){
+		const lll_string_t* s=*(a_dt->st.dt+i);
+		_write_integer(os,s->l);
+		LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)s->v,s->l*sizeof(lll_char_t));
 	}
-	_write_object(os,o);
-	return LLL_RETURN_NO_ERROR;
 }
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt,lll_error_t* e){
-	if (!_bf){
-		e->t=LLL_ERROR_NO_STACK;
-		return LLL_RETURN_ERROR;
-	}
+__LLL_IMPORT_EXPORT void lll_write_object(lll_output_data_stream_t* os,const lll_object_t* o){
+	_write_object(os,o);
+}
+
+
+
+__LLL_IMPORT_EXPORT void lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt){
 	uint32_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
 	lll_version_t v=LLL_VERSION;
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&v),sizeof(lll_version_t));
 	_write_integer(os,c_dt->tm);
+	_write_integer(os,c_dt->_n_sc_id);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		const lll_identifier_list_t* l=c_dt->i_dt.s+i;
 		_write_integer(os,l->l);
@@ -152,5 +160,4 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_write_compiled_object(lll_output_data_strea
 		LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)s->v,s->l*sizeof(lll_char_t));
 	}
 	_write_object(os,c_dt->h);
-	return LLL_RETURN_NO_ERROR;
 }

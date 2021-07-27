@@ -25,6 +25,7 @@
 #define PRINT_STATIC_STR(s) fwrite((void*)(s),sizeof(char),sizeof((s))/sizeof(char)-1,stdout)
 #define _STR(x) #x
 #define STR(x) _STR(x)
+#define ASSEMBLY_STACK_SIZE 16384
 #define COMPILER_STACK_SIZE 65536
 #define FLAG_EXPAND_PATH 1
 #define FLAG_GENERATE_ASSEMBLY 2
@@ -33,8 +34,9 @@
 #define FLAG_MERGE_IMPORTS 16
 #define FLAG_NO_LOGO 32
 #define FLAG_NO_RUN 64
-#define FLAG_PRINT_OBJECT 128
-#define FLAG_VERBOSE 256
+#define FLAG_PRINT_ASSEMBLY 128
+#define FLAG_PRINT_OBJECT 256
+#define FLAG_VERBOSE 512
 #define OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE 2
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
@@ -42,7 +44,8 @@
 
 
 
-uint8_t st[COMPILER_STACK_SIZE];
+uint8_t a_st[ASSEMBLY_STACK_SIZE];
+uint8_t c_st[COMPILER_STACK_SIZE];
 uint8_t ol;
 uint16_t fl;
 char* i_fp;
@@ -167,8 +170,10 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 				}
 				lll_error_t e;
 				if (!lll_load_compiled_object(is,c_dt,&e)){
+					lll_free_function_data(&(c_dt->f_dt));
 					lll_free_identifier_data(&(c_dt->i_dt));
 					lll_free_import_data(&(c_dt->im));
+					lll_free_string_table(&(c_dt->st));
 					if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
 						if (fl&FLAG_VERBOSE){
 							PRINT_STATIC_STR("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
@@ -194,26 +199,22 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 									nm[m]=s->v[m];
 								}
 								nm[s->l]=0;
-								lll_stack_context_t s_ctx;
-								lll_save_stack_context(&s_ctx);
-								uint8_t n_st[COMPILER_STACK_SIZE];
 								lll_compilation_data_t n_c_dt={0};
 								FILE* n_f=NULL;
 								lll_input_data_stream_t n_is;
 								char n_f_fp[MAX_PATH_LENGTH];
-								lll_set_internal_stack(n_st,COMPILER_STACK_SIZE);
+								uint8_t n_st[COMPILER_STACK_SIZE];
+								lll_set_compilation_data_stack(&n_c_dt,n_st,COMPILER_STACK_SIZE);
 								if (!load_file(nm,&n_c_dt,&n_f,&n_is,n_f_fp)){
 									if (n_f){
 										fclose(n_f);
 									}
-									lll_load_stack_context(&s_ctx);
 									lll_free_compilation_data(&n_c_dt);
 									return 0;
 								}
 								if (n_f){
 									fclose(n_f);
 								}
-								lll_load_stack_context(&s_ctx);
 								if (fl&FLAG_VERBOSE){
 									PRINT_STATIC_STR("Merging Module '");
 									print_str(n_f_fp);
@@ -282,46 +283,19 @@ uint8_t load_file(const char* f_nm,lll_compilation_data_t* c_dt,FILE** f,lll_inp
 
 
 
-uint8_t write_assembly(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t ext,lll_error_t* e){
-	if (ext){
-		uint16_t i=0;
-		while (*(o_fp+i)){
-			i++;
-		}
-		*(o_fp+i)='.';
-		*(o_fp+i+1)='l';
-		*(o_fp+i+2)='l';
-		*(o_fp+i+3)='l';
-		*(o_fp+i+4)='a';
-		*(o_fp+i+5)=0;
+uint8_t write_assembly(char* o_fp,const lll_assembly_data_t* a_dt){
+	uint16_t i=0;
+	while (*(o_fp+i)){
+		i++;
 	}
-	return 1;
-}
-
-
-
-uint8_t write_code(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t t,uint8_t ext,lll_error_t* e){
-	printf("Generate Code For '%s' (Index %u) -> .%s\n",CODE_GENERATION_LANGUAGES[t],CODE_GENERATION_LANGUAGE_VALUES[t],CODE_GENERATION_LANGUAGES_EXTENSIONS[t]);
-	return 1;
-}
-
-
-
-uint8_t write_compiled(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t ext,lll_error_t* e){
-	if (ext){
-		uint16_t i=0;
-		while (*(o_fp+i)){
-			i++;
-		}
-		*(o_fp+i)='.';
-		*(o_fp+i+1)='l';
-		*(o_fp+i+2)='l';
-		*(o_fp+i+3)='l';
-		*(o_fp+i+4)='c';
-		*(o_fp+i+5)=0;
-	}
+	*(o_fp+i)='.';
+	*(o_fp+i+1)='l';
+	*(o_fp+i+2)='l';
+	*(o_fp+i+3)='l';
+	*(o_fp+i+4)='a';
+	*(o_fp+i+5)=0;
 	if (fl&FLAG_VERBOSE){
-		PRINT_STATIC_STR("Writing Object to File '");
+		PRINT_STATIC_STR("Writing Assembly to File '");
 		print_str(o_fp);
 		PRINT_STATIC_STR("'...\n");
 	}
@@ -334,10 +308,49 @@ uint8_t write_compiled(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t ext
 	}
 	lll_output_data_stream_t os;
 	lll_create_output_data_stream(f,&os);
-	if (!lll_write_compiled_object(&os,c_dt,e)){
-		fclose(f);
+	lll_write_assembly(&os,a_dt);
+	if (fl&FLAG_VERBOSE){
+		PRINT_STATIC_STR("File Written Successfully.\n");
+	}
+	fclose(f);
+	return 1;
+}
+
+
+
+uint8_t write_code(char* o_fp,const lll_compilation_data_t* c_dt,uint8_t t){
+	printf("Generate Code For '%s' (Index %u) -> .%s\n",CODE_GENERATION_LANGUAGES[t],CODE_GENERATION_LANGUAGE_VALUES[t],CODE_GENERATION_LANGUAGES_EXTENSIONS[t]);
+	return 1;
+}
+
+
+
+uint8_t write_compiled(char* o_fp,const lll_compilation_data_t* c_dt){
+	uint16_t i=0;
+	while (*(o_fp+i)){
+		i++;
+	}
+	*(o_fp+i)='.';
+	*(o_fp+i+1)='l';
+	*(o_fp+i+2)='l';
+	*(o_fp+i+3)='l';
+	*(o_fp+i+4)='c';
+	*(o_fp+i+5)=0;
+	if (fl&FLAG_VERBOSE){
+		PRINT_STATIC_STR("Writing Compiled Object to File '");
+		print_str(o_fp);
+		PRINT_STATIC_STR("'...\n");
+	}
+	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
+	if (!f){
+		PRINT_STATIC_STR("Unable to Open Output File '");
+		print_str(o_fp);
+		PRINT_STATIC_STR("'\n");
 		return 0;
 	}
+	lll_output_data_stream_t os;
+	lll_create_output_data_stream(f,&os);
+	lll_write_compiled_object(&os,c_dt);
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("File Written Successfully.\n");
 	}
@@ -363,6 +376,7 @@ int main(int argc,const char** argv){
 	fpl=0;
 	const char* o_fp=NULL;
 	FILE* f=NULL;
+	lll_assembly_data_t a_dt={0};
 	lll_compilation_data_t c_dt={0};
 	uint32_t im_fpl=UINT32_MAX;
 	for (int i=1;i<argc;i++){
@@ -466,6 +480,9 @@ int main(int argc,const char** argv){
 				goto _unkown_switch;
 			}
 		}
+		else if ((*e=='-'&&*(e+1)=='P'&&*(e+2)==0)||cmp_str(e,"--print-assembly")){
+			fl|=FLAG_PRINT_ASSEMBLY;
+		}
 		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||cmp_str(e,"--print-objects")){
 			fl|=FLAG_PRINT_OBJECT;
 		}
@@ -531,6 +548,9 @@ _next_argument:;
 		if (fl&FLAG_MERGE_IMPORTS){
 			PRINT_STATIC_STR("  Import Merge Mode\n");
 		}
+		if (fl&FLAG_PRINT_ASSEMBLY){
+			PRINT_STATIC_STR("  Assembly Print Mode\n");
+		}
 		if (fl&FLAG_PRINT_OBJECT){
 			PRINT_STATIC_STR("  Object Print Mode\n");
 		}
@@ -563,7 +583,7 @@ _next_argument:;
 		goto _help;
 	}
 	for (uint32_t j=0;j<fpl;j++){
-		lll_set_internal_stack(st,COMPILER_STACK_SIZE);
+		lll_set_compilation_data_stack(&c_dt,c_st,COMPILER_STACK_SIZE);
 		char f_fp[MAX_PATH_LENGTH];
 		lll_input_data_stream_t is;
 		if (!load_file(*(fp+j),&c_dt,&f,&is,f_fp)){
@@ -583,21 +603,13 @@ _next_argument:;
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Removing Debug Data...\n");
 			}
-			lll_error_t e;
-			if (!lll_remove_object_debug_data(c_dt.h,&e)){
-				lll_print_error(&is,&e);
-				goto _error;
-			}
+			lll_remove_object_debug_data(c_dt.h);
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Removing Object Padding...\n");
 			}
-			lll_error_t e;
-			if (!lll_remove_object_padding(&c_dt,c_dt.h,&e)){
-				lll_print_error(&is,&e);
-				goto _error;
-			}
+			lll_remove_object_padding(&c_dt,c_dt.h);
 		}
 		if (fl&FLAG_PRINT_OBJECT){
 			lll_print_object(&c_dt,c_dt.h,stdout);
@@ -607,6 +619,18 @@ _next_argument:;
 		if (!lll_optimize_metadata(&c_dt,&e)){
 			lll_print_error(&is,&e);
 			goto _error;
+		}
+		if ((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_PRINT_ASSEMBLY))||!(fl&FLAG_NO_RUN)){
+			PRINT_STATIC_STR("Generating Assembly...\n");
+			lll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
+			if (!lll_generate_assembly(&c_dt,&a_dt,&e)){
+				lll_print_error(&is,&e);
+				goto _error;
+			}
+		}
+		if (fl&FLAG_PRINT_ASSEMBLY){
+			lll_print_assembly(&a_dt,stdout);
+			putchar('\n');
 		}
 		if ((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT))||cg_l){
 			char bf[MAX_PATH_LENGTH];
@@ -624,14 +648,9 @@ _next_argument:;
 						bf[i]=*(o_fp+i);
 						i++;
 					}
-					bf[i]=0;
-					uint8_t ext=(!!((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT))&((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT))-1)));
-					if (cg_l&(cg_l-1)){
-						ext=1;
-					}
 					if (fl&FLAG_GENERATE_ASSEMBLY){
-						e.t=LLL_ERROR_UNKNOWN;
-						if (!write_assembly(bf,&c_dt,ext,&e)){// lgtm [cpp/path-injection]
+						bf[i]=0;
+						if (!write_assembly(bf,&a_dt)){// lgtm [cpp/path-injection]
 							if (e.t!=LLL_ERROR_UNKNOWN){
 								lll_print_error(&is,&e);
 							}
@@ -639,21 +658,15 @@ _next_argument:;
 						}
 					}
 					if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-						e.t=LLL_ERROR_UNKNOWN;
-						if (!write_compiled(bf,&c_dt,ext,&e)){// lgtm [cpp/path-injection]
-							if (e.t!=LLL_ERROR_UNKNOWN){
-								lll_print_error(&is,&e);
-							}
+						bf[i]=0;
+						if (!write_compiled(bf,&c_dt)){// lgtm [cpp/path-injection]
 							goto _error;
 						}
 					}
 					for (uint8_t j=0;j<sizeof(CODE_GENERATION_LANGUAGES)/sizeof(CODE_GENERATION_LANGUAGES[0]);j++){
 						if (cg_l&(1<<j)){
-							e.t=LLL_ERROR_UNKNOWN;
-							if (!write_code(bf,&c_dt,j,ext,&e)){// lgtm [cpp/path-injection]
-								if (e.t!=LLL_ERROR_UNKNOWN){
-									lll_print_error(&is,&e);
-								}
+							bf[i]=0;
+							if (!write_code(bf,&c_dt,j)){// lgtm [cpp/path-injection]
 								goto _error;
 							}
 						}
@@ -690,32 +703,23 @@ _next_argument:;
 					bf[i]='.';
 				}
 			}
-			bf[i+1]=0;
+			i++;
 			if (fl&FLAG_GENERATE_ASSEMBLY){
-				e.t=LLL_ERROR_UNKNOWN;
-				if (!write_assembly(bf,&c_dt,1,&e)){// lgtm [cpp/path-injection]
-					if (e.t!=LLL_ERROR_UNKNOWN){
-						lll_print_error(&is,&e);
-					}
+				bf[i]=0;
+				if (!write_assembly(bf,&a_dt)){// lgtm [cpp/path-injection]
 					goto _error;
 				}
 			}
 			if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-				e.t=LLL_ERROR_UNKNOWN;
-				if (!write_compiled(bf,&c_dt,1,&e)){// lgtm [cpp/path-injection]
-					if (e.t!=LLL_ERROR_UNKNOWN){
-						lll_print_error(&is,&e);
-					}
+				bf[i]=0;
+				if (!write_compiled(bf,&c_dt)){// lgtm [cpp/path-injection]
 					goto _error;
 				}
 			}
 			for (uint8_t j=0;j<sizeof(CODE_GENERATION_LANGUAGES)/sizeof(CODE_GENERATION_LANGUAGES[0]);j++){
 				if (cg_l&(1<<j)){
-					e.t=LLL_ERROR_UNKNOWN;
-					if (!write_code(bf,&c_dt,j,1,&e)){// lgtm [cpp/path-injection]
-						if (e.t!=LLL_ERROR_UNKNOWN){
-							lll_print_error(&is,&e);
-						}
+					bf[i]=0;
+					if (!write_code(bf,&c_dt,j)){// lgtm [cpp/path-injection]
 						goto _error;
 					}
 				}
@@ -735,6 +739,7 @@ _skip_write:;
 		}
 		fclose(f);
 		f=NULL;
+		lll_free_assembly_data(&a_dt);
 		lll_free_compilation_data(&c_dt);
 	}
 	while (im_fpl<fpl){
@@ -757,6 +762,7 @@ _error:
 	if (fp){
 		free(fp);
 	}
+	lll_free_assembly_data(&a_dt);
 	lll_free_compilation_data(&c_dt);
 	if (f){
 		fclose(f);

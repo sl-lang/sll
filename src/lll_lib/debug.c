@@ -66,14 +66,14 @@ lll_stack_offset_t _remove_debug_data_internal(lll_object_t* o){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_input_data_stream_t* is,lll_error_t* e){
-	if (!_bf){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is,lll_error_t* e){
+	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
 	}
-	lll_debug_object_t* dbg=(lll_debug_object_t*)(_bf+_bf_off);
-	_bf_off+=sizeof(lll_debug_object_t);
-	if (_bf_off>=_bf_sz){
+	lll_debug_object_t* dbg=(lll_debug_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
+	c_dt->_s.off+=sizeof(lll_debug_object_t);
+	if (c_dt->_s.off>=c_dt->_s.sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
 		e->dt.r.off=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-2;
 		e->dt.r.sz=1;
@@ -89,11 +89,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_input_data_stream_t
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_remove_object_debug_data(lll_object_t* o,lll_error_t* e){
-	if (!_bf){
-		e->t=LLL_ERROR_NO_STACK;
-		return LLL_RETURN_ERROR;
-	}
+__LLL_IMPORT_EXPORT void lll_remove_object_debug_data(lll_object_t* o){
 	_remove_debug_data_internal(o);
-	return LLL_RETURN_NO_ERROR;
 }

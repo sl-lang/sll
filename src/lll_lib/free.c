@@ -5,6 +5,16 @@
 
 
 
+__LLL_IMPORT_EXPORT void lll_free_assembly_data(lll_assembly_data_t* a_dt){
+	a_dt->tm=0;
+	lll_free_string_table(&(a_dt->st));
+	a_dt->_s.ptr=NULL;
+	a_dt->_s.off=0;
+	a_dt->_s.sz=0;
+}
+
+
+
 __LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt){
 	c_dt->is=NULL;
 	c_dt->tm=0;
@@ -13,6 +23,9 @@ __LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt)
 	lll_free_identifier_data(&(c_dt->i_dt));
 	lll_free_import_data(&(c_dt->im));
 	lll_free_string_table(&(c_dt->st));
+	c_dt->_s.ptr=NULL;
+	c_dt->_s.off=0;
+	c_dt->_s.sz=0;
 	c_dt->_n_sc_id=1;
 }
 
@@ -40,7 +53,7 @@ __LLL_IMPORT_EXPORT void lll_free_function_data(lll_function_data_t* f_dt){
 	for (lll_function_index_t i=0;i<f_dt->l;i++){
 		free(*(f_dt->dt+i));
 	}
-	if (f_dt->l){
+	if (f_dt->dt){
 		free(f_dt->dt);
 		f_dt->dt=NULL;
 	}
@@ -50,7 +63,7 @@ __LLL_IMPORT_EXPORT void lll_free_function_data(lll_function_data_t* f_dt){
 
 
 __LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im){
-	if (im->l){
+	if (im->dt){
 		free(im->dt);
 		im->dt=NULL;
 	}
