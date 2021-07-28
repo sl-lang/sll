@@ -11,8 +11,7 @@ Options:
   -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.llla | .lllc | ...]. If no <output_file> is supplied, then each <file> output is written to <file_without_extension>[.llla | .lllc | ...]
   -O0 -> No optimization
   -O1 -> Remove padding
-  -O2 -> Remove padding + Global optimization (default)
-  -O3 -> Remove padding + Global optimization + Removal of debug data
+  -O2 -> Remove padding + Removal of debug data (default)
   -P, --print-assembly -> Print assembly
   -p, --print-objects -> Print objects
   -R, --no-run -> Disable program execution mode

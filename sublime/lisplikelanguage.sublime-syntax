@@ -22,7 +22,7 @@ contexts:
       captures:
         1: punctuation.definition.comment.lll
   objects:
-    - match: '(\()\s*(?:(\?|->)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.lll punctuation.section.parens.begin.lll
         2: keyword.control.conditional.lll
@@ -33,8 +33,10 @@ contexts:
         7: keyword.operator.assignment.lll
         8: keyword.control.import.lll
         9: keyword.declaration.function.lll
-        10: support.function.builtin.lll
-        11: variable.function.lll
+        10: support.function.builtin.io.lll
+        11: meta.function-call.lll variable.function.lll
+        12: support.function.builtin.exit.lll
+        13: keyword.control.return.lll
       push:
         - meta_scope: meta.group.lll meta.parens.lll
         - match: '\)'

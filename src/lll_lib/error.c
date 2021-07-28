@@ -45,6 +45,15 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			case LLL_ERROR_INVALID_IMPORT_INDEX:
 				printf("Unknown Module Index '%u'\n",e->dt.im_i);
 				return;
+			case LLL_ERROR_INVALID_INSTRUCTION:
+				printf("Invalid Instruction: 0x%.2hhx\n",e->dt.it);
+				return;
+			case LLL_ERROR_STACK_CORRUPTED:
+				printf("Stack Corruption Detected\n");
+				return;
+			case LLL_ERROR_INVALID_INSTRUCTION_INDEX:
+				printf("Instruction Index Out of Bounds\n");
+				return;
 			case LLL_ERROR_ASSERTION:
 				printf("%s\n",e->dt.str);
 				return;

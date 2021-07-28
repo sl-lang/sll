@@ -6,7 +6,8 @@
 	(= i (+ i 1))
 })
 (= func (,,, x y {
-	(:> "x = " x ", y = " y "\n")
+	(:> "(Function Args: {x, y} = {" x ", " y "}) ")
+	(@@ (* x y))
 }))
 (= FACTORIAL 10)
 (= i 1 (:> "After Var Init (i=" i ")\n"))
@@ -27,5 +28,6 @@
 (:> FACTORIAL "! = " i '\n')
 (< 10 5 (:> "This Should Never Happen"))
 (-- "import.lll")
-(<- func 10 2)
+(:> "Call: " (<- func 10 2) "\n")
 (:> "Program End\n")
+(@ 0)

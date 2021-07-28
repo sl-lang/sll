@@ -69,8 +69,6 @@ uint8_t _read_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is){
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_NIL:
-		case LLL_OBJECT_TYPE_TRUE:
-		case LLL_OBJECT_TYPE_FALSE:
 			c_dt->_s.off+=sizeof(lll_object_t);
 			return 1;
 		case LLL_OBJECT_TYPE_CHAR:
@@ -217,6 +215,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 		ai->t=(lll_assembly_instruction_type_t)c;
 		switch (LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
 				{
 					uint8_t e=0;
 					ai->dt.i=(lll_integer_t)_read_signed_integer(is,&e);
@@ -226,12 +225,15 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 					break;
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
 				if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&(ai->dt.f)),sizeof(lll_float_t))){
 					e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 					return LLL_RETURN_ERROR;
 				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 				if (c==LLL_END_OF_DATA){
 					e->t=LLL_ERROR_INVALID_FILE_FORMAT;
@@ -263,10 +265,31 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 				CHECK_ERROR(is,ai->dt.v,lll_variable_index_t,e);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				CHECK_ERROR(is,ai->dt.s,lll_string_index_t,e);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_DIV:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_MOD:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_AND:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					CHECK_ERROR(is,ai->dt.v,lll_variable_index_t,e);
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);

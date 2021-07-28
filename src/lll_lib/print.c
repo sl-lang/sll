@@ -36,11 +36,11 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 		eoff+=sizeof(lll_object_type_t);
 		o=LLL_GET_OBJECT_AFTER_NOP(o);
 	}
-	if ((LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_TYPE&&LLL_GET_OBJECT_TYPE(o)<LLL_OBJECT_TYPE_MIN_EXTRA)||LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_IMPORT){
+	if ((LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_TYPE&&LLL_GET_OBJECT_TYPE(o)<LLL_OBJECT_TYPE_MIN_EXTRA)||LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_RETURN||LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_EXIT||LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_IMPORT){
 		fputc('(',f);
 	}
 	if (LLL_IS_OBJECT_CONST(o)){
-		fprintf(f,"@const ");
+		fprintf(f,"#const ");
 	}
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
@@ -93,12 +93,6 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 			return sizeof(lll_float_object_t)+eoff;
 		case LLL_OBJECT_TYPE_NIL:
 			fprintf(f,"nil");
-			return sizeof(lll_object_t)+eoff;
-		case LLL_OBJECT_TYPE_TRUE:
-			fprintf(f,"true");
-			return sizeof(lll_object_t)+eoff;
-		case LLL_OBJECT_TYPE_FALSE:
-			fprintf(f,"false");
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
 			{
@@ -250,6 +244,12 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
 			fprintf(f,">=");
 			break;
+		case LLL_OBJECT_TYPE_RETURN:
+			fprintf(f,"@@");
+			break;
+		case LLL_OBJECT_TYPE_EXIT:
+			fprintf(f,"@");
+			break;
 		case LLL_OBJECT_TYPE_IMPORT:
 			{
 				fputc('-',f);
@@ -317,31 +317,43 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 				fprintf(f,"POP");
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_POP_TWO:
-				fprintf(f,"POP 2");
+				fprintf(f,"POP & POP");
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_ROT:
 				fprintf(f,"ROT");
 				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_ROT_POP:
+				fprintf(f,"ROT & POP");
+				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_DUP:
 				fprintf(f,"DUP");
 				break;
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NIL:
-				fprintf(f,"PUSH nil");
-				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 				fprintf(f,"PUSH %"PRId64"",ai->dt.i);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE:
+				fprintf(f,"PUSH -1");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO:
+				fprintf(f,"PUSH 0");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ONE:
+				fprintf(f,"PUSH 1");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TWO:
+				fprintf(f,"PUSH 2");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_THREE:
+				fprintf(f,"PUSH 3");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FOUR:
+				fprintf(f,"PUSH 4");
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 				fprintf(f,"PUSH %lf",ai->dt.f);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				fprintf(f,"PUSH %u (char)",ai->dt.c);
-				break;
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TRUE:
-				fprintf(f,"PUSH true");
-				break;
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FALSE:
-				fprintf(f,"PUSH false");
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II:
 				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
@@ -352,16 +364,16 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
-				fprintf(f,"LOAD #%u",ai->dt.v);
+				fprintf(f,"LOAD $%u",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 				fprintf(f,"LOADS #%u",ai->dt.s);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
-				fprintf(f,"STORE #%u",ai->dt.v);
+				fprintf(f,"STORE $%u",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
-				fprintf(f,"STORE #%u & POP",ai->dt.v);
+				fprintf(f,"STORE $%u & POP",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
@@ -436,40 +448,110 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
-				fprintf(f,"NOT");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"NOT $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"NOT");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
-				fprintf(f,"ADD");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"ADD $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"ADD");
+				}
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
+				fprintf(f,"INC $%u",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
-				fprintf(f,"SUB");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"SUB $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"SUB");
+				}
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
+				fprintf(f,"DEC $%u",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:
-				fprintf(f,"MULT");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"MULT $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"MULT");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_DIV:
-				fprintf(f,"DIV");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"DIV $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"DIV");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV:
-				fprintf(f,"FDIV");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"FDIV $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"FDIV");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_MOD:
-				fprintf(f,"MOD");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"MOD $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"MOD");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_AND:
-				fprintf(f,"AND");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"AND $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"AND");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
-				fprintf(f,"OR");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"OR $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"OR");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
-				fprintf(f,"XOR");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"XOR $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"XOR");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
-				fprintf(f,"INV");
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					fprintf(f,"INV $%u",ai->dt.v);
+				}
+				else{
+					fprintf(f,"INV");
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				fprintf(f,"PRINT");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
+				fprintf(f,"PRINT %u (char)",ai->dt.c);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
+				fprintf(f,"PRINT #%u",ai->dt.s);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
+				fprintf(f,"PRINT $%u",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 				fprintf(f,"CALL");
@@ -477,8 +559,23 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 				fprintf(f,"RET");
 				break;
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_NIL:
-				fprintf(f,"PUSH nil & RET");
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
+				fprintf(f,"RET %"PRId64"",ai->dt.i);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO:
+				fprintf(f,"RET 0");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
+				fprintf(f,"RET %lf",ai->dt.f);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
+				fprintf(f,"RET %u (char)",ai->dt.c);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
+				fprintf(f,"RET #%u",ai->dt.s);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
+				fprintf(f,"RET $%u",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END:
 				fprintf(f,"END");

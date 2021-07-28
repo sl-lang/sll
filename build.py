@@ -7,7 +7,7 @@ import sys
 
 
 COMMENT_REGEX=re.compile(br"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
-COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG"]) if os.name=="nt" else [])
+COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG",b"DEBUG_BUILD"]) if os.name=="nt" else ([] if "--release" in sys.argv else [b"DEBUG_BUILD"]))
 DEFINE_LINE_CONTINUE_REGEX=re.compile(br"\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
 ESCAPE_CHARACTER_REGEX=re.compile(br"[^\x20-~]")
@@ -325,7 +325,7 @@ if (os.name=="nt"):
 	if ("--run" in sys.argv):
 		os.chdir("build")
 		subprocess.run(["lll.exe","-h"])
-		if (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test","-p","-e","-I","../example","-m","-R"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O3","-p","-P","-e","-L","-a","-c","-o","test2","-R"]).returncode!=0 or subprocess.run(["lll.exe","test2.llla","-v","-P","-L"]).returncode!=0):
+		if (subprocess.run(["lll.exe","../example/test.lll","-v","-O0","-c","-o","test","-p","-e","-I","../example","-m","-R"]).returncode!=0 or subprocess.run(["lll.exe","test.lllc","-v","-O2","-p","-P","-e","-L","-a","-c","-o","test2","-R"]).returncode!=0 or subprocess.run(["lll.exe","test2.llla","-v","-P","-L"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		os.chdir(cd)
@@ -350,5 +350,5 @@ else:
 			sys.exit(1)
 	if ("--run" in sys.argv):
 		subprocess.run(["build/lll","-h"])
-		if (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test","-p","-e","-I","example","-m","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test2.llla","-v","-P","-L"]).returncode!=0):
+		if (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test","-p","-e","-I","example","-m","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O2","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test2.llla","-v","-P","-L"]).returncode!=0):
 			sys.exit(1)

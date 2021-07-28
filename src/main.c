@@ -39,10 +39,9 @@
 #define FLAG_PRINT_OBJECT 256
 #define FLAG_VERBOSE 512
 #define _FLAG_ASSEMBLY_GENERATED 1024
-#define OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE 2
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
-#define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 3
+#define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
 
 
 
@@ -353,7 +352,7 @@ uint8_t write_compiled(char* o_fp,const lll_compilation_data_t* c_dt){
 
 int main(int argc,const char** argv){
 	int32_t ec=1;
-	ol=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE;
+	ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
 	fl=0;
 	i_fp=malloc(sizeof(char));
 	if (!i_fp){
@@ -445,9 +444,6 @@ int main(int argc,const char** argv){
 				ol=OPTIMIZE_LEVEL_REMOVE_PADDING;
 			}
 			else if (*(e+2)=='2'){
-				ol=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE;
-			}
-			else if (*(e+2)=='3'){
 				ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
 			}
 			else{
@@ -496,9 +492,6 @@ _read_file_argument:
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
 			PRINT_STATIC_STR("    Padding Reduction\n");
-		}
-		if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
-			PRINT_STATIC_STR("    Global Optimization\n");
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
 			PRINT_STATIC_STR("    Debug Data Stripping\n");
@@ -565,16 +558,6 @@ _read_file_argument:
 			goto _error;
 		}
 		if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
-			if (ol>=OPTIMIZE_LEVEL_GLOBAL_OPTIMIZE){
-				if (fl&FLAG_VERBOSE){
-					PRINT_STATIC_STR("Performing Global Optimization...\n");
-				}
-				lll_error_t e;
-				if (!lll_optimize_object(c_dt.h,&e)){
-					lll_print_error(&is,&e);
-					goto _error;
-				}
-			}
 			if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Removing Debug Data...\n");
@@ -691,7 +674,14 @@ _skip_write:;
 			lll_create_output_data_stream(stdout,&ros);
 			lll_stack_data_t st;
 			lll_setup_stack(&st,vm_st,VM_STACK_SIZE);
-			lll_return_code_t r=lll_run_assembly(&a_dt,&st,&ris,&ros);
+			lll_error_t e={
+				LLL_ERROR_UNKNOWN
+			};
+			lll_return_code_t r=lll_run_assembly(&a_dt,&st,&ris,&ros,&e);
+			if (e.t!=LLL_ERROR_UNKNOWN){
+				lll_print_error(NULL,&e);
+				goto _error;
+			}
 			if (r){
 				ec=r;
 				goto _error;

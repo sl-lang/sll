@@ -14,8 +14,6 @@ lll_stack_offset_t _patch_import(lll_object_t* o,import_data_t* dt){
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_NIL:
-		case LLL_OBJECT_TYPE_TRUE:
-		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
 			return sizeof(lll_char_object_t)+eoff;
@@ -120,8 +118,6 @@ lll_stack_offset_t _patch_module(lll_object_t* o,const import_module_data_t* im_
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_NIL:
-		case LLL_OBJECT_TYPE_TRUE:
-		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
 			return sizeof(lll_char_object_t)+eoff;

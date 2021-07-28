@@ -4,13 +4,13 @@
 
 
 
-lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const lll_char_t* dt,lll_string_length_t l){
+lll_string_index_t _create_string(lll_string_table_t* st,const lll_char_t* dt,lll_string_length_t l){
 	lll_string_checksum_t c=0;
 	for (lll_string_length_t i=0;i<l;i++){
 		c^=(lll_string_checksum_t)(*(dt+i));
 	}
-	for (lll_string_index_t i=0;i<c_dt->st.l;i++){
-		lll_string_t* s=*(c_dt->st.dt+i);
+	for (lll_string_index_t i=0;i<st->l;i++){
+		lll_string_t* s=*(st->dt+i);
 		if (s->c==c&&s->l==l){
 			for (lll_string_length_t j=0;j<l;j++){
 				if (*(dt+j)!=*(s->v+j)){
@@ -21,8 +21,8 @@ lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const lll_char_t*
 		}
 _check_next_string:;
 	}
-	c_dt->st.l++;
-	c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
+	st->l++;
+	st->dt=realloc(st->dt,st->l*sizeof(lll_string_t*));
 	lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
 	s->l=l;
 	s->c=c;
@@ -30,8 +30,8 @@ _check_next_string:;
 		s->v[i]=*(dt+i);
 	}
 	s->v[l]=0;
-	*(c_dt->st.dt+c_dt->st.l-1)=s;
-	return c_dt->st.l-1;
+	*(st->dt+st->l-1)=s;
+	return st->l-1;
 }
 
 
@@ -45,8 +45,6 @@ lll_stack_offset_t _get_object_size(const lll_object_t* o){
 	switch (LLL_GET_OBJECT_TYPE(o)){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 		case LLL_OBJECT_TYPE_NIL:
-		case LLL_OBJECT_TYPE_TRUE:
-		case LLL_OBJECT_TYPE_FALSE:
 			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
 			return sizeof(lll_char_object_t)+eoff;

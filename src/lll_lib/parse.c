@@ -430,6 +430,10 @@ _read_symbol:
 					o->t=LLL_OBJECT_TYPE_MORE|LLL_OBJECT_TYPE_CONST;
 					c_dt->_s.off+=sizeof(lll_operator_object_t);
 				}
+				else if (*str=='@'){
+					o->t=LLL_OBJECT_TYPE_EXIT|LLL_OBJECT_TYPE_CONST;
+					c_dt->_s.off+=sizeof(lll_operator_object_t);
+				}
 				else{
 					goto _unknown_symbol;
 				}
@@ -477,6 +481,10 @@ _read_symbol:
 				}
 				else if (*str=='>'&&*(str+1)=='='){
 					o->t=LLL_OBJECT_TYPE_MORE_EQUAL|LLL_OBJECT_TYPE_CONST;
+					c_dt->_s.off+=sizeof(lll_operator_object_t);
+				}
+				else if (*str=='@'&&*(str+1)=='@'){
+					o->t=LLL_OBJECT_TYPE_RETURN|LLL_OBJECT_TYPE_CONST;
 					c_dt->_s.off+=sizeof(lll_operator_object_t);
 				}
 				else if (*str=='-'&&*(str+1)=='-'){
@@ -630,7 +638,7 @@ _unknown_symbol:
 					}
 					ln++;
 				}
-				((lll_string_object_t*)arg)->i=_create_string(c_dt,s,ln);
+				((lll_string_object_t*)arg)->i=_create_string(&(c_dt->st),s,ln);
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 			}
 			else if ((c>47&&c<58)||c=='-'){
@@ -878,14 +886,6 @@ _read_identifier:
 					arg->t=LLL_OBJECT_TYPE_NIL;
 					c_dt->_s.off+=sizeof(lll_object_t);
 				}
-				else if (sz==4&&*str=='t'&&*(str+1)=='r'&&*(str+2)=='u'&&*(str+3)=='e'){
-					arg->t=LLL_OBJECT_TYPE_TRUE;
-					c_dt->_s.off+=sizeof(lll_object_t);
-				}
-				else if (sz==5&&*str=='f'&&*(str+1)=='a'&&*(str+2)=='l'&&*(str+3)=='s'&&*(str+4)=='e'){
-					arg->t=LLL_OBJECT_TYPE_FALSE;
-					c_dt->_s.off+=sizeof(lll_object_t);
-				}
 				else{
 					arg->t=LLL_OBJECT_TYPE_IDENTIFIER;
 					c_dt->_s.off+=sizeof(lll_identifier_object_t);
@@ -930,7 +930,7 @@ _next_short_identifier:;
 						k->l++;
 						k->dt=realloc(k->dt,k->l*sizeof(lll_identifier_t));
 						(k->dt+k->l-1)->sc=l_sc->l_sc;
-						(k->dt+k->l-1)->i=_create_string(c_dt,str,sz);
+						(k->dt+k->l-1)->i=_create_string(&(c_dt->st),str,sz);
 						((lll_identifier_object_t*)arg)->idx=LLL_CREATE_IDENTIFIER(k->l-1,sz-1);
 					}
 					else{
@@ -973,7 +973,7 @@ _next_long_identifier:;
 						c_dt->i_dt.ill++;
 						c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t));
 						(c_dt->i_dt.il+c_dt->i_dt.ill-1)->sc=l_sc->l_sc;
-						(c_dt->i_dt.il+c_dt->i_dt.ill-1)->i=_create_string(c_dt,str,sz);
+						(c_dt->i_dt.il+c_dt->i_dt.ill-1)->i=_create_string(&(c_dt->st),str,sz);
 						((lll_identifier_object_t*)arg)->idx=LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
 					}
 _identifier_found:
@@ -1106,7 +1106,7 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 		i++;
 	}
 	bf[i]=0;
-	_create_string(o,bf,i);
+	_create_string(&(o->st),bf,i);
 }
 
 

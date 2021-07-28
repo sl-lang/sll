@@ -12,17 +12,23 @@
 
 #ifdef _MSC_VER
 #pragma intrinsic(_BitScanForward64)
+#ifdef DEBUG_BUILD
+#define UNREACHABLE() ASSERT(!"UNREACHABLE")
+#else
 #define UNREACHABLE() __assume(0)
+#endif
 static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m){
 	unsigned long o;
 	_BitScanForward64(&o,m);
 	return o;
 }
-#define POPCOUNT(m) __popcnt64(m)
+#else
+#ifdef DEBUG_BUILD
+#define UNREACHABLE() ASSERT(!"UNREACHABLE")
 #else
 #define UNREACHABLE() __builtin_unreachable()
+#endif
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
-#define POPCOUNT(m) __builtin_popcountll(m)
 #endif
 
 
@@ -72,11 +78,17 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define ERROR_DISPLAY_TAB_WIDTH 4
 
+#define ASSEMBLY_INSTRUCTION_TYPE_FUNC_START LLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED0
+#define ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET LLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED1
 #define ASSEMBLY_INSTRUCTION_LABEL 128
+#define ASSEMBLY_INSTRUCTION_MISC_FIELD(ai) ((ai)->dt.j)
+
+#define RUNTIME_OBJECT_TYPE_UNKNOWN 5
 
 #define RUNTIME_OBJECT_COMPARE_BELOW 0
 #define RUNTIME_OBJECT_COMPARE_EQUAL 1
 #define RUNTIME_OBJECT_COMPARE_ABOVE 2
+#define RUNTIME_OBJECT_COMPARE_ERROR 3
 
 
 
@@ -123,19 +135,13 @@ typedef struct __IDENTIFIER_MAP_DATA{
 
 
 
-typedef struct __LABEL_DATA{
-	assembly_instruction_label_t nxt;
-	lll_instruction_index_t* m;
-	assembly_instruction_label_t ml;
-} label_data_t;
-
-
-
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	lll_assembly_data_t* a_dt;
 	const lll_compilation_data_t* c_dt;
 	identifier_map_data_t im;
-	label_data_t lbl;
+	assembly_instruction_label_t n_lbl;
+	lll_runtime_object_t* v;
+	lll_variable_index_t vi;
 } assembly_generator_data_t;
 
 
@@ -148,11 +154,15 @@ typedef struct __STRING_MAP_DATA{
 
 
 
-lll_string_index_t _create_string(lll_compilation_data_t* c_dt,const lll_char_t* dt,lll_string_length_t l);
+lll_string_index_t _create_string(lll_string_table_t* st,const lll_char_t* dt,lll_string_length_t l);
 
 
 
 lll_stack_offset_t _get_object_size(const lll_object_t* o);
+
+
+
+uint8_t _compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b);
 
 
 
