@@ -4,7 +4,6 @@ Options:
   -c, --generate-compiled-object -> Generate compiled objects (.lllc)
   -e, --expand-file-paths -> Expand file paths
   -f <file>, --file <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))
-  -g <language>, --generate <language> -> Generate Code for Language <language>
   -h, --help -> Print this message
   -I <directory>, --include <directory> -> Add <directory> to file include path
   -L, --no-logo -> Disable compiler logo
@@ -18,11 +17,3 @@ Options:
   -p, --print-objects -> Print objects
   -R, --no-run -> Disable program execution mode
   -v, --verbose -> Enable verbose mode
-
-Code can be Generated for the Following Languages (<language>):
-  - C (.c)
-  - C++ (.cpp)
-  - Java (.java)
-  - Javascript / Js (.js)
-  - LispLikeLanguage / Lll (.lll)
-  - Python / Py (.py)

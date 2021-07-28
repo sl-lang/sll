@@ -520,9 +520,9 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_metadata(lll_compilation_data_t* c
 		c_dt->st.l-=l;
 		c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
 		for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-			lll_identifier_list_t* l=c_dt->i_dt.s+i;
-			for (lll_identifier_list_length_t j=0;j<l->l;j++){
-				(l->dt+j)->i=*(sm+(l->dt+j)->i);
+			lll_identifier_list_t* e=c_dt->i_dt.s+i;
+			for (lll_identifier_list_length_t j=0;j<e->l;j++){
+				(e->dt+j)->i=*(sm+(e->dt+j)->i);
 			}
 		}
 		for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){

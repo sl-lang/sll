@@ -74,9 +74,17 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define ASSEMBLY_INSTRUCTION_LABEL 128
 
+#define RUNTIME_OBJECT_COMPARE_BELOW 0
+#define RUNTIME_OBJECT_COMPARE_EQUAL 1
+#define RUNTIME_OBJECT_COMPARE_ABOVE 2
+
 
 
 typedef uint16_t scope_data_mask_length_t;
+
+
+
+typedef lll_instruction_index_t assembly_instruction_label_t;
 
 
 
@@ -104,19 +112,39 @@ typedef struct __IMPORT_MODULE_DATA{
 
 
 
+typedef struct __IDENTIFIER_MAP_DATA{
+	lll_variable_index_t* s_im[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	lll_variable_index_t* l_im;
+	lll_variable_index_t n_vi;
+	lll_scope_t l_sc;
+	lll_variable_index_t* sc_vi;
+	lll_scope_t sc_vi_l;
+} identifier_map_data_t;
+
+
+
+typedef struct __LABEL_DATA{
+	assembly_instruction_label_t nxt;
+	lll_instruction_index_t* m;
+	assembly_instruction_label_t ml;
+} label_data_t;
+
+
+
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	lll_assembly_data_t* a_dt;
 	const lll_compilation_data_t* c_dt;
-	_lll_assembly_instruction_label_t n_lbl;
-	lll_variable_index_t* s_im[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	lll_variable_index_t* l_im;
-	lll_variable_index_t _n_vi;
-	lll_scope_t _l_sc;
-	lll_variable_index_t* _sc_vi;
-	lll_scope_t _sc_vi_l;
-	lll_instruction_index_t* _lm;
-	_lll_assembly_instruction_label_t _lm_l;
+	identifier_map_data_t im;
+	label_data_t lbl;
 } assembly_generator_data_t;
+
+
+
+typedef struct __STRING_MAP_DATA{
+	lll_string_index_t ml;
+	uint64_t* m;
+	lll_string_index_t* im;
+} strint_map_data_t;
 
 
 

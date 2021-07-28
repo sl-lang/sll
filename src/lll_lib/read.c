@@ -169,6 +169,121 @@ uint8_t _read_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is){
 
 
 
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assembly_data_t* a_dt,lll_error_t* e){
+	if (!a_dt->_s.ptr){
+		e->t=LLL_ERROR_NO_STACK;
+		return LLL_RETURN_ERROR;
+	}
+	uint32_t n;
+	lll_version_t v;
+	if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&n),sizeof(uint32_t))||n!=ASSEMBLY_FILE_MAGIC_NUMBER||!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&v),sizeof(lll_version_t))||v!=LLL_VERSION){
+		e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+		return LLL_RETURN_ERROR;
+	}
+	CHECK_ERROR(is,a_dt->tm,lll_time_t,e);
+	CHECK_ERROR(is,a_dt->ic,lll_instruction_index_t,e);
+	CHECK_ERROR(is,a_dt->vc,lll_variable_index_t,e);
+	CHECK_ERROR(is,a_dt->ft.l,lll_function_index_t,e);
+	a_dt->ft.dt=malloc(a_dt->ft.l*sizeof(lll_instruction_index_t));
+	for (lll_function_index_t i=0;i<a_dt->ft.l;i++){
+		CHECK_ERROR(is,*(a_dt->ft.dt+i),lll_instruction_index_t,e);
+	}
+	CHECK_ERROR(is,a_dt->st.l,lll_string_index_t,e);
+	a_dt->st.dt=malloc(a_dt->st.l*sizeof(lll_string_t*));
+	for (lll_string_index_t i=0;i<a_dt->st.l;i++){
+		lll_string_length_t l;
+		CHECK_ERROR(is,l,lll_string_length_t,e);
+		lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
+		s->l=l;
+		s->c=0;
+		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)s->v,s->l*sizeof(lll_char_t))){
+			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+			return LLL_RETURN_ERROR;
+		}
+		s->v[s->l]=0;
+		for (lll_string_length_t j=0;j<s->l;j++){
+			s->c^=(lll_string_checksum_t)(s->v[j]);
+		}
+		*(a_dt->st.dt+i)=s;
+	}
+	a_dt->h=(lll_assembly_instruction_t*)(a_dt->_s.ptr+a_dt->_s.off);
+	lll_assembly_instruction_t* ai=a_dt->h;
+	for (lll_instruction_index_t i=0;i<a_dt->ic;i++){
+		int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+		if (c==LLL_END_OF_DATA){
+			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+			return LLL_RETURN_ERROR;
+		}
+		ai->t=(lll_assembly_instruction_type_t)c;
+		switch (LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
+				{
+					uint8_t e=0;
+					ai->dt.i=(lll_integer_t)_read_signed_integer(is,&e);
+					if (e){
+						return 0;
+					}
+					break;
+				}
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
+				if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&(ai->dt.f)),sizeof(lll_float_t))){
+					e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+					return LLL_RETURN_ERROR;
+				}
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
+				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+				if (c==LLL_END_OF_DATA){
+					e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+					return LLL_RETURN_ERROR;
+				}
+				ai->dt.c=(lll_char_t)c;
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					uint8_t e=0;
+					ai->dt.i=(lll_relative_instruction_index_t)_read_signed_integer(is,&e);
+					if (e){
+						return 0;
+					}
+				}
+				else{
+					CHECK_ERROR(is,ai->dt.rj,lll_instruction_index_t,e);
+				}
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
+				CHECK_ERROR(is,ai->dt.v,lll_variable_index_t,e);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
+				CHECK_ERROR(is,ai->dt.s,lll_string_index_t,e);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
+				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+				if (c==LLL_END_OF_DATA){
+					e->t=LLL_ERROR_INVALID_FILE_FORMAT;
+					return LLL_RETURN_ERROR;
+				}
+				ai->dt.ac=(lll_arg_count_t)c;
+				break;
+		}
+		ai++;
+	}
+	return LLL_RETURN_NO_ERROR;
+}
+
+
+
 __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
@@ -182,7 +297,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 	}
 	c_dt->is=NULL;
 	CHECK_ERROR(is,c_dt->tm,lll_time_t,e);
-	CHECK_ERROR(is,c_dt->_n_sc_id,lll_scope_t,e);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		CHECK_ERROR(is,c_dt->i_dt.s[i].l,lll_identifier_list_length_t,e);
 		c_dt->i_dt.s[i].dt=malloc(c_dt->i_dt.s[i].l*sizeof(lll_identifier_t));
@@ -235,6 +349,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 		}
 		*(c_dt->st.dt+i)=s;
 	}
+	CHECK_ERROR(is,c_dt->_n_sc_id,lll_scope_t,e);
 	c_dt->h=(lll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
 	if (!_read_object(c_dt,is)){
 		e->t=LLL_ERROR_INVALID_FILE_FORMAT;

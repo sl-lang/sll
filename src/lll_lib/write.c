@@ -104,11 +104,61 @@ __LLL_IMPORT_EXPORT void lll_write_assembly(lll_output_data_stream_t* os,const l
 	lll_version_t v=LLL_VERSION;
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&v),sizeof(lll_version_t));
 	_write_integer(os,a_dt->tm);
+	_write_integer(os,a_dt->ic);
+	_write_integer(os,a_dt->vc);
+	_write_integer(os,a_dt->ft.l);
+	for (lll_function_index_t i=0;i<a_dt->ft.l;i++){
+		_write_integer(os,*(a_dt->ft.dt+i));
+	}
 	_write_integer(os,a_dt->st.l);
 	for (lll_string_index_t i=0;i<a_dt->st.l;i++){
 		const lll_string_t* s=*(a_dt->st.dt+i);
 		_write_integer(os,s->l);
 		LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)s->v,s->l*sizeof(lll_char_t));
+	}
+	const lll_assembly_instruction_t* ai=a_dt->h;
+	for (lll_instruction_index_t i=0;i<a_dt->ic;i++){
+		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->t);
+		switch (LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
+				WRITE_SIGNED_INTEGER(os,ai->dt.i);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
+				LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(ai->dt.f)),sizeof(lll_float_t));
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
+				LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->dt.c);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					WRITE_SIGNED_INTEGER(os,ai->dt.rj);
+				}
+				else{
+					_write_integer(os,ai->dt.rj);
+				}
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
+				_write_integer(os,ai->dt.v);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
+				_write_integer(os,ai->dt.s);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
+				LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->dt.ac);
+				break;
+		}
+		ai++;
 	}
 }
 
@@ -126,7 +176,6 @@ __LLL_IMPORT_EXPORT void lll_write_compiled_object(lll_output_data_stream_t* os,
 	lll_version_t v=LLL_VERSION;
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&v),sizeof(lll_version_t));
 	_write_integer(os,c_dt->tm);
-	_write_integer(os,c_dt->_n_sc_id);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		const lll_identifier_list_t* l=c_dt->i_dt.s+i;
 		_write_integer(os,l->l);
@@ -159,5 +208,6 @@ __LLL_IMPORT_EXPORT void lll_write_compiled_object(lll_output_data_stream_t* os,
 		_write_integer(os,s->l);
 		LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)s->v,s->l*sizeof(lll_char_t));
 	}
+	_write_integer(os,c_dt->_n_sc_id);
 	_write_object(os,c_dt->h);
 }

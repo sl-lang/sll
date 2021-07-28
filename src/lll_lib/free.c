@@ -7,6 +7,10 @@
 
 __LLL_IMPORT_EXPORT void lll_free_assembly_data(lll_assembly_data_t* a_dt){
 	a_dt->tm=0;
+	a_dt->h=NULL;
+	a_dt->ic=0;
+	a_dt->vc=0;
+	lll_free_function_table(&(a_dt->ft));
 	lll_free_string_table(&(a_dt->st));
 	a_dt->_s.ptr=NULL;
 	a_dt->_s.off=0;
@@ -58,6 +62,16 @@ __LLL_IMPORT_EXPORT void lll_free_function_data(lll_function_data_t* f_dt){
 		f_dt->dt=NULL;
 	}
 	f_dt->l=0;
+}
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_function_table(lll_function_table_t* ft){
+	if (ft->dt){
+		free(ft->dt);
+		ft->dt=NULL;
+	}
+	ft->l=0;
 }
 
 

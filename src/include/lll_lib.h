@@ -150,34 +150,48 @@
 #define LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR 8
 #define LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TRUE 9
 #define LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FALSE 10
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD 11
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS 12
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE 13
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP 14
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JB 15
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE 16
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JA 17
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE 18
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JE 19
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE 20
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ 21
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ 22
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_NOT 23
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_ADD 24
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_SUB 25
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_MULT 26
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_DIV 27
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV 28
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_MOD 29
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_BIT_AND 30
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_BIT_OR 31
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_BIT_XOR 32
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_BIT_NOT 33
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT 34
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL 35
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_RET 36
-#define LLL_ASSEMBLY_INSTRUCTION_TYPE_END 37
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II 11
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD 12
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS 13
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE 14
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP 15
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP 16
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JB 17
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE 18
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JA 19
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE 20
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JE 21
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE 22
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ 23
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ 24
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_NOT 25
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_ADD 26
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_SUB 27
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_MULT 28
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_DIV 29
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV 30
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_MOD 31
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_AND 32
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_OR 33
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_XOR 34
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_INV 35
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT 36
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL 37
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_RET 38
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_NIL 39
+#define LLL_ASSEMBLY_INSTRUCTION_TYPE_END 40
+#define LLL_ASSEMBLY_INSTRUCTION_RELATIVE 128
 #define LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai) ((ai)->t&0x7f)
+#define LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai) ((ai)->t>>7)
+
+#define LLL_RUNTIME_OBJECT_TYPE_NIL 0
+#define LLL_RUNTIME_OBJECT_TYPE_INT 1
+#define LLL_RUNTIME_OBJECT_TYPE_FLOAT 2
+#define LLL_RUNTIME_OBJECT_TYPE_CHAR 3
+#define LLL_RUNTIME_OBJECT_TYPE_TRUE 4
+#define LLL_RUNTIME_OBJECT_TYPE_FALSE 5
+#define LLL_RUNTIME_OBJECT_TYPE_STRING 6
+#define LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX 7
 
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
@@ -246,10 +260,6 @@ typedef int32_t lll_return_code_t;
 
 
 
-typedef uint32_t _lll_assembly_instruction_label_t;
-
-
-
 typedef uint32_t lll_column_number_t;
 
 
@@ -275,6 +285,10 @@ typedef uint32_t lll_instruction_index_t;
 
 
 typedef uint32_t lll_line_number_t;
+
+
+
+typedef int32_t lll_relative_instruction_index_t;
 
 
 
@@ -500,7 +514,8 @@ typedef union __LLL_ASSEMBLY_INSTRUCTION_DATA{
 	lll_string_index_t s;
 	lll_variable_index_t v;
 	lll_instruction_index_t j;
-	_lll_assembly_instruction_label_t _lbl;
+	lll_relative_instruction_index_t rj;
+	lll_arg_count_t ac;
 } lll_assembly_instruction_data_t;
 
 
@@ -512,14 +527,39 @@ typedef struct __LLL_ASSEMBLY_INSTRUCTION{
 
 
 
+typedef struct __LLL_FUNCTION_TABLE{
+	lll_function_index_t l;
+	lll_instruction_index_t* dt;
+} lll_function_table_t;
+
+
+
 typedef struct __LLL_ASSEMBLY_DATA{
 	lll_time_t tm;
 	lll_assembly_instruction_t* h;
-	lll_string_table_t st;
-	lll_instruction_index_t lc;
+	lll_instruction_index_t ic;
 	lll_variable_index_t vc;
+	lll_function_table_t ft;
+	lll_string_table_t st;
 	lll_stack_data_t _s;
 } lll_assembly_data_t;
+
+
+
+typedef union __LLL_RUNTIME_OBJECT_DATA{
+	lll_char_t c;
+	lll_integer_t i;
+	lll_float_t f;
+	lll_string_t* s;
+	lll_instruction_index_t ii;
+} lll_runtime_object_data_t;
+
+
+
+typedef struct __LLL_RUNTIME_OBJECT{
+	uint8_t t;
+	lll_runtime_object_data_t dt;
+} lll_runtime_object_t;
 
 
 
@@ -565,6 +605,10 @@ __LLL_IMPORT_EXPORT void lll_free_function_data(lll_function_data_t* f_dt);
 
 
 
+__LLL_IMPORT_EXPORT void lll_free_function_table(lll_function_table_t* ft);
+
+
+
 __LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt);
 
 
@@ -586,6 +630,10 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 
 
 __LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is,lll_error_t* e);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assembly_data_t* a_dt,lll_error_t* e);
 
 
 
@@ -637,7 +685,7 @@ __LLL_IMPORT_EXPORT void lll_remove_object_padding(lll_compilation_data_t* c_dt,
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_run_compiled_object(const lll_compilation_data_t* c_dt,lll_input_data_stream_t* in,lll_output_data_stream_t* out);
+__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_run_assembly(const lll_assembly_data_t* a_dt,lll_stack_data_t* st,lll_input_data_stream_t* in,lll_output_data_stream_t* out);
 
 
 
@@ -646,6 +694,10 @@ __LLL_IMPORT_EXPORT void lll_set_assembly_data_stack(lll_assembly_data_t* a_dt,u
 
 
 __LLL_IMPORT_EXPORT void lll_set_compilation_data_stack(lll_compilation_data_t* c_dt,uint8_t* bf,lll_stack_offset_t sz);
+
+
+
+__LLL_IMPORT_EXPORT void lll_setup_stack(lll_stack_data_t* o,uint8_t* bf,lll_stack_offset_t sz);
 
 
 
