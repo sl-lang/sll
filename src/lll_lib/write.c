@@ -5,7 +5,7 @@
 
 
 
-#define WRITE_FIELD(o,t,f,os) LLL_WRITE_TO_OUTPUT_DATA_STREAM((os),(uint8_t*)(&(((t*)(o))->f)),sizeof(((t*)(o))->f))
+#define WRITE_FIELD(f,os) LLL_WRITE_TO_OUTPUT_DATA_STREAM((os),(uint8_t*)(&(f)),sizeof((f)))
 #define WRITE_SIGNED_INTEGER(os,n) _write_integer((os),((n)<0?((~(n))<<1)|1:(n)<<1))
 
 
@@ -20,76 +20,70 @@ void _write_integer(lll_output_data_stream_t* os,uint64_t v){
 
 
 
-lll_stack_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_t* o){
-	lll_stack_offset_t eoff=0;
+lll_object_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_t* o){
+	lll_object_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
-		eoff+=sizeof(lll_object_type_t);
-		o=LLL_GET_OBJECT_AFTER_NOP(o);
+		eoff++;
+		o++;
 	}
-	WRITE_FIELD(o,lll_object_t,t,os);
-	switch (LLL_GET_OBJECT_TYPE(o)){
+	WRITE_FIELD(o->t,os);
+	switch (o->t){
 		case LLL_OBJECT_TYPE_UNKNOWN:
-		case LLL_OBJECT_TYPE_NIL:
-			return sizeof(lll_object_t)+eoff;
+			return eoff+1;
 		case LLL_OBJECT_TYPE_CHAR:
-			WRITE_FIELD(o,lll_char_object_t,v,os);
-			return sizeof(lll_char_object_t)+eoff;
+			WRITE_FIELD(o->dt.c,os);
+			return eoff+1;
 		case LLL_OBJECT_TYPE_INT:
-			WRITE_SIGNED_INTEGER(os,((lll_integer_object_t*)o)->v);
-			return sizeof(lll_integer_object_t)+eoff;
+			WRITE_SIGNED_INTEGER(os,o->dt.i);
+			return eoff+1;
 		case LLL_OBJECT_TYPE_FLOAT:
-			WRITE_FIELD(o,lll_float_object_t,v,os);
-			return sizeof(lll_float_object_t)+eoff;
+			WRITE_FIELD(o->dt.f,os);
+			return eoff+1;
 		case LLL_OBJECT_TYPE_STRING:
-			_write_integer(os,((lll_string_object_t*)o)->i);
-			return sizeof(lll_string_object_t)+eoff;
+			_write_integer(os,o->dt.s);
+			return eoff+1;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			_write_integer(os,((lll_identifier_object_t*)o)->idx);
-			return sizeof(lll_identifier_object_t)+eoff;
+			_write_integer(os,o->dt.id);
+			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
 			{
-				lll_stack_offset_t off=sizeof(lll_function_object_t);
-				_write_integer(os,((lll_function_object_t*)o)->id);
-				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
+				lll_object_offset_t off=1;
+				_write_integer(os,o->dt.fn.id);
+				lll_arg_count_t l=o->dt.fn.ac;
 				LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,l);
 				while (l){
 					l--;
-					off+=_write_object(os,LLL_GET_OBJECT_ARGUMENT(o,off));
+					off+=_write_object(os,o+off);
 				}
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,((lll_import_object_t*)o)->ac);
-			for (lll_arg_count_t i=0;i<((lll_import_object_t*)o)->ac;i++){
-				_write_integer(os,((lll_import_object_t*)o)->idx[i]);
-			}
-			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
+			_write_integer(os,o->dt.ii);
+			return eoff+1;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
-				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
+				lll_object_offset_t off=1;
+				lll_statement_count_t l=o->dt.sc;
 				_write_integer(os,l);
 				while (l){
 					l--;
-					off+=_write_object(os,LLL_GET_OBJECT_STATEMENT(o,off));
+					off+=_write_object(os,o+off);
 				}
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			{
-				_write_integer(os,((lll_debug_object_t*)o)->fpi);
-				_write_integer(os,((lll_debug_object_t*)o)->ln);
-				_write_integer(os,((lll_debug_object_t*)o)->cn);
-				_write_integer(os,((lll_debug_object_t*)o)->ln_off);
-				return sizeof(lll_debug_object_t)+eoff+_write_object(os,LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o));
-			}
+			_write_integer(os,o->dt.dbg.fpi);
+			_write_integer(os,o->dt.dbg.ln);
+			_write_integer(os,o->dt.dbg.cn);
+			_write_integer(os,o->dt.dbg.ln_off);
+			return eoff+_write_object(os,o+1)+1;
 	}
-	lll_stack_offset_t off=sizeof(lll_operator_object_t);
-	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
+	lll_object_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
 	LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,l);
 	while (l){
 		l--;
-		off+=_write_object(os,LLL_GET_OBJECT_ARGUMENT(o,off));
+		off+=_write_object(os,o+off);
 	}
 	return off+eoff;
 }
@@ -151,6 +145,12 @@ __LLL_IMPORT_EXPORT void lll_write_assembly(lll_output_data_stream_t* os,const l
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:

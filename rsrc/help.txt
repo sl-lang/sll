@@ -8,10 +8,11 @@ Options:
   -I <directory>, --include <directory> -> Add <directory> to file include path
   -L, --no-logo -> Disable compiler logo
   -m, --merge-imports -> Merge imports
-  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.llla | .lllc | ...]. If no <output_file> is supplied, then each <file> output is written to <file_without_extension>[.llla | .lllc | ...]
+  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.llla | .lllc]. If no <output_file> is supplied, then each <file> output is written to <file_without_extension>[.llla | .lllc]
   -O0 -> No optimization
   -O1 -> Remove padding
   -O2 -> Remove padding + Removal of debug data (default)
+  -O3 -> Remove padding + Removal of debug data + Global optimization
   -P, --print-assembly -> Print assembly
   -p, --print-objects -> Print objects
   -R, --no-run -> Disable program execution mode

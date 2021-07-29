@@ -26,11 +26,11 @@ void _output_int(lll_output_data_stream_t* os,int64_t v){
 
 
 uint8_t _compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b){
-	switch (a->t){
+	switch (LLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case LLL_RUNTIME_OBJECT_TYPE_INT:
 			{
 				int64_t v;
-				switch (b->t){
+				switch (LLL_RUNTIME_OBJECT_GET_TYPE(b)){
 					case LLL_RUNTIME_OBJECT_TYPE_INT:
 						v=b->dt.i;
 						break;
@@ -63,15 +63,15 @@ uint8_t _compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_
 
 
 uint8_t _runtime_object_zero(const lll_runtime_object_t* o){
-	switch (o->t){
+	switch (LLL_RUNTIME_OBJECT_GET_TYPE(o)){
 		case LLL_RUNTIME_OBJECT_TYPE_INT:
-			return !!(o->dt.i);
+			return !o->dt.i;
 		case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			return !!(o->dt.f);
+			return !o->dt.f;
 		case LLL_RUNTIME_OBJECT_TYPE_CHAR:
-			return !!(o->dt.c);
+			return !o->dt.c;
 		case LLL_RUNTIME_OBJECT_TYPE_STRING:
-			return !!(o->dt.s->l);
+			return !o->dt.s->l;
 		case LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX:
 		default:
 			return RUNTIME_OBJECT_COMPARE_ERROR;
@@ -175,6 +175,30 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_run_assembly(const lll_assembly_data_t
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
 				s--;
 				*(v+ai->dt.v)=*s;
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE:
+				(v+ai->dt.v)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(v+ai->dt.v)->dt.i=-1;
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO:
+				(v+ai->dt.v)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(v+ai->dt.v)->dt.i=0;
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE:
+				(v+ai->dt.v)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(v+ai->dt.v)->dt.i=1;
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
+				(v+ai->dt.v)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(v+ai->dt.v)->dt.i=2;
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
+				(v+ai->dt.v)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(v+ai->dt.v)->dt.i=3;
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
+				(v+ai->dt.v)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(v+ai->dt.v)->dt.i=4;
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 _jump:
@@ -292,9 +316,9 @@ _jump:
 					s--;
 					lll_runtime_object_t* a=(LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s-1);
 					lll_runtime_object_t* b=s;
-					switch (a->t){
+					switch (LLL_RUNTIME_OBJECT_GET_TYPE(a)){
 						case LLL_RUNTIME_OBJECT_TYPE_INT:
-							switch (b->t){
+							switch (LLL_RUNTIME_OBJECT_GET_TYPE(b)){
 								case LLL_RUNTIME_OBJECT_TYPE_INT:
 									a->dt.i+=b->dt.i;
 									break;
@@ -331,7 +355,7 @@ _jump:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
 				{
 					lll_runtime_object_t* a=v+ai->dt.v;
-					switch (a->t){
+					switch (LLL_RUNTIME_OBJECT_GET_TYPE(a)){
 						case LLL_RUNTIME_OBJECT_TYPE_INT:
 							a->dt.i++;
 							break;
@@ -356,7 +380,7 @@ _jump:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
 				{
 					lll_runtime_object_t* a=v+ai->dt.v;
-					switch (a->t){
+					switch (LLL_RUNTIME_OBJECT_GET_TYPE(a)){
 						case LLL_RUNTIME_OBJECT_TYPE_INT:
 							a->dt.i--;
 							break;
@@ -381,9 +405,9 @@ _jump:
 					s--;
 					lll_runtime_object_t* a=(LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s-1);
 					lll_runtime_object_t* b=s;
-					switch (a->t){
+					switch (LLL_RUNTIME_OBJECT_GET_TYPE(a)){
 						case LLL_RUNTIME_OBJECT_TYPE_INT:
-							switch (b->t){
+							switch (LLL_RUNTIME_OBJECT_GET_TYPE(b)){
 								case LLL_RUNTIME_OBJECT_TYPE_INT:
 									a->dt.i*=b->dt.i;
 									break;
@@ -434,7 +458,7 @@ _jump:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				s--;
 _print_from_stack:
-				switch (s->t){
+				switch (LLL_RUNTIME_OBJECT_GET_TYPE(s)){
 					case LLL_RUNTIME_OBJECT_TYPE_INT:
 						_output_int(out,s->dt.i);
 						break;
@@ -478,48 +502,48 @@ _print_from_stack:
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 				s--;
-				ASSERT((s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
+				ASSERT((s-1)->t==LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
 				ii=(s-1)->dt.ii;
 				ai=a_dt->h+ii;
 				*(s-1)=*s;
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO:
-				ASSERT((s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
+				ASSERT((s-1)->t==LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
 				ii=(s-1)->dt.ii;
 				ai=a_dt->h+ii;
 				(s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
 				(s-1)->dt.i=0;
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
-				ASSERT((s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
+				ASSERT((s-1)->t==LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
 				ii=(s-1)->dt.ii;
 				ai=a_dt->h+ii;
 				(s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
 				(s-1)->dt.i=ai->dt.i;
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				ASSERT((s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
+				ASSERT((s-1)->t==LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
 				ii=(s-1)->dt.ii;
 				ai=a_dt->h+ii;
 				(s-1)->t=LLL_RUNTIME_OBJECT_TYPE_FLOAT;
 				(s-1)->dt.f=ai->dt.f;
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
-				ASSERT((s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
+				ASSERT((s-1)->t==LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
 				ii=(s-1)->dt.ii;
 				ai=a_dt->h+ii;
 				(s-1)->t=LLL_RUNTIME_OBJECT_TYPE_CHAR;
 				(s-1)->dt.c=ai->dt.c;
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				ASSERT((s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
+				ASSERT((s-1)->t==LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
 				ii=(s-1)->dt.ii;
 				ai=a_dt->h+ii;
 				(s-1)->t=LLL_RUNTIME_OBJECT_TYPE_STRING;
 				(s-1)->dt.s=*(a_dt->st.dt+ai->dt.s);
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
-				ASSERT((s-1)->t=LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
+				ASSERT((s-1)->t==LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX);
 				ii=(s-1)->dt.ii;
 				ai=a_dt->h+ii;
 				*(s-1)=*(v+ai->dt.v);
@@ -527,11 +551,11 @@ _print_from_stack:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END:
 				free(v);
 				s--;
-				if (((uint8_t*)s)!=st->ptr){
+				if (((uint8_t*)s)<st->ptr){
 					e->t=LLL_ERROR_STACK_CORRUPTED;
 					return 0;
 				}
-				switch (s->t){
+				switch (LLL_RUNTIME_OBJECT_GET_TYPE(s)){
 					case LLL_RUNTIME_OBJECT_TYPE_INT:
 						return (s->dt.i<INT32_MIN?INT32_MIN:(s->dt.i>INT32_MAX?INT32_MAX:(lll_return_code_t)s->dt.i));
 					case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
@@ -545,6 +569,18 @@ _print_from_stack:
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 				}
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO:
+				free(v);
+				if (((uint8_t*)s)<st->ptr){
+					e->t=LLL_ERROR_STACK_CORRUPTED;
+				}
+				return 0;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END_ONE:
+				free(v);
+				if (((uint8_t*)s)<st->ptr){
+					e->t=LLL_ERROR_STACK_CORRUPTED;
+				}
+				return 1;
 			default:
 				e->t=LLL_ERROR_INVALID_INSTRUCTION;
 				e->dt.it=LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai);

@@ -83,6 +83,13 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define ASSEMBLY_INSTRUCTION_LABEL 128
 #define ASSEMBLY_INSTRUCTION_MISC_FIELD(ai) ((ai)->dt.j)
 
+#define OPTIMIZER_FLAG_ARGUMENT 1
+
+#define COND_TYPE_UNKNOWN 0
+#define COND_TYPE_ALWAYS_TRUE 1
+#define COND_TYPE_ALWAYS_FALSE 2
+
+#define RUNTIME_OBJECT_CHANGE_IN_LOOP LLL_RUNTIME_OBJECT_RESERVED0
 #define RUNTIME_OBJECT_TYPE_UNKNOWN 5
 
 #define RUNTIME_OBJECT_COMPARE_BELOW 0
@@ -110,7 +117,7 @@ typedef struct __SCOPE_DATA{
 
 typedef struct __IMPORT_DATA{
 	lll_import_index_t i;
-	lll_stack_offset_t off;
+	lll_object_offset_t off;
 	uint64_t b_off;
 	uint8_t rm;
 } import_data_t;
@@ -124,14 +131,32 @@ typedef struct __IMPORT_MODULE_DATA{
 
 
 
+typedef struct __IDENTIFIER_DATA{
+	lll_variable_index_t v;
+	uint32_t c;
+} identifier_data_t;
+
+
+
 typedef struct __IDENTIFIER_MAP_DATA{
-	lll_variable_index_t* s_im[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	lll_variable_index_t* l_im;
+	identifier_data_t* s_im[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	identifier_data_t* l_im;
 	lll_variable_index_t n_vi;
 	lll_scope_t l_sc;
 	lll_variable_index_t* sc_vi;
 	lll_scope_t sc_vi_l;
+	lll_variable_index_t vc;
 } identifier_map_data_t;
+
+
+
+typedef struct __OPTIMIZER_DATA{
+	lll_compilation_data_t* c_dt;
+	identifier_map_data_t im;
+	lll_runtime_object_t* v;
+	lll_variable_index_t vi;
+	uint8_t rm;
+} optimizer_data_t;
 
 
 
@@ -140,8 +165,6 @@ typedef struct __ASSEMBLY_GENERATOR_DATA{
 	const lll_compilation_data_t* c_dt;
 	identifier_map_data_t im;
 	assembly_instruction_label_t n_lbl;
-	lll_runtime_object_t* v;
-	lll_variable_index_t vi;
 } assembly_generator_data_t;
 
 
@@ -154,15 +177,23 @@ typedef struct __STRING_MAP_DATA{
 
 
 
+lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation_data_t* c_dt,identifier_map_data_t* im);
+
+
+
 lll_string_index_t _create_string(lll_string_table_t* st,const lll_char_t* dt,lll_string_length_t l);
 
 
 
-lll_stack_offset_t _get_object_size(const lll_object_t* o);
+lll_object_offset_t _get_object_size(const lll_object_t* o);
 
 
 
 uint8_t _compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b);
+
+
+
+uint8_t _runtime_object_zero(const lll_runtime_object_t* o);
 
 
 

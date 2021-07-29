@@ -5,318 +5,834 @@
 
 
 
-lll_stack_offset_t _mark_strings_update_imports(const lll_object_t* o,uint64_t* m,lll_import_index_t* im){
-	lll_stack_offset_t eoff=0;
-	while (o->t==LLL_OBJECT_TYPE_NOP){
-		eoff+=sizeof(lll_object_type_t);
-		o=LLL_GET_OBJECT_AFTER_NOP(o);
+#define DECREASE_PARENT(p) \
+	do{ \
+		if (p){ \
+			if ((p)->t==LLL_OBJECT_TYPE_FUNC){ \
+				(p)->dt.fn.ac--; \
+			} \
+			else if ((p)->t==LLL_OBJECT_TYPE_OPERATION_LIST){ \
+				(p)->dt.sc--; \
+			} \
+			else{ \
+				(p)->dt.ac--; \
+			} \
+		} \
+	} while (0)
+#define DECREASE_VARIABLE(o,o_dt) \
+	do{ \
+		if (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH){ \
+			((o_dt)->im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c--; \
+		} \
+		else{ \
+			((o_dt)->im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c--; \
+		} \
+	} while (0)
+#define GET_VARIABLE_INDEX(o,o_dt) (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH?((o_dt)->im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v:((o_dt)->im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v)
+#define GET_VARIABLE_REF_COUNT(o,o_dt) (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH?((o_dt)->im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c:((o_dt)->im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c)
+
+
+
+lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* o_dt,uint8_t fl);
+
+
+
+void _remove_up_to_end(lll_object_t* o,lll_object_offset_t off){
+	lll_object_offset_t sz=_get_object_size(o);
+	for (;off<sz;off++){
+		(o+off)->t=LLL_OBJECT_TYPE_NOP;
 	}
-	switch (LLL_GET_OBJECT_TYPE(o)){
+}
+
+
+
+lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation_data_t* c_dt,identifier_map_data_t* im){
+	lll_object_offset_t eoff=0;
+	while (o->t==LLL_OBJECT_TYPE_NOP){
+		eoff++;
+		o++;
+	}
+	switch (o->t){
 		case LLL_OBJECT_TYPE_UNKNOWN:
-			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			*(m+(((lll_string_object_t*)o)->i>>6))|=1ull<<(((lll_string_object_t*)o)->i&63);
-			return sizeof(lll_string_object_t)+eoff;
-		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_identifier_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_float_object_t)+eoff;
-		case LLL_OBJECT_TYPE_FUNC:
-			{
-				lll_stack_offset_t off=sizeof(lll_function_object_t);
-				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
-				while (l){
-					l--;
-					off+=_mark_strings_update_imports(LLL_GET_OBJECT_ARGUMENT(o,off),m,im);
-				}
-				return off+eoff;
-			}
 		case LLL_OBJECT_TYPE_IMPORT:
+			return eoff+1;
+		case LLL_OBJECT_TYPE_IDENTIFIER:
 			{
-				lll_import_object_t* im_o=(lll_import_object_t*)o;
-				for (lll_arg_count_t i=0;i<im_o->ac;i++){
-					im_o->idx[i]=*(im+im_o->idx[i]);
+				lll_identifier_index_t i=LLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
+				uint8_t j=LLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
+				if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
+					lll_identifier_t* id=c_dt->i_dt.il+i;
+					if (im->l_sc<id->sc){
+						*(im->sc_vi+im->l_sc)=im->n_vi;
+						im->l_sc=id->sc;
+						if (id->sc<=im->sc_vi_l){
+							im->n_vi=*(im->sc_vi+im->l_sc);
+						}
+						else{
+							im->sc_vi_l=id->sc;
+						}
+					}
+					else if (im->l_sc>id->sc){
+						*(im->sc_vi+im->l_sc)=im->n_vi;
+						im->l_sc=id->sc;
+						im->n_vi=*(im->sc_vi+im->l_sc);
+					}
+					(im->l_im+i)->c++;
+					if ((im->l_im+i)->v==LLL_MAX_VARIABLE_INDEX){
+						(im->l_im+i)->v=im->n_vi;
+						im->n_vi++;
+						if (im->n_vi>im->vc){
+							im->vc=im->n_vi;
+						}
+					}
 				}
-				return sizeof(lll_import_object_t)+im_o->ac*sizeof(lll_import_index_t)+eoff;
+				else{
+					lll_identifier_t* id=c_dt->i_dt.s[j].dt+i;
+					if (im->l_sc<id->sc){
+						*(im->sc_vi+im->l_sc)=im->n_vi;
+						im->l_sc=id->sc;
+						if (id->sc<=im->sc_vi_l){
+							im->n_vi=*(im->sc_vi+im->l_sc);
+						}
+						else{
+							im->sc_vi_l=id->sc;
+						}
+					}
+					else if (im->l_sc>id->sc){
+						*(im->sc_vi+im->l_sc)=im->n_vi;
+						im->l_sc=id->sc;
+						im->n_vi=*(im->sc_vi+im->l_sc);
+					}
+					(im->s_im[j]+i)->c++;
+					if ((im->s_im[j]+i)->v==LLL_MAX_VARIABLE_INDEX){
+						(im->s_im[j]+i)->v=im->n_vi;
+						im->n_vi++;
+						if (im->n_vi>im->vc){
+							im->vc=im->n_vi;
+						}
+					}
+				}
+				return eoff+1;
 			}
+		case LLL_OBJECT_TYPE_FUNC:
+			return _get_object_size(o)+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
-				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
+				lll_object_offset_t off=1;
+				lll_statement_count_t l=o->dt.sc;
 				while (l){
 					l--;
-					off+=_mark_strings_update_imports(LLL_GET_OBJECT_STATEMENT(o,off),m,im);
+					off+=_map_identifiers(o+off,c_dt,im);
 				}
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			*(m+(((lll_debug_object_t*)o)->fpi>>6))|=1ull<<(((lll_debug_object_t*)o)->fpi&63);
-			return sizeof(lll_debug_object_t)+eoff+_mark_strings_update_imports(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o),m,im);
+			return eoff+_map_identifiers(o+1,c_dt,im)+1;
 	}
-	lll_stack_offset_t off=sizeof(lll_operator_object_t);
-	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
+	lll_object_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
 	while (l){
 		l--;
-		off+=_mark_strings_update_imports(LLL_GET_OBJECT_ARGUMENT(o,off),m,im);
+		off+=_map_identifiers(o+off,c_dt,im);
 	}
 	return off+eoff;
 }
 
 
 
-lll_stack_offset_t _update_strings(const lll_object_t* o,lll_string_index_t* sm){
-	lll_stack_offset_t eoff=0;
-	while (o->t==LLL_OBJECT_TYPE_NOP){
-		eoff+=sizeof(lll_object_type_t);
-		o=LLL_GET_OBJECT_AFTER_NOP(o);
+void _get_as_runtime_object(const lll_object_t* o,const optimizer_data_t* o_dt,lll_runtime_object_t* v){
+	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+		o++;
 	}
-	switch (LLL_GET_OBJECT_TYPE(o)){
-		case LLL_OBJECT_TYPE_UNKNOWN:
-		case LLL_OBJECT_TYPE_NIL:
-			return sizeof(lll_object_t)+eoff;
+	switch (o->t){
+		case LLL_OBJECT_TYPE_PRINT:
+		case LLL_OBJECT_TYPE_IF:
+		case LLL_OBJECT_TYPE_FOR:
+		case LLL_OBJECT_TYPE_RETURN:
+		case LLL_OBJECT_TYPE_EXIT:
+		case LLL_OBJECT_TYPE_IMPORT:
+		case LLL_OBJECT_TYPE_OPERATION_LIST:
+			v->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+			v->dt.i=0;
+			return;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_char_object_t)+eoff;
-		case LLL_OBJECT_TYPE_STRING:
-			((lll_string_object_t*)o)->i=*(sm+((lll_string_object_t*)o)->i);
-			return sizeof(lll_string_object_t)+eoff;
-		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_identifier_object_t)+eoff;
+			v->t=LLL_RUNTIME_OBJECT_TYPE_CHAR;
+			v->dt.c=o->dt.c;
+			return;
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_integer_object_t)+eoff;
+			v->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+			v->dt.i=o->dt.i;
+			return;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_float_object_t)+eoff;
+			v->t=LLL_RUNTIME_OBJECT_TYPE_FLOAT;
+			v->dt.f=o->dt.f;
+			return;
+		case LLL_OBJECT_TYPE_STRING:
+			v->t=LLL_RUNTIME_OBJECT_TYPE_STRING;
+			v->dt.s=*(o_dt->c_dt->st.dt+o->dt.s);
+			return;
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			*v=*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt));
+			return;
+		case LLL_OBJECT_TYPE_FUNC:
+			v->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+			v->dt.i=o->dt.fn.id;
+			return;
+		default:
+			v->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
+	}
+}
+
+
+
+lll_object_offset_t _mark_loop_vars(const lll_object_t* o,optimizer_data_t* o_dt){
+	lll_object_offset_t eoff=0;
+	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+		eoff++;
+		o++;
+	}
+	switch (o->t){
+		case LLL_OBJECT_TYPE_UNKNOWN:
+		case LLL_OBJECT_TYPE_CHAR:
+		case LLL_OBJECT_TYPE_STRING:
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+		case LLL_OBJECT_TYPE_INT:
+		case LLL_OBJECT_TYPE_FLOAT:
+		case LLL_OBJECT_TYPE_IMPORT:
+			return eoff+1;
+		case LLL_OBJECT_TYPE_ASSIGN:
+			{
+				lll_arg_count_t l=o->dt.ac;
+				ASSERT(l>=2);
+				lll_object_offset_t off=1;
+				while ((o+off)->t==LLL_OBJECT_TYPE_NOP||(o+off)->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+					off++;
+				}
+				ASSERT((o+off)->t==LLL_OBJECT_TYPE_IDENTIFIER);
+				lll_runtime_object_t tmp;
+				_get_as_runtime_object(o+off+1,o_dt,&tmp);
+				if (tmp.t==RUNTIME_OBJECT_TYPE_UNKNOWN){
+					(o_dt->v+GET_VARIABLE_INDEX(o+off,o_dt))->t|=RUNTIME_OBJECT_CHANGE_IN_LOOP;
+				}
+				off++;
+				l--;
+				while (l){
+					l--;
+					off+=_mark_loop_vars(o+off,o_dt);
+				}
+				return off+eoff;
+			}
 		case LLL_OBJECT_TYPE_FUNC:
 			{
-				lll_stack_offset_t off=sizeof(lll_function_object_t);
-				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){
 					l--;
-					off+=_update_strings(LLL_GET_OBJECT_ARGUMENT(o,off),sm);
+					off+=_mark_loop_vars(o+off,o_dt);
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_IMPORT:
-			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
-				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
+				lll_object_offset_t off=1;
+				lll_statement_count_t l=o->dt.sc;
 				while (l){
 					l--;
-					off+=_update_strings(LLL_GET_OBJECT_STATEMENT(o,off),sm);
+					off+=_mark_loop_vars(o+off,o_dt);
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			((lll_debug_object_t*)o)->fpi=*(sm+((lll_debug_object_t*)o)->fpi);
-			return sizeof(lll_debug_object_t)+eoff+_update_strings(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o),sm);
 	}
-	lll_stack_offset_t off=sizeof(lll_operator_object_t);
-	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
+	lll_object_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
 	while (l){
 		l--;
-		off+=_update_strings(LLL_GET_OBJECT_ARGUMENT(o,off),sm);
+		off+=_mark_loop_vars(o+off,o_dt);
 	}
 	return off+eoff;
 }
 
 
 
-lll_stack_offset_t _remove_padding_internal(lll_object_t* o,lll_stack_offset_t* rm,lll_compilation_data_t* c_dt,uint64_t st){
-	uint8_t* d=(uint8_t*)o-(*rm);
-	lll_stack_offset_t pad=0;
-	while (o->t==LLL_OBJECT_TYPE_NOP){
-		pad+=sizeof(lll_object_type_t);
-		o=LLL_GET_OBJECT_AFTER_NOP(o);
+uint8_t _get_cond_type(lll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_t lv){
+	lll_object_offset_t eoff=0;
+	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+		eoff++;
+		o++;
 	}
-	uint8_t* s=(uint8_t*)o;
-	(*rm)+=pad;
-	switch (LLL_GET_OBJECT_TYPE(o)){
+	switch (o->t){
 		case LLL_OBJECT_TYPE_UNKNOWN:
-		case LLL_OBJECT_TYPE_NIL:
-			for (lll_stack_offset_t i=0;i<sizeof(lll_object_t);i++){
-				*(d+i)=*(s+i);
-			}
-			return sizeof(lll_object_t)+pad;
+			return COND_TYPE_UNKNOWN;
 		case LLL_OBJECT_TYPE_CHAR:
-			for (lll_stack_offset_t i=0;i<sizeof(lll_char_object_t);i++){
-				*(d+i)=*(s+i);
-			}
-			return sizeof(lll_char_object_t)+pad;
-		case LLL_OBJECT_TYPE_STRING:
-			for (lll_stack_offset_t i=0;i<sizeof(lll_string_object_t);i++){
-				*(d+i)=*(s+i);
-			}
-			return sizeof(lll_string_object_t)+pad;
-		case LLL_OBJECT_TYPE_IDENTIFIER:
-			for (lll_stack_offset_t i=0;i<sizeof(lll_identifier_object_t);i++){
-				*(d+i)=*(s+i);
-			}
-			return sizeof(lll_identifier_object_t)+pad;
+			return ((!!o->dt.c)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case LLL_OBJECT_TYPE_INT:
-			{
-				for (lll_stack_offset_t i=0;i<sizeof(lll_integer_object_t);i++){
-					*(d+i)=*(s+i);
-				}
-				return sizeof(lll_integer_object_t)+pad;
-			}
+			return ((!!o->dt.i)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case LLL_OBJECT_TYPE_FLOAT:
+			return ((!!o->dt.f)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+		case LLL_OBJECT_TYPE_STRING:
+			return ((!!(*(o_dt->c_dt->st.dt+o->dt.s))->l)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+		case LLL_OBJECT_TYPE_IDENTIFIER:
 			{
-				for (lll_stack_offset_t i=0;i<sizeof(lll_float_object_t);i++){
-					*(d+i)=*(s+i);
+				lll_runtime_object_t* v=o_dt->v+GET_VARIABLE_INDEX(o,o_dt);
+				DECREASE_VARIABLE(o,o_dt);
+				if (lv||!(v->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
+					switch (LLL_RUNTIME_OBJECT_GET_TYPE(v)){
+						case LLL_RUNTIME_OBJECT_TYPE_INT:
+							return ((!!v->dt.i)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
+							return ((!!v->dt.f)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						case LLL_RUNTIME_OBJECT_TYPE_CHAR:
+							return ((!!v->dt.c)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						case LLL_RUNTIME_OBJECT_TYPE_STRING:
+							return ((!!v->dt.s->l)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+					}
 				}
-				return sizeof(lll_float_object_t)+pad;
+				return COND_TYPE_UNKNOWN;
 			}
-		case LLL_OBJECT_TYPE_FUNC:
-			{
-				for (lll_stack_offset_t i=0;i<sizeof(lll_function_object_t);i++){
-					*(d+i)=*(s+i);
-				}
-				(*(c_dt->f_dt.dt+((lll_function_object_t*)o)->id))->off-=(lll_stack_offset_t)(((uint64_t)(void*)s)-((uint64_t)(void*)d));
-				lll_stack_offset_t off=sizeof(lll_function_object_t);
-				lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
-				while (l){
-					l--;
-					off+=_remove_padding_internal(LLL_GET_OBJECT_ARGUMENT(o,off),rm,c_dt,st);
-				}
-				return off+pad;
-			}
+		case LLL_OBJECT_TYPE_PRINT:
+		case LLL_OBJECT_TYPE_IF:
+		case LLL_OBJECT_TYPE_FOR:
+		case LLL_OBJECT_TYPE_WHILE:
+		case LLL_OBJECT_TYPE_LOOP:
+		case LLL_OBJECT_TYPE_RETURN:
+		case LLL_OBJECT_TYPE_EXIT:
 		case LLL_OBJECT_TYPE_IMPORT:
-			{
-				lll_stack_offset_t sz=sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac;
-				for (lll_stack_offset_t i=0;i<sz;i++){
-					*(d+i)=*(s+i);
-				}
-				return sz+pad;
-			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
+			return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+		case LLL_OBJECT_TYPE_INPUT:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_AND:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_OR:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_NOT:
+			ASSERT(o->dt.ac);
+			return _get_cond_type(o+1,o_dt,!inv,lv);
+		case LLL_OBJECT_TYPE_ASSIGN:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_FUNC:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_CALL:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_ADD:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_SUB:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_MULT:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_DIV:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_FLOOR_DIV:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_MOD:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_BIT_AND:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_BIT_OR:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_BIT_XOR:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_BIT_NOT:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_LESS:
+		case LLL_OBJECT_TYPE_LESS_EQUAL:
+		case LLL_OBJECT_TYPE_EQUAL:
+		case LLL_OBJECT_TYPE_NOT_EQUAL:
+		case LLL_OBJECT_TYPE_MORE:
+		case LLL_OBJECT_TYPE_MORE_EQUAL:
 			{
-				for (lll_stack_offset_t i=0;i<sizeof(lll_operation_list_object_t);i++){
-					*(d+i)=*(s+i);
+				lll_arg_count_t l=o->dt.ac;
+				ASSERT(l);
+				l--;
+				if (!l){
+					return _get_cond_type(o+1,o_dt,inv,lv);
 				}
-				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
-				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
+				lll_runtime_object_t a;
+				_get_as_runtime_object(o+1,o_dt,&a);
+				lll_object_offset_t off=_get_object_size(o+1)+1;
+				if (!lv&&(a.t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
+					return COND_TYPE_UNKNOWN;
+				}
 				while (l){
 					l--;
-					off+=_remove_padding_internal(LLL_GET_OBJECT_STATEMENT(o,off),rm,c_dt,st);
+					lll_runtime_object_t b;
+					_get_as_runtime_object(o+off,o_dt,&b);
+					if (a.t==RUNTIME_OBJECT_TYPE_UNKNOWN||b.t==RUNTIME_OBJECT_TYPE_UNKNOWN||(!lv&&(b.t&RUNTIME_OBJECT_CHANGE_IN_LOOP))){
+						return COND_TYPE_UNKNOWN;
+					}
+					uint8_t cmp=_compare_runtime_object(&a,&b);
+					ASSERT(cmp!=RUNTIME_OBJECT_COMPARE_ERROR);
+					switch (o->t){
+						case LLL_OBJECT_TYPE_LESS:
+							if (cmp==RUNTIME_OBJECT_COMPARE_BELOW){
+								break;
+							}
+							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						case LLL_OBJECT_TYPE_LESS_EQUAL:
+							if (cmp!=RUNTIME_OBJECT_COMPARE_ABOVE){
+								break;
+							}
+							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						case LLL_OBJECT_TYPE_EQUAL:
+							if (cmp==RUNTIME_OBJECT_COMPARE_EQUAL){
+								break;
+							}
+							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						case LLL_OBJECT_TYPE_NOT_EQUAL:
+							if (cmp!=RUNTIME_OBJECT_COMPARE_EQUAL){
+								break;
+							}
+							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						case LLL_OBJECT_TYPE_MORE:
+							if (cmp==RUNTIME_OBJECT_COMPARE_ABOVE){
+								break;
+							}
+							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						case LLL_OBJECT_TYPE_MORE_EQUAL:
+							if (cmp!=RUNTIME_OBJECT_COMPARE_BELOW){
+								break;
+							}
+							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+						default:
+							UNREACHABLE();
+					}
+					off+=_get_object_size(o+off);
+					a=b;
 				}
-				return off+pad;
+				return (inv?COND_TYPE_ALWAYS_FALSE:COND_TYPE_ALWAYS_TRUE);
 			}
-		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			for (lll_stack_offset_t i=0;i<sizeof(lll_debug_object_t);i++){
-				*(d+i)=*(s+i);
-			}
-			return sizeof(lll_debug_object_t)+_remove_padding_internal(LLL_GET_DEBUG_OBJECT_CHILD((lll_debug_object_t*)o),rm,c_dt,st)+pad;
+		default:
+			UNREACHABLE();
 	}
-	for (lll_stack_offset_t i=0;i<sizeof(lll_operator_object_t);i++){
-		*(d+i)=*(s+i);
-	}
-	lll_stack_offset_t off=sizeof(lll_operator_object_t);
-	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
-	while (l){
-		l--;
-		off+=_remove_padding_internal(LLL_GET_OBJECT_ARGUMENT(o,off),rm,c_dt,st);
-	}
-	return off+pad;
 }
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_optimize_metadata(lll_compilation_data_t* c_dt,lll_error_t* e){
-	uint32_t ml=(c_dt->st.l>>6)+1;
-	uint64_t* m=malloc(ml*sizeof(uint64_t));
-	for (uint32_t i=0;i<ml;i++){
-		*(m+i)=0;
+lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* o_dt,uint8_t fl){
+	lll_object_offset_t eoff=0;
+	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+		eoff++;
+		o++;
 	}
+	ASSERT(!o_dt->rm);
+	if (o_dt->vi!=LLL_MAX_VARIABLE_INDEX){
+		_get_as_runtime_object(o,o_dt,o_dt->v+o_dt->vi);
+		o_dt->vi=LLL_MAX_VARIABLE_INDEX;
+	}
+	switch (o->t){
+		case LLL_OBJECT_TYPE_UNKNOWN:
+		case LLL_OBJECT_TYPE_IMPORT:
+			return eoff+1;
+		case LLL_OBJECT_TYPE_CHAR:
+		case LLL_OBJECT_TYPE_STRING:
+		case LLL_OBJECT_TYPE_INT:
+		case LLL_OBJECT_TYPE_FLOAT:
+			if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+				DECREASE_PARENT(p);
+				o->t=LLL_OBJECT_TYPE_NOP;
+			}
+			return eoff+1;
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+				DECREASE_PARENT(p);
+				o->t=LLL_OBJECT_TYPE_NOP;
+			}
+			else{
+				lll_runtime_object_t* v=o_dt->v+GET_VARIABLE_INDEX(o,o_dt);
+				if (LLL_RUNTIME_OBJECT_GET_TYPE(v)!=RUNTIME_OBJECT_TYPE_UNKNOWN&&!(v->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
+					DECREASE_VARIABLE(o,o_dt);
+					switch (LLL_RUNTIME_OBJECT_GET_TYPE(v)){
+						case LLL_RUNTIME_OBJECT_TYPE_INT:
+							o->t=LLL_OBJECT_TYPE_INT;
+							o->dt.i=v->dt.i;
+							break;
+						case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
+							o->t=LLL_OBJECT_TYPE_FLOAT;
+							o->dt.f=v->dt.f;
+							break;
+						case LLL_RUNTIME_OBJECT_TYPE_CHAR:
+							o->t=LLL_OBJECT_TYPE_CHAR;
+							o->dt.c=v->dt.c;
+							break;
+						case LLL_RUNTIME_OBJECT_TYPE_STRING:
+							ASSERT(!"Unimplemented");
+						default:
+							UNREACHABLE();
+					}
+				}
+			}
+			return eoff+1;
+		case LLL_OBJECT_TYPE_ASSIGN:
+			{
+				lll_arg_count_t l=o->dt.ac;
+				ASSERT(l>=2);
+				lll_object_offset_t off=1;
+				while ((o+off)->t==LLL_OBJECT_TYPE_NOP||(o+off)->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+					off++;
+				}
+				lll_object_t* id_o=o+off;
+				ASSERT(id_o->t==LLL_OBJECT_TYPE_IDENTIFIER);
+				DECREASE_VARIABLE(id_o,o_dt);
+				o_dt->vi=GET_VARIABLE_INDEX(id_o,o_dt);
+				off++;
+				off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+				if (o_dt->rm){
+					o->t=LLL_OBJECT_TYPE_NOP;
+					id_o->t=LLL_OBJECT_TYPE_NOP;
+					_remove_up_to_end(o,off);
+					return off+eoff;
+				}
+				l-=2;
+				while (l){
+					l--;
+					off+=_optimize(o+off,o,o_dt,0);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.ac-=l;
+						break;
+					}
+				}
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_FUNC:
+			return _get_object_size(o)+eoff;
+		case LLL_OBJECT_TYPE_IF:
+			{
+				lll_arg_count_t l=o->dt.ac;
+				ASSERT(l);
+				if (l==1){
+					o->t=LLL_OBJECT_TYPE_NOP;
+					return _optimize(o+1,p,o_dt,fl)+eoff;
+				}
+				lll_object_offset_t off=1;
+				if (l&1){
+					l>>=1;
+					while (l){
+						l--;
+						lll_object_t* cnd_o=o+off;
+						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						if (o_dt->rm){
+							ASSERT(!"Unimplemented");
+						}
+						uint8_t cnd=_get_cond_type(cnd_o,o_dt,0,0);
+						if (cnd==COND_TYPE_ALWAYS_TRUE){
+							if (o->dt.ac-(l<<1)==3){
+								lll_object_offset_t sz=_get_object_size(o);
+								o->t=LLL_OBJECT_TYPE_NOP;
+								off+=_optimize(o+off,p,o_dt,0);
+								while (off<sz){
+									(o+off)->t=LLL_OBJECT_TYPE_NOP;
+									off++;
+								}
+							}
+							else{
+								off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+								o_dt->rm=0;
+								_remove_up_to_end(o,off);
+								o->dt.ac-=(l<<1)+2;
+							}
+							while (cnd_o->t==LLL_OBJECT_TYPE_NOP||cnd_o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+								cnd_o++;
+							}
+							cnd_o->t=LLL_OBJECT_TYPE_NOP;
+							return off+eoff;
+						}
+						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						o_dt->rm=0;
+					}
+					off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+					o_dt->rm=0;
+				}
+				else{
+					l>>=1;
+					while (l){
+						l--;
+						lll_object_t* cnd_o=o+off;
+						off+=_optimize(cnd_o,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						if (o_dt->rm){
+							ASSERT(!"Unimplemented");
+						}
+						uint8_t cnd=_get_cond_type(cnd_o,o_dt,0,0);
+						if (cnd==COND_TYPE_ALWAYS_TRUE){
+							if (o->dt.ac-(l<<1)==2){
+								lll_object_offset_t sz=_get_object_size(o);
+								o->t=LLL_OBJECT_TYPE_NOP;
+								off+=_optimize(o+off,p,o_dt,0);
+								while (off<sz){
+									(o+off)->t=LLL_OBJECT_TYPE_NOP;
+									off++;
+								}
+							}
+							else{
+								o_dt->rm=0;
+								off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+							}
+							_remove_up_to_end(o,off);
+							o->dt.ac-=(l<<1)+1;
+							while (cnd_o->t==LLL_OBJECT_TYPE_NOP||cnd_o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+								cnd_o++;
+							}
+							cnd_o->t=LLL_OBJECT_TYPE_NOP;
+							break;
+						}
+						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						o_dt->rm=0;
+					}
+				}
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_FOR:
+			{
+				lll_arg_count_t l=o->dt.ac;
+				ASSERT(l);
+				if (l==1){
+					o->t=LLL_OBJECT_TYPE_NOP;
+					return _optimize(o+1,p,o_dt,fl)+eoff;
+				}
+				lll_object_offset_t off=_optimize(o+1,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT)+1;
+				if (o_dt->rm){
+					o->t=LLL_OBJECT_TYPE_NOP;
+					_remove_up_to_end(o,off);
+					return off+eoff;
+				}
+				lll_object_t* cnd_o=o+off;
+				lll_object_offset_t off2=off;
+				for (lll_arg_count_t i=1;i<l;i++){
+					off2+=_mark_loop_vars(o+off2,o_dt);
+				}
+				off+=_optimize(cnd_o,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+				if (o_dt->rm){
+					ASSERT(!"Unimplemented");
+				}
+				uint8_t cnd=_get_cond_type(cnd_o,o_dt,1,1);
+				if (cnd==COND_TYPE_ALWAYS_TRUE){
+					ASSERT(!"Unimplemented");
+				}
+				else if (cnd==COND_TYPE_ALWAYS_FALSE){
+					o->t=LLL_OBJECT_TYPE_WHILE;
+				}
+				l-=2;
+				while (l){
+					l--;
+					off+=_optimize(o+off,o,o_dt,0);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.ac-=l;
+						break;
+					}
+				}
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_WHILE:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_LOOP:
+			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_RETURN:
+		case LLL_OBJECT_TYPE_EXIT:
+			{
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.ac;
+				while (l){
+					l--;
+					off+=_optimize(o+off,o,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.ac-=l;
+						break;
+					}
+				}
+				o_dt->rm=1;
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_OPERATION_LIST:
+			{
+				lll_object_offset_t off=1;
+				lll_statement_count_t l=o->dt.sc;
+				while (l){
+					l--;
+					off+=_optimize(o+off,o,o_dt,0);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.sc-=l;
+						break;
+					}
+				}
+				if (!o->dt.sc){
+					o->t=LLL_OBJECT_TYPE_NOP;
+					DECREASE_PARENT(p);
+				}
+				else if (o->dt.sc==1){
+					o->t=LLL_OBJECT_TYPE_NOP;
+				}
+				return off+eoff;
+			}
+	}
+	lll_object_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
+	while (l){
+		l--;
+		off+=_optimize(o+off,o,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+		if (o_dt->rm){
+			_remove_up_to_end(o,off);
+			o->dt.ac-=l;
+			break;
+		}
+	}
+	return off+eoff;
+}
+
+
+
+lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_data_t* o_dt){
+	lll_object_offset_t eoff=0;
+	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+		eoff++;
+		o++;
+	}
+	switch (o->t){
+		case LLL_OBJECT_TYPE_UNKNOWN:
+		case LLL_OBJECT_TYPE_CHAR:
+		case LLL_OBJECT_TYPE_STRING:
+		case LLL_OBJECT_TYPE_INT:
+		case LLL_OBJECT_TYPE_FLOAT:
+		case LLL_OBJECT_TYPE_IMPORT:
+			return eoff+1;
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			ASSERT(GET_VARIABLE_REF_COUNT(o,o_dt));
+			return eoff+1;
+		case LLL_OBJECT_TYPE_ASSIGN:
+			{
+				lll_arg_count_t l=o->dt.ac;
+				ASSERT(l>=2);
+				lll_object_offset_t off=1;
+				while ((o+off)->t==LLL_OBJECT_TYPE_NOP||(o+off)->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+					off++;
+				}
+				ASSERT((o+off)->t==LLL_OBJECT_TYPE_IDENTIFIER);
+				uint8_t rm=!GET_VARIABLE_REF_COUNT(o+off,o_dt);
+				if (rm){
+					o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
+					o->dt.sc=o->dt.ac-1;
+					(o+off)->t=LLL_OBJECT_TYPE_NOP;
+				}
+				off++;
+				off+=_remove_const_var(o+off,o,o_dt);
+				l-=2;
+				while (l){
+					l--;
+					off+=_remove_const_var(o+off,o,o_dt);
+				}
+				if (rm){
+					_optimize(o,p,o_dt,0);
+				}
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_FUNC:
+			{
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.fn.ac;
+				while (l){
+					l--;
+					off+=_remove_const_var(o+off,o,o_dt);
+				}
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_OPERATION_LIST:
+			{
+				lll_object_offset_t off=1;
+				lll_statement_count_t l=o->dt.sc;
+				while (l){
+					l--;
+					off+=_remove_const_var(o+off,o,o_dt);
+				}
+				return off+eoff;
+			}
+	}
+	lll_object_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
+	while (l){
+		l--;
+		off+=_remove_const_var(o+off,o,o_dt);
+	}
+	return off+eoff;
+}
+
+
+
+__LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_object_t* o){
+	optimizer_data_t o_dt={
+		c_dt,
+		{
+			.l_im=malloc(c_dt->i_dt.ill*sizeof(identifier_data_t)),
+			.n_vi=0,
+			.l_sc=0,
+			.sc_vi=malloc(c_dt->_n_sc_id*sizeof(lll_variable_index_t)),
+			.sc_vi_l=0,
+			.vc=0
+		},
+		.vi=LLL_MAX_VARIABLE_INDEX,
+		.rm=0
+	};
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		lll_identifier_list_t* l=c_dt->i_dt.s+i;
-		for (lll_identifier_list_length_t j=0;j<l->l;j++){
-			*(m+((l->dt+j)->i>>6))|=1ull<<((l->dt+j)->i&63);
+		o_dt.im.s_im[i]=malloc(c_dt->i_dt.s[i].l*sizeof(identifier_data_t));
+		for (lll_identifier_list_length_t j=0;j<c_dt->i_dt.s[i].l;j++){
+			(o_dt.im.s_im[i]+j)->v=LLL_MAX_VARIABLE_INDEX;
+			(o_dt.im.s_im[i]+j)->c=0;
 		}
 	}
 	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
-		*(m+((c_dt->i_dt.il+i)->i>>6))|=1ull<<((c_dt->i_dt.il+i)->i&63);
+		(o_dt.im.l_im+i)->v=LLL_MAX_VARIABLE_INDEX;
+		(o_dt.im.l_im+i)->c=0;
 	}
-	lll_import_index_t* im=malloc(c_dt->im.l*sizeof(lll_import_index_t));
-	uint32_t k=0;
-	uint32_t l=0;
-	for (lll_import_index_t i=0;i<c_dt->im.l;i++){
-		lll_string_index_t j=*(c_dt->im.dt+i);
-		if (j==LLL_MAX_STRING_INDEX){
-			for (uint32_t n=k;n<i;n++){
-				*(c_dt->im.dt+n-l)=*(c_dt->im.dt+n);
-				*(im+n)=n-l;
-			}
-			k=i+1;
-			l++;
-		}
-		else{
-			*(m+(j>>6))|=1ull<<(j&63);
+	_map_identifiers(c_dt->h,c_dt,&(o_dt.im));
+	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
+		o_dt.im.n_vi=o_dt.im.vc;
+		o_dt.im.l_sc=0;
+		o_dt.im.sc_vi_l=0;
+		lll_object_t* fo=c_dt->h+(*(c_dt->f_dt.dt+i))->off;
+		ASSERT(fo->t==LLL_OBJECT_TYPE_FUNC);
+		lll_object_offset_t off=1;
+		for (lll_arg_count_t j=0;j<fo->dt.fn.ac;j++){
+			off+=_map_identifiers(fo+off,c_dt,&(o_dt.im));
 		}
 	}
-	for (uint32_t i=k;i<c_dt->im.l;i++){
-		*(c_dt->im.dt+i-l)=*(c_dt->im.dt+i);
-		*(im+i)=i-l;
+	free(o_dt.im.sc_vi);
+	o_dt.v=malloc(o_dt.im.vc*sizeof(lll_runtime_object_t));
+	for (lll_variable_index_t i=0;i<o_dt.im.vc;i++){
+		(o_dt.v+i)->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
 	}
-	if (l){
-		c_dt->im.l-=l;
-		c_dt->im.dt=realloc(c_dt->im.dt,c_dt->im.l*sizeof(lll_string_index_t));
-	}
-	_mark_strings_update_imports(c_dt->h,m,im);
-	free(im);
-	lll_string_index_t* sm=malloc(c_dt->st.l*sizeof(lll_string_index_t));
-	k=0;
-	l=0;
-	for (uint32_t i=0;i<ml;i++){
-		uint64_t v=~(*(m+i));
-		while (v){
-			lll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
-			if (j==c_dt->st.l){
-				break;
-			}
-			for (uint32_t n=k;n<j;n++){
-				*(c_dt->st.dt+n-l)=*(c_dt->st.dt+n);
-				*(sm+n)=n-l;
-			}
-			free(*(c_dt->st.dt+j));
-			k=j+1;
-			l++;
-			v&=v-1;
-		}
-	}
-	free(m);
-	for (uint32_t i=k;i<c_dt->st.l;i++){
-		*(c_dt->st.dt+i-l)=*(c_dt->st.dt+i);
-		*(sm+i)=i-l;
-	}
-	if (l){
-		c_dt->st.l-=l;
-		c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
-		for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-			lll_identifier_list_t* e=c_dt->i_dt.s+i;
-			for (lll_identifier_list_length_t j=0;j<e->l;j++){
-				(e->dt+j)->i=*(sm+(e->dt+j)->i);
+	_optimize(c_dt->h,NULL,&o_dt,0);
+	o_dt.rm=0;
+	_remove_const_var(c_dt->h,NULL,&o_dt);
+	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		lll_identifier_list_length_t k=0;
+		for (lll_identifier_list_length_t j=0;j<c_dt->i_dt.s[i].l;j++){
+			*(c_dt->i_dt.s[i].dt+j-k)=*(c_dt->i_dt.s[i].dt+j);
+			if (!(o_dt.im.s_im[i]+j)->c){
+				k++;
 			}
 		}
-		for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
-			(c_dt->i_dt.il+i)->i=*(sm+(c_dt->i_dt.il+i)->i);
+		if (k){
+			c_dt->i_dt.s[i].l-=k;
+			c_dt->i_dt.s[i].dt=realloc(c_dt->i_dt.s[i].dt,c_dt->i_dt.s[i].l*sizeof(lll_identifier_t));
 		}
-		for (lll_import_index_t i=0;i<c_dt->im.l;i++){
-			*(c_dt->im.dt+i)=*(sm+(*(c_dt->im.dt+i)));
-		}
-		_update_strings(c_dt->h,sm);
+		free(o_dt.im.s_im[i]);
 	}
-	free(sm);
-	return LLL_RETURN_NO_ERROR;
-}
-
-
-
-__LLL_IMPORT_EXPORT void lll_remove_object_padding(lll_compilation_data_t* c_dt,lll_object_t* o){
-	lll_stack_offset_t rm=0;
-	_remove_padding_internal(o,&rm,c_dt,(uint64_t)(void*)(c_dt->h));
+	lll_identifier_list_length_t j=0;
+	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
+		*(c_dt->i_dt.il+i-j)=*(c_dt->i_dt.il+i);
+		if (!(o_dt.im.l_im+i)->c){
+			j++;
+		}
+	}
+	if (j){
+		c_dt->i_dt.ill-=j;
+		c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t));
+	}
+	free(o_dt.im.l_im);
+	free(o_dt.v);
 }

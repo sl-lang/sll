@@ -5,169 +5,127 @@
 
 
 
-lll_stack_offset_t _patch_import(lll_object_t* o,import_data_t* dt){
-	lll_stack_offset_t eoff=0;
+lll_object_offset_t _patch_import(lll_object_t* o,import_data_t* dt){
+	lll_object_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
-		eoff+=sizeof(lll_object_type_t);
-		o=LLL_GET_OBJECT_AFTER_NOP(o);
+		eoff++;
+		o++;
 	}
-	switch (LLL_GET_OBJECT_TYPE(o)){
+	switch (o->t){
 		case LLL_OBJECT_TYPE_UNKNOWN:
-		case LLL_OBJECT_TYPE_NIL:
-			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_char_object_t)+eoff;
 		case LLL_OBJECT_TYPE_STRING:
-			return sizeof(lll_string_object_t)+eoff;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-			return sizeof(lll_identifier_object_t)+eoff;
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_float_object_t)+eoff;
+			return eoff+1;
 		case LLL_OBJECT_TYPE_IMPORT:
 			{
-				lll_import_object_t* io=(lll_import_object_t*)o;
-				lll_stack_offset_t sz=sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*io->ac;
-				lll_arg_count_t i=io->ac;
-				while (i){
-					i--;
-					if (io->idx[i]==dt->i){
-						for (lll_arg_count_t j=i+1;j<io->ac;j++){
-							io->idx[j-1]=io->idx[j];
-						}
-						io->ac--;
-					}
-				}
-				lll_stack_offset_t j=(!io->ac?0:sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*io->ac);
-				if (j!=sz){
-					if (dt->off==LLL_MAX_STACK_OFFSET){
-						dt->off=(lll_stack_offset_t)(((uint64_t)(void*)o)-dt->b_off);
+				if (o->dt.ii==dt->i){
+					o->t=LLL_OBJECT_TYPE_NOP;
+					if (dt->off==LLL_MAX_OBJECT_OFFSET){
+						dt->off=(lll_object_offset_t)((((uint64_t)(void*)o)-dt->b_off)/sizeof(lll_object_t));
 					}
 					else{
 						dt->rm=1;
 					}
 				}
-				while (j<sz){
-					LLL_SET_OBJECT_NOP(o,j);
-					j+=sizeof(lll_object_type_t);
-				}
-				return sz+eoff;
+				return eoff+1;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
 			{
-				lll_stack_offset_t off=sizeof(lll_function_object_t);
-				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
-				lll_arg_count_t sz=l;
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){
 					l--;
-					off+=_patch_import(LLL_GET_OBJECT_ARGUMENT(o,off),dt);
+					off+=_patch_import(o+off,dt);
 					if (dt->rm){
 						dt->rm=0;
-						sz--;
+						o->dt.fn.ac--;
 					}
 				}
-				((lll_function_object_t*)o)->ac=sz;
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
-				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
-				lll_statement_count_t sz=l;
+				lll_object_offset_t off=1;
+				lll_statement_count_t l=o->dt.sc;
 				while (l){
 					l--;
-					off+=_patch_import(LLL_GET_OBJECT_STATEMENT(o,off),dt);
+					off+=_patch_import(o+off,dt);
 					if (dt->rm){
 						dt->rm=0;
-						sz--;
+						o->dt.sc--;
 					}
 				}
-				((lll_operation_list_object_t*)o)->sc=sz;
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			{
-				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				return sizeof(lll_debug_object_t)+eoff+_patch_import(LLL_GET_DEBUG_OBJECT_CHILD(dbg),dt);
-			}
+			return eoff+_patch_import(o+1,dt)+1;
 	}
-	lll_stack_offset_t off=sizeof(lll_operator_object_t);
-	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
-	lll_arg_count_t sz=l;
+	lll_object_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
 	while (l){
 		l--;
-		off+=_patch_import(LLL_GET_OBJECT_ARGUMENT(o,off),dt);
+		off+=_patch_import(o+off,dt);
 		if (dt->rm){
 			dt->rm=0;
-			sz--;
+			o->dt.ac--;
 		}
 	}
-	((lll_operator_object_t*)o)->ac=sz;
 	return off+eoff;
 }
 
 
 
-lll_stack_offset_t _patch_module(lll_object_t* o,const import_module_data_t* im_dt){
-	lll_stack_offset_t eoff=0;
+lll_object_offset_t _patch_module(lll_object_t* o,const import_module_data_t* im_dt){
+	lll_object_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
-		eoff+=sizeof(lll_object_type_t);
-		o=LLL_GET_OBJECT_AFTER_NOP(o);
+		eoff++;
+		o++;
 	}
-	switch (LLL_GET_OBJECT_TYPE(o)){
+	switch (o->t){
 		case LLL_OBJECT_TYPE_UNKNOWN:
-		case LLL_OBJECT_TYPE_NIL:
-			return sizeof(lll_object_t)+eoff;
 		case LLL_OBJECT_TYPE_CHAR:
-			return sizeof(lll_char_object_t)+eoff;
-		case LLL_OBJECT_TYPE_STRING:
-			((lll_string_object_t*)o)->i=*(im_dt->sm+((lll_string_object_t*)o)->i);
-			return sizeof(lll_string_object_t)+eoff;
-		case LLL_OBJECT_TYPE_IDENTIFIER:
-			{
-				lll_identifier_object_t* io=(lll_identifier_object_t*)o;
-				io->idx=LLL_IDENTIFIER_ADD_INDEX(io->idx,im_dt->off[LLL_IDENTIFIER_GET_ARRAY_ID(io->idx)]);
-				return sizeof(lll_identifier_object_t)+eoff;
-			}
 		case LLL_OBJECT_TYPE_INT:
-			return sizeof(lll_integer_object_t)+eoff;
 		case LLL_OBJECT_TYPE_FLOAT:
-			return sizeof(lll_float_object_t)+eoff;
+		case LLL_OBJECT_TYPE_IMPORT:
+			return eoff+1;
+		case LLL_OBJECT_TYPE_STRING:
+			o->dt.s=*(im_dt->sm+o->dt.s);
+			return eoff+1;
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			o->dt.id=LLL_IDENTIFIER_ADD_INDEX(o->dt.id,im_dt->off[LLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]);
+			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
 			{
-				lll_stack_offset_t off=sizeof(lll_function_object_t);
-				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){
 					l--;
-					off+=_patch_module(LLL_GET_OBJECT_ARGUMENT(o,off),im_dt);
+					off+=_patch_module(o+off,im_dt);
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_IMPORT:
-			return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*((lll_import_object_t*)o)->ac+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
-				lll_statement_count_t l=((lll_operation_list_object_t*)o)->sc;
+				lll_object_offset_t off=1;
+				lll_statement_count_t l=o->dt.sc;
 				while (l){
 					l--;
-					off+=_patch_module(LLL_GET_OBJECT_STATEMENT(o,off),im_dt);
+					off+=_patch_module(o+off,im_dt);
 				}
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			{
-				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				dbg->fpi=*(im_dt->sm+dbg->fpi);
-				return sizeof(lll_debug_object_t)+eoff+_patch_module(LLL_GET_DEBUG_OBJECT_CHILD(dbg),im_dt);
-			}
+			o->dt.dbg.fpi=*(im_dt->sm+o->dt.dbg.fpi);
+			return eoff+_patch_module(o+1,im_dt)+1;
 	}
-	lll_stack_offset_t off=sizeof(lll_operator_object_t);
-	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
+	lll_object_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
 	while (l){
 		l--;
-		off+=_patch_module(LLL_GET_OBJECT_ARGUMENT(o,off),im_dt);
+		off+=_patch_module(o+off,im_dt);
 	}
 	return off+eoff;
 }
@@ -183,11 +141,11 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,l
 	*(c_dt->im.dt+im_i)=LLL_MAX_STRING_INDEX;
 	import_data_t dt={
 		im_i,
-		LLL_MAX_STACK_OFFSET,
+		LLL_MAX_OBJECT_OFFSET,
 		(uint64_t)(void*)(c_dt->h),
 		0
 	};
-	lll_stack_offset_t sz=_patch_import(c_dt->h,&dt);
+	lll_object_offset_t sz=_patch_import(c_dt->h,&dt);
 	import_module_data_t im_dt={
 		.sm=malloc(im->st.l*sizeof(lll_string_index_t))
 	};
@@ -253,7 +211,7 @@ _merge_next_string:;
 		}
 	}
 	c_dt->_n_sc_id+=im->_n_sc_id;
-	lll_stack_offset_t m_sz=_patch_module(im->h,&im_dt);
+	lll_object_offset_t m_sz=_patch_module(im->h,&im_dt);
 	free(im_dt.sm);
 	if (sz+m_sz>=c_dt->_s.sz){
 		e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
@@ -262,16 +220,16 @@ _merge_next_string:;
 		return LLL_RETURN_ERROR;
 	}
 	sz-=dt.off;
-	uint8_t* s=(uint8_t*)(void*)(((uint64_t)(void*)c_dt->h)+dt.off+sz);
-	uint8_t* d=(uint8_t*)(void*)(((uint64_t)(void*)c_dt->h)+dt.off+sz+m_sz);
+	lll_object_t* s=c_dt->h+dt.off+sz;
+	lll_object_t* d=c_dt->h+dt.off+sz+m_sz;
 	while (sz){
 		sz--;
 		s--;
 		d--;
 		*d=*s;
 	}
-	s=(uint8_t*)(void*)(((uint64_t)(void*)im->h)+m_sz);
-	d=(uint8_t*)(void*)(((uint64_t)(void*)c_dt->h)+dt.off+m_sz);
+	s=im->h+m_sz;
+	d=c_dt->h+dt.off+m_sz;
 	while (m_sz){
 		m_sz--;
 		s--;

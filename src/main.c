@@ -42,6 +42,7 @@
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
 #define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
+#define OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE 3
 
 
 
@@ -446,6 +447,9 @@ int main(int argc,const char** argv){
 			else if (*(e+2)=='2'){
 				ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
 			}
+			else if (*(e+2)=='3'){
+				ol=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE;
+			}
 			else{
 				goto _unkown_switch;
 			}
@@ -495,6 +499,9 @@ _read_file_argument:
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
 			PRINT_STATIC_STR("    Debug Data Stripping\n");
+		}
+		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
+			PRINT_STATIC_STR("    Global Optimization\n");
 		}
 		if (fl&FLAG_GENERATE_ASSEMBLY){
 			PRINT_STATIC_STR("  Assembly Generation Mode\n");
@@ -558,6 +565,12 @@ _read_file_argument:
 			goto _error;
 		}
 		if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
+			if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
+				if (fl&FLAG_VERBOSE){
+					PRINT_STATIC_STR("Performing Global Optimization...\n");
+				}
+				lll_optimize_object(&c_dt,c_dt.h);
+			}
 			if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Removing Debug Data...\n");
@@ -574,11 +587,10 @@ _read_file_argument:
 				lll_print_object(&c_dt,c_dt.h,stdout);
 				putchar('\n');
 			}
-			lll_error_t e;
-			if (!lll_optimize_metadata(&c_dt,&e)){
-				lll_print_error(&is,&e);
-				goto _error;
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("Optimizing Object Metadata...\n");
 			}
+			lll_optimize_metadata(&c_dt);
 		}
 		if (!(fl&_FLAG_ASSEMBLY_GENERATED)&&((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_PRINT_ASSEMBLY))||!(fl&FLAG_NO_RUN))){
 			PRINT_STATIC_STR("Generating Assembly...\n");

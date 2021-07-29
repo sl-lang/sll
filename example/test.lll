@@ -30,4 +30,10 @@
 (-- "import.lll")
 (:> "Call: " (<- func 10 2) "\n")
 (:> "Program End\n")
-(@ 0)
+(? true nil 2 (:> "Dead Code") (@ 128 "False Exit"))
+(? (! FACTORIAL) nil {
+	(:> "Early Exit\n")
+	(@ false)
+})
+(:> "Useless Code")
+(@ 1)

@@ -30,26 +30,23 @@ void _print_int64(int64_t v,FILE* f){
 
 
 
-lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f){
-	lll_stack_offset_t eoff=0;
+lll_object_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f){
+	lll_object_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
-		eoff+=sizeof(lll_object_type_t);
-		o=LLL_GET_OBJECT_AFTER_NOP(o);
+		eoff++;
+		o++;
 	}
-	if ((LLL_GET_OBJECT_TYPE(o)>LLL_OBJECT_TYPE_MAX_TYPE&&LLL_GET_OBJECT_TYPE(o)<LLL_OBJECT_TYPE_MIN_EXTRA)||LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_RETURN||LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_EXIT||LLL_GET_OBJECT_TYPE(o)==LLL_OBJECT_TYPE_IMPORT){
+	if (LLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=LLL_OBJECT_TYPE_OPERATION_LIST&&o->t!=LLL_OBJECT_TYPE_DEBUG_DATA){
 		fputc('(',f);
 	}
-	if (LLL_IS_OBJECT_CONST(o)){
-		fprintf(f,"#const ");
-	}
-	switch (LLL_GET_OBJECT_TYPE(o)){
+	switch (o->t){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 			fprintf(f,"(unknown)");
-			return sizeof(lll_object_t)+eoff;
+			return eoff+1;
 		case LLL_OBJECT_TYPE_CHAR:
 			{
 				fputc('\'',f);
-				char c=((lll_char_object_t*)o)->v;
+				char c=o->dt.c;
 				if (c=='\''||c=='"'||c=='\\'){
 					fputc('\\',f);
 				}
@@ -81,23 +78,20 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 				}
 				fputc(c,f);
 				fputc('\'',f);
-				return sizeof(lll_char_object_t)+eoff;
+				return eoff+1;
 			}
 		case LLL_OBJECT_TYPE_INT:
 			{
-				_print_int64(((lll_integer_object_t*)o)->v,f);
-				return sizeof(lll_integer_object_t)+eoff;
+				_print_int64(o->dt.i,f);
+				return eoff+1;
 			}
 		case LLL_OBJECT_TYPE_FLOAT:
-			fprintf(f,"%lf",((lll_float_object_t*)o)->v);
-			return sizeof(lll_float_object_t)+eoff;
-		case LLL_OBJECT_TYPE_NIL:
-			fprintf(f,"nil");
-			return sizeof(lll_object_t)+eoff;
+			fprintf(f,"%lf",o->dt.f);
+			return eoff+1;
 		case LLL_OBJECT_TYPE_STRING:
 			{
 				fputc('"',f);
-				lll_string_t* s=*(c_dt->st.dt+((lll_string_object_t*)o)->i);
+				lll_string_t* s=*(c_dt->st.dt+o->dt.s);
 				for (lll_string_length_t i=0;i<s->l;i++){
 					char c=s->v[i];
 					if (c=='\''||c=='"'||c=='\\'){
@@ -132,11 +126,11 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 					fputc(c,f);
 				}
 				fputc('"',f);
-				return sizeof(lll_string_object_t)+eoff;
+				return eoff+1;
 			}
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			{
-				lll_identifier_index_t i=((lll_identifier_object_t*)o)->idx;
+				lll_identifier_index_t i=o->dt.id;
 				lll_identifier_list_length_t j=LLL_IDENTIFIER_GET_ARRAY_ID(i);
 				if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
 					lll_string_t* s=*(c_dt->st.dt+(c_dt->i_dt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i);
@@ -154,7 +148,7 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 					fputc('$',f);
 					_print_int64((c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
 				}
-				return sizeof(lll_identifier_object_t)+eoff;
+				return eoff+1;
 			}
 		case LLL_OBJECT_TYPE_PRINT:
 			fprintf(f,":>");
@@ -177,12 +171,12 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 		case LLL_OBJECT_TYPE_FUNC:
 			{
 				fprintf(f,",,,");
-				lll_stack_offset_t off=sizeof(lll_function_object_t);
-				lll_arg_count_t l=((lll_function_object_t*)o)->ac;
+				lll_stack_offset_t off=1;
+				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){
 					l--;
 					fputc(' ',f);
-					off+=_print_object_internal(c_dt,LLL_GET_OBJECT_ARGUMENT(o,off),f);
+					off+=_print_object_internal(c_dt,o+off,f);
 				}
 				fputc(')',f);
 				return off+eoff;
@@ -195,6 +189,12 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 			break;
 		case LLL_OBJECT_TYPE_FOR:
 			fprintf(f,"->");
+			break;
+		case LLL_OBJECT_TYPE_WHILE:
+			fprintf(f,">-");
+			break;
+		case LLL_OBJECT_TYPE_LOOP:
+			fprintf(f,"><");
 			break;
 		case LLL_OBJECT_TYPE_ADD:
 			fprintf(f,"+");
@@ -252,50 +252,41 @@ lll_stack_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,con
 			break;
 		case LLL_OBJECT_TYPE_IMPORT:
 			{
-				fputc('-',f);
-				fputc('-',f);
-				lll_import_object_t* io=(lll_import_object_t*)o;
-				for (lll_arg_count_t i=0;i<io->ac;i++){
-					fputc(' ',f);
-					fputc('"',f);
-					lll_string_t* dt=*(c_dt->st.dt+*(c_dt->im.dt+io->idx[i]));
-					for (lll_string_length_t i=0;i<dt->l;i++){
-						fputc(dt->v[i],f);
-					}
-					fputc('"',f);
+				fprintf(f,"-- \"");
+				lll_string_t* dt=*(c_dt->st.dt+*(c_dt->im.dt+o->dt.ii));
+				for (lll_string_length_t i=0;i<dt->l;i++){
+					fputc(dt->v[i],f);
 				}
+				fputc('"',f);
 				fputc(')',f);
-				return sizeof(lll_import_object_t)+sizeof(lll_import_index_t)*io->ac+eoff;
+				return eoff+1;
 			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				fputc('{',f);
-				lll_stack_offset_t off=sizeof(lll_operation_list_object_t);
-				lll_statement_count_t sc=((lll_operation_list_object_t*)o)->sc;
+				lll_stack_offset_t off=1;
+				lll_statement_count_t sc=o->dt.sc;
 				for (lll_statement_count_t i=0;i<sc;i++){
 					if (i){
 						fputc(' ',f);
 					}
-					off+=_print_object_internal(c_dt,LLL_GET_OBJECT_STATEMENT(o,off),f);
+					off+=_print_object_internal(c_dt,o+off,f);
 				}
 				fputc('}',f);
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			{
-				lll_debug_object_t* dbg=(lll_debug_object_t*)o;
-				fprintf(f,"[%s:%u:%u]",(*(c_dt->st.dt+dbg->fpi))->v,dbg->ln,dbg->cn);
-				return sizeof(lll_debug_object_t)+eoff+_print_object_internal(c_dt,LLL_GET_DEBUG_OBJECT_CHILD(dbg),f);
-			}
+			fprintf(f,"[%s:%u:%u]",(*(c_dt->st.dt+o->dt.dbg.fpi))->v,o->dt.dbg.ln+1,o->dt.dbg.cn+1);
+			return eoff+_print_object_internal(c_dt,o+1,f)+1;
 		default:
 			UNREACHABLE();
 	}
-	lll_stack_offset_t off=sizeof(lll_operator_object_t);
-	lll_arg_count_t l=((lll_operator_object_t*)o)->ac;
+	lll_stack_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
 	while (l){
 		l--;
 		fputc(' ',f);
-		off+=_print_object_internal(c_dt,LLL_GET_OBJECT_ARGUMENT(o,off),f);
+		off+=_print_object_internal(c_dt,o+off,f);
 	}
 	fputc(')',f);
 	return off+eoff;
@@ -374,6 +365,24 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
 				fprintf(f,"STORE $%u & POP",ai->dt.v);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE:
+				fprintf(f,"PUSH -1 & STORE $%u",ai->dt.v);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO:
+				fprintf(f,"PUSH 0 & STORE $%u",ai->dt.v);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE:
+				fprintf(f,"PUSH 1 & STORE $%u",ai->dt.v);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
+				fprintf(f,"PUSH 2 & STORE $%u",ai->dt.v);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
+				fprintf(f,"PUSH 3 & STORE $%u",ai->dt.v);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
+				fprintf(f,"PUSH 4 & STORE $%u",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
@@ -579,6 +588,12 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END:
 				fprintf(f,"END");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO:
+				fprintf(f,"END 0");
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END_ONE:
+				fprintf(f,"END 1");
 				break;
 			default:
 				UNREACHABLE();
