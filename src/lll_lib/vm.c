@@ -427,8 +427,8 @@ _print_from_stack:
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				{
-					lll_string_t* s=*(a_dt->st.dt+ai->dt.s);
-					LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,(uint8_t*)(s->v),s->l*sizeof(lll_char_t));
+					lll_string_t* str=*(a_dt->st.dt+ai->dt.s);
+					LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,(uint8_t*)(str->v),str->l*sizeof(lll_char_t));
 					break;
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
@@ -505,7 +505,7 @@ _print_from_stack:
 					case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
 						return (s->dt.f<INT32_MIN?INT32_MIN:(s->dt.f>INT32_MAX?INT32_MAX:(lll_return_code_t)s->dt.f));
 					case LLL_RUNTIME_OBJECT_TYPE_CHAR:
-						return (s->dt.c>INT32_MAX?INT32_MAX:s->dt.c);
+						return (s->dt.c>INT32_MAX?INT32_MAX:s->dt.c);// lgtm [cpp/constant-comparison]
 					case LLL_RUNTIME_OBJECT_TYPE_STRING:
 						return (s->dt.s->l>INT32_MAX?INT32_MAX:s->dt.s->l);
 					case LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX:

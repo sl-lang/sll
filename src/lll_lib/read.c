@@ -189,9 +189,9 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
 				{
-					uint8_t e=0;
-					ai->dt.i=(lll_integer_t)_read_signed_integer(is,&e);
-					if (e){
+					uint8_t re=0;
+					ai->dt.i=(lll_integer_t)_read_signed_integer(is,&re);
+					if (re){
 						return 0;
 					}
 					break;
@@ -224,9 +224,9 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
-					uint8_t e=0;
-					ai->dt.i=(lll_relative_instruction_index_t)_read_signed_integer(is,&e);
-					if (e){
+					uint8_t re=0;
+					ai->dt.i=(lll_relative_instruction_index_t)_read_signed_integer(is,&re);
+					if (re){
 						return 0;
 					}
 				}

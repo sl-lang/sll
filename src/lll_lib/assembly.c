@@ -667,14 +667,14 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 		ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=i;
 		while (j){
 			j--;
-			lll_assembly_instruction_t* ai=NEXT_INSTRUCTION(&g_dt);
+			ai=NEXT_INSTRUCTION(&g_dt);
 			ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP;
 			ai->dt.v=(LLL_IDENTIFIER_GET_ARRAY_ID(k->a[j])==LLL_MAX_SHORT_IDENTIFIER_LENGTH?(g_dt.im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX(k->a[j]))->v:(g_dt.im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID(k->a[j])]+LLL_IDENTIFIER_GET_ARRAY_INDEX(k->a[j]))->v);
 		}
 		const lll_object_t* fo=c_dt->h+k->off;
 		ASSERT(fo->t==LLL_OBJECT_TYPE_FUNC);
 		lll_object_offset_t off=1;
-		for (lll_arg_count_t j=0;j<fo->dt.fn.ac;j++){
+		for (j=0;j<fo->dt.fn.ac;j++){
 			off+=_generate(fo+off,&g_dt);
 		}
 		if ((o->h+o->ic-1)->t!=LLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
@@ -922,7 +922,7 @@ _handle_nop:;
 				ai->dt.j=j;
 			}
 			else{
-				lll_relative_instruction_index_t off=((lll_relative_instruction_index_t)j)-i;
+				off=((lll_relative_instruction_index_t)j)-i;
 				if (GET_SIGN_ENCODED_INTEGER((int64_t)off)<(int64_t)j){
 					ai->t|=LLL_ASSEMBLY_INSTRUCTION_RELATIVE;
 					ai->dt.rj=off;
