@@ -689,7 +689,7 @@ _skip_write:;
 			lll_error_t e={
 				LLL_ERROR_UNKNOWN
 			};
-			lll_return_code_t r=lll_run_assembly(&a_dt,&st,&ris,&ros,&e);
+			lll_return_code_t r=lll_execute_assembly(&a_dt,&st,&ris,&ros,&e);
 			if (e.t!=LLL_ERROR_UNKNOWN){
 				lll_print_error(NULL,&e);
 				goto _error;

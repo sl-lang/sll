@@ -92,11 +92,6 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define RUNTIME_OBJECT_CHANGE_IN_LOOP LLL_RUNTIME_OBJECT_RESERVED0
 #define RUNTIME_OBJECT_TYPE_UNKNOWN 5
 
-#define RUNTIME_OBJECT_COMPARE_BELOW 0
-#define RUNTIME_OBJECT_COMPARE_EQUAL 1
-#define RUNTIME_OBJECT_COMPARE_ABOVE 2
-#define RUNTIME_OBJECT_COMPARE_ERROR 3
-
 
 
 typedef uint16_t scope_data_mask_length_t;
@@ -178,22 +173,6 @@ typedef struct __STRING_MAP_DATA{
 
 
 lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation_data_t* c_dt,identifier_map_data_t* im);
-
-
-
-lll_string_index_t _create_string(lll_string_table_t* st,const lll_char_t* dt,lll_string_length_t l);
-
-
-
-lll_object_offset_t _get_object_size(const lll_object_t* o);
-
-
-
-uint8_t _compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b);
-
-
-
-uint8_t _runtime_object_zero(const lll_runtime_object_t* o);
 
 
 

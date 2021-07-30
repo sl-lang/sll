@@ -38,7 +38,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 
 
 void _remove_up_to_end(lll_object_t* o,lll_object_offset_t off){
-	lll_object_offset_t sz=_get_object_size(o);
+	lll_object_offset_t sz=lll_get_object_size(o);
 	for (;off<sz;off++){
 		(o+off)->t=LLL_OBJECT_TYPE_NOP;
 	}
@@ -48,7 +48,7 @@ void _remove_up_to_end(lll_object_t* o,lll_object_offset_t off){
 
 lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation_data_t* c_dt,identifier_map_data_t* im){
 	lll_object_offset_t eoff=0;
-	while (o->t==LLL_OBJECT_TYPE_NOP){
+	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
 		o++;
 	}
@@ -119,7 +119,7 @@ lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation
 				return eoff+1;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
-			return _get_object_size(o)+eoff;
+			return lll_get_object_size(o)+eoff;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_object_offset_t off=1;
@@ -130,8 +130,6 @@ lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			return eoff+_map_identifiers(o+1,c_dt,im)+1;
 	}
 	lll_object_offset_t off=1;
 	lll_arg_count_t l=o->dt.ac;
@@ -353,7 +351,7 @@ uint8_t _get_cond_type(lll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 				}
 				lll_runtime_object_t a;
 				_get_as_runtime_object(o+1,o_dt,&a);
-				lll_object_offset_t off=_get_object_size(o+1)+1;
+				lll_object_offset_t off=lll_get_object_size(o+1)+1;
 				if (!lv&&(a.t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
 					return COND_TYPE_UNKNOWN;
 				}
@@ -364,43 +362,43 @@ uint8_t _get_cond_type(lll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 					if (a.t==RUNTIME_OBJECT_TYPE_UNKNOWN||b.t==RUNTIME_OBJECT_TYPE_UNKNOWN||(!lv&&(b.t&RUNTIME_OBJECT_CHANGE_IN_LOOP))){
 						return COND_TYPE_UNKNOWN;
 					}
-					uint8_t cmp=_compare_runtime_object(&a,&b);
-					ASSERT(cmp!=RUNTIME_OBJECT_COMPARE_ERROR);
+					lll_compare_result_t cmp=lll_compare_runtime_object(&a,&b);
+					ASSERT(cmp!=LLL_COMPARE_RESULT_ERROR);
 					switch (o->t){
 						case LLL_OBJECT_TYPE_LESS:
-							if (cmp==RUNTIME_OBJECT_COMPARE_BELOW){
+							if (cmp==LLL_COMPARE_RESULT_BELOW){
 								break;
 							}
 							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						case LLL_OBJECT_TYPE_LESS_EQUAL:
-							if (cmp!=RUNTIME_OBJECT_COMPARE_ABOVE){
+							if (cmp!=LLL_COMPARE_RESULT_ABOVE){
 								break;
 							}
 							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						case LLL_OBJECT_TYPE_EQUAL:
-							if (cmp==RUNTIME_OBJECT_COMPARE_EQUAL){
+							if (cmp==LLL_COMPARE_RESULT_EQUAL){
 								break;
 							}
 							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						case LLL_OBJECT_TYPE_NOT_EQUAL:
-							if (cmp!=RUNTIME_OBJECT_COMPARE_EQUAL){
+							if (cmp!=LLL_COMPARE_RESULT_EQUAL){
 								break;
 							}
 							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						case LLL_OBJECT_TYPE_MORE:
-							if (cmp==RUNTIME_OBJECT_COMPARE_ABOVE){
+							if (cmp==LLL_COMPARE_RESULT_ABOVE){
 								break;
 							}
 							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						case LLL_OBJECT_TYPE_MORE_EQUAL:
-							if (cmp!=RUNTIME_OBJECT_COMPARE_BELOW){
+							if (cmp!=LLL_COMPARE_RESULT_BELOW){
 								break;
 							}
 							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						default:
 							UNREACHABLE();
 					}
-					off+=_get_object_size(o+off);
+					off+=lll_get_object_size(o+off);
 					a=b;
 				}
 				return (inv?COND_TYPE_ALWAYS_FALSE:COND_TYPE_ALWAYS_TRUE);
@@ -499,7 +497,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
-			return _get_object_size(o)+eoff;
+			return lll_get_object_size(o)+eoff;
 		case LLL_OBJECT_TYPE_IF:
 			{
 				lll_arg_count_t l=o->dt.ac;
@@ -521,7 +519,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 						uint8_t cnd=_get_cond_type(cnd_o,o_dt,0,0);
 						if (cnd==COND_TYPE_ALWAYS_TRUE){
 							if (o->dt.ac-(l<<1)==3){
-								lll_object_offset_t sz=_get_object_size(o);
+								lll_object_offset_t sz=lll_get_object_size(o);
 								o->t=LLL_OBJECT_TYPE_NOP;
 								off+=_optimize(o+off,p,o_dt,0);
 								while (off<sz){
@@ -573,7 +571,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 						uint8_t cnd=_get_cond_type(cnd_o,o_dt,0,0);
 						if (cnd==COND_TYPE_ALWAYS_TRUE){
 							if (o->dt.ac-(l<<1)==2){
-								lll_object_offset_t sz=_get_object_size(o);
+								lll_object_offset_t sz=lll_get_object_size(o);
 								o->t=LLL_OBJECT_TYPE_NOP;
 								off+=_optimize(o+off,p,o_dt,0);
 								while (off<sz){
@@ -596,11 +594,11 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 								o->t=LLL_OBJECT_TYPE_NOP;
 								DECREASE_PARENT(p);
 							}
-							lll_object_offset_t sz=_get_object_size(cnd_o);
+							lll_object_offset_t sz=lll_get_object_size(cnd_o);
 							for (lll_object_offset_t i=0;i<sz;i++){
 								(cnd_o+i)->t=LLL_OBJECT_TYPE_NOP;
 							}
-							sz=_get_object_size(o+off);
+							sz=lll_get_object_size(o+off);
 							for (lll_object_offset_t i=0;i<sz;i++){
 								(o+off+i)->t=LLL_OBJECT_TYPE_NOP;
 							}
@@ -692,9 +690,9 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 						if (b.t==RUNTIME_OBJECT_TYPE_UNKNOWN){
 							break;
 						}
-						uint8_t cmp=_compare_runtime_object(&a,&b);
-						ASSERT(cmp!=RUNTIME_OBJECT_COMPARE_ERROR);
-						if ((o->t==LLL_OBJECT_TYPE_LESS&&cmp==RUNTIME_OBJECT_COMPARE_BELOW)||(o->t==LLL_OBJECT_TYPE_LESS_EQUAL&&cmp!=RUNTIME_OBJECT_COMPARE_ABOVE)||(o->t==LLL_OBJECT_TYPE_EQUAL&&cmp==RUNTIME_OBJECT_COMPARE_EQUAL)||(o->t==LLL_OBJECT_TYPE_NOT_EQUAL&&cmp!=RUNTIME_OBJECT_COMPARE_EQUAL)||(o->t==LLL_OBJECT_TYPE_MORE&&cmp==RUNTIME_OBJECT_COMPARE_ABOVE)||(o->t==LLL_OBJECT_TYPE_MORE_EQUAL&&cmp!=RUNTIME_OBJECT_COMPARE_BELOW)){
+						lll_compare_result_t cmp=lll_compare_runtime_object(&a,&b);
+						ASSERT(cmp!=LLL_COMPARE_RESULT_ERROR);
+						if ((o->t==LLL_OBJECT_TYPE_LESS&&cmp==LLL_COMPARE_RESULT_BELOW)||(o->t==LLL_OBJECT_TYPE_LESS_EQUAL&&cmp!=LLL_COMPARE_RESULT_ABOVE)||(o->t==LLL_OBJECT_TYPE_EQUAL&&cmp==LLL_COMPARE_RESULT_EQUAL)||(o->t==LLL_OBJECT_TYPE_NOT_EQUAL&&cmp!=LLL_COMPARE_RESULT_EQUAL)||(o->t==LLL_OBJECT_TYPE_MORE&&cmp==LLL_COMPARE_RESULT_ABOVE)||(o->t==LLL_OBJECT_TYPE_MORE_EQUAL&&cmp!=LLL_COMPARE_RESULT_BELOW)){
 							a=b;
 							continue;
 						}

@@ -5,7 +5,7 @@
 
 lll_object_offset_t _remove_padding_internal(lll_object_t* o,lll_compilation_data_t* c_dt,lll_object_offset_t* rm){
 	lll_object_offset_t eoff=0;
-	while (o->t==LLL_OBJECT_TYPE_NOP){
+	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
 		o++;
 		(*rm)++;
@@ -41,8 +41,6 @@ lll_object_offset_t _remove_padding_internal(lll_object_t* o,lll_compilation_dat
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			return eoff+_remove_padding_internal(o+1,c_dt,rm)+1;
 	}
 	lll_object_offset_t off=1;
 	lll_arg_count_t l=o->dt.ac;

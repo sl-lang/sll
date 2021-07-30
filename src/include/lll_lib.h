@@ -12,8 +12,7 @@
 #else
 #define __LLL_IMPORT_EXPORT __declspec(dllimport)
 #endif
-#define __LLL_RETURN _Check_return_ lll_return_t
-#define __LLL_RETURN_CODE _Check_return_ lll_return_code_t
+#define __LLL_CHECK_OUTPUT _Check_return_
 #define __LLL_OBJECT_ALIGNMENT __declspec(align(8))
 #else
 #ifdef __LLL_LIB_COMPILATION__
@@ -21,10 +20,14 @@
 #else
 #define __LLL_IMPORT_EXPORT
 #endif
-#define __LLL_RETURN __attribute__((warn_unused_result)) lll_return_t
-#define __LLL_RETURN_CODE __attribute__((warn_unused_result)) lll_return_code_t
+#define __LLL_CHECK_OUTPUT __attribute__((warn_unused_result))
 #define __LLL_OBJECT_ALIGNMENT __attribute__((aligned(8)))
 #endif
+#define __LLL_RETURN __LLL_CHECK_OUTPUT lll_return_t
+#define __LLL_RETURN_CODE __LLL_CHECK_OUTPUT lll_return_code_t
+#define __LLL_RETURN_COMARE __LLL_CHECK_OUTPUT lll_compare_result_t
+#define __LLL_RETURN_SIZE __LLL_CHECK_OUTPUT lll_object_offset_t
+#define __LLL_RETURN_STRING_INDEX __LLL_CHECK_OUTPUT lll_string_index_t
 
 #define LLL_ERROR_UNKNOWN 0
 #define LLL_ERROR_INTERNAL_STACK_OVERFLOW 1
@@ -196,6 +199,13 @@
 #define LLL_RUNTIME_OBJECT_RESERVED0 128
 #define LLL_RUNTIME_OBJECT_GET_TYPE(r) ((r)->t&0x7f)
 
+#define LLL_COMPARE_RESULT_BELOW 0
+#define LLL_COMPARE_RESULT_EQUAL 1
+#define LLL_COMPARE_RESULT_ABOVE 2
+#define LLL_COMPARE_RESULT_ZERO 3
+#define LLL_COMPARE_RESULT_NONZERO 4
+#define LLL_COMPARE_RESULT_ERROR 255
+
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
 #define LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,bf,sz) ((is)->rbf((is),(bf),(sz)))
@@ -225,6 +235,10 @@ typedef uint8_t lll_assembly_instruction_type_t;
 
 
 typedef uint8_t lll_char_t;
+
+
+
+typedef uint8_t lll_compare_result_t;
 
 
 
@@ -551,11 +565,23 @@ typedef struct __LLL_ERROR{
 
 
 
+__LLL_IMPORT_EXPORT __LLL_RETURN_COMARE lll_compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b);
+
+
+
 __LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o);
 
 
 
 __LLL_IMPORT_EXPORT void lll_create_output_data_stream(FILE* f,lll_output_data_stream_t* o);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_RETURN_STRING_INDEX lll_create_string(lll_string_table_t* st,const lll_char_t* dt,lll_string_length_t l);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e);
 
 
 
@@ -588,6 +614,10 @@ __LLL_IMPORT_EXPORT void lll_free_string_table(lll_string_table_t* st);
 
 
 __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_data_t* c_dt,lll_assembly_data_t* o,lll_error_t* e);
+
+
+
+__LLL_IMPORT_EXPORT __LLL_RETURN_SIZE lll_get_object_size(const lll_object_t* o);
 
 
 
@@ -651,7 +681,7 @@ __LLL_IMPORT_EXPORT void lll_remove_object_padding(lll_compilation_data_t* c_dt,
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_run_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN_COMARE lll_runtime_object_nonzero(const lll_runtime_object_t* o);
 
 
 

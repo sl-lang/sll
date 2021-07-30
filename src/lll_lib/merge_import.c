@@ -7,7 +7,7 @@
 
 lll_object_offset_t _patch_import(lll_object_t* o,import_data_t* dt){
 	lll_object_offset_t eoff=0;
-	while (o->t==LLL_OBJECT_TYPE_NOP){
+	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
 		o++;
 	}
@@ -60,8 +60,6 @@ lll_object_offset_t _patch_import(lll_object_t* o,import_data_t* dt){
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_DEBUG_DATA:
-			return eoff+_patch_import(o+1,dt)+1;
 	}
 	lll_object_offset_t off=1;
 	lll_arg_count_t l=o->dt.ac;

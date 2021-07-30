@@ -594,7 +594,7 @@ _unknown_symbol:
 					}
 					ln++;
 				}
-				arg->dt.s=_create_string(&(c_dt->st),s,ln);
+				arg->dt.s=lll_create_string(&(c_dt->st),s,ln);
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 			}
 			else if ((c>47&&c<58)||c=='-'){
@@ -879,7 +879,7 @@ _next_short_identifier:;
 						k->l++;
 						k->dt=realloc(k->dt,k->l*sizeof(lll_identifier_t));
 						(k->dt+k->l-1)->sc=l_sc->l_sc;
-						(k->dt+k->l-1)->i=_create_string(&(c_dt->st),str,sz);
+						(k->dt+k->l-1)->i=lll_create_string(&(c_dt->st),str,sz);
 						arg->dt.id=LLL_CREATE_IDENTIFIER(k->l-1,sz-1);
 					}
 					else{
@@ -922,7 +922,7 @@ _next_long_identifier:;
 						c_dt->i_dt.ill++;
 						c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t));
 						(c_dt->i_dt.il+c_dt->i_dt.ill-1)->sc=l_sc->l_sc;
-						(c_dt->i_dt.il+c_dt->i_dt.ill-1)->i=_create_string(&(c_dt->st),str,sz);
+						(c_dt->i_dt.il+c_dt->i_dt.ill-1)->i=lll_create_string(&(c_dt->st),str,sz);
 						arg->dt.id=LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
 					}
 _identifier_found:;
@@ -1050,7 +1050,7 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 		i++;
 	}
 	bf[i]=0;
-	_create_string(&(o->st),bf,i);
+	lll_create_string(&(o->st),bf,i);
 }
 
 

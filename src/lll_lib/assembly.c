@@ -205,7 +205,7 @@ lll_object_offset_t _generate_jump(const lll_object_t* o,assembly_generator_data
 			if (!inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
-			return _get_object_size(o)+eoff;
+			return lll_get_object_size(o)+eoff;
 		case LLL_OBJECT_TYPE_IF:
 		case LLL_OBJECT_TYPE_FOR:
 		case LLL_OBJECT_TYPE_RETURN:
@@ -243,7 +243,7 @@ lll_object_offset_t _generate_jump(const lll_object_t* o,assembly_generator_data
 lll_object_offset_t _generate_call(const lll_object_t* o,assembly_generator_data_t* g_dt){
 	lll_arg_count_t l=o->dt.ac;
 	ASSERT(l);
-	lll_object_offset_t off=_get_object_size(o+1)+1;
+	lll_object_offset_t off=lll_get_object_size(o+1)+1;
 	l--;
 	assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 	GENERATE_OPCODE_WITH_LABEL(g_dt,LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II,e);
@@ -357,7 +357,7 @@ lll_object_offset_t _generate_on_stack(const lll_object_t* o,assembly_generator_
 				lll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
 				ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
 				ai->dt.i=o->dt.fn.id;
-				return _get_object_size(o)+eoff;
+				return lll_get_object_size(o)+eoff;
 			}
 		case LLL_OBJECT_TYPE_CALL:
 			return _generate_call(o,g_dt)+eoff;
@@ -440,7 +440,7 @@ lll_object_offset_t _generate(const lll_object_t* o,assembly_generator_data_t* g
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
-			return _get_object_size(o)+eoff;
+			return lll_get_object_size(o)+eoff;
 		case LLL_OBJECT_TYPE_CALL:
 			{
 				lll_object_offset_t off=_generate_call(o,g_dt);
@@ -517,7 +517,7 @@ lll_object_offset_t _generate(const lll_object_t* o,assembly_generator_data_t* g
 				}
 				lll_object_offset_t off=_generate(o+1,g_dt)+1;
 				const lll_object_t* cnd=o+off;
-				off+=_get_object_size(cnd);
+				off+=lll_get_object_size(cnd);
 				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
 				DEFINE_LABEL(g_dt,s);
 				l-=2;
@@ -741,7 +741,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 					bf[j]=bf_r[k]+48;
 					j++;
 				}
-				(ai-1)->dt.s=_create_string(&(o->st),bf,j);
+				(ai-1)->dt.s=lll_create_string(&(o->st),bf,j);
 				goto _print_str;
 			}
 			else if ((ai-1)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT){

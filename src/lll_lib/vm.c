@@ -25,62 +25,7 @@ void _output_int(lll_output_data_stream_t* os,int64_t v){
 
 
 
-uint8_t _compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b){
-	switch (LLL_RUNTIME_OBJECT_GET_TYPE(a)){
-		case LLL_RUNTIME_OBJECT_TYPE_INT:
-			{
-				int64_t v;
-				switch (LLL_RUNTIME_OBJECT_GET_TYPE(b)){
-					case LLL_RUNTIME_OBJECT_TYPE_INT:
-						v=b->dt.i;
-						break;
-					case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
-						return (b->dt.f>a->dt.i?RUNTIME_OBJECT_COMPARE_BELOW:(b->dt.f<a->dt.i?RUNTIME_OBJECT_COMPARE_ABOVE:RUNTIME_OBJECT_COMPARE_EQUAL));
-					case LLL_RUNTIME_OBJECT_TYPE_CHAR:
-						v=b->dt.c;
-						break;
-					case LLL_RUNTIME_OBJECT_TYPE_STRING:
-						v=b->dt.s->l;
-						break;
-					case LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX:
-					default:
-						return RUNTIME_OBJECT_COMPARE_ERROR;
-				}
-				return (v>a->dt.i?RUNTIME_OBJECT_COMPARE_BELOW:(v<a->dt.i?RUNTIME_OBJECT_COMPARE_ABOVE:RUNTIME_OBJECT_COMPARE_EQUAL));
-			}
-		case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			ASSERT(!"Unimplemented");
-		case LLL_RUNTIME_OBJECT_TYPE_CHAR:
-			ASSERT(!"Unimplemented");
-		case LLL_RUNTIME_OBJECT_TYPE_STRING:
-			ASSERT(!"Unimplemented");
-		case LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX:
-		default:
-			return RUNTIME_OBJECT_COMPARE_ERROR;
-	}
-}
-
-
-
-uint8_t _runtime_object_zero(const lll_runtime_object_t* o){
-	switch (LLL_RUNTIME_OBJECT_GET_TYPE(o)){
-		case LLL_RUNTIME_OBJECT_TYPE_INT:
-			return !o->dt.i;
-		case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			return !o->dt.f;
-		case LLL_RUNTIME_OBJECT_TYPE_CHAR:
-			return !o->dt.c;
-		case LLL_RUNTIME_OBJECT_TYPE_STRING:
-			return !o->dt.s->l;
-		case LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX:
-		default:
-			return RUNTIME_OBJECT_COMPARE_ERROR;
-	}
-}
-
-
-
-__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_run_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e){
 	const lll_assembly_instruction_t* ai=a_dt->h;
 	lll_runtime_object_t* v=(lll_runtime_object_t*)(st->ptr);
 	lll_runtime_object_t* s=v+a_dt->vc;
@@ -207,12 +152,12 @@ _jump:
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
 				{
-					uint8_t cmp=_compare_runtime_object(s-2,s-1);
-					if (cmp==RUNTIME_OBJECT_COMPARE_ERROR){
+					lll_compare_result_t cmp=lll_compare_runtime_object(s-2,s-1);
+					if (cmp==LLL_COMPARE_RESULT_ERROR){
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 					}
-					if (cmp==RUNTIME_OBJECT_COMPARE_BELOW){
+					if (cmp==LLL_COMPARE_RESULT_BELOW){
 						s-=2;
 						goto _jump;
 					}
@@ -220,12 +165,12 @@ _jump:
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
 				{
-					uint8_t cmp=_compare_runtime_object(s-2,s-1);
-					if (cmp==RUNTIME_OBJECT_COMPARE_ERROR){
+					lll_compare_result_t cmp=lll_compare_runtime_object(s-2,s-1);
+					if (cmp==LLL_COMPARE_RESULT_ERROR){
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 					}
-					if (cmp!=RUNTIME_OBJECT_COMPARE_ABOVE){
+					if (cmp!=LLL_COMPARE_RESULT_ABOVE){
 						s-=2;
 						goto _jump;
 					}
@@ -233,12 +178,12 @@ _jump:
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
 				{
-					uint8_t cmp=_compare_runtime_object(s-2,s-1);
-					if (cmp==RUNTIME_OBJECT_COMPARE_ERROR){
+					lll_compare_result_t cmp=lll_compare_runtime_object(s-2,s-1);
+					if (cmp==LLL_COMPARE_RESULT_ERROR){
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 					}
-					if (cmp==RUNTIME_OBJECT_COMPARE_ABOVE){
+					if (cmp==LLL_COMPARE_RESULT_ABOVE){
 						s-=2;
 						goto _jump;
 					}
@@ -246,12 +191,12 @@ _jump:
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
 				{
-					uint8_t cmp=_compare_runtime_object(s-2,s-1);
-					if (cmp==RUNTIME_OBJECT_COMPARE_ERROR){
+					lll_compare_result_t cmp=lll_compare_runtime_object(s-2,s-1);
+					if (cmp==LLL_COMPARE_RESULT_ERROR){
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 					}
-					if (cmp!=RUNTIME_OBJECT_COMPARE_BELOW){
+					if (cmp!=LLL_COMPARE_RESULT_BELOW){
 						s-=2;
 						goto _jump;
 					}
@@ -259,12 +204,12 @@ _jump:
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
 				{
-					uint8_t cmp=_compare_runtime_object(s-2,s-1);
-					if (cmp==RUNTIME_OBJECT_COMPARE_ERROR){
+					lll_compare_result_t cmp=lll_compare_runtime_object(s-2,s-1);
+					if (cmp==LLL_COMPARE_RESULT_ERROR){
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 					}
-					if (cmp==RUNTIME_OBJECT_COMPARE_EQUAL){
+					if (cmp==LLL_COMPARE_RESULT_EQUAL){
 						s-=2;
 						goto _jump;
 					}
@@ -272,12 +217,12 @@ _jump:
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
 				{
-					uint8_t cmp=_compare_runtime_object(s-2,s-1);
-					if (cmp==RUNTIME_OBJECT_COMPARE_ERROR){
+					lll_compare_result_t cmp=lll_compare_runtime_object(s-2,s-1);
+					if (cmp==LLL_COMPARE_RESULT_ERROR){
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 					}
-					if (cmp!=RUNTIME_OBJECT_COMPARE_EQUAL){
+					if (cmp!=LLL_COMPARE_RESULT_EQUAL){
 						s-=2;
 						goto _jump;
 					}
@@ -285,12 +230,12 @@ _jump:
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 				{
-					uint8_t cmp=_runtime_object_zero(s-1);
-					if (cmp==RUNTIME_OBJECT_COMPARE_ERROR){
+					lll_compare_result_t cmp=lll_runtime_object_nonzero(s-1);
+					if (cmp==LLL_COMPARE_RESULT_ERROR){
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 					}
-					if (cmp){
+					if (cmp==LLL_COMPARE_RESULT_ZERO){
 						s--;
 						goto _jump;
 					}
@@ -298,12 +243,12 @@ _jump:
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				{
-					uint8_t cmp=_runtime_object_zero(s-1);
-					if (cmp==RUNTIME_OBJECT_COMPARE_ERROR){
+					lll_compare_result_t cmp=lll_runtime_object_nonzero(s-1);
+					if (cmp==LLL_COMPARE_RESULT_ERROR){
 						e->t=LLL_ERROR_STACK_CORRUPTED;
 						return 0;
 					}
-					if (!cmp){
+					if (cmp==LLL_COMPARE_RESULT_NONZERO){
 						s--;
 						goto _jump;
 					}
