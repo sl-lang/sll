@@ -213,27 +213,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 				}
 				ai->dt.c=(lll_char_t)c;
 				break;
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
-				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
-					uint8_t re=0;
-					ai->dt.i=(lll_relative_instruction_index_t)_read_signed_integer(is,&re);
-					if (re){
-						return 0;
-					}
-				}
-				else{
-					CHECK_ERROR(is,ai->dt.rj,lll_instruction_index_t,e);
-				}
-				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
@@ -253,6 +232,26 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				CHECK_ERROR(is,ai->dt.s,lll_string_index_t,e);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
+				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					uint8_t re=0;
+					ai->dt.i=(lll_relative_instruction_index_t)_read_signed_integer(is,&re);
+					if (re){
+						return 0;
+					}
+				}
+				else{
+					CHECK_ERROR(is,ai->dt.rj,lll_instruction_index_t,e);
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:

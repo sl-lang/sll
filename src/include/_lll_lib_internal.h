@@ -22,6 +22,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	_BitScanForward64(&o,m);
 	return o;
 }
+#define IGNORE(x) (void)(x)
 #else
 #ifdef DEBUG_BUILD
 #define UNREACHABLE() ASSERT(!"UNREACHABLE")
@@ -29,10 +30,15 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define UNREACHABLE() __builtin_unreachable()
 #endif
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
+#define IGNORE(x) \
+	do{ \
+		unsigned long long int __tmp __attribute__((unused))=(unsigned long long int)(x); \
+	} while (0)
 #endif
 
 
 
+#ifdef DEBUG_BUILD
 #define _ASSERT_STR_(l) #l
 #define _ASSERT_STR(l) _ASSERT_STR_(l)
 #define _ASSERT_JOIN_(l) ASSERT_##l
@@ -68,6 +74,11 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 			raise(SIGABRT); \
 		} \
 	} while (0)
+#else
+#define ASSERT(...)
+#define ASSERT_ERROR(x,e,r)
+#define ASSERT_EXIT(x,...)
+#endif
 
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
 
@@ -75,6 +86,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define ASSEMBLY_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','A',0)
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','C',0)
+
+#define EXTRA_COMPILATION_DATA_INSIDE_FUNCTION 1
 
 #define ERROR_DISPLAY_TAB_WIDTH 4
 
@@ -89,8 +102,14 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define COND_TYPE_ALWAYS_TRUE 1
 #define COND_TYPE_ALWAYS_FALSE 2
 
+#define CALL_STACK_SIZE 256
+
 #define RUNTIME_OBJECT_CHANGE_IN_LOOP LLL_RUNTIME_OBJECT_RESERVED0
 #define RUNTIME_OBJECT_TYPE_UNKNOWN 5
+
+
+
+typedef uint16_t call_stack_size_t;
 
 
 
@@ -107,6 +126,13 @@ typedef struct __SCOPE_DATA{
 	lll_scope_t l_sc;
 	scope_data_mask_length_t ml;
 } scope_data_t;
+
+
+
+typedef struct __EXTRA_COMPILATION_DATA{
+	uint8_t fl;
+	scope_data_t sc;
+} extra_compilation_data_t;
 
 
 
@@ -139,7 +165,6 @@ typedef struct __IDENTIFIER_MAP_DATA{
 	lll_variable_index_t n_vi;
 	lll_scope_t l_sc;
 	lll_variable_index_t* sc_vi;
-	lll_scope_t sc_vi_l;
 	lll_variable_index_t vc;
 } identifier_map_data_t;
 
@@ -169,6 +194,20 @@ typedef struct __STRING_MAP_DATA{
 	uint64_t* m;
 	lll_string_index_t* im;
 } strint_map_data_t;
+
+
+
+typedef struct __CALL_STACK_FRAME{
+	lll_instruction_index_t ii;
+	lll_stack_offset_t s;
+} call_stack_frame_t;
+
+
+
+typedef struct __CALL_STACK{
+	call_stack_frame_t* dt;
+	call_stack_size_t l;
+} call_stack_t;
 
 
 

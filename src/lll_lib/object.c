@@ -20,7 +20,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_COMARE lll_compare_runtime_object(const lll_run
 					case LLL_RUNTIME_OBJECT_TYPE_STRING:
 						v=b->dt.s->l;
 						break;
-					case LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX:
 					default:
 						return LLL_COMPARE_RESULT_ERROR;
 				}
@@ -32,7 +31,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_COMARE lll_compare_runtime_object(const lll_run
 			ASSERT(!"Unimplemented");
 		case LLL_RUNTIME_OBJECT_TYPE_STRING:
 			ASSERT(!"Unimplemented");
-		case LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX:
 		default:
 			return LLL_COMPARE_RESULT_ERROR;
 	}
@@ -50,7 +48,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_COMARE lll_runtime_object_nonzero(const lll_run
 			return (o->dt.c?LLL_COMPARE_RESULT_NONZERO:LLL_COMPARE_RESULT_ZERO);
 		case LLL_RUNTIME_OBJECT_TYPE_STRING:
 			return (o->dt.s->l?LLL_COMPARE_RESULT_NONZERO:LLL_COMPARE_RESULT_ZERO);
-		case LLL_RUNTIME_OBJECT_TYPE_INSTRUCTION_INDEX:
 		default:
 			return LLL_COMPARE_RESULT_ERROR;
 	}

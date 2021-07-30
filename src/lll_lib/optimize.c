@@ -66,20 +66,12 @@ lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation
 				uint8_t j=LLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
 				if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
 					lll_identifier_t* id=c_dt->i_dt.il+i;
-					if (im->l_sc<id->sc){
+					if (im->l_sc!=id->sc){
 						*(im->sc_vi+im->l_sc)=im->n_vi;
 						im->l_sc=id->sc;
-						if (id->sc<=im->sc_vi_l){
+						if (*(im->sc_vi+im->l_sc)!=LLL_MAX_SCOPE){
 							im->n_vi=*(im->sc_vi+im->l_sc);
 						}
-						else{
-							im->sc_vi_l=id->sc;
-						}
-					}
-					else if (im->l_sc>id->sc){
-						*(im->sc_vi+im->l_sc)=im->n_vi;
-						im->l_sc=id->sc;
-						im->n_vi=*(im->sc_vi+im->l_sc);
 					}
 					(im->l_im+i)->c++;
 					if ((im->l_im+i)->v==LLL_MAX_VARIABLE_INDEX){
@@ -92,20 +84,12 @@ lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation
 				}
 				else{
 					lll_identifier_t* id=c_dt->i_dt.s[j].dt+i;
-					if (im->l_sc<id->sc){
+					if (im->l_sc!=id->sc){
 						*(im->sc_vi+im->l_sc)=im->n_vi;
 						im->l_sc=id->sc;
-						if (id->sc<=im->sc_vi_l){
+						if (*(im->sc_vi+im->l_sc)!=LLL_MAX_SCOPE){
 							im->n_vi=*(im->sc_vi+im->l_sc);
 						}
-						else{
-							im->sc_vi_l=id->sc;
-						}
-					}
-					else if (im->l_sc>id->sc){
-						*(im->sc_vi+im->l_sc)=im->n_vi;
-						im->l_sc=id->sc;
-						im->n_vi=*(im->sc_vi+im->l_sc);
 					}
 					(im->s_im[j]+i)->c++;
 					if ((im->s_im[j]+i)->v==LLL_MAX_VARIABLE_INDEX){
@@ -292,6 +276,7 @@ uint8_t _get_cond_type(lll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 				return COND_TYPE_UNKNOWN;
 			}
 		case LLL_OBJECT_TYPE_PRINT:
+		case LLL_OBJECT_TYPE_FUNC:
 		case LLL_OBJECT_TYPE_IF:
 		case LLL_OBJECT_TYPE_FOR:
 		case LLL_OBJECT_TYPE_WHILE:
@@ -311,98 +296,26 @@ uint8_t _get_cond_type(lll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 			ASSERT(o->dt.ac);
 			return _get_cond_type(o+1,o_dt,!inv,lv);
 		case LLL_OBJECT_TYPE_ASSIGN:
-			ASSERT(!"Unimplemented");
-		case LLL_OBJECT_TYPE_FUNC:
-			ASSERT(!"Unimplemented");
+			ASSERT(o->dt.ac>=2);
+			return _get_cond_type(o+lll_get_object_size(o+1)+1,o_dt,inv,lv);
 		case LLL_OBJECT_TYPE_CALL:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_ADD:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_SUB:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MULT:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_DIV:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_FLOOR_DIV:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_MOD:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_AND:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_OR:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_XOR:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_BIT_NOT:
-			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LESS:
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
 		case LLL_OBJECT_TYPE_EQUAL:
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
 		case LLL_OBJECT_TYPE_MORE:
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
-			{
-				lll_arg_count_t l=o->dt.ac;
-				ASSERT(l);
-				l--;
-				if (!l){
-					return _get_cond_type(o+1,o_dt,inv,lv);
-				}
-				lll_runtime_object_t a;
-				_get_as_runtime_object(o+1,o_dt,&a);
-				lll_object_offset_t off=lll_get_object_size(o+1)+1;
-				if (!lv&&(a.t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
-					return COND_TYPE_UNKNOWN;
-				}
-				while (l){
-					l--;
-					lll_runtime_object_t b;
-					_get_as_runtime_object(o+off,o_dt,&b);
-					if (a.t==RUNTIME_OBJECT_TYPE_UNKNOWN||b.t==RUNTIME_OBJECT_TYPE_UNKNOWN||(!lv&&(b.t&RUNTIME_OBJECT_CHANGE_IN_LOOP))){
-						return COND_TYPE_UNKNOWN;
-					}
-					lll_compare_result_t cmp=lll_compare_runtime_object(&a,&b);
-					ASSERT(cmp!=LLL_COMPARE_RESULT_ERROR);
-					switch (o->t){
-						case LLL_OBJECT_TYPE_LESS:
-							if (cmp==LLL_COMPARE_RESULT_BELOW){
-								break;
-							}
-							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
-						case LLL_OBJECT_TYPE_LESS_EQUAL:
-							if (cmp!=LLL_COMPARE_RESULT_ABOVE){
-								break;
-							}
-							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
-						case LLL_OBJECT_TYPE_EQUAL:
-							if (cmp==LLL_COMPARE_RESULT_EQUAL){
-								break;
-							}
-							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
-						case LLL_OBJECT_TYPE_NOT_EQUAL:
-							if (cmp!=LLL_COMPARE_RESULT_EQUAL){
-								break;
-							}
-							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
-						case LLL_OBJECT_TYPE_MORE:
-							if (cmp==LLL_COMPARE_RESULT_ABOVE){
-								break;
-							}
-							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
-						case LLL_OBJECT_TYPE_MORE_EQUAL:
-							if (cmp!=LLL_COMPARE_RESULT_BELOW){
-								break;
-							}
-							return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
-						default:
-							UNREACHABLE();
-					}
-					off+=lll_get_object_size(o+off);
-					a=b;
-				}
-				return (inv?COND_TYPE_ALWAYS_FALSE:COND_TYPE_ALWAYS_TRUE);
-			}
+				return COND_TYPE_UNKNOWN;
 		default:
 			UNREACHABLE();
 	}
@@ -864,7 +777,6 @@ __LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_ob
 			.n_vi=0,
 			.l_sc=0,
 			.sc_vi=malloc(c_dt->_n_sc_id*sizeof(lll_variable_index_t)),
-			.sc_vi_l=0,
 			.vc=0
 		},
 		.vi=LLL_MAX_VARIABLE_INDEX,
@@ -881,11 +793,13 @@ __LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_ob
 		(o_dt.im.l_im+i)->v=LLL_MAX_VARIABLE_INDEX;
 		(o_dt.im.l_im+i)->c=0;
 	}
+	for (lll_scope_t i=0;i<c_dt->_n_sc_id;i++){
+		*(o_dt.im.sc_vi+i)=LLL_MAX_VARIABLE_INDEX;
+	}
 	_map_identifiers(c_dt->h,c_dt,&(o_dt.im));
 	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
 		o_dt.im.n_vi=o_dt.im.vc;
 		o_dt.im.l_sc=0;
-		o_dt.im.sc_vi_l=0;
 		lll_object_t* fo=c_dt->h+(*(c_dt->f_dt.dt+i))->off;
 		ASSERT(fo->t==LLL_OBJECT_TYPE_FUNC);
 		lll_object_offset_t off=1;

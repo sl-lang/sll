@@ -1,6 +1,7 @@
 #ifdef _MSC_VER
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
+#undef IGNORE
 #endif
 #include <lll_lib.h>
 #include <_lll_lib_internal.h>
@@ -194,18 +195,6 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			return;
 		case LLL_ERROR_TOO_MANY_STATEMENTS:
 			printf("Too Many Statements\n");
-			return;
-		case LLL_ERROR_MATH_OP_NOT_ENOUGH_ARGUMENTS:
-			printf("Math Expression Contains not Enough Arguments\n");
-			return;
-		case LLL_ERROR_MATH_OP_TOO_MANY_ARGUMENTS:
-			printf("Math Expression Contains too Many Arguments\n");
-			return;
-		case LLL_ERROR_SET_NOT_ENOUGH_ARGUMENTS:
-			printf("Not Enough Arguments for an Assignment\n");
-			return;
-		case LLL_ERROR_SET_NO_INDENTIFIER:
-			printf("Identifier Requierd for Assignment\n");
 			return;
 		case LLL_ERROR_UNKNOWN_IDENTIFIER:
 			*sp=0;

@@ -245,8 +245,6 @@ lll_object_offset_t _generate_call(const lll_object_t* o,assembly_generator_data
 	ASSERT(l);
 	lll_object_offset_t off=lll_get_object_size(o+1)+1;
 	l--;
-	assembly_instruction_label_t e=NEXT_LABEL(g_dt);
-	GENERATE_OPCODE_WITH_LABEL(g_dt,LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II,e);
 	while (l){
 		l--;
 		off+=_generate_on_stack(o+off,g_dt);
@@ -255,7 +253,6 @@ lll_object_offset_t _generate_call(const lll_object_t* o,assembly_generator_data
 	lll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
 	ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL;
 	ai->dt.ac=o->dt.ac-1;
-	DEFINE_LABEL(g_dt,e);
 	return off;
 }
 
@@ -623,7 +620,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 			.n_vi=0,
 			.l_sc=0,
 			.sc_vi=malloc(c_dt->_n_sc_id*sizeof(lll_variable_index_t)),
-			.sc_vi_l=0,
 			.vc=0
 		},
 		0
@@ -639,11 +635,13 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 		(g_dt.im.l_im+i)->v=LLL_MAX_VARIABLE_INDEX;
 		(g_dt.im.l_im+i)->c=0;
 	}
+	for (lll_scope_t i=0;i<c_dt->_n_sc_id;i++){
+		*(g_dt.im.sc_vi+i)=LLL_MAX_VARIABLE_INDEX;
+	}
 	_map_identifiers(c_dt->h,c_dt,&(g_dt.im));
 	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
 		g_dt.im.n_vi=g_dt.im.vc;
 		g_dt.im.l_sc=0;
-		g_dt.im.sc_vi_l=0;
 		const lll_object_t* fo=c_dt->h+(*(c_dt->f_dt.dt+i))->off;
 		ASSERT(fo->t==LLL_OBJECT_TYPE_FUNC);
 		lll_object_offset_t off=1;
@@ -915,7 +913,7 @@ _handle_nop:;
 	}
 	ai=o->h;
 	for (lll_instruction_index_t i=0;i<o->ic;i++){
-		if ((LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II||(LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ))&&(ai->t&ASSEMBLY_INSTRUCTION_LABEL)){
+		if ((LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ)&&(ai->t&ASSEMBLY_INSTRUCTION_LABEL)){
 			ai->t&=~ASSEMBLY_INSTRUCTION_LABEL;
 			lll_instruction_index_t j=*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai));
 			if (j<128){

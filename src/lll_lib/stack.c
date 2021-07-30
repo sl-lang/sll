@@ -23,5 +23,5 @@ __LLL_IMPORT_EXPORT void lll_set_compilation_data_stack(lll_compilation_data_t* 
 __LLL_IMPORT_EXPORT void lll_setup_stack(lll_stack_data_t* o,uint8_t* bf,lll_stack_offset_t sz){
 	o->ptr=bf;
 	o->off=0;
-	o->sz=0;
+	o->sz=sz;
 }

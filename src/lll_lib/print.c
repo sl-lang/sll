@@ -346,14 +346,6 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				fprintf(f,"PUSH %u (char)",ai->dt.c);
 				break;
-			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II:
-				if (LLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
-					fprintf(f,"PUSH .%+d",ai->dt.rj);
-				}
-				else{
-					fprintf(f,"PUSH .%u",ai->dt.j);
-				}
-				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				fprintf(f,"LOAD $%u",ai->dt.v);
 				break;
@@ -563,7 +555,7 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 				fprintf(f,"PRINT $%u",ai->dt.v);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
-				fprintf(f,"CALL");
+				fprintf(f,"CALL %u",ai->dt.ac);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 				fprintf(f,"RET");
