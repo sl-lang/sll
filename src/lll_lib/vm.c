@@ -82,8 +82,8 @@ uint8_t _runtime_object_zero(const lll_runtime_object_t* o){
 
 __LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_run_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e){
 	const lll_assembly_instruction_t* ai=a_dt->h;
-	lll_runtime_object_t* s=(lll_runtime_object_t*)(st->ptr);
-	lll_runtime_object_t* v=malloc(a_dt->vc*sizeof(lll_runtime_object_t));
+	lll_runtime_object_t* v=(lll_runtime_object_t*)(st->ptr);
+	lll_runtime_object_t* s=v+a_dt->vc;
 	lll_instruction_index_t ii=0;
 	while (1){
 		if (ii>=a_dt->ic){
@@ -549,9 +549,8 @@ _print_from_stack:
 				*(s-1)=*(v+ai->dt.v);
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END:
-				free(v);
 				s--;
-				if (((uint8_t*)s)<st->ptr){
+				if (s<v+a_dt->vc){
 					e->t=LLL_ERROR_STACK_CORRUPTED;
 					return 0;
 				}
@@ -570,14 +569,12 @@ _print_from_stack:
 						return 0;
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO:
-				free(v);
-				if (((uint8_t*)s)<st->ptr){
+				if (s<v+a_dt->vc){
 					e->t=LLL_ERROR_STACK_CORRUPTED;
 				}
 				return 0;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_END_ONE:
-				free(v);
-				if (((uint8_t*)s)<st->ptr){
+				if (s<v+a_dt->vc){
 					e->t=LLL_ERROR_STACK_CORRUPTED;
 				}
 				return 1;

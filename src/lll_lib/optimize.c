@@ -541,11 +541,25 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 							cnd_o->t=LLL_OBJECT_TYPE_NOP;
 							return off+eoff;
 						}
+						else if (cnd==COND_TYPE_ALWAYS_FALSE){
+							o->dt.ac-=2;
+							if (o->dt.ac==1){
+								o->t=LLL_OBJECT_TYPE_NOP;
+							}
+							_remove_up_to_end(cnd_o,0);
+							_remove_up_to_end(o+off,0);
+							continue;
+						}
 						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 						o_dt->rm=0;
 					}
-					off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
-					o_dt->rm=0;
+					if (o->t!=LLL_OBJECT_TYPE_NOP){
+						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						o_dt->rm=0;
+					}
+					else{
+						off+=_optimize(o+off,p,o_dt,fl);
+					}
 				}
 				else{
 					l>>=1;
@@ -570,14 +584,28 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 							else{
 								o_dt->rm=0;
 								off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+								_remove_up_to_end(o,off);
 							}
-							_remove_up_to_end(o,off);
 							o->dt.ac-=(l<<1)+1;
-							while (cnd_o->t==LLL_OBJECT_TYPE_NOP||cnd_o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
-								cnd_o++;
-							}
-							cnd_o->t=LLL_OBJECT_TYPE_NOP;
+							_remove_up_to_end(cnd_o,0);
 							break;
+						}
+						else if (cnd==COND_TYPE_ALWAYS_FALSE){
+							o->dt.ac-=2;
+							if (!o->dt.ac){
+								o->t=LLL_OBJECT_TYPE_NOP;
+								DECREASE_PARENT(p);
+							}
+							lll_object_offset_t sz=_get_object_size(cnd_o);
+							for (lll_object_offset_t i=0;i<sz;i++){
+								(cnd_o+i)->t=LLL_OBJECT_TYPE_NOP;
+							}
+							sz=_get_object_size(o+off);
+							for (lll_object_offset_t i=0;i<sz;i++){
+								(o+off+i)->t=LLL_OBJECT_TYPE_NOP;
+							}
+							off+=sz;
+							continue;
 						}
 						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 						o_dt->rm=0;
@@ -631,6 +659,63 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 			ASSERT(!"Unimplemented");
 		case LLL_OBJECT_TYPE_LOOP:
 			ASSERT(!"Unimplemented");
+		case LLL_OBJECT_TYPE_LESS:
+		case LLL_OBJECT_TYPE_LESS_EQUAL:
+		case LLL_OBJECT_TYPE_EQUAL:
+		case LLL_OBJECT_TYPE_NOT_EQUAL:
+		case LLL_OBJECT_TYPE_MORE:
+		case LLL_OBJECT_TYPE_MORE_EQUAL:
+			{
+				lll_arg_count_t l=o->dt.ac;
+				ASSERT(l);
+				lll_object_offset_t off=_optimize(o+1,o,o_dt,OPTIMIZER_FLAG_ARGUMENT)+1;
+				if (o_dt->rm){
+					_remove_up_to_end(o,off);
+					o->t=LLL_OBJECT_TYPE_NOP;
+					return off+eoff;
+				}
+				lll_runtime_object_t a;
+				_get_as_runtime_object(o+1,o_dt,&a);
+				l--;
+				if (a.t!=RUNTIME_OBJECT_TYPE_UNKNOWN){
+					while (l){
+						l--;
+						lll_object_t* arg=o+off;
+						off+=_optimize(o+off,o,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						if (o_dt->rm){
+							_remove_up_to_end(o,off);
+							o->dt.ac-=l;
+							return off+eoff;
+						}
+						lll_runtime_object_t b;
+						_get_as_runtime_object(arg,o_dt,&b);
+						if (b.t==RUNTIME_OBJECT_TYPE_UNKNOWN){
+							break;
+						}
+						uint8_t cmp=_compare_runtime_object(&a,&b);
+						ASSERT(cmp!=RUNTIME_OBJECT_COMPARE_ERROR);
+						if ((o->t==LLL_OBJECT_TYPE_LESS&&cmp==RUNTIME_OBJECT_COMPARE_BELOW)||(o->t==LLL_OBJECT_TYPE_LESS_EQUAL&&cmp!=RUNTIME_OBJECT_COMPARE_ABOVE)||(o->t==LLL_OBJECT_TYPE_EQUAL&&cmp==RUNTIME_OBJECT_COMPARE_EQUAL)||(o->t==LLL_OBJECT_TYPE_NOT_EQUAL&&cmp!=RUNTIME_OBJECT_COMPARE_EQUAL)||(o->t==LLL_OBJECT_TYPE_MORE&&cmp==RUNTIME_OBJECT_COMPARE_ABOVE)||(o->t==LLL_OBJECT_TYPE_MORE_EQUAL&&cmp!=RUNTIME_OBJECT_COMPARE_BELOW)){
+							a=b;
+							continue;
+						}
+						_remove_up_to_end(o,off);
+						o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
+						o->dt.sc=o->dt.ac-l;
+						return _optimize(o,p,o_dt,fl)+eoff;
+					}
+				}
+				while (l){
+					l--;
+					off+=_optimize(o+off,o,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.ac-=l;
+						break;
+					}
+				}
+				return off+eoff;
+				ASSERT(!"Unimplemented");
+			}
 		case LLL_OBJECT_TYPE_RETURN:
 		case LLL_OBJECT_TYPE_EXIT:
 			{
@@ -662,10 +747,20 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 					}
 				}
 				if (!o->dt.sc){
-					o->t=LLL_OBJECT_TYPE_NOP;
-					DECREASE_PARENT(p);
+					if (fl&OPTIMIZER_FLAG_ARGUMENT){
+						o->t=LLL_OBJECT_TYPE_INT;
+						o->dt.i=0;
+					}
+					else{
+						o->t=LLL_OBJECT_TYPE_NOP;
+						DECREASE_PARENT(p);
+					}
 				}
 				else if (o->dt.sc==1){
+					o->t=LLL_OBJECT_TYPE_NOP;
+				}
+				else if (p&&p->t==LLL_OBJECT_TYPE_OPERATION_LIST){
+					p->dt.sc+=o->dt.sc-1;
 					o->t=LLL_OBJECT_TYPE_NOP;
 				}
 				return off+eoff;
