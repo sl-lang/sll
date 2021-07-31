@@ -19,7 +19,7 @@
 		ASSEMBLY_INSTRUCTION_MISC_FIELD(__ai)=(lbl); \
 	} while(0)
 #define GET_SIGN_ENCODED_INTEGER(x) ((x)<0?((~(x))<<1)|1:(x)<<1)
-#define GET_VARIABLE_INDEX(o,g_dt) (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH?((g_dt)->im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v:((g_dt)->im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v)
+#define GET_VARIABLE_INDEX(o,g_dt) (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH?((g_dt)->it.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v:((g_dt)->it.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v)
 #define NEXT_INSTRUCTION(g_dt) ((g_dt)->a_dt->h+((g_dt)->a_dt->ic++))
 #define NEXT_LABEL(g_dt) ((g_dt)->n_lbl++)
 
@@ -628,7 +628,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 		o,
 		c_dt,
 		{
-			.l_im=malloc(c_dt->i_dt.ill*sizeof(identifier_data_t)),
+			.l_im=malloc(c_dt->idt.ill*sizeof(identifier_data_t)),
 			.n_vi=0,
 			.l_sc=0,
 			.sc_vi=malloc(c_dt->_n_sc_id*sizeof(lll_variable_index_t)),
@@ -637,40 +637,40 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 		0
 	};
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		g_dt.im.s_im[i]=malloc(c_dt->i_dt.s[i].l*sizeof(identifier_data_t));
-		for (lll_identifier_list_length_t j=0;j<c_dt->i_dt.s[i].l;j++){
-			(g_dt.im.s_im[i]+j)->v=LLL_MAX_VARIABLE_INDEX;
-			(g_dt.im.s_im[i]+j)->c=0;
+		g_dt.it.s_im[i]=malloc(c_dt->idt.s[i].l*sizeof(identifier_data_t));
+		for (lll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
+			(g_dt.it.s_im[i]+j)->v=LLL_MAX_VARIABLE_INDEX;
+			(g_dt.it.s_im[i]+j)->c=0;
 		}
 	}
-	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
-		(g_dt.im.l_im+i)->v=LLL_MAX_VARIABLE_INDEX;
-		(g_dt.im.l_im+i)->c=0;
+	for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
+		(g_dt.it.l_im+i)->v=LLL_MAX_VARIABLE_INDEX;
+		(g_dt.it.l_im+i)->c=0;
 	}
 	for (lll_scope_t i=0;i<c_dt->_n_sc_id;i++){
-		*(g_dt.im.sc_vi+i)=LLL_MAX_VARIABLE_INDEX;
+		*(g_dt.it.sc_vi+i)=LLL_MAX_VARIABLE_INDEX;
 	}
-	_map_identifiers(c_dt->h,c_dt,&(g_dt.im));
-	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
-		g_dt.im.n_vi=g_dt.im.vc;
-		g_dt.im.l_sc=0;
-		const lll_object_t* fo=c_dt->h+(*(c_dt->f_dt.dt+i))->off;
+	_map_identifiers(c_dt->h,c_dt,&(g_dt.it));
+	for (lll_function_index_t i=0;i<c_dt->ft.l;i++){
+		g_dt.it.n_vi=g_dt.it.vc;
+		g_dt.it.l_sc=0;
+		const lll_object_t* fo=c_dt->h+(*(c_dt->ft.dt+i))->off;
 		ASSERT(fo->t==LLL_OBJECT_TYPE_FUNC);
 		lll_object_offset_t off=1;
 		for (lll_arg_count_t j=0;j<fo->dt.fn.ac;j++){
-			off+=_map_identifiers(fo+off,c_dt,&(g_dt.im));
+			off+=_map_identifiers(fo+off,c_dt,&(g_dt.it));
 		}
 	}
-	free(g_dt.im.sc_vi);
-	o->vc=g_dt.im.vc;
+	free(g_dt.it.sc_vi);
+	o->vc=g_dt.it.vc;
 	_generate(c_dt->h,&g_dt);
 	if ((o->h+o->ic-1)->t!=LLL_ASSEMBLY_INSTRUCTION_TYPE_END){
 		GENERATE_OPCODE(&g_dt,LLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO);
 	}
-	o->ft.l=c_dt->f_dt.l;
-	o->ft.dt=malloc(c_dt->f_dt.l*sizeof(lll_instruction_index_t));
-	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
-		const lll_function_t* k=*(c_dt->f_dt.dt+i);
+	o->ft.l=c_dt->ft.l;
+	o->ft.dt=malloc(c_dt->ft.l*sizeof(lll_instruction_index_t));
+	for (lll_function_index_t i=0;i<c_dt->ft.l;i++){
+		const lll_function_t* k=*(c_dt->ft.dt+i);
 		lll_arg_count_t j=k->al;
 		lll_assembly_instruction_t* ai=NEXT_INSTRUCTION(&g_dt);
 		ai->t=ASSEMBLY_INSTRUCTION_TYPE_FUNC_START;
@@ -679,7 +679,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 			j--;
 			ai=NEXT_INSTRUCTION(&g_dt);
 			ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP;
-			ai->dt.v=(LLL_IDENTIFIER_GET_ARRAY_ID(k->a[j])==LLL_MAX_SHORT_IDENTIFIER_LENGTH?(g_dt.im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX(k->a[j]))->v:(g_dt.im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID(k->a[j])]+LLL_IDENTIFIER_GET_ARRAY_INDEX(k->a[j]))->v);
+			ai->dt.v=(LLL_IDENTIFIER_GET_ARRAY_ID(k->a[j])==LLL_MAX_SHORT_IDENTIFIER_LENGTH?(g_dt.it.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX(k->a[j]))->v:(g_dt.it.s_im[LLL_IDENTIFIER_GET_ARRAY_ID(k->a[j])]+LLL_IDENTIFIER_GET_ARRAY_INDEX(k->a[j]))->v);
 		}
 		const lll_object_t* fo=c_dt->h+k->off;
 		ASSERT(fo->t==LLL_OBJECT_TYPE_FUNC);
@@ -692,9 +692,9 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 		}
 	}
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		free(g_dt.im.s_im[i]);
+		free(g_dt.it.s_im[i]);
 	}
-	free(g_dt.im.l_im);
+	free(g_dt.it.l_im);
 	lll_assembly_instruction_t* ai=o->h;
 	for (lll_instruction_index_t i=0;i<o->ic;i++){
 		if ((ai+1)->t!=LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT){

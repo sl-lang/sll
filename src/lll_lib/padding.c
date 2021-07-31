@@ -22,7 +22,7 @@ lll_object_offset_t _remove_padding_internal(lll_object_t* o,lll_compilation_dat
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
 			{
-				(*(c_dt->f_dt.dt+o->dt.fn.id))->off-=*rm;
+				(*(c_dt->ft.dt+o->dt.fn.id))->off-=*rm;
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){

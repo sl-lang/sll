@@ -10,7 +10,7 @@
 
 
 
-void lll_api_get_time(lll_runtime_object_t* o,lll_arg_count_t ac,lll_runtime_object_t* a){
+__LLL_IMPORT_EXPORT void lll_api_get_time(lll_runtime_object_t* o,lll_arg_count_t ac,lll_runtime_object_t* a){
 	o->t=LLL_RUNTIME_OBJECT_TYPE_INT;
 #ifdef _MSC_VER
 	FILETIME ft;

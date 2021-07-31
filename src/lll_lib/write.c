@@ -60,7 +60,8 @@ lll_object_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			_write_integer(os,o->dt.ii);
+			_write_integer(os,o->dt.im.ii);
+			_write_integer(os,o->dt.im.sc);
 			return eoff+1;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
@@ -201,25 +202,29 @@ __LLL_IMPORT_EXPORT void lll_write_compiled_object(lll_output_data_stream_t* os,
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&v),sizeof(lll_version_t));
 	_write_integer(os,c_dt->tm);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		const lll_identifier_list_t* l=c_dt->i_dt.s+i;
+		const lll_identifier_list_t* l=c_dt->idt.s+i;
 		_write_integer(os,l->l);
 		for (lll_identifier_list_length_t j=0;j<l->l;j++){
 			_write_integer(os,(l->dt+j)->sc);
 			_write_integer(os,(l->dt+j)->i);
 		}
 	}
-	_write_integer(os,c_dt->i_dt.ill);
-	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
-		_write_integer(os,(c_dt->i_dt.il+i)->sc);
-		_write_integer(os,(c_dt->i_dt.il+i)->i);
+	_write_integer(os,c_dt->idt.ill);
+	for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
+		_write_integer(os,(c_dt->idt.il+i)->sc);
+		_write_integer(os,(c_dt->idt.il+i)->i);
 	}
-	_write_integer(os,c_dt->im.l);
-	for (lll_import_index_t i=0;i<c_dt->im.l;i++){
-		_write_integer(os,*(c_dt->im.dt+i));
+	_write_integer(os,c_dt->it.l);
+	for (lll_import_index_t i=0;i<c_dt->it.l;i++){
+		_write_integer(os,*(c_dt->it.dt+i));
 	}
-	_write_integer(os,c_dt->f_dt.l);
-	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
-		const lll_function_t* k=*(c_dt->f_dt.dt+i);
+	_write_integer(os,c_dt->et.l);
+	for (lll_export_table_length_t i=0;i<c_dt->et.l;i++){
+		_write_integer(os,*(c_dt->et.dt+i));
+	}
+	_write_integer(os,c_dt->ft.l);
+	for (lll_function_index_t i=0;i<c_dt->ft.l;i++){
+		const lll_function_t* k=*(c_dt->ft.dt+i);
 		_write_integer(os,k->off);
 		_write_integer(os,k->al);
 		for (lll_arg_count_t i=0;i<k->al;i++){

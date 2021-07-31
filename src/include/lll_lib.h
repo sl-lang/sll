@@ -109,8 +109,9 @@
 #define LLL_OBJECT_TYPE_EXIT 36
 #define LLL_OBJECT_TYPE_IMPORT 37
 #define LLL_OBJECT_TYPE_OPERATION_LIST 38
-#define LLL_OBJECT_TYPE_DEBUG_DATA 63
-#define LLL_OBJECT_TYPE_NOP 0xff
+#define LLL_OBJECT_TYPE_DEBUG_DATA 39
+#define LLL_OBJECT_TYPE_RESERVED0 254
+#define LLL_OBJECT_TYPE_NOP 255
 #define LLL_IS_OBJECT_TYPE_NOT_TYPE(o) ((o)->t>LLL_OBJECT_TYPE_IDENTIFIER)
 
 #define LLL_MAX_SHORT_IDENTIFIER_LENGTH 15
@@ -273,6 +274,10 @@ typedef uint32_t lll_column_number_t;
 
 
 
+typedef uint32_t lll_export_table_length_t;
+
+
+
 typedef uint32_t lll_file_offset_t;
 
 
@@ -365,6 +370,13 @@ typedef struct __LLL_FUNCTION_OBJECT_DATA{
 
 
 
+typedef struct __LLL_IMPORT_OBJECT_DATA{
+	lll_import_index_t ii;
+	lll_scope_t sc;
+} lll_import_object_data_t;
+
+
+
 typedef struct __LLL_DEBUG_OBJECT_DATA{
 	lll_string_index_t fpi;
 	lll_line_number_t ln;
@@ -382,7 +394,7 @@ typedef union __LLL_OBJECT_DATA{
 	lll_identifier_index_t id;
 	lll_function_object_data_t fn;
 	lll_arg_count_t ac;
-	lll_import_index_t ii;
+	lll_import_object_data_t im;
 	lll_statement_count_t sc;
 	lll_debug_object_data_t dbg;
 } lll_object_data_t;
@@ -414,14 +426,21 @@ typedef struct __LLL_IDENTIFIER_DATA{
 	lll_identifier_list_t s[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
 	lll_identifier_t* il;
 	lll_identifier_list_length_t ill;
-} lll_identifier_data_t;
+} lll_identifier_table_t;
 
 
 
 typedef struct __LLL_IMPORT_DATA{
 	lll_string_index_t* dt;
 	lll_import_index_t l;
-} lll_import_data_t;
+} lll_import_table_t;
+
+
+
+typedef struct __LLL_EXPORT_TABLE{
+	lll_identifier_index_t* dt;
+	lll_export_table_length_t l;
+} lll_export_table_t;
 
 
 
@@ -436,7 +455,7 @@ typedef struct __LLL_FUNCTION{
 typedef struct __LLL_FUNCTION_DATA{
 	lll_function_t** dt;
 	lll_function_index_t l;
-} lll_function_data_t;
+} lll_function_table_t;
 
 
 
@@ -467,9 +486,10 @@ typedef struct __LLL_COMPILATION_DATA{
 	lll_input_data_stream_t* is;
 	lll_time_t tm;
 	lll_object_t* h;
-	lll_identifier_data_t i_dt;
-	lll_import_data_t im;
-	lll_function_data_t f_dt;
+	lll_identifier_table_t idt;
+	lll_import_table_t it;
+	lll_export_table_t et;
+	lll_function_table_t ft;
 	lll_string_table_t st;
 	lll_stack_data_t _s;
 	lll_scope_t _n_sc_id;
@@ -497,10 +517,10 @@ typedef struct __LLL_ASSEMBLY_INSTRUCTION{
 
 
 
-typedef struct __LLL_FUNCTION_TABLE{
+typedef struct __LLL_ASSEMBLY_FUNCTION_TABLE{
 	lll_function_index_t l;
 	lll_instruction_index_t* dt;
-} lll_function_table_t;
+} lll_assembly_function_table_t;
 
 
 
@@ -509,7 +529,7 @@ typedef struct __LLL_ASSEMBLY_DATA{
 	lll_assembly_instruction_t* h;
 	lll_instruction_index_t ic;
 	lll_variable_index_t vc;
-	lll_function_table_t ft;
+	lll_assembly_function_table_t ft;
 	lll_string_table_t st;
 	lll_stack_data_t _s;
 } lll_assembly_data_t;
@@ -600,11 +620,15 @@ __LLL_IMPORT_EXPORT void lll_free_assembly_data(lll_assembly_data_t* a_dt);
 
 
 
+__LLL_IMPORT_EXPORT void lll_free_assembly_function_table(lll_assembly_function_table_t* ft);
+
+
+
 __LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt);
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_function_data(lll_function_data_t* f_dt);
+__LLL_IMPORT_EXPORT void lll_free_export_table(lll_export_table_t* et);
 
 
 
@@ -612,15 +636,15 @@ __LLL_IMPORT_EXPORT void lll_free_function_table(lll_function_table_t* ft);
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt);
+__LLL_IMPORT_EXPORT void lll_free_identifier_table(lll_identifier_table_t* idt);
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im);
+__LLL_IMPORT_EXPORT void lll_free_import_table(lll_import_table_t* it);
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_internal_function_table(lll_internal_function_table_t* i_ft);
+__LLL_IMPORT_EXPORT void lll_free_internal_function_table(lll_internal_function_table_t* ift);
 
 
 

@@ -192,16 +192,15 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const extra_com
 						off++;
 					}
 					o->dt.fn.ac=ac-i;
-					o->dt.fn.id=c_dt->f_dt.l;
-					c_dt->f_dt.l++;
-					void* tmp=realloc(c_dt->f_dt.dt,c_dt->f_dt.l*sizeof(lll_function_t*));
+					o->dt.fn.id=c_dt->ft.l;
+					c_dt->ft.l++;
+					void* tmp=realloc(c_dt->ft.dt,c_dt->ft.l*sizeof(lll_function_t*));
 					if (!tmp){
 						ASSERT(!"Unable to Reallocate Function Array");
 					}
-					c_dt->f_dt.dt=tmp;
+					c_dt->ft.dt=tmp;
 					lll_function_t* f=malloc(sizeof(lll_function_t)+i*sizeof(lll_identifier_index_t));
 					f->off=(lll_object_offset_t)(o-c_dt->h);
-					printf("%u\n",f->off);
 					f->al=i;
 					off=1;
 					lll_object_offset_t eoff=1;
@@ -217,7 +216,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const extra_com
 					for (off=1;off<eoff;off++){
 						(o+off)->t=LLL_OBJECT_TYPE_NOP;
 					}
-					*(c_dt->f_dt.dt+c_dt->f_dt.l-1)=f;
+					*(c_dt->ft.dt+c_dt->ft.l-1)=f;
 				}
 			}
 			else if (o->t==LLL_OBJECT_TYPE_INTERNAL_FUNC){
@@ -262,6 +261,33 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const extra_com
 			else if (o->t==LLL_OBJECT_TYPE_IMPORT){
 				ASSERT(!ac);
 				o->t=LLL_OBJECT_TYPE_NOP;
+			}
+			else if (o->t==OBJECT_TYPE_EXPORT){
+				o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
+				o->dt.sc=ac;
+				lll_object_offset_t off=1;
+				for (lll_arg_count_t i=0;i<ac;i++){
+					while ((o+off)->t==LLL_OBJECT_TYPE_NOP||(o+off)->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+						off++;
+					}
+					if ((o+off)->t==LLL_OBJECT_TYPE_IDENTIFIER){
+						o->dt.sc--;
+						for (lll_export_table_length_t j=0;j<c_dt->et.l;j++){
+							if (*(c_dt->et.dt+j)==(o+off)->dt.id){
+								goto _skip_export;
+							}
+						}
+						c_dt->et.l++;
+						c_dt->et.dt=realloc(c_dt->et.dt,c_dt->et.l*sizeof(lll_identifier_index_t));
+						*(c_dt->et.dt+c_dt->et.l-1)=(o+off)->dt.id;
+_skip_export:
+						(o+off)->t=LLL_OBJECT_TYPE_NOP;
+						while ((o+off)->t==LLL_OBJECT_TYPE_NOP||(o+off)->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+							(o+off)->t=LLL_OBJECT_TYPE_NOP;
+							off--;
+						}
+					}
+				}
 			}
 			else{
 				o->dt.ac=ac;
@@ -507,7 +533,10 @@ _read_symbol:
 					c_dt->_s.off+=sizeof(lll_object_t);
 					o++;
 					o->t=LLL_OBJECT_TYPE_IMPORT;
-					o->dt.ii=LLL_MAX_IMPORT_INDEX;
+					o->dt.im.ii=LLL_MAX_IMPORT_INDEX;
+				}
+				else if (*str=='#'&&*(str+1)=='#'){
+					o->t=OBJECT_TYPE_EXPORT;
 				}
 				else{
 					goto _unknown_symbol;
@@ -895,7 +924,7 @@ _read_identifier:
 				else{
 					arg->t=LLL_OBJECT_TYPE_IDENTIFIER;
 					if (sz<=LLL_MAX_SHORT_IDENTIFIER_LENGTH){
-						lll_identifier_list_t* k=c_dt->i_dt.s+sz-1;
+						lll_identifier_list_t* k=c_dt->idt.s+sz-1;
 						lll_scope_t mx_sc=LLL_MAX_SCOPE;
 						lll_identifier_index_t mx_i=0;
 						for (lll_identifier_list_length_t i=0;i<k->l;i++){
@@ -941,8 +970,8 @@ _next_short_identifier:;
 					else{
 						lll_scope_t mx_sc=LLL_MAX_SCOPE;
 						lll_identifier_index_t mx_i=0;
-						for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
-							lll_identifier_t* k=c_dt->i_dt.il+i;
+						for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
+							lll_identifier_t* k=c_dt->idt.il+i;
 							lll_string_t* s=*(c_dt->st.dt+k->i);
 							if (s->c!=cs||s->l!=sz){
 								continue;
@@ -975,11 +1004,11 @@ _next_long_identifier:;
 							}
 							return LLL_RETURN_ERROR;
 						}
-						c_dt->i_dt.ill++;
-						c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t));
-						(c_dt->i_dt.il+c_dt->i_dt.ill-1)->sc=l_sc->l_sc;
-						(c_dt->i_dt.il+c_dt->i_dt.ill-1)->i=lll_create_string(&(c_dt->st),str,sz);
-						arg->dt.id=LLL_CREATE_IDENTIFIER(c_dt->i_dt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
+						c_dt->idt.ill++;
+						c_dt->idt.il=realloc(c_dt->idt.il,c_dt->idt.ill*sizeof(lll_identifier_t));
+						(c_dt->idt.il+c_dt->idt.ill-1)->sc=l_sc->l_sc;
+						(c_dt->idt.il+c_dt->idt.ill-1)->i=lll_create_string(&(c_dt->st),str,sz);
+						arg->dt.id=LLL_CREATE_IDENTIFIER(c_dt->idt.ill-1,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
 					}
 _identifier_found:;
 				}
@@ -1028,18 +1057,19 @@ _identifier_found:;
 						}
 						return LLL_RETURN_ERROR;
 					}
-					for (lll_import_index_t i=0;i<c_dt->im.l;i++){
-						if (*(c_dt->im.dt+i)!=arg->dt.s){
+					o->dt.im.sc=l_sc->l_sc;
+					for (lll_import_index_t i=0;i<c_dt->it.l;i++){
+						if (*(c_dt->it.dt+i)!=arg->dt.s){
 							continue;
 						}
-						o->dt.ii=i;
+						o->dt.im.ii=i;
 						break;
 					}
-					if (o->dt.ii==LLL_MAX_IMPORT_INDEX){
-						o->dt.ii=c_dt->im.l;
-						c_dt->im.l++;
-						c_dt->im.dt=realloc(c_dt->im.dt,c_dt->im.l*sizeof(lll_string_index_t));
-						*(c_dt->im.dt+c_dt->im.l-1)=arg->dt.s;
+					if (o->dt.im.ii==LLL_MAX_IMPORT_INDEX){
+						o->dt.im.ii=c_dt->it.l;
+						c_dt->it.l++;
+						c_dt->it.dt=realloc(c_dt->it.dt,c_dt->it.l*sizeof(lll_string_index_t));
+						*(c_dt->it.dt+c_dt->it.l-1)=arg->dt.s;
 					}
 					c_dt->_s.off=arg_bf_off+sizeof(lll_object_t);
 					sc++;
@@ -1047,7 +1077,7 @@ _identifier_found:;
 					(o-sc)->dt.sc=sc;
 					o++;
 					o->t=LLL_OBJECT_TYPE_IMPORT;
-					o->dt.ii=LLL_MAX_IMPORT_INDEX;
+					o->dt.im.ii=LLL_MAX_IMPORT_INDEX;
 				}
 				else{
 					ac++;
@@ -1087,15 +1117,17 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 	o->tm=(lll_time_t)time(NULL);
 	o->h=NULL;
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		o->i_dt.s[i].dt=NULL;
-		o->i_dt.s[i].l=0;
+		o->idt.s[i].dt=NULL;
+		o->idt.s[i].l=0;
 	}
-	o->i_dt.il=NULL;
-	o->i_dt.ill=0;
-	o->im.dt=NULL;
-	o->im.l=0;
-	o->f_dt.dt=NULL;
-	o->f_dt.l=0;
+	o->idt.il=NULL;
+	o->idt.ill=0;
+	o->it.dt=NULL;
+	o->it.l=0;
+	o->et.dt=NULL;
+	o->et.l=0;
+	o->ft.dt=NULL;
+	o->ft.l=0;
 	o->st.dt=NULL;
 	o->st.l=0;
 	o->_n_sc_id=1;

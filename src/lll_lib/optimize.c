@@ -23,14 +23,14 @@
 #define DECREASE_VARIABLE(o,o_dt) \
 	do{ \
 		if (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH){ \
-			((o_dt)->im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c--; \
+			((o_dt)->it.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c--; \
 		} \
 		else{ \
-			((o_dt)->im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c--; \
+			((o_dt)->it.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c--; \
 		} \
 	} while (0)
-#define GET_VARIABLE_INDEX(o,o_dt) (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH?((o_dt)->im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v:((o_dt)->im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v)
-#define GET_VARIABLE_REF_COUNT(o,o_dt) (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH?((o_dt)->im.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c:((o_dt)->im.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c)
+#define GET_VARIABLE_INDEX(o,o_dt) (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH?((o_dt)->it.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v:((o_dt)->it.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v)
+#define GET_VARIABLE_REF_COUNT(o,o_dt) (LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH?((o_dt)->it.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c:((o_dt)->it.s_im[LLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->c)
 
 
 
@@ -66,7 +66,7 @@ lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation
 				lll_identifier_index_t i=LLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
 				uint8_t j=LLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
 				if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					lll_identifier_t* id=c_dt->i_dt.il+i;
+					lll_identifier_t* id=c_dt->idt.il+i;
 					if (im->l_sc!=id->sc){
 						*(im->sc_vi+im->l_sc)=im->n_vi;
 						im->l_sc=id->sc;
@@ -84,7 +84,7 @@ lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation
 					}
 				}
 				else{
-					lll_identifier_t* id=c_dt->i_dt.s[j].dt+i;
+					lll_identifier_t* id=c_dt->idt.s[j].dt+i;
 					if (im->l_sc!=id->sc){
 						*(im->sc_vi+im->l_sc)=im->n_vi;
 						im->l_sc=id->sc;
@@ -809,7 +809,7 @@ __LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_ob
 	optimizer_data_t o_dt={
 		c_dt,
 		{
-			.l_im=malloc(c_dt->i_dt.ill*sizeof(identifier_data_t)),
+			.l_im=malloc(c_dt->idt.ill*sizeof(identifier_data_t)),
 			.n_vi=0,
 			.l_sc=0,
 			.sc_vi=malloc(c_dt->_n_sc_id*sizeof(lll_variable_index_t)),
@@ -819,33 +819,33 @@ __LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_ob
 		.rm=0
 	};
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		o_dt.im.s_im[i]=malloc(c_dt->i_dt.s[i].l*sizeof(identifier_data_t));
-		for (lll_identifier_list_length_t j=0;j<c_dt->i_dt.s[i].l;j++){
-			(o_dt.im.s_im[i]+j)->v=LLL_MAX_VARIABLE_INDEX;
-			(o_dt.im.s_im[i]+j)->c=0;
+		o_dt.it.s_im[i]=malloc(c_dt->idt.s[i].l*sizeof(identifier_data_t));
+		for (lll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
+			(o_dt.it.s_im[i]+j)->v=LLL_MAX_VARIABLE_INDEX;
+			(o_dt.it.s_im[i]+j)->c=0;
 		}
 	}
-	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
-		(o_dt.im.l_im+i)->v=LLL_MAX_VARIABLE_INDEX;
-		(o_dt.im.l_im+i)->c=0;
+	for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
+		(o_dt.it.l_im+i)->v=LLL_MAX_VARIABLE_INDEX;
+		(o_dt.it.l_im+i)->c=0;
 	}
 	for (lll_scope_t i=0;i<c_dt->_n_sc_id;i++){
-		*(o_dt.im.sc_vi+i)=LLL_MAX_VARIABLE_INDEX;
+		*(o_dt.it.sc_vi+i)=LLL_MAX_VARIABLE_INDEX;
 	}
-	_map_identifiers(c_dt->h,c_dt,&(o_dt.im));
-	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
-		o_dt.im.n_vi=o_dt.im.vc;
-		o_dt.im.l_sc=0;
-		lll_object_t* fo=c_dt->h+(*(c_dt->f_dt.dt+i))->off;
+	_map_identifiers(c_dt->h,c_dt,&(o_dt.it));
+	for (lll_function_index_t i=0;i<c_dt->ft.l;i++){
+		o_dt.it.n_vi=o_dt.it.vc;
+		o_dt.it.l_sc=0;
+		lll_object_t* fo=c_dt->h+(*(c_dt->ft.dt+i))->off;
 		ASSERT(fo->t==LLL_OBJECT_TYPE_FUNC);
 		lll_object_offset_t off=1;
 		for (lll_arg_count_t j=0;j<fo->dt.fn.ac;j++){
-			off+=_map_identifiers(fo+off,c_dt,&(o_dt.im));
+			off+=_map_identifiers(fo+off,c_dt,&(o_dt.it));
 		}
 	}
-	free(o_dt.im.sc_vi);
-	o_dt.v=malloc(o_dt.im.vc*sizeof(lll_runtime_object_t));
-	for (lll_variable_index_t i=0;i<o_dt.im.vc;i++){
+	free(o_dt.it.sc_vi);
+	o_dt.v=malloc(o_dt.it.vc*sizeof(lll_runtime_object_t));
+	for (lll_variable_index_t i=0;i<o_dt.it.vc;i++){
 		(o_dt.v+i)->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
 	}
 	_optimize(c_dt->h,NULL,&o_dt,0);
@@ -853,29 +853,29 @@ __LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_ob
 	_remove_const_var(c_dt->h,NULL,&o_dt);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		lll_identifier_list_length_t k=0;
-		for (lll_identifier_list_length_t j=0;j<c_dt->i_dt.s[i].l;j++){
-			*(c_dt->i_dt.s[i].dt+j-k)=*(c_dt->i_dt.s[i].dt+j);
-			if (!(o_dt.im.s_im[i]+j)->c){
+		for (lll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
+			*(c_dt->idt.s[i].dt+j-k)=*(c_dt->idt.s[i].dt+j);
+			if (!(o_dt.it.s_im[i]+j)->c){
 				k++;
 			}
 		}
 		if (k){
-			c_dt->i_dt.s[i].l-=k;
-			c_dt->i_dt.s[i].dt=realloc(c_dt->i_dt.s[i].dt,c_dt->i_dt.s[i].l*sizeof(lll_identifier_t));
+			c_dt->idt.s[i].l-=k;
+			c_dt->idt.s[i].dt=realloc(c_dt->idt.s[i].dt,c_dt->idt.s[i].l*sizeof(lll_identifier_t));
 		}
-		free(o_dt.im.s_im[i]);
+		free(o_dt.it.s_im[i]);
 	}
 	lll_identifier_list_length_t j=0;
-	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
-		*(c_dt->i_dt.il+i-j)=*(c_dt->i_dt.il+i);
-		if (!(o_dt.im.l_im+i)->c){
+	for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
+		*(c_dt->idt.il+i-j)=*(c_dt->idt.il+i);
+		if (!(o_dt.it.l_im+i)->c){
 			j++;
 		}
 	}
 	if (j){
-		c_dt->i_dt.ill-=j;
-		c_dt->i_dt.il=realloc(c_dt->i_dt.il,c_dt->i_dt.ill*sizeof(lll_identifier_t));
+		c_dt->idt.ill-=j;
+		c_dt->idt.il=realloc(c_dt->idt.il,c_dt->idt.ill*sizeof(lll_identifier_t));
 	}
-	free(o_dt.im.l_im);
+	free(o_dt.it.l_im);
 	free(o_dt.v);
 }

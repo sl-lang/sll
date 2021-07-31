@@ -113,7 +113,8 @@ uint8_t _read_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is){
 				return 1;
 			}
 		case LLL_OBJECT_TYPE_IMPORT:
-			CHECK_ERROR2(is,o->dt.ii,lll_import_index_t);
+			CHECK_ERROR2(is,o->dt.im.ii,lll_import_index_t);
+			CHECK_ERROR2(is,o->dt.im.sc,lll_scope_t);
 			return 1;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			CHECK_ERROR2(is,o->dt.sc,lll_statement_count_t);
@@ -304,27 +305,32 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 	c_dt->is=NULL;
 	CHECK_ERROR(is,c_dt->tm,lll_time_t,e);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		CHECK_ERROR(is,c_dt->i_dt.s[i].l,lll_identifier_list_length_t,e);
-		c_dt->i_dt.s[i].dt=malloc(c_dt->i_dt.s[i].l*sizeof(lll_identifier_t));
-		for (lll_identifier_list_length_t j=0;j<c_dt->i_dt.s[i].l;j++){
-			CHECK_ERROR(is,(c_dt->i_dt.s[i].dt+j)->sc,lll_scope_t,e);
-			CHECK_ERROR(is,(c_dt->i_dt.s[i].dt+j)->i,lll_string_index_t,e);
+		CHECK_ERROR(is,c_dt->idt.s[i].l,lll_identifier_list_length_t,e);
+		c_dt->idt.s[i].dt=malloc(c_dt->idt.s[i].l*sizeof(lll_identifier_t));
+		for (lll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
+			CHECK_ERROR(is,(c_dt->idt.s[i].dt+j)->sc,lll_scope_t,e);
+			CHECK_ERROR(is,(c_dt->idt.s[i].dt+j)->i,lll_string_index_t,e);
 		}
 	}
-	CHECK_ERROR(is,c_dt->i_dt.ill,lll_identifier_list_length_t,e);
-	c_dt->i_dt.il=malloc(c_dt->i_dt.ill*sizeof(lll_identifier_t));
-	for (lll_identifier_list_length_t i=0;i<c_dt->i_dt.ill;i++){
-		CHECK_ERROR(is,(c_dt->i_dt.il+i)->sc,lll_scope_t,e);
-		CHECK_ERROR(is,(c_dt->i_dt.il+i)->i,lll_string_index_t,e);
+	CHECK_ERROR(is,c_dt->idt.ill,lll_identifier_list_length_t,e);
+	c_dt->idt.il=malloc(c_dt->idt.ill*sizeof(lll_identifier_t));
+	for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
+		CHECK_ERROR(is,(c_dt->idt.il+i)->sc,lll_scope_t,e);
+		CHECK_ERROR(is,(c_dt->idt.il+i)->i,lll_string_index_t,e);
 	}
-	CHECK_ERROR(is,c_dt->im.l,lll_import_index_t,e);
-	c_dt->im.dt=malloc(c_dt->im.l*sizeof(lll_string_index_t));
-	for (lll_import_index_t i=0;i<c_dt->im.l;i++){
-		CHECK_ERROR(is,*(c_dt->im.dt+i),lll_string_index_t,e);
+	CHECK_ERROR(is,c_dt->it.l,lll_import_index_t,e);
+	c_dt->it.dt=malloc(c_dt->it.l*sizeof(lll_string_index_t));
+	for (lll_import_index_t i=0;i<c_dt->it.l;i++){
+		CHECK_ERROR(is,*(c_dt->it.dt+i),lll_string_index_t,e);
 	}
-	CHECK_ERROR(is,c_dt->f_dt.l,lll_function_index_t,e);
-	c_dt->f_dt.dt=malloc(c_dt->f_dt.l*sizeof(lll_function_t*));
-	for (lll_function_index_t i=0;i<c_dt->f_dt.l;i++){
+	CHECK_ERROR(is,c_dt->et.l,lll_export_table_length_t,e);
+	c_dt->et.dt=malloc(c_dt->et.l*sizeof(lll_identifier_index_t));
+	for (lll_export_table_length_t i=0;i<c_dt->et.l;i++){
+		CHECK_ERROR(is,*(c_dt->et.dt+i),lll_identifier_index_t,e);
+	}
+	CHECK_ERROR(is,c_dt->ft.l,lll_function_index_t,e);
+	c_dt->ft.dt=malloc(c_dt->ft.l*sizeof(lll_function_t*));
+	for (lll_function_index_t i=0;i<c_dt->ft.l;i++){
 		lll_stack_offset_t off;
 		CHECK_ERROR(is,off,lll_stack_offset_t,e);
 		lll_arg_count_t al;
@@ -335,7 +341,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 		for (lll_arg_count_t i=0;i<al;i++){
 			CHECK_ERROR(is,k->a[i],lll_identifier_index_t,e);
 		}
-		*(c_dt->f_dt.dt+i)=k;
+		*(c_dt->ft.dt+i)=k;
 	}
 	CHECK_ERROR(is,c_dt->st.l,lll_string_index_t,e);
 	c_dt->st.dt=malloc(c_dt->st.l*sizeof(lll_string_t*));

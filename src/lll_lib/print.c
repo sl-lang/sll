@@ -133,20 +133,20 @@ lll_object_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,co
 				lll_identifier_index_t i=o->dt.id;
 				lll_identifier_list_length_t j=LLL_IDENTIFIER_GET_ARRAY_ID(i);
 				if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					lll_string_t* s=*(c_dt->st.dt+(c_dt->i_dt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i);
+					lll_string_t* s=*(c_dt->st.dt+(c_dt->idt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i);
 					for (lll_string_length_t k=0;k<s->l;k++){
 						fputc(s->v[k],f);
 					}
 					fputc('$',f);
-					_print_int64((c_dt->i_dt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
+					_print_int64((c_dt->idt.il+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
 				}
 				else{
-					lll_char_t* s=(*(c_dt->st.dt+(c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i))->v;
+					lll_char_t* s=(*(c_dt->st.dt+(c_dt->idt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i))->v;
 					for (lll_string_length_t k=0;k<j+1;k++){
 						fputc(*(s+k),f);
 					}
 					fputc('$',f);
-					_print_int64((c_dt->i_dt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
+					_print_int64((c_dt->idt.s[j].dt+LLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,f);
 				}
 				return eoff+1;
 			}
@@ -260,7 +260,7 @@ lll_object_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,co
 		case LLL_OBJECT_TYPE_IMPORT:
 			{
 				fprintf(f,"-- \"");
-				lll_string_t* dt=*(c_dt->st.dt+*(c_dt->im.dt+o->dt.ii));
+				lll_string_t* dt=*(c_dt->st.dt+*(c_dt->it.dt+o->dt.im.ii));
 				for (lll_string_length_t i=0;i<dt->l;i++){
 					fputc(dt->v[i],f);
 				}

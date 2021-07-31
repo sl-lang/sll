@@ -104,6 +104,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define CALL_STACK_SIZE 256
 
+#define OBJECT_TYPE_EXPORT LLL_OBJECT_TYPE_RESERVED0
+
 #define RUNTIME_OBJECT_CHANGE_IN_LOOP LLL_RUNTIME_OBJECT_RESERVED0
 #define RUNTIME_OBJECT_TYPE_UNKNOWN 5
 
@@ -140,7 +142,7 @@ typedef struct __EXTRA_COMPILATION_DATA{
 typedef struct __IMPORT_DATA{
 	lll_import_index_t i;
 	lll_object_offset_t off;
-	uint64_t b_off;
+	lll_object_t* b_off;
 	uint8_t rm;
 } import_data_t;
 
@@ -173,7 +175,7 @@ typedef struct __IDENTIFIER_MAP_DATA{
 
 typedef struct __OPTIMIZER_DATA{
 	lll_compilation_data_t* c_dt;
-	identifier_map_data_t im;
+	identifier_map_data_t it;
 	lll_runtime_object_t* v;
 	lll_variable_index_t vi;
 	uint8_t rm;
@@ -184,7 +186,7 @@ typedef struct __OPTIMIZER_DATA{
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	lll_assembly_data_t* a_dt;
 	const lll_compilation_data_t* c_dt;
-	identifier_map_data_t im;
+	identifier_map_data_t it;
 	assembly_instruction_label_t n_lbl;
 } assembly_generator_data_t;
 

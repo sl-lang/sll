@@ -162,7 +162,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 				}
 				lll_error_t e;
 				if (!lll_load_assembly(is,a_dt,&e)){
-					lll_free_function_table(&(a_dt->ft));
+					lll_free_assembly_function_table(&(a_dt->ft));
 					lll_free_string_table(&(a_dt->st));
 					if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
 						if (fl&FLAG_VERBOSE){
@@ -170,9 +170,10 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 						}
 						lll_create_input_data_stream(*f,is);
 						if (!lll_load_compiled_object(is,c_dt,&e)){
-							lll_free_function_data(&(c_dt->f_dt));
-							lll_free_identifier_data(&(c_dt->i_dt));
-							lll_free_import_data(&(c_dt->im));
+							lll_free_identifier_table(&(c_dt->idt));
+							lll_free_import_table(&(c_dt->it));
+							lll_free_export_table(&(c_dt->et));
+							lll_free_function_table(&(c_dt->ft));
 							lll_free_string_table(&(c_dt->st));
 							if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
 								if (fl&FLAG_VERBOSE){
@@ -192,9 +193,9 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 									PRINT_STATIC_STR("File Successfully Read.\n");
 								}
 								if (fl&FLAG_MERGE_IMPORTS){
-									for (lll_import_index_t l=0;l<c_dt->im.l;l++){
+									for (lll_import_index_t l=0;l<c_dt->it.l;l++){
 										char nm[MAX_PATH_LENGTH];
-										lll_string_t* s=*(c_dt->st.dt+*(c_dt->im.dt+l));
+										lll_string_t* s=*(c_dt->st.dt+*(c_dt->it.dt+l));
 										for (lll_string_length_t m=0;m<s->l;m++){
 											nm[m]=s->v[m];
 										}
@@ -239,7 +240,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 									}
 								}
 								else{
-									for (lll_import_index_t l=0;l<c_dt->im.l;l++){
+									for (lll_import_index_t l=0;l<c_dt->it.l;l++){
 										fpl++;
 										void* tmp=realloc(fp,fpl*sizeof(char*));
 										if (!tmp){
@@ -247,7 +248,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 											return 0;
 										}
 										fp=tmp;
-										lll_string_t* s=*(c_dt->st.dt+*(c_dt->im.dt+l));
+										lll_string_t* s=*(c_dt->st.dt+*(c_dt->it.dt+l));
 										char* d=malloc((s->l+1)*sizeof(char));
 										for (lll_string_length_t m=0;m<s->l;m++){
 											*(d+m)=s->v[m];
