@@ -132,6 +132,7 @@ typedef struct __SCOPE_DATA{
 typedef struct __EXTRA_COMPILATION_DATA{
 	uint8_t fl;
 	scope_data_t sc;
+	lll_internal_function_table_t* i_ft;
 } extra_compilation_data_t;
 
 

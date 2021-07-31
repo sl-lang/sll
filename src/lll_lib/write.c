@@ -23,6 +23,7 @@ void _write_integer(lll_output_data_stream_t* os,uint64_t v){
 lll_object_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_t* o){
 	lll_object_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
+		WRITE_FIELD(o->t,os);
 		eoff++;
 		o++;
 	}
@@ -46,6 +47,7 @@ lll_object_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_
 			_write_integer(os,o->dt.id);
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_object_offset_t off=1;
 				_write_integer(os,o->dt.fn.id);

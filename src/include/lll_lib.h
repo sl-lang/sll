@@ -1,5 +1,5 @@
-#ifndef __LLL_H__
-#define __LLL_H__ 1
+#ifndef __LLL_LIB_H__
+#define __LLL_LIB_H__ 1
 #include <stdint.h>
 #include <stdio.h>
 #include <version.h>
@@ -25,7 +25,7 @@
 #endif
 #define __LLL_RETURN __LLL_CHECK_OUTPUT lll_return_t
 #define __LLL_RETURN_CODE __LLL_CHECK_OUTPUT lll_return_code_t
-#define __LLL_RETURN_COMARE __LLL_CHECK_OUTPUT lll_compare_result_t
+#define __LLL_RETURN_FUNCTION_INDEX __LLL_CHECK_OUTPUT lll_function_index_t
 #define __LLL_RETURN_SIZE __LLL_CHECK_OUTPUT lll_object_offset_t
 #define __LLL_RETURN_STRING_INDEX __LLL_CHECK_OUTPUT lll_string_index_t
 
@@ -54,14 +54,16 @@
 #define LLL_ERROR_TOO_MANY_ARGUMENTS 22
 #define LLL_ERROR_TOO_MANY_STATEMENTS 23
 #define LLL_ERROR_UNKNOWN_IDENTIFIER 24
-#define LLL_ERROR_STRING_REQUIRED 25
-#define LLL_ERROR_NO_STACK 26
-#define LLL_ERROR_DIVISION_BY_ZERO 27
-#define LLL_ERROR_INVALID_FILE_FORMAT 28
-#define LLL_ERROR_INVALID_IMPORT_INDEX 29
-#define LLL_ERROR_INVALID_INSTRUCTION 30
-#define LLL_ERROR_STACK_CORRUPTED 31
-#define LLL_ERROR_INVALID_INSTRUCTION_INDEX 32
+#define LLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG 25
+#define LLL_ERROR_STRING_REQUIRED 26
+#define LLL_ERROR_UNKNOWN_INTERNAL_FUNCTION 27
+#define LLL_ERROR_NO_STACK 28
+#define LLL_ERROR_DIVISION_BY_ZERO 29
+#define LLL_ERROR_INVALID_FILE_FORMAT 30
+#define LLL_ERROR_INVALID_IMPORT_INDEX 31
+#define LLL_ERROR_INVALID_INSTRUCTION 32
+#define LLL_ERROR_STACK_CORRUPTED 33
+#define LLL_ERROR_INVALID_INSTRUCTION_INDEX 34
 #define LLL_ERROR_ASSERTION 255
 #define LLL_MAX_COMPILATION_ERROR LLL_ERROR_STRING_REQUIRED
 
@@ -81,31 +83,32 @@
 #define LLL_OBJECT_TYPE_NOT 10
 #define LLL_OBJECT_TYPE_ASSIGN 11
 #define LLL_OBJECT_TYPE_FUNC 12
-#define LLL_OBJECT_TYPE_CALL 13
-#define LLL_OBJECT_TYPE_IF 14
-#define LLL_OBJECT_TYPE_FOR 15
-#define LLL_OBJECT_TYPE_WHILE 16
-#define LLL_OBJECT_TYPE_LOOP 17
-#define LLL_OBJECT_TYPE_ADD 18
-#define LLL_OBJECT_TYPE_SUB 19
-#define LLL_OBJECT_TYPE_MULT 20
-#define LLL_OBJECT_TYPE_DIV 21
-#define LLL_OBJECT_TYPE_FLOOR_DIV 22
-#define LLL_OBJECT_TYPE_MOD 23
-#define LLL_OBJECT_TYPE_BIT_AND 24
-#define LLL_OBJECT_TYPE_BIT_OR 25
-#define LLL_OBJECT_TYPE_BIT_XOR 26
-#define LLL_OBJECT_TYPE_BIT_NOT 27
-#define LLL_OBJECT_TYPE_LESS 28
-#define LLL_OBJECT_TYPE_LESS_EQUAL 29
-#define LLL_OBJECT_TYPE_EQUAL 30
-#define LLL_OBJECT_TYPE_NOT_EQUAL 31
-#define LLL_OBJECT_TYPE_MORE 32
-#define LLL_OBJECT_TYPE_MORE_EQUAL 33
-#define LLL_OBJECT_TYPE_RETURN 34
-#define LLL_OBJECT_TYPE_EXIT 35
-#define LLL_OBJECT_TYPE_IMPORT 36
-#define LLL_OBJECT_TYPE_OPERATION_LIST 37
+#define LLL_OBJECT_TYPE_INTERNAL_FUNC 13
+#define LLL_OBJECT_TYPE_CALL 14
+#define LLL_OBJECT_TYPE_IF 15
+#define LLL_OBJECT_TYPE_FOR 16
+#define LLL_OBJECT_TYPE_WHILE 17
+#define LLL_OBJECT_TYPE_LOOP 18
+#define LLL_OBJECT_TYPE_ADD 19
+#define LLL_OBJECT_TYPE_SUB 20
+#define LLL_OBJECT_TYPE_MULT 21
+#define LLL_OBJECT_TYPE_DIV 22
+#define LLL_OBJECT_TYPE_FLOOR_DIV 23
+#define LLL_OBJECT_TYPE_MOD 24
+#define LLL_OBJECT_TYPE_BIT_AND 25
+#define LLL_OBJECT_TYPE_BIT_OR 26
+#define LLL_OBJECT_TYPE_BIT_XOR 27
+#define LLL_OBJECT_TYPE_BIT_NOT 28
+#define LLL_OBJECT_TYPE_LESS 29
+#define LLL_OBJECT_TYPE_LESS_EQUAL 30
+#define LLL_OBJECT_TYPE_EQUAL 31
+#define LLL_OBJECT_TYPE_NOT_EQUAL 32
+#define LLL_OBJECT_TYPE_MORE 33
+#define LLL_OBJECT_TYPE_MORE_EQUAL 34
+#define LLL_OBJECT_TYPE_RETURN 35
+#define LLL_OBJECT_TYPE_EXIT 36
+#define LLL_OBJECT_TYPE_IMPORT 37
+#define LLL_OBJECT_TYPE_OPERATION_LIST 38
 #define LLL_OBJECT_TYPE_DEBUG_DATA 63
 #define LLL_OBJECT_TYPE_NOP 0xff
 #define LLL_IS_OBJECT_TYPE_NOT_TYPE(o) ((o)->t>LLL_OBJECT_TYPE_IDENTIFIER)
@@ -193,13 +196,6 @@
 #define LLL_RUNTIME_OBJECT_RESERVED0 128
 #define LLL_RUNTIME_OBJECT_GET_TYPE(r) ((r)->t&0x7f)
 
-#define LLL_COMPARE_RESULT_BELOW 0
-#define LLL_COMPARE_RESULT_EQUAL 1
-#define LLL_COMPARE_RESULT_ABOVE 2
-#define LLL_COMPARE_RESULT_ZERO 3
-#define LLL_COMPARE_RESULT_NONZERO 4
-#define LLL_COMPARE_RESULT_ERROR 255
-
 #define LLL_END_OF_DATA (-1)
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
 #define LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,bf,sz) ((is)->rbf((is),(bf),(sz)))
@@ -212,6 +208,7 @@
 #define LLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM(os,s) ((os)->wsf((os),(s)))
 #define LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,bf,sz) ((os)->wf((os),(bf),(sz)))
 
+#define LLL_MAX_FUNCTION_INDEX UINT32_MAX
 #define LLL_MAX_IMPORT_INDEX UINT32_MAX
 #define LLL_MAX_OBJECT_OFFSET UINT32_MAX
 #define LLL_MAX_SCOPE UINT32_MAX
@@ -232,10 +229,6 @@ typedef uint8_t lll_char_t;
 
 
 
-typedef uint8_t lll_compare_result_t;
-
-
-
 typedef uint8_t lll_error_type_t;
 
 
@@ -248,15 +241,15 @@ typedef uint8_t lll_return_t;
 
 
 
+typedef uint8_t lll_runtime_object_type_t;
+
+
+
 typedef uint8_t lll_string_checksum_t;
 
 
 
 typedef uint16_t lll_file_path_index_t;
-
-
-
-typedef uint16_t lll_function_index_t;
 
 
 
@@ -281,6 +274,10 @@ typedef uint32_t lll_column_number_t;
 
 
 typedef uint32_t lll_file_offset_t;
+
+
+
+typedef uint32_t lll_function_index_t;
 
 
 
@@ -429,7 +426,7 @@ typedef struct __LLL_IMPORT_DATA{
 
 
 typedef struct __LLL_FUNCTION{
-	lll_stack_offset_t off;
+	lll_object_offset_t off;
 	lll_arg_count_t al;
 	lll_identifier_index_t a[];
 } lll_function_t;
@@ -530,7 +527,7 @@ typedef union __LLL_RUNTIME_OBJECT_DATA{
 
 
 typedef struct __LLL_RUNTIME_OBJECT{
-	uint8_t t;
+	lll_runtime_object_type_t t;
 	lll_runtime_object_data_t dt;
 } lll_runtime_object_t;
 
@@ -559,7 +556,27 @@ typedef struct __LLL_ERROR{
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_COMARE lll_compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b);
+typedef void (*lll_internal_function_pointer_t)(lll_runtime_object_t* o,lll_arg_count_t ac,lll_runtime_object_t* a);
+
+
+
+typedef struct __LLL_INTERNAL_FUNCTION{
+	char nm[256];
+	uint8_t nml;
+	lll_string_checksum_t c;
+	lll_internal_function_pointer_t p;
+} lll_internal_function_t;
+
+
+
+typedef struct __LLL_INTERNAL_FUNCTION_TABLE{
+	lll_internal_function_t** dt;
+	lll_function_index_t l;
+} lll_internal_function_table_t;
+
+
+
+__LLL_IMPORT_EXPORT void lll_create_internal_function_table(lll_internal_function_table_t* o);
 
 
 
@@ -575,7 +592,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_STRING_INDEX lll_create_string(lll_string_table
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_internal_function_table_t* i_ft,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e);
 
 
 
@@ -600,6 +617,10 @@ __LLL_IMPORT_EXPORT void lll_free_identifier_data(lll_identifier_data_t* i_dt);
 
 
 __LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im);
+
+
+
+__LLL_IMPORT_EXPORT void lll_free_internal_function_table(lll_internal_function_table_t* i_ft);
 
 
 
@@ -635,6 +656,10 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_object(lll_compilation_data_t* c_dt,ll
 
 
 
+__LLL_IMPORT_EXPORT __LLL_RETURN_FUNCTION_INDEX lll_lookup_internal_function(const lll_internal_function_table_t* i_ft,const char* nm);
+
+
+
 __LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,lll_import_index_t im_i,lll_compilation_data_t* im,lll_error_t* e);
 
 
@@ -647,11 +672,11 @@ __LLL_IMPORT_EXPORT void lll_optimize_metadata(lll_compilation_data_t* c_dt);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_error_t* e,lll_object_t** o);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_error_t* e,lll_object_t** o);
 
 
 
@@ -667,15 +692,19 @@ __LLL_IMPORT_EXPORT void lll_print_object(const lll_compilation_data_t* c_dt,con
 
 
 
+__LLL_IMPORT_EXPORT lll_function_index_t lll_register_internal_function(lll_internal_function_table_t* i_ft,const char* nm,lll_internal_function_pointer_t f);
+
+
+
+__LLL_IMPORT_EXPORT void lll_register_standard_internal_functions(lll_internal_function_table_t* i_ft);
+
+
+
 __LLL_IMPORT_EXPORT void lll_remove_object_debug_data(lll_object_t* o);
 
 
 
 __LLL_IMPORT_EXPORT void lll_remove_object_padding(lll_compilation_data_t* c_dt,lll_object_t* o);
-
-
-
-__LLL_IMPORT_EXPORT __LLL_RETURN_COMARE lll_runtime_object_nonzero(const lll_runtime_object_t* o);
 
 
 

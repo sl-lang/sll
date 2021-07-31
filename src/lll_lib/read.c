@@ -67,6 +67,11 @@ uint8_t _read_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is){
 	lll_object_t* o=(lll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
 	c_dt->_s.off+=sizeof(lll_object_t);
 	READ_FIELD(o->t,is);
+	while (o->t==LLL_OBJECT_TYPE_NOP){
+		o++;
+		c_dt->_s.off+=sizeof(lll_object_t);
+		READ_FIELD(o->t,is);
+	}
 	switch (o->t){
 		case LLL_OBJECT_TYPE_UNKNOWN:
 			return 1;
@@ -92,6 +97,7 @@ uint8_t _read_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is){
 			CHECK_ERROR2(is,o->dt.id,lll_identifier_index_t);
 			return 1;
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				CHECK_ERROR2(is,o->dt.fn.id,lll_function_index_t);
 				int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);

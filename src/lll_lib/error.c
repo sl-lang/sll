@@ -34,6 +34,9 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			case LLL_ERROR_UNKNOWN:
 				printf("Unknown Error: %c%c\n",(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
 				return;
+			case LLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
+				printf("Unknown Internal Function '%s'\n",e->dt.str);
+				return;
 			case LLL_ERROR_NO_STACK:
 				printf("No Internal Stack\n");
 				return;
@@ -200,6 +203,9 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			*sp=0;
 			printf("Unknown Identifier '%s'\n",sym);
 			free(sym);
+			return;
+		case LLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
+			printf("Internal Function Name Too Long\n");
 			return;
 		case LLL_ERROR_STRING_REQUIRED:
 			printf("Import File Path Must be a String\n");

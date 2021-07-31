@@ -1,4 +1,5 @@
 #include <lll_lib.h>
+#include <lll_lib_api.h>
 #include <_lll_lib_internal.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -8,7 +9,7 @@
 #define DECREASE_PARENT(p) \
 	do{ \
 		if (p){ \
-			if ((p)->t==LLL_OBJECT_TYPE_FUNC){ \
+			if ((p)->t==LLL_OBJECT_TYPE_FUNC||(p)->t==LLL_OBJECT_TYPE_INTERNAL_FUNC){ \
 				(p)->dt.fn.ac--; \
 			} \
 			else if ((p)->t==LLL_OBJECT_TYPE_OPERATION_LIST){ \
@@ -104,6 +105,16 @@ lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation
 			}
 		case LLL_OBJECT_TYPE_FUNC:
 			return lll_get_object_size(o)+eoff;
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.ac;
+				while (l){
+					l--;
+					off+=_map_identifiers(o+off,c_dt,im);
+				}
+				return off+eoff;
+			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_object_offset_t off=1;
@@ -161,8 +172,9 @@ void _get_as_runtime_object(const lll_object_t* o,const optimizer_data_t* o_dt,l
 			*v=*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt));
 			return;
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			v->t=LLL_RUNTIME_OBJECT_TYPE_INT;
-			v->dt.i=o->dt.fn.id;
+			v->dt.i=(o->t==LLL_OBJECT_TYPE_FUNC?o->dt.fn.id:~((lll_integer_t)o->dt.fn.id));
 			return;
 		default:
 			v->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
@@ -209,6 +221,7 @@ lll_object_offset_t _mark_loop_vars(const lll_object_t* o,optimizer_data_t* o_dt
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;
@@ -277,6 +290,7 @@ uint8_t _get_cond_type(lll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 			}
 		case LLL_OBJECT_TYPE_PRINT:
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 		case LLL_OBJECT_TYPE_IF:
 		case LLL_OBJECT_TYPE_FOR:
 		case LLL_OBJECT_TYPE_WHILE:
@@ -315,9 +329,10 @@ uint8_t _get_cond_type(lll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 		case LLL_OBJECT_TYPE_NOT_EQUAL:
 		case LLL_OBJECT_TYPE_MORE:
 		case LLL_OBJECT_TYPE_MORE_EQUAL:
-				return COND_TYPE_UNKNOWN;
+			return COND_TYPE_UNKNOWN;
 		default:
 			UNREACHABLE();
+			return COND_TYPE_UNKNOWN;
 	}
 }
 
@@ -411,6 +426,26 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 			}
 		case LLL_OBJECT_TYPE_FUNC:
 			return lll_get_object_size(o)+eoff;
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
+				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+					o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
+					o->dt.sc=o->dt.fn.ac;
+					return _optimize(o,p,o_dt,0)+eoff;
+				}
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.fn.ac;
+				while (l){
+					l--;
+					off+=_optimize(o+off,o,o_dt,0);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.fn.ac-=l;
+						break;
+					}
+				}
+				return off+eoff;
+			}
 		case LLL_OBJECT_TYPE_IF:
 			{
 				lll_arg_count_t l=o->dt.ac;
@@ -738,6 +773,7 @@ lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;

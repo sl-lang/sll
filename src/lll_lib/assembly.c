@@ -202,6 +202,7 @@ lll_object_offset_t _generate_jump(const lll_object_t* o,assembly_generator_data
 				return off+eoff+_generate_jump(o+off,g_dt,lbl,!inv);
 			}
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			if (!inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,LLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
@@ -350,10 +351,11 @@ lll_object_offset_t _generate_on_stack(const lll_object_t* o,assembly_generator_
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
 				ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
-				ai->dt.i=o->dt.fn.id;
+				ai->dt.i=(o->t==LLL_OBJECT_TYPE_FUNC?o->dt.fn.id:~((lll_integer_t)o->dt.fn.id));
 				return lll_get_object_size(o)+eoff;
 			}
 		case LLL_OBJECT_TYPE_CALL:
@@ -438,6 +440,16 @@ lll_object_offset_t _generate(const lll_object_t* o,assembly_generator_data_t* g
 			}
 		case LLL_OBJECT_TYPE_FUNC:
 			return lll_get_object_size(o)+eoff;
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.fn.ac;
+				while (l){
+					l--;
+					off+=_generate(o+off,g_dt);
+				}
+				return off+eoff;
+			}
 		case LLL_OBJECT_TYPE_CALL:
 			{
 				lll_object_offset_t off=_generate_call(o,g_dt);

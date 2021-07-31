@@ -52,6 +52,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_SIZE lll_get_object_size(const lll_object_t* o)
 		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;

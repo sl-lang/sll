@@ -22,6 +22,7 @@ lll_object_offset_t _mark_strings_update_imports(lll_object_t* o,uint64_t* m,lll
 			*(m+(o->dt.s>>6))|=1ull<<(o->dt.s&63);
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;
@@ -77,6 +78,7 @@ lll_object_offset_t _update_strings(lll_object_t* o,lll_string_index_t* sm){
 			o->dt.s=*(sm+o->dt.s);
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;

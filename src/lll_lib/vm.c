@@ -1,4 +1,5 @@
 #include <lll_lib.h>
+#include <lll_lib_api.h>
 #include <_lll_lib_internal.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -25,7 +26,7 @@ void _output_int(lll_output_data_stream_t* os,int64_t v){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_internal_function_table_t* i_ft,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e){
 	const lll_assembly_instruction_t* ai=a_dt->h;
 	lll_runtime_object_t* v=(lll_runtime_object_t*)(st->ptr);
 	call_stack_t c_st={
@@ -420,20 +421,28 @@ _print_from_stack:
 				*(s+si)=*(v+ai->dt.v);
 				goto _print_from_stack;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
-				if ((s+si-1)->dt.i<0||(s+si-1)->dt.i>=a_dt->ft.l){
-					si-=ai->dt.ac-1;
-					(s+si-1)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
-					(s+si-1)->dt.i=0;
-					break;
+				if ((s+si-1)->dt.i<0){
+					lll_function_index_t i=(lll_function_index_t)(~(s+si-1)->dt.i);
+					if (i<i_ft->l){
+						si-=ai->dt.ac-1;
+						(*(i_ft->dt+i))->p(s+si-1,ai->dt.ac,s+si);
+						break;
+					}
 				}
-				si--;
-				ASSERT(c_st.l<=CALL_STACK_SIZE);
-				(c_st.dt+c_st.l)->ii=ii+1;
-				(c_st.dt+c_st.l)->s=si;
-				c_st.l++;
-				ii=*(a_dt->ft.dt+(s+si)->dt.i);
-				ai=a_dt->h+ii;
-				continue;
+				else if ((s+si-1)->dt.i<a_dt->ft.l){
+					si--;
+					ASSERT(c_st.l<=CALL_STACK_SIZE);
+					(c_st.dt+c_st.l)->ii=ii+1;
+					(c_st.dt+c_st.l)->s=si;
+					c_st.l++;
+					ii=*(a_dt->ft.dt+(s+si)->dt.i);
+					ai=a_dt->h+ii;
+					continue;
+				}
+				si-=ai->dt.ac-1;
+				(s+si-1)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(s+si-1)->dt.i=0;
+				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 _return:;
 				lll_runtime_object_t tmp=*(s+si-1);

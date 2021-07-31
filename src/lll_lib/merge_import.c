@@ -33,6 +33,7 @@ lll_object_offset_t _patch_import(lll_object_t* o,import_data_t* dt){
 				return eoff+1;
 			}
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;
@@ -96,6 +97,7 @@ lll_object_offset_t _patch_module(lll_object_t* o,const import_module_data_t* im
 			o->dt.id=LLL_IDENTIFIER_ADD_INDEX(o->dt.id,im_dt->off[LLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]);
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;
@@ -224,6 +226,9 @@ _merge_next_string:;
 		sz--;
 		s--;
 		d--;
+		if (s->t==LLL_OBJECT_TYPE_FUNC){
+			(*(c_dt->f_dt.dt+s->dt.fn.id))->off+=m_sz;
+		}
 		*d=*s;
 	}
 	s=im->h+m_sz;
@@ -232,7 +237,23 @@ _merge_next_string:;
 		m_sz--;
 		s--;
 		d--;
+		if (s->t==LLL_OBJECT_TYPE_FUNC){
+			s->dt.fn.id+=c_dt->f_dt.l;
+		}
 		*d=*s;
+	}
+	lll_function_index_t j=c_dt->f_dt.l;
+	c_dt->f_dt.l+=im->f_dt.l;
+	c_dt->f_dt.dt=realloc(c_dt->f_dt.dt,c_dt->f_dt.l*sizeof(lll_function_t*));
+	for (lll_function_index_t i=0;i<im->f_dt.l;i++){
+		lll_function_t* f=*(im->f_dt.dt+i);
+		lll_function_t* nf=malloc(sizeof(lll_function_t)+f->al*sizeof(lll_identifier_index_t));
+		nf->off=f->off+dt.off;
+		nf->al=f->al;
+		for (lll_arg_count_t k=0;k<f->al;k++){
+			nf->a[k]=f->a[k];
+		}
+		*(c_dt->f_dt.dt+i+j)=nf;
 	}
 	return LLL_RETURN_NO_ERROR;
 }

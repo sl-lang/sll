@@ -169,8 +169,15 @@ lll_object_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,co
 			fprintf(f,"=");
 			break;
 		case LLL_OBJECT_TYPE_FUNC:
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				fprintf(f,",,,");
+				if (o->t==LLL_OBJECT_TYPE_FUNC){
+					fprintf(f,",,,");
+				}
+				else{
+					fprintf(f,"... #");
+					_print_int64(o->dt.fn.id,f);
+				}
 				lll_stack_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){

@@ -1,5 +1,6 @@
 queries:
   - include: "*"
+  - exclude: cpp/complex-condition
   - exclude: cpp/long-switch
   - exclude: cpp/loop-variable-changed
   - exclude: cpp/poorly-documented-function

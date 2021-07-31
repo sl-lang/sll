@@ -85,6 +85,19 @@ __LLL_IMPORT_EXPORT void lll_free_import_data(lll_import_data_t* im){
 
 
 
+__LLL_IMPORT_EXPORT void lll_free_internal_function_table(lll_internal_function_table_t* i_ft){
+	for (lll_function_index_t i=0;i<i_ft->l;i++){
+		free(*(i_ft->dt+i));
+	}
+	if (i_ft->dt){
+		free(i_ft->dt);
+		i_ft->dt=NULL;
+	}
+	i_ft->l=0;
+}
+
+
+
 __LLL_IMPORT_EXPORT void lll_free_string_table(lll_string_table_t* st){
 	for (lll_string_index_t i=0;i<st->l;i++){
 		free(*(st->dt+i));

@@ -4,6 +4,7 @@
 #include <windows.h>
 #else
 #include <linux/limits.h>
+#include <unistd.h>
 #endif
 #include <lll_lib.h>
 #include <generated.h>
@@ -15,9 +16,25 @@
 #ifdef _MSC_VER
 #define MAX_PATH_LENGTH MAX_PATH
 #define EXPAND_FILE_PATH(s,d) GetFullPathNameA((s),MAX_PATH,(d),NULL)
+#define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
+	do{ \
+		(o)=GetModuleFileNameA(NULL,(bf),(l)); \
+	} while (0)
 #else
 #define MAX_PATH_LENGTH PATH_MAX
 #define EXPAND_FILE_PATH(s,d) realpath((s),(d))
+#define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
+	do{ \
+		ssize_t __o=readlink("/proc/self/exe",(bf),(l)); \
+		if (__o!=-1){ \
+			(o)=__o; \
+			*((bf)+(o))=0; \
+		} \
+		else{ \
+			(o)=0; \
+			*(bf)=0; \
+		} \
+	} while (0)
 #endif
 
 
@@ -55,6 +72,7 @@ char* i_fp;
 uint32_t i_fpl;
 char** fp;
 uint32_t fpl;
+lll_internal_function_table_t i_ft;
 
 
 
@@ -162,7 +180,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 								}
 								lll_create_input_data_stream(*f,is);
 								lll_init_compilation_data(f_fp,is,c_dt);
-								if (!lll_parse_all_objects(c_dt,&e)){
+								if (!lll_parse_all_objects(c_dt,&i_ft,&e)){
 									lll_print_error(is,&e);
 									return 0;
 								}
@@ -362,8 +380,30 @@ int main(int argc,const char** argv){
 	}
 	*i_fp=0;
 	i_fpl=1;
+	char e_fp[MAX_PATH_LENGTH];
+	uint32_t e_fp_l;
+	GET_EXECUATBLE_FILE_PATH(e_fp,MAX_PATH_LENGTH,e_fp_l);
+	while (e_fp[e_fp_l]!='/'&&e_fp[e_fp_l]!='\\'){
+		if (!e_fp_l){
+			goto _skip_std_lib_path;
+		}
+		e_fp_l--;
+	}
+	e_fp[e_fp_l+1]='l';
+	e_fp[e_fp_l+2]='i';
+	e_fp[e_fp_l+3]='b';
+	e_fp[e_fp_l+4]='/';
+	e_fp[e_fp_l+5]=0;
+	i_fpl+=e_fp_l+6;
+	i_fp=realloc(i_fp,i_fpl*sizeof(char));
+	for (uint32_t i=0;i<e_fp_l+6;i++){
+		*(i_fp+i+1)=e_fp[i];
+	}
+_skip_std_lib_path:
 	fp=NULL;
 	fpl=0;
+	lll_create_internal_function_table(&i_ft);
+	lll_register_standard_internal_functions(&i_ft);
 	const char* o_fp=NULL;
 	FILE* f=NULL;
 	lll_assembly_data_t a_dt={0};
@@ -689,7 +729,7 @@ _skip_write:;
 			lll_error_t e={
 				LLL_ERROR_UNKNOWN
 			};
-			lll_return_code_t r=lll_execute_assembly(&a_dt,&st,&ris,&ros,&e);
+			lll_return_code_t r=lll_execute_assembly(&a_dt,&st,&i_ft,&ris,&ros,&e);
 			if (e.t!=LLL_ERROR_UNKNOWN){
 				lll_print_error(NULL,&e);
 				goto _error;
@@ -712,6 +752,7 @@ _skip_write:;
 	if (fp){
 		free(fp);
 	}
+	lll_free_internal_function_table(&i_ft);
 	return 0;
 _help:
 	PRINT_STATIC_STR(HELP_TEXT);
@@ -729,5 +770,6 @@ _error:
 	if (f){
 		fclose(f);
 	}
+	lll_free_internal_function_table(&i_ft);
 	return ec;
 }
