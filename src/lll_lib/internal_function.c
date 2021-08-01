@@ -55,5 +55,5 @@ __LLL_IMPORT_EXPORT lll_function_index_t lll_register_internal_function(lll_inte
 
 
 __LLL_IMPORT_EXPORT void lll_register_standard_internal_functions(lll_internal_function_table_t* i_ft){
-	lll_register_internal_function(i_ft,"time",lll_api_get_time);
+	lll_register_internal_function(i_ft,"time_current",lll_api_get_time);
 }

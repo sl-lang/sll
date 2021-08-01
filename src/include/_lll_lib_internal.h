@@ -22,7 +22,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	_BitScanForward64(&o,m);
 	return o;
 }
-#define IGNORE(x) (void)(x)
+#define IGNORE(x) ((void)(x))
 #else
 #ifdef DEBUG_BUILD
 #define UNREACHABLE() ASSERT(!"UNREACHABLE")
@@ -82,8 +82,6 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
 
-#define MAX(a,b) ((a)>(b)?(a):(b))
-
 #define ASSEMBLY_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','A',0)
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','C',0)
 
@@ -141,12 +139,21 @@ typedef struct __EXTRA_COMPILATION_DATA{
 
 
 
+typedef struct __IDENTIFIER_PAIR{
+	lll_identifier_index_t a;
+	lll_identifier_index_t b;
+} identifier_pair_t;
+
+
+
 typedef struct __IMPORT_MODULE_DATA{
 	lll_identifier_list_length_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
 	lll_string_index_t* sm;
 	lll_function_index_t f_off;
 	lll_object_t* s;
 	lll_object_t* d;
+	identifier_pair_t* eim;
+	lll_export_table_length_t eiml;
 } import_module_data_t;
 
 

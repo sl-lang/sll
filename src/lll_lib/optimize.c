@@ -847,6 +847,15 @@ __LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_ob
 		}
 	}
 	free(o_dt.it.sc_vi);
+	for (lll_export_table_length_t i=0;i<c_dt->et.l;i++){
+		lll_identifier_index_t j=*(c_dt->et.dt+i);
+		if (LLL_IDENTIFIER_GET_ARRAY_ID(j)==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
+			(o_dt.it.l_im+LLL_IDENTIFIER_GET_ARRAY_INDEX(j))->c++;
+		}
+		else{
+			(o_dt.it.s_im[LLL_IDENTIFIER_GET_ARRAY_ID(j)]+LLL_IDENTIFIER_GET_ARRAY_INDEX(j))->c++;
+		}
+	}
 	o_dt.v=malloc(o_dt.it.vc*sizeof(lll_runtime_object_t));
 	for (lll_variable_index_t i=0;i<o_dt.it.vc;i++){
 		(o_dt.v+i)->t=RUNTIME_OBJECT_TYPE_UNKNOWN;

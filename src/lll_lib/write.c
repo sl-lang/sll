@@ -176,6 +176,7 @@ __LLL_IMPORT_EXPORT void lll_write_assembly(lll_output_data_stream_t* os,const l
 				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 				LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->dt.ac);
 				break;
 		}

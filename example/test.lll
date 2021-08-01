@@ -1,5 +1,8 @@
 (= time (,,, (@@ 12345)))
-(-- "time.lll")
+(? 1 {
+	(-- "time.lll")
+	(= time time_current)
+})
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -12,7 +15,6 @@
 	(@@ (* x y))
 }))
 (= FACTORIAL 10)
-(## FACTORIAL)
 (= i 1 (:> "After Var Init (i=" i ")\n"))
 (-> (= j 2) (< j FACTORIAL) {
 	(? (< j 5) {
@@ -30,7 +32,7 @@
 })
 (:> FACTORIAL "! = " i '\n')
 (< 10 5 (:> "This Should Never Happen"))
-(-- "import.lll")
+(? 1 (-- "import.lll"))
 (:> "Call: " (<- func 10 2) "\n")
 (:> "Current Time (Internal Call): " (<- time) "\n")
 (:> "Program End\n")

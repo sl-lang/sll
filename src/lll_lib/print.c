@@ -553,6 +553,9 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 				fprintf(f,"CALL %u",ai->dt.ac);
 				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
+				fprintf(f,"CALL %u & POP",ai->dt.ac);
+				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 				fprintf(f,"RET");
 				break;

@@ -1,2 +1,2 @@
-(= time (... "time"))
-(## time)
+(= time_current (... "time_current"))
+(## time_current)

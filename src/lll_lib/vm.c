@@ -421,27 +421,38 @@ _print_from_stack:
 				*(s+si)=*(v+ai->dt.v);
 				goto _print_from_stack;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
-				if ((s+si-1)->dt.i<0){
-					lll_function_index_t i=(lll_function_index_t)(~(s+si-1)->dt.i);
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
+				si--;
+				if ((s+si)->dt.i<0){
+					lll_function_index_t i=(lll_function_index_t)(~(s+si)->dt.i);
 					if (i<i_ft->l){
-						si-=ai->dt.ac-1;
-						(*(i_ft->dt+i))->p(s+si-1,ai->dt.ac,s+si);
+						si-=ai->dt.ac;
+						lll_runtime_object_t n={0};
+						(*(i_ft->dt+i))->p(&n,ai->dt.ac,s+si);
+						if (LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
+							*(s+si)=n;
+							si++;
+						}
 						break;
 					}
 				}
 				else if ((s+si-1)->dt.i<a_dt->ft.l){
-					si--;
 					ASSERT(c_st.l<=CALL_STACK_SIZE);
-					(c_st.dt+c_st.l)->ii=ii+1;
-					(c_st.dt+c_st.l)->s=si;
+					(c_st.dt+c_st.l)->ii=ii;
+					(c_st.dt+c_st.l)->s=si-ai->dt.ac;
 					c_st.l++;
 					ii=*(a_dt->ft.dt+(s+si)->dt.i);
 					ai=a_dt->h+ii;
 					continue;
 				}
-				si-=ai->dt.ac-1;
-				(s+si-1)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
-				(s+si-1)->dt.i=0;
+				if (LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
+					si-=ai->dt.ac;
+				}
+				else{
+					si-=ai->dt.ac-1;
+					(s+si-1)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+					(s+si-1)->dt.i=0;
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 _return:;
@@ -451,8 +462,11 @@ _return:;
 				ii=(c_st.dt+c_st.l)->ii;
 				ai=a_dt->h+ii;
 				si=(c_st.dt+c_st.l)->s;
-				*(s+si)=tmp;
-				si++;
+				if (LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
+					*(s+si)=tmp;
+					si++;
+				}
+				ai++;
 				continue;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO:
 				(s+si)->t=LLL_RUNTIME_OBJECT_TYPE_INT;

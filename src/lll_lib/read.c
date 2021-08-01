@@ -272,6 +272,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 				c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 				if (c==LLL_END_OF_DATA){
 					e->t=LLL_ERROR_INVALID_FILE_FORMAT;
