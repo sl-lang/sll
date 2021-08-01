@@ -1,5 +1,8 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
+#include <lll/version.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -142,7 +145,7 @@ uint8_t _read_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assembly_data_t* a_dt,lll_error_t* e){
+__LLL_FUNC __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assembly_data_t* a_dt,lll_error_t* e){
 	if (!a_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -288,7 +291,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,l
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t* e){
+__LLL_FUNC __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -364,7 +367,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_load_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is,lll_object_t** o,lll_error_t* e){
+__LLL_FUNC __LLL_RETURN lll_load_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is,lll_object_t** o,lll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;

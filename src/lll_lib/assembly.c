@@ -1,5 +1,8 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/common.h>
+#include <lll/constants.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -599,7 +602,7 @@ lll_object_offset_t _generate(const lll_object_t* o,assembly_generator_data_t* g
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_data_t* c_dt,lll_assembly_data_t* o,lll_error_t* e){
+__LLL_FUNC __LLL_RETURN lll_generate_assembly(const lll_compilation_data_t* c_dt,lll_assembly_data_t* o,lll_error_t* e){
 	if (!o->_s.ptr||!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -756,7 +759,10 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_generate_assembly(const lll_compilation_dat
 				goto _print_str;
 			}
 			else if ((ai-1)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT){
-				ASSERT(!"Unimplemented");
+				char bf[128];
+				int i=snprintf(bf,128,"%.16lg",(ai-1)->dt.f);
+				(ai-1)->dt.s=lll_create_string(&(o->st),(lll_char_t*)bf,i);
+				goto _print_str;
 			}
 			else if ((ai-1)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR){
 				(ai-1)->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR;

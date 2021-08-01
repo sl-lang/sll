@@ -1,5 +1,7 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -109,7 +111,7 @@ lll_object_offset_t _update_strings(lll_object_t* o,lll_string_index_t* sm){
 
 
 
-__LLL_IMPORT_EXPORT void lll_optimize_metadata(lll_compilation_data_t* c_dt){
+__LLL_FUNC void lll_optimize_metadata(lll_compilation_data_t* c_dt){
 	uint32_t ml=(c_dt->st.l>>6)+1;
 	uint64_t* m=malloc(ml*sizeof(uint64_t));
 	for (uint32_t i=0;i<ml;i++){

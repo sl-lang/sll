@@ -1,9 +1,9 @@
-#ifndef ___LLL_LIB_INTERNAL_H__
-#define ___LLL_LIB_INTERNAL_H__ 1
+#ifndef ___LLL_INTERNAL_H__
+#define ___LLL_INTERNAL_H__ 1
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
-#include <lll_lib.h>
+#include <lll/types.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -12,6 +12,9 @@
 
 #ifdef _MSC_VER
 #pragma intrinsic(_BitScanForward64)
+#pragma section("ifunc$a",read)
+#pragma section("ifunc$b",read)
+#pragma section("ifunc$z",read)
 #ifdef DEBUG_BUILD
 #define UNREACHABLE() ASSERT(!"UNREACHABLE")
 #else
@@ -23,6 +26,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	return o;
 }
 #define IGNORE(x) ((void)(x))
+#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _INTERNAL_FUNCTION_JOIN(__ifunc,__LINE__)={(nm),(f)};const static __declspec(allocate("ifunc$b")) internal_function_t* _INTERNAL_FUNCTION_JOIN(__ifunc_ptr,__LINE__)=&_INTERNAL_FUNCTION_JOIN(__ifunc,__LINE__);
+#define IINTERNAL_FUNCTION_SETUP const static __declspec(allocate("ifunc$a")) internal_function_t* __ifunc_start=0;const static __declspec(allocate("ifunc$z")) internal_function_t* __ifunc_end=0;
 #else
 #ifdef DEBUG_BUILD
 #define UNREACHABLE() ASSERT(!"UNREACHABLE")
@@ -34,10 +39,16 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	do{ \
 		unsigned long long int __tmp __attribute__((unused))=(unsigned long long int)(x); \
 	} while (0)
+#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _INTERNAL_FUNCTION_JOIN(__ifunc,__LINE__)={(nm),(f)};const static __attribute__((used,section("ifunc"))) internal_function_t* _INTERNAL_FUNCTION_JOIN(__ifunc_ptr,__LINE__)=&_INTERNAL_FUNCTION_JOIN(__ifunc,__LINE__);
+#define IINTERNAL_FUNCTION_SETUP extern const internal_function_t* __start_ifunc;extern const internal_function_t* __stop_ifunc;
+#define __ifunc_start __start_ifunc
+#define __ifunc_end __stop_ifunc
 #endif
 
 
 
+#define _INTERNAL_FUNCTION_JOIN2(a,b) a##b
+#define _INTERNAL_FUNCTION_JOIN(a,b) _INTERNAL_FUNCTION_JOIN2(a,b)
 #ifdef DEBUG_BUILD
 #define _ASSERT_STR_(l) #l
 #define _ASSERT_STR(l) _ASSERT_STR_(l)
@@ -214,6 +225,13 @@ typedef struct __CALL_STACK{
 	call_stack_frame_t* dt;
 	call_stack_size_t l;
 } call_stack_t;
+
+
+
+typedef struct __INTERNAL_FUNCTION{
+	const char nm[256];
+	lll_internal_function_pointer_t f;
+} internal_function_t;
 
 
 

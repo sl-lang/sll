@@ -1,5 +1,7 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -313,7 +315,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const extra_com
 						if (o->dt.fn.id==LLL_MAX_FUNCTION_INDEX){
 							e->t=LLL_ERROR_UNKNOWN_INTERNAL_FUNCTION;
 							uint8_t i=0;
-							while (i<s->l){
+							while (i<s->l){// lgtm [cpp/comparison-with-wider-type]
 								e->dt.str[i]=s->v[i];
 								i++;
 							}
@@ -1307,7 +1309,7 @@ _skip_export:;
 
 
 
-__LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
+__LLL_FUNC void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
 	o->is=is;
 	o->tm=(lll_time_t)time(NULL);
 	o->h=NULL;
@@ -1336,7 +1338,7 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_import_loader_t il,lll_error_t* e,lll_object_t** o){
+__LLL_FUNC __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_import_loader_t il,lll_error_t* e,lll_object_t** o){
 	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -1371,7 +1373,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,l
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_import_loader_t il,lll_error_t* e){
+__LLL_FUNC __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_import_loader_t il,lll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;

@@ -1,5 +1,7 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -290,7 +292,7 @@ lll_object_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,co
 
 
 
-__LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE* f){
+__LLL_FUNC void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE* f){
 	lll_assembly_instruction_t* ai=a_dt->h;
 	for (lll_instruction_index_t i=0;i<a_dt->ic;i++){
 		if (i){
@@ -595,6 +597,6 @@ __LLL_IMPORT_EXPORT void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE
 
 
 
-__LLL_IMPORT_EXPORT void lll_print_object(const lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f){
+__LLL_FUNC void lll_print_object(const lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f){
 	_print_object_internal(c_dt,o,f);
 }

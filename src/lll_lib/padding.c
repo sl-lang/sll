@@ -1,5 +1,6 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 
 
 
@@ -64,7 +65,7 @@ lll_object_offset_t _remove_padding_internal(lll_object_t* o,lll_compilation_dat
 
 
 
-__LLL_IMPORT_EXPORT void lll_remove_object_padding(lll_compilation_data_t* c_dt,lll_object_t* o){
+__LLL_FUNC void lll_remove_object_padding(lll_compilation_data_t* c_dt,lll_object_t* o){
 	lll_object_offset_t rm=0;
 	_remove_padding_internal(o,c_dt,&rm);
 }

@@ -1,10 +1,11 @@
-#include <lll_lib.h>
-#include <lll_lib_api.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/api.h>
+#include <lll/common.h>
+#include <lll/types.h>
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_COMPARE lll_compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b){
+__LLL_FUNC __LLL_RETURN_COMPARE lll_compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b){
 	switch (LLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case LLL_RUNTIME_OBJECT_TYPE_INT:
 			{
@@ -39,7 +40,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_COMPARE lll_compare_runtime_object(const lll_ru
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_COMPARE lll_runtime_object_nonzero(const lll_runtime_object_t* o){
+__LLL_FUNC __LLL_RETURN_COMPARE lll_runtime_object_nonzero(const lll_runtime_object_t* o){
 	switch (LLL_RUNTIME_OBJECT_GET_TYPE(o)){
 		case LLL_RUNTIME_OBJECT_TYPE_INT:
 			return (o->dt.i?LLL_COMPARE_RESULT_NONZERO:LLL_COMPARE_RESULT_ZERO);

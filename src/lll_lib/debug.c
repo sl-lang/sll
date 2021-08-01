@@ -1,5 +1,6 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 
 
 
@@ -53,7 +54,7 @@ lll_object_offset_t _remove_debug_data_internal(lll_object_t* o){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is,lll_error_t* e){
+__LLL_FUNC __LLL_RETURN lll_insert_debug_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is,lll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -76,6 +77,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_insert_debug_object(lll_compilation_data_t*
 
 
 
-__LLL_IMPORT_EXPORT void lll_remove_object_debug_data(lll_object_t* o){
+__LLL_FUNC void lll_remove_object_debug_data(lll_object_t* o){
 	_remove_debug_data_internal(o);
 }

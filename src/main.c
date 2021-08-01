@@ -193,7 +193,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 					PRINT_STATIC_STR("'\n");
 				}
 				*f=tf;
-				lll_create_input_data_stream(*f,is);
+				lll_create_input_data_stream(tf,is);
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Trying to Load File as Assembly...\n");
 				}
@@ -205,7 +205,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 						if (fl&FLAG_VERBOSE){
 							PRINT_STATIC_STR("File is not an Assembly. Falling Back to Compiled Object...\n");
 						}
-						lll_create_input_data_stream(*f,is);
+						lll_create_input_data_stream(tf,is);
 						if (!lll_load_compiled_object(is,c_dt,&e)){
 							lll_free_identifier_table(&(c_dt->idt));
 							lll_free_export_table(&(c_dt->et));
@@ -215,7 +215,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 								if (fl&FLAG_VERBOSE){
 									PRINT_STATIC_STR("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
 								}
-								lll_create_input_data_stream(*f,is);
+								lll_create_input_data_stream(tf,is);
 								lll_init_compilation_data(f_fp,is,c_dt);
 								if (!lll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
 									if (e.t!=LLL_ERROR_UNKNOWN){
@@ -258,6 +258,60 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 					}
 				}
 				return 1;
+			}
+			else{
+				*(bf+j)='.';
+				*(bf+j+1)='l';
+				*(bf+j+2)='l';
+				*(bf+j+3)='l';
+				*(bf+j+4)='c';
+				*(bf+j+5)=0;
+				if (fl&FLAG_VERBOSE){
+					PRINT_STATIC_STR("Trying to Open File '");
+					print_str(bf);
+					PRINT_STATIC_STR("'...\n");
+				}
+				tf=fopen(bf,"rb");// lgtm [cpp/path-injection]
+				if (tf){
+					if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
+						*(f_fp+j)=0;
+						while (j){
+							j--;
+							*(f_fp+j)=*(bf+j);
+						}
+					}
+					if (fl&FLAG_VERBOSE){
+						PRINT_STATIC_STR("Found File '");
+						print_str(f_fp);
+						PRINT_STATIC_STR("'\n");
+					}
+					*f=tf;
+					lll_create_input_data_stream(tf,is);
+					lll_error_t e;
+					if (!lll_load_compiled_object(is,c_dt,&e)){
+						lll_free_identifier_table(&(c_dt->idt));
+						lll_free_export_table(&(c_dt->et));
+						lll_free_function_table(&(c_dt->ft));
+						lll_free_string_table(&(c_dt->st));
+						if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
+							PRINT_STATIC_STR("File '");
+							print_str(f_fp);
+							PRINT_STATIC_STR("'is not a Compiled Object.\n");
+						}
+						else{
+							lll_print_error(is,&e);
+						}
+						return 0;
+					}
+					if (fl&FLAG_PRINT_OBJECT){
+						lll_print_object(c_dt,c_dt->h,stdout);
+						putchar('\n');
+					}
+					if (fl&FLAG_VERBOSE){
+						PRINT_STATIC_STR("File Successfully Read.\n");
+					}
+					return 1;
+				}
 			}
 			j=0;
 			continue;
@@ -618,11 +672,11 @@ _read_file_argument:
 			char bf[MAX_PATH_LENGTH];
 			uint16_t i=0;
 			if (!o_fp){
-				while (*(f_fp+i)&&*(f_fp+i)!='.'){
+				while (*(f_fp+i)){
 					*(bf+i)=*(f_fp+i);
 					i++;
 				}
-				bf[i]='.';
+				i--;
 			}
 			else{
 				if (fpl==1){

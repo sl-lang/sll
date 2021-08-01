@@ -3,8 +3,9 @@
 #include <windows.h>
 #undef IGNORE
 #endif
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/common.h>
+#include <lll/types.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +28,7 @@
 
 
 
-__LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_error_t* e){
+__LLL_FUNC void lll_print_error(lll_input_data_stream_t* is,const lll_error_t* e){
 	if (e->t==LLL_ERROR_UNKNOWN||e->t>LLL_MAX_COMPILATION_ERROR){
 		switch (e->t){
 			default:

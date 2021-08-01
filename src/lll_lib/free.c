@@ -1,10 +1,11 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <stdlib.h>
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_assembly_function_table(lll_assembly_function_table_t* ft){
+__LLL_FUNC void lll_free_assembly_function_table(lll_assembly_function_table_t* ft){
 	if (ft->dt){
 		free(ft->dt);
 		ft->dt=NULL;
@@ -14,7 +15,7 @@ __LLL_IMPORT_EXPORT void lll_free_assembly_function_table(lll_assembly_function_
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_assembly_data(lll_assembly_data_t* a_dt){
+__LLL_FUNC void lll_free_assembly_data(lll_assembly_data_t* a_dt){
 	a_dt->tm=0;
 	a_dt->h=NULL;
 	a_dt->ic=0;
@@ -28,7 +29,7 @@ __LLL_IMPORT_EXPORT void lll_free_assembly_data(lll_assembly_data_t* a_dt){
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt){
+__LLL_FUNC void lll_free_compilation_data(lll_compilation_data_t* c_dt){
 	c_dt->is=NULL;
 	c_dt->tm=0;
 	c_dt->h=NULL;
@@ -44,7 +45,7 @@ __LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt)
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_export_table(lll_export_table_t* et){
+__LLL_FUNC void lll_free_export_table(lll_export_table_t* et){
 	if (et->dt){
 		free(et->dt);
 		et->dt=NULL;
@@ -54,7 +55,7 @@ __LLL_IMPORT_EXPORT void lll_free_export_table(lll_export_table_t* et){
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_function_table(lll_function_table_t* ft){
+__LLL_FUNC void lll_free_function_table(lll_function_table_t* ft){
 	for (lll_function_index_t i=0;i<ft->l;i++){
 		free(*(ft->dt+i));
 	}
@@ -67,7 +68,7 @@ __LLL_IMPORT_EXPORT void lll_free_function_table(lll_function_table_t* ft){
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_identifier_table(lll_identifier_table_t* idt){
+__LLL_FUNC void lll_free_identifier_table(lll_identifier_table_t* idt){
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		lll_identifier_list_t* e=idt->s+i;
 		if (e->dt){
@@ -85,7 +86,7 @@ __LLL_IMPORT_EXPORT void lll_free_identifier_table(lll_identifier_table_t* idt){
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_internal_function_table(lll_internal_function_table_t* ift){
+__LLL_FUNC void lll_free_internal_function_table(lll_internal_function_table_t* ift){
 	for (lll_function_index_t i=0;i<ift->l;i++){
 		free(*(ift->dt+i));
 	}
@@ -98,7 +99,7 @@ __LLL_IMPORT_EXPORT void lll_free_internal_function_table(lll_internal_function_
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_string_table(lll_string_table_t* st){
+__LLL_FUNC void lll_free_string_table(lll_string_table_t* st){
 	for (lll_string_index_t i=0;i<st->l;i++){
 		free(*(st->dt+i));
 	}

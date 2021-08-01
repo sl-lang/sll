@@ -1,6 +1,8 @@
-#include <lll_lib.h>
-#include <lll_lib_api.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/api.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -808,7 +810,7 @@ lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_
 
 
 
-__LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_object_t* o){
+__LLL_FUNC void lll_optimize_object(lll_compilation_data_t* c_dt,lll_object_t* o){
 	optimizer_data_t o_dt={
 		c_dt,
 		{

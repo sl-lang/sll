@@ -1,2 +1,3 @@
 (= time_current (... "time_current"))
-(## time_current)
+(= time_current_nanos (... "time_current_nanos"))
+(## time_current time_current_nanos)

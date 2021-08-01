@@ -1,7 +1,10 @@
-#include <lll_lib.h>
-#include <lll_lib_api.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/api.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 
@@ -26,7 +29,15 @@ void _output_int(lll_output_data_stream_t* os,int64_t v){
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_internal_function_table_t* i_ft,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e){
+void _output_float(lll_output_data_stream_t* os,double v){
+	char bf[128];
+	int sz=snprintf(bf,128,"%.16lg",v);
+	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)bf,sz*sizeof(char));
+}
+
+
+
+__LLL_FUNC __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_dt,const lll_stack_data_t* st,lll_internal_function_table_t* i_ft,lll_input_data_stream_t* in,lll_output_data_stream_t* out,lll_error_t* e){
 	const lll_assembly_instruction_t* ai=a_dt->h;
 	lll_runtime_object_t* v=(lll_runtime_object_t*)(st->ptr);
 	call_stack_t c_st={
@@ -397,7 +408,8 @@ _print_from_stack:
 						_output_int(out,(s+si)->dt.i);
 						break;
 					case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
-						ASSERT(!"Unimplemented");
+						_output_float(out,(s+si)->dt.f);
+						break;
 					case LLL_RUNTIME_OBJECT_TYPE_CHAR:
 						LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,(uint8_t)((s+si)->dt.c));
 						break;

@@ -1,4 +1,4 @@
-(= time (,,, (@@ 12345)))
+(= time)
 (? 1 {
 	(-- "time.lll")
 	(= time time_current)
@@ -37,6 +37,7 @@
 (:> "Current Time (Internal Call): " (<- time) "\n")
 (:> "Program End\n")
 (? true nil 2 (:> "Dead Code") (@ 128 "False Exit"))
+(:> "Float: " 10.5333333333e-12 "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)

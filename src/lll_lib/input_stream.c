@@ -1,5 +1,6 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -46,7 +47,7 @@ void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,lll_file_o
 
 
 
-__LLL_IMPORT_EXPORT void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o){
+__LLL_FUNC void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o){
 	fseek(f,0,SEEK_SET);
 	clearerr(f);
 	o->ctx=f;

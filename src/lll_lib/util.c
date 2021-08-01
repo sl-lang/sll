@@ -1,10 +1,11 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
 #include <stdlib.h>
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_STRING_INDEX lll_create_string(lll_string_table_t* st,const lll_char_t* dt,lll_string_length_t l){
+__LLL_FUNC __LLL_RETURN_STRING_INDEX lll_create_string(lll_string_table_t* st,const lll_char_t* dt,lll_string_length_t l){
 	lll_string_checksum_t c=0;
 	for (lll_string_length_t i=0;i<l;i++){
 		c^=(lll_string_checksum_t)(*(dt+i));
@@ -36,7 +37,7 @@ _check_next_string:;
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_SIZE lll_get_object_size(const lll_object_t* o){
+__LLL_FUNC __LLL_RETURN_SIZE lll_get_object_size(const lll_object_t* o){
 	lll_object_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;

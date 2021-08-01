@@ -1,5 +1,8 @@
-#include <lll_lib.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
+#include <lll/version.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -89,7 +92,7 @@ lll_object_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_
 
 
 
-__LLL_IMPORT_EXPORT void lll_write_assembly(lll_output_data_stream_t* os,const lll_assembly_data_t* a_dt){
+__LLL_FUNC void lll_write_assembly(lll_output_data_stream_t* os,const lll_assembly_data_t* a_dt){
 	uint32_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
 	lll_version_t v=LLL_VERSION;
@@ -186,13 +189,13 @@ __LLL_IMPORT_EXPORT void lll_write_assembly(lll_output_data_stream_t* os,const l
 
 
 
-__LLL_IMPORT_EXPORT void lll_write_object(lll_output_data_stream_t* os,const lll_object_t* o){
+__LLL_FUNC void lll_write_object(lll_output_data_stream_t* os,const lll_object_t* o){
 	_write_object(os,o);
 }
 
 
 
-__LLL_IMPORT_EXPORT void lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt){
+__LLL_FUNC void lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt){
 	uint32_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
 	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
 	lll_version_t v=LLL_VERSION;

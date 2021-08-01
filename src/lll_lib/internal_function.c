@@ -1,18 +1,24 @@
-#include <lll_lib.h>
-#include <lll_lib_api.h>
-#include <_lll_lib_internal.h>
+#include <lll/_lll_internal.h>
+#include <lll/common.h>
+#include <lll/core.h>
+#include <lll/types.h>
+#include <lll/api.h>
 #include <stdlib.h>
 
 
 
-__LLL_IMPORT_EXPORT void lll_create_internal_function_table(lll_internal_function_table_t* o){
+IINTERNAL_FUNCTION_SETUP
+
+
+
+__LLL_FUNC void lll_create_internal_function_table(lll_internal_function_table_t* o){
 	o->dt=NULL;
 	o->l=0;
 }
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN_FUNCTION_INDEX lll_lookup_internal_function(const lll_internal_function_table_t* i_ft,const char* nm){
+__LLL_FUNC __LLL_RETURN_FUNCTION_INDEX lll_lookup_internal_function(const lll_internal_function_table_t* i_ft,const char* nm){
 	uint8_t l=0;
 	lll_string_checksum_t c=0;
 	while (*(nm+l)){
@@ -36,7 +42,7 @@ _check_next:;
 
 
 
-__LLL_IMPORT_EXPORT lll_function_index_t lll_register_internal_function(lll_internal_function_table_t* i_ft,const char* nm,lll_internal_function_pointer_t f){
+__LLL_FUNC lll_function_index_t lll_register_internal_function(lll_internal_function_table_t* i_ft,const char* nm,lll_internal_function_pointer_t f){
 	i_ft->l++;
 	i_ft->dt=realloc(i_ft->dt,i_ft->l*sizeof(lll_internal_function_t*));
 	lll_internal_function_t* i_f=malloc(sizeof(lll_internal_function_t));
@@ -54,6 +60,12 @@ __LLL_IMPORT_EXPORT lll_function_index_t lll_register_internal_function(lll_inte
 
 
 
-__LLL_IMPORT_EXPORT void lll_register_standard_internal_functions(lll_internal_function_table_t* i_ft){
-	lll_register_internal_function(i_ft,"time_current",lll_api_get_time);
+__LLL_FUNC void lll_register_standard_internal_functions(lll_internal_function_table_t* i_ft){
+	const internal_function_t** f=&__ifunc_start;
+	while (f<&__ifunc_end){
+		if (*f){
+			lll_register_internal_function(i_ft,(*f)->nm,(*f)->f);
+		}
+		f++;
+	}
 }
