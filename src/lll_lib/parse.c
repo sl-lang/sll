@@ -1,11 +1,11 @@
 #include <lll/_lll_internal.h>
 #include <lll/common.h>
 #include <lll/core.h>
+#include <lll/platform.h>
 #include <lll/types.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <time.h>
 
 
 
@@ -1311,7 +1311,7 @@ _skip_export:;
 
 __LLL_FUNC void lll_init_compilation_data(const char* fp,lll_input_data_stream_t* is,lll_compilation_data_t* o){
 	o->is=is;
-	o->tm=(lll_time_t)time(NULL);
+	o->tm=lll_platform_get_current_time();
 	o->h=NULL;
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		o->idt.s[i].dt=NULL;
