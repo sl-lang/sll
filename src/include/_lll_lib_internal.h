@@ -88,6 +88,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','C',0)
 
 #define EXTRA_COMPILATION_DATA_INSIDE_FUNCTION 1
+#define EXTRA_COMPILATION_DATA_IMPORT 2
+#define EXTRA_COMPILATION_DATA_EXPORT 4
 
 #define ERROR_DISPLAY_TAB_WIDTH 4
 
@@ -97,14 +99,13 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define ASSEMBLY_INSTRUCTION_MISC_FIELD(ai) ((ai)->dt.j)
 
 #define OPTIMIZER_FLAG_ARGUMENT 1
+#define OPTIMIZER_FLAG_IGNORE_LOOP_FLAG 2
 
 #define COND_TYPE_UNKNOWN 0
 #define COND_TYPE_ALWAYS_TRUE 1
 #define COND_TYPE_ALWAYS_FALSE 2
 
 #define CALL_STACK_SIZE 256
-
-#define OBJECT_TYPE_EXPORT LLL_OBJECT_TYPE_RESERVED0
 
 #define RUNTIME_OBJECT_CHANGE_IN_LOOP LLL_RUNTIME_OBJECT_RESERVED0
 #define RUNTIME_OBJECT_TYPE_UNKNOWN 5
@@ -135,22 +136,17 @@ typedef struct __EXTRA_COMPILATION_DATA{
 	uint8_t fl;
 	scope_data_t sc;
 	lll_internal_function_table_t* i_ft;
+	lll_import_loader_t il;
 } extra_compilation_data_t;
-
-
-
-typedef struct __IMPORT_DATA{
-	lll_import_index_t i;
-	lll_object_offset_t off;
-	lll_object_t* b_off;
-	uint8_t rm;
-} import_data_t;
 
 
 
 typedef struct __IMPORT_MODULE_DATA{
 	lll_identifier_list_length_t off[LLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
 	lll_string_index_t* sm;
+	lll_function_index_t f_off;
+	lll_object_t* s;
+	lll_object_t* d;
 } import_module_data_t;
 
 

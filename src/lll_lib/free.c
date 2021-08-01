@@ -33,7 +33,6 @@ __LLL_IMPORT_EXPORT void lll_free_compilation_data(lll_compilation_data_t* c_dt)
 	c_dt->tm=0;
 	c_dt->h=NULL;
 	lll_free_identifier_table(&(c_dt->idt));
-	lll_free_import_table(&(c_dt->it));
 	lll_free_export_table(&(c_dt->et));
 	lll_free_function_table(&(c_dt->ft));
 	lll_free_string_table(&(c_dt->st));
@@ -82,16 +81,6 @@ __LLL_IMPORT_EXPORT void lll_free_identifier_table(lll_identifier_table_t* idt){
 		idt->il=NULL;
 	}
 	idt->ill=0;
-}
-
-
-
-__LLL_IMPORT_EXPORT void lll_free_import_table(lll_import_table_t* it){
-	if (it->dt){
-		free(it->dt);
-		it->dt=NULL;
-	}
-	it->l=0;
 }
 
 

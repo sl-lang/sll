@@ -55,17 +55,15 @@
 #define LLL_ERROR_TOO_MANY_STATEMENTS 23
 #define LLL_ERROR_UNKNOWN_IDENTIFIER 24
 #define LLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG 25
-#define LLL_ERROR_STRING_REQUIRED 26
-#define LLL_ERROR_UNKNOWN_INTERNAL_FUNCTION 27
-#define LLL_ERROR_NO_STACK 28
-#define LLL_ERROR_DIVISION_BY_ZERO 29
-#define LLL_ERROR_INVALID_FILE_FORMAT 30
-#define LLL_ERROR_INVALID_IMPORT_INDEX 31
-#define LLL_ERROR_INVALID_INSTRUCTION 32
-#define LLL_ERROR_STACK_CORRUPTED 33
-#define LLL_ERROR_INVALID_INSTRUCTION_INDEX 34
+#define LLL_ERROR_UNKNOWN_INTERNAL_FUNCTION 26
+#define LLL_ERROR_NO_STACK 27
+#define LLL_ERROR_DIVISION_BY_ZERO 28
+#define LLL_ERROR_INVALID_FILE_FORMAT 29
+#define LLL_ERROR_INVALID_INSTRUCTION 30
+#define LLL_ERROR_STACK_CORRUPTED 31
+#define LLL_ERROR_INVALID_INSTRUCTION_INDEX 32
 #define LLL_ERROR_ASSERTION 255
-#define LLL_MAX_COMPILATION_ERROR LLL_ERROR_STRING_REQUIRED
+#define LLL_MAX_COMPILATION_ERROR LLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG
 
 #define LLL_RETURN_ERROR 0
 #define LLL_RETURN_NO_ERROR 1
@@ -107,10 +105,8 @@
 #define LLL_OBJECT_TYPE_MORE_EQUAL 34
 #define LLL_OBJECT_TYPE_RETURN 35
 #define LLL_OBJECT_TYPE_EXIT 36
-#define LLL_OBJECT_TYPE_IMPORT 37
-#define LLL_OBJECT_TYPE_OPERATION_LIST 38
-#define LLL_OBJECT_TYPE_DEBUG_DATA 39
-#define LLL_OBJECT_TYPE_RESERVED0 254
+#define LLL_OBJECT_TYPE_OPERATION_LIST 37
+#define LLL_OBJECT_TYPE_DEBUG_DATA 38
 #define LLL_OBJECT_TYPE_NOP 255
 #define LLL_IS_OBJECT_TYPE_NOT_TYPE(o) ((o)->t>LLL_OBJECT_TYPE_IDENTIFIER)
 
@@ -210,7 +206,6 @@
 #define LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,bf,sz) ((os)->wf((os),(bf),(sz)))
 
 #define LLL_MAX_FUNCTION_INDEX UINT32_MAX
-#define LLL_MAX_IMPORT_INDEX UINT32_MAX
 #define LLL_MAX_OBJECT_OFFSET UINT32_MAX
 #define LLL_MAX_SCOPE UINT32_MAX
 #define LLL_MAX_STRING_INDEX UINT32_MAX
@@ -294,10 +289,6 @@ typedef uint32_t lll_identifier_list_length_t;
 
 
 
-typedef uint32_t lll_import_index_t;
-
-
-
 typedef uint32_t lll_instruction_index_t;
 
 
@@ -370,13 +361,6 @@ typedef struct __LLL_FUNCTION_OBJECT_DATA{
 
 
 
-typedef struct __LLL_IMPORT_OBJECT_DATA{
-	lll_import_index_t ii;
-	lll_scope_t sc;
-} lll_import_object_data_t;
-
-
-
 typedef struct __LLL_DEBUG_OBJECT_DATA{
 	lll_string_index_t fpi;
 	lll_line_number_t ln;
@@ -394,7 +378,6 @@ typedef union __LLL_OBJECT_DATA{
 	lll_identifier_index_t id;
 	lll_function_object_data_t fn;
 	lll_arg_count_t ac;
-	lll_import_object_data_t im;
 	lll_statement_count_t sc;
 	lll_debug_object_data_t dbg;
 } lll_object_data_t;
@@ -427,13 +410,6 @@ typedef struct __LLL_IDENTIFIER_DATA{
 	lll_identifier_t* il;
 	lll_identifier_list_length_t ill;
 } lll_identifier_table_t;
-
-
-
-typedef struct __LLL_IMPORT_DATA{
-	lll_string_index_t* dt;
-	lll_import_index_t l;
-} lll_import_table_t;
 
 
 
@@ -487,7 +463,6 @@ typedef struct __LLL_COMPILATION_DATA{
 	lll_time_t tm;
 	lll_object_t* h;
 	lll_identifier_table_t idt;
-	lll_import_table_t it;
 	lll_export_table_t et;
 	lll_function_table_t ft;
 	lll_string_table_t st;
@@ -563,7 +538,6 @@ typedef struct __LLL_ERROR_DATA_RANGE{
 typedef union __LLL_ERROR_DATA{
 	char str[256];
 	lll_error_data_range_t r;
-	lll_import_index_t im_i;
 	lll_assembly_instruction_type_t it;
 } lll_error_data_t;
 
@@ -573,6 +547,10 @@ typedef struct __LLL_ERROR{
 	lll_error_type_t t;
 	lll_error_data_t dt;
 } lll_error_t;
+
+
+
+typedef lll_return_t (*lll_import_loader_t)(lll_string_t* s,lll_compilation_data_t* o,lll_error_t* e);
 
 
 
@@ -640,10 +618,6 @@ __LLL_IMPORT_EXPORT void lll_free_identifier_table(lll_identifier_table_t* idt);
 
 
 
-__LLL_IMPORT_EXPORT void lll_free_import_table(lll_import_table_t* it);
-
-
-
 __LLL_IMPORT_EXPORT void lll_free_internal_function_table(lll_internal_function_table_t* ift);
 
 
@@ -684,10 +658,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_FUNCTION_INDEX lll_lookup_internal_function(con
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_merge_import(lll_compilation_data_t* c_dt,lll_import_index_t im_i,lll_compilation_data_t* im,lll_error_t* e);
-
-
-
 __LLL_IMPORT_EXPORT void lll_optimize_object(lll_compilation_data_t* c_dt,lll_object_t* o);
 
 
@@ -696,11 +666,11 @@ __LLL_IMPORT_EXPORT void lll_optimize_metadata(lll_compilation_data_t* c_dt);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_error_t* e);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_import_loader_t il,lll_error_t* e);
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_error_t* e,lll_object_t** o);
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_import_loader_t il,lll_error_t* e,lll_object_t** o);
 
 
 

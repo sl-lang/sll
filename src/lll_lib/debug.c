@@ -16,7 +16,6 @@ lll_object_offset_t _remove_debug_data_internal(lll_object_t* o){
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 		case LLL_OBJECT_TYPE_INT:
 		case LLL_OBJECT_TYPE_FLOAT:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
 		case LLL_OBJECT_TYPE_INTERNAL_FUNC:

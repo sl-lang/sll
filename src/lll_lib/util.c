@@ -49,7 +49,6 @@ __LLL_IMPORT_EXPORT __LLL_RETURN_SIZE lll_get_object_size(const lll_object_t* o)
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 		case LLL_OBJECT_TYPE_INT:
 		case LLL_OBJECT_TYPE_FLOAT:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
 		case LLL_OBJECT_TYPE_INTERNAL_FUNC:

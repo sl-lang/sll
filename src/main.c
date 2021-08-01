@@ -49,13 +49,12 @@
 #define FLAG_GENERATE_ASSEMBLY 2
 #define FLAG_GENERATE_COMPILED_OBJECT 4
 #define FLAG_HELP 8
-#define FLAG_MERGE_IMPORTS 16
-#define FLAG_NO_LOGO 32
-#define FLAG_NO_RUN 64
-#define FLAG_PRINT_ASSEMBLY 128
-#define FLAG_PRINT_OBJECT 256
-#define FLAG_VERBOSE 512
-#define _FLAG_ASSEMBLY_GENERATED 1024
+#define FLAG_NO_LOGO 16
+#define FLAG_NO_RUN 32
+#define FLAG_PRINT_ASSEMBLY 64
+#define FLAG_PRINT_OBJECT 128
+#define FLAG_VERBOSE 256
+#define _FLAG_ASSEMBLY_GENERATED 512
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
 #define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
@@ -73,6 +72,10 @@ uint32_t i_fpl;
 char** fp;
 uint32_t fpl;
 lll_internal_function_table_t i_ft;
+
+
+
+uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_data_t* c_dt,FILE** f,lll_input_data_stream_t* is,char* f_fp);
 
 
 
@@ -124,6 +127,40 @@ void print_int(int64_t v){
 
 
 
+lll_return_t load_import(const lll_string_t* fp,lll_compilation_data_t* o,lll_error_t* e){
+	char nm[MAX_PATH_LENGTH];
+	for (lll_string_length_t m=0;m<fp->l;m++){
+		nm[m]=fp->v[m];
+	}
+	nm[fp->l]=0;
+	FILE* f=NULL;
+	lll_assembly_data_t a_dt={0};
+	lll_input_data_stream_t is;
+	char f_fp[MAX_PATH_LENGTH];
+	uint8_t st[COMPILER_STACK_SIZE];
+	lll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
+	lll_set_compilation_data_stack(o,st,COMPILER_STACK_SIZE);
+	if (!load_file(nm,&a_dt,o,&f,&is,f_fp)){
+		if (f){
+			fclose(f);
+		}
+		lll_free_compilation_data(o);
+		e->t=LLL_ERROR_UNKNOWN;
+		return LLL_RETURN_ERROR;
+	}
+	if (fl&_FLAG_ASSEMBLY_GENERATED){
+		PRINT_STATIC_STR("Importing Assembly into Compiled Objects is Not Allowed\n");
+		e->t=LLL_ERROR_UNKNOWN;
+		return LLL_RETURN_ERROR;
+	}
+	if (f){
+		fclose(f);
+	}
+	return LLL_RETURN_NO_ERROR;
+}
+
+
+
 uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_data_t* c_dt,FILE** f,lll_input_data_stream_t* is,char* f_fp){
 	char bf[MAX_PATH_LENGTH];
 	uint32_t j=0;
@@ -171,7 +208,6 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 						lll_create_input_data_stream(*f,is);
 						if (!lll_load_compiled_object(is,c_dt,&e)){
 							lll_free_identifier_table(&(c_dt->idt));
-							lll_free_import_table(&(c_dt->it));
 							lll_free_export_table(&(c_dt->et));
 							lll_free_function_table(&(c_dt->ft));
 							lll_free_string_table(&(c_dt->st));
@@ -181,8 +217,10 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 								}
 								lll_create_input_data_stream(*f,is);
 								lll_init_compilation_data(f_fp,is,c_dt);
-								if (!lll_parse_all_objects(c_dt,&i_ft,&e)){
-									lll_print_error(is,&e);
+								if (!lll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
+									if (e.t!=LLL_ERROR_UNKNOWN){
+										lll_print_error(is,&e);
+									}
 									return 0;
 								}
 								if (fl&FLAG_PRINT_OBJECT){
@@ -191,71 +229,6 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 								}
 								if (fl&FLAG_VERBOSE){
 									PRINT_STATIC_STR("File Successfully Read.\n");
-								}
-								if (fl&FLAG_MERGE_IMPORTS){
-									for (lll_import_index_t l=0;l<c_dt->it.l;l++){
-										char nm[MAX_PATH_LENGTH];
-										lll_string_t* s=*(c_dt->st.dt+*(c_dt->it.dt+l));
-										for (lll_string_length_t m=0;m<s->l;m++){
-											nm[m]=s->v[m];
-										}
-										nm[s->l]=0;
-										lll_compilation_data_t n_c_dt={0};
-										FILE* n_f=NULL;
-										lll_input_data_stream_t n_is;
-										char n_f_fp[MAX_PATH_LENGTH];
-										uint8_t n_st[COMPILER_STACK_SIZE];
-										lll_set_compilation_data_stack(&n_c_dt,n_st,COMPILER_STACK_SIZE);
-										if (!load_file(nm,a_dt,&n_c_dt,&n_f,&n_is,n_f_fp)){
-											if (n_f){
-												fclose(n_f);
-											}
-											lll_free_compilation_data(&n_c_dt);
-											return 0;
-										}
-										if (fl&_FLAG_ASSEMBLY_GENERATED){
-											PRINT_STATIC_STR("Merging Assembly into Compiled Objects is Not Allowed\n");
-											return 0;
-										}
-										if (n_f){
-											fclose(n_f);
-										}
-										if (fl&FLAG_VERBOSE){
-											PRINT_STATIC_STR("Merging Module '");
-											print_str(n_f_fp);
-											PRINT_STATIC_STR("' ('");
-											print_str(nm);
-											PRINT_STATIC_STR("', index ");
-											print_int(l);
-											PRINT_STATIC_STR(") into '");
-											print_str(f_fp);
-											PRINT_STATIC_STR("'...\n");
-										}
-										if (!lll_merge_import(c_dt,l,&n_c_dt,&e)){
-											lll_free_compilation_data(&n_c_dt);
-											lll_print_error(is,&e);
-											return 0;
-										}
-										lll_free_compilation_data(&n_c_dt);
-									}
-								}
-								else{
-									for (lll_import_index_t l=0;l<c_dt->it.l;l++){
-										fpl++;
-										void* tmp=realloc(fp,fpl*sizeof(char*));
-										if (!tmp){
-											PRINT_STATIC_STR("Unable to Allocate Space for File Path Array\n");
-											return 0;
-										}
-										fp=tmp;
-										lll_string_t* s=*(c_dt->st.dt+*(c_dt->it.dt+l));
-										char* d=malloc((s->l+1)*sizeof(char));
-										for (lll_string_length_t m=0;m<s->l;m++){
-											*(d+m)=s->v[m];
-										}
-										*(d+s->l)=0;
-										*(fp+fpl-1)=d;
-									}
 								}
 							}
 							else{
@@ -464,9 +437,6 @@ _skip_std_lib_path:
 		else if ((*e=='-'&&*(e+1)=='L'&&*(e+2)==0)||cmp_str(e,"--no-logo")){
 			fl|=FLAG_NO_LOGO;
 		}
-		else if ((*e=='-'&&*(e+1)=='m'&&*(e+2)==0)||cmp_str(e,"--merge-imports")){
-			fl|=FLAG_MERGE_IMPORTS;
-		}
 		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||cmp_str(e,"--output")){
 			if (o_fp){
 				PRINT_STATIC_STR("Multplie Output Files Supplied\n");
@@ -559,9 +529,6 @@ _read_file_argument:
 		if (!(fl&FLAG_NO_LOGO)){
 			PRINT_STATIC_STR("  Compiler Logo Mode\n");
 		}
-		if (fl&FLAG_MERGE_IMPORTS){
-			PRINT_STATIC_STR("  Import Merge Mode\n");
-		}
 		if (fl&FLAG_PRINT_ASSEMBLY){
 			PRINT_STATIC_STR("  Assembly Print Mode\n");
 		}
@@ -634,7 +601,9 @@ _read_file_argument:
 			lll_optimize_metadata(&c_dt);
 		}
 		if (!(fl&_FLAG_ASSEMBLY_GENERATED)&&((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_PRINT_ASSEMBLY))||!(fl&FLAG_NO_RUN))){
-			PRINT_STATIC_STR("Generating Assembly...\n");
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("Generating Assembly...\n");
+			}
 			lll_error_t e;
 			if (!lll_generate_assembly(&c_dt,&a_dt,&e)){
 				lll_print_error(&is,&e);

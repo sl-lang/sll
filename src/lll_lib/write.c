@@ -59,10 +59,6 @@ lll_object_offset_t _write_object(lll_output_data_stream_t* os,const lll_object_
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_IMPORT:
-			_write_integer(os,o->dt.im.ii);
-			_write_integer(os,o->dt.im.sc);
-			return eoff+1;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_object_offset_t off=1;
@@ -213,10 +209,6 @@ __LLL_IMPORT_EXPORT void lll_write_compiled_object(lll_output_data_stream_t* os,
 	for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		_write_integer(os,(c_dt->idt.il+i)->sc);
 		_write_integer(os,(c_dt->idt.il+i)->i);
-	}
-	_write_integer(os,c_dt->it.l);
-	for (lll_import_index_t i=0;i<c_dt->it.l;i++){
-		_write_integer(os,*(c_dt->it.dt+i));
 	}
 	_write_integer(os,c_dt->et.l);
 	for (lll_export_table_length_t i=0;i<c_dt->et.l;i++){

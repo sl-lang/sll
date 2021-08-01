@@ -257,17 +257,6 @@ lll_object_offset_t _print_object_internal(const lll_compilation_data_t* c_dt,co
 		case LLL_OBJECT_TYPE_EXIT:
 			fprintf(f,"@");
 			break;
-		case LLL_OBJECT_TYPE_IMPORT:
-			{
-				fprintf(f,"-- \"");
-				lll_string_t* dt=*(c_dt->st.dt+*(c_dt->it.dt+o->dt.im.ii));
-				for (lll_string_length_t i=0;i<dt->l;i++){
-					fputc(dt->v[i],f);
-				}
-				fputc('"',f);
-				fputc(')',f);
-				return eoff+1;
-			}
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				fputc('{',f);

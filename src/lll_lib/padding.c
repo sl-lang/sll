@@ -18,7 +18,6 @@ lll_object_offset_t _remove_padding_internal(lll_object_t* o,lll_compilation_dat
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 		case LLL_OBJECT_TYPE_INT:
 		case LLL_OBJECT_TYPE_FLOAT:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_FUNC:
 			{

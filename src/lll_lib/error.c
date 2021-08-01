@@ -46,9 +46,6 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			case LLL_ERROR_INVALID_FILE_FORMAT:
 				printf("Invalid File Format\n");
 				return;
-			case LLL_ERROR_INVALID_IMPORT_INDEX:
-				printf("Unknown Module Index '%u'\n",e->dt.im_i);
-				return;
 			case LLL_ERROR_INVALID_INSTRUCTION:
 				printf("Invalid Instruction: 0x%.2hhx\n",e->dt.it);
 				return;
@@ -206,9 +203,6 @@ __LLL_IMPORT_EXPORT void lll_print_error(lll_input_data_stream_t* is,const lll_e
 			return;
 		case LLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
 			printf("Internal Function Name Too Long\n");
-			return;
-		case LLL_ERROR_STRING_REQUIRED:
-			printf("Import File Path Must be a String\n");
 			return;
 	}
 }

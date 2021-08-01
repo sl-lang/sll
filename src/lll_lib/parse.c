@@ -7,6 +7,65 @@
 
 
 
+lll_object_offset_t _patch_module(lll_object_t* mo,const import_module_data_t* im_dt){
+	lll_object_offset_t eoff=0;
+	lll_object_t* o=im_dt->d+(mo-im_dt->s);
+	while (mo->t==LLL_OBJECT_TYPE_NOP){
+		eoff++;
+		o->t=LLL_OBJECT_TYPE_NOP;
+		o++;
+		mo++;
+	}
+	*o=*mo;
+	switch (o->t){
+		case LLL_OBJECT_TYPE_UNKNOWN:
+		case LLL_OBJECT_TYPE_CHAR:
+		case LLL_OBJECT_TYPE_INT:
+		case LLL_OBJECT_TYPE_FLOAT:
+			return eoff+1;
+		case LLL_OBJECT_TYPE_STRING:
+			o->dt.s=*(im_dt->sm+o->dt.s);
+			return eoff+1;
+		case LLL_OBJECT_TYPE_IDENTIFIER:
+			o->dt.id=LLL_IDENTIFIER_ADD_INDEX(o->dt.id,im_dt->off[LLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]);
+			return eoff+1;
+		case LLL_OBJECT_TYPE_FUNC:
+			o->dt.fn.id+=im_dt->f_off;
+		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
+				lll_object_offset_t off=1;
+				lll_arg_count_t l=o->dt.fn.ac;
+				while (l){
+					l--;
+					off+=_patch_module(mo+off,im_dt);
+				}
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_OPERATION_LIST:
+			{
+				lll_object_offset_t off=1;
+				lll_statement_count_t l=o->dt.sc;
+				while (l){
+					l--;
+					off+=_patch_module(mo+off,im_dt);
+				}
+				return off+eoff;
+			}
+		case LLL_OBJECT_TYPE_DEBUG_DATA:
+			o->dt.dbg.fpi=*(im_dt->sm+o->dt.dbg.fpi);
+			return eoff+_patch_module(mo+1,im_dt)+1;
+	}
+	lll_object_offset_t off=1;
+	lll_arg_count_t l=o->dt.ac;
+	while (l){
+		l--;
+		off+=_patch_module(mo+off,im_dt);
+	}
+	return off+eoff;
+}
+
+
+
 uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_error_t* e,lll_char_t* o){
 	int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==LLL_END_OF_DATA){
@@ -258,36 +317,8 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const extra_com
 					}
 				}
 			}
-			else if (o->t==LLL_OBJECT_TYPE_IMPORT){
-				ASSERT(!ac);
-				o->t=LLL_OBJECT_TYPE_NOP;
-			}
-			else if (o->t==OBJECT_TYPE_EXPORT){
-				o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
-				o->dt.sc=ac;
-				lll_object_offset_t off=1;
-				for (lll_arg_count_t i=0;i<ac;i++){
-					while ((o+off)->t==LLL_OBJECT_TYPE_NOP||(o+off)->t==LLL_OBJECT_TYPE_DEBUG_DATA){
-						off++;
-					}
-					if ((o+off)->t==LLL_OBJECT_TYPE_IDENTIFIER){
-						o->dt.sc--;
-						for (lll_export_table_length_t j=0;j<c_dt->et.l;j++){
-							if (*(c_dt->et.dt+j)==(o+off)->dt.id){
-								goto _skip_export;
-							}
-						}
-						c_dt->et.l++;
-						c_dt->et.dt=realloc(c_dt->et.dt,c_dt->et.l*sizeof(lll_identifier_index_t));
-						*(c_dt->et.dt+c_dt->et.l-1)=(o+off)->dt.id;
-_skip_export:
-						(o+off)->t=LLL_OBJECT_TYPE_NOP;
-						while ((o+off)->t==LLL_OBJECT_TYPE_NOP||(o+off)->t==LLL_OBJECT_TYPE_DEBUG_DATA){
-							(o+off)->t=LLL_OBJECT_TYPE_NOP;
-							off--;
-						}
-					}
-				}
+			else if (fl&(EXTRA_COMPILATION_DATA_IMPORT|EXTRA_COMPILATION_DATA_EXPORT)){
+				o->dt.sc=sc;
 			}
 			else{
 				o->dt.ac=ac;
@@ -365,9 +396,10 @@ _skip_export:
 					return LLL_RETURN_ERROR;
 				}
 				extra_compilation_data_t n_e_c_dt={
-					fl,
+					fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION,
 					*l_sc,
-					e_c_dt->i_ft
+					e_c_dt->i_ft,
+					e_c_dt->il
 				};
 				if (!_read_object_internal(c_dt,c,&n_e_c_dt,e)){
 					if (n_l_sc.m){
@@ -528,15 +560,13 @@ _read_symbol:
 				}
 				else if (*str=='-'&&*(str+1)=='-'){
 					o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
-					o->dt.sc=0;
 					sc=0;
-					c_dt->_s.off+=sizeof(lll_object_t);
-					o++;
-					o->t=LLL_OBJECT_TYPE_IMPORT;
-					o->dt.im.ii=LLL_MAX_IMPORT_INDEX;
+					fl|=EXTRA_COMPILATION_DATA_IMPORT;
 				}
 				else if (*str=='#'&&*(str+1)=='#'){
-					o->t=OBJECT_TYPE_EXPORT;
+					o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
+					sc=0;
+					fl|=EXTRA_COMPILATION_DATA_EXPORT;
 				}
 				else{
 					goto _unknown_symbol;
@@ -1030,12 +1060,141 @@ _identifier_found:;
 					e->t=LLL_ERROR_TOO_MANY_STATEMENTS;
 					e->dt.r.off=arg_s;
 					e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
-					}
 					return LLL_RETURN_ERROR;
 				}
 				sc++;
+				if ((fl&EXTRA_COMPILATION_DATA_IMPORT)&&arg->t==LLL_OBJECT_TYPE_STRING){
+					lll_compilation_data_t im={0};
+					if (e_c_dt->il(*(c_dt->st.dt+arg->dt.s),&im,e)==LLL_RETURN_ERROR){
+						return LLL_RETURN_ERROR;
+					}
+					c_dt->_s.off-=sizeof(lll_object_t)*2;
+					arg->t=LLL_OBJECT_TYPE_NOP;
+					while (arg->t==LLL_OBJECT_TYPE_NOP||arg->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+						arg->t=LLL_OBJECT_TYPE_NOP;
+						arg--;
+					}
+					arg++;
+					import_module_data_t im_dt={
+						.sm=malloc(im.st.l*sizeof(lll_string_index_t)),
+						.f_off=c_dt->ft.l,
+						.s=im.h,
+						.d=arg
+					};
+					for (lll_string_index_t i=0;i<im.st.l;i++){
+						lll_string_t* s=*(im.st.dt+i);
+						for (lll_string_index_t j=0;j<c_dt->st.l;j++){
+							lll_string_t* d=*(c_dt->st.dt+j);
+							if (s->c!=d->c||s->l!=d->l){
+								continue;
+							}
+							for (lll_string_length_t k=0;k<s->l;k++){
+								if (s->v[k]!=d->v[k]){
+									goto _check_next_string;
+								}
+							}
+							*(im_dt.sm+i)=j;
+							goto _merge_next_string;
+_check_next_string:;
+						}
+						*(im_dt.sm+i)=c_dt->st.l;
+						c_dt->st.l++;
+						c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
+						lll_string_t* n=malloc(sizeof(lll_string_t)+(s->l+1)*sizeof(lll_char_t));
+						n->l=s->l;
+						n->c=s->c;
+						for (lll_string_length_t j=0;j<s->l;j++){
+							n->v[j]=s->v[j];
+						}
+						n->v[n->l]=0;
+						*(c_dt->st.dt+c_dt->st.l-1)=n;
+_merge_next_string:;
+					}
+					lll_identifier_list_length_t s_si[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
+					for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+						lll_identifier_list_t* il=c_dt->idt.s+i;
+						lll_identifier_list_t mil=im.idt.s[i];
+						im_dt.off[i]=il->l;
+						if (mil.l){
+							s_si[i]=il->l;
+							il->l+=mil.l;
+							void* tmp=realloc(il->dt,il->l*sizeof(lll_identifier_t));
+							if (!tmp){
+								ASSERT(!"Unable to Reallocate Fixed-Length Identifier Array",e,LLL_RETURN_ERROR);
+							}
+							il->dt=tmp;
+							for (lll_identifier_list_length_t j=0;j<mil.l;j++){
+								(il->dt+s_si[i]+j)->sc=(mil.dt+j)->sc+c_dt->_n_sc_id;
+								(il->dt+s_si[i]+j)->i=*(im_dt.sm+(mil.dt+j)->i);
+							}
+						}
+					}
+					im_dt.off[LLL_MAX_SHORT_IDENTIFIER_LENGTH]=c_dt->idt.ill;
+					lll_identifier_list_length_t si=c_dt->idt.ill;
+					if (im.idt.ill){
+						c_dt->idt.ill+=im.idt.ill;
+						void* tmp=realloc(c_dt->idt.il,c_dt->idt.ill*sizeof(lll_identifier_t));
+						if (!tmp){
+							ASSERT(!"Unable to Reallocate Variable-Length Identifier Array",e,LLL_RETURN_ERROR);
+						}
+						c_dt->idt.il=tmp;
+						for (lll_identifier_list_length_t j=0;j<im.idt.ill;j++){
+							(c_dt->idt.il+si+j)->sc=(im.idt.il+j)->sc+c_dt->_n_sc_id;
+							(c_dt->idt.il+si+j)->i=*(im_dt.sm+(im.idt.il+j)->i);
+						}
+					}
+					for (lll_export_table_length_t i=0;i<im.et.l;i++){
+						lll_identifier_index_t ei=*(im.et.dt+i);
+						uint8_t j=LLL_IDENTIFIER_GET_ARRAY_ID(ei);
+						if (j==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
+							(c_dt->idt.il+si+LLL_IDENTIFIER_GET_ARRAY_INDEX(ei))->sc=l_sc->l_sc;
+						}
+						else{
+							(c_dt->idt.s[j].dt+s_si[j]+LLL_IDENTIFIER_GET_ARRAY_INDEX(ei))->sc=l_sc->l_sc;
+						}
+					}
+					lll_function_index_t j=c_dt->ft.l;
+					c_dt->ft.l+=im.ft.l;
+					c_dt->ft.dt=realloc(c_dt->ft.dt,c_dt->ft.l*sizeof(lll_function_t*));
+					for (lll_function_index_t i=0;i<im.ft.l;i++){
+						lll_function_t* f=*(im.ft.dt+i);
+						lll_function_t* nf=malloc(sizeof(lll_function_t)+f->al*sizeof(lll_identifier_index_t));
+						nf->off=(lll_object_offset_t)(f->off+(arg-c_dt->h));
+						nf->al=f->al;
+						for (lll_arg_count_t k=0;k<f->al;k++){
+							nf->a[k]=f->a[k];
+						}
+						*(c_dt->ft.dt+i+j)=nf;
+					}
+					c_dt->_n_sc_id+=im._n_sc_id;
+					lll_object_offset_t im_sz=_patch_module(im.h,&im_dt);
+					free(im_dt.sm);
+					lll_free_compilation_data(&im);
+					c_dt->_s.off+=im_sz*sizeof(lll_object_t);
+					if (c_dt->_s.off>=c_dt->_s.sz){
+						e->t=LLL_ERROR_INTERNAL_STACK_OVERFLOW;
+						e->dt.r.off=0;
+						e->dt.r.sz=1;
+						return LLL_RETURN_ERROR;
+					}
+				}
+				else if ((fl&EXTRA_COMPILATION_DATA_EXPORT)&&arg->t==LLL_OBJECT_TYPE_IDENTIFIER){
+					sc--;
+					for (lll_export_table_length_t j=0;j<c_dt->et.l;j++){
+						if (*(c_dt->et.dt+j)==arg->dt.id){
+							goto _skip_export;
+						}
+					}
+					c_dt->et.l++;
+					c_dt->et.dt=realloc(c_dt->et.dt,c_dt->et.l*sizeof(lll_identifier_index_t));
+					*(c_dt->et.dt+c_dt->et.l-1)=arg->dt.id;
+_skip_export:;
+					arg->t=LLL_OBJECT_TYPE_NOP;
+					while (arg->t==LLL_OBJECT_TYPE_NOP||arg->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+						arg->t=LLL_OBJECT_TYPE_NOP;
+						arg--;
+					}
+				}
 			}
 			else{
 				if (ac==UINT8_MAX){
@@ -1047,41 +1206,7 @@ _identifier_found:;
 					}
 					return LLL_RETURN_ERROR;
 				}
-				if (o->t==LLL_OBJECT_TYPE_IMPORT){
-					if (arg->t!=LLL_OBJECT_TYPE_STRING){
-						e->t=LLL_ERROR_STRING_REQUIRED;
-						e->dt.r.off=arg_s;
-						e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
-						if (n_l_sc.m){
-							free(n_l_sc.m);
-						}
-						return LLL_RETURN_ERROR;
-					}
-					o->dt.im.sc=l_sc->l_sc;
-					for (lll_import_index_t i=0;i<c_dt->it.l;i++){
-						if (*(c_dt->it.dt+i)!=arg->dt.s){
-							continue;
-						}
-						o->dt.im.ii=i;
-						break;
-					}
-					if (o->dt.im.ii==LLL_MAX_IMPORT_INDEX){
-						o->dt.im.ii=c_dt->it.l;
-						c_dt->it.l++;
-						c_dt->it.dt=realloc(c_dt->it.dt,c_dt->it.l*sizeof(lll_string_index_t));
-						*(c_dt->it.dt+c_dt->it.l-1)=arg->dt.s;
-					}
-					c_dt->_s.off=arg_bf_off+sizeof(lll_object_t);
-					sc++;
-					ASSERT((o-sc)->t==LLL_OBJECT_TYPE_OPERATION_LIST);
-					(o-sc)->dt.sc=sc;
-					o++;
-					o->t=LLL_OBJECT_TYPE_IMPORT;
-					o->dt.im.ii=LLL_MAX_IMPORT_INDEX;
-				}
-				else{
-					ac++;
-				}
+				ac++;
 			}
 		}
 	}
@@ -1122,8 +1247,6 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 	}
 	o->idt.il=NULL;
 	o->idt.ill=0;
-	o->it.dt=NULL;
-	o->it.l=0;
 	o->et.dt=NULL;
 	o->et.l=0;
 	o->ft.dt=NULL;
@@ -1143,7 +1266,7 @@ __LLL_IMPORT_EXPORT void lll_init_compilation_data(const char* fp,lll_input_data
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_error_t* e,lll_object_t** o){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_import_loader_t il,lll_error_t* e,lll_object_t** o){
 	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -1163,7 +1286,8 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,l
 			0,
 			1
 		},
-		i_ft
+		i_ft,
+		il
 	};
 	e_c_dt.sc.m[0]=1;
 	if (!_read_object_internal(c_dt,c,&e_c_dt,e)){
@@ -1177,7 +1301,7 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,l
 
 
 
-__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_error_t* e){
+__LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_internal_function_table_t* i_ft,lll_import_loader_t il,lll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
@@ -1198,7 +1322,8 @@ __LLL_IMPORT_EXPORT __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c
 			0,
 			1
 		},
-		i_ft
+		i_ft,
+		il
 	};
 	e_c_dt.sc.m[0]=1;
 	lll_statement_count_t sc=0;

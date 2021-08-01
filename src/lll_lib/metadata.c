@@ -5,7 +5,7 @@
 
 
 
-lll_object_offset_t _mark_strings_update_imports(lll_object_t* o,uint64_t* m,lll_import_index_t* im){
+lll_object_offset_t _mark_strings(lll_object_t* o,uint64_t* m){
 	lll_object_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP){
 		eoff++;
@@ -28,32 +28,29 @@ lll_object_offset_t _mark_strings_update_imports(lll_object_t* o,uint64_t* m,lll
 				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){
 					l--;
-					off+=_mark_strings_update_imports(o+off,m,im);
+					off+=_mark_strings(o+off,m);
 				}
 				return off+eoff;
 			}
-		case LLL_OBJECT_TYPE_IMPORT:
-			o->dt.im.ii=*(im+o->dt.im.ii);
-			return eoff+1;
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_object_offset_t off=1;
 				lll_statement_count_t l=o->dt.sc;
 				while (l){
 					l--;
-					off+=_mark_strings_update_imports(o+off,m,im);
+					off+=_mark_strings(o+off,m);
 				}
 				return off+eoff;
 			}
 		case LLL_OBJECT_TYPE_DEBUG_DATA:
 			*(m+(o->dt.dbg.fpi>>6))|=1ull<<(o->dt.dbg.fpi&63);
-			return eoff+_mark_strings_update_imports(o+1,m,im)+1;
+			return eoff+_mark_strings(o+1,m)+1;
 	}
 	lll_object_offset_t off=1;
 	lll_arg_count_t l=o->dt.ac;
 	while (l){
 		l--;
-		off+=_mark_strings_update_imports(o+off,m,im);
+		off+=_mark_strings(o+off,m);
 	}
 	return off+eoff;
 }
@@ -72,7 +69,6 @@ lll_object_offset_t _update_strings(lll_object_t* o,lll_string_index_t* sm){
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 		case LLL_OBJECT_TYPE_INT:
 		case LLL_OBJECT_TYPE_FLOAT:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_STRING:
 			o->dt.s=*(sm+o->dt.s);
@@ -128,36 +124,10 @@ __LLL_IMPORT_EXPORT void lll_optimize_metadata(lll_compilation_data_t* c_dt){
 	for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		*(m+((c_dt->idt.il+i)->i>>6))|=1ull<<((c_dt->idt.il+i)->i&63);
 	}
-	lll_import_index_t* im=malloc(c_dt->it.l*sizeof(lll_import_index_t));
+	_mark_strings(c_dt->h,m);
+	lll_string_index_t* sm=malloc(c_dt->st.l*sizeof(lll_string_index_t));
 	uint32_t k=0;
 	uint32_t l=0;
-	for (lll_import_index_t i=0;i<c_dt->it.l;i++){
-		lll_string_index_t j=*(c_dt->it.dt+i);
-		if (j==LLL_MAX_STRING_INDEX){
-			for (uint32_t n=k;n<i;n++){
-				*(c_dt->it.dt+n-l)=*(c_dt->it.dt+n);
-				*(im+n)=n-l;
-			}
-			k=i+1;
-			l++;
-		}
-		else{
-			*(m+(j>>6))|=1ull<<(j&63);
-		}
-	}
-	for (uint32_t i=k;i<c_dt->it.l;i++){
-		*(c_dt->it.dt+i-l)=*(c_dt->it.dt+i);
-		*(im+i)=i-l;
-	}
-	if (l){
-		c_dt->it.l-=l;
-		c_dt->it.dt=realloc(c_dt->it.dt,c_dt->it.l*sizeof(lll_string_index_t));
-	}
-	_mark_strings_update_imports(c_dt->h,m,im);
-	free(im);
-	lll_string_index_t* sm=malloc(c_dt->st.l*sizeof(lll_string_index_t));
-	k=0;
-	l=0;
 	for (uint32_t i=0;i<ml;i++){
 		uint64_t v=~(*(m+i));
 		while (v){
@@ -191,9 +161,6 @@ __LLL_IMPORT_EXPORT void lll_optimize_metadata(lll_compilation_data_t* c_dt){
 		}
 		for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 			(c_dt->idt.il+i)->i=*(sm+(c_dt->idt.il+i)->i);
-		}
-		for (lll_import_index_t i=0;i<c_dt->it.l;i++){
-			*(c_dt->it.dt+i)=*(sm+(*(c_dt->it.dt+i)));
 		}
 		_update_strings(c_dt->h,sm);
 	}

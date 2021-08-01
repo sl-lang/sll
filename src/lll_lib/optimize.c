@@ -34,10 +34,6 @@
 
 
 
-lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* o_dt,uint8_t fl);
-
-
-
 void _remove_up_to_end(lll_object_t* o,lll_object_offset_t off){
 	lll_object_offset_t sz=lll_get_object_size(o);
 	for (;off<sz;off++){
@@ -59,7 +55,6 @@ lll_object_offset_t _map_identifiers(const lll_object_t* o,const lll_compilation
 		case LLL_OBJECT_TYPE_STRING:
 		case LLL_OBJECT_TYPE_INT:
 		case LLL_OBJECT_TYPE_FLOAT:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			{
@@ -147,7 +142,6 @@ void _get_as_runtime_object(const lll_object_t* o,const optimizer_data_t* o_dt,l
 		case LLL_OBJECT_TYPE_FOR:
 		case LLL_OBJECT_TYPE_RETURN:
 		case LLL_OBJECT_TYPE_EXIT:
-		case LLL_OBJECT_TYPE_IMPORT:
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			v->t=LLL_RUNTIME_OBJECT_TYPE_INT;
 			v->dt.i=0;
@@ -196,7 +190,6 @@ lll_object_offset_t _mark_loop_vars(const lll_object_t* o,optimizer_data_t* o_dt
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 		case LLL_OBJECT_TYPE_INT:
 		case LLL_OBJECT_TYPE_FLOAT:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_ASSIGN:
 			{
@@ -297,7 +290,6 @@ uint8_t _get_cond_type(lll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 		case LLL_OBJECT_TYPE_LOOP:
 		case LLL_OBJECT_TYPE_RETURN:
 		case LLL_OBJECT_TYPE_EXIT:
-		case LLL_OBJECT_TYPE_IMPORT:
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case LLL_OBJECT_TYPE_INPUT:
@@ -351,7 +343,6 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 	}
 	switch (o->t){
 		case LLL_OBJECT_TYPE_UNKNOWN:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_CHAR:
 		case LLL_OBJECT_TYPE_STRING:
@@ -369,7 +360,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 			}
 			else{
 				lll_runtime_object_t* v=o_dt->v+GET_VARIABLE_INDEX(o,o_dt);
-				if (LLL_RUNTIME_OBJECT_GET_TYPE(v)!=RUNTIME_OBJECT_TYPE_UNKNOWN&&!(v->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
+				if (LLL_RUNTIME_OBJECT_GET_TYPE(v)!=RUNTIME_OBJECT_TYPE_UNKNOWN&&(!(v->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)||(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG))){
 					DECREASE_VARIABLE(o,o_dt);
 					switch (LLL_RUNTIME_OBJECT_GET_TYPE(v)){
 						case LLL_RUNTIME_OBJECT_TYPE_INT:
@@ -405,7 +396,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				DECREASE_VARIABLE(id_o,o_dt);
 				o_dt->vi=GET_VARIABLE_INDEX(id_o,o_dt);
 				off++;
-				off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+				off+=_optimize(o+off,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 				if (o_dt->rm){
 					o->t=LLL_OBJECT_TYPE_NOP;
 					id_o->t=LLL_OBJECT_TYPE_NOP;
@@ -415,7 +406,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				l-=2;
 				while (l){
 					l--;
-					off+=_optimize(o+off,o,o_dt,0);
+					off+=_optimize(o+off,o,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 					if (o_dt->rm){
 						_remove_up_to_end(o,off);
 						o->dt.ac-=l;
@@ -431,13 +422,13 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
 					o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
 					o->dt.sc=o->dt.fn.ac;
-					return _optimize(o,p,o_dt,0)+eoff;
+					return _optimize(o,p,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)+eoff;
 				}
 				lll_object_offset_t off=1;
 				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){
 					l--;
-					off+=_optimize(o+off,o,o_dt,0);
+					off+=_optimize(o+off,o,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 					if (o_dt->rm){
 						_remove_up_to_end(o,off);
 						o->dt.fn.ac-=l;
@@ -460,7 +451,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 					while (l){
 						l--;
 						lll_object_t* cnd_o=o+off;
-						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						off+=_optimize(o+off,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 						if (o_dt->rm){
 							ASSERT(!"Unimplemented");
 						}
@@ -469,14 +460,14 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 							if (o->dt.ac-(l<<1)==3){
 								lll_object_offset_t sz=lll_get_object_size(o);
 								o->t=LLL_OBJECT_TYPE_NOP;
-								off+=_optimize(o+off,p,o_dt,0);
+								off+=_optimize(o+off,p,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 								while (off<sz){
 									(o+off)->t=LLL_OBJECT_TYPE_NOP;
 									off++;
 								}
 							}
 							else{
-								off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+								off+=_optimize(o+off,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 								o_dt->rm=0;
 								_remove_up_to_end(o,off);
 								o->dt.ac-=(l<<1)+2;
@@ -496,11 +487,11 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 							_remove_up_to_end(o+off,0);
 							continue;
 						}
-						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						off+=_optimize(o+off,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 						o_dt->rm=0;
 					}
 					if (o->t!=LLL_OBJECT_TYPE_NOP){
-						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						off+=_optimize(o+off,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 						o_dt->rm=0;
 					}
 					else{
@@ -512,7 +503,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 					while (l){
 						l--;
 						lll_object_t* cnd_o=o+off;
-						off+=_optimize(cnd_o,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						off+=_optimize(cnd_o,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 						if (o_dt->rm){
 							ASSERT(!"Unimplemented");
 						}
@@ -521,7 +512,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 							if (o->dt.ac-(l<<1)==2){
 								lll_object_offset_t sz=lll_get_object_size(o);
 								o->t=LLL_OBJECT_TYPE_NOP;
-								off+=_optimize(o+off,p,o_dt,0);
+								off+=_optimize(o+off,p,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 								while (off<sz){
 									(o+off)->t=LLL_OBJECT_TYPE_NOP;
 									off++;
@@ -529,7 +520,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 							}
 							else{
 								o_dt->rm=0;
-								off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+								off+=_optimize(o+off,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 								_remove_up_to_end(o,off);
 							}
 							o->dt.ac-=(l<<1)+1;
@@ -553,7 +544,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 							off+=sz;
 							continue;
 						}
-						off+=_optimize(o+off,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						off+=_optimize(o+off,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 						o_dt->rm=0;
 					}
 				}
@@ -567,7 +558,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 					o->t=LLL_OBJECT_TYPE_NOP;
 					return _optimize(o+1,p,o_dt,fl)+eoff;
 				}
-				lll_object_offset_t off=_optimize(o+1,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT)+1;
+				lll_object_offset_t off=_optimize(o+1,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT)+1;
 				if (o_dt->rm){
 					o->t=LLL_OBJECT_TYPE_NOP;
 					_remove_up_to_end(o,off);
@@ -578,11 +569,18 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				for (lll_arg_count_t i=1;i<l;i++){
 					off2+=_mark_loop_vars(o+off2,o_dt);
 				}
-				off+=_optimize(cnd_o,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+				lll_object_offset_t cnd_sz=_optimize(cnd_o,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+				off+=cnd_sz;
+				lll_object_t* tmp=malloc(cnd_sz*sizeof(lll_object_t));
+				for (lll_object_offset_t i=0;i<cnd_sz;i++){
+					*(tmp+i)=*(cnd_o+i);
+				}
+				_optimize(tmp,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT|OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 				if (o_dt->rm){
 					ASSERT(!"Unimplemented");
 				}
-				uint8_t cnd=_get_cond_type(cnd_o,o_dt,1,1);
+				uint8_t cnd=_get_cond_type(tmp,o_dt,1,1);
+				free(tmp);
 				if (cnd==COND_TYPE_ALWAYS_TRUE){
 					ASSERT(!"Unimplemented");
 				}
@@ -592,7 +590,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				l-=2;
 				while (l){
 					l--;
-					off+=_optimize(o+off,o,o_dt,0);
+					off+=_optimize(o+off,o,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 					if (o_dt->rm){
 						_remove_up_to_end(o,off);
 						o->dt.ac-=l;
@@ -614,7 +612,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 			{
 				lll_arg_count_t l=o->dt.ac;
 				ASSERT(l);
-				lll_object_offset_t off=_optimize(o+1,o,o_dt,OPTIMIZER_FLAG_ARGUMENT)+1;
+				lll_object_offset_t off=_optimize(o+1,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT)+1;
 				if (o_dt->rm){
 					_remove_up_to_end(o,off);
 					o->t=LLL_OBJECT_TYPE_NOP;
@@ -623,21 +621,21 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				lll_runtime_object_t a;
 				_get_as_runtime_object(o+1,o_dt,&a);
 				l--;
-				if (a.t!=RUNTIME_OBJECT_TYPE_UNKNOWN){
+				if (a.t!=RUNTIME_OBJECT_TYPE_UNKNOWN&&!(a.t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
 					while (l){
-						l--;
 						lll_object_t* arg=o+off;
-						off+=_optimize(o+off,o,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						off+=_optimize(o+off,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 						if (o_dt->rm){
 							_remove_up_to_end(o,off);
-							o->dt.ac-=l;
+							o->dt.ac-=l-1;
 							return off+eoff;
 						}
 						lll_runtime_object_t b;
 						_get_as_runtime_object(arg,o_dt,&b);
-						if (b.t==RUNTIME_OBJECT_TYPE_UNKNOWN){
+						if (b.t==RUNTIME_OBJECT_TYPE_UNKNOWN||(b.t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
 							break;
 						}
+						l--;
 						lll_compare_result_t cmp=lll_compare_runtime_object(&a,&b);
 						ASSERT(cmp!=LLL_COMPARE_RESULT_ERROR);
 						if ((o->t==LLL_OBJECT_TYPE_LESS&&cmp==LLL_COMPARE_RESULT_BELOW)||(o->t==LLL_OBJECT_TYPE_LESS_EQUAL&&cmp!=LLL_COMPARE_RESULT_ABOVE)||(o->t==LLL_OBJECT_TYPE_EQUAL&&cmp==LLL_COMPARE_RESULT_EQUAL)||(o->t==LLL_OBJECT_TYPE_NOT_EQUAL&&cmp!=LLL_COMPARE_RESULT_EQUAL)||(o->t==LLL_OBJECT_TYPE_MORE&&cmp==LLL_COMPARE_RESULT_ABOVE)||(o->t==LLL_OBJECT_TYPE_MORE_EQUAL&&cmp!=LLL_COMPARE_RESULT_BELOW)){
@@ -649,10 +647,17 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 						o->dt.sc=o->dt.ac-l;
 						return _optimize(o,p,o_dt,fl)+eoff;
 					}
+					if (!l){
+						_remove_up_to_end(o,1);
+						o->t=LLL_OBJECT_TYPE_INT;
+						o->dt.i=1;
+						return eoff+1;
+					}
+					l--;
 				}
 				while (l){
 					l--;
-					off+=_optimize(o+off,o,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+					off+=_optimize(o+off,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 					if (o_dt->rm){
 						_remove_up_to_end(o,off);
 						o->dt.ac-=l;
@@ -660,7 +665,6 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 					}
 				}
 				return off+eoff;
-				ASSERT(!"Unimplemented");
 			}
 		case LLL_OBJECT_TYPE_RETURN:
 		case LLL_OBJECT_TYPE_EXIT:
@@ -669,7 +673,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				lll_arg_count_t l=o->dt.ac;
 				while (l){
 					l--;
-					off+=_optimize(o+off,o,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+					off+=_optimize(o+off,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 					if (o_dt->rm){
 						_remove_up_to_end(o,off);
 						o->dt.ac-=l;
@@ -685,7 +689,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 				lll_statement_count_t l=o->dt.sc;
 				while (l){
 					l--;
-					off+=_optimize(o+off,o,o_dt,0);
+					off+=_optimize(o+off,o,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 					if (o_dt->rm){
 						_remove_up_to_end(o,off);
 						o->dt.sc-=l;
@@ -716,7 +720,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 	lll_arg_count_t l=o->dt.ac;
 	while (l){
 		l--;
-		off+=_optimize(o+off,o,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+		off+=_optimize(o+off,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 		if (o_dt->rm){
 			_remove_up_to_end(o,off);
 			o->dt.ac-=l;
@@ -740,7 +744,6 @@ lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_
 		case LLL_OBJECT_TYPE_STRING:
 		case LLL_OBJECT_TYPE_INT:
 		case LLL_OBJECT_TYPE_FLOAT:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(GET_VARIABLE_REF_COUNT(o,o_dt));

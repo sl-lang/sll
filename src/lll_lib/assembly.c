@@ -211,7 +211,6 @@ lll_object_offset_t _generate_jump(const lll_object_t* o,assembly_generator_data
 		case LLL_OBJECT_TYPE_FOR:
 		case LLL_OBJECT_TYPE_RETURN:
 		case LLL_OBJECT_TYPE_EXIT:
-		case LLL_OBJECT_TYPE_IMPORT:
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_object_offset_t off=_generate(o,g_dt);
@@ -308,7 +307,6 @@ lll_object_offset_t _generate_on_stack(const lll_object_t* o,assembly_generator_
 		case LLL_OBJECT_TYPE_FOR:
 		case LLL_OBJECT_TYPE_RETURN:
 		case LLL_OBJECT_TYPE_EXIT:
-		case LLL_OBJECT_TYPE_IMPORT:
 		case LLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				lll_object_offset_t off=_generate(o,g_dt);
@@ -403,7 +401,6 @@ lll_object_offset_t _generate(const lll_object_t* o,assembly_generator_data_t* g
 		case LLL_OBJECT_TYPE_FLOAT:
 		case LLL_OBJECT_TYPE_STRING:
 		case LLL_OBJECT_TYPE_IDENTIFIER:
-		case LLL_OBJECT_TYPE_IMPORT:
 			return eoff+1;
 		case LLL_OBJECT_TYPE_PRINT:
 			{
