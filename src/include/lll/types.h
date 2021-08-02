@@ -13,10 +13,6 @@ typedef uint8_t lll_assembly_instruction_type_t;
 
 
 
-typedef uint8_t lll_char_t;
-
-
-
 typedef uint8_t lll_compare_result_t;
 
 
@@ -37,11 +33,11 @@ typedef uint8_t lll_runtime_object_type_t;
 
 
 
-typedef uint8_t lll_string_checksum_t;
-
-
-
 typedef uint16_t lll_file_path_index_t;
+
+
+
+typedef uint16_t lll_small_char_t;
 
 
 
@@ -58,6 +54,14 @@ typedef int32_t lll_relative_instruction_index_t;
 
 
 typedef int32_t lll_return_code_t;
+
+
+
+typedef uint32_t lll_buffer_size_t;
+
+
+
+typedef uint32_t lll_char_t;
 
 
 
@@ -105,6 +109,10 @@ typedef uint32_t lll_stack_offset_t;
 
 
 
+typedef uint32_t lll_string_checksum_t;
+
+
+
 typedef uint32_t lll_string_index_t;
 
 
@@ -129,10 +137,14 @@ typedef double lll_float_t;
 
 
 
+typedef uint8_t* lll_buffer_t;
+
+
+
 typedef struct __LLL_INPUT_DATA_SOURCE{
 	void* ctx;
-	int (*rf)(struct __LLL_INPUT_DATA_SOURCE* is);
-	uint8_t (*rbf)(struct __LLL_INPUT_DATA_SOURCE* is,uint8_t* bf,uint32_t sz);
+	lll_small_char_t (*rf)(struct __LLL_INPUT_DATA_SOURCE* is);
+	lll_small_char_t (*rbf)(struct __LLL_INPUT_DATA_SOURCE* is,lll_buffer_t bf,lll_buffer_size_t sz);
 	void (*rlf)(struct __LLL_INPUT_DATA_SOURCE* is,lll_file_offset_t lp);
 	lll_line_number_t _lc;
 	lll_file_offset_t _off;
@@ -145,7 +157,7 @@ typedef struct __LLL_OUTPUT_DATA_STREAM{
 	void* ctx;
 	void (*wcf)(struct __LLL_OUTPUT_DATA_STREAM* os,char c);
 	void (*wsf)(struct __LLL_OUTPUT_DATA_STREAM* os,const char* s);
-	void (*wf)(struct __LLL_OUTPUT_DATA_STREAM* os,const uint8_t* bf,uint32_t sz);
+	void (*wf)(struct __LLL_OUTPUT_DATA_STREAM* os,const lll_buffer_t bf,lll_buffer_size_t sz);
 } lll_output_data_stream_t;
 
 
@@ -247,7 +259,7 @@ typedef struct __LLL_STRING_TABLE{
 
 
 typedef struct __LLL_STACK_CONTEXT{
-	uint8_t* ptr;
+	lll_buffer_t ptr;
 	lll_stack_offset_t off;
 	lll_stack_offset_t sz;
 } lll_stack_data_t;

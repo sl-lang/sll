@@ -132,7 +132,7 @@ h_dt=INCLUDE_REGEX.sub(lambda m:(b"" if m.group(1)[1:-1] in il else b"#include <
 l=[]
 st=[True]
 tm=datetime.datetime.now()
-dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__DATE__":bytes(tm.strftime(f"\"{MONTHS[tm.month-1]} %d %Y\""),"utf-8"),b"UINT32_MAX":b"4294967295u"}
+dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__DATE__":bytes(tm.strftime(f"\"{MONTHS[tm.month-1]} %d %Y\""),"utf-8"),b"UINT16_MAX":b"65535",b"UINT32_MAX":b"4294967295u"}
 dfm={}
 d_v=[]
 d_f=[]
@@ -165,37 +165,36 @@ for e in h_dt:
 				il+=b"\n#include "+b" ".join(f[1:])
 			continue
 		elif (f[0]==b"define"and False not in st):
-			if (f[1][:2]==b"__"):
-				dm[f[1]]=b" ".join(f[2:])
-			else:
-				if (b"(" in f[1]):
-					al=f[1].split(b"(")[1].split(b")")[0].split(b",")
-					if (al[-1]==b""):
-						al.pop(len(al)-1)
-					al=tuple(al)
-					k=b" ".join(f[2:])
+			if (b"(" in f[1]):
+				al=f[1].split(b"(")[1].split(b")")[0].split(b",")
+				if (al[-1]==b""):
+					al.pop(len(al)-1)
+				al=tuple(al)
+				k=b" ".join(f[2:])
+				if (f[1][:2]!=b"__"):
 					d_f.append((f[1],k))
-					sl=[b""]
-					sli=0
-					i=0
-					while (i<len(k)):
-						if (i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS):
-							nxt=False
-							for j,se in enumerate(al):
-								if (k.startswith(se,i) and k[i+len(se):i+len(se)+1] not in IDENTIFIER_CHARACTERS):
-									sl.append(j)
-									sl.append(b"")
-									sli+=2
-									i+=len(se)
-									nxt=True
-									break
-							if (nxt):
-								continue
-						sl[sli]+=k[i:i+1]
-						i+=1
-					dfm[f[1].split(b"(")[0]]=(al,tuple(sl))
-				else:
-					dm[f[1]]=b" ".join(f[2:])
+				sl=[b""]
+				sli=0
+				i=0
+				while (i<len(k)):
+					if (i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS):
+						nxt=False
+						for j,se in enumerate(al):
+							if (k.startswith(se,i) and k[i+len(se):i+len(se)+1] not in IDENTIFIER_CHARACTERS):
+								sl.append(j)
+								sl.append(b"")
+								sli+=2
+								i+=len(se)
+								nxt=True
+								break
+						if (nxt):
+							continue
+					sl[sli]+=k[i:i+1]
+					i+=1
+				dfm[f[1].split(b"(")[0]]=(al,tuple(sl))
+			else:
+				dm[f[1]]=b" ".join(f[2:])
+				if (f[1][:2]!=b"__"):
 					d_v.append((f[1],b" ".join(f[2:])))
 			continue
 	if (False not in st):
@@ -316,42 +315,40 @@ for k,v in sorted(fl,key=lambda e:e[0]):
 with open("build/lll_lib.h","wb") as wf:
 	wf.write(b"#ifndef __LLL_LIB_H__\n#define __LLL_LIB_H__ 1"+il+d_s+b"\n"+o.strip()+b"\n#endif\n")
 if (os.name=="nt"):
+	o_fl=[]
+	for r,_,fl in os.walk("src/lll_lib"):
+		r=r.replace("\\","/").rstrip("/")+"/"
+		for f in fl:
+			if (f[-2:]==".c" and (r!="src/lll_lib/platform/" or f=="windows.c")):
+				o_fl.append("../"+r+f)
 	cd=os.getcwd()
 	os.chdir("build")
 	if ("--release" in sys.argv):
-		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__LLL_LIB_COMPILATION__","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/include","../src/lll_lib/*.c","../src/lll_lib/api/*.c","../src/lll_lib/platform/windows.c"]).returncode!=0 or subprocess.run(["link","*.obj","/OUT:lll_lib.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO"]).returncode!=0 or subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll.exe","/DYNAMICBASE","kernel32.lib","user32.lib","gdi32.lib","winspool.lib","comdlg32.lib","advapi32.lib","shell32.lib","ole32.lib","oleaut32.lib","uuid.lib","odbc32.lib","odbccp32.lib","lll_lib.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]).returncode!=0):
+		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__LLL_LIB_COMPILATION__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/include"]+o_fl).returncode!=0 or subprocess.run(["link","*.obj","/OUT:lll_lib.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO"]).returncode!=0 or subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll.exe","/DYNAMICBASE","kernel32.lib","user32.lib","gdi32.lib","winspool.lib","comdlg32.lib","advapi32.lib","shell32.lib","ole32.lib","oleaut32.lib","uuid.lib","odbc32.lib","odbccp32.lib","lll_lib.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	else:
-		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__LLL_LIB_COMPILATION__","/D","DEBUG_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I","../src/include","../src/lll_lib/*.c","../src/lll_lib/api/*.c","../src/lll_lib/platform/windows.c"]).returncode!=0 or subprocess.run(["link","*.obj","/OUT:lll_lib.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll.exe","/DYNAMICBASE","kernel32.lib","user32.lib","gdi32.lib","winspool.lib","comdlg32.lib","advapi32.lib","shell32.lib","ole32.lib","oleaut32.lib","uuid.lib","odbc32.lib","odbccp32.lib","lll_lib.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0):
+		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__LLL_LIB_COMPILATION__","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I","../src/include"]+o_fl).returncode!=0 or subprocess.run(["link","*.obj","/OUT:lll_lib.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0 or subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll.exe","/DYNAMICBASE","kernel32.lib","user32.lib","gdi32.lib","winspool.lib","comdlg32.lib","advapi32.lib","shell32.lib","ole32.lib","oleaut32.lib","uuid.lib","odbc32.lib","odbccp32.lib","lll_lib.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	os.chdir(cd)
 else:
-	if ("--release" in sys.argv):
-		o_fl=[]
-		for r,_,fl in os.walk("src/lll_lib"):
-			r=r.rstrip("/")+"/"
-			for f in fl:
-				if (f[-2:]==".c" and (r!="src/lll_lib/platform/" or f=="linux.c")):
-					o_fl.append(r+f)
-		if (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O3","-Werror","-o","build/lll_lib.so","-Isrc/include"]+o_fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O3","src/main.c","build/lll_lib.so","-o","build/lll","-Ibuild"]).returncode!=0):
-			sys.exit(1)
-	else:
-		o_fl=[]
-		for r,_,fl in os.walk("src/lll_lib"):
-			r=r.rstrip("/")+"/"
-			for f in fl:
-				if (f[-2:]==".c" and (r!="src/lll_lib/platform/" or f=="linux.c")):
-					o_fl.append(r+f)
-		if (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-D","DEBUG_BUILD","-Wall","-O0","-Werror","-o","build/lll_lib.so","-Isrc/include"]+o_fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","src/main.c","build/lll_lib.so","-o","build/lll","-Ibuild"]).returncode!=0):
-			sys.exit(1)
+	o_fl=[]
+	for r,_,fl in os.walk("src/lll_lib"):
+		r=r.rstrip("/")+"/"
+		for f in fl:
+			if (f[-2:]==".c" and (r!="src/lll_lib/platform/" or f=="linux.c")):
+				o_fl.append(r+f)
+	if ("--release" in sys.argv and (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O3","-Werror","-o","build/lll_lib.so","-Isrc/include"]+o_fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O3","src/main.c","build/lll_lib.so","-o","build/lll","-Ibuild"]).returncode!=0)):
+		sys.exit(1)
+	elif (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-D","DEBUG_BUILD","-Wall","-O0","-Werror","-o","build/lll_lib.so","-Isrc/include"]+o_fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","src/main.c","build/lll_lib.so","-o","build/lll","-Ibuild"]).returncode!=0):
+		sys.exit(1)
 fl=list(os.listdir("build/lib"))
-if (subprocess.run(["build/lll","-c","-O3","-L","-e"]+["build/lib/"+e for e in fl]).returncode!=0):
+if (subprocess.run(["build/lll","-c",("-O3" if "--release" in sys.argv else "-O0"),"-L","-e"]+["build/lib/"+e for e in fl]).returncode!=0):
 	sys.exit(1)
 for e in fl:
 	os.remove("build/lib/"+e)
 if ("--run" in sys.argv):
 	subprocess.run(["build/lll","-h"])
-	if (subprocess.run(["build/lll","example/test.lll","-v","-O0","-c","-o","build/test","-p","-e","-I","example","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O3","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test2.llla","-v","-P","-L"]).returncode!=0):
+	if (subprocess.run(["build/lll","example/test.lll","-v","-O3","-c","-o","build/test","-e","-I","example","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O0","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test2.llla","-v","-P","-L"]).returncode!=0):
 		sys.exit(1)

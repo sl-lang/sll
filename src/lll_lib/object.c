@@ -1,5 +1,5 @@
 #include <lll/_lll_internal.h>
-#include <lll/api.h>
+#include <lll/core.h>
 #include <lll/common.h>
 #include <lll/types.h>
 

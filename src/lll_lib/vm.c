@@ -2,38 +2,11 @@
 #include <lll/api.h>
 #include <lll/common.h>
 #include <lll/core.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-
-
-void _output_int(lll_output_data_stream_t* os,int64_t v){
-	char bf[20];
-	uint8_t i=0;
-	if (v<0){
-		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'-');
-		v=-v;
-	}
-	do{
-		bf[i]=v%10;
-		i++;
-		v/=10;
-	} while(v);
-	while (i){
-		i--;
-		LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,bf[i]+48);
-	}
-}
-
-
-
-void _output_float(lll_output_data_stream_t* os,double v){
-	char bf[128];
-	int sz=snprintf(bf,128,"%.16lg",v);
-	LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)bf,sz*sizeof(char));
-}
 
 
 
@@ -405,30 +378,48 @@ _jump:
 _print_from_stack:
 				switch (LLL_RUNTIME_OBJECT_GET_TYPE(s+si)){
 					case LLL_RUNTIME_OBJECT_TYPE_INT:
-						_output_int(out,(s+si)->dt.i);
-						break;
+						{
+							int64_t v=(s+si)->dt.i;
+							char bf[20];
+							uint8_t i=0;
+							if (v<0){
+								LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,'-');
+								v=-v;
+							}
+							do{
+								bf[i]=v%10;
+								i++;
+								v/=10;
+							} while(v);
+							while (i){
+								i--;
+								LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,bf[i]+48);
+							}
+							break;
+						}
 					case LLL_RUNTIME_OBJECT_TYPE_FLOAT:
-						_output_float(out,(s+si)->dt.f);
-						break;
+						{
+							char bf[128];
+							int sz=snprintf(bf,128,"%.16lg",(s+si)->dt.f);
+							LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,(uint8_t*)bf,sz*sizeof(char));
+							break;
+						}
 					case LLL_RUNTIME_OBJECT_TYPE_CHAR:
-						LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,(uint8_t)((s+si)->dt.c));
+						lll_string_encode_char_to_stream((s+si)->dt.c,out);
 						break;
 					case LLL_RUNTIME_OBJECT_TYPE_STRING:
-						LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,(uint8_t*)((s+si)->dt.s->v),(s+si)->dt.s->l*sizeof(lll_char_t));
+						lll_string_to_stream((s+si)->dt.s,out);
 						break;
 					default:
 						UNREACHABLE();
 				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
-				LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,(uint8_t)(ai->dt.c));
+				lll_string_encode_char_to_stream(ai->dt.c,out);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
-				{
-					lll_string_t* str=*(a_dt->st.dt+ai->dt.s);
-					LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,(uint8_t*)(str->v),str->l*sizeof(lll_char_t));
-					break;
-				}
+				lll_string_to_stream(*(a_dt->st.dt+ai->dt.s),out);
+				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 				*(s+si)=*(v+ai->dt.v);
 				goto _print_from_stack;

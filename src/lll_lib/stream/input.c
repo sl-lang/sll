@@ -1,12 +1,12 @@
 #include <lll/common.h>
-#include <lll/core.h>
+#include <lll/stream.h>
 #include <lll/types.h>
 #include <stdint.h>
 #include <stdio.h>
 
 
 
-int _input_data_stream_file_read(lll_input_data_stream_t* is){
+lll_small_char_t _input_data_stream_file_read(lll_input_data_stream_t* is){
 	int o=fgetc((FILE*)(is->ctx));
 	if (o==EOF){
 		return LLL_END_OF_DATA;
@@ -16,13 +16,13 @@ int _input_data_stream_file_read(lll_input_data_stream_t* is){
 		is->_lc++;
 		is->_loff=is->_off;
 	}
-	return o;
+	return (lll_small_char_t)o;
 }
 
 
 
-uint8_t _input_data_stream_file_read_buffer(lll_input_data_stream_t* is,uint8_t* bf,uint32_t sz){
-	return (fread(bf,sizeof(uint8_t),sz,(FILE*)(is->ctx))==sz);
+lll_small_char_t _input_data_stream_file_read_buffer(lll_input_data_stream_t* is,lll_buffer_t bf,lll_buffer_size_t sz){
+	return (fread(bf,sizeof(uint8_t),sz,(FILE*)(is->ctx))==sz?0:LLL_END_OF_DATA);
 }
 
 
@@ -47,7 +47,7 @@ void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,lll_file_o
 
 
 
-__LLL_FUNC void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o){
+__LLL_FUNC void lll_stream_create_input_from_file(FILE* f,lll_input_data_stream_t* o){
 	fseek(f,0,SEEK_SET);
 	clearerr(f);
 	o->ctx=f;

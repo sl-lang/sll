@@ -2,8 +2,6 @@
 #define __LLL_CORE_H__ 1
 #include <lll/common.h>
 #include <lll/types.h>
-#include <stdint.h>
-#include <stdio.h>
 
 
 
@@ -11,11 +9,7 @@ __LLL_FUNC void lll_create_internal_function_table(lll_internal_function_table_t
 
 
 
-__LLL_FUNC void lll_create_input_data_stream(FILE* f,lll_input_data_stream_t* o);
-
-
-
-__LLL_FUNC void lll_create_output_data_stream(FILE* f,lll_output_data_stream_t* o);
+__LLL_FUNC __LLL_RETURN_COMPARE lll_compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b);
 
 
 
@@ -75,18 +69,6 @@ __LLL_FUNC __LLL_RETURN lll_insert_debug_object(lll_compilation_data_t* c_dt,lll
 
 
 
-__LLL_FUNC __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assembly_data_t* a_dt,lll_error_t* e);
-
-
-
-__LLL_FUNC __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll_compilation_data_t* c_dt,lll_error_t* e);
-
-
-
-__LLL_FUNC __LLL_RETURN lll_load_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is,lll_object_t** o,lll_error_t* e);
-
-
-
 __LLL_FUNC __LLL_RETURN_FUNCTION_INDEX lll_lookup_internal_function(const lll_internal_function_table_t* i_ft,const char* nm);
 
 
@@ -107,7 +89,7 @@ __LLL_FUNC __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_intern
 
 
 
-__LLL_FUNC void lll_print_assembly(const lll_assembly_data_t* a_dt,FILE* f);
+__LLL_FUNC void lll_print_assembly(const lll_assembly_data_t* a_dt,lll_output_data_stream_t* os);
 
 
 
@@ -115,7 +97,7 @@ __LLL_FUNC void lll_print_error(lll_input_data_stream_t* is,const lll_error_t* e
 
 
 
-__LLL_FUNC void lll_print_object(const lll_compilation_data_t* c_dt,const lll_object_t* o,FILE* f);
+__LLL_FUNC void lll_print_object(const lll_compilation_data_t* c_dt,const lll_object_t* o,lll_output_data_stream_t* os);
 
 
 
@@ -135,27 +117,19 @@ __LLL_FUNC void lll_remove_object_padding(lll_compilation_data_t* c_dt,lll_objec
 
 
 
-__LLL_FUNC void lll_set_assembly_data_stack(lll_assembly_data_t* a_dt,uint8_t* bf,lll_stack_offset_t sz);
+__LLL_FUNC __LLL_RETURN_COMPARE lll_runtime_object_nonzero(const lll_runtime_object_t* o);
 
 
 
-__LLL_FUNC void lll_set_compilation_data_stack(lll_compilation_data_t* c_dt,uint8_t* bf,lll_stack_offset_t sz);
+__LLL_FUNC void lll_set_assembly_data_stack(lll_assembly_data_t* a_dt,lll_buffer_t bf,lll_stack_offset_t sz);
 
 
 
-__LLL_FUNC void lll_setup_stack(lll_stack_data_t* o,uint8_t* bf,lll_stack_offset_t sz);
+__LLL_FUNC void lll_set_compilation_data_stack(lll_compilation_data_t* c_dt,lll_buffer_t bf,lll_stack_offset_t sz);
 
 
 
-__LLL_FUNC void lll_write_assembly(lll_output_data_stream_t* os,const lll_assembly_data_t* o);
-
-
-
-__LLL_FUNC void lll_write_compiled_object(lll_output_data_stream_t* os,const lll_compilation_data_t* c_dt);
-
-
-
-__LLL_FUNC void lll_write_object(lll_output_data_stream_t* os,const lll_object_t* o);
+__LLL_FUNC void lll_setup_stack(lll_stack_data_t* o,lll_buffer_t bf,lll_stack_offset_t sz);
 
 
 

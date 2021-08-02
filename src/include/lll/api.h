@@ -5,15 +5,33 @@
 
 
 
-__LLL_FUNC void lll_api_get_time(lll_runtime_object_t* o,lll_arg_count_t ac,lll_runtime_object_t* a);
+#define __API_FUNC(nm) __LLL_FUNC void nm(lll_runtime_object_t* o,lll_arg_count_t ac,lll_runtime_object_t* a)
 
 
 
-__LLL_FUNC __LLL_RETURN_COMPARE lll_compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b);
+#define LLL_API_FILE_APPEND 0
+#define LLL_API_FILE_READ 1
+#define LLL_API_FILE_WRITE 2
+
+#define LLL_API_INVALID_FILE_HANDLE 65535
+#define LLL_API_MAX_FILE_PATH_LENGTH 4096
+#define LLL_API_MAX_OPEN_FILES 8192
 
 
 
-__LLL_FUNC __LLL_RETURN_COMPARE lll_runtime_object_nonzero(const lll_runtime_object_t* o);
+__API_FUNC(lll_api_get_time);
+
+
+
+__API_FUNC(lll_api_open_file);
+
+
+
+__API_FUNC(lll_api_close_file);
+
+
+
+__API_FUNC(lll_api_write_file);
 
 
 

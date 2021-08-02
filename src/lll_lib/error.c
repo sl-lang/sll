@@ -1,30 +1,10 @@
-#ifdef _MSC_VER
-#define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
-#undef IGNORE
-#endif
 #include <lll/_lll_internal.h>
 #include <lll/common.h>
+#include <lll/platform.h>
 #include <lll/types.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-
-
-#ifdef _MSC_VER
-#define ENABLE_COLOR() \
-	DWORD __tv; \
-	do{ \
-		SetConsoleOutputCP(CP_UTF8); \
-		GetConsoleMode(GetStdHandle(-11),&__tv); \
-		SetConsoleMode(GetStdHandle(-11),7); \
-	} while (0)
-#define DISABLE_COLOR() SetConsoleMode(GetStdHandle(-11),__tv)
-#else
-#define ENABLE_COLOR()
-#define DISABLE_COLOR()
-#endif
 
 
 
@@ -61,7 +41,7 @@ __LLL_FUNC void lll_print_error(lll_input_data_stream_t* is,const lll_error_t* e
 				return;
 		}
 	}
-	ENABLE_COLOR();
+	lll_platform_setup_console();
 	lll_stack_offset_t os=e->dt.r.off;
 	lll_stack_offset_t oe=os+e->dt.r.sz;
 	LLL_INPUT_DATA_STREAM_RESTART_LINE(is,os);
@@ -116,7 +96,6 @@ __LLL_FUNC void lll_print_error(lll_input_data_stream_t* is,const lll_error_t* e
 		putchar('~');
 	}
 	fputs("\x1b[0m\n",stdout);
-	DISABLE_COLOR();
 	switch (e->t){
 		default:
 			printf("Unknown Error: %c%c\n",(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
@@ -204,6 +183,9 @@ __LLL_FUNC void lll_print_error(lll_input_data_stream_t* is,const lll_error_t* e
 			return;
 		case LLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
 			printf("Internal Function Name Too Long\n");
+			return;
+		case LLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII:
+			printf("Internal Function Names Must be ASCII\n");
 			return;
 	}
 }

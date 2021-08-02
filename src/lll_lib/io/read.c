@@ -1,6 +1,6 @@
 #include <lll/_lll_internal.h>
 #include <lll/common.h>
-#include <lll/core.h>
+#include <lll/io.h>
 #include <lll/types.h>
 #include <lll/version.h>
 #include <stdint.h>
@@ -27,7 +27,7 @@
 	} while (0)
 #define READ_FIELD(f,is) \
 	do{ \
-		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM((is),(uint8_t*)(&(f)),sizeof((f)))){ \
+		if (LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM((is),(lll_buffer_t)(&(f)),sizeof((f)))==LLL_END_OF_DATA){ \
 			return 0; \
 		} \
 	} while(0)
@@ -152,7 +152,7 @@ __LLL_FUNC __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assemb
 	}
 	uint32_t n;
 	lll_version_t v;
-	if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&n),sizeof(uint32_t))||n!=ASSEMBLY_FILE_MAGIC_NUMBER||!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&v),sizeof(lll_version_t))||v!=LLL_VERSION){
+	if (LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&n),sizeof(uint32_t))==LLL_END_OF_DATA||n!=ASSEMBLY_FILE_MAGIC_NUMBER||LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&v),sizeof(lll_version_t))==LLL_END_OF_DATA||v!=LLL_VERSION){
 		e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 		return LLL_RETURN_ERROR;
 	}
@@ -170,15 +170,9 @@ __LLL_FUNC __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assemb
 		lll_string_length_t l;
 		CHECK_ERROR(is,l,lll_string_length_t,e);
 		lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
-		s->l=l;
-		s->c=0;
-		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)s->v,s->l*sizeof(lll_char_t))){
+		if (lll_read_string(is,l,s)==LLL_RETURN_ERROR){
 			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 			return LLL_RETURN_ERROR;
-		}
-		s->v[s->l]=0;
-		for (lll_string_length_t j=0;j<s->l;j++){
-			s->c^=(lll_string_checksum_t)(s->v[j]);
 		}
 		*(a_dt->st.dt+i)=s;
 	}
@@ -204,7 +198,7 @@ __LLL_FUNC __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assemb
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&(ai->dt.f)),sizeof(lll_float_t))){
+				if (LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&(ai->dt.f)),sizeof(lll_float_t))==LLL_END_OF_DATA){
 					e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 					return LLL_RETURN_ERROR;
 				}
@@ -298,7 +292,7 @@ __LLL_FUNC __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll
 	}
 	uint32_t n;
 	lll_version_t v;
-	if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&n),sizeof(uint32_t))||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&v),sizeof(lll_version_t))||v!=LLL_VERSION){
+	if (LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&n),sizeof(uint32_t))==LLL_END_OF_DATA||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&v),sizeof(lll_version_t))==LLL_END_OF_DATA||v!=LLL_VERSION){
 		e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 		return LLL_RETURN_ERROR;
 	}
@@ -344,15 +338,9 @@ __LLL_FUNC __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll
 		lll_string_length_t l;
 		CHECK_ERROR(is,l,lll_string_length_t,e);
 		lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
-		s->l=l;
-		s->c=0;
-		if (!LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)s->v,s->l*sizeof(lll_char_t))){
+		if (lll_read_string(is,l,s)==LLL_RETURN_ERROR){
 			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 			return LLL_RETURN_ERROR;
-		}
-		s->v[s->l]=0;
-		for (lll_string_length_t j=0;j<s->l;j++){
-			s->c^=(lll_string_checksum_t)(s->v[j]);
 		}
 		*(c_dt->st.dt+i)=s;
 	}
@@ -376,6 +364,36 @@ __LLL_FUNC __LLL_RETURN lll_load_object(lll_compilation_data_t* c_dt,lll_input_d
 	if (!_read_object(c_dt,is)){
 		e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 		return LLL_RETURN_ERROR;
+	}
+	return LLL_RETURN_NO_ERROR;
+}
+
+
+
+__LLL_FUNC __LLL_RETURN lll_read_string(lll_input_data_stream_t* is,lll_string_length_t l,lll_string_t* o){
+	o->l=l;
+	o->c=0;
+	for (lll_string_length_t i=0;i<l;i++){
+		lll_char_t c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+		if (c==LLL_END_OF_DATA){
+			return LLL_RETURN_ERROR;
+		}
+		if (c&0x80){
+			lll_small_char_t nc=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+			if (c==LLL_END_OF_DATA){
+				return LLL_RETURN_ERROR;
+			}
+			c=(c&0x7f)|(nc<<7);
+			if (nc&0x80){
+				nc=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+				if (c==LLL_END_OF_DATA){
+					return LLL_RETURN_ERROR;
+				}
+				c=(c&0x7fff)|(nc<<14);
+			}
+		}
+		o->v[i]=c;
+		o->c^=c;
 	}
 	return LLL_RETURN_NO_ERROR;
 }

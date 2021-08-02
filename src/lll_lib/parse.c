@@ -2,6 +2,7 @@
 #include <lll/common.h>
 #include <lll/core.h>
 #include <lll/platform.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <math.h>
 #include <stdint.h>
@@ -75,7 +76,7 @@ lll_object_offset_t _patch_module(lll_object_t* mo,const import_module_data_t* i
 
 
 uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_error_t* e,lll_char_t* o){
-	int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+	lll_small_char_t c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==LLL_END_OF_DATA){
 		e->t=LLL_ERROR_UNMATCHED_QUOTES;
 		e->dt.r.off=st;
@@ -129,7 +130,7 @@ uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_e
 				e->dt.r.sz=1;
 				return 1;
 			}
-			uint8_t v=(c>64?c-55:c-48)<<4;
+			lll_char_t v=(c>64?c-55:c-48)<<4;
 			c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 			if (c==LLL_END_OF_DATA){
 				e->t=LLL_ERROR_UNMATCHED_QUOTES;
@@ -182,7 +183,7 @@ uint8_t _read_single_char(lll_input_data_stream_t* is,lll_file_offset_t st,lll_e
 
 
 
-uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const extra_compilation_data_t* e_c_dt,lll_error_t* e){
+uint8_t _read_object_internal(lll_compilation_data_t* c_dt,lll_char_t c,const extra_compilation_data_t* e_c_dt,lll_error_t* e){
 	uint8_t fl=e_c_dt->fl;
 	const scope_data_t* l_sc=&(e_c_dt->sc);
 	scope_data_t n_l_sc={
@@ -304,14 +305,23 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,int c,const extra_com
 					else{
 						(o+off)->t=LLL_OBJECT_TYPE_NOP;
 						lll_string_t* s=*(c_dt->st.dt+(o+off)->dt.s);
-						if (s->l>255){
+						if (!s->l||s->l>255){
 							e->t=LLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG;
 							e->dt.r.off=st_off;
 							e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off;
 							return LLL_RETURN_ERROR;
 						}
+						char bf[256];
+						uint8_t sz=lll_string_to_ascii(s,bf);
+						if (!sz){
+							e->t=LLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII;
+							e->dt.r.off=st_off;
+							e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off;
+							return LLL_RETURN_ERROR;
+						}
+						bf[sz]=0;
 						o->dt.fn.ac=ac-1;
-						o->dt.fn.id=lll_lookup_internal_function(e_c_dt->i_ft,(char*)s->v);
+						o->dt.fn.id=lll_lookup_internal_function(e_c_dt->i_ft,bf);
 						if (o->dt.fn.id==LLL_MAX_FUNCTION_INDEX){
 							e->t=LLL_ERROR_UNKNOWN_INTERNAL_FUNCTION;
 							uint8_t i=0;
@@ -968,7 +978,7 @@ _read_identifier:
 						for (lll_identifier_list_length_t i=0;i<k->l;i++){
 							lll_identifier_t* si=k->dt+i;
 							lll_string_t* si_s=*(c_dt->st.dt+si->i);
-							if (si_s->c!=cs){
+							if (si_s->c!=cs||si->sc==LLL_MAX_SCOPE){
 								continue;
 							}
 							for (lll_string_length_t j=0;j<sz;j++){
@@ -1011,7 +1021,7 @@ _next_short_identifier:;
 						for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 							lll_identifier_t* k=c_dt->idt.il+i;
 							lll_string_t* s=*(c_dt->st.dt+k->i);
-							if (s->c!=cs||s->l!=sz){
+							if (s->c!=cs||s->l!=sz||k->sc==LLL_MAX_SCOPE){
 								continue;
 							}
 							for (lll_string_length_t j=0;j<sz;j++){
@@ -1344,7 +1354,7 @@ __LLL_FUNC __LLL_RETURN lll_parse_object(lll_compilation_data_t* c_dt,lll_intern
 		return LLL_RETURN_ERROR;
 	}
 	lll_object_t* a=(lll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
-	int c=LLL_READ_FROM_INPUT_DATA_STREAM(c_dt->is);
+	lll_small_char_t c=LLL_READ_FROM_INPUT_DATA_STREAM(c_dt->is);
 	if (c==LLL_END_OF_DATA){
 		c_dt->_s.off+=sizeof(lll_object_t);
 		a->t=LLL_OBJECT_TYPE_INT;
@@ -1400,7 +1410,7 @@ __LLL_FUNC __LLL_RETURN lll_parse_all_objects(lll_compilation_data_t* c_dt,lll_i
 	e_c_dt.sc.m[0]=1;
 	lll_statement_count_t sc=0;
 	while (1){
-		int c=LLL_READ_FROM_INPUT_DATA_STREAM(c_dt->is);
+		lll_small_char_t c=LLL_READ_FROM_INPUT_DATA_STREAM(c_dt->is);
 		if (c==LLL_END_OF_DATA){
 			c_dt->h->dt.sc=sc;
 			free(e_c_dt.sc.m);

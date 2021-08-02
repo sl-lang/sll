@@ -28,11 +28,11 @@
 
 
 
-uint32_t _generate_on_stack(const lll_object_t* o,assembly_generator_data_t* g_dt);
+lll_object_offset_t _generate_on_stack(const lll_object_t* o,assembly_generator_data_t* g_dt);
 
 
 
-uint32_t _generate(const lll_object_t* o,assembly_generator_data_t* g_dt);
+lll_object_offset_t _generate(const lll_object_t* o,assembly_generator_data_t* g_dt);
 
 
 
@@ -227,13 +227,13 @@ lll_object_offset_t _generate_jump(const lll_object_t* o,assembly_generator_data
 		case LLL_OBJECT_TYPE_LESS_EQUAL:
 			return _generate_cond_jump(o,g_dt,lbl,(inv?LLL_ASSEMBLY_INSTRUCTION_TYPE_JA:LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE))+eoff;
 		case LLL_OBJECT_TYPE_EQUAL:
-			return _generate_cond_jump(o,g_dt,lbl,(inv?LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:LLL_ASSEMBLY_INSTRUCTION_TYPE_JA))+eoff;
-		case LLL_OBJECT_TYPE_NOT_EQUAL:
-			return _generate_cond_jump(o,g_dt,lbl,(inv?LLL_ASSEMBLY_INSTRUCTION_TYPE_JB:LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE))+eoff;
-		case LLL_OBJECT_TYPE_MORE:
 			return _generate_cond_jump(o,g_dt,lbl,(inv?LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:LLL_ASSEMBLY_INSTRUCTION_TYPE_JE))+eoff;
-		case LLL_OBJECT_TYPE_MORE_EQUAL:
+		case LLL_OBJECT_TYPE_NOT_EQUAL:
 			return _generate_cond_jump(o,g_dt,lbl,(inv?LLL_ASSEMBLY_INSTRUCTION_TYPE_JE:LLL_ASSEMBLY_INSTRUCTION_TYPE_JNE))+eoff;
+		case LLL_OBJECT_TYPE_MORE:
+			return _generate_cond_jump(o,g_dt,lbl,(inv?LLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:LLL_ASSEMBLY_INSTRUCTION_TYPE_JA))+eoff;
+		case LLL_OBJECT_TYPE_MORE_EQUAL:
+			return _generate_cond_jump(o,g_dt,lbl,(inv?LLL_ASSEMBLY_INSTRUCTION_TYPE_JB:LLL_ASSEMBLY_INSTRUCTION_TYPE_JAE))+eoff;
 	}
 	lll_object_offset_t off=_generate_on_stack(o,g_dt);
 	GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?LLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:LLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
@@ -426,11 +426,16 @@ lll_object_offset_t _generate(const lll_object_t* o,assembly_generator_data_t* g
 			{
 				lll_arg_count_t l=o->dt.ac;
 				ASSERT(l>=2);
-				ASSERT((o+1)->t==LLL_OBJECT_TYPE_IDENTIFIER);
-				lll_object_offset_t off=_generate_on_stack(o+2,g_dt)+2;
+				lll_object_offset_t off=1;
+				while ((o+off)->t==LLL_OBJECT_TYPE_NOP||(o+off)->t==LLL_OBJECT_TYPE_DEBUG_DATA){
+					off++;
+				}
+				ASSERT((o+off)->t==LLL_OBJECT_TYPE_IDENTIFIER);
+				lll_variable_index_t vi=GET_VARIABLE_INDEX(o+off,g_dt);
+				off+=_generate_on_stack(o+off+1,g_dt)+1;
 				lll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
 				ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP;
-				ai->dt.v=GET_VARIABLE_INDEX(o+1,g_dt);
+				ai->dt.v=vi;
 				l-=2;
 				while (l){
 					l--;

@@ -358,6 +358,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
 				DECREASE_PARENT(p);
+				DECREASE_VARIABLE(o,o_dt);
 				o->t=LLL_OBJECT_TYPE_NOP;
 			}
 			else{

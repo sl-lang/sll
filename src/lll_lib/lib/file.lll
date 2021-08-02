@@ -1,0 +1,7 @@
+(= INVALID_FILE_HANDLE 65535)
+
+(= open (... "file_open"))
+(= close (... "file_close"))
+(= write (... "file_write"))
+
+(## INVALID_FILE_HANDLE open close write)

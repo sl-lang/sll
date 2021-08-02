@@ -1,6 +1,6 @@
 #include <lll/_lll_internal.h>
 #include <lll/common.h>
-#include <lll/core.h>
+#include <lll/io.h>
 #include <lll/types.h>
 #include <lll/version.h>
 #include <stdint.h>
@@ -108,7 +108,7 @@ __LLL_FUNC void lll_write_assembly(lll_output_data_stream_t* os,const lll_assemb
 	for (lll_string_index_t i=0;i<a_dt->st.l;i++){
 		const lll_string_t* s=*(a_dt->st.dt+i);
 		_write_integer(os,s->l);
-		LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)s->v,s->l*sizeof(lll_char_t));
+		lll_write_string(s,os);
 	}
 	const lll_assembly_instruction_t* ai=a_dt->h;
 	for (lll_instruction_index_t i=0;i<a_dt->ic;i++){
@@ -231,8 +231,27 @@ __LLL_FUNC void lll_write_compiled_object(lll_output_data_stream_t* os,const lll
 	for (lll_string_index_t i=0;i<c_dt->st.l;i++){
 		const lll_string_t* s=*(c_dt->st.dt+i);
 		_write_integer(os,s->l);
-		LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)s->v,s->l*sizeof(lll_char_t));
+		lll_write_string(s,os);
 	}
 	_write_integer(os,c_dt->_n_sc_id);
 	_write_object(os,c_dt->h);
+}
+
+
+
+__LLL_FUNC void lll_write_string(const lll_string_t* s,lll_output_data_stream_t* os){
+	for (lll_string_length_t i=0;i<s->l;i++){
+		lll_char_t c=s->v[i];
+		if (c>16383){
+			uint8_t bf[3]={(c&0x7f)|0x80,((c>>7)&0x7f)|0x80,c>>14};
+			LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,bf,3*sizeof(uint8_t));
+		}
+		else if (c>127){
+			uint8_t bf[2]={(c&0x7f)|0x80,c>>7};
+			LLL_WRITE_TO_OUTPUT_DATA_STREAM(os,bf,2*sizeof(uint8_t));
+		}
+		else{
+			LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,c);
+		}
+	}
 }

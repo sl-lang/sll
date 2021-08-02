@@ -1,7 +1,11 @@
 (= time)
+(= INVALID_FILE_HANDLE)
+(= open)
+(= close)
+(= write)
 (? 1 {
 	(-- "time.lll")
-	(= time time_current)
+	(-- "file.lll")
 })
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -35,9 +39,15 @@
 (? 1 (-- "import.lll"))
 (:> "Call: " (<- func 10 2) "\n")
 (:> "Current Time (Internal Call): " (<- time) "\n")
-(:> "Program End\n")
 (? true nil 2 (:> "Dead Code") (@ 128 "False Exit"))
-(:> "Float: " 10.5333333333e-12 "\n")
+(= f (<- open "build/hello.txt" "wb"))
+(? (== f INVALID_FILE_HANDLE) {
+	(:> "Unable to open file!\n")
+} {
+	(<- write f "Hello!\n")
+	(<- close f)
+})
+(:> "Program End\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)
