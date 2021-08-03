@@ -11,7 +11,7 @@
 #else
 #include <lll_lib.h>
 #endif
-#include <generated.h>
+#include <help_text.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -149,6 +149,7 @@ lll_return_t load_import(const lll_string_t* nm,lll_compilation_data_t* o,lll_er
 	char f_fp[MAX_PATH_LENGTH];
 	uint8_t st[COMPILER_STACK_SIZE];
 	lll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
+	lll_init_compilation_data(bf,&is,o);
 	lll_set_compilation_data_stack(o,st,COMPILER_STACK_SIZE);
 	if (!load_file(bf,&a_dt,o,&f,&is,f_fp)){
 		if (f){
@@ -411,10 +412,11 @@ _check_next_module:;
 		FILE* nf=fopen(l_fp,"rb");// lgtm [cpp/path-injection]
 		if (nf){
 			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(l_fp,f_fp)){
-				*(f_fp+j)=0;
-				while (j){
-					j--;
-					*(f_fp+j)=*(l_fp+j);
+				i+=5;
+				*(f_fp+i)=0;
+				while (i){
+					i--;
+					*(f_fp+i)=*(l_fp+i);
 				}
 			}
 			if (fl&FLAG_VERBOSE){
@@ -567,10 +569,18 @@ _skip_std_lib_path:
 	lll_assembly_data_t a_dt={0};
 	lll_compilation_data_t c_dt={0};
 	uint32_t im_fpl=UINT32_MAX;
+	lll_set_argument_count(1);
 	for (int i=1;i<argc;i++){
 		const char* e=argv[i];
 		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||cmp_str(e,"--generate-assembly")){
 			fl|=FLAG_GENERATE_ASSEMBLY;
+		}
+		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||cmp_str(e,"--args")){
+			lll_set_argument_count(argc-i);
+			for (lll_sys_arg_count_t j=0;j<(lll_sys_arg_count_t)(argc-i-1);j++){
+				lll_set_argument(j+1,*(argv+i+j+1));
+			}
+			break;
 		}
 		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||cmp_str(e,"--generate-compiled-object")){
 			fl|=FLAG_GENERATE_COMPILED_OBJECT;
@@ -887,6 +897,17 @@ _read_file_argument:
 _skip_write:;
 		}
 		if (!(fl&FLAG_NO_RUN)){
+			const char* c_fp=*(fp+j);
+			char bf[MAX_PATH_LENGTH];
+			if (!EXPAND_FILE_PATH(c_fp,bf)){
+				uint16_t j=0;
+				while (*(c_fp+j)){
+					bf[j]=*(c_fp+j);
+					j++;
+				}
+				bf[j]=0;
+			}
+			lll_set_argument(0,bf);
 			lll_input_data_stream_t ris;
 			lll_output_data_stream_t ros;
 			lll_stream_create_input_from_file(stdin,&ris);

@@ -187,9 +187,17 @@ typedef struct __IDENTIFIER_MAP_DATA{
 
 
 
+typedef struct __IDENTIFIER_REMAP_DATA{
+	lll_identifier_index_t* s[LLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	lll_identifier_index_t* l;
+} identifier_remap_data_t;
+
+
+
 typedef struct __OPTIMIZER_DATA{
 	lll_compilation_data_t* c_dt;
 	identifier_map_data_t it;
+	identifier_remap_data_t im;
 	lll_runtime_object_t* v;
 	lll_variable_index_t vi;
 	uint8_t rm;
@@ -232,6 +240,10 @@ typedef struct __INTERNAL_FUNCTION{
 	const char nm[256];
 	lll_internal_function_pointer_t f;
 } internal_function_t;
+
+
+
+extern lll_string_t _zero_string;
 
 
 

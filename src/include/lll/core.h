@@ -5,11 +5,11 @@
 
 
 
-__LLL_FUNC void lll_create_internal_function_table(lll_internal_function_table_t* o);
-
-
-
 __LLL_FUNC __LLL_RETURN_COMPARE lll_compare_runtime_object(const lll_runtime_object_t* a,const lll_runtime_object_t* b);
+
+
+
+__LLL_FUNC void lll_create_internal_function_table(lll_internal_function_table_t* o);
 
 
 
@@ -121,6 +121,14 @@ __LLL_FUNC __LLL_RETURN_COMPARE lll_runtime_object_nonzero(const lll_runtime_obj
 
 
 
+__LLL_FUNC void lll_set_argument_count(lll_sys_arg_count_t ac);
+
+
+
+__LLL_FUNC void lll_set_argument(lll_sys_arg_count_t i,const char* a);
+
+
+
 __LLL_FUNC void lll_set_assembly_data_stack(lll_assembly_data_t* a_dt,lll_buffer_t bf,lll_stack_offset_t sz);
 
 
@@ -130,6 +138,10 @@ __LLL_FUNC void lll_set_compilation_data_stack(lll_compilation_data_t* c_dt,lll_
 
 
 __LLL_FUNC void lll_setup_stack(lll_stack_data_t* o,lll_buffer_t bf,lll_stack_offset_t sz);
+
+
+
+__LLL_FUNC void lll_string_release(lll_string_t* s);
 
 
 

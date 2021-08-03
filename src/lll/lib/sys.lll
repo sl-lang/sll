@@ -1,0 +1,6 @@
+(= platform (<- (... "sys_get_platform")))
+
+(= argc (<- (... "sys_arg_get_count")))
+(= argv (... "sys_arg_get"))
+
+(## platform argc argv)

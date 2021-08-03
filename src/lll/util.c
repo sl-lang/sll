@@ -5,6 +5,14 @@
 
 
 
+lll_string_t _zero_string={
+	0,
+	0,
+	1
+};
+
+
+
 __LLL_FUNC __LLL_RETURN_STRING_INDEX lll_create_string(lll_string_table_t* st,const lll_char_t* dt,lll_string_length_t l){
 	lll_string_checksum_t c=0;
 	for (lll_string_length_t i=0;i<l;i++){
@@ -80,4 +88,13 @@ __LLL_FUNC __LLL_RETURN_SIZE lll_get_object_size(const lll_object_t* o){
 		off+=lll_get_object_size(o+off);
 	}
 	return off+eoff;
+}
+
+
+
+__LLL_FUNC void lll_string_release(lll_string_t* s){
+	s->rc--;
+	if (!s->rc){
+		free(s);
+	}
 }

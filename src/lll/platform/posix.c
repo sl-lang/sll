@@ -4,6 +4,10 @@
 
 
 
+const char* lll_platform_string="posix";
+
+
+
 __LLL_FUNC lll_time_t lll_platform_get_current_time(void){
 	struct timespec tm;
 	clock_gettime(CLOCK_REALTIME,&tm);

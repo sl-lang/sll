@@ -2,7 +2,6 @@
 #include <lll/api.h>
 #include <lll/common.h>
 #include <lll/core.h>
-#include <lll/string.h>
 #include <lll/types.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -405,21 +404,24 @@ _print_from_stack:
 							break;
 						}
 					case LLL_RUNTIME_OBJECT_TYPE_CHAR:
-						lll_string_encode_char_to_stream((s+si)->dt.c,out);
+						LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,(s+si)->dt.c);
 						break;
 					case LLL_RUNTIME_OBJECT_TYPE_STRING:
-						lll_string_to_stream((s+si)->dt.s,out);
+						LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,(s+si)->dt.s->v,(s+si)->dt.s->l*sizeof(lll_char_t));
 						break;
 					default:
 						UNREACHABLE();
 				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
-				lll_string_encode_char_to_stream(ai->dt.c,out);
+				LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,ai->dt.c);
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
-				lll_string_to_stream(*(a_dt->st.dt+ai->dt.s),out);
-				break;
+				{
+					lll_string_t* s=*(a_dt->st.dt+ai->dt.s);
+					LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,s->v,s->l*sizeof(lll_char_t));
+					break;
+				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 				*(s+si)=*(v+ai->dt.v);
 				goto _print_from_stack;
@@ -439,7 +441,7 @@ _print_from_stack:
 						break;
 					}
 				}
-				else if ((s+si-1)->dt.i<a_dt->ft.l){
+				else if ((s+si)->dt.i<a_dt->ft.l){
 					ASSERT(c_st.l<=CALL_STACK_SIZE);
 					(c_st.dt+c_st.l)->ii=ii;
 					(c_st.dt+c_st.l)->s=si-ai->dt.ac;
@@ -452,10 +454,59 @@ _print_from_stack:
 					si-=ai->dt.ac;
 				}
 				else{
-					si-=ai->dt.ac-1;
+					if (!ai->dt.ac){
+						si++;
+					}
+					else{
+						si-=ai->dt.ac-1;
+					}
 					(s+si-1)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
 					(s+si-1)->dt.i=0;
 				}
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
+				if (ai->dt.i<0){
+					lll_function_index_t i=(lll_function_index_t)(~ai->dt.i);
+					if (i<i_ft->l){
+						(*(i_ft->dt+i))->p(s+si,0,NULL);
+						si++;
+						break;
+					}
+				}
+				else if (ai->dt.i<a_dt->ft.l){
+					ASSERT(c_st.l<=CALL_STACK_SIZE);
+					(c_st.dt+c_st.l)->ii=ii;
+					(c_st.dt+c_st.l)->s=si;
+					c_st.l++;
+					ii=*(a_dt->ft.dt+ai->dt.i);
+					ai=a_dt->h+ii;
+					continue;
+				}
+				(s+si)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(s+si)->dt.i=0;
+				si++;
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
+				if (ai->dt.i<0){
+					lll_function_index_t i=(lll_function_index_t)(~ai->dt.i);
+					if (i<i_ft->l){
+						lll_runtime_object_t n={0};
+						(*(i_ft->dt+i))->p(&n,1,s+si-1);
+						*(s+si-1)=n;
+						break;
+					}
+				}
+				else if (ai->dt.i<a_dt->ft.l){
+					ASSERT(c_st.l<=CALL_STACK_SIZE);
+					(c_st.dt+c_st.l)->ii=ii;
+					(c_st.dt+c_st.l)->s=si-1;
+					c_st.l++;
+					ii=*(a_dt->ft.dt+ai->dt.i);
+					ai=a_dt->h+ii;
+					continue;
+				}
+				(s+si-1)->t=LLL_RUNTIME_OBJECT_TYPE_INT;
+				(s+si-1)->dt.i=0;
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 _return:;

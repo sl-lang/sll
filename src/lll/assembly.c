@@ -72,6 +72,7 @@ _check_next_string:;
 	lll_string_t* s=malloc(sizeof(lll_string_t)+(al+bl+1)*sizeof(lll_char_t));
 	s->l=al+bl;
 	s->c=c;
+	s->rc=1;
 	for (lll_string_length_t j=0;j<al;j++){
 		s->v[j]=*(a+j);
 	}
@@ -623,6 +624,7 @@ __LLL_FUNC __LLL_RETURN lll_generate_assembly(const lll_compilation_data_t* c_dt
 		lll_string_t* d=malloc(sizeof(lll_string_t)+(s->l+1)*sizeof(lll_char_t));
 		d->l=s->l;
 		d->c=s->c;
+		d->rc=1;
 		for (lll_string_length_t l=0;l<s->l;l++){
 			d->v[l]=s->v[l];
 		}
@@ -820,6 +822,48 @@ _print_str:
 			else if ((ai-1)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD){
 				(ai-1)->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR;
 				ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+			}
+		}
+		else if (ai->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL){
+			if (ai->dt.ac<2){
+				lll_instruction_index_t j=1;
+				while (LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai-j)==LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP||LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai-j)==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||LLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai-j)==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
+					j++;
+				}
+				if ((ai-j)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT){
+					ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					(ai-j)->t=(ai->dt.ac?LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO);
+				}
+				else if ((ai-j)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE){
+					ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					(ai-j)->t=(ai->dt.ac?LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO);
+					(ai-j)->dt.i=-1;
+				}
+				else if ((ai-j)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO){
+					ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					(ai-j)->t=(ai->dt.ac?LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO);
+					(ai-j)->dt.i=0;
+				}
+				else if ((ai-j)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ONE){
+					ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					(ai-j)->t=(ai->dt.ac?LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO);
+					(ai-j)->dt.i=1;
+				}
+				else if ((ai-j)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TWO){
+					ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					(ai-j)->t=(ai->dt.ac?LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO);
+					(ai-j)->dt.i=2;
+				}
+				else if ((ai-j)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_THREE){
+					ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					(ai-j)->t=(ai->dt.ac?LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO);
+					(ai-j)->dt.i=3;
+				}
+				else if ((ai-j)->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FOUR){
+					ai->t=LLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					(ai-j)->t=(ai->dt.ac?LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO);
+					(ai-j)->dt.i=4;
+				}
 			}
 		}
 		else if (ai->t==LLL_ASSEMBLY_INSTRUCTION_TYPE_RET){

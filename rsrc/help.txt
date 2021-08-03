@@ -1,6 +1,7 @@
 Usage: lll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...
 Options:
   -a, --generate-assembly -> Generate assembly (.llla)
+  -A <arg1> <arg2> <arg3>, --args <arg1> <arg2> <arg3> -> Pass argumnets to the VM
   -c, --generate-compiled-object -> Generate compiled objects (.lllc)
   -e, --expand-file-paths -> Expand file paths
   -f <file>, --file <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))

@@ -5,6 +5,10 @@
 
 
 
+extern const char* lll_platform_string;
+
+
+
 __LLL_FUNC lll_time_t lll_platform_get_current_time(void);
 
 

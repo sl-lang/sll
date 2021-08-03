@@ -125,7 +125,7 @@ def _generate_header(h_dt,c_m):
 				if (not os.path.exists(f_nm)):
 					il+=b"\n#include "+b" ".join(f[1:])
 				continue
-			elif (f[0]==b"define"and False not in st):
+			elif (f[0]==b"define" and False not in st):
 				if (b"(" in f[1]):
 					al=f[1].split(b"(")[1].split(b")")[0].split(b",")
 					if (al[-1]==b""):
@@ -152,7 +152,7 @@ def _generate_header(h_dt,c_m):
 								continue
 						sl[sli]+=k[i:i+1]
 						i+=1
-					dfm[f[1].split(b"(")[0]]=(al,tuple(sl))
+					dfm[f[1].split(b"(")[0]]=(al,tuple([(sl_e if j&1 else sl_e.replace(b"##",b"")) for j,sl_e in enumerate(sl)]))
 				else:
 					dm[f[1]]=b" ".join(f[2:])
 					if (f[1][:2]!=b"__"):
@@ -295,11 +295,11 @@ else:
 	os.mkdir("build")
 if (not os.path.exists("build/lib")):
 	os.mkdir("build/lib")
-for f in os.listdir("src/lll_lib/lib"):
-	with open(f"src/lll_lib/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
+for f in os.listdir("src/lll/lib"):
+	with open(f"src/lll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
 		wf.write(rf.read())
-with open(HELP_FILE_PATH,"rb") as rf,open("build/generated.h","wb") as wf:
-	wf.write(b"#ifndef __GENERATED_H__\n#define __GENERATED_H__ 1\n#include <stdint.h>\nconst uint8_t HELP_TEXT[]={")
+with open(HELP_FILE_PATH,"rb") as rf,open("build/help_text.h","wb") as wf:
+	wf.write(b"#ifndef __HELP_TEXT_H__\n#define __HELP_TEXT_H__ 1\n#include <stdint.h>\nconst uint8_t HELP_TEXT[]={")
 	st=True
 	for c in rf.read().replace(b"\r\n",b"\n"):
 		if (st is False):
@@ -328,10 +328,10 @@ i_fl=[]
 o_fl=[]
 cd=os.getcwd()
 if (os.name=="nt"):
-	for r,_,fl in os.walk("src/lll_lib"):
+	for r,_,fl in os.walk("src/lll"):
 		r=r.replace("\\","/").rstrip("/")+"/"
 		for f in fl:
-			if (f[-2:]==".c" and (r!="src/lll_lib/platform/" or f=="windows.c")):
+			if (f[-2:]==".c" and (r!="src/lll/platform/" or f=="windows.c")):
 				i_fl.append("../"+r+f)
 				o_fl.append(f[:-2]+".obj")
 	os.chdir("build")
@@ -347,10 +347,10 @@ if (os.name=="nt"):
 else:
 	i_fl=[]
 	o_fl=[]
-	for r,_,fl in os.walk("src/lll_lib"):
+	for r,_,fl in os.walk("src/lll"):
 		r=r.rstrip("/")+"/"
 		for f in fl:
-			if (f[-2:]==".c" and (r!="src/lll_lib/platform/" or f=="linux.c")):
+			if (f[-2:]==".c" and (r!="src/lll/platform/" or f=="posix.c")):
 				i_fl.append("../"+r+f)
 				o_fl.append(f[:-2]+".o")
 	os.chdir("build")

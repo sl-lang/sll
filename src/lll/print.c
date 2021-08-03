@@ -575,6 +575,16 @@ __LLL_FUNC void lll_print_assembly(const lll_assembly_data_t* a_dt,lll_output_da
 				_print_int(ai->dt.ac,os);
 				PRINT_STATIC_STRING(" & POP",os);
 				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
+				PRINT_STATIC_STRING("PUSH ",os);
+				_print_int(ai->dt.i,os);
+				PRINT_STATIC_STRING(" & CALL 0",os);
+				break;
+			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
+				PRINT_STATIC_STRING("PUSH ",os);
+				_print_int(ai->dt.i,os);
+				PRINT_STATIC_STRING(" & CALL 1",os);
+				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 				PRINT_STATIC_STRING("RET",os);
 				break;

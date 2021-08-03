@@ -6,7 +6,7 @@
 
 
 
-lll_small_char_t _input_data_stream_file_read(lll_input_data_stream_t* is){
+lll_read_char_t _input_data_stream_file_read(lll_input_data_stream_t* is){
 	int o=fgetc((FILE*)(is->ctx));
 	if (o==EOF){
 		return LLL_END_OF_DATA;
@@ -16,12 +16,12 @@ lll_small_char_t _input_data_stream_file_read(lll_input_data_stream_t* is){
 		is->_lc++;
 		is->_loff=is->_off;
 	}
-	return (lll_small_char_t)o;
+	return (lll_read_char_t)o;
 }
 
 
 
-lll_small_char_t _input_data_stream_file_read_buffer(lll_input_data_stream_t* is,lll_buffer_t bf,lll_buffer_size_t sz){
+lll_read_char_t _input_data_stream_file_read_buffer(lll_input_data_stream_t* is,lll_buffer_t bf,lll_buffer_size_t sz){
 	return (fread(bf,sizeof(uint8_t),sz,(FILE*)(is->ctx))==sz?0:LLL_END_OF_DATA);
 }
 
@@ -47,7 +47,7 @@ void _input_data_stream_file_restart_line(lll_input_data_stream_t* is,lll_file_o
 
 
 
-lll_small_char_t _input_data_stream_buffer_read(lll_input_data_stream_t* is){
+lll_read_char_t _input_data_stream_buffer_read(lll_input_data_stream_t* is){
 	lll_input_buffer_t* bf=(lll_input_buffer_t*)(is->ctx);
 	if (is->_off>=bf->sz){
 		return LLL_END_OF_DATA;
@@ -63,7 +63,7 @@ lll_small_char_t _input_data_stream_buffer_read(lll_input_data_stream_t* is){
 
 
 
-lll_small_char_t _input_data_stream_buffer_read_buffer(lll_input_data_stream_t* is,lll_buffer_t bf,lll_buffer_size_t sz){
+lll_read_char_t _input_data_stream_buffer_read_buffer(lll_input_data_stream_t* is,lll_buffer_t bf,lll_buffer_size_t sz){
 	lll_input_buffer_t* is_bf=(lll_input_buffer_t*)(is->ctx);
 	if (is->_off+sz>=is_bf->sz){
 		return LLL_END_OF_DATA;

@@ -17,10 +17,6 @@ __LLL_FUNC __LLL_RETURN lll_load_object(lll_compilation_data_t* c_dt,lll_input_d
 
 
 
-__LLL_FUNC __LLL_RETURN lll_read_string(lll_input_data_stream_t* is,lll_string_length_t l,lll_string_t* o);
-
-
-
 __LLL_FUNC void lll_write_assembly(lll_output_data_stream_t* os,const lll_assembly_data_t* o);
 
 
@@ -30,10 +26,6 @@ __LLL_FUNC void lll_write_compiled_object(lll_output_data_stream_t* os,const lll
 
 
 __LLL_FUNC void lll_write_object(lll_output_data_stream_t* os,const lll_object_t* o);
-
-
-
-__LLL_FUNC void lll_write_string(const lll_string_t* s,lll_output_data_stream_t* os);
 
 
 

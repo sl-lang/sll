@@ -3,10 +3,10 @@
 (= open)
 (= close)
 (= write)
-(? 1 {
-	(-- "time.lll")
-	(-- "file.lll")
-})
+(= platform)
+(= argc)
+(= argv)
+(? 1 (-- "time.lll" "file.lll" "sys.lll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -47,6 +47,9 @@
 	(<- write f "Hello!\n")
 	(<- close f)
 })
+(:> "Argument Count: " argc "\n")
+(-> (= i 0) (< i argc) (:> "[" i "] = " (<- argv i) "\n") (= i (+ i 1)))
+(:> "Platform: " platform "\n")
 (:> "Program End\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")

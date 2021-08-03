@@ -5,13 +5,10 @@
 
 
 
-#define __API_FUNC(nm) __LLL_FUNC void nm(lll_runtime_object_t* o,lll_arg_count_t ac,lll_runtime_object_t* a)
+#define __API_FUNC(nm) INTERNAL_FUNCTION(#nm,lll_api_##nm);__API_FUNC_DECL(nm)
+#define __API_FUNC_DECL(nm) __LLL_FUNC void lll_api_##nm(lll_runtime_object_t* o,lll_arg_count_t ac,lll_runtime_object_t* a)
 
 
-
-#define LLL_API_FILE_APPEND 0
-#define LLL_API_FILE_READ 1
-#define LLL_API_FILE_WRITE 2
 
 #define LLL_API_INVALID_FILE_HANDLE 65535
 #define LLL_API_MAX_FILE_PATH_LENGTH 4096
@@ -19,19 +16,35 @@
 
 
 
-__API_FUNC(lll_api_get_time);
+__API_FUNC_DECL(file_close);
 
 
 
-__API_FUNC(lll_api_open_file);
+__API_FUNC_DECL(file_open);
 
 
 
-__API_FUNC(lll_api_close_file);
+__API_FUNC_DECL(file_write);
 
 
 
-__API_FUNC(lll_api_write_file);
+__API_FUNC_DECL(sys_arg_get);
+
+
+
+__API_FUNC_DECL(sys_arg_get_count);
+
+
+
+__API_FUNC_DECL(sys_get_platform);
+
+
+
+__API_FUNC_DECL(time_current);
+
+
+
+__API_FUNC_DECL(time_current_nanos);
 
 
 

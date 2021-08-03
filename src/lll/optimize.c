@@ -735,7 +735,7 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 
 
 
-lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_data_t* o_dt){
+lll_object_offset_t _remap_vars(lll_object_t* o,lll_object_t* p,optimizer_data_t* o_dt){
 	lll_object_offset_t eoff=0;
 	while (o->t==LLL_OBJECT_TYPE_NOP||o->t==LLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -750,6 +750,12 @@ lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_
 			return eoff+1;
 		case LLL_OBJECT_TYPE_IDENTIFIER:
 			ASSERT(GET_VARIABLE_REF_COUNT(o,o_dt));
+			if (LLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
+				o->dt.id=*(o_dt->im.l+LLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id));
+			}
+			else{
+				o->dt.id=*(o_dt->im.s[LLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id));
+			}
 			return eoff+1;
 		case LLL_OBJECT_TYPE_ASSIGN:
 			{
@@ -766,12 +772,20 @@ lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_
 					o->dt.sc=o->dt.ac-1;
 					(o+off)->t=LLL_OBJECT_TYPE_NOP;
 				}
+				else{
+					if (LLL_IDENTIFIER_GET_ARRAY_ID((o+off)->dt.id)==LLL_MAX_SHORT_IDENTIFIER_LENGTH){
+						(o+off)->dt.id=*(o_dt->im.l+LLL_IDENTIFIER_GET_ARRAY_INDEX((o+off)->dt.id));
+					}
+					else{
+						(o+off)->dt.id=*(o_dt->im.s[LLL_IDENTIFIER_GET_ARRAY_ID((o+off)->dt.id)]+LLL_IDENTIFIER_GET_ARRAY_INDEX((o+off)->dt.id));
+					}
+				}
 				off++;
-				off+=_remove_const_var(o+off,o,o_dt);
+				off+=_remap_vars(o+off,o,o_dt);
 				l-=2;
 				while (l){
 					l--;
-					off+=_remove_const_var(o+off,o,o_dt);
+					off+=_remap_vars(o+off,o,o_dt);
 				}
 				if (rm){
 					_optimize(o,p,o_dt,0);
@@ -785,7 +799,7 @@ lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_
 				lll_arg_count_t l=o->dt.fn.ac;
 				while (l){
 					l--;
-					off+=_remove_const_var(o+off,o,o_dt);
+					off+=_remap_vars(o+off,o,o_dt);
 				}
 				return off+eoff;
 			}
@@ -795,7 +809,7 @@ lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_
 				lll_statement_count_t l=o->dt.sc;
 				while (l){
 					l--;
-					off+=_remove_const_var(o+off,o,o_dt);
+					off+=_remap_vars(o+off,o,o_dt);
 				}
 				return off+eoff;
 			}
@@ -804,7 +818,7 @@ lll_object_offset_t _remove_const_var(lll_object_t* o,lll_object_t* p,optimizer_
 	lll_arg_count_t l=o->dt.ac;
 	while (l){
 		l--;
-		off+=_remove_const_var(o+off,o,o_dt);
+		off+=_remap_vars(o+off,o,o_dt);
 	}
 	return off+eoff;
 }
@@ -864,11 +878,11 @@ __LLL_FUNC void lll_optimize_object(lll_compilation_data_t* c_dt,lll_object_t* o
 		(o_dt.v+i)->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
 	}
 	_optimize(c_dt->h,NULL,&o_dt,0);
-	o_dt.rm=0;
-	_remove_const_var(c_dt->h,NULL,&o_dt);
 	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		o_dt.im.s[i]=malloc(c_dt->idt.s[i].l*sizeof(lll_identifier_index_t));
 		lll_identifier_list_length_t k=0;
 		for (lll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
+			*(o_dt.im.s[i]+j)=LLL_CREATE_IDENTIFIER(j-k,i);
 			*(c_dt->idt.s[i].dt+j-k)=*(c_dt->idt.s[i].dt+j);
 			if (!(o_dt.it.s_im[i]+j)->c){
 				k++;
@@ -878,10 +892,11 @@ __LLL_FUNC void lll_optimize_object(lll_compilation_data_t* c_dt,lll_object_t* o
 			c_dt->idt.s[i].l-=k;
 			c_dt->idt.s[i].dt=realloc(c_dt->idt.s[i].dt,c_dt->idt.s[i].l*sizeof(lll_identifier_t));
 		}
-		free(o_dt.it.s_im[i]);
 	}
+	o_dt.im.l=malloc(c_dt->idt.ill*sizeof(lll_identifier_index_t));
 	lll_identifier_list_length_t j=0;
 	for (lll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
+		*(o_dt.im.l+i)=LLL_CREATE_IDENTIFIER(i-j,LLL_MAX_SHORT_IDENTIFIER_LENGTH);
 		*(c_dt->idt.il+i-j)=*(c_dt->idt.il+i);
 		if (!(o_dt.it.l_im+i)->c){
 			j++;
@@ -891,6 +906,13 @@ __LLL_FUNC void lll_optimize_object(lll_compilation_data_t* c_dt,lll_object_t* o
 		c_dt->idt.ill-=j;
 		c_dt->idt.il=realloc(c_dt->idt.il,c_dt->idt.ill*sizeof(lll_identifier_t));
 	}
+	o_dt.rm=0;
+	_remap_vars(c_dt->h,NULL,&o_dt);
+	for (uint8_t i=0;i<LLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		free(o_dt.it.s_im[i]);
+		free(o_dt.im.s[i]);
+	}
 	free(o_dt.it.l_im);
+	free(o_dt.im.l);
 	free(o_dt.v);
 }
