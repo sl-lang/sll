@@ -290,8 +290,8 @@ __LLL_FUNC __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll
 		e->t=LLL_ERROR_NO_STACK;
 		return LLL_RETURN_ERROR;
 	}
-	uint32_t n;
-	lll_version_t v;
+	uint32_t n=0;
+	lll_version_t v=0;
 	if (LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&n),sizeof(uint32_t))==LLL_END_OF_DATA||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&v),sizeof(lll_version_t))==LLL_END_OF_DATA||v!=LLL_VERSION){
 		e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 		return LLL_RETURN_ERROR;

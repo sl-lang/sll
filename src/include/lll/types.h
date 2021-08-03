@@ -141,6 +141,10 @@ typedef uint8_t* lll_buffer_t;
 
 
 
+typedef const uint8_t* lll_const_buffer_t;
+
+
+
 typedef struct __LLL_INPUT_DATA_SOURCE{
 	void* ctx;
 	lll_small_char_t (*rf)(struct __LLL_INPUT_DATA_SOURCE* is);
@@ -157,8 +161,15 @@ typedef struct __LLL_OUTPUT_DATA_STREAM{
 	void* ctx;
 	void (*wcf)(struct __LLL_OUTPUT_DATA_STREAM* os,char c);
 	void (*wsf)(struct __LLL_OUTPUT_DATA_STREAM* os,const char* s);
-	void (*wf)(struct __LLL_OUTPUT_DATA_STREAM* os,const lll_buffer_t bf,lll_buffer_size_t sz);
+	void (*wf)(struct __LLL_OUTPUT_DATA_STREAM* os,lll_const_buffer_t bf,lll_buffer_size_t sz);
 } lll_output_data_stream_t;
+
+
+
+typedef struct __LLL_INPUT_BUFFER{
+	lll_const_buffer_t bf;
+	lll_buffer_size_t sz;
+} lll_input_buffer_t;
 
 
 

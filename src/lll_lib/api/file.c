@@ -16,13 +16,13 @@ typedef struct __FILE{
 
 
 
-file_t* fl=NULL;
-uint16_t fll=0;
+file_t* _file_fl=NULL;
+uint16_t _file_fll=0;
 
 
 
 __API_FUNC(lll_api_open_file){
-	if (fll==LLL_API_MAX_OPEN_FILES||!ac||a->t!=LLL_RUNTIME_OBJECT_TYPE_STRING||a->dt.s->l>LLL_API_MAX_FILE_PATH_LENGTH){
+	if (_file_fll==LLL_API_MAX_OPEN_FILES||!ac||a->t!=LLL_RUNTIME_OBJECT_TYPE_STRING||a->dt.s->l>LLL_API_MAX_FILE_PATH_LENGTH){
 		o->t=LLL_RUNTIME_OBJECT_TYPE_INT;
 		o->dt.i=LLL_API_INVALID_FILE_HANDLE;
 		return;
@@ -58,16 +58,16 @@ __API_FUNC(lll_api_open_file){
 		return;
 	}
 	uint16_t i=0;
-	while (i<fll){
-		if (!(fl+i)->h){
+	while (i<_file_fll){
+		if (!(_file_fl+i)->h){
 			goto _found_index;
 		}
 		i++;
 	}
-	fll++;
-	fl=realloc(fl,fll*sizeof(file_t));
+	_file_fll++;
+	_file_fl=realloc(_file_fl,_file_fll*sizeof(file_t));
 _found_index:
-	(fl+i)->h=h;
+	(_file_fl+i)->h=h;
 	o->t=LLL_RUNTIME_OBJECT_TYPE_INT;
 	o->dt.i=i;
 }
@@ -77,23 +77,23 @@ _found_index:
 __API_FUNC(lll_api_close_file){
 	o->t=LLL_RUNTIME_OBJECT_TYPE_INT;
 	o->dt.i=0;
-	if (!ac||a->t!=LLL_RUNTIME_OBJECT_TYPE_INT||a->dt.i<0||a->dt.i>=fll){
+	if (!ac||a->t!=LLL_RUNTIME_OBJECT_TYPE_INT||a->dt.i<0||a->dt.i>=_file_fll){
 		return;
 	}
-	file_t* f=fl+a->dt.i;
+	file_t* f=_file_fl+a->dt.i;
 	if (f->h){
 		fclose(f->h);
 		f->h=NULL;
-		if (a->dt.i==fll-1){
+		if (a->dt.i==_file_fll-1){
 			do{
-				fll--;
-			} while (fll&&!(fl+fll-1)->h);
-			if (fll){
-				fl=realloc(fl,fll*sizeof(file_t));
+				_file_fll--;
+			} while (_file_fll&&!(_file_fl+_file_fll-1)->h);
+			if (_file_fll){
+				_file_fl=realloc(_file_fl,_file_fll*sizeof(file_t));
 			}
 			else{
-				free(fl);
-				fl=NULL;
+				free(_file_fl);
+				_file_fl=NULL;
 			}
 		}
 		o->dt.i=1;
@@ -108,7 +108,7 @@ __API_FUNC(lll_api_write_file){
 	if (ac<2||a->t!=LLL_RUNTIME_OBJECT_TYPE_INT||a->dt.i<0||a->dt.i>=LLL_API_MAX_OPEN_FILES){
 		return;
 	}
-	file_t* f=fl+a->dt.i;
+	file_t* f=_file_fl+a->dt.i;
 	if (f->h){
 		if ((a+1)->t!=LLL_RUNTIME_OBJECT_TYPE_STRING){
 			ASSERT(!"Unimplemented");

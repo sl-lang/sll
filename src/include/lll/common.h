@@ -4,17 +4,25 @@
 
 
 #ifdef _MSC_VER
+#ifdef __LLL_LIB_STATIC__
+#define __LLL_FUNC
+#else
 #ifdef __LLL_LIB_COMPILATION__
 #define __LLL_FUNC __declspec(dllexport)
 #else
 #define __LLL_FUNC __declspec(dllimport)
 #endif
+#endif
 #define __LLL_CHECK_OUTPUT _Check_return_
+#else
+#ifdef __LLL_LIB_STATIC__
+#define __LLL_FUNC
 #else
 #ifdef __LLL_LIB_COMPILATION__
 #define __LLL_FUNC __attribute__((visibility("default")))
 #else
 #define __LLL_FUNC
+#endif
 #endif
 #define __LLL_CHECK_OUTPUT __attribute__((warn_unused_result))
 #endif
