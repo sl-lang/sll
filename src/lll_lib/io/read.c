@@ -380,13 +380,13 @@ __LLL_FUNC __LLL_RETURN lll_read_string(lll_input_data_stream_t* is,lll_string_l
 		}
 		if (c&0x80){
 			lll_small_char_t nc=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-			if (c==LLL_END_OF_DATA){
+			if (nc==LLL_END_OF_DATA){
 				return LLL_RETURN_ERROR;
 			}
 			c=(c&0x7f)|(nc<<7);
 			if (nc&0x80){
 				nc=LLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==LLL_END_OF_DATA){
+				if (nc==LLL_END_OF_DATA){
 					return LLL_RETURN_ERROR;
 				}
 				c=(c&0x7fff)|(nc<<14);

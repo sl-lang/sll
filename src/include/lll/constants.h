@@ -177,7 +177,7 @@
 #define LLL_COMPARE_RESULT_NONZERO 4
 #define LLL_COMPARE_RESULT_ERROR 255
 
-#define LLL_END_OF_DATA UINT16_MAX
+#define LLL_END_OF_DATA 65535
 #define LLL_READ_FROM_INPUT_DATA_STREAM(is) ((is)->rf((is)))
 #define LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,bf,sz) ((is)->rbf((is),(bf),(sz)))
 #define LLL_INPUT_DATA_STREAM_RESTART_LINE(is,lp) ((is)->rlf((is),(lp)))

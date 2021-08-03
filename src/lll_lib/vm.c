@@ -379,18 +379,18 @@ _print_from_stack:
 				switch (LLL_RUNTIME_OBJECT_GET_TYPE(s+si)){
 					case LLL_RUNTIME_OBJECT_TYPE_INT:
 						{
-							int64_t v=(s+si)->dt.i;
+							int64_t iv=(s+si)->dt.i;
 							char bf[20];
 							uint8_t i=0;
-							if (v<0){
+							if (iv<0){
 								LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,'-');
-								v=-v;
+								iv=-iv;
 							}
 							do{
-								bf[i]=v%10;
+								bf[i]=iv%10;
 								i++;
-								v/=10;
-							} while(v);
+								iv/=10;
+							} while(iv);
 							while (i){
 								i--;
 								LLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(out,bf[i]+48);
