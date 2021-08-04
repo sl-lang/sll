@@ -426,8 +426,8 @@ _print_from_stack:
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				{
-					lll_string_t* s=*(a_dt->st.dt+ai->dt.s);
-					LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,s->v,s->l*sizeof(lll_char_t));
+					lll_string_t* ps=*(a_dt->st.dt+ai->dt.s);
+					LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,ps->v,ps->l*sizeof(lll_char_t));
 					break;
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:

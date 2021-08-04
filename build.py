@@ -378,8 +378,10 @@ with open("build/compiled_modules.h","wb") as f:
 				c^=k
 			dt=rf.read()
 			m_dt.append(bytes(f"{{\"{e.replace(chr(34),chr(92)+chr(34))}\",{len(e)},{c},{len(dt)},_m{i}}}","utf-8"))
-			for i,c in enumerate(dt):
-				f.write((b"," if i>0 else b"")+bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
+			st=False
+			for c in dt:
+				f.write((b"," if st else b"")+bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
+				st=True
 		f.write(b"};\n")
 	f.write(b"const module_t m_dt[]={"+b",".join(m_dt)+b"};\n#endif")
 os.chdir("build")

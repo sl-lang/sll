@@ -343,11 +343,11 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 		c^=*(f_nm+i);
 		i++;
 	}
-	for (uint32_t j=0;j<COMPILED_MODULE_COUNT;j++){
-		const module_t* m=m_dt+j;
+	for (uint32_t k=0;k<COMPILED_MODULE_COUNT;k++){
+		const module_t* m=m_dt+k;
 		if (m->c==c&&m->nml==i){
-			for (uint32_t k=0;k<i;k++){
-				if (*(m->nm+k)!=*(f_nm+k)){
+			for (uint32_t l=0;l<i;l++){
+				if (*(m->nm+l)!=*(f_nm+l)){
 					goto _check_next_module;
 				}
 			}
@@ -392,11 +392,11 @@ _check_next_module:;
 #else
 	if (l_fpl){
 		uint32_t i=l_fpl;
-		uint32_t j=0;
-		while (*(f_nm+j)){
-			*(l_fp+i)=*(f_nm+j);
+		uint32_t k=0;
+		while (*(f_nm+k)){
+			*(l_fp+i)=*(f_nm+k);
 			i++;
-			j++;
+			k++;
 		}
 		*(l_fp+i)='.';
 		*(l_fp+i+1)='l';
