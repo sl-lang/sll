@@ -51,6 +51,9 @@
 (-> (= i 0) (< i argc) (:> "[" i "] = " (<- argv i) "\n") (= i (+ i 1)))
 (:> "Platform: " platform "\n")
 (:> "Program End\n")
+(= string (<- (,,, (@@ "string"))))
+(:> "String: " string "\n")
+(:> "String: " string "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)

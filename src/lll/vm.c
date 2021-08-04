@@ -97,15 +97,22 @@ __LLL_FUNC __LLL_RETURN_CODE lll_execute_assembly(const lll_assembly_data_t* a_d
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				*(s+si)=*(v+ai->dt.v);
+				if ((s+si)->t==LLL_RUNTIME_OBJECT_TYPE_STRING){
+					(s+si)->dt.s->rc++;
+				}
 				si++;
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 				(s+si)->t=LLL_RUNTIME_OBJECT_TYPE_STRING;
 				(s+si)->dt.s=*(a_dt->st.dt+ai->dt.s);
+				(s+si)->dt.s->rc++;
 				si++;
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				*(v+ai->dt.v)=*(s+si-1);
+				if ((s+si-1)->t==LLL_RUNTIME_OBJECT_TYPE_STRING){
+					(s+si-1)->dt.s->rc++;
+				}
 				break;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
 				si--;
@@ -408,6 +415,7 @@ _print_from_stack:
 						break;
 					case LLL_RUNTIME_OBJECT_TYPE_STRING:
 						LLL_WRITE_TO_OUTPUT_DATA_STREAM(out,(s+si)->dt.s->v,(s+si)->dt.s->l*sizeof(lll_char_t));
+						lll_string_release((s+si)->dt.s);
 						break;
 					default:
 						UNREACHABLE();
@@ -424,6 +432,9 @@ _print_from_stack:
 				}
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 				*(s+si)=*(v+ai->dt.v);
+				if ((s+si)->t==LLL_RUNTIME_OBJECT_TYPE_STRING){
+					(s+si)->dt.s->rc++;
+				}
 				goto _print_from_stack;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
@@ -545,6 +556,7 @@ _return:;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				(s+si)->t=LLL_RUNTIME_OBJECT_TYPE_STRING;
 				(s+si)->dt.s=*(a_dt->st.dt+ai->dt.s);
+				(s+si)->dt.s->rc++;
 				si++;
 				goto _return;
 			case LLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:

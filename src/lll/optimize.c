@@ -379,7 +379,12 @@ lll_object_offset_t _optimize(lll_object_t* o,lll_object_t* p,optimizer_data_t* 
 							o->dt.c=v->dt.c;
 							break;
 						case LLL_RUNTIME_OBJECT_TYPE_STRING:
-							ASSERT(!"Unimplemented");
+							o->t=LLL_OBJECT_TYPE_STRING;
+							o->dt.s=0;
+							while (*(o_dt->c_dt->st.dt+o->dt.s)!=v->dt.s){
+								o->dt.s++;
+							}
+							break;
 						default:
 							UNREACHABLE();
 					}
