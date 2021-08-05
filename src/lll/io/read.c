@@ -35,7 +35,7 @@
 
 
 uint64_t _read_integer(lll_input_data_stream_t* is,uint8_t* e){
-	int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+	lll_read_char_t c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==LLL_END_OF_DATA){
 		*e=1;
 		return 0;
@@ -103,7 +103,7 @@ uint8_t _read_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is){
 		case LLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				CHECK_ERROR2(is,o->dt.fn.id,lll_function_index_t);
-				int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+				lll_read_char_t c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 				if (c==LLL_END_OF_DATA){
 					return 0;
 				}
@@ -130,7 +130,7 @@ uint8_t _read_object(lll_compilation_data_t* c_dt,lll_input_data_stream_t* is){
 			CHECK_ERROR2(is,o->dt.dbg.ln_off,lll_file_offset_t);
 			return _read_object(c_dt,is);
 	}
-	int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+	lll_read_char_t c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==LLL_END_OF_DATA){
 		return 0;
 	}
@@ -186,7 +186,7 @@ __LLL_FUNC __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assemb
 	a_dt->h=(lll_assembly_instruction_t*)(a_dt->_s.ptr+a_dt->_s.off);
 	lll_assembly_instruction_t* ai=a_dt->h;
 	for (lll_instruction_index_t i=0;i<a_dt->ic;i++){
-		int c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
+		lll_read_char_t c=LLL_READ_FROM_INPUT_DATA_STREAM(is);
 		if (c==LLL_END_OF_DATA){
 			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 			return LLL_RETURN_ERROR;
