@@ -25,7 +25,7 @@ jobs:
         python-version: 3.9
     - uses: ilammy/msvc-dev-cmd@v1
     - name: 'Build "lll${{matrix.args}}"'
-      run: python build.py${{matrix.args}}
+      run: python build.py --verbose${{matrix.args}}
       shell: cmd
     strategy:
       matrix:
