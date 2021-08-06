@@ -410,7 +410,7 @@ if ("--standalone" in sys.argv):
 				os.chdir(cd)
 				sys.exit(1)
 		os.remove("lll")
-		os.remove("lll_lib")
+		os.remove("lll_lib.so")
 	os.rmdir("lib")
 	os.chdir(cd)
 if ("--run" in sys.argv):
