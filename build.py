@@ -398,6 +398,8 @@ if ("--standalone" in sys.argv):
 			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/D","__LLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]+o_fl).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
+		os.remove("lll.exe")
+		os.remove("lll_lib.dll")
 	else:
 		if ("--release" in sys.argv):
 			if (subprocess.run(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
@@ -407,9 +409,9 @@ if ("--standalone" in sys.argv):
 			if (subprocess.run(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
-	os.remove("lib")
-	os.remove("lll")
-	os.remove("lll_lib")
+		os.remove("lll")
+		os.remove("lll_lib")
+	os.rmdir("lib")
 	os.chdir(cd)
 if ("--run" in sys.argv):
 	subprocess.run([e_nm,"-h"])

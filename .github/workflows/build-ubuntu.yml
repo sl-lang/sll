@@ -23,13 +23,13 @@ jobs:
     - uses: actions/setup-python@v2
       with:
         python-version: 3.9
-    - name: 'Build LLL (${{matrix.args}})'
-      run: python build.py ${{matrix.args}}
+    - name: 'Build "lll${{matrix.args}}"'
+      run: python build.py${{matrix.args}}
     strategy:
       matrix:
         args:
           - ''
-          - '--release'
-          - '--standalone'
-          - '--standalone --release'
-    timeout-minutes: 2
+          - ' --release'
+          - ' --standalone'
+          - ' --standalone --release'
+    timeout-minutes: 5

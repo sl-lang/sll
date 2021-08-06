@@ -24,14 +24,14 @@ jobs:
       with:
         python-version: 3.9
     - uses: ilammy/msvc-dev-cmd@v1
-    - name: 'Build LLL (${{matrix.args}})'
-      run: python build.py ${{matrix.args}}
+    - name: 'Build "lll${{matrix.args}}"'
+      run: python build.py${{matrix.args}}
       shell: cmd
     strategy:
       matrix:
         args:
           - ''
-          - '--release'
-          - '--standalone'
-          - '--standalone --release'
-    timeout-minutes: 2
+          - ' --release'
+          - ' --standalone'
+          - ' --standalone --release'
+    timeout-minutes: 5
