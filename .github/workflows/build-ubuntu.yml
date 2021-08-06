@@ -1,0 +1,35 @@
+name: Build CI (Ubuntu)
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - build.py
+      - rsrc/
+      - src/
+  pull_request:
+    branches:
+      - main
+    paths:
+      - build.py
+      - rsrc/
+      - src/
+permissions: read-all
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: 'Build LLL (${{matrix.args}})'
+      run: python build.py ${{matrix.args}}
+    strategy:
+      matrix:
+        args:
+          - ''
+          - '--release'
+          - '--standalone'
+          - '--standalone --release'
+    timeout-minutes: 2

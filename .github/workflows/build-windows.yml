@@ -1,4 +1,4 @@
-name: Build CI
+name: Build CI (Windows)
 on:
   push:
     branches:
@@ -17,20 +17,18 @@ on:
 permissions: read-all
 jobs:
   build:
-    runs-on: ${{matrix.os}}
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - uses: actions/setup-python@v2
       with:
         python-version: 3.9
-    - name: 'Build LLL (OS: ${{matrix.os}}, Args: ${{matrix.args}})'
+    - uses: ilammy/msvc-dev-cmd@v1
+    - name: 'Build LLL (${{matrix.args}})'
       run: python build.py ${{matrix.args}}
+      shell: cmd
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
         args:
           - ''
           - '--release'
