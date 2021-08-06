@@ -373,7 +373,6 @@ if ("--standalone" in sys.argv):
 		f.write(bytes(f"#ifndef __COMPILED_MODULES_H__\n#define __COMPILED_MODULES_H__\n#include <stdint.h>\n#define COMPILED_MODULE_COUNT {len(fl)}\ntypedef struct __MODULE{{const char* nm;uint32_t nml;uint8_t c;uint32_t sz;const uint8_t* dt;}} module_t;\n","utf-8"))
 		m_dt=[]
 		for i,e in enumerate(fl):
-			os.remove("build/lib/"+e)
 			f.write(bytes(f"const uint8_t _m{i}[]={{","utf-8"))
 			with open(f"build/lib/{e}.lllc","rb") as rf:
 				c=0
@@ -386,6 +385,8 @@ if ("--standalone" in sys.argv):
 					f.write((b"," if st else b"")+bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
 					st=True
 			f.write(b"};\n")
+			os.remove("build/lib/"+e)
+			os.remove("build/lib/"+e+".lllc")
 		f.write(b"const module_t m_dt[]={"+b",".join(m_dt)+b"};\n#endif")
 	os.chdir("build")
 	if (os.name=="nt"):
@@ -406,6 +407,9 @@ if ("--standalone" in sys.argv):
 			if (subprocess.run(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
+	os.remove("lib")
+	os.remove("lll")
+	os.remove("lll_lib")
 	os.chdir(cd)
 if ("--run" in sys.argv):
 	subprocess.run([e_nm,"-h"])
