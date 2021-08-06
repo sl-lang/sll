@@ -322,8 +322,6 @@ for f in os.listdir("src/include/lll"):
 h_dt=INCLUDE_REGEX.sub(lambda m:(b"" if m.group(1)[1:-1] in il else b"#include <"+(il.append(m.group(1)[1:-1]),m.group(1)[1:-1])[1]+b">"),DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX.sub(br"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(br"\n",COMMENT_REGEX.sub(br"",h_dt).strip().replace(b"\r\n",b"\n")))).split(b"\n")
 with open("build/lll_lib.h","wb") as wf:
 	wf.write(b"#ifndef __LLL_LIB_H__\n#define __LLL_LIB_H__ 1"+_generate_header(h_dt,COMPILATION_DEFINES)+b"\n#endif\n")
-with open("build/lll_lib_standalone.h","wb") as wf:
-	wf.write(b"#ifndef __LLL_LIB_STANDALONE_BUILD_H__\n#define __LLL_LIB_STANDALONE_BUILD_H__ 1"+_generate_header(h_dt,COMPILATION_DEFINES+[b"__LLL_LIB_STATIC__"])+b"\n#endif\n")
 i_fl=[]
 o_fl=[]
 cd=os.getcwd()
@@ -366,45 +364,50 @@ else:
 fl=list(os.listdir("build/lib"))
 if (subprocess.run(["build/lll","-c",("-O3" if "--release" in sys.argv else "-O0"),"-L","-e"]+["build/lib/"+e for e in fl]).returncode!=0):
 	sys.exit(1)
-with open("build/compiled_modules.h","wb") as f:
-	f.write(bytes(f"#ifndef __COMPILED_MODULES_H__\n#define __COMPILED_MODULES_H__\n#include <stdint.h>\n#define COMPILED_MODULE_COUNT {len(fl)}\ntypedef struct __MODULE{{const char* nm;uint32_t nml;uint8_t c;uint32_t sz;const uint8_t* dt;}} module_t;\n","utf-8"))
-	m_dt=[]
-	for i,e in enumerate(fl):
-		os.remove("build/lib/"+e)
-		f.write(bytes(f"const uint8_t _m{i}[]={{","utf-8"))
-		with open(f"build/lib/{e}.lllc","rb") as rf:
-			c=0
-			for k in bytes(e,"utf-8"):
-				c^=k
-			dt=rf.read()
-			m_dt.append(bytes(f"{{\"{e.replace(chr(34),chr(92)+chr(34))}\",{len(e)},{c},{len(dt)},_m{i}}}","utf-8"))
-			st=False
-			for c in dt:
-				f.write((b"," if st else b"")+bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
-				st=True
-		f.write(b"};\n")
-	f.write(b"const module_t m_dt[]={"+b",".join(m_dt)+b"};\n#endif")
-os.chdir("build")
-if (os.name=="nt"):
-	if ("--release" in sys.argv):
-		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","_CRT_SECURE_NO_WARNINGS","/D","__LLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]+o_fl).returncode!=0):
-			os.chdir(cd)
-			sys.exit(1)
+e_nm="build/lll"
+if ("--standalone" in sys.argv):
+	e_nm="build/lll_standalone"
+	with open("build/lll_lib_standalone.h","wb") as wf:
+		wf.write(b"#ifndef __LLL_LIB_STANDALONE_BUILD_H__\n#define __LLL_LIB_STANDALONE_BUILD_H__ 1"+_generate_header(h_dt,COMPILATION_DEFINES+[b"__LLL_LIB_STATIC__"])+b"\n#endif\n")
+	with open("build/compiled_modules.h","wb") as f:
+		f.write(bytes(f"#ifndef __COMPILED_MODULES_H__\n#define __COMPILED_MODULES_H__\n#include <stdint.h>\n#define COMPILED_MODULE_COUNT {len(fl)}\ntypedef struct __MODULE{{const char* nm;uint32_t nml;uint8_t c;uint32_t sz;const uint8_t* dt;}} module_t;\n","utf-8"))
+		m_dt=[]
+		for i,e in enumerate(fl):
+			os.remove("build/lib/"+e)
+			f.write(bytes(f"const uint8_t _m{i}[]={{","utf-8"))
+			with open(f"build/lib/{e}.lllc","rb") as rf:
+				c=0
+				for k in bytes(e,"utf-8"):
+					c^=k
+				dt=rf.read()
+				m_dt.append(bytes(f"{{\"{e.replace(chr(34),chr(92)+chr(34))}\",{len(e)},{c},{len(dt)},_m{i}}}","utf-8"))
+				st=False
+				for c in dt:
+					f.write((b"," if st else b"")+bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
+					st=True
+			f.write(b"};\n")
+		f.write(b"const module_t m_dt[]={"+b",".join(m_dt)+b"};\n#endif")
+	os.chdir("build")
+	if (os.name=="nt"):
+		if ("--release" in sys.argv):
+			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","_CRT_SECURE_NO_WARNINGS","/D","__LLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]+o_fl).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+		else:
+			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/D","__LLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]+o_fl).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
 	else:
-		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/D","__LLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I",".","../src/main.c"]).returncode!=0 or subprocess.run(["link","main.obj","/OUT:lll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]+o_fl).returncode!=0):
-			os.chdir(cd)
-			sys.exit(1)
-else:
-	if ("--release" in sys.argv):
-		if (subprocess.run(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
-			os.chdir(cd)
-			sys.exit(1)
-	else:
-		if (subprocess.run(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
-			os.chdir(cd)
-			sys.exit(1)
-os.chdir(cd)
+		if ("--release" in sys.argv):
+			if (subprocess.run(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+		else:
+			if (subprocess.run(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+	os.chdir(cd)
 if ("--run" in sys.argv):
-	subprocess.run(["build/lll","-h"])
-	if (subprocess.run(["build/lll_standalone","example/test.lll","-v","-O3","-c","-o","build/test","-e","-I","example","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test.lllc","-v","-O0","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/lll","build/test2.llla","-v","-P","-L"]).returncode!=0):
+	subprocess.run([e_nm,"-h"])
+	if (subprocess.run([e_nm,"example/test.lll","-v","-O3","-c","-o","build/test","-e","-I","example","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test.lllc","-v","-O0","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.llla","-v","-P","-L"]).returncode!=0):
 		sys.exit(1)

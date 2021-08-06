@@ -1,17 +1,39 @@
 name: Build CI
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+    paths:
+      - build.py
+      - rsrc/
+      - src/
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+    paths:
+      - build.py
+      - rsrc/
+      - src/
+permissions: read-all
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{matrix.os}}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
-    - name: Build
-      run: python build.py
+    - name: 'Build LLL (OS: ${{matrix.os}}, Args: ${{matrix.args}})'
+      run: python build.py ${{matrix.args}}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        args:
+          - ''
+          - '--release'
+          - '--standalone'
+          - '--standalone --release'
+    timeout-minutes: 2
