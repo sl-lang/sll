@@ -3,15 +3,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - rsrc/
-      - src/
   pull_request:
     branches:
       - main
-    paths:
-      - rsrc/
-      - src/
 permissions: read-all
 jobs:
   build:
