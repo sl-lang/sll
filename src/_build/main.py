@@ -21,6 +21,7 @@ INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^>]*\")\s*$""",re.MU
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
 MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
+NUMBERS=b"0123456789"
 SPACE_CHARACTERS=b" \t\n\v\f\r"
 SPACE_CHARACTERS_REGEX=re.compile(b" \t\n\v\f\r")
 
@@ -43,66 +44,41 @@ def _wrap_output(a,pfx=b"    "):
 
 
 def _expand_macros(k,dm,dfm):
-	for e,v in dm.items():
-		k=re.sub(br"\b"+e+br"\b",v,k)
-	while (True):
-		u=False
-		for e,v in dm.items():
-			i=0
-			while (i<len(k)):
-				if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k.startswith(e,i)):
-					j=i
-					i+=len(e)
-					while (i<len(k) and k[i:i+1] in SPACE_CHARACTERS):
-						i+=1
-					if (k[i:i+1] not in b"("+IDENTIFIER_CHARACTERS):
-						i=j+len(e)
-						k=k[:j]+v+k[i:]
-						i+=len(v)-(i-j)
-						u=True
+	i=0
+	while (i<len(k)):
+		if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k[i] not in NUMBERS):
+			j=i
+			while (i<len(k) and k[i:i+1] in IDENTIFIER_CHARACTERS):
 				i+=1
-		for e,v in dfm.items():
-			i=0
-			while (i<len(k)):
-				if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k.startswith(e,i)):
-					j=i
-					i+=len(e)
-					while (k[i:i+1] in SPACE_CHARACTERS):
+			for e,v in dm.items():
+				if (e==k[j:i]):
+					k=k[:j]+v+k[i:]
+					i=j-1
+					break
+			if (i!=j):
+				for e,v in dfm.items():
+					if (e==k[j:i]):
+						if (k[i:i+1]!=b"("):
+							continue
 						i+=1
-					if (k[i:i+1]==b"("):
-						b=0
-						al=[b""]
-						ali=0
-						while (True):
-							if (k[i:i+1]==b"("):
-								b+=1
-								if (b==1):
-									i+=1
-									continue
-							elif (k[i:i+1]==b")"):
-								b-=1
-							if (b==0):
-								break
-							if (k[i:i+1]==b","):
-								al.append(b"")
-								ali+=1
-							else:
-								al[ali]+=k[i:i+1]
+						l=i
+						while (k[i:i+1]!=b")"):
 							i+=1
-						if (len(al)!=len(v[0])):
-							raise RuntimeError("Invalid Macro Invocation (Argument Count Mismatch)")
-						s=b""
-						for st in v[1]:
-							if (type(st)==int):
-								s+=al[st]
+						a=k[l:i].split(b".")
+						if (len(a)!=len(v[0])):
+							raise RuntimeError("Invalid Macro Argument Count")
+						tmp=k[i+1:]
+						k=k[:j]
+						for m,n in enumerate(v[1]):
+							if (m&1):
+								k+=a[n]
 							else:
-								s+=st
-						k=k[:j]+s+k[i+1:]
-						i+=len(s)-(i-j)
-						u=True
-				i+=1
-		if (u is False):
-			return k
+								k+=n
+						k+=tmp
+						i=j-1
+						break
+		i+=1
+	return k
 
 
 
@@ -180,12 +156,7 @@ def _generate_header(h_dt,c_m):
 	d_s=b""
 	o=b""
 	for i,(k,v) in enumerate(sorted(d_v,key=lambda e:e[0])):
-		while (True):
-			nv=_expand_macros(v,dm,dfm)
-			if (nv==v):
-				break
-			v=nv
-		v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),v)
+		v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm))
 		d_v[i]=(k,v)
 		d_s+=b"\n#define "+k+b" "+v.strip()
 	for i,(k,v) in enumerate(sorted(d_f,key=lambda e:e[0])):
@@ -209,21 +180,14 @@ def _generate_header(h_dt,c_m):
 				else:
 					break
 		nk+=b")"
-		while (True):
-			nv=_expand_macros(v,dm,dfm)
-			if (nv==v):
-				break
-			v=nv
-		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),v))
+		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm)))
 		d_f[i]=(nk,v)
 		d_s+=b"\n#define "+nk+b" "+v.strip()
 	fl=[]
 	for k in l:
-		while (True):
-			nk=_expand_macros(k,dm,dfm)
-			if (nk==k):
-				break
-			k=nk
+		k=_expand_macros(k,dm,dfm)
+		if (len(k)==0):
+			continue
 		if (b"(" in k and b"(*" not in SPACE_CHARACTERS_REGEX.sub(b"",k) and k.count(b"(")==k.count(b")") and k.count(b"{")==k.count(b"}")):
 			fl.append((k[:-len(k.split(b"(")[-1])-1].split(b" ")[-1],k.strip()))
 			continue
@@ -467,7 +431,7 @@ if (os.name!="nt"):
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
-if (_wrap_output(["build/lll","-c",("-O3" if "--release" in sys.argv else "-O0"),"-L","-e"]+["build/lib/"+e for e in fl]+(["-v"] if vb else []),pfx=b"  ").returncode!=0):
+if (_wrap_output(["build/lll","-c",("-O3" if "--release" in sys.argv else "-O1"),"-L","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if vb else []),pfx=b"  ").returncode!=0):
 	sys.exit(1)
 if (vb):
 	print("Removing Module Source Files...")

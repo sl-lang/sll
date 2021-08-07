@@ -1,5 +1,7 @@
+#include <lll/_lll_internal.h>
 #include <lll/common.h>
 #include <lll/core.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <stdlib.h>
 
@@ -7,8 +9,9 @@
 
 lll_string_t _zero_string={
 	0,
-	0,
-	1
+	1,
+	HEAP_SIGNATURE+1,
+	0
 };
 
 
@@ -32,8 +35,8 @@ _check_next_string:;
 	}
 	st->l++;
 	st->dt=realloc(st->dt,st->l*sizeof(lll_string_t*));
-	lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
-	s->l=l;
+	lll_string_t* s=lll_string_create(l);
+	s->rc=1;
 	s->c=c;
 	for (lll_string_length_t i=0;i<l;i++){
 		s->v[i]=*(dt+i);
@@ -88,13 +91,4 @@ __LLL_FUNC __LLL_RETURN_SIZE lll_get_object_size(const lll_object_t* o){
 		off+=lll_get_object_size(o+off);
 	}
 	return off+eoff;
-}
-
-
-
-__LLL_FUNC void lll_string_release(lll_string_t* s){
-	s->rc--;
-	if (!s->rc){
-		free(s);
-	}
 }

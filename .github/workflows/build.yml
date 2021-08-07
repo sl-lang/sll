@@ -1,6 +1,5 @@
 name: Build
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -19,16 +18,19 @@ jobs:
     name: Build (OS = ${{matrix.os}}, Args = 'lll${{matrix.args}}')
     runs-on: ${{matrix.os}}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v2
       with:
         python-version: 3.9
-    - name: 'Build "lll${{matrix.args}}"'
+    - name: 'Build "lll${{matrix.args}}" (Ubuntu)'
       if: matrix.os=='ubuntu-latest'
       run: python src/_build/main.py --verbose${{matrix.args}}
-    - uses: ilammy/msvc-dev-cmd@v1
+    - name: Setup Windows Environment
+      uses: ilammy/msvc-dev-cmd@v1
       if: matrix.os=='windows-latest'
-    - name: 'Build "lll${{matrix.args}}"'
+    - name: 'Build "lll${{matrix.args}}" (Windows)'
       if: matrix.os=='windows-latest'
       run: python src/_build/main.py --verbose${{matrix.args}}
       shell: cmd

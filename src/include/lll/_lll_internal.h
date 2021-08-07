@@ -91,7 +91,18 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define ASSERT_EXIT(x,...)
 #endif
 
+#define ALIGN(a) ((((uint64_t)(a))+STRING_HEAP_ALIGNMENT-1)&(~(STRING_HEAP_ALIGNMENT-1)))
+#define CORRECT_ALIGNMENT(n) ASSERT(!(((uint64_t)(n))&(STRING_HEAP_ALIGNMENT-1)))
+
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
+
+#define STRING_HEAP_ALIGNMENT 8
+#define HEAP_SIGNATURE 'H'
+#define GET_HEAP_SIGNATURE(s) ((s)->h&0xff)
+#define GET_PADDING(s) ((s)->h>>8)
+
+#define MEMORY_NODE_SIGNATURE 0x8000000000000000
+#define MEMORY_NODE_GET_SIZE(n) ((n)->sz&0x7fffffffffffffff)
 
 #define ASSEMBLY_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','A',0)
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('L','L','C',0)
@@ -99,6 +110,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define EXTRA_COMPILATION_DATA_INSIDE_FUNCTION 1
 #define EXTRA_COMPILATION_DATA_IMPORT 2
 #define EXTRA_COMPILATION_DATA_EXPORT 4
+#define EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION 8
 
 #define ERROR_DISPLAY_TAB_WIDTH 4
 
@@ -240,6 +252,14 @@ typedef struct __INTERNAL_FUNCTION{
 	const char nm[256];
 	lll_internal_function_pointer_t f;
 } internal_function_t;
+
+
+
+typedef struct __MEMORY_NODE{
+	uint64_t sz;
+	struct __MEMORY_NODE* p;
+	struct __MEMORY_NODE* n;
+} memory_node_t;
 
 
 

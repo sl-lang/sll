@@ -9,7 +9,19 @@ extern const char* lll_platform_string;
 
 
 
+__LLL_FUNC void* lll_platform_allocate_page(lll_page_size_t sz);
+
+
+
+__LLL_FUNC void lll_platform_free_page(void* pg);
+
+
+
 __LLL_FUNC lll_time_t lll_platform_get_current_time(void);
+
+
+
+__LLL_FUNC lll_page_size_t lll_platform_get_page_size(void);
 
 
 

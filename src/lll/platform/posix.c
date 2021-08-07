@@ -1,5 +1,7 @@
 #include <lll/common.h>
+#include <lll/platform.h>
 #include <lll/types.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <time.h>
@@ -11,10 +13,35 @@ const char* lll_platform_string="posix";
 
 
 
+uint64_t _posix_page_size=0;
+
+
+
+__LLL_FUNC void* lll_platform_allocate_page(lll_page_size_t sz){
+	return mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+}
+
+
+
+__LLL_FUNC void lll_platform_free_page(void* pg){
+	munmap(pg,lll_platform_get_page_size());
+}
+
+
+
 __LLL_FUNC lll_time_t lll_platform_get_current_time(void){
 	struct timespec tm;
 	clock_gettime(CLOCK_REALTIME,&tm);
 	return tm.tv_sec*1000000000+tm.tv_nsec;
+}
+
+
+
+__LLL_FUNC lll_time_t lll_platform_get_page_size(void){
+	if (!_posix_page_size){
+		_posix_page_size=sysconf(_SC_PAGESIZE);
+	}
+	return _posix_page_size;
 }
 
 

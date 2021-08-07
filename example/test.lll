@@ -1,11 +1,4 @@
-(= time)
-(= INVALID_FILE_HANDLE)
-(= open)
-(= close)
-(= write)
-(= platform)
-(= argc)
-(= argv)
+(# time INVALID_FILE_HANDLE open close write platform argc argv)
 (? 1 (-- "time.lll" "file.lll" "sys.lll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {

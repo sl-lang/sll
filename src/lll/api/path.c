@@ -2,6 +2,7 @@
 #include <lll/api.h>
 #include <lll/constants.h>
 #include <lll/platform.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <stdlib.h>
 
@@ -19,8 +20,7 @@ __API_FUNC(path_absolute){
 			o->dt.s=a->dt.s;
 		}
 		else{
-			o->dt.s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
-			o->dt.s->l=l;
+			o->dt.s=lll_string_create(l);
 			o->dt.s->rc=0;
 			o->dt.s->c=0;
 			for (lll_string_length_t i=0;i<l;i++){

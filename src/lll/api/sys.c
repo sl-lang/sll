@@ -3,6 +3,7 @@
 #include <lll/constants.h>
 #include <lll/core.h>
 #include <lll/platform.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <stdlib.h>
 
@@ -41,10 +42,9 @@ __LLL_FUNC void lll_set_argument(lll_sys_arg_count_t i,const char* a){
 		c^=*(a+l);
 		l++;
 	}
-	lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
-	s->l=l;
-	s->c=c;
+	lll_string_t* s=lll_string_create(l);
 	s->rc=1;
+	s->c=c;
 	for (lll_string_length_t j=0;j<l;j++){
 		s->v[j]=*(a+j);
 	}
@@ -81,10 +81,9 @@ __API_FUNC(sys_get_platform){
 		c^=*(lll_platform_string+l);
 		l++;
 	}
-	lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
-	s->l=l;
-	s->c=c;
+	lll_string_t* s=lll_string_create(l);
 	s->rc=1;
+	s->c=c;
 	for (lll_string_length_t j=0;j<l;j++){
 		s->v[j]=*(lll_platform_string+j);
 	}

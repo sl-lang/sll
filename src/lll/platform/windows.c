@@ -1,6 +1,7 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
 #include <lll/common.h>
+#include <lll/platform.h>
 #include <lll/types.h>
 
 
@@ -9,10 +10,30 @@ const char* lll_platform_string="windows";
 
 
 
+__LLL_FUNC void* lll_platform_allocate_page(lll_page_size_t sz){
+	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+}
+
+
+
+__LLL_FUNC void lll_platform_free_page(void* pg){
+	VirtualFree(pg,0,MEM_RELEASE);
+}
+
+
+
 __LLL_FUNC lll_time_t lll_platform_get_current_time(void){
 	FILETIME ft;
 	GetSystemTimeAsFileTime(&ft);
 	return ((((lll_time_t)ft.dwHighDateTime)<<32)|ft.dwLowDateTime)*100-11644473600000000000;
+}
+
+
+
+__LLL_FUNC lll_page_size_t lll_platform_get_page_size(void){
+	SYSTEM_INFO si;
+	GetSystemInfo(&si);
+	return si.dwPageSize;
 }
 
 

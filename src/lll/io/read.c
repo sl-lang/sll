@@ -1,6 +1,7 @@
 #include <lll/_lll_internal.h>
 #include <lll/common.h>
 #include <lll/io.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <lll/version.h>
 #include <stdint.h>
@@ -169,11 +170,10 @@ __LLL_FUNC __LLL_RETURN lll_load_assembly(lll_input_data_stream_t* is,lll_assemb
 	for (lll_string_index_t i=0;i<a_dt->st.l;i++){
 		lll_string_length_t l;
 		CHECK_ERROR(is,l,lll_string_length_t,e);
-		lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
+		lll_string_t* s=lll_string_create(l);
 		*(a_dt->st.dt+i)=s;
-		s->l=l;
-		s->c=0;
 		s->rc=1;
+		s->c=0;
 		if (LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,s->v,s->l*sizeof(lll_char_t))==LLL_END_OF_DATA){
 			e->t=LLL_ERROR_INVALID_FILE_FORMAT;
 			return LLL_RETURN_ERROR;
@@ -346,9 +346,9 @@ __LLL_FUNC __LLL_RETURN lll_load_compiled_object(lll_input_data_stream_t* is,lll
 	for (lll_string_index_t i=0;i<c_dt->st.l;i++){
 		lll_string_length_t l;
 		CHECK_ERROR(is,l,lll_string_length_t,e);
-		lll_string_t* s=malloc(sizeof(lll_string_t)+(l+1)*sizeof(lll_char_t));
+		lll_string_t* s=lll_string_create(l);
 		*(c_dt->st.dt+i)=s;
-		s->l=l;
+		s->rc=1;
 		s->c=0;
 		if (LLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,s->v,s->l*sizeof(lll_char_t))==LLL_END_OF_DATA){
 			e->t=LLL_ERROR_INVALID_FILE_FORMAT;

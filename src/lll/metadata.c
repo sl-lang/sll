@@ -1,6 +1,7 @@
 #include <lll/_lll_internal.h>
 #include <lll/common.h>
 #include <lll/core.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -137,11 +138,11 @@ __LLL_FUNC void lll_optimize_metadata(lll_compilation_data_t* c_dt){
 			if (j==c_dt->st.l){
 				break;
 			}
+			lll_string_release(*(c_dt->st.dt+j));
 			for (uint32_t n=k;n<j;n++){
 				*(c_dt->st.dt+n-l)=*(c_dt->st.dt+n);
 				*(sm+n)=n-l;
 			}
-			free(*(c_dt->st.dt+j));
 			k=j+1;
 			l++;
 			v&=v-1;

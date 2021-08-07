@@ -45,6 +45,10 @@ typedef uint16_t lll_file_path_index_t;
 
 
 
+typedef uint16_t lll_heap_data_t;
+
+
+
 typedef uint16_t lll_read_char_t;
 
 
@@ -138,6 +142,10 @@ typedef uint32_t lll_variable_index_t;
 
 
 typedef int64_t lll_integer_t;
+
+
+
+typedef uint64_t lll_page_size_t;
 
 
 
@@ -267,8 +275,9 @@ typedef struct __LLL_FUNCTION_DATA{
 
 
 typedef struct __LLL_STRING{
-	lll_string_length_t l;
+	const lll_string_length_t l;
 	lll_ref_count_t rc;
+	const lll_heap_data_t h;
 	lll_string_checksum_t c;
 	lll_char_t v[];
 } lll_string_t;

@@ -2,6 +2,7 @@
 #include <lll/common.h>
 #include <lll/core.h>
 #include <lll/platform.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <math.h>
 #include <stdint.h>
@@ -325,7 +326,7 @@ uint8_t _read_object_internal(lll_compilation_data_t* c_dt,lll_read_char_t c,con
 					}
 				}
 			}
-			else if (fl&(EXTRA_COMPILATION_DATA_IMPORT|EXTRA_COMPILATION_DATA_EXPORT)){
+			else if (fl&(EXTRA_COMPILATION_DATA_IMPORT|EXTRA_COMPILATION_DATA_EXPORT|EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
 				o->dt.sc=sc;
 			}
 			else{
@@ -518,6 +519,11 @@ _read_symbol:
 				}
 				else if (*str=='@'){
 					o->t=LLL_OBJECT_TYPE_EXIT;
+				}
+				else if (*str=='#'){
+					o->t=LLL_OBJECT_TYPE_OPERATION_LIST;
+					sc=0;
+					fl|=EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION;
 				}
 				else{
 					goto _unknown_symbol;
@@ -990,7 +996,7 @@ _next_short_identifier:;
 							arg->dt.id=mx_i;
 							goto _identifier_found;
 						}
-						if ((o->t!=LLL_OBJECT_TYPE_ASSIGN||ac)&&o->t!=LLL_OBJECT_TYPE_FUNC){
+						if ((o->t!=LLL_OBJECT_TYPE_ASSIGN||ac)&&o->t!=LLL_OBJECT_TYPE_FUNC&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
 							e->t=LLL_ERROR_UNKNOWN_IDENTIFIER;
 							e->dt.r.off=arg_s;
 							e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1033,7 +1039,7 @@ _next_long_identifier:;
 							arg->dt.id=mx_i;
 							goto _identifier_found;
 						}
-						if (o->t!=LLL_OBJECT_TYPE_ASSIGN&&o->t!=LLL_OBJECT_TYPE_FUNC){
+						if ((o->t!=LLL_OBJECT_TYPE_ASSIGN||ac)&&o->t!=LLL_OBJECT_TYPE_FUNC&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
 							e->t=LLL_ERROR_UNKNOWN_IDENTIFIER;
 							e->dt.r.off=arg_s;
 							e->dt.r.sz=LLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1109,8 +1115,8 @@ _check_next_string:;
 						*(im_dt.sm+i)=c_dt->st.l;
 						c_dt->st.l++;
 						c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(lll_string_t*));
-						lll_string_t* n=malloc(sizeof(lll_string_t)+(s->l+1)*sizeof(lll_char_t));
-						n->l=s->l;
+						lll_string_t* n=lll_string_create(s->l);
+						n->rc=1;
 						n->c=s->c;
 						for (lll_string_length_t j=0;j<s->l;j++){
 							n->v[j]=s->v[j];

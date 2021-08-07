@@ -1,5 +1,6 @@
 #include <lll/common.h>
 #include <lll/core.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <stdlib.h>
 
@@ -101,7 +102,7 @@ __LLL_FUNC void lll_free_internal_function_table(lll_internal_function_table_t* 
 
 __LLL_FUNC void lll_free_string_table(lll_string_table_t* st){
 	for (lll_string_index_t i=0;i<st->l;i++){
-		free(*(st->dt+i));
+		lll_string_release(*(st->dt+i));
 	}
 	if (st->dt){
 		free(st->dt);

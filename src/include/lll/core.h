@@ -141,8 +141,4 @@ __LLL_FUNC void lll_setup_stack(lll_stack_data_t* o,lll_buffer_t bf,lll_stack_of
 
 
 
-__LLL_FUNC void lll_string_release(lll_string_t* s);
-
-
-
 #endif

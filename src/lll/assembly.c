@@ -2,6 +2,7 @@
 #include <lll/common.h>
 #include <lll/constants.h>
 #include <lll/core.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -69,10 +70,9 @@ _check_next_string:;
 	}
 	a_dt->st.l++;
 	a_dt->st.dt=realloc(a_dt->st.dt,a_dt->st.l*sizeof(lll_string_t*));
-	lll_string_t* s=malloc(sizeof(lll_string_t)+(al+bl+1)*sizeof(lll_char_t));
-	s->l=al+bl;
-	s->c=c;
+	lll_string_t* s=lll_string_create(al+bl);
 	s->rc=1;
+	s->c=c;
 	for (lll_string_length_t j=0;j<al;j++){
 		s->v[j]=*(a+j);
 	}
@@ -621,10 +621,9 @@ __LLL_FUNC __LLL_RETURN lll_generate_assembly(const lll_compilation_data_t* c_dt
 	o->st.dt=malloc(o->st.l*sizeof(lll_string_t*));
 	for (lll_string_index_t i=0;i<o->st.l;i++){
 		lll_string_t* s=*(c_dt->st.dt+i);
-		lll_string_t* d=malloc(sizeof(lll_string_t)+(s->l+1)*sizeof(lll_char_t));
-		d->l=s->l;
-		d->c=s->c;
+		lll_string_t* d=lll_string_create(s->l);
 		d->rc=1;
+		d->c=s->c;
 		for (lll_string_length_t l=0;l<s->l;l++){
 			d->v[l]=s->v[l];
 		}
@@ -964,7 +963,7 @@ _handle_nop:;
 				*(o->st.dt+n-l)=*(o->st.dt+n);
 				*(sm.im+n)=n-l;
 			}
-			free(*(o->st.dt+j));
+			lll_string_release(*(o->st.dt+j));
 			k=j+1;
 			l++;
 			v&=v-1;

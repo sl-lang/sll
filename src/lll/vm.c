@@ -2,6 +2,7 @@
 #include <lll/api.h>
 #include <lll/common.h>
 #include <lll/core.h>
+#include <lll/string.h>
 #include <lll/types.h>
 #include <stdint.h>
 #include <stdio.h>
