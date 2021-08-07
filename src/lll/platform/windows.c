@@ -17,6 +17,25 @@ __LLL_FUNC lll_time_t lll_platform_get_current_time(void){
 
 
 
+__LLL_FUNC lll_buffer_size_t lll_platform_path_absolute(const char* fp,lll_buffer_t bf,lll_buffer_size_t bfl){
+	return (lll_buffer_size_t)GetFullPathNameA(fp,bfl,bf,NULL);
+}
+
+
+
+__LLL_FUNC lll_bool_t lll_platform_path_exists(const char* fp){
+	return (GetFileAttributesA(fp)!=INVALID_FILE_ATTRIBUTES);
+}
+
+
+
+__LLL_FUNC lll_bool_t lll_platform_path_is_directory(const char* fp){
+	DWORD a=GetFileAttributesA(fp);
+	return (a==INVALID_FILE_ATTRIBUTES?0:!!(a&FILE_ATTRIBUTE_DIRECTORY));
+}
+
+
+
 __LLL_FUNC void lll_platform_setup_console(void){
 	SetConsoleOutputCP(CP_UTF8);
 	DWORD v;

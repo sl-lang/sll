@@ -13,6 +13,10 @@ typedef uint8_t lll_assembly_instruction_type_t;
 
 
 
+typedef uint8_t lll_bool_t;
+
+
+
 typedef uint8_t lll_char_t;
 
 

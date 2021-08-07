@@ -1,0 +1,7 @@
+(= absolute (... "path_absolute"))
+(= exists (... "path_exists"))
+(= is_dir (... "path_is_dir"))
+(= relative (... "path_relative"))
+(= size (... "path_size"))
+
+(## absolute exists is_dir relative size)

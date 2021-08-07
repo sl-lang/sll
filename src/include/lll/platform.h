@@ -13,6 +13,18 @@ __LLL_FUNC lll_time_t lll_platform_get_current_time(void);
 
 
 
+__LLL_FUNC lll_buffer_size_t lll_platform_path_absolute(const char* fp,lll_buffer_t bf,lll_buffer_size_t bfl);
+
+
+
+__LLL_FUNC lll_bool_t lll_platform_path_exists(const char* fp);
+
+
+
+__LLL_FUNC lll_bool_t lll_platform_path_is_directory(const char* fp);
+
+
+
 __LLL_FUNC void lll_platform_setup_console(void);
 
 

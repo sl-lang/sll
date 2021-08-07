@@ -25,13 +25,13 @@ SPACE_CHARACTERS_REGEX=re.compile(b" \t\n\v\f\r")
 
 
 
-def _wrap_output(a):
+def _wrap_output(a,pfx=b"    "):
 	p=subprocess.Popen(a,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
 	st=False
 	for c in iter(lambda:p.stdout.read(1),b""):
 		if (not st):
 			st=True
-			sys.stdout.buffer.write(b"    ")
+			sys.stdout.buffer.write(pfx)
 		sys.stdout.buffer.write(c)
 		if (c==b"\n"):
 			st=False
@@ -442,8 +442,18 @@ else:
 			sys.exit(1)
 	else:
 		if (vb):
+			print("  Compiling Library Files...")
+		if (subprocess.run(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
+		if (vb):
+			print("  Linking Library Files...")
+		if (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-Werror","-o","lll_lib.so"]+o_fl+["-lm"]).returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
+		if (vb):
 			print("  Compiling & Linking Files...")
-		if (subprocess.run(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-I","../src/include"]+i_fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-Werror","-o","lll_lib.so"]+o_fl+["-lm"]).returncode!=0 or subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","../src/main.c","lll_lib.so","-o","lll","-I","."]).returncode!=0):
+		if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","../src/main.c","lll_lib.so","-o","lll","-I","."]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	os.chdir(cd)
@@ -456,7 +466,7 @@ if (os.name!="nt"):
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
-if (subprocess.run(["build/lll","-c",("-O3" if "--release" in sys.argv else "-O0"),"-L","-e"]+["build/lib/"+e for e in fl]).returncode!=0):
+if (_wrap_output(["build/lll","-c",("-O3" if "--release" in sys.argv else "-O0"),"-L","-e"]+["build/lib/"+e for e in fl]+(["-v"] if vb else []),pfx=b"  ").returncode!=0):
 	sys.exit(1)
 e_nm="build/lll"
 if ("--standalone" in sys.argv):

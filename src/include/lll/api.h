@@ -28,6 +28,26 @@ __API_FUNC_DECL(file_write);
 
 
 
+__API_FUNC_DECL(path_absolute);
+
+
+
+__API_FUNC_DECL(path_exists);
+
+
+
+__API_FUNC_DECL(path_is_dir);
+
+
+
+__API_FUNC_DECL(path_relative);
+
+
+
+__API_FUNC_DECL(path_size);
+
+
+
 __API_FUNC_DECL(sys_arg_get);
 
 
