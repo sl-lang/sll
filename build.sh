@@ -1,4 +1,4 @@
 #!/bin/bash
 echo off
 clear
-python build.py "$@"
+python src/_build/main.py "$@"

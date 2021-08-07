@@ -1,3 +1,3 @@
 @echo off
 cls
-python build.py %*
+python src/_build/main.py %*

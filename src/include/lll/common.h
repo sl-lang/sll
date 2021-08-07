@@ -35,4 +35,8 @@
 
 
 
+#define LLL_VERSION ((lll_version_t)((LLL_VERSION_MAJOR<<12)|(LLL_VERSION_MINOR<<8)|LLL_VERSION_PATCH))
+
+
+
 #endif
