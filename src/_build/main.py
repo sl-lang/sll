@@ -546,7 +546,7 @@ if ("--standalone" in sys.argv):
 			print("  Removing Old Files...")
 	os.chdir(cd)
 if ("--bundle" in sys.argv):
-	with zipfile.ZipFile(f"build/lll.zip","w") as zf:
+	with zipfile.ZipFile("build/lll.zip","w") as zf:
 		for k in (["build/lll.exe","build/lll_lib.dll"] if os.name=="nt" else ["build/lll","build/lll_lib.so"]):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
