@@ -1,1 +1,1 @@
-# C - Lisp Like Language
+# The SL Language Compiler & Runtime
