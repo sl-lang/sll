@@ -17,8 +17,9 @@ uint64_t _pg_sz=0;
 void _free_string_heap(void){
 	void* c=_string_heap_page_ptr;
 	while (c){
-		void* n=*((void**)c);
-		lll_platform_free_page(c);
+		page_header_t* h=(page_header_t*)c;
+		void* n=h->p;
+		lll_platform_free_page(c,h->sz);
 		c=n;
 	}
 }
@@ -51,12 +52,14 @@ __LLL_FUNC lll_string_t* lll_string_create(lll_string_length_t l){
 			atexit(_free_string_heap);
 			_pg_sz=lll_platform_get_page_size();
 		}
-		lll_page_size_t pg_sz=(sz+sizeof(uint64_t)+sizeof(void*)+_pg_sz-1)/_pg_sz*_pg_sz;
+		lll_page_size_t pg_sz=(sz+sizeof(page_header_t)+sizeof(uint64_t)+_pg_sz-1)/_pg_sz*_pg_sz;
 		void* pg=lll_platform_allocate_page(pg_sz);
-		*((void**)pg)=_string_heap_page_ptr;
-		n=(memory_node_t*)((uint64_t)pg+sizeof(void*));
+		page_header_t* pg_h=(page_header_t*)pg;
+		pg_h->p=_string_heap_page_ptr;
+		pg_h->sz=pg_sz;
+		n=(memory_node_t*)((uint64_t)pg+sizeof(page_header_t));
 		CORRECT_ALIGNMENT(n);
-		n->sz=(pg_sz-sizeof(void*)-sizeof(uint64_t))|MEMORY_NODE_SIGNATURE;
+		n->sz=(pg_sz-sizeof(page_header_t)-sizeof(uint64_t))|MEMORY_NODE_SIGNATURE;
 		n->p=NULL;
 		n->n=_string_heap_node;
 		if (n->n){

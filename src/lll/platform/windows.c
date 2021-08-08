@@ -16,7 +16,7 @@ __LLL_FUNC void* lll_platform_allocate_page(lll_page_size_t sz){
 
 
 
-__LLL_FUNC void lll_platform_free_page(void* pg){
+__LLL_FUNC void lll_platform_free_page(void* pg,lll_page_size_t sz){
 	VirtualFree(pg,0,MEM_RELEASE);
 }
 

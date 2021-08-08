@@ -255,6 +255,13 @@ typedef struct __INTERNAL_FUNCTION{
 
 
 
+typedef struct __PAGE_HEADER{
+	void* p;
+	uint64_t sz;
+} page_header_t;
+
+
+
 typedef struct __MEMORY_NODE{
 	uint64_t sz;
 	struct __MEMORY_NODE* p;
