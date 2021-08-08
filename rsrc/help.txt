@@ -1,14 +1,14 @@
-Usage: lll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...
+Usage: sll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...
 Options:
-  -a, --generate-assembly -> Generate assembly (.llla)
+  -a, --generate-assembly -> Generate assembly (.slla)
   -A <arg1> <arg2> <arg3>, --args <arg1> <arg2> <arg3> -> Pass argumnets to the VM
-  -c, --generate-compiled-object -> Generate compiled objects (.lllc)
+  -c, --generate-compiled-object -> Generate compiled objects (.sllc)
   -e, --expand-file-paths -> Expand file paths
   -f <file>, --file <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))
   -h, --help -> Print this message
   -I <directory>, --include <directory> -> Add <directory> to file include path
   -L, --no-logo -> Disable compiler logo
-  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.llla | .lllc]. If no <output_file> is supplied, then each <file> output is written to <file>[.llla | .lllc]
+  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.slla | .sllc]. If no <output_file> is supplied, then each <file> output is written to <file>[.slla | .sllc]
   -O0 -> No optimization
   -O1 -> Remove padding
   -O2 -> Remove padding + Removal of debug data (default)

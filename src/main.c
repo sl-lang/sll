@@ -6,10 +6,10 @@
 #include <unistd.h>
 #endif
 #ifdef STANDALONE_BUILD
-#include <lll_lib_standalone.h>
+#include <sll_lib_standalone.h>
 #include <compiled_modules.h>
 #else
-#include <lll_lib.h>
+#include <sll_lib.h>
 #endif
 #include <help_text.h>
 #include <stdio.h>
@@ -79,13 +79,13 @@ uint32_t fpl;
 char l_fp[MAX_PATH_LENGTH];
 uint32_t l_fpl;
 #else
-lll_input_buffer_t i_bf;
+sll_input_buffer_t i_bf;
 #endif
-lll_internal_function_table_t i_ft;
+sll_internal_function_table_t i_ft;
 
 
 
-uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_data_t* c_dt,FILE** f,lll_input_data_stream_t* is,char* f_fp);
+uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp);
 
 
 
@@ -137,44 +137,44 @@ void print_int(int64_t v){
 
 
 
-lll_return_t load_import(const lll_string_t* nm,lll_compilation_data_t* o,lll_error_t* e){
+sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
 	char bf[MAX_PATH_LENGTH];
-	for (lll_string_length_t m=0;m<nm->l;m++){
+	for (sll_string_length_t m=0;m<nm->l;m++){
 		bf[m]=nm->v[m];
 	}
 	bf[nm->l]=0;
 	FILE* f=NULL;
-	lll_assembly_data_t a_dt={0};
-	lll_input_data_stream_t is;
+	sll_assembly_data_t a_dt={0};
+	sll_input_data_stream_t is;
 	char f_fp[MAX_PATH_LENGTH];
 	uint8_t st[COMPILER_STACK_SIZE];
-	lll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
-	lll_init_compilation_data(bf,&is,o);
-	lll_set_compilation_data_stack(o,st,COMPILER_STACK_SIZE);
+	sll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
+	sll_init_compilation_data(bf,&is,o);
+	sll_set_compilation_data_stack(o,st,COMPILER_STACK_SIZE);
 	if (!load_file(bf,&a_dt,o,&f,&is,f_fp)){
 		if (f){
 			fclose(f);
 		}
-		lll_free_compilation_data(o);
-		e->t=LLL_ERROR_UNKNOWN;
-		return LLL_RETURN_ERROR;
+		sll_free_compilation_data(o);
+		e->t=SLL_ERROR_UNKNOWN;
+		return SLL_RETURN_ERROR;
 	}
 	if (fl&_FLAG_ASSEMBLY_GENERATED){
-		lll_free_assembly_function_table(&(a_dt.ft));
-		lll_free_string_table(&(a_dt.st));
+		sll_free_assembly_function_table(&(a_dt.ft));
+		sll_free_string_table(&(a_dt.st));
 		PRINT_STATIC_STR("Importing Assembly into Compiled Objects is Not Allowed\n");
-		e->t=LLL_ERROR_UNKNOWN;
-		return LLL_RETURN_ERROR;
+		e->t=SLL_ERROR_UNKNOWN;
+		return SLL_RETURN_ERROR;
 	}
 	if (f){
 		fclose(f);
 	}
-	return LLL_RETURN_NO_ERROR;
+	return SLL_RETURN_NO_ERROR;
 }
 
 
 
-uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_data_t* c_dt,FILE** f,lll_input_data_stream_t* is,char* f_fp){
+uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp){
 	char bf[MAX_PATH_LENGTH];
 	uint32_t j=0;
 	for (uint32_t i=0;i<i_fpl;i++){
@@ -186,7 +186,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 				k++;
 			}
 			*(bf+j)='.';
-			*(bf+j+1)='l';
+			*(bf+j+1)='s';
 			*(bf+j+2)='l';
 			*(bf+j+3)='l';
 			*(bf+j+4)='c';
@@ -211,27 +211,27 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 					PRINT_STATIC_STR("'\n");
 				}
 				*f=nf;
-				lll_stream_create_input_from_file(nf,is);
-				lll_error_t e;
-				if (!lll_load_compiled_object(is,c_dt,&e)){
-					lll_free_identifier_table(&(c_dt->idt));
-					lll_free_export_table(&(c_dt->et));
-					lll_free_function_table(&(c_dt->ft));
-					lll_free_string_table(&(c_dt->st));
-					if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
+				sll_stream_create_input_from_file(nf,is);
+				sll_error_t e;
+				if (!sll_load_compiled_object(is,c_dt,&e)){
+					sll_free_identifier_table(&(c_dt->idt));
+					sll_free_export_table(&(c_dt->et));
+					sll_free_function_table(&(c_dt->ft));
+					sll_free_string_table(&(c_dt->st));
+					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 						PRINT_STATIC_STR("File '");
 						print_str(f_fp);
 						PRINT_STATIC_STR("'is not a Compiled Object.\n");
 					}
 					else{
-						lll_print_error(is,&e);
+						sll_print_error(is,&e);
 					}
 					return 0;
 				}
 				if (fl&FLAG_PRINT_OBJECT){
-					lll_output_data_stream_t os;
-					lll_stream_create_output_from_file(stdout,&os);
-					lll_print_object(c_dt,c_dt->h,&os);
+					sll_output_data_stream_t os;
+					sll_stream_create_output_from_file(stdout,&os);
+					sll_print_object(c_dt,c_dt->h,&os);
 					putchar('\n');
 				}
 				if (fl&FLAG_VERBOSE){
@@ -260,40 +260,40 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 					PRINT_STATIC_STR("'\n");
 				}
 				*f=nf;
-				lll_stream_create_input_from_file(nf,is);
+				sll_stream_create_input_from_file(nf,is);
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Trying to Load File as Assembly...\n");
 				}
-				lll_error_t e;
-				if (!lll_load_assembly(is,a_dt,&e)){
-					lll_free_assembly_function_table(&(a_dt->ft));
-					lll_free_string_table(&(a_dt->st));
-					if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
+				sll_error_t e;
+				if (!sll_load_assembly(is,a_dt,&e)){
+					sll_free_assembly_function_table(&(a_dt->ft));
+					sll_free_string_table(&(a_dt->st));
+					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 						if (fl&FLAG_VERBOSE){
 							PRINT_STATIC_STR("File is not an Assembly. Falling Back to Compiled Object...\n");
 						}
-						lll_stream_create_input_from_file(nf,is);
-						if (!lll_load_compiled_object(is,c_dt,&e)){
-							lll_free_identifier_table(&(c_dt->idt));
-							lll_free_export_table(&(c_dt->et));
-							lll_free_function_table(&(c_dt->ft));
-							lll_free_string_table(&(c_dt->st));
-							if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
+						sll_stream_create_input_from_file(nf,is);
+						if (!sll_load_compiled_object(is,c_dt,&e)){
+							sll_free_identifier_table(&(c_dt->idt));
+							sll_free_export_table(&(c_dt->et));
+							sll_free_function_table(&(c_dt->ft));
+							sll_free_string_table(&(c_dt->st));
+							if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 								if (fl&FLAG_VERBOSE){
 									PRINT_STATIC_STR("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
 								}
-								lll_stream_create_input_from_file(nf,is);
-								lll_init_compilation_data(f_fp,is,c_dt);
-								if (!lll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
-									if (e.t!=LLL_ERROR_UNKNOWN){
-										lll_print_error(is,&e);
+								sll_stream_create_input_from_file(nf,is);
+								sll_init_compilation_data(f_fp,is,c_dt);
+								if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
+									if (e.t!=SLL_ERROR_UNKNOWN){
+										sll_print_error(is,&e);
 									}
 									return 0;
 								}
 								if (fl&FLAG_PRINT_OBJECT){
-									lll_output_data_stream_t os;
-									lll_stream_create_output_from_file(stdout,&os);
-									lll_print_object(c_dt,c_dt->h,&os);
+									sll_output_data_stream_t os;
+									sll_stream_create_output_from_file(stdout,&os);
+									sll_print_object(c_dt,c_dt->h,&os);
 									putchar('\n');
 								}
 								if (fl&FLAG_VERBOSE){
@@ -301,15 +301,15 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 								}
 							}
 							else{
-								lll_print_error(is,&e);
+								sll_print_error(is,&e);
 								return 0;
 							}
 						}
 						else{
 							if (fl&FLAG_PRINT_OBJECT){
-								lll_output_data_stream_t os;
-								lll_stream_create_output_from_file(stdout,&os);
-								lll_print_object(c_dt,c_dt->h,&os);
+								sll_output_data_stream_t os;
+								sll_stream_create_output_from_file(stdout,&os);
+								sll_print_object(c_dt,c_dt->h,&os);
 								putchar('\n');
 							}
 							if (fl&FLAG_VERBOSE){
@@ -318,7 +318,7 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 						}
 					}
 					else{
-						lll_print_error(is,&e);
+						sll_print_error(is,&e);
 						return 0;
 					}
 				}
@@ -354,32 +354,32 @@ uint8_t load_file(const char* f_nm,lll_assembly_data_t* a_dt,lll_compilation_dat
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found Internal Module '");
 				print_str(f_nm);
-				PRINT_STATIC_STR(".lllc'\n");
+				PRINT_STATIC_STR(".sllc'\n");
 			}
 			*f=NULL;
 			i_bf.bf=m->dt;
 			i_bf.sz=m->sz;
-			lll_stream_create_input_from_buffer(&i_bf,is);
-			lll_error_t e;
-			if (!lll_load_compiled_object(is,c_dt,&e)){
-				lll_free_identifier_table(&(c_dt->idt));
-				lll_free_export_table(&(c_dt->et));
-				lll_free_function_table(&(c_dt->ft));
-				lll_free_string_table(&(c_dt->st));
-				if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
+			sll_stream_create_input_from_buffer(&i_bf,is);
+			sll_error_t e;
+			if (!sll_load_compiled_object(is,c_dt,&e)){
+				sll_free_identifier_table(&(c_dt->idt));
+				sll_free_export_table(&(c_dt->et));
+				sll_free_function_table(&(c_dt->ft));
+				sll_free_string_table(&(c_dt->st));
+				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					PRINT_STATIC_STR("Module '");
 					print_str(f_nm);
-					PRINT_STATIC_STR(".lllc' is not a Compiled Object.\n");
+					PRINT_STATIC_STR(".sllc' is not a Compiled Object.\n");
 				}
 				else{
-					lll_print_error(is,&e);
+					sll_print_error(is,&e);
 				}
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				lll_output_data_stream_t os;
-				lll_stream_create_output_from_file(stdout,&os);
-				lll_print_object(c_dt,c_dt->h,&os);
+				sll_output_data_stream_t os;
+				sll_stream_create_output_from_file(stdout,&os);
+				sll_print_object(c_dt,c_dt->h,&os);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -399,7 +399,7 @@ _check_next_module:;
 			k++;
 		}
 		*(l_fp+i)='.';
-		*(l_fp+i+1)='l';
+		*(l_fp+i+1)='s';
 		*(l_fp+i+2)='l';
 		*(l_fp+i+3)='l';
 		*(l_fp+i+4)='c';
@@ -425,27 +425,27 @@ _check_next_module:;
 				PRINT_STATIC_STR("'\n");
 			}
 			*f=nf;
-			lll_stream_create_input_from_file(nf,is);
-			lll_error_t e;
-			if (!lll_load_compiled_object(is,c_dt,&e)){
-				lll_free_identifier_table(&(c_dt->idt));
-				lll_free_export_table(&(c_dt->et));
-				lll_free_function_table(&(c_dt->ft));
-				lll_free_string_table(&(c_dt->st));
-				if (e.t==LLL_ERROR_INVALID_FILE_FORMAT){
+			sll_stream_create_input_from_file(nf,is);
+			sll_error_t e;
+			if (!sll_load_compiled_object(is,c_dt,&e)){
+				sll_free_identifier_table(&(c_dt->idt));
+				sll_free_export_table(&(c_dt->et));
+				sll_free_function_table(&(c_dt->ft));
+				sll_free_string_table(&(c_dt->st));
+				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					PRINT_STATIC_STR("File '");
 					print_str(f_fp);
 					PRINT_STATIC_STR("' is not a Compiled Object.\n");
 				}
 				else{
-					lll_print_error(is,&e);
+					sll_print_error(is,&e);
 				}
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				lll_output_data_stream_t os;
-				lll_stream_create_output_from_file(stdout,&os);
-				lll_print_object(c_dt,c_dt->h,&os);
+				sll_output_data_stream_t os;
+				sll_stream_create_output_from_file(stdout,&os);
+				sll_print_object(c_dt,c_dt->h,&os);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -463,13 +463,13 @@ _check_next_module:;
 
 
 
-uint8_t write_assembly(char* o_fp,const lll_assembly_data_t* a_dt){
+uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 	uint16_t i=0;
 	while (*(o_fp+i)){
 		i++;
 	}
 	*(o_fp+i)='.';
-	*(o_fp+i+1)='l';
+	*(o_fp+i+1)='s';
 	*(o_fp+i+2)='l';
 	*(o_fp+i+3)='l';
 	*(o_fp+i+4)='a';
@@ -486,9 +486,9 @@ uint8_t write_assembly(char* o_fp,const lll_assembly_data_t* a_dt){
 		PRINT_STATIC_STR("'\n");
 		return 0;
 	}
-	lll_output_data_stream_t os;
-	lll_stream_create_output_from_file(f,&os);
-	lll_write_assembly(&os,a_dt);
+	sll_output_data_stream_t os;
+	sll_stream_create_output_from_file(f,&os);
+	sll_write_assembly(&os,a_dt);
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("File Written Successfully.\n");
 	}
@@ -498,13 +498,13 @@ uint8_t write_assembly(char* o_fp,const lll_assembly_data_t* a_dt){
 
 
 
-uint8_t write_compiled(char* o_fp,const lll_compilation_data_t* c_dt){
+uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
 	uint16_t i=0;
 	while (*(o_fp+i)){
 		i++;
 	}
 	*(o_fp+i)='.';
-	*(o_fp+i+1)='l';
+	*(o_fp+i+1)='s';
 	*(o_fp+i+2)='l';
 	*(o_fp+i+3)='l';
 	*(o_fp+i+4)='c';
@@ -521,9 +521,9 @@ uint8_t write_compiled(char* o_fp,const lll_compilation_data_t* c_dt){
 		PRINT_STATIC_STR("'\n");
 		return 0;
 	}
-	lll_output_data_stream_t os;
-	lll_stream_create_output_from_file(f,&os);
-	lll_write_compiled_object(&os,c_dt);
+	sll_output_data_stream_t os;
+	sll_stream_create_output_from_file(f,&os);
+	sll_write_compiled_object(&os,c_dt);
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("File Written Successfully.\n");
 	}
@@ -562,23 +562,23 @@ _skip_std_lib_path:
 #endif
 	fp=NULL;
 	fpl=0;
-	lll_create_internal_function_table(&i_ft);
-	lll_register_standard_internal_functions(&i_ft);
+	sll_create_internal_function_table(&i_ft);
+	sll_register_standard_internal_functions(&i_ft);
 	const char* o_fp=NULL;
 	FILE* f=NULL;
-	lll_assembly_data_t a_dt={0};
-	lll_compilation_data_t c_dt={0};
+	sll_assembly_data_t a_dt={0};
+	sll_compilation_data_t c_dt={0};
 	uint32_t im_fpl=UINT32_MAX;
-	lll_set_argument_count(1);
+	sll_set_argument_count(1);
 	for (int i=1;i<argc;i++){
 		const char* e=argv[i];
 		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||cmp_str(e,"--generate-assembly")){
 			fl|=FLAG_GENERATE_ASSEMBLY;
 		}
 		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||cmp_str(e,"--args")){
-			lll_set_argument_count(argc-i);
-			for (lll_sys_arg_count_t j=0;j<(lll_sys_arg_count_t)(argc-i-1);j++){
-				lll_set_argument(j+1,*(argv+i+j+1));
+			sll_set_argument_count(argc-i);
+			for (sll_sys_arg_count_t j=0;j<(sll_sys_arg_count_t)(argc-i-1);j++){
+				sll_set_argument(j+1,*(argv+i+j+1));
 			}
 			break;
 		}
@@ -693,9 +693,9 @@ _read_file_argument:
 	im_fpl=fpl;
 	if (!(fl&FLAG_NO_LOGO)){
 #ifdef STANDALONE_BUILD
-		PRINT_STATIC_STR("lll (standalone, v"STR(LLL_VERSION_MAJOR)"."STR(LLL_VERSION_MINOR)"."STR(LLL_VERSION_PATCH)") ("LLL_VERSION_BUILD_DATE", "LLL_VERSION_BUILD_TIME")\n");
+		PRINT_STATIC_STR("sll (standalone, v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)") ("SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 #else
-		PRINT_STATIC_STR("lll (v"STR(LLL_VERSION_MAJOR)"."STR(LLL_VERSION_MINOR)"."STR(LLL_VERSION_PATCH)") ("LLL_VERSION_BUILD_DATE", "LLL_VERSION_BUILD_TIME")\n");
+		PRINT_STATIC_STR("sll (v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)") ("SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 #endif
 	}
 	if (fl&FLAG_VERBOSE){
@@ -767,10 +767,10 @@ _read_file_argument:
 		goto _help;
 	}
 	for (uint32_t j=0;j<fpl;j++){
-		lll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
-		lll_set_compilation_data_stack(&c_dt,c_st,COMPILER_STACK_SIZE);
+		sll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
+		sll_set_compilation_data_stack(&c_dt,c_st,COMPILER_STACK_SIZE);
 		char f_fp[MAX_PATH_LENGTH];
-		lll_input_data_stream_t is;
+		sll_input_data_stream_t is;
 		fl&=~_FLAG_ASSEMBLY_GENERATED;
 		if (!load_file(*(fp+j),&a_dt,&c_dt,&f,&is,f_fp)){
 			goto _error;
@@ -780,45 +780,45 @@ _read_file_argument:
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Performing Global Optimization...\n");
 				}
-				lll_optimize_object(&c_dt,c_dt.h);
+				sll_optimize_object(&c_dt,c_dt.h);
 			}
 			if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Removing Debug Data...\n");
 				}
-				lll_remove_object_debug_data(c_dt.h);
+				sll_remove_object_debug_data(c_dt.h);
 			}
 			if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Removing Object Padding...\n");
 				}
-				lll_remove_object_padding(&c_dt,c_dt.h);
+				sll_remove_object_padding(&c_dt,c_dt.h);
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				lll_output_data_stream_t os;
-				lll_stream_create_output_from_file(stdout,&os);
-				lll_print_object(&c_dt,c_dt.h,&os);
+				sll_output_data_stream_t os;
+				sll_stream_create_output_from_file(stdout,&os);
+				sll_print_object(&c_dt,c_dt.h,&os);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Optimizing Object Metadata...\n");
 			}
-			lll_optimize_metadata(&c_dt);
+			sll_optimize_metadata(&c_dt);
 		}
 		if (!(fl&_FLAG_ASSEMBLY_GENERATED)&&((fl&(FLAG_GENERATE_ASSEMBLY|FLAG_PRINT_ASSEMBLY))||!(fl&FLAG_NO_RUN))){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Generating Assembly...\n");
 			}
-			lll_error_t e;
-			if (!lll_generate_assembly(&c_dt,&a_dt,&e)){
-				lll_print_error(&is,&e);
+			sll_error_t e;
+			if (!sll_generate_assembly(&c_dt,&a_dt,&e)){
+				sll_print_error(&is,&e);
 				goto _error;
 			}
 		}
 		if (fl&FLAG_PRINT_ASSEMBLY){
-			lll_output_data_stream_t os;
-			lll_stream_create_output_from_file(stdout,&os);
-			lll_print_assembly(&a_dt,&os);
+			sll_output_data_stream_t os;
+			sll_stream_create_output_from_file(stdout,&os);
+			sll_print_assembly(&a_dt,&os);
 			putchar('\n');
 		}
 		if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT)){
@@ -907,19 +907,19 @@ _skip_write:;
 				}
 				bf[j]=0;
 			}
-			lll_set_argument(0,bf);
-			lll_input_data_stream_t ris;
-			lll_output_data_stream_t ros;
-			lll_stream_create_input_from_file(stdin,&ris);
-			lll_stream_create_output_from_file(stdout,&ros);
-			lll_stack_data_t st;
-			lll_setup_stack(&st,vm_st,VM_STACK_SIZE);
-			lll_error_t e={
-				LLL_ERROR_UNKNOWN
+			sll_set_argument(0,bf);
+			sll_input_data_stream_t ris;
+			sll_output_data_stream_t ros;
+			sll_stream_create_input_from_file(stdin,&ris);
+			sll_stream_create_output_from_file(stdout,&ros);
+			sll_stack_data_t st;
+			sll_setup_stack(&st,vm_st,VM_STACK_SIZE);
+			sll_error_t e={
+				SLL_ERROR_UNKNOWN
 			};
-			lll_return_code_t r=lll_execute_assembly(&a_dt,&st,&i_ft,&ris,&ros,&e);
-			if (e.t!=LLL_ERROR_UNKNOWN){
-				lll_print_error(NULL,&e);
+			sll_return_code_t r=sll_execute_assembly(&a_dt,&st,&i_ft,&ris,&ros,&e);
+			if (e.t!=SLL_ERROR_UNKNOWN){
+				sll_print_error(NULL,&e);
 				goto _error;
 			}
 			if (r){
@@ -931,8 +931,8 @@ _skip_write:;
 			fclose(f);
 			f=NULL;
 		}
-		lll_free_assembly_data(&a_dt);
-		lll_free_compilation_data(&c_dt);
+		sll_free_assembly_data(&a_dt);
+		sll_free_compilation_data(&c_dt);
 	}
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));
@@ -942,7 +942,7 @@ _skip_write:;
 	if (fp){
 		free(fp);
 	}
-	lll_free_internal_function_table(&i_ft);
+	sll_free_internal_function_table(&i_ft);
 	return 0;
 _help:
 	PRINT_STATIC_STR(HELP_TEXT);
@@ -955,11 +955,11 @@ _error:
 	if (fp){
 		free(fp);
 	}
-	lll_free_assembly_data(&a_dt);
-	lll_free_compilation_data(&c_dt);
+	sll_free_assembly_data(&a_dt);
+	sll_free_compilation_data(&c_dt);
 	if (f){
 		fclose(f);
 	}
-	lll_free_internal_function_table(&i_ft);
+	sll_free_internal_function_table(&i_ft);
 	return ec;
 }

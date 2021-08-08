@@ -10,7 +10,7 @@ on:
 permissions: read-all
 jobs:
   build:
-    name: Build (OS = ${{matrix.os}}, Args = 'lll${{matrix.args}}')
+    name: Build (OS = ${{matrix.os}}, Args = 'sll${{matrix.args}}')
     runs-on: ${{matrix.os}}
     steps:
     - name: Checkout
@@ -19,13 +19,13 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
-    - name: 'Build "lll${{matrix.args}}" (Ubuntu)'
+    - name: 'Build "sll${{matrix.args}}" (Ubuntu)'
       if: matrix.os=='ubuntu-latest'
       run: python src/_build/main.py --verbose${{matrix.args}}
     - name: Setup Windows Environment
       uses: ilammy/msvc-dev-cmd@v1
       if: matrix.os=='windows-latest'
-    - name: 'Build "lll${{matrix.args}}" (Windows)'
+    - name: 'Build "sll${{matrix.args}}" (Windows)'
       if: matrix.os=='windows-latest'
       run: python src/_build/main.py --verbose${{matrix.args}}
       shell: cmd

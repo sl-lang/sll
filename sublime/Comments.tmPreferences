@@ -2,9 +2,9 @@
 <plist version="1.0">
 	<dict>
 		<key>name</key>
-		<string>Comments (LispLikeLanguage)</string>
+		<string>Comments (SLL)</string>
 		<key>scope</key>
-		<string>source.lll</string>
+		<string>source.sll</string>
 		<key>settings</key>
 		<dict>
 			<key>shellVariables</key>

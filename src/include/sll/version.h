@@ -1,0 +1,18 @@
+#ifndef __SLL_VERSION_H__
+#define __SLL_VERSION_H__ 1
+
+
+
+#define SLL_VERSION_MAJOR 0
+#define SLL_VERSION_MINOR 6
+#define SLL_VERSION_PATCH 9
+#define SLL_VERSION_BUILD_TIME __TIME__
+#define SLL_VERSION_BUILD_DATE __DATE__
+
+
+
+#define SLL_VERSION ((sll_version_t)((SLL_VERSION_MAJOR<<12)|(SLL_VERSION_MINOR<<8)|SLL_VERSION_PATCH))
+
+
+
+#endif

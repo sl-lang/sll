@@ -278,10 +278,10 @@ if (not os.path.exists("build/lib")):
 	os.mkdir("build/lib")
 if (vb):
 	print("Copying Modules...")
-for f in os.listdir("src/lll/lib"):
+for f in os.listdir("src/sll/lib"):
 	if (vb):
-		print(f"  Copying Module 'src/lll/lib/{f}'...")
-	with open(f"src/lll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
+		print(f"  Copying Module 'src/sll/lib/{f}'...")
+	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
 		wf.write(rf.read())
 if (vb):
 	print(f"Convering '{HELP_FILE_PATH}' to Header File...")
@@ -298,9 +298,9 @@ if (vb):
 	print("Combining Library Header Files...")
 h_dt=b""
 il=[]
-for f in os.listdir("src/include/lll"):
+for f in os.listdir("src/include/sll"):
 	if (f[0]!="_" and f[-2:]==".h"):
-		with open(f"src/include/lll/{f}","rb") as rf:
+		with open(f"src/include/sll/{f}","rb") as rf:
 			il.append(bytes(f,"utf-8"))
 			dt=rf.read()
 			m=HEADER_INCLUDE_GUARD_REGEX.fullmatch(dt)
@@ -313,8 +313,8 @@ if (vb):
 h_dt=INCLUDE_REGEX.sub(lambda m:(b"" if m.group(1)[1:-1] in il else b"#include <"+(il.append(m.group(1)[1:-1]),m.group(1)[1:-1])[1]+b">"),DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX.sub(br"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(br"\n",COMMENT_REGEX.sub(br"",h_dt).strip().replace(b"\r\n",b"\n")))).split(b"\n")
 if (vb):
 	print("Generating Library Header File...")
-with open("build/lll_lib.h","wb") as wf:
-	wf.write(b"#ifndef __LLL_LIB_H__\n#define __LLL_LIB_H__ 1"+_generate_header(h_dt,COMPILATION_DEFINES)+b"\n#endif\n")
+with open("build/sll_lib.h","wb") as wf:
+	wf.write(b"#ifndef __SLL_LIB_H__\n#define __SLL_LIB_H__ 1"+_generate_header(h_dt,COMPILATION_DEFINES)+b"\n#endif\n")
 i_fl=[]
 o_fl=[]
 cd=os.getcwd()
@@ -323,10 +323,10 @@ if (vb):
 if (os.name=="nt"):
 	if (vb):
 		print("  Listing Files...")
-	for r,_,fl in os.walk("src/lll"):
+	for r,_,fl in os.walk("src/sll"):
 		r=r.replace("\\","/").rstrip("/")+"/"
 		for f in fl:
-			if (f[-2:]==".c" and (r!="src/lll/platform/" or f=="windows.c")):
+			if (f[-2:]==".c" and (r!="src/sll/platform/" or f=="windows.c")):
 				i_fl.append("../"+r+f)
 				o_fl.append(f[:-2]+".obj")
 	if (vb):
@@ -335,12 +335,12 @@ if (os.name=="nt"):
 	if ("--release" in sys.argv):
 		if (vb):
 			print("  Compiling Library Files (Release Mode)...")
-		if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__LLL_LIB_COMPILATION__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/include"]+i_fl).returncode!=0):
+		if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__SLL_LIB_COMPILATION__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/include"]+i_fl).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		if (vb):
 			print("  Linking Library Files (Release Mode)...")
-		if (_wrap_output(["link","/OUT:lll_lib.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO"]+o_fl).returncode!=0):
+		if (_wrap_output(["link","/OUT:sll_lib.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO"]+o_fl).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		if (vb):
@@ -350,18 +350,18 @@ if (os.name=="nt"):
 			sys.exit(1)
 		if (vb):
 			print("  Linking Files (Release Mode)...")
-		if (_wrap_output(["link","main.obj","/OUT:lll.exe","/DYNAMICBASE","lll_lib.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]).returncode!=0):
+		if (_wrap_output(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE","sll_lib.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	else:
 		if (vb):
 			print("  Compiling Library Files...")
-		if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__LLL_LIB_COMPILATION__","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I","../src/include"]+i_fl).returncode!=0):
+		if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__SLL_LIB_COMPILATION__","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I","../src/include"]+i_fl).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		if (vb):
 			print("  Linking Library Files...")
-		if (_wrap_output(["link","/OUT:lll_lib.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]+o_fl).returncode!=0):
+		if (_wrap_output(["link","/OUT:sll_lib.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]+o_fl).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		if (vb):
@@ -371,7 +371,7 @@ if (os.name=="nt"):
 			sys.exit(1)
 		if (vb):
 			print("  Linking Files...")
-		if (_wrap_output(["link","main.obj","/OUT:lll.exe","/DYNAMICBASE","lll_lib.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0):
+		if (_wrap_output(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE","sll_lib.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	os.chdir(cd)
@@ -380,10 +380,10 @@ else:
 		print("  Listing Files...")
 	i_fl=[]
 	o_fl=[]
-	for r,_,fl in os.walk("src/lll"):
+	for r,_,fl in os.walk("src/sll"):
 		r=r.rstrip("/")+"/"
 		for f in fl:
-			if (f[-2:]==".c" and (r!="src/lll/platform/" or f=="posix.c")):
+			if (f[-2:]==".c" and (r!="src/sll/platform/" or f=="posix.c")):
 				i_fl.append("../"+r+f)
 				o_fl.append(f[:-2]+".o")
 	if (vb):
@@ -392,33 +392,33 @@ else:
 	if ("--release" in sys.argv):
 		if (vb):
 			print("  Compiling Library Files (Release Mode)...")
-		if (_wrap_output(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O3","-Werror","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
+		if (_wrap_output(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__SLL_LIB_COMPILATION__","-Wall","-O3","-Werror","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		if (vb):
 			print("  Linking Library Files (Release Mode)...")
-		if (_wrap_output(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o","lll_lib.so"]+o_fl+["-lm"]).returncode!=0):
+		if (_wrap_output(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o","sll_lib.so"]+o_fl+["-lm"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		if (vb):
 			print("  Compiling & Linking Files (Release Mode)...")
-		if (_wrap_output(["gcc","-Wall","-lm","-Werror","-O3","../src/main.c","lll_lib.so","-o","lll","-I","."]).returncode!=0):
+		if (_wrap_output(["gcc","-Wall","-lm","-Werror","-O3","../src/main.c","sll_lib.so","-o","sll","-I","."]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	else:
 		if (vb):
 			print("  Compiling Library Files...")
-		if (subprocess.run(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__LLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
+		if (subprocess.run(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__SLL_LIB_COMPILATION__","-Wall","-O0","-Werror","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		if (vb):
 			print("  Linking Library Files...")
-		if (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-Werror","-o","lll_lib.so"]+o_fl+["-lm"]).returncode!=0):
+		if (subprocess.run(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-Werror","-o","sll_lib.so"]+o_fl+["-lm"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		if (vb):
 			print("  Compiling & Linking Files...")
-		if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","../src/main.c","lll_lib.so","-o","lll","-I","."]).returncode!=0):
+		if (subprocess.run(["gcc","-Wall","-lm","-Werror","-O0","../src/main.c","sll_lib.so","-o","sll","-I","."]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	os.chdir(cd)
@@ -431,7 +431,7 @@ if (os.name!="nt"):
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
-if (_wrap_output(["build/lll","-c",("-O3" if "--release" in sys.argv else "-O1"),"-L","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if vb else []),pfx=b"  ").returncode!=0):
+if (_wrap_output(["build/sll","-c",("-O3" if "--release" in sys.argv else "-O1"),"-L","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if vb else []),pfx=b"  ").returncode!=0):
 	sys.exit(1)
 if (vb):
 	print("Removing Module Source Files...")
@@ -439,15 +439,15 @@ for k in fl:
 	if (vb):
 		print(f"  Removing 'build/lib/{k}'...")
 	os.remove(f"build/lib/{k}")
-e_nm="build/lll"
+e_nm="build/sll"
 if ("--standalone" in sys.argv):
 	if (vb):
 		print("Generating Standalone Executable...")
-	e_nm="build/lll_standalone"
+	e_nm="build/sll_standalone"
 	if (vb):
 		print("  Generating Standalone Library Header File...")
-	with open("build/lll_lib_standalone.h","wb") as wf:
-		wf.write(b"#ifndef __LLL_LIB_STANDALONE_BUILD_H__\n#define __LLL_LIB_STANDALONE_BUILD_H__ 1"+_generate_header(h_dt,COMPILATION_DEFINES+[b"__LLL_LIB_STATIC__"])+b"\n#endif\n")
+	with open("build/sll_lib_standalone.h","wb") as wf:
+		wf.write(b"#ifndef __SLL_LIB_STANDALONE_BUILD_H__\n#define __SLL_LIB_STANDALONE_BUILD_H__ 1"+_generate_header(h_dt,COMPILATION_DEFINES+[b"__SLL_LIB_STATIC__"])+b"\n#endif\n")
 	if (vb):
 		print(f"  Converting Modules to Header File ({len(fl)} Modules)...")
 	with open("build/compiled_modules.h","wb") as f:
@@ -455,10 +455,10 @@ if ("--standalone" in sys.argv):
 		m_dt=[]
 		for i,e in enumerate(fl):
 			f.write(bytes(f"const uint8_t _m{i}[]={{","utf-8"))
-			with open(f"build/lib/{e}.lllc","rb") as rf:
+			with open(f"build/lib/{e}.sllc","rb") as rf:
 				dt=rf.read()
 				if (vb):
-					print(f"    Converting Module 'build/lib/{e}.lllc' ({len(dt)} bytes)")
+					print(f"    Converting Module 'build/lib/{e}.sllc' ({len(dt)} bytes)")
 				c=0
 				for k in bytes(e,"utf-8"):
 					c^=k
@@ -474,50 +474,50 @@ if ("--standalone" in sys.argv):
 		if ("--release" in sys.argv):
 			if (vb):
 				print("  Compiling Files (Release Mode)...")
-			if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","_CRT_SECURE_NO_WARNINGS","/D","__LLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","../src/main.c"]).returncode!=0):
+			if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","../src/main.c"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Linking Files (Release Mode)...")
-			if (_wrap_output(["link","main.obj","/OUT:lll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]+o_fl).returncode!=0):
+			if (_wrap_output(["link","main.obj","/OUT:sll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]+o_fl).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			if (vb):
 				print("  Compiling Files...")
-			if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/D","__LLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I",".","../src/main.c"]).returncode!=0):
+			if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_LIB_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/ZI","/Od","/RTC1","/MDd","/I",".","../src/main.c"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Linking Files...")
-			if (_wrap_output(["link","main.obj","/OUT:lll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]+o_fl).returncode!=0):
+			if (_wrap_output(["link","main.obj","/OUT:sll_standalone.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]+o_fl).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	else:
 		if ("--release" in sys.argv):
 			if (vb):
 				print("  Compiling & Linking Files (Release Mode)...")
-			if (_wrap_output(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
+			if (_wrap_output(["gcc","-D","__SLL_LIB_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (_wrap_output(["gcc","-D","__LLL_LIB_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","lll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
+			if (_wrap_output(["gcc","-D","__SLL_LIB_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		if (vb):
 			print("  Removing Old Files...")
 	os.chdir(cd)
 if ("--bundle" in sys.argv):
-	with zipfile.ZipFile("build/lll.zip","w") as zf:
-		for k in (["build/lll.exe","build/lll_lib.dll"] if os.name=="nt" else ["build/lll","build/lll_lib.so"]):
+	with zipfile.ZipFile("build/sll.zip","w") as zf:
+		for k in (["build/sll.exe","build/sll_lib.dll"] if os.name=="nt" else ["build/sll","build/sll_lib.so"]):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			zf.write("build/lib/"+k,arcname="lib/"+k)
 if ("--run" in sys.argv):
 	if (vb):
-		print("Running 'example/test.lll'...")
+		print("Running 'example/test.sll'...")
 	subprocess.run([e_nm,"-h"])
-	if (subprocess.run([e_nm,"example/test.lll","-v","-O3","-c","-o","build/test","-e","-I","example","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test.lllc","-v","-O0","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.llla","-v","-P","-L"]).returncode!=0):
+	if (subprocess.run([e_nm,"example/test.sll","-v","-O3","-c","-o","build/test","-e","-I","example","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test.sllc","-v","-O0","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.slla","-v","-P","-L"]).returncode!=0):
 		sys.exit(1)
