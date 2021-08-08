@@ -34,7 +34,9 @@ __API_FUNC(file_close){
 				_file_fll--;
 			} while (_file_fll&&!(_file_fl+_file_fll-1)->h);
 			if (_file_fll){
-				_file_fl=realloc(_file_fl,_file_fll*sizeof(file_t));
+				void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t));
+				ASSERT(tmp);
+				_file_fl=tmp;
 			}
 			else{
 				free(_file_fl);
@@ -68,7 +70,7 @@ __API_FUNC(file_open){
 			}
 		}
 	}
-	FILE* h=fopen((char*)a->dt.s->v,m);
+	FILE* h=fopen((char*)a->dt.s->v,m);// lgtm [cpp/path-injection]
 	if (!h){
 		o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 		o->dt.i=SLL_API_INVALID_FILE_HANDLE;

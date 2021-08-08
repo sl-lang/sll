@@ -900,12 +900,12 @@ _skip_write:;
 			const char* c_fp=*(fp+j);
 			char bf[MAX_PATH_LENGTH];
 			if (!EXPAND_FILE_PATH(c_fp,bf)){
-				uint16_t j=0;
-				while (*(c_fp+j)){
-					bf[j]=*(c_fp+j);
-					j++;
+				uint16_t k=0;
+				while (*(c_fp+k)){
+					bf[k]=*(c_fp+k);
+					k++;
 				}
-				bf[j]=0;
+				bf[k]=0;
 			}
 			sll_set_argument(0,bf);
 			sll_input_data_stream_t ris;
