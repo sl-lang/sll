@@ -506,8 +506,6 @@ if ("--standalone" in sys.argv):
 			if (_wrap_output(["gcc","-D","__SLL_LIB_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+i_fl+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
-		if (vb):
-			print("  Removing Old Files...")
 	os.chdir(cd)
 if ("--bundle" in sys.argv):
 	with zipfile.ZipFile("build/sll.zip","w") as zf:
@@ -515,6 +513,27 @@ if ("--bundle" in sys.argv):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			zf.write("build/lib/"+k,arcname="lib/"+k)
+if ("--test" in sys.argv):
+	os.chdir("build")
+	td=os.path.abspath("../tests/").replace("\\","/").rstrip("/")+"/"
+	if (os.name=="nt"):
+		if (vb):
+			print("  Compiling Test Program...")
+		if (_wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","_CRT_SECURE_NO_WARNINGS","/D","__TEST_ROOT_DIR__=\""+td+"\"","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/FC","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","../tests/run_tests.c"]).returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
+		if (vb):
+			print("  Linking Test Program...")
+		if (_wrap_output(["link","run_tests.obj","/OUT:run_tests.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]).returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
+	else:
+		if (vb):
+			print("  Compiling & Linking Files...")
+		if (_wrap_output(["gcc","-D","__TEST_ROOT_DIR__=\""+td+"\"","-Wall","-lm","-Werror","-O3","../tests/run_tests.c","-o","run_tests","-I","."]).returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
+	os.chdir(cd)
 if ("--run" in sys.argv):
 	if (vb):
 		print("Running 'example/test.sll'...")

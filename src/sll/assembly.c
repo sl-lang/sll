@@ -766,8 +766,8 @@ __SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt
 			}
 			else if ((ai-1)->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT){
 				char bf[128];
-				int i=snprintf(bf,128,"%.16lg",(ai-1)->dt.f);
-				(ai-1)->dt.s=sll_create_string(&(o->st),(sll_char_t*)bf,i);
+				int sz=snprintf(bf,128,"%.16lg",(ai-1)->dt.f);
+				(ai-1)->dt.s=sll_create_string(&(o->st),(sll_char_t*)bf,sz);
 				goto _print_str;
 			}
 			else if ((ai-1)->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR){

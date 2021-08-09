@@ -336,8 +336,8 @@ __SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll
 		sll_function_t* k=malloc(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));
 		k->off=off;
 		k->al=al;
-		for (sll_arg_count_t i=0;i<al;i++){
-			CHECK_ERROR(is,k->a[i],sll_identifier_index_t,e);
+		for (sll_arg_count_t j=0;j<al;j++){
+			CHECK_ERROR(is,k->a[j],sll_identifier_index_t,e);
 		}
 		*(c_dt->ft.dt+i)=k;
 	}

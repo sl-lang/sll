@@ -570,7 +570,7 @@ _read_symbol:
 					o->t=SLL_OBJECT_TYPE_MORE_EQUAL;
 				}
 				else if (*str=='@'&&*(str+1)=='@'){
-					o->t=(fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION?SLL_OBJECT_TYPE_RETURN:SLL_OBJECT_TYPE_EXIT);
+					o->t=((fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION)?SLL_OBJECT_TYPE_RETURN:SLL_OBJECT_TYPE_EXIT);
 				}
 				else if (*str=='-'&&*(str+1)=='-'){
 					o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
@@ -895,8 +895,7 @@ _parse_float_exponent:;
 					if (c=='-'){
 						em=-1;
 					}
-					else if (c=='+');
-					else{
+					else if (c!='+'){
 						goto _add_exponent_char;
 					}
 _float_exponent:

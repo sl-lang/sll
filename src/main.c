@@ -865,18 +865,18 @@ _read_file_argument:
 						i--;
 					}
 					i++;
-					uint32_t j=0;
 					uint32_t k=0;
-					while (*(f_fp+j)&&*(f_fp+j)!='.'){
-						if (*(f_fp+j)=='\\'||*(f_fp+j)=='/'){
-							k=j+1;
+					uint32_t l=0;
+					while (*(f_fp+k)&&*(f_fp+k)!='.'){
+						if (*(f_fp+k)=='\\'||*(f_fp+k)=='/'){
+							l=k+1;
 						}
-						j++;
-					}
-					while (k<j){
-						bf[i]=*(f_fp+k);
-						i++;
 						k++;
+					}
+					while (l<k){
+						bf[i]=*(f_fp+l);
+						i++;
+						l++;
 					}
 					bf[i]='.';
 				}

@@ -258,13 +258,13 @@ uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 		case SLL_OBJECT_TYPE_UNKNOWN:
 			return COND_TYPE_UNKNOWN;
 		case SLL_OBJECT_TYPE_CHAR:
-			return ((!!o->dt.c)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+			return (((!!o->dt.c)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_OBJECT_TYPE_INT:
-			return ((!!o->dt.i)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+			return (((!!o->dt.i)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return ((!!o->dt.f)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+			return (((!!o->dt.f)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_OBJECT_TYPE_STRING:
-			return ((!!(*(o_dt->c_dt->st.dt+o->dt.s))->l)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+			return (((!!(*(o_dt->c_dt->st.dt+o->dt.s))->l)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				sll_runtime_object_t* v=o_dt->v+GET_VARIABLE_INDEX(o,o_dt);
@@ -272,13 +272,13 @@ uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 				if (lv||!(v->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
 					switch (SLL_RUNTIME_OBJECT_GET_TYPE(v)){
 						case SLL_RUNTIME_OBJECT_TYPE_INT:
-							return ((!!v->dt.i)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+							return (((!!v->dt.i)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-							return ((!!v->dt.f)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+							return (((!!v->dt.f)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-							return ((!!v->dt.c)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+							return (((!!v->dt.c)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 						case SLL_RUNTIME_OBJECT_TYPE_STRING:
-							return ((!!v->dt.s->l)^inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+							return (((!!v->dt.s->l)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 					}
 				}
 				return COND_TYPE_UNKNOWN;
