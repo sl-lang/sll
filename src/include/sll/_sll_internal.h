@@ -25,8 +25,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	_BitScanForward64(&o,m);
 	return o;
 }
-#define IGNORE(x) ((void)(x))
-#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _INTERNAL_FUNCTION_JOIN(__ifunc,__LINE__)={(nm),(f)};const static __declspec(allocate("ifunc$b")) internal_function_t* _INTERNAL_FUNCTION_JOIN(__ifunc_ptr,__LINE__)=&_INTERNAL_FUNCTION_JOIN(__ifunc,__LINE__);
+#define IGNORE_RESULT(x) ((void)(x))
+#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _INTERNAL_FUNCTION_NAME(__ifunc)={(nm),(f)};const static __declspec(allocate("ifunc$b")) internal_function_t* _INTERNAL_FUNCTION_NAME(__ifunc_ptr)=&_INTERNAL_FUNCTION_NAME(__ifunc);
 #define IINTERNAL_FUNCTION_SETUP const static __declspec(allocate("ifunc$a")) internal_function_t* __ifunc_start=0;const static __declspec(allocate("ifunc$z")) internal_function_t* __ifunc_end=0;
 #else
 #ifdef DEBUG_BUILD
@@ -35,11 +35,11 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define UNREACHABLE() __builtin_unreachable()
 #endif
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
-#define IGNORE(x) \
+#define IGNORE_RESULT(x) \
 	do{ \
 		unsigned long long int __tmp __attribute__((unused))=(unsigned long long int)(x); \
 	} while (0)
-#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _INTERNAL_FUNCTION_JOIN(__ifunc,__LINE__)={(nm),(f)};const static __attribute__((used,section("ifunc"))) internal_function_t* _INTERNAL_FUNCTION_JOIN(__ifunc_ptr,__LINE__)=&_INTERNAL_FUNCTION_JOIN(__ifunc,__LINE__);
+#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _INTERNAL_FUNCTION_NAME(__ifunc)={(nm),(f)};const static __attribute__((used,section("ifunc"))) internal_function_t* _INTERNAL_FUNCTION_NAME(__ifunc_ptr)=&_INTERNAL_FUNCTION_NAME(__ifunc);
 #define IINTERNAL_FUNCTION_SETUP extern const internal_function_t* __start_ifunc;extern const internal_function_t* __stop_ifunc;
 #define __ifunc_start __start_ifunc
 #define __ifunc_end __stop_ifunc
@@ -47,15 +47,16 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 
 
-#define _INTERNAL_FUNCTION_JOIN2(a,b) a##b
-#define _INTERNAL_FUNCTION_JOIN(a,b) _INTERNAL_FUNCTION_JOIN2(a,b)
+#define _INTERNAL_FUNCTION_JOIN2(a,b,c) a##b##_##c
+#define _INTERNAL_FUNCTION_JOIN(a,b,c) _INTERNAL_FUNCTION_JOIN2(a,b,c)
+#define _INTERNAL_FUNCTION_NAME(a) _INTERNAL_FUNCTION_JOIN(a,__FILE_ID__,__LINE__)
 #ifdef DEBUG_BUILD
-#define _ASSERT_STR_(l) #l
-#define _ASSERT_STR(l) _ASSERT_STR_(l)
-#define _ASSERT_JOIN_(l) ASSERT_##l
-#define _ASSERT_JOIN(l) _ASSERT_JOIN_(l)
+#define _ASSERT_STR_(x) #x
+#define _ASSERT_STR(x) _ASSERT_STR_(x)
+#define _ASSERT_JOIN_(x) ASSERT##x
+#define _ASSERT_JOIN(x) _ASSERT_JOIN_(x)
 #define _ASSERT_COUNT_ARGS(_1,_2,_3,n,...) n
-#define ASSERT(...) _ASSERT_JOIN(_ASSERT_COUNT_ARGS(__VA_ARGS__,ERROR,EXIT,EXIT))(__VA_ARGS__)
+#define ASSERT(...) _ASSERT_JOIN(_ASSERT_COUNT_ARGS(__VA_ARGS__,_ERROR,_EXIT,_EXIT))(__VA_ARGS__)
 #define ASSERT_ERROR(x,e,r) \
 	do{ \
 		if (!(x)){ \

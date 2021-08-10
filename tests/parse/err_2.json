@@ -1,8 +1,0 @@
-{
-	"name": "Unmatched Open Parentheses",
-	"input": [
-		"(",
-		"((+ 1 2)"
-	],
-	"error_code": 2
-}

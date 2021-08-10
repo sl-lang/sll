@@ -20,7 +20,7 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 	sll_runtime_object_t* s=(sll_runtime_object_t*)(st->ptr+a_dt->vc*sizeof(sll_runtime_object_t)+CALL_STACK_SIZE*sizeof(call_stack_frame_t));
 	sll_stack_offset_t si=0;
 	sll_stack_offset_t s_sz=(st->sz-a_dt->vc*sizeof(sll_runtime_object_t)-CALL_STACK_SIZE*sizeof(call_stack_frame_t))/sizeof(sll_runtime_object_t);
-	IGNORE(s_sz);
+	IGNORE_RESULT(s_sz);
 	sll_instruction_index_t ii=0;
 	while (1){
 		if (ii>=a_dt->ic){

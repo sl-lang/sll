@@ -1,0 +1,29 @@
+{
+	"name": "Unmatched Open Parentheses",
+	"data": [
+		{
+			"input": "(",
+			"error": {
+				"type": 2,
+				"data": [
+					0,
+					1
+				]
+			}
+		},
+		{
+			"input": "{(:> (- (+ 1 2) nil  (* 3 4))",
+			"error": {
+				"type": 2,
+				"data": [
+					1,
+					29
+				]
+			}
+		},
+		{
+			"input": "()",
+			"error": null
+		}
+	]
+}

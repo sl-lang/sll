@@ -6,10 +6,10 @@
 #include <unistd.h>
 #endif
 #ifdef STANDALONE_BUILD
-#include <sll_lib_standalone.h>
+#include <sll_standalone.h>
 #include <compiled_modules.h>
 #else
-#include <sll_lib.h>
+#include <sll.h>
 #endif
 #include <help_text.h>
 #include <stdio.h>

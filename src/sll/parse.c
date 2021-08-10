@@ -1305,7 +1305,7 @@ _skip_export:;
 	}
 	e->t=SLL_ERROR_UNMATCHED_OPEN_PARENTHESES;
 	e->dt.r.off=st_off;
-	e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off-1;
+	e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off;
 	if (n_l_sc.m){
 		free(n_l_sc.m);
 	}
@@ -1338,7 +1338,7 @@ __SLL_FUNC void sll_init_compilation_data(const char* fp,sll_input_data_stream_t
 		i++;
 	}
 	bf[i]=0;
-	IGNORE(sll_create_string(&(o->st),bf,i));
+	IGNORE_RESULT(sll_create_string(&(o->st),bf,i));
 }
 
 

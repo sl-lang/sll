@@ -4,10 +4,10 @@
 
 
 #ifdef _MSC_VER
-#ifdef __SLL_LIB_STATIC__
+#ifdef __SLL_STATIC__
 #define __SLL_FUNC
 #else
-#ifdef __SLL_LIB_COMPILATION__
+#ifdef __SLL_COMPILATION__
 #define __SLL_FUNC __declspec(dllexport)
 #else
 #define __SLL_FUNC __declspec(dllimport)
@@ -15,10 +15,10 @@
 #endif
 #define __SLL_CHECK_OUTPUT _Check_return_
 #else
-#ifdef __SLL_LIB_STATIC__
+#ifdef __SLL_STATIC__
 #define __SLL_FUNC
 #else
-#ifdef __SLL_LIB_COMPILATION__
+#ifdef __SLL_COMPILATION__
 #define __SLL_FUNC __attribute__((visibility("default")))
 #else
 #define __SLL_FUNC

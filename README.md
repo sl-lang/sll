@@ -1,1 +1,1 @@
-# The SL Language Compiler & Runtime
+# The SL Programing Language
