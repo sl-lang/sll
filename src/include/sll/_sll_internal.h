@@ -178,7 +178,6 @@ typedef struct __IMPORT_MODULE_DATA{
 	sll_object_t* d;
 	identifier_pair_t* eim;
 	sll_export_table_length_t eiml;
-	sll_scope_t sc_off;
 } import_module_data_t;
 
 

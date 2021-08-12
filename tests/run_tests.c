@@ -694,8 +694,8 @@ void run_parser_test(const char* fp,test_result_t* o){
 					printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 					continue;
 				}
-				for (uint32_t i=0;i<err_v_e->dt.s.l;i++){
-					ne.dt.str[i]=*(err_v_e->dt.s.v+i);
+				for (uint32_t j=0;j<err_v_e->dt.s.l;j++){
+					ne.dt.str[j]=*(err_v_e->dt.s.v+j);
 				}
 				ne.dt.str[err_v_e->dt.s.l]=0;
 				break;

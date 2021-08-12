@@ -50,9 +50,9 @@ __API_FUNC(file_close){
 
 
 __API_FUNC(file_open){
+	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 	if (_file_fll==SLL_API_MAX_OPEN_FILES||!ac||a->t!=SLL_RUNTIME_OBJECT_TYPE_STRING||a->dt.s->l>SLL_API_MAX_FILE_PATH_LENGTH){
-		o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-		o->dt.i=SLL_API_INVALID_FILE_HANDLE;
 		return;
 	}
 	const char* m="rb";
@@ -72,8 +72,6 @@ __API_FUNC(file_open){
 	}
 	FILE* h=fopen((char*)a->dt.s->v,m);// lgtm [cpp/path-injection]
 	if (!h){
-		o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-		o->dt.i=SLL_API_INVALID_FILE_HANDLE;
 		return;
 	}
 	uint16_t i=0;
@@ -84,10 +82,14 @@ __API_FUNC(file_open){
 		i++;
 	}
 	_file_fll++;
-	_file_fl=realloc(_file_fl,_file_fll*sizeof(file_t));
+	void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t));
+	if (!tmp){
+		fclose(h);
+		return;
+	}
+	_file_fl=tmp;
 _found_index:
 	(_file_fl+i)->h=h;
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 	o->dt.i=i;
 }
 #define _SLL_ASSERT_STR_(x) #x

@@ -41,7 +41,6 @@ sll_object_offset_t _patch_module(sll_object_t* mo,const import_module_data_t* i
 			return eoff+1;
 		case SLL_OBJECT_TYPE_FUNC:
 			o->dt.fn.id+=im_dt->f_off;
-			o->dt.fn.sc+=im_dt->sc_off;
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				sll_object_offset_t off=1;
@@ -587,7 +586,6 @@ _read_symbol:
 			else if (sz==3){
 				if (*str==','&&*(str+1)==','&&*(str+2)==','){
 					o->t=SLL_OBJECT_TYPE_FUNC;
-					o->dt.fn.sc=c_dt->_n_sc_id;
 					fl|=EXTRA_COMPILATION_DATA_INSIDE_FUNCTION;
 				}
 				else if (*str=='.'&&*(str+1)=='.'&&*(str+2)=='.'){
@@ -1104,8 +1102,7 @@ _identifier_found:;
 						.f_off=c_dt->ft.l,
 						.s=im.h,
 						.d=arg,
-						.eiml=im.et.l,
-						.sc_off=c_dt->_n_sc_id
+						.eiml=im.et.l
 					};
 					for (sll_string_index_t i=0;i<im.st.l;i++){
 						sll_string_t* s=*(im.st.dt+i);

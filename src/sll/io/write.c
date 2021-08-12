@@ -55,7 +55,6 @@ sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_
 				sll_arg_count_t l=o->dt.fn.ac;
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,l);
 				_write_integer(os,o->dt.fn.id);
-				_write_integer(os,o->dt.fn.sc);
 				sll_object_offset_t off=1;
 				while (l){
 					l--;
@@ -227,8 +226,8 @@ __SLL_FUNC void sll_write_compiled_object(sll_output_data_stream_t* os,const sll
 		const sll_function_t* k=*(c_dt->ft.dt+i);
 		_write_integer(os,k->off);
 		_write_integer(os,k->al);
-		for (sll_arg_count_t i=0;i<k->al;i++){
-			_write_integer(os,k->a[i]);
+		for (sll_arg_count_t j=0;j<k->al;j++){
+			_write_integer(os,k->a[j]);
 		}
 	}
 	_write_integer(os,c_dt->st.l);
