@@ -28,11 +28,11 @@ __SLL_FUNC __SLL_RETURN_COMPARE sll_compare_runtime_object(const sll_runtime_obj
 				return (v>a->dt.i?SLL_COMPARE_RESULT_BELOW:(v<a->dt.i?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_EQUAL));
 			}
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			ASSERT(!"Unimplemented");
+			SLL_ASSERT(!"Unimplemented");
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-			ASSERT(!"Unimplemented");
+			SLL_ASSERT(!"Unimplemented");
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			ASSERT(!"Unimplemented");
+			SLL_ASSERT(!"Unimplemented");
 		default:
 			return SLL_COMPARE_RESULT_ERROR;
 	}

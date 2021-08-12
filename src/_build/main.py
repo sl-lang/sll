@@ -38,6 +38,7 @@ for f in os.listdir("src/sll/lib"):
 		print(f"  Copying Module 'src/sll/lib/{f}'...")
 	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
 		wf.write(rf.read())
+v=header.read_version("src/include/sll/version.h")
 header.generate_help("rsrc/help.txt","build/help_text.h",vb)
 h_dt=header.parse_header("src/include/sll",vb)
 if (vb):
@@ -70,7 +71,7 @@ if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Coverage Source Code File...")
 	build.convert_to_coverage("build/sll.c","build/sll_coverage.c",vb)
-build.build_sll("build/sll.c","build/sll.o",vb,("--release" in sys.argv))
+build.build_sll("build/sll.c","build/sll.o",v,vb,("--release" in sys.argv))
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))

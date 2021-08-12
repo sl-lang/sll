@@ -40,7 +40,7 @@
 	(<- write f "Hello!\n")
 	(<- close f)
 })
-(:> "Argument Count: " argc "\n")
+(<- write stdout "Argument Count: " argc "\n")
 (-> (= i 0) (< i argc) (:> "[" i "] = " (<- argv i) "\n") (= i (+ i 1)))
 (:> "Platform: " platform "\n")
 (:> "Program End\n")

@@ -48,9 +48,10 @@ def convert_to_coverage(i_fp,o_fp,vb):
 
 
 
-def build_sll(fp,o_fp,vb,r):
+def build_sll(fp,o_fp,v,vb,r):
 	fp=os.path.abspath(fp)
 	o_fp=os.path.abspath(o_fp)
+	nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
@@ -62,7 +63,7 @@ def build_sll(fp,o_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Linking Library Files (Release Mode)...")
-			if (util.wrap_output(["link",o_fp,"/OUT:sll.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO"]).returncode!=0):
+			if (util.wrap_output(["link",o_fp,f"/OUT:{nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
@@ -72,7 +73,7 @@ def build_sll(fp,o_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Linking Files (Release Mode)...")
-			if (util.wrap_output(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE","sll.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]).returncode!=0):
+			if (util.wrap_output(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE",nm+".lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
@@ -83,7 +84,7 @@ def build_sll(fp,o_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Linking Library Files...")
-			if (util.wrap_output(["link",o_fp,"/OUT:sll.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0):
+			if (util.wrap_output(["link",o_fp,f"/OUT:{nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
@@ -93,7 +94,7 @@ def build_sll(fp,o_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Linking Files...")
-			if (util.wrap_output(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE","sll.lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0):
+			if (util.wrap_output(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE",nm+".lib","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	else:
@@ -105,28 +106,28 @@ def build_sll(fp,o_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Linking Library Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o","sll.so",o_fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",nm+".so",o_fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-Wall","-lm","-Werror","-O3","../src/main.c","sll.so","-o","sll","-I","."]).returncode!=0):
+			if (util.wrap_output(["gcc","-Wall","-lm","-Werror","-O3","../src/main.c",nm+".so","-o","sll","-I","."]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			if (vb):
 				print("  Compiling Library Files...")
-			if (util.wrap_output(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-Wall","-O0","-Werror","-o",o_fp,"-I","../src/include",fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-Wall","-O0","-Werror","-o",o_fp,"-I","../src/include",fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Linking Library Files...")
-			if (util.wrap_output(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-Werror","-o","sll.so",o_fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-Werror","-o",nm+".so",o_fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-Wall","-lm","-Werror","-O0","../src/main.c","sll.so","-o","sll","-I","."]).returncode!=0):
+			if (util.wrap_output(["gcc","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c",nm+".so","-o","sll","-I","."]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
@@ -138,7 +139,7 @@ def build_sll_standalone(fp,vb,r):
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
-		if ("--release" in sys.argv):
+		if (r):
 			if (vb):
 				print("  Compiling Files (Release Mode)...")
 			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_STATIC__","/D","STANDALONE_BUILD","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","../src/main.c"]).returncode!=0):
@@ -161,7 +162,7 @@ def build_sll_standalone(fp,vb,r):
 				os.chdir(cd)
 				sys.exit(1)
 	else:
-		if ("--release" in sys.argv):
+		if (r):
 			if (vb):
 				print("  Compiling & Linking Files (Release Mode)...")
 			if (util.wrap_output(["gcc","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/main.c","-o","sll_standalone","-I",".","-I","../src/include",fp,"-lm"]).returncode!=0):

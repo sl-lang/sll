@@ -88,7 +88,7 @@ __SLL_FUNC sll_string_t* sll_string_create(sll_string_length_t l){
 	}
 	else{
 		p=(uint8_t)(MEMORY_NODE_GET_SIZE(n)-sz);
-		ASSERT(p<sizeof(memory_node_t));
+		SLL_ASSERT(p<sizeof(memory_node_t));
 		sz=MEMORY_NODE_GET_SIZE(n);
 		if (!n->p){
 			_string_heap_node=n->n;
@@ -111,11 +111,12 @@ __SLL_FUNC sll_string_t* sll_string_create(sll_string_length_t l){
 
 
 __SLL_FUNC void sll_string_release(sll_string_t* s){
+	SLL_ASSERT(s->rc);
 	s->rc--;
 	if (s->rc){
 		return;
 	}
-	ASSERT(GET_HEAP_SIGNATURE(s)==HEAP_SIGNATURE);
+	SLL_ASSERT(GET_HEAP_SIGNATURE(s)==HEAP_SIGNATURE);
 	uint64_t sz=ALIGN(sizeof(sll_string_t)+(s->l+1)*sizeof(sll_char_t));
 	if (sz<sizeof(memory_node_t)){
 		sz=sizeof(memory_node_t);
@@ -134,7 +135,7 @@ __SLL_FUNC void sll_string_release(sll_string_t* s){
 		n->p=nn->p;
 		n->n=nn->n;
 		if (!n->p){
-			ASSERT(_string_heap_node==nn);
+			SLL_ASSERT(_string_heap_node==nn);
 			_string_heap_node=n;
 		}
 		else{

@@ -16,7 +16,7 @@
 #pragma section("ifunc$b",read)
 #pragma section("ifunc$z",read)
 #ifdef DEBUG_BUILD
-#define UNREACHABLE() ASSERT(!"UNREACHABLE")
+#define UNREACHABLE() SLL_ASSERT(!"UNREACHABLE")
 #else
 #define UNREACHABLE() __assume(0)
 #endif
@@ -30,7 +30,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define IINTERNAL_FUNCTION_SETUP const static __declspec(allocate("ifunc$a")) internal_function_t* __ifunc_start=0;const static __declspec(allocate("ifunc$z")) internal_function_t* __ifunc_end=0;
 #else
 #ifdef DEBUG_BUILD
-#define UNREACHABLE() ASSERT(!"UNREACHABLE")
+#define UNREACHABLE() SLL_ASSERT(!"UNREACHABLE")
 #else
 #define UNREACHABLE() __builtin_unreachable()
 #endif
@@ -50,50 +50,50 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define _INTERNAL_FUNCTION_JOIN2(a,b,c) a##b##_##c
 #define _INTERNAL_FUNCTION_JOIN(a,b,c) _INTERNAL_FUNCTION_JOIN2(a,b,c)
 #define _INTERNAL_FUNCTION_NAME(a) _INTERNAL_FUNCTION_JOIN(a,__FILE_ID__,__LINE__)
+#define _SLL_ASSERT_STRINGIFY_(x) #x
+#define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
+#define _SLL_ASSERT_JOIN_(x) SLL_ASSERT##x
+#define _SLL_ASSERT_JOIN(x) _SLL_ASSERT_JOIN_(x)
+#define _SLL_ASSERT_COUNT_ARGS(_1,_2,_3,n,...) n
 #ifdef DEBUG_BUILD
-#define _ASSERT_STR_(x) #x
-#define _ASSERT_STR(x) _ASSERT_STR_(x)
-#define _ASSERT_JOIN_(x) ASSERT##x
-#define _ASSERT_JOIN(x) _ASSERT_JOIN_(x)
-#define _ASSERT_COUNT_ARGS(_1,_2,_3,n,...) n
-#define ASSERT(...) _ASSERT_JOIN(_ASSERT_COUNT_ARGS(__VA_ARGS__,_ERROR,_EXIT,_EXIT))(__VA_ARGS__)
-#define ASSERT_ERROR(x,e,r) \
+#define SLL_ASSERT(...) _SLL_ASSERT_JOIN(_SLL_ASSERT_COUNT_ARGS(__VA_ARGS__,_ERROR,_EXIT,_EXIT))(__VA_ARGS__)
+#define SLL_ASSERT_ERROR(x,e,r) \
 	do{ \
 		if (!(x)){ \
-			e->t=SLL_ERROR_ASSERTION; \
-			const char __tmp0[]="File \""__FILE__"\", Line "_ASSERT_STR(__LINE__)" ("; \
+			(e)->t=SLL_ERROR_SLL_ASSERTION; \
+			const char __tmp0[]="File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("; \
 			uint32_t __i=0; \
 			for (uint32_t __j=0;__j<sizeof(__tmp0)/sizeof(char)-1;__j++){ \
-				e->dt.str[__i]=__tmp0[__j]; \
+				(e)->dt.str[__i]=__tmp0[__j]; \
 				__i++; \
 			} \
 			for (uint32_t __j=0;__j<sizeof(__func__)/sizeof(char)-1;__j++){ \
-				e->dt.str[__i]=__func__[__j]; \
+				(e)->dt.str[__i]=__func__[__j]; \
 				__i++; \
 			} \
-			const char __tmp1[]="): "_ASSERT_STR(x)": Assertion Failed"; \
+			const char __tmp1[]="): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed"; \
 			for (uint32_t __j=0;__j<sizeof(__tmp1)/sizeof(char);__j++){ \
-				e->dt.str[__i]=__tmp1[__j]; \
+				(e)->dt.str[__i]=__tmp1[__j]; \
 				__i++; \
 			} \
 			return r; \
 		} \
 	} while (0)
-#define ASSERT_EXIT(x,...) \
+#define SLL_ASSERT_EXIT(x,...) \
 	do{ \
 		if (!(x)){ \
-			printf("File \"%s\", Line %u (%s): %s: Assertion Failed\n",__FILE__,__LINE__,__func__,_ASSERT_STR(x)); \
+			printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n",__func__); \
 			raise(SIGABRT); \
 		} \
 	} while (0)
 #else
-#define ASSERT(...)
-#define ASSERT_ERROR(x,e,r)
-#define ASSERT_EXIT(x,...)
+#define SLL_ASSERT(...)
+#define SLL_ASSERT_ERROR(x,e,r)
+#define SLL_ASSERT_EXIT(x,...)
 #endif
 
 #define ALIGN(a) ((((uint64_t)(a))+STRING_HEAP_ALIGNMENT-1)&(~(STRING_HEAP_ALIGNMENT-1)))
-#define CORRECT_ALIGNMENT(n) ASSERT(!(((uint64_t)(n))&(STRING_HEAP_ALIGNMENT-1)))
+#define CORRECT_ALIGNMENT(n) SLL_ASSERT(!(((uint64_t)(n))&(STRING_HEAP_ALIGNMENT-1)))
 
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
 

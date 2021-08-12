@@ -519,7 +519,7 @@ char* error_to_string(sll_error_t* e){
 			snprintf(o,512,"<type=%"PRIu8", range=%"PRIu32"-%"PRIu32">",e->t,e->dt.r.off,e->dt.r.off+e->dt.r.sz);
 			break;
 		case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-		case SLL_ERROR_ASSERTION:
+		case SLL_ERROR_SLL_ASSERTION:
 			snprintf(o,512,"<type=%"PRIu8", string='%s'>",e->t,e->dt.str);
 			break;
 		case SLL_ERROR_INVALID_INSTRUCTION:
@@ -687,7 +687,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 				ne.dt.r.sz=(sll_file_offset_t)(err_v_e->dt.a.dt+1)->dt.i-ne.dt.r.off;
 				break;
 			case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-			case SLL_ERROR_ASSERTION:
+			case SLL_ERROR_SLL_ASSERTION:
 				if (!err_v_e||err_v_e->t!=JSON_OBJECT_TYPE_STRING||err_v_e->dt.s.l>255){
 					o->s++;
 					printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
@@ -749,7 +749,7 @@ _wrong_error:
 				}
 				break;
 			case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-			case SLL_ERROR_ASSERTION:
+			case SLL_ERROR_SLL_ASSERTION:
 				for (uint16_t i=0;i<256;i++){
 					if (ne.dt.str[i]!=e->dt.str[i]){
 						goto _wrong_error;

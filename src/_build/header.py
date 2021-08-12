@@ -60,6 +60,24 @@ def _expand_macros(k,dm,dfm):
 
 
 
+def read_version(fp):
+	o=[0,0,0]
+	with open(fp,"rb") as f:
+		for k in f.read().replace(b"\r\n",b"\n").split(b"\n"):
+			k=k.strip()
+			if (k[:1]==b"#"):
+				k=k[1:].lstrip().split(b" ")
+				if (k[0]==b"define"):
+					if (k[1]==b"SLL_VERSION_MAJOR"):
+						o[0]=int(k[2])
+					elif (k[1]==b"SLL_VERSION_MINOR"):
+						o[1]=int(k[2])
+					elif (k[1]==b"SLL_VERSION_PATCH"):
+						o[2]=int(k[2])
+	return tuple(o)
+
+
+
 def generate_help(i_fp,o_fp,vb):
 	if (vb):
 		print(f"Convering '{i_fp}' to Header File...")

@@ -73,6 +73,10 @@ __SLL_FUNC __SLL_RETURN_FUNCTION_INDEX sll_lookup_internal_function(const sll_in
 
 
 
+__SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_arg_count_t ac);
+
+
+
 __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_object_t* o);
 
 

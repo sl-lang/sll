@@ -1,0 +1,3 @@
+(= str (... "string_convert"))
+
+(## str)

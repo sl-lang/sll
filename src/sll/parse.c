@@ -264,7 +264,7 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 					c_dt->ft.l++;
 					void* tmp=realloc(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 					if (!tmp){
-						ASSERT(!"Unable to Reallocate Function Array");
+						SLL_ASSERT(!"Unable to Reallocate Function Array");
 					}
 					c_dt->ft.dt=tmp;
 					sll_function_t* f=malloc(sizeof(sll_function_t)+i*sizeof(sll_identifier_index_t));
@@ -276,7 +276,7 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 						while ((o+off)->t==SLL_OBJECT_TYPE_NOP){
 							off++;
 						}
-						ASSERT((o+off)->t==SLL_OBJECT_TYPE_IDENTIFIER);
+						SLL_ASSERT((o+off)->t==SLL_OBJECT_TYPE_IDENTIFIER);
 						f->a[j]=(o+off)->dt.id;
 						off++;
 						eoff=off;
@@ -964,6 +964,18 @@ _read_identifier:
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
 				}
+				else if (sz==5&&*str=='s'&&*(str+1)=='t'&&*(str+2)=='d'&&*(str+3)=='i'&&*(str+4)=='n'){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=-1;
+				}
+				else if (sz==6&&*str=='s'&&*(str+1)=='t'&&*(str+2)=='d'&&*(str+3)=='o'&&*(str+4)=='u'&&*(str+5)=='t'){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=-2;
+				}
+				else if (sz==6&&*str=='s'&&*(str+1)=='t'&&*(str+2)=='d'&&*(str+3)=='e'&&*(str+4)=='r'&&*(str+5)=='r'){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=-3;
+				}
 				else{
 					arg->t=SLL_OBJECT_TYPE_IDENTIFIER;
 					if (sz<=SLL_MAX_SHORT_IDENTIFIER_LENGTH){
@@ -1134,7 +1146,7 @@ _merge_next_string:;
 							il->l+=mil.l;
 							void* tmp=realloc(il->dt,il->l*sizeof(sll_identifier_t));
 							if (!tmp){
-								ASSERT(!"Unable to Reallocate Fixed-Length Identifier Array",e,SLL_RETURN_ERROR);
+								SLL_ASSERT(!"Unable to Reallocate Fixed-Length Identifier Array",e,SLL_RETURN_ERROR);
 							}
 							il->dt=tmp;
 							for (sll_identifier_list_length_t j=0;j<mil.l;j++){
@@ -1149,7 +1161,7 @@ _merge_next_string:;
 						c_dt->idt.ill+=im.idt.ill;
 						void* tmp=realloc(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
 						if (!tmp){
-							ASSERT(!"Unable to Reallocate Variable-Length Identifier Array",e,SLL_RETURN_ERROR);
+							SLL_ASSERT(!"Unable to Reallocate Variable-Length Identifier Array",e,SLL_RETURN_ERROR);
 						}
 						c_dt->idt.il=tmp;
 						for (sll_identifier_list_length_t j=0;j<im.idt.ill;j++){

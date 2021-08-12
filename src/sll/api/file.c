@@ -35,7 +35,7 @@ __API_FUNC(file_close){
 			} while (_file_fll&&!(_file_fl+_file_fll-1)->h);
 			if (_file_fll){
 				void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t));
-				ASSERT(tmp);
+				SLL_ASSERT(tmp);
 				_file_fl=tmp;
 			}
 			else{
@@ -90,21 +90,35 @@ _found_index:
 	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 	o->dt.i=i;
 }
+#define _SLL_ASSERT_STR_(x) #x
+#define _SLL_ASSERT_STR(x) _SLL_ASSERT_STR_(x)
 
 
 
 __API_FUNC(file_write){
 	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 	o->dt.i=0;
-	if (ac<2||a->t!=SLL_RUNTIME_OBJECT_TYPE_INT||a->dt.i<0||a->dt.i>=SLL_API_MAX_OPEN_FILES){
+	if (ac<2||a->t!=SLL_RUNTIME_OBJECT_TYPE_INT){
 		return;
 	}
-	file_t* f=_file_fl+a->dt.i;
-	if (f->h){
-		if ((a+1)->t!=SLL_RUNTIME_OBJECT_TYPE_STRING){
-			ASSERT(!"Unimplemented");
-		}
-		fwrite((a+1)->dt.s->v,sizeof(sll_char_t),(a+1)->dt.s->l,f->h);
-		o->dt.i=(a+1)->dt.s->l;
+	FILE* fh=NULL;
+	if (a->dt.i==-2){
+		fh=stdout;
 	}
+	else if (a->dt.i==-3){
+		fh=stderr;
+	}
+	else if (a->dt.i<0||a->dt.i>=_file_fll){
+		return;
+	}
+	else{
+		fh=(_file_fl+a->dt.i)->h;
+		if (!fh){
+			return;
+		}
+	}
+	sll_string_t* s=sll_object_to_string(a+1,ac-1);
+	fwrite(s->v,sizeof(sll_char_t),s->l,fh);
+	o->dt.i+=s->l;
+	sll_string_release(s);
 }

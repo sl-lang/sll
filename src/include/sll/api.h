@@ -48,6 +48,10 @@ __API_FUNC_DECL(path_size);
 
 
 
+__API_FUNC_DECL(string_convert);
+
+
+
 __API_FUNC_DECL(sys_arg_get);
 
 
