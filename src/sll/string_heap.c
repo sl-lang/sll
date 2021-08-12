@@ -105,6 +105,7 @@ __SLL_FUNC sll_string_t* sll_string_create(sll_string_length_t l){
 	o->rc=0;
 	*((sll_heap_data_t*)(&(o->h)))=HEAP_SIGNATURE|(p<<8);
 	o->c=0;
+	o->v[l]=0;
 	return o;
 }
 

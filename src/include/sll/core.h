@@ -61,7 +61,7 @@ __SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o);
 
 
 
-__SLL_FUNC void sll_init_compilation_data(const char* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o);
+__SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o);
 
 
 

@@ -7,6 +7,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -40,6 +41,7 @@ sll_object_offset_t _patch_module(sll_object_t* mo,const import_module_data_t* i
 			return eoff+1;
 		case SLL_OBJECT_TYPE_FUNC:
 			o->dt.fn.id+=im_dt->f_off;
+			o->dt.fn.sc+=im_dt->sc_off;
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				sll_object_offset_t off=1;
@@ -315,12 +317,8 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 						o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,(char*)s->v);
 						if (o->dt.fn.id==SLL_MAX_FUNCTION_INDEX){
 							e->t=SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION;
-							uint8_t i=0;
-							while (i<s->l){// lgtm [cpp/comparison-with-wider-type]
-								e->dt.str[i]=s->v[i];
-								i++;
-							}
-							e->dt.str[i]=0;
+							memcpy(e->dt.str,s->v,s->l);
+							e->dt.str[s->l]=0;
 							return SLL_RETURN_ERROR;
 						}
 					}
@@ -589,6 +587,7 @@ _read_symbol:
 			else if (sz==3){
 				if (*str==','&&*(str+1)==','&&*(str+2)==','){
 					o->t=SLL_OBJECT_TYPE_FUNC;
+					o->dt.fn.sc=c_dt->_n_sc_id;
 					fl|=EXTRA_COMPILATION_DATA_INSIDE_FUNCTION;
 				}
 				else if (*str=='.'&&*(str+1)=='.'&&*(str+2)=='.'){
@@ -1105,7 +1104,8 @@ _identifier_found:;
 						.f_off=c_dt->ft.l,
 						.s=im.h,
 						.d=arg,
-						.eiml=im.et.l
+						.eiml=im.et.l,
+						.sc_off=c_dt->_n_sc_id
 					};
 					for (sll_string_index_t i=0;i<im.st.l;i++){
 						sll_string_t* s=*(im.st.dt+i);
@@ -1129,10 +1129,7 @@ _check_next_string:;
 						sll_string_t* n=sll_string_create(s->l);
 						n->rc=1;
 						n->c=s->c;
-						for (sll_string_length_t j=0;j<s->l;j++){
-							n->v[j]=s->v[j];
-						}
-						n->v[n->l]=0;
+						memcpy(n->v,s->v,s->l);
 						*(c_dt->st.dt+c_dt->st.l-1)=n;
 _merge_next_string:;
 					}
@@ -1326,7 +1323,7 @@ _skip_export:;
 
 
 
-__SLL_FUNC void sll_init_compilation_data(const char* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o){
+__SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o){
 	o->is=is;
 	o->tm=sll_platform_get_current_time();
 	o->h=NULL;
@@ -1343,14 +1340,11 @@ __SLL_FUNC void sll_init_compilation_data(const char* fp,sll_input_data_stream_t
 	o->st.dt=NULL;
 	o->st.l=0;
 	o->_n_sc_id=1;
-	sll_char_t bf[512];
 	sll_string_length_t i=0;
 	while (*(fp+i)){
-		bf[i]=*(fp+i);
 		i++;
 	}
-	bf[i]=0;
-	IGNORE_RESULT(sll_create_string(&(o->st),bf,i));
+	IGNORE_RESULT(sll_create_string(&(o->st),fp,i));
 }
 
 

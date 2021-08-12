@@ -178,6 +178,7 @@ typedef struct __IMPORT_MODULE_DATA{
 	sll_object_t* d;
 	identifier_pair_t* eim;
 	sll_export_table_length_t eiml;
+	sll_scope_t sc_off;
 } import_module_data_t;
 
 
@@ -218,11 +219,19 @@ typedef struct __OPTIMIZER_DATA{
 
 
 
+typedef struct __IDENTIFIER_REMOVE_DATA{
+	void** s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	void** l;
+} identifier_remove_data_t;
+
+
+
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	sll_assembly_data_t* a_dt;
 	const sll_compilation_data_t* c_dt;
 	identifier_map_data_t it;
 	assembly_instruction_label_t n_lbl;
+	identifier_remove_data_t rm;
 } assembly_generator_data_t;
 
 
@@ -272,10 +281,6 @@ typedef struct __MEMORY_NODE{
 
 
 extern sll_string_t _zero_string;
-
-
-
-sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_compilation_data_t* c_dt,identifier_map_data_t* im);
 
 
 

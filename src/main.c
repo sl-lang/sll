@@ -149,7 +149,7 @@ sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_er
 	char f_fp[MAX_PATH_LENGTH];
 	uint8_t st[COMPILER_STACK_SIZE];
 	sll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
-	sll_init_compilation_data(bf,&is,o);
+	sll_init_compilation_data((sll_char_t*)bf,&is,o);
 	sll_set_compilation_data_stack(o,st,COMPILER_STACK_SIZE);
 	if (!load_file(bf,&a_dt,o,&f,&is,f_fp)){
 		if (f){
@@ -283,7 +283,7 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 									PRINT_STATIC_STR("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
 								}
 								sll_stream_create_input_from_file(nf,is);
-								sll_init_compilation_data(f_fp,is,c_dt);
+								sll_init_compilation_data((sll_char_t*)f_fp,is,c_dt);
 								if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
 									if (e.t!=SLL_ERROR_UNKNOWN){
 										sll_print_error(is,&e);

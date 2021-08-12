@@ -4,6 +4,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -38,10 +39,7 @@ _check_next_string:;
 	sll_string_t* s=sll_string_create(l);
 	s->rc=1;
 	s->c=c;
-	for (sll_string_length_t i=0;i<l;i++){
-		s->v[i]=*(dt+i);
-	}
-	s->v[l]=0;
+	memcpy(s->v,dt,l);
 	*(st->dt+st->l-1)=s;
 	return st->l-1;
 }

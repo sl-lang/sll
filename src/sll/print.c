@@ -454,12 +454,22 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
-				PRINT_STATIC_STRING("INC $",os);
-				_print_int(ai->dt.v,os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					PRINT_STATIC_STRING("INC $",os);
+					_print_int(ai->dt.v,os);
+				}
+				else{
+					PRINT_STATIC_STRING("INC",os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
-				PRINT_STATIC_STRING("DEC $",os);
-				_print_int(ai->dt.v,os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					PRINT_STATIC_STRING("DEC $",os);
+					_print_int(ai->dt.v,os);
+				}
+				else{
+					PRINT_STATIC_STRING("DEC",os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
@@ -619,6 +629,10 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ONE:
 				PRINT_STATIC_STRING("END 1",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
+				PRINT_STATIC_STRING("DEL $",os);
+				_print_int(ai->dt.v,os);
 				break;
 			default:
 				UNREACHABLE();

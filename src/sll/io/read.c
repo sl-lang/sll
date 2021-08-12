@@ -103,12 +103,13 @@ uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				CHECK_ERROR2(is,o->dt.fn.id,sll_function_index_t);
 				sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 				if (c==SLL_END_OF_DATA){
 					return 0;
 				}
 				o->dt.fn.ac=(sll_arg_count_t)c;
+				CHECK_ERROR2(is,o->dt.fn.id,sll_function_index_t);
+				CHECK_ERROR2(is,o->dt.fn.sc,sll_scope_t);
 				for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
 					if (!_read_object(c_dt,is)){
 						return 0;
@@ -178,7 +179,6 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 			return SLL_RETURN_ERROR;
 		}
-		s->v[l]=0;
 		for (sll_string_length_t j=0;j<l;j++){
 			s->c^=s->v[j];
 		}
@@ -231,10 +231,9 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 				CHECK_ERROR(is,ai->dt.v,sll_variable_index_t,e);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
@@ -263,6 +262,8 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:
@@ -354,7 +355,6 @@ __SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 			return SLL_RETURN_ERROR;
 		}
-		s->v[l]=0;
 		for (sll_string_length_t j=0;j<l;j++){
 			s->c^=s->v[j];
 		}

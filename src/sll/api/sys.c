@@ -6,11 +6,14 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdlib.h>
+#include <string.h>
+#include <string.h>
 
 
 
 sll_sys_arg_count_t _sys_argc=0;
 sll_string_t** _sys_argv=NULL;
+sll_string_t* _sys_p=NULL;
 
 
 
@@ -45,10 +48,7 @@ __SLL_FUNC void sll_set_argument(sll_sys_arg_count_t i,const char* a){
 	sll_string_t* s=sll_string_create(l);
 	s->rc=1;
 	s->c=c;
-	for (sll_string_length_t j=0;j<l;j++){
-		s->v[j]=*(a+j);
-	}
-	s->v[l]=0;
+	memcpy(s->v,a,l);
 	*(_sys_argv+i)=s;
 }
 
@@ -75,19 +75,19 @@ __API_FUNC(sys_arg_get_count){
 
 
 __API_FUNC(sys_get_platform){
-	sll_string_length_t l=0;
-	sll_string_checksum_t c=0;
-	while (*(sll_platform_string+l)){
-		c^=*(sll_platform_string+l);
-		l++;
+	if (!_sys_p){
+		sll_string_length_t l=0;
+		sll_string_checksum_t c=0;
+		while (*(sll_platform_string+l)){
+			c^=*(sll_platform_string+l);
+			l++;
+		}
+		_sys_p=sll_string_create(l);
+		_sys_p->rc=1;
+		_sys_p->c=c;
+		memcpy(_sys_p->v,sll_platform_string,l);
 	}
-	sll_string_t* s=sll_string_create(l);
-	s->rc=1;
-	s->c=c;
-	for (sll_string_length_t j=0;j<l;j++){
-		s->v[j]=*(sll_platform_string+j);
-	}
-	s->v[l]=0;
+	_sys_p->rc++;
 	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	o->dt.s=s;
+	o->dt.s=_sys_p;
 }

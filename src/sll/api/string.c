@@ -4,6 +4,7 @@
 #include <sll/core.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <string.h>
 
 
 
@@ -100,9 +101,7 @@ __SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_arg_co
 			case SLL_RUNTIME_OBJECT_TYPE_STRING:
 				{
 					sll_string_t* s=(a+j)->dt.s;
-					for (sll_string_length_t k=0;k<s->l;k++){
-						o->v[i+k]=s->v[k];
-					}
+					memcpy(o->v+i,s->v,s->l);
 					o->c^=(a+j)->dt.s->c;
 					i+=(a+j)->dt.s->l;
 					break;
@@ -124,4 +123,15 @@ __API_FUNC(string_convert){
 		return;
 	}
 	o->dt.s=sll_object_to_string(a,ac);
+}
+
+
+
+__API_FUNC(string_ref_count){
+	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+	o->dt.i=0;
+	if (!ac||a->t!=SLL_RUNTIME_OBJECT_TYPE_STRING){
+		return;
+	}
+	o->dt.i=a->dt.s->rc;
 }

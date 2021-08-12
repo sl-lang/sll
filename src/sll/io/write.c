@@ -52,10 +52,11 @@ sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				sll_object_offset_t off=1;
-				_write_integer(os,o->dt.fn.id);
 				sll_arg_count_t l=o->dt.fn.ac;
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,l);
+				_write_integer(os,o->dt.fn.id);
+				_write_integer(os,o->dt.fn.sc);
+				sll_object_offset_t off=1;
 				while (l){
 					l--;
 					off+=_write_object(os,o+off);
@@ -138,10 +139,9 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 				_write_integer(os,ai->dt.v);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
@@ -166,6 +166,8 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:

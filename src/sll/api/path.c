@@ -27,7 +27,6 @@ __API_FUNC(path_absolute){
 				o->dt.s->c^=*(bf+i);
 				o->dt.s->v[i]=*(bf+i);
 			}
-			o->dt.s->v[l]=0;
 		}
 	}
 	o->dt.s->rc++;

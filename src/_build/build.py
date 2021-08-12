@@ -101,33 +101,33 @@ def build_sll(fp,o_fp,v,vb,r):
 		if (r):
 			if (vb):
 				print("  Compiling Library Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-Wall","-O3","-Werror","-o",o_fp,"-I","../src/include",fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-Wall","-O3","-Werror","-o",o_fp,"-I","../src/include",fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Linking Library Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",nm+".so",o_fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",nm+".so",o_fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-Wall","-lm","-Werror","-O3","../src/main.c",nm+".so","-o","sll","-I","."]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-Wall","-lm","-Werror","-O3","../src/main.c",nm+".so","-o","sll","-I","."]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			if (vb):
 				print("  Compiling Library Files...")
-			if (util.wrap_output(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-Wall","-O0","-Werror","-o",o_fp,"-I","../src/include",fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-Wall","-O0","-Werror","-o",o_fp,"-I","../src/include",fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Linking Library Files...")
-			if (util.wrap_output(["gcc","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-Werror","-o",nm+".so",o_fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-Werror","-o",nm+".so",o_fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c",nm+".so","-o","sll","-I","."]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c",nm+".so","-o","sll","-I","."]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
@@ -165,13 +165,13 @@ def build_sll_standalone(fp,vb,r):
 		if (r):
 			if (vb):
 				print("  Compiling & Linking Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/main.c","-o","sll_standalone","-I",".","-I","../src/include",fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/main.c","-o","sll_standalone","-I",".","-I","../src/include",fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","sll_standalone","-I",".","-I","../src/include",fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/main.c","-o","sll_standalone","-I",".","-I","../src/include",fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
@@ -220,23 +220,23 @@ def build_sll_test(fp,t_fp,vb,r):
 		if (r):
 			if (vb):
 				print("  Compiling Library Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","__SLL_STATIC__","-Wall","-O3","-Werror","-o","sll_coverage.o","-I","../src/include",fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","__SLL_STATIC__","-Wall","-O3","-Werror","-o","sll_coverage.o","-I","../src/include",fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-O3","../tests/run_tests.c","sll_coverage.o","-o","run_tests","-I",".","-I","../tests","-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-O3","../tests/run_tests.c","sll_coverage.o","-o","run_tests","-I",".","-I","../tests","-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			if (vb):
 				print("  Compiling Library Files...")
-			if (util.wrap_output(["gcc","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","__SLL_STATIC__","-Wall","-O0","-Werror","-o","sll_coverage.o","-I","../src/include",fp,"-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","__SLL_STATIC__","-Wall","-O0","-Werror","-o","sll_coverage.o","-I","../src/include",fp,"-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-O0","../tests/run_tests.c","sll_coverage.o","-o","run_tests","-I",".","-I","../tests","-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-O0","../tests/run_tests.c","sll_coverage.o","-o","run_tests","-I",".","-I","../tests","-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)

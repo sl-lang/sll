@@ -2,6 +2,7 @@
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/core.h>
+#include <sll/operator.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
@@ -10,9 +11,43 @@
 
 
 
+#define OPERATOR_INSTRUCTION_UNARY(nm) \
+	{ \
+		sll_runtime_object_t* a=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
+		sll_runtime_object_t n={0}; \
+		sll_operator_##nm(a,&n); \
+		if (a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
+			sll_string_release(a->dt.s); \
+		} \
+		*a=n; \
+		break; \
+	}
+#define OPERATOR_INSTRUCTION(nm) \
+	{ \
+		si--; \
+		sll_runtime_object_t* a=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
+		sll_runtime_object_t* b=s+si; \
+		sll_runtime_object_t n={0}; \
+		sll_operator_##nm(a,b,&n); \
+		if (a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
+			sll_string_release(a->dt.s); \
+		} \
+		if (b->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
+			sll_string_release(b->dt.s); \
+		} \
+		*a=n; \
+		break; \
+	}
+
+
+
 __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,sll_internal_function_table_t* i_ft,sll_input_data_stream_t* in,sll_output_data_stream_t* out,sll_error_t* e){
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	sll_runtime_object_t* v=(sll_runtime_object_t*)(st->ptr);
+	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
+		(v+i)->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+		(v+i)->dt.i=0;
+	}
 	call_stack_t c_st={
 		(call_stack_frame_t*)(st->ptr+a_dt->vc*sizeof(sll_runtime_object_t)),
 		0
@@ -20,7 +55,6 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 	sll_runtime_object_t* s=(sll_runtime_object_t*)(st->ptr+a_dt->vc*sizeof(sll_runtime_object_t)+CALL_STACK_SIZE*sizeof(call_stack_frame_t));
 	sll_stack_offset_t si=0;
 	sll_stack_offset_t s_sz=(st->sz-a_dt->vc*sizeof(sll_runtime_object_t)-CALL_STACK_SIZE*sizeof(call_stack_frame_t))/sizeof(sll_runtime_object_t);
-	IGNORE_RESULT(s_sz);
 	sll_instruction_index_t ii=0;
 	while (1){
 		if (ii>=a_dt->ic){
@@ -255,131 +289,29 @@ _jump:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 				SLL_ASSERT(!"Unimplemented");
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
-				{
-					sll_runtime_object_t* a=v+ai->dt.v;
-					switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
-						case SLL_RUNTIME_OBJECT_TYPE_INT:
-							a->dt.i++;
-							break;
-						case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-							a->dt.f++;
-							break;
-						case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-							a->dt.c++;
-							break;
-						case SLL_RUNTIME_OBJECT_TYPE_STRING:
-							SLL_ASSERT(!"Unimplemented");
-						default:
-							UNREACHABLE();
-					}
-					break;
-				}
+				OPERATOR_INSTRUCTION_UNARY(inc);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
-				{
-					sll_runtime_object_t* a=v+ai->dt.v;
-					switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
-						case SLL_RUNTIME_OBJECT_TYPE_INT:
-							a->dt.i--;
-							break;
-						case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-							a->dt.f--;
-							break;
-						case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-							a->dt.c--;
-							break;
-						case SLL_RUNTIME_OBJECT_TYPE_STRING:
-							SLL_ASSERT(!"Unimplemented");
-						default:
-							UNREACHABLE();
-					}
-					break;
-				}
+				OPERATOR_INSTRUCTION_UNARY(dec);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
-				{
-					si--;
-					sll_runtime_object_t* a=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
-					sll_runtime_object_t* b=s+si;
-					switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
-						case SLL_RUNTIME_OBJECT_TYPE_INT:
-							switch (SLL_RUNTIME_OBJECT_GET_TYPE(b)){
-								case SLL_RUNTIME_OBJECT_TYPE_INT:
-									a->dt.i+=b->dt.i;
-									break;
-								case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-									a->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
-									a->dt.f=a->dt.i+b->dt.f;
-									break;
-								case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-									a->dt.i+=b->dt.c;
-									break;
-								case SLL_RUNTIME_OBJECT_TYPE_STRING:
-									SLL_ASSERT(!"Unimplemented");
-								default:
-									UNREACHABLE();
-							}
-							break;
-						case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-							SLL_ASSERT(!"Unimplemented");
-						case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-							SLL_ASSERT(!"Unimplemented");
-						case SLL_RUNTIME_OBJECT_TYPE_STRING:
-							SLL_ASSERT(!"Unimplemented");
-						default:
-							UNREACHABLE();
-					}
-					break;
-				}
+				OPERATOR_INSTRUCTION(add);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
-				SLL_ASSERT(!"Unimplemented");
+				OPERATOR_INSTRUCTION(sub);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:
-				{
-					si--;
-					sll_runtime_object_t* a=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
-					sll_runtime_object_t* b=s+si;
-					switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
-						case SLL_RUNTIME_OBJECT_TYPE_INT:
-							switch (SLL_RUNTIME_OBJECT_GET_TYPE(b)){
-								case SLL_RUNTIME_OBJECT_TYPE_INT:
-									a->dt.i*=b->dt.i;
-									break;
-								case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-									a->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
-									a->dt.f=a->dt.i*b->dt.f;
-									break;
-								case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-									a->dt.i*=b->dt.c;
-									break;
-								case SLL_RUNTIME_OBJECT_TYPE_STRING:
-									SLL_ASSERT(!"Unimplemented");
-								default:
-									UNREACHABLE();
-							}
-							break;
-						case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-							SLL_ASSERT(!"Unimplemented");
-						case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-							SLL_ASSERT(!"Unimplemented");
-						case SLL_RUNTIME_OBJECT_TYPE_STRING:
-							SLL_ASSERT(!"Unimplemented");
-						default:
-							UNREACHABLE();
-					}
-					break;
-				}
+				OPERATOR_INSTRUCTION(mult);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DIV:
-				SLL_ASSERT(!"Unimplemented");
+				OPERATOR_INSTRUCTION(div);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV:
-				SLL_ASSERT(!"Unimplemented");
+				OPERATOR_INSTRUCTION(floor_div);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MOD:
-				SLL_ASSERT(!"Unimplemented");
+				OPERATOR_INSTRUCTION(mod);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_AND:
-				SLL_ASSERT(!"Unimplemented");
+				OPERATOR_INSTRUCTION(and);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
-				SLL_ASSERT(!"Unimplemented");
+				OPERATOR_INSTRUCTION(or);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
-				SLL_ASSERT(!"Unimplemented");
+				OPERATOR_INSTRUCTION(xor);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
-				SLL_ASSERT(!"Unimplemented");
+				OPERATOR_INSTRUCTION_UNARY(inv);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				si--;
 _print_from_stack:
@@ -446,6 +378,11 @@ _print_from_stack:
 						si-=ai->dt.ac;
 						sll_runtime_object_t n={0};
 						(*(i_ft->dt+i))->p(&n,ai->dt.ac,s+si);
+						for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
+							if ((s+si+j)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
+								sll_string_release((s+si+j)->dt.s);
+							}
+						}
 						if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
 							*(s+si)=n;
 							si++;
@@ -504,6 +441,9 @@ _print_from_stack:
 					if (i<i_ft->l){
 						sll_runtime_object_t n={0};
 						(*(i_ft->dt+i))->p(&n,1,s+si-1);
+						if ((s+si-1)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
+							sll_string_release((s+si-1)->dt.s);
+						}
 						*(s+si-1)=n;
 						break;
 					}
@@ -586,6 +526,12 @@ _return:;
 				return 0;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ONE:
 				return 1;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
+				*(s+si)=*(v+ai->dt.v);
+				(v+ai->dt.v)->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+				(v+ai->dt.v)->dt.i=0;
+				si++;
+				break;
 			default:
 				e->t=SLL_ERROR_INVALID_INSTRUCTION;
 				e->dt.it=SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai);
@@ -593,5 +539,9 @@ _return:;
 		}
 		ai++;
 		ii++;
+		if (si>=s_sz){
+			e->t=SLL_ERROR_INVALID_STACK_INDEX;
+			return 0;
+		}
 	}
 }
