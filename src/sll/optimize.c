@@ -166,8 +166,6 @@ void _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,s
 			v->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 			v->dt.s=*(o_dt->c_dt->st.dt+o->dt.s);
 			return;
-		case SLL_OBJECT_TYPE_ARRAY:
-			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			*v=*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt));
 			return;

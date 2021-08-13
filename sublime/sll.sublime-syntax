@@ -5,8 +5,14 @@ file_extensions:
 scope: source.sll
 contexts:
   main:
+    - include: all
+  all:
     - include: comments
     - include: objects
+    - include: arrays
+    - include: numbers
+    - include: strings
+    - include: constants
   comments:
     - match: '\|#'
       scope: punctuation.definition.comment.begin.sll
@@ -22,7 +28,7 @@ contexts:
       captures:
         1: punctuation.definition.comment.sll
   objects:
-    - match: '(\()\s*(?:(\?|->)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(\.\.\.)|(##)|(#))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->|>-|><)|(&&|\|\||\!)|([&\|\^\~])|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(\.\.\.)|(##)|(#))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.control.conditional.sll
@@ -45,11 +51,7 @@ contexts:
         - match: '\)'
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           pop: true
-        - include: comments
-        - include: objects
-        - include: numbers
-        - include: strings
-        - include: constants
+        - include: all
     - match: '(\()\s*(\))'
       scope: meta.group.sll meta.parens.sll
       captures:
@@ -70,11 +72,7 @@ contexts:
         - match: '\}'
           scope: punctuation.section.block.end.sll punctuation.section.braces.end.sll
           pop: true
-        - include: comments
-        - include: objects
-        - include: numbers
-        - include: strings
-        - include: constants
+        - include: all
     - match: '\}'
       scope: invalid.illegal.stray-bracket-end.sll
   objects_no_highlight:
@@ -83,6 +81,17 @@ contexts:
         - match: '\)'
           pop: true
         - include: objects_no_highlight
+  arrays:
+    - match: '\['
+      scope: punctuation.section.sequence.begin.sll
+      push:
+        - meta_scope: meta.sequence.list.sll
+        - match: '\]'
+          scope: punctuation.section.sequence.end.sll
+          pop: true
+        - include: all
+    - match: '\]'
+      scope: invalid.illegal.stray-bracket-end.sll
   constants:
     - match: '\b(nil|true|false|stdin|stdout|stderr)\b'
       scope: constant.language.sll

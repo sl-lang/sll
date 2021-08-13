@@ -50,9 +50,15 @@ if ("--standalone" in sys.argv or "--test" in sys.argv):
 		print("Generating Standalone Library Header File...")
 	with open("build/sll_standalone.h","wb") as wf:
 		wf.write(b"#ifndef __SLL_STANDALONE_H__\n#define __SLL_STANDALONE_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES+[b"__SLL_STATIC__"])+b"\n#endif\n")
-if (os.name!="nt"):
-	if (vb):
-		print("Fixing 'LD_LIBRARY_PATH'...")
+if (vb):
+	print("Fixing Env Variables...")
+if (os.name=="nt"):
+	for p in os.environ["PATH"].split(";"):
+		if (os.path.exists(p+"/cl.exe")):
+			break
+	else:
+		util.wrap_output([str(subprocess.run([os.environ["ProgramFiles(x86)"]+"/Microsoft Visual Studio/Installer/vswhere.exe","-nologo","-latest","-products","*","-requires","Microsoft.VisualStudio.Component.VC.Tools.x86.x64","-property","installationPath"],stdout=subprocess.PIPE).stdout.strip(),"utf-8")+"/VC/Auxiliary/Build/vcvarsall.bat","x64"])
+else:
 	ld=os.getenv("LD_LIBRARY_PATH","")
 	if ("build:" not in ld):
 		os.environ["LD_LIBRARY_PATH"]="build:"+ld
@@ -71,6 +77,7 @@ if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Coverage Source Code File...")
 	build.convert_to_coverage("build/sll.c","build/sll_coverage.c",vb)
+print("Generating Executable...")
 build.build_sll("build/sll.c","build/sll.o",v,vb,("--release" in sys.argv))
 if (vb):
 	print("Compiling Modules...")

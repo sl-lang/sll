@@ -642,7 +642,7 @@ _unknown_symbol:
 				l_sc=&n_l_sc;
 			}
 		}
-		else if (c=='<'){
+		else if (c=='['){
 			if (!o){
 				if (!sll_insert_debug_object(c_dt,is,e)){
 					if (n_l_sc.m){
@@ -726,7 +726,7 @@ _unknown_symbol:
 			}
 			c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 		}
-		else if (c=='>'){
+		else if (c==']'){
 			if (n_l_sc.m){
 				free(n_l_sc.m);
 			}
@@ -871,7 +871,7 @@ _hexadecimal:
 						if (c==SLL_END_OF_DATA){
 							break;
 						}
-						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!=']'&&c!='[')){
 							goto _hexadecimal;
 						}
 					}
@@ -895,7 +895,7 @@ _octal:
 						if (c==SLL_END_OF_DATA){
 							break;
 						}
-						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!=']'&&c!='[')){
 							goto _octal;
 						}
 					}
@@ -919,7 +919,7 @@ _binary:
 						if (c==SLL_END_OF_DATA){
 							break;
 						}
-						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!=']'&&c!='[')){
 							goto _binary;
 						}
 					}
@@ -929,7 +929,7 @@ _binary:
 					else if (c>47&&c<58){
 						goto _decimal;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!=']'&&c!='[')){
 						e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
 						e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
 						e->dt.r.sz=1;
@@ -946,7 +946,7 @@ _decimal:
 					if (c==SLL_END_OF_DATA){
 						break;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!=']'&&c!='[')){
 						if (c=='.'||c=='e'||c=='E'){
 							goto _parse_float;
 						}
@@ -973,7 +973,7 @@ _float:
 					if (c==SLL_END_OF_DATA){
 						break;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!=']'&&c!='[')){
 						if (c=='e'||c=='E'){
 							goto _parse_float_exponent;
 						}
@@ -1011,7 +1011,7 @@ _float_exponent:
 						break;
 					}
 _add_exponent_char:
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!=']'&&c!='[')){
 						if (c<48||c>57){
 							e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
 							e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
@@ -1054,7 +1054,7 @@ _read_identifier:
 				if ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
 					goto _read_identifier;
 				}
-				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
+				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!=']'&&c!='[')){
 					e->t=SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER;
 					e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
 					e->dt.r.sz=1;

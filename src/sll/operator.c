@@ -170,7 +170,9 @@ __SLL_OPERATOR(sub){
 		case COMBINED_TYPE_FI:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
+			o->dt.f=a->dt.f-b->dt.f;
+			return;
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:

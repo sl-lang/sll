@@ -506,7 +506,7 @@ sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_
 			{
 				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
-				ai->dt.i=(o->t==SLL_OBJECT_TYPE_FUNC?o->dt.fn.id:~((sll_integer_t)o->dt.fn.id));
+				ai->dt.i=(o->t==SLL_OBJECT_TYPE_FUNC?o->dt.fn.id+1:~((sll_integer_t)o->dt.fn.id));
 				return sll_get_object_size(o)+eoff;
 			}
 		case SLL_OBJECT_TYPE_CALL:

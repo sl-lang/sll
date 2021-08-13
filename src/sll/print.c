@@ -141,7 +141,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'<');
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'[');
 				sll_stack_offset_t off=1;
 				sll_array_length_t al=o->dt.al;
 				for (sll_array_length_t i=0;i<al;i++){
@@ -150,7 +150,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 					}
 					off+=_print_object_internal(c_dt,o+off,os);
 				}
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'>');
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,']');
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
@@ -298,7 +298,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			{
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'[');
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'<');
 				sll_string_t* fp=*(c_dt->st.dt+o->dt.dbg.fpi);
 				for (sll_string_length_t i=0;i<fp->l;i++){
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,fp->v[i]);
@@ -307,7 +307,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 				_print_int(o->dt.dbg.ln+1,os);
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,':');
 				_print_int(o->dt.dbg.cn+1,os);
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,']');
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'>');
 				return eoff+_print_object_internal(c_dt,o+1,os)+1;
 			}
 		default:

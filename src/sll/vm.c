@@ -365,12 +365,12 @@ _print_from_stack:;
 						break;
 					}
 				}
-				else if ((s+si)->dt.i<a_dt->ft.l){
+				else if ((s+si)->dt.i&&(s+si)->dt.i<=a_dt->ft.l){
 					SLL_ASSERT(c_st.l<=CALL_STACK_SIZE);
 					(c_st.dt+c_st.l)->ii=ii;
 					(c_st.dt+c_st.l)->s=si-ai->dt.ac;
 					c_st.l++;
-					ii=*(a_dt->ft.dt+(s+si)->dt.i);
+					ii=*(a_dt->ft.dt+(s+si)->dt.i-1);
 					ai=a_dt->h+ii;
 					continue;
 				}
@@ -397,12 +397,12 @@ _print_from_stack:;
 						break;
 					}
 				}
-				else if (ai->dt.i<a_dt->ft.l){
+				else if (ai->dt.i&&ai->dt.i<=a_dt->ft.l){
 					SLL_ASSERT(c_st.l<=CALL_STACK_SIZE);
 					(c_st.dt+c_st.l)->ii=ii;
 					(c_st.dt+c_st.l)->s=si;
 					c_st.l++;
-					ii=*(a_dt->ft.dt+ai->dt.i);
+					ii=*(a_dt->ft.dt+ai->dt.i-1);
 					ai=a_dt->h+ii;
 					continue;
 				}
@@ -426,12 +426,12 @@ _print_from_stack:;
 						break;
 					}
 				}
-				else if (ai->dt.i<a_dt->ft.l){
+				else if (ai->dt.i&&ai->dt.i<=a_dt->ft.l){
 					SLL_ASSERT(c_st.l<=CALL_STACK_SIZE);
 					(c_st.dt+c_st.l)->ii=ii;
 					(c_st.dt+c_st.l)->s=si-1;
 					c_st.l++;
-					ii=*(a_dt->ft.dt+ai->dt.i);
+					ii=*(a_dt->ft.dt+ai->dt.i-1);
 					ai=a_dt->h+ii;
 					continue;
 				}
