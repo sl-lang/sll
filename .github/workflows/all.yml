@@ -31,7 +31,6 @@ jobs:
       with:
         python-version: 3.9
     - name: Build
-      run: src/_build/main.py --verbose --test --do-not-start-test${{matrix.args}}
-      shell: python
+      run: python src/_build/main.py --verbose --test --do-not-start-test${{matrix.args}}
     - name: Test
       run: build/run_tests
