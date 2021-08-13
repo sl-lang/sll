@@ -53,11 +53,11 @@ if ("--standalone" in sys.argv or "--test" in sys.argv):
 if (vb):
 	print("Fixing Env Variables...")
 if (os.name=="nt"):
-	for p in os.environ["PATH"].split(";"):
-		if (os.path.exists(p+"/cl.exe")):
-			break
-	else:
-		util.wrap_output([str(subprocess.run([os.environ["ProgramFiles(x86)"]+"/Microsoft Visual Studio/Installer/vswhere.exe","-nologo","-latest","-products","*","-requires","Microsoft.VisualStudio.Component.VC.Tools.x86.x64","-property","installationPath"],stdout=subprocess.PIPE).stdout.strip(),"utf-8")+"/VC/Auxiliary/Build/vcvarsall.bat","x64"])
+	if ("__ghactions" in sys.argv):
+		for k in str(subprocess.run([str(subprocess.run([os.environ["ProgramFiles(x86)"]+"/Microsoft Visual Studio/Installer/vswhere.exe","-nologo","-latest","-products","*","-requires","Microsoft.VisualStudio.Component.VC.Tools.x86.x64","-property","installationPath"],stdout=subprocess.PIPE).stdout.strip(),"utf-8")+"/VC/Auxiliary/Build/vcvarsall.bat","x64","&&","cls","&&","set"],shell=True,stdout=subprocess.PIPE).stdout.split(b"\x0c")[1],"utf-8").split("\r\n"):
+			k=[e.strip() for e in k.split("=")]
+			if (k[0].lower() in ["path","include","lib","libpath"]):
+				os.environ[k[0].upper()]=k[1]
 else:
 	ld=os.getenv("LD_LIBRARY_PATH","")
 	if ("build:" not in ld):
