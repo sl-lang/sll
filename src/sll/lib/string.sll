@@ -1,4 +1,5 @@
 (= str (... "string_convert"))
+(= str_len (... "string_length"))
 (= _get_ref_count (... "string_ref_count"))
 
-(## str _get_ref_count)
+(## str str_len _get_ref_count)

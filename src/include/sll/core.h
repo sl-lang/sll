@@ -5,7 +5,7 @@
 
 
 
-__SLL_FUNC __SLL_RETURN_COMPARE sll_compare_runtime_object(const sll_runtime_object_t* a,const sll_runtime_object_t* b);
+__SLL_FUNC sll_allocated_block_t* sll_allocate_raw(sll_allocation_size_t sz);
 
 
 
@@ -14,6 +14,10 @@ __SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t
 
 
 __SLL_FUNC __SLL_RETURN_STRING_INDEX sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l);
+
+
+
+__SLL_FUNC void sll_deallocate_raw(sll_allocated_block_t* b,sll_allocation_size_t sz);
 
 
 
@@ -73,7 +77,7 @@ __SLL_FUNC __SLL_RETURN_FUNCTION_INDEX sll_lookup_internal_function(const sll_in
 
 
 
-__SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_arg_count_t ac);
+__SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_array_length_t al);
 
 
 
@@ -121,7 +125,7 @@ __SLL_FUNC void sll_remove_object_padding(sll_compilation_data_t* c_dt,sll_objec
 
 
 
-__SLL_FUNC __SLL_RETURN_COMPARE sll_runtime_object_nonzero(const sll_runtime_object_t* o);
+__SLL_FUNC void sll_reset_allocator(void);
 
 
 

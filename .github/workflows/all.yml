@@ -7,11 +7,22 @@ on:
   pull_request:
     branches:
       - main
-permissions: read-all
 jobs:
   all:
     name: Build & Test (OS = ${{matrix.os}}, Args = 'sll${{matrix.args}}')
     runs-on: ${{matrix.os}}
+    permissions: read-all
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        args:
+          - ''
+          - ' --release'
+          - ' --standalone'
+          - ' --standalone --release'
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -31,14 +42,62 @@ jobs:
       shell: cmd
     - name: Test
       run: build/run_tests
+  codeql_analysis_c:
+    name: CodeQL Analysis (C)
+    runs-on: ${{matrix.os}}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
           - windows-latest
-        args:
-          - ''
-          - ' --release'
-          - ' --standalone'
-          - ' --standalone --release'
-    timeout-minutes: 5
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: CodeQL Initialization
+      uses: github/codeql-action/init@v1
+      with:
+        languages: cpp
+    - name: Build (Ubuntu)
+      if: matrix.os=='ubuntu-latest'
+      run: python src/_build/main.py --verbose --test --do-not-start-test --standalone
+    - name: Setup Windows Environment
+      if: matrix.os=='windows-latest'
+      uses: ilammy/msvc-dev-cmd@v1
+    - name: Build (Windows)
+      if: matrix.os=='windows-latest'
+      run: python src/_build/main.py --verbose --test --do-not-start-test --standalone
+      shell: cmd
+    - name: CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+  codeql_analysis_python:
+    name: CodeQL Analysis (Python)
+    runs-on: ${{matrix.os}}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: CodeQL Initialization
+      uses: github/codeql-action/init@v1
+      with:
+        languages: python
+        setup-python-dependencies: false
+    - name: CodeQL Analysis
+      uses: github/codeql-action/analyze@v1

@@ -5,8 +5,8 @@
 
 
 
-#define __SLL_OPERATOR_UNARY(nm) __SLL_FUNC void sll_operator_##nm(sll_runtime_object_t* a,sll_runtime_object_t* o)
-#define __SLL_OPERATOR(nm) __SLL_FUNC void sll_operator_##nm(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* o)
+#define __SLL_OPERATOR_UNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,sll_runtime_object_t* o)
+#define __SLL_OPERATOR(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,sll_runtime_object_t* o)
 
 
 
@@ -55,6 +55,14 @@ __SLL_OPERATOR(xor);
 
 
 __SLL_OPERATOR_UNARY(inv);
+
+
+
+__SLL_FUNC __SLL_RETURN_COMPARE sll_operator_compare(const sll_runtime_object_t* a,const sll_runtime_object_t* b);
+
+
+
+__SLL_FUNC __SLL_RETURN_COMPARE sll_operator_bool(const sll_runtime_object_t* a);
 
 
 

@@ -139,6 +139,20 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'"');
 				return eoff+1;
 			}
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'<');
+				sll_stack_offset_t off=1;
+				sll_array_length_t al=o->dt.al;
+				for (sll_array_length_t i=0;i<al;i++){
+					if (i){
+						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
+					}
+					off+=_print_object_internal(c_dt,o+off,os);
+				}
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'>');
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				sll_identifier_index_t i=o->dt.id;
@@ -374,6 +388,16 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 				PRINT_STATIC_STRING("LOADS #",os);
 				_print_int(ai->dt.s,os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
+				PRINT_STATIC_STRING("PACK ",os);
+				_print_int(ai->dt.al,os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO:
+				PRINT_STATIC_STRING("PACK 0",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE:
+				PRINT_STATIC_STRING("PACK 1",os);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				PRINT_STATIC_STRING("STORE $",os);
@@ -631,8 +655,9 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				PRINT_STATIC_STRING("END 1",os);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
-				PRINT_STATIC_STRING("DEL $",os);
+				PRINT_STATIC_STRING("LOAD $",os);
 				_print_int(ai->dt.v,os);
+				PRINT_STATIC_STRING(" & DEL",os);
 				break;
 			default:
 				UNREACHABLE();

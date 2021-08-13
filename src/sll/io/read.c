@@ -240,6 +240,9 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				CHECK_ERROR(is,ai->dt.s,sll_string_index_t,e);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
+				CHECK_ERROR(is,ai->dt.al,sll_array_length_t,e);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:

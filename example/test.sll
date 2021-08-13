@@ -48,6 +48,7 @@
 (:> "String: " string " (RC: " (<- _get_ref_count string) ")\n")
 (:> "String: " string "\n")
 (:> (<- _get_ref_count string) "\n")
+(:> "Array: " <5 10 <"Abc" 148> <"Def" (<- time)>> "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)

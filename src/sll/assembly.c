@@ -51,6 +51,16 @@ sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compi
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 			return eoff+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				sll_object_offset_t off=1;
+				sll_array_length_t l=o->dt.al;
+				while (l){
+					l--;
+					off+=_map_identifiers_extra(o+off,c_dt,g_dt);
+				}
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
@@ -262,6 +272,8 @@ sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return eoff+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
@@ -293,11 +305,11 @@ sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_INPUT:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_AND:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_OR:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_NOT:
 			{
 				sll_arg_count_t l=o->dt.ac;
@@ -403,6 +415,26 @@ sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_
 				ai->dt.s=o->dt.s;
 				return eoff+1;
 			}
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				if (!o->dt.al){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO);
+					return eoff+1;
+				}
+				sll_object_offset_t off=1;
+				for (sll_array_length_t i=0;i<o->dt.al;i++){
+					off+=_generate_on_stack(o+off,g_dt);
+				}
+				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				if (o->dt.al==1){
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE;
+				}
+				else{
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK;
+					ai->dt.al=o->dt.al;
+				}
+				return eoff+off;
+			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
@@ -435,11 +467,11 @@ sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_INPUT:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_AND:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_OR:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_NOT:
 			{
 				sll_arg_count_t l=o->dt.ac;
@@ -522,6 +554,8 @@ sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_STRING:
 			return eoff+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				uint8_t i=SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
@@ -556,11 +590,11 @@ sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_INPUT:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_AND:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_OR:
-			SLL_ASSERT(!"Unimplemented");
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_ASSIGN:
 			{
 				sll_arg_count_t l=o->dt.ac;

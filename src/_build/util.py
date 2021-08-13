@@ -4,6 +4,7 @@ import sys
 
 
 def wrap_output(a,pfx=b"    "):
+	sys.stdout.flush()
 	p=subprocess.Popen(a,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
 	st=False
 	for c in iter(lambda:p.stdout.read(1),b""):

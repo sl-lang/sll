@@ -121,6 +121,12 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 		case SLL_ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS:
 			printf("Unmatched Right Curly Brackets\n");
 			return;
+		case SLL_ERROR_UNMATCHED_ARRAY_OPEN_BRACKETS:
+			printf("Unmatched Left Array Brackets\n");
+			return;
+		case SLL_ERROR_UNMATCHED_ARRAY_CLOSE_BRACKETS:
+			printf("Unmatched Right Array Brackets\n");
+			return;
 		case SLL_ERROR_UNMATCHED_QUOTES:
 			if (t=='\''){
 				printf("Unmatched Single Quotes\n");
@@ -178,6 +184,9 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 			return;
 		case SLL_ERROR_TOO_MANY_STATEMENTS:
 			printf("Too Many Statements\n");
+			return;
+		case SLL_ERROR_ARRAY_TOO_LONG:
+			printf("Array Too Long\n");
 			return;
 		case SLL_ERROR_UNKNOWN_IDENTIFIER:
 			*sp=0;

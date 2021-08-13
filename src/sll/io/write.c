@@ -148,6 +148,9 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				_write_integer(os,ai->dt.s);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
+				_write_integer(os,ai->dt.al);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:

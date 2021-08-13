@@ -5,6 +5,17 @@
 
 
 
+#define __SLL_ALLOCATED_STRUCT(lt) \
+	const lt l; \
+	sll_ref_count_t rc; \
+	const sll_heap_data_t h;
+
+
+
+struct __SLL_ARRAY;
+
+
+
 typedef uint8_t sll_arg_count_t;
 
 
@@ -69,7 +80,7 @@ typedef int32_t sll_return_code_t;
 
 
 
-typedef uint32_t sll_sys_arg_count_t;
+typedef uint32_t sll_allocated_block_length_t;
 
 
 
@@ -137,11 +148,23 @@ typedef uint32_t sll_string_length_t;
 
 
 
+typedef uint32_t sll_sys_arg_count_t;
+
+
+
 typedef uint32_t sll_variable_index_t;
 
 
 
+typedef uint32_t sll_array_length_t;
+
+
+
 typedef int64_t sll_integer_t;
+
+
+
+typedef uint64_t sll_allocation_size_t;
 
 
 
@@ -193,6 +216,12 @@ typedef struct __SLL_INPUT_BUFFER{
 
 
 
+typedef struct __SLL_ALLOCATED_BLOCK{
+	__SLL_ALLOCATED_STRUCT(sll_allocated_block_length_t)
+} sll_allocated_block_t;
+
+
+
 typedef struct __SLL_FUNCTION_OBJECT_DATA{
 	sll_arg_count_t ac;
 	sll_function_index_t id;
@@ -214,6 +243,7 @@ typedef union __SLL_OBJECT_DATA{
 	sll_integer_t i;
 	sll_float_t f;
 	sll_string_index_t s;
+	sll_array_length_t al;
 	sll_identifier_index_t id;
 	sll_function_object_data_t fn;
 	sll_arg_count_t ac;
@@ -275,9 +305,7 @@ typedef struct __SLL_FUNCTION_DATA{
 
 
 typedef struct __SLL_STRING{
-	const sll_string_length_t l;
-	sll_ref_count_t rc;
-	const sll_heap_data_t h;
+	__SLL_ALLOCATED_STRUCT(sll_string_length_t)
 	sll_string_checksum_t c;
 	sll_char_t v[];
 } sll_string_t;
@@ -322,6 +350,7 @@ typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_instruction_index_t j;
 	sll_relative_instruction_index_t rj;
 	sll_arg_count_t ac;
+	sll_array_length_t al;
 } sll_assembly_instruction_data_t;
 
 
@@ -358,6 +387,7 @@ typedef union __SLL_RUNTIME_OBJECT_DATA{
 	sll_float_t f;
 	sll_string_t* s;
 	sll_instruction_index_t ii;
+	struct __SLL_ARRAY* a;
 } sll_runtime_object_data_t;
 
 
@@ -366,6 +396,13 @@ typedef struct __SLL_RUNTIME_OBJECT{
 	sll_runtime_object_type_t t;
 	sll_runtime_object_data_t dt;
 } sll_runtime_object_t;
+
+
+
+typedef struct __SLL_ARRAY{
+	__SLL_ALLOCATED_STRUCT(sll_array_length_t)
+	sll_runtime_object_t v[];
+} sll_array_t;
 
 
 

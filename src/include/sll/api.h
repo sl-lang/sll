@@ -52,6 +52,10 @@ __API_FUNC_DECL(string_convert);
 
 
 
+__API_FUNC_DECL(string_length);
+
+
+
 __API_FUNC_DECL(string_ref_count);
 
 

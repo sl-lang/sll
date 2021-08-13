@@ -5,10 +5,6 @@
 
 
 
-__SLL_FUNC void sll_reset_heap(void);
-
-
-
 __SLL_FUNC sll_string_t* sll_string_create(sll_string_length_t l);
 
 

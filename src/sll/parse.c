@@ -197,6 +197,7 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 	sll_object_t* o=NULL;
 	sll_arg_count_t ac=0;
 	sll_statement_count_t sc=0;
+	sll_array_length_t al=0;
 	while (c!=SLL_END_OF_DATA){
 		if ((c>8&&c<14)||c==' '){
 			while ((c>8&&c<14)||c==' '){
@@ -413,7 +414,19 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 					}
 					return SLL_RETURN_ERROR;
 				}
-				if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
+				if (o->t==SLL_OBJECT_TYPE_ARRAY){
+					if (al==UINT32_MAX){
+						e->t=SLL_ERROR_ARRAY_TOO_LONG;
+						e->dt.r.off=arg_s;
+						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
+						if (n_l_sc.m){
+							free(n_l_sc.m);
+						}
+						return SLL_RETURN_ERROR;
+					}
+					al++;
+				}
+				else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
 					if (sc==UINT16_MAX){
 						e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
 						e->dt.r.off=arg_s;
@@ -629,6 +642,103 @@ _unknown_symbol:
 				l_sc=&n_l_sc;
 			}
 		}
+		else if (c=='<'){
+			if (!o){
+				if (!sll_insert_debug_object(c_dt,is,e)){
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return SLL_RETURN_ERROR;
+				}
+				st_off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
+				o=(sll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
+				c_dt->_s.off+=sizeof(sll_object_t);
+				if (c_dt->_s.off>=c_dt->_s.sz){
+					e->t=SLL_ERROR_INTERNAL_STACK_OVERFLOW;
+					e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return SLL_RETURN_ERROR;
+				}
+				o->t=SLL_OBJECT_TYPE_ARRAY;
+			}
+			else{
+				sll_file_offset_t arg_s=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
+				if (o->t==SLL_OBJECT_TYPE_UNKNOWN){
+					e->t=SLL_ERROR_NO_SYMBOL;
+					e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
+					e->dt.r.sz=1;
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return SLL_RETURN_ERROR;
+				}
+				extra_compilation_data_t n_e_c_dt={
+					fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION,
+					*l_sc,
+					e_c_dt->i_ft,
+					e_c_dt->il
+				};
+				if (!_read_object_internal(c_dt,c,&n_e_c_dt,e)){
+					if (n_l_sc.m){
+						free(n_l_sc.m);
+					}
+					return SLL_RETURN_ERROR;
+				}
+				if (o->t==SLL_OBJECT_TYPE_ARRAY){
+					if (al==UINT32_MAX){
+						e->t=SLL_ERROR_ARRAY_TOO_LONG;
+						e->dt.r.off=arg_s;
+						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
+						if (n_l_sc.m){
+							free(n_l_sc.m);
+						}
+						return SLL_RETURN_ERROR;
+					}
+					al++;
+				}
+				else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
+					if (sc==UINT16_MAX){
+						e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
+						e->dt.r.off=arg_s;
+						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
+						if (n_l_sc.m){
+							free(n_l_sc.m);
+						}
+						return SLL_RETURN_ERROR;
+					}
+					sc++;
+				}
+				else{
+					if (ac==UINT8_MAX){
+						e->t=SLL_ERROR_TOO_MANY_ARGUMENTS;
+						e->dt.r.off=arg_s;
+						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
+						if (n_l_sc.m){
+							free(n_l_sc.m);
+						}
+						return SLL_RETURN_ERROR;
+					}
+					ac++;
+				}
+			}
+			c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
+		}
+		else if (c=='>'){
+			if (n_l_sc.m){
+				free(n_l_sc.m);
+			}
+			if (!o||o->t!=SLL_OBJECT_TYPE_ARRAY){
+				e->t=SLL_ERROR_UNMATCHED_ARRAY_CLOSE_BRACKETS;
+				e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
+				e->dt.r.sz=1;
+				return SLL_RETURN_ERROR;
+			}
+			o->dt.al=al;
+			return SLL_RETURN_NO_ERROR;
+		}
 		else if (c=='|'){
 			c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 			if (c!='#'){
@@ -761,7 +871,7 @@ _hexadecimal:
 						if (c==SLL_END_OF_DATA){
 							break;
 						}
-						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
 							goto _hexadecimal;
 						}
 					}
@@ -785,7 +895,7 @@ _octal:
 						if (c==SLL_END_OF_DATA){
 							break;
 						}
-						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
 							goto _octal;
 						}
 					}
@@ -809,7 +919,7 @@ _binary:
 						if (c==SLL_END_OF_DATA){
 							break;
 						}
-						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+						if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
 							goto _binary;
 						}
 					}
@@ -819,7 +929,7 @@ _binary:
 					else if (c>47&&c<58){
 						goto _decimal;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
 						e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
 						e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
 						e->dt.r.sz=1;
@@ -836,7 +946,7 @@ _decimal:
 					if (c==SLL_END_OF_DATA){
 						break;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
 						if (c=='.'||c=='e'||c=='E'){
 							goto _parse_float;
 						}
@@ -863,7 +973,7 @@ _float:
 					if (c==SLL_END_OF_DATA){
 						break;
 					}
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
 						if (c=='e'||c=='E'){
 							goto _parse_float_exponent;
 						}
@@ -901,7 +1011,7 @@ _float_exponent:
 						break;
 					}
 _add_exponent_char:
-					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+					if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
 						if (c<48||c>57){
 							e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
 							e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
@@ -944,7 +1054,7 @@ _read_identifier:
 				if ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
 					goto _read_identifier;
 				}
-				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{')){
+				if (c<9||(c>13&&c!=' '&&c!=';'&&c!=')'&&c!='('&&c!='}'&&c!='{'&&c!='>'&&c!='<')){
 					e->t=SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER;
 					e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
 					e->dt.r.sz=1;
@@ -1077,7 +1187,16 @@ _identifier_found:;
 			if (!o){
 				return SLL_RETURN_NO_ERROR;
 			}
-			if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
+			if (o->t==SLL_OBJECT_TYPE_ARRAY){
+				if (al==UINT32_MAX){
+					e->t=SLL_ERROR_ARRAY_TOO_LONG;
+					e->dt.r.off=arg_s;
+					e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
+					return SLL_RETURN_ERROR;
+				}
+				al++;
+			}
+			else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
 				if (sc==UINT16_MAX){
 					e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
 					e->dt.r.off=arg_s;
@@ -1309,7 +1428,15 @@ _skip_export:;
 		o->dt.i=0;
 		return SLL_RETURN_NO_ERROR;
 	}
-	e->t=SLL_ERROR_UNMATCHED_OPEN_PARENTHESES;
+	if (o->t==SLL_OBJECT_TYPE_ARRAY){
+		e->t=SLL_ERROR_UNMATCHED_ARRAY_OPEN_BRACKETS;
+	}
+	else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
+		e->t=SLL_ERROR_UNMATCHED_CURLY_OPEN_BRACKETS;
+	}
+	else{
+		e->t=SLL_ERROR_UNMATCHED_OPEN_PARENTHESES;
+	}
 	e->dt.r.off=st_off;
 	e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-st_off;
 	if (n_l_sc.m){
