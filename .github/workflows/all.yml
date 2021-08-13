@@ -7,11 +7,11 @@ on:
   pull_request:
     branches:
       - main
+permissions: read-all
 jobs:
   all:
     name: Build & Test (OS = ${{matrix.os}}, Args = 'sll${{matrix.args}}')
     runs-on: ${{matrix.os}}
-    permissions: read-all
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +31,7 @@ jobs:
       with:
         python-version: 3.9
     - name: Build
-      run: python src/_build/main.py --verbose --test --do-not-start-test${{matrix.args}}
-      shell: ${{matrix.os=="windows-latest"&&"cmd"||"bash"}}
+      run: src/_build/main.py --verbose --test --do-not-start-test${{matrix.args}}
+      shell: python
     - name: Test
       run: build/run_tests
