@@ -109,6 +109,9 @@ uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 				}
 				o->dt.fn.ac=(sll_arg_count_t)c;
 				CHECK_ERROR2(is,o->dt.fn.id,sll_function_index_t);
+				if (o->t==SLL_OBJECT_TYPE_FUNC){
+					CHECK_ERROR2(is,o->dt.fn.sc,sll_scope_t);
+				}
 				for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
 					if (!_read_object(c_dt,is)){
 						return 0;

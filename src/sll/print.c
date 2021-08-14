@@ -8,6 +8,14 @@
 
 
 #define PRINT_STATIC_STRING(s,os) SLL_WRITE_TO_OUTPUT_DATA_STREAM((os),(sll_buffer_t)(s),sizeof(s)-1)
+#define PRINT_INT_SIGN(v,os) \
+	do{ \
+		int64_t __v=(v); \
+		if (__v>0){ \
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM((os),'+'); \
+		} \
+		_print_int(__v,(os)); \
+	} while(0)
 
 
 
@@ -434,39 +442,84 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 				PRINT_STATIC_STRING("JMP .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
 				PRINT_STATIC_STRING("JB .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
 				PRINT_STATIC_STRING("JBE .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
 				PRINT_STATIC_STRING("JA .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
 				PRINT_STATIC_STRING("JAE .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
 				PRINT_STATIC_STRING("JE .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
 				PRINT_STATIC_STRING("JNE .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 				PRINT_STATIC_STRING("JZ .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				PRINT_STATIC_STRING("JNZ .",os);
-				_print_int((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ai->dt.rj:ai->dt.j),os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){

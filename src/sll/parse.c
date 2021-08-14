@@ -599,6 +599,7 @@ _read_symbol:
 			else if (sz==3){
 				if (*str==','&&*(str+1)==','&&*(str+2)==','){
 					o->t=SLL_OBJECT_TYPE_FUNC;
+					o->dt.fn.sc=c_dt->_n_sc_id;
 					fl|=EXTRA_COMPILATION_DATA_INSIDE_FUNCTION;
 				}
 				else if (*str=='.'&&*(str+1)=='.'&&*(str+2)=='.'){

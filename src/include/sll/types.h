@@ -225,6 +225,7 @@ typedef struct __SLL_ALLOCATED_BLOCK{
 typedef struct __SLL_FUNCTION_OBJECT_DATA{
 	sll_arg_count_t ac;
 	sll_function_index_t id;
+	sll_scope_t sc;
 } sll_function_object_data_t;
 
 

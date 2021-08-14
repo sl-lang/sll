@@ -181,7 +181,7 @@ void _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,s
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			v->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			v->dt.i=(o->t==SLL_OBJECT_TYPE_FUNC?o->dt.fn.id:~((sll_integer_t)o->dt.fn.id));
+			v->dt.i=(o->t==SLL_OBJECT_TYPE_FUNC?o->dt.fn.id+1:~((sll_integer_t)o->dt.fn.id));
 			return;
 		default:
 			v->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
@@ -476,7 +476,21 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_FUNC:
-			return sll_get_object_size(o)+eoff;
+			{
+				sll_object_offset_t off=1;
+				sll_arg_count_t l=o->dt.fn.ac;
+				while (l){
+					l--;
+					off+=_optimize(o+off,o,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.fn.ac-=l;
+						break;
+					}
+				}
+				o_dt->rm=0;
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
@@ -769,7 +783,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 				else if (o->dt.sc==1){
 					o->t=SLL_OBJECT_TYPE_NOP;
 				}
-				else if (p&&p->t==SLL_OBJECT_TYPE_OPERATION_LIST){
+				else if (p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_OPERATION_LIST)){
 					p->dt.sc+=o->dt.sc-1;
 					o->t=SLL_OBJECT_TYPE_NOP;
 				}

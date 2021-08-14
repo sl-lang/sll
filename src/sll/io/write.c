@@ -55,6 +55,9 @@ sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_
 				sll_arg_count_t l=o->dt.fn.ac;
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,l);
 				_write_integer(os,o->dt.fn.id);
+				if (o->t==SLL_OBJECT_TYPE_FUNC){
+					_write_integer(os,o->dt.fn.sc);
+				}
 				sll_object_offset_t off=1;
 				while (l){
 					l--;
