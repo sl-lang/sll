@@ -10,7 +10,7 @@ on:
 permissions: read-all
 jobs:
   all:
-    name: Build & Test (OS = ${{matrix.os}}, Args = 'sll${{matrix.args}}')
+    name: OS = ${{matrix.os}}, Args = 'sll${{matrix.args}}'
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
