@@ -644,10 +644,18 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
 			continue;
 		}
-		for (uint32_t j=0;j<__coverage_map_length;j++){
+		uint32_t j=0;
+		for (;j<__coverage_map_length;j++){
 			uint64_t v=0;
-			fread(&v,sizeof(uint64_t),1,c_f);
+			if (fread(&v,sizeof(uint64_t),1,c_f)!=1){
+				o->s++;
+				printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
+				break;
+			}
 			__coverage_map[j]|=v;
+		}
+		if (j!=__coverage_map_length){
+			continue;
 		}
 		fclose(c_f);
 		json_object_t* err_e=get_by_key(t,"error");
