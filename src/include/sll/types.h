@@ -16,10 +16,6 @@ struct __SLL_ARRAY;
 
 
 
-typedef uint8_t sll_arg_count_t;
-
-
-
 typedef uint8_t sll_assembly_instruction_type_t;
 
 
@@ -64,10 +60,6 @@ typedef uint16_t sll_read_char_t;
 
 
 
-typedef uint16_t sll_statement_count_t;
-
-
-
 typedef uint16_t sll_version_t;
 
 
@@ -81,6 +73,10 @@ typedef int32_t sll_return_code_t;
 
 
 typedef uint32_t sll_allocated_block_length_t;
+
+
+
+typedef uint32_t sll_arg_count_t;
 
 
 
@@ -133,6 +129,10 @@ typedef uint32_t sll_scope_t;
 
 
 typedef uint32_t sll_stack_offset_t;
+
+
+
+typedef uint32_t sll_statement_count_t;
 
 
 

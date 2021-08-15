@@ -92,8 +92,6 @@ _found_index:
 	(_file_fl+i)->h=h;
 	o->dt.i=i;
 }
-#define _SLL_ASSERT_STR_(x) #x
-#define _SLL_ASSERT_STR(x) _SLL_ASSERT_STR_(x)
 
 
 

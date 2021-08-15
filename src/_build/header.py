@@ -40,22 +40,56 @@ def _expand_macros(k,dm,dfm):
 							continue
 						i+=1
 						l=i
-						while (k[i:i+1]!=b")"):
+						b=1
+						a=[b""]
+						ai=0
+						while (True):
+							si=i
+							if (k[i:i+1]==b"\'"):
+								i+=1
+								while (k[i:i+1]!=b"\'"):
+									if (k[i:i+1]==b"\\"):
+										i+=1
+									i+=1
+							elif (k[i:i+1]==b"\""):
+								i+=1
+								while (k[i:i+1]!=b"\""):
+									if (k[i:i+1]==b"\\"):
+										i+=1
+									i+=1
+							elif (k[i:i+1]==b"("):
+								b+=1
+							elif (k[i:i+1]==b")"):
+								b-=1
+								if (b==0):
+									break
+							elif (b==1 and k[i:i+1]==b","):
+								a.append(b"")
+								ai+=1
+								i+=1
+								continue
 							i+=1
-						a=k[l:i].split(b".")
+							a[ai]+=k[si:i]
+						if (ai==0 and len(a[0])==0):
+							a=[]
+						va=b""
 						if (len(a)!=len(v[0])):
-							raise RuntimeError("Invalid Macro Argument Count")
+							if (len(a)>len(v[0]) and not v[1]):
+								raise RuntimeError("Invalid Macro Argument Count")
+							va=b",".join(a[len(v[0]):])
 						tmp=k[i+1:]
 						k=k[:j]
-						for m,n in enumerate(v[1]):
+						for m,n in enumerate(v[2]):
 							if (m&1):
-								k+=a[n]
+								k+=(va if n==-1 else a[n])
 							else:
 								k+=n
 						k+=tmp
 						i=j-1
 						break
 		i+=1
+	if (b"##" in k):
+		return _expand_macros(k.replace(b"##",b""),dm,dfm)
 	return k
 
 
@@ -119,7 +153,7 @@ def generate_header(h_dt,c_m):
 	l=[]
 	st=[True]
 	tm=datetime.datetime.now()
-	dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__DATE__":bytes(tm.strftime(f"\"{MONTHS[tm.month-1]} %d %Y\""),"utf-8"),b"UINT16_MAX":b"65535",b"UINT32_MAX":b"4294967295u"}
+	dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__DATE__":bytes(tm.strftime(f"\"{MONTHS[tm.month-1]} %d %Y\""),"utf-8"),b"UINT8_MAX":b"255",b"UINT16_MAX":b"65535",b"UINT32_MAX":b"4294967295u",b"UINT64_MAX":b"18446744073709551615ull"}
 	dfm={}
 	d_v=[]
 	d_f=[]
@@ -156,7 +190,14 @@ def generate_header(h_dt,c_m):
 					al=f[1].split(b"(")[1].split(b")")[0].split(b",")
 					if (al[-1]==b""):
 						al.pop(len(al)-1)
-					al=tuple(al)
+					va=False
+					if (al[-1]==b"..."):
+						va=True
+						al.pop()
+					if (len(al)>0 and len(al[0])==0):
+						al=tuple()
+					else:
+						al=tuple(al)
 					k=b" ".join(f[2:])
 					if (f[1][:2]!=b"__"):
 						d_f.append((f[1],k))
@@ -165,6 +206,12 @@ def generate_header(h_dt,c_m):
 					i=0
 					while (i<len(k)):
 						if (i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS):
+							if (k.startswith(b"__VA_ARGS__",i) and k[i+11:i+12] not in IDENTIFIER_CHARACTERS):
+								sl.append(-1)
+								sl.append(b"")
+								sli+=2
+								i+=11
+								continue
 							nxt=False
 							for j,se in enumerate(al):
 								if (k.startswith(se,i) and k[i+len(se):i+len(se)+1] not in IDENTIFIER_CHARACTERS):
@@ -178,7 +225,7 @@ def generate_header(h_dt,c_m):
 								continue
 						sl[sli]+=k[i:i+1]
 						i+=1
-					dfm[f[1].split(b"(")[0]]=(al,tuple([(sl_e if j&1 else sl_e.replace(b"##",b"")) for j,sl_e in enumerate(sl)]))
+					dfm[f[1].split(b"(")[0]]=(al,va,tuple(sl))
 				else:
 					dm[f[1]]=b" ".join(f[2:])
 					if (f[1][:2]!=b"__"):

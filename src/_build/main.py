@@ -76,7 +76,7 @@ build.generate_source_file(i_fl,"build/sll.c",vb)
 if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Coverage Source Code File...")
-	build.convert_to_coverage("build/sll.c","build/sll_coverage.c",vb)
+	build.convert_to_coverage("build/sll.c","build/sll_coverage.c","src/include/",COMPILATION_DEFINES+[b"__SLL_STATIC__"],vb)
 print("Generating Executable...")
 build.build_sll("build/sll.c","build/sll.o",v,vb,("--release" in sys.argv))
 if (vb):
@@ -116,8 +116,8 @@ if ("--standalone" in sys.argv):
 		print("Generating Standalone Executable...")
 	build.build_sll_standalone("build/sll.o",vb,("--release" in sys.argv))
 if ("--bundle" in sys.argv):
-	with zipfile.ZipFile("build/sll.zip","w") as zf:
-		for k in (["build/sll.exe","build/sll.dll"] if os.name=="nt" else ["build/sll","build/sll.so"]):
+	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
+		for k in (["build/sll.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			zf.write("build/lib/"+k,arcname="lib/"+k)
