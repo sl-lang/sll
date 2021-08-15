@@ -52,7 +52,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define _INTERNAL_FUNCTION_NAME(a) _INTERNAL_FUNCTION_JOIN(a,__FILE_ID__,__LINE__)
 #define _SLL_ASSERT_STRINGIFY_(x) #x
 #define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
-#define _SLL_ASSERT_JOIN_(x) SLL_ASSERT##x
+#define _SLL_ASSERT_JOIN_(x) _SLL_ASSERT_##x
 #define _SLL_ASSERT_JOIN(x) _SLL_ASSERT_JOIN_(x)
 #define _SLL_ASSERT_COUNT_ARGS(_1,_2,_3,n,...) n
 #define SLL_UNIMPLEMENTED() \
@@ -61,8 +61,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 		raise(SIGABRT); \
 	} while (0)
 #ifdef DEBUG_BUILD
-#define SLL_ASSERT(...) _SLL_ASSERT_JOIN(_SLL_ASSERT_COUNT_ARGS(__VA_ARGS__,_ERROR,_EXIT,_EXIT))(__VA_ARGS__)
-#define SLL_ASSERT_ERROR(x,e,r) \
+#define SLL_ASSERT(...) _SLL_ASSERT_JOIN(_SLL_ASSERT_COUNT_ARGS(__VA_ARGS__,0,1,1))(__VA_ARGS__)
+#define _SLL_ASSERT_0(x,e,r) \
 	do{ \
 		if (!(x)){ \
 			(e)->t=SLL_ERROR_SLL_ASSERTION; \
@@ -84,7 +84,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 			return r; \
 		} \
 	} while (0)
-#define SLL_ASSERT_EXIT(x,...) \
+#define _SLL_ASSERT_1(x,...) \
 	do{ \
 		if (!(x)){ \
 			printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n",__func__); \
@@ -93,8 +93,6 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	} while (0)
 #else
 #define SLL_ASSERT(...)
-#define SLL_ASSERT_ERROR(x,e,r)
-#define SLL_ASSERT_EXIT(x,...)
 #endif
 
 #define ALIGN(a) ((((uint64_t)(a))+STRING_HEAP_ALIGNMENT-1)&(~(STRING_HEAP_ALIGNMENT-1)))

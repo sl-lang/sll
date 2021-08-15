@@ -1,6 +1,7 @@
 #ifdef _MSC_VER
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
+#include <intrin.h>
 #else
 #include <dirent.h>
 #include <errno.h>
@@ -8,18 +9,36 @@
 #include <unistd.h>
 #endif
 #include <run_tests.h>
+#include <sll/__coverage.h>
 #include <sll_standalone.h>
 #include <inttypes.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+
+
+#ifdef _MSC_VER
+#pragma intrinsic(_BitScanForward64)
+static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m){
+	unsigned long o;
+	_BitScanForward64(&o,m);
+	return o;
+}
+#define POPCNT(m) __popcnt64((m))
+#else
+#define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
+#define (uint32_t)POPCNT(m) __builtin_popcountll((m))
+#endif
 
 
 
 uint8_t c_st[COMPILER_STACK_SIZE];
 char e_fp[4096];
 char t_fp[4096];
+char c_fp[4096];
 
 
 
@@ -85,9 +104,17 @@ uint8_t execute_test(uint8_t id){
 		}
 		sll_free_compilation_data(&c_dt);
 		fclose(f);
-		return 0;
+		goto _save_coverage;
 	}
 	return 1;
+_save_coverage:
+	FILE* c_f=fopen(c_fp,"wb");
+	if (!c_f){
+		return 1;
+	}
+	fwrite(__coverage_map,sizeof(uint64_t),__coverage_map_length,c_f);
+	fclose(c_f);
+	return 0;
 }
 
 
@@ -611,6 +638,18 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> Test Case #%"PRIu32": Program Crashed\n",i);
 			continue;
 		}
+		FILE* c_f=fopen(c_fp,"rb");
+		if (!c_f){
+			o->s++;
+			printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
+			continue;
+		}
+		for (uint32_t j=0;j<__coverage_map_length;j++){
+			uint64_t v=0;
+			fread(&v,sizeof(uint64_t),1,c_f);
+			__coverage_map[j]|=v;
+		}
+		fclose(c_f);
 		json_object_t* err_e=get_by_key(t,"error");
 		if (!err_e||(err_e->t!=JSON_OBJECT_TYPE_NULL&&err_e->t!=JSON_OBJECT_TYPE_MAP)){
 			o->s++;
@@ -807,14 +846,23 @@ int main(int argc,const char** argv){
 	while (i&&e_fp[i]!='\\'&&e_fp[i]!='/'){
 		i--;
 	}
+	char c_o_fp[4096];
 	for (uint16_t j=0;j<i;j++){
 		t_fp[j]=e_fp[j];
+		c_fp[j]=e_fp[j];
+		c_o_fp[j]=e_fp[j];
 	}
 	t_fp[i]='/';
 	t_fp[i+1]='t';
 	t_fp[i+2]='m';
 	t_fp[i+3]='p';
 	t_fp[i+4]=0;
+	c_fp[i]='/';
+	c_fp[i+1]='c';
+	c_fp[i+2]='o';
+	c_fp[i+3]='v';
+	c_fp[i+4]=0;
+	memcpy(c_o_fp+i,"/coverage.txt",sizeof("/coverage.txt")/sizeof(char));
 	if (argc>1){
 		return execute_test(argv[1][0]-1);
 	}
@@ -829,6 +877,74 @@ int main(int argc,const char** argv){
 		0
 	};
 	list_files(bf,i,run_parser_test,&dt);
-	printf("%"PRIu32" Test%s Passed, %"PRIu32" Test%s Failed, %"PRIu32" Test%s Skipped\n",dt.p,(dt.p==1?"":"s"),dt.f,(dt.f==1?"":"s"),dt.s,(dt.s==1?"":"s"));
+	printf("%"PRIu32" Test%s Passed, %"PRIu32" Test%s Failed, %"PRIu32" Test%s Skipped\nWriting Coverage File '%s'...\n",dt.p,(dt.p==1?"":"s"),dt.f,(dt.f==1?"":"s"),dt.s,(dt.s==1?"":"s"),c_o_fp);
+	FILE* c_o=fopen(c_o_fp,"wb");
+	uint32_t c=0;
+	for (uint32_t j=0;j<__coverage_map_length;j++){
+		c+=(uint32_t)POPCNT(__coverage_map[j]);
+	}
+	fprintf(c_o,"Tested Code: (%.3f%%)\n",((float)c*100)/__coverage_count);
+	for (uint32_t j=0;j<__coverage_map_length;j++){
+		uint64_t v=__coverage_map[j];
+		while (v){
+			uint32_t k=FIND_FIRST_SET_BIT(v)|(j<<6);
+			__coverage_data_t dt=__coverage_data[k];
+			switch (dt.t){
+				case __COVERAGE_DATA_TYPE_BREAK:
+					fprintf(c_o,"  [%s:%u (%s)] 'break' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_CONTINUE:
+					fprintf(c_o,"  [%s:%u (%s)] 'continue' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_FUNC:
+					fprintf(c_o,"  [%s:%u (%s)] Function Entry\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_FUNC_END:
+					fprintf(c_o,"  [%s:%u (%s)] Implict Return\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_GOTO:
+					fprintf(c_o,"  [%s:%u (%s)] 'goto' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_RETURN:
+					fprintf(c_o,"  [%s:%u (%s)] 'return' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+			}
+			v&=v-1;
+		}
+	}
+	fprintf(c_o,"\nUntested Code: (%.3f%%)\n",((float)(__coverage_count-c)*100)/__coverage_count);
+	for (uint32_t j=0;j<__coverage_map_length;j++){
+		uint64_t v=~__coverage_map[j];
+		while (v){
+			uint32_t k=FIND_FIRST_SET_BIT(v)|(j<<6);
+			if (k==__coverage_count){
+				break;
+			}
+			__coverage_data_t dt=__coverage_data[k];
+			switch (dt.t){
+				case __COVERAGE_DATA_TYPE_BREAK:
+					fprintf(c_o,"  [%s:%u (%s)] 'break' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_CONTINUE:
+					fprintf(c_o,"  [%s:%u (%s)] 'continue' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_FUNC:
+					fprintf(c_o,"  [%s:%u (%s)] Function '%s'\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm],__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_FUNC_END:
+					fprintf(c_o,"  [%s:%u (%s)] Implict Return\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_GOTO:
+					fprintf(c_o,"  [%s:%u (%s)] 'goto' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+				case __COVERAGE_DATA_TYPE_RETURN:
+					fprintf(c_o,"  [%s:%u (%s)] 'return' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
+					break;
+			}
+			v&=v-1;
+		}
+	}
+	fclose(c_o);
+	printf("Test Coverage: %.3f%%\n",((float)(__coverage_count-c)*100)/__coverage_count);
 	return !!dt.f;
 }
