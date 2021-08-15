@@ -409,6 +409,7 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 		if (i==len(dt)):
 			break
 		rt=False
+		sw=False
 		while (b!=0):
 			if (dt[i:i+1]==b"\'"):
 				i+=1
@@ -426,7 +427,7 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 				b+=1
 			elif (dt[i:i+1]==b"{"):
 				if (nm_id!=-1):
-					if (st[-1] is None):
+					if (st[-1] is None or sw is True):
 						st.append(None)
 					else:
 						j=i-1
@@ -440,6 +441,7 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 							i+=len(s)
 						else:
 							st.append(None)
+				sw=False
 				b+=1
 			elif (dt[i:i+1]==b")"):
 				b-=1
@@ -449,9 +451,15 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 					if (e is not None):
 						e[3]=ln
 				b-=1
+			elif (dt[i:i+1]==b";"):
+				sw=False
 			elif (dt[i:i+1]==b"\n"):
 				ln+=1
 				ln_off=i+1
+			elif (nm_id!=-1):
+				if (dt[i-1:i] not in IDENTIFIER_CHARACTERS):
+					if (dt[i:i+6]==b"switch" and dt[i+6:i+7] not in IDENTIFIER_CHARACTERS):
+						sw=True
 			i+=1
 		while (dt[i:i+1] in b" \t\r\n\f\v"):
 			if (dt[i:i+1]==b"\n"):
