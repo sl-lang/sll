@@ -13,17 +13,21 @@ CHAR_DOUBLE_QUOTE=34
 CHAR_LEFT_PARENTHESIS=40
 CHAR_RIGHT_PARENTHESIS=41
 CHAR_SINGLE_QUOTE=39
-COVERAGE_DATA_TYPE_BREAK=0
-COVERAGE_DATA_TYPE_CONTINUE=1
-COVERAGE_DATA_TYPE_FUNC=2
-COVERAGE_DATA_TYPE_FUNC_END=3
-COVERAGE_DATA_TYPE_GOTO=4
-COVERAGE_DATA_TYPE_RETURN=5
 DEFINE_REGEX=re.compile(br"^[ \t]*#[ \t]*define[ \t]+([a-zA-Z0-9_]+)",re.M)
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 SPACE_CHARACTERS_REGEX=re.compile(b" \t\n\v\f\r")
 START_IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+
+
+
+def _find_line(dt,i):
+	while (dt[i:i+1] in b" \t"):
+		i+=1
+	j=i
+	while (dt[j:j+1]!=b"\n"):
+		j+=1
+	return dt[i:j]
 
 
 
@@ -312,16 +316,19 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 	ln=1
 	c_fp_id=0
 	f_id=-1
+	ln_off=0
 	while (i<len(dt)):
 		while (dt[i:i+1] in b" \t\r\n\f\v"):
 			if (dt[i:i+1]==b"\n"):
 				ln+=1
+				ln_off=i+1
 			i+=1
 		while (dt[i:i+1]==b"#"):
 			i+=1
 			while (dt[i:i+1] in b" \t\r\n\f\v"):
 				if (dt[i:i+1]==b"\n"):
 					ln+=1
+					ln_off=i+1
 				i+=1
 			j=i
 			while (i!=len(dt) and dt[i:i+1] not in b" \t\r\n\f\v"):
@@ -330,6 +337,7 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 				while (dt[i:i+1] in b" \t\r\n\f\v"):
 					if (dt[i:i+1]==b"\n"):
 						ln+=1
+						ln_off=i+1
 					i+=1
 				j=i
 				while (i!=len(dt) and dt[i:i+1] not in b" \t\r\n\f\v"):
@@ -338,6 +346,7 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 				while (dt[i:i+1] in b" \t\r\n\f\v"):
 					if (dt[i:i+1]==b"\n"):
 						ln+=1
+						ln_off=i+1
 					i+=1
 				j=i
 				while (i!=len(dt) and dt[i:i+1] not in b" \t\r\n\f\v"):
@@ -351,12 +360,14 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 			while (i!=len(dt) and dt[i:i+1] in b" \t\r\n\f\v"):
 				if (dt[i:i+1]==b"\n"):
 					ln+=1
+					ln_off=i+1
 				i+=1
 		if (i==len(dt)):
 			break
 		b=0
 		j=i
 		nm_id=-1
+		st=[None]
 		while (dt[i:i+1]!=b")" or b!=1):
 			if (i==len(dt)):
 				b=0
@@ -373,12 +384,14 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 				break
 			elif (dt[i:i+1]==b"\n"):
 				ln+=1
+				ln_off=i+1
 			i+=1
 		else:
 			i+=1
 			while (dt[i:i+1] in b" \t\r\n\f\v"):
 				if (dt[i:i+1]==b"\n"):
 					ln+=1
+					ln_off=i+1
 				i+=1
 			b=0
 			if (dt[i:i+1]==b"{"):
@@ -388,7 +401,8 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 				if (b"static" not in e):
 					cov_s_dt.append(e.split(b"(")[0].split(b" ")[-1])
 					nm_id=len(cov_s_dt)-1
-					cov_dt.append((COVERAGE_DATA_TYPE_FUNC,ln,c_fp_id,nm_id))
+					cov_dt.append([c_fp_id,nm_id,ln,-1])
+					st[0]=cov_dt[-1]
 					s=bytes(f"__coverage_map[{(len(cov_dt)-1)>>6}]|={1<<((len(cov_dt)-1)&63)}ull;","utf-8")
 					dt=dt[:i]+s+dt[i:]
 					i+=len(s)
@@ -408,47 +422,41 @@ def convert_to_coverage(i_fp,o_fp,inc_fp,cm,vb):
 					if (dt[i:i+1]==b"\\"):
 						i+=1
 					i+=1
-			elif (dt[i:i+1] in b"({"):
+			elif (dt[i:i+1]==b"("):
+				b+=1
+			elif (dt[i:i+1]==b"{"):
+				if (nm_id!=-1):
+					if (st[-1] is None):
+						st.append(None)
+					else:
+						j=i-1
+						while (dt[j:j+1] in b" \t\r\n\f\v"):
+							j-=1
+						if (dt[j:j+1]!=b"="):
+							cov_dt.append([c_fp_id,nm_id,ln,-1])
+							st.append(cov_dt[-1])
+							s=bytes(f"__coverage_map[{(len(cov_dt)-1)>>6}]|={1<<((len(cov_dt)-1)&63)}ull;","utf-8")
+							dt=dt[:i+1]+s+dt[i+1:]
+							i+=len(s)
+						else:
+							st.append(None)
 				b+=1
 			elif (dt[i:i+1]==b")"):
 				b-=1
 			elif (dt[i:i+1]==b"}"):
+				if (nm_id!=-1):
+					e=st.pop()
+					if (e is not None):
+						e[3]=ln
 				b-=1
-				if (b==0 and nm_id!=-1 and rt is False):
-					cov_dt.append((COVERAGE_DATA_TYPE_FUNC_END,ln,c_fp_id,nm_id))
-					s=bytes(f"__coverage_map[{(len(cov_dt)-1)>>6}]|={1<<((len(cov_dt)-1)&63)}ull;","utf-8")
-					dt=dt[:i]+s+dt[i:]
-					i+=len(s)
 			elif (dt[i:i+1]==b"\n"):
 				ln+=1
-			elif (nm_id!=-1):
-				if (dt[i-1:i] not in IDENTIFIER_CHARACTERS):
-					if (dt[i:i+5]==b"break" and dt[i+5:i+6] not in IDENTIFIER_CHARACTERS):
-						cov_dt.append((COVERAGE_DATA_TYPE_BREAK,ln,c_fp_id,nm_id))
-						s=bytes(f"__coverage_map[{(len(cov_dt)-1)>>6}]|={1<<((len(cov_dt)-1)&63)}ull;","utf-8")
-						dt=dt[:i]+s+dt[i:]
-						i+=len(s)
-					elif (dt[i:i+8]==b"continue" and dt[i+8:i+9] not in IDENTIFIER_CHARACTERS):
-						cov_dt.append((COVERAGE_DATA_TYPE_CONTINUE,ln,c_fp_id,nm_id))
-						s=bytes(f"__coverage_map[{(len(cov_dt)-1)>>6}]|={1<<((len(cov_dt)-1)&63)}ull;","utf-8")
-						dt=dt[:i]+s+dt[i:]
-						i+=len(s)
-					elif (dt[i:i+4]==b"goto" and dt[i+4:i+5] not in IDENTIFIER_CHARACTERS):
-						cov_dt.append((COVERAGE_DATA_TYPE_GOTO,ln,c_fp_id,nm_id))
-						s=bytes(f"__coverage_map[{(len(cov_dt)-1)>>6}]|={1<<((len(cov_dt)-1)&63)}ull;","utf-8")
-						dt=dt[:i]+s+dt[i:]
-						i+=len(s)
-					elif (dt[i:i+6]==b"return" and dt[i+6:i+7] not in IDENTIFIER_CHARACTERS):
-						if (b==1):
-							rt=True
-						cov_dt.append((COVERAGE_DATA_TYPE_RETURN,ln,c_fp_id,nm_id))
-						s=bytes(f"__coverage_map[{(len(cov_dt)-1)>>6}]|={1<<((len(cov_dt)-1)&63)}ull;","utf-8")
-						dt=dt[:i]+s+dt[i:]
-						i+=len(s)
+				ln_off=i+1
 			i+=1
 		while (dt[i:i+1] in b" \t\r\n\f\v"):
 			if (dt[i:i+1]==b"\n"):
 				ln+=1
+				ln_off=i+1
 			i+=1
 			if (i==len(dt)):
 				break
@@ -610,6 +618,7 @@ def build_sll_standalone(fp,vb,r):
 def build_sll_test(fp,t_fp,vb,r):
 	fp=os.path.abspath(fp)
 	t_fp=os.path.abspath(t_fp).replace("\\","/").rstrip("/")+"/"
+	src_fp=os.path.abspath("build/sll.c").replace("\\","/")
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
@@ -621,7 +630,7 @@ def build_sll_test(fp,t_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Compiling Files (Release Mode)...")
-			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","__SLL_STATIC__","/D","__TEST_ROOT_DIR__=\""+t_fp+"\"","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../tests","/I","../src/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
+			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","__SLL_STATIC__","/D","__TEST_ROOT_DIR__=\""+t_fp+"\"","/D","__SOURCE_FILE_PATH__=\""+src_fp+"\"","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../tests","/I","../src/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
@@ -637,7 +646,7 @@ def build_sll_test(fp,t_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Compiling Files...")
-			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","__SLL_STATIC__","/D","__TEST_ROOT_DIR__=\""+t_fp+"\"","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",".","/I","../tests","/I","../src/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
+			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","__SLL_STATIC__","/D","__TEST_ROOT_DIR__=\""+t_fp+"\"","/D","__SOURCE_FILE_PATH__=\""+src_fp+"\"","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",".","/I","../tests","/I","../src/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
@@ -654,7 +663,7 @@ def build_sll_test(fp,t_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-O3","../tests/run_tests.c","sll_coverage.o","-o","run_tests","-I",".","-I","../tests","-I","../src/include","-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-D","__SOURCE_FILE_PATH__=\""+src_fp+"\"","-Wall","-Werror","-O3","../tests/run_tests.c","sll_coverage.o","-o","run_tests","-I",".","-I","../tests","-I","../src/include","-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
@@ -665,7 +674,7 @@ def build_sll_test(fp,t_fp,vb,r):
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-O0","../tests/run_tests.c","sll_coverage.o","-o","run_tests","-I",".","-I","../tests","-I","../src/include","-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-D","__SOURCE_FILE_PATH__=\""+src_fp+"\"","-Wall","-Werror","-O0","../tests/run_tests.c","sll_coverage.o","-o","run_tests","-I",".","-I","../tests","-I","../src/include","-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)

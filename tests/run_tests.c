@@ -615,8 +615,6 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 			continue;
 		}
-		uint32_t bfl;
-		fflush(stdout);
 		FILE* dt_f=fopen(t_fp,"wb");// lgtm [cpp/path-injection]
 		if (!dt_f||fwrite(in_e->dt.s.v,sizeof(char),in_e->dt.s.l,dt_f)!=in_e->dt.s.l){
 			if (dt_f){
@@ -627,6 +625,8 @@ void run_parser_test(const char* fp,test_result_t* o){
 			continue;
 		}
 		fclose(dt_f);
+		uint32_t bfl;
+		fflush(stdout);
 		int8_t ec=execute_subprocess(TEST_ID_PARSE,bf,&bfl);
 		if (ec==-1){
 			o->s++;
@@ -644,18 +644,14 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
 			continue;
 		}
-		uint32_t j=0;
-		for (;j<__coverage_map_length;j++){
+		for (uint32_t j=0;j<__coverage_map_length;j++){
 			uint64_t v=0;
 			if (fread(&v,sizeof(uint64_t),1,c_f)!=1){
 				o->s++;
 				printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
-				break;
+				goto _continue;
 			}
 			__coverage_map[j]|=v;
-		}
-		if (j!=__coverage_map_length){
-			continue;
 		}
 		fclose(c_f);
 		json_object_t* err_e=get_by_key(t,"error");
@@ -824,6 +820,7 @@ _wrong_error:
 		}
 		o->p++;
 		printf("-> Test Case #%"PRIu32": OK\n",i);
+_continue:;
 	}
 	free_json(&json);
 	return;
@@ -886,41 +883,26 @@ int main(int argc,const char** argv){
 	};
 	list_files(bf,i,run_parser_test,&dt);
 	printf("%"PRIu32" Test%s Passed, %"PRIu32" Test%s Failed, %"PRIu32" Test%s Skipped\nWriting Coverage File '%s'...\n",dt.p,(dt.p==1?"":"s"),dt.f,(dt.f==1?"":"s"),dt.s,(dt.s==1?"":"s"),c_o_fp);
-	FILE* c_o=fopen(c_o_fp,"wb");
 	uint32_t c=0;
-	for (uint32_t j=0;j<__coverage_map_length;j++){
-		c+=(uint32_t)POPCNT(__coverage_map[j]);
-	}
-	fprintf(c_o,"Tested Code: (%.3f%%)\n",((float)c*100)/__coverage_count);
 	for (uint32_t j=0;j<__coverage_map_length;j++){
 		uint64_t v=__coverage_map[j];
 		while (v){
 			uint32_t k=FIND_FIRST_SET_BIT(v)|(j<<6);
 			__coverage_data_t dt=__coverage_data[k];
-			switch (dt.t){
-				case __COVERAGE_DATA_TYPE_BREAK:
-					fprintf(c_o,"  [%s:%u (%s)] 'break' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_CONTINUE:
-					fprintf(c_o,"  [%s:%u (%s)] 'continue' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_FUNC:
-					fprintf(c_o,"  [%s:%u (%s)] Function Entry\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_FUNC_END:
-					fprintf(c_o,"  [%s:%u (%s)] Implict Return\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_GOTO:
-					fprintf(c_o,"  [%s:%u (%s)] 'goto' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_RETURN:
-					fprintf(c_o,"  [%s:%u (%s)] 'return' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-			}
+			c+=dt.e-dt.s+1;
 			v&=v-1;
 		}
 	}
-	fprintf(c_o,"\nUntested Code: (%.3f%%)\n",((float)(__coverage_count-c)*100)/__coverage_count);
+	uint32_t t=0;
+	for (uint32_t j=0;j<__coverage_count;j++){
+		__coverage_data_t dt=__coverage_data[j];
+		t+=dt.e-dt.s+1;
+	}
+	FILE* c_o=fopen(c_o_fp,"wb");
+	fprintf(c_o,"Untested Code: (%.3f%%)\n\n",((t-c)*1e2f)/t);
+	FILE* sf=fopen(__SOURCE_FILE_PATH__,"rb");
+	uint16_t c_fp=UINT16_MAX;
+	uint16_t c_nm=UINT16_MAX;
 	for (uint32_t j=0;j<__coverage_map_length;j++){
 		uint64_t v=~__coverage_map[j];
 		while (v){
@@ -929,30 +911,20 @@ int main(int argc,const char** argv){
 				break;
 			}
 			__coverage_data_t dt=__coverage_data[k];
-			switch (dt.t){
-				case __COVERAGE_DATA_TYPE_BREAK:
-					fprintf(c_o,"  [%s:%u (%s)] 'break' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_CONTINUE:
-					fprintf(c_o,"  [%s:%u (%s)] 'continue' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_FUNC:
-					fprintf(c_o,"  [%s:%u (%s)] Function '%s'\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm],__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_FUNC_END:
-					fprintf(c_o,"  [%s:%u (%s)] Implict Return\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_GOTO:
-					fprintf(c_o,"  [%s:%u (%s)] 'goto' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
-				case __COVERAGE_DATA_TYPE_RETURN:
-					fprintf(c_o,"  [%s:%u (%s)] 'return' statement\n",__coverage_strings[dt.fp],dt.ln,__coverage_strings[dt.nm]);
-					break;
+			if (dt.fp!=c_fp){
+				c_fp=dt.fp;
+				fprintf(c_o,"%s:\n",__coverage_strings[dt.fp]);
 			}
+			if (dt.nm!=c_nm){
+				c_nm=dt.nm;
+				fprintf(c_o,"  %s:\n",__coverage_strings[dt.nm]);
+			}
+			fprintf(c_o,"    %u-%u\n",dt.s,dt.e);
 			v&=v-1;
 		}
 	}
+	fclose(sf);
 	fclose(c_o);
-	printf("Test Coverage: %.3f%%\n",((float)c*100)/__coverage_count);
+	printf("Test Coverage: %.3f%%\n",((float)c*100)/t);
 	return !!dt.f;
 }

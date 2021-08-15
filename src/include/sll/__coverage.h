@@ -4,20 +4,11 @@
 
 
 
-#define __COVERAGE_DATA_TYPE_BREAK 0
-#define __COVERAGE_DATA_TYPE_CONTINUE 1
-#define __COVERAGE_DATA_TYPE_FUNC 2
-#define __COVERAGE_DATA_TYPE_FUNC_END 3
-#define __COVERAGE_DATA_TYPE_GOTO 4
-#define __COVERAGE_DATA_TYPE_RETURN 5
-
-
-
 typedef struct ____COVERAGE_DATA{
-	uint8_t t;
-	uint32_t ln;
 	uint16_t fp;
 	uint16_t nm;
+	uint32_t s;
+	uint32_t e;
 } __coverage_data_t;
 
 
