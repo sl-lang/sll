@@ -30,7 +30,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define POPCNT(m) __popcnt64((m))
 #else
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
-#define (uint32_t)POPCNT(m) __builtin_popcountll((m))
+#define POPCNT(m) __builtin_popcountll((m))
 #endif
 
 
@@ -107,7 +107,7 @@ uint8_t execute_test(uint8_t id){
 		goto _save_coverage;
 	}
 	return 1;
-_save_coverage:
+_save_coverage:;
 	FILE* c_f=fopen(c_fp,"wb");
 	if (!c_f){
 		return 1;
@@ -945,6 +945,6 @@ int main(int argc,const char** argv){
 		}
 	}
 	fclose(c_o);
-	printf("Test Coverage: %.3f%%\n",((float)(__coverage_count-c)*100)/__coverage_count);
+	printf("Test Coverage: %.3f%%\n",((float)c*100)/__coverage_count);
 	return !!dt.f;
 }
