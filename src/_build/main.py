@@ -73,11 +73,8 @@ for r,_,fl in os.walk("src/sll"):
 		if (f[-2:]==".c"):
 			i_fl.append(r+f)
 build.generate_source_file(i_fl,"build/sll.c",vb)
-if ("--test" in sys.argv):
-	if (vb):
-		print("Generating Coverage Source Code File...")
-	build.convert_to_coverage("build/sll.c","build/sll_coverage.c","src/include/",COMPILATION_DEFINES+[b"__SLL_STATIC__"],vb)
-print("Generating Executable...")
+if (vb):
+	print("Generating Executable...")
 build.build_sll("build/sll.c","build/sll.o",v,vb,("--release" in sys.argv))
 if (vb):
 	print("Compiling Modules...")
@@ -124,7 +121,7 @@ if ("--bundle" in sys.argv):
 if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Test Executable...")
-	build.build_sll_test("build/sll_coverage.c","tests/data",vb,("--release" in sys.argv))
+	build.build_sll_test("build/sll.o","tests/data",vb,("--release" in sys.argv))
 	if ("--do-not-start-test" not in sys.argv):
 		if (vb):
 			print("  Running Tests...")
