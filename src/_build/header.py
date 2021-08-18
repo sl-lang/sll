@@ -155,8 +155,8 @@ def generate_header(h_dt,c_m):
 	tm=datetime.datetime.now()
 	dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__DATE__":bytes(tm.strftime(f"\"{MONTHS[tm.month-1]} %d %Y\""),"utf-8"),b"UINT8_MAX":b"255",b"UINT16_MAX":b"65535",b"UINT32_MAX":b"4294967295u",b"UINT64_MAX":b"18446744073709551615ull"}
 	if (os.getenv("GITHUB_SHA") is not None):
-		dm[b"__SHA__"]=bytes(os.getenv("GITHUB_SHA")[:7],"utf-8")
-		dm[b"__FULL_SHA__"]=bytes(os.getenv("GITHUB_SHA"),"utf-8")
+		dm[b"__SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")[:7]+"\"","utf-8")
+		dm[b"__FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")
 	dfm={}
 	d_v=[]
 	d_f=[]
