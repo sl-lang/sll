@@ -126,7 +126,6 @@ __SLL_OPERATOR_BINARY(add){
 				sll_string_t* sa=a->dt.s;
 				sll_string_t* sb=b->dt.s;
 				sll_string_t* s=sll_string_create(sa->l+sb->l);
-				s->rc=1;
 				s->c=sa->c^sb->c;
 				memcpy(s->v,sa->v,sa->l);
 				memcpy(s->v+sa->l,sb->v,sb->l);

@@ -21,7 +21,6 @@ __API_FUNC(path_absolute){
 		}
 		else{
 			o->dt.s=sll_string_create(l);
-			o->dt.s->rc=0;
 			o->dt.s->c=0;
 			for (sll_string_length_t i=0;i<l;i++){
 				o->dt.s->c^=*(bf+i);
@@ -29,7 +28,7 @@ __API_FUNC(path_absolute){
 			}
 		}
 	}
-	o->dt.s->rc++;
+	SLL_ACQUIRE(o->dt.s);
 }
 
 
@@ -61,7 +60,7 @@ __API_FUNC(path_is_dir){
 __API_FUNC(path_relative){
 	o->t=SLL_OBJECT_TYPE_STRING;
 	o->dt.s=&_zero_string;
-	o->dt.s->rc++;
+	SLL_ACQUIRE(o->dt.s);
 }
 
 

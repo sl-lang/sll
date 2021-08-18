@@ -38,6 +38,7 @@
 	(:> "Unable to open file!\n")
 } {
 	(<- write f "Hello!\n")
+	(:> "ABC\n")
 	(<- close f)
 })
 (<- write stdout "Argument Count: " argc "\n")

@@ -202,7 +202,6 @@ _check_next_string:;
 	a_dt->st.l++;
 	a_dt->st.dt=realloc(a_dt->st.dt,a_dt->st.l*sizeof(sll_string_t*));
 	sll_string_t* s=sll_string_create(al+bl);
-	s->rc=1;
 	s->c=c;
 	memcpy(s->v,a,al);
 	memcpy(s->v+al,b,bl);
@@ -960,7 +959,6 @@ __SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt
 	for (sll_string_index_t i=0;i<o->st.l;i++){
 		sll_string_t* s=*(c_dt->st.dt+i);
 		sll_string_t* d=sll_string_create(s->l);
-		d->rc=1;
 		d->c=s->c;
 		memcpy(d->v,s->v,s->l);
 		*(o->st.dt+i)=d;

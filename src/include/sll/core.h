@@ -5,7 +5,12 @@
 
 
 
+#define SLL_ACQUIRE(x) (++((sll_gc_object_t*)(x))->rc)
 #define SLL_RELEASE(x) (--((sll_gc_object_t*)(x))->rc||(free((x)),0))
+
+
+
+__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o);
 
 
 

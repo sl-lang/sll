@@ -178,7 +178,6 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 		CHECK_ERROR(is,l,sll_string_length_t,e);
 		sll_string_t* s=sll_string_create(l);
 		*(a_dt->st.dt+i)=s;
-		s->rc=1;
 		s->c=0;
 		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,s->v,s->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
@@ -358,7 +357,6 @@ __SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll
 		CHECK_ERROR(is,l,sll_string_length_t,e);
 		sll_string_t* s=sll_string_create(l);
 		*(c_dt->st.dt+i)=s;
-		s->rc=1;
 		s->c=0;
 		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,s->v,s->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;

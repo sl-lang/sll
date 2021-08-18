@@ -77,15 +77,14 @@ sll_string_length_t _object_to_string(sll_runtime_object_t* a,sll_string_t* o,sl
 
 __SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_array_length_t al){
 	if (!al){
-		_zero_string.rc++;
+		SLL_ACQUIRE(&_zero_string);
 		return &_zero_string;
 	}
 	if (al==1&&a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-		a->dt.s->rc++;
+		SLL_ACQUIRE(a->dt.s);
 		return a->dt.s;
 	}
 	sll_string_t* o=sll_string_create(sll_object_to_string_length(a,al));
-	o->rc=1;
 	o->c=0;
 	sll_string_length_t i=0;
 	for (sll_array_length_t j=0;j<al;j++){
@@ -137,9 +136,9 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(sll_runtime_object_t*
 
 __API_FUNC(string_convert){
 	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	o->dt.s=&_zero_string;
 	if (!ac){
-		o->dt.s->rc++;
+		o->dt.s=&_zero_string;
+		SLL_ACQUIRE(o->dt.s);
 		return;
 	}
 	o->dt.s=sll_object_to_string(a,ac);
@@ -150,15 +149,4 @@ __API_FUNC(string_convert){
 __API_FUNC(string_length){
 	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 	o->dt.i=sll_object_to_string_length(a,ac);
-}
-
-
-
-__API_FUNC(string_ref_count){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-	o->dt.i=0;
-	if (!ac||a->t!=SLL_RUNTIME_OBJECT_TYPE_STRING){
-		return;
-	}
-	o->dt.i=a->dt.s->rc;
 }

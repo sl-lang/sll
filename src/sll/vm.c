@@ -147,24 +147,18 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				*(s+si)=*(v+ai->dt.v);
-				if ((s+si)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-					(s+si)->dt.s->rc++;
-				}
-				else if ((s+si)->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-					(s+si)->dt.a->rc++;
-				}
+				sll_acquire_object(s+si);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 				(s+si)->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				(s+si)->dt.s=*(a_dt->st.dt+ai->dt.s);
-				(s+si)->dt.s->rc++;
+				SLL_ACQUIRE((s+si)->dt.s);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				{
 					sll_array_t* a=sll_array_create(ai->dt.al);
-					a->rc=1;
 					si-=ai->dt.al;
 					for (sll_array_length_t i=0;i<ai->dt.al;i++){
 						a->v[i]=*(s+si+i);
@@ -180,12 +174,7 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				*(v+ai->dt.v)=*(s+si-1);
-				if ((s+si-1)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-					(s+si-1)->dt.s->rc++;
-				}
-				else if ((s+si-1)->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-					(s+si-1)->dt.a->rc++;
-				}
+				sll_acquire_object(s+si-1);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
 				si--;
@@ -349,12 +338,7 @@ _print_from_stack:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 				*(s+si)=*(v+ai->dt.v);
-				if ((s+si)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-					(s+si)->dt.s->rc++;
-				}
-				else if ((s+si)->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-					(s+si)->dt.a->rc++;
-				}
+				sll_acquire_object(s+si);
 				goto _print_from_stack;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
@@ -481,7 +465,7 @@ _return:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				(s+si)->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				(s+si)->dt.s=*(a_dt->st.dt+ai->dt.s);
-				(s+si)->dt.s->rc++;
+				SLL_ACQUIRE((s+si)->dt.s);
 				si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:

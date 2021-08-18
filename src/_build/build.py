@@ -37,7 +37,7 @@ def generate_source_file(fl,o_fp,vb):
 	if (b"<windows.h>" in inc):
 		dt=[b"#define WIN32_LEAN_AND_MEAN 1\n#include <windows.h>"]+dt
 	if (os.getenv("GITHUB_SHA") is not None):
-		dt=[bytes(f"#define __SHA__ \"{os.getenv(['GITHUB_SHA'])[:7]}\"\n#define __FULL_SHA__ \"{os.getenv(['GITHUB_SHA'])}\"","utf-8")]+dt
+		dt=[bytes(f"#define __SHA__ \"{os.getenv('GITHUB_SHA')[:7]}\"\n#define __FULL_SHA__ \"{os.getenv('GITHUB_SHA')}\"","utf-8")]+dt
 	with open(o_fp,"wb") as f:
 		f.write(b"\n".join(dt))
 

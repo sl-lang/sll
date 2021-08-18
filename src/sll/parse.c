@@ -1265,7 +1265,6 @@ _check_next_string:;
 						c_dt->st.l++;
 						c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t*));
 						sll_string_t* n=sll_string_create(s->l);
-						n->rc=1;
 						n->c=s->c;
 						memcpy(n->v,s->v,s->l);
 						*(c_dt->st.dt+c_dt->st.l-1)=n;

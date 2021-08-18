@@ -56,10 +56,6 @@ __API_FUNC_DECL(string_length);
 
 
 
-__API_FUNC_DECL(string_ref_count);
-
-
-
 __API_FUNC_DECL(sys_arg_get);
 
 
@@ -77,10 +73,6 @@ __API_FUNC_DECL(time_current);
 
 
 __API_FUNC_DECL(time_current_nanos);
-
-
-
-__API_FUNC_DECL(util_length);
 
 
 
