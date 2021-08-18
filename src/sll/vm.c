@@ -21,11 +21,10 @@
 	{ \
 		si--; \
 		sll_runtime_object_t* a=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
-		sll_runtime_object_t* b=s+si; \
 		sll_runtime_object_t n={0}; \
-		sll_operator_##nm(a,b,&n); \
+		sll_operator_##nm(a,s+si,&n); \
 		sll_release_object(a); \
-		sll_release_object(b); \
+		sll_release_object(s+si); \
 		*a=n; \
 		break; \
 	}
@@ -33,13 +32,11 @@
 	{ \
 		si-=2; \
 		sll_runtime_object_t* a=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
-		sll_runtime_object_t* b=s+si; \
-		sll_runtime_object_t* c=s+si+1; \
 		sll_runtime_object_t n={0}; \
-		sll_operator_##nm(a,b,c,&n); \
+		sll_operator_##nm(a,s+si,s+si+1,&n); \
 		sll_release_object(a); \
-		sll_release_object(b); \
-		sll_release_object(c); \
+		sll_release_object(s+si); \
+		sll_release_object(s+si+1); \
 		*a=n; \
 		break; \
 	}
@@ -47,15 +44,12 @@
 	{ \
 		si-=3; \
 		sll_runtime_object_t* a=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
-		sll_runtime_object_t* b=s+si; \
-		sll_runtime_object_t* c=s+si+1; \
-		sll_runtime_object_t* d=s+si+2; \
 		sll_runtime_object_t n={0}; \
-		sll_operator_##nm(a,b,c,d,&n); \
+		sll_operator_##nm(a,s+si,s+si+1,s+si+2,&n); \
 		sll_release_object(a); \
-		sll_release_object(b); \
-		sll_release_object(c); \
-		sll_release_object(d); \
+		sll_release_object(s+si); \
+		sll_release_object(s+si+1); \
+		sll_release_object(s+si+2); \
 		*a=n; \
 		break; \
 	}

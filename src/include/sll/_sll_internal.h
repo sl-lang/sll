@@ -95,18 +95,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define SLL_ASSERT(...)
 #endif
 
-#define ALIGN(a) ((((uint64_t)(a))+STRING_HEAP_ALIGNMENT-1)&(~(STRING_HEAP_ALIGNMENT-1)))
-#define CORRECT_ALIGNMENT(n) SLL_ASSERT(!(((uint64_t)(n))&(STRING_HEAP_ALIGNMENT-1)))
-
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
-
-#define STRING_HEAP_ALIGNMENT 8
-#define HEAP_SIGNATURE 'H'
-#define GET_HEAP_SIGNATURE(s) ((s)->h&0xff)
-#define GET_PADDING(s) ((s)->h>>8)
-
-#define MEMORY_NODE_SIGNATURE 0x8000000000000000
-#define MEMORY_NODE_GET_SIZE(n) ((n)->sz&0x7fffffffffffffff)
 
 #define ASSEMBLY_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','A',0)
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','C',0)

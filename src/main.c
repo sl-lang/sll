@@ -58,7 +58,8 @@
 #define FLAG_PRINT_ASSEMBLY 64
 #define FLAG_PRINT_OBJECT 128
 #define FLAG_VERBOSE 256
-#define _FLAG_ASSEMBLY_GENERATED 512
+#define FLAG_VERSION 512
+#define _FLAG_ASSEMBLY_GENERATED 1024
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
 #define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
@@ -188,9 +189,8 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 			*(bf+j)='.';
 			*(bf+j+1)='s';
 			*(bf+j+2)='l';
-			*(bf+j+3)='l';
-			*(bf+j+4)='c';
-			*(bf+j+5)=0;
+			*(bf+j+3)='c';
+			*(bf+j+4)=0;
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Trying to Open File '");
 				print_str(bf);
@@ -354,7 +354,7 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found Internal Module '");
 				print_str(f_nm);
-				PRINT_STATIC_STR(".sllc'\n");
+				PRINT_STATIC_STR(".slc'\n");
 			}
 			*f=NULL;
 			i_bf.bf=m->dt;
@@ -369,7 +369,7 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					PRINT_STATIC_STR("Module '");
 					print_str(f_nm);
-					PRINT_STATIC_STR(".sllc' is not a Compiled Object.\n");
+					PRINT_STATIC_STR(".slc' is not a Compiled Object.\n");
 				}
 				else{
 					sll_print_error(is,&e);
@@ -401,9 +401,8 @@ _check_next_module:;
 		*(l_fp+i)='.';
 		*(l_fp+i+1)='s';
 		*(l_fp+i+2)='l';
-		*(l_fp+i+3)='l';
-		*(l_fp+i+4)='c';
-		*(l_fp+i+5)=0;
+		*(l_fp+i+3)='c';
+		*(l_fp+i+4)=0;
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Open File '");
 			print_str(l_fp);
@@ -471,9 +470,8 @@ uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 	*(o_fp+i)='.';
 	*(o_fp+i+1)='s';
 	*(o_fp+i+2)='l';
-	*(o_fp+i+3)='l';
-	*(o_fp+i+4)='a';
-	*(o_fp+i+5)=0;
+	*(o_fp+i+3)='a';
+	*(o_fp+i+4)=0;
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Writing Assembly to File '");
 		print_str(o_fp);
@@ -506,9 +504,8 @@ uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
 	*(o_fp+i)='.';
 	*(o_fp+i+1)='s';
 	*(o_fp+i+2)='l';
-	*(o_fp+i+3)='l';
-	*(o_fp+i+4)='c';
-	*(o_fp+i+5)=0;
+	*(o_fp+i+3)='c';
+	*(o_fp+i+4)=0;
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Writing Compiled Object to File '");
 		print_str(o_fp);
@@ -671,6 +668,9 @@ _skip_std_lib_path:
 		else if ((*e=='-'&&*(e+1)=='v'&&*(e+2)==0)||cmp_str(e,"--verbose")){
 			fl|=FLAG_VERBOSE;
 		}
+		else if ((*e=='-'&&*(e+1)=='V'&&*(e+2)==0)||cmp_str(e,"--version")){
+			fl|=FLAG_VERSION;
+		}
 		else if (*e=='-'){
 _unkown_switch:
 			PRINT_STATIC_STR("Unknown Switch '");
@@ -690,12 +690,20 @@ _read_file_argument:
 			*(fp+fpl-1)=(char*)e;
 		}
 	}
+	if (fl&FLAG_VERSION){
+#ifdef SLL_VERSION_SHA
+		PRINT_STATIC_STR("sll v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME", "SLL_VERSION_SHA" (https://github.com/sl-lang/sll/tree/"SLL_VERSION_FULL_SHA"\n");
+#else
+		PRINT_STATIC_STR("sll v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME", Local Build\n");
+#endif
+		return 0;
+	}
 	im_fpl=fpl;
 	if (!(fl&FLAG_NO_LOGO)){
-#ifdef STANDALONE_BUILD
-		PRINT_STATIC_STR("sll (standalone, v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)") ("SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
+#ifdef SLL_VERSION_SHA
+		PRINT_STATIC_STR("sll v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" ("SLL_VERSION_SHA", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 #else
-		PRINT_STATIC_STR("sll (v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)") ("SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
+		PRINT_STATIC_STR("sll v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" ("SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 #endif
 	}
 	if (fl&FLAG_VERBOSE){
