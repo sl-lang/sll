@@ -80,14 +80,9 @@ __SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_array_
 		_zero_string.rc++;
 		return &_zero_string;
 	}
-	if (al==1){
-		switch (a->t){
-			case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-				SLL_UNIMPLEMENTED();
-			case SLL_RUNTIME_OBJECT_TYPE_STRING:
-				a->dt.s->rc++;
-				return a->dt.s;
-		}
+	if (al==1&&a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
+		a->dt.s->rc++;
+		return a->dt.s;
 	}
 	sll_string_t* o=sll_string_create(sll_object_to_string_length(a,al));
 	o->rc=1;

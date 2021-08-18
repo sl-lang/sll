@@ -6,7 +6,9 @@
 
 
 #define __SLL_OPERATOR_UNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,sll_runtime_object_t* o)
-#define __SLL_OPERATOR(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,sll_runtime_object_t* o)
+#define __SLL_OPERATOR_BINARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,sll_runtime_object_t* o)
+#define __SLL_OPERATOR_TERNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,const sll_runtime_object_t* c,sll_runtime_object_t* o)
+#define __SLL_OPERATOR_QUATERNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,const sll_runtime_object_t* c,const sll_runtime_object_t* d,sll_runtime_object_t* o)
 
 
 
@@ -18,43 +20,63 @@ __SLL_OPERATOR_UNARY(dec);
 
 
 
-__SLL_OPERATOR(add);
+__SLL_OPERATOR_BINARY(add);
 
 
 
-__SLL_OPERATOR(sub);
+__SLL_OPERATOR_BINARY(sub);
 
 
 
-__SLL_OPERATOR(mult);
+__SLL_OPERATOR_BINARY(mult);
 
 
 
-__SLL_OPERATOR(div);
+__SLL_OPERATOR_BINARY(div);
 
 
 
-__SLL_OPERATOR(floor_div);
+__SLL_OPERATOR_BINARY(floor_div);
 
 
 
-__SLL_OPERATOR(mod);
+__SLL_OPERATOR_BINARY(mod);
 
 
 
-__SLL_OPERATOR(and);
+__SLL_OPERATOR_BINARY(and);
 
 
 
-__SLL_OPERATOR(or);
+__SLL_OPERATOR_BINARY(or);
 
 
 
-__SLL_OPERATOR(xor);
+__SLL_OPERATOR_BINARY(xor);
 
 
 
 __SLL_OPERATOR_UNARY(inv);
+
+
+
+__SLL_OPERATOR_UNARY(len);
+
+
+
+__SLL_OPERATOR_UNARY(dup);
+
+
+
+__SLL_OPERATOR_BINARY(access);
+
+
+
+__SLL_OPERATOR_TERNARY(access_range);
+
+
+
+__SLL_OPERATOR_QUATERNARY(access_range_step);
 
 
 

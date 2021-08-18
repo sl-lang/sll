@@ -5,19 +5,11 @@
 
 
 
-__SLL_FUNC sll_allocated_block_t* sll_allocate_raw(sll_allocation_size_t sz);
-
-
-
 __SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t* o);
 
 
 
 __SLL_FUNC __SLL_RETURN_STRING_INDEX sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l);
-
-
-
-__SLL_FUNC void sll_deallocate_raw(sll_allocated_block_t* b,sll_allocation_size_t sz);
 
 
 

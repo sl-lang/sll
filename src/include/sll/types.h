@@ -230,6 +230,13 @@ typedef struct __SLL_FUNCTION_OBJECT_DATA{
 
 
 
+typedef struct __SLL_LOOP_DATA{
+	sll_arg_count_t ac;
+	sll_scope_t sc;
+} sll_loop_data_t;
+
+
+
 typedef struct __SLL_DEBUG_OBJECT_DATA{
 	sll_string_index_t fpi;
 	sll_line_number_t ln;
@@ -247,6 +254,7 @@ typedef union __SLL_OBJECT_DATA{
 	sll_array_length_t al;
 	sll_identifier_index_t id;
 	sll_function_object_data_t fn;
+	sll_loop_data_t l;
 	sll_arg_count_t ac;
 	sll_statement_count_t sc;
 	sll_debug_object_data_t dbg;
@@ -352,6 +360,7 @@ typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_relative_instruction_index_t rj;
 	sll_arg_count_t ac;
 	sll_array_length_t al;
+	sll_stack_offset_t st;
 } sll_assembly_instruction_data_t;
 
 

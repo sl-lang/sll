@@ -80,6 +80,10 @@ __API_FUNC_DECL(time_current_nanos);
 
 
 
+__API_FUNC_DECL(util_length);
+
+
+
 __API_FUNC_DECL(util_ref_count);
 
 

@@ -626,7 +626,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 			}
 		case SLL_OBJECT_TYPE_FOR:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				SLL_ASSERT(l);
 				if (l==1){
 					o->t=SLL_OBJECT_TYPE_NOP;
@@ -667,7 +667,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 					off+=_optimize(o+off,o,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 					if (o_dt->rm){
 						_remove_up_to_end(o,off);
-						o->dt.ac-=l;
+						o->dt.l.ac-=l;
 						break;
 					}
 				}

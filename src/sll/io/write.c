@@ -52,26 +52,34 @@ sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->dt.fn.ac;
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,l);
+				_write_integer(os,o->dt.fn.ac);
 				_write_integer(os,o->dt.fn.id);
 				if (o->t==SLL_OBJECT_TYPE_FUNC){
 					_write_integer(os,o->dt.fn.sc);
 				}
 				sll_object_offset_t off=1;
-				while (l){
-					l--;
+				for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
+					off+=_write_object(os,o+off);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
+			{
+				_write_integer(os,o->dt.l.ac);
+				_write_integer(os,o->dt.l.sc);
+				sll_object_offset_t off=1;
+				for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
 					off+=_write_object(os,o+off);
 				}
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
+				_write_integer(os,o->dt.sc);
 				sll_object_offset_t off=1;
-				sll_statement_count_t l=o->dt.sc;
-				_write_integer(os,l);
-				while (l){
-					l--;
+				for (sll_statement_count_t i=0;i<o->dt.sc;i++){
 					off+=_write_object(os,o+off);
 				}
 				return off+eoff;
@@ -83,11 +91,9 @@ sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_
 			_write_integer(os,o->dt.dbg.ln_off);
 			return eoff+_write_object(os,o+1)+1;
 	}
+	_write_integer(os,o->dt.ac);
 	sll_object_offset_t off=1;
-	sll_arg_count_t l=o->dt.ac;
-	SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,l);
-	while (l){
-		l--;
+	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
 		off+=_write_object(os,o+off);
 	}
 	return off+eoff;
@@ -144,6 +150,7 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
 				_write_integer(os,ai->dt.v);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:

@@ -228,14 +228,38 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 			PRINT_STATIC_STRING("?",os);
 			break;
 		case SLL_OBJECT_TYPE_FOR:
-			PRINT_STATIC_STRING("->",os);
-			break;
+			{
+				PRINT_STATIC_STRING("->",os);
+				sll_stack_offset_t off=1;
+				for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
+					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
+					off+=_print_object_internal(c_dt,o+off,os);
+				}
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_WHILE:
-			PRINT_STATIC_STRING(">-",os);
-			break;
+			{
+				PRINT_STATIC_STRING(">-",os);
+				sll_stack_offset_t off=1;
+				for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
+					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
+					off+=_print_object_internal(c_dt,o+off,os);
+				}
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_LOOP:
-			PRINT_STATIC_STRING("><",os);
-			break;
+			{
+				PRINT_STATIC_STRING("><",os);
+				sll_stack_offset_t off=1;
+				for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
+					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
+					off+=_print_object_internal(c_dt,o+off,os);
+				}
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_ADD:
 			PRINT_STATIC_STRING("+",os);
 			break;
@@ -284,6 +308,12 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
 			PRINT_STATIC_STRING(">=",os);
 			break;
+		case SLL_OBJECT_TYPE_LENGTH:
+			PRINT_STATIC_STRING("$",os);
+			break;
+		case SLL_OBJECT_TYPE_ACCESS:
+			PRINT_STATIC_STRING(":",os);
+			break;
 		case SLL_OBJECT_TYPE_RETURN:
 			PRINT_STATIC_STRING("@@",os);
 			break;
@@ -322,9 +352,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 			UNREACHABLE();
 	}
 	sll_stack_offset_t off=1;
-	sll_arg_count_t l=o->dt.ac;
-	while (l){
-		l--;
+	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
 		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
 		off+=_print_object_internal(c_dt,o+off,os);
 	}
@@ -638,6 +666,21 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 					PRINT_STATIC_STRING("INV",os);
 				}
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH:
+				PRINT_STATIC_STRING("LENGTH",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY:
+				PRINT_STATIC_STRING("COPY",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS:
+				PRINT_STATIC_STRING("ACCESS",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_TWO:
+				PRINT_STATIC_STRING("ACCESS_RANGE",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE:
+				PRINT_STATIC_STRING("ACCESS_RANGE_STEP",os);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				PRINT_STATIC_STRING("PRINT",os);
 				break;
@@ -708,6 +751,10 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				PRINT_STATIC_STRING("END 1",os);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
+				PRINT_STATIC_STRING("DEL $",os);
+				_print_int(ai->dt.v,os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
 				PRINT_STATIC_STRING("LOAD $",os);
 				_print_int(ai->dt.v,os);
 				PRINT_STATIC_STRING(" & DEL",os);

@@ -103,11 +103,7 @@ uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==SLL_END_OF_DATA){
-					return 0;
-				}
-				o->dt.fn.ac=(sll_arg_count_t)c;
+				CHECK_ERROR2(is,o->dt.fn.ac,sll_arg_count_t);
 				CHECK_ERROR2(is,o->dt.fn.id,sll_function_index_t);
 				if (o->t==SLL_OBJECT_TYPE_FUNC){
 					CHECK_ERROR2(is,o->dt.fn.sc,sll_scope_t);
@@ -119,6 +115,17 @@ uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 				}
 				return 1;
 			}
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
+			CHECK_ERROR2(is,o->dt.l.ac,sll_arg_count_t);
+			CHECK_ERROR2(is,o->dt.l.sc,sll_scope_t);
+			for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
+				if (!_read_object(c_dt,is)){
+					return 0;
+				}
+			}
+			return 1;
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			CHECK_ERROR2(is,o->dt.sc,sll_statement_count_t);
 			for (sll_statement_count_t i=0;i<o->dt.sc;i++){
@@ -134,12 +141,8 @@ uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 			CHECK_ERROR2(is,o->dt.dbg.ln_off,sll_file_offset_t);
 			return _read_object(c_dt,is);
 	}
-	sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
-	if (c==SLL_END_OF_DATA){
-		return 0;
-	}
-	o->dt.ac=(sll_arg_count_t)c;
-	for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
+	CHECK_ERROR2(is,o->dt.ac,sll_arg_count_t);
+	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
 		if (!_read_object(c_dt,is)){
 			return 0;
 		}
@@ -236,6 +239,7 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
 				CHECK_ERROR(is,ai->dt.v,sll_variable_index_t,e);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
