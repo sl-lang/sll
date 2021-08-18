@@ -95,10 +95,10 @@ if ("--standalone" in sys.argv):
 		m_dt=[]
 		for i,e in enumerate(fl):
 			f.write(bytes(f"const uint8_t _m{i}[]={{","utf-8"))
-			with open(f"build/lib/{e}.sllc","rb") as rf:
+			with open(f"build/lib/{e}.slc","rb") as rf:
 				dt=rf.read()
 				if (vb):
-					print(f"  Converting Module 'build/lib/{e}.sllc' ({len(dt)} bytes)")
+					print(f"  Converting Module 'build/lib/{e}.slc' ({len(dt)} bytes)")
 				c=0
 				for k in bytes(e,"utf-8"):
 					c^=k
