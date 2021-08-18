@@ -5,10 +5,7 @@
 
 
 
-#define __SLL_ALLOCATED_STRUCT(lt) \
-	const lt l; \
-	sll_ref_count_t rc; \
-	const sll_heap_data_t h;
+#define __SLL_GC_HEADER sll_ref_count_t rc;
 
 
 
@@ -49,10 +46,6 @@ typedef uint8_t sll_runtime_object_type_t;
 
 
 typedef uint16_t sll_file_path_index_t;
-
-
-
-typedef uint16_t sll_heap_data_t;
 
 
 
@@ -216,12 +209,6 @@ typedef struct __SLL_INPUT_BUFFER{
 
 
 
-typedef struct __SLL_ALLOCATED_BLOCK{
-	__SLL_ALLOCATED_STRUCT(sll_allocated_block_length_t)
-} sll_allocated_block_t;
-
-
-
 typedef struct __SLL_FUNCTION_OBJECT_DATA{
 	sll_arg_count_t ac;
 	sll_function_index_t id;
@@ -313,8 +300,15 @@ typedef struct __SLL_FUNCTION_DATA{
 
 
 
+typedef struct __SLL_GC_OBJECT{
+	__SLL_GC_HEADER
+} sll_gc_object_t;
+
+
+
 typedef struct __SLL_STRING{
-	__SLL_ALLOCATED_STRUCT(sll_string_length_t)
+	__SLL_GC_HEADER
+	sll_string_length_t l;
 	sll_string_checksum_t c;
 	sll_char_t v[];
 } sll_string_t;
@@ -410,7 +404,8 @@ typedef struct __SLL_RUNTIME_OBJECT{
 
 
 typedef struct __SLL_ARRAY{
-	__SLL_ALLOCATED_STRUCT(sll_array_length_t)
+	__SLL_GC_HEADER
+	sll_array_length_t l;
 	sll_runtime_object_t v[];
 } sll_array_t;
 

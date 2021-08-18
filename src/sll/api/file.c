@@ -120,5 +120,5 @@ __API_FUNC(file_write){
 	sll_string_t* s=sll_object_to_string(a+1,ac-1);
 	fwrite(s->v,sizeof(sll_char_t),s->l,fh);
 	o->dt.i+=s->l;
-	sll_string_release(s);
+	SLL_RELEASE(s);
 }

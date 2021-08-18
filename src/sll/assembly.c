@@ -1302,7 +1302,7 @@ _handle_nop:;
 				*(o->st.dt+n-l)=*(o->st.dt+n);
 				*(sm.im+n)=n-l;
 			}
-			sll_string_release(*(o->st.dt+j));
+			SLL_RELEASE(*(o->st.dt+j));
 			k=j+1;
 			l++;
 			v&=v-1;

@@ -20,7 +20,7 @@ __SLL_FUNC void sll_set_argument_count(sll_sys_arg_count_t ac){
 	if (_sys_argv){
 		for (sll_sys_arg_count_t i=0;i<_sys_argc;i++){
 			if (*(_sys_argv+i)!=&_zero_string){
-				sll_string_release(*(_sys_argv+i));
+				SLL_RELEASE(*(_sys_argv+i));
 			}
 		}
 		free(_sys_argv);

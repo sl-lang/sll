@@ -138,7 +138,7 @@ __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 			if (j==c_dt->st.l){
 				break;
 			}
-			sll_string_release(*(c_dt->st.dt+j));
+			SLL_RELEASE(*(c_dt->st.dt+j));
 			for (uint32_t n=k;n<j;n++){
 				*(c_dt->st.dt+n-l)=*(c_dt->st.dt+n);
 				*(sm+n)=n-l;

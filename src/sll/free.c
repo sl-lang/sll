@@ -102,7 +102,7 @@ __SLL_FUNC void sll_free_internal_function_table(sll_internal_function_table_t* 
 
 __SLL_FUNC void sll_free_string_table(sll_string_table_t* st){
 	for (sll_string_index_t i=0;i<st->l;i++){
-		sll_string_release(*(st->dt+i));
+		SLL_RELEASE(*(st->dt+i));
 	}
 	if (st->dt){
 		free(st->dt);

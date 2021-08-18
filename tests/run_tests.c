@@ -20,7 +20,8 @@
 
 uint8_t c_st[COMPILER_STACK_SIZE];
 char e_fp[4096];
-char t_fp[4096];
+char ti_fp[4096];
+char to_fp[4096];
 
 
 
@@ -67,11 +68,12 @@ void list_files(char* fp,uint16_t fpl,file_callback_t cb,test_result_t* o){
 
 
 uint8_t execute_test(uint8_t id){
+	remove(to_fp);
 	if (id==TEST_ID_PARSE){
 		sll_internal_function_table_t i_ft;
 		sll_create_internal_function_table(&i_ft);
 		sll_register_standard_internal_functions(&i_ft);
-		FILE* f=fopen(t_fp,"rb");// lgtm [cpp/path-injection]
+		FILE* f=fopen(ti_fp,"rb");// lgtm [cpp/path-injection]
 		if (!f){
 			return 1;
 		}
@@ -82,7 +84,12 @@ uint8_t execute_test(uint8_t id){
 		sll_set_compilation_data_stack(&c_dt,c_st,COMPILER_STACK_SIZE);
 		sll_error_t e;
 		if (!sll_parse_all_objects(&c_dt,&i_ft,NULL,&e)){
-			fwrite((void*)&e,sizeof(sll_error_t),1,stdout);
+			FILE* o_f=fopen(to_fp,"wb");// lgtm [cpp/path-injection]
+			if (!o_f){
+				return 1;
+			}
+			fwrite((void*)&e,sizeof(sll_error_t),1,o_f);
+			fclose(o_f);
 		}
 		sll_free_compilation_data(&c_dt);
 		fclose(f);
@@ -93,25 +100,8 @@ uint8_t execute_test(uint8_t id){
 
 
 
-int8_t execute_subprocess(uint8_t id,char* bf,uint32_t* o){
-	*o=0;
+int8_t execute_subprocess(uint8_t id){
 #ifdef _MSC_VER
-	HANDLE rh=INVALID_HANDLE_VALUE;
-	HANDLE wh=INVALID_HANDLE_VALUE;
-	SECURITY_ATTRIBUTES sa={0};
-	sa.nLength=sizeof(SECURITY_ATTRIBUTES);
-	sa.lpSecurityDescriptor=NULL;
-	sa.bInheritHandle=TRUE;
-	if (!CreatePipe(&rh,&wh,&sa,0)||!SetHandleInformation(rh,HANDLE_FLAG_INHERIT,0)){
-		return -1;
-	}
-	STARTUPINFOA si={0};
-	si.cb=sizeof(STARTUPINFOA);
-	si.dwFlags=STARTF_USESTDHANDLES;
-	si.hStdInput=GetStdHandle(STD_INPUT_HANDLE);
-	si.hStdOutput=wh;
-	si.hStdError=GetStdHandle(STD_ERROR_HANDLE);
-	PROCESS_INFORMATION pi;
 	uint16_t i=0;
 	while (e_fp[i]){
 		i++;
@@ -119,27 +109,14 @@ int8_t execute_subprocess(uint8_t id,char* bf,uint32_t* o){
 	e_fp[i]=' ';
 	e_fp[i+1]=id+1;
 	e_fp[i+2]=0;
+	STARTUPINFOA si={0};
+	si.cb=sizeof(STARTUPINFOA);
+	si.dwFlags=0;
+	PROCESS_INFORMATION pi;
 	if (!CreateProcessA(NULL,e_fp,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,NULL,NULL,&si,&pi)){
 		return -1;
 	}
 	e_fp[i]=0;
-	CloseHandle(wh);
-	char tmp[4097];
-	while (1){
-		DWORD l=0;
-		if (!ReadFile(rh,tmp,4096,&l,NULL)&&l){
-			return -1;
-		}
-		if (!l){
-			break;
-		}
-		for (DWORD j=0;j<l;j++){
-			*(bf+(*o)+j)=*(tmp+j);
-		}
-		(*o)+=l;
-	}
-	CloseHandle(rh);
-	*(bf+(*o))=0;
 	DWORD ec;
 	if (WaitForSingleObject(pi.hProcess,INFINITE)!=WAIT_OBJECT_0||!GetExitCodeProcess(pi.hProcess,&ec)){
 		return -1;
@@ -148,41 +125,13 @@ int8_t execute_subprocess(uint8_t id,char* bf,uint32_t* o){
 	CloseHandle(pi.hProcess);
 	return !!ec;
 #else
-	int p[2];
-	if (pipe(p)==-1){
-		return -1;
-	}
 	pid_t f=fork();
 	if (f==-1){
-		close(p[1]);
 		return -1;
 	}
 	if (f==0){
-		while (dup2(p[1],STDOUT_FILENO)==-1&&errno==EINTR);
-		close(p[0]);
-		close(p[1]);
 		exit(execute_test(id));
 	}
-	close(p[1]);
-	char tmp[4096];
-	while (1){
-		ssize_t l=read(p[0],tmp,4096);
-		if (l==-1){
-			if (errno==EINTR){
-				continue;
-			}
-			close(p[0]);
-			return -1;
-		}
-		if (!l){
-			break;
-		}
-		for (ssize_t i=0;i<l;i++){
-			*(bf+(*o)+i)=*(tmp+i);
-		}
-		(*o)+=l;
-	}
-	close(p[0]);
 	int st;
 	if (waitpid(-1,&st,0)==-1){
 		return -1;
@@ -575,7 +524,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 		return;
 	}
 	printf("Running Test '%s':\n",nm);
-	char bf[32768];
+	uint8_t bf[32768];
 	for (uint32_t i=0;i<dt_e->dt.a.l;i++){
 		json_object_t* t=dt_e->dt.a.dt+i;
 		if (t->t!=JSON_OBJECT_TYPE_MAP){
@@ -589,7 +538,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 			continue;
 		}
-		FILE* dt_f=fopen(t_fp,"wb");// lgtm [cpp/path-injection]
+		FILE* dt_f=fopen(ti_fp,"wb");// lgtm [cpp/path-injection]
 		if (!dt_f||fwrite(in_e->dt.s.v,sizeof(char),in_e->dt.s.l,dt_f)!=in_e->dt.s.l){
 			if (dt_f){
 				fclose(dt_f);
@@ -599,9 +548,8 @@ void run_parser_test(const char* fp,test_result_t* o){
 			continue;
 		}
 		fclose(dt_f);
-		uint32_t bfl;
 		fflush(stdout);
-		int8_t ec=execute_subprocess(TEST_ID_PARSE,bf,&bfl);
+		int8_t ec=execute_subprocess(TEST_ID_PARSE);
 		if (ec==-1){
 			o->s++;
 			printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
@@ -618,13 +566,25 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 			continue;
 		}
+		uint32_t bfl=0;
+		FILE* bf_f=fopen(to_fp,"rb");
+		if (bf_f){
+			fseek(bf_f,0,SEEK_END);
+			bfl=ftell(bf_f);
+			fseek(bf_f,0,SEEK_SET);
+			if (fread(bf,sizeof(uint8_t),bfl,bf_f)!=bfl){
+				fclose(bf_f);
+				continue;
+			}
+			fclose(bf_f);
+		}
 		if (err_e->t==JSON_OBJECT_TYPE_NULL){
 			if (!bfl){
 				o->p++;
 				printf("-> Test Case #%"PRIu32": OK\n",i);
 				continue;
 			}
-			if (bfl<sizeof(sll_error_t)){
+			if (bfl!=sizeof(sll_error_t)){
 				o->s++;
 				printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
 				continue;
@@ -640,7 +600,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> Test Case #%"PRIu32": Expected an Error\n",i);
 			continue;
 		}
-		if (bfl<sizeof(sll_error_t)){
+		if (bfl!=sizeof(sll_error_t)){
 			o->s++;
 			printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
 			continue;
@@ -809,16 +769,31 @@ int main(int argc,const char** argv){
 		i--;
 	}
 	for (uint16_t j=0;j<i;j++){
-		t_fp[j]=e_fp[j];
+		ti_fp[j]=e_fp[j];
+		to_fp[j]=e_fp[j];
 	}
-	t_fp[i]='/';
-	t_fp[i+1]='t';
-	t_fp[i+2]='m';
-	t_fp[i+3]='p';
-	t_fp[i+4]=0;
-	if (argc>1){
+	ti_fp[i]='/';
+	ti_fp[i+1]='t';
+	ti_fp[i+2]='m';
+	ti_fp[i+3]='p';
+	ti_fp[i+4]='_';
+	ti_fp[i+5]='i';
+	ti_fp[i+6]='n';
+	ti_fp[i+7]=0;
+	to_fp[i]='/';
+	to_fp[i+1]='t';
+	to_fp[i+2]='m';
+	to_fp[i+3]='p';
+	to_fp[i+4]='_';
+	to_fp[i+5]='o';
+	to_fp[i+6]='u';
+	to_fp[i+7]='t';
+	to_fp[i+8]=0;
+#ifdef _MSC_VER
+	if (argc==2){
 		return execute_test(argv[1][0]-1);
 	}
+#endif
 	char bf[4096]=__TEST_ROOT_DIR__;
 	i=0;
 	while (bf[i]){

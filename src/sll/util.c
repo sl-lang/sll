@@ -9,9 +9,8 @@
 
 
 sll_string_t _zero_string={
-	0,
 	1,
-	HEAP_SIGNATURE+1,
+	0,
 	0
 };
 
@@ -89,4 +88,15 @@ __SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o){
 		off+=sll_get_object_size(o+off);
 	}
 	return off+eoff;
+}
+
+
+
+__SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
+	if (o->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
+		SLL_RELEASE(o->dt.s);
+	}
+	else if (o->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
+		SLL_RELEASE(o->dt.a);
+	}
 }

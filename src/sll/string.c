@@ -12,13 +12,3 @@ __SLL_FUNC sll_string_t* sll_string_create(sll_string_length_t l){
 	o->v[l]=0;
 	return o;
 }
-
-
-
-__SLL_FUNC void sll_string_release(sll_string_t* s){
-	SLL_ASSERT(s->rc);
-	s->rc--;
-	if (!s->rc){
-		free(s);
-	}
-}

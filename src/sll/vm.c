@@ -4,11 +4,7 @@
 #include <sll/common.h>
 #include <sll/core.h>
 #include <sll/operator.h>
-#include <sll/string.h>
 #include <sll/types.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 
 
@@ -17,12 +13,7 @@
 		sll_runtime_object_t* a=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
 		sll_runtime_object_t n={0}; \
 		sll_operator_##nm(a,&n); \
-		if (a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(a->dt.s); \
-		} \
-		else if (a->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(a->dt.a); \
-		} \
+		sll_release_object(a); \
 		*a=n; \
 		break; \
 	}
@@ -33,18 +24,8 @@
 		sll_runtime_object_t* b=s+si; \
 		sll_runtime_object_t n={0}; \
 		sll_operator_##nm(a,b,&n); \
-		if (a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(a->dt.s); \
-		} \
-		else if (a->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(a->dt.a); \
-		} \
-		if (b->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(b->dt.s); \
-		} \
-		else if (b->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(b->dt.a); \
-		} \
+		sll_release_object(a); \
+		sll_release_object(b); \
 		*a=n; \
 		break; \
 	}
@@ -56,24 +37,9 @@
 		sll_runtime_object_t* c=s+si+1; \
 		sll_runtime_object_t n={0}; \
 		sll_operator_##nm(a,b,c,&n); \
-		if (a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(a->dt.s); \
-		} \
-		else if (a->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(a->dt.a); \
-		} \
-		if (b->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(b->dt.s); \
-		} \
-		else if (b->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(b->dt.a); \
-		} \
-		if (c->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(c->dt.s); \
-		} \
-		else if (c->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(c->dt.a); \
-		} \
+		sll_release_object(a); \
+		sll_release_object(b); \
+		sll_release_object(c); \
 		*a=n; \
 		break; \
 	}
@@ -86,37 +52,17 @@
 		sll_runtime_object_t* d=s+si+2; \
 		sll_runtime_object_t n={0}; \
 		sll_operator_##nm(a,b,c,d,&n); \
-		if (a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(a->dt.s); \
-		} \
-		else if (a->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(a->dt.a); \
-		} \
-		if (b->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(b->dt.s); \
-		} \
-		else if (b->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(b->dt.a); \
-		} \
-		if (c->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(c->dt.s); \
-		} \
-		else if (c->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(c->dt.a); \
-		} \
-		if (d->t==SLL_RUNTIME_OBJECT_TYPE_STRING){ \
-			sll_string_release(d->dt.s); \
-		} \
-		else if (d->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){ \
-			sll_array_release(d->dt.a); \
-		} \
+		sll_release_object(a); \
+		sll_release_object(b); \
+		sll_release_object(c); \
+		sll_release_object(d); \
 		*a=n; \
 		break; \
 	}
 
 
 
-__SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,sll_internal_function_table_t* i_ft,sll_input_data_stream_t* in,sll_output_data_stream_t* out,sll_error_t* e){
+__SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,const sll_internal_function_table_t* i_ft,sll_input_data_stream_t* in,sll_output_data_stream_t* out,sll_error_t* e){
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	sll_runtime_object_t* v=(sll_runtime_object_t*)(st->ptr);
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
@@ -386,14 +332,14 @@ _jump:
 _print_from_stack:;
 					if ((s+si)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
 						fwrite((s+si)->dt.s->v,sizeof(sll_char_t),(s+si)->dt.s->l,stdout);
-						sll_string_release((s+si)->dt.s);
+						SLL_RELEASE((s+si)->dt.s);
 					}
 					else{
 						sll_string_t* str=sll_object_to_string(s+si,1);
 						fwrite(str->v,sizeof(sll_char_t),str->l,stdout);
-						sll_string_release(str);
+						SLL_RELEASE(str);
 						if ((s+si)->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-							sll_array_release((s+si)->dt.a);
+							SLL_RELEASE((s+si)->dt.a);
 						}
 					}
 					break;
@@ -426,12 +372,7 @@ _print_from_stack:;
 						sll_runtime_object_t n={0};
 						(*(i_ft->dt+i))->p(&n,ai->dt.ac,s+si);
 						for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
-							if ((s+si+j)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-								sll_string_release((s+si+j)->dt.s);
-							}
-							else if ((s+si+j)->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-								sll_array_release((s+si+j)->dt.a);
-							}
+							sll_release_object(s+si+j);
 						}
 						if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
 							*(s+si)=n;
@@ -491,12 +432,7 @@ _print_from_stack:;
 					if (i<i_ft->l){
 						sll_runtime_object_t n={0};
 						(*(i_ft->dt+i))->p(&n,1,s+si-1);
-						if ((s+si-1)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-							sll_string_release((s+si-1)->dt.s);
-						}
-						else if ((s+si-1)->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-							sll_array_release((s+si-1)->dt.a);
-						}
+						sll_release_object(s+si-1);
 						*(s+si-1)=n;
 						break;
 					}
@@ -583,12 +519,7 @@ _return:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ONE:
 				return 1;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
-				if ((v+ai->dt.v)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-					sll_string_release((v+ai->dt.v)->dt.s);
-				}
-				else if ((v+ai->dt.v)->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-					sll_array_release((v+ai->dt.v)->dt.a);
-				}
+				sll_release_object(v+ai->dt.v);
 				(v+ai->dt.v)->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 				(v+ai->dt.v)->dt.i=0;
 				break;

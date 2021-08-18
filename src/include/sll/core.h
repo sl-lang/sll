@@ -5,6 +5,10 @@
 
 
 
+#define SLL_RELEASE(x) (--((sll_gc_object_t*)(x))->rc||(free((x)),0))
+
+
+
 __SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t* o);
 
 
@@ -13,7 +17,7 @@ __SLL_FUNC __SLL_RETURN_STRING_INDEX sll_create_string(sll_string_table_t* st,co
 
 
 
-__SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,sll_internal_function_table_t* i_ft,sll_input_data_stream_t* in,sll_output_data_stream_t* out,sll_error_t* e);
+__SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,const sll_internal_function_table_t* i_ft,sll_input_data_stream_t* in,sll_output_data_stream_t* out,sll_error_t* e);
 
 
 
@@ -113,15 +117,15 @@ __SLL_FUNC void sll_register_standard_internal_functions(sll_internal_function_t
 
 
 
+__SLL_FUNC void sll_release_object(sll_runtime_object_t* o);
+
+
+
 __SLL_FUNC void sll_remove_object_debug_data(sll_object_t* o);
 
 
 
 __SLL_FUNC void sll_remove_object_padding(sll_compilation_data_t* c_dt,sll_object_t* o);
-
-
-
-__SLL_FUNC void sll_reset_allocator(void);
 
 
 
