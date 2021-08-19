@@ -58,8 +58,3 @@ __SLL_FUNC sll_bool_t sll_platform_path_is_directory(const char* fp){
 	}
 	return o;
 }
-
-
-
-__SLL_FUNC void sll_platform_setup_console(void){
-}

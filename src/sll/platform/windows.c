@@ -53,16 +53,3 @@ __SLL_FUNC sll_bool_t sll_platform_path_is_directory(const char* fp){
 	DWORD a=GetFileAttributesA(fp);
 	return (a==INVALID_FILE_ATTRIBUTES?0:!!(a&FILE_ATTRIBUTE_DIRECTORY));
 }
-
-
-
-__SLL_FUNC void sll_platform_setup_console(void){
-	SetConsoleOutputCP(CP_UTF8);
-	DWORD v;
-	HANDLE h=GetStdHandle(STD_OUTPUT_HANDLE);
-	GetConsoleMode(h,&v);
-	SetConsoleMode(h,v|ENABLE_PROCESSED_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-	h=GetStdHandle(STD_ERROR_HANDLE);
-	GetConsoleMode(h,&v);
-	SetConsoleMode(h,v|ENABLE_PROCESSED_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-}

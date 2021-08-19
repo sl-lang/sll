@@ -1,7 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/constants.h>
-#include <sll/platform.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -45,7 +44,6 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 				return;
 		}
 	}
-	sll_platform_setup_console();
 	sll_stack_offset_t os=e->dt.r.off;
 	sll_stack_offset_t oe=os+e->dt.r.sz;
 	SLL_INPUT_DATA_STREAM_RESTART_LINE(is,os);
@@ -64,7 +62,6 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 	while (c!='\n'&&c!='\r'&&c!=SLL_END_OF_DATA){
 		if (off==os){
 			t=c;
-			fputs("\x1b[31m",stdout);
 		}
 		if (off>=os&&off<oe&&sp){
 			*sp=c;
@@ -86,20 +83,15 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 		}
 		c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 		off++;
-		if (off==oe){
-			fputs("\x1b[0m",stdout);
-		}
 	}
 	putchar('\n');
 	sll_stack_offset_t i=s_off;
 	for (;i<os+os_tb;i++){
 		putchar(' ');
 	}
-	fputs("\x1b[31m",stdout);
 	for (;i<oe+oe_tb;i++){
 		putchar('~');
 	}
-	fputs("\x1b[0m\n",stdout);
 	switch (e->t){
 		default:
 			printf("Unknown Error: %c%c\n",(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
