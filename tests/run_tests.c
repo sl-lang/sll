@@ -646,7 +646,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 			case SLL_ERROR_UNKNOWN_IDENTIFIER:
 			case SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
 			case SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII:
-				if (!err_v_e||err_v_e->t!=JSON_OBJECT_TYPE_ARRAY||err_v_e->dt.a.l!=2||err_v_e->dt.a.dt->t!=JSON_OBJECT_TYPE_INTEGER||err_v_e->dt.a.dt->dt.i<0||err_v_e->dt.a.dt->dt.i>UINT32_MAX||(err_v_e->dt.a.dt+1)->t!=JSON_OBJECT_TYPE_INTEGER||(err_v_e->dt.a.dt+1)->dt.i<0||(err_v_e->dt.a.dt+1)->dt.i>UINT32_MAX){
+				if (!err_v_e||err_v_e->t!=JSON_OBJECT_TYPE_ARRAY||err_v_e->dt.a.l!=2||err_v_e->dt.a.dt->t!=JSON_OBJECT_TYPE_INTEGER||err_v_e->dt.a.dt->dt.i<0||err_v_e->dt.a.dt->dt.i>SLL_MAX_FILE_OFFSET||(err_v_e->dt.a.dt+1)->t!=SLL_MAX_FILE_OFFSET||(err_v_e->dt.a.dt+1)->dt.i<0||(err_v_e->dt.a.dt+1)->dt.i>UINT32_MAX){
 					o->s++;
 					printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 					continue;
@@ -667,7 +667,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 				ne.dt.str[err_v_e->dt.s.l]=0;
 				break;
 			case SLL_ERROR_INVALID_INSTRUCTION:
-				if (!err_v_e||err_v_e->t!=JSON_OBJECT_TYPE_INTEGER||err_v_e->dt.i<0||err_v_e->dt.i>UINT8_MAX){
+				if (!err_v_e||err_v_e->t!=JSON_OBJECT_TYPE_INTEGER||err_v_e->dt.i<0||err_v_e->dt.i>SLL_MAX_ASSEMBLY_INSTRUCTION){
 					o->s++;
 					printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 					continue;

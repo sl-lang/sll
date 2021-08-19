@@ -427,7 +427,7 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 					return SLL_RETURN_ERROR;
 				}
 				if (o->t==SLL_OBJECT_TYPE_ARRAY){
-					if (al==UINT32_MAX){
+					if (al==SLL_MAX_ARRAY_LENGTH){
 						e->t=SLL_ERROR_ARRAY_TOO_LONG;
 						e->dt.r.off=arg_s;
 						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -439,7 +439,7 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 					al++;
 				}
 				else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
-					if (sc==UINT16_MAX){
+					if (sc==SLL_MAX_STATEMENT_COUNT){
 						e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
 						e->dt.r.off=arg_s;
 						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -451,7 +451,7 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 					sc++;
 				}
 				else{
-					if (ac==UINT8_MAX){
+					if (ac==SLL_MAX_ARGUMENT_COUNT){
 						e->t=SLL_ERROR_TOO_MANY_ARGUMENTS;
 						e->dt.r.off=arg_s;
 						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -467,9 +467,9 @@ uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,con
 		}
 		else if (o&&o->t==SLL_OBJECT_TYPE_UNKNOWN){
 			char* str=(char*)(c_dt->_s.ptr+c_dt->_s.off);
-			uint16_t sz=0;
+			sll_string_length_t sz=0;
 _read_symbol:
-			if (sz==UINT16_MAX){
+			if (sz==SLL_MAX_STRING_LENGTH){
 				e->t=SLL_ERROR_SYMBOL_TOO_LONG;
 				e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-sz-3;
 				e->dt.r.sz=sz;
@@ -710,7 +710,7 @@ _unknown_symbol:
 					return SLL_RETURN_ERROR;
 				}
 				if (o->t==SLL_OBJECT_TYPE_ARRAY){
-					if (al==UINT32_MAX){
+					if (al==SLL_MAX_ARRAY_LENGTH){
 						e->t=SLL_ERROR_ARRAY_TOO_LONG;
 						e->dt.r.off=arg_s;
 						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -722,7 +722,7 @@ _unknown_symbol:
 					al++;
 				}
 				else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
-					if (sc==UINT16_MAX){
+					if (sc==SLL_MAX_STATEMENT_COUNT){
 						e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
 						e->dt.r.off=arg_s;
 						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -734,7 +734,7 @@ _unknown_symbol:
 					sc++;
 				}
 				else{
-					if (ac==UINT8_MAX){
+					if (ac==SLL_MAX_ARGUMENT_COUNT){
 						e->t=SLL_ERROR_TOO_MANY_ARGUMENTS;
 						e->dt.r.off=arg_s;
 						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1210,7 +1210,7 @@ _identifier_found:;
 				return SLL_RETURN_NO_ERROR;
 			}
 			if (o->t==SLL_OBJECT_TYPE_ARRAY){
-				if (al==UINT32_MAX){
+				if (al==SLL_MAX_ARRAY_LENGTH){
 					e->t=SLL_ERROR_ARRAY_TOO_LONG;
 					e->dt.r.off=arg_s;
 					e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1219,7 +1219,7 @@ _identifier_found:;
 				al++;
 			}
 			else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
-				if (sc==UINT16_MAX){
+				if (sc==SLL_MAX_STATEMENT_COUNT){
 					e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
 					e->dt.r.off=arg_s;
 					e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1420,7 +1420,7 @@ _skip_export:;
 					b_l_sc=l_sc;
 					l_sc=&n_l_sc;
 				}
-				if (ac==UINT8_MAX){
+				if (ac==SLL_MAX_ARGUMENT_COUNT){
 					e->t=SLL_ERROR_TOO_MANY_ARGUMENTS;
 					e->dt.r.off=arg_s;
 					e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1567,7 +1567,7 @@ __SLL_FUNC __SLL_RETURN sll_parse_all_objects(sll_compilation_data_t* c_dt,sll_i
 			free(e_c_dt.sc.m);
 			return SLL_RETURN_ERROR;
 		}
-		if (sc==UINT16_MAX){
+		if (sc==SLL_MAX_STATEMENT_COUNT){
 			e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
 			e->dt.r.off=off-1;
 			e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(c_dt->is)-off-1;

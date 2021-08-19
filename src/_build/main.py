@@ -79,7 +79,7 @@ build.build_sll("build/sll.c","build/sll.o",v,vb,("--release" in sys.argv))
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
-if (util.wrap_output(["build/sll","-c",("-O3" if "--release" in sys.argv else "-O1"),"-L","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if vb else []),pfx=b"  ").returncode!=0):
+if (util.wrap_output(["build/sll","-C","-c",("-O3" if "--release" in sys.argv else "-O1"),"-L","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if vb else []),pfx=b"  ").returncode!=0):
 	sys.exit(1)
 if (vb):
 	print("Removing Module Source Files...")
@@ -122,7 +122,7 @@ if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Test Executable...")
 	build.build_sll_test("build/sll.o","tests/data",vb,("--release" in sys.argv))
-	if ("--do-not-start-test" not in sys.argv):
+	if ("--do-not-run-test" not in sys.argv):
 		if (vb):
 			print("  Running Tests...")
 		if (util.wrap_output(["build/run_tests"]).returncode!=0):
@@ -131,6 +131,6 @@ if ("--run" in sys.argv):
 	if (vb):
 		print("Running 'example/test.sll'...")
 	e_nm=("build/sll_standalone" if "--standalone " in sys.argv else "build/sll")
-	subprocess.run([e_nm,"-h"])
-	if (subprocess.run([e_nm,"example/test.sll","-v","-O3","-c","-o","build/test","-e","-I","example","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-v","-O0","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-v","-P","-L"]).returncode!=0):
+	subprocess.run([e_nm,"-h","-C"])
+	if (subprocess.run([e_nm,"example/test.sll","-C","-v","-O3","-c","-o","build/test","-e","-I","example","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-C","-v","-O0","-p","-P","-e","-L","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-C","-v","-P","-L"]).returncode!=0):
 		sys.exit(1)

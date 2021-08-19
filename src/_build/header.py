@@ -39,7 +39,6 @@ def _expand_macros(k,dm,dfm):
 						if (k[i:i+1]!=b"("):
 							continue
 						i+=1
-						l=i
 						b=1
 						a=[b""]
 						ai=0

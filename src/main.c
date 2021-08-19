@@ -24,6 +24,7 @@
 	do{ \
 		(o)=GetModuleFileNameA(NULL,(bf),(l)); \
 	} while (0)
+#define RESET_CONSOLE SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),cm)
 #else
 #define MAX_PATH_LENGTH PATH_MAX
 #define EXPAND_FILE_PATH(s,d) realpath((s),(d))
@@ -39,6 +40,7 @@
 			*(bf)=0; \
 		} \
 	} while (0)
+#define RESET_CONSOLE
 #endif
 
 
@@ -46,6 +48,14 @@
 #define PRINT_STATIC_STR(s) fwrite((void*)(s),sizeof(char),sizeof((s))/sizeof(char)-1,stdout)
 #define _STR(x) #x
 #define STR(x) _STR(x)
+#define _IF_USE_COLORS(x) \
+	do{ \
+		if (fl&FLAG_USE_COLORS){ \
+			PRINT_STATIC_STR(x); \
+		} \
+	} while (0)
+#define COLOR_RESET _IF_USE_COLORS("\x1b[0m")
+#define COLOR_RED _IF_USE_COLORS("\x1b[91m")
 #define ASSEMBLY_STACK_SIZE 16384
 #define COMPILER_STACK_SIZE 65536
 #define VM_STACK_SIZE 65536
@@ -57,9 +67,10 @@
 #define FLAG_NO_RUN 32
 #define FLAG_PRINT_ASSEMBLY 64
 #define FLAG_PRINT_OBJECT 128
-#define FLAG_VERBOSE 256
-#define FLAG_VERSION 512
-#define _FLAG_ASSEMBLY_GENERATED 1024
+#define FLAG_USE_COLORS 256
+#define FLAG_VERBOSE 512
+#define FLAG_VERSION 1024
+#define _FLAG_ASSEMBLY_GENERATED 2048
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
 #define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
@@ -83,6 +94,9 @@ uint32_t l_fpl;
 sll_input_buffer_t i_bf;
 #endif
 sll_internal_function_table_t i_ft;
+#ifdef _MSC_VER
+DWORD cm;
+#endif
 
 
 
@@ -163,7 +177,9 @@ sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_er
 	if (fl&_FLAG_ASSEMBLY_GENERATED){
 		sll_free_assembly_function_table(&(a_dt.ft));
 		sll_free_string_table(&(a_dt.st));
+		COLOR_RED;
 		PRINT_STATIC_STR("Importing Assembly into Compiled Objects is Not Allowed\n");
+		COLOR_RESET;
 		e->t=SLL_ERROR_UNKNOWN;
 		return SLL_RETURN_ERROR;
 	}
@@ -219,9 +235,11 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 					sll_free_function_table(&(c_dt->ft));
 					sll_free_string_table(&(c_dt->st));
 					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
+						COLOR_RED;
 						PRINT_STATIC_STR("File '");
 						print_str(f_fp);
 						PRINT_STATIC_STR("'is not a Compiled Object.\n");
+						COLOR_RESET;
 					}
 					else{
 						sll_print_error(is,&e);
@@ -269,9 +287,6 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 					sll_free_assembly_function_table(&(a_dt->ft));
 					sll_free_string_table(&(a_dt->st));
 					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-						if (fl&FLAG_VERBOSE){
-							PRINT_STATIC_STR("File is not an Assembly. Falling Back to Compiled Object...\n");
-						}
 						sll_stream_create_input_from_file(nf,is);
 						if (!sll_load_compiled_object(is,c_dt,&e)){
 							sll_free_identifier_table(&(c_dt->idt));
@@ -279,9 +294,6 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 							sll_free_function_table(&(c_dt->ft));
 							sll_free_string_table(&(c_dt->st));
 							if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-								if (fl&FLAG_VERBOSE){
-									PRINT_STATIC_STR("File is not a Compiled Object. Falling Back to Standard Compilation...\n");
-								}
 								sll_stream_create_input_from_file(nf,is);
 								sll_init_compilation_data((sll_char_t*)f_fp,is,c_dt);
 								if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
@@ -352,9 +364,11 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 				}
 			}
 			if (fl&FLAG_VERBOSE){
+				COLOR_GREEN;
 				PRINT_STATIC_STR("Found Internal Module '");
 				print_str(f_nm);
 				PRINT_STATIC_STR(".slc'\n");
+				COLOR_RESET;
 			}
 			*f=NULL;
 			i_bf.bf=m->dt;
@@ -367,9 +381,11 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 				sll_free_function_table(&(c_dt->ft));
 				sll_free_string_table(&(c_dt->st));
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
+					COLOR_RED;
 					PRINT_STATIC_STR("Module '");
 					print_str(f_nm);
 					PRINT_STATIC_STR(".slc' is not a Compiled Object.\n");
+					COLOR_RESET;
 				}
 				else{
 					sll_print_error(is,&e);
@@ -432,9 +448,11 @@ _check_next_module:;
 				sll_free_function_table(&(c_dt->ft));
 				sll_free_string_table(&(c_dt->st));
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
+					COLOR_RED;
 					PRINT_STATIC_STR("File '");
 					print_str(f_fp);
 					PRINT_STATIC_STR("' is not a Compiled Object.\n");
+					COLOR_RESET;
 				}
 				else{
 					sll_print_error(is,&e);
@@ -454,9 +472,11 @@ _check_next_module:;
 		}
 	}
 #endif
+	COLOR_RED;
 	PRINT_STATIC_STR("Unable to Find File '");
 	print_str(f_nm);
 	PRINT_STATIC_STR("'\n");
+	COLOR_RESET;
 	return 0;
 }
 
@@ -479,9 +499,11 @@ uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 	}
 	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
 	if (!f){
+		COLOR_RED;
 		PRINT_STATIC_STR("Unable to Open Output File '");
 		print_str(o_fp);
 		PRINT_STATIC_STR("'\n");
+		COLOR_RESET;
 		return 0;
 	}
 	sll_output_data_stream_t os;
@@ -513,9 +535,11 @@ uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
 	}
 	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
 	if (!f){
+		COLOR_RED;
 		PRINT_STATIC_STR("Unable to Open Output File '");
 		print_str(o_fp);
 		PRINT_STATIC_STR("'\n");
+		COLOR_RESET;
 		return 0;
 	}
 	sll_output_data_stream_t os;
@@ -531,12 +555,17 @@ uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
 
 
 int main(int argc,const char** argv){
+#ifdef _MSC_VER
+	GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),&cm);
+	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+#endif
 	int32_t ec=1;
 	ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
 	fl=0;
 	i_fp=malloc(sizeof(char));
 	if (!i_fp){
 		PRINT_STATIC_STR("Unable to Allocate Space for Include File Path Array\n");
+		RESET_CONSOLE;
 		return 1;
 	}
 	*i_fp=0;
@@ -545,7 +574,7 @@ int main(int argc,const char** argv){
 	GET_EXECUATBLE_FILE_PATH(l_fp,MAX_PATH_LENGTH,l_fpl);
 	while (l_fp[l_fpl]!='/'&&l_fp[l_fpl]!='\\'){
 		if (!l_fpl){
-			goto _skip_std_lib_path;
+			goto _skip_lib_path;
 		}
 		l_fpl--;
 	}
@@ -555,7 +584,7 @@ int main(int argc,const char** argv){
 	l_fp[l_fpl+4]='/';
 	l_fp[l_fpl+5]=0;
 	l_fpl+=5;
-_skip_std_lib_path:
+_skip_lib_path:
 #endif
 	fp=NULL;
 	fpl=0;
@@ -581,6 +610,9 @@ _skip_std_lib_path:
 		}
 		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||cmp_str(e,"--generate-compiled-object")){
 			fl|=FLAG_GENERATE_COMPILED_OBJECT;
+		}
+		else if ((*e=='-'&&*(e+1)=='C'&&*(e+2)==0)||cmp_str(e,"--use-colors")){
+			fl|=FLAG_USE_COLORS;
 		}
 		else if ((*e=='-'&&*(e+1)=='e'&&*(e+2)==0)||cmp_str(e,"--expand-file-paths")){
 			fl|=FLAG_EXPAND_PATH;
@@ -610,7 +642,9 @@ _skip_std_lib_path:
 				i_fpl+=sz+(*(e+sz-1)!='\\'&&*(e+sz-1)!='/'?2:1);
 				void* tmp=realloc(i_fp,i_fpl*sizeof(char));
 				if (!tmp){
+					COLOR_RED;
 					PRINT_STATIC_STR("Unable to Allocate Space for Include File Path Array\n");
+					COLOR_RESET;
 					goto _error;
 				}
 				i_fp=tmp;
@@ -630,7 +664,9 @@ _skip_std_lib_path:
 		}
 		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||cmp_str(e,"--output")){
 			if (o_fp){
+				COLOR_RED;
 				PRINT_STATIC_STR("Multplie Output Files Supplied\n");
+				COLOR_RESET;
 				goto _help;
 			}
 			i++;
@@ -673,9 +709,11 @@ _skip_std_lib_path:
 		}
 		else if (*e=='-'){
 _unkown_switch:
+			COLOR_RED;
 			PRINT_STATIC_STR("Unknown Switch '");
 			print_str((char*)e);
 			PRINT_STATIC_STR("'\n");
+			COLOR_RESET;
 			goto _help;
 		}
 		else{
@@ -683,7 +721,9 @@ _read_file_argument:
 			fpl++;
 			void* tmp=realloc(fp,fpl*sizeof(char*));
 			if (!tmp){
+				COLOR_RED;
 				PRINT_STATIC_STR("Unable to Allocate Space for File Path Array\n");
+				COLOR_RESET;
 				goto _error;
 			}
 			fp=tmp;
@@ -692,18 +732,19 @@ _read_file_argument:
 	}
 	if (fl&FLAG_VERSION){
 #ifdef SLL_VERSION_SHA
-		PRINT_STATIC_STR("sll v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME", "SLL_VERSION_SHA" (https://github.com/sl-lang/sll/tree/"SLL_VERSION_FULL_SHA"\n");
+		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" (commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_FULL_SHA"], "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 #else
-		PRINT_STATIC_STR("sll v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME", Local Build\n");
+		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" (local, "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 #endif
+		RESET_CONSOLE;
 		return 0;
 	}
 	im_fpl=fpl;
 	if (!(fl&FLAG_NO_LOGO)){
 #ifdef SLL_VERSION_SHA
-		PRINT_STATIC_STR("sll v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" ("SLL_VERSION_SHA", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
+		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" (commit/"SLL_VERSION_SHA", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 #else
-		PRINT_STATIC_STR("sll v"STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" ("SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
+		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" (local, "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 #endif
 	}
 	if (fl&FLAG_VERBOSE){
@@ -744,6 +785,9 @@ _read_file_argument:
 		if (!(fl&FLAG_NO_RUN)){
 			PRINT_STATIC_STR("  Program Run Mode\n");
 		}
+		if (fl&FLAG_USE_COLORS){
+			PRINT_STATIC_STR("  Use Colors\n");
+		}
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("  Verbose Mode\n");
 		}
@@ -771,7 +815,9 @@ _read_file_argument:
 		goto _help;
 	}
 	if (!fpl){
+		COLOR_RED;
 		PRINT_STATIC_STR("No Input Files Supplied\n");
+		COLOR_RESET;
 		goto _help;
 	}
 	for (uint32_t j=0;j<fpl;j++){
@@ -951,6 +997,7 @@ _skip_write:;
 		free(fp);
 	}
 	sll_free_internal_function_table(&i_ft);
+	RESET_CONSOLE;
 	return 0;
 _help:
 	PRINT_STATIC_STR(HELP_TEXT);
@@ -969,5 +1016,6 @@ _error:
 		fclose(f);
 	}
 	sll_free_internal_function_table(&i_ft);
+	RESET_CONSOLE;
 	return ec;
 }
