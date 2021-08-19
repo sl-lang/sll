@@ -364,11 +364,9 @@ uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_dat
 				}
 			}
 			if (fl&FLAG_VERBOSE){
-				COLOR_GREEN;
 				PRINT_STATIC_STR("Found Internal Module '");
 				print_str(f_nm);
 				PRINT_STATIC_STR(".slc'\n");
-				COLOR_RESET;
 			}
 			*f=NULL;
 			i_bf.bf=m->dt;
