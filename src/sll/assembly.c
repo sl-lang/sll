@@ -2,6 +2,8 @@
 #include <sll/common.h>
 #include <sll/constants.h>
 #include <sll/core.h>
+#include <sll/gc.h>
+#include <sll/object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>

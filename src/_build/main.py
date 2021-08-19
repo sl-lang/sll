@@ -25,12 +25,14 @@ if (os.path.exists("build")):
 		for f in fl:
 			os.remove(r+f)
 	for k in dl:
-		if (k!="build/lib"):
+		if (k!="build/lib" and k!="build/objects"):
 			os.rmdir(k)
 else:
 	os.mkdir("build")
 if (not os.path.exists("build/lib")):
 	os.mkdir("build/lib")
+if (not os.path.exists("build/objects")):
+	os.mkdir("build/objects")
 if (vb):
 	print("Copying Modules...")
 for f in os.listdir("src/sll/lib"):
@@ -63,7 +65,7 @@ else:
 	if ("build:" not in ld):
 		os.environ["LD_LIBRARY_PATH"]="build:"+ld
 if (vb):
-	print("Generating Source Code File...")
+	print("Listing Source Code Files...")
 i_fl=[PLATFORM_SOURCE_CODE[os.name]]
 for r,_,fl in os.walk("src/sll"):
 	r=r.replace("\\","/").rstrip("/")+"/"
@@ -72,10 +74,9 @@ for r,_,fl in os.walk("src/sll"):
 	for f in fl:
 		if (f[-2:]==".c"):
 			i_fl.append(r+f)
-build.generate_source_file(i_fl,"build/sll.c",vb)
 if (vb):
 	print("Generating Executable...")
-build.build_sll("build/sll.c","build/sll.o",v,vb,("--release" in sys.argv))
+build.build_sll(i_fl,v,vb,("--release" in sys.argv))
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
@@ -111,7 +112,7 @@ if ("--standalone" in sys.argv):
 		f.write(b"const module_t m_dt[]={"+b",".join(m_dt)+b"};\n#endif")
 	if (vb):
 		print("Generating Standalone Executable...")
-	build.build_sll_standalone("build/sll.o",vb,("--release" in sys.argv))
+	build.build_sll_standalone(vb,("--release" in sys.argv))
 if ("--bundle" in sys.argv):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
 		for k in (["build/sll.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
@@ -121,7 +122,7 @@ if ("--bundle" in sys.argv):
 if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Test Executable...")
-	build.build_sll_test("build/sll.o","tests/data",vb,("--release" in sys.argv))
+	build.build_sll_test("tests/data",vb,("--release" in sys.argv))
 	if ("--do-not-run-test" not in sys.argv):
 		if (vb):
 			print("  Running Tests...")

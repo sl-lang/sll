@@ -80,4 +80,20 @@ __API_FUNC_DECL(util_ref_count);
 
 
 
+__SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_array_length_t al);
+
+
+
+__SLL_FUNC sll_string_length_t sll_object_to_string_length(sll_runtime_object_t* a,sll_array_length_t al);
+
+
+
+__SLL_FUNC void sll_set_argument_count(sll_sys_arg_count_t ac);
+
+
+
+__SLL_FUNC void sll_set_argument(sll_sys_arg_count_t i,const char* a);
+
+
+
 #endif

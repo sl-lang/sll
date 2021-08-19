@@ -2,6 +2,7 @@
 #define __SLL_GC_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+#include <stdlib.h>
 
 
 

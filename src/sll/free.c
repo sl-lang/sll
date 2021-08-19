@@ -1,6 +1,6 @@
 #include <sll/common.h>
 #include <sll/core.h>
-#include <sll/string.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 #include <stdlib.h>
 

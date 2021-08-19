@@ -2,6 +2,7 @@
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/core.h>
+#include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/types.h>
 #include <stdint.h>

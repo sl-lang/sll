@@ -1,7 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/core.h>
-#include <sll/string.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdlib.h>
