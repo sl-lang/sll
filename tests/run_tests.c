@@ -667,7 +667,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 				ne.dt.str[err_v_e->dt.s.l]=0;
 				break;
 			case SLL_ERROR_INVALID_INSTRUCTION:
-				if (!err_v_e||err_v_e->t!=JSON_OBJECT_TYPE_INTEGER||err_v_e->dt.i<0||err_v_e->dt.i>SLL_MAX_ASSEMBLY_INSTRUCTION){
+				if (!err_v_e||err_v_e->t!=JSON_OBJECT_TYPE_INTEGER||err_v_e->dt.i<0||err_v_e->dt.i>SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE){
 					o->s++;
 					printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 					continue;

@@ -5,15 +5,6 @@
 
 
 
-#define SLL_ACQUIRE(x) (++((sll_gc_object_t*)(x))->rc)
-#define SLL_RELEASE(x) (--((sll_gc_object_t*)(x))->rc||(free((x)),0))
-
-
-
-__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o);
-
-
-
 __SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t* o);
 
 
@@ -119,10 +110,6 @@ __SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_func
 
 
 __SLL_FUNC void sll_register_standard_internal_functions(sll_internal_function_table_t* i_ft);
-
-
-
-__SLL_FUNC void sll_release_object(sll_runtime_object_t* o);
 
 
 
