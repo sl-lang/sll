@@ -1,7 +1,3 @@
-path_classifiers:
-  generated:
-    - exclude: "build/help_text.h"
-    - exclude: "build/sll.c"
 queries:
   - include: "*"
   - exclude: cpp/complex-condition
