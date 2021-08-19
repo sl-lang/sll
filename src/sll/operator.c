@@ -1,15 +1,14 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
-#include <sll/core.h>
+#include <sll/constants.h>
 #include <sll/operator.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <stdint.h>
 #include <string.h>
 
 
 
-#define COMBINE_TYPES(a,b) (((uint16_t)(a)<<8)|(b))
+#define COMBINE_TYPES(a,b) (((unsigned int)(a)<<8)|(b))
 #define COMBINED_TYPE_II COMBINE_TYPES(SLL_RUNTIME_OBJECT_TYPE_INT,SLL_RUNTIME_OBJECT_TYPE_INT)
 #define COMBINED_TYPE_IF COMBINE_TYPES(SLL_RUNTIME_OBJECT_TYPE_INT,SLL_RUNTIME_OBJECT_TYPE_FLOAT)
 #define COMBINED_TYPE_IC COMBINE_TYPES(SLL_RUNTIME_OBJECT_TYPE_INT,SLL_RUNTIME_OBJECT_TYPE_CHAR)
@@ -54,7 +53,7 @@ __SLL_OPERATOR_UNARY(inc){
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -75,7 +74,7 @@ __SLL_OPERATOR_UNARY(dec){
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -146,7 +145,7 @@ __SLL_OPERATOR_BINARY(add){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -209,7 +208,7 @@ __SLL_OPERATOR_BINARY(sub){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -270,7 +269,7 @@ __SLL_OPERATOR_BINARY(mult){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -331,7 +330,7 @@ __SLL_OPERATOR_BINARY(div){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -392,7 +391,7 @@ __SLL_OPERATOR_BINARY(floor_div){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -453,7 +452,7 @@ __SLL_OPERATOR_BINARY(mod){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -514,7 +513,7 @@ __SLL_OPERATOR_BINARY(and){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -575,7 +574,7 @@ __SLL_OPERATOR_BINARY(or){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -636,7 +635,7 @@ __SLL_OPERATOR_BINARY(xor){
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -657,7 +656,7 @@ __SLL_OPERATOR_UNARY(inv){
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -678,7 +677,7 @@ __SLL_OPERATOR_UNARY(len){
 			o->dt.i=a->dt.a->l;
 			return;
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -697,7 +696,7 @@ __SLL_OPERATOR_UNARY(dup){
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -790,7 +789,7 @@ __SLL_FUNC __SLL_RETURN_COMPARE sll_operator_compare(const sll_runtime_object_t*
 		case COMBINED_TYPE_AA:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 	return 0;
 }
@@ -810,7 +809,7 @@ __SLL_FUNC __SLL_RETURN_COMPARE sll_operator_bool(const sll_runtime_object_t* a)
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 	return 0;
 }

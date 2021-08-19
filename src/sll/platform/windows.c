@@ -1,7 +1,6 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
 #include <sll/common.h>
-#include <sll/platform.h>
 #include <sll/types.h>
 
 

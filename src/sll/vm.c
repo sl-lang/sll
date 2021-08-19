@@ -2,7 +2,7 @@
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
-#include <sll/core.h>
+#include <sll/constants.h>
 #include <sll/gc.h>
 #include <sll/operator.h>
 #include <sll/types.h>
@@ -491,7 +491,7 @@ _return:;
 					case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 						SLL_UNIMPLEMENTED();
 					default:
-						UNREACHABLE();
+						SLL_UNREACHABLE();
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO:
 				return 0;

@@ -1,7 +1,6 @@
 #include <sll/_sll_internal.h>
-#include <sll/api.h>
 #include <sll/common.h>
-#include <sll/core.h>
+#include <sll/constants.h>
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/types.h>
@@ -351,7 +350,7 @@ uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
 			return COND_TYPE_UNKNOWN;
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 			return COND_TYPE_UNKNOWN;
 	}
 }
@@ -439,7 +438,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 						case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 							SLL_UNIMPLEMENTED();
 						default:
-							UNREACHABLE();
+							SLL_UNREACHABLE();
 					}
 				}
 			}

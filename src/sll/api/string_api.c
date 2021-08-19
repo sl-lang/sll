@@ -4,6 +4,7 @@
 #include <sll/gc.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <stdio.h>
 #include <string.h>
 
 
@@ -68,7 +69,7 @@ sll_string_length_t _object_to_string(sll_runtime_object_t* a,sll_string_t* o,sl
 			}
 			return i+1;
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 	return 0;
 }
@@ -126,7 +127,7 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(sll_runtime_object_t*
 				o+=sll_object_to_string_length((a+i)->dt.a->v,(a+i)->dt.a->l)+(a+i)->dt.a->l+1;
 				break;
 			default:
-				UNREACHABLE();
+				SLL_UNREACHABLE();
 		}
 	}
 	return o;

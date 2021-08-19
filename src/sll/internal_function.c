@@ -1,13 +1,12 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
-#include <sll/core.h>
+#include <sll/constants.h>
 #include <sll/types.h>
-#include <sll/api.h>
 #include <stdlib.h>
 
 
 
-IINTERNAL_FUNCTION_SETUP
+INTERNAL_FUNCTION_SETUP
 
 
 

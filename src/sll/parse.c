@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/constants.h>
 #include <sll/core.h>
 #include <sll/ift.h>
 #include <sll/object.h>

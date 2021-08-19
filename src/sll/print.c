@@ -1,6 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
-#include <sll/core.h>
+#include <sll/constants.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -349,7 +349,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 				return eoff+_print_object_internal(c_dt,o+1,os)+1;
 			}
 		default:
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 	}
 	sll_stack_offset_t off=1;
 	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
@@ -760,7 +760,7 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				PRINT_STATIC_STRING(" & DEL",os);
 				break;
 			default:
-				UNREACHABLE();
+				SLL_UNREACHABLE();
 		}
 		ai++;
 	}

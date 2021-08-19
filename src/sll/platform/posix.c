@@ -1,5 +1,4 @@
 #include <sll/common.h>
-#include <sll/platform.h>
 #include <sll/types.h>
 #include <sys/mman.h>
 #include <sys/stat.h>

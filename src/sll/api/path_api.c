@@ -5,7 +5,6 @@
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <stdlib.h>
 
 
 

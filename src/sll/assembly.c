@@ -1,13 +1,11 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/constants.h>
-#include <sll/core.h>
 #include <sll/gc.h>
 #include <sll/object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 
 
@@ -172,7 +170,7 @@ sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compi
 sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* ai,sll_instruction_index_t i){
 	do{
 		if (!i){
-			UNREACHABLE();
+			SLL_UNREACHABLE();
 			return NULL;
 		}
 		ai--;
