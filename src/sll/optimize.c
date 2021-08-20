@@ -1,6 +1,9 @@
 #include <sll/_sll_internal.h>
+#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/constants.h>
+#include <sll/core.h>
+#include <sll/gc.h>
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/types.h>
@@ -368,13 +371,36 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 		_get_as_runtime_object(o,o_dt,o_dt->v+o_dt->vi);
 		o_dt->vi=SLL_MAX_VARIABLE_INDEX;
 	}
+_optimize_again:
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_CHAR:
+			if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+				DECREASE_PARENT(p);
+				o->t=SLL_OBJECT_TYPE_NOP;
+			}
+			return eoff+1;
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
-			if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+			if (fl&OPTIMIZER_FLAG_ARGUMENT){
+				if (p&&p->t==SLL_OBJECT_TYPE_PRINT){
+					sll_runtime_object_t rt;
+					if (o->t==SLL_OBJECT_TYPE_INT){
+						rt.t=SLL_RUNTIME_OBJECT_TYPE_INT;
+						rt.dt.i=o->dt.i;
+					}
+					else{
+						rt.t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
+						rt.dt.f=o->dt.f;
+					}
+					sll_string_t* s=sll_object_to_string(&rt,1);
+					o->t=SLL_OBJECT_TYPE_STRING;
+					o->dt.s=sll_add_string(&(o_dt->c_dt->st),s);
+					SLL_RELEASE(s);
+				}
+			}
+			else{
 				DECREASE_PARENT(p);
 				o->t=SLL_OBJECT_TYPE_NOP;
 			}
@@ -458,6 +484,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 						default:
 							SLL_UNREACHABLE();
 					}
+					goto _optimize_again;
 				}
 			}
 			return eoff+1;

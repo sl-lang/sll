@@ -1,5 +1,6 @@
 #include <sll/common.h>
 #include <sll/constants.h>
+#include <sll/gc.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdlib.h>
@@ -12,6 +13,28 @@ sll_string_t _zero_string={
 	0,
 	0
 };
+
+
+
+__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_add_string(sll_string_table_t* st,sll_string_t* s){
+	for (sll_string_index_t i=0;i<st->l;i++){
+		sll_string_t* k=*(st->dt+i);
+		if (k->c==s->c&&k->l==s->l){
+			for (sll_string_length_t j=0;j<s->l;j++){
+				if (s->v[j]!=k->v[j]){
+					goto _check_next_string;
+				}
+			}
+			return i;
+		}
+_check_next_string:;
+	}
+	st->l++;
+	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t*));
+	*(st->dt+st->l-1)=s;
+	SLL_ACQUIRE(s);
+	return st->l-1;
+}
 
 
 
