@@ -27,8 +27,8 @@ __SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
 
 
 __SLL_FUNC sll_time_t sll_platform_get_current_time(void){
-	FILETIME ft;
-	GetSystemTimeAsFileTime(&ft);
+		FILETIME ft;
+		GetSystemTimeAsFileTime(&ft);
 	return ((((sll_time_t)ft.dwHighDateTime)<<32)|ft.dwLowDateTime)*100-11644473600000000000;
 }
 
