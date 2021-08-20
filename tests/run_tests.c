@@ -25,7 +25,7 @@ char to_fp[4096];
 
 
 
-void list_files(char* fp,uint16_t fpl,file_callback_t cb,test_result_t* o){
+void list_files(char* restrict fp,uint16_t fpl,file_callback_t cb,test_result_t* restrict o){
 #ifdef _MSC_VER
 	WIN32_FIND_DATAA dt;
 	fp[fpl]='*';
@@ -142,7 +142,7 @@ int8_t execute_subprocess(uint8_t id){
 
 
 
-void _parse_json_str(json_parser_state_t* p,string_32bit_t* o){
+void _parse_json_str(json_parser_state_t* restrict p,string_32bit_t* restrict o){
 	o->l=1;
 	o->v=malloc(sizeof(char));
 	*(o->v)=0;
@@ -214,7 +214,7 @@ void _parse_json_str(json_parser_state_t* p,string_32bit_t* o){
 
 
 
-uint8_t parse_json(json_parser_state_t* p,json_object_t* o){
+uint8_t parse_json(json_parser_state_t* restrict p,json_object_t* restrict o){
 	char c=**p;
 	(*p)++;
 	while (c==' '||c=='\t'||c=='\n'||c=='\r'){
@@ -382,7 +382,7 @@ uint8_t parse_json(json_parser_state_t* p,json_object_t* o){
 
 
 
-json_object_t* get_by_key(json_object_t* json,const char* k){
+json_object_t* get_by_key(json_object_t* restrict json,const char* restrict k){
 	for (uint32_t i=0;i<json->dt.m.l;i++){
 		json_map_keypair_t* e=json->dt.m.dt+i;
 		for (uint32_t j=0;j<e->k.l+1;j++){
@@ -398,7 +398,7 @@ _check_next_key:;
 
 
 
-void free_json(json_object_t* json){
+void free_json(json_object_t* restrict json){
 	if (json->t==JSON_OBJECT_TYPE_STRING){
 		if (json->dt.s.v){
 			free(json->dt.s.v);
@@ -428,7 +428,7 @@ void free_json(json_object_t* json){
 
 
 
-char* error_to_string(sll_error_t* e){
+char* error_to_string(sll_error_t* restrict e){
 	char* o=malloc(512*sizeof(char));
 	switch (e->t){
 		default:
@@ -485,7 +485,7 @@ char* error_to_string(sll_error_t* e){
 
 
 
-void run_parser_test(const char* fp,test_result_t* o){
+void run_parser_test(const char* restrict fp,test_result_t* restrict o){
 	FILE* f=fopen(fp,"rb");// lgtm [cpp/path-injection]
 	char* f_dt=NULL;
 	json_object_t json={

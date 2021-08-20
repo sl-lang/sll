@@ -5,7 +5,7 @@
 
 
 
-__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o){
+__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* restrict o){
 	if (o->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		SLL_ACQUIRE(o->dt.s);
 	}
@@ -16,7 +16,7 @@ __SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o){
 
 
 
-__SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
+__SLL_FUNC void sll_release_object(sll_runtime_object_t* restrict o){
 	if (o->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		SLL_RELEASE(o->dt.s);
 	}

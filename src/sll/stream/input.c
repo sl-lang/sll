@@ -5,7 +5,7 @@
 
 
 
-sll_read_char_t _input_data_stream_file_read(sll_input_data_stream_t* is){
+sll_read_char_t _input_data_stream_file_read(sll_input_data_stream_t* restrict is){
 	int o=fgetc((FILE*)(is->ctx));
 	if (o==EOF){
 		return SLL_END_OF_DATA;
@@ -20,13 +20,13 @@ sll_read_char_t _input_data_stream_file_read(sll_input_data_stream_t* is){
 
 
 
-sll_read_char_t _input_data_stream_file_read_buffer(sll_input_data_stream_t* is,sll_buffer_t bf,sll_buffer_size_t sz){
+sll_read_char_t _input_data_stream_file_read_buffer(sll_input_data_stream_t* restrict is,sll_buffer_t restrict bf,sll_buffer_size_t sz){
 	return (fread(bf,sizeof(uint8_t),sz,(FILE*)(is->ctx))==sz?0:SLL_END_OF_DATA);
 }
 
 
 
-void _input_data_stream_file_restart_line(sll_input_data_stream_t* is,sll_file_offset_t lp){
+void _input_data_stream_file_restart_line(sll_input_data_stream_t* restrict is,sll_file_offset_t lp){
 	FILE* f=(FILE*)(is->ctx);
 	fseek(f,lp,SEEK_SET);
 	int c=fgetc(f);
@@ -46,7 +46,7 @@ void _input_data_stream_file_restart_line(sll_input_data_stream_t* is,sll_file_o
 
 
 
-sll_read_char_t _input_data_stream_buffer_read(sll_input_data_stream_t* is){
+sll_read_char_t _input_data_stream_buffer_read(sll_input_data_stream_t* restrict is){
 	sll_input_buffer_t* bf=(sll_input_buffer_t*)(is->ctx);
 	if (is->_off>=bf->sz){
 		return SLL_END_OF_DATA;
@@ -62,7 +62,7 @@ sll_read_char_t _input_data_stream_buffer_read(sll_input_data_stream_t* is){
 
 
 
-sll_read_char_t _input_data_stream_buffer_read_buffer(sll_input_data_stream_t* is,sll_buffer_t bf,sll_buffer_size_t sz){
+sll_read_char_t _input_data_stream_buffer_read_buffer(sll_input_data_stream_t* restrict is,sll_buffer_t restrict bf,sll_buffer_size_t sz){
 	sll_input_buffer_t* is_bf=(sll_input_buffer_t*)(is->ctx);
 	if (is->_off+sz>=is_bf->sz){
 		return SLL_END_OF_DATA;
@@ -76,7 +76,7 @@ sll_read_char_t _input_data_stream_buffer_read_buffer(sll_input_data_stream_t* i
 
 
 
-void _input_data_stream_buffer_restart_line(sll_input_data_stream_t* is,sll_file_offset_t lp){
+void _input_data_stream_buffer_restart_line(sll_input_data_stream_t* restrict is,sll_file_offset_t lp){
 	sll_input_buffer_t* bf=(sll_input_buffer_t*)(is->ctx);
 	while (lp&&*(bf->bf+lp)!='\n'&&*(bf->bf+lp)!='\r'){
 		lp--;
@@ -89,7 +89,7 @@ void _input_data_stream_buffer_restart_line(sll_input_data_stream_t* is,sll_file
 
 
 
-__SLL_FUNC void sll_stream_create_input_from_file(FILE* f,sll_input_data_stream_t* o){
+__SLL_FUNC void sll_stream_create_input_from_file(FILE* restrict f,sll_input_data_stream_t* restrict o){
 	fseek(f,0,SEEK_SET);
 	clearerr(f);
 	o->ctx=f;
@@ -103,7 +103,7 @@ __SLL_FUNC void sll_stream_create_input_from_file(FILE* f,sll_input_data_stream_
 
 
 
-__SLL_FUNC void sll_stream_create_input_from_buffer(sll_input_buffer_t* bf,sll_input_data_stream_t* o){
+__SLL_FUNC void sll_stream_create_input_from_buffer(sll_input_buffer_t* restrict bf,sll_input_data_stream_t* restrict o){
 	o->ctx=bf;
 	o->rf=_input_data_stream_buffer_read;
 	o->rbf=_input_data_stream_buffer_read_buffer;

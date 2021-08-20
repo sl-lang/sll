@@ -57,7 +57,7 @@
 
 
 
-__SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,const sll_internal_function_table_t* i_ft,sll_input_data_stream_t* in,sll_output_data_stream_t* out,sll_error_t* e){
+__SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* restrict a_dt,const sll_stack_data_t* restrict st,const sll_internal_function_table_t* restrict i_ft,sll_input_data_stream_t* restrict in,sll_output_data_stream_t* restrict out,sll_error_t* restrict e){
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	sll_runtime_object_t* v=(sll_runtime_object_t*)(st->ptr);
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
@@ -349,7 +349,7 @@ _print_from_stack:;
 					if (i<i_ft->l){
 						si-=ai->dt.ac;
 						sll_runtime_object_t n={0};
-						(*(i_ft->dt+i))->p(&n,ai->dt.ac,s+si);
+						(*(i_ft->dt+i))->p(s+si,ai->dt.ac,&n);
 						for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
 							sll_release_object(s+si+j);
 						}
@@ -387,7 +387,7 @@ _print_from_stack:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<i_ft->l){
-						(*(i_ft->dt+i))->p(s+si,0,NULL);
+						(*(i_ft->dt+i))->p(NULL,0,s+si);
 						si++;
 						break;
 					}
@@ -410,7 +410,7 @@ _print_from_stack:;
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<i_ft->l){
 						sll_runtime_object_t n={0};
-						(*(i_ft->dt+i))->p(&n,1,s+si-1);
+						(*(i_ft->dt+i))->p(s+si-1,1,&n);
 						sll_release_object(s+si-1);
 						*(s+si-1)=n;
 						break;

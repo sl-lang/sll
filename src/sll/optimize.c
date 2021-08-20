@@ -51,7 +51,7 @@ void _remove_up_to_end(sll_object_t* o,sll_object_offset_t off){
 
 
 
-sll_string_index_t _create_print_string(optimizer_data_t* o_dt,const sll_char_t* a,const sll_char_t* b,sll_string_length_t al,sll_string_length_t bl,sll_string_checksum_t c){
+sll_string_index_t _create_print_string(optimizer_data_t* restrict o_dt,const sll_char_t* restrict a,const sll_char_t* restrict b,sll_string_length_t al,sll_string_length_t bl,sll_string_checksum_t c){
 	for (sll_string_index_t i=0;i<o_dt->c_dt->st.l;i++){
 		sll_string_t* s=*(o_dt->c_dt->st.dt+i);
 		if (s->c==c&&s->l==al+bl){
@@ -81,7 +81,7 @@ _check_next_string:;
 
 
 
-sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_compilation_data_t* c_dt,identifier_map_data_t* im){
+sll_object_offset_t _map_identifiers(const sll_object_t* restrict o,const sll_compilation_data_t* restrict c_dt,identifier_map_data_t* restrict im){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -180,7 +180,7 @@ sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_compilation
 
 
 
-void _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,sll_runtime_object_t* v){
+void _get_as_runtime_object(const sll_object_t* restrict o,const optimizer_data_t* restrict o_dt,sll_runtime_object_t* restrict v){
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		o++;
 	}
@@ -225,7 +225,7 @@ void _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,s
 
 
 
-sll_object_offset_t _mark_loop_vars(const sll_object_t* o,optimizer_data_t* o_dt){
+sll_object_offset_t _mark_loop_vars(const sll_object_t* restrict o,optimizer_data_t* restrict o_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -304,7 +304,7 @@ sll_object_offset_t _mark_loop_vars(const sll_object_t* o,optimizer_data_t* o_dt
 
 
 
-uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_t lv){
+uint8_t _get_cond_type(sll_object_t* restrict o,optimizer_data_t* restrict o_dt,uint8_t inv,uint8_t lv){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -392,7 +392,7 @@ uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 
 
 
-sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt,uint8_t fl){
+sll_object_offset_t _optimize(sll_object_t* restrict o,sll_object_t* restrict p,optimizer_data_t* restrict o_dt,uint8_t fl){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -919,7 +919,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 
 
 
-sll_object_offset_t _remap_vars(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt){
+sll_object_offset_t _remap_vars(sll_object_t* restrict o,sll_object_t* restrict p,optimizer_data_t* restrict o_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -1019,7 +1019,7 @@ sll_object_offset_t _remap_vars(sll_object_t* o,sll_object_t* p,optimizer_data_t
 
 
 
-__SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_object_t* o){
+__SLL_FUNC void sll_optimize_object(sll_compilation_data_t* restrict c_dt,sll_object_t* restrict o){
 	optimizer_data_t o_dt={
 		c_dt,
 		{

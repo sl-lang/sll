@@ -8,7 +8,7 @@
 
 
 
-sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
+sll_object_offset_t _mark_strings(sll_object_t* restrict o,uint64_t* restrict m){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;
@@ -60,7 +60,7 @@ sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
 
 
 
-sll_object_offset_t _update_strings(sll_object_t* o,sll_string_index_t* sm){
+sll_object_offset_t _update_strings(sll_object_t* restrict o,sll_string_index_t* restrict sm){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;
@@ -112,7 +112,7 @@ sll_object_offset_t _update_strings(sll_object_t* o,sll_string_index_t* sm){
 
 
 
-__SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
+__SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* restrict c_dt){
 	uint32_t ml=(c_dt->st.l>>6)+1;
 	uint64_t* m=malloc(ml*sizeof(uint64_t));
 	for (uint32_t i=0;i<ml;i++){

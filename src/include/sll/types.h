@@ -183,9 +183,9 @@ typedef const uint8_t* sll_const_buffer_t;
 
 typedef struct __SLL_INPUT_DATA_SOURCE{
 	void* ctx;
-	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_SOURCE* is);
-	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_buffer_t bf,sll_buffer_size_t sz);
-	void (*rlf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_file_offset_t lp);
+	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_SOURCE* restrict is);
+	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* restrict is,sll_buffer_t restrict bf,sll_buffer_size_t sz);
+	void (*rlf)(struct __SLL_INPUT_DATA_SOURCE* restrict is,sll_file_offset_t lp);
 	sll_line_number_t _lc;
 	sll_file_offset_t _off;
 	sll_file_offset_t _loff;
@@ -195,9 +195,9 @@ typedef struct __SLL_INPUT_DATA_SOURCE{
 
 typedef struct __SLL_OUTPUT_DATA_STREAM{
 	void* ctx;
-	void (*wcf)(struct __SLL_OUTPUT_DATA_STREAM* os,char c);
-	void (*wsf)(struct __SLL_OUTPUT_DATA_STREAM* os,const char* s);
-	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* os,sll_const_buffer_t bf,sll_buffer_size_t sz);
+	void (*wcf)(struct __SLL_OUTPUT_DATA_STREAM* restrict os,char c);
+	void (*wsf)(struct __SLL_OUTPUT_DATA_STREAM* restrict os,const char* restrict s);
+	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* restrict os,sll_const_buffer_t restrict bf,sll_buffer_size_t sz);
 } sll_output_data_stream_t;
 
 
@@ -433,11 +433,11 @@ typedef struct __SLL_ERROR{
 
 
 
-typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o,sll_error_t* e);
+typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* restrict s,sll_compilation_data_t* restrict o,sll_error_t* restrict e);
 
 
 
-typedef void (*sll_internal_function_pointer_t)(sll_runtime_object_t* o,sll_arg_count_t ac,sll_runtime_object_t* a);
+typedef void (*sll_internal_function_pointer_t)(const sll_runtime_object_t* restrict a,sll_arg_count_t ac,sll_runtime_object_t* restrict o);
 
 
 

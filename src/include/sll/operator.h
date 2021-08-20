@@ -5,10 +5,10 @@
 
 
 
-#define __SLL_OPERATOR_UNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,sll_runtime_object_t* o)
-#define __SLL_OPERATOR_BINARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,sll_runtime_object_t* o)
-#define __SLL_OPERATOR_TERNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,const sll_runtime_object_t* c,sll_runtime_object_t* o)
-#define __SLL_OPERATOR_QUATERNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,const sll_runtime_object_t* c,const sll_runtime_object_t* d,sll_runtime_object_t* o)
+#define __SLL_OPERATOR_UNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* restrict a,sll_runtime_object_t* restrict o)
+#define __SLL_OPERATOR_BINARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* restrict a,const sll_runtime_object_t* restrict b,sll_runtime_object_t* restrict o)
+#define __SLL_OPERATOR_TERNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* restrict a,const sll_runtime_object_t* restrict b,const sll_runtime_object_t* restrict c,sll_runtime_object_t* restrict o)
+#define __SLL_OPERATOR_QUATERNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* restrict a,const sll_runtime_object_t* restrict b,const sll_runtime_object_t* restrict c,const sll_runtime_object_t* restrict d,sll_runtime_object_t* restrict o)
 
 
 

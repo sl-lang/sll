@@ -82,7 +82,7 @@ typedef struct __JSON_MAP_KEYPAIR{
 
 
 
-typedef void (*file_callback_t)(const char* fp,test_result_t* o);
+typedef void (*file_callback_t)(const char* restrict fp,test_result_t* restrict o);
 
 
 

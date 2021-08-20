@@ -11,11 +11,11 @@
 
 
 
-__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o);
+__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* restrict o);
 
 
 
-__SLL_FUNC void sll_release_object(sll_runtime_object_t* o);
+__SLL_FUNC void sll_release_object(sll_runtime_object_t* restrict o);
 
 
 

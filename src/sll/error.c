@@ -8,7 +8,7 @@
 
 
 
-__SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e){
+__SLL_FUNC void sll_print_error(sll_input_data_stream_t* restrict is,const sll_error_t* restrict e){
 	if (e->t==SLL_ERROR_UNKNOWN||e->t>SLL_MAX_COMPILATION_ERROR){
 		switch (e->t){
 			default:

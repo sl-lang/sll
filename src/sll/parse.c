@@ -14,7 +14,7 @@
 
 
 
-sll_object_offset_t _patch_module(sll_object_t* mo,const import_module_data_t* im_dt){
+sll_object_offset_t _patch_module(sll_object_t* restrict mo,const import_module_data_t* restrict im_dt){
 	sll_object_offset_t eoff=0;
 	sll_object_t* o=im_dt->d+(mo-im_dt->s);
 	while (mo->t==SLL_OBJECT_TYPE_NOP){
@@ -79,7 +79,7 @@ sll_object_offset_t _patch_module(sll_object_t* mo,const import_module_data_t* i
 
 
 
-uint8_t _read_single_char(sll_input_data_stream_t* is,sll_file_offset_t st,sll_error_t* e,sll_char_t* o){
+uint8_t _read_single_char(sll_input_data_stream_t* restrict is,sll_file_offset_t st,sll_error_t* restrict e,sll_char_t* restrict o){
 	sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==SLL_END_OF_DATA){
 		e->t=SLL_ERROR_UNMATCHED_QUOTES;
@@ -187,7 +187,7 @@ uint8_t _read_single_char(sll_input_data_stream_t* is,sll_file_offset_t st,sll_e
 
 
 
-uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,const extra_compilation_data_t* e_c_dt,sll_error_t* e){
+uint8_t _read_object_internal(sll_compilation_data_t* restrict c_dt,sll_read_char_t c,const extra_compilation_data_t* restrict e_c_dt,sll_error_t* restrict e){
 	uint8_t fl=e_c_dt->fl;
 	const scope_data_t* l_sc=&(e_c_dt->sc);
 	scope_data_t n_l_sc={
@@ -1471,7 +1471,7 @@ _skip_export:;
 
 
 
-__SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o){
+__SLL_FUNC void sll_init_compilation_data(const sll_char_t* restrict fp,sll_input_data_stream_t* restrict is,sll_compilation_data_t* restrict o){
 	o->is=is;
 	o->tm=sll_platform_get_current_time();
 	o->h=NULL;
@@ -1497,7 +1497,7 @@ __SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_st
 
 
 
-__SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e,sll_object_t** o){
+__SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* restrict c_dt,sll_internal_function_table_t* restrict i_ft,sll_import_loader_t il,sll_error_t* restrict e,sll_object_t** restrict o){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -1532,7 +1532,7 @@ __SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* c_dt,sll_intern
 
 
 
-__SLL_FUNC __SLL_RETURN sll_parse_all_objects(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e){
+__SLL_FUNC __SLL_RETURN sll_parse_all_objects(sll_compilation_data_t* restrict c_dt,sll_internal_function_table_t* restrict i_ft,sll_import_loader_t il,sll_error_t* restrict e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

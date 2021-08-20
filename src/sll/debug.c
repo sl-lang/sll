@@ -4,7 +4,7 @@
 
 
 
-sll_object_offset_t _remove_debug_data_internal(sll_object_t* o){
+sll_object_offset_t _remove_debug_data_internal(sll_object_t* restrict o){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;
@@ -54,7 +54,7 @@ sll_object_offset_t _remove_debug_data_internal(sll_object_t* o){
 
 
 
-__SLL_FUNC __SLL_RETURN sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_error_t* e){
+__SLL_FUNC __SLL_RETURN sll_insert_debug_object(sll_compilation_data_t* restrict c_dt,sll_input_data_stream_t* restrict is,sll_error_t* restrict e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -77,6 +77,6 @@ __SLL_FUNC __SLL_RETURN sll_insert_debug_object(sll_compilation_data_t* c_dt,sll
 
 
 
-__SLL_FUNC void sll_remove_object_debug_data(sll_object_t* o){
+__SLL_FUNC void sll_remove_object_debug_data(sll_object_t* restrict o){
 	_remove_debug_data_internal(o);
 }

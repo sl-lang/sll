@@ -44,15 +44,15 @@
 	} while(0)
 
 
-sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt);
+sll_object_offset_t _generate_on_stack(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt);
 
 
 
-sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g_dt);
+sll_object_offset_t _generate(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt);
 
 
 
-sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compilation_data_t* c_dt,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
+sll_object_offset_t _map_identifiers_extra(const sll_object_t* restrict o,const sll_compilation_data_t* restrict c_dt,assembly_generator_data_t* restrict g_dt,sll_scope_t fn_sc){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -167,7 +167,7 @@ sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compi
 
 
 
-sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* ai,sll_instruction_index_t i){
+sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* restrict ai,sll_instruction_index_t i){
 	do{
 		if (!i){
 			SLL_UNREACHABLE();
@@ -181,7 +181,7 @@ sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t
 
 
 
-sll_object_offset_t _generate_sequential_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,sll_assembly_instruction_type_t t,uint8_t st){
+sll_object_offset_t _generate_sequential_jump(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt,sll_assembly_instruction_type_t t,uint8_t st){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	if (l==1){
@@ -215,7 +215,7 @@ sll_object_offset_t _generate_sequential_jump(const sll_object_t* o,assembly_gen
 
 
 
-sll_object_offset_t _generate_cond_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,sll_assembly_instruction_type_t t){
+sll_object_offset_t _generate_cond_jump(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt,assembly_instruction_label_t lbl,sll_assembly_instruction_type_t t){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	if (l==1){
@@ -237,7 +237,7 @@ sll_object_offset_t _generate_cond_jump(const sll_object_t* o,assembly_generator
 
 
 
-sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,uint8_t inv){
+sll_object_offset_t _generate_jump(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt,assembly_instruction_label_t lbl,uint8_t inv){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -354,7 +354,7 @@ sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data
 
 
 
-sll_object_offset_t _generate_call(const sll_object_t* o,assembly_generator_data_t* g_dt){
+sll_object_offset_t _generate_call(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	sll_object_offset_t off=sll_get_object_size(o+1)+1;
@@ -372,7 +372,7 @@ sll_object_offset_t _generate_call(const sll_object_t* o,assembly_generator_data
 
 
 
-sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt){
+sll_object_offset_t _generate_on_stack(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -582,7 +582,7 @@ sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_
 
 
 
-sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_generator_data_t* g_dt,uint64_t* v_st,sll_scope_t sc){
+sll_object_offset_t _mark_loop_delete(const sll_object_t* restrict o,const assembly_generator_data_t* restrict g_dt,uint64_t* restrict v_st,sll_scope_t sc){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -650,7 +650,7 @@ sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_gener
 
 
 
-sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g_dt){
+sll_object_offset_t _generate(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -915,7 +915,7 @@ sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g
 
 
 
-__SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e){
+__SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* restrict c_dt,sll_assembly_data_t* restrict o,sll_error_t* restrict e){
 	if (!o->_s.ptr||!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

@@ -19,7 +19,7 @@
 
 
 
-void _print_int(int64_t v,sll_output_data_stream_t* os){
+void _print_int(int64_t v,sll_output_data_stream_t* restrict os){
 	if (!v){
 		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'0');
 		return;
@@ -43,7 +43,7 @@ void _print_int(int64_t v,sll_output_data_stream_t* os){
 
 
 
-void _print_float(double v,sll_output_data_stream_t* os){
+void _print_float(double v,sll_output_data_stream_t* restrict os){
 	char bf[128];
 	int sz=snprintf(bf,128,"%.16lg",v);
 	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)bf,sz*sizeof(char));
@@ -51,7 +51,7 @@ void _print_float(double v,sll_output_data_stream_t* os){
 
 
 
-sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,const sll_object_t* o,sll_output_data_stream_t* os){
+sll_object_offset_t _print_object_internal(const sll_compilation_data_t* restrict c_dt,const sll_object_t* restrict o,sll_output_data_stream_t* restrict os){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;
@@ -362,7 +362,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 
 
 
-__SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_data_stream_t* os){
+__SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* restrict a_dt,sll_output_data_stream_t* restrict os){
 	sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
 		if (i){
@@ -768,6 +768,6 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 
 
 
-__SLL_FUNC void sll_print_object(const sll_compilation_data_t* c_dt,const sll_object_t* o,sll_output_data_stream_t* os){
+__SLL_FUNC void sll_print_object(const sll_compilation_data_t* restrict c_dt,const sll_object_t* restrict o,sll_output_data_stream_t* restrict os){
 	_print_object_internal(c_dt,o,os);
 }

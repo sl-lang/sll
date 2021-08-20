@@ -100,11 +100,11 @@ DWORD cm;
 
 
 
-uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp);
+uint8_t load_file(const char* restrict f_nm,sll_assembly_data_t* restrict a_dt,sll_compilation_data_t* restrict c_dt,FILE** restrict f,sll_input_data_stream_t* restrict is,char* restrict f_fp);
 
 
 
-uint8_t cmp_str(const char* a,const char* b){
+uint8_t cmp_str(const char* restrict a,const char* restrict b){
 	while (1){
 		if (*a!=*b){
 			return 0;
@@ -119,7 +119,7 @@ uint8_t cmp_str(const char* a,const char* b){
 
 
 
-void print_str(const char* s){
+void print_str(const char* restrict s){
 	while (*s){
 		putchar(*s);
 		s++;
@@ -152,7 +152,7 @@ void print_int(int64_t v){
 
 
 
-sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
+sll_return_t load_import(const sll_string_t* restrict nm,sll_compilation_data_t* restrict o,sll_error_t* restrict e){
 	char bf[MAX_PATH_LENGTH];
 	for (sll_string_length_t m=0;m<nm->l;m++){
 		bf[m]=nm->v[m];
@@ -191,7 +191,7 @@ sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_er
 
 
 
-uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp){
+uint8_t load_file(const char* restrict f_nm,sll_assembly_data_t* restrict a_dt,sll_compilation_data_t* restrict c_dt,FILE** restrict f,sll_input_data_stream_t* restrict is,char* restrict f_fp){
 	char bf[MAX_PATH_LENGTH];
 	uint32_t j=0;
 	for (uint32_t i=0;i<i_fpl;i++){
@@ -480,7 +480,7 @@ _check_next_module:;
 
 
 
-uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
+uint8_t write_assembly(char* restrict o_fp,const sll_assembly_data_t* restrict a_dt){
 	uint16_t i=0;
 	while (*(o_fp+i)){
 		i++;
@@ -516,7 +516,7 @@ uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 
 
 
-uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
+uint8_t write_compiled(char* restrict o_fp,const sll_compilation_data_t* restrict c_dt){
 	uint16_t i=0;
 	while (*(o_fp+i)){
 		i++;

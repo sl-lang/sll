@@ -9,7 +9,7 @@
 
 
 
-sll_string_length_t _object_to_string(sll_runtime_object_t* a,sll_string_t* o,sll_string_index_t i){
+sll_string_length_t _object_to_string(const sll_runtime_object_t* restrict a,sll_string_t* restrict o,sll_string_index_t i){
 	switch (a->t){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			{
@@ -76,7 +76,7 @@ sll_string_length_t _object_to_string(sll_runtime_object_t* a,sll_string_t* o,sl
 
 
 
-__SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_array_length_t al){
+__SLL_FUNC sll_string_t* sll_object_to_string(const sll_runtime_object_t* restrict a,sll_array_length_t al){
 	if (!al){
 		SLL_ACQUIRE(&_zero_string);
 		return &_zero_string;
@@ -97,7 +97,7 @@ __SLL_FUNC sll_string_t* sll_object_to_string(sll_runtime_object_t* a,sll_array_
 
 
 
-__SLL_FUNC sll_string_length_t sll_object_to_string_length(sll_runtime_object_t* a,sll_array_length_t al){
+__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t* restrict a,sll_array_length_t al){
 	sll_string_length_t o=0;
 	for (sll_array_length_t i=0;i<al;i++){
 		switch ((a+i)->t){

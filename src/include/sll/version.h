@@ -5,7 +5,7 @@
 
 #define SLL_VERSION_MAJOR 0
 #define SLL_VERSION_MINOR 6
-#define SLL_VERSION_PATCH 13
+#define SLL_VERSION_PATCH 14
 #ifdef __SLL_STATIC__
 #define SLL_VERSION_TYPE "-standalone"
 #else

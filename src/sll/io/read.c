@@ -35,7 +35,7 @@
 
 
 
-uint64_t _read_integer(sll_input_data_stream_t* is,uint8_t* e){
+uint64_t _read_integer(sll_input_data_stream_t* restrict is,uint8_t* restrict e){
 	sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==SLL_END_OF_DATA){
 		*e=1;
@@ -57,7 +57,7 @@ uint64_t _read_integer(sll_input_data_stream_t* is,uint8_t* e){
 
 
 
-int64_t _read_signed_integer(sll_input_data_stream_t* is,uint8_t* e){
+int64_t _read_signed_integer(sll_input_data_stream_t* restrict is,uint8_t* restrict e){
 	uint64_t v=_read_integer(is,e);
 	if (*e){
 		return 0;
@@ -67,7 +67,7 @@ int64_t _read_signed_integer(sll_input_data_stream_t* is,uint8_t* e){
 
 
 
-uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
+uint8_t _read_object(sll_compilation_data_t* restrict c_dt,sll_input_data_stream_t* restrict is){
 	sll_object_t* o=(sll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
 	c_dt->_s.off+=sizeof(sll_object_t);
 	READ_FIELD(o->t,is);
@@ -152,7 +152,7 @@ uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assembly_data_t* a_dt,sll_error_t* e){
+__SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* restrict is,sll_assembly_data_t* restrict a_dt,sll_error_t* restrict e){
 	if (!a_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -303,7 +303,7 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll_compilation_data_t* c_dt,sll_error_t* e){
+__SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* restrict is,sll_compilation_data_t* restrict c_dt,sll_error_t* restrict e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -377,7 +377,7 @@ __SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_object_t** o,sll_error_t* e){
+__SLL_FUNC __SLL_RETURN sll_load_object(sll_compilation_data_t* restrict c_dt,sll_input_data_stream_t* restrict is,sll_object_t** restrict o,sll_error_t* restrict e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

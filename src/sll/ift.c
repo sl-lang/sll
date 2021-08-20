@@ -10,14 +10,14 @@ INTERNAL_FUNCTION_SETUP
 
 
 
-__SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t* o){
+__SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t* restrict o){
 	o->dt=NULL;
 	o->l=0;
 }
 
 
 
-__SLL_FUNC __SLL_RETURN_FUNCTION_INDEX sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const char* nm){
+__SLL_FUNC __SLL_RETURN_FUNCTION_INDEX sll_lookup_internal_function(const sll_internal_function_table_t* restrict i_ft,const char* restrict nm){
 	uint8_t l=0;
 	sll_string_checksum_t c=0;
 	while (*(nm+l)){
@@ -41,7 +41,7 @@ _check_next:;
 
 
 
-__SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const char* nm,sll_internal_function_pointer_t f){
+__SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* restrict i_ft,const char* restrict nm,sll_internal_function_pointer_t f){
 	i_ft->l++;
 	i_ft->dt=realloc(i_ft->dt,i_ft->l*sizeof(sll_internal_function_t*));
 	sll_internal_function_t* i_f=malloc(sizeof(sll_internal_function_t));
@@ -59,7 +59,7 @@ __SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_func
 
 
 
-__SLL_FUNC void sll_register_standard_internal_functions(sll_internal_function_table_t* i_ft){
+__SLL_FUNC void sll_register_standard_internal_functions(sll_internal_function_table_t* restrict i_ft){
 	const internal_function_t** f=&__ifunc_start;
 	while (f<&__ifunc_end){
 		if (*f){

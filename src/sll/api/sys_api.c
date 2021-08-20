@@ -34,7 +34,7 @@ __SLL_FUNC void sll_set_argument_count(sll_sys_arg_count_t ac){
 
 
 
-__SLL_FUNC void sll_set_argument(sll_sys_arg_count_t i,const char* a){
+__SLL_FUNC void sll_set_argument(sll_sys_arg_count_t i,const char* restrict a){
 	if (i>=_sys_argc){
 		return;
 	}
