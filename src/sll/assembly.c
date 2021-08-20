@@ -181,36 +181,6 @@ sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t
 
 
 
-sll_string_index_t _create_print_string(sll_assembly_data_t* a_dt,const sll_char_t* a,const sll_char_t* b,sll_string_length_t al,sll_string_length_t bl,sll_string_checksum_t c){
-	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		sll_string_t* s=*(a_dt->st.dt+i);
-		if (s->c==c&&s->l==al+bl){
-			for (sll_string_length_t j=0;j<al;j++){
-				if (*(a+j)!=s->v[j]){
-					goto _check_next_string;
-				}
-			}
-			for (sll_string_length_t j=0;j<bl;j++){
-				if (*(b+j)!=s->v[j+al]){
-					goto _check_next_string;
-				}
-			}
-			return i;
-		}
-_check_next_string:;
-	}
-	a_dt->st.l++;
-	a_dt->st.dt=realloc(a_dt->st.dt,a_dt->st.l*sizeof(sll_string_t*));
-	sll_string_t* s=sll_string_create(al+bl);
-	s->c=c;
-	memcpy(s->v,a,al);
-	memcpy(s->v+al,b,bl);
-	*(a_dt->st.dt+a_dt->st.l-1)=s;
-	return a_dt->st.l-1;
-}
-
-
-
 sll_object_offset_t _generate_sequential_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,sll_assembly_instruction_type_t t,uint8_t st){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
