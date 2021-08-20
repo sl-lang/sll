@@ -372,10 +372,28 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 		case SLL_OBJECT_TYPE_UNKNOWN:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_STRING:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 			if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+				DECREASE_PARENT(p);
+				o->t=SLL_OBJECT_TYPE_NOP;
+			}
+			return eoff+1;
+		case SLL_OBJECT_TYPE_STRING:
+			if (fl&OPTIMIZER_FLAG_ARGUMENT){
+				if (p&&p->t==SLL_OBJECT_TYPE_PRINT){
+					sll_string_t* s=*(o_dt->c_dt->st.dt+o->dt.s);
+					if (!s->l){
+						DECREASE_PARENT(p);
+						o->t=SLL_OBJECT_TYPE_NOP;
+					}
+					else if (s->l==1){
+						o->t=SLL_OBJECT_TYPE_CHAR;
+						o->dt.c=s->v[0];
+					}
+				}
+			}
+			else{
 				DECREASE_PARENT(p);
 				o->t=SLL_OBJECT_TYPE_NOP;
 			}
