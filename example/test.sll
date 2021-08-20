@@ -1,4 +1,4 @@
-(# time INVALID_FILE_HANDLE open close write platform argc argv get_ref_count)
+(# time sleep INVALID_FILE_HANDLE open close write platform argc argv get_ref_count)
 (? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -54,10 +54,10 @@
 (:> "Array: " x " (RC: " (<- get_ref_count x) ")\n")
 (:> (<- get_ref_count x) ", " (<- get_ref_count y) "\n")
 (= st (<- time))
-(-> (= j 0) (< j 10000) (= j (+ j 1)))
+(= tm (<- sleep 1))
 (= et (<- time))
+(:> "Delta Time: " (- et st) "s (" tm "s)\n")
 (= z z z z z z z z z)
-(:> "Delta Time: " (- et st) "s\n")
 (= factorial (,,, n (? (< n 3) (@@ n) (@@ (* n (<- factorial (- n 1)))))))
 (:> "Recursive Factorial: 10! = " (<- factorial 10) "\n")
 (= arr [1 2 3 4 5 6 7 8 9 10])

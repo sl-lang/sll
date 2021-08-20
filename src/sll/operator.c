@@ -87,7 +87,9 @@ __SLL_OPERATOR_BINARY(add){
 			o->dt.i=a->dt.i+b->dt.i;
 			return;
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
+			o->dt.f=a->dt.i+b->dt.f;
+			return;
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -95,9 +97,13 @@ __SLL_OPERATOR_BINARY(add){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
+			o->dt.f=a->dt.f+b->dt.i;
+			return;
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
+			o->dt.f=a->dt.f+b->dt.f;
+			return;
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:

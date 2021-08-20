@@ -1,3 +1,7 @@
 (= time (... "time_current"))
 (= time_nanos (... "time_current_nanos"))
-(## time time_nanos)
+
+(= sleep (... "time_sleep"))
+(= sleep_nanos (... "time_sleep_nanos"))
+
+(## time time_nanos sleep sleep_nanos)

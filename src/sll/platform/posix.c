@@ -58,3 +58,25 @@ __SLL_FUNC sll_bool_t sll_platform_path_is_directory(const char* fp){
 	}
 	return o;
 }
+
+
+
+__SLL_FUNC void sll_platform_sleep(sll_time_t tm){
+	struct timespec ts;
+	clock_gettime(CLOCK_REALTIME,&ts);
+	sll_time_t e=ts.tv_sec*1000000000+ts.tv_nsec+tm;
+	while (1){
+		struct timeval tv;
+		tv.tv_sec=tm/1000000000;
+		tv.tv_usec=(tm/1000)%1000000;
+		if (!select(0,NULL,NULL,NULL,&tv)){
+			return;
+		}
+		clock_gettime(CLOCK_REALTIME,&ts);
+		sll_time_t c=ts.tv_sec*1000000000+ts.tv_nsec;
+		if (c>=e){
+			break;
+		}
+		tm=c-e;
+	}
+}

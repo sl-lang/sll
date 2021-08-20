@@ -76,6 +76,14 @@ __API_FUNC_DECL(time_current_nanos);
 
 
 
+__API_FUNC_DECL(time_sleep);
+
+
+
+__API_FUNC_DECL(time_sleep_nanos);
+
+
+
 __API_FUNC_DECL(util_ref_count);
 
 
