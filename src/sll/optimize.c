@@ -10,6 +10,7 @@
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 

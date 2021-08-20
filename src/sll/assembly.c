@@ -930,7 +930,7 @@ __SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt
 		sll_string_t* s=*(c_dt->st.dt+i);
 		sll_string_t* d=sll_string_create(s->l);
 		d->c=s->c;
-		memcpy(d->v,s->v,s->l);
+		memcpy(d->v,s->v,s->l*sizeof(sll_char_t));
 		*(o->st.dt+i)=d;
 	}
 	assembly_generator_data_t g_dt={
