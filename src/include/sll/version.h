@@ -7,13 +7,15 @@
 #define SLL_VERSION_MINOR 6
 #define SLL_VERSION_PATCH 14
 #ifdef __SLL_STATIC__
-#define SLL_VERSION_TYPE "-standalone"
-#else
-#define SLL_VERSION_TYPE ""
+#define SLL_VERSION_STANDALONE 1
 #endif
 #ifdef __SHA__
 #define SLL_VERSION_SHA __SHA__
 #define SLL_VERSION_FULL_SHA __FULL_SHA__
+#define SLL_VERSION_HAS_SHA 1
+#else
+#define SLL_VERSION_SHA NULL
+#define SLL_VERSION_FULL_SHA NULL
 #endif
 #define SLL_VERSION_BUILD_TIME __TIME__
 #define SLL_VERSION_BUILD_DATE __DATE__

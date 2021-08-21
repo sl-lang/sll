@@ -63,18 +63,27 @@
 #define FLAG_GENERATE_ASSEMBLY 2
 #define FLAG_GENERATE_COMPILED_OBJECT 4
 #define FLAG_HELP 8
-#define FLAG_NO_LOGO 16
-#define FLAG_NO_RUN 32
-#define FLAG_PRINT_ASSEMBLY 64
-#define FLAG_PRINT_OBJECT 128
-#define FLAG_USE_COLORS 256
-#define FLAG_VERBOSE 512
-#define FLAG_VERSION 1024
-#define _FLAG_ASSEMBLY_GENERATED 2048
+#define FLAG_NO_RUN 16
+#define FLAG_PRINT_ASSEMBLY 32
+#define FLAG_PRINT_OBJECT 64
+#define FLAG_USE_COLORS 128
+#define FLAG_VERBOSE 256
+#define FLAG_VERSION 512
+#define _FLAG_ASSEMBLY_GENERATED 1024
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
 #define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
 #define OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE 3
+#ifdef SLL_VERSION_STANDALONE
+#define STANDALONE_STRING "standalone, "
+#else
+#define STANDALONE_STRING ""
+#endif
+#ifdef SLL_VERSION_HAS_SHA
+#define TYPE_STRING "commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_FULL_SHA"], "
+#else
+#define TYPE_STRING "local, "
+#endif
 
 
 
@@ -806,9 +815,6 @@ _skip_lib_path:
 				*(i_fp+j)=0;
 			}
 		}
-		else if ((*e=='-'&&*(e+1)=='L'&&*(e+2)==0)||cmp_str(e,"--no-logo")){
-			fl|=FLAG_NO_LOGO;
-		}
 		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||cmp_str(e,"--output")){
 			if (o_fp){
 				COLOR_RED;
@@ -894,22 +900,11 @@ _read_file_argument:
 		}
 	}
 	if (fl&FLAG_VERSION){
-#ifdef SLL_VERSION_SHA
-		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" (commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_FULL_SHA"], "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
-#else
-		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" (local, "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
-#endif
+		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)"("STANDALONE_STRING TYPE_STRING SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 		RESET_CONSOLE;
 		return 0;
 	}
 	im_fpl=fpl;
-	if (!(fl&FLAG_NO_LOGO)){
-#ifdef SLL_VERSION_SHA
-		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" (commit/"SLL_VERSION_SHA", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
-#else
-		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)SLL_VERSION_TYPE" (local, "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
-#endif
-	}
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Configuration:\n  Optimization Level:\n");
 		if (ol==OPTIMIZE_LEVEL_NO_OPTIMIZE){
@@ -935,9 +930,6 @@ _read_file_argument:
 		}
 		if (fl&FLAG_HELP){
 			PRINT_STATIC_STR("  Help Print Mode\n");
-		}
-		if (!(fl&FLAG_NO_LOGO)){
-			PRINT_STATIC_STR("  Compiler Logo Mode\n");
 		}
 		if (fl&FLAG_PRINT_ASSEMBLY){
 			PRINT_STATIC_STR("  Assembly Print Mode\n");

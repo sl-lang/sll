@@ -1,3 +1,6 @@
+path_classifiers:
+  test:
+    - exclude: tests
 queries:
   - include: "*"
   - exclude: cpp/complex-condition
