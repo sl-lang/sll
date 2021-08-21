@@ -9,15 +9,12 @@ on:
       - main
 permissions: read-all
 jobs:
-  all:
-    name: OS = ${{matrix.os}}, Args = 'sll${{matrix.args}}'
-    runs-on: ${{matrix.os}}
+  ubuntu:
+    name: OS = Ubuntu, Args = 'sll${{matrix.args}}'
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
         args:
           - ''
           - ' --release'
@@ -31,6 +28,29 @@ jobs:
       with:
         python-version: 3.9
     - name: Build
-      run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}} __ghactions
+      run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}}
+    - name: Test
+      run: build/run_tests
+  windows:
+    name: OS = Windows, Args = 'sll${{matrix.args}}'
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        args:
+          - ''
+          - ' --release'
+          - ' --standalone'
+          - ' --standalone --release'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Build
+      run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}}
+      shell: cmd
     - name: Test
       run: build/run_tests

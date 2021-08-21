@@ -14,6 +14,7 @@
 #include <help_text.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -110,21 +111,6 @@ DWORD cm;
 
 
 uint8_t load_file(const char* restrict f_nm,sll_assembly_data_t* restrict a_dt,sll_compilation_data_t* restrict c_dt,FILE** restrict f,sll_input_data_stream_t* restrict is,char* restrict f_fp);
-
-
-
-uint8_t cmp_str(const char* restrict a,const char* restrict b){
-	while (1){
-		if (*a!=*b){
-			return 0;
-		}
-		if (!(*a)){
-			return 1;
-		}
-		a++;
-		b++;
-	}
-}
 
 
 
@@ -754,36 +740,36 @@ _skip_lib_path:
 	sll_set_argument_count(1);
 	for (int i=1;i<argc;i++){
 		const char* e=argv[i];
-		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||cmp_str(e,"--generate-assembly")){
+		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||!strcmp(e,"--generate-assembly")){
 			fl|=FLAG_GENERATE_ASSEMBLY;
 		}
-		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||cmp_str(e,"--args")){
+		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||!strcmp(e,"--args")){
 			sll_set_argument_count(argc-i);
 			for (sll_sys_arg_count_t j=0;j<(sll_sys_arg_count_t)(argc-i-1);j++){
 				sll_set_argument(j+1,*(argv+i+j+1));
 			}
 			break;
 		}
-		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||cmp_str(e,"--generate-compiled-object")){
+		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||!strcmp(e,"--generate-compiled-object")){
 			fl|=FLAG_GENERATE_COMPILED_OBJECT;
 		}
-		else if ((*e=='-'&&*(e+1)=='C'&&*(e+2)==0)||cmp_str(e,"--use-colors")){
+		else if ((*e=='-'&&*(e+1)=='C'&&*(e+2)==0)||!strcmp(e,"--use-colors")){
 			fl|=FLAG_USE_COLORS;
 		}
-		else if ((*e=='-'&&*(e+1)=='e'&&*(e+2)==0)||cmp_str(e,"--expand-file-paths")){
+		else if ((*e=='-'&&*(e+1)=='e'&&*(e+2)==0)||!strcmp(e,"--expand-file-paths")){
 			fl|=FLAG_EXPAND_PATH;
 		}
-		else if ((*e=='-'&&*(e+1)=='f'&&*(e+2)==0)||cmp_str(e,"--file")){
+		else if ((*e=='-'&&*(e+1)=='f'&&*(e+2)==0)||!strcmp(e,"--file")){
 			i++;
 			if (i==argc){
 				break;
 			}
 			goto _read_file_argument;
 		}
-		else if ((*e=='-'&&*(e+1)=='h'&&*(e+2)==0)||cmp_str(e,"--help")){
+		else if ((*e=='-'&&*(e+1)=='h'&&*(e+2)==0)||!strcmp(e,"--help")){
 			fl|=FLAG_HELP;
 		}
-		else if ((*e=='-'&&*(e+1)=='I'&&*(e+2)==0)||cmp_str(e,"--include")){
+		else if ((*e=='-'&&*(e+1)=='I'&&*(e+2)==0)||!strcmp(e,"--include")){
 			i++;
 			if (i==argc){
 				break;
@@ -815,7 +801,7 @@ _skip_lib_path:
 				*(i_fp+j)=0;
 			}
 		}
-		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||cmp_str(e,"--output")){
+		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||!strcmp(e,"--output")){
 			if (o_fp){
 				COLOR_RED;
 				PRINT_STATIC_STR("Multplie Output Files Supplied\n");
@@ -845,16 +831,16 @@ _skip_lib_path:
 				goto _unkown_switch;
 			}
 		}
-		else if ((*e=='-'&&*(e+1)=='P'&&*(e+2)==0)||cmp_str(e,"--print-assembly")){
+		else if ((*e=='-'&&*(e+1)=='P'&&*(e+2)==0)||!strcmp(e,"--print-assembly")){
 			fl|=FLAG_PRINT_ASSEMBLY;
 		}
-		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||cmp_str(e,"--print-objects")){
+		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||!strcmp(e,"--print-objects")){
 			fl|=FLAG_PRINT_OBJECT;
 		}
-		else if ((*e=='-'&&*(e+1)=='R'&&*(e+2)==0)||cmp_str(e,"--no-run")){
+		else if ((*e=='-'&&*(e+1)=='R'&&*(e+2)==0)||!strcmp(e,"--no-run")){
 			fl|=FLAG_NO_RUN;
 		}
-		else if ((*e=='-'&&*(e+1)=='s'&&*(e+2)==0)||cmp_str(e,"--source")){
+		else if ((*e=='-'&&*(e+1)=='s'&&*(e+2)==0)||!strcmp(e,"--source")){
 			i++;
 			if (i==argc){
 				break;
@@ -870,10 +856,10 @@ _skip_lib_path:
 			sl=tmp;
 			*(sl+sll-1)=(char*)argv[i];
 		}
-		else if ((*e=='-'&&*(e+1)=='v'&&*(e+2)==0)||cmp_str(e,"--verbose")){
+		else if ((*e=='-'&&*(e+1)=='v'&&*(e+2)==0)||!strcmp(e,"--verbose")){
 			fl|=FLAG_VERBOSE;
 		}
-		else if ((*e=='-'&&*(e+1)=='V'&&*(e+2)==0)||cmp_str(e,"--version")){
+		else if ((*e=='-'&&*(e+1)=='V'&&*(e+2)==0)||!strcmp(e,"--version")){
 			fl|=FLAG_VERSION;
 		}
 		else if (*e=='-'){
