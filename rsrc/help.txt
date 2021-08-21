@@ -17,5 +17,6 @@ Options:
   -P, --print-assembly -> Print assembly
   -p, --print-objects -> Print objects
   -R, --no-run -> Disable program execution mode
+  -s <code>, --source <code> -> Treat <code> as an input file
   -v, --verbose -> Enable verbose mode
   -V, --version -> Print SLL version and exit
