@@ -1016,13 +1016,12 @@ _read_file_argument:
 		char f_fp[MAX_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		sll_input_buffer_t i_bf={
-			*(sl+j),
+			(sll_buffer_t)(*(sl+j)),
 			0
 		};
 		while (*(i_bf.bf+i_bf.sz)){
 			i_bf.sz++;
 		}
-		/**********/
 		sll_stream_create_input_from_buffer(&i_bf,&is);
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Load Input as Assembly...\n");
@@ -1082,7 +1081,6 @@ _read_file_argument:
 		else if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Input Successfully Read.\n");
 		}
-		/**********/
 		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
 			goto _error;
 		}
