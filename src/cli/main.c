@@ -110,11 +110,11 @@ DWORD cm;
 
 
 
-uint8_t load_file(const char* restrict f_nm,sll_assembly_data_t* restrict a_dt,sll_compilation_data_t* restrict c_dt,FILE** restrict f,sll_input_data_stream_t* restrict is,char* restrict f_fp);
+uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp);
 
 
 
-void print_str(const char* restrict s){
+void print_str(const char* s){
 	while (*s){
 		putchar(*s);
 		s++;
@@ -147,7 +147,7 @@ void print_int(int64_t v){
 
 
 
-sll_return_t load_import(const sll_string_t* restrict nm,sll_compilation_data_t* restrict o,sll_error_t* restrict e){
+sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
 	char bf[MAX_PATH_LENGTH];
 	for (sll_string_length_t m=0;m<nm->l;m++){
 		bf[m]=nm->v[m];
@@ -186,7 +186,7 @@ sll_return_t load_import(const sll_string_t* restrict nm,sll_compilation_data_t*
 
 
 
-uint8_t load_file(const char* restrict f_nm,sll_assembly_data_t* restrict a_dt,sll_compilation_data_t* restrict c_dt,FILE** restrict f,sll_input_data_stream_t* restrict is,char* restrict f_fp){
+uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp){
 	char bf[MAX_PATH_LENGTH];
 	uint32_t j=0;
 	for (uint32_t i=0;i<i_fpl;i++){
@@ -475,7 +475,7 @@ _check_next_module:;
 
 
 
-uint8_t write_assembly(char* restrict o_fp,const sll_assembly_data_t* restrict a_dt){
+uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 	uint16_t i=0;
 	while (*(o_fp+i)){
 		i++;
@@ -511,7 +511,7 @@ uint8_t write_assembly(char* restrict o_fp,const sll_assembly_data_t* restrict a
 
 
 
-uint8_t write_compiled(char* restrict o_fp,const sll_compilation_data_t* restrict c_dt){
+uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
 	uint16_t i=0;
 	while (*(o_fp+i)){
 		i++;
@@ -547,7 +547,7 @@ uint8_t write_compiled(char* restrict o_fp,const sll_compilation_data_t* restric
 
 
 
-uint8_t execute(const char* restrict f_fp,sll_compilation_data_t* restrict c_dt,sll_assembly_data_t* restrict a_dt,sll_input_data_stream_t* restrict is,const char* restrict o_fp,int* restrict ec){
+uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_input_data_stream_t* is,const char* o_fp,int* ec){
 	if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
 		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
 			if (fl&FLAG_VERBOSE){
@@ -745,7 +745,7 @@ _skip_lib_path:
 		}
 		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||!strcmp(e,"--args")){
 			sll_set_argument_count(argc-i);
-			for (sll_sys_arg_count_t j=0;j<(sll_sys_arg_count_t)(argc-i-1);j++){
+			for (sll_integer_t j=0;j<(sll_integer_t)(argc-i-1);j++){
 				sll_set_argument(j+1,*(argv+i+j+1));
 			}
 			break;

@@ -5,8 +5,7 @@
 
 
 
-#define __API_FUNC(nm) INTERNAL_FUNCTION(#nm,sll_api_##nm);__API_FUNC_DECL(nm)
-#define __API_FUNC_DECL(nm) __SLL_FUNC void sll_api_##nm(const sll_runtime_object_t* restrict a,sll_arg_count_t ac,sll_runtime_object_t* restrict o)
+#define __API_FUNC_DECL(nm) __SLL_FUNC sll_runtime_object_t* sll_api_##nm(const sll_runtime_object_t** a,sll_arg_count_t ac)
 
 
 
@@ -88,19 +87,19 @@ __API_FUNC_DECL(util_ref_count);
 
 
 
-__SLL_FUNC sll_string_t* sll_object_to_string(const sll_runtime_object_t* a,sll_array_length_t al);
+__SLL_FUNC void sll_object_to_string(const sll_runtime_object_t** a,sll_array_length_t al,sll_string_t* o);
 
 
 
-__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t* a,sll_array_length_t al);
+__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t** a,sll_array_length_t al);
 
 
 
-__SLL_FUNC void sll_set_argument_count(sll_sys_arg_count_t ac);
+__SLL_FUNC void sll_set_argument_count(sll_integer_t ac);
 
 
 
-__SLL_FUNC void sll_set_argument(sll_sys_arg_count_t i,const char* a);
+__SLL_FUNC void sll_set_argument(sll_integer_t i,const char* a);
 
 
 

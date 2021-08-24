@@ -1,7 +1,9 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/constants.h>
+#include <sll/gc.h>
 #include <sll/operator.h>
+#include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <string.h>
@@ -41,9 +43,7 @@
 __SLL_OPERATOR_UNARY(inc){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i+1;
-			return;
+			return sll_int_to_object(a->dt.i+1);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
@@ -55,6 +55,7 @@ __SLL_OPERATOR_UNARY(inc){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -62,9 +63,7 @@ __SLL_OPERATOR_UNARY(inc){
 __SLL_OPERATOR_UNARY(dec){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i-1;
-			return;
+			return sll_int_to_object(a->dt.i-1);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
@@ -76,6 +75,7 @@ __SLL_OPERATOR_UNARY(dec){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -83,13 +83,9 @@ __SLL_OPERATOR_UNARY(dec){
 __SLL_OPERATOR_BINARY(add){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i+b->dt.i;
-			return;
+			return sll_int_to_object(a->dt.i+b->dt.i);
 		case COMBINED_TYPE_IF:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
-			o->dt.f=a->dt.i+b->dt.f;
-			return;
+			return sll_float_to_object(a->dt.i+b->dt.f);
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -97,13 +93,9 @@ __SLL_OPERATOR_BINARY(add){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
-			o->dt.f=a->dt.f+b->dt.i;
-			return;
+			return sll_float_to_object(a->dt.f+b->dt.i);
 		case COMBINED_TYPE_FF:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
-			o->dt.f=a->dt.f+b->dt.f;
-			return;
+			return sll_float_to_object(a->dt.f+b->dt.f);
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -128,15 +120,19 @@ __SLL_OPERATOR_BINARY(add){
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_SS:
 			{
-				sll_string_t* sa=a->dt.s;
-				sll_string_t* sb=b->dt.s;
-				sll_string_t* s=sll_string_create(sa->l+sb->l);
-				s->c=sa->c^sb->c;
-				memcpy(s->v,sa->v,sa->l);
-				memcpy(s->v+sa->l,sb->v,sb->l);
+				sll_string_t sa=a->dt.s;
+				sll_string_t sb=b->dt.s;
+				if (!sa.l&&!sb.l){
+					return SLL_ACQUIRE_STATIC(str_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->rc=1;
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-				o->dt.s=s;
-				return;
+				sll_string_create(sa.l+sb.l,&o->dt.s);
+				o->dt.s.c=sa.c^sb.c;
+				memcpy(o->dt.s.v,sa.v,sa.l);
+				memcpy(o->dt.s.v+sa.l,sb.v,sb.l);
+				return o;
 			}
 		case COMBINED_TYPE_SA:
 			SLL_UNIMPLEMENTED();
@@ -153,6 +149,7 @@ __SLL_OPERATOR_BINARY(add){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -160,11 +157,9 @@ __SLL_OPERATOR_BINARY(add){
 __SLL_OPERATOR_BINARY(sub){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i-b->dt.i;
-			return;
+			return sll_int_to_object(a->dt.i-b->dt.i);
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			return sll_float_to_object(a->dt.i-b->dt.f);
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -172,11 +167,9 @@ __SLL_OPERATOR_BINARY(sub){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			return sll_float_to_object(a->dt.f-b->dt.i);
 		case COMBINED_TYPE_FF:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
-			o->dt.f=a->dt.f-b->dt.f;
-			return;
+			return sll_float_to_object(a->dt.f-b->dt.f);
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -216,6 +209,7 @@ __SLL_OPERATOR_BINARY(sub){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -223,11 +217,9 @@ __SLL_OPERATOR_BINARY(sub){
 __SLL_OPERATOR_BINARY(mult){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i*b->dt.i;
-			return;
+			return sll_int_to_object(a->dt.i*b->dt.i);
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			return sll_float_to_object(a->dt.i*b->dt.f);
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -235,9 +227,9 @@ __SLL_OPERATOR_BINARY(mult){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			return sll_float_to_object(a->dt.f*b->dt.i);
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			return sll_float_to_object(a->dt.f*b->dt.f);
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -277,6 +269,7 @@ __SLL_OPERATOR_BINARY(mult){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -284,11 +277,9 @@ __SLL_OPERATOR_BINARY(mult){
 __SLL_OPERATOR_BINARY(div){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
-			o->dt.f=((sll_float_t)a->dt.i)/b->dt.i;
-			return;
+			return sll_float_to_object(((sll_float_t)a->dt.i)/b->dt.i);
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			return sll_float_to_object(a->dt.i/b->dt.f);
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -296,9 +287,9 @@ __SLL_OPERATOR_BINARY(div){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			return sll_float_to_object(a->dt.f/b->dt.i);
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			return sll_float_to_object(a->dt.f/b->dt.f);
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -338,6 +329,7 @@ __SLL_OPERATOR_BINARY(div){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -345,11 +337,9 @@ __SLL_OPERATOR_BINARY(div){
 __SLL_OPERATOR_BINARY(floor_div){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i/b->dt.i;
-			return;
+			return sll_int_to_object(a->dt.i/b->dt.i);
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.i/b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -357,9 +347,9 @@ __SLL_OPERATOR_BINARY(floor_div){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f/b->dt.i));
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f/b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -399,6 +389,7 @@ __SLL_OPERATOR_BINARY(floor_div){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -406,11 +397,9 @@ __SLL_OPERATOR_BINARY(floor_div){
 __SLL_OPERATOR_BINARY(mod){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i%b->dt.i;
-			return;
+			return sll_int_to_object(a->dt.i%b->dt.i);
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(a->dt.i%SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -418,9 +407,9 @@ __SLL_OPERATOR_BINARY(mod){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)%b->dt.i);
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)%SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -460,6 +449,7 @@ __SLL_OPERATOR_BINARY(mod){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -467,11 +457,9 @@ __SLL_OPERATOR_BINARY(mod){
 __SLL_OPERATOR_BINARY(and){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i&b->dt.i;
-			return;
+			return sll_int_to_object(a->dt.i&b->dt.i);
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(a->dt.i&SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -479,9 +467,9 @@ __SLL_OPERATOR_BINARY(and){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)&b->dt.i);
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)&SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -521,18 +509,17 @@ __SLL_OPERATOR_BINARY(and){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
 
 __SLL_OPERATOR_BINARY(or){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
-		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i|b->dt.i;
-			return;
+	case COMBINED_TYPE_II:
+			return sll_int_to_object(a->dt.i|b->dt.i);
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(a->dt.i|SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -540,9 +527,9 @@ __SLL_OPERATOR_BINARY(or){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)|b->dt.i);
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)|SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -582,6 +569,7 @@ __SLL_OPERATOR_BINARY(or){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -589,11 +577,9 @@ __SLL_OPERATOR_BINARY(or){
 __SLL_OPERATOR_BINARY(xor){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=a->dt.i^b->dt.i;
-			return;
+			return sll_int_to_object(a->dt.i^b->dt.i);
 		case COMBINED_TYPE_IF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(a->dt.i^SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -601,9 +587,9 @@ __SLL_OPERATOR_BINARY(xor){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)^b->dt.i);
 		case COMBINED_TYPE_FF:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)^SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -643,6 +629,7 @@ __SLL_OPERATOR_BINARY(xor){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -650,11 +637,9 @@ __SLL_OPERATOR_BINARY(xor){
 __SLL_OPERATOR_UNARY(inv){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
-			o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-			o->dt.i=~a->dt.i;
-			return;
+			return sll_int_to_object(~a->dt.i);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			SLL_UNIMPLEMENTED();
+			return sll_int_to_object(~SLL_ROUND_FLOAT(a->dt.f));
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
@@ -664,27 +649,25 @@ __SLL_OPERATOR_UNARY(inv){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
 
 __SLL_OPERATOR_UNARY(len){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-			o->dt.i=0;
-			return;
+			SLL_RETURN_ZERO;
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			o->dt.i=a->dt.s->l;
-			return;
+			return sll_int_to_object(a->dt.s.l);
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-			o->dt.i=a->dt.a->l;
-			return;
+			return sll_int_to_object(a->dt.a.l);
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
@@ -704,45 +687,52 @@ __SLL_OPERATOR_UNARY(dup){
 		default:
 			SLL_UNREACHABLE();
 	}
+	SLL_RETURN_ZERO;
 }
 
 
 
 __SLL_OPERATOR_BINARY(access){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-	o->dt.i=0;
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT){
-			if (b->dt.i>=0&&b->dt.i<a->dt.s->l){
+			if (b->dt.i>=0&&b->dt.i<a->dt.s.l){
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->rc=1;
 				o->t=SLL_RUNTIME_OBJECT_TYPE_CHAR;
-				o->dt.c=a->dt.s->v[b->dt.i];
+				o->dt.c=a->dt.s.v[b->dt.i];
+				return o;
 			}
 		}
 	}
-	else if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
+	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT){
-			if (b->dt.i>=0&&b->dt.i<a->dt.a->l){
-				*o=a->dt.a->v[b->dt.i];
+			if (b->dt.i>=0&&b->dt.i<a->dt.a.l){
+				sll_runtime_object_t* o=a->dt.a.v[b->dt.i];
+				SLL_ACQUIRE(o);
+				return o;
 			}
 		}
 	}
+	SLL_RETURN_ZERO;
 }
 
 
 
 __SLL_OPERATOR_TERNARY(access_range){
 	SLL_UNIMPLEMENTED();
+	SLL_RETURN_ZERO;
 }
 
 
 
 __SLL_OPERATOR_QUATERNARY(access_range_step){
 	SLL_UNIMPLEMENTED();
+	SLL_RETURN_ZERO;
 }
 
 
 
-__SLL_FUNC __SLL_RETURN_COMPARE sll_operator_compare(const sll_runtime_object_t* restrict a,const sll_runtime_object_t* restrict b){
+__SLL_FUNC __SLL_RETURN_COMPARE sll_operator_compare(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
 			return COMPARE_RESULT(a->dt.i,b->dt.i);
@@ -802,7 +792,7 @@ __SLL_FUNC __SLL_RETURN_COMPARE sll_operator_compare(const sll_runtime_object_t*
 
 
 
-__SLL_FUNC __SLL_RETURN_COMPARE sll_operator_bool(const sll_runtime_object_t* restrict a){
+__SLL_FUNC __SLL_RETURN_COMPARE sll_operator_bool(const sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return (a->dt.i?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
@@ -811,9 +801,9 @@ __SLL_FUNC __SLL_RETURN_COMPARE sll_operator_bool(const sll_runtime_object_t* re
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			return (a->dt.c?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			return (a->dt.s->l?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
+			return (a->dt.s.l?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-			SLL_UNIMPLEMENTED();
+			return (a->dt.a.l?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
 		default:
 			SLL_UNREACHABLE();
 	}

@@ -19,7 +19,7 @@
 
 
 
-void _print_int(int64_t v,sll_output_data_stream_t* restrict os){
+void _print_int(int64_t v,sll_output_data_stream_t* os){
 	if (!v){
 		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'0');
 		return;
@@ -43,7 +43,7 @@ void _print_int(int64_t v,sll_output_data_stream_t* restrict os){
 
 
 
-void _print_float(double v,sll_output_data_stream_t* restrict os){
+void _print_float(double v,sll_output_data_stream_t* os){
 	char bf[128];
 	int sz=snprintf(bf,128,"%.16lg",v);
 	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)bf,sz*sizeof(char));
@@ -51,7 +51,7 @@ void _print_float(double v,sll_output_data_stream_t* restrict os){
 
 
 
-sll_object_offset_t _print_object_internal(const sll_compilation_data_t* restrict c_dt,const sll_object_t* restrict o,sll_output_data_stream_t* restrict os){
+sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,const sll_object_t* o,sll_output_data_stream_t* os){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;
@@ -110,7 +110,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* restric
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'"');
-				sll_string_t* s=*(c_dt->st.dt+o->dt.s);
+				sll_string_t* s=c_dt->st.dt+o->dt.s;
 				for (sll_string_length_t i=0;i<s->l;i++){
 					char c=s->v[i];
 					if (c=='\''||c=='"'||c=='\\'){
@@ -166,7 +166,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* restric
 				sll_identifier_index_t i=o->dt.id;
 				sll_identifier_list_length_t j=SLL_IDENTIFIER_GET_ARRAY_ID(i);
 				if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					sll_string_t* s=*(c_dt->st.dt+(c_dt->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i);
+					sll_string_t* s=c_dt->st.dt+(c_dt->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i;
 					for (sll_string_length_t k=0;k<s->l;k++){
 						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,s->v[k]);
 					}
@@ -174,7 +174,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* restric
 					_print_int((c_dt->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(i))->sc,os);
 				}
 				else{
-					sll_char_t* s=(*(c_dt->st.dt+(c_dt->idt.s[j].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i))->v;
+					sll_char_t* s=(c_dt->st.dt+(c_dt->idt.s[j].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(i))->i)->v;
 					for (sll_string_length_t k=0;k<j+1;k++){
 						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,*(s+k));
 					}
@@ -337,7 +337,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* restric
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'<');
-				sll_string_t* fp=*(c_dt->st.dt+o->dt.dbg.fpi);
+				sll_string_t* fp=c_dt->st.dt+o->dt.dbg.fpi;
 				for (sll_string_length_t i=0;i<fp->l;i++){
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,fp->v[i]);
 				}
@@ -362,7 +362,7 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* restric
 
 
 
-__SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* restrict a_dt,sll_output_data_stream_t* restrict os){
+__SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_data_stream_t* os){
 	sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
 		if (i){
@@ -768,6 +768,6 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* restrict a_dt,sll_
 
 
 
-__SLL_FUNC void sll_print_object(const sll_compilation_data_t* restrict c_dt,const sll_object_t* restrict o,sll_output_data_stream_t* restrict os){
+__SLL_FUNC void sll_print_object(const sll_compilation_data_t* c_dt,const sll_object_t* o,sll_output_data_stream_t* os){
 	_print_object_internal(c_dt,o,os);
 }

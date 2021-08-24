@@ -14,7 +14,7 @@
 
 
 
-sll_object_offset_t _patch_module(sll_object_t* restrict mo,const import_module_data_t* restrict im_dt){
+sll_object_offset_t _patch_module(sll_object_t* mo,const import_module_data_t* im_dt){
 	sll_object_offset_t eoff=0;
 	sll_object_t* o=im_dt->d+(mo-im_dt->s);
 	while (mo->t==SLL_OBJECT_TYPE_NOP){
@@ -79,7 +79,7 @@ sll_object_offset_t _patch_module(sll_object_t* restrict mo,const import_module_
 
 
 
-uint8_t _read_single_char(sll_input_data_stream_t* restrict is,sll_file_offset_t st,sll_error_t* restrict e,sll_char_t* restrict o){
+uint8_t _read_single_char(sll_input_data_stream_t* is,sll_file_offset_t st,sll_error_t* e,sll_char_t* o){
 	sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==SLL_END_OF_DATA){
 		e->t=SLL_ERROR_UNMATCHED_QUOTES;
@@ -187,7 +187,7 @@ uint8_t _read_single_char(sll_input_data_stream_t* restrict is,sll_file_offset_t
 
 
 
-uint8_t _read_object_internal(sll_compilation_data_t* restrict c_dt,sll_read_char_t c,const extra_compilation_data_t* restrict e_c_dt,sll_error_t* restrict e){
+uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,const extra_compilation_data_t* e_c_dt,sll_error_t* e){
 	uint8_t fl=e_c_dt->fl;
 	const scope_data_t* l_sc=&(e_c_dt->sc);
 	scope_data_t n_l_sc={
@@ -309,7 +309,7 @@ uint8_t _read_object_internal(sll_compilation_data_t* restrict c_dt,sll_read_cha
 					}
 					else{
 						(o+off)->t=SLL_OBJECT_TYPE_NOP;
-						sll_string_t* s=*(c_dt->st.dt+(o+off)->dt.s);
+						sll_string_t* s=c_dt->st.dt+(o+off)->dt.s;
 						if (!s->l||s->l>255){
 							e->t=SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG;
 							e->dt.r.off=st_off;
@@ -317,7 +317,7 @@ uint8_t _read_object_internal(sll_compilation_data_t* restrict c_dt,sll_read_cha
 							return SLL_RETURN_ERROR;
 						}
 						o->dt.fn.ac=ac-1;
-						o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,(char*)s->v);
+						o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,s->v);
 						if (o->dt.fn.id==SLL_MAX_FUNCTION_INDEX){
 							e->t=SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION;
 							memcpy(e->dt.str,s->v,s->l);
@@ -1083,7 +1083,7 @@ _read_identifier:
 						sll_identifier_index_t mx_i=0;
 						for (sll_identifier_list_length_t i=0;i<k->l;i++){
 							sll_identifier_t* si=k->dt+i;
-							sll_string_t* si_s=*(c_dt->st.dt+si->i);
+							sll_string_t* si_s=c_dt->st.dt+si->i;
 							if (si_s->c!=cs||si->sc==SLL_MAX_SCOPE){
 								continue;
 							}
@@ -1126,7 +1126,7 @@ _next_short_identifier:;
 						sll_identifier_index_t mx_i=0;
 						for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 							sll_identifier_t* k=c_dt->idt.il+i;
-							sll_string_t* s=*(c_dt->st.dt+k->i);
+							sll_string_t* s=c_dt->st.dt+k->i;
 							if (s->c!=cs||s->l!=sz||k->sc==SLL_MAX_SCOPE){
 								continue;
 							}
@@ -1198,7 +1198,7 @@ _identifier_found:;
 				sc++;
 				if ((fl&EXTRA_COMPILATION_DATA_IMPORT)&&arg->t==SLL_OBJECT_TYPE_STRING){
 					sll_compilation_data_t im={0};
-					if (e_c_dt->il(*(c_dt->st.dt+arg->dt.s),&im,e)==SLL_RETURN_ERROR){
+					if (e_c_dt->il(c_dt->st.dt+arg->dt.s,&im,e)==SLL_RETURN_ERROR){
 						return SLL_RETURN_ERROR;
 					}
 					c_dt->_s.off-=sizeof(sll_object_t)*2;
@@ -1216,9 +1216,9 @@ _identifier_found:;
 						.eiml=im.et.l
 					};
 					for (sll_string_index_t i=0;i<im.st.l;i++){
-						sll_string_t* s=*(im.st.dt+i);
+						sll_string_t* s=im.st.dt+i;
 						for (sll_string_index_t j=0;j<c_dt->st.l;j++){
-							sll_string_t* d=*(c_dt->st.dt+j);
+							sll_string_t* d=c_dt->st.dt+j;
 							if (s->c!=d->c||s->l!=d->l){
 								continue;
 							}
@@ -1233,11 +1233,11 @@ _check_next_string:;
 						}
 						*(im_dt.sm+i)=c_dt->st.l;
 						c_dt->st.l++;
-						c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t*));
-						sll_string_t* n=sll_string_create(s->l);
+						c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
+						sll_string_t* n=c_dt->st.dt+c_dt->st.l-1;
+						sll_string_create(s->l,n);
 						n->c=s->c;
 						memcpy(n->v,s->v,s->l);
-						*(c_dt->st.dt+c_dt->st.l-1)=n;
 _merge_next_string:;
 					}
 					sll_identifier_list_length_t s_si[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
@@ -1432,7 +1432,7 @@ _skip_export:;
 
 
 
-__SLL_FUNC void sll_init_compilation_data(const sll_char_t* restrict fp,sll_input_data_stream_t* restrict is,sll_compilation_data_t* restrict o){
+__SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o){
 	o->is=is;
 	o->tm=sll_platform_get_current_time();
 	o->h=NULL;
@@ -1458,7 +1458,7 @@ __SLL_FUNC void sll_init_compilation_data(const sll_char_t* restrict fp,sll_inpu
 
 
 
-__SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* restrict c_dt,sll_internal_function_table_t* restrict i_ft,sll_import_loader_t il,sll_error_t* restrict e,sll_object_t** restrict o){
+__SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e,sll_object_t** o){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -1493,7 +1493,7 @@ __SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* restrict c_dt,s
 
 
 
-__SLL_FUNC __SLL_RETURN sll_parse_all_objects(sll_compilation_data_t* restrict c_dt,sll_internal_function_table_t* restrict i_ft,sll_import_loader_t il,sll_error_t* restrict e){
+__SLL_FUNC __SLL_RETURN sll_parse_all_objects(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

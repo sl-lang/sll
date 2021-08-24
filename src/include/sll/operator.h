@@ -2,13 +2,18 @@
 #define __SLL_OPERATOR_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+#include <math.h>
 
 
 
-#define __SLL_OPERATOR_UNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* restrict a,sll_runtime_object_t* restrict o)
-#define __SLL_OPERATOR_BINARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* restrict a,const sll_runtime_object_t* restrict b,sll_runtime_object_t* restrict o)
-#define __SLL_OPERATOR_TERNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* restrict a,const sll_runtime_object_t* restrict b,const sll_runtime_object_t* restrict c,sll_runtime_object_t* restrict o)
-#define __SLL_OPERATOR_QUATERNARY(nm) __SLL_FUNC void sll_operator_##nm(const sll_runtime_object_t* restrict a,const sll_runtime_object_t* restrict b,const sll_runtime_object_t* restrict c,const sll_runtime_object_t* restrict d,sll_runtime_object_t* restrict o)
+#define __SLL_OPERATOR_UNARY(nm) __SLL_FUNC sll_runtime_object_t* sll_operator_##nm(const sll_runtime_object_t* a)
+#define __SLL_OPERATOR_BINARY(nm) __SLL_FUNC sll_runtime_object_t* sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b)
+#define __SLL_OPERATOR_TERNARY(nm) __SLL_FUNC sll_runtime_object_t* sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,const sll_runtime_object_t* c)
+#define __SLL_OPERATOR_QUATERNARY(nm) __SLL_FUNC sll_runtime_object_t* sll_operator_##nm(const sll_runtime_object_t* a,const sll_runtime_object_t* b,const sll_runtime_object_t* c,const sll_runtime_object_t* d)
+
+
+
+#define SLL_ROUND_FLOAT(v) llround((v))
 
 
 

@@ -2,6 +2,7 @@
 #include <sll/api.h>
 #include <sll/constants.h>
 #include <sll/gc.h>
+#include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdio.h>
@@ -9,7 +10,7 @@
 
 
 
-sll_string_length_t _object_to_string(const sll_runtime_object_t* restrict a,sll_string_t* restrict o,sll_string_index_t i){
+sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_string_t* o,sll_string_index_t i){
 	switch (a->t){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			{
@@ -49,22 +50,22 @@ sll_string_length_t _object_to_string(const sll_runtime_object_t* restrict a,sll
 			o->c^=a->dt.c;
 			return i+1;
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			memcpy(o->v+i,(a->dt.s)->v,(a->dt.s)->l);
-			o->c^=a->dt.s->c;
-			return i+a->dt.s->l;
+			memcpy(o->v+i,a->dt.s.v,a->dt.s.l);
+			o->c^=a->dt.s.c;
+			return i+a->dt.s.l;
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			o->v[i]='[';
 			i++;
-			for (sll_array_length_t k=0;k<a->dt.a->l;k++){
+			for (sll_array_length_t k=0;k<a->dt.a.l;k++){
 				if (k){
 					o->v[i]=' ';
 					i++;
 				}
-				i=_object_to_string(a->dt.a->v+k,o,i);
+				i=_object_to_string(*(a->dt.a.v+k),o,i);
 			}
 			o->v[i]=']';
 			o->c^='['^']';
-			if (a->dt.a->l&1){
+			if (a->dt.a.l&1){
 				o->c^=' ';
 			}
 			return i+1;
@@ -76,34 +77,29 @@ sll_string_length_t _object_to_string(const sll_runtime_object_t* restrict a,sll
 
 
 
-__SLL_FUNC sll_string_t* sll_object_to_string(const sll_runtime_object_t* restrict a,sll_array_length_t al){
+__SLL_FUNC void sll_object_to_string(const sll_runtime_object_t** a,sll_array_length_t al,sll_string_t* o){
 	if (!al){
-		SLL_ACQUIRE(&_zero_string);
-		return &_zero_string;
+		SLL_ZERO_STRING(o);
+		return;
 	}
-	if (al==1&&a->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-		SLL_ACQUIRE(a->dt.s);
-		return a->dt.s;
-	}
-	sll_string_t* o=sll_string_create(sll_object_to_string_length(a,al));
-	o->c=0;
+	sll_string_create(sll_object_to_string_length(a,al),o);
 	sll_string_length_t i=0;
 	for (sll_array_length_t j=0;j<al;j++){
-		i=_object_to_string(a+j,o,i);
+		i=_object_to_string(*(a+j),o,i);
 	}
 	SLL_ASSERT(i==o->l);
-	return o;
 }
 
 
 
-__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t* restrict a,sll_array_length_t al){
+__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t** al,sll_array_length_t all){
 	sll_string_length_t o=0;
-	for (sll_array_length_t i=0;i<al;i++){
-		switch ((a+i)->t){
+	for (sll_array_length_t i=0;i<all;i++){
+		const sll_runtime_object_t* a=*(al+i);
+		switch (a->t){
 			case SLL_RUNTIME_OBJECT_TYPE_INT:
 				{
-					sll_integer_t v=(a+i)->dt.i;
+					sll_integer_t v=a->dt.i;
 					if (v<0){
 						o++;
 						v=-v;
@@ -115,16 +111,16 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 					break;
 				}
 			case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-				o+=snprintf(NULL,0,"%.16lf",(a+i)->dt.f);
+				o+=snprintf(NULL,0,"%.16lf",a->dt.f);
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 				o++;
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_STRING:
-				o+=(a+i)->dt.s->l;
+				o+=a->dt.s.l;
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-				o+=sll_object_to_string_length((a+i)->dt.a->v,(a+i)->dt.a->l)+(a+i)->dt.a->l+1;
+				o+=sll_object_to_string_length(a->dt.a.v,a->dt.a.l)+a->dt.a.l+1;
 				break;
 			default:
 				SLL_UNREACHABLE();
@@ -136,18 +132,18 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 
 
 __API_FUNC(string_convert){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 	if (!ac){
-		o->dt.s=&_zero_string;
-		SLL_ACQUIRE(o->dt.s);
-		return;
+		SLL_RETURN_ZERO_STRING;
 	}
-	o->dt.s=sll_object_to_string(a,ac);
+	sll_runtime_object_t* o=SLL_CREATE();
+	o->rc=1;
+	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	sll_object_to_string(a,ac,&(o->dt.s));
+	return o;
 }
 
 
 
 __API_FUNC(string_length){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-	o->dt.i=sll_object_to_string_length(a,ac);
+	return sll_int_to_object(sll_object_to_string_length(a,ac));
 }

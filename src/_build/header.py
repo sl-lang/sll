@@ -193,7 +193,7 @@ def generate_header(h_dt,c_m):
 					if (al[-1]==b""):
 						al.pop(len(al)-1)
 					va=False
-					if (al[-1]==b"..."):
+					if (len(al)>0 and al[-1]==b"..."):
 						va=True
 						al.pop()
 					if (len(al)>0 and len(al[0])==0):
@@ -207,8 +207,8 @@ def generate_header(h_dt,c_m):
 					sli=0
 					i=0
 					while (i<len(k)):
-						if (i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS):
-							if (k.startswith(b"__VA_ARGS__",i) and k[i+11:i+12] not in IDENTIFIER_CHARACTERS):
+						if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k[i:i+1] in IDENTIFIER_CHARACTERS):
+							if (k.startswith(b"__VA_ARGS__",i) and (i+11==len(k) or k[i+11:i+12] not in IDENTIFIER_CHARACTERS)):
 								sl.append(-1)
 								sl.append(b"")
 								sli+=2
@@ -216,7 +216,7 @@ def generate_header(h_dt,c_m):
 								continue
 							nxt=False
 							for j,se in enumerate(al):
-								if (k.startswith(se,i) and k[i+len(se):i+len(se)+1] not in IDENTIFIER_CHARACTERS):
+								if (k.startswith(se,i) and (i+len(se)==len(k) or k[i+len(se):i+len(se)+1] not in IDENTIFIER_CHARACTERS)):
 									sl.append(j)
 									sl.append(b"")
 									sli+=2
@@ -266,9 +266,13 @@ def generate_header(h_dt,c_m):
 		d_f[i]=(nk,v)
 		d_s+=b"\n#define "+nk+b" "+v.strip()
 	fl=[]
+	e_v=[]
 	for k in l:
-		k=_expand_macros(k,dm,dfm)
+		k=_expand_macros(k,dm,dfm).strip()
 		if (len(k)==0):
+			continue
+		if (k.startswith(b"extern")):
+			e_v.append((k.replace(b"\t",b" ").split(b" ")[-1].split(b";")[0],k))
 			continue
 		if (b"(" in k and b"(*" not in SPACE_CHARACTERS_REGEX.sub(b"",k) and k.count(b"(")==k.count(b")") and k.count(b"{")==k.count(b"}")):
 			fl.append((k[:-len(k.split(b"(")[-1])-1].split(b" ")[-1],k.strip()))
@@ -319,14 +323,18 @@ def generate_header(h_dt,c_m):
 							continue
 					i+=1
 		i+=1
-	for k,v in sorted(fl,key=lambda e:e[0]):
+	for _,k in sorted(e_v,key=lambda e:e[0]):
 		if (len(o)>0):
 			o+=b"\n"
-		ai=len(v.split(b"(")[-1])
-		o+=v[:-ai]
+		o+=k
+	for _,k in sorted(fl,key=lambda e:e[0]):
+		if (len(o)>0):
+			o+=b"\n"
+		ai=len(k.split(b"(")[-1])
+		o+=k[:-ai]
 		st=True
 		void=True
-		for a in v[-ai:].split(b")")[0].split(b","):
+		for a in k[-ai:].split(b")")[0].split(b","):
 			if (st is False):
 				o+=b","
 			st=False

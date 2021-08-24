@@ -3,6 +3,7 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
+#include <sll/api.h>
 #include <sll/types.h>
 #include <signal.h>
 #include <stdint.h>
@@ -44,6 +45,12 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define __ifunc_start __start_ifunc
 #define __ifunc_end __stop_ifunc
 #endif
+
+
+
+#define __API_FUNC(nm) INTERNAL_FUNCTION(#nm,sll_api_##nm);__API_FUNC_DECL(nm)
+#define __SLL_STATIC_RAW(nm) &_##nm##_static_data
+#define __SLL_STATIC_OBJECT(nm,t,f,v) sll_runtime_object_t _##nm##_static_data={1,t,{.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
 
 
 

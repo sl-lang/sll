@@ -5,11 +5,7 @@
 
 
 
-#define __SLL_GC_HEADER sll_ref_count_t rc;
-
-
-
-struct __SLL_ARRAY;
+struct __SLL_RUNTIME_OBJECT;
 
 
 
@@ -141,10 +137,6 @@ typedef uint32_t sll_string_length_t;
 
 
 
-typedef uint32_t sll_sys_arg_count_t;
-
-
-
 typedef uint32_t sll_variable_index_t;
 
 
@@ -183,9 +175,9 @@ typedef const uint8_t* sll_const_buffer_t;
 
 typedef struct __SLL_INPUT_DATA_SOURCE{
 	void* ctx;
-	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_SOURCE* restrict is);
-	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* restrict is,sll_buffer_t restrict bf,sll_buffer_size_t sz);
-	void (*rlf)(struct __SLL_INPUT_DATA_SOURCE* restrict is,sll_file_offset_t lp);
+	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_SOURCE* is);
+	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_buffer_t bf,sll_buffer_size_t sz);
+	void (*rlf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_file_offset_t lp);
 	sll_line_number_t _lc;
 	sll_file_offset_t _off;
 	sll_file_offset_t _loff;
@@ -195,9 +187,9 @@ typedef struct __SLL_INPUT_DATA_SOURCE{
 
 typedef struct __SLL_OUTPUT_DATA_STREAM{
 	void* ctx;
-	void (*wcf)(struct __SLL_OUTPUT_DATA_STREAM* restrict os,char c);
-	void (*wsf)(struct __SLL_OUTPUT_DATA_STREAM* restrict os,const char* restrict s);
-	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* restrict os,sll_const_buffer_t restrict bf,sll_buffer_size_t sz);
+	void (*wcf)(struct __SLL_OUTPUT_DATA_STREAM* os,char c);
+	void (*wsf)(struct __SLL_OUTPUT_DATA_STREAM* os,const char* s);
+	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* os,sll_const_buffer_t bf,sll_buffer_size_t sz);
 } sll_output_data_stream_t;
 
 
@@ -300,24 +292,17 @@ typedef struct __SLL_FUNCTION_DATA{
 
 
 
-typedef struct __SLL_GC_OBJECT{
-	__SLL_GC_HEADER
-} sll_gc_object_t;
-
-
-
 typedef struct __SLL_STRING{
-	__SLL_GC_HEADER
 	sll_string_length_t l;
 	sll_string_checksum_t c;
-	sll_char_t v[];
+	sll_char_t* v;
 } sll_string_t;
 
 
 
 typedef struct __SLL_STRING_TABLE{
 	sll_string_index_t l;
-	sll_string_t** dt;
+	sll_string_t* dt;
 } sll_string_table_t;
 
 
@@ -385,29 +370,29 @@ typedef struct __SLL_ASSEMBLY_DATA{
 
 
 
+typedef struct __SLL_ARRAY{
+	sll_array_length_t l;
+	struct __SLL_RUNTIME_OBJECT** v;
+} sll_array_t;
+
+
+
 typedef union __SLL_RUNTIME_OBJECT_DATA{
 	sll_char_t c;
 	sll_integer_t i;
 	sll_float_t f;
-	sll_string_t* s;
+	sll_string_t s;
 	sll_instruction_index_t ii;
-	struct __SLL_ARRAY* a;
+	sll_array_t a;
 } sll_runtime_object_data_t;
 
 
 
 typedef struct __SLL_RUNTIME_OBJECT{
+	sll_ref_count_t rc;
 	sll_runtime_object_type_t t;
 	sll_runtime_object_data_t dt;
 } sll_runtime_object_t;
-
-
-
-typedef struct __SLL_ARRAY{
-	__SLL_GC_HEADER
-	sll_array_length_t l;
-	sll_runtime_object_t v[];
-} sll_array_t;
 
 
 
@@ -433,16 +418,16 @@ typedef struct __SLL_ERROR{
 
 
 
-typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* restrict s,sll_compilation_data_t* restrict o,sll_error_t* restrict e);
+typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o,sll_error_t* e);
 
 
 
-typedef void (*sll_internal_function_pointer_t)(const sll_runtime_object_t* restrict a,sll_arg_count_t ac,sll_runtime_object_t* restrict o);
+typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runtime_object_t** a,sll_arg_count_t ac);
 
 
 
 typedef struct __SLL_INTERNAL_FUNCTION{
-	char nm[256];
+	sll_char_t nm[256];
 	uint8_t nml;
 	sll_string_checksum_t c;
 	sll_internal_function_pointer_t p;

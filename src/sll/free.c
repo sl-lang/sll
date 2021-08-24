@@ -7,7 +7,7 @@
 
 
 
-__SLL_FUNC void sll_free_assembly_function_table(sll_assembly_function_table_t* restrict ft){
+__SLL_FUNC void sll_free_assembly_function_table(sll_assembly_function_table_t* ft){
 	if (ft->dt){
 		free(ft->dt);
 		ft->dt=NULL;
@@ -17,7 +17,7 @@ __SLL_FUNC void sll_free_assembly_function_table(sll_assembly_function_table_t* 
 
 
 
-__SLL_FUNC void sll_free_assembly_data(sll_assembly_data_t* restrict a_dt){
+__SLL_FUNC void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 	a_dt->tm=0;
 	a_dt->h=NULL;
 	a_dt->ic=0;
@@ -31,7 +31,7 @@ __SLL_FUNC void sll_free_assembly_data(sll_assembly_data_t* restrict a_dt){
 
 
 
-__SLL_FUNC void sll_free_compilation_data(sll_compilation_data_t* restrict c_dt){
+__SLL_FUNC void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	c_dt->is=NULL;
 	c_dt->tm=0;
 	c_dt->h=NULL;
@@ -47,7 +47,7 @@ __SLL_FUNC void sll_free_compilation_data(sll_compilation_data_t* restrict c_dt)
 
 
 
-__SLL_FUNC void sll_free_export_table(sll_export_table_t* restrict et){
+__SLL_FUNC void sll_free_export_table(sll_export_table_t* et){
 	if (et->dt){
 		free(et->dt);
 		et->dt=NULL;
@@ -57,7 +57,7 @@ __SLL_FUNC void sll_free_export_table(sll_export_table_t* restrict et){
 
 
 
-__SLL_FUNC void sll_free_function_table(sll_function_table_t* restrict ft){
+__SLL_FUNC void sll_free_function_table(sll_function_table_t* ft){
 	for (sll_function_index_t i=0;i<ft->l;i++){
 		free(*(ft->dt+i));
 	}
@@ -70,7 +70,7 @@ __SLL_FUNC void sll_free_function_table(sll_function_table_t* restrict ft){
 
 
 
-__SLL_FUNC void sll_free_identifier_table(sll_identifier_table_t* restrict idt){
+__SLL_FUNC void sll_free_identifier_table(sll_identifier_table_t* idt){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_identifier_list_t* e=idt->s+i;
 		if (e->dt){
@@ -88,7 +88,7 @@ __SLL_FUNC void sll_free_identifier_table(sll_identifier_table_t* restrict idt){
 
 
 
-__SLL_FUNC void sll_free_internal_function_table(sll_internal_function_table_t* restrict ift){
+__SLL_FUNC void sll_free_internal_function_table(sll_internal_function_table_t* ift){
 	for (sll_function_index_t i=0;i<ift->l;i++){
 		free(*(ift->dt+i));
 	}
@@ -101,9 +101,9 @@ __SLL_FUNC void sll_free_internal_function_table(sll_internal_function_table_t* 
 
 
 
-__SLL_FUNC void sll_free_string_table(sll_string_table_t* restrict st){
+__SLL_FUNC void sll_free_string_table(sll_string_table_t* st){
 	for (sll_string_index_t i=0;i<st->l;i++){
-		SLL_RELEASE(*(st->dt+i));
+		free((st->dt+i)->v);
 	}
 	if (st->dt){
 		free(st->dt);

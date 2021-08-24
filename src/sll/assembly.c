@@ -44,15 +44,15 @@
 	} while(0)
 
 
-sll_object_offset_t _generate_on_stack(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt);
+sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt);
 
 
 
-sll_object_offset_t _generate(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt);
+sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g_dt);
 
 
 
-sll_object_offset_t _map_identifiers_extra(const sll_object_t* restrict o,const sll_compilation_data_t* restrict c_dt,assembly_generator_data_t* restrict g_dt,sll_scope_t fn_sc){
+sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compilation_data_t* c_dt,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -167,7 +167,7 @@ sll_object_offset_t _map_identifiers_extra(const sll_object_t* restrict o,const 
 
 
 
-sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* restrict ai,sll_instruction_index_t i){
+sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* ai,sll_instruction_index_t i){
 	do{
 		if (!i){
 			SLL_UNREACHABLE();
@@ -181,7 +181,7 @@ sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t
 
 
 
-sll_object_offset_t _generate_sequential_jump(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt,sll_assembly_instruction_type_t t,uint8_t st){
+sll_object_offset_t _generate_sequential_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,sll_assembly_instruction_type_t t,uint8_t st){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	if (l==1){
@@ -215,7 +215,7 @@ sll_object_offset_t _generate_sequential_jump(const sll_object_t* restrict o,ass
 
 
 
-sll_object_offset_t _generate_cond_jump(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt,assembly_instruction_label_t lbl,sll_assembly_instruction_type_t t){
+sll_object_offset_t _generate_cond_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,sll_assembly_instruction_type_t t){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	if (l==1){
@@ -237,7 +237,7 @@ sll_object_offset_t _generate_cond_jump(const sll_object_t* restrict o,assembly_
 
 
 
-sll_object_offset_t _generate_jump(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt,assembly_instruction_label_t lbl,uint8_t inv){
+sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,uint8_t inv){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -262,7 +262,7 @@ sll_object_offset_t _generate_jump(const sll_object_t* restrict o,assembly_gener
 			}
 			return eoff+1;
 		case SLL_OBJECT_TYPE_STRING:
-			if ((!!((*(g_dt->c_dt->st.dt+o->dt.s))->l))^inv){
+			if ((!!((g_dt->c_dt->st.dt+o->dt.s)->l))^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return eoff+1;
@@ -354,7 +354,7 @@ sll_object_offset_t _generate_jump(const sll_object_t* restrict o,assembly_gener
 
 
 
-sll_object_offset_t _generate_call(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt){
+sll_object_offset_t _generate_call(const sll_object_t* o,assembly_generator_data_t* g_dt){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	sll_object_offset_t off=sll_get_object_size(o+1)+1;
@@ -372,7 +372,7 @@ sll_object_offset_t _generate_call(const sll_object_t* restrict o,assembly_gener
 
 
 
-sll_object_offset_t _generate_on_stack(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt){
+sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -582,7 +582,7 @@ sll_object_offset_t _generate_on_stack(const sll_object_t* restrict o,assembly_g
 
 
 
-sll_object_offset_t _mark_loop_delete(const sll_object_t* restrict o,const assembly_generator_data_t* restrict g_dt,uint64_t* restrict v_st,sll_scope_t sc){
+sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_generator_data_t* g_dt,uint64_t* v_st,sll_scope_t sc){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -650,7 +650,7 @@ sll_object_offset_t _mark_loop_delete(const sll_object_t* restrict o,const assem
 
 
 
-sll_object_offset_t _generate(const sll_object_t* restrict o,assembly_generator_data_t* restrict g_dt){
+sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -915,7 +915,7 @@ sll_object_offset_t _generate(const sll_object_t* restrict o,assembly_generator_
 
 
 
-__SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* restrict c_dt,sll_assembly_data_t* restrict o,sll_error_t* restrict e){
+__SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e){
 	if (!o->_s.ptr||!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -925,13 +925,13 @@ __SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* rest
 	o->ic=0;
 	o->vc=0;
 	o->st.l=c_dt->st.l;
-	o->st.dt=malloc(o->st.l*sizeof(sll_string_t*));
+	o->st.dt=malloc(o->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<o->st.l;i++){
-		sll_string_t* s=*(c_dt->st.dt+i);
-		sll_string_t* d=sll_string_create(s->l);
+		sll_string_t* s=c_dt->st.dt+i;
+		sll_string_t* d=o->st.dt+i;
+		sll_string_create(s->l,d);
 		d->c=s->c;
 		memcpy(d->v,s->v,s->l*sizeof(sll_char_t));
-		*(o->st.dt+i)=d;
 	}
 	assembly_generator_data_t g_dt={
 		o,
@@ -1270,7 +1270,7 @@ _handle_nop:;
 				*(o->st.dt+n-l)=*(o->st.dt+n);
 				*(sm.im+n)=n-l;
 			}
-			SLL_RELEASE(*(o->st.dt+j));
+			free((o->st.dt+j)->v);
 			k=j+1;
 			l++;
 			v&=v-1;
@@ -1283,7 +1283,7 @@ _handle_nop:;
 	}
 	if (l){
 		o->st.l-=l;
-		o->st.dt=realloc(o->st.dt,o->st.l*sizeof(sll_string_t*));
+		o->st.dt=realloc(o->st.dt,o->st.l*sizeof(sll_string_t));
 	}
 	ai=o->h;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){

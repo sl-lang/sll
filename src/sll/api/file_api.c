@@ -2,6 +2,7 @@
 #include <sll/api.h>
 #include <sll/constants.h>
 #include <sll/gc.h>
+#include <sll/static_object.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -15,22 +16,24 @@ typedef struct __FILE{
 
 
 
-file_t* _file_fl=NULL;
-uint16_t _file_fll=0;
+static file_t* _file_fl=NULL;
+static uint16_t _file_fll=0;
 
 
 
 __API_FUNC(file_close){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-	o->dt.i=0;
-	if (!ac||a->t!=SLL_RUNTIME_OBJECT_TYPE_INT||a->dt.i<0||a->dt.i>=_file_fll){
-		return;
+	if (!ac){
+		SLL_RETURN_ZERO;
 	}
-	file_t* f=_file_fl+a->dt.i;
+	const sll_runtime_object_t* v=*a;
+	if (v->t!=SLL_RUNTIME_OBJECT_TYPE_INT||v->dt.i<0||v->dt.i>=_file_fll){
+		SLL_RETURN_ZERO;
+	}
+	file_t* f=_file_fl+v->dt.i;
 	if (f->h){
 		fclose(f->h);
 		f->h=NULL;
-		if (a->dt.i==_file_fll-1){
+		if (v->dt.i==_file_fll-1){
 			do{
 				_file_fll--;
 			} while (_file_fll&&!(_file_fl+_file_fll-1)->h);
@@ -44,36 +47,39 @@ __API_FUNC(file_close){
 				_file_fl=NULL;
 			}
 		}
-		o->dt.i=1;
+		SLL_RETURN_ONE;
 	}
+	SLL_RETURN_ZERO;
 }
 
 
 
 __API_FUNC(file_open){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-	if (_file_fll==SLL_API_MAX_OPEN_FILES||!ac||a->t!=SLL_RUNTIME_OBJECT_TYPE_STRING||a->dt.s->l>SLL_API_MAX_FILE_PATH_LENGTH){
-		return;
+	if (_file_fll==SLL_API_MAX_OPEN_FILES||!ac){
+		SLL_RETURN_ZERO;
+	}
+	const sll_runtime_object_t* fp=*a;
+	if (fp->t!=SLL_RUNTIME_OBJECT_TYPE_STRING||fp->dt.s.l>SLL_API_MAX_FILE_PATH_LENGTH){
+		SLL_RETURN_ZERO;
 	}
 	const char* m="rb";
-	if (ac>1&&(a+1)->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-		sll_string_t* s=(a+1)->dt.s;
-		for (sll_string_length_t i=0;i<s->l;i++){
-			if (s->v[i]=='a'||s->v[i]=='A'){
+	if (ac>1&&(*(a+1))->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
+		sll_string_t s=(*(a+1))->dt.s;
+		for (sll_string_length_t i=0;i<s.l;i++){
+			if (s.v[i]=='a'||s.v[i]=='A'){
 				m="ab";
 			}
-			else if (s->v[i]=='w'||s->v[i]=='W'){
+			else if (s.v[i]=='w'||s.v[i]=='W'){
 				m="wb";
 			}
-			else if (s->v[i]=='x'||s->v[i]=='X'){
+			else if (s.v[i]=='x'||s.v[i]=='X'){
 				m="xb";
 			}
 		}
 	}
-	FILE* h=fopen((char*)a->dt.s->v,m);// lgtm [cpp/path-injection]
+	FILE* h=fopen((char*)fp->dt.s.v,m);// lgtm [cpp/path-injection]
 	if (!h){
-		return;
+		SLL_RETURN_ZERO;
 	}
 	uint16_t i=0;
 	while (i<_file_fll){
@@ -86,40 +92,43 @@ __API_FUNC(file_open){
 	void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t));
 	if (!tmp){
 		fclose(h);
-		return;
+		SLL_RETURN_ZERO;
 	}
 	_file_fl=tmp;
 _found_index:
 	(_file_fl+i)->h=h;
-	o->dt.i=i;
+	return sll_int_to_object(i);
 }
 
 
 
 __API_FUNC(file_write){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-	o->dt.i=0;
-	if (ac<2||a->t!=SLL_RUNTIME_OBJECT_TYPE_INT){
-		return;
+	if (ac<2){
+		SLL_RETURN_ZERO;
+	}
+	const sll_runtime_object_t* v=*a;
+	if (v->t!=SLL_RUNTIME_OBJECT_TYPE_INT){
+		SLL_RETURN_ZERO;
 	}
 	FILE* fh=NULL;
-	if (a->dt.i==-2){
+	if (v->dt.i==-2){
 		fh=stdout;
 	}
-	else if (a->dt.i==-3){
+	else if (v->dt.i==-3){
 		fh=stderr;
 	}
-	else if (a->dt.i<0||a->dt.i>=_file_fll){
-		return;
+	else if (v->dt.i<0||v->dt.i>=_file_fll){
+		SLL_RETURN_ZERO;
 	}
 	else{
-		fh=(_file_fl+a->dt.i)->h;
+		fh=(_file_fl+v->dt.i)->h;
 		if (!fh){
-			return;
+			SLL_RETURN_ZERO;
 		}
 	}
-	sll_string_t* s=sll_object_to_string(a+1,ac-1);
-	fwrite(s->v,sizeof(sll_char_t),s->l,fh);
-	o->dt.i+=s->l;
-	SLL_RELEASE(s);
+	sll_string_t s;
+	sll_object_to_string(a+1,ac-1,&s);
+	fwrite(s.v,sizeof(sll_char_t),s.l,fh);
+	free(s.v);
+	return sll_int_to_object(s.l);
 }

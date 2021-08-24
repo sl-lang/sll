@@ -16,9 +16,9 @@ sll_string_t _zero_string={
 
 
 
-__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_add_string(sll_string_table_t* restrict st,sll_string_t* restrict s){
+__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_add_string(sll_string_table_t* st,sll_string_t* s){
 	for (sll_string_index_t i=0;i<st->l;i++){
-		sll_string_t* k=*(st->dt+i);
+		sll_string_t* k=st->dt+i;
 		if (k->c==s->c&&k->l==s->l){
 			for (sll_string_length_t j=0;j<s->l;j++){
 				if (s->v[j]!=k->v[j]){
@@ -30,21 +30,20 @@ __SLL_FUNC __SLL_RETURN_STRING_INDEX sll_add_string(sll_string_table_t* restrict
 _check_next_string:;
 	}
 	st->l++;
-	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t*));
-	*(st->dt+st->l-1)=s;
-	SLL_ACQUIRE(s);
+	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
+	*(st->dt+st->l-1)=*s;
 	return st->l-1;
 }
 
 
 
-__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_create_string(sll_string_table_t* restrict st,const sll_char_t* restrict dt,sll_string_length_t l){
+__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
 	sll_string_checksum_t c=0;
 	for (sll_string_length_t i=0;i<l;i++){
 		c^=(sll_string_checksum_t)(*(dt+i));
 	}
 	for (sll_string_index_t i=0;i<st->l;i++){
-		sll_string_t* s=*(st->dt+i);
+		sll_string_t* s=st->dt+i;
 		if (s->c==c&&s->l==l){
 			for (sll_string_length_t j=0;j<l;j++){
 				if (*(dt+j)!=*(s->v+j)){
@@ -56,17 +55,17 @@ __SLL_FUNC __SLL_RETURN_STRING_INDEX sll_create_string(sll_string_table_t* restr
 _check_next_string:;
 	}
 	st->l++;
-	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t*));
-	sll_string_t* s=sll_string_create(l);
+	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
+	sll_string_t* s=st->dt+st->l-1;
+	sll_string_create(l,s);
 	s->c=c;
 	memcpy(s->v,dt,l);
-	*(st->dt+st->l-1)=s;
 	return st->l-1;
 }
 
 
 
-__SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* restrict o){
+__SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;

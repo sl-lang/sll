@@ -44,7 +44,6 @@
 (<- write stdout "Argument Count: " argc "\n")
 (-> (= i 0) (< i argc) (:> "[" i "] = " (<- argv i) "\n") (= i (+ i 1)))
 (:> "Platform: " platform "\n")
-(:> "Program End\n")
 (= string (+ "prefix_" (<- (,,, (@@ "test_string")))) (:> (<- get_ref_count string) "\n"))
 (:> "String: " string " (RC: " (<- get_ref_count string) ")\n")
 (:> "String: " string "\n")

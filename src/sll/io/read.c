@@ -35,7 +35,7 @@
 
 
 
-uint64_t _read_integer(sll_input_data_stream_t* restrict is,uint8_t* restrict e){
+uint64_t _read_integer(sll_input_data_stream_t* is,uint8_t* e){
 	sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==SLL_END_OF_DATA){
 		*e=1;
@@ -57,7 +57,7 @@ uint64_t _read_integer(sll_input_data_stream_t* restrict is,uint8_t* restrict e)
 
 
 
-int64_t _read_signed_integer(sll_input_data_stream_t* restrict is,uint8_t* restrict e){
+int64_t _read_signed_integer(sll_input_data_stream_t* is,uint8_t* e){
 	uint64_t v=_read_integer(is,e);
 	if (*e){
 		return 0;
@@ -67,7 +67,7 @@ int64_t _read_signed_integer(sll_input_data_stream_t* restrict is,uint8_t* restr
 
 
 
-uint8_t _read_object(sll_compilation_data_t* restrict c_dt,sll_input_data_stream_t* restrict is){
+uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 	sll_object_t* o=(sll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
 	c_dt->_s.off+=sizeof(sll_object_t);
 	READ_FIELD(o->t,is);
@@ -152,7 +152,7 @@ uint8_t _read_object(sll_compilation_data_t* restrict c_dt,sll_input_data_stream
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* restrict is,sll_assembly_data_t* restrict a_dt,sll_error_t* restrict e){
+__SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assembly_data_t* a_dt,sll_error_t* e){
 	if (!a_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -172,13 +172,12 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* restrict is,s
 		CHECK_ERROR(is,*(a_dt->ft.dt+i),sll_instruction_index_t,e);
 	}
 	CHECK_ERROR(is,a_dt->st.l,sll_string_index_t,e);
-	a_dt->st.dt=malloc(a_dt->st.l*sizeof(sll_string_t*));
+	a_dt->st.dt=malloc(a_dt->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
 		sll_string_length_t l;
 		CHECK_ERROR(is,l,sll_string_length_t,e);
-		sll_string_t* s=sll_string_create(l);
-		*(a_dt->st.dt+i)=s;
-		s->c=0;
+		sll_string_t* s=a_dt->st.dt+i;
+		sll_string_create(l,s);
 		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,s->v,s->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 			return SLL_RETURN_ERROR;
@@ -303,7 +302,7 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* restrict is,s
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* restrict is,sll_compilation_data_t* restrict c_dt,sll_error_t* restrict e){
+__SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll_compilation_data_t* c_dt,sll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -351,13 +350,12 @@ __SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* restri
 		*(c_dt->ft.dt+i)=k;
 	}
 	CHECK_ERROR(is,c_dt->st.l,sll_string_index_t,e);
-	c_dt->st.dt=malloc(c_dt->st.l*sizeof(sll_string_t*));
+	c_dt->st.dt=malloc(c_dt->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
 		sll_string_length_t l;
 		CHECK_ERROR(is,l,sll_string_length_t,e);
-		sll_string_t* s=sll_string_create(l);
-		*(c_dt->st.dt+i)=s;
-		s->c=0;
+		sll_string_t* s=c_dt->st.dt+i;
+		sll_string_create(l,s);
 		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,s->v,s->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 			return SLL_RETURN_ERROR;
@@ -377,7 +375,7 @@ __SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* restri
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_object(sll_compilation_data_t* restrict c_dt,sll_input_data_stream_t* restrict is,sll_object_t** restrict o,sll_error_t* restrict e){
+__SLL_FUNC __SLL_RETURN sll_load_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_object_t** o,sll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

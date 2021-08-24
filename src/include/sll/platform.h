@@ -13,7 +13,7 @@ __SLL_FUNC void* sll_platform_allocate_page(sll_page_size_t sz);
 
 
 
-__SLL_FUNC void sll_platform_free_page(void* restrict pg,sll_page_size_t sz);
+__SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz);
 
 
 
@@ -25,15 +25,15 @@ __SLL_FUNC sll_page_size_t sll_platform_get_page_size(void);
 
 
 
-__SLL_FUNC sll_buffer_size_t sll_platform_path_absolute(const char* restrict fp,sll_buffer_t restrict bf,sll_buffer_size_t bfl);
+__SLL_FUNC sll_buffer_size_t sll_platform_path_absolute(const char* fp,sll_buffer_t bf,sll_buffer_size_t bfl);
 
 
 
-__SLL_FUNC sll_bool_t sll_platform_path_exists(const char* restrict fp);
+__SLL_FUNC sll_bool_t sll_platform_path_exists(const char* fp);
 
 
 
-__SLL_FUNC sll_bool_t sll_platform_path_is_directory(const char* restrict fp);
+__SLL_FUNC sll_bool_t sll_platform_path_is_directory(const char* fp);
 
 
 

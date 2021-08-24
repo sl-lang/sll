@@ -8,7 +8,7 @@
 
 
 
-__SLL_FUNC void sll_print_error(sll_input_data_stream_t* restrict is,const sll_error_t* restrict e){
+__SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e){
 	if (e->t==SLL_ERROR_UNKNOWN||e->t>SLL_MAX_COMPILATION_ERROR){
 		switch (e->t){
 			default:
@@ -92,6 +92,7 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* restrict is,const sll_e
 	for (;i<oe+oe_tb;i++){
 		putchar('~');
 	}
+	putchar('\n');
 	switch (e->t){
 		default:
 			printf("Unknown Error: %c%c\n",(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));

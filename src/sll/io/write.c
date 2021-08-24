@@ -13,7 +13,7 @@
 
 
 
-void _write_integer(sll_output_data_stream_t* restrict os,uint64_t v){
+void _write_integer(sll_output_data_stream_t* os,uint64_t v){
 	while (v>0x7f){
 		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)((v&0x7f)|0x80));
 		v>>=7;
@@ -23,7 +23,7 @@ void _write_integer(sll_output_data_stream_t* restrict os,uint64_t v){
 
 
 
-sll_object_offset_t _write_object(sll_output_data_stream_t* restrict os,const sll_object_t* restrict o){
+sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_t* o){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		WRITE_FIELD(o->t,os);
@@ -101,7 +101,7 @@ sll_object_offset_t _write_object(sll_output_data_stream_t* restrict os,const sl
 
 
 
-__SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* restrict os,const sll_assembly_data_t* restrict a_dt){
+__SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assembly_data_t* a_dt){
 	uint32_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
 	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
 	sll_version_t v=SLL_VERSION;
@@ -115,7 +115,7 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* restrict os,const s
 	}
 	_write_integer(os,a_dt->st.l);
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		const sll_string_t* s=*(a_dt->st.dt+i);
+		const sll_string_t* s=a_dt->st.dt+i;
 		_write_integer(os,s->l);
 		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,s->v,s->l*sizeof(sll_char_t));
 	}
@@ -205,13 +205,13 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* restrict os,const s
 
 
 
-__SLL_FUNC void sll_write_object(sll_output_data_stream_t* restrict os,const sll_object_t* restrict o){
+__SLL_FUNC void sll_write_object(sll_output_data_stream_t* os,const sll_object_t* o){
 	_write_object(os,o);
 }
 
 
 
-__SLL_FUNC void sll_write_compiled_object(sll_output_data_stream_t* restrict os,const sll_compilation_data_t* restrict c_dt){
+__SLL_FUNC void sll_write_compiled_object(sll_output_data_stream_t* os,const sll_compilation_data_t* c_dt){
 	uint32_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
 	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
 	sll_version_t v=SLL_VERSION;
@@ -245,7 +245,7 @@ __SLL_FUNC void sll_write_compiled_object(sll_output_data_stream_t* restrict os,
 	}
 	_write_integer(os,c_dt->st.l);
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
-		const sll_string_t* s=*(c_dt->st.dt+i);
+		const sll_string_t* s=c_dt->st.dt+i;
 		_write_integer(os,s->l);
 		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,s->v,s->l*sizeof(sll_char_t));
 	}

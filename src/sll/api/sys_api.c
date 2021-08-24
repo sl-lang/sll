@@ -3,6 +3,7 @@
 #include <sll/constants.h>
 #include <sll/gc.h>
 #include <sll/platform.h>
+#include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdlib.h>
@@ -10,32 +11,30 @@
 
 
 
-sll_sys_arg_count_t _sys_argc=0;
-sll_string_t** _sys_argv=NULL;
-sll_string_t* _sys_p=NULL;
+static sll_runtime_object_t _sys_argc={1,SLL_RUNTIME_OBJECT_TYPE_INT,{.i=0}};
+static sll_runtime_object_t** _sys_argv=NULL;
+static sll_runtime_object_t _sys_p={1,SLL_RUNTIME_OBJECT_TYPE_STRING,{.s=SLL_ZERO_STRING_STRUCT}};
 
 
 
-__SLL_FUNC void sll_set_argument_count(sll_sys_arg_count_t ac){
+__SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
 	if (_sys_argv){
-		for (sll_sys_arg_count_t i=0;i<_sys_argc;i++){
-			if (*(_sys_argv+i)!=&_zero_string){
-				SLL_RELEASE(*(_sys_argv+i));
-			}
+		for (sll_integer_t i=0;i<_sys_argc.dt.i;i++){
+			SLL_RELEASE(*(_sys_argv+i));
 		}
 		free(_sys_argv);
 	}
-	_sys_argc=ac;
-	_sys_argv=malloc(ac*sizeof(sll_string_t*));
-	for (sll_sys_arg_count_t i=0;i<ac;i++){
-		*(_sys_argv+i)=&_zero_string;
+	_sys_argc.dt.i=ac;
+	_sys_argv=malloc(ac*sizeof(sll_runtime_object_t*));
+	for (sll_integer_t i=0;i<ac;i++){
+		*(_sys_argv+i)=SLL_ACQUIRE_STATIC(str_zero);
 	}
 }
 
 
 
-__SLL_FUNC void sll_set_argument(sll_sys_arg_count_t i,const char* restrict a){
-	if (i>=_sys_argc){
+__SLL_FUNC void sll_set_argument(sll_integer_t i,const char* a){
+	if (i<0||i>=_sys_argc.dt.i){
 		return;
 	}
 	sll_string_length_t l=0;
@@ -44,47 +43,51 @@ __SLL_FUNC void sll_set_argument(sll_sys_arg_count_t i,const char* restrict a){
 		c^=*(a+l);
 		l++;
 	}
-	sll_string_t* s=sll_string_create(l);
-	s->c=c;
-	memcpy(s->v,a,l);
-	*(_sys_argv+i)=s;
+	SLL_RELEASE(*(_sys_argv+i));
+	sll_runtime_object_t* n=SLL_CREATE();
+	n->rc=1;
+	n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	sll_string_create(l,&(n->dt.s));
+	n->dt.s.c=c;
+	memcpy(n->dt.s.v,a,l);
+	*(_sys_argv+i)=n;
 }
 
 
 
 __API_FUNC(sys_arg_get){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	if (!ac||a->t!=SLL_RUNTIME_OBJECT_TYPE_INT||a->dt.i<0||a->dt.i>=_sys_argc){
-		o->dt.s=&_zero_string;
+	if (!ac){
+		SLL_RETURN_ZERO_STRING;
 	}
-	else{
-		o->dt.s=*(_sys_argv+a->dt.i);
+	const sll_runtime_object_t* e=*a;
+	if (e->t!=SLL_RUNTIME_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=_sys_argc.dt.i){
+		SLL_RETURN_ZERO_STRING
 	}
-	SLL_ACQUIRE(o->dt.s);
+	SLL_ACQUIRE(*(_sys_argv+e->dt.i));
+	return *(_sys_argv+e->dt.i);
 }
 
 
 
 __API_FUNC(sys_arg_get_count){
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-	o->dt.i=_sys_argc;
+	SLL_ACQUIRE(&_sys_argc);
+	return &_sys_argc;
 }
 
 
 
 __API_FUNC(sys_get_platform){
-	if (!_sys_p){
+	if (!_sys_p.dt.s.l){
 		sll_string_length_t l=0;
 		sll_string_checksum_t c=0;
 		while (*(sll_platform_string+l)){
 			c^=*(sll_platform_string+l);
 			l++;
 		}
-		_sys_p=sll_string_create(l);
-		_sys_p->c=c;
-		memcpy(_sys_p->v,sll_platform_string,l);
+		sll_string_create(l,&(_sys_p.dt.s));
+		_sys_p.dt.s.c=c;
+		memcpy(_sys_p.dt.s.v,sll_platform_string,l);
 	}
-	SLL_ACQUIRE(_sys_p);
-	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	o->dt.s=_sys_p;
+	SLL_ACQUIRE(&_sys_p);
+	return &_sys_p;
 }

@@ -6,16 +6,10 @@
 
 
 
-#define SLL_ACQUIRE(x) (++((sll_gc_object_t*)(x))->rc)
-#define SLL_RELEASE(x) (--((sll_gc_object_t*)(x))->rc||(free((x)),0))
-
-
-
-__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* restrict o);
-
-
-
-__SLL_FUNC void sll_release_object(sll_runtime_object_t* restrict o);
+#define SLL_CREATE() malloc(sizeof(sll_runtime_object_t))
+#define SLL_ACQUIRE(x) (++(x)->rc)
+#define SLL_RELEASE(x) (--(x)->rc||(free((x)),0))
+#define SLL_CREATE_STRUCT {1,SLL_RUNTIME_OBJECT_TYPE_INT,{.i=0}}
 
 
 
