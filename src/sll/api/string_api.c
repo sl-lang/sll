@@ -120,7 +120,7 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 				o+=a->dt.s.l;
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-				o+=sll_object_to_string_length(a->dt.a.v,a->dt.a.l)+a->dt.a.l+1;
+				o+=sll_object_to_string_length((const sll_runtime_object_t**)(a->dt.a.v),a->dt.a.l)+a->dt.a.l+1;
 				break;
 			default:
 				SLL_UNREACHABLE();

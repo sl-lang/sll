@@ -17,7 +17,7 @@ __API_FUNC(path_absolute){
 	if (v->t!=SLL_RUNTIME_OBJECT_TYPE_STRING){
 		SLL_RETURN_ZERO_STRING;
 	}
-	char bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t l=(sll_string_length_t)sll_platform_path_absolute((char*)v->dt.s.v,bf,SLL_API_MAX_FILE_PATH_LENGTH);
 	if (!l){
 		sll_runtime_object_t* o=SLL_CREATE();

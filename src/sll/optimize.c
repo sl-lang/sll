@@ -506,7 +506,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 							rt.dt.f=b->dt.f;
 						}
 						sll_string_t s;
-						sll_runtime_object_t* rt_p=&rt;
+						const sll_runtime_object_t* rt_p=&rt;
 						sll_object_to_string(&rt_p,1,&s);
 						b->t=SLL_OBJECT_TYPE_STRING;
 						b->dt.s=sll_add_string(&(o_dt->c_dt->st),&s);

@@ -335,7 +335,7 @@ _print_from_stack:;
 					}
 					else{
 						sll_string_t str;
-						sll_object_to_string(&e,1,&str);
+						sll_object_to_string((const sll_runtime_object_t**)(&e),1,&str);
 						fwrite(str.v,sizeof(sll_char_t),str.l,stdout);
 						free(str.v);
 					}
@@ -364,7 +364,7 @@ _print_from_stack:;
 						sll_function_index_t i=(sll_function_index_t)(~e->dt.i);
 						if (i<i_ft->l){
 							si-=ai->dt.ac;
-							sll_runtime_object_t* n=(*(i_ft->dt+i))->p(s+si,ai->dt.ac);
+							sll_runtime_object_t* n=(*(i_ft->dt+i))->p((const sll_runtime_object_t**)(s+si),ai->dt.ac);
 							for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
 								SLL_RELEASE(*(s+si+j));
 							}
@@ -424,7 +424,7 @@ _print_from_stack:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<i_ft->l){
-						sll_runtime_object_t* n=(*(i_ft->dt+i))->p(s+si-1,1);
+						sll_runtime_object_t* n=(*(i_ft->dt+i))->p((const sll_runtime_object_t**)(s+si-1),1);
 						SLL_RELEASE(*(s+si-1));
 						*(s+si-1)=n;
 						break;

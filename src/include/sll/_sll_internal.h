@@ -259,24 +259,9 @@ typedef struct __CALL_STACK{
 
 
 typedef struct __INTERNAL_FUNCTION{
-	const char nm[256];
+	const sll_char_t nm[256];
 	sll_internal_function_pointer_t f;
 } internal_function_t;
-
-
-
-typedef struct __PAGE_HEADER{
-	void* p;
-	uint64_t sz;
-} page_header_t;
-
-
-
-typedef struct __MEMORY_NODE{
-	uint64_t sz;
-	struct __MEMORY_NODE* p;
-	struct __MEMORY_NODE* n;
-} memory_node_t;
 
 
 
