@@ -21,13 +21,11 @@ __API_FUNC(path_absolute){
 	sll_string_length_t l=(sll_string_length_t)sll_platform_path_absolute((char*)v->dt.s.v,bf,SLL_API_MAX_FILE_PATH_LENGTH);
 	if (!l){
 		sll_runtime_object_t* o=SLL_CREATE();
-		o->rc=1;
 		o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 		sll_string_clone(&(v->dt.s),&(o->dt.s));
 		return o;
 	}
 	sll_runtime_object_t* o=SLL_CREATE();
-	o->rc=1;
 	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 	sll_string_create(l,&(o->dt.s));
 	for (sll_string_length_t i=0;i<l;i++){

@@ -53,7 +53,7 @@
 (:> "Array: " x " (RC: " (<- get_ref_count x) ")\n")
 (:> (<- get_ref_count x) ", " (<- get_ref_count y) "\n")
 (= st (<- time))
-(= tm (<- sleep 1))
+(= tm (<- sleep 0.1))
 (= et (<- time))
 (:> "Delta Time: " (- et st) "s (" tm "s)\n")
 (= z z z z z z z z z)

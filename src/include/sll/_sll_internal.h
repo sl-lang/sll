@@ -54,9 +54,9 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 
 
-#define _INTERNAL_FUNCTION_JOIN2(a,b,c) a##b##_##c
-#define _INTERNAL_FUNCTION_JOIN(a,b,c) _INTERNAL_FUNCTION_JOIN2(a,b,c)
-#define _INTERNAL_FUNCTION_NAME(a) _INTERNAL_FUNCTION_JOIN(a,__FILE_ID__,__LINE__)
+#define _INTERNAL_FUNCTION_JOIN2(a,b) a##_##b
+#define _INTERNAL_FUNCTION_JOIN(a,b) _INTERNAL_FUNCTION_JOIN2(a,b)
+#define _INTERNAL_FUNCTION_NAME(a) _INTERNAL_FUNCTION_JOIN(a,__LINE__)
 #define _SLL_ASSERT_STRINGIFY_(x) #x
 #define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
 #define _SLL_ASSERT_JOIN_(x) _SLL_ASSERT_##x
@@ -133,6 +133,10 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define RUNTIME_OBJECT_CHANGE_IN_LOOP SLL_RUNTIME_OBJECT_RESERVED0
 #define RUNTIME_OBJECT_TYPE_UNKNOWN 5
 
+#define GC_INIT_PAGE_COUNT 4
+#define GC_GET_NEXT_OBJECT(o) ((sll_runtime_object_t*)((o)->dt.s.v))
+#define GC_SET_NEXT_OBJECT(o,n) ((o)->dt.s.v=(sll_char_t*)(n))
+
 
 
 typedef uint16_t call_stack_size_t;
@@ -155,11 +159,19 @@ typedef struct __SCOPE_DATA{
 
 
 
+typedef struct __NEW_VARIABLE_DATA{
+	sll_object_t** dt;
+	uint32_t sz;
+} new_variable_data_t;
+
+
+
 typedef struct __EXTRA_COMPILATION_DATA{
 	uint8_t fl;
 	scope_data_t sc;
 	sll_internal_function_table_t* i_ft;
 	sll_import_loader_t il;
+	new_variable_data_t* nv_dt;
 } extra_compilation_data_t;
 
 
@@ -179,6 +191,7 @@ typedef struct __IMPORT_MODULE_DATA{
 	sll_object_t* d;
 	identifier_pair_t* eim;
 	sll_export_table_length_t eiml;
+	sll_scope_t sc_off;
 } import_module_data_t;
 
 
@@ -265,7 +278,15 @@ typedef struct __INTERNAL_FUNCTION{
 
 
 
-extern sll_string_t _zero_string;
+void _gc_free_pages(void);
+
+
+
+void _gc_init(void);
+
+
+
+void _sys_free_argv(void);
 
 
 

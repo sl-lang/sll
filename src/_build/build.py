@@ -76,18 +76,18 @@ def build_sll(fl,v,vb,r):
 			if (vb):
 				print("  Compiling Library Files...")
 			os.chdir("objects")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-Wall","-O0","-Werror","-I","../../src/include"]+sha_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-Wall","-g","-O0","-Werror","-I","../../src/include"]+sha_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
 			if (vb):
 				print("  Linking Library Files...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O0","-o",nm+".so"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-g","-O0","-o",nm+".so"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/cli/main.c",nm+".so","-o","sll","-I","."]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-g","-O0","../src/cli/main.c",nm+".so","-o","sll","-I","."]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
@@ -130,7 +130,7 @@ def build_sll_standalone(vb,r):
 		else:
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-O0","../src/cli/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-g","-O0","../src/cli/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
@@ -174,7 +174,7 @@ def build_sll_test(t_fp,vb,r):
 		else:
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-O0","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-g","-O0","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)

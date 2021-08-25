@@ -1,3 +1,4 @@
+#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/constants.h>
 #include <sll/gc.h>
@@ -8,11 +9,14 @@
 
 
 
-sll_string_t _zero_string={
-	1,
-	0,
-	0
-};
+static char _util_init=0;
+
+
+
+void _util_cleanup(void){
+	_sys_free_argv();
+	_gc_free_pages();
+}
 
 
 
@@ -108,4 +112,14 @@ __SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o){
 		off+=sll_get_object_size(o+off);
 	}
 	return off+eoff;
+}
+
+
+
+__SLL_FUNC void sll_init(void){
+	if (!_util_init){
+		_util_init=1;
+		_gc_init();
+		atexit(_util_cleanup);
+	}
 }

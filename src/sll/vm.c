@@ -7,6 +7,7 @@
 #include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
+#include <stdlib.h>
 
 
 
@@ -113,7 +114,6 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 				{
 					sll_runtime_object_t* n=SLL_CREATE();
 					*(s+si)=n;
-					n->rc=1;
 					n->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 					n->dt.i=ai->dt.i;
 					si++;
@@ -147,7 +147,6 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 				{
 					sll_runtime_object_t* n=SLL_CREATE();
 					*(s+si)=n;
-					n->rc=1;
 					n->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
 					n->dt.f=ai->dt.f;
 					si++;
@@ -157,7 +156,6 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 				{
 					sll_runtime_object_t* n=SLL_CREATE();
 					*(s+si)=n;
-					n->rc=1;
 					n->t=SLL_RUNTIME_OBJECT_TYPE_CHAR;
 					n->dt.c=ai->dt.c;
 					si++;
@@ -176,7 +174,6 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				{
 					sll_runtime_object_t* n=SLL_CREATE();
-					n->rc=1;
 					n->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 					sll_array_t* a=&(n->dt.a);
 					sll_array_create(ai->dt.al,a);
@@ -195,29 +192,37 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE:
 				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
+				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=*(s+si-1);
 				SLL_ACQUIRE(*(s+si-1));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
+				SLL_RELEASE(*(v+ai->dt.v));
 				si--;
 				*(v+ai->dt.v)=*(s+si);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE:
+				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_minus_one);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO:
+				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_zero);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE:
+				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_one);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
+				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_two);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
+				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_three);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
+				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_four);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
@@ -229,6 +234,8 @@ _jump:
 				{
 					if (sll_operator_compare(*(s+si-2),*(s+si-1))==SLL_COMPARE_RESULT_BELOW){
 						si-=2;
+						SLL_RELEASE(*(s+si));
+						SLL_RELEASE(*(s+si+1));
 						goto _jump;
 					}
 					break;
@@ -237,6 +244,8 @@ _jump:
 				{
 					if (sll_operator_compare(*(s+si-2),*(s+si-1))!=SLL_COMPARE_RESULT_ABOVE){
 						si-=2;
+						SLL_RELEASE(*(s+si));
+						SLL_RELEASE(*(s+si+1));
 						goto _jump;
 					}
 					break;
@@ -245,6 +254,8 @@ _jump:
 				{
 					if (sll_operator_compare(*(s+si-2),*(s+si-1))==SLL_COMPARE_RESULT_ABOVE){
 						si-=2;
+						SLL_RELEASE(*(s+si));
+						SLL_RELEASE(*(s+si+1));
 						goto _jump;
 					}
 					break;
@@ -253,6 +264,8 @@ _jump:
 				{
 					if (sll_operator_compare(*(s+si-2),*(s+si-1))!=SLL_COMPARE_RESULT_BELOW){
 						si-=2;
+						SLL_RELEASE(*(s+si));
+						SLL_RELEASE(*(s+si+1));
 						goto _jump;
 					}
 					break;
@@ -261,6 +274,8 @@ _jump:
 				{
 					if (sll_operator_compare(*(s+si-2),*(s+si-1))==SLL_COMPARE_RESULT_EQUAL){
 						si-=2;
+						SLL_RELEASE(*(s+si));
+						SLL_RELEASE(*(s+si+1));
 						goto _jump;
 					}
 					break;
@@ -269,6 +284,8 @@ _jump:
 				{
 					if (sll_operator_compare(*(s+si-2),*(s+si-1))!=SLL_COMPARE_RESULT_EQUAL){
 						si-=2;
+						SLL_RELEASE(*(s+si));
+						SLL_RELEASE(*(s+si+1));
 						goto _jump;
 					}
 					break;
@@ -277,6 +294,7 @@ _jump:
 				{
 					if (sll_operator_bool(*(s+si-1))==SLL_COMPARE_RESULT_ZERO){
 						si--;
+						SLL_RELEASE(*(s+si));
 						goto _jump;
 					}
 					break;
@@ -285,6 +303,7 @@ _jump:
 				{
 					if (sll_operator_bool(*(s+si-1))==SLL_COMPARE_RESULT_NONZERO){
 						si--;
+						SLL_RELEASE(*(s+si));
 						goto _jump;
 					}
 					break;
@@ -360,30 +379,38 @@ _print_from_stack:;
 				{
 					si--;
 					sll_runtime_object_t* e=*(s+si);
-					if (e->dt.i<0){
-						sll_function_index_t i=(sll_function_index_t)(~e->dt.i);
-						if (i<i_ft->l){
-							si-=ai->dt.ac;
-							sll_runtime_object_t* n=(*(i_ft->dt+i))->p((const sll_runtime_object_t**)(s+si),ai->dt.ac);
-							for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
-								SLL_RELEASE(*(s+si+j));
+					if (e->t==SLL_RUNTIME_OBJECT_TYPE_INT){
+						sll_integer_t v=e->dt.i;
+						SLL_RELEASE(e);
+						if (v<0){
+							sll_function_index_t i=(sll_function_index_t)(~v);
+							if (i<i_ft->l){
+								si-=ai->dt.ac;
+								sll_runtime_object_t* n=(*(i_ft->dt+i))->p((const sll_runtime_object_t**)(s+si),ai->dt.ac);
+								for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
+									SLL_RELEASE(*(s+si+j));
+								}
+								if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
+									*(s+si)=n;
+									si++;
+								}
+								else{
+									SLL_RELEASE(n);
+								}
+								break;
 							}
-							if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
-								*(s+si)=n;
-								si++;
-							}
-							break;
+						}
+						else if (v&&v<=a_dt->ft.l){
+							SLL_ASSERT(c_st.l<=CALL_STACK_SIZE);
+							(c_st.dt+c_st.l)->ii=ii;
+							(c_st.dt+c_st.l)->s=si-ai->dt.ac;
+							c_st.l++;
+							ii=*(a_dt->ft.dt+v-1);
+							ai=a_dt->h+ii;
+							continue;
 						}
 					}
-					else if (e->dt.i&&e->dt.i<=a_dt->ft.l){
-						SLL_ASSERT(c_st.l<=CALL_STACK_SIZE);
-						(c_st.dt+c_st.l)->ii=ii;
-						(c_st.dt+c_st.l)->s=si-ai->dt.ac;
-						c_st.l++;
-						ii=*(a_dt->ft.dt+e->dt.i-1);
-						ai=a_dt->h+ii;
-						continue;
-					}
+					SLL_RELEASE(e);
 					if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
 						si-=ai->dt.ac;
 					}
@@ -453,6 +480,9 @@ _return:;
 					*(s+si)=tmp;
 					si++;
 				}
+				else{
+					SLL_RELEASE(tmp);
+				}
 				ii++;
 				ai++;
 				continue;
@@ -463,7 +493,6 @@ _return:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
 				{
 					sll_runtime_object_t* n=SLL_CREATE();
-					n->rc=1;
 					n->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 					n->dt.i=ai->dt.i;
 					*(s+si)=n;
@@ -473,7 +502,6 @@ _return:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
 				{
 					sll_runtime_object_t* n=SLL_CREATE();
-					n->rc=1;
 					n->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
 					n->dt.f=ai->dt.f;
 					*(s+si)=n;
@@ -483,7 +511,6 @@ _return:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
 				{
 					sll_runtime_object_t* n=SLL_CREATE();
-					n->rc=1;
 					n->t=SLL_RUNTIME_OBJECT_TYPE_CHAR;
 					n->dt.c=ai->dt.c;
 					*(s+si)=n;

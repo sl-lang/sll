@@ -17,6 +17,18 @@ static sll_runtime_object_t _sys_p={1,SLL_RUNTIME_OBJECT_TYPE_STRING,{.s=SLL_ZER
 
 
 
+void _sys_free_argv(void){
+	if (_sys_argv){
+		for (sll_integer_t i=0;i<_sys_argc.dt.i;i++){
+			SLL_RELEASE(*(_sys_argv+i));
+		}
+		free(_sys_argv);
+		_sys_argv=NULL;
+	}
+}
+
+
+
 __SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc.dt.i;i++){
@@ -45,7 +57,6 @@ __SLL_FUNC void sll_set_argument(sll_integer_t i,const char* a){
 	}
 	SLL_RELEASE(*(_sys_argv+i));
 	sll_runtime_object_t* n=SLL_CREATE();
-	n->rc=1;
 	n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 	sll_string_create(l,&(n->dt.s));
 	n->dt.s.c=c;

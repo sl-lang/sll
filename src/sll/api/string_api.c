@@ -136,7 +136,6 @@ __API_FUNC(string_convert){
 		SLL_RETURN_ZERO_STRING;
 	}
 	sll_runtime_object_t* o=SLL_CREATE();
-	o->rc=1;
 	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 	sll_object_to_string(a,ac,&(o->dt.s));
 	return o;

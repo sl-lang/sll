@@ -126,7 +126,6 @@ __SLL_OPERATOR_BINARY(add){
 					return SLL_ACQUIRE_STATIC(str_zero);
 				}
 				sll_runtime_object_t* o=SLL_CREATE();
-				o->rc=1;
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				sll_string_create(sa.l+sb.l,&o->dt.s);
 				o->dt.s.c=sa.c^sb.c;
@@ -697,7 +696,6 @@ __SLL_OPERATOR_BINARY(access){
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT){
 			if (b->dt.i>=0&&b->dt.i<a->dt.s.l){
 				sll_runtime_object_t* o=SLL_CREATE();
-				o->rc=1;
 				o->t=SLL_RUNTIME_OBJECT_TYPE_CHAR;
 				o->dt.c=a->dt.s.v[b->dt.i];
 				return o;

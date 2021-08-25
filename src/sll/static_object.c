@@ -67,7 +67,6 @@ __SLL_FUNC sll_runtime_object_t* sll_int_to_object(sll_integer_t v){
 		return o;
 	}
 	sll_runtime_object_t* o=SLL_CREATE();
-	o->rc=1;
 	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 	o->dt.i=v;
 	return o;
@@ -89,7 +88,6 @@ __SLL_FUNC sll_runtime_object_t* sll_float_to_object(sll_float_t v){
 		return SLL_ACQUIRE_STATIC(float_third);
 	}
 	sll_runtime_object_t* o=SLL_CREATE();
-	o->rc=1;
 	o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
 	o->dt.f=v;
 	return o;

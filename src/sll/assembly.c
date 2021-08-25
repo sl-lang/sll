@@ -6,6 +6,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -483,11 +484,29 @@ sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_
 			{
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l>=2);
-				SLL_ASSERT((o+1)->t==SLL_OBJECT_TYPE_IDENTIFIER);
+				const sll_object_t* io=o+1;
+				SLL_ASSERT(io->t==SLL_OBJECT_TYPE_IDENTIFIER);
 				sll_object_offset_t off=_generate_on_stack(o+2,g_dt)+2;
 				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE;
-				ai->dt.v=GET_VARIABLE_INDEX(o+1,g_dt);
+				uint8_t i=SLL_IDENTIFIER_GET_ARRAY_ID(io->dt.id);
+				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_INDEX(io->dt.id);
+				if (i==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
+					if (*(g_dt->rm.l+j)==io){
+						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					}
+					else{
+						ai->dt.v=(g_dt->it.l_im+j)->v;
+					}
+				}
+				else{
+					if (*(g_dt->rm.s[i]+j)==io){
+						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
+					}
+					else{
+						ai->dt.v=(g_dt->it.s_im[i]+j)->v;
+					}
+				}
 				l-=2;
 				while (l){
 					l--;
@@ -664,7 +683,13 @@ sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g
 		case SLL_OBJECT_TYPE_STRING:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_ARRAY:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_object_offset_t off=1;
+				for (sll_array_length_t i=0;i<o->dt.al;i++){
+					off+=_generate(o+off,g_dt);
+				}
+				return eoff+off;
+			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				uint8_t i=SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
@@ -710,12 +735,23 @@ sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g
 				while ((o+off)->t==SLL_OBJECT_TYPE_NOP||(o+off)->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 					off++;
 				}
-				SLL_ASSERT((o+off)->t==SLL_OBJECT_TYPE_IDENTIFIER);
-				sll_variable_index_t vi=GET_VARIABLE_INDEX(o+off,g_dt);
+				const sll_object_t* io=o+off;
+				SLL_ASSERT(io->t==SLL_OBJECT_TYPE_IDENTIFIER);
+				uint8_t i=SLL_IDENTIFIER_GET_ARRAY_ID(io->dt.id);
+				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_INDEX(io->dt.id);
+				if ((i==SLL_MAX_SHORT_IDENTIFIER_LENGTH&&*(g_dt->rm.l+j)==io)||(i!=SLL_MAX_SHORT_IDENTIFIER_LENGTH&&*(g_dt->rm.s[i]+j)==io)){
+					off++;
+					l--;
+					while (l){
+						l--;
+						off+=_generate(o+off,g_dt);
+					}
+					return off+eoff;
+				}
 				off+=_generate_on_stack(o+off+1,g_dt)+1;
 				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP;
-				ai->dt.v=vi;
+				ai->dt.v=GET_VARIABLE_INDEX(io,g_dt);
 				l-=2;
 				while (l){
 					l--;
