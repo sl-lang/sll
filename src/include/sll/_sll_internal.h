@@ -50,7 +50,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define __API_FUNC(nm) INTERNAL_FUNCTION(#nm,sll_api_##nm);__API_FUNC_DECL(nm)
 #define __SLL_STATIC_RAW(nm) &_##nm##_static_data
-#define __SLL_STATIC_OBJECT(nm,t,f,v) sll_runtime_object_t _##nm##_static_data={1,t,{.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
+#define __SLL_STATIC_OBJECT(nm,t,f,v) sll_runtime_object_t _##nm##_static_data={1,t,.dt={.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
 
 
 
@@ -136,6 +136,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define GC_INIT_PAGE_COUNT 4
 #define GC_GET_NEXT_OBJECT(o) ((sll_runtime_object_t*)((o)->dt.s.v))
 #define GC_SET_NEXT_OBJECT(o,n) ((o)->dt.s.v=(sll_char_t*)(n))
+
+#define GC_MAX_DBG_ID 16777215
 
 
 
@@ -275,6 +277,14 @@ typedef struct __INTERNAL_FUNCTION{
 	const sll_char_t nm[256];
 	sll_internal_function_pointer_t f;
 } internal_function_t;
+
+
+
+typedef struct __RUNTIME_OBJECT_DEBUG_DATA{
+	const char* fp;
+	unsigned int ln;
+	const char* fn;
+} runtime_object_debug_data_t;
 
 
 

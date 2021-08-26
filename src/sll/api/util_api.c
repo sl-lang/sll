@@ -9,5 +9,5 @@ __API_FUNC(util_ref_count){
 	if (!ac){
 		SLL_RETURN_ZERO;
 	}
-	return sll_int_to_object((*a)->rc);
+	return SLL_FROM_INT((*a)->rc);
 }

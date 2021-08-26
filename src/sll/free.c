@@ -8,10 +8,8 @@
 
 
 __SLL_FUNC void sll_free_assembly_function_table(sll_assembly_function_table_t* ft){
-	if (ft->dt){
-		free(ft->dt);
-		ft->dt=NULL;
-	}
+	free(ft->dt);
+	ft->dt=NULL;
 	ft->l=0;
 }
 
@@ -48,10 +46,8 @@ __SLL_FUNC void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 
 
 __SLL_FUNC void sll_free_export_table(sll_export_table_t* et){
-	if (et->dt){
-		free(et->dt);
-		et->dt=NULL;
-	}
+	free(et->dt);
+	et->dt=NULL;
 	et->l=0;
 }
 
@@ -61,10 +57,8 @@ __SLL_FUNC void sll_free_function_table(sll_function_table_t* ft){
 	for (sll_function_index_t i=0;i<ft->l;i++){
 		free(*(ft->dt+i));
 	}
-	if (ft->dt){
-		free(ft->dt);
-		ft->dt=NULL;
-	}
+	free(ft->dt);
+	ft->dt=NULL;
 	ft->l=0;
 }
 
@@ -73,16 +67,12 @@ __SLL_FUNC void sll_free_function_table(sll_function_table_t* ft){
 __SLL_FUNC void sll_free_identifier_table(sll_identifier_table_t* idt){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_identifier_list_t* e=idt->s+i;
-		if (e->dt){
-			free(e->dt);
-			e->dt=NULL;
-		}
+		free(e->dt);
+		e->dt=NULL;
 		e->l=0;
 	}
-	if (idt->il){
-		free(idt->il);
-		idt->il=NULL;
-	}
+	free(idt->il);
+	idt->il=NULL;
 	idt->ill=0;
 }
 
@@ -92,11 +82,18 @@ __SLL_FUNC void sll_free_internal_function_table(sll_internal_function_table_t* 
 	for (sll_function_index_t i=0;i<ift->l;i++){
 		free(*(ift->dt+i));
 	}
-	if (ift->dt){
-		free(ift->dt);
-		ift->dt=NULL;
-	}
+	free(ift->dt);
+	ift->dt=NULL;
 	ift->l=0;
+}
+
+
+
+__SLL_FUNC void sll_free_runtime_object_stack_data(sll_runtime_object_stack_data_t* rst){
+	rst->off=0;
+	free(rst->m);
+	rst->m=NULL;
+	rst->ml=0;
 }
 
 
@@ -105,9 +102,7 @@ __SLL_FUNC void sll_free_string_table(sll_string_table_t* st){
 	for (sll_string_index_t i=0;i<st->l;i++){
 		free((st->dt+i)->v);
 	}
-	if (st->dt){
-		free(st->dt);
-		st->dt=NULL;
-	}
+	free(st->dt);
+	st->dt=NULL;
 	st->l=0;
 }

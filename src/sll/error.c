@@ -39,6 +39,9 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 			case SLL_ERROR_INVALID_STACK_INDEX:
 				printf("Stack Index Out of Bounds\n");
 				return;
+			case SLL_ERROR_UNRELEASED_OBJECTS:
+				printf("Unreleased Runtime Objects\n");
+				return;
 			case SLL_ERROR_SLL_ASSERTION:
 				printf("%s\n",e->dt.str);
 				return;

@@ -391,6 +391,8 @@ typedef union __SLL_RUNTIME_OBJECT_DATA{
 typedef struct __SLL_RUNTIME_OBJECT{
 	sll_ref_count_t rc;
 	sll_runtime_object_type_t t;
+	uint16_t _dbg0;
+	uint8_t _dbg1;
 	sll_runtime_object_data_t dt;
 } sll_runtime_object_t;
 
@@ -439,6 +441,14 @@ typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
 	sll_internal_function_t** dt;
 	sll_function_index_t l;
 } sll_internal_function_table_t;
+
+
+
+typedef struct __SLL_RUNTIME_OBJECT_STACK_DATA{
+	uint32_t off;
+	uint64_t* m;
+	uint32_t ml;
+} sll_runtime_object_stack_data_t;
 
 
 

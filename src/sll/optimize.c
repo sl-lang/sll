@@ -770,9 +770,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 				sll_object_offset_t cnd_sz=_optimize(cnd_o,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 				off+=cnd_sz;
 				sll_object_t* tmp=malloc(cnd_sz*sizeof(sll_object_t));
-				for (sll_object_offset_t i=0;i<cnd_sz;i++){
-					*(tmp+i)=*(cnd_o+i);
-				}
+				memcpy(tmp,cnd_o,cnd_sz*sizeof(sll_object_t));
 				_optimize(tmp,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT|OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
 				if (o_dt->rm){
 					SLL_UNIMPLEMENTED();

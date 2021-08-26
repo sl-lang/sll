@@ -3,6 +3,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/constants.h>
+#include <sll/core.h>
 #include <sll/gc.h>
 #include <sll/operator.h>
 #include <sll/static_object.h>
@@ -57,25 +58,33 @@
 
 __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,const sll_internal_function_table_t* i_ft,sll_input_data_stream_t* in,sll_output_data_stream_t* out,sll_error_t* e){
 	sll_return_code_t rc=0;
+	sll_runtime_object_stack_data_t rst;
+	sll_get_runtime_object_stack_data(&rst);
 	const sll_assembly_instruction_t* ai=a_dt->h;
-	sll_runtime_object_t** v=(sll_runtime_object_t**)(st->ptr);
+	sll_buffer_t ptr=st->ptr;
+	sll_runtime_object_t** v=(sll_runtime_object_t**)ptr;
+	__SLL_STATIC_NAME(int_zero)->rc+=a_dt->vc;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
-		*(v+i)=SLL_ACQUIRE_STATIC(int_zero);
+		*(v+i)=__SLL_STATIC_NAME(int_zero);
 	}
-	call_stack_t c_st={
-		(call_stack_frame_t*)(st->ptr+a_dt->vc*sizeof(sll_runtime_object_t*)),
-		0
-	};
-	sll_runtime_object_t** s=(sll_runtime_object_t**)(st->ptr+a_dt->vc*sizeof(sll_runtime_object_t*)+CALL_STACK_SIZE*sizeof(call_stack_frame_t));
-	sll_stack_offset_t si=0;
-	sll_stack_offset_t s_sz=(st->sz-a_dt->vc*sizeof(sll_runtime_object_t*)-CALL_STACK_SIZE*sizeof(call_stack_frame_t))/sizeof(sll_runtime_object_t*);
-	sll_instruction_index_t ii=0;
-	sll_runtime_object_t* cs=malloc(a_dt->st.l*sizeof(sll_runtime_object_t));
+	ptr+=a_dt->vc*sizeof(sll_runtime_object_t*);
+	sll_runtime_object_t* cs=(sll_runtime_object_t*)ptr;
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
 		(cs+i)->rc=1;
 		(cs+i)->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 		(cs+i)->dt.s=*(a_dt->st.dt+i);
 	}
+	ptr+=a_dt->st.l*sizeof(sll_runtime_object_t);
+	call_stack_t c_st={
+		(call_stack_frame_t*)ptr,
+		0
+	};
+	ptr+=CALL_STACK_SIZE*sizeof(call_stack_frame_t);
+	sll_runtime_object_t** s=(sll_runtime_object_t**)ptr;
+	sll_stack_offset_t si=0;
+	SLL_ASSERT(st->ptr+st->sz>=ptr);
+	sll_stack_offset_t s_sz=(sll_stack_offset_t)(st->ptr+st->sz-ptr);
+	sll_instruction_index_t ii=0;
 	while (1){
 		if (ii>=a_dt->ic){
 			e->t=SLL_ERROR_INVALID_INSTRUCTION_INDEX;
@@ -112,10 +121,10 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 				{
-					sll_runtime_object_t* n=SLL_CREATE();
-					*(s+si)=n;
-					n->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-					n->dt.i=ai->dt.i;
+					sll_runtime_object_t* tos=SLL_CREATE();
+					*(s+si)=tos;
+					tos->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+					tos->dt.i=ai->dt.i;
 					si++;
 					break;
 				}
@@ -174,6 +183,7 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				{
 					sll_runtime_object_t* tos=SLL_CREATE();
+					*(s+si)=tos;
 					tos->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 					sll_array_t* a=&(tos->dt.a);
 					sll_array_create(ai->dt.al,a);
@@ -181,7 +191,6 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 					for (sll_array_length_t i=0;i<ai->dt.al;i++){
 						a->v[i]=*(s+si+i);
 					}
-					*(s+si)=tos;
 					si++;
 					break;
 				}
@@ -429,8 +438,7 @@ _print_from_stack:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<i_ft->l){
-						sll_runtime_object_t* n=(*(i_ft->dt+i))->p(NULL,0);
-						*(s+si)=n;
+						*(s+si)=(*(i_ft->dt+i))->p(NULL,0);
 						si++;
 						break;
 					}
@@ -532,34 +540,34 @@ _return:;
 					si--;
 					if (s<v+a_dt->vc){
 						e->t=SLL_ERROR_STACK_CORRUPTED;
-						goto _clanup;
+						goto _end;
 					}
 					sll_runtime_object_t* tos=*(s+si);
 					switch (SLL_RUNTIME_OBJECT_GET_TYPE(tos)){
 						case SLL_RUNTIME_OBJECT_TYPE_INT:
 							rc=(tos->dt.i<INT32_MIN?INT32_MIN:(tos->dt.i>INT32_MAX?INT32_MAX:(sll_return_code_t)tos->dt.i));
-							goto _clanup;
+							goto _end;
 						case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 							rc=(tos->dt.f<INT32_MIN?INT32_MIN:(tos->dt.f>INT32_MAX?INT32_MAX:(sll_return_code_t)tos->dt.f));
-							goto _clanup;
+							goto _end;
 						case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 							rc=tos->dt.c;
-							goto _clanup;
+							goto _end;
 						case SLL_RUNTIME_OBJECT_TYPE_STRING:
 							rc=(tos->dt.s.l>INT32_MAX?INT32_MAX:tos->dt.s.l);
-							goto _clanup;
+							goto _end;
 						case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 							rc=(tos->dt.a.l>INT32_MAX?INT32_MAX:tos->dt.a.l);
-							goto _clanup;
+							goto _end;
 						default:
 							SLL_UNREACHABLE();
 					}
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO:
-				goto _clanup;
+				goto _end;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ONE:
 				rc=1;
-				goto _clanup;
+				goto _end;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_zero);
@@ -572,16 +580,18 @@ _return:;
 			default:
 				e->t=SLL_ERROR_INVALID_INSTRUCTION;
 				e->dt.it=SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai);
-				goto _clanup;
+				goto _end;
 		}
 		ai++;
 		ii++;
 		if (si>=s_sz){
 			e->t=SLL_ERROR_INVALID_STACK_INDEX;
-			goto _clanup;
 		}
 	}
-_clanup:;
-	free(cs);
+_end:
+	if (!sll_verify_runtime_object_stack_cleanup(&rst)){
+		e->t=SLL_ERROR_UNRELEASED_OBJECTS;
+	}
+	sll_free_runtime_object_stack_data(&rst);
 	return rc;
 }

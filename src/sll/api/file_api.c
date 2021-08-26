@@ -97,7 +97,7 @@ __API_FUNC(file_open){
 	_file_fl=tmp;
 _found_index:
 	(_file_fl+i)->h=h;
-	return sll_int_to_object(i);
+	return SLL_FROM_INT(i);
 }
 
 
@@ -130,5 +130,5 @@ __API_FUNC(file_write){
 	sll_object_to_string(a+1,ac-1,&s);
 	fwrite(s.v,sizeof(sll_char_t),s.l,fh);
 	free(s.v);
-	return sll_int_to_object(s.l);
+	return SLL_FROM_INT(s.l);
 }

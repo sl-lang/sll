@@ -440,6 +440,7 @@ char* error_to_string(sll_error_t* e){
 		case SLL_ERROR_STACK_CORRUPTED:
 		case SLL_ERROR_INVALID_INSTRUCTION_INDEX:
 		case SLL_ERROR_INVALID_STACK_INDEX:
+		case SLL_ERROR_UNRELEASED_OBJECTS:
 			snprintf(o,512,"<type=%"PRIu8">",e->t);
 			break;
 		case SLL_ERROR_INTERNAL_STACK_OVERFLOW:

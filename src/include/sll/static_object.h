@@ -11,6 +11,13 @@
 
 
 #define SLL_ACQUIRE_STATIC(nm) (SLL_ACQUIRE(__SLL_STATIC_NAME(nm)),__SLL_STATIC_NAME(nm))
+#ifdef DEBUG_BUILD
+#define SLL_FROM_INT(v) sll__add_debug_data(sll_int_to_object(v),__FILE__,__LINE__,__func__);
+#define SLL_FROM_FLOAT(v) sll__add_debug_data(sll_float_to_object(v),__FILE__,__LINE__,__func__);
+#else
+#define SLL_FROM_INT(v) sll_int_to_object(v)
+#define SLL_FROM_FLOAT(v) sll_float_to_object(v)
+#endif
 #define SLL_RETURN_ZERO return SLL_ACQUIRE_STATIC(int_zero)
 #define SLL_RETURN_ONE return SLL_ACQUIRE_STATIC(int_one)
 #define SLL_RETURN_ZERO_STRING return SLL_ACQUIRE_STATIC(str_zero);

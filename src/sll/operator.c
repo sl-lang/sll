@@ -43,7 +43,7 @@
 __SLL_OPERATOR_UNARY(inc){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
-			return sll_int_to_object(a->dt.i+1);
+			return SLL_FROM_INT(a->dt.i+1);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
@@ -63,7 +63,7 @@ __SLL_OPERATOR_UNARY(inc){
 __SLL_OPERATOR_UNARY(dec){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
-			return sll_int_to_object(a->dt.i-1);
+			return SLL_FROM_INT(a->dt.i-1);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
@@ -83,9 +83,9 @@ __SLL_OPERATOR_UNARY(dec){
 __SLL_OPERATOR_BINARY(add){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i+b->dt.i);
+			return SLL_FROM_INT(a->dt.i+b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object(a->dt.i+b->dt.f);
+			return SLL_FROM_FLOAT(a->dt.i+b->dt.f);
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -93,9 +93,9 @@ __SLL_OPERATOR_BINARY(add){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_float_to_object(a->dt.f+b->dt.i);
+			return SLL_FROM_FLOAT(a->dt.f+b->dt.i);
 		case COMBINED_TYPE_FF:
-			return sll_float_to_object(a->dt.f+b->dt.f);
+			return SLL_FROM_FLOAT(a->dt.f+b->dt.f);
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -156,9 +156,9 @@ __SLL_OPERATOR_BINARY(add){
 __SLL_OPERATOR_BINARY(sub){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i-b->dt.i);
+			return SLL_FROM_INT(a->dt.i-b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object(a->dt.i-b->dt.f);
+			return SLL_FROM_FLOAT(a->dt.i-b->dt.f);
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -166,9 +166,9 @@ __SLL_OPERATOR_BINARY(sub){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_float_to_object(a->dt.f-b->dt.i);
+			return SLL_FROM_FLOAT(a->dt.f-b->dt.i);
 		case COMBINED_TYPE_FF:
-			return sll_float_to_object(a->dt.f-b->dt.f);
+			return SLL_FROM_FLOAT(a->dt.f-b->dt.f);
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -216,9 +216,9 @@ __SLL_OPERATOR_BINARY(sub){
 __SLL_OPERATOR_BINARY(mult){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i*b->dt.i);
+			return SLL_FROM_INT(a->dt.i*b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object(a->dt.i*b->dt.f);
+			return SLL_FROM_FLOAT(a->dt.i*b->dt.f);
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -226,9 +226,9 @@ __SLL_OPERATOR_BINARY(mult){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_float_to_object(a->dt.f*b->dt.i);
+			return SLL_FROM_FLOAT(a->dt.f*b->dt.i);
 		case COMBINED_TYPE_FF:
-			return sll_float_to_object(a->dt.f*b->dt.f);
+			return SLL_FROM_FLOAT(a->dt.f*b->dt.f);
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -276,9 +276,9 @@ __SLL_OPERATOR_BINARY(mult){
 __SLL_OPERATOR_BINARY(div){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			return sll_float_to_object(((sll_float_t)a->dt.i)/b->dt.i);
+			return SLL_FROM_FLOAT(((sll_float_t)a->dt.i)/b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object(a->dt.i/b->dt.f);
+			return SLL_FROM_FLOAT(a->dt.i/b->dt.f);
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -286,9 +286,9 @@ __SLL_OPERATOR_BINARY(div){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_float_to_object(a->dt.f/b->dt.i);
+			return SLL_FROM_FLOAT(a->dt.f/b->dt.i);
 		case COMBINED_TYPE_FF:
-			return sll_float_to_object(a->dt.f/b->dt.f);
+			return SLL_FROM_FLOAT(a->dt.f/b->dt.f);
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -336,9 +336,9 @@ __SLL_OPERATOR_BINARY(div){
 __SLL_OPERATOR_BINARY(floor_div){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i/b->dt.i);
+			return SLL_FROM_INT(a->dt.i/b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.i/b->dt.f));
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.i/b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -346,9 +346,9 @@ __SLL_OPERATOR_BINARY(floor_div){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f/b->dt.i));
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f/b->dt.i));
 		case COMBINED_TYPE_FF:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f/b->dt.f));
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f/b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -396,9 +396,9 @@ __SLL_OPERATOR_BINARY(floor_div){
 __SLL_OPERATOR_BINARY(mod){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i%b->dt.i);
+			return SLL_FROM_INT(a->dt.i%b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_int_to_object(a->dt.i%SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_INT(a->dt.i%SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -406,9 +406,9 @@ __SLL_OPERATOR_BINARY(mod){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)%b->dt.i);
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)%b->dt.i);
 		case COMBINED_TYPE_FF:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)%SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)%SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -456,9 +456,9 @@ __SLL_OPERATOR_BINARY(mod){
 __SLL_OPERATOR_BINARY(and){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i&b->dt.i);
+			return SLL_FROM_INT(a->dt.i&b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_int_to_object(a->dt.i&SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_INT(a->dt.i&SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -466,9 +466,9 @@ __SLL_OPERATOR_BINARY(and){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)&b->dt.i);
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)&b->dt.i);
 		case COMBINED_TYPE_FF:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)&SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)&SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -516,9 +516,9 @@ __SLL_OPERATOR_BINARY(and){
 __SLL_OPERATOR_BINARY(or){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 	case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i|b->dt.i);
+			return SLL_FROM_INT(a->dt.i|b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_int_to_object(a->dt.i|SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_INT(a->dt.i|SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -526,9 +526,9 @@ __SLL_OPERATOR_BINARY(or){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)|b->dt.i);
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)|b->dt.i);
 		case COMBINED_TYPE_FF:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)|SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)|SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -576,9 +576,9 @@ __SLL_OPERATOR_BINARY(or){
 __SLL_OPERATOR_BINARY(xor){
 	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i^b->dt.i);
+			return SLL_FROM_INT(a->dt.i^b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_int_to_object(a->dt.i^SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_INT(a->dt.i^SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_IC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_IS:
@@ -586,9 +586,9 @@ __SLL_OPERATOR_BINARY(xor){
 		case COMBINED_TYPE_IA:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FI:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)^b->dt.i);
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)^b->dt.i);
 		case COMBINED_TYPE_FF:
-			return sll_int_to_object(SLL_ROUND_FLOAT(a->dt.f)^SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)^SLL_ROUND_FLOAT(b->dt.f));
 		case COMBINED_TYPE_FC:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_FS:
@@ -636,9 +636,9 @@ __SLL_OPERATOR_BINARY(xor){
 __SLL_OPERATOR_UNARY(inv){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
-			return sll_int_to_object(~a->dt.i);
+			return SLL_FROM_INT(~a->dt.i);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			return sll_int_to_object(~SLL_ROUND_FLOAT(a->dt.f));
+			return SLL_FROM_INT(~SLL_ROUND_FLOAT(a->dt.f));
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
@@ -660,9 +660,9 @@ __SLL_OPERATOR_UNARY(len){
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			SLL_RETURN_ZERO;
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			return sll_int_to_object(a->dt.s.l);
+			return SLL_FROM_INT(a->dt.s.l);
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-			return sll_int_to_object(a->dt.a.l);
+			return SLL_FROM_INT(a->dt.a.l);
 		default:
 			SLL_UNREACHABLE();
 	}

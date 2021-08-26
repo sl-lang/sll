@@ -11,6 +11,11 @@
 
 
 sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_string_t* o,sll_string_index_t i){
+	if (!a->rc){
+		memcpy(o->v+i,"<released object>",17);
+		o->c^='<'^'r'^'e'^'l'^'e'^'a'^'s'^'e'^'d'^' '^'o'^'b'^'j'^'e'^'c'^'t'^'>';
+		return i+17;
+	}
 	switch (a->t){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			{
@@ -96,6 +101,10 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 	sll_string_length_t o=0;
 	for (sll_array_length_t i=0;i<all;i++){
 		const sll_runtime_object_t* a=*(al+i);
+		if (!a->rc){
+			o+=17;
+			continue;
+		}
 		switch (a->t){
 			case SLL_RUNTIME_OBJECT_TYPE_INT:
 				{
@@ -144,5 +153,5 @@ __API_FUNC(string_convert){
 
 
 __API_FUNC(string_length){
-	return sll_int_to_object(sll_object_to_string_length(a,ac));
+	return SLL_FROM_INT(sll_object_to_string_length(a,ac));
 }

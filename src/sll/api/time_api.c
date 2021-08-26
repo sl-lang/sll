@@ -8,13 +8,13 @@
 
 
 __API_FUNC(time_current){
-	return sll_float_to_object(sll_platform_get_current_time()*1e-9);
+	return SLL_FROM_FLOAT(sll_platform_get_current_time()*1e-9);
 }
 
 
 
 __API_FUNC(time_current_nanos){
-	return sll_int_to_object(sll_platform_get_current_time());
+	return SLL_FROM_INT(sll_platform_get_current_time());
 }
 
 
@@ -30,7 +30,7 @@ __API_FUNC(time_sleep){
 			sll_platform_sleep((sll_time_t)(v->dt.f*1e9));
 		}
 	}
-	return sll_float_to_object((sll_platform_get_current_time()-st)*1e-9);
+	return SLL_FROM_FLOAT((sll_platform_get_current_time()-st)*1e-9);
 }
 
 
@@ -46,5 +46,5 @@ __API_FUNC(time_sleep_nanos){
 			sll_platform_sleep((sll_time_t)v->dt.f);
 		}
 	}
-	return sll_int_to_object(sll_platform_get_current_time()-st);
+	return SLL_FROM_INT(sll_platform_get_current_time()-st);
 }
