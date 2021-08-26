@@ -41,4 +41,12 @@ __SLL_FUNC void sll_platform_sleep(sll_time_t tm);
 
 
 
+__SLL_FUNC void sll_platform_setup_console(void);
+
+
+
+__SLL_FUNC void sll_platform_reset_console(void);
+
+
+
 #endif

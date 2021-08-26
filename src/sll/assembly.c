@@ -36,13 +36,19 @@
 		(st)[2]=(st)[3]; \
 		(st)[3]=(st)[4]; \
 	} while(0)
-#define SHIFT_UP_TWO(st,tmp) \
+#define SHIFT_UP_TWO(st) \
 	do{ \
 		(st)[0]=(st)[2]; \
 		(st)[1]=(st)[3]; \
 		(st)[2]=(st)[4]; \
-		(st)[3]=(tmp); \
+		(st)[3]=&_assembly_nop; \
 	} while(0)
+
+
+
+static sll_assembly_instruction_t _assembly_nop={
+	SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP
+};
 
 
 sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt);
@@ -171,8 +177,7 @@ sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compi
 sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* ai,sll_instruction_index_t i){
 	do{
 		if (!i){
-			SLL_UNREACHABLE();
-			return NULL;
+			return &_assembly_nop;
 		}
 		ai--;
 		i--;
@@ -1026,6 +1031,7 @@ __SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt
 	free(g_dt.it.sc_vi);
 	o->vc=g_dt.it.vc;
 	_generate(c_dt->h,&g_dt);
+	printf("AA\n");
 	if (PREV_INSTRUCTION(&g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
 		GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO);
 	}
@@ -1060,15 +1066,12 @@ __SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt
 	free(g_dt.it.l_im);
 	free(g_dt.rm.l);
 	sll_assembly_instruction_t* ai=o->h;
-	sll_assembly_instruction_t tmp={
-		SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP
-	};
 	sll_assembly_instruction_t* st[5]={
-		&tmp,
-		&tmp,
-		&tmp,
-		&tmp,
-		&tmp
+		&_assembly_nop,
+		&_assembly_nop,
+		&_assembly_nop,
+		&_assembly_nop,
+		&_assembly_nop
 	};
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
 		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP||ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
@@ -1125,7 +1128,7 @@ __SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt
 			st[0]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
 			st[2]->t=st[1]->t|SLL_ASSEMBLY_INSTRUCTION_INPLACE;
 			st[1]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
-			SHIFT_UP_TWO(st,&tmp);
+			SHIFT_UP_TWO(st);
 		}
 		else if (st[0]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT&&st[1]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR){
 			st[0]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;

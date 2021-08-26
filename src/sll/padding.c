@@ -1,3 +1,4 @@
+#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/constants.h>
 #include <sll/types.h>
@@ -15,14 +16,25 @@ sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilation_dat
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
 		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_STRING:
-		case SLL_OBJECT_TYPE_IDENTIFIER:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_IDENTIFIER:
 			return eoff+1;
-		case SLL_OBJECT_TYPE_FUNC:
+		case SLL_OBJECT_TYPE_ARRAY:
 			{
-				(*(c_dt->ft.dt+o->dt.fn.id))->off-=*rm;
+				sll_object_offset_t off=1;
+				sll_array_length_t l=o->dt.al;
+				while (l){
+					l--;
+					off+=_remove_padding_internal(o+off,c_dt,rm);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_FUNC:
+			(*(c_dt->ft.dt+o->dt.fn.id))->off-=*rm;
+		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
 				sll_object_offset_t off=1;
 				sll_arg_count_t l=o->dt.fn.ac;
 				while (l){
@@ -31,10 +43,12 @@ sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilation_dat
 				}
 				return off+eoff;
 			}
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 			{
 				sll_object_offset_t off=1;
-				sll_arg_count_t l=o->dt.fn.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				while (l){
 					l--;
 					off+=_remove_padding_internal(o+off,c_dt,rm);
@@ -52,7 +66,7 @@ sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilation_dat
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
-			return _remove_padding_internal(o+1,c_dt,rm)+eoff;
+			return _remove_padding_internal(o+1,c_dt,rm)+1+eoff;
 	}
 	sll_object_offset_t off=1;
 	sll_arg_count_t l=o->dt.ac;

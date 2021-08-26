@@ -2,6 +2,7 @@
 #include <sll/common.h>
 #include <sll/constants.h>
 #include <sll/gc.h>
+#include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdlib.h>
@@ -14,6 +15,7 @@ static char _util_init=0;
 
 
 void _util_cleanup(void){
+	sll_platform_reset_console();
 	_sys_free_argv();
 	_gc_free_pages();
 }
@@ -78,16 +80,38 @@ __SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o){
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
 		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_STRING:
-		case SLL_OBJECT_TYPE_IDENTIFIER:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_IDENTIFIER:
 			return eoff+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				sll_object_offset_t off=1;
+				sll_array_length_t l=o->dt.al;
+				while (l){
+					l--;
+					off+=sll_get_object_size(o+off);
+				}
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				sll_object_offset_t off=1;
 				sll_arg_count_t l=o->dt.fn.ac;
+				while (l){
+					l--;
+					off+=sll_get_object_size(o+off);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
+			{
+				sll_object_offset_t off=1;
+				sll_arg_count_t l=o->dt.l.ac;
 				while (l){
 					l--;
 					off+=sll_get_object_size(o+off);
@@ -119,6 +143,7 @@ __SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o){
 __SLL_FUNC void sll_init(void){
 	if (!_util_init){
 		_util_init=1;
+		sll_platform_setup_console();
 		_gc_init();
 		atexit(_util_cleanup);
 	}

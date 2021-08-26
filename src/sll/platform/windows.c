@@ -1,8 +1,10 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/types.h>
+#include <fcntl.h>
+#include <io.h>
+#include <stdio.h>
 
 
 
@@ -10,7 +12,9 @@ const char* sll_platform_string="windows";
 
 
 
-HANDLE _wh=INVALID_HANDLE_VALUE;
+static HANDLE _win_wh=INVALID_HANDLE_VALUE;
+static int _win_stdout_m=0;
+static int _win_stderr_m=0;
 
 
 
@@ -27,8 +31,8 @@ __SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
 
 
 __SLL_FUNC sll_time_t sll_platform_get_current_time(void){
-		FILETIME ft;
-		GetSystemTimeAsFileTime(&ft);
+	FILETIME ft;
+	GetSystemTimeAsFileTime(&ft);
 	return ((((sll_time_t)ft.dwHighDateTime)<<32)|ft.dwLowDateTime)*100-11644473600000000000;
 }
 
@@ -62,13 +66,13 @@ __SLL_FUNC sll_bool_t sll_platform_path_is_directory(const char* fp){
 
 
 __SLL_FUNC void sll_platform_sleep(sll_time_t tm){
-	if (_wh==INVALID_HANDLE_VALUE){
-		_wh=CreateEvent(NULL,TRUE,FALSE,FALSE);
+	if (_win_wh==INVALID_HANDLE_VALUE){
+		_win_wh=CreateEvent(NULL,TRUE,FALSE,FALSE);
 	}
 	sll_time_t e=GetTickCount64()*1000000+tm;
 	while (1){
-		ResetEvent(_wh);
-		if (WaitForSingleObjectEx(_wh,(DWORD)((tm+999999)/1000000),FALSE)!=WAIT_OBJECT_0){
+		ResetEvent(_win_wh);
+		if (WaitForSingleObjectEx(_win_wh,(DWORD)((tm+999999)/1000000),FALSE)!=WAIT_OBJECT_0){
 			return;
 		}
 		sll_time_t c=GetTickCount64()*1000000;
@@ -77,4 +81,18 @@ __SLL_FUNC void sll_platform_sleep(sll_time_t tm){
 		}
 		tm=c-e;
 	}
+}
+
+
+
+__SLL_FUNC void sll_platform_setup_console(void){
+	_win_stdout_m=_setmode(_fileno(stdout),_O_BINARY);
+	_win_stderr_m=_setmode(_fileno(stderr),_O_BINARY);
+}
+
+
+
+__SLL_FUNC void sll_platform_reset_console(void){
+	_setmode(_fileno(stdout),_win_stdout_m);
+	_setmode(_fileno(stderr),_win_stderr_m);
 }
