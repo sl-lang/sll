@@ -224,7 +224,7 @@ __SLL_FUNC __SLL_RETURN sll_verify_runtime_object_stack_cleanup(const sll_runtim
 						break;
 				}
 				sll_string_t str;
-				sll_object_to_string((const sll_runtime_object_t**)&c,1,&str);
+				sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
 				uint32_t j=c->_dbg0|(c->_dbg1<<16);
 				if (j!=GC_MAX_DBG_ID){
 					runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);

@@ -456,7 +456,7 @@ typedef struct __SLL_ERROR{
 
 
 
-typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runtime_object_t** a,sll_arg_count_t ac);
+typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runtime_object_t*const* const a,sll_arg_count_t ac);
 
 
 

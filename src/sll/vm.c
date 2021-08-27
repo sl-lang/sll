@@ -190,7 +190,6 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				{
 					sll_runtime_object_t* tos=SLL_CREATE();
-					*(s+si)=tos;
 					tos->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 					sll_array_t* a=&(tos->dt.a);
 					sll_array_create(ai->dt.al,a);
@@ -198,6 +197,7 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 					for (sll_array_length_t i=0;i<ai->dt.al;i++){
 						a->v[i]=*(s+si+i);
 					}
+					*(s+si)=tos;
 					si++;
 					break;
 				}
@@ -370,7 +370,7 @@ _print_from_stack:;
 					}
 					else{
 						sll_string_t str;
-						sll_object_to_string((const sll_runtime_object_t**)&tos,1,&str);
+						sll_object_to_string((const sll_runtime_object_t*const*)&tos,1,&str);
 						fwrite(str.v,sizeof(sll_char_t),str.l,stdout);
 						free(str.v);
 					}
@@ -402,7 +402,7 @@ _print_from_stack:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<i_ft->l){
 								si-=ai->dt.ac;
-								sll_runtime_object_t* n=(*(i_ft->dt+j))->p((const sll_runtime_object_t**)(s+si),ai->dt.ac);
+								sll_runtime_object_t* n=(*(i_ft->dt+j))->p((const sll_runtime_object_t*const*)(s+si),ai->dt.ac);
 								for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
 									SLL_RELEASE(*(s+si+j));
 								}
@@ -466,7 +466,7 @@ _print_from_stack:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<i_ft->l){
-						sll_runtime_object_t* n=(*(i_ft->dt+i))->p((const sll_runtime_object_t**)(s+si-1),1);
+						sll_runtime_object_t* n=(*(i_ft->dt+i))->p((const sll_runtime_object_t*const*)(s+si-1),1);
 						SLL_RELEASE(*(s+si-1));
 						*(s+si-1)=n;
 						break;

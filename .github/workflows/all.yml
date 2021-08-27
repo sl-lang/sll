@@ -10,7 +10,7 @@ on:
 permissions: read-all
 jobs:
   ubuntu:
-    name: OS = Ubuntu, Args = 'sll${{matrix.args}}'
+    name: Ubuntu, Args = 'sll${{matrix.args}}'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -32,7 +32,7 @@ jobs:
     - name: Test
       run: build/run_tests
   windows:
-    name: OS = Windows, Args = 'sll${{matrix.args}}'
+    name: Windows, Args = 'sll${{matrix.args}}'
     runs-on: windows-latest
     strategy:
       fail-fast: false

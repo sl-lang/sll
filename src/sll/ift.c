@@ -60,7 +60,7 @@ __SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_func
 
 
 __SLL_FUNC void sll_register_standard_internal_functions(sll_internal_function_table_t* i_ft){
-	const internal_function_t** f=&__ifunc_start;
+	const internal_function_t*const* f=&__ifunc_start;
 	while (f<&__ifunc_end){
 		if (*f){
 			sll_register_internal_function(i_ft,(*f)->nm,(*f)->f);

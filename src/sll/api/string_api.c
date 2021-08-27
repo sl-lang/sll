@@ -111,7 +111,7 @@ sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_string_t
 
 
 
-__SLL_FUNC void sll_object_to_string(const sll_runtime_object_t** a,sll_array_length_t al,sll_string_t* o){
+__SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o){
 	if (!al){
 		SLL_ZERO_STRING(o);
 		return;
@@ -126,7 +126,7 @@ __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t** a,sll_array_le
 
 
 
-__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t** al,sll_array_length_t all){
+__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* al,sll_array_length_t all){
 	sll_string_length_t o=0;
 	for (sll_array_length_t i=0;i<all;i++){
 		const sll_runtime_object_t* a=*(al+i);
@@ -155,7 +155,7 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 				o+=a->dt.s.l;
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-				o+=sll_object_to_string_length((const sll_runtime_object_t**)(a->dt.a.v),a->dt.a.l)+a->dt.a.l+1;
+				o+=sll_object_to_string_length((const sll_runtime_object_t*const*)a->dt.a.v,a->dt.a.l)+a->dt.a.l+1;
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 				{
