@@ -615,10 +615,12 @@ sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_gener
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
 		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_STRING:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_STRING:
 			return eoff+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
@@ -628,7 +630,7 @@ sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_gener
 					if (id->sc<=sc&&*(g_dt->rm.l+i)==o){
 						*(g_dt->rm.l+i)=VARIABLE_OFFSET_NEVER_DELETE;
 						sll_variable_index_t k=(g_dt->it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id))->v;
-						*(v_st+(k>>6))|=1ull<<(k&0x63);
+						*(v_st+(k>>6))|=1ull<<(k&63);
 					}
 				}
 				else{
@@ -636,7 +638,7 @@ sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_gener
 					if (id->sc<=sc&&*(g_dt->rm.s[j]+i)==o){
 						*(g_dt->rm.s[j]+i)=VARIABLE_OFFSET_NEVER_DELETE;
 						sll_variable_index_t k=(g_dt->it.s_im[j]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id))->v;
-						*(v_st+(k>>6))|=1ull<<(k&0x63);
+						*(v_st+(k>>6))|=1ull<<(k&63);
 					}
 				}
 				return eoff+1;
@@ -838,7 +840,7 @@ sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g
 				const sll_object_t* cnd=o+off;
 				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
-				uint64_t* v_st=calloc(sizeof(uint64_t),((g_dt->a_dt->vc>>6)+1)*sizeof(uint64_t));
+				uint64_t* v_st=calloc(sizeof(uint64_t),(g_dt->a_dt->vc>>6)+1);
 				for (sll_arg_count_t i=1;i<l;i++){
 					off+=_mark_loop_delete(o+off,g_dt,v_st,o->dt.l.sc);
 				}
@@ -874,7 +876,7 @@ sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g
 				}
 				sll_object_offset_t off=_generate(o+1,g_dt)+1;
 				const sll_object_t* cnd=o+off;
-				uint64_t* v_st=calloc(sizeof(uint64_t),((g_dt->a_dt->vc>>6)+1)*sizeof(uint64_t));
+				uint64_t* v_st=calloc(sizeof(uint64_t),(g_dt->a_dt->vc>>6)+1);
 				off+=_mark_loop_delete(cnd,g_dt,v_st,o->dt.l.sc);
 				l-=2;
 				sll_object_offset_t j=off;
