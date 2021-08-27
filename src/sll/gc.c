@@ -228,7 +228,7 @@ __SLL_FUNC __SLL_RETURN sll_verify_runtime_object_stack_cleanup(const sll_runtim
 				uint32_t j=c->_dbg0|(c->_dbg1<<16);
 				if (j!=GC_MAX_DBG_ID){
 					runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
-					fprintf(stderr,"%s: %u (%s): {type: %s, ref: %u, data: %s}\n",dt->fp,dt->ln,dt->fn,t,c->rc,str.v);
+					fprintf(stderr,"%s:%u (%s): {type: %s, ref: %u, data: %s}\n",dt->fp,dt->ln,dt->fn,t,c->rc,str.v);
 				}
 				else{
 					fprintf(stderr,"<unknown>: {type: %s, ref: %u, data: %s}\n",t,c->rc,str.v);

@@ -298,6 +298,12 @@ sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,co
 		case SLL_OBJECT_TYPE_BIT_NOT:
 			PRINT_STATIC_STRING("~",os);
 			break;
+		case SLL_OBJECT_TYPE_BIT_RSHIFT:
+			PRINT_STATIC_STRING(">>",os);
+			break;
+		case SLL_OBJECT_TYPE_BIT_LSHIFT:
+			PRINT_STATIC_STRING("<<",os);
+			break;
 		case SLL_OBJECT_TYPE_LESS:
 			PRINT_STATIC_STRING("<",os);
 			break;
@@ -672,6 +678,24 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				}
 				else{
 					PRINT_STATIC_STRING("INV",os);
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHR:
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					PRINT_STATIC_STRING("SHR $",os);
+					_print_int(ai->dt.v,os);
+				}
+				else{
+					PRINT_STATIC_STRING("SHR",os);
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHL:
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					PRINT_STATIC_STRING("SHL $",os);
+					_print_int(ai->dt.v,os);
+				}
+				else{
+					PRINT_STATIC_STRING("SHL",os);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH:

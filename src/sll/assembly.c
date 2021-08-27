@@ -1031,7 +1031,6 @@ __SLL_FUNC __SLL_RETURN sll_generate_assembly(const sll_compilation_data_t* c_dt
 	free(g_dt.it.sc_vi);
 	o->vc=g_dt.it.vc;
 	_generate(c_dt->h,&g_dt);
-	printf("AA\n");
 	if (PREV_INSTRUCTION(&g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
 		GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO);
 	}

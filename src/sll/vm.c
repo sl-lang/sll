@@ -61,6 +61,7 @@ const sll_runtime_data_t* sll_current_runtime_data=NULL;
 
 
 __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,const sll_runtime_data_t* r_dt,sll_error_t* e){
+	e->t=SLL_ERROR_UNKNOWN;
 	sll_current_runtime_data=r_dt;
 	sll_internal_function_table_t* i_ft=r_dt->ift;
 	sll_output_data_stream_t* out=r_dt->os;
@@ -350,6 +351,10 @@ _jump:
 				OPERATOR_INSTRUCTION_BINARY(xor);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
 				OPERATOR_INSTRUCTION_UNARY(inv);
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHR:
+				OPERATOR_INSTRUCTION_BINARY(shr);
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHL:
+				OPERATOR_INSTRUCTION_BINARY(shl);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH:
 				OPERATOR_INSTRUCTION_UNARY(len);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY:
@@ -596,8 +601,10 @@ _return:;
 		}
 	}
 _end:
-	if (!sll_verify_runtime_object_stack_cleanup(&rst)){
-		e->t=SLL_ERROR_UNRELEASED_OBJECTS;
+	if (e->t==SLL_ERROR_UNKNOWN){
+		if (!sll_verify_runtime_object_stack_cleanup(&rst)){
+			e->t=SLL_ERROR_UNRELEASED_OBJECTS;
+		}
 	}
 	sll_free_runtime_object_stack_data(&rst);
 	sll_current_runtime_data=NULL;

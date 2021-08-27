@@ -65,6 +65,14 @@ __SLL_OPERATOR_UNARY(inv);
 
 
 
+__SLL_OPERATOR_BINARY(shr);
+
+
+
+__SLL_OPERATOR_BINARY(shl);
+
+
+
 __SLL_OPERATOR_UNARY(len);
 
 

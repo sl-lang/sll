@@ -594,6 +594,12 @@ _read_symbol:
 				else if (*str=='/'&&*(str+1)=='/'){
 					o->t=SLL_OBJECT_TYPE_FLOOR_DIV;
 				}
+				else if (*str=='>'&&*(str+1)=='>'){
+					o->t=SLL_OBJECT_TYPE_BIT_RSHIFT;
+				}
+				else if (*str=='<'&&*(str+1)=='<'){
+					o->t=SLL_OBJECT_TYPE_BIT_LSHIFT;
+				}
 				else if (*str=='<'&&*(str+1)=='='){
 					o->t=SLL_OBJECT_TYPE_LESS_EQUAL;
 				}

@@ -300,6 +300,34 @@ __SLL_OPERATOR_UNARY(inv){
 
 
 
+__SLL_OPERATOR_BINARY(shr){
+	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
+		case COMBINED_TYPE_II:
+			return SLL_FROM_INT(a->dt.i>>b->dt.i);
+		default:
+			SLL_UNIMPLEMENTED();
+	}
+	SLL_RETURN_ZERO;
+}
+
+
+
+__SLL_OPERATOR_BINARY(shl){
+	switch (COMBINE_TYPES(SLL_RUNTIME_OBJECT_GET_TYPE(a),SLL_RUNTIME_OBJECT_GET_TYPE(b))){
+		case COMBINED_TYPE_II:
+			return SLL_FROM_INT(a->dt.i<<b->dt.i);
+		case COMBINED_TYPE_IH:
+			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i<<b->dt.h.h);
+		case COMBINED_TYPE_HI:
+			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h<<a->dt.i);
+		default:
+			SLL_UNIMPLEMENTED();
+	}
+	SLL_RETURN_ZERO;
+}
+
+
+
 __SLL_OPERATOR_UNARY(len){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
