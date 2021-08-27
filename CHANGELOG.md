@@ -91,4 +91,4 @@
 
 ## v0.1.3 - 2021-6-16
 
-Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the changelog for version 0.1.2 (and below) consists of everything added at that time.
+Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the changelog for version 0.1.2 (and below) consists of everything added up to that point.
