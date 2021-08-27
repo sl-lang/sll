@@ -89,6 +89,10 @@ typedef uint32_t sll_function_index_t;
 
 
 
+typedef uint32_t sll_handle_type_t;
+
+
+
 typedef uint32_t sll_identifier_index_t;
 
 
@@ -150,6 +154,10 @@ typedef int64_t sll_integer_t;
 
 
 typedef uint64_t sll_allocation_size_t;
+
+
+
+typedef uint64_t sll_handle_t;
 
 
 
@@ -377,6 +385,33 @@ typedef struct __SLL_ARRAY{
 
 
 
+typedef void (*sll_handle_destructor_t)(sll_handle_t h);
+
+
+
+typedef struct __SLL_HANDLE_DESCRIPTOR{
+	sll_char_t nm[256];
+	uint8_t nml;
+	sll_string_checksum_t c;
+	sll_handle_destructor_t df;
+} sll_handle_descriptor_t;
+
+
+
+typedef struct __SLL_HANDLE_LIST{
+	sll_handle_descriptor_t** dt;
+	sll_handle_type_t dtl;
+} sll_handle_list_t;
+
+
+
+typedef struct __SLL_HANDLE_DATA{
+	sll_handle_type_t t;
+	sll_handle_t h;
+} sll_handle_data_t;
+
+
+
 typedef union __SLL_RUNTIME_OBJECT_DATA{
 	sll_char_t c;
 	sll_integer_t i;
@@ -384,6 +419,7 @@ typedef union __SLL_RUNTIME_OBJECT_DATA{
 	sll_string_t s;
 	sll_instruction_index_t ii;
 	sll_array_t a;
+	sll_handle_data_t h;
 } sll_runtime_object_data_t;
 
 
@@ -420,10 +456,6 @@ typedef struct __SLL_ERROR{
 
 
 
-typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o,sll_error_t* e);
-
-
-
 typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runtime_object_t** a,sll_arg_count_t ac);
 
 
@@ -444,11 +476,24 @@ typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
 
 
 
+typedef struct __SLL_RUNTIME_DATA{
+	sll_internal_function_table_t* ift;
+	sll_handle_list_t* hl;
+	sll_input_data_stream_t* is;
+	sll_output_data_stream_t* os;
+} sll_runtime_data_t;
+
+
+
 typedef struct __SLL_RUNTIME_OBJECT_STACK_DATA{
 	uint32_t off;
 	uint64_t* m;
 	uint32_t ml;
 } sll_runtime_object_stack_data_t;
+
+
+
+typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o,sll_error_t* e);
 
 
 

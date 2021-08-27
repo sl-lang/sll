@@ -72,7 +72,7 @@ __API_FUNC(sys_arg_get){
 	}
 	const sll_runtime_object_t* e=*a;
 	if (e->t!=SLL_RUNTIME_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=_sys_argc.dt.i){
-		SLL_RETURN_ZERO_STRING
+		SLL_RETURN_ZERO_STRING;
 	}
 	SLL_ACQUIRE(*(_sys_argv+e->dt.i));
 	return *(_sys_argv+e->dt.i);

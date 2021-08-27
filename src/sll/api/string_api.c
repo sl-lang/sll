@@ -1,12 +1,42 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/assembly.h>
 #include <sll/constants.h>
 #include <sll/gc.h>
+#include <sll/handle.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+
+
+
+#define INT_SIZE(v,o) \
+	do{ \
+		(o)++; \
+		(v)/=10; \
+	} while (v);
+
+
+
+sll_string_length_t _write_int(uint64_t v,sll_string_length_t i,sll_string_t* o){
+	uint8_t k=0;
+	char bf[20];
+	do{
+		bf[k]=v%10;
+		k++;
+		v/=10;
+	} while (v);
+	while (k){
+		k--;
+		o->v[i]=bf[k]+48;
+		o->c^=o->v[i];
+		i++;
+	}
+	return i;
+}
 
 
 
@@ -26,20 +56,7 @@ sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_string_t
 					v=-v;
 					i++;
 				}
-				uint8_t k=0;
-				char bf[20];
-				do{
-					bf[k]=v%10;
-					k++;
-					v/=10;
-				} while (v);
-				while (k){
-					k--;
-					o->v[i]=bf[k]+48;
-					o->c^=o->v[i];
-					i++;
-				}
-				return i;
+				return _write_int(v,i,o);
 			}
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 			{
@@ -74,6 +91,18 @@ sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_string_t
 				o->c^=' ';
 			}
 			return i+1;
+		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+			i=_write_int(a->dt.h.h,i,o);
+			o->v[i]='$';
+			o->c^='$';
+			i++;
+			if (sll_current_runtime_data){
+				sll_handle_descriptor_t* hd=SLL_LOOKUP_HANDLE_DESCRIPTOR(sll_current_runtime_data->hl,a->dt.h.t);
+				memcpy(o->v+i,hd->nm,hd->nml);
+				o->c^=hd->c;
+				return i+hd->nml;
+			}
+			return _write_int(a->dt.h.t,i,o);
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -113,10 +142,7 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 						o++;
 						v=-v;
 					}
-					do{
-						o++;
-						v/=10;
-					} while (v);
+					INT_SIZE(v,o);
 					break;
 				}
 			case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
@@ -131,6 +157,21 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 			case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 				o+=sll_object_to_string_length((const sll_runtime_object_t**)(a->dt.a.v),a->dt.a.l)+a->dt.a.l+1;
 				break;
+			case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+				{
+					uint64_t v=a->dt.h.h;
+					INT_SIZE(v,o);
+					o++;
+					if (sll_current_runtime_data){
+						sll_handle_descriptor_t* hd=SLL_LOOKUP_HANDLE_DESCRIPTOR(sll_current_runtime_data->hl,a->dt.h.t);
+						o+=hd->nml;
+					}
+					else{
+						v=a->dt.h.t;
+						INT_SIZE(v,o);
+					}
+					break;
+				}
 			default:
 				SLL_UNREACHABLE();
 		}

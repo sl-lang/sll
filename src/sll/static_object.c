@@ -2,6 +2,7 @@
 #include <sll/array.h>
 #include <sll/constants.h>
 #include <sll/gc.h>
+#include <sll/handle.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -53,6 +54,10 @@ __SLL_STATIC_OBJECT(str_zero,SLL_RUNTIME_OBJECT_TYPE_STRING,s,SLL_ZERO_STRING_ST
 
 
 __SLL_STATIC_OBJECT(array_zero,SLL_RUNTIME_OBJECT_TYPE_ARRAY,a,SLL_ZERO_ARRAY_STRUCT);
+
+
+
+__SLL_STATIC_OBJECT(handle_zero,SLL_RUNTIME_OBJECT_TYPE_HANDLE,h,SLL_ZERO_HANDLE_STRUCT);
 
 
 

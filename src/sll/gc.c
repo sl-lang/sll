@@ -1,7 +1,9 @@
 #include <sll/_sll_internal.h>
+#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/constants.h>
 #include <sll/gc.h>
+#include <sll/handle.h>
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -162,14 +164,18 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 		}
 		if (o->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
 			free(o->dt.s.v);
-			o->dt.s.v=NULL;
 		}
 		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
 			for (sll_array_length_t i=0;i<o->dt.a.l;i++){
 				sll_release_object(*(o->dt.a.v+i));
 			}
 			free(o->dt.a.v);
-			o->dt.a.v=NULL;
+		}
+		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_HANDLE){
+			if (sll_current_runtime_data){
+				sll_handle_descriptor_t* hd=SLL_LOOKUP_HANDLE_DESCRIPTOR(sll_current_runtime_data->hl,o->dt.h.t);
+				hd->df(o->dt.h.h);
+			}
 		}
 		o->t=SLL_OBJECT_TYPE_INT;
 		o->dt.i=0;
@@ -212,6 +218,9 @@ __SLL_FUNC __SLL_RETURN sll_verify_runtime_object_stack_cleanup(const sll_runtim
 						break;
 					case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 						t="array";
+						break;
+					case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+						t="handle";
 						break;
 				}
 				sll_string_t str;

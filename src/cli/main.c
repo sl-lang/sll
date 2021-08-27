@@ -670,16 +670,25 @@ uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_
 _skip_write:;
 	}
 	if (!(fl&FLAG_NO_RUN)){
+		sll_stack_data_t st;
+		sll_setup_stack(&st,vm_st,VM_STACK_SIZE);
+		sll_handle_list_t hl;
+		sll_init_handle_list(&hl);
 		sll_input_data_stream_t ris;
 		sll_output_data_stream_t ros;
 		sll_stream_create_input_from_file(stdin,&ris);
 		sll_stream_create_output_from_file(stdout,&ros);
-		sll_stack_data_t st;
-		sll_setup_stack(&st,vm_st,VM_STACK_SIZE);
+		sll_runtime_data_t r_dt={
+			&i_ft,
+			&hl,
+			&ris,
+			&ros
+		};
 		sll_error_t e={
 			SLL_ERROR_UNKNOWN
 		};
-		sll_return_code_t r=sll_execute_assembly(a_dt,&st,&i_ft,&ris,&ros,&e);
+		sll_return_code_t r=sll_execute_assembly(a_dt,&st,&r_dt,&e);
+		sll_free_handle_list(&hl);
 		if (e.t!=SLL_ERROR_UNKNOWN){
 			sll_print_error(NULL,&e);
 			return 0;

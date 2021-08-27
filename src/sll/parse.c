@@ -463,7 +463,7 @@ _recurse_array:;
 					sc++;
 				}
 				else{
-					if (ac==SLL_MAX_ARGUMENT_COUNT){
+					if (ac==SLL_MAX_ARG_COUNT){
 						e->t=SLL_ERROR_TOO_MANY_ARGUMENTS;
 						e->dt.r.off=arg_s;
 						e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1377,7 +1377,7 @@ _skip_export:;
 				else if (o->t==SLL_OBJECT_TYPE_ASSIGN&&ac==1&&(o+2)->t==SLL_OBJECT_TYPE_IDENTIFIER&&o+2==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
 					e_c_dt->nv_dt->sz--;
 				}
-				if (ac==SLL_MAX_ARGUMENT_COUNT){
+				if (ac==SLL_MAX_ARG_COUNT){
 					e->t=SLL_ERROR_TOO_MANY_ARGUMENTS;
 					e->dt.r.off=arg_s;
 					e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;

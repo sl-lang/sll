@@ -20,7 +20,8 @@
 #endif
 #define SLL_RETURN_ZERO return SLL_ACQUIRE_STATIC(int_zero)
 #define SLL_RETURN_ONE return SLL_ACQUIRE_STATIC(int_one)
-#define SLL_RETURN_ZERO_STRING return SLL_ACQUIRE_STATIC(str_zero);
+#define SLL_RETURN_ZERO_STRING return SLL_ACQUIRE_STATIC(str_zero)
+#define SLL_RETURN_ZERO_HANDLE return SLL_ACQUIRE_STATIC(handle_zero);
 
 
 
@@ -69,6 +70,10 @@ __SLL_STATIC_OBJECT_DECL(str_zero);
 
 
 __SLL_STATIC_OBJECT_DECL(array_zero);
+
+
+
+__SLL_STATIC_OBJECT_DECL(handle_zero);
 
 
 
