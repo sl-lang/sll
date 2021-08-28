@@ -614,7 +614,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.4/src/include/lll/io.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/io.h
 [0.6.4/src/include/lll/stream.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/stream.h
 [0.6.4/src/include/lll/string.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/string.h
-[0.6.5/build.py]: https://github.com/sl-lang/sll/blob/v0.6.7/build.py
+[0.6.5/build.py]: https://github.com/sl-lang/sll/blob/v0.6.5/build.py
 [0.6.5/src/lll_lib]: https://github.com/sl-lang/sll/tree/v0.6.5/src/lll_lib
 [0.6.6/src/lll]: https://github.com/sl-lang/sll/tree/v0.6.6/src/lll
 [0.6.7/build.py]: https://github.com/sl-lang/sll/blob/v0.6.7/build.py
