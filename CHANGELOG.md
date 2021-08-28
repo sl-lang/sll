@@ -10,7 +10,7 @@
 - New static object: `handle_zero`
 - New object creation macro: `SLL_FROM_HANDLE` (and `sll_handle_to_object`)
 - `sll_platform_setup_console` and `sll_platform_reset_console`: On Windows, is sets the output mode to binary
-- Fixed memory leak in `sll_add_string` ([#32])
+- Fixed memory leak in `sll_add_string` ([#32]) and memory corruption in `sll__add_debug_data` ([#33])
 
 #### Handles
 Handles can be used to uniquely identify an object. They are a replacement for `SLL_RUNTIME_TYPE_INT`. They consists of the handle itself (`sll_handle_t`) and a type (`sll_handle_type_t`).
@@ -609,6 +609,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#20]: https://github.com/sl-lang/sll/issues/20
 [#30]: https://github.com/sl-lang/sll/issues/30
 [#32]: https://github.com/sl-lang/sll/issues/32
+[#33]: https://github.com/sl-lang/sll/issues/33
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [0.6.3/src/include/lll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/core.h
 [0.6.4/src/include/lll/io.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/io.h

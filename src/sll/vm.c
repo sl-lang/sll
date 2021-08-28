@@ -408,8 +408,8 @@ _print_from_stack:;
 							if (j<i_ft->l){
 								si-=ai->dt.ac;
 								sll_runtime_object_t* n=(*(i_ft->dt+j))->p((const sll_runtime_object_t*const*)(s+si),ai->dt.ac);
-								for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
-									SLL_RELEASE(*(s+si+j));
+								for (sll_arg_count_t k=0;k<ai->dt.ac;k++){
+									SLL_RELEASE(*(s+si+k));
 								}
 								if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
 									*(s+si)=n;

@@ -119,7 +119,7 @@ __API_FUNC(file_open){
 	if (!h){
 		SLL_RETURN_ZERO_HANDLE;
 	}
-	uint16_t i=0;
+	sll_handle_t i=0;
 	while (i<_file_fll){
 		if (!(_file_fl+i)->h){
 			goto _found_index;

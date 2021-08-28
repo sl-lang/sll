@@ -84,7 +84,13 @@ _found_index:
 	runtime_object_debug_data_t* dt=malloc(sizeof(runtime_object_debug_data_t));
 	dt->fp=fp;
 	dt->ln=ln;
-	dt->fn=fn;
+	uint8_t j=0;
+	while (*(fn+j)){
+		dt->fn[j]=*fn;
+		j++;
+		SLL_ASSERT(j);
+	}
+	dt->fn[j]=0;
 	*(_gc_dbg_dt+i)=dt;
 	return o;
 }
@@ -166,8 +172,8 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 			free(o->dt.s.v);
 		}
 		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-			for (sll_array_length_t i=0;i<o->dt.a.l;i++){
-				sll_release_object(*(o->dt.a.v+i));
+			for (sll_array_length_t j=0;j<o->dt.a.l;j++){
+				sll_release_object(*(o->dt.a.v+j));
 			}
 			free(o->dt.a.v);
 		}

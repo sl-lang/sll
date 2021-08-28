@@ -305,6 +305,10 @@ __SLL_OPERATOR_BINARY(shr){
 	COMBINED_SWITCH{
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i>>b->dt.i);
+		case COMBINED_TYPE_IH:
+			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i>>b->dt.h.h);
+		case COMBINED_TYPE_HI:
+			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h>>a->dt.i);
 		default:
 			SLL_UNIMPLEMENTED();
 	}
@@ -398,6 +402,12 @@ __SLL_FUNC __SLL_RETURN_COMPARE sll_operator_compare(const sll_runtime_object_t*
 	COMBINED_SWITCH{
 		case COMBINED_TYPE_II:
 			return COMPARE_RESULT(a->dt.i,b->dt.i);
+		case COMBINED_TYPE_IF:
+			return COMPARE_RESULT(a->dt.i,b->dt.f);
+		case COMBINED_TYPE_FI:
+			return COMPARE_RESULT(a->dt.f,b->dt.i);
+		case COMBINED_TYPE_FF:
+			return COMPARE_RESULT(a->dt.f,b->dt.f);
 		default:
 			SLL_UNIMPLEMENTED();
 	}

@@ -283,7 +283,7 @@ typedef struct __INTERNAL_FUNCTION{
 typedef struct __RUNTIME_OBJECT_DEBUG_DATA{
 	const char* fp;
 	unsigned int ln;
-	const char* fn;
+	char fn[256];
 } runtime_object_debug_data_t;
 
 
