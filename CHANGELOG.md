@@ -21,6 +21,7 @@ Handles can be used to uniquely identify an object. They are a replacement for `
 | Type Name | No | Yes (up to 256 characters) |
 | Automatic Cleanup | No | Yes |
 | Arithmetic Operations | Yes | Yes |
+
 Handle types can be create by calling `sll_create_handle()` and specifying the name of the new handle type and its destructor. The destructor is automatically called when the last instance of the object gets released. The destructor also gets called when the handle type is deregistered.
 If a handles does not have a type (`SLL_UNKNOWN_HANDLE_TYPE`) it has a boolean value of zero. Otherwise, it has a boolean value of one.
 
