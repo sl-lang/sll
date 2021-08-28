@@ -31,6 +31,7 @@ __SLL_FUNC __SLL_RETURN_STRING_INDEX sll_add_string(sll_string_table_t* st,sll_s
 					goto _check_next_string;
 				}
 			}
+			free(s.v);
 			return i;
 		}
 _check_next_string:;
