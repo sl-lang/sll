@@ -249,307 +249,96 @@ Literally, just arrays.
 - Renamed `time_current` and `time_current_nanos` into `time` and `time_nanos`
 
 ## [0.6.3] - 2021-8-2
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.6.2] - 2021-8-1
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.6.1] - 2021-8-1
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.6.0] - 2021-7-31
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.5.2] - 2021-7-31
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.5.1] - 2021-7-30
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.5.0] - 2021-7-30
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.4.1] - 2021-7-29
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.4.0] - 2021-7-28
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.3.5] - 2021-7-28
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.3.4] - 2021-7-27
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.3.3] - 2021-7-26
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.3.2] - 2021-7-25
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.3.1] - 2021-7-25
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.3.0] - 2021-7-25
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.2.3] - 2021-7-25
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.2.2] - 2021-7-23
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.2.1] - 2021-7-3
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.2.0] - 2021-7-3
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.13] - 2021-7-2
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.12] - 2021-7-2
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.11] - 2021-7-2
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.10] - 2021-7-1
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.9] - 2021-7-1
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.8] - 2021-7-1
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.7] - 2021-7-1
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.6] - 2021-6-18
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.5] - 2021-6-17
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.4] - 2021-6-16
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.3] - 2021-6-16
-### Added
-*N/A*
-
-### Changed
-*N/A*
-
-### Removed
-*N/A*
+*Undocumented*
 
 ## [0.1.2] - 2021-6-15
-
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
 [0.6.16]: https://github.com/sl-lang/sll/compare/v0.6.15...main
@@ -596,33 +385,36 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
-[#2]: https://github.com/sl-lang/sll/issues/2
-[#5]: https://github.com/sl-lang/sll/issues/5
-[#10]: https://github.com/sl-lang/sll/issues/10
-[#11]: https://github.com/sl-lang/sll/issues/11
-[#12]: https://github.com/sl-lang/sll/issues/12
-[#15]: https://github.com/sl-lang/sll/issues/15
-[#16]: https://github.com/sl-lang/sll/issues/16
-[#17]: https://github.com/sl-lang/sll/issues/17
-[#18]: https://github.com/sl-lang/sll/issues/18
-[#19]: https://github.com/sl-lang/sll/issues/19
-[#20]: https://github.com/sl-lang/sll/issues/20
-[#30]: https://github.com/sl-lang/sll/issues/30
-[#32]: https://github.com/sl-lang/sll/issues/32
 [#33]: https://github.com/sl-lang/sll/issues/33
+[#32]: https://github.com/sl-lang/sll/issues/32
+[#30]: https://github.com/sl-lang/sll/issues/30
+[#20]: https://github.com/sl-lang/sll/issues/20
+[#19]: https://github.com/sl-lang/sll/issues/19
+[#18]: https://github.com/sl-lang/sll/issues/18
+[#17]: https://github.com/sl-lang/sll/issues/17
+[#16]: https://github.com/sl-lang/sll/issues/16
+[#15]: https://github.com/sl-lang/sll/issues/15
+[#12]: https://github.com/sl-lang/sll/issues/12
+[#11]: https://github.com/sl-lang/sll/issues/11
+[#10]: https://github.com/sl-lang/sll/issues/10
+[#5]: https://github.com/sl-lang/sll/issues/5
+[#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[0.6.3/src/include/lll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/core.h
-[0.6.4/src/include/lll/io.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/io.h
-[0.6.4/src/include/lll/stream.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/stream.h
-[0.6.4/src/include/lll/string.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/string.h
-[0.6.5/build.py]: https://github.com/sl-lang/sll/blob/v0.6.5/build.py
-[0.6.5/src/lll_lib]: https://github.com/sl-lang/sll/tree/v0.6.5/src/lll_lib
-[0.6.6/src/lll]: https://github.com/sl-lang/sll/tree/v0.6.6/src/lll
-[0.6.7/build.py]: https://github.com/sl-lang/sll/blob/v0.6.7/build.py
-[0.6.8/build.py]: https://github.com/sl-lang/sll/blob/v0.6.8/build.py
-[0.6.8/src/_build/main.py]: https://github.com/sl-lang/sll/blob/v0.6.8/src/_build/main.py
-[0.6.8/src/include/lll]: https://github.com/sl-lang/sll/tree/v0.6.8/src/include/lll
-[0.6.8/src/lll]: https://github.com/sl-lang/sll/tree/v0.6.8/src/lll
+[main/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/main/src/sll/operator.c
+[main/src/sll/vm.c]: https://github.com/sl-lang/sll/blob/main/src/sll/vm.c
+[0.6.15/src/sll/parse.c]: https://github.com/sl-lang/sll/blob/v0.6.15/src/sll/parse.c
+[0.6.15/src/sll/print.c]: https://github.com/sl-lang/sll/blob/v0.6.15/src/sll/print.c
+[0.6.14/src/cli]: https://github.com/sl-lang/sll/tree/v0.6.14/src/cli
+[0.6.14/src/sll/parse.c]: https://github.com/sl-lang/sll/blob/v0.6.14/src/sll/parse.c
+[0.6.13/src/include/sll/assembly.h]: https://github.com/sl-lang/sll/blob/v0.6.13/src/include/sll/assembly.h
+[0.6.13/src/include/sll/ift.h]: https://github.com/sl-lang/sll/blob/v0.6.13/src/include/sll/ift.h
+[0.6.13/src/include/sll/object.h]: https://github.com/sl-lang/sll/blob/v0.6.13/src/include/sll/object.h
+[0.6.13/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.13/src/sll/operator.c
+[0.6.11/src/sll/allocator.c]: https://github.com/sl-lang/sll/blob/v0.6.11/src/sll/allocator.c
+[0.6.10/src/include/sll/version.h]: https://github.com/sl-lang/sll/blob/v0.6.10/src/include/sll/version.h
+[0.6.10/src/sll/allocator.c]: https://github.com/sl-lang/sll/blob/v0.6.10/src/sll/allocator.c
+[0.6.10/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.10/src/sll/operator.c
+[0.6.10/src/sll/string.c]: https://github.com/sl-lang/sll/blob/v0.6.10/src/sll/string.c
 [0.6.9/src/_build/build.py]: https://github.com/sl-lang/sll/blob/v0.6.9/src/_build/build.py
 [0.6.9/src/_build/header.py]: https://github.com/sl-lang/sll/blob/v0.6.9/src/_build/header.py
 [0.6.9/src/_build/main.py]: https://github.com/sl-lang/sll/blob/v0.6.9/src/_build/main.py
@@ -630,18 +422,15 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.9/src/include/sll]: https://github.com/sl-lang/sll/tree/v0.6.9/src/include/sll
 [0.6.9/src/sll]: https://github.com/sl-lang/sll/tree/v0.6.9/src/sll
 [0.6.9/src/sll/string_heap.c]: https://github.com/sl-lang/sll/blob/v0.6.9/src/sll/string_heap.c
-[0.6.10/src/include/sll/version.h]: https://github.com/sl-lang/sll/blob/v0.6.10/src/include/sll/version.h
-[0.6.10/src/sll/allocator.c]: https://github.com/sl-lang/sll/blob/v0.6.10/src/sll/allocator.c
-[0.6.10/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.10/src/sll/operator.c
-[0.6.10/src/sll/string.c]: https://github.com/sl-lang/sll/blob/v0.6.10/src/sll/string.c
-[0.6.11/src/sll/allocator.c]: https://github.com/sl-lang/sll/blob/v0.6.11/src/sll/allocator.c
-[0.6.13/src/include/sll/assembly.h]: https://github.com/sl-lang/sll/blob/v0.6.13/src/include/sll/assembly.h
-[0.6.13/src/include/sll/ift.h]: https://github.com/sl-lang/sll/blob/v0.6.13/src/include/sll/ift.h
-[0.6.13/src/include/sll/object.h]: https://github.com/sl-lang/sll/blob/v0.6.13/src/include/sll/object.h
-[0.6.13/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.13/src/sll/operator.c
-[0.6.14/src/cli]: https://github.com/sl-lang/sll/tree/v0.6.14/src/cli
-[0.6.14/src/sll/parse.c]: https://github.com/sl-lang/sll/blob/v0.6.14/src/sll/parse.c
-[0.6.15/src/sll/parse.c]: https://github.com/sl-lang/sll/blob/v0.6.15/src/sll/parse.c
-[0.6.15/src/sll/print.c]: https://github.com/sl-lang/sll/blob/v0.6.15/src/sll/print.c
-[main/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/main/src/sll/operator.c
-[main/src/sll/vm.c]: https://github.com/sl-lang/sll/blob/main/src/sll/vm.c
+[0.6.8/build.py]: https://github.com/sl-lang/sll/blob/v0.6.8/build.py
+[0.6.8/src/_build/main.py]: https://github.com/sl-lang/sll/blob/v0.6.8/src/_build/main.py
+[0.6.8/src/include/lll]: https://github.com/sl-lang/sll/tree/v0.6.8/src/include/lll
+[0.6.8/src/lll]: https://github.com/sl-lang/sll/tree/v0.6.8/src/lll
+[0.6.7/build.py]: https://github.com/sl-lang/sll/blob/v0.6.7/build.py
+[0.6.6/src/lll]: https://github.com/sl-lang/sll/tree/v0.6.6/src/lll
+[0.6.5/build.py]: https://github.com/sl-lang/sll/blob/v0.6.5/build.py
+[0.6.5/src/lll_lib]: https://github.com/sl-lang/sll/tree/v0.6.5/src/lll_lib
+[0.6.4/src/include/lll/io.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/io.h
+[0.6.4/src/include/lll/stream.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/stream.h
+[0.6.4/src/include/lll/string.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/string.h
+[0.6.3/src/include/lll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/core.h
