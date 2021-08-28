@@ -578,7 +578,6 @@ _read_symbol:
 				}
 				else if (*str=='<'&&*(str+1)=='-'){
 					o->t=SLL_OBJECT_TYPE_CALL;
-					o->dt.l.sc=c_dt->_n_sc_id;
 				}
 				else if (*str=='-'&&*(str+1)=='>'){
 					o->t=SLL_OBJECT_TYPE_FOR;

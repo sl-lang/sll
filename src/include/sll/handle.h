@@ -1,6 +1,7 @@
 #ifndef __SLL_HANDLE_H__
 #define __SLL_HANDLE_H__ 1
 #include <sll/common.h>
+#include <sll/constants.h>
 #include <sll/types.h>
 
 
@@ -11,7 +12,7 @@
 #else
 #define SLL_FROM_HANDLE(t,v) sll_handle_to_object((t),(v))
 #endif
-#define SLL_ZERO_HANDLE_STRUCT {0,0}
+#define SLL_ZERO_HANDLE_STRUCT {SLL_UNKNOWN_HANDLE_TYPE,0}
 
 
 
