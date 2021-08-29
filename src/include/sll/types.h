@@ -49,10 +49,6 @@ typedef uint16_t sll_read_char_t;
 
 
 
-typedef uint16_t sll_version_t;
-
-
-
 typedef int32_t sll_relative_instruction_index_t;
 
 
@@ -66,6 +62,10 @@ typedef uint32_t sll_allocated_block_length_t;
 
 
 typedef uint32_t sll_arg_count_t;
+
+
+
+typedef uint32_t sll_array_length_t;
 
 
 
@@ -145,7 +145,7 @@ typedef uint32_t sll_variable_index_t;
 
 
 
-typedef uint32_t sll_array_length_t;
+typedef uint32_t sll_version_t;
 
 
 

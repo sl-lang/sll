@@ -92,7 +92,7 @@ __API_FUNC(file_close){
 
 
 __API_FUNC(file_open){
-	if (_file_fll==SLL_API_MAX_OPEN_FILES||!ac){
+	if (!ac){
 		SLL_RETURN_ZERO_HANDLE;
 	}
 	SETUP_HANDLE;

@@ -3,6 +3,7 @@ import header
 import os
 import subprocess
 import sys
+import upload
 import util
 import zipfile
 
@@ -128,6 +129,17 @@ if ("--test" in sys.argv):
 			print("  Running Tests...")
 		if (util.wrap_output(["build/run_tests"]).returncode!=0):
 			sys.exit(1)
+if ("--upload" in sys.argv):
+	if ("--release" not in sys.argv):
+		print("Uploading can only be done in release mode")
+		sys.exit(1)
+	if (vb):
+		print("Uploading Main Executable...")
+	upload.upload((["sll.exe",f"sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["sll",f"sll-{v[0]}.{v[1]}.{v[2]}.so"])+[f"lib/{k}.slc" for k in fl],("win" if os.name=="nt" else "posix"))
+	if ("--standalone" in sys.argv):
+		if (vb):
+			print("Uploading Standalone Executable...")
+		upload.upload([("sll_standalone.exe" if os.name=="nt" else "sll_standalone")],("win-standalone" if os.name=="nt" else "posix-standalone"))
 if ("--run" in sys.argv):
 	if (vb):
 		print("Running 'example/test.sll'...")

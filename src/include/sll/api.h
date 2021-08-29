@@ -10,18 +10,37 @@
 
 
 #define SLL_API_MAX_FILE_PATH_LENGTH 4096
-#define SLL_API_MAX_OPEN_FILES 8192
 
 
 
+/*TYPE api
+FUNC file_close
+DESC Closes a file previously opened by $file_open
+ARG H Previously allocated file handle
+RET 0 Failure
+RET 1 Success*/
 __API_FUNC_DECL(file_close);
 
 
 
+/*TYPE api
+FUNC file_open
+DESC Opens a file with the specified mode
+ARG S The path to the file to open
+ARG S? The optional file mode
+RET 0 Failure
+RET H Success*/
 __API_FUNC_DECL(file_open);
 
 
 
+/*TYPE api
+FUNC file_write
+DESC Writes to a file prevoiusly opened by $file_open
+ARG H Previously opened file handle
+ARG O? The object to write to file
+RET 0 Failure
+RET I Number of bytes written*/
 __API_FUNC_DECL(file_write);
 
 
