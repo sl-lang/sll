@@ -49,7 +49,7 @@ If a handles does not have a type (`SLL_UNKNOWN_HANDLE_TYPE`) it has a boolean v
 It is very inefficient to constantly allocate objects with common values (such as zero). The `SLL_ACQUIRE_STATIC` macro allows to acquire on of the predefined static object (`int_minus_one`, `int_zero`, `int_one`, `int_two`, `int_three`, `int_four`, `float_zero`, `float_one`, `float_half`, `float_third`, `str_zero` and `array_zero`).
 Helper functions (`sll_int_to_object` and `sll_float_to_object`) can be used to automatically convert a C type to either a new or a static object.
 
-### Changes
+### Changed
 - Fixed Function Macro Parsing
 - `internal_function_t` now uses `sll_char_t[256]` instead of `char[256]`
 - Combined cleanup functions into single `atexit` function (which calls other functions in the correct order)
@@ -88,7 +88,7 @@ The `SLL_RELEASE` macro automatically deallocates the object when its last refer
 - The order of arguments in an API function (Used to be `output, argument count, argument data` and now is `argument data, argument count, output`)
 
 ### Removed
-- CLI `-L` option
+- CLI no-logo (`-L`) option
 - Useless clean-up code in [`src/sll/parse.c`][0.6.14/src/sll/parse.c] \([#20]\)
 
 ## [0.6.13] - 2021-8-20
