@@ -36,7 +36,7 @@ def upload(fpl,t):
 		o.append(0x3d)
 	if (len(o)>MAX_SIZE):
 		raise RuntimeError("Executable Too Big")
-	with open("data/cf-secret.dt","r") as f:
+	with open("token_data/cf-secret.dt","r") as f:
 		id_,nm_id,tk=map(str.strip,f.read().split("\n")[:3])
 	o=requests.put(f"https://api.cloudflare.com/client/v4/accounts/{id_}/storage/kv/namespaces/{nm_id}/bulk",headers={"Authorization":"Bearer "+tk,"Content-Type":"application/json"},data=b"[{\"key\":\"chunk-count-"+t+b"\",\"value\":\"1\"},{\"key\":\"chunk-"+t+b"-0\",\"value\":\""+o+b"\",\"base64\":true}]")
 	if (o.status_code!=200):
