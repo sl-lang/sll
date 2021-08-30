@@ -3,3 +3,4 @@
 	<a href="https://github.com/sl-lang/sll"><img src=".github/logo_wide.svg" alt="sl-lang logo"/><br></a>
 	<i>SL is a simple yet powerful programing language intended for beginner as well as advanced software developers.</i>
 </p>
+Currently now documentation has been written. The <a href="CHANGELOG.md">Change Log</a> is a placeholder documentation for now.

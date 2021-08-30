@@ -1,6 +1,9 @@
 # The Sl Programing Language Change Log
 
-## [0.6.16] - Ongoing
+## [0.6.17] - Ongoing
+*Nothing*
+
+## [0.6.16] - 2021-8-30
 ### Added
 - This Change Log!
 - Bit shifting operators ([#30]): `(<<)` and `(>>)` as well as their `SLL_OBJECT_TYPE_` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_` counterparts (This also includes updates to the syntax highlight)
@@ -32,13 +35,13 @@ Handle types can be create by calling `sll_create_handle()` and specifying the n
 If a handles does not have a type (`SLL_UNKNOWN_HANDLE_TYPE`) it has a boolean value of zero. Otherwise, it has a boolean value of one.
 
 ### Changed
-- Renamed top-of-stack variables in [`src/sll/vm.c`][main/src/sll/vm.c] to `tos`
-- Constant string objects in [`src/sll/vm.c`][main/src/sll/vm.c] now use part of the user-supplied stack instead of `malloc()`
+- Renamed top-of-stack variables in [`src/sll/vm.c`][0.6.16/src/sll/vm.c] to `tos`
+- Constant string objects in [`src/sll/vm.c`][0.6.16/src/sll/vm.c] now use part of the user-supplied stack instead of `malloc()`
 - Renamed `SLL_MAX_ARGUMENT_COUNT` to `SLL_MAX_ARG_COUNT`
 - `sll_execute_assembly` now expects `sll_runtime_data_t` instead of multiple parameters
 
 ### Removed
-- `SLL_UNIMPLEMENTED()` statements in [`src/sll/operator.c`][main/src/sll/operator.c]
+- `SLL_UNIMPLEMENTED()` statements in [`src/sll/operator.c`][0.6.16/src/sll/operator.c]
 - Unused constant `INVALID_FILE_HANDLE` and unused macro `SLL_API_INVALID_FILE_HANDLE`
 
 ## [0.6.15] - 2021-8-26
@@ -345,7 +348,8 @@ Literally, just arrays.
 ## [0.1.2] - 2021-6-15
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.16]: https://github.com/sl-lang/sll/compare/v0.6.15...main
+[0.6.17]: https://github.com/sl-lang/sll/compare/v0.6.16...main
+[0.6.16]: https://github.com/sl-lang/sll/compare/v0.6.15...v0.6.16
 [0.6.15]: https://github.com/sl-lang/sll/compare/v0.6.14...v0.6.15
 [0.6.14]: https://github.com/sl-lang/sll/compare/v0.6.13...v0.6.14
 [0.6.13]: https://github.com/sl-lang/sll/compare/v0.6.12...v0.6.13
@@ -406,8 +410,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/main/src/sll/operator.c
-[main/src/sll/vm.c]: https://github.com/sl-lang/sll/blob/main/src/sll/vm.c
+[0.6.16/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/operator.c
+[0.6.16/src/sll/vm.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/vm.c
 [0.6.15/src/sll/parse.c]: https://github.com/sl-lang/sll/blob/v0.6.15/src/sll/parse.c
 [0.6.15/src/sll/print.c]: https://github.com/sl-lang/sll/blob/v0.6.15/src/sll/print.c
 [0.6.14/src/cli]: https://github.com/sl-lang/sll/tree/v0.6.14/src/cli
