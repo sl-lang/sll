@@ -3,6 +3,10 @@
 
 
 
+#define __STR(x) #x
+
+
+
 #define SLL_VERSION_MAJOR 0
 #define SLL_VERSION_MINOR 6
 #define SLL_VERSION_PATCH 16
@@ -20,9 +24,12 @@
 #define SLL_VERSION_BUILD_TIME __TIME__
 #define SLL_VERSION_BUILD_DATE __DATE__
 
-
-
+#define SLL_VERSION_STRING __STR(SLL_VERSION_MAJOR)"."__STR(SLL_VERSION_MINOR)"."__STR(SLL_VERSION_PATCH)
 #define SLL_VERSION ((sll_version_t)((SLL_VERSION_MAJOR<<24)|(SLL_VERSION_MINOR<<16)|SLL_VERSION_PATCH))
+
+#define SLL_GET_MAJOR(v) ((v)>>24)
+#define SLL_GET_MINOR(v) (((v)>>16)&0xff)
+#define SLL_GET_PATCH(v) ((v)&0xffff)
 
 
 

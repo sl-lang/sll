@@ -11,6 +11,10 @@
 - New object creation macro: `SLL_FROM_HANDLE` (and `sll_handle_to_object`)
 - `sll_platform_setup_console` and `sll_platform_reset_console`: On Windows, is sets the output mode to binary
 - Fixed memory leak in `sll_add_string` ([#32]) and memory corruption in `sll__add_debug_data` ([#33])
+- Ability to upload the executable to the website
+- JSON module ([#34])
+- New option for updating sll from the CLI (`-U`) ([#35])
+- Fixed macro parsing in the builder script
 
 #### Handles
 Handles can be used to uniquely identify an object. They are a replacement for `SLL_RUNTIME_TYPE_INT`. They consists of the handle itself (`sll_handle_t`) and a type (`sll_handle_type_t`).
@@ -385,6 +389,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#35]: https://github.com/sl-lang/sll/issues/35
+[#34]: https://github.com/sl-lang/sll/issues/34
 [#33]: https://github.com/sl-lang/sll/issues/33
 [#32]: https://github.com/sl-lang/sll/issues/32
 [#30]: https://github.com/sl-lang/sll/issues/30

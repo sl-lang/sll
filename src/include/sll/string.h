@@ -12,6 +12,15 @@
 		(s)->c=0; \
 		(s)->v=NULL; \
 	} while (0)
+#define SLL_STRING_FROM_STATIC(s,o) \
+	do{ \
+		(o)->l=sizeof(s)-1; \
+		(o)->c=0; \
+		(o)->v=(sll_char_t*)(s); \
+		for (sll_string_length_t __i=0;__i<sizeof(s)-1;__i++){ \
+			(o)->c^=(sll_char_t)*((s)+__i); \
+		} \
+	} while (0)
 #define SLL_ZERO_STRING_STRUCT {0,0,NULL}
 
 

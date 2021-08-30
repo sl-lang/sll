@@ -227,6 +227,11 @@ def generate_header(h_dt,c_m):
 								continue
 						sl[sli]+=k[i:i+1]
 						i+=1
+					for i in range(0,len(sl),2):
+						k=sl[i]
+						if (k[-1:]==b"#" and k[-2:-1]!=b"#"):
+							sl[i]=k[:-1]+b"\""
+							sl[i+2]=b"\""+sl[i+2]
 					dfm[f[1].split(b"(")[0]]=(al,va,tuple(sl))
 				else:
 					dm[f[1]]=b" ".join(f[2:])

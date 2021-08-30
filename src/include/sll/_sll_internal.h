@@ -288,6 +288,14 @@ typedef struct __RUNTIME_OBJECT_DEBUG_DATA{
 
 
 
+
+typedef struct __FILE_LIST_DATA{
+	sll_string_t* dt;
+	sll_array_length_t l;
+} file_list_data_t;
+
+
+
 void _gc_free_pages(void);
 
 

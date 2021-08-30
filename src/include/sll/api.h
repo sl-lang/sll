@@ -45,6 +45,14 @@ __API_FUNC_DECL(file_write);
 
 
 
+__API_FUNC_DECL(json_parse);
+
+
+
+__API_FUNC_DECL(json_stringify);
+
+
+
 __API_FUNC_DECL(path_absolute);
 
 
@@ -102,6 +110,18 @@ __API_FUNC_DECL(time_sleep_nanos);
 
 
 __API_FUNC_DECL(util_ref_count);
+
+
+
+__SLL_FUNC void sll_free_json_object(sll_json_object_t* json);
+
+
+
+__SLL_FUNC sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k);
+
+
+
+__SLL_FUNC __SLL_RETURN sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o);
 
 
 

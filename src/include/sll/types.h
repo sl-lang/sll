@@ -6,6 +6,8 @@
 
 
 struct __SLL_RUNTIME_OBJECT;
+struct __SLL_JSON_OBJECT;
+struct __SLL_JSON_MAP_KEYPAIR;
 
 
 
@@ -29,6 +31,10 @@ typedef uint8_t sll_error_type_t;
 
 
 
+typedef uint8_t sll_json_object_type_t;
+
+
+
 typedef uint8_t sll_object_type_t;
 
 
@@ -42,6 +48,10 @@ typedef uint8_t sll_runtime_object_type_t;
 
 
 typedef uint16_t sll_file_path_index_t;
+
+
+
+typedef uint16_t sll_header_count_t;
 
 
 
@@ -102,6 +112,14 @@ typedef uint32_t sll_identifier_list_length_t;
 
 
 typedef uint32_t sll_instruction_index_t;
+
+
+
+typedef uint32_t sll_json_array_length_t;
+
+
+
+typedef uint32_t sll_json_map_length_t;
 
 
 
@@ -178,6 +196,10 @@ typedef uint8_t* sll_buffer_t;
 
 
 typedef const uint8_t* sll_const_buffer_t;
+
+
+
+typedef sll_char_t* sll_json_parser_state_t;
 
 
 
@@ -494,6 +516,66 @@ typedef struct __SLL_RUNTIME_OBJECT_STACK_DATA{
 
 
 typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o,sll_error_t* e);
+
+
+
+typedef struct __SLL_HEADER{
+	sll_string_t k;
+	sll_string_t v;
+} sll_header_t;
+
+
+
+typedef struct __SLL_HEADER_LIST{
+	sll_header_t** dt;
+	sll_header_count_t l;
+} sll_header_list_t;
+
+
+
+typedef struct __SLL_HTTP_RESPONSE{
+	sll_string_t* rc;
+	sll_header_list_t* hl;
+	sll_string_t* dt;
+} sll_http_response_t;
+
+
+
+typedef struct __SLL_JSON_ARRAY{
+	sll_json_array_length_t l;
+	struct __SLL_JSON_OBJECT* dt;
+} sll_json_array_t;
+
+
+
+typedef struct __SLL_JSON_MAP{
+	sll_json_map_length_t l;
+	struct __SLL_JSON_MAP_KEYPAIR* dt;
+} sll_json_map_t;
+
+
+
+typedef union __SLL_JSON_OBJECT_DATA{
+	sll_integer_t i;
+	sll_float_t f;
+	sll_string_t s;
+	sll_json_array_t a;
+	sll_json_map_t m;
+} sll_json_object_data_t;
+
+
+
+typedef struct __SLL_JSON_OBJECT{
+	sll_json_object_type_t t;
+	sll_json_object_data_t dt;
+} sll_json_object_t;
+
+
+
+typedef struct __SLL_JSON_MAP_KEYPAIR{
+	sll_string_t k;
+	sll_json_object_t v;
+} sll_json_map_keypair_t;
 
 
 
