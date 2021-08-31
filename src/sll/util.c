@@ -14,7 +14,7 @@ static char _util_init=0;
 
 
 
-void _util_cleanup(void){
+static void _util_cleanup(void){
 	sll_platform_reset_console();
 	_sys_free_argv();
 	_gc_free_pages();
@@ -90,6 +90,16 @@ __SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o){
 			{
 				sll_object_offset_t off=1;
 				sll_array_length_t l=o->dt.al;
+				while (l){
+					l--;
+					off+=sll_get_object_size(o+off);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_object_offset_t off=1;
+				sll_map_length_t l=o->dt.ml;
 				while (l){
 					l--;
 					off+=sll_get_object_size(o+off);

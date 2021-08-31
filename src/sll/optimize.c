@@ -56,7 +56,7 @@
 
 
 
-void _remove_up_to_end(sll_object_t* o,sll_object_offset_t off){
+static void _remove_up_to_end(sll_object_t* o,sll_object_offset_t off){
 	sll_object_offset_t sz=sll_get_object_size(o);
 	for (;off<sz;off++){
 		(o+off)->t=SLL_OBJECT_TYPE_NOP;
@@ -65,7 +65,7 @@ void _remove_up_to_end(sll_object_t* o,sll_object_offset_t off){
 
 
 
-sll_string_index_t _create_print_string(optimizer_data_t* o_dt,const sll_char_t* a,const sll_char_t* b,sll_string_length_t al,sll_string_length_t bl,sll_string_checksum_t c){
+static sll_string_index_t _create_print_string(optimizer_data_t* o_dt,const sll_char_t* a,const sll_char_t* b,sll_string_length_t al,sll_string_length_t bl,sll_string_checksum_t c){
 	for (sll_string_index_t i=0;i<o_dt->c_dt->st.l;i++){
 		sll_string_t* s=o_dt->c_dt->st.dt+i;
 		if (s->c==c&&s->l==al+bl){
@@ -95,7 +95,7 @@ _check_next_string:;
 
 
 
-sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_compilation_data_t* c_dt,identifier_map_data_t* im){
+static sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_compilation_data_t* c_dt,identifier_map_data_t* im){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -112,6 +112,16 @@ sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_compilation
 			{
 				sll_object_offset_t off=1;
 				sll_array_length_t l=o->dt.al;
+				while (l){
+					l--;
+					off+=_map_identifiers(o+off,c_dt,im);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_object_offset_t off=1;
+				sll_map_length_t l=o->dt.ml;
 				while (l){
 					l--;
 					off+=_map_identifiers(o+off,c_dt,im);
@@ -194,7 +204,7 @@ sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_compilation
 
 
 
-void _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,sll_runtime_object_t* v){
+static void _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,sll_runtime_object_t* v){
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		o++;
 	}
@@ -239,7 +249,7 @@ void _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,s
 
 
 
-sll_object_offset_t _mark_loop_vars(const sll_object_t* o,optimizer_data_t* o_dt){
+static sll_object_offset_t _mark_loop_vars(const sll_object_t* o,optimizer_data_t* o_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -263,6 +273,8 @@ sll_object_offset_t _mark_loop_vars(const sll_object_t* o,optimizer_data_t* o_dt
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_MAP:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_ASSIGN:
 			{
 				sll_arg_count_t l=o->dt.ac;
@@ -318,7 +330,7 @@ sll_object_offset_t _mark_loop_vars(const sll_object_t* o,optimizer_data_t* o_dt
 
 
 
-uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_t lv){
+static uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_t lv){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -337,6 +349,8 @@ uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 			return (((!!(o_dt->c_dt->st.dt+o->dt.s)->l)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_OBJECT_TYPE_ARRAY:
 			return (((!!o->dt.al)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+		case SLL_OBJECT_TYPE_MAP:
+			return (((!!o->dt.ml)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				sll_runtime_object_t* v=o_dt->v+GET_VARIABLE_INDEX(o,o_dt);
@@ -406,7 +420,7 @@ uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_
 
 
 
-sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt,uint8_t fl){
+static sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt,uint8_t fl){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -443,6 +457,27 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 					}
 				}
 				if (!o->dt.al){
+					if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+						o->t=SLL_OBJECT_TYPE_NOP;
+						DECREASE_PARENT(p);
+					}
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_object_offset_t off=1;
+				sll_map_length_t l=o->dt.ml;
+				while (l){
+					l--;
+					off+=_optimize(o+off,NULL,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|OPTIMIZER_FLAG_ARGUMENT);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.ml-=l;
+						break;
+					}
+				}
+				if (!o->dt.ml){
 					if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
 						o->t=SLL_OBJECT_TYPE_NOP;
 						DECREASE_PARENT(p);
@@ -928,7 +963,7 @@ sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* 
 
 
 
-sll_object_offset_t _check_remove(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt){
+static sll_object_offset_t _check_remove(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -947,6 +982,18 @@ sll_object_offset_t _check_remove(sll_object_t* o,sll_object_t* p,optimizer_data
 			{
 				o->t=SLL_OBJECT_TYPE_NOP;
 				sll_array_length_t l=o->dt.al;
+				INCREASE_PARENT(p,l-1);
+				sll_object_offset_t off=1;
+				while (l){
+					l--;
+					off+=_check_remove(o+off,p,o_dt);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				o->t=SLL_OBJECT_TYPE_NOP;
+				sll_map_length_t l=o->dt.ml;
 				INCREASE_PARENT(p,l-1);
 				sll_object_offset_t off=1;
 				while (l){
@@ -1012,7 +1059,7 @@ sll_object_offset_t _check_remove(sll_object_t* o,sll_object_t* p,optimizer_data
 
 
 
-sll_object_offset_t _remap_vars(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt){
+static sll_object_offset_t _remap_vars(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -1029,6 +1076,16 @@ sll_object_offset_t _remap_vars(sll_object_t* o,sll_object_t* p,optimizer_data_t
 			{
 				sll_object_offset_t off=1;
 				sll_array_length_t l=o->dt.al;
+				while (l){
+					l--;
+					off+=_remap_vars(o+off,o,o_dt);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_object_offset_t off=1;
+				sll_map_length_t l=o->dt.ml;
 				while (l){
 					l--;
 					off+=_remap_vars(o+off,o,o_dt);

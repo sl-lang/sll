@@ -8,7 +8,7 @@
 
 
 
-void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
+static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 	o->l=1;
 	o->c=0;
 	o->v=malloc(sizeof(sll_char_t));

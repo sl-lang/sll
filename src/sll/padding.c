@@ -5,7 +5,7 @@
 
 
 
-sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_offset_t* rm){
+static sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_offset_t* rm){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;
@@ -25,6 +25,16 @@ sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilation_dat
 			{
 				sll_object_offset_t off=1;
 				sll_array_length_t l=o->dt.al;
+				while (l){
+					l--;
+					off+=_remove_padding_internal(o+off,c_dt,rm);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_object_offset_t off=1;
+				sll_map_length_t l=o->dt.ml;
 				while (l){
 					l--;
 					off+=_remove_padding_internal(o+off,c_dt,rm);

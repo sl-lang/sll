@@ -1,7 +1,14 @@
 # The Sl Programing Language Change Log
 
 ## [0.6.17] - Ongoing
-*Nothing*
+### Added
+- Mappings ([#36])
+
+#### Mappings
+Maps (Mapping Objects) can be created by arrow brackets (`<key1 value1 key2 value2>`). If the number of elements is odd, a `nil` is automatically added to the end.
+
+### Changes
+- Internal functions are now declared as `static`
 
 ## [0.6.16] - 2021-8-30
 ### Added

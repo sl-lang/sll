@@ -51,15 +51,15 @@ static sll_assembly_instruction_t _assembly_nop={
 };
 
 
-sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt);
+static sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt);
 
 
 
-sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g_dt);
+static sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g_dt);
 
 
 
-sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compilation_data_t* c_dt,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
+static sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compilation_data_t* c_dt,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -76,6 +76,16 @@ sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compi
 			{
 				sll_object_offset_t off=1;
 				sll_array_length_t l=o->dt.al;
+				while (l){
+					l--;
+					off+=_map_identifiers_extra(o+off,c_dt,g_dt,fn_sc);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_object_offset_t off=1;
+				sll_map_length_t l=o->dt.ml;
 				while (l){
 					l--;
 					off+=_map_identifiers_extra(o+off,c_dt,g_dt,fn_sc);
@@ -174,7 +184,7 @@ sll_object_offset_t _map_identifiers_extra(const sll_object_t* o,const sll_compi
 
 
 
-sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* ai,sll_instruction_index_t i){
+static sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* ai,sll_instruction_index_t i){
 	do{
 		if (!i){
 			return &_assembly_nop;
@@ -187,7 +197,7 @@ sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t
 
 
 
-sll_object_offset_t _generate_sequential_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,sll_assembly_instruction_type_t t,uint8_t st){
+static sll_object_offset_t _generate_sequential_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,sll_assembly_instruction_type_t t,uint8_t st){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	if (l==1){
@@ -221,7 +231,7 @@ sll_object_offset_t _generate_sequential_jump(const sll_object_t* o,assembly_gen
 
 
 
-sll_object_offset_t _generate_cond_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,sll_assembly_instruction_type_t t){
+static sll_object_offset_t _generate_cond_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,sll_assembly_instruction_type_t t){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	if (l==1){
@@ -243,7 +253,7 @@ sll_object_offset_t _generate_cond_jump(const sll_object_t* o,assembly_generator
 
 
 
-sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,uint8_t inv){
+static sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,uint8_t inv){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -273,6 +283,8 @@ sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data
 			}
 			return eoff+1;
 		case SLL_OBJECT_TYPE_ARRAY:
+			SLL_UNIMPLEMENTED();
+		case SLL_OBJECT_TYPE_MAP:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
@@ -360,7 +372,7 @@ sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generator_data
 
 
 
-sll_object_offset_t _generate_call(const sll_object_t* o,assembly_generator_data_t* g_dt){
+static sll_object_offset_t _generate_call(const sll_object_t* o,assembly_generator_data_t* g_dt){
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
 	sll_object_offset_t off=sll_get_object_size(o+1)+1;
@@ -378,7 +390,7 @@ sll_object_offset_t _generate_call(const sll_object_t* o,assembly_generator_data
 
 
 
-sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt){
+static sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -433,6 +445,21 @@ sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_
 					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK;
 					ai->dt.al=o->dt.al;
 				}
+				return eoff+off;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				if (!o->dt.ml){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO);
+					return eoff+1;
+				}
+				sll_object_offset_t off=1;
+				for (sll_map_length_t i=0;i<o->dt.ml;i++){
+					off+=_generate_on_stack(o+off,g_dt);
+				}
+				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP;
+				ai->dt.ml=o->dt.ml;
 				return eoff+off;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
@@ -606,7 +633,7 @@ sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_generator_
 
 
 
-sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_generator_data_t* g_dt,uint64_t* v_st,sll_scope_t sc){
+static sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_generator_data_t* g_dt,uint64_t* v_st,sll_scope_t sc){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -620,6 +647,8 @@ sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_gener
 		case SLL_OBJECT_TYPE_STRING:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_ARRAY:
+			SLL_UNIMPLEMENTED();
+		case SLL_OBJECT_TYPE_MAP:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
@@ -676,7 +705,7 @@ sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembly_gener
 
 
 
-sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g_dt){
+static sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g_dt){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;
@@ -697,6 +726,8 @@ sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_data_t* g
 				}
 				return eoff+off;
 			}
+		case SLL_OBJECT_TYPE_MAP:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
 				uint8_t i=SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);

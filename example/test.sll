@@ -64,6 +64,10 @@
 (:> "Array: " arr ", (Length: " ($ arr) ")\n")
 (= print_array (,,, a (:> "[") (-> (= idx 0) (< idx ($ a)) (? idx (:> ", ")) (:> (: a idx)) (= idx (+ idx 1))) (:> "]")))
 (:> "Array: ") (<- print_array arr) (:> "\n" "")
+(= map <1 "a" 2 "b" 3>)
+(:> "Map: " map "\n")
+(= print_map (,,, m (:> "<") (-> (= idx 0) (< idx ($ m)) (? idx (? (& idx 1) (:> ": ") (:> ", "))) (:> (: m idx)) (= idx (+ idx 1))) (:> ">")))
+(:> "Map: ") (<- print_map map) (:> "\n" "")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)

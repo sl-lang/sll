@@ -35,7 +35,7 @@
 
 
 
-uint64_t _read_integer(sll_input_data_stream_t* is,uint8_t* e){
+static uint64_t _read_integer(sll_input_data_stream_t* is,uint8_t* e){
 	sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 	if (c==SLL_END_OF_DATA){
 		*e=1;
@@ -57,7 +57,7 @@ uint64_t _read_integer(sll_input_data_stream_t* is,uint8_t* e){
 
 
 
-int64_t _read_signed_integer(sll_input_data_stream_t* is,uint8_t* e){
+static int64_t _read_signed_integer(sll_input_data_stream_t* is,uint8_t* e){
 	uint64_t v=_read_integer(is,e);
 	if (*e){
 		return 0;
@@ -67,7 +67,7 @@ int64_t _read_signed_integer(sll_input_data_stream_t* is,uint8_t* e){
 
 
 
-uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
+static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 	sll_object_t* o=(sll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
 	c_dt->_s.off+=sizeof(sll_object_t);
 	READ_FIELD(o->t,is);
@@ -96,6 +96,22 @@ uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
 			return 1;
 		case SLL_OBJECT_TYPE_STRING:
 			CHECK_ERROR2(is,o->dt.s,sll_string_index_t);
+			return 1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			CHECK_ERROR2(is,o->dt.al,sll_array_length_t);
+			for (sll_array_length_t i=0;i<o->dt.al;i++){
+				if (!_read_object(c_dt,is)){
+					return 0;
+				}
+			}
+			return 1;
+		case SLL_OBJECT_TYPE_MAP:
+			CHECK_ERROR2(is,o->dt.ml,sll_map_length_t);
+			for (sll_map_length_t i=0;i<o->dt.ml;i++){
+				if (!_read_object(c_dt,is)){
+					return 0;
+				}
+			}
 			return 1;
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			CHECK_ERROR2(is,o->dt.id,sll_identifier_index_t);
@@ -247,6 +263,9 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				CHECK_ERROR(is,ai->dt.al,sll_array_length_t,e);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
+				CHECK_ERROR(is,ai->dt.ml,sll_map_length_t,e);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:

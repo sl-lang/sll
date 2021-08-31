@@ -13,7 +13,7 @@
 
 
 
-void _write_integer(sll_output_data_stream_t* os,uint64_t v){
+static void _write_integer(sll_output_data_stream_t* os,uint64_t v){
 	while (v>0x7f){
 		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)((v&0x7f)|0x80));
 		v>>=7;
@@ -23,7 +23,7 @@ void _write_integer(sll_output_data_stream_t* os,uint64_t v){
 
 
 
-sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_t* o){
+static sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_t* o){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		WRITE_FIELD(o->t,os);
@@ -46,6 +46,24 @@ sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_
 		case SLL_OBJECT_TYPE_STRING:
 			_write_integer(os,o->dt.s);
 			return eoff+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				_write_integer(os,o->dt.al);
+				sll_object_offset_t off=1;
+				for (sll_array_length_t i=0;i<o->dt.al;i++){
+					off+=_write_object(os,o+off);
+				}
+				return off+eoff;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				_write_integer(os,o->dt.ml);
+				sll_object_offset_t off=1;
+				for (sll_map_length_t i=0;i<o->dt.ml;i++){
+					off+=_write_object(os,o+off);
+				}
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			_write_integer(os,o->dt.id);
 			return eoff+1;
@@ -160,6 +178,9 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				_write_integer(os,ai->dt.al);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
+				_write_integer(os,ai->dt.ml);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:

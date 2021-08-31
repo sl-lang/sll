@@ -34,7 +34,7 @@ static sll_handle_type_t _file_ht=SLL_UNKNOWN_HANDLE_TYPE;
 
 
 
-uint8_t _free_file(sll_handle_t h){
+static uint8_t _free_file(sll_handle_t h){
 	if (h>=_file_fll){
 		return 0;
 	}
@@ -63,7 +63,7 @@ uint8_t _free_file(sll_handle_t h){
 
 
 
-void _file_destructor(sll_handle_t h){
+static void _file_destructor(sll_handle_t h){
 	if (h==SLL_HANDLE_FREE){
 		SLL_ASSERT(!_file_fll);
 		_file_ht=SLL_UNKNOWN_HANDLE_TYPE;

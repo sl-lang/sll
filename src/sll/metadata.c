@@ -8,7 +8,7 @@
 
 
 
-sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
+static sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;
@@ -60,7 +60,7 @@ sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
 
 
 
-sll_object_offset_t _update_strings(sll_object_t* o,sll_string_index_t* sm){
+static sll_object_offset_t _update_strings(sll_object_t* o,sll_string_index_t* sm){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;

@@ -86,7 +86,7 @@ _found_index:
 	dt->ln=ln;
 	uint8_t j=0;
 	while (*(fn+j)){
-		dt->fn[j]=*fn;
+		dt->fn[j]=*(fn+j);
 		j++;
 		SLL_ASSERT(j);
 	}
@@ -227,6 +227,9 @@ __SLL_FUNC __SLL_RETURN sll_verify_runtime_object_stack_cleanup(const sll_runtim
 						break;
 					case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 						t="handle";
+						break;
+					case SLL_RUNTIME_OBJECT_TYPE_MAP:
+						t="map";
 						break;
 				}
 				sll_string_t str;

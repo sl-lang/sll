@@ -19,7 +19,7 @@ const char* sll_platform_string="posix";
 
 
 
-void _list_dir_files(char* bf,uint16_t i,sll_string_checksum_t c,file_list_data_t* o){
+static void _list_dir_files(char* bf,uint16_t i,sll_string_checksum_t c,file_list_data_t* o){
 	bf[i]=0;
 	DIR* d=opendir(bf);
 	if (d){

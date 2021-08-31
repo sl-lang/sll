@@ -27,7 +27,7 @@ static int _win_stderr_m=0;
 
 
 
-void _list_dir_files(char* bf,uint16_t i,sll_string_checksum_t c,file_list_data_t* o){
+static void _list_dir_files(char* bf,uint16_t i,sll_string_checksum_t c,file_list_data_t* o){
 	WIN32_FIND_DATAA dt;
 	bf[i]='*';
 	bf[i+1]=0;

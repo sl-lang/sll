@@ -5,6 +5,7 @@
 #include <sll/constants.h>
 #include <sll/core.h>
 #include <sll/gc.h>
+#include <sll/map.h>
 #include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
@@ -207,6 +208,25 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE:
+				SLL_UNIMPLEMENTED();
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
+				{
+					sll_runtime_object_t* tos=SLL_CREATE();
+					tos->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+					sll_map_t* m=&(tos->dt.m);
+					sll_map_create(ai->dt.ml+(ai->dt.ml&1),m);
+					si-=ai->dt.ml;
+					for (sll_map_length_t i=0;i<ai->dt.ml;i++){
+						m->v[i]=*(s+si+i);
+					}
+					if (ai->dt.ml&1){
+						m->v[ai->dt.ml]=SLL_ACQUIRE_STATIC(int_zero);
+					}
+					*(s+si)=tos;
+					si++;
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO:
 				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				SLL_RELEASE(*(v+ai->dt.v));

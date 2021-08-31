@@ -4,7 +4,7 @@
 
 
 
-sll_object_offset_t _remove_debug_data_internal(sll_object_t* o){
+static sll_object_offset_t _remove_debug_data_internal(sll_object_t* o){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP){
 		eoff++;
