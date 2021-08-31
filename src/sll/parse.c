@@ -122,7 +122,7 @@ static uint8_t _read_single_char(sll_input_data_stream_t* is,sll_file_offset_t s
 		}
 		if (c=='\''||c=='"'||c=='\\'){
 			*o=(sll_char_t)c;
-			return 0;
+			return 2;
 		}
 		else if (c=='x'){
 			c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
@@ -760,13 +760,14 @@ _unknown_symbol:
 			}
 			if (c=='\''){
 				arg->t=SLL_OBJECT_TYPE_CHAR;
-				if (_read_single_char(is,arg_s,e,&(arg->dt.c))){
+				uint8_t err=_read_single_char(is,arg_s,e,&(arg->dt.c));
+				if (err==1){
 					if (n_l_sc.m){
 						free(n_l_sc.m);
 					}
 					return SLL_RETURN_ERROR;
 				}
-				if (arg->dt.c=='\''){
+				if (!err&&arg->dt.c=='\''){
 					e->t=SLL_ERROR_EMPTY_CHAR_STRING;
 					e->dt.r.off=arg_s;
 					e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -792,13 +793,14 @@ _unknown_symbol:
 				sll_string_length_t ln=0;
 				sll_char_t* s=(sll_char_t*)(c_dt->_s.ptr+c_dt->_s.off);
 				while (1){
-					if (_read_single_char(is,arg_s,e,s+ln)){
+					uint8_t err=_read_single_char(is,arg_s,e,s+ln);
+					if (err==1){
 						if (n_l_sc.m){
 							free(n_l_sc.m);
 						}
 						return SLL_RETURN_ERROR;
 					}
-					if (*(s+ln)=='"'){
+					if (!err&&*(s+ln)=='"'){
 						break;
 					}
 					ln++;

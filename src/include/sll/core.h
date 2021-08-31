@@ -49,6 +49,10 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 
 
 
+__SLL_FUNC void sll_register_cleanup(sll_cleanup_function f,sll_cleanup_type_t t);
+
+
+
 __SLL_FUNC void sll_set_compilation_data_stack(sll_compilation_data_t* c_dt,sll_buffer_t bf,sll_stack_offset_t sz);
 
 

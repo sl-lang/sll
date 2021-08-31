@@ -1,7 +1,10 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/array.h>
 #include <sll/constants.h>
+#include <sll/map.h>
 #include <sll/static_object.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <math.h>
 #include <stdlib.h>
@@ -69,6 +72,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 			}
 			else{
 				printf("Unknown Escape: \\%c\n",c);
+				SLL_UNIMPLEMENTED();
 			}
 		}
 		o->c^=o->v[o->l-2];
@@ -77,6 +81,182 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 	}
 	o->l--;
 	o->v[o->l]=0;
+}
+
+
+
+static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
+	sll_char_t c=**p;
+	(*p)++;
+	while (c==' '||c=='\t'||c=='\n'||c=='\r'){
+		c=**p;
+		(*p)++;
+	}
+	if (c=='{'){
+		sll_runtime_object_t* o=SLL_CREATE();
+		o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+		sll_map_t* m=&(o->dt.m);
+		SLL_ZERO_MAP(m);
+		while (1){
+			c=**p;
+			(*p)++;
+			while (c!='\"'){
+				if (c=='}'){
+					return o;
+				}
+				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
+					SLL_RELEASE(o);
+					return NULL;
+				}
+				c=**p;
+				(*p)++;
+			}
+			m->l+=2;
+			m->v=realloc(m->v,m->l*sizeof(sll_runtime_object_t*));
+			sll_runtime_object_t* k=SLL_CREATE();
+			m->v[m->l-2]=k;
+			k->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+			_parse_json_string(p,&(k->dt.s));
+			c=**p;
+			(*p)++;
+			while (c!=':'){
+				c=**p;
+				(*p)++;
+			}
+			sll_runtime_object_t* v=_parse_json_as_object(p);
+			if (!v){
+				m->v[m->l-1]=SLL_ACQUIRE_STATIC(int_zero);
+				SLL_RELEASE(o);
+				return NULL;
+			}
+			m->v[m->l-1]=v;
+			c=**p;
+			(*p)++;
+			while (c!=','){
+				if (c=='}'){
+					return o;
+				}
+				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
+					SLL_RELEASE(o);
+					return NULL;
+				}
+				c=**p;
+				(*p)++;
+			}
+		}
+	}
+	if (c=='['){
+		sll_runtime_object_t* o=SLL_CREATE();
+		o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+		sll_array_t* a=&(o->dt.a);
+		SLL_ZERO_ARRAY(a);
+		while (c==' '||c=='\t'||c=='\n'||c=='\r'){
+			c=**p;
+			(*p)++;
+		}
+		if (c==']'){
+			return o;
+		}
+		while (1){
+			sll_runtime_object_t* k=_parse_json_as_object(p);
+			if (!k){
+				SLL_RELEASE(o);
+				return NULL;
+			}
+			a->l++;
+			a->v=realloc(a->v,a->l*sizeof(sll_runtime_object_t*));
+			a->v[a->l-1]=k;
+			c=**p;
+			(*p)++;
+			while (c!=','){
+				if (c==']'){
+					return o;
+				}
+				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
+					SLL_RELEASE(o);
+					return NULL;
+				}
+				c=**p;
+				(*p)++;
+			}
+		}
+	}
+	if (c=='\"'){
+		sll_runtime_object_t* o=SLL_CREATE();
+		o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+		_parse_json_string(p,&(o->dt.s));
+		return o;
+	}
+	if (c=='t'&&**p=='r'&&*((*p)+1)=='u'&&*((*p)+2)=='e'){
+		(*p)+=3;
+		SLL_RETURN_ONE;
+	}
+	if (c=='f'&&**p=='a'&&*((*p)+1)=='l'&&*((*p)+2)=='s'&&*((*p)+3)=='e'){
+		(*p)+=4;
+		SLL_RETURN_ZERO;
+	}
+	if (c=='n'&&**p=='u'&&*((*p)+1)=='l'&&*((*p)+2)=='l'){
+		(*p)+=3;
+		SLL_RETURN_ZERO;
+	}
+	if ((c<48||c>57)&&c!='.'&&c!='e'&&c!='E'&&c!='-'&&c!='+'){
+		return NULL;
+	}
+	int8_t s=1;
+	if (c=='+'){
+		c=**p;
+		(*p)++;
+	}
+	else if (c=='-'){
+		s=-1;
+		c=**p;
+		(*p)++;
+	}
+	sll_float_t v=0;
+	while (c>47&&c<58){
+		v=v*10+(c-48);
+		c=**p;
+		(*p)++;
+	}
+	if (c!='.'&&c!='e'&&c!='E'){
+		(*p)--;
+		return SLL_FROM_INT((sll_integer_t)(v*s));
+	}
+	if (c=='.'){
+		sll_float_t pw=0.1;
+		c=**p;
+		(*p)++;
+		while (c>47&&c<58){
+			v+=pw*(c-48);
+			pw*=0.1;
+			c=**p;
+			(*p)++;
+		}
+	}
+	if (c=='e'||c=='E'){
+		c=**p;
+		(*p)++;
+		int8_t pw_s=1;
+		if (c=='+'){
+			c=**p;
+			(*p)++;
+		}
+		else if (c=='-'){
+			c=**p;
+			(*p)++;
+			pw_s=-1;
+		}
+		int64_t pw=0;
+		while (c>47&&c<58){
+			pw=pw*10+(c-48);
+			c=**p;
+			(*p)++;
+		}
+		pw*=pw_s;
+		v*=pow(2,(sll_float_t)pw)*pow(5,(sll_float_t)pw);
+	}
+	(*p)--;
+	return SLL_FROM_FLOAT(v*s);
 }
 
 
@@ -292,8 +472,19 @@ __SLL_FUNC __SLL_RETURN sll_json_parse(sll_json_parser_state_t* p,sll_json_objec
 
 
 __API_FUNC(json_parse){
-	SLL_UNIMPLEMENTED();
-	SLL_RETURN_ZERO;
+	if (!ac){
+		SLL_RETURN_ZERO;
+	}
+	const sll_runtime_object_t* v=*a;
+	if (v->t!=SLL_RUNTIME_OBJECT_TYPE_STRING){
+		SLL_RETURN_ZERO;
+	}
+	sll_json_parser_state_t p=v->dt.s.v;
+	sll_runtime_object_t* o=_parse_json_as_object(&p);
+	if (!o){
+		SLL_RETURN_ZERO;
+	}
+	return o;
 }
 
 

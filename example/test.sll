@@ -1,5 +1,5 @@
-(# time sleep open close write platform argc argv get_ref_count)
-(? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll"))
+(# time sleep open close write platform argc argv get_ref_count parse)
+(? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "json.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -67,7 +67,8 @@
 (= map <1 "a" 2 "b" 3>)
 (:> "Map: " map "\n")
 (= print_map (,,, m (:> "<") (-> (= idx 0) (< idx ($ m)) (? idx (? (& idx 1) (:> ": ") (:> ", "))) (:> (: m idx)) (= idx (+ idx 1))) (:> ">")))
-(:> "Map: ") (<- print_map map) (:> "\n" "")
+(:> "Map: ") (<- print_map map) (:> "\n")
+(:> "Parsed: " (<- parse "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\n\x01\"],\"other\":\"else\"},true,false,null]}") "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)

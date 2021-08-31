@@ -2,6 +2,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/constants.h>
+#include <sll/core.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/platform.h>
@@ -23,7 +24,7 @@ static uint8_t _gc_verify=1;
 
 
 
-void _gc_free_pages(void){
+static void _gc_free_pages(void){
 	if (_gc_verify){
 		sll_runtime_object_stack_data_t rst={
 			0,
@@ -43,26 +44,6 @@ void _gc_free_pages(void){
 		sll_platform_free_page(c,sz*(n?1:GC_INIT_PAGE_COUNT));
 		c=n;
 	}
-}
-
-
-
-void _gc_init(void){
-	SLL_ASSERT(!_gc_page_ptr);
-	SLL_ASSERT(!_gc_next_object);
-	sll_page_size_t sz=GC_INIT_PAGE_COUNT*sll_platform_get_page_size();
-	_gc_page_ptr=sll_platform_allocate_page(sz);
-	*((void**)_gc_page_ptr)=NULL;
-	sll_runtime_object_t* c=(sll_runtime_object_t*)((uint64_t)_gc_page_ptr+sizeof(void*));
-	_gc_next_object=c;
-	void* e=(void*)((uint64_t)_gc_page_ptr+sizeof(void*)+((sz-sizeof(void*))/sizeof(sll_runtime_object_t)-1)*sizeof(sll_runtime_object_t));
-	while ((void*)c<e){
-		GC_SET_NEXT_OBJECT(c,c+1);
-		c->rc=0;
-		c++;
-	}
-	GC_SET_NEXT_OBJECT(c,NULL);
-	c->rc=0;
 }
 
 
@@ -100,12 +81,16 @@ _found_index:
 __SLL_FUNC sll_runtime_object_t* sll_create_object(void){
 	if (!_gc_next_object){
 		sll_page_size_t sz=sll_platform_get_page_size();
+		if (!_gc_page_ptr){
+			sz*=GC_INIT_PAGE_COUNT;
+			sll_register_cleanup(_gc_free_pages,CLEANUP_ORDER_LAST);
+		}
 		void* pg=sll_platform_allocate_page(sz);
 		*((void**)pg)=_gc_page_ptr;
 		_gc_page_ptr=pg;
 		sll_runtime_object_t* c=(sll_runtime_object_t*)((uint64_t)pg+sizeof(void*));
 		_gc_next_object=c;
-		void* e=(void*)((uint64_t)pg+sizeof(void*)+(sz/sizeof(sll_runtime_object_t)-1)*sizeof(sll_runtime_object_t));
+		void* e=(void*)((uint64_t)pg+sizeof(void*)+((sz-sizeof(void*))/sizeof(sll_runtime_object_t)-1)*sizeof(sll_runtime_object_t));
 		while ((void*)c<e){
 			GC_SET_NEXT_OBJECT(c,c+1);
 			c->rc=0;
@@ -182,6 +167,12 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 				sll_handle_descriptor_t* hd=SLL_LOOKUP_HANDLE_DESCRIPTOR(sll_current_runtime_data->hl,o->dt.h.t);
 				hd->df(o->dt.h.h);
 			}
+		}
+		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_MAP){
+			for (sll_map_length_t j=0;j<o->dt.m.l;j++){
+				sll_release_object(*(o->dt.m.v+j));
+			}
+			free(o->dt.m.v);
 		}
 		o->t=SLL_OBJECT_TYPE_INT;
 		o->dt.i=0;

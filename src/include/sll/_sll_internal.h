@@ -139,6 +139,9 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define GC_MAX_DBG_ID 16777215
 
+#define MAX_EXIT_TABLE_SIZE 512
+#define CLEANUP_ORDER_LAST SLL_CLEANUP_ORDER_RESERVED0
+
 
 
 typedef uint16_t call_stack_size_t;
@@ -293,18 +296,6 @@ typedef struct __FILE_LIST_DATA{
 	sll_string_t* dt;
 	sll_array_length_t l;
 } file_list_data_t;
-
-
-
-void _gc_free_pages(void);
-
-
-
-void _gc_init(void);
-
-
-
-void _sys_free_argv(void);
 
 
 

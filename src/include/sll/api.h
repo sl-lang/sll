@@ -15,9 +15,9 @@
 
 /*TYPE api
 FUNC file_close
-DESC Closes a file previously opened by $file_open
+DESC Closes a file previously opened by $file_open and invalidates its handle
 ARG H Previously allocated file handle
-RET 0 Failure
+RET 0 Failure: Invalid file handle
 RET 1 Success*/
 __API_FUNC_DECL(file_close);
 
@@ -28,18 +28,18 @@ FUNC file_open
 DESC Opens a file with the specified mode
 ARG S The path to the file to open
 ARG S? The optional file mode
-RET 0 Failure
+RET 0 Failure: Unable to open file
 RET H Success*/
 __API_FUNC_DECL(file_open);
 
 
 
-/*TYPE api
+/*TYPE api var_arg
 FUNC file_write
 DESC Writes to a file prevoiusly opened by $file_open
 ARG H Previously opened file handle
 ARG O? The object to write to file
-RET 0 Failure
+RET 0 Failure: Invalid file handle
 RET I Number of bytes written*/
 __API_FUNC_DECL(file_write);
 

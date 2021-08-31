@@ -23,6 +23,10 @@ typedef uint8_t sll_char_t;
 
 
 
+typedef uint8_t sll_cleanup_type_t;
+
+
+
 typedef uint8_t sll_compare_result_t;
 
 
@@ -203,7 +207,7 @@ typedef const uint8_t* sll_const_buffer_t;
 
 
 
-typedef sll_char_t* sll_json_parser_state_t;
+typedef const sll_char_t* sll_json_parser_state_t;
 
 
 
@@ -590,6 +594,10 @@ typedef struct __SLL_JSON_MAP_KEYPAIR{
 	sll_string_t k;
 	sll_json_object_t v;
 } sll_json_map_keypair_t;
+
+
+
+typedef void (*sll_cleanup_function)(void);
 
 
 

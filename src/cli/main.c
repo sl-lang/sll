@@ -976,10 +976,8 @@ _read_file_argument:
 			goto _json_error;
 		}
 		sll_free_http_response(&r);
-		if (!(fl&FLAG_FORCE_UPDATE)&&v->dt.i==SLL_VERSION){
-			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("No New Versions Avaible, sll is Up To Date\n");
-			}
+		if (!(fl&FLAG_FORCE_UPDATE)&&v->dt.i<=SLL_VERSION){
+			PRINT_STATIC_STR("No New Versions Avaible, sll is Up To Date\n");
 		}
 		else{
 			if (fl&FLAG_VERBOSE){
@@ -1030,6 +1028,12 @@ _read_file_argument:
 #endif
 			SLL_STRING_FROM_STATIC("/data/"SLL_TYPE,&p);
 			r.dt=&r_dt;
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("Downloading '");
+				print_str(h.v);
+				print_str(p.v);
+				PRINT_STATIC_STR("'...\n");
+			}
 			rc=sll_url_http_request(&m,&h,&p,&hl,&dt,&r);
 			if (rc!=200){
 				COLOR_RED;
@@ -1053,6 +1057,15 @@ _read_file_argument:
 				j+=5;
 				memcpy(bf+i,r_dt.v+j,nml);
 				bf[i+nml]=0;
+				if (fl&FLAG_VERBOSE){
+					PRINT_STATIC_STR("Extracting '");
+					print_str(bf+i);
+					PRINT_STATIC_STR("' into '");
+					print_str(bf);
+					PRINT_STATIC_STR("' (");
+					print_int(sz);
+					PRINT_STATIC_STR(" bytes)\n");
+				}
 				j+=nml;
 				FILE* f=fopen(bf,"wb");
 				if (!f){

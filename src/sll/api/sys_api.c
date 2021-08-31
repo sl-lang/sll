@@ -1,6 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/constants.h>
+#include <sll/core.h>
 #include <sll/gc.h>
 #include <sll/platform.h>
 #include <sll/static_object.h>
@@ -17,7 +18,7 @@ static sll_runtime_object_t _sys_p={1,SLL_RUNTIME_OBJECT_TYPE_STRING,.dt={.s=SLL
 
 
 
-void _sys_free_argv(void){
+static void _sys_free_argv(void){
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc.dt.i;i++){
 			SLL_RELEASE(*(_sys_argv+i));
@@ -30,11 +31,15 @@ void _sys_free_argv(void){
 
 
 __SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
+	SLL_ASSERT(ac);
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc.dt.i;i++){
 			SLL_RELEASE(*(_sys_argv+i));
 		}
 		free(_sys_argv);
+	}
+	else{
+		sll_register_cleanup(_sys_free_argv,SLL_CLEANUP_ORDER_NORMAL);
 	}
 	_sys_argc.dt.i=ac;
 	_sys_argv=malloc(ac*sizeof(sll_runtime_object_t*));

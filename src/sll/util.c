@@ -1,23 +1,32 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/constants.h>
+#include <sll/core.h>
 #include <sll/gc.h>
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
 
 
 static char _util_init=0;
+static sll_cleanup_function _util_exit_table[MAX_EXIT_TABLE_SIZE];
+static uint16_t _util_exit_table_size=0;
+static sll_cleanup_function _util_last_cleanup=NULL;
 
 
 
 static void _util_cleanup(void){
-	sll_platform_reset_console();
-	_sys_free_argv();
-	_gc_free_pages();
+	while (_util_exit_table_size){
+		_util_exit_table_size--;
+		_util_exit_table[_util_exit_table_size]();
+	}
+	if (_util_last_cleanup){
+		_util_last_cleanup();
+	}
 }
 
 
@@ -155,7 +164,20 @@ __SLL_FUNC void sll_init(void){
 	if (!_util_init){
 		_util_init=1;
 		sll_platform_setup_console();
-		_gc_init();
+		sll_register_cleanup(sll_platform_reset_console,SLL_CLEANUP_ORDER_NORMAL);
 		atexit(_util_cleanup);
 	}
+}
+
+
+
+__SLL_FUNC void sll_register_cleanup(sll_cleanup_function f,sll_cleanup_type_t t){
+	if (t==CLEANUP_ORDER_LAST){
+		SLL_ASSERT(!_util_last_cleanup);
+		_util_last_cleanup=f;
+		return;
+	}
+	SLL_ASSERT(_util_exit_table_size<MAX_EXIT_TABLE_SIZE);
+	_util_exit_table[_util_exit_table_size]=f;
+	_util_exit_table_size++;
 }
