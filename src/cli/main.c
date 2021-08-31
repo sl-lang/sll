@@ -1030,8 +1030,8 @@ _read_file_argument:
 			r.dt=&r_dt;
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Downloading '");
-				print_str(h.v);
-				print_str(p.v);
+				print_str((char*)h.v);
+				print_str((char*)p.v);
 				PRINT_STATIC_STR("'...\n");
 			}
 			rc=sll_url_http_request(&m,&h,&p,&hl,&dt,&r);
