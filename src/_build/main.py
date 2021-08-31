@@ -1,4 +1,5 @@
 import build
+import docs
 import header
 import os
 import subprocess
@@ -120,6 +121,12 @@ if ("--bundle" in sys.argv):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			zf.write("build/lib/"+k,arcname="lib/"+k)
+if ("--docs" in sys.argv):
+	d_fl=[]
+	for k in os.listdir("src/include/sll"):
+		if (k[0]!="_"):
+			d_fl.append("src/include/sll/"+k)
+	docs.create_docs(d_fl)
 if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Test Executable...")
