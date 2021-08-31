@@ -5,6 +5,7 @@
 - Mappings ([#36])
 - More logging related to updating from the CLI
 - `sll_register_cleanup` function, which can be used for safely executing functions before key library features (like GC) are cleaned up
+- JSON api
 
 #### Mappings
 Maps (Mapping Objects) can be created by arrow brackets (`<key1 value1 key2 value2>`). If the number of elements is odd, a `nil` is automatically added to the end.

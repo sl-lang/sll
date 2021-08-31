@@ -45,6 +45,12 @@ __API_FUNC_DECL(file_write);
 
 
 
+/*TYPE api
+FUNC json_parse
+DESC Converts a [JSON][https://www.json.org/json-en.html] string into SLL types
+ARG S The string to parse
+RET 0 Failure: Invalid syntax
+RET O The parsed object*/
 __API_FUNC_DECL(json_parse);
 
 
