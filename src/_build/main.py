@@ -177,7 +177,7 @@ if ("--standalone" in sys.argv):
 		f.write(b"const module_t m_dt[]={"+b",".join(m_dt)+b"};\n#endif")
 	if (vb):
 		print("Generating Standalone Executable...")
-	build.build_sll_standalone(d_cm,vb,("--release" in sys.argv))
+	build.build_sll_standalone(vb,("--release" in sys.argv))
 if ("--bundle" in sys.argv):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
 		for k in (["build/sll.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
@@ -187,7 +187,7 @@ if ("--bundle" in sys.argv):
 if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Test Executable...")
-	build.build_sll_test("tests/data",d_cm,vb,("--release" in sys.argv))
+	build.build_sll_test("tests/data",vb,("--release" in sys.argv))
 	if ("--do-not-run-test" not in sys.argv):
 		if (vb):
 			print("  Running Tests...")
