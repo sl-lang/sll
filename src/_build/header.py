@@ -156,6 +156,7 @@ def generate_header(h_dt,c_m):
 	if (os.getenv("GITHUB_SHA") is not None):
 		dm[b"__SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")[:7]+"\"","utf-8")
 		dm[b"__FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")
+	dm.update(c_m)
 	dfm={}
 	d_v=[]
 	d_f=[]
@@ -165,13 +166,13 @@ def generate_header(h_dt,c_m):
 		if (e[:1]==b"#"):
 			f=e[1:].split(b" ")
 			if (f[0]==b"ifdef"):
-				if (f[1] in c_m or f[1] in dm):
+				if (f[1] in dm):
 					st.append(True)
 				else:
 					st.append(False)
 				continue
 			elif (f[0]==b"ifndef"):
-				if (f[1] in c_m or f[1] in dm):
+				if (f[1] in dm):
 					st.append(False)
 				else:
 					st.append(True)

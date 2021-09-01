@@ -78,8 +78,8 @@ __SLL_FUNC sll_return_code_t sll_url_http_request(const sll_string_t* m,const sl
 	i+=p->l;
 	memcpy(s.v+i," HTTP/1.1",9);
 	i+=9;
-	for (sll_header_count_t i=0;i<hl->l;i++){
-		sll_header_t* kv=*(hl->dt+i);
+	for (sll_header_count_t j=0;j<hl->l;j++){
+		sll_header_t* kv=*(hl->dt+j);
 		memcpy(s.v+i,kv->k.v,kv->k.l);
 		i+=kv->k.l;
 		s.v[i]=':';

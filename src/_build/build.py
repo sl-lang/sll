@@ -4,16 +4,19 @@ import util
 
 
 
-def build_sll(fl,v,vb,r):
+def build_sll(fl,v,d_cm,vb,r):
 	nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
-		sha_fl=(["/D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","/D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])
+		e_fl=(["/D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","/D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])
+		for k,v in d_cm.items():
+			e_fl.append("/D")
+			e_fl.append(k+"="+v.replace("\\","\\\\").replace("\"","\\\""))
 		if (r):
 			if (vb):
 				print("  Compiling Library Files (Release Mode)...")
-			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__SLL_COMPILATION__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/include","/Foobjects\\"]+sha_fl+["../"+e for e in fl]).returncode!=0):
+			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__SLL_COMPILATION__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/include","/Foobjects\\"]+e_fl+["../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
@@ -34,7 +37,7 @@ def build_sll(fl,v,vb,r):
 		else:
 			if (vb):
 				print("  Compiling Library Files...")
-			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__SLL_COMPILATION__","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","../src/include","/Foobjects\\"]+sha_fl+["../"+e for e in fl]).returncode!=0):
+			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__SLL_COMPILATION__","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","../src/include","/Foobjects\\"]+e_fl+["../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
@@ -53,12 +56,15 @@ def build_sll(fl,v,vb,r):
 				os.chdir(cd)
 				sys.exit(1)
 	else:
-		sha_fl=(["-D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","-D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])
+		e_fl=(["-D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","-D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])
+		for k,v in d_cm.items():
+			e_fl.append("-D")
+			e_fl.append(k+"="+v.replace("\\","\\\\").replace("\"","\\\""))
 		if (r):
 			if (vb):
 				print("  Compiling Library Files (Release Mode)...")
 			os.chdir("objects")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-Wall","-O3","-Werror","-I","../../src/include"]+sha_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-Wall","-O3","-Werror","-I","../../src/include"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
@@ -76,7 +82,7 @@ def build_sll(fl,v,vb,r):
 			if (vb):
 				print("  Compiling Library Files...")
 			os.chdir("objects")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-Wall","-g","-O0","-Werror","-I","../../src/include"]+sha_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-Wall","-g","-O0","-Werror","-I","../../src/include"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")

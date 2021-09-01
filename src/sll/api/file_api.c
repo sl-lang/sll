@@ -75,15 +75,10 @@ static void _file_destructor(sll_handle_t h){
 
 
 __API_FUNC(file_close){
-	if (!ac){
+	if (a->t!=_file_ht||a->h>=_file_fll){
 		SLL_RETURN_ZERO;
 	}
-	SETUP_HANDLE;
-	const sll_runtime_object_t* v=*a;
-	if (v->t!=SLL_RUNTIME_OBJECT_TYPE_HANDLE||v->dt.h.t!=_file_ht||v->dt.h.h>=_file_fll){
-		SLL_RETURN_ZERO;
-	}
-	if (_free_file(v->dt.h.h)){
+	if (_free_file(a->h)){
 		SLL_RETURN_ONE;
 	}
 	SLL_RETURN_ZERO;
@@ -92,30 +87,24 @@ __API_FUNC(file_close){
 
 
 __API_FUNC(file_open){
-	if (!ac){
-		SLL_RETURN_ZERO_HANDLE;
-	}
-	SETUP_HANDLE;
-	const sll_runtime_object_t* fp=*a;
-	if (fp->t!=SLL_RUNTIME_OBJECT_TYPE_STRING||fp->dt.s.l>SLL_API_MAX_FILE_PATH_LENGTH){
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
 		SLL_RETURN_ZERO_HANDLE;
 	}
 	const char* m="rb";
-	if (ac>1&&(*(a+1))->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-		sll_string_t s=(*(a+1))->dt.s;
-		for (sll_string_length_t i=0;i<s.l;i++){
-			if (s.v[i]=='a'||s.v[i]=='A'){
+	if (b){
+		for (sll_string_length_t i=0;i<b->l;i++){
+			if (b->v[i]=='a'||b->v[i]=='A'){
 				m="ab";
 			}
-			else if (s.v[i]=='w'||s.v[i]=='W'){
+			else if (b->v[i]=='w'||b->v[i]=='W'){
 				m="wb";
 			}
-			else if (s.v[i]=='x'||s.v[i]=='X'){
+			else if (b->v[i]=='x'||b->v[i]=='X'){
 				m="xb";
 			}
 		}
 	}
-	FILE* h=fopen((char*)fp->dt.s.v,m);// lgtm [cpp/path-injection]
+	FILE* h=fopen((char*)a->v,m);// lgtm [cpp/path-injection]
 	if (!h){
 		SLL_RETURN_ZERO_HANDLE;
 	}
@@ -135,31 +124,27 @@ __API_FUNC(file_open){
 	_file_fl=tmp;
 _found_index:
 	(_file_fl+i)->h=h;
+	SETUP_HANDLE;
 	return SLL_FROM_HANDLE(_file_ht,i);
 }
 
 
 
 __API_FUNC(file_write){
-	if (ac<2){
-		SLL_RETURN_ZERO;
-	}
-	SETUP_HANDLE;
-	const sll_runtime_object_t* v=*a;
 	FILE* fh=NULL;
-	if (v->t==SLL_RUNTIME_OBJECT_TYPE_INT){
-		if (v->dt.i==-2){
+	if (a->t==SLL_RUNTIME_OBJECT_TYPE_INT){
+		if (a->dt.i==-2){
 			fh=stdout;
 		}
-		else if (v->dt.i==-3){
+		else if (a->dt.i==-3){
 			fh=stderr;
 		}
 		else{
 			SLL_RETURN_ZERO;
 		}
 	}
-	else if (v->t==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&v->dt.h.t==_file_ht&&v->dt.h.h<_file_fll){
-		fh=(_file_fl+v->dt.h.h)->h;
+	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
+		fh=(_file_fl+a->dt.h.h)->h;
 		if (!fh){
 			SLL_RETURN_ZERO;
 		}
@@ -168,7 +153,7 @@ __API_FUNC(file_write){
 		SLL_RETURN_ZERO;
 	}
 	sll_string_t s;
-	sll_object_to_string(a+1,ac-1,&s);
+	sll_object_to_string(b,bc,&s);
 	fwrite(s.v,sizeof(sll_char_t),s.l,fh);
 	free(s.v);
 	return SLL_FROM_INT(s.l);

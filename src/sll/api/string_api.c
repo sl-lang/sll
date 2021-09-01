@@ -201,9 +201,6 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 
 
 __API_FUNC(string_convert){
-	if (!ac){
-		SLL_RETURN_ZERO_STRING;
-	}
 	sll_runtime_object_t* o=SLL_CREATE();
 	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 	sll_object_to_string(a,ac,&(o->dt.s));

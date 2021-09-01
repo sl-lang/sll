@@ -21,14 +21,11 @@ __API_FUNC(time_current_nanos){
 
 __API_FUNC(time_sleep){
 	sll_time_t st=sll_platform_get_current_time();
-	if (ac){
-		const sll_runtime_object_t* v=*a;
-		if (v->t==SLL_RUNTIME_OBJECT_TYPE_INT){
-			sll_platform_sleep(v->dt.i*1000000000);
-		}
-		else if (v->t==SLL_RUNTIME_OBJECT_TYPE_FLOAT){
-			sll_platform_sleep((sll_time_t)(v->dt.f*1e9));
-		}
+	if (a->t==SLL_RUNTIME_OBJECT_TYPE_INT){
+		sll_platform_sleep(a->dt.i*1000000000);
+	}
+	else{
+		sll_platform_sleep((sll_time_t)(a->dt.f*1e9));
 	}
 	return SLL_FROM_FLOAT((sll_platform_get_current_time()-st)*1e-9);
 }
@@ -37,14 +34,11 @@ __API_FUNC(time_sleep){
 
 __API_FUNC(time_sleep_nanos){
 	sll_time_t st=sll_platform_get_current_time();
-	if (ac){
-		const sll_runtime_object_t* v=*a;
-		if (v->t==SLL_RUNTIME_OBJECT_TYPE_INT){
-			sll_platform_sleep(v->dt.i);
-		}
-		else if (v->t==SLL_RUNTIME_OBJECT_TYPE_FLOAT){
-			sll_platform_sleep((sll_time_t)v->dt.f);
-		}
+	if (a->t==SLL_RUNTIME_OBJECT_TYPE_INT){
+		sll_platform_sleep(a->dt.i);
+	}
+	else{
+		sll_platform_sleep((sll_time_t)a->dt.f);
 	}
 	return SLL_FROM_INT(sll_platform_get_current_time()-st);
 }

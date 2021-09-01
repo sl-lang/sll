@@ -1020,9 +1020,9 @@ _read_file_argument:
 			sll_string_t* dl;
 			sll_array_length_t dll=sll_platform_list_directory_recursive(bf,&dl);
 			for (sll_array_length_t j=0;j<dll;j++){
-				sll_string_t* fp=dl+j;
-				remove((char*)fp->v);
-				free(fp->v);
+				sll_string_t* f_fp=dl+j;
+				remove((char*)f_fp->v);
+				free(f_fp->v);
 			}
 			free(dl);
 #endif
@@ -1067,8 +1067,8 @@ _read_file_argument:
 					PRINT_STATIC_STR(" bytes)\n");
 				}
 				j+=nml;
-				FILE* f=fopen(bf,"wb");
-				if (!f){
+				FILE* wf=fopen(bf,"wb");
+				if (!wf){
 					COLOR_RED;
 					PRINT_STATIC_STR("Unable to Open File '");
 					print_str(bf);
@@ -1079,19 +1079,19 @@ _read_file_argument:
 					RESET_CONSOLE;
 					return 1;
 				}
-				if (fwrite(r_dt.v+j,sizeof(sll_char_t),sz,f)!=sz){
+				if (fwrite(r_dt.v+j,sizeof(sll_char_t),sz,wf)!=sz){
 					COLOR_RED;
 					PRINT_STATIC_STR("Unable to Write Data to File '");
 					print_str(bf);
 					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
 					COLOR_RESET;
-					fclose(f);
+					fclose(wf);
 					sll_free_http_response(&r);
 					sll_free_json_object(&json);
 					RESET_CONSOLE;
 					return 1;
 				}
-				fclose(f);
+				fclose(wf);
 				j+=sz;
 			}
 			sll_free_http_response(&r);

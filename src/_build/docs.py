@@ -4,8 +4,6 @@ import re
 
 
 DOCS_COMMENT_REGEX=re.compile(r"\/\*\s*~~DOCS~~\s*(.*?)\*\/",re.S)
-FLAG_API=1
-FLAG_VAR_ARG=2
 
 
 
@@ -14,15 +12,13 @@ def create_docs(fl):
 	for nm in fl:
 		with open(nm,"r") as f:
 			for k in DOCS_COMMENT_REGEX.findall(f.read().replace("\r\n","\n")):
-				dt={"flag":0,"name":None,"desc":None,"args":[],"ret":[]}
+				dt={"flag":[],"name":None,"desc":None,"args":[],"ret":[],"err_ret":0}
 				for e in k.split("\n"):
 					t=e.split(" ")[0]
 					if (t=="TYPE"):
-						for se in e.split(" ")[1:]:
-							if (se=="api"):
-								dt["flag"]|=FLAG_API
-							elif (se=="var_arg"):
-								dt["flag"]|=FLAG_VAR_ARG
+						for se in e.lower().split(" ")[1:]:
+							if (se not in dt["flag"]):
+								dt["flag"].append(se)
 					elif (t=="FUNC"):
 						if (dt["name"] is not None):
 							raise RuntimeError("Only one 'FUNC' tag can be present")
@@ -33,12 +29,15 @@ def create_docs(fl):
 						dt["desc"]=e[5:]
 					elif (t=="ARG"):
 						se=e.split(" ")
-						dt["args"].append((se[1]," ".join(se[2:])))
+						dt["args"].append({"type":se[1].replace("?",""),"opt":("?" in se[1]),"desc":" ".join(se[2:])})
 					elif (t=="RET"):
 						se=e.split(" ")
-						dt["ret"].append((se[1]," ".join(se[2:])))
+						dt["ret"].append({"type":se[1],"desc":" ".join(se[2:])})
+					elif (t=="ERR"):
+						dt["err_ret"]=int(e.split(" ")[1])
 					else:
 						raise RuntimeError(f"Unknown tag '{t}'")
 				o.append(dt)
 	with open("build/docs.json","w") as f:
 		f.write(json.dumps(o,indent="\t"))
+	return o

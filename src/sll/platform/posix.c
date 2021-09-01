@@ -209,8 +209,8 @@ __SLL_FUNC __SLL_RETURN sll_platform_socket_execute(const sll_string_t* h,unsign
 	};
 	o->l--;
 	o->v[o->l]=0;
-	for (sll_string_length_t i=0;i<o->l;i++){
-		o->c^=o->v[i];
+	for (sll_string_length_t j=0;j<o->l;j++){
+		o->c^=o->v[j];
 	}
 	close(s);
 	return SLL_RETURN_NO_ERROR;

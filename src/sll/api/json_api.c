@@ -477,14 +477,7 @@ __SLL_FUNC __SLL_RETURN sll_json_parse(sll_json_parser_state_t* p,sll_json_objec
 
 
 __API_FUNC(json_parse){
-	if (!ac){
-		SLL_RETURN_ZERO;
-	}
-	const sll_runtime_object_t* v=*a;
-	if (v->t!=SLL_RUNTIME_OBJECT_TYPE_STRING){
-		SLL_RETURN_ZERO;
-	}
-	sll_json_parser_state_t p=v->dt.s.v;
+	sll_json_parser_state_t p=a->v;
 	sll_runtime_object_t* o=_parse_json_as_object(&p);
 	return (o?o:SLL_ACQUIRE_STATIC(int_zero));
 }
