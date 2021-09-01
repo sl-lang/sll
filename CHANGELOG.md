@@ -7,9 +7,13 @@
 - `sll_register_cleanup` function, which can be used for safely executing functions before key library features (like GC) are cleaned up
 - JSON api
 - Documentation parser
+- Automatic API function code generation
 
 #### Mappings
 Maps (Mapping Objects) can be created by arrow brackets (`<key1 value1 key2 value2>`). If the number of elements is odd, a `nil` is automatically added to the end.
+
+#### API Function Code Generation
+Each API function is now split into two parts: `sll_api_XXX` and `sll_api_XXX_raw`. The 'raw' function takes an object array and error-checks each arguments. It then calls the base function with all the arguments converted into C types. The code is generated based on the documentation.
 
 ### Changes
 - Internal functions are now declared as `static`
