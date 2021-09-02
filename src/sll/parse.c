@@ -1041,59 +1041,59 @@ _read_identifier:
 					}
 					return SLL_RETURN_ERROR;
 				}
-				if ((sz==3&&!strncmp(str,"nil",3))||(sz==5&&!strncmp(str,"false",5))){
+				if ((sz==3&&!strncmp((char*)str,"nil",3))||(sz==5&&!strncmp((char*)str,"false",5))){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=0;
 				}
-				else if (sz==4&&!strncmp(str,"true",4)){
+				else if (sz==4&&!strncmp((char*)str,"true",4)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
 				}
-				else if (sz==8&&!strncmp(str,"int_type",8)){
+				else if (sz==8&&!strncmp((char*)str,"int_type",8)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_INT;
 				}
-				else if (sz==10&&!strncmp(str,"float_type",10)){
+				else if (sz==10&&!strncmp((char*)str,"float_type",10)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_FLOAT;
 				}
-				else if (sz==9&&!strncmp(str,"char_type",9)){
+				else if (sz==9&&!strncmp((char*)str,"char_type",9)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_CHAR;
 				}
-				else if (sz==11&&!strncmp(str,"string_type",11)){
+				else if (sz==11&&!strncmp((char*)str,"string_type",11)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_STRING;
 				}
-				else if (sz==10&&!strncmp(str,"array_type",10)){
+				else if (sz==10&&!strncmp((char*)str,"array_type",10)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_ARRAY;
 				}
-				else if (sz==11&&!strncmp(str,"handle_type",11)){
+				else if (sz==11&&!strncmp((char*)str,"handle_type",11)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_HANDLE;
 				}
-				else if (sz==8&&!strncmp(str,"map_type",8)){
+				else if (sz==8&&!strncmp((char*)str,"map_type",8)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_MAP;
 				}
-				else if (sz==12&&!strncmp(str,"map_key_type",12)){
+				else if (sz==12&&!strncmp((char*)str,"map_key_type",12)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_MAP_KEY;
 				}
-				else if (sz==14&&!strncmp(str,"map_value_type",14)){
+				else if (sz==14&&!strncmp((char*)str,"map_value_type",14)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_MAP_VALUE;
 				}
-				else if (sz==5&&!strncmp(str,"stdin",5)){
+				else if (sz==5&&!strncmp((char*)str,"stdin",5)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-1;
 				}
-				else if (sz==6&&!strncmp(str,"stdout",6)){
+				else if (sz==6&&!strncmp((char*)str,"stdout",6)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-2;
 				}
-				else if (sz==6&&!strncmp(str,"stderr",6)){
+				else if (sz==6&&!strncmp((char*)str,"stderr",6)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-3;
 				}
