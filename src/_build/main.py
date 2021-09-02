@@ -84,7 +84,7 @@ for k in d_dt:
 					if (e["type"]=="O"):
 						c+=f"const sll_runtime_object_t*const* {ALPHABET[i]}=al+{i};sll_arg_count_t {ALPHABET[i]}c=all-{i};";
 					else:
-						RuntimeError("Unimplemeted")
+						raise RuntimeError("Unimplemeted")
 					ec+=ALPHABET[i]+","+ALPHABET[i]+"c"
 				else:
 					a+=f"const {(TYPE_MAP[e['type']] if len(e['type'])==1 else 'sll_runtime_object_t*')} {ALPHABET[i]}"
