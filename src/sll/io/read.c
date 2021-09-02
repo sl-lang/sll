@@ -304,6 +304,14 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 					CHECK_ERROR(is,ai->dt.v,sll_variable_index_t,e);
 				}
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
+				c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
+				if (c==SLL_END_OF_DATA){
+					e->t=SLL_ERROR_INVALID_FILE_FORMAT;
+					return SLL_RETURN_ERROR;
+				}
+				ai->dt.t=(sll_constant_type_t)c;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 				c=SLL_READ_FROM_INPUT_DATA_STREAM(is);

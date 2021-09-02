@@ -31,6 +31,10 @@ typedef uint8_t sll_compare_result_t;
 
 
 
+typedef uint8_t sll_constant_type_t;
+
+
+
 typedef uint8_t sll_error_type_t;
 
 
@@ -380,6 +384,7 @@ typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_array_length_t al;
 	sll_map_length_t ml;
 	sll_stack_offset_t st;
+	sll_constant_type_t t;
 } sll_assembly_instruction_data_t;
 
 

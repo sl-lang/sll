@@ -215,6 +215,9 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 					_write_integer(os,ai->dt.v);
 				}
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,ai->dt.t);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->dt.ac);

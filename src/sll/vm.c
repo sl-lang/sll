@@ -387,6 +387,20 @@ _jump:
 				OPERATOR_INSTRUCTION_TERNARY(access_range);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE:
 				OPERATOR_INSTRUCTION_QUATERNARY(access_range_step);
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
+				OPERATOR_INSTRUCTION_BINARY(cast);
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
+				{
+					sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
+					sll_runtime_object_t* t=SLL_CREATE();
+					t->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+					t->dt.i=ai->dt.t;
+					sll_runtime_object_t* n=sll_operator_cast(*tos,t);
+					SLL_RELEASE(*tos);
+					SLL_RELEASE(t);
+					*tos=n;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				{
 					si--;

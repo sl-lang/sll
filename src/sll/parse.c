@@ -615,6 +615,9 @@ _read_symbol:
 				else if (*str=='>'&&*(str+1)=='='){
 					o->t=SLL_OBJECT_TYPE_MORE_EQUAL;
 				}
+				else if (*str==':'&&*(str+1)==':'){
+					o->t=SLL_OBJECT_TYPE_CAST;
+				}
 				else if (*str=='@'&&*(str+1)=='@'){
 					o->t=((fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION)?SLL_OBJECT_TYPE_RETURN:SLL_OBJECT_TYPE_EXIT);
 				}
@@ -1038,23 +1041,59 @@ _read_identifier:
 					}
 					return SLL_RETURN_ERROR;
 				}
-				if ((sz==3&&*str=='n'&&*(str+1)=='i'&&*(str+2)=='l')||(sz==5&&*str=='f'&&*(str+1)=='a'&&*(str+2)=='l'&&*(str+3)=='s'&&*(str+4)=='e')){
+				if ((sz==3&&!strncmp(str,"nil",3))||(sz==5&&!strncmp(str,"false",5))){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=0;
 				}
-				else if (sz==4&&*str=='t'&&*(str+1)=='r'&&*(str+2)=='u'&&*(str+3)=='e'){
+				else if (sz==4&&!strncmp(str,"true",4)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
 				}
-				else if (sz==5&&*str=='s'&&*(str+1)=='t'&&*(str+2)=='d'&&*(str+3)=='i'&&*(str+4)=='n'){
+				else if (sz==8&&!strncmp(str,"int_type",8)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_INT;
+				}
+				else if (sz==10&&!strncmp(str,"float_type",10)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_FLOAT;
+				}
+				else if (sz==9&&!strncmp(str,"char_type",9)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_CHAR;
+				}
+				else if (sz==11&&!strncmp(str,"string_type",11)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_STRING;
+				}
+				else if (sz==10&&!strncmp(str,"array_type",10)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_ARRAY;
+				}
+				else if (sz==11&&!strncmp(str,"handle_type",11)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_HANDLE;
+				}
+				else if (sz==8&&!strncmp(str,"map_type",8)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_MAP;
+				}
+				else if (sz==12&&!strncmp(str,"map_key_type",12)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_MAP_KEY;
+				}
+				else if (sz==14&&!strncmp(str,"map_value_type",14)){
+					arg->t=SLL_OBJECT_TYPE_INT;
+					arg->dt.i=SLL_CONSTANT_TYPE_MAP_VALUE;
+				}
+				else if (sz==5&&!strncmp(str,"stdin",5)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-1;
 				}
-				else if (sz==6&&*str=='s'&&*(str+1)=='t'&&*(str+2)=='d'&&*(str+3)=='o'&&*(str+4)=='u'&&*(str+5)=='t'){
+				else if (sz==6&&!strncmp(str,"stdout",6)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-2;
 				}
-				else if (sz==6&&*str=='s'&&*(str+1)=='t'&&*(str+2)=='d'&&*(str+3)=='e'&&*(str+4)=='r'&&*(str+5)=='r'){
+				else if (sz==6&&!strncmp(str,"stderr",6)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-3;
 				}

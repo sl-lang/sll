@@ -615,6 +615,35 @@ static sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_gen
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_CAST:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l);
+				if (l==1){
+					return _generate(o+1,g_dt)+eoff;
+				}
+				sll_object_offset_t off=_generate_on_stack(o+1,g_dt)+1;
+				l--;
+				while (l){
+					l--;
+					const sll_object_t* a=o+off;
+					while (a->t==SLL_OBJECT_TYPE_NOP||a->t==SLL_OBJECT_TYPE_DEBUG_DATA){
+						off++;
+						a++;
+					}
+					if (a->t==SLL_OBJECT_TYPE_INT&&a->dt.i>0&&a->dt.i<=SLL_MAX_CONSTANT_TYPE){
+						off++;
+						sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE;
+						ai->dt.t=(sll_constant_type_t)a->dt.i;
+					}
+					else{
+						off+=_generate_on_stack(a,g_dt);
+						GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST);
+					}
+				}
+				return off+eoff;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);

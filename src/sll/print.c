@@ -342,6 +342,9 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_ACCESS:
 			PRINT_STATIC_STRING(":",os);
 			break;
+		case SLL_OBJECT_TYPE_CAST:
+			PRINT_STATIC_STRING("::",os);
+			break;
 		case SLL_OBJECT_TYPE_RETURN:
 			PRINT_STATIC_STRING("@@",os);
 			break;
@@ -735,6 +738,43 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE:
 				PRINT_STATIC_STRING("ACCESS_RANGE_STEP",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
+				PRINT_STATIC_STRING("CAST",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
+				PRINT_STATIC_STRING("CAST ",os);
+				switch (ai->dt.t){
+					case SLL_CONSTANT_TYPE_INT:
+						PRINT_STATIC_STRING("int_type",os);
+						break;
+					case SLL_CONSTANT_TYPE_FLOAT:
+						PRINT_STATIC_STRING("float_type",os);
+						break;
+					case SLL_CONSTANT_TYPE_CHAR:
+						PRINT_STATIC_STRING("char_type",os);
+						break;
+					case SLL_CONSTANT_TYPE_STRING:
+						PRINT_STATIC_STRING("string_type",os);
+						break;
+					case SLL_CONSTANT_TYPE_ARRAY:
+						PRINT_STATIC_STRING("array_type",os);
+						break;
+					case SLL_CONSTANT_TYPE_HANDLE:
+						PRINT_STATIC_STRING("handle_type",os);
+						break;
+					case SLL_CONSTANT_TYPE_MAP:
+						PRINT_STATIC_STRING("map_type",os);
+						break;
+					case SLL_CONSTANT_TYPE_MAP_KEY:
+						PRINT_STATIC_STRING("map_key_type",os);
+						break;
+					case SLL_CONSTANT_TYPE_MAP_VALUE:
+						PRINT_STATIC_STRING("map_value_type",os);
+						break;
+					default:
+						SLL_UNREACHABLE();
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				PRINT_STATIC_STRING("PRINT",os);
