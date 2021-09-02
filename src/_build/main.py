@@ -48,7 +48,7 @@ for f in os.listdir("src/sll/lib"):
 		print(f"  Copying Module 'src/sll/lib/{f}'...")
 	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
 		wf.write(rf.read())
-v=header.read_version("src/include/sll/version.h")
+ver=header.read_version("src/include/sll/version.h")
 if (vb):
 	print("Collecting Documentation Files...")
 d_fl=[]
@@ -141,7 +141,7 @@ for r,_,fl in os.walk("src/sll"):
 			i_fl.append(r+f)
 if (vb):
 	print("Generating Executable...")
-build.build_sll(i_fl,v,d_cm,vb,("--release" in sys.argv))
+build.build_sll(i_fl,ver,d_cm,vb,("--release" in sys.argv))
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
@@ -180,7 +180,7 @@ if ("--standalone" in sys.argv):
 	build.build_sll_standalone(vb,("--release" in sys.argv))
 if ("--bundle" in sys.argv):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		for k in (["build/sll.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
+		for k in (["build/sll.exe",f"build/sll-{ver[0]}.{ver[1]}.{ver[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{ver[0]}.{ver[1]}.{ver[2]}.so"]):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			zf.write("build/lib/"+k,arcname="lib/"+k)
@@ -199,7 +199,7 @@ if ("--upload" in sys.argv):
 		sys.exit(1)
 	if (vb):
 		print("Uploading Main Executable...")
-	upload.upload((["sll.exe",f"sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["sll",f"sll-{v[0]}.{v[1]}.{v[2]}.so"])+[f"lib/{k}.slc" for k in fl],("win" if os.name=="nt" else "posix"))
+	upload.upload((["sll.exe",f"sll-{ver[0]}.{ver[1]}.{ver[2]}.dll"] if os.name=="nt" else ["sll",f"sll-{ver[0]}.{ver[1]}.{ver[2]}.so"])+[f"lib/{k}.slc" for k in fl],("win" if os.name=="nt" else "posix"))
 	if ("--standalone" in sys.argv):
 		if (vb):
 			print("Uploading Standalone Executable...")

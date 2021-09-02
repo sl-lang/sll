@@ -40,7 +40,7 @@ static sll_string_length_t _write_int(uint64_t v,sll_string_length_t i,sll_strin
 
 
 
-static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_string_t* o,sll_string_index_t i){
+static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_string_t* o,sll_string_index_t i){
 	if (!a->rc){
 		memcpy(o->v+i,"<released object>",17);
 		o->c^='<'^'r'^'e'^'l'^'e'^'a'^'s'^'e'^'d'^' '^'o'^'b'^'j'^'e'^'c'^'t'^'>';
@@ -68,10 +68,73 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_s
 				return i;
 			}
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
+			if (q){
+				SLL_UNIMPLEMENTED();
+			}
 			o->v[i]=a->dt.c;
 			o->c^=a->dt.c;
 			return i+1;
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
+			if (q){
+				o->v[i]='\"';
+				i++;
+				for (sll_string_length_t j=0;j<a->dt.s.l;j++){
+					sll_char_t c=a->dt.s.v[j];
+					if (c=='\"'||c=='\''||c=='\\'){
+						o->v[i]='\\';
+						o->v[i+1]=c;
+						o->c^='\\'^c;
+						i+=2;
+					}
+					else if (c=='\t'){
+						o->v[i]='\\';
+						o->v[i+1]='t';
+						o->c^='\\'^'t';
+						i+=2;
+					}
+					else if (c=='\n'){
+						o->v[i]='\\';
+						o->v[i+1]='n';
+						o->c^='\\'^'n';
+						i+=2;
+					}
+					else if (c=='\v'){
+						o->v[i]='\\';
+						o->v[i+1]='v';
+						o->c^='\\'^'v';
+						i+=2;
+					}
+					else if (c=='\f'){
+						o->v[i]='\\';
+						o->v[i+1]='f';
+						o->c^='\\'^'f';
+						i+=2;
+					}
+					else if (c=='\r'){
+						o->v[i]='\\';
+						o->v[i+1]='r';
+						o->c^='\\'^'r';
+						i+=2;
+					}
+					else if (SLL_STRING_HEX_ESCAPE(c)){
+						o->v[i]='\\';
+						o->v[i+1]='x';
+						o->v[i+2]=(c>>4)+((c>>4)>9?87:48);
+						o->v[i+3]=(c&15)+((c&15)>9?87:48);
+						o->c^='\\'^'x'^o->v[i+2]^o->v[i+3];
+						i+=4;
+					}
+					else{
+						o->v[i]=c;
+						o->c^=c;
+						i++;
+					}
+				}
+				o->v[i]='\"';
+				i++;
+				o->c^='\"'^'\"';
+				return i;
+			}
 			memcpy(o->v+i,a->dt.s.v,a->dt.s.l);
 			o->c^=a->dt.s.c;
 			return i+a->dt.s.l;
@@ -83,7 +146,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_s
 					o->v[i]=' ';
 					i++;
 				}
-				i=_object_to_string(*(a->dt.a.v+k),o,i);
+				i=_object_to_string(*(a->dt.a.v+k),1,o,i);
 			}
 			o->v[i]=']';
 			o->c^='['^']';
@@ -111,7 +174,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_s
 					o->v[i]=' ';
 					i++;
 				}
-				i=_object_to_string(*(a->dt.m.v+k),o,i);
+				i=_object_to_string(*(a->dt.m.v+k),1,o,i);
 			}
 			o->v[i]='>';
 			o->c^='<'^'>';
@@ -132,17 +195,17 @@ __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_arr
 		SLL_ZERO_STRING(o);
 		return;
 	}
-	sll_string_create(sll_object_to_string_length(a,al),o);
+	sll_string_create(sll_object_to_string_length(a,al,0),o);
 	sll_string_length_t i=0;
 	for (sll_array_length_t j=0;j<al;j++){
-		i=_object_to_string(*(a+j),o,i);
+		i=_object_to_string(*(a+j),0,o,i);
 	}
 	SLL_ASSERT(i==o->l);
 }
 
 
 
-__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* al,sll_array_length_t all){
+__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* al,sll_array_length_t all,sll_bool_t q){
 	sll_string_length_t o=0;
 	for (sll_array_length_t i=0;i<all;i++){
 		const sll_runtime_object_t* a=*(al+i);
@@ -166,12 +229,32 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 				o++;
+				if (q){
+					o+=2;
+					if (SLL_STRING_ESCAPE(a->dt.c)){
+						o++;
+					}
+					else if (SLL_STRING_HEX_ESCAPE(a->dt.c)){
+						o+=3;
+					}
+				}
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_STRING:
 				o+=a->dt.s.l;
+				if (q){
+					o+=2;
+					for (sll_string_length_t j=0;j<a->dt.s.l;j++){
+						if (SLL_STRING_ESCAPE(a->dt.s.v[j])){
+							o++;
+						}
+						else if (SLL_STRING_HEX_ESCAPE(a->dt.s.v[j])){
+							o+=3;
+						}
+					}
+				}
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-				o+=sll_object_to_string_length((const sll_runtime_object_t*const*)a->dt.a.v,a->dt.a.l)+a->dt.a.l+(!a->dt.a.l)+1;
+				o+=sll_object_to_string_length((const sll_runtime_object_t*const*)a->dt.a.v,a->dt.a.l,1)+a->dt.a.l+(!a->dt.a.l)+1;
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 				{
@@ -189,7 +272,7 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 					break;
 				}
 			case SLL_RUNTIME_OBJECT_TYPE_MAP:
-				o+=sll_object_to_string_length((const sll_runtime_object_t*const*)a->dt.m.v,a->dt.m.l)+a->dt.m.l+(!a->dt.m.l)+1;
+				o+=sll_object_to_string_length((const sll_runtime_object_t*const*)a->dt.m.v,a->dt.m.l,1)+a->dt.m.l+(!a->dt.m.l)+1;
 				break;
 			default:
 				SLL_UNREACHABLE();
@@ -210,5 +293,5 @@ __API_FUNC(string_convert){
 
 
 __API_FUNC(string_length){
-	return SLL_FROM_INT(sll_object_to_string_length(a,ac));
+	return SLL_FROM_INT(sll_object_to_string_length(a,ac,0));
 }

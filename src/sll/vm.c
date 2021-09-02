@@ -227,7 +227,9 @@ __SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_d
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO:
-				SLL_UNIMPLEMENTED();
+				*(s+si)=SLL_ACQUIRE_STATIC(map_zero);
+				si++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=*(s+si-1);

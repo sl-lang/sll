@@ -119,8 +119,23 @@ __SLL_FUNC sll_return_code_t sll_url_http_request(const sll_string_t* m,const sl
 		goto _error;
 	}
 	i+=4;
+	if (r.v[i]!=' '){
+		goto _error;
+	}
+	i++;
 	if (o->rc){
-		SLL_UNIMPLEMENTED();
+		sll_string_length_t j=i;
+		sll_string_checksum_t c=0;
+		while (r.v[i]!='\r'||r.v[i+1]!='\n'){
+			if (!r.v[i]){
+				goto _error;
+			}
+			c^=r.v[i];
+			i++;
+		}
+		sll_string_create(i-j,o->rc);
+		o->rc->c=c;
+		memcpy(o->rc->v,r.v+j,i-j);
 	}
 	else{
 		while (r.v[i]!='\r'||r.v[i+1]!='\n'){

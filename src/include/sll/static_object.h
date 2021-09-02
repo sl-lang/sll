@@ -77,6 +77,10 @@ __SLL_STATIC_OBJECT_DECL(handle_zero);
 
 
 
+__SLL_STATIC_OBJECT_DECL(map_zero);
+
+
+
 __SLL_FUNC sll_runtime_object_t* sll_int_to_object(sll_integer_t v);
 
 

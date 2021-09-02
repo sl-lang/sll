@@ -22,6 +22,8 @@
 		} \
 	} while (0)
 #define SLL_ZERO_STRING_STRUCT {0,0,NULL}
+#define SLL_STRING_ESCAPE(c) ((c)=='\t'||(c)=='\n'||(c)=='\v'||(c)=='\f'||(c)=='\r'||(c)=='\"'||(c)=='\''||(c)=='\\')
+#define SLL_STRING_HEX_ESCAPE(c) ((c)<32||(c)>126)
 
 
 

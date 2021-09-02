@@ -218,6 +218,21 @@ __API_FUNC_DECL(time_sleep_nanos);
 
 /*~~DOCS~~
 TYPE api
+FUNC sll_api_url_execute_request
+DESC Docs!
+ARG S Docs!
+ARG S Docs!
+ARG S Docs!
+ARG M Docs!
+ARG S Docs!
+RET 0 Failure
+RET A Success*/
+__API_FUNC_DECL(url_execute_request);
+
+
+
+/*~~DOCS~~
+TYPE api
 FUNC sll_api_util_ref_count
 DESC Docs!
 ARG O Docs!
@@ -243,7 +258,7 @@ __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_arr
 
 
 
-__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* a,sll_array_length_t al);
+__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_bool_t q);
 
 
 

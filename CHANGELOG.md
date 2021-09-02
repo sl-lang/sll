@@ -8,6 +8,8 @@
 - JSON api
 - Documentation parser
 - Automatic API function code generation
+- The `url.sll` module ([#29])
+- Fixed bugs in the builder script
 
 #### Mappings
 Maps (Mapping Objects) can be created by arrow brackets (`<key1 value1 key2 value2>`). If the number of elements is odd, a `nil` is automatically added to the end.
@@ -414,6 +416,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#33]: https://github.com/sl-lang/sll/issues/33
 [#32]: https://github.com/sl-lang/sll/issues/32
 [#30]: https://github.com/sl-lang/sll/issues/30
+[#29]: https://github.com/sl-lang/sll/issues/29
 [#20]: https://github.com/sl-lang/sll/issues/20
 [#19]: https://github.com/sl-lang/sll/issues/19
 [#18]: https://github.com/sl-lang/sll/issues/18
