@@ -220,3 +220,15 @@ __SLL_FUNC __SLL_RETURN sll_platform_socket_execute(const sll_string_t* h,unsign
 
 __SLL_FUNC void sll_platform_reset_console(void){
 }
+
+
+
+void __attribute__((constructor)) _sll_setup(void){
+	sll_platform_setup_console();
+}
+
+
+
+void __attribute__((destructor)) _sll_cleanup(void){
+	_util_cleanup();
+}

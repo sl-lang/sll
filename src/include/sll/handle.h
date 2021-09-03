@@ -6,6 +6,7 @@
 
 
 
+#define SLL_HANDLE_DESCRIPTOR_HEADER(nm) nm,0,0
 #define SLL_LOOKUP_HANDLE_DESCRIPTOR(hl,t) (*((hl)->dt+(t)-1))
 #ifdef DEBUG_BUILD
 #define SLL_FROM_HANDLE(t,v) sll__add_debug_data(sll_handle_to_object((t),(v)),__FILE__,__LINE__,__func__);
@@ -16,7 +17,11 @@
 
 
 
-__SLL_FUNC __SLL_RETURN_HANDLE_TYPE sll_create_handle(sll_handle_list_t* hl,const sll_char_t* nm,sll_handle_destructor_t df);
+__SLL_FUNC void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll);
+
+
+
+__SLL_FUNC __SLL_RETURN_HANDLE_TYPE sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd);
 
 
 

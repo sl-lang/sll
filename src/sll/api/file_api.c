@@ -16,7 +16,7 @@
 	do{ \
 		if (_file_ht==SLL_UNKNOWN_HANDLE_TYPE){ \
 			SLL_ASSERT(sll_current_runtime_data); \
-			_file_ht=sll_create_handle(sll_current_runtime_data->hl,(sll_char_t*)"sll_file_handle",_file_destructor); \
+			_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type); \
 		} \
 	} while (0)
 
@@ -31,6 +31,7 @@ typedef struct __FILE{
 static file_t* _file_fl=NULL;
 static sll_handle_t _file_fll=0;
 static sll_handle_type_t _file_ht=SLL_UNKNOWN_HANDLE_TYPE;
+static sll_handle_descriptor_t _file_type;
 
 
 
@@ -158,3 +159,11 @@ __API_FUNC(file_write){
 	free(s.v);
 	return SLL_FROM_INT(s.l);
 }
+
+
+
+static sll_handle_descriptor_t _file_type={
+	SLL_HANDLE_DESCRIPTOR_HEADER("sll_file_handle"),
+	NULL,
+	_file_destructor
+};

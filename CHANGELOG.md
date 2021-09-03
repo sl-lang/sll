@@ -20,9 +20,13 @@ Maps (Mapping Objects) can be created by arrow brackets (`<key1 value1 key2 valu
 #### API Function Code Generation
 Each API function is now split into two parts: `sll_api_XXX` and `sll_api_XXX_raw`. The 'raw' function takes an object array and error-checks each arguments. It then calls the base function with all the arguments converted into C types. The code is generated based on the documentation.
 
-### Changes
+### Changed
 - Internal functions are now declared as `static`
 - All `sll_operator_XXX` functions now use non-constant parameters (This has been changed to allow returning one of the operands)
+- `sll_handle_descriptor_t` can also specify a `sll_handle_stringify_t` function
+
+### Removed
+- `sll_init` function has been replaced by platform-dependent code to automatically set-up the console
 
 ## [0.6.16] - 2021-8-30
 ### Added

@@ -6,18 +6,27 @@
 
 
 
-__SLL_FUNC __SLL_RETURN_HANDLE_TYPE sll_create_handle(sll_handle_list_t* hl,const sll_char_t* nm,sll_handle_destructor_t df){
+__SLL_FUNC void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll){
+	for (sll_handle_type_t i=hll;i<hl->dtl;i++){
+		if ((*(hl->dt+i))->df){
+			(*(hl->dt+i))->df(SLL_HANDLE_FREE);
+		}
+	}
+	hl->dtl=hll;
+	hl->dt=realloc(hl->dt,hll*sizeof(sll_handle_descriptor_t*));
+}
+
+
+
+__SLL_FUNC __SLL_RETURN_HANDLE_TYPE sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd){
 	hl->dtl++;
 	hl->dt=realloc(hl->dt,hl->dtl*sizeof(sll_handle_descriptor_t*));
-	sll_handle_descriptor_t* hd=malloc(sizeof(sll_handle_descriptor_t));
 	hd->nml=0;
 	hd->c=0;
-	while (*(nm+hd->nml)){
-		hd->nm[hd->nml]=*(nm+hd->nml);
+	while (hd->nm[hd->nml]){
 		hd->c^=hd->nm[hd->nml];
 		hd->nml++;
 	}
-	hd->df=df;
 	*(hl->dt+hl->dtl-1)=hd;
 	return hl->dtl;
 }
@@ -26,8 +35,9 @@ __SLL_FUNC __SLL_RETURN_HANDLE_TYPE sll_create_handle(sll_handle_list_t* hl,cons
 
 __SLL_FUNC void sll_free_handle_list(sll_handle_list_t* hl){
 	for (sll_handle_type_t i=0;i<hl->dtl;i++){
-		(*(hl->dt+i))->df(SLL_HANDLE_FREE);
-		free(*(hl->dt+i));
+		if ((*(hl->dt+i))->df){
+			(*(hl->dt+i))->df(SLL_HANDLE_FREE);
+		}
 	}
 	free(hl->dt);
 	hl->dt=NULL;

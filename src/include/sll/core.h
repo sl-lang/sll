@@ -37,10 +37,6 @@ __SLL_FUNC void sll_free_string_table(sll_string_table_t* st);
 
 
 
-__SLL_FUNC void sll_init(void);
-
-
-
 __SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o);
 
 

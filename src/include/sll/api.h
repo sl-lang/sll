@@ -72,6 +72,17 @@ __API_FUNC_DECL(json_stringify);
 
 /*~~DOCS~~
 TYPE api
+FUNC sll_api_json_type
+DESC Docs!
+ARG I Docs!
+RET 0 Failure
+RET H Success*/
+__API_FUNC_DECL(json_type);
+
+
+
+/*~~DOCS~~
+TYPE api
 FUNC sll_api_path_absolute
 DESC Docs!
 ARG S Docs!

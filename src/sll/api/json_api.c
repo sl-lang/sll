@@ -1,13 +1,71 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/array.h>
+#include <sll/assembly.h>
 #include <sll/constants.h>
+#include <sll/handle.h>
 #include <sll/map.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
+
+
+
+#define SETUP_HANDLE \
+	do{ \
+		if (_json_ht==SLL_UNKNOWN_HANDLE_TYPE){ \
+			SLL_ASSERT(sll_current_runtime_data); \
+			_json_ht=sll_create_handle(sll_current_runtime_data->hl,&_json_type); \
+			_json_null=SLL_FROM_HANDLE(_json_ht,0); \
+			_json_true=SLL_FROM_HANDLE(_json_ht,1); \
+			_json_false=SLL_FROM_HANDLE(_json_ht,2); \
+		} \
+	} while (0)
+
+
+
+static sll_handle_type_t _json_ht=SLL_UNKNOWN_HANDLE_TYPE;
+static sll_runtime_object_t* _json_null=NULL;
+static sll_runtime_object_t* _json_true=NULL;
+static sll_runtime_object_t* _json_false=NULL;
+static sll_handle_descriptor_t _json_type;
+
+
+
+static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,sll_string_t* o){
+	if (!o){
+		return (h<2?4:5);
+	}
+	if (!h){
+		memcpy(o->v+i,"null",4);
+		o->c^='n'^'u'^'l'^'l';
+		return i+4;
+	}
+	if (h==1){
+		memcpy(o->v+i,"true",4);
+		o->c^='t'^'r'^'u'^'e';
+		return i+4;
+	}
+	memcpy(o->v+i,"false",5);
+	o->c^='f'^'a'^'l'^'s'^'e';
+	return i+5;
+}
+
+
+
+static void _json_cleanup(sll_handle_t h){
+	if (h==SLL_HANDLE_FREE){
+		SLL_RELEASE(_json_null);
+		SLL_RELEASE(_json_true);
+		SLL_RELEASE(_json_false);
+		_json_null=NULL;
+		_json_true=NULL;
+		_json_false=NULL;
+	}
+}
 
 
 
@@ -193,15 +251,18 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	}
 	if (c=='t'&&**p=='r'&&*((*p)+1)=='u'&&*((*p)+2)=='e'){
 		(*p)+=3;
-		SLL_RETURN_ONE;
+		SLL_ACQUIRE(_json_true);
+		return _json_true;
 	}
 	if (c=='f'&&**p=='a'&&*((*p)+1)=='l'&&*((*p)+2)=='s'&&*((*p)+3)=='e'){
 		(*p)+=4;
-		SLL_RETURN_ZERO;
+		SLL_ACQUIRE(_json_false);
+		return _json_false;
 	}
 	if (c=='n'&&**p=='u'&&*((*p)+1)=='l'&&*((*p)+2)=='l'){
 		(*p)+=3;
-		SLL_RETURN_ZERO;
+		SLL_ACQUIRE(_json_null);
+		return _json_null;
 	}
 	if ((c<48||c>57)&&c!='.'&&c!='e'&&c!='E'&&c!='-'&&c!='+'){
 		return NULL;
@@ -477,6 +538,7 @@ __SLL_FUNC __SLL_RETURN sll_json_parse(sll_json_parser_state_t* p,sll_json_objec
 
 
 __API_FUNC(json_parse){
+	SETUP_HANDLE;
 	sll_json_parser_state_t p=a->v;
 	sll_runtime_object_t* o=_parse_json_as_object(&p);
 	return (o?o:SLL_ACQUIRE_STATIC(int_zero));
@@ -488,3 +550,19 @@ __API_FUNC(json_stringify){
 	SLL_UNIMPLEMENTED();
 	SLL_RETURN_ZERO;
 }
+
+
+
+__API_FUNC(json_type){
+	SETUP_HANDLE;
+	SLL_UNIMPLEMENTED();
+	SLL_RETURN_ZERO;
+}
+
+
+
+static sll_handle_descriptor_t _json_type={
+	SLL_HANDLE_DESCRIPTOR_HEADER("sll_json_type_handle"),
+	_json_stringify,
+	_json_cleanup
+};

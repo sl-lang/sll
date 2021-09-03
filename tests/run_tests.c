@@ -69,7 +69,6 @@ void list_files(char* fp,uint16_t fpl,file_callback_t cb,test_result_t* o){
 
 uint8_t execute_test(uint8_t id){
 	remove(to_fp);
-	sll_init();
 	if (id==TEST_ID_PARSE){
 		sll_internal_function_table_t i_ft;
 		sll_create_internal_function_table(&i_ft);

@@ -78,7 +78,7 @@
 (:> "Map: ") (<- print_map map) (:> "\n")
 (:> "Map: " map " Keys: " (:: map map_key_type) " Values: " (:: map map_value_type) "\n")
 (:> "Parsed: " (<- parse "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}") "\n")
-(:> "URL: " (<- read_url "GET" "example.com" "/" <> "") "\n")
+; (:> "URL: " (<- read_url "GET" "example.com" "/" <> "") "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)

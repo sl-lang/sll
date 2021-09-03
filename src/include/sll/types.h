@@ -59,10 +59,6 @@ typedef uint16_t sll_file_path_index_t;
 
 
 
-typedef uint16_t sll_header_count_t;
-
-
-
 typedef uint16_t sll_read_char_t;
 
 
@@ -108,6 +104,10 @@ typedef uint32_t sll_function_index_t;
 
 
 typedef uint32_t sll_handle_type_t;
+
+
+
+typedef uint32_t sll_header_count_t;
 
 
 
@@ -429,6 +429,10 @@ typedef struct __SLL_MAP{
 
 
 
+typedef sll_string_length_t (*sll_handle_stringify_t)(sll_handle_t h,sll_string_length_t i,sll_string_t* o);
+
+
+
 typedef void (*sll_handle_destructor_t)(sll_handle_t h);
 
 
@@ -437,6 +441,7 @@ typedef struct __SLL_HANDLE_DESCRIPTOR{
 	sll_char_t nm[256];
 	uint8_t nml;
 	sll_string_checksum_t c;
+	sll_handle_stringify_t sf;
 	sll_handle_destructor_t df;
 } sll_handle_descriptor_t;
 

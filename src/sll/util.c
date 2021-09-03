@@ -12,14 +12,13 @@
 
 
 
-static char _util_init=0;
-static sll_cleanup_function _util_exit_table[MAX_EXIT_TABLE_SIZE];
-static uint16_t _util_exit_table_size=0;
+static sll_cleanup_function _util_exit_table[MAX_EXIT_TABLE_SIZE]={sll_platform_reset_console};
+static uint16_t _util_exit_table_size=1;
 static sll_cleanup_function _util_last_cleanup=NULL;
 
 
 
-static void _util_cleanup(void){
+void _util_cleanup(void){
 	while (_util_exit_table_size){
 		_util_exit_table_size--;
 		_util_exit_table[_util_exit_table_size]();
@@ -156,17 +155,6 @@ __SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o){
 		off+=sll_get_object_size(o+off);
 	}
 	return off+eoff;
-}
-
-
-
-__SLL_FUNC void sll_init(void){
-	if (!_util_init){
-		_util_init=1;
-		sll_platform_setup_console();
-		sll_register_cleanup(sll_platform_reset_console,SLL_CLEANUP_ORDER_NORMAL);
-		atexit(_util_cleanup);
-	}
 }
 
 

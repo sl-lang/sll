@@ -717,7 +717,6 @@ _skip_write:;
 
 
 int main(int argc,const char** argv){
-	sll_init();
 #ifdef _MSC_VER
 	GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),&cm);
 	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);

@@ -16,12 +16,10 @@ __API_FUNC(url_execute_request){
 	};
 	for (sll_header_count_t i=0;i<(d->l>>1);i++){
 		sll_header_t* h_kv=malloc(sizeof(sll_header_t));
-		sll_runtime_object_t* e=d->v[i<<1];
-		SLL_ASSERT(e->t==SLL_RUNTIME_OBJECT_TYPE_STRING);
-		h_kv->k=e->dt.s;
-		e=d->v[(i<<1)+1];
-		SLL_ASSERT(e->t==SLL_RUNTIME_OBJECT_TYPE_STRING);
-		h_kv->v=e->dt.s;
+		SLL_ASSERT(d->v[i<<1]->t==SLL_RUNTIME_OBJECT_TYPE_STRING);
+		h_kv->k=d->v[i<<1]->dt.s;
+		SLL_ASSERT(d->v[(i<<1)+1]->t==SLL_RUNTIME_OBJECT_TYPE_STRING);
+		h_kv->v=d->v[(i<<1)+1]->dt.s;
 		*(http_m.dt+i)=h_kv;
 	}
 	sll_runtime_object_t* rc_s=SLL_CREATE();
