@@ -541,7 +541,10 @@ __API_FUNC(json_parse){
 	SETUP_HANDLE;
 	sll_json_parser_state_t p=a->v;
 	sll_runtime_object_t* o=_parse_json_as_object(&p);
-	return (o?o:SLL_ACQUIRE_STATIC(int_zero));
+	if (o){
+		return o;
+	}
+	SLL_RETURN_ZERO_HANDLE;
 }
 
 
@@ -555,8 +558,19 @@ __API_FUNC(json_stringify){
 
 __API_FUNC(json_type){
 	SETUP_HANDLE;
-	SLL_UNIMPLEMENTED();
-	SLL_RETURN_ZERO;
+	if (!a){
+		SLL_ACQUIRE(_json_null);
+		return _json_null;
+	}
+	if (a==1){
+		SLL_ACQUIRE(_json_true);
+		return _json_true;
+	}
+	if (a==2){
+		SLL_ACQUIRE(_json_false);
+		return _json_false;
+	}
+	SLL_RETURN_ZERO_HANDLE;
 }
 
 

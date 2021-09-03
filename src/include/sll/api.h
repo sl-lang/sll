@@ -30,7 +30,7 @@ FUNC sll_api_file_open
 DESC Opens a file with the specified mode
 ARG S The path to the file to open
 ARG S? The optional file mode
-RET 0 Failure
+RET h Failure
 RET H Success*/
 __API_FUNC_DECL(file_open);
 
@@ -53,7 +53,7 @@ TYPE api
 FUNC sll_api_json_parse
 DESC Converts a [JSON][https://www.json.org/json-en.html] string into SLL types
 ARG S The string to parse
-RET 0 Failure
+RET h Failure
 RET O The parsed object*/
 __API_FUNC_DECL(json_parse);
 
@@ -75,7 +75,7 @@ TYPE api
 FUNC sll_api_json_type
 DESC Docs!
 ARG I Docs!
-RET 0 Failure
+RET h Failure
 RET H Success*/
 __API_FUNC_DECL(json_type);
 
