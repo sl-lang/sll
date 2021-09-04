@@ -41,16 +41,13 @@ static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,
 	}
 	if (!h){
 		memcpy(o->v+i,"null",4);
-		o->c^='n'^'u'^'l'^'l';
 		return i+4;
 	}
 	if (h==1){
 		memcpy(o->v+i,"true",4);
-		o->c^='t'^'r'^'u'^'e';
 		return i+4;
 	}
 	memcpy(o->v+i,"false",5);
-	o->c^='f'^'a'^'l'^'s'^'e';
 	return i+5;
 }
 
@@ -70,75 +67,65 @@ static void _json_cleanup(sll_handle_t h){
 
 
 static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
-	o->l=1;
-	o->c=0;
-	o->v=malloc(sizeof(sll_char_t));
+	o->l=0;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
 	sll_char_t c=**p;
 	(*p)++;
 	while (c!='\"'){
+		SLL_STRING_INCREASE(o);
 		if (c!='\\'){
+			o->v[o->l]=c;
 			o->l++;
-			o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-			o->v[o->l-2]=c;
 		}
 		else{
 			c=**p;
 			(*p)++;
 			if (c=='/'||c=='\\'||c=='\''||c=='\"'){
+				o->v[o->l]=c;
 				o->l++;
-				o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-				o->v[o->l-2]=c;
 			}
 			else if (c=='b'){
+				o->v[o->l]=8;
 				o->l++;
-				o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-				o->v[o->l-2]=8;
 			}
 			else if (c=='f'){
+				o->v[o->l]=12;
 				o->l++;
-				o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-				o->v[o->l-2]=12;
 			}
 			else if (c=='n'){
+				o->v[o->l]=10;
 				o->l++;
-				o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-				o->v[o->l-2]=10;
 			}
 			else if (c=='r'){
+				o->v[o->l]=13;
 				o->l++;
-				o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-				o->v[o->l-2]=13;
 			}
 			else if (c=='t'){
+				o->v[o->l]=9;
 				o->l++;
-				o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-				o->v[o->l-2]=9;
 			}
 			else if (c=='v'){
+				o->v[o->l]=11;
 				o->l++;
-				o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-				o->v[o->l-2]=11;
 			}
 			else if (c=='x'){
 				sll_char_t a=**p;
 				(*p)++;
 				sll_char_t b=**p;
 				(*p)++;
+				o->v[o->l]=((a>47&&a<58?a-48:(a>64&&a<71?a-55:a-87))<<4)|(b>47&&b<58?b-48:(b>64&&b<71?b-55:b-87));
 				o->l++;
-				o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-				o->v[o->l-2]=((a>47&&a<58?a-48:(a>64&&a<71?a-55:a-87))<<4)|(b>47&&b<58?b-48:(b>64&&b<71?b-55:b-87));
 			}
 			else{
 				printf("Unknown Escape: \\%c\n",c);
 				SLL_UNIMPLEMENTED();
 			}
 		}
-		o->c^=o->v[o->l-2];
 		c=**p;
 		(*p)++;
 	}
-	o->l--;
 	o->v[o->l]=0;
+	sll_string_hash(o);
 }
 
 

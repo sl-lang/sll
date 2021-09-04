@@ -18,7 +18,7 @@ TYPE api
 FUNC sll_api_file_close
 DESC Closes a file previously opened by :sll_api_file_open: and invalidates its handle
 ARG H Previously allocated file handle
-RET 0 Failure: Invalid file handle
+RET 0 Failure
 RET 1 Success*/
 __API_FUNC_DECL(file_close);
 
@@ -64,7 +64,7 @@ TYPE api
 FUNC sll_api_json_stringify
 DESC Docs!
 ARG O Docs!
-RET 0 Failure
+RET Z Failure
 RET S Success*/
 __API_FUNC_DECL(json_stringify);
 

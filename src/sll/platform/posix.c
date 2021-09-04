@@ -192,8 +192,8 @@ __SLL_FUNC __SLL_RETURN sll_platform_socket_execute(const sll_string_t* h,unsign
 		close(s);
 		return SLL_RETURN_ERROR;
 	}
-	o->l=1;
-	o->v=malloc(sizeof(sll_char_t));
+	o->l=0;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
 	sll_char_t bf[4096];
 	int l=recv(s,bf,4096,0);
 	shutdown(s,SHUT_WR);
@@ -202,17 +202,14 @@ __SLL_FUNC __SLL_RETURN sll_platform_socket_execute(const sll_string_t* h,unsign
 			close(s);
 			return SLL_RETURN_ERROR;
 		}
+		o->v=realloc(o->v,SLL_STRING_ALIGN_LENGTH(o->l+l)*sizeof(sll_char_t));
+		memcpy(o->v+o->l,bf,l);
 		o->l+=l;
-		o->v=realloc(o->v,o->l*sizeof(sll_char_t));
-		memcpy(o->v+o->l-l-1,bf,l);
 		l=recv(s,bf,4096,0);
 	};
-	o->l--;
-	o->v[o->l]=0;
-	for (sll_string_length_t j=0;j<o->l;j++){
-		o->c^=o->v[j];
-	}
 	close(s);
+	o->v[o->l]=0;
+	sll_string_hash(o);
 	return SLL_RETURN_NO_ERROR;
 }
 

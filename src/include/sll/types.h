@@ -27,6 +27,10 @@ typedef uint8_t sll_cleanup_type_t;
 
 
 
+typedef uint8_t sll_string_checksum_t;
+
+
+
 typedef uint8_t sll_compare_result_t;
 
 
@@ -156,10 +160,6 @@ typedef uint32_t sll_stack_offset_t;
 
 
 typedef uint32_t sll_statement_count_t;
-
-
-
-typedef uint32_t sll_string_checksum_t;
 
 
 

@@ -198,9 +198,7 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 			return SLL_RETURN_ERROR;
 		}
-		for (sll_string_length_t j=0;j<l;j++){
-			s->c^=s->v[j];
-		}
+		sll_string_hash(s);
 	}
 	a_dt->h=(sll_assembly_instruction_t*)(a_dt->_s.ptr+a_dt->_s.off);
 	sll_assembly_instruction_t* ai=a_dt->h;
@@ -387,9 +385,7 @@ __SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 			return SLL_RETURN_ERROR;
 		}
-		for (sll_string_length_t j=0;j<l;j++){
-			s->c^=s->v[j];
-		}
+		sll_string_hash(s);
 	}
 	CHECK_ERROR(is,c_dt->_n_sc_id,sll_scope_t,e);
 	c_dt->h=(sll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);

@@ -32,7 +32,6 @@ static sll_string_length_t _write_int(uint64_t v,sll_string_length_t i,sll_strin
 	while (k){
 		k--;
 		o->v[i]=bf[k]+48;
-		o->c^=o->v[i];
 		i++;
 	}
 	return i;
@@ -43,7 +42,6 @@ static sll_string_length_t _write_int(uint64_t v,sll_string_length_t i,sll_strin
 static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_string_t* o,sll_string_index_t i){
 	if (!a->rc){
 		memcpy(o->v+i,"<released object>",17);
-		o->c^='<'^'r'^'e'^'l'^'e'^'a'^'s'^'e'^'d'^' '^'o'^'b'^'j'^'e'^'c'^'t'^'>';
 		return i+17;
 	}
 	switch (a->t){
@@ -52,27 +50,18 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 				sll_integer_t v=a->dt.i;
 				if (v<0){
 					o->v[i]='-';
-					o->c^='-';
 					v=-v;
 					i++;
 				}
 				return _write_int(v,i,o);
 			}
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			{
-				sll_string_length_t k=i+snprintf((char*)(o->v+i),4096,"%.16lf",a->dt.f);
-				while (i<k){
-					o->c^=o->v[i];
-					i++;
-				}
-				return i;
-			}
+			return i+snprintf((char*)(o->v+i),4096,"%.16lf",a->dt.f);
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			if (q){
 				SLL_UNIMPLEMENTED();
 			}
 			o->v[i]=a->dt.c;
-			o->c^=a->dt.c;
 			return i+1;
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
 			if (q){
@@ -83,37 +72,31 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 					if (c=='\"'||c=='\''||c=='\\'){
 						o->v[i]='\\';
 						o->v[i+1]=c;
-						o->c^='\\'^c;
 						i+=2;
 					}
 					else if (c=='\t'){
 						o->v[i]='\\';
 						o->v[i+1]='t';
-						o->c^='\\'^'t';
 						i+=2;
 					}
 					else if (c=='\n'){
 						o->v[i]='\\';
 						o->v[i+1]='n';
-						o->c^='\\'^'n';
 						i+=2;
 					}
 					else if (c=='\v'){
 						o->v[i]='\\';
 						o->v[i+1]='v';
-						o->c^='\\'^'v';
 						i+=2;
 					}
 					else if (c=='\f'){
 						o->v[i]='\\';
 						o->v[i+1]='f';
-						o->c^='\\'^'f';
 						i+=2;
 					}
 					else if (c=='\r'){
 						o->v[i]='\\';
 						o->v[i+1]='r';
-						o->c^='\\'^'r';
 						i+=2;
 					}
 					else if (SLL_STRING_HEX_ESCAPE(c)){
@@ -121,22 +104,18 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 						o->v[i+1]='x';
 						o->v[i+2]=(c>>4)+((c>>4)>9?87:48);
 						o->v[i+3]=(c&15)+((c&15)>9?87:48);
-						o->c^='\\'^'x'^o->v[i+2]^o->v[i+3];
 						i+=4;
 					}
 					else{
 						o->v[i]=c;
-						o->c^=c;
 						i++;
 					}
 				}
 				o->v[i]='\"';
 				i++;
-				o->c^='\"'^'\"';
 				return i;
 			}
 			memcpy(o->v+i,a->dt.s.v,a->dt.s.l);
-			o->c^=a->dt.s.c;
 			return i+a->dt.s.l;
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			o->v[i]='[';
@@ -149,10 +128,6 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 				i=_object_to_string(*(a->dt.a.v+k),1,o,i);
 			}
 			o->v[i]=']';
-			o->c^='['^']';
-			if (a->dt.a.l&1){
-				o->c^=' ';
-			}
 			return i+1;
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 			{
@@ -163,11 +138,9 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 				}
 				i=_write_int(a->dt.h.h,i,o);
 				o->v[i]='$';
-				o->c^='$';
 				i++;
 				if (sll_current_runtime_data){
 					memcpy(o->v+i,hd->nm,hd->nml);
-					o->c^=hd->c;
 					return i+hd->nml;
 				}
 				return _write_int(a->dt.h.t,i,o);
@@ -183,10 +156,6 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 				i=_object_to_string(*(a->dt.m.v+k),1,o,i);
 			}
 			o->v[i]='>';
-			o->c^='<'^'>';
-			if (a->dt.m.l&1){
-				o->c^=' ';
-			}
 			return i+1;
 		default:
 			SLL_UNREACHABLE();
@@ -207,6 +176,7 @@ __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_arr
 		i=_object_to_string(*(a+j),0,o,i);
 	}
 	SLL_ASSERT(i==o->l);
+	sll_string_hash(o);
 }
 
 

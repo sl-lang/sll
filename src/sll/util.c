@@ -73,8 +73,8 @@ _check_next_string:;
 	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
 	sll_string_t* s=st->dt+st->l-1;
 	sll_string_create(l,s);
-	s->c=c;
 	memcpy(s->v,dt,l);
+	sll_string_hash(s);
 	return st->l-1;
 }
 
