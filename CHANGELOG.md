@@ -12,7 +12,8 @@
 - Fixed bugs in the builder script
 - New Constants: `int_type`, `float_type`, `char_type`, `string_type`, `array_type`, `handle_type`, `map_type`, `map_key_type` and `map_value_type`
 - New type casting operator: `(::)` ([#37])
-- `sll_operator_cast` and `sll_api_json_type` functions
+- `sll_operator_cast`, `sll_api_json_type` and `sll_string_hash` functions
+- Strings are now aligned on a 8-byte boundary to aid performance
 
 #### Mappings
 Maps (Mapping Objects) can be created by arrow brackets (`<key1 value1 key2 value2>`). If the number of elements is odd, a `nil` is automatically added to the end.

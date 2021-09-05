@@ -493,6 +493,8 @@ __SLL_OPERATOR_QUATERNARY(access_range_step){
 __SLL_OPERATOR_BINARY(cast){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&b->dt.i>0&&b->dt.i<=SLL_MAX_CONSTANT_TYPE){
 		COMBINED_CAST_SWITCH{
+			case COMBINED_CAST_TYPE_FI:
+				return SLL_FROM_INT((sll_integer_t)(a->dt.f));
 			case COMBINED_CAST_TYPE_MK:
 				{
 					sll_runtime_object_t* o=SLL_CREATE();
