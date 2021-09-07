@@ -12,9 +12,9 @@
 
 
 
-static sll_runtime_object_t _sys_argc={1,SLL_RUNTIME_OBJECT_TYPE_INT,.dt={.i=0}};
+static sll_runtime_object_t _sys_argc={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_NO_DEBUG_DATA,.dt={.i=0}};
 static sll_runtime_object_t** _sys_argv=NULL;
-static sll_runtime_object_t _sys_p={1,SLL_RUNTIME_OBJECT_TYPE_STRING,.dt={.s=SLL_ZERO_STRING_STRUCT}};
+static sll_runtime_object_t _sys_p={1,SLL_RUNTIME_OBJECT_TYPE_STRING,SLL_NO_DEBUG_DATA,.dt={.s=SLL_ZERO_STRING_STRUCT}};
 
 
 

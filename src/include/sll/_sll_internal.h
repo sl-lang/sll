@@ -50,7 +50,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define __API_FUNC(nm) INTERNAL_FUNCTION(#nm,sll_api_##nm##_raw);__SLL_FUNC sll_runtime_object_t* sll_api_##nm##_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){__SLL_API_CODE_sll_api_##nm};__SLL_FUNC sll_runtime_object_t* sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
 #define __SLL_STATIC_RAW(nm) &_##nm##_static_data
-#define __SLL_STATIC_OBJECT(nm,t,f,v) sll_runtime_object_t _##nm##_static_data={1,t,.dt={.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
+#define __SLL_STATIC_OBJECT(nm,t,f,v) sll_runtime_object_t _##nm##_static_data={1,t,SLL_NO_DEBUG_DATA,.dt={.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
 
 
 
@@ -65,6 +65,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define SLL_UNIMPLEMENTED() \
 	do{ \
 		printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): Unimplemented\n",__func__); \
+		fflush(stdout); \
 		raise(SIGABRT); \
 	} while (0)
 #ifdef DEBUG_BUILD
@@ -95,6 +96,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	do{ \
 		if (!(x)){ \
 			printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n",__func__); \
+			fflush(stdout); \
 			raise(SIGABRT); \
 		} \
 	} while (0)
@@ -283,10 +285,20 @@ typedef struct __INTERNAL_FUNCTION{
 
 
 
-typedef struct __RUNTIME_OBJECT_DEBUG_DATA{
+typedef struct __RUNTIME_OBJECT_DEBUG_DATA_TRACE_DATA{
 	const char* fp;
 	unsigned int ln;
 	char fn[256];
+} runtime_object_debug_data_trace_data_t;
+
+
+
+typedef struct __RUNTIME_OBJECT_DEBUG_DATA{
+	runtime_object_debug_data_trace_data_t c;
+	runtime_object_debug_data_trace_data_t** al;
+	uint32_t all;
+	runtime_object_debug_data_trace_data_t** rl;
+	uint32_t rll;
 } runtime_object_debug_data_t;
 
 

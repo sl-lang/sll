@@ -26,6 +26,20 @@
 #endif
 #define __SLL_CHECK_OUTPUT __attribute__((warn_unused_result))
 #endif
+
+
+
+#ifdef DEBUG_BUILD
+#define __SLL_ADD_DEBUG_DATA(o,t) sll__add_debug_data((o),__FILE__,__LINE__,__func__,(t))
+#else
+#define __SLL_ADD_DEBUG_DATA(o,t) o
+#endif
+#define __SLL_DEBUG_TYPE_CREATE 0
+#define __SLL_DEBUG_TYPE_ACQUIRE 1
+#define __SLL_DEBUG_TYPE_RELEASE 2
+
+
+
 #define __SLL_RETURN __SLL_CHECK_OUTPUT sll_return_t
 #define __SLL_RETURN_CODE __SLL_CHECK_OUTPUT sll_return_code_t
 #define __SLL_RETURN_COMPARE __SLL_CHECK_OUTPUT sll_compare_result_t

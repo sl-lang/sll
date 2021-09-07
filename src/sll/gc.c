@@ -48,31 +48,62 @@ static void _gc_free_pages(void){
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn){
-	uint32_t i=0;
-	while (i<_gc_dbg_dtl){
-		if (!(*(_gc_dbg_dt+i))){
-			goto _found_index;
+__SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t){
+	uint32_t i=o->_dbg0|(o->_dbg1<<16);
+	if (i==GC_MAX_DBG_ID){
+		i=0;
+		while (i<_gc_dbg_dtl){
+			if (!(*(_gc_dbg_dt+i))){
+				goto _found_index;
+			}
+			i++;
 		}
-		i++;
-	}
-	_gc_dbg_dtl++;
-	SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DBG_ID);
-	_gc_dbg_dt=realloc(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
+		_gc_dbg_dtl++;
+		SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DBG_ID);
+		_gc_dbg_dt=realloc(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
 _found_index:
-	o->_dbg0=i&0xffff;
-	o->_dbg1=i>>16;
-	runtime_object_debug_data_t* dt=malloc(sizeof(runtime_object_debug_data_t));
-	dt->fp=fp;
-	dt->ln=ln;
+		o->_dbg0=i&0xffff;
+		o->_dbg1=i>>16;
+		runtime_object_debug_data_t* dt=malloc(sizeof(runtime_object_debug_data_t));
+		dt->c.fp=NULL;
+		dt->al=NULL;
+		dt->all=0;
+		dt->rl=NULL;
+		dt->rll=0;
+		*(_gc_dbg_dt+i)=dt;
+	}
+	else{
+		SLL_ASSERT(i<_gc_dbg_dtl);
+	}
+	runtime_object_debug_data_trace_data_t* n=malloc(sizeof(runtime_object_debug_data_trace_data_t));
+	n->fp=fp;
+	n->ln=ln;
 	uint8_t j=0;
 	while (*(fn+j)){
-		dt->fn[j]=*(fn+j);
+		n->fn[j]=*(fn+j);
 		j++;
 		SLL_ASSERT(j);
 	}
-	dt->fn[j]=0;
-	*(_gc_dbg_dt+i)=dt;
+	n->fn[j]=0;
+	runtime_object_debug_data_t* dt=*(_gc_dbg_dt+i);
+	if (t==__SLL_DEBUG_TYPE_CREATE){
+		if (!dt->c.fp){
+			dt->c=*n;
+		}
+		goto _acquire_debug_data;
+	}
+	else if (t==__SLL_DEBUG_TYPE_ACQUIRE){
+_acquire_debug_data:
+		dt->all++;
+		dt->al=realloc(dt->al,dt->all*sizeof(runtime_object_debug_data_trace_data_t*));
+		*(dt->al+dt->all-1)=n;
+	}
+	else{
+		SLL_ASSERT(t==__SLL_DEBUG_TYPE_RELEASE);
+		dt->rll++;
+		dt->rl=realloc(dt->rl,dt->rll*sizeof(runtime_object_debug_data_trace_data_t*));
+		*(dt->rl+dt->rll-1)=n;
+	}
 	return o;
 }
 
@@ -150,8 +181,17 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 		uint32_t i=o->_dbg0|(o->_dbg1<<16);
 		if (i!=GC_MAX_DBG_ID){
 			SLL_ASSERT(i<_gc_dbg_dtl);
-			free(*(_gc_dbg_dt+i));
+			runtime_object_debug_data_t* dt=*(_gc_dbg_dt+i);
 			*(_gc_dbg_dt+i)=NULL;
+			for (uint32_t j=0;j<dt->all;j++){
+				free(*(dt->al+j));
+			}
+			free(dt->al);
+			for (uint32_t j=0;j<dt->rll;j++){
+				free(*(dt->rl+j));
+			}
+			free(dt->rl);
+			free(dt);
 		}
 		if (o->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
 			free(o->dt.s.v);
@@ -164,8 +204,10 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 		}
 		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_HANDLE){
 			if (sll_current_runtime_data){
-				sll_handle_descriptor_t* hd=SLL_LOOKUP_HANDLE_DESCRIPTOR(sll_current_runtime_data->hl,o->dt.h.t);
-				hd->df(o->dt.h.h);
+				sll_handle_descriptor_t* hd=sll_lookup_handle_descriptor(sll_current_runtime_data->hl,o->dt.h.t);
+				if (hd&&hd->df){
+					hd->df(o->dt.h.h);
+				}
 			}
 		}
 		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_MAP){
@@ -228,10 +270,25 @@ __SLL_FUNC __SLL_RETURN sll_verify_runtime_object_stack_cleanup(const sll_runtim
 				uint32_t j=c->_dbg0|(c->_dbg1<<16);
 				if (j!=GC_MAX_DBG_ID){
 					runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
-					fprintf(stderr,"%s:%u (%s): {type: %s, ref: %u, data: %s}\n",dt->fp,dt->ln,dt->fn,t,c->rc,str.v);
+					if (dt->c.fp){
+						fprintf(stderr,"%s:%u (%s)",dt->c.fp,dt->c.ln,dt->c.fn);
+					}
+					else{
+						fprintf(stderr,"<unknown>");
+					}
+					fprintf(stderr,": {type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",t,c->rc,str.v,dt->all);
+					for (uint32_t k=0;k<dt->all;k++){
+						runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+k);
+						fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
+					}
+					fprintf(stderr,"  Release (%u):\n",dt->rll);
+					for (uint32_t k=0;k<dt->rll;k++){
+						runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+k);
+						fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
+					}
 				}
 				else{
-					fprintf(stderr,"<unknown>: {type: %s, ref: %u, data: %s}\n",t,c->rc,str.v);
+					fprintf(stderr,"<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n",t,c->rc,str.v);
 				}
 				free(str.v);
 			}

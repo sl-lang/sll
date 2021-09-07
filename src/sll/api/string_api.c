@@ -131,15 +131,15 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 			return i+1;
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 			{
-				sll_handle_descriptor_t* hd=SLL_LOOKUP_HANDLE_DESCRIPTOR(sll_current_runtime_data->hl,a->dt.h.t);
+				sll_handle_descriptor_t* hd=(sll_current_runtime_data?sll_lookup_handle_descriptor(sll_current_runtime_data->hl,a->dt.h.t):NULL);
 				sll_handle_t v=a->dt.h.h;
-				if (hd->sf){
+				if (hd&&hd->sf){
 					return hd->sf(v,i,o);
 				}
 				i=_write_int(a->dt.h.h,i,o);
 				o->v[i]='$';
 				i++;
-				if (sll_current_runtime_data){
+				if (hd){
 					memcpy(o->v+i,hd->nm,hd->nml);
 					return i+hd->nml;
 				}
@@ -234,15 +234,15 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 				break;
 			case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 				{
-					sll_handle_descriptor_t* hd=SLL_LOOKUP_HANDLE_DESCRIPTOR(sll_current_runtime_data->hl,a->dt.h.t);
+					sll_handle_descriptor_t* hd=(sll_current_runtime_data?sll_lookup_handle_descriptor(sll_current_runtime_data->hl,a->dt.h.t):NULL);
 					sll_handle_t v=a->dt.h.h;
-					if (hd->sf){
+					if (hd&&hd->sf){
 						o+=hd->sf(v,0,NULL);
 					}
 					else{
 						INT_SIZE(v,o);
 						o++;
-						if (sll_current_runtime_data){
+						if (hd){
 							o+=hd->nml;
 						}
 						else{

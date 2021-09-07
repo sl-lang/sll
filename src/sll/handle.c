@@ -1,3 +1,4 @@
+#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/constants.h>
 #include <sll/gc.h>
@@ -46,6 +47,16 @@ __SLL_FUNC void sll_free_handle_list(sll_handle_list_t* hl){
 
 
 
+__SLL_FUNC sll_runtime_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h){
+	sll_runtime_object_t* o=sll_create_object();
+	o->t=SLL_RUNTIME_OBJECT_TYPE_HANDLE;
+	o->dt.h.t=t;
+	o->dt.h.h=h;
+	return o;
+}
+
+
+
 __SLL_FUNC void sll_init_handle_list(sll_handle_list_t* o){
 	o->dt=NULL;
 	o->dtl=0;
@@ -53,10 +64,10 @@ __SLL_FUNC void sll_init_handle_list(sll_handle_list_t* o){
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h){
-	sll_runtime_object_t* o=sll_create_object();
-	o->t=SLL_RUNTIME_OBJECT_TYPE_HANDLE;
-	o->dt.h.t=t;
-	o->dt.h.h=h;
-	return o;
+__SLL_FUNC sll_handle_descriptor_t* sll_lookup_handle_descriptor(sll_handle_list_t* hl,sll_handle_type_t t){
+	if (!hl||!t||t>hl->dtl){
+		return NULL;
+	}
+	SLL_ASSERT(hl->dt);
+	return *(hl->dt+t-1);
 }
