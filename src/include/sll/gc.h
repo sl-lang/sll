@@ -6,8 +6,8 @@
 
 
 #define SLL_CREATE() __SLL_ADD_DEBUG_DATA(sll_create_object(),__SLL_DEBUG_TYPE_CREATE)
-#define SLL_ACQUIRE(x) (__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_ACQUIRE),(x)->rc++)
-#define SLL_RELEASE(x) (__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_RELEASE),sll_release_object((x)))
+#define SLL_ACQUIRE(x) ((__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_ACQUIRE))->rc++)
+#define SLL_RELEASE(x) sll_release_object(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_RELEASE))
 #define SLL_NO_DEBUG_DATA ._dbg0=0xffff,._dbg1=0xff
 
 
