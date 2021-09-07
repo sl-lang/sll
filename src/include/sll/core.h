@@ -5,11 +5,11 @@
 
 
 
-__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_add_string(sll_string_table_t* st,sll_string_t* s);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s);
 
 
 
-__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l);
 
 
 

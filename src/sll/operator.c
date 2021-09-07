@@ -527,7 +527,7 @@ __SLL_OPERATOR_BINARY(cast){
 
 
 
-__SLL_FUNC __SLL_RETURN_COMPARE sll_operator_compare(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
 	COMBINED_SWITCH{
 		case COMBINED_TYPE_II:
 			return COMPARE_RESULT(a->dt.i,b->dt.i);
@@ -545,7 +545,7 @@ __SLL_FUNC __SLL_RETURN_COMPARE sll_operator_compare(const sll_runtime_object_t*
 
 
 
-__SLL_FUNC __SLL_RETURN_COMPARE sll_operator_bool(const sll_runtime_object_t* a){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_bool(const sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return (a->dt.i?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);

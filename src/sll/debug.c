@@ -54,7 +54,7 @@ static sll_object_offset_t _remove_debug_data_internal(sll_object_t* o){
 
 
 
-__SLL_FUNC __SLL_RETURN sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_error_t* e){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

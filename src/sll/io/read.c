@@ -168,7 +168,7 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assembly_data_t* a_dt,sll_error_t* e){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stream_t* is,sll_assembly_data_t* a_dt,sll_error_t* e){
 	if (!a_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -327,7 +327,7 @@ __SLL_FUNC __SLL_RETURN sll_load_assembly(sll_input_data_stream_t* is,sll_assemb
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll_compilation_data_t* c_dt,sll_error_t* e){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_data_stream_t* is,sll_compilation_data_t* c_dt,sll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -398,7 +398,7 @@ __SLL_FUNC __SLL_RETURN sll_load_compiled_object(sll_input_data_stream_t* is,sll
 
 
 
-__SLL_FUNC __SLL_RETURN sll_load_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_object_t** o,sll_error_t* e){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_object_t** o,sll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

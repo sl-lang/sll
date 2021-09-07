@@ -28,6 +28,7 @@ Each API function is now split into two parts: `sll_api_XXX` and `sll_api_XXX_ra
 
 ### Removed
 - `sll_init` function has been replaced by platform-dependent code to automatically set-up the console
+- `__SLL_RETURN_xxx` macros from [`src/include/sll/common.h`][main/src/include/sll/common.h]
 
 ## [0.6.16] - 2021-8-30
 ### Added
@@ -439,6 +440,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/include/sll/common.h]: https://github.com/sl-lang/sll/blob/v0.6.16/src/include/sll/common.h
 [0.6.16/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/operator.c
 [0.6.16/src/sll/vm.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/vm.c
 [0.6.15/src/sll/parse.c]: https://github.com/sl-lang/sll/blob/v0.6.15/src/sll/parse.c

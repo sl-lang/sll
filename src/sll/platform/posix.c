@@ -53,7 +53,7 @@ static void _list_dir_files(char* bf,uint16_t i,sll_string_checksum_t c,file_lis
 
 
 
-__SLL_FUNC void* sll_platform_allocate_page(sll_page_size_t sz){
+__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
 	return mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
 }
 
@@ -65,7 +65,7 @@ __SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
 
 
 
-__SLL_FUNC sll_time_t sll_platform_get_current_time(void){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 	struct timespec tm;
 	clock_gettime(CLOCK_REALTIME,&tm);
 	return tm.tv_sec*1000000000+tm.tv_nsec;
@@ -73,13 +73,13 @@ __SLL_FUNC sll_time_t sll_platform_get_current_time(void){
 
 
 
-__SLL_FUNC sll_time_t sll_platform_get_page_size(void){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_page_size(void){
 	return sysconf(_SC_PAGESIZE);
 }
 
 
 
-__SLL_FUNC sll_array_length_t sll_platform_list_directory_recursive(const char* fp,sll_string_t** o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const char* fp,sll_string_t** o){
 	sll_string_checksum_t c=0;
 	char bf[PATH_MAX];
 	uint16_t i=0;
@@ -99,19 +99,19 @@ __SLL_FUNC sll_array_length_t sll_platform_list_directory_recursive(const char* 
 
 
 
-__SLL_FUNC sll_buffer_size_t sll_platform_path_absolute(const char* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const char* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
 	return !!realpath(fp,(char*)bf);
 }
 
 
 
-__SLL_FUNC sll_bool_t sll_platform_path_exists(const char* fp){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const char* fp){
 	return !access(fp,F_OK);
 }
 
 
 
-__SLL_FUNC sll_bool_t sll_platform_path_is_directory(const char* fp){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const char* fp){
 	struct stat st;
 	sll_bool_t o=0;
 	if (!stat(fp,&st)&&(st.st_mode&S_IFDIR)){
@@ -154,7 +154,7 @@ __SLL_FUNC void sll_platform_socket_init(void){
 
 
 
-__SLL_FUNC __SLL_RETURN sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
 	SLL_ZERO_STRING(o);
 	struct addrinfo ah;
 	memset(&ah,0,sizeof(struct addrinfo));

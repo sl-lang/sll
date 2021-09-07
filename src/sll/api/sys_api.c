@@ -30,26 +30,6 @@ static void _sys_free_argv(void){
 
 
 
-__SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
-	SLL_ASSERT(ac);
-	if (_sys_argv){
-		for (sll_integer_t i=0;i<_sys_argc.dt.i;i++){
-			SLL_RELEASE(*(_sys_argv+i));
-		}
-		free(_sys_argv);
-	}
-	else{
-		sll_register_cleanup(_sys_free_argv,SLL_CLEANUP_ORDER_NORMAL);
-	}
-	_sys_argc.dt.i=ac;
-	_sys_argv=malloc(ac*sizeof(sll_runtime_object_t*));
-	for (sll_integer_t i=0;i<ac;i++){
-		*(_sys_argv+i)=SLL_ACQUIRE_STATIC(str_zero);
-	}
-}
-
-
-
 __SLL_FUNC void sll_set_argument(sll_integer_t i,const char* a){
 	if (i<0||i>=_sys_argc.dt.i){
 		return;
@@ -67,6 +47,26 @@ __SLL_FUNC void sll_set_argument(sll_integer_t i,const char* a){
 	n->dt.s.c=c;
 	memcpy(n->dt.s.v,a,l);
 	*(_sys_argv+i)=n;
+}
+
+
+
+__SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
+	SLL_ASSERT(ac);
+	if (_sys_argv){
+		for (sll_integer_t i=0;i<_sys_argc.dt.i;i++){
+			SLL_RELEASE(*(_sys_argv+i));
+		}
+		free(_sys_argv);
+	}
+	else{
+		sll_register_cleanup(_sys_free_argv,SLL_CLEANUP_ORDER_NORMAL);
+	}
+	_sys_argc.dt.i=ac;
+	_sys_argv=malloc(ac*sizeof(sll_runtime_object_t*));
+	for (sll_integer_t i=0;i<ac;i++){
+		*(_sys_argv+i)=SLL_ACQUIRE_STATIC(str_zero);
+	}
 }
 
 

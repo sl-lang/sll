@@ -70,7 +70,7 @@ static sll_runtime_object_t* _small_int[]={__SLL_STATIC_RAW(int_minus_one),__SLL
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_int_to_object(sll_integer_t v){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_integer_t v){
 	if (v>-2&&v<5){
 		sll_runtime_object_t* o=_small_int[v+1];
 		SLL_ACQUIRE(o);
@@ -84,7 +84,7 @@ __SLL_FUNC sll_runtime_object_t* sll_int_to_object(sll_integer_t v){
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_float_to_object(sll_float_t v){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_float_t v){
 	if (!v){
 		return SLL_ACQUIRE_STATIC(float_zero);
 	}

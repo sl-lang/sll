@@ -109,7 +109,7 @@ _acquire_debug_data:
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_create_object(void){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 	if (!_gc_next_object){
 		sll_page_size_t sz=sll_platform_get_page_size();
 		if (!_gc_page_ptr){
@@ -226,7 +226,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 
 
 
-__SLL_FUNC __SLL_RETURN sll_verify_runtime_object_stack_cleanup(const sll_runtime_object_stack_data_t* rst){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(const sll_runtime_object_stack_data_t* rst){
 	if (_gc_alloc-_gc_dealloc<=rst->off){
 		return SLL_RETURN_NO_ERROR;
 	}

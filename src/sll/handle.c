@@ -19,7 +19,7 @@ __SLL_FUNC void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll)
 
 
 
-__SLL_FUNC __SLL_RETURN_HANDLE_TYPE sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_handle_type_t sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd){
 	hl->dtl++;
 	hl->dt=realloc(hl->dt,hl->dtl*sizeof(sll_handle_descriptor_t*));
 	hd->nml=0;

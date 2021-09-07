@@ -30,7 +30,7 @@ void _util_cleanup(void){
 
 
 
-__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_add_string(sll_string_table_t* st,sll_string_t* s){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s){
 	for (sll_string_index_t i=0;i<st->l;i++){
 		sll_string_t* k=st->dt+i;
 		if (k->c==s->c&&k->l==s->l){
@@ -52,7 +52,7 @@ _check_next_string:;
 
 
 
-__SLL_FUNC __SLL_RETURN_STRING_INDEX sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
 	sll_string_checksum_t c=0;
 	for (sll_string_length_t i=0;i<l;i++){
 		c^=(sll_string_checksum_t)(*(dt+i));
@@ -80,7 +80,7 @@ _check_next_string:;
 
 
 
-__SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o){
 	sll_object_offset_t eoff=0;
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
 		eoff++;

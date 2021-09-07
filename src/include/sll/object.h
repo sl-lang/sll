@@ -5,11 +5,11 @@
 
 
 
-__SLL_FUNC __SLL_RETURN_SIZE sll_get_object_size(const sll_object_t* o);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o);
 
 
 
-__SLL_FUNC __SLL_RETURN sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_error_t* e);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_error_t* e);
 
 
 
@@ -21,11 +21,11 @@ __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt);
 
 
 
-__SLL_FUNC __SLL_RETURN sll_parse_all_objects(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_parse_all_objects(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e);
 
 
 
-__SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e,sll_object_t** o);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_parse_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e,sll_object_t** o);
 
 
 

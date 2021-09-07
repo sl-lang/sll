@@ -62,7 +62,7 @@ static void _list_dir_files(char* bf,uint16_t i,sll_string_checksum_t c,file_lis
 
 
 
-__SLL_FUNC void* sll_platform_allocate_page(sll_page_size_t sz){
+__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
 	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
 }
 
@@ -74,7 +74,7 @@ __SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
 
 
 
-__SLL_FUNC sll_time_t sll_platform_get_current_time(void){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 	FILETIME ft;
 	GetSystemTimeAsFileTime(&ft);
 	return ((((sll_time_t)ft.dwHighDateTime)<<32)|ft.dwLowDateTime)*100-11644473600000000000;
@@ -82,7 +82,7 @@ __SLL_FUNC sll_time_t sll_platform_get_current_time(void){
 
 
 
-__SLL_FUNC sll_page_size_t sll_platform_get_page_size(void){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
 	return si.dwPageSize;
@@ -90,7 +90,7 @@ __SLL_FUNC sll_page_size_t sll_platform_get_page_size(void){
 
 
 
-__SLL_FUNC sll_array_length_t sll_platform_list_directory_recursive(const char* fp,sll_string_t** o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const char* fp,sll_string_t** o){
 	sll_string_checksum_t c=0;
 	char bf[MAX_PATH+1];
 	uint16_t i=0;
@@ -110,19 +110,19 @@ __SLL_FUNC sll_array_length_t sll_platform_list_directory_recursive(const char* 
 
 
 
-__SLL_FUNC sll_buffer_size_t sll_platform_path_absolute(const char* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const char* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
 	return (sll_buffer_size_t)GetFullPathNameA(fp,bfl,bf,NULL);
 }
 
 
 
-__SLL_FUNC sll_bool_t sll_platform_path_exists(const char* fp){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const char* fp){
 	return (GetFileAttributesA(fp)!=INVALID_FILE_ATTRIBUTES);
 }
 
 
 
-__SLL_FUNC sll_bool_t sll_platform_path_is_directory(const char* fp){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const char* fp){
 	DWORD a=GetFileAttributesA(fp);
 	return (a!=INVALID_FILE_ATTRIBUTES&&(a&FILE_ATTRIBUTE_DIRECTORY));
 }
@@ -166,7 +166,7 @@ __SLL_FUNC void sll_platform_socket_init(void){
 
 
 
-__SLL_FUNC __SLL_RETURN sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
 	SLL_ZERO_STRING(o);
 	struct addrinfo ah;
 	memset(&ah,0,sizeof(struct addrinfo));

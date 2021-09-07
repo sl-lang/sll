@@ -62,7 +62,7 @@ const sll_runtime_data_t* sll_current_runtime_data=NULL;
 
 
 
-__SLL_FUNC __SLL_RETURN_CODE sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,const sll_runtime_data_t* r_dt,sll_error_t* e){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,const sll_runtime_data_t* r_dt,sll_error_t* e){
 	e->t=SLL_ERROR_UNKNOWN;
 	sll_current_runtime_data=r_dt;
 	sll_handle_type_t hl_l=r_dt->hl->dtl;

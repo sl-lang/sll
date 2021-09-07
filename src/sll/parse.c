@@ -1518,7 +1518,7 @@ __SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_st
 
 
 
-__SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e,sll_object_t** o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_parse_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e,sll_object_t** o){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
@@ -1560,7 +1560,7 @@ __SLL_FUNC __SLL_RETURN sll_parse_object(sll_compilation_data_t* c_dt,sll_intern
 
 
 
-__SLL_FUNC __SLL_RETURN sll_parse_all_objects(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_parse_all_objects(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e){
 	if (!c_dt->_s.ptr){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

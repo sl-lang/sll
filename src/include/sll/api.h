@@ -257,11 +257,11 @@ __SLL_FUNC void sll_free_json_object(sll_json_object_t* json);
 
 
 
-__SLL_FUNC sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k);
 
 
 
-__SLL_FUNC __SLL_RETURN sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o);
 
 
 
@@ -269,15 +269,15 @@ __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_arr
 
 
 
-__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_bool_t q);
-
-
-
-__SLL_FUNC void sll_set_argument_count(sll_integer_t ac);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_bool_t q);
 
 
 
 __SLL_FUNC void sll_set_argument(sll_integer_t i,const char* a);
+
+
+
+__SLL_FUNC void sll_set_argument_count(sll_integer_t ac);
 
 
 

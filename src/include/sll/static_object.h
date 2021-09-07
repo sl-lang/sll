@@ -76,11 +76,11 @@ __SLL_STATIC_OBJECT_DECL(map_zero);
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_int_to_object(sll_integer_t v);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_integer_t v);
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_float_to_object(sll_float_t v);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_float_t v);
 
 
 
