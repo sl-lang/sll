@@ -340,7 +340,10 @@ Literally, just arrays.
 - VM now uses a stack index instead of a moving pointer
 
 ## [0.5.1] - 2021-7-30
-*Undocumented*
+### Changed
+- The `lll_compare_runtime_object`, `lll_create_string`, `lll_runtime_object_size` and `lll_runtime_object_nonzero` functions are now public
+- Function `lll_run_assembly` has been renamed to `lll_execute_assembly`
+- The runtime object functions (`lll_compare_runtime_object` and `lll_runtime_object_nonzero`) have been moved to [`src/lll_lib/object.c`][0.5.1/src/lll_lib/object.c]
 
 ## [0.5.0] - 2021-7-30
 *Undocumented*
@@ -532,3 +535,4 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.0/src/include/lll_lib_api.h]: https://github.com/sl-lang/sll/blob/v0.6.0/src/include/lll_lib_api.h
 [0.6.0/src/lll_lib/api/time.c]: https://github.com/sl-lang/sll/blob/v0.6.0/src/lll_lib/api/time.c
 [0.6.0/src/lll_lib/lib/time.lll]: https://github.com/sl-lang/sll/blob/v0.6.0/src/lll_lib/lib/time.lll
+[0.5.1/src/lll_lib/object.c]: https://github.com/sl-lang/sll/blob/v0.5.1/src/lll_lib/object.c
