@@ -401,7 +401,11 @@ Literally, just arrays.
 - `lll_optimize_metadata` function
 
 ## [0.3.3] - 2021-7-26
-*Undocumented*
+### Added
+- Two new types: `lll_float_t` and `lll_time_t`
+
+### Changed
+- Moved `_create_string` and `_object_size` functions to [`src/lll_lib/util.c`][0.3.3/src/lll_lib/util.c]
 
 ## [0.3.2] - 2021-7-25
 *Undocumented*
@@ -579,3 +583,4 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.5.0/src/lll_lib/metadata.c]: https://github.com/sl-lang/sll/blob/v0.5.0/src/lll_lib/metadata.c
 [0.5.0/src/lll_lib/padding.c]: https://github.com/sl-lang/sll/blob/v0.5.0/src/lll_lib/padding.c
 [0.4.1/src/lll_lib/optimize.c]: https://github.com/sl-lang/sll/blob/v0.4.1/src/lll_lib/optimize.c
+[0.3.3/src/lll_lib/util.c]: https://github.com/sl-lang/sll/blob/v0.3.3/src/lll_lib/utilc.c
