@@ -305,18 +305,18 @@ Literally, just arrays.
 - `LLL_ASSEMBLY_INSTRUCTION)TYPE_CALL_POP` instruction
 
 ### Changed
-- The internal function `time` is now named `time_current`
+- Internal function `time` has been renamed to `time_current`
 - Bugs in the optimizer have been fixed
 - `lll_parse_all_object` not requires a function used to load external files
 
 ### Removed
 - Types and functions related to import tables
-- The option to merge modules (`-m`). Modules are now merged automatically
+- Option to merge modules (`-m`). Modules are now merged automatically
 
 ## [0.6.1] - 2021-8-1
 ### Added
-- The ability to export identifiers
-- The export operator (`(##)`)
+- Ability to export identifiers
+- Export operator (`(##)`)
 
 ### Changed
 - Changed some structure and type definitions
@@ -327,13 +327,17 @@ Literally, just arrays.
 - [`src/include/lll_lib_api.h`][0.6.0/src/include/lll_lib_api.h]
 - `lll_api_get_time` function in [`src/lll_lib/api/time.c`][0.6.0/src/lll_lib/api/time.c]
 - [`src/lll_lib/lib/time.lll`][0.6.0/src/lll_lib/lib/time.lll]
-- The CLI tries to load files from the `<executable_directory>/lib/` directory
+- CLI tries to load files from the `<executable_directory>/lib/` directory
 
 ### Changed
 - Fixed the builder script
 
 ## [0.5.2] - 2021-7-31
-*Undocumented*
+### Changed
+- `ASSERT` macro now only works in debug builds
+- VM now uses a call stack instead of the `LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II` instruction
+- `(@@)` (return) operator now compiles into the exit operator (`(@)`) if it is used outside of a function
+- VM now uses a stack index instead of a moving pointer
 
 ## [0.5.1] - 2021-7-30
 *Undocumented*
