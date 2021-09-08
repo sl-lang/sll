@@ -377,7 +377,16 @@ Literally, just arrays.
 - `lll_optimize_object` function
 
 ## [0.4.0] - 2021-7-28
-*Undocumented*
+### Added
+- Assembly instructions used for pushing the current instruicton index and for storing a variable and poping it of the stack
+- Implemented `lll_run_assembly`
+
+### Changed
+- Assembly instruction that modify the instruction index can jump to relative offsets
+- Assembly instruction data is now saved and read from files
+
+### Removed
+- Unimplemented language-generation functions and CLI arguments
 
 ## [0.3.5] - 2021-7-28
 *Undocumented*
