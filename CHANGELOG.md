@@ -416,7 +416,9 @@ Literally, just arrays.
 - Renamed `uintXX_t` to custom types
 
 ## [0.3.1] - 2021-7-25
-*Undocumented*
+### Changed
+- Fixed bugs related to bit shifting of narrow types in variable-length integer encoding
+- Fixed other bugs
 
 ## [0.3.0] - 2021-7-25
 *Undocumented*
