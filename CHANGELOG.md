@@ -425,7 +425,12 @@ Literally, just arrays.
 -  Integers are now encoded differently
 
 ## [0.2.3] - 2021-7-25
-*Undocumented*
+### Changed
+- Rewritten the help document
+
+### Removed
+- Object modifiers
+- Unused macros related to assembly generation
 
 ## [0.2.2] - 2021-7-23
 *Undocumented*
