@@ -300,7 +300,8 @@ Literally, just arrays.
 
 ## [0.6.2] - 2021-8-1
 ### Added
-- Two new operators: `(--)` (import) and `(##)` (export)
+- New operator: `(--)` (import)
+- Implemented identifier exporting (the `(##)` operator)
 - `LLL_ASSEMBLY_INSTRUCTION)TYPE_CALL_POP` instruction
 
 ### Changed
@@ -313,7 +314,12 @@ Literally, just arrays.
 - The option to merge modules (`-m`). Modules are now merged automatically
 
 ## [0.6.1] - 2021-8-1
-*Undocumented*
+### Added
+- The ability to export identifiers
+- The export operator (`(##)`)
+
+### Changed
+- Changed some structure and type definitions
 
 ## [0.6.0] - 2021-7-31
 *Undocumented*
