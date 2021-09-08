@@ -360,7 +360,21 @@ Literally, just arrays.
 - `LLL_OBJECT_TYPE_NIL`: `nil` values get compiled directly into zeros
 
 ## [0.4.1] - 2021-7-29
-*Undocumented*
+### Added
+- A level-3 optimization (`-O3`), which performs global optimization of the compiled object
+- `LLL_ASSEMBLY_INSTRUCTION_TYPE_POP_ROT` instruction
+- Assembly instructions for returning diffrent types
+- Errors related to invalid instructions, stack corruption and an invalid instruction index
+- Two new operators: `(@)` (exit) and `(@@)` return
+
+### Chagned
+- In a debug build, the `UNREACHABLE()` macro expands into `ASSERT(!"Unreachable")`
+- Operator assembly instruction can be used directly on a variable
+
+### Removed
+- `LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NIL` instruction
+- `LLL_RUNTIME_OBJECT_TYPE_TRUE` and `LLL_RUNTIME_OBJECT_TYPE_FALSE` runtime object types
+- `lll_optimize_object` function
 
 ## [0.4.0] - 2021-7-28
 *Undocumented*
