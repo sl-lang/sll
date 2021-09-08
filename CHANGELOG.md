@@ -421,7 +421,8 @@ Literally, just arrays.
 - Fixed other bugs
 
 ## [0.3.0] - 2021-7-25
-*Undocumented*
+### Changed
+-  Integers are now encoded differently
 
 ## [0.2.3] - 2021-7-25
 *Undocumented*
