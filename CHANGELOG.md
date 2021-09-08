@@ -293,13 +293,24 @@ Literally, just arrays.
 
 ### Changed
 - Removed duplications in the builder script
-- `__SLL_IMPORT_EXPORT` is now named `__SLL_FUNC`
+- `__SLL_IMPORT_EXPORT` has been renamed to `__SLL_FUNC`
 - Split [`src/include/lll_lib.h`][0.6.2/src/include/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
 - Renamed [`src/include/lll_lib_api.h`][0.6.2/src/include/lll_lib_api.h] and [`src/include/version.h`][0.6.2/src/include/version.h] to [`src/include/lll/api.h`][0.6.3/src/include/lll/api.h] and [`src/include/lll/version.h`][0.6.3/src/include/lll/version.h]
 - Moved platform-dependent code to [`src/lll_lib/platform/linux.c`][0.6.3/src/lll_lib/platform/linux.c] and [`src/lll_lib/platform/windows.c`][0.6.3/src/lll_lib/platform/windows.c]
 
 ## [0.6.2] - 2021-8-1
-*Undocumented*
+### Added
+- Two new operators: `(--)` (import) and `(##)` (export)
+- `LLL_ASSEMBLY_INSTRUCTION)TYPE_CALL_POP` instruction
+
+### Changed
+- The internal function `time` is now named `time_current`
+- Bugs in the optimizer have been fixed
+- `lll_parse_all_object` not requires a function used to load external files
+
+### Removed
+- Types and functions related to import tables
+- The option to merge modules (`-m`). Modules are now merged automatically
 
 ## [0.6.1] - 2021-8-1
 *Undocumented*
