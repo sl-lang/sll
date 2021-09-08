@@ -255,7 +255,7 @@ Literally, just arrays.
 
 ### Changed
 - The build script properly indents output from child processes
-- Renamed [`src/lll_lib`][0.6.5/src/lll_lib] to [`src/lll`][0.6.6/src/sll]
+- Renamed [`src/lll_lib`][0.6.5/src/lll_lib] to [`src/lll`][0.6.6/src/lll]
 - Updated the optimizer
 - Updated the assembly optimizer
 
