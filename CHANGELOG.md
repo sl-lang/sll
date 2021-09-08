@@ -294,7 +294,7 @@ Literally, just arrays.
 ### Changed
 - Removed duplications in the builder script
 - `__SLL_IMPORT_EXPORT` is now named `__SLL_FUNC`
-- Split [`src/inculde/lll_lib.h`][0.6.2/src/inculde/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
+- Split [`src/include/lll_lib.h`][0.6.2/src/include/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
 - Renamed [`src/include/lll_lib_api.h`][0.6.2/src/include/lll_lib_api.h] and [`src/include/version.h`][0.6.2/src/include/version.h] to [`src/include/lll/api.h`][0.6.3/src/include/lll/api.h] and [`src/include/lll/version.h`][0.6.3/src/include/lll/version.h]
 - Moved platform-dependent code to [`src/lll_lib/platform/linux.c`][0.6.3/src/lll_lib/platform/linux.c] and [`src/lll_lib/platform/windows.c`][0.6.3/src/lll_lib/platform/windows.c]
 
@@ -499,4 +499,4 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.3/src/lll_lib/platform/windows.c]: https://github.com/sl-lang/sll/blob/v0.6.3/src/lll_lib/platform/windows.c
 [0.6.2/src/include/lll_lib_api.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/include/lll_lib_api.h
 [0.6.2/src/include/version.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/include/version.h
-[0.6.2/src/inculde/lll_lib.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/inculde/lll_lib.h
+[0.6.2/src/include/lll_lib.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/include/lll_lib.h
