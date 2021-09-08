@@ -395,7 +395,10 @@ Literally, just arrays.
 - Assembly generator and related structures, types, functions and macros
 
 ## [0.3.4] - 2021-7-27
-*Undocumented*
+### Added
+- Option for saving the compiled object (`-c`)
+- Option for language generation (`-g`)
+- `lll_optimize_metadata` function
 
 ## [0.3.3] - 2021-7-26
 *Undocumented*
