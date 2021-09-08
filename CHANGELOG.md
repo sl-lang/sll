@@ -322,7 +322,15 @@ Literally, just arrays.
 - Changed some structure and type definitions
 
 ## [0.6.0] - 2021-7-31
-*Undocumented*
+### Added
+- Internal functions
+- [`src/include/lll_lib_api.h`][0.6.0/src/include/lll_lib_api.h]
+- `lll_api_get_time` function in [`src/lll_lib/api/time.c`][0.6.0/src/lll_lib/api/time.c]
+- [`src/lll_lib/lib/time.lll`][0.6.0/src/lll_lib/lib/time.lll]
+- The CLI tries to load files from the `<executable_directory>/lib/` directory
+
+### Changed
+- Fixed the builder script
 
 ## [0.5.2] - 2021-7-31
 *Undocumented*
@@ -517,3 +525,6 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.2/src/include/lll_lib_api.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/include/lll_lib_api.h
 [0.6.2/src/include/version.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/include/version.h
 [0.6.2/src/include/lll_lib.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/include/lll_lib.h
+[0.6.0/src/include/lll_lib_api.h]: https://github.com/sl-lang/sll/blob/v0.6.0/src/include/lll_lib_api.h
+[0.6.0/src/lll_lib/api/time.c]: https://github.com/sl-lang/sll/blob/v0.6.0/src/lll_lib/api/time.c
+[0.6.0/src/lll_lib/lib/time.lll]: https://github.com/sl-lang/sll/blob/v0.6.0/src/lll_lib/lib/time.lll
