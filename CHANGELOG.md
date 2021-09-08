@@ -341,12 +341,23 @@ Literally, just arrays.
 
 ## [0.5.1] - 2021-7-30
 ### Changed
-- The `lll_compare_runtime_object`, `lll_create_string`, `lll_runtime_object_size` and `lll_runtime_object_nonzero` functions are now public
+- `lll_compare_runtime_object`, `lll_create_string`, `lll_runtime_object_size` and `lll_runtime_object_nonzero` functions are now public
 - Function `lll_run_assembly` has been renamed to `lll_execute_assembly`
-- The runtime object functions (`lll_compare_runtime_object` and `lll_runtime_object_nonzero`) have been moved to [`src/lll_lib/object.c`][0.5.1/src/lll_lib/object.c]
+- Runtime object functions (`lll_compare_runtime_object` and `lll_runtime_object_nonzero`) have been moved to [`src/lll_lib/object.c`][0.5.1/src/lll_lib/object.c]
 
 ## [0.5.0] - 2021-7-30
-*Undocumented*
+### Added
+- Two new operators: `(>-)` (do-while loop) and `(><)` (infinite loop)
+- Assembly instructions used to store small integer values (`-1`, `0`, `1`, `2`, `3` and `4`)
+- `lll_optimize_object` function
+
+### Changed
+- Every single object uses the same structure
+- `lll_optimize_metadata` function has been moved from [`src/lll_lib/optimize.c`][0.4.1/src/lll_lib/optimize.c] to [`src/lll_lib/metadata.c`][0.5.0/src/lll_lib/metadata.c]
+- `lll_remove padding` function has been moved to [`src/lll_lib/padding.c`][0.5.0/src/lll_lib/padding.c]
+
+### Removed
+- `LLL_OBJECT_TYPE_NIL`: `nil` values get compiled directly into zeros
 
 ## [0.4.1] - 2021-7-29
 *Undocumented*
@@ -536,3 +547,6 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.0/src/lll_lib/api/time.c]: https://github.com/sl-lang/sll/blob/v0.6.0/src/lll_lib/api/time.c
 [0.6.0/src/lll_lib/lib/time.lll]: https://github.com/sl-lang/sll/blob/v0.6.0/src/lll_lib/lib/time.lll
 [0.5.1/src/lll_lib/object.c]: https://github.com/sl-lang/sll/blob/v0.5.1/src/lll_lib/object.c
+[0.5.0/src/lll_lib/metadata.c]: https://github.com/sl-lang/sll/blob/v0.5.0/src/lll_lib/metadata.c
+[0.5.0/src/lll_lib/padding.c]: https://github.com/sl-lang/sll/blob/v0.5.0/src/lll_lib/padding.c
+[0.4.1/src/lll_lib/optimize.c]: https://github.com/sl-lang/sll/blob/v0.4.1/src/lll_lib/optimize.c
