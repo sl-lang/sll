@@ -588,4 +588,4 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.5.0/src/lll_lib/metadata.c]: https://github.com/sl-lang/sll/blob/v0.5.0/src/lll_lib/metadata.c
 [0.5.0/src/lll_lib/padding.c]: https://github.com/sl-lang/sll/blob/v0.5.0/src/lll_lib/padding.c
 [0.4.1/src/lll_lib/optimize.c]: https://github.com/sl-lang/sll/blob/v0.4.1/src/lll_lib/optimize.c
-[0.3.3/src/lll_lib/util.c]: https://github.com/sl-lang/sll/blob/v0.3.3/src/lll_lib/utilc.c
+[0.3.3/src/lll_lib/util.c]: https://github.com/sl-lang/sll/blob/v0.3.3/src/lll_lib/util.c
