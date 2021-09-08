@@ -285,7 +285,18 @@ Literally, just arrays.
 - Renamed `time_current` and `time_current_nanos` into `time` and `time_nanos`
 
 ## [0.6.3] - 2021-8-2
-*Undocumented*
+### Added
+- The `INTERNAL_FUNCTION` macro can be used to declare default internal function
+- `sll_api_get_time_float` function
+- Support for floating-point values
+- The CLI tries to load each file as a compiled object (`<file>.lllc`)
+
+### Changed
+- Removed duplications in the builder script
+- `__SLL_IMPORT_EXPORT` is now named `__SLL_FUNC`
+- Split [`src/inculde/lll_lib.h`][0.6.2/src/inculde/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
+- Renamed [`src/include/lll_lib_api.h`][0.6.2/src/include/lll_lib_api.h] and [`src/include/version.h`][0.6.2/src/include/version.h] to [`src/include/lll/api.h`][0.6.3/src/include/lll/api.h] and [`src/include/lll/version.h`][0.6.3/src/include/lll/version.h]
+- Moved platform-dependent code to [`src/lll_lib/platform/linux.c`][0.6.3/src/lll_lib/platform/linux.c] and [`src/lll_lib/platform/windows.c`][0.6.3/src/lll_lib/platform/windows.c]
 
 ## [0.6.2] - 2021-8-1
 *Undocumented*
@@ -476,4 +487,16 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.4/src/include/lll/io.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/io.h
 [0.6.4/src/include/lll/stream.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/stream.h
 [0.6.4/src/include/lll/string.h]: https://github.com/sl-lang/sll/blob/v0.6.4/src/include/lll/string.h
+[0.6.3/src/include/lll/api.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/api.h
+[0.6.3/src/include/lll/common.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/common.h
+[0.6.3/src/include/lll/constants.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/constants.h
 [0.6.3/src/include/lll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/core.h
+[0.6.3/src/include/lll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/core.h
+[0.6.3/src/include/lll/platform.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/platform.h
+[0.6.3/src/include/lll/types.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/types.h
+[0.6.3/src/include/lll/version.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/version.h
+[0.6.3/src/lll_lib/platform/linux.c]: https://github.com/sl-lang/sll/blob/v0.6.3/src/lll_lib/platform/linux.c
+[0.6.3/src/lll_lib/platform/windows.c]: https://github.com/sl-lang/sll/blob/v0.6.3/src/lll_lib/platform/windows.c
+[0.6.2/src/include/lll_lib_api.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/include/lll_lib_api.h
+[0.6.2/src/include/version.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/include/version.h
+[0.6.2/src/inculde/lll_lib.h]: https://github.com/sl-lang/sll/blob/v0.6.2/src/inculde/lll_lib.h
