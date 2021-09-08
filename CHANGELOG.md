@@ -390,9 +390,9 @@ Literally, just arrays.
 
 ## [0.3.5] - 2021-7-28
 ### Added
-- Ability to save the generated assembly code
+- Ability to save the generated assembly code (option `-a`)
 - Option for printing assembly (`-P`)
-- The assemly generator and related structures, types, functions and macros
+- Assembly generator and related structures, types, functions and macros
 
 ## [0.3.4] - 2021-7-27
 *Undocumented*
