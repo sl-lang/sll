@@ -81,6 +81,7 @@
 ; (:> "URL: " (<- read_url "GET" "example.com" "/" <> "") "\n")
 (= v 5.943)
 (:> "Round Down: " v " -> " (:: v int_type) "\n")
+(:> "€\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)

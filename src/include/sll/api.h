@@ -5,7 +5,7 @@
 
 
 
-#define __API_FUNC_DECL(nm) __SLL_FUNC sll_runtime_object_t* sll_api_##nm##_raw(const sll_runtime_object_t*const* al,const sll_arg_count_t all);__SLL_FUNC sll_runtime_object_t* sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
+#define __API_FUNC_DECL(nm) __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_##nm##_raw(const sll_runtime_object_t*const* al,const sll_arg_count_t all);__SLL_FUNC __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
 
 
 
@@ -164,7 +164,7 @@ FUNC sll_api_sys_arg_get
 DESC Docs!
 ARG I Docs!
 RET Z Failure
-RET S Success*/
+RET O Success*/
 __API_FUNC_DECL(sys_arg_get);
 
 
@@ -182,7 +182,7 @@ __API_FUNC_DECL(sys_arg_get_count);
 TYPE api
 FUNC sll_api_sys_get_platform
 DESC Docs!
-RET S Docs!*/
+RET O Docs!*/
 __API_FUNC_DECL(sys_get_platform);
 
 
@@ -210,7 +210,7 @@ TYPE api
 FUNC sll_api_time_sleep
 DESC Docs!
 ARG IF Docs!
-RET 0 Failure
+RET f Failure
 RET F Success*/
 __API_FUNC_DECL(time_sleep);
 

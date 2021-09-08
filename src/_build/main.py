@@ -13,11 +13,13 @@ import zipfile
 ALPHABET="abcdefghijklmnopqrstuvwxyz"
 COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG",b"DEBUG_BUILD"]) if os.name=="nt" else ([] if "--release" in sys.argv else [b"DEBUG_BUILD"]))
 PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix.c","nt":"src/sll/platform/windows.c"}
-RETURN_CODE_TYPE_MAP={"0":"SLL_RETURN_ZERO;","h":"SLL_RETURN_ZERO_HANDLE;","Z":"SLL_RETURN_ZERO_STRING;"}
+RETURN_CODE_TYPE_MAP={"0":"SLL_RETURN_ZERO;","1":"SLL_RETURN_ONE;","h":"SLL_RETURN_ZERO_HANDLE;","Z":"SLL_RETURN_ZERO_STRING;","f":"return SLL_ACQUIRE_STATIC(float_zero);"}
+RETURN_CODE_BASE_TYPE={"0":"I","1":"I","h":"H","Z":"S","f":"F","I":"I","F":"F","C":"C","S":"S","A":"A","H":"H","M":"M","O":"O"}
 TYPE_ACCESS_MAP={"I":"$->dt.i","F":"$->dt.f","C":"$->dt.c","S":"&($->dt.s)","A":"&($->dt.a)","H":"&($->dt.h)","M":"&($->dt.m)","O":"$"}
 TYPE_ACCESS_OPT_MAP={"I":"($?$->dt.i:0)","F":"($?$->dt.f:0)","C":"($?$->dt.c:0)","S":"($?&($->dt.s):NULL)","A":"($?&($->dt.a):NULL)","H":"($?&($->dt.h):NULL)","M":"($?&($->dt.m):NULL)","O":"$"}
 TYPE_CHECK_MAP={"I":"$->t==SLL_RUNTIME_OBJECT_TYPE_INT","F":"$->t==SLL_RUNTIME_OBJECT_TYPE_FLOAT","C":"$->t==SLL_RUNTIME_OBJECT_TYPE_CHAR","S":"$->t==SLL_RUNTIME_OBJECT_TYPE_STRING","A":"$->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY","H":"($->t==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&$->dt.h.t!=SLL_UNKNOWN_HANDLE_TYPE)","M":"$->t==SLL_RUNTIME_OBJECT_TYPE_MAP"}
 TYPE_MAP={"I":"sll_integer_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t*","A":"sll_array_t*","H":"sll_handle_data_t*","M":"sll_map_t*","O":"sll_runtime_object_t*"}
+TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out);","F":"return SLL_FROM_FLOAT(out);","S":"sll_runtime_object_t* out_o=SLL_CREATE();out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;out_o->dt.s=out;return out_o;","A":"sll_runtime_object_t* out_o=SLL_CREATE();out_o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;out_o->dt.a=out;return out_o;","H":"sll_runtime_object_t* out_o=SLL_CREATE();out_o->t=SLL_RUNTIME_OBJECT_TYPE_HANDLE;out_o->dt.h=out;return out_o;","M":"sll_runtime_object_t* out_o=SLL_CREATE();out_o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;out_o->dt.m=out;return out_o;"}
 
 
 
@@ -62,30 +64,33 @@ d_dt=docs.create_docs(d_fl)
 d_cm={}
 for k in d_dt:
 	if ("api" in k["flag"]):
-		if (len(k["args"])==0):
-			d_cm["__SLL_API_ARGS_"+k["name"]]="void"
-			d_cm["__SLL_API_CODE_"+k["name"]]=f"return {k['name']}();"
-		else:
+		rt=RETURN_CODE_BASE_TYPE[k["ret"][0]["type"]]
+		for i in range(1,len(k["ret"])):
+			if (RETURN_CODE_BASE_TYPE[k["ret"][i]["type"]]!=rt):
+				rt="O"
+				break
+		a=""
+		c=""
+		pc=""
+		if (len(k["args"])>0):
 			err_c=RETURN_CODE_TYPE_MAP[k["ret"][k["err_ret"]]["type"]]
-			a=""
 			i=len(k["args"])
 			while (i>0 and k["args"][i-1]["opt"]):
 				i-=1
 			c=""
 			if (i!=0):
 				c=f"if (all<{i}){{{err_c}}}"
-			ec=f"return {k['name']}("
 			for i,e in enumerate(k["args"]):
 				if (i):
 					a+=","
-					ec+=","
+					pc+=","
 				if (i==len(k["args"])-1 and "var_arg" in k["flag"]):
 					a+=f"const {TYPE_MAP[e['type']]+('const' if TYPE_MAP[e['type']][-1]=='*' else '')}* {ALPHABET[i]},sll_arg_count_t {ALPHABET[i]}c"
 					if (e["type"]=="O"):
 						c+=f"const sll_runtime_object_t*const* {ALPHABET[i]}=al+{i};sll_arg_count_t {ALPHABET[i]}c=all-{i};";
 					else:
 						raise RuntimeError("Unimplemeted")
-					ec+=ALPHABET[i]+","+ALPHABET[i]+"c"
+					pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
 				else:
 					a+=f"const {(TYPE_MAP[e['type']] if len(e['type'])==1 else 'sll_runtime_object_t*')} {ALPHABET[i]}"
 					if (e["opt"]):
@@ -97,11 +102,28 @@ for k in d_dt:
 					if (e["opt"]):
 						c+="}"
 					if (len(e["type"])==1):
-						ec+=(TYPE_ACCESS_OPT_MAP[e["type"]] if e["opt"] else TYPE_ACCESS_MAP[e["type"]]).replace("$",ALPHABET[i])
+						pc+=(TYPE_ACCESS_OPT_MAP[e["type"]] if e["opt"] else TYPE_ACCESS_MAP[e["type"]]).replace("$",ALPHABET[i])
 					else:
-						ec+=ALPHABET[i]
-			d_cm["__SLL_API_ARGS_"+k["name"]]=a
-			d_cm["__SLL_API_CODE_"+k["name"]]=c+ec+");"
+						pc+=ALPHABET[i]
+		if (rt=="O"):
+			c+=f"return {k['name']}({pc});"
+			d_cm["__SLL_API_TYPE_"+k["name"]]="__SLL_CHECK_OUTPUT sll_runtime_object_t*"
+		else:
+			if (TYPE_MAP[rt][-1]=="*"):
+				if (len(pc)>0):
+					a+=f",{TYPE_MAP[rt]} out"
+					pc+=","
+				else:
+					a=TYPE_MAP[rt]+" out"
+				c+=TYPE_MAP[rt][:-1]+f" out;{k['name']}({pc}&out);"+TYPE_RETURN_MAP[rt]
+				d_cm["__SLL_API_TYPE_"+k["name"]]="void"
+			else:
+				c+=TYPE_MAP[rt]+f" out={k['name']}({pc});"+TYPE_RETURN_MAP[rt]
+				d_cm["__SLL_API_TYPE_"+k["name"]]="__SLL_CHECK_OUTPUT "+TYPE_MAP[rt]
+		if (len(a)==0):
+			a="void"
+		d_cm["__SLL_API_ARGS_"+k["name"]]=a
+		d_cm["__SLL_API_CODE_"+k["name"]]=c
 header.generate_help("rsrc/help.txt","build/help_text.h",vb)
 h_dt=header.parse_header("src/include/sll",vb)
 if (vb):

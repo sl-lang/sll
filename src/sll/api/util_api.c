@@ -6,5 +6,5 @@
 
 
 __API_FUNC(util_ref_count){
-	return SLL_FROM_INT(a->rc);
+	return a->rc;
 }

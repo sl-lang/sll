@@ -14,6 +14,7 @@
 - New type casting operator: `(::)` ([#37])
 - `sll_operator_cast`, `sll_api_json_type`, `sll_lookup_handle_descriptor` and `sll_string_hash` functions
 - Strings are now aligned on a 8-byte boundary to aid performance
+- The GC now stores data about each call to `SLL_CREATE`, `SLL_ACQUIRE`, `SLL_RELEASE` or other runtime object creation function  
 
 #### Mappings
 Maps (Mapping Objects) can be created by arrow brackets (`<key1 value1 key2 value2>`). If the number of elements is odd, a `nil` is automatically added to the end.
@@ -25,6 +26,7 @@ Each API function is now split into two parts: `sll_api_XXX` and `sll_api_XXX_ra
 - Internal functions are now declared as `static`
 - All `sll_operator_XXX` functions now use non-constant parameters (This has been changed to allow returning one of the operands)
 - `sll_handle_descriptor_t` can also specify a `sll_handle_stringify_t` function
+- Function that return a value (except for `sll__add_debug_data` and `sll_register_internal_function`) are now marked with `__SLL_CHECK_OUTPUT`
 
 ### Removed
 - `sll_init` function has been replaced by platform-dependent code to automatically set-up the console

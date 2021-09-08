@@ -13,49 +13,43 @@ __API_FUNC(path_absolute){
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t l=(sll_string_length_t)sll_platform_path_absolute((char*)a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH);
 	if (!l){
-		sll_runtime_object_t* o=SLL_CREATE();
-		o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-		sll_string_clone(a,&(o->dt.s));
-		return o;
+		sll_string_clone(a,out);
+		return;
 	}
-	sll_runtime_object_t* o=SLL_CREATE();
-	o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	sll_string_create(l,&(o->dt.s));
+	sll_string_create(l,out);
 	for (sll_string_length_t i=0;i<l;i++){
-		o->dt.s.c^=*(bf+i);
-		o->dt.s.v[i]=*(bf+i);
+		out->v[i]=*(bf+i);
 	}
-	return o;
+	sll_string_hash(out);
 }
 
 
 
 __API_FUNC(path_exists){
 	if (sll_platform_path_exists((char*)a->v)){
-		SLL_RETURN_ONE;
+		return 1;
 	}
-	SLL_RETURN_ZERO;
+	return 0;
 }
 
 
 
 __API_FUNC(path_is_dir){
 	if (sll_platform_path_is_directory((char*)a->v)){
-		SLL_RETURN_ONE;
+		return 1;
 	}
-	SLL_RETURN_ZERO;
+	return 0;
 }
 
 
 
 __API_FUNC(path_relative){
 	SLL_UNIMPLEMENTED();
-	SLL_RETURN_ZERO_STRING;
 }
 
 
 
 __API_FUNC(path_size){
 	SLL_UNIMPLEMENTED();
-	SLL_RETURN_ZERO;
+	return 0;
 }

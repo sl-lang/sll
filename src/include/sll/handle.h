@@ -10,6 +10,11 @@
 #define SLL_LOOKUP_HANDLE_DESCRIPTOR_FAST(hl,t) (*((hl)->dt+(t)-1))
 #define SLL_FROM_HANDLE(t,v) __SLL_ADD_DEBUG_DATA(sll_handle_to_object((t),(v)),__SLL_DEBUG_TYPE_CREATE)
 #define SLL_ZERO_HANDLE_STRUCT {SLL_UNKNOWN_HANDLE_TYPE,0}
+#define SLL_ZERO_HANDLE(o) \
+	do{ \
+		(o)->t=SLL_UNKNOWN_HANDLE_TYPE; \
+		(o)->h=0; \
+	} while (0)
 
 
 

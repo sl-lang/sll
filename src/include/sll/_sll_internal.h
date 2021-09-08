@@ -48,7 +48,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 
 
-#define __API_FUNC(nm) INTERNAL_FUNCTION(#nm,sll_api_##nm##_raw);__SLL_FUNC sll_runtime_object_t* sll_api_##nm##_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){__SLL_API_CODE_sll_api_##nm};__SLL_FUNC sll_runtime_object_t* sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
+#define __API_FUNC(nm) INTERNAL_FUNCTION(#nm,sll_api_##nm##_raw);__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_##nm##_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){__SLL_API_CODE_sll_api_##nm};__SLL_FUNC __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
 #define __SLL_STATIC_RAW(nm) &_##nm##_static_data
 #define __SLL_STATIC_OBJECT(nm,t,f,v) sll_runtime_object_t _##nm##_static_data={1,t,SLL_NO_DEBUG_DATA,.dt={.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
 
@@ -141,7 +141,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define GC_MAX_DBG_ID 16777215
 
-#define MAX_EXIT_TABLE_SIZE 512
+#define MAX_CLEANUP_TABLE_SIZE 512
+#define MAX_LAST_CLEANUP_TABLE_SIZE 16
 #define CLEANUP_ORDER_LAST SLL_CLEANUP_ORDER_RESERVED0
 
 

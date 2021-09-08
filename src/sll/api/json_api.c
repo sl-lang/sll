@@ -538,26 +538,18 @@ __API_FUNC(json_parse){
 
 __API_FUNC(json_stringify){
 	SLL_UNIMPLEMENTED();
-	SLL_RETURN_ZERO;
 }
 
 
 
 __API_FUNC(json_type){
 	SETUP_HANDLE;
-	if (!a){
-		SLL_ACQUIRE(_json_null);
-		return _json_null;
+	if (a>=0&&a<3){
+		out->t=_json_ht;
+		out->h=a;
+		return;
 	}
-	if (a==1){
-		SLL_ACQUIRE(_json_true);
-		return _json_true;
-	}
-	if (a==2){
-		SLL_ACQUIRE(_json_false);
-		return _json_false;
-	}
-	SLL_RETURN_ZERO_HANDLE;
+	SLL_ZERO_HANDLE(out);
 }
 
 

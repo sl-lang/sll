@@ -12,16 +12,6 @@
 
 
 
-#define SETUP_HANDLE \
-	do{ \
-		if (_file_ht==SLL_UNKNOWN_HANDLE_TYPE){ \
-			SLL_ASSERT(sll_current_runtime_data); \
-			_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type); \
-		} \
-	} while (0)
-
-
-
 typedef struct __FILE{
 	FILE* h;
 } file_t;
@@ -77,19 +67,17 @@ static void _file_destructor(sll_handle_t h){
 
 __API_FUNC(file_close){
 	if (a->t!=_file_ht||a->h>=_file_fll){
-		SLL_RETURN_ZERO;
+		return 0;
 	}
-	if (_free_file(a->h)){
-		SLL_RETURN_ONE;
-	}
-	SLL_RETURN_ZERO;
+	return _free_file(a->h);
 }
 
 
 
 __API_FUNC(file_open){
+	SLL_ZERO_HANDLE(out);
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
-		SLL_RETURN_ZERO_HANDLE;
+		return;
 	}
 	const char* m="rb";
 	if (b){
@@ -107,7 +95,7 @@ __API_FUNC(file_open){
 	}
 	FILE* h=fopen((char*)a->v,m);// lgtm [cpp/path-injection]
 	if (!h){
-		SLL_RETURN_ZERO_HANDLE;
+		return;
 	}
 	sll_handle_t i=0;
 	while (i<_file_fll){
@@ -120,13 +108,17 @@ __API_FUNC(file_open){
 	void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t));
 	if (!tmp){
 		fclose(h);
-		SLL_RETURN_ZERO_HANDLE;
+		return;
 	}
 	_file_fl=tmp;
 _found_index:
 	(_file_fl+i)->h=h;
-	SETUP_HANDLE;
-	return SLL_FROM_HANDLE(_file_ht,i);
+	if (_file_ht==SLL_UNKNOWN_HANDLE_TYPE){
+		SLL_ASSERT(sll_current_runtime_data);
+		_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type);
+	}
+	out->t=_file_ht;
+	out->h=i;
 }
 
 
@@ -141,23 +133,23 @@ __API_FUNC(file_write){
 			fh=stderr;
 		}
 		else{
-			SLL_RETURN_ZERO;
+			return 0;
 		}
 	}
 	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
 		fh=(_file_fl+a->dt.h.h)->h;
 		if (!fh){
-			SLL_RETURN_ZERO;
+			return 0;
 		}
 	}
 	else{
-		SLL_RETURN_ZERO;
+		return 0;
 	}
 	sll_string_t s;
 	sll_object_to_string(b,bc,&s);
 	fwrite(s.v,sizeof(sll_char_t),s.l,fh);
 	free(s.v);
-	return SLL_FROM_INT(s.l);
+	return s.l;
 }
 
 
