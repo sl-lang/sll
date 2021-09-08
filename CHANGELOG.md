@@ -408,7 +408,12 @@ Literally, just arrays.
 - Moved `_create_string` and `_object_size` functions to [`src/lll_lib/util.c`][0.3.3/src/lll_lib/util.c]
 
 ## [0.3.2] - 2021-7-25
-*Undocumented*
+### Added
+- `lll_merge_import` function merges string
+- `_create_string` function
+
+### Changed
+- Renamed `uintXX_t` to custom types
 
 ## [0.3.1] - 2021-7-25
 *Undocumented*
