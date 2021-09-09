@@ -460,7 +460,8 @@ Literally, just arrays.
 *Nothing*
 
 ## [0.1.12] - 2021-7-2
-*Undocumented*
+### Changed
+- Added builder script option for code generation (`--generate-code`)
 
 ## [0.1.11] - 2021-7-2
 *Undocumented*
