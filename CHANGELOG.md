@@ -450,7 +450,11 @@ Literally, just arrays.
 - All integer are now stored as 64-bit value
 
 ## [0.2.0] - 2021-7-3
-*Undocumented*
+### Added
+- Diffrent structures for each object type
+
+### Removed
+- Object conversion functions
 
 ## [0.1.13] - 2021-7-2
 *Undocumented*
