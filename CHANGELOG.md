@@ -473,7 +473,8 @@ Literally, just arrays.
 - Replaced `printf()` call in the CLI now print data using `print_str`, `print_str_const` and `print_int`
 
 ## [0.1.9] - 2021-7-1
-*Undocumented*
+### Changed
+- Fixed bugs in the builder script
 
 ## [0.1.8] - 2021-7-1
 *Undocumented*
