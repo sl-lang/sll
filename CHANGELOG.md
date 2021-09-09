@@ -1,7 +1,8 @@
 # The Sl Programing Language Change Log
 
 ## [0.6.18] - Ongoing
-*Nothing*
+### Added
+- `sll_init` and `sll_deinit` functions
 
 ## [0.6.17] - 2021-9-9
 ### Added

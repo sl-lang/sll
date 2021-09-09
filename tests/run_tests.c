@@ -769,6 +769,7 @@ _json_error:
 
 
 int main(int argc,const char** argv){
+	sll_init();
 #ifdef _MSC_VER
 	uint16_t i=(uint16_t)GetModuleFileNameA(NULL,e_fp,4096);
 #else

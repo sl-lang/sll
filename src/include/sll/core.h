@@ -13,6 +13,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_ta
 
 
 
+__SLL_FUNC void sll_deinit(void);
+
+
+
 __SLL_FUNC void sll_free_compilation_data(sll_compilation_data_t* c_dt);
 
 
@@ -34,6 +38,10 @@ __SLL_FUNC void sll_free_runtime_object_stack_data(sll_runtime_object_stack_data
 
 
 __SLL_FUNC void sll_free_string_table(sll_string_table_t* st);
+
+
+
+__SLL_FUNC void sll_init(void);
 
 
 

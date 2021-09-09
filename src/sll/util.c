@@ -12,23 +12,10 @@
 
 
 
-static sll_cleanup_function _util_exit_table[MAX_CLEANUP_TABLE_SIZE]={sll_platform_reset_console};
-static uint16_t _util_exit_table_size=1;
+static sll_cleanup_function _util_exit_table[MAX_CLEANUP_TABLE_SIZE];
+static uint16_t _util_exit_table_size=0;
 static sll_cleanup_function _util_last_cleanup[MAX_LAST_CLEANUP_TABLE_SIZE]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 static uint8_t _util_last_cleanup_size=0;
-
-
-
-void _util_cleanup(void){
-	while (_util_exit_table_size){
-		_util_exit_table_size--;
-		_util_exit_table[_util_exit_table_size]();
-	}
-	while (_util_last_cleanup_size){
-		_util_last_cleanup_size--;
-		_util_last_cleanup[_util_last_cleanup_size]();
-	}
-}
 
 
 
@@ -78,6 +65,22 @@ _check_next_string:;
 	memcpy(s->v,dt,l);
 	sll_string_hash(s);
 	return st->l-1;
+}
+
+
+
+__SLL_FUNC void sll_deinit(void){
+	while (_util_exit_table_size){
+		_util_exit_table_size--;
+		_util_exit_table[_util_exit_table_size]();
+	}
+	while (_util_last_cleanup_size){
+		_util_last_cleanup_size--;
+		_util_last_cleanup[_util_last_cleanup_size]();
+	}
+	sll_platform_reset_console();
+	_util_exit_table_size=0;
+	_util_last_cleanup_size=0;
 }
 
 
@@ -157,6 +160,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_
 		off+=sll_get_object_size(o+off);
 	}
 	return off+eoff;
+}
+
+
+
+__SLL_FUNC void sll_init(void){
+	sll_platform_setup_console();
+	atexit(sll_deinit);
 }
 
 

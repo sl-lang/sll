@@ -231,15 +231,3 @@ __SLL_FUNC void sll_platform_reset_console(void){
 	_setmode(_fileno(stdout),_win_stdout_m);
 	_setmode(_fileno(stderr),_win_stderr_m);
 }
-
-
-
-BOOL WINAPI DllMain(HINSTANCE dll,DWORD r,LPVOID _){
-	if (r==DLL_PROCESS_ATTACH){
-		sll_platform_setup_console();
-	}
-	else if (r==DLL_PROCESS_DETACH){
-		_util_cleanup();
-	}
-	return TRUE;
-}

@@ -15,8 +15,8 @@
 #define SLL_STRING_FROM_STATIC(s,o) \
 	do{ \
 		(o)->l=sizeof(s)-1; \
-		(o)->c=0; \
 		(o)->v=(sll_char_t*)(s); \
+		sll_string_hash((o)); \
 	} while (0)
 #define SLL_ZERO_STRING_STRUCT {0,0,NULL}
 #define SLL_STRING_ESCAPE(c) ((c)=='\t'||(c)=='\n'||(c)=='\v'||(c)=='\f'||(c)=='\r'||(c)=='\"'||(c)=='\''||(c)=='\\')
