@@ -477,7 +477,13 @@ Literally, just arrays.
 - Fixed bugs in the builder script
 
 ## [0.1.8] - 2021-7-1
-*Undocumented*
+### Added
+- Function for executing code (`lll_run_compiled_object`)
+- Options for running the program (`-r` / `-r0`) and generating output (`-g` / `-g0`)
+
+### Changed
+- Moved the example file to the [`example/`][0.1.8/example] directory
+- The help string has been moved to a separate file ([`rsrc/help.txt`][0.1.8/rsrc/help.txt])
 
 ## [0.1.7] - 2021-7-1
 *Undocumented*
@@ -618,3 +624,5 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.5.0/src/lll_lib/padding.c]: https://github.com/sl-lang/sll/blob/v0.5.0/src/lll_lib/padding.c
 [0.4.1/src/lll_lib/optimize.c]: https://github.com/sl-lang/sll/blob/v0.4.1/src/lll_lib/optimize.c
 [0.3.3/src/lll_lib/util.c]: https://github.com/sl-lang/sll/blob/v0.3.3/src/lll_lib/util.c
+[0.1.8/example]: https://github.com/sl-lang/sll/tree/v0.1.8/example
+[0.1.8/rsrc/help.txt]: https://github.com/sl-lang/sll/blob/v0.1.8/rsrc/help.txt
