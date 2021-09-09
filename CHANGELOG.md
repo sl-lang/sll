@@ -464,7 +464,9 @@ Literally, just arrays.
 - Added builder script option for code generation (`--generate-code`)
 
 ## [0.1.11] - 2021-7-2
-*Undocumented*
+### Changed
+- Rewritten help documentation
+- CLI now executes the code by default
 
 ## [0.1.10] - 2021-7-1
 *Undocumented*
