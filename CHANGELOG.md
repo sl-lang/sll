@@ -486,7 +486,9 @@ Literally, just arrays.
 - The help string has been moved to a separate file ([`rsrc/help.txt`][0.1.8/rsrc/help.txt])
 
 ## [0.1.7] - 2021-7-1
-*Undocumented*
+### Changed
+- Changed from the MIT License to the BSD 3-Clause License
+- Implemented code generation for functions
 
 ## [0.1.6] - 2021-6-18
 *Undocumented*
