@@ -1,6 +1,9 @@
 # The Sl Programing Language Change Log
 
-## [0.6.17] - Ongoing
+## [0.6.18] - Ongoing
+*Nothing*
+
+## [0.6.17] - 2021-9-9
 ### Added
 - Mappings ([#36])
 - More logging related to updating from the CLI
@@ -477,7 +480,8 @@ Literally, just arrays.
 ## [0.1.2] - 2021-6-15
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.17]: https://github.com/sl-lang/sll/compare/v0.6.16...main
+[0.6.18]: https://github.com/sl-lang/sll/compare/v0.6.17...main
+[0.6.17]: https://github.com/sl-lang/sll/compare/v0.6.16...v0.6.17
 [0.6.16]: https://github.com/sl-lang/sll/compare/v0.6.15...v0.6.16
 [0.6.15]: https://github.com/sl-lang/sll/compare/v0.6.14...v0.6.15
 [0.6.14]: https://github.com/sl-lang/sll/compare/v0.6.13...v0.6.14
