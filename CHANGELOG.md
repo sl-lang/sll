@@ -443,7 +443,11 @@ Literally, just arrays.
 - Identifier listist comparasion has been sped up
 
 ## [0.2.1] - 2021-7-3
-*Undocumented*
+### Added
+- Debug object also store the line and column number
+
+### Changed
+- All integer are now stored as 64-bit value
 
 ## [0.2.0] - 2021-7-3
 *Undocumented*
