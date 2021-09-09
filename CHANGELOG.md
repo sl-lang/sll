@@ -437,7 +437,10 @@ Literally, just arrays.
 - Unused macros related to assembly generation
 
 ## [0.2.2] - 2021-7-23
-*Undocumented*
+### Changed
+- Renamed some options
+- All object are now 8-byte alignemd
+- Identifier listist comparasion has been sped up
 
 ## [0.2.1] - 2021-7-3
 *Undocumented*
