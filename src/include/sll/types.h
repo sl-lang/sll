@@ -492,7 +492,7 @@ typedef struct __SLL_ERROR_DATA_RANGE{
 
 
 typedef union __SLL_ERROR_DATA{
-	char str[256];
+	sll_char_t str[256];
 	sll_error_data_range_t r;
 	sll_assembly_instruction_type_t it;
 } sll_error_data_t;

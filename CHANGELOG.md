@@ -4,6 +4,9 @@
 ### Added
 - `sll_init` and `sll_deinit` functions
 
+### Changed
+- `sll_error_t` now uses `sll_char_t` instead of `char`
+
 ## [0.6.17] - 2021-9-9
 ### Added
 - Mappings ([#36])
@@ -369,7 +372,7 @@ Literally, just arrays.
 - `LLL_ASSEMBLY_INSTRUCTION_TYPE_POP_ROT` instruction
 - Assembly instructions for returning diffrent types
 - Errors related to invalid instructions, stack corruption and an invalid instruction index
-- Two new operators: `(@)` (exit) and `(@@)` return
+- Two new operators: `(@)` (exit) and `(@@)` (return)
 
 ### Chagned
 - In a debug build, the `UNREACHABLE()` macro expands into `ASSERT(!"Unreachable")`
@@ -491,16 +494,34 @@ Literally, just arrays.
 - Implemented code generation for functions
 
 ## [0.1.6] - 2021-6-18
-*Undocumented*
+### Added
+- List of volatile CPU registers
+
+### Changed
+- API functions are now marked with `__LLL_API_FUNCTION`
+- Volatile CPU registers are now saved across function calls
+
+### Removed
+- Declarations of unexported private functions
 
 ## [0.1.5] - 2021-6-17
-*Undocumented*
+### Added
+- Functions tables are now used to store function arguments
+
+### Changed
+- Functions and loops have inner scopes
 
 ## [0.1.4] - 2021-6-16
-*Undocumented*
+### Added
+- Support for functions
+
+### Changed
+- Rewritten the syntax highlight
 
 ## [0.1.3] - 2021-6-16
-*Undocumented*
+### Added
+- Versions!
+- Options for printing the help message
 
 ## [0.1.2] - 2021-6-15
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
