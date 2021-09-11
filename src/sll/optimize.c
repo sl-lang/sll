@@ -670,6 +670,36 @@ static sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_d
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_CALL:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					o->t=SLL_OBJECT_TYPE_NOP;
+					return eoff+1;
+				}
+				sll_object_offset_t off=1;
+				while ((o+off)->t==SLL_OBJECT_TYPE_NOP||(o+off)->t==SLL_OBJECT_TYPE_DEBUG_DATA){
+					off++;
+				}
+				sll_object_t* fn=o+off;
+				off+=_optimize(fn,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+				if (o_dt->rm){
+					_remove_up_to_end(o,off);
+					o->dt.ac-=l;
+					break;
+				}
+				l--;
+				while (l){
+					l--;
+					off+=_optimize(o+off,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+					if (o_dt->rm){
+						_remove_up_to_end(o,off);
+						o->dt.ac-=l;
+						break;
+					}
+				}
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_IF:
 			{
 				sll_arg_count_t l=o->dt.ac;

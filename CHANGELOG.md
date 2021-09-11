@@ -2,62 +2,62 @@
 
 ## [0.6.18] - Ongoing
 ### Added
-- `sll_init` and `sll_deinit` functions
 - Code generated for API functions is now located in [`src/sll/api/_generated.c`][main/src/sll/api/_generated.c]
+- `sll_init` and `sll_deinit` functions
 - Useless assembly code (`STORE $xx & POP,LOAD $xx & DEL`) is removed
 
 ### Changed
-- `sll_error_t` now uses `sll_char_t` instead of `char`
-- Marked internal CLI variables & function as `static`
 - Function arguments will now shadow other variables instaed of overriding them
+- Marked internal CLI variables & function as `static`
+- `sll_error_t` now uses `sll_char_t` instead of `char`
 
 ## [0.6.17] - 2021-9-9
 ### Added
+- Automatic API function code generation
+- Documentation parser
+- Fixed bugs in the builder script
+- JSON api
 - Mappings ([#36])
 - More logging related to updating from the CLI
-- `sll_register_cleanup` function, which can be used for safely executing functions before key library features (like GC) are cleaned up
-- JSON api
-- Documentation parser
-- Automatic API function code generation
-- The `url.sll` module ([#29])
-- Fixed bugs in the builder script
 - New Constants: `int_type`, `float_type`, `char_type`, `string_type`, `array_type`, `handle_type`, `map_type`, `map_key_type` and `map_value_type`
 - New type casting operator: `(::)` ([#37])
 - `sll_operator_cast`, `sll_api_json_type`, `sll_lookup_handle_descriptor` and `sll_string_hash` functions
+- `sll_register_cleanup` function, which can be used for safely executing functions before key library features (like GC) are cleaned up
 - Strings are now aligned on a 8-byte boundary to aid performance
-- The GC now stores data about each call to `SLL_CREATE`, `SLL_ACQUIRE`, `SLL_RELEASE` or other runtime object creation function  
+- The `url.sll` module ([#29])
+- The GC now stores data about each call to `SLL_CREATE`, `SLL_ACQUIRE`, `SLL_RELEASE` or other runtime object creation function
 
 #### Mappings
-Maps (Mapping Objects) can be created by arrow brackets (`<key1 value1 key2 value2>`). If the number of elements is odd, a `nil` is automatically added to the end.
+Maps (Mapping Objects) are created by arrow brackets (`<key1 value1 key2 value2>`). If the number of elements is odd, a `nil` is automatically added to the end.
 
 #### API Function Code Generation
 Each API function is now split into two parts: `sll_api_XXX` and `sll_api_XXX_raw`. The 'raw' function takes an object array and error-checks each arguments. It then calls the base function with all the arguments converted into C types. The code is generated based on the documentation.
 
 ### Changed
-- Internal functions are now declared as `static`
 - All `sll_operator_XXX` functions now use non-constant parameters (This has been changed to allow returning one of the operands)
-- `sll_handle_descriptor_t` can also specify a `sll_handle_stringify_t` function
 - Function that return a value (except for `sll__add_debug_data` and `sll_register_internal_function`) are now marked with `__SLL_CHECK_OUTPUT`
+- Internal functions are now declared as `static`
+- `sll_handle_descriptor_t` can also specify a `sll_handle_stringify_t` function
 
 ### Removed
-- `sll_init` function has been replaced by platform-dependent code to automatically set-up the console
 - `__SLL_RETURN_xxx` macros from [`src/include/sll/common.h`][0.6.17/src/include/sll/common.h]
+- `sll_init` function has been replaced by platform-dependent code to automatically set-up the console
 
 ## [0.6.16] - 2021-8-30
 ### Added
-- This Change Log!
-- Bit shifting operators ([#30]): `(<<)` and `(>>)` as well as their `SLL_OBJECT_TYPE_` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_` counterparts (This also includes updates to the syntax highlight)
-- `SLL_ERROR_UNRELEASED_OBJECTS` error: It is raised when not all objects (allocated during execution of the program) have been `SLL_RELEASE`d
-- `sll_current_runtime_data` holds the current runtime data of the program (Can be used to ex. create handle types or write directly to output)
-- Handles
-- New static object: `handle_zero`
-- New object creation macro: `SLL_FROM_HANDLE` (and `sll_handle_to_object`)
-- `sll_platform_setup_console` and `sll_platform_reset_console`: On Windows, is sets the output mode to binary
-- Fixed memory leak in `sll_add_string` ([#32]) and memory corruption in `sll__add_debug_data` ([#33])
 - Ability to upload the executable to the website
-- JSON module ([#34])
-- New option for updating sll from the CLI (`-U`) ([#35])
+- Bit shifting operators ([#30]): `(<<)` and `(>>)` as well as their `SLL_OBJECT_TYPE_` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_` counterparts (This also includes updates to the syntax highlight)
 - Fixed macro parsing in the builder script
+- Fixed memory leak in `sll_add_string` ([#32]) and memory corruption in `sll__add_debug_data` ([#33])
+- Handles
+- JSON module ([#34])
+- New object creation macro: `SLL_FROM_HANDLE` (and `sll_handle_to_object`)
+- New option for updating sll from the CLI (`-U`) ([#35])
+- New static object: `handle_zero`
+- `sll_current_runtime_data` holds the current runtime data of the program (Can be used to ex. create handle types or write directly to output)
+- `SLL_ERROR_UNRELEASED_OBJECTS` error: Raised when not all objects (allocated during execution of the program) have been `SLL_RELEASE`d
+- `sll_platform_setup_console` and `sll_platform_reset_console`: On Windows, is sets the output mode to binary
+- This Change Log!
 
 #### Handles
 Handles can be used to uniquely identify an object. They are a replacement for `SLL_RUNTIME_TYPE_INT`. They consists of the handle itself (`sll_handle_t`) and a type (`sll_handle_type_t`).
@@ -75,9 +75,9 @@ Handle types can be create by calling `sll_create_handle()` and specifying the n
 If a handles does not have a type (`SLL_UNKNOWN_HANDLE_TYPE`) it has a boolean value of zero. Otherwise, it has a boolean value of one.
 
 ### Changed
-- Renamed top-of-stack variables in [`src/sll/vm.c`][0.6.16/src/sll/vm.c] to `tos`
 - Constant string objects in [`src/sll/vm.c`][0.6.16/src/sll/vm.c] now use part of the user-supplied stack instead of `malloc()`
 - Renamed `SLL_MAX_ARGUMENT_COUNT` to `SLL_MAX_ARG_COUNT`
+- Renamed top-of-stack variables in [`src/sll/vm.c`][0.6.16/src/sll/vm.c] to `tos`
 - `sll_execute_assembly` now expects `sll_runtime_data_t` instead of multiple parameters
 
 ### Removed
@@ -87,20 +87,20 @@ If a handles does not have a type (`SLL_UNKNOWN_HANDLE_TYPE`) it has a boolean v
 ## [0.6.15] - 2021-8-26
 ### Added
 - *\[POSIX only\]* Compilation in debug mode (without `--release` flag) now generates debugging information (gcc `-g` flag)
-- Static objects
-- Object creation functions: `sll_int_to_object`, `sll_float_to_object`
-- Object allocation function: `sll_create_object`
 - If a variable is used before it has been initialized, is is replaced by a zero: `(= x x x x x)` is compiled into `(= x 0 x x x)`
+- Object allocation function: `sll_create_object`
+- Object creation functions: `sll_int_to_object`, `sll_float_to_object`
+- Static objects
 
 #### Static Objects
 It is very inefficient to constantly allocate objects with common values (such as zero). The `SLL_ACQUIRE_STATIC` macro allows to acquire on of the predefined static object (`int_minus_one`, `int_zero`, `int_one`, `int_two`, `int_three`, `int_four`, `float_zero`, `float_one`, `float_half`, `float_third`, `str_zero` and `array_zero`).
 Helper functions (`sll_int_to_object` and `sll_float_to_object`) can be used to automatically convert a C type to either a new or a static object.
 
 ### Changed
+- Changed how runtime objects are allocated, acquired, released and deallocated
+- Combined cleanup functions into single `atexit` function (which calls other functions in the correct order)
 - Fixed Function Macro Parsing
 - `internal_function_t` now uses `sll_char_t[256]` instead of `char[256]`
-- Combined cleanup functions into single `atexit` function (which calls other functions in the correct order)
-- Changed how runtime objects are allocated, acquired, released and deallocated
 - Printing functions now also prints their arguments
 - Signatures of functions that return runtime objects
 
@@ -118,10 +118,10 @@ The `SLL_RELEASE` macro can be used to decrease the object's reference counter.
 The `SLL_RELEASE` macro automatically deallocates the object when its last reference is released. It recycles the object back into the memory pool.
 
 ### Removed
-- The `restrict` keyword (Reverting [#18])
-- `sll_sys_arg_count_t` has been replaced by `sll_integer_t` (it was easy to confuse with `sll_arg_count_t`)
 - Duplicated code in [`src/sll/parse.c`][0.6.15/src/sll/parse.c] and [`src/sll/print.c`][0.6.15/src/sll/print.c]
 - `sll_acquire_object` function
+- `sll_sys_arg_count_t` has been replaced by `sll_integer_t` (it was easy to confuse with `sll_arg_count_t`)
+- The `restrict` keyword (Reverting [#18])
 
 ## [0.6.14] - 2021-8-24
 ### Added
@@ -130,8 +130,8 @@ The `SLL_RELEASE` macro automatically deallocates the object when its last refer
 - The `SLL_VERSION_HAS_SHA` macro is defined when the `SLL_VERSION_SHA` and `SLL_VERSION_FULL_SHA` macros hold the commit sha-1 value
 
 ### Changed
-- Reverted from the BSD 3-Clause License to the MIT License
 - Moved the CLI code into its own folder ([`src/cli/`][0.6.14/src/cli])
+- Reverted from the BSD 3-Clause License to the MIT License
 - The order of arguments in an API function (Used to be `output, argument count, argument data` and now is `argument data, argument count, output`)
 
 ### Removed
@@ -140,77 +140,77 @@ The `SLL_RELEASE` macro automatically deallocates the object when its last refer
 
 ## [0.6.13] - 2021-8-20
 ### Added
-- Time sleeping functions: `sleep`, `sleep_nanos`, `sll_api_time_sleep` and `sll_api_time_sleep_nanos` ([#5])
-- Platform-dependent function `sll_platform_sleep`
-- Object-to-string conversion functions: `sll_object_to_string` and `sll_object_to_string_length`
-- System argument functions (similar to `argv` in C): `sll_set_argument_count` and `sll_set_argument`
-- New type: `sll_sys_arg_count_t`
-- Implemented part of [`src/sll/operator.c`][0.6.13/src/sll/operator.c]
-- Optimization in printing ([#15], [#16] and [#17])
 - Added and/or removed included header files ([#11])
 - Function for adding string to a string list: `sll_add_string`
+- Implemented part of [`src/sll/operator.c`][0.6.13/src/sll/operator.c]
+- New type: `sll_sys_arg_count_t`
+- Object-to-string conversion functions: `sll_object_to_string` and `sll_object_to_string_length`
+- Optimization in printing ([#15], [#16] and [#17])
+- Platform-dependent function `sll_platform_sleep`
+- System argument functions (`argv` in C): `sll_set_argument_count` and `sll_set_argument`
+- Time sleeping functions: `sleep`, `sleep_nanos`, `sll_api_time_sleep` and `sll_api_time_sleep_nanos` ([#5])
 
 ### Changed
 - Build script now does not combine files before compilation ([#12])
-- Renamed `UNREACHABLE` to `SLL_UNREACHABLE`
 - Moved assembly functions into a separate header ([`src/include/sll/assembly.h`][0.6.13/src/include/sll/assembly.h])
 - Moved internal function table functions into a separate header ([`src/include/sll/ift.h`][0.6.13/src/include/sll/ift.h])
 - Moved object-related functions into a separate header ([`src/include/sll/object.h`][0.6.13/src/include/sll/object.h])
+- Renamed `UNREACHABLE` to `SLL_UNREACHABLE`
 - Renamed all API function files to end with a `_api` suffix to avoid name collisions with other files
 
 ### Removed
-- `sll_platform_setup_console` function
 - ANSI escape sequences in error printing (Thus invalidating [#2])
+- `sll_platform_setup_console` function
 
 ## [0.6.12] - 2021-8-19
 ### Added
 - An option to enable ANSI escape codes (`-C`) to color the output
 - An option to print the version of sll (`-V`)
+- Looping operators (`SLL_OBJECT_TYPE_FOR`, `SLL_OBJECT_TYPE_WHILE` and `SLL_OBJECT_TYPE_LOOP`) now store their inner scope id
+- Macros for ternary and quaternary operators
+- New reference-counting based GC for strings and arrays (`sll_array_release` and `sll_string_release` are now `SLL_ACQUIRE`)
+- Proper clean-up code generation after loops
+- Six new assembly instructions: `SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_TWO`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL`
 - The `SLL_VERSION_SHA` and `SLL_VERSION_FULL_SHA` macros hold the current commits' hash
 - Two new operators: length (`$`) and access (`:`) (as well as their `SLL_OBJECT_TYPE_` counterparts)
-- Six new assembly instructions: `SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_TWO`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL`
-- New reference-counting based GC for strings and arrays (`sll_array_release` and `sll_string_release` are now `SLL_ACQUIRE`)
-- Macros for ternary and quaternary operators
-- Proper clean-up code generation after loops
-- Looping operators (`SLL_OBJECT_TYPE_FOR`, `SLL_OBJECT_TYPE_WHILE` and `SLL_OBJECT_TYPE_LOOP`) now store their inner scope id
 
 ### Changed
-- The new file extension for an assembly is `.sla` and for a compiled object `.slc`
 - Changed `SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL` to `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL`
-- Rewritten assembly optimizer
 - Replaced `UINTxx_MAX` with `SLL_MAX_yy` where applicable ([#10])
+- Rewritten assembly optimizer
+- The new file extension for an assembly is `.sla` and for a compiled object `.slc`
 - The test child process now uses a file to communicate its result instead of the piped standard output
 
 ### Removed
 - Heap functions (`sll_allocate_raw`, `sll_deallocate_raw`, `sll_reset_allocator`, `sll_array_release` and `sll_string_release`)
+- Heap-related types and structures
 - The [`src/sll/allocator.c`][0.6.11/src/sll/allocator.c] file
 - The `sll_api_string_ref_count` internal function
-- Heap-related types and structures
 - Unused heap-related macros
 
 ## [0.6.11] - 2021-8-18
 ### Added
-- Support for variadic macros in the build script
-- Macro constants for limits of sll types (`SLL_MAX_xxx`)
 - Functions now store their inner scope id
 - Jump instructions are no longer generated in unreachable locations
+- Macro constants for limits of sll types (`SLL_MAX_xxx`)
+- Support for variadic macros in the build script
 
 ### Changed
-- The sll library is now named `sll-{major}.{minor}.{patch}` instead of `sll`
 - `sll_arg_count_t` and `sll_statement_count_t` are now 32-bit values
+- The sll library is now named `sll-{major}.{minor}.{patch}` instead of `sll`
 
 ### Removed
 - Coverage data is now an experimental feature and has been moved to a [different branch][test-coverage]
 
 ## [0.6.10] - 2021-8-14
 ### Added
-- The build script now parses the [`src/include/sll/version.h`][0.6.10/src/include/sll/version.h] file
+- Arrays
 - Fix for Windows runner in Github Actions
 - Four new API functions: `sll_api_string_convert`, `sll_api_string_length`, `sll_api_string_ref_count` and `sll_api_util_ref_count`
-- Object to string conversion functions: `sll_object_to_string` and `sll_object_to_string_length`
-- Arrays
-- Four new errors: `SLL_ERROR_UNMATCHED_ARRAY_OPEN_BRACKETS`, `SLL_ERROR_UNMATCHED_ARRAY_CLOSE_BRACKETS`, `SLL_ERROR_ARRAY_TOO_LONG` and `SLL_ERROR_INVALID_STACK_INDEX`
 - Four new assembly instructions: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL`
+- Four new errors: `SLL_ERROR_UNMATCHED_ARRAY_OPEN_BRACKETS`, `SLL_ERROR_UNMATCHED_ARRAY_CLOSE_BRACKETS`, `SLL_ERROR_ARRAY_TOO_LONG` and `SLL_ERROR_INVALID_STACK_INDEX`
+- Object to string conversion functions: `sll_object_to_string` and `sll_object_to_string_length`
+- The build script now parses the [`src/include/sll/version.h`][0.6.10/src/include/sll/version.h] file
 - Variables are now released after their last reference
 
 #### Arrays
@@ -218,26 +218,26 @@ Literally, just arrays.
 
 ### Changed
 - `ASSERT` has been renamed to `SLL_ASSERT`
-- Operators were moved to a separate file ([`src/sll/operator.c`][0.6.10/src/sll/operator.c])
-- String heap functions were renamed to generic allocator functions and are now used by both arrays and strings
-- [`src/sll/string_heap.c`][0.6.9/src/sll/string_heap.c] was split into [`src/sll/allocator.c`][0.6.10/src/sll/allocator.c] and [`src/sll/string.c`][0.6.10/src/sll/string.c]
 - `memcpy()` is now used instead of loops
+- Operators were moved to a separate file ([`src/sll/operator.c`][0.6.10/src/sll/operator.c])
+- [`src/sll/string_heap.c`][0.6.9/src/sll/string_heap.c] was split into [`src/sll/allocator.c`][0.6.10/src/sll/allocator.c] and [`src/sll/string.c`][0.6.10/src/sll/string.c]
+- String heap functions were renamed to generic allocator functions and are now used by both arrays and strings
 
 ## [0.6.9] - 2021-8-12
-**Name Change: From _Lisp Like Language_ to _Sl Lang_ !!!**
+**Name Change: From *Lisp Like Language* to *Sl Lang* !!!**
 
 ### Added
-- Test runner
+- New operator: variable declaration (`(#)`)
 - `SLL_MAX_ERROR` macro constant
 - String heap allocator
-- New operator: variable declaration (`(#)`)
+- Test runner
 
 ### Changed
+- `sll_platform_free_page` now takes the page size as the second parameter
 - Renamed [`src/include/lll`][0.6.8/src/include/lll] to [`src/include/sll`][0.6.9/src/include/sll]
 - Renamed [`src/lll`][0.6.8/src/lll] to [`src/sll`][0.6.9/src/sll]
 - Renamed all functions and macros
 - Split [`src/_build/main.py`][0.6.8/src/_build/main.py] into [`src/_build/build.py`][0.6.9/src/_build/build.py], [`src/_build/header.py`][0.6.9/src/_build/header.py], [`src/_build/main.py`][0.6.9/src/_build/main.py] and [`src/_build/util.py`][0.6.9/src/_build/util.py]
-- `sll_platform_free_page` now takes the page size as the second parameter
 
 ### Removed
 - Unused file: [`build.py`][0.6.8/build.py]
@@ -248,36 +248,36 @@ Literally, just arrays.
 
 ## [0.6.7] - 2021-8-7
 ### Added
+- New type: `lll_bool_t`
 - Path-related functions: `lll_api_path_absolute`, `lll_api_path_exists`, `lll_api_path_is_dir`, `lll_api_path_relative` and `lll_api_path_size`
 - Platform-dependent path functions: `lll_platform_path_absolute`, `lll_platform_path_exists` and `lll_platform_path_is_directory`
-- New type: `lll_bool_t`
 
 ### Changed
 - Minor fixes to the build script
 
 ## [0.6.6] - 2021-8-7
 ### Added
-- More verbose logs generated
-- The ability to pass arguments into the VM (`-A` option, `lll_set_argument_count` and `lll_set_argument` functions)
 - A static zero-length string to reduce object allocation
-- Two new assembly instructions: `LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO` and `LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE`
-- String release function (`lll_string_release`)
+- More verbose logs generated
 - Platform name string (`lll_platform_string`)
+- String release function (`lll_string_release`)
+- The ability to pass arguments into the VM (`-A` option, `lll_set_argument_count` and `lll_set_argument` functions)
+- Two new assembly instructions: `LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO` and `LLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE`
 
 ### Changed
-- The build script properly indents output from child processes
 - Renamed [`src/lll_lib`][0.6.5/src/lll_lib] to [`src/lll`][0.6.6/src/lll]
-- Updated the optimizer
+- The build script properly indents output from child processes
 - Updated the assembly optimizer
+- Updated the optimizer
 
 ### Removed
-- Unused file constants: `LLL_API_FILE_APPEND`, `LLL_API_FILE_READ` and `LLL_API_FILE_WRITE`
 - String comparison and conversion functions
+- Unused file constants: `LLL_API_FILE_APPEND`, `LLL_API_FILE_READ` and `LLL_API_FILE_WRITE`
 
 ## [0.6.5] - 2021-8-3
 ### Added
-- Standalone compilation mode
 - Ability to create an input stream from a buffer (`lll_stream_create_input_from_buffer`)
+- Standalone compilation mode
 
 ### Changed
 - Rewritten [`build.py`][0.6.5/build.py]
@@ -291,38 +291,38 @@ Literally, just arrays.
 
 ### Changed
 - Minor tweaks & changes to the build script and cli program
-- Split [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h] into [`src/include/lll/io.h`][0.6.4/src/include/lll/io.h], [`src/include/lll/stream.h`][0.6.4/src/include/lll/stream.h] and [`src/include/lll/string.h`][0.6.4/src/include/lll/string.h]
 - Moved console setup code to `lll_platform_setup_console`
 - Renamed `time_current` and `time_current_nanos` into `time` and `time_nanos`
+- Split [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h] into [`src/include/lll/io.h`][0.6.4/src/include/lll/io.h], [`src/include/lll/stream.h`][0.6.4/src/include/lll/stream.h] and [`src/include/lll/string.h`][0.6.4/src/include/lll/string.h]
 
 ## [0.6.3] - 2021-8-2
 ### Added
-- The `INTERNAL_FUNCTION` macro can be used to declare default internal function
 - `sll_api_get_time_float` function
 - Support for floating-point values
+- The `INTERNAL_FUNCTION` macro can be used to declare default internal function
 - The CLI tries to load each file as a compiled object (`<file>.lllc`)
 
 ### Changed
-- Removed duplications in the builder script
 - `__SLL_IMPORT_EXPORT` has been renamed to `__SLL_FUNC`
-- Split [`src/include/lll_lib.h`][0.6.2/src/include/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
-- Renamed [`src/include/lll_lib_api.h`][0.6.2/src/include/lll_lib_api.h] and [`src/include/version.h`][0.6.2/src/include/version.h] to [`src/include/lll/api.h`][0.6.3/src/include/lll/api.h] and [`src/include/lll/version.h`][0.6.3/src/include/lll/version.h]
 - Moved platform-dependent code to [`src/lll_lib/platform/linux.c`][0.6.3/src/lll_lib/platform/linux.c] and [`src/lll_lib/platform/windows.c`][0.6.3/src/lll_lib/platform/windows.c]
+- Removed duplications in the builder script
+- Renamed [`src/include/lll_lib_api.h`][0.6.2/src/include/lll_lib_api.h] and [`src/include/version.h`][0.6.2/src/include/version.h] to [`src/include/lll/api.h`][0.6.3/src/include/lll/api.h] and [`src/include/lll/version.h`][0.6.3/src/include/lll/version.h]
+- Split [`src/include/lll_lib.h`][0.6.2/src/include/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
 
 ## [0.6.2] - 2021-8-1
 ### Added
-- New operator: `(--)` (import)
 - Implemented identifier exporting (the `(##)` operator)
 - `LLL_ASSEMBLY_INSTRUCTION)TYPE_CALL_POP` instruction
+- New operator: `(--)` (import)
 
 ### Changed
-- Internal function `time` has been renamed to `time_current`
 - Bugs in the optimizer have been fixed
+- Internal function `time` has been renamed to `time_current`
 - `lll_parse_all_object` not requires a function used to load external files
 
 ### Removed
-- Types and functions related to import tables
 - Option to merge modules (`-m`). Modules are now merged automatically
+- Types and functions related to import tables
 
 ## [0.6.1] - 2021-8-1
 ### Added
@@ -334,33 +334,33 @@ Literally, just arrays.
 
 ## [0.6.0] - 2021-7-31
 ### Added
-- Internal functions
-- [`src/include/lll_lib_api.h`][0.6.0/src/include/lll_lib_api.h]
-- `lll_api_get_time` function in [`src/lll_lib/api/time.c`][0.6.0/src/lll_lib/api/time.c]
-- [`src/lll_lib/lib/time.lll`][0.6.0/src/lll_lib/lib/time.lll]
 - CLI tries to load files from the `<executable_directory>/lib/` directory
+- Internal functions
+- `lll_api_get_time` function in [`src/lll_lib/api/time.c`][0.6.0/src/lll_lib/api/time.c]
+- [`src/include/lll_lib_api.h`][0.6.0/src/include/lll_lib_api.h]
+- [`src/lll_lib/lib/time.lll`][0.6.0/src/lll_lib/lib/time.lll]
 
 ### Changed
 - Fixed the builder script
 
 ## [0.5.2] - 2021-7-31
 ### Changed
+- `(@@)` (return) operator now compiles into the exit operator (`(@)`) if it is used outside of a function
 - `ASSERT` macro now only works in debug builds
 - VM now uses a call stack instead of the `LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II` instruction
-- `(@@)` (return) operator now compiles into the exit operator (`(@)`) if it is used outside of a function
 - VM now uses a stack index instead of a moving pointer
 
 ## [0.5.1] - 2021-7-30
 ### Changed
-- `lll_compare_runtime_object`, `lll_create_string`, `lll_runtime_object_size` and `lll_runtime_object_nonzero` functions are now public
 - Function `lll_run_assembly` has been renamed to `lll_execute_assembly`
+- `lll_compare_runtime_object`, `lll_create_string`, `lll_runtime_object_size` and `lll_runtime_object_nonzero` functions are now public
 - Runtime object functions (`lll_compare_runtime_object` and `lll_runtime_object_nonzero`) have been moved to [`src/lll_lib/object.c`][0.5.1/src/lll_lib/object.c]
 
 ## [0.5.0] - 2021-7-30
 ### Added
-- Two new operators: `(>-)` (do-while loop) and `(><)` (infinite loop)
 - Assembly instructions used to store small integer values (`-1`, `0`, `1`, `2`, `3` and `4`)
 - `lll_optimize_object` function
+- Two new operators: `(>-)` (do-while loop) and `(><)` (infinite loop)
 
 ### Changed
 - Every single object uses the same structure
@@ -373,9 +373,9 @@ Literally, just arrays.
 ## [0.4.1] - 2021-7-29
 ### Added
 - A level-3 optimization (`-O3`), which performs global optimization of the compiled object
-- `LLL_ASSEMBLY_INSTRUCTION_TYPE_POP_ROT` instruction
 - Assembly instructions for returning diffrent types
 - Errors related to invalid instructions, stack corruption and an invalid instruction index
+- `LLL_ASSEMBLY_INSTRUCTION_TYPE_POP_ROT` instruction
 - Two new operators: `(@)` (exit) and `(@@)` (return)
 
 ### Chagned
@@ -384,8 +384,8 @@ Literally, just arrays.
 
 ### Removed
 - `LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NIL` instruction
-- `LLL_RUNTIME_OBJECT_TYPE_TRUE` and `LLL_RUNTIME_OBJECT_TYPE_FALSE` runtime object types
 - `lll_optimize_object` function
+- `LLL_RUNTIME_OBJECT_TYPE_TRUE` and `LLL_RUNTIME_OBJECT_TYPE_FALSE` runtime object types
 
 ## [0.4.0] - 2021-7-28
 ### Added
@@ -393,8 +393,8 @@ Literally, just arrays.
 - Implemented `lll_run_assembly`
 
 ### Changed
-- Assembly instruction that modify the instruction index can jump to relative offsets
 - Assembly instruction data is now saved and read from files
+- Assembly instruction that modify the instruction index can jump to relative offsets
 
 ### Removed
 - Unimplemented language-generation functions and CLI arguments
@@ -402,14 +402,14 @@ Literally, just arrays.
 ## [0.3.5] - 2021-7-28
 ### Added
 - Ability to save the generated assembly code (option `-a`)
-- Option for printing assembly (`-P`)
 - Assembly generator and related structures, types, functions and macros
+- Option for printing assembly (`-P`)
 
 ## [0.3.4] - 2021-7-27
 ### Added
-- Option for saving the compiled object (`-c`)
-- Option for language generation (`-g`)
 - `lll_optimize_metadata` function
+- Option for language generation (`-g`)
+- Option for saving the compiled object (`-c`)
 
 ## [0.3.3] - 2021-7-26
 ### Added
@@ -420,8 +420,8 @@ Literally, just arrays.
 
 ## [0.3.2] - 2021-7-25
 ### Added
-- `lll_merge_import` function merges string
 - `_create_string` function
+- `lll_merge_import` function merges string
 
 ### Changed
 - Renamed `uintXX_t` to custom types
@@ -445,9 +445,9 @@ Literally, just arrays.
 
 ## [0.2.2] - 2021-7-23
 ### Changed
-- Renamed some options
 - All object are now 8-byte alignemd
 - Identifier listist comparasion has been sped up
+- Renamed some options
 
 ## [0.2.1] - 2021-7-3
 ### Added
@@ -472,8 +472,8 @@ Literally, just arrays.
 
 ## [0.1.11] - 2021-7-2
 ### Changed
-- Rewritten help documentation
 - CLI now executes the code by default
+- Rewritten help documentation
 
 ## [0.1.10] - 2021-7-1
 ### Changed
@@ -524,8 +524,8 @@ Literally, just arrays.
 
 ## [0.1.3] - 2021-6-16
 ### Added
-- Versions!
 - Options for printing the help message
+- Versions!
 
 ## [0.1.2] - 2021-6-15
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
@@ -634,7 +634,6 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.3/src/include/lll/api.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/api.h
 [0.6.3/src/include/lll/common.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/common.h
 [0.6.3/src/include/lll/constants.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/constants.h
-[0.6.3/src/include/lll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/core.h
 [0.6.3/src/include/lll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/core.h
 [0.6.3/src/include/lll/platform.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/platform.h
 [0.6.3/src/include/lll/types.h]: https://github.com/sl-lang/sll/blob/v0.6.3/src/include/lll/types.h
