@@ -4,10 +4,12 @@
 ### Added
 - `sll_init` and `sll_deinit` functions
 - Code generated for API functions is now located in [`src/sll/api/_generated.c`][main/src/sll/api/_generated.c]
+- Useless assembly code (`STORE $xx & POP,LOAD $xx & DEL`) is removed
 
 ### Changed
 - `sll_error_t` now uses `sll_char_t` instead of `char`
 - Marked internal CLI variables & function as `static`
+- Function arguments will now shadow other variables instaed of overriding them
 
 ## [0.6.17] - 2021-9-9
 ### Added

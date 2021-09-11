@@ -82,6 +82,7 @@
 (= v 5.943)
 (:> "Round Down: " v " -> " (:: v int_type) "\n")
 (:> "€\n")
+(<- (,,, f (<- f)) (,,, (:> "Inner Call\n")))
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@ false)

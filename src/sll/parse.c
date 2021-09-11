@@ -1103,32 +1103,33 @@ _read_identifier:
 						sll_identifier_list_t* k=c_dt->idt.s+sz-1;
 						sll_scope_t mx_sc=SLL_MAX_SCOPE;
 						sll_identifier_index_t mx_i=0;
-						for (sll_identifier_list_length_t i=0;i<k->l;i++){
-							sll_identifier_t* si=k->dt+i;
-							sll_string_t* si_s=c_dt->st.dt+si->i;
-							if (si_s->c!=cs||si->sc==SLL_MAX_SCOPE){
-								continue;
-							}
-							for (sll_string_length_t j=0;j<sz;j++){
-								if (*(str+j)!=si_s->v[j]){
-									goto _next_short_identifier;
+						if (o->t!=SLL_OBJECT_TYPE_FUNC){
+							for (sll_identifier_list_length_t i=0;i<k->l;i++){
+								sll_identifier_t* si=k->dt+i;
+								sll_string_t* si_s=c_dt->st.dt+si->i;
+								if (si_s->c!=cs||si->sc==SLL_MAX_SCOPE){
+									continue;
 								}
+								for (sll_string_length_t j=0;j<sz;j++){
+									if (*(str+j)!=si_s->v[j]){
+										goto _next_short_identifier;
+									}
+								}
+								if (si->sc==l_sc->l_sc){
+									arg->dt.id=SLL_CREATE_IDENTIFIER(i,sz-1);
+									goto _check_new_variable;
+								}
+								else if ((l_sc->m[si->sc>>6]&(1ull<<(si->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||si->sc>mx_sc)){
+									mx_sc=si->sc;
+									mx_i=SLL_CREATE_IDENTIFIER(i,sz-1);
+								}
+_next_short_identifier:;
 							}
-							if (si->sc==l_sc->l_sc){
-								arg->dt.id=SLL_CREATE_IDENTIFIER(i,sz-1);
+							if (mx_sc!=SLL_MAX_SCOPE){
+								arg->dt.id=mx_i;
 								goto _check_new_variable;
 							}
-							else if ((l_sc->m[si->sc>>6]&(1ull<<(si->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||si->sc>mx_sc)){
-								mx_sc=si->sc;
-								mx_i=SLL_CREATE_IDENTIFIER(i,sz-1);
-							}
-_next_short_identifier:;
-						}
-						if (mx_sc!=SLL_MAX_SCOPE){
-							arg->dt.id=mx_i;
-						}
-						else{
-							if ((o->t!=SLL_OBJECT_TYPE_ASSIGN||ac)&&o->t!=SLL_OBJECT_TYPE_FUNC&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
+							if ((o->t!=SLL_OBJECT_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
 								e->t=SLL_ERROR_UNKNOWN_IDENTIFIER;
 								e->dt.r.off=arg_s;
 								e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1137,48 +1138,49 @@ _next_short_identifier:;
 								}
 								return SLL_RETURN_ERROR;
 							}
-							k->l++;
-							k->dt=realloc(k->dt,k->l*sizeof(sll_identifier_t));
-							(k->dt+k->l-1)->sc=l_sc->l_sc;
-							(k->dt+k->l-1)->i=sll_create_string(&(c_dt->st),str,sz);
-							arg->dt.id=SLL_CREATE_IDENTIFIER(k->l-1,sz-1);
-							if (o->t==SLL_OBJECT_TYPE_ASSIGN){
-								e_c_dt->nv_dt->sz++;
-								e_c_dt->nv_dt->dt=realloc(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_object_t*));
-								*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)=arg;
-							}
-							goto _identifier_created;
 						}
+						k->l++;
+						k->dt=realloc(k->dt,k->l*sizeof(sll_identifier_t));
+						(k->dt+k->l-1)->sc=l_sc->l_sc;
+						(k->dt+k->l-1)->i=sll_create_string(&(c_dt->st),str,sz);
+						arg->dt.id=SLL_CREATE_IDENTIFIER(k->l-1,sz-1);
+						if (o->t==SLL_OBJECT_TYPE_ASSIGN){
+							e_c_dt->nv_dt->sz++;
+							e_c_dt->nv_dt->dt=realloc(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_object_t*));
+							*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)=arg;
+						}
+						goto _identifier_created;
 					}
 					else{
 						sll_scope_t mx_sc=SLL_MAX_SCOPE;
 						sll_identifier_index_t mx_i=0;
-						for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
-							sll_identifier_t* k=c_dt->idt.il+i;
-							sll_string_t* s=c_dt->st.dt+k->i;
-							if (s->c!=cs||s->l!=sz||k->sc==SLL_MAX_SCOPE){
-								continue;
-							}
-							for (sll_string_length_t j=0;j<sz;j++){
-								if (*(str+j)!=s->v[j]){
-									goto _next_long_identifier;
+						if (o->t!=SLL_OBJECT_TYPE_FUNC){
+							for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
+								sll_identifier_t* k=c_dt->idt.il+i;
+								sll_string_t* s=c_dt->st.dt+k->i;
+								if (s->c!=cs||s->l!=sz||k->sc==SLL_MAX_SCOPE){
+									continue;
 								}
+								for (sll_string_length_t j=0;j<sz;j++){
+									if (*(str+j)!=s->v[j]){
+										goto _next_long_identifier;
+									}
+								}
+								if (k->sc==l_sc->l_sc){
+									arg->dt.id=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
+									goto _check_new_variable;
+								}
+								else if ((l_sc->m[k->sc>>6]&(1ull<<(k->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||k->sc>mx_sc)){
+									mx_sc=k->sc;
+									mx_i=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
+								}
+_next_long_identifier:;
 							}
-							if (k->sc==l_sc->l_sc){
-								arg->dt.id=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
+							if (mx_sc!=SLL_MAX_SCOPE){
+								arg->dt.id=mx_i;
 								goto _check_new_variable;
 							}
-							else if ((l_sc->m[k->sc>>6]&(1ull<<(k->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||k->sc>mx_sc)){
-								mx_sc=k->sc;
-								mx_i=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
-							}
-_next_long_identifier:;
-						}
-						if (mx_sc!=SLL_MAX_SCOPE){
-							arg->dt.id=mx_i;
-						}
-						else{
-							if ((o->t!=SLL_OBJECT_TYPE_ASSIGN||ac)&&o->t!=SLL_OBJECT_TYPE_FUNC&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
+							if ((o->t!=SLL_OBJECT_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
 								e->t=SLL_ERROR_UNKNOWN_IDENTIFIER;
 								e->dt.r.off=arg_s;
 								e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1187,18 +1189,18 @@ _next_long_identifier:;
 								}
 								return SLL_RETURN_ERROR;
 							}
-							c_dt->idt.ill++;
-							c_dt->idt.il=realloc(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
-							(c_dt->idt.il+c_dt->idt.ill-1)->sc=l_sc->l_sc;
-							(c_dt->idt.il+c_dt->idt.ill-1)->i=sll_create_string(&(c_dt->st),str,sz);
-							arg->dt.id=SLL_CREATE_IDENTIFIER(c_dt->idt.ill-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
-							if (o->t==SLL_OBJECT_TYPE_ASSIGN){
-								e_c_dt->nv_dt->sz++;
-								e_c_dt->nv_dt->dt=realloc(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_object_t*));
-								*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)=arg;
-							}
-							goto _identifier_created;
 						}
+						c_dt->idt.ill++;
+						c_dt->idt.il=realloc(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
+						(c_dt->idt.il+c_dt->idt.ill-1)->sc=l_sc->l_sc;
+						(c_dt->idt.il+c_dt->idt.ill-1)->i=sll_create_string(&(c_dt->st),str,sz);
+						arg->dt.id=SLL_CREATE_IDENTIFIER(c_dt->idt.ill-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
+						if (o->t==SLL_OBJECT_TYPE_ASSIGN){
+							e_c_dt->nv_dt->sz++;
+							e_c_dt->nv_dt->dt=realloc(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_object_t*));
+							*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)=arg;
+						}
+						goto _identifier_created;
 					}
 _check_new_variable:;
 					for (uint32_t i=0;i<e_c_dt->nv_dt->sz;i++){
