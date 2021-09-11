@@ -102,32 +102,32 @@
 
 
 
-uint8_t a_st[ASSEMBLY_STACK_SIZE];
-uint8_t c_st[COMPILER_STACK_SIZE];
-uint8_t vm_st[VM_STACK_SIZE];
-uint8_t ol;
-uint16_t fl;
-char* i_fp;
-uint32_t i_fpl;
-char** fp;
-uint32_t fpl;
-char l_fp[MAX_PATH_LENGTH];
-uint32_t l_fpl;
+static uint8_t a_st[ASSEMBLY_STACK_SIZE];
+static uint8_t c_st[COMPILER_STACK_SIZE];
+static uint8_t vm_st[VM_STACK_SIZE];
+static uint8_t ol;
+static uint16_t fl;
+static char* i_fp;
+static uint32_t i_fpl;
+static char** fp;
+static uint32_t fpl;
+static char l_fp[MAX_PATH_LENGTH];
+static uint32_t l_fpl;
 #ifdef STANDALONE_BUILD
-sll_input_buffer_t m_i_bf;
+static sll_input_buffer_t m_i_bf;
 #endif
-sll_internal_function_table_t i_ft;
+static sll_internal_function_table_t i_ft;
 #ifdef _MSC_VER
-DWORD cm;
+static DWORD cm;
 #endif
 
 
 
-uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp);
+static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp);
 
 
 
-void print_str(const char* s){
+static void print_str(const char* s){
 	while (*s){
 		putchar(*s);
 		s++;
@@ -136,7 +136,7 @@ void print_str(const char* s){
 
 
 
-void print_int(int64_t v){
+static void print_int(int64_t v){
 	if (!v){
 		putchar('0');
 		return;
@@ -160,7 +160,7 @@ void print_int(int64_t v){
 
 
 
-sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
+static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
 	char bf[MAX_PATH_LENGTH];
 	for (sll_string_length_t m=0;m<nm->l;m++){
 		bf[m]=nm->v[m];
@@ -199,7 +199,7 @@ sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_er
 
 
 
-uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp){
+static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp){
 	char bf[MAX_PATH_LENGTH];
 	uint32_t j=0;
 	for (uint32_t i=0;i<i_fpl;i++){
@@ -488,7 +488,7 @@ _check_next_module:;
 
 
 
-uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
+static uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 	uint16_t i=0;
 	while (*(o_fp+i)){
 		i++;
@@ -524,7 +524,7 @@ uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 
 
 
-uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
+static uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
 	uint16_t i=0;
 	while (*(o_fp+i)){
 		i++;
@@ -560,7 +560,7 @@ uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
 
 
 
-uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_input_data_stream_t* is,const char* o_fp,int* ec){
+static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_input_data_stream_t* is,const char* o_fp,int* ec){
 	if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
 		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
 			if (fl&FLAG_VERBOSE){

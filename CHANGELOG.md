@@ -7,6 +7,7 @@
 
 ### Changed
 - `sll_error_t` now uses `sll_char_t` instead of `char`
+- Marked internal CLI variables & function as `static`
 
 ## [0.6.17] - 2021-9-9
 ### Added
