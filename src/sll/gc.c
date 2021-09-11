@@ -60,7 +60,9 @@ __SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,con
 		}
 		_gc_dbg_dtl++;
 		SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DBG_ID);
-		_gc_dbg_dt=realloc(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
+		void* tmp=realloc(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
+		SLL_ASSERT(tmp||!"Unable to Reallocate Debug Data Array");
+		_gc_dbg_dt=tmp;
 _found_index:
 		o->_dbg0=i&0xffff;
 		o->_dbg1=i>>16;

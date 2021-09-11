@@ -40,8 +40,8 @@ Each API function is now split into two parts: `sll_api_XXX` and `sll_api_XXX_ra
 - `sll_handle_descriptor_t` can also specify a `sll_handle_stringify_t` function
 
 ### Removed
-- `__SLL_RETURN_xxx` macros from [`src/include/sll/common.h`][0.6.17/src/include/sll/common.h]
 - `sll_init` function has been replaced by platform-dependent code to automatically set-up the console
+- `__SLL_RETURN_xxx` macros from [`src/include/sll/common.h`][0.6.17/src/include/sll/common.h]
 
 ## [0.6.16] - 2021-8-30
 ### Added
@@ -233,11 +233,11 @@ Literally, just arrays.
 - Test runner
 
 ### Changed
-- `sll_platform_free_page` now takes the page size as the second parameter
 - Renamed [`src/include/lll`][0.6.8/src/include/lll] to [`src/include/sll`][0.6.9/src/include/sll]
 - Renamed [`src/lll`][0.6.8/src/lll] to [`src/sll`][0.6.9/src/sll]
 - Renamed all functions and macros
 - Split [`src/_build/main.py`][0.6.8/src/_build/main.py] into [`src/_build/build.py`][0.6.9/src/_build/build.py], [`src/_build/header.py`][0.6.9/src/_build/header.py], [`src/_build/main.py`][0.6.9/src/_build/main.py] and [`src/_build/util.py`][0.6.9/src/_build/util.py]
+- `sll_platform_free_page` now takes the page size as the second parameter
 
 ### Removed
 - Unused file: [`build.py`][0.6.8/build.py]
@@ -303,10 +303,10 @@ Literally, just arrays.
 - The CLI tries to load each file as a compiled object (`<file>.lllc`)
 
 ### Changed
-- `__SLL_IMPORT_EXPORT` has been renamed to `__SLL_FUNC`
 - Moved platform-dependent code to [`src/lll_lib/platform/linux.c`][0.6.3/src/lll_lib/platform/linux.c] and [`src/lll_lib/platform/windows.c`][0.6.3/src/lll_lib/platform/windows.c]
 - Removed duplications in the builder script
 - Renamed [`src/include/lll_lib_api.h`][0.6.2/src/include/lll_lib_api.h] and [`src/include/version.h`][0.6.2/src/include/version.h] to [`src/include/lll/api.h`][0.6.3/src/include/lll/api.h] and [`src/include/lll/version.h`][0.6.3/src/include/lll/version.h]
+- `__SLL_IMPORT_EXPORT` has been renamed to `__SLL_FUNC`
 - Split [`src/include/lll_lib.h`][0.6.2/src/include/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
 
 ## [0.6.2] - 2021-8-1
@@ -345,7 +345,7 @@ Literally, just arrays.
 
 ## [0.5.2] - 2021-7-31
 ### Changed
-- `(@@)` (return) operator now compiles into the exit operator (`(@)`) if it is used outside of a function
+- `(@@)` (return) operator now compiles into the exit operator (`(@)`) if used outside of a function
 - `ASSERT` macro now only works in debug builds
 - VM now uses a call stack instead of the `LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II` instruction
 - VM now uses a stack index instead of a moving pointer
@@ -433,7 +433,7 @@ Literally, just arrays.
 
 ## [0.3.0] - 2021-7-25
 ### Changed
--  Integers are now encoded differently
+- Integers are now encoded differently
 
 ## [0.2.3] - 2021-7-25
 ### Changed
