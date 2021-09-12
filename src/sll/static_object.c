@@ -102,3 +102,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_floa
 	o->dt.f=v;
 	return o;
 }
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_char_to_object(sll_char_t v){
+	sll_runtime_object_t* o=sll_create_object();
+	o->t=SLL_RUNTIME_OBJECT_TYPE_CHAR;
+	o->dt.c=v;
+	return o;
+}

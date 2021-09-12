@@ -145,15 +145,17 @@ __SLL_OPERATOR_UNARY(inc){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(a->dt.i+1);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			SLL_UNIMPLEMENTED();
+			return SLL_FROM_FLOAT(a->dt.f+1);
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-			SLL_UNIMPLEMENTED();
+			return SLL_FROM_CHAR(a->dt.c+1);
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h+1);
+		case SLL_RUNTIME_OBJECT_TYPE_MAP:
+			SLL_UNIMPLEMENTED();
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -167,15 +169,17 @@ __SLL_OPERATOR_UNARY(dec){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(a->dt.i-1);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			SLL_UNIMPLEMENTED();
+			return SLL_FROM_FLOAT(a->dt.f-1);
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-			SLL_UNIMPLEMENTED();
+			return SLL_FROM_CHAR(a->dt.c-1);
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-1);
+		case SLL_RUNTIME_OBJECT_TYPE_MAP:
+			SLL_UNIMPLEMENTED();
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -191,10 +195,20 @@ __SLL_OPERATOR_BINARY(add){
 			return SLL_FROM_INT(a->dt.i+b->dt.i);
 		case COMBINED_TYPE_IF:
 			return SLL_FROM_FLOAT(a->dt.i+b->dt.f);
+		case COMBINED_TYPE_IC:
+			return SLL_FROM_INT(a->dt.i+b->dt.c);
 		case COMBINED_TYPE_IH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i+b->dt.h.h);
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_FLOAT(a->dt.f+b->dt.f);
+		case COMBINED_TYPE_FC:
+			return SLL_FROM_FLOAT(a->dt.f+b->dt.c);
+		case COMBINED_TYPE_FH:
+			return SLL_FROM_FLOAT(a->dt.f+b->dt.h.h);
+		case COMBINED_TYPE_CC:
+			return SLL_FROM_CHAR(a->dt.c+b->dt.c);
+		case COMBINED_TYPE_CH:
+			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c+b->dt.h.h);
 		case COMBINED_TYPE_SS:
 			{
 				sll_string_t sa=a->dt.s;
@@ -210,6 +224,11 @@ __SLL_OPERATOR_BINARY(add){
 				memcpy(o->dt.s.v+sa.l,sb.v,sb.l);
 				return o;
 			}
+		case COMBINED_TYPE_HH:
+			if (a->dt.h.t==b->dt.h.t){
+				return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h+b->dt.h.h);
+			}
+			return SLL_FROM_INT(a->dt.h.h+b->dt.h.h);
 		default:
 			SLL_UNIMPLEMENTED();
 	}
@@ -371,6 +390,8 @@ __SLL_OPERATOR_UNARY(inv){
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+			SLL_UNIMPLEMENTED();
+		case SLL_RUNTIME_OBJECT_TYPE_MAP:
 			SLL_UNIMPLEMENTED();
 		default:
 			SLL_UNREACHABLE();

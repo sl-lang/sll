@@ -3,9 +3,11 @@
 ## [0.6.18] - Ongoing
 ### Added
 - API function signatures (argumetns and return types) are now stored in [`src/include/sll/_api_generated.h`][main/src/include/sll/_api_generated.h]
-- Code generated for API functions is now located in [`src/sll/api/_generated.c`][main/src/sll/api/_generated.c]
-- `sll_init` and `sll_deinit` functions
 - Builder script option for generating code & signatures for API functions (`--generate-api`)
+- Code generated for API functions is now located in [`src/sll/api/_generated.c`][main/src/sll/api/_generated.c]
+- Implemented a bigger part of [`src/sll/operator.c`][main/src/sll/operator.c]
+- Macro for creating an object from a `sll_char_t` value: `SLL_FROM_CHAR`
+- `sll_init`, `sll_deinit` and `sll_char_to_object` functions
 - Useless assembly code (`STORE $xx & POP,LOAD $xx & DEL`) is removed
 
 ### Changed
@@ -600,6 +602,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [main/src/include/sll/_api_generated.h]: https://github.com/sl-lang/sll/blob/main/src/include/sll/_api_generated.h
 [main/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/_generated.c
+[main/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/main/src/sll/operator.c
 [0.6.17/src/include/sll/common.h]: https://github.com/sl-lang/sll/blob/v0.6.17/src/include/sll/common.h
 [0.6.16/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/operator.c
 [0.6.16/src/sll/vm.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/vm.c
