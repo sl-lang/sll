@@ -12,6 +12,7 @@ HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z0-9_]+\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^>]*\")\s*$""",re.MULTILINE)
+INTERNAL_SLL_HEADER="_sll_internal.h"
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
 MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
@@ -132,7 +133,7 @@ def parse_header(fp,vb):
 	o=b""
 	il=[]
 	for f in os.listdir(fp):
-		if (f[0]!="_" and f[-2:]==".h"):
+		if (f[-2:]==".h" and f!=INTERNAL_SLL_HEADER):
 			with open(fp+"/"+f,"rb") as rf:
 				il.append(bytes(f,"utf-8"))
 				dt=rf.read()
@@ -148,7 +149,7 @@ def parse_header(fp,vb):
 
 
 
-def generate_header(h_dt,c_m):
+def generate_header(h_dt,cm):
 	l=[]
 	st=[True]
 	tm=datetime.datetime.now()
@@ -156,7 +157,8 @@ def generate_header(h_dt,c_m):
 	if (os.getenv("GITHUB_SHA") is not None):
 		dm[b"__SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")[:7]+"\"","utf-8")
 		dm[b"__FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")
-	dm.update(c_m)
+	for k in cm:
+		dm[k]=b"1"
 	dfm={}
 	d_v=[]
 	d_f=[]

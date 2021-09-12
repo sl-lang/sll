@@ -4,15 +4,12 @@ import util
 
 
 
-def build_sll(fl,v,d_cm,vb,r):
+def build_sll(fl,v,vb,r):
 	nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
 		e_fl=(["/D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","/D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])
-		for k,v in d_cm.items():
-			e_fl.append("/D")
-			e_fl.append(k+"="+v.replace("\\","\\\\").replace("\"","\\\""))
 		if (r):
 			if (vb):
 				print("  Compiling Library Files (Release Mode)...")
@@ -57,9 +54,6 @@ def build_sll(fl,v,d_cm,vb,r):
 				sys.exit(1)
 	else:
 		e_fl=(["-D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","-D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])
-		for k,v in d_cm.items():
-			e_fl.append("-D")
-			e_fl.append(k+"="+v.replace("\\","\\\\").replace("\"","\\\""))
 		if (r):
 			if (vb):
 				print("  Compiling Library Files (Release Mode)...")

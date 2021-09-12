@@ -2,8 +2,10 @@
 
 ## [0.6.18] - Ongoing
 ### Added
+- API function signatures (argumetns and return types) are now stored in [`src/include/sll/_api_generated.h`][main/src/include/sll/_api_generated.h]
 - Code generated for API functions is now located in [`src/sll/api/_generated.c`][main/src/sll/api/_generated.c]
 - `sll_init` and `sll_deinit` functions
+- Builder script option for generating code & signatures for API functions (`--generate-api`)
 - Useless assembly code (`STORE $xx & POP,LOAD $xx & DEL`) is removed
 
 ### Changed
@@ -596,6 +598,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/include/sll/_api_generated.h]: https://github.com/sl-lang/sll/blob/main/src/include/sll/_api_generated.h
 [main/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/_generated.c
 [0.6.17/src/include/sll/common.h]: https://github.com/sl-lang/sll/blob/v0.6.17/src/include/sll/common.h
 [0.6.16/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/operator.c

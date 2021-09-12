@@ -12,6 +12,7 @@ import zipfile
 
 ALPHABET="abcdefghijklmnopqrstuvwxyz"
 API_CODE_FILE_PATH="src/sll/api/_generated.c"
+API_HEADER_FILE_PATH="src/include/sll/_api_generated.h"
 COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG",b"DEBUG_BUILD"]) if os.name=="nt" else ([] if "--release" in sys.argv else [b"DEBUG_BUILD"]))
 PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix.c","nt":"src/sll/platform/windows.c"}
 RETURN_CODE_BASE_TYPE={"0":"I","1":"I","h":"H","Z":"S","f":"F","I":"I","F":"F","C":"C","S":"S","A":"A","H":"H","M":"M","O":"O"}
@@ -62,87 +63,88 @@ if (vb):
 	print(f"  Found {len(d_fl)} Files")
 	print("Generating Documentation...")
 d_dt=docs.create_docs(d_fl)
-d_cm={}
-with open(API_CODE_FILE_PATH,"w") as f:
-	f.write("#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/common.h>\n#include <sll/constants.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
-	for k in d_dt:
-		if ("api" in k["flag"]):
-			rt=RETURN_CODE_BASE_TYPE[k["ret"][0]["type"]]
-			for i in range(1,len(k["ret"])):
-				if (RETURN_CODE_BASE_TYPE[k["ret"][i]["type"]]!=rt):
-					rt="O"
-					break
-			f.write(f"\n\n\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw);\n__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* {k['name']}_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){{\n")
-			a=""
-			pc=""
-			if (len(k["args"])>0):
-				err_c=RETURN_CODE_TYPE_MAP[k["ret"][k["err_ret"]]["type"]]
-				i=len(k["args"])
-				while (i>0 and k["args"][i-1]["opt"]):
-					i-=1
-				if (i!=0):
-					f.write(f"\tif (all<{i}){{\n\t\t"+err_c.replace(";",";\n\t\t")+";\n\t}\n")
-				for i,e in enumerate(k["args"]):
-					if (i):
-						a+=","
-						pc+=","
-					if (i==len(k["args"])-1 and "var_arg" in k["flag"]):
-						a+=f"const {TYPE_MAP[e['type']]+('const' if TYPE_MAP[e['type']][-1]=='*' else '')}* {ALPHABET[i]},sll_arg_count_t {ALPHABET[i]}c"
-						if (e["type"]=="O"):
-							f.write(f"\tconst sll_runtime_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n")
+if ("--generate-api" in sys.argv):
+	if (vb):
+		print(f"Generating Code & Signatures for {len(d_dt)} API functions...")
+	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
+		hf.write("#ifndef __SLL__API_GENERATED__\n#define __SLL__API_GENERATED__\n#include <sll/types.h>\n\n\n")
+		cf.write("#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/common.h>\n#include <sll/constants.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		for k in d_dt:
+			if ("api" in k["flag"]):
+				rt=RETURN_CODE_BASE_TYPE[k["ret"][0]["type"]]
+				for i in range(1,len(k["ret"])):
+					if (RETURN_CODE_BASE_TYPE[k["ret"][i]["type"]]!=rt):
+						rt="O"
+						break
+				cf.write(f"\n\n\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw);\n__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* {k['name']}_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){{\n")
+				a=""
+				pc=""
+				if (len(k["args"])>0):
+					err_c=RETURN_CODE_TYPE_MAP[k["ret"][k["err_ret"]]["type"]]
+					i=len(k["args"])
+					while (i>0 and k["args"][i-1]["opt"]):
+						i-=1
+					if (i!=0):
+						cf.write(f"\tif (all<{i}){{\n\t\t"+err_c.replace(";",";\n\t\t")+";\n\t}\n")
+					for i,e in enumerate(k["args"]):
+						if (i):
+							a+=","
+							pc+=","
+						if (i==len(k["args"])-1 and "var_arg" in k["flag"]):
+							a+=f"const {TYPE_MAP[e['type']]+('const' if TYPE_MAP[e['type']][-1]=='*' else '')}* {ALPHABET[i]},sll_arg_count_t {ALPHABET[i]}c"
+							if (e["type"]=="O"):
+								cf.write(f"\tconst sll_runtime_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n")
+							else:
+								raise RuntimeError("Unimplemeted")
+							pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
 						else:
-							raise RuntimeError("Unimplemeted")
-						pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
-					else:
-						a+=f"const {(TYPE_MAP[e['type']] if len(e['type'])==1 else 'sll_runtime_object_t*')} {ALPHABET[i]}"
-						e_tb=""
-						if (e["opt"]):
-							e_tb="\t"
-							f.write(f"\tconst sll_runtime_object_t* {ALPHABET[i]}=NULL;\n\tif (all>{i}){{\n\t\t{ALPHABET[i]}=*(al+{i});\n")
-						else:
-							f.write(f"\tconst sll_runtime_object_t* {ALPHABET[i]}=*(al+{i});\n")
-						if ("O" not in e["type"]):
-							f.write(e_tb+"\tif (!("+"||".join([TYPE_CHECK_MAP[se].replace('$',ALPHABET[i]) for se in e["type"]])+f")){{\n\t\t"+e_tb+err_c.replace(";",";\n\t\t"+e_tb)+f";\n{e_tb}\t}}\n")
-						if (e["opt"]):
-							f.write("\t}\n")
-						if (len(e["type"])==1):
-							pc+=(TYPE_ACCESS_OPT_MAP[e["type"]] if e["opt"] else TYPE_ACCESS_MAP[e["type"]]).replace("$",ALPHABET[i])
-						else:
-							pc+=ALPHABET[i]
-			if (rt=="O"):
-				f.write(f"\treturn {k['name']}({pc});\n")
-				d_cm["__SLL_API_TYPE_"+k["name"]]="__SLL_CHECK_OUTPUT sll_runtime_object_t*"
-			else:
-				if (TYPE_MAP[rt][-1]=="*"):
-					if (len(pc)>0):
-						a+=f",{TYPE_MAP[rt]} out"
-						pc+=","
-					else:
-						a=TYPE_MAP[rt]+" out"
-					f.write("\t"+TYPE_MAP[rt][:-1]+f" out;\n\t{k['name']}({pc}&out);\n\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
-					d_cm["__SLL_API_TYPE_"+k["name"]]="void"
+							a+=f"const {(TYPE_MAP[e['type']] if len(e['type'])==1 else 'sll_runtime_object_t*')} {ALPHABET[i]}"
+							e_tb=""
+							if (e["opt"]):
+								e_tb="\t"
+								cf.write(f"\tconst sll_runtime_object_t* {ALPHABET[i]}=NULL;\n\tif (all>{i}){{\n\t\t{ALPHABET[i]}=*(al+{i});\n")
+							else:
+								cf.write(f"\tconst sll_runtime_object_t* {ALPHABET[i]}=*(al+{i});\n")
+							if ("O" not in e["type"]):
+								cf.write(e_tb+"\tif (!("+"||".join([TYPE_CHECK_MAP[se].replace('$',ALPHABET[i]) for se in e["type"]])+f")){{\n\t\t"+e_tb+err_c.replace(";",";\n\t\t"+e_tb)+f";\n{e_tb}\t}}\n")
+							if (e["opt"]):
+								cf.write("\t}\n")
+							if (len(e["type"])==1):
+								pc+=(TYPE_ACCESS_OPT_MAP[e["type"]] if e["opt"] else TYPE_ACCESS_MAP[e["type"]]).replace("$",ALPHABET[i])
+							else:
+								pc+=ALPHABET[i]
+				hf.write(f"\n#define __SLL_API_TYPE_{k['name']} ")
+				if (rt=="O"):
+					hf.write("__SLL_CHECK_OUTPUT sll_runtime_object_t*")
+					cf.write(f"\treturn {k['name']}({pc});\n")
 				else:
-					f.write("\t"+TYPE_MAP[rt]+f" out={k['name']}({pc});\n\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
-					d_cm["__SLL_API_TYPE_"+k["name"]]="__SLL_CHECK_OUTPUT "+TYPE_MAP[rt]
-			if (len(a)==0):
-				a="void"
-			f.write("}\n")
-			d_cm["__SLL_API_ARGS_"+k["name"]]=a
+					if (TYPE_MAP[rt][-1]=="*"):
+						if (len(pc)>0):
+							a+=f",{TYPE_MAP[rt]} out"
+							pc+=","
+						else:
+							a=TYPE_MAP[rt]+" out"
+						hf.write("void")
+						cf.write("\t"+TYPE_MAP[rt][:-1]+f" out;\n\t{k['name']}({pc}&out);\n\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
+					else:
+						hf.write("__SLL_CHECK_OUTPUT "+TYPE_MAP[rt])
+						cf.write("\t"+TYPE_MAP[rt]+f" out={k['name']}({pc});\n\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
+				if (len(a)==0):
+					a="void"
+				hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n")
+				cf.write("}\n")
+		hf.write("\n\n\n#endif\n")
 header.generate_help("rsrc/help.txt","build/help_text.h",vb)
 h_dt=header.parse_header("src/include/sll",vb)
 if (vb):
 	print("Generating Library Header File...")
-cm={e:b"1" for e in COMPILATION_DEFINES}
-for k,v in d_cm.items():
-	cm[bytes(k,"utf-8")]=bytes(v,"utf-8")
 with open("build/sll.h","wb") as wf:
-	wf.write(b"#ifndef __SLL_H__\n#define __SLL_H__ 1"+header.generate_header(h_dt,cm)+b"\n#endif\n")
+	wf.write(b"#ifndef __SLL_H__\n#define __SLL_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES)+b"\n#endif\n")
 if ("--standalone" in sys.argv or "--test" in sys.argv):
 	if (vb):
 		print("Generating Standalone Library Header File...")
 	with open("build/sll_standalone.h","wb") as wf:
-		cm[b"__SLL_STATIC__"]=b"1"
-		wf.write(b"#ifndef __SLL_STANDALONE_H__\n#define __SLL_STANDALONE_H__ 1"+header.generate_header(h_dt,cm)+b"\n#endif\n")
+		wf.write(b"#ifndef __SLL_STANDALONE_H__\n#define __SLL_STANDALONE_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES+[b"__SLL_STATIC__"])+b"\n#endif\n")
 if (vb):
 	print("Fixing Env Variables...")
 if (os.name=="nt"):
@@ -167,7 +169,7 @@ for r,_,fl in os.walk("src/sll"):
 			i_fl.append(r+f)
 if (vb):
 	print("Generating Executable...")
-build.build_sll(i_fl,ver,d_cm,vb,("--release" in sys.argv))
+build.build_sll(i_fl,ver,vb,("--release" in sys.argv))
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))

@@ -1,5 +1,6 @@
 #ifndef __SLL_FUNC_H__
 #define __SLL_FUNC_H__ 1
+#include <sll/_api_generated.h>
 #include <sll/common.h>
 #include <sll/types.h>
 

@@ -1,8 +1,9 @@
-#ifndef ___SLL_INTERNAL_H__
-#define ___SLL_INTERNAL_H__ 1
+#ifndef __SLL__SLL_INTERNAL_H__
+#define __SLL__SLL_INTERNAL_H__ 1
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
+#include <sll/_api_generated.h>
 #include <sll/api.h>
 #include <sll/types.h>
 #include <signal.h>
