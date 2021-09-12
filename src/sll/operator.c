@@ -243,10 +243,20 @@ __SLL_OPERATOR_BINARY(sub){
 			return SLL_FROM_INT(a->dt.i-b->dt.i);
 		case COMBINED_TYPE_IF:
 			return SLL_FROM_FLOAT(a->dt.i-b->dt.f);
+		case COMBINED_TYPE_IC:
+			return SLL_FROM_INT(a->dt.i-b->dt.c);
 		case COMBINED_TYPE_FI:
 			return SLL_FROM_FLOAT(a->dt.f-b->dt.i);
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_FLOAT(a->dt.f-b->dt.f);
+		case COMBINED_TYPE_FC:
+			return SLL_FROM_FLOAT(a->dt.f-b->dt.c);
+		case COMBINED_TYPE_CI:
+			return SLL_FROM_INT(a->dt.c-b->dt.i);
+		case COMBINED_TYPE_CF:
+			return SLL_FROM_FLOAT(a->dt.c-b->dt.f);
+		case COMBINED_TYPE_CC:
+			return SLL_FROM_CHAR(a->dt.c-b->dt.c);
 		default:
 			SLL_UNIMPLEMENTED();
 	}

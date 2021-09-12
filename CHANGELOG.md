@@ -237,9 +237,9 @@ Literally, just arrays.
 - Test runner
 
 ### Changed
+- Renamed all functions and macros
 - Renamed [`src/include/lll`][0.6.8/src/include/lll] to [`src/include/sll`][0.6.9/src/include/sll]
 - Renamed [`src/lll`][0.6.8/src/lll] to [`src/sll`][0.6.9/src/sll]
-- Renamed all functions and macros
 - Split [`src/_build/main.py`][0.6.8/src/_build/main.py] into [`src/_build/build.py`][0.6.9/src/_build/build.py], [`src/_build/header.py`][0.6.9/src/_build/header.py], [`src/_build/main.py`][0.6.9/src/_build/main.py] and [`src/_build/util.py`][0.6.9/src/_build/util.py]
 - `sll_platform_free_page` now takes the page size as the second parameter
 
