@@ -74,9 +74,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	sll_buffer_t ptr=st->ptr;
 	sll_runtime_object_t** v=(sll_runtime_object_t**)ptr;
-	__SLL_STATIC_NAME(int_zero)->rc+=a_dt->vc;
+	sll_static_int[0]->rc+=a_dt->vc;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
-		*(v+i)=__SLL_STATIC_NAME(int_zero);
+		*(v+i)=sll_static_int[0];
 	}
 	ptr+=a_dt->vc*sizeof(sll_runtime_object_t*);
 	sll_runtime_object_t* cs=(sll_runtime_object_t*)ptr;
@@ -140,27 +140,27 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE:
-				*(s+si)=SLL_ACQUIRE_STATIC(int_minus_one);
+				*(s+si)=SLL_ACQUIRE_STATIC_INT(-1);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO:
-				*(s+si)=SLL_ACQUIRE_STATIC(int_zero);
+				*(s+si)=SLL_ACQUIRE_STATIC_INT(0);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ONE:
-				*(s+si)=SLL_ACQUIRE_STATIC(int_one);
+				*(s+si)=SLL_ACQUIRE_STATIC_INT(1);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TWO:
-				*(s+si)=SLL_ACQUIRE_STATIC(int_two);
+				*(s+si)=SLL_ACQUIRE_STATIC_INT(2);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_THREE:
-				*(s+si)=SLL_ACQUIRE_STATIC(int_three);
+				*(s+si)=SLL_ACQUIRE_STATIC_INT(3);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FOUR:
-				*(s+si)=SLL_ACQUIRE_STATIC(int_four);
+				*(s+si)=SLL_ACQUIRE_STATIC_INT(4);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
@@ -216,13 +216,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 					sll_runtime_object_t* tos=SLL_CREATE();
 					tos->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
 					sll_map_t* m=&(tos->dt.m);
-					sll_map_create(ai->dt.ml+(ai->dt.ml&1),m);
+					sll_map_create((ai->dt.ml+1)>>1,m);
 					si-=ai->dt.ml;
 					for (sll_map_length_t i=0;i<ai->dt.ml;i++){
 						m->v[i]=*(s+si+i);
 					}
 					if (ai->dt.ml&1){
-						m->v[ai->dt.ml]=SLL_ACQUIRE_STATIC(int_zero);
+						m->v[ai->dt.ml]=SLL_ACQUIRE_STATIC_INT(0);
 					}
 					*(s+si)=tos;
 					si++;
@@ -244,27 +244,27 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE:
 				SLL_RELEASE(*(v+ai->dt.v));
-				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_minus_one);
+				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(-1);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO:
 				SLL_RELEASE(*(v+ai->dt.v));
-				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_zero);
+				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(0);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE:
 				SLL_RELEASE(*(v+ai->dt.v));
-				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_one);
+				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(1);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
 				SLL_RELEASE(*(v+ai->dt.v));
-				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_two);
+				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(2);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
 				SLL_RELEASE(*(v+ai->dt.v));
-				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_three);
+				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(3);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
 				SLL_RELEASE(*(v+ai->dt.v));
-				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_four);
+				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(4);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 _jump:
@@ -480,7 +480,7 @@ _print_from_stack:;
 						else{
 							si-=ai->dt.ac-1;
 						}
-						*(s+si-1)=SLL_ACQUIRE_STATIC(int_zero);
+						*(s+si-1)=SLL_ACQUIRE_STATIC_INT(0);
 					}
 					break;
 				}
@@ -502,7 +502,7 @@ _print_from_stack:;
 					ai=a_dt->h+ii;
 					continue;
 				}
-				*(s+si)=SLL_ACQUIRE_STATIC(int_zero);
+				*(s+si)=SLL_ACQUIRE_STATIC_INT(0);
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
@@ -524,7 +524,7 @@ _print_from_stack:;
 					ai=a_dt->h+ii;
 					continue;
 				}
-				*(s+si-1)=SLL_ACQUIRE_STATIC(int_zero);
+				*(s+si-1)=SLL_ACQUIRE_STATIC_INT(0);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 _return:;
@@ -545,7 +545,7 @@ _return:;
 				ai++;
 				continue;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO:
-				*(s+si)=SLL_ACQUIRE_STATIC(int_zero);
+				*(s+si)=SLL_ACQUIRE_STATIC_INT(0);
 				si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
@@ -620,11 +620,11 @@ _return:;
 				goto _end;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 				SLL_RELEASE(*(v+ai->dt.v));
-				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_zero);
+				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(0);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
 				*(s+si)=*(v+ai->dt.v);
-				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC(int_zero);
+				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(0);
 				si++;
 				break;
 			default:

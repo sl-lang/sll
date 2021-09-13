@@ -213,7 +213,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 			}
 		}
 		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_MAP){
-			for (sll_map_length_t j=0;j<o->dt.m.l;j++){
+			for (sll_map_length_t j=0;j<(o->dt.m.l<<1);j++){
 				sll_release_object(*(o->dt.m.v+j));
 			}
 			free(o->dt.m.v);

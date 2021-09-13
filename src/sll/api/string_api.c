@@ -148,7 +148,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 		case SLL_RUNTIME_OBJECT_TYPE_MAP:
 			o->v[i]='<';
 			i++;
-			for (sll_map_length_t k=0;k<a->dt.m.l;k++){
+			for (sll_map_length_t k=0;k<(a->dt.m.l<<1);k++){
 				if (k){
 					o->v[i]=' ';
 					i++;
@@ -253,7 +253,7 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 					break;
 				}
 			case SLL_RUNTIME_OBJECT_TYPE_MAP:
-				o+=sll_object_to_string_length((const sll_runtime_object_t*const*)a->dt.m.v,a->dt.m.l,1)+a->dt.m.l+(!a->dt.m.l)+1;
+				o+=sll_object_to_string_length((const sll_runtime_object_t*const*)a->dt.m.v,a->dt.m.l<<1,1)+(a->dt.m.l<<1)+(!a->dt.m.l)+1;
 				break;
 			default:
 				SLL_UNREACHABLE();

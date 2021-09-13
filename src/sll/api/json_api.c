@@ -159,10 +159,10 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 				c=**p;
 				(*p)++;
 			}
-			m->l+=2;
-			m->v=realloc(m->v,m->l*sizeof(sll_runtime_object_t*));
+			m->l++;
+			m->v=realloc(m->v,(m->l<<1)*sizeof(sll_runtime_object_t*));
 			sll_runtime_object_t* k=SLL_CREATE();
-			m->v[m->l-2]=k;
+			m->v[(m->l-1)<<1]=k;
 			k->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 			_parse_json_string(p,&(k->dt.s));
 			c=**p;
@@ -173,11 +173,11 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			}
 			sll_runtime_object_t* v=_parse_json_as_object(p);
 			if (!v){
-				m->v[m->l-1]=SLL_ACQUIRE_STATIC(int_zero);
+				m->v[m->l-1]=SLL_ACQUIRE_STATIC_INT(0);
 				SLL_RELEASE(o);
 				return NULL;
 			}
-			m->v[m->l-1]=v;
+			m->v[((m->l-1)<<1)+1]=v;
 			c=**p;
 			(*p)++;
 			while (c!=','){

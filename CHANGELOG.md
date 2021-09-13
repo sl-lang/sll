@@ -2,6 +2,7 @@
 
 ## [0.6.18] - Ongoing
 ### Added
+- Added `sll_static_int[n]` for integers in range of `0 - 255` (inclusive), `sll_static_negative_int[-n-1]` for integers in range of `-16 to -1` (inclusive) (for example, `-2` can be accessed by `sll_static_negative_int[-(-2)-1] = sll_static_negative_int[1]`) and `sll_static_char[n]` for all characters
 - API function signatures (argumetns and return types) are now stored in [`src/include/sll/_api_generated.h`][main/src/include/sll/_api_generated.h]
 - Builder script option for generating code & signatures for API functions (`--generate-api`)
 - Code generated for API functions is now located in [`src/sll/api/_generated.c`][main/src/sll/api/_generated.c]
@@ -14,6 +15,10 @@
 - Function arguments will now shadow other variables instaed of overriding them
 - Marked internal CLI variables & function as `static`
 - `sll_error_t` now uses `sll_char_t` instead of `char`
+- `sll_map_t` now stores the length of the map (`n`) instead of the length of the element array (`2n`) (TL;DR Multiply the new value by a factor of 2 to get the previous value)
+
+### Removed
+- `sll_static_minus_one`, `sll_static_zero`, `sll_static_one`, `sll_static_two`, `sll_static_threee`, `sll_static_four` and `sll_static_float_third` (in favor of `sll_static_int` and `sll_static_negative_int`)
 
 ## [0.6.17] - 2021-9-9
 ### Added

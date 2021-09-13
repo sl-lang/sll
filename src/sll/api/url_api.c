@@ -14,7 +14,7 @@ __API_FUNC(url_execute_request){
 		malloc((d->l>>1)*sizeof(sll_header_t*)),
 		d->l>>1
 	};
-	for (sll_header_count_t i=0;i<(d->l>>1);i++){
+	for (sll_header_count_t i=0;i<d->l;i++){
 		sll_header_t* h_kv=malloc(sizeof(sll_header_t));
 		SLL_ASSERT(d->v[i<<1]->t==SLL_RUNTIME_OBJECT_TYPE_STRING);
 		h_kv->k=d->v[i<<1]->dt.s;
@@ -39,7 +39,7 @@ __API_FUNC(url_execute_request){
 	free(http_m.dt);
 	sll_runtime_object_t* hl_m=SLL_CREATE();
 	hl_m->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
-	sll_map_create(hl.l<<1,&(hl_m->dt.m));
+	sll_map_create(hl.l,&(hl_m->dt.m));
 	for (sll_map_length_t i=0;i<hl.l;i++){
 		sll_header_t* h_kv=*(hl.dt+i);
 		sll_runtime_object_t* k=SLL_CREATE();

@@ -455,7 +455,7 @@ __SLL_OPERATOR_UNARY(len){
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			return SLL_FROM_INT(a->dt.a.l);
 		case SLL_RUNTIME_OBJECT_TYPE_MAP:
-			return SLL_FROM_INT(a->dt.m.l>>1);
+			return SLL_FROM_INT(a->dt.m.l);
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -493,10 +493,10 @@ __SLL_OPERATOR_BINARY(access){
 	}
 	else if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_MAP){
 		sll_map_t m=a->dt.m;
-		for (sll_map_length_t i=0;i<m.l;i+=2){
-			if (sll_operator_compare(m.v[i],b)==SLL_COMPARE_RESULT_EQUAL){
-				SLL_ACQUIRE(m.v[i+1]);
-				return m.v[i+1];
+		for (sll_map_length_t i=0;i<m.l;i++){
+			if (sll_operator_compare(m.v[i<<1],b)==SLL_COMPARE_RESULT_EQUAL){
+				SLL_ACQUIRE(m.v[(i<<1)+1]);
+				return m.v[(i<<1)+1];
 			}
 		}
 		SLL_RETURN_ZERO;
@@ -531,7 +531,7 @@ __SLL_OPERATOR_BINARY(cast){
 					sll_runtime_object_t* o=SLL_CREATE();
 					o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 					sll_array_t* oa=&(o->dt.a);
-					sll_array_create(a->dt.m.l>>1,oa);
+					sll_array_create(a->dt.m.l,oa);
 					for (sll_array_length_t i=0;i<oa->l;i++){
 						oa->v[i]=a->dt.m.v[i<<1];
 						SLL_ACQUIRE(oa->v[i]);
@@ -543,7 +543,7 @@ __SLL_OPERATOR_BINARY(cast){
 					sll_runtime_object_t* o=SLL_CREATE();
 					o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 					sll_array_t* oa=&(o->dt.a);
-					sll_array_create(a->dt.m.l>>1,oa);
+					sll_array_create(a->dt.m.l,oa);
 					for (sll_array_length_t i=0;i<oa->l;i++){
 						oa->v[i]=a->dt.m.v[(i<<1)+1];
 						SLL_ACQUIRE(oa->v[i]);
