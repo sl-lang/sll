@@ -11,6 +11,7 @@
 - Macro for creating an object from a `sll_char_t` value: `SLL_FROM_CHAR`
 - `sll_init`, `sll_deinit` and `sll_char_to_object` functions
 - Useless assembly code (`STORE $xx & POP,LOAD $xx & DEL`) is removed
+- When updating, the CLI also downloads the Change Log for the given version
 
 ### Changed
 - Function arguments will now shadow other variables instaed of overriding them

@@ -227,11 +227,13 @@ if ("--upload" in sys.argv):
 		sys.exit(1)
 	if (vb):
 		print("Uploading Main Executable...")
-	upload.upload((["sll.exe",f"sll-{ver[0]}.{ver[1]}.{ver[2]}.dll"] if os.name=="nt" else ["sll",f"sll-{ver[0]}.{ver[1]}.{ver[2]}.so"])+[f"lib/{k}.slc" for k in fl],("win" if os.name=="nt" else "posix"))
+	with open("build/CHANGELOG.md","wb") as wf,open("CHANGELOG.md","rb") as rf:
+		wf.write(rf.read())
+	upload.upload((["sll.exe",f"sll-{ver[0]}.{ver[1]}.{ver[2]}.dll","CHANGELOG.md"] if os.name=="nt" else ["sll",f"sll-{ver[0]}.{ver[1]}.{ver[2]}.so","CHANGELOG.md"])+[f"lib/{k}.slc" for k in fl],("win" if os.name=="nt" else "posix"))
 	if ("--standalone" in sys.argv):
 		if (vb):
 			print("Uploading Standalone Executable...")
-		upload.upload([("sll_standalone.exe" if os.name=="nt" else "sll_standalone")],("win-standalone" if os.name=="nt" else "posix-standalone"))
+		upload.upload([("sll_standalone.exe" if os.name=="nt" else "sll_standalone"),"CHANGELOG.md"],("win-standalone" if os.name=="nt" else "posix-standalone"))
 if ("--run" in sys.argv):
 	if (vb):
 		print("Running 'example/test.sll'...")
