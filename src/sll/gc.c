@@ -372,13 +372,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 				SLL_ASSERT(j!=GC_MAX_DBG_ID);
 				runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
 				fprintf(stderr,"%s: %u (<static>): {type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",k->fp,k->ln,t,c->rc,str.v,dt->all);
-				for (uint32_t k=0;k<dt->all;k++){
-					runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+k);
+				for (uint32_t m=0;m<dt->all;m++){
+					runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+m);
 					fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
 				}
 				fprintf(stderr,"  Release (%u):\n",dt->rll);
-				for (uint32_t k=0;k<dt->rll;k++){
-					runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+k);
+				for (uint32_t m=0;m<dt->rll;m++){
+					runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
 					fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
 				}
 				free(str.v);
