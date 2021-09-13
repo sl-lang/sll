@@ -17,6 +17,9 @@
 #pragma section("ifunc$a",read)
 #pragma section("ifunc$b",read)
 #pragma section("ifunc$z",read)
+#pragma section("strto$a",read)
+#pragma section("strto$b",read)
+#pragma section("strto$z",read)
 #ifdef DEBUG_BUILD
 #define SLL_UNREACHABLE() SLL_ASSERT(!"UNREACHABLE")
 #else
@@ -28,8 +31,10 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	return o;
 }
 #define IGNORE_RESULT(x) ((void)(x))
-#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _INTERNAL_FUNCTION_NAME(__ifunc)={(nm),(f)};const static __declspec(allocate("ifunc$b")) internal_function_t* _INTERNAL_FUNCTION_NAME(__ifunc_ptr)=&_INTERNAL_FUNCTION_NAME(__ifunc)
+#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _UNIQUE_NAME(__ifunc)={(nm),(f)};const static __declspec(allocate("ifunc$b")) internal_function_t* _UNIQUE_NAME(__ifunc_ptr)=&_UNIQUE_NAME(__ifunc)
 #define INTERNAL_FUNCTION_SETUP const static __declspec(allocate("ifunc$a")) internal_function_t* __ifunc_start=0;const static __declspec(allocate("ifunc$z")) internal_function_t* __ifunc_end=0;
+#define STATIC_RUNTIME_OBJECT(rt) const static static_runtime_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __declspec(allocate("strto$b")) static_runtime_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
+#define STATIC_RUNTIME_OBJECT_SETUP const static __declspec(allocate("strto$a")) static_runtime_object_t* __strto_start=0;const static __declspec(allocate("strto$z")) static_runtime_object_t* __strto_end=0
 #else
 #ifdef DEBUG_BUILD
 #define SLL_UNREACHABLE() SLL_ASSERT(!"UNREACHABLE")
@@ -41,25 +46,29 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	do{ \
 		unsigned long long int __tmp __attribute__((unused))=(unsigned long long int)(x); \
 	} while (0)
-#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _INTERNAL_FUNCTION_NAME(__ifunc)={(nm),(f)};const static __attribute__((used,section("ifunc"))) internal_function_t* _INTERNAL_FUNCTION_NAME(__ifunc_ptr)=&_INTERNAL_FUNCTION_NAME(__ifunc)
-#define INTERNAL_FUNCTION_SETUP extern const internal_function_t* __start_ifunc;extern const internal_function_t* __stop_ifunc;
+#define INTERNAL_FUNCTION(nm,f) const static internal_function_t _UNIQUE_NAME(__ifunc)={(nm),(f)};const static __attribute__((used,section("ifunc"))) internal_function_t* _UNIQUE_NAME(__ifunc_ptr)=&_UNIQUE_NAME(__ifunc)
+#define INTERNAL_FUNCTION_SETUP extern const internal_function_t* __start_ifunc;extern const internal_function_t* __stop_ifunc
+#define STATIC_RUNTIME_OBJECT(rt) const static static_runtime_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __attribute__((used,section("strto"))) static_runtime_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
+#define STATIC_RUNTIME_OBJECT_SETUP extern const static_runtime_object_t* __start_strto;extern const static_runtime_object_t* __stop_strto
 #define __ifunc_start __start_ifunc
 #define __ifunc_end __stop_ifunc
+#define __strto_start __start_strto
+#define __strto_end __stop_strto
 #endif
 
 
 
 #define __API_FUNC(nm) __SLL_FUNC __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
-#define __SLL_STATIC_RAW(nm) &_##nm##_static_data
-#define __SLL_STATIC_INT_AND_CHAR_OBJECT(v) sll_runtime_object_t _int_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_NO_DEBUG_DATA,.dt={.i=(v)}};sll_runtime_object_t _char_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_CHAR,SLL_NO_DEBUG_DATA,.dt={.c=(v)}}
-#define __SLL_STATIC_NEG_INT_AND_CHAR_OBJECT(v) sll_runtime_object_t _int_neg_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_NO_DEBUG_DATA,.dt={.i=-(v)}};__SLL_STATIC_INT_AND_CHAR_OBJECT(v)
-#define __SLL_STATIC_OBJECT(nm,t,f,v) sll_runtime_object_t _##nm##_static_data={1,t,SLL_NO_DEBUG_DATA,.dt={.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
+#define __SLL_STATIC_INT_OBJECT(v) static sll_runtime_object_t _int_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_NO_DEBUG_DATA,.dt={.i=(v)}};STATIC_RUNTIME_OBJECT(&_int_##v##_static_data)
+#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_runtime_object_t _int_neg_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_NO_DEBUG_DATA,.dt={.i=-(v)}};STATIC_RUNTIME_OBJECT(&_int_neg_##v##_static_data)
+#define __SLL_STATIC_CHAR_OBJECT(v) static sll_runtime_object_t _char_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_CHAR,SLL_NO_DEBUG_DATA,.dt={.c=(sll_char_t)(v)}};STATIC_RUNTIME_OBJECT(&_char_##v##_static_data)
+#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_runtime_object_t _##nm##_static_data={1,t,SLL_NO_DEBUG_DATA,.dt={.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
 
 
 
-#define _INTERNAL_FUNCTION_JOIN2(a,b) a##_##b
-#define _INTERNAL_FUNCTION_JOIN(a,b) _INTERNAL_FUNCTION_JOIN2(a,b)
-#define _INTERNAL_FUNCTION_NAME(a) _INTERNAL_FUNCTION_JOIN(a,__LINE__)
+#define _UNIQUE_NAME_JOIN2(a,b) a##_##b
+#define _UNIQUE_NAME_JOIN(a,b) _UNIQUE_NAME_JOIN2(a,b)
+#define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
 #define _SLL_ASSERT_STRINGIFY_(x) #x
 #define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
 #define _SLL_ASSERT_JOIN_(x) _SLL_ASSERT_##x
@@ -307,12 +316,18 @@ typedef struct __RUNTIME_OBJECT_DEBUG_DATA{
 
 
 
-
 typedef struct __FILE_LIST_DATA{
 	sll_string_t* dt;
 	sll_array_length_t l;
 } file_list_data_t;
 
+
+
+typedef struct __STATIC_RUNTIME_OBJECT{
+	sll_runtime_object_t* dt;
+	const char* fp;
+	unsigned int ln;
+} static_runtime_object_t;
 
 
 

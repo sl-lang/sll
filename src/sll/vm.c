@@ -639,6 +639,9 @@ _return:;
 		}
 	}
 _end:
+	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
+		SLL_RELEASE(*(v+i));
+	}
 	sll_cleanup_handles(r_dt->hl,hl_l);
 	if (e->t==SLL_ERROR_UNKNOWN){
 		if (!sll_verify_runtime_object_stack_cleanup(&rst)){

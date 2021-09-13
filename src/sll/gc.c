@@ -14,6 +14,10 @@
 
 
 
+STATIC_RUNTIME_OBJECT_SETUP;
+
+
+
 static void* _gc_page_ptr=NULL;
 static sll_runtime_object_t* _gc_next_object=NULL;
 static uint32_t _gc_dbg_dtl=0;
@@ -21,15 +25,16 @@ static runtime_object_debug_data_t** _gc_dbg_dt=NULL;
 static uint32_t _gc_alloc=0;
 static uint32_t _gc_dealloc=0;
 static uint8_t _gc_verify=1;
+static uint32_t _gc_static_count=0;
 
 
 
 static void _gc_free_pages(void){
 	if (_gc_verify){
 		sll_runtime_object_stack_data_t rst={
-			0,
 			NULL,
-			0
+			0,
+			NULL
 		};
 		if (!sll_verify_runtime_object_stack_cleanup(&rst)){
 			SLL_UNIMPLEMENTED();
@@ -43,6 +48,18 @@ static void _gc_free_pages(void){
 		void* n=*((void**)c);
 		sll_platform_free_page(c,sz*(n?1:GC_INIT_PAGE_COUNT));
 		c=n;
+	}
+}
+
+
+
+static void _count_static_objects(void){
+	const static_runtime_object_t*const* l=&__strto_start;
+	while (l<&__strto_end){
+		if (*l){
+			_gc_static_count++;
+		}
+		l++;
 	}
 }
 
@@ -145,7 +162,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 
 
 __SLL_FUNC void sll_get_runtime_object_stack_data(sll_runtime_object_stack_data_t* o){
-	o->off=_gc_alloc-_gc_dealloc;
 	o->m=NULL;
 	o->ml=0;
 	sll_page_size_t sz=sll_platform_get_page_size();
@@ -171,6 +187,20 @@ __SLL_FUNC void sll_get_runtime_object_stack_data(sll_runtime_object_stack_data_
 			c++;
 		}
 		pg=*((void**)pg);
+	}
+	if (!_gc_static_count){
+		_count_static_objects();
+	}
+	o->s=malloc(_gc_static_count*sizeof(sll_ref_count_t));
+	i=0;
+	const static_runtime_object_t*const* l=&__strto_start;
+	while (l<&__strto_end){
+		const static_runtime_object_t* k=*l;
+		if (k){
+			*(o->s+i)=k->dt->rc;
+			i++;
+		}
+		l++;
 	}
 }
 
@@ -229,13 +259,10 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(const sll_runtime_object_stack_data_t* rst){
-	if (_gc_alloc-_gc_dealloc<=rst->off){
-		return SLL_RETURN_NO_ERROR;
-	}
+	uint8_t err=0;
 	_gc_verify=0;
 	fflush(stdout);
 	sll_page_size_t sz=sll_platform_get_page_size();
-	fprintf(stderr,"\n%u Unreleased Object%s:\n",_gc_alloc-_gc_dealloc-rst->off,(_gc_alloc-_gc_dealloc-rst->off==1?"":"s"));
 	void* pg=_gc_page_ptr;
 	uint32_t i=0;
 	while (pg){
@@ -243,6 +270,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 		void* e=(void*)((uint64_t)pg+sizeof(void*)+(sz*(*((void**)pg)?1:GC_INIT_PAGE_COUNT)-sizeof(void*))/sizeof(sll_runtime_object_t)*sizeof(sll_runtime_object_t));
 		while ((void*)c<e){
 			if (c->rc&&((i>>6)>=rst->ml||!(*(rst->m+(i>>6))&(1ull<<(i&63))))){
+				if (!err){
+					err=1;
+					fputs("\nUnreleased Objects:\n",stderr);
+				}
 				const char* t="<unknown>";
 				switch (c->t){
 					case SLL_RUNTIME_OBJECT_TYPE_INT:
@@ -299,6 +330,63 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 		}
 		pg=*((void**)pg);
 	}
+	i=0;
+	const static_runtime_object_t*const* l=&__strto_start;
+	while (l<&__strto_end){
+		const static_runtime_object_t* k=*l;
+		if (k){
+			SLL_ASSERT(k->dt->rc);
+			if ((!rst->s&&k->dt->rc>1)||(rst->s&&k->dt->rc>*(rst->s+i))){
+				if (!err){
+					err=1;
+					fputs("\nUnreleased Objects:\n",stderr);
+				}
+				sll_runtime_object_t* c=k->dt;
+				const char* t="<unknown>";
+				switch (c->t){
+					case SLL_RUNTIME_OBJECT_TYPE_INT:
+						t="int";
+						break;
+					case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
+						t="float";
+						break;
+					case SLL_RUNTIME_OBJECT_TYPE_CHAR:
+						t="char";
+						break;
+					case SLL_RUNTIME_OBJECT_TYPE_STRING:
+						t="string";
+						break;
+					case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
+						t="array";
+						break;
+					case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+						t="handle";
+						break;
+					case SLL_RUNTIME_OBJECT_TYPE_MAP:
+						t="map";
+						break;
+				}
+				sll_string_t str;
+				sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
+				uint32_t j=c->_dbg0|(c->_dbg1<<16);
+				SLL_ASSERT(j!=GC_MAX_DBG_ID);
+				runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
+				fprintf(stderr,"%s: %u (<static>): {type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",k->fp,k->ln,t,c->rc,str.v,dt->all);
+				for (uint32_t k=0;k<dt->all;k++){
+					runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+k);
+					fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
+				}
+				fprintf(stderr,"  Release (%u):\n",dt->rll);
+				for (uint32_t k=0;k<dt->rll;k++){
+					runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+k);
+					fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
+				}
+				free(str.v);
+			}
+			i++;
+		}
+		l++;
+	}
 	fflush(stderr);
-	return SLL_RETURN_ERROR;
+	return (err?SLL_RETURN_ERROR:SLL_RETURN_NO_ERROR);
 }

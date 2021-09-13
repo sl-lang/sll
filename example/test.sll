@@ -38,7 +38,7 @@
 	(<- write f "Hello!\n")
 	(:> "ABC\n")
 	(:> f ", " (+ f 1) ", " (<< 2 (+ f 1)) "\n")
-	|# (<- close f) #|; Automatic Cleanup
+	(<- close f); Automatic Cleanup
 } {
 	(:> "Unable to open file!\n")
 } )

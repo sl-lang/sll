@@ -6,6 +6,7 @@
 - API function signatures (argumetns and return types) are now stored in [`src/include/sll/_api_generated.h`][main/src/include/sll/_api_generated.h]
 - Builder script option for generating code & signatures for API functions (`--generate-api`)
 - Code generated for API functions is now located in [`src/sll/api/_generated.c`][main/src/sll/api/_generated.c]
+- GC now also check for unreleased static objects
 - Implemented a bigger part of [`src/sll/operator.c`][main/src/sll/operator.c]
 - Macro for creating an object from a `sll_char_t` value: `SLL_FROM_CHAR`
 - `sll_init`, `sll_deinit` and `sll_char_to_object` functions
@@ -16,6 +17,7 @@
 - Marked internal CLI variables & function as `static`
 - `sll_error_t` now uses `sll_char_t` instead of `char`
 - `sll_map_t` now stores the length of the map (`n`) instead of the length of the element array (`2n`) (TL;DR Multiply the new value by a factor of 2 to get the previous value)
+- VM variables are now properly released
 
 ### Removed
 - `sll_static_minus_one`, `sll_static_zero`, `sll_static_one`, `sll_static_two`, `sll_static_threee`, `sll_static_four` and `sll_static_float_third` (in favor of `sll_static_int` and `sll_static_negative_int`)
