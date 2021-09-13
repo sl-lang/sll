@@ -1,13 +1,16 @@
 # The Sl Programing Language Change Log
 
-## [0.6.18] - Ongoing
+## [0.6.19] - Ongoing
+*Nothing*
+
+## [0.6.18] - 2021-9-13
 ### Added
 - Added `sll_static_int[n]` for integers in range of `0 - 255` (inclusive), `sll_static_negative_int[-n-1]` for integers in range of `-16 to -1` (inclusive) (for example, `-2` can be accessed by `sll_static_negative_int[-(-2)-1] = sll_static_negative_int[1]`) and `sll_static_char[n]` for all characters
-- API function signatures (argumetns and return types) are now stored in [`src/include/sll/_api_generated.h`][main/src/include/sll/_api_generated.h]
+- API function signatures (argumetns and return types) are now stored in [`src/include/sll/_api_generated.h`][0.6.18/src/include/sll/_api_generated.h]
 - Builder script option for generating code & signatures for API functions (`--generate-api`)
-- Code generated for API functions is now located in [`src/sll/api/_generated.c`][main/src/sll/api/_generated.c]
+- Code generated for API functions is now located in [`src/sll/api/_generated.c`][0.6.18/src/sll/api/_generated.c]
 - GC now also check for unreleased static objects
-- Implemented a bigger part of [`src/sll/operator.c`][main/src/sll/operator.c]
+- Implemented a bigger part of [`src/sll/operator.c`][0.6.18/src/sll/operator.c]
 - Macro for creating an object from a `sll_char_t` value: `SLL_FROM_CHAR`
 - `sll_init`, `sll_deinit` and `sll_char_to_object` functions
 - Useless assembly code (`STORE $xx & POP,LOAD $xx & DEL`) is removed
@@ -542,7 +545,8 @@ Literally, just arrays.
 ## [0.1.2] - 2021-6-15
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.18]: https://github.com/sl-lang/sll/compare/v0.6.17...main
+[0.6.19]: https://github.com/sl-lang/sll/compare/v0.6.18...main
+[0.6.18]: https://github.com/sl-lang/sll/compare/v0.6.17...v0.6.18
 [0.6.17]: https://github.com/sl-lang/sll/compare/v0.6.16...v0.6.17
 [0.6.16]: https://github.com/sl-lang/sll/compare/v0.6.15...v0.6.16
 [0.6.15]: https://github.com/sl-lang/sll/compare/v0.6.14...v0.6.15
@@ -608,9 +612,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/src/include/sll/_api_generated.h]: https://github.com/sl-lang/sll/blob/main/src/include/sll/_api_generated.h
-[main/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/_generated.c
-[main/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/main/src/sll/operator.c
+[0.6.18/src/include/sll/_api_generated.h]: https://github.com/sl-lang/sll/blob/v0.6.18/src/include/sll/_api_generated.h
+[0.6.18/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/v0.6.18/src/sll/api/_generated.c
+[0.6.18/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.18/src/sll/operator.c
 [0.6.17/src/include/sll/common.h]: https://github.com/sl-lang/sll/blob/v0.6.17/src/include/sll/common.h
 [0.6.16/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/operator.c
 [0.6.16/src/sll/vm.c]: https://github.com/sl-lang/sll/blob/v0.6.16/src/sll/vm.c
