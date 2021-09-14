@@ -173,14 +173,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
-				{
-					sll_runtime_object_t* tos=SLL_CREATE();
-					*(s+si)=tos;
-					tos->t=SLL_RUNTIME_OBJECT_TYPE_CHAR;
-					tos->dt.c=ai->dt.c;
-					si++;
-					break;
-				}
+				*(s+si)=SLL_ACQUIRE_STATIC_CHAR(ai->dt.c);
+				si++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				*(s+si)=*(v+ai->dt.v);
 				SLL_ACQUIRE(*(s+si));
@@ -567,14 +562,9 @@ _return:;
 					goto _return;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
-				{
-					sll_runtime_object_t* tos=SLL_CREATE();
-					tos->t=SLL_RUNTIME_OBJECT_TYPE_CHAR;
-					tos->dt.c=ai->dt.c;
-					*(s+si)=tos;
-					si++;
-					goto _return;
-				}
+				*(s+si)=SLL_ACQUIRE_STATIC_CHAR(ai->dt.c);
+				si++;
+				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				*(s+si)=cs+ai->dt.s;
 				SLL_ACQUIRE(*(s+si));

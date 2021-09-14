@@ -589,11 +589,11 @@ __SLL_STATIC_OBJECT(map_zero,SLL_RUNTIME_OBJECT_TYPE_MAP,m,SLL_ZERO_MAP_STRUCT);
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_integer_t v){
 	if (v>-1&&v<256){
-		sll_static_int[v]->rc++;
+		SLL_ACQUIRE_NO_DEBUG(sll_static_int[v]);
 		return sll_static_int[v];
 	}
 	if (v>-17&&v<0){
-		sll_static_negative_int[-v-1]->rc++;
+		SLL_ACQUIRE_NO_DEBUG(sll_static_negative_int[-v-1]);
 		return sll_static_negative_int[-v-1];
 	}
 	sll_runtime_object_t* o=sll_create_object();
@@ -604,17 +604,17 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_intege
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_float_t v){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_float_t  v){
 	if (!v){
-		sll_static_float_zero->rc++;
+		SLL_ACQUIRE_NO_DEBUG(sll_static_float_zero);
 		return sll_static_float_zero;
 	}
 	if (v==1){
-		sll_static_float_one->rc++;
+		SLL_ACQUIRE_NO_DEBUG(sll_static_float_one);
 		return sll_static_float_one;
 	}
 	if (v==0.5){
-		sll_static_float_half->rc++;
+		SLL_ACQUIRE_NO_DEBUG(sll_static_float_half);
 		return sll_static_float_half;
 	}
 	sll_runtime_object_t* o=sll_create_object();

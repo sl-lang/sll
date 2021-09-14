@@ -1,12 +1,17 @@
 # The Sl Programing Language Change Log
 
 ## [0.6.19] - Ongoing
-*Nothing*
+### Added
+- `SLL_ACQUIRE_NO_DEBUG` macro (like `SLL_ACQUIRE` but does not add debug data)
+- `SLL_ACQUIRE_STATIC_CHAR` macro (an alias to `SLL_FROM_CHAR`)
+
+### Changed
+- Fixed syntax highlight
 
 ## [0.6.18] - 2021-9-13
 ### Added
 - Added `sll_static_int[n]` for integers in range of `0 - 255` (inclusive), `sll_static_negative_int[-n-1]` for integers in range of `-16 to -1` (inclusive) (for example, `-2` can be accessed by `sll_static_negative_int[-(-2)-1] = sll_static_negative_int[1]`) and `sll_static_char[n]` for all characters
-- API function signatures (argumetns and return types) are now stored in [`src/include/sll/_api_generated.h`][0.6.18/src/include/sll/_api_generated.h]
+- API function signatures (arguments and return types) are now stored in [`src/include/sll/_api_generated.h`][0.6.18/src/include/sll/_api_generated.h]
 - Builder script option for generating code & signatures for API functions (`--generate-api`)
 - Code generated for API functions is now located in [`src/sll/api/_generated.c`][0.6.18/src/sll/api/_generated.c]
 - GC now also check for unreleased static objects
@@ -17,7 +22,7 @@
 - When updating, the CLI also downloads the Change Log for the given version
 
 ### Changed
-- Function arguments will now shadow other variables instaed of overriding them
+- Function arguments will now shadow other variables instead of overriding them
 - Marked internal CLI variables & function as `static`
 - `sll_error_t` now uses `sll_char_t` instead of `char`
 - `sll_map_t` now stores the length of the map (`n`) instead of the length of the element array (`2n`) (TL;DR Multiply the new value by a factor of 2 to get the previous value)
@@ -388,12 +393,12 @@ Literally, just arrays.
 ## [0.4.1] - 2021-7-29
 ### Added
 - A level-3 optimization (`-O3`), which performs global optimization of the compiled object
-- Assembly instructions for returning diffrent types
+- Assembly instructions for returning different types
 - Errors related to invalid instructions, stack corruption and an invalid instruction index
 - `LLL_ASSEMBLY_INSTRUCTION_TYPE_POP_ROT` instruction
 - Two new operators: `(@)` (exit) and `(@@)` (return)
 
-### Chagned
+### Changed
 - In a debug build, the `UNREACHABLE()` macro expands into `ASSERT(!"Unreachable")`
 - Operator assembly instruction can be used directly on a variable
 
@@ -404,7 +409,7 @@ Literally, just arrays.
 
 ## [0.4.0] - 2021-7-28
 ### Added
-- Assembly instructions used for pushing the current instruicton index and for storing a variable and poping it of the stack
+- Assembly instructions used for pushing the current instruction index and for storing a variable and removing it of the stack
 - Implemented `lll_run_assembly`
 
 ### Changed
@@ -460,8 +465,8 @@ Literally, just arrays.
 
 ## [0.2.2] - 2021-7-23
 ### Changed
-- All object are now 8-byte alignemd
-- Identifier listist comparasion has been sped up
+- All object are now 8-byte aligned
+- Identifier list compassion has been sped up
 - Renamed some options
 
 ## [0.2.1] - 2021-7-3
@@ -473,7 +478,7 @@ Literally, just arrays.
 
 ## [0.2.0] - 2021-7-3
 ### Added
-- Diffrent structures for each object type
+- Different structures for each object type
 
 ### Removed
 - Object conversion functions
@@ -521,7 +526,7 @@ Literally, just arrays.
 - Volatile CPU registers are now saved across function calls
 
 ### Removed
-- Declarations of unexported private functions
+- Declarations of unused private functions
 
 ## [0.1.5] - 2021-6-17
 ### Added

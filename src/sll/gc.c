@@ -53,18 +53,6 @@ static void _gc_free_pages(void){
 
 
 
-static void _count_static_objects(void){
-	const static_runtime_object_t*const* l=&__strto_start;
-	while (l<&__strto_end){
-		if (*l){
-			_gc_static_count++;
-		}
-		l++;
-	}
-}
-
-
-
 __SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t){
 	uint32_t i=o->_dbg0|(o->_dbg1<<16);
 	if (i==GC_MAX_DBG_ID){
@@ -189,7 +177,13 @@ __SLL_FUNC void sll_get_runtime_object_stack_data(sll_runtime_object_stack_data_
 		pg=*((void**)pg);
 	}
 	if (!_gc_static_count){
-		_count_static_objects();
+		const static_runtime_object_t*const* l=&__strto_start;
+		while (l<&__strto_end){
+			if (*l){
+				_gc_static_count++;
+			}
+			l++;
+		}
 	}
 	o->s=malloc(_gc_static_count*sizeof(sll_ref_count_t));
 	i=0;
