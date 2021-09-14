@@ -2,9 +2,9 @@
 
 ## [0.6.19] - Ongoing
 ### Added
+- Added more operators
 - `SLL_ACQUIRE_NO_DEBUG` macro (like `SLL_ACQUIRE` but does not add debug data)
 - `SLL_ACQUIRE_STATIC_CHAR` macro (an alias to `SLL_FROM_CHAR`)
-- Added more operators
 
 ### Changed
 - Fixed syntax highlight
