@@ -65,6 +65,7 @@ static sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilat
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				sll_object_offset_t off=1;

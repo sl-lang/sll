@@ -79,7 +79,7 @@ contexts:
               pop: true
             - include: all
         - include: all
-    - match: '(\()\s*(?:(\?|->|>-|><)|(&&|\|\||\!)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->|>-|><)|(&&|\|\||\!)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(,))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.control.conditional.sll
@@ -100,6 +100,7 @@ contexts:
         17: support.function.builtin.length.sll
         18: support.function.builtin.access.sll
         19: support.function.builtin.cast.sll
+        20: punctuation.separator.sll
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - match: '\)'

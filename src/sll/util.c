@@ -142,6 +142,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				sll_object_offset_t off=1;

@@ -67,6 +67,7 @@ static sll_object_offset_t _patch_module(sll_object_t* mo,const import_module_da
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				sll_object_offset_t off=1;
@@ -356,7 +357,7 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 					o->dt.l.ac=ac;
 				}
 			}
-			else if (fl&(EXTRA_COMPILATION_DATA_IMPORT|EXTRA_COMPILATION_DATA_EXPORT|EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
+			else if (o->t==SLL_OBJECT_TYPE_COMMA||(fl&(EXTRA_COMPILATION_DATA_IMPORT|EXTRA_COMPILATION_DATA_EXPORT|EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION))){
 				o->dt.sc=sc;
 			}
 			else{
@@ -457,7 +458,7 @@ _recurse_array_or_map:;
 					}
 					ml++;
 				}
-				else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
+				else if (o->t==SLL_OBJECT_TYPE_COMMA||o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
 					if (sc==SLL_MAX_STATEMENT_COUNT){
 						e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
 						e->dt.r.off=arg_s;
@@ -557,6 +558,10 @@ _read_symbol:
 				}
 				else if (*str=='@'){
 					o->t=SLL_OBJECT_TYPE_EXIT;
+				}
+				else if (*str==','){
+					o->t=SLL_OBJECT_TYPE_COMMA;
+					sc=0;
 				}
 				else if (*str=='#'){
 					o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
@@ -1243,7 +1248,7 @@ _identifier_created:;
 				}
 				ml++;
 			}
-			else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
+			else if (o->t==SLL_OBJECT_TYPE_COMMA||o->t==SLL_OBJECT_TYPE_OPERATION_LIST){
 				if (sc==SLL_MAX_STATEMENT_COUNT){
 					e->t=SLL_ERROR_TOO_MANY_STATEMENTS;
 					e->dt.r.off=arg_s;

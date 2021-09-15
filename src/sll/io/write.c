@@ -93,6 +93,7 @@ static sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				_write_integer(os,o->dt.sc);

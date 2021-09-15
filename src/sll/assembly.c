@@ -162,6 +162,7 @@ static sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_comp
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				sll_object_offset_t off=1;
@@ -363,6 +364,8 @@ static sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generat
 			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:SLL_ASSEMBLY_INSTRUCTION_TYPE_JA))+eoff;
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
 			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE))+eoff;
+		case SLL_OBJECT_TYPE_COMMA:
+			SLL_UNIMPLEMENTED();
 	}
 	sll_object_offset_t off=_generate_on_stack(o,g_dt);
 	GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
@@ -644,6 +647,22 @@ static sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_gen
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
+			{
+				sll_statement_count_t l=o->dt.sc;
+				SLL_ASSERT(l);
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					return eoff+1;
+				}
+				sll_object_offset_t off=1;
+				l--;
+				while (l){
+					l--;
+					off+=_generate(o+off,g_dt);
+				}
+				return _generate_on_stack(o+off,g_dt)+off+eoff;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
@@ -712,6 +731,7 @@ static sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembl
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				sll_object_offset_t off=1;
@@ -996,6 +1016,7 @@ static sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_da
 				GENERATE_OPCODE(g_dt,(o->t==SLL_OBJECT_TYPE_RETURN?SLL_ASSEMBLY_INSTRUCTION_TYPE_RET:SLL_ASSEMBLY_INSTRUCTION_TYPE_END));
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				sll_object_offset_t off=1;

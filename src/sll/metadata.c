@@ -35,6 +35,7 @@ static sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				sll_object_offset_t off=1;
@@ -87,6 +88,7 @@ static sll_object_offset_t _update_strings(sll_object_t* o,sll_string_index_t* s
 				}
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				sll_object_offset_t off=1;

@@ -365,6 +365,18 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'}');
 				return off+eoff;
 			}
+		case SLL_OBJECT_TYPE_COMMA:
+			{
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,',');
+				sll_stack_offset_t off=1;
+				sll_statement_count_t sc=o->dt.sc;
+				for (sll_statement_count_t i=0;i<sc;i++){
+					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
+					off+=_print_object_internal(c_dt,o+off,os);
+				}
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'|');
