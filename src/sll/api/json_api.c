@@ -138,7 +138,7 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		(*p)++;
 	}
 	if (!c){
-		SLL_RETURN_ZERO;
+		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	if (c=='{'){
 		sll_runtime_object_t* o=SLL_CREATE();
@@ -531,7 +531,7 @@ __API_FUNC(json_parse){
 	if (o){
 		return o;
 	}
-	SLL_RETURN_ZERO_HANDLE;
+	return SLL_ACQUIRE_STATIC(handle_zero);
 }
 
 

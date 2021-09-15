@@ -171,7 +171,7 @@ __SLL_OPERATOR_UNARY(inc){
 		default:
 			SLL_UNREACHABLE();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -195,7 +195,7 @@ __SLL_OPERATOR_UNARY(dec){
 		default:
 			SLL_UNREACHABLE();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -367,7 +367,7 @@ _add_to_map:
 		default:
 			SLL_UNREACHABLE();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -395,7 +395,7 @@ __SLL_OPERATOR_BINARY(sub){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -413,7 +413,7 @@ __SLL_OPERATOR_BINARY(mult){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -431,7 +431,7 @@ __SLL_OPERATOR_BINARY(div){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -449,7 +449,7 @@ __SLL_OPERATOR_BINARY(floor_div){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -467,7 +467,7 @@ __SLL_OPERATOR_BINARY(mod){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -485,7 +485,7 @@ __SLL_OPERATOR_BINARY(and){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -503,7 +503,7 @@ __SLL_OPERATOR_BINARY(or){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -521,7 +521,7 @@ __SLL_OPERATOR_BINARY(xor){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -545,7 +545,7 @@ __SLL_OPERATOR_UNARY(inv){
 		default:
 			SLL_UNREACHABLE();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -561,7 +561,7 @@ __SLL_OPERATOR_BINARY(shr){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -577,7 +577,7 @@ __SLL_OPERATOR_BINARY(shl){
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -588,7 +588,7 @@ __SLL_OPERATOR_UNARY(len){
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
-			SLL_RETURN_ZERO;
+			return SLL_ACQUIRE_STATIC_INT(0);
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
 			return SLL_FROM_INT(a->dt.s.l);
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
@@ -598,14 +598,14 @@ __SLL_OPERATOR_UNARY(len){
 		default:
 			SLL_UNREACHABLE();
 	}
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
 
 __SLL_OPERATOR_UNARY(dup){
 	SLL_UNIMPLEMENTED();
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -638,7 +638,7 @@ __SLL_OPERATOR_BINARY(access){
 				return m.v[(i<<1)+1];
 			}
 		}
-		SLL_RETURN_ZERO;
+		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	SLL_ACQUIRE(a);
 	return a;
@@ -648,14 +648,14 @@ __SLL_OPERATOR_BINARY(access){
 
 __SLL_OPERATOR_TERNARY(access_range){
 	SLL_UNIMPLEMENTED();
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
 
 __SLL_OPERATOR_QUATERNARY(access_range_step){
 	SLL_UNIMPLEMENTED();
-	SLL_RETURN_ZERO;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 

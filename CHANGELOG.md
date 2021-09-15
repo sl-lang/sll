@@ -9,9 +9,12 @@
 ### Changed
 - Fixed syntax highlight
 
+### Removed
+- `SLL_RETURN_ZERO`, `SLL_RETURN_ONE`, `SLL_RETURN_ZERO_STRING` and `SLL_RETURN_ZERO_HANDLE` macros
+
 ## [0.6.18] - 2021-9-13
 ### Added
-- Added `sll_static_int[n]` for integers in range of `0 - 255` (inclusive), `sll_static_negative_int[-n-1]` for integers in range of `-16 to -1` (inclusive) (for example, `-2` can be accessed by `sll_static_negative_int[-(-2)-1] = sll_static_negative_int[1]`) and `sll_static_char[n]` for all characters
+- Added `sll_static_int[n]` for integers in range of `0 - 255` (inclusive), `sll_static_negative_int[-n-1]` for integers in range of `-16 to -1` (inclusive) (for example, `-2` can be accessed by `sll_static_negative_int[-(-2)-1] = sll_static_negative_int[1]`) and `sll_static_char[n]` for all characters (unsigned 8-bit integer)
 - API function signatures (arguments and return types) are now stored in [`src/include/sll/_api_generated.h`][0.6.18/src/include/sll/_api_generated.h]
 - Builder script option for generating code & signatures for API functions (`--generate-api`)
 - Code generated for API functions is now located in [`src/sll/api/_generated.c`][0.6.18/src/sll/api/_generated.c]

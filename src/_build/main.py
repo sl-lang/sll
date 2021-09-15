@@ -16,7 +16,7 @@ API_HEADER_FILE_PATH="src/include/sll/_api_generated.h"
 COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG",b"DEBUG_BUILD"]) if os.name=="nt" else ([] if "--release" in sys.argv else [b"DEBUG_BUILD"]))
 PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix.c","nt":"src/sll/platform/windows.c"}
 RETURN_CODE_BASE_TYPE={"0":"I","1":"I","h":"H","Z":"S","f":"F","I":"I","F":"F","C":"C","S":"S","A":"A","H":"H","M":"M","O":"O"}
-RETURN_CODE_TYPE_MAP={"0":"SLL_RETURN_ZERO","1":"SLL_RETURN_ONE","h":"SLL_RETURN_ZERO_HANDLE","Z":"SLL_RETURN_ZERO_STRING","f":"return SLL_ACQUIRE_STATIC(float_zero)"}
+RETURN_CODE_TYPE_MAP={"0":"return SLL_ACQUIRE_STATIC_INT(0)","1":"return SLL_ACQUIRE_STATIC_INT(1)","h":"return SLL_ACQUIRE_STATIC(handle_zero)","Z":"return SLL_ACQUIRE_STATIC(str_zero)","f":"return SLL_ACQUIRE_STATIC(float_zero)"}
 TYPE_ACCESS_MAP={"I":"$->dt.i","F":"$->dt.f","C":"$->dt.c","S":"&($->dt.s)","A":"&($->dt.a)","H":"&($->dt.h)","M":"&($->dt.m)","O":"$"}
 TYPE_ACCESS_OPT_MAP={"I":"($?$->dt.i:0)","F":"($?$->dt.f:0)","C":"($?$->dt.c:0)","S":"($?&($->dt.s):NULL)","A":"($?&($->dt.a):NULL)","H":"($?&($->dt.h):NULL)","M":"($?&($->dt.m):NULL)","O":"$"}
 TYPE_CHECK_MAP={"I":"$->t==SLL_RUNTIME_OBJECT_TYPE_INT","F":"$->t==SLL_RUNTIME_OBJECT_TYPE_FLOAT","C":"$->t==SLL_RUNTIME_OBJECT_TYPE_CHAR","S":"$->t==SLL_RUNTIME_OBJECT_TYPE_STRING","A":"$->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY","H":"($->t==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&$->dt.h.t!=SLL_UNKNOWN_HANDLE_TYPE)","M":"$->t==SLL_RUNTIME_OBJECT_TYPE_MAP"}

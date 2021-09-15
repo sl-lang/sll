@@ -73,7 +73,7 @@ __SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
 
 __API_FUNC(sys_arg_get){
 	if (a<0||a>=_sys_argc){
-		SLL_RETURN_ZERO_STRING;
+		return SLL_ACQUIRE_STATIC(str_zero);
 	}
 	SLL_ACQUIRE(*(_sys_argv+a));
 	return *(_sys_argv+a);

@@ -16,10 +16,6 @@
 #define SLL_FROM_INT(v) __SLL_ADD_DEBUG_DATA(sll_int_to_object(v),__SLL_DEBUG_TYPE_CREATE)
 #define SLL_FROM_FLOAT(v) __SLL_ADD_DEBUG_DATA(sll_float_to_object(v),__SLL_DEBUG_TYPE_CREATE)
 #define SLL_FROM_CHAR(c) __SLL_ADD_DEBUG_DATA(sll_static_char[(sll_char_t)(c)],__SLL_DEBUG_TYPE_CREATE)
-#define SLL_RETURN_ZERO return SLL_ACQUIRE_STATIC_INT(0)
-#define SLL_RETURN_ONE return SLL_ACQUIRE_STATIC_INT(1)
-#define SLL_RETURN_ZERO_STRING return SLL_ACQUIRE_STATIC(str_zero)
-#define SLL_RETURN_ZERO_HANDLE return SLL_ACQUIRE_STATIC(handle_zero)
 
 
 
