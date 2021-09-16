@@ -702,8 +702,6 @@ static sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_d
 				off+=_optimize(fn,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 				if (o_dt->rm){
 					_remove_up_to_end(o,off);
-					o->dt.ac-=l;
-					break;
 				}
 				l--;
 				while (l){
