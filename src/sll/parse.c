@@ -29,6 +29,7 @@ static sll_object_offset_t _patch_module(sll_object_t* mo,const import_module_da
 		case SLL_OBJECT_TYPE_CHAR:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_STRING:
 			o->dt.s=*(im_dt->sm+o->dt.s);

@@ -20,6 +20,7 @@ static sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_STRING:
 			*(m+(o->dt.s>>6))|=1ull<<(o->dt.s&63);
@@ -73,6 +74,7 @@ static sll_object_offset_t _update_strings(sll_object_t* o,sll_string_index_t* s
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_STRING:
 			o->dt.s=*(sm+o->dt.s);

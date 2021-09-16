@@ -71,6 +71,7 @@ static sll_object_offset_t _map_identifiers(const sll_object_t* o,const sll_comp
 		case SLL_OBJECT_TYPE_STRING:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
@@ -366,6 +367,11 @@ static sll_object_offset_t _generate_jump(const sll_object_t* o,assembly_generat
 			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE))+eoff;
 		case SLL_OBJECT_TYPE_COMMA:
 			SLL_UNIMPLEMENTED();
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			if (!inv){
+				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+			}
+			return eoff+1;
 	}
 	sll_object_offset_t off=_generate_on_stack(o,g_dt);
 	GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
@@ -663,6 +669,13 @@ static sll_object_offset_t _generate_on_stack(const sll_object_t* o,assembly_gen
 				}
 				return _generate_on_stack(o+off,g_dt)+off+eoff;
 			}
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			{
+				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
+				ai->dt.i=o->dt.fn_id+1;
+				return eoff+1;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	SLL_ASSERT(l);
@@ -693,6 +706,7 @@ static sll_object_offset_t _mark_loop_delete(const sll_object_t* o,const assembl
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_ARRAY:
 			SLL_UNIMPLEMENTED();
@@ -766,6 +780,7 @@ static sll_object_offset_t _generate(const sll_object_t* o,assembly_generator_da
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_ARRAY:
 			{

@@ -328,7 +328,7 @@ _jump:
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 				{
-					if (sll_operator_bool(*(s+si-1))==SLL_COMPARE_RESULT_ZERO){
+					if (!sll_operator_bool(*(s+si-1))){
 						si--;
 						SLL_RELEASE(*(s+si));
 						goto _jump;
@@ -337,7 +337,7 @@ _jump:
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				{
-					if (sll_operator_bool(*(s+si-1))==SLL_COMPARE_RESULT_NONZERO){
+					if (sll_operator_bool(*(s+si-1))){
 						si--;
 						SLL_RELEASE(*(s+si));
 						goto _jump;
@@ -377,7 +377,7 @@ _jump:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH:
 				OPERATOR_INSTRUCTION_UNARY(len);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY:
-				OPERATOR_INSTRUCTION_UNARY(dup);
+				OPERATOR_INSTRUCTION_UNARY(access_zero);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS:
 				OPERATOR_INSTRUCTION_BINARY(access);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_TWO:

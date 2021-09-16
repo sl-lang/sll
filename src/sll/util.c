@@ -98,6 +98,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_STRING:
 		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_ARRAY:
 			{

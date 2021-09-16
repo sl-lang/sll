@@ -79,6 +79,24 @@ contexts:
               pop: true
             - include: all
         - include: all
+    - match: '(\()\s*(,,,)\s*'
+      captures:
+        1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
+        2: keyword.declaration.function.sll
+      push:
+        - meta_scope: meta.group.sll meta.parens.sll
+        - match: '\)'
+          scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+          pop: true
+          push:
+            - meta_scope: meta.group.sll meta.parens.sll
+            - match: '\)'
+              scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+              pop: true
+            - include: all
+        - include: all
+        - match: '[a-zA-Z0-9_]+'
+          scope: variable.parameter.sll
     - match: '(\()\s*(?:(\?|->|>-|><)|(&&|\|\||\!)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(,))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll

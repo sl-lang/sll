@@ -393,6 +393,9 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'|');
 				return eoff+_print_object_internal(c_dt,o+1,os)+1;
 			}
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			_print_int(o->dt.fn_id,os);
+			return eoff+1;
 		default:
 			SLL_UNREACHABLE();
 	}

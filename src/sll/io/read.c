@@ -157,6 +157,9 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t
 			CHECK_ERROR2(is,o->dt.dbg.cn,sll_column_number_t);
 			CHECK_ERROR2(is,o->dt.dbg.ln_off,sll_file_offset_t);
 			return _read_object(c_dt,is);
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			CHECK_ERROR2(is,o->dt.fn_id,sll_function_index_t);
+			return 1;
 	}
 	CHECK_ERROR2(is,o->dt.ac,sll_arg_count_t);
 	for (sll_arg_count_t i=0;i<o->dt.ac;i++){

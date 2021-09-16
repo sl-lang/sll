@@ -603,7 +603,7 @@ __SLL_OPERATOR_UNARY(len){
 
 
 
-__SLL_OPERATOR_UNARY(dup){
+__SLL_OPERATOR_UNARY(access_zero){
 	SLL_UNIMPLEMENTED();
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -715,22 +715,22 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sl
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_bool(const sll_runtime_object_t* a){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
-			return (a->dt.i?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
+			return !!a->dt.i;
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			return (a->dt.f?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
+			return !!a->dt.f;
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-			return (a->dt.c?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
+			return !!a->dt.c;
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			return (a->dt.s.l?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
+			return !!a->dt.s.l;
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-			return (a->dt.a.l?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
+			return !!a->dt.a.l;
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
-			return (a->dt.h.t?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
+			return !!a->dt.h.t;
 		case SLL_RUNTIME_OBJECT_TYPE_MAP:
-			return (a->dt.m.l?SLL_COMPARE_RESULT_NONZERO:SLL_COMPARE_RESULT_ZERO);
+			return !!a->dt.m.l;
 		default:
 			SLL_UNREACHABLE();
 	}

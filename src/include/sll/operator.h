@@ -77,7 +77,7 @@ __SLL_OPERATOR_UNARY(len);
 
 
 
-__SLL_OPERATOR_UNARY(dup);
+__SLL_OPERATOR_UNARY(access_zero);
 
 
 
@@ -101,7 +101,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sl
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_bool(const sll_runtime_object_t* a);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_runtime_object_t* a);
 
 
 

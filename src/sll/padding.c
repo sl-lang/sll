@@ -20,6 +20,7 @@ static sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilat
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_STRING:
 		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_ARRAY:
 			{

@@ -109,6 +109,9 @@ static sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_
 			_write_integer(os,o->dt.dbg.cn);
 			_write_integer(os,o->dt.dbg.ln_off);
 			return eoff+_write_object(os,o+1)+1;
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			_write_integer(os,o->dt.fn_id);
+			return eoff+1;
 	}
 	_write_integer(os,o->dt.ac);
 	sll_object_offset_t off=1;

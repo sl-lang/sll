@@ -17,6 +17,7 @@ static sll_object_offset_t _remove_debug_data_internal(sll_object_t* o){
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			return eoff+1;
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:

@@ -280,6 +280,7 @@ typedef union __SLL_OBJECT_DATA{
 	sll_arg_count_t ac;
 	sll_statement_count_t sc;
 	sll_debug_object_data_t dbg;
+	sll_function_index_t fn_id;
 } sll_object_data_t;
 
 
