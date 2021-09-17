@@ -441,7 +441,6 @@ static uint8_t _get_cond_type(sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv
 
 
 
-#include <sll/stream.h>
 static sll_object_offset_t _inline_function(sll_object_t* o,optimizer_data_t* o_dt){
 	SLL_ASSERT(o->t==SLL_OBJECT_TYPE_CALL);
 	o->t=SLL_OBJECT_TYPE_INLINE_FUNC;
@@ -520,18 +519,15 @@ static sll_object_offset_t _inline_function(sll_object_t* o,optimizer_data_t* o_
 	}
 	free(fn_arg);
 	free(fn_arg_sz_l);
+	free(fn_dt);
 	memcpy(o+off,fn_src,fn_src_sz*sizeof(sll_object_t));
+	free(fn_src);
 	while ((o+off)->t!=SLL_OBJECT_TYPE_FUNC){
 		(o+off)->t=SLL_OBJECT_TYPE_NOP;
 		off++;
 	}
 	(o+off)->t=SLL_OBJECT_TYPE_OPERATION_LIST;
 	(o+off)->dt.sc=(o+off)->dt.fn.ac;
-	free(fn_src);
-	free(fn_dt);
-	/*sll_output_data_stream_t os;
-	sll_stream_create_output_from_file(stdout,&os);
-	sll_print_object(o_dt->c_dt,o,&os);putchar('\n');*/
 	return out;
 }
 
