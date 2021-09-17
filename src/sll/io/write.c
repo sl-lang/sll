@@ -265,10 +265,6 @@ __SLL_FUNC void sll_write_compiled_object(sll_output_data_stream_t* os,const sll
 	_write_integer(os,c_dt->ft.l);
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
-		if (!k){
-			_write_integer(os,SLL_MAX_OBJECT_OFFSET);
-			continue;
-		}
 		_write_integer(os,k->off);
 		_write_integer(os,k->al);
 		for (sll_arg_count_t j=0;j<k->al;j++){

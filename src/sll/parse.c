@@ -1406,9 +1406,6 @@ _export_identifier_found:;
 					c_dt->ft.dt=realloc(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 					for (sll_function_index_t i=0;i<im.ft.l;i++){
 						sll_function_t* f=*(im.ft.dt+i);
-						if (!f){
-							continue;
-						}
 						sll_function_t* nf=malloc(sizeof(sll_function_t)+f->al*sizeof(sll_identifier_index_t));
 						nf->off=(sll_object_offset_t)(f->off+(arg-c_dt->h));
 						nf->al=f->al;

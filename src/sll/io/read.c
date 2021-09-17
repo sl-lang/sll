@@ -368,10 +368,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		sll_stack_offset_t off;
 		CHECK_ERROR(is,off,sll_stack_offset_t,e);
-		if (off==SLL_MAX_OBJECT_OFFSET){
-			*(c_dt->ft.dt+i)=NULL;
-			continue;
-		}
 		sll_arg_count_t al;
 		CHECK_ERROR(is,al,sll_arg_count_t,e);
 		sll_function_t* k=malloc(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));
