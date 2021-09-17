@@ -287,9 +287,6 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 				}
 				*f=nf;
 				sll_stream_create_input_from_file(nf,is);
-				if (fl&FLAG_VERBOSE){
-					PRINT_STATIC_STR("Trying to Load File as Assembly...\n");
-				}
 				sll_error_t e;
 				if (!sll_load_assembly(is,a_dt,&e)){
 					sll_free_assembly_function_table(&(a_dt->ft));

@@ -67,6 +67,9 @@ static sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			_write_integer(os,o->dt.id);
 			return eoff+1;
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			_write_integer(os,o->dt.fn_id);
+			return eoff+1;
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
@@ -109,9 +112,6 @@ static sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_
 			_write_integer(os,o->dt.dbg.cn);
 			_write_integer(os,o->dt.dbg.ln_off);
 			return eoff+_write_object(os,o+1)+1;
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
-			_write_integer(os,o->dt.fn_id);
-			return eoff+1;
 	}
 	_write_integer(os,o->dt.ac);
 	sll_object_offset_t off=1;
@@ -265,6 +265,10 @@ __SLL_FUNC void sll_write_compiled_object(sll_output_data_stream_t* os,const sll
 	_write_integer(os,c_dt->ft.l);
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
+		if (!k){
+			_write_integer(os,SLL_MAX_OBJECT_OFFSET);
+			continue;
+		}
 		_write_integer(os,k->off);
 		_write_integer(os,k->al);
 		for (sll_arg_count_t j=0;j<k->al;j++){

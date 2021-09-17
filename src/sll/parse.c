@@ -650,6 +650,11 @@ _read_symbol:
 				else if (*str=='.'&&*(str+1)=='.'&&*(str+2)=='.'){
 					o->t=SLL_OBJECT_TYPE_INTERNAL_FUNC;
 				}
+				else if (*str=='*'&&*(str+1)=='*'&&*(str+2)=='*'){
+					o->t=SLL_OBJECT_TYPE_INLINE_FUNC;
+					o->dt.fn.sc=c_dt->_n_sc_id;
+					fl|=EXTRA_COMPILATION_DATA_INSIDE_FUNCTION;
+				}
 				else if (*str=='<'&&*(str+1)=='<'&&*(str+2)=='<'){
 					o->t=SLL_OBJECT_TYPE_CONTINUE;
 				}
@@ -674,7 +679,7 @@ _unknown_symbol:
 				e->dt.r.sz=1;
 				return SLL_RETURN_ERROR;
 			}
-			if (o->t==SLL_OBJECT_TYPE_IF||o->t==SLL_OBJECT_TYPE_FOR||o->t==SLL_OBJECT_TYPE_WHILE||o->t==SLL_OBJECT_TYPE_LOOP||o->t==SLL_OBJECT_TYPE_FUNC){
+			if (o->t==SLL_OBJECT_TYPE_IF||o->t==SLL_OBJECT_TYPE_FOR||o->t==SLL_OBJECT_TYPE_WHILE||o->t==SLL_OBJECT_TYPE_LOOP||o->t==SLL_OBJECT_TYPE_FUNC||o->t==SLL_OBJECT_TYPE_INLINE_FUNC){
 				n_l_sc.l_sc=c_dt->_n_sc_id;
 				n_l_sc.ml=(n_l_sc.l_sc+65)>>6;
 				n_l_sc.m=malloc(n_l_sc.ml*sizeof(uint64_t));
@@ -1401,6 +1406,9 @@ _export_identifier_found:;
 					c_dt->ft.dt=realloc(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 					for (sll_function_index_t i=0;i<im.ft.l;i++){
 						sll_function_t* f=*(im.ft.dt+i);
+						if (!f){
+							continue;
+						}
 						sll_function_t* nf=malloc(sizeof(sll_function_t)+f->al*sizeof(sll_identifier_index_t));
 						nf->off=(sll_object_offset_t)(f->off+(arg-c_dt->h));
 						nf->al=f->al;

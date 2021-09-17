@@ -116,6 +116,9 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			CHECK_ERROR2(is,o->dt.id,sll_identifier_index_t);
 			return 1;
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			CHECK_ERROR2(is,o->dt.fn_id,sll_function_index_t);
+			return 1;
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
@@ -157,9 +160,6 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t
 			CHECK_ERROR2(is,o->dt.dbg.cn,sll_column_number_t);
 			CHECK_ERROR2(is,o->dt.dbg.ln_off,sll_file_offset_t);
 			return _read_object(c_dt,is);
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
-			CHECK_ERROR2(is,o->dt.fn_id,sll_function_index_t);
-			return 1;
 	}
 	CHECK_ERROR2(is,o->dt.ac,sll_arg_count_t);
 	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
@@ -368,6 +368,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		sll_stack_offset_t off;
 		CHECK_ERROR(is,off,sll_stack_offset_t,e);
+		if (off==SLL_MAX_OBJECT_OFFSET){
+			*(c_dt->ft.dt+i)=NULL;
+			continue;
+		}
 		sll_arg_count_t al;
 		CHECK_ERROR(is,al,sll_arg_count_t,e);
 		sll_function_t* k=malloc(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));

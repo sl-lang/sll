@@ -158,6 +158,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define MAX_LAST_CLEANUP_TABLE_SIZE 16
 #define CLEANUP_ORDER_LAST SLL_CLEANUP_ORDER_RESERVED0
 
+#define MAX_ASSEMBLY_INSTRUCTION_LABEL SLL_MAX_INSTRUCTION_INDEX
+
 
 
 typedef uint16_t call_stack_size_t;
@@ -274,6 +276,13 @@ typedef struct __LOOP_TABLE{
 
 
 
+typedef struct __RETURN_TABLE{
+	assembly_instruction_label_t* dt;
+	uint32_t sz;
+} return_table_t;
+
+
+
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	sll_assembly_data_t* a_dt;
 	const sll_compilation_data_t* c_dt;
@@ -281,6 +290,7 @@ typedef struct __ASSEMBLY_GENERATOR_DATA{
 	assembly_instruction_label_t n_lbl;
 	identifier_remove_data_t rm;
 	loop_table_t* lt;
+	return_table_t* rt;
 } assembly_generator_data_t;
 
 
