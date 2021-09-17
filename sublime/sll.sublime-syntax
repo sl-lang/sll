@@ -97,7 +97,7 @@ contexts:
         - include: all
         - match: '[a-zA-Z0-9_]+'
           scope: variable.parameter.sll
-    - match: '(\()\s*(?:(\?|->|>-|><)|(&&|\|\||\!)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(,))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->|>-|><)|(&&|\|\||\!)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(@@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(,)|(<<<))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.control.conditional.sll
@@ -110,15 +110,17 @@ contexts:
         9: keyword.declaration.function.sll
         10: support.function.builtin.io.sll
         11: keyword.control.call.sll
-        12: support.function.builtin.exit.sll
+        12: keyword.control.break.sll
         13: keyword.control.return.sll
-        14: keyword.declaration.function.internal.sll
-        15: storage.modifier.export.sll
-        16: keyword.declaration.sll
-        17: support.function.builtin.length.sll
-        18: support.function.builtin.access.sll
-        19: support.function.builtin.cast.sll
-        20: punctuation.separator.sll
+        14: support.function.builtin.exit.sll
+        15: keyword.declaration.function.internal.sll
+        16: storage.modifier.export.sll
+        17: keyword.declaration.sll
+        18: support.function.builtin.length.sll
+        19: support.function.builtin.access.sll
+        20: support.function.builtin.cast.sll
+        21: punctuation.separator.sll
+        22: keyword.control.continue.sll
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - match: '\)'

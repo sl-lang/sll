@@ -283,34 +283,34 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_ADD:
-			PRINT_STATIC_STRING("+",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'+');
 			break;
 		case SLL_OBJECT_TYPE_SUB:
-			PRINT_STATIC_STRING("-",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'-');
 			break;
 		case SLL_OBJECT_TYPE_MULT:
-			PRINT_STATIC_STRING("*",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'*');
 			break;
 		case SLL_OBJECT_TYPE_DIV:
-			PRINT_STATIC_STRING("/",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'/');
 			break;
 		case SLL_OBJECT_TYPE_FLOOR_DIV:
 			PRINT_STATIC_STRING("//",os);
 			break;
 		case SLL_OBJECT_TYPE_MOD:
-			PRINT_STATIC_STRING("%",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'%');
 			break;
 		case SLL_OBJECT_TYPE_BIT_AND:
-			PRINT_STATIC_STRING("&",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'&');
 			break;
 		case SLL_OBJECT_TYPE_BIT_OR:
-			PRINT_STATIC_STRING("|",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'|');
 			break;
 		case SLL_OBJECT_TYPE_BIT_XOR:
-			PRINT_STATIC_STRING("^",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'^');
 			break;
 		case SLL_OBJECT_TYPE_BIT_NOT:
-			PRINT_STATIC_STRING("~",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'~');
 			break;
 		case SLL_OBJECT_TYPE_BIT_RSHIFT:
 			PRINT_STATIC_STRING(">>",os);
@@ -319,7 +319,7 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 			PRINT_STATIC_STRING("<<",os);
 			break;
 		case SLL_OBJECT_TYPE_LESS:
-			PRINT_STATIC_STRING("<",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'<');
 			break;
 		case SLL_OBJECT_TYPE_LESS_EQUAL:
 			PRINT_STATIC_STRING("<=",os);
@@ -331,25 +331,31 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 			PRINT_STATIC_STRING("!=",os);
 			break;
 		case SLL_OBJECT_TYPE_MORE:
-			PRINT_STATIC_STRING(">",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'>');
 			break;
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
 			PRINT_STATIC_STRING(">=",os);
 			break;
 		case SLL_OBJECT_TYPE_LENGTH:
-			PRINT_STATIC_STRING("$",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'$');
 			break;
 		case SLL_OBJECT_TYPE_ACCESS:
-			PRINT_STATIC_STRING(":",os);
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,':');
 			break;
 		case SLL_OBJECT_TYPE_CAST:
 			PRINT_STATIC_STRING("::",os);
+			break;
+		case SLL_OBJECT_TYPE_BREAK:
+			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'@');
+			break;
+		case SLL_OBJECT_TYPE_CONTINUE:
+			PRINT_STATIC_STRING("<<<",os);
 			break;
 		case SLL_OBJECT_TYPE_RETURN:
 			PRINT_STATIC_STRING("@@",os);
 			break;
 		case SLL_OBJECT_TYPE_EXIT:
-			PRINT_STATIC_STRING("@",os);
+			PRINT_STATIC_STRING("@@@",os);
 			break;
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{

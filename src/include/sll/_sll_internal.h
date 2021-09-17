@@ -260,12 +260,27 @@ typedef struct __IDENTIFIER_REMOVE_DATA{
 
 
 
+typedef struct __LOOP{
+	assembly_instruction_label_t s;
+	assembly_instruction_label_t e;
+} loop_t;
+
+
+
+typedef struct __LOOP_TABLE{
+	loop_t* dt;
+	uint32_t sz;
+} loop_table_t;
+
+
+
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	sll_assembly_data_t* a_dt;
 	const sll_compilation_data_t* c_dt;
 	identifier_map_data_t it;
 	assembly_instruction_label_t n_lbl;
 	identifier_remove_data_t rm;
+	loop_table_t* lt;
 } assembly_generator_data_t;
 
 

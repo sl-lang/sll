@@ -558,7 +558,7 @@ _read_symbol:
 					o->t=SLL_OBJECT_TYPE_ACCESS;
 				}
 				else if (*str=='@'){
-					o->t=SLL_OBJECT_TYPE_EXIT;
+					o->t=SLL_OBJECT_TYPE_BREAK;
 				}
 				else if (*str==','){
 					o->t=SLL_OBJECT_TYPE_COMMA;
@@ -649,6 +649,12 @@ _read_symbol:
 				}
 				else if (*str=='.'&&*(str+1)=='.'&&*(str+2)=='.'){
 					o->t=SLL_OBJECT_TYPE_INTERNAL_FUNC;
+				}
+				else if (*str=='<'&&*(str+1)=='<'&&*(str+2)=='<'){
+					o->t=SLL_OBJECT_TYPE_CONTINUE;
+				}
+				else if (*str=='@'&&*(str+1)=='@'&&*(str+2)=='@'){
+					o->t=SLL_OBJECT_TYPE_EXIT;
 				}
 				else{
 					goto _unknown_symbol;

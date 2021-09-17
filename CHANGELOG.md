@@ -3,6 +3,7 @@
 ## [0.6.19] - Ongoing
 ### Added
 - Added more operators
+- Break (`(@)`) and continue (`(<<<)`) operators
 - Comma operator (`(,)`): It behaves like an operator list (`{}`), but instead of returning `nil`, it returns the value of the last expression
 - `SLL_ACQUIRE_NO_DEBUG` macro (like `SLL_ACQUIRE` but does not add debug data)
 - `SLL_ACQUIRE_STATIC_CHAR` macro (an alias to `SLL_FROM_CHAR`)
@@ -12,6 +13,8 @@
 - Fixed syntax highlight
 - `sll_operator_bool` now returns `sll_bool_t` instead of `sll_compare_result_t`
 - Renamed `sll_operator_dup` to `sll_operator_access_zero`
+- Renamed the exit operator (`(@)`) to `(@@@)`
+- Replaced `PRINT_STATIC_STRING` function calls to `SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM` in [`src/sll/print.c`][main/src/sll/print.c]
 
 ### Removed
 - `SLL_RETURN_ZERO`, `SLL_RETURN_ONE`, `SLL_RETURN_ZERO_STRING` and `SLL_RETURN_ZERO_HANDLE` macros
@@ -38,7 +41,7 @@
 - VM variables are now properly released
 
 ### Removed
-- `sll_static_minus_one`, `sll_static_zero`, `sll_static_one`, `sll_static_two`, `sll_static_threee`, `sll_static_four` and `sll_static_float_third` (in favor of `sll_static_int` and `sll_static_negative_int`)
+- `sll_static_minus_one`, `sll_static_zero`, `sll_static_one`, `sll_static_two`, `sll_static_three`, `sll_static_four` and `sll_static_float_third` (in favor of `sll_static_int` and `sll_static_negative_int`)
 
 ## [0.6.17] - 2021-9-9
 ### Added
@@ -626,6 +629,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/sll/print.c]: https://github.com/sl-lang/sll/blob/main/src/sll/print.c
 [0.6.18/src/include/sll/_api_generated.h]: https://github.com/sl-lang/sll/blob/v0.6.18/src/include/sll/_api_generated.h
 [0.6.18/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/v0.6.18/src/sll/api/_generated.c
 [0.6.18/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.18/src/sll/operator.c
