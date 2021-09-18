@@ -21,7 +21,7 @@ __API_FUNC(time_current_nanos){
 
 __API_FUNC(time_sleep){
 	sll_time_t st=sll_platform_get_current_time();
-	if (a->t==SLL_RUNTIME_OBJECT_TYPE_INT){
+	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT){
 		sll_platform_sleep(a->dt.i*1000000000);
 	}
 	else{
@@ -34,7 +34,7 @@ __API_FUNC(time_sleep){
 
 __API_FUNC(time_sleep_nanos){
 	sll_time_t st=sll_platform_get_current_time();
-	if (a->t==SLL_RUNTIME_OBJECT_TYPE_INT){
+	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT){
 		sll_platform_sleep(a->dt.i);
 	}
 	else{

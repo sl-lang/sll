@@ -125,7 +125,7 @@ _found_index:
 
 __API_FUNC(file_write){
 	FILE* fh=NULL;
-	if (a->t==SLL_RUNTIME_OBJECT_TYPE_INT){
+	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT){
 		if (a->dt.i==-2){
 			fh=stdout;
 		}

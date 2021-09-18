@@ -433,7 +433,7 @@ _print_from_stack:;
 				{
 					si--;
 					sll_runtime_object_t* tos=*(s+si);
-					if (tos->t==SLL_RUNTIME_OBJECT_TYPE_INT){
+					if (SLL_RUNTIME_OBJECT_GET_TYPE(tos)==SLL_RUNTIME_OBJECT_TYPE_INT){
 						sll_integer_t i=tos->dt.i;
 						SLL_RELEASE(tos);
 						if (i<0){

@@ -16,9 +16,9 @@ __API_FUNC(url_execute_request){
 	};
 	for (sll_header_count_t i=0;i<d->l;i++){
 		sll_header_t* h_kv=malloc(sizeof(sll_header_t));
-		SLL_ASSERT(d->v[i<<1]->t==SLL_RUNTIME_OBJECT_TYPE_STRING);
+		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(d->v[i<<1])==SLL_RUNTIME_OBJECT_TYPE_STRING);
 		h_kv->k=d->v[i<<1]->dt.s;
-		SLL_ASSERT(d->v[(i<<1)+1]->t==SLL_RUNTIME_OBJECT_TYPE_STRING);
+		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(d->v[(i<<1)+1])==SLL_RUNTIME_OBJECT_TYPE_STRING);
 		h_kv->v=d->v[(i<<1)+1]->dt.s;
 		*(http_m.dt+i)=h_kv;
 	}

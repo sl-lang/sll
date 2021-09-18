@@ -105,6 +105,7 @@
 	(:> "II=" ii "\n")
 	(? (== ii 10) (@))
 })
+(:> "A: " (+ 1 2) "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

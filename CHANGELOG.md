@@ -4,10 +4,12 @@
 
 ### Added
 
+- Added automatic function inlining ([#41]) and contants term evaluation ([#48])
 - Added more operators
-- Break (`(@)`) and continue (`(<<<)`) operators
-- Comma operator (`(,)`): It behaves like an operator list (`{}`), but instead of returning `nil`, it returns the value of the last expression
-- Inline function (`(***)`) operator: It is equal to (`(<- (,,, |# code #|) |# args #|)`)
+- Break (`(@)`) and continue (`(<<<)`) operators ([#44])
+- [Code of Conduct][main/CODE_OF_CONDUCT.md]
+- Comma operator (`(,)`): It behaves like an operator list (`{}`), but instead of returning `nil`, it returns the value of the last expression ([#43])
+- Inline function (`(***)`) operator: It is equal to (`(<- (,,, |# code #|) |# args #|)`) ([#46])
 - Internal function now store the type of the function, for example `SLL_INTERNAL_FUNCTION_TYPE_REQUIRED`
 - `SLL_ACQUIRE_NO_DEBUG` macro (like `SLL_ACQUIRE` but does not add debug data)
 - `SLL_ACQUIRE_STATIC_CHAR` macro (an alias to `SLL_FROM_CHAR`)
@@ -20,6 +22,7 @@
 - Renamed `sll_operator_dup` to `sll_operator_access_zero`
 - Renamed the exit operator (`(@)`) to `(@@@)`
 - Replaced `PRINT_STATIC_STRING` function calls to `SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM` in [`src/sll/print.c`][main/src/sll/print.c]
+- Updated the license name
 
 ### Removed
 
@@ -760,6 +763,12 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#48]: https://github.com/sl-lang/sll/issues/48
+[#47]: https://github.com/sl-lang/sll/issues/47
+[#46]: https://github.com/sl-lang/sll/issues/46
+[#44]: https://github.com/sl-lang/sll/issues/44
+[#43]: https://github.com/sl-lang/sll/issues/43
+[#41]: https://github.com/sl-lang/sll/issues/41
 [#37]: https://github.com/sl-lang/sll/issues/37
 [#36]: https://github.com/sl-lang/sll/issues/36
 [#35]: https://github.com/sl-lang/sll/issues/35
@@ -780,6 +789,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/CODE_OF_CONDUCT.md]: https://github.com/sl-lang/sll/blob/main/CODE_OF_CONDUCT.md
 [main/src/sll/print.c]: https://github.com/sl-lang/sll/blob/main/src/sll/print.c
 [0.6.18/src/include/sll/_api_generated.h]: https://github.com/sl-lang/sll/blob/v0.6.18/src/include/sll/_api_generated.h
 [0.6.18/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/v0.6.18/src/sll/api/_generated.c

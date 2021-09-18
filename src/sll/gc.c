@@ -219,16 +219,18 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 			free(dt->rl);
 			free(dt);
 		}
-		if (o->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-			free(o->dt.s.v);
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_STRING){
+			if (!(o->t&RUNTIME_OBJECT_EXTERNAL_STRING)){
+				free(o->dt.s.v);
+			}
 		}
-		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
+		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
 			for (sll_array_length_t j=0;j<o->dt.a.l;j++){
 				sll_release_object(*(o->dt.a.v+j));
 			}
 			free(o->dt.a.v);
 		}
-		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_HANDLE){
+		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_HANDLE){
 			if (sll_current_runtime_data){
 				sll_handle_descriptor_t* hd=sll_lookup_handle_descriptor(sll_current_runtime_data->hl,o->dt.h.t);
 				if (hd&&hd->df){
@@ -236,7 +238,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 				}
 			}
 		}
-		else if (o->t==SLL_RUNTIME_OBJECT_TYPE_MAP){
+		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_MAP){
 			for (sll_map_length_t j=0;j<(o->dt.m.l<<1);j++){
 				sll_release_object(*(o->dt.m.v+j));
 			}
@@ -269,7 +271,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 					fputs("\nUnreleased Objects:\n",stderr);
 				}
 				const char* t="<unknown>";
-				switch (c->t){
+				switch (SLL_RUNTIME_OBJECT_GET_TYPE(c)){
 					case SLL_RUNTIME_OBJECT_TYPE_INT:
 						t="int";
 						break;
@@ -337,7 +339,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 				}
 				sll_runtime_object_t* c=k->dt;
 				const char* t="<unknown>";
-				switch (c->t){
+				switch (SLL_RUNTIME_OBJECT_GET_TYPE(c)){
 					case SLL_RUNTIME_OBJECT_TYPE_INT:
 						t="int";
 						break;

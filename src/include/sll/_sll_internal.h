@@ -147,6 +147,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define RUNTIME_OBJECT_TYPE_FUNCTION_ID SLL_RUNTIME_OBJECT_TYPE_RESERVED0
 #define RUNTIME_OBJECT_TYPE_UNKNOWN SLL_RUNTIME_OBJECT_TYPE_RESERVED1
 #define RUNTIME_OBJECT_CHANGE_IN_LOOP SLL_RUNTIME_OBJECT_FLAG_RESERVED0
+#define RUNTIME_OBJECT_EXTERNAL_STRING SLL_RUNTIME_OBJECT_FLAG_RESERVED1
 
 #define GC_INIT_PAGE_COUNT 4
 #define GC_GET_NEXT_OBJECT(o) ((sll_runtime_object_t*)((o)->dt.s.v))
@@ -249,7 +250,7 @@ typedef struct __OPTIMIZER_DATA{
 	sll_internal_function_table_t* i_ft;
 	identifier_map_data_t it;
 	identifier_remap_data_t im;
-	sll_runtime_object_t* v;
+	sll_runtime_object_t** v;
 	sll_variable_index_t vi;
 	uint8_t rm;
 } optimizer_data_t;
@@ -356,6 +357,13 @@ typedef struct __STATIC_RUNTIME_OBJECT{
 	const char* fp;
 	unsigned int ln;
 } static_runtime_object_t;
+
+
+
+typedef struct __OBJECT_OFFSET_SIZE{
+	sll_object_offset_t off;
+	sll_object_offset_t sz;
+} object_offset_size_t;
 
 
 

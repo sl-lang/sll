@@ -233,7 +233,7 @@ __SLL_OPERATOR_BINARY(add){
 		case COMBINED_TYPE_SH:
 _add_to_string:
 			{
-				SLL_ASSERT(a->t==SLL_RUNTIME_OBJECT_TYPE_STRING);
+				SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING);
 				sll_string_t sa=a->dt.s;
 				sll_string_t sb;
 				sll_object_to_string((const sll_runtime_object_t*const*)&b,1,&sb);

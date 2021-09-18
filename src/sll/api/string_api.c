@@ -44,7 +44,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 		memcpy(o->v+i,"<released object>",17);
 		return i+17;
 	}
-	switch (a->t){
+	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			{
 				sll_integer_t v=a->dt.i;
@@ -189,7 +189,7 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 			o+=17;
 			continue;
 		}
-		switch (a->t){
+		switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 			case SLL_RUNTIME_OBJECT_TYPE_INT:
 				{
 					sll_integer_t v=a->dt.i;
