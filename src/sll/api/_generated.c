@@ -7,7 +7,7 @@
 
 
 
-INTERNAL_FUNCTION("file_close",sll_api_file_close_raw);
+INTERNAL_FUNCTION("file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_close_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -22,7 +22,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_close_raw(const
 
 
 
-INTERNAL_FUNCTION("file_open",sll_api_file_open_raw);
+INTERNAL_FUNCTION("file_open",sll_api_file_open_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_open_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(handle_zero);
@@ -48,7 +48,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_open_raw(const 
 
 
 
-INTERNAL_FUNCTION("file_write",sll_api_file_write_raw);
+INTERNAL_FUNCTION("file_write",sll_api_file_write_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_write_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<2){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -65,7 +65,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_write_raw(const
 
 
 
-INTERNAL_FUNCTION("json_parse",sll_api_json_parse_raw);
+INTERNAL_FUNCTION("json_parse",sll_api_json_parse_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_parse_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(handle_zero);
@@ -79,7 +79,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_parse_raw(const
 
 
 
-INTERNAL_FUNCTION("json_stringify",sll_api_json_stringify_raw);
+INTERNAL_FUNCTION("json_stringify",sll_api_json_stringify_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_stringify_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(str_zero);
@@ -95,7 +95,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_stringify_raw(c
 
 
 
-INTERNAL_FUNCTION("json_type",sll_api_json_type_raw);
+INTERNAL_FUNCTION("json_type",sll_api_json_type_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_type_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(handle_zero);
@@ -114,7 +114,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_type_raw(const 
 
 
 
-INTERNAL_FUNCTION("path_absolute",sll_api_path_absolute_raw);
+INTERNAL_FUNCTION("path_absolute",sll_api_path_absolute_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_absolute_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(str_zero);
@@ -133,7 +133,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_absolute_raw(co
 
 
 
-INTERNAL_FUNCTION("path_exists",sll_api_path_exists_raw);
+INTERNAL_FUNCTION("path_exists",sll_api_path_exists_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_exists_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -148,7 +148,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_exists_raw(cons
 
 
 
-INTERNAL_FUNCTION("path_is_dir",sll_api_path_is_dir_raw);
+INTERNAL_FUNCTION("path_is_dir",sll_api_path_is_dir_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_is_dir_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -163,7 +163,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_is_dir_raw(cons
 
 
 
-INTERNAL_FUNCTION("path_relative",sll_api_path_relative_raw);
+INTERNAL_FUNCTION("path_relative",sll_api_path_relative_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_relative_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(str_zero);
@@ -182,7 +182,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_relative_raw(co
 
 
 
-INTERNAL_FUNCTION("path_size",sll_api_path_size_raw);
+INTERNAL_FUNCTION("path_size",sll_api_path_size_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_size_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -197,7 +197,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_size_raw(const 
 
 
 
-INTERNAL_FUNCTION("string_convert",sll_api_string_convert_raw);
+INTERNAL_FUNCTION("string_convert",sll_api_string_convert_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_convert_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(str_zero);
@@ -214,7 +214,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_convert_raw(c
 
 
 
-INTERNAL_FUNCTION("string_length",sll_api_string_length_raw);
+INTERNAL_FUNCTION("string_length",sll_api_string_length_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_length_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -227,7 +227,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_length_raw(co
 
 
 
-INTERNAL_FUNCTION("sys_arg_get",sll_api_sys_arg_get_raw);
+INTERNAL_FUNCTION("sys_arg_get",sll_api_sys_arg_get_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(str_zero);
@@ -241,7 +241,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_raw(cons
 
 
 
-INTERNAL_FUNCTION("sys_arg_get_count",sll_api_sys_arg_get_count_raw);
+INTERNAL_FUNCTION("sys_arg_get_count",sll_api_sys_arg_get_count_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_count_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	sll_integer_t out=sll_api_sys_arg_get_count();
 	return SLL_FROM_INT(out);
@@ -249,14 +249,14 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_count_ra
 
 
 
-INTERNAL_FUNCTION("sys_get_platform",sll_api_sys_get_platform_raw);
+INTERNAL_FUNCTION("sys_get_platform",sll_api_sys_get_platform_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_get_platform_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	return sll_api_sys_get_platform();
 }
 
 
 
-INTERNAL_FUNCTION("time_current",sll_api_time_current_raw);
+INTERNAL_FUNCTION("time_current",sll_api_time_current_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_current_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	sll_float_t out=sll_api_time_current();
 	return SLL_FROM_FLOAT(out);
@@ -264,7 +264,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_current_raw(con
 
 
 
-INTERNAL_FUNCTION("time_current_nanos",sll_api_time_current_nanos_raw);
+INTERNAL_FUNCTION("time_current_nanos",sll_api_time_current_nanos_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_current_nanos_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	sll_integer_t out=sll_api_time_current_nanos();
 	return SLL_FROM_INT(out);
@@ -272,7 +272,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_current_nanos_r
 
 
 
-INTERNAL_FUNCTION("time_sleep",sll_api_time_sleep_raw);
+INTERNAL_FUNCTION("time_sleep",sll_api_time_sleep_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_sleep_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC(float_zero);
@@ -287,7 +287,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_sleep_raw(const
 
 
 
-INTERNAL_FUNCTION("time_sleep_nanos",sll_api_time_sleep_nanos_raw);
+INTERNAL_FUNCTION("time_sleep_nanos",sll_api_time_sleep_nanos_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_sleep_nanos_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -302,7 +302,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_sleep_nanos_raw
 
 
 
-INTERNAL_FUNCTION("url_execute_request",sll_api_url_execute_request_raw);
+INTERNAL_FUNCTION("url_execute_request",sll_api_url_execute_request_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_url_execute_request_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<5){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -332,7 +332,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_url_execute_request_
 
 
 
-INTERNAL_FUNCTION("util_ref_count",sll_api_util_ref_count_raw);
+INTERNAL_FUNCTION("util_ref_count",sll_api_util_ref_count_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_util_ref_count_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
 		return SLL_ACQUIRE_STATIC_INT(0);

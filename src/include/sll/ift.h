@@ -17,7 +17,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(
 
 
 
-__SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f);
+__SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f,sll_internal_function_type_t t);
 
 
 

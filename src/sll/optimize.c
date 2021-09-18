@@ -231,7 +231,9 @@ static void _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t*
 			*v=*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt));
 			return;
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
-			SLL_UNIMPLEMENTED();
+			v->t=RUNTIME_OBJECT_TYPE_FUNCTION_ID;
+			v->dt.i=o->dt.fn_id;
+			return;
 		case SLL_OBJECT_TYPE_PRINT:
 		case SLL_OBJECT_TYPE_IF:
 		case SLL_OBJECT_TYPE_FOR:
@@ -320,8 +322,6 @@ static sll_object_offset_t _mark_loop_vars(const sll_object_t* o,optimizer_data_
 				}
 				return off+eoff;
 			}
-		case SLL_OBJECT_TYPE_INLINE_FUNC:
-			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
@@ -526,8 +526,8 @@ static sll_object_offset_t _inline_function(sll_object_t* o,optimizer_data_t* o_
 		(o+off)->t=SLL_OBJECT_TYPE_NOP;
 		off++;
 	}
-	(o+off)->t=SLL_OBJECT_TYPE_OPERATION_LIST;
-	(o+off)->dt.sc=(o+off)->dt.fn.ac;
+	(o+off)->t=SLL_OBJECT_TYPE_NOP;
+	o->dt.ac+=(o+off)->dt.fn.ac-1;
 	return out;
 }
 
@@ -817,6 +817,18 @@ static sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_d
 				if (fn->t==SLL_OBJECT_TYPE_FUNC){
 					off+=_inline_function(o,o_dt);
 				}
+				else if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+					sll_runtime_object_t rt;
+					_get_as_runtime_object(fn,o_dt,&rt);
+					if (rt.t==SLL_RUNTIME_OBJECT_TYPE_INT&&rt.dt.i<0){
+						sll_function_index_t i=(sll_function_index_t)(~(rt.dt.i));
+						if (i<o_dt->i_ft->l&&(*(o_dt->i_ft->dt+i))->t==SLL_INTERNAL_FUNCTION_TYPE_DEFAULT){
+							o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
+							o->dt.sc=o->dt.ac;
+							_optimize(o,p,o_dt,fl);
+						}
+					}
+				}
 				return off+eoff;
 			}
 		case SLL_OBJECT_TYPE_IF:
@@ -1089,7 +1101,7 @@ static sll_object_offset_t _optimize(sll_object_t* o,sll_object_t* p,optimizer_d
 				else if (o->dt.sc==1){
 					o->t=SLL_OBJECT_TYPE_NOP;
 				}
-				else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST&&p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_OPERATION_LIST)){
+				else if (o->t==SLL_OBJECT_TYPE_OPERATION_LIST&&p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_INLINE_FUNC||p->t==SLL_OBJECT_TYPE_OPERATION_LIST)){
 					p->dt.sc+=o->dt.sc-1;
 					o->t=SLL_OBJECT_TYPE_NOP;
 				}
@@ -1166,6 +1178,28 @@ static sll_object_offset_t _check_remove(sll_object_t* o,sll_object_t* p,optimiz
 			}
 		case SLL_OBJECT_TYPE_INLINE_FUNC:
 			SLL_UNIMPLEMENTED();
+		case SLL_OBJECT_TYPE_CALL:
+			{
+				SLL_ASSERT(o->dt.ac);
+				sll_object_offset_t off=1;
+				while ((o+off)->t==SLL_OBJECT_TYPE_NOP||(o+off)->t==SLL_OBJECT_TYPE_DEBUG_DATA){
+					off++;
+				}
+				sll_runtime_object_t rt;
+				_get_as_runtime_object(o+off,o_dt,&rt);
+				if (rt.t==SLL_RUNTIME_OBJECT_TYPE_INT&&rt.dt.i<0){
+					sll_function_index_t i=(sll_function_index_t)(~(rt.dt.i));
+					if (i<o_dt->i_ft->l&&(*(o_dt->i_ft->dt+i))->t==SLL_INTERNAL_FUNCTION_TYPE_DEFAULT){
+						o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
+						o->dt.sc=o->dt.ac;
+						return _check_remove(o,p,o_dt);
+					}
+				}
+				for (sll_arg_count_t i=1;i<o->dt.ac;i++){
+					off+=sll_get_object_size(o+off);
+				}
+				return off+eoff;
+			}
 		case SLL_OBJECT_TYPE_ADD:
 		case SLL_OBJECT_TYPE_SUB:
 		case SLL_OBJECT_TYPE_MULT:
@@ -1327,9 +1361,10 @@ static sll_object_offset_t _remap_indexes(sll_object_t* o,sll_object_t* p,optimi
 
 
 
-__SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_object_t* o){
+__SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft){
 	optimizer_data_t o_dt={
 		c_dt,
+		i_ft,
 		{
 			.l_im=malloc(c_dt->idt.ill*sizeof(identifier_data_t)),
 			.n_vi=0,

@@ -563,7 +563,7 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Performing Global Optimization...\n");
 			}
-			sll_optimize_object(c_dt,c_dt->h);
+			sll_optimize_object(c_dt,&i_ft);
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
 			if (fl&FLAG_VERBOSE){

@@ -76,7 +76,7 @@ if ("--generate-api" in sys.argv):
 					if (RETURN_CODE_BASE_TYPE[k["ret"][i]["type"]]!=rt):
 						rt="O"
 						break
-				cf.write(f"\n\n\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw);\n__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* {k['name']}_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){{\n")
+				cf.write(f"\n\n\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);\n__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* {k['name']}_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){{\n")
 				a=""
 				pc=""
 				if (len(k["args"])>0):

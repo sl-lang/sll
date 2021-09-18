@@ -13,7 +13,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_insert_debug_object(sll_compilati
 
 
 
-__SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_object_t* o);
+__SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft);
 
 
 

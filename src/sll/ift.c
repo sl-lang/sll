@@ -41,7 +41,7 @@ _check_next:;
 
 
 
-__SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f){
+__SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f,sll_internal_function_type_t t){
 	i_ft->l++;
 	i_ft->dt=realloc(i_ft->dt,i_ft->l*sizeof(sll_internal_function_t*));
 	sll_internal_function_t* i_f=malloc(sizeof(sll_internal_function_t));
@@ -53,6 +53,7 @@ __SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_func
 		i_f->nml++;
 	}
 	i_f->p=f;
+	i_f->t=t;
 	*(i_ft->dt+i_ft->l-1)=i_f;
 	return i_ft->l-1;
 }
@@ -63,7 +64,7 @@ __SLL_FUNC void sll_register_standard_internal_functions(sll_internal_function_t
 	const internal_function_t*const* f=&__ifunc_start;
 	while (f<&__ifunc_end){
 		if (*f){
-			sll_register_internal_function(i_ft,(*f)->nm,(*f)->f);
+			sll_register_internal_function(i_ft,(*f)->nm,(*f)->f,(*f)->t);
 		}
 		f++;
 	}

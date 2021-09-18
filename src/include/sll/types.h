@@ -27,10 +27,6 @@ typedef uint8_t sll_cleanup_type_t;
 
 
 
-typedef uint8_t sll_string_checksum_t;
-
-
-
 typedef uint8_t sll_compare_result_t;
 
 
@@ -47,6 +43,10 @@ typedef uint8_t sll_json_object_type_t;
 
 
 
+typedef uint8_t sll_internal_function_type_t;
+
+
+
 typedef uint8_t sll_object_type_t;
 
 
@@ -56,6 +56,10 @@ typedef uint8_t sll_return_t;
 
 
 typedef uint8_t sll_runtime_object_type_t;
+
+
+
+typedef uint8_t sll_string_checksum_t;
 
 
 
@@ -516,6 +520,7 @@ typedef struct __SLL_INTERNAL_FUNCTION{
 	uint8_t nml;
 	sll_string_checksum_t c;
 	sll_internal_function_pointer_t p;
+	sll_internal_function_type_t t;
 } sll_internal_function_t;
 
 
