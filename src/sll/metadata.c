@@ -8,11 +8,9 @@
 
 
 
-static sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
-	sll_object_offset_t eoff=0;
-	while (o->t==SLL_OBJECT_TYPE_NOP){
-		eoff++;
-		o++;
+static sll_object_t* _mark_strings(sll_object_t* o,uint64_t* m){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_NEXT_STACK){
+		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -21,52 +19,50 @@ static sll_object_offset_t _mark_strings(sll_object_t* o,uint64_t* m){
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_STRING:
 			*(m+(o->dt.s>>6))|=1ull<<(o->dt.s&63);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				sll_object_offset_t off=1;
 				sll_arg_count_t l=o->dt.fn.ac;
+				o++;
 				while (l){
 					l--;
-					off+=_mark_strings(o+off,m);
+					o=_mark_strings(o,m);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_object_offset_t off=1;
 				sll_statement_count_t l=o->dt.sc;
+				o++;
 				while (l){
 					l--;
-					off+=_mark_strings(o+off,m);
+					o=_mark_strings(o,m);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			*(m+(o->dt.dbg.fpi>>6))|=1ull<<(o->dt.dbg.fpi&63);
-			return eoff+_mark_strings(o+1,m)+1;
+			return _mark_strings(o+1,m);
 	}
-	sll_object_offset_t off=1;
 	sll_arg_count_t l=o->dt.ac;
+	o++;
 	while (l){
 		l--;
-		off+=_mark_strings(o+off,m);
+		o=_mark_strings(o,m);
 	}
-	return off+eoff;
+	return o;
 }
 
 
 
-static sll_object_offset_t _update_strings(sll_object_t* o,sll_string_index_t* sm){
-	sll_object_offset_t eoff=0;
-	while (o->t==SLL_OBJECT_TYPE_NOP){
-		eoff++;
-		o++;
+static sll_object_t* _update_strings(sll_object_t* o,sll_string_index_t* sm){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_NEXT_STACK){
+		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -75,43 +71,43 @@ static sll_object_offset_t _update_strings(sll_object_t* o,sll_string_index_t* s
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_STRING:
 			o->dt.s=*(sm+o->dt.s);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				sll_object_offset_t off=1;
 				sll_arg_count_t l=o->dt.fn.ac;
+				o++;
 				while (l){
 					l--;
-					off+=_update_strings(o+off,sm);
+					o=_update_strings(o,sm);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_object_offset_t off=1;
 				sll_statement_count_t l=o->dt.sc;
+				o++;
 				while (l){
 					l--;
-					off+=_update_strings(o+off,sm);
+					o=_update_strings(o,sm);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			o->dt.dbg.fpi=*(sm+o->dt.dbg.fpi);
-			return eoff+_update_strings(o+1,sm)+1;
+			return _update_strings(o+1,sm);
 	}
-	sll_object_offset_t off=1;
 	sll_arg_count_t l=o->dt.ac;
+	o++;
 	while (l){
 		l--;
-		off+=_update_strings(o+off,sm);
+		o=_update_strings(o,sm);
 	}
-	return off+eoff;
+	return o;
 }
 
 

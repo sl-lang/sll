@@ -4,8 +4,6 @@
 
 
 
-#define COMPILER_STACK_SIZE 65536
-
 #define TEST_ID_PARSE 0
 
 #define JSON_OBJECT_TYPE_ARRAY 0

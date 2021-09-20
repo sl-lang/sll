@@ -73,11 +73,9 @@ static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_da
 
 
 
-static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* c_dt,const sll_object_t* o,sll_output_data_stream_t* os){
-	sll_object_offset_t eoff=0;
-	while (o->t==SLL_OBJECT_TYPE_NOP){
-		eoff++;
-		o++;
+static const sll_object_t* _print_object_internal(const sll_compilation_data_t* c_dt,const sll_object_t* o,sll_output_data_stream_t* os){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
+		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
 	}
 	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_OBJECT_TYPE_OPERATION_LIST&&o->t!=SLL_OBJECT_TYPE_DEBUG_DATA){
 		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'(');
@@ -85,7 +83,7 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
 			PRINT_STATIC_STRING("(unknown)",os);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_CHAR:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\'');
@@ -121,14 +119,14 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,c);
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\'');
-				return eoff+1;
+				return o+1;
 			}
 		case SLL_OBJECT_TYPE_INT:
 			_print_int(o->dt.i,os);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_FLOAT:
 			_print_float(o->dt.f,os);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'"');
@@ -167,42 +165,42 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,c);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'"');
-				return eoff+1;
+				return o+1;
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'[');
-				sll_stack_offset_t off=1;
 				sll_array_length_t al=o->dt.al;
+				o++;
 				for (sll_array_length_t i=0;i<al;i++){
 					if (i){
 						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
 					}
-					off+=_print_object_internal(c_dt,o+off,os);
+					o=_print_object_internal(c_dt,o,os);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,']');
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'<');
-				sll_stack_offset_t off=1;
 				sll_array_length_t al=o->dt.al;
+				o++;
 				for (sll_array_length_t i=0;i<al;i++){
 					if (i){
 						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
 					}
-					off+=_print_object_internal(c_dt,o+off,os);
+					o=_print_object_internal(c_dt,o,os);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'>');
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			_print_identifier(o->dt.id,c_dt,os);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			_print_int(o->dt.fn_id,os);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_PRINT:
 			PRINT_STATIC_STRING(":>",os);
 			break;
@@ -236,15 +234,15 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 					PRINT_STATIC_STRING("... #",os);
 					_print_int(o->dt.fn.id,os);
 				}
-				sll_stack_offset_t off=1;
 				sll_arg_count_t l=o->dt.fn.ac;
+				o++;
 				while (l){
 					l--;
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
-					off+=_print_object_internal(c_dt,o+off,os);
+					o=_print_object_internal(c_dt,o,os);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_INLINE_FUNC:
 			PRINT_STATIC_STRING("***",os);
@@ -258,35 +256,38 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_FOR:
 			{
 				PRINT_STATIC_STRING("->",os);
-				sll_stack_offset_t off=1;
-				for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
+				sll_arg_count_t ac=o->dt.l.ac;
+				o++;
+				for (sll_arg_count_t i=0;i<ac;i++){
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
-					off+=_print_object_internal(c_dt,o+off,os);
+					o=_print_object_internal(c_dt,o,os);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_WHILE:
 			{
 				PRINT_STATIC_STRING(">-",os);
-				sll_stack_offset_t off=1;
-				for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
+				sll_arg_count_t ac=o->dt.l.ac;
+				o++;
+				for (sll_arg_count_t i=0;i<ac;i++){
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
-					off+=_print_object_internal(c_dt,o+off,os);
+					o=_print_object_internal(c_dt,o,os);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_LOOP:
 			{
 				PRINT_STATIC_STRING("><",os);
-				sll_stack_offset_t off=1;
-				for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
+				sll_arg_count_t ac=o->dt.l.ac;
+				o++;
+				for (sll_arg_count_t i=0;i<ac;i++){
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
-					off+=_print_object_internal(c_dt,o+off,os);
+					o=_print_object_internal(c_dt,o,os);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_ADD:
 			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'+');
@@ -366,28 +367,28 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'{');
-				sll_stack_offset_t off=1;
 				sll_statement_count_t sc=o->dt.sc;
+				o++;
 				for (sll_statement_count_t i=0;i<sc;i++){
 					if (i){
 						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
 					}
-					off+=_print_object_internal(c_dt,o+off,os);
+					o=_print_object_internal(c_dt,o,os);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'}');
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_COMMA:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,',');
-				sll_stack_offset_t off=1;
 				sll_statement_count_t sc=o->dt.sc;
+				o++;
 				for (sll_statement_count_t i=0;i<sc;i++){
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
-					off+=_print_object_internal(c_dt,o+off,os);
+					o=_print_object_internal(c_dt,o,os);
 				}
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			{
@@ -403,18 +404,19 @@ static sll_object_offset_t _print_object_internal(const sll_compilation_data_t* 
 				_print_int(o->dt.dbg.cn+1,os);
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'#');
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'|');
-				return eoff+_print_object_internal(c_dt,o+1,os)+1;
+				return _print_object_internal(c_dt,o+1,os);
 			}
 		default:
 			SLL_UNREACHABLE();
 	}
-	sll_stack_offset_t off=1;
-	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
+	sll_arg_count_t ac=o->dt.ac;
+	o++;
+	for (sll_arg_count_t i=0;i<ac;i++){
 		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
-		off+=_print_object_internal(c_dt,o+off,os);
+		o=_print_object_internal(c_dt,o,os);
 	}
 	SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,')');
-	return off+eoff;
+	return o;
 }
 
 

@@ -5,11 +5,7 @@
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o);
-
-
-
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_error_t* e);
+__SLL_FUNC void sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is);
 
 
 
@@ -38,6 +34,14 @@ __SLL_FUNC void sll_remove_object_debug_data(sll_object_t* o);
 
 
 __SLL_FUNC void sll_remove_object_padding(sll_compilation_data_t* c_dt,sll_object_t* o);
+
+
+
+__SLL_FUNC sll_object_t* sll_skip_object(sll_object_t* o);
+
+
+
+__SLL_FUNC const sll_object_t* sll_skip_object_const(const sll_object_t* o);
 
 
 

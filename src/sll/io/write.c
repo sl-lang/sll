@@ -23,53 +23,59 @@ static void _write_integer(sll_output_data_stream_t* os,uint64_t v){
 
 
 
-static sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_object_t* o){
-	sll_object_offset_t eoff=0;
-	while (o->t==SLL_OBJECT_TYPE_NOP){
+static const sll_object_t* _write_object(sll_output_data_stream_t* os,const sll_object_t* o){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_NEXT_STACK){
+		if (o->t==OBJECT_TYPE_NEXT_STACK){
+			o=o->dt._p;
+			continue;
+		}
 		WRITE_FIELD(o->t,os);
-		eoff++;
 		o++;
 	}
 	WRITE_FIELD(o->t,os);
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_CHAR:
 			WRITE_FIELD(o->dt.c,os);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_INT:
 			WRITE_SIGNED_INTEGER(os,o->dt.i);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_FLOAT:
 			WRITE_FIELD(o->dt.f,os);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_STRING:
 			_write_integer(os,o->dt.s);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
 				_write_integer(os,o->dt.al);
-				sll_object_offset_t off=1;
-				for (sll_array_length_t i=0;i<o->dt.al;i++){
-					off+=_write_object(os,o+off);
+				sll_array_length_t l=o->dt.al;
+				o++;
+				while (l){
+					l--;
+					o=_write_object(os,o);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				_write_integer(os,o->dt.ml);
-				sll_object_offset_t off=1;
-				for (sll_map_length_t i=0;i<o->dt.ml;i++){
-					off+=_write_object(os,o+off);
+				sll_map_length_t l=o->dt.ml;
+				o++;
+				while (l){
+					l--;
+					o=_write_object(os,o);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			_write_integer(os,o->dt.id);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			_write_integer(os,o->dt.fn_id);
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
@@ -78,11 +84,13 @@ static sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_
 				if (o->t==SLL_OBJECT_TYPE_FUNC){
 					_write_integer(os,o->dt.fn.sc);
 				}
-				sll_object_offset_t off=1;
-				for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
-					off+=_write_object(os,o+off);
+				sll_arg_count_t l=o->dt.fn.ac;
+				o++;
+				while (l){
+					l--;
+					o=_write_object(os,o);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_FOR:
 		case SLL_OBJECT_TYPE_WHILE:
@@ -90,35 +98,41 @@ static sll_object_offset_t _write_object(sll_output_data_stream_t* os,const sll_
 			{
 				_write_integer(os,o->dt.l.ac);
 				_write_integer(os,o->dt.l.sc);
-				sll_object_offset_t off=1;
-				for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
-					off+=_write_object(os,o+off);
+				sll_arg_count_t l=o->dt.l.ac;
+				o++;
+				while (l){
+					l--;
+					o=_write_object(os,o);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				_write_integer(os,o->dt.sc);
-				sll_object_offset_t off=1;
-				for (sll_statement_count_t i=0;i<o->dt.sc;i++){
-					off+=_write_object(os,o+off);
+				sll_statement_count_t l=o->dt.sc;
+				o++;
+				while (l){
+					l--;
+					o=_write_object(os,o);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			_write_integer(os,o->dt.dbg.fpi);
 			_write_integer(os,o->dt.dbg.ln);
 			_write_integer(os,o->dt.dbg.cn);
 			_write_integer(os,o->dt.dbg.ln_off);
-			return eoff+_write_object(os,o+1)+1;
+			return _write_object(os,o+1);
 	}
 	_write_integer(os,o->dt.ac);
-	sll_object_offset_t off=1;
-	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
-		off+=_write_object(os,o+off);
+	sll_arg_count_t l=o->dt.ac;
+	o++;
+	while (l){
+		l--;
+		o=_write_object(os,o);
 	}
-	return off+eoff;
+	return o;
 }
 
 

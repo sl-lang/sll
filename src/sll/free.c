@@ -1,7 +1,9 @@
+#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/constants.h>
 #include <sll/core.h>
 #include <sll/gc.h>
+#include <sll/platform.h>
 #include <sll/types.h>
 #include <stdlib.h>
 
@@ -37,9 +39,21 @@ __SLL_FUNC void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	sll_free_export_table(&(c_dt->et));
 	sll_free_function_table(&(c_dt->ft));
 	sll_free_string_table(&(c_dt->st));
-	c_dt->_s.ptr=NULL;
-	c_dt->_s.off=0;
+	void* p_pg=NULL;
+	void* pg=c_dt->_s.s;
+	sll_page_size_t sz=sll_platform_get_page_size();
+	while (pg){
+		void* n=(void*)(((uint64_t)(*((void**)pg)))^((uint64_t)p_pg));
+		sll_platform_free_page(pg,sz);
+		p_pg=pg;
+		pg=n;
+	}
+	c_dt->_s.s=NULL;
+	c_dt->_s.e=NULL;
 	c_dt->_s.sz=0;
+	c_dt->_s.c=0;
+	c_dt->_s.p=NULL;
+	c_dt->_s.off=0;
 	c_dt->_n_sc_id=1;
 }
 

@@ -57,10 +57,6 @@ __SLL_FUNC void sll_register_cleanup(sll_cleanup_function f,sll_cleanup_type_t t
 
 
 
-__SLL_FUNC void sll_set_compilation_data_stack(sll_compilation_data_t* c_dt,sll_buffer_t bf,sll_stack_offset_t sz);
-
-
-
 __SLL_FUNC void sll_setup_stack(sll_stack_data_t* o,sll_buffer_t bf,sll_stack_offset_t sz);
 
 

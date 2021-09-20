@@ -161,6 +161,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define MAX_ASSEMBLY_INSTRUCTION_LABEL SLL_MAX_INSTRUCTION_INDEX
 
+#define OBJECT_TYPE_NEXT_STACK SLL_OBJECT_TYPE_RESERVED0
+
 
 
 typedef uint16_t call_stack_size_t;
@@ -211,11 +213,10 @@ typedef struct __IMPORT_MODULE_DATA{
 	sll_identifier_list_length_t off[SLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
 	sll_string_index_t* sm;
 	sll_function_index_t f_off;
-	sll_object_t* s;
-	sll_object_t* d;
 	identifier_pair_t* eim;
 	sll_export_table_length_t eiml;
 	sll_scope_t sc_off;
+	sll_compilation_data_t* c_dt;
 } import_module_data_t;
 
 
@@ -364,6 +365,18 @@ typedef struct __OBJECT_OFFSET_SIZE{
 	sll_object_offset_t off;
 	sll_object_offset_t sz;
 } object_offset_size_t;
+
+
+
+sll_object_t* _acquire_next_object(sll_compilation_data_t* c_dt);
+
+
+
+sll_object_t* _acquire_next_object_ptr(sll_compilation_data_t* c_dt);
+
+
+
+sll_object_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_object_offset_t off);
 
 
 

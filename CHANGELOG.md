@@ -9,6 +9,7 @@
 - Break (`(@)`) and continue (`(<<<)`) operators ([#44])
 - [Code of Conduct][main/CODE_OF_CONDUCT.md]
 - Comma operator (`(,)`): It behaves like an operator list (`{}`), but instead of returning `nil`, it returns the value of the last expression ([#43])
+- Debugging functions, such as `sll_debug_print_object` or `sll_debug_print_runtime_object`
 - Inline function (`(***)`) operator: It is equal to (`(<- (,,, |# code #|) |# args #|)`) ([#46])
 - Internal function now store the type of the function, for example `SLL_INTERNAL_FUNCTION_TYPE_REQUIRED`
 - `SLL_ACQUIRE_NO_DEBUG` macro (like `SLL_ACQUIRE` but does not add debug data)
@@ -18,6 +19,8 @@
 ### Changed
 
 - Fixed syntax highlight
+- Compilation & assembly stacks are now stored & resized internally ([#50])
+- **HUGE** memory (stack) corruption in [`src/cli/main.c`][main/src/cli/main.c]
 - `sll_operator_bool` now returns `sll_bool_t` instead of `sll_compare_result_t`
 - Renamed `sll_operator_dup` to `sll_operator_access_zero`
 - Renamed the exit operator (`(@)`) to `(@@@)`
@@ -26,6 +29,7 @@
 
 ### Removed
 
+- Stack types & stack API ([#50])
 - `SLL_RETURN_ZERO`, `SLL_RETURN_ONE`, `SLL_RETURN_ZERO_STRING` and `SLL_RETURN_ZERO_HANDLE` macros
 - Unused constant `SLL_COMPARE_RESULT_ERROR`
 
@@ -763,6 +767,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#50]: https://github.com/sl-lang/sll/issues/50
 [#48]: https://github.com/sl-lang/sll/issues/48
 [#47]: https://github.com/sl-lang/sll/issues/47
 [#46]: https://github.com/sl-lang/sll/issues/46
@@ -790,6 +795,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [main/CODE_OF_CONDUCT.md]: https://github.com/sl-lang/sll/blob/main/CODE_OF_CONDUCT.md
+[main/src/cli/main.c]: https://github.com/sl-lang/sll/blob/main/src/cli/main.c
 [main/src/sll/print.c]: https://github.com/sl-lang/sll/blob/main/src/sll/print.c
 [0.6.18/src/include/sll/_api_generated.h]: https://github.com/sl-lang/sll/blob/v0.6.18/src/include/sll/_api_generated.h
 [0.6.18/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/v0.6.18/src/sll/api/_generated.c

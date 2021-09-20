@@ -404,12 +404,12 @@ _jump:
 _print_from_stack:;
 					sll_runtime_object_t* tos=*(s+si);
 					if (tos->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-						fwrite(tos->dt.s.v,sizeof(sll_char_t),tos->dt.s.l,stdout);
+						SLL_WRITE_TO_OUTPUT_DATA_STREAM(r_dt->os,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t));
 					}
 					else{
 						sll_string_t str;
 						sll_object_to_string((const sll_runtime_object_t*const*)&tos,1,&str);
-						fwrite(str.v,sizeof(sll_char_t),str.l,stdout);
+						SLL_WRITE_TO_OUTPUT_DATA_STREAM(r_dt->os,str.v,str.l*sizeof(sll_char_t));
 						free(str.v);
 					}
 					SLL_RELEASE(tos);

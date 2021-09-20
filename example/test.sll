@@ -32,7 +32,7 @@
 (? 1 (-- "import.sll"))
 (:> "Call: " (<- func 10 2) "\n")
 (:> "Current Time (Internal Call): " (<- time) "\n")
-(? true nil 2 (:> "Dead Code") (@ 128 "False Exit"))
+(? true nil 2 (:> "Dead Code") (@@@ 128 "False Exit"))
 (= f (<- open "build/hello.txt" "wb"))
 (? f {
 	(<- write f "Hello!\n")

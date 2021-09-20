@@ -285,6 +285,7 @@ typedef union __SLL_OBJECT_DATA{
 	sll_statement_count_t sc;
 	sll_debug_object_data_t dbg;
 	sll_function_index_t fn_id;
+	void* _p;
 } sll_object_data_t;
 
 
@@ -355,11 +356,23 @@ typedef struct __SLL_STRING_TABLE{
 
 
 
-typedef struct __SLL_STACK_CONTEXT{
+typedef struct __SLL_STACK_DATA{
 	sll_buffer_t ptr;
 	sll_stack_offset_t off;
 	sll_stack_offset_t sz;
 } sll_stack_data_t;
+
+
+
+
+typedef struct __SLL_COMPILATION_STACK_DATA{
+	void* s;
+	void* e;
+	uint32_t sz;
+	uint32_t c;
+	sll_object_t* p;
+	sll_object_offset_t off;
+} sll_compilation_stack_data_t;
 
 
 
@@ -371,7 +384,7 @@ typedef struct __SLL_COMPILATION_DATA{
 	sll_export_table_t et;
 	sll_function_table_t ft;
 	sll_string_table_t st;
-	sll_stack_data_t _s;
+	sll_compilation_stack_data_t _s;
 	sll_scope_t _n_sc_id;
 } sll_compilation_data_t;
 

@@ -18,7 +18,6 @@
 
 
 
-uint8_t c_st[COMPILER_STACK_SIZE];
 char e_fp[4096];
 char ti_fp[4096];
 char to_fp[4096];
@@ -81,7 +80,6 @@ uint8_t execute_test(uint8_t id){
 		sll_stream_create_input_from_file(f,&is);
 		sll_compilation_data_t c_dt;
 		sll_init_compilation_data((sll_char_t*)"<internal>",&is,&c_dt);
-		sll_set_compilation_data_stack(&c_dt,c_st,COMPILER_STACK_SIZE);
 		sll_error_t e;
 		if (!sll_parse_all_objects(&c_dt,&i_ft,NULL,&e)){
 			FILE* o_f=fopen(to_fp,"wb");// lgtm [cpp/path-injection]

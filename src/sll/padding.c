@@ -5,14 +5,21 @@
 
 
 
-static sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_offset_t* rm){
-	sll_object_offset_t eoff=0;
-	while (o->t==SLL_OBJECT_TYPE_NOP){
-		eoff++;
-		o++;
-		(*rm)++;
+static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_t** d,sll_object_offset_t* rm){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_NEXT_STACK){
+		if (o->t==OBJECT_TYPE_NEXT_STACK){
+			o=o->dt._p;
+		}
+		else{
+			o++;
+			(*rm)++;
+		}
 	}
-	*(o-*rm)=*o;
+	**d=*o;
+	(*d)++;
+	if ((*d)->t==OBJECT_TYPE_NEXT_STACK){
+		(*d)=(*d)->dt._p;
+	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
 		case SLL_OBJECT_TYPE_CHAR:
@@ -21,77 +28,78 @@ static sll_object_offset_t _remove_padding_internal(sll_object_t* o,sll_compilat
 		case SLL_OBJECT_TYPE_STRING:
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
-			return eoff+1;
+			return o+1;
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
-				sll_object_offset_t off=1;
 				sll_array_length_t l=o->dt.al;
+				o++;
 				while (l){
 					l--;
-					off+=_remove_padding_internal(o+off,c_dt,rm);
+					o=_remove_padding_internal(o,c_dt,d,rm);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
-				sll_object_offset_t off=1;
 				sll_map_length_t l=o->dt.ml;
+				o++;
 				while (l){
 					l--;
-					off+=_remove_padding_internal(o+off,c_dt,rm);
+					o=_remove_padding_internal(o,c_dt,d,rm);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_FUNC:
 			(*(c_dt->ft.dt+o->dt.fn.id))->off-=*rm;
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				sll_object_offset_t off=1;
 				sll_arg_count_t l=o->dt.fn.ac;
+				o++;
 				while (l){
 					l--;
-					off+=_remove_padding_internal(o+off,c_dt,rm);
+					o=_remove_padding_internal(o,c_dt,d,rm);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_FOR:
 		case SLL_OBJECT_TYPE_WHILE:
 		case SLL_OBJECT_TYPE_LOOP:
 			{
-				sll_object_offset_t off=1;
 				sll_arg_count_t l=o->dt.l.ac;
+				o++;
 				while (l){
 					l--;
-					off+=_remove_padding_internal(o+off,c_dt,rm);
+					o=_remove_padding_internal(o,c_dt,d,rm);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_object_offset_t off=1;
 				sll_statement_count_t l=o->dt.sc;
+				o++;
 				while (l){
 					l--;
-					off+=_remove_padding_internal(o+off,c_dt,rm);
+					o=_remove_padding_internal(o,c_dt,d,rm);
 				}
-				return off+eoff;
+				return o;
 			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
-			return _remove_padding_internal(o+1,c_dt,rm)+1+eoff;
+			return _remove_padding_internal(o+1,c_dt,d,rm);
 	}
-	sll_object_offset_t off=1;
 	sll_arg_count_t l=o->dt.ac;
+	o++;
 	while (l){
 		l--;
-		off+=_remove_padding_internal(o+off,c_dt,rm);
+		o=_remove_padding_internal(o,c_dt,d,rm);
 	}
-	return off+eoff;
+	return o;
 }
 
 
 
 __SLL_FUNC void sll_remove_object_padding(sll_compilation_data_t* c_dt,sll_object_t* o){
+	sll_object_t* d=o;
 	sll_object_offset_t rm=0;
-	_remove_padding_internal(o,c_dt,&rm);
+	_remove_padding_internal(o,c_dt,&d,&rm);
 }

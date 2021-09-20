@@ -19,6 +19,98 @@ static uint8_t _util_last_cleanup_size=0;
 
 
 
+static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_offset_t* sz){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
+		if (o->t==OBJECT_TYPE_NEXT_STACK){
+			o=o->dt._p;
+		}
+		else{
+			(*sz)++;
+			o++;
+		}
+	}
+	switch (o->t){
+		case SLL_OBJECT_TYPE_UNKNOWN:
+		case SLL_OBJECT_TYPE_CHAR:
+		case SLL_OBJECT_TYPE_INT:
+		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			(*sz)++;
+			return o+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				sll_array_length_t l=o->dt.al;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_map_length_t l=o->dt.ml;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FUNC:
+		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
+				sll_arg_count_t l=o->dt.fn.ac;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
+			{
+				sll_arg_count_t l=o->dt.l.ac;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_COMMA:
+		case SLL_OBJECT_TYPE_OPERATION_LIST:
+			{
+				sll_statement_count_t l=o->dt.sc;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+	}
+	sll_arg_count_t l=o->dt.ac;
+	(*sz)++;
+	o++;
+	while (l){
+		l--;
+		o=_get_object_size(o,sz);
+	}
+	return o;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s){
 	for (sll_string_index_t i=0;i<st->l;i++){
 		sll_string_t* k=st->dt+i;
@@ -86,82 +178,9 @@ __SLL_FUNC void sll_deinit(void){
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o){
-	sll_object_offset_t eoff=0;
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA){
-		eoff++;
-		o++;
-	}
-	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
-		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_INT:
-		case SLL_OBJECT_TYPE_FLOAT:
-		case SLL_OBJECT_TYPE_STRING:
-		case SLL_OBJECT_TYPE_IDENTIFIER:
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
-			return eoff+1;
-		case SLL_OBJECT_TYPE_ARRAY:
-			{
-				sll_object_offset_t off=1;
-				sll_array_length_t l=o->dt.al;
-				while (l){
-					l--;
-					off+=sll_get_object_size(o+off);
-				}
-				return off+eoff;
-			}
-		case SLL_OBJECT_TYPE_MAP:
-			{
-				sll_object_offset_t off=1;
-				sll_map_length_t l=o->dt.ml;
-				while (l){
-					l--;
-					off+=sll_get_object_size(o+off);
-				}
-				return off+eoff;
-			}
-		case SLL_OBJECT_TYPE_FUNC:
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
-			{
-				sll_object_offset_t off=1;
-				sll_arg_count_t l=o->dt.fn.ac;
-				while (l){
-					l--;
-					off+=sll_get_object_size(o+off);
-				}
-				return off+eoff;
-			}
-		case SLL_OBJECT_TYPE_FOR:
-		case SLL_OBJECT_TYPE_WHILE:
-		case SLL_OBJECT_TYPE_LOOP:
-			{
-				sll_object_offset_t off=1;
-				sll_arg_count_t l=o->dt.l.ac;
-				while (l){
-					l--;
-					off+=sll_get_object_size(o+off);
-				}
-				return off+eoff;
-			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			{
-				sll_object_offset_t off=1;
-				sll_statement_count_t l=o->dt.sc;
-				while (l){
-					l--;
-					off+=sll_get_object_size(o+off);
-				}
-				return off+eoff;
-			}
-	}
-	sll_object_offset_t off=1;
-	sll_arg_count_t l=o->dt.ac;
-	while (l){
-		l--;
-		off+=sll_get_object_size(o+off);
-	}
-	return off+eoff;
+	sll_object_offset_t sz=0;
+	_get_object_size(o,&sz);
+	return sz;
 }
 
 
@@ -183,4 +202,89 @@ __SLL_FUNC void sll_register_cleanup(sll_cleanup_function f,sll_cleanup_type_t t
 	SLL_ASSERT(_util_exit_table_size<MAX_CLEANUP_TABLE_SIZE);
 	_util_exit_table[_util_exit_table_size]=f;
 	_util_exit_table_size++;
+}
+
+
+
+__SLL_FUNC sll_object_t* sll_skip_object(sll_object_t* o){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
+		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	}
+	switch (o->t){
+		case SLL_OBJECT_TYPE_UNKNOWN:
+		case SLL_OBJECT_TYPE_CHAR:
+		case SLL_OBJECT_TYPE_INT:
+		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			return o+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				sll_array_length_t l=o->dt.al;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_map_length_t l=o->dt.ml;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FUNC:
+		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
+				sll_arg_count_t l=o->dt.fn.ac;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
+			{
+				sll_arg_count_t l=o->dt.l.ac;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_COMMA:
+		case SLL_OBJECT_TYPE_OPERATION_LIST:
+			{
+				sll_statement_count_t l=o->dt.sc;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+	}
+	sll_arg_count_t l=o->dt.ac;
+	o++;
+	while (l){
+		l--;
+		o=sll_skip_object(o);
+	}
+	return o;
+}
+
+
+
+__SLL_FUNC const sll_object_t* sll_skip_object_const(const sll_object_t* o){
+	return sll_skip_object((sll_object_t*)o);
 }

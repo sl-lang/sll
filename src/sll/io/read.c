@@ -68,12 +68,10 @@ static int64_t _read_signed_integer(sll_input_data_stream_t* is,uint8_t* e){
 
 
 static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
-	sll_object_t* o=(sll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
-	c_dt->_s.off+=sizeof(sll_object_t);
+	sll_object_t* o=_acquire_next_object(c_dt);
 	READ_FIELD(o->t,is);
 	while (o->t==SLL_OBJECT_TYPE_NOP){
-		o++;
-		c_dt->_s.off+=sizeof(sll_object_t);
+		o=_acquire_next_object(c_dt);
 		READ_FIELD(o->t,is);
 	}
 	switch (o->t){
@@ -332,10 +330,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_data_stream_t* is,sll_compilation_data_t* c_dt,sll_error_t* e){
-	if (!c_dt->_s.ptr){
-		e->t=SLL_ERROR_NO_STACK;
-		return SLL_RETURN_ERROR;
-	}
 	uint32_t n=0;
 	sll_version_t v=0;
 	if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&n),sizeof(uint32_t))==SLL_END_OF_DATA||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&v),sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
@@ -392,7 +386,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 		sll_string_hash(s);
 	}
 	CHECK_ERROR(is,c_dt->_n_sc_id,sll_scope_t,e);
-	c_dt->h=(sll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
+	c_dt->h=_acquire_next_object_ptr(c_dt);
 	if (!_read_object(c_dt,is)){
 		e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 		return SLL_RETURN_ERROR;
@@ -403,11 +397,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_object_t** o,sll_error_t* e){
-	if (!c_dt->_s.ptr){
-		e->t=SLL_ERROR_NO_STACK;
-		return SLL_RETURN_ERROR;
-	}
-	*o=(sll_object_t*)(c_dt->_s.ptr+c_dt->_s.off);
+	*o=_acquire_next_object_ptr(c_dt);
 	if (!_read_object(c_dt,is)){
 		e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 		return SLL_RETURN_ERROR;
