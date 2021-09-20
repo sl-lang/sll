@@ -386,7 +386,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 		sll_string_hash(s);
 	}
 	CHECK_ERROR(is,c_dt->_n_sc_id,sll_scope_t,e);
-	c_dt->h=_acquire_next_object_ptr(c_dt);
+	_init_object_stack(c_dt);
+	c_dt->h=c_dt->_s.p;
+	SLL_ASSERT(c_dt->h);
 	if (!_read_object(c_dt,is)){
 		e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 		return SLL_RETURN_ERROR;
@@ -397,7 +399,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is,sll_object_t** o,sll_error_t* e){
-	*o=_acquire_next_object_ptr(c_dt);
+	*o=c_dt->_s.p;
+	SLL_ASSERT(*o);
 	if (!_read_object(c_dt,is)){
 		e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 		return SLL_RETURN_ERROR;

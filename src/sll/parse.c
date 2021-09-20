@@ -1466,12 +1466,7 @@ __SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_st
 	o->ft.l=0;
 	o->st.dt=NULL;
 	o->st.l=0;
-	o->_s.s=NULL;
-	o->_s.e=NULL;
-	o->_s.sz=0;
-	o->_s.c=0;
-	o->_s.p=NULL;
-	o->_s.off=0;
+	_init_object_stack(o);
 	o->_n_sc_id=1;
 	sll_string_length_t i=0;
 	while (*(fp+i)){
@@ -1483,7 +1478,8 @@ __SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_st
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_parse_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e,sll_object_t** o){
-	sll_object_t* a=_acquire_next_object_ptr(c_dt);
+	sll_object_t* a=c_dt->_s.p;
+	SLL_ASSERT(a);
 	sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(c_dt->is);
 	if (c==SLL_END_OF_DATA){
 		a->t=SLL_OBJECT_TYPE_INT;
@@ -1520,7 +1516,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_parse_object(sll_compilation_data
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_parse_all_objects(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e){
-	SLL_ASSERT(!c_dt->_s.s);
 	c_dt->h=_acquire_next_object(c_dt);
 	c_dt->h->t=SLL_OBJECT_TYPE_OPERATION_LIST;
 	c_dt->h->dt.sc=0;

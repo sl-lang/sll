@@ -162,6 +162,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define MAX_ASSEMBLY_INSTRUCTION_LABEL SLL_MAX_INSTRUCTION_INDEX
 
 #define OBJECT_TYPE_NEXT_STACK SLL_OBJECT_TYPE_RESERVED0
+#define OBJECT_STACK_PAGE_ALLOC_COUNT 16
 
 
 
@@ -361,22 +362,19 @@ typedef struct __STATIC_RUNTIME_OBJECT{
 
 
 
-typedef struct __OBJECT_OFFSET_SIZE{
-	sll_object_offset_t off;
-	sll_object_offset_t sz;
-} object_offset_size_t;
-
-
-
 sll_object_t* _acquire_next_object(sll_compilation_data_t* c_dt);
 
 
 
-sll_object_t* _acquire_next_object_ptr(sll_compilation_data_t* c_dt);
-
-
-
 sll_object_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_object_offset_t off);
+
+
+
+void _init_object_stack(sll_compilation_data_t* c_dt);
+
+
+
+void _shift_objects(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_offset_t off);
 
 
 
