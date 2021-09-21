@@ -1,13 +1,17 @@
 # The Sl Programing Language Change Log
 
-## [0.6.19] - Ongoing
+## [0.6.20] - Ongoing
+
+*Nothing*
+
+## [0.6.19] - 2021-9-21
 
 ### Added
 
 - Added automatic function inlining ([#41]) and contants term evaluation ([#48])
 - Added more operators
 - Break (`(@)`) and continue (`(<<<)`) operators ([#44])
-- [Code of Conduct][main/CODE_OF_CONDUCT.md]
+- [Code of Conduct][0.6.19/CODE_OF_CONDUCT.md]
 - Comma operator (`(,)`): It behaves like an operator list (`{}`), but instead of returning `nil`, it returns the value of the last expression ([#43])
 - Debugging functions, such as `sll_debug_print_object` or `sll_debug_print_runtime_object`
 - Inline function (`(***)`) operator: It is equal to (`(<- (,,, |# code #|) |# args #|)`) ([#46])
@@ -20,16 +24,16 @@
 
 - Fixed syntax highlight
 - Compilation & assembly stacks are now stored & resized internally ([#50])
-- **HUGE** memory (stack) corruption in [`src/cli/main.c`][main/src/cli/main.c]
+- **HUGE** memory (stack) corruption in [`src/cli/main.c`][0.6.19/src/cli/main.c]
 - `sll_operator_bool` now returns `sll_bool_t` instead of `sll_compare_result_t`
 - Renamed `sll_operator_dup` to `sll_operator_access_zero`
 - Renamed the exit operator (`(@)`) to `(@@@)`
-- Replaced `PRINT_STATIC_STRING` function calls to `SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM` in [`src/sll/print.c`][main/src/sll/print.c]
+- Replaced `PRINT_STATIC_STRING` function calls to `SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM` in [`src/sll/print.c`][0.6.19/src/sll/print.c]
 - Updated the license name
 
 ### Removed
 
-- Duplicate JSON API from [`tests`][main/tests] directory
+- Duplicate JSON API from [`tests`][0.6.19/tests] directory
 - `SLL_RETURN_ZERO`, `SLL_RETURN_ONE`, `SLL_RETURN_ZERO_STRING` and `SLL_RETURN_ZERO_HANDLE` macros
 - Stack types & stack API ([#50])
 - Unused constant `SLL_COMPARE_RESULT_ERROR`
@@ -721,7 +725,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.19]: https://github.com/sl-lang/sll/compare/v0.6.18...main
+[0.6.20]: https://github.com/sl-lang/sll/compare/v0.6.19...main
+[0.6.19]: https://github.com/sl-lang/sll/compare/v0.6.18...v0.6.19
 [0.6.18]: https://github.com/sl-lang/sll/compare/v0.6.17...v0.6.18
 [0.6.17]: https://github.com/sl-lang/sll/compare/v0.6.16...v0.6.17
 [0.6.16]: https://github.com/sl-lang/sll/compare/v0.6.15...v0.6.16
@@ -795,10 +800,10 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/CODE_OF_CONDUCT.md]: https://github.com/sl-lang/sll/blob/main/CODE_OF_CONDUCT.md
-[main/src/cli/main.c]: https://github.com/sl-lang/sll/blob/main/src/cli/main.c
-[main/src/sll/print.c]: https://github.com/sl-lang/sll/blob/main/src/sll/print.c
-[main/tests]: https://github.com/sl-lang/sll/tree/main/tests
+[0.6.19/CODE_OF_CONDUCT.md]: https://github.com/sl-lang/sll/blob/v0.6.19/CODE_OF_CONDUCT.md
+[0.6.19/src/cli/main.c]: https://github.com/sl-lang/sll/blob/v0.6.19/src/cli/main.c
+[0.6.19/src/sll/print.c]: https://github.com/sl-lang/sll/blob/v0.6.19/src/sll/print.c
+[0.6.19/tests]: https://github.com/sl-lang/sll/tree/v0.6.19/tests
 [0.6.18/src/include/sll/_api_generated.h]: https://github.com/sl-lang/sll/blob/v0.6.18/src/include/sll/_api_generated.h
 [0.6.18/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/v0.6.18/src/sll/api/_generated.c
 [0.6.18/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.18/src/sll/operator.c
