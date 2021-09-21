@@ -6,8 +6,8 @@
 
 
 static sll_object_t* _remove_debug_data_internal(sll_object_t* o){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:

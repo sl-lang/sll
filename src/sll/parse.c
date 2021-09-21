@@ -16,8 +16,8 @@
 
 static sll_object_t* _patch_module(sll_object_t* mo,const import_module_data_t* im_dt){
 	sll_object_t* o=_acquire_next_object(im_dt->c_dt);
-	while (mo->t==SLL_OBJECT_TYPE_NOP||mo->t==OBJECT_TYPE_NEXT_STACK){
-		if (mo->t==OBJECT_TYPE_NEXT_STACK){
+	while (mo->t==SLL_OBJECT_TYPE_NOP||mo->t==OBJECT_TYPE_CHANGE_STACK){
+		if (mo->t==OBJECT_TYPE_CHANGE_STACK){
 			mo=mo->dt._p;
 		}
 		else{
@@ -256,8 +256,8 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 				}
 				else{
 					sll_object_t* a=o+1;
-					while (a->t==SLL_OBJECT_TYPE_NOP||a->t==SLL_OBJECT_TYPE_DEBUG_DATA||a->t==OBJECT_TYPE_NEXT_STACK){
-						a=(a->t==OBJECT_TYPE_NEXT_STACK?a->dt._p:a+1);
+					while (a->t==SLL_OBJECT_TYPE_NOP||a->t==SLL_OBJECT_TYPE_DEBUG_DATA||a->t==OBJECT_TYPE_CHANGE_STACK){
+						a=(a->t==OBJECT_TYPE_CHANGE_STACK?a->dt._p:a+1);
 					}
 					if (a->t!=SLL_OBJECT_TYPE_IDENTIFIER){
 						o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
@@ -277,8 +277,8 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 					sll_arg_count_t i=0;
 					sll_object_t* arg=o+1;
 					for (;i<ac;i++){
-						while (arg->t==SLL_OBJECT_TYPE_NOP||arg->t==SLL_OBJECT_TYPE_DEBUG_DATA||arg->t==OBJECT_TYPE_NEXT_STACK){
-							arg=(arg->t==OBJECT_TYPE_NEXT_STACK?arg->dt._p:arg+1);
+						while (arg->t==SLL_OBJECT_TYPE_NOP||arg->t==SLL_OBJECT_TYPE_DEBUG_DATA||arg->t==OBJECT_TYPE_CHANGE_STACK){
+							arg=(arg->t==OBJECT_TYPE_CHANGE_STACK?arg->dt._p:arg+1);
 						}
 						if (arg->t!=SLL_OBJECT_TYPE_IDENTIFIER){
 							break;
@@ -298,8 +298,8 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 					f->al=i;
 					arg=o+1;
 					for (sll_arg_count_t j=0;j<i;j++){
-						while (arg->t==SLL_OBJECT_TYPE_NOP||arg->t==SLL_OBJECT_TYPE_DEBUG_DATA||arg->t==OBJECT_TYPE_NEXT_STACK){
-							if (arg->t==OBJECT_TYPE_NEXT_STACK){
+						while (arg->t==SLL_OBJECT_TYPE_NOP||arg->t==SLL_OBJECT_TYPE_DEBUG_DATA||arg->t==OBJECT_TYPE_CHANGE_STACK){
+							if (arg->t==OBJECT_TYPE_CHANGE_STACK){
 								arg=arg->dt._p;
 							}
 							else{
@@ -322,8 +322,8 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 				}
 				else{
 					sll_object_t* n=o+1;
-					while (n->t==SLL_OBJECT_TYPE_NOP||n->t==SLL_OBJECT_TYPE_DEBUG_DATA||n->t==OBJECT_TYPE_NEXT_STACK){
-						n=(n->t==OBJECT_TYPE_NEXT_STACK?n->dt._p:n+1);
+					while (n->t==SLL_OBJECT_TYPE_NOP||n->t==SLL_OBJECT_TYPE_DEBUG_DATA||n->t==OBJECT_TYPE_CHANGE_STACK){
+						n=(n->t==OBJECT_TYPE_CHANGE_STACK?n->dt._p:n+1);
 					}
 					if (n->t!=SLL_OBJECT_TYPE_STRING){
 						o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
@@ -991,26 +991,24 @@ _skip_float_parse:;
 				sll_char_t str[255];
 				uint8_t sz=0;
 				sll_string_checksum_t cs=0;
-_read_identifier:
-				str[sz]=(sll_char_t)c;
-				cs^=(sll_string_checksum_t)c;
-				if (sz==255){
-					e->t=SLL_ERROR_INTERNAL_STACK_OVERFLOW;
-					e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
-					e->dt.r.sz=1;
-					if (n_l_sc.m){
-						free(n_l_sc.m);
+				do{
+					if (sz==255){
+						e->t=SLL_ERROR_INTERNAL_STACK_OVERFLOW;
+						e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
+						e->dt.r.sz=1;
+						if (n_l_sc.m){
+							free(n_l_sc.m);
+						}
+						return SLL_RETURN_ERROR;
 					}
-					return SLL_RETURN_ERROR;
-				}
-				sz++;
-				c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==SLL_END_OF_DATA){
-					break;
-				}
-				if ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123)){
-					goto _read_identifier;
-				}
+					str[sz]=(sll_char_t)c;
+					cs^=(sll_string_checksum_t)c;
+					sz++;
+					c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
+					if (c==SLL_END_OF_DATA){
+						goto _return_error;
+					}
+				} while ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123));
 				if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
 					e->t=SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER;
 					e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
@@ -1428,6 +1426,7 @@ _skip_export:;
 		o->dt.i=0;
 		return SLL_RETURN_NO_ERROR;
 	}
+_return_error:;
 	if (o->t==SLL_OBJECT_TYPE_ARRAY){
 		e->t=SLL_ERROR_UNMATCHED_ARRAY_OPEN_BRACKETS;
 	}

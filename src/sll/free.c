@@ -24,9 +24,17 @@ __SLL_FUNC void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 	a_dt->vc=0;
 	sll_free_assembly_function_table(&(a_dt->ft));
 	sll_free_string_table(&(a_dt->st));
-	a_dt->_s.ptr=NULL;
-	a_dt->_s.off=0;
-	a_dt->_s.sz=0;
+	void* pg=a_dt->_s.s;
+	sll_page_size_t sz=sll_platform_get_page_size()*ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT;
+	while (pg){
+		void* n=*((void**)pg);
+		sll_platform_free_page(pg,sz);
+		pg=n;
+	}
+	a_dt->_s.s=NULL;
+	a_dt->_s.e=NULL;
+	a_dt->_s.c=0;
+	a_dt->_s.p=NULL;
 }
 
 
@@ -39,18 +47,15 @@ __SLL_FUNC void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	sll_free_export_table(&(c_dt->et));
 	sll_free_function_table(&(c_dt->ft));
 	sll_free_string_table(&(c_dt->st));
-	void* p_pg=NULL;
 	void* pg=c_dt->_s.s;
-	sll_page_size_t sz=sll_platform_get_page_size();
+	sll_page_size_t sz=sll_platform_get_page_size()*OBJECT_STACK_PAGE_ALLOC_COUNT;
 	while (pg){
-		void* n=(void*)(((uint64_t)(*((void**)pg)))^((uint64_t)p_pg));
+		void* n=*((void**)pg);
 		sll_platform_free_page(pg,sz);
-		p_pg=pg;
 		pg=n;
 	}
 	c_dt->_s.s=NULL;
 	c_dt->_s.e=NULL;
-	c_dt->_s.sz=0;
 	c_dt->_s.c=0;
 	c_dt->_s.p=NULL;
 	c_dt->_s.off=0;

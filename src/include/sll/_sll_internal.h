@@ -132,6 +132,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define ASSEMBLY_INSTRUCTION_TYPE_FUNC_START SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED0
 #define ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED1
+#define ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED2
 #define ASSEMBLY_INSTRUCTION_LABEL 128
 #define ASSEMBLY_INSTRUCTION_MISC_FIELD(ai) ((ai)->dt.j)
 
@@ -161,8 +162,10 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define MAX_ASSEMBLY_INSTRUCTION_LABEL SLL_MAX_INSTRUCTION_INDEX
 
-#define OBJECT_TYPE_NEXT_STACK SLL_OBJECT_TYPE_RESERVED0
-#define OBJECT_STACK_PAGE_ALLOC_COUNT 16
+#define OBJECT_TYPE_CHANGE_STACK SLL_OBJECT_TYPE_RESERVED0
+
+#define ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT 8
+#define OBJECT_STACK_PAGE_ALLOC_COUNT 8
 
 
 
@@ -362,11 +365,19 @@ typedef struct __STATIC_RUNTIME_OBJECT{
 
 
 
+sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
+
+
+
 sll_object_t* _acquire_next_object(sll_compilation_data_t* c_dt);
 
 
 
 sll_object_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_object_offset_t off);
+
+
+
+void _init_assembly_stack(sll_assembly_data_t* a_dt);
 
 
 

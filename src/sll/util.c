@@ -20,8 +20,8 @@ static uint8_t _util_last_cleanup_size=0;
 
 
 static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_offset_t* sz){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		if (o->t==OBJECT_TYPE_NEXT_STACK){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		if (o->t==OBJECT_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 		}
 		else{
@@ -207,8 +207,8 @@ __SLL_FUNC void sll_register_cleanup(sll_cleanup_function f,sll_cleanup_type_t t
 
 
 __SLL_FUNC sll_object_t* sll_skip_object(sll_object_t* o){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:

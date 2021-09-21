@@ -74,8 +74,8 @@ static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_da
 
 
 static const sll_object_t* _print_object_internal(const sll_compilation_data_t* c_dt,const sll_object_t* o,sll_output_data_stream_t* os){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_OBJECT_TYPE_OPERATION_LIST&&o->t!=SLL_OBJECT_TYPE_DEBUG_DATA){
 		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'(');
@@ -884,6 +884,9 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				SLL_UNREACHABLE();
 		}
 		ai++;
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			ai=ai->dt._p;
+		}
 	}
 }
 

@@ -58,8 +58,8 @@
 
 
 static sll_object_t* _remove_single_object(sll_object_t* o){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	sll_object_type_t t=o->t;
 	o->t=SLL_OBJECT_TYPE_NOP;
@@ -179,8 +179,8 @@ _check_next_string:;
 
 
 static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_compilation_data_t* c_dt,identifier_map_data_t* im){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -288,8 +288,8 @@ static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_comp
 
 
 static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_CHAR:
@@ -342,8 +342,8 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 
 
 static sll_runtime_object_t* _get_as_runtime_object_nonstatic(const sll_object_t* o,const optimizer_data_t* o_dt){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	sll_runtime_object_t* v=SLL_CREATE();
 	v->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
@@ -444,8 +444,8 @@ static void _runtime_object_to_object(sll_runtime_object_t* v,sll_object_t* o,op
 
 
 static const sll_object_t* _mark_loop_vars(const sll_object_t* o,optimizer_data_t* o_dt){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -481,8 +481,8 @@ static const sll_object_t* _mark_loop_vars(const sll_object_t* o,optimizer_data_
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l>=2);
 				o++;
-				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-					o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+					o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				SLL_ASSERT(o->t==SLL_OBJECT_TYPE_IDENTIFIER);
 				sll_runtime_object_t* tmp=_get_as_runtime_object(o+1,o_dt);
@@ -533,8 +533,8 @@ static const sll_object_t* _mark_loop_vars(const sll_object_t* o,optimizer_data_
 
 
 static uint8_t _get_cond_type(const sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_t lv){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -712,8 +712,8 @@ static sll_object_t* _inline_function(sll_object_t* o,optimizer_data_t* o_dt){
 
 
 static sll_object_t* _check_remove(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_CHAR:
@@ -769,8 +769,8 @@ static sll_object_t* _check_remove(sll_object_t* o,sll_object_t* p,optimizer_dat
 				SLL_ASSERT(l);
 				sll_object_t* r=o;
 				o++;
-				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-					o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+					o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				sll_runtime_object_t* rt=_get_as_runtime_object(o,o_dt);
 				if (rt->t==SLL_RUNTIME_OBJECT_TYPE_INT&&rt->dt.i<0){
@@ -835,8 +835,8 @@ static sll_object_t* _check_remove(sll_object_t* o,sll_object_t* p,optimizer_dat
 
 
 static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt,uint8_t fl){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	SLL_ASSERT(!o_dt->rm);
 	if (o_dt->vi!=SLL_MAX_VARIABLE_INDEX){
@@ -924,8 +924,8 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 					if (o_dt->rm){
 						SLL_UNIMPLEMENTED();
 					}
-					while (b->t==SLL_OBJECT_TYPE_NOP||b->t==SLL_OBJECT_TYPE_DEBUG_DATA||b->t==OBJECT_TYPE_NEXT_STACK){
-						b=(b->t==OBJECT_TYPE_NEXT_STACK?b->dt._p:b+1);
+					while (b->t==SLL_OBJECT_TYPE_NOP||b->t==SLL_OBJECT_TYPE_DEBUG_DATA||b->t==OBJECT_TYPE_CHANGE_STACK){
+						b=(b->t==OBJECT_TYPE_CHANGE_STACK?b->dt._p:b+1);
 					}
 					if (b->t==SLL_OBJECT_TYPE_INT||b->t==SLL_OBJECT_TYPE_FLOAT){
 						sll_runtime_object_t rt=SLL_RUNTIME_OBJECT_STRUCT;
@@ -1007,8 +1007,8 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				}
 				sll_object_t* r=o;
 				o++;
-				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-					o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+					o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				sll_object_t* v=o;
 				o=_optimize(v,NULL,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
@@ -1053,8 +1053,8 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l>=2);
 				o++;
-				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-					o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+					o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				sll_object_t* id_o=o;
 				SLL_ASSERT(id_o->t==SLL_OBJECT_TYPE_IDENTIFIER);
@@ -1123,8 +1123,8 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				}
 				sll_object_t* r=o;
 				o++;
-				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-					o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+					o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				sll_object_t* fn=o;
 				o=_optimize(fn,o,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
@@ -1190,8 +1190,8 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 								_remove_up_to_end(o,l);
 								r->dt.ac-=(l<<1)+2;
 							}
-							while (cnd_o->t==SLL_OBJECT_TYPE_NOP||cnd_o->t==SLL_OBJECT_TYPE_DEBUG_DATA||cnd_o->t==OBJECT_TYPE_NEXT_STACK){
-								cnd_o=(cnd_o->t==OBJECT_TYPE_NEXT_STACK?cnd_o->dt._p:cnd_o+1);
+							while (cnd_o->t==SLL_OBJECT_TYPE_NOP||cnd_o->t==SLL_OBJECT_TYPE_DEBUG_DATA||cnd_o->t==OBJECT_TYPE_CHANGE_STACK){
+								cnd_o=(cnd_o->t==OBJECT_TYPE_CHANGE_STACK?cnd_o->dt._p:cnd_o+1);
 							}
 							cnd_o->t=SLL_OBJECT_TYPE_NOP;
 							return o;
@@ -1565,8 +1565,8 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 
 
 static sll_object_t* _remap_indexes(sll_object_t* o,sll_object_t* p,optimizer_data_t* o_dt,sll_function_index_t* fn_m){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -1615,8 +1615,8 @@ static sll_object_t* _remap_indexes(sll_object_t* o,sll_object_t* p,optimizer_da
 				SLL_ASSERT(l>=2);
 				sll_object_t* r=o;
 				o++;
-				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-					o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+					o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				SLL_ASSERT(o->t==SLL_OBJECT_TYPE_IDENTIFIER);
 				uint8_t rm=!GET_VARIABLE_REF_COUNT(o,o_dt);

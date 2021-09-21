@@ -356,19 +356,9 @@ typedef struct __SLL_STRING_TABLE{
 
 
 
-typedef struct __SLL_STACK_DATA{
-	sll_buffer_t ptr;
-	sll_stack_offset_t off;
-	sll_stack_offset_t sz;
-} sll_stack_data_t;
-
-
-
-
 typedef struct __SLL_COMPILATION_STACK_DATA{
 	void* s;
 	void* e;
-	uint32_t sz;
 	uint32_t c;
 	sll_object_t* p;
 	sll_object_offset_t off;
@@ -403,6 +393,7 @@ typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_map_length_t ml;
 	sll_stack_offset_t st;
 	sll_constant_type_t t;
+	void* _p;
 } sll_assembly_instruction_data_t;
 
 
@@ -421,6 +412,15 @@ typedef struct __SLL_ASSEMBLY_FUNCTION_TABLE{
 
 
 
+typedef struct __SLL_ASSEMBLY_STACK_DATA{
+	void* s;
+	void* e;
+	uint32_t c;
+	sll_assembly_instruction_t* p;
+} sll_assembly_stack_data_t;
+
+
+
 typedef struct __SLL_ASSEMBLY_DATA{
 	sll_time_t tm;
 	sll_assembly_instruction_t* h;
@@ -428,7 +428,7 @@ typedef struct __SLL_ASSEMBLY_DATA{
 	sll_variable_index_t vc;
 	sll_assembly_function_table_t ft;
 	sll_string_table_t st;
-	sll_stack_data_t _s;
+	sll_assembly_stack_data_t _s;
 } sll_assembly_data_t;
 
 
@@ -627,6 +627,14 @@ typedef struct __SLL_JSON_MAP_KEYPAIR{
 
 
 typedef void (*sll_cleanup_function)(void);
+
+
+
+typedef struct __SLL_STACK_DATA{
+	sll_buffer_t ptr;
+	sll_stack_offset_t off;
+	sll_stack_offset_t sz;
+} sll_stack_data_t;
 
 
 

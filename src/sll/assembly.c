@@ -3,6 +3,7 @@
 #include <sll/constants.h>
 #include <sll/gc.h>
 #include <sll/object.h>
+#include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
@@ -13,22 +14,20 @@
 
 #define DEFINE_LABEL(g_dt,id) \
 	do{ \
-		sll_assembly_instruction_t* __ai=NEXT_INSTRUCTION((g_dt)); \
+		sll_assembly_instruction_t* __ai=_acquire_next_instruction((g_dt)->a_dt); \
 		__ai->t=ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET; \
 		ASSEMBLY_INSTRUCTION_MISC_FIELD(__ai)=(id); \
 	} while(0)
-#define GENERATE_OPCODE(g_dt,op) (NEXT_INSTRUCTION((g_dt))->t=(op))
+#define GENERATE_OPCODE(g_dt,op) (_acquire_next_instruction((g_dt)->a_dt)->t=(op))
 #define GENERATE_OPCODE_WITH_LABEL(g_dt,op,lbl) \
 	do{ \
-		sll_assembly_instruction_t* __ai=NEXT_INSTRUCTION((g_dt)); \
+		sll_assembly_instruction_t* __ai=_acquire_next_instruction((g_dt)->a_dt); \
 		__ai->t=(op)|ASSEMBLY_INSTRUCTION_LABEL; \
 		ASSEMBLY_INSTRUCTION_MISC_FIELD(__ai)=(lbl); \
 	} while(0)
 #define GET_SIGN_ENCODED_INTEGER(x) ((x)<0?((~(x))<<1)|1:(x)<<1)
 #define GET_VARIABLE_INDEX(o,g_dt) (SLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?((g_dt)->it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v:((g_dt)->it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID((o)->dt.id)]+SLL_IDENTIFIER_GET_ARRAY_INDEX((o)->dt.id))->v)
-#define NEXT_INSTRUCTION(g_dt) ((g_dt)->a_dt->h+((g_dt)->a_dt->ic++))
 #define NEXT_LABEL(g_dt) ((g_dt)->n_lbl++)
-#define PREV_INSTRUCTION(g_dt) _get_previous_instruction((g_dt)->a_dt->h+(g_dt)->a_dt->ic,(g_dt)->a_dt->ic)
 #define SHIFT_UP(st) \
 	do{ \
 		(st)[0]=(st)[1]; \
@@ -60,8 +59,8 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 
 
 static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_compilation_data_t* c_dt,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -184,15 +183,17 @@ static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_comp
 
 
 
-static sll_assembly_instruction_t* _get_previous_instruction(sll_assembly_instruction_t* ai,sll_instruction_index_t i){
+static sll_assembly_instruction_t* _get_previous_instruction(assembly_generator_data_t* g_dt){
+	sll_assembly_instruction_t* o=g_dt->a_dt->_s.p;
+	sll_instruction_index_t i=g_dt->a_dt->ic;
 	do{
 		if (!i){
 			return &_assembly_nop;
 		}
-		ai--;
+		o=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?o->dt._p:o-1);
 		i--;
-	} while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET);
-	return ai;
+	} while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
+	return o;
 }
 
 
@@ -254,8 +255,8 @@ static const sll_object_t* _generate_cond_jump(const sll_object_t* o,assembly_ge
 
 
 static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,uint8_t inv){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -286,7 +287,7 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD;
 				uint8_t i=SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
 				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
@@ -392,7 +393,7 @@ static const sll_object_t* _generate_call(const sll_object_t* o,assembly_generat
 		o=_generate_on_stack(o,g_dt);
 	}
 	_generate_on_stack(fn,g_dt);
-	sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+	sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 	ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL;
 	ai->dt.ac=ac-1;
 	return o;
@@ -427,36 +428,36 @@ static const sll_object_t* _generate_inline_function(const sll_object_t* o,assem
 
 
 static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_generator_data_t* g_dt){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
 			return o+1;
 		case SLL_OBJECT_TYPE_CHAR:
 			{
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR;
 				ai->dt.c=o->dt.c;
 				return o+1;
 			}
 		case SLL_OBJECT_TYPE_INT:
 			{
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
 				ai->dt.i=o->dt.i;
 				return o+1;
 			}
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT;
 				ai->dt.f=o->dt.f;
 				return o+1;
 			}
 		case SLL_OBJECT_TYPE_STRING:
 			{
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS;
 				ai->dt.s=o->dt.s;
 				return o+1;
@@ -472,7 +473,7 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 				for (sll_array_length_t i=0;i<al;i++){
 					o=_generate_on_stack(o,g_dt);
 				}
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				if (al==1){
 					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE;
 				}
@@ -493,14 +494,14 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 				for (sll_map_length_t i=0;i<ml;i++){
 					o=_generate_on_stack(o,g_dt);
 				}
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP;
 				ai->dt.ml=ml;
 				return o;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			{
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD;
 				uint8_t i=SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
 				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
@@ -520,7 +521,7 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 			}
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
 			{
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
 				ai->dt.i=o->dt.fn_id+1;
 				return o+1;
@@ -562,7 +563,7 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 				SLL_ASSERT(io->t==SLL_OBJECT_TYPE_IDENTIFIER);
 				o=sll_skip_object_const(o);
 				o=_generate_on_stack(o,g_dt);
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE;
 				uint8_t i=SLL_IDENTIFIER_GET_ARRAY_ID(io->dt.id);
 				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_INDEX(io->dt.id);
@@ -592,7 +593,7 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
 				ai->dt.i=(o->t==SLL_OBJECT_TYPE_FUNC?o->dt.fn.id+1:~((sll_integer_t)o->dt.fn.id));
 				return sll_skip_object_const(o);
@@ -671,11 +672,11 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 				l--;
 				while (l){
 					l--;
-					while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-						o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+					while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+						o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					if (o->t==SLL_OBJECT_TYPE_INT&&o->dt.i>0&&o->dt.i<=SLL_MAX_CONSTANT_TYPE){
-						sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE;
 						ai->dt.t=(sll_constant_type_t)(o->dt.i);
 						o++;
@@ -727,8 +728,8 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 
 
 static const sll_object_t* _mark_loop_delete(const sll_object_t* o,const assembly_generator_data_t* g_dt,uint64_t* v_st,sll_scope_t sc){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -801,8 +802,8 @@ static const sll_object_t* _mark_loop_delete(const sll_object_t* o,const assembl
 
 
 static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_data_t* g_dt){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-		o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -829,14 +830,14 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
 				if (i==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 					if (*(g_dt->rm.l+j)==o){
-						sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
 						ai->dt.v=(g_dt->it.l_im+j)->v;
 					}
 				}
 				else{
 					if (*(g_dt->rm.s[i]+j)==o){
-						sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
 						ai->dt.v=(g_dt->it.s_im[i]+j)->v;
 					}
@@ -865,8 +866,8 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l>=2);
 				o++;
-				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_NEXT_STACK){
-					o=(o->t==OBJECT_TYPE_NEXT_STACK?o->dt._p:o+1);
+				while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+					o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				const sll_object_t* io=o;
 				SLL_ASSERT(io->t==SLL_OBJECT_TYPE_IDENTIFIER);
@@ -882,7 +883,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 					return o;
 				}
 				o=_generate_on_stack(o+1,g_dt);
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP;
 				ai->dt.v=GET_VARIABLE_INDEX(io,g_dt);
 				l-=2;
@@ -928,7 +929,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 						assembly_instruction_label_t nxt=NEXT_LABEL(g_dt);
 						o=_generate_jump(o,g_dt,nxt,1);
 						o=_generate(o,g_dt);
-						sll_assembly_instruction_t* p_ai=PREV_INSTRUCTION(g_dt);
+						sll_assembly_instruction_t* p_ai=_get_previous_instruction(g_dt);
 						if (p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET&&p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
 							GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
 						}
@@ -946,7 +947,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 						o=_generate_jump(o,g_dt,nxt,1);
 						o=_generate(o,g_dt);
 						if (l){
-							sll_assembly_instruction_t* p_ai=PREV_INSTRUCTION(g_dt);
+							sll_assembly_instruction_t* p_ai=_get_previous_instruction(g_dt);
 							if (p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET&&p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
 								GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
 							}
@@ -998,7 +999,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				for (sll_variable_index_t i=0;i<(g_dt->a_dt->vc>>6)+1;i++){
 					uint64_t v=*(v_st+i);
 					while (v){
-						sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
 						ai->dt.v=FIND_FIRST_SET_BIT(v)|(i<<6);
 						v&=v-1;
@@ -1049,7 +1050,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				for (sll_variable_index_t i=0;i<(g_dt->a_dt->vc>>6)+1;i++){
 					uint64_t v=*(v_st+i);
 					while (v){
-						sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
 						ai->dt.v=FIND_FIRST_SET_BIT(v)|(i<<6);
 						v&=v-1;
@@ -1113,7 +1114,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				}
 				SLL_ASSERT(g_dt->rt->sz);
 				assembly_instruction_label_t t=*(g_dt->rt->dt+g_dt->rt->sz-1);
-				sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				if (t==MAX_ASSEMBLY_INSTRUCTION_LABEL){
 					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET;
 				}
@@ -1164,12 +1165,13 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e){
-	if (!o->_s.ptr||!c_dt->_s.s){
+	if (!c_dt->_s.s){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;
 	}
-	o->tm=c_dt->tm;
-	o->h=(sll_assembly_instruction_t*)(o->_s.ptr+o->_s.off);
+	_init_assembly_stack(o);
+	o->tm=sll_platform_get_current_time();
+	o->h=o->_s.p;
 	o->ic=0;
 	o->vc=0;
 	o->st.l=c_dt->st.l;
@@ -1250,7 +1252,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 	free(g_dt.it.sc_vi);
 	o->vc=g_dt.it.vc;
 	_generate(c_dt->h,&g_dt);
-	if (PREV_INSTRUCTION(&g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
+	if (_get_previous_instruction(&g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
 		GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO);
 	}
 	o->ft.l=c_dt->ft.l;
@@ -1261,12 +1263,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
 		sll_arg_count_t j=k->al;
-		sll_assembly_instruction_t* ai=NEXT_INSTRUCTION(&g_dt);
+		sll_assembly_instruction_t* ai=_acquire_next_instruction(o);
 		ai->t=ASSEMBLY_INSTRUCTION_TYPE_FUNC_START;
 		ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=i;
 		while (j){
 			j--;
-			ai=NEXT_INSTRUCTION(&g_dt);
+			ai=_acquire_next_instruction(o);
 			ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP;
 			ai->dt.v=(SLL_IDENTIFIER_GET_ARRAY_ID(k->a[j])==SLL_MAX_SHORT_IDENTIFIER_LENGTH?(g_dt.it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(k->a[j]))->v:(g_dt.it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID(k->a[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(k->a[j]))->v);
 		}
@@ -1278,7 +1280,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 			ac--;
 			fo=_generate(fo,&g_dt);
 		}
-		if (PREV_INSTRUCTION(&g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
+		if (_get_previous_instruction(&g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
 			GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO);
 		}
 	}
@@ -1300,6 +1302,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
 		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP||ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
 			ai++;
+			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+				ai=ai->dt._p;
+			}
 			continue;
 		}
 		st[4]=st[3];
@@ -1491,6 +1496,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 			SHIFT_UP(st);
 		}
 		ai++;
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			ai=ai->dt._p;
+		}
 	}
 	strint_map_data_t sm={
 		(o->st.l>>6)+1,
@@ -1500,18 +1508,21 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 		*(sm.m+i)=0;
 	}
 	ai=o->h;
+	sll_assembly_instruction_t* s=ai;
 	sll_instruction_index_t* lbl=malloc(g_dt.n_lbl*sizeof(sll_instruction_index_t));
-	sll_instruction_index_t off=0;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
-		*ai=*(ai+off);
-		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP){
+		if (s->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP){
 _handle_nop:;
-			off++;
+			s++;
+			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+				s=s->dt._p;
+			}
 			i--;
 			o->ic--;
 			continue;
 		}
-		else if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
+		*ai=*s;
+		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
 			*(sm.m+(ai->dt.s>>6))|=1ull<<(ai->dt.s&63);
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
@@ -1523,6 +1534,13 @@ _handle_nop:;
 			goto _handle_nop;
 		}
 		ai++;
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			ai=ai->dt._p;
+		}
+		s++;
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			s=s->dt._p;
+		}
 	}
 	sm.im=malloc(o->st.l*sizeof(sll_string_t*));
 	sll_string_index_t k=0;
@@ -1562,7 +1580,7 @@ _handle_nop:;
 				ai->dt.j=j;
 			}
 			else{
-				off=((sll_relative_instruction_index_t)j)-i;
+				sll_relative_instruction_index_t off=((sll_relative_instruction_index_t)j)-i;
 				if (GET_SIGN_ENCODED_INTEGER((int64_t)off)<(int64_t)j){
 					ai->t|=SLL_ASSEMBLY_INSTRUCTION_RELATIVE;
 					ai->dt.rj=off;
@@ -1576,6 +1594,9 @@ _handle_nop:;
 			ai->dt.s=*(sm.im+ai->dt.s);
 		}
 		ai++;
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			ai=ai->dt._p;
+		}
 	}
 	free(lbl);
 	free(sm.im);

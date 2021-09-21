@@ -24,8 +24,8 @@ static void _write_integer(sll_output_data_stream_t* os,uint64_t v){
 
 
 static const sll_object_t* _write_object(sll_output_data_stream_t* os,const sll_object_t* o){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_NEXT_STACK){
-		if (o->t==OBJECT_TYPE_NEXT_STACK){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
+		if (o->t==OBJECT_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 			continue;
 		}
@@ -242,6 +242,9 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 				break;
 		}
 		ai++;
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			ai=ai->dt._p;
+		}
 	}
 }
 

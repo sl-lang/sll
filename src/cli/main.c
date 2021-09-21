@@ -69,7 +69,6 @@
 	} while (0)
 #define COLOR_RESET _IF_USE_COLORS("\x1b[0m")
 #define COLOR_RED _IF_USE_COLORS("\x1b[91m")
-#define ASSEMBLY_STACK_SIZE 16384
 #define VM_STACK_SIZE 65536
 #define FLAG_EXPAND_PATH 1
 #define FLAG_FORCE_UPDATE 2
@@ -101,7 +100,6 @@
 
 
 
-static uint8_t a_st[ASSEMBLY_STACK_SIZE];
 static uint8_t vm_st[VM_STACK_SIZE];
 static uint8_t ol;
 static uint16_t fl;
@@ -163,7 +161,6 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 	sll_assembly_data_t a_dt={0};
 	sll_input_data_stream_t is;
 	char f_fp[MAX_PATH_LENGTH];
-	sll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
 	sll_init_compilation_data(nm->v,&is,o);
 	if (!load_file((char*)(nm->v),&a_dt,o,&f,&is,f_fp)){
 		if (f){
@@ -1173,7 +1170,6 @@ _json_error:
 		goto _help;
 	}
 	for (uint32_t j=0;j<fpl;j++){
-		sll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
 		char f_fp[MAX_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		fl&=~_FLAG_ASSEMBLY_GENERATED;
@@ -1199,7 +1195,6 @@ _json_error:
 	}
 	for (uint32_t j=0;j<sll;j++){
 		sll_set_argument(0,"<console>");
-		sll_set_assembly_data_stack(&a_dt,a_st,ASSEMBLY_STACK_SIZE);
 		char f_fp[MAX_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		sll_input_buffer_t i_bf={

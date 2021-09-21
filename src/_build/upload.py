@@ -3,7 +3,6 @@ import sys
 
 
 
-BASE64_ALPHABET=b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 MAX_SIZE=10485760
 
 

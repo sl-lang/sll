@@ -23,13 +23,13 @@
 		uint8_t __e=0; \
 		(f)=(ft)_read_integer(is,&__e); \
 		if (__e){ \
-			return 0; \
+			return SLL_RETURN_ERROR; \
 		} \
 	} while (0)
 #define READ_FIELD(f,is) \
 	do{ \
 		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM((is),(sll_buffer_t)(&(f)),sizeof((f)))==SLL_END_OF_DATA){ \
-			return 0; \
+			return SLL_RETURN_ERROR; \
 		} \
 	} while(0)
 
@@ -171,10 +171,6 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stream_t* is,sll_assembly_data_t* a_dt,sll_error_t* e){
-	if (!a_dt->_s.ptr){
-		e->t=SLL_ERROR_NO_STACK;
-		return SLL_RETURN_ERROR;
-	}
 	uint32_t n;
 	sll_version_t v;
 	if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&n),sizeof(uint32_t))==SLL_END_OF_DATA||n!=ASSEMBLY_FILE_MAGIC_NUMBER||SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(uint8_t*)(&v),sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
@@ -202,9 +198,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 		}
 		sll_string_hash(s);
 	}
-	a_dt->h=(sll_assembly_instruction_t*)(a_dt->_s.ptr+a_dt->_s.off);
-	sll_assembly_instruction_t* ai=a_dt->h;
-	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
+	_init_assembly_stack(a_dt);
+	a_dt->h=a_dt->_s.p;
+	sll_instruction_index_t i=a_dt->ic;
+	a_dt->ic=0;
+	while (i){
+		i--;
+		sll_assembly_instruction_t* ai=_acquire_next_instruction(a_dt);
 		sll_read_char_t c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 		if (c==SLL_END_OF_DATA){
 			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
@@ -220,7 +220,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 					uint8_t re=0;
 					ai->dt.i=(sll_integer_t)_read_signed_integer(is,&re);
 					if (re){
-						return 0;
+						return SLL_RETURN_ERROR;
 					}
 					break;
 				}
@@ -280,7 +280,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 					uint8_t re=0;
 					ai->dt.i=(sll_relative_instruction_index_t)_read_signed_integer(is,&re);
 					if (re){
-						return 0;
+						return SLL_RETURN_ERROR;
 					}
 				}
 				else{
@@ -322,7 +322,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 				ai->dt.ac=(sll_arg_count_t)c;
 				break;
 		}
-		ai++;
 	}
 	return SLL_RETURN_NO_ERROR;
 }
