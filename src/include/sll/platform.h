@@ -17,6 +17,10 @@ __SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz);
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const char* fp);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void);
 
 

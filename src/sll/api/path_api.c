@@ -51,6 +51,5 @@ __API_FUNC(path_relative){
 
 
 __API_FUNC(path_size){
-	SLL_UNIMPLEMENTED();
-	return 0;
+	return sll_platform_file_size((char*)a->v);
 }

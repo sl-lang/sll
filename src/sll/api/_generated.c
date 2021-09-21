@@ -21,7 +21,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_close_raw(const
 	sll_integer_t out=sll_api_file_close(&(a->dt.h));
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_TYPE_REQUIRED);
 
 
 
@@ -48,7 +48,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_open_raw(const 
 	out_o->dt.h=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("file_open",sll_api_file_open_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("file_open",sll_api_file_open_raw,SLL_INTERNAL_FUNCTION_TYPE_REQUIRED);
 
 
 
@@ -66,7 +66,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_write_raw(const
 	sll_integer_t out=sll_api_file_write(a,b,bc);
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("file_write",sll_api_file_write_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("file_write",sll_api_file_write_raw,SLL_INTERNAL_FUNCTION_TYPE_REQUIRED);
 
 
 
@@ -351,7 +351,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_url_execute_request_
 	}
 	return sll_api_url_execute_request(&(a->dt.s),&(b->dt.s),&(c->dt.s),&(d->dt.m),&(e->dt.s));
 }
-INTERNAL_FUNCTION("url_execute_request",sll_api_url_execute_request_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("url_execute_request",sll_api_url_execute_request_raw,SLL_INTERNAL_FUNCTION_TYPE_REQUIRED);
 
 
 

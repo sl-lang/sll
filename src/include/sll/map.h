@@ -5,7 +5,6 @@
 
 
 
-#define SLL_SAME_MAP(a,b) ((a)->v==(b)->v)
 #define SLL_ZERO_MAP(m) \
 	do{ \
 		(m)->l=0; \

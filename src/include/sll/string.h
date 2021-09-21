@@ -5,7 +5,6 @@
 
 
 
-#define SLL_SAME_STRING(a,b) ((a)->v==(b)->v)
 #define SLL_ZERO_STRING(s) \
 	do{ \
 		(s)->l=0; \

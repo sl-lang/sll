@@ -65,6 +65,16 @@ __SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const char* fp){
+	struct stat st;
+	if (!stat(fp,&st)){
+		return st.st_size;
+	}
+	return 0;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 	struct timespec tm;
 	clock_gettime(CLOCK_REALTIME,&tm);
@@ -113,11 +123,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const char* fp
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const char* fp){
 	struct stat st;
-	sll_bool_t o=0;
-	if (!stat(fp,&st)&&(st.st_mode&S_IFDIR)){
-		o=1;
-	}
-	return o;
+	return (!stat(fp,&st)&&(st.st_mode&S_IFDIR));
 }
 
 

@@ -7,7 +7,7 @@
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_json_parse
 DESC Converts a [JSON][https://www.json.org/json-en.html] string into SLL types
 ARG S The string to parse
@@ -18,7 +18,7 @@ __API_FUNC_DECL(json_parse);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_json_stringify
 DESC Docs!
 ARG O Docs!
@@ -29,7 +29,7 @@ __API_FUNC_DECL(json_stringify);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_json_type
 DESC Docs!
 ARG I Docs!

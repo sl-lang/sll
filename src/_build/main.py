@@ -133,7 +133,7 @@ if ("--generate-api" in sys.argv):
 				if (len(a)==0):
 					a="void"
 				hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n")
-				cf.write(f"}}\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);\n")
+				cf.write(f"}}\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw,{('SLL_INTERNAL_FUNCTION_TYPE_DEFAULT' if 'optimizable' in k['flag'] else 'SLL_INTERNAL_FUNCTION_TYPE_REQUIRED')});\n")
 		hf.write("\n\n\n#endif\n")
 header.generate_help("rsrc/help.txt","build/help_text.h",vb)
 h_dt=header.parse_header("src/include/sll",vb)

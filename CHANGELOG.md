@@ -2,8 +2,18 @@
 
 ## [0.6.20] - Ongoing
 
+### Added
+
+- `sll_platform_file_size` function
+
 ### Changed
+
+- Fixed API Code Generation
 - Split the API header into multiple files in the [`src/include/sll/api`][main/src/include/sll/api] directory
+
+### Removed
+
+- `SLL_SAME_ARRAY`, `SLL_SAME_MAP` and `SLL_SAME_STRING` macros
 
 ## [0.6.19] - 2021-9-21
 

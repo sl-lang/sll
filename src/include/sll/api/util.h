@@ -7,7 +7,7 @@
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_util_ref_count
 DESC Docs!
 ARG O Docs!

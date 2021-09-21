@@ -7,7 +7,7 @@
 
 
 /*~~DOCS~~
-TYPE api var_arg
+TYPE api optimizable var_arg
 FUNC sll_api_string_convert
 DESC Docs!
 ARG O Docs!
@@ -18,7 +18,7 @@ __API_FUNC_DECL(string_convert);
 
 
 /*~~DOCS~~
-TYPE api var_arg
+TYPE api optimizable var_arg
 FUNC sll_api_string_length
 DESC Docs!
 ARG O Docs!

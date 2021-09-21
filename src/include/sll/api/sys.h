@@ -7,7 +7,7 @@
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_sys_arg_get
 DESC Docs!
 ARG I Docs!
@@ -18,7 +18,7 @@ __API_FUNC_DECL(sys_arg_get);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_sys_arg_get_count
 DESC Docs!
 RET I Docs!*/
@@ -27,7 +27,7 @@ __API_FUNC_DECL(sys_arg_get_count);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_sys_get_platform
 DESC Docs!
 RET O Docs!*/

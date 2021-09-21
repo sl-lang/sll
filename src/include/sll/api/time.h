@@ -7,7 +7,7 @@
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_time_current
 DESC Docs!
 RET F Docs!*/
@@ -16,7 +16,7 @@ __API_FUNC_DECL(time_current);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_time_current_nanos
 DESC Docs!
 RET I Docs!*/
@@ -25,7 +25,7 @@ __API_FUNC_DECL(time_current_nanos);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_time_sleep
 DESC Docs!
 ARG IF Docs!
@@ -36,7 +36,7 @@ __API_FUNC_DECL(time_sleep);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_time_sleep_nanos
 DESC Docs!
 ARG IF Docs!

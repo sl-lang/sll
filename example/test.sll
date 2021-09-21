@@ -1,5 +1,5 @@
-(# time sleep open close write platform argc argv get_ref_count parse read_url)
-(? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "json.sll" "url.sll"))
+(# time sleep open close write platform argc argv get_ref_count size parse read_url)
+(? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "url.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -42,6 +42,7 @@
 } {
 	(:> "Unable to open file!\n")
 } )
+(:> "File size: " (<- size "build/hello.txt") "\n")
 (<- write stdout "Argument Count: " argc "\n")
 (-> (= i 0) (< i argc) (:> "[" i "] = " (<- argv i) "\n") (= i (+ i 1)))
 (:> "Platform: " platform "\n")

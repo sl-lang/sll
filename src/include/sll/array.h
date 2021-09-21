@@ -5,7 +5,6 @@
 
 
 
-#define SLL_SAME_ARRAY(a,b) ((a)->v==(b)->v)
 #define SLL_ZERO_ARRAY(a) \
 	do{ \
 		(a)->l=0; \

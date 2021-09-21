@@ -11,7 +11,7 @@
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_path_absolute
 DESC Docs!
 ARG S Docs!
@@ -22,7 +22,7 @@ __API_FUNC_DECL(path_absolute);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_path_exists
 DESC Docs!
 ARG S Docs!
@@ -33,7 +33,7 @@ __API_FUNC_DECL(path_exists);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_path_is_dir
 DESC Docs!
 ARG S Docs!
@@ -44,7 +44,7 @@ __API_FUNC_DECL(path_is_dir);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_path_relative
 DESC Docs!
 ARG S Docs!
@@ -55,7 +55,7 @@ __API_FUNC_DECL(path_relative);
 
 
 /*~~DOCS~~
-TYPE api
+TYPE api optimizable
 FUNC sll_api_path_size
 DESC Docs!
 ARG S Docs!
