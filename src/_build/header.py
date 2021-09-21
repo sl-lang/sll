@@ -138,7 +138,7 @@ def parse_header(fp,vb):
 				il.append(bytes(f,"utf-8"))
 				dt=rf.read()
 				m=HEADER_INCLUDE_GUARD_REGEX.fullmatch(dt)
-				if (m!=None):
+				if (m is not None):
 					o+=m.group(2)+b"\n"
 				else:
 					o+=dt+b"\n"
@@ -173,24 +173,24 @@ def generate_header(h_dt,cm):
 				else:
 					st.append(False)
 				continue
-			elif (f[0]==b"ifndef"):
+			if (f[0]==b"ifndef"):
 				if (f[1] in dm):
 					st.append(False)
 				else:
 					st.append(True)
 				continue
-			elif (f[0]==b"else"):
+			if (f[0]==b"else"):
 				st[-1]=not st[-1]
 				continue
-			elif (f[0]==b"endif"):
+			if (f[0]==b"endif"):
 				st.pop()
 				continue
-			elif (f[0]==b"include" and False not in st):
+			if (f[0]==b"include" and False not in st):
 				f_nm="src/include/"+str(b" ".join(f[1:]).strip(b"\"").strip(b"<").strip(b">"),"utf-8")
 				if (not os.path.exists(f_nm)):
 					il+=b"\n#include "+b" ".join(f[1:])
 				continue
-			elif (f[0]==b"define" and False not in st):
+			if (f[0]==b"define" and False not in st):
 				if (b"(" in f[1]):
 					al=f[1].split(b"(")[1].split(b")")[0].split(b",")
 					if (al[-1]==b""):
