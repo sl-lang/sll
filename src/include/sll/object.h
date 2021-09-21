@@ -37,11 +37,11 @@ __SLL_FUNC void sll_remove_object_padding(sll_compilation_data_t* c_dt,sll_objec
 
 
 
-__SLL_FUNC sll_object_t* sll_skip_object(sll_object_t* o);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o);
 
 
 
-__SLL_FUNC const sll_object_t* sll_skip_object_const(const sll_object_t* o);
+__SLL_FUNC __SLL_CHECK_OUTPUT const sll_object_t* sll_skip_object_const(const sll_object_t* o);
 
 
 

@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/string.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/constants.h>

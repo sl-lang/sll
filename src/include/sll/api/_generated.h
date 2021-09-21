@@ -1,5 +1,6 @@
-#ifndef __SLL__API_GENERATED__
-#define __SLL__API_GENERATED__
+// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!
+#ifndef __SLL_API__GENERATED__
+#define __SLL_API__GENERATED__
 #include <sll/types.h>
 
 

@@ -2,7 +2,8 @@
 
 ## [0.6.20] - Ongoing
 
-*Nothing*
+### Changed
+- Split the API header into multiple files in the [`src/include/sll/api`][main/src/include/sll/api] directory
 
 ## [0.6.19] - 2021-9-21
 
@@ -800,6 +801,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/include/sll/api]: https://github.com/sl-lang/sll/tree/main/src/include/sll/api
 [0.6.19/CODE_OF_CONDUCT.md]: https://github.com/sl-lang/sll/blob/v0.6.19/CODE_OF_CONDUCT.md
 [0.6.19/src/cli/main.c]: https://github.com/sl-lang/sll/blob/v0.6.19/src/cli/main.c
 [0.6.19/src/sll/print.c]: https://github.com/sl-lang/sll/blob/v0.6.19/src/sll/print.c

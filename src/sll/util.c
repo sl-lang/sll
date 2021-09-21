@@ -14,7 +14,7 @@
 
 static sll_cleanup_function _util_exit_table[MAX_CLEANUP_TABLE_SIZE];
 static uint16_t _util_exit_table_size=0;
-static sll_cleanup_function _util_last_cleanup[MAX_LAST_CLEANUP_TABLE_SIZE]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+static sll_cleanup_function _util_last_cleanup[MAX_LAST_CLEANUP_TABLE_SIZE];
 static uint8_t _util_last_cleanup_size=0;
 
 
@@ -206,7 +206,7 @@ __SLL_FUNC void sll_register_cleanup(sll_cleanup_function f,sll_cleanup_type_t t
 
 
 
-__SLL_FUNC sll_object_t* sll_skip_object(sll_object_t* o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -285,6 +285,6 @@ __SLL_FUNC sll_object_t* sll_skip_object(sll_object_t* o){
 
 
 
-__SLL_FUNC const sll_object_t* sll_skip_object_const(const sll_object_t* o){
+__SLL_FUNC __SLL_CHECK_OUTPUT const sll_object_t* sll_skip_object_const(const sll_object_t* o){
 	return sll_skip_object((sll_object_t*)o);
 }

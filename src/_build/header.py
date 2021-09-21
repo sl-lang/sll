@@ -132,16 +132,17 @@ def parse_header(fp,vb):
 		print("Combining Library Header Files...")
 	o=b""
 	il=[]
-	for f in os.listdir(fp):
-		if (f[-2:]==".h" and f!=INTERNAL_SLL_HEADER):
-			with open(fp+"/"+f,"rb") as rf:
-				il.append(bytes(f,"utf-8"))
-				dt=rf.read()
-				m=HEADER_INCLUDE_GUARD_REGEX.fullmatch(dt)
-				if (m is not None):
-					o+=m.group(2)+b"\n"
-				else:
-					o+=dt+b"\n"
+	for r,_,fl in os.walk(fp):
+		for f in fl:
+			if (f[-2:]==".h" and f!=INTERNAL_SLL_HEADER):
+				with open(os.path.join(r,f),"rb") as rf:
+					il.append(bytes(f,"utf-8"))
+					dt=rf.read()
+					m=HEADER_INCLUDE_GUARD_REGEX.fullmatch(dt)
+					if (m is not None):
+						o+=m.group(2)+b"\n"
+					else:
+						o+=dt+b"\n"
 	if (vb):
 		print(f"  Combined {len(il)} Files\nPreprocessing Combined Library Header File...")
 	o=INCLUDE_REGEX.sub(lambda m:(b"" if m.group(1)[1:-1] in il else b"#include <"+(il.append(m.group(1)[1:-1]),m.group(1)[1:-1])[1]+b">"),DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX.sub(br"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(br"\n",COMMENT_REGEX.sub(br"",o).strip().replace(b"\r\n",b"\n")))).split(b"\n")

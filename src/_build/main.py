@@ -12,7 +12,7 @@ import zipfile
 
 ALPHABET="abcdefghijklmnopqrstuvwxyz"
 API_CODE_FILE_PATH="src/sll/api/_generated.c"
-API_HEADER_FILE_PATH="src/include/sll/_api_generated.h"
+API_HEADER_FILE_PATH="src/include/sll/api/_generated.h"
 COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG",b"DEBUG_BUILD"]) if os.name=="nt" else ([] if "--release" in sys.argv else [b"DEBUG_BUILD"]))
 PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix.c","nt":"src/sll/platform/windows.c"}
 RETURN_CODE_BASE_TYPE={"0":"I","1":"I","h":"H","Z":"S","f":"F","I":"I","F":"F","C":"C","S":"S","A":"A","H":"H","M":"M","O":"O"}
@@ -56,9 +56,10 @@ ver=header.read_version("src/include/sll/version.h")
 if (vb):
 	print("Collecting Documentation Files...")
 d_fl=[]
-for k in os.listdir("src/include/sll"):
-	if (k[0]!="_"):
-		d_fl.append("src/include/sll/"+k)
+for r,_,fl in os.walk("src/include/sll"):
+	for k in fl:
+		if (k[0]!="_"):
+			d_fl.append(os.path.join(r,k))
 if (vb):
 	print(f"  Found {len(d_fl)} Files")
 	print("Generating Documentation...")
@@ -67,8 +68,8 @@ if ("--generate-api" in sys.argv):
 	if (vb):
 		print(f"Generating Code & Signatures for {len(d_dt)} API functions...")
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
-		hf.write("#ifndef __SLL__API_GENERATED__\n#define __SLL__API_GENERATED__\n#include <sll/types.h>\n\n\n")
-		cf.write("#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/common.h>\n#include <sll/constants.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_API__GENERATED__\n#define __SLL_API__GENERATED__\n#include <sll/types.h>\n\n\n")
+		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/constants.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		for k in d_dt:
 			if ("api" in k["flag"]):
 				rt=RETURN_CODE_BASE_TYPE[k["ret"][0]["type"]]
@@ -76,7 +77,7 @@ if ("--generate-api" in sys.argv):
 					if (RETURN_CODE_BASE_TYPE[k["ret"][i]["type"]]!=rt):
 						rt="O"
 						break
-				cf.write(f"\n\n\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);\n__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* {k['name']}_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){{\n")
+				cf.write(f"\n\n\nextern __SLL_API_TYPE_{k['name']} {k['name']}(__SLL_API_ARGS_{k['name']});\n__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* {k['name']}_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){{\n")
 				a=""
 				pc=""
 				if (len(k["args"])>0):
@@ -132,7 +133,7 @@ if ("--generate-api" in sys.argv):
 				if (len(a)==0):
 					a="void"
 				hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n")
-				cf.write("}\n")
+				cf.write(f"}}\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);\n")
 		hf.write("\n\n\n#endif\n")
 header.generate_help("rsrc/help.txt","build/help_text.h",vb)
 h_dt=header.parse_header("src/include/sll",vb)

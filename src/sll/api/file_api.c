@@ -1,5 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/api/path.h>
+#include <sll/api/string.h>
 #include <sll/assembly.h>
 #include <sll/constants.h>
 #include <sll/gc.h>

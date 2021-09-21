@@ -3,7 +3,7 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
-#include <sll/_api_generated.h>
+#include <sll/api/_generated.h>
 #include <sll/api.h>
 #include <sll/types.h>
 #include <signal.h>
