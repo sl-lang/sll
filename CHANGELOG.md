@@ -8,7 +8,10 @@
 
 ### Changed
 
+- CLI now also tries to load uncompiled modules from the `lib/` directory
 - Fixed API Code Generation
+- Fixed bugs related to incorrect variable inlining
+- Fixed GC bugs in `SLL_FROM_CHAR` (and `SLL_ACQUIRE_STATIC_CHAR`)
 - Split the API header into multiple files in the [`src/include/sll/api`][main/src/include/sll/api] directory
 
 ### Removed

@@ -308,7 +308,7 @@ _jump:
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
 				{
-					if (sll_operator_compare(*(s+si-2),*(s+si-1))==SLL_COMPARE_RESULT_EQUAL){
+					if (sll_operator_equal(*(s+si-2),*(s+si-1))){
 						si-=2;
 						SLL_RELEASE(*(s+si));
 						SLL_RELEASE(*(s+si+1));
@@ -318,7 +318,7 @@ _jump:
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
 				{
-					if (sll_operator_compare(*(s+si-2),*(s+si-1))!=SLL_COMPARE_RESULT_EQUAL){
+					if (!sll_operator_equal(*(s+si-2),*(s+si-1))){
 						si-=2;
 						SLL_RELEASE(*(s+si));
 						SLL_RELEASE(*(s+si+1));

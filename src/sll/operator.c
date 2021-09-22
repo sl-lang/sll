@@ -634,7 +634,7 @@ __SLL_OPERATOR_BINARY(access){
 	else if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_MAP){
 		sll_map_t m=a->dt.m;
 		for (sll_map_length_t i=0;i<m.l;i++){
-			if (sll_operator_compare(m.v[i<<1],b)==SLL_COMPARE_RESULT_EQUAL){
+			if (sll_operator_equal(m.v[i<<1],b)){
 				SLL_ACQUIRE(m.v[(i<<1)+1]);
 				return m.v[(i<<1)+1];
 			}
@@ -698,24 +698,6 @@ __SLL_OPERATOR_BINARY(cast){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
-	switch (COMBINED_ARGS){
-		case COMBINED_TYPE_II:
-			return COMPARE_RESULT(a->dt.i,b->dt.i);
-		case COMBINED_TYPE_IF:
-			return COMPARE_RESULT(a->dt.i,b->dt.f);
-		case COMBINED_TYPE_FI:
-			return COMPARE_RESULT(a->dt.f,b->dt.i);
-		case COMBINED_TYPE_FF:
-			return COMPARE_RESULT(a->dt.f,b->dt.f);
-		default:
-			SLL_UNIMPLEMENTED();
-	}
-	return 0;
-}
-
-
-
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
@@ -734,6 +716,51 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_runtime_obj
 			return !!a->dt.m.l;
 		default:
 			SLL_UNREACHABLE();
+	}
+	return 0;
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
+	switch (COMBINED_ARGS){
+		case COMBINED_TYPE_II:
+			return COMPARE_RESULT(a->dt.i,b->dt.i);
+		case COMBINED_TYPE_IF:
+			return COMPARE_RESULT(a->dt.i,b->dt.f);
+		case COMBINED_TYPE_FI:
+			return COMPARE_RESULT(a->dt.f,b->dt.i);
+		case COMBINED_TYPE_FF:
+			return COMPARE_RESULT(a->dt.f,b->dt.f);
+		default:
+			SLL_UNIMPLEMENTED();
+	}
+	return 0;
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
+	switch (COMBINED_ARGS){
+		case COMBINED_TYPE_II:
+			return a->dt.i==b->dt.i;
+		case COMBINED_TYPE_IF:
+			return a->dt.i==b->dt.f;
+		case COMBINED_TYPE_FI:
+			return a->dt.f==b->dt.i;
+		case COMBINED_TYPE_FF:
+			return a->dt.f==b->dt.f;
+		case COMBINED_TYPE_SS:
+			{
+				sll_string_t as=a->dt.s;
+				sll_string_t bs=b->dt.s;
+				if (as.l!=bs.l||as.c!=bs.c){
+					return 0;
+				}
+				return !memcmp(as.v,bs.v,as.l*sizeof(sll_char_t));
+			}
+		default:
+			SLL_UNIMPLEMENTED();
 	}
 	return 0;
 }

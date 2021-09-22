@@ -250,11 +250,21 @@ typedef struct __IDENTIFIER_REMAP_DATA{
 
 
 
+typedef struct __VARIABLE_ASSIGNMENT_DATA{
+	uint64_t* s_sm[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	uint64_t* l_sm;
+} variable_assignment_data_t;
+
+
+
 typedef struct __OPTIMIZER_DATA{
 	sll_compilation_data_t* c_dt;
 	sll_internal_function_table_t* i_ft;
 	identifier_map_data_t it;
 	identifier_remap_data_t im;
+	uint32_t s_sm_l[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	uint32_t l_sm_l;
+	variable_assignment_data_t va;
 	sll_runtime_object_t** v;
 	sll_variable_index_t vi;
 	uint8_t rm;

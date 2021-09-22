@@ -159,7 +159,8 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 			o->v[i]='>';
 			return i+1;
 		case RUNTIME_OBJECT_TYPE_FUNCTION_ID:
-			SLL_UNIMPLEMENTED();
+			o->v[i]='#';
+			return _write_int(a->dt.i,i+1,o);
 		case RUNTIME_OBJECT_TYPE_UNKNOWN:
 			memcpy(o->v+i,"<unknown>",9);
 			return i+9;
@@ -262,7 +263,12 @@ __SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_obj
 				o+=sll_object_to_string_length((const sll_runtime_object_t*const*)a->dt.m.v,a->dt.m.l<<1,1)+(a->dt.m.l<<1)+(!a->dt.m.l)+1;
 				break;
 			case RUNTIME_OBJECT_TYPE_FUNCTION_ID:
-				SLL_UNIMPLEMENTED();
+				{
+					sll_integer_t v=a->dt.i;
+					o++;
+					INT_SIZE(v,o);
+					break;
+				}
 			case RUNTIME_OBJECT_TYPE_UNKNOWN:
 				o+=9;
 				break;

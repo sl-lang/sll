@@ -242,8 +242,14 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 				e->dt.r.sz=1;
 				return SLL_RETURN_ERROR;
 			}
-			if (o->t==SLL_OBJECT_TYPE_ASSIGN&&ac==1&&(o+2)->t==SLL_OBJECT_TYPE_IDENTIFIER&&o+2==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
-				e_c_dt->nv_dt->sz--;
+			if (o->t==SLL_OBJECT_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
+				sll_object_t* id=o+1;
+				while (id->t==SLL_OBJECT_TYPE_NOP||id->t==SLL_OBJECT_TYPE_DEBUG_DATA||id->t==OBJECT_TYPE_CHANGE_STACK){
+					id=(id->t==OBJECT_TYPE_CHANGE_STACK?id->dt._p:id+1);
+				}
+				if (id->t==SLL_OBJECT_TYPE_IDENTIFIER&&id==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
+					e_c_dt->nv_dt->sz--;
+				}
 			}
 			if (o->t==SLL_OBJECT_TYPE_UNKNOWN){
 				o->t=SLL_OBJECT_TYPE_INT;
@@ -409,8 +415,14 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 					l_sc=&n_l_sc;
 				}
 _recurse_array_or_map:;
-				if (o->t==SLL_OBJECT_TYPE_ASSIGN&&ac==1&&(o+2)->t==SLL_OBJECT_TYPE_IDENTIFIER&&o+2==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
-					e_c_dt->nv_dt->sz--;
+				if (o->t==SLL_OBJECT_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
+					sll_object_t* id=o+1;
+					while (id->t==SLL_OBJECT_TYPE_NOP||id->t==SLL_OBJECT_TYPE_DEBUG_DATA||id->t==OBJECT_TYPE_CHANGE_STACK){
+						id=(id->t==OBJECT_TYPE_CHANGE_STACK?id->dt._p:id+1);
+					}
+					if (id->t==SLL_OBJECT_TYPE_IDENTIFIER&&id==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
+						e_c_dt->nv_dt->sz--;
+					}
 				}
 				sll_file_offset_t arg_s=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
 				if (o->t==SLL_OBJECT_TYPE_UNKNOWN){
@@ -1018,59 +1030,59 @@ _skip_float_parse:;
 					}
 					return SLL_RETURN_ERROR;
 				}
-				if ((sz==3&&!strncmp((char*)str,"nil",3))||(sz==5&&!strncmp((char*)str,"false",5))){
+				if ((sz==3&&!memcmp((char*)str,"nil",3))||(sz==5&&!memcmp((char*)str,"false",5))){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=0;
 				}
-				else if (sz==4&&!strncmp((char*)str,"true",4)){
+				else if (sz==4&&!memcmp((char*)str,"true",4)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
 				}
-				else if (sz==8&&!strncmp((char*)str,"int_type",8)){
+				else if (sz==8&&!memcmp((char*)str,"int_type",8)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_INT;
 				}
-				else if (sz==10&&!strncmp((char*)str,"float_type",10)){
+				else if (sz==10&&!memcmp((char*)str,"float_type",10)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_FLOAT;
 				}
-				else if (sz==9&&!strncmp((char*)str,"char_type",9)){
+				else if (sz==9&&!memcmp((char*)str,"char_type",9)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_CHAR;
 				}
-				else if (sz==11&&!strncmp((char*)str,"string_type",11)){
+				else if (sz==11&&!memcmp((char*)str,"string_type",11)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_STRING;
 				}
-				else if (sz==10&&!strncmp((char*)str,"array_type",10)){
+				else if (sz==10&&!memcmp((char*)str,"array_type",10)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_ARRAY;
 				}
-				else if (sz==11&&!strncmp((char*)str,"handle_type",11)){
+				else if (sz==11&&!memcmp((char*)str,"handle_type",11)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_HANDLE;
 				}
-				else if (sz==8&&!strncmp((char*)str,"map_type",8)){
+				else if (sz==8&&!memcmp((char*)str,"map_type",8)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_MAP;
 				}
-				else if (sz==12&&!strncmp((char*)str,"map_key_type",12)){
+				else if (sz==12&&!memcmp((char*)str,"map_key_type",12)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_MAP_KEY;
 				}
-				else if (sz==14&&!strncmp((char*)str,"map_value_type",14)){
+				else if (sz==14&&!memcmp((char*)str,"map_value_type",14)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=SLL_CONSTANT_TYPE_MAP_VALUE;
 				}
-				else if (sz==5&&!strncmp((char*)str,"stdin",5)){
+				else if (sz==5&&!memcmp((char*)str,"stdin",5)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-1;
 				}
-				else if (sz==6&&!strncmp((char*)str,"stdout",6)){
+				else if (sz==6&&!memcmp((char*)str,"stdout",6)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-2;
 				}
-				else if (sz==6&&!strncmp((char*)str,"stderr",6)){
+				else if (sz==6&&!memcmp((char*)str,"stderr",6)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=-3;
 				}
@@ -1404,8 +1416,14 @@ _skip_export:;
 					c_dt->_n_sc_id++;
 					l_sc=&n_l_sc;
 				}
-				else if (o->t==SLL_OBJECT_TYPE_ASSIGN&&ac==1&&(o+2)->t==SLL_OBJECT_TYPE_IDENTIFIER&&o+2==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
-					e_c_dt->nv_dt->sz--;
+				else if (o->t==SLL_OBJECT_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
+					sll_object_t* id=o+1;
+					while (id->t==SLL_OBJECT_TYPE_NOP||id->t==SLL_OBJECT_TYPE_DEBUG_DATA||id->t==OBJECT_TYPE_CHANGE_STACK){
+						id=(id->t==OBJECT_TYPE_CHANGE_STACK?id->dt._p:id+1);
+					}
+					if (id->t==SLL_OBJECT_TYPE_IDENTIFIER&&id==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
+						e_c_dt->nv_dt->sz--;
+					}
 				}
 				if (ac==SLL_MAX_ARG_COUNT){
 					e->t=SLL_ERROR_TOO_MANY_ARGUMENTS;

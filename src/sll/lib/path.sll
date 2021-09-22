@@ -1,7 +1,19 @@
+(# separator)
+
+(? 1 {
+	(# platform)
+	(-- "sys.sll")
+	(? (== platform "windows") {
+		(= separator '\\')
+	} {
+		(= separator '/')
+	})
+})
+
 (= absolute (... "path_absolute"))
 (= exists (... "path_exists"))
 (= is_dir (... "path_is_dir"))
 (= relative (... "path_relative"))
 (= size (... "path_size"))
 
-(## absolute exists is_dir relative size)
+(## separator absolute exists is_dir relative size)

@@ -1,4 +1,4 @@
-(# time sleep open close write platform argc argv get_ref_count size parse read_url)
+(# time sleep open close write platform argc argv get_ref_count size parse read_url separator)
 (? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "url.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -107,6 +107,10 @@
 	(? (== ii 10) (@))
 })
 (:> "A: " (+ 1 2) "\n")
+(? (== platform "windows") {
+	(:> "AAAAA\n");
+})
+(:> "Path: " (+ "build" separator "hello.txt") "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

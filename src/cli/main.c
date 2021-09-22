@@ -290,6 +290,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 								sll_stream_create_input_from_file(nf,is);
 								sll_init_compilation_data((sll_char_t*)f_fp,is,c_dt);
 								if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
+									sll_free_compilation_data(c_dt);
 									if (e.t!=SLL_ERROR_UNKNOWN){
 										sll_print_error(is,&e);
 									}
@@ -434,10 +435,7 @@ _check_next_module:;
 			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
 			if (!sll_load_compiled_object(is,c_dt,&e)){
-				sll_free_identifier_table(&(c_dt->idt));
-				sll_free_export_table(&(c_dt->et));
-				sll_free_function_table(&(c_dt->ft));
-				sll_free_string_table(&(c_dt->st));
+				sll_free_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("File '");
@@ -446,6 +444,48 @@ _check_next_module:;
 					COLOR_RESET;
 				}
 				else{
+					sll_print_error(is,&e);
+				}
+				return 0;
+			}
+			if (fl&FLAG_PRINT_OBJECT){
+				sll_output_data_stream_t os;
+				sll_stream_create_output_from_file(stdout,&os);
+				sll_print_object(c_dt,c_dt->h,&os);
+				putchar('\n');
+			}
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("File Successfully Read.\n");
+			}
+			return 1;
+		}
+		*(l_fp+i)=0;
+		if (fl&FLAG_VERBOSE){
+			PRINT_STATIC_STR("Trying to Open File '");
+			print_str(l_fp);
+			PRINT_STATIC_STR("'...\n");
+		}
+		nf=fopen(l_fp,"rb");// lgtm [cpp/path-injection]
+		if (nf){
+			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(l_fp,f_fp)){
+				i+=5;
+				*(f_fp+i)=0;
+				while (i){
+					i--;
+					*(f_fp+i)=*(l_fp+i);
+				}
+			}
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("Found File '");
+				print_str(f_fp);
+				PRINT_STATIC_STR("'\n");
+			}
+			*f=nf;
+			sll_stream_create_input_from_file(nf,is);
+			sll_error_t e;
+			if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
+				sll_free_compilation_data(c_dt);
+				if (e.t!=SLL_ERROR_UNKNOWN){
 					sll_print_error(is,&e);
 				}
 				return 0;
