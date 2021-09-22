@@ -5,6 +5,10 @@
 
 
 
+extern sll_integer_t sll_current_instruction_count;
+
+
+
 extern const sll_runtime_data_t* sll_current_runtime_data;
 
 

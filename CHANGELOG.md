@@ -4,6 +4,7 @@
 
 ### Added
 
+- `instruction_count`, `sll_api_util_instruction_count` and `sll_current_instruction_count` ([#51])
 - `sll_platform_file_size` function
 
 ### Changed
@@ -12,6 +13,7 @@
 - Fixed API Code Generation
 - Fixed bugs related to incorrect variable inlining
 - Fixed GC bugs in `SLL_FROM_CHAR` (and `SLL_ACQUIRE_STATIC_CHAR`)
+- Fixed memory corruption in [`src/sll/api/file_api.c`][main/src/sll/api/file_api.c]
 - Split the API header into multiple files in the [`src/include/sll/api`][main/src/include/sll/api] directory
 
 ### Removed
@@ -787,6 +789,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#51]: https://github.com/sl-lang/sll/issues/51
 [#50]: https://github.com/sl-lang/sll/issues/50
 [#48]: https://github.com/sl-lang/sll/issues/48
 [#47]: https://github.com/sl-lang/sll/issues/47
@@ -814,6 +817,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/sll/api/file_api.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/file_api.c
 [main/src/include/sll/api]: https://github.com/sl-lang/sll/tree/main/src/include/sll/api
 [0.6.19/CODE_OF_CONDUCT.md]: https://github.com/sl-lang/sll/blob/v0.6.19/CODE_OF_CONDUCT.md
 [0.6.19/src/cli/main.c]: https://github.com/sl-lang/sll/blob/v0.6.19/src/cli/main.c

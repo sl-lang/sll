@@ -8,6 +8,15 @@
 
 /*~~DOCS~~
 TYPE api optimizable
+FUNC sll_api_util_instruction_count
+DESC Docs!
+RET I Success*/
+__API_FUNC_DECL(util_instruction_count);
+
+
+
+/*~~DOCS~~
+TYPE api optimizable
 FUNC sll_api_util_ref_count
 DESC Docs!
 ARG O Docs!

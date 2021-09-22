@@ -17,7 +17,7 @@
 
 
 typedef struct __FILE{
-	const sll_char_t nm[SLL_API_MAX_FILE_PATH_LENGTH];
+	const sll_char_t nm[SLL_API_MAX_FILE_PATH_LENGTH+1];
 	sll_string_length_t nml;
 	sll_string_checksum_t nmc;
 	FILE* h;
@@ -122,6 +122,7 @@ __API_FUNC(file_open){
 _found_index:;
 	file_t* n=malloc(sizeof(file_t));
 	memcpy((sll_char_t*)(n->nm),a->v,a->l*sizeof(sll_char_t));
+	((sll_char_t*)(n->nm))[a->l]=0;
 	n->nml=a->l;
 	n->nmc=a->c;
 	n->h=h;

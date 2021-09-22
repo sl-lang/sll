@@ -1,3 +1,4 @@
 (= get_ref_count (... "util_ref_count"))
+(= instruction_count (... "util_instruction_count"))
 
-(## get_ref_count)
+(## get_ref_count instruction_count)

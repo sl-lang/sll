@@ -355,6 +355,15 @@ INTERNAL_FUNCTION("url_execute_request",sll_api_url_execute_request_raw,SLL_INTE
 
 
 
+extern __SLL_API_TYPE_sll_api_util_instruction_count sll_api_util_instruction_count(__SLL_API_ARGS_sll_api_util_instruction_count);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_util_instruction_count_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t out=sll_api_util_instruction_count();
+	return SLL_FROM_INT(out);
+}
+INTERNAL_FUNCTION("util_instruction_count",sll_api_util_instruction_count_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+
+
+
 extern __SLL_API_TYPE_sll_api_util_ref_count sll_api_util_ref_count(__SLL_API_ARGS_sll_api_util_ref_count);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_util_ref_count_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){

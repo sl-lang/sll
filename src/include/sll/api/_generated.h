@@ -68,6 +68,9 @@
 #define __SLL_API_TYPE_sll_api_url_execute_request __SLL_CHECK_OUTPUT sll_runtime_object_t*
 #define __SLL_API_ARGS_sll_api_url_execute_request const sll_string_t* a,const sll_string_t* b,const sll_string_t* c,const sll_map_t* d,const sll_string_t* e
 
+#define __SLL_API_TYPE_sll_api_util_instruction_count __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_util_instruction_count void
+
 #define __SLL_API_TYPE_sll_api_util_ref_count __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_util_ref_count const sll_runtime_object_t* a
 

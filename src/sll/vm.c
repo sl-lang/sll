@@ -58,12 +58,17 @@
 
 
 
+sll_integer_t sll_current_instruction_count=0;
+
+
+
 const sll_runtime_data_t* sll_current_runtime_data=NULL;
 
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_stack_data_t* st,const sll_runtime_data_t* r_dt,sll_error_t* e){
 	e->t=SLL_ERROR_UNKNOWN;
+	sll_current_instruction_count=0;
 	sll_current_runtime_data=r_dt;
 	sll_handle_type_t hl_l=r_dt->hl->dtl;
 	sll_internal_function_table_t* i_ft=r_dt->ift;
@@ -622,7 +627,11 @@ _return:;
 				e->dt.it=SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai);
 				goto _end;
 		}
+		sll_current_instruction_count++;
 		ai++;
+		if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			ai=ai->dt._p;
+		}
 		ii++;
 		if (si>=s_sz){
 			e->t=SLL_ERROR_INVALID_STACK_INDEX;
