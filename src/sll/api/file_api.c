@@ -7,20 +7,25 @@
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/static_object.h>
+#include <sll/stream.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
 typedef struct __FILE{
+	const sll_char_t nm[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_length_t nml;
+	sll_string_checksum_t nmc;
 	FILE* h;
 } file_t;
 
 
 
-static file_t* _file_fl=NULL;
+static file_t** _file_fl=NULL;
 static sll_handle_t _file_fll=0;
 static sll_handle_type_t _file_ht=SLL_UNKNOWN_HANDLE_TYPE;
 static sll_handle_descriptor_t _file_type;
@@ -31,18 +36,19 @@ static uint8_t _free_file(sll_handle_t h){
 	if (h>=_file_fll){
 		return 0;
 	}
-	file_t* f=_file_fl+h;
-	if (!f->h){
+	file_t* f=*(_file_fl+h);
+	if (!f){
 		return 0;
 	}
 	fclose(f->h);
-	f->h=NULL;
+	free(f);
+	*(_file_fl+h)=NULL;
 	if (h==_file_fll-1){
 		do{
 			_file_fll--;
-		} while (_file_fll&&!(_file_fl+_file_fll-1)->h);
+		} while (_file_fll&&!(_file_fl+_file_fll-1));
 		if (_file_fll){
-			void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t));
+			void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t*));
 			SLL_ASSERT(tmp);
 			_file_fl=tmp;
 		}
@@ -101,20 +107,25 @@ __API_FUNC(file_open){
 	}
 	sll_handle_t i=0;
 	while (i<_file_fll){
-		if (!(_file_fl+i)->h){
+		if (!(_file_fl+i)){
 			goto _found_index;
 		}
 		i++;
 	}
 	_file_fll++;
-	void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t));
+	void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t*));
 	if (!tmp){
 		fclose(h);
 		return;
 	}
 	_file_fl=tmp;
-_found_index:
-	(_file_fl+i)->h=h;
+_found_index:;
+	file_t* n=malloc(sizeof(file_t));
+	memcpy((sll_char_t*)(n->nm),a->v,a->l*sizeof(sll_char_t));
+	n->nml=a->l;
+	n->nmc=a->c;
+	n->h=h;
+	*(_file_fl+i)=n;
 	if (_file_ht==SLL_UNKNOWN_HANDLE_TYPE){
 		SLL_ASSERT(sll_current_runtime_data);
 		_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type);
@@ -126,32 +137,35 @@ _found_index:
 
 
 __API_FUNC(file_write){
-	FILE* fh=NULL;
+	sll_output_data_stream_t os;
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT){
 		if (a->dt.i==-2){
-			fh=stdout;
+			SLL_ASSERT(sll_current_runtime_data);
+			os=*(sll_current_runtime_data->os);
 		}
 		else if (a->dt.i==-3){
-			fh=stderr;
+			SLL_ASSERT(sll_current_runtime_data);
+			sll_stream_create_output_from_file(stderr,&os);
 		}
 		else{
 			return 0;
 		}
 	}
 	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
-		fh=(_file_fl+a->dt.h.h)->h;
-		if (!fh){
+		file_t* f=*(_file_fl+a->dt.h.h);
+		if (!f){
 			return 0;
 		}
+		sll_stream_create_output_from_file(f->h,&os);
 	}
 	else{
 		return 0;
 	}
 	sll_string_t s;
 	sll_object_to_string(b,bc,&s);
-	fwrite(s.v,sizeof(sll_char_t),s.l,fh);
+	SLL_WRITE_TO_OUTPUT_DATA_STREAM(&os,s.v,s.l*sizeof(sll_char_t));
 	free(s.v);
-	return s.l;
+	return s.l*sizeof(sll_char_t);
 }
 
 
