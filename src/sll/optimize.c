@@ -199,20 +199,9 @@ static sll_object_t* _remove_up_to_end(sll_object_t* o,sll_object_offset_t off){
 static sll_string_index_t _create_print_string(optimizer_data_t* o_dt,const sll_char_t* a,const sll_char_t* b,sll_string_length_t al,sll_string_length_t bl,sll_string_checksum_t c){
 	for (sll_string_index_t i=0;i<o_dt->c_dt->st.l;i++){
 		sll_string_t* s=o_dt->c_dt->st.dt+i;
-		if (s->c==c&&s->l==al+bl){
-			for (sll_string_length_t j=0;j<al;j++){
-				if (*(a+j)!=s->v[j]){
-					goto _check_next_string;
-				}
-			}
-			for (sll_string_length_t j=0;j<bl;j++){
-				if (*(b+j)!=s->v[j+al]){
-					goto _check_next_string;
-				}
-			}
+		if (s->c==c&&s->l==al+bl&&!memcmp(a,s->v,al)&&!memcmp(b,s->v+al,bl)){
 			return i;
 		}
-_check_next_string:;
 	}
 	o_dt->c_dt->st.l++;
 	o_dt->c_dt->st.dt=realloc(o_dt->c_dt->st.dt,o_dt->c_dt->st.l*sizeof(sll_string_t));

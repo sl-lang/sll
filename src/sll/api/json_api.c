@@ -339,16 +339,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_ob
 	SLL_ASSERT(json->t==SLL_JSON_OBJECT_TYPE_MAP);
 	for (sll_json_map_length_t i=0;i<json->dt.m.l;i++){
 		sll_json_map_keypair_t* e=json->dt.m.dt+i;
-		if (e->k.c!=k->c||e->k.l!=k->l){
-			continue;
+		if (e->k.c==k->c&&e->k.l==k->l&&!memcmp(e->k.v,k->v,e->k.l)){
+			return &(e->v);
 		}
-		for (sll_string_length_t j=0;j<e->k.l;j++){
-			if (e->k.v[j]!=k->v[j]){
-				goto _check_next_key;
-			}
-		}
-		return &(e->v);
-_check_next_key:;
 	}
 	return NULL;
 }

@@ -453,13 +453,8 @@ _wrong_error:
 				break;
 			case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
 			case SLL_ERROR_SLL_ASSERTION:
-				for (uint16_t j=0;j<256;j++){
-					if (ne.dt.str[j]!=e->dt.str[j]){
-						goto _wrong_error;
-					}
-					if (!ne.dt.str[j]){
-						break;
-					}
+				if (strcmp((char*)ne.dt.str,(char*)e->dt.str)){
+					goto _wrong_error;
 				}
 				break;
 			case SLL_ERROR_INVALID_INSTRUCTION:

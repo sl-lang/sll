@@ -14,7 +14,10 @@
 - Fixed bugs related to incorrect variable inlining
 - Fixed GC bugs in `SLL_FROM_CHAR` (and `SLL_ACQUIRE_STATIC_CHAR`)
 - Fixed memory corruption in [`src/sll/api/file_api.c`][main/src/sll/api/file_api.c]
+- Float comparasion now uses an error constant to minimize unexpected behaviour ([#53])
+- `PRINT_INT_SIGN` not prints `+0` instead of `0` ([#52])
 - Split the API header into multiple files in the [`src/include/sll/api`][main/src/include/sll/api] directory
+- Useless `goto` statements replaced by do-while loops and `memcmp` calls ([#54])
 
 ### Removed
 
@@ -789,6 +792,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#54]: https://github.com/sl-lang/sll/issues/54
+[#53]: https://github.com/sl-lang/sll/issues/53
+[#52]: https://github.com/sl-lang/sll/issues/52
 [#51]: https://github.com/sl-lang/sll/issues/51
 [#50]: https://github.com/sl-lang/sll/issues/50
 [#48]: https://github.com/sl-lang/sll/issues/48

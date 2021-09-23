@@ -351,12 +351,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 	}
 	for (uint32_t k=0;k<COMPILED_MODULE_COUNT;k++){
 		const module_t* m=m_dt+k;
-		if (m->c==c&&m->nml==i){
-			for (uint32_t l=0;l<i;l++){
-				if (*(m->nm+l)!=*(f_nm+l)){
-					goto _check_next_module;
-				}
-			}
+		if (m->c==c&&m->nml==i&&!memcmp(m->nm,f_nm,l)){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found Internal Module '");
 				print_str(f_nm);
@@ -395,7 +390,6 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			}
 			return 1;
 		}
-_check_next_module:;
 	}
 #else
 	if (l_fpl){

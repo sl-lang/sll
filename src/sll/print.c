@@ -11,7 +11,7 @@
 #define PRINT_INT_SIGN(v,os) \
 	do{ \
 		int64_t __v=(v); \
-		if (__v>0){ \
+		if (__v>=0){ \
 			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM((os),'+'); \
 		} \
 		_print_int(__v,(os)); \

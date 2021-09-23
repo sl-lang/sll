@@ -3,6 +3,7 @@
 #include <sll/constants.h>
 #include <sll/types.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -26,15 +27,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(
 	}
 	for (sll_function_index_t i=0;i<i_ft->l;i++){
 		sll_internal_function_t* f=*(i_ft->dt+i);
-		if (f->c==c&&f->nml==l){
-			for (uint8_t j=0;j<l;j++){
-				if (*(nm+j)!=f->nm[j]){
-					goto _check_next;
-				}
-			}
+		if (f->c==c&&f->nml==l&&!memcmp((sll_char_t*)nm,f->nm,l)){
 			return i;
 		}
-_check_next:;
 	}
 	return SLL_MAX_FUNCTION_INDEX;
 }

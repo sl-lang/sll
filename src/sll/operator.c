@@ -10,8 +10,9 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <string.h>
+#include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -142,6 +143,10 @@
 			inv=1; \
 		} \
 	} while (0)
+
+
+
+const sll_float_t sll_float_compare_error=1e-6;
 
 
 
@@ -745,11 +750,11 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_runtime_ob
 		case COMBINED_TYPE_II:
 			return a->dt.i==b->dt.i;
 		case COMBINED_TYPE_IF:
-			return a->dt.i==b->dt.f;
+			return fabs(a->dt.i-b->dt.f)<sll_float_compare_error;
 		case COMBINED_TYPE_FI:
-			return a->dt.f==b->dt.i;
+			return fabs(a->dt.f-b->dt.i)<sll_float_compare_error;
 		case COMBINED_TYPE_FF:
-			return a->dt.f==b->dt.f;
+			return fabs(a->dt.f-b->dt.f)<sll_float_compare_error;
 		case COMBINED_TYPE_SS:
 			{
 				sll_string_t as=a->dt.s;

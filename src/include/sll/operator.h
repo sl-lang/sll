@@ -17,6 +17,10 @@
 
 
 
+extern const sll_float_t sll_float_compare_error;
+
+
+
 __SLL_OPERATOR_UNARY(inc);
 
 

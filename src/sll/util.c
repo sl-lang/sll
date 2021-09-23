@@ -114,16 +114,10 @@ static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_off
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s){
 	for (sll_string_index_t i=0;i<st->l;i++){
 		sll_string_t* k=st->dt+i;
-		if (k->c==s->c&&k->l==s->l){
-			for (sll_string_length_t j=0;j<s->l;j++){
-				if (s->v[j]!=k->v[j]){
-					goto _check_next_string;
-				}
-			}
+		if (k->c==s->c&&k->l==s->l&&!memcmp(s->v,k->v,s->l)){
 			free(s->v);
 			return i;
 		}
-_check_next_string:;
 	}
 	st->l++;
 	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
@@ -140,15 +134,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_ta
 	}
 	for (sll_string_index_t i=0;i<st->l;i++){
 		sll_string_t* s=st->dt+i;
-		if (s->c==c&&s->l==l){
-			for (sll_string_length_t j=0;j<l;j++){
-				if (*(dt+j)!=*(s->v+j)){
-					goto _check_next_string;
-				}
-			}
+		if (s->c==c&&s->l==l&&!memcmp(dt,s->v,l)){
 			return i;
 		}
-_check_next_string:;
 	}
 	st->l++;
 	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
