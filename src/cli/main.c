@@ -23,7 +23,7 @@
 #define EXPAND_FILE_PATH(s,d) GetFullPathNameA((s),MAX_PATH+1,(d),NULL)
 #define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
 	do{ \
-		(o)=GetModuleFileNameA(NULL,(bf),(l)); \
+		(o)=GetModuleFileNameA(NULL,(char*)(bf),(l)); \
 	} while (0)
 #define RESET_CONSOLE SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),cm)
 #ifdef SLL_VERSION_STANDALONE
@@ -37,7 +37,7 @@
 #define EXPAND_FILE_PATH(s,d) realpath((s),(d))
 #define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
 	do{ \
-		ssize_t __o=readlink("/proc/self/exe",(bf),(l)); \
+		ssize_t __o=readlink("/proc/self/exe",(char*)(bf),(l)); \
 		if (__o!=-1){ \
 			(o)=__o; \
 			*((bf)+(o))=0; \
@@ -804,7 +804,7 @@ _skip_lib_path:
 		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||!strcmp(e,"--args")){
 			sll_set_argument_count(argc-i);
 			for (sll_integer_t j=0;j<(sll_integer_t)(argc-i-1);j++){
-				sll_set_argument(j+1,*(argv+i+j+1));
+				sll_set_argument(j+1,SLL_CHAR(*(argv+i+j+1)));
 			}
 			break;
 		}
@@ -1008,17 +1008,17 @@ _read_file_argument:
 				print_int(SLL_GET_PATCH(v->dt.i));
 				putchar('\n');
 			}
-			char bf[MAX_PATH_LENGTH];
+			sll_char_t bf[MAX_PATH_LENGTH+1];
 			uint32_t i;
 			GET_EXECUATBLE_FILE_PATH(bf,MAX_PATH_LENGTH,i);
-			char bf2[MAX_PATH_LENGTH];
+			sll_char_t bf2[MAX_PATH_LENGTH];
 			memcpy(bf2,bf,i);
 			bf2[i]='.';
 			bf2[i+1]='o';
 			bf2[i+2]='l';
 			bf2[i+3]='d';
 			bf2[i+4]=0;
-			rename(bf,bf2);
+			rename((char*)bf,(char*)bf2);
 #ifndef STANDALONE_BUILD
 			while (bf[i]!='\\'&&bf[i]!='/'){
 				i--;
@@ -1031,7 +1031,7 @@ _read_file_argument:
 			bf2[i+2]='l';
 			bf2[i+3]='d';
 			bf2[i+4]=0;
-			rename(bf,bf2);
+			rename((char*)bf,(char*)bf2);
 			while (bf[i]!='\\'&&bf[i]!='/'){
 				i--;
 			}
@@ -1078,19 +1078,19 @@ _read_file_argument:
 				bf[i+nml]=0;
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Extracting '");
-					print_str(bf+i);
+					print_str((char*)(bf+i));
 					PRINT_STATIC_STR("' into '");
-					print_str(bf);
+					print_str((char*)bf);
 					PRINT_STATIC_STR("' (");
 					print_int(sz);
 					PRINT_STATIC_STR(" bytes)\n");
 				}
 				j+=nml;
-				FILE* wf=fopen(bf,"wb");
+				FILE* wf=fopen((char*)bf,"wb");
 				if (!wf){
 					COLOR_RED;
 					PRINT_STATIC_STR("Unable to Open File '");
-					print_str(bf);
+					print_str((char*)bf);
 					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
 					COLOR_RESET;
 					sll_free_http_response(&r);
@@ -1101,7 +1101,7 @@ _read_file_argument:
 				if (fwrite(r_dt.v+j,sizeof(sll_char_t),sz,wf)!=sz){
 					COLOR_RED;
 					PRINT_STATIC_STR("Unable to Write Data to File '");
-					print_str(bf);
+					print_str((char*)bf);
 					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
 					COLOR_RESET;
 					fclose(wf);
@@ -1211,12 +1211,7 @@ _json_error:
 			goto _error;
 		}
 		char bf[MAX_PATH_LENGTH];
-		if (!EXPAND_FILE_PATH(*(fp+j),bf)){
-			sll_set_argument(0,*(fp+j));
-		}
-		else{
-			sll_set_argument(0,bf);
-		}
+		sll_set_argument(0,SLL_CHAR((!EXPAND_FILE_PATH(*(fp+j),bf)?*(fp+j):bf)));
 		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
 			goto _error;
 		}
@@ -1228,7 +1223,7 @@ _json_error:
 		sll_free_compilation_data(&c_dt);
 	}
 	for (uint32_t j=0;j<sll;j++){
-		sll_set_argument(0,"<console>");
+		sll_set_argument(0,SLL_CHAR("<console>"));
 		char f_fp[MAX_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		sll_input_buffer_t i_bf={

@@ -28,10 +28,15 @@
 			(s)->v=realloc((s)->v,SLL_STRING_ALIGN_LENGTH((s)->l+1)*sizeof(sll_char_t)); \
 		} \
 	} while (0)
+#define SLL_CHAR(x) ((sll_char_t*)(x))
 
 
 
 __SLL_FUNC void sll_string_create(sll_string_length_t l,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_create_from_pointer(const sll_char_t* s,sll_string_t* o);
 
 
 
@@ -40,6 +45,10 @@ __SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d);
 
 
 __SLL_FUNC void sll_string_hash(sll_string_t* s);
+
+
+
+__SLL_FUNC sll_string_length_t sll_string_length(const sll_char_t* s);
 
 
 

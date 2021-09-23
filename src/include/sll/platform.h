@@ -5,7 +5,7 @@
 
 
 
-extern const char* sll_platform_string;
+extern const sll_char_t* sll_platform_string;
 
 
 
@@ -17,7 +17,7 @@ __SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const char* fp);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp);
 
 
 
@@ -29,19 +29,19 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const char* fp,sll_string_t** o);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const char* fp,sll_buffer_t bf,sll_buffer_size_t bfl);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const sll_char_t* fp,sll_buffer_t bf,sll_buffer_size_t bfl);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const char* fp);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_char_t* fp);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const char* fp);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sll_char_t* fp);
 
 
 

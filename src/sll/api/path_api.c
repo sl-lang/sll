@@ -12,7 +12,7 @@
 
 __API_FUNC(path_absolute){
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_length_t l=(sll_string_length_t)sll_platform_path_absolute((char*)a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH);
+	sll_string_length_t l=(sll_string_length_t)sll_platform_path_absolute(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH);
 	if (!l){
 		sll_string_clone(a,out);
 		return;
@@ -27,19 +27,13 @@ __API_FUNC(path_absolute){
 
 
 __API_FUNC(path_exists){
-	if (sll_platform_path_exists((char*)a->v)){
-		return 1;
-	}
-	return 0;
+	return sll_platform_path_exists(a->v);
 }
 
 
 
 __API_FUNC(path_is_dir){
-	if (sll_platform_path_is_directory((char*)a->v)){
-		return 1;
-	}
-	return 0;
+	return sll_platform_path_is_directory(a->v);
 }
 
 
@@ -51,5 +45,5 @@ __API_FUNC(path_relative){
 
 
 __API_FUNC(path_size){
-	return sll_platform_file_size((char*)a->v);
+	return sll_platform_file_size(a->v);
 }

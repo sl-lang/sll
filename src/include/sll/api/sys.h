@@ -35,7 +35,7 @@ __API_FUNC_DECL(sys_get_platform);
 
 
 
-__SLL_FUNC void sll_set_argument(sll_integer_t i,const char* a);
+__SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a);
 
 
 

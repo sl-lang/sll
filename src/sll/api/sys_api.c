@@ -30,22 +30,14 @@ static void _sys_free_argv(void){
 
 
 
-__SLL_FUNC void sll_set_argument(sll_integer_t i,const char* a){
+__SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 	if (i<0||i>=_sys_argc){
 		return;
-	}
-	sll_string_length_t l=0;
-	sll_string_checksum_t c=0;
-	while (*(a+l)){
-		c^=*(a+l);
-		l++;
 	}
 	SLL_RELEASE(*(_sys_argv+i));
 	sll_runtime_object_t* n=SLL_CREATE();
 	n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	sll_string_create(l,&(n->dt.s));
-	n->dt.s.c=c;
-	memcpy(n->dt.s.v,a,l);
+	sll_string_create_from_pointer(a,&(n->dt.s));
 	*(_sys_argv+i)=n;
 }
 
@@ -89,15 +81,7 @@ __API_FUNC(sys_arg_get_count){
 
 __API_FUNC(sys_get_platform){
 	if (!_sys_p.dt.s.l){
-		sll_string_length_t l=0;
-		sll_string_checksum_t c=0;
-		while (*(sll_platform_string+l)){
-			c^=*(sll_platform_string+l);
-			l++;
-		}
-		sll_string_create(l,&(_sys_p.dt.s));
-		_sys_p.dt.s.c=c;
-		memcpy(_sys_p.dt.s.v,sll_platform_string,l);
+		sll_string_create_from_pointer(sll_platform_string,&(_sys_p.dt.s));
 	}
 	SLL_ACQUIRE(&_sys_p);
 	return &_sys_p;

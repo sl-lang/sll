@@ -4,6 +4,7 @@
 #include <ws2tcpip.h>
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/core.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <fcntl.h>
@@ -17,7 +18,7 @@
 
 
 
-const char* sll_platform_string="windows";
+const sll_char_t* sll_platform_string=SLL_CHAR("windows");
 
 
 
@@ -27,7 +28,7 @@ static int _win_stderr_m=0;
 
 
 
-static void _list_dir_files(char* bf,uint16_t i,sll_string_checksum_t c,file_list_data_t* o){
+static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_t* o){
 	WIN32_FIND_DATAA dt;
 	bf[i]='*';
 	bf[i+1]=0;
@@ -41,19 +42,14 @@ static void _list_dir_files(char* bf,uint16_t i,sll_string_checksum_t c,file_lis
 				SLL_UNIMPLEMENTED();
 			}
 			else{
-				sll_string_checksum_t nc=c;
-				uint16_t j=0;
-				while (*(dt.cFileName+j)){
-					bf[i+j]=*(dt.cFileName+j);
-					nc^=bf[i+j];
-					j++;
-				}
+				sll_string_length_t j=sll_string_length(SLL_CHAR(dt.cFileName));
 				o->l++;
 				o->dt=realloc(o->dt,o->l*sizeof(sll_string_t));
 				sll_string_t* s=o->dt+o->l-1;
 				sll_string_create(i+j,s);
-				s->c=nc;
-				memcpy(s->v,bf,i+j);
+				memcpy(s->v,bf,i);
+				memcpy(s->v+i,dt.cFileName,j);
+				sll_string_hash(s);
 			}
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
@@ -74,7 +70,7 @@ __SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const char* fp){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
 	HANDLE fh=CreateFileA(fp,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 	if (fh==INVALID_HANDLE_VALUE){
 		return 0;
@@ -106,39 +102,35 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const char* fp,sll_string_t** o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_string_checksum_t c=0;
-	char bf[MAX_PATH+1];
-	uint16_t i=0;
-	while (*(fp+i)){
-		bf[i]=*(fp+i);
-		c^=bf[i];
-		i++;
-	}
+	sll_char_t bf[MAX_PATH+1];
+	sll_string_length_t i=sll_string_length(fp);
+	memcpy(bf,fp,i);
 	file_list_data_t dt={
 		NULL,
 		0
 	};
-	_list_dir_files(bf,i,c,&dt);
+	_list_dir_files(bf,i,&dt);
 	*o=dt.dt;
 	return dt.l;
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const char* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const sll_char_t* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
 	return (sll_buffer_size_t)GetFullPathNameA(fp,bfl,bf,NULL);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const char* fp){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_char_t* fp){
 	return (GetFileAttributesA(fp)!=INVALID_FILE_ATTRIBUTES);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const char* fp){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sll_char_t* fp){
 	DWORD a=GetFileAttributesA(fp);
 	return (a!=INVALID_FILE_ATTRIBUTES&&(a&FILE_ATTRIBUTE_DIRECTORY));
 }
@@ -177,7 +169,7 @@ __SLL_FUNC void sll_platform_socket_init(void){
 	if (WSAStartup(MAKEWORD(2,2),&dt)){
 		SLL_UNIMPLEMENTED();
 	}
-	atexit(WSACleanup);
+	sll_register_cleanup(WSACleanup,SLL_CLEANUP_ORDER_NORMAL);
 }
 
 
