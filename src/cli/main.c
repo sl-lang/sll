@@ -351,7 +351,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 	}
 	for (uint32_t k=0;k<COMPILED_MODULE_COUNT;k++){
 		const module_t* m=m_dt+k;
-		if (m->c==c&&m->nml==i&&!memcmp(m->nm,f_nm,l)){
+		if (m->c==c&&m->nml==i&&!memcmp(m->nm,f_nm,i)){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found Internal Module '");
 				print_str(f_nm);
