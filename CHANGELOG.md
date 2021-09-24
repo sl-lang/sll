@@ -9,12 +9,12 @@
 
 ### Changed
 
-- CLI now also tries to load uncompiled modules from the `lib/` directory
+- CLI now also tries to load plain-text modules from the `lib/` directory
 - Fixed API Code Generation
 - Fixed bugs related to incorrect variable inlining
 - Fixed GC bugs in `SLL_FROM_CHAR` (and `SLL_ACQUIRE_STATIC_CHAR`)
 - Fixed memory corruption in [`src/sll/api/file_api.c`][main/src/sll/api/file_api.c]
-- Float comparasion now uses an error constant to minimize unexpected behaviour ([#53])
+- Float comparison now uses an error constant to minimize unexpected behavior ([#53])
 - `PRINT_INT_SIGN` now prints `+0` instead of `0` ([#52])
 - Split the API header into multiple files in the [`src/include/sll/api`][main/src/include/sll/api] directory
 - Strings checksums are now 32-bit (to combine two checksums use the `SLL_STRING_COMBINE_CHECKSUMS` or `SLL_STRING_COMBINE_CHECKSUMS_FAST` macro) ([#40])
@@ -28,7 +28,7 @@
 
 ### Added
 
-- Added automatic function inlining ([#41]) and contants term evaluation ([#48])
+- Added automatic function inlining ([#41]) and constant term evaluation ([#48])
 - Added more operators
 - Break (`(@)`) and continue (`(<<<)`) operators ([#44])
 - [Code of Conduct][0.6.19/CODE_OF_CONDUCT.md]
@@ -441,7 +441,7 @@ Literally, just arrays.
 ### Changed
 
 - Moved platform-dependent code to [`src/lll_lib/platform/linux.c`][0.6.3/src/lll_lib/platform/linux.c] and [`src/lll_lib/platform/windows.c`][0.6.3/src/lll_lib/platform/windows.c]
-- Removed duplications in the builder script
+- Removed duplicated code in the builder script
 - Renamed [`src/include/lll_lib_api.h`][0.6.2/src/include/lll_lib_api.h] and [`src/include/version.h`][0.6.2/src/include/version.h] to [`src/include/lll/api.h`][0.6.3/src/include/lll/api.h] and [`src/include/lll/version.h`][0.6.3/src/include/lll/version.h]
 - `__SLL_IMPORT_EXPORT` has been renamed to `__SLL_FUNC`
 - Split [`src/include/lll_lib.h`][0.6.2/src/include/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
