@@ -28,6 +28,28 @@ __API_FUNC_DECL(string_length);
 
 
 
+/*~~DOCS~~
+TYPE api optimizable
+FUNC sll_api_string_to_lower_case
+DESC Docs!
+ARG S Docs!
+RET Z Failure
+RET S Success*/
+__API_FUNC_DECL(string_to_lower_case);
+
+
+
+/*~~DOCS~~
+TYPE api optimizable
+FUNC sll_api_string_to_upper_case
+DESC Docs!
+ARG S Docs!
+RET Z Failure
+RET S Success*/
+__API_FUNC_DECL(string_to_upper_case);
+
+
+
 __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o);
 
 

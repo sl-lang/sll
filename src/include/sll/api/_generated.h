@@ -44,6 +44,12 @@
 #define __SLL_API_TYPE_sll_api_string_length __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_string_length const sll_runtime_object_t*const* a,sll_arg_count_t ac
 
+#define __SLL_API_TYPE_sll_api_string_to_lower_case void
+#define __SLL_API_ARGS_sll_api_string_to_lower_case const sll_string_t* a,sll_string_t* out
+
+#define __SLL_API_TYPE_sll_api_string_to_upper_case void
+#define __SLL_API_ARGS_sll_api_string_to_upper_case const sll_string_t* a,sll_string_t* out
+
 #define __SLL_API_TYPE_sll_api_sys_arg_get __SLL_CHECK_OUTPUT sll_runtime_object_t*
 #define __SLL_API_ARGS_sll_api_sys_arg_get const sll_integer_t a
 

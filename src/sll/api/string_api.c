@@ -290,3 +290,15 @@ __API_FUNC(string_convert){
 __API_FUNC(string_length){
 	return sll_object_to_string_length(a,ac,0);
 }
+
+
+
+__API_FUNC(string_to_lower_case){
+	sll_string_lower_case(a,out);
+}
+
+
+
+__API_FUNC(string_to_upper_case){
+	sll_string_upper_case(a,out);
+}

@@ -242,6 +242,46 @@ INTERNAL_FUNCTION("string_length",sll_api_string_length_raw,SLL_INTERNAL_FUNCTIO
 
 
 
+extern __SLL_API_TYPE_sll_api_string_to_lower_case sll_api_string_to_lower_case(__SLL_API_ARGS_sll_api_string_to_lower_case);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_to_lower_case_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
+	const sll_runtime_object_t* a=*(al+0);
+	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
+	sll_string_t out;
+	sll_api_string_to_lower_case(&(a->dt.s),&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+INTERNAL_FUNCTION("string_to_lower_case",sll_api_string_to_lower_case_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+
+
+
+extern __SLL_API_TYPE_sll_api_string_to_upper_case sll_api_string_to_upper_case(__SLL_API_ARGS_sll_api_string_to_upper_case);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_to_upper_case_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
+	const sll_runtime_object_t* a=*(al+0);
+	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
+	sll_string_t out;
+	sll_api_string_to_upper_case(&(a->dt.s),&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+INTERNAL_FUNCTION("string_to_upper_case",sll_api_string_to_upper_case_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+
+
+
 extern __SLL_API_TYPE_sll_api_sys_arg_get sll_api_sys_arg_get(__SLL_API_ARGS_sll_api_sys_arg_get);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){

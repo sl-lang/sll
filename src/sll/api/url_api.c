@@ -11,8 +11,8 @@
 
 __API_FUNC(url_execute_request){
 	sll_header_list_t http_m={
-		malloc((d->l>>1)*sizeof(sll_header_t*)),
-		d->l>>1
+		malloc(d->l*sizeof(sll_header_t*)),
+		d->l
 	};
 	for (sll_header_count_t i=0;i<d->l;i++){
 		sll_header_t* h_kv=malloc(sizeof(sll_header_t));
@@ -33,7 +33,7 @@ __API_FUNC(url_execute_request){
 		&(dt_s->dt.s)
 	};
 	sll_return_code_t rc=sll_url_http_request(a,b,c,&http_m,e,&r);
-	for (sll_header_count_t i=0;i<(d->l>>1);i++){
+	for (sll_header_count_t i=0;i<d->l;i++){
 		free(*(http_m.dt+i));
 	}
 	free(http_m.dt);
