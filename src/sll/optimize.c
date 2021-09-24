@@ -907,21 +907,21 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 						if (a->t==SLL_OBJECT_TYPE_CHAR&&b->t==SLL_OBJECT_TYPE_CHAR){
 							a->t=SLL_OBJECT_TYPE_NOP;
 							b->t=SLL_OBJECT_TYPE_STRING;
-							b->dt.s=_create_print_string(o_dt,&(a->dt.c),&(b->dt.c),1,1,a->dt.c^b->dt.c);
+							b->dt.s=_create_print_string(o_dt,&(a->dt.c),&(b->dt.c),1,1,SLL_STRING_COMBINE_CHECKSUMS_FAST(a->dt.c,1,b->dt.c));
 							r->dt.ac--;
 						}
 						else if (a->t==SLL_OBJECT_TYPE_CHAR&&b->t==SLL_OBJECT_TYPE_STRING){
 							sll_string_t* sb=o_dt->c_dt->st.dt+b->dt.s;
 							a->t=SLL_OBJECT_TYPE_NOP;
 							b->t=SLL_OBJECT_TYPE_STRING;
-							b->dt.s=_create_print_string(o_dt,&(a->dt.c),sb->v,1,sb->l,a->dt.c^sb->c);
+							b->dt.s=_create_print_string(o_dt,&(a->dt.c),sb->v,1,sb->l,SLL_STRING_COMBINE_CHECKSUMS_FAST(a->dt.c,1,sb->c));
 							r->dt.ac--;
 						}
 						else if (a->t==SLL_OBJECT_TYPE_STRING&&b->t==SLL_OBJECT_TYPE_CHAR){
 							sll_string_t* sa=o_dt->c_dt->st.dt+a->dt.s;
 							a->t=SLL_OBJECT_TYPE_NOP;
 							b->t=SLL_OBJECT_TYPE_STRING;
-							b->dt.s=_create_print_string(o_dt,sa->v,&(b->dt.c),sa->l,1,sa->c^b->dt.c);
+							b->dt.s=_create_print_string(o_dt,sa->v,&(b->dt.c),sa->l,1,SLL_STRING_COMBINE_CHECKSUMS_FAST(sa->c,sa->l,b->dt.c));
 							r->dt.ac--;
 						}
 						else if (a->t==SLL_OBJECT_TYPE_STRING&&b->t==SLL_OBJECT_TYPE_STRING){
@@ -929,7 +929,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 							sll_string_t* sb=o_dt->c_dt->st.dt+b->dt.s;
 							a->t=SLL_OBJECT_TYPE_NOP;
 							b->t=SLL_OBJECT_TYPE_STRING;
-							b->dt.s=_create_print_string(o_dt,sa->v,sb->v,sa->l,sb->l,sa->c^sb->c);
+							b->dt.s=_create_print_string(o_dt,sa->v,sb->v,sa->l,sb->l,SLL_STRING_COMBINE_CHECKSUMS_FAST(sa->c,sa->l,sb->c));
 							r->dt.ac--;
 						}
 					}

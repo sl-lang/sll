@@ -283,7 +283,7 @@ def generate_header(h_dt,cm):
 		if (k.startswith(b"extern")):
 			e_v.append((k.replace(b"\t",b" ").split(b" ")[-1].split(b";")[0],k))
 			continue
-		if (b"(" in k and b"(*" not in SPACE_CHARACTERS_REGEX.sub(b"",k) and k.count(b"(")==k.count(b")") and k.count(b"{")==k.count(b"}")):
+		if (b"(" in k and b"(*" not in SPACE_CHARACTERS_REGEX.sub(b"",k) and k.count(b"(")==k.count(b")") and k.count(b"{")==k.count(b"}") and b"inline" not in k):
 			k=k.split(b";")
 			fl.append((k[0][:-len(k[0].split(b"(")[-1])-1].split(b" ")[-1],k[0].strip()))
 			for e in k[1:]:

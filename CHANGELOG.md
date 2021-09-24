@@ -5,7 +5,7 @@
 ### Added
 
 - `instruction_count`, `sll_api_util_instruction_count` and `sll_current_instruction_count` ([#51])
-- `sll_platform_file_size` function
+- `sll_platform_file_size` and `sll_string_join` functions
 
 ### Changed
 
@@ -17,6 +17,7 @@
 - Float comparasion now uses an error constant to minimize unexpected behaviour ([#53])
 - `PRINT_INT_SIGN` not prints `+0` instead of `0` ([#52])
 - Split the API header into multiple files in the [`src/include/sll/api`][main/src/include/sll/api] directory
+- Strings checksums are now 32-bit (to combine two checksums use the `SLL_STRING_COMBINE_CHECKSUMS` or `SLL_STRING_COMBINE_CHECKSUMS_FAST` macro) ([#40])
 - Useless `goto` statements replaced by do-while loops and `memcmp` calls ([#54])
 
 ### Removed
@@ -803,6 +804,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#44]: https://github.com/sl-lang/sll/issues/44
 [#43]: https://github.com/sl-lang/sll/issues/43
 [#41]: https://github.com/sl-lang/sll/issues/41
+[#40]: https://github.com/sl-lang/sll/issues/40
 [#37]: https://github.com/sl-lang/sll/issues/37
 [#36]: https://github.com/sl-lang/sll/issues/36
 [#35]: https://github.com/sl-lang/sll/issues/35

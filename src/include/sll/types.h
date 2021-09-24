@@ -23,6 +23,10 @@ typedef uint8_t sll_char_t;
 
 
 
+typedef uint8_t sll_checksum_t;
+
+
+
 typedef uint8_t sll_cleanup_type_t;
 
 
@@ -47,6 +51,10 @@ typedef uint8_t sll_internal_function_type_t;
 
 
 
+typedef uint8_t sll_name_length_t;
+
+
+
 typedef uint8_t sll_object_type_t;
 
 
@@ -56,10 +64,6 @@ typedef uint8_t sll_return_t;
 
 
 typedef uint8_t sll_runtime_object_type_t;
-
-
-
-typedef uint8_t sll_string_checksum_t;
 
 
 
@@ -164,6 +168,10 @@ typedef uint32_t sll_stack_offset_t;
 
 
 typedef uint32_t sll_statement_count_t;
+
+
+
+typedef uint32_t sll_string_checksum_t;
 
 
 
@@ -457,8 +465,8 @@ typedef void (*sll_handle_destructor_t)(sll_handle_t h);
 
 typedef struct __SLL_HANDLE_DESCRIPTOR{
 	sll_char_t nm[256];
-	uint8_t nml;
-	sll_string_checksum_t c;
+	sll_name_length_t nml;
+	sll_checksum_t c;
 	sll_handle_stringify_t sf;
 	sll_handle_destructor_t df;
 } sll_handle_descriptor_t;
@@ -530,8 +538,8 @@ typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runti
 
 typedef struct __SLL_INTERNAL_FUNCTION{
 	sll_char_t nm[256];
-	uint8_t nml;
-	sll_string_checksum_t c;
+	sll_name_length_t nml;
+	sll_checksum_t c;
 	sll_internal_function_pointer_t p;
 	sll_internal_function_type_t t;
 } sll_internal_function_t;

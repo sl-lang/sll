@@ -13,11 +13,11 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t s
 
 
 
-__SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz);
-
-
-
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp);
+
+
+
+__SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz);
 
 
 

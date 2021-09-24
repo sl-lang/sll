@@ -128,22 +128,20 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
-	sll_string_checksum_t c=0;
-	for (sll_string_length_t i=0;i<l;i++){
-		c^=(sll_string_checksum_t)(*(dt+i));
-	}
+	sll_string_t n;
+	sll_string_create(l,&n);
+	memcpy(n.v,dt,l);
+	sll_string_hash(&n);
 	for (sll_string_index_t i=0;i<st->l;i++){
 		sll_string_t* s=st->dt+i;
-		if (s->c==c&&s->l==l&&!memcmp(dt,s->v,l)){
+		if (s->c==n.c&&s->l==l&&!memcmp(dt,s->v,l)){
+			free(n.v);
 			return i;
 		}
 	}
 	st->l++;
 	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
-	sll_string_t* s=st->dt+st->l-1;
-	sll_string_create(l,s);
-	memcpy(s->v,dt,l);
-	sll_string_hash(s);
+	*(st->dt+st->l-1)=n;
 	return st->l-1;
 }
 

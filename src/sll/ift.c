@@ -20,14 +20,14 @@ __SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const sll_char_t* nm){
 	uint8_t l=0;
-	sll_string_checksum_t c=0;
+	sll_checksum_t c=0;
 	while (*(nm+l)){
 		c^=*(nm+l);
 		l++;
 	}
 	for (sll_function_index_t i=0;i<i_ft->l;i++){
 		sll_internal_function_t* f=*(i_ft->dt+i);
-		if (f->c==c&&f->nml==l&&!memcmp((sll_char_t*)nm,f->nm,l)){
+		if (f->c==c&&f->nml==l&&!memcmp((void*)nm,f->nm,l)){
 			return i;
 		}
 	}

@@ -163,7 +163,7 @@ __SLL_OPERATOR_UNARY(inc){
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				sll_string_create(a->dt.s.l+1,&(o->dt.s));
-				o->dt.s.c=a->dt.s.c^'1';
+				o->dt.s.c=SLL_STRING_COMBINE_CHECKSUMS_FAST(a->dt.s.c,a->dt.s.l,'1');
 				memcpy(o->dt.s.v,a->dt.s.v,a->dt.s.l);
 				o->dt.s.v[a->dt.s.l]='1';
 				return o;
@@ -249,10 +249,7 @@ _add_to_string:
 					o->dt.s=sb;
 					return o;
 				}
-				sll_string_create(sa.l+sb.l,&(o->dt.s));
-				o->dt.s.c=sa.c^sb.c;
-				memcpy(o->dt.s.v,sa.v,sa.l);
-				memcpy(o->dt.s.v+sa.l,sb.v,sb.l);
+				sll_string_join(&sa,&sb,&(o->dt.s));
 				free(sb.v);
 				return o;
 			}
@@ -265,10 +262,7 @@ _add_to_string:
 				}
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-				sll_string_create(sa.l+sb.l,&(o->dt.s));
-				o->dt.s.c=sa.c^sb.c;
-				memcpy(o->dt.s.v,sa.v,sa.l);
-				memcpy(o->dt.s.v+sa.l,sb.v,sb.l);
+				sll_string_join(&sa,&sb,&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_HH:

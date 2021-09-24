@@ -11,8 +11,8 @@
 
 
 __API_FUNC(path_absolute){
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_length_t l=(sll_string_length_t)sll_platform_path_absolute(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH);
+	sll_char_t bf[SLL_STRING_ALIGN_LENGTH(SLL_API_MAX_FILE_PATH_LENGTH)];
+	sll_string_length_t l=(sll_string_length_t)sll_platform_path_absolute(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH+1);
 	if (!l){
 		sll_string_clone(a,out);
 		return;

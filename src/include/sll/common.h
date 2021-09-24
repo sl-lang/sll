@@ -1,5 +1,8 @@
 #ifndef __SLL_COMMON_H__
 #define __SLL_COMMON_H__ 1
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
 
 
 
@@ -14,6 +17,7 @@
 #endif
 #endif
 #define __SLL_CHECK_OUTPUT _Check_return_
+static __inline __forceinline unsigned int sll_rotate_bits(unsigned int a,unsigned char b){return _rotl(a,b);}
 #else
 #ifdef __SLL_STATIC__
 #define __SLL_FUNC
@@ -25,6 +29,7 @@
 #endif
 #endif
 #define __SLL_CHECK_OUTPUT __attribute__((warn_unused_result))
+static inline __attribute__((always_inline)) unsigned int sll_rotate_bits(unsigned int a,unsigned char b){__asm__("rol %1,%0":"+r"(a):"c"(b));return a;}
 #endif
 
 

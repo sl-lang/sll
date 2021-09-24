@@ -288,7 +288,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 							sll_free_string_table(&(c_dt->st));
 							if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 								sll_stream_create_input_from_file(nf,is);
-								sll_init_compilation_data((sll_char_t*)f_fp,is,c_dt);
+								sll_init_compilation_data(SLL_CHAR(f_fp),is,c_dt);
 								if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
 									sll_free_compilation_data(c_dt);
 									if (e.t!=SLL_ERROR_UNKNOWN){
@@ -1250,7 +1250,7 @@ _json_error:
 					sll_free_string_table(&(c_dt.st));
 					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 						sll_stream_create_input_from_buffer(&i_bf,&is);
-						sll_init_compilation_data((sll_char_t*)"<console>",&is,&c_dt);
+						sll_init_compilation_data(SLL_CHAR("<console>"),&is,&c_dt);
 						if (!sll_parse_all_objects(&c_dt,&i_ft,load_import,&e)){
 							if (e.t!=SLL_ERROR_UNKNOWN){
 								sll_print_error(&is,&e);

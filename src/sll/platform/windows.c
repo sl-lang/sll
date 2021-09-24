@@ -64,12 +64,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t s
 
 
 
-__SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
-	VirtualFree(pg,0,MEM_RELEASE);
-}
-
-
-
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
 	HANDLE fh=CreateFileA(fp,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 	if (fh==INVALID_HANDLE_VALUE){
@@ -82,6 +76,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_cha
 	}
 	CloseHandle(fh);
 	return sz.QuadPart;
+}
+
+
+
+__SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
+	VirtualFree(pg,0,MEM_RELEASE);
 }
 
 
@@ -103,7 +103,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
-	sll_string_checksum_t c=0;
 	sll_char_t bf[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length(fp);
 	memcpy(bf,fp,i);

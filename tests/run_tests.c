@@ -79,7 +79,7 @@ uint8_t execute_test(uint8_t id){
 		sll_input_data_stream_t is;
 		sll_stream_create_input_from_file(f,&is);
 		sll_compilation_data_t c_dt;
-		sll_init_compilation_data((sll_char_t*)"<internal>",&is,&c_dt);
+		sll_init_compilation_data(SLL_CHAR("<internal>"),&is,&c_dt);
 		sll_error_t e;
 		if (!sll_parse_all_objects(&c_dt,&i_ft,NULL,&e)){
 			FILE* o_f=fopen(to_fp,"wb");// lgtm [cpp/path-injection]

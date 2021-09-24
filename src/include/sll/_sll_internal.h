@@ -152,7 +152,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 #define GC_INIT_PAGE_COUNT 4
 #define GC_GET_NEXT_OBJECT(o) ((sll_runtime_object_t*)((o)->dt.s.v))
-#define GC_SET_NEXT_OBJECT(o,n) ((o)->dt.s.v=(sll_char_t*)(n))
+#define GC_SET_NEXT_OBJECT(o,n) ((o)->dt.s.v=SLL_CHAR((n)))
 
 #define GC_MAX_DBG_ID 16777215
 

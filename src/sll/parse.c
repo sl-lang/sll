@@ -780,6 +780,7 @@ _unknown_symbol:
 				arg->t=SLL_OBJECT_TYPE_STRING;
 				sll_string_t s=SLL_ZERO_STRING_STRUCT;
 				s.v=malloc(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
+				SLL_STRING_FORMAT_PADDING(s.v,0);
 				while (1){
 					SLL_STRING_INCREASE(&s);
 					uint8_t err=_read_single_char(is,arg_s,e,s.v+s.l);
@@ -998,9 +999,8 @@ _unknown_symbol:
 				}
 			}
 			else if ((c>64&&c<91)||c=='_'||(c>96&&c<123)){
-				sll_char_t str[255];
+				sll_char_t str[SLL_STRING_ALIGN_LENGTH(255)];
 				uint8_t sz=0;
-				sll_string_checksum_t cs=0;
 				do{
 					if (sz==255){
 						e->t=SLL_ERROR_INTERNAL_STACK_OVERFLOW;
@@ -1012,7 +1012,6 @@ _unknown_symbol:
 						return SLL_RETURN_ERROR;
 					}
 					str[sz]=(sll_char_t)c;
-					cs^=(sll_string_checksum_t)c;
 					sz++;
 					c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 					if (c==SLL_END_OF_DATA){
@@ -1085,6 +1084,13 @@ _unknown_symbol:
 					arg->dt.i=-3;
 				}
 				else{
+					sll_string_t n={
+						sz,
+						0,
+						str
+					};
+					SLL_STRING_FORMAT_PADDING(str,sz);
+					sll_string_hash(&n);
 					arg->t=SLL_OBJECT_TYPE_IDENTIFIER;
 					if (sz<=SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 						sll_identifier_list_t* k=c_dt->idt.s+sz-1;
@@ -1094,7 +1100,7 @@ _unknown_symbol:
 							for (sll_identifier_list_length_t i=0;i<k->l;i++){
 								sll_identifier_t* si=k->dt+i;
 								sll_string_t* si_s=c_dt->st.dt+si->i;
-								if (si_s->c!=cs||si->sc==SLL_MAX_SCOPE||memcmp(str,si_s->v,sz)){
+								if (si_s->c!=n.c||si->sc==SLL_MAX_SCOPE||memcmp(str,si_s->v,sz)){
 									continue;
 								}
 								if (si->sc==l_sc->l_sc){
@@ -1139,7 +1145,7 @@ _unknown_symbol:
 							for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 								sll_identifier_t* k=c_dt->idt.il+i;
 								sll_string_t* s=c_dt->st.dt+k->i;
-								if (s->c!=cs||s->l!=sz||k->sc==SLL_MAX_SCOPE||memcmp(str,s->v,sz)){
+								if (s->c!=n.c||s->l!=sz||k->sc==SLL_MAX_SCOPE||memcmp(str,s->v,sz)){
 									continue;
 								}
 								if (k->sc==l_sc->l_sc){

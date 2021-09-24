@@ -69,6 +69,7 @@ static void _json_cleanup(sll_handle_t h){
 static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 	o->l=0;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
+	SLL_STRING_FORMAT_PADDING(o->v,0);
 	sll_char_t c=**p;
 	(*p)++;
 	while (c!='\"'){
