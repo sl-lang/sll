@@ -41,7 +41,7 @@ __SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d){
 __SLL_FUNC void sll_string_hash(sll_string_t* s){
 	uint64_t c=0;
 	const uint64_t* p=(const uint64_t*)(s->v);
-	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+	for (sll_string_length_t i=0;i<((s->l+sizeof(uint64_t)-1)>>3);i++){
 		c^=*(p+i);
 	}
 	s->c=((sll_string_checksum_t)c)^((sll_string_checksum_t)(c>>32));
@@ -63,7 +63,7 @@ __SLL_FUNC void sll_string_join(const sll_string_t* a,const sll_string_t* b,sll_
 __SLL_FUNC sll_string_length_t sll_string_length(const sll_char_t* s){
 	uint64_t o=(uint64_t)s;
 	while (((uint64_t)s)&(sizeof(uint64_t)-1)){
-		if (!*s){
+		if (!(*s)){
 			return (sll_string_length_t)((uint64_t)s-o);
 		}
 		s++;
