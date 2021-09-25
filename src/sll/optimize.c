@@ -1418,11 +1418,21 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 							break;
 						}
 						l--;
-						sll_compare_result_t cmp=sll_operator_compare(a,b);
-						SLL_RELEASE(a);
-						if ((o->t==SLL_OBJECT_TYPE_LESS&&cmp==SLL_COMPARE_RESULT_BELOW)||(o->t==SLL_OBJECT_TYPE_LESS_EQUAL&&cmp!=SLL_COMPARE_RESULT_ABOVE)||(o->t==SLL_OBJECT_TYPE_EQUAL&&cmp==SLL_COMPARE_RESULT_EQUAL)||(o->t==SLL_OBJECT_TYPE_NOT_EQUAL&&cmp!=SLL_COMPARE_RESULT_EQUAL)||(o->t==SLL_OBJECT_TYPE_MORE&&cmp==SLL_COMPARE_RESULT_ABOVE)||(o->t==SLL_OBJECT_TYPE_MORE_EQUAL&&cmp!=SLL_COMPARE_RESULT_BELOW)){
-							a=b;
-							continue;
+						if (o->t==SLL_OBJECT_TYPE_EQUAL||o->t==SLL_OBJECT_TYPE_NOT_EQUAL){
+							sll_bool_t cmp=sll_operator_equal(a,b);
+							SLL_RELEASE(a);
+							if ((!!(o->t==SLL_OBJECT_TYPE_NOT_EQUAL))^cmp){
+								a=b;
+								continue;
+							}
+						}
+						else{
+							sll_compare_result_t cmp=sll_operator_compare(a,b);
+							SLL_RELEASE(a);
+							if ((o->t==SLL_OBJECT_TYPE_LESS&&cmp==SLL_COMPARE_RESULT_BELOW)||(o->t==SLL_OBJECT_TYPE_LESS_EQUAL&&cmp!=SLL_COMPARE_RESULT_ABOVE)||(o->t==SLL_OBJECT_TYPE_MORE&&cmp==SLL_COMPARE_RESULT_ABOVE)||(o->t==SLL_OBJECT_TYPE_MORE_EQUAL&&cmp!=SLL_COMPARE_RESULT_BELOW)){
+								a=b;
+								continue;
+							}
 						}
 						SLL_RELEASE(b);
 						_remove_up_to_end(o,l);
