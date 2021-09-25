@@ -14,7 +14,27 @@
 
 
 
+__SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v,sll_map_t* o);
+
+
+
+__SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o);
+
+
+
 __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o);
+
+
+
+__SLL_FUNC void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* o);
+
+
+
+__SLL_FUNC void sll_map_keys(const sll_map_t* m,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_map_values(const sll_map_t* m,sll_array_t* o);
 
 
 

@@ -30,7 +30,15 @@ __SLL_FUNC void sll_array_push(const sll_array_t* a,sll_runtime_object_t* v,sll_
 
 
 
-__SLL_FUNC void sll_array_move(const sll_array_t* a,sll_integer_t v,sll_array_t* o);
+__SLL_FUNC void sll_array_remove(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_remove_multiple(const sll_array_t* a,sll_runtime_object_t** v,sll_array_length_t vl,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_t* o);
 
 
 
