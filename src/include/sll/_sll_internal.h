@@ -20,9 +20,7 @@
 #pragma section("strto$a",read)
 #pragma section("strto$b",read)
 #pragma section("strto$z",read)
-#ifdef DEBUG_BUILD
-#define SLL_UNREACHABLE() SLL_ASSERT(!"UNREACHABLE")
-#else
+#ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __assume(0)
 #endif
 static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m){
@@ -36,9 +34,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define STATIC_RUNTIME_OBJECT(rt) const static static_runtime_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __declspec(allocate("strto$b")) static_runtime_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
 #define STATIC_RUNTIME_OBJECT_SETUP const static __declspec(allocate("strto$a")) static_runtime_object_t* __strto_start=0;const static __declspec(allocate("strto$z")) static_runtime_object_t* __strto_end=0
 #else
-#ifdef DEBUG_BUILD
-#define SLL_UNREACHABLE() SLL_ASSERT(!"UNREACHABLE")
-#else
+#ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __builtin_unreachable()
 #endif
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
@@ -54,6 +50,14 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define __ifunc_end __stop_ifunc
 #define __strto_start __start_strto
 #define __strto_end __stop_strto
+#endif
+#ifdef DEBUG_BUILD
+#define SLL_UNREACHABLE() \
+	do{ \
+		printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): Unreachable Code\n",__func__); \
+		fflush(stdout); \
+		raise(SIGABRT); \
+	} while (0)
 #endif
 
 

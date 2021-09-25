@@ -798,7 +798,7 @@ _unknown_symbol:
 				}
 				s.v[s.l]=0;
 				sll_string_hash(&s);
-				arg->dt.s=sll_add_string(&(c_dt->st),&s);
+				arg->dt.s=sll_add_string(&(c_dt->st),&s,1);
 				c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 			}
 			else if ((c>47&&c<58)||c=='-'){

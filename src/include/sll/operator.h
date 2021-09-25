@@ -81,7 +81,7 @@ __SLL_OPERATOR_UNARY(len);
 
 
 
-__SLL_OPERATOR_UNARY(access_zero);
+__SLL_OPERATOR_UNARY(dup);
 
 
 

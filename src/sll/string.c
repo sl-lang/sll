@@ -1,5 +1,8 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/gc.h>
+#include <sll/operator.h>
+#include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
@@ -87,7 +90,22 @@ __SLL_FUNC void sll_string_create(sll_string_length_t l,sll_string_t* o){
 
 
 
-__SLL_FUNC void sll_string_create_from_pointer(const sll_char_t* s,sll_string_t* o){
+__SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_t vl,sll_string_t* o){
+	o->l=vl;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(vl)*sizeof(sll_char_t));
+	for (sll_string_length_t i=0;i<vl;i++){
+		sll_runtime_object_t* n=sll_operator_cast(*(v+i),sll_static_int[SLL_CONSTANT_TYPE_INT]);
+		SLL_ASSERT(n->t==SLL_RUNTIME_OBJECT_TYPE_INT);
+		o->v[i]=n->dt.i&SLL_MAX_CHAR;
+		SLL_RELEASE(n);
+	}
+	SLL_STRING_FORMAT_PADDING(o->v,vl);
+	sll_string_hash(o);
+}
+
+
+
+__SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
 	sll_string_length_t l=sll_string_length(s);
 	o->l=l;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
@@ -139,18 +157,18 @@ __SLL_FUNC sll_string_length_t sll_string_length(const sll_char_t* s){
 
 
 
-__SLL_FUNC void sll_string_lower_case(const sll_string_t* a,sll_string_t* o){
-	o->l=a->l;
-	o->v=malloc(SLL_STRING_ALIGN_LENGTH(a->l)*sizeof(sll_char_t));
+__SLL_FUNC void sll_string_lower_case(const sll_string_t* s,sll_string_t* o){
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	SLL_STRING_FORMAT_PADDING(o->v,o->l);
 	sll_string_checksum_t c=0;
 	const uint32_t* p=(const uint32_t*)(o->v);
 	sll_string_length_t i=0;
 	for (sll_string_length_t j=0;j<((o->l+3)>>2);j++){
-		o->v[i]=string_to_lower_case_map[a->v[i]];
-		o->v[i+1]=string_to_lower_case_map[a->v[i+1]];
-		o->v[i+2]=string_to_lower_case_map[a->v[i+2]];
-		o->v[i+3]=string_to_lower_case_map[a->v[i+3]];
+		o->v[i]=string_to_lower_case_map[s->v[i]];
+		o->v[i+1]=string_to_lower_case_map[s->v[i+1]];
+		o->v[i+2]=string_to_lower_case_map[s->v[i+2]];
+		o->v[i+3]=string_to_lower_case_map[s->v[i+3]];
 		c^=*(p+j);
 		i+=4;
 	}
@@ -159,7 +177,7 @@ __SLL_FUNC void sll_string_lower_case(const sll_string_t* a,sll_string_t* o){
 
 
 
-__SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* s,sll_string_t* o){
+__SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* b,sll_string_t* o){
 	if (!a->l){
 		SLL_ZERO_STRING(o);
 		return;
@@ -167,17 +185,17 @@ __SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* s,sl
 	o->l=a->l;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(a->l)*sizeof(sll_char_t));
 	sll_string_length_t i=0;
-	for (sll_string_length_t j=0;j<a->l-s->l+1;j++){
-		if (memcmp(a->v+j,s->v,s->l)){
+	for (sll_string_length_t j=0;j<a->l-b->l+1;j++){
+		if (memcmp(a->v+j,b->v,b->l)){
 			o->v[i]=a->v[j];
 			i++;
 		}
 		else{
-			j+=s->l-1;
+			j+=b->l-1;
 		}
 	}
-	memcpy(o->v+i,a->v+a->l-s->l+1,s->l-1);
-	i+=s->l-1;
+	memcpy(o->v+i,a->v+a->l-b->l+1,b->l-1);
+	i+=b->l-1;
 	o->l=i;
 	if (!o->l){
 		free(o->v);
@@ -191,18 +209,18 @@ __SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* s,sl
 
 
 
-__SLL_FUNC void sll_string_replace(const sll_string_t* a,const sll_string_t* k,const sll_string_t* v,sll_string_t* o){
+__SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,const sll_string_t* v,sll_string_t* o){
 	if (!v->l){
-		sll_string_remove(a,k,o);
+		sll_string_remove(s,k,o);
 		return;
 	}
-	o->l=a->l;
-	o->v=malloc(SLL_STRING_ALIGN_LENGTH(a->l)*sizeof(sll_char_t));
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	sll_string_length_t i=0;
 	if (v->l<=k->l){
-		for (sll_string_length_t j=0;j<a->l-k->l+1;j++){
-			if (memcmp(a->v+j,k->v,k->l)){
-				o->v[i]=a->v[j];
+		for (sll_string_length_t j=0;j<s->l-k->l+1;j++){
+			if (memcmp(s->v+j,k->v,k->l)){
+				o->v[i]=s->v[j];
 				i++;
 			}
 			else{
@@ -213,9 +231,9 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* a,const sll_string_t* k,c
 		}
 	}
 	else{
-		for (sll_string_length_t j=0;j<a->l-k->l+1;j++){
-			if (memcmp(a->v+j,k->v,k->l)){
-				o->v[i]=a->v[j];
+		for (sll_string_length_t j=0;j<s->l-k->l+1;j++){
+			if (memcmp(s->v+j,k->v,k->l)){
+				o->v[i]=s->v[j];
 				i++;
 			}
 			else{
@@ -227,7 +245,7 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* a,const sll_string_t* k,c
 			}
 		}
 	}
-	memcpy(o->v+i,a->v+a->l-k->l+1,k->l-1);
+	memcpy(o->v+i,s->v+s->l-k->l+1,k->l-1);
 	i+=k->l-1;
 	if (i!=o->l){
 		SLL_ASSERT(i<o->l);
@@ -245,13 +263,13 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* a,const sll_string_t* k,c
 
 
 
-__SLL_FUNC void sll_string_title_case(const sll_string_t* a,sll_string_t* o){
-	o->l=a->l;
-	o->v=malloc(SLL_STRING_ALIGN_LENGTH(a->l)*sizeof(sll_char_t));
+__SLL_FUNC void sll_string_title_case(const sll_string_t* s,sll_string_t* o){
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	SLL_STRING_FORMAT_PADDING(o->v,o->l);
 	sll_bool_t st=1;
 	for (sll_string_length_t i=0;i<o->l;i++){
-		sll_char_t c=a->v[i];
+		sll_char_t c=s->v[i];
 		if (string_letter_map[c>>6]&(1ull<<(c&63))){
 			o->v[i]=(st?string_to_upper_case_map:string_to_lower_case_map)[c];
 			st=0;
@@ -266,20 +284,52 @@ __SLL_FUNC void sll_string_title_case(const sll_string_t* a,sll_string_t* o){
 
 
 
-__SLL_FUNC void sll_string_upper_case(const sll_string_t* a,sll_string_t* o){
-	o->l=a->l;
-	o->v=malloc(SLL_STRING_ALIGN_LENGTH(a->l)*sizeof(sll_char_t));
+__SLL_FUNC void sll_string_to_array(const sll_string_t* s,sll_array_t* o){
+	o->l=s->l;
+	o->v=malloc(s->l*sizeof(sll_runtime_object_t*));
+	for (sll_string_length_t i=0;i<s->l;i++){
+		o->v[i]=sll_static_int[s->v[i]];
+		SLL_ACQUIRE(o->v[i]);
+	}
+}
+
+
+
+__SLL_FUNC void sll_string_upper_case(const sll_string_t* s,sll_string_t* o){
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	SLL_STRING_FORMAT_PADDING(o->v,o->l);
 	sll_string_checksum_t c=0;
 	const uint32_t* p=(const uint32_t*)(o->v);
 	sll_string_length_t i=0;
 	for (sll_string_length_t j=0;j<((o->l+3)>>2);j++){
-		o->v[i]=string_to_upper_case_map[a->v[i]];
-		o->v[i+1]=string_to_upper_case_map[a->v[i+1]];
-		o->v[i+2]=string_to_upper_case_map[a->v[i+2]];
-		o->v[i+3]=string_to_upper_case_map[a->v[i+3]];
+		o->v[i]=string_to_upper_case_map[s->v[i]];
+		o->v[i+1]=string_to_upper_case_map[s->v[i+1]];
+		o->v[i+2]=string_to_upper_case_map[s->v[i+2]];
+		o->v[i+3]=string_to_upper_case_map[s->v[i+3]];
 		c^=*(p+j);
 		i+=4;
 	}
 	o->c=c;
+}
+
+
+
+__SLL_FUNC void sll_string_xor(const sll_string_t* s,sll_char_t v,sll_string_t* o){
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+	const uint64_t* a=(const uint64_t*)(s->v);
+	uint64_t* b=(uint64_t*)(o->v);
+	uint16_t v16=(((uint16_t)v)<<8)|v;
+	uint32_t v32=(((uint32_t)v16)<<16)|v16;
+	uint64_t v64=(((uint64_t)v32)<<32)|v32;
+	uint64_t c=0;
+	for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){
+		*(b+i)=(*(a+i))^v64;
+		c^=*(b+i);
+	}
+	c^=*(b+((o->l+7)>>3)-1);
+	SLL_STRING_FORMAT_PADDING(o->v,o->l);
+	c^=*(b+((o->l+7)>>3)-1);
+	o->c=((sll_string_checksum_t)c)^((sll_string_checksum_t)(c>>32));
 }

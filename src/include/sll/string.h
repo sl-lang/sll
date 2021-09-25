@@ -50,7 +50,11 @@ __SLL_FUNC void sll_string_create(sll_string_length_t l,sll_string_t* o);
 
 
 
-__SLL_FUNC void sll_string_create_from_pointer(const sll_char_t* s,sll_string_t* o);
+__SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_t vl,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o);
 
 
 
@@ -66,23 +70,31 @@ __SLL_FUNC sll_string_length_t sll_string_length(const sll_char_t* s);
 
 
 
-__SLL_FUNC void sll_string_lower_case(const sll_string_t* a,sll_string_t* o);
+__SLL_FUNC void sll_string_lower_case(const sll_string_t* s,sll_string_t* o);
 
 
 
-__SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* s,sll_string_t* o);
+__SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
 
 
 
-__SLL_FUNC void sll_string_replace(const sll_string_t* a,const sll_string_t* k,const sll_string_t* v,sll_string_t* o);
+__SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,const sll_string_t* v,sll_string_t* o);
 
 
 
-__SLL_FUNC void sll_string_title_case(const sll_string_t* a,sll_string_t* o);
+__SLL_FUNC void sll_string_title_case(const sll_string_t* s,sll_string_t* o);
 
 
 
-__SLL_FUNC void sll_string_upper_case(const sll_string_t* a,sll_string_t* o);
+__SLL_FUNC void sll_string_upper_case(const sll_string_t* s,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_to_array(const sll_string_t* s,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_string_xor(const sll_string_t* s,sll_char_t v,sll_string_t* o);
 
 
 

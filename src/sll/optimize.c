@@ -339,7 +339,9 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 			{
 				sll_runtime_object_t* v=SLL_CREATE();
 				v->t=SLL_RUNTIME_OBJECT_TYPE_STRING|RUNTIME_OBJECT_EXTERNAL_STRING;
+				SLL_ASSERT(o->dt.s<o_dt->c_dt->st.l);
 				v->dt.s=*(o_dt->c_dt->st.dt+o->dt.s);
+				printf("%u %.8x %p\n",v->dt.s.l,v->dt.s.c,v->dt.s.v);
 				return v;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
@@ -455,7 +457,7 @@ static void _runtime_object_to_object(sll_runtime_object_t* v,sll_object_t* o,op
 				o->dt.s++;
 				if (o->dt.s==o_dt->c_dt->st.l){
 					v->t|=RUNTIME_OBJECT_EXTERNAL_STRING;
-					o->dt.s=sll_add_string(&(o_dt->c_dt->st),&(v->dt.s));
+					o->dt.s=sll_add_string(&(o_dt->c_dt->st),&(v->dt.s),0);
 					break;
 				}
 			}
@@ -901,7 +903,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 						const sll_runtime_object_t* rt_p=&rt;
 						sll_object_to_string(&rt_p,1,&s);
 						b->t=SLL_OBJECT_TYPE_STRING;
-						b->dt.s=sll_add_string(&(o_dt->c_dt->st),&s);
+						b->dt.s=sll_add_string(&(o_dt->c_dt->st),&s,1);
 					}
 					if (a){
 						if (a->t==SLL_OBJECT_TYPE_CHAR&&b->t==SLL_OBJECT_TYPE_CHAR){

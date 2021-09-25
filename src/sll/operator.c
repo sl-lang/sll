@@ -201,7 +201,19 @@ __SLL_OPERATOR_UNARY(dec){
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(a->dt.c-1);
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+				sll_char_t bf[SLL_STRING_ALIGN_LENGTH(1)]={'1'};
+				SLL_STRING_FORMAT_PADDING(bf,1);
+				sll_string_t str={
+					1,
+					'1',
+					bf
+				};
+				sll_string_remove(&(a->dt.s),&str,&(o->dt.s));
+				return o;
+			}
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
@@ -412,7 +424,7 @@ __SLL_OPERATOR_BINARY(sub){
 		case COMBINED_TYPE_HH:
 			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-b->dt.h.h):SLL_FROM_INT(a->dt.h.h-b->dt.h.h));
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -430,7 +442,7 @@ __SLL_OPERATOR_BINARY(mult){
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_FLOAT(a->dt.f*b->dt.f);
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -453,7 +465,7 @@ __SLL_OPERATOR_BINARY(div){
 		case COMBINED_TYPE_SS:
 			return SLL_FROM_INT(sll_string_count(&(a->dt.s),&(b->dt.s)));
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -476,7 +488,7 @@ __SLL_OPERATOR_BINARY(floor_div){
 		case COMBINED_TYPE_SS:
 			return SLL_FROM_INT(sll_string_count(&(a->dt.s),&(b->dt.s)));
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -494,7 +506,7 @@ __SLL_OPERATOR_BINARY(mod){
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)%SLL_ROUND_FLOAT(b->dt.f));
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -512,7 +524,7 @@ __SLL_OPERATOR_BINARY(and){
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)&SLL_ROUND_FLOAT(b->dt.f));
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -530,7 +542,7 @@ __SLL_OPERATOR_BINARY(or){
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)|SLL_ROUND_FLOAT(b->dt.f));
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -545,10 +557,41 @@ __SLL_OPERATOR_BINARY(xor){
 			return SLL_FROM_INT(a->dt.i^b->dt.i);
 		case COMBINED_TYPE_IF:
 			return SLL_FROM_INT(a->dt.i^SLL_ROUND_FLOAT(b->dt.f));
+		case COMBINED_TYPE_IC:
+			return SLL_FROM_INT(a->dt.i^b->dt.c);
+		case COMBINED_TYPE_IS:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+				sll_string_xor(&(b->dt.s),(sll_char_t)(a->dt.i&SLL_MAX_CHAR),&(o->dt.s));
+				return o;
+			}
+		case COMBINED_TYPE_IA:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(b->dt.a.l,&(o->dt.a));
+				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
+					o->dt.a.v[i]=sll_operator_xor(a,b->dt.a.v[i]);
+				}
+				return o;
+			}
+		case COMBINED_TYPE_IH:
+			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i^b->dt.h.h);
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)^SLL_ROUND_FLOAT(b->dt.f));
+		case COMBINED_TYPE_FC:
+			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f)^b->dt.c);
+		case COMBINED_TYPE_FH:
+			return SLL_FROM_HANDLE(b->dt.h.t,SLL_ROUND_FLOAT(a->dt.f)^b->dt.h.h);
+		case COMBINED_TYPE_CC:
+			return SLL_FROM_CHAR(a->dt.c^b->dt.c);
+		case COMBINED_TYPE_CH:
+			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c^b->dt.h.h);
+		case COMBINED_TYPE_HH:
+			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h^b->dt.h.h):SLL_FROM_INT(a->dt.h.h^b->dt.h.h));
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -564,13 +607,13 @@ __SLL_OPERATOR_UNARY(inv){
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(~a->dt.c);
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
-			SLL_UNIMPLEMENTED();
+			return SLL_FROM_HANDLE(a->dt.h.t,~a->dt.h.h);
 		case SLL_RUNTIME_OBJECT_TYPE_MAP:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -595,7 +638,7 @@ __SLL_OPERATOR_BINARY(shr){
 		case COMBINED_TYPE_HI:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h>>a->dt.i);
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -618,7 +661,7 @@ __SLL_OPERATOR_BINARY(shl){
 		case COMBINED_TYPE_HI:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h<<a->dt.i);
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -646,8 +689,41 @@ __SLL_OPERATOR_UNARY(len){
 
 
 
-__SLL_OPERATOR_UNARY(access_zero){
-	SLL_UNIMPLEMENTED();
+__SLL_OPERATOR_UNARY(dup){
+	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
+		case SLL_RUNTIME_OBJECT_TYPE_INT:
+			return SLL_FROM_INT(a->dt.i);
+		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
+			return SLL_FROM_FLOAT(a->dt.f);
+		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
+			SLL_ACQUIRE(a);
+			return a;
+		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h);
+		case SLL_RUNTIME_OBJECT_TYPE_STRING:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+				sll_string_clone(&(a->dt.s),&(o->dt.s));
+				return o;
+			}
+		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_clone(&(a->dt.a),&(o->dt.a));
+				return o;
+			}
+		case SLL_RUNTIME_OBJECT_TYPE_MAP:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_clone(&(a->dt.m),&(o->dt.m));
+				return o;
+			}
+		default:
+			SLL_UNREACHABLE();
+	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
@@ -657,10 +733,7 @@ __SLL_OPERATOR_BINARY(access){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT){
 			if (b->dt.i>=0&&b->dt.i<a->dt.s.l){
-				sll_runtime_object_t* o=SLL_CREATE();
-				o->t=SLL_RUNTIME_OBJECT_TYPE_CHAR;
-				o->dt.c=a->dt.s.v[b->dt.i];
-				return o;
+				return SLL_FROM_CHAR(a->dt.s.v[b->dt.i]);
 			}
 		}
 	}
@@ -690,14 +763,14 @@ __SLL_OPERATOR_BINARY(access){
 
 
 __SLL_OPERATOR_TERNARY(access_range){
-	SLL_UNIMPLEMENTED();
+	SLL_UNREACHABLE();
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
 
 __SLL_OPERATOR_QUATERNARY(access_range_step){
-	SLL_UNIMPLEMENTED();
+	SLL_UNREACHABLE();
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
@@ -706,8 +779,47 @@ __SLL_OPERATOR_QUATERNARY(access_range_step){
 __SLL_OPERATOR_BINARY(cast){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&b->dt.i>0&&b->dt.i<=SLL_MAX_CONSTANT_TYPE){
 		switch (COMBINED_CAST_ARGS){
+			case COMBINED_CAST_TYPE_II:
+			case COMBINED_CAST_TYPE_FF:
+			case COMBINED_CAST_TYPE_CC:
+			case COMBINED_CAST_TYPE_SS:
+			case COMBINED_CAST_TYPE_AA:
+			case COMBINED_CAST_TYPE_HH:
+			case COMBINED_CAST_TYPE_MM:
+				SLL_ACQUIRE(a);
+				return a;
+			case COMBINED_CAST_TYPE_IF:
+				return SLL_FROM_FLOAT((sll_float_t)(a->dt.i));
+			case COMBINED_CAST_TYPE_IC:
+				return SLL_FROM_CHAR(a->dt.c);
 			case COMBINED_CAST_TYPE_FI:
 				return SLL_FROM_INT((sll_integer_t)(a->dt.f));
+			case COMBINED_CAST_TYPE_FC:
+				return SLL_FROM_CHAR((sll_char_t)(a->dt.f));
+			case COMBINED_CAST_TYPE_CI:
+				return SLL_FROM_INT(a->dt.c);
+			case COMBINED_CAST_TYPE_CF:
+				return SLL_FROM_FLOAT(a->dt.c);
+			case COMBINED_CAST_TYPE_HI:
+				return SLL_FROM_INT(a->dt.h.h);
+			case COMBINED_CAST_TYPE_HF:
+				return SLL_FROM_FLOAT((sll_float_t)(a->dt.h.h));
+			case COMBINED_CAST_TYPE_HC:
+				return SLL_FROM_CHAR((sll_char_t)(a->dt.h.h));
+			case COMBINED_CAST_TYPE_SA:
+				{
+					sll_runtime_object_t* o=SLL_CREATE();
+					o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+					sll_string_to_array(&(a->dt.s),&(o->dt.a));
+					return o;
+				}
+			case COMBINED_CAST_TYPE_AS:
+				{
+					sll_runtime_object_t* o=SLL_CREATE();
+					o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+					sll_string_from_data(a->dt.a.v,a->dt.a.l,&(o->dt.s));
+					return o;
+				}
 			case COMBINED_CAST_TYPE_MK:
 				{
 					sll_runtime_object_t* o=SLL_CREATE();
@@ -722,6 +834,8 @@ __SLL_OPERATOR_BINARY(cast){
 					sll_map_values(&(a->dt.m),&(o->dt.a));
 					return o;
 				}
+			default:
+				SLL_UNREACHABLE();
 		}
 	}
 	SLL_ACQUIRE(a);
@@ -765,7 +879,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sl
 		case COMBINED_TYPE_FF:
 			return COMPARE_RESULT(a->dt.f,b->dt.f);
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return 0;
 }
@@ -792,7 +906,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_runtime_ob
 				return !memcmp(as.v,bs.v,as.l*sizeof(sll_char_t));
 			}
 		default:
-			SLL_UNIMPLEMENTED();
+			SLL_UNREACHABLE();
 	}
 	return 0;
 }

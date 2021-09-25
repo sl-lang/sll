@@ -37,7 +37,7 @@ __SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 	SLL_RELEASE(*(_sys_argv+i));
 	sll_runtime_object_t* n=SLL_CREATE();
 	n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	sll_string_create_from_pointer(a,&(n->dt.s));
+	sll_string_from_pointer(a,&(n->dt.s));
 	*(_sys_argv+i)=n;
 }
 
@@ -81,7 +81,7 @@ __API_FUNC(sys_arg_get_count){
 
 __API_FUNC(sys_get_platform){
 	if (!_sys_p.dt.s.l){
-		sll_string_create_from_pointer(sll_platform_string,&(_sys_p.dt.s));
+		sll_string_from_pointer(sll_platform_string,&(_sys_p.dt.s));
 	}
 	SLL_ACQUIRE(&_sys_p);
 	return &_sys_p;
