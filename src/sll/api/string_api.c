@@ -293,8 +293,28 @@ __API_FUNC(string_length){
 
 
 
+__API_FUNC(string_replace){
+	if (!b){
+		sll_string_clone(a,out);
+	}
+	else if (!c){
+		sll_string_remove(a,b,out);
+	}
+	else{
+		sll_string_replace(a,b,c,out);
+	}
+}
+
+
+
 __API_FUNC(string_to_lower_case){
 	sll_string_lower_case(a,out);
+}
+
+
+
+__API_FUNC(string_to_title_case){
+	sll_string_title_case(a,out);
 }
 
 

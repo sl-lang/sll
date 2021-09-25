@@ -30,12 +30,36 @@ __API_FUNC_DECL(string_length);
 
 /*~~DOCS~~
 TYPE api optimizable
+FUNC sll_api_string_replace
+DESC Docs!
+ARG S Docs!
+ARG S? Docs!
+ARG S? Docs!
+RET Z Failure
+RET S Success*/
+__API_FUNC_DECL(string_replace);
+
+
+
+/*~~DOCS~~
+TYPE api optimizable
 FUNC sll_api_string_to_lower_case
 DESC Docs!
 ARG S Docs!
 RET Z Failure
 RET S Success*/
 __API_FUNC_DECL(string_to_lower_case);
+
+
+
+/*~~DOCS~~
+TYPE api optimizable
+FUNC sll_api_string_to_title_case
+DESC Docs!
+ARG S Docs!
+RET Z Failure
+RET S Success*/
+__API_FUNC_DECL(string_to_title_case);
 
 
 

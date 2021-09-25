@@ -4,6 +4,7 @@
 
 ### Added
 
+- Array, string and map functions ([#3])
 - `instruction_count`, `sll_api_util_instruction_count` and `sll_current_instruction_count` ([#51])
 - `sll_platform_file_size` and `sll_string_join` functions
 
@@ -67,7 +68,7 @@
 - Builder script option for generating code & signatures for API functions (`--generate-api`)
 - Code generated for API functions is now located in [`src/sll/api/_generated.c`][0.6.18/src/sll/api/_generated.c]
 - GC now also check for unreleased static objects
-- Implemented a bigger part of [`src/sll/operator.c`][0.6.18/src/sll/operator.c]
+- Implemented more operations in  [`src/sll/operator.c`][0.6.18/src/sll/operator.c]
 - Macro for creating an object from a `sll_char_t` value: `SLL_FROM_CHAR`
 - `sll_init`, `sll_deinit` and `sll_char_to_object` functions
 - Useless assembly code (`STORE $xx & POP,LOAD $xx & DEL`) is removed
@@ -823,6 +824,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#11]: https://github.com/sl-lang/sll/issues/11
 [#10]: https://github.com/sl-lang/sll/issues/10
 [#5]: https://github.com/sl-lang/sll/issues/5
+[#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [main/src/sll/api/file_api.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/file_api.c

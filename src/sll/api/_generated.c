@@ -242,6 +242,40 @@ INTERNAL_FUNCTION("string_length",sll_api_string_length_raw,SLL_INTERNAL_FUNCTIO
 
 
 
+extern __SLL_API_TYPE_sll_api_string_replace sll_api_string_replace(__SLL_API_ARGS_sll_api_string_replace);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_replace_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
+	const sll_runtime_object_t* a=*(al+0);
+	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
+	const sll_runtime_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (!(SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+			return SLL_ACQUIRE_STATIC(str_zero);
+		}
+	}
+	const sll_runtime_object_t* c=NULL;
+	if (all>2){
+		c=*(al+2);
+		if (!(SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+			return SLL_ACQUIRE_STATIC(str_zero);
+		}
+	}
+	sll_string_t out;
+	sll_api_string_replace(&(a->dt.s),(b?&(b->dt.s):NULL),(c?&(c->dt.s):NULL),&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+INTERNAL_FUNCTION("string_replace",sll_api_string_replace_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+
+
+
 extern __SLL_API_TYPE_sll_api_string_to_lower_case sll_api_string_to_lower_case(__SLL_API_ARGS_sll_api_string_to_lower_case);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_to_lower_case_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
@@ -259,6 +293,26 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_to_lower_case
 	return out_o;
 }
 INTERNAL_FUNCTION("string_to_lower_case",sll_api_string_to_lower_case_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+
+
+
+extern __SLL_API_TYPE_sll_api_string_to_title_case sll_api_string_to_title_case(__SLL_API_ARGS_sll_api_string_to_title_case);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_to_title_case_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
+	const sll_runtime_object_t* a=*(al+0);
+	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
+	sll_string_t out;
+	sll_api_string_to_title_case(&(a->dt.s),&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+INTERNAL_FUNCTION("string_to_title_case",sll_api_string_to_title_case_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
 
 
 
