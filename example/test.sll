@@ -113,6 +113,8 @@
 (:> "A: " (+ 1 2) "\n")
 (:> "Path: " fp "\n")
 (:> "Upper Case Path: " (<- upper_case fp) "\n")
+(= array [1 2 3 4 5 6])
+(:> array "\n" (>> array 2) "\n" (<< array 5) "\n" (>> array 7) "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

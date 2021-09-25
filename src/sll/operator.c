@@ -283,13 +283,7 @@ _add_to_array:
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l+1,&(o->dt.a));
-				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
-					SLL_ACQUIRE(b->dt.a.v[i]);
-				}
-				memcpy(o->dt.a.v,b->dt.a.v,b->dt.a.l*sizeof(sll_runtime_object_t*));
-				SLL_ACQUIRE(a);
-				o->dt.a.v[b->dt.a.l]=a;
+				sll_array_push(&(b->dt.a),a,&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
@@ -301,12 +295,7 @@ _add_to_array:
 				}
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
-				sll_array_create(aa.l+ab.l,&(o->dt.a));
-				memcpy(o->dt.a.v,aa.v,aa.l*sizeof(sll_runtime_object_t*));
-				memcpy(o->dt.a.v+aa.l,ab.v,ab.l*sizeof(sll_runtime_object_t*));
-				for (sll_array_length_t i=0;i<o->dt.a.l;i++){
-					SLL_ACQUIRE(o->dt.a.v[i]);
-				}
+				sll_array_join(&aa,&ab,&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_IM:
@@ -556,6 +545,13 @@ __SLL_OPERATOR_BINARY(shr){
 			return SLL_FROM_INT(a->dt.i>>b->dt.i);
 		case COMBINED_TYPE_IH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i>>b->dt.h.h);
+		case COMBINED_TYPE_AI:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_move(&(a->dt.a),-b->dt.i,&(o->dt.a));
+				return o;
+			}
 		case COMBINED_TYPE_HI:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h>>a->dt.i);
 		default:
@@ -572,6 +568,13 @@ __SLL_OPERATOR_BINARY(shl){
 			return SLL_FROM_INT(a->dt.i<<b->dt.i);
 		case COMBINED_TYPE_IH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i<<b->dt.h.h);
+		case COMBINED_TYPE_AI:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_move(&(a->dt.a),b->dt.i,&(o->dt.a));
+				return o;
+			}
 		case COMBINED_TYPE_HI:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h<<a->dt.i);
 		default:
