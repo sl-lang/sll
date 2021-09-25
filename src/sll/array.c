@@ -9,6 +9,17 @@
 
 
 
+__SLL_FUNC void sll_array_clone(const sll_array_t* a,sll_array_t* o){
+	o->l=a->l;
+	o->v=malloc(a->l*sizeof(sll_runtime_object_t*));
+	memcpy(o->v,a->v,a->l*sizeof(sll_runtime_object_t*));
+	for (sll_array_length_t i=0;i<a->l;i++){
+		SLL_ACQUIRE(a->v[i]);
+	}
+}
+
+
+
 __SLL_FUNC void sll_array_create(sll_array_length_t l,sll_array_t* o){
 	o->l=l;
 	o->v=calloc(sizeof(sll_runtime_object_t*),l);

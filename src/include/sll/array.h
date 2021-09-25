@@ -14,6 +14,10 @@
 
 
 
+__SLL_FUNC void sll_array_clone(const sll_array_t* a,sll_array_t* o);
+
+
+
 __SLL_FUNC void sll_array_create(sll_array_length_t l,sll_array_t* o);
 
 

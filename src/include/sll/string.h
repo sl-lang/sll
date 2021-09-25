@@ -38,15 +38,15 @@
 
 
 
+__SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d);
+
+
+
 __SLL_FUNC void sll_string_create(sll_string_length_t l,sll_string_t* o);
 
 
 
 __SLL_FUNC void sll_string_create_from_pointer(const sll_char_t* s,sll_string_t* o);
-
-
-
-__SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d);
 
 
 
