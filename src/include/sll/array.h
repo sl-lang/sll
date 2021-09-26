@@ -26,11 +26,23 @@ __SLL_FUNC sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_
 
 
 
+__SLL_FUNC void sll_array_combinations(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_string_combinations(const sll_array_t* a,const sll_string_t* s,sll_array_t* o);
+
+
+
 __SLL_FUNC void sll_array_create(sll_array_length_t l,sll_array_t* o);
 
 
 
 __SLL_FUNC void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll_array_length_t e,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_from_length(sll_array_length_t l,sll_array_t* o);
 
 
 
@@ -54,6 +66,10 @@ __SLL_FUNC void sll_array_push(const sll_array_t* a,sll_runtime_object_t* v,sll_
 
 
 
+__SLL_FUNC void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_t n,sll_array_t* o);
+
+
+
 __SLL_FUNC void sll_array_remove(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o);
 
 
@@ -67,6 +83,10 @@ __SLL_FUNC void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_
 
 
 __SLL_FUNC sll_runtime_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_to_map(const sll_array_t* a,sll_map_t* o);
 
 
 

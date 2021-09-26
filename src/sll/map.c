@@ -175,6 +175,21 @@ __SLL_FUNC sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_o
 
 
 
+__SLL_FUNC void sll_map_to_array(const sll_map_t* m,sll_array_t* o){
+	if (!m->l){
+		SLL_ZERO_ARRAY(o);
+		return;
+	}
+	o->l=m->l<<1;
+	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	memcpy(o->v,m->v,o->l*sizeof(sll_runtime_object_t*));
+	for (sll_array_length_t i=0;i<o->l;i++){
+		SLL_ACQUIRE(o->v[i]);
+	}
+}
+
+
+
 __SLL_FUNC void sll_map_values(const sll_map_t* m,sll_array_t* o){
 	if (!m->l){
 		SLL_ZERO_ARRAY(o);

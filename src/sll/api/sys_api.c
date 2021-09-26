@@ -44,7 +44,7 @@ __SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 
 
 __SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
-	SLL_ASSERT(ac);
+	SLL_ASSERT(ac>0);
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc;i++){
 			SLL_RELEASE(*(_sys_argv+i));

@@ -26,6 +26,7 @@
 ### Removed
 
 - `SLL_SAME_ARRAY`, `SLL_SAME_MAP` and `SLL_SAME_STRING` macros
+- Runtime object stack API: `sll_get_runtime_object_stack_data`, `sll_runtime_object_stack_data_t`, `sll_free_runtime_object_stack_data` etc.
 
 ## [0.6.19] - 2021-9-21
 

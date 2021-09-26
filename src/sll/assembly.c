@@ -602,6 +602,19 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 			return _generate_inline_function(o,g_dt);
 		case SLL_OBJECT_TYPE_CALL:
 			return _generate_call(o,g_dt);
+		case SLL_OBJECT_TYPE_BIT_NOT:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l);
+				o=_generate_on_stack(o+1,g_dt);
+				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_INV);
+				l--;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				return o;
+			}
 		case SLL_OBJECT_TYPE_LESS:
 			return _generate_sequential_jump(o,g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE,1);
 		case SLL_OBJECT_TYPE_LESS_EQUAL:

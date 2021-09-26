@@ -74,8 +74,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 	sll_internal_function_table_t* i_ft=r_dt->ift;
 	sll_output_data_stream_t* out=r_dt->os;
 	sll_return_code_t rc=0;
-	sll_runtime_object_stack_data_t rst;
-	sll_get_runtime_object_stack_data(&rst);
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	sll_buffer_t ptr=st->ptr;
 	sll_runtime_object_t** v=(sll_runtime_object_t**)ptr;
@@ -649,12 +647,6 @@ _end:
 		SLL_RELEASE(*(v+i));
 	}
 	sll_cleanup_handles(r_dt->hl,hl_l);
-	if (e->t==SLL_ERROR_UNKNOWN){
-		if (!sll_verify_runtime_object_stack_cleanup(&rst)){
-			e->t=SLL_ERROR_UNRELEASED_OBJECTS;
-		}
-	}
-	sll_free_runtime_object_stack_data(&rst);
 	sll_current_runtime_data=NULL;
 	return rc;
 }

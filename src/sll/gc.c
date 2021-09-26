@@ -26,18 +26,12 @@ static runtime_object_debug_data_t** _gc_dbg_dt=NULL;
 static uint32_t _gc_alloc=0;
 static uint32_t _gc_dealloc=0;
 static uint8_t _gc_verify=1;
-static uint32_t _gc_static_count=0;
 
 
 
 static void _gc_free_pages(void){
 	if (_gc_verify){
-		sll_runtime_object_stack_data_t rst={
-			NULL,
-			0,
-			NULL
-		};
-		if (!sll_verify_runtime_object_stack_cleanup(&rst)){
+		if (!sll_verify_runtime_object_stack_cleanup()){
 			SLL_UNIMPLEMENTED();
 		}
 		_gc_verify=0;
@@ -150,57 +144,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 
 
 
-__SLL_FUNC void sll_get_runtime_object_stack_data(sll_runtime_object_stack_data_t* o){
-	o->m=NULL;
-	o->ml=0;
-	sll_page_size_t sz=sll_platform_get_page_size();
-	void* pg=_gc_page_ptr;
-	uint32_t i=0;
-	while (pg){
-		sll_runtime_object_t* c=(sll_runtime_object_t*)((uint64_t)pg+sizeof(void*));
-		void* e=(void*)((uint64_t)pg+sizeof(void*)+(sz*(*((void**)pg)?1:GC_INIT_PAGE_COUNT)-sizeof(void*))/sizeof(sll_runtime_object_t)*sizeof(sll_runtime_object_t));
-		while ((void*)c<e){
-			if (c->rc){
-				if ((i>>6)+1>o->ml){
-					uint32_t j=o->ml;
-					o->ml=(i>>6)+1;
-					o->m=realloc(o->m,o->ml*sizeof(uint64_t));
-					while (j<o->ml){
-						*(o->m+j)=0;
-						j++;
-					}
-				}
-				*(o->m+(i>>6))|=1ull<<(i&63);
-			}
-			i++;
-			c++;
-		}
-		pg=*((void**)pg);
-	}
-	if (!_gc_static_count){
-		const static_runtime_object_t*const* l=&__strto_start;
-		while (l<&__strto_end){
-			if (*l){
-				_gc_static_count++;
-			}
-			l++;
-		}
-	}
-	o->s=malloc(_gc_static_count*sizeof(sll_ref_count_t));
-	i=0;
-	const static_runtime_object_t*const* l=&__strto_start;
-	while (l<&__strto_end){
-		const static_runtime_object_t* k=*l;
-		if (k){
-			*(o->s+i)=k->dt->rc;
-			i++;
-		}
-		l++;
-	}
-}
-
-
-
 __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 	SLL_ASSERT(o->rc);
 	o->rc--;
@@ -263,7 +206,7 @@ __SLL_FUNC void sll_remove_debug_data(sll_runtime_object_t* o){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(const sll_runtime_object_stack_data_t* rst){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(void){
 	uint8_t err=0;
 	_gc_verify=0;
 	fflush(stdout);
@@ -274,7 +217,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 		sll_runtime_object_t* c=(sll_runtime_object_t*)((uint64_t)pg+sizeof(void*));
 		void* e=(void*)((uint64_t)pg+sizeof(void*)+(sz*(*((void**)pg)?1:GC_INIT_PAGE_COUNT)-sizeof(void*))/sizeof(sll_runtime_object_t)*sizeof(sll_runtime_object_t));
 		while ((void*)c<e){
-			if (c->rc&&((i>>6)>=rst->ml||!(*(rst->m+(i>>6))&(1ull<<(i&63))))){
+			if (c->rc){
 				if (!err){
 					err=1;
 					fputs("\nUnreleased Objects:\n",stderr);
@@ -347,7 +290,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 		const static_runtime_object_t* k=*l;
 		if (k){
 			SLL_ASSERT(k->dt->rc);
-			if ((!rst->s&&k->dt->rc>1)||(rst->s&&k->dt->rc>*(rst->s+i))){
+			if (k->dt->rc>1){
 				if (!err){
 					err=1;
 					fputs("\nUnreleased Objects:\n",stderr);

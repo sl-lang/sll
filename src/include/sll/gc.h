@@ -22,10 +22,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void);
 
 
 
-__SLL_FUNC void sll_get_runtime_object_stack_data(sll_runtime_object_stack_data_t* o);
-
-
-
 __SLL_FUNC void sll_release_object(sll_runtime_object_t* o);
 
 
@@ -34,7 +30,7 @@ __SLL_FUNC void sll_remove_debug_data(sll_runtime_object_t* o);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(const sll_runtime_object_stack_data_t* rst);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(void);
 
 
 

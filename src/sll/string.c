@@ -2,6 +2,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/map.h>
 #include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
@@ -138,6 +139,13 @@ __SLL_FUNC void sll_string_combinations(const sll_string_t* a,const sll_string_t
 
 
 
+__SLL_FUNC sll_compare_result_t sll_string_compare(const sll_string_t* a,const sll_string_t* b){
+	SLL_UNIMPLEMENTED();
+	return SLL_COMPARE_RESULT_EQUAL;
+}
+
+
+
 __SLL_FUNC sll_string_length_t sll_string_count(const sll_string_t* a,const sll_string_t* b){
 	if (a->l<b->l){
 		return 0;
@@ -145,6 +153,18 @@ __SLL_FUNC sll_string_length_t sll_string_count(const sll_string_t* a,const sll_
 	sll_string_length_t o=0;
 	for (sll_string_length_t i=0;i<a->l-b->l+1;i++){
 		if (!memcmp(a->v+i,b->v,b->l)){
+			o++;
+		}
+	}
+	return o;
+}
+
+
+
+__SLL_FUNC sll_string_length_t sll_string_count_char(const sll_string_t* s,sll_char_t c){
+	sll_string_length_t o=0;
+	for (sll_string_length_t i=0;i<s->l;i++){
+		if (s->v[i]==c){
 			o++;
 		}
 	}
@@ -227,6 +247,22 @@ __SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_s
 
 
 
+__SLL_FUNC sll_bool_t sll_string_equal(const sll_string_t* a,const sll_string_t* b){
+	if (a->l!=b->l||a->c!=b->c){
+		return 0;
+	}
+	const uint64_t* ap=(const uint64_t*)(a->v);
+	const uint64_t* bp=(const uint64_t*)(b->v);
+	for (sll_string_length_t i=0;i<((a->l+7)>>3);i++){
+		if (*(ap+i)!=*(bp+i)){
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
+
 __SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_t vl,sll_string_t* o){
 	o->l=vl;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(vl)*sizeof(sll_char_t));
@@ -260,6 +296,20 @@ __SLL_FUNC void sll_string_hash(sll_string_t* s){
 		c^=*(p+i);
 	}
 	s->c=((sll_string_checksum_t)c)^((sll_string_checksum_t)(c>>32));
+}
+
+
+
+__SLL_FUNC void sll_string_inv(const sll_string_t* s,sll_string_t* o){
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+	const uint64_t* a=(const uint64_t*)(s->v);
+	uint64_t* b=(uint64_t*)(o->v);
+	for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){
+		*(b+i)=~(*(a+i));
+	}
+	SLL_STRING_FORMAT_PADDING(o->v,o->l);
+	sll_string_hash(o);
 }
 
 
@@ -471,8 +521,25 @@ __SLL_FUNC void sll_string_to_array(const sll_string_t* s,sll_array_t* o){
 	o->l=s->l;
 	o->v=malloc(s->l*sizeof(sll_runtime_object_t*));
 	for (sll_string_length_t i=0;i<s->l;i++){
-		o->v[i]=sll_static_int[s->v[i]];
-		SLL_ACQUIRE(o->v[i]);
+		o->v[i]=SLL_ACQUIRE_STATIC_CHAR(s->v[i]);
+	}
+}
+
+
+
+__SLL_FUNC void sll_string_to_map(const sll_string_t* s,sll_map_t* o){
+	if (!s->l){
+		SLL_ZERO_MAP(o);
+		return;
+	}
+	o->l=s->l;
+	sll_map_length_t e=s->l<<1;
+	o->v=malloc(e*sizeof(sll_runtime_object_t*));
+	sll_string_length_t i=0;
+	for (sll_map_length_t j=0;j<e;j+=2){
+		o->v[j]=SLL_FROM_INT(i);
+		o->v[j+1]=SLL_FROM_CHAR(s->v[i]);
+		i++;
 	}
 }
 

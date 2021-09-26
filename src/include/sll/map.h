@@ -58,6 +58,10 @@ __SLL_FUNC sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_o
 
 
 
+__SLL_FUNC void sll_map_to_array(const sll_map_t* m,sll_array_t* o);
+
+
+
 __SLL_FUNC void sll_map_values(const sll_map_t* m,sll_array_t* o);
 
 

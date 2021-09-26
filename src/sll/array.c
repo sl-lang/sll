@@ -2,6 +2,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/map.h>
 #include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
@@ -48,6 +49,18 @@ __SLL_FUNC sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_
 		}
 	}
 	return o;
+}
+
+
+
+__SLL_FUNC void sll_array_combinations(const sll_array_t* a,const sll_array_t* b,sll_array_t* o){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+__SLL_FUNC void sll_array_string_combinations(const sll_array_t* a,const sll_string_t* s,sll_array_t* o){
+	SLL_UNIMPLEMENTED();
 }
 
 
@@ -121,6 +134,28 @@ __SLL_FUNC void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll_arr
 		for (sll_array_length_t i=0;i<e;i++){
 			SLL_ACQUIRE(o->v[i]);
 		}
+	}
+}
+
+
+
+__SLL_FUNC void sll_array_from_length(sll_array_length_t l,sll_array_t* o){
+	if (!l){
+		SLL_ZERO_ARRAY(o);
+		return;
+	}
+	o->l=l;
+	o->v=malloc(l*sizeof(sll_runtime_object_t*));
+	sll_static_int[0]->rc+=l;
+	o->v[0]=sll_static_int[0];
+	sll_array_length_t i=1;
+	while (i<l){
+		sll_array_length_t j=i<<1;
+		if (j>l){
+			j=l;
+		}
+		memcpy(o->v+i,o->v,(j-i)*sizeof(sll_runtime_object_t*));
+		i=j;
 	}
 }
 
@@ -206,6 +241,27 @@ __SLL_FUNC void sll_array_push(const sll_array_t* a,sll_runtime_object_t* v,sll_
 	o->v[a->l]=v;
 	for (sll_array_length_t i=0;i<o->l;i++){
 		SLL_ACQUIRE(o->v[i]);
+	}
+}
+
+
+
+__SLL_FUNC void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_t n,sll_array_t* o){
+	if (!n||s==e){
+		SLL_ZERO_ARRAY(o);
+		return;
+	}
+	if (e<s){
+		SLL_ASSERT(n<0);
+		SLL_UNIMPLEMENTED();
+	}
+	SLL_ASSERT(n>0);
+	o->l=(sll_array_length_t)((e-s)/n);
+	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	sll_array_length_t i=0;
+	for (sll_integer_t j=s;j<e;j+=n){
+		o->v[i]=SLL_FROM_INT(j);
+		i++;
 	}
 }
 
@@ -316,6 +372,25 @@ __SLL_FUNC sll_runtime_object_t* sll_array_shift(const sll_array_t* a,sll_array_
 		}
 	}
 	return a->v[0];
+}
+
+
+
+__SLL_FUNC void sll_array_to_map(const sll_array_t* a,sll_map_t* o){
+	if (!a->l){
+		SLL_ZERO_MAP(o);
+		return;
+	}
+	o->l=a->l;
+	sll_map_length_t e=a->l<<1;
+	o->v=malloc(e*sizeof(sll_runtime_object_t*));
+	sll_array_length_t i=0;
+	for (sll_map_length_t j=0;j<e;j+=2){
+		o->v[j]=SLL_FROM_INT(i);
+		o->v[j+1]=a->v[i];
+		SLL_ACQUIRE(a->v[i]);
+		i++;
+	}
 }
 
 

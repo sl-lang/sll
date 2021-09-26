@@ -60,7 +60,52 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 			return i+snprintf((char*)(o->v+i),4096,"%.16lf",a->dt.f);
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			if (q){
-				SLL_UNIMPLEMENTED();
+				o->v[i]='\'';
+				i++;
+				sll_char_t c=a->dt.c;
+				if (c=='\"'||c=='\''||c=='\\'){
+					o->v[i]='\\';
+					o->v[i+1]=c;
+					i+=2;
+				}
+				else if (c=='\t'){
+					o->v[i]='\\';
+					o->v[i+1]='t';
+					i+=2;
+				}
+				else if (c=='\n'){
+					o->v[i]='\\';
+					o->v[i+1]='n';
+					i+=2;
+				}
+				else if (c=='\v'){
+					o->v[i]='\\';
+					o->v[i+1]='v';
+					i+=2;
+				}
+				else if (c=='\f'){
+					o->v[i]='\\';
+					o->v[i+1]='f';
+					i+=2;
+				}
+				else if (c=='\r'){
+					o->v[i]='\\';
+					o->v[i+1]='r';
+					i+=2;
+				}
+				else if (SLL_STRING_HEX_ESCAPE(c)){
+					o->v[i]='\\';
+					o->v[i+1]='x';
+					o->v[i+2]=(c>>4)+((c>>4)>9?87:48);
+					o->v[i+3]=(c&15)+((c&15)>9?87:48);
+					i+=4;
+				}
+				else{
+					o->v[i]=c;
+					i++;
+				}
+				o->v[i]='\'';
+				return i+1;
 			}
 			o->v[i]=a->dt.c;
 			return i+1;

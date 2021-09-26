@@ -988,14 +988,13 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 					if (r->dt.ac){
 						SLL_UNIMPLEMENTED();
 					}
-					r->t=SLL_OBJECT_TYPE_INT;
 					if (r->t==SLL_OBJECT_TYPE_NOT){
+						r->t=SLL_OBJECT_TYPE_INT;
 						r->dt.i=!sll_operator_bool(rt);
 					}
 					else if (r->t==SLL_OBJECT_TYPE_BIT_NOT){
 						sll_runtime_object_t* nv=sll_operator_inv(rt);
-						SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(nv)==SLL_RUNTIME_OBJECT_TYPE_INT);
-						r->dt.i=nv->dt.i;
+						_runtime_object_to_object(nv,r,o_dt);
 						SLL_RELEASE(nv);
 					}
 					else{

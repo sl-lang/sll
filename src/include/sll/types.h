@@ -562,14 +562,6 @@ typedef struct __SLL_RUNTIME_DATA{
 
 
 
-typedef struct __SLL_RUNTIME_OBJECT_STACK_DATA{
-	uint64_t* m;
-	uint32_t ml;
-	sll_ref_count_t* s;
-} sll_runtime_object_stack_data_t;
-
-
-
 typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o,sll_error_t* e);
 
 

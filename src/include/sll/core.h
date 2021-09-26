@@ -33,10 +33,6 @@ __SLL_FUNC void sll_free_identifier_table(sll_identifier_table_t* idt);
 
 
 
-__SLL_FUNC void sll_free_runtime_object_stack_data(sll_runtime_object_stack_data_t* rst);
-
-
-
 __SLL_FUNC void sll_free_string_table(sll_string_table_t* st);
 
 

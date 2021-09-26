@@ -108,16 +108,6 @@ __SLL_FUNC void sll_free_internal_function_table(sll_internal_function_table_t* 
 
 
 
-__SLL_FUNC void sll_free_runtime_object_stack_data(sll_runtime_object_stack_data_t* rst){
-	free(rst->m);
-	rst->m=NULL;
-	rst->ml=0;
-	free(rst->s);
-	rst->s=NULL;
-}
-
-
-
 __SLL_FUNC void sll_free_string_table(sll_string_table_t* st){
 	for (sll_string_index_t i=0;i<st->l;i++){
 		free((st->dt+i)->v);
