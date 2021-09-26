@@ -13,6 +13,7 @@
 
 
 
+#define SLL_ABS_FLOAT(v) fabs((v))
 #define SLL_ROUND_FLOAT(v) llround((v))
 
 

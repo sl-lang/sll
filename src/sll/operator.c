@@ -133,8 +133,8 @@
 #define COMBINED_CAST_TYPE_MK COMBINE_CAST_TYPES(SLL_RUNTIME_OBJECT_TYPE_MAP,SLL_CONSTANT_TYPE_MAP_KEY)
 #define COMBINED_CAST_TYPE_MV COMBINE_CAST_TYPES(SLL_RUNTIME_OBJECT_TYPE_MAP,SLL_CONSTANT_TYPE_MAP_VALUE)
 #define COMPARE_RESULT(a,b) ((a)<(b)?SLL_COMPARE_RESULT_BELOW:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_EQUAL))
-#define COMPARE_RESULT_FLOAT(a,b) (fabs((a)-(b))<sll_float_compare_error?SLL_COMPARE_RESULT_EQUAL:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW))
-#define EQUAL_FLOAT(a,b) (fabs((a)-(b))<sll_float_compare_error)
+#define COMPARE_RESULT_FLOAT(a,b) (SLL_ABS_FLOAT((a)-(b))<sll_float_compare_error?SLL_COMPARE_RESULT_EQUAL:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW))
+#define EQUAL_FLOAT(a,b) (SLL_ABS_FLOAT((a)-(b))<sll_float_compare_error)
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
 	do{ \
@@ -489,7 +489,7 @@ __SLL_OPERATOR_BINARY(mult){
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)SLL_ROUND_FLOAT(fabs(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
+				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)SLL_ROUND_FLOAT(SLL_ABS_FLOAT(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_FA:
@@ -497,7 +497,7 @@ __SLL_OPERATOR_BINARY(mult){
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)SLL_ROUND_FLOAT(fabs(a->dt.f-n)*b->dt.a.l),&(o->dt.a));
+				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)SLL_ROUND_FLOAT(SLL_ABS_FLOAT(a->dt.f-n)*b->dt.a.l),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_FH:
