@@ -18,6 +18,14 @@ __SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runti
 
 
 
+__SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o);
+
+
+
+__SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o);
+
+
+
 __SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o);
 
 

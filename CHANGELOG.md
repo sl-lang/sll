@@ -6,6 +6,7 @@
 
 - Array, string and map functions ([#3])
 - `instruction_count`, `sll_api_util_instruction_count` and `sll_current_instruction_count` ([#51])
+- Operator function types: `sll_unary_operator_t`, `sll_binary_operator_t`, `sll_ternary_operator_t` and `sll_quaternary_operator_t`
 - `sll_platform_file_size` and `sll_string_join` functions
 
 ### Changed

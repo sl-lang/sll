@@ -646,4 +646,20 @@ typedef struct __SLL_STACK_DATA{
 
 
 
+typedef sll_runtime_object_t* (*sll_unary_operator_t)(sll_runtime_object_t* a);
+
+
+
+typedef sll_runtime_object_t* (*sll_binary_operator_t)(sll_runtime_object_t* a,sll_runtime_object_t* b);
+
+
+
+typedef sll_runtime_object_t* (*sll_ternary_operator_t)(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c);
+
+
+
+typedef sll_runtime_object_t* (*sll_quaternary_operator_t)(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* d);
+
+
+
 #endif

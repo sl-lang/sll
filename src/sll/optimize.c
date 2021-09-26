@@ -341,7 +341,6 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				v->t=SLL_RUNTIME_OBJECT_TYPE_STRING|RUNTIME_OBJECT_EXTERNAL_STRING;
 				SLL_ASSERT(o->dt.s<o_dt->c_dt->st.l);
 				v->dt.s=*(o_dt->c_dt->st.dt+o->dt.s);
-				printf("%u %.8x %p\n",v->dt.s.l,v->dt.s.c,v->dt.s.v);
 				return v;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
@@ -1303,7 +1302,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 						SLL_UNIMPLEMENTED();
 					}
 					sll_runtime_object_t* av=_get_as_runtime_object(a,o_dt);
-					if (SLL_RUNTIME_OBJECT_GET_TYPE(av)!=RUNTIME_OBJECT_TYPE_UNKNOWN&&!(av->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
+					if (SLL_RUNTIME_OBJECT_GET_TYPE(av)!=RUNTIME_OBJECT_TYPE_UNKNOWN&&!(av->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)&&(!v||!i||SLL_RUNTIME_OBJECT_IS_STORAGE(av)==SLL_RUNTIME_OBJECT_IS_STORAGE(v))){
 						*(arg+j)=o;
 						if (!v){
 							SLL_ACQUIRE(av);

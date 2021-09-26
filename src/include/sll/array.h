@@ -34,6 +34,14 @@ __SLL_FUNC void sll_array_join(const sll_array_t* a,const sll_array_t* b,sll_arr
 
 
 
+__SLL_FUNC void sll_array_op_array(const sll_array_t* a,const sll_array_t* b,sll_binary_operator_t f,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_op_string(const sll_array_t* a,const sll_string_t* s,sll_binary_operator_t f,sll_array_t* o);
+
+
+
 __SLL_FUNC sll_runtime_object_t* sll_array_pop(const sll_array_t* a,sll_array_t* o);
 
 

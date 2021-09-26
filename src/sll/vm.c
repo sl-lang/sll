@@ -210,7 +210,14 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE:
-				SLL_UNIMPLEMENTED();
+				{
+					sll_runtime_object_t* tos=SLL_CREATE();
+					tos->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+					sll_array_create(1,&(tos->dt.a));
+					tos->dt.a.v[0]=*(s+si-1);
+					*(s+si-1)=tos;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
 				{
 					sll_runtime_object_t* tos=SLL_CREATE();
