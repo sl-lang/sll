@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/operator.h>
@@ -111,6 +112,32 @@ __SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d){
 
 
 
+__SLL_FUNC void sll_string_combinations(const sll_string_t* a,const sll_string_t* b,sll_array_t* o){
+	if (!a->l||!b->l){
+		SLL_ZERO_ARRAY(o);
+		return;
+	}
+	o->l=a->l*b->l;
+	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	sll_array_length_t i=0;
+	for (sll_string_length_t j=0;j<a->l;j++){
+		for (sll_string_length_t k=0;k<b->l;k++){
+			sll_runtime_object_t* n=SLL_CREATE();
+			n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+			n->dt.s.l=2;
+			n->dt.s.c=(a->v[j])|(((sll_string_checksum_t)(b->v[k]))<<8);
+			n->dt.s.v=malloc(SLL_STRING_ALIGN_LENGTH(2)*sizeof(sll_char_t));
+			SLL_STRING_FORMAT_PADDING(n->dt.s.v,2);
+			n->dt.s.v[0]=a->v[j];
+			n->dt.s.v[1]=b->v[k];
+			o->v[i]=n;
+			i++;
+		}
+	}
+}
+
+
+
 __SLL_FUNC sll_string_length_t sll_string_count(const sll_string_t* a,const sll_string_t* b){
 	if (a->l<b->l){
 		return 0;
@@ -131,6 +158,71 @@ __SLL_FUNC void sll_string_create(sll_string_length_t l,sll_string_t* o){
 	o->c=0;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
 	SLL_STRING_FORMAT_PADDING(o->v,l);
+}
+
+
+
+__SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_string_length_t e,sll_string_t* o){
+	SLL_ASSERT(e<s->l);
+	if (e){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_bool_t r=0;
+	if (n<0){
+		n=-n;
+		r=1;
+	}
+	uint8_t st=n&7;
+	n*=s->l;
+	if (!n){
+		SLL_ZERO_STRING(o);
+		return;
+	}
+	SLL_ASSERT(n<SLL_MAX_STRING_LENGTH);
+	o->l=(sll_string_length_t)n;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(n)*sizeof(sll_char_t));
+	SLL_STRING_FORMAT_PADDING(o->v,o->l);
+	if (r){
+		sll_string_length_t i=s->l-1;
+		for (sll_string_length_t j=0;j<i;i--,j++){
+			o->v[i]=s->v[j];
+			o->v[j]=s->v[i];
+		}
+		if (s->l&1){
+			o->v[i]=s->v[i];
+		}
+	}
+	else{
+		memcpy(o->v,s->v,s->l);
+	}
+	sll_string_length_t i=s->l;
+	while (i<n){
+		sll_string_length_t j=i<<1;
+		if (j>n){
+			j=(sll_string_length_t)n;
+		}
+		memcpy(o->v+i,o->v,j-i);
+		i=j;
+	}
+	o->c=0;
+	switch (st){
+		case 3:
+			o->c^=(s->c>>16)|(s->c<<16);
+		case 2:
+			o->c^=(s->c>>8)|(s->c<<24);
+		case 1:
+			o->c^=s->c;
+			break;
+		case 4:
+			o->c^=s->c;
+		case 5:
+			o->c^=(s->c>>8)|(s->c<<24);
+		case 6:
+			o->c^=(s->c>>16)|(s->c<<16);
+		case 7:
+			o->c^=(s->c>>24)|(s->c<<8);
+			break;
+	}
 }
 
 

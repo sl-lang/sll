@@ -122,7 +122,7 @@
 (= data_encoding1 "S\xcdrL\xf8\x88\x0f\xc3\x14\t\xfc")
 (:> "Decoded data: " (^ data data_encoding0 data_encoding1) "\n")
 (:> "Decoded data: " (:: (^ (:: data array_type) data_encoding0 data_encoding1) string_type) "\n")
-(:> (+ <1 "a" 2 "b"> 1 <2 "c" 3 "d">) "\n" [(& "ghi" "ABCDEF")] "\n")
+(:> (+ <1 "a" 2 "b"> 1 <2 "c" 3 "d">) "\n" [(& "ghi" "ABCDEF")] "\n" (* "XYZ-@" -3) "\n" (* [1 2 3] 1.5) "\n" (* (:: "abc" string_type) "def") "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

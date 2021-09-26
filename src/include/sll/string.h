@@ -33,7 +33,7 @@
 		} \
 	} while (0)
 #define SLL_CHAR(x) ((sll_char_t*)(x))
-#define SLL_STRING_COMBINE_CHECKSUMS(a,l,b) (((sll_string_checksum_t)(a))^((((sll_string_checksum_t)(b))>>(((l)&3)<<3))|(((sll_string_checksum_t)(b))<<(((l)&3)<<3))))
+#define SLL_STRING_COMBINE_CHECKSUMS(a,l,b) (((sll_string_checksum_t)(a))^((((sll_string_checksum_t)(b))>>(((l)&3)<<3))|(((sll_string_checksum_t)(b))<<((4-((l)&3))<<3))))
 #define SLL_STRING_COMBINE_CHECKSUMS_FAST(a,l,b) (((sll_string_checksum_t)(a))^sll_rotate_bits((b),((l)&3)<<3))
 
 
@@ -50,11 +50,19 @@ __SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d);
 
 
 
+__SLL_FUNC void sll_string_combinations(const sll_string_t* a,const sll_string_t* b,sll_array_t* o);
+
+
+
 __SLL_FUNC sll_string_length_t sll_string_count(const sll_string_t* a,const sll_string_t* b);
 
 
 
 __SLL_FUNC void sll_string_create(sll_string_length_t l,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t v,sll_string_length_t e,sll_string_t* o);
 
 
 

@@ -26,6 +26,18 @@ __SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_
 
 
 
+__SLL_FUNC void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o);
+
+
+
+__SLL_FUNC void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o);
+
+
+
+__SLL_FUNC void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o);
+
+
+
 __SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o);
 
 
