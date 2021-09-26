@@ -257,7 +257,6 @@ __SLL_OPERATOR_UNARY(dec){
 
 __SLL_OPERATOR_BINARY(add){
 	COMMUTATIVE_OPERATOR;
-	IGNORE_RESULT(inv);
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i+b->dt.i);
@@ -286,8 +285,13 @@ _add_to_string:
 					o->dt.s=sb;
 					return o;
 				}
+				if (!inv){
+					sll_string_t tmp=sa;
+					sa=sb;
+					sb=tmp;
+				}
 				sll_string_join(&sa,&sb,&(o->dt.s));
-				free(sb.v);
+				free((!inv?sa.v:sb.v));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
@@ -297,7 +301,12 @@ _add_to_array:
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
-				sll_array_push(&(b->dt.a),a,&(o->dt.a));
+				if (inv){
+					sll_array_push(&(b->dt.a),a,&(o->dt.a));
+				}
+				else{
+					sll_array_unshift(&(b->dt.a),a,&(o->dt.a));
+				}
 				return o;
 			}
 		case COMBINED_TYPE_IM:

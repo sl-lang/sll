@@ -124,6 +124,7 @@
 (:> "Decoded data: " (:: (^ (~ (:: data array_type)) data_encoding0 data_encoding1) string_type) "\n")
 (:> (+ <1 "a" 2 "b"> 1 <2 "c" 3 "d">) "\n" [(& "ghi" "ABCDEF")] "\n" (* "XYZ-@" -3) "\n" (* [1 2 3] 1.5) "\n")
 (:> (* (:: "abc" string_type) "def") "\n" (:: (* "A" 100) map_key_type) "\n" (:: array string_type map_type array_type) "\n")
+(:> (* [1 2.3456 -78] ["a" array "cd"]) "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

@@ -2,7 +2,13 @@
 
 ## [0.6.21] - Ongoing
 
-*Nothing*
+### Added
+
+- Implemented `sll_array_combinations`
+
+### Changed
+
+- `sll_operator_add` now correctly combines objects with strings and arrays
 
 ## [0.6.20] - 2021-9-26
 

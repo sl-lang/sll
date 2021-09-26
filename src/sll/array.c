@@ -54,7 +54,19 @@ __SLL_FUNC sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_
 
 
 __SLL_FUNC void sll_array_combinations(const sll_array_t* a,const sll_array_t* b,sll_array_t* o){
-	SLL_UNIMPLEMENTED();
+	if (!a->l||!b->l){
+		SLL_ZERO_ARRAY(o);
+		return;
+	}
+	o->l=a->l*b->l;
+	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	sll_array_length_t i=0;
+	for (sll_array_length_t j=0;j<a->l;j++){
+		for (sll_array_length_t k=0;k<b->l;k++){
+			o->v[i]=sll_operator_add(a->v[j],b->v[k]);
+			i++;
+		}
+	}
 }
 
 
