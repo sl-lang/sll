@@ -15,7 +15,7 @@
 	} while (0)
 #define SLL_STRING_FROM_STATIC(s,o) \
 	do{ \
-		(o)->l=sizeof(s)-1; \
+		(o)->l=sizeof(s)/sizeof(sll_char_t)-1; \
 		(o)->v=SLL_CHAR((s)); \
 		sll_string_hash((o)); \
 	} while (0)
@@ -35,6 +35,10 @@
 #define SLL_CHAR(x) ((sll_char_t*)(x))
 #define SLL_STRING_COMBINE_CHECKSUMS(a,l,b) (((sll_string_checksum_t)(a))^((((sll_string_checksum_t)(b))>>(((l)&3)<<3))|(((sll_string_checksum_t)(b))<<(((l)&3)<<3))))
 #define SLL_STRING_COMBINE_CHECKSUMS_FAST(a,l,b) (((sll_string_checksum_t)(a))^sll_rotate_bits((b),((l)&3)<<3))
+
+
+
+__SLL_FUNC void sll_string_and(const sll_string_t* s,sll_char_t v,sll_string_t* o);
 
 
 
@@ -71,6 +75,10 @@ __SLL_FUNC sll_string_length_t sll_string_length(const sll_char_t* s);
 
 
 __SLL_FUNC void sll_string_lower_case(const sll_string_t* s,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_or(const sll_string_t* s,sll_char_t v,sll_string_t* o);
 
 
 

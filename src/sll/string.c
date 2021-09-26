@@ -56,6 +56,28 @@ static const sll_char_t string_to_upper_case_map[]={
 
 
 
+__SLL_FUNC void sll_string_and(const sll_string_t* s,sll_char_t v,sll_string_t* o){
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+	const uint64_t* a=(const uint64_t*)(s->v);
+	uint64_t* b=(uint64_t*)(o->v);
+	uint16_t v16=(((uint16_t)v)<<8)|v;
+	uint32_t v32=(((uint32_t)v16)<<16)|v16;
+	uint64_t v64=(((uint64_t)v32)<<32)|v32;
+	uint64_t c=0;
+	sll_string_length_t e=((o->l+7)>>3)-1;
+	for (sll_string_length_t i=0;i<e;i++){
+		*(b+i)=(*(a+i))&v64;
+		c^=*(b+i);
+	}
+	*(b+e)=(*(a+e))&v64;
+	SLL_STRING_FORMAT_PADDING(o->v,o->l);
+	c^=*(b+e);
+	o->c=((sll_string_checksum_t)c)^((sll_string_checksum_t)(c>>32));
+}
+
+
+
 __SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d){
 	d->l=s->l;
 	d->c=s->c;
@@ -173,6 +195,28 @@ __SLL_FUNC void sll_string_lower_case(const sll_string_t* s,sll_string_t* o){
 		i+=4;
 	}
 	o->c=c;
+}
+
+
+
+__SLL_FUNC void sll_string_or(const sll_string_t* s,sll_char_t v,sll_string_t* o){
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+	const uint64_t* a=(const uint64_t*)(s->v);
+	uint64_t* b=(uint64_t*)(o->v);
+	uint16_t v16=(((uint16_t)v)<<8)|v;
+	uint32_t v32=(((uint32_t)v16)<<16)|v16;
+	uint64_t v64=(((uint64_t)v32)<<32)|v32;
+	uint64_t c=0;
+	sll_string_length_t e=((o->l+7)>>3)-1;
+	for (sll_string_length_t i=0;i<e;i++){
+		*(b+i)=(*(a+i))|v64;
+		c^=*(b+i);
+	}
+	*(b+e)=(*(a+e))|v64;
+	SLL_STRING_FORMAT_PADDING(o->v,o->l);
+	c^=*(b+e);
+	o->c=((sll_string_checksum_t)c)^((sll_string_checksum_t)(c>>32));
 }
 
 
@@ -324,12 +368,13 @@ __SLL_FUNC void sll_string_xor(const sll_string_t* s,sll_char_t v,sll_string_t* 
 	uint32_t v32=(((uint32_t)v16)<<16)|v16;
 	uint64_t v64=(((uint64_t)v32)<<32)|v32;
 	uint64_t c=0;
-	for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){
+	sll_string_length_t e=((o->l+7)>>3)-1;
+	for (sll_string_length_t i=0;i<e;i++){
 		*(b+i)=(*(a+i))^v64;
 		c^=*(b+i);
 	}
-	c^=*(b+((o->l+7)>>3)-1);
+	*(b+e)=(*(a+e))^v64;
 	SLL_STRING_FORMAT_PADDING(o->v,o->l);
-	c^=*(b+((o->l+7)>>3)-1);
+	c^=*(b+e);
 	o->c=((sll_string_checksum_t)c)^((sll_string_checksum_t)(c>>32));
 }
