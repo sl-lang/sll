@@ -59,8 +59,16 @@ __SLL_FUNC void sll_array_combinations(const sll_array_t* a,const sll_array_t* b
 
 
 
-__SLL_FUNC void sll_array_string_combinations(const sll_array_t* a,const sll_string_t* s,sll_array_t* o){
+__SLL_FUNC sll_compare_result_t sll_array_compare(const sll_array_t* a,const sll_array_t* b){
 	SLL_UNIMPLEMENTED();
+	return SLL_COMPARE_RESULT_EQUAL;
+}
+
+
+
+__SLL_FUNC sll_compare_result_t sll_array_compare_map(const sll_array_t* a,const sll_map_t* m,sll_bool_t inv){
+	SLL_UNIMPLEMENTED();
+	return SLL_COMPARE_RESULT_EQUAL;
 }
 
 
@@ -135,6 +143,20 @@ __SLL_FUNC void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll_arr
 			SLL_ACQUIRE(o->v[i]);
 		}
 	}
+}
+
+
+
+__SLL_FUNC sll_bool_t sll_array_equal(const sll_array_t* a,const sll_array_t* b){
+	SLL_UNIMPLEMENTED();
+	return 0;
+}
+
+
+
+__SLL_FUNC sll_bool_t sll_array_equal_map(const sll_array_t* a,const sll_map_t* m){
+	SLL_UNIMPLEMENTED();
+	return 0;
 }
 
 
@@ -372,6 +394,12 @@ __SLL_FUNC sll_runtime_object_t* sll_array_shift(const sll_array_t* a,sll_array_
 		}
 	}
 	return a->v[0];
+}
+
+
+
+__SLL_FUNC void sll_array_string_combinations(const sll_array_t* a,const sll_string_t* s,sll_array_t* o){
+	SLL_UNIMPLEMENTED();
 }
 
 

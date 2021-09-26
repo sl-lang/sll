@@ -42,7 +42,15 @@ __SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o);
 
 
 
+__SLL_FUNC sll_compare_result_t sll_map_compare(const sll_map_t* a,const sll_map_t* b);
+
+
+
 __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o);
+
+
+
+__SLL_FUNC sll_bool_t sll_map_equal(const sll_map_t* a,const sll_map_t* b);
 
 
 

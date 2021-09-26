@@ -146,6 +146,20 @@ __SLL_FUNC sll_compare_result_t sll_string_compare(const sll_string_t* a,const s
 
 
 
+__SLL_FUNC sll_compare_result_t sll_string_compare_array(const sll_string_t* s,const sll_array_t* a,sll_bool_t inv){
+	SLL_UNIMPLEMENTED();
+	return SLL_COMPARE_RESULT_EQUAL;
+}
+
+
+
+__SLL_FUNC sll_compare_result_t sll_string_compare_map(const sll_string_t* s,const sll_map_t* m,sll_bool_t inv){
+	SLL_UNIMPLEMENTED();
+	return SLL_COMPARE_RESULT_EQUAL;
+}
+
+
+
 __SLL_FUNC sll_string_length_t sll_string_count(const sll_string_t* a,const sll_string_t* b){
 	if (a->l<b->l){
 		return 0;
@@ -259,6 +273,20 @@ __SLL_FUNC sll_bool_t sll_string_equal(const sll_string_t* a,const sll_string_t*
 		}
 	}
 	return 1;
+}
+
+
+
+__SLL_FUNC sll_bool_t sll_string_equal_array(const sll_string_t* s,const sll_array_t* a){
+	SLL_UNIMPLEMENTED();
+	return 0;
+}
+
+
+
+__SLL_FUNC sll_bool_t sll_string_equal_map(const sll_string_t* s,const sll_map_t* m){
+	SLL_UNIMPLEMENTED();
+	return 0;
 }
 
 

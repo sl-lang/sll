@@ -134,6 +134,7 @@
 #define COMBINED_CAST_TYPE_MV COMBINE_CAST_TYPES(SLL_RUNTIME_OBJECT_TYPE_MAP,SLL_CONSTANT_TYPE_MAP_VALUE)
 #define COMPARE_RESULT(a,b) ((a)<(b)?SLL_COMPARE_RESULT_BELOW:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_EQUAL))
 #define COMPARE_RESULT_FLOAT(a,b) (fabs((a)-(b))<sll_float_compare_error?SLL_COMPARE_RESULT_EQUAL:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW))
+#define EQUAL_FLOAT(a,b) (fabs((a)-(b))<sll_float_compare_error)
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
 	do{ \
@@ -1523,7 +1524,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sl
 		case COMBINED_TYPE_IA:
 			return COMPARE_RESULT(a->dt.i,b->dt.a.l);
 		case COMBINED_TYPE_IH:
-			return (a->dt.i<0?SLL_COMPARE_RESULT_BELOW:COMPARE_RESULT((sll_handle_t)a->dt.i,b->dt.h.h));
+			return (a->dt.i<0?SLL_COMPARE_RESULT_BELOW:COMPARE_RESULT((sll_handle_t)(a->dt.i),b->dt.h.h));
 		case COMBINED_TYPE_IM:
 			return COMPARE_RESULT(a->dt.i,b->dt.m.l);
 		case COMBINED_TYPE_FI:
@@ -1547,7 +1548,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sl
 		case COMBINED_TYPE_CC:
 			return COMPARE_RESULT(a->dt.c,b->dt.c);
 		case COMBINED_TYPE_CS:
-			return COMPARE_RESULT(a->dt.c,b->dt.s.l);
+			if (!b->dt.s.l){
+				return SLL_COMPARE_RESULT_ABOVE;
+			}
+			if (b->dt.s.v[0]!=a->dt.c){
+				return COMPARE_RESULT(a->dt.c,b->dt.s.v[0]);
+			}
+			return (b->dt.s.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_BELOW);
 		case COMBINED_TYPE_CA:
 			return COMPARE_RESULT(a->dt.c,b->dt.a.l);
 		case COMBINED_TYPE_CH:
@@ -1559,9 +1566,63 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sl
 		case COMBINED_TYPE_SF:
 			return COMPARE_RESULT_FLOAT(a->dt.s.l,b->dt.f);
 		case COMBINED_TYPE_SC:
-			return COMPARE_RESULT(a->dt.s.l,b->dt.c);
+			if (!a->dt.s.l){
+				return SLL_COMPARE_RESULT_BELOW;
+			}
+			if (a->dt.s.v[0]!=b->dt.c){
+				return COMPARE_RESULT(b->dt.c,a->dt.s.v[0]);
+			}
+			return (a->dt.s.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_ABOVE);
 		case COMBINED_TYPE_SS:
 			return sll_string_compare(&(a->dt.s),&(b->dt.s));
+		case COMBINED_TYPE_SA:
+			return sll_string_compare_array(&(a->dt.s),&(b->dt.a),0);
+		case COMBINED_TYPE_SH:
+			return COMPARE_RESULT(a->dt.s.l,b->dt.h.h);
+		case COMBINED_TYPE_SM:
+			return sll_string_compare_map(&(a->dt.s),&(b->dt.m),0);
+		case COMBINED_TYPE_AI:
+			return COMPARE_RESULT(a->dt.a.l,b->dt.i);
+		case COMBINED_TYPE_AF:
+			return COMPARE_RESULT_FLOAT(a->dt.a.l,b->dt.f);
+		case COMBINED_TYPE_AC:
+			return COMPARE_RESULT(a->dt.a.l,b->dt.c);
+		case COMBINED_TYPE_AS:
+			return sll_string_compare_array(&(b->dt.s),&(a->dt.a),1);
+		case COMBINED_TYPE_AA:
+			return sll_array_compare(&(a->dt.a),&(b->dt.a));
+		case COMBINED_TYPE_AH:
+			return COMPARE_RESULT(a->dt.a.l,b->dt.h.h);
+		case COMBINED_TYPE_AM:
+			return sll_array_compare_map(&(a->dt.a),&(b->dt.m),0);
+		case COMBINED_TYPE_HI:
+			return (b->dt.i<0?SLL_COMPARE_RESULT_ABOVE:COMPARE_RESULT(a->dt.h.h,(sll_handle_t)(b->dt.i)));
+		case COMBINED_TYPE_HF:
+			return COMPARE_RESULT_FLOAT(a->dt.h.h,b->dt.f);
+		case COMBINED_TYPE_HC:
+			return COMPARE_RESULT(a->dt.h.h,b->dt.c);
+		case COMBINED_TYPE_HS:
+			return COMPARE_RESULT(a->dt.h.h,b->dt.s.l);
+		case COMBINED_TYPE_HA:
+			return COMPARE_RESULT(a->dt.h.h,b->dt.a.l);
+		case COMBINED_TYPE_HH:
+			return COMPARE_RESULT(a->dt.h.h,b->dt.h.h);
+		case COMBINED_TYPE_HM:
+			return COMPARE_RESULT(a->dt.h.h,b->dt.m.l);
+		case COMBINED_TYPE_MI:
+			return COMPARE_RESULT(a->dt.m.l,b->dt.i);
+		case COMBINED_TYPE_MF:
+			return COMPARE_RESULT_FLOAT(a->dt.m.l,b->dt.f);
+		case COMBINED_TYPE_MC:
+			return COMPARE_RESULT(a->dt.m.l,b->dt.c);
+		case COMBINED_TYPE_MS:
+			return sll_string_compare_map(&(b->dt.s),&(a->dt.m),1);
+		case COMBINED_TYPE_MA:
+			return sll_array_compare_map(&(b->dt.a),&(a->dt.m),1);
+		case COMBINED_TYPE_MH:
+			return COMPARE_RESULT(a->dt.m.l,b->dt.h.h);
+		case COMBINED_TYPE_MM:
+			return sll_map_compare(&(a->dt.m),&(b->dt.m));
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -1575,17 +1636,101 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_runtime_ob
 		case COMBINED_TYPE_II:
 			return a->dt.i==b->dt.i;
 		case COMBINED_TYPE_IF:
-			return fabs(a->dt.i-b->dt.f)<sll_float_compare_error;
+			return EQUAL_FLOAT(a->dt.i,b->dt.f);
+		case COMBINED_TYPE_IC:
+			return a->dt.i==b->dt.c;
 		case COMBINED_TYPE_IS:
 			return a->dt.i==b->dt.s.l;
+		case COMBINED_TYPE_IA:
+			return a->dt.i==b->dt.a.l;
+		case COMBINED_TYPE_IH:
+			return a->dt.i==b->dt.h.h;
+		case COMBINED_TYPE_IM:
+			return a->dt.i==b->dt.m.l;
 		case COMBINED_TYPE_FI:
-			return fabs(a->dt.f-b->dt.i)<sll_float_compare_error;
+			return EQUAL_FLOAT(a->dt.f,b->dt.i);
 		case COMBINED_TYPE_FF:
-			return fabs(a->dt.f-b->dt.f)<sll_float_compare_error;
+			return EQUAL_FLOAT(a->dt.f,b->dt.f);
+		case COMBINED_TYPE_FC:
+			return EQUAL_FLOAT(a->dt.f,b->dt.c);
+		case COMBINED_TYPE_FS:
+			return EQUAL_FLOAT(a->dt.f,b->dt.s.l);
+		case COMBINED_TYPE_FA:
+			return EQUAL_FLOAT(a->dt.f,b->dt.a.l);
+		case COMBINED_TYPE_FH:
+			return EQUAL_FLOAT(a->dt.f,b->dt.h.h);
+		case COMBINED_TYPE_FM:
+			return EQUAL_FLOAT(a->dt.f,b->dt.m.l);
+		case COMBINED_TYPE_CI:
+			return a->dt.c==b->dt.i;
+		case COMBINED_TYPE_CF:
+			return EQUAL_FLOAT(a->dt.c,b->dt.f);
+		case COMBINED_TYPE_CC:
+			return a->dt.c==b->dt.c;
+		case COMBINED_TYPE_CS:
+			return (b->dt.s.l==1&&b->dt.s.v[0]==a->dt.c);
+		case COMBINED_TYPE_CA:
+			return a->dt.c==b->dt.a.l;
+		case COMBINED_TYPE_CH:
+			return a->dt.c==b->dt.h.h;
+		case COMBINED_TYPE_CM:
+			return a->dt.c==b->dt.m.l;
 		case COMBINED_TYPE_SI:
-			return (!a->dt.s.l&&!b->dt.i);
+			return a->dt.s.l==b->dt.i;
+		case COMBINED_TYPE_SF:
+			return EQUAL_FLOAT(a->dt.s.l,b->dt.f);
+		case COMBINED_TYPE_SC:
+			return (a->dt.s.l==1&&a->dt.s.v[0]==b->dt.c);
 		case COMBINED_TYPE_SS:
 			return sll_string_equal(&(a->dt.s),&(b->dt.s));
+		case COMBINED_TYPE_SA:
+			return sll_string_equal_array(&(a->dt.s),&(b->dt.a));
+		case COMBINED_TYPE_SH:
+			return a->dt.s.l==b->dt.h.h;
+		case COMBINED_TYPE_SM:
+			return sll_string_equal_map(&(a->dt.s),&(b->dt.m));
+		case COMBINED_TYPE_AI:
+			return a->dt.a.l==b->dt.i;
+		case COMBINED_TYPE_AF:
+			return EQUAL_FLOAT(a->dt.a.l,b->dt.f);
+		case COMBINED_TYPE_AC:
+			return a->dt.a.l==b->dt.c;
+		case COMBINED_TYPE_AS:
+			return sll_string_equal_array(&(b->dt.s),&(a->dt.a));
+		case COMBINED_TYPE_AA:
+			return sll_array_equal(&(a->dt.a),&(b->dt.a));
+		case COMBINED_TYPE_AH:
+			return a->dt.a.l==b->dt.h.h;
+		case COMBINED_TYPE_AM:
+			return sll_array_equal_map(&(a->dt.a),&(b->dt.m));
+		case COMBINED_TYPE_HI:
+			return a->dt.h.h==b->dt.i;
+		case COMBINED_TYPE_HF:
+			return EQUAL_FLOAT(a->dt.h.h,b->dt.f);
+		case COMBINED_TYPE_HC:
+			return a->dt.h.h==b->dt.c;
+		case COMBINED_TYPE_HS:
+			return a->dt.h.h==b->dt.s.l;
+		case COMBINED_TYPE_HA:
+			return a->dt.h.h==b->dt.a.l;
+		case COMBINED_TYPE_HH:
+			return (a->dt.h.t==b->dt.h.t&&a->dt.h.h==b->dt.h.h);
+		case COMBINED_TYPE_HM:
+			return a->dt.h.h==b->dt.m.l;
+		case COMBINED_TYPE_MI:
+			return a->dt.m.l==b->dt.i;
+		case COMBINED_TYPE_MF:
+			return EQUAL_FLOAT(a->dt.m.l,b->dt.f);
+		case COMBINED_TYPE_MC:
+			return a->dt.m.l==b->dt.c;
+		case COMBINED_TYPE_MS:
+			return sll_string_equal_map(&(b->dt.s),&(a->dt.m));
+		case COMBINED_TYPE_MA:
+			return sll_array_equal_map(&(b->dt.a),&(a->dt.m));
+		case COMBINED_TYPE_MH:
+			return a->dt.m.l==b->dt.h.h;
+		case COMBINED_TYPE_MM:
+			return sll_map_equal(&(a->dt.m),&(b->dt.m));
 		default:
 			SLL_UNREACHABLE();
 	}

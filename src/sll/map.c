@@ -87,6 +87,13 @@ __SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o){
 
 
 
+__SLL_FUNC sll_compare_result_t sll_map_compare(const sll_map_t* a,const sll_map_t* b){
+	SLL_UNIMPLEMENTED();
+	return SLL_COMPARE_RESULT_EQUAL;
+}
+
+
+
 __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o){
 	if (!l){
 		SLL_ZERO_MAP(o);
@@ -94,6 +101,13 @@ __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o){
 	}
 	o->l=l;
 	o->v=calloc(sizeof(sll_runtime_object_t*),l<<1);
+}
+
+
+
+__SLL_FUNC sll_bool_t sll_map_equal(const sll_map_t* a,const sll_map_t* b){
+	SLL_UNIMPLEMENTED();
+	return 0;
 }
 
 
