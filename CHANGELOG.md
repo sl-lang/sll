@@ -4,6 +4,7 @@
 
 ### Added
 
+- Hash module ([#23])
 - Implemented `sll_array_and_array`, `sll_array_combinations`, `sll_array_equal`, `sll_array_equal_map`, `sll_map_equal`, `sll_array_or`, `sll_string_equal_array`, `sll_string_equal_map`
 
 ### Changed
@@ -831,6 +832,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#32]: https://github.com/sl-lang/sll/issues/32
 [#30]: https://github.com/sl-lang/sll/issues/30
 [#29]: https://github.com/sl-lang/sll/issues/29
+[#23]: https://github.com/sl-lang/sll/issues/23
 [#20]: https://github.com/sl-lang/sll/issues/20
 [#19]: https://github.com/sl-lang/sll/issues/19
 [#18]: https://github.com/sl-lang/sll/issues/18

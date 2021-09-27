@@ -2,6 +2,7 @@
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/assembly.h>
+#include <sll/common.h>
 #include <sll/constants.h>
 #include <sll/handle.h>
 #include <sll/map.h>

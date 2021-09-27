@@ -70,6 +70,19 @@ INTERNAL_FUNCTION("file_write",sll_api_file_write_raw,SLL_INTERNAL_FUNCTION_TYPE
 
 
 
+extern __SLL_API_TYPE_sll_api_hash_create sll_api_hash_create(__SLL_API_ARGS_sll_api_hash_create);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_hash_create_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_runtime_object_t* a=*(al+0);
+	sll_integer_t out=sll_api_hash_create(a);
+	return SLL_FROM_INT(out);
+}
+INTERNAL_FUNCTION("hash_create",sll_api_hash_create_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+
+
+
 extern __SLL_API_TYPE_sll_api_json_parse sll_api_json_parse(__SLL_API_ARGS_sll_api_json_parse);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_parse_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){

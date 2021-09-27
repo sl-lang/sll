@@ -14,6 +14,9 @@
 #define __SLL_API_TYPE_sll_api_file_write __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_file_write const sll_runtime_object_t* a,const sll_runtime_object_t*const* b,sll_arg_count_t bc
 
+#define __SLL_API_TYPE_sll_api_hash_create __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_hash_create const sll_runtime_object_t* a
+
 #define __SLL_API_TYPE_sll_api_json_parse __SLL_CHECK_OUTPUT sll_runtime_object_t*
 #define __SLL_API_ARGS_sll_api_json_parse const sll_string_t* a
 
