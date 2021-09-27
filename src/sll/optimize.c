@@ -1400,7 +1400,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 							_optimize(r,p,o_dt,fl);
 						}
 						else{
-							// SLL_UNIMPLEMENTED();
+							SLL_UNIMPLEMENTED();
 						}
 					}
 					SLL_RELEASE(v);

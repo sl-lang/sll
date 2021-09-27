@@ -278,15 +278,38 @@ __SLL_FUNC sll_bool_t sll_string_equal(const sll_string_t* a,const sll_string_t*
 
 
 __SLL_FUNC sll_bool_t sll_string_equal_array(const sll_string_t* s,const sll_array_t* a){
-	SLL_UNIMPLEMENTED();
-	return 0;
+	if (s->l!=a->l){
+		return 0;
+	}
+	for (sll_string_length_t i=0;i<s->l;i++){
+		sll_runtime_object_t* e=a->v[i];
+		if ((e->t==SLL_RUNTIME_OBJECT_TYPE_CHAR&&e->dt.c==s->v[i])||(e->t==SLL_RUNTIME_OBJECT_TYPE_INT&&e->dt.i==s->v[i])||(e->t==SLL_RUNTIME_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==s->v[i])){
+			continue;
+		}
+		return 0;
+	}
+	return 1;
 }
 
 
 
 __SLL_FUNC sll_bool_t sll_string_equal_map(const sll_string_t* s,const sll_map_t* m){
-	SLL_UNIMPLEMENTED();
-	return 0;
+	if (s->l!=m->l){
+		return 0;
+	}
+	for (sll_map_length_t i=0;i<(m->l<<1);i+=2){
+		sll_runtime_object_t* e=m->v[i];
+		if (e->t!=SLL_RUNTIME_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=s->l){
+			return 0;
+		}
+		sll_char_t c=s->v[e->dt.i];
+		e=m->v[i+1];
+		if ((e->t==SLL_RUNTIME_OBJECT_TYPE_CHAR&&e->dt.c==c)||(e->t==SLL_RUNTIME_OBJECT_TYPE_INT&&e->dt.i==c)||(e->t==SLL_RUNTIME_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==c)){
+			continue;
+		}
+		return 0;
+	}
+	return 1;
 }
 
 

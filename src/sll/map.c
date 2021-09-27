@@ -106,8 +106,23 @@ __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o){
 
 
 __SLL_FUNC sll_bool_t sll_map_equal(const sll_map_t* a,const sll_map_t* b){
-	SLL_UNIMPLEMENTED();
-	return 0;
+	if (a->l!=b->l){
+		return 0;
+	}
+	for (sll_map_length_t i=0;i<(a->l<<1);i+=2){
+		sll_runtime_object_t* e=a->v[i];
+		for (sll_map_length_t j=0;j<(b->l<<1);j+=2){
+			if (sll_operator_equal(e,b->v[j])){
+				if (!sll_operator_equal(a->v[i+1],b->v[j+1])){
+					return 0;
+				}
+				goto _next_key;
+			}
+		}
+		return 0;
+_next_key:;
+	}
+	return 1;
 }
 
 

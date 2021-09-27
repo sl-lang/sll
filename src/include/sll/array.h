@@ -14,6 +14,10 @@
 
 
 
+__SLL_FUNC void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+
+
+
 __SLL_FUNC void sll_array_clone(const sll_array_t* a,sll_array_t* o);
 
 
@@ -62,11 +66,11 @@ __SLL_FUNC void sll_array_join(const sll_array_t* a,const sll_array_t* b,sll_arr
 
 
 
-__SLL_FUNC void sll_array_op_array(const sll_array_t* a,const sll_array_t* b,sll_binary_operator_t f,sll_array_t* o);
-
-
-
 __SLL_FUNC void sll_array_op_string(const sll_array_t* a,const sll_string_t* s,sll_binary_operator_t f,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
 
 
 
@@ -107,6 +111,10 @@ __SLL_FUNC void sll_array_to_map(const sll_array_t* a,sll_map_t* o);
 
 
 __SLL_FUNC void sll_array_unshift(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
 
 
 
