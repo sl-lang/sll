@@ -4,7 +4,7 @@
 
 ### Added
 
-- Implemented `sll_array_combinations`
+- Implemented `sll_array_and_array`, `sll_array_combinations`, `sll_array_equal`, `sll_array_equal_map`, `sll_map_equal`, `sll_array_or`, `sll_string_equal_array`, `sll_string_equal_map`
 
 ### Changed
 

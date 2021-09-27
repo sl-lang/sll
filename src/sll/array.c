@@ -295,7 +295,35 @@ __SLL_FUNC void sll_array_op_string(const sll_array_t* a,const sll_string_t* s,s
 
 
 __SLL_FUNC void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_array_t* o){
-	SLL_UNIMPLEMENTED();
+	if (!a->l&&!b->l){
+		SLL_ZERO_ARRAY(o);
+		return;
+	}
+	o->l=a->l+b->l;
+	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	memcpy(o->v,a->v,a->l*sizeof(sll_runtime_object_t*));
+	memcpy(o->v+a->l,b->v,b->l*sizeof(sll_runtime_object_t*));
+	sll_array_length_t i=0;
+	uint64_t* m=calloc(sizeof(uint64_t),(o->l+63)>>6);
+	for (sll_array_length_t j=0;j<o->l;j++){
+		sll_runtime_object_t* e=o->v[j];
+		if ((*(m+(j>>6)))&(1ull<<(j&63))){
+			continue;
+		}
+		o->v[i]=o->v[j];
+		SLL_ACQUIRE(o->v[i]);
+		i++;
+		for (sll_array_length_t k=j+1;k<o->l;k++){
+			if (sll_operator_equal(e,o->v[k])){
+				(*(m+(k>>6)))|=1ull<<(k&63);
+			}
+		}
+	}
+	free(m);
+	if (o->l!=i){
+		o->l=i;
+		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+	}
 }
 
 
