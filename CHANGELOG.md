@@ -5,7 +5,7 @@
 ### Added
 
 - Hash module ([#23])
-- Implemented `sll_array_and_array`, `sll_array_combinations`, `sll_array_equal`, `sll_array_equal_map`, `sll_map_equal`, `sll_array_or`, `sll_string_equal_array`, `sll_string_equal_map`
+- Implemented `sll_array_and_array`, `sll_array_combinations`, `sll_array_equal`, `sll_array_equal_map`, `sll_array_or_array`, `sll_array_xor_array`, `sll_array_range`, `sll_array_string_combinations`, `sll_map_add_array`, `sll_map_add_string`, `sll_map_and`, `sll_map_and_array`, `sll_map_and_string`, `sll_map_equal`, `sll_string_duplicate`, `sll_string_equal_array` and `sll_string_equal_map`
 
 ### Changed
 
@@ -39,8 +39,8 @@
 
 ### Removed
 
-- `SLL_SAME_ARRAY`, `SLL_SAME_MAP` and `SLL_SAME_STRING` macros
 - Runtime object stack API: `sll_get_runtime_object_stack_data`, `sll_runtime_object_stack_data_t`, `sll_free_runtime_object_stack_data` etc.
+- `SLL_SAME_ARRAY`, `SLL_SAME_MAP` and `SLL_SAME_STRING` macros
 
 ## [0.6.19] - 2021-9-21
 

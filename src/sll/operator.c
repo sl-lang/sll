@@ -493,11 +493,41 @@ __SLL_OPERATOR_BINARY(sub){
 			return SLL_FROM_CHAR(a->dt.c-b->dt.c);
 		case COMBINED_TYPE_CH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c-b->dt.h.h);
+		case COMBINED_TYPE_SI:
+		case COMBINED_TYPE_SF:
+		case COMBINED_TYPE_SC:
+		case COMBINED_TYPE_SH:
+			{
+				if (!a->dt.s.l){
+					return SLL_ACQUIRE_STATIC(str_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(a->dt.s.l,&(o->dt.a));
+				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
+					o->dt.a.v[i]=sll_operator_sub(sll_static_char[a->dt.s.v[i]],b);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_SS:
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				sll_string_remove(&(a->dt.s),&(b->dt.s),&(o->dt.s));
+				return o;
+			}
+		case COMBINED_TYPE_SA:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_string_subtract_array(&(a->dt.s),&(b->dt.a),&(o->dt.a));
+				return o;
+			}
+		case COMBINED_TYPE_SM:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_string_subtract_map(&(a->dt.s),&(b->dt.m),&(o->dt.m));
 				return o;
 			}
 		case COMBINED_TYPE_HI:
@@ -542,6 +572,27 @@ __SLL_OPERATOR_BINARY(mult){
 			}
 		case COMBINED_TYPE_IH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i*b->dt.h.h);
+		case COMBINED_TYPE_IM:
+		case COMBINED_TYPE_FM:
+		case COMBINED_TYPE_CM:
+		case COMBINED_TYPE_SM:
+		case COMBINED_TYPE_AM:
+		case COMBINED_TYPE_HM:
+			{
+				sll_map_t m=b->dt.m;
+				if (!m.l){
+					return SLL_ACQUIRE_STATIC(map_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_create(m.l,&(o->dt.m));
+				for (sll_map_length_t i=0;i<(m.l<<1);i+=2){
+					SLL_ACQUIRE(m.v[i]);
+					o->dt.m.v[i]=m.v[i];
+					o->dt.m.v[i+1]=sll_operator_mult(a,m.v[i+1]);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_FLOAT(a->dt.f*b->dt.f);
 		case COMBINED_TYPE_FC:

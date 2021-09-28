@@ -138,6 +138,14 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 
 
 
+__SLL_FUNC void sll_string_subtract_array(const sll_string_t* s,const sll_array_t* a,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_string_subtract_map(const sll_string_t* s,const sll_map_t* m,sll_map_t* o);
+
+
+
 __SLL_FUNC void sll_string_title_case(const sll_string_t* s,sll_string_t* o);
 
 

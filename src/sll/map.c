@@ -43,31 +43,166 @@ __SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runti
 
 
 __SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
-	SLL_UNIMPLEMENTED();
+	o->l=m->l+a->l;
+	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	sll_map_length_t i=m->l<<1;
+	uint64_t* sm=calloc(sizeof(uint64_t),(a->l+63)>>6);
+	for (sll_map_length_t j=0;j<i;j+=2){
+		sll_runtime_object_t* e=m->v[j];
+		SLL_ACQUIRE(e);
+		o->v[j]=e;
+		sll_integer_t n=e->dt.i;
+		if (e->t==SLL_RUNTIME_OBJECT_TYPE_INT&&n>=0&&n<a->l){
+			o->v[j+1]=a->v[n];
+			SLL_ACQUIRE(o->v[j+1]);
+			(*(sm+(n>>6)))|=1ull<<(n&63);
+			continue;
+		}
+		o->v[j+1]=m->v[j+1];
+		SLL_ACQUIRE(o->v[j+1]);
+	}
+	for (sll_array_length_t j=0;j<((a->l+63)>>6);j++){
+		uint64_t v=~(*(sm+j));
+		while (v){
+			sll_array_length_t k=(j<<6)|FIND_FIRST_SET_BIT(v);
+			if (k>=a->l){
+				break;
+			}
+			o->v[i]=SLL_FROM_INT(k);
+			o->v[i+1]=a->v[k];
+			SLL_ACQUIRE(o->v[i+1]);
+			i+=2;
+			v&=v-1;
+		}
+	}
+	free(sm);
+	if (i!=o->l){
+		o->l=i>>1;
+		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+	}
 }
 
 
 
 __SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
-	SLL_UNIMPLEMENTED();
+	o->l=m->l+s->l;
+	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	sll_map_length_t i=m->l<<1;
+	uint64_t* sm=calloc(sizeof(uint64_t),(s->l+63)>>6);
+	for (sll_map_length_t j=0;j<i;j+=2){
+		sll_runtime_object_t* e=m->v[j];
+		SLL_ACQUIRE(e);
+		o->v[j]=e;
+		sll_integer_t n=e->dt.i;
+		if (e->t==SLL_RUNTIME_OBJECT_TYPE_INT&&n>=0&&n<s->l){
+			o->v[j+1]=SLL_FROM_CHAR(s->v[n]);
+			(*(sm+(n>>6)))|=1ull<<(n&63);
+			continue;
+		}
+		o->v[j+1]=m->v[j+1];
+		SLL_ACQUIRE(o->v[j+1]);
+	}
+	for (sll_string_length_t j=0;j<((s->l+63)>>6);j++){
+		uint64_t v=~(*(sm+j));
+		while (v){
+			sll_string_length_t k=(j<<6)|FIND_FIRST_SET_BIT(v);
+			if (k>=s->l){
+				break;
+			}
+			o->v[i]=SLL_FROM_INT(k);
+			o->v[i+1]=SLL_FROM_CHAR(s->v[k]);
+			i+=2;
+			v&=v-1;
+		}
+	}
+	free(sm);
+	if ((i>>1)!=o->l){
+		o->l=i>>1;
+		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+	}
 }
 
 
 
 __SLL_FUNC void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
-	SLL_UNIMPLEMENTED();
+	if (b->l>a->l){
+		const sll_map_t* c=a;
+		a=b;
+		b=c;
+	}
+	if (!b->l){
+		SLL_ZERO_ARRAY(o);
+		return;
+	}
+	o->l=b->l;
+	o->v=malloc((b->l<<1)*sizeof(sll_runtime_object_t*));
+	sll_map_length_t i=0;
+	for (sll_map_length_t j=0;j<(a->l<<1);j+=2){
+		sll_runtime_object_t* e=a->v[j];
+		for (sll_map_length_t k=0;k<(b->l<<1);k+=2){
+			if (sll_operator_equal(e,b->v[k])){
+				o->v[i]=e;
+				SLL_ACQUIRE(e);
+				o->v[i+1]=sll_operator_add(a->v[j+1],b->v[k+1]);
+				i+=2;
+				break;
+			}
+		}
+	}
+	if ((i>>1)!=o->l){
+		o->l=i>>1;
+		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+	}
 }
 
 
 
 __SLL_FUNC void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
-	SLL_UNIMPLEMENTED();
+	o->l=(m->l<a->l?m->l:a->l);
+	if (!o->l){
+		o->v=NULL;
+		return;
+	}
+	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	sll_map_length_t i=0;
+	for (sll_map_length_t j=0;j<(m->l<<1);j+=2){
+		sll_runtime_object_t* e=m->v[j];
+		if (e->t==SLL_RUNTIME_OBJECT_TYPE_INT&&e->dt.i>=0&&e->dt.i<a->l){
+			o->v[i]=e;
+			SLL_ACQUIRE(e);
+			o->v[i+1]=sll_operator_add(m->v[i+1],a->v[e->dt.i]);
+			i+=2;
+		}
+	}
+	if ((i>>1)!=o->l){
+		o->l=i>>1;
+		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+	}
 }
 
 
 
 __SLL_FUNC void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
-	SLL_UNIMPLEMENTED();
+	o->l=(m->l<s->l?m->l:s->l);
+	if (!o->l){
+		o->v=NULL;
+		return;
+	}
+	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	sll_map_length_t i=0;
+	for (sll_map_length_t j=0;j<(m->l<<1);j+=2){
+		sll_runtime_object_t* e=m->v[j];
+		if (e->t==SLL_RUNTIME_OBJECT_TYPE_INT&&e->dt.i>=0&&e->dt.i<s->l){
+			o->v[i]=e;
+			SLL_ACQUIRE(e);
+			o->v[i+1]=sll_operator_add(m->v[i+1],sll_static_char[s->v[e->dt.i]]);
+			i+=2;
+		}
+	}
+	if ((i>>1)!=o->l){
+		o->l=i>>1;
+		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+	}
 }
 
 
