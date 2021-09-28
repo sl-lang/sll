@@ -237,7 +237,6 @@ __SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_s
 		*b=(*a)&((1ull<<(e<<3))-1);
 		c^=*b;
 		o->c=(sll_string_length_t)(c^(c>>32));
-		o->c=(sll_string_length_t)(c^(c>>32));
 		return;
 	}
 	SLL_ASSERT(n<SLL_MAX_STRING_LENGTH);
