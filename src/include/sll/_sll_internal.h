@@ -14,6 +14,7 @@
 
 #ifdef _MSC_VER
 #pragma intrinsic(_BitScanForward64)
+#pragma intrinsic(__popcnt64)
 #pragma section("ifunc$a",read)
 #pragma section("ifunc$b",read)
 #pragma section("ifunc$z",read)
@@ -28,6 +29,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 	_BitScanForward64(&o,m);
 	return o;
 }
+#define POPULATION_COUNT(m) __popcnt64((m))
 #define IGNORE_RESULT(x) ((void)(x))
 #define INTERNAL_FUNCTION(nm,f,fl) const static internal_function_t _UNIQUE_NAME(__ifunc)={(nm),(f),(fl)};const static __declspec(allocate("ifunc$b")) internal_function_t* _UNIQUE_NAME(__ifunc_ptr)=&_UNIQUE_NAME(__ifunc)
 #define INTERNAL_FUNCTION_SETUP const static __declspec(allocate("ifunc$a")) internal_function_t* __ifunc_start=0;const static __declspec(allocate("ifunc$z")) internal_function_t* __ifunc_end=0
@@ -38,6 +40,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define SLL_UNREACHABLE() __builtin_unreachable()
 #endif
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
+#define POPULATION_COUNT(m) __builtin_popcountll((m))
 #define IGNORE_RESULT(x) \
 	do{ \
 		unsigned long long int __tmp __attribute__((unused))=(unsigned long long int)(x); \

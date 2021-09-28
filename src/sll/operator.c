@@ -711,8 +711,57 @@ __SLL_OPERATOR_BINARY(div){
 			return SLL_FROM_FLOAT(a->dt.i/b->dt.f);
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.i))/b->dt.c);
+		case COMBINED_TYPE_IS:
+		case COMBINED_TYPE_FS:
+		case COMBINED_TYPE_HS:
+			{
+				if (!b->dt.s.l){
+					return SLL_ACQUIRE_STATIC(str_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(b->dt.s.l,&(o->dt.a));
+				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
+					o->dt.a.v[i]=sll_operator_div(a,sll_static_char[b->dt.s.v[i]]);
+				}
+				return o;
+			}
+		case COMBINED_TYPE_IA:
+		case COMBINED_TYPE_FA:
+		case COMBINED_TYPE_CA:
+		case COMBINED_TYPE_HA:
+			{
+				if (!b->dt.a.l){
+					return SLL_ACQUIRE_STATIC(array_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(b->dt.a.l,&(o->dt.a));
+				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
+					o->dt.a.v[i]=sll_operator_div(a,b->dt.a.v[i]);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_IH:
 			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.i))/b->dt.h.h);
+		case COMBINED_TYPE_IM:
+		case COMBINED_TYPE_FM:
+		case COMBINED_TYPE_CM:
+		case COMBINED_TYPE_HM:
+			{
+				if (!b->dt.m.l){
+					return SLL_ACQUIRE_STATIC(map_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_create(b->dt.m.l,&(o->dt.m));
+				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
+					o->dt.m.v[i]=b->dt.m.v[i];
+					SLL_ACQUIRE(o->dt.m.v[i]);
+					o->dt.m.v[i+1]=sll_operator_div(a,b->dt.m.v[i+1]);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_FI:
 			return SLL_FROM_FLOAT(a->dt.f/b->dt.i);
 		case COMBINED_TYPE_FF:
@@ -733,6 +782,21 @@ __SLL_OPERATOR_BINARY(div){
 			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.c))/b->dt.h.h);
 		case COMBINED_TYPE_SC:
 			return SLL_FROM_INT(sll_string_count_char(&(a->dt.s),b->dt.c));
+		case COMBINED_TYPE_SI:
+		case COMBINED_TYPE_SF:
+		case COMBINED_TYPE_SH:
+			{
+				if (!a->dt.s.l){
+					return SLL_ACQUIRE_STATIC(str_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(a->dt.s.l,&(o->dt.a));
+				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
+					o->dt.a.v[i]=sll_operator_div(sll_static_char[a->dt.s.v[i]],b);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_SS:
 			return SLL_FROM_INT(sll_string_count(&(a->dt.s),&(b->dt.s)));
 		case COMBINED_TYPE_HI:
@@ -743,6 +807,24 @@ __SLL_OPERATOR_BINARY(div){
 			return SLL_FROM_FLOAT(((sll_float_t)(b->dt.h.h))/a->dt.c);
 		case COMBINED_TYPE_HH:
 			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.h.h))/b->dt.h.h);
+		case COMBINED_TYPE_MI:
+		case COMBINED_TYPE_MF:
+		case COMBINED_TYPE_MC:
+		case COMBINED_TYPE_MH:
+			{
+				if (!a->dt.m.l){
+					return SLL_ACQUIRE_STATIC(map_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_create(a->dt.m.l,&(o->dt.m));
+				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
+					o->dt.m.v[i]=a->dt.m.v[i];
+					SLL_ACQUIRE(o->dt.m.v[i]);
+					o->dt.m.v[i+1]=sll_operator_div(a->dt.m.v[i+1],b);
+				}
+				return o;
+			}
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -762,8 +844,57 @@ __SLL_OPERATOR_BINARY(floor_div){
 			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.i/b->dt.f));
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i/b->dt.c);
+		case COMBINED_TYPE_IS:
+		case COMBINED_TYPE_FS:
+		case COMBINED_TYPE_HS:
+			{
+				if (!b->dt.s.l){
+					return SLL_ACQUIRE_STATIC(str_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(b->dt.s.l,&(o->dt.a));
+				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
+					o->dt.a.v[i]=sll_operator_floor_div(a,sll_static_char[b->dt.s.v[i]]);
+				}
+				return o;
+			}
+		case COMBINED_TYPE_IA:
+		case COMBINED_TYPE_FA:
+		case COMBINED_TYPE_CA:
+		case COMBINED_TYPE_HA:
+			{
+				if (!b->dt.a.l){
+					return SLL_ACQUIRE_STATIC(array_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(b->dt.a.l,&(o->dt.a));
+				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
+					o->dt.a.v[i]=sll_operator_floor_div(a,b->dt.a.v[i]);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_IH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i/b->dt.h.h);
+		case COMBINED_TYPE_IM:
+		case COMBINED_TYPE_FM:
+		case COMBINED_TYPE_CM:
+		case COMBINED_TYPE_HM:
+			{
+				if (!b->dt.m.l){
+					return SLL_ACQUIRE_STATIC(map_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_create(b->dt.m.l,&(o->dt.m));
+				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
+					o->dt.m.v[i]=b->dt.m.v[i];
+					SLL_ACQUIRE(o->dt.m.v[i]);
+					o->dt.m.v[i+1]=sll_operator_floor_div(a,b->dt.m.v[i+1]);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_FI:
 			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f/b->dt.i));
 		case COMBINED_TYPE_FF:
@@ -782,6 +913,21 @@ __SLL_OPERATOR_BINARY(floor_div){
 			return SLL_FROM_INT(sll_string_count_char(&(b->dt.s),a->dt.c));
 		case COMBINED_TYPE_CH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c/b->dt.h.h);
+		case COMBINED_TYPE_SI:
+		case COMBINED_TYPE_SF:
+		case COMBINED_TYPE_SH:
+			{
+				if (!a->dt.s.l){
+					return SLL_ACQUIRE_STATIC(str_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(a->dt.s.l,&(o->dt.a));
+				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
+					o->dt.a.v[i]=sll_operator_floor_div(sll_static_char[a->dt.s.v[i]],b);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_SC:
 			return SLL_FROM_INT(sll_string_count_char(&(a->dt.s),b->dt.c));
 		case COMBINED_TYPE_SS:
@@ -794,6 +940,24 @@ __SLL_OPERATOR_BINARY(floor_div){
 			return SLL_FROM_HANDLE(b->dt.h.t,b->dt.h.h/a->dt.c);
 		case COMBINED_TYPE_HH:
 			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h/b->dt.h.h):SLL_FROM_INT(a->dt.h.h/b->dt.h.h));
+		case COMBINED_TYPE_MI:
+		case COMBINED_TYPE_MF:
+		case COMBINED_TYPE_MC:
+		case COMBINED_TYPE_MH:
+			{
+				if (!a->dt.m.l){
+					return SLL_ACQUIRE_STATIC(map_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_create(a->dt.m.l,&(o->dt.m));
+				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
+					o->dt.m.v[i]=a->dt.m.v[i];
+					SLL_ACQUIRE(o->dt.m.v[i]);
+					o->dt.m.v[i+1]=sll_operator_floor_div(a->dt.m.v[i+1],b);
+				}
+				return o;
+			}
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -809,20 +973,121 @@ __SLL_OPERATOR_BINARY(mod){
 			return SLL_FROM_INT(a->dt.i%b->dt.i);
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i%b->dt.c);
+		case COMBINED_TYPE_IS:
+		case COMBINED_TYPE_CS:
+		case COMBINED_TYPE_HS:
+			{
+				if (!b->dt.s.l){
+					return SLL_ACQUIRE_STATIC(str_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(b->dt.s.l,&(o->dt.a));
+				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
+					o->dt.a.v[i]=sll_operator_mod(a,sll_static_char[b->dt.s.v[i]]);
+				}
+				return o;
+			}
+		case COMBINED_TYPE_IA:
+		case COMBINED_TYPE_CA:
+		case COMBINED_TYPE_HA:
+			{
+				if (!b->dt.a.l){
+					return SLL_ACQUIRE_STATIC(array_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(b->dt.a.l,&(o->dt.a));
+				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
+					o->dt.a.v[i]=sll_operator_mod(a,b->dt.a.v[i]);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_IH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i%b->dt.h.h);
+		case COMBINED_TYPE_IM:
+		case COMBINED_TYPE_CM:
+		case COMBINED_TYPE_HM:
+			{
+				if (!b->dt.m.l){
+					return SLL_ACQUIRE_STATIC(map_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_create(b->dt.m.l,&(o->dt.m));
+				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
+					o->dt.m.v[i]=b->dt.m.v[i];
+					SLL_ACQUIRE(o->dt.m.v[i]);
+					o->dt.m.v[i+1]=sll_operator_mod(a,b->dt.m.v[i+1]);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c%b->dt.i);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c%b->dt.c);
 		case COMBINED_TYPE_CH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c%b->dt.h.h);
+		case COMBINED_TYPE_SI:
+		case COMBINED_TYPE_SC:
+		case COMBINED_TYPE_SH:
+			{
+				if (!a->dt.s.l){
+					return SLL_ACQUIRE_STATIC(str_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(a->dt.s.l,&(o->dt.a));
+				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
+					o->dt.a.v[i]=sll_operator_mod(sll_static_char[a->dt.s.v[i]],b);
+				}
+				return o;
+			}
+		case COMBINED_TYPE_SS:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+				sll_string_remove(&(a->dt.s),&(b->dt.s),&(o->dt.s));
+				return o;
+			}
+		case COMBINED_TYPE_AI:
+		case COMBINED_TYPE_AC:
+		case COMBINED_TYPE_AH:
+			{
+				if (!a->dt.a.l){
+					return SLL_ACQUIRE_STATIC(array_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_array_create(a->dt.a.l,&(o->dt.a));
+				for (sll_array_length_t i=0;i<a->dt.a.l;i++){
+					o->dt.a.v[i]=sll_operator_mod(a->dt.a.v[i],b);
+				}
+				return o;
+			}
 		case COMBINED_TYPE_HI:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.i);
 		case COMBINED_TYPE_HC:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.c);
 		case COMBINED_TYPE_HH:
 			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.h.h):SLL_FROM_INT(a->dt.h.h%b->dt.h.h));
+		case COMBINED_TYPE_MI:
+		case COMBINED_TYPE_MC:
+		case COMBINED_TYPE_MH:
+			{
+				if (!a->dt.m.l){
+					return SLL_ACQUIRE_STATIC(map_zero);
+				}
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_create(a->dt.m.l,&(o->dt.m));
+				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
+					o->dt.m.v[i]=a->dt.m.v[i];
+					SLL_ACQUIRE(o->dt.m.v[i]);
+					o->dt.m.v[i+1]=sll_operator_mod(a->dt.m.v[i+1],b);
+				}
+				return o;
+			}
 		default:
 			SLL_UNREACHABLE();
 	}

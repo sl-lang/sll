@@ -63,9 +63,7 @@ __SLL_FUNC void sll_string_and(const sll_string_t* s,sll_char_t v,sll_string_t* 
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	const uint64_t* a=(const uint64_t*)(s->v);
 	uint64_t* b=(uint64_t*)(o->v);
-	uint16_t v16=(((uint16_t)v)<<8)|v;
-	uint32_t v32=(((uint32_t)v16)<<16)|v16;
-	uint64_t v64=(((uint64_t)v32)<<32)|v32;
+	uint64_t v64=0x101010101010101*v;
 	uint64_t c=0;
 	sll_string_length_t e=((o->l+7)>>3)-1;
 	for (sll_string_length_t i=0;i<e;i++){
@@ -177,10 +175,14 @@ __SLL_FUNC sll_string_length_t sll_string_count(const sll_string_t* a,const sll_
 
 __SLL_FUNC sll_string_length_t sll_string_count_char(const sll_string_t* s,sll_char_t c){
 	sll_string_length_t o=0;
-	for (sll_string_length_t i=0;i<s->l;i++){
-		if (s->v[i]==c){
-			o++;
-		}
+	const uint64_t* p=(const uint64_t*)(s->v);
+	uint64_t m=0x101010101010101*c;
+	for (sll_string_length_t i=0;i<(s->l+7)>>3;i++){
+		uint64_t v=(*(p+i))^m;
+		o+=(sll_string_length_t)POPULATION_COUNT((v-0x101010101010101ull)&0x8080808080808080ull&(~v));
+	}
+	if (!c){
+		return o-((s->l&7)?8-(s->l&7):0);
 	}
 	return o;
 }
@@ -401,7 +403,7 @@ __SLL_FUNC sll_string_length_t sll_string_length(const sll_char_t* s){
 	const uint64_t* p=(const uint64_t*)s;
 	uint64_t v;
 	do{
-		v=((*p)-72340172838076673ull)&9259542123273814144ull&(~(*p));
+		v=((*p)-0x101010101010101ull)&0x8080808080808080ull&(~(*p));
 		p++;
 	} while (!v);
 	return (sll_string_length_t)((uint64_t)p-o-sizeof(uint64_t)+(FIND_FIRST_SET_BIT(v)>>3));
@@ -434,9 +436,7 @@ __SLL_FUNC void sll_string_or(const sll_string_t* s,sll_char_t v,sll_string_t* o
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	const uint64_t* a=(const uint64_t*)(s->v);
 	uint64_t* b=(uint64_t*)(o->v);
-	uint16_t v16=(((uint16_t)v)<<8)|v;
-	uint32_t v32=(((uint32_t)v16)<<16)|v16;
-	uint64_t v64=(((uint64_t)v32)<<32)|v32;
+	uint64_t v64=0x101010101010101*v;
 	uint64_t c=0;
 	sll_string_length_t e=((o->l+7)>>3)-1;
 	for (sll_string_length_t i=0;i<e;i++){
@@ -684,9 +684,7 @@ __SLL_FUNC void sll_string_xor(const sll_string_t* s,sll_char_t v,sll_string_t* 
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	const uint64_t* a=(const uint64_t*)(s->v);
 	uint64_t* b=(uint64_t*)(o->v);
-	uint16_t v16=(((uint16_t)v)<<8)|v;
-	uint32_t v32=(((uint32_t)v16)<<16)|v16;
-	uint64_t v64=(((uint64_t)v32)<<32)|v32;
+	uint64_t v64=0x101010101010101*v;
 	uint64_t c=0;
 	sll_string_length_t e=((o->l+7)>>3)-1;
 	for (sll_string_length_t i=0;i<e;i++){
