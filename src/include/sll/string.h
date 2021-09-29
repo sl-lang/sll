@@ -126,6 +126,10 @@ __SLL_FUNC void sll_string_lower_case(const sll_string_t* s,sll_string_t* o);
 
 
 
+__SLL_FUNC void sll_string_op(const sll_string_t* s,const sll_string_t* a,sll_binary_operator_t f,sll_string_t* o);
+
+
+
 __SLL_FUNC void sll_string_op_array(const sll_string_t* s,const sll_array_t* a,sll_binary_operator_t f,sll_bool_t inv,sll_array_t* o);
 
 
@@ -142,11 +146,27 @@ __SLL_FUNC void sll_string_or_string(const sll_string_t* a,const sll_string_t* b
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_char_t sll_string_parse_char(const sll_string_t* s);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_float_t sll_string_parse_float(const sll_string_t* s);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_string_parse_int(const sll_string_t* s);
+
+
+
 __SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
 
 
 
 __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,const sll_string_t* v,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_string_t* o);
 
 
 

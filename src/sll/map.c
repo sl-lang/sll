@@ -312,6 +312,12 @@ __SLL_FUNC void sll_map_keys(const sll_map_t* m,sll_array_t* o){
 
 
 
+__SLL_FUNC void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_operator_t f,sll_map_t* o){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_object_t* k,sll_map_t* o){
 	for (sll_map_length_t i=0;i<m->l;i++){
 		SLL_ACQUIRE(m->v[(i<<1)+1]);

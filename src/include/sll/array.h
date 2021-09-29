@@ -70,11 +70,23 @@ __SLL_FUNC void sll_array_op(const sll_array_t* a,const sll_array_t* b,sll_binar
 
 
 
-__SLL_FUNC void sll_array_op_map(const sll_array_t* a,const sll_map_t* m,sll_binary_operator_t f,sll_map_t* o);
+__SLL_FUNC void sll_array_op_map(const sll_array_t* a,const sll_map_t* m,sll_binary_operator_t f,sll_bool_t inv,sll_map_t* o);
 
 
 
 __SLL_FUNC void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_char_t sll_array_parse_char(const sll_array_t* a);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_float_t sll_array_parse_float(const sll_array_t* a);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_array_parse_int(const sll_array_t* a);
 
 
 
@@ -99,6 +111,10 @@ __SLL_FUNC void sll_array_remove_multiple(const sll_array_t* a,sll_runtime_objec
 
 
 __SLL_FUNC void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_array_t* o);
 
 
 

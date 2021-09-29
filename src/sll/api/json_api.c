@@ -36,6 +36,19 @@ static sll_handle_descriptor_t _json_type;
 
 
 
+static void _json_cleanup(sll_handle_t h){
+	if (h==SLL_HANDLE_FREE){
+		SLL_RELEASE(_json_null);
+		SLL_RELEASE(_json_true);
+		SLL_RELEASE(_json_false);
+		_json_null=NULL;
+		_json_true=NULL;
+		_json_false=NULL;
+	}
+}
+
+
+
 static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,sll_string_t* o){
 	if (!o){
 		return (h<2?4:5);
@@ -50,19 +63,6 @@ static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,
 	}
 	memcpy(o->v+i,"false",5);
 	return i+5;
-}
-
-
-
-static void _json_cleanup(sll_handle_t h){
-	if (h==SLL_HANDLE_FREE){
-		SLL_RELEASE(_json_null);
-		SLL_RELEASE(_json_true);
-		SLL_RELEASE(_json_false);
-		_json_null=NULL;
-		_json_true=NULL;
-		_json_false=NULL;
-	}
 }
 
 
