@@ -222,7 +222,7 @@ __SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o){
 
 
 
-__SLL_FUNC sll_compare_result_t sll_map_compare(const sll_map_t* a,const sll_map_t* b){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_map_compare(const sll_map_t* a,const sll_map_t* b){
 	SLL_UNIMPLEMENTED();
 	return SLL_COMPARE_RESULT_EQUAL;
 }
@@ -240,7 +240,7 @@ __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o){
 
 
 
-__SLL_FUNC sll_bool_t sll_map_equal(const sll_map_t* a,const sll_map_t* b){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_map_equal(const sll_map_t* a,const sll_map_t* b){
 	if (a->l!=b->l){
 		return 0;
 	}
@@ -312,7 +312,7 @@ __SLL_FUNC void sll_map_keys(const sll_map_t* m,sll_array_t* o){
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_object_t* k,sll_map_t* o){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_object_t* k,sll_map_t* o){
 	for (sll_map_length_t i=0;i<m->l;i++){
 		SLL_ACQUIRE(m->v[(i<<1)+1]);
 		if (sll_operator_equal(m->v[i<<1],k)){
@@ -335,6 +335,24 @@ __SLL_FUNC sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_o
 	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
 	memcpy(o->v,m->v,(o->l<<1)*sizeof(sll_runtime_object_t*));
 	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_FUNC void sll_map_remove_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+__SLL_FUNC void sll_map_remove_map(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+__SLL_FUNC void sll_map_remove_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
+	SLL_UNIMPLEMENTED();
 }
 
 

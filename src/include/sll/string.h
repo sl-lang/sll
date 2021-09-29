@@ -54,23 +54,23 @@ __SLL_FUNC void sll_string_combinations(const sll_string_t* a,const sll_string_t
 
 
 
-__SLL_FUNC sll_compare_result_t sll_string_compare(const sll_string_t* a,const sll_string_t* b);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare(const sll_string_t* a,const sll_string_t* b);
 
 
 
-__SLL_FUNC sll_compare_result_t sll_string_compare_array(const sll_string_t* s,const sll_array_t* a,sll_bool_t inv);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_array(const sll_string_t* s,const sll_array_t* a,sll_bool_t inv);
 
 
 
-__SLL_FUNC sll_compare_result_t sll_string_compare_map(const sll_string_t* s,const sll_map_t* m,sll_bool_t inv);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_map(const sll_string_t* s,const sll_map_t* m,sll_bool_t inv);
 
 
 
-__SLL_FUNC sll_string_length_t sll_string_count(const sll_string_t* a,const sll_string_t* b);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count(const sll_string_t* a,const sll_string_t* b);
 
 
 
-__SLL_FUNC sll_string_length_t sll_string_count_char(const sll_string_t* s,sll_char_t c);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_char(const sll_string_t* s,sll_char_t c);
 
 
 
@@ -82,15 +82,15 @@ __SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t v,sll_s
 
 
 
-__SLL_FUNC sll_bool_t sll_string_equal(const sll_string_t* a,const sll_string_t* b);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal(const sll_string_t* a,const sll_string_t* b);
 
 
 
-__SLL_FUNC sll_bool_t sll_string_equal_array(const sll_string_t* s,const sll_array_t* a);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_array(const sll_string_t* s,const sll_array_t* a);
 
 
 
-__SLL_FUNC sll_bool_t sll_string_equal_map(const sll_string_t* s,const sll_map_t* m);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_string_t* s,const sll_map_t* m);
 
 
 
@@ -114,15 +114,23 @@ __SLL_FUNC void sll_string_join(const sll_string_t* a,const sll_string_t* b,sll_
 
 
 
-__SLL_FUNC sll_string_length_t sll_string_length(const sll_char_t* s);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length(const sll_char_t* s);
 
 
 
-__SLL_FUNC sll_string_length_t sll_string_length_unaligned(const sll_char_t* s);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length_unaligned(const sll_char_t* s);
 
 
 
 __SLL_FUNC void sll_string_lower_case(const sll_string_t* s,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_op_array(const sll_string_t* s,const sll_array_t* a,sll_binary_operator_t f,sll_bool_t inv,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_string_op_map(const sll_string_t* s,const sll_map_t* m,sll_binary_operator_t f,sll_bool_t inv,sll_map_t* o);
 
 
 
@@ -139,6 +147,10 @@ __SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* b,sl
 
 
 __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,const sll_string_t* v,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_string_t* o);
 
 
 
