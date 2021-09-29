@@ -118,6 +118,10 @@ __SLL_FUNC sll_string_length_t sll_string_length(const sll_char_t* s);
 
 
 
+__SLL_FUNC sll_string_length_t sll_string_length_unaligned(const sll_char_t* s);
+
+
+
 __SLL_FUNC void sll_string_lower_case(const sll_string_t* s,sll_string_t* o);
 
 
