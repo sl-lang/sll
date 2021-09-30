@@ -98,6 +98,10 @@ __SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_
 
 
 
+__SLL_FUNC void sll_string_from_int(sll_integer_t v,sll_string_t* o);
+
+
+
 __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o);
 
 

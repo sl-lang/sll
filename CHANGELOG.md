@@ -6,7 +6,7 @@
 
 - Hash module ([#23])
 - Implemented **ALL** operators ([#14])
-- Implemented `sll_array_and_array`, `sll_array_combinations`, `sll_array_equal`, `sll_array_equal_map`, `sll_array_or_array`, `sll_array_xor_array`, `sll_array_range`, `sll_array_string_combinations`, `sll_map_add_array`, `sll_map_add_string`, `sll_map_and`, `sll_map_and_array`, `sll_map_and_string`, `sll_map_equal`, `sll_string_duplicate`, `sll_string_equal_array` and `sll_string_equal_map`
+- Implemented `sll_array_and_array`, `sll_array_combinations`, `sll_array_equal`, `sll_array_equal_map`, `sll_array_or_array`, `sll_array_xor_array`, `sll_array_range`, `sll_array_string_combinations`, `sll_map_add_array`, `sll_map_add_string`, `sll_map_and`, `sll_map_and_array`, `sll_map_and_string`, `sll_map_equal`, `sll_string_duplicate`, `sll_string_equal_array`, `sll_string_equal_map`, `sll_string_from_int` and `sll_string_split_char`
 
 ### Changed
 

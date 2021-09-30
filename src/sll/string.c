@@ -328,6 +328,37 @@ __SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_
 
 
 
+__SLL_FUNC void sll_string_from_int(sll_integer_t v,sll_string_t* o){
+	if (!v){
+		o->l=1;
+		o->v=malloc(SLL_STRING_ALIGN_LENGTH(1)*sizeof(sll_char_t));
+		*((uint64_t*)(o->v))='0';
+		return;
+	}
+	sll_bool_t n=0;
+	if (v<0){
+		v=-v;
+		n=1;
+	}
+	sll_char_t bf[20];
+	sll_string_length_t i=20;
+	do{
+		i--;
+		bf[i]=v%10;
+		v/=10;
+	} while (v);
+	o->l=n+(20-i);
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
+	INIT_PADDING(o->v,o->l);
+	if (n){
+		o->v[0]='-';
+	}
+	memcpy(o->v+n,bf+i,20-i);
+	sll_string_hash(o);
+}
+
+
+
 __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
 	sll_string_length_t l=sll_string_length_unaligned(s);
 	o->l=l;
