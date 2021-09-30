@@ -26,7 +26,7 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 		struct dirent* dt;
 		while ((dt=readdir(d))){
 			if (dt->d_type==DT_REG){
-				sll_string_length_t j=sll_string_length(SLL_CHAR(dt->d_name));
+				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
 				o->l++;
 				o->dt=realloc(o->dt,o->l*sizeof(sll_string_t));
 				sll_string_t* s=o->dt+o->l-1;
@@ -86,7 +86,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_page_size(void){
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[PATH_MAX+1];
-	sll_string_length_t l=sll_string_length(fp);
+	sll_string_length_t l=sll_string_length_unaligned(fp);
 	memcpy(bf,fp,l);
 	file_list_data_t dt={
 		NULL,

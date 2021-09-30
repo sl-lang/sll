@@ -14,6 +14,7 @@
 
 
 #define INIT_PADDING(v,l) (*((uint64_t*)((v)+((l)&0xfffffffffffffff8)))=0)
+#define SPLIT_CHAR_ALLOCATION_SIZE 16
 
 
 
@@ -328,7 +329,7 @@ __SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_
 
 
 __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
-	sll_string_length_t l=sll_string_length(s);
+	sll_string_length_t l=sll_string_length_unaligned(s);
 	o->l=l;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
 	const uint64_t* a=(const uint64_t*)s;
@@ -684,6 +685,104 @@ __SLL_FUNC void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_strin
 		} while (l);
 	}
 	o->c=(sll_string_length_t)(c^(c>>32));
+}
+
+
+
+__SLL_FUNC void sll_string_split(const sll_string_t* s,const sll_string_t* p,sll_array_t* o){
+	if (!s->l){
+		o->l=1;
+		o->v=malloc(sizeof(sll_runtime_object_t*));
+		o->v[0]=SLL_ACQUIRE_STATIC(str_zero);
+		return;
+	}
+	if (!p->l){
+		o->l=s->l;
+		o->v=malloc(s->l*sizeof(sll_runtime_object_t*));
+		for (sll_string_length_t i=0;i<s->l;i++){
+			o->v[i]=SLL_FROM_CHAR(s->v[i]);
+		}
+		return;
+	}
+	if (p->l==1){
+		sll_string_split_char(s,p->v[0],o);
+		return;
+	}
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+__SLL_FUNC void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll_array_t* o){
+	if (!s->l){
+		o->l=1;
+		o->v=malloc(sizeof(sll_runtime_object_t*));
+		o->v[0]=SLL_ACQUIRE_STATIC(str_zero);
+		return;
+	}
+	o->l=SPLIT_CHAR_ALLOCATION_SIZE;
+	o->v=malloc(SPLIT_CHAR_ALLOCATION_SIZE*sizeof(sll_runtime_object_t*));
+	const uint64_t* p=(const uint64_t*)(s->v);
+	uint64_t m=0x101010101010101ull*c;
+	sll_array_length_t i=0;
+	sll_string_length_t j=0;
+	for (sll_string_length_t k=0;k<(s->l+7)>>3;k++){
+		uint64_t v=(*(p+k))^m;
+		v=(v-0x101010101010101ull)&0x8080808080808080ull&(~v);
+		while (v){
+			sll_runtime_object_t* n;
+			sll_string_length_t l=(k<<3)|(FIND_FIRST_SET_BIT(v)>>3);
+			if (j!=l){
+				n=SLL_CREATE();
+				n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+				sll_string_t ns={
+					l-j,
+					0,
+					malloc(SLL_STRING_ALIGN_LENGTH(l-j)*sizeof(sll_char_t))
+				};
+				INIT_PADDING(ns.v,ns.l);
+				memcpy(ns.v,s->v+j,ns.l);
+				n->dt.s=ns;
+			}
+			else{
+				n=SLL_ACQUIRE_STATIC(str_zero);
+			}
+			if (i==o->l){
+				o->l+=SPLIT_CHAR_ALLOCATION_SIZE;
+				o->v=realloc(o->v,o->l*sizeof(sll_runtime_object_t*));
+			}
+			o->v[i]=n;
+			i++;
+			j=l+1;
+			v&=v-1;
+		}
+	}
+	sll_runtime_object_t* n;
+	if (j!=s->l){
+		n=SLL_CREATE();
+		n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+		sll_string_t ns={
+			s->l-j,
+			0,
+			malloc(SLL_STRING_ALIGN_LENGTH(s->l-j)*sizeof(sll_char_t))
+		};
+		INIT_PADDING(ns.v,ns.l);
+		memcpy(ns.v,s->v+j,ns.l);
+		n->dt.s=ns;
+	}
+	else{
+		n=SLL_ACQUIRE_STATIC(str_zero);
+	}
+	if (i==o->l){
+		o->l+=SPLIT_CHAR_ALLOCATION_SIZE;
+		o->v=realloc(o->v,o->l*sizeof(sll_runtime_object_t*));
+	}
+	o->v[i]=n;
+	i++;
+	if (i!=o->l){
+		o->l=i;
+		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+	}
 }
 
 

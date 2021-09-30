@@ -1045,7 +1045,6 @@ __SLL_OPERATOR_BINARY(mod){
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i%b->dt.c);
 		case COMBINED_TYPE_IS:
-		case COMBINED_TYPE_CS:
 		case COMBINED_TYPE_HS:
 			{
 				if (!b->dt.s.l){
@@ -1097,10 +1096,16 @@ __SLL_OPERATOR_BINARY(mod){
 			return SLL_FROM_INT(a->dt.c%b->dt.i);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c%b->dt.c);
+		case COMBINED_TYPE_CS:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_string_split_char(&(b->dt.s),a->dt.c,&(o->dt.a));
+				return o;
+			}
 		case COMBINED_TYPE_CH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c%b->dt.h.h);
 		case COMBINED_TYPE_SI:
-		case COMBINED_TYPE_SC:
 		case COMBINED_TYPE_SH:
 			{
 				if (!a->dt.s.l){
@@ -1114,11 +1119,18 @@ __SLL_OPERATOR_BINARY(mod){
 				}
 				return o;
 			}
+		case COMBINED_TYPE_SC:
+			{
+				sll_runtime_object_t* o=SLL_CREATE();
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_string_split_char(&(a->dt.s),b->dt.c,&(o->dt.a));
+				return o;
+			}
 		case COMBINED_TYPE_SS:
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
-				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-				sll_string_remove(&(a->dt.s),&(b->dt.s),&(o->dt.s));
+				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+				sll_string_split(&(a->dt.s),&(b->dt.s),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_SA:

@@ -174,6 +174,14 @@ __SLL_FUNC void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_strin
 
 
 
+__SLL_FUNC void sll_string_split(const sll_string_t* s,const sll_string_t* p,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll_array_t* o);
+
+
+
 __SLL_FUNC void sll_string_subtract_array(const sll_string_t* s,const sll_array_t* a,sll_array_t* o);
 
 
