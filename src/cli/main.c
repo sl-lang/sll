@@ -284,15 +284,13 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		}
 	}
 #ifdef STANDALONE_BUILD
-	uint32_t i=0;
 	uint8_t c=0;
-	while (*(f_nm+i)){
+	for (i=0;i<f_nm_l;i++){
 		c^=*(f_nm+i);
-		i++;
 	}
-	for (uint32_t k=0;k<COMPILED_MODULE_COUNT;k++){
-		const module_t* m=m_dt+k;
-		if (m->c==c&&m->nml==i&&!memcmp(m->nm,f_nm,i)){
+	for (uint32_t j=0;j<COMPILED_MODULE_COUNT;j++){
+		const module_t* m=m_dt+j;
+		if (m->c==c&&m->nml==f_nm_l&&!memcmp(m->nm,f_nm,f_nm_l)){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found Internal Module '");
 				fputs(f_nm,stdout);
@@ -334,18 +332,9 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 	}
 #else
 	if (l_fpl){
-		uint32_t i=l_fpl;
-		uint32_t k=0;
-		while (*(f_nm+k)){
-			*(l_fp+i)=*(f_nm+k);
-			i++;
-			k++;
-		}
-		*(l_fp+i)='.';
-		*(l_fp+i+1)='s';
-		*(l_fp+i+2)='l';
-		*(l_fp+i+3)='c';
-		*(l_fp+i+4)=0;
+		i=l_fpl+f_nm_l;
+		memcpy(l_fp+l_fpl,f_nm,f_nm_l);
+		memcpy(l_fp+i,".slc",5);
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Open File '");
 			fputs(l_fp,stdout);
@@ -354,12 +343,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		FILE* nf=fopen(l_fp,"rb");// lgtm [cpp/path-injection]
 		if (nf){
 			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(l_fp,f_fp)){
-				i+=5;
-				*(f_fp+i)=0;
-				while (i){
-					i--;
-					*(f_fp+i)=*(l_fp+i);
-				}
+				memcpy(f_fp,l_fp,i+5);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
