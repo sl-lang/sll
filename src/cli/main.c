@@ -138,8 +138,7 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 		return SLL_RETURN_ERROR;
 	}
 	if (fl&_FLAG_ASSEMBLY_GENERATED){
-		sll_free_assembly_function_table(&(a_dt.ft));
-		sll_free_string_table(&(a_dt.st));
+		sll_free_assembly_data(&a_dt);
 		COLOR_RED;
 		PRINT_STATIC_STR("Importing Assembly into Compiled Objects is Not Allowed\n");
 		COLOR_RESET;
@@ -155,130 +154,94 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 
 
 static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp){
+	sll_string_length_t f_nm_l=sll_string_length_unaligned(SLL_CHAR(f_nm));
 	char bf[MAX_PATH_LENGTH];
-	uint32_t j=0;
-	for (uint32_t i=0;i<i_fpl;i++){
-		if (!(*(i_fp+i))){
-			uint32_t k=0;
-			while (*(f_nm+k)){
-				*(bf+j)=*(f_nm+k);
-				j++;
-				k++;
+	sll_string_length_t i=0;
+	while (i<i_fpl){
+		sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(i_fp+i));
+		memcpy(bf,i_fp+i,j);
+		i+=j+1;
+		memcpy(bf+j,f_nm,f_nm_l);
+		j+=f_nm_l;
+		memcpy(bf+j,".slc",5);
+		if (fl&FLAG_VERBOSE){
+			PRINT_STATIC_STR("Trying to Open File '");
+			fputs(bf,stdout);
+			PRINT_STATIC_STR("'...\n");
+		}
+		FILE* nf=fopen(bf,"rb");// lgtm [cpp/path-injection]
+		if (nf){
+			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
+				memcpy(f_fp,bf,j+1);
 			}
-			*(bf+j)='.';
-			*(bf+j+1)='s';
-			*(bf+j+2)='l';
-			*(bf+j+3)='c';
-			*(bf+j+4)=0;
 			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("Trying to Open File '");
-				puts(bf);
-				PRINT_STATIC_STR("'...\n");
+				PRINT_STATIC_STR("Found File '");
+				fputs(f_fp,stdout);
+				PRINT_STATIC_STR("'\n");
 			}
-			FILE* nf=fopen(bf,"rb");// lgtm [cpp/path-injection]
-			if (nf){
-				if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
-					*(f_fp+j)=0;
-					while (j){
-						j--;
-						*(f_fp+j)=*(bf+j);
-					}
+			*f=nf;
+			sll_stream_create_input_from_file(nf,is);
+			sll_error_t e;
+			if (!sll_load_compiled_object(is,c_dt,&e)){
+				sll_free_compilation_data(c_dt);
+				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
+					COLOR_RED;
+					PRINT_STATIC_STR("File '");
+					fputs(f_fp,stdout);
+					PRINT_STATIC_STR("'is not a Compiled Object.\n");
+					COLOR_RESET;
 				}
-				if (fl&FLAG_VERBOSE){
-					PRINT_STATIC_STR("Found File '");
-					puts(f_fp);
-					PRINT_STATIC_STR("'\n");
+				else{
+					sll_print_error(is,&e);
 				}
-				*f=nf;
-				sll_stream_create_input_from_file(nf,is);
-				sll_error_t e;
-				if (!sll_load_compiled_object(is,c_dt,&e)){
-					sll_free_identifier_table(&(c_dt->idt));
-					sll_free_export_table(&(c_dt->et));
-					sll_free_function_table(&(c_dt->ft));
-					sll_free_string_table(&(c_dt->st));
-					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-						COLOR_RED;
-						PRINT_STATIC_STR("File '");
-						puts(f_fp);
-						PRINT_STATIC_STR("'is not a Compiled Object.\n");
-						COLOR_RESET;
-					}
-					else{
-						sll_print_error(is,&e);
-					}
-					return 0;
-				}
-				if (fl&FLAG_PRINT_OBJECT){
-					sll_output_data_stream_t os;
-					sll_stream_create_output_from_file(stdout,&os);
-					sll_print_object(c_dt,c_dt->h,&os);
-					putchar('\n');
-				}
-				if (fl&FLAG_VERBOSE){
-					PRINT_STATIC_STR("File Successfully Read.\n");
-				}
-				return 1;
+				return 0;
 			}
-			*(bf+j)=0;
+			if (fl&FLAG_PRINT_OBJECT){
+				sll_output_data_stream_t os;
+				sll_stream_create_output_from_file(stdout,&os);
+				sll_print_object(c_dt,c_dt->h,&os);
+				putchar('\n');
+			}
 			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("Trying to Open File '");
-				puts(bf);
-				PRINT_STATIC_STR("'...\n");
+				PRINT_STATIC_STR("File Successfully Read.\n");
 			}
-			nf=fopen(bf,"rb");// lgtm [cpp/path-injection]
-			if (nf){
-				if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
-					*(f_fp+j)=0;
-					while (j){
-						j--;
-						*(f_fp+j)=*(bf+j);
-					}
-				}
-				if (fl&FLAG_VERBOSE){
-					PRINT_STATIC_STR("Found File '");
-					puts(f_fp);
-					PRINT_STATIC_STR("'\n");
-				}
-				*f=nf;
-				sll_stream_create_input_from_file(nf,is);
-				sll_error_t e;
-				if (!sll_load_assembly(is,a_dt,&e)){
-					sll_free_assembly_function_table(&(a_dt->ft));
-					sll_free_string_table(&(a_dt->st));
-					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-						sll_stream_create_input_from_file(nf,is);
-						if (!sll_load_compiled_object(is,c_dt,&e)){
-							sll_free_identifier_table(&(c_dt->idt));
-							sll_free_export_table(&(c_dt->et));
-							sll_free_function_table(&(c_dt->ft));
-							sll_free_string_table(&(c_dt->st));
-							if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-								sll_stream_create_input_from_file(nf,is);
-								sll_init_compilation_data(SLL_CHAR(f_fp),is,c_dt);
-								if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
-									sll_free_compilation_data(c_dt);
-									if (e.t!=SLL_ERROR_UNKNOWN){
-										sll_print_error(is,&e);
-									}
-									return 0;
+			return 1;
+		}
+		bf[j]=0;
+		if (fl&FLAG_VERBOSE){
+			PRINT_STATIC_STR("Trying to Open File '");
+			fputs(bf,stdout);
+			PRINT_STATIC_STR("'...\n");
+		}
+		nf=fopen(bf,"rb");// lgtm [cpp/path-injection]
+		if (nf){
+			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
+				memcpy(f_fp,bf,j+1);
+			}
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("Found File '");
+				fputs(f_fp,stdout);
+				PRINT_STATIC_STR("'\n");
+			}
+			*f=nf;
+			sll_stream_create_input_from_file(nf,is);
+			sll_error_t e;
+			if (!sll_load_assembly(is,a_dt,&e)){
+				sll_free_assembly_data(a_dt);
+				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
+					sll_stream_create_input_from_file(nf,is);
+					if (!sll_load_compiled_object(is,c_dt,&e)){
+						sll_free_compilation_data(c_dt);
+						if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
+							sll_stream_create_input_from_file(nf,is);
+							sll_init_compilation_data(SLL_CHAR(f_fp),is,c_dt);
+							if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
+								sll_free_compilation_data(c_dt);
+								if (e.t!=SLL_ERROR_UNKNOWN){
+									sll_print_error(is,&e);
 								}
-								if (fl&FLAG_PRINT_OBJECT){
-									sll_output_data_stream_t os;
-									sll_stream_create_output_from_file(stdout,&os);
-									sll_print_object(c_dt,c_dt->h,&os);
-									putchar('\n');
-								}
-								if (fl&FLAG_VERBOSE){
-									PRINT_STATIC_STR("File Successfully Read.\n");
-								}
-							}
-							else{
-								sll_print_error(is,&e);
 								return 0;
 							}
-						}
-						else{
 							if (fl&FLAG_PRINT_OBJECT){
 								sll_output_data_stream_t os;
 								sll_stream_create_output_from_file(stdout,&os);
@@ -289,25 +252,36 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 								PRINT_STATIC_STR("File Successfully Read.\n");
 							}
 						}
+						else{
+							sll_print_error(is,&e);
+							return 0;
+						}
 					}
 					else{
-						sll_print_error(is,&e);
-						return 0;
+						if (fl&FLAG_PRINT_OBJECT){
+							sll_output_data_stream_t os;
+							sll_stream_create_output_from_file(stdout,&os);
+							sll_print_object(c_dt,c_dt->h,&os);
+							putchar('\n');
+						}
+						if (fl&FLAG_VERBOSE){
+							PRINT_STATIC_STR("File Successfully Read.\n");
+						}
 					}
 				}
 				else{
-					fl|=_FLAG_ASSEMBLY_GENERATED;
-					if (fl&FLAG_VERBOSE){
-						PRINT_STATIC_STR("File Successfully Read.\n");
-					}
+					sll_print_error(is,&e);
+					return 0;
 				}
-				return 1;
 			}
-			j=0;
-			continue;
+			else{
+				fl|=_FLAG_ASSEMBLY_GENERATED;
+				if (fl&FLAG_VERBOSE){
+					PRINT_STATIC_STR("File Successfully Read.\n");
+				}
+			}
+			return 1;
 		}
-		*(bf+j)=*(i_fp+i);
-		j++;
 	}
 #ifdef STANDALONE_BUILD
 	uint32_t i=0;
@@ -321,7 +295,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		if (m->c==c&&m->nml==i&&!memcmp(m->nm,f_nm,i)){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found Internal Module '");
-				puts(f_nm);
+				fputs(f_nm,stdout);
 				PRINT_STATIC_STR(".slc'\n");
 			}
 			*f=NULL;
@@ -337,7 +311,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("Module '");
-					puts(f_nm);
+					fputs(f_nm,stdout);
 					PRINT_STATIC_STR(".slc' is not a Compiled Object.\n");
 					COLOR_RESET;
 				}
@@ -374,7 +348,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		*(l_fp+i+4)=0;
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Open File '");
-			puts(l_fp);
+			fputs(l_fp,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
 		FILE* nf=fopen(l_fp,"rb");// lgtm [cpp/path-injection]
@@ -389,7 +363,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
-				puts(f_fp);
+				fputs(f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
 			*f=nf;
@@ -400,7 +374,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("File '");
-					puts(f_fp);
+					fputs(f_fp,stdout);
 					PRINT_STATIC_STR("' is not a Compiled Object.\n");
 					COLOR_RESET;
 				}
@@ -423,7 +397,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		*(l_fp+i)=0;
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Open File '");
-			puts(l_fp);
+			fputs(l_fp,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
 		nf=fopen(l_fp,"rb");// lgtm [cpp/path-injection]
@@ -438,7 +412,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
-				puts(f_fp);
+				fputs(f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
 			*f=nf;
@@ -466,7 +440,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 #endif
 	COLOR_RED;
 	PRINT_STATIC_STR("Unable to Find File '");
-	puts(f_nm);
+	fputs(f_nm,stdout);
 	PRINT_STATIC_STR("'\n");
 	COLOR_RESET;
 	return 0;
@@ -486,14 +460,14 @@ static uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 	*(o_fp+i+4)=0;
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Writing Assembly to File '");
-		puts(o_fp);
+		fputs(o_fp,stdout);
 		PRINT_STATIC_STR("'...\n");
 	}
 	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
 	if (!f){
 		COLOR_RED;
 		PRINT_STATIC_STR("Unable to Open Output File '");
-		puts(o_fp);
+		fputs(o_fp,stdout);
 		PRINT_STATIC_STR("'\n");
 		COLOR_RESET;
 		return 0;
@@ -522,14 +496,14 @@ static uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
 	*(o_fp+i+4)=0;
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Writing Compiled Object to File '");
-		puts(o_fp);
+		fputs(o_fp,stdout);
 		PRINT_STATIC_STR("'...\n");
 	}
 	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
 	if (!f){
 		COLOR_RED;
 		PRINT_STATIC_STR("Unable to Open Output File '");
-		puts(o_fp);
+		fputs(o_fp,stdout);
 		PRINT_STATIC_STR("'\n");
 		COLOR_RESET;
 		return 0;
@@ -897,7 +871,7 @@ _skip_lib_path:
 _unkown_switch:
 			COLOR_RED;
 			PRINT_STATIC_STR("Unknown Switch '");
-			puts((char*)e);
+			fputs((char*)e,stdout);
 			PRINT_STATIC_STR("'\n");
 			COLOR_RESET;
 			goto _help;
@@ -1026,8 +1000,8 @@ _read_file_argument:
 			r.dt=&r_dt;
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Downloading '");
-				puts((char*)h.v);
-				puts((char*)p.v);
+				fputs((char*)h.v,stdout);
+				fputs((char*)p.v,stdout);
 				PRINT_STATIC_STR("'...\n");
 			}
 			rc=sll_url_http_request(&m,&h,&p,&hl,&dt,&r);
@@ -1058,9 +1032,9 @@ _read_file_argument:
 				bf[i+nml]=0;
 				if (fl&FLAG_VERBOSE){
 					PRINT_STATIC_STR("Extracting '");
-					puts((char*)(bf+i));
+					fputs((char*)(bf+i),stdout);
 					PRINT_STATIC_STR("' into '");
-					puts((char*)bf);
+					fputs((char*)bf,stdout);
 					PRINT_STATIC_STR("' (");
 					sll_string_t tmp;
 					sll_string_from_int(sz,&tmp);
@@ -1073,7 +1047,7 @@ _read_file_argument:
 				if (!wf){
 					COLOR_RED;
 					PRINT_STATIC_STR("Unable to Open File '");
-					puts((char*)bf);
+					fputs((char*)bf,stdout);
 					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
 					COLOR_RESET;
 					sll_free_http_response(&r);
@@ -1084,7 +1058,7 @@ _read_file_argument:
 				if (fwrite(r_dt.v+j,sizeof(sll_char_t),sz,wf)!=sz){
 					COLOR_RED;
 					PRINT_STATIC_STR("Unable to Write Data to File '");
-					puts((char*)bf);
+					fputs((char*)bf,stdout);
 					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
 					COLOR_RESET;
 					fclose(wf);
@@ -1105,7 +1079,7 @@ _json_error:
 		sll_free_json_object(&json);
 		COLOR_RED;
 		PRINT_STATIC_STR("Malformated JSON: ");
-		puts((char*)r_dt.v);
+		fputs((char*)r_dt.v,stdout);
 		putchar('\n');
 		COLOR_RESET;
 		sll_free_http_response(&r);
@@ -1173,7 +1147,7 @@ _json_error:
 		}
 #ifndef STANDALONE_BUILD
 		PRINT_STATIC_STR("Library Path: ");
-		puts(l_fp);
+		fputs(l_fp,stdout);
 		putchar('\n');
 #endif
 	}

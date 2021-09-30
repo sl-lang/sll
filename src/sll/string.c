@@ -445,7 +445,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length_unaligned(co
 		}
 		s++;
 	}
-	return sll_string_length(s);
+	return sll_string_length(s)+(sll_string_length_t)((uint64_t)s-o);
 }
 
 
