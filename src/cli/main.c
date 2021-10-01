@@ -854,7 +854,6 @@ _read_file_argument:
 		else{
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Updating sll from "SLL_VERSION_STRING" to ");
-				sll_string_t tmp;
 				sll_string_from_int(SLL_GET_MAJOR(v->dt.i),&tmp);
 				fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
 				free(tmp.v);
@@ -917,7 +916,6 @@ _read_file_argument:
 			if (rc!=200){
 				COLOR_RED;
 				PRINT_STATIC_STR("Unexpected HTTP Status Code: ");
-				sll_string_t tmp;
 				sll_string_from_int(rc,&tmp);
 				fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
 				free(tmp.v);
@@ -945,7 +943,6 @@ _read_file_argument:
 					PRINT_STATIC_STR("' into '");
 					fputs((char*)bf,stdout);
 					PRINT_STATIC_STR("' (");
-					sll_string_t tmp;
 					sll_string_from_int(sz,&tmp);
 					fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
 					free(tmp.v);
