@@ -56,9 +56,9 @@ __SLL_FUNC void sll_array_clone(const sll_array_t* a,sll_array_t* o){
 	}
 	o->l=a->l;
 	o->v=malloc(a->l*sizeof(sll_runtime_object_t*));
-	memcpy(o->v,a->v,a->l*sizeof(sll_runtime_object_t*));
 	for (sll_array_length_t i=0;i<a->l;i++){
-		SLL_ACQUIRE(a->v[i]);
+		o->v[i]=a->v[i];
+		SLL_ACQUIRE(o->v[i]);
 	}
 }
 
@@ -129,7 +129,7 @@ __SLL_FUNC void sll_array_create(sll_array_length_t l,sll_array_t* o){
 		return;
 	}
 	o->l=l;
-	o->v=calloc(sizeof(sll_runtime_object_t*),l);
+	o->v=malloc(l*sizeof(sll_runtime_object_t*));
 }
 
 
@@ -149,8 +149,8 @@ __SLL_FUNC void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll_arr
 		}
 		o->l=e;
 		o->v=malloc(e*sizeof(sll_runtime_object_t*));
-		memcpy(o->v,a->v,e*sizeof(sll_runtime_object_t*));
 		for (sll_array_length_t i=0;i<e;i++){
+			o->v[i]=a->v[i];
 			SLL_ACQUIRE(o->v[i]);
 		}
 		return;
@@ -174,24 +174,21 @@ __SLL_FUNC void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll_arr
 		}
 	}
 	else{
-		memcpy(o->v,a->v,a->l*sizeof(sll_runtime_object_t*));
 		for (sll_array_length_t i=0;i<a->l;i++){
-			a->v[i]->rc+=m;
+			o->v[i]=a->v[i];
+			o->v[i]->rc+=m;
 		}
 	}
 	sll_array_length_t i=a->l;
-	while (i<n){
-		sll_array_length_t j=i<<1;
-		if (j>n){
-			j=(sll_array_length_t)n;
-		}
-		memcpy(o->v+i,o->v,(j-i)*sizeof(sll_runtime_object_t*));
-		i=j;
+	sll_array_length_t j=0;
+	while (i<o->l){
+		o->v[i]=o->v[j];
+		i++;
+		j++;
 	}
 	if (e){
-		memcpy(o->v+i,o->v,e*sizeof(sll_runtime_object_t*));
-		for (sll_array_length_t j=0;j<e;j++){
-			SLL_ACQUIRE(o->v[j]);
+		for (i=0;i<e;i++){
+			SLL_ACQUIRE(o->v[i]);
 		}
 	}
 }
@@ -235,15 +232,8 @@ __SLL_FUNC void sll_array_from_length(sll_array_length_t l,sll_array_t* o){
 	o->l=l;
 	o->v=malloc(l*sizeof(sll_runtime_object_t*));
 	sll_static_int[0]->rc+=l;
-	o->v[0]=sll_static_int[0];
-	sll_array_length_t i=1;
-	while (i<l){
-		sll_array_length_t j=i<<1;
-		if (j>l){
-			j=l;
-		}
-		memcpy(o->v+i,o->v,(j-i)*sizeof(sll_runtime_object_t*));
-		i=j;
+	for (sll_array_length_t i=0;i<l;i++){
+		o->v[i]=sll_static_int[0];
 	}
 }
 
@@ -256,10 +246,15 @@ __SLL_FUNC void sll_array_join(const sll_array_t* a,const sll_array_t* b,sll_arr
 		return;
 	}
 	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
-	memcpy(o->v,a->v,a->l*sizeof(sll_runtime_object_t*));
-	memcpy(o->v+a->l,b->v,b->l*sizeof(sll_runtime_object_t*));
-	for (sll_array_length_t i=0;i<o->l;i++){
+	sll_array_length_t i=0;
+	for (;i<a->l;i++){
+		o->v[i]=a->v[i];
 		SLL_ACQUIRE(o->v[i]);
+	}
+	for (sll_array_length_t j=0;j<b->l;j++){
+		o->v[i]=b->v[j];
+		SLL_ACQUIRE(o->v[i]);
+		i++;
 	}
 }
 
@@ -344,8 +339,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_pop(const sll_arra
 	else{
 		o->l=a->l-1;
 		o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
-		memcpy(o->v,a->v,o->l*sizeof(sll_runtime_object_t*));
 		for (sll_array_length_t i=0;i<o->l;i++){
+			o->v[i]=a->v[i];
 			SLL_ACQUIRE(o->v[i]);
 		}
 	}
@@ -357,11 +352,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_pop(const sll_arra
 __SLL_FUNC void sll_array_push(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o){
 	o->l=a->l+1;
 	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
-	memcpy(o->v,a->v,a->l*sizeof(sll_runtime_object_t*));
-	o->v[a->l]=v;
-	for (sll_array_length_t i=0;i<o->l;i++){
+	for (sll_array_length_t i=0;i<a->l;i++){
+		o->v[i]=a->v[i];
 		SLL_ACQUIRE(o->v[i]);
 	}
+	o->v[a->l]=v;
+	SLL_ACQUIRE(v);
 }
 
 
@@ -461,8 +457,8 @@ __SLL_FUNC void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_
 		}
 		o->l=(sll_array_length_t)(a->l-v);
 		o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
-		memcpy(o->v,a->v+v,(a->l-v)*sizeof(sll_runtime_object_t*));
 		for (sll_array_length_t i=0;i<o->l;i++){
+			o->v[i]=a->v[i];
 			SLL_ACQUIRE(o->v[i]);
 		}
 		return;
@@ -473,8 +469,8 @@ __SLL_FUNC void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_
 	for (sll_array_length_t i=0;i<(sll_array_length_t)v;i++){
 		o->v[i]=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	memcpy(o->v+v,a->v,a->l*sizeof(sll_runtime_object_t*));
 	for (sll_array_length_t i=0;i<a->l;i++){
+		o->v[i+v]=a->v[i];
 		SLL_ACQUIRE(a->v[i]);
 	}
 }

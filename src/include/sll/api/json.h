@@ -18,7 +18,7 @@ __API_FUNC_DECL(json_parse);
 
 
 /*~~DOCS~~
-TYPE api optimizable
+TYPE api compilation_call optimizable
 FUNC sll_api_json_stringify
 DESC Docs!
 ARG O Docs!

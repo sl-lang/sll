@@ -169,7 +169,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			fputs(bf,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		FILE* nf=fopen(bf,"rb");// lgtm [cpp/path-injection]
+		FILE* nf=fopen(bf,"rb");
 		if (nf){
 			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
 				memcpy(f_fp,bf,j+1);
@@ -213,7 +213,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			fputs(bf,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		nf=fopen(bf,"rb");// lgtm [cpp/path-injection]
+		nf=fopen(bf,"rb");
 		if (nf){
 			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
 				memcpy(f_fp,bf,j+1);
@@ -340,7 +340,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			fputs(l_fp,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		FILE* nf=fopen(l_fp,"rb");// lgtm [cpp/path-injection]
+		FILE* nf=fopen(l_fp,"rb");
 		if (nf){
 			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(l_fp,f_fp)){
 				memcpy(f_fp,l_fp,i+5);
@@ -384,15 +384,10 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			fputs(l_fp,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		nf=fopen(l_fp,"rb");// lgtm [cpp/path-injection]
+		nf=fopen(l_fp,"rb");
 		if (nf){
 			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(l_fp,f_fp)){
-				i+=5;
-				*(f_fp+i)=0;
-				while (i){
-					i--;
-					*(f_fp+i)=*(l_fp+i);
-				}
+				memcpy(f_fp,l_fp,l_fpl+5);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
@@ -433,21 +428,13 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 
 
 static uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
-	uint16_t i=0;
-	while (*(o_fp+i)){
-		i++;
-	}
-	*(o_fp+i)='.';
-	*(o_fp+i+1)='s';
-	*(o_fp+i+2)='l';
-	*(o_fp+i+3)='a';
-	*(o_fp+i+4)=0;
+	memcpy(o_fp+sll_string_length_unaligned(SLL_CHAR(o_fp)),".sla",5);
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Writing Assembly to File '");
 		fputs(o_fp,stdout);
 		PRINT_STATIC_STR("'...\n");
 	}
-	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
+	FILE* f=fopen(o_fp,"wb");
 	if (!f){
 		COLOR_RED;
 		PRINT_STATIC_STR("Unable to Open Output File '");
@@ -469,21 +456,13 @@ static uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
 
 
 static uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
-	uint16_t i=0;
-	while (*(o_fp+i)){
-		i++;
-	}
-	*(o_fp+i)='.';
-	*(o_fp+i+1)='s';
-	*(o_fp+i+2)='l';
-	*(o_fp+i+3)='c';
-	*(o_fp+i+4)=0;
+	memcpy(o_fp+sll_string_length_unaligned(SLL_CHAR(o_fp)),".slc",5);
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Writing Compiled Object to File '");
 		fputs(o_fp,stdout);
 		PRINT_STATIC_STR("'...\n");
 	}
-	FILE* f=fopen(o_fp,"wb");// lgtm [cpp/path-injection]
+	FILE* f=fopen(o_fp,"wb");
 	if (!f){
 		COLOR_RED;
 		PRINT_STATIC_STR("Unable to Open Output File '");
@@ -554,39 +533,19 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 	if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT)){
 		char bf[MAX_PATH_LENGTH];
 		uint16_t i=0;
+		sll_string_length_t f_fp_l=sll_string_length_unaligned(SLL_CHAR(f_fp));
 		if (!o_fp){
-			while (*(f_fp+i)){
-				*(bf+i)=*(f_fp+i);
-				i++;
-			}
-			i--;
+			memcpy(bf,f_fp,f_fp_l);
+			i=f_fp_l-1;
 		}
 		else{
 			if (fpl==1){
-				while (*(o_fp+i)){
-					bf[i]=*(o_fp+i);
-					i++;
-				}
-				if (fl&FLAG_GENERATE_ASSEMBLY){
-					bf[i]=0;
-					if (!write_assembly(bf,a_dt)){// lgtm [cpp/path-injection]
-						return 0;
-					}
-				}
-				if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-					bf[i]=0;
-					if (!write_compiled(bf,c_dt)){// lgtm [cpp/path-injection]
-						return 0;
-					}
-				}
-				goto _skip_write;
+				i=sll_string_length_unaligned(SLL_CHAR(o_fp));
+				memcpy(bf,o_fp,i);
+				i-=1;
 			}
 			else{
-				while (*(o_fp+i)&&*(o_fp+i)!='.'){
-					bf[i]=*(o_fp+i);
-					i++;
-				}
-				i--;
+				i=sll_string_length_unaligned(SLL_CHAR(o_fp));
 				while (*(o_fp+i)!='\\'&&*(o_fp+i)!='/'){
 					if (i==0){
 						i--;
@@ -595,36 +554,27 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 					i--;
 				}
 				i++;
-				uint32_t k=0;
-				uint32_t l=0;
-				while (*(f_fp+k)&&*(f_fp+k)!='.'){
-					if (*(f_fp+k)=='\\'||*(f_fp+k)=='/'){
-						l=k+1;
-					}
-					k++;
+				sll_string_length_t j=f_fp_l;
+				while (j&&*(f_fp+j-1)!='\\'&&*(f_fp+j-1)!='/'){
+					j--;
 				}
-				while (l<k){
-					bf[i]=*(f_fp+l);
-					i++;
-					l++;
-				}
-				bf[i]='.';
+				memcpy(bf+i,f_fp+j,f_fp_l-j);
+				i+=f_fp_l-j-1;
 			}
 		}
 		i++;
 		if (fl&FLAG_GENERATE_ASSEMBLY){
 			bf[i]=0;
-			if (!write_assembly(bf,a_dt)){// lgtm [cpp/path-injection]
+			if (!write_assembly(bf,a_dt)){
 				return 0;
 			}
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
 			bf[i]=0;
-			if (!write_compiled(bf,c_dt)){// lgtm [cpp/path-injection]
+			if (!write_compiled(bf,c_dt)){
 				return 0;
 			}
 		}
-_skip_write:;
 	}
 	if (!(fl&FLAG_NO_RUN)){
 		sll_stack_data_t st;
@@ -678,22 +628,6 @@ int main(int argc,const char** argv){
 	*i_fp=0;
 	i_fpl=1;
 	GET_EXECUATBLE_FILE_PATH(l_fp,MAX_PATH_LENGTH,l_fpl);
-	l_fp[l_fpl]='.';
-	l_fp[l_fpl+1]='o';
-	l_fp[l_fpl+2]='l';
-	l_fp[l_fpl+3]='d';
-	l_fp[l_fpl+4]=0;
-	remove(l_fp);
-#ifndef STANDALONE_BUILD
-	char dl_fp[MAX_PATH_LENGTH];
-	memcpy(dl_fp,l_fp,l_fpl);
-	uint16_t dl_fpi=l_fpl;
-	while (dl_fp[dl_fpi]!='\\'&&dl_fp[dl_fpi]!='/'){
-		dl_fpi--;
-	}
-	memcpy(dl_fp+dl_fpi+1,"sll-"SLL_VERSION_STRING DYNAMIC_LIBRARY_EXTENSION".old",sizeof("sll-"SLL_VERSION_STRING DYNAMIC_LIBRARY_EXTENSION".old"));
-	remove(dl_fp);
-#endif
 #ifndef STANDALONE_BUILD
 	while (l_fp[l_fpl]!='/'&&l_fp[l_fpl]!='\\'){
 		if (!l_fpl){
@@ -701,11 +635,7 @@ int main(int argc,const char** argv){
 		}
 		l_fpl--;
 	}
-	l_fp[l_fpl+1]='l';
-	l_fp[l_fpl+2]='i';
-	l_fp[l_fpl+3]='b';
-	l_fp[l_fpl+4]='/';
-	l_fp[l_fpl+5]=0;
+	memcpy(l_fp+l_fpl+1,"lib/",5);
 	l_fpl+=5;
 _skip_lib_path:
 #endif
@@ -761,10 +691,7 @@ _skip_lib_path:
 				break;
 			}
 			e=argv[i];
-			uint32_t sz=0;
-			while (*(e+sz)){
-				sz++;
-			}
+			sll_string_length_t sz=sll_string_length_unaligned(SLL_CHAR(e));
 			if (sz){
 				uint32_t j=i_fpl;
 				i_fpl+=sz+(*(e+sz-1)!='\\'&&*(e+sz-1)!='/'?2:1);
@@ -776,10 +703,8 @@ _skip_lib_path:
 					goto _error;
 				}
 				i_fp=tmp;
-				for (uint32_t k=0;k<sz;k++){
-					*(i_fp+j)=*(e+k);
-					j++;
-				}
+				memcpy(i_fp+j,e,sz);
+				j+=sz;
 				if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
 					*(i_fp+j)='/';
 					j++;
@@ -1116,19 +1041,16 @@ _json_error:
 			PRINT_STATIC_STR("  Verbose Mode\n");
 		}
 		PRINT_STATIC_STR("Include Path: \n  - '");
-		for (uint32_t i=0;i<i_fpl;i++){
-			if (*(i_fp+i)){
-				putchar(*(i_fp+i));
+		uint32_t i=0;
+		while (i<i_fpl){
+			if (i){
+				PRINT_STATIC_STR("'\n  - '");
 			}
-			else{
-				if (i+1<i_fpl){
-					PRINT_STATIC_STR("'\n  - '");
-				}
-				else{
-					PRINT_STATIC_STR("'\n");
-				}
-			}
+			sll_string_length_t sz=sll_string_length_unaligned(SLL_CHAR(i_fp+i));
+			fwrite(i_fp+i,sizeof(char),sz,stdout);
+			i+=sz+1;
 		}
+		PRINT_STATIC_STR("'\n");
 #ifndef STANDALONE_BUILD
 		PRINT_STATIC_STR("Library Path: ");
 		fputs(l_fp,stdout);
@@ -1169,26 +1091,19 @@ _json_error:
 		sll_input_data_stream_t is;
 		sll_input_buffer_t i_bf={
 			(sll_buffer_t)(*(sl+j)),
-			0
+			sll_string_length_unaligned(SLL_CHAR(*(sl+j)))
 		};
-		while (*(i_bf.bf+i_bf.sz)){
-			i_bf.sz++;
-		}
 		sll_stream_create_input_from_buffer(&i_bf,&is);
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Load Input as Assembly...\n");
 		}
 		sll_error_t e;
 		if (!sll_load_assembly(&is,&a_dt,&e)){
-			sll_free_assembly_function_table(&(a_dt.ft));
-			sll_free_string_table(&(a_dt.st));
+			sll_free_assembly_data(&(a_dt));
 			if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 				sll_stream_create_input_from_buffer(&i_bf,&is);
 				if (!sll_load_compiled_object(&is,&c_dt,&e)){
-					sll_free_identifier_table(&(c_dt.idt));
-					sll_free_export_table(&(c_dt.et));
-					sll_free_function_table(&(c_dt.ft));
-					sll_free_string_table(&(c_dt.st));
+					sll_free_compilation_data(&c_dt);
 					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 						sll_stream_create_input_from_buffer(&i_bf,&is);
 						sll_init_compilation_data(SLL_CHAR("<console>"),&is,&c_dt);

@@ -21,7 +21,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_close_raw(const
 	sll_integer_t out=sll_api_file_close(&(a->dt.h));
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_TYPE_REQUIRED);
+INTERNAL_FUNCTION("file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED|0);
 
 
 
@@ -48,7 +48,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_open_raw(const 
 	out_o->dt.h=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("file_open",sll_api_file_open_raw,SLL_INTERNAL_FUNCTION_TYPE_REQUIRED);
+INTERNAL_FUNCTION("file_open",sll_api_file_open_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED|0);
 
 
 
@@ -66,7 +66,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_write_raw(const
 	sll_integer_t out=sll_api_file_write(a,b,bc);
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("file_write",sll_api_file_write_raw,SLL_INTERNAL_FUNCTION_TYPE_REQUIRED);
+INTERNAL_FUNCTION("file_write",sll_api_file_write_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED|0);
 
 
 
@@ -79,7 +79,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_hash_create_raw(cons
 	sll_integer_t out=sll_api_hash_create(a);
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("hash_create",sll_api_hash_create_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("hash_create",sll_api_hash_create_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
 
 
@@ -94,7 +94,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_parse_raw(const
 	}
 	return sll_api_json_parse(&(a->dt.s));
 }
-INTERNAL_FUNCTION("json_parse",sll_api_json_parse_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("json_parse",sll_api_json_parse_raw,0|0);
 
 
 
@@ -111,7 +111,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_stringify_raw(c
 	out_o->dt.s=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("json_stringify",sll_api_json_stringify_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("json_stringify",sll_api_json_stringify_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
 
 
@@ -131,7 +131,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_type_raw(const 
 	out_o->dt.h=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("json_type",sll_api_json_type_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("json_type",sll_api_json_type_raw,0|0);
 
 
 
@@ -151,7 +151,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_absolute_raw(co
 	out_o->dt.s=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("path_absolute",sll_api_path_absolute_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("path_absolute",sll_api_path_absolute_raw,0|0);
 
 
 
@@ -167,7 +167,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_exists_raw(cons
 	sll_integer_t out=sll_api_path_exists(&(a->dt.s));
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("path_exists",sll_api_path_exists_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("path_exists",sll_api_path_exists_raw,0|0);
 
 
 
@@ -183,7 +183,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_is_dir_raw(cons
 	sll_integer_t out=sll_api_path_is_dir(&(a->dt.s));
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("path_is_dir",sll_api_path_is_dir_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("path_is_dir",sll_api_path_is_dir_raw,0|0);
 
 
 
@@ -203,7 +203,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_relative_raw(co
 	out_o->dt.s=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("path_relative",sll_api_path_relative_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("path_relative",sll_api_path_relative_raw,0|0);
 
 
 
@@ -219,7 +219,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_size_raw(const 
 	sll_integer_t out=sll_api_path_size(&(a->dt.s));
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("path_size",sll_api_path_size_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("path_size",sll_api_path_size_raw,0|0);
 
 
 
@@ -237,7 +237,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_convert_raw(c
 	out_o->dt.s=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("string_convert",sll_api_string_convert_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("string_convert",sll_api_string_convert_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
 
 
@@ -251,7 +251,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_length_raw(co
 	sll_integer_t out=sll_api_string_length(a,ac);
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("string_length",sll_api_string_length_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("string_length",sll_api_string_length_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
 
 
@@ -285,7 +285,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_replace_raw(c
 	out_o->dt.s=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("string_replace",sll_api_string_replace_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("string_replace",sll_api_string_replace_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
 
 
@@ -305,7 +305,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_to_lower_case
 	out_o->dt.s=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("string_to_lower_case",sll_api_string_to_lower_case_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("string_to_lower_case",sll_api_string_to_lower_case_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
 
 
@@ -325,7 +325,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_to_title_case
 	out_o->dt.s=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("string_to_title_case",sll_api_string_to_title_case_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("string_to_title_case",sll_api_string_to_title_case_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
 
 
@@ -345,7 +345,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_to_upper_case
 	out_o->dt.s=out;
 	return out_o;
 }
-INTERNAL_FUNCTION("string_to_upper_case",sll_api_string_to_upper_case_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("string_to_upper_case",sll_api_string_to_upper_case_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
 
 
@@ -360,7 +360,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_raw(cons
 	}
 	return sll_api_sys_arg_get(a->dt.i);
 }
-INTERNAL_FUNCTION("sys_arg_get",sll_api_sys_arg_get_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("sys_arg_get",sll_api_sys_arg_get_raw,0|0);
 
 
 
@@ -369,7 +369,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_count_ra
 	sll_integer_t out=sll_api_sys_arg_get_count();
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("sys_arg_get_count",sll_api_sys_arg_get_count_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("sys_arg_get_count",sll_api_sys_arg_get_count_raw,0|0);
 
 
 
@@ -377,7 +377,7 @@ extern __SLL_API_TYPE_sll_api_sys_get_platform sll_api_sys_get_platform(__SLL_AP
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_get_platform_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	return sll_api_sys_get_platform();
 }
-INTERNAL_FUNCTION("sys_get_platform",sll_api_sys_get_platform_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("sys_get_platform",sll_api_sys_get_platform_raw,0|0);
 
 
 
@@ -386,7 +386,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_current_raw(con
 	sll_float_t out=sll_api_time_current();
 	return SLL_FROM_FLOAT(out);
 }
-INTERNAL_FUNCTION("time_current",sll_api_time_current_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("time_current",sll_api_time_current_raw,0|0);
 
 
 
@@ -395,7 +395,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_current_nanos_r
 	sll_integer_t out=sll_api_time_current_nanos();
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("time_current_nanos",sll_api_time_current_nanos_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("time_current_nanos",sll_api_time_current_nanos_raw,0|0);
 
 
 
@@ -411,7 +411,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_sleep_raw(const
 	sll_float_t out=sll_api_time_sleep(a);
 	return SLL_FROM_FLOAT(out);
 }
-INTERNAL_FUNCTION("time_sleep",sll_api_time_sleep_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("time_sleep",sll_api_time_sleep_raw,0|0);
 
 
 
@@ -427,7 +427,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_time_sleep_nanos_raw
 	sll_integer_t out=sll_api_time_sleep_nanos(a);
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("time_sleep_nanos",sll_api_time_sleep_nanos_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("time_sleep_nanos",sll_api_time_sleep_nanos_raw,0|0);
 
 
 
@@ -458,7 +458,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_url_execute_request_
 	}
 	return sll_api_url_execute_request(&(a->dt.s),&(b->dt.s),&(c->dt.s),&(d->dt.m),&(e->dt.s));
 }
-INTERNAL_FUNCTION("url_execute_request",sll_api_url_execute_request_raw,SLL_INTERNAL_FUNCTION_TYPE_REQUIRED);
+INTERNAL_FUNCTION("url_execute_request",sll_api_url_execute_request_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED|0);
 
 
 
@@ -467,7 +467,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_util_instruction_cou
 	sll_integer_t out=sll_api_util_instruction_count();
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("util_instruction_count",sll_api_util_instruction_count_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("util_instruction_count",sll_api_util_instruction_count_raw,0|0);
 
 
 
@@ -480,4 +480,4 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_util_ref_count_raw(c
 	sll_integer_t out=sll_api_util_ref_count(a);
 	return SLL_FROM_INT(out);
 }
-INTERNAL_FUNCTION("util_ref_count",sll_api_util_ref_count_raw,SLL_INTERNAL_FUNCTION_TYPE_DEFAULT);
+INTERNAL_FUNCTION("util_ref_count",sll_api_util_ref_count_raw,0|0);

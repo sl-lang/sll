@@ -7,7 +7,7 @@
 
 
 /*~~DOCS~~
-TYPE api optimizable
+TYPE api compilation_call optimizable
 FUNC sll_api_hash_create
 DESC Docs!
 ARG O Docs!

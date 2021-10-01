@@ -7,7 +7,7 @@
 
 
 /*~~DOCS~~
-TYPE api optimizable var_arg
+TYPE api compilation_call optimizable var_arg
 FUNC sll_api_string_convert
 DESC Docs!
 ARG O Docs!
@@ -18,7 +18,7 @@ __API_FUNC_DECL(string_convert);
 
 
 /*~~DOCS~~
-TYPE api optimizable var_arg
+TYPE api compilation_call optimizable var_arg
 FUNC sll_api_string_length
 DESC Docs!
 ARG O Docs!
@@ -29,7 +29,7 @@ __API_FUNC_DECL(string_length);
 
 
 /*~~DOCS~~
-TYPE api optimizable
+TYPE api compilation_call optimizable
 FUNC sll_api_string_replace
 DESC Docs!
 ARG S Docs!
@@ -42,7 +42,7 @@ __API_FUNC_DECL(string_replace);
 
 
 /*~~DOCS~~
-TYPE api optimizable
+TYPE api compilation_call optimizable
 FUNC sll_api_string_to_lower_case
 DESC Docs!
 ARG S Docs!
@@ -53,7 +53,7 @@ __API_FUNC_DECL(string_to_lower_case);
 
 
 /*~~DOCS~~
-TYPE api optimizable
+TYPE api compilation_call optimizable
 FUNC sll_api_string_to_title_case
 DESC Docs!
 ARG S Docs!
@@ -64,7 +64,7 @@ __API_FUNC_DECL(string_to_title_case);
 
 
 /*~~DOCS~~
-TYPE api optimizable
+TYPE api compilation_call optimizable
 FUNC sll_api_string_to_upper_case
 DESC Docs!
 ARG S Docs!

@@ -92,16 +92,13 @@ _found_index:
 		if (!dt->c.fp){
 			dt->c=*n;
 		}
-		goto _acquire_debug_data;
 	}
-	else if (t==__SLL_DEBUG_TYPE_ACQUIRE){
-_acquire_debug_data:
+	if (t==__SLL_DEBUG_TYPE_RELEASE){
 		dt->all++;
 		dt->al=realloc(dt->al,dt->all*sizeof(runtime_object_debug_data_trace_data_t*));
 		*(dt->al+dt->all-1)=n;
 	}
 	else{
-		SLL_ASSERT(t==__SLL_DEBUG_TYPE_RELEASE);
 		dt->rll++;
 		dt->rl=realloc(dt->rl,dt->rll*sizeof(runtime_object_debug_data_trace_data_t*));
 		*(dt->rl+dt->rll-1)=n;
