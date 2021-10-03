@@ -103,7 +103,7 @@ __API_FUNC(file_open){
 			}
 		}
 	}
-	FILE* h=fopen((char*)a->v,m);// lgtm [cpp/path-injection]
+	FILE* h=fopen((char*)a->v,m);
 	if (!h){
 		return;
 	}

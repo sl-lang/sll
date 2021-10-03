@@ -281,7 +281,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_array(const sll_string
 	}
 	for (sll_string_length_t i=0;i<s->l;i++){
 		sll_runtime_object_t* e=a->v[i];
-		if ((e->t==SLL_RUNTIME_OBJECT_TYPE_CHAR&&e->dt.c==s->v[i])||(e->t==SLL_RUNTIME_OBJECT_TYPE_INT&&e->dt.i==s->v[i])||(e->t==SLL_RUNTIME_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==s->v[i])){
+		if ((SLL_RUNTIME_OBJECT_GET_TYPE(e)==SLL_RUNTIME_OBJECT_TYPE_CHAR&&e->dt.c==s->v[i])||(SLL_RUNTIME_OBJECT_GET_TYPE(e)==SLL_RUNTIME_OBJECT_TYPE_INT&&e->dt.i==s->v[i])||(SLL_RUNTIME_OBJECT_GET_TYPE(e)==SLL_RUNTIME_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==s->v[i])){
 			continue;
 		}
 		return 0;

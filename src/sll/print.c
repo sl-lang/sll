@@ -184,9 +184,9 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'<');
-				sll_array_length_t al=o->dt.al;
+				sll_map_length_t ml=o->dt.ml;
 				o++;
-				for (sll_array_length_t i=0;i<al;i++){
+				for (sll_map_length_t i=0;i<ml;i++){
 					if (i){
 						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
 					}

@@ -72,7 +72,7 @@ uint8_t execute_test(uint8_t id){
 		sll_internal_function_table_t i_ft;
 		sll_create_internal_function_table(&i_ft);
 		sll_register_standard_internal_functions(&i_ft);
-		FILE* f=fopen(ti_fp,"rb");// lgtm [cpp/path-injection]
+		FILE* f=fopen(ti_fp,"rb");
 		if (!f){
 			return 1;
 		}
@@ -82,7 +82,7 @@ uint8_t execute_test(uint8_t id){
 		sll_init_compilation_data(SLL_CHAR("<internal>"),&is,&c_dt);
 		sll_error_t e;
 		if (!sll_parse_all_objects(&c_dt,&i_ft,NULL,&e)){
-			FILE* o_f=fopen(to_fp,"wb");// lgtm [cpp/path-injection]
+			FILE* o_f=fopen(to_fp,"wb");
 			if (!o_f){
 				return 1;
 			}
@@ -202,7 +202,7 @@ char* error_to_string(sll_error_t* e){
 
 
 void run_parser_test(const char* fp,test_result_t* o){
-	FILE* f=fopen(fp,"rb");// lgtm [cpp/path-injection]
+	FILE* f=fopen(fp,"rb");
 	char* f_dt=NULL;
 	sll_json_object_t json={
 		SLL_JSON_OBJECT_TYPE_INTEGER,
@@ -261,7 +261,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 			continue;
 		}
-		FILE* dt_f=fopen(ti_fp,"wb");// lgtm [cpp/path-injection]
+		FILE* dt_f=fopen(ti_fp,"wb");
 		if (!dt_f||fwrite(in_e->dt.s.v,sizeof(char),in_e->dt.s.l,dt_f)!=in_e->dt.s.l){
 			if (dt_f){
 				fclose(dt_f);
