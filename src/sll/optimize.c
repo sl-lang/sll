@@ -1522,7 +1522,9 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 							r->dt.ac++;
 							_shift_objects(o,o_dt->c_dt,1);
 							_runtime_object_to_object(v,o,o_dt);
-							o=_optimize(r,p,o_dt,fl);
+							SLL_RELEASE(v);
+							o=r;
+							goto _optimize_operation_list_comma;
 						}
 						else{
 							r->dt.ac-=j-i-1;
@@ -1536,7 +1538,11 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 							}
 							_shift_objects(o,o_dt->c_dt,1);
 							_runtime_object_to_object(v,o,o_dt);
-							o=_optimize(tmp,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|OPTIMIZER_FLAG_ARGUMENT);
+							SLL_RELEASE(v);
+							o=tmp;
+							p=r;
+							fl=(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|OPTIMIZER_FLAG_ARGUMENT;
+							goto _optimize_operation_list_comma;
 						}
 					}
 					SLL_RELEASE(v);
