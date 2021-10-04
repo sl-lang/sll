@@ -267,19 +267,19 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_replace_raw(c
 	const sll_runtime_object_t* b=NULL;
 	if (all>1){
 		b=*(al+1);
-		if (!(SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+		if (!(SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_CHAR||SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
 			return SLL_ACQUIRE_STATIC(str_zero);
 		}
 	}
 	const sll_runtime_object_t* c=NULL;
 	if (all>2){
 		c=*(al+2);
-		if (!(SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+		if (!(SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_CHAR||SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
 			return SLL_ACQUIRE_STATIC(str_zero);
 		}
 	}
 	sll_string_t out;
-	sll_api_string_replace(&(a->dt.s),(b?&(b->dt.s):NULL),(c?&(c->dt.s):NULL),&out);
+	sll_api_string_replace(&(a->dt.s),b,c,&out);
 	sll_runtime_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 	out_o->dt.s=out;

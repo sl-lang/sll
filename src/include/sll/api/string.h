@@ -33,8 +33,8 @@ TYPE api compilation_call optimizable
 FUNC sll_api_string_replace
 DESC Docs!
 ARG S Docs!
-ARG S? Docs!
-ARG S? Docs!
+ARG CS? Docs!
+ARG CS? Docs!
 RET Z Failure
 RET S Success*/
 __API_FUNC_DECL(string_replace);

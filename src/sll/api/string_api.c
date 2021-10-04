@@ -344,10 +344,48 @@ __API_FUNC(string_replace){
 		sll_string_clone(a,out);
 	}
 	else if (!c){
-		sll_string_remove(a,b,out);
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_STRING){
+			sll_string_remove(a,&(b->dt.s),out);
+		}
+		else{
+			SLL_UNIMPLEMENTED();
+			sll_char_t v[SLL_STRING_ALIGN_LENGTH(1)];
+			*((uint64_t*)v)=b->dt.c;
+			sll_string_t s={
+				1,
+				b->dt.c,
+				v
+			};
+			sll_string_remove(a,&s,out);
+		}
 	}
 	else{
-		sll_string_replace(a,b,c,out);
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_CHAR&&SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+			sll_string_replace_char(a,b->dt.c,c->dt.c,out);
+		}
+		else if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+			sll_char_t v[SLL_STRING_ALIGN_LENGTH(1)];
+			*((uint64_t*)v)=b->dt.c;
+			sll_string_t s={
+				1,
+				b->dt.c,
+				v
+			};
+			sll_string_replace(a,&s,&(c->dt.s),out);
+		}
+		else if (SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+			sll_char_t v[SLL_STRING_ALIGN_LENGTH(1)];
+			*((uint64_t*)v)=c->dt.c;
+			sll_string_t s={
+				1,
+				c->dt.c,
+				v
+			};
+			sll_string_replace(a,&(b->dt.s),&s,out);
+		}
+		else{
+			sll_string_replace(a,&(b->dt.s),&(c->dt.s),out);
+		}
 	}
 }
 

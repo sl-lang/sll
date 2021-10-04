@@ -170,6 +170,10 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 
 
 
+__SLL_FUNC void sll_string_replace_char(const sll_string_t* s,sll_char_t k,sll_char_t v,sll_string_t* o);
+
+
+
 __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_string_t* o);
 
 

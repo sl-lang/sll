@@ -617,6 +617,10 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 		sll_string_remove(s,k,o);
 		return;
 	}
+	if (k->l==1&&v->l==1){
+		sll_string_replace_char(s,k->v[0],v->v[0],o);
+		return;
+	}
 	o->l=s->l;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	sll_string_length_t i=0;
@@ -662,6 +666,39 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 	}
 	SLL_STRING_FORMAT_PADDING(o->v,o->l);
 	sll_string_hash(o);
+}
+
+
+
+__SLL_FUNC void sll_string_replace_char(const sll_string_t* s,sll_char_t k,sll_char_t v,sll_string_t* o){
+	if (!s->l){
+		SLL_ZERO_STRING(o);
+		return;
+	}
+	if (k==v){
+		sll_string_clone(s,o);
+		return;
+	}
+	o->l=s->l;
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+	const uint64_t* a=(const uint64_t*)(s->v);
+	uint64_t* b=(uint64_t*)(o->v);
+	uint64_t k64=0x101010101010101ull*k;
+	uint64_t m=0x101010101010101ull*(k^v);
+	uint64_t c=0;
+	sll_string_length_t l=s->l;
+	while (l>7){
+		uint64_t e=(*a)^k64;
+		*b=(*a)^(((((e-0x101010101010101ull)&0x8080808080808080ull&(~e))>>7)*255)&m);
+		c^=*b;
+		a++;
+		b++;
+		l-=8;
+	}
+	uint64_t e=(*a)^k64;
+	*b=(*a)^(((((e-0x101010101010101ull)&0x8080808080808080ull&(~e))>>7)*255)&((1ull<<(l<<3))-1)&m);
+	c^=*b;
+	o->c=(sll_string_length_t)(c^(c>>32));
 }
 
 
