@@ -684,19 +684,19 @@ __SLL_FUNC void sll_string_replace_char(const sll_string_t* s,sll_char_t k,sll_c
 	const uint64_t* a=(const uint64_t*)(s->v);
 	uint64_t* b=(uint64_t*)(o->v);
 	uint64_t k64=0x101010101010101ull*k;
-	uint64_t m=0x101010101010101ull*(k^v);
+	uint64_t v64=0x101010101010101ull*(k^v);
 	uint64_t c=0;
 	sll_string_length_t l=s->l;
 	while (l>7){
 		uint64_t e=(*a)^k64;
-		*b=(*a)^(((((e-0x101010101010101ull)&0x8080808080808080ull&(~e))>>7)*255)&m);
+		*b=(*a)^(((((e-0x101010101010101ull)&0x8080808080808080ull&(~e))>>7)*255)&v64);
 		c^=*b;
 		a++;
 		b++;
 		l-=8;
 	}
 	uint64_t e=(*a)^k64;
-	*b=(*a)^(((((e-0x101010101010101ull)&0x8080808080808080ull&(~e))>>7)*255)&((1ull<<(l<<3))-1)&m);
+	*b=(*a)^(((((e-0x101010101010101ull)&0x8080808080808080ull&(~e))>>7)*255)&((1ull<<(l<<3))-1)&v64);
 	c^=*b;
 	o->c=(sll_string_length_t)(c^(c>>32));
 }

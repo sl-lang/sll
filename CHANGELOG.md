@@ -5,11 +5,11 @@
 ### Added
 
 - All operators are now properly optimized
-- Memory API & reference operator ([#42])
 - Hash module ([#23])
 - Implemented **ALL** operators ([#14])
 - Implemented `sll_array_and_array`, `sll_array_combinations`, `sll_array_equal`, `sll_array_equal_map`, `sll_array_or_array`, `sll_array_xor_array`, `sll_array_range`, `sll_array_string_combinations`, `sll_map_add_array`, `sll_map_add_string`, `sll_map_and`, `sll_map_and_array`, `sll_map_and_string`, `sll_map_equal`, `sll_string_duplicate`, `sll_string_equal_array`, `sll_string_equal_map`, `sll_string_from_int`, `sll_string_replace_char` and `sll_string_split_char`
 - Internal function can now be declared as `SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL`, which would make them be optimizable at compile-time
+- Memory API & reference operator ([#42])
 
 ### Changed
 
@@ -826,7 +826,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#46]: https://github.com/sl-lang/sll/issues/46
 [#44]: https://github.com/sl-lang/sll/issues/44
 [#43]: https://github.com/sl-lang/sll/issues/43
-[#32]: https://github.com/sl-lang/sll/issues/32
+[#42]: https://github.com/sl-lang/sll/issues/42
 [#41]: https://github.com/sl-lang/sll/issues/41
 [#40]: https://github.com/sl-lang/sll/issues/40
 [#37]: https://github.com/sl-lang/sll/issues/37

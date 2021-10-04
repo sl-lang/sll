@@ -711,7 +711,7 @@ static uint8_t _get_cond_type(const sll_object_t* o,optimizer_data_t* o_dt,uint8
 			}
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
 		case SLL_OBJECT_TYPE_REF:
-			return ((!o->dt.ac)^inv?COND_TYPE_ALWAYS_FALSE:COND_TYPE_ALWAYS_TRUE);
+			return (((!o->dt.ac)^inv)?COND_TYPE_ALWAYS_FALSE:COND_TYPE_ALWAYS_TRUE);
 		case SLL_OBJECT_TYPE_PRINT:
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
