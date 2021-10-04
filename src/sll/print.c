@@ -358,6 +358,9 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_CONTINUE:
 			PRINT_STATIC_STRING("<<<",os);
 			break;
+		case SLL_OBJECT_TYPE_REF:
+			PRINT_STATIC_STRING("%%",os);
+			break;
 		case SLL_OBJECT_TYPE_RETURN:
 			PRINT_STATIC_STRING("@@",os);
 			break;
@@ -475,6 +478,9 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				PRINT_STATIC_STRING("PUSH c",os);
 				_print_int(ai->dt.c,os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL:
+				PRINT_STATIC_STRING("PUSH null_ref",os);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				PRINT_STATIC_STRING("LOAD $",os);
@@ -835,6 +841,9 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				PRINT_STATIC_STRING("PUSH ",os);
 				_print_int(ai->dt.i,os);
 				PRINT_STATIC_STRING(" & CALL 1",os);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_REF:
+				PRINT_STATIC_STRING("REF",os);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET:
 				PRINT_STATIC_STRING("RET",os);

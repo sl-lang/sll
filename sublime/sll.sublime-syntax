@@ -97,7 +97,7 @@ contexts:
         - include: all
         - match: '[a-zA-Z0-9_]+'
           scope: variable.parameter.sll
-    - match: '(\()\s*(?:(\?|->|>-|><)|(&&|\|\||\!)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(@@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(,)|(<<<))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->|>-|><)|(&&|\|\||\!)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<)|(=)|(--)|(,,,)|(<:|:>)|(<-)|(@)|(@@)|(@@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(,)|(<<<)|(%%))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.control.conditional.sll
@@ -121,6 +121,7 @@ contexts:
         20: support.function.builtin.cast.sll
         21: punctuation.separator.sll
         22: keyword.control.continue.sll
+        23: keyword.operator.reference.sll
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - match: '\)'

@@ -2299,13 +2299,10 @@ __SLL_OPERATOR_BINARY(cast){
 			case COMBINED_CAST_TYPE_IH:
 			case COMBINED_CAST_TYPE_FH:
 			case COMBINED_CAST_TYPE_CH:
-				return sll_memory_from_pointer(a);
 			case COMBINED_CAST_TYPE_SH:
-				return sll_memory_from_pointer(a->dt.s.v);
 			case COMBINED_CAST_TYPE_AH:
-				return sll_memory_from_pointer(a->dt.a.v);
 			case COMBINED_CAST_TYPE_MH:
-				return sll_memory_from_pointer(a->dt.m.v);
+				return sll_memory_from_pointer(a);
 			case COMBINED_CAST_TYPE_IM:
 			case COMBINED_CAST_TYPE_FM:
 			case COMBINED_CAST_TYPE_CM:

@@ -369,6 +369,8 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_CONTINUE:
 			SLL_UNIMPLEMENTED();
+		case SLL_OBJECT_TYPE_REF:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_COMMA:
 			SLL_UNIMPLEMENTED();
 	}
@@ -705,6 +707,22 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_CONTINUE:
 			SLL_UNIMPLEMENTED();
+		case SLL_OBJECT_TYPE_REF:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL);
+					return o+1;
+				}
+				o=_generate_on_stack(o+1,g_dt);
+				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_REF);
+				l--;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				return o;
+			}
 		case SLL_OBJECT_TYPE_COMMA:
 			{
 				sll_statement_count_t l=o->dt.sc;
@@ -1108,6 +1126,16 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 					o=_generate(o,g_dt);
 				}
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,(g_dt->lt->dt+g_dt->lt->sz-1)->s);
+				return o;
+			}
+		case SLL_OBJECT_TYPE_REF:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				o++;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
 				return o;
 			}
 		case SLL_OBJECT_TYPE_RETURN:

@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/api/memory.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -9,13 +10,27 @@
 
 
 
+#define SETUP_HANDLE \
+	do{ \
+		if (_memory_ht==SLL_UNKNOWN_HANDLE_TYPE){ \
+			SLL_ASSERT(sll_current_runtime_data); \
+			_memory_ht=sll_create_handle(sll_current_runtime_data->hl,&_memory_type); \
+			_memory_null_ref=SLL_FROM_HANDLE(_memory_ht,0); \
+		} \
+	} while (0)
+
+
+
 static sll_handle_type_t _memory_ht=SLL_UNKNOWN_HANDLE_TYPE;
+static sll_runtime_object_t* _memory_null_ref=NULL;
 static sll_handle_descriptor_t _memory_type;
 
 
 
 static void _memory_cleanup(sll_handle_t h){
 	if (h==SLL_HANDLE_FREE){
+		SLL_RELEASE(_memory_null_ref);
+		_memory_null_ref=NULL;
 		_memory_ht=SLL_UNKNOWN_HANDLE_TYPE;
 		return;
 	}
@@ -43,16 +58,46 @@ static sll_string_length_t _memory_stringify(sll_handle_t h,sll_string_length_t 
 
 
 
+__SLL_FUNC sll_runtime_object_t* sll_memory_from_object(sll_runtime_object_t* v){
+	SETUP_HANDLE;
+	void* p=v;
+	if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_STRING){
+		p=v->dt.s.v;
+	}
+	else if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
+		p=v->dt.a.v;
+	}
+	else if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&v->dt.h.t==_memory_ht){
+		SLL_ACQUIRE(v);
+		return v;
+	}
+	else if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_MAP){
+		p=v->dt.m.v;
+	}
+	return sll_memory_from_pointer(p);
+}
+
+
+
 __SLL_FUNC sll_runtime_object_t* sll_memory_from_pointer(void* p){
-	if (_memory_ht==SLL_UNKNOWN_HANDLE_TYPE){
-		SLL_ASSERT(sll_current_runtime_data);
-		_memory_ht=sll_create_handle(sll_current_runtime_data->hl,&_memory_type);
+	SETUP_HANDLE;
+	if (!p){
+		SLL_ACQUIRE(_memory_null_ref);
+		return _memory_null_ref;
 	}
 	sll_runtime_object_t* o=SLL_CREATE();
 	o->t=SLL_RUNTIME_OBJECT_TYPE_HANDLE;
 	o->dt.h.t=_memory_ht;
 	o->dt.h.h=(sll_handle_t)p;
 	return o;
+}
+
+
+
+__SLL_FUNC sll_runtime_object_t* sll_memory_get_null_pointer(void){
+	SETUP_HANDLE;
+	SLL_ACQUIRE(_memory_null_ref);
+	return _memory_null_ref;
 }
 
 

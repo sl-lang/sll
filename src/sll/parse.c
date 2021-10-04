@@ -622,6 +622,9 @@ _recurse_array_or_map:;
 				else if (*str==':'&&*(str+1)==':'){
 					o->t=SLL_OBJECT_TYPE_CAST;
 				}
+				else if (*str=='%'&&*(str+1)=='%'){
+					o->t=SLL_OBJECT_TYPE_REF;
+				}
 				else if (*str=='@'&&*(str+1)=='@'){
 					o->t=((fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION)?SLL_OBJECT_TYPE_RETURN:SLL_OBJECT_TYPE_EXIT);
 				}
