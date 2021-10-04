@@ -395,6 +395,35 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				}
 				return v;
 			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_map_length_t l=o->dt.ml;
+				sll_runtime_object_t* v=SLL_CREATE();
+				v->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+				sll_map_create((l+1)>>1,&(v->dt.m));
+				o++;
+				for (sll_map_length_t i=0;i<l;i++){
+					sll_runtime_object_t* n=_get_as_runtime_object(o,o_dt,st);
+					o=sll_skip_object_const(o);
+					v->dt.a.v[i]=n;
+					if (n->t==RUNTIME_OBJECT_TYPE_UNKNOWN){
+						while (1){
+							SLL_RELEASE(v->dt.a.v[i]);
+							if (!i){
+								break;
+							}
+							i--;
+						}
+						free(v->dt.a.v);
+						v->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
+						break;
+					}
+				}
+				if (l&1){
+					v->dt.a.v[l]=SLL_ACQUIRE_STATIC_INT(0);
+				}
+				return v;
+			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
 			SLL_ACQUIRE(*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt)));
 			return *(o_dt->v+GET_VARIABLE_INDEX(o,o_dt));
@@ -1657,8 +1686,13 @@ _optimize_operation_list_comma:
 					l--;
 					o=_optimize(o,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(!l&&r->t==SLL_OBJECT_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
 					if (o_dt->rm){
-						o=_remove_up_to_end(o,l);
-						r->dt.sc-=l;
+						_remove_up_to_end(o,l);
+						sll_object_t* e=r+1;
+						r->dt.sc=0;
+						do{
+							r->dt.sc++;
+							e=sll_skip_object(e);
+						} while (e!=o);
 						break;
 					}
 				}
@@ -1676,7 +1710,7 @@ _optimize_operation_list_comma:
 					r->t=SLL_OBJECT_TYPE_NOP;
 				}
 				else if (r->t==SLL_OBJECT_TYPE_OPERATION_LIST&&p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_INLINE_FUNC||p->t==SLL_OBJECT_TYPE_OPERATION_LIST)){
-					p->dt.sc+=r->dt.sc-1;
+					INCREASE_PARENT(p,r->dt.sc-1);
 					r->t=SLL_OBJECT_TYPE_NOP;
 				}
 				return o;

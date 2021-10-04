@@ -297,12 +297,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_string_t
 	}
 	for (sll_map_length_t i=0;i<(m->l<<1);i+=2){
 		sll_runtime_object_t* e=m->v[i];
-		if (e->t!=SLL_RUNTIME_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=s->l){
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(e)!=SLL_RUNTIME_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=s->l){
 			return 0;
 		}
 		sll_char_t c=s->v[e->dt.i];
 		e=m->v[i+1];
-		if ((e->t==SLL_RUNTIME_OBJECT_TYPE_CHAR&&e->dt.c==c)||(e->t==SLL_RUNTIME_OBJECT_TYPE_INT&&e->dt.i==c)||(e->t==SLL_RUNTIME_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==c)){
+		if ((SLL_RUNTIME_OBJECT_GET_TYPE(e)==SLL_RUNTIME_OBJECT_TYPE_CHAR&&e->dt.c==c)||(SLL_RUNTIME_OBJECT_GET_TYPE(e)==SLL_RUNTIME_OBJECT_TYPE_INT&&e->dt.i==c)||(SLL_RUNTIME_OBJECT_GET_TYPE(e)==SLL_RUNTIME_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==c)){
 			continue;
 		}
 		return 0;
@@ -319,7 +319,7 @@ __SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_
 	INIT_PADDING(o->v,vl);
 	for (sll_string_length_t i=0;i<vl;i++){
 		sll_runtime_object_t* n=sll_operator_cast(*(v+i),sll_static_int[SLL_CONSTANT_TYPE_CHAR]);
-		SLL_ASSERT(n->t==SLL_RUNTIME_OBJECT_TYPE_CHAR);
+		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(n)==SLL_RUNTIME_OBJECT_TYPE_CHAR);
 		o->v[i]=n->dt.c;
 		o->c^=sll_rotate_bits(n->dt.c,(i&3)<<3);
 		SLL_RELEASE(n);
