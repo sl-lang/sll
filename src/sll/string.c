@@ -361,6 +361,10 @@ __SLL_FUNC void sll_string_from_int(sll_integer_t v,sll_string_t* o){
 
 __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
 	sll_string_length_t l=sll_string_length_unaligned(s);
+	if (!l){
+		SLL_ZERO_STRING(o);
+		return;
+	}
 	o->l=l;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
 	const uint64_t* a=(const uint64_t*)s;
@@ -392,6 +396,10 @@ __SLL_FUNC void sll_string_hash(sll_string_t* s){
 
 
 __SLL_FUNC void sll_string_inv(const sll_string_t* s,sll_string_t* o){
+	if (!s->l){
+		SLL_ZERO_STRING(o);
+		return;
+	}
 	o->l=s->l;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	const uint64_t* a=(const uint64_t*)(s->v);
@@ -508,6 +516,10 @@ __SLL_FUNC void sll_string_op_map(const sll_string_t* s,const sll_map_t* m,sll_b
 
 
 __SLL_FUNC void sll_string_or(const sll_string_t* s,sll_char_t v,sll_string_t* o){
+	if (!s->l){
+		SLL_ZERO_STRING(o);
+		return;
+	}
 	if (!v){
 		sll_string_clone(s,o);
 		return;
@@ -704,7 +716,34 @@ __SLL_FUNC void sll_string_replace_char(const sll_string_t* s,sll_char_t k,sll_c
 
 
 __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_string_t* o){
-	SLL_UNIMPLEMENTED();
+	a=(a<0?s->l:0)+(a%s->l);
+	b=(b<0?s->l:0)+(b%s->l);
+	if (!s->l||a==b||!c){
+		SLL_ZERO_STRING(o);
+		return;
+	}
+	if (a<b){
+		SLL_ASSERT(c>0);
+		if (c>s->l+a){
+			o->l=1;
+			o->c=s->v[a];
+			o->v=malloc(SLL_STRING_ALIGN_LENGTH(1)*sizeof(sll_char_t));
+			o->v[0]=s->v[a];
+			return;
+		}
+		o->l=(sll_string_length_t)((b-a)/c);
+		o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+		if (c==1){
+			memcpy(o->v,s->v+a,o->l);
+		}
+		else{
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	else{
+		SLL_UNIMPLEMENTED();
+	}
+	sll_string_hash(o);
 }
 
 
@@ -880,9 +919,10 @@ __SLL_FUNC void sll_string_subtract_array(const sll_string_t* s,const sll_array_
 	o->l=s->l;
 	o->v=malloc(s->l*sizeof(sll_runtime_object_t*));
 	sll_array_length_t i=0;
-	for (;i<a->l;i++){
+	do{
 		o->v[i]=sll_operator_sub(sll_static_char[s->v[i]],a->v[i]);
-	}
+		i++;
+	} while (i<a->l);
 	while (i<s->l){
 		o->v[i]=SLL_FROM_CHAR(s->v[i]);
 		i++;
@@ -979,6 +1019,10 @@ __SLL_FUNC void sll_string_upper_case(const sll_string_t* s,sll_string_t* o){
 
 
 __SLL_FUNC void sll_string_xor(const sll_string_t* s,sll_char_t v,sll_string_t* o){
+	if (!s->l){
+		SLL_ZERO_STRING(o);
+		return;
+	}
 	if (!v){
 		sll_string_clone(s,o);
 		return;

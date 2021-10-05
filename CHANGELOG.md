@@ -18,6 +18,7 @@
 ### Changed
 
 - Bug fixes in the optimizer
+- Everything is converted to strings in object of type `SLL_OBJECT_TYPE_PRINT`
 - `sll_operator_add` now correctly combines objects with strings and arrays
 
 ## [0.6.20] - 2021-9-26
