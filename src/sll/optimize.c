@@ -1641,13 +1641,82 @@ _remove_cond:
 					return o+1;
 				}
 				sll_object_t* r=o;
+				if (l==1){
+					o=_optimize(o+1,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+					sll_runtime_object_t* v=_get_as_runtime_object(r+1,o_dt,0);
+					if (SLL_RUNTIME_OBJECT_GET_TYPE(v)!=RUNTIME_OBJECT_TYPE_UNKNOWN&&!(v->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
+						r->t=SLL_OBJECT_TYPE_COMMA;
+						r->dt.sc=2;
+						_shift_objects(o,o_dt->c_dt,1);
+						_runtime_object_to_object(v,o,o_dt);
+						SLL_RELEASE(v);
+						o=r;
+						goto _optimize_operation_list_comma;
+					}
+					SLL_RELEASE(v);
+					return o;
+				}
 				o++;
-				while (l){
-					l--;
+				sll_runtime_object_t* v[4]={NULL,NULL,NULL,NULL};
+				sll_arg_count_t i=0;
+				if (l>4){
+					l=4;
+				}
+				while (i<l){
+					sll_object_t* a=o;
 					o=_optimize(o,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+					v[i]=_get_as_runtime_object(a,o_dt,0);
+					if (SLL_RUNTIME_OBJECT_GET_TYPE(v[i])==RUNTIME_OBJECT_TYPE_UNKNOWN||(v[i]->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
+						break;
+					}
 					if (o_dt->rm){
 						SLL_UNIMPLEMENTED();
 					}
+					i++;
+				}
+				if (i!=l){
+					i++;
+				}
+				else{
+					sll_runtime_object_t* n;
+					SLL_ASSERT(i>1&&i<5);
+					if (i==2){
+						n=sll_operator_access(v[0],v[1]);
+					}
+					else if (i==3){
+						n=sll_operator_access_range(v[0],v[1],v[2]);
+					}
+					else{
+						n=sll_operator_access_range_step(v[0],v[1],v[2],v[3]);
+					}
+					while (i){
+						i--;
+						SLL_RELEASE(v[i]);
+					}
+					i=4;
+					l=r->dt.ac;
+					while (i<l){
+						o=sll_skip_object(o);
+						i++;
+					}
+					r->t=SLL_OBJECT_TYPE_COMMA;
+					r->dt.sc=r->dt.ac+1;
+					_shift_objects(o,o_dt->c_dt,1);
+					o=_runtime_object_to_object(n,o,o_dt)+1;
+					SLL_RELEASE(n);
+					o=r;
+					goto _optimize_operation_list_comma;
+				}
+				for (sll_arg_count_t j=0;j<i;j++){
+					SLL_RELEASE(v[j]);
+				}
+				l=r->dt.ac;
+				while (i<l){
+					o=_optimize(o,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(i<5?OPTIMIZER_FLAG_ARGUMENT:0));
+					if (o_dt->rm){
+						SLL_UNIMPLEMENTED();
+					}
+					i++;
 				}
 				return o;
 			}

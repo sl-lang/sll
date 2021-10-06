@@ -2,7 +2,13 @@
 
 ## [0.6.22] - Ongoing
 
-*Nothing*
+### Added
+
+- `SLL_OBJECT_TYPE_ACCESS` is now optimized properly
+
+### Changed
+
+- Everything is converted to strings in object of type `SLL_OBJECT_TYPE_PRINT`
 
 ## [0.6.21] - 2021-10-4
 
@@ -18,7 +24,6 @@
 ### Changed
 
 - Bug fixes in the optimizer
-- Everything is converted to strings in object of type `SLL_OBJECT_TYPE_PRINT`
 - `sll_operator_add` now correctly combines objects with strings and arrays
 
 ## [0.6.20] - 2021-9-26
