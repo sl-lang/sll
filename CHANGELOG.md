@@ -5,6 +5,7 @@
 ### Added
 
 - `SLL_OBJECT_TYPE_ACCESS` is now optimized properly
+- Adjacent `SLL_OBJECT_TYPE_PRINT` objects are not combined
 
 ### Changed
 
