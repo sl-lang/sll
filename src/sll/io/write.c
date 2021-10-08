@@ -146,16 +146,16 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 	}
 	uint64_t v=0;
 	uint8_t bc=64;
-	sll_char_t bf[STRING_COMPRESSION_BUFFER_SIZE];
-	memset(bf,0xff,STRING_COMPRESSION_BUFFER_OFFSET);
+	sll_char_t bf[1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)];
+	memset(bf,0xff,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
 	sll_string_length_t si=0;
-	uint16_t i=STRING_COMPRESSION_BUFFER_OFFSET;
+	uint16_t i=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{
 		bf[i]=s->v[si];
 		i++;
 		si++;
-	} while (si<s->l&&i<STRING_COMPRESSION_BUFFER_SIZE);
-	uint16_t r=STRING_COMPRESSION_BUFFER_OFFSET;
+	} while (si<s->l&&i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)));
+	uint16_t r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{
 		uint16_t st=0;
 		uint16_t l=1;
@@ -164,7 +164,7 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 			mn=(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1;
 		}
 		sll_char_t c=bf[r];
-		for (uint16_t j=r-STRING_COMPRESSION_BUFFER_OFFSET;j<r;j++){
+		for (uint16_t j=r-(((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));j<r;j++){
 			if (bf[j]==c){
 				uint16_t k=1;
 				while (k<mn&&bf[j+k]==bf[r+k]){
@@ -190,11 +190,11 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 			bc-=el;
 		}
 		r+=l;
-		if (r>=STRING_COMPRESSION_BUFFER_SIZE-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1){
+		if (r>=(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1){
 			memcpy(bf,bf+(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT),1<<STRING_COMPRESSION_OFFSET_BIT_COUNT);
 			i-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
 			r-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
-			while (i<STRING_COMPRESSION_BUFFER_SIZE&&si<s->l){
+			while (i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))&&si<s->l){
 				bf[i]=s->v[si];
 				i++;
 				si++;

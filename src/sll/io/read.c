@@ -183,8 +183,8 @@ static sll_return_t _read_string(sll_input_data_stream_t* is,sll_string_t* o,sll
 		return SLL_RETURN_NO_ERROR;
 	}
 	sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
-	memset(bf,0xff,STRING_COMPRESSION_BUFFER_OFFSET);
-	uint16_t r=STRING_COMPRESSION_BUFFER_OFFSET;
+	memset(bf,0xff,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
+	uint16_t r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	uint64_t v;
 	uint8_t bc=0;
 	sll_string_length_t i=0;
