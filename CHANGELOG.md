@@ -6,11 +6,11 @@
 
 - Adjacent `SLL_OBJECT_TYPE_PRINT` objects are not combined
 - `SLL_OBJECT_TYPE_ACCESS` is now optimized properly
-- Strings longer than `STRING_COMPRESSION_MIN_LENGTH` characters are now compressed when written to file
+- Strings longer than `STRING_COMPRESSION_MIN_LENGTH` characters are now compressed when generating string tables in files
 
 ### Changed
 
-- Everything is converted to strings in objects of type `SLL_OBJECT_TYPE_PRINT`
+- All arguments in objects of type `SLL_OBJECT_TYPE_PRINT` are converted to strings
 - Fixed bugs in optimizing `SLL_OBJECT_TYPE_COMMA` objects
 
 ## [0.6.21] - 2021-10-4
