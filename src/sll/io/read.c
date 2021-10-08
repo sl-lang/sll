@@ -170,6 +170,23 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t
 
 
 
+static sll_return_t _read_string(sll_input_data_stream_t* is,sll_string_t* o,sll_error_t* err){
+	CHECK_ERROR(is,o->l,sll_string_length_t,err);
+	sll_string_create(o->l,o);
+	if (o->l<STRING_COMPRESSION_MIN_LENGTH){
+		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,o->v,o->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
+			err->t=SLL_ERROR_INVALID_FILE_FORMAT;
+			return SLL_RETURN_ERROR;
+		}
+		sll_string_hash(o);
+		return SLL_RETURN_NO_ERROR;
+	}
+	SLL_UNIMPLEMENTED();
+	return SLL_RETURN_NO_ERROR;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stream_t* is,sll_assembly_data_t* a_dt,sll_error_t* e){
 	uint32_t n;
 	sll_version_t v;
@@ -188,15 +205,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 	CHECK_ERROR(is,a_dt->st.l,sll_string_index_t,e);
 	a_dt->st.dt=malloc(a_dt->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		sll_string_length_t l;
-		CHECK_ERROR(is,l,sll_string_length_t,e);
-		sll_string_t* s=a_dt->st.dt+i;
-		sll_string_create(l,s);
-		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,s->v,s->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
-			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
+		if (!_read_string(is,a_dt->st.dt+i,e)){
 			return SLL_RETURN_ERROR;
 		}
-		sll_string_hash(s);
 	}
 	_init_assembly_stack(a_dt);
 	a_dt->h=a_dt->_s.p;
@@ -374,15 +385,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 	CHECK_ERROR(is,c_dt->st.l,sll_string_index_t,e);
 	c_dt->st.dt=malloc(c_dt->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
-		sll_string_length_t l;
-		CHECK_ERROR(is,l,sll_string_length_t,e);
-		sll_string_t* s=c_dt->st.dt+i;
-		sll_string_create(l,s);
-		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,s->v,s->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
-			e->t=SLL_ERROR_INVALID_FILE_FORMAT;
+		if (!_read_string(is,c_dt->st.dt+i,e)){
 			return SLL_RETURN_ERROR;
 		}
-		sll_string_hash(s);
 	}
 	CHECK_ERROR(is,c_dt->_n_sc_id,sll_scope_t,e);
 	_init_object_stack(c_dt);

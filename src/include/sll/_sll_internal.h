@@ -174,6 +174,8 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT 8
 #define OBJECT_STACK_PAGE_ALLOC_COUNT 8
 
+#define STRING_COMPRESSION_MIN_LENGTH 4096
+
 
 
 typedef uint16_t call_stack_size_t;

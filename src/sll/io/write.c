@@ -137,6 +137,17 @@ static const sll_object_t* _write_object(sll_output_data_stream_t* os,const sll_
 
 
 
+static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
+	_write_integer(os,s->l);
+	if (s->l<STRING_COMPRESSION_MIN_LENGTH){
+		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,s->v,s->l*sizeof(sll_char_t));
+		return;
+	}
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assembly_data_t* a_dt){
 	uint32_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
 	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
@@ -151,9 +162,7 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 	}
 	_write_integer(os,a_dt->st.l);
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		const sll_string_t* s=a_dt->st.dt+i;
-		_write_integer(os,s->l);
-		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,s->v,s->l*sizeof(sll_char_t));
+		_write_string(a_dt->st.dt+i,os);
 	}
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
@@ -290,9 +299,7 @@ __SLL_FUNC void sll_write_compiled_object(sll_output_data_stream_t* os,const sll
 	}
 	_write_integer(os,c_dt->st.l);
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
-		const sll_string_t* s=c_dt->st.dt+i;
-		_write_integer(os,s->l);
-		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,s->v,s->l*sizeof(sll_char_t));
+		_write_string(c_dt->st.dt+i,os);
 	}
 	_write_integer(os,c_dt->_n_sc_id);
 	_write_object(os,c_dt->h);

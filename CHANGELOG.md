@@ -4,12 +4,13 @@
 
 ### Added
 
-- `SLL_OBJECT_TYPE_ACCESS` is now optimized properly
 - Adjacent `SLL_OBJECT_TYPE_PRINT` objects are not combined
+- `SLL_OBJECT_TYPE_ACCESS` is now optimized properly
 
 ### Changed
 
-- Everything is converted to strings in object of type `SLL_OBJECT_TYPE_PRINT`
+- Everything is converted to strings in objects of type `SLL_OBJECT_TYPE_PRINT`
+- Fixed bugs in optimizing `SLL_OBJECT_TYPE_COMMA` objects
 
 ## [0.6.21] - 2021-10-4
 

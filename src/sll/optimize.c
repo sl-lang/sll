@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sll/debug.h>
 
 
 
@@ -1015,8 +1016,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 							sll_object_to_string((const sll_runtime_object_t*const*)&v,1,&s);
 							o->t=SLL_OBJECT_TYPE_STRING;
 							o->dt.i=sll_add_string(&(o_dt->c_dt->st),&s,1);
-							o++;
-							_optimize(b,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+							o=_optimize(b,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 						}
 						while (b->t==SLL_OBJECT_TYPE_NOP||b->t==SLL_OBJECT_TYPE_DEBUG_DATA||b->t==OBJECT_TYPE_CHANGE_STACK){
 							b=(b->t==OBJECT_TYPE_CHANGE_STACK?b->dt._p:b+1);
@@ -1827,6 +1827,7 @@ _remove_cond:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 _optimize_operation_list_comma:
 			{
+				sll_bool_t rm=(p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_INLINE_FUNC||p->t==SLL_OBJECT_TYPE_COMMA||p->t==SLL_OBJECT_TYPE_OPERATION_LIST));
 				sll_statement_count_t l=o->dt.sc;
 				sll_object_t* r=o;
 				o++;
@@ -1835,7 +1836,7 @@ _optimize_operation_list_comma:
 					l--;
 					sll_object_t* a=o;
 					sll_statement_count_t j=r->dt.sc;
-					o=_optimize(o,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(!l&&r->t==SLL_OBJECT_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
+					o=_optimize(o,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(!rm&&!l&&r->t==SLL_OBJECT_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
 					if (r->dt.sc==j){
 						while (a->t==SLL_OBJECT_TYPE_NOP||a->t==SLL_OBJECT_TYPE_DEBUG_DATA||a->t==OBJECT_TYPE_CHANGE_STACK){
 							a=(a->t==OBJECT_TYPE_CHANGE_STACK?a->dt._p:a+1);
@@ -1844,7 +1845,7 @@ _optimize_operation_list_comma:
 							b->dt.ac+=a->dt.ac;
 							a->t=SLL_OBJECT_TYPE_NOP;
 							r->dt.sc--;
-							o=_optimize(b,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(!l&&r->t==SLL_OBJECT_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
+							o=_optimize(b,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(!rm&&!l&&r->t==SLL_OBJECT_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
 						}
 						else{
 							b=a;
@@ -1874,7 +1875,7 @@ _optimize_operation_list_comma:
 				else if (r->dt.sc==1&&(r->t==SLL_OBJECT_TYPE_COMMA||!(fl&OPTIMIZER_FLAG_ARGUMENT))){
 					r->t=SLL_OBJECT_TYPE_NOP;
 				}
-				else if (r->t==SLL_OBJECT_TYPE_OPERATION_LIST&&p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_INLINE_FUNC||p->t==SLL_OBJECT_TYPE_OPERATION_LIST)){
+				else if ((p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_INLINE_FUNC||p->t==SLL_OBJECT_TYPE_COMMA||p->t==SLL_OBJECT_TYPE_OPERATION_LIST))){
 					INCREASE_PARENT(p,r->dt.sc-1);
 					r->t=SLL_OBJECT_TYPE_NOP;
 				}
