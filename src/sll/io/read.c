@@ -6,6 +6,7 @@
 #include <sll/version.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -181,7 +182,49 @@ static sll_return_t _read_string(sll_input_data_stream_t* is,sll_string_t* o,sll
 		sll_string_hash(o);
 		return SLL_RETURN_NO_ERROR;
 	}
-	SLL_UNIMPLEMENTED();
+	sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
+	memset(bf,0xff,STRING_COMPRESSION_BUFFER_OFFSET);
+	uint16_t r=STRING_COMPRESSION_BUFFER_OFFSET;
+	uint64_t v;
+	uint8_t bc=0;
+	sll_string_length_t i=0;
+	do{
+		if (!bc){
+			READ_FIELD(v,is);
+			bc=64;
+		}
+		bc--;
+		uint16_t e;
+		uint8_t el=((v&(1ull<<bc))?8:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT);
+		if (bc<el){
+			e=(v&((1<<bc)-1))<<(el-bc);
+			READ_FIELD(v,is);
+			bc+=64-el;
+			e|=v>>bc;
+		}
+		else{
+			bc-=el;
+			e=(v>>bc)&((1<<el)-1);
+		}
+		if (el==8){
+			o->v[i]=(sll_char_t)e;
+			bf[r]=(sll_char_t)e;
+			i++;
+			r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
+		}
+		else{
+			uint16_t k=e>>STRING_COMPRESSION_LENGTH_BIT_COUNT;
+			uint16_t l=k+(e&((1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1))+2;
+			do{
+				bf[r]=bf[k&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1)];
+				o->v[i]=bf[r];
+				i++;
+				r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
+				k++;
+			} while (k<l);
+		}
+	} while (i<o->l);
+	sll_string_hash(o);
 	return SLL_RETURN_NO_ERROR;
 }
 

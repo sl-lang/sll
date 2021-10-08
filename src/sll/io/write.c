@@ -5,6 +5,7 @@
 #include <sll/version.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -143,7 +144,67 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,s->v,s->l*sizeof(sll_char_t));
 		return;
 	}
-	SLL_UNIMPLEMENTED();
+	uint64_t v=0;
+	uint8_t bc=64;
+	sll_char_t bf[STRING_COMPRESSION_BUFFER_SIZE];
+	memset(bf,0xff,STRING_COMPRESSION_BUFFER_OFFSET);
+	sll_string_length_t si=0;
+	uint16_t i=STRING_COMPRESSION_BUFFER_OFFSET;
+	do{
+		bf[i]=s->v[si];
+		i++;
+		si++;
+	} while (si<s->l&&i<STRING_COMPRESSION_BUFFER_SIZE);
+	uint16_t r=STRING_COMPRESSION_BUFFER_OFFSET;
+	do{
+		uint16_t st=0;
+		uint16_t l=1;
+		uint16_t mn=i-r;
+		if (mn>(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1){
+			mn=(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1;
+		}
+		sll_char_t c=bf[r];
+		for (uint16_t j=r-STRING_COMPRESSION_BUFFER_OFFSET;j<r;j++){
+			if (bf[j]==c){
+				uint16_t k=1;
+				while (k<mn&&bf[j+k]==bf[r+k]){
+					k++;
+				}
+				if (k>l){
+					st=j;
+					l=k;
+				}
+			}
+		}
+		uint16_t e=(l==1?(256|c):(((st&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1))<<STRING_COMPRESSION_LENGTH_BIT_COUNT)|(l-2)));
+		uint8_t el=(l==1?9:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT+1);
+		SLL_ASSERT(el<=15);
+		if (bc<el){
+			v=(v<<bc)|(e>>(el-bc));
+			SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(void*)(&v),sizeof(uint64_t));
+			v=e;
+			bc+=64-el;
+		}
+		else{
+			v=(v<<el)|e;
+			bc-=el;
+		}
+		r+=l;
+		if (r>=STRING_COMPRESSION_BUFFER_SIZE-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1){
+			memcpy(bf,bf+(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT),1<<STRING_COMPRESSION_OFFSET_BIT_COUNT);
+			i-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
+			r-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
+			while (i<STRING_COMPRESSION_BUFFER_SIZE&&si<s->l){
+				bf[i]=s->v[si];
+				i++;
+				si++;
+			}
+		}
+	} while (r<i);
+	if (bc!=64){
+		v<<=bc;
+		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(void*)(&v),sizeof(uint64_t));
+	}
 }
 
 
