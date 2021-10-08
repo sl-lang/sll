@@ -6,6 +6,7 @@
 
 - Adjacent `SLL_OBJECT_TYPE_PRINT` objects are not combined
 - `SLL_OBJECT_TYPE_ACCESS` is now optimized properly
+- Strings longer than `STRING_COMPRESSION_MIN_LENGTH` characters are now compressed when written to file
 
 ### Changed
 
