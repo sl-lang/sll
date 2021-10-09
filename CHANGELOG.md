@@ -12,7 +12,12 @@
 
 - All arguments in objects of type `SLL_OBJECT_TYPE_PRINT` are converted to strings
 - Fixed bugs in optimizing `SLL_OBJECT_TYPE_COMMA` objects
+- Renamed `SLL_ERROR_SLL_ASSERTION` to `SLL_ERROR_ASSERTION`
 - Renamed some array & string functions for consistency
+- Rewritten header files
+
+### Removed
+- [`src/include/sll/core.h`][0.6.21/src/include/sll/core.h] and [`src/include/sll/constants.h`][0.6.21/src/include/sll/constants.h]
 
 ## [0.6.21] - 2021-10-4
 
@@ -868,6 +873,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[0.6.21/src/include/sll/constants.h]: https://github.com/sl-lang/sll/blob/v0.6.21/src/include/sll/constants.h
+[0.6.21/src/include/sll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.21/src/include/sll/core.h
 [0.6.20/src/sll/api/file_api.c]: https://github.com/sl-lang/sll/blob/v0.6.20/src/sll/api/file_api.c
 [0.6.20/src/include/sll/api]: https://github.com/sl-lang/sll/tree/v0.6.20/src/include/sll/api
 [0.6.19/CODE_OF_CONDUCT.md]: https://github.com/sl-lang/sll/blob/v0.6.19/CODE_OF_CONDUCT.md

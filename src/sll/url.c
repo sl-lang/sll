@@ -4,6 +4,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/url.h>
+#include <sll/util.h>
 #include <stdlib.h>
 #include <string.h>
 

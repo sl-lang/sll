@@ -1,8 +1,12 @@
 #include <sll/_sll_internal.h>
+#include <sll/assembly.h>
 #include <sll/common.h>
-#include <sll/constants.h>
+#include <sll/error.h>
+#include <sll/object.h>
+#include <sll/stream.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <sll/version.h>
 #include <stdint.h>
 #include <stdlib.h>

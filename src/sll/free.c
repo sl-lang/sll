@@ -1,7 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
-#include <sll/constants.h>
-#include <sll/core.h>
+#include <sll/free.h>
 #include <sll/gc.h>
 #include <sll/platform.h>
 #include <sll/types.h>

@@ -4,9 +4,9 @@
 #include <sll/api/string.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
-#include <sll/constants.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
+#include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/stream.h>
 #include <sll/string.h>

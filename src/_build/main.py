@@ -69,7 +69,7 @@ if ("--generate-api" in sys.argv):
 		print(f"Generating Code & Signatures for {len(d_dt)} API functions...")
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_API__GENERATED__\n#define __SLL_API__GENERATED__\n#include <sll/types.h>\n\n\n")
-		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/constants.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/handle.h>\n#include <sll/ift.h>\n#include <sll/runtime_object.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		for k in d_dt:
 			if ("api" in k["flag"]):
 				rt=RETURN_CODE_BASE_TYPE[k["ret"][0]["type"]]

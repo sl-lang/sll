@@ -1,6 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/common.h>
+#include <sll/runtime_object.h>
 #include <sll/types.h>
 #include <string.h>
 #include <stdint.h>

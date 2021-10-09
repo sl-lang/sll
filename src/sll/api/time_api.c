@@ -1,9 +1,9 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/common.h>
-#include <sll/constants.h>
 #include <sll/operator.h>
 #include <sll/platform.h>
+#include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 

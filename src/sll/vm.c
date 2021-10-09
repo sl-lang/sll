@@ -2,14 +2,16 @@
 #include <sll/api/memory.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
+#include <sll/assembly.h>
 #include <sll/common.h>
-#include <sll/constants.h>
-#include <sll/core.h>
+#include <sll/error.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/map.h>
 #include <sll/operator.h>
+#include <sll/runtime_object.h>
 #include <sll/static_object.h>
+#include <sll/stream.h>
 #include <sll/types.h>
 #include <stdlib.h>
 

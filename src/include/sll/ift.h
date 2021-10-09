@@ -5,6 +5,11 @@
 
 
 
+#define SLL_INTERNAL_FUNCTION_FLAG_REQUIRED 1
+#define SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL 2
+
+
+
 __SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t* o);
 
 

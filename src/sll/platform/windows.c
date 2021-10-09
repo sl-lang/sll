@@ -4,9 +4,9 @@
 #include <ws2tcpip.h>
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
-#include <sll/core.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <fcntl.h>
 #include <io.h>
 #include <stdio.h>

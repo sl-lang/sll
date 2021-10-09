@@ -3,8 +3,8 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
-#include <sll/api/_generated.h>
 #include <sll/api.h>
+#include <sll/api/_generated.h>
 #include <sll/types.h>
 #include <signal.h>
 #include <stdint.h>
@@ -92,7 +92,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define _SLL_ASSERT_0(x,e,r) \
 	do{ \
 		if (!(x)){ \
-			(e)->t=SLL_ERROR_SLL_ASSERTION; \
+			(e)->t=SLL_ERROR_ASSERTION; \
 			const char __tmp0[]="File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("; \
 			uint32_t __i=0; \
 			for (uint32_t __j=0;__j<sizeof(__tmp0)/sizeof(char)-1;__j++){ \

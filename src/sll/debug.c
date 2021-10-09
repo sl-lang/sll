@@ -1,6 +1,7 @@
 #include <sll/api/string.h>
 #include <sll/common.h>
 #include <sll/object.h>
+#include <sll/runtime_object.h>
 #include <sll/stream.h>
 #include <sll/types.h>
 #include <stdio.h>

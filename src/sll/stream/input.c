@@ -1,4 +1,5 @@
 #include <sll/common.h>
+#include <sll/stream.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>

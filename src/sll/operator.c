@@ -2,12 +2,13 @@
 #include <sll/api/memory.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
+#include <sll/cast.h>
 #include <sll/common.h>
-#include <sll/constants.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/map.h>
 #include <sll/operator.h>
+#include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -2194,7 +2195,7 @@ __SLL_OPERATOR_BINARY(access){
 
 __SLL_OPERATOR_TERNARY(access_range){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT){
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT){
 			sll_runtime_object_t* o=SLL_CREATE();
 			o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 			sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,1,&(o->dt.s));
@@ -2202,7 +2203,7 @@ __SLL_OPERATOR_TERNARY(access_range){
 		}
 	}
 	else if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT){
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT){
 			sll_runtime_object_t* o=SLL_CREATE();
 			o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 			sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,1,&(o->dt.a));
@@ -2228,7 +2229,7 @@ __SLL_OPERATOR_TERNARY(access_range){
 
 __SLL_OPERATOR_QUATERNARY(access_range_step){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(d)==SLL_RUNTIME_OBJECT_TYPE_INT){
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(d)==SLL_RUNTIME_OBJECT_TYPE_INT){
 			sll_runtime_object_t* o=SLL_CREATE();
 			o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 			sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,d->dt.i,&(o->dt.s));
@@ -2236,7 +2237,7 @@ __SLL_OPERATOR_QUATERNARY(access_range_step){
 		}
 	}
 	else if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(d)==SLL_RUNTIME_OBJECT_TYPE_INT){
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(d)==SLL_RUNTIME_OBJECT_TYPE_INT){
 			sll_runtime_object_t* o=SLL_CREATE();
 			o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 			sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,d->dt.i,&(o->dt.a));

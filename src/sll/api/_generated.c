@@ -3,7 +3,9 @@
 #include <sll/api.h>
 #include <sll/api/_generated.h>
 #include <sll/common.h>
-#include <sll/constants.h>
+#include <sll/handle.h>
+#include <sll/ift.h>
+#include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 

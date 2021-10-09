@@ -9,8 +9,8 @@
 #define SLL_ACQUIRE_NO_DEBUG(x) ((x)->rc++)
 #define SLL_ACQUIRE(x) SLL_ACQUIRE_NO_DEBUG(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_ACQUIRE))
 #define SLL_RELEASE(x) sll_release_object(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_RELEASE))
+
 #define SLL_NO_DEBUG_DATA ._dbg0=0xffff,._dbg1=0xff
-#define SLL_RUNTIME_OBJECT_STRUCT {1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_NO_DEBUG_DATA,.dt={.i=0}}
 
 
 

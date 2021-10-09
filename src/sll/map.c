@@ -4,6 +4,7 @@
 #include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/operator.h>
+#include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <stdlib.h>

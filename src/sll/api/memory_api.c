@@ -5,6 +5,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
+#include <sll/runtime_object.h>
 #include <sll/types.h>
 #include <stdint.h>
 

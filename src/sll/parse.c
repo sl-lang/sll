@@ -1,12 +1,15 @@
 #include <sll/_sll_internal.h>
+#include <sll/cast.h>
 #include <sll/common.h>
-#include <sll/constants.h>
-#include <sll/core.h>
+#include <sll/error.h>
+#include <sll/free.h>
 #include <sll/ift.h>
 #include <sll/object.h>
 #include <sll/platform.h>
+#include <sll/stream.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>

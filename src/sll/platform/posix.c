@@ -2,6 +2,7 @@
 #include <sll/common.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <dirent.h>
 #include <netdb.h>
 #include <stdlib.h>

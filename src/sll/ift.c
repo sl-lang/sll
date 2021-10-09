@@ -1,6 +1,5 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
-#include <sll/constants.h>
 #include <sll/types.h>
 #include <stdlib.h>
 #include <string.h>

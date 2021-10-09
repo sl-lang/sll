@@ -3,6 +3,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/map.h>
+#include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/url.h>

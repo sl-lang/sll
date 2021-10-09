@@ -2,13 +2,13 @@
 #include <sll/api/string.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
-#include <sll/constants.h>
-#include <sll/core.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/platform.h>
+#include <sll/runtime_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -171,7 +171,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 			}
 			free(o->dt.m.v);
 		}
-		o->t=SLL_OBJECT_TYPE_INT;
+		o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
 		o->dt.i=0;
 		GC_SET_NEXT_OBJECT(o,_gc_next_object);
 		_gc_next_object=o;
