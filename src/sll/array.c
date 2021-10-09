@@ -109,6 +109,24 @@ __SLL_FUNC void sll_array_combinations(const sll_array_t* a,const sll_array_t* b
 
 
 
+__SLL_FUNC void sll_array_combinations_string(const sll_array_t* a,const sll_string_t* s,sll_array_t* o){
+	if (!a->l||!s->l){
+		SLL_ZERO_ARRAY(o);
+		return;
+	}
+	o->l=a->l*s->l;
+	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	sll_array_length_t i=0;
+	for (sll_string_length_t j=0;j<a->l;j++){
+		for (sll_array_length_t k=0;k<s->l;k++){
+			o->v[i]=sll_operator_add(a->v[j],sll_static_char[s->v[k]]);
+			i++;
+		}
+	}
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare(const sll_array_t* a,const sll_array_t* b){
 	SLL_UNIMPLEMENTED();
 	return SLL_COMPARE_RESULT_EQUAL;
@@ -501,24 +519,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_shift(const sll_ar
 		}
 	}
 	return a->v[0];
-}
-
-
-
-__SLL_FUNC void sll_array_string_combinations(const sll_array_t* a,const sll_string_t* s,sll_array_t* o){
-	if (!a->l||!s->l){
-		SLL_ZERO_ARRAY(o);
-		return;
-	}
-	o->l=a->l*s->l;
-	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
-	sll_array_length_t i=0;
-	for (sll_string_length_t j=0;j<a->l;j++){
-		for (sll_array_length_t k=0;k<s->l;k++){
-			o->v[i]=sll_operator_add(a->v[j],sll_static_char[s->v[k]]);
-			i++;
-		}
-	}
 }
 
 

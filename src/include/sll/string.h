@@ -38,11 +38,11 @@
 
 
 
-__SLL_FUNC void sll_string_and(const sll_string_t* s,sll_char_t v,sll_string_t* o);
+__SLL_FUNC void sll_string_and(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
 
 
 
-__SLL_FUNC void sll_string_and_string(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
+__SLL_FUNC void sll_string_and_char(const sll_string_t* s,sll_char_t v,sll_string_t* o);
 
 
 
@@ -142,11 +142,11 @@ __SLL_FUNC void sll_string_op_map(const sll_string_t* s,const sll_map_t* m,sll_b
 
 
 
-__SLL_FUNC void sll_string_or(const sll_string_t* s,sll_char_t v,sll_string_t* o);
+__SLL_FUNC void sll_string_or(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
 
 
 
-__SLL_FUNC void sll_string_or_string(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
+__SLL_FUNC void sll_string_or_char(const sll_string_t* s,sll_char_t v,sll_string_t* o);
 
 
 
@@ -214,11 +214,11 @@ __SLL_FUNC void sll_string_to_map(const sll_string_t* s,sll_map_t* o);
 
 
 
-__SLL_FUNC void sll_string_xor(const sll_string_t* s,sll_char_t v,sll_string_t* o);
+__SLL_FUNC void sll_string_xor(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
 
 
 
-__SLL_FUNC void sll_string_xor_string(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
+__SLL_FUNC void sll_string_xor_char(const sll_string_t* s,sll_char_t v,sll_string_t* o);
 
 
 

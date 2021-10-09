@@ -34,6 +34,10 @@ __SLL_FUNC void sll_array_combinations(const sll_array_t* a,const sll_array_t* b
 
 
 
+__SLL_FUNC void sll_array_combinations_string(const sll_array_t* a,const sll_string_t* s,sll_array_t* o);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare(const sll_array_t* a,const sll_array_t* b);
 
 
@@ -119,10 +123,6 @@ __SLL_FUNC void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_intege
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o);
-
-
-
-__SLL_FUNC void sll_array_string_combinations(const sll_array_t* a,const sll_string_t* s,sll_array_t* o);
 
 
 

@@ -12,6 +12,7 @@
 
 - All arguments in objects of type `SLL_OBJECT_TYPE_PRINT` are converted to strings
 - Fixed bugs in optimizing `SLL_OBJECT_TYPE_COMMA` objects
+- Renamed some array & string functions for consistency
 
 ## [0.6.21] - 2021-10-4
 

@@ -50,7 +50,7 @@ static void _gc_free_pages(void){
 
 __SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t){
 	uint32_t i=o->_dbg0|(o->_dbg1<<16);
-	if (i==GC_MAX_DBG_ID){
+	if (i==GC_MAX_DEBUG_ID){
 		i=0;
 		while (i<_gc_dbg_dtl){
 			if (!(*(_gc_dbg_dt+i))){
@@ -59,7 +59,7 @@ __SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,con
 			i++;
 		}
 		_gc_dbg_dtl++;
-		SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DBG_ID);
+		SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DEBUG_ID);
 		void* tmp=realloc(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
 		SLL_ASSERT(tmp||!"Unable to Reallocate Debug Data Array");
 		_gc_dbg_dt=tmp;
@@ -183,7 +183,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 
 __SLL_FUNC void sll_remove_debug_data(sll_runtime_object_t* o){
 	uint32_t i=o->_dbg0|(o->_dbg1<<16);
-	if (i!=GC_MAX_DBG_ID){
+	if (i!=GC_MAX_DEBUG_ID){
 		SLL_ASSERT(i<_gc_dbg_dtl);
 		runtime_object_debug_data_t* dt=*(_gc_dbg_dt+i);
 		*(_gc_dbg_dt+i)=NULL;
@@ -252,7 +252,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 				sll_string_t str;
 				sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
 				uint32_t j=c->_dbg0|(c->_dbg1<<16);
-				if (j!=GC_MAX_DBG_ID){
+				if (j!=GC_MAX_DEBUG_ID){
 					runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
 					if (dt->c.fp){
 						fprintf(stderr,"%s:%u (%s)",dt->c.fp,dt->c.ln,dt->c.fn);
@@ -326,7 +326,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 				sll_string_t str;
 				sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
 				uint32_t j=c->_dbg0|(c->_dbg1<<16);
-				SLL_ASSERT(j!=GC_MAX_DBG_ID);
+				SLL_ASSERT(j!=GC_MAX_DEBUG_ID);
 				runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
 				fprintf(stderr,"%s: %u (<static>): {type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",k->fp,k->ln,t,c->rc,str.v,dt->all);
 				for (uint32_t m=0;m<dt->all;m++){
