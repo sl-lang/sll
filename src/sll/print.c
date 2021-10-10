@@ -256,6 +256,12 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_IF:
 			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'?');
 			break;
+		case SLL_OBJECT_TYPE_INLINE_IF:
+			PRINT_STATIC_STRING("?:",os);
+			break;
+		case SLL_OBJECT_TYPE_SWITCH:
+			PRINT_STATIC_STRING("??",os);
+			break;
 		case SLL_OBJECT_TYPE_FOR:
 			{
 				PRINT_STATIC_STRING("->",os);

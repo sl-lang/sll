@@ -5,6 +5,7 @@
 ### Added
 
 - Adjacent `SLL_OBJECT_TYPE_PRINT` objects are not combined
+- Inline-if statements (`(?:)`) and switch statements (`(??)`) ([#67])
 - `SLL_OBJECT_TYPE_ACCESS` is now optimized properly
 - Strings longer than `STRING_COMPRESSION_MIN_LENGTH` characters are now compressed when generating string tables in files
 
@@ -12,9 +13,12 @@
 
 - All arguments in objects of type `SLL_OBJECT_TYPE_PRINT` are converted to strings
 - Fixed bugs in optimizing `SLL_OBJECT_TYPE_COMMA` objects
+- Fixed bug in `SLL_IS_OBJECT_TYPE_NOT_TYPE`
+- Fixed optimization of if statements (`(?)`)
 - Renamed `SLL_ERROR_SLL_ASSERTION` to `SLL_ERROR_ASSERTION`
 - Renamed some array & string functions for consistency
 - Rewritten header files
+- Rewritten variable optimization
 
 ### Removed
 - [`src/include/sll/core.h`][0.6.21/src/include/sll/core.h] and [`src/include/sll/constants.h`][0.6.21/src/include/sll/constants.h]
@@ -837,6 +841,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#67]: https://github.com/sl-lang/sll/issues/67
 [#54]: https://github.com/sl-lang/sll/issues/54
 [#53]: https://github.com/sl-lang/sll/issues/53
 [#52]: https://github.com/sl-lang/sll/issues/52

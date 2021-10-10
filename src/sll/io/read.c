@@ -190,7 +190,8 @@ static sll_return_t _read_string(sll_input_data_stream_t* is,sll_string_t* o,sll
 	memset(bf,0xff,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
 	uint16_t r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	uint64_t v;
-	uint8_t bc=0;
+	READ_FIELD(v,is);
+	uint8_t bc=64;
 	sll_string_length_t i=0;
 	do{
 		if (!bc){

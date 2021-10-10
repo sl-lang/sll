@@ -238,7 +238,7 @@ typedef struct __IMPORT_MODULE_DATA{
 
 typedef struct __IDENTIFIER_DATA{
 	sll_variable_index_t v;
-	uint32_t c;
+	uint8_t rm;
 } identifier_data_t;
 
 

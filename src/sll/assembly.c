@@ -106,7 +106,6 @@ static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_comp
 							g_dt->it.n_vi=*(g_dt->it.sc_vi+g_dt->it.l_sc);
 						}
 					}
-					(g_dt->it.l_im+i)->c++;
 					if (*(g_dt->rm.l+i)!=VARIABLE_OFFSET_NEVER_DELETE){
 						if (fn_sc==SLL_MAX_SCOPE||id->sc>=fn_sc){
 							*(g_dt->rm.l+i)=(void*)o;
@@ -132,7 +131,6 @@ static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_comp
 							g_dt->it.n_vi=*(g_dt->it.sc_vi+g_dt->it.l_sc);
 						}
 					}
-					(g_dt->it.s_im[j]+i)->c++;
 					if (*(g_dt->rm.s[j]+i)!=VARIABLE_OFFSET_NEVER_DELETE){
 						if (fn_sc==SLL_MAX_SCOPE||id->sc>=fn_sc){
 							*(g_dt->rm.s[j]+i)=(void*)o;
@@ -347,6 +345,7 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 		case SLL_OBJECT_TYPE_INLINE_FUNC:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_IF:
+		case SLL_OBJECT_TYPE_SWITCH:
 		case SLL_OBJECT_TYPE_FOR:
 		case SLL_OBJECT_TYPE_RETURN:
 		case SLL_OBJECT_TYPE_EXIT:
@@ -533,6 +532,7 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 			}
 		case SLL_OBJECT_TYPE_PRINT:
 		case SLL_OBJECT_TYPE_IF:
+		case SLL_OBJECT_TYPE_SWITCH:
 		case SLL_OBJECT_TYPE_FOR:
 		case SLL_OBJECT_TYPE_RETURN:
 		case SLL_OBJECT_TYPE_EXIT:
@@ -607,6 +607,59 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 			return _generate_inline_function(o,g_dt);
 		case SLL_OBJECT_TYPE_CALL:
 			return _generate_call(o,g_dt);
+		case SLL_OBJECT_TYPE_INLINE_IF:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
+					ai->dt.i=0;
+					return o+1;
+				}
+				if (l==1){
+					o=_generate(o+1,g_dt);
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
+					ai->dt.i=0;
+					return o;
+				}
+				o++;
+				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
+				if (l&1){
+					l>>=1;
+					while (l){
+						l--;
+						assembly_instruction_label_t nxt=NEXT_LABEL(g_dt);
+						o=_generate_jump(o,g_dt,nxt,1);
+						o=_generate_on_stack(o,g_dt);
+						sll_assembly_instruction_t* p_ai=_get_previous_instruction(g_dt);
+						if (p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET&&p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
+							GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
+						}
+						DEFINE_LABEL(g_dt,nxt);
+					}
+					o=_generate_on_stack(o,g_dt);
+				}
+				else{
+					l>>=1;
+					while (l){
+						l--;
+						assembly_instruction_label_t nxt=NEXT_LABEL(g_dt);
+						o=_generate_jump(o,g_dt,nxt,1);
+						o=_generate_on_stack(o,g_dt);
+						sll_assembly_instruction_t* p_ai=_get_previous_instruction(g_dt);
+						if (p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET&&p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
+							GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
+						}
+						DEFINE_LABEL(g_dt,nxt);
+					}
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
+					ai->dt.i=0;
+				}
+				DEFINE_LABEL(g_dt,e);
+				return o;
+			}
 		case SLL_OBJECT_TYPE_BIT_NOT:
 			{
 				sll_arg_count_t l=o->dt.ac;
@@ -992,6 +1045,12 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				}
 				return o;
 			}
+		case SLL_OBJECT_TYPE_INLINE_IF:
+			o=_generate_on_stack(o,g_dt);
+			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_POP);
+			return o;
+		case SLL_OBJECT_TYPE_SWITCH:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_FOR:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
@@ -1257,13 +1316,11 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 		g_dt.rm.s[i]=malloc(c_dt->idt.s[i].l*sizeof(identifier_data_t));
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			(g_dt.it.s_im[i]+j)->v=SLL_MAX_VARIABLE_INDEX;
-			(g_dt.it.s_im[i]+j)->c=0;
 			*(g_dt.rm.s[i]+j)=NULL;
 		}
 	}
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		(g_dt.it.l_im+i)->v=SLL_MAX_VARIABLE_INDEX;
-		(g_dt.it.l_im+i)->c=0;
 		*(g_dt.rm.l+i)=NULL;
 	}
 	for (sll_scope_t i=0;i<c_dt->_n_sc_id;i++){
@@ -1344,7 +1401,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 		&_assembly_nop
 	};
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
-		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP||ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
+		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP){
 			ai++;
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 				ai=ai->dt._p;

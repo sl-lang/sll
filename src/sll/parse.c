@@ -403,7 +403,7 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 				}
 			}
 			else{
-				if (o->t==SLL_OBJECT_TYPE_IF&&(ac&1)){
+				if (SLL_IS_OBJECT_TYPE_IF(o)&&(ac&1)){
 					SLL_ASSERT(n_l_sc.m);
 					free(n_l_sc.m);
 					n_l_sc.l_sc=c_dt->_n_sc_id;
@@ -590,6 +590,12 @@ _recurse_array_or_map:;
 				else if (*str=='<'&&*(str+1)=='-'){
 					o->t=SLL_OBJECT_TYPE_CALL;
 				}
+				else if (*str=='?'&&*(str+1)==':'){
+					o->t=SLL_OBJECT_TYPE_INLINE_IF;
+				}
+				else if (*str=='?'&&*(str+1)=='?'){
+					o->t=SLL_OBJECT_TYPE_SWITCH;
+				}
 				else if (*str=='-'&&*(str+1)=='>'){
 					o->t=SLL_OBJECT_TYPE_FOR;
 					o->dt.l.sc=c_dt->_n_sc_id;
@@ -677,7 +683,7 @@ _unknown_symbol:
 				e->dt.r.sz=sz;
 				return SLL_RETURN_ERROR;
 			}
-			if (o->t==SLL_OBJECT_TYPE_IF||o->t==SLL_OBJECT_TYPE_FOR||o->t==SLL_OBJECT_TYPE_WHILE||o->t==SLL_OBJECT_TYPE_LOOP||o->t==SLL_OBJECT_TYPE_FUNC||o->t==SLL_OBJECT_TYPE_INLINE_FUNC){
+			if (SLL_IS_OBJECT_TYPE_IF(o)||o->t==SLL_OBJECT_TYPE_FOR||o->t==SLL_OBJECT_TYPE_WHILE||o->t==SLL_OBJECT_TYPE_LOOP||o->t==SLL_OBJECT_TYPE_FUNC||o->t==SLL_OBJECT_TYPE_INLINE_FUNC){
 				n_l_sc.l_sc=c_dt->_n_sc_id;
 				n_l_sc.ml=(n_l_sc.l_sc+65)>>6;
 				n_l_sc.m=malloc(n_l_sc.ml*sizeof(uint64_t));
@@ -1393,7 +1399,7 @@ _skip_export:;
 				}
 			}
 			else{
-				if (o->t==SLL_OBJECT_TYPE_IF&&(ac&1)){
+				if (SLL_IS_OBJECT_TYPE_IF(o)&&(ac&1)){
 					SLL_ASSERT(n_l_sc.m);
 					free(n_l_sc.m);
 					n_l_sc.l_sc=c_dt->_n_sc_id;

@@ -131,6 +131,7 @@
 (:> (^ [1 2 3] [4 5 6 7]) "\n" (* "abc" [5 6 7]) "\n" (/ "abcdabcdabcdabcd" 'a') "\n" (* "abcdefghij" 0.7) "\n" (<- replace "one-two-three-four-five" '-' ",") "\n")
 (:> (<- lower_case "aBcDeFgHi") "\n" (<- upper_case "aBcDeFgHi") "\n" (<< array 2) "\n" (<< (>> "acegi" -1) -2) "\n" (%% array) "\n")
 (:> (% "abcbaXaXXabcdX" "X") "\n" (: "abcdefg" -4 5) "\n")
+(:> "Length of array == 9? " (?: (== 9 ($ array)) "True" "False") "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@@@ false)
