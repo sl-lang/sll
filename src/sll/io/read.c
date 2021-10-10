@@ -150,8 +150,8 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t
 			return 1;
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			CHECK_ERROR2(is,o->dt.sc,sll_statement_count_t);
-			for (sll_statement_count_t i=0;i<o->dt.sc;i++){
+			CHECK_ERROR2(is,o->dt.ac,sll_arg_count_t);
+			for (sll_arg_count_t i=0;i<o->dt.ac;i++){
 				if (!_read_object(c_dt,is)){
 					return 0;
 				}

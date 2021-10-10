@@ -40,7 +40,6 @@
 #define SLL_MAX_REF_COUNT UINT32_MAX
 #define SLL_MAX_SCOPE UINT32_MAX
 #define SLL_MAX_STACK_OFFSET UINT32_MAX
-#define SLL_MAX_STATEMENT_COUNT UINT32_MAX
 #define SLL_MAX_STRING_INDEX UINT32_MAX
 #define SLL_MAX_STRING_LENGTH UINT32_MAX
 #define SLL_MAX_VARIABLE_INDEX UINT32_MAX
@@ -213,10 +212,6 @@ typedef uint32_t sll_stack_offset_t;
 
 
 
-typedef uint32_t sll_statement_count_t;
-
-
-
 typedef uint32_t sll_string_checksum_t;
 
 
@@ -336,7 +331,6 @@ typedef union __SLL_OBJECT_DATA{
 	sll_function_object_data_t fn;
 	sll_loop_data_t l;
 	sll_arg_count_t ac;
-	sll_statement_count_t sc;
 	sll_debug_object_data_t dbg;
 	sll_function_index_t fn_id;
 	void* _p;

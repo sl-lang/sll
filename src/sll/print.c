@@ -379,9 +379,9 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'{');
-				sll_statement_count_t sc=o->dt.sc;
+				sll_arg_count_t ac=o->dt.ac;
 				o++;
-				for (sll_statement_count_t i=0;i<sc;i++){
+				for (sll_arg_count_t i=0;i<ac;i++){
 					if (i){
 						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
 					}
@@ -393,9 +393,9 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_COMMA:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,',');
-				sll_statement_count_t sc=o->dt.sc;
+				sll_arg_count_t ac=o->dt.ac;
 				o++;
-				for (sll_statement_count_t i=0;i<sc;i++){
+				for (sll_arg_count_t i=0;i<ac;i++){
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,' ');
 					o=_print_object_internal(c_dt,o,os);
 				}

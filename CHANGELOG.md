@@ -21,6 +21,7 @@
 - Rewritten variable optimization
 
 ### Removed
+- `sll_statement_count_t` and `SLL_MAX_STATEMENT_COUNT` (replaced by `sll_arg_count_t` and `SLL_MAX_ARG_COUNT`)
 - [`src/include/sll/core.h`][0.6.21/src/include/sll/core.h] and [`src/include/sll/constants.h`][0.6.21/src/include/sll/constants.h]
 
 ## [0.6.21] - 2021-10-4

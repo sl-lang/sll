@@ -164,7 +164,7 @@ static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_comp
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_statement_count_t l=o->dt.sc;
+				sll_arg_count_t l=o->dt.ac;
 				o++;
 				while (l){
 					l--;
@@ -781,7 +781,7 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 			}
 		case SLL_OBJECT_TYPE_COMMA:
 			{
-				sll_statement_count_t l=o->dt.sc;
+				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l);
 				if (!l){
 					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
@@ -868,7 +868,7 @@ static const sll_object_t* _mark_loop_delete(const sll_object_t* o,const assembl
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_statement_count_t l=o->dt.sc;
+				sll_arg_count_t l=o->dt.ac;
 				o++;
 				while (l){
 					l--;
@@ -1247,7 +1247,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_statement_count_t l=o->dt.sc;
+				sll_arg_count_t l=o->dt.ac;
 				o++;
 				while (l){
 					l--;

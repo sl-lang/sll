@@ -33,7 +33,7 @@ static sll_object_t* _remove_debug_data_internal(sll_object_t* o){
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_statement_count_t l=o->dt.sc;
+				sll_arg_count_t l=o->dt.ac;
 				o++;
 				while (l){
 					l--;

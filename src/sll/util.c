@@ -89,7 +89,7 @@ static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_off
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_statement_count_t l=o->dt.sc;
+				sll_arg_count_t l=o->dt.ac;
 				(*sz)++;
 				o++;
 				while (l){
@@ -252,7 +252,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
 		case SLL_OBJECT_TYPE_COMMA:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
 			{
-				sll_statement_count_t l=o->dt.sc;
+				sll_arg_count_t l=o->dt.ac;
 				o++;
 				while (l){
 					l--;
