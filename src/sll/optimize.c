@@ -4,6 +4,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
+#include <sll/integer_list.h>
 #include <sll/map.h>
 #include <sll/object.h>
 #include <sll/operator.h>
@@ -15,6 +16,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sll/debug.h>
 
 
 
@@ -1119,7 +1121,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 						SLL_RELEASE(nv);
 					}
 					r->t=SLL_OBJECT_TYPE_COMMA;
-					r->dt.ac=r->dt.ac+1;
+					r->dt.ac++;
 					o=r;
 					SLL_RELEASE(rt);
 					goto _optimize_operation_list_comma;
@@ -1237,7 +1239,6 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 						sll_function_index_t i=(sll_function_index_t)(~(rt->dt.i));
 						if (i<o_dt->i_ft->l&&!((*(o_dt->i_ft->dt+i))->t&SLL_INTERNAL_FUNCTION_FLAG_REQUIRED)){
 							r->t=SLL_OBJECT_TYPE_OPERATION_LIST;
-							r->dt.ac=r->dt.ac;
 							_optimize(r,p,o_dt,fl);
 						}
 					}
@@ -1297,7 +1298,6 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				}
 				if (l==1){
 					o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
-					o->dt.ac=o->dt.ac;
 					goto _optimize_operation_list_comma;
 				}
 				variable_assignment_data_t va_dt;
@@ -1343,7 +1343,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 								goto _optimize_operation_list_comma;
 							}
 							r->t=(r->t==SLL_OBJECT_TYPE_INLINE_IF?SLL_OBJECT_TYPE_COMMA:SLL_OBJECT_TYPE_OPERATION_LIST);
-							r->dt.ac=r->dt.ac-1;
+							r->dt.ac--;
 							_remove_single_object(_optimize(o,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT));
 							_restore_var_data(o_dt,&va_dt,0);
 							o=r;
@@ -1411,7 +1411,6 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 								goto _optimize_operation_list_comma;
 							}
 							r->t=(r->t==SLL_OBJECT_TYPE_INLINE_IF?SLL_OBJECT_TYPE_COMMA:SLL_OBJECT_TYPE_OPERATION_LIST);
-							r->dt.ac=r->dt.ac;
 							_optimize(o,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
 							_restore_var_data(o_dt,&va_dt,0);
 							o=r;
@@ -1437,7 +1436,76 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				return o;
 			}
 		case SLL_OBJECT_TYPE_SWITCH:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (l==1){
+					o->t=SLL_OBJECT_TYPE_NOP;
+					return _optimize(o+1,p,o_dt,fl);
+				}
+				if (l==2){
+					o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
+					goto _optimize_operation_list_comma;
+				}
+				sll_object_t* r=o;
+				if (l==3){
+					SLL_UNIMPLEMENTED();
+				}
+				if (l==4){
+					SLL_UNIMPLEMENTED();
+				}
+				o=_optimize(o+1,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+				sll_object_t* cnd_n_o=o;
+				sll_runtime_object_t* cnd=_get_as_runtime_object(r+1,o_dt,0);
+				if ((SLL_RUNTIME_OBJECT_GET_TYPE(cnd)!=SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(cnd)!=SLL_RUNTIME_OBJECT_TYPE_CHAR)||(cnd->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
+					SLL_RELEASE(cnd);
+					cnd=NULL;
+				}
+				else if (SLL_RUNTIME_OBJECT_GET_TYPE(cnd)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+					sll_char_t v=cnd->dt.c;
+					SLL_RELEASE(cnd);
+					cnd=SLL_FROM_INT(v);
+				}
+				SLL_ASSERT(!cnd||SLL_RUNTIME_OBJECT_GET_TYPE(cnd)==SLL_RUNTIME_OBJECT_TYPE_INT);
+				l=(l-1)>>1;
+				sll_integer_list_t il=SLL_ZERO_INTEGER_LIST_STRUCT;
+				do{
+					l--;
+					sll_object_t* a=o;
+					o=_optimize(o,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+					while (a->t==SLL_OBJECT_TYPE_NOP||a->t==SLL_OBJECT_TYPE_DEBUG_DATA||a->t==OBJECT_TYPE_CHANGE_STACK){
+						a=(a->t==OBJECT_TYPE_CHANGE_STACK?a->dt._p:a+1);
+					}
+					if (a->t!=SLL_OBJECT_TYPE_INT&&a->t!=SLL_OBJECT_TYPE_CHAR){
+						SLL_UNIMPLEMENTED();
+					}
+					sll_integer_t i=(a->t==SLL_OBJECT_TYPE_INT?a->dt.i:a->dt.c);
+					if (cnd&&i==cnd->dt.i){
+						sll_free_integer_list(&il);
+						SLL_RELEASE(cnd);
+						r->t=SLL_OBJECT_TYPE_OPERATION_LIST;
+						_remove_up_to_end(cnd_n_o,((r->dt.ac-1)&0xfffffffe)-(l<<1)-1);
+						o=_optimize(o,r,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
+						_remove_up_to_end(o,(l<<1)+(!(r->dt.ac&1)));
+						r->dt.ac=2;
+						o=r;
+						goto _optimize_operation_list_comma;
+					}
+					else if (!sll_integer_list_add(&il,i)){
+						o=_remove_single_object(_remove_single_object(a));
+					}
+					else{
+						o=_optimize(o,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+					}
+				} while (l);
+				sll_free_integer_list(&il);
+				if (!(o->dt.ac&1)){
+					o=_optimize(o,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+				}
+				if (cnd){
+					SLL_RELEASE(cnd);
+				}
+				return o;
+			}
 		case SLL_OBJECT_TYPE_FOR:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
@@ -1689,7 +1757,6 @@ _remove_cond:
 			{
 				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
 					o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
-					o->dt.ac=o->dt.ac;
 					goto _optimize_operation_list_comma;
 				}
 				sll_arg_count_t l=o->dt.ac;
@@ -1758,7 +1825,7 @@ _remove_cond:
 						i++;
 					}
 					r->t=SLL_OBJECT_TYPE_COMMA;
-					r->dt.ac=r->dt.ac+1;
+					r->dt.ac++;
 					_shift_objects(o,o_dt->c_dt,1);
 					o=_runtime_object_to_object(n,o,o_dt)+1;
 					SLL_RELEASE(n);
@@ -1782,7 +1849,6 @@ _remove_cond:
 			{
 				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
 					o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
-					o->dt.ac=o->dt.ac;
 					goto _optimize_operation_list_comma;
 				}
 				sll_arg_count_t l=o->dt.ac;
@@ -1810,7 +1876,7 @@ _remove_cond:
 						v=tmp;
 					}
 					r->t=SLL_OBJECT_TYPE_COMMA;
-					r->dt.ac=r->dt.ac+1;
+					r->dt.ac++;
 					_shift_objects(o,o_dt->c_dt,1);
 					_runtime_object_to_object(v,o,o_dt);
 					SLL_RELEASE(v);
@@ -1846,7 +1912,6 @@ _remove_cond:
 			{
 				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
 					o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
-					o->dt.ac=o->dt.ac;
 					goto _optimize_operation_list_comma;
 				}
 				sll_arg_count_t l=o->dt.ac;
