@@ -269,7 +269,6 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 					}
 					if (a->t!=SLL_OBJECT_TYPE_IDENTIFIER){
 						o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
-						o->dt.ac=o->dt.ac;
 					}
 					else{
 						o->dt.ac=ac;

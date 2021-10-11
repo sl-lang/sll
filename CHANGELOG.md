@@ -24,8 +24,8 @@
 ### Changed
 
 - All arguments in objects of type `SLL_OBJECT_TYPE_PRINT` are converted to strings
-- Fixed bugs in optimizing `SLL_OBJECT_TYPE_COMMA` objects
 - Fixed bug in `SLL_IS_OBJECT_TYPE_NOT_TYPE`
+- Fixed bugs in optimizing `SLL_OBJECT_TYPE_COMMA` objects
 - Fixed optimization of if statements (`(?)`)
 - Renamed `SLL_ERROR_SLL_ASSERTION` to `SLL_ERROR_ASSERTION`
 - Renamed some array & string functions for consistency
