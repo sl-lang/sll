@@ -183,52 +183,58 @@ static sll_return_t _read_string(sll_input_data_stream_t* is,sll_string_t* o,sll
 			err->t=SLL_ERROR_INVALID_FILE_FORMAT;
 			return SLL_RETURN_ERROR;
 		}
-		sll_string_hash(o);
-		return SLL_RETURN_NO_ERROR;
 	}
-	sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
-	memset(bf,0xff,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
-	uint16_t r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
-	uint64_t v;
-	READ_FIELD(v,is);
-	uint8_t bc=64;
-	sll_string_length_t i=0;
-	do{
-		if (!bc){
-			READ_FIELD(v,is);
-			bc=64;
+	else{
+		sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
+		memset(bf,0xff,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
+		uint64_t v;
+		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(void*)(&v),sizeof(uint64_t))==SLL_END_OF_DATA){
+			return SLL_RETURN_ERROR;
 		}
-		bc--;
-		uint16_t e;
-		uint8_t el=((v&(1ull<<bc))?8:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT);
-		if (bc<el){
-			e=(v&((1<<bc)-1))<<(el-bc);
-			READ_FIELD(v,is);
-			bc+=64-el;
-			e|=v>>bc;
-		}
-		else{
-			bc-=el;
-			e=(v>>bc)&((1<<el)-1);
-		}
-		if (el==8){
-			o->v[i]=(sll_char_t)e;
-			bf[r]=(sll_char_t)e;
-			i++;
-			r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
-		}
-		else{
-			uint16_t k=e>>STRING_COMPRESSION_LENGTH_BIT_COUNT;
-			uint16_t l=k+(e&((1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1))+2;
-			do{
-				bf[r]=bf[k&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1)];
-				o->v[i]=bf[r];
+		uint8_t bc=64;
+		sll_string_length_t i=0;
+		uint16_t r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
+		do{
+			if (!bc){
+				if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(void*)(&v),sizeof(uint64_t))==SLL_END_OF_DATA){
+					return SLL_RETURN_ERROR;
+				}
+				bc=64;
+			}
+			bc--;
+			uint16_t e;
+			uint8_t el=((v&(1ull<<bc))?8:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT);
+			if (bc<el){
+				e=(v&((1<<bc)-1))<<(el-bc);
+				if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(void*)(&v),sizeof(uint64_t))==SLL_END_OF_DATA){
+					return SLL_RETURN_ERROR;
+				}
+				bc+=64-el;
+				e|=v>>bc;
+			}
+			else{
+				bc-=el;
+				e=(v>>bc)&((1<<el)-1);
+			}
+			if (el==8){
+				o->v[i]=(sll_char_t)e;
+				bf[r]=(sll_char_t)e;
 				i++;
 				r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
-				k++;
-			} while (k<l);
-		}
-	} while (i<o->l);
+			}
+			else{
+				uint16_t k=e>>STRING_COMPRESSION_LENGTH_BIT_COUNT;
+				uint16_t l=k+(e&((1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1))+2;
+				do{
+					bf[r]=bf[k&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1)];
+					o->v[i]=bf[r];
+					i++;
+					r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
+					k++;
+				} while (k<l);
+			}
+		} while (i<o->l);
+	}
 	sll_string_hash(o);
 	return SLL_RETURN_NO_ERROR;
 }

@@ -49,7 +49,7 @@ static void _gc_free_pages(void){
 
 
 __SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t){
-	uint32_t i=o->_dbg0|(o->_dbg1<<16);
+	uint32_t i=o->_dbg0|(o->_dbg1<<8);
 	if (i==GC_MAX_DEBUG_ID){
 		i=0;
 		while (i<_gc_dbg_dtl){
@@ -64,8 +64,8 @@ __SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,con
 		SLL_ASSERT(tmp||!"Unable to Reallocate Debug Data Array");
 		_gc_dbg_dt=tmp;
 _found_index:
-		o->_dbg0=i&0xffff;
-		o->_dbg1=i>>16;
+		o->_dbg0=i&0xff;
+		o->_dbg1=i>>8;
 		runtime_object_debug_data_t* dt=malloc(sizeof(runtime_object_debug_data_t));
 		dt->c.fp=NULL;
 		dt->al=NULL;
@@ -132,8 +132,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 	sll_runtime_object_t* o=_gc_next_object;
 	_gc_next_object=GC_GET_NEXT_OBJECT(o);
 	o->rc=1;
-	o->_dbg0=0xffff;
-	o->_dbg1=0xff;
+	o->_dbg0=0xff;
+	o->_dbg1=0xffff;
 	_gc_alloc++;
 	_gc_verify=1;
 	return o;
@@ -182,7 +182,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 
 
 __SLL_FUNC void sll_remove_debug_data(sll_runtime_object_t* o){
-	uint32_t i=o->_dbg0|(o->_dbg1<<16);
+	uint32_t i=o->_dbg0|(o->_dbg1<<8);
 	if (i!=GC_MAX_DEBUG_ID){
 		SLL_ASSERT(i<_gc_dbg_dtl);
 		runtime_object_debug_data_t* dt=*(_gc_dbg_dt+i);
@@ -197,8 +197,8 @@ __SLL_FUNC void sll_remove_debug_data(sll_runtime_object_t* o){
 		free(dt->rl);
 		free(dt);
 	}
-	o->_dbg0=0xffff;
-	o->_dbg1=0xff;
+	o->_dbg0=0xff;
+	o->_dbg1=0xffff;
 }
 
 
@@ -251,7 +251,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 				}
 				sll_string_t str;
 				sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
-				uint32_t j=c->_dbg0|(c->_dbg1<<16);
+				uint32_t j=c->_dbg0|(c->_dbg1<<8);
 				if (j!=GC_MAX_DEBUG_ID){
 					runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
 					if (dt->c.fp){
@@ -325,7 +325,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 				}
 				sll_string_t str;
 				sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
-				uint32_t j=c->_dbg0|(c->_dbg1<<16);
+				uint32_t j=c->_dbg0|(c->_dbg1<<8);
 				SLL_ASSERT(j!=GC_MAX_DEBUG_ID);
 				runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
 				fprintf(stderr,"%s: %u (<static>): {type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",k->fp,k->ln,t,c->rc,str.v,dt->all);

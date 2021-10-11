@@ -1951,26 +1951,9 @@ _optimize_operation_list_comma:
 				sll_arg_count_t l=o->dt.ac;
 				sll_object_t* r=o;
 				o++;
-				sll_object_t* b=NULL;
 				while (l){
 					l--;
-					sll_object_t* a=o;
-					sll_arg_count_t j=r->dt.ac;
 					o=_optimize(o,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(!rm&&!l&&r->t==SLL_OBJECT_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
-					if (r->dt.ac==j){
-						while (a->t==SLL_OBJECT_TYPE_NOP||a->t==SLL_OBJECT_TYPE_DEBUG_DATA||a->t==OBJECT_TYPE_CHANGE_STACK){
-							a=(a->t==OBJECT_TYPE_CHANGE_STACK?a->dt._p:a+1);
-						}
-						if (b&&a->t==SLL_OBJECT_TYPE_PRINT&&b->t==SLL_OBJECT_TYPE_PRINT){
-							b->dt.ac+=a->dt.ac;
-							a->t=SLL_OBJECT_TYPE_NOP;
-							r->dt.ac--;
-							o=_optimize(b,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(!rm&&!l&&r->t==SLL_OBJECT_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
-						}
-						else{
-							b=a;
-						}
-					}
 					if (o_dt->rm){
 						_remove_up_to_end(o,l);
 						sll_object_t* e=r+1;
@@ -1991,11 +1974,46 @@ _optimize_operation_list_comma:
 						r->t=SLL_OBJECT_TYPE_NOP;
 						DECREASE_PARENT(p);
 					}
+					return o;
 				}
 				else if (r->dt.ac==1&&(r->t==SLL_OBJECT_TYPE_COMMA||!(fl&OPTIMIZER_FLAG_ARGUMENT))){
 					r->t=SLL_OBJECT_TYPE_NOP;
+					return o;
 				}
-				else if ((p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_INLINE_FUNC||p->t==SLL_OBJECT_TYPE_COMMA||p->t==SLL_OBJECT_TYPE_OPERATION_LIST))){
+				sll_bool_t rm_fn=o_dt->rm;
+				o_dt->rm=0;
+				o=r+1;
+				sll_object_t* a=NULL;
+				sll_arg_count_t i=r->dt.ac;
+				do{
+					sll_debug_print_object(o,o_dt->c_dt);
+					i--;
+					while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+						o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					}
+					if (o->t==SLL_OBJECT_TYPE_PRINT){
+						if (a){
+							a->dt.ac+=o->dt.ac;
+							o->t=SLL_OBJECT_TYPE_NOP;
+							r->dt.ac--;
+						}
+						else{
+							a=o;
+						}
+					}
+					else{
+						if (a){
+							o=_optimize(a,r,o_dt,fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG);
+						}
+						a=NULL;
+					}
+					o=sll_skip_object(o);
+				} while (i);
+				o_dt->rm=rm_fn;
+				if (a){
+					o=_optimize(a,r,o_dt,(fl&OPTIMIZER_FLAG_IGNORE_LOOP_FLAG)|(!rm&&r->t==SLL_OBJECT_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
+				}
+				if ((p&&(p->t==SLL_OBJECT_TYPE_FUNC||p->t==SLL_OBJECT_TYPE_INLINE_FUNC||p->t==SLL_OBJECT_TYPE_COMMA||p->t==SLL_OBJECT_TYPE_OPERATION_LIST))){
 					INCREASE_PARENT(p,r->dt.ac-1);
 					r->t=SLL_OBJECT_TYPE_NOP;
 				}

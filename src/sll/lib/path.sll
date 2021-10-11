@@ -3,11 +3,7 @@
 (? 1 {
 	(# platform)
 	(-- "sys.sll")
-	(? (== platform "windows") {
-		(= separator '\\')
-	} {
-		(= separator '/')
-	})
+	(= separator (?: (== platform "windows") '\\' '/'))
 })
 
 (= absolute (... "path_absolute"))

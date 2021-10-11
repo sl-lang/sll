@@ -543,8 +543,8 @@ typedef union __SLL_RUNTIME_OBJECT_DATA{
 typedef struct __SLL_RUNTIME_OBJECT{
 	sll_ref_count_t rc;
 	sll_runtime_object_type_t t;
-	uint16_t _dbg0;
-	uint8_t _dbg1;
+	uint8_t _dbg0;
+	uint16_t _dbg1;
 	sll_runtime_object_data_t dt;
 } sll_runtime_object_t;
 

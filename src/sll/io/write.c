@@ -178,8 +178,16 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 				}
 			}
 		}
-		uint16_t e=(l==1?(256|c):(((st&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1))<<STRING_COMPRESSION_LENGTH_BIT_COUNT)|(l-2)));
-		uint8_t el=(l==1?9:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT+1);
+		uint16_t e;
+		uint8_t el;
+		if (l==1){
+			e=256|c;
+			el=9;
+		}
+		else{
+			e=((st&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1))<<STRING_COMPRESSION_LENGTH_BIT_COUNT)|(l-2);
+			el=STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT+1;
+		}
 		SLL_ASSERT(el<=15);
 		if (bc<el){
 			v=(v<<bc)|(e>>(el-bc));

@@ -2,7 +2,10 @@
 
 ## [0.6.23] - Ongoing
 
-*Nothing*
+### Changed
+
+- Fixed bugs in optimization and merging of print objects
+- Runtime objects now store debug data in the correct order
 
 ## [0.6.22] - 2021-10-10
 
