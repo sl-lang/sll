@@ -7,6 +7,8 @@ Each object represent either a [base type](#base-types) or an [operator](#operat
 
 Single-line comments begin with a semicolon (`; comment`), while block comments have to be surrounded with special symbols (`|# comment #|`).
 
+All operands are split by whitespace. If an operator receives more arguments than it requires, it evaluates them as other expressions and not its operands.
+
 ## Base Types
 
 ### Integer
@@ -85,9 +87,11 @@ Here are all of the constants as well as their corresponding integer values:
 
 ### Print (`:>`)
 
-#### Arguments
+#### Syntax
 
-Variable number of arguments (`0` - `2^32-1`)
+```sll
+(:> |# expression 1 #| |# expression 2 #| |# expression 3 #|)
+```
 
 #### Return value
 
@@ -101,6 +105,12 @@ A print operator can be substituted by the following expression[^2] to obtain th
 
 ```sll
 (<- (... "file_write") stdout |# argument 1 #| |# argument 2 #| |# argument 3 #|)
+```
+
+#### Example
+
+```sll
+(:> "Array: " [1 2 3 4] "\n")
 ```
 
 ### Input (`<:`)
@@ -117,15 +127,144 @@ Currently unimplemented.
 
 ### Boolean NOT (`!`)
 
+#### Syntax
+
+```sll
+(! |# expression #|)
+```
+
+#### Return value
+
+The inverted value
+
+#### Description
+
+The first (and only) operand is evaluated, its value is converted to a boolean and then inverted.
+
+#### Example
+
+```sll
+(:> (! 0) ", " (! 1) "\n")
+```
+
 ### Assignment (`=`)
+
+#### Syntax
+
+```sll
+(= |# variable #| |# value #|)
+```
+
+#### Return value
+
+The value of the second operand.
+
+#### Description
+
+The value of the second operand is evaluated and assigned to the variable pointed by the first operand. If the first operand is not an identifier, the entire object behaves like an [operation list](#operation-list).
+
+#### Example
+
+```sll
+(= variable "value" (:> "Extra expression"))
+```
 
 ### Function (`,,,`)
 
+#### Syntax
+
+```sll
+(,,, |# argument 1 #| |# argument 2 #| |# argument 3 #|
+	|# function body #|
+)
+```
+
+#### Return value
+
+An integer, which can be used to call the given function.
+
+#### Description
+
+The object defines a function. The first `n` consecutive identifiers are considered the arguments, and the rest of the operands (`operand_count - n`) are considered the body of the function.
+
+#### Example
+
+```sll
+(= mult_func (,,, x y
+	(:> x " * " y " = " (* x y) "\n")
+	(@@ (* x y))
+))
+```
+
 ### Internal Function (`...`)
+
+#### Syntax
+
+```sll
+(... "internal_function_name")
+```
+
+#### Return value
+
+An integer, which can be used to invoke the given internal function.
+
+#### Description
+
+The object declares an internal function. The operand is a string, which will be used to look-up the ID of the internal function. If the operand is not a string, the object behaves like an [operation list](#operation-list).
+
+#### Example
+
+```sll
+(= parse_json (... "json_parse"))
+```
 
 ### Inline Function (`***`)
 
+#### Syntax
+
+```sll
+(*** |# function body #|)
+```
+
+#### Return value
+
+The value returned by a return object, or `nil`
+
+#### Description
+
+This object works just like a function called without arguments. It can be used to write expressions more complex than [inline-if objects](#inline-if-).
+
+#### Example
+
+```sll
+(***
+	(-> (= i 0) (< i 10) {
+		(? (= i 5) (@@ i))
+	})
+)
+```
+
 ### Function Call (`<-`)
+
+#### Syntax
+
+```sll
+(<- |# function expression #| |# function argument 1 #| |# function argument 2 #| |# function argument 3 #|)
+```
+
+#### Return value
+
+The return value of the function called, or `nil`
+
+#### Description
+
+This object calls the function specified by the first operand with the arguments specified by the consecutive operands. If the function operand is an invalid function or internal function ID, a `nil` value is returned.
+
+#### Example
+
+```sll
+(<- (... "file_write") stdout "Example Code\n")
+```
 
 ### If (`?`)
 
