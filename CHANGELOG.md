@@ -7,6 +7,10 @@
 - Fixed bugs in optimization and merging of print objects
 - Runtime objects now store debug data in the correct order
 
+### Removed
+
+- Unused error: `SLL_ERROR_TOO_MANY_STATEMENTS`
+
 ## [0.6.22] - 2021-10-10
 
 ### Added
