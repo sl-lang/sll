@@ -491,6 +491,15 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL:
 				PRINT_STATIC_STRING("PUSH null_ref",os);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
+				PRINT_STATIC_STRING("PUSH .",os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				PRINT_STATIC_STRING("LOAD $",os);
 				_print_int(ai->dt.v,os);
@@ -629,6 +638,10 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				else{
 					_print_int(ai->dt.j,os);
 				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
+				PRINT_STATIC_STRING("JT ",os);
+				_print_int(ai->dt.i,os);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){

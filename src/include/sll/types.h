@@ -694,8 +694,15 @@ typedef sll_runtime_object_t* (*sll_quaternary_operator_t)(sll_runtime_object_t*
 
 
 
+typedef struct __SLL_INTEGER_LIST_ELEMENT{
+	sll_integer_t k;
+	void* v;
+} sll_integer_list_element_t;
+
+
+
 typedef struct __SLL_INTEGER_LIST{
-	sll_integer_t* v;
+	sll_integer_list_element_t* v;
 	sll_array_length_t l;
 } sll_integer_list_t;
 

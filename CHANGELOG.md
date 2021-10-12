@@ -2,6 +2,10 @@
 
 ## [0.6.23] - Ongoing
 
+### Added
+
+- Assembly instructions for jump tables (`SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_JT`) ([#67])
+
 ### Changed
 
 - Fixed bugs in optimization and merging of print objects

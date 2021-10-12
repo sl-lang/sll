@@ -306,6 +306,27 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 				}
 				ai->dt.c=(sll_char_t)c;
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					uint8_t re=0;
+					ai->dt.i=(sll_relative_instruction_index_t)_read_signed_integer(is,&re);
+					if (re){
+						return SLL_RETURN_ERROR;
+					}
+				}
+				else{
+					CHECK_ERROR(is,ai->dt.rj,sll_instruction_index_t,e);
+				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
@@ -327,30 +348,11 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 				CHECK_ERROR(is,ai->dt.s,sll_string_index_t,e);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
 				CHECK_ERROR(is,ai->dt.al,sll_array_length_t,e);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
 				CHECK_ERROR(is,ai->dt.ml,sll_map_length_t,e);
-				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
-					uint8_t re=0;
-					ai->dt.i=(sll_relative_instruction_index_t)_read_signed_integer(is,&re);
-					if (re){
-						return SLL_RETURN_ERROR;
-					}
-				}
-				else{
-					CHECK_ERROR(is,ai->dt.rj,sll_instruction_index_t,e);
-				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:

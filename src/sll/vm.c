@@ -186,6 +186,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 				*(s+si)=sll_memory_get_null_pointer();
 				si++;
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
+				*(s+si)=SLL_FROM_INT((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ii+ai->dt.rj:ai->dt.j));
+				si++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				*(s+si)=*(v+ai->dt.v);
 				SLL_ACQUIRE(*(s+si));
@@ -360,6 +364,60 @@ _jump:
 						goto _jump;
 					}
 					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
+				{
+					si--;
+					sll_stack_offset_t e=si;
+					si-=ai->dt.al<<1;
+					sll_stack_offset_t i=si-1;
+					sll_runtime_object_t* cnd=*(s+si-1);
+					sll_integer_t cnd_v;
+					if (SLL_RUNTIME_OBJECT_GET_TYPE(cnd)==SLL_RUNTIME_OBJECT_TYPE_INT){
+						cnd_v=cnd->dt.i;
+					}
+					else if (SLL_RUNTIME_OBJECT_GET_TYPE(cnd)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+						cnd_v=cnd->dt.c;
+					}
+					else{
+						while (si<e){
+							SLL_RELEASE(*(s+si));
+							si++;
+						}
+					}
+					SLL_RELEASE(cnd);
+					while (si<e){
+						sll_runtime_object_t* v=*(s+si);
+						if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_INT){
+							if (v->dt.i==cnd_v){
+								goto _cleanup_jump_table;
+							}
+						}
+						else if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+							if (v->dt.c==cnd_v){
+								goto _cleanup_jump_table;
+							}
+						}
+						SLL_RELEASE(v);
+						SLL_RELEASE(*(s+si+1));
+						si+=2;
+					}
+					SLL_ASSERT(si==e);
+					ii=(sll_instruction_index_t)((*(s+si))->dt.i);
+					ai=a_dt->h+ii;
+					SLL_RELEASE(*(s+si));
+					si=i;
+					continue;
+_cleanup_jump_table:;
+					ii=(sll_instruction_index_t)((*(s+si+1))->dt.i);
+					ai=a_dt->h+ii;
+					while (si<e){
+						SLL_RELEASE(*(s+si));
+						si++;
+					}
+					SLL_RELEASE(*(s+si));
+					si=i;
+					continue;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 				SLL_UNIMPLEMENTED();

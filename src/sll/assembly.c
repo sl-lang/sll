@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sll/debug.h>
 
 
 
@@ -1050,7 +1051,57 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_POP);
 			return o;
 		case SLL_OBJECT_TYPE_SWITCH:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l);
+				if (l==1){
+					return _generate(o+1,g_dt);
+				}
+				const sll_object_t* r=o;
+				sll_bool_t d=!(o->dt.ac&1);
+				o=_generate_on_stack(o+1,g_dt);
+				l=(l-1)>>1;
+				object_label_t* m=malloc((l+1)*sizeof(object_label_t));
+				sll_arg_count_t i=0;
+				while (l){
+					l--;
+					assembly_instruction_label_t j=NEXT_LABEL(g_dt);
+					o=_generate_on_stack(o,g_dt);
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL,j);
+					(m+i)->o=o;
+					(m+i)->l=j;
+					i++;
+					o=sll_skip_object_const(o);
+				}
+				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
+				if (d){
+					assembly_instruction_label_t j=NEXT_LABEL(g_dt);
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL,j);
+					(m+i)->o=o;
+					(m+i)->l=j;
+				}
+				else{
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL,e);
+					(m+i)->o=NULL;
+					(m+i)->l=e;
+				}
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_JT;
+				ai->dt.al=i;
+				o=r+1;
+				for (sll_arg_count_t j=0;j<=i;j++){
+					if ((m+j)->o){
+						DEFINE_LABEL(g_dt,(m+j)->l);
+						o=_generate((m+j)->o,g_dt);
+						if (j<i-(d?1:0)){
+							GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
+						}
+					}
+				}
+				free(m);
+				DEFINE_LABEL(g_dt,e);
+				return o;
+			}
 		case SLL_OBJECT_TYPE_FOR:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
@@ -1674,7 +1725,7 @@ _handle_nop:;
 	}
 	ai=o->h;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
-		if ((SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ)&&(ai->t&ASSEMBLY_INSTRUCTION_LABEL)){
+		if ((SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ))&&(ai->t&ASSEMBLY_INSTRUCTION_LABEL)){
 			ai->t&=~ASSEMBLY_INSTRUCTION_LABEL;
 			sll_instruction_index_t j=*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai));
 			if (j<128){

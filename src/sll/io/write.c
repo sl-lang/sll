@@ -254,6 +254,23 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->dt.c);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					WRITE_SIGNED_INTEGER(os,ai->dt.rj);
+				}
+				else{
+					_write_integer(os,ai->dt.rj);
+				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
@@ -275,26 +292,11 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 				_write_integer(os,ai->dt.s);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
 				_write_integer(os,ai->dt.al);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
 				_write_integer(os,ai->dt.ml);
-				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
-					WRITE_SIGNED_INTEGER(os,ai->dt.rj);
-				}
-				else{
-					_write_integer(os,ai->dt.rj);
-				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:

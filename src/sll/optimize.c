@@ -1489,7 +1489,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 						o=r;
 						goto _optimize_operation_list_comma;
 					}
-					else if (!sll_integer_list_add(&il,i)){
+					else if (!sll_integer_list_add(&il,i,NULL)){
 						o=_remove_single_object(_remove_single_object(a));
 					}
 					else{
@@ -2180,6 +2180,14 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 		sll_function_t* fn=*(c_dt->ft.dt+i);
 		if (!fn){
 			continue;
+		}
+		for (sll_arg_count_t k=0;k<fn->al;k++){
+			if (SLL_IDENTIFIER_GET_ARRAY_ID(fn->a[k])==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
+				(o_dt.it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(fn->a[k]))->rm=0;
+			}
+			else{
+				(o_dt.it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID(fn->a[k])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(fn->a[k]))->rm=0;
+			}
 		}
 		o_dt.it.n_vi=o_dt.it.vc;
 		o_dt.it.l_sc=0;

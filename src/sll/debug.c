@@ -1,4 +1,5 @@
 #include <sll/api/string.h>
+#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/object.h>
 #include <sll/runtime_object.h>
@@ -6,6 +7,15 @@
 #include <sll/types.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+
+
+__SLL_FUNC void sll_debug_print_assembly(const sll_assembly_data_t* a_dt){
+	sll_output_data_stream_t os;
+	sll_stream_create_output_from_file(stdout,&os);
+	sll_print_assembly(a_dt,&os);
+	putchar('\n');
+}
 
 
 

@@ -386,6 +386,13 @@ typedef struct __STATIC_RUNTIME_OBJECT{
 
 
 
+typedef struct __OBJECT_LABEL{
+	const sll_object_t* o;
+	assembly_instruction_label_t l;
+} object_label_t;
+
+
+
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 
