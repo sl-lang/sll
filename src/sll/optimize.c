@@ -16,7 +16,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sll/debug.h>
 
 
 
@@ -1986,7 +1985,6 @@ _optimize_operation_list_comma:
 				sll_object_t* a=NULL;
 				sll_arg_count_t i=r->dt.ac;
 				do{
-					sll_debug_print_object(o,o_dt->c_dt);
 					i--;
 					while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 						o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
