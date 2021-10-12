@@ -369,7 +369,7 @@ _jump:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
 				{
 					si--;
-					sll_stack_offset_t e=si;
+					sll_stack_offset_t e_si=si;
 					si-=ai->dt.al<<1;
 					sll_stack_offset_t i=si-1;
 					sll_runtime_object_t* cnd=*(s+si-1);
@@ -381,29 +381,29 @@ _jump:
 						cnd_v=cnd->dt.c;
 					}
 					else{
-						while (si<e){
+						while (si<e_si){
 							SLL_RELEASE(*(s+si));
 							si++;
 						}
 					}
 					SLL_RELEASE(cnd);
-					while (si<e){
-						sll_runtime_object_t* v=*(s+si);
-						if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_INT){
-							if (v->dt.i==cnd_v){
+					while (si<e_si){
+						sll_runtime_object_t* k=*(s+si);
+						if (SLL_RUNTIME_OBJECT_GET_TYPE(k)==SLL_RUNTIME_OBJECT_TYPE_INT){
+							if (k->dt.i==cnd_v){
 								goto _cleanup_jump_table;
 							}
 						}
-						else if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
-							if (v->dt.c==cnd_v){
+						else if (SLL_RUNTIME_OBJECT_GET_TYPE(k)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+							if (k->dt.c==cnd_v){
 								goto _cleanup_jump_table;
 							}
 						}
-						SLL_RELEASE(v);
+						SLL_RELEASE(k);
 						SLL_RELEASE(*(s+si+1));
 						si+=2;
 					}
-					SLL_ASSERT(si==e);
+					SLL_ASSERT(si==e_si);
 					ii=(sll_instruction_index_t)((*(s+si))->dt.i);
 					ai=_get_instruction_at_offset(a_dt,ii);
 					sll_current_instruction_count++;
@@ -414,7 +414,7 @@ _cleanup_jump_table:;
 					ii=(sll_instruction_index_t)((*(s+si+1))->dt.i);
 					ai=_get_instruction_at_offset(a_dt,ii);
 					sll_current_instruction_count++;
-					while (si<e){
+					while (si<e_si){
 						SLL_RELEASE(*(s+si));
 						si++;
 					}
