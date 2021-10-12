@@ -401,6 +401,10 @@ sll_object_t* _acquire_next_object(sll_compilation_data_t* c_dt);
 
 
 
+sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t* a_dt,sll_instruction_index_t off);
+
+
+
 sll_object_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_object_offset_t off);
 
 

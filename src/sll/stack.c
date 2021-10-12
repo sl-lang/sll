@@ -61,6 +61,19 @@ sll_object_t* _acquire_next_object(sll_compilation_data_t* c_dt){
 
 
 
+sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t* a_dt,sll_instruction_index_t off){
+	sll_page_size_t sz=sll_platform_get_page_size()*ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT;
+	sll_instruction_index_t cnt=(sll_instruction_index_t)(((sz-sizeof(void*)-sizeof(sll_object_t)*2)/sizeof(sll_object_t)));
+	void* pg=a_dt->_s.s;
+	while (off>=cnt){
+		pg=*((void**)pg);
+		off-=cnt;
+	}
+	return (sll_assembly_instruction_t*)((char*)pg+sizeof(void*)+sizeof(sll_assembly_instruction_t)*(off+1));
+}
+
+
+
 sll_object_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_object_offset_t off){
 	sll_page_size_t sz=sll_platform_get_page_size()*OBJECT_STACK_PAGE_ALLOC_COUNT;
 	sll_object_offset_t cnt=(sll_object_offset_t)(((sz-sizeof(void*)-sizeof(sll_object_t)*2)/sizeof(sll_object_t)));
