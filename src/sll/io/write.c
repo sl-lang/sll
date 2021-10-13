@@ -252,7 +252,7 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->dt.c);
+				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,ai->dt.c);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
@@ -320,7 +320,7 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->dt.ac);
+				_write_integer(os,ai->dt.ac);
 				break;
 		}
 		ai++;

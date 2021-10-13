@@ -381,12 +381,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
-				c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
-				if (c==SLL_END_OF_DATA){
-					e->t=SLL_ERROR_INVALID_FILE_FORMAT;
-					return SLL_RETURN_ERROR;
-				}
-				ai->dt.ac=(sll_arg_count_t)c;
+				CHECK_ERROR(is,ai->dt.ac,sll_arg_count_t,e);
 				break;
 		}
 	}

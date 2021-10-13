@@ -12,6 +12,7 @@
 - Fixed bugs in optimization and merging of print objects
 - Fixed string merging in optimzation of `SLL_OBJECT_TYPE_PRINT` objects
 - Fixed VM instruction jumps
+- Renamed integer lists to integer heap queues ([#71])
 - Runtime objects now store debug data in the correct order
 
 ### Removed
@@ -862,6 +863,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#71]: https://github.com/sl-lang/sll/issues/71
 [#67]: https://github.com/sl-lang/sll/issues/67
 [#54]: https://github.com/sl-lang/sll/issues/54
 [#53]: https://github.com/sl-lang/sll/issues/53

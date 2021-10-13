@@ -580,7 +580,7 @@ The bitwise NOT (One's complement) of the value is return
 
 #### Description
 
-The one's complement (bitwise NOT) of the first and only operand is returned.
+The one's complement (bitwise NOT) of the first (and only) operand is returned.
 
 #### Example
 
