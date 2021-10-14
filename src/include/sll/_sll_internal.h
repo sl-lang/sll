@@ -277,7 +277,7 @@ typedef struct __OPTIMIZER_DATA{
 	uint32_t l_sm_l;
 	variable_assignment_data_t va;
 	sll_runtime_object_t** v;
-	sll_variable_index_t vi;
+	sll_runtime_object_t** a_v;
 	uint8_t rm;
 } optimizer_data_t;
 

@@ -267,12 +267,7 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 					while (a->t==SLL_OBJECT_TYPE_NOP||a->t==SLL_OBJECT_TYPE_DEBUG_DATA||a->t==OBJECT_TYPE_CHANGE_STACK){
 						a=(a->t==OBJECT_TYPE_CHANGE_STACK?a->dt._p:a+1);
 					}
-					if (a->t!=SLL_OBJECT_TYPE_IDENTIFIER){
-						o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
-					}
-					else{
-						o->dt.ac=ac;
-					}
+					o->dt.ac=ac;
 				}
 			}
 			else if (o->t==SLL_OBJECT_TYPE_FUNC){
