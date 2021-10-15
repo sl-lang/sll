@@ -10,8 +10,9 @@
 
 - Fixed assembly instruction counting
 - Fixed bugs in optimization and merging of print objects
-- Fixed string merging in optimzation of `SLL_OBJECT_TYPE_PRINT` objects
+- Fixed string merging in optimization of `SLL_OBJECT_TYPE_PRINT` objects
 - Fixed VM instruction jumps
+- Instruction counter now increases before the instruction is executed
 - Renamed integer lists to integer heap queues ([#71])
 - Runtime objects now store debug data in the correct order
 

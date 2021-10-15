@@ -107,6 +107,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 			e->t=SLL_ERROR_INVALID_INSTRUCTION_INDEX;
 			return 0;
 		}
+		sll_current_instruction_count++;
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP:
 				break;
@@ -286,7 +287,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 _jump:
 				ii=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ii+ai->dt.rj:ai->dt.j);
 				ai=_get_instruction_at_offset(a_dt,ii);
-				sll_current_instruction_count++;
 				continue;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
 				{
@@ -406,14 +406,12 @@ _jump:
 					SLL_ASSERT(si==e_si);
 					ii=(sll_instruction_index_t)((*(s+si))->dt.i);
 					ai=_get_instruction_at_offset(a_dt,ii);
-					sll_current_instruction_count++;
 					SLL_RELEASE(*(s+si));
 					si=i;
 					continue;
 _cleanup_jump_table:;
 					ii=(sll_instruction_index_t)((*(s+si+1))->dt.i);
 					ai=_get_instruction_at_offset(a_dt,ii);
-					sll_current_instruction_count++;
 					while (si<e_si){
 						SLL_RELEASE(*(s+si));
 						si++;
@@ -539,7 +537,6 @@ _print_from_stack:;
 							c_st.l++;
 							ii=*(a_dt->ft.dt+i-1);
 							ai=_get_instruction_at_offset(a_dt,ii);
-							sll_current_instruction_count++;
 							continue;
 						}
 					}
@@ -574,7 +571,6 @@ _print_from_stack:;
 					c_st.l++;
 					ii=*(a_dt->ft.dt+ai->dt.i-1);
 					ai=_get_instruction_at_offset(a_dt,ii);
-					sll_current_instruction_count++;
 					continue;
 				}
 				*(s+si)=SLL_ACQUIRE_STATIC_INT(0);
@@ -597,7 +593,6 @@ _print_from_stack:;
 					c_st.l++;
 					ii=*(a_dt->ft.dt+ai->dt.i-1);
 					ai=_get_instruction_at_offset(a_dt,ii);
-					sll_current_instruction_count++;
 					continue;
 				}
 				*(s+si-1)=SLL_ACQUIRE_STATIC_INT(0);
@@ -616,7 +611,6 @@ _return:;
 				c_st.l--;
 				ii=(c_st.dt+c_st.l)->ii;
 				ai=_get_instruction_at_offset(a_dt,ii);
-				sll_current_instruction_count++;
 				si=(c_st.dt+c_st.l)->s;
 				if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
 					*(s+si)=tmp;
@@ -711,7 +705,6 @@ _return:;
 				e->dt.it=SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai);
 				goto _end;
 		}
-		sll_current_instruction_count++;
 		ai++;
 		if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			ai=ai->dt._p;
