@@ -381,10 +381,12 @@ _jump:
 						cnd_v=cnd->dt.c;
 					}
 					else{
+						SLL_RELEASE(cnd);
 						while (si<e_si){
 							SLL_RELEASE(*(s+si));
 							si++;
 						}
+						goto _jump_to_default;
 					}
 					SLL_RELEASE(cnd);
 					while (si<e_si){
@@ -403,6 +405,7 @@ _jump:
 						SLL_RELEASE(*(s+si+1));
 						si+=2;
 					}
+_jump_to_default:
 					SLL_ASSERT(si==e_si);
 					ii=(sll_instruction_index_t)((*(s+si))->dt.i);
 					ai=_get_instruction_at_offset(a_dt,ii);
