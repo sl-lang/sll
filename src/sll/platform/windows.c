@@ -106,9 +106,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 	char bf[MAX_PATH+1];
 	sll_string_length_t fpl=sll_string_length_unaligned(fp);
 	memcpy(bf,fp,fpl);
-	bf[fpl]='\\';
-	bf[fpl+1]='*';
-	bf[fpl+2]=0;
+	if (bf[fpl-1]!='/'&&bf[fpl-1]!='\\'){
+		bf[fpl]='\\';
+		fpl++;
+	}
+	bf[fpl]='*';
+	bf[fpl+1]=0;
 	sll_string_t* op=NULL;
 	sll_array_length_t ol=0;
 	WIN32_FIND_DATAA dt;
@@ -137,8 +140,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 	sll_char_t bf[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length_unaligned(fp);
 	memcpy(bf,fp,i);
-	bf[i]='\\';
-	i++;
+	if (bf[i-1]!='/'&&bf[i-1]!='\\'){
+		bf[i]='\\';
+		i++;
+	}
 	file_list_data_t dt={
 		NULL,
 		0

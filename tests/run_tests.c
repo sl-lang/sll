@@ -2,7 +2,6 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
 #else
-#include <dirent.h>
 #include <errno.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -21,48 +20,6 @@
 char e_fp[4096];
 char ti_fp[4096];
 char to_fp[4096];
-
-
-
-void list_files(char* fp,uint16_t fpl,file_callback_t cb,test_result_t* o){
-#ifdef _MSC_VER
-	WIN32_FIND_DATAA dt;
-	fp[fpl]='*';
-	fp[fpl+1]=0;
-	HANDLE fh=FindFirstFileA(fp,&dt);
-	if (fh!=INVALID_HANDLE_VALUE){
-		do{
-			if (!(dt.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)){
-				uint16_t i=0;
-				while (*(dt.cFileName+i)){
-					*(fp+fpl+i)=*(dt.cFileName+i);
-					i++;
-				}
-				*(fp+fpl+i)=0;
-				cb(fp,o);
-			}
-		} while (FindNextFileA(fh,&dt));
-		FindClose(fh);
-	}
-#else
-	DIR* d=opendir(fp);
-	if (d){
-		struct dirent* dt;
-		while ((dt=readdir(d))){
-			if (dt->d_type==DT_REG){
-				uint16_t i=0;
-				while (*(dt->d_name+i)){
-					*(fp+fpl+i)=*(dt->d_name+i);
-					i++;
-				}
-				*(fp+fpl+i)=0;
-				cb(fp,o);
-			}
-		}
-		closedir(d);
-	}
-#endif
-}
 
 
 
@@ -517,17 +474,18 @@ int main(int argc,const char** argv){
 		return execute_test(argv[1][0]-1);
 	}
 #endif
-	char bf[4096]=__TEST_ROOT_DIR__;
-	i=0;
-	while (bf[i]){
-		i++;
-	}
 	test_result_t dt={
 		0,
 		0,
 		0
 	};
-	list_files(bf,i,run_parser_test,&dt);
+	sll_string_t* a=NULL;
+	sll_array_length_t l=sll_platform_list_directory_recursive(SLL_CHAR(__TEST_ROOT_DIR__),&a);
+	for (sll_array_length_t i=0;i<l;i++){
+		run_parser_test((char*)((a+i)->v),&dt);
+		free((a+i)->v);
+	}
+	free(a);
 	printf("%"PRIu32" Test%s Passed, %"PRIu32" Test%s Failed, %"PRIu32" Test%s Skipped\n",dt.p,(dt.p==1?"":"s"),dt.f,(dt.f==1?"":"s"),dt.s,(dt.s==1?"":"s"));
 	return !!dt.f;
 }

@@ -114,6 +114,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 	sll_char_t bf[PATH_MAX+1];
 	sll_string_length_t l=sll_string_length_unaligned(fp);
 	memcpy(bf,fp,l);
+	if (bf[l-1]!='/'&&bf[l-1]!='\\'){
+		bf[l]='/';
+		l++;
+	}
 	file_list_data_t dt={
 		NULL,
 		0
