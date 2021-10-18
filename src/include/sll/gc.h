@@ -8,7 +8,12 @@
 #define SLL_ACQUIRE(x) SLL_ACQUIRE_NO_DEBUG(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_ACQUIRE))
 #define SLL_ACQUIRE_NO_DEBUG(x) ((x)->rc++)
 #define SLL_CREATE() __SLL_ADD_DEBUG_DATA(sll_create_object(),__SLL_DEBUG_TYPE_CREATE)
-#define SLL_GC_NO_DEBUG_DATA ._dbg0=0xff,._dbg1=0xffff
+#define SLL_GC_ZERO_DEBUG_DATA(r) \
+	do{ \
+		(r)->_dbg0=0xff; \
+		(r)->_dbg1=0xffff; \
+	} while (0)
+#define SLL_GC_ZERO_DEBUG_DATA_STRUCT ._dbg0=0xff,._dbg1=0xffff
 #define SLL_RELEASE(x) sll_release_object(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_RELEASE))
 
 

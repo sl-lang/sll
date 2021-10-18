@@ -14,15 +14,16 @@
 - Fixed string merging in optimization of `SLL_OBJECT_TYPE_PRINT` objects
 - Fixed VM instruction jumps
 - Instruction counter now increases before the instruction is executed
-- Renamed `sll__add_debug_data` to `sll_add_debug_data`, `SLL_NO_DEBUG_DATA` to `SLL_GC_NO_DEBUG_DATA`, `SLL_LOOKUP_HANDLE_DESCRIPTOR_FAST` to `SLL_HANDLE_LOOKUP_DESCRIPTOR`, `SLL_UNKNOWN_HANLE_TYPE` to `SLL_HANDLE_UNKNOWN_TYPE`, `SLL_ZERO_integer_heap_queue_STRUCT` to `SLL_ZERO_INTEGER_HEAP_QUEUE_STRUCT`, `SLL_ABS_FLOAT` to `SLL_FLOAT_ABSOLUTE` and `SLL_ROUND_FLOAT` to `SLL_FLOAT_ROUND`
+- Renamed `sll__add_debug_data` to `sll_add_debug_data`, `SLL_NO_DEBUG_DATA` to `SLL_GC_ZERO_DEBUG_DATA_STRUCT`, `SLL_LOOKUP_HANDLE_DESCRIPTOR_FAST` to `SLL_HANDLE_LOOKUP_DESCRIPTOR`, `SLL_UNKNOWN_HANLE_TYPE` to `SLL_HANDLE_UNKNOWN_TYPE`, `SLL_ZERO_integer_heap_queue_STRUCT` to `SLL_ZERO_INTEGER_HEAP_QUEUE_STRUCT`, `SLL_ABS_FLOAT` to `SLL_FLOAT_ABSOLUTE` and `SLL_ROUND_FLOAT` to `SLL_FLOAT_ROUND`
 - Renamed `SLL_STRING_COMBINE_CHECKSUMS_FAST` to `SLL_STRING_COMBINE_CHECKSUMS` (and removed the latter one)
 - Renamed integer lists to integer heap queues ([#71])
 - Runtime objects now store debug data in the correct order
 
 ### Removed
 
-- Unused error: `SLL_ERROR_TOO_MANY_STATEMENTS`
+- Internal operator declaration macros `__SLL_OPERATOR_UNARY`, `__SLL_OPERATOR_BINARY`, `__SLL_OPERATOR_TERNARY` and `__SLL_OPERATOR_QUATERNARY`
 - `SLL_STRING_INCREASE` macro (in favor of `sll_string_increase`), `SLL_STRING_FROM_STATIC` macro (in favor of `sll_string_from_pointer`, which removes bugs with writing to read-only memory)
+- Unused error: `SLL_ERROR_TOO_MANY_STATEMENTS`
 
 ## [0.6.22] - 2021-10-10
 
