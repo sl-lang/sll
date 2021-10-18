@@ -6,6 +6,7 @@
 
 - Assembly instructions for jump tables (`SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_JT`) ([#67])
 - Implemented `sll_acquire_object`,`sll_identifier_add_index`, `sll_identifier_create_identifier`, `sll_identifier_get_array_id`, `sll_identifier_get_array_index`, `sll_string_combine_checksums`, `sll_string_increase` and `sll_string_op`
+- Macro `SLL_ZERO_HEADER`
 
 ### Changed
 
@@ -24,6 +25,7 @@
 - Internal operator declaration macros `__SLL_OPERATOR_UNARY`, `__SLL_OPERATOR_BINARY`, `__SLL_OPERATOR_TERNARY` and `__SLL_OPERATOR_QUATERNARY`
 - `SLL_STRING_INCREASE` macro (in favor of `sll_string_increase`), `SLL_STRING_FROM_STATIC` macro (in favor of `sll_string_from_pointer`, which removes bugs with writing to read-only memory)
 - Unused error: `SLL_ERROR_TOO_MANY_STATEMENTS`
+- Internal static object macros: `__SLL_STATIC_NAME` and `__SLL_STATIC_OBJECT_DECL`
 
 ## [0.6.22] - 2021-10-10
 

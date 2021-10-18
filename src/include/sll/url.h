@@ -6,6 +6,11 @@
 
 
 
+#define SLL_ZERO_HEADER(h) \
+	do{ \
+		SLL_ZERO_STRING((h)->k); \
+		SLL_ZERO_STRING((h)->v); \
+	} while (0)
 #define SLL_ZERO_HEADER_STRUCT {SLL_ZERO_STRING_STRUCT,SLL_ZERO_STRING_STRUCT}
 #define SLL_ZERO_HEADER_LIST(hl) \
 	do{ \
