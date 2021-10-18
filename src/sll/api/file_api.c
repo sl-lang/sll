@@ -29,7 +29,7 @@ typedef struct __FILE{
 
 static file_t** _file_fl=NULL;
 static sll_handle_t _file_fll=0;
-static sll_handle_type_t _file_ht=SLL_UNKNOWN_HANDLE_TYPE;
+static sll_handle_type_t _file_ht=SLL_HANDLE_UNKNOWN_TYPE;
 static sll_handle_descriptor_t _file_type;
 
 
@@ -67,7 +67,7 @@ static uint8_t _free_file(sll_handle_t h){
 static void _file_destructor(sll_handle_t h){
 	if (h==SLL_HANDLE_FREE){
 		SLL_ASSERT(!_file_fll);
-		_file_ht=SLL_UNKNOWN_HANDLE_TYPE;
+		_file_ht=SLL_HANDLE_UNKNOWN_TYPE;
 		return;
 	}
 	_free_file(h);
@@ -129,7 +129,7 @@ _found_index:;
 	n->nmc=a->c;
 	n->h=h;
 	*(_file_fl+i)=n;
-	if (_file_ht==SLL_UNKNOWN_HANDLE_TYPE){
+	if (_file_ht==SLL_HANDLE_UNKNOWN_TYPE){
 		SLL_ASSERT(sll_current_runtime_data);
 		_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type);
 	}

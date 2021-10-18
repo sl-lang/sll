@@ -1444,7 +1444,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				}
 				SLL_ASSERT(!cnd||SLL_RUNTIME_OBJECT_GET_TYPE(cnd)==SLL_RUNTIME_OBJECT_TYPE_INT);
 				l=(l-1)>>1;
-				sll_integer_heap_queue_t il=SLL_ZERO_integer_heap_queue_STRUCT;
+				sll_integer_heap_queue_t il=SLL_ZERO_INTEGER_HEAP_QUEUE_STRUCT;
 				do{
 					l--;
 					sll_object_t* a=o;
@@ -1983,21 +1983,21 @@ static sll_object_t* _merge_print_strings(sll_object_t* o,optimizer_data_t* o_dt
 		if (o->t==SLL_OBJECT_TYPE_CHAR||o->t==SLL_OBJECT_TYPE_STRING){
 			if (a){
 				if (a->t==SLL_OBJECT_TYPE_CHAR&&o->t==SLL_OBJECT_TYPE_CHAR){
-					o->dt.s=_create_print_string(o_dt,&(a->dt.c),&(o->dt.c),1,1,SLL_STRING_COMBINE_CHECKSUMS_FAST(a->dt.c,1,o->dt.c));
+					o->dt.s=_create_print_string(o_dt,&(a->dt.c),&(o->dt.c),1,1,SLL_STRING_COMBINE_CHECKSUMS(a->dt.c,1,o->dt.c));
 				}
 				else if (a->t==SLL_OBJECT_TYPE_CHAR&&o->t==SLL_OBJECT_TYPE_STRING){
 					sll_string_t* sb=o_dt->c_dt->st.dt+o->dt.s;
-					o->dt.s=_create_print_string(o_dt,&(a->dt.c),sb->v,1,sb->l,SLL_STRING_COMBINE_CHECKSUMS_FAST(a->dt.c,1,sb->c));
+					o->dt.s=_create_print_string(o_dt,&(a->dt.c),sb->v,1,sb->l,SLL_STRING_COMBINE_CHECKSUMS(a->dt.c,1,sb->c));
 				}
 				else if (a->t==SLL_OBJECT_TYPE_STRING&&o->t==SLL_OBJECT_TYPE_CHAR){
 					sll_string_t* sa=o_dt->c_dt->st.dt+a->dt.s;
-					o->dt.s=_create_print_string(o_dt,sa->v,&(o->dt.c),sa->l,1,SLL_STRING_COMBINE_CHECKSUMS_FAST(sa->c,sa->l,o->dt.c));
+					o->dt.s=_create_print_string(o_dt,sa->v,&(o->dt.c),sa->l,1,SLL_STRING_COMBINE_CHECKSUMS(sa->c,sa->l,o->dt.c));
 				}
 				else{
 					SLL_ASSERT(a->t==SLL_OBJECT_TYPE_STRING&&o->t==SLL_OBJECT_TYPE_STRING);
 					sll_string_t* sa=o_dt->c_dt->st.dt+a->dt.s;
 					sll_string_t* sb=o_dt->c_dt->st.dt+o->dt.s;
-					o->dt.s=_create_print_string(o_dt,sa->v,sb->v,sa->l,sb->l,SLL_STRING_COMBINE_CHECKSUMS_FAST(sa->c,sa->l,sb->c));
+					o->dt.s=_create_print_string(o_dt,sa->v,sb->v,sa->l,sb->l,SLL_STRING_COMBINE_CHECKSUMS(sa->c,sa->l,sb->c));
 				}
 				a->t=SLL_OBJECT_TYPE_NOP;
 				o->t=SLL_OBJECT_TYPE_STRING;

@@ -19,7 +19,7 @@
 
 #define SETUP_HANDLE \
 	do{ \
-		if (_json_ht==SLL_UNKNOWN_HANDLE_TYPE){ \
+		if (_json_ht==SLL_HANDLE_UNKNOWN_TYPE){ \
 			SLL_ASSERT(sll_current_runtime_data); \
 			_json_ht=sll_create_handle(sll_current_runtime_data->hl,&_json_type); \
 			_json_null=SLL_FROM_HANDLE(_json_ht,0); \
@@ -30,7 +30,7 @@
 
 
 
-static sll_handle_type_t _json_ht=SLL_UNKNOWN_HANDLE_TYPE;
+static sll_handle_type_t _json_ht=SLL_HANDLE_UNKNOWN_TYPE;
 static sll_runtime_object_t* _json_null=NULL;
 static sll_runtime_object_t* _json_true=NULL;
 static sll_runtime_object_t* _json_false=NULL;
@@ -76,7 +76,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 	sll_char_t c=**p;
 	(*p)++;
 	while (c!='\"'){
-		SLL_STRING_INCREASE(o);
+		sll_string_increase(o,1);
 		if (c!='\\'){
 			o->v[o->l]=c;
 			o->l++;

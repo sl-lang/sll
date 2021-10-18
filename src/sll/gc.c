@@ -48,7 +48,7 @@ static void _gc_free_pages(void){
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t){
+__SLL_FUNC sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t){
 	uint32_t i=o->_dbg0|(o->_dbg1<<8);
 	if (i==GC_MAX_DEBUG_ID){
 		i=0;
@@ -108,6 +108,12 @@ _found_index:
 
 
 
+__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o){
+	o->rc++;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 	if (!_gc_next_object){
 		sll_page_size_t sz=sll_platform_get_page_size();
@@ -159,7 +165,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 		}
 		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_HANDLE){
 			if (sll_current_runtime_data){
-				sll_handle_descriptor_t* hd=sll_lookup_handle_descriptor(sll_current_runtime_data->hl,o->dt.h.t);
+				sll_handle_descriptor_t* hd=SLL_HANDLE_LOOKUP_DESCRIPTOR(sll_current_runtime_data->hl,o->dt.h.t);
 				if (hd&&hd->df){
 					hd->df(o->dt.h.h);
 				}

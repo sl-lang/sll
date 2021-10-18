@@ -102,6 +102,12 @@ __SLL_FUNC void sll_string_combinations(const sll_string_t* a,const sll_string_t
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_checksum_t sll_string_combine_checksums(sll_string_checksum_t a,sll_string_length_t l,sll_string_checksum_t b){
+	return a^sll_rotate_bits(b,(l&3)<<3);
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare(const sll_string_t* a,const sll_string_t* b){
 	SLL_UNIMPLEMENTED();
 	return SLL_COMPARE_RESULT_EQUAL;
@@ -397,6 +403,19 @@ __SLL_FUNC void sll_string_hash(sll_string_t* s){
 
 
 
+__SLL_FUNC void sll_string_increase(sll_string_t* s,sll_string_length_t l){
+	if (!l){
+		return;
+	}
+	l+=s->l;
+	if (!(l&(SLL_STRING_ALIGN-1))){
+		s->v=realloc(s->v,SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
+		SLL_STRING_FORMAT_PADDING(s->v,l);
+	}
+}
+
+
+
 __SLL_FUNC void sll_string_inv(const sll_string_t* s,sll_string_t* o){
 	if (!s->l){
 		SLL_ZERO_STRING(o);
@@ -428,7 +447,7 @@ __SLL_FUNC void sll_string_join(const sll_string_t* a,const sll_string_t* b,sll_
 	INIT_PADDING(o->v,o->l);
 	memcpy(o->v,a->v,a->l);
 	memcpy(o->v+a->l,b->v,b->l);
-	o->c=SLL_STRING_COMBINE_CHECKSUMS_FAST(a->c,a->l,b->c);
+	o->c=SLL_STRING_COMBINE_CHECKSUMS(a->c,a->l,b->c);
 }
 
 
@@ -476,8 +495,32 @@ __SLL_FUNC void sll_string_lower_case(const sll_string_t* s,sll_string_t* o){
 
 
 
-__SLL_FUNC void sll_string_op(const sll_string_t* s,const sll_string_t* a,sll_binary_operator_t f,sll_string_t* o){
-	SLL_UNIMPLEMENTED();
+__SLL_FUNC void sll_string_op(const sll_string_t* a,const sll_string_t* b,sll_binary_operator_t f,sll_string_t* o){
+	sll_string_length_t e=a->l;
+	o->l=b->l;
+	if (b->l<a->l){
+		e=b->l;
+		o->l=a->l;
+	}
+	o->v=malloc(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
+	INIT_PADDING(o->v,o->l);
+	for (sll_string_length_t i=0;i<e;i++){
+		sll_runtime_object_t* v=f(sll_static_char[a->v[i]],sll_static_char[b->v[i]]);
+		sll_runtime_object_t* c=sll_operator_cast(v,sll_static_int[SLL_CONSTANT_TYPE_CHAR]);
+		SLL_RELEASE(v);
+		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_CHAR);
+		o->v[i]=c->dt.c;
+		SLL_RELEASE(c);
+	}
+	if (a->l==b->l){
+		return;
+	}
+	if (a->l>b->l){
+		memcpy(o->v+e,a->v+e,o->l-e);
+	}
+	else{
+		memcpy(o->v+e,b->v+e,o->l-e);
+	}
 }
 
 

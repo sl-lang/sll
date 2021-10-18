@@ -35,7 +35,7 @@ static inline __attribute__((always_inline)) unsigned int sll_rotate_bits(unsign
 
 
 #ifdef DEBUG_BUILD
-#define __SLL_ADD_DEBUG_DATA(o,t) sll__add_debug_data((o),__FILE__,__LINE__,__func__,(t))
+#define __SLL_ADD_DEBUG_DATA(o,t) sll_add_debug_data((o),__FILE__,__LINE__,__func__,(t))
 #else
 #define __SLL_ADD_DEBUG_DATA(o,t) o
 #endif

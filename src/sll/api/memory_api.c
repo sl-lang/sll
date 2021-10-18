@@ -13,7 +13,7 @@
 
 #define SETUP_HANDLE \
 	do{ \
-		if (_memory_ht==SLL_UNKNOWN_HANDLE_TYPE){ \
+		if (_memory_ht==SLL_HANDLE_UNKNOWN_TYPE){ \
 			SLL_ASSERT(sll_current_runtime_data); \
 			_memory_ht=sll_create_handle(sll_current_runtime_data->hl,&_memory_type); \
 			_memory_null_ref=SLL_FROM_HANDLE(_memory_ht,0); \
@@ -22,7 +22,7 @@
 
 
 
-static sll_handle_type_t _memory_ht=SLL_UNKNOWN_HANDLE_TYPE;
+static sll_handle_type_t _memory_ht=SLL_HANDLE_UNKNOWN_TYPE;
 static sll_runtime_object_t* _memory_null_ref=NULL;
 static sll_handle_descriptor_t _memory_type;
 
@@ -32,7 +32,7 @@ static void _memory_cleanup(sll_handle_t h){
 	if (h==SLL_HANDLE_FREE){
 		SLL_RELEASE(_memory_null_ref);
 		_memory_null_ref=NULL;
-		_memory_ht=SLL_UNKNOWN_HANDLE_TYPE;
+		_memory_ht=SLL_HANDLE_UNKNOWN_TYPE;
 		return;
 	}
 }

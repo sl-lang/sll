@@ -65,7 +65,7 @@ __SLL_FUNC void sll_init_handle_list(sll_handle_list_t* o){
 
 
 
-__SLL_FUNC sll_handle_descriptor_t* sll_lookup_handle_descriptor(sll_handle_list_t* hl,sll_handle_type_t t){
+__SLL_FUNC sll_handle_descriptor_t* sll_handle_lookup_descriptor(sll_handle_list_t* hl,sll_handle_type_t t){
 	if (!hl||!t||t>hl->dtl){
 		return NULL;
 	}

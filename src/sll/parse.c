@@ -771,7 +771,7 @@ _unknown_symbol:
 				s.v=malloc(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
 				SLL_STRING_FORMAT_PADDING(s.v,0);
 				while (1){
-					SLL_STRING_INCREASE(&s);
+					sll_string_increase(&s,1);
 					uint8_t err=_read_single_char(is,arg_s,e,s.v+s.l);
 					if (err==1){
 						free(s.v);

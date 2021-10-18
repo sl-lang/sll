@@ -66,10 +66,10 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 
 
 #define __API_FUNC(nm) __SLL_FUNC __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
-#define __SLL_STATIC_INT_OBJECT(v) static sll_runtime_object_t _int_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_NO_DEBUG_DATA,.dt={.i=(v)}};STATIC_RUNTIME_OBJECT(&_int_##v##_static_data)
-#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_runtime_object_t _int_neg_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_NO_DEBUG_DATA,.dt={.i=-(v)}};STATIC_RUNTIME_OBJECT(&_int_neg_##v##_static_data)
-#define __SLL_STATIC_CHAR_OBJECT(v) static sll_runtime_object_t _char_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_CHAR,SLL_NO_DEBUG_DATA,.dt={.c=(sll_char_t)(v)}};STATIC_RUNTIME_OBJECT(&_char_##v##_static_data)
-#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_runtime_object_t _##nm##_static_data={1,t,SLL_NO_DEBUG_DATA,.dt={.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
+#define __SLL_STATIC_INT_OBJECT(v) static sll_runtime_object_t _int_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_GC_NO_DEBUG_DATA,.dt={.i=(v)}};STATIC_RUNTIME_OBJECT(&_int_##v##_static_data)
+#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_runtime_object_t _int_neg_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_GC_NO_DEBUG_DATA,.dt={.i=-(v)}};STATIC_RUNTIME_OBJECT(&_int_neg_##v##_static_data)
+#define __SLL_STATIC_CHAR_OBJECT(v) static sll_runtime_object_t _char_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_CHAR,SLL_GC_NO_DEBUG_DATA,.dt={.c=(sll_char_t)(v)}};STATIC_RUNTIME_OBJECT(&_char_##v##_static_data)
+#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_runtime_object_t _##nm##_static_data={1,t,SLL_GC_NO_DEBUG_DATA,.dt={.f=v}};sll_runtime_object_t* __SLL_STATIC_NAME(nm)=&_##nm##_static_data
 
 
 

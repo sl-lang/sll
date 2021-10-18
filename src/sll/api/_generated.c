@@ -17,7 +17,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_close_raw(const
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	const sll_runtime_object_t* a=*(al+0);
-	if (!((SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_UNKNOWN_HANDLE_TYPE))){
+	if (!((SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE))){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	sll_integer_t out=sll_api_file_close(&(a->dt.h));
@@ -60,7 +60,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_file_write_raw(const
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	const sll_runtime_object_t* a=*(al+0);
-	if (!((SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_UNKNOWN_HANDLE_TYPE)||SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT)){
+	if (!((SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)||SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	const sll_runtime_object_t*const* b=al+1;

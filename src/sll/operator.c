@@ -135,8 +135,8 @@
 #define COMBINED_CAST_TYPE_MK COMBINE_CAST_TYPES(SLL_RUNTIME_OBJECT_TYPE_MAP,SLL_CONSTANT_TYPE_MAP_KEY)
 #define COMBINED_CAST_TYPE_MV COMBINE_CAST_TYPES(SLL_RUNTIME_OBJECT_TYPE_MAP,SLL_CONSTANT_TYPE_MAP_VALUE)
 #define COMPARE_RESULT(a,b) ((a)<(b)?SLL_COMPARE_RESULT_BELOW:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_EQUAL))
-#define COMPARE_RESULT_FLOAT(a,b) (SLL_ABS_FLOAT((a)-(b))<sll_float_compare_error?SLL_COMPARE_RESULT_EQUAL:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW))
-#define EQUAL_FLOAT(a,b) (SLL_ABS_FLOAT((a)-(b))<sll_float_compare_error)
+#define COMPARE_RESULT_FLOAT(a,b) (SLL_FLOAT_ABSOLUTE((a)-(b))<sll_float_compare_error?SLL_COMPARE_RESULT_EQUAL:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW))
+#define EQUAL_FLOAT(a,b) (SLL_FLOAT_ABSOLUTE((a)-(b))<sll_float_compare_error)
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
 	do{ \
@@ -153,12 +153,12 @@
 	do{ \
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_FLOAT){ \
 			__tmp0.t=SLL_RUNTIME_OBJECT_TYPE_INT; \
-			__tmp0.dt.i=SLL_ROUND_FLOAT(a->dt.f); \
+			__tmp0.dt.i=SLL_FLOAT_ROUND(a->dt.f); \
 			a=&__tmp0; \
 		} \
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_FLOAT){ \
 			__tmp1.t=SLL_RUNTIME_OBJECT_TYPE_INT; \
-			__tmp1.dt.i=SLL_ROUND_FLOAT(b->dt.f); \
+			__tmp1.dt.i=SLL_FLOAT_ROUND(b->dt.f); \
 			b=&__tmp1; \
 		} \
 	} while (0)
@@ -182,7 +182,7 @@ __SLL_OPERATOR_UNARY(inc){
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				sll_string_create(a->dt.s.l+1,&(o->dt.s));
-				o->dt.s.c=SLL_STRING_COMBINE_CHECKSUMS_FAST(a->dt.s.c,a->dt.s.l,'1');
+				o->dt.s.c=SLL_STRING_COMBINE_CHECKSUMS(a->dt.s.c,a->dt.s.l,'1');
 				memcpy(o->dt.s.v,a->dt.s.v,a->dt.s.l);
 				o->dt.s.v[a->dt.s.l]='1';
 				return o;
@@ -535,7 +535,7 @@ __SLL_OPERATOR_BINARY(sub){
 		case COMBINED_TYPE_HI:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-b->dt.i);
 		case COMBINED_TYPE_HF:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-SLL_ROUND_FLOAT(b->dt.f));
+			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-SLL_FLOAT_ROUND(b->dt.f));
 		case COMBINED_TYPE_HC:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-b->dt.c);
 		case COMBINED_TYPE_HH:
@@ -604,7 +604,7 @@ __SLL_OPERATOR_BINARY(mult){
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)SLL_ROUND_FLOAT(SLL_ABS_FLOAT(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
+				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)SLL_FLOAT_ROUND(SLL_FLOAT_ABSOLUTE(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_FA:
@@ -612,7 +612,7 @@ __SLL_OPERATOR_BINARY(mult){
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)SLL_ROUND_FLOAT(SLL_ABS_FLOAT(a->dt.f-n)*b->dt.a.l),&(o->dt.a));
+				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)SLL_FLOAT_ROUND(SLL_FLOAT_ABSOLUTE(a->dt.f-n)*b->dt.a.l),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_FH:
@@ -878,7 +878,7 @@ __SLL_OPERATOR_BINARY(floor_div){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i/b->dt.i);
 		case COMBINED_TYPE_IF:
-			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.i/b->dt.f));
+			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.i/b->dt.f));
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i/b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -933,17 +933,17 @@ __SLL_OPERATOR_BINARY(floor_div){
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f/b->dt.i));
+			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.f/b->dt.i));
 		case COMBINED_TYPE_FF:
-			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f/b->dt.f));
+			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.f/b->dt.f));
 		case COMBINED_TYPE_FC:
-			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.f/b->dt.c));
+			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.f/b->dt.c));
 		case COMBINED_TYPE_FH:
-			return SLL_FROM_HANDLE(b->dt.h.t,SLL_ROUND_FLOAT(a->dt.f/b->dt.h.h));
+			return SLL_FROM_HANDLE(b->dt.h.t,SLL_FLOAT_ROUND(a->dt.f/b->dt.h.h));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c/b->dt.i);
 		case COMBINED_TYPE_CF:
-			return SLL_FROM_INT(SLL_ROUND_FLOAT(a->dt.c/b->dt.f));
+			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.c/b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c/b->dt.c);
 		case COMBINED_TYPE_CS:
@@ -986,7 +986,7 @@ __SLL_OPERATOR_BINARY(floor_div){
 		case COMBINED_TYPE_HI:
 			return SLL_FROM_HANDLE(b->dt.h.t,b->dt.h.h/a->dt.i);
 		case COMBINED_TYPE_HF:
-			return SLL_FROM_HANDLE(b->dt.h.t,SLL_ROUND_FLOAT(b->dt.h.h/a->dt.f));
+			return SLL_FROM_HANDLE(b->dt.h.t,SLL_FLOAT_ROUND(b->dt.h.h/a->dt.f));
 		case COMBINED_TYPE_HC:
 			return SLL_FROM_HANDLE(b->dt.h.t,b->dt.h.h/a->dt.c);
 		case COMBINED_TYPE_HH:
@@ -1598,7 +1598,7 @@ __SLL_OPERATOR_UNARY(inv){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(~a->dt.i);
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			return SLL_FROM_INT(~SLL_ROUND_FLOAT(a->dt.f));
+			return SLL_FROM_INT(~SLL_FLOAT_ROUND(a->dt.f));
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(~a->dt.c);
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
@@ -1727,7 +1727,7 @@ __SLL_OPERATOR_BINARY(shr){
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),-SLL_ROUND_FLOAT(a->dt.f),&(o->dt.s));
+				sll_string_shift(&(a->dt.s),-SLL_FLOAT_ROUND(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SC:
@@ -1776,7 +1776,7 @@ __SLL_OPERATOR_BINARY(shr){
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),-SLL_ROUND_FLOAT(a->dt.f),&(o->dt.a));
+				sll_array_resize(&(a->dt.a),-SLL_FLOAT_ROUND(a->dt.f),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_AC:
@@ -1957,7 +1957,7 @@ __SLL_OPERATOR_BINARY(shl){
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),SLL_ROUND_FLOAT(a->dt.f),&(o->dt.s));
+				sll_string_shift(&(a->dt.s),SLL_FLOAT_ROUND(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SC:
@@ -2006,7 +2006,7 @@ __SLL_OPERATOR_BINARY(shl){
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),SLL_ROUND_FLOAT(a->dt.f),&(o->dt.a));
+				sll_array_resize(&(a->dt.a),SLL_FLOAT_ROUND(a->dt.f),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_AC:
@@ -2350,7 +2350,7 @@ __SLL_OPERATOR_BINARY(cast){
 				return SLL_FROM_CHAR((sll_char_t)(a->dt.f));
 			case COMBINED_CAST_TYPE_FA:
 				{
-					sll_integer_t n=SLL_ROUND_FLOAT(a->dt.f);
+					sll_integer_t n=SLL_FLOAT_ROUND(a->dt.f);
 					if (n<1){
 						return SLL_ACQUIRE_STATIC(array_zero);
 					}

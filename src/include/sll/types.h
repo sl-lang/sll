@@ -1,7 +1,18 @@
 #ifndef __SLL_TYPES_H__
 #define __SLL_TYPES_H__ 1
-#include <sll/identifier.h>
 #include <stdint.h>
+
+
+
+#define SLL_MAX_IDENTIFIER_INDEX UINT32_MAX
+
+
+
+typedef uint32_t sll_identifier_index_t;
+
+
+
+#include <sll/identifier.h>
 
 
 
@@ -29,7 +40,6 @@
 #define SLL_MAX_FUNCTION_INDEX UINT32_MAX
 #define SLL_MAX_HANDLE_TYPE UINT32_MAX
 #define SLL_MAX_HEADER_COUNT UINT32_MAX
-#define SLL_MAX_IDENTIFIER_INDEX UINT32_MAX
 #define SLL_MAX_IDENTIFIER_LIST_LENGTH UINT32_MAX
 #define SLL_MAX_INSTRUCTION_INDEX UINT32_MAX
 #define SLL_MAX_JSON_ARRAY_LENGTH UINT32_MAX
@@ -165,10 +175,6 @@ typedef uint32_t sll_handle_type_t;
 
 
 typedef uint32_t sll_header_count_t;
-
-
-
-typedef uint32_t sll_identifier_index_t;
 
 
 

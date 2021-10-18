@@ -5,7 +5,7 @@
 
 
 
-#define SLL_ZERO_integer_heap_queue_STRUCT {NULL,0}
+#define SLL_ZERO_INTEGER_HEAP_QUEUE_STRUCT {NULL,0}
 
 
 

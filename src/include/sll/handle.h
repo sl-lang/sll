@@ -6,19 +6,17 @@
 
 
 #define SLL_FROM_HANDLE(t,v) __SLL_ADD_DEBUG_DATA(sll_handle_to_object((t),(v)),__SLL_DEBUG_TYPE_CREATE)
-#define SLL_ZERO_HANDLE_STRUCT {SLL_UNKNOWN_HANDLE_TYPE,0}
+#define SLL_HANDLE_DESCRIPTOR_HEADER(nm) nm,0,0
+#define SLL_HANDLE_FREE 0xffffffffffffffff
+#define SLL_HANDLE_LOOKUP_DESCRIPTOR(hl,t) (*((hl)->dt+(t)-1))
+#define SLL_HANDLE_UNKNOWN_TYPE 0
+#define SLL_MAX_HANDLE 0xfffffffffffffffe
 #define SLL_ZERO_HANDLE(o) \
 	do{ \
-		(o)->t=SLL_UNKNOWN_HANDLE_TYPE; \
+		(o)->t=SLL_HANDLE_UNKNOWN_TYPE; \
 		(o)->h=0; \
 	} while (0)
-
-#define SLL_UNKNOWN_HANDLE_TYPE 0
-#define SLL_HANDLE_FREE UINT64_MAX
-#define SLL_MAX_HANDLE (UINT64_MAX-1)
-
-#define SLL_HANDLE_DESCRIPTOR_HEADER(nm) nm,0,0
-#define SLL_LOOKUP_HANDLE_DESCRIPTOR_FAST(hl,t) (*((hl)->dt+(t)-1))
+#define SLL_ZERO_HANDLE_STRUCT {SLL_HANDLE_UNKNOWN_TYPE,0}
 
 
 
@@ -42,7 +40,7 @@ __SLL_FUNC void sll_init_handle_list(sll_handle_list_t* o);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_handle_descriptor_t* sll_lookup_handle_descriptor(sll_handle_list_t* hl,sll_handle_type_t t);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_handle_descriptor_t* sll_handle_lookup_descriptor(sll_handle_list_t* hl,sll_handle_type_t t);
 
 
 

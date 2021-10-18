@@ -5,16 +5,19 @@
 
 
 
-#define SLL_CREATE() __SLL_ADD_DEBUG_DATA(sll_create_object(),__SLL_DEBUG_TYPE_CREATE)
-#define SLL_ACQUIRE_NO_DEBUG(x) ((x)->rc++)
 #define SLL_ACQUIRE(x) SLL_ACQUIRE_NO_DEBUG(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_ACQUIRE))
+#define SLL_ACQUIRE_NO_DEBUG(x) ((x)->rc++)
+#define SLL_CREATE() __SLL_ADD_DEBUG_DATA(sll_create_object(),__SLL_DEBUG_TYPE_CREATE)
+#define SLL_GC_NO_DEBUG_DATA ._dbg0=0xff,._dbg1=0xffff
 #define SLL_RELEASE(x) sll_release_object(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_RELEASE))
 
-#define SLL_NO_DEBUG_DATA ._dbg0=0xff,._dbg1=0xffff
+
+
+__SLL_FUNC sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t);
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll__add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t);
+__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o);
 
 
 

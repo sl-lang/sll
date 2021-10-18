@@ -229,13 +229,13 @@ void run_parser_test(const char* fp,test_result_t* o){
 	free(f_dt);
 	f_dt=NULL;
 	sll_string_t tmp_str;
-	SLL_STRING_FROM_STATIC("name",&tmp_str);
+	sll_string_from_pointer(SLL_CHAR("name"),&tmp_str);
 	sll_json_object_t* nm_e=sll_json_get_by_key(&json,&tmp_str);
 	if (!nm_e||nm_e->t!=SLL_JSON_OBJECT_TYPE_STRING){
 		goto _json_error;
 	}
 	char* nm=(char*)nm_e->dt.s.v;
-	SLL_STRING_FROM_STATIC("data",&tmp_str);
+	sll_string_from_pointer(SLL_CHAR("data"),&tmp_str);
 	sll_json_object_t* dt_e=sll_json_get_by_key(&json,&tmp_str);
 	if (!dt_e||dt_e->t!=SLL_JSON_OBJECT_TYPE_ARRAY){
 		goto _json_error;
@@ -253,7 +253,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 			continue;
 		}
-		SLL_STRING_FROM_STATIC("input",&tmp_str);
+		sll_string_from_pointer(SLL_CHAR("input"),&tmp_str);
 		sll_json_object_t* in_e=sll_json_get_by_key(t,&tmp_str);
 		if (!in_e||in_e->t!=SLL_JSON_OBJECT_TYPE_STRING){
 			o->s++;
@@ -282,7 +282,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> Test Case #%"PRIu32": Program Crashed\n",i);
 			continue;
 		}
-		SLL_STRING_FROM_STATIC("error",&tmp_str);
+		sll_string_from_pointer(SLL_CHAR("error"),&tmp_str);
 		sll_json_object_t* err_e=sll_json_get_by_key(t,&tmp_str);
 		if (!err_e||(err_e->t!=SLL_JSON_OBJECT_TYPE_NULL&&err_e->t!=SLL_JSON_OBJECT_TYPE_MAP)){
 			o->s++;
@@ -329,7 +329,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 			continue;
 		}
 		sll_error_t* e=(sll_error_t*)bf;
-		SLL_STRING_FROM_STATIC("type",&tmp_str);
+		sll_string_from_pointer(SLL_CHAR("type"),&tmp_str);
 		sll_json_object_t* err_t_e=sll_json_get_by_key(err_e,&tmp_str);
 		if (!err_t_e||err_t_e->t!=SLL_JSON_OBJECT_TYPE_INTEGER||err_t_e->dt.i<0||err_t_e->dt.i>SLL_MAX_ERROR){
 			o->s++;
@@ -339,7 +339,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 		sll_error_t ne={
 			(sll_error_type_t)err_t_e->dt.i
 		};
-		SLL_STRING_FROM_STATIC("data",&tmp_str);
+		sll_string_from_pointer(SLL_CHAR("data"),&tmp_str);
 		sll_json_object_t* err_v_e=sll_json_get_by_key(err_e,&tmp_str);
 		switch (ne.t){
 			case SLL_ERROR_INTERNAL_STACK_OVERFLOW:

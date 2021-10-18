@@ -809,11 +809,11 @@ _read_file_argument:
 			PRINT_STATIC_STR("Fetching Version Data...\n");
 		}
 		sll_string_t m;
-		SLL_STRING_FROM_STATIC("GET",&m);
+		sll_string_from_pointer(SLL_CHAR("GET"),&m);
 		sll_string_t h;
-		SLL_STRING_FROM_STATIC("sll.krzem.workers.dev",&h);
+		sll_string_from_pointer(SLL_CHAR("sll.krzem.workers.dev"),&h);
 		sll_string_t p;
-		SLL_STRING_FROM_STATIC("/version",&p);
+		sll_string_from_pointer(SLL_CHAR("/version"),&p);
 		sll_string_t dt=SLL_ZERO_STRING_STRUCT;
 		sll_header_list_t hl=SLL_ZERO_HEADER_LIST_STRUCT;
 		sll_string_t r_dt;
@@ -842,7 +842,7 @@ _read_file_argument:
 			goto _json_error;
 		}
 		sll_string_t tmp;
-		SLL_STRING_FROM_STATIC("version",&tmp);
+		sll_string_from_pointer(SLL_CHAR("version"),&tmp);
 		sll_json_object_t* v=sll_json_get_by_key(&json,&tmp);
 		if (!v||v->t!=SLL_JSON_OBJECT_TYPE_INTEGER){
 			goto _json_error;
@@ -904,7 +904,7 @@ _read_file_argument:
 			}
 			free(dl);
 #endif
-			SLL_STRING_FROM_STATIC("/data/"SLL_TYPE,&p);
+			sll_string_from_pointer(SLL_CHAR("/data/"SLL_TYPE),&p);
 			r.dt=&r_dt;
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Downloading '");
