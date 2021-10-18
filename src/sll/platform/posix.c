@@ -85,6 +85,31 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_page_size(void){
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
+	DIR* d=opendir((char*)fp);
+	sll_string_t* op=NULL;
+	sll_array_length_t ol=0;
+	if (d){
+		struct dirent* dt;
+		while ((dt=readdir(d))){
+			if (dt->d_type==DT_DIR&&*(dt->d_name)=='.'&&(*(dt->d_name+1)==0||(*(dt->d_name+1)=='.'&&*(dt->d_name+2)==0))){
+				continue;
+			}
+			ol++;
+			op=realloc(op,ol*sizeof(sll_string_t));
+			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
+			sll_string_create(l,op+ol-1);
+			memcpy((op+ol-1)->v,dt->d_name,l);
+			sll_string_hash(op+ol-1);
+		}
+		closedir(d);
+	}
+	*o=op;
+	return ol;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[PATH_MAX+1];
 	sll_string_length_t l=sll_string_length_unaligned(fp);

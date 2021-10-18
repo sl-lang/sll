@@ -102,10 +102,43 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
+	char bf[MAX_PATH+1];
+	sll_string_length_t fpl=sll_string_length_unaligned(fp);
+	memcpy(bf,fp,fpl);
+	bf[fpl]='\\';
+	bf[fpl+1]='*';
+	bf[fpl+2]=0;
+	sll_string_t* op=NULL;
+	sll_array_length_t ol=0;
+	WIN32_FIND_DATAA dt;
+	HANDLE fh=FindFirstFileA(bf,&dt);
+	if (fh!=INVALID_HANDLE_VALUE){
+		do{
+			if ((dt.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)&&*(dt.cFileName)=='.'&&(*(dt.cFileName+1)==0||(*(dt.cFileName+1)=='.'&&*(dt.cFileName+2)==0))){
+				continue;
+			}
+			ol++;
+			op=realloc(op,ol*sizeof(sll_string_t));
+			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
+			sll_string_create(l,op+ol-1);
+			memcpy((op+ol-1)->v,dt.cFileName,l);
+			sll_string_hash(op+ol-1);
+		} while (FindNextFileA(fh,&dt));
+		FindClose(fh);
+	}
+	*o=op;
+	return ol;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length_unaligned(fp);
 	memcpy(bf,fp,i);
+	bf[i]='\\';
+	i++;
 	file_list_data_t dt={
 		NULL,
 		0

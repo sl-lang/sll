@@ -2,7 +2,9 @@
 
 ## [0.6.24] - Ongoing
 
-*Nothing*
+### Added
+
+- API related to listing files in a directory (`sll_api_path_list_dir`, `sll_api_path_list_dir_raw`, `sll_platform_list_directory` and `list_dir`)
 
 ## [0.6.23] - 2021-10-18
 

@@ -173,6 +173,21 @@ INTERNAL_FUNCTION("path_exists",sll_api_path_exists_raw,0|0);
 
 
 
+extern __SLL_API_TYPE_sll_api_path_list_dir sll_api_path_list_dir(__SLL_API_ARGS_sll_api_path_list_dir);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_list_dir_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_runtime_object_t* a=*(al+0);
+	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	return sll_api_path_list_dir(&(a->dt.s));
+}
+INTERNAL_FUNCTION("path_list_dir",sll_api_path_list_dir_raw,0|0);
+
+
+
 extern __SLL_API_TYPE_sll_api_path_is_dir sll_api_path_is_dir(__SLL_API_ARGS_sll_api_path_is_dir);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_is_dir_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){

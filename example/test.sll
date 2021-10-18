@@ -1,4 +1,4 @@
-(# time sleep open close write platform argc argv get_ref_count size parse read_url separator instruction_count lower_case upper_case title_case replace hash)
+(# time sleep open close write platform argc argv get_ref_count list_dir size parse read_url separator instruction_count lower_case upper_case title_case replace hash)
 (? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "url.sll" "string.sll" "hash.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -149,6 +149,7 @@
 	(:> "(number too big)")
 )
 (:> "\n")
+(:> (<- list_dir ".") "\n")
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@@@ false)
