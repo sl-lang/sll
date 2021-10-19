@@ -39,9 +39,9 @@
 
 ### Removed
 
-- `SLL_STRING_INCREASE` macro (in favor of `sll_string_increase`), `SLL_STRING_FROM_STATIC` macro (in favor of `sll_string_from_pointer`, which removes bugs with writing to read-only memory)
 - Internal operator declaration macros `__SLL_OPERATOR_UNARY`, `__SLL_OPERATOR_BINARY`, `__SLL_OPERATOR_TERNARY` and `__SLL_OPERATOR_QUATERNARY`
 - Internal static object macros: `__SLL_STATIC_NAME` and `__SLL_STATIC_OBJECT_DECL`
+- `SLL_STRING_INCREASE` macro (in favor of `sll_string_increase`), `SLL_STRING_FROM_STATIC` macro (in favor of `sll_string_from_pointer`, which removes bugs with writing to read-only memory)
 - Unused error: `SLL_ERROR_TOO_MANY_STATEMENTS`
 
 ## [0.6.22] - 2021-10-10
