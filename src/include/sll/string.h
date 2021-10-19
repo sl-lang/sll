@@ -96,6 +96,10 @@ __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o);
 
 
 
+__SLL_FUNC sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i);
+
+
+
 __SLL_FUNC void sll_string_hash(sll_string_t* s);
 
 
@@ -169,6 +173,10 @@ __SLL_FUNC void sll_string_replace_char(const sll_string_t* s,sll_char_t k,sll_c
 
 
 __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_set(const sll_string_t* s,sll_string_length_t i,sll_char_t c);
 
 
 

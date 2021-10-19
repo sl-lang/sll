@@ -392,6 +392,12 @@ __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
 
 
 
+__SLL_FUNC sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i){
+	return (i<s->l?s->v[i]:0);
+}
+
+
+
 __SLL_FUNC void sll_string_hash(sll_string_t* s){
 	const uint64_t* p=(const uint64_t*)(s->v);
 	uint64_t c=0;
@@ -789,6 +795,14 @@ __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_inte
 		SLL_UNIMPLEMENTED();
 	}
 	sll_string_hash(o);
+}
+
+
+
+__SLL_FUNC void sll_string_set(const sll_string_t* s,sll_string_length_t i,sll_char_t c){
+	if (i<s->l){
+		s->v[i]=c;
+	}
 }
 
 

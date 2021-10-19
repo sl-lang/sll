@@ -66,6 +66,10 @@ __SLL_FUNC void sll_array_from_length(sll_array_length_t l,sll_array_t* o);
 
 
 
+__SLL_FUNC sll_runtime_object_t* sll_array_get(const sll_array_t* a,sll_array_length_t i);
+
+
+
 __SLL_FUNC void sll_array_join(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
 
 
@@ -119,6 +123,10 @@ __SLL_FUNC void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_
 
 
 __SLL_FUNC void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_array_t* o);
+
+
+
+__SLL_FUNC void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_runtime_object_t* v);
 
 
 

@@ -5,6 +5,7 @@
 ### Added
 
 - API related to listing files in a directory (`sll_api_path_list_dir`, `sll_api_path_list_dir_raw`, `sll_api_path_recursive_list_dir`, `sll_api_path_recursive_list_dir_raw`, `sll_platform_list_directory`, `list_dir` and `recursive_list_dir`)
+- Implemented `sll_array_get`, `sll_array_set`, `sll_map_get_key`, `sll_map_get_value`, `sll_map_set_key`, `sll_map_set_value`, `sll_string_get` and `sll_string_set`
 - Sorting API (`sll_api_sort_sort`, `sll_api_sort_sort_raw`, `sll_quicksort`, `sort`)
 
 ### Changed
@@ -31,7 +32,7 @@
 - Fixed bugs in optimization and merging of print objects
 - Fixed string merging in optimization of `SLL_OBJECT_TYPE_PRINT` objects
 - Fixed VM instruction jumps
-- Instruction counter now increases before the instruction is executed
+- Instruction counter now increases bef	ore the instruction is executed
 - Renamed `sll__add_debug_data` to `sll_add_debug_data`, `SLL_NO_DEBUG_DATA` to `SLL_GC_ZERO_DEBUG_DATA_STRUCT`, `SLL_LOOKUP_HANDLE_DESCRIPTOR_FAST` to `SLL_HANDLE_LOOKUP_DESCRIPTOR`, `SLL_UNKNOWN_HANLE_TYPE` to `SLL_HANDLE_UNKNOWN_TYPE`, `SLL_ZERO_integer_heap_queue_STRUCT` to `SLL_ZERO_INTEGER_HEAP_QUEUE_STRUCT`, `SLL_ABS_FLOAT` to `SLL_FLOAT_ABSOLUTE` and `SLL_ROUND_FLOAT` to `SLL_FLOAT_ROUND`
 - Renamed `SLL_STRING_COMBINE_CHECKSUMS_FAST` to `SLL_STRING_COMBINE_CHECKSUMS` (and removed the latter one)
 - Renamed integer lists to integer heap queues ([#71])
