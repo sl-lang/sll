@@ -99,7 +99,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 				continue;
 			}
 			ol++;
-			op=realloc(op,ol*sizeof(sll_string_t));
+			void* tmp=realloc(op,ol*sizeof(sll_string_t));
+			if (!tmp){
+				*o=op;
+				closedir(d);
+				return ol-1;
+			}
+			op=tmp;
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
 			sll_string_create(l,op+ol-1);
 			memcpy((op+ol-1)->v,dt->d_name,l);
