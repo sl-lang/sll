@@ -39,7 +39,10 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				if (*(dt.cFileName)=='.'&&(*(dt.cFileName+1)==0||(*(dt.cFileName+1)=='.'&&*(dt.cFileName+2)==0))){
 					continue;
 				}
-				SLL_UNIMPLEMENTED();
+				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
+				memcpy(bf+i,dt.cFileName,j);
+				bf[i+j]='\\';
+				_list_dir_files(bf,i+j+1,o);
 			}
 			else{
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));

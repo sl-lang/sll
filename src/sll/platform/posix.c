@@ -40,7 +40,10 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				if (*(dt->d_name)=='.'&&(*(dt->d_name+1)==0||(*(dt->d_name+1)=='.'&&*(dt->d_name+2)==0))){
 					continue;
 				}
-				SLL_UNIMPLEMENTED();
+				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
+				memcpy(bf+i,dt->d_name,j);
+				bf[i+j]='/';
+				_list_dir_files(bf,i+j+1,o);
 			}
 		}
 		closedir(d);
@@ -130,7 +133,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const sll_char_t* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
-	return !!realpath((char*)fp,(char*)bf);
+	return (!realpath((char*)fp,(char*)bf)?0:sll_string_length_unaligned(SLL_CHAR(bf)));
 }
 
 

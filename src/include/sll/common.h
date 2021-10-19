@@ -3,6 +3,7 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
+#include <stddef.h>
 
 
 

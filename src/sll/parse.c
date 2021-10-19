@@ -1024,54 +1024,6 @@ _unknown_symbol:
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
 				}
-				else if (sz==8&&!memcmp(str,"int_type",8)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_INT;
-				}
-				else if (sz==10&&!memcmp(str,"float_type",10)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_FLOAT;
-				}
-				else if (sz==9&&!memcmp(str,"char_type",9)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_CHAR;
-				}
-				else if (sz==11&&!memcmp(str,"string_type",11)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_STRING;
-				}
-				else if (sz==10&&!memcmp(str,"array_type",10)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_ARRAY;
-				}
-				else if (sz==11&&!memcmp(str,"handle_type",11)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_HANDLE;
-				}
-				else if (sz==8&&!memcmp(str,"map_type",8)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_MAP;
-				}
-				else if (sz==12&&!memcmp(str,"map_key_type",12)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_MAP_KEY;
-				}
-				else if (sz==14&&!memcmp(str,"map_value_type",14)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=SLL_CONSTANT_TYPE_MAP_VALUE;
-				}
-				else if (sz==5&&!memcmp(str,"stdin",5)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=-1;
-				}
-				else if (sz==6&&!memcmp(str,"stdout",6)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=-2;
-				}
-				else if (sz==6&&!memcmp(str,"stderr",6)){
-					arg->t=SLL_OBJECT_TYPE_INT;
-					arg->dt.i=-3;
-				}
 				else{
 					sll_string_t n={
 						sz,

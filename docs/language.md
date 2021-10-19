@@ -1,4 +1,3 @@
-
 # The Sl-Lang File Syntax
 
 The building-block of Sll is called an object. An object can represent anything from an integer to a complex expression.

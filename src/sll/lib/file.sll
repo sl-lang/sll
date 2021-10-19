@@ -1,5 +1,9 @@
+(= stdin -1)
+(= stdout -2)
+(= stderr -3)
+
 (= open (... "file_open"))
 (= close (... "file_close"))
 (= write (... "file_write"))
 
-(## open close write)
+(## stdin stdout stderr open close write)

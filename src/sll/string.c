@@ -109,8 +109,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_checksum_t sll_string_combine_checksums
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare(const sll_string_t* a,const sll_string_t* b){
-	SLL_UNIMPLEMENTED();
-	return SLL_COMPARE_RESULT_EQUAL;
+	int o=strcmp((char*)(a->v),(char*)(b->v));
+	return (!o?SLL_COMPARE_RESULT_BELOW:(o>0?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW));
 }
 
 

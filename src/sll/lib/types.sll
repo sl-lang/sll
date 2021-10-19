@@ -1,0 +1,11 @@
+(= int_type 1)
+(= float_type 2)
+(= char_type 3)
+(= string_type 4)
+(= array_type 5)
+(= handle_type 6)
+(= map_type 7)
+(= map_key_type 8)
+(= map_value_type 9)
+
+(## int_type float_type char_type string_type array_type handle_type map_type map_key_type map_value_type)

@@ -1,5 +1,5 @@
-(# time sleep open close write platform argc argv get_ref_count list_dir size parse read_url separator instruction_count lower_case upper_case title_case replace hash)
-(? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "url.sll" "string.sll" "hash.sll"))
+(# time sleep open close write platform argc argv get_ref_count list_dir recursive_list_dir size parse read_url separator instruction_count lower_case upper_case title_case replace hash int_type string_type array_type map_type map_key_type map_value_type stdout absolute sort)
+(? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "url.sll" "string.sll" "hash.sll" "types.sll" "sort.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -150,6 +150,17 @@
 )
 (:> "\n")
 (:> (<- list_dir ".") "\n")
+(= format_bytes (,,, sz (?
+	(< sz 1024) (@@ (+ sz " b"))
+	(< sz 1048576) (@@ (+ (>> sz 10) " kb"))
+	(< sz 1073741824) (@@ (+ (>> sz 20) " Mb"))
+	(@@ (+ sz " b"))
+)))
+(= array (<- sort (<- recursive_list_dir ".")))
+(-> (= i 0) (< i ($ array))
+	(:> (<- absolute (: array i)) " -> " (<- format_bytes (<- size (: array i))) "\n")
+	(= i (+ i 1))
+)
 (? (! FACTORIAL) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

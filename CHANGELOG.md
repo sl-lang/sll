@@ -4,7 +4,13 @@
 
 ### Added
 
-- API related to listing files in a directory (`sll_api_path_list_dir`, `sll_api_path_list_dir_raw`, `sll_platform_list_directory` and `list_dir`)
+- API related to listing files in a directory (`sll_api_path_list_dir`, `sll_api_path_list_dir_raw`, `sll_api_path_recursive_list_dir`, `sll_api_path_recursive_list_dir_raw`, `sll_platform_list_directory`, `list_dir` and `recursive_list_dir`)
+- Sorting API (`sll_api_sort_sort`, `sll_api_sort_sort_raw`, `sort`)
+
+### Changed
+
+- All constants excluding `true`, `false` and `nil` have been move to library files (`int_type`, `float_type`, `char_type`, `string_type`, `array_type`, `handle_type`, `map_type`, `map_key_type` and `map_value_type` have been moved to [`src/sll/lib/types.sll`](main/src/sll/lib/types.sll) and `stdin`, `stdout`, `stderr` have been moved to [`src/sll/lib/file.sll`](main/src/sll/lib/file.sll))
+- *\[POSIX only\]* Fixed return value of `sll_platform_path_absolute`
 
 ## [0.6.23] - 2021-10-18
 
@@ -916,6 +922,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/sll/lib/file.sll]: https://github.com/sl-lang/sll/blob/main/src/sll/lib/file.sll
+[main/src/sll/lib/types.sll]: https://github.com/sl-lang/sll/blob/main/src/sll/lib/types.sll
 [0.6.21/src/include/sll/constants.h]: https://github.com/sl-lang/sll/blob/v0.6.21/src/include/sll/constants.h
 [0.6.21/src/include/sll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.21/src/include/sll/core.h
 [0.6.20/src/sll/api/file_api.c]: https://github.com/sl-lang/sll/blob/v0.6.20/src/sll/api/file_api.c
