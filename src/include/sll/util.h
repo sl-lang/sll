@@ -37,7 +37,7 @@ __SLL_FUNC void sll_register_cleanup(sll_cleanup_function f,sll_cleanup_type_t t
 
 
 
-__SLL_FUNC void sll_setup_stack(sll_stack_data_t* o,sll_buffer_t bf,sll_stack_offset_t sz);
+__SLL_FUNC void sll_setup_stack(sll_stack_data_t* o,sll_char_t* bf,sll_stack_offset_t sz);
 
 
 

@@ -481,9 +481,9 @@ int main(int argc,const char** argv){
 	};
 	sll_string_t* a=NULL;
 	sll_array_length_t l=sll_platform_list_directory_recursive(SLL_CHAR(__TEST_ROOT_DIR__),&a);
-	for (sll_array_length_t i=0;i<l;i++){
-		run_parser_test((char*)((a+i)->v),&dt);
-		free((a+i)->v);
+	for (sll_array_length_t j=0;j<l;j++){
+		run_parser_test((char*)((a+j)->v),&dt);
+		free((a+j)->v);
 	}
 	free(a);
 	printf("%"PRIu32" Test%s Passed, %"PRIu32" Test%s Failed, %"PRIu32" Test%s Skipped\n",dt.p,(dt.p==1?"":"s"),dt.f,(dt.f==1?"":"s"),dt.s,(dt.s==1?"":"s"));

@@ -21,7 +21,7 @@ static sll_read_char_t _input_data_stream_file_read(sll_input_data_stream_t* is)
 
 
 
-static sll_read_char_t _input_data_stream_file_read_buffer(sll_input_data_stream_t* is,sll_buffer_t bf,sll_buffer_size_t sz){
+static sll_read_char_t _input_data_stream_file_read_buffer(sll_input_data_stream_t* is,sll_char_t* bf,sll_string_length_t sz){
 	return (fread(bf,sizeof(uint8_t),sz,(FILE*)(is->ctx))==sz?0:SLL_END_OF_DATA);
 }
 
@@ -63,12 +63,12 @@ static sll_read_char_t _input_data_stream_buffer_read(sll_input_data_stream_t* i
 
 
 
-static sll_read_char_t _input_data_stream_buffer_read_buffer(sll_input_data_stream_t* is,sll_buffer_t bf,sll_buffer_size_t sz){
+static sll_read_char_t _input_data_stream_buffer_read_buffer(sll_input_data_stream_t* is,sll_char_t* bf,sll_string_length_t sz){
 	sll_input_buffer_t* is_bf=(sll_input_buffer_t*)(is->ctx);
 	if (is->_off+sz>=is_bf->sz){
 		return SLL_END_OF_DATA;
 	}
-	for (sll_buffer_size_t i=0;i<sz;i++){
+	for (sll_string_length_t i=0;i<sz;i++){
 		*(bf+i)=*(is_bf->bf+i+is->_off);
 	}
 	is->_off+=sz;

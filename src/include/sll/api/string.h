@@ -6,6 +6,14 @@
 
 
 
+__SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_bool_t q);
+
+
+
 /*~~DOCS~~
 TYPE api compilation_call optimizable var_arg
 FUNC sll_api_string_convert
@@ -71,14 +79,6 @@ ARG S Docs!
 RET Z Failure
 RET S Success*/
 __API_FUNC_DECL(string_to_upper_case);
-
-
-
-__SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o);
-
-
-
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_bool_t q);
 
 
 

@@ -9,46 +9,61 @@
 
 
 
-static sll_string_length_t _sort_partition(sll_runtime_object_t** a,sll_string_length_t i,sll_string_length_t j){
-	sll_runtime_object_t* p=*(a+j);
-	sll_string_length_t o=i;
-	while (i<j){
-		if (sll_operator_compare(*(a+i),p)==SLL_COMPARE_RESULT_BELOW){
-			sll_runtime_object_t* tmp=*(a+o);
-			*(a+o)=*(a+i);
-			*(a+i)=tmp;
-			o++;
+__SLL_FUNC void sll_quicksort(const sll_runtime_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
+	sll_array_length_t i=0;
+	for (sll_array_length_t j=0;j<l;j++){
+		if (sll_operator_compare(*(a+j),*(a+l))==cmp){
+			const sll_runtime_object_t* t=*(a+i);
+			*(a+i)=*(a+j);
+			*(a+j)=t;
+			i++;
 		}
-		i++;
 	}
-	sll_runtime_object_t* tmp=*(a+o);
-	*(a+o)=*(a+i);
-	*(a+i)=tmp;
-	return o;
-}
-
-
-
-static void _sort(sll_runtime_object_t** a,sll_string_length_t i,sll_string_length_t j){
-	if (i<j){
-		sll_string_length_t k=_sort_partition(a,i,j);
-		if (k){
-			_sort(a,i,k-1);
-		}
-		_sort(a,k+1,j);
+	const sll_runtime_object_t* t=*(a+i);
+	*(a+i)=*(a+l);
+	*(a+l)=t;
+	if (i>1){
+		sll_quicksort(a,i-1,cmp);
+	}
+	i++;
+	if (i<l){
+		sll_quicksort(a+i,l-i,cmp);
 	}
 }
 
 
 
 __API_FUNC(sort_sort){
+	if (!a->l){
+		return SLL_ACQUIRE_STATIC(array_zero);
+	}
 	sll_runtime_object_t* o=SLL_CREATE();
 	o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 	sll_array_create(a->l,&(o->dt.a));
-	for (sll_array_length_t i=0;i<a->l;i++){
-		o->dt.a.v[i]=a->v[i];
-		SLL_ACQUIRE(a->v[i]);
+	if (a->l==1){
+		o->dt.a.v[0]=a->v[0];
+		SLL_ACQUIRE(a->v[0]);
+		return o;
 	}
-	_sort(o->dt.a.v,0,a->l-1);
+	sll_compare_result_t cmp=(!b?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+	sll_string_length_t i=0;
+	for (sll_array_length_t j=0;j<a->l;j++){
+		o->dt.a.v[j]=a->v[j];
+		SLL_ACQUIRE(a->v[j]);
+		if (j<a->l-1&&sll_operator_compare(a->v[j],a->v[a->l-1])==cmp){
+			o->dt.a.v[j]=o->dt.a.v[i];
+			o->dt.a.v[i]=a->v[j];
+			i++;
+		}
+	}
+	o->dt.a.v[a->l-1]=o->dt.a.v[i];
+	o->dt.a.v[i]=a->v[a->l-1];
+	if (i>1){
+		sll_quicksort((const sll_runtime_object_t**)(o->dt.a.v),i-1,cmp);
+	}
+	i++;
+	if (i<a->l-1){
+		sll_quicksort((const sll_runtime_object_t**)(o->dt.a.v+i),a->l-i-1,cmp);
+	}
 	return o;
 }

@@ -21,7 +21,7 @@ static void _output_data_stream_file_write_string(sll_output_data_stream_t* os,c
 
 
 
-static void _output_data_stream_file_write(sll_output_data_stream_t* os,sll_const_buffer_t bf,sll_buffer_size_t sz){
+static void _output_data_stream_file_write(sll_output_data_stream_t* os,const sll_char_t* bf,sll_string_length_t sz){
 	fwrite(bf,sizeof(uint8_t),sz,(FILE*)(os->ctx));
 }
 

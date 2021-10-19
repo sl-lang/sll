@@ -33,7 +33,6 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_ALLOCATED_BLOCK_LENGTH UINT32_MAX
 #define SLL_MAX_ARG_COUNT UINT32_MAX
 #define SLL_MAX_ARRAY_LENGTH UINT32_MAX
-#define SLL_MAX_BUFFER_SIZE UINT32_MAX
 #define SLL_MAX_COLUMN_NUMBER UINT32_MAX
 #define SLL_MAX_EXPORT_TABLE_LENGTH UINT32_MAX
 #define SLL_MAX_FILE_OFFSET UINT32_MAX
@@ -150,10 +149,6 @@ typedef uint32_t sll_array_length_t;
 
 
 
-typedef uint32_t sll_buffer_size_t;
-
-
-
 typedef uint32_t sll_column_number_t;
 
 
@@ -262,14 +257,6 @@ typedef double sll_float_t;
 
 
 
-typedef uint8_t* sll_buffer_t;
-
-
-
-typedef const uint8_t* sll_const_buffer_t;
-
-
-
 typedef const sll_char_t* sll_json_parser_state_t;
 
 
@@ -277,7 +264,7 @@ typedef const sll_char_t* sll_json_parser_state_t;
 typedef struct __SLL_INPUT_DATA_SOURCE{
 	void* ctx;
 	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_SOURCE* is);
-	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_buffer_t bf,sll_buffer_size_t sz);
+	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_char_t* bf,sll_string_length_t sz);
 	void (*rlf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_file_offset_t lp);
 	sll_line_number_t _lc;
 	sll_file_offset_t _off;
@@ -290,14 +277,14 @@ typedef struct __SLL_OUTPUT_DATA_STREAM{
 	void* ctx;
 	void (*wcf)(struct __SLL_OUTPUT_DATA_STREAM* os,char c);
 	void (*wsf)(struct __SLL_OUTPUT_DATA_STREAM* os,const char* s);
-	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* os,sll_const_buffer_t bf,sll_buffer_size_t sz);
+	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* os,const sll_char_t* bf,sll_string_length_t sz);
 } sll_output_data_stream_t;
 
 
 
 typedef struct __SLL_INPUT_BUFFER{
-	sll_const_buffer_t bf;
-	sll_buffer_size_t sz;
+	const sll_char_t* bf;
+	sll_string_length_t sz;
 } sll_input_buffer_t;
 
 
@@ -677,7 +664,7 @@ typedef void (*sll_cleanup_function)(void);
 
 
 typedef struct __SLL_STACK_DATA{
-	sll_buffer_t ptr;
+	sll_char_t* ptr;
 	sll_stack_offset_t off;
 	sll_stack_offset_t sz;
 } sll_stack_data_t;

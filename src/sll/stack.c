@@ -152,7 +152,7 @@ void _shift_objects(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_offs
 
 
 
-__SLL_FUNC void sll_setup_stack(sll_stack_data_t* o,sll_buffer_t bf,sll_stack_offset_t sz){
+__SLL_FUNC void sll_setup_stack(sll_stack_data_t* o,sll_char_t* bf,sll_stack_offset_t sz){
 	o->ptr=bf;
 	o->off=0;
 	o->sz=sz;

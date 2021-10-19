@@ -33,7 +33,7 @@
 	} while (0)
 #define READ_FIELD(f,is) \
 	do{ \
-		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM((is),(sll_buffer_t)(&(f)),sizeof((f)))==SLL_END_OF_DATA){ \
+		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM((is),SLL_CHAR(&(f)),sizeof((f)))==SLL_END_OF_DATA){ \
 			return SLL_RETURN_ERROR; \
 		} \
 	} while(0)

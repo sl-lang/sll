@@ -1087,7 +1087,7 @@ _json_error:
 		char f_fp[MAX_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		sll_input_buffer_t i_bf={
-			(sll_buffer_t)(*(sl+j)),
+			SLL_CHAR(*(sl+j)),
 			sll_string_length_unaligned(SLL_CHAR(*(sl+j)))
 		};
 		sll_stream_create_input_from_buffer(&i_bf,&is);

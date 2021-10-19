@@ -132,8 +132,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const sll_char_t* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
-	return (!realpath((char*)fp,(char*)bf)?0:sll_string_length_unaligned(SLL_CHAR(bf)));
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_path_absolute(const sll_char_t* fp,sll_char_t* o,sll_string_length_t ol){
+	IGNORE_RESULT(ol);
+	return (!realpath((char*)fp,(char*)o)?0:sll_string_length_unaligned(SLL_CHAR(o)));
 }
 
 

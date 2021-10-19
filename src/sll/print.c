@@ -4,13 +4,14 @@
 #include <sll/common.h>
 #include <sll/object.h>
 #include <sll/stream.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>
 
 
 
-#define PRINT_STATIC_STRING(s,os) SLL_WRITE_TO_OUTPUT_DATA_STREAM((os),(sll_buffer_t)(s),sizeof(s)-1)
+#define PRINT_STATIC_STRING(s,os) SLL_WRITE_TO_OUTPUT_DATA_STREAM((os),SLL_CHAR((s)),sizeof(s)/sizeof(char)-1)
 #define PRINT_INT_SIGN(v,os) \
 	do{ \
 		int64_t __v=(v); \

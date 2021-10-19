@@ -5,12 +5,17 @@
 ### Added
 
 - API related to listing files in a directory (`sll_api_path_list_dir`, `sll_api_path_list_dir_raw`, `sll_api_path_recursive_list_dir`, `sll_api_path_recursive_list_dir_raw`, `sll_platform_list_directory`, `list_dir` and `recursive_list_dir`)
-- Sorting API (`sll_api_sort_sort`, `sll_api_sort_sort_raw`, `sort`)
+- Sorting API (`sll_api_sort_sort`, `sll_api_sort_sort_raw`, `sll_quicksort`, `sort`)
 
 ### Changed
 
 - All constants excluding `true`, `false` and `nil` have been move to library files (`int_type`, `float_type`, `char_type`, `string_type`, `array_type`, `handle_type`, `map_type`, `map_key_type` and `map_value_type` have been moved to [`src/sll/lib/types.sll`](main/src/sll/lib/types.sll) and `stdin`, `stdout`, `stderr` have been moved to [`src/sll/lib/file.sll`](main/src/sll/lib/file.sll))
 - *\[POSIX only\]* Fixed return value of `sll_platform_path_absolute`
+
+### Removed
+
+- Buffer-related types: `sll_buffer_t` (now `sll_char_t*`), `sll_const_buffer_t` (now `const sll_char_t*`) and `sll_buffer_size_t` (now `sll_string_length_t`)
+- Max buffer size macro `SLL_MAX_BUFFER_SIZE` (now `SLL_MAX_STRING_LENGTH`)
 
 ## [0.6.23] - 2021-10-18
 

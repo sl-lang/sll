@@ -158,8 +158,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_buffer_size_t sll_platform_path_absolute(const sll_char_t* fp,sll_buffer_t bf,sll_buffer_size_t bfl){
-	return (sll_buffer_size_t)GetFullPathNameA(fp,bfl,bf,NULL);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_path_absolute(const sll_char_t* fp,sll_char_t* o,sll_string_length_t ol){
+	return (sll_string_length_t)GetFullPathNameA(fp,ol,o,NULL);
 }
 
 

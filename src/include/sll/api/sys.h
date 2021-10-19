@@ -6,6 +6,14 @@
 
 
 
+__SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a);
+
+
+
+__SLL_FUNC void sll_set_argument_count(sll_integer_t ac);
+
+
+
 /*~~DOCS~~
 TYPE api optimizable
 FUNC sll_api_sys_arg_get
@@ -32,14 +40,6 @@ FUNC sll_api_sys_get_platform
 DESC Docs!
 RET O Docs!*/
 __API_FUNC_DECL(sys_get_platform);
-
-
-
-__SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a);
-
-
-
-__SLL_FUNC void sll_set_argument_count(sll_integer_t ac);
 
 
 

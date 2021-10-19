@@ -156,7 +156,7 @@
 	(< sz 1073741824) (@@ (+ (>> sz 20) " Mb"))
 	(@@ (+ sz " b"))
 )))
-(= array (<- sort (<- recursive_list_dir ".")))
+(= array (<- sort (<- recursive_list_dir ".") false))
 (-> (= i 0) (< i ($ array))
 	(:> (<- absolute (: array i)) " -> " (<- format_bytes (<- size (: array i))) "\n")
 	(= i (+ i 1))

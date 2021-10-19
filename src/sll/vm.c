@@ -78,7 +78,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_a
 	sll_output_data_stream_t* out=r_dt->os;
 	sll_return_code_t rc=0;
 	const sll_assembly_instruction_t* ai=a_dt->h;
-	sll_buffer_t ptr=st->ptr;
+	sll_char_t* ptr=st->ptr;
 	sll_runtime_object_t** v=(sll_runtime_object_t**)ptr;
 	sll_static_int[0]->rc+=a_dt->vc;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
