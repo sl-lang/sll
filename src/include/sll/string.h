@@ -10,7 +10,7 @@
 #define SLL_CHAR(x) ((sll_char_t*)(x))
 #define SLL_STRING_ALIGN 8
 #define SLL_STRING_ALIGN_LENGTH(l) (((l)+SLL_STRING_ALIGN)&(-SLL_STRING_ALIGN))
-#define SLL_STRING_COMBINE_CHECKSUMS(a,l,b) (((sll_string_checksum_t)(a))^sll_rotate_bits((sll_string_checksum_t)(b),((l)&3)<<3))
+#define SLL_STRING_COMBINE_CHECKSUMS(a,l,b) (((sll_string_checksum_t)(a))^((((sll_string_checksum_t)(b))<<(((l)&3)<<3))|(((sll_string_checksum_t)(b))>>(32-(((l)&3)<<3)))))
 #define SLL_STRING_ESCAPE(c) ((c)=='\t'||(c)=='\n'||(c)=='\v'||(c)=='\f'||(c)=='\r'||(c)=='\"'||(c)=='\''||(c)=='\\')
 #define SLL_STRING_FORMAT_PADDING(v,l) memset((v)+(l),0,SLL_STRING_ALIGN-((l)&(SLL_STRING_ALIGN-1)))
 #define SLL_STRING_HEX_ESCAPE(c) ((c)<32||(c)>126)

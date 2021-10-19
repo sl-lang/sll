@@ -18,10 +18,10 @@
 		memcpy((st)->bf+(st)->l,(p),(sz)); \
 		(st)->l+=(sz); \
 	} while (0)
-#define MD5_STAGE0(a,b,c,d,i,r,k) a=b+sll_rotate_bits(((b&c)|((~b)&d))+a+k+dt[i],r)
-#define MD5_STAGE1(a,b,c,d,i,r,k) a=b+sll_rotate_bits(((b&d)|(c&(~d)))+a+k+dt[(5*i+1)&15],r)
-#define MD5_STAGE2(a,b,c,d,i,r,k) a=b+sll_rotate_bits((b^c^d)+a+k+dt[(3*i+5)&15],r)
-#define MD5_STAGE3(a,b,c,d,i,r,k) a=b+sll_rotate_bits((c^(b|(~d)))+a+k+dt[(7*i)&15],r)
+#define MD5_STAGE0(a,b,c,d,i,r,k) a=b+ROTATE_BITS(((b&c)|((~b)&d))+a+k+dt[i],r)
+#define MD5_STAGE1(a,b,c,d,i,r,k) a=b+ROTATE_BITS(((b&d)|(c&(~d)))+a+k+dt[(5*i+1)&15],r)
+#define MD5_STAGE2(a,b,c,d,i,r,k) a=b+ROTATE_BITS((b^c^d)+a+k+dt[(3*i+5)&15],r)
+#define MD5_STAGE3(a,b,c,d,i,r,k) a=b+ROTATE_BITS((c^(b|(~d)))+a+k+dt[(7*i)&15],r)
 
 
 

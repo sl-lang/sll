@@ -5,17 +5,19 @@
 ### Added
 
 - API related to listing files in a directory (`sll_api_path_list_dir`, `sll_api_path_list_dir_raw`, `sll_api_path_recursive_list_dir`, `sll_api_path_recursive_list_dir_raw`, `sll_platform_list_directory`, `list_dir` and `recursive_list_dir`)
-- Implemented `sll_array_get`, `sll_array_set`, `sll_map_get_key`, `sll_map_get_value`, `sll_map_set_key`, `sll_map_set_value`, `sll_string_get` and `sll_string_set`
+- Implemented `sll_array_get`, `sll_array_set`, `sll_map_get_key`, `sll_map_get_value`, `sll_map_set_key`, `sll_map_set_value`, `sll_stream_read`, `sll_stream_read_buffer`, `sll_stream_restart_line`, `sll_stream_write`, `sll_stream_write_buffer`, `sll_string_get` and `sll_string_set`
 - Sorting API (`sll_api_sort_sort`, `sll_api_sort_sort_raw`, `sll_quicksort`, `sort`)
 
 ### Changed
 
 - All constants excluding `true`, `false` and `nil` have been move to library files (`int_type`, `float_type`, `char_type`, `string_type`, `array_type`, `handle_type`, `map_type`, `map_key_type` and `map_value_type` have been moved to [`src/sll/lib/types.sll`][main/src/sll/lib/types.sll] and `stdin`, `stdout`, `stderr` have been moved to [`src/sll/lib/file.sll`][main/src/sll/lib/file.sll])
 - *\[POSIX only\]* Fixed return value of `sll_platform_path_absolute`
+- `sll_rotate_bits` has been renamed to `ROTATE_BITS` and is now used only internally
 
 ### Removed
 
 - Buffer-related types: `sll_buffer_t` (now `sll_char_t*`), `sll_const_buffer_t` (now `const sll_char_t*`) and `sll_buffer_size_t` (now `sll_string_length_t`)
+- Functions for writing strings to buffers: `sll_output_data_stream_t.wsf` and `SLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM`
 - Maximum buffer size macro `SLL_MAX_BUFFER_SIZE` (now `SLL_MAX_STRING_LENGTH`)
 
 ## [0.6.23] - 2021-10-18

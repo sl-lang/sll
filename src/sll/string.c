@@ -103,14 +103,27 @@ __SLL_FUNC void sll_string_combinations(const sll_string_t* a,const sll_string_t
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_checksum_t sll_string_combine_checksums(sll_string_checksum_t a,sll_string_length_t l,sll_string_checksum_t b){
-	return a^sll_rotate_bits(b,(l&3)<<3);
+	return a^ROTATE_BITS(b,(l&3)<<3);
 }
 
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare(const sll_string_t* a,const sll_string_t* b){
-	int o=strcmp((char*)(a->v),(char*)(b->v));
-	return (!o?SLL_COMPARE_RESULT_BELOW:(o>0?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW));
+	sll_string_length_t l=(a->l<b->l?a->l:b->l);
+	const uint64_t* ap=(const uint64_t*)(a->v);
+	const uint64_t* bp=(const uint64_t*)(b->v);
+	for (sll_string_length_t i=0;i<((l+7)<<3);i++){
+		uint64_t av=*(ap+i);
+		uint64_t bv=*(bp+i);
+		if (av!=bv){
+			av=ROTATE_BITS64(av,32);
+			bv=ROTATE_BITS64(bv,32);
+			av=((av&0xffff0000ffff)<<16)|((av&0xffff0000ffff0000)>>16);
+			bv=((bv&0xffff0000ffff)<<16)|((bv&0xffff0000ffff0000)>>16);
+			return ((((av&0xff00ff00ff00ff)<<8)|((av&0xff00ff00ff00ff00)>>8))<(((bv&0xff00ff00ff00ff)<<8)|((bv&0xff00ff00ff00ff00)>>8))?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+		}
+	}
+	return (a->l==b->l?SLL_COMPARE_RESULT_EQUAL:(a->l<b->l?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE));
 }
 
 
@@ -239,27 +252,27 @@ __SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_s
 	o->c=0;
 	switch (st){
 		case 3:
-			o->c^=sll_rotate_bits(s->c,16);
+			o->c^=ROTATE_BITS(s->c,16);
 		case 2:
-			o->c^=sll_rotate_bits(s->c,24);
+			o->c^=ROTATE_BITS(s->c,24);
 		case 1:
 			o->c^=s->c;
 			break;
 		case 4:
 			o->c^=s->c;
 		case 5:
-			o->c^=sll_rotate_bits(s->c,24);
+			o->c^=ROTATE_BITS(s->c,24);
 		case 6:
-			o->c^=sll_rotate_bits(s->c,16);
+			o->c^=ROTATE_BITS(s->c,16);
 		case 7:
-			o->c^=sll_rotate_bits(s->c,8);
+			o->c^=ROTATE_BITS(s->c,8);
 			break;
 	}
 	if (e){
 		memcpy(o->v+i,o->v,e);
 		e+=i;
 		while (i<e){
-			o->c^=sll_rotate_bits(o->v[i],(i&3)<<3);
+			o->c^=ROTATE_BITS(o->v[i],(i&3)<<3);
 			i++;
 		}
 	}
@@ -329,7 +342,7 @@ __SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_
 		sll_runtime_object_t* n=sll_operator_cast(*(v+i),sll_static_int[SLL_CONSTANT_TYPE_CHAR]);
 		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(n)==SLL_RUNTIME_OBJECT_TYPE_CHAR);
 		o->v[i]=n->dt.c;
-		o->c^=sll_rotate_bits(n->dt.c,(i&3)<<3);
+		o->c^=ROTATE_BITS(n->dt.c,(i&3)<<3);
 		SLL_RELEASE(n);
 	}
 }
@@ -453,7 +466,7 @@ __SLL_FUNC void sll_string_join(const sll_string_t* a,const sll_string_t* b,sll_
 	INIT_PADDING(o->v,o->l);
 	memcpy(o->v,a->v,a->l);
 	memcpy(o->v+a->l,b->v,b->l);
-	o->c=SLL_STRING_COMBINE_CHECKSUMS(a->c,a->l,b->c);
+	o->c=a->c^ROTATE_BITS(b->c,(a->l&3)<<3);
 }
 
 

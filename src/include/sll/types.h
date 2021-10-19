@@ -264,7 +264,7 @@ typedef const sll_char_t* sll_json_parser_state_t;
 typedef struct __SLL_INPUT_DATA_SOURCE{
 	void* ctx;
 	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_SOURCE* is);
-	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_char_t* bf,sll_string_length_t sz);
+	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_char_t* bf,sll_string_length_t l);
 	void (*rlf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_file_offset_t lp);
 	sll_line_number_t _lc;
 	sll_file_offset_t _off;
@@ -275,9 +275,8 @@ typedef struct __SLL_INPUT_DATA_SOURCE{
 
 typedef struct __SLL_OUTPUT_DATA_STREAM{
 	void* ctx;
-	void (*wcf)(struct __SLL_OUTPUT_DATA_STREAM* os,char c);
-	void (*wsf)(struct __SLL_OUTPUT_DATA_STREAM* os,const char* s);
-	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* os,const sll_char_t* bf,sll_string_length_t sz);
+	void (*wcf)(struct __SLL_OUTPUT_DATA_STREAM* os,sll_char_t c);
+	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* os,const sll_char_t* bf,sll_string_length_t l);
 } sll_output_data_stream_t;
 
 
