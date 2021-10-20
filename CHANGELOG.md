@@ -21,6 +21,7 @@
 - Buffer-related types: `sll_buffer_t` (now `sll_char_t*`), `sll_const_buffer_t` (now `const sll_char_t*`) and `sll_buffer_size_t` (now `sll_string_length_t`)
 - Functions for writing strings to buffers: `sll_output_data_stream_t.wsf` and `SLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM`
 - Maximum buffer size macro `SLL_MAX_BUFFER_SIZE` (now `SLL_MAX_STRING_LENGTH`)
+- `memcpy` calls in [`src/sll/string.c`][main/src/sll/string.c] and `memset` calls in `SLL_STRING_FORMAT_PADDING`
 
 ## [0.6.23] - 2021-10-18
 
@@ -934,6 +935,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [main/src/sll/lib/file.sll]: https://github.com/sl-lang/sll/blob/main/src/sll/lib/file.sll
 [main/src/sll/lib/types.sll]: https://github.com/sl-lang/sll/blob/main/src/sll/lib/types.sll
+[main/src/sll/string.c]: https://github.com/sl-lang/sll/blob/main/src/sll/string.c
 [0.6.21/src/include/sll/constants.h]: https://github.com/sl-lang/sll/blob/v0.6.21/src/include/sll/constants.h
 [0.6.21/src/include/sll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.21/src/include/sll/core.h
 [0.6.20/src/sll/api/file_api.c]: https://github.com/sl-lang/sll/blob/v0.6.20/src/sll/api/file_api.c

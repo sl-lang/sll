@@ -198,7 +198,6 @@ __SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_s
 		n=-n;
 		r=1;
 	}
-	uint8_t st=n&7;
 	n*=s->l;
 	if (!n){
 		if (!e||!s->l){
@@ -225,7 +224,7 @@ __SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_s
 	SLL_ASSERT(n<SLL_MAX_STRING_LENGTH);
 	o->l=((sll_string_length_t)n)+e;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
-	INIT_PADDING(o->v,o->l);
+	uint64_t* op=(uint64_t*)(o->v);
 	if (r){
 		sll_string_length_t i=s->l-1;
 		for (sll_string_length_t j=0;j<i;j++){
@@ -238,44 +237,45 @@ __SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_s
 		}
 	}
 	else{
-		memcpy(o->v,s->v,s->l);
+		const uint64_t* ap=(const uint64_t*)(s->v);
+		for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+			*(op+i)=*(ap+i);
+		}
 	}
 	sll_string_length_t i=s->l;
-	while (i<n){
-		sll_string_length_t j=i<<1;
-		if (j>n){
-			j=(sll_string_length_t)n;
-		}
-		memcpy(o->v+i,o->v,j-i);
-		i=j;
-	}
-	o->c=0;
-	switch (st){
-		case 3:
-			o->c^=ROTATE_BITS(s->c,16);
-		case 2:
-			o->c^=ROTATE_BITS(s->c,24);
-		case 1:
-			o->c^=s->c;
-			break;
-		case 4:
-			o->c^=s->c;
-		case 5:
-			o->c^=ROTATE_BITS(s->c,24);
-		case 6:
-			o->c^=ROTATE_BITS(s->c,16);
-		case 7:
-			o->c^=ROTATE_BITS(s->c,8);
-			break;
-	}
-	if (e){
-		memcpy(o->v+i,o->v,e);
-		e+=i;
-		while (i<e){
-			o->c^=ROTATE_BITS(o->v[i],(i&3)<<3);
+	if (s->l&7){
+		sll_string_length_t j=(o->l<8?s->l:(s->l+15)&0xfffffff0);
+		while (i<j){
+			o->v[i]=o->v[i-s->l];
 			i++;
 		}
 	}
+	n+=e;
+	uint64_t c=0;
+	if (i<n){
+		const uint64_t* ap=(const uint64_t*)(o->v+8-(s->l&7));
+		i>>=3;
+		for (sll_string_length_t j=0;j<i;j++){
+			c^=*(op+j);
+		}
+		n=((n+7)>>3)-1;
+		sll_string_length_t j=0;
+		while (i<n){
+			*(op+i)=*(ap+j);
+			c^=*(op+i);
+			i++;
+			j++;
+		}
+		*(op+i)=(*(ap+j))&((1ull<<((o->l&7)<<3))-1);
+		c^=*(op+i);
+	}
+	else{
+		SLL_STRING_FORMAT_PADDING(o->v,o->l);
+		for (sll_string_length_t j=0;j<(i>>3);j++){
+			c^=*(op+j);
+		}
+	}
+	o->c=(sll_string_length_t)(c^(c>>32));
 }
 
 
@@ -374,7 +374,9 @@ __SLL_FUNC void sll_string_from_int(sll_integer_t v,sll_string_t* o){
 	if (n){
 		o->v[0]='-';
 	}
-	memcpy(o->v+n,bf+i,20-i);
+	for (sll_string_length_t j=0;j<20-i;j++){
+		o->v[j+n]=bf[i+j];
+	}
 	sll_string_hash(o);
 }
 
@@ -464,8 +466,32 @@ __SLL_FUNC void sll_string_join(const sll_string_t* a,const sll_string_t* b,sll_
 	o->l=a->l+b->l;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
 	INIT_PADDING(o->v,o->l);
-	memcpy(o->v,a->v,a->l);
-	memcpy(o->v+a->l,b->v,b->l);
+	const uint64_t* ap=(const uint64_t*)(a->v);
+	uint64_t* op=(uint64_t*)(o->v);
+	sll_string_length_t i=0;
+	for (;i<((a->l+7)>>3);i++){
+		*(op+i)=*(ap+i);
+	}
+	const sll_char_t* s=b->v;
+	if (a->l&7){
+		sll_string_length_t j=8-(a->l&7);
+		s+=j;
+		do{
+			j--;
+			o->v[a->l+j]=b->v[j];
+		} while (j);
+	}
+	if (8-(a->l&7)<b->l){
+		sll_string_length_t j=i+((b->l+(a->l&7)-1)>>3);
+		SLL_ASSERT(i<j);
+		const uint64_t* bp=(const uint64_t*)s;
+		sll_string_length_t k=0;
+		do{
+			*(op+i)=*(bp+k);
+			i++;
+			k++;
+		} while (i<j);
+	}
 	o->c=a->c^ROTATE_BITS(b->c,(a->l&3)<<3);
 }
 
@@ -534,12 +560,11 @@ __SLL_FUNC void sll_string_op(const sll_string_t* a,const sll_string_t* b,sll_bi
 	if (a->l==b->l){
 		return;
 	}
-	if (a->l>b->l){
-		memcpy(o->v+e,a->v+e,o->l-e);
-	}
-	else{
-		memcpy(o->v+e,b->v+e,o->l-e);
-	}
+	const sll_char_t* s=(a->l>b->l?a->v:b->v)+e;
+	do{
+		o->v[e]=s[e];
+		e++;
+	} while (e<o->l);
 }
 
 
@@ -559,15 +584,17 @@ __SLL_FUNC void sll_string_op_array(const sll_string_t* s,const sll_array_t* a,s
 		return;
 	}
 	if (s->l>a->l){
-		for (sll_array_length_t i=e;i<o->l;i++){
-			o->v[i]=sll_static_char[s->v[i]];
-		}
+		do{
+			o->v[e]=SLL_ACQUIRE_STATIC_CHAR(s->v[e]);
+			e++;
+		} while (e<o->l);
 	}
 	else{
-		memcpy(o->v+e,a->v+e,(o->l-e)*sizeof(sll_runtime_object_t*));
-	}
-	for (sll_array_length_t i=e;i<o->l;i++){
-		SLL_ACQUIRE(o->v[i]);
+		do{
+			o->v[e]=a->v[e];
+			SLL_ACQUIRE(o->v[e]);
+			e++;
+		} while (e<o->l);
 	}
 }
 
@@ -673,7 +700,10 @@ __SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* b,sl
 			j+=b->l-1;
 		}
 	}
-	memcpy(o->v+i,a->v+a->l-b->l+1,b->l-1);
+	const sll_char_t* s=a->v+a->l-b->l+1;
+	for (sll_string_length_t j=0;j<b->l-1;j++){
+		o->v[i+j]=s[j];
+	}
 	i+=b->l-1;
 	o->l=i;
 	if (!o->l){
@@ -707,7 +737,9 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 				i++;
 			}
 			else{
-				memcpy(o->v+i,v->v,v->l);
+				for (sll_string_length_t e=0;e<v->l;e++){
+					o->v[i+e]=v->v[e];
+				}
 				i+=v->l;
 				j+=k->l-1;
 			}
@@ -722,13 +754,18 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 			else{
 				o->l+=v->l-k->l;
 				o->v=realloc(o->v,SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
-				memcpy(o->v+i,v->v,v->l);
+				for (sll_string_length_t e=0;e<v->l;e++){
+					o->v[i+e]=v->v[e];
+				}
 				i+=v->l;
 				j+=k->l-1;
 			}
 		}
 	}
-	memcpy(o->v+i,s->v+s->l-k->l+1,k->l-1);
+	const sll_char_t* t=s->v+s->l-k->l+1;
+	for (sll_string_length_t j=0;j<k->l-1;j++){
+		o->v[i+j]=t[j];
+	}
 	i+=k->l-1;
 	if (i!=o->l){
 		SLL_ASSERT(i<o->l);
@@ -797,12 +834,13 @@ __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_inte
 		}
 		o->l=(sll_string_length_t)((b-a)/c);
 		o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
-		if (c==1){
-			memcpy(o->v,s->v+a,o->l);
-		}
-		else{
-			SLL_UNIMPLEMENTED();
-		}
+		sll_string_length_t i=0;
+		do{
+			o->v[i]=s->v[a];
+			i++;
+			a+=c;
+		} while (a<b);
+		SLL_ASSERT(i==o->l);
 	}
 	else{
 		SLL_UNIMPLEMENTED();
@@ -920,7 +958,9 @@ __SLL_FUNC void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll_arr
 					malloc(SLL_STRING_ALIGN_LENGTH(l-j)*sizeof(sll_char_t))
 				};
 				INIT_PADDING(ns.v,ns.l);
-				memcpy(ns.v,s->v+j,ns.l);
+				for (sll_string_length_t e=0;e<ns.l;e++){
+					ns.v[e]=s->v[j+e];
+				}
 				n->dt.s=ns;
 			}
 			else{
@@ -946,7 +986,9 @@ __SLL_FUNC void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll_arr
 			malloc(SLL_STRING_ALIGN_LENGTH(s->l-j)*sizeof(sll_char_t))
 		};
 		INIT_PADDING(ns.v,ns.l);
-		memcpy(ns.v,s->v+j,ns.l);
+		for (sll_string_length_t k=0;k<ns.l;k++){
+			ns.v[k]=s->v[j+k];
+		}
 		n->dt.s=ns;
 	}
 	else{
