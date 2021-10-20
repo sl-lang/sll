@@ -199,7 +199,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			if (fl&FLAG_PRINT_OBJECT){
 				sll_output_data_stream_t os;
 				sll_stream_create_output_from_file(stdout,&os);
-				sll_print_object(c_dt,c_dt->h,&os);
+				sll_print_object(c_dt,&i_ft,c_dt->h,&os);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -245,7 +245,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 							if (fl&FLAG_PRINT_OBJECT){
 								sll_output_data_stream_t os;
 								sll_stream_create_output_from_file(stdout,&os);
-								sll_print_object(c_dt,c_dt->h,&os);
+								sll_print_object(c_dt,&i_ft,c_dt->h,&os);
 								putchar('\n');
 							}
 							if (fl&FLAG_VERBOSE){
@@ -261,7 +261,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 						if (fl&FLAG_PRINT_OBJECT){
 							sll_output_data_stream_t os;
 							sll_stream_create_output_from_file(stdout,&os);
-							sll_print_object(c_dt,c_dt->h,&os);
+							sll_print_object(c_dt,&i_ft,c_dt->h,&os);
 							putchar('\n');
 						}
 						if (fl&FLAG_VERBOSE){
@@ -321,7 +321,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			if (fl&FLAG_PRINT_OBJECT){
 				sll_output_data_stream_t os;
 				sll_stream_create_output_from_file(stdout,&os);
-				sll_print_object(c_dt,c_dt->h,&os);
+				sll_print_object(c_dt,&i_ft,c_dt->h,&os);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -370,7 +370,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			if (fl&FLAG_PRINT_OBJECT){
 				sll_output_data_stream_t os;
 				sll_stream_create_output_from_file(stdout,&os);
-				sll_print_object(c_dt,c_dt->h,&os);
+				sll_print_object(c_dt,&i_ft,c_dt->h,&os);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -407,7 +407,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			if (fl&FLAG_PRINT_OBJECT){
 				sll_output_data_stream_t os;
 				sll_stream_create_output_from_file(stdout,&os);
-				sll_print_object(c_dt,c_dt->h,&os);
+				sll_print_object(c_dt,&i_ft,c_dt->h,&os);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -506,7 +506,7 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 		if (fl&FLAG_PRINT_OBJECT){
 			sll_output_data_stream_t os;
 			sll_stream_create_output_from_file(stdout,&os);
-			sll_print_object(c_dt,c_dt->h,&os);
+			sll_print_object(c_dt,&i_ft,c_dt->h,&os);
 			putchar('\n');
 		}
 		if (fl&FLAG_VERBOSE){
@@ -1113,7 +1113,7 @@ _json_error:
 						if (fl&FLAG_PRINT_OBJECT){
 							sll_output_data_stream_t os;
 							sll_stream_create_output_from_file(stdout,&os);
-							sll_print_object(&c_dt,c_dt.h,&os);
+							sll_print_object(&c_dt,&i_ft,c_dt.h,&os);
 							putchar('\n');
 						}
 						if (fl&FLAG_VERBOSE){
@@ -1129,7 +1129,7 @@ _json_error:
 					if (fl&FLAG_PRINT_OBJECT){
 						sll_output_data_stream_t os;
 						sll_stream_create_output_from_file(stdout,&os);
-						sll_print_object(&c_dt,c_dt.h,&os);
+						sll_print_object(&c_dt,&i_ft,c_dt.h,&os);
 						putchar('\n');
 					}
 					if (fl&FLAG_VERBOSE){

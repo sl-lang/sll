@@ -45,7 +45,7 @@ __API_FUNC(sort_sort){
 		SLL_ACQUIRE(a->v[0]);
 		return o;
 	}
-	sll_compare_result_t cmp=(!b?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+	sll_compare_result_t cmp=(b?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW);
 	sll_string_length_t i=0;
 	for (sll_array_length_t j=0;j<a->l;j++){
 		o->dt.a.v[j]=a->v[j];

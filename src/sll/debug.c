@@ -22,7 +22,7 @@ __SLL_FUNC void sll_debug_print_assembly(const sll_assembly_data_t* a_dt){
 __SLL_FUNC void sll_debug_print_object(const sll_object_t* o,const sll_compilation_data_t* c_dt){
 	sll_output_data_stream_t os;
 	sll_stream_create_output_from_file(stdout,&os);
-	sll_print_object(c_dt,o,&os);
+	sll_print_object(c_dt,NULL,o,&os);
 	putchar('\n');
 }
 

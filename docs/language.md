@@ -14,25 +14,25 @@ All operands are split by whitespace. If an operator receives more arguments tha
 
 A 64-bit signed integer.
 
-The C equivalents of this type are `sll_integer_t` and `int64_t`.
+The C equivalents of this type are `sll_integer_t` or `int64_t`.
 
 ### Float
 
 A 64-bit IEEE 754 floating-point number.
 
-The C equivalents of this type are `sll_float_t` and `double`.
+The C equivalents of this type are `sll_float_t` or `double`.
 
 ### Char
 
 A 8-bit unsigned integer.
 
-The C equivalents of this type are `sll_char_t` and `uint8_t`.
+The C equivalents of this type are `sll_char_t` or `uint8_t`.
 
 ### String
 
 An array of [char](#char)s.
 
-The C equivalents of this type are `sll_string_t` and `uint8_t*`.
+The C equivalents of this type are `sll_string_t` or `uint8_t*`.
 
 ### Array
 
@@ -60,27 +60,25 @@ An operation list evaluates to `nil` (zero).
 
 ### Constant
 
-A constant is replaced by an integer during the parsing stage.
-
-Here are all of the constants as well as their corresponding integer values:
+Ths is ithe list of all of the constants as well as their corresponding integer values:
 
 | Type | Value | Note |
 |---|---|---|
 | `array_type` | [^1] | Array type (used for casting) |
 | `char_type` | [^1] | Character type (used for casting) |
-| `false` | `0` | A value which is returned when an expression is not true, ex. by the [equals operator](#equal-) with two different integers |
+| `false` | `0` [^3] | A value which is returned when an expression is not true, ex. by the [equals operator](#equal-) with two different integers |
 | `float_type` | [^1] | Float type (used for casting) |
 | `handle_type` | [^1] | Handle type (used for casting) |
 | `int_type` | [^1] | Integer type (used for casting) |
 | `map_type` | [^1] | Map type (used for casting) |
 | `map_key_type` | [^1] | Map key type (used for casting) |
 | `map_value_type` | [^1] | Map value type (used for casting) |
-| `nil` | `0` | This value is returned by an object which does not return anything |
+| `nil` | `0` [^3] | This value is returned by an object which does not return anything |
 | `stderr` | `-3` | A type recognized by the `file_write` internal function (and other file-related function). It is a handle to the default error stream |
 | `stdin` | `-1` | A type recognized by the `file_write` internal function (and other file-related function). It is a handle to the default input stream |
 | `stdout` | `-2` | A type recognized by the `file_write` internal function (and other file-related function). It is a handle to the default output stream |
 | `string_type` | [^1] | String type (used for casting) |
-| `true` | `1` | A value which is returned when an expression is true, ex. by the comparing two equal numbers |
+| `true` | `1` [^3] | A value which is returned when an expression is true, ex. by the comparing two equal numbers |
 
 ## Operator Types
 
@@ -623,3 +621,4 @@ The one's complement (bitwise NOT) of the first (and only) operand is returned.
 
 [^1]: The value is determined by a C compile-time constant
 [^2]: There is a possible performance penalty when using this method
+[^3]: This constant is replaced by its integer value during the parsing stage
