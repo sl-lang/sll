@@ -52,7 +52,7 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				sll_string_create(i+j,s);
 				memcpy(s->v,bf,i);
 				memcpy(s->v+i,dt.cFileName,j);
-				sll_string_hash(s);
+				sll_string_calculate_checksum(s);
 			}
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
@@ -135,7 +135,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
 			sll_string_create(l,op+ol-1);
 			memcpy((op+ol-1)->v,dt.cFileName,l);
-			sll_string_hash(op+ol-1);
+			sll_string_calculate_checksum(op+ol-1);
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
 	}
@@ -275,7 +275,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 	};
 	closesocket(s);
 	o->v[o->l]=0;
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 	return SLL_RETURN_NO_ERROR;
 }
 

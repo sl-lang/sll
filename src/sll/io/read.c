@@ -235,7 +235,7 @@ static sll_return_t _read_string(sll_input_data_stream_t* is,sll_string_t* o,sll
 			}
 		} while (i<o->l);
 	}
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 	return SLL_RETURN_NO_ERROR;
 }
 

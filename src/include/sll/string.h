@@ -100,7 +100,7 @@ __SLL_FUNC sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i
 
 
 
-__SLL_FUNC void sll_string_hash(sll_string_t* s);
+__SLL_FUNC void sll_string_calculate_checksum(sll_string_t* s);
 
 
 

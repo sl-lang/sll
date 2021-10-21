@@ -23,7 +23,7 @@ __API_FUNC(path_absolute){
 	for (sll_string_length_t i=0;i<l;i++){
 		out->v[i]=*(bf+i);
 	}
-	sll_string_hash(out);
+	sll_string_calculate_checksum(out);
 }
 
 

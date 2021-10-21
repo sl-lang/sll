@@ -34,7 +34,7 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				sll_string_create(i+j,s);
 				memcpy(s->v,bf,i);
 				memcpy(s->v+i,dt->d_name,j);
-				sll_string_hash(s);
+				sll_string_calculate_checksum(s);
 			}
 			else if (dt->d_type==DT_DIR){
 				if (*(dt->d_name)=='.'&&(*(dt->d_name+1)==0||(*(dt->d_name+1)=='.'&&*(dt->d_name+2)==0))){
@@ -109,7 +109,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
 			sll_string_create(l,op+ol-1);
 			memcpy((op+ol-1)->v,dt->d_name,l);
-			sll_string_hash(op+ol-1);
+			sll_string_calculate_checksum(op+ol-1);
 		}
 		closedir(d);
 	}
@@ -245,7 +245,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 	};
 	close(s);
 	o->v[o->l]=0;
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 	return SLL_RETURN_NO_ERROR;
 }
 

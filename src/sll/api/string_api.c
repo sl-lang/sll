@@ -229,7 +229,7 @@ __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_arr
 		i=_object_to_string(*(a+j),0,o,i);
 	}
 	SLL_ASSERT(i==o->l);
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 }
 
 

@@ -129,7 +129,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 		(*p)++;
 	}
 	o->v[o->l]=0;
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 }
 
 

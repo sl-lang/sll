@@ -134,7 +134,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 		}
 		sll_string_create(i-j,o->rc);
 		memcpy(o->rc->v,r.v+j,i-j);
-		sll_string_hash(o->rc);
+		sll_string_calculate_checksum(o->rc);
 	}
 	else{
 		while (r.v[i]!='\r'||r.v[i+1]!='\n'){

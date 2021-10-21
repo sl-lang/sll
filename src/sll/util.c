@@ -132,7 +132,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_ta
 	sll_string_t n;
 	sll_string_create(l,&n);
 	memcpy(n.v,dt,l);
-	sll_string_hash(&n);
+	sll_string_calculate_checksum(&n);
 	for (sll_string_index_t i=0;i<st->l;i++){
 		sll_string_t* s=st->dt+i;
 		if (s->c==n.c&&s->l==l&&!memcmp(dt,s->v,l)){

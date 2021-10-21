@@ -352,6 +352,7 @@ __SLL_FUNC void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_
 __SLL_FUNC void sll_string_from_int(sll_integer_t v,sll_string_t* o){
 	if (!v){
 		o->l=1;
+		o->c='0';
 		o->v=malloc(SLL_STRING_ALIGN_LENGTH(1)*sizeof(sll_char_t));
 		*((uint64_t*)(o->v))='0';
 		return;
@@ -377,7 +378,7 @@ __SLL_FUNC void sll_string_from_int(sll_integer_t v,sll_string_t* o){
 	for (sll_string_length_t j=0;j<20-i;j++){
 		o->v[j+n]=bf[i+j];
 	}
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 }
 
 
@@ -413,7 +414,7 @@ __SLL_FUNC sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i
 
 
 
-__SLL_FUNC void sll_string_hash(sll_string_t* s){
+__SLL_FUNC void sll_string_calculate_checksum(sll_string_t* s){
 	const uint64_t* p=(const uint64_t*)(s->v);
 	uint64_t c=0;
 	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
@@ -713,7 +714,7 @@ __SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* b,sl
 	}
 	o->v=realloc(o->v,SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
 	SLL_STRING_FORMAT_PADDING(o->v,o->l);
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 }
 
 
@@ -778,7 +779,7 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 		o->v=realloc(o->v,SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
 	}
 	SLL_STRING_FORMAT_PADDING(o->v,o->l);
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 }
 
 
@@ -845,7 +846,7 @@ __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_inte
 	else{
 		SLL_UNIMPLEMENTED();
 	}
-	sll_string_hash(o);
+	sll_string_calculate_checksum(o);
 }
 
 

@@ -11,8 +11,10 @@
 ### Changed
 
 - All constants excluding `true`, `false` and `nil` have been move to library files (`int_type`, `float_type`, `char_type`, `string_type`, `array_type`, `handle_type`, `map_type`, `map_key_type` and `map_value_type` have been moved to [`src/sll/lib/types.sll`][main/src/sll/lib/types.sll] and `stdin`, `stdout`, `stderr` have been moved to [`src/sll/lib/file.sll`][main/src/sll/lib/file.sll])
-- Identifiers are now correctly printed
 - *\[POSIX only\]* Fixed return value of `sll_platform_path_absolute`
+- Fixed string checksum calculation in `sll_string_from_int`
+- Identifiers are now correctly printed
+- Renamed `sll_string_hash` to `sll_string_calculate_checksum`
 - `sll_print_object` now accepts an optional internal function table, which it will use to decode internal function calls
 - `sll_rotate_bits` has been renamed to `ROTATE_BITS` and is now used only internally
 

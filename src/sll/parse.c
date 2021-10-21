@@ -786,7 +786,7 @@ _unknown_symbol:
 					s.l++;
 				}
 				s.v[s.l]=0;
-				sll_string_hash(&s);
+				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(c_dt->st),&s,1);
 				c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 			}
@@ -1031,7 +1031,7 @@ _unknown_symbol:
 						str
 					};
 					SLL_STRING_FORMAT_PADDING(str,sz);
-					sll_string_hash(&n);
+					sll_string_calculate_checksum(&n);
 					arg->t=SLL_OBJECT_TYPE_IDENTIFIER;
 					if (sz<=SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 						sll_identifier_list_t* k=c_dt->idt.s+sz-1;
