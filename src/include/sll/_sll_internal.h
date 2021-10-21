@@ -156,7 +156,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define ASSEMBLY_INSTRUCTION_MISC_FIELD(ai) ((ai)->dt.j)
 
 #define OPTIMIZER_FLAG_ARGUMENT 1
-#define OPTIMIZER_FLAG_IGNORE_LOOP_FLAG 2
+#define OPTIMIZER_FLAG_ASSIGN 2
 
 #define COND_TYPE_UNKNOWN 0
 #define COND_TYPE_ALWAYS_TRUE 1
@@ -289,7 +289,7 @@ typedef struct __OPTIMIZER_DATA{
 	uint32_t l_sm_l;
 	variable_assignment_data_t va;
 	sll_runtime_object_t** v;
-	sll_runtime_object_t** a_v;
+	sll_object_t* a_v;
 	uint8_t rm;
 } optimizer_data_t;
 

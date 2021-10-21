@@ -17,6 +17,7 @@
 - Renamed `sll_string_hash` to `sll_string_calculate_checksum`
 - `sll_print_object` now accepts an optional internal function table, which it will use to decode internal function calls
 - `sll_rotate_bits` has been renamed to `ROTATE_BITS` and is now used only internally
+- Replaced the unused internal `OPTIMIZER_FLAG_IGNORE_LOOP_FLAG` flag with `OPTIMIZER_FLAG_ASSIGN`
 
 ### Removed
 
