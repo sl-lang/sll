@@ -31,9 +31,9 @@ static uint8_t _gc_verify=1;
 
 static void _gc_free_pages(void){
 	if (_gc_verify){
-		// if (!sll_verify_runtime_object_stack_cleanup()){
-		// 	SLL_UNIMPLEMENTED();
-		// }
+		if (!sll_verify_runtime_object_stack_cleanup()){
+			SLL_UNIMPLEMENTED();
+		}
 		_gc_verify=0;
 	}
 	SLL_ASSERT(_gc_alloc==_gc_dealloc);
