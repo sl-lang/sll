@@ -6,6 +6,7 @@
 
 - API related to listing files in a directory (`sll_api_path_list_dir`, `sll_api_path_list_dir_raw`, `sll_api_path_recursive_list_dir`, `sll_api_path_recursive_list_dir_raw`, `sll_platform_list_directory`, `list_dir` and `recursive_list_dir`)
 - Implemented `sll_array_get`, `sll_array_set`, `sll_map_get_key`, `sll_map_get_value`, `sll_map_set_key`, `sll_map_set_value`, `sll_stream_read`, `sll_stream_read_buffer`, `sll_stream_restart_line`, `sll_stream_write`, `sll_stream_write_buffer`, `sll_string_get` and `sll_string_set`
+- Macro `SLL_ZERO_INTEGER_HEAP_QUEUE` for consistency
 - Sorting API (`sll_api_sort_sort`, `sll_api_sort_sort_raw`, `sll_quicksort`, `sort`)
 
 ### Changed
