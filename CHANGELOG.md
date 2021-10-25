@@ -1,6 +1,10 @@
 # The Sl Programing Language Change Log
 
-## [0.6.24] - Ongoing
+## [0.6.25] - Ongoing
+
+*Nothing*
+
+## [0.6.24] - 2021-10-25
 
 ### Added
 
@@ -11,7 +15,7 @@
 
 ### Changed
 
-- All constants excluding `true`, `false` and `nil` have been move to library files (`int_type`, `float_type`, `char_type`, `string_type`, `array_type`, `handle_type`, `map_type`, `map_key_type` and `map_value_type` have been moved to [`src/sll/lib/types.sll`][main/src/sll/lib/types.sll] and `stdin`, `stdout`, `stderr` have been moved to [`src/sll/lib/file.sll`][main/src/sll/lib/file.sll])
+- All constants excluding `true`, `false` and `nil` have been move to library files (`int_type`, `float_type`, `char_type`, `string_type`, `array_type`, `handle_type`, `map_type`, `map_key_type` and `map_value_type` have been moved to [`src/sll/lib/types.sll`][0.6.24/src/sll/lib/types.sll] and `stdin`, `stdout`, `stderr` have been moved to [`src/sll/lib/file.sll`][0.6.24/src/sll/lib/file.sll])
 - *\[POSIX only\]* Fixed return value of `sll_platform_path_absolute`
 - Fixed string checksum calculation in `sll_string_from_int`
 - Identifiers are now correctly printed
@@ -25,7 +29,7 @@
 - Buffer-related types: `sll_buffer_t` (now `sll_char_t*`), `sll_const_buffer_t` (now `const sll_char_t*`) and `sll_buffer_size_t` (now `sll_string_length_t`)
 - Functions for writing strings to buffers: `sll_output_data_stream_t.wsf` and `SLL_WRITE_STRING_TO_OUTPUT_DATA_STREAM`
 - Maximum buffer size macro `SLL_MAX_BUFFER_SIZE` (now `SLL_MAX_STRING_LENGTH`)
-- `memcpy` calls in [`src/sll/string.c`][main/src/sll/string.c] and `memset` calls in `SLL_STRING_FORMAT_PADDING`
+- `memcpy` calls in [`src/sll/string.c`][0.6.24/src/sll/string.c] and `memset` calls in `SLL_STRING_FORMAT_PADDING`
 
 ## [0.6.23] - 2021-10-18
 
@@ -847,7 +851,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.24]: https://github.com/sl-lang/sll/compare/v0.6.23...main
+[0.6.25]: https://github.com/sl-lang/sll/compare/v0.6.24...main
+[0.6.24]: https://github.com/sl-lang/sll/compare/v0.6.23...v0.6.24
 [0.6.23]: https://github.com/sl-lang/sll/compare/v0.6.22...v0.6.23
 [0.6.22]: https://github.com/sl-lang/sll/compare/v0.6.21...v0.6.22
 [0.6.21]: https://github.com/sl-lang/sll/compare/v0.6.20...v0.6.21
@@ -937,9 +942,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/src/sll/lib/file.sll]: https://github.com/sl-lang/sll/blob/main/src/sll/lib/file.sll
-[main/src/sll/lib/types.sll]: https://github.com/sl-lang/sll/blob/main/src/sll/lib/types.sll
-[main/src/sll/string.c]: https://github.com/sl-lang/sll/blob/main/src/sll/string.c
+[0.6.24/src/sll/lib/file.sll]: https://github.com/sl-lang/sll/blob/v0.6.24/src/sll/lib/file.sll
+[0.6.24/src/sll/lib/types.sll]: https://github.com/sl-lang/sll/blob/v0.6.24/src/sll/lib/types.sll
+[0.6.24/src/sll/string.c]: https://github.com/sl-lang/sll/blob/v0.6.24/src/sll/string.c
 [0.6.21/src/include/sll/constants.h]: https://github.com/sl-lang/sll/blob/v0.6.21/src/include/sll/constants.h
 [0.6.21/src/include/sll/core.h]: https://github.com/sl-lang/sll/blob/v0.6.21/src/include/sll/core.h
 [0.6.20/src/sll/api/file_api.c]: https://github.com/sl-lang/sll/blob/v0.6.20/src/sll/api/file_api.c
