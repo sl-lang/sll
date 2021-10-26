@@ -4,6 +4,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
+#include <sll/init.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
 #include <sll/string.h>
@@ -151,34 +152,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 	SLL_ASSERT(o->rc);
 	o->rc--;
 	if (!o->rc){
-		sll_remove_debug_data(o);
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_STRING){
-			if (!(o->t&RUNTIME_OBJECT_EXTERNAL_STRING)){
-				free(o->dt.s.v);
-			}
-		}
-		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-			for (sll_array_length_t j=0;j<o->dt.a.l;j++){
-				sll_release_object(*(o->dt.a.v+j));
-			}
-			free(o->dt.a.v);
-		}
-		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_HANDLE){
-			if (sll_current_runtime_data){
-				sll_handle_descriptor_t* hd=SLL_HANDLE_LOOKUP_DESCRIPTOR(sll_current_runtime_data->hl,o->dt.h.t);
-				if (hd&&hd->df){
-					hd->df(o->dt.h.h);
-				}
-			}
-		}
-		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_MAP){
-			for (sll_map_length_t j=0;j<(o->dt.m.l<<1);j++){
-				sll_release_object(*(o->dt.m.v+j));
-			}
-			free(o->dt.m.v);
-		}
-		o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
-		o->dt.i=0;
+		sll_deinit_runtime_object(o);
 		GC_SET_NEXT_OBJECT(o,_gc_next_object);
 		_gc_next_object=o;
 		_gc_dealloc++;

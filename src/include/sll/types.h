@@ -68,7 +68,7 @@ typedef uint8_t sll_assembly_instruction_type_t;
 
 
 
-typedef uint8_t sll_bool_t;
+typedef _Bool sll_bool_t;
 
 
 
@@ -519,7 +519,6 @@ typedef union __SLL_RUNTIME_OBJECT_DATA{
 	sll_integer_t i;
 	sll_float_t f;
 	sll_string_t s;
-	sll_instruction_index_t ii;
 	sll_array_t a;
 	sll_handle_data_t h;
 	sll_map_t m;

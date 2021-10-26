@@ -20,6 +20,7 @@
 ### Removed
 
 - Unused function `sll_integer_heap_queue_init`
+- Unused `sll_instruction_index_t` member from `sll_runtime_object_data_t`
 - Unused type `sll_allocation_size_t` and macro `SLL_MAX_ALLOCATION_SIZE`
 
 ## [0.6.24] - 2021-10-25

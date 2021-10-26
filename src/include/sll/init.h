@@ -255,7 +255,7 @@
 		(o)->rc=1; \
 		(o)->t=SLL_RUNTIME_OBJECT_TYPE_INT; \
 		SLL_GC_ZERO_DEBUG_DATA(o); \
-		SLL_INIT_RUNTIME_OBJECT_DATA(&((o)->dt)); \
+		(o)->dt.i=0; \
 	} while (0)
 #define SLL_INIT_RUNTIME_OBJECT_DATA(o) \
 	do{ \
@@ -345,11 +345,11 @@ __SLL_FUNC void sll_deinit_assembly_function_table(sll_assembly_function_table_t
 
 
 
-__SLL_FUNC void sll_deinit_assembly_instruction_data(sll_assembly_instruction_data_t* o);
+__SLL_FUNC void sll_deinit_assembly_instruction(sll_assembly_instruction_t* ai);
 
 
 
-__SLL_FUNC void sll_deinit_assembly_instruction(sll_assembly_instruction_t* o);
+__SLL_FUNC void sll_deinit_assembly_instruction_data(sll_assembly_instruction_data_t* ai_dt);
 
 
 
@@ -421,11 +421,11 @@ __SLL_FUNC void sll_deinit_http_response(sll_http_response_t* r);
 
 
 
-__SLL_FUNC void sll_deinit_identifier_list(sll_identifier_list_t* il);
-
-
-
 __SLL_FUNC void sll_deinit_identifier(sll_identifier_t* i);
+
+
+
+__SLL_FUNC void sll_deinit_identifier_list(sll_identifier_list_t* il);
 
 
 
@@ -501,7 +501,7 @@ __SLL_FUNC void sll_deinit_runtime_object_data(sll_runtime_object_data_t* ro_dt)
 
 
 
-__SLL_FUNC void sll_deinit_runtime_object(sll_runtime_object_t* ro);
+__SLL_FUNC void sll_deinit_runtime_object(sll_runtime_object_t* o);
 
 
 
@@ -533,11 +533,11 @@ __SLL_FUNC void sll_init_assembly_function_table(sll_assembly_function_table_t* 
 
 
 
-__SLL_FUNC void sll_init_assembly_instruction_data(sll_assembly_instruction_data_t* o);
-
-
-
 __SLL_FUNC void sll_init_assembly_instruction(sll_assembly_instruction_t* o);
+
+
+
+__SLL_FUNC void sll_init_assembly_instruction_data(sll_assembly_instruction_data_t* o);
 
 
 
@@ -609,11 +609,11 @@ __SLL_FUNC void sll_init_http_response(sll_http_response_t* o);
 
 
 
-__SLL_FUNC void sll_init_identifier_list(sll_identifier_list_t* o);
-
-
-
 __SLL_FUNC void sll_init_identifier(sll_identifier_t* o);
+
+
+
+__SLL_FUNC void sll_init_identifier_list(sll_identifier_list_t* o);
 
 
 

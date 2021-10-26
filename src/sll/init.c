@@ -34,14 +34,14 @@ __SLL_FUNC void sll_init_assembly_function_table(sll_assembly_function_table_t* 
 
 
 
-__SLL_FUNC void sll_init_assembly_instruction_data(sll_assembly_instruction_data_t* o){
-	SLL_INIT_ASSEMBLY_INSTRUCTION_DATA(o);
+__SLL_FUNC void sll_init_assembly_instruction(sll_assembly_instruction_t* o){
+	SLL_INIT_ASSEMBLY_INSTRUCTION(o);
 }
 
 
 
-__SLL_FUNC void sll_init_assembly_instruction(sll_assembly_instruction_t* o){
-	SLL_INIT_ASSEMBLY_INSTRUCTION(o);
+__SLL_FUNC void sll_init_assembly_instruction_data(sll_assembly_instruction_data_t* o){
+	SLL_INIT_ASSEMBLY_INSTRUCTION_DATA(o);
 }
 
 
@@ -157,14 +157,14 @@ __SLL_FUNC void sll_init_http_response(sll_http_response_t* o){
 
 
 
-__SLL_FUNC void sll_init_identifier_list(sll_identifier_list_t* o){
-	SLL_INIT_IDENTIFIER_LIST(o);
+__SLL_FUNC void sll_init_identifier(sll_identifier_t* o){
+	SLL_INIT_IDENTIFIER(o);
 }
 
 
 
-__SLL_FUNC void sll_init_identifier(sll_identifier_t* o){
-	SLL_INIT_IDENTIFIER(o);
+__SLL_FUNC void sll_init_identifier_list(sll_identifier_list_t* o){
+	SLL_INIT_IDENTIFIER_LIST(o);
 }
 
 
