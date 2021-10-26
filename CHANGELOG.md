@@ -2,7 +2,25 @@
 
 ## [0.6.25] - Ongoing
 
-*Nothing*
+### Added
+
+- Implemented `sll_array_compare`, `sll_array_init`, `sll_free_array`, `sll_string_compare_array`
+- Marked appropriate functions as `__SLL_CHECK_OUTPUT`
+- Structure initialization functions in [`src/include/sll/init.h`][main/src/include/sll/init.h] and [`src/sll/init.c`][main/src/sll/init.c]
+
+### Changed
+
+- Moved `sll_deinit` and `sll_init` from [`src/include/sll/util.h`][main/src/include/sll/util.h] to [`src/include/sll/init.h`][main/src/include/sll/init.h]
+- Renamed all `sll_free_` functions to `sll_deinit_` and moved them to [`src/include/sll/init.h`][main/src/include/sll/init.h] and [`src/sll/deinit.c`][main/src/sll/deinit.c]
+- Renamed all `SLL_ZERO_` macros to `SLL_INIT_` and moved them to [`src/include/sll/init.h`][main/src/include/sll/init.h]
+- Renamed `sll_cleanup_function` to `sll_cleanup_function_t`
+- `sll_add_debug_data` now expects an `unsigned int` instead of `uint8_t`
+- `sll_compilation_stack_data_t` and `sll_assembly_stack_data_t` now use an `unsigned int` instead of `uint32_t`
+
+### Removed
+
+- Unused function `sll_integer_heap_queue_init`
+- Unused type `sll_allocation_size_t` and macro `SLL_MAX_ALLOCATION_SIZE`
 
 ## [0.6.24] - 2021-10-25
 
@@ -942,6 +960,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/main/src/include/sll/init.h
+[main/src/sll/deinit.c]: https://github.com/sl-lang/sll/blob/main/src/sll/deinit.c
+[main/src/sll/init.c]: https://github.com/sl-lang/sll/blob/main/src/sll/init.c
 [0.6.24/src/sll/lib/file.sll]: https://github.com/sl-lang/sll/blob/v0.6.24/src/sll/lib/file.sll
 [0.6.24/src/sll/lib/types.sll]: https://github.com/sl-lang/sll/blob/v0.6.24/src/sll/lib/types.sll
 [0.6.24/src/sll/string.c]: https://github.com/sl-lang/sll/blob/v0.6.24/src/sll/string.c

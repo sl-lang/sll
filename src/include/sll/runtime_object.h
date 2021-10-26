@@ -19,21 +19,12 @@
 #define SLL_RUNTIME_OBJECT_FLAG_RESERVED0 64
 #define SLL_RUNTIME_OBJECT_FLAG_RESERVED1 128
 
-#define SLL_RUNTIME_OBJECT_ZERO(r) \
-	do{ \
-		(r)->rc=1; \
-		(r)->t=SLL_RUNTIME_OBJECT_TYPE_INT; \
-		SLL_GC_ZERO_DEBUG_DATA((r)); \
-		(r)->dt.i=0; \
-	} while (0)
-#define SLL_RUNTIME_OBJECT_ZERO_STRUCT {1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=0}}
-
 #define SLL_RUNTIME_OBJECT_GET_TYPE(r) ((r)->t&0x3f)
 #define SLL_RUNTIME_OBJECT_IS_STORAGE(r) (SLL_RUNTIME_OBJECT_GET_TYPE((r))==SLL_RUNTIME_OBJECT_TYPE_STRING||SLL_RUNTIME_OBJECT_GET_TYPE((r))==SLL_RUNTIME_OBJECT_TYPE_ARRAY||SLL_RUNTIME_OBJECT_GET_TYPE((r))==SLL_RUNTIME_OBJECT_TYPE_MAP)
 
 
 
-__SLL_FUNC sll_runtime_object_type_t sll_runtime_object_get_type(const sll_runtime_object_t* o);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_type_t sll_runtime_object_get_type(const sll_runtime_object_t* o);
 
 
 

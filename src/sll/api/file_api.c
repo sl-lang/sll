@@ -5,6 +5,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/init.h>
 #include <sll/handle.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
@@ -85,7 +86,7 @@ __API_FUNC(file_close){
 
 
 __API_FUNC(file_open){
-	SLL_ZERO_HANDLE(out);
+	SLL_INIT_HANDLE_DATA(out);
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
 		return;
 	}

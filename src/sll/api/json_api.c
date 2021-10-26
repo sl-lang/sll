@@ -5,6 +5,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/handle.h>
+#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
@@ -148,7 +149,7 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		sll_runtime_object_t* o=SLL_CREATE();
 		o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
 		sll_map_t* m=&(o->dt.m);
-		SLL_ZERO_MAP(m);
+		SLL_INIT_MAP(m);
 		while (1){
 			c=**p;
 			(*p)++;
@@ -201,7 +202,7 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		sll_runtime_object_t* o=SLL_CREATE();
 		o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 		sll_array_t* a=&(o->dt.a);
-		SLL_ZERO_ARRAY(a);
+		SLL_INIT_ARRAY(a);
 		while (c==' '||c=='\t'||c=='\n'||c=='\r'){
 			c=**p;
 			(*p)++;
@@ -313,28 +314,6 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	}
 	(*p)--;
 	return SLL_FROM_FLOAT(v*s);
-}
-
-
-
-__SLL_FUNC void sll_free_json_object(sll_json_object_t* json){
-	if (json->t==SLL_JSON_OBJECT_TYPE_STRING){
-		free(json->dt.s.v);
-	}
-	else if (json->t==SLL_JSON_OBJECT_TYPE_ARRAY){
-		for (sll_json_array_length_t i=0;i<json->dt.a.l;i++){
-			sll_free_json_object(json->dt.a.dt+i);
-		}
-		free(json->dt.a.dt);
-	}
-	else if (json->t==SLL_JSON_OBJECT_TYPE_MAP){
-		for (sll_json_map_length_t i=0;i<json->dt.m.l;i++){
-			sll_json_map_keypair_t* e=json->dt.m.dt+i;
-			free(e->k.v);
-			sll_free_json_object(&(e->v));
-		}
-		free(json->dt.m.dt);
-	}
 }
 
 
@@ -546,7 +525,7 @@ __API_FUNC(json_type){
 		out->h=a;
 		return;
 	}
-	SLL_ZERO_HANDLE(out);
+	SLL_INIT_HANDLE_DATA(out);
 }
 
 

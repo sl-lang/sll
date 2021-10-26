@@ -3,6 +3,7 @@
 #include <sll/cast.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/operator.h>
 #include <sll/runtime_object.h>
@@ -65,6 +66,17 @@ __SLL_FUNC void sll_string_and_char(const sll_string_t* s,sll_char_t v,sll_strin
 
 
 
+__SLL_FUNC void sll_string_calculate_checksum(sll_string_t* s){
+	const uint64_t* p=(const uint64_t*)(s->v);
+	uint64_t c=0;
+	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+		c^=*(p+i);
+	}
+	s->c=(sll_string_length_t)(c^(c>>32));
+}
+
+
+
 __SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d){
 	d->l=s->l;
 	d->c=s->c;
@@ -80,7 +92,7 @@ __SLL_FUNC void sll_string_clone(const sll_string_t* s,sll_string_t* d){
 
 __SLL_FUNC void sll_string_combinations(const sll_string_t* a,const sll_string_t* b,sll_array_t* o){
 	if (!a->l||!b->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=a->l*b->l;
@@ -109,10 +121,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_checksum_t sll_string_combine_checksums
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare(const sll_string_t* a,const sll_string_t* b){
-	sll_string_length_t l=(a->l<b->l?a->l:b->l);
 	const uint64_t* ap=(const uint64_t*)(a->v);
 	const uint64_t* bp=(const uint64_t*)(b->v);
-	for (sll_string_length_t i=0;i<((l+7)<<3);i++){
+	for (sll_string_length_t i=0;i<(((a->l<b->l?a->l:b->l)+7)<<3);i++){
 		uint64_t av=*(ap+i);
 		uint64_t bv=*(bp+i);
 		if (av!=bv){
@@ -129,8 +140,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare(const sll_
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_array(const sll_string_t* s,const sll_array_t* a,sll_bool_t inv){
-	SLL_UNIMPLEMENTED();
-	return SLL_COMPARE_RESULT_EQUAL;
+	for (sll_array_length_t i=0;i<(s->l<a->l?s->l:a->l);i++){
+		sll_compare_result_t cmp=sll_operator_compare(sll_static_char[s->v[i]],a->v[i]);
+		if (cmp!=SLL_COMPARE_RESULT_EQUAL){
+			return (((cmp==SLL_COMPARE_RESULT_ABOVE)^inv)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+		}
+	}
+	return (s->l==a->l?SLL_COMPARE_RESULT_EQUAL:(((s->l<a->l)^inv)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE));
 }
 
 
@@ -201,7 +217,7 @@ __SLL_FUNC void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_s
 	n*=s->l;
 	if (!n){
 		if (!e||!s->l){
-			SLL_ZERO_STRING(o);
+			SLL_INIT_STRING(o);
 			return;
 		}
 		o->l=e;
@@ -386,7 +402,7 @@ __SLL_FUNC void sll_string_from_int(sll_integer_t v,sll_string_t* o){
 __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
 	sll_string_length_t l=sll_string_length_unaligned(s);
 	if (!l){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	o->l=l;
@@ -408,19 +424,8 @@ __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
 
 
 
-__SLL_FUNC sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i){
 	return (i<s->l?s->v[i]:0);
-}
-
-
-
-__SLL_FUNC void sll_string_calculate_checksum(sll_string_t* s){
-	const uint64_t* p=(const uint64_t*)(s->v);
-	uint64_t c=0;
-	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
-		c^=*(p+i);
-	}
-	s->c=(sll_string_length_t)(c^(c>>32));
 }
 
 
@@ -440,7 +445,7 @@ __SLL_FUNC void sll_string_increase(sll_string_t* s,sll_string_length_t l){
 
 __SLL_FUNC void sll_string_inv(const sll_string_t* s,sll_string_t* o){
 	if (!s->l){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	o->l=s->l;
@@ -635,7 +640,7 @@ __SLL_FUNC void sll_string_or(const sll_string_t* a,const sll_string_t* b,sll_st
 
 __SLL_FUNC void sll_string_or_char(const sll_string_t* s,sll_char_t v,sll_string_t* o){
 	if (!s->l){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	if (!v){
@@ -686,7 +691,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_string_parse_int(const sll_strin
 
 __SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* b,sll_string_t* o){
 	if (!a->l){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	o->l=a->l;
@@ -786,7 +791,7 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 
 __SLL_FUNC void sll_string_replace_char(const sll_string_t* s,sll_char_t k,sll_char_t v,sll_string_t* o){
 	if (!s->l){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	if (k==v){
@@ -821,7 +826,7 @@ __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_inte
 	a=(a<0?s->l:0)+(a%s->l);
 	b=(b<0?s->l:0)+(b%s->l);
 	if (!s->l||a==b||!c){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	if (a<b){
@@ -861,7 +866,7 @@ __SLL_FUNC void sll_string_set(const sll_string_t* s,sll_string_length_t i,sll_c
 
 __SLL_FUNC void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_string_t* o){
 	if (!s->l){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	o->l=s->l;
@@ -1012,7 +1017,7 @@ __SLL_FUNC void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll_arr
 __SLL_FUNC void sll_string_subtract_array(const sll_string_t* s,const sll_array_t* a,sll_array_t* o){
 	if (s->l<a->l){
 		if (!s->l){
-			SLL_ZERO_ARRAY(o);
+			SLL_INIT_ARRAY(o);
 			return;
 		}
 		o->l=a->l;
@@ -1028,7 +1033,7 @@ __SLL_FUNC void sll_string_subtract_array(const sll_string_t* s,const sll_array_
 		return;
 	}
 	if (!a->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=s->l;
@@ -1101,7 +1106,7 @@ __SLL_FUNC void sll_string_to_array(const sll_string_t* s,sll_array_t* o){
 
 __SLL_FUNC void sll_string_to_map(const sll_string_t* s,sll_map_t* o){
 	if (!s->l){
-		SLL_ZERO_MAP(o);
+		SLL_INIT_MAP(o);
 		return;
 	}
 	o->l=s->l;
@@ -1161,7 +1166,7 @@ __SLL_FUNC void sll_string_xor(const sll_string_t* a,const sll_string_t* b,sll_s
 
 __SLL_FUNC void sll_string_xor_char(const sll_string_t* s,sll_char_t v,sll_string_t* o){
 	if (!s->l){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	if (!v){

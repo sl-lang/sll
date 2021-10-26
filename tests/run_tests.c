@@ -46,7 +46,7 @@ uint8_t execute_test(uint8_t id){
 			fwrite((void*)&e,sizeof(sll_error_t),1,o_f);
 			fclose(o_f);
 		}
-		sll_free_compilation_data(&c_dt);
+		sll_deinit_compilation_data(&c_dt);
 		fclose(f);
 		return 0;
 	}
@@ -420,7 +420,7 @@ _wrong_error:
 		o->p++;
 		printf("-> Test Case #%"PRIu32": OK\n",i);
 	}
-	sll_free_json_object(&json);
+	sll_deinit_json_object(&json);
 	return;
 _json_error:
 	if (f){
@@ -429,7 +429,7 @@ _json_error:
 	if (f_dt){
 		free(f_dt);
 	}
-	sll_free_json_object(&json);
+	sll_deinit_json_object(&json);
 	o->s++;
 	printf("JSON Error in File '%s'. Skipping Test...\n",fp);
 	return;

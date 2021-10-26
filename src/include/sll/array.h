@@ -5,15 +5,6 @@
 
 
 
-#define SLL_ZERO_ARRAY(a) \
-	do{ \
-		(a)->l=0; \
-		(a)->v=NULL; \
-	} while (0)
-#define SLL_ZERO_ARRAY_STRUCT {0,NULL}
-
-
-
 __SLL_FUNC void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
 
 
@@ -66,7 +57,11 @@ __SLL_FUNC void sll_array_from_length(sll_array_length_t l,sll_array_t* o);
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_array_get(const sll_array_t* a,sll_array_length_t i);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_get(const sll_array_t* a,sll_array_length_t i);
+
+
+
+__SLL_FUNC void sll_array_init(sll_array_t* o);
 
 
 

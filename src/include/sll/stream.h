@@ -32,11 +32,11 @@ __SLL_FUNC void sll_stream_create_output_from_file(FILE* f,sll_output_data_strea
 
 
 
-__SLL_FUNC sll_read_char_t sll_stream_read(sll_input_data_stream_t* is);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_read_char_t sll_stream_read(sll_input_data_stream_t* is);
 
 
 
-__SLL_FUNC sll_read_char_t sll_stream_read_buffer(sll_input_data_stream_t* is,sll_char_t* bf,sll_string_length_t l);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_read_char_t sll_stream_read_buffer(sll_input_data_stream_t* is,sll_char_t* bf,sll_string_length_t l);
 
 
 

@@ -5,15 +5,6 @@
 
 
 
-#define SLL_ZERO_MAP(m) \
-	do{ \
-		(m)->l=0; \
-		(m)->v=NULL; \
-	} while (0)
-#define SLL_ZERO_MAP_STRUCT {0,NULL}
-
-
-
 __SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v,sll_map_t* o);
 
 
@@ -58,15 +49,15 @@ __SLL_FUNC void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* o)
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_map_get(const sll_map_t* m,const sll_runtime_object_t* v);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get(const sll_map_t* m,const sll_runtime_object_t* v);
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i);
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i);
 
 
 

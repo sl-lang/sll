@@ -2,6 +2,7 @@
 #include <sll/array.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
+#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
@@ -663,19 +664,19 @@ sll_runtime_object_t* sll_static_char[256]={
 };
 
 
-__SLL_STATIC_OBJECT(str_zero,SLL_RUNTIME_OBJECT_TYPE_STRING,s,SLL_ZERO_STRING_STRUCT);
+__SLL_STATIC_OBJECT(str_zero,SLL_RUNTIME_OBJECT_TYPE_STRING,s,SLL_INIT_STRING_STRUCT);
 
 
 
-__SLL_STATIC_OBJECT(array_zero,SLL_RUNTIME_OBJECT_TYPE_ARRAY,a,SLL_ZERO_ARRAY_STRUCT);
+__SLL_STATIC_OBJECT(array_zero,SLL_RUNTIME_OBJECT_TYPE_ARRAY,a,SLL_INIT_ARRAY_STRUCT);
 
 
 
-__SLL_STATIC_OBJECT(handle_zero,SLL_RUNTIME_OBJECT_TYPE_HANDLE,h,SLL_ZERO_HANDLE_STRUCT);
+__SLL_STATIC_OBJECT(handle_zero,SLL_RUNTIME_OBJECT_TYPE_HANDLE,h,SLL_INIT_HANDLE_DATA_STRUCT);
 
 
 
-__SLL_STATIC_OBJECT(map_zero,SLL_RUNTIME_OBJECT_TYPE_MAP,m,SLL_ZERO_MAP_STRUCT);
+__SLL_STATIC_OBJECT(map_zero,SLL_RUNTIME_OBJECT_TYPE_MAP,m,SLL_INIT_MAP_STRUCT);
 
 
 

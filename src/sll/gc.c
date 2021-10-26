@@ -48,7 +48,7 @@ static void _gc_free_pages(void){
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,uint8_t t){
+__SLL_FUNC sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t){
 	uint32_t i=o->_dbg0|(o->_dbg1<<8);
 	if (i==GC_MAX_DEBUG_ID){
 		i=0;

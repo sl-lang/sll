@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/init.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -191,7 +192,7 @@ __SLL_FUNC void sll_platform_socket_init(void){
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
-	SLL_ZERO_STRING(o);
+	SLL_INIT_STRING(o);
 	struct addrinfo ah;
 	memset(&ah,0,sizeof(struct addrinfo));
 	ah.ai_family=AF_UNSPEC;

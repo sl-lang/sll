@@ -53,7 +53,6 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_STRING_LENGTH UINT32_MAX
 #define SLL_MAX_VARIABLE_INDEX UINT32_MAX
 #define SLL_MAX_VERSION UINT32_MAX
-#define SLL_MAX_ALLOCATION_SIZE UINT64_MAX
 #define SLL_MAX_PAGE_SIZE UINT64_MAX
 #define SLL_MAX_TIME UINT64_MAX
 
@@ -237,10 +236,6 @@ typedef int64_t sll_integer_t;
 
 
 
-typedef uint64_t sll_allocation_size_t;
-
-
-
 typedef uint64_t sll_handle_t;
 
 
@@ -261,11 +256,11 @@ typedef const sll_char_t* sll_json_parser_state_t;
 
 
 
-typedef struct __SLL_INPUT_DATA_SOURCE{
+typedef struct __SLL_INPUT_DATA_STREAM{
 	void* ctx;
-	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_SOURCE* is);
-	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_char_t* bf,sll_string_length_t l);
-	void (*rlf)(struct __SLL_INPUT_DATA_SOURCE* is,sll_file_offset_t lp);
+	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_STREAM* is);
+	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_STREAM* is,sll_char_t* bf,sll_string_length_t l);
+	void (*rlf)(struct __SLL_INPUT_DATA_STREAM* is,sll_file_offset_t lp);
 	sll_line_number_t _lc;
 	sll_file_offset_t _off;
 	sll_file_offset_t _loff;
@@ -351,7 +346,7 @@ typedef struct __SLL_IDENTIFIER_LIST{
 
 
 
-typedef struct __SLL_IDENTIFIER_DATA{
+typedef struct __SLL_IDENTIFIER_TABLE{
 	sll_identifier_list_t s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
 	sll_identifier_t* il;
 	sll_identifier_list_length_t ill;
@@ -374,7 +369,7 @@ typedef struct __SLL_FUNCTION{
 
 
 
-typedef struct __SLL_FUNCTION_DATA{
+typedef struct __SLL_FUNCTION_TABLE{
 	sll_function_t** dt;
 	sll_function_index_t l;
 } sll_function_table_t;
@@ -399,7 +394,7 @@ typedef struct __SLL_STRING_TABLE{
 typedef struct __SLL_COMPILATION_STACK_DATA{
 	void* s;
 	void* e;
-	uint32_t c;
+	unsigned int c;
 	sll_object_t* p;
 	sll_object_offset_t off;
 } sll_compilation_stack_data_t;
@@ -455,7 +450,7 @@ typedef struct __SLL_ASSEMBLY_FUNCTION_TABLE{
 typedef struct __SLL_ASSEMBLY_STACK_DATA{
 	void* s;
 	void* e;
-	uint32_t c;
+	unsigned int c;
 	sll_assembly_instruction_t* p;
 } sll_assembly_stack_data_t;
 
@@ -564,7 +559,7 @@ typedef struct __SLL_ERROR{
 
 
 
-typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runtime_object_t*const* const al,sll_arg_count_t all);
+typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runtime_object_t*const* al,sll_arg_count_t all);
 
 
 
@@ -658,7 +653,7 @@ typedef struct __SLL_JSON_MAP_KEYPAIR{
 
 
 
-typedef void (*sll_cleanup_function)(void);
+typedef void (*sll_cleanup_function_t)(void);
 
 
 
@@ -686,7 +681,7 @@ typedef sll_runtime_object_t* (*sll_quaternary_operator_t)(sll_runtime_object_t*
 
 
 
-typedef struct __SLL_integer_heap_queue{
+typedef struct __SLL_INTEGER_HEAP_QUEUE{
 	sll_integer_t* v;
 	sll_array_length_t l;
 } sll_integer_heap_queue_t;

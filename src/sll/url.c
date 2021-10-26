@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/init.h>
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -19,46 +20,15 @@ static char _url_init=0;
 
 
 
-__SLL_FUNC void sll_free_header_list(sll_header_list_t* hl){
-	for (sll_header_count_t i=0;i<hl->l;i++){
-		sll_header_t* kv=*(hl->dt+i);
-		free(kv->k.v);
-		free(kv->v.v);
-		free(*(hl->dt+i));
-	}
-	free(hl->dt);
-	hl->dt=NULL;
-	hl->l=0;
-}
-
-
-
-__SLL_FUNC void sll_free_http_response(sll_http_response_t* r){
-	if (r->rc){
-		free(r->rc->v);
-		SLL_ZERO_STRING(r->rc);
-	}
-	if (r->hl){
-		sll_free_header_list(r->hl);
-		SLL_ZERO_HEADER_LIST(r->hl);
-	}
-	if (r->dt){
-		free(r->dt->v);
-		SLL_ZERO_STRING(r->dt);
-	}
-}
-
-
-
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_string_t* m,const sll_string_t* h,const sll_string_t* p,const sll_header_list_t* hl,const sll_string_t* dt,sll_http_response_t* o){
 	if (o->rc){
-		SLL_ZERO_STRING(o->rc);
+		SLL_INIT_STRING(o->rc);
 	}
 	if (o->hl){
-		SLL_ZERO_HEADER_LIST(o->hl);
+		SLL_INIT_HEADER_LIST(o->hl);
 	}
 	if (o->dt){
-		SLL_ZERO_STRING(o->dt);
+		SLL_INIT_STRING(o->dt);
 	}
 	if (!_url_init){
 		_url_init=1;
@@ -98,7 +68,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 	memcpy(s.v+i,"\r\n\r\n",4);
 	i+=4;
 	memcpy(s.v+i,dt->v,dt->l);
-	sll_string_t r=SLL_ZERO_STRING_STRUCT;
+	sll_string_t r=SLL_INIT_STRING_STRUCT;
 	sll_return_t err=sll_platform_socket_execute(h,DEFAULT_HTTP_PORT,&s,&r);
 	free(s.v);
 	if (err==SLL_RETURN_ERROR){

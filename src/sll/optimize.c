@@ -4,6 +4,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
+#include <sll/init.h>
 #include <sll/integer_heap_queue.h>
 #include <sll/map.h>
 #include <sll/object.h>
@@ -1475,7 +1476,7 @@ _skip_access:;
 				}
 				SLL_ASSERT(!cnd||SLL_RUNTIME_OBJECT_GET_TYPE(cnd)==SLL_RUNTIME_OBJECT_TYPE_INT);
 				l=(l-1)>>1;
-				sll_integer_heap_queue_t il=SLL_ZERO_INTEGER_HEAP_QUEUE_STRUCT;
+				sll_integer_heap_queue_t il=SLL_INIT_INTEGER_HEAP_QUEUE_STRUCT;
 				do{
 					l--;
 					sll_object_t* a=o;
@@ -1488,7 +1489,7 @@ _skip_access:;
 					}
 					sll_integer_t i=(a->t==SLL_OBJECT_TYPE_INT?a->dt.i:a->dt.c);
 					if (cnd&&i==cnd->dt.i){
-						sll_free_integer_heap_queue(&il);
+						sll_deinit_integer_heap_queue(&il);
 						SLL_RELEASE(cnd);
 						r->t=SLL_OBJECT_TYPE_OPERATION_LIST;
 						_remove_up_to_end(cnd_n_o,((r->dt.ac-1)&0xfffffffe)-(l<<1)-1);
@@ -1505,7 +1506,7 @@ _skip_access:;
 						o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 					}
 				} while (l);
-				sll_free_integer_heap_queue(&il);
+				sll_deinit_integer_heap_queue(&il);
 				if (!(o->dt.ac&1)){
 					o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 				}

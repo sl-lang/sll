@@ -2,6 +2,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/operator.h>
 #include <sll/runtime_object.h>
@@ -19,7 +20,7 @@ __SLL_FUNC void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_arra
 		b=c;
 	}
 	if (!b->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=b->l;
@@ -52,7 +53,7 @@ __SLL_FUNC void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_arra
 
 __SLL_FUNC void sll_array_clone(const sll_array_t* a,sll_array_t* o){
 	if (!a->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=a->l;
@@ -94,7 +95,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const 
 
 __SLL_FUNC void sll_array_combinations(const sll_array_t* a,const sll_array_t* b,sll_array_t* o){
 	if (!a->l||!b->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=a->l*b->l;
@@ -112,7 +113,7 @@ __SLL_FUNC void sll_array_combinations(const sll_array_t* a,const sll_array_t* b
 
 __SLL_FUNC void sll_array_combinations_string(const sll_array_t* a,const sll_string_t* s,sll_array_t* o){
 	if (!a->l||!s->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=a->l*s->l;
@@ -129,8 +130,13 @@ __SLL_FUNC void sll_array_combinations_string(const sll_array_t* a,const sll_str
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare(const sll_array_t* a,const sll_array_t* b){
-	SLL_UNIMPLEMENTED();
-	return SLL_COMPARE_RESULT_EQUAL;
+	for (sll_array_length_t i=0;i<(a->l<b->l?a->l:b->l);i++){
+		sll_compare_result_t cmp=sll_operator_compare(a->v[i],b->v[i]);
+		if (cmp!=SLL_COMPARE_RESULT_EQUAL){
+			return cmp;
+		}
+	}
+	return (a->l==b->l?SLL_COMPARE_RESULT_EQUAL:(a->l<b->l?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE));
 }
 
 
@@ -144,7 +150,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare_map(const s
 
 __SLL_FUNC void sll_array_create(sll_array_length_t l,sll_array_t* o){
 	if (!l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=l;
@@ -163,7 +169,7 @@ __SLL_FUNC void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll_arr
 	sll_ref_count_t m=(sll_ref_count_t)n;
 	if (!n){
 		if (!e||!a->l){
-			SLL_ZERO_ARRAY(o);
+			SLL_INIT_ARRAY(o);
 			return;
 		}
 		o->l=e;
@@ -245,7 +251,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal_map(const sll_array_t* 
 
 __SLL_FUNC void sll_array_from_length(sll_array_length_t l,sll_array_t* o){
 	if (!l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=l;
@@ -258,7 +264,7 @@ __SLL_FUNC void sll_array_from_length(sll_array_length_t l,sll_array_t* o){
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_array_get(const sll_array_t* a,sll_array_length_t i){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_get(const sll_array_t* a,sll_array_length_t i){
 	if (i<a->l){
 		SLL_ACQUIRE(a->v[i]);
 		return a->v[i];
@@ -303,7 +309,7 @@ __SLL_FUNC void sll_array_op_map(const sll_array_t* a,const sll_map_t* m,sll_bin
 
 __SLL_FUNC void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_array_t* o){
 	if (!a->l&&!b->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=a->l+b->l;
@@ -358,12 +364,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_array_parse_int(const sll_array_
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_pop(const sll_array_t* a,sll_array_t* o){
 	if (!a->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	SLL_ACQUIRE(a->v[a->l-1]);
 	if (a->l==1){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 	}
 	else{
 		o->l=a->l-1;
@@ -393,7 +399,7 @@ __SLL_FUNC void sll_array_push(const sll_array_t* a,sll_runtime_object_t* v,sll_
 
 __SLL_FUNC void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_t n,sll_array_t* o){
 	if (!n||s==e){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	if (e<s){
@@ -421,7 +427,7 @@ __SLL_FUNC void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_t n,
 
 __SLL_FUNC void sll_array_remove(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o){
 	if (!a->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=a->l;
@@ -448,7 +454,7 @@ __SLL_FUNC void sll_array_remove(const sll_array_t* a,sll_runtime_object_t* v,sl
 
 __SLL_FUNC void sll_array_remove_multiple(const sll_array_t* a,sll_runtime_object_t** v,sll_array_length_t vl,sll_array_t* o){
 	if (!a->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return;
 	}
 	o->l=a->l;
@@ -481,7 +487,7 @@ __SLL_FUNC void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_
 	if (v<0){
 		v=-v;
 		if (v>a->l){
-			SLL_ZERO_ARRAY(o);
+			SLL_INIT_ARRAY(o);
 			return;
 		}
 		o->l=(sll_array_length_t)(a->l-v);
@@ -524,12 +530,12 @@ __SLL_FUNC void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_runt
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o){
 	if (!a->l){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	SLL_ACQUIRE(a->v[0]);
 	if (a->l==1){
-		SLL_ZERO_ARRAY(o);
+		SLL_INIT_ARRAY(o);
 	}
 	else{
 		o->l=a->l-1;
@@ -546,7 +552,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_shift(const sll_ar
 
 __SLL_FUNC void sll_array_to_map(const sll_array_t* a,sll_map_t* o){
 	if (!a->l){
-		SLL_ZERO_MAP(o);
+		SLL_INIT_MAP(o);
 		return;
 	}
 	o->l=a->l;

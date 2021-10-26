@@ -21,19 +21,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_ta
 
 
 
-__SLL_FUNC void sll_deinit(void);
-
-
-
-__SLL_FUNC void sll_init(void);
-
-
-
-__SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o);
-
-
-
-__SLL_FUNC void sll_register_cleanup(sll_cleanup_function f,sll_cleanup_type_t t);
+__SLL_FUNC void sll_register_cleanup(sll_cleanup_function_t f,sll_cleanup_type_t t);
 
 
 

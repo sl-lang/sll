@@ -5,6 +5,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
+#include <sll/init.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
@@ -220,7 +221,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 
 __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o){
 	if (!al){
-		SLL_ZERO_STRING(o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	sll_string_create(sll_object_to_string_length(a,al,0),o);

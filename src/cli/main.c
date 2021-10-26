@@ -133,12 +133,12 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 		if (f){
 			fclose(f);
 		}
-		sll_free_compilation_data(o);
+		sll_deinit_compilation_data(o);
 		e->t=SLL_ERROR_UNKNOWN;
 		return SLL_RETURN_ERROR;
 	}
 	if (fl&_FLAG_ASSEMBLY_GENERATED){
-		sll_free_assembly_data(&a_dt);
+		sll_deinit_assembly_data(&a_dt);
 		COLOR_RED;
 		PRINT_STATIC_STR("Importing Assembly into Compiled Objects is Not Allowed\n");
 		COLOR_RESET;
@@ -183,7 +183,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
 			if (!sll_load_compiled_object(is,c_dt,&e)){
-				sll_free_compilation_data(c_dt);
+				sll_deinit_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("File '");
@@ -227,16 +227,16 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
 			if (!sll_load_assembly(is,a_dt,&e)){
-				sll_free_assembly_data(a_dt);
+				sll_deinit_assembly_data(a_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					sll_stream_create_input_from_file(nf,is);
 					if (!sll_load_compiled_object(is,c_dt,&e)){
-						sll_free_compilation_data(c_dt);
+						sll_deinit_compilation_data(c_dt);
 						if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 							sll_stream_create_input_from_file(nf,is);
 							sll_init_compilation_data(SLL_CHAR(f_fp),is,c_dt);
 							if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
-								sll_free_compilation_data(c_dt);
+								sll_deinit_compilation_data(c_dt);
 								if (e.t!=SLL_ERROR_UNKNOWN){
 									sll_print_error(is,&e);
 								}
@@ -302,10 +302,10 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			sll_stream_create_input_from_buffer(&m_i_bf,is);
 			sll_error_t e;
 			if (!sll_load_compiled_object(is,c_dt,&e)){
-				sll_free_identifier_table(&(c_dt->idt));
-				sll_free_export_table(&(c_dt->et));
-				sll_free_function_table(&(c_dt->ft));
-				sll_free_string_table(&(c_dt->st));
+				sll_deinit_identifier_table(&(c_dt->idt));
+				sll_deinit_export_table(&(c_dt->et));
+				sll_deinit_function_table(&(c_dt->ft));
+				sll_deinit_string_table(&(c_dt->st));
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("Module '");
@@ -354,7 +354,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
 			if (!sll_load_compiled_object(is,c_dt,&e)){
-				sll_free_compilation_data(c_dt);
+				sll_deinit_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("File '");
@@ -398,7 +398,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
 			if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
-				sll_free_compilation_data(c_dt);
+				sll_deinit_compilation_data(c_dt);
 				if (e.t!=SLL_ERROR_UNKNOWN){
 					sll_print_error(is,&e);
 				}
@@ -595,7 +595,7 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 			SLL_ERROR_UNKNOWN
 		};
 		sll_return_code_t r=sll_execute_assembly(a_dt,&st,&r_dt,&e);
-		sll_free_handle_list(&hl);
+		sll_deinit_handle_list(&hl);
 		if (e.t!=SLL_ERROR_UNKNOWN){
 			sll_print_error(NULL,&e);
 			return 0;
@@ -814,8 +814,8 @@ _read_file_argument:
 		sll_string_from_pointer(SLL_CHAR("sll.krzem.workers.dev"),&h);
 		sll_string_t p;
 		sll_string_from_pointer(SLL_CHAR("/version"),&p);
-		sll_string_t dt=SLL_ZERO_STRING_STRUCT;
-		sll_header_list_t hl=SLL_ZERO_HEADER_LIST_STRUCT;
+		sll_string_t dt=SLL_INIT_STRING_STRUCT;
+		sll_header_list_t hl=SLL_INIT_HEADER_LIST_STRUCT;
 		sll_string_t r_dt;
 		sll_http_response_t r={
 			NULL,
@@ -832,7 +832,7 @@ _read_file_argument:
 			free(tmp.v);
 			PRINT_STATIC_STR("\n");
 			COLOR_RESET;
-			sll_free_http_response(&r);
+			sll_deinit_http_response(&r);
 			RESET_CONSOLE;
 			return 1;
 		}
@@ -847,7 +847,7 @@ _read_file_argument:
 		if (!v||v->t!=SLL_JSON_OBJECT_TYPE_INTEGER){
 			goto _json_error;
 		}
-		sll_free_http_response(&r);
+		sll_deinit_http_response(&r);
 		if (!(fl&FLAG_FORCE_UPDATE)&&v->dt.i<=SLL_VERSION){
 			PRINT_STATIC_STR("No New Versions Avaible, sll is Up To Date\n");
 		}
@@ -921,8 +921,8 @@ _read_file_argument:
 				free(tmp.v);
 				PRINT_STATIC_STR("\n");
 				COLOR_RESET;
-				sll_free_http_response(&r);
-				sll_free_json_object(&json);
+				sll_deinit_http_response(&r);
+				sll_deinit_json_object(&json);
 				RESET_CONSOLE;
 				return 1;
 			}
@@ -956,8 +956,8 @@ _read_file_argument:
 					fputs((char*)bf,stdout);
 					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
 					COLOR_RESET;
-					sll_free_http_response(&r);
-					sll_free_json_object(&json);
+					sll_deinit_http_response(&r);
+					sll_deinit_json_object(&json);
 					RESET_CONSOLE;
 					return 1;
 				}
@@ -968,27 +968,27 @@ _read_file_argument:
 					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
 					COLOR_RESET;
 					fclose(wf);
-					sll_free_http_response(&r);
-					sll_free_json_object(&json);
+					sll_deinit_http_response(&r);
+					sll_deinit_json_object(&json);
 					RESET_CONSOLE;
 					return 1;
 				}
 				fclose(wf);
 				j+=sz;
 			}
-			sll_free_http_response(&r);
+			sll_deinit_http_response(&r);
 		}
-		sll_free_json_object(&json);
+		sll_deinit_json_object(&json);
 		RESET_CONSOLE;
 		return 0;
 _json_error:
-		sll_free_json_object(&json);
+		sll_deinit_json_object(&json);
 		COLOR_RED;
 		PRINT_STATIC_STR("Malformated JSON: ");
 		fputs((char*)r_dt.v,stdout);
 		putchar('\n');
 		COLOR_RESET;
-		sll_free_http_response(&r);
+		sll_deinit_http_response(&r);
 		RESET_CONSOLE;
 		return 1;
 	}
@@ -1079,8 +1079,8 @@ _json_error:
 			fclose(f);
 			f=NULL;
 		}
-		sll_free_assembly_data(&a_dt);
-		sll_free_compilation_data(&c_dt);
+		sll_deinit_assembly_data(&a_dt);
+		sll_deinit_compilation_data(&c_dt);
 	}
 	for (uint32_t j=0;j<sll;j++){
 		sll_set_argument(0,SLL_CHAR("<console>"));
@@ -1096,11 +1096,11 @@ _json_error:
 		}
 		sll_error_t e;
 		if (!sll_load_assembly(&is,&a_dt,&e)){
-			sll_free_assembly_data(&(a_dt));
+			sll_deinit_assembly_data(&(a_dt));
 			if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 				sll_stream_create_input_from_buffer(&i_bf,&is);
 				if (!sll_load_compiled_object(&is,&c_dt,&e)){
-					sll_free_compilation_data(&c_dt);
+					sll_deinit_compilation_data(&c_dt);
 					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 						sll_stream_create_input_from_buffer(&i_bf,&is);
 						sll_init_compilation_data(SLL_CHAR("<console>"),&is,&c_dt);
@@ -1148,8 +1148,8 @@ _json_error:
 		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
 			goto _error;
 		}
-		sll_free_assembly_data(&a_dt);
-		sll_free_compilation_data(&c_dt);
+		sll_deinit_assembly_data(&a_dt);
+		sll_deinit_compilation_data(&c_dt);
 	}
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));
@@ -1162,7 +1162,7 @@ _json_error:
 	if (sll){
 		free(sl);
 	}
-	sll_free_internal_function_table(&i_ft);
+	sll_deinit_internal_function_table(&i_ft);
 	RESET_CONSOLE;
 	return 0;
 _help:
@@ -1179,12 +1179,12 @@ _error:
 	if (sll){
 		free(sl);
 	}
-	sll_free_assembly_data(&a_dt);
-	sll_free_compilation_data(&c_dt);
+	sll_deinit_assembly_data(&a_dt);
+	sll_deinit_compilation_data(&c_dt);
 	if (f){
 		fclose(f);
 	}
-	sll_free_internal_function_table(&i_ft);
+	sll_deinit_internal_function_table(&i_ft);
 	RESET_CONSOLE;
 	return ec;
 }

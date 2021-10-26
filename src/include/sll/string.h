@@ -14,13 +14,6 @@
 #define SLL_STRING_ESCAPE(c) ((c)=='\t'||(c)=='\n'||(c)=='\v'||(c)=='\f'||(c)=='\r'||(c)=='\"'||(c)=='\''||(c)=='\\')
 #define SLL_STRING_FORMAT_PADDING(v,l) ((*((uint64_t*)((v)+((l)&0xfffffffffffffff8))))&=(1ull<<(((l)&7)<<3))-1)
 #define SLL_STRING_HEX_ESCAPE(c) ((c)<32||(c)>126)
-#define SLL_ZERO_STRING(s) \
-	do{ \
-		(s)->l=0; \
-		(s)->c=0; \
-		(s)->v=NULL; \
-	} while (0)
-#define SLL_ZERO_STRING_STRUCT {0,0,NULL}
 
 
 
@@ -29,6 +22,10 @@ __SLL_FUNC void sll_string_and(const sll_string_t* a,const sll_string_t* b,sll_s
 
 
 __SLL_FUNC void sll_string_and_char(const sll_string_t* s,sll_char_t v,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_calculate_checksum(sll_string_t* s);
 
 
 
@@ -96,11 +93,7 @@ __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o);
 
 
 
-__SLL_FUNC sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i);
-
-
-
-__SLL_FUNC void sll_string_calculate_checksum(sll_string_t* s);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i);
 
 
 

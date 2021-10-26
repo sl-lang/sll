@@ -2,7 +2,7 @@
 #include <sll/cast.h>
 #include <sll/common.h>
 #include <sll/error.h>
-#include <sll/free.h>
+#include <sll/init.h>
 #include <sll/ift.h>
 #include <sll/object.h>
 #include <sll/platform.h>
@@ -767,7 +767,7 @@ _unknown_symbol:
 			}
 			else if (c=='"'){
 				arg->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_t s=SLL_ZERO_STRING_STRUCT;
+				sll_string_t s=SLL_INIT_STRING_STRUCT;
 				s.v=malloc(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
 				SLL_STRING_FORMAT_PADDING(s.v,0);
 				while (1){
@@ -1339,7 +1339,7 @@ _export_identifier_found:;
 					_patch_module(im.h,&im_dt);
 					free(im_dt.sm);
 					free(im_dt.eim);
-					sll_free_compilation_data(&im);
+					sll_deinit_compilation_data(&im);
 				}
 				else if ((fl&EXTRA_COMPILATION_DATA_EXPORT)&&arg->t==SLL_OBJECT_TYPE_IDENTIFIER){
 					for (sll_export_table_length_t j=0;j<c_dt->et.l;j++){
@@ -1380,33 +1380,6 @@ _return_error:;
 		free(n_l_sc.m);
 	}
 	return SLL_RETURN_ERROR;
-}
-
-
-
-__SLL_FUNC void sll_init_compilation_data(const sll_char_t* fp,sll_input_data_stream_t* is,sll_compilation_data_t* o){
-	o->is=is;
-	o->tm=sll_platform_get_current_time();
-	o->h=NULL;
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		o->idt.s[i].dt=NULL;
-		o->idt.s[i].l=0;
-	}
-	o->idt.il=NULL;
-	o->idt.ill=0;
-	o->et.dt=NULL;
-	o->et.l=0;
-	o->ft.dt=NULL;
-	o->ft.l=0;
-	o->st.dt=NULL;
-	o->st.l=0;
-	_init_object_stack(o);
-	o->_n_sc_id=1;
-	sll_string_length_t i=0;
-	while (*(fp+i)){
-		i++;
-	}
-	IGNORE_RESULT(sll_create_string(&(o->st),fp,i));
 }
 
 

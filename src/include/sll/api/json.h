@@ -17,10 +17,6 @@
 
 
 
-__SLL_FUNC void sll_free_json_object(sll_json_object_t* json);
-
-
-
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k);
 
 

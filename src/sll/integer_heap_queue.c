@@ -5,15 +5,7 @@
 
 
 
-__SLL_FUNC void sll_free_integer_heap_queue(sll_integer_heap_queue_t* il){
-	free(il->v);
-	il->v=NULL;
-	il->l=0;
-}
-
-
-
-__SLL_FUNC sll_bool_t sll_integer_heap_queue_add(sll_integer_heap_queue_t* il,sll_integer_t v){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_integer_heap_queue_add(sll_integer_heap_queue_t* il,sll_integer_t v){
 	if (!il->l){
 		il->v=malloc(sizeof(sll_integer_t));
 		il->l=1;
@@ -56,14 +48,7 @@ __SLL_FUNC sll_bool_t sll_integer_heap_queue_add(sll_integer_heap_queue_t* il,sl
 
 
 
-__SLL_FUNC sll_bool_t sll_integer_heap_queue_contains(sll_integer_heap_queue_t* il,sll_integer_t v){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_integer_heap_queue_contains(sll_integer_heap_queue_t* il,sll_integer_t v){
 	SLL_UNIMPLEMENTED();
 	return 0;
-}
-
-
-
-__SLL_FUNC void sll_integer_heap_queue_init(sll_integer_heap_queue_t* o){
-	o->v=NULL;
-	o->l=0;
 }
