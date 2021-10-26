@@ -961,6 +961,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [main/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/main/src/include/sll/init.h
+[main/src/include/sll/util.h]: https://github.com/sl-lang/sll/blob/main/src/include/sll/util.h
 [main/src/sll/deinit.c]: https://github.com/sl-lang/sll/blob/main/src/sll/deinit.c
 [main/src/sll/init.c]: https://github.com/sl-lang/sll/blob/main/src/sll/init.c
 [0.6.24/src/sll/lib/file.sll]: https://github.com/sl-lang/sll/blob/v0.6.24/src/sll/lib/file.sll
