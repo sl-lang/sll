@@ -550,7 +550,7 @@ __SLL_FUNC void sll_operator_assign(sll_runtime_object_t* a,sll_runtime_object_t
 		}
 	}
 	else if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_MAP){
-		SLL_UNIMPLEMENTED();
+		sll_map_set(&(a->dt.m),b,v);
 	}
 }
 
