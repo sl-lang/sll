@@ -1446,10 +1446,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_inc(sll_runtime
 			{
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-				sll_string_create(a->dt.s.l+1,&(o->dt.s));
-				o->dt.s.c=SLL_STRING_COMBINE_CHECKSUMS(a->dt.s.c,a->dt.s.l,'1');
-				memcpy(o->dt.s.v,a->dt.s.v,a->dt.s.l);
-				o->dt.s.v[a->dt.s.l]='1';
+				sll_string_join_char(&(a->dt.s),'1',&(o->dt.s));
 				return o;
 			}
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:

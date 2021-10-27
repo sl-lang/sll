@@ -65,46 +65,52 @@
 static void _save_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* o){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		o->s_sm[i]=malloc(o_dt->s_sm_l[i]*sizeof(uint64_t));
-		memcpy(o->s_sm[i],o_dt->va.s_sm[i],o_dt->s_sm_l[i]*sizeof(uint64_t));
+		for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
+			*(o->s_sm[i]+j)=*(o_dt->va.s_sm[i]+j);
+		}
 	}
 	o->l_sm=malloc(o_dt->l_sm_l*sizeof(uint64_t));
-	memcpy(o->l_sm,o_dt->va.l_sm,o_dt->l_sm_l*sizeof(uint64_t));
+	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
+		*(o->l_sm+i)=*(o_dt->va.l_sm+i);
+	}
 }
 
 
 
-static void _restore_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* va_dt,uint8_t s){
+static void _restore_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* va_dt,sll_bool_t s){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		if (s){
-			for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
-				uint64_t v=(*(o_dt->va.s_sm[i]+j))^(*(va_dt->s_sm[i]+j));
-				while (v){
-					sll_variable_index_t k=(o_dt->it.s_im[i]+((j<<6)|FIND_FIRST_SET_BIT(v)))->v;
-					sll_runtime_object_t* n=SLL_CREATE();
-					n->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
-					SLL_RELEASE(*(o_dt->v+k));
-					*(o_dt->v+k)=n;
-					v&=v-1;
-				}
+		for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
+			uint64_t v=(*(o_dt->va.s_sm[i]+j))^(*(va_dt->s_sm[i]+j));
+			*(o_dt->va.s_sm[i]+j)=*(va_dt->s_sm[i]+j);
+			if (!s){
+				continue;
 			}
-		}
-		memcpy(o_dt->va.s_sm[i],va_dt->s_sm[i],o_dt->s_sm_l[i]*sizeof(uint64_t));
-		free(va_dt->s_sm[i]);
-	}
-	if (s){
-		for (uint32_t i=0;i<o_dt->l_sm_l;i++){
-			uint64_t v=(*(o_dt->va.l_sm+i))^(*(va_dt->l_sm+i));
 			while (v){
-				sll_variable_index_t j=(o_dt->it.l_im+((i<<6)|FIND_FIRST_SET_BIT(v)))->v;
+				sll_variable_index_t k=(o_dt->it.s_im[i]+((j<<6)|FIND_FIRST_SET_BIT(v)))->v;
 				sll_runtime_object_t* n=SLL_CREATE();
 				n->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
-				SLL_RELEASE(*(o_dt->v+j));
-				*(o_dt->v+j)=n;
+				SLL_RELEASE(*(o_dt->v+k));
+				*(o_dt->v+k)=n;
 				v&=v-1;
 			}
 		}
+		free(va_dt->s_sm[i]);
 	}
-	memcpy(o_dt->va.l_sm,va_dt->l_sm,o_dt->l_sm_l*sizeof(uint64_t));
+	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
+		uint64_t v=(*(o_dt->va.l_sm+i))^(*(va_dt->l_sm+i));
+		*(o_dt->va.l_sm+i)=*(va_dt->l_sm+i);
+		if (!s){
+			continue;
+		}
+		while (v){
+			sll_variable_index_t j=(o_dt->it.l_im+((i<<6)|FIND_FIRST_SET_BIT(v)))->v;
+			sll_runtime_object_t* n=SLL_CREATE();
+			n->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
+			SLL_RELEASE(*(o_dt->v+j));
+			*(o_dt->v+j)=n;
+			v&=v-1;
+		}
+	}
 	free(va_dt->l_sm);
 }
 
@@ -197,25 +203,6 @@ static sll_object_t* _remove_up_to_end(sll_object_t* o,sll_object_offset_t off){
 		o=_remove_single_object(o);
 	}
 	return o;
-}
-
-
-
-static sll_string_index_t _create_print_string(optimizer_data_t* o_dt,const sll_char_t* a,const sll_char_t* b,sll_string_length_t al,sll_string_length_t bl,sll_string_checksum_t c){
-	for (sll_string_index_t i=0;i<o_dt->c_dt->st.l;i++){
-		sll_string_t* s=o_dt->c_dt->st.dt+i;
-		if (s->c==c&&s->l==al+bl&&!memcmp(a,s->v,al)&&!memcmp(b,s->v+al,bl)){
-			return i;
-		}
-	}
-	o_dt->c_dt->st.l++;
-	o_dt->c_dt->st.dt=realloc(o_dt->c_dt->st.dt,o_dt->c_dt->st.l*sizeof(sll_string_t));
-	sll_string_t* s=o_dt->c_dt->st.dt+o_dt->c_dt->st.l-1;
-	sll_string_create(al+bl,s);
-	s->c=c;
-	memcpy(s->v,a,al);
-	memcpy(s->v+al,b,bl);
-	return o_dt->c_dt->st.l-1;
 }
 
 
@@ -2023,25 +2010,23 @@ static sll_object_t* _merge_print_strings(sll_object_t* o,optimizer_data_t* o_dt
 		}
 		if (o->t==SLL_OBJECT_TYPE_CHAR||o->t==SLL_OBJECT_TYPE_STRING){
 			if (a){
+				sll_string_t tmp;
 				if (a->t==SLL_OBJECT_TYPE_CHAR&&o->t==SLL_OBJECT_TYPE_CHAR){
-					o->dt.s=_create_print_string(o_dt,&(a->dt.c),&(o->dt.c),1,1,SLL_STRING_COMBINE_CHECKSUMS(a->dt.c,1,o->dt.c));
+					sll_string_join_chars(a->dt.c,o->dt.c,&tmp);
 				}
 				else if (a->t==SLL_OBJECT_TYPE_CHAR&&o->t==SLL_OBJECT_TYPE_STRING){
-					sll_string_t* sb=o_dt->c_dt->st.dt+o->dt.s;
-					o->dt.s=_create_print_string(o_dt,&(a->dt.c),sb->v,1,sb->l,SLL_STRING_COMBINE_CHECKSUMS(a->dt.c,1,sb->c));
+					sll_string_prepend_char(o_dt->c_dt->st.dt+o->dt.s,a->dt.c,&tmp);
 				}
 				else if (a->t==SLL_OBJECT_TYPE_STRING&&o->t==SLL_OBJECT_TYPE_CHAR){
-					sll_string_t* sa=o_dt->c_dt->st.dt+a->dt.s;
-					o->dt.s=_create_print_string(o_dt,sa->v,&(o->dt.c),sa->l,1,SLL_STRING_COMBINE_CHECKSUMS(sa->c,sa->l,o->dt.c));
+					sll_string_join_char(o_dt->c_dt->st.dt+a->dt.s,o->dt.c,&tmp);
 				}
 				else{
 					SLL_ASSERT(a->t==SLL_OBJECT_TYPE_STRING&&o->t==SLL_OBJECT_TYPE_STRING);
-					sll_string_t* sa=o_dt->c_dt->st.dt+a->dt.s;
-					sll_string_t* sb=o_dt->c_dt->st.dt+o->dt.s;
-					o->dt.s=_create_print_string(o_dt,sa->v,sb->v,sa->l,sb->l,SLL_STRING_COMBINE_CHECKSUMS(sa->c,sa->l,sb->c));
+					sll_string_join(o_dt->c_dt->st.dt+a->dt.s,o_dt->c_dt->st.dt+o->dt.s,&tmp);
 				}
 				a->t=SLL_OBJECT_TYPE_NOP;
 				o->t=SLL_OBJECT_TYPE_STRING;
+				o->dt.s=sll_add_string(&(o_dt->c_dt->st),&tmp,1);
 				r->dt.ac--;
 			}
 			a=o;

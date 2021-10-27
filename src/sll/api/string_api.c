@@ -44,8 +44,7 @@ static sll_string_length_t _write_int(uint64_t v,sll_string_length_t i,sll_strin
 
 static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_string_t* o,sll_string_index_t i){
 	if (!a->rc){
-		memcpy(o->v+i,"<released object>",17);
-		return i+17;
+		return sll_string_insert_pointer(SLL_CHAR("<released object>"),i,o);
 	}
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
@@ -209,8 +208,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 			o->v[i]='#';
 			return _write_int(a->dt.i,i+1,o);
 		case RUNTIME_OBJECT_TYPE_UNKNOWN:
-			memcpy(o->v+i,"<unknown>",9);
-			return i+9;
+			return sll_string_insert_pointer(SLL_CHAR("unknown"),i,o);
 		default:
 			SLL_UNREACHABLE();
 	}

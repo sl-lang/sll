@@ -93,6 +93,10 @@ __SLL_FUNC void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o);
 
 
 
+__SLL_FUNC void sll_string_from_pointer_length(const sll_char_t* s,sll_string_length_t l,sll_string_t* o);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_char_t sll_string_get(const sll_string_t* s,sll_string_length_t i);
 
 
@@ -101,11 +105,27 @@ __SLL_FUNC void sll_string_increase(sll_string_t* s,sll_string_length_t l);
 
 
 
+__SLL_FUNC sll_string_length_t sll_string_insert_pointer(const sll_char_t* s,sll_string_length_t i,sll_string_t* o);
+
+
+
+__SLL_FUNC sll_string_length_t sll_string_insert_pointer_length(const sll_char_t* s,sll_string_length_t l,sll_string_length_t i,sll_string_t* o);
+
+
+
 __SLL_FUNC void sll_string_inv(const sll_string_t* s,sll_string_t* o);
 
 
 
 __SLL_FUNC void sll_string_join(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_join_char(const sll_string_t* s,sll_char_t c,sll_string_t* o);
+
+
+
+__SLL_FUNC void sll_string_join_chars(sll_char_t a,sll_char_t b,sll_string_t* o);
 
 
 
@@ -150,6 +170,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_float_t sll_string_parse_float(const sll_strin
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_string_parse_int(const sll_string_t* s);
+
+
+
+__SLL_FUNC void sll_string_prepend_char(const sll_string_t* s,sll_char_t c,sll_string_t* o);
 
 
 

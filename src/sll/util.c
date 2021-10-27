@@ -1,6 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/init.h>
 #include <sll/object.h>
 #include <sll/platform.h>
 #include <sll/string.h>
@@ -143,13 +144,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
 	sll_string_t n;
-	sll_string_create(l,&n);
-	memcpy(n.v,dt,l);
-	sll_string_calculate_checksum(&n);
+	sll_string_from_pointer_length(dt,l,&n);
 	for (sll_string_index_t i=0;i<st->l;i++){
-		sll_string_t* s=st->dt+i;
-		if (s->c==n.c&&s->l==l&&!memcmp(dt,s->v,l)){
-			free(n.v);
+		if (sll_string_equal(st->dt+i,&n)){
+			sll_deinit_string(&n);
 			return i;
 		}
 	}

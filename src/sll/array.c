@@ -314,8 +314,12 @@ __SLL_FUNC void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_array
 	}
 	o->l=a->l+b->l;
 	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
-	memcpy(o->v,a->v,a->l*sizeof(sll_runtime_object_t*));
-	memcpy(o->v+a->l,b->v,b->l*sizeof(sll_runtime_object_t*));
+	for (sll_array_length_t i=0;i<a->l;i++){
+		o->v[i]=a->v[i];
+	}
+	for (sll_array_length_t i=0;i<b->l;i++){
+		o->v[a->l+i]=b->v[i];
+	}
 	sll_array_length_t i=0;
 	uint64_t* m=calloc(sizeof(uint64_t),(o->l+63)>>6);
 	for (sll_array_length_t j=0;j<o->l;j++){
@@ -540,8 +544,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_shift(const sll_ar
 	else{
 		o->l=a->l-1;
 		o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
-		memcpy(o->v,a->v+1,o->l*sizeof(sll_runtime_object_t*));
 		for (sll_array_length_t i=0;i<o->l;i++){
+			o->v[i]=a->v[i+1];
 			SLL_ACQUIRE(o->v[i]);
 		}
 	}
@@ -572,9 +576,10 @@ __SLL_FUNC void sll_array_to_map(const sll_array_t* a,sll_map_t* o){
 __SLL_FUNC void sll_array_unshift(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o){
 	o->l=a->l+1;
 	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
-	memcpy(o->v+1,a->v,a->l*sizeof(sll_runtime_object_t*));
 	o->v[0]=v;
-	for (sll_array_length_t i=0;i<o->l;i++){
+	SLL_ACQUIRE(v);
+	for (sll_array_length_t i=1;i<o->l;i++){
+		o->v[i]=a->v[i-1];
 		SLL_ACQUIRE(o->v[i]);
 	}
 }

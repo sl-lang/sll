@@ -201,7 +201,9 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 		}
 		r+=l;
 		if (r>=(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1){
-			memcpy(bf,bf+(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT),1<<STRING_COMPRESSION_OFFSET_BIT_COUNT);
+			for (uint16_t j=0;j<(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT);j++){
+				bf[j]=bf[j+(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)];
+			}
 			i-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
 			r-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
 			while (i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))&&si<s->l){

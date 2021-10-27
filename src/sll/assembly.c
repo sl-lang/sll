@@ -411,7 +411,9 @@ static const sll_object_t* _generate_inline_function(const sll_object_t* o,assem
 		malloc((g_dt->rt->sz+1)*sizeof(assembly_instruction_label_t)),
 		g_dt->rt->sz+1
 	};
-	memcpy(rt.dt,g_dt->rt->dt,g_dt->rt->sz*sizeof(assembly_instruction_label_t));
+	for (uint32_t i=0;i<g_dt->rt->sz;i++){
+		*(rt.dt+i)=*(g_dt->rt->dt+i);
+	}
 	assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 	*(rt.dt+rt.sz-1)=e;
 	return_table_t* p_rt=g_dt->rt;
@@ -1115,7 +1117,9 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 					malloc((g_dt->lt->sz+1)*sizeof(loop_t)),
 					g_dt->lt->sz+1
 				};
-				memcpy(lt.dt,g_dt->lt->dt,g_dt->lt->sz*sizeof(loop_t));
+				for (uint32_t i=0;i<g_dt->lt->sz;i++){
+					*(lt.dt+i)=*(g_dt->lt->dt+i);
+				}
 				loop_table_t* p_lt=g_dt->lt;
 				g_dt->lt=&lt;
 				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
@@ -1165,7 +1169,9 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 					malloc((g_dt->lt->sz+1)*sizeof(loop_t)),
 					g_dt->lt->sz+1
 				};
-				memcpy(lt.dt,g_dt->lt->dt,g_dt->lt->sz*sizeof(loop_t));
+				for (uint32_t i=0;i<g_dt->lt->sz;i++){
+					*(lt.dt+i)=*(g_dt->lt->dt+i);
+				}
 				loop_table_t* p_lt=g_dt->lt;
 				g_dt->lt=&lt;
 				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
@@ -1330,11 +1336,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compi
 	o->st.l=c_dt->st.l;
 	o->st.dt=malloc(o->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<o->st.l;i++){
-		sll_string_t* s=c_dt->st.dt+i;
-		sll_string_t* d=o->st.dt+i;
-		sll_string_create(s->l,d);
-		d->c=s->c;
-		memcpy(d->v,s->v,s->l*sizeof(sll_char_t));
+		sll_string_clone(c_dt->st.dt+i,o->st.dt+i);
 	}
 	loop_table_t g_dt_lt={
 		NULL,

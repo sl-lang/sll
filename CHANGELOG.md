@@ -4,12 +4,13 @@
 
 ### Added
 
-- Implemented `sll_array_compare`, `sll_array_init`, `sll_free_array`, `sll_string_compare_array`
+- Implemented `sll_array_compare`, `sll_array_init`, `sll_free_array`, `sll_string_compare_array`, `sll_string_insert_pointer`, `sll_string_insert_pointer_length`, `sll_string_join_char`, `sll_string_join_chars` and `sll_string_prepend_char`
 - Marked appropriate functions as `__SLL_CHECK_OUTPUT`
 - Structure initialization functions in [`src/include/sll/init.h`][main/src/include/sll/init.h] and [`src/sll/init.c`][main/src/sll/init.c]
 
 ### Changed
 
+- Fixed `sll_string_join`
 - Moved `sll_deinit` and `sll_init` from [`src/include/sll/util.h`][main/src/include/sll/util.h] to [`src/include/sll/init.h`][main/src/include/sll/init.h]
 - Renamed all `sll_free_` functions to `sll_deinit_` and moved them to [`src/include/sll/init.h`][main/src/include/sll/init.h] and [`src/sll/deinit.c`][main/src/sll/deinit.c]
 - Renamed all `SLL_ZERO_` macros to `SLL_INIT_` and moved them to [`src/include/sll/init.h`][main/src/include/sll/init.h]
@@ -19,8 +20,9 @@
 
 ### Removed
 
-- Unused function `sll_integer_heap_queue_init`
+- Most `memcpy` calls
 - Unused `sll_instruction_index_t` member from `sll_runtime_object_data_t`
+- Unused function `sll_integer_heap_queue_init`
 - Unused type `sll_allocation_size_t` and macro `SLL_MAX_ALLOCATION_SIZE`
 
 ## [0.6.24] - 2021-10-25

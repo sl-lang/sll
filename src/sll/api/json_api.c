@@ -57,15 +57,12 @@ static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,
 		return (h<2?4:5);
 	}
 	if (!h){
-		memcpy(o->v+i,"null",4);
-		return i+4;
+		return sll_string_insert_pointer(SLL_CHAR("null"),i,o);
 	}
 	if (h==1){
-		memcpy(o->v+i,"true",4);
-		return i+4;
+		return sll_string_insert_pointer(SLL_CHAR("true"),i,o);
 	}
-	memcpy(o->v+i,"false",5);
-	return i+5;
+	return sll_string_insert_pointer(SLL_CHAR("false"),i,o);
 }
 
 

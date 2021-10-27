@@ -344,7 +344,9 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 						o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,s->v);
 						if (o->dt.fn.id==SLL_MAX_FUNCTION_INDEX){
 							e->t=SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION;
-							memcpy(e->dt.str,s->v,s->l);
+							for (sll_string_length_t i=0;i<s->l;i++){
+								e->dt.str[i]=s->v[i];
+							}
 							e->dt.str[s->l]=0;
 							return SLL_RETURN_ERROR;
 						}
@@ -1221,8 +1223,7 @@ _identifier_created:;
 					for (sll_string_index_t i=0;i<im.st.l;i++){
 						sll_string_t* s=im.st.dt+i;
 						for (sll_string_index_t j=0;j<c_dt->st.l;j++){
-							sll_string_t* d=c_dt->st.dt+j;
-							if (s->c==d->c&&s->l==d->l&&!memcmp(s->v,d->v,s->l)){
+							if (sll_string_equal(s,c_dt->st.dt+j)){
 								*(im_dt.sm+i)=j;
 								goto _merge_next_string;
 							}
@@ -1230,10 +1231,7 @@ _identifier_created:;
 						*(im_dt.sm+i)=c_dt->st.l;
 						c_dt->st.l++;
 						c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
-						sll_string_t* n=c_dt->st.dt+c_dt->st.l-1;
-						sll_string_create(s->l,n);
-						n->c=s->c;
-						memcpy(n->v,s->v,s->l);
+						sll_string_clone(s,c_dt->st.dt+c_dt->st.l-1);
 _merge_next_string:;
 					}
 					sll_identifier_list_length_t s_si[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
@@ -1332,7 +1330,9 @@ _export_identifier_found:;
 						sll_function_t* nf=malloc(sizeof(sll_function_t)+f->al*sizeof(sll_identifier_index_t));
 						nf->off=(sll_object_offset_t)(f->off+c_dt->_s.off);
 						nf->al=f->al;
-						memcpy(nf->a,f->a,f->al*sizeof(sll_identifier_index_t));
+						for (sll_arg_count_t j=0;j<f->al;j++){
+							nf->a[j]=f->a[j];
+						}
 						*(c_dt->ft.dt+i+j)=nf;
 					}
 					c_dt->_n_sc_id+=im._n_sc_id;
