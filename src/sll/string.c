@@ -458,11 +458,44 @@ __SLL_FUNC sll_string_length_t sll_string_insert_pointer_length(const sll_char_t
 	if (i+l>o->l){
 		l=o->l-i;
 	}
-	if (!l){
+	if (l<16){
+		while (l){
+			o->v[i]=*s;
+			l--;
+			i++;
+			s++;
+		}
 		return i;
 	}
-	memcpy(o->v+i,s,l);
-	return i+l;
+	if (i&7){
+		sll_string_length_t j=8-(i&7);
+		if (j>l){
+			j=l;
+		}
+		i+=j;
+		l-=j;
+		s+=j;
+		do{
+			o->v[i-j]=*(s-j);
+			j--;
+		} while (j);
+		if (!l){
+			return i;
+		}
+	}
+	SLL_ASSERT(!(i&7));
+	const uint64_t* ap=(const uint64_t*)s;
+	uint64_t* op=(uint64_t*)(o->v+i);
+	sll_string_length_t j=0;
+	for (;j<(l>>3);j++){
+		*(op+j)=*(ap+j);
+	}
+	i+=l;
+	if (l&7){
+		l=(l&7)<<3;
+		*(op+j)=((*(op+j))&(0xffffffffffffffffull<<l))|((*(ap+j))&((1ull<<l)-1));
+	}
+	return i;
 }
 
 

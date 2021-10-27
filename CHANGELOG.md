@@ -5,6 +5,7 @@
 ### Added
 
 - Implemented `sll_array_compare`, `sll_array_init`, `sll_free_array`, `sll_string_compare_array`, `sll_string_insert_pointer`, `sll_string_insert_pointer_length`, `sll_string_join_char`, `sll_string_join_chars` and `sll_string_prepend_char`
+- Implemented `SLL_STRING_INSERT_POINTER_STATIC` macro
 - Marked appropriate functions as `__SLL_CHECK_OUTPUT`
 - Structure initialization functions in [`src/include/sll/init.h`][main/src/include/sll/init.h] and [`src/sll/init.c`][main/src/sll/init.c]
 

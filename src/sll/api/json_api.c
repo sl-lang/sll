@@ -57,12 +57,12 @@ static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,
 		return (h<2?4:5);
 	}
 	if (!h){
-		return sll_string_insert_pointer(SLL_CHAR("null"),i,o);
+		return SLL_STRING_INSERT_POINTER_STATIC("null",i,o);
 	}
 	if (h==1){
-		return sll_string_insert_pointer(SLL_CHAR("true"),i,o);
+		return SLL_STRING_INSERT_POINTER_STATIC("true",i,o);
 	}
-	return sll_string_insert_pointer(SLL_CHAR("false"),i,o);
+	return SLL_STRING_INSERT_POINTER_STATIC("false",i,o);
 }
 
 
