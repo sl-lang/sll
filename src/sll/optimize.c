@@ -958,7 +958,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				SLL_RELEASE(v[i]);
 			}
 			o_dt->a_v=OPTIMIZER_ASSIGN_VARIABLE_CONSTANT;
-	_keep_assignment:;
+_keep_assignment:;
 			if (o_dt->a_v!=OPTIMIZER_ASSIGN_VARIABLE_CONSTANT){
 				o_dt->a_v=NULL;
 			}
