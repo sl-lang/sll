@@ -187,8 +187,8 @@ __SLL_FUNC void sll_init_input_data_stream(sll_input_data_stream_t* o){
 
 
 
-__SLL_FUNC void sll_init_integer_heap_queue(sll_integer_heap_queue_t* o){
-	SLL_INIT_INTEGER_HEAP_QUEUE(o);
+__SLL_FUNC void sll_init_binary_heap(sll_binary_heap_t* o){
+	SLL_INIT_binary_heap(o);
 }
 
 

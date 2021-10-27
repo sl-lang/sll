@@ -5,7 +5,7 @@
 #include <sll/gc.h>
 #include <sll/ift.h>
 #include <sll/init.h>
-#include <sll/integer_heap_queue.h>
+#include <sll/binary_heap.h>
 #include <sll/map.h>
 #include <sll/object.h>
 #include <sll/operator.h>
@@ -1496,7 +1496,7 @@ _keep_assignment:;
 				}
 				SLL_ASSERT(!cnd||SLL_RUNTIME_OBJECT_GET_TYPE(cnd)==SLL_RUNTIME_OBJECT_TYPE_INT);
 				l=(l-1)>>1;
-				sll_integer_heap_queue_t il=SLL_INIT_INTEGER_HEAP_QUEUE_STRUCT;
+				sll_binary_heap_t il=SLL_INIT_binary_heap_STRUCT;
 				do{
 					l--;
 					sll_object_t* a=o;
@@ -1509,7 +1509,7 @@ _keep_assignment:;
 					}
 					sll_integer_t i=(a->t==SLL_OBJECT_TYPE_INT?a->dt.i:a->dt.c);
 					if (cnd&&i==cnd->dt.i){
-						sll_deinit_integer_heap_queue(&il);
+						sll_deinit_binary_heap(&il);
 						SLL_RELEASE(cnd);
 						r->t=SLL_OBJECT_TYPE_OPERATION_LIST;
 						_remove_up_to_end(cnd_n_o,((r->dt.ac-1)&0xfffffffe)-(l<<1)-1);
@@ -1519,14 +1519,14 @@ _keep_assignment:;
 						o=r;
 						goto _optimize_operation_list_comma;
 					}
-					else if (!sll_integer_heap_queue_add(&il,i)){
+					else if (!sll_binary_heap_add(&il,i)){
 						o=_remove_single_object(_remove_single_object(a));
 					}
 					else{
 						o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 					}
 				} while (l);
-				sll_deinit_integer_heap_queue(&il);
+				sll_deinit_binary_heap(&il);
 				if (!(o->dt.ac&1)){
 					o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 				}

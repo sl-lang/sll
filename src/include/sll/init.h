@@ -176,7 +176,7 @@
 		(o)->_off=0; \
 		(o)->_loff=0; \
 	} while (0)
-#define SLL_INIT_INTEGER_HEAP_QUEUE(o) \
+#define SLL_INIT_binary_heap(o) \
 	do{ \
 		(o)->v=NULL; \
 		(o)->l=0; \
@@ -306,7 +306,7 @@
 #define SLL_INIT_IDENTIFIER_TABLE_STRUCT {.il=NULL,.ill=0}
 #define SLL_INIT_INPUT_BUFFER_STRUCT {NULL,0}
 #define SLL_INIT_INPUT_DATA_STREAM_STRUCT {NULL,NULL,NULL,NULL,0,0,0}
-#define SLL_INIT_INTEGER_HEAP_QUEUE_STRUCT {NULL,0}
+#define SLL_INIT_binary_heap_STRUCT {NULL,0}
 #define SLL_INIT_INTERNAL_FUNCTION_STRUCT {{0},0,0,NULL,0}
 #define SLL_INIT_INTERNAL_FUNCTION_TABLE_STRUCT {NULL,0}
 #define SLL_INIT_JSON_ARRAY_STRUCT {0,NULL}
@@ -441,7 +441,7 @@ __SLL_FUNC void sll_deinit_input_data_stream(sll_input_data_stream_t* is);
 
 
 
-__SLL_FUNC void sll_deinit_integer_heap_queue(sll_integer_heap_queue_t* il);
+__SLL_FUNC void sll_deinit_binary_heap(sll_binary_heap_t* il);
 
 
 
@@ -629,7 +629,7 @@ __SLL_FUNC void sll_init_input_data_stream(sll_input_data_stream_t* o);
 
 
 
-__SLL_FUNC void sll_init_integer_heap_queue(sll_integer_heap_queue_t* o);
+__SLL_FUNC void sll_init_binary_heap(sll_binary_heap_t* o);
 
 
 

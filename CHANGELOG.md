@@ -16,6 +16,7 @@
 - Moved `sll_deinit` and `sll_init` from [`src/include/sll/util.h`][main/src/include/sll/util.h] to [`src/include/sll/init.h`][main/src/include/sll/init.h]
 - Renamed all `sll_free_` functions to `sll_deinit_` and moved them to [`src/include/sll/init.h`][main/src/include/sll/init.h] and [`src/sll/deinit.c`][main/src/sll/deinit.c]
 - Renamed all `SLL_ZERO_` macros to `SLL_INIT_` and moved them to [`src/include/sll/init.h`][main/src/include/sll/init.h]
+- Renamed `integer_heap_queue` to `binary_heap`
 - Renamed `sll_cleanup_function` to `sll_cleanup_function_t`
 - `sll_add_debug_data` now expects an `unsigned int` instead of `uint8_t`
 - `sll_compilation_stack_data_t` and `sll_assembly_stack_data_t` now use an `unsigned int` instead of `uint32_t`

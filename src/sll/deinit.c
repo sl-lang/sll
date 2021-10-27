@@ -262,7 +262,7 @@ __SLL_FUNC void sll_deinit_input_data_stream(sll_input_data_stream_t* is){
 
 
 
-__SLL_FUNC void sll_deinit_integer_heap_queue(sll_integer_heap_queue_t* il){
+__SLL_FUNC void sll_deinit_binary_heap(sll_binary_heap_t* il){
 	free(il->v);
 	il->v=NULL;
 	il->l=0;

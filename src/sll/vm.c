@@ -20,7 +20,7 @@
 #define OPERATOR_INSTRUCTION_UNARY(nm) \
 	{ \
 		sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
-		sll_runtime_object_t* n=sll_operator_##nm(*tos); \
+		sll_runtime_object_t* n=nm(*tos); \
 		SLL_RELEASE(*tos); \
 		*tos=n; \
 		break; \
@@ -29,7 +29,7 @@
 	{ \
 		si--; \
 		sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
-		sll_runtime_object_t* n=sll_operator_##nm(*tos,*(s+si)); \
+		sll_runtime_object_t* n=nm(*tos,*(s+si)); \
 		SLL_RELEASE(*tos); \
 		SLL_RELEASE(*(s+si)); \
 		*tos=n; \
@@ -39,7 +39,7 @@
 	{ \
 		si-=2; \
 		sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
-		sll_runtime_object_t* n=sll_operator_##nm(*tos,*(s+si),*(s+si+1)); \
+		sll_runtime_object_t* n=nm(*tos,*(s+si),*(s+si+1)); \
 		SLL_RELEASE(*tos); \
 		SLL_RELEASE(*(s+si)); \
 		SLL_RELEASE(*(s+si+1)); \
@@ -50,7 +50,7 @@
 	{ \
 		si-=3; \
 		sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
-		sll_runtime_object_t* n=sll_operator_##nm(*tos,*(s+si),*(s+si+1),*(s+si+2)); \
+		sll_runtime_object_t* n=nm(*tos,*(s+si),*(s+si+1),*(s+si+2)); \
 		SLL_RELEASE(*tos); \
 		SLL_RELEASE(*(s+si)); \
 		SLL_RELEASE(*(s+si+1)); \
@@ -426,45 +426,45 @@ _cleanup_jump_table:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
-				OPERATOR_INSTRUCTION_UNARY(inc);
+				OPERATOR_INSTRUCTION_UNARY(sll_operator_inc);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
-				OPERATOR_INSTRUCTION_UNARY(dec);
+				OPERATOR_INSTRUCTION_UNARY(sll_operator_dec);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
-				OPERATOR_INSTRUCTION_BINARY(add);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_add);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
-				OPERATOR_INSTRUCTION_BINARY(sub);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_sub);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:
-				OPERATOR_INSTRUCTION_BINARY(mult);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_mult);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DIV:
-				OPERATOR_INSTRUCTION_BINARY(div);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_div);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV:
-				OPERATOR_INSTRUCTION_BINARY(floor_div);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_floor_div);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MOD:
-				OPERATOR_INSTRUCTION_BINARY(mod);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_mod);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_AND:
-				OPERATOR_INSTRUCTION_BINARY(and);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_and);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
-				OPERATOR_INSTRUCTION_BINARY(or);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_or);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
-				OPERATOR_INSTRUCTION_BINARY(xor);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_xor);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
-				OPERATOR_INSTRUCTION_UNARY(inv);
+				OPERATOR_INSTRUCTION_UNARY(sll_operator_inv);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHR:
-				OPERATOR_INSTRUCTION_BINARY(shr);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_shr);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHL:
-				OPERATOR_INSTRUCTION_BINARY(shl);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_shl);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH:
-				OPERATOR_INSTRUCTION_UNARY(len);
+				OPERATOR_INSTRUCTION_UNARY(sll_operator_len);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY:
-				OPERATOR_INSTRUCTION_UNARY(dup);
+				OPERATOR_INSTRUCTION_UNARY(sll_operator_dup);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS:
-				OPERATOR_INSTRUCTION_BINARY(access);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_access);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_TWO:
-				OPERATOR_INSTRUCTION_TERNARY(access_range);
+				OPERATOR_INSTRUCTION_TERNARY(sll_operator_access_range);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE:
-				OPERATOR_INSTRUCTION_QUATERNARY(access_range_step);
+				OPERATOR_INSTRUCTION_QUATERNARY(sll_operator_access_range_step);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
-				OPERATOR_INSTRUCTION_BINARY(cast);
+				OPERATOR_INSTRUCTION_BINARY(sll_operator_cast);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				{
 					sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);

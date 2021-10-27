@@ -175,19 +175,15 @@ const sll_float_t sll_float_compare_error=1e-6;
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT){
-			if (b->dt.i>=0&&b->dt.i<a->dt.s.l){
-				return SLL_FROM_CHAR(a->dt.s.v[b->dt.i]);
-			}
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<a->dt.s.l){
+			return SLL_FROM_CHAR(a->dt.s.v[b->dt.i]);
 		}
 	}
 	else if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT){
-			if (b->dt.i>=0&&b->dt.i<a->dt.a.l){
-				sll_runtime_object_t* o=a->dt.a.v[b->dt.i];
-				SLL_ACQUIRE(o);
-				return o;
-			}
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<a->dt.a.l){
+			sll_runtime_object_t* o=a->dt.a.v[b->dt.i];
+			SLL_ACQUIRE(o);
+			return o;
 		}
 	}
 	else if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_MAP){

@@ -5,7 +5,7 @@
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_integer_heap_queue_add(sll_integer_heap_queue_t* il,sll_integer_t v){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* il,sll_integer_t v){
 	if (!il->l){
 		il->v=malloc(sizeof(sll_integer_t));
 		il->l=1;
@@ -48,7 +48,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_integer_heap_queue_add(sll_integer_
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_integer_heap_queue_contains(sll_integer_heap_queue_t* il,sll_integer_t v){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary_heap_t* il,sll_integer_t v){
 	SLL_UNIMPLEMENTED();
 	return 0;
 }
