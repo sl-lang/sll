@@ -190,6 +190,8 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define STRING_COMPRESSION_OFFSET_BIT_COUNT 9
 #define STRING_COMPRESSION_LENGTH_BIT_COUNT 4
 
+#define OPTIMIZER_ASSIGN_VARIABLE_CONSTANT ((void*)0xffffffffffffffff)
+
 
 
 typedef uint16_t call_stack_size_t;

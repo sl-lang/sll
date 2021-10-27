@@ -448,6 +448,17 @@ __SLL_FUNC void sll_string_increase(sll_string_t* s,sll_string_length_t l){
 
 
 
+__SLL_FUNC sll_string_length_t sll_string_insert_char(sll_char_t c,sll_string_length_t i,sll_string_t* o){
+	if (i>=o->l){
+		return o->l;
+	}
+	o->c^=(o->v[i]^c)<<((i&3)<<3);
+	o->v[i]=c;
+	return i+1;
+}
+
+
+
 __SLL_FUNC sll_string_length_t sll_string_insert_pointer(const sll_char_t* s,sll_string_length_t i,sll_string_t* o){
 	return sll_string_insert_pointer_length(s,sll_string_length_unaligned(s),i,o);
 }

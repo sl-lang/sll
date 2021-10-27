@@ -891,7 +891,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	SLL_ASSERT(!o_dt->rm);
-	if (o_dt->a_v){
+	if (o_dt->a_v&&o_dt->a_v!=OPTIMIZER_ASSIGN_VARIABLE_CONSTANT){
 		if (o_dt->a_v->t==SLL_OBJECT_TYPE_IDENTIFIER){
 			sll_runtime_object_t** v;
 			if (SLL_IDENTIFIER_GET_ARRAY_ID(o_dt->a_v->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
@@ -904,6 +904,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 			}
 			SLL_RELEASE(*v);
 			*v=_get_as_runtime_object(o,o_dt,1);
+			o_dt->a_v=(SLL_RUNTIME_OBJECT_GET_TYPE(*v)==RUNTIME_OBJECT_TYPE_UNKNOWN||((*v)->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)?NULL:OPTIMIZER_ASSIGN_VARIABLE_CONSTANT);
 		}
 		else{
 			SLL_ASSERT(o_dt->a_v->t==SLL_OBJECT_TYPE_ACCESS);
@@ -914,7 +915,18 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 			while (tmp->t==SLL_OBJECT_TYPE_NOP||tmp->t==SLL_OBJECT_TYPE_DEBUG_DATA||tmp->t==OBJECT_TYPE_CHANGE_STACK){
 				tmp=(tmp->t==OBJECT_TYPE_CHANGE_STACK?tmp->dt._p:tmp+1);
 			}
-			if (tmp->t!=SLL_OBJECT_TYPE_IDENTIFIER){
+			sll_runtime_object_t* var=NULL;
+			if (tmp->t==SLL_OBJECT_TYPE_IDENTIFIER){
+				if (SLL_IDENTIFIER_GET_ARRAY_ID(tmp->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
+					var=*(o_dt->v+(o_dt->it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(tmp->dt.id))->v);
+					(*(o_dt->va.l_sm+(SLL_IDENTIFIER_GET_ARRAY_INDEX(tmp->dt.id)>>6)))|=1ull<<(SLL_IDENTIFIER_GET_ARRAY_INDEX(tmp->dt.id)&63);
+				}
+				else{
+					var=*(o_dt->v+(o_dt->it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID(tmp->dt.id)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(tmp->dt.id))->v);
+					(*(o_dt->va.s_sm[SLL_IDENTIFIER_GET_ARRAY_ID(tmp->dt.id)]+(SLL_IDENTIFIER_GET_ARRAY_INDEX(tmp->dt.id)>>6)))|=1ull<<(SLL_IDENTIFIER_GET_ARRAY_INDEX(tmp->dt.id)&63);
+				}
+			}
+			else{
 				SLL_UNIMPLEMENTED();
 			}
 			tmp++;
@@ -925,17 +937,32 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 						i--;
 						SLL_RELEASE(v[i]);
 					} while (i);
-					goto _skip_access;
+					goto _keep_assignment;
 				}
 				tmp=sll_skip_object(tmp);
 			}
+			SLL_ASSERT(var);
+			sll_runtime_object_t* val=_get_as_runtime_object(o,o_dt,1);
+			if (vl==2){
+				sll_operator_assign(var,v[0],val);
+			}
+			else if (vl==3){
+				sll_operator_assign_range(var,v[0],v[1],val);
+			}
+			else{
+				SLL_ASSERT(vl==4);
+				sll_operator_assign_range_step(var,v[0],v[1],v[2],val);
+			}
+			SLL_RELEASE(val);
 			for (sll_arg_count_t i=0;i<vl-1;i++){
 				SLL_RELEASE(v[i]);
 			}
-			SLL_UNIMPLEMENTED();
-_skip_access:;
+			o_dt->a_v=OPTIMIZER_ASSIGN_VARIABLE_CONSTANT;
+	_keep_assignment:;
+			if (o_dt->a_v!=OPTIMIZER_ASSIGN_VARIABLE_CONSTANT){
+				o_dt->a_v=NULL;
+			}
 		}
-		o_dt->a_v=NULL;
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
@@ -1144,6 +1171,12 @@ _skip_access:;
 				}
 				o_dt->a_v=id_o;
 				o=_optimize(o,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+				if (o_dt->a_v==OPTIMIZER_ASSIGN_VARIABLE_CONSTANT){
+					o_dt->a_v=NULL;
+					o=r;
+					o->t=SLL_OBJECT_TYPE_OPERATION_LIST;
+					goto _optimize_operation_list_comma;
+				}
 				o_dt->a_v=NULL;
 				if (o_dt->rm){
 					SLL_UNIMPLEMENTED();
@@ -1801,7 +1834,7 @@ _remove_cond:
 				if (i!=l){
 					i++;
 				}
-				else{
+				else if (!(fl&OPTIMIZER_FLAG_ASSIGN)){
 					sll_runtime_object_t* n;
 					SLL_ASSERT(i>1&&i<5);
 					if (i==2){

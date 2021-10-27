@@ -39,6 +39,18 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_and(sll_runtime
 
 
 
+__SLL_FUNC void sll_operator_assign(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* v);
+
+
+
+__SLL_FUNC void sll_operator_assign_range(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* v);
+
+
+
+__SLL_FUNC void sll_operator_assign_range_step(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* d,sll_runtime_object_t* v);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_runtime_object_t* a);
 
 
