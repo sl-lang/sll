@@ -106,10 +106,6 @@ __SLL_FUNC void sll_string_increase(sll_string_t* s,sll_string_length_t l);
 
 
 
-__SLL_FUNC sll_string_length_t sll_string_insert_char(sll_char_t c,sll_string_length_t i,sll_string_t* o);
-
-
-
 __SLL_FUNC sll_string_length_t sll_string_insert_pointer(const sll_char_t* s,sll_string_length_t i,sll_string_t* o);
 
 
@@ -198,7 +194,7 @@ __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_inte
 
 
 
-__SLL_FUNC void sll_string_set(const sll_string_t* s,sll_string_length_t i,sll_char_t c);
+__SLL_FUNC void sll_string_set_char(sll_char_t c,sll_string_length_t i,sll_string_t* o);
 
 
 

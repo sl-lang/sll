@@ -4,7 +4,7 @@
 
 ### Added
 
-- Implemented `sll_array_compare`, `sll_array_init`, `sll_free_array`, `sll_operator_assign`, `sll_string_compare_array`, `sll_string_insert_char`, `sll_string_insert_pointer`, `sll_string_insert_pointer_length`, `sll_string_join_char`, `sll_string_join_chars` and `sll_string_prepend_char`
+- Implemented `sll_array_compare`, `sll_array_init`, `sll_free_array`, `sll_operator_assign`, `sll_string_compare_array`, `sll_string_insert_pointer`, `sll_string_insert_pointer_length`, `sll_string_join_char`, `sll_string_join_chars`, `sll_string_prepend_char` and `sll_string_set_char`
 - Implemented `SLL_STRING_INSERT_POINTER_STATIC` macro
 - Index assignment optimization ([#69])
 - Marked appropriate functions as `__SLL_CHECK_OUTPUT`
@@ -12,6 +12,7 @@
 
 ### Changed
 
+- Changed `sll_bool_t` to use `_Bool` instead of `uint8_t`
 - Fixed `sll_string_join`
 - Moved `sll_deinit` and `sll_init` from [`src/include/sll/util.h`][main/src/include/sll/util.h] to [`src/include/sll/init.h`][main/src/include/sll/init.h]
 - Renamed all `sll_free_` functions to `sll_deinit_` and moved them to [`src/include/sll/init.h`][main/src/include/sll/init.h] and [`src/sll/deinit.c`][main/src/sll/deinit.c]
@@ -25,7 +26,7 @@
 
 - Most `memcpy` calls
 - Unused `sll_instruction_index_t` member from `sll_runtime_object_data_t`
-- Unused function `sll_integer_heap_queue_init`
+- Unused function `sll_integer_heap_queue_init` and `sll_string_set`
 - Unused type `sll_allocation_size_t` and macro `SLL_MAX_ALLOCATION_SIZE`
 
 ## [0.6.24] - 2021-10-25

@@ -536,7 +536,7 @@ __SLL_FUNC void sll_operator_assign(sll_runtime_object_t* a,sll_runtime_object_t
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<a->dt.s.l){
 			sll_runtime_object_t* tmp=sll_operator_cast(v,sll_static_int[SLL_CONSTANT_TYPE_CHAR]);
 			SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(tmp)==SLL_RUNTIME_OBJECT_TYPE_CHAR);
-			sll_string_insert_char(tmp->dt.c,(sll_string_length_t)(b->dt.i),&(a->dt.s));
+			sll_string_set_char(tmp->dt.c,(sll_string_length_t)(b->dt.i),&(a->dt.s));
 			SLL_RELEASE(tmp);
 		}
 	}

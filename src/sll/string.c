@@ -448,17 +448,6 @@ __SLL_FUNC void sll_string_increase(sll_string_t* s,sll_string_length_t l){
 
 
 
-__SLL_FUNC sll_string_length_t sll_string_insert_char(sll_char_t c,sll_string_length_t i,sll_string_t* o){
-	if (i>=o->l){
-		return o->l;
-	}
-	o->c^=(o->v[i]^c)<<((i&3)<<3);
-	o->v[i]=c;
-	return i+1;
-}
-
-
-
 __SLL_FUNC sll_string_length_t sll_string_insert_pointer(const sll_char_t* s,sll_string_length_t i,sll_string_t* o){
 	return sll_string_insert_pointer_length(s,sll_string_length_unaligned(s),i,o);
 }
@@ -581,7 +570,7 @@ __SLL_FUNC void sll_string_join_char(const sll_string_t* s,sll_char_t c,sll_stri
 		*(b+i)=*(a+i);
 	}
 	o->v[s->l]=c;
-	o->c=s->c^ROTATE_BITS(c,(s->l&3)<<3);
+	o->c=s->c^(((sll_string_checksum_t)c)<<((s->l&3)<<3));
 }
 
 
@@ -964,9 +953,10 @@ __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_inte
 
 
 
-__SLL_FUNC void sll_string_set(const sll_string_t* s,sll_string_length_t i,sll_char_t c){
-	if (i<s->l){
-		s->v[i]=c;
+__SLL_FUNC void sll_string_set_char(sll_char_t c,sll_string_length_t i,sll_string_t* o){
+	if (i<o->l){
+		o->c^=((sll_string_checksum_t)(o->v[i]^c))<<((i&3)<<3);
+		o->v[i]=c;
 	}
 }
 
