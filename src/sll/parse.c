@@ -1330,8 +1330,8 @@ _export_identifier_found:;
 						sll_function_t* nf=malloc(sizeof(sll_function_t)+f->al*sizeof(sll_identifier_index_t));
 						nf->off=(sll_object_offset_t)(f->off+c_dt->_s.off);
 						nf->al=f->al;
-						for (sll_arg_count_t j=0;j<f->al;j++){
-							nf->a[j]=f->a[j];
+						for (sll_arg_count_t k=0;k<f->al;k++){
+							nf->a[k]=f->a[k];
 						}
 						*(c_dt->ft.dt+i+j)=nf;
 					}

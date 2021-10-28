@@ -472,9 +472,6 @@ __SLL_FUNC sll_string_length_t sll_string_insert_pointer_length(const sll_char_t
 	}
 	if (i&7){
 		sll_string_length_t j=8-(i&7);
-		if (j>l){
-			j=l;
-		}
 		i+=j;
 		l-=j;
 		s+=j;
