@@ -1209,7 +1209,7 @@ _identifier_created:;
 						return SLL_RETURN_ERROR;
 					}
 					ac++;
-					sll_compilation_data_t im={0};
+					sll_compilation_data_t im=SLL_INIT_COMPILATION_DATA_STRUCT;
 					if (e_c_dt->il(c_dt->st.dt+arg->dt.s,&im,e)==SLL_RETURN_ERROR){
 						return SLL_RETURN_ERROR;
 					}

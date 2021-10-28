@@ -11,7 +11,6 @@
 
 __SLL_FUNC void sll_init(void){
 	sll_platform_setup_console();
-	atexit(sll_deinit);
 }
 
 

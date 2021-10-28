@@ -129,7 +129,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table
 	for (sll_string_index_t i=0;i<st->l;i++){
 		if (sll_string_equal(st->dt+i,s)){
 			if (d){
-				free(s->v);
+				sll_deinit_string(s);
 			}
 			return i;
 		}
@@ -137,6 +137,22 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table
 	st->l++;
 	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
 	*(st->dt+st->l-1)=*s;
+	return st->l-1;
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_string_table_t* st,sll_runtime_object_t* v){
+	SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_STRING);
+	for (sll_string_index_t i=0;i<st->l;i++){
+		if (sll_string_equal(st->dt+i,&(v->dt.s))){
+			return i;
+		}
+	}
+	st->l++;
+	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
+	v->t|=RUNTIME_OBJECT_EXTERNAL_STRING;
+	*(st->dt+st->l-1)=v->dt.s;
 	return st->l-1;
 }
 

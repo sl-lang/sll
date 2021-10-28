@@ -425,7 +425,7 @@ __SLL_FUNC void sll_deinit_string(sll_string_t* s){
 
 __SLL_FUNC void sll_deinit_string_table(sll_string_table_t* st){
 	for (sll_string_index_t i=0;i<st->l;i++){
-		free((st->dt+i)->v);
+		sll_deinit_string(st->dt+i);
 	}
 	free(st->dt);
 	st->dt=NULL;

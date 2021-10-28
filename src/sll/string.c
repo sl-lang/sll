@@ -202,7 +202,10 @@ __SLL_FUNC void sll_string_create(sll_string_length_t l,sll_string_t* o){
 	o->l=l;
 	o->c=0;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
-	INIT_PADDING(o->v,l);
+	uint64_t* p=(uint64_t*)(o->v);
+	for (sll_string_length_t i=0;i<=l>>3;i++){
+		*(p+i)=0;
+	}
 }
 
 
@@ -545,15 +548,20 @@ __SLL_FUNC void sll_string_join(const sll_string_t* a,const sll_string_t* b,sll_
 		} while (j);
 	}
 	if (!(a->l&7)||8-(a->l&7)<b->l){
-		sll_string_length_t j=i+((b->l+(a->l&7?(a->l&7)-1:7))>>3);
-		SLL_ASSERT(i<=j);
+		sll_string_length_t bl=b->l-(a->l&7?8-(a->l&7):0);
+		sll_string_length_t j=i+(bl>>3);
 		const uint64_t* bp=(const uint64_t*)s;
 		sll_string_length_t k=0;
-		do{
+		while (i<j){
 			*(op+i)=*(bp+k);
 			i++;
 			k++;
-		} while (i<j);
+		};
+		s+=k<<3;
+		j<<=3;
+		for (k=0;k<(bl&7);k++){
+			o->v[j+k]=*(s+k);
+		}
 	}
 	o->c=a->c^ROTATE_BITS(b->c,(a->l&3)<<3);
 }
@@ -932,11 +940,12 @@ __SLL_FUNC void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_inte
 			o->l=1;
 			o->c=s->v[a];
 			o->v=malloc(SLL_STRING_ALIGN_LENGTH(1)*sizeof(sll_char_t));
-			o->v[0]=s->v[a];
+			*((uint64_t*)(o->v))=s->v[a];
 			return;
 		}
 		o->l=(sll_string_length_t)((b-a)/c);
-		o->v=malloc(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+		o->v=malloc(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
+		INIT_PADDING(o->v,o->l);
 		sll_string_length_t i=0;
 		do{
 			o->v[i]=s->v[a];
@@ -1244,6 +1253,7 @@ __SLL_FUNC void sll_string_xor(const sll_string_t* a,const sll_string_t* b,sll_s
 	}
 	o->l=a->l;
 	o->v=malloc(SLL_STRING_ALIGN_LENGTH(a->l)*sizeof(sll_char_t));
+	INIT_PADDING(o->v,o->l);
 	const uint64_t* ap=(const uint64_t*)(a->v);
 	const uint64_t* bp=(const uint64_t*)(b->v);
 	uint64_t* op=(uint64_t*)(o->v);

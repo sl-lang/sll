@@ -355,6 +355,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				v->t=SLL_RUNTIME_OBJECT_TYPE_STRING|RUNTIME_OBJECT_EXTERNAL_STRING;
 				SLL_ASSERT(o->dt.s<o_dt->c_dt->st.l);
 				v->dt.s=*(o_dt->c_dt->st.dt+o->dt.s);
+				SLL_ASSERT(v->dt.s.v);
 				return v;
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
@@ -526,8 +527,7 @@ static sll_object_t* _runtime_object_to_object(sll_runtime_object_t* v,sll_objec
 			while (o_dt->c_dt->st.dt+o->dt.s!=&(v->dt.s)){
 				o->dt.s++;
 				if (o->dt.s==o_dt->c_dt->st.l){
-					v->t|=RUNTIME_OBJECT_EXTERNAL_STRING;
-					o->dt.s=sll_add_string(&(o_dt->c_dt->st),&(v->dt.s),0);
+					o->dt.s=sll_add_string_runtime(&(o_dt->c_dt->st),v);
 					return o;
 				}
 			}
@@ -1698,9 +1698,9 @@ _join_cond:
 											break;
 										}
 _remove_cond:
+										free(arg);
 										SLL_RELEASE(v);
 										SLL_RELEASE(av);
-										free(arg);
 										_remove_up_to_end(o,r->dt.ac-j-1);
 										_shift_objects(pa,o_dt->c_dt,1);
 										pa->t=SLL_OBJECT_TYPE_COMMA;
@@ -1741,6 +1741,7 @@ _remove_cond:
 				if (v){
 					if (j-i>1){
 						if (!i){
+							free(arg);
 							_shift_objects(o,o_dt->c_dt,1);
 							if (r->t>=SLL_OBJECT_TYPE_LESS){
 								o->t=SLL_OBJECT_TYPE_INT;
@@ -1761,6 +1762,7 @@ _remove_cond:
 							}
 							r->dt.ac-=j-i-1;
 							sll_object_t* tmp=*(arg+i);
+							free(arg);
 							_shift_objects(tmp,o_dt->c_dt,1);
 							tmp->t=SLL_OBJECT_TYPE_COMMA;
 							tmp->dt.ac=j-i+1;

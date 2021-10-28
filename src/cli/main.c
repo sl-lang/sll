@@ -125,15 +125,13 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 
 static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
 	FILE* f=NULL;
-	sll_assembly_data_t a_dt={0};
+	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 	sll_input_data_stream_t is;
 	char f_fp[MAX_PATH_LENGTH];
-	sll_init_compilation_data(nm->v,&is,o);
 	if (!load_file((char*)(nm->v),&a_dt,o,&f,&is,f_fp)){
 		if (f){
 			fclose(f);
 		}
-		sll_deinit_compilation_data(o);
 		e->t=SLL_ERROR_UNKNOWN;
 		return SLL_RETURN_ERROR;
 	}
@@ -397,6 +395,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 			*f=nf;
 			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
+			sll_init_compilation_data(SLL_CHAR(l_fp),is,c_dt);
 			if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
 				sll_deinit_compilation_data(c_dt);
 				if (e.t!=SLL_ERROR_UNKNOWN){
@@ -612,6 +611,7 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 
 int main(int argc,const char** argv){
 	sll_init();
+	atexit(sll_deinit);
 #ifdef _MSC_VER
 	GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),&cm);
 	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
