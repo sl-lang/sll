@@ -4,6 +4,7 @@
 
 ### Added
 
+- Added [`examples`](main/examples)! ([#77])
 - Implemented `sll_add_string_runtime`, `sll_array_compare`, `sll_array_init`, `sll_free_array`, `sll_operator_assign`, `sll_string_compare_array`, `sll_string_insert_pointer`, `sll_string_insert_pointer_length`, `sll_string_join_char`, `sll_string_join_chars`, `sll_string_prepend_char` and `sll_string_set_char`
 - Implemented `SLL_STRING_INSERT_POINTER_STATIC` macro
 - Index assignment optimization ([#69])
@@ -932,6 +933,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#77]: https://github.com/sl-lang/sll/issues/77
 [#76]: https://github.com/sl-lang/sll/issues/76
 [#71]: https://github.com/sl-lang/sll/issues/71
 [#69]: https://github.com/sl-lang/sll/issues/69
@@ -972,6 +974,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/examples]: https://github.com/sl-lang/sll/tree/main/examples
 [main/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/main/src/include/sll/init.h
 [main/src/include/sll/util.h]: https://github.com/sl-lang/sll/blob/main/src/include/sll/util.h
 [main/src/sll/deinit.c]: https://github.com/sl-lang/sll/blob/main/src/sll/deinit.c
