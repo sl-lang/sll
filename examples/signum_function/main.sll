@@ -1,0 +1,17 @@
+; Sll Signum Function Implementation Example
+; @krzem5, 2021-10-31
+
+
+
+(= sgn (,,, x
+	(?
+		(< x 0) (@@ -1)
+		(= x 0) (@@ 0)
+		(@@ 1)
+	)
+))
+
+
+
+(= x 5)
+(:> "sgn(" x ") = " (<- sgn x) "\n")
