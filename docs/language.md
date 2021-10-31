@@ -268,7 +268,7 @@ This object calls the function specified by the first operand with the arguments
 #### Syntax
 
 ```sll
-(<- |# condition 1 #| |# code block 1 #|
+(? |# condition 1 #| |# code block 1 #|
 	|# condition 2 #| |# code block 2 #|
 	|# condition 3 #| |# code block 3 #|
 	|# 'else' code block #|
