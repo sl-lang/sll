@@ -4,7 +4,7 @@
 
 ### Added
 
-- Added [`examples`](main/examples)! ([#77])
+- Added [`examples`][main/examples]! ([#77])
 - Implemented `sll_add_string_runtime`, `sll_array_compare`, `sll_array_init`, `sll_free_array`, `sll_operator_assign`, `sll_string_compare_array`, `sll_string_insert_pointer`, `sll_string_insert_pointer_length`, `sll_string_join_char`, `sll_string_join_chars`, `sll_string_prepend_char` and `sll_string_set_char`
 - Implemented `SLL_STRING_INSERT_POINTER_STATIC` macro
 - Index assignment optimization ([#69])
