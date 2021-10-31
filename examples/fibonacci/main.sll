@@ -1,0 +1,21 @@
+; Sll Fibonacci Sequence Example
+; @krzem5, 2021-10-31
+
+
+
+(= fib (,,, n {
+	(= a 1)
+	(= b 1)
+	(-> (= i 1) (< i n) {
+		(= c (+ a b))
+		(= a b)
+		(= b c)
+		(= i (+ i 1))
+	})
+	(@@ b)
+}))
+
+
+
+(= N 10)
+(:> "fib(" N ") = " (<- fib N) "\n")

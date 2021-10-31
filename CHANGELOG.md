@@ -14,6 +14,7 @@
 
 - Changed `sll_bool_t` to use `_Bool` instead of `uint8_t`
 - Fixed `sll_string_join`
+- Fixed incorrect optimization of variables inside loops ([#76])
 - Fixed invalid memory access in `sll_string_join`
 - Fixed memory corruption in the CLI
 - Moved `sll_deinit` and `sll_init` from [`src/include/sll/util.h`][main/src/include/sll/util.h] to [`src/include/sll/init.h`][main/src/include/sll/init.h]
@@ -931,6 +932,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#76]: https://github.com/sl-lang/sll/issues/76
 [#71]: https://github.com/sl-lang/sll/issues/71
 [#69]: https://github.com/sl-lang/sll/issues/69
 [#67]: https://github.com/sl-lang/sll/issues/67

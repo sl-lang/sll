@@ -192,6 +192,9 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 #define OPTIMIZER_ASSIGN_VARIABLE_REMOVE ((void*)0xffffffffffffffff)
 
+#define OPTIMIZER_NEW_RUNTIME_OBJECT 1
+#define OPTIMIZER_NO_VARIABLES 2
+
 
 
 typedef uint16_t call_stack_size_t;

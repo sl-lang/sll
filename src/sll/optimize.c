@@ -314,13 +314,13 @@ static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_comp
 
 
 
-static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,sll_bool_t st){
+static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const optimizer_data_t* o_dt,uint8_t fl){
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_OBJECT_TYPE_CHAR:
-			if (!st){
+			if (!(fl&OPTIMIZER_NEW_RUNTIME_OBJECT)){
 				return SLL_FROM_CHAR(o->dt.c);
 			}
 			else{
@@ -330,7 +330,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				return v;
 			}
 		case SLL_OBJECT_TYPE_INT:
-			if (!st){
+			if (!(fl&OPTIMIZER_NEW_RUNTIME_OBJECT)){
 				return SLL_FROM_INT(o->dt.i);
 			}
 			else{
@@ -340,7 +340,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				return v;
 			}
 		case SLL_OBJECT_TYPE_FLOAT:
-			if (!st){
+			if (!(fl&OPTIMIZER_NEW_RUNTIME_OBJECT)){
 				return SLL_FROM_FLOAT(o->dt.f);
 			}
 			else{
@@ -366,7 +366,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				sll_array_create(l,&(v->dt.a));
 				o++;
 				for (sll_array_length_t i=0;i<l;i++){
-					sll_runtime_object_t* n=_get_as_runtime_object(o,o_dt,st);
+					sll_runtime_object_t* n=_get_as_runtime_object(o,o_dt,fl);
 					o=sll_skip_object_const(o);
 					v->dt.a.v[i]=n;
 					if (n->t==RUNTIME_OBJECT_TYPE_UNKNOWN){
@@ -392,7 +392,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				sll_map_create((l+1)>>1,&(v->dt.m));
 				o++;
 				for (sll_map_length_t i=0;i<l;i++){
-					sll_runtime_object_t* n=_get_as_runtime_object(o,o_dt,st);
+					sll_runtime_object_t* n=_get_as_runtime_object(o,o_dt,fl);
 					o=sll_skip_object_const(o);
 					v->dt.a.v[i]=n;
 					if (n->t==RUNTIME_OBJECT_TYPE_UNKNOWN){
@@ -414,6 +414,9 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				return v;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
+			if (fl&OPTIMIZER_NO_VARIABLES){
+				break;
+			}
 			SLL_ACQUIRE(*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt)));
 			return *(o_dt->v+GET_VARIABLE_INDEX(o,o_dt));
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
@@ -430,7 +433,18 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 		case SLL_OBJECT_TYPE_RETURN:
 		case SLL_OBJECT_TYPE_EXIT:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			return SLL_ACQUIRE_STATIC_INT(0);
+_return_zero:
+			{
+				if (!(fl&OPTIMIZER_NEW_RUNTIME_OBJECT)){
+					return SLL_ACQUIRE_STATIC_INT(0);
+				}
+				else{
+					sll_runtime_object_t* v=SLL_CREATE();
+					v->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+					v->dt.i=0;
+					return v;
+				}
+			}
 		case SLL_OBJECT_TYPE_FUNC:
 			{
 				sll_runtime_object_t* v=SLL_CREATE();
@@ -439,7 +453,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 				return v;
 			}
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
-			if (!st){
+			if (!(fl&OPTIMIZER_NEW_RUNTIME_OBJECT)){
 				return SLL_FROM_INT(~((sll_integer_t)(o->dt.fn.id)));
 			}
 			else{
@@ -451,14 +465,14 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 		case SLL_OBJECT_TYPE_CAST:
 			{
 				if (!o->dt.ac){
-					return SLL_ACQUIRE_STATIC_INT(0);
+					goto _return_zero;
 				}
 				sll_arg_count_t l=o->dt.ac-1;
 				o++;
 				if (o->t==OBJECT_TYPE_CHANGE_STACK){
 					o=o->dt._p;
 				}
-				sll_runtime_object_t* v=_get_as_runtime_object(o,o_dt,st);
+				sll_runtime_object_t* v=_get_as_runtime_object(o,o_dt,fl);
 				if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==RUNTIME_OBJECT_TYPE_UNKNOWN){
 					return v;
 				}
@@ -468,7 +482,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 					while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 						o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
-					sll_runtime_object_t* t=_get_as_runtime_object(o,o_dt,st);
+					sll_runtime_object_t* t=_get_as_runtime_object(o,o_dt,fl);
 					if (SLL_RUNTIME_OBJECT_GET_TYPE(t)==RUNTIME_OBJECT_TYPE_UNKNOWN){
 						SLL_RELEASE(v);
 						return t;
@@ -487,14 +501,14 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 			{
 				sll_arg_count_t l=o->dt.ac;
 				if (!l){
-					return SLL_ACQUIRE_STATIC_INT(0);
+					goto _return_zero;
 				}
 				o++;
 				while (l>1){
 					l--;
 					o=sll_skip_object_const(o);
 				}
-				return _get_as_runtime_object(o,o_dt,st);
+				return _get_as_runtime_object(o,o_dt,fl);
 			}
 	}
 	sll_runtime_object_t* v=SLL_CREATE();
@@ -610,7 +624,7 @@ static const sll_object_t* _mark_loop_vars(const sll_object_t* o,optimizer_data_
 					o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				SLL_ASSERT(o->t==SLL_OBJECT_TYPE_IDENTIFIER);
-				sll_runtime_object_t* tmp=_get_as_runtime_object(o+1,o_dt,0);
+				sll_runtime_object_t* tmp=_get_as_runtime_object(o+1,o_dt,OPTIMIZER_NO_VARIABLES);
 				if (tmp->t==RUNTIME_OBJECT_TYPE_UNKNOWN){
 					(*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt)))->t|=RUNTIME_OBJECT_CHANGE_IN_LOOP;
 				}
@@ -903,7 +917,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				(*(o_dt->va.s_sm[SLL_IDENTIFIER_GET_ARRAY_ID(o_dt->a_v->dt.id)]+(SLL_IDENTIFIER_GET_ARRAY_INDEX(o_dt->a_v->dt.id)>>6)))|=1ull<<(SLL_IDENTIFIER_GET_ARRAY_INDEX(o_dt->a_v->dt.id)&63);
 			}
 			SLL_RELEASE(*v);
-			*v=_get_as_runtime_object(o,o_dt,1);
+			*v=_get_as_runtime_object(o,o_dt,OPTIMIZER_NEW_RUNTIME_OBJECT);
 			o_dt->a_v=NULL;
 		}
 		else{
@@ -942,7 +956,7 @@ static sll_object_t* _optimize(sll_object_t* o,sll_object_t* p,optimizer_data_t*
 				tmp=sll_skip_object(tmp);
 			}
 			SLL_ASSERT(var);
-			sll_runtime_object_t* val=_get_as_runtime_object(o,o_dt,1);
+			sll_runtime_object_t* val=_get_as_runtime_object(o,o_dt,OPTIMIZER_NEW_RUNTIME_OBJECT);
 			if (vl==2){
 				sll_operator_assign(var,v[0],val);
 			}
