@@ -100,7 +100,6 @@
 
 
 
-static uint8_t vm_st[VM_STACK_SIZE];
 static uint8_t ol;
 static uint16_t fl;
 static char* i_fp;
@@ -576,8 +575,6 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 		}
 	}
 	if (!(fl&FLAG_NO_RUN)){
-		sll_stack_data_t st;
-		sll_setup_stack(&st,vm_st,VM_STACK_SIZE);
 		sll_handle_list_t hl;
 		sll_init_handle_list(&hl);
 		sll_input_data_stream_t ris;
@@ -593,7 +590,7 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 		sll_error_t e={
 			SLL_ERROR_UNKNOWN
 		};
-		sll_return_code_t r=sll_execute_assembly(a_dt,&st,&r_dt,&e);
+		sll_return_code_t r=sll_execute_assembly(a_dt,VM_STACK_SIZE,&r_dt,&e);
 		sll_deinit_handle_list(&hl);
 		if (e.t!=SLL_ERROR_UNKNOWN){
 			sll_print_error(NULL,&e);

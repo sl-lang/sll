@@ -205,6 +205,10 @@ typedef uint16_t scope_data_mask_length_t;
 
 
 
+typedef uint32_t stack_offset_t;
+
+
+
 typedef sll_instruction_index_t assembly_instruction_label_t;
 
 
@@ -350,7 +354,7 @@ typedef struct __STRING_MAP_DATA{
 
 typedef struct __CALL_STACK_FRAME{
 	sll_instruction_index_t ii;
-	sll_stack_offset_t s;
+	stack_offset_t s;
 } call_stack_frame_t;
 
 

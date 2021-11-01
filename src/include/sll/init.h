@@ -261,12 +261,6 @@
 	do{ \
 		(o)->i=0; \
 	} while (0)
-#define SLL_INIT_STACK_DATA(o) \
-	do{ \
-		(o)->ptr=NULL; \
-		(o)->off=0; \
-		(o)->sz=0; \
-	} while (0)
 #define SLL_INIT_STRING(o) \
 	do{ \
 		(o)->l=0; \
@@ -322,7 +316,6 @@
 #define SLL_INIT_RUNTIME_DATA_STRUCT {NULL,0,NULL,NULL}
 #define SLL_INIT_RUNTIME_OBJECT_DATA_UNION {.i=0}
 #define SLL_INIT_RUNTIME_OBJECT_STRUCT {1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt=SLL_INIT_RUNTIME_OBJECT_DATA_UNION}
-#define SLL_INIT_STACK_DATA_STRUCT {NULL,0,0}
 #define SLL_INIT_STRING_STRUCT {0,0,NULL}
 #define SLL_INIT_STRING_TABLE_STRUCT {0,NULL}
 
@@ -502,10 +495,6 @@ __SLL_FUNC void sll_deinit_runtime_object_data(sll_runtime_object_data_t* ro_dt)
 
 
 __SLL_FUNC void sll_deinit_runtime_object(sll_runtime_object_t* o);
-
-
-
-__SLL_FUNC void sll_deinit_stack_data(sll_stack_data_t* s_dt);
 
 
 
@@ -690,10 +679,6 @@ __SLL_FUNC void sll_init_runtime_object_data(sll_runtime_object_data_t* o);
 
 
 __SLL_FUNC void sll_init_runtime_object(sll_runtime_object_t* o);
-
-
-
-__SLL_FUNC void sll_init_stack_data(sll_stack_data_t* o);
 
 
 

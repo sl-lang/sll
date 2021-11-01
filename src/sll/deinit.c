@@ -408,12 +408,6 @@ __SLL_FUNC void sll_deinit_runtime_object(sll_runtime_object_t* o){
 
 
 
-__SLL_FUNC void sll_deinit_stack_data(sll_stack_data_t* s_dt){
-	SLL_INIT_STACK_DATA(s_dt);
-}
-
-
-
 __SLL_FUNC void sll_deinit_string(sll_string_t* s){
 	s->l=0;
 	s->c=0;

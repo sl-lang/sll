@@ -48,7 +48,6 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_OBJECT_OFFSET UINT32_MAX
 #define SLL_MAX_REF_COUNT UINT32_MAX
 #define SLL_MAX_SCOPE UINT32_MAX
-#define SLL_MAX_STACK_OFFSET UINT32_MAX
 #define SLL_MAX_STRING_INDEX UINT32_MAX
 #define SLL_MAX_STRING_LENGTH UINT32_MAX
 #define SLL_MAX_VARIABLE_INDEX UINT32_MAX
@@ -205,10 +204,6 @@ typedef uint32_t sll_ref_count_t;
 
 
 typedef uint32_t sll_scope_t;
-
-
-
-typedef uint32_t sll_stack_offset_t;
 
 
 
@@ -426,7 +421,6 @@ typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_arg_count_t ac;
 	sll_array_length_t al;
 	sll_map_length_t ml;
-	sll_stack_offset_t st;
 	sll_constant_type_t t;
 	void* _p;
 } sll_assembly_instruction_data_t;
@@ -653,14 +647,6 @@ typedef struct __SLL_JSON_MAP_KEYPAIR{
 
 
 typedef void (*sll_cleanup_function_t)(void);
-
-
-
-typedef struct __SLL_STACK_DATA{
-	sll_char_t* ptr;
-	sll_stack_offset_t off;
-	sll_stack_offset_t sz;
-} sll_stack_data_t;
 
 
 

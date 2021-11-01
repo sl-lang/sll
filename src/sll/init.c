@@ -282,12 +282,6 @@ __SLL_FUNC void sll_init_runtime_object(sll_runtime_object_t* o){
 
 
 
-__SLL_FUNC void sll_init_stack_data(sll_stack_data_t* o){
-	SLL_INIT_STACK_DATA(o);
-}
-
-
-
 __SLL_FUNC void sll_init_string(sll_string_t* o){
 	SLL_INIT_STRING(o);
 }

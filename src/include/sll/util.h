@@ -29,8 +29,4 @@ __SLL_FUNC void sll_register_cleanup(sll_cleanup_function_t f,sll_cleanup_type_t
 
 
 
-__SLL_FUNC void sll_setup_stack(sll_stack_data_t* o,sll_char_t* bf,sll_stack_offset_t sz);
-
-
-
 #endif

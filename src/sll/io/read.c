@@ -423,8 +423,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 	CHECK_ERROR(is,c_dt->ft.l,sll_function_index_t,e);
 	c_dt->ft.dt=malloc(c_dt->ft.l*sizeof(sll_function_t*));
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
-		sll_stack_offset_t off;
-		CHECK_ERROR(is,off,sll_stack_offset_t,e);
+		sll_object_offset_t off;
+		CHECK_ERROR(is,off,sll_object_offset_t,e);
 		sll_arg_count_t al;
 		CHECK_ERROR(is,al,sll_arg_count_t,e);
 		sll_function_t* k=malloc(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));

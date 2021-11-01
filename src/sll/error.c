@@ -48,11 +48,11 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 				return;
 		}
 	}
-	sll_stack_offset_t os=e->dt.r.off;
-	sll_stack_offset_t oe=os+e->dt.r.sz;
+	sll_file_offset_t os=e->dt.r.off;
+	sll_file_offset_t oe=os+e->dt.r.sz;
 	SLL_INPUT_DATA_STREAM_RESTART_LINE(is,os);
-	sll_stack_offset_t off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is);
-	sll_stack_offset_t s_off=off;
+	sll_file_offset_t off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is);
+	sll_file_offset_t s_off=off;
 	uint32_t os_tb=0;
 	uint32_t oe_tb=0;
 	int c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
@@ -89,7 +89,7 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 		off++;
 	}
 	putchar('\n');
-	sll_stack_offset_t i=s_off;
+	sll_file_offset_t i=s_off;
 	for (;i<os+os_tb;i++){
 		putchar(' ');
 	}
