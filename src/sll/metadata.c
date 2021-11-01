@@ -1,6 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/init.h>
 #include <sll/object.h>
 #include <sll/types.h>
 #include <stdint.h>
@@ -138,7 +139,7 @@ __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 			if (j==c_dt->st.l){
 				break;
 			}
-			free((c_dt->st.dt+j)->v);
+			sll_deinit_string(c_dt->st.dt+j);
 			for (uint32_t n=k;n<j;n++){
 				*(c_dt->st.dt+n-l)=*(c_dt->st.dt+n);
 				*(sm+n)=n-l;

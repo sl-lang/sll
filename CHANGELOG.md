@@ -4,7 +4,7 @@
 
 ### Added
 
-- Implemented `sll_operator_strict_equal`
+- Implemented `sll_operator_strict_equal` and `sll_string_from_char`
 - Strict equal (`(===)`) and not equal (`(!==)`) operators ([#78])
 
 ### Changed
@@ -13,8 +13,9 @@
 
 ### Removed
 
-- Unused stack API: `sll_stack_offset_t`, `sll_stack_data_t`, `sll_deinit_stack_data`, `sll_init_stack_data`, `sll_setup_stack`, `SLL_MAX_STACK_OFFSET`, `SLL_INIT_STACK_DATA` and `SLL_INIT_STACK_DATA_STRUCT`
+- Unused included headers
 - Unused member `sll_stack_offset_t st` from `sll_assembly_instruction_data_t`
+- Unused stack API: `sll_stack_offset_t`, `sll_stack_data_t`, `sll_deinit_stack_data`, `sll_init_stack_data`, `sll_setup_stack`, `SLL_MAX_STACK_OFFSET`, `SLL_INIT_STACK_DATA` and `SLL_INIT_STACK_DATA_STRUCT`
 
 ## [0.6.25] - 2021-10-31
 

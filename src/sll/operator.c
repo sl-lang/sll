@@ -6,6 +6,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
+#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/operator.h>
 #include <sll/runtime_object.h>
@@ -13,8 +14,6 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <math.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 
@@ -306,7 +305,7 @@ _add_to_string:
 					sb=tmp;
 				}
 				sll_string_join(&sa,&sb,&(o->dt.s));
-				free((!inv?sa.v:sb.v));
+				sll_deinit_string((!inv?&sa:&sb));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
@@ -638,8 +637,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_cast(sll_runtim
 				{
 					sll_runtime_object_t* o=SLL_CREATE();
 					o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
-					o->dt.m.l=1;
-					o->dt.m.v=malloc(2*sizeof(sll_runtime_object_t*));
+					sll_map_create(1,&(o->dt.m));
 					o->dt.m.v[0]=SLL_ACQUIRE_STATIC_INT(0);
 					o->dt.m.v[1]=a;
 					SLL_ACQUIRE(a);
@@ -652,8 +650,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_cast(sll_runtim
 				{
 					sll_runtime_object_t* o=SLL_CREATE();
 					o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
-					o->dt.a.l=1;
-					o->dt.a.v=malloc(sizeof(sll_runtime_object_t*));
+					sll_array_create(1,&(o->dt.a));
 					o->dt.a.v[0]=SLL_ACQUIRE_STATIC_INT(0);
 					return o;
 				}
@@ -665,8 +662,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_cast(sll_runtim
 				{
 					sll_runtime_object_t* o=SLL_CREATE();
 					o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
-					o->dt.a.l=1;
-					o->dt.a.v=malloc(sizeof(sll_runtime_object_t*));
+					sll_array_create(1,&(o->dt.a));
 					o->dt.a.v[0]=a;
 					SLL_ACQUIRE(a);
 					return o;
@@ -694,10 +690,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_cast(sll_runtim
 				{
 					sll_runtime_object_t* o=SLL_CREATE();
 					o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-					o->dt.s.l=1;
-					o->dt.s.c=a->dt.c;
-					o->dt.s.v=malloc(SLL_STRING_ALIGN_LENGTH(1)*sizeof(sll_char_t));
-					o->dt.s.v[0]=a->dt.c;
+					sll_string_from_char(a->dt.c,&(o->dt.s));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_SI:

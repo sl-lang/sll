@@ -1,12 +1,12 @@
 #include <sll/api/string.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/init.h>
 #include <sll/object.h>
 #include <sll/runtime_object.h>
 #include <sll/stream.h>
 #include <sll/types.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 
 
@@ -36,6 +36,6 @@ __SLL_FUNC void sll_debug_print_runtime_object(const sll_runtime_object_t* v){
 		sll_string_t str;
 		sll_object_to_string((const sll_runtime_object_t*const*)&v,1,&str);
 		fwrite(str.v,sizeof(sll_char_t),str.l,stdout);
-		free(str.v);
+		sll_deinit_string(&str);
 	}
 }

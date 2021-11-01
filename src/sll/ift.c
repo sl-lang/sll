@@ -1,8 +1,8 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/types.h>
+#include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
 
 
@@ -26,9 +26,16 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(
 	}
 	for (sll_function_index_t i=0;i<i_ft->l;i++){
 		sll_internal_function_t* f=*(i_ft->dt+i);
-		if (f->c==c&&f->nml==l&&!memcmp((void*)nm,f->nm,l)){
-			return i;
+		if (f->c!=c||f->nml!=l){
+			continue;
 		}
+		for (uint8_t j=0;j<l;j++){
+			if (*(nm+j)!=f->nm[j]){
+				goto _continue;
+			}
+		}
+		return i;
+_continue:;
 	}
 	return SLL_MAX_FUNCTION_INDEX;
 }

@@ -9,7 +9,6 @@
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <stdlib.h>
-#include <string.h>
 
 
 

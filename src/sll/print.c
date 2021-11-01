@@ -89,7 +89,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_CHAR:
 			{
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\'');
-				char c=o->dt.c;
+				sll_char_t c=o->dt.c;
 				if (c=='\''||c=='"'||c=='\\'){
 					SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\\');
 				}
@@ -134,7 +134,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'"');
 				sll_string_t* s=c_dt->st.dt+o->dt.s;
 				for (sll_string_length_t i=0;i<s->l;i++){
-					char c=s->v[i];
+					sll_char_t c=s->v[i];
 					if (c=='\''||c=='"'||c=='\\'){
 						SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'\\');
 					}
