@@ -1740,7 +1740,7 @@ _remove_cond:
 									goto _remove_cond;
 								case SLL_OBJECT_TYPE_STRICT_EQUAL:
 								case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
-									if ((!!(r->t==SLL_OBJECT_TYPE_NOT_EQUAL))^(SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_GET_TYPE(av)&&sll_operator_equal(v,av))){
+									if ((!!(r->t==SLL_OBJECT_TYPE_NOT_EQUAL))^sll_operator_strict_equal(v,av)){
 										goto _join_cond;
 									}
 									goto _remove_cond;
