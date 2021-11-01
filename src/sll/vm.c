@@ -366,6 +366,26 @@ _jump:
 					}
 					break;
 				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
+				{
+					if (sll_operator_strict_equal(*(s+si-2),*(s+si-1))){
+						si-=2;
+						SLL_RELEASE(*(s+si));
+						SLL_RELEASE(*(s+si+1));
+						goto _jump;
+					}
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
+				{
+					if (!sll_operator_strict_equal(*(s+si-2),*(s+si-1))){
+						si-=2;
+						SLL_RELEASE(*(s+si));
+						SLL_RELEASE(*(s+si+1));
+						goto _jump;
+					}
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
 				{
 					si--;

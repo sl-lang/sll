@@ -266,6 +266,8 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
 					WRITE_SIGNED_INTEGER(os,ai->dt.rj);
 				}

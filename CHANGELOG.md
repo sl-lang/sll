@@ -2,7 +2,10 @@
 
 ## [0.6.26] - Ongoing
 
-*Nothing*
+### Added
+
+- Implemented `sll_operator_strict_equal`
+- Strict equal (`(===)`) and not equal (`(!==)`) operators ([#78])
 
 ## [0.6.25] - 2021-10-31
 
@@ -938,6 +941,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#78]: https://github.com/sl-lang/sll/issues/78
 [#77]: https://github.com/sl-lang/sll/issues/77
 [#76]: https://github.com/sl-lang/sll/issues/76
 [#71]: https://github.com/sl-lang/sll/issues/71

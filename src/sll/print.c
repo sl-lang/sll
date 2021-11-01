@@ -385,6 +385,12 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
 			PRINT_STATIC_STRING(">=",os);
 			break;
+		case SLL_OBJECT_TYPE_STRICT_EQUAL:
+			PRINT_STATIC_STRING("===",os);
+			break;
+		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
+			PRINT_STATIC_STRING("!==",os);
+			break;
 		case SLL_OBJECT_TYPE_LENGTH:
 			SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,'$');
 			break;
@@ -665,6 +671,24 @@ __SLL_FUNC void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_output_da
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				PRINT_STATIC_STRING("JNZ .",os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
+				PRINT_STATIC_STRING("JSE .",os);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,os);
+				}
+				else{
+					_print_int(ai->dt.j,os);
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
+				PRINT_STATIC_STRING("JSNE .",os);
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,os);
 				}

@@ -2500,6 +2500,33 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_shr(sll_runtime
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
+	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)!=SLL_RUNTIME_OBJECT_GET_TYPE(b)){
+		return 0;
+	}
+	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
+		case SLL_RUNTIME_OBJECT_TYPE_INT:
+			return a->dt.i==b->dt.i;
+		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
+			return a->dt.f==b->dt.f;
+		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
+			return a->dt.c==b->dt.c;
+		case SLL_RUNTIME_OBJECT_TYPE_STRING:
+			return sll_string_equal(&(a->dt.s),&(b->dt.s));
+		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
+			return sll_array_equal(&(a->dt.a),&(b->dt.a));
+		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+			return (a->dt.h.t==b->dt.h.t&&a->dt.h.h==b->dt.h.h);
+		case SLL_RUNTIME_OBJECT_TYPE_MAP:
+			return sll_map_equal(&(a->dt.m),&(b->dt.m));
+		default:
+			SLL_UNREACHABLE();
+	}
+	return 0;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_sub(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
 		sll_runtime_object_t* o=SLL_CREATE();

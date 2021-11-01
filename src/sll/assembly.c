@@ -367,6 +367,10 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:SLL_ASSEMBLY_INSTRUCTION_TYPE_JA));
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
 			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE));
+		case SLL_OBJECT_TYPE_STRICT_EQUAL:
+			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE));
+		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
+			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE));
 		case SLL_OBJECT_TYPE_BREAK:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_CONTINUE:
@@ -687,6 +691,10 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 			return _generate_sequential_jump(o,g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE,1);
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
 			return _generate_sequential_jump(o,g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JB,1);
+		case SLL_OBJECT_TYPE_STRICT_EQUAL:
+			SLL_UNIMPLEMENTED();
+		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_LENGTH:
 			{
 				sll_arg_count_t l=o->dt.ac;
@@ -1222,6 +1230,10 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 			return _generate_sequential_jump(o,g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE,0);
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
 			return _generate_sequential_jump(o,g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JB,0);
+		case SLL_OBJECT_TYPE_STRICT_EQUAL:
+			SLL_UNIMPLEMENTED();
+		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_BREAK:
 			{
 				SLL_ASSERT(g_dt->lt->sz);
@@ -1726,7 +1738,7 @@ _handle_nop:;
 	}
 	ai=o->h;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
-		if ((SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ))&&(ai->t&ASSEMBLY_INSTRUCTION_LABEL)){
+		if ((SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE))&&(ai->t&ASSEMBLY_INSTRUCTION_LABEL)){
 			ai->t&=~ASSEMBLY_INSTRUCTION_LABEL;
 			sll_instruction_index_t j=*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai));
 			if (j<128){

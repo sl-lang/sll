@@ -115,6 +115,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_shr(sll_runtime
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(const sll_runtime_object_t* a,const sll_runtime_object_t* b);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_sub(sll_runtime_object_t* a,sll_runtime_object_t* b);
 
 

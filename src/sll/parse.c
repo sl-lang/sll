@@ -645,6 +645,12 @@ _recurse_array_or_map:;
 					o->dt.fn.sc=c_dt->_n_sc_id;
 					fl|=EXTRA_COMPILATION_DATA_INSIDE_FUNCTION;
 				}
+				else if (*str=='='&&*(str+1)=='='&&*(str+2)=='='){
+					o->t=SLL_OBJECT_TYPE_STRICT_EQUAL;
+				}
+				else if (*str=='!'&&*(str+1)=='='&&*(str+2)=='='){
+					o->t=SLL_OBJECT_TYPE_STRICT_NOT_EQUAL;
+				}
 				else if (*str=='<'&&*(str+1)=='<'&&*(str+2)=='<'){
 					o->t=SLL_OBJECT_TYPE_CONTINUE;
 				}

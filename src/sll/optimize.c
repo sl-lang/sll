@@ -759,6 +759,8 @@ static uint8_t _get_cond_type(const sll_object_t* o,optimizer_data_t* o_dt,uint8
 		case SLL_OBJECT_TYPE_NOT_EQUAL:
 		case SLL_OBJECT_TYPE_MORE:
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
+		case SLL_OBJECT_TYPE_STRICT_EQUAL:
+		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
 		case SLL_OBJECT_TYPE_COMMA:
 			return COND_TYPE_UNKNOWN;
 		default:
@@ -869,6 +871,8 @@ static sll_object_t* _check_remove(sll_object_t* o,sll_object_t* p,optimizer_dat
 		case SLL_OBJECT_TYPE_NOT_EQUAL:
 		case SLL_OBJECT_TYPE_MORE:
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
+		case SLL_OBJECT_TYPE_STRICT_EQUAL:
+		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
 		case SLL_OBJECT_TYPE_CAST:
 			{
 				o->t=SLL_OBJECT_TYPE_NOP;
@@ -1602,6 +1606,8 @@ _keep_assignment:;
 		case SLL_OBJECT_TYPE_NOT_EQUAL:
 		case SLL_OBJECT_TYPE_MORE:
 		case SLL_OBJECT_TYPE_MORE_EQUAL:
+		case SLL_OBJECT_TYPE_STRICT_EQUAL:
+		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
 			if (o->dt.ac==1){
 				o->t=SLL_OBJECT_TYPE_COMMA;
 				o->dt.ac=2;
@@ -1729,6 +1735,12 @@ _remove_cond:
 								case SLL_OBJECT_TYPE_EQUAL:
 								case SLL_OBJECT_TYPE_NOT_EQUAL:
 									if ((!!(r->t==SLL_OBJECT_TYPE_NOT_EQUAL))^sll_operator_equal(v,av)){
+										goto _join_cond;
+									}
+									goto _remove_cond;
+								case SLL_OBJECT_TYPE_STRICT_EQUAL:
+								case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
+									if ((!!(r->t==SLL_OBJECT_TYPE_NOT_EQUAL))^(SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_GET_TYPE(av)&&sll_operator_equal(v,av))){
 										goto _join_cond;
 									}
 									goto _remove_cond;

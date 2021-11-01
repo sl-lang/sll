@@ -316,6 +316,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
 					uint8_t re=0;
 					ai->dt.i=(sll_relative_instruction_index_t)_read_signed_integer(is,&re);
