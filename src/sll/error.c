@@ -1,11 +1,11 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/error.h>
+#include <sll/memory.h>
 #include <sll/stream.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 
 
@@ -60,7 +60,7 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 	char* sym=NULL;
 	char* sp=NULL;
 	if (e->t==SLL_ERROR_UNKNOWN_SYMBOL||e->t==SLL_ERROR_UNKNOWN_IDENTIFIER){
-		sym=malloc((oe-os+1)*sizeof(char));
+		sym=sll_allocate((oe-os+1)*sizeof(char));
 		sp=sym;
 	}
 	while (c!='\n'&&c!='\r'&&c!=SLL_END_OF_DATA){
@@ -169,7 +169,7 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 		case SLL_ERROR_UNKNOWN_SYMBOL:
 			*sp=0;
 			printf("Unknown Symbol: '%s'\n",sym);
-			free(sym);
+			sll_deallocate(sym);
 			return;
 		case SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
 			printf("Unknown Identifier Character: '%c'\n",t);
@@ -195,7 +195,7 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 		case SLL_ERROR_UNKNOWN_IDENTIFIER:
 			*sp=0;
 			printf("Unknown Identifier '%s'\n",sym);
-			free(sym);
+			sll_deallocate(sym);
 			return;
 		case SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
 			printf("Internal Function Name Too Long\n");

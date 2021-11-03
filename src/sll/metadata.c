@@ -2,10 +2,10 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/init.h>
+#include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/types.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 
 
@@ -115,7 +115,7 @@ static sll_object_t* _update_strings(sll_object_t* o,sll_string_index_t* sm){
 
 __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	uint32_t ml=(c_dt->st.l>>6)+1;
-	uint64_t* m=malloc(ml*sizeof(uint64_t));
+	uint64_t* m=sll_allocate(ml*sizeof(uint64_t));
 	for (uint32_t i=0;i<ml;i++){
 		*(m+i)=0;
 	}
@@ -129,7 +129,7 @@ __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		*(m+((c_dt->idt.il+i)->i>>6))|=1ull<<((c_dt->idt.il+i)->i&63);
 	}
 	_mark_strings(c_dt->h,m);
-	sll_string_index_t* sm=malloc(c_dt->st.l*sizeof(sll_string_index_t));
+	sll_string_index_t* sm=sll_allocate(c_dt->st.l*sizeof(sll_string_index_t));
 	uint32_t k=0;
 	uint32_t l=0;
 	for (uint32_t i=0;i<ml;i++){
@@ -149,14 +149,14 @@ __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 			v&=v-1;
 		}
 	}
-	free(m);
+	sll_deallocate(m);
 	for (uint32_t i=k;i<c_dt->st.l;i++){
 		*(c_dt->st.dt+i-l)=*(c_dt->st.dt+i);
 		*(sm+i)=i-l;
 	}
 	if (l){
 		c_dt->st.l-=l;
-		c_dt->st.dt=realloc(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
+		c_dt->st.dt=sll_rellocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
 		for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 			sll_identifier_list_t* e=c_dt->idt.s+i;
 			for (sll_identifier_list_length_t j=0;j<e->l;j++){
@@ -168,5 +168,5 @@ __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		}
 		_update_strings(c_dt->h,sm);
 	}
-	free(sm);
+	sll_deallocate(sm);
 }

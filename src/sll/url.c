@@ -1,12 +1,12 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/init.h>
+#include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/url.h>
 #include <sll/util.h>
-#include <stdlib.h>
 #include <string.h>
 
 
@@ -70,7 +70,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 	memcpy(s.v+i,dt->v,dt->l);
 	sll_string_t r=SLL_INIT_STRING_STRUCT;
 	sll_return_t err=sll_platform_socket_execute(h,DEFAULT_HTTP_PORT,&s,&r);
-	free(s.v);
+	sll_deallocate(s.v);
 	if (err==SLL_RETURN_ERROR){
 		goto _error;
 	}
@@ -120,8 +120,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 		sll_header_t* kv=NULL;
 		if (o->hl){
 			o->hl->l++;
-			o->hl->dt=realloc(o->hl->dt,o->hl->l*sizeof(sll_header_t*));
-			kv=malloc(sizeof(sll_header_t));
+			o->hl->dt=sll_rellocate(o->hl->dt,o->hl->l*sizeof(sll_header_t*));
+			kv=sll_allocate(sizeof(sll_header_t));
 			*(o->hl->dt+o->hl->l-1)=kv;
 		}
 		sll_string_length_t j=i;
@@ -158,9 +158,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 		sll_string_create(r.l-i,o->dt);
 		memcpy(o->dt->v,r.v+i,r.l-i);
 	}
-	free(r.v);
+	sll_deallocate(r.v);
 	return rc;
 _error:
-	free(r.v);
+	sll_deallocate(r.v);
 	return -1;
 }

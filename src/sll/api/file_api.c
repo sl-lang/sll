@@ -5,8 +5,9 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/init.h>
 #include <sll/handle.h>
+#include <sll/init.h>
+#include <sll/memory.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/stream.h>
@@ -14,7 +15,6 @@
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 
@@ -42,19 +42,19 @@ static uint8_t _free_file(sll_handle_t h){
 		return 0;
 	}
 	fclose(f->h);
-	free(f);
+	sll_deallocate(f);
 	*(_file_fl+h)=NULL;
 	if (h==_file_fll-1){
 		do{
 			_file_fll--;
 		} while (_file_fll&&!(_file_fl+_file_fll-1));
 		if (_file_fll){
-			void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t*));
+			void* tmp=sll_rellocate(_file_fl,_file_fll*sizeof(file_t*));
 			SLL_ASSERT(tmp);
 			_file_fl=tmp;
 		}
 		else{
-			free(_file_fl);
+			sll_deallocate(_file_fl);
 			_file_fl=NULL;
 		}
 	}
@@ -114,14 +114,14 @@ __API_FUNC(file_open){
 		i++;
 	}
 	_file_fll++;
-	void* tmp=realloc(_file_fl,_file_fll*sizeof(file_t*));
+	void* tmp=sll_rellocate(_file_fl,_file_fll*sizeof(file_t*));
 	if (!tmp){
 		fclose(h);
 		return;
 	}
 	_file_fl=tmp;
 _found_index:;
-	file_t* n=malloc(sizeof(file_t));
+	file_t* n=sll_allocate(sizeof(file_t));
 	sll_string_clone(a,(sll_string_t*)(&(n->nm)));
 	n->h=h;
 	*(_file_fl+i)=n;
@@ -163,7 +163,7 @@ __API_FUNC(file_write){
 	sll_string_t s;
 	sll_object_to_string(b,bc,&s);
 	SLL_WRITE_TO_OUTPUT_DATA_STREAM(&os,s.v,s.l*sizeof(sll_char_t));
-	free(s.v);
+	sll_deallocate(s.v);
 	return s.l*sizeof(sll_char_t);
 }
 

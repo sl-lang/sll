@@ -2,9 +2,9 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
+#include <sll/memory.h>
 #include <sll/runtime_object.h>
 #include <sll/types.h>
-#include <stdlib.h>
 
 
 
@@ -15,14 +15,14 @@ __SLL_FUNC void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll)
 		}
 	}
 	hl->dtl=hll;
-	hl->dt=realloc(hl->dt,hll*sizeof(sll_handle_descriptor_t*));
+	hl->dt=sll_rellocate(hl->dt,hll*sizeof(sll_handle_descriptor_t*));
 }
 
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_handle_type_t sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd){
 	hl->dtl++;
-	hl->dt=realloc(hl->dt,hl->dtl*sizeof(sll_handle_descriptor_t*));
+	hl->dt=sll_rellocate(hl->dt,hl->dtl*sizeof(sll_handle_descriptor_t*));
 	hd->nml=0;
 	hd->c=0;
 	while (hd->nm[hd->nml]){

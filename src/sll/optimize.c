@@ -1,12 +1,13 @@
 #include <sll/_sll_internal.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
+#include <sll/binary_heap.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
 #include <sll/init.h>
-#include <sll/binary_heap.h>
 #include <sll/map.h>
+#include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/runtime_object.h>
@@ -15,7 +16,6 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 
 
@@ -63,12 +63,12 @@
 
 static void _save_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* o){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		o->s_sm[i]=malloc(o_dt->s_sm_l[i]*sizeof(uint64_t));
+		o->s_sm[i]=sll_allocate(o_dt->s_sm_l[i]*sizeof(uint64_t));
 		for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
 			*(o->s_sm[i]+j)=*(o_dt->va.s_sm[i]+j);
 		}
 	}
-	o->l_sm=malloc(o_dt->l_sm_l*sizeof(uint64_t));
+	o->l_sm=sll_allocate(o_dt->l_sm_l*sizeof(uint64_t));
 	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
 		*(o->l_sm+i)=*(o_dt->va.l_sm+i);
 	}
@@ -93,7 +93,7 @@ static void _restore_var_data(optimizer_data_t* o_dt,variable_assignment_data_t*
 				v&=v-1;
 			}
 		}
-		free(va_dt->s_sm[i]);
+		sll_deallocate(va_dt->s_sm[i]);
 	}
 	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
 		uint64_t v=(*(o_dt->va.l_sm+i))^(*(va_dt->l_sm+i));
@@ -110,7 +110,7 @@ static void _restore_var_data(optimizer_data_t* o_dt,variable_assignment_data_t*
 			v&=v-1;
 		}
 	}
-	free(va_dt->l_sm);
+	sll_deallocate(va_dt->l_sm);
 }
 
 
@@ -376,7 +376,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 							}
 							i--;
 						}
-						free(v->dt.a.v);
+						sll_deallocate(v->dt.a.v);
 						v->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
 						break;
 					}
@@ -402,7 +402,7 @@ static sll_runtime_object_t* _get_as_runtime_object(const sll_object_t* o,const 
 							}
 							i--;
 						}
-						free(v->dt.a.v);
+						sll_deallocate(v->dt.a.v);
 						v->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
 						break;
 					}
@@ -1298,7 +1298,7 @@ _keep_assignment:;
 					sll_object_t* e=o;
 					sll_function_index_t i=(sll_function_index_t)(~(fn->dt.i));
 					if (i<o_dt->i_ft->l&&((*(o_dt->i_ft->dt+i))->t&SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL)){
-						sll_runtime_object_t** al=malloc((r->dt.ac-1)*sizeof(sll_runtime_object_t*));
+						sll_runtime_object_t** al=sll_allocate((r->dt.ac-1)*sizeof(sll_runtime_object_t*));
 						o=fn;
 						for (sll_arg_count_t j=1;j<r->dt.ac;j++){
 							o=sll_skip_object(o);
@@ -1309,7 +1309,7 @@ _keep_assignment:;
 									j--;
 									SLL_RELEASE(*(al+j));
 								} while (j);
-								free(al);
+								sll_deallocate(al);
 								return e;
 							}
 						}
@@ -1318,7 +1318,7 @@ _keep_assignment:;
 							for (sll_arg_count_t j=0;j<r->dt.ac-1;j++){
 								SLL_RELEASE(*(al+j));
 							}
-							free(al);
+							sll_deallocate(al);
 							r->t=SLL_OBJECT_TYPE_COMMA;
 							r->dt.ac++;
 							o=sll_skip_object(o);
@@ -1636,7 +1636,7 @@ _keep_assignment:;
 				sll_object_t* r=o;
 				o++;
 				sll_runtime_object_t* v=NULL;
-				sll_object_t** arg=malloc(l*sizeof(sll_object_t*));
+				sll_object_t** arg=sll_allocate(l*sizeof(sll_object_t*));
 				sll_arg_count_t i=0;
 				sll_arg_count_t j=0;
 				sll_object_t* pa=NULL;
@@ -1717,7 +1717,7 @@ _join_cond:
 											break;
 										}
 _remove_cond:
-										free(arg);
+										sll_deallocate(arg);
 										SLL_RELEASE(v);
 										SLL_RELEASE(av);
 										_remove_up_to_end(o,r->dt.ac-j-1);
@@ -1766,7 +1766,7 @@ _remove_cond:
 				if (v){
 					if (j-i>1){
 						if (!i){
-							free(arg);
+							sll_deallocate(arg);
 							_shift_objects(o,o_dt->c_dt,1);
 							if (r->t>=SLL_OBJECT_TYPE_LESS){
 								o->t=SLL_OBJECT_TYPE_INT;
@@ -1787,7 +1787,7 @@ _remove_cond:
 							}
 							r->dt.ac-=j-i-1;
 							sll_object_t* tmp=*(arg+i);
-							free(arg);
+							sll_deallocate(arg);
 							_shift_objects(tmp,o_dt->c_dt,1);
 							tmp->t=SLL_OBJECT_TYPE_COMMA;
 							tmp->dt.ac=j-i+1;
@@ -1806,7 +1806,7 @@ _remove_cond:
 					}
 					SLL_RELEASE(v);
 				}
-				free(arg);
+				sll_deallocate(arg);
 				return o;
 			}
 		case SLL_OBJECT_TYPE_ACCESS:
@@ -2266,10 +2266,10 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 		c_dt,
 		i_ft,
 		{
-			.l_im=malloc(c_dt->idt.ill*sizeof(identifier_data_t)),
+			.l_im=sll_allocate(c_dt->idt.ill*sizeof(identifier_data_t)),
 			.n_vi=0,
 			.l_sc=0,
-			.sc_vi=malloc(c_dt->_n_sc_id*sizeof(sll_variable_index_t)),
+			.sc_vi=sll_allocate(c_dt->_n_sc_id*sizeof(sll_variable_index_t)),
 			.vc=0
 		},
 		.l_sm_l=(c_dt->idt.ill+63)>>6,
@@ -2277,15 +2277,15 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 		.rm=0
 	};
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		o_dt.it.s_im[i]=malloc(c_dt->idt.s[i].l*sizeof(identifier_data_t));
+		o_dt.it.s_im[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(identifier_data_t));
 		o_dt.s_sm_l[i]=(c_dt->idt.s[i].l+63)>>6;
-		o_dt.va.s_sm[i]=calloc(sizeof(uint64_t),o_dt.s_sm_l[i]);
+		o_dt.va.s_sm[i]=sll_zero_allocate(sizeof(uint64_t),o_dt.s_sm_l[i]);
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			(o_dt.it.s_im[i]+j)->v=SLL_MAX_VARIABLE_INDEX;
 			(o_dt.it.s_im[i]+j)->rm=1;
 		}
 	}
-	o_dt.va.l_sm=calloc(sizeof(uint64_t),o_dt.l_sm_l);
+	o_dt.va.l_sm=sll_zero_allocate(sizeof(uint64_t),o_dt.l_sm_l);
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		(o_dt.it.l_im+i)->v=SLL_MAX_VARIABLE_INDEX;
 		(o_dt.it.l_im+i)->rm=1;
@@ -2318,7 +2318,7 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 			fo=_map_identifiers(fo,c_dt,&(o_dt.it));
 		}
 	}
-	free(o_dt.it.sc_vi);
+	sll_deallocate(o_dt.it.sc_vi);
 	for (sll_export_table_length_t i=0;i<c_dt->et.l;i++){
 		sll_identifier_index_t j=*(c_dt->et.dt+i);
 		if (SLL_IDENTIFIER_GET_ARRAY_ID(j)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
@@ -2328,17 +2328,17 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 			(o_dt.it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID(j)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(j))->rm=0;
 		}
 	}
-	o_dt.v=malloc(o_dt.it.vc*sizeof(sll_runtime_object_t*));
+	o_dt.v=sll_allocate(o_dt.it.vc*sizeof(sll_runtime_object_t*));
 	for (sll_variable_index_t i=0;i<o_dt.it.vc;i++){
 		sll_runtime_object_t* v=SLL_CREATE();
 		v->t=RUNTIME_OBJECT_TYPE_UNKNOWN;
 		*(o_dt.v+i)=v;
 	}
 	_optimize(c_dt->h,NULL,&o_dt,0);
-	free(o_dt.va.l_sm);
+	sll_deallocate(o_dt.va.l_sm);
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		free(o_dt.va.s_sm[i]);
-		o_dt.im.s[i]=malloc(c_dt->idt.s[i].l*sizeof(sll_identifier_index_t));
+		sll_deallocate(o_dt.va.s_sm[i]);
+		o_dt.im.s[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(sll_identifier_index_t));
 		sll_identifier_list_length_t k=0;
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			*(o_dt.im.s[i]+j)=SLL_CREATE_IDENTIFIER(j-k,i);
@@ -2349,10 +2349,10 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 		}
 		if (k){
 			c_dt->idt.s[i].l-=k;
-			c_dt->idt.s[i].dt=realloc(c_dt->idt.s[i].dt,c_dt->idt.s[i].l*sizeof(sll_identifier_t));
+			c_dt->idt.s[i].dt=sll_rellocate(c_dt->idt.s[i].dt,c_dt->idt.s[i].l*sizeof(sll_identifier_t));
 		}
 	}
-	o_dt.im.l=malloc(c_dt->idt.ill*sizeof(sll_identifier_index_t));
+	o_dt.im.l=sll_allocate(c_dt->idt.ill*sizeof(sll_identifier_index_t));
 	sll_identifier_list_length_t j=0;
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		*(o_dt.im.l+i)=SLL_CREATE_IDENTIFIER(i-j,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
@@ -2363,11 +2363,11 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 	}
 	if (j){
 		c_dt->idt.ill-=j;
-		c_dt->idt.il=realloc(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
+		c_dt->idt.il=sll_rellocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
 	}
 	o_dt.rm=0;
 	sll_function_index_t fn_off=0;
-	sll_function_index_t* fn_m=malloc(c_dt->ft.l*sizeof(sll_function_index_t));
+	sll_function_index_t* fn_m=sll_allocate(c_dt->ft.l*sizeof(sll_function_index_t));
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		sll_function_t* f=*(c_dt->ft.dt+i);
 		if (!f){
@@ -2390,23 +2390,23 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 	if (fn_off){
 		c_dt->ft.l-=fn_off;
 		if (!c_dt->ft.l){
-			free(c_dt->ft.dt);
+			sll_deallocate(c_dt->ft.dt);
 			c_dt->ft.dt=NULL;
 		}
 		else{
-			c_dt->ft.dt=realloc(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
+			c_dt->ft.dt=sll_rellocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 		}
 	}
 	_remap_indexes_merge_print(c_dt->h,NULL,&o_dt,fn_m);
-	free(fn_m);
+	sll_deallocate(fn_m);
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		free(o_dt.it.s_im[i]);
-		free(o_dt.im.s[i]);
+		sll_deallocate(o_dt.it.s_im[i]);
+		sll_deallocate(o_dt.im.s[i]);
 	}
-	free(o_dt.it.l_im);
-	free(o_dt.im.l);
+	sll_deallocate(o_dt.it.l_im);
+	sll_deallocate(o_dt.im.l);
 	for (sll_variable_index_t i=0;i<o_dt.it.vc;i++){
 		SLL_RELEASE(*(o_dt.v+i));
 	}
-	free(o_dt.v);
+	sll_deallocate(o_dt.v);
 }

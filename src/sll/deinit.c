@@ -4,10 +4,10 @@
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/init.h>
+#include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/types.h>
 #include <sll/url.h>
-#include <stdlib.h>
 
 
 __SLL_FUNC void sll_deinit(void){
@@ -21,7 +21,7 @@ __SLL_FUNC void sll_deinit_array(sll_array_t* a){
 	for (sll_array_length_t i=0;i<a->l;i++){
 		sll_release_object(a->v[i]);
 	}
-	free(a->v);
+	sll_deallocate(a->v);
 	a->v=NULL;
 	a->l=0;
 }
@@ -41,7 +41,7 @@ __SLL_FUNC void sll_deinit_assembly_data(sll_assembly_data_t* a_dt){
 
 
 __SLL_FUNC void sll_deinit_assembly_function_table(sll_assembly_function_table_t* ft){
-	free(ft->dt);
+	sll_deallocate(ft->dt);
 	ft->dt=NULL;
 	ft->l=0;
 }
@@ -132,7 +132,7 @@ __SLL_FUNC void sll_deinit_error(sll_error_t* e){
 
 
 __SLL_FUNC void sll_deinit_export_table(sll_export_table_t* et){
-	free(et->dt);
+	sll_deallocate(et->dt);
 	et->dt=NULL;
 	et->l=0;
 }
@@ -153,9 +153,9 @@ __SLL_FUNC void sll_deinit_function(sll_function_t* f){
 
 __SLL_FUNC void sll_deinit_function_table(sll_function_table_t* ft){
 	for (sll_function_index_t i=0;i<ft->l;i++){
-		free(*(ft->dt+i));
+		sll_deallocate(*(ft->dt+i));
 	}
-	free(ft->dt);
+	sll_deallocate(ft->dt);
 	ft->dt=NULL;
 	ft->l=0;
 }
@@ -180,7 +180,7 @@ __SLL_FUNC void sll_deinit_handle_list(sll_handle_list_t* hl){
 			(*(hl->dt+i))->df(SLL_HANDLE_FREE);
 		}
 	}
-	free(hl->dt);
+	sll_deallocate(hl->dt);
 	hl->dt=NULL;
 	hl->dtl=0;
 }
@@ -196,11 +196,11 @@ __SLL_FUNC void sll_deinit_header(sll_header_t* h){
 __SLL_FUNC void sll_deinit_header_list(sll_header_list_t* hl){
 	for (sll_header_count_t i=0;i<hl->l;i++){
 		sll_header_t* kv=*(hl->dt+i);
-		free(kv->k.v);
-		free(kv->v.v);
-		free(*(hl->dt+i));
+		sll_deallocate(kv->k.v);
+		sll_deallocate(kv->v.v);
+		sll_deallocate(*(hl->dt+i));
 	}
-	free(hl->dt);
+	sll_deallocate(hl->dt);
 	hl->dt=NULL;
 	hl->l=0;
 }
@@ -209,7 +209,7 @@ __SLL_FUNC void sll_deinit_header_list(sll_header_list_t* hl){
 
 __SLL_FUNC void sll_deinit_http_response(sll_http_response_t* r){
 	if (r->rc){
-		free(r->rc->v);
+		sll_deallocate(r->rc->v);
 		SLL_INIT_STRING(r->rc);
 	}
 	if (r->hl){
@@ -217,7 +217,7 @@ __SLL_FUNC void sll_deinit_http_response(sll_http_response_t* r){
 		SLL_INIT_HEADER_LIST(r->hl);
 	}
 	if (r->dt){
-		free(r->dt->v);
+		sll_deallocate(r->dt->v);
 		SLL_INIT_STRING(r->dt);
 	}
 }
@@ -239,11 +239,11 @@ __SLL_FUNC void sll_deinit_identifier_list(sll_identifier_list_t* il){
 __SLL_FUNC void sll_deinit_identifier_table(sll_identifier_table_t* idt){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_identifier_list_t* e=idt->s+i;
-		free(e->dt);
+		sll_deallocate(e->dt);
 		e->dt=NULL;
 		e->l=0;
 	}
-	free(idt->il);
+	sll_deallocate(idt->il);
 	idt->il=NULL;
 	idt->ill=0;
 }
@@ -263,7 +263,7 @@ __SLL_FUNC void sll_deinit_input_data_stream(sll_input_data_stream_t* is){
 
 
 __SLL_FUNC void sll_deinit_binary_heap(sll_binary_heap_t* il){
-	free(il->v);
+	sll_deallocate(il->v);
 	il->v=NULL;
 	il->l=0;
 }
@@ -278,9 +278,9 @@ __SLL_FUNC void sll_deinit_internal_function(sll_internal_function_t* i_f){
 
 __SLL_FUNC void sll_deinit_internal_function_table(sll_internal_function_table_t* ift){
 	for (sll_function_index_t i=0;i<ift->l;i++){
-		free(*(ift->dt+i));
+		sll_deallocate(*(ift->dt+i));
 	}
-	free(ift->dt);
+	sll_deallocate(ift->dt);
 	ift->dt=NULL;
 	ift->l=0;
 }
@@ -291,7 +291,7 @@ __SLL_FUNC void sll_deinit_json_array(sll_json_array_t* json_a){
 	for (sll_json_array_length_t i=0;i<json_a->l;i++){
 		sll_deinit_json_object(json_a->dt+i);
 	}
-	free(json_a->dt);
+	sll_deallocate(json_a->dt);
 }
 
 
@@ -309,7 +309,7 @@ __SLL_FUNC void sll_deinit_json_map(sll_json_map_t* json_m){
 		sll_deinit_string(&(e->k));
 		sll_deinit_json_object(&(e->v));
 	}
-	free(json_m->dt);
+	sll_deallocate(json_m->dt);
 }
 
 
@@ -344,7 +344,7 @@ __SLL_FUNC void sll_deinit_map(sll_map_t* m){
 	for (sll_map_length_t j=0;j<(m->l<<1);j++){
 		sll_release_object(*(m->v+j));
 	}
-	free(m->v);
+	sll_deallocate(m->v);
 	m->v=NULL;
 	m->l=0;
 }
@@ -411,7 +411,7 @@ __SLL_FUNC void sll_deinit_runtime_object(sll_runtime_object_t* o){
 __SLL_FUNC void sll_deinit_string(sll_string_t* s){
 	s->l=0;
 	s->c=0;
-	free(s->v);
+	sll_deallocate(s->v);
 	s->v=NULL;
 }
 
@@ -421,7 +421,7 @@ __SLL_FUNC void sll_deinit_string_table(sll_string_table_t* st){
 	for (sll_string_index_t i=0;i<st->l;i++){
 		sll_deinit_string(st->dt+i);
 	}
-	free(st->dt);
+	sll_deallocate(st->dt);
 	st->dt=NULL;
 	st->l=0;
 }

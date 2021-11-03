@@ -53,6 +53,7 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_VARIABLE_INDEX UINT32_MAX
 #define SLL_MAX_VERSION UINT32_MAX
 #define SLL_MAX_PAGE_SIZE UINT64_MAX
+#define SLL_MAX_SIZE UINT64_MAX
 #define SLL_MAX_TIME UINT64_MAX
 
 
@@ -236,6 +237,10 @@ typedef uint64_t sll_handle_t;
 
 
 typedef uint64_t sll_page_size_t;
+
+
+
+typedef uint64_t sll_size_t;
 
 
 

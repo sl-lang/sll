@@ -3,21 +3,21 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/map.h>
+#include <sll/memory.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/url.h>
-#include <stdlib.h>
 
 
 
 __API_FUNC(url_execute_request){
 	sll_header_list_t http_m={
-		malloc(d->l*sizeof(sll_header_t*)),
+		sll_allocate(d->l*sizeof(sll_header_t*)),
 		d->l
 	};
 	for (sll_header_count_t i=0;i<d->l;i++){
-		sll_header_t* h_kv=malloc(sizeof(sll_header_t));
+		sll_header_t* h_kv=sll_allocate(sizeof(sll_header_t));
 		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(d->v[i<<1])==SLL_RUNTIME_OBJECT_TYPE_STRING);
 		h_kv->k=d->v[i<<1]->dt.s;
 		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(d->v[(i<<1)+1])==SLL_RUNTIME_OBJECT_TYPE_STRING);
@@ -36,9 +36,9 @@ __API_FUNC(url_execute_request){
 	};
 	sll_return_code_t rc=sll_url_http_request(a,b,c,&http_m,e,&r);
 	for (sll_header_count_t i=0;i<d->l;i++){
-		free(*(http_m.dt+i));
+		sll_deallocate(*(http_m.dt+i));
 	}
-	free(http_m.dt);
+	sll_deallocate(http_m.dt);
 	sll_runtime_object_t* hl_m=SLL_CREATE();
 	hl_m->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
 	sll_map_create(hl.l,&(hl_m->dt.m));
@@ -52,9 +52,9 @@ __API_FUNC(url_execute_request){
 		v->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 		v->dt.s=h_kv->v;
 		hl_m->dt.m.v[(i<<1)+1]=v;
-		free(h_kv);
+		sll_deallocate(h_kv);
 	}
-	free(hl.dt);
+	sll_deallocate(hl.dt);
 	sll_runtime_object_t* o=SLL_CREATE();
 	o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
 	sll_array_create(4,&(o->dt.a));

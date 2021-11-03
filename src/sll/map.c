@@ -4,11 +4,11 @@
 #include <sll/gc.h>
 #include <sll/init.h>
 #include <sll/map.h>
+#include <sll/memory.h>
 #include <sll/operator.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
-#include <stdlib.h>
 
 
 
@@ -16,13 +16,13 @@ __SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runti
 	sll_map_length_t l=m->l<<1;
 	SLL_ACQUIRE(v);
 	o->l=m->l+1;
-	o->v=malloc((l+2)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((l+2)*sizeof(sll_runtime_object_t*));
 	for (sll_map_length_t i=0;i<l;i+=2){
 		o->v[i]=m->v[i];
 		SLL_ACQUIRE(o->v[i]);
 		if (sll_operator_equal(m->v[i],k)){
 			o->l--;
-			o->v=realloc(o->v,l*sizeof(sll_runtime_object_t*));
+			o->v=sll_rellocate(o->v,l*sizeof(sll_runtime_object_t*));
 			o->v[i+1]=v;
 			i+=2;
 			while (i<l){
@@ -44,9 +44,9 @@ __SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runti
 
 __SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
 	o->l=m->l+a->l;
-	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=m->l<<1;
-	uint64_t* sm=calloc(sizeof(uint64_t),(a->l+63)>>6);
+	uint64_t* sm=sll_zero_allocate(sizeof(uint64_t),(a->l+63)>>6);
 	for (sll_map_length_t j=0;j<i;j+=2){
 		sll_runtime_object_t* e=m->v[j];
 		SLL_ACQUIRE(e);
@@ -75,10 +75,10 @@ __SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 			v&=v-1;
 		}
 	}
-	free(sm);
+	sll_deallocate(sm);
 	if (i!=o->l){
 		o->l=i>>1;
-		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -86,9 +86,9 @@ __SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 
 __SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
 	o->l=m->l+s->l;
-	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=m->l<<1;
-	uint64_t* sm=calloc(sizeof(uint64_t),(s->l+63)>>6);
+	uint64_t* sm=sll_zero_allocate(sizeof(uint64_t),(s->l+63)>>6);
 	for (sll_map_length_t j=0;j<i;j+=2){
 		sll_runtime_object_t* e=m->v[j];
 		SLL_ACQUIRE(e);
@@ -115,10 +115,10 @@ __SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_
 			v&=v-1;
 		}
 	}
-	free(sm);
+	sll_deallocate(sm);
 	if ((i>>1)!=o->l){
 		o->l=i>>1;
-		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -135,7 +135,7 @@ __SLL_FUNC void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 		return;
 	}
 	o->l=b->l;
-	o->v=malloc((b->l<<1)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((b->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=0;
 	for (sll_map_length_t j=0;j<(a->l<<1);j+=2){
 		sll_runtime_object_t* e=a->v[j];
@@ -151,7 +151,7 @@ __SLL_FUNC void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 	}
 	if ((i>>1)!=o->l){
 		o->l=i>>1;
-		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -163,7 +163,7 @@ __SLL_FUNC void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 		o->v=NULL;
 		return;
 	}
-	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=0;
 	for (sll_map_length_t j=0;j<(m->l<<1);j+=2){
 		sll_runtime_object_t* e=m->v[j];
@@ -176,7 +176,7 @@ __SLL_FUNC void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 	}
 	if ((i>>1)!=o->l){
 		o->l=i>>1;
-		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -188,7 +188,7 @@ __SLL_FUNC void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_
 		o->v=NULL;
 		return;
 	}
-	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=0;
 	for (sll_map_length_t j=0;j<(m->l<<1);j+=2){
 		sll_runtime_object_t* e=m->v[j];
@@ -201,7 +201,7 @@ __SLL_FUNC void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_
 	}
 	if ((i>>1)!=o->l){
 		o->l=i>>1;
-		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -213,7 +213,7 @@ __SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o){
 		return;
 	}
 	o->l=m->l;
-	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	for (sll_map_length_t i=0;i<(o->l<<1);i++){
 		o->v[i]=m->v[i];
 		SLL_ACQUIRE(o->v[i]);
@@ -235,7 +235,7 @@ __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o){
 		return;
 	}
 	o->l=l;
-	o->v=calloc(sizeof(sll_runtime_object_t*),l<<1);
+	o->v=sll_zero_allocate(sizeof(sll_runtime_object_t*),l<<1);
 }
 
 
@@ -268,7 +268,7 @@ __SLL_FUNC void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* o)
 		o->v=NULL;
 		return;
 	}
-	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t al=(a->l<<1);
 	for (sll_array_length_t i=0;i<al;i++){
 		o->v[i]=a->v[i];
@@ -289,7 +289,7 @@ _next_key:;
 	}
 	if (i!=(o->l<<1)){
 		o->l=i>>1;
-		o->v=realloc(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 	while (i){
 		i--;
@@ -332,7 +332,7 @@ __SLL_FUNC void sll_map_keys(const sll_map_t* m,sll_array_t* o){
 		return;
 	}
 	o->l=m->l;
-	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate(o->l*sizeof(sll_runtime_object_t*));
 	for (sll_array_length_t i=0;i<o->l;i++){
 		o->v[i]=m->v[i<<1];
 		SLL_ACQUIRE(o->v[i]);
@@ -352,7 +352,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll_map
 		SLL_ACQUIRE(m->v[(i<<1)+1]);
 		if (sll_operator_equal(m->v[i<<1],k)){
 			o->l=m->l-1;
-			o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+			o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 			for (sll_map_length_t j=0;j<(i<<1);j++){
 				o->v[i]=m->v[i];
 			}
@@ -369,7 +369,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll_map
 		SLL_ACQUIRE(m->v[i<<1]);
 	}
 	o->l=m->l;
-	o->v=malloc((o->l<<1)*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	for (sll_map_length_t i=0;i<(o->l<<1);i++){
 		o->v[i]=m->v[i];
 	}
@@ -428,7 +428,7 @@ __SLL_FUNC void sll_map_to_array(const sll_map_t* m,sll_array_t* o){
 		return;
 	}
 	o->l=m->l<<1;
-	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate(o->l*sizeof(sll_runtime_object_t*));
 	for (sll_array_length_t i=0;i<o->l;i++){
 		o->v[i]=m->v[i];
 		SLL_ACQUIRE(o->v[i]);
@@ -443,7 +443,7 @@ __SLL_FUNC void sll_map_values(const sll_map_t* m,sll_array_t* o){
 		return;
 	}
 	o->l=m->l;
-	o->v=malloc(o->l*sizeof(sll_runtime_object_t*));
+	o->v=sll_allocate(o->l*sizeof(sll_runtime_object_t*));
 	for (sll_array_length_t i=0;i<o->l;i++){
 		o->v[i]=m->v[(i<<1)+1];
 		SLL_ACQUIRE(o->v[i]);

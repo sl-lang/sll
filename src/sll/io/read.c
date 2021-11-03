@@ -2,6 +2,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/error.h>
+#include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/stream.h>
 #include <sll/string.h>
@@ -9,8 +10,6 @@
 #include <sll/util.h>
 #include <sll/version.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 
@@ -252,12 +251,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_input_data_stre
 	CHECK_ERROR(is,a_dt->ic,sll_instruction_index_t,e);
 	CHECK_ERROR(is,a_dt->vc,sll_variable_index_t,e);
 	CHECK_ERROR(is,a_dt->ft.l,sll_function_index_t,e);
-	a_dt->ft.dt=malloc(a_dt->ft.l*sizeof(sll_instruction_index_t));
+	a_dt->ft.dt=sll_allocate(a_dt->ft.l*sizeof(sll_instruction_index_t));
 	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
 		CHECK_ERROR(is,*(a_dt->ft.dt+i),sll_instruction_index_t,e);
 	}
 	CHECK_ERROR(is,a_dt->st.l,sll_string_index_t,e);
-	a_dt->st.dt=malloc(a_dt->st.l*sizeof(sll_string_t));
+	a_dt->st.dt=sll_allocate(a_dt->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
 		if (!_read_string(is,a_dt->st.dt+i,e)){
 			return SLL_RETURN_ERROR;
@@ -403,31 +402,31 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 	CHECK_ERROR(is,c_dt->tm,sll_time_t,e);
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		CHECK_ERROR(is,c_dt->idt.s[i].l,sll_identifier_list_length_t,e);
-		c_dt->idt.s[i].dt=malloc(c_dt->idt.s[i].l*sizeof(sll_identifier_t));
+		c_dt->idt.s[i].dt=sll_allocate(c_dt->idt.s[i].l*sizeof(sll_identifier_t));
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			CHECK_ERROR(is,(c_dt->idt.s[i].dt+j)->sc,sll_scope_t,e);
 			CHECK_ERROR(is,(c_dt->idt.s[i].dt+j)->i,sll_string_index_t,e);
 		}
 	}
 	CHECK_ERROR(is,c_dt->idt.ill,sll_identifier_list_length_t,e);
-	c_dt->idt.il=malloc(c_dt->idt.ill*sizeof(sll_identifier_t));
+	c_dt->idt.il=sll_allocate(c_dt->idt.ill*sizeof(sll_identifier_t));
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		CHECK_ERROR(is,(c_dt->idt.il+i)->sc,sll_scope_t,e);
 		CHECK_ERROR(is,(c_dt->idt.il+i)->i,sll_string_index_t,e);
 	}
 	CHECK_ERROR(is,c_dt->et.l,sll_export_table_length_t,e);
-	c_dt->et.dt=malloc(c_dt->et.l*sizeof(sll_identifier_index_t));
+	c_dt->et.dt=sll_allocate(c_dt->et.l*sizeof(sll_identifier_index_t));
 	for (sll_export_table_length_t i=0;i<c_dt->et.l;i++){
 		CHECK_ERROR(is,*(c_dt->et.dt+i),sll_identifier_index_t,e);
 	}
 	CHECK_ERROR(is,c_dt->ft.l,sll_function_index_t,e);
-	c_dt->ft.dt=malloc(c_dt->ft.l*sizeof(sll_function_t*));
+	c_dt->ft.dt=sll_allocate(c_dt->ft.l*sizeof(sll_function_t*));
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		sll_object_offset_t off;
 		CHECK_ERROR(is,off,sll_object_offset_t,e);
 		sll_arg_count_t al;
 		CHECK_ERROR(is,al,sll_arg_count_t,e);
-		sll_function_t* k=malloc(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));
+		sll_function_t* k=sll_allocate(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));
 		k->off=off;
 		k->al=al;
 		for (sll_arg_count_t j=0;j<al;j++){
@@ -436,7 +435,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_input_da
 		*(c_dt->ft.dt+i)=k;
 	}
 	CHECK_ERROR(is,c_dt->st.l,sll_string_index_t,e);
-	c_dt->st.dt=malloc(c_dt->st.l*sizeof(sll_string_t));
+	c_dt->st.dt=sll_allocate(c_dt->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
 		if (!_read_string(is,c_dt->st.dt+i,e)){
 			return SLL_RETURN_ERROR;

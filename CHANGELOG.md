@@ -4,6 +4,7 @@
 
 ### Added
 
+- Custom memory API: `sll_allocate`, `sll_zero_allocate`, `sll_reallocate` and `sll_deallocate`
 - Implemented `sll_operator_strict_equal` and `sll_string_from_char`
 - Strict equal (`(===)`) and not equal (`(!==)`) operators ([#78])
 

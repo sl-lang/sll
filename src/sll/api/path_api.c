@@ -4,6 +4,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
@@ -46,7 +47,7 @@ __API_FUNC(path_list_dir){
 		n->dt.s=*(dt+i);
 		o->dt.a.v[i]=n;
 	}
-	free(dt);
+	sll_deallocate(dt);
 	return o;
 }
 
@@ -64,7 +65,7 @@ __API_FUNC(path_recursive_list_dir){
 		n->dt.s=*(dt+i);
 		o->dt.a.v[i]=n;
 	}
-	free(dt);
+	sll_deallocate(dt);
 	return o;
 }
 

@@ -5,13 +5,13 @@
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/init.h>
+#include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 
 
@@ -35,17 +35,17 @@ static void _gc_free_debug_data(void){
 			runtime_object_debug_data_t* dt=*(_gc_dbg_dt+i);
 			*(_gc_dbg_dt+i)=NULL;
 			for (uint32_t j=0;j<dt->all;j++){
-				free(*(dt->al+j));
+				sll_deallocate(*(dt->al+j));
 			}
-			free(dt->al);
+			sll_deallocate(dt->al);
 			for (uint32_t j=0;j<dt->rll;j++){
-				free(*(dt->rl+j));
+				sll_deallocate(*(dt->rl+j));
 			}
-			free(dt->rl);
-			free(dt);
+			sll_deallocate(dt->rl);
+			sll_deallocate(dt);
 		}
 	}
-	free(_gc_dbg_dt);
+	sll_deallocate(_gc_dbg_dt);
 	_gc_dbg_dtl=0;
 	_gc_dbg_dt=NULL;
 }
@@ -88,13 +88,13 @@ __SLL_FUNC sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,cons
 		}
 		_gc_dbg_dtl++;
 		SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DEBUG_ID);
-		void* tmp=realloc(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
-		SLL_ASSERT(tmp||!"Unable to Reallocate Debug Data Array");
+		void* tmp=sll_rellocate(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
+		SLL_ASSERT(tmp||!"Unable to sll_rellocateate Debug Data Array");
 		_gc_dbg_dt=tmp;
 _found_index:
 		o->_dbg0=i&0xff;
 		o->_dbg1=i>>8;
-		runtime_object_debug_data_t* dt=malloc(sizeof(runtime_object_debug_data_t));
+		runtime_object_debug_data_t* dt=sll_allocate(sizeof(runtime_object_debug_data_t));
 		dt->c.fp=NULL;
 		dt->al=NULL;
 		dt->all=0;
@@ -105,7 +105,7 @@ _found_index:
 	else{
 		SLL_ASSERT(i<_gc_dbg_dtl);
 	}
-	runtime_object_debug_data_trace_data_t* n=malloc(sizeof(runtime_object_debug_data_trace_data_t));
+	runtime_object_debug_data_trace_data_t* n=sll_allocate(sizeof(runtime_object_debug_data_trace_data_t));
 	n->fp=fp;
 	n->ln=ln;
 	uint8_t j=0;
@@ -123,12 +123,12 @@ _found_index:
 	}
 	if (t==__SLL_DEBUG_TYPE_RELEASE){
 		dt->all++;
-		dt->al=realloc(dt->al,dt->all*sizeof(runtime_object_debug_data_trace_data_t*));
+		dt->al=sll_rellocate(dt->al,dt->all*sizeof(runtime_object_debug_data_trace_data_t*));
 		*(dt->al+dt->all-1)=n;
 	}
 	else{
 		dt->rll++;
-		dt->rl=realloc(dt->rl,dt->rll*sizeof(runtime_object_debug_data_trace_data_t*));
+		dt->rl=sll_rellocate(dt->rl,dt->rll*sizeof(runtime_object_debug_data_trace_data_t*));
 		*(dt->rl+dt->rll-1)=n;
 	}
 	return o;
@@ -195,14 +195,14 @@ __SLL_FUNC void sll_remove_debug_data(sll_runtime_object_t* o){
 		runtime_object_debug_data_t* dt=*(_gc_dbg_dt+i);
 		*(_gc_dbg_dt+i)=NULL;
 		for (uint32_t j=0;j<dt->all;j++){
-			free(*(dt->al+j));
+			sll_deallocate(*(dt->al+j));
 		}
-		free(dt->al);
+		sll_deallocate(dt->al);
 		for (uint32_t j=0;j<dt->rll;j++){
-			free(*(dt->rl+j));
+			sll_deallocate(*(dt->rl+j));
 		}
-		free(dt->rl);
-		free(dt);
+		sll_deallocate(dt->rl);
+		sll_deallocate(dt);
 	}
 	o->_dbg0=0xff;
 	o->_dbg1=0xffff;
@@ -281,7 +281,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 				else{
 					fprintf(stderr,"<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n",t,c->rc,str.v);
 				}
-				free(str.v);
+				sll_deallocate(str.v);
 			}
 			i++;
 			c++;
@@ -345,7 +345,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 					runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
 					fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
 				}
-				free(str.v);
+				sll_deallocate(str.v);
 			}
 			else{
 				sll_remove_debug_data(k->dt);

@@ -7,13 +7,13 @@
 #include <sll/handle.h>
 #include <sll/init.h>
 #include <sll/map.h>
+#include <sll/memory.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <math.h>
-#include <stdlib.h>
 #include <string.h>
 
 
@@ -69,7 +69,7 @@ static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,
 
 static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 	o->l=0;
-	o->v=malloc(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
 	SLL_STRING_FORMAT_PADDING(o->v,0);
 	sll_char_t c=**p;
 	(*p)++;
@@ -162,7 +162,7 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 				(*p)++;
 			}
 			m->l++;
-			m->v=realloc(m->v,(m->l<<1)*sizeof(sll_runtime_object_t*));
+			m->v=sll_rellocate(m->v,(m->l<<1)*sizeof(sll_runtime_object_t*));
 			sll_runtime_object_t* k=SLL_CREATE();
 			m->v[(m->l-1)<<1]=k;
 			k->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
@@ -215,7 +215,7 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 				return NULL;
 			}
 			a->l++;
-			a->v=realloc(a->v,a->l*sizeof(sll_runtime_object_t*));
+			a->v=sll_rellocate(a->v,a->l*sizeof(sll_runtime_object_t*));
 			a->v[a->l-1]=k;
 			c=**p;
 			(*p)++;
@@ -353,7 +353,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_state_
 				(*p)++;
 			}
 			o->dt.m.l++;
-			o->dt.m.dt=realloc(o->dt.m.dt,o->dt.m.l*sizeof(sll_json_map_keypair_t));
+			o->dt.m.dt=sll_rellocate(o->dt.m.dt,o->dt.m.l*sizeof(sll_json_map_keypair_t));
 			sll_json_map_keypair_t* k=o->dt.m.dt+o->dt.m.l-1;
 			_parse_json_string(p,&(k->k));
 			c=**p;
@@ -393,7 +393,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_state_
 		}
 		while (1){
 			o->dt.a.l++;
-			o->dt.a.dt=realloc(o->dt.a.dt,o->dt.a.l*sizeof(sll_json_object_t));
+			o->dt.a.dt=sll_rellocate(o->dt.a.dt,o->dt.a.l*sizeof(sll_json_object_t));
 			if (!sll_json_parse(p,o->dt.a.dt+o->dt.a.l-1)){
 				return SLL_RETURN_ERROR;
 			}

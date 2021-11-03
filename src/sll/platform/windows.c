@@ -5,6 +5,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/init.h>
+#include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -48,7 +49,7 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 			else{
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
 				o->l++;
-				o->dt=realloc(o->dt,o->l*sizeof(sll_string_t));
+				o->dt=sll_rellocate(o->dt,o->l*sizeof(sll_string_t));
 				sll_string_t* s=o->dt+o->l-1;
 				sll_string_create(i+j,s);
 				memcpy(s->v,bf,i);
@@ -126,7 +127,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 				continue;
 			}
 			ol++;
-			void* tmp=realloc(op,ol*sizeof(sll_string_t));
+			void* tmp=sll_rellocate(op,ol*sizeof(sll_string_t));
 			if (!tmp){
 				*o=op;
 				FindClose(fh);
@@ -260,7 +261,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 		return SLL_RETURN_ERROR;
 	}
 	o->l=0;
-	o->v=malloc(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
 	sll_char_t bf[4096];
 	int l=recv(s,bf,4096,0);
 	shutdown(s,SD_SEND);
@@ -269,7 +270,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 			closesocket(s);
 			return SLL_RETURN_ERROR;
 		}
-		o->v=realloc(o->v,SLL_STRING_ALIGN_LENGTH(o->l+l)*sizeof(sll_char_t));
+		o->v=sll_rellocate(o->v,SLL_STRING_ALIGN_LENGTH(o->l+l)*sizeof(sll_char_t));
 		memcpy(o->v+o->l,bf,l);
 		o->l+=l;
 		l=recv(s,bf,4096,0);

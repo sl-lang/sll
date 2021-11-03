@@ -3,13 +3,13 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/init.h>
+#include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
-#include <stdlib.h>
 #include <string.h>
 
 
@@ -25,7 +25,7 @@ static void _sys_free_argv(void){
 		for (sll_integer_t i=0;i<_sys_argc;i++){
 			SLL_RELEASE(*(_sys_argv+i));
 		}
-		free(_sys_argv);
+		sll_deallocate(_sys_argv);
 		_sys_argv=NULL;
 	}
 }
@@ -51,13 +51,13 @@ __SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
 		for (sll_integer_t i=0;i<_sys_argc;i++){
 			SLL_RELEASE(*(_sys_argv+i));
 		}
-		free(_sys_argv);
+		sll_deallocate(_sys_argv);
 	}
 	else{
 		sll_register_cleanup(_sys_free_argv,SLL_CLEANUP_ORDER_NORMAL);
 	}
 	_sys_argc=ac;
-	_sys_argv=malloc(ac*sizeof(sll_runtime_object_t*));
+	_sys_argv=sll_allocate(ac*sizeof(sll_runtime_object_t*));
 	for (sll_integer_t i=0;i<ac;i++){
 		*(_sys_argv+i)=SLL_ACQUIRE_STATIC(str_zero);
 	}

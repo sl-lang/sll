@@ -2,13 +2,13 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/init.h>
+#include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 
 
@@ -134,7 +134,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table
 		}
 	}
 	st->l++;
-	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
+	st->dt=sll_rellocate(st->dt,st->l*sizeof(sll_string_t));
 	*(st->dt+st->l-1)=*s;
 	return st->l-1;
 }
@@ -149,7 +149,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_stri
 		}
 	}
 	st->l++;
-	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
+	st->dt=sll_rellocate(st->dt,st->l*sizeof(sll_string_t));
 	v->t|=RUNTIME_OBJECT_EXTERNAL_STRING;
 	*(st->dt+st->l-1)=v->dt.s;
 	return st->l-1;
@@ -167,7 +167,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_ta
 		}
 	}
 	st->l++;
-	st->dt=realloc(st->dt,st->l*sizeof(sll_string_t));
+	st->dt=sll_rellocate(st->dt,st->l*sizeof(sll_string_t));
 	*(st->dt+st->l-1)=n;
 	return st->l-1;
 }
