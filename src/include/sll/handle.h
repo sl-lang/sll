@@ -7,10 +7,10 @@
 
 #define SLL_FROM_HANDLE(t,v) __SLL_ADD_DEBUG_DATA(sll_handle_to_object((t),(v)),__SLL_DEBUG_TYPE_CREATE)
 #define SLL_HANDLE_DESCRIPTOR_HEADER(nm) nm,0,0
-#define SLL_HANDLE_FREE 0xffffffffffffffff
+#define SLL_HANDLE_FREE 0xffffffffffffffffull
 #define SLL_HANDLE_LOOKUP_DESCRIPTOR(hl,t) (*((hl)->dt+(t)-1))
 #define SLL_HANDLE_UNKNOWN_TYPE 0
-#define SLL_MAX_HANDLE 0xfffffffffffffffe
+#define SLL_MAX_HANDLE 0xfffffffffffffffeull
 
 
 

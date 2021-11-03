@@ -29,7 +29,14 @@ static uint8_t _gc_verify=1;
 
 
 
-static void _gc_free_debug_data(void){
+void _gc_release_data(void){
+	if (_gc_verify){
+		if (!sll_verify_runtime_object_stack_cleanup()){
+			SLL_UNIMPLEMENTED();
+		}
+		_gc_verify=0;
+	}
+	SLL_ASSERT(_gc_alloc==_gc_dealloc);
 	for (uint32_t i=0;i<_gc_dbg_dtl;i++){
 		if (*(_gc_dbg_dt+i)){
 			runtime_object_debug_data_t* dt=*(_gc_dbg_dt+i);
@@ -48,18 +55,6 @@ static void _gc_free_debug_data(void){
 	sll_deallocate(_gc_dbg_dt);
 	_gc_dbg_dtl=0;
 	_gc_dbg_dt=NULL;
-}
-
-
-
-static void _gc_free_pages(void){
-	if (_gc_verify){
-		if (!sll_verify_runtime_object_stack_cleanup()){
-			SLL_UNIMPLEMENTED();
-		}
-		_gc_verify=0;
-	}
-	SLL_ASSERT(_gc_alloc==_gc_dealloc);
 	sll_page_size_t sz=sll_platform_get_page_size();
 	void* c=_gc_page_ptr;
 	while (c){
@@ -82,9 +77,6 @@ __SLL_FUNC sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,cons
 				}
 				i++;
 			}
-		}
-		else{
-			sll_register_cleanup(_gc_free_debug_data,CLEANUP_ORDER_LAST);
 		}
 		_gc_dbg_dtl++;
 		SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DEBUG_ID);
@@ -147,7 +139,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 		sll_page_size_t sz=sll_platform_get_page_size();
 		if (!_gc_page_ptr){
 			sz*=GC_INIT_PAGE_COUNT;
-			sll_register_cleanup(_gc_free_pages,CLEANUP_ORDER_LAST);
 		}
 		void* pg=sll_platform_allocate_page(sz);
 		*((void**)pg)=_gc_page_ptr;

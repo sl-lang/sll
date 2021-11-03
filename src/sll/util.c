@@ -14,8 +14,6 @@
 
 static sll_cleanup_function_t _util_exit_table[MAX_CLEANUP_TABLE_SIZE];
 static uint16_t _util_exit_table_size=0;
-static sll_cleanup_function_t _util_last_cleanup[MAX_LAST_CLEANUP_TABLE_SIZE];
-static uint8_t _util_last_cleanup_size=0;
 
 
 
@@ -116,10 +114,8 @@ void _execute_cleanup(void){
 		_util_exit_table_size--;
 		_util_exit_table[_util_exit_table_size]();
 	}
-	while (_util_last_cleanup_size){
-		_util_last_cleanup_size--;
-		_util_last_cleanup[_util_last_cleanup_size]();
-	}
+	_gc_release_data();
+	_memory_release_data();
 }
 
 
@@ -183,13 +179,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_
 
 
 
-__SLL_FUNC void sll_register_cleanup(sll_cleanup_function_t f,sll_cleanup_type_t t){
-	if (t==CLEANUP_ORDER_LAST){
-		SLL_ASSERT(_util_last_cleanup_size<MAX_LAST_CLEANUP_TABLE_SIZE);
-		_util_last_cleanup[_util_last_cleanup_size]=f;
-		_util_last_cleanup_size++;
-		return;
-	}
+__SLL_FUNC void sll_register_cleanup(sll_cleanup_function_t f){
 	SLL_ASSERT(_util_exit_table_size<MAX_CLEANUP_TABLE_SIZE);
 	_util_exit_table[_util_exit_table_size]=f;
 	_util_exit_table_size++;

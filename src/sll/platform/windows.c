@@ -217,7 +217,7 @@ __SLL_FUNC void sll_platform_socket_init(void){
 	if (WSAStartup(MAKEWORD(2,2),&dt)){
 		SLL_UNIMPLEMENTED();
 	}
-	sll_register_cleanup(WSACleanup,SLL_CLEANUP_ORDER_NORMAL);
+	sll_register_cleanup(WSACleanup);
 }
 
 

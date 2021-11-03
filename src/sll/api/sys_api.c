@@ -54,7 +54,7 @@ __SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
 		sll_deallocate(_sys_argv);
 	}
 	else{
-		sll_register_cleanup(_sys_free_argv,SLL_CLEANUP_ORDER_NORMAL);
+		sll_register_cleanup(_sys_free_argv);
 	}
 	_sys_argc=ac;
 	_sys_argv=sll_allocate(ac*sizeof(sll_runtime_object_t*));

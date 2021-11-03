@@ -176,15 +176,14 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define GC_MAX_DEBUG_ID 16777215
 
 #define MAX_CLEANUP_TABLE_SIZE 512
-#define MAX_LAST_CLEANUP_TABLE_SIZE 16
-#define CLEANUP_ORDER_LAST SLL_CLEANUP_ORDER_RESERVED0
 
 #define MAX_ASSEMBLY_INSTRUCTION_LABEL SLL_MAX_INSTRUCTION_INDEX
 
 #define OBJECT_TYPE_CHANGE_STACK SLL_OBJECT_TYPE_RESERVED0
 
-#define ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT 8
-#define OBJECT_STACK_PAGE_ALLOC_COUNT 8
+#define ALLOCATOR_PAGE_ALLOC_COUNT 16
+#define ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT 16
+#define OBJECT_STACK_PAGE_ALLOC_COUNT 16
 
 #define STRING_COMPRESSION_MIN_LENGTH 64
 #define STRING_COMPRESSION_OFFSET_BIT_COUNT 9
@@ -194,6 +193,8 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 #define OPTIMIZER_NEW_RUNTIME_OBJECT 1
 #define OPTIMIZER_NO_VARIABLES 2
+
+#define ALLOCATOR_MAX_SMALL_SIZE 512
 
 
 
@@ -414,6 +415,24 @@ typedef struct __OBJECT_LABEL{
 
 
 
+typedef struct __PAGE_HEADER{
+	struct __PAGE_HEADER* n;
+} page_header_t;
+
+
+
+typedef struct __USER_MEM_BLOCK{
+	uint64_t sz;
+} user_mem_block_t;
+
+
+
+typedef struct __MEM_BLOCK{
+	struct __MEM_BLOCK* n;
+} mem_block_t;
+
+
+
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 
@@ -423,6 +442,10 @@ sll_object_t* _acquire_next_object(sll_compilation_data_t* c_dt);
 
 
 void _execute_cleanup(void);
+
+
+
+void _gc_release_data(void);
 
 
 
@@ -439,6 +462,10 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt);
 
 
 void _init_object_stack(sll_compilation_data_t* c_dt);
+
+
+
+void _memory_release_data(void);
 
 
 

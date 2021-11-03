@@ -14,9 +14,12 @@
 
 ### Removed
 
+- `type` argument from `sll_register_cleanup`
 - Unused included headers
+- Unused macros: `SLL_CLEANUP_ORDER_NORMAL` and `SLL_CLEANUP_ORDER_RESERVED0`
 - Unused member `sll_stack_offset_t st` from `sll_assembly_instruction_data_t`
 - Unused stack API: `sll_stack_offset_t`, `sll_stack_data_t`, `sll_deinit_stack_data`, `sll_init_stack_data`, `sll_setup_stack`, `SLL_MAX_STACK_OFFSET`, `SLL_INIT_STACK_DATA` and `SLL_INIT_STACK_DATA_STRUCT`
+- Unused type `sll_cleanup_type_t`
 
 ## [0.6.25] - 2021-10-31
 

@@ -16,7 +16,7 @@
 
 
 
-#define INIT_PADDING(v,l) (*((uint64_t*)((v)+((l)&0xfffffffffffffff8)))=0)
+#define INIT_PADDING(v,l) (*((uint64_t*)((v)+((l)&0xfffffffffffffff8ull)))=0)
 #define SPLIT_CHAR_ALLOCATION_SIZE 16
 
 
