@@ -126,12 +126,15 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 		return _memory_zero_ptr;
 	}
 	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
-	if (sz>ALLOCATOR_MAX_SMALL_SIZE){
-		user_mem_block_t* o=malloc(sz);
-		o->sz=sz;
-		return (void*)(((uint64_t)o)+sizeof(user_mem_block_t));
+	if (sz<=ALLOCATOR_MAX_SMALL_SIZE){
+		return _memory_allocate_chunk(sz);
 	}
-	return _memory_allocate_chunk(sz);
+	user_mem_block_t* o=malloc(sz);
+	if (!o){
+		return NULL;
+	}
+	o->sz=sz;
+	return (void*)(((uint64_t)o)+sizeof(user_mem_block_t));
 }
 
 
@@ -196,6 +199,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_rellocate(void* p,sll_size_t sz){
 		return n;
 	}
 	b=realloc(b,sz);
+	if (!b){
+		return NULL;
+	}
 	b->sz=sz;
 	return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
 
