@@ -19,13 +19,6 @@
 
 
 
-typedef struct __FILE{
-	const sll_string_t nm;
-	FILE* h;
-} file_t;
-
-
-
 static file_t** _file_fl=NULL;
 static sll_handle_t _file_fll=0;
 static sll_handle_type_t _file_ht=SLL_HANDLE_UNKNOWN_TYPE;

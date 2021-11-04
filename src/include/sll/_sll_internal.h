@@ -422,14 +422,22 @@ typedef struct __PAGE_HEADER{
 
 
 typedef struct __USER_MEM_BLOCK{
-	uint64_t sz;
+	uint64_t dt;
 } user_mem_block_t;
 
 
 
 typedef struct __MEM_BLOCK{
-	struct __MEM_BLOCK* n;
+	uint64_t p;
+	uint64_t n;
 } mem_block_t;
+
+
+
+typedef struct __FILE{
+	const sll_string_t nm;
+	FILE* h;
+} file_t;
 
 
 
