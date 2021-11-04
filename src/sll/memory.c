@@ -19,8 +19,8 @@
 #define FREE_BLOCK_GET_PREV(v) ((mem_block_t*)((v)->p&0xfffffffffffffff8ull))
 #define FREE_BLOCK_GET_NEXT(v) ((mem_block_t*)(((v)->n>>1)&0xfffffffffffffff8ull))
 #define FREE_BLOCK_GET_PREV_SIZE(v) ((((v)->p&3)<<3)|((v)->n&7))
-#define FREE_BLOCK_SET_PREV(b,v) ((b)->p=(uint64_t)(v))
-#define FREE_BLOCK_SET_NEXT(b,v) ((b)->n=(uint64_t)(v)<<1)
+#define FREE_BLOCK_SET_PREV(b,v) ((b)->p=((uint64_t)(v))|((b)->p&7))
+#define FREE_BLOCK_SET_NEXT(b,v) ((b)->n=((uint64_t)(v)<<1)|((b)->p&15))
 #define FREE_BLOCK_SET_PREV_SIZE(b,v) \
 	do{ \
 		SLL_ASSERT((v)<32); \
@@ -48,7 +48,7 @@ static void* _memory_allocate_chunk(sll_size_t sz){
 _find_block:
 	if (_memory_data_mask&(1<<i)){
 		mem_block_t* b=_memory_head_blocks[i];
-		if (b->n){
+		if (FREE_BLOCK_GET_NEXT(b)){
 			_memory_head_blocks[i]=FREE_BLOCK_GET_NEXT(b);
 			_memory_head_blocks[i]->p&=7;
 		}
@@ -70,7 +70,7 @@ _find_block:
 		uint8_t j=((i+1)<<1)-1;
 		if (_memory_data_mask&(1<<j)){
 			mem_block_t* a=_memory_head_blocks[j];
-			if (a->n){
+			if (FREE_BLOCK_GET_NEXT(a)){
 				_memory_head_blocks[j]=FREE_BLOCK_GET_NEXT(a);
 				_memory_head_blocks[j]->p&=7;
 			}
@@ -93,7 +93,7 @@ _find_block:
 		uint8_t j=FIND_FIRST_SET_BIT(v)+i+1;
 		SLL_ASSERT(j<(ALLOCATOR_MAX_SMALL_SIZE>>4));
 		mem_block_t* b=_memory_head_blocks[j];
-		if (b->n){
+		if (FREE_BLOCK_GET_NEXT(b)){
 			_memory_head_blocks[j]=FREE_BLOCK_GET_NEXT(b);
 			_memory_head_blocks[j]->p&=7;
 		}
@@ -111,11 +111,12 @@ _find_block:
 			o->dt|=USED_BLOCK_FLAG_NO_PREV;
 		}
 		b=(mem_block_t*)(((uint64_t)b)+sz);
+		b->p=nxt;
+		b->n=0;
 		FREE_BLOCK_SET_PREV_SIZE(b,i);
-		b->p|=nxt;
 		i=j-i-1;
 		SLL_ASSERT(i<(ALLOCATOR_MAX_SMALL_SIZE>>4));
-		mem_block_t* nxt_b=(_memory_data_mask&(1<<i)?_memory_head_blocks[i]:NULL);
+		mem_block_t* nxt_b=((_memory_data_mask&(1<<i))?_memory_head_blocks[i]:NULL);
 		FREE_BLOCK_SET_NEXT(b,nxt_b);
 		if (nxt_b){
 			FREE_BLOCK_SET_PREV(nxt_b,b);
@@ -135,7 +136,7 @@ _find_block:
 		mem_block_t* b=pg;
 		b->p=0;
 		b->n=0;
-		mem_block_t* nxt=(_memory_data_mask&(1<<((ALLOCATOR_MAX_SMALL_SIZE>>4)-1))?_memory_head_blocks[(ALLOCATOR_MAX_SMALL_SIZE>>4)-1]:NULL);
+		mem_block_t* nxt=((_memory_data_mask&(1<<((ALLOCATOR_MAX_SMALL_SIZE>>4)-1)))?_memory_head_blocks[(ALLOCATOR_MAX_SMALL_SIZE>>4)-1]:NULL);
 		FREE_BLOCK_SET_NEXT(b,nxt);
 		if (nxt){
 			FREE_BLOCK_SET_PREV(nxt,b);
@@ -150,7 +151,7 @@ _find_block:
 		mem_block_t* b=pg;
 		b->p=0;
 		b->n=0;
-		mem_block_t* nxt=(_memory_data_mask&(1<<j)?_memory_head_blocks[j]:NULL);
+		mem_block_t* nxt=((_memory_data_mask&(1<<j))?_memory_head_blocks[j]:NULL);
 		FREE_BLOCK_SET_NEXT(b,nxt);
 		if (nxt){
 			FREE_BLOCK_SET_PREV(nxt,b);
@@ -176,7 +177,7 @@ static void _memory_release_chunk(user_mem_block_t* b){
 	if (!(bv.dt&USED_BLOCK_FLAG_NO_NEXT)){
 		n->n|=FREE_BLOCK_FLAG_HAS_NEXT;
 	}
-	mem_block_t* nxt=(_memory_data_mask&(1<<i)?_memory_head_blocks[i]:NULL);
+	mem_block_t* nxt=((_memory_data_mask&(1<<i))?_memory_head_blocks[i]:NULL);
 	FREE_BLOCK_SET_NEXT(n,nxt);
 	if (nxt){
 		FREE_BLOCK_SET_PREV(nxt,n);
