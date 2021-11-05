@@ -3,6 +3,7 @@
 #include <sll/common.h>
 #include <sll/runtime_object.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <string.h>
 #include <stdint.h>
 
@@ -11,11 +12,11 @@
 #define APPEND_SMALL(p,sz,st) \
 	do{ \
 		if ((st)->l+(sz)>63){ \
-			memcpy((st)->bf+(st)->l,(p),64-(st)->l); \
+			sll_copy_data((p),64-(st)->l,(st)->bf+(st)->l); \
 			(st)->l=0; \
 			_process_chunk((st),(st)->bf); \
 		} \
-		memcpy((st)->bf+(st)->l,(p),(sz)); \
+		sll_copy_data((p),(sz),(st)->bf+(st)->l); \
 		(st)->l+=(sz); \
 	} while (0)
 #define MD5_STAGE0(a,b,c,d,i,r,k) a=b+ROTATE_BITS(((b&c)|((~b)&d))+a+k+dt[i],r)
@@ -137,11 +138,11 @@ static void _hash_object(const sll_runtime_object_t* o,hash_state_t* st){
 				}
 				if (st->l){
 					if (l+st->l<64){
-						memcpy(st->bf+st->l,p,l);
+						sll_copy_data(p,l,st->bf+st->l);
 						st->l+=l;
 						return;
 					}
-					memcpy(st->bf+st->l,p,64-st->l);
+					sll_copy_data(p,64-st->l,st->bf+st->l);
 					p+=64-st->l;
 					_process_chunk(st,st->bf);
 				}
@@ -150,7 +151,7 @@ static void _hash_object(const sll_runtime_object_t* o,hash_state_t* st){
 					p+=64;
 					l-=64;
 				}
-				memcpy(st->bf,p,l);
+				sll_copy_data(p,l,st->bf);
 				st->l=l;
 				return;
 			}
@@ -193,7 +194,7 @@ __API_FUNC(hash_create){
 	}
 	memset(st.bf+st.l,0,56-st.l);
 	uint8_t bf[8]={(sz<<3)&0xff,(sz>>5)&0xff,(sz>>13)&0xff,(sz>>21)&0xff,(sz>>29)&0xff,(sz>>37)&0xff,(sz>>45)&0xff,(sz>>53)&0xff};
-	memcpy(st.bf+56,bf,8);
+	sll_copy_data(bf,8,st.bf+56);
 	_process_chunk(&st,st.bf);
 	return (sll_integer_t)((((uint64_t)(st.a^st.b))<<32)|(st.c^st.d));
 }

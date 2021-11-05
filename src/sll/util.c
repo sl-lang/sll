@@ -153,6 +153,45 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_stri
 
 
 
+__SLL_FUNC void sll_copy_data(const void* s,sll_string_length_t l,void* d){
+	const sll_char_t* a=(const sll_char_t*)s;
+	sll_char_t* b=(sll_char_t*)d;
+	if (l<16){
+		while (l){
+			*b=*a;
+			a++;
+			b++;
+			l--;
+		}
+		return;
+	}
+	if (((uint64_t)d)&7){
+		sll_string_length_t i=8-(((uint64_t)d)&7);
+		a+=i;
+		b+=i;
+		l-=i;
+		do{
+			*(b-i)=*(a-i);
+			i--;
+		} while (i);
+	}
+	SLL_ASSERT(!(((uint64_t)b)&7));
+	const uint64_t* ap=(const uint64_t*)a;
+	uint64_t* bp=(uint64_t*)b;
+	ASSUME_ALIGNED(bp,3,0);
+	sll_string_length_t i=0;
+	for (;i<(l>>3);i++){
+		*(bp+i)=*(ap+i);
+	}
+	i+=l;
+	if (l&7){
+		l=(l&7)<<3;
+		*(bp+i)=((*(bp+i))&(0xffffffffffffffffull<<l))|((*(ap+i))&((1ull<<l)-1));
+	}
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
 	sll_string_t n;
 	sll_string_from_pointer_length(dt,l,&n);
@@ -167,7 +206,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_ta
 	*(st->dt+st->l-1)=n;
 	return st->l-1;
 }
-
 
 
 

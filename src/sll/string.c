@@ -523,9 +523,8 @@ __SLL_FUNC sll_string_length_t sll_string_insert_pointer_length(const sll_char_t
 	}
 	SLL_ASSERT(!(i&7));
 	const uint64_t* ap=(const uint64_t*)s;
+	STRING_DATA_PTR(o->v);
 	uint64_t* op=(uint64_t*)(o->v+i);
-	STRING_DATA_PTR(ap);
-	STRING_DATA_PTR(op);
 	sll_string_length_t j=0;
 	for (;j<(l>>3);j++){
 		*(op+j)=*(ap+j);

@@ -143,7 +143,8 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 		} \
 	} while (0)
 #else
-#define ASSUME_ALIGNED(p,n,x) _ASSUME_ALIGNED(p,(n),(x))
+#define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
+// #define ASSUME_ALIGNED(p,n,x) _ASSUME_ALIGNED(p,(n),(x))
 #define SLL_ASSERT(...)
 #endif
 

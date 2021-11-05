@@ -34,16 +34,15 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				o->dt=sll_rellocate(o->dt,o->l*sizeof(sll_string_t));
 				sll_string_t* s=o->dt+o->l-1;
 				sll_string_create(i+j,s);
-				memcpy(s->v,bf,i);
-				memcpy(s->v+i,dt->d_name,j);
-				sll_string_calculate_checksum(s);
+				sll_string_insert_pointer_length(bf,i,0,s);
+				sll_string_insert_pointer_length(SLL_CHAR(dt->d_name),j,i,s);
 			}
 			else if (dt->d_type==DT_DIR){
 				if (*(dt->d_name)=='.'&&(*(dt->d_name+1)==0||(*(dt->d_name+1)=='.'&&*(dt->d_name+2)==0))){
 					continue;
 				}
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
-				memcpy(bf+i,dt->d_name,j);
+				sll_copy_data(dt->d_name,j,bf+i);
 				bf[i+j]='/';
 				_list_dir_files(bf,i+j+1,o);
 			}
@@ -109,9 +108,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 			}
 			op=tmp;
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
-			sll_string_create(l,op+ol-1);
-			memcpy((op+ol-1)->v,dt->d_name,l);
-			sll_string_calculate_checksum(op+ol-1);
+			sll_string_from_pointer_length(SLL_CHAR(dt->d_name),l,op+ol-1);
 		}
 		closedir(d);
 	}
@@ -124,7 +121,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[PATH_MAX+1];
 	sll_string_length_t l=sll_string_length_unaligned(fp);
-	memcpy(bf,fp,l);
+	sll_copy_data(fp,l,bf);
 	if (bf[l-1]!='/'&&bf[l-1]!='\\'){
 		bf[l]='/';
 		l++;
@@ -239,8 +236,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 			close(s);
 			return SLL_RETURN_ERROR;
 		}
-		o->v=sll_rellocate(o->v,SLL_STRING_ALIGN_LENGTH(o->l+l)*sizeof(sll_char_t));
-		memcpy(o->v+o->l,bf,l);
+		sll_string_increase(o,l);
+		sll_copy_data(bf,l,o->v+o->l);
 		o->l+=l;
 		l=recv(s,bf,4096,0);
 	};

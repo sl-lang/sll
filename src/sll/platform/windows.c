@@ -42,7 +42,7 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 					continue;
 				}
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
-				memcpy(bf+i,dt.cFileName,j);
+				sll_copy_data(dt.cFileName,j,bf+i);
 				bf[i+j]='\\';
 				_list_dir_files(bf,i+j+1,o);
 			}
@@ -52,9 +52,8 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				o->dt=sll_rellocate(o->dt,o->l*sizeof(sll_string_t));
 				sll_string_t* s=o->dt+o->l-1;
 				sll_string_create(i+j,s);
-				memcpy(s->v,bf,i);
-				memcpy(s->v+i,dt.cFileName,j);
-				sll_string_calculate_checksum(s);
+				sll_string_insert_pointer_length(bf,i,0,s);
+				sll_string_insert_pointer_length(dt.cFileName,j,i,s);
 			}
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
@@ -110,7 +109,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
 	char bf[MAX_PATH+1];
 	sll_string_length_t fpl=sll_string_length_unaligned(fp);
-	memcpy(bf,fp,fpl);
+	sll_copy_data(fp,fpl,bf);
 	if (bf[fpl-1]!='/'&&bf[fpl-1]!='\\'){
 		bf[fpl]='\\';
 		fpl++;
@@ -135,9 +134,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 			}
 			op=tmp;
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
-			sll_string_create(l,op+ol-1);
-			memcpy((op+ol-1)->v,dt.cFileName,l);
-			sll_string_calculate_checksum(op+ol-1);
+			sll_string_from_pointer_length(dt.cFileName,l,op+ol-1);
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
 	}
@@ -150,7 +147,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length_unaligned(fp);
-	memcpy(bf,fp,i);
+	sll_copy_data(fp,i,bf);
 	if (bf[i-1]!='/'&&bf[i-1]!='\\'){
 		bf[i]='\\';
 		i++;
@@ -269,8 +266,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 			closesocket(s);
 			return SLL_RETURN_ERROR;
 		}
-		o->v=sll_rellocate(o->v,SLL_STRING_ALIGN_LENGTH(o->l+l)*sizeof(sll_char_t));
-		memcpy(o->v+o->l,bf,l);
+		sll_string_increase(o,l);
+		sll_copy_data(bf,l,o->v+o->l);
 		o->l+=l;
 		l=recv(s,bf,4096,0);
 	};

@@ -10,6 +10,7 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -162,7 +163,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 				i++;
 				return i;
 			}
-			memcpy(o->v+i,a->dt.s.v,a->dt.s.l);
+			sll_copy_data(a->dt.s.v,a->dt.s.l,o->v+i);
 			return i+a->dt.s.l;
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 			o->v[i]='[';
@@ -187,7 +188,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 				o->v[i]='$';
 				i++;
 				if (hd){
-					memcpy(o->v+i,hd->nm,hd->nml);
+					sll_copy_data(hd->nm,hd->nml,o->v+i);
 					return i+hd->nml;
 				}
 				return _write_int(a->dt.h.t,i,o);

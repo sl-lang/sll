@@ -425,62 +425,6 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 
 
 
-static uint8_t write_assembly(char* o_fp,const sll_assembly_data_t* a_dt){
-	memcpy(o_fp+sll_string_length_unaligned(SLL_CHAR(o_fp)),".sla",5);
-	if (fl&FLAG_VERBOSE){
-		PRINT_STATIC_STR("Writing Assembly to File '");
-		fputs(o_fp,stdout);
-		PRINT_STATIC_STR("'...\n");
-	}
-	FILE* f=fopen(o_fp,"wb");
-	if (!f){
-		COLOR_RED;
-		PRINT_STATIC_STR("Unable to Open Output File '");
-		fputs(o_fp,stdout);
-		PRINT_STATIC_STR("'\n");
-		COLOR_RESET;
-		return 0;
-	}
-	sll_output_data_stream_t os;
-	sll_stream_create_output_from_file(f,&os);
-	sll_write_assembly(&os,a_dt);
-	if (fl&FLAG_VERBOSE){
-		PRINT_STATIC_STR("File Written Successfully.\n");
-	}
-	fclose(f);
-	return 1;
-}
-
-
-
-static uint8_t write_compiled(char* o_fp,const sll_compilation_data_t* c_dt){
-	memcpy(o_fp+sll_string_length_unaligned(SLL_CHAR(o_fp)),".slc",5);
-	if (fl&FLAG_VERBOSE){
-		PRINT_STATIC_STR("Writing Compiled Object to File '");
-		fputs(o_fp,stdout);
-		PRINT_STATIC_STR("'...\n");
-	}
-	FILE* f=fopen(o_fp,"wb");
-	if (!f){
-		COLOR_RED;
-		PRINT_STATIC_STR("Unable to Open Output File '");
-		fputs(o_fp,stdout);
-		PRINT_STATIC_STR("'\n");
-		COLOR_RESET;
-		return 0;
-	}
-	sll_output_data_stream_t os;
-	sll_stream_create_output_from_file(f,&os);
-	sll_write_compiled_object(&os,c_dt);
-	if (fl&FLAG_VERBOSE){
-		PRINT_STATIC_STR("File Written Successfully.\n");
-	}
-	fclose(f);
-	return 1;
-}
-
-
-
 static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_input_data_stream_t* is,const char* o_fp,int* ec){
 	if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
 		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
@@ -562,16 +506,52 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 		}
 		i++;
 		if (fl&FLAG_GENERATE_ASSEMBLY){
-			bf[i]=0;
-			if (!write_assembly(bf,a_dt)){
+			memcpy(bf+i,".sla",5);
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("Writing Assembly to File '");
+				fputs(bf,stdout);
+				PRINT_STATIC_STR("'...\n");
+			}
+			FILE* f=fopen(bf,"wb");
+			if (!f){
+				COLOR_RED;
+				PRINT_STATIC_STR("Unable to Open Output File '");
+				fputs(bf,stdout);
+				PRINT_STATIC_STR("'\n");
+				COLOR_RESET;
 				return 0;
 			}
+			sll_output_data_stream_t os;
+			sll_stream_create_output_from_file(f,&os);
+			sll_write_assembly(&os,a_dt);
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("File Written Successfully.\n");
+			}
+			fclose(f);
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-			bf[i]=0;
-			if (!write_compiled(bf,c_dt)){
+			memcpy(bf+i,".slc",5);
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("Writing Compiled Object to File '");
+				fputs(bf,stdout);
+				PRINT_STATIC_STR("'...\n");
+			}
+			FILE* f=fopen(bf,"wb");
+			if (!f){
+				COLOR_RED;
+				PRINT_STATIC_STR("Unable to Open Output File '");
+				fputs(bf,stdout);
+				PRINT_STATIC_STR("'\n");
+				COLOR_RESET;
 				return 0;
 			}
+			sll_output_data_stream_t os;
+			sll_stream_create_output_from_file(f,&os);
+			sll_write_compiled_object(&os,c_dt);
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("File Written Successfully.\n");
+			}
+			fclose(f);
 		}
 	}
 	if (!(fl&FLAG_NO_RUN)){

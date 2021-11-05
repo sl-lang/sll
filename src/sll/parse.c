@@ -792,7 +792,7 @@ _unknown_symbol:
 					}
 					s.l++;
 				}
-				s.v[s.l]=0;
+				SLL_STRING_FORMAT_PADDING(s.v,s.l);
 				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(c_dt->st),&s,1);
 				c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
@@ -1013,6 +1013,7 @@ _unknown_symbol:
 					sz++;
 					c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 					if (c==SLL_END_OF_DATA){
+						sll_deinit_string(&str);
 						goto _return_error;
 					}
 				} while ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123));
@@ -1027,10 +1028,12 @@ _unknown_symbol:
 					return SLL_RETURN_ERROR;
 				}
 				if ((sz==3&&!memcmp(str.v,"nil",3))||(sz==5&&!memcmp(str.v,"false",5))){
+					sll_deinit_string(&str);
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=0;
 				}
 				else if (sz==4&&!memcmp(str.v,"true",4)){
+					sll_deinit_string(&str);
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
 				}

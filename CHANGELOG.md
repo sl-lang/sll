@@ -5,12 +5,13 @@
 ### Added
 
 - Custom memory API: `sll_allocate`, `sll_zero_allocate`, `sll_reallocate` and `sll_deallocate`
-- Implemented `sll_char_to_object`, `sll_operator_strict_equal` and `sll_string_from_char`
+- Implemented `sll_char_to_object`, `sll_copy_data`, `sll_operator_strict_equal` and `sll_string_from_char`
 - Strict equal (`(===)`) and not equal (`(!==)`) operators ([#78])
 
 ### Changed
 
 - `sll_execute_assembly` now expects the size of the stack instead of the stack itself
+- `sll_get_object_size` is now correctly exported
 - Strings are now aligned 8 bytes above a 16-byte boundary
 
 ### Removed
