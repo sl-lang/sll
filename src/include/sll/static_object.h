@@ -62,4 +62,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_floa
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_char_to_object(sll_char_t v);
+
+
+
 #endif

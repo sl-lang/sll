@@ -210,13 +210,25 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_rellocate(void* p,sll_size_t sz){
 		}
 		const uint64_t* s=(const uint64_t*)p;
 		uint64_t* d=(uint64_t*)n;
-		sz=((USED_BLOCK_GET_SIZE(b)>sz?sz:USED_BLOCK_GET_SIZE(b))-sizeof(user_mem_block_t))>>3;
+		sll_size_t i=((USED_BLOCK_GET_SIZE(b)>sz?sz:USED_BLOCK_GET_SIZE(b))-sizeof(user_mem_block_t))>>3;
 		do{
 			*d=*s;
 			s++;
 			d++;
-			sz--;
-		} while (sz);
+			i--;
+		} while (i);
+#ifdef DEBUG_BUILD
+		if (sz>USED_BLOCK_GET_SIZE(b)){
+			uint64_t* p=(uint64_t*)(((uint64_t)n)+USED_BLOCK_GET_SIZE(b));
+			sz=(sz-USED_BLOCK_GET_SIZE(b)-sizeof(user_mem_block_t))>>3;
+			ASSUME_ALIGNED(p,4,8);
+			do{
+				*p=0xababababababababull;
+				p++;
+				sz--;
+			} while (sz);
+		}
+#endif
 		_memory_release_chunk(b);
 		return n;
 	}
@@ -231,6 +243,18 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_rellocate(void* p,sll_size_t sz){
 			d++;
 			sz--;
 		} while (sz);
+#ifdef DEBUG_BUILD
+		if (sz>USED_BLOCK_GET_SIZE(b)){
+			uint64_t* p=(uint64_t*)(((uint64_t)n)+USED_BLOCK_GET_SIZE(b));
+			sz=(sz-USED_BLOCK_GET_SIZE(b)-sizeof(user_mem_block_t))>>3;
+			ASSUME_ALIGNED(p,4,8);
+			do{
+				*p=0xababababababababull;
+				p++;
+				sz--;
+			} while (sz);
+		}
+#endif
 		free(b);
 		return n;
 	}

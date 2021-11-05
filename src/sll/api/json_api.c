@@ -68,9 +68,7 @@ static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,
 
 
 static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
-	o->l=0;
-	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
-	SLL_STRING_FORMAT_PADDING(o->v,0);
+	sll_string_create(0,o);
 	sll_char_t c=**p;
 	(*p)++;
 	while (c!='\"'){

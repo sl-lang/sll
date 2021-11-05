@@ -260,8 +260,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 		closesocket(s);
 		return SLL_RETURN_ERROR;
 	}
-	o->l=0;
-	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
+	sll_string_create(0,o);
 	sll_char_t bf[4096];
 	int l=recv(s,bf,4096,0);
 	shutdown(s,SD_SEND);

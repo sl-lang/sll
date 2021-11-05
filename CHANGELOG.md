@@ -5,18 +5,19 @@
 ### Added
 
 - Custom memory API: `sll_allocate`, `sll_zero_allocate`, `sll_reallocate` and `sll_deallocate`
-- Implemented `sll_operator_strict_equal` and `sll_string_from_char`
+- Implemented `sll_char_to_object`, `sll_operator_strict_equal` and `sll_string_from_char`
 - Strict equal (`(===)`) and not equal (`(!==)`) operators ([#78])
 
 ### Changed
 
 - `sll_execute_assembly` now expects the size of the stack instead of the stack itself
+- Strings are now aligned 8 bytes above a 16-byte boundary
 
 ### Removed
 
 - `type` argument from `sll_register_cleanup`
 - Unused included headers
-- Unused macros: `SLL_CLEANUP_ORDER_NORMAL` and `SLL_CLEANUP_ORDER_RESERVED0`
+- Unused macros: `SLL_CLEANUP_ORDER_NORMAL`, `SLL_CLEANUP_ORDER_RESERVED0` and `SLL_STRING_ALIGN`
 - Unused member `sll_stack_offset_t st` from `sll_assembly_instruction_data_t`
 - Unused stack API: `sll_stack_offset_t`, `sll_stack_data_t`, `sll_deinit_stack_data`, `sll_init_stack_data`, `sll_setup_stack`, `SLL_MAX_STACK_OFFSET`, `SLL_INIT_STACK_DATA` and `SLL_INIT_STACK_DATA_STRUCT`
 - Unused type `sll_cleanup_type_t`
