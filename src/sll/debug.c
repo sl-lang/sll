@@ -38,4 +38,5 @@ __SLL_FUNC void sll_debug_print_runtime_object(const sll_runtime_object_t* v){
 		fwrite(str.v,sizeof(sll_char_t),str.l,stdout);
 		sll_deinit_string(&str);
 	}
+	putchar('\n');
 }

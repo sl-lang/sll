@@ -35,6 +35,12 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define ROTATE_BITS(a,b) _rotl((a),(b))
 #define ROTATE_BITS64(a,b) _rotl64((a),(b))
 #define IGNORE_RESULT(x) ((void)(x))
+#define _ASSUME_ALIGNED(p,n,x) \
+	do{ \
+		if ((((uint64_t)(p))-(x))&((1<<(n))-1)!=0){ \
+			__assume(0); \
+		} \
+	} while (0)
 #define INTERNAL_FUNCTION(nm,f,fl) const static internal_function_t _UNIQUE_NAME(__ifunc)={(nm),(f),(fl)};const static __declspec(allocate("ifunc$b")) internal_function_t* _UNIQUE_NAME(__ifunc_ptr)=&_UNIQUE_NAME(__ifunc)
 #define INTERNAL_FUNCTION_SETUP const static __declspec(allocate("ifunc$a")) internal_function_t* __ifunc_start=0;const static __declspec(allocate("ifunc$z")) internal_function_t* __ifunc_end=0
 #define STATIC_RUNTIME_OBJECT(rt) const static static_runtime_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __declspec(allocate("strto$b")) static_runtime_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
@@ -56,6 +62,10 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define IGNORE_RESULT(x) \
 	do{ \
 		unsigned long long int __tmp __attribute__((unused))=(unsigned long long int)(x); \
+	} while (0)
+#define _ASSUME_ALIGNED(p,n,x) \
+	do{ \
+		p=__builtin_assume_aligned((p),(n),(x)); \
 	} while (0)
 #define INTERNAL_FUNCTION(nm,f,fl) const static internal_function_t _UNIQUE_NAME(__ifunc)={(nm),(f),(fl)};const static __attribute__((used,section("ifunc"))) internal_function_t* _UNIQUE_NAME(__ifunc_ptr)=&_UNIQUE_NAME(__ifunc)
 #define INTERNAL_FUNCTION_SETUP extern const internal_function_t* __start_ifunc;extern const internal_function_t* __stop_ifunc
@@ -100,6 +110,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 		raise(SIGABRT); \
 	} while (0)
 #ifdef DEBUG_BUILD
+#define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
 #define SLL_ASSERT(...) _SLL_ASSERT_JOIN(_SLL_ASSERT_COUNT_ARGS(__VA_ARGS__,0,1,1))(__VA_ARGS__)
 #define _SLL_ASSERT_0(x,e,r) \
 	do{ \
@@ -132,6 +143,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 		} \
 	} while (0)
 #else
+#define ASSUME_ALIGNED(p,n,x) _ASSUME_ALIGNED(p,(n),(x))
 #define SLL_ASSERT(...)
 #endif
 
@@ -428,8 +440,7 @@ typedef struct __USER_MEM_BLOCK{
 
 
 typedef struct __MEM_BLOCK{
-	uint64_t p;
-	uint64_t n;
+	struct __MEM_BLOCK* n;
 } mem_block_t;
 
 

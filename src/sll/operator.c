@@ -940,12 +940,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_dec(sll_runtime
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				sll_char_t bf[SLL_STRING_ALIGN_LENGTH(1)]={'1'};
 				SLL_STRING_FORMAT_PADDING(bf,1);
-				sll_string_t str={
-					1,
-					'1',
-					bf
-				};
+				sll_string_t str;
+				sll_string_from_char('1',&str);
 				sll_string_remove(&(a->dt.s),&str,&(o->dt.s));
+				sll_deinit_string(&str);
 				return o;
 			}
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:

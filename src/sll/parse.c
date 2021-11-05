@@ -775,9 +775,8 @@ _unknown_symbol:
 			}
 			else if (c=='"'){
 				arg->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_t s=SLL_INIT_STRING_STRUCT;
-				s.v=sll_allocate(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
-				SLL_STRING_FORMAT_PADDING(s.v,0);
+				sll_string_t s;
+				sll_string_create(0,&s);
 				while (1){
 					sll_string_increase(&s,1);
 					uint8_t err=_read_single_char(is,arg_s,e,s.v+s.l);
@@ -996,10 +995,12 @@ _unknown_symbol:
 				}
 			}
 			else if ((c>64&&c<91)||c=='_'||(c>96&&c<123)){
-				sll_char_t str[SLL_STRING_ALIGN_LENGTH(255)];
-				uint8_t sz=0;
+				sll_string_t str;
+				sll_string_create(255,&str);
+				uint8_t	sz=0;
 				do{
 					if (sz==255){
+						sll_deinit_string(&str);
 						e->t=SLL_ERROR_INTERNAL_STACK_OVERFLOW;
 						e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
 						e->dt.r.sz=1;
@@ -1008,13 +1009,14 @@ _unknown_symbol:
 						}
 						return SLL_RETURN_ERROR;
 					}
-					str[sz]=(sll_char_t)c;
+					str.v[sz]=(sll_char_t)c;
 					sz++;
 					c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
 					if (c==SLL_END_OF_DATA){
 						goto _return_error;
 					}
 				} while ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123));
+				str.l=sz;
 				if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
 					e->t=SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER;
 					e->dt.r.off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-1;
@@ -1024,22 +1026,16 @@ _unknown_symbol:
 					}
 					return SLL_RETURN_ERROR;
 				}
-				if ((sz==3&&!memcmp(str,"nil",3))||(sz==5&&!memcmp(str,"false",5))){
+				if ((sz==3&&!memcmp(str.v,"nil",3))||(sz==5&&!memcmp(str.v,"false",5))){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=0;
 				}
-				else if (sz==4&&!memcmp(str,"true",4)){
+				else if (sz==4&&!memcmp(str.v,"true",4)){
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
 				}
 				else{
-					sll_string_t n={
-						sz,
-						0,
-						str
-					};
-					SLL_STRING_FORMAT_PADDING(str,sz);
-					sll_string_calculate_checksum(&n);
+					sll_string_calculate_checksum(&str);
 					arg->t=SLL_OBJECT_TYPE_IDENTIFIER;
 					if (sz<=SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 						sll_identifier_list_t* k=c_dt->idt.s+sz-1;
@@ -1049,12 +1045,12 @@ _unknown_symbol:
 							for (sll_identifier_list_length_t i=0;i<k->l;i++){
 								sll_identifier_t* si=k->dt+i;
 								sll_string_t* si_s=c_dt->st.dt+si->i;
-								if (si_s->c!=n.c||si->sc==SLL_MAX_SCOPE||memcmp(str,si_s->v,sz)){
+								if (si_s->c!=str.c||si->sc==SLL_MAX_SCOPE||memcmp(str.v,si_s->v,sz)){
 									continue;
 								}
 								if (si->sc==l_sc->l_sc){
 									arg->dt.id=SLL_CREATE_IDENTIFIER(i,sz-1);
-									goto _check_exports;
+									goto _check_new_var;
 								}
 								else if ((l_sc->m[si->sc>>6]&(1ull<<(si->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||si->sc>mx_sc)){
 									mx_sc=si->sc;
@@ -1063,9 +1059,10 @@ _unknown_symbol:
 							}
 							if (mx_sc!=SLL_MAX_SCOPE){
 								arg->dt.id=mx_i;
-								goto _check_exports;
+								goto _check_new_var;
 							}
 							if ((o->t!=SLL_OBJECT_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
+								sll_deinit_string(&str);
 								e->t=SLL_ERROR_UNKNOWN_IDENTIFIER;
 								e->dt.r.off=arg_s;
 								e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1078,7 +1075,7 @@ _unknown_symbol:
 						k->l++;
 						k->dt=sll_rellocate(k->dt,k->l*sizeof(sll_identifier_t));
 						(k->dt+k->l-1)->sc=l_sc->l_sc;
-						(k->dt+k->l-1)->i=sll_create_string(&(c_dt->st),str,sz);
+						(k->dt+k->l-1)->i=sll_add_string(&(c_dt->st),&str,1);
 						arg->dt.id=SLL_CREATE_IDENTIFIER(k->l-1,sz-1);
 						if (o->t==SLL_OBJECT_TYPE_ASSIGN){
 							e_c_dt->nv_dt->sz++;
@@ -1094,12 +1091,12 @@ _unknown_symbol:
 							for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 								sll_identifier_t* k=c_dt->idt.il+i;
 								sll_string_t* s=c_dt->st.dt+k->i;
-								if (s->c!=n.c||s->l!=sz||k->sc==SLL_MAX_SCOPE||memcmp(str,s->v,sz)){
+								if (s->c!=str.c||s->l!=sz||k->sc==SLL_MAX_SCOPE||memcmp(str.v,s->v,sz)){
 									continue;
 								}
 								if (k->sc==l_sc->l_sc){
 									arg->dt.id=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
-									goto _check_exports;
+									goto _check_new_var;
 								}
 								else if ((l_sc->m[k->sc>>6]&(1ull<<(k->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||k->sc>mx_sc)){
 									mx_sc=k->sc;
@@ -1108,9 +1105,10 @@ _unknown_symbol:
 							}
 							if (mx_sc!=SLL_MAX_SCOPE){
 								arg->dt.id=mx_i;
-								goto _check_exports;
+								goto _check_new_var;
 							}
 							if ((o->t!=SLL_OBJECT_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
+								sll_deinit_string(&str);
 								e->t=SLL_ERROR_UNKNOWN_IDENTIFIER;
 								e->dt.r.off=arg_s;
 								e->dt.r.sz=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-arg_s-1;
@@ -1123,7 +1121,7 @@ _unknown_symbol:
 						c_dt->idt.ill++;
 						c_dt->idt.il=sll_rellocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
 						(c_dt->idt.il+c_dt->idt.ill-1)->sc=l_sc->l_sc;
-						(c_dt->idt.il+c_dt->idt.ill-1)->i=sll_create_string(&(c_dt->st),str,sz);
+						(c_dt->idt.il+c_dt->idt.ill-1)->i=sll_add_string(&(c_dt->st),&str,1);
 						arg->dt.id=SLL_CREATE_IDENTIFIER(c_dt->idt.ill-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 						if (o->t==SLL_OBJECT_TYPE_ASSIGN){
 							e_c_dt->nv_dt->sz++;
@@ -1132,7 +1130,8 @@ _unknown_symbol:
 						}
 						goto _identifier_created;
 					}
-_check_exports:;
+_check_new_var:;
+					sll_deinit_string(&str);
 					for (uint32_t i=0;i<e_c_dt->nv_dt->sz;i++){
 						if ((*(e_c_dt->nv_dt->dt+i))->dt.id==arg->dt.id){
 							arg->t=SLL_OBJECT_TYPE_INT;
