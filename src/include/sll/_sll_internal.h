@@ -37,7 +37,7 @@ static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m
 #define IGNORE_RESULT(x) ((void)(x))
 #define _ASSUME_ALIGNED(p,n,x) \
 	do{ \
-		if ((((uint64_t)(p))-(x))&((1<<(n))-1)!=0){ \
+		if (((((uint64_t)(p))-(x))&((1<<(n))-1))!=0){ \
 			__assume(0); \
 		} \
 	} while (0)
