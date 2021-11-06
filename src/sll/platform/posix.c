@@ -116,7 +116,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 		}
 		closedir(d);
 	}
-	*o=op;
+	*o=sll_rellocate(op,ol*sizeof(sll_string_t));
 	return ol;
 }
 
