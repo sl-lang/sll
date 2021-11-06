@@ -183,7 +183,6 @@ __SLL_FUNC void sll_copy_data(const void* s,sll_string_length_t l,void* d){
 	for (;i<(l>>3);i++){
 		*(bp+i)=*(ap+i);
 	}
-	i+=l;
 	if (l&7){
 		l=(l&7)<<3;
 		*(bp+i)=((*(bp+i))&(0xffffffffffffffffull<<l))|((*(ap+i))&((1ull<<l)-1));

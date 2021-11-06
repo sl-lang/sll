@@ -448,27 +448,15 @@ int main(int argc,const char** argv){
 	while (i&&e_fp[i]!='\\'&&e_fp[i]!='/'){
 		i--;
 	}
+	sll_char_t td_fp[4096];
 	for (uint16_t j=0;j<i;j++){
 		ti_fp[j]=e_fp[j];
 		to_fp[j]=e_fp[j];
+		td_fp[j]=e_fp[j];
 	}
-	ti_fp[i]='/';
-	ti_fp[i+1]='t';
-	ti_fp[i+2]='m';
-	ti_fp[i+3]='p';
-	ti_fp[i+4]='_';
-	ti_fp[i+5]='i';
-	ti_fp[i+6]='n';
-	ti_fp[i+7]=0;
-	to_fp[i]='/';
-	to_fp[i+1]='t';
-	to_fp[i+2]='m';
-	to_fp[i+3]='p';
-	to_fp[i+4]='_';
-	to_fp[i+5]='o';
-	to_fp[i+6]='u';
-	to_fp[i+7]='t';
-	to_fp[i+8]=0;
+	memcpy(ti_fp+i,"/tmp_in",8);
+	memcpy(to_fp+i,"/tmp_out",9);
+	memcpy(td_fp+i,"/../tests/data/",16);
 #ifdef _MSC_VER
 	if (argc==2){
 		return execute_test(argv[1][0]-1);
@@ -480,7 +468,7 @@ int main(int argc,const char** argv){
 		0
 	};
 	sll_string_t* a=NULL;
-	sll_array_length_t l=sll_platform_list_directory_recursive(SLL_CHAR(__TEST_ROOT_DIR__),&a);
+	sll_array_length_t l=sll_platform_list_directory_recursive(td_fp,&a);
 	for (sll_array_length_t j=0;j<l;j++){
 		run_parser_test((char*)((a+j)->v),&dt);
 		sll_deinit_string(a+j);

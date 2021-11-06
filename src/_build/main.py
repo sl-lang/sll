@@ -216,7 +216,7 @@ if ("--bundle" in sys.argv):
 if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Test Executable...")
-	build.build_sll_test("tests/data",vb,("--release" in sys.argv))
+	build.build_sll_test(vb,("--release" in sys.argv))
 	if ("--do-not-run-test" not in sys.argv):
 		if (vb):
 			print("  Running Tests...")

@@ -137,15 +137,14 @@ def build_sll_standalone(vb,r):
 
 
 
-def build_sll_test(t_fp,vb,r):
-	t_fp=os.path.abspath(t_fp).replace("\\","/").rstrip("/")+"/"
+def build_sll_test(vb,r):
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
 		if (r):
 			if (vb):
 				print("  Compiling Files (Release Mode)...")
-			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","__SLL_STATIC__","/D","__TEST_ROOT_DIR__=\""+t_fp+"\"","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../tests","/I","../src/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
+			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","__SLL_STATIC__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../tests","/I","../src/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
@@ -156,7 +155,7 @@ def build_sll_test(t_fp,vb,r):
 		else:
 			if (vb):
 				print("  Compiling Files...")
-			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","__SLL_STATIC__","/D","__TEST_ROOT_DIR__=\""+t_fp+"\"","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",".","/I","../tests","/I","../src/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
+			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","__SLL_STATIC__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",".","/I","../tests","/I","../src/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			if (vb):
@@ -168,13 +167,13 @@ def build_sll_test(t_fp,vb,r):
 		if (r):
 			if (vb):
 				print("  Compiling & Linking Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-O3","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-Wall","-Werror","-O3","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			if (vb):
 				print("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__TEST_ROOT_DIR__=\""+t_fp+"\"","-Wall","-Werror","-g","-O0","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-Wall","-Werror","-g","-O0","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
