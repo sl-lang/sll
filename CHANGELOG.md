@@ -12,6 +12,7 @@
 
 - `sll_execute_assembly` now expects the size of the stack instead of the stack itself
 - `sll_get_object_size` is now correctly exported
+- `sll_platform_list_directory` and `sll_platform_list_directory_recursive` now preallocate lists to reduce the number of memory reallocations
 - Strings are now aligned 8 bytes above a 16-byte boundary
 
 ### Removed

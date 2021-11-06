@@ -30,9 +30,11 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 		while ((dt=readdir(d))){
 			if (dt->d_type==DT_REG){
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
+				if (!(o->l&7)){
+					o->dt=sll_rellocate(o->dt,(o->l+8)*sizeof(sll_string_t));
+				}
+				sll_string_t* s=o->dt+o->l;
 				o->l++;
-				o->dt=sll_rellocate(o->dt,o->l*sizeof(sll_string_t));
-				sll_string_t* s=o->dt+o->l-1;
 				sll_string_create(i+j,s);
 				sll_string_insert_pointer_length(bf,i,0,s);
 				sll_string_insert_pointer_length(SLL_CHAR(dt->d_name),j,i,s);
@@ -99,16 +101,18 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 			if (dt->d_type==DT_DIR&&*(dt->d_name)=='.'&&(*(dt->d_name+1)==0||(*(dt->d_name+1)=='.'&&*(dt->d_name+2)==0))){
 				continue;
 			}
-			ol++;
-			void* tmp=sll_rellocate(op,ol*sizeof(sll_string_t));
-			if (!tmp){
-				*o=op;
-				closedir(d);
-				return ol-1;
+			if (!(ol&7)){
+				void* tmp=sll_rellocate(op,(ol+8)*sizeof(sll_string_t));
+				if (!tmp){
+					*o=sll_rellocate(op,ol*sizeof(sll_string_t));
+					closedir(d);
+					return ol-1;
+				}
+				op=tmp;
 			}
-			op=tmp;
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
-			sll_string_from_pointer_length(SLL_CHAR(dt->d_name),l,op+ol-1);
+			sll_string_from_pointer_length(SLL_CHAR(dt->d_name),l,op+ol);
+			ol++;
 		}
 		closedir(d);
 	}
@@ -131,7 +135,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 		0
 	};
 	_list_dir_files(bf,l,&dt);
-	*o=dt.dt;
+	*o=sll_rellocate(dt.dt,dt.l*sizeof(sll_string_t));
 	return dt.l;
 }
 

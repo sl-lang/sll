@@ -48,9 +48,11 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 			}
 			else{
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
+				if (!(o->l&7)){
+					o->dt=sll_rellocate(o->dt,(o->l+8)*sizeof(sll_string_t));
+				}
+				sll_string_t* s=o->dt+o->l;
 				o->l++;
-				o->dt=sll_rellocate(o->dt,o->l*sizeof(sll_string_t));
-				sll_string_t* s=o->dt+o->l-1;
 				sll_string_create(i+j,s);
 				sll_string_insert_pointer_length(bf,i,0,s);
 				sll_string_insert_pointer_length(dt.cFileName,j,i,s);
@@ -125,20 +127,22 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 			if ((dt.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)&&*(dt.cFileName)=='.'&&(*(dt.cFileName+1)==0||(*(dt.cFileName+1)=='.'&&*(dt.cFileName+2)==0))){
 				continue;
 			}
-			ol++;
-			void* tmp=sll_rellocate(op,ol*sizeof(sll_string_t));
-			if (!tmp){
-				*o=op;
-				FindClose(fh);
-				return ol-1;
+			if (!(ol&7)){
+				void* tmp=sll_rellocate(op,(ol+8)*sizeof(sll_string_t));
+				if (!tmp){
+					*o=sll_rellocate(op,ol*sizeof(sll_string_t));
+					FindClose(fh);
+					return ol-1;
+				}
+				op=tmp;
 			}
-			op=tmp;
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
-			sll_string_from_pointer_length(dt.cFileName,l,op+ol-1);
+			sll_string_from_pointer_length(dt.cFileName,l,op+ol);
+			ol++;
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
 	}
-	*o=op;
+	*o=sll_rellocate(op,ol*sizeof(sll_string_t));
 	return ol;
 }
 
@@ -157,7 +161,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 		0
 	};
 	_list_dir_files(bf,i,&dt);
-	*o=dt.dt;
+	*o=sll_rellocate(dt.dt,dt.l*sizeof(sll_string_t));
 	return dt.l;
 }
 
