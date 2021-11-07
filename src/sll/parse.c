@@ -1252,7 +1252,7 @@ _merge_next_string:;
 							il->l+=mil.l;
 							void* tmp=sll_rellocate(il->dt,il->l*sizeof(sll_identifier_t));
 							if (!tmp){
-								SLL_ASSERT(!"Unable to sll_rellocateate Fixed-Length Identifier Array",e,SLL_RETURN_ERROR);
+								SLL_ASSERT(!"Unable to sll_rellocateate Fixed-Length Identifier Array");
 							}
 							il->dt=tmp;
 							for (sll_identifier_list_length_t j=0;j<mil.l;j++){
@@ -1267,7 +1267,7 @@ _merge_next_string:;
 						c_dt->idt.ill+=im.idt.ill;
 						void* tmp=sll_rellocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
 						if (!tmp){
-							SLL_ASSERT(!"Unable to sll_rellocateate Variable-Length Identifier Array",e,SLL_RETURN_ERROR);
+							SLL_ASSERT(!"Unable to sll_rellocateate Variable-Length Identifier Array");
 						}
 						c_dt->idt.il=tmp;
 						for (sll_identifier_list_length_t j=0;j<im.idt.ill;j++){

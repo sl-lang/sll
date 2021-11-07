@@ -18,6 +18,7 @@
 ### Removed
 
 - `type` argument from `sll_register_cleanup`
+- Unused error types: `SLL_ERROR_UNRELEASED_OBJECTS` and `SLL_ERROR_ASSERTION`
 - Unused included headers
 - Unused macros: `SLL_CLEANUP_ORDER_NORMAL`, `SLL_CLEANUP_ORDER_RESERVED0` and `SLL_STRING_ALIGN`
 - Unused member `sll_stack_offset_t st` from `sll_assembly_instruction_data_t`
