@@ -20,21 +20,13 @@
 
 #ifdef _MSC_VER
 #define MAX_PATH_LENGTH (MAX_PATH+1)
-#define EXPAND_FILE_PATH(s,d) GetFullPathNameA((s),MAX_PATH+1,(d),NULL)
 #define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
 	do{ \
 		(o)=GetModuleFileNameA(NULL,(char*)(bf),(l)); \
 	} while (0)
 #define RESET_CONSOLE SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),cm)
-#ifdef SLL_VERSION_STANDALONE
-#define SLL_TYPE "win-standalone"
-#else
-#define SLL_TYPE "win"
-#endif
-#define DYNAMIC_LIBRARY_EXTENSION ".dll"
 #else
 #define MAX_PATH_LENGTH (PATH_MAX+1)
-#define EXPAND_FILE_PATH(s,d) realpath((s),(d))
 #define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
 	do{ \
 		ssize_t __o=readlink("/proc/self/exe",(char*)(bf),(l)); \
@@ -48,12 +40,6 @@
 		} \
 	} while (0)
 #define RESET_CONSOLE
-#ifdef SLL_VERSION_STANDALONE
-#define SLL_TYPE "posix-standalone"
-#else
-#define SLL_TYPE "posix"
-#endif
-#define DYNAMIC_LIBRARY_EXTENSION ".so"
 #endif
 
 
@@ -71,18 +57,16 @@
 #define COLOR_RED _IF_USE_COLORS("\x1b[91m")
 #define VM_STACK_SIZE 65536
 #define FLAG_EXPAND_PATH 1
-#define FLAG_FORCE_UPDATE 2
-#define FLAG_GENERATE_ASSEMBLY 4
-#define FLAG_GENERATE_COMPILED_OBJECT 8
-#define FLAG_HELP 16
-#define FLAG_NO_RUN 32
-#define FLAG_PRINT_ASSEMBLY 64
-#define FLAG_PRINT_OBJECT 128
-#define FLAG_UPDATE 256
-#define FLAG_USE_COLORS 512
-#define FLAG_VERBOSE 1024
-#define FLAG_VERSION 2048
-#define _FLAG_ASSEMBLY_GENERATED 4096
+#define FLAG_GENERATE_ASSEMBLY 2
+#define FLAG_GENERATE_COMPILED_OBJECT 4
+#define FLAG_HELP 8
+#define FLAG_NO_RUN 16
+#define FLAG_PRINT_ASSEMBLY 32
+#define FLAG_PRINT_OBJECT 64
+#define FLAG_USE_COLORS 128
+#define FLAG_VERBOSE 256
+#define FLAG_VERSION 512
+#define _FLAG_ASSEMBLY_GENERATED 1024
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
 #define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
@@ -168,7 +152,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		}
 		FILE* nf=fopen(bf,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(SLL_CHAR(bf),SLL_CHAR(f_fp),MAX_PATH_LENGTH)){
 				memcpy(f_fp,bf,j+1);
 			}
 			if (fl&FLAG_VERBOSE){
@@ -212,7 +196,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		}
 		nf=fopen(bf,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(bf,f_fp)){
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(SLL_CHAR(bf),SLL_CHAR(f_fp),MAX_PATH_LENGTH)){
 				memcpy(f_fp,bf,j+1);
 			}
 			if (fl&FLAG_VERBOSE){
@@ -339,7 +323,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		}
 		FILE* nf=fopen(l_fp,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(l_fp,f_fp)){
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(SLL_CHAR(l_fp),SLL_CHAR(f_fp),MAX_PATH_LENGTH)){
 				memcpy(f_fp,l_fp,i+5);
 			}
 			if (fl&FLAG_VERBOSE){
@@ -383,7 +367,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		}
 		nf=fopen(l_fp,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!EXPAND_FILE_PATH(l_fp,f_fp)){
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(SLL_CHAR(l_fp),SLL_CHAR(f_fp),MAX_PATH_LENGTH)){
 				memcpy(f_fp,l_fp,l_fpl+5);
 			}
 			if (fl&FLAG_VERBOSE){
@@ -656,9 +640,6 @@ _skip_lib_path:
 			}
 			goto _read_file_argument;
 		}
-		else if (!strcmp(e,"--force-update")){
-			fl|=FLAG_FORCE_UPDATE;
-		}
 		else if ((*e=='-'&&*(e+1)=='h'&&*(e+2)==0)||!strcmp(e,"--help")){
 			fl|=FLAG_HELP;
 		}
@@ -744,9 +725,6 @@ _skip_lib_path:
 			sl=tmp;
 			*(sl+sll-1)=(char*)argv[i];
 		}
-		else if ((*e=='-'&&*(e+1)=='U'&&*(e+2)==0)||!strcmp(e,"--update")){
-			fl|=FLAG_UPDATE;
-		}
 		else if ((*e=='-'&&*(e+1)=='v'&&*(e+2)==0)||!strcmp(e,"--verbose")){
 			fl|=FLAG_VERBOSE;
 		}
@@ -780,194 +758,6 @@ _read_file_argument:
 		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)" ("STANDALONE_STRING TYPE_STRING SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 		RESET_CONSOLE;
 		return 0;
-	}
-	if (fl&FLAG_UPDATE){
-		if (fl&FLAG_VERBOSE){
-			PRINT_STATIC_STR("Fetching Version Data...\n");
-		}
-		sll_string_t m;
-		sll_string_from_pointer(SLL_CHAR("GET"),&m);
-		sll_string_t h;
-		sll_string_from_pointer(SLL_CHAR("sll.krzem.workers.dev"),&h);
-		sll_string_t p;
-		sll_string_from_pointer(SLL_CHAR("/version"),&p);
-		sll_string_t dt=SLL_INIT_STRING_STRUCT;
-		sll_header_list_t hl=SLL_INIT_HEADER_LIST_STRUCT;
-		sll_string_t r_dt;
-		sll_http_response_t r={
-			NULL,
-			NULL,
-			&r_dt
-		};
-		sll_return_code_t rc=sll_url_http_request(&m,&h,&p,&hl,&dt,&r);
-		if (rc!=200){
-			COLOR_RED;
-			PRINT_STATIC_STR("Unexpected HTTP Status Code: ");
-			sll_string_t tmp;
-			sll_string_from_int(rc,&tmp);
-			fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
-			free(tmp.v);
-			PRINT_STATIC_STR("\n");
-			COLOR_RESET;
-			sll_deinit_http_response(&r);
-			RESET_CONSOLE;
-			return 1;
-		}
-		sll_json_object_t json;
-		sll_json_parser_state_t json_p=r_dt.v;
-		if (!sll_json_parse(&json_p,&json)){
-			goto _json_error;
-		}
-		sll_string_t tmp;
-		sll_string_from_pointer(SLL_CHAR("version"),&tmp);
-		sll_json_object_t* v=sll_json_get_by_key(&json,&tmp);
-		if (!v||v->t!=SLL_JSON_OBJECT_TYPE_INTEGER){
-			goto _json_error;
-		}
-		sll_deinit_http_response(&r);
-		if (!(fl&FLAG_FORCE_UPDATE)&&v->dt.i<=SLL_VERSION){
-			PRINT_STATIC_STR("No New Versions Avaible, sll is Up To Date\n");
-		}
-		else{
-			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("Updating sll from "SLL_VERSION_STRING" to ");
-				sll_string_from_int(SLL_GET_MAJOR(v->dt.i),&tmp);
-				fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
-				free(tmp.v);
-				putchar('.');
-				sll_string_from_int(SLL_GET_MINOR(v->dt.i),&tmp);
-				fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
-				free(tmp.v);
-				putchar('.');
-				sll_string_from_int(SLL_GET_PATCH(v->dt.i),&tmp);
-				fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
-				free(tmp.v);
-				putchar('\n');
-			}
-			sll_char_t bf[MAX_PATH_LENGTH+1];
-			uint32_t i;
-			GET_EXECUATBLE_FILE_PATH(bf,MAX_PATH_LENGTH,i);
-			sll_char_t bf2[MAX_PATH_LENGTH];
-			memcpy(bf2,bf,i);
-			bf2[i]='.';
-			bf2[i+1]='o';
-			bf2[i+2]='l';
-			bf2[i+3]='d';
-			bf2[i+4]=0;
-			rename((char*)bf,(char*)bf2);
-#ifndef STANDALONE_BUILD
-			while (bf[i]!='\\'&&bf[i]!='/'){
-				i--;
-			}
-			memcpy(bf+i+1,"sll-"SLL_VERSION_STRING DYNAMIC_LIBRARY_EXTENSION,sizeof("sll-"SLL_VERSION_STRING DYNAMIC_LIBRARY_EXTENSION));
-			i+=sizeof("sll-"SLL_VERSION_STRING DYNAMIC_LIBRARY_EXTENSION);
-			memcpy(bf2,bf,i);
-			bf2[i]='.';
-			bf2[i+1]='o';
-			bf2[i+2]='l';
-			bf2[i+3]='d';
-			bf2[i+4]=0;
-			rename((char*)bf,(char*)bf2);
-			while (bf[i]!='\\'&&bf[i]!='/'){
-				i--;
-			}
-			memcpy(bf+i+1,"lib/",sizeof("lib/"));
-			sll_string_t* dl;
-			sll_array_length_t dll=sll_platform_list_directory_recursive(bf,&dl);
-			for (sll_array_length_t j=0;j<dll;j++){
-				sll_string_t* f_fp=dl+j;
-				remove((char*)f_fp->v);
-				free(f_fp->v);
-			}
-			free(dl);
-#endif
-			sll_string_from_pointer(SLL_CHAR("/data/"SLL_TYPE),&p);
-			r.dt=&r_dt;
-			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("Downloading '");
-				fputs((char*)h.v,stdout);
-				fputs((char*)p.v,stdout);
-				PRINT_STATIC_STR("'...\n");
-			}
-			rc=sll_url_http_request(&m,&h,&p,&hl,&dt,&r);
-			if (rc!=200){
-				COLOR_RED;
-				PRINT_STATIC_STR("Unexpected HTTP Status Code: ");
-				sll_string_from_int(rc,&tmp);
-				fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
-				free(tmp.v);
-				PRINT_STATIC_STR("\n");
-				COLOR_RESET;
-				sll_deinit_http_response(&r);
-				sll_deinit_json_object(&json);
-				RESET_CONSOLE;
-				return 1;
-			}
-			while (bf[i]!='\\'&&bf[i]!='/'){
-				i--;
-			}
-			i++;
-			sll_string_length_t j=0;
-			while (j<r_dt.l){
-				uint8_t nml=r_dt.v[j];
-				uint32_t sz=(((uint32_t)r_dt.v[j+1])<<24)|(((uint32_t)r_dt.v[j+2])<<16)|(((uint32_t)r_dt.v[j+3])<<8)|r_dt.v[j+4];
-				j+=5;
-				memcpy(bf+i,r_dt.v+j,nml);
-				bf[i+nml]=0;
-				if (fl&FLAG_VERBOSE){
-					PRINT_STATIC_STR("Extracting '");
-					fputs((char*)(bf+i),stdout);
-					PRINT_STATIC_STR("' into '");
-					fputs((char*)bf,stdout);
-					PRINT_STATIC_STR("' (");
-					sll_string_from_int(sz,&tmp);
-					fwrite(tmp.v,sizeof(sll_char_t),tmp.l,stdout);
-					free(tmp.v);
-					PRINT_STATIC_STR(" bytes)\n");
-				}
-				j+=nml;
-				FILE* wf=fopen((char*)bf,"wb");
-				if (!wf){
-					COLOR_RED;
-					PRINT_STATIC_STR("Unable to Open File '");
-					fputs((char*)bf,stdout);
-					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
-					COLOR_RESET;
-					sll_deinit_http_response(&r);
-					sll_deinit_json_object(&json);
-					RESET_CONSOLE;
-					return 1;
-				}
-				if (fwrite(r_dt.v+j,sizeof(sll_char_t),sz,wf)!=sz){
-					COLOR_RED;
-					PRINT_STATIC_STR("Unable to Write Data to File '");
-					fputs((char*)bf,stdout);
-					PRINT_STATIC_STR("'. Installation is now in a corrupted state.");
-					COLOR_RESET;
-					fclose(wf);
-					sll_deinit_http_response(&r);
-					sll_deinit_json_object(&json);
-					RESET_CONSOLE;
-					return 1;
-				}
-				fclose(wf);
-				j+=sz;
-			}
-			sll_deinit_http_response(&r);
-		}
-		sll_deinit_json_object(&json);
-		RESET_CONSOLE;
-		return 0;
-_json_error:
-		sll_deinit_json_object(&json);
-		COLOR_RED;
-		PRINT_STATIC_STR("Malformated JSON: ");
-		fputs((char*)r_dt.v,stdout);
-		putchar('\n');
-		COLOR_RESET;
-		sll_deinit_http_response(&r);
-		RESET_CONSOLE;
-		return 1;
 	}
 	im_fpl=fpl;
 	if (fl&FLAG_VERBOSE){
@@ -1008,9 +798,6 @@ _json_error:
 		if (fl&FLAG_USE_COLORS){
 			PRINT_STATIC_STR("  Use Colors\n");
 		}
-		if (fl&FLAG_UPDATE){
-			PRINT_STATIC_STR("  Update Mode\n");
-		}
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("  Verbose Mode\n");
 		}
@@ -1048,7 +835,7 @@ _json_error:
 			goto _error;
 		}
 		char bf[MAX_PATH_LENGTH];
-		sll_set_argument(0,SLL_CHAR((!EXPAND_FILE_PATH(*(fp+j),bf)?*(fp+j):bf)));
+		sll_set_argument(0,SLL_CHAR((!sll_platform_path_absolute(SLL_CHAR(*(fp+j)),SLL_CHAR(bf),MAX_PATH_LENGTH)?*(fp+j):bf)));
 		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
 			goto _error;
 		}

@@ -2,9 +2,16 @@
 
 ## [0.6.27] - Ongoing
 
-*Nothing*
+### Changed
 
-## [0.6.26] - 2021-10-7
+- Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI
+
+### Removed
+
+- Options related to updating Sll from the CLI
+- Unused CLI macro: `EXPAND_FILE_PATH`
+
+## [0.6.26] - 2021-11-7
 
 ### Added
 
