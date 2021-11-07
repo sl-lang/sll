@@ -20,11 +20,7 @@ __API_FUNC(path_absolute){
 		sll_string_clone(a,out);
 		return;
 	}
-	sll_string_create(l,out);
-	for (sll_string_length_t i=0;i<l;i++){
-		out->v[i]=*(bf+i);
-	}
-	sll_string_calculate_checksum(out);
+	sll_string_from_pointer_length(bf,l,out);
 }
 
 

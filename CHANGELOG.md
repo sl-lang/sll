@@ -4,16 +4,18 @@
 
 ### Added
 
-- Custom memory API: `sll_allocate`, `sll_zero_allocate`, `sll_reallocate` and `sll_deallocate`
+- Custom memory API: `sll_allocate`, `sll_deallocate`, `sll_reallocate` and `sll_zero_allocate`
 - Implemented `sll_char_to_object`, `sll_copy_data`, `sll_operator_strict_equal` and `sll_string_from_char`
+- Option macro to disable the custom memory allocator (`USE_BUILTIN_MALLOC`)
 - Strict equal (`(===)`) and not equal (`(!==)`) operators ([#78])
 
 ### Changed
 
+- Runtime object pool used by GC now allocates memory pages in larger chunks
 - `sll_execute_assembly` now expects the size of the stack instead of the stack itself
 - `sll_get_object_size` is now correctly exported
 - `sll_platform_list_directory` and `sll_platform_list_directory_recursive` now preallocate lists to reduce the number of memory reallocations
-- Strings are now aligned 8 bytes above a 16-byte boundary
+- Strings are now aligned 8 bytes above a 16-byte boundary (like all memory returned by `sll_allocate`, `sll_reallocate` or `sll_zero_allocate`)
 
 ### Removed
 

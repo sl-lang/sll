@@ -49,7 +49,7 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 			else{
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
 				if (!(o->l&7)){
-					o->dt=sll_rellocate(o->dt,(o->l+8)*sizeof(sll_string_t));
+					o->dt=sll_reallocate(o->dt,(o->l+8)*sizeof(sll_string_t));
 				}
 				sll_string_t* s=o->dt+o->l;
 				o->l++;
@@ -128,9 +128,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 				continue;
 			}
 			if (!(ol&7)){
-				void* tmp=sll_rellocate(op,(ol+8)*sizeof(sll_string_t));
+				void* tmp=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
 				if (!tmp){
-					*o=sll_rellocate(op,ol*sizeof(sll_string_t));
+					*o=sll_reallocate(op,ol*sizeof(sll_string_t));
 					FindClose(fh);
 					return ol-1;
 				}
@@ -142,7 +142,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
 	}
-	*o=sll_rellocate(op,ol*sizeof(sll_string_t));
+	*o=sll_reallocate(op,ol*sizeof(sll_string_t));
 	return ol;
 }
 
@@ -161,7 +161,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 		0
 	};
 	_list_dir_files(bf,i,&dt);
-	*o=sll_rellocate(dt.dt,dt.l*sizeof(sll_string_t));
+	*o=sll_reallocate(dt.dt,dt.l*sizeof(sll_string_t));
 	return dt.l;
 }
 

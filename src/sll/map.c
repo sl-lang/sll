@@ -22,7 +22,7 @@ __SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runti
 		SLL_ACQUIRE(o->v[i]);
 		if (sll_operator_equal(m->v[i],k)){
 			o->l--;
-			o->v=sll_rellocate(o->v,l*sizeof(sll_runtime_object_t*));
+			o->v=sll_reallocate(o->v,l*sizeof(sll_runtime_object_t*));
 			o->v[i+1]=v;
 			i+=2;
 			while (i<l){
@@ -78,7 +78,7 @@ __SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 	sll_deallocate(sm);
 	if (i!=o->l){
 		o->l=i>>1;
-		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -118,7 +118,7 @@ __SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_
 	sll_deallocate(sm);
 	if ((i>>1)!=o->l){
 		o->l=i>>1;
-		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -151,7 +151,7 @@ __SLL_FUNC void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 	}
 	if ((i>>1)!=o->l){
 		o->l=i>>1;
-		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -176,7 +176,7 @@ __SLL_FUNC void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 	}
 	if ((i>>1)!=o->l){
 		o->l=i>>1;
-		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -201,7 +201,7 @@ __SLL_FUNC void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_
 	}
 	if ((i>>1)!=o->l){
 		o->l=i>>1;
-		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -289,7 +289,7 @@ _next_key:;
 	}
 	if (i!=(o->l<<1)){
 		o->l=i>>1;
-		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 	while (i){
 		i--;

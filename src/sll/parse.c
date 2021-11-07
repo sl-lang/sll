@@ -290,9 +290,9 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 					o->dt.fn.ac=ac-i;
 					o->dt.fn.id=c_dt->ft.l;
 					c_dt->ft.l++;
-					void* tmp=sll_rellocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
+					void* tmp=sll_reallocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 					if (!tmp){
-						SLL_ASSERT(!"Unable to sll_rellocateate Function Array");
+						SLL_ASSERT(!"Unable to sll_reallocateate Function Array");
 					}
 					c_dt->ft.dt=tmp;
 					sll_function_t* f=sll_allocate(sizeof(sll_function_t)+i*sizeof(sll_identifier_index_t));
@@ -1076,13 +1076,13 @@ _unknown_symbol:
 							}
 						}
 						k->l++;
-						k->dt=sll_rellocate(k->dt,k->l*sizeof(sll_identifier_t));
+						k->dt=sll_reallocate(k->dt,k->l*sizeof(sll_identifier_t));
 						(k->dt+k->l-1)->sc=l_sc->l_sc;
 						(k->dt+k->l-1)->i=sll_add_string(&(c_dt->st),&str,1);
 						arg->dt.id=SLL_CREATE_IDENTIFIER(k->l-1,sz-1);
 						if (o->t==SLL_OBJECT_TYPE_ASSIGN){
 							e_c_dt->nv_dt->sz++;
-							e_c_dt->nv_dt->dt=sll_rellocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_object_t*));
+							e_c_dt->nv_dt->dt=sll_reallocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_object_t*));
 							*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)=arg;
 						}
 						goto _identifier_created;
@@ -1122,13 +1122,13 @@ _unknown_symbol:
 							}
 						}
 						c_dt->idt.ill++;
-						c_dt->idt.il=sll_rellocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
+						c_dt->idt.il=sll_reallocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
 						(c_dt->idt.il+c_dt->idt.ill-1)->sc=l_sc->l_sc;
 						(c_dt->idt.il+c_dt->idt.ill-1)->i=sll_add_string(&(c_dt->st),&str,1);
 						arg->dt.id=SLL_CREATE_IDENTIFIER(c_dt->idt.ill-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 						if (o->t==SLL_OBJECT_TYPE_ASSIGN){
 							e_c_dt->nv_dt->sz++;
-							e_c_dt->nv_dt->dt=sll_rellocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_object_t*));
+							e_c_dt->nv_dt->dt=sll_reallocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_object_t*));
 							*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)=arg;
 						}
 						goto _identifier_created;
@@ -1238,7 +1238,7 @@ _identifier_created:;
 						}
 						*(im_dt.sm+i)=c_dt->st.l;
 						c_dt->st.l++;
-						c_dt->st.dt=sll_rellocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
+						c_dt->st.dt=sll_reallocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
 						sll_string_clone(s,c_dt->st.dt+c_dt->st.l-1);
 _merge_next_string:;
 					}
@@ -1250,11 +1250,7 @@ _merge_next_string:;
 						if (mil.l){
 							s_si[i]=il->l;
 							il->l+=mil.l;
-							void* tmp=sll_rellocate(il->dt,il->l*sizeof(sll_identifier_t));
-							if (!tmp){
-								SLL_ASSERT(!"Unable to sll_rellocateate Fixed-Length Identifier Array");
-							}
-							il->dt=tmp;
+							il->dt=sll_reallocate(il->dt,il->l*sizeof(sll_identifier_t));
 							for (sll_identifier_list_length_t j=0;j<mil.l;j++){
 								(il->dt+s_si[i]+j)->sc=(mil.dt+j)->sc+c_dt->_n_sc_id;
 								(il->dt+s_si[i]+j)->i=*(im_dt.sm+(mil.dt+j)->i);
@@ -1265,11 +1261,7 @@ _merge_next_string:;
 					sll_identifier_list_length_t si=c_dt->idt.ill;
 					if (im.idt.ill){
 						c_dt->idt.ill+=im.idt.ill;
-						void* tmp=sll_rellocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
-						if (!tmp){
-							SLL_ASSERT(!"Unable to sll_rellocateate Variable-Length Identifier Array");
-						}
-						c_dt->idt.il=tmp;
+						c_dt->idt.il=sll_reallocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
 						for (sll_identifier_list_length_t j=0;j<im.idt.ill;j++){
 							(c_dt->idt.il+si+j)->sc=(im.idt.il+j)->sc+c_dt->_n_sc_id;
 							(c_dt->idt.il+si+j)->i=*(im_dt.sm+(im.idt.il+j)->i);
@@ -1332,7 +1324,7 @@ _export_identifier_found:;
 					}
 					sll_function_index_t j=c_dt->ft.l;
 					c_dt->ft.l+=im.ft.l;
-					c_dt->ft.dt=sll_rellocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
+					c_dt->ft.dt=sll_reallocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 					for (sll_function_index_t i=0;i<im.ft.l;i++){
 						sll_function_t* f=*(im.ft.dt+i);
 						sll_function_t* nf=sll_allocate(sizeof(sll_function_t)+f->al*sizeof(sll_identifier_index_t));
@@ -1356,7 +1348,7 @@ _export_identifier_found:;
 						}
 					}
 					c_dt->et.l++;
-					c_dt->et.dt=sll_rellocate(c_dt->et.dt,c_dt->et.l*sizeof(sll_identifier_index_t));
+					c_dt->et.dt=sll_reallocate(c_dt->et.dt,c_dt->et.l*sizeof(sll_identifier_index_t));
 					*(c_dt->et.dt+c_dt->et.l-1)=arg->dt.id;
 _skip_export:;
 				}

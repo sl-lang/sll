@@ -156,7 +156,7 @@ __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	}
 	if (l){
 		c_dt->st.l-=l;
-		c_dt->st.dt=sll_rellocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
+		c_dt->st.dt=sll_reallocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
 		for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 			sll_identifier_list_t* e=c_dt->idt.s+i;
 			for (sll_identifier_list_length_t j=0;j<e->l;j++){

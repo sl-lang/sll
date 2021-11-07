@@ -2349,7 +2349,7 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 		}
 		if (k){
 			c_dt->idt.s[i].l-=k;
-			c_dt->idt.s[i].dt=sll_rellocate(c_dt->idt.s[i].dt,c_dt->idt.s[i].l*sizeof(sll_identifier_t));
+			c_dt->idt.s[i].dt=sll_reallocate(c_dt->idt.s[i].dt,c_dt->idt.s[i].l*sizeof(sll_identifier_t));
 		}
 	}
 	o_dt.im.l=sll_allocate(c_dt->idt.ill*sizeof(sll_identifier_index_t));
@@ -2363,7 +2363,7 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 	}
 	if (j){
 		c_dt->idt.ill-=j;
-		c_dt->idt.il=sll_rellocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
+		c_dt->idt.il=sll_reallocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
 	}
 	o_dt.rm=0;
 	sll_function_index_t fn_off=0;
@@ -2394,7 +2394,7 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 			c_dt->ft.dt=NULL;
 		}
 		else{
-			c_dt->ft.dt=sll_rellocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
+			c_dt->ft.dt=sll_reallocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 		}
 	}
 	_remap_indexes_merge_print(c_dt->h,NULL,&o_dt,fn_m);

@@ -1733,7 +1733,7 @@ _handle_nop:;
 	}
 	if (l){
 		o->st.l-=l;
-		o->st.dt=sll_rellocate(o->st.dt,o->st.l*sizeof(sll_string_t));
+		o->st.dt=sll_reallocate(o->st.dt,o->st.l*sizeof(sll_string_t));
 	}
 	ai=o->h;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){

@@ -120,7 +120,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 		sll_header_t* kv=NULL;
 		if (o->hl){
 			o->hl->l++;
-			o->hl->dt=sll_rellocate(o->hl->dt,o->hl->l*sizeof(sll_header_t*));
+			o->hl->dt=sll_reallocate(o->hl->dt,o->hl->l*sizeof(sll_header_t*));
 			kv=sll_allocate(sizeof(sll_header_t));
 			*(o->hl->dt+o->hl->l-1)=kv;
 		}

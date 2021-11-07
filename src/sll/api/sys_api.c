@@ -16,17 +16,22 @@
 
 static sll_integer_t _sys_argc=0;
 static sll_runtime_object_t** _sys_argv=NULL;
-static sll_runtime_object_t _sys_p={1,SLL_RUNTIME_OBJECT_TYPE_STRING,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.s=SLL_INIT_STRING_STRUCT}};
+static sll_runtime_object_t _sys_p={0,SLL_RUNTIME_OBJECT_TYPE_STRING,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.s=SLL_INIT_STRING_STRUCT}};
+static char _sys_end=0;
 
 
 
-static void _sys_free_argv(void){
+static void _sys_free_data(void){
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc;i++){
 			SLL_RELEASE(*(_sys_argv+i));
 		}
 		sll_deallocate(_sys_argv);
 		_sys_argv=NULL;
+	}
+	if (_sys_p.dt.s.l){
+		sll_deinit_string(&(_sys_p.dt.s));
+		_sys_p.dt.s.l=0;
 	}
 }
 
@@ -53,8 +58,9 @@ __SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
 		}
 		sll_deallocate(_sys_argv);
 	}
-	else{
-		sll_register_cleanup(_sys_free_argv);
+	else if (!_sys_end){
+		sll_register_cleanup(_sys_free_data);
+		_sys_end=1;
 	}
 	_sys_argc=ac;
 	_sys_argv=sll_allocate(ac*sizeof(sll_runtime_object_t*));
@@ -84,6 +90,10 @@ __API_FUNC(sys_arg_get_count){
 __API_FUNC(sys_get_platform){
 	if (!_sys_p.dt.s.l){
 		sll_string_from_pointer(sll_platform_string,&(_sys_p.dt.s));
+		if (!_sys_end){
+			sll_register_cleanup(_sys_free_data);
+			_sys_end=1;
+		}
 	}
 	SLL_ACQUIRE(&_sys_p);
 	return &_sys_p;

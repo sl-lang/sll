@@ -34,6 +34,7 @@ static uint8_t _free_file(sll_handle_t h){
 	if (!f){
 		return 0;
 	}
+	sll_deinit_string((sll_string_t*)&(f->nm));
 	fclose(f->h);
 	sll_deallocate(f);
 	*(_file_fl+h)=NULL;
@@ -42,7 +43,7 @@ static uint8_t _free_file(sll_handle_t h){
 			_file_fll--;
 		} while (_file_fll&&!(_file_fl+_file_fll-1));
 		if (_file_fll){
-			void* tmp=sll_rellocate(_file_fl,_file_fll*sizeof(file_t*));
+			void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(file_t*));
 			SLL_ASSERT(tmp);
 			_file_fl=tmp;
 		}
@@ -107,7 +108,7 @@ __API_FUNC(file_open){
 		i++;
 	}
 	_file_fll++;
-	void* tmp=sll_rellocate(_file_fl,_file_fll*sizeof(file_t*));
+	void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(file_t*));
 	if (!tmp){
 		fclose(h);
 		return;

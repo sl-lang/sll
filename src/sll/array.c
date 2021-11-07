@@ -44,7 +44,7 @@ __SLL_FUNC void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_arra
 	sll_deallocate(m);
 	if (o->l!=i){
 		o->l=i;
-		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -338,7 +338,7 @@ __SLL_FUNC void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_array
 	sll_deallocate(m);
 	if (o->l!=i){
 		o->l=i;
-		o->v=sll_rellocate(o->v,i*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,i*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -449,7 +449,7 @@ __SLL_FUNC void sll_array_remove(const sll_array_t* a,sll_runtime_object_t* v,sl
 		o->v=NULL;
 	}
 	else{
-		o->v=sll_rellocate(o->v,o->l*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,o->l*sizeof(sll_runtime_object_t*));
 	}
 }
 
@@ -480,7 +480,7 @@ _skip_value:;
 		o->v=NULL;
 	}
 	else{
-		o->v=sll_rellocate(o->v,o->l*sizeof(sll_runtime_object_t*));
+		o->v=sll_reallocate(o->v,o->l*sizeof(sll_runtime_object_t*));
 	}
 }
 

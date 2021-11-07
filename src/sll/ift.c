@@ -44,7 +44,7 @@ _continue:;
 
 __SLL_FUNC sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f,sll_internal_function_type_t t){
 	i_ft->l++;
-	i_ft->dt=sll_rellocate(i_ft->dt,i_ft->l*sizeof(sll_internal_function_t*));
+	i_ft->dt=sll_reallocate(i_ft->dt,i_ft->l*sizeof(sll_internal_function_t*));
 	sll_internal_function_t* i_f=sll_allocate(sizeof(sll_internal_function_t));
 	i_f->nml=0;
 	i_f->c=0;

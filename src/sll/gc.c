@@ -36,7 +36,7 @@ void _gc_release_data(void){
 		}
 		_gc_verify=0;
 	}
-	SLL_ASSERT(_gc_alloc==_gc_dealloc);
+	SLL_ASSERT(_gc_alloc<=_gc_dealloc);
 	for (uint32_t i=0;i<_gc_dbg_dtl;i++){
 		if (*(_gc_dbg_dt+i)){
 			runtime_object_debug_data_t* dt=*(_gc_dbg_dt+i);
@@ -55,11 +55,11 @@ void _gc_release_data(void){
 	sll_deallocate(_gc_dbg_dt);
 	_gc_dbg_dtl=0;
 	_gc_dbg_dt=NULL;
-	sll_page_size_t sz=sll_platform_get_page_size();
+	sll_page_size_t sz=sll_platform_get_page_size()*GC_RUNTIME_OBJECT_POOL_PAGE_ALLOC_COUNT;
 	void* c=_gc_page_ptr;
 	while (c){
 		void* n=*((void**)c);
-		sll_platform_free_page(c,sz*(n?1:GC_INIT_PAGE_COUNT));
+		sll_platform_free_page(c,sz);
 		c=n;
 	}
 }
@@ -80,8 +80,8 @@ __SLL_FUNC sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,cons
 		}
 		_gc_dbg_dtl++;
 		SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DEBUG_ID);
-		void* tmp=sll_rellocate(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
-		SLL_ASSERT(tmp||!"Unable to sll_rellocateate Debug Data Array");
+		void* tmp=sll_reallocate(_gc_dbg_dt,_gc_dbg_dtl*sizeof(runtime_object_debug_data_t*));
+		SLL_ASSERT(tmp||!"Unable to sll_reallocateate Debug Data Array");
 		_gc_dbg_dt=tmp;
 _found_index:
 		o->_dbg0=i&0xff;
@@ -115,12 +115,12 @@ _found_index:
 	}
 	if (t==__SLL_DEBUG_TYPE_RELEASE){
 		dt->all++;
-		dt->al=sll_rellocate(dt->al,dt->all*sizeof(runtime_object_debug_data_trace_data_t*));
+		dt->al=sll_reallocate(dt->al,dt->all*sizeof(runtime_object_debug_data_trace_data_t*));
 		*(dt->al+dt->all-1)=n;
 	}
 	else{
 		dt->rll++;
-		dt->rl=sll_rellocate(dt->rl,dt->rll*sizeof(runtime_object_debug_data_trace_data_t*));
+		dt->rl=sll_reallocate(dt->rl,dt->rll*sizeof(runtime_object_debug_data_trace_data_t*));
 		*(dt->rl+dt->rll-1)=n;
 	}
 	return o;
@@ -136,10 +136,7 @@ __SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o){
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 	if (!_gc_next_object){
-		sll_page_size_t sz=sll_platform_get_page_size();
-		if (!_gc_page_ptr){
-			sz*=GC_INIT_PAGE_COUNT;
-		}
+		sll_page_size_t sz=sll_platform_get_page_size()*GC_RUNTIME_OBJECT_POOL_PAGE_ALLOC_COUNT;
 		void* pg=sll_platform_allocate_page(sz);
 		*((void**)pg)=_gc_page_ptr;
 		_gc_page_ptr=pg;

@@ -17,7 +17,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* 
 			return 0;
 		}
 		il->l=2;
-		il->v=sll_rellocate(il->v,2*sizeof(sll_integer_t));
+		il->v=sll_reallocate(il->v,2*sizeof(sll_integer_t));
 		if (il->v[0]<v){
 			il->v[1]=v;
 		}
@@ -29,7 +29,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* 
 	}
 	sll_array_length_t i=il->l;
 	il->l++;
-	il->v=sll_rellocate(il->v,il->l*sizeof(sll_integer_t));
+	il->v=sll_reallocate(il->v,il->l*sizeof(sll_integer_t));
 	do{
 		sll_array_length_t j=(i-1)>>1;
 		if (v>=il->v[j]){
