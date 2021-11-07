@@ -100,9 +100,6 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
 #define _SLL_ASSERT_STRINGIFY_(x) #x
 #define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
-#define _SLL_ASSERT_JOIN_(x) _SLL_ASSERT_##x
-#define _SLL_ASSERT_JOIN(x) _SLL_ASSERT_JOIN_(x)
-#define _SLL_ASSERT_COUNT_ARGS(_1,_2,_3,n,...) n
 #define SLL_UNIMPLEMENTED() \
 	do{ \
 		printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): Unimplemented\n",__func__); \
@@ -111,41 +108,17 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 	} while (0)
 #ifdef DEBUG_BUILD
 #define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
-#define SLL_ASSERT(...) _SLL_ASSERT_JOIN(_SLL_ASSERT_COUNT_ARGS(__VA_ARGS__,0,1,1))(__VA_ARGS__)
-#define _SLL_ASSERT_0(x,e,r) \
+#define SLL_ASSERT(x) \
 	do{ \
 		if (!(x)){ \
-			(e)->t=SLL_ERROR_ASSERTION; \
-			const char __tmp0[]="File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("; \
-			uint32_t __i=0; \
-			for (uint32_t __j=0;__j<sizeof(__tmp0)/sizeof(char)-1;__j++){ \
-				(e)->dt.str[__i]=__tmp0[__j]; \
-				__i++; \
-			} \
-			for (uint32_t __j=0;__j<sizeof(__func__)/sizeof(char)-1;__j++){ \
-				(e)->dt.str[__i]=__func__[__j]; \
-				__i++; \
-			} \
-			const char __tmp1[]="): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed"; \
-			for (uint32_t __j=0;__j<sizeof(__tmp1)/sizeof(char);__j++){ \
-				(e)->dt.str[__i]=__tmp1[__j]; \
-				__i++; \
-			} \
-			return r; \
-		} \
-	} while (0)
-#define _SLL_ASSERT_1(x,...) \
-	do{ \
-		if (!(x)){ \
-			printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n",__func__); \
+			fprintf(stdout,"File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n",__func__); \
 			fflush(stdout); \
 			raise(SIGABRT); \
 		} \
 	} while (0)
 #else
-#define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
-// #define ASSUME_ALIGNED(p,n,x) _ASSUME_ALIGNED(p,(n),(x))
-#define SLL_ASSERT(...)
+#define ASSUME_ALIGNED(p,n,x) _ASSUME_ALIGNED(p,(n),(x))
+#define SLL_ASSERT(x)
 #endif
 
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
