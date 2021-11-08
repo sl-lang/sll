@@ -302,7 +302,7 @@ __SLL_FUNC void sll_deallocate(void* p){
 			if (!(pn->dt&USED_BLOCK_FLAG_USED)){
 				p_sz+=sz;
 				UPDATE_STACK_BLOCK_SIZE(pn,p_sz);
-				mem_stack_block_t* n=(mem_stack_block_t*)(((uint64_t)b)+sz);
+				n=(mem_stack_block_t*)(((uint64_t)b)+sz);
 				if (((uint64_t)n)<((uint64_t)_memory_stack_page)+_memory_stack_size){
 					SLL_ASSERT(n->dt&USED_BLOCK_FLAG_USED);
 					UPDATE_STACK_BLOCK_PREV_SIZE(n,p_sz);
