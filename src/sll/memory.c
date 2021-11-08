@@ -298,17 +298,17 @@ __SLL_FUNC void sll_deallocate(void* p){
 			b->dt=SET_STACK_BLOCK_SIZE(p_sz,sz);
 		}
 		if (p_sz){
-			mem_stack_block_t* p=(mem_stack_block_t*)(((uint64_t)b)-p_sz);
-			if (!(p->dt&USED_BLOCK_FLAG_USED)){
+			mem_stack_block_t* pn=(mem_stack_block_t*)(((uint64_t)b)-p_sz);
+			if (!(pn->dt&USED_BLOCK_FLAG_USED)){
 				p_sz+=sz;
-				UPDATE_STACK_BLOCK_SIZE(p,p_sz);
+				UPDATE_STACK_BLOCK_SIZE(pn,p_sz);
 				mem_stack_block_t* n=(mem_stack_block_t*)(((uint64_t)b)+sz);
 				if (((uint64_t)n)<((uint64_t)_memory_stack_page)+_memory_stack_size){
 					SLL_ASSERT(n->dt&USED_BLOCK_FLAG_USED);
 					UPDATE_STACK_BLOCK_PREV_SIZE(n,p_sz);
 				}
 				else if (((mem_stack_block_t*)b)==_memory_stack_top){
-					_memory_stack_top=p;
+					_memory_stack_top=pn;
 				}
 			}
 		}
