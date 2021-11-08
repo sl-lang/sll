@@ -2,8 +2,6 @@
 #define __SLL_STRING_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 

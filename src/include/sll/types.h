@@ -671,7 +671,7 @@ typedef sll_runtime_object_t* (*sll_quaternary_operator_t)(sll_runtime_object_t*
 
 
 
-typedef struct __SLL_binary_heap{
+typedef struct __SLL_BINARY_HEAP{
 	sll_integer_t* v;
 	sll_array_length_t l;
 } sll_binary_heap_t;

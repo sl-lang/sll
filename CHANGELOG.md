@@ -13,6 +13,7 @@
 - All `memcpy` calls have been replaced by `sll_copy_data`, and all `memset` calls have been replaced by `sll_set_memory` or `sll_zero_memory`
 - CLI now uses built-in sll types
 - Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI
+- `SLL_API_MAX_FILE_PATH_LENGTH` is now platform-dependent
 - `sll_copy_data` now expects `sll_size_t` instead of `sll_string_length_t`
 
 ### Removed
