@@ -61,6 +61,11 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t s
 
 
 
+__SLL_FUNC void sll_platform_enable_console_color(void){
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
 	struct stat st;
 	if (!stat((char*)fp,&st)){
@@ -196,7 +201,7 @@ __SLL_FUNC void sll_platform_socket_init(void){
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
 	SLL_INIT_STRING(o);
 	struct addrinfo ah;
-	memset(&ah,0,sizeof(struct addrinfo));
+	sll_zero_memory(&ah,sizeof(struct addrinfo));
 	ah.ai_family=AF_UNSPEC;
 	ah.ai_socktype=SOCK_STREAM;
 	ah.ai_protocol=IPPROTO_TCP;

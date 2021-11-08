@@ -18,7 +18,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_stri
 
 
 
-__SLL_FUNC void sll_copy_data(const void* s,sll_string_length_t l,void* d);
+__SLL_FUNC void sll_copy_data(const void* s,sll_size_t l,void* d);
 
 
 
@@ -26,7 +26,15 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_ta
 
 
 
+__SLL_FUNC void sll_set_memory(void* p,sll_size_t l,sll_char_t v);
+
+
+
 __SLL_FUNC void sll_register_cleanup(sll_cleanup_function_t f);
+
+
+
+__SLL_FUNC void sll_zero_memory(void* p,sll_size_t l);
 
 
 

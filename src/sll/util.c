@@ -153,7 +153,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_stri
 
 
 
-__SLL_FUNC void sll_copy_data(const void* s,sll_string_length_t l,void* d){
+__SLL_FUNC void sll_copy_data(const void* s,sll_size_t l,void* d){
 	const sll_char_t* a=(const sll_char_t*)s;
 	sll_char_t* b=(sll_char_t*)d;
 	if (l<16){
@@ -166,7 +166,7 @@ __SLL_FUNC void sll_copy_data(const void* s,sll_string_length_t l,void* d){
 		return;
 	}
 	if (((uint64_t)d)&7){
-		sll_string_length_t i=8-(((uint64_t)d)&7);
+		sll_size_t i=8-(((uint64_t)d)&7);
 		a+=i;
 		b+=i;
 		l-=i;
@@ -179,7 +179,7 @@ __SLL_FUNC void sll_copy_data(const void* s,sll_string_length_t l,void* d){
 	const uint64_t* ap=(const uint64_t*)a;
 	uint64_t* bp=(uint64_t*)b;
 	ASSUME_ALIGNED(bp,3,0);
-	sll_string_length_t i=0;
+	sll_size_t i=0;
 	for (;i<(l>>3);i++){
 		*(bp+i)=*(ap+i);
 	}
@@ -220,6 +220,41 @@ __SLL_FUNC void sll_register_cleanup(sll_cleanup_function_t f){
 	SLL_ASSERT(_util_exit_table_size<MAX_CLEANUP_TABLE_SIZE);
 	_util_exit_table[_util_exit_table_size]=f;
 	_util_exit_table_size++;
+}
+
+
+
+__SLL_FUNC void sll_set_memory(void* p,sll_size_t l,sll_char_t v){
+	sll_char_t* o=(sll_char_t*)p;
+	if (l<16){
+		while (l){
+			*o=v;
+			o++;
+			l--;
+		}
+		return;
+	}
+	if (((uint64_t)o)&7){
+		sll_size_t i=8-(((uint64_t)o)&7);
+		l-=i;
+		do{
+			*o=v;
+			o++;
+			i--;
+		} while (i);
+	}
+	SLL_ASSERT(!(((uint64_t)o)&7));
+	uint64_t* op=(uint64_t*)o;
+	ASSUME_ALIGNED(op,3,0);
+	sll_size_t i=0;
+	uint64_t v64=0x101010101010101ull*v;
+	for (;i<(l>>3);i++){
+		*(op+i)=v64;
+	}
+	if (l&7){
+		l=(l&7)<<3;
+		*(op+i)=((*(op+i))&(0xffffffffffffffffull<<l))|(v64&((1ull<<l)-1));
+	}
 }
 
 
@@ -305,4 +340,37 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
 
 __SLL_FUNC __SLL_CHECK_OUTPUT const sll_object_t* sll_skip_object_const(const sll_object_t* o){
 	return sll_skip_object((sll_object_t*)o);
+}
+
+
+
+__SLL_FUNC void sll_zero_memory(void* p,sll_size_t l){
+	sll_char_t* o=(sll_char_t*)p;
+	if (l<16){
+		while (l){
+			*o=0;
+			o++;
+			l--;
+		}
+		return;
+	}
+	if (((uint64_t)o)&7){
+		sll_size_t i=8-(((uint64_t)o)&7);
+		l-=i;
+		do{
+			*o=0;
+			o++;
+			i--;
+		} while (i);
+	}
+	SLL_ASSERT(!(((uint64_t)o)&7));
+	uint64_t* op=(uint64_t*)o;
+	ASSUME_ALIGNED(op,3,0);
+	sll_size_t i=0;
+	for (;i<(l>>3);i++){
+		*(op+i)=0;
+	}
+	if (l&7){
+		*(op+i)&=0xffffffffffffffffull<<((l&7)<<3);
+	}
 }

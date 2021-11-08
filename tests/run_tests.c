@@ -450,9 +450,9 @@ int main(int argc,const char** argv){
 		to_fp[j]=e_fp[j];
 		td_fp[j]=e_fp[j];
 	}
-	memcpy(ti_fp+i,"/tmp_in",8);
-	memcpy(to_fp+i,"/tmp_out",9);
-	memcpy(td_fp+i,"/../tests/data/",16);
+	sll_copy_data("/tmp_in",8,ti_fp+i);
+	sll_copy_data("/tmp_out",9,to_fp+i);
+	sll_copy_data("/../tests/data/",16,td_fp+i);
 #ifdef _MSC_VER
 	if (argc==2){
 		return execute_test(argv[1][0]-1);

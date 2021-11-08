@@ -185,7 +185,7 @@ static sll_return_t _read_string(sll_input_data_stream_t* is,sll_string_t* o,sll
 	}
 	else{
 		sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
-		memset(bf,0xff,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
+		sll_set_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1),0xff);
 		uint64_t v;
 		if (SLL_READ_BUFFER_FROM_INPUT_DATA_STREAM(is,(void*)(&v),sizeof(uint64_t))==SLL_END_OF_DATA){
 			return SLL_RETURN_ERROR;

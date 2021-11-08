@@ -27,6 +27,21 @@ const sll_char_t* sll_platform_string=SLL_CHAR("windows");
 static HANDLE _win_wh=INVALID_HANDLE_VALUE;
 static int _win_stdout_m=0;
 static int _win_stderr_m=0;
+static DWORD _win_stdout_cm=0xffffffff;
+static DWORD _win_stderr_cm=0xffffffff;
+
+
+
+static void _reset_console_color(void){
+	if (_win_stdout_cm!=0xffffffff){
+		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm);
+		_win_stdout_cm=0xffffffff;
+	}
+	if (_win_stderr_cm!=0xffffffff){
+		SetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),_win_stderr_cm);
+		_win_stderr_cm=0xffffffff;
+	}
+}
 
 
 
@@ -66,6 +81,25 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 
 __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
 	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+}
+
+
+
+__SLL_FUNC void sll_platform_enable_console_color(void){
+	sll_bool_t st=0;
+	if (_win_stdout_cm!=0xffffffff&&_isatty(1)){
+		GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),&_win_stdout_cm);
+		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+		st=1;
+	}
+	if (_win_stderr_cm!=0xffffffff&&_isatty(2)){
+		GetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),&_win_stderr_cm);
+		SetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),_win_stderr_cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+		st=1;
+	}
+	if (st){
+		sll_register_cleanup(_reset_console_color);
+	}
 }
 
 
@@ -226,7 +260,7 @@ __SLL_FUNC void sll_platform_socket_init(void){
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
 	SLL_INIT_STRING(o);
 	struct addrinfo ah;
-	memset(&ah,0,sizeof(struct addrinfo));
+	sll_zero_memory(&ah,sizeof(struct addrinfo));
 	ah.ai_family=AF_UNSPEC;
 	ah.ai_socktype=SOCK_STREAM;
 	ah.ai_protocol=IPPROTO_TCP;

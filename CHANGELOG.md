@@ -4,12 +4,16 @@
 
 ### Added
 
-- More memory API: `sll_allocate_stack`
+- CLI now properly releases all memory (by calling `sll_deinit`)
+- Implemented `sll_platform_enable_console_color`, `sll_set_memory` and `sll_zero_memory`
+- More memory API functions: `sll_allocate_stack`
 
 ### Changed
 
+- All `memcpy` calls have been replaced by `sll_copy_data`, and all `memset` calls have been replaced by `sll_set_memory` or `sll_zero_memory`
 - CLI now uses built-in sll types
 - Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI
+- `sll_copy_data` now expects `sll_size_t` instead of `sll_string_length_t`
 
 ### Removed
 

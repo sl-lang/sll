@@ -4,6 +4,7 @@
 #include <sll/object.h>
 #include <sll/stream.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <sll/version.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -149,7 +150,7 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 	uint64_t v=0;
 	uint8_t bc=64;
 	sll_char_t bf[1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)];
-	memset(bf,0xff,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
+	sll_set_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1),0xff);
 	sll_string_length_t si=0;
 	uint16_t i=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{

@@ -4,7 +4,6 @@
 #include <sll/runtime_object.h>
 #include <sll/types.h>
 #include <sll/util.h>
-#include <string.h>
 #include <stdint.h>
 
 
@@ -188,11 +187,11 @@ __API_FUNC(hash_create){
 	st.bf[st.l]=0x80;
 	st.l++;
 	if (st.l>55){
-		memset(st.bf+st.l,0,64-st.l);
+		sll_zero_memory(st.bf+st.l,64-st.l);
 		_process_chunk(&st,st.bf);
 		st.l=0;
 	}
-	memset(st.bf+st.l,0,56-st.l);
+	sll_zero_memory(st.bf+st.l,56-st.l);
 	uint8_t bf[8]={(sz<<3)&0xff,(sz>>5)&0xff,(sz>>13)&0xff,(sz>>21)&0xff,(sz>>29)&0xff,(sz>>37)&0xff,(sz>>45)&0xff,(sz>>53)&0xff};
 	sll_copy_data(bf,8,st.bf+56);
 	_process_chunk(&st,st.bf);

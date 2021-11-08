@@ -24,7 +24,6 @@
 	do{ \
 		(o)=GetModuleFileNameA(NULL,(char*)(bf),(l)); \
 	} while (0)
-#define RESET_CONSOLE SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),cm)
 #else
 #define MAX_PATH_LENGTH (PATH_MAX+1)
 #define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
@@ -39,7 +38,6 @@
 			*(bf)=0; \
 		} \
 	} while (0)
-#define RESET_CONSOLE
 #endif
 
 
@@ -96,9 +94,6 @@ static uint32_t l_fpl;
 static sll_input_buffer_t m_i_bf;
 #endif
 static sll_internal_function_table_t i_ft;
-#ifdef _MSC_VER
-static DWORD cm;
-#endif
 
 
 
@@ -274,7 +269,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		if (m->c==c&&m->nml==f_nm_l&&!memcmp(m->nm,f_nm,f_nm_l)){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found Internal Module '");
-				fputs(f_nm,stdout);
+				fputs((char*)f_nm,stdout);
 				PRINT_STATIC_STR(".slc'\n");
 			}
 			*f=NULL;
@@ -290,7 +285,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("Module '");
-					fputs(f_nm,stdout);
+					fputs((char*)f_nm,stdout);
 					PRINT_STATIC_STR(".slc' is not a Compiled Object.\n");
 					COLOR_RESET;
 				}
@@ -573,17 +568,14 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 int main(int argc,const char** argv){
 	sll_init();
 	atexit(sll_deinit);
-#ifdef _MSC_VER
-	GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),&cm);
-	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-#endif
+	sll_platform_enable_console_color();
 	int ec=1;
 	ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
 	fl=0;
 	i_fp=malloc(sizeof(sll_char_t));
 	if (!i_fp){
 		PRINT_STATIC_STR("Unable to Allocate Space for Include File Path Array\n");
-		RESET_CONSOLE;
+		sll_deinit();
 		return 1;
 	}
 	*i_fp=0;
@@ -756,7 +748,7 @@ _read_file_argument:
 	}
 	if (fl&FLAG_VERSION){
 		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)" ("STANDALONE_STRING TYPE_STRING SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
-		RESET_CONSOLE;
+		sll_deinit();
 		return 0;
 	}
 	im_fpl=fpl;
@@ -927,7 +919,7 @@ _read_file_argument:
 		free(sl);
 	}
 	sll_deinit_internal_function_table(&i_ft);
-	RESET_CONSOLE;
+	sll_deinit();
 	return 0;
 _help:
 	PRINT_STATIC_STR(HELP_TEXT);
@@ -949,6 +941,6 @@ _error:
 		fclose(f);
 	}
 	sll_deinit_internal_function_table(&i_ft);
-	RESET_CONSOLE;
+	sll_deinit();
 	return ec;
 }

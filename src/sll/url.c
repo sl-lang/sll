@@ -41,33 +41,33 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 	}
 	sll_string_t s;
 	sll_string_create(sz,&s);
-	memcpy(s.v,m->v,m->l);
+	sll_copy_data(m->v,m->l,s.v);
 	sll_string_length_t i=m->l;
 	s.v[i]=' ';
 	i++;
-	memcpy(s.v+i,p->v,p->l);
+	sll_copy_data(p->v,p->l,s.v+i);
 	i+=p->l;
-	memcpy(s.v+i," HTTP/1.1",9);
+	sll_copy_data(" HTTP/1.1",9,s.v+i);
 	i+=9;
 	for (sll_header_count_t j=0;j<hl->l;j++){
 		sll_header_t* kv=*(hl->dt+j);
-		memcpy(s.v+i,kv->k.v,kv->k.l);
+		sll_copy_data(kv->k.v,kv->k.l,s.v+i);
 		i+=kv->k.l;
 		s.v[i]=':';
 		i++;
-		memcpy(s.v+i,kv->v.v,kv->v.l);
+		sll_copy_data(kv->v.v,kv->v.l,s.v+i);
 		i+=kv->v.l;
 		s.v[i]='\r';
 		s.v[i+1]='\n';
 		i+=2;
 	}
-	memcpy(s.v+i,"\r\nHost:",7);
+	sll_copy_data("\r\nHost:",7,s.v+i);
 	i+=7;
-	memcpy(s.v+i,h->v,h->l);
+	sll_copy_data(h->v,h->l,s.v+i);
 	i+=h->l;
-	memcpy(s.v+i,"\r\n\r\n",4);
+	sll_copy_data("\r\n\r\n",4,s.v+i);
 	i+=4;
-	memcpy(s.v+i,dt->v,dt->l);
+	sll_copy_data(dt->v,dt->l,s.v+i);
 	sll_string_t r=SLL_INIT_STRING_STRUCT;
 	sll_return_t err=sll_platform_socket_execute(h,DEFAULT_HTTP_PORT,&s,&r);
 	sll_deallocate(s.v);
@@ -102,9 +102,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 			}
 			i++;
 		}
-		sll_string_create(i-j,o->rc);
-		memcpy(o->rc->v,r.v+j,i-j);
-		sll_string_calculate_checksum(o->rc);
+		sll_string_from_pointer_length(r.v+j,i-j,o->rc);
 	}
 	else{
 		while (r.v[i]!='\r'||r.v[i+1]!='\n'){
@@ -135,8 +133,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 			i++;
 		}
 		if (kv){
-			sll_string_create(i-j,&(kv->k));
-			memcpy(kv->k.v,r.v+j,i-j);
+			sll_string_from_pointer_length(r.v+j,i-j,&(kv->k));
 		}
 		do{
 			i++;
@@ -149,14 +146,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 			i++;
 		}
 		if (kv){
-			sll_string_create(i-j,&(kv->v));
-			memcpy(kv->v.v,r.v+j,i-j);
+			sll_string_from_pointer_length(r.v+j,i-j,&(kv->v));
 		}
 	}
 	i+=4;
 	if (o->dt){
-		sll_string_create(r.l-i,o->dt);
-		memcpy(o->dt->v,r.v+i,r.l-i);
+		sll_string_from_pointer_length(r.v+i,r.l-i,o->dt);
 	}
 	sll_deallocate(r.v);
 	return rc;

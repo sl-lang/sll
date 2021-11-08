@@ -13,6 +13,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t s
 
 
 
+__SLL_FUNC void sll_platform_enable_console_color(void);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp);
 
 

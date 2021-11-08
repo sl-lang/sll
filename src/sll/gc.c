@@ -30,6 +30,9 @@ static uint8_t _gc_verify=1;
 
 
 void _gc_release_data(void){
+	if (!_gc_page_ptr){
+		return;
+	}
 	if (_gc_verify){
 		if (!sll_verify_runtime_object_stack_cleanup()){
 			SLL_UNIMPLEMENTED();
@@ -62,6 +65,7 @@ void _gc_release_data(void){
 		sll_platform_free_page(c,sz);
 		c=n;
 	}
+	_gc_page_ptr=NULL;
 }
 
 
