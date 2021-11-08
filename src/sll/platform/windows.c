@@ -118,7 +118,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 	}
 	bf[fpl]='*';
 	bf[fpl+1]=0;
-	sll_string_t* op=NULL;
+	sll_string_t* op=sll_allocate_stack(1);
 	sll_array_length_t ol=0;
 	WIN32_FIND_DATAA dt;
 	HANDLE fh=FindFirstFileA(bf,&dt);
@@ -157,7 +157,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 		i++;
 	}
 	file_list_data_t dt={
-		NULL,
+		sll_allocate_stack(1),
 		0
 	};
 	_list_dir_files(bf,i,&dt);

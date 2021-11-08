@@ -10,8 +10,9 @@
 
 
 #define USED_BLOCK_FLAG_USED 0x8000000000000000ull
+#define USED_BLOCK_FLAG_STACK 0x4000000000000000ull
 
-#define USED_BLOCK_GET_SIZE(b) ((b)->dt&0x7fffffffffffffffull)
+#define USED_BLOCK_GET_SIZE(b) ((b)->dt&0x3fffffffffffffffull)
 
 
 
@@ -20,7 +21,6 @@
 
 
 void _memory_release_data(void){
-	return;
 }
 
 
@@ -40,12 +40,19 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
+	return sll_allocate(sz);
+}
+
+
+
 __SLL_FUNC void sll_deallocate(void* p){
 	if (!p){
 		return;
 	}
 	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
 	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
+	SLL_ASSERT(!(b->dt&USED_BLOCK_FLAG_STACK));
 	free(b);
 }
 
@@ -61,6 +68,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 	}
 	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
 	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
+	SLL_ASSERT(!(b->dt&USED_BLOCK_FLAG_STACK));
 	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
 	if (USED_BLOCK_GET_SIZE(b)==sz){
 		return p;
@@ -79,9 +87,39 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 
 
 
+#define GET_STACK_BLOCK_SIZE(b) (((b)->dt&0x7ffffff)<<4)
+#define GET_STACK_BLOCK_PREV_SIZE(b) (((b)->dt>>27)&0x7ffffff0)
+#define SET_STACK_BLOCK_SIZE(p_sz,sz) (((p_sz)<<27)|((sz)>>4))
+#define UPDATE_STACK_BLOCK_PREV_SIZE(b,p_sz) ((b)->dt=((b)->dt&0xffc0000007ffffffull)|((p_sz)<<27))
+#define UPDATE_STACK_BLOCK_SIZE(b,p_sz) ((b)->dt=((b)->dt&0xfffffffff8000000ull)|((sz)>>4))
+
+
+
 static uint32_t _memory_data_mask=0;
 static mem_block_t* _memory_head_blocks[ALLOCATOR_MAX_SMALL_SIZE>>4];
 static page_header_t* _memory_page_head=NULL;
+static uint64_t _memory_stack_size=0;
+static void* _memory_stack_page=NULL;
+static mem_stack_block_t* _memory_stack_top=0;
+
+
+
+void _memory_release_data(void){
+	if (_memory_page_head){
+		page_header_t* p=_memory_page_head;
+		sll_page_size_t sz=sll_platform_get_page_size()*ALLOCATOR_PAGE_ALLOC_COUNT;
+		while (p){
+			page_header_t* n=p->n;
+			sll_platform_free_page(p,sz);
+			p=n;
+		}
+		_memory_page_head=NULL;
+	}
+	if (_memory_stack_page){
+		sll_platform_free_page(_memory_stack_page,_memory_stack_size);
+		_memory_stack_page=NULL;
+	}
+}
 
 
 
@@ -178,37 +216,61 @@ static void _memory_release_chunk(user_mem_block_t* b){
 
 
 
-void _memory_release_data(void){
-	page_header_t* p=_memory_page_head;
-	sll_page_size_t sz=sll_platform_get_page_size()*ALLOCATOR_PAGE_ALLOC_COUNT;
-	while (p){
-		page_header_t* n=p->n;
-		sll_platform_free_page(p,sz);
-		p=n;
-	}
-	_memory_page_head=NULL;
-}
-
-
-
 __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
 	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
-	void* o;
 	if (sz<=ALLOCATOR_MAX_SMALL_SIZE){
-		o=_memory_allocate_chunk(sz);
+		return _memory_allocate_chunk(sz);
 	}
-	else{
-		user_mem_block_t* b=malloc(sz);
-		if (!b){
-			return NULL;
+	user_mem_block_t* b=malloc(sz);
+	if (!b){
+		return NULL;
+	}
+	b->dt=USED_BLOCK_FLAG_USED|sz;
+	return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
+	if (!sz){
+		return NULL;
+	}
+	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
+	if (!_memory_stack_size){
+		_memory_stack_size=sll_platform_get_page_size()*ALLOCATOR_STACK_PAGE_ALLOC_COUNT;
+	}
+	if (sz<=_memory_stack_size){
+		if (!_memory_stack_page){
+			_memory_stack_page=sll_platform_allocate_page(_memory_stack_size);
+			_memory_stack_top=_memory_stack_page;
+			SLL_ASSERT(!(_memory_stack_size&15));
+			_memory_stack_top->dt=SET_STACK_BLOCK_SIZE(0,_memory_stack_size);
 		}
-		b->dt=USED_BLOCK_FLAG_USED|sz;
-		o=(void*)(((uint64_t)b)+sizeof(user_mem_block_t));
+		if (_memory_stack_top&&GET_STACK_BLOCK_SIZE(_memory_stack_top)>=sz){
+			sll_size_t p_sz=GET_STACK_BLOCK_PREV_SIZE(_memory_stack_top);
+			sll_size_t n_sz=GET_STACK_BLOCK_SIZE(_memory_stack_top)-sz;
+			SLL_ASSERT(!(p_sz&15)&&!(sz&15)&&!(n_sz&15));
+			user_mem_block_t* b=(user_mem_block_t*)_memory_stack_top;
+			b->dt=USED_BLOCK_FLAG_USED|USED_BLOCK_FLAG_STACK|SET_STACK_BLOCK_SIZE(p_sz,sz);
+			if (n_sz){
+				_memory_stack_top=(mem_stack_block_t*)(((uint64_t)_memory_stack_top)+sz);
+				_memory_stack_top->dt=SET_STACK_BLOCK_SIZE(sz,n_sz);
+			}
+			else{
+				_memory_stack_top=NULL;
+			}
+			return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
+		}
 	}
-	return o;
+	user_mem_block_t* b=malloc(sz);
+	if (!b){
+		return NULL;
+	}
+	b->dt=USED_BLOCK_FLAG_USED|sz;
+	return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
 }
 
 
@@ -219,7 +281,39 @@ __SLL_FUNC void sll_deallocate(void* p){
 	}
 	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
 	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
-	if (USED_BLOCK_GET_SIZE(b)>ALLOCATOR_MAX_SMALL_SIZE){
+	if (b->dt&USED_BLOCK_FLAG_STACK){
+		sll_size_t p_sz=GET_STACK_BLOCK_PREV_SIZE(b);
+		sll_size_t sz=GET_STACK_BLOCK_SIZE(b);
+		b->dt&=0x3fffffffffffffffull;
+		mem_stack_block_t* n=(mem_stack_block_t*)(((uint64_t)b)+sz);
+		if (((uint64_t)n)<((uint64_t)_memory_stack_page)+_memory_stack_size&&!(n->dt&USED_BLOCK_FLAG_USED)){
+			mem_stack_block_t* nn=(mem_stack_block_t*)(((uint64_t)n)+GET_STACK_BLOCK_SIZE(n));
+			if (((uint64_t)nn)<((uint64_t)_memory_stack_page)+_memory_stack_size){
+				UPDATE_STACK_BLOCK_PREV_SIZE(nn,GET_STACK_BLOCK_SIZE(n)+sz);
+			}
+			if (n==_memory_stack_top){
+				_memory_stack_top=(mem_stack_block_t*)b;
+			}
+			sz+=GET_STACK_BLOCK_SIZE(n);
+			b->dt=SET_STACK_BLOCK_SIZE(p_sz,sz);
+		}
+		if (p_sz){
+			mem_stack_block_t* p=(mem_stack_block_t*)(((uint64_t)b)-p_sz);
+			if (!(p->dt&USED_BLOCK_FLAG_USED)){
+				p_sz+=sz;
+				UPDATE_STACK_BLOCK_SIZE(p,p_sz);
+				mem_stack_block_t* n=(mem_stack_block_t*)(((uint64_t)b)+sz);
+				if (((uint64_t)n)<((uint64_t)_memory_stack_page)+_memory_stack_size){
+					SLL_ASSERT(n->dt&USED_BLOCK_FLAG_USED);
+					UPDATE_STACK_BLOCK_PREV_SIZE(n,p_sz);
+				}
+				else if (((mem_stack_block_t*)b)==_memory_stack_top){
+					_memory_stack_top=p;
+				}
+			}
+		}
+	}
+	else if (USED_BLOCK_GET_SIZE(b)>ALLOCATOR_MAX_SMALL_SIZE){
 		free(b);
 	}
 	else{
@@ -240,6 +334,56 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
 	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
 	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
+	if (b->dt&USED_BLOCK_FLAG_STACK){
+		if (GET_STACK_BLOCK_SIZE(b)==sz){
+			return p;
+		}
+		mem_stack_block_t* n=(mem_stack_block_t*)(((uint64_t)b)+GET_STACK_BLOCK_SIZE(b));
+		if (GET_STACK_BLOCK_SIZE(b)>sz){
+			sll_size_t off=GET_STACK_BLOCK_SIZE(b)-sz;
+			SLL_ASSERT(!(off&15));
+			if (((uint64_t)n)<((uint64_t)_memory_stack_page)+_memory_stack_size){
+				if (n->dt&USED_BLOCK_FLAG_USED){
+					SLL_UNIMPLEMENTED();
+				}
+				else{
+					mem_stack_block_t* nn=(mem_stack_block_t*)(((uint64_t)n)+GET_STACK_BLOCK_SIZE(n));
+					if (((uint64_t)nn)<((uint64_t)_memory_stack_page)+_memory_stack_size){
+						UPDATE_STACK_BLOCK_PREV_SIZE(nn,GET_STACK_BLOCK_SIZE(n)+off);
+					}
+					nn=(mem_stack_block_t*)(((uint64_t)n)-off);
+					nn->dt=SET_STACK_BLOCK_SIZE(sz,GET_STACK_BLOCK_SIZE(n)+off);
+				}
+			}
+			else{
+				SLL_UNIMPLEMENTED();
+			}
+			UPDATE_STACK_BLOCK_SIZE(b,sz);
+			return p;
+		}
+		if (((uint64_t)n)<((uint64_t)_memory_stack_page)+_memory_stack_size&&!(n->dt&USED_BLOCK_FLAG_USED)&&sz-GET_STACK_BLOCK_SIZE(b)<=GET_STACK_BLOCK_SIZE(n)){
+			sll_size_t n_sz=GET_STACK_BLOCK_SIZE(n)-sz+GET_STACK_BLOCK_SIZE(b);
+			UPDATE_STACK_BLOCK_SIZE(b,sz);
+			mem_stack_block_t* nn=(mem_stack_block_t*)(((uint64_t)b)+sz);
+			if (((uint64_t)nn)>=((uint64_t)_memory_stack_page)+_memory_stack_size){
+				SLL_ASSERT(n==_memory_stack_top);
+				_memory_stack_top=NULL;
+			}
+			else{
+				SLL_ASSERT(!(n_sz&15));
+				nn->dt=SET_STACK_BLOCK_SIZE(sz,n_sz);
+				if (n==_memory_stack_top){
+					_memory_stack_top=nn;
+				}
+				mem_stack_block_t* nnn=(mem_stack_block_t*)(((uint64_t)nn)+n_sz);
+				if (((uint64_t)nnn)<((uint64_t)_memory_stack_page)+_memory_stack_size){
+					UPDATE_STACK_BLOCK_PREV_SIZE(nnn,n_sz);
+				}
+			}
+			return p;
+		}
+		SLL_UNIMPLEMENTED();
+	}
 	if (USED_BLOCK_GET_SIZE(b)==sz){
 		return p;
 	}

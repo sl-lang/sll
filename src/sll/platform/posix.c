@@ -93,7 +93,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_page_size(void){
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
 	DIR* d=opendir((char*)fp);
-	sll_string_t* op=NULL;
+	sll_string_t* op=sll_allocate_stack(1);
 	sll_array_length_t ol=0;
 	if (d){
 		struct dirent* dt;
@@ -131,7 +131,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 		l++;
 	}
 	file_list_data_t dt={
-		NULL,
+		sll_allocate_stack(1),
 		0
 	};
 	_list_dir_files(bf,l,&dt);

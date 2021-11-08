@@ -168,6 +168,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define OBJECT_TYPE_CHANGE_STACK SLL_OBJECT_TYPE_RESERVED0
 
 #define ALLOCATOR_PAGE_ALLOC_COUNT 16
+#define ALLOCATOR_STACK_PAGE_ALLOC_COUNT 64
 #define ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT 16
 #define GC_RUNTIME_OBJECT_POOL_PAGE_ALLOC_COUNT 16
 #define OBJECT_STACK_PAGE_ALLOC_COUNT 16
@@ -417,6 +418,12 @@ typedef struct __USER_MEM_BLOCK{
 typedef struct __MEM_BLOCK{
 	struct __MEM_BLOCK* n;
 } mem_block_t;
+
+
+
+typedef struct __MEM_STACK_BLOCK{
+	uint64_t dt;
+} mem_stack_block_t;
 
 
 

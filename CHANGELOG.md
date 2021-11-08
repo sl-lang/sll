@@ -2,6 +2,10 @@
 
 ## [0.6.27] - Ongoing
 
+### Added
+
+- More memory API: `sll_allocate_stack`
+
 ### Changed
 
 - Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI

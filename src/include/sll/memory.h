@@ -9,6 +9,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz);
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz);
+
+
+
 __SLL_FUNC void sll_deallocate(void* p);
 
 
