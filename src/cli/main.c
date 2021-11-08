@@ -86,11 +86,11 @@
 
 static uint8_t ol;
 static uint16_t fl;
-static char* i_fp;
+static sll_char_t* i_fp;
 static uint32_t i_fpl;
-static char** fp;
+static sll_char_t** fp;
 static uint32_t fpl;
-static char l_fp[MAX_PATH_LENGTH];
+static sll_char_t l_fp[MAX_PATH_LENGTH];
 static uint32_t l_fpl;
 #ifdef STANDALONE_BUILD
 static sll_input_buffer_t m_i_bf;
@@ -102,7 +102,7 @@ static DWORD cm;
 
 
 
-static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp);
+static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,sll_char_t* f_fp);
 
 
 
@@ -110,8 +110,8 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 	FILE* f=NULL;
 	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 	sll_input_data_stream_t is;
-	char f_fp[MAX_PATH_LENGTH];
-	if (!load_file((char*)(nm->v),&a_dt,o,&f,&is,f_fp)){
+	sll_char_t f_fp[MAX_PATH_LENGTH];
+	if (!load_file(nm->v,&a_dt,o,&f,&is,f_fp)){
 		if (f){
 			fclose(f);
 		}
@@ -134,30 +134,30 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 
 
 
-static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,char* f_fp){
-	sll_string_length_t f_nm_l=sll_string_length_unaligned(SLL_CHAR(f_nm));
-	char bf[MAX_PATH_LENGTH];
+static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,sll_char_t* f_fp){
+	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
+	sll_char_t bf[MAX_PATH_LENGTH];
 	sll_string_length_t i=0;
 	while (i<i_fpl){
-		sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(i_fp+i));
-		memcpy(bf,i_fp+i,j);
+		sll_string_length_t j=sll_string_length_unaligned(i_fp+i);
+		sll_copy_data(i_fp+i,j,bf);
 		i+=j+1;
-		memcpy(bf+j,f_nm,f_nm_l);
+		sll_copy_data(f_nm,f_nm_l,bf+j);
 		j+=f_nm_l;
-		memcpy(bf+j,".slc",5);
+		sll_copy_data(".slc",5,bf+j);
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Open File '");
-			fputs(bf,stdout);
+			fputs((char*)bf,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		FILE* nf=fopen(bf,"rb");
+		FILE* nf=fopen((char*)bf,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(SLL_CHAR(bf),SLL_CHAR(f_fp),MAX_PATH_LENGTH)){
-				memcpy(f_fp,bf,j+1);
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(bf,f_fp,MAX_PATH_LENGTH)){
+				sll_copy_data(bf,j+1,f_fp);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
-				fputs(f_fp,stdout);
+				fputs((char*)f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
 			*f=nf;
@@ -168,7 +168,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("File '");
-					fputs(f_fp,stdout);
+					fputs((char*)f_fp,stdout);
 					PRINT_STATIC_STR("'is not a Compiled Object.\n");
 					COLOR_RESET;
 				}
@@ -191,17 +191,17 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		bf[j]=0;
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Open File '");
-			fputs(bf,stdout);
+			fputs((char*)bf,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		nf=fopen(bf,"rb");
+		nf=fopen((char*)bf,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(SLL_CHAR(bf),SLL_CHAR(f_fp),MAX_PATH_LENGTH)){
-				memcpy(f_fp,bf,j+1);
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(bf,f_fp,MAX_PATH_LENGTH)){
+				sll_copy_data(bf,j+1,f_fp);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
-				fputs(f_fp,stdout);
+				fputs((char*)f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
 			*f=nf;
@@ -215,7 +215,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 						sll_deinit_compilation_data(c_dt);
 						if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 							sll_stream_create_input_from_file(nf,is);
-							sll_init_compilation_data(SLL_CHAR(f_fp),is,c_dt);
+							sll_init_compilation_data(f_fp,is,c_dt);
 							if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
 								sll_deinit_compilation_data(c_dt);
 								if (e.t!=SLL_ERROR_UNKNOWN){
@@ -314,21 +314,21 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 #else
 	if (l_fpl){
 		i=l_fpl+f_nm_l;
-		memcpy(l_fp+l_fpl,f_nm,f_nm_l);
-		memcpy(l_fp+i,".slc",5);
+		sll_copy_data(f_nm,f_nm_l,l_fp+l_fpl);
+		sll_copy_data(".slc",5,l_fp+i);
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Open File '");
-			fputs(l_fp,stdout);
+			fputs((char*)l_fp,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		FILE* nf=fopen(l_fp,"rb");
+		FILE* nf=fopen((char*)l_fp,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(SLL_CHAR(l_fp),SLL_CHAR(f_fp),MAX_PATH_LENGTH)){
-				memcpy(f_fp,l_fp,i+5);
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(l_fp,f_fp,MAX_PATH_LENGTH)){
+				sll_copy_data(l_fp,i+5,f_fp);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
-				fputs(f_fp,stdout);
+				fputs((char*)f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
 			*f=nf;
@@ -339,7 +339,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("File '");
-					fputs(f_fp,stdout);
+					fputs((char*)f_fp,stdout);
 					PRINT_STATIC_STR("' is not a Compiled Object.\n");
 					COLOR_RESET;
 				}
@@ -362,23 +362,23 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 		*(l_fp+i)=0;
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Open File '");
-			fputs(l_fp,stdout);
+			fputs((char*)l_fp,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		nf=fopen(l_fp,"rb");
+		nf=fopen((char*)l_fp,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(SLL_CHAR(l_fp),SLL_CHAR(f_fp),MAX_PATH_LENGTH)){
-				memcpy(f_fp,l_fp,l_fpl+5);
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(l_fp,f_fp,MAX_PATH_LENGTH)){
+				sll_copy_data(l_fp,l_fpl+5,f_fp);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
-				fputs(f_fp,stdout);
+				fputs((char*)f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
 			*f=nf;
 			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
-			sll_init_compilation_data(SLL_CHAR(l_fp),is,c_dt);
+			sll_init_compilation_data(l_fp,is,c_dt);
 			if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
 				sll_deinit_compilation_data(c_dt);
 				if (e.t!=SLL_ERROR_UNKNOWN){
@@ -401,7 +401,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 #endif
 	COLOR_RED;
 	PRINT_STATIC_STR("Unable to Find File '");
-	fputs(f_nm,stdout);
+	fputs((char*)f_nm,stdout);
 	PRINT_STATIC_STR("'\n");
 	COLOR_RESET;
 	return 0;
@@ -409,7 +409,7 @@ static uint8_t load_file(const char* f_nm,sll_assembly_data_t* a_dt,sll_compilat
 
 
 
-static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_input_data_stream_t* is,const char* o_fp,int* ec){
+static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_input_data_stream_t* is,const sll_char_t* o_fp,int* ec){
 	if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
 		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
 			if (fl&FLAG_VERBOSE){
@@ -457,21 +457,21 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 		putchar('\n');
 	}
 	if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT)){
-		char bf[MAX_PATH_LENGTH];
+		sll_char_t bf[MAX_PATH_LENGTH];
 		uint16_t i=0;
-		sll_string_length_t f_fp_l=sll_string_length_unaligned(SLL_CHAR(f_fp));
+		sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
 		if (!o_fp){
-			memcpy(bf,f_fp,f_fp_l);
+			sll_copy_data(f_fp,f_fp_l,bf);
 			i=f_fp_l-1;
 		}
 		else{
 			if (fpl==1){
-				i=sll_string_length_unaligned(SLL_CHAR(o_fp));
-				memcpy(bf,o_fp,i);
+				i=sll_string_length_unaligned(o_fp);
+				sll_copy_data(o_fp,i,bf);
 				i-=1;
 			}
 			else{
-				i=sll_string_length_unaligned(SLL_CHAR(o_fp));
+				i=sll_string_length_unaligned(o_fp);
 				while (*(o_fp+i)!='\\'&&*(o_fp+i)!='/'){
 					if (i==0){
 						i--;
@@ -484,23 +484,23 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 				while (j&&*(f_fp+j-1)!='\\'&&*(f_fp+j-1)!='/'){
 					j--;
 				}
-				memcpy(bf+i,f_fp+j,f_fp_l-j);
+				sll_copy_data(f_fp+j,f_fp_l-j,bf+i);
 				i+=f_fp_l-j-1;
 			}
 		}
 		i++;
 		if (fl&FLAG_GENERATE_ASSEMBLY){
-			memcpy(bf+i,".sla",5);
+			sll_copy_data(".sla",5,bf+i);
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Writing Assembly to File '");
-				fputs(bf,stdout);
+				fputs((char*)bf,stdout);
 				PRINT_STATIC_STR("'...\n");
 			}
-			FILE* f=fopen(bf,"wb");
+			FILE* f=fopen((char*)bf,"wb");
 			if (!f){
 				COLOR_RED;
 				PRINT_STATIC_STR("Unable to Open Output File '");
-				fputs(bf,stdout);
+				fputs((char*)bf,stdout);
 				PRINT_STATIC_STR("'\n");
 				COLOR_RESET;
 				return 0;
@@ -514,17 +514,17 @@ static uint8_t execute(const char* f_fp,sll_compilation_data_t* c_dt,sll_assembl
 			fclose(f);
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-			memcpy(bf+i,".slc",5);
+			sll_copy_data(".slc",5,bf+i);
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Writing Compiled Object to File '");
-				fputs(bf,stdout);
+				fputs((char*)bf,stdout);
 				PRINT_STATIC_STR("'...\n");
 			}
-			FILE* f=fopen(bf,"wb");
+			FILE* f=fopen((char*)bf,"wb");
 			if (!f){
 				COLOR_RED;
 				PRINT_STATIC_STR("Unable to Open Output File '");
-				fputs(bf,stdout);
+				fputs((char*)bf,stdout);
 				PRINT_STATIC_STR("'\n");
 				COLOR_RESET;
 				return 0;
@@ -580,7 +580,7 @@ int main(int argc,const char** argv){
 	int ec=1;
 	ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
 	fl=0;
-	i_fp=malloc(sizeof(char));
+	i_fp=malloc(sizeof(sll_char_t));
 	if (!i_fp){
 		PRINT_STATIC_STR("Unable to Allocate Space for Include File Path Array\n");
 		RESET_CONSOLE;
@@ -596,17 +596,17 @@ int main(int argc,const char** argv){
 		}
 		l_fpl--;
 	}
-	memcpy(l_fp+l_fpl+1,"lib/",5);
+	sll_copy_data("lib/",5,l_fp+l_fpl+1);
 	l_fpl+=5;
 _skip_lib_path:
 #endif
 	fp=NULL;
 	fpl=0;
-	char** sl=NULL;
+	sll_char_t** sl=NULL;
 	uint32_t sll=0;
 	sll_create_internal_function_table(&i_ft);
 	sll_register_standard_internal_functions(&i_ft);
-	const char* o_fp=NULL;
+	const sll_char_t* o_fp=NULL;
 	FILE* f=NULL;
 	sll_assembly_data_t a_dt={0};
 	sll_compilation_data_t c_dt={0};
@@ -653,7 +653,7 @@ _skip_lib_path:
 			if (sz){
 				uint32_t j=i_fpl;
 				i_fpl+=sz+(*(e+sz-1)!='\\'&&*(e+sz-1)!='/'?2:1);
-				void* tmp=realloc(i_fp,i_fpl*sizeof(char));
+				void* tmp=realloc(i_fp,i_fpl*sizeof(sll_char_t));
 				if (!tmp){
 					COLOR_RED;
 					PRINT_STATIC_STR("Unable to Allocate Space for Include File Path Array\n");
@@ -661,7 +661,7 @@ _skip_lib_path:
 					goto _error;
 				}
 				i_fp=tmp;
-				memcpy(i_fp+j,e,sz);
+				sll_copy_data(e,sz,i_fp+j);
 				j+=sz;
 				if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
 					*(i_fp+j)='/';
@@ -681,7 +681,7 @@ _skip_lib_path:
 			if (i==argc){
 				break;
 			}
-			o_fp=argv[i];
+			o_fp=(const sll_char_t*)(argv[i]);
 		}
 		else if (*e=='-'&&*(e+1)=='O'&&*(e+3)==0){
 			if (*(e+2)=='0'){
@@ -715,7 +715,7 @@ _skip_lib_path:
 				break;
 			}
 			sll++;
-			void* tmp=realloc(sl,sll*sizeof(char*));
+			void* tmp=realloc(sl,sll*sizeof(sll_char_t*));
 			if (!tmp){
 				COLOR_RED;
 				PRINT_STATIC_STR("Unable to Allocate Space for Source Code Array\n");
@@ -723,7 +723,7 @@ _skip_lib_path:
 				goto _error;
 			}
 			sl=tmp;
-			*(sl+sll-1)=(char*)argv[i];
+			*(sl+sll-1)=(sll_char_t*)argv[i];
 		}
 		else if ((*e=='-'&&*(e+1)=='v'&&*(e+2)==0)||!strcmp(e,"--verbose")){
 			fl|=FLAG_VERBOSE;
@@ -743,7 +743,7 @@ _unkown_switch:
 		else{
 _read_file_argument:
 			fpl++;
-			void* tmp=realloc(fp,fpl*sizeof(char*));
+			void* tmp=realloc(fp,fpl*sizeof(sll_char_t*));
 			if (!tmp){
 				COLOR_RED;
 				PRINT_STATIC_STR("Unable to Allocate Space for File Path Array\n");
@@ -751,7 +751,7 @@ _read_file_argument:
 				goto _error;
 			}
 			fp=tmp;
-			*(fp+fpl-1)=(char*)e;
+			*(fp+fpl-1)=(sll_char_t*)e;
 		}
 	}
 	if (fl&FLAG_VERSION){
@@ -807,14 +807,14 @@ _read_file_argument:
 			if (i){
 				PRINT_STATIC_STR("'\n  - '");
 			}
-			sll_string_length_t sz=sll_string_length_unaligned(SLL_CHAR(i_fp+i));
-			fwrite(i_fp+i,sizeof(char),sz,stdout);
+			sll_string_length_t sz=sll_string_length_unaligned(i_fp+i);
+			fwrite(i_fp+i,sizeof(sll_char_t),sz,stdout);
 			i+=sz+1;
 		}
 		PRINT_STATIC_STR("'\n");
 #ifndef STANDALONE_BUILD
 		PRINT_STATIC_STR("Library Path: ");
-		fputs(l_fp,stdout);
+		fputs((char*)l_fp,stdout);
 		putchar('\n');
 #endif
 	}
@@ -828,14 +828,14 @@ _read_file_argument:
 		goto _help;
 	}
 	for (uint32_t j=0;j<fpl;j++){
-		char f_fp[MAX_PATH_LENGTH];
+		sll_char_t f_fp[MAX_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		fl&=~_FLAG_ASSEMBLY_GENERATED;
 		if (!load_file(*(fp+j),&a_dt,&c_dt,&f,&is,f_fp)){
 			goto _error;
 		}
-		char bf[MAX_PATH_LENGTH];
-		sll_set_argument(0,SLL_CHAR((!sll_platform_path_absolute(SLL_CHAR(*(fp+j)),SLL_CHAR(bf),MAX_PATH_LENGTH)?*(fp+j):bf)));
+		sll_char_t bf[MAX_PATH_LENGTH];
+		sll_set_argument(0,(!sll_platform_path_absolute(*(fp+j),bf,MAX_PATH_LENGTH)?*(fp+j):bf));
 		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
 			goto _error;
 		}
@@ -848,11 +848,11 @@ _read_file_argument:
 	}
 	for (uint32_t j=0;j<sll;j++){
 		sll_set_argument(0,SLL_CHAR("<console>"));
-		char f_fp[MAX_PATH_LENGTH];
+		sll_char_t f_fp[MAX_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		sll_input_buffer_t i_bf={
-			SLL_CHAR(*(sl+j)),
-			sll_string_length_unaligned(SLL_CHAR(*(sl+j)))
+			*(sl+j),
+			sll_string_length_unaligned(*(sl+j))
 		};
 		sll_stream_create_input_from_buffer(&i_bf,&is);
 		if (fl&FLAG_VERBOSE){

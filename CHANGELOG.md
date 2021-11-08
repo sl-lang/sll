@@ -8,11 +8,12 @@
 
 ### Changed
 
+- CLI now uses built-in sll types
 - Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI
 
 ### Removed
 
-- Options related to updating Sll from the CLI
+- Options related to updating sll from the CLI
 - Unused CLI macro: `EXPAND_FILE_PATH`
 
 ## [0.6.26] - 2021-11-7
