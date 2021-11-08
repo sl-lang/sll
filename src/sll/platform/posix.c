@@ -90,6 +90,18 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
+	ssize_t i=readlink("/proc/self/exe",(char*)o,ol);
+	if (i!=-1){
+		*(o+i)=0;
+		return (sll_string_length_t)i;
+	}
+	*o=0;
+	return 0;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_page_size(void){
 	return sysconf(_SC_PAGESIZE);
 }

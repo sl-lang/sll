@@ -17,21 +17,21 @@
 
 
 
-char e_fp[4096];
-char ti_fp[4096];
-char to_fp[4096];
+sll_char_t e_fp[SLL_API_MAX_FILE_PATH_LENGTH];
+sll_char_t ti_fp[SLL_API_MAX_FILE_PATH_LENGTH];
+sll_char_t to_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 
 
 
-uint8_t execute_test(uint8_t id){
-	remove(to_fp);
+sll_bool_t execute_test(uint8_t id){
+	remove((char*)to_fp);
 	if (id==TEST_ID_PARSE){
 		sll_internal_function_table_t i_ft;
 		sll_create_internal_function_table(&i_ft);
 		sll_register_standard_internal_functions(&i_ft);
-		FILE* f=fopen(ti_fp,"rb");
+		FILE* f=fopen((char*)ti_fp,"rb");
 		if (!f){
-			return 1;
+			return 0;
 		}
 		sll_input_data_stream_t is;
 		sll_stream_create_input_from_file(f,&is);
@@ -39,7 +39,7 @@ uint8_t execute_test(uint8_t id){
 		sll_init_compilation_data(SLL_CHAR("<internal>"),&is,&c_dt);
 		sll_error_t e;
 		if (!sll_parse_all_objects(&c_dt,&i_ft,NULL,&e)){
-			FILE* o_f=fopen(to_fp,"wb");
+			FILE* o_f=fopen((char*)to_fp,"wb");
 			if (!o_f){
 				return 1;
 			}
@@ -48,9 +48,9 @@ uint8_t execute_test(uint8_t id){
 		}
 		sll_deinit_compilation_data(&c_dt);
 		fclose(f);
-		return 0;
+		return 1;
 	}
-	return 1;
+	return 0;
 }
 
 
@@ -85,7 +85,7 @@ int8_t execute_subprocess(uint8_t id){
 		return -1;
 	}
 	if (f==0){
-		exit(execute_test(id));
+		exit(!execute_test(id));
 	}
 	int st;
 	if (waitpid(-1,&st,0)==-1){
@@ -97,8 +97,8 @@ int8_t execute_subprocess(uint8_t id){
 
 
 
-char* error_to_string(sll_error_t* e){
-	char* o=malloc(512*sizeof(char));
+sll_char_t* error_to_string(sll_error_t* e){
+	sll_char_t* o=malloc(512*sizeof(sll_char_t));
 	switch (e->t){
 		default:
 		case SLL_ERROR_UNKNOWN:
@@ -108,7 +108,7 @@ char* error_to_string(sll_error_t* e){
 		case SLL_ERROR_STACK_CORRUPTED:
 		case SLL_ERROR_INVALID_INSTRUCTION_INDEX:
 		case SLL_ERROR_INVALID_STACK_INDEX:
-			snprintf(o,512,"<type=%"PRIu8">",e->t);
+			snprintf((char*)o,512,"<type=%"PRIu8">",e->t);
 			break;
 		case SLL_ERROR_INTERNAL_STACK_OVERFLOW:
 		case SLL_ERROR_UNMATCHED_OPEN_PARENTHESES:
@@ -141,13 +141,13 @@ char* error_to_string(sll_error_t* e){
 		case SLL_ERROR_UNKNOWN_IDENTIFIER:
 		case SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
 		case SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII:
-			snprintf(o,512,"<type=%"PRIu8", range=%"PRIu32"-%"PRIu32">",e->t,e->dt.r.off,e->dt.r.off+e->dt.r.sz);
+			snprintf((char*)o,512,"<type=%"PRIu8", range=%"PRIu32"-%"PRIu32">",e->t,e->dt.r.off,e->dt.r.off+e->dt.r.sz);
 			break;
 		case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-			snprintf(o,512,"<type=%"PRIu8", string='%s'>",e->t,e->dt.str);
+			snprintf((char*)o,512,"<type=%"PRIu8", string='%s'>",e->t,e->dt.str);
 			break;
 		case SLL_ERROR_INVALID_INSTRUCTION:
-			snprintf(o,512,"<type=%"PRIu8", opcode=%"PRIu8">",e->t,e->dt.it);
+			snprintf((char*)o,512,"<type=%"PRIu8", opcode=%"PRIu8">",e->t,e->dt.it);
 			break;
 	}
 	return o;
@@ -155,9 +155,9 @@ char* error_to_string(sll_error_t* e){
 
 
 
-void run_parser_test(const char* fp,test_result_t* o){
-	FILE* f=fopen(fp,"rb");
-	char* f_dt=NULL;
+void run_parser_test(const sll_char_t* fp,test_result_t* o){
+	FILE* f=fopen((char*)fp,"rb");
+	sll_char_t* f_dt=NULL;
 	sll_json_object_t json={
 		SLL_JSON_OBJECT_TYPE_INTEGER,
 		{
@@ -168,11 +168,11 @@ void run_parser_test(const char* fp,test_result_t* o){
 		goto _json_error;
 	}
 	fseek(f,0,SEEK_END);
-	uint32_t sz=ftell(f);
-	f_dt=malloc((sz+1)*sizeof(char));
+	sll_string_length_t sz=ftell(f);
+	f_dt=malloc((sz+1)*sizeof(sll_char_t));
 	*(f_dt+sz)=0;
 	fseek(f,0,SEEK_SET);
-	if (fread(f_dt,sizeof(char),sz,f)!=sz){
+	if (fread(f_dt,sizeof(sll_char_t),sz,f)!=sz){
 		goto _json_error;
 	}
 	fclose(f);
@@ -189,17 +189,17 @@ void run_parser_test(const char* fp,test_result_t* o){
 	if (!nm_e||nm_e->t!=SLL_JSON_OBJECT_TYPE_STRING){
 		goto _json_error;
 	}
-	char* nm=(char*)nm_e->dt.s.v;
+	sll_char_t* nm=(sll_char_t*)nm_e->dt.s.v;
 	sll_string_from_pointer(SLL_CHAR("data"),&tmp_str);
 	sll_json_object_t* dt_e=sll_json_get_by_key(&json,&tmp_str);
 	if (!dt_e||dt_e->t!=SLL_JSON_OBJECT_TYPE_ARRAY){
 		goto _json_error;
 	}
 	if (!dt_e->dt.a.l){
-		printf("Empty Test '%s'\n",nm);
+		printf("Empty Test '%s'\n",(char*)nm);
 		return;
 	}
-	printf("Running Test '%s':\n",nm);
+	printf("Running Test '%s':\n",(char*)nm);
 	uint8_t bf[32768];
 	for (uint32_t i=0;i<dt_e->dt.a.l;i++){
 		sll_json_object_t* t=dt_e->dt.a.dt+i;
@@ -215,8 +215,8 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 			continue;
 		}
-		FILE* dt_f=fopen(ti_fp,"wb");
-		if (!dt_f||fwrite(in_e->dt.s.v,sizeof(char),in_e->dt.s.l,dt_f)!=in_e->dt.s.l){
+		FILE* dt_f=fopen((char*)ti_fp,"wb");
+		if (!dt_f||fwrite(in_e->dt.s.v,sizeof(sll_char_t),in_e->dt.s.l,dt_f)!=in_e->dt.s.l){
 			if (dt_f){
 				fclose(dt_f);
 			}
@@ -244,8 +244,8 @@ void run_parser_test(const char* fp,test_result_t* o){
 			printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 			continue;
 		}
-		uint32_t bfl=0;
-		FILE* bf_f=fopen(to_fp,"rb");
+		FILE* bf_f=fopen((char*)to_fp,"rb");
+		sll_string_length_t bfl=0;
 		if (bf_f){
 			fseek(bf_f,0,SEEK_END);
 			bfl=ftell(bf_f);
@@ -268,7 +268,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 				continue;
 			}
 			o->f++;
-			char* err_s=error_to_string((sll_error_t*)bf);
+			sll_char_t* err_s=error_to_string((sll_error_t*)bf);
 			printf("-> Test Case #%"PRIu32": Expected No Error, Recived %s\n",i,err_s);
 			free(err_s);
 			continue;
@@ -342,7 +342,7 @@ void run_parser_test(const char* fp,test_result_t* o){
 					printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 					continue;
 				}
-				for (uint32_t j=0;j<err_v_e->dt.s.l;j++){
+				for (sll_string_length_t j=0;j<err_v_e->dt.s.l;j++){
 					ne.dt.str[j]=*(err_v_e->dt.s.v+j);
 				}
 				ne.dt.str[err_v_e->dt.s.l]=0;
@@ -359,8 +359,8 @@ void run_parser_test(const char* fp,test_result_t* o){
 		if (e->t!=ne.t){
 _wrong_error:
 			o->f++;
-			char* e_s=error_to_string(e);
-			char* ne_s=error_to_string(&ne);
+			sll_char_t* e_s=error_to_string(e);
+			sll_char_t* ne_s=error_to_string(&ne);
 			printf("-> Test Case #%"PRIu32": Expected %s, Recived %s\n",i,ne_s,e_s);
 			free(e_s);
 			free(ne_s);
@@ -435,16 +435,11 @@ _json_error:
 
 int main(int argc,const char** argv){
 	sll_init();
-#ifdef _MSC_VER
-	uint16_t i=(uint16_t)GetModuleFileNameA(NULL,e_fp,4096);
-#else
-	uint16_t i=(uint16_t)readlink("/proc/self/exe",e_fp,4096);
-#endif
-	e_fp[i]=0;
+	sll_string_length_t i=sll_platform_get_executable_file_path(e_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 	while (i&&e_fp[i]!='\\'&&e_fp[i]!='/'){
 		i--;
 	}
-	sll_char_t td_fp[4096];
+	sll_char_t td_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 	for (uint16_t j=0;j<i;j++){
 		ti_fp[j]=e_fp[j];
 		to_fp[j]=e_fp[j];
@@ -455,7 +450,7 @@ int main(int argc,const char** argv){
 	sll_copy_data("/../tests/data/",16,td_fp+i);
 #ifdef _MSC_VER
 	if (argc==2){
-		return execute_test(argv[1][0]-1);
+		return !execute_test(argv[1][0]-1);
 	}
 #endif
 	test_result_t dt={
@@ -466,7 +461,7 @@ int main(int argc,const char** argv){
 	sll_string_t* a=NULL;
 	sll_array_length_t l=sll_platform_list_directory_recursive(td_fp,&a);
 	for (sll_array_length_t j=0;j<l;j++){
-		run_parser_test((char*)((a+j)->v),&dt);
+		run_parser_test((a+j)->v,&dt);
 		sll_deinit_string(a+j);
 	}
 	sll_deallocate(a);

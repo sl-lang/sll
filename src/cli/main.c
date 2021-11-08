@@ -18,30 +18,6 @@
 
 
 
-#ifdef _MSC_VER
-#define MAX_PATH_LENGTH (MAX_PATH+1)
-#define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
-	do{ \
-		(o)=GetModuleFileNameA(NULL,(char*)(bf),(l)); \
-	} while (0)
-#else
-#define MAX_PATH_LENGTH (PATH_MAX+1)
-#define GET_EXECUATBLE_FILE_PATH(bf,l,o) \
-	do{ \
-		ssize_t __o=readlink("/proc/self/exe",(char*)(bf),(l)); \
-		if (__o!=-1){ \
-			(o)=__o; \
-			*((bf)+(o))=0; \
-		} \
-		else{ \
-			(o)=0; \
-			*(bf)=0; \
-		} \
-	} while (0)
-#endif
-
-
-
 #define PRINT_STATIC_STR(s) fwrite((void*)(s),sizeof(char),sizeof((s))/sizeof(char)-1,stdout)
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -85,11 +61,11 @@
 static uint8_t ol;
 static uint16_t fl;
 static sll_char_t* i_fp;
-static uint32_t i_fpl;
+static sll_string_length_t i_fpl;
 static sll_char_t** fp;
-static uint32_t fpl;
-static sll_char_t l_fp[MAX_PATH_LENGTH];
-static uint32_t l_fpl;
+static sll_string_length_t fpl;
+static sll_char_t l_fp[SLL_API_MAX_FILE_PATH_LENGTH];
+static sll_string_length_t l_fpl;
 #ifdef STANDALONE_BUILD
 static sll_input_buffer_t m_i_bf;
 #endif
@@ -105,7 +81,7 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 	FILE* f=NULL;
 	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 	sll_input_data_stream_t is;
-	sll_char_t f_fp[MAX_PATH_LENGTH];
+	sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 	if (!load_file(nm->v,&a_dt,o,&f,&is,f_fp)){
 		if (f){
 			fclose(f);
@@ -131,7 +107,7 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 
 static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,sll_char_t* f_fp){
 	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
-	sll_char_t bf[MAX_PATH_LENGTH];
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
 	while (i<i_fpl){
 		sll_string_length_t j=sll_string_length_unaligned(i_fp+i);
@@ -147,7 +123,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		FILE* nf=fopen((char*)bf,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(bf,f_fp,MAX_PATH_LENGTH)){
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH)){
 				sll_copy_data(bf,j+1,f_fp);
 			}
 			if (fl&FLAG_VERBOSE){
@@ -191,7 +167,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		nf=fopen((char*)bf,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(bf,f_fp,MAX_PATH_LENGTH)){
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH)){
 				sll_copy_data(bf,j+1,f_fp);
 			}
 			if (fl&FLAG_VERBOSE){
@@ -318,7 +294,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		FILE* nf=fopen((char*)l_fp,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(l_fp,f_fp,MAX_PATH_LENGTH)){
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH)){
 				sll_copy_data(l_fp,i+5,f_fp);
 			}
 			if (fl&FLAG_VERBOSE){
@@ -362,7 +338,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		nf=fopen((char*)l_fp,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(l_fp,f_fp,MAX_PATH_LENGTH)){
+			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH)){
 				sll_copy_data(l_fp,l_fpl+5,f_fp);
 			}
 			if (fl&FLAG_VERBOSE){
@@ -452,7 +428,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		putchar('\n');
 	}
 	if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT)){
-		sll_char_t bf[MAX_PATH_LENGTH];
+		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		uint16_t i=0;
 		sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
 		if (!o_fp){
@@ -580,7 +556,7 @@ int main(int argc,const char** argv){
 	}
 	*i_fp=0;
 	i_fpl=1;
-	GET_EXECUATBLE_FILE_PATH(l_fp,MAX_PATH_LENGTH,l_fpl);
+	l_fpl=sll_platform_get_executable_file_path(l_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 #ifndef STANDALONE_BUILD
 	while (l_fp[l_fpl]!='/'&&l_fp[l_fpl]!='\\'){
 		if (!l_fpl){
@@ -820,14 +796,14 @@ _read_file_argument:
 		goto _help;
 	}
 	for (uint32_t j=0;j<fpl;j++){
-		sll_char_t f_fp[MAX_PATH_LENGTH];
+		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		fl&=~_FLAG_ASSEMBLY_GENERATED;
 		if (!load_file(*(fp+j),&a_dt,&c_dt,&f,&is,f_fp)){
 			goto _error;
 		}
-		sll_char_t bf[MAX_PATH_LENGTH];
-		sll_set_argument(0,(!sll_platform_path_absolute(*(fp+j),bf,MAX_PATH_LENGTH)?*(fp+j):bf));
+		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+		sll_set_argument(0,(!sll_platform_path_absolute(*(fp+j),bf,SLL_API_MAX_FILE_PATH_LENGTH)?*(fp+j):bf));
 		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
 			goto _error;
 		}
@@ -840,7 +816,7 @@ _read_file_argument:
 	}
 	for (uint32_t j=0;j<sll;j++){
 		sll_set_argument(0,SLL_CHAR("<console>"));
-		sll_char_t f_fp[MAX_PATH_LENGTH];
+		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_input_data_stream_t is;
 		sll_input_buffer_t i_bf={
 			*(sl+j),

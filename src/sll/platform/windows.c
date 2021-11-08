@@ -134,6 +134,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
+	return GetModuleFileNameA(NULL,(char*)o,ol);
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
