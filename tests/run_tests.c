@@ -440,7 +440,7 @@ int main(int argc,const char** argv){
 		i--;
 	}
 	sll_char_t td_fp[SLL_API_MAX_FILE_PATH_LENGTH];
-	for (uint16_t j=0;j<i;j++){
+	for (sll_string_length_t j=0;j<i;j++){
 		ti_fp[j]=e_fp[j];
 		to_fp[j]=e_fp[j];
 		td_fp[j]=e_fp[j];
