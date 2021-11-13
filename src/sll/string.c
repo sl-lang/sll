@@ -1138,11 +1138,7 @@ __SLL_FUNC void sll_string_split(const sll_string_t* s,const sll_string_t* p,sll
 		return;
 	}
 	if (!p->l){
-		o->l=s->l;
-		o->v=sll_allocate(s->l*sizeof(sll_runtime_object_t*));
-		for (sll_string_length_t i=0;i<s->l;i++){
-			o->v[i]=SLL_FROM_CHAR(s->v[i]);
-		}
+		sll_string_to_array(s,o);
 		return;
 	}
 	if (p->l==1){

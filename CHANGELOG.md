@@ -14,6 +14,7 @@
 - CLI and test sciript now use built-in sll types
 - Improved performance requested by [#92]
 - Refactored code according to [#82] and [#95]
+- Removed duplicated code ([#93])
 - Renamed `sll_loop_data_t` to `sll_loop_object_data_t` ([#85])
 - Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI
 - Replaced `memcmp` calls with calls to `sll_compare_data` and `strcmp` with `sll_string_compare_pointer` ([#81])
@@ -988,6 +989,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#95]: https://github.com/sl-lang/sll/issues/95
+[#93]: https://github.com/sl-lang/sll/issues/93
 [#92]: https://github.com/sl-lang/sll/issues/92
 [#85]: https://github.com/sl-lang/sll/issues/85
 [#82]: https://github.com/sl-lang/sll/issues/82
