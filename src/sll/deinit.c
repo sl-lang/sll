@@ -334,7 +334,7 @@ __SLL_FUNC void sll_deinit_json_object(sll_json_object_t* json){
 
 
 
-__SLL_FUNC void sll_deinit_loop_data(sll_loop_data_t* l_dt){
+__SLL_FUNC void sll_deinit_loop_data(sll_loop_object_data_t* l_dt){
 	SLL_INIT_LOOP_DATA(l_dt);
 }
 

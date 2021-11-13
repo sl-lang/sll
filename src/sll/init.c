@@ -234,7 +234,7 @@ __SLL_FUNC void sll_init_json_object(sll_json_object_t* o){
 
 
 
-__SLL_FUNC void sll_init_loop_data(sll_loop_data_t* o){
+__SLL_FUNC void sll_init_loop_data(sll_loop_object_data_t* o){
 	SLL_INIT_LOOP_DATA(o);
 }
 

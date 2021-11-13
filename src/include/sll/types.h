@@ -291,10 +291,10 @@ typedef struct __SLL_FUNCTION_OBJECT_DATA{
 
 
 
-typedef struct __SLL_LOOP_DATA{
+typedef struct __SLL_LOOP_OBEJCT_DATA{
 	sll_arg_count_t ac;
 	sll_scope_t sc;
-} sll_loop_data_t;
+} sll_loop_object_data_t;
 
 
 
@@ -316,7 +316,7 @@ typedef union __SLL_OBJECT_DATA{
 	sll_map_length_t ml;
 	sll_identifier_index_t id;
 	sll_function_object_data_t fn;
-	sll_loop_data_t l;
+	sll_loop_object_data_t l;
 	sll_arg_count_t ac;
 	sll_debug_object_data_t dbg;
 	sll_function_index_t fn_id;
