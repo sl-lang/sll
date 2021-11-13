@@ -1,8 +1,9 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/ift.h>
 #include <sll/memory.h>
 #include <sll/types.h>
-#include <stdint.h>
+#include <sll/util.h>
 
 
 
@@ -18,7 +19,7 @@ __SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const sll_char_t* nm){
-	uint8_t l=0;
+	sll_name_length_t l=0;
 	sll_checksum_t c=0;
 	while (*(nm+l)){
 		c^=*(nm+l);
@@ -26,18 +27,12 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(
 	}
 	for (sll_function_index_t i=0;i<i_ft->l;i++){
 		sll_internal_function_t* f=*(i_ft->dt+i);
-		if (f->c!=c||f->nml!=l){
+		if (f->c!=c||f->nml!=l||sll_compare_data(nm,f->nm,l)!=SLL_COMPARE_RESULT_EQUAL){
 			continue;
 		}
-		for (uint8_t j=0;j<l;j++){
-			if (*(nm+j)!=f->nm[j]){
-				goto _continue;
-			}
-		}
 		return i;
-_continue:;
 	}
-	return SLL_MAX_FUNCTION_INDEX;
+	return SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX;
 }
 
 

@@ -330,7 +330,7 @@ static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_
 						}
 						o->dt.fn.ac=ac-1;
 						o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,s->v);
-						if (o->dt.fn.id==SLL_MAX_FUNCTION_INDEX){
+						if (o->dt.fn.id==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX){
 							e->t=SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION;
 							for (sll_string_length_t i=0;i<s->l;i++){
 								e->dt.str[i]=s->v[i];

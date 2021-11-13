@@ -9,6 +9,7 @@
 - Implemented `sll_platform_enable_console_color`, `sll_platform_get_executable_file_path`, `sll_set_memory` and `sll_zero_memory`
 - Implemented `sll_zero_allocate_stack` ([#98])
 - More memory API functions: `sll_allocate_stack`
+- `SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX` macro constant ([#89])
 
 ### Changed
 
@@ -1001,6 +1002,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#92]: https://github.com/sl-lang/sll/issues/92
 [#91]: https://github.com/sl-lang/sll/issues/91
 [#90]: https://github.com/sl-lang/sll/issues/90
+[#89]: https://github.com/sl-lang/sll/issues/89
 [#88]: https://github.com/sl-lang/sll/issues/88
 [#85]: https://github.com/sl-lang/sll/issues/85
 [#84]: https://github.com/sl-lang/sll/issues/84

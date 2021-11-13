@@ -8,6 +8,9 @@
 #define SLL_INTERNAL_FUNCTION_FLAG_REQUIRED 1
 #define SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL 2
 
+#define SLL_MAX_FUNCTION_INDEX (UINT32_MAX-1)
+#define SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX UINT32_MAX
+
 
 
 __SLL_FUNC void sll_create_internal_function_table(sll_internal_function_table_t* o);
