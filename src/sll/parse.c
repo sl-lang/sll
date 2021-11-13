@@ -73,17 +73,6 @@ static sll_object_t* _patch_module(sll_object_t* mo,const import_module_data_t* 
 				}
 				return mo;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			{
-				sll_arg_count_t l=o->dt.ac;
-				mo++;
-				while (l){
-					l--;
-					mo=_patch_module(mo,im_dt);
-				}
-				return mo;
-			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			o->dt.dbg.fpi=*(im_dt->sm+o->dt.dbg.fpi);
 			return _patch_module(mo+1,im_dt);

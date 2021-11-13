@@ -25,9 +25,6 @@
 			if ((p)->t==SLL_OBJECT_TYPE_FUNC||(p)->t==SLL_OBJECT_TYPE_INTERNAL_FUNC){ \
 				(p)->dt.fn.ac--; \
 			} \
-			else if ((p)->t==SLL_OBJECT_TYPE_COMMA||(p)->t==SLL_OBJECT_TYPE_OPERATION_LIST){ \
-				(p)->dt.ac--; \
-			} \
 			else{ \
 				(p)->dt.ac--; \
 			} \
@@ -49,9 +46,6 @@
 		if (p){ \
 			if ((p)->t==SLL_OBJECT_TYPE_FUNC||(p)->t==SLL_OBJECT_TYPE_INTERNAL_FUNC){ \
 				(p)->dt.fn.ac+=(v); \
-			} \
-			else if ((p)->t==SLL_OBJECT_TYPE_COMMA||(p)->t==SLL_OBJECT_TYPE_OPERATION_LIST){ \
-				(p)->dt.ac+=(v); \
 			} \
 			else{ \
 				(p)->dt.ac+=(v); \
@@ -173,17 +167,6 @@ static sll_object_t* _remove_single_object(sll_object_t* o){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			{
-				sll_arg_count_t l=o->dt.ac;
-				o++;
-				while (l){
-					l--;
-					o=_remove_single_object(o);
-				}
-				return o;
-			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;
@@ -290,10 +273,11 @@ static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_comp
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;
@@ -647,10 +631,11 @@ static const sll_object_t* _mark_loop_vars(const sll_object_t* o,optimizer_data_
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;
@@ -2198,6 +2183,19 @@ static sll_object_t* _remap_indexes_merge_print(sll_object_t* o,sll_object_t* p,
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
 				sll_arg_count_t l=o->dt.fn.ac;
+				sll_object_t* r=o;
+				o++;
+				while (l){
+					l--;
+					o=_remap_indexes_merge_print(o,r,o_dt,fn_m);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
+			{
+				sll_arg_count_t l=o->dt.l.ac;
 				sll_object_t* r=o;
 				o++;
 				while (l){

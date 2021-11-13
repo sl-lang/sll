@@ -30,10 +30,11 @@ static sll_object_t* _remove_debug_data_internal(sll_object_t* o){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;

@@ -160,10 +160,11 @@ static const sll_object_t* _map_identifiers(const sll_object_t* o,const sll_comp
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;
@@ -346,6 +347,8 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 		case SLL_OBJECT_TYPE_IF:
 		case SLL_OBJECT_TYPE_SWITCH:
 		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 		case SLL_OBJECT_TYPE_RETURN:
 		case SLL_OBJECT_TYPE_EXIT:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
@@ -539,6 +542,8 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 		case SLL_OBJECT_TYPE_IF:
 		case SLL_OBJECT_TYPE_SWITCH:
 		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 		case SLL_OBJECT_TYPE_RETURN:
 		case SLL_OBJECT_TYPE_EXIT:
 		case SLL_OBJECT_TYPE_OPERATION_LIST:
@@ -874,10 +879,11 @@ static const sll_object_t* _mark_loop_delete(const sll_object_t* o,const assembl
 			}
 		case SLL_OBJECT_TYPE_INLINE_FUNC:
 			SLL_UNIMPLEMENTED();
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;

@@ -147,15 +147,6 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t
 				}
 			}
 			return 1;
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			CHECK_ERROR2(is,o->dt.ac,sll_arg_count_t);
-			for (sll_arg_count_t i=0;i<o->dt.ac;i++){
-				if (!_read_object(c_dt,is)){
-					return 0;
-				}
-			}
-			return 1;
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			CHECK_ERROR2(is,o->dt.dbg.fpi,sll_file_path_index_t);
 			CHECK_ERROR2(is,o->dt.dbg.ln,sll_line_number_t);

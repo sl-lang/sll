@@ -84,18 +84,6 @@ static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_off
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			{
-				sll_arg_count_t l=o->dt.ac;
-				(*sz)++;
-				o++;
-				while (l){
-					l--;
-					o=_get_object_size(o,sz);
-				}
-				return o;
-			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	(*sz)++;
@@ -363,17 +351,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
 		case SLL_OBJECT_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
-				o++;
-				while (l){
-					l--;
-					o=sll_skip_object(o);
-				}
-				return o;
-			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			{
-				sll_arg_count_t l=o->dt.ac;
 				o++;
 				while (l){
 					l--;

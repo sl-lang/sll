@@ -109,18 +109,6 @@ static const sll_object_t* _write_object(sll_output_data_stream_t* os,const sll_
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			{
-				_write_integer(os,o->dt.ac);
-				sll_arg_count_t l=o->dt.ac;
-				o++;
-				while (l){
-					l--;
-					o=_write_object(os,o);
-				}
-				return o;
-			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			_write_integer(os,o->dt.dbg.fpi);
 			_write_integer(os,o->dt.dbg.ln);

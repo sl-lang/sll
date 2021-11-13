@@ -73,17 +73,6 @@ static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_da
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
-			{
-				sll_arg_count_t l=o->dt.ac;
-				o++;
-				while (l){
-					l--;
-					o=_remove_padding_internal(o,c_dt,d,rm);
-				}
-				return o;
-			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			return _remove_padding_internal(o+1,c_dt,d,rm);
 	}

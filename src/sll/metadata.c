@@ -35,10 +35,11 @@ static sll_object_t* _mark_strings(sll_object_t* o,uint64_t* m){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;
@@ -87,10 +88,11 @@ static sll_object_t* _update_strings(sll_object_t* o,sll_string_index_t* sm){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;
