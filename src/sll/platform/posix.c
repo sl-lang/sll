@@ -101,7 +101,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_fi
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_page_size(void){
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 	return sysconf(_SC_PAGESIZE);
 }
 
