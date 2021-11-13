@@ -111,6 +111,38 @@ __API_FUNC(path_is_dir){
 
 
 
+__API_FUNC(path_join){
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_length_t i=0;
+	if (ac){
+		if ((*a)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
+			sll_string_create(0,out);
+			return;
+		}
+		i=(*a)->l;
+		sll_copy_data((*a)->v,i,bf);
+		ac--;
+		a++;
+		while (ac){
+			if (!i||(bf[i-1]!='/'&&bf[i-1]!='\\')){
+				bf[i]=SLL_API_FILE_PATH_SEPARATOR;
+				i++;
+			}
+			if ((*a)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
+				sll_string_create(0,out);
+				return;
+			}
+			sll_copy_data((*a)->v,(*a)->l,bf+i);
+			i+=(*a)->l;
+			ac--;
+			a++;
+		}
+	}
+	sll_string_from_pointer_length(bf,i,out);
+}
+
+
+
 __API_FUNC(path_list_dir){
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);

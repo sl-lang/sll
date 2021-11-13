@@ -63,6 +63,17 @@ __API_FUNC_DECL(path_is_dir);
 
 
 /*~~DOCS~~
+TYPE api optimizable var_arg
+FUNC sll_api_path_join
+DESC Docs!
+ARG S? Docs!
+RET Z Failure
+RET S Success*/
+__API_FUNC_DECL(path_join);
+
+
+
+/*~~DOCS~~
 TYPE api optimizable
 FUNC sll_api_path_list_dir
 DESC Docs!

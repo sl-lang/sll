@@ -69,7 +69,7 @@ if ("--generate-api" in sys.argv):
 		print(f"Generating Code & Signatures for {len(d_dt)} API functions...")
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_API__GENERATED__\n#define __SLL_API__GENERATED__\n#include <sll/common.h>\n#include <sll/types.h>\n\n\n")
-		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/handle.h>\n#include <sll/ift.h>\n#include <sll/runtime_object.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/handle.h>\n#include <sll/ift.h>\n#include <sll/memory.h>\n#include <sll/runtime_object.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		for k in d_dt:
 			if ("api" in k["flag"]):
 				rt=RETURN_CODE_BASE_TYPE[k["ret"][0]["type"]]
@@ -80,6 +80,7 @@ if ("--generate-api" in sys.argv):
 				cf.write(f"\n\n\nextern __SLL_API_TYPE_{k['name']} {k['name']}(__SLL_API_ARGS_{k['name']});\n__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* {k['name']}_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){{\n")
 				a=""
 				pc=""
+				end=""
 				if (len(k["args"])>0):
 					err_c=RETURN_CODE_TYPE_MAP[k["ret"][k["err_ret"]]["type"]]
 					i=len(k["args"])
@@ -96,7 +97,8 @@ if ("--generate-api" in sys.argv):
 							if (e["type"]=="O"):
 								cf.write(f"\tconst sll_runtime_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n")
 							else:
-								raise RuntimeError("Unimplemeted")
+								cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n\tconst {TYPE_MAP[e['type']]}* {ALPHABET[i]}=sll_allocate({ALPHABET[i]}c*sizeof({TYPE_MAP[e['type']]}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tconst sll_runtime_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\tsll_deallocate((void*){ALPHABET[i]});\n\t\t\t"+err_c.replace(";",";\n\t\t\t")+f";\n\t\t}}\n\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t}}\n")
+								end=f"\tsll_deallocate((void*){ALPHABET[i]});\n"
 							pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
 						else:
 							a+=f"const {(TYPE_MAP[e['type']] if len(e['type'])==1 else 'sll_runtime_object_t*')} {ALPHABET[i]}"
@@ -117,7 +119,7 @@ if ("--generate-api" in sys.argv):
 				hf.write(f"\n#define __SLL_API_TYPE_{k['name']} ")
 				if (rt=="O"):
 					hf.write("__SLL_CHECK_OUTPUT sll_runtime_object_t*")
-					cf.write(f"\treturn {k['name']}({pc});\n")
+					cf.write(f"\tsll_runtime_object_t* out={k['name']}({pc});\n{end}\treturn out;\n")
 				else:
 					if (TYPE_MAP[rt][-1]=="*"):
 						if (len(pc)>0):
@@ -126,10 +128,10 @@ if ("--generate-api" in sys.argv):
 						else:
 							a=TYPE_MAP[rt]+" out"
 						hf.write("void")
-						cf.write("\t"+TYPE_MAP[rt][:-1]+f" out;\n\t{k['name']}({pc}&out);\n\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
+						cf.write("\t"+TYPE_MAP[rt][:-1]+f" out;\n\t{k['name']}({pc}&out);\n{end}\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
 					else:
 						hf.write("__SLL_CHECK_OUTPUT "+TYPE_MAP[rt])
-						cf.write("\t"+TYPE_MAP[rt]+f" out={k['name']}({pc});\n\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
+						cf.write("\t"+TYPE_MAP[rt]+f" out={k['name']}({pc});\n{end}\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
 				if (len(a)==0):
 					a="void"
 				hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n")

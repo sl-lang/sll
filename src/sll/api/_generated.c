@@ -5,6 +5,7 @@
 #include <sll/common.h>
 #include <sll/handle.h>
 #include <sll/ift.h>
+#include <sll/memory.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
@@ -94,7 +95,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_json_parse_raw(const
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
 		return SLL_ACQUIRE_STATIC(handle_zero);
 	}
-	return sll_api_json_parse(&(a->dt.s));
+	sll_runtime_object_t* out=sll_api_json_parse(&(a->dt.s));
+	return out;
 }
 INTERNAL_FUNCTION("json_parse",sll_api_json_parse_raw,0|0);
 
@@ -202,6 +204,30 @@ INTERNAL_FUNCTION("path_is_dir",sll_api_path_is_dir_raw,0|0);
 
 
 
+extern __SLL_API_TYPE_sll_api_path_join sll_api_path_join(__SLL_API_ARGS_sll_api_path_join);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_join_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	sll_arg_count_t ac=all-0;
+	const sll_string_t** a=sll_allocate(ac*sizeof(sll_string_t*));
+	for (sll_arg_count_t idx=0;idx<ac;idx++){
+		const sll_runtime_object_t* tmp=*(al+idx+0);
+		if (!(SLL_RUNTIME_OBJECT_GET_TYPE(tmp)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
+			sll_deallocate((void*)a);
+			return SLL_ACQUIRE_STATIC(str_zero);
+		}
+		*(a+idx)=&(tmp->dt.s);
+	}
+	sll_string_t out;
+	sll_api_path_join(a,ac,&out);
+	sll_deallocate((void*)a);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+INTERNAL_FUNCTION("path_join",sll_api_path_join_raw,0|0);
+
+
+
 extern __SLL_API_TYPE_sll_api_path_list_dir sll_api_path_list_dir(__SLL_API_ARGS_sll_api_path_list_dir);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_list_dir_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
@@ -211,7 +237,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_list_dir_raw(co
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	return sll_api_path_list_dir(&(a->dt.s));
+	sll_runtime_object_t* out=sll_api_path_list_dir(&(a->dt.s));
+	return out;
 }
 INTERNAL_FUNCTION("path_list_dir",sll_api_path_list_dir_raw,0|0);
 
@@ -226,7 +253,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_recursive_list_
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	return sll_api_path_recursive_list_dir(&(a->dt.s));
+	sll_runtime_object_t* out=sll_api_path_recursive_list_dir(&(a->dt.s));
+	return out;
 }
 INTERNAL_FUNCTION("path_recursive_list_dir",sll_api_path_recursive_list_dir_raw,0|0);
 
@@ -300,7 +328,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sort_sort_raw(const 
 			return SLL_ACQUIRE_STATIC(array_zero);
 		}
 	}
-	return sll_api_sort_sort(&(a->dt.a),(b?b->dt.i:0));
+	sll_runtime_object_t* out=sll_api_sort_sort(&(a->dt.a),(b?b->dt.i:0));
+	return out;
 }
 INTERNAL_FUNCTION("sort_sort",sll_api_sort_sort_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 
@@ -441,7 +470,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_raw(cons
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT)){
 		return SLL_ACQUIRE_STATIC(str_zero);
 	}
-	return sll_api_sys_arg_get(a->dt.i);
+	sll_runtime_object_t* out=sll_api_sys_arg_get(a->dt.i);
+	return out;
 }
 INTERNAL_FUNCTION("sys_arg_get",sll_api_sys_arg_get_raw,0|0);
 
@@ -458,7 +488,8 @@ INTERNAL_FUNCTION("sys_arg_get_count",sll_api_sys_arg_get_count_raw,0|0);
 
 extern __SLL_API_TYPE_sll_api_sys_get_platform sll_api_sys_get_platform(__SLL_API_ARGS_sll_api_sys_get_platform);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_get_platform_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
-	return sll_api_sys_get_platform();
+	sll_runtime_object_t* out=sll_api_sys_get_platform();
+	return out;
 }
 INTERNAL_FUNCTION("sys_get_platform",sll_api_sys_get_platform_raw,0|0);
 
@@ -539,7 +570,8 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_url_execute_request_
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(e)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	return sll_api_url_execute_request(&(a->dt.s),&(b->dt.s),&(c->dt.s),&(d->dt.m),&(e->dt.s));
+	sll_runtime_object_t* out=sll_api_url_execute_request(&(a->dt.s),&(b->dt.s),&(c->dt.s),&(d->dt.m),&(e->dt.s));
+	return out;
 }
 INTERNAL_FUNCTION("url_execute_request",sll_api_url_execute_request_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED|0);
 
