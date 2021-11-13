@@ -7,10 +7,16 @@
 
 
 #ifdef _MSC_VER
+#define SLL_API_FILE_PATH_SEPARATOR '\\'
 #define SLL_API_MAX_FILE_PATH_LENGTH 260
 #else
+#define SLL_API_FILE_PATH_SEPARATOR '/'
 #define SLL_API_MAX_FILE_PATH_LENGTH 4096
 #endif
+
+
+
+__SLL_FUNC sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_char_t* o,sll_string_length_t ol);
 
 
 

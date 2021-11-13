@@ -29,6 +29,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void);
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol);
 
 
@@ -42,10 +46,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o);
-
-
-
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_path_absolute(const sll_char_t* fp,sll_char_t* o,sll_string_length_t ol);
 
 
 

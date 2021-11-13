@@ -89,6 +89,16 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol){
+	if (!getcwd((char*)o,ol)){
+		*o=0;
+		return 0;
+	}
+	return sll_string_length_unaligned(o);
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
 	ssize_t i=readlink("/proc/self/exe",(char*)o,ol);
 	if (i!=-1){
@@ -153,13 +163,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 	_list_dir_files(bf,l,&dt);
 	*o=sll_reallocate(dt.dt,dt.l*sizeof(sll_string_t));
 	return dt.l;
-}
-
-
-
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_path_absolute(const sll_char_t* fp,sll_char_t* o,sll_string_length_t ol){
-	IGNORE_RESULT(ol);
-	return (!realpath((char*)fp,(char*)o)?0:sll_string_length_unaligned(SLL_CHAR(o)));
 }
 
 

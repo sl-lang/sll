@@ -133,6 +133,16 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol){
+	if (!GetCurrentDirectoryA(ol,(char*)o)){
+		*o=0;
+		return 0;
+	}
+	return sll_string_length_unaligned(o);
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
 	return GetModuleFileNameA(NULL,(char*)o,ol);
 }
@@ -202,12 +212,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 	_list_dir_files(bf,i,&dt);
 	*o=sll_reallocate(dt.dt,dt.l*sizeof(sll_string_t));
 	return dt.l;
-}
-
-
-
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_path_absolute(const sll_char_t* fp,sll_char_t* o,sll_string_length_t ol){
-	return (sll_string_length_t)GetFullPathNameA(fp,ol,o,NULL);
 }
 
 

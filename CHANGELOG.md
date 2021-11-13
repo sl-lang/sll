@@ -6,9 +6,10 @@
 
 - CLI now properly releases all memory (by calling `sll_deinit`)
 - Implemented `SLL_MEMORY_MOVE_DIRECTION_FROM_STACK`, `SLL_MEMORY_MOVE_DIRECTION_TO_STACK` and `sll_memory_move` ([#94])
-- Implemented `sll_platform_enable_console_color`, `sll_platform_get_executable_file_path`, `sll_set_memory` and `sll_zero_memory`
+- Implemented `sll_platform_enable_console_color`, `sll_platform_get_current_working_directory`, `sll_platform_get_executable_file_path`, `sll_set_memory` and `sll_zero_memory`
 - Implemented `sll_zero_allocate_stack` ([#98])
 - More memory API functions: `sll_allocate_stack`
+- Path separator macro constant: `SLL_API_FILE_PATH_SEPARATOR`
 - `SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX` macro constant ([#89])
 
 ### Changed
@@ -23,6 +24,7 @@
 - Renamed `sll_loop_data_t` to `sll_loop_object_data_t` ([#85])
 - Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI
 - Replaced `memcmp` calls with calls to `sll_compare_data` and `strcmp` with `sll_string_compare_pointer` ([#81])
+- Replaced `sll_platform_path_absolute` by `sll_path_absolute` (which is platform-independent) ([#86])
 - `SLL_API_MAX_FILE_PATH_LENGTH` is now platform-dependent
 - `sll_copy_data` now expects `sll_size_t` instead of `sll_string_length_t`
 
@@ -1004,6 +1006,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#90]: https://github.com/sl-lang/sll/issues/90
 [#89]: https://github.com/sl-lang/sll/issues/89
 [#88]: https://github.com/sl-lang/sll/issues/88
+[#86]: https://github.com/sl-lang/sll/issues/86
 [#85]: https://github.com/sl-lang/sll/issues/85
 [#84]: https://github.com/sl-lang/sll/issues/84
 [#82]: https://github.com/sl-lang/sll/issues/82

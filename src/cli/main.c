@@ -122,8 +122,11 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		FILE* nf=fopen((char*)bf,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH)){
+			if (!(fl&FLAG_EXPAND_PATH)){
 				sll_copy_data(bf,j+1,f_fp);
+			}
+			else{
+				sll_path_absolute(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
@@ -166,8 +169,11 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		nf=fopen((char*)bf,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH)){
+			if (!(fl&FLAG_EXPAND_PATH)){
 				sll_copy_data(bf,j+1,f_fp);
+			}
+			else{
+				sll_path_absolute(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
@@ -293,8 +299,11 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		FILE* nf=fopen((char*)l_fp,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH)){
+			if (!(fl&FLAG_EXPAND_PATH)){
 				sll_copy_data(l_fp,i+5,f_fp);
+			}
+			else{
+				sll_path_absolute(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
@@ -337,8 +346,11 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		nf=fopen((char*)l_fp,"rb");
 		if (nf){
-			if (!(fl&FLAG_EXPAND_PATH)||!sll_platform_path_absolute(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH)){
+			if (!(fl&FLAG_EXPAND_PATH)){
 				sll_copy_data(l_fp,l_fpl+5,f_fp);
+			}
+			else{
+				sll_path_absolute(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found File '");
@@ -802,7 +814,8 @@ _read_file_argument:
 			goto _error;
 		}
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_set_argument(0,(!sll_platform_path_absolute(*(fp+j),bf,SLL_API_MAX_FILE_PATH_LENGTH)?*(fp+j):bf));
+		sll_path_absolute(*(fp+j),bf,SLL_API_MAX_FILE_PATH_LENGTH);
+		sll_set_argument(0,bf);
 		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
 			goto _error;
 		}

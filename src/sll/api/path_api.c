@@ -7,20 +7,87 @@
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
-#include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
+
+
+
+__SLL_FUNC sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_char_t* o,sll_string_length_t ol){
+	sll_string_length_t i=0;
+	if (!s[0]||(s[0]!='/'&&s[0]!='\\'&&(!s[1]||s[0]<'A'||s[0]>'Z'||s[1]!=':'))){
+		i=sll_platform_get_current_working_directory(o,ol);
+		if (!i){
+			i=sll_string_length_unaligned(s);
+			if (i>ol){
+				i=ol;
+			}
+			sll_copy_data(s,i,o);
+			return i;
+		}
+		o[i]=SLL_API_FILE_PATH_SEPARATOR;
+		i++;
+	}
+	sll_string_length_t j=0;
+	while (s[j]){
+		if (s[j]=='.'&&(!i||o[i-1]==SLL_API_FILE_PATH_SEPARATOR)){
+			if (!s[j+1]||s[j+1]=='/'||s[j+1]=='\\'){
+				j++;
+				continue;
+			}
+			if (s[j+1]=='.'&&(!s[j+2]||s[j+2]=='/'||s[j+2]=='\\')){
+				j+=2;
+				SLL_ASSERT(i);
+				sll_string_length_t k=i;
+				i--;
+				while (i&&o[i-1]!=SLL_API_FILE_PATH_SEPARATOR){
+					i--;
+				}
+				if (!i){
+					i=k;
+				}
+				continue;
+			}
+		}
+		if (s[j]=='/'||s[j]=='\\'){
+			if (i&&o[i-1]==SLL_API_FILE_PATH_SEPARATOR){
+				j++;
+				continue;
+			}
+			o[i]=SLL_API_FILE_PATH_SEPARATOR;
+		}
+		else{
+			o[i]=s[j];
+		}
+		i++;
+		j++;
+		if (i==ol){
+			i=sll_string_length_unaligned(s);
+			if (i>ol){
+				i=ol;
+			}
+			sll_copy_data(s,i,o);
+			return i;
+		}
+	}
+	if (i==ol){
+		i=sll_string_length_unaligned(s);
+		if (i>ol){
+			i=ol;
+		}
+		sll_copy_data(s,i,o);
+	}
+	else{
+		o[i]=0;
+	}
+	return i;
+}
 
 
 
 __API_FUNC(path_absolute){
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_length_t l=sll_platform_path_absolute(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH+1);
-	if (!l){
-		sll_string_clone(a,out);
-		return;
-	}
-	sll_string_from_pointer_length(bf,l,out);
+	sll_string_from_pointer_length(bf,sll_path_absolute(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 }
 
 
