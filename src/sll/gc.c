@@ -29,6 +29,51 @@ static uint8_t _gc_verify=1;
 
 
 
+static const char* _get_type_string(sll_runtime_object_t* o){
+	switch (SLL_RUNTIME_OBJECT_GET_TYPE(o)){
+		case SLL_RUNTIME_OBJECT_TYPE_INT:
+			return "int";
+		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
+			return "float";
+		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
+			return "char";
+		case SLL_RUNTIME_OBJECT_TYPE_STRING:
+			return "string";
+		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
+			return "array";
+		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+			return "handle";
+		case SLL_RUNTIME_OBJECT_TYPE_MAP:
+			return "map";
+		case RUNTIME_OBJECT_TYPE_FUNCTION_ID:
+			return "<function id>";
+		case RUNTIME_OBJECT_TYPE_UNKNOWN:
+			return "<unknown>";
+		default:
+			return "<wrong type>";
+	}
+}
+
+
+
+static void _print_gc_data(sll_runtime_object_t* o,runtime_object_debug_data_t* dt){
+	sll_string_t str;
+	sll_object_to_string((const sll_runtime_object_t*const*)(&o),1,&str);
+	fprintf(stderr,"{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",_get_type_string(o),o->rc,str.v,dt->all);
+	sll_deinit_string(&str);
+	for (uint32_t m=0;m<dt->all;m++){
+		runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+m);
+		fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
+	}
+	fprintf(stderr,"  Release (%u):\n",dt->rll);
+	for (uint32_t m=0;m<dt->rll;m++){
+		runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
+		fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
+	}
+}
+
+
+
 void _gc_release_data(void){
 	if (!_gc_page_ptr){
 		return;
@@ -218,62 +263,23 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 					err=1;
 					fputs("\nUnreleased Objects:\n",stderr);
 				}
-				const char* t="<wrong type>";
-				switch (SLL_RUNTIME_OBJECT_GET_TYPE(c)){
-					case SLL_RUNTIME_OBJECT_TYPE_INT:
-						t="int";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-						t="float";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-						t="char";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_STRING:
-						t="string";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-						t="array";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
-						t="handle";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_MAP:
-						t="map";
-						break;
-					case RUNTIME_OBJECT_TYPE_FUNCTION_ID:
-						t="<function id>";
-						break;
-					case RUNTIME_OBJECT_TYPE_UNKNOWN:
-						t="<unknown>";
-						break;
-				}
-				sll_string_t str;
-				sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
 				uint32_t j=c->_dbg0|(c->_dbg1<<8);
 				if (j!=GC_MAX_DEBUG_ID){
 					runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
 					if (dt->c.fp){
-						fprintf(stderr,"%s:%u (%s)",dt->c.fp,dt->c.ln,dt->c.fn);
+						fprintf(stderr,"%s:%u (%s): ",dt->c.fp,dt->c.ln,dt->c.fn);
 					}
 					else{
-						fprintf(stderr,"<unknown>");
+						fprintf(stderr,"<unknown>: ");
 					}
-					fprintf(stderr,": {type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",t,c->rc,str.v,dt->all);
-					for (uint32_t k=0;k<dt->all;k++){
-						runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+k);
-						fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
-					}
-					fprintf(stderr,"  Release (%u):\n",dt->rll);
-					for (uint32_t k=0;k<dt->rll;k++){
-						runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+k);
-						fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
-					}
+					_print_gc_data(c,dt);
 				}
 				else{
-					fprintf(stderr,"<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n",t,c->rc,str.v);
+					sll_string_t str;
+					sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
+					fprintf(stderr,"<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n",_get_type_string(c),c->rc,str.v);
+					sll_deinit_string(&str);
 				}
-				sll_deallocate(str.v);
 			}
 			i++;
 			c++;
@@ -291,53 +297,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_clean
 					err=1;
 					fputs("\nUnreleased Objects:\n",stderr);
 				}
-				sll_runtime_object_t* c=k->dt;
-				const char* t="<wrong type>";
-				switch (SLL_RUNTIME_OBJECT_GET_TYPE(c)){
-					case SLL_RUNTIME_OBJECT_TYPE_INT:
-						t="int";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-						t="float";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-						t="char";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_STRING:
-						t="string";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-						t="array";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
-						t="handle";
-						break;
-					case SLL_RUNTIME_OBJECT_TYPE_MAP:
-						t="map";
-						break;
-					case RUNTIME_OBJECT_TYPE_FUNCTION_ID:
-						t="<function id>";
-						break;
-					case RUNTIME_OBJECT_TYPE_UNKNOWN:
-						t="<unknown>";
-						break;
-				}
-				sll_string_t str;
-				sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
-				uint32_t j=c->_dbg0|(c->_dbg1<<8);
-				SLL_ASSERT(j!=GC_MAX_DEBUG_ID);
-				runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
-				fprintf(stderr,"%s: %u (<static>): {type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",k->fp,k->ln,t,c->rc,str.v,dt->all);
-				for (uint32_t m=0;m<dt->all;m++){
-					runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+m);
-					fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
-				}
-				fprintf(stderr,"  Release (%u):\n",dt->rll);
-				for (uint32_t m=0;m<dt->rll;m++){
-					runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
-					fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
-				}
-				sll_deallocate(str.v);
+				SLL_ASSERT((k->dt->_dbg0|(k->dt->_dbg1<<8))!=GC_MAX_DEBUG_ID);
+				fprintf(stderr,"%s: %u (<static>): ",k->fp,k->ln);
+				_print_gc_data(k->dt,*(_gc_dbg_dt+(k->dt->_dbg0|(k->dt->_dbg1<<8))));
 			}
 			else{
 				sll_remove_debug_data(k->dt);

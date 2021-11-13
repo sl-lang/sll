@@ -26,7 +26,7 @@
 
 ### Removed
 
-- Duplicated code ([#93])
+- Duplicated code ([#90] and [#93])
 - Options related to updating sll from the CLI
 - Unused CLI macros: `EXPAND_FILE_PATH` and `GET_EXECUATBLE_FILE_PATH`
 - Unused headers ([#91])
@@ -998,6 +998,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#93]: https://github.com/sl-lang/sll/issues/93
 [#92]: https://github.com/sl-lang/sll/issues/92
 [#91]: https://github.com/sl-lang/sll/issues/91
+[#90]: https://github.com/sl-lang/sll/issues/90
 [#88]: https://github.com/sl-lang/sll/issues/88
 [#85]: https://github.com/sl-lang/sll/issues/85
 [#84]: https://github.com/sl-lang/sll/issues/84
