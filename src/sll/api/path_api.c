@@ -105,6 +105,12 @@ __API_FUNC(path_get_cwd){
 
 
 
+__API_FUNC(path_is_dir){
+	return sll_platform_path_is_directory(a->v);
+}
+
+
+
 __API_FUNC(path_list_dir){
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);
@@ -141,14 +147,14 @@ __API_FUNC(path_recursive_list_dir){
 
 
 
-__API_FUNC(path_is_dir){
-	return sll_platform_path_is_directory(a->v);
+__API_FUNC(path_relative){
+	SLL_UNIMPLEMENTED();
 }
 
 
 
-__API_FUNC(path_relative){
-	SLL_UNIMPLEMENTED();
+__API_FUNC(path_set_cwd){
+	sll_platform_set_current_working_directory(a->v);
 }
 
 

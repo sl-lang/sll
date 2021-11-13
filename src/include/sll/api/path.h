@@ -53,6 +53,17 @@ __API_FUNC_DECL(path_get_cwd);
 
 /*~~DOCS~~
 TYPE api optimizable
+FUNC sll_api_path_is_dir
+DESC Docs!
+ARG S Docs!
+RET 0 Failure
+RET I Success*/
+__API_FUNC_DECL(path_is_dir);
+
+
+
+/*~~DOCS~~
+TYPE api optimizable
 FUNC sll_api_path_list_dir
 DESC Docs!
 ARG S Docs!
@@ -75,23 +86,21 @@ __API_FUNC_DECL(path_recursive_list_dir);
 
 /*~~DOCS~~
 TYPE api optimizable
-FUNC sll_api_path_is_dir
-DESC Docs!
-ARG S Docs!
-RET 0 Failure
-RET I Success*/
-__API_FUNC_DECL(path_is_dir);
-
-
-
-/*~~DOCS~~
-TYPE api optimizable
 FUNC sll_api_path_relative
 DESC Docs!
 ARG S Docs!
 RET Z Failure
 RET S Success*/
 __API_FUNC_DECL(path_relative);
+
+
+
+/*~~DOCS~~
+TYPE api optimizable
+FUNC sll_api_path_set_cwd
+ARG S Docs!
+RET Z Docs!*/
+__API_FUNC_DECL(path_set_cwd);
 
 
 
