@@ -44,6 +44,15 @@ __API_FUNC_DECL(path_exists);
 
 /*~~DOCS~~
 TYPE api optimizable
+FUNC sll_api_path_get_cwd
+DESC Docs!
+RET S Docs!*/
+__API_FUNC_DECL(path_get_cwd);
+
+
+
+/*~~DOCS~~
+TYPE api optimizable
 FUNC sll_api_path_list_dir
 DESC Docs!
 ARG S Docs!

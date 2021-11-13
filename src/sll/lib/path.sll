@@ -8,10 +8,11 @@
 
 (= absolute (... "path_absolute"))
 (= exists (... "path_exists"))
+(= get_cwd (... "path_get_cwd"))
 (= recursive_list_dir (... "path_recursive_list_dir"))
 (= list_dir (... "path_list_dir"))
 (= is_dir (... "path_is_dir"))
 (= relative (... "path_relative"))
 (= size (... "path_size"))
 
-(## separator absolute exists recursive_list_dir list_dir is_dir relative size)
+(## separator absolute exists get_cwd recursive_list_dir list_dir is_dir relative size)

@@ -173,6 +173,19 @@ INTERNAL_FUNCTION("path_exists",sll_api_path_exists_raw,0|0);
 
 
 
+extern __SLL_API_TYPE_sll_api_path_get_cwd sll_api_path_get_cwd(__SLL_API_ARGS_sll_api_path_get_cwd);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_get_cwd_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	sll_string_t out;
+	sll_api_path_get_cwd(&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+INTERNAL_FUNCTION("path_get_cwd",sll_api_path_get_cwd_raw,0|0);
+
+
+
 extern __SLL_API_TYPE_sll_api_path_list_dir sll_api_path_list_dir(__SLL_API_ARGS_sll_api_path_list_dir);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_list_dir_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){

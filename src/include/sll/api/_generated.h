@@ -33,6 +33,9 @@
 #define __SLL_API_TYPE_sll_api_path_exists __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_path_exists const sll_string_t* a
 
+#define __SLL_API_TYPE_sll_api_path_get_cwd void
+#define __SLL_API_ARGS_sll_api_path_get_cwd sll_string_t* out
+
 #define __SLL_API_TYPE_sll_api_path_list_dir __SLL_CHECK_OUTPUT sll_runtime_object_t*
 #define __SLL_API_ARGS_sll_api_path_list_dir const sll_string_t* a
 

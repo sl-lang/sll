@@ -98,6 +98,13 @@ __API_FUNC(path_exists){
 
 
 
+__API_FUNC(path_get_cwd){
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(bf,sll_platform_get_current_working_directory(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+}
+
+
+
 __API_FUNC(path_list_dir){
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);

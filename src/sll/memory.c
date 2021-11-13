@@ -162,26 +162,28 @@ _find_block:
 			return (void*)(((uint64_t)o)+sizeof(user_mem_block_t));
 		}
 	}
-	uint32_t v=_memory_data_mask>>(i+1);
-	if (v){
-		uint8_t j=FIND_FIRST_SET_BIT(v)+i+1;
-		SLL_ASSERT(j<(ALLOCATOR_MAX_SMALL_SIZE>>4));
-		mem_block_t* b=_memory_head_blocks[j];
-		if (b->n){
-			_memory_head_blocks[j]=b->n;
+	if (i+1<(ALLOCATOR_MAX_SMALL_SIZE>>4)){
+		uint32_t v=_memory_data_mask>>(i+1);
+		if (v){
+			uint8_t j=FIND_FIRST_SET_BIT(v)+i+1;
+			SLL_ASSERT(j<(ALLOCATOR_MAX_SMALL_SIZE>>4));
+			mem_block_t* b=_memory_head_blocks[j];
+			if (b->n){
+				_memory_head_blocks[j]=b->n;
+			}
+			else{
+				_memory_data_mask&=~(1<<j);
+			}
+			user_mem_block_t* o=(user_mem_block_t*)b;
+			o->dt=USED_BLOCK_FLAG_USED|sz;
+			i=j-i-1;
+			SLL_ASSERT(i<(ALLOCATOR_MAX_SMALL_SIZE>>4));
+			b=(mem_block_t*)(((uint64_t)b)+sz);
+			b->n=((_memory_data_mask&(1<<i))?_memory_head_blocks[i]:NULL);
+			_memory_data_mask|=1<<i;
+			_memory_head_blocks[i]=b;
+			return (void*)(((uint64_t)o)+sizeof(user_mem_block_t));
 		}
-		else{
-			_memory_data_mask&=~(1<<j);
-		}
-		user_mem_block_t* o=(user_mem_block_t*)b;
-		o->dt=USED_BLOCK_FLAG_USED|sz;
-		i=j-i-1;
-		SLL_ASSERT(i<(ALLOCATOR_MAX_SMALL_SIZE>>4));
-		b=(mem_block_t*)(((uint64_t)b)+sz);
-		b->n=((_memory_data_mask&(1<<i))?_memory_head_blocks[i]:NULL);
-		_memory_data_mask|=1<<i;
-		_memory_head_blocks[i]=b;
-		return (void*)(((uint64_t)o)+sizeof(user_mem_block_t));
 	}
 	sll_page_size_t pg_sz=sll_platform_get_page_size()*ALLOCATOR_PAGE_ALLOC_COUNT;
 	void* pg=sll_platform_allocate_page(pg_sz);
