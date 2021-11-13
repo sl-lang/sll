@@ -6,11 +6,13 @@
 
 - CLI now properly releases all memory (by calling `sll_deinit`)
 - Implemented `sll_platform_enable_console_color`, `sll_platform_get_executable_file_path`, `sll_set_memory` and `sll_zero_memory`
+- Implemented `sll_zero_allocate_stack` ([#98])
 - More memory API functions: `sll_allocate_stack`
 
 ### Changed
 
 - All `memcpy` calls have been replaced by `sll_copy_data`, and all `memset` calls have been replaced by `sll_set_memory` or `sll_zero_memory`
+- Changed arguments of `sll_zero_allocate`
 - CLI and test sciript now use built-in sll types
 - Fixed incorrect union member access ([#84])
 - *\[POSIX only\]* Fixed return type of `sll_platform_get_page_size` ([#88])
@@ -991,6 +993,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#98]: https://github.com/sl-lang/sll/issues/98
 [#95]: https://github.com/sl-lang/sll/issues/95
 [#93]: https://github.com/sl-lang/sll/issues/93
 [#92]: https://github.com/sl-lang/sll/issues/92

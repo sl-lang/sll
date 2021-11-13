@@ -47,7 +47,7 @@ __SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 	o->l=m->l+a->l;
 	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=m->l<<1;
-	uint64_t* sm=sll_zero_allocate(sizeof(uint64_t),(a->l+63)>>6);
+	uint64_t* sm=sll_zero_allocate(((a->l+63)>>6)*sizeof(uint64_t));
 	for (sll_map_length_t j=0;j<i;j+=2){
 		sll_runtime_object_t* e=m->v[j];
 		SLL_ACQUIRE(e);
@@ -89,7 +89,7 @@ __SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_
 	o->l=m->l+s->l;
 	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=m->l<<1;
-	uint64_t* sm=sll_zero_allocate(sizeof(uint64_t),(s->l+63)>>6);
+	uint64_t* sm=sll_zero_allocate(((s->l+63)>>6)*sizeof(uint64_t));
 	for (sll_map_length_t j=0;j<i;j+=2){
 		sll_runtime_object_t* e=m->v[j];
 		SLL_ACQUIRE(e);
@@ -236,7 +236,7 @@ __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o){
 		return;
 	}
 	o->l=l;
-	o->v=sll_zero_allocate(sizeof(sll_runtime_object_t*),l<<1);
+	o->v=sll_zero_allocate((l<<1)*sizeof(sll_runtime_object_t*));
 }
 
 

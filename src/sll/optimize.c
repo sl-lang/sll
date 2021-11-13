@@ -2277,13 +2277,13 @@ __SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_fu
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		o_dt.it.s_im[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(identifier_data_t));
 		o_dt.s_sm_l[i]=(c_dt->idt.s[i].l+63)>>6;
-		o_dt.va.s_sm[i]=sll_zero_allocate(sizeof(uint64_t),o_dt.s_sm_l[i]);
+		o_dt.va.s_sm[i]=sll_zero_allocate(o_dt.s_sm_l[i]*sizeof(uint64_t));
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			(o_dt.it.s_im[i]+j)->v=SLL_MAX_VARIABLE_INDEX;
 			(o_dt.it.s_im[i]+j)->rm=1;
 		}
 	}
-	o_dt.va.l_sm=sll_zero_allocate(sizeof(uint64_t),o_dt.l_sm_l);
+	o_dt.va.l_sm=sll_zero_allocate(o_dt.l_sm_l*sizeof(uint64_t));
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		(o_dt.it.l_im+i)->v=SLL_MAX_VARIABLE_INDEX;
 		(o_dt.it.l_im+i)->rm=1;

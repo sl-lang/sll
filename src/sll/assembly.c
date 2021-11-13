@@ -1140,7 +1140,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				(lt.dt+lt.sz-1)->s=c;
 				(lt.dt+lt.sz-1)->e=e;
-				uint64_t* v_st=sll_zero_allocate(sizeof(uint64_t),(g_dt->a_dt->vc>>6)+1);
+				uint64_t* v_st=sll_zero_allocate(((g_dt->a_dt->vc>>6)+1)*sizeof(uint64_t));
 				for (sll_arg_count_t i=1;i<l;i++){
 					o=_mark_loop_delete(o,g_dt,v_st,sc);
 				}
@@ -1192,7 +1192,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				(lt.dt+lt.sz-1)->s=c;
 				(lt.dt+lt.sz-1)->e=e;
-				uint64_t* v_st=sll_zero_allocate(sizeof(uint64_t),(g_dt->a_dt->vc>>6)+1);
+				uint64_t* v_st=sll_zero_allocate(((g_dt->a_dt->vc>>6)+1)*sizeof(uint64_t));
 				o=_mark_loop_delete(cnd,g_dt,v_st,o->dt.l.sc);
 				l-=2;
 				const sll_object_t* j=o;

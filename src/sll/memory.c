@@ -123,7 +123,7 @@ void _memory_release_data(void){
 
 
 
-static void* _memory_allocate_chunk(sll_size_t sz){
+static void* _allocate_chunk(sll_size_t sz){
 	SLL_ASSERT(sz>=16&&sz<=ALLOCATOR_MAX_SMALL_SIZE&&!(sz&15));
 	uint8_t i=(uint8_t)((sz>>4)-1);
 _find_block:
@@ -205,7 +205,7 @@ _find_block:
 
 
 
-static void _memory_release_chunk(user_mem_block_t* b){
+static void _release_chunk(user_mem_block_t* b){
 	SLL_ASSERT(USED_BLOCK_GET_SIZE(b)<=ALLOCATOR_MAX_SMALL_SIZE);
 	uint8_t i=(uint8_t)((USED_BLOCK_GET_SIZE(b)>>4)-1);
 	mem_block_t* n=(mem_block_t*)b;
@@ -216,13 +216,26 @@ static void _memory_release_chunk(user_mem_block_t* b){
 
 
 
+static void _fill_zero(void* o,sll_size_t sz){
+	uint64_t* p=o;
+	ASSUME_ALIGNED(p,4,8);
+	sz=(sz+7)>>3;
+	do{
+		*p=0;
+		p++;
+		sz--;
+	} while (sz);
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
 	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
 	if (sz<=ALLOCATOR_MAX_SMALL_SIZE){
-		return _memory_allocate_chunk(sz);
+		return _allocate_chunk(sz);
 	}
 	user_mem_block_t* b=malloc(sz);
 	if (!b){
@@ -317,7 +330,7 @@ __SLL_FUNC void sll_deallocate(void* p){
 		free(b);
 	}
 	else{
-		_memory_release_chunk(b);
+		_release_chunk(b);
 	}
 }
 
@@ -390,7 +403,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 	if (USED_BLOCK_GET_SIZE(b)<=ALLOCATOR_MAX_SMALL_SIZE){
 		void* n=NULL;
 		if (sz<=ALLOCATOR_MAX_SMALL_SIZE){
-			n=_memory_allocate_chunk(sz);
+			n=_allocate_chunk(sz);
 		}
 		else{
 			user_mem_block_t* blk=malloc(sz);
@@ -409,11 +422,11 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 			d++;
 			i--;
 		} while (i);
-		_memory_release_chunk(b);
+		_release_chunk(b);
 		return n;
 	}
 	if (sz<=ALLOCATOR_MAX_SMALL_SIZE){
-		void* n=_memory_allocate_chunk(sz);
+		void* n=_allocate_chunk(sz);
 		const uint64_t* s=(const uint64_t*)p;
 		uint64_t* d=(uint64_t*)n;
 		sz=(sz-sizeof(user_mem_block_t))>>3;
@@ -440,19 +453,22 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz,sll_size_t c){
-	sz*=c;
+__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
 	void* o=sll_allocate(sz);
-	uint64_t* p=o;
-	ASSUME_ALIGNED(p,4,8);
-	sz=(sz+7)>>3;
-	do{
-		*p=0;
-		p++;
-		sz--;
-	} while (sz);
+	_fill_zero(o,sz);
+	return o;
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack(sll_size_t sz){
+	if (!sz){
+		return NULL;
+	}
+	void* o=sll_allocate_stack(sz);
+	_fill_zero(o,sz);
 	return o;
 }

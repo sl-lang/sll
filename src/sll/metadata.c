@@ -117,7 +117,7 @@ static sll_object_t* _update_strings(sll_object_t* o,sll_string_index_t* sm){
 
 __SLL_FUNC void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	uint32_t ml=(c_dt->st.l>>6)+1;
-	uint64_t* m=sll_zero_allocate(sizeof(uint64_t),ml);
+	uint64_t* m=sll_zero_allocate(ml*sizeof(uint64_t));
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_identifier_list_t* l=c_dt->idt.s+i;
 		for (sll_identifier_list_length_t j=0;j<l->l;j++){

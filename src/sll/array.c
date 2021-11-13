@@ -26,7 +26,7 @@ __SLL_FUNC void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_arra
 	o->l=b->l;
 	o->v=sll_allocate(b->l*sizeof(sll_runtime_object_t*));
 	sll_array_length_t i=0;
-	uint64_t* m=sll_zero_allocate(sizeof(uint64_t),(b->l+63)>>6);
+	uint64_t* m=sll_zero_allocate(((b->l+63)>>6)*sizeof(uint64_t));
 	for (sll_array_length_t j=0;j<a->l;j++){
 		sll_runtime_object_t* e=a->v[j];
 		for (sll_array_length_t k=0;k<b->l;k++){
@@ -321,7 +321,7 @@ __SLL_FUNC void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_array
 		o->v[a->l+i]=b->v[i];
 	}
 	sll_array_length_t i=0;
-	uint64_t* m=sll_zero_allocate(sizeof(uint64_t),(o->l+63)>>6);
+	uint64_t* m=sll_zero_allocate(((o->l+63)>>6)*sizeof(uint64_t));
 	for (sll_array_length_t j=0;j<o->l;j++){
 		sll_runtime_object_t* e=o->v[j];
 		if ((*(m+(j>>6)))&(1ull<<(j&63))){
