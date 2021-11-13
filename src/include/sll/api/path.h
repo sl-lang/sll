@@ -99,7 +99,8 @@ __API_FUNC_DECL(path_relative);
 TYPE api optimizable
 FUNC sll_api_path_set_cwd
 ARG S Docs!
-RET Z Docs!*/
+RET 0 Failure
+RET I Docs!*/
 __API_FUNC_DECL(path_set_cwd);
 
 

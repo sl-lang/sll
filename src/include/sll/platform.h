@@ -57,7 +57,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sl
 
 
 
-__SLL_FUNC void sll_platform_set_current_working_directory(const sll_char_t* p);
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p);
 
 
 

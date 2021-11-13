@@ -154,7 +154,7 @@ __API_FUNC(path_relative){
 
 
 __API_FUNC(path_set_cwd){
-	sll_platform_set_current_working_directory(a->v);
+	return sll_platform_set_current_working_directory(a->v);
 }
 
 

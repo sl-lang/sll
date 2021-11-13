@@ -255,18 +255,14 @@ INTERNAL_FUNCTION("path_relative",sll_api_path_relative_raw,0|0);
 extern __SLL_API_TYPE_sll_api_path_set_cwd sll_api_path_set_cwd(__SLL_API_ARGS_sll_api_path_set_cwd);
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_set_cwd_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	const sll_runtime_object_t* a=*(al+0);
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_string_t out;
-	sll_api_path_set_cwd(&(a->dt.s),&out);
-	sll_runtime_object_t* out_o=SLL_CREATE();
-	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	out_o->dt.s=out;
-	return out_o;
+	sll_integer_t out=sll_api_path_set_cwd(&(a->dt.s));
+	return SLL_FROM_INT(out);
 }
 INTERNAL_FUNCTION("path_set_cwd",sll_api_path_set_cwd_raw,0|0);
 

@@ -48,8 +48,8 @@
 #define __SLL_API_TYPE_sll_api_path_relative void
 #define __SLL_API_ARGS_sll_api_path_relative const sll_string_t* a,sll_string_t* out
 
-#define __SLL_API_TYPE_sll_api_path_set_cwd void
-#define __SLL_API_ARGS_sll_api_path_set_cwd const sll_string_t* a,sll_string_t* out
+#define __SLL_API_TYPE_sll_api_path_set_cwd __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_path_set_cwd const sll_string_t* a
 
 #define __SLL_API_TYPE_sll_api_path_size __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_path_size const sll_string_t* a
