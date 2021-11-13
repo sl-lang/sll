@@ -13,7 +13,6 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <stdint.h>
-#include <string.h>
 
 
 

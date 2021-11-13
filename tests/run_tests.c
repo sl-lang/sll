@@ -13,7 +13,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 
 
@@ -23,7 +22,7 @@ sll_char_t to_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 
 
 
-sll_bool_t execute_test(uint8_t id){
+static sll_bool_t execute_test(uint8_t id){
 	remove((char*)to_fp);
 	if (id==TEST_ID_PARSE){
 		sll_internal_function_table_t i_ft;
@@ -55,7 +54,7 @@ sll_bool_t execute_test(uint8_t id){
 
 
 
-int8_t execute_subprocess(uint8_t id){
+static int8_t execute_subprocess(uint8_t id){
 #ifdef _MSC_VER
 	uint16_t i=0;
 	while (e_fp[i]){
@@ -97,7 +96,7 @@ int8_t execute_subprocess(uint8_t id){
 
 
 
-sll_char_t* error_to_string(sll_error_t* e){
+static sll_char_t* error_to_string(sll_error_t* e){
 	sll_char_t* o=malloc(512*sizeof(sll_char_t));
 	switch (e->t){
 		default:
@@ -155,7 +154,7 @@ sll_char_t* error_to_string(sll_error_t* e){
 
 
 
-void run_parser_test(const sll_char_t* fp,test_result_t* o){
+static void run_parser_test(const sll_char_t* fp,test_result_t* o){
 	FILE* f=fopen((char*)fp,"rb");
 	sll_char_t* f_dt=NULL;
 	sll_json_object_t json={

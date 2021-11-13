@@ -14,7 +14,6 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <math.h>
-#include <string.h>
 
 
 

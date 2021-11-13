@@ -13,7 +13,6 @@
 #include <io.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib,"mswsock.lib")
 #pragma comment(lib,"advapi32.lib")

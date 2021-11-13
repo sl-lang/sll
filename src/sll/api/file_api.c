@@ -13,9 +13,7 @@
 #include <sll/stream.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <string.h>
 
 
 
@@ -26,7 +24,7 @@ static sll_handle_descriptor_t _file_type;
 
 
 
-static uint8_t _free_file(sll_handle_t h){
+static sll_bool_t _free_file(sll_handle_t h){
 	if (h>=_file_fll){
 		return 0;
 	}

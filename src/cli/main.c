@@ -14,7 +14,6 @@
 #include <help_text.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 
 
