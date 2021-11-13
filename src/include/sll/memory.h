@@ -5,6 +5,11 @@
 
 
 
+#define SLL_MEMORY_MOVE_DIRECTION_FROM_STACK 0
+#define SLL_MEMORY_MOVE_DIRECTION_TO_STACK 1
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz);
 
 
@@ -14,6 +19,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz);
 
 
 __SLL_FUNC void sll_deallocate(void* p);
+
+
+
+__SLL_FUNC void* sll_memory_move(void* p,sll_bool_t d);
 
 
 

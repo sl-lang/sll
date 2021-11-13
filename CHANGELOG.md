@@ -5,6 +5,7 @@
 ### Added
 
 - CLI now properly releases all memory (by calling `sll_deinit`)
+- Implemented `SLL_MEMORY_MOVE_DIRECTION_FROM_STACK`, `SLL_MEMORY_MOVE_DIRECTION_TO_STACK` and `sll_memory_move` ([#90])
 - Implemented `sll_platform_enable_console_color`, `sll_platform_get_executable_file_path`, `sll_set_memory` and `sll_zero_memory`
 - Implemented `sll_zero_allocate_stack` ([#98])
 - More memory API functions: `sll_allocate_stack`
@@ -995,6 +996,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#98]: https://github.com/sl-lang/sll/issues/98
 [#95]: https://github.com/sl-lang/sll/issues/95
+[#94]: https://github.com/sl-lang/sll/issues/94
 [#93]: https://github.com/sl-lang/sll/issues/93
 [#92]: https://github.com/sl-lang/sll/issues/92
 [#91]: https://github.com/sl-lang/sll/issues/91

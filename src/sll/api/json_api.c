@@ -68,44 +68,37 @@ static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,
 
 static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 	sll_string_create(0,o);
+	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	sll_char_t c=**p;
 	(*p)++;
 	while (c!='\"'){
 		sll_string_increase(o,1);
 		if (c!='\\'){
 			o->v[o->l]=c;
-			o->l++;
 		}
 		else{
 			c=**p;
 			(*p)++;
 			if (c=='/'||c=='\\'||c=='\''||c=='\"'){
 				o->v[o->l]=c;
-				o->l++;
 			}
 			else if (c=='b'){
 				o->v[o->l]=8;
-				o->l++;
 			}
 			else if (c=='f'){
 				o->v[o->l]=12;
-				o->l++;
 			}
 			else if (c=='n'){
 				o->v[o->l]=10;
-				o->l++;
 			}
 			else if (c=='r'){
 				o->v[o->l]=13;
-				o->l++;
 			}
 			else if (c=='t'){
 				o->v[o->l]=9;
-				o->l++;
 			}
 			else if (c=='v'){
 				o->v[o->l]=11;
-				o->l++;
 			}
 			else if (c=='x'){
 				sll_char_t a=**p;
@@ -113,17 +106,17 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 				sll_char_t b=**p;
 				(*p)++;
 				o->v[o->l]=((a>47&&a<58?a-48:(a>64&&a<71?a-55:a-87))<<4)|(b>47&&b<58?b-48:(b>64&&b<71?b-55:b-87));
-				o->l++;
 			}
 			else{
 				printf("Unknown Escape: \\%c\n",c);
 				SLL_UNIMPLEMENTED();
 			}
 		}
+		o->l++;
 		c=**p;
 		(*p)++;
 	}
-	o->v[o->l]=0;
+	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(o);
 }
 

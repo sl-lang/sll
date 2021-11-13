@@ -765,6 +765,7 @@ _unknown_symbol:
 				arg->t=SLL_OBJECT_TYPE_STRING;
 				sll_string_t s;
 				sll_string_create(0,&s);
+				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 				while (1){
 					sll_string_increase(&s,1);
 					uint8_t err=_read_single_char(is,arg_s,e,s.v+s.l);
@@ -781,6 +782,7 @@ _unknown_symbol:
 					s.l++;
 				}
 				SLL_STRING_FORMAT_PADDING(s.v,s.l);
+				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(c_dt->st),&s,1);
 				c=SLL_READ_FROM_INPUT_DATA_STREAM(is);

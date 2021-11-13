@@ -58,6 +58,11 @@ __SLL_FUNC void sll_deallocate(void* p){
 
 
 
+__SLL_FUNC void sll_memory_move(void* p,sll_bool_t d){
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 	if (!p){
 		return sll_allocate(sz);
@@ -205,6 +210,38 @@ _find_block:
 
 
 
+static void* _allocate_chunk_stack(sll_size_t sz){
+	if (!_memory_stack_size){
+		_memory_stack_size=sll_platform_get_page_size()*ALLOCATOR_STACK_PAGE_ALLOC_COUNT;
+	}
+	if (sz<=_memory_stack_size){
+		if (!_memory_stack_page){
+			_memory_stack_page=sll_platform_allocate_page(_memory_stack_size);
+			_memory_stack_top=_memory_stack_page;
+			SLL_ASSERT(!(_memory_stack_size&15));
+			_memory_stack_top->dt=SET_STACK_BLOCK_SIZE(0,_memory_stack_size);
+		}
+		if (_memory_stack_top&&GET_STACK_BLOCK_SIZE(_memory_stack_top)>=sz){
+			sll_size_t p_sz=GET_STACK_BLOCK_PREV_SIZE(_memory_stack_top);
+			sll_size_t n_sz=GET_STACK_BLOCK_SIZE(_memory_stack_top)-sz;
+			SLL_ASSERT(!(p_sz&15)&&!(sz&15)&&!(n_sz&15));
+			user_mem_block_t* b=(user_mem_block_t*)_memory_stack_top;
+			b->dt=USED_BLOCK_FLAG_USED|USED_BLOCK_FLAG_STACK|SET_STACK_BLOCK_SIZE(p_sz,sz);
+			if (n_sz){
+				_memory_stack_top=(mem_stack_block_t*)(((uint64_t)_memory_stack_top)+sz);
+				_memory_stack_top->dt=SET_STACK_BLOCK_SIZE(sz,n_sz);
+			}
+			else{
+				_memory_stack_top=NULL;
+			}
+			return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
+		}
+	}
+	return NULL;
+}
+
+
+
 static void _release_chunk(user_mem_block_t* b){
 	SLL_ASSERT(USED_BLOCK_GET_SIZE(b)<=ALLOCATOR_MAX_SMALL_SIZE);
 	uint8_t i=(uint8_t)((USED_BLOCK_GET_SIZE(b)>>4)-1);
@@ -252,31 +289,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
 		return NULL;
 	}
 	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
-	if (!_memory_stack_size){
-		_memory_stack_size=sll_platform_get_page_size()*ALLOCATOR_STACK_PAGE_ALLOC_COUNT;
-	}
-	if (sz<=_memory_stack_size){
-		if (!_memory_stack_page){
-			_memory_stack_page=sll_platform_allocate_page(_memory_stack_size);
-			_memory_stack_top=_memory_stack_page;
-			SLL_ASSERT(!(_memory_stack_size&15));
-			_memory_stack_top->dt=SET_STACK_BLOCK_SIZE(0,_memory_stack_size);
-		}
-		if (_memory_stack_top&&GET_STACK_BLOCK_SIZE(_memory_stack_top)>=sz){
-			sll_size_t p_sz=GET_STACK_BLOCK_PREV_SIZE(_memory_stack_top);
-			sll_size_t n_sz=GET_STACK_BLOCK_SIZE(_memory_stack_top)-sz;
-			SLL_ASSERT(!(p_sz&15)&&!(sz&15)&&!(n_sz&15));
-			user_mem_block_t* b=(user_mem_block_t*)_memory_stack_top;
-			b->dt=USED_BLOCK_FLAG_USED|USED_BLOCK_FLAG_STACK|SET_STACK_BLOCK_SIZE(p_sz,sz);
-			if (n_sz){
-				_memory_stack_top=(mem_stack_block_t*)(((uint64_t)_memory_stack_top)+sz);
-				_memory_stack_top->dt=SET_STACK_BLOCK_SIZE(sz,n_sz);
-			}
-			else{
-				_memory_stack_top=NULL;
-			}
-			return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
-		}
+	void* o=_allocate_chunk_stack(sz);
+	if (o){
+		return o;
 	}
 	user_mem_block_t* b=malloc(sz);
 	if (!b){
@@ -332,6 +347,44 @@ __SLL_FUNC void sll_deallocate(void* p){
 	else{
 		_release_chunk(b);
 	}
+}
+
+
+
+__SLL_FUNC void* sll_memory_move(void* p,sll_bool_t d){
+	if (!p){
+		return NULL;
+	}
+	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
+	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
+	void* n;
+	sll_size_t sz;
+	if (d==SLL_MEMORY_MOVE_DIRECTION_FROM_STACK){
+		sz=GET_STACK_BLOCK_SIZE(b);
+		if (!(b->dt&USED_BLOCK_FLAG_STACK)||sz>ALLOCATOR_MAX_SMALL_SIZE){
+			return p;
+		}
+		n=_allocate_chunk(sz);
+	}
+	else{
+		if (b->dt&USED_BLOCK_FLAG_STACK){
+			return p;
+		}
+		sz=USED_BLOCK_GET_SIZE(b);
+		n=_allocate_chunk_stack(sz);
+		if (!n){
+			return p;
+		}
+	}
+	const uint64_t* p64=(const uint64_t*)p;
+	uint64_t* n64=(uint64_t*)n;
+	ASSUME_ALIGNED(p64,4,8);
+	ASSUME_ALIGNED(n64,4,8);
+	for (sll_size_t i=0;i<((sz-sizeof(user_mem_block_t))>>3);i++){
+		*(n64+i)=*(p64+i);
+	}
+	sll_deallocate(p);
+	return n;
 }
 
 
@@ -395,7 +448,18 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 			}
 			return p;
 		}
-		SLL_UNIMPLEMENTED();
+		void* o=sll_allocate_stack(sz);
+		const uint64_t* s=(const uint64_t*)p;
+		uint64_t* d=(uint64_t*)n;
+		sll_size_t i=((USED_BLOCK_GET_SIZE(b)>sz?sz:USED_BLOCK_GET_SIZE(b))-sizeof(user_mem_block_t))>>3;
+		do{
+			*d=*s;
+			s++;
+			d++;
+			i--;
+		} while (i);
+		sll_deallocate(p);
+		return o;
 	}
 	if (USED_BLOCK_GET_SIZE(b)==sz){
 		return p;
