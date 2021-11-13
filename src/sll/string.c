@@ -1052,7 +1052,7 @@ __SLL_FUNC void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_strin
 	uint64_t c=0;
 	if (v<0){
 		v=-v;
-		uint64_t m=0x101010101010101ull*(256-(1<<v));
+		uint64_t m=0x101010101010101ull*((0xff<<v)&0xff);
 		do{
 			l--;
 			*(b+l)=((*(a+l))&m)>>v;
@@ -1060,7 +1060,7 @@ __SLL_FUNC void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_strin
 		} while (l);
 	}
 	else{
-		uint64_t m=0x101010101010101ull*((1<<(8-v))-1);
+		uint64_t m=0x101010101010101ull*(0xff>>v);
 		do{
 			l--;
 			*(b+l)=((*(a+l))&m)<<v;
@@ -1218,7 +1218,7 @@ __SLL_FUNC void sll_string_title_case(const sll_string_t* s,sll_string_t* o){
 	sll_char_t off=64;
 	for (sll_string_length_t i=0;i<o->l;i++){
 		sll_char_t e=s->v[i];
-		if ((e>>6)==1&&(0x07fffffe&(1u<<(e&31)))){
+		if ((e&64)&&(0x07fffffe&(1u<<(e&31)))){
 			o->v[i]=(e&31)|off;
 			off=96;
 		}
