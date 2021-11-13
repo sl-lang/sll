@@ -82,7 +82,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const sll_s
 		i++;
 	}
 	r.v[i]=0;
-	if (strcmp((char*)r.v,"HTTP/1.1")){
+	if (sll_string_compare_pointer(r.v,SLL_CHAR("HTTP/1.1"))!=SLL_COMPARE_RESULT_EQUAL){
 		goto _error;
 	}
 	sll_return_code_t rc=((sll_return_code_t)r.v[i+1])*100+((sll_return_code_t)r.v[i+2])*10+r.v[i+3]-5328;

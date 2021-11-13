@@ -582,36 +582,36 @@ _skip_lib_path:
 	sll_set_argument_count(1);
 	for (int i=1;i<argc;i++){
 		const char* e=argv[i];
-		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||!strcmp(e,"--generate-assembly")){
+		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--generate-assembly"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_GENERATE_ASSEMBLY;
 		}
-		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||!strcmp(e,"--args")){
+		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			sll_set_argument_count(argc-i);
 			for (sll_integer_t j=0;j<(sll_integer_t)(argc-i-1);j++){
 				sll_set_argument(j+1,SLL_CHAR(*(argv+i+j+1)));
 			}
 			break;
 		}
-		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||!strcmp(e,"--generate-compiled-object")){
+		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--generate-compiled-object"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_GENERATE_COMPILED_OBJECT;
 		}
-		else if ((*e=='-'&&*(e+1)=='C'&&*(e+2)==0)||!strcmp(e,"--use-colors")){
+		else if ((*e=='-'&&*(e+1)=='C'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--use-colors"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_USE_COLORS;
 		}
-		else if ((*e=='-'&&*(e+1)=='e'&&*(e+2)==0)||!strcmp(e,"--expand-file-paths")){
+		else if ((*e=='-'&&*(e+1)=='e'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--expand-file-paths"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_EXPAND_PATH;
 		}
-		else if ((*e=='-'&&*(e+1)=='f'&&*(e+2)==0)||!strcmp(e,"--file")){
+		else if ((*e=='-'&&*(e+1)=='f'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
 			if (i==argc){
 				break;
 			}
 			goto _read_file_argument;
 		}
-		else if ((*e=='-'&&*(e+1)=='h'&&*(e+2)==0)||!strcmp(e,"--help")){
+		else if ((*e=='-'&&*(e+1)=='h'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--help"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_HELP;
 		}
-		else if ((*e=='-'&&*(e+1)=='I'&&*(e+2)==0)||!strcmp(e,"--include")){
+		else if ((*e=='-'&&*(e+1)=='I'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
 			if (i==argc){
 				break;
@@ -638,7 +638,7 @@ _skip_lib_path:
 				*(i_fp+j)=0;
 			}
 		}
-		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||!strcmp(e,"--output")){
+		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL){
 			if (o_fp){
 				COLOR_RED;
 				PRINT_STATIC_STR("Multplie Output Files Supplied\n");
@@ -668,16 +668,16 @@ _skip_lib_path:
 				goto _unkown_switch;
 			}
 		}
-		else if ((*e=='-'&&*(e+1)=='P'&&*(e+2)==0)||!strcmp(e,"--print-assembly")){
+		else if ((*e=='-'&&*(e+1)=='P'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--print-assembly"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_PRINT_ASSEMBLY;
 		}
-		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||!strcmp(e,"--print-objects")){
+		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--print-objects"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_PRINT_OBJECT;
 		}
-		else if ((*e=='-'&&*(e+1)=='R'&&*(e+2)==0)||!strcmp(e,"--no-run")){
+		else if ((*e=='-'&&*(e+1)=='R'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--no-run"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_NO_RUN;
 		}
-		else if ((*e=='-'&&*(e+1)=='s'&&*(e+2)==0)||!strcmp(e,"--source")){
+		else if ((*e=='-'&&*(e+1)=='s'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
 			if (i==argc){
 				break;
@@ -693,10 +693,10 @@ _skip_lib_path:
 			sl=tmp;
 			*(sl+sll-1)=(sll_char_t*)argv[i];
 		}
-		else if ((*e=='-'&&*(e+1)=='v'&&*(e+2)==0)||!strcmp(e,"--verbose")){
+		else if ((*e=='-'&&*(e+1)=='v'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--verbose"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_VERBOSE;
 		}
-		else if ((*e=='-'&&*(e+1)=='V'&&*(e+2)==0)||!strcmp(e,"--version")){
+		else if ((*e=='-'&&*(e+1)=='V'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--version"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_VERSION;
 		}
 		else if (*e=='-'){

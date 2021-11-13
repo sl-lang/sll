@@ -51,6 +51,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_map(const 
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointer(const sll_char_t* a,const sll_char_t* b);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count(const sll_string_t* a,const sll_string_t* b);
 
 

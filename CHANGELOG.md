@@ -16,7 +16,7 @@
 - Refactored code according to [#82] and [#95]
 - Renamed `sll_loop_data_t` to `sll_loop_object_data_t` ([#85])
 - Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI
-- Replaced `memcmp` calls with calls to `sll_compare_data` ([#81])
+- Replaced `memcmp` calls with calls to `sll_compare_data` and `strcmp` with `sll_string_compare_pointer` ([#81])
 - `SLL_API_MAX_FILE_PATH_LENGTH` is now platform-dependent
 - `sll_copy_data` now expects `sll_size_t` instead of `sll_string_length_t`
 

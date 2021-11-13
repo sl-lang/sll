@@ -403,7 +403,7 @@ _wrong_error:
 				}
 				break;
 			case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-				if (strcmp((char*)ne.dt.str,(char*)e->dt.str)){
+				if (sll_string_compare_pointer(ne.dt.str,e->dt.str)!=SLL_COMPARE_RESULT_EQUAL){
 					goto _wrong_error;
 				}
 				break;
