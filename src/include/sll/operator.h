@@ -6,10 +6,6 @@
 
 
 
-#define SLL_COMPARE_RESULT_BELOW 0
-#define SLL_COMPARE_RESULT_EQUAL 1
-#define SLL_COMPARE_RESULT_ABOVE 2
-
 #define SLL_FLOAT_ABSOLUTE(v) fabs((v))
 #define SLL_FLOAT_ROUND(v) llround((v))
 

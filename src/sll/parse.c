@@ -1027,12 +1027,12 @@ _unknown_symbol:
 					}
 					return SLL_RETURN_ERROR;
 				}
-				if ((sz==3&&!memcmp(str.v,"nil",3))||(sz==5&&!memcmp(str.v,"false",5))){
+				if ((sz==3&&sll_compare_data(str.v,"nil",3)==SLL_COMPARE_RESULT_EQUAL)||(sz==5&&sll_compare_data(str.v,"false",5)==SLL_COMPARE_RESULT_EQUAL)){
 					sll_deinit_string(&str);
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=0;
 				}
-				else if (sz==4&&!memcmp(str.v,"true",4)){
+				else if (sz==4&&sll_compare_data(str.v,"true",4)==SLL_COMPARE_RESULT_EQUAL){
 					sll_deinit_string(&str);
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
@@ -1048,7 +1048,7 @@ _unknown_symbol:
 							for (sll_identifier_list_length_t i=0;i<k->l;i++){
 								sll_identifier_t* si=k->dt+i;
 								sll_string_t* si_s=c_dt->st.dt+si->i;
-								if (si_s->c!=str.c||si->sc==SLL_MAX_SCOPE||memcmp(str.v,si_s->v,sz)){
+								if (si_s->c!=str.c||si->sc==SLL_MAX_SCOPE||sll_compare_data(str.v,si_s->v,sz)!=SLL_COMPARE_RESULT_EQUAL){
 									continue;
 								}
 								if (si->sc==l_sc->l_sc){
@@ -1094,7 +1094,7 @@ _unknown_symbol:
 							for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 								sll_identifier_t* k=c_dt->idt.il+i;
 								sll_string_t* s=c_dt->st.dt+k->i;
-								if (s->c!=str.c||s->l!=sz||k->sc==SLL_MAX_SCOPE||memcmp(str.v,s->v,sz)){
+								if (s->c!=str.c||s->l!=sz||k->sc==SLL_MAX_SCOPE||sll_compare_data(str.v,s->v,sz)!=SLL_COMPARE_RESULT_EQUAL){
 									continue;
 								}
 								if (k->sc==l_sc->l_sc){

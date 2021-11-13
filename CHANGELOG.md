@@ -16,6 +16,7 @@
 - Refactored code according to [#82] and [#95]
 - Renamed `sll_loop_data_t` to `sll_loop_object_data_t` ([#85])
 - Replaced `EXPAND_FILE_PATH` macro by `sll_platform_path_absolute` function calls in the CLI
+- Replaced `memcmp` calls with calls to `sll_compare_data` ([#81])
 - `SLL_API_MAX_FILE_PATH_LENGTH` is now platform-dependent
 - `sll_copy_data` now expects `sll_size_t` instead of `sll_string_length_t`
 
@@ -990,6 +991,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#92]: https://github.com/sl-lang/sll/issues/92
 [#85]: https://github.com/sl-lang/sll/issues/85
 [#82]: https://github.com/sl-lang/sll/issues/82
+[#81]: https://github.com/sl-lang/sll/issues/81
 [#78]: https://github.com/sl-lang/sll/issues/78
 [#77]: https://github.com/sl-lang/sll/issues/77
 [#76]: https://github.com/sl-lang/sll/issues/76

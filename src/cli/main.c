@@ -242,7 +242,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 	}
 	for (uint32_t j=0;j<COMPILED_MODULE_COUNT;j++){
 		const module_t* m=m_dt+j;
-		if (m->c==c&&m->nml==f_nm_l&&!memcmp(m->nm,f_nm,f_nm_l)){
+		if (m->c==c&&m->nml==f_nm_l&&sll_compare_data(m->nm,f_nm,f_nm_l)==SLL_COMPARE_RESULT_EQUAL){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Found Internal Module '");
 				fputs((char*)f_nm,stdout);

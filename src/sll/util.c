@@ -153,6 +153,61 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_stri
 
 
 
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* a,const void* b,sll_size_t l){
+	if (!l){
+		return SLL_COMPARE_RESULT_EQUAL;
+	}
+	const sll_char_t* ap=(const sll_char_t*)a;
+	const sll_char_t* bp=(const sll_char_t*)b;
+	if (l<16){
+		for (sll_size_t i=0;i<l;i++){
+			if (*(ap+i)!=*(bp+i)){
+				return (*(ap+i)<*(bp+i)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+			}
+		}
+		return SLL_COMPARE_RESULT_EQUAL;
+	}
+	if ((((uint64_t)ap)&7)&&(((uint64_t)bp)&7)){
+		if ((((uint64_t)ap)&7)<(((uint64_t)bp)&7)){
+			ap=(const sll_char_t*)b;
+			bp=(const sll_char_t*)a;
+		}
+		SLL_UNIMPLEMENTED();
+	}
+	else if (((uint64_t)ap)&7){
+		ap=(const sll_char_t*)b;
+		bp=(const sll_char_t*)a;
+	}
+	const uint64_t* ap64=(const uint64_t*)ap;
+	const uint64_t* bp64=(const uint64_t*)bp;
+	SLL_ASSERT(!(((uint64_t)ap64)&7));
+	do{
+		if (*ap64!=*bp64){
+			uint64_t av=ROTATE_BITS64(*ap64,32);
+			uint64_t bv=ROTATE_BITS64(*bp64,32);
+			av=((av&0xffff0000ffffull)<<16)|((av&0xffff0000ffff0000ull)>>16);
+			bv=((bv&0xffff0000ffffull)<<16)|((bv&0xffff0000ffff0000ull)>>16);
+			return ((((av&0xff00ff00ff00ffull)<<8)|((av&0xff00ff00ff00ff00ull)>>8))<(((bv&0xff00ff00ff00ffull)<<8)|((bv&0xff00ff00ff00ff00ull)>>8))?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+		}
+		ap64++;
+		bp64++;
+		l-=8;
+	} while (l>7);
+	ap=(const sll_char_t*)ap64;
+	bp=(const sll_char_t*)bp64;
+	while (l){
+		l--;
+		if (*ap!=*bp){
+			return (*ap<*bp?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+		}
+		ap++;
+		bp++;
+	}
+	return SLL_COMPARE_RESULT_EQUAL;
+}
+
+
+
 __SLL_FUNC void sll_copy_data(const void* s,sll_size_t l,void* d){
 	const sll_char_t* a=(const sll_char_t*)s;
 	sll_char_t* b=(sll_char_t*)d;

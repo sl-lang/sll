@@ -15,6 +15,7 @@
 #include <sll/static_object.h>
 #include <sll/stream.h>
 #include <sll/types.h>
+#include <sll/util.h>
 
 
 
@@ -63,9 +64,6 @@
 
 
 sll_integer_t sll_current_instruction_count=0;
-
-
-
 const sll_runtime_data_t* sll_current_runtime_data=NULL;
 
 

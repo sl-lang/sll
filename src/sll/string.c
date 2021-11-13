@@ -11,6 +11,7 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -183,7 +184,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count(const sll_str
 	}
 	sll_string_length_t o=0;
 	for (sll_string_length_t i=0;i<a->l-b->l+1;i++){
-		if (!memcmp(a->v+i,b->v,b->l)){
+		if (sll_compare_data(a->v+i,b->v,b->l)==SLL_COMPARE_RESULT_EQUAL){
 			o++;
 		}
 	}
@@ -852,7 +853,7 @@ __SLL_FUNC void sll_string_remove(const sll_string_t* a,const sll_string_t* b,sl
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(a->l)*sizeof(sll_char_t));
 	sll_string_length_t i=0;
 	for (sll_string_length_t j=0;j<a->l-b->l+1;j++){
-		if (memcmp(a->v+j,b->v,b->l)){
+		if (sll_compare_data(a->v+j,b->v,b->l)!=SLL_COMPARE_RESULT_EQUAL){
 			o->v[i]=a->v[j];
 			i++;
 		}
@@ -892,7 +893,7 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 	sll_string_length_t i=0;
 	if (v->l<=k->l){
 		for (sll_string_length_t j=0;j<s->l-k->l+1;j++){
-			if (memcmp(s->v+j,k->v,k->l)){
+			if (sll_compare_data(s->v+j,k->v,k->l)!=SLL_COMPARE_RESULT_EQUAL){
 				o->v[i]=s->v[j];
 				i++;
 			}
@@ -907,7 +908,7 @@ __SLL_FUNC void sll_string_replace(const sll_string_t* s,const sll_string_t* k,c
 	}
 	else{
 		for (sll_string_length_t j=0;j<s->l-k->l+1;j++){
-			if (memcmp(s->v+j,k->v,k->l)){
+			if (sll_compare_data(s->v+j,k->v,k->l)!=SLL_COMPARE_RESULT_EQUAL){
 				o->v[i]=s->v[j];
 				i++;
 			}

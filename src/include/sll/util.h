@@ -8,6 +8,10 @@
 #define SLL_RETURN_ERROR 0
 #define SLL_RETURN_NO_ERROR 1
 
+#define SLL_COMPARE_RESULT_BELOW 0
+#define SLL_COMPARE_RESULT_EQUAL 1
+#define SLL_COMPARE_RESULT_ABOVE 2
+
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s,sll_bool_t d);
@@ -15,6 +19,10 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table
 
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_string_table_t* st,sll_runtime_object_t* v);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* a,const void* b,sll_size_t l);
 
 
 
