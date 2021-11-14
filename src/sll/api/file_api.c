@@ -4,20 +4,22 @@
 #include <sll/api/string.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/init.h>
 #include <sll/memory.h>
+#include <sll/platform.h>
 #include <sll/runtime_object.h>
-#include <sll/static_object.h>
 #include <sll/stream.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <stdio.h>
 
 
 
-static file_t** _file_fl=NULL;
+static sll_file_t** _file_fl=NULL;
 static sll_handle_t _file_fll=0;
 static sll_handle_type_t _file_ht=SLL_HANDLE_UNKNOWN_TYPE;
 static sll_handle_descriptor_t _file_type;
@@ -28,12 +30,11 @@ static sll_bool_t _free_file(sll_handle_t h){
 	if (h>=_file_fll){
 		return 0;
 	}
-	file_t* f=*(_file_fl+h);
+	sll_file_t* f=*(_file_fl+h);
 	if (!f){
 		return 0;
 	}
-	sll_deinit_string((sll_string_t*)&(f->nm));
-	fclose(f->h);
+	sll_file_close(f);
 	sll_deallocate(f);
 	*(_file_fl+h)=NULL;
 	if (h==_file_fll-1){
@@ -41,7 +42,7 @@ static sll_bool_t _free_file(sll_handle_t h){
 			_file_fll--;
 		} while (_file_fll&&!(_file_fl+_file_fll-1));
 		if (_file_fll){
-			void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(file_t*));
+			void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t*));
 			SLL_ASSERT(tmp);
 			_file_fl=tmp;
 		}
@@ -80,22 +81,33 @@ __API_FUNC(file_open){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
 		return;
 	}
-	const char* m="rb";
+	sll_file_flags_t ff=SLL_FILE_FLAG_READ;
+	sll_bool_t chk_e=0;
 	if (b){
 		for (sll_string_length_t i=0;i<b->l;i++){
 			if (b->v[i]=='a'||b->v[i]=='A'){
-				m="ab";
+				ff=SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND;
+				chk_e=0;
+			}
+			else if (b->v[i]=='r'||b->v[i]=='R'){
+				ff=SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND;
+				chk_e=0;
 			}
 			else if (b->v[i]=='w'||b->v[i]=='W'){
-				m="wb";
+				ff=SLL_FILE_FLAG_WRITE;
+				chk_e=0;
 			}
 			else if (b->v[i]=='x'||b->v[i]=='X'){
-				m="xb";
+				ff=SLL_FILE_FLAG_WRITE;
+				chk_e=1;
 			}
 		}
 	}
-	FILE* h=fopen((char*)a->v,m);
-	if (!h){
+	if (chk_e&&sll_platform_path_exists(a->v)){
+		return;
+	}
+	sll_file_t f;
+	if (!sll_file_open(a->v,ff,&f)){
 		return;
 	}
 	sll_handle_t i=0;
@@ -106,16 +118,15 @@ __API_FUNC(file_open){
 		i++;
 	}
 	_file_fll++;
-	void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(file_t*));
+	void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t));
 	if (!tmp){
-		fclose(h);
+		sll_file_close(&f);
 		return;
 	}
 	_file_fl=tmp;
 _found_index:;
-	file_t* n=sll_allocate(sizeof(file_t));
-	sll_string_clone(a,(sll_string_t*)(&(n->nm)));
-	n->h=h;
+	sll_file_t* n=sll_allocate(sizeof(sll_file_t));
+	sll_copy_data((void*)(&f),sizeof(sll_file_t),(void*)n);
 	*(_file_fl+i)=n;
 	if (_file_ht==SLL_HANDLE_UNKNOWN_TYPE){
 		SLL_ASSERT(sll_current_runtime_data);
@@ -128,8 +139,8 @@ _found_index:;
 
 
 __API_FUNC(file_write){
-	sll_output_data_stream_t os;
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT){
+		sll_output_data_stream_t os;
 		if (a->dt.i==-2){
 			SLL_ASSERT(sll_current_runtime_data);
 			os=*(sll_current_runtime_data->os);
@@ -141,22 +152,24 @@ __API_FUNC(file_write){
 		else{
 			return 0;
 		}
+		sll_string_t s;
+		sll_object_to_string(b,bc,&s);
+		SLL_WRITE_TO_OUTPUT_DATA_STREAM(&os,s.v,s.l*sizeof(sll_char_t));
+		sll_deallocate(s.v);
+		return s.l*sizeof(sll_char_t);
 	}
 	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
-		file_t* f=*(_file_fl+a->dt.h.h);
+		sll_file_t* f=*(_file_fl+a->dt.h.h);
 		if (!f){
 			return 0;
 		}
-		sll_stream_create_output_from_file(f->h,&os);
+		sll_string_t s;
+		sll_object_to_string(b,bc,&s);
+		sll_size_t o=sll_file_write(f,s.v,s.l*sizeof(sll_char_t));
+		sll_deinit_string(&s);
+		return o*sizeof(sll_char_t);
 	}
-	else{
-		return 0;
-	}
-	sll_string_t s;
-	sll_object_to_string(b,bc,&s);
-	SLL_WRITE_TO_OUTPUT_DATA_STREAM(&os,s.v,s.l*sizeof(sll_char_t));
-	sll_deallocate(s.v);
-	return s.l*sizeof(sll_char_t);
+	return 0;
 }
 
 

@@ -427,13 +427,6 @@ typedef struct __MEM_STACK_BLOCK{
 
 
 
-typedef struct __FILE{
-	const sll_string_t nm;
-	FILE* h;
-} file_t;
-
-
-
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 

@@ -1,11 +1,13 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <dirent.h>
+#include <fcntl.h>
 #include <netdb.h>
 #include <stdlib.h>
 #include <sys/mman.h>
@@ -65,12 +67,52 @@ __SLL_FUNC void sll_platform_enable_console_color(void){
 
 
 
+__SLL_FUNC void sll_platform_file_close(const sll_file_descriptor_t fd){
+	close((int)(uint64_t)fd);
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff){
+	int fl=O_RDONLY;
+	if ((ff&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE))==(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE)){
+		fl=O_RDWR;
+	}
+	else if (ff&SLL_FILE_FLAG_WRITE){
+		fl=O_WRONLY;
+	}
+	if (ff&SLL_FILE_FLAG_APPEND){
+		fl|=O_APPEND;
+	}
+	else{
+		fl|=O_CREAT|O_TRUNC;
+	}
+	int o=open((char*)fp,fl,S_IRWXU|S_IRWXG|S_IRWXO);
+	return (o==-1?SLL_UNKNOWN_FILE_DESCRIPTOR:((sll_file_descriptor_t)(uint64_t)o));
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(const sll_file_descriptor_t fd,void* p,sll_size_t sz){
+	ssize_t o=read((int)(uint64_t)fd,p,sz);
+	return (o==-1?0:o);
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
 	struct stat st;
 	if (!stat((char*)fp,&st)){
 		return st.st_size;
 	}
 	return 0;
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_write(const sll_file_descriptor_t fd,const void* p,sll_size_t sz){
+	ssize_t o=write((int)(uint64_t)fd,p,sz);
+	return (o==-1?0:o);
 }
 
 

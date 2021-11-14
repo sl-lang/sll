@@ -23,6 +23,7 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_COMPARE_RESULT UINT8_MAX
 #define SLL_MAX_ERROR_TYPE UINT8_MAX
 #define SLL_MAX_JSON_OBJECT_TYPE UINT8_MAX
+#define SLL_MAX_FILE_FLAGS UINT8_MAX
 #define SLL_MAX_INTERNAL_FUNCTION_TYPE UINT8_MAX
 #define SLL_MAX_OBJECT_TYPE UINT8_MAX
 #define SLL_MAX_RETURN UINT8_MAX
@@ -92,6 +93,10 @@ typedef uint8_t sll_constant_type_t;
 
 
 typedef uint8_t sll_error_type_t;
+
+
+
+typedef uint8_t sll_file_flags_t;
 
 
 
@@ -248,6 +253,10 @@ typedef uint64_t sll_time_t;
 
 
 typedef double sll_float_t;
+
+
+
+typedef void* sll_file_descriptor_t;
 
 
 
@@ -674,6 +683,14 @@ typedef struct __SLL_BINARY_HEAP{
 	sll_integer_t* v;
 	sll_array_length_t l;
 } sll_binary_heap_t;
+
+
+
+typedef struct __SLL_FILE{
+	const sll_file_descriptor_t fd;
+	const sll_string_t nm;
+	const sll_file_flags_t f;
+} sll_file_t;
 
 
 

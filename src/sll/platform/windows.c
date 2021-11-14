@@ -4,6 +4,7 @@
 #include <ws2tcpip.h>
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/string.h>
@@ -103,6 +104,42 @@ __SLL_FUNC void sll_platform_enable_console_color(void){
 
 
 
+__SLL_FUNC void sll_platform_file_close(const sll_file_descriptor_t fd){
+	CloseHandle((HANDLE)fd);
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff){
+	DWORD m=0;
+	if (ff&SLL_FILE_FLAG_READ){
+		m|=GENERIC_READ;
+	}
+	if (ff&SLL_FILE_FLAG_WRITE){
+		m|=GENERIC_WRITE;
+	}
+	if (ff&SLL_FILE_FLAG_APPEND){
+		m|=FILE_APPEND_DATA;
+	}
+	HANDLE o=CreateFileA((char*)fp,m,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	if (o==INVALID_HANDLE_VALUE){
+		return SLL_UNKNOWN_FILE_DESCRIPTOR;
+	}
+	return (sll_file_descriptor_t)o;
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(const sll_file_descriptor_t fd,void* p,sll_size_t sz){
+	DWORD o;
+	if (ReadFile((HANDLE)fd,p,sz,&o,NULL)==FALSE){
+		return 0;
+	}
+	return o;
+}
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
 	HANDLE fh=CreateFileA(fp,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 	if (fh==INVALID_HANDLE_VALUE){
@@ -115,6 +152,16 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_cha
 	}
 	CloseHandle(fh);
 	return sz.QuadPart;
+}
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_write(const sll_file_descriptor_t fd,const void* p,sll_size_t sz){
+	DWORD o;
+	if (WriteFile((HANDLE)fd,p,(DWORD)sz,&o,NULL)==FALSE){
+		return 0;
+	}
+	return o;
 }
 
 

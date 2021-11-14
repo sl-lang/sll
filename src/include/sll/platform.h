@@ -17,7 +17,23 @@ __SLL_FUNC void sll_platform_enable_console_color(void);
 
 
 
+__SLL_FUNC void sll_platform_file_close(const sll_file_descriptor_t fd);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(const sll_file_descriptor_t fd,void* p,sll_size_t sz);
+
+
+
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp);
+
+
+
+__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_write(const sll_file_descriptor_t fd,const void* p,sll_size_t sz);
 
 
 
