@@ -6,6 +6,7 @@
 
 - CLI now properly releases all memory (by calling `sll_deinit`)
 - Custom file IO API: `sll_file_close`, `sll_file_flush`, `sll_file_open`, `sll_file_read` and `sll_file_write`
+- `extern` variables are now marked as `__SLL_EXTERNAL extern`
 - Implemented `SLL_MEMORY_MOVE_DIRECTION_FROM_STACK`, `SLL_MEMORY_MOVE_DIRECTION_TO_STACK` and `sll_memory_move` ([#94])
 - Implemented `sll_platform_enable_console_color`, `sll_platform_get_current_working_directory`, `sll_platform_get_executable_file_path`, `sll_platform_set_current_working_directory`, `sll_set_memory` and `sll_zero_memory`
 - Implemented `sll_zero_allocate_stack` ([#98])
@@ -13,13 +14,13 @@
 - Path separator macro constant: `SLL_API_FILE_PATH_SEPARATOR`
 - `SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX` macro constant ([#89])
 - Three new functions in `path.sll`: `get_cwd`, `join` and `set_cwd` ([#87])
-- `extern` variables are now marked as `__SLL_EXTERNAL extern`
 
 ### Changed
 
 - All `memcpy` calls have been replaced by `sll_copy_data`, and all `memset` calls have been replaced by `sll_set_memory` or `sll_zero_memory`
 - Changed arguments of `sll_zero_allocate`
 - CLI and test sciript now use built-in sll types
+- Expanded two macros: `SLL_RETURN_ERROR` to `0` and `SLL_RETURN_NO_ERROR` to `1`
 - Fixed incorrect union member access ([#84])
 - *\[POSIX only\]* Fixed return type of `sll_platform_get_page_size` ([#88])
 - Improved performance requested by [#92]
@@ -30,7 +31,6 @@
 - Replaced `memcmp` calls with calls to `sll_compare_data` and `strcmp` with `sll_string_compare_pointer` ([#81])
 - Replaced `sll_platform_path_absolute` by `sll_path_absolute` (which is platform-independent) ([#86])
 - Replaced `sll_return_t` by `sll_bool_t`
-- Expanded two macros: `SLL_RETURN_ERROR` to `0` and `SLL_RETURN_NO_ERROR` to `1`
 - `SLL_API_MAX_FILE_PATH_LENGTH` is now platform-dependent
 - `sll_copy_data` now expects `sll_size_t` instead of `sll_string_length_t`
 
