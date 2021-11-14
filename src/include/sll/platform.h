@@ -93,7 +93,7 @@ __SLL_EXTERNAL void sll_platform_socket_init(void);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o);
 
 
 

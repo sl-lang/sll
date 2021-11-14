@@ -69,9 +69,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const s
 	i+=4;
 	sll_copy_data(dt->v,dt->l,s.v+i);
 	sll_string_t r=SLL_INIT_STRING_STRUCT;
-	sll_return_t err=sll_platform_socket_execute(h,DEFAULT_HTTP_PORT,&s,&r);
+	sll_bool_t err=sll_platform_socket_execute(h,DEFAULT_HTTP_PORT,&s,&r);
 	sll_deallocate(s.v);
-	if (err==SLL_RETURN_ERROR){
+	if (err==0){
 		goto _error;
 	}
 	i=0;

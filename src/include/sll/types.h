@@ -16,24 +16,10 @@ typedef uint32_t sll_identifier_index_t;
 
 
 
-#define SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE UINT8_MAX
-#define SLL_MAX_BOOL UINT8_MAX
-#define SLL_MAX_CHAR UINT8_MAX
-#define SLL_MAX_CLEANUP_TYPE UINT8_MAX
-#define SLL_MAX_COMPARE_RESULT UINT8_MAX
-#define SLL_MAX_ERROR_TYPE UINT8_MAX
-#define SLL_MAX_JSON_OBJECT_TYPE UINT8_MAX
-#define SLL_MAX_FILE_FLAGS UINT8_MAX
-#define SLL_MAX_INTERNAL_FUNCTION_TYPE UINT8_MAX
-#define SLL_MAX_OBJECT_TYPE UINT8_MAX
-#define SLL_MAX_RETURN UINT8_MAX
-#define SLL_MAX_RUNTIME_OBJECT_TYPE UINT8_MAX
-#define SLL_MAX_STRING_CHECKSUM UINT8_MAX
-#define SLL_MAX_FILE_PATH_INDEX UINT16_MAX
-#define SLL_MAX_READ_CHAR UINT16_MAX
-#define SLL_MAX_ALLOCATED_BLOCK_LENGTH UINT32_MAX
 #define SLL_MAX_ARG_COUNT UINT32_MAX
 #define SLL_MAX_ARRAY_LENGTH UINT32_MAX
+#define SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE UINT8_MAX
+#define SLL_MAX_CHAR UINT8_MAX
 #define SLL_MAX_COLUMN_NUMBER UINT32_MAX
 #define SLL_MAX_EXPORT_TABLE_LENGTH UINT32_MAX
 #define SLL_MAX_FILE_OFFSET UINT32_MAX
@@ -46,15 +32,14 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_LINE_NUMBER UINT32_MAX
 #define SLL_MAX_MAP_LENGTH UINT32_MAX
 #define SLL_MAX_OBJECT_OFFSET UINT32_MAX
+#define SLL_MAX_PAGE_SIZE UINT64_MAX
 #define SLL_MAX_REF_COUNT UINT32_MAX
 #define SLL_MAX_SCOPE UINT32_MAX
+#define SLL_MAX_SIZE UINT64_MAX
 #define SLL_MAX_STRING_INDEX UINT32_MAX
 #define SLL_MAX_STRING_LENGTH UINT32_MAX
-#define SLL_MAX_VARIABLE_INDEX UINT32_MAX
-#define SLL_MAX_VERSION UINT32_MAX
-#define SLL_MAX_PAGE_SIZE UINT64_MAX
-#define SLL_MAX_SIZE UINT64_MAX
 #define SLL_MAX_TIME UINT64_MAX
+#define SLL_MAX_VARIABLE_INDEX UINT32_MAX
 
 
 
@@ -64,11 +49,11 @@ struct __SLL_JSON_MAP_KEYPAIR;
 
 
 
-typedef uint8_t sll_assembly_instruction_type_t;
-
-
-
 typedef _Bool sll_bool_t;
+
+
+
+typedef uint8_t sll_assembly_instruction_type_t;
 
 
 
@@ -77,10 +62,6 @@ typedef uint8_t sll_char_t;
 
 
 typedef uint8_t sll_checksum_t;
-
-
-
-typedef uint8_t sll_cleanup_type_t;
 
 
 
@@ -116,15 +97,7 @@ typedef uint8_t sll_object_type_t;
 
 
 
-typedef uint8_t sll_return_t;
-
-
-
 typedef uint8_t sll_runtime_object_type_t;
-
-
-
-typedef uint16_t sll_file_path_index_t;
 
 
 
@@ -137,10 +110,6 @@ typedef int32_t sll_relative_instruction_index_t;
 
 
 typedef int32_t sll_return_code_t;
-
-
-
-typedef uint32_t sll_allocated_block_length_t;
 
 
 
@@ -264,26 +233,6 @@ typedef const sll_char_t* sll_json_parser_state_t;
 
 
 
-typedef struct __SLL_INPUT_DATA_STREAM{
-	void* ctx;
-	sll_read_char_t (*rf)(struct __SLL_INPUT_DATA_STREAM* is);
-	sll_read_char_t (*rbf)(struct __SLL_INPUT_DATA_STREAM* is,sll_char_t* bf,sll_string_length_t l);
-	void (*rlf)(struct __SLL_INPUT_DATA_STREAM* is,sll_file_offset_t lp);
-	sll_line_number_t _lc;
-	sll_file_offset_t _off;
-	sll_file_offset_t _loff;
-} sll_input_data_stream_t;
-
-
-
-typedef struct __SLL_OUTPUT_DATA_STREAM{
-	void* ctx;
-	void (*wcf)(struct __SLL_OUTPUT_DATA_STREAM* os,sll_char_t c);
-	void (*wf)(struct __SLL_OUTPUT_DATA_STREAM* os,const sll_char_t* bf,sll_string_length_t l);
-} sll_output_data_stream_t;
-
-
-
 typedef struct __SLL_STRING{
 	sll_string_length_t l;
 	sll_string_checksum_t c;
@@ -296,17 +245,10 @@ typedef struct __SLL_FILE{
 	const sll_file_descriptor_t fd;
 	const sll_string_t nm;
 	const sll_file_flags_t f;
-	sll_file_offset_t _l_num;
+	sll_line_number_t _l_num;
 	sll_file_offset_t _l_off;
 	sll_file_offset_t _off;
 } sll_file_t;
-
-
-
-typedef struct __SLL_INPUT_BUFFER{
-	const sll_char_t* bf;
-	sll_string_length_t sz;
-} sll_input_buffer_t;
 
 
 
@@ -606,7 +548,7 @@ typedef struct __SLL_RUNTIME_DATA{
 
 
 
-typedef sll_return_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o,sll_error_t* e);
+typedef sll_bool_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o,sll_error_t* e);
 
 
 

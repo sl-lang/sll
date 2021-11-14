@@ -318,7 +318,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_jso
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o){
 	sll_char_t c=**p;
 	(*p)++;
 	while (c==' '||c=='\t'||c=='\n'||c=='\r'){
@@ -334,10 +334,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_st
 			(*p)++;
 			while (c!='\"'){
 				if (c=='}'){
-					return SLL_RETURN_NO_ERROR;
+					return 1;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					return SLL_RETURN_ERROR;
+					return 0;
 				}
 				c=**p;
 				(*p)++;
@@ -353,16 +353,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_st
 				(*p)++;
 			}
 			if (!sll_json_parse(p,&(k->v))){
-				return SLL_RETURN_ERROR;
+				return 0;
 			}
 			c=**p;
 			(*p)++;
 			while (c!=','){
 				if (c=='}'){
-					return SLL_RETURN_NO_ERROR;
+					return 1;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					return SLL_RETURN_ERROR;
+					return 0;
 				}
 				c=**p;
 				(*p)++;
@@ -379,22 +379,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_st
 		}
 		if (**p==']'){
 			(*p)++;
-			return SLL_RETURN_NO_ERROR;
+			return 1;
 		}
 		while (1){
 			o->dt.a.l++;
 			o->dt.a.dt=sll_reallocate(o->dt.a.dt,o->dt.a.l*sizeof(sll_json_object_t));
 			if (!sll_json_parse(p,o->dt.a.dt+o->dt.a.l-1)){
-				return SLL_RETURN_ERROR;
+				return 0;
 			}
 			c=**p;
 			(*p)++;
 			while (c!=','){
 				if (c==']'){
-					return SLL_RETURN_NO_ERROR;
+					return 1;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					return SLL_RETURN_ERROR;
+					return 0;
 				}
 				c=**p;
 				(*p)++;
@@ -404,25 +404,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_st
 	if (c=='\"'){
 		o->t=SLL_JSON_OBJECT_TYPE_STRING;
 		_parse_json_string(p,&(o->dt.s));
-		return SLL_RETURN_NO_ERROR;
+		return 1;
 	}
 	if (c=='t'&&**p=='r'&&*((*p)+1)=='u'&&*((*p)+2)=='e'){
 		(*p)+=3;
 		o->t=SLL_JSON_OBJECT_TYPE_TRUE;
-		return SLL_RETURN_NO_ERROR;
+		return 1;
 	}
 	if (c=='f'&&**p=='a'&&*((*p)+1)=='l'&&*((*p)+2)=='s'&&*((*p)+3)=='e'){
 		(*p)+=4;
 		o->t=SLL_JSON_OBJECT_TYPE_FALSE;
-		return SLL_RETURN_NO_ERROR;
+		return 1;
 	}
 	if (c=='n'&&**p=='u'&&*((*p)+1)=='l'&&*((*p)+2)=='l'){
 		(*p)+=3;
 		o->t=SLL_JSON_OBJECT_TYPE_NULL;
-		return SLL_RETURN_NO_ERROR;
+		return 1;
 	}
 	if ((c<48||c>57)&&c!='.'&&c!='e'&&c!='E'&&c!='-'&&c!='+'){
-		return SLL_RETURN_ERROR;
+		return 0;
 	}
 	int8_t s=1;
 	if (c=='+'){
@@ -444,7 +444,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_st
 		(*p)--;
 		o->t=SLL_JSON_OBJECT_TYPE_INTEGER;
 		o->dt.i=(sll_integer_t)(v*s);
-		return SLL_RETURN_NO_ERROR;
+		return 1;
 	}
 	if (c=='.'){
 		sll_float_t pw=0.1;
@@ -482,7 +482,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_st
 	(*p)--;
 	o->t=SLL_JSON_OBJECT_TYPE_FLOAT;
 	o->dt.f=v*s;
-	return SLL_RETURN_NO_ERROR;
+	return 1;
 }
 
 

@@ -65,9 +65,6 @@ static sll_char_t** fp;
 static sll_string_length_t fpl;
 static sll_char_t l_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 static sll_string_length_t l_fpl;
-#ifdef STANDALONE_BUILD
-static sll_input_buffer_t m_i_bf;
-#endif
 static sll_internal_function_table_t i_ft;
 
 
@@ -76,13 +73,13 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 
 
 
-static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
+static sll_bool_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
 	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 	sll_file_t f;
 	sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 	if (!load_file(nm->v,&a_dt,o,&f,f_fp)){
 		e->t=SLL_ERROR_UNKNOWN;
-		return SLL_RETURN_ERROR;
+		return 0;
 	}
 	sll_file_close(&f);
 	if (fl&_FLAG_ASSEMBLY_GENERATED){
@@ -91,9 +88,9 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 		PRINT_STATIC_STR("Importing Assembly into Compiled Objects is Not Allowed\n");
 		COLOR_RESET;
 		e->t=SLL_ERROR_UNKNOWN;
-		return SLL_RETURN_ERROR;
+		return 0;
 	}
-	return SLL_RETURN_NO_ERROR;
+	return 1;
 }
 
 

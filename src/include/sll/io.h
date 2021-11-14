@@ -5,15 +5,15 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* a_dt,sll_error_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* a_dt,sll_error_t* e);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_load_compiled_object(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_error_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_object(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_error_t* e);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_load_object(sll_compilation_data_t* c_dt,sll_file_t* rf,sll_object_t** o,sll_error_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_object(sll_compilation_data_t* c_dt,sll_file_t* rf,sll_object_t** o,sll_error_t* e);
 
 
 

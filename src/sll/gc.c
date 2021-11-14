@@ -247,7 +247,7 @@ __SLL_EXTERNAL void sll_remove_debug_data(sll_runtime_object_t* o){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_runtime_object_stack_cleanup(void){
 	uint8_t err=0;
 	_gc_verify=0;
 	fflush(stdout);
@@ -309,5 +309,5 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_c
 		l++;
 	}
 	fflush(stderr);
-	return (err?SLL_RETURN_ERROR:SLL_RETURN_NO_ERROR);
+	return (err?0:1);
 }

@@ -279,7 +279,7 @@ __SLL_EXTERNAL void sll_platform_socket_init(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
 	SLL_INIT_STRING(o);
 	struct addrinfo ah;
 	sll_zero_memory(&ah,sizeof(struct addrinfo));
@@ -295,14 +295,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const
 		p/=10;
 	} while (p);
 	if (getaddrinfo((char*)h->v,ps+i+1,&ah,&r)){
-		return SLL_RETURN_ERROR;
+		return 0;
 	}
 	int s=-1;
 	for (struct addrinfo* k=r;k;k=k->ai_next){
 		s=socket(k->ai_family,k->ai_socktype,k->ai_protocol);
 		if (s==-1){
 			freeaddrinfo(r);
-			return SLL_RETURN_ERROR;
+			return 0;
 		}
 		if (!connect(s,k->ai_addr,(int)k->ai_addrlen)){
 			break;
@@ -311,11 +311,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const
 	}
 	freeaddrinfo(r);
 	if (s==-1){
-		return SLL_RETURN_ERROR;
+		return 0;
 	}
 	if (send(s,in->v,in->l,0)==-1){
 		close(s);
-		return SLL_RETURN_ERROR;
+		return 0;
 	}
 	sll_string_create(0,o);
 	sll_char_t bf[4096];
@@ -324,7 +324,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const
 	while (l){
 		if (l<0){
 			close(s);
-			return SLL_RETURN_ERROR;
+			return 0;
 		}
 		sll_string_increase(o,l);
 		sll_copy_data(bf,l,o->v+o->l);
@@ -334,7 +334,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const
 	close(s);
 	o->v[o->l]=0;
 	sll_string_calculate_checksum(o);
-	return SLL_RETURN_NO_ERROR;
+	return 1;
 }
 
 

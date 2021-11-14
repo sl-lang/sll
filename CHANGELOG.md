@@ -29,6 +29,8 @@
 - Replaced `EXPAND_FILE_PATH` macro by `sll_path_absolute` function calls in the CLI
 - Replaced `memcmp` calls with calls to `sll_compare_data` and `strcmp` with `sll_string_compare_pointer` ([#81])
 - Replaced `sll_platform_path_absolute` by `sll_path_absolute` (which is platform-independent) ([#86])
+- Replaced `sll_return_t` by `sll_bool_t`
+- Expanded two macros: `SLL_RETURN_ERROR` to `0` and `SLL_RETURN_NO_ERROR` to `1`
 - `SLL_API_MAX_FILE_PATH_LENGTH` is now platform-dependent
 - `sll_copy_data` now expects `sll_size_t` instead of `sll_string_length_t`
 
@@ -38,7 +40,9 @@
 - Options related to updating sll from the CLI
 - Stream API
 - Unused CLI macros: `EXPAND_FILE_PATH` and `GET_EXECUATBLE_FILE_PATH`
+- Unused constants: `SLL_MAX_ALLOCATED_BLOCK_LENGTH`, `SLL_MAX_READ_CHAR`, `SLL_MAX_STRING_CHECKSUM`, `SLL_MAX_RUNTIME_OBJECT_TYPE`, `SLL_MAX_OBJECT_TYPE`, `SLL_MAX_JSON_OBJECT_TYPE`, `SLL_MAX_ERROR_TYPE`, `SLL_MAX_FILE_FLAGS`, `SLL_MAX_COMPARE_RESULT`, `SLL_MAX_BOOL`, `SLL_MAX_CLEANUP_TYPE`, `SLL_MAX_INTERNAL_FUNCTION_TYPE`, `SLL_MAX_RETURN`, `SLL_MAX_FILE_PATH_INDEX`, `SLL_MAX_VERSION`, `SLL_RETURN_ERROR` and `SLL_RETURN_NO_ERROR`
 - Unused headers ([#91])
+- Unused types: `sll_allocated_block_length_t`, `sll_cleanup_type_t`, `sll_file_path_index_t`, `sll_return_t` and `sll_input_buffer_t`
 
 ## [0.6.26] - 2021-11-7
 
