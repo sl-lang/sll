@@ -132,7 +132,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const
 
 __SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(const sll_file_descriptor_t fd,void* p,sll_size_t sz){
 	DWORD o;
-	if (ReadFile((HANDLE)fd,p,sz,&o,NULL)==FALSE){
+	if (ReadFile((HANDLE)fd,p,(DWORD)sz,&o,NULL)==FALSE){
 		return 0;
 	}
 	return o;
