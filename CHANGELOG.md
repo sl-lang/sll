@@ -5,7 +5,7 @@
 ### Added
 
 - CLI now properly releases all memory (by calling `sll_deinit`)
-- Custom file IO API: `sll_file_close`, `sll_file_flush`, `sll_file_open`, `sll_file_read` and `sll_file_write`
+- Custom file IO API: `sll_file_close`, `sll_file_flush`, `sll_file_from_data`, `sll_file_open`, `sll_file_read`, `sll_file_read_char`, `sll_file_reset`, `sll_file_reset_line`, `sll_file_write` and `sll_file_write_char`
 - `extern` variables are now marked as `__SLL_EXTERNAL extern`
 - Implemented `SLL_MEMORY_MOVE_DIRECTION_FROM_STACK`, `SLL_MEMORY_MOVE_DIRECTION_TO_STACK` and `sll_memory_move` ([#94])
 - Implemented `sll_platform_enable_console_color`, `sll_platform_get_current_working_directory`, `sll_platform_get_executable_file_path`, `sll_platform_set_current_working_directory`, `sll_set_memory` and `sll_zero_memory`

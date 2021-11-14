@@ -103,6 +103,7 @@ void _execute_cleanup(void){
 		_util_exit_table[_util_exit_table_size]();
 	}
 	_gc_release_data();
+	_file_release_std_streams();
 	_memory_release_data();
 }
 

@@ -241,9 +241,29 @@ typedef struct __SLL_STRING{
 
 
 
-typedef struct __SLL_FILE{
+typedef struct __SLL_FILE_DATA_FILE{
 	const sll_file_descriptor_t fd;
 	const sll_string_t nm;
+} sll_file_data_file_t;
+
+
+
+typedef struct __SLL_FILE_DATA_MEMORY{
+	const void* p;
+	const sll_size_t sz;
+} sll_file_data_memory_t;
+
+
+
+typedef union __SLL_FILE_DATA{
+	const sll_file_data_file_t fl;
+	const sll_file_data_memory_t mm;
+} sll_file_data_t;
+
+
+
+typedef struct __SLL_FILE{
+	const sll_file_data_t dt;
 	const sll_file_flags_t f;
 	sll_line_number_t _l_num;
 	sll_file_offset_t _l_off;

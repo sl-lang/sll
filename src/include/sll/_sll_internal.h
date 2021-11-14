@@ -184,6 +184,8 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 #define ALLOCATOR_MAX_SMALL_SIZE 512
 
+#define FILE_FLAG_BUFFER SLL_FILE_FLAG_RESERVED
+
 
 
 typedef uint16_t call_stack_size_t;
@@ -440,6 +442,10 @@ void _execute_cleanup(void);
 
 
 void _file_init_std_streams(void);
+
+
+
+void _file_release_std_streams(void);
 
 
 

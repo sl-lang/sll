@@ -9,6 +9,7 @@
 #define SLL_FILE_FLAG_WRITE 2
 #define SLL_FILE_FLAG_APPEND 4
 #define SLL_FILE_FLAG_NO_BUFFER 8
+#define SLL_FILE_FLAG_RESERVED 128
 
 #define SLL_FILE_GET_LINE_NUMBER(f) ((f)->_l_num)
 #define SLL_FILE_GET_LINE_OFFSET(f) ((f)->_l_off)
@@ -62,7 +63,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 
 
 
-__SLL_EXTERNAL void sll_file_write_char(sll_file_t* f,sll_char_t c);
+__SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c);
 
 
 

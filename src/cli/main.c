@@ -773,7 +773,7 @@ _read_file_argument:
 		if (!execute(f_fp,&c_dt,&a_dt,&f,o_fp,&ec)){
 			goto _error;
 		}
-		if (f.nm.v){
+		if (f.f){
 			sll_file_close(&f);
 		}
 		sll_deinit_assembly_data(&a_dt);
@@ -869,7 +869,7 @@ _error:
 	}
 	sll_deinit_assembly_data(&a_dt);
 	sll_deinit_compilation_data(&c_dt);
-	if (f.nm.v){
+	if (f.f){
 		sll_file_close(&f);
 	}
 	sll_deinit_internal_function_table(&i_ft);
