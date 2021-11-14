@@ -6,23 +6,23 @@
 
 #ifdef _MSC_VER
 #ifdef __SLL_STATIC__
-#define __SLL_FUNC
+#define __SLL_EXTERNAL
 #else
 #ifdef __SLL_COMPILATION__
-#define __SLL_FUNC __declspec(dllexport)
+#define __SLL_EXTERNAL __declspec(dllexport)
 #else
-#define __SLL_FUNC __declspec(dllimport)
+#define __SLL_EXTERNAL __declspec(dllimport)
 #endif
 #endif
 #define __SLL_CHECK_OUTPUT _Check_return_
 #else
 #ifdef __SLL_STATIC__
-#define __SLL_FUNC
+#define __SLL_EXTERNAL
 #else
 #ifdef __SLL_COMPILATION__
-#define __SLL_FUNC __attribute__((visibility("default")))
+#define __SLL_EXTERNAL __attribute__((visibility("default")))
 #else
-#define __SLL_FUNC
+#define __SLL_EXTERNAL
 #endif
 #endif
 #define __SLL_CHECK_OUTPUT __attribute__((warn_unused_result))

@@ -1,7 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/object.h>
-#include <sll/stream.h>
 #include <sll/types.h>
 
 
@@ -57,17 +57,17 @@ static sll_object_t* _remove_debug_data_internal(sll_object_t* o){
 
 
 
-__SLL_FUNC void sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_input_data_stream_t* is){
+__SLL_EXTERNAL void sll_insert_debug_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 	sll_object_t* dbg=_acquire_next_object(c_dt);
 	dbg->t=SLL_OBJECT_TYPE_DEBUG_DATA;
 	dbg->dt.dbg.fpi=0;
-	dbg->dt.dbg.ln=SLL_GET_INPUT_DATA_STREAM_LINE_NUMBER(is);
-	dbg->dt.dbg.cn=SLL_GET_INPUT_DATA_STREAM_OFFSET(is)-SLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is)-1;
-	dbg->dt.dbg.ln_off=SLL_GET_INPUT_DATA_STREAM_LINE_OFFSET(is);
+	dbg->dt.dbg.ln=SLL_FILE_GET_LINE_NUMBER(rf);
+	dbg->dt.dbg.cn=SLL_FILE_GET_OFFSET(rf)-SLL_FILE_GET_LINE_OFFSET(rf)-1;
+	dbg->dt.dbg.ln_off=SLL_FILE_GET_LINE_OFFSET(rf);
 }
 
 
 
-__SLL_FUNC void sll_remove_object_debug_data(sll_object_t* o){
+__SLL_EXTERNAL void sll_remove_object_debug_data(sll_object_t* o){
 	_remove_debug_data_internal(o);
 }

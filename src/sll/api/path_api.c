@@ -13,9 +13,9 @@
 
 
 
-__SLL_FUNC sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_char_t* o,sll_string_length_t ol){
+__SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_char_t* o,sll_string_length_t ol){
 	sll_string_length_t i=0;
-	if (!s[0]||(s[0]!='/'&&s[0]!='\\'&&(!s[1]||s[0]<'A'||s[0]>'Z'||s[1]!=':'))){
+	if (!s[0]||(s[0]!='/'&&s[0]!='\\'&&(!s[1]||s[0]<65||(s[0]>90&&s[0]<97)||s[0]>122||s[1]!=':'))){
 		i=sll_platform_get_current_working_directory(o,ol);
 		if (!i){
 			i=sll_string_length_unaligned(s);

@@ -5,7 +5,7 @@
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* il,sll_integer_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* il,sll_integer_t v){
 	if (!il->l){
 		il->v=sll_allocate(sizeof(sll_integer_t));
 		il->l=1;
@@ -48,7 +48,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* 
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary_heap_t* il,sll_integer_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary_heap_t* il,sll_integer_t v){
 	SLL_UNIMPLEMENTED();
 	return 0;
 }

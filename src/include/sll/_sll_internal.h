@@ -87,11 +87,11 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 
 
-#define __API_FUNC(nm) __SLL_FUNC __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
+#define __API_FUNC(nm) __SLL_EXTERNAL __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
 #define __SLL_STATIC_INT_OBJECT(v) static sll_runtime_object_t _int_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=(v)}};STATIC_RUNTIME_OBJECT(&_int_##v##_static_data)
 #define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_runtime_object_t _int_neg_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=-(v)}};STATIC_RUNTIME_OBJECT(&_int_neg_##v##_static_data)
 #define __SLL_STATIC_CHAR_OBJECT(v) static sll_runtime_object_t _char_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_CHAR,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.c=(sll_char_t)(v)}};STATIC_RUNTIME_OBJECT(&_char_##v##_static_data)
-#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_runtime_object_t _##nm##_static_data={1,t,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.f=v}};sll_runtime_object_t* sll_static_##nm=&_##nm##_static_data
+#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_runtime_object_t _##nm##_static_data={1,t,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.f=v}};__SLL_EXTERNAL sll_runtime_object_t* sll_static_##nm=&_##nm##_static_data
 
 
 
@@ -439,6 +439,10 @@ void _execute_cleanup(void);
 
 
 
+void _file_init_std_streams(void);
+
+
+
 void _gc_release_data(void);
 
 
@@ -460,6 +464,10 @@ void _init_object_stack(sll_compilation_data_t* c_dt);
 
 
 void _memory_release_data(void);
+
+
+
+sll_file_descriptor_t _platform_get_stream_descriptor(int t);
 
 
 

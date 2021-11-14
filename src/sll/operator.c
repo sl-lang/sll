@@ -169,11 +169,11 @@
 
 
 
-const sll_float_t sll_float_compare_error=1e-6;
+__SLL_EXTERNAL const sll_float_t sll_float_compare_error=1e-6;
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<a->dt.s.l){
 			return SLL_FROM_CHAR(a->dt.s.v[b->dt.i]);
@@ -202,7 +202,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access(sll_runt
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access_range(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access_range(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT){
 			sll_runtime_object_t* o=SLL_CREATE();
@@ -236,7 +236,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access_range(sl
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access_range_step(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* d){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access_range_step(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* d){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_INT&&SLL_RUNTIME_OBJECT_GET_TYPE(d)==SLL_RUNTIME_OBJECT_TYPE_INT){
 			sll_runtime_object_t* o=SLL_CREATE();
@@ -270,7 +270,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_access_range_st
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_add(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_add(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	COMMUTATIVE_OPERATOR;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
@@ -412,7 +412,7 @@ _add_to_map:
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_and(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_and(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	COMMUTATIVE_OPERATOR;
 	IGNORE_RESULT(inv);
 	REMOVE_FLOAT;
@@ -531,7 +531,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_and(sll_runtime
 
 
 
-__SLL_FUNC void sll_operator_assign(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* v){
+__SLL_EXTERNAL void sll_operator_assign(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* v){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<a->dt.s.l){
 			sll_runtime_object_t* tmp=sll_operator_cast(v,sll_static_int[SLL_CONSTANT_TYPE_CHAR]);
@@ -552,19 +552,19 @@ __SLL_FUNC void sll_operator_assign(sll_runtime_object_t* a,sll_runtime_object_t
 
 
 
-__SLL_FUNC void sll_operator_assign_range(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* v){
+__SLL_EXTERNAL void sll_operator_assign_range(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* v){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_FUNC void sll_operator_assign_range_step(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* d,sll_runtime_object_t* v){
+__SLL_EXTERNAL void sll_operator_assign_range_step(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* d,sll_runtime_object_t* v){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_runtime_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return !!a->dt.i;
@@ -588,7 +588,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_runtime_obj
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_cast(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_cast(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_INT&&b->dt.i>0&&b->dt.i<=SLL_MAX_CONSTANT_TYPE){
 		switch (COMBINED_CAST_ARGS){
 			case COMBINED_CAST_TYPE_II:
@@ -807,7 +807,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_cast(sll_runtim
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return COMPARE_RESULT(a->dt.i,b->dt.i);
@@ -927,7 +927,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sl
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_dec(sll_runtime_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_dec(sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(a->dt.i-1);
@@ -969,7 +969,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_dec(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_div(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_div(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
 		return SLL_FROM_INT((SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_ARRAY?sll_array_count_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l):sll_array_count(&(a->dt.a),b)));
 	}
@@ -1137,7 +1137,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_div(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_dup(sll_runtime_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_dup(sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(a->dt.i);
@@ -1177,7 +1177,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_dup(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return a->dt.i==b->dt.i;
@@ -1285,7 +1285,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_runtime_ob
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_floor_div(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_floor_div(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
 		return SLL_FROM_INT((SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_ARRAY?sll_array_count_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l):sll_array_count(&(a->dt.a),b)));
 	}
@@ -1453,7 +1453,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_floor_div(sll_r
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_inc(sll_runtime_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_inc(sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(a->dt.i+1);
@@ -1492,7 +1492,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_inc(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_inv(sll_runtime_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_inv(sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(~a->dt.i);
@@ -1539,7 +1539,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_inv(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_len(sll_runtime_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_len(sll_runtime_object_t* a){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
@@ -1560,7 +1560,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_len(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_mod(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_mod(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	REMOVE_FLOAT;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
@@ -1758,7 +1758,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_mod(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_mult(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_mult(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	COMMUTATIVE_OPERATOR;
 	IGNORE_RESULT(inv);
 	switch (COMBINED_ARGS){
@@ -1912,7 +1912,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_mult(sll_runtim
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_or(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_or(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	COMMUTATIVE_OPERATOR;
 	IGNORE_RESULT(inv);
 	REMOVE_FLOAT;
@@ -2031,7 +2031,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_or(sll_runtime_
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_shl(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_shl(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	REMOVE_FLOAT;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
@@ -2261,7 +2261,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_shl(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_shr(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_shr(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i>>b->dt.i);
@@ -2490,7 +2490,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_shr(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(const sll_runtime_object_t* a,const sll_runtime_object_t* b){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)!=SLL_RUNTIME_OBJECT_GET_TYPE(b)){
 		return 0;
 	}
@@ -2517,7 +2517,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(const sll_run
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_sub(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_sub(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
 		sll_runtime_object_t* o=SLL_CREATE();
 		o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
@@ -2666,7 +2666,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_sub(sll_runtime
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_xor(sll_runtime_object_t* a,sll_runtime_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_xor(sll_runtime_object_t* a,sll_runtime_object_t* b){
 	COMMUTATIVE_OPERATOR;
 	IGNORE_RESULT(inv);
 	REMOVE_FLOAT;

@@ -5,7 +5,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/file.h>
-#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -20,7 +19,7 @@
 
 
 
-const sll_char_t* sll_platform_string=SLL_CHAR("windows");
+__SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("windows");
 
 
 
@@ -79,13 +78,26 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
+sll_file_descriptor_t _platform_get_stream_descriptor(int t){
+	if (t==0){
+		return (sll_file_descriptor_t)GetStdHandle(STD_INPUT_HANDLE);
+	}
+	if (t==1){
+		return (sll_file_descriptor_t)GetStdHandle(STD_OUTPUT_HANDLE);
+	}
+	SLL_ASSERT(t==2);
+	return (sll_file_descriptor_t)GetStdHandle(STD_ERROR_HANDLE);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
 	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
 }
 
 
 
-__SLL_FUNC void sll_platform_enable_console_color(void){
+__SLL_EXTERNAL void sll_platform_enable_console_color(void){
 	sll_bool_t st=0;
 	if (_win_stdout_cm!=0xffffffff&&_isatty(1)){
 		GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),&_win_stdout_cm);
@@ -104,24 +116,27 @@ __SLL_FUNC void sll_platform_enable_console_color(void){
 
 
 
-__SLL_FUNC void sll_platform_file_close(const sll_file_descriptor_t fd){
+__SLL_EXTERNAL void sll_platform_file_close(sll_file_descriptor_t fd){
 	CloseHandle((HANDLE)fd);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff){
 	DWORD m=0;
+	DWORD cm=OPEN_EXISTING;
 	if (ff&SLL_FILE_FLAG_READ){
 		m|=GENERIC_READ;
 	}
 	if (ff&SLL_FILE_FLAG_WRITE){
 		m|=GENERIC_WRITE;
+		cm=CREATE_ALWAYS;
 	}
 	if (ff&SLL_FILE_FLAG_APPEND){
 		m|=FILE_APPEND_DATA;
+		cm=OPEN_ALWAYS;
 	}
-	HANDLE o=CreateFileA((char*)fp,m,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+	HANDLE o=CreateFileA((char*)fp,m,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,cm,FILE_ATTRIBUTE_NORMAL,NULL);
 	if (o==INVALID_HANDLE_VALUE){
 		return SLL_UNKNOWN_FILE_DESCRIPTOR;
 	}
@@ -130,9 +145,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(const sll_file_descriptor_t fd,void* p,sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* p,sll_size_t sz){
 	DWORD o;
-	if (ReadFile((HANDLE)fd,p,(DWORD)sz,&o,NULL)==FALSE){
+	if (!ReadFile((HANDLE)fd,p,(DWORD)sz,&o,NULL)){
 		return 0;
 	}
 	return o;
@@ -140,7 +155,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(const sll_file_d
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
+__SLL_EXTERNAL void sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t off){
+	SetFilePointer((HANDLE)fd,off,NULL,FILE_BEGIN);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
 	HANDLE fh=CreateFileA(fp,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 	if (fh==INVALID_HANDLE_VALUE){
 		return 0;
@@ -156,9 +177,9 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_cha
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_write(const sll_file_descriptor_t fd,const void* p,sll_size_t sz){
+__SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* p,sll_size_t sz){
 	DWORD o;
-	if (WriteFile((HANDLE)fd,p,(DWORD)sz,&o,NULL)==FALSE){
+	if (!WriteFile((HANDLE)fd,p,(DWORD)sz,&o,NULL)){
 		return 0;
 	}
 	return o;
@@ -166,13 +187,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_write(const sll_file_
 
 
 
-__SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
+__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_page_size_t sz){
 	VirtualFree(pg,0,MEM_RELEASE);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 	FILETIME ft;
 	GetSystemTimeAsFileTime(&ft);
 	return ((((sll_time_t)ft.dwHighDateTime)<<32)|ft.dwLowDateTime)*100-11644473600000000000;
@@ -180,7 +201,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol){
 	if (!GetCurrentDirectoryA(ol,(char*)o)){
 		*o=0;
 		return 0;
@@ -190,13 +211,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_worki
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
 	return GetModuleFileNameA(NULL,(char*)o,ol);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
 	return si.dwPageSize;
@@ -204,7 +225,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
 	char bf[MAX_PATH+1];
 	sll_string_length_t fpl=sll_string_length_unaligned(fp);
 	sll_copy_data(fp,fpl,bf);
@@ -244,7 +265,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length_unaligned(fp);
 	sll_copy_data(fp,i,bf);
@@ -263,33 +284,33 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_char_t* fp){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_char_t* fp){
 	return (GetFileAttributesA(fp)!=INVALID_FILE_ATTRIBUTES);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sll_char_t* fp){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sll_char_t* fp){
 	DWORD a=GetFileAttributesA(fp);
 	return (a!=INVALID_FILE_ATTRIBUTES&&(a&FILE_ATTRIBUTE_DIRECTORY));
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p){
 	return !!SetCurrentDirectoryA((char*)p);
 }
 
 
 
-__SLL_FUNC void sll_platform_setup_console(void){
+__SLL_EXTERNAL void sll_platform_setup_console(void){
 	_win_stdout_m=_setmode(_fileno(stdout),_O_BINARY);
 	_win_stderr_m=_setmode(_fileno(stderr),_O_BINARY);
 }
 
 
 
-__SLL_FUNC void sll_platform_sleep(sll_time_t tm){
+__SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 	if (_win_wh==INVALID_HANDLE_VALUE){
 		_win_wh=CreateEvent(NULL,TRUE,FALSE,FALSE);
 	}
@@ -309,7 +330,7 @@ __SLL_FUNC void sll_platform_sleep(sll_time_t tm){
 
 
 
-__SLL_FUNC void sll_platform_socket_init(void){
+__SLL_EXTERNAL void sll_platform_socket_init(void){
 	WSADATA dt;
 	if (WSAStartup(MAKEWORD(2,2),&dt)){
 		SLL_UNIMPLEMENTED();
@@ -319,8 +340,8 @@ __SLL_FUNC void sll_platform_socket_init(void){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
-	SLL_INIT_STRING(o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
+	sll_string_create(0,o);
 	struct addrinfo ah;
 	sll_zero_memory(&ah,sizeof(struct addrinfo));
 	ah.ai_family=AF_UNSPEC;
@@ -357,7 +378,6 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 		closesocket(s);
 		return SLL_RETURN_ERROR;
 	}
-	sll_string_create(0,o);
 	sll_char_t bf[4096];
 	int l=recv(s,bf,4096,0);
 	shutdown(s,SD_SEND);
@@ -379,7 +399,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 
 
 
-__SLL_FUNC void sll_platform_reset_console(void){
+__SLL_EXTERNAL void sll_platform_reset_console(void){
 	_setmode(_fileno(stdout),_win_stdout_m);
 	_setmode(_fileno(stderr),_win_stderr_m);
 }

@@ -1498,7 +1498,7 @@ _keep_assignment:;
 				}
 				SLL_ASSERT(!cnd||SLL_RUNTIME_OBJECT_GET_TYPE(cnd)==SLL_RUNTIME_OBJECT_TYPE_INT);
 				l=(l-1)>>1;
-				sll_binary_heap_t il=SLL_INIT_binary_heap_STRUCT;
+				sll_binary_heap_t il=SLL_INIT_BINARY_HEAP_STRUCT;
 				do{
 					l--;
 					sll_object_t* a=o;
@@ -2259,7 +2259,7 @@ static sll_object_t* _remap_indexes_merge_print(sll_object_t* o,sll_object_t* p,
 
 
 
-__SLL_FUNC void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft){
+__SLL_EXTERNAL void sll_optimize_object(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft){
 	optimizer_data_t o_dt={
 		c_dt,
 		i_ft,

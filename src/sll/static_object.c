@@ -270,7 +270,7 @@ __SLL_STATIC_INT_OBJECT(255);
 
 
 
-sll_runtime_object_t* sll_static_int[256]={
+__SLL_EXTERNAL sll_runtime_object_t* sll_static_int[256]={
 	&_int_0_static_data,&_int_1_static_data,&_int_2_static_data,&_int_3_static_data,&_int_4_static_data,&_int_5_static_data,
 	&_int_6_static_data,&_int_7_static_data,&_int_8_static_data,&_int_9_static_data,&_int_10_static_data,&_int_11_static_data,
 	&_int_12_static_data,&_int_13_static_data,&_int_14_static_data,&_int_15_static_data,&_int_16_static_data,&_int_17_static_data,
@@ -337,7 +337,7 @@ __SLL_STATIC_NEG_INT_OBJECT(16);
 
 
 
-sll_runtime_object_t* sll_static_negative_int[16]={
+__SLL_EXTERNAL sll_runtime_object_t* sll_static_negative_int[16]={
 	&_int_neg_1_static_data,&_int_neg_2_static_data,&_int_neg_3_static_data,&_int_neg_4_static_data,&_int_neg_5_static_data,
 	&_int_neg_6_static_data,&_int_neg_7_static_data,&_int_neg_8_static_data,&_int_neg_9_static_data,&_int_neg_10_static_data,
 	&_int_neg_11_static_data,&_int_neg_12_static_data,&_int_neg_13_static_data,&_int_neg_14_static_data,&_int_neg_15_static_data,
@@ -617,7 +617,7 @@ __SLL_STATIC_CHAR_OBJECT(255);
 
 
 
-sll_runtime_object_t* sll_static_char[256]={
+__SLL_EXTERNAL sll_runtime_object_t* sll_static_char[256]={
 	&_char_0_static_data,&_char_1_static_data,&_char_2_static_data,&_char_3_static_data,&_char_4_static_data,&_char_5_static_data,
 	&_char_6_static_data,&_char_7_static_data,&_char_8_static_data,&_char_9_static_data,&_char_10_static_data,&_char_11_static_data,
 	&_char_12_static_data,&_char_13_static_data,&_char_14_static_data,&_char_15_static_data,&_char_16_static_data,&_char_17_static_data,
@@ -680,7 +680,7 @@ __SLL_STATIC_OBJECT(map_zero,SLL_RUNTIME_OBJECT_TYPE_MAP,m,SLL_INIT_MAP_STRUCT);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_integer_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_integer_t v){
 	if (v>-1&&v<256){
 		SLL_ACQUIRE_NO_DEBUG(sll_static_int[v]);
 		return sll_static_int[v];
@@ -697,7 +697,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_intege
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_float_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_float_t v){
 	if (!v){
 		SLL_ACQUIRE_NO_DEBUG(sll_static_float_zero);
 		return sll_static_float_zero;
@@ -718,7 +718,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_floa
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_char_to_object(sll_char_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_char_to_object(sll_char_t v){
 	SLL_ACQUIRE_NO_DEBUG(sll_static_char[v]);
 	return sll_static_char[v];
 }

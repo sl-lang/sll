@@ -24,7 +24,7 @@
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_type_t sll_runtime_object_get_type(const sll_runtime_object_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_type_t sll_runtime_object_get_type(const sll_runtime_object_t* o);
 
 
 

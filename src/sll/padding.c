@@ -87,7 +87,7 @@ static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_da
 
 
 
-__SLL_FUNC void sll_remove_object_padding(sll_compilation_data_t* c_dt,sll_object_t* o){
+__SLL_EXTERNAL void sll_remove_object_padding(sll_compilation_data_t* c_dt,sll_object_t* o){
 	sll_object_t* d=o;
 	sll_object_offset_t rm=0;
 	_remove_padding_internal(o,c_dt,&d,&rm);

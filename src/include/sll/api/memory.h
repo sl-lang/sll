@@ -5,15 +5,15 @@
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_object(sll_runtime_object_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_object(sll_runtime_object_t* v);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_pointer(void* p);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_pointer(void* p);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_get_null_pointer(void);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_get_null_pointer(void);
 
 
 

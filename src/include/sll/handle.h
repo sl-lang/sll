@@ -14,19 +14,19 @@
 
 
 
-__SLL_FUNC void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll);
+__SLL_EXTERNAL void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_handle_type_t sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_handle_type_t sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_handle_descriptor_t* sll_handle_lookup_descriptor(sll_handle_list_t* hl,sll_handle_type_t t);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_handle_descriptor_t* sll_handle_lookup_descriptor(sll_handle_list_t* hl,sll_handle_type_t t);
 
 
 

@@ -59,7 +59,7 @@ static sll_string_length_t _memory_stringify(sll_handle_t h,sll_string_length_t 
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_object(sll_runtime_object_t* v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_object(sll_runtime_object_t* v){
 	SETUP_HANDLE;
 	void* p=v;
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_STRING){
@@ -80,7 +80,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_object(sll_r
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_pointer(void* p){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_pointer(void* p){
 	SETUP_HANDLE;
 	if (!p){
 		SLL_ACQUIRE(_memory_null_ref);
@@ -95,7 +95,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_pointer(void
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_get_null_pointer(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_get_null_pointer(void){
 	SETUP_HANDLE;
 	SLL_ACQUIRE(_memory_null_ref);
 	return _memory_null_ref;

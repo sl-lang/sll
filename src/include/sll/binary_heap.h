@@ -5,11 +5,11 @@
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* il,sll_integer_t k);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* il,sll_integer_t k);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary_heap_t* il,sll_integer_t k);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary_heap_t* il,sll_integer_t k);
 
 
 

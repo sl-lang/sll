@@ -284,6 +284,25 @@ typedef struct __SLL_OUTPUT_DATA_STREAM{
 
 
 
+typedef struct __SLL_STRING{
+	sll_string_length_t l;
+	sll_string_checksum_t c;
+	sll_char_t* v;
+} sll_string_t;
+
+
+
+typedef struct __SLL_FILE{
+	const sll_file_descriptor_t fd;
+	const sll_string_t nm;
+	const sll_file_flags_t f;
+	sll_file_offset_t _l_num;
+	sll_file_offset_t _l_off;
+	sll_file_offset_t _off;
+} sll_file_t;
+
+
+
 typedef struct __SLL_INPUT_BUFFER{
 	const sll_char_t* bf;
 	sll_string_length_t sz;
@@ -291,7 +310,7 @@ typedef struct __SLL_INPUT_BUFFER{
 
 
 
-typedef struct __SLL_FUNCTION_OBJECT_DATA{
+typedef struct __SLL_EXTERNALTION_OBJECT_DATA{
 	sll_arg_count_t ac;
 	sll_function_index_t id;
 	sll_scope_t sc;
@@ -369,7 +388,7 @@ typedef struct __SLL_EXPORT_TABLE{
 
 
 
-typedef struct __SLL_FUNCTION{
+typedef struct __SLL_EXTERNALTION{
 	sll_object_offset_t off;
 	sll_arg_count_t al;
 	sll_identifier_index_t a[];
@@ -377,24 +396,16 @@ typedef struct __SLL_FUNCTION{
 
 
 
-typedef struct __SLL_FUNCTION_TABLE{
+typedef struct __SLL_EXTERNALTION_TABLE{
 	sll_function_t** dt;
 	sll_function_index_t l;
 } sll_function_table_t;
 
 
 
-typedef struct __SLL_STRING{
-	sll_string_length_t l;
-	sll_string_checksum_t c;
-	sll_char_t* v;
-} sll_string_t;
-
-
-
 typedef struct __SLL_STRING_TABLE{
-	sll_string_index_t l;
 	sll_string_t* dt;
+	sll_string_index_t l;
 } sll_string_table_t;
 
 
@@ -410,7 +421,7 @@ typedef struct __SLL_COMPILATION_STACK_DATA{
 
 
 typedef struct __SLL_COMPILATION_DATA{
-	sll_input_data_stream_t* is;
+	sll_file_t* rf;
 	sll_time_t tm;
 	sll_object_t* h;
 	sll_identifier_table_t idt;
@@ -589,8 +600,8 @@ typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
 typedef struct __SLL_RUNTIME_DATA{
 	sll_internal_function_table_t* ift;
 	sll_handle_list_t* hl;
-	sll_input_data_stream_t* is;
-	sll_output_data_stream_t* os;
+	sll_file_t* in;
+	sll_file_t* out;
 } sll_runtime_data_t;
 
 
@@ -683,14 +694,6 @@ typedef struct __SLL_BINARY_HEAP{
 	sll_integer_t* v;
 	sll_array_length_t l;
 } sll_binary_heap_t;
-
-
-
-typedef struct __SLL_FILE{
-	const sll_file_descriptor_t fd;
-	const sll_string_t nm;
-	const sll_file_flags_t f;
-} sll_file_t;
 
 
 

@@ -1,97 +1,96 @@
 #include <sll/_sll_internal.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/object.h>
-#include <sll/stream.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <sll/version.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 
 
-#define WRITE_FIELD(f,os) SLL_WRITE_TO_OUTPUT_DATA_STREAM((os),(uint8_t*)(&(f)),sizeof((f)))
-#define WRITE_SIGNED_INTEGER(os,n) _write_integer((os),((n)<0?((~(n))<<1)|1:(n)<<1))
+#define WRITE_FIELD(f,wf) sll_file_write((wf),(void*)(&(f)),sizeof((f)))
+#define WRITE_SIGNED_INTEGER(wf,n) _write_integer((wf),((n)<0?((~(n))<<1)|1:(n)<<1))
 
 
 
-static void _write_integer(sll_output_data_stream_t* os,uint64_t v){
+static void _write_integer(sll_file_t* wf,uint64_t v){
 	while (v>0x7f){
-		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)((v&0x7f)|0x80));
+		sll_file_write_char(wf,(uint8_t)((v&0x7f)|0x80));
 		v>>=7;
 	}
-	SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)v);
+	sll_file_write_char(wf,(uint8_t)v);
 }
 
 
 
-static const sll_object_t* _write_object(sll_output_data_stream_t* os,const sll_object_t* o){
+static const sll_object_t* _write_object(sll_file_t* wf,const sll_object_t* o){
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
 		if (o->t==OBJECT_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 			continue;
 		}
-		WRITE_FIELD(o->t,os);
+		WRITE_FIELD(o->t,wf);
 		o++;
 	}
-	WRITE_FIELD(o->t,os);
+	WRITE_FIELD(o->t,wf);
 	switch (o->t){
 		case SLL_OBJECT_TYPE_UNKNOWN:
 			return o+1;
 		case SLL_OBJECT_TYPE_CHAR:
-			WRITE_FIELD(o->dt.c,os);
+			WRITE_FIELD(o->dt.c,wf);
 			return o+1;
 		case SLL_OBJECT_TYPE_INT:
-			WRITE_SIGNED_INTEGER(os,o->dt.i);
+			WRITE_SIGNED_INTEGER(wf,o->dt.i);
 			return o+1;
 		case SLL_OBJECT_TYPE_FLOAT:
-			WRITE_FIELD(o->dt.f,os);
+			WRITE_FIELD(o->dt.f,wf);
 			return o+1;
 		case SLL_OBJECT_TYPE_STRING:
-			_write_integer(os,o->dt.s);
+			_write_integer(wf,o->dt.s);
 			return o+1;
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
-				_write_integer(os,o->dt.al);
+				_write_integer(wf,o->dt.al);
 				sll_array_length_t l=o->dt.al;
 				o++;
 				while (l){
 					l--;
-					o=_write_object(os,o);
+					o=_write_object(wf,o);
 				}
 				return o;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
-				_write_integer(os,o->dt.ml);
+				_write_integer(wf,o->dt.ml);
 				sll_map_length_t l=o->dt.ml;
 				o++;
 				while (l){
 					l--;
-					o=_write_object(os,o);
+					o=_write_object(wf,o);
 				}
 				return o;
 			}
 		case SLL_OBJECT_TYPE_IDENTIFIER:
-			_write_integer(os,o->dt.id);
+			_write_integer(wf,o->dt.id);
 			return o+1;
 		case SLL_OBJECT_TYPE_FUNCTION_ID:
-			_write_integer(os,o->dt.fn_id);
+			_write_integer(wf,o->dt.fn_id);
 			return o+1;
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
 			{
-				_write_integer(os,o->dt.fn.ac);
-				_write_integer(os,o->dt.fn.id);
+				_write_integer(wf,o->dt.fn.ac);
+				_write_integer(wf,o->dt.fn.id);
 				if (o->t==SLL_OBJECT_TYPE_FUNC){
-					_write_integer(os,o->dt.fn.sc);
+					_write_integer(wf,o->dt.fn.sc);
 				}
 				sll_arg_count_t l=o->dt.fn.ac;
 				o++;
 				while (l){
 					l--;
-					o=_write_object(os,o);
+					o=_write_object(wf,o);
 				}
 				return o;
 			}
@@ -99,39 +98,39 @@ static const sll_object_t* _write_object(sll_output_data_stream_t* os,const sll_
 		case SLL_OBJECT_TYPE_WHILE:
 		case SLL_OBJECT_TYPE_LOOP:
 			{
-				_write_integer(os,o->dt.l.ac);
-				_write_integer(os,o->dt.l.sc);
+				_write_integer(wf,o->dt.l.ac);
+				_write_integer(wf,o->dt.l.sc);
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;
-					o=_write_object(os,o);
+					o=_write_object(wf,o);
 				}
 				return o;
 			}
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
-			_write_integer(os,o->dt.dbg.fpi);
-			_write_integer(os,o->dt.dbg.ln);
-			_write_integer(os,o->dt.dbg.cn);
-			_write_integer(os,o->dt.dbg.ln_off);
-			return _write_object(os,o+1);
+			_write_integer(wf,o->dt.dbg.fpi);
+			_write_integer(wf,o->dt.dbg.ln);
+			_write_integer(wf,o->dt.dbg.cn);
+			_write_integer(wf,o->dt.dbg.ln_off);
+			return _write_object(wf,o+1);
 	}
-	_write_integer(os,o->dt.ac);
+	_write_integer(wf,o->dt.ac);
 	sll_arg_count_t l=o->dt.ac;
 	o++;
 	while (l){
 		l--;
-		o=_write_object(os,o);
+		o=_write_object(wf,o);
 	}
 	return o;
 }
 
 
 
-static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
-	_write_integer(os,s->l);
+static void _write_string(const sll_string_t* s,sll_file_t* wf){
+	_write_integer(wf,s->l);
 	if (s->l<STRING_COMPRESSION_MIN_LENGTH){
-		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,s->v,s->l*sizeof(sll_char_t));
+		sll_file_write(wf,s->v,s->l*sizeof(sll_char_t));
 		return;
 	}
 	uint64_t v=0;
@@ -179,7 +178,7 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 		SLL_ASSERT(el<=15);
 		if (bc<el){
 			v=(v<<bc)|(e>>(el-bc));
-			SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(void*)(&v),sizeof(uint64_t));
+			sll_file_write(wf,(void*)(&v),sizeof(uint64_t));
 			v=e;
 			bc+=64-el;
 		}
@@ -203,46 +202,46 @@ static void _write_string(const sll_string_t* s,sll_output_data_stream_t* os){
 	} while (r<i);
 	if (bc!=64){
 		v<<=bc;
-		SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(void*)(&v),sizeof(uint64_t));
+		sll_file_write(wf,(void*)(&v),sizeof(uint64_t));
 	}
 }
 
 
 
-__SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assembly_data_t* a_dt){
+__SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t* a_dt){
 	uint32_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
-	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
+	sll_file_write(wf,(uint8_t*)(&n),sizeof(uint32_t));
 	sll_version_t v=SLL_VERSION;
-	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&v),sizeof(sll_version_t));
-	_write_integer(os,a_dt->tm);
-	_write_integer(os,a_dt->ic);
-	_write_integer(os,a_dt->vc);
-	_write_integer(os,a_dt->ft.l);
+	sll_file_write(wf,(uint8_t*)(&v),sizeof(sll_version_t));
+	_write_integer(wf,a_dt->tm);
+	_write_integer(wf,a_dt->ic);
+	_write_integer(wf,a_dt->vc);
+	_write_integer(wf,a_dt->ft.l);
 	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
-		_write_integer(os,*(a_dt->ft.dt+i));
+		_write_integer(wf,*(a_dt->ft.dt+i));
 	}
-	_write_integer(os,a_dt->st.l);
+	_write_integer(wf,a_dt->st.l);
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		_write_string(a_dt->st.dt+i,os);
+		_write_string(a_dt->st.dt+i,wf);
 	}
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
-		SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,(uint8_t)ai->t);
+		sll_file_write_char(wf,(uint8_t)ai->t);
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
-				WRITE_SIGNED_INTEGER(os,ai->dt.i);
+				WRITE_SIGNED_INTEGER(wf,ai->dt.i);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&(ai->dt.f)),sizeof(sll_float_t));
+				sll_file_write(wf,(uint8_t*)(&(ai->dt.f)),sizeof(sll_float_t));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,ai->dt.c);
+				sll_file_write_char(wf,ai->dt.c);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
@@ -257,10 +256,10 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
-					WRITE_SIGNED_INTEGER(os,ai->dt.rj);
+					WRITE_SIGNED_INTEGER(wf,ai->dt.rj);
 				}
 				else{
-					_write_integer(os,ai->dt.rj);
+					_write_integer(wf,ai->dt.rj);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
@@ -276,19 +275,19 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
-				_write_integer(os,ai->dt.v);
+				_write_integer(wf,ai->dt.v);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				_write_integer(os,ai->dt.s);
+				_write_integer(wf,ai->dt.s);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
-				_write_integer(os,ai->dt.al);
+				_write_integer(wf,ai->dt.al);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
-				_write_integer(os,ai->dt.ml);
+				_write_integer(wf,ai->dt.ml);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
@@ -304,15 +303,15 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
-					_write_integer(os,ai->dt.v);
+					_write_integer(wf,ai->dt.v);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(os,ai->dt.t);
+				sll_file_write_char(wf,ai->dt.t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
-				_write_integer(os,ai->dt.ac);
+				_write_integer(wf,ai->dt.ac);
 				break;
 		}
 		ai++;
@@ -324,48 +323,48 @@ __SLL_FUNC void sll_write_assembly(sll_output_data_stream_t* os,const sll_assemb
 
 
 
-__SLL_FUNC void sll_write_object(sll_output_data_stream_t* os,const sll_object_t* o){
-	_write_object(os,o);
+__SLL_EXTERNAL void sll_write_object(sll_file_t* wf,const sll_object_t* o){
+	_write_object(wf,o);
 }
 
 
 
-__SLL_FUNC void sll_write_compiled_object(sll_output_data_stream_t* os,const sll_compilation_data_t* c_dt){
+__SLL_EXTERNAL void sll_write_compiled_object(sll_file_t* wf,const sll_compilation_data_t* c_dt){
 	uint32_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
-	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&n),sizeof(uint32_t));
+	sll_file_write(wf,(uint8_t*)(&n),sizeof(uint32_t));
 	sll_version_t v=SLL_VERSION;
-	SLL_WRITE_TO_OUTPUT_DATA_STREAM(os,(uint8_t*)(&v),sizeof(sll_version_t));
-	_write_integer(os,c_dt->tm);
+	sll_file_write(wf,(uint8_t*)(&v),sizeof(sll_version_t));
+	_write_integer(wf,c_dt->tm);
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		const sll_identifier_list_t* l=c_dt->idt.s+i;
-		_write_integer(os,l->l);
+		_write_integer(wf,l->l);
 		for (sll_identifier_list_length_t j=0;j<l->l;j++){
-			_write_integer(os,(l->dt+j)->sc);
-			_write_integer(os,(l->dt+j)->i);
+			_write_integer(wf,(l->dt+j)->sc);
+			_write_integer(wf,(l->dt+j)->i);
 		}
 	}
-	_write_integer(os,c_dt->idt.ill);
+	_write_integer(wf,c_dt->idt.ill);
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
-		_write_integer(os,(c_dt->idt.il+i)->sc);
-		_write_integer(os,(c_dt->idt.il+i)->i);
+		_write_integer(wf,(c_dt->idt.il+i)->sc);
+		_write_integer(wf,(c_dt->idt.il+i)->i);
 	}
-	_write_integer(os,c_dt->et.l);
+	_write_integer(wf,c_dt->et.l);
 	for (sll_export_table_length_t i=0;i<c_dt->et.l;i++){
-		_write_integer(os,*(c_dt->et.dt+i));
+		_write_integer(wf,*(c_dt->et.dt+i));
 	}
-	_write_integer(os,c_dt->ft.l);
+	_write_integer(wf,c_dt->ft.l);
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
-		_write_integer(os,k->off);
-		_write_integer(os,k->al);
+		_write_integer(wf,k->off);
+		_write_integer(wf,k->al);
 		for (sll_arg_count_t j=0;j<k->al;j++){
-			_write_integer(os,k->a[j]);
+			_write_integer(wf,k->a[j]);
 		}
 	}
-	_write_integer(os,c_dt->st.l);
+	_write_integer(wf,c_dt->st.l);
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
-		_write_string(c_dt->st.dt+i,os);
+		_write_string(c_dt->st.dt+i,wf);
 	}
-	_write_integer(os,c_dt->_n_sc_id);
-	_write_object(os,c_dt->h);
+	_write_integer(wf,c_dt->_n_sc_id);
+	_write_object(wf,c_dt->h);
 }

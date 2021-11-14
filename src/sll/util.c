@@ -108,7 +108,7 @@ void _execute_cleanup(void){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s,sll_bool_t d){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s,sll_bool_t d){
 	for (sll_string_index_t i=0;i<st->l;i++){
 		if (sll_string_equal(st->dt+i,s)){
 			if (d){
@@ -125,7 +125,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_string_table_t* st,sll_runtime_object_t* v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_string_table_t* st,sll_runtime_object_t* v){
 	SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_STRING);
 	for (sll_string_index_t i=0;i<st->l;i++){
 		if (sll_string_equal(st->dt+i,&(v->dt.s))){
@@ -141,7 +141,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_stri
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* a,const void* b,sll_size_t l){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* a,const void* b,sll_size_t l){
 	if (!l){
 		return SLL_COMPARE_RESULT_EQUAL;
 	}
@@ -196,7 +196,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* 
 
 
 
-__SLL_FUNC void sll_copy_data(const void* s,sll_size_t l,void* d){
+__SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 	const sll_char_t* a=(const sll_char_t*)s;
 	sll_char_t* b=(sll_char_t*)d;
 	if (l<16){
@@ -234,7 +234,7 @@ __SLL_FUNC void sll_copy_data(const void* s,sll_size_t l,void* d){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
 	sll_string_t n;
 	sll_string_from_pointer_length(dt,l,&n);
 	for (sll_string_index_t i=0;i<st->l;i++){
@@ -251,7 +251,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_ta
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o){
 	sll_object_offset_t sz=0;
 	_get_object_size(o,&sz);
 	return sz;
@@ -259,7 +259,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_
 
 
 
-__SLL_FUNC void sll_register_cleanup(sll_cleanup_function_t f){
+__SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t f){
 	SLL_ASSERT(_util_exit_table_size<MAX_CLEANUP_TABLE_SIZE);
 	_util_exit_table[_util_exit_table_size]=f;
 	_util_exit_table_size++;
@@ -267,7 +267,7 @@ __SLL_FUNC void sll_register_cleanup(sll_cleanup_function_t f){
 
 
 
-__SLL_FUNC void sll_set_memory(void* p,sll_size_t l,sll_char_t v){
+__SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v){
 	sll_char_t* o=(sll_char_t*)p;
 	if (l<16){
 		while (l){
@@ -302,7 +302,7 @@ __SLL_FUNC void sll_set_memory(void* p,sll_size_t l,sll_char_t v){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -370,13 +370,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT const sll_object_t* sll_skip_object_const(const sll_object_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_object_t* sll_skip_object_const(const sll_object_t* o){
 	return sll_skip_object((sll_object_t*)o);
 }
 
 
 
-__SLL_FUNC void sll_zero_memory(void* p,sll_size_t l){
+__SLL_EXTERNAL void sll_zero_memory(void* p,sll_size_t l){
 	sll_char_t* o=(sll_char_t*)p;
 	if (l<16){
 		while (l){

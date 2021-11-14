@@ -13,7 +13,7 @@
 
 
 
-__SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v,sll_map_t* o){
 	sll_map_length_t l=m->l<<1;
 	SLL_ACQUIRE(v);
 	o->l=m->l+1;
@@ -43,7 +43,7 @@ __SLL_FUNC void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runti
 
 
 
-__SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
 	o->l=m->l+a->l;
 	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=m->l<<1;
@@ -85,7 +85,7 @@ __SLL_FUNC void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 
 
 
-__SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
 	o->l=m->l+s->l;
 	o->v=sll_allocate((o->l<<1)*sizeof(sll_runtime_object_t*));
 	sll_map_length_t i=m->l<<1;
@@ -125,7 +125,7 @@ __SLL_FUNC void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_
 
 
 
-__SLL_FUNC void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 	if (b->l>a->l){
 		const sll_map_t* c=a;
 		a=b;
@@ -158,7 +158,7 @@ __SLL_FUNC void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 
 
 
-__SLL_FUNC void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
 	o->l=(m->l<a->l?m->l:a->l);
 	if (!o->l){
 		o->v=NULL;
@@ -183,7 +183,7 @@ __SLL_FUNC void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_ma
 
 
 
-__SLL_FUNC void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
 	o->l=(m->l<s->l?m->l:s->l);
 	if (!o->l){
 		o->v=NULL;
@@ -208,7 +208,7 @@ __SLL_FUNC void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_
 
 
 
-__SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_clone(const sll_map_t* m,sll_map_t* o){
 	if (!m->l){
 		SLL_INIT_MAP(o);
 		return;
@@ -223,14 +223,14 @@ __SLL_FUNC void sll_map_clone(const sll_map_t* m,sll_map_t* o){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_compare_result_t sll_map_compare(const sll_map_t* a,const sll_map_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_map_compare(const sll_map_t* a,const sll_map_t* b){
 	SLL_UNIMPLEMENTED();
 	return SLL_COMPARE_RESULT_EQUAL;
 }
 
 
 
-__SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_create(sll_map_length_t l,sll_map_t* o){
 	if (!l){
 		SLL_INIT_MAP(o);
 		return;
@@ -241,7 +241,7 @@ __SLL_FUNC void sll_map_create(sll_map_length_t l,sll_map_t* o){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_map_equal(const sll_map_t* a,const sll_map_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_equal(const sll_map_t* a,const sll_map_t* b){
 	if (a->l!=b->l){
 		return 0;
 	}
@@ -263,7 +263,7 @@ _next_key:;
 
 
 
-__SLL_FUNC void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 	o->l=a->l+b->l;
 	if (!o->l){
 		o->v=NULL;
@@ -300,14 +300,14 @@ _next_key:;
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get(const sll_map_t* m,const sll_runtime_object_t* v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get(const sll_map_t* m,const sll_runtime_object_t* v){
 	SLL_UNIMPLEMENTED();
 	return NULL;
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i){
 	if (i<m->l){
 		SLL_ACQUIRE(m->v[i<<1]);
 		return m->v[i<<1];
@@ -317,7 +317,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_key(const sll_ma
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i){
 	if (i<m->l){
 		SLL_ACQUIRE(m->v[(i<<1)+1]);
 		return m->v[(i<<1)+1];
@@ -327,7 +327,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_value(const sll_
 
 
 
-__SLL_FUNC void sll_map_keys(const sll_map_t* m,sll_array_t* o){
+__SLL_EXTERNAL void sll_map_keys(const sll_map_t* m,sll_array_t* o){
 	if (!m->l){
 		SLL_INIT_ARRAY(o);
 		return;
@@ -342,13 +342,13 @@ __SLL_FUNC void sll_map_keys(const sll_map_t* m,sll_array_t* o){
 
 
 
-__SLL_FUNC void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_operator_t f,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_operator_t f,sll_map_t* o){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_object_t* k,sll_map_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_object_t* k,sll_map_t* o){
 	for (sll_map_length_t i=0;i<m->l;i++){
 		SLL_ACQUIRE(m->v[(i<<1)+1]);
 		if (sll_operator_equal(m->v[i<<1],k)){
@@ -379,31 +379,31 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll_map
 
 
 
-__SLL_FUNC void sll_map_remove_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_remove_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_FUNC void sll_map_remove_map(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_remove_map(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_FUNC void sll_map_remove_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
+__SLL_EXTERNAL void sll_map_remove_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_FUNC void sll_map_set(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v){
+__SLL_EXTERNAL void sll_map_set(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_FUNC void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_runtime_object_t* v){
+__SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_runtime_object_t* v){
 	if (i<m->l){
 		SLL_ACQUIRE(v);
 		SLL_RELEASE(m->v[i<<1]);
@@ -413,7 +413,7 @@ __SLL_FUNC void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_runtim
 
 
 
-__SLL_FUNC void sll_map_set_value(const sll_map_t* m,sll_map_length_t i,sll_runtime_object_t* v){
+__SLL_EXTERNAL void sll_map_set_value(const sll_map_t* m,sll_map_length_t i,sll_runtime_object_t* v){
 	if (i<m->l){
 		SLL_ACQUIRE(v);
 		SLL_RELEASE(m->v[(i<<1)+1]);
@@ -423,7 +423,7 @@ __SLL_FUNC void sll_map_set_value(const sll_map_t* m,sll_map_length_t i,sll_runt
 
 
 
-__SLL_FUNC void sll_map_to_array(const sll_map_t* m,sll_array_t* o){
+__SLL_EXTERNAL void sll_map_to_array(const sll_map_t* m,sll_array_t* o){
 	if (!m->l){
 		SLL_INIT_ARRAY(o);
 		return;
@@ -438,7 +438,7 @@ __SLL_FUNC void sll_map_to_array(const sll_map_t* m,sll_array_t* o){
 
 
 
-__SLL_FUNC void sll_map_values(const sll_map_t* m,sll_array_t* o){
+__SLL_EXTERNAL void sll_map_values(const sll_map_t* m,sll_array_t* o){
 	if (!m->l){
 		SLL_INIT_ARRAY(o);
 		return;

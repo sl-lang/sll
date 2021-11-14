@@ -6,11 +6,11 @@
 
 
 
-__SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a);
+__SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a);
 
 
 
-__SLL_FUNC void sll_set_argument_count(sll_integer_t ac);
+__SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac);
 
 
 

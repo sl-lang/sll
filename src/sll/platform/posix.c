@@ -19,7 +19,7 @@
 
 
 
-const sll_char_t* sll_platform_string=SLL_CHAR("posix");
+__SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("posix");
 
 
 
@@ -56,24 +56,37 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
+sll_file_descriptor_t _platform_get_stream_descriptor(int t){
+	if (t==0){
+		return (sll_file_descriptor_t)(uint64_t)STDIN_FILENO;
+	}
+	if (t==1){
+		return (sll_file_descriptor_t)(uint64_t)STDOUT_FILENO;
+	}
+	SLL_ASSERT(t==2);
+	return (sll_file_descriptor_t)(uint64_t)STDERR_FILENO;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
 	return mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
 }
 
 
 
-__SLL_FUNC void sll_platform_enable_console_color(void){
+__SLL_EXTERNAL void sll_platform_enable_console_color(void){
 }
 
 
 
-__SLL_FUNC void sll_platform_file_close(const sll_file_descriptor_t fd){
+__SLL_EXTERNAL void sll_platform_file_close(sll_file_descriptor_t fd){
 	close((int)(uint64_t)fd);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff){
 	int fl=O_RDONLY;
 	if ((ff&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE))==(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE)){
 		fl=O_RDWR;
@@ -84,7 +97,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const
 	if (ff&SLL_FILE_FLAG_APPEND){
 		fl|=O_APPEND;
 	}
-	else{
+	else if (ff&SLL_FILE_FLAG_WRITE){
 		fl|=O_CREAT|O_TRUNC;
 	}
 	int o=open((char*)fp,fl,S_IRWXU|S_IRWXG|S_IRWXO);
@@ -93,14 +106,14 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(const sll_file_descriptor_t fd,void* p,sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* p,sll_size_t sz){
 	ssize_t o=read((int)(uint64_t)fd,p,sz);
 	return (o==-1?0:o);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
 	struct stat st;
 	if (!stat((char*)fp,&st)){
 		return st.st_size;
@@ -110,20 +123,26 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_cha
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_write(const sll_file_descriptor_t fd,const void* p,sll_size_t sz){
+__SLL_EXTERNAL void sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t off){
+	lseek((int)(uint64_t)fd,off,SEEK_SET);
+}
+
+
+
+__SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* p,sll_size_t sz){
 	ssize_t o=write((int)(uint64_t)fd,p,sz);
 	return (o==-1?0:o);
 }
 
 
 
-__SLL_FUNC void sll_platform_free_page(void* pg,sll_page_size_t sz){
+__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_page_size_t sz){
 	munmap(pg,sz);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 	struct timespec tm;
 	clock_gettime(CLOCK_REALTIME,&tm);
 	return tm.tv_sec*1000000000+tm.tv_nsec;
@@ -131,7 +150,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol){
 	if (!getcwd((char*)o,ol)){
 		*o=0;
 		return 0;
@@ -141,7 +160,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_worki
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
 	ssize_t i=readlink("/proc/self/exe",(char*)o,ol);
 	if (i!=-1){
 		*(o+i)=0;
@@ -153,13 +172,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_fi
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
 	return sysconf(_SC_PAGESIZE);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
 	DIR* d=opendir((char*)fp);
 	sll_string_t* op=sll_allocate_stack(1);
 	sll_array_length_t ol=0;
@@ -190,7 +209,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(con
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[PATH_MAX+1];
 	sll_string_length_t l=sll_string_length_unaligned(fp);
 	sll_copy_data(fp,l,bf);
@@ -209,31 +228,31 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_rec
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_char_t* fp){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_char_t* fp){
 	return !access((char*)fp,F_OK);
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sll_char_t* fp){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sll_char_t* fp){
 	struct stat st;
 	return (!stat((char*)fp,&st)&&(st.st_mode&S_IFDIR));
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p){
 	return !chdir((char*)p);
 }
 
 
 
-__SLL_FUNC void sll_platform_setup_console(void){
+__SLL_EXTERNAL void sll_platform_setup_console(void){
 }
 
 
 
-__SLL_FUNC void sll_platform_sleep(sll_time_t tm){
+__SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 	struct timespec ts;
 	clock_gettime(CLOCK_REALTIME,&ts);
 	sll_time_t e=ts.tv_sec*1000000000+ts.tv_nsec+tm;
@@ -255,12 +274,12 @@ __SLL_FUNC void sll_platform_sleep(sll_time_t tm){
 
 
 
-__SLL_FUNC void sll_platform_socket_init(void){
+__SLL_EXTERNAL void sll_platform_socket_init(void){
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
 	SLL_INIT_STRING(o);
 	struct addrinfo ah;
 	sll_zero_memory(&ah,sizeof(struct addrinfo));
@@ -320,5 +339,5 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_platform_socket_execute(const sll
 
 
 
-__SLL_FUNC void sll_platform_reset_console(void){
+__SLL_EXTERNAL void sll_platform_reset_console(void){
 }

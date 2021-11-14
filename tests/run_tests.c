@@ -28,14 +28,12 @@ static sll_bool_t execute_test(uint8_t id){
 		sll_internal_function_table_t i_ft;
 		sll_create_internal_function_table(&i_ft);
 		sll_register_standard_internal_functions(&i_ft);
-		FILE* f=fopen((char*)ti_fp,"rb");
-		if (!f){
+		sll_file_t f;
+		if (!sll_file_open(ti_fp,SLL_FILE_FLAG_READ,&f)){
 			return 0;
 		}
-		sll_input_data_stream_t is;
-		sll_stream_create_input_from_file(f,&is);
 		sll_compilation_data_t c_dt;
-		sll_init_compilation_data(SLL_CHAR("<internal>"),&is,&c_dt);
+		sll_init_compilation_data(SLL_CHAR("<internal>"),&f,&c_dt);
 		sll_error_t e;
 		if (!sll_parse_all_objects(&c_dt,&i_ft,NULL,&e)){
 			FILE* o_f=fopen((char*)to_fp,"wb");
@@ -46,7 +44,7 @@ static sll_bool_t execute_test(uint8_t id){
 			fclose(o_f);
 		}
 		sll_deinit_compilation_data(&c_dt);
-		fclose(f);
+		sll_file_close(&f);
 		return 1;
 	}
 	return 0;

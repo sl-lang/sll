@@ -10,7 +10,7 @@
 
 
 
-__SLL_FUNC void sll_quicksort(const sll_runtime_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
+__SLL_EXTERNAL void sll_quicksort(const sll_runtime_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<l;j++){
 		if (sll_operator_compare(*(a+j),*(a+l))==cmp){

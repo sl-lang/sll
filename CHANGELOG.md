@@ -13,6 +13,7 @@
 - Path separator macro constant: `SLL_API_FILE_PATH_SEPARATOR`
 - `SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX` macro constant ([#89])
 - Three new functions in `path.sll`: `get_cwd`, `join` and `set_cwd` ([#87])
+- `extern` variables are now marked as `__SLL_EXTERNAL extern`
 
 ### Changed
 
@@ -23,6 +24,7 @@
 - *\[POSIX only\]* Fixed return type of `sll_platform_get_page_size` ([#88])
 - Improved performance requested by [#92]
 - Refactored code according to [#82] and [#95]
+- Renamed `__SLL_FUNC` to `__SLL_EXTERNAL`
 - Renamed `sll_loop_data_t` to `sll_loop_object_data_t` ([#85])
 - Replaced `EXPAND_FILE_PATH` macro by `sll_path_absolute` function calls in the CLI
 - Replaced `memcmp` calls with calls to `sll_compare_data` and `strcmp` with `sll_string_compare_pointer` ([#81])
@@ -34,6 +36,7 @@
 
 - Duplicated code ([#90] and [#93])
 - Options related to updating sll from the CLI
+- Stream API
 - Unused CLI macros: `EXPAND_FILE_PATH` and `GET_EXECUATBLE_FILE_PATH`
 - Unused headers ([#91])
 

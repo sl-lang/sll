@@ -1340,7 +1340,7 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e){
 	if (!c_dt->_s.s){
 		e->t=SLL_ERROR_NO_STACK;
 		return SLL_RETURN_ERROR;

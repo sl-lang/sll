@@ -36,7 +36,7 @@ static void _sys_free_data(void){
 
 
 
-__SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a){
+__SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 	if (i<0||i>=_sys_argc){
 		return;
 	}
@@ -49,7 +49,7 @@ __SLL_FUNC void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 
 
 
-__SLL_FUNC void sll_set_argument_count(sll_integer_t ac){
+__SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac){
 	SLL_ASSERT(ac>0);
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc;i++){

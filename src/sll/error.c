@@ -1,15 +1,15 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/error.h>
+#include <sll/file.h>
 #include <sll/memory.h>
-#include <sll/stream.h>
 #include <sll/types.h>
 #include <stdint.h>
 #include <stdio.h>
 
 
 
-__SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e){
+__SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 	if (e->t==SLL_ERROR_UNKNOWN||e->t>SLL_MAX_COMPILATION_ERROR){
 		switch (e->t){
 			default:
@@ -44,25 +44,25 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 	}
 	sll_file_offset_t os=e->dt.r.off;
 	sll_file_offset_t oe=os+e->dt.r.sz;
-	SLL_INPUT_DATA_STREAM_RESTART_LINE(is,os);
-	sll_file_offset_t off=SLL_GET_INPUT_DATA_STREAM_OFFSET(is);
+	sll_file_reset_line(rf,os);
+	sll_file_offset_t off=SLL_FILE_GET_OFFSET(rf);
 	sll_file_offset_t s_off=off;
 	uint32_t os_tb=0;
 	uint32_t oe_tb=0;
-	int c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
-	char t=0;
-	char* sym=NULL;
-	char* sp=NULL;
+	sll_read_char_t c=sll_file_read_char(rf);
+	sll_char_t t=0;
+	sll_char_t* sym=NULL;
+	sll_char_t* sp=NULL;
 	if (e->t==SLL_ERROR_UNKNOWN_SYMBOL||e->t==SLL_ERROR_UNKNOWN_IDENTIFIER){
-		sym=sll_allocate((oe-os+1)*sizeof(char));
+		sym=sll_allocate((oe-os+1)*sizeof(sll_char_t));
 		sp=sym;
 	}
 	while (c!='\n'&&c!='\r'&&c!=SLL_END_OF_DATA){
 		if (off==os){
-			t=c;
+			t=(sll_char_t)c;
 		}
 		if (off>=os&&off<oe&&sp){
-			*sp=c;
+			*sp=(sll_char_t)c;
 			sp++;
 		}
 		if (c=='\t'){
@@ -79,7 +79,7 @@ __SLL_FUNC void sll_print_error(sll_input_data_stream_t* is,const sll_error_t* e
 		else{
 			putchar(c);
 		}
-		c=SLL_READ_FROM_INPUT_DATA_STREAM(is);
+		c=sll_file_read_char(rf);
 		off++;
 	}
 	putchar('\n');

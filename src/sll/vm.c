@@ -5,6 +5,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/error.h>
+#include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/init.h>
@@ -13,7 +14,6 @@
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
-#include <sll/stream.h>
 #include <sll/types.h>
 #include <sll/util.h>
 
@@ -63,12 +63,12 @@
 
 
 
-sll_integer_t sll_current_instruction_count=0;
-const sll_runtime_data_t* sll_current_runtime_data=NULL;
+__SLL_EXTERNAL sll_integer_t sll_current_instruction_count=0;
+__SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,sll_page_size_t s_sz,const sll_runtime_data_t* r_dt,sll_error_t* e){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,sll_page_size_t s_sz,const sll_runtime_data_t* r_dt,sll_error_t* e){
 	e->t=SLL_ERROR_UNKNOWN;
 	sll_current_instruction_count=0;
 	sll_current_runtime_data=r_dt;
@@ -500,24 +500,24 @@ _cleanup_jump_table:;
 _print_from_stack:;
 					sll_runtime_object_t* tos=*(s+si);
 					if (tos->t==SLL_RUNTIME_OBJECT_TYPE_STRING){
-						SLL_WRITE_TO_OUTPUT_DATA_STREAM(r_dt->os,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t));
+						sll_file_write(r_dt->out,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t));
 					}
 					else{
 						sll_string_t str;
 						sll_object_to_string((const sll_runtime_object_t*const*)&tos,1,&str);
-						SLL_WRITE_TO_OUTPUT_DATA_STREAM(r_dt->os,str.v,str.l*sizeof(sll_char_t));
+						sll_file_write(r_dt->out,str.v,str.l*sizeof(sll_char_t));
 						sll_deinit_string(&str);
 					}
 					SLL_RELEASE(tos);
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
-				SLL_WRITE_CHAR_TO_OUTPUT_DATA_STREAM(r_dt->os,ai->dt.c);
+				sll_file_write_char(r_dt->out,ai->dt.c);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				{
 					sll_string_t* str=a_dt->st.dt+ai->dt.s;
-					SLL_WRITE_TO_OUTPUT_DATA_STREAM(r_dt->os,str->v,str->l*sizeof(sll_char_t));
+					sll_file_write(r_dt->out,str->v,str->l*sizeof(sll_char_t));
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:

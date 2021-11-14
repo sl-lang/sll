@@ -10,14 +10,14 @@
 #include <sll/url.h>
 
 
-__SLL_FUNC void sll_deinit(void){
+__SLL_EXTERNAL void sll_deinit(void){
 	_execute_cleanup();
 	sll_platform_reset_console();
 }
 
 
 
-__SLL_FUNC void sll_deinit_array(sll_array_t* a){
+__SLL_EXTERNAL void sll_deinit_array(sll_array_t* a){
 	for (sll_array_length_t i=0;i<a->l;i++){
 		sll_release_object(a->v[i]);
 	}
@@ -28,7 +28,7 @@ __SLL_FUNC void sll_deinit_array(sll_array_t* a){
 
 
 
-__SLL_FUNC void sll_deinit_assembly_data(sll_assembly_data_t* a_dt){
+__SLL_EXTERNAL void sll_deinit_assembly_data(sll_assembly_data_t* a_dt){
 	a_dt->tm=0;
 	a_dt->h=NULL;
 	a_dt->ic=0;
@@ -40,7 +40,7 @@ __SLL_FUNC void sll_deinit_assembly_data(sll_assembly_data_t* a_dt){
 
 
 
-__SLL_FUNC void sll_deinit_assembly_function_table(sll_assembly_function_table_t* ft){
+__SLL_EXTERNAL void sll_deinit_assembly_function_table(sll_assembly_function_table_t* ft){
 	sll_deallocate(ft->dt);
 	ft->dt=NULL;
 	ft->l=0;
@@ -48,19 +48,7 @@ __SLL_FUNC void sll_deinit_assembly_function_table(sll_assembly_function_table_t
 
 
 
-__SLL_FUNC void sll_deinit_assembly_instruction(sll_assembly_instruction_t* ai){
-	SLL_INIT_ASSEMBLY_INSTRUCTION(ai);
-}
-
-
-
-__SLL_FUNC void sll_deinit_assembly_instruction_data(sll_assembly_instruction_data_t* ai_dt){
-	SLL_INIT_ASSEMBLY_INSTRUCTION_DATA(ai_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_assembly_stack_data(sll_assembly_stack_data_t* a_st){
+__SLL_EXTERNAL void sll_deinit_assembly_stack_data(sll_assembly_stack_data_t* a_st){
 	void* pg=a_st->s;
 	sll_page_size_t sz=sll_platform_get_page_size()*ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT;
 	while (pg){
@@ -76,8 +64,16 @@ __SLL_FUNC void sll_deinit_assembly_stack_data(sll_assembly_stack_data_t* a_st){
 
 
 
-__SLL_FUNC void sll_deinit_compilation_data(sll_compilation_data_t* c_dt){
-	c_dt->is=NULL;
+__SLL_EXTERNAL void sll_deinit_binary_heap(sll_binary_heap_t* il){
+	sll_deallocate(il->v);
+	il->v=NULL;
+	il->l=0;
+}
+
+
+
+__SLL_EXTERNAL void sll_deinit_compilation_data(sll_compilation_data_t* c_dt){
+	c_dt->rf=NULL;
 	c_dt->tm=0;
 	c_dt->h=NULL;
 	sll_deinit_identifier_table(&(c_dt->idt));
@@ -90,7 +86,7 @@ __SLL_FUNC void sll_deinit_compilation_data(sll_compilation_data_t* c_dt){
 
 
 
-__SLL_FUNC void sll_deinit_compilation_stack_data(sll_compilation_stack_data_t* c_st){
+__SLL_EXTERNAL void sll_deinit_compilation_stack_data(sll_compilation_stack_data_t* c_st){
 	void* pg=c_st->s;
 	sll_page_size_t sz=sll_platform_get_page_size()*OBJECT_STACK_PAGE_ALLOC_COUNT;
 	while (pg){
@@ -107,31 +103,7 @@ __SLL_FUNC void sll_deinit_compilation_stack_data(sll_compilation_stack_data_t* 
 
 
 
-__SLL_FUNC void sll_deinit_debug_object_data(sll_debug_object_data_t* d_dt){
-	SLL_INIT_DEBUG_OBJECT_DATA(d_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_error_data_range(sll_error_data_range_t* e_dt_r){
-	SLL_INIT_ERROR_DATA_RANGE(e_dt_r);
-}
-
-
-
-__SLL_FUNC void sll_deinit_error_data(sll_error_data_t* e_dt){
-	SLL_INIT_ERROR_DATA(e_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_error(sll_error_t* e){
-	SLL_INIT_ERROR(e);
-}
-
-
-
-__SLL_FUNC void sll_deinit_export_table(sll_export_table_t* et){
+__SLL_EXTERNAL void sll_deinit_export_table(sll_export_table_t* et){
 	sll_deallocate(et->dt);
 	et->dt=NULL;
 	et->l=0;
@@ -139,19 +111,7 @@ __SLL_FUNC void sll_deinit_export_table(sll_export_table_t* et){
 
 
 
-__SLL_FUNC void sll_deinit_function_object_data(sll_function_object_data_t* f_dt){
-	SLL_INIT_FUNCTION_OBJECT_DATA(f_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_function(sll_function_t* f){
-	SLL_INIT_FUNCTION(f);
-}
-
-
-
-__SLL_FUNC void sll_deinit_function_table(sll_function_table_t* ft){
+__SLL_EXTERNAL void sll_deinit_function_table(sll_function_table_t* ft){
 	for (sll_function_index_t i=0;i<ft->l;i++){
 		sll_deallocate(*(ft->dt+i));
 	}
@@ -162,19 +122,7 @@ __SLL_FUNC void sll_deinit_function_table(sll_function_table_t* ft){
 
 
 
-__SLL_FUNC void sll_deinit_handle_data(sll_handle_data_t* h_dt){
-	SLL_INIT_HANDLE_DATA(h_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_handle_descriptor(sll_handle_descriptor_t* hd){
-	SLL_INIT_HANDLE_DESCRIPTOR(hd);
-}
-
-
-
-__SLL_FUNC void sll_deinit_handle_list(sll_handle_list_t* hl){
+__SLL_EXTERNAL void sll_deinit_handle_list(sll_handle_list_t* hl){
 	for (sll_handle_type_t i=0;i<hl->dtl;i++){
 		if ((*(hl->dt+i))->df){
 			(*(hl->dt+i))->df(SLL_HANDLE_FREE);
@@ -187,13 +135,7 @@ __SLL_FUNC void sll_deinit_handle_list(sll_handle_list_t* hl){
 
 
 
-__SLL_FUNC void sll_deinit_header(sll_header_t* h){
-	SLL_INIT_HEADER(h);
-}
-
-
-
-__SLL_FUNC void sll_deinit_header_list(sll_header_list_t* hl){
+__SLL_EXTERNAL void sll_deinit_header_list(sll_header_list_t* hl){
 	for (sll_header_count_t i=0;i<hl->l;i++){
 		sll_header_t* kv=*(hl->dt+i);
 		sll_deallocate(kv->k.v);
@@ -207,14 +149,15 @@ __SLL_FUNC void sll_deinit_header_list(sll_header_list_t* hl){
 
 
 
-__SLL_FUNC void sll_deinit_http_response(sll_http_response_t* r){
+__SLL_EXTERNAL void sll_deinit_http_response(sll_http_response_t* r){
 	if (r->rc){
 		sll_deallocate(r->rc->v);
 		SLL_INIT_STRING(r->rc);
 	}
 	if (r->hl){
 		sll_deinit_header_list(r->hl);
-		SLL_INIT_HEADER_LIST(r->hl);
+		r->hl->dt=NULL;
+		r->dt->l=0;
 	}
 	if (r->dt){
 		sll_deallocate(r->dt->v);
@@ -224,19 +167,7 @@ __SLL_FUNC void sll_deinit_http_response(sll_http_response_t* r){
 
 
 
-__SLL_FUNC void sll_deinit_identifier(sll_identifier_t* i){
-	SLL_INIT_IDENTIFIER(i);
-}
-
-
-
-__SLL_FUNC void sll_deinit_identifier_list(sll_identifier_list_t* il){
-	SLL_INIT_IDENTIFIER_LIST(il);
-}
-
-
-
-__SLL_FUNC void sll_deinit_identifier_table(sll_identifier_table_t* idt){
+__SLL_EXTERNAL void sll_deinit_identifier_table(sll_identifier_table_t* idt){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_identifier_list_t* e=idt->s+i;
 		sll_deallocate(e->dt);
@@ -250,33 +181,7 @@ __SLL_FUNC void sll_deinit_identifier_table(sll_identifier_table_t* idt){
 
 
 
-__SLL_FUNC void sll_deinit_input_buffer(sll_input_buffer_t* i_bf){
-	SLL_INIT_INPUT_BUFFER(i_bf);
-}
-
-
-
-__SLL_FUNC void sll_deinit_input_data_stream(sll_input_data_stream_t* is){
-	SLL_INIT_INPUT_DATA_STREAM(is);
-}
-
-
-
-__SLL_FUNC void sll_deinit_binary_heap(sll_binary_heap_t* il){
-	sll_deallocate(il->v);
-	il->v=NULL;
-	il->l=0;
-}
-
-
-
-__SLL_FUNC void sll_deinit_internal_function(sll_internal_function_t* i_f){
-	SLL_INIT_INTERNAL_FUNCTION(i_f);
-}
-
-
-
-__SLL_FUNC void sll_deinit_internal_function_table(sll_internal_function_table_t* ift){
+__SLL_EXTERNAL void sll_deinit_internal_function_table(sll_internal_function_table_t* ift){
 	for (sll_function_index_t i=0;i<ift->l;i++){
 		sll_deallocate(*(ift->dt+i));
 	}
@@ -287,7 +192,7 @@ __SLL_FUNC void sll_deinit_internal_function_table(sll_internal_function_table_t
 
 
 
-__SLL_FUNC void sll_deinit_json_array(sll_json_array_t* json_a){
+__SLL_EXTERNAL void sll_deinit_json_array(sll_json_array_t* json_a){
 	for (sll_json_array_length_t i=0;i<json_a->l;i++){
 		sll_deinit_json_object(json_a->dt+i);
 	}
@@ -296,14 +201,14 @@ __SLL_FUNC void sll_deinit_json_array(sll_json_array_t* json_a){
 
 
 
-__SLL_FUNC void sll_deinit_json_map_keypair(sll_json_map_keypair_t* json_kp){
+__SLL_EXTERNAL void sll_deinit_json_map_keypair(sll_json_map_keypair_t* json_kp){
 	sll_deinit_string(&(json_kp->k));
 	sll_deinit_json_object(&(json_kp->v));
 }
 
 
 
-__SLL_FUNC void sll_deinit_json_map(sll_json_map_t* json_m){
+__SLL_EXTERNAL void sll_deinit_json_map(sll_json_map_t* json_m){
 	for (sll_json_map_length_t i=0;i<json_m->l;i++){
 		sll_json_map_keypair_t* e=json_m->dt+i;
 		sll_deinit_string(&(e->k));
@@ -314,13 +219,7 @@ __SLL_FUNC void sll_deinit_json_map(sll_json_map_t* json_m){
 
 
 
-__SLL_FUNC void sll_deinit_json_object_data(sll_json_object_data_t* json_dt){
-	SLL_INIT_JSON_OBJECT_DATA(json_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_json_object(sll_json_object_t* json){
+__SLL_EXTERNAL void sll_deinit_json_object(sll_json_object_t* json){
 	if (json->t==SLL_JSON_OBJECT_TYPE_STRING){
 		sll_deinit_string(&(json->dt.s));
 	}
@@ -334,13 +233,7 @@ __SLL_FUNC void sll_deinit_json_object(sll_json_object_t* json){
 
 
 
-__SLL_FUNC void sll_deinit_loop_data(sll_loop_object_data_t* l_dt){
-	SLL_INIT_LOOP_DATA(l_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_map(sll_map_t* m){
+__SLL_EXTERNAL void sll_deinit_map(sll_map_t* m){
 	for (sll_map_length_t j=0;j<(m->l<<1);j++){
 		sll_release_object(*(m->v+j));
 	}
@@ -351,37 +244,7 @@ __SLL_FUNC void sll_deinit_map(sll_map_t* m){
 
 
 
-__SLL_FUNC void sll_deinit_object_data(sll_object_data_t* o_dt){
-	SLL_INIT_OBJECT_DATA(o_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_object(sll_object_t* o){
-	SLL_INIT_OBJECT(o);
-}
-
-
-
-__SLL_FUNC void sll_deinit_output_data_stream(sll_output_data_stream_t* os){
-	SLL_INIT_OUTPUT_DATA_STREAM(os);
-}
-
-
-
-__SLL_FUNC void sll_deinit_runtime_data(sll_runtime_data_t* r_dt){
-	SLL_INIT_RUNTIME_DATA(r_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_runtime_object_data(sll_runtime_object_data_t* ro_dt){
-	SLL_INIT_RUNTIME_OBJECT_DATA(ro_dt);
-}
-
-
-
-__SLL_FUNC void sll_deinit_runtime_object(sll_runtime_object_t* o){
+__SLL_EXTERNAL void sll_deinit_runtime_object(sll_runtime_object_t* o){
 	sll_remove_debug_data(o);
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_STRING){
 		if (!(o->t&RUNTIME_OBJECT_EXTERNAL_STRING)){
@@ -408,7 +271,7 @@ __SLL_FUNC void sll_deinit_runtime_object(sll_runtime_object_t* o){
 
 
 
-__SLL_FUNC void sll_deinit_string(sll_string_t* s){
+__SLL_EXTERNAL void sll_deinit_string(sll_string_t* s){
 	s->l=0;
 	s->c=0;
 	sll_deallocate(s->v);
@@ -417,7 +280,7 @@ __SLL_FUNC void sll_deinit_string(sll_string_t* s){
 
 
 
-__SLL_FUNC void sll_deinit_string_table(sll_string_table_t* st){
+__SLL_EXTERNAL void sll_deinit_string_table(sll_string_table_t* st){
 	for (sll_string_index_t i=0;i<st->l;i++){
 		sll_deinit_string(st->dt+i);
 	}

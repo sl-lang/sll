@@ -25,7 +25,7 @@ void _memory_release_data(void){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
@@ -40,13 +40,13 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
 	return sll_allocate(sz);
 }
 
 
 
-__SLL_FUNC void sll_deallocate(void* p){
+__SLL_EXTERNAL void sll_deallocate(void* p){
 	if (!p){
 		return;
 	}
@@ -58,12 +58,12 @@ __SLL_FUNC void sll_deallocate(void* p){
 
 
 
-__SLL_FUNC void sll_memory_move(void* p,sll_bool_t d){
+__SLL_EXTERNAL void sll_memory_move(void* p,sll_bool_t d){
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 	if (!p){
 		return sll_allocate(sz);
 	}
@@ -268,7 +268,7 @@ static void _fill_zero(void* o,sll_size_t sz){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
@@ -286,7 +286,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
@@ -305,7 +305,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
 
 
 
-__SLL_FUNC void sll_deallocate(void* p){
+__SLL_EXTERNAL void sll_deallocate(void* p){
 	if (!p){
 		return;
 	}
@@ -353,7 +353,7 @@ __SLL_FUNC void sll_deallocate(void* p){
 
 
 
-__SLL_FUNC void* sll_memory_move(void* p,sll_bool_t d){
+__SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d){
 	if (!p){
 		return NULL;
 	}
@@ -391,7 +391,7 @@ __SLL_FUNC void* sll_memory_move(void* p,sll_bool_t d){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 	if (!p){
 		return sll_allocate(sz);
 	}
@@ -519,7 +519,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
@@ -530,7 +530,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack(sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}

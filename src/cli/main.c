@@ -72,22 +72,19 @@ static sll_internal_function_table_t i_ft;
 
 
 
-static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,sll_char_t* f_fp);
+static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_file_t* f,sll_char_t* f_fp);
 
 
 
 static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
-	FILE* f=NULL;
 	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
-	sll_input_data_stream_t is;
+	sll_file_t f;
 	sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
-	if (!load_file(nm->v,&a_dt,o,&f,&is,f_fp)){
-		if (f){
-			fclose(f);
-		}
+	if (!load_file(nm->v,&a_dt,o,&f,f_fp)){
 		e->t=SLL_ERROR_UNKNOWN;
 		return SLL_RETURN_ERROR;
 	}
+	sll_file_close(&f);
 	if (fl&_FLAG_ASSEMBLY_GENERATED){
 		sll_deinit_assembly_data(&a_dt);
 		COLOR_RED;
@@ -96,15 +93,12 @@ static sll_return_t load_import(const sll_string_t* nm,sll_compilation_data_t* o
 		e->t=SLL_ERROR_UNKNOWN;
 		return SLL_RETURN_ERROR;
 	}
-	if (f){
-		fclose(f);
-	}
 	return SLL_RETURN_NO_ERROR;
 }
 
 
 
-static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,FILE** f,sll_input_data_stream_t* is,sll_char_t* f_fp){
+static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_file_t* f,sll_char_t* f_fp){
 	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
@@ -120,8 +114,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			fputs((char*)bf,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		FILE* nf=fopen((char*)bf,"rb");
-		if (nf){
+		if (sll_file_open(bf,SLL_FILE_FLAG_READ,f)){
 			if (!(fl&FLAG_EXPAND_PATH)){
 				sll_copy_data(bf,j+1,f_fp);
 			}
@@ -133,27 +126,24 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				fputs((char*)f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
-			*f=nf;
-			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
-			if (!sll_load_compiled_object(is,c_dt,&e)){
+			if (!sll_load_compiled_object(f,c_dt,&e)){
 				sll_deinit_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("File '");
 					fputs((char*)f_fp,stdout);
-					PRINT_STATIC_STR("'is not a Compiled Object.\n");
+					PRINT_STATIC_STR("' is not a Compiled Object.\n");
 					COLOR_RESET;
 				}
 				else{
-					sll_print_error(is,&e);
+					sll_print_error(f,&e);
 				}
+				sll_file_close(f);
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_output_data_stream_t os;
-				sll_stream_create_output_from_file(stdout,&os);
-				sll_print_object(c_dt,&i_ft,c_dt->h,&os);
+				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -167,8 +157,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			fputs((char*)bf,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		nf=fopen((char*)bf,"rb");
-		if (nf){
+		if (sll_file_open(bf,SLL_FILE_FLAG_READ,f)){
 			if (!(fl&FLAG_EXPAND_PATH)){
 				sll_copy_data(bf,j+1,f_fp);
 			}
@@ -180,29 +169,26 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				fputs((char*)f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
-			*f=nf;
-			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
-			if (!sll_load_assembly(is,a_dt,&e)){
+			if (!sll_load_assembly(f,a_dt,&e)){
 				sll_deinit_assembly_data(a_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-					sll_stream_create_input_from_file(nf,is);
-					if (!sll_load_compiled_object(is,c_dt,&e)){
+					sll_file_reset(f);
+					if (!sll_load_compiled_object(f,c_dt,&e)){
 						sll_deinit_compilation_data(c_dt);
 						if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-							sll_stream_create_input_from_file(nf,is);
-							sll_init_compilation_data(f_fp,is,c_dt);
+							sll_file_reset(f);
+							sll_init_compilation_data(f_fp,f,c_dt);
 							if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
 								sll_deinit_compilation_data(c_dt);
 								if (e.t!=SLL_ERROR_UNKNOWN){
-									sll_print_error(is,&e);
+									sll_print_error(f,&e);
 								}
+								sll_file_close(f);
 								return 0;
 							}
 							if (fl&FLAG_PRINT_OBJECT){
-								sll_output_data_stream_t os;
-								sll_stream_create_output_from_file(stdout,&os);
-								sll_print_object(c_dt,&i_ft,c_dt->h,&os);
+								sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
 								putchar('\n');
 							}
 							if (fl&FLAG_VERBOSE){
@@ -210,15 +196,14 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 							}
 						}
 						else{
-							sll_print_error(is,&e);
+							sll_print_error(f,&e);
+							sll_file_close(f);
 							return 0;
 						}
 					}
 					else{
 						if (fl&FLAG_PRINT_OBJECT){
-							sll_output_data_stream_t os;
-							sll_stream_create_output_from_file(stdout,&os);
-							sll_print_object(c_dt,&i_ft,c_dt->h,&os);
+							sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
 							putchar('\n');
 						}
 						if (fl&FLAG_VERBOSE){
@@ -227,7 +212,8 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 					}
 				}
 				else{
-					sll_print_error(is,&e);
+					sll_print_error(f,&e);
+					sll_file_close(f);
 					return 0;
 				}
 			}
@@ -253,16 +239,10 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				fputs((char*)f_nm,stdout);
 				PRINT_STATIC_STR(".slc'\n");
 			}
-			*f=NULL;
-			m_i_bf.bf=m->dt;
-			m_i_bf.sz=m->sz;
-			sll_stream_create_input_from_buffer(&m_i_bf,is);
+			sll_file_from_data((void*)(m->dt),m->sz,SLL_FILE_FLAG_READ,f);
 			sll_error_t e;
-			if (!sll_load_compiled_object(is,c_dt,&e)){
-				sll_deinit_identifier_table(&(c_dt->idt));
-				sll_deinit_export_table(&(c_dt->et));
-				sll_deinit_function_table(&(c_dt->ft));
-				sll_deinit_string_table(&(c_dt->st));
+			if (!sll_load_compiled_object(f,c_dt,&e)){
+				sll_deinit_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
 					PRINT_STATIC_STR("Module '");
@@ -271,14 +251,13 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 					COLOR_RESET;
 				}
 				else{
-					sll_print_error(is,&e);
+					sll_print_error(f,&e);
 				}
+				sll_file_close(f);
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_output_data_stream_t os;
-				sll_stream_create_output_from_file(stdout,&os);
-				sll_print_object(c_dt,&i_ft,c_dt->h,&os);
+				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -297,8 +276,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			fputs((char*)l_fp,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		FILE* nf=fopen((char*)l_fp,"rb");
-		if (nf){
+		if (sll_file_open(l_fp,SLL_FILE_FLAG_READ,f)){
 			if (!(fl&FLAG_EXPAND_PATH)){
 				sll_copy_data(l_fp,i+5,f_fp);
 			}
@@ -310,10 +288,8 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				fputs((char*)f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
-			*f=nf;
-			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
-			if (!sll_load_compiled_object(is,c_dt,&e)){
+			if (!sll_load_compiled_object(f,c_dt,&e)){
 				sll_deinit_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
@@ -323,14 +299,13 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 					COLOR_RESET;
 				}
 				else{
-					sll_print_error(is,&e);
+					sll_print_error(f,&e);
 				}
+				sll_file_close(f);
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_output_data_stream_t os;
-				sll_stream_create_output_from_file(stdout,&os);
-				sll_print_object(c_dt,&i_ft,c_dt->h,&os);
+				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -344,8 +319,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			fputs((char*)l_fp,stdout);
 			PRINT_STATIC_STR("'...\n");
 		}
-		nf=fopen((char*)l_fp,"rb");
-		if (nf){
+		if (sll_file_open(l_fp,SLL_FILE_FLAG_READ,f)){
 			if (!(fl&FLAG_EXPAND_PATH)){
 				sll_copy_data(l_fp,l_fpl+5,f_fp);
 			}
@@ -357,21 +331,18 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				fputs((char*)f_fp,stdout);
 				PRINT_STATIC_STR("'\n");
 			}
-			*f=nf;
-			sll_stream_create_input_from_file(nf,is);
 			sll_error_t e;
-			sll_init_compilation_data(l_fp,is,c_dt);
+			sll_init_compilation_data(l_fp,f,c_dt);
 			if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
 				sll_deinit_compilation_data(c_dt);
 				if (e.t!=SLL_ERROR_UNKNOWN){
-					sll_print_error(is,&e);
+					sll_print_error(f,&e);
 				}
+				sll_file_close(f);
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_output_data_stream_t os;
-				sll_stream_create_output_from_file(stdout,&os);
-				sll_print_object(c_dt,&i_ft,c_dt->h,&os);
+				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -391,7 +362,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 
 
 
-static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_input_data_stream_t* is,const sll_char_t* o_fp,int* ec){
+static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_file_t* f,const sll_char_t* o_fp,int* ec){
 	if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
 		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
 			if (fl&FLAG_VERBOSE){
@@ -412,9 +383,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			sll_remove_object_padding(c_dt,c_dt->h);
 		}
 		if (fl&FLAG_PRINT_OBJECT){
-			sll_output_data_stream_t os;
-			sll_stream_create_output_from_file(stdout,&os);
-			sll_print_object(c_dt,&i_ft,c_dt->h,&os);
+			sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
 			putchar('\n');
 		}
 		if (fl&FLAG_VERBOSE){
@@ -428,14 +397,12 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		}
 		sll_error_t e;
 		if (!sll_generate_assembly(c_dt,a_dt,&e)){
-			sll_print_error(is,&e);
+			sll_print_error(f,&e);
 			return 0;
 		}
 	}
 	if (fl&FLAG_PRINT_ASSEMBLY){
-		sll_output_data_stream_t os;
-		sll_stream_create_output_from_file(stdout,&os);
-		sll_print_assembly(a_dt,&os);
+		sll_print_assembly(a_dt,sll_stdout);
 		putchar('\n');
 	}
 	if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT)){
@@ -478,8 +445,8 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 				fputs((char*)bf,stdout);
 				PRINT_STATIC_STR("'...\n");
 			}
-			FILE* f=fopen((char*)bf,"wb");
-			if (!f){
+			sll_file_t of;
+			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
 				COLOR_RED;
 				PRINT_STATIC_STR("Unable to Open Output File '");
 				fputs((char*)bf,stdout);
@@ -487,13 +454,11 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 				COLOR_RESET;
 				return 0;
 			}
-			sll_output_data_stream_t os;
-			sll_stream_create_output_from_file(f,&os);
-			sll_write_assembly(&os,a_dt);
+			sll_write_assembly(&of,a_dt);
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("File Written Successfully.\n");
 			}
-			fclose(f);
+			sll_file_close(&of);
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
 			sll_copy_data(".slc",5,bf+i);
@@ -502,8 +467,8 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 				fputs((char*)bf,stdout);
 				PRINT_STATIC_STR("'...\n");
 			}
-			FILE* f=fopen((char*)bf,"wb");
-			if (!f){
+			sll_file_t of;
+			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
 				COLOR_RED;
 				PRINT_STATIC_STR("Unable to Open Output File '");
 				fputs((char*)bf,stdout);
@@ -511,27 +476,20 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 				COLOR_RESET;
 				return 0;
 			}
-			sll_output_data_stream_t os;
-			sll_stream_create_output_from_file(f,&os);
-			sll_write_compiled_object(&os,c_dt);
+			sll_write_compiled_object(&of,c_dt);
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("File Written Successfully.\n");
 			}
-			fclose(f);
+			sll_file_close(&of);
 		}
 	}
 	if (!(fl&FLAG_NO_RUN)){
-		sll_handle_list_t hl;
-		sll_init_handle_list(&hl);
-		sll_input_data_stream_t ris;
-		sll_output_data_stream_t ros;
-		sll_stream_create_input_from_file(stdin,&ris);
-		sll_stream_create_output_from_file(stdout,&ros);
+		sll_handle_list_t hl=SLL_INIT_HANDLE_LIST_STRUCT;
 		sll_runtime_data_t r_dt={
 			&i_ft,
 			&hl,
-			&ris,
-			&ros
+			sll_stdin,
+			sll_stdout
 		};
 		sll_error_t e={
 			SLL_ERROR_UNKNOWN
@@ -586,7 +544,7 @@ _skip_lib_path:
 	sll_create_internal_function_table(&i_ft);
 	sll_register_standard_internal_functions(&i_ft);
 	const sll_char_t* o_fp=NULL;
-	FILE* f=NULL;
+	sll_file_t f={0};
 	sll_assembly_data_t a_dt={0};
 	sll_compilation_data_t c_dt={0};
 	uint32_t im_fpl=UINT32_MAX;
@@ -808,20 +766,18 @@ _read_file_argument:
 	}
 	for (uint32_t j=0;j<fpl;j++){
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_input_data_stream_t is;
 		fl&=~_FLAG_ASSEMBLY_GENERATED;
-		if (!load_file(*(fp+j),&a_dt,&c_dt,&f,&is,f_fp)){
+		if (!load_file(*(fp+j),&a_dt,&c_dt,&f,f_fp)){
 			goto _error;
 		}
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_path_absolute(*(fp+j),bf,SLL_API_MAX_FILE_PATH_LENGTH);
 		sll_set_argument(0,bf);
-		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
+		if (!execute(f_fp,&c_dt,&a_dt,&f,o_fp,&ec)){
 			goto _error;
 		}
-		if (f){
-			fclose(f);
-			f=NULL;
+		if (f.nm.v){
+			sll_file_close(&f);
 		}
 		sll_deinit_assembly_data(&a_dt);
 		sll_deinit_compilation_data(&c_dt);
@@ -829,35 +785,28 @@ _read_file_argument:
 	for (uint32_t j=0;j<sll;j++){
 		sll_set_argument(0,SLL_CHAR("<console>"));
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_input_data_stream_t is;
-		sll_input_buffer_t i_bf={
-			*(sl+j),
-			sll_string_length_unaligned(*(sl+j))
-		};
-		sll_stream_create_input_from_buffer(&i_bf,&is);
+		sll_file_from_data(*(sl+j),sll_string_length_unaligned(*(sl+j)),SLL_FILE_FLAG_READ,&f);
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Trying to Load Input as Assembly...\n");
 		}
 		sll_error_t e;
-		if (!sll_load_assembly(&is,&a_dt,&e)){
+		if (!sll_load_assembly(&f,&a_dt,&e)){
 			sll_deinit_assembly_data(&(a_dt));
 			if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-				sll_stream_create_input_from_buffer(&i_bf,&is);
-				if (!sll_load_compiled_object(&is,&c_dt,&e)){
+				sll_file_reset(&f);
+				if (!sll_load_compiled_object(&f,&c_dt,&e)){
 					sll_deinit_compilation_data(&c_dt);
 					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-						sll_stream_create_input_from_buffer(&i_bf,&is);
-						sll_init_compilation_data(SLL_CHAR("<console>"),&is,&c_dt);
+						sll_file_reset(&f);
+						sll_init_compilation_data(SLL_CHAR("<console>"),&f,&c_dt);
 						if (!sll_parse_all_objects(&c_dt,&i_ft,load_import,&e)){
 							if (e.t!=SLL_ERROR_UNKNOWN){
-								sll_print_error(&is,&e);
+								sll_print_error(&f,&e);
 							}
 							goto _error;
 						}
 						if (fl&FLAG_PRINT_OBJECT){
-							sll_output_data_stream_t os;
-							sll_stream_create_output_from_file(stdout,&os);
-							sll_print_object(&c_dt,&i_ft,c_dt.h,&os);
+							sll_print_object(&c_dt,&i_ft,c_dt.h,sll_stdout);
 							putchar('\n');
 						}
 						if (fl&FLAG_VERBOSE){
@@ -865,15 +814,13 @@ _read_file_argument:
 						}
 					}
 					else{
-						sll_print_error(&is,&e);
+						sll_print_error(&f,&e);
 						goto _error;
 					}
 				}
 				else{
 					if (fl&FLAG_PRINT_OBJECT){
-						sll_output_data_stream_t os;
-						sll_stream_create_output_from_file(stdout,&os);
-						sll_print_object(&c_dt,&i_ft,c_dt.h,&os);
+						sll_print_object(&c_dt,&i_ft,c_dt.h,sll_stdout);
 						putchar('\n');
 					}
 					if (fl&FLAG_VERBOSE){
@@ -882,14 +829,14 @@ _read_file_argument:
 				}
 			}
 			else{
-				sll_print_error(&is,&e);
+				sll_print_error(&f,&e);
 				goto _error;
 			}
 		}
 		else if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Input Successfully Read.\n");
 		}
-		if (!execute(f_fp,&c_dt,&a_dt,&is,o_fp,&ec)){
+		if (!execute(f_fp,&c_dt,&a_dt,&f,o_fp,&ec)){
 			goto _error;
 		}
 		sll_deinit_assembly_data(&a_dt);
@@ -925,8 +872,8 @@ _error:
 	}
 	sll_deinit_assembly_data(&a_dt);
 	sll_deinit_compilation_data(&c_dt);
-	if (f){
-		fclose(f);
+	if (f.nm.v){
+		sll_file_close(&f);
 	}
 	sll_deinit_internal_function_table(&i_ft);
 	sll_deinit();

@@ -280,7 +280,7 @@ def generate_header(h_dt,cm):
 		k=_expand_macros(k,dm,dfm).strip()
 		if (len(k)==0):
 			continue
-		if (k.startswith(b"extern")):
+		if (b"extern" in k):
 			e_v.append((k.replace(b"\t",b" ").split(b" ")[-1].split(b";")[0],k))
 			continue
 		if (b"(" in k and b"(*" not in SPACE_CHARACTERS_REGEX.sub(b"",k) and k.count(b"(")==k.count(b")") and k.count(b"{")==k.count(b"}") and b"inline" not in k):

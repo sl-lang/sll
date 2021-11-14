@@ -115,7 +115,7 @@ void _gc_release_data(void){
 
 
 
-__SLL_FUNC sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t){
+__SLL_EXTERNAL sll_runtime_object_t* sll_add_debug_data(sll_runtime_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t){
 	uint32_t i=o->_dbg0|(o->_dbg1<<8);
 	if (i==GC_MAX_DEBUG_ID){
 		i=0;
@@ -177,13 +177,13 @@ _found_index:
 
 
 
-__SLL_FUNC void sll_acquire_object(sll_runtime_object_t* o){
+__SLL_EXTERNAL void sll_acquire_object(sll_runtime_object_t* o){
 	o->rc++;
 }
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 	if (!_gc_next_object){
 		sll_page_size_t sz=sll_platform_get_page_size()*GC_RUNTIME_OBJECT_POOL_PAGE_ALLOC_COUNT;
 		void* pg=sll_platform_allocate_page(sz);
@@ -212,7 +212,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_create_object(void){
 
 
 
-__SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
+__SLL_EXTERNAL void sll_release_object(sll_runtime_object_t* o){
 	SLL_ASSERT(o->rc);
 	o->rc--;
 	if (!o->rc){
@@ -225,7 +225,7 @@ __SLL_FUNC void sll_release_object(sll_runtime_object_t* o){
 
 
 
-__SLL_FUNC void sll_remove_debug_data(sll_runtime_object_t* o){
+__SLL_EXTERNAL void sll_remove_debug_data(sll_runtime_object_t* o){
 	uint32_t i=o->_dbg0|(o->_dbg1<<8);
 	if (i!=GC_MAX_DEBUG_ID){
 		SLL_ASSERT(i<_gc_dbg_dtl);
@@ -247,7 +247,7 @@ __SLL_FUNC void sll_remove_debug_data(sll_runtime_object_t* o){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_verify_runtime_object_stack_cleanup(void){
 	uint8_t err=0;
 	_gc_verify=0;
 	fflush(stdout);

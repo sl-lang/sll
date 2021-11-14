@@ -217,7 +217,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 
 
 
-__SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o){
+__SLL_EXTERNAL void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o){
 	if (!al){
 		SLL_INIT_STRING(o);
 		return;
@@ -233,7 +233,7 @@ __SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_arr
 
 
 
-__SLL_FUNC sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* al,sll_array_length_t all,sll_bool_t q){
+__SLL_EXTERNAL sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* al,sll_array_length_t all,sll_bool_t q){
 	sll_string_length_t o=0;
 	for (sll_array_length_t i=0;i<all;i++){
 		const sll_runtime_object_t* a=*(al+i);

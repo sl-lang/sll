@@ -305,7 +305,7 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k){
 	SLL_ASSERT(json->t==SLL_JSON_OBJECT_TYPE_MAP);
 	for (sll_json_map_length_t i=0;i<json->dt.m.l;i++){
 		sll_json_map_keypair_t* e=json->dt.m.dt+i;
@@ -318,7 +318,7 @@ __SLL_FUNC __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_ob
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o){
 	sll_char_t c=**p;
 	(*p)++;
 	while (c==' '||c=='\t'||c=='\n'||c=='\r'){

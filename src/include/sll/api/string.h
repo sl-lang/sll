@@ -6,11 +6,11 @@
 
 
 
-__SLL_FUNC void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o);
+__SLL_EXTERNAL void sll_object_to_string(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_string_t* o);
 
 
 
-__SLL_FUNC __SLL_CHECK_OUTPUT sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_bool_t q);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_object_to_string_length(const sll_runtime_object_t*const* a,sll_array_length_t al,sll_bool_t q);
 
 
 

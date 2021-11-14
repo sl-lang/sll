@@ -11,7 +11,6 @@
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
-#include <sll/stream.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -139,37 +138,30 @@ _found_index:;
 
 
 __API_FUNC(file_write){
+	sll_file_t* f=NULL;
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT){
-		sll_output_data_stream_t os;
 		if (a->dt.i==-2){
 			SLL_ASSERT(sll_current_runtime_data);
-			os=*(sll_current_runtime_data->os);
+			f=sll_current_runtime_data->out;
 		}
 		else if (a->dt.i==-3){
-			SLL_ASSERT(sll_current_runtime_data);
-			sll_stream_create_output_from_file(stderr,&os);
+			f=sll_stderr;
 		}
 		else{
 			return 0;
 		}
-		sll_string_t s;
-		sll_object_to_string(b,bc,&s);
-		SLL_WRITE_TO_OUTPUT_DATA_STREAM(&os,s.v,s.l*sizeof(sll_char_t));
-		sll_deallocate(s.v);
-		return s.l*sizeof(sll_char_t);
 	}
 	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
-		sll_file_t* f=*(_file_fl+a->dt.h.h);
+		f=*(_file_fl+a->dt.h.h);
 		if (!f){
 			return 0;
 		}
-		sll_string_t s;
-		sll_object_to_string(b,bc,&s);
-		sll_size_t o=sll_file_write(f,s.v,s.l*sizeof(sll_char_t));
-		sll_deinit_string(&s);
-		return o*sizeof(sll_char_t);
 	}
-	return 0;
+	sll_string_t s;
+	sll_object_to_string(b,bc,&s);
+	sll_size_t o=sll_file_write(f,s.v,s.l*sizeof(sll_char_t));
+	sll_deinit_string(&s);
+	return o*sizeof(sll_char_t);
 }
 
 
