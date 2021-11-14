@@ -5,7 +5,7 @@
 ### Added
 
 - CLI now properly releases all memory (by calling `sll_deinit`)
-- Custom file IO API: `sll_file_close`, `sll_file_flush`, `sll_file_from_data`, `sll_file_open`, `sll_file_read`, `sll_file_read_char`, `sll_file_reset`, `sll_file_reset_line`, `sll_file_write` and `sll_file_write_char`
+- Custom file IO API with output buffering: `sll_file_close`, `sll_file_flush`, `sll_file_from_data`, `sll_file_open`, `sll_file_open_descriptor`, `sll_file_read`, `sll_file_read_char`, `sll_file_reset`, `sll_file_reset_line`, `sll_file_write` and `sll_file_write_char`
 - `extern` variables are now marked as `__SLL_EXTERNAL extern`
 - Implemented `SLL_MEMORY_MOVE_DIRECTION_FROM_STACK`, `SLL_MEMORY_MOVE_DIRECTION_TO_STACK` and `sll_memory_move` ([#94])
 - Implemented `sll_platform_enable_console_color`, `sll_platform_get_current_working_directory`, `sll_platform_get_executable_file_path`, `sll_platform_set_current_working_directory`, `sll_set_memory` and `sll_zero_memory`
@@ -40,9 +40,9 @@
 - Options related to updating sll from the CLI
 - Stream API
 - Unused CLI macros: `EXPAND_FILE_PATH` and `GET_EXECUATBLE_FILE_PATH`
-- Unused constants: `SLL_MAX_ALLOCATED_BLOCK_LENGTH`, `SLL_MAX_READ_CHAR`, `SLL_MAX_STRING_CHECKSUM`, `SLL_MAX_RUNTIME_OBJECT_TYPE`, `SLL_MAX_OBJECT_TYPE`, `SLL_MAX_JSON_OBJECT_TYPE`, `SLL_MAX_ERROR_TYPE`, `SLL_MAX_FILE_FLAGS`, `SLL_MAX_COMPARE_RESULT`, `SLL_MAX_BOOL`, `SLL_MAX_CLEANUP_TYPE`, `SLL_MAX_INTERNAL_FUNCTION_TYPE`, `SLL_MAX_RETURN`, `SLL_MAX_FILE_PATH_INDEX`, `SLL_MAX_VERSION`, `SLL_RETURN_ERROR` and `SLL_RETURN_NO_ERROR`
+- Unused constants: `SLL_MAX_ALLOCATED_BLOCK_LENGTH`, `SLL_MAX_READ_CHAR`, `SLL_MAX_STRING_CHECKSUM`, `SLL_MAX_RUNTIME_OBJECT_TYPE`, `SLL_MAX_OBJECT_TYPE`, `SLL_MAX_JSON_OBJECT_TYPE`, `SLL_MAX_ERROR_TYPE`, `SLL_MAX_FILE_FLAGS`, `SLL_MAX_COMPARE_RESULT`, `SLL_MAX_BOOL`, `SLL_MAX_CLEANUP_TYPE`, `SLL_MAX_INTERNAL_FUNCTION_TYPE`, `SLL_MAX_RETURN`, `SLL_MAX_FILE_PATH_INDEX`, `SLL_MAX_VERSION`, `SLL_MAX_COLUMN_NUMBER`, `SLL_MAX_LINE_NUMBER`, `SLL_RETURN_ERROR` and `SLL_RETURN_NO_ERROR`
 - Unused headers ([#91])
-- Unused types: `sll_allocated_block_length_t`, `sll_cleanup_type_t`, `sll_file_path_index_t`, `sll_return_t` and `sll_input_buffer_t`
+- Unused types: `sll_allocated_block_length_t`, `sll_cleanup_type_t`, `sll_file_path_index_t`, `sll_return_t`, `sll_column_number_t` and `sll_input_buffer_t`
 
 ## [0.6.26] - 2021-11-7
 

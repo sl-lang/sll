@@ -156,7 +156,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_des
 
 
 __SLL_EXTERNAL void sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t off){
-	SetFilePointer((HANDLE)fd,off,NULL,FILE_BEGIN);
+	DWORD h=off>>32;
+	SetFilePointer((HANDLE)fd,(DWORD)(off&0xffffffff),&h,FILE_BEGIN);
 }
 
 

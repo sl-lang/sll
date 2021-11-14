@@ -20,16 +20,14 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_ARRAY_LENGTH UINT32_MAX
 #define SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE UINT8_MAX
 #define SLL_MAX_CHAR UINT8_MAX
-#define SLL_MAX_COLUMN_NUMBER UINT32_MAX
 #define SLL_MAX_EXPORT_TABLE_LENGTH UINT32_MAX
-#define SLL_MAX_FILE_OFFSET UINT32_MAX
+#define SLL_MAX_FILE_OFFSET UINT64_MAX
 #define SLL_MAX_HANDLE_TYPE UINT32_MAX
 #define SLL_MAX_HEADER_COUNT UINT32_MAX
 #define SLL_MAX_IDENTIFIER_LIST_LENGTH UINT32_MAX
 #define SLL_MAX_INSTRUCTION_INDEX UINT32_MAX
 #define SLL_MAX_JSON_ARRAY_LENGTH UINT32_MAX
 #define SLL_MAX_JSON_MAP_LENGTH UINT32_MAX
-#define SLL_MAX_LINE_NUMBER UINT32_MAX
 #define SLL_MAX_MAP_LENGTH UINT32_MAX
 #define SLL_MAX_OBJECT_OFFSET UINT32_MAX
 #define SLL_MAX_PAGE_SIZE UINT64_MAX
@@ -121,15 +119,7 @@ typedef uint32_t sll_array_length_t;
 
 
 
-typedef uint32_t sll_column_number_t;
-
-
-
 typedef uint32_t sll_export_table_length_t;
-
-
-
-typedef uint32_t sll_file_offset_t;
 
 
 
@@ -158,10 +148,6 @@ typedef uint32_t sll_json_array_length_t;
 
 
 typedef uint32_t sll_json_map_length_t;
-
-
-
-typedef uint32_t sll_line_number_t;
 
 
 
@@ -202,6 +188,10 @@ typedef uint32_t sll_version_t;
 
 
 typedef int64_t sll_integer_t;
+
+
+
+typedef uint64_t sll_file_offset_t;
 
 
 
@@ -265,9 +255,13 @@ typedef union __SLL_FILE_DATA{
 typedef struct __SLL_FILE{
 	const sll_file_data_t dt;
 	const sll_file_flags_t f;
-	sll_line_number_t _l_num;
+	sll_file_offset_t _l_num;
 	sll_file_offset_t _l_off;
 	sll_file_offset_t _off;
+	sll_char_t* _r_bf;
+	sll_file_offset_t _r_bf_off;
+	sll_char_t* _w_bf;
+	sll_file_offset_t _w_bf_off;
 } sll_file_t;
 
 
@@ -289,8 +283,8 @@ typedef struct __SLL_LOOP_OBEJCT_DATA{
 
 typedef struct __SLL_DEBUG_OBJECT_DATA{
 	sll_string_index_t fpi;
-	sll_line_number_t ln;
-	sll_column_number_t cn;
+	sll_file_offset_t ln;
+	sll_file_offset_t cn;
 	sll_file_offset_t ln_off;
 } sll_debug_object_data_t;
 

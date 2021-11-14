@@ -149,8 +149,8 @@ static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 			return 1;
 		case SLL_OBJECT_TYPE_DEBUG_DATA:
 			CHECK_ERROR2(rf,o->dt.dbg.fpi,sll_string_index_t);
-			CHECK_ERROR2(rf,o->dt.dbg.ln,sll_line_number_t);
-			CHECK_ERROR2(rf,o->dt.dbg.cn,sll_column_number_t);
+			CHECK_ERROR2(rf,o->dt.dbg.ln,sll_file_offset_t);
+			CHECK_ERROR2(rf,o->dt.dbg.cn,sll_file_offset_t);
 			CHECK_ERROR2(rf,o->dt.dbg.ln_off,sll_file_offset_t);
 			return _read_object(c_dt,rf);
 	}

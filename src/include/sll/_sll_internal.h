@@ -184,7 +184,9 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 #define ALLOCATOR_MAX_SMALL_SIZE 512
 
-#define FILE_FLAG_BUFFER SLL_FILE_FLAG_RESERVED
+#define FILE_FLAG_MEMORY SLL_FILE_FLAG_RESERVED
+
+#define FILE_BUFFER_SIZE 8192
 
 
 

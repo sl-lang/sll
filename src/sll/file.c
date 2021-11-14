@@ -22,35 +22,39 @@ __SLL_EXTERNAL sll_file_t* sll_stderr=&_file_stderr;
 
 
 void _file_init_std_streams(void){
-	*((sll_file_descriptor_t*)(&(_file_stdin.dt.fl.fd)))=_platform_get_stream_descriptor(0);
-	sll_string_from_pointer(SLL_CHAR("sll_stdin"),(sll_string_t*)(&(_file_stdin.dt.fl.nm)));
-	*((sll_file_flags_t*)(&(_file_stdin.f)))=SLL_FILE_FLAG_READ|SLL_FILE_FLAG_NO_BUFFER;
-	_file_stdin._l_num=0;
-	_file_stdin._l_off=0;
-	_file_stdin._off=0;
-	*((sll_file_descriptor_t*)(&(_file_stdout.dt.fl.fd)))=_platform_get_stream_descriptor(1);
-	sll_string_from_pointer(SLL_CHAR("sll_stdout"),(sll_string_t*)(&(_file_stdout.dt.fl.nm)));
-	*((sll_file_flags_t*)(&(_file_stdout.f)))=SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_NO_BUFFER;
-	*((sll_file_descriptor_t*)(&(_file_stderr.dt.fl.fd)))=_platform_get_stream_descriptor(2);
-	sll_string_from_pointer(SLL_CHAR("sll_stderr"),(sll_string_t*)(&(_file_stderr.dt.fl.nm)));
-	*((sll_file_flags_t*)(&(_file_stderr.f)))=SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_NO_BUFFER;
+	if (!sll_file_open_descriptor(SLL_CHAR("sll_stdin"),_platform_get_stream_descriptor(0),SLL_FILE_FLAG_READ,sll_stdin)||!sll_file_open_descriptor(SLL_CHAR("sll_stdout"),_platform_get_stream_descriptor(1),SLL_FILE_FLAG_WRITE,sll_stdout)||!sll_file_open_descriptor(SLL_CHAR("sll_stderr"),_platform_get_stream_descriptor(2),SLL_FILE_FLAG_WRITE,sll_stderr)){
+		SLL_UNIMPLEMENTED();
+	}
 }
 
 
 
 void _file_release_std_streams(void){
-	sll_deinit_string((sll_string_t*)(&(sll_stdin->dt.fl.nm)));
-	sll_deinit_string((sll_string_t*)(&(sll_stdout->dt.fl.nm)));
-	sll_deinit_string((sll_string_t*)(&(sll_stderr->dt.fl.nm)));
+	sll_file_close(sll_stdin);
+	sll_file_close(sll_stdout);
+	sll_file_close(sll_stderr);
 }
 
 
 
 __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 	sll_file_flush(f);
-	if (!(f->f&FILE_FLAG_BUFFER)){
+	if (!(f->f&FILE_FLAG_MEMORY)){
 		sll_platform_file_close(f->dt.fl.fd);
 		sll_deinit_string((sll_string_t*)(&(f->dt.fl.nm)));
+		if (!(f->f&SLL_FILE_FLAG_NO_BUFFER)){
+			sll_page_size_t sz=sll_platform_get_page_size();
+			sz=(FILE_BUFFER_SIZE+sz-1)%sz;
+			if (f->f&SLL_FILE_FLAG_READ){
+				sll_platform_free_page(f->_r_bf,sz);
+			}
+			if (f->f&SLL_FILE_FLAG_WRITE){
+				sll_platform_free_page(f->_w_bf,sz);
+			}
+		}
+	}
+	else{
+		SLL_ASSERT(f->f&SLL_FILE_FLAG_NO_BUFFER);
 	}
 	*((sll_file_flags_t*)(&(f->f)))=0;
 }
@@ -58,9 +62,11 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 
 
 __SLL_EXTERNAL void sll_file_flush(sll_file_t* f){
-	if ((f->f&(SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_NO_BUFFER))!=(SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_NO_BUFFER)){
+	if (!(f->f&SLL_FILE_FLAG_WRITE)||(f->f&SLL_FILE_FLAG_NO_BUFFER)){
 		return;
 	}
+	sll_platform_file_write(f->dt.fl.fd,f->_w_bf,f->_w_bf_off);
+	f->_w_bf_off=0;
 }
 
 
@@ -68,7 +74,7 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f){
 __SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o){
 	*((void**)(&(o->dt.mm.p)))=p;
 	*((sll_size_t*)(&(o->dt.mm.sz)))=sz;
-	*((sll_file_flags_t*)(&(o->f)))=f|FILE_FLAG_BUFFER;
+	*((sll_file_flags_t*)(&(o->f)))=f|SLL_FILE_FLAG_NO_BUFFER|FILE_FLAG_MEMORY;
 	o->_l_num=0;
 	o->_l_off=0;
 	o->_off=0;
@@ -77,11 +83,17 @@ __SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open(const sll_char_t* nm,sll_file_flags_t f,sll_file_t* o){
-	SLL_ASSERT(!(f&FILE_FLAG_BUFFER));
+	SLL_ASSERT(!(f&FILE_FLAG_MEMORY));
 	if ((f&SLL_FILE_FLAG_READ)&&!sll_platform_path_exists(nm)){
 		return 0;
 	}
-	sll_file_descriptor_t fd=sll_platform_file_open(nm,f);
+	return sll_file_open_descriptor(nm,sll_platform_file_open(nm,f),f,o);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open_descriptor(const sll_char_t* nm,sll_file_descriptor_t fd,sll_file_flags_t f,sll_file_t* o){
+	SLL_ASSERT(!(f&FILE_FLAG_MEMORY));
 	if (fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 		return 0;
 	}
@@ -91,6 +103,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open(const sll_char_t* nm,
 	o->_l_num=0;
 	o->_l_off=0;
 	o->_off=0;
+	if (!(f&SLL_FILE_FLAG_NO_BUFFER)){
+		sll_page_size_t sz=sll_platform_get_page_size();
+		sz=(FILE_BUFFER_SIZE+sz-1)&(0xffffffffffffffffull-(sz-1));
+		if (f&SLL_FILE_FLAG_READ){
+			o->_r_bf=sll_platform_allocate_page(sz);
+			o->_r_bf_off=0;
+		}
+		if (f&SLL_FILE_FLAG_WRITE){
+			o->_w_bf=sll_platform_allocate_page(sz);
+			o->_w_bf_off=0;
+		}
+	}
 	return 1;
 }
 
@@ -100,7 +124,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 	if (!(f->f&SLL_FILE_FLAG_READ)){
 		return 0;
 	}
-	if (f->f&FILE_FLAG_BUFFER){
+	if (f->f&FILE_FLAG_MEMORY){
 		if (f->_off+sz>=f->dt.mm.sz){
 			sz=f->dt.mm.sz-f->_off;
 		}
@@ -133,7 +157,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 
 
 __SLL_EXTERNAL void sll_file_reset(sll_file_t* f){
-	if (!(f->f&FILE_FLAG_BUFFER)){
+	if (!(f->f&FILE_FLAG_MEMORY)){
 		sll_platform_file_seek(f->dt.fl.fd,0);
 	}
 	f->_l_num=0;
@@ -147,7 +171,7 @@ __SLL_EXTERNAL void sll_file_reset_line(sll_file_t* f,sll_file_offset_t off){
 	if (!(f->f&SLL_FILE_FLAG_READ)){
 		return;
 	}
-	if (f->f&FILE_FLAG_BUFFER){
+	if (f->f&FILE_FLAG_MEMORY){
 		if (off>=f->dt.mm.sz){
 			f->_l_num=0;
 			f->_l_off=0;
@@ -197,7 +221,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 	if (!(f->f&SLL_FILE_FLAG_WRITE)){
 		return 0;
 	}
-	if (f->f&FILE_FLAG_BUFFER){
+	if (f->f&FILE_FLAG_MEMORY){
 		if (f->_off+sz>=f->dt.mm.sz){
 			sz=f->dt.mm.sz-f->_off;
 		}
@@ -205,7 +229,34 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 		f->_off+=sz;
 		return sz;
 	}
-	return sll_platform_file_write(f->dt.fl.fd,p,sz);
+	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
+		return sll_platform_file_write(f->dt.fl.fd,p,sz);
+	}
+	if (sz+f->_w_bf_off<=FILE_BUFFER_SIZE){
+		sll_copy_data(p,sz,f->_w_bf+f->_w_bf_off);
+		f->_w_bf_off+=sz;
+		if (f->_w_bf_off==FILE_BUFFER_SIZE){
+			sll_platform_file_write(f->dt.fl.fd,f->_w_bf,FILE_BUFFER_SIZE);
+			f->_w_bf_off=0;
+		}
+		return sz;
+	}
+	sll_size_t i=FILE_BUFFER_SIZE-f->_w_bf_off;
+	sll_copy_data(p,i,f->_w_bf+f->_w_bf_off);
+	sll_platform_file_write(f->dt.fl.fd,f->_w_bf,FILE_BUFFER_SIZE);
+	const sll_char_t* v=((const sll_char_t*)p)+i;
+	sll_size_t o=i;
+	sz-=i;
+	i=sz&(FILE_BUFFER_SIZE-1);
+	if (sz-i){
+		sll_platform_file_write(f->dt.fl.fd,v,sz-i);
+		v+=sz-i;
+	}
+	if (i){
+		sll_copy_data(v,i,f->_w_bf);
+	}
+	f->_w_bf_off=i;
+	return o;
 }
 
 
@@ -214,7 +265,7 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c){
 	if (!(f->f&SLL_FILE_FLAG_WRITE)){
 		return 0;
 	}
-	if (f->f&FILE_FLAG_BUFFER){
+	if (f->f&FILE_FLAG_MEMORY){
 		if (f->_off+1>=f->dt.mm.sz){
 			return 0;
 		}
@@ -222,5 +273,5 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c){
 		f->_off++;
 		return 1;
 	}
-	return sll_platform_file_write(f->dt.fl.fd,&c,sizeof(sll_char_t));
+	return sll_file_write(f,&c,sizeof(sll_char_t));
 }

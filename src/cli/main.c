@@ -141,6 +141,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			}
 			if (fl&FLAG_PRINT_OBJECT){
 				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_file_flush(sll_stdout);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -186,6 +187,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 							}
 							if (fl&FLAG_PRINT_OBJECT){
 								sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+								sll_file_flush(sll_stdout);
 								putchar('\n');
 							}
 							if (fl&FLAG_VERBOSE){
@@ -201,6 +203,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 					else{
 						if (fl&FLAG_PRINT_OBJECT){
 							sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+							sll_file_flush(sll_stdout);
 							putchar('\n');
 						}
 						if (fl&FLAG_VERBOSE){
@@ -255,6 +258,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			}
 			if (fl&FLAG_PRINT_OBJECT){
 				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_file_flush(sll_stdout);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -303,6 +307,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			}
 			if (fl&FLAG_PRINT_OBJECT){
 				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_file_flush(sll_stdout);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -340,6 +345,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			}
 			if (fl&FLAG_PRINT_OBJECT){
 				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_file_flush(sll_stdout);
 				putchar('\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -381,6 +387,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		}
 		if (fl&FLAG_PRINT_OBJECT){
 			sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+			sll_file_flush(sll_stdout);
 			putchar('\n');
 		}
 		if (fl&FLAG_VERBOSE){
@@ -400,6 +407,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 	}
 	if (fl&FLAG_PRINT_ASSEMBLY){
 		sll_print_assembly(a_dt,sll_stdout);
+		sll_file_flush(sll_stdout);
 		putchar('\n');
 	}
 	if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT)){
@@ -492,6 +500,8 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			SLL_ERROR_UNKNOWN
 		};
 		sll_return_code_t r=sll_execute_assembly(a_dt,VM_STACK_SIZE,&r_dt,&e);
+		sll_file_flush(sll_stdout);
+		sll_file_flush(sll_stderr);
 		sll_deinit_handle_list(&hl);
 		if (e.t!=SLL_ERROR_UNKNOWN){
 			sll_print_error(NULL,&e);
@@ -804,6 +814,7 @@ _read_file_argument:
 						}
 						if (fl&FLAG_PRINT_OBJECT){
 							sll_print_object(&c_dt,&i_ft,c_dt.h,sll_stdout);
+							sll_file_flush(sll_stdout);
 							putchar('\n');
 						}
 						if (fl&FLAG_VERBOSE){
@@ -818,6 +829,7 @@ _read_file_argument:
 				else{
 					if (fl&FLAG_PRINT_OBJECT){
 						sll_print_object(&c_dt,&i_ft,c_dt.h,sll_stdout);
+						sll_file_flush(sll_stdout);
 						putchar('\n');
 					}
 					if (fl&FLAG_VERBOSE){
