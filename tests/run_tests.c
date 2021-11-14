@@ -138,7 +138,7 @@ static sll_char_t* error_to_string(sll_error_t* e){
 		case SLL_ERROR_UNKNOWN_IDENTIFIER:
 		case SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
 		case SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII:
-			snprintf((char*)o,512,"<type=%"PRIu8", range=%"PRIu32"-%"PRIu32">",e->t,e->dt.r.off,e->dt.r.off+e->dt.r.sz);
+			snprintf((char*)o,512,"<type=%"PRIu8", range=%"PRIu64"-%"PRIu64">",e->t,e->dt.r.off,e->dt.r.off+e->dt.r.sz);
 			break;
 		case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
 			snprintf((char*)o,512,"<type=%"PRIu8", string='%s'>",e->t,e->dt.str);
