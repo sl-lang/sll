@@ -6,6 +6,7 @@
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/memory.h>
+#include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -74,19 +75,6 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
 	}
-}
-
-
-
-sll_file_descriptor_t _platform_get_stream_descriptor(int t){
-	if (t==0){
-		return (sll_file_descriptor_t)GetStdHandle(STD_INPUT_HANDLE);
-	}
-	if (t==1){
-		return (sll_file_descriptor_t)GetStdHandle(STD_OUTPUT_HANDLE);
-	}
-	SLL_ASSERT(t==2);
-	return (sll_file_descriptor_t)GetStdHandle(STD_ERROR_HANDLE);
 }
 
 
@@ -208,6 +196,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 		return 0;
 	}
 	return sll_string_length_unaligned(o);
+}
+
+
+
+sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t){
+	if (t==SLL_PLATFORM_STREAM_INPUT){
+		return (sll_file_descriptor_t)GetStdHandle(STD_INPUT_HANDLE);
+	}
+	if (t==SLL_PLATFORM_STREAM_OUTPUT){
+		return (sll_file_descriptor_t)GetStdHandle(STD_OUTPUT_HANDLE);
+	}
+	SLL_ASSERT(t==SLL_PLATFORM_STREAM_ERROR);
+	return (sll_file_descriptor_t)GetStdHandle(STD_ERROR_HANDLE);
 }
 
 

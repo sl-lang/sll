@@ -22,9 +22,12 @@ __SLL_EXTERNAL sll_file_t* sll_stderr=&_file_stderr;
 
 
 void _file_init_std_streams(void){
-	if (!sll_file_open_descriptor(SLL_CHAR("sll_stdin"),_platform_get_stream_descriptor(0),SLL_FILE_FLAG_READ,sll_stdin)||!sll_file_open_descriptor(SLL_CHAR("sll_stdout"),_platform_get_stream_descriptor(1),SLL_FILE_FLAG_WRITE,sll_stdout)||!sll_file_open_descriptor(SLL_CHAR("sll_stderr"),_platform_get_stream_descriptor(2),SLL_FILE_FLAG_WRITE,sll_stderr)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_bool_t x=sll_file_open_descriptor(SLL_CHAR("sll_stdin"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_INPUT),SLL_FILE_FLAG_READ,sll_stdin);
+	SLL_ASSERT(x);
+	x=sll_file_open_descriptor(SLL_CHAR("sll_stdout"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_OUTPUT),SLL_FILE_FLAG_WRITE,sll_stdout);
+	SLL_ASSERT(x);
+	x=sll_file_open_descriptor(SLL_CHAR("sll_stderr"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR),SLL_FILE_FLAG_WRITE,sll_stderr);
+	SLL_ASSERT(x);
 }
 
 
@@ -273,5 +276,15 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c){
 		f->_off++;
 		return 1;
 	}
-	return sll_file_write(f,&c,sizeof(sll_char_t));
+	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
+		return sll_platform_file_write(f->dt.fl.fd,&c,sizeof(sll_char_t));
+	}
+	SLL_ASSERT(f->_w_bf_off+1<=FILE_BUFFER_SIZE);
+	f->_w_bf[f->_w_bf_off]=c;
+	f->_w_bf_off++;
+	if (f->_w_bf_off==FILE_BUFFER_SIZE){
+		sll_platform_file_write(f->dt.fl.fd,f->_w_bf,FILE_BUFFER_SIZE);
+		f->_w_bf_off=0;
+	}
+	return 1;
 }

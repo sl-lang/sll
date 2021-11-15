@@ -2,7 +2,9 @@
 
 ## [0.6.28] - Ongoing
 
-*Nothing*
+### Added
+
+- Implemented `sll_platform_get_default_stream_descriptor`
 
 ## [0.6.27] - 2021-11-14
 

@@ -5,6 +5,12 @@
 
 
 
+#define SLL_PLATFORM_STREAM_INPUT 0
+#define SLL_PLATFORM_STREAM_OUTPUT 1
+#define SLL_PLATFORM_STREAM_ERROR 2
+
+
+
 __SLL_EXTERNAL extern const sll_char_t* sll_platform_string;
 
 
@@ -50,6 +56,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol);
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t);
 
 
 

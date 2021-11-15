@@ -475,10 +475,6 @@ void _memory_release_data(void);
 
 
 
-sll_file_descriptor_t _platform_get_stream_descriptor(int t);
-
-
-
 void _shift_objects(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_offset_t off);
 
 
