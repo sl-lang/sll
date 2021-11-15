@@ -4,6 +4,7 @@
 
 ### Added
 
+- Macro constants: `SLL_PLATFORM_STREAM_INPUT`, `SLL_PLATFORM_STREAM_OUTPUT` and `SLL_PLATFORM_STREAM_ERROR`
 - Implemented `sll_platform_get_default_stream_descriptor`
 
 ## [0.6.27] - 2021-11-14
