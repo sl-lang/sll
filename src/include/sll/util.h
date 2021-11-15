@@ -9,6 +9,10 @@
 #define SLL_COMPARE_RESULT_EQUAL 1
 #define SLL_COMPARE_RESULT_ABOVE 2
 
+#define SLL_SANDBOX_FLAG_DISABLE_FILE_IO 1
+#define SLL_SANDBOX_FLAG_ENABLE_STDIN_IO 2
+#define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 4
+
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s,sll_bool_t d);
@@ -31,7 +35,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_strin
 
 
 
+__SLL_EXTERNAL sll_bool_t sll_get_sandbox_flag(sll_sandbox_flags_t f);
+
+
+
 __SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v);
+
+
+
+__SLL_EXTERNAL sll_sandbox_flags_t sll_set_sandbox_flags(sll_sandbox_flags_t f);
 
 
 

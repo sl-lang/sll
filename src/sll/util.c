@@ -14,6 +14,7 @@
 
 static sll_cleanup_function_t _util_exit_table[MAX_CLEANUP_TABLE_SIZE];
 static uint16_t _util_exit_table_size=0;
+static sll_sandbox_flags_t _util_sandbox_flags=0;
 
 
 
@@ -105,6 +106,7 @@ void _execute_cleanup(void){
 	_gc_release_data();
 	_file_release_std_streams();
 	_memory_release_data();
+	_util_sandbox_flags=0;
 }
 
 
@@ -252,6 +254,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_strin
 
 
 
+__SLL_EXTERNAL sll_bool_t sll_get_sandbox_flag(sll_sandbox_flags_t f){
+	return !!(_util_sandbox_flags&f);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o){
 	sll_object_offset_t sz=0;
 	_get_object_size(o,&sz);
@@ -299,6 +307,13 @@ __SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v){
 		l=(l&7)<<3;
 		*(op+i)=((*(op+i))&(0xffffffffffffffffull<<l))|(v64&((1ull<<l)-1));
 	}
+}
+
+
+
+__SLL_EXTERNAL sll_sandbox_flags_t sll_set_sandbox_flags(sll_sandbox_flags_t f){
+	_util_sandbox_flags|=f;
+	return _util_sandbox_flags;
 }
 
 

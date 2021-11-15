@@ -99,6 +99,10 @@ typedef uint8_t sll_runtime_object_type_t;
 
 
 
+typedef uint8_t sll_sandbox_flags_t;
+
+
+
 typedef uint16_t sll_read_char_t;
 
 
@@ -558,6 +562,7 @@ typedef struct __SLL_RUNTIME_DATA{
 	sll_handle_list_t* hl;
 	sll_file_t* in;
 	sll_file_t* out;
+	sll_file_t* err;
 } sll_runtime_data_t;
 
 

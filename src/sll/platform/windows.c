@@ -87,12 +87,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size
 
 __SLL_EXTERNAL void sll_platform_enable_console_color(void){
 	sll_bool_t st=0;
-	if (_win_stdout_cm!=0xffffffff&&_isatty(1)){
+	if (_win_stdout_cm==0xffffffff&&_isatty(1)){
 		GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),&_win_stdout_cm);
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		st=1;
 	}
-	if (_win_stderr_cm!=0xffffffff&&_isatty(2)){
+	if (_win_stderr_cm==0xffffffff&&_isatty(2)){
 		GetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),&_win_stderr_cm);
 		SetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),_win_stderr_cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 		st=1;

@@ -26,15 +26,11 @@ static sll_handle_descriptor_t _file_type;
 
 
 static sll_bool_t _free_file(sll_handle_t h){
-	if (h>=_file_fll){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||h>=_file_fll||!(*(_file_fl+h))){
 		return 0;
 	}
-	sll_file_t* f=*(_file_fl+h);
-	if (!f){
-		return 0;
-	}
-	sll_file_close(f);
-	sll_deallocate(f);
+	sll_file_close(*(_file_fl+h));
+	sll_deallocate(*(_file_fl+h));
 	*(_file_fl+h)=NULL;
 	if (h==_file_fll-1){
 		do{
@@ -67,7 +63,7 @@ static void _file_destructor(sll_handle_t h){
 
 
 __API_FUNC(file_close){
-	if (a->t!=_file_ht||a->h>=_file_fll){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||a->t!=_file_ht||a->h>=_file_fll){
 		return 0;
 	}
 	return _free_file(a->h);
@@ -77,7 +73,7 @@ __API_FUNC(file_close){
 
 __API_FUNC(file_open){
 	SLL_INIT_HANDLE_DATA(out);
-	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||a->l>SLL_API_MAX_FILE_PATH_LENGTH){
 		return;
 	}
 	sll_file_flags_t ff=SLL_FILE_FLAG_READ;
@@ -141,21 +137,34 @@ __API_FUNC(file_write){
 	sll_file_t* f=NULL;
 	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT){
 		if (a->dt.i==-2){
+			if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
+				return 0;
+			}
 			SLL_ASSERT(sll_current_runtime_data);
 			f=sll_current_runtime_data->out;
 		}
 		else if (a->dt.i==-3){
-			f=sll_stderr;
+			if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+				return 0;
+			}
+			SLL_ASSERT(sll_current_runtime_data);
+			f=sll_current_runtime_data->err;
 		}
 		else{
 			return 0;
 		}
 	}
 	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
+		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+			return 0;
+		}
 		f=*(_file_fl+a->dt.h.h);
 		if (!f){
 			return 0;
 		}
+	}
+	else{
+		return 0;
 	}
 	sll_string_t s;
 	sll_object_to_string(b,bc,&s);

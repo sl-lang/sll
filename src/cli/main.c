@@ -494,7 +494,8 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			&i_ft,
 			&hl,
 			sll_stdin,
-			sll_stdout
+			sll_stdout,
+			sll_stderr
 		};
 		sll_error_t e={
 			SLL_ERROR_UNKNOWN
@@ -519,7 +520,6 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 
 int main(int argc,const char** argv){
 	sll_init();
-	atexit(sll_deinit);
 	sll_platform_enable_console_color();
 	int ec=1;
 	ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
@@ -555,6 +555,7 @@ _skip_lib_path:
 	sll_assembly_data_t a_dt={0};
 	sll_compilation_data_t c_dt={0};
 	uint32_t im_fpl=UINT32_MAX;
+	sll_sandbox_flags_t s_fl=0;
 	sll_set_argument_count(1);
 	for (int i=1;i<argc;i++){
 		const char* e=argv[i];
@@ -669,6 +670,30 @@ _skip_lib_path:
 			sl=tmp;
 			*(sl+sll-1)=(sll_char_t*)argv[i];
 		}
+		else if ((*e=='-'&&*(e+1)=='S'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
+			i++;
+			if (i==argc){
+				break;
+			}
+			e=argv[i];
+			if (sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("no-file-io"))==SLL_COMPARE_RESULT_EQUAL){
+				s_fl|=SLL_SANDBOX_FLAG_DISABLE_FILE_IO;
+			}
+			else if (sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("enable-stdin-io"))==SLL_COMPARE_RESULT_EQUAL){
+				s_fl|=SLL_SANDBOX_FLAG_ENABLE_STDIN_IO;
+			}
+			else if (sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("enable-stdout-io"))==SLL_COMPARE_RESULT_EQUAL){
+				s_fl|=SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO;
+			}
+			else{
+				COLOR_RED;
+				PRINT_STATIC_STR("Unknown sandbox flag '");
+				fputs(e,stdout);
+				PRINT_STATIC_STR("'\n");
+				COLOR_RESET;
+				goto _error;
+			}
+		}
 		else if ((*e=='-'&&*(e+1)=='v'&&*(e+2)==0)||sll_string_compare_pointer(SLL_CHAR(e),SLL_CHAR("--verbose"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_VERBOSE;
 		}
@@ -703,6 +728,7 @@ _read_file_argument:
 		sll_deinit();
 		return 0;
 	}
+	sll_set_sandbox_flags(s_fl);
 	im_fpl=fpl;
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Configuration:\n  Optimization Level:\n");

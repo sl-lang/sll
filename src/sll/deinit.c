@@ -256,7 +256,7 @@ __SLL_EXTERNAL void sll_deinit_runtime_object(sll_runtime_object_t* o){
 	}
 	else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_HANDLE){
 		if (sll_current_runtime_data){
-			sll_handle_descriptor_t* hd=SLL_HANDLE_LOOKUP_DESCRIPTOR(sll_current_runtime_data->hl,o->dt.h.t);
+			sll_handle_descriptor_t* hd=sll_handle_lookup_descriptor(sll_current_runtime_data->hl,o->dt.h.t);
 			if (hd&&hd->df){
 				hd->df(o->dt.h.h);
 			}

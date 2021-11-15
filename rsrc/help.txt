@@ -1,4 +1,5 @@
 Usage: sll [ <option1> <option2> <option3> ... ] <file1> <file2> <file3> ...
+
 Options:
   -a, --generate-assembly -> Generate assembly (.sla)
   -A <arg1> <arg2> <arg3>, --args <arg1> <arg2> <arg3> -> Pass argumnets to the VM
@@ -17,5 +18,11 @@ Options:
   -P, --print-assembly -> Print assembly
   -R, --no-run -> Disable program execution mode
   -s <code>, --source <code> -> Treat <code> as an input file
+  -S <flag>, --sandbox <flag> -> enable the sandbox <flag> (see Sandbox Flags)
   -v, --verbose -> Enable verbose mode
   -V, --version -> Print SLL version and exit
+
+Sandbox Flags:
+  no-file-io -> Disable all file IO (does not include the C sll_file_xxx and sll_platform_file_xxx APIs)
+  enable-stdin-io -> Enable reading from standard input (ignored if 'no-file-io' flag is not present)
+  enable-stdout-io -> Enable writing to standard output (ignored if 'no-file-io' flag is not present)

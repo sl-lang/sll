@@ -4,8 +4,16 @@
 
 ### Added
 
-- Macro constants: `SLL_PLATFORM_STREAM_INPUT`, `SLL_PLATFORM_STREAM_OUTPUT` and `SLL_PLATFORM_STREAM_ERROR`
+- CLI option for enabling sandbox flags (`-S`) ([#97])
 - Implemented `sll_platform_get_default_stream_descriptor`
+- Macro constants: `SLL_PLATFORM_STREAM_INPUT`, `SLL_PLATFORM_STREAM_OUTPUT` and `SLL_PLATFORM_STREAM_ERROR`
+- Sandbox flags (`SLL_SANDBOX_FLAG_DISABLE_FILE_IO`) ([#97])
+- Secure sandbox API: `sll_get_sandbox_flag` and `sll_set_sandbox_flags` ([#97])
+
+### Changed
+
+- Fixed `sll_platform_enable_console_color`
+- The `sll_runtime_data_t` structure now contains a field for an error file (`sll_file_t* err`)
 
 ## [0.6.27] - 2021-11-14
 
@@ -1015,6 +1023,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#98]: https://github.com/sl-lang/sll/issues/98
+[#97]: https://github.com/sl-lang/sll/issues/97
 [#95]: https://github.com/sl-lang/sll/issues/95
 [#94]: https://github.com/sl-lang/sll/issues/94
 [#93]: https://github.com/sl-lang/sll/issues/93
