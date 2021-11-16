@@ -357,13 +357,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll
 			for (sll_map_length_t j=0;j<(i<<1);j++){
 				o->v[i]=m->v[i];
 			}
-			for (sll_map_length_t j=0;j<(i<<1);j++){
-				o->v[i]=m->v[i];
-			}
 			sll_runtime_object_t* v=m->v[(i<<1)+1];
-			for (i=(i+1)<<1;i<(m->l<<1);i++){
-				o->v[i-2]=m->v[i];
-				SLL_ACQUIRE(o->v[i-2]);
+			for (sll_map_length_t j=(i+1)<<1;j<(m->l<<1);j++){
+				o->v[j-2]=m->v[j];
+				SLL_ACQUIRE(o->v[j-2]);
 			}
 			return v;
 		}

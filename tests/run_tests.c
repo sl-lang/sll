@@ -36,12 +36,12 @@ static sll_bool_t execute_test(uint8_t id){
 		sll_init_compilation_data(SLL_CHAR("<internal>"),&f,&c_dt);
 		sll_error_t e;
 		if (!sll_parse_all_objects(&c_dt,&i_ft,NULL,&e)){
-			FILE* o_f=fopen((char*)to_fp,"wb");
-			if (!o_f){
+			sll_file_t of;
+			if (!sll_file_open(to_fp,SLL_FILE_FLAG_WRITE,&of)){
 				return 1;
 			}
-			fwrite((void*)&e,sizeof(sll_error_t),1,o_f);
-			fclose(o_f);
+			sll_file_write(&of,&e,sizeof(sll_error_t));
+			sll_file_close(&of);
 		}
 		sll_deinit_compilation_data(&c_dt);
 		sll_file_close(&f);
@@ -212,16 +212,19 @@ static void run_parser_test(const sll_char_t* fp,test_result_t* o){
 			printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
 			continue;
 		}
-		FILE* dt_f=fopen((char*)ti_fp,"wb");
-		if (!dt_f||fwrite(in_e->dt.s.v,sizeof(sll_char_t),in_e->dt.s.l,dt_f)!=in_e->dt.s.l){
-			if (dt_f){
-				fclose(dt_f);
-			}
+		sll_file_t dt_f;
+		if (!sll_file_open(ti_fp,SLL_FILE_FLAG_WRITE,&dt_f)){
 			o->s++;
 			printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
 			continue;
 		}
-		fclose(dt_f);
+		if (sll_file_write(&dt_f,in_e->dt.s.v,in_e->dt.s.l)!=in_e->dt.s.l){
+			sll_file_close(&dt_f);
+			o->s++;
+			printf("-> Internal Error in Test Case #%"PRIu32" (Line %u)\n",i,__LINE__);
+			continue;
+		}
+		sll_file_close(&dt_f);
 		fflush(stdout);
 		int8_t ec=execute_subprocess(TEST_ID_PARSE);
 		if (ec==-1){
