@@ -5,13 +5,14 @@
 ### Added
 
 - CLI option for enabling sandbox flags (`-S`) ([#97])
-- Implemented `sll_platform_get_default_stream_descriptor`
+- Implemented `sll_platform_get_default_stream_descriptor`, `sll_file_write_format`, `sll_file_write_string`, `sll_string_format` and `sll_string_format_list`
 - Macro constants: `SLL_PLATFORM_STREAM_INPUT`, `SLL_PLATFORM_STREAM_OUTPUT` and `SLL_PLATFORM_STREAM_ERROR`
-- Sandbox flags (`SLL_SANDBOX_FLAG_DISABLE_FILE_IO`) ([#97])
+- Sandbox flags (`SLL_SANDBOX_FLAG_DISABLE_FILE_IO`, `SLL_SANDBOX_FLAG_ENABLE_STDIN_IO`, `SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO` and `SLL_SANDBOX_FLAG_DISABLE_PATH_API`) ([#97])
 - Secure sandbox API: `sll_get_sandbox_flag` and `sll_set_sandbox_flags` ([#97])
 
 ### Changed
 
+- Fixed incorrect memory reallocation in `sll_string_increase`
 - Fixed `sll_platform_enable_console_color`
 - The `sll_runtime_data_t` structure now contains a field for an error file (`sll_file_t* err`)
 

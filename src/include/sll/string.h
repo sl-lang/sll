@@ -2,6 +2,7 @@
 #define __SLL_STRING_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+#include <stdarg.h>
 
 
 
@@ -80,6 +81,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_array(const sll_st
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_string_t* s,const sll_map_t* m);
+
+
+
+__SLL_EXTERNAL void sll_string_format(const sll_char_t* t,sll_string_t* o,...);
+
+
+
+__SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_string_t* o);
 
 
 

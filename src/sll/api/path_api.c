@@ -7,6 +7,7 @@
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
+#include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -86,6 +87,10 @@ __SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_cha
 
 
 __API_FUNC(path_absolute){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		sll_string_clone(a,out);
+		return;
+	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_from_pointer_length(bf,sll_path_absolute(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 }
@@ -93,12 +98,19 @@ __API_FUNC(path_absolute){
 
 
 __API_FUNC(path_exists){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		return 0;
+	}
 	return sll_platform_path_exists(a->v);
 }
 
 
 
 __API_FUNC(path_get_cwd){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		sll_string_create(0,out);
+		return;
+	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_from_pointer_length(bf,sll_platform_get_current_working_directory(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 }
@@ -106,12 +118,19 @@ __API_FUNC(path_get_cwd){
 
 
 __API_FUNC(path_is_dir){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		return 0;
+	}
 	return sll_platform_path_is_directory(a->v);
 }
 
 
 
 __API_FUNC(path_join){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		sll_string_create(0,out);
+		return;
+	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
 	if (ac){
@@ -144,6 +163,9 @@ __API_FUNC(path_join){
 
 
 __API_FUNC(path_list_dir){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		return SLL_ACQUIRE_STATIC(array_zero);
+	}
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);
 	sll_runtime_object_t* o=SLL_CREATE();
@@ -162,6 +184,9 @@ __API_FUNC(path_list_dir){
 
 
 __API_FUNC(path_recursive_list_dir){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		return SLL_ACQUIRE_STATIC(array_zero);
+	}
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory_recursive(a->v,&dt);
 	sll_runtime_object_t* o=SLL_CREATE();
@@ -186,11 +211,11 @@ __API_FUNC(path_relative){
 
 
 __API_FUNC(path_set_cwd){
-	return sll_platform_set_current_working_directory(a->v);
+	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)?0:sll_platform_set_current_working_directory(a->v));
 }
 
 
 
 __API_FUNC(path_size){
-	return sll_platform_file_size(a->v);
+	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)?0:sll_platform_file_size(a->v));
 }

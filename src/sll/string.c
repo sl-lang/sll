@@ -12,6 +12,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <stdarg.h>
 #include <stdint.h>
 
 
@@ -275,7 +276,7 @@ __SLL_EXTERNAL void sll_string_create(sll_string_length_t l,sll_string_t* o){
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
 	uint64_t* p=(uint64_t*)(o->v);
 	STRING_DATA_PTR(p);
-	for (sll_string_length_t i=0;i<=l>>3;i++){
+	for (sll_string_length_t i=0;i<=(l>>3);i++){
 		*(p+i)=0;
 	}
 }
@@ -433,6 +434,67 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_stri
 
 
 
+__SLL_EXTERNAL void sll_string_format(const sll_char_t* t,sll_string_t* o,...){
+	va_list va;
+	va_start(va,o);
+	sll_string_format_list(t,va,o);
+	va_end(va);
+}
+
+
+
+__SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_string_t* o){
+	sll_string_create(0,o);
+	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	while (*t){
+		if (*t=='%'){
+			t++;
+			if (!(*t)){
+				break;
+			}
+			switch (*t){
+				case 'c':
+					sll_string_increase(o,1);
+					o->v[o->l]=(sll_char_t)va_arg(va,int);
+					o->l++;
+					break;
+				case 's':
+					{
+						const sll_char_t* v=va_arg(va,const sll_char_t*);
+						sll_string_length_t i=sll_string_length_unaligned(v);
+						sll_string_increase(o,i);
+						sll_copy_data(v,i,o->v+o->l);
+						o->l+=i;
+						break;
+					}
+				case 'S':
+					{
+						const sll_string_t* v=va_arg(va,const sll_string_t*);
+						sll_string_increase(o,v->l);
+						sll_copy_data(v->v,v->l,o->v+o->l);
+						o->l+=v->l;
+						break;
+					}
+				default:
+					sll_string_increase(o,2);
+					o->v[o->l]='%';
+					o->v[o->l+1]=*t;
+					o->l+=2;
+			}
+		}
+		else{
+			sll_string_increase(o,1);
+			o->v[o->l]=*t;
+			o->l++;
+		}
+		t++;
+	}
+	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_string_calculate_checksum(o);
+}
+
+
+
 __SLL_EXTERNAL void sll_string_from_char(sll_char_t c,sll_string_t* o){
 	o->l=1;
 	o->c=c;
@@ -536,7 +598,7 @@ __SLL_EXTERNAL void sll_string_increase(sll_string_t* s,sll_string_length_t l){
 		return;
 	}
 	l+=s->l;
-	if (!(l&15)){
+	if (l>SLL_STRING_ALIGN_LENGTH(s->l)-1){
 		s->v=sll_reallocate(s->v,SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
 		SLL_STRING_FORMAT_PADDING(s->v,l);
 	}

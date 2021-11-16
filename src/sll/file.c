@@ -6,6 +6,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <stdarg.h>
 
 
 
@@ -284,4 +285,29 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c){
 		f->_w_bf_off=0;
 	}
 	return 1;
+}
+
+
+
+__SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* t,...){
+	if (!(f->f&SLL_FILE_FLAG_WRITE)){
+		return 0;
+	}
+	va_list va;
+	va_start(va,t);
+	sll_string_t str;
+	sll_string_format_list(t,va,&str);
+	va_end(va);
+	sll_size_t o=sll_file_write(f,str.v,str.l);
+	sll_deinit_string(&str);
+	return o;
+}
+
+
+
+__SLL_EXTERNAL sll_size_t sll_file_write_string(sll_file_t* f,const sll_char_t* p){
+	if (!(f->f&SLL_FILE_FLAG_WRITE)){
+		return 0;
+	}
+	return sll_file_write(f,p,sll_string_length_unaligned(p));
 }
