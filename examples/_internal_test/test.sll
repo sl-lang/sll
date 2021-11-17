@@ -149,6 +149,7 @@
 	(:> "(number too big)")
 )
 (:> "\n")
+(:> (: "abcdefghijklmnopqrstuvwxyz" 5 2 -1) "\n")
 (:> (<- list_dir ".") "\n")
 (= format_bytes (,,, sz (?
 	(< sz (<< 1 10)) (@@ (+ sz " b"))
