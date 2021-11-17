@@ -276,7 +276,7 @@ __SLL_EXTERNAL void sll_string_create(sll_string_length_t l,sll_string_t* o){
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
 	uint64_t* p=(uint64_t*)(o->v);
 	STRING_DATA_PTR(p);
-	for (sll_string_length_t i=0;i<=(l>>3);i++){
+	for (sll_string_length_t i=0;i<SLL_STRING_ALIGN_LENGTH(l)>>3;i++){
 		*(p+i)=0;
 	}
 }

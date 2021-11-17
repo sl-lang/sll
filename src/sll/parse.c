@@ -811,7 +811,7 @@ _unknown_symbol:
 							if (c>96){
 								c-=32;
 							}
-							if (c<48||(c>57&&c<65)||c>70){
+							if (c<48||(c>57&&c<65)||(c>70&&c!='_')){
 								e->t=SLL_ERROR_UNKNOWN_HEXADECIMAL_CHARCTER;
 								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
 								e->dt.r.sz=1;
@@ -820,7 +820,9 @@ _unknown_symbol:
 								}
 								return 0;
 							}
-							v=(v<<4)+(c>64?c-55:c-48);
+							if (c!='_'){
+								v=(v<<4)+(c>64?c-55:c-48);
+							}
 							c=sll_file_read_char(rf);
 							if (c==SLL_END_OF_DATA){
 								goto _return_error;
@@ -833,7 +835,7 @@ _unknown_symbol:
 							break;
 						}
 						do{
-							if (c<48||c>55){
+							if (c<48||(c>55&&c!='_')){
 								e->t=SLL_ERROR_UNKNOWN_OCTAL_CHARCTER;
 								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
 								e->dt.r.sz=1;
@@ -842,7 +844,9 @@ _unknown_symbol:
 								}
 								return 0;
 							}
-							v=(v<<3)+(c-48);
+							if (c!='_'){
+								v=(v<<3)+(c-48);
+							}
 							c=sll_file_read_char(rf);
 							if (c==SLL_END_OF_DATA){
 								goto _return_error;
@@ -855,7 +859,7 @@ _unknown_symbol:
 							break;
 						}
 						do{
-							if (c!=48&&c!=49){
+							if (c!='0'&&c!='1'&&c!='_'){
 								e->t=SLL_ERROR_UNKNOWN_BINARY_CHARCTER;
 								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
 								e->dt.r.sz=1;
@@ -864,7 +868,9 @@ _unknown_symbol:
 								}
 								return 0;
 							}
-							v=(v<<1)+(c-48);
+							if (c!='_'){
+								v=(v<<1)+(c-48);
+							}
 							c=sll_file_read_char(rf);
 							if (c==SLL_END_OF_DATA){
 								goto _return_error;
@@ -883,7 +889,9 @@ _unknown_symbol:
 				}
 				if (c>47&&c<58){
 					while (1){
-						v=v*10+(c-48);
+						if (c!='_'){
+							v=v*10+(c-48);
+						}
 						c=sll_file_read_char(rf);
 						if (c==SLL_END_OF_DATA){
 							goto _return_error;
@@ -891,7 +899,7 @@ _unknown_symbol:
 						if ((c>8&&c<14)||c==' '||c=='('||c==')'||c==';'||c=='<'||c=='>'||c=='['||c==']'||c=='{'||c=='}'||c=='.'||c=='e'||c=='E'){
 							break;
 						}
-						if (c<48||c>57){
+						if (c<48||(c>57&&c!='_')){
 							e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
 							e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
 							e->dt.r.sz=1;
@@ -913,7 +921,7 @@ _unknown_symbol:
 							if ((c>8&&c<14)||c==' '||c=='('||c==')'||c==';'||c=='<'||c=='>'||c=='['||c==']'||c=='{'||c=='}'||c=='e'||c=='E'){
 								break;
 							}
-							if (c<48||c>57){
+							if (c<48||(c>57&&c!='_')){
 								e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
 								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
 								e->dt.r.sz=1;
@@ -923,7 +931,9 @@ _unknown_symbol:
 								return 0;
 							}
 							ex--;
-							v=v*10+(c-48);
+							if (c!='_'){
+								v=v*10+(c-48);
+							}
 						}
 					}
 					if (c=='e'||c=='E'){
@@ -950,7 +960,7 @@ _unknown_symbol:
 							if ((c>8&&c<14)||c==' '||c=='('||c==')'||c==';'||c=='<'||c=='>'||c=='['||c==']'||c=='{'||c=='}'){
 								break;
 							}
-							if (c<48||c>57){
+							if (c<48||(c>57&&c!='_')){
 								e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
 								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
 								e->dt.r.sz=1;
@@ -959,7 +969,9 @@ _unknown_symbol:
 								}
 								return 0;
 							}
-							ev=ev*10+(c-48);
+							if (c!='_'){
+								ev=ev*10+(c-48);
+							}
 							c=sll_file_read_char(rf);
 							if (c==SLL_END_OF_DATA){
 								break;

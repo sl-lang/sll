@@ -191,7 +191,7 @@ __SLL_EXTERNAL void sll_file_reset_line(sll_file_t* f,sll_file_offset_t off){
 	}
 	sll_platform_file_seek(f->dt.fl.fd,off);
 	sll_char_t c;
-	if (!sll_file_read(f->dt.fl.fd,&c,sizeof(sll_char_t))){
+	if (!sll_file_read(f,&c,sizeof(sll_char_t))){
 		f->_l_num=0;
 		f->_l_off=0;
 		f->_off=0;
@@ -200,7 +200,7 @@ __SLL_EXTERNAL void sll_file_reset_line(sll_file_t* f,sll_file_offset_t off){
 	while (off&&c!='\n'&&c!='\r'){
 		off--;
 		sll_platform_file_seek(f->dt.fl.fd,off);
-		if (!sll_platform_file_read(f->dt.fl.fd,&c,sizeof(sll_char_t))){
+		if (!sll_file_read(f,&c,sizeof(sll_char_t))){
 			f->_l_num=0;
 			f->_l_off=0;
 			f->_off=0;

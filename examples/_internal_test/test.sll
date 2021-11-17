@@ -126,7 +126,7 @@
 (:> (* (:: "abc" string_type) "def") "\n" (:: (* "A" 100) map_key_type) "\n" (:: array string_type map_type array_type) "\n")
 (:> (* [1 2.3456 -78] ["a" array "cd"]) "\n" (== [1 2 3] [1 2 3 4]) "\n" (== "abc" <0 'a' 2 "c" 1 0x62>) "\n" (== "def" ["d" 'e' 0x66]) "\n")
 (:> (== [4 5 6] <2 6 0 4 1 5>) "\n" (== <"a" 9384 array 'c'> <array 'c' "a" 9384>) "\n" (& [1 2 3 3] [2 3 4]) "\n" (- 128.4 "abc") "\n")
-(:> (| [1 2 3] [3 4 4 5]) "\n" (<- hash [3 4.5 '7' "abc"]) "\n" (* "abcdefghij" 2.3) "\n" (| <1 0.585 "a" 5> "ghijklmnop" [0.1234 78.9]) "\n")
+(:> (| [1 2 3] [3 4 4 5]) "\n" (<- hash [3 4.5 '7' "abc"]) "\n" (* "abcdefghij" 2.3) "\n" (| <1 0.585 "a" 5> "ghijklmnop" [0.1234 7_8.9]) "\n")
 (:> (& <1 "a" 2 "b"> <2 "b2" 3 "c" 4 "d">) "\n" (& <1 "a" 2.1 "b"> ["c" "d" "e" "f"]) "\n" (& <1 "a" 2.1 "b"> "cdef") "\n")
 (:> (^ [1 2 3] [4 5 6 7]) "\n" (* "abc" [5 6 7]) "\n" (/ "abcdabcdabcdabcd" 'a') "\n" (* "abcdefghij" 0.7) "\n" (<- replace "one-two-three-four-five" '-' ",") "\n")
 (= (: array 0) "zero")
