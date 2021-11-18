@@ -264,6 +264,7 @@ typedef struct __SLL_FILE{
 	sll_file_offset_t _off;
 	sll_char_t* _r_bf;
 	sll_file_offset_t _r_bf_off;
+	sll_file_offset_t _r_bf_sz;
 	sll_char_t* _w_bf;
 	sll_file_offset_t _w_bf_off;
 } sll_file_t;

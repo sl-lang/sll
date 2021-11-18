@@ -10,6 +10,7 @@
 - Macro constants: `SLL_PLATFORM_STREAM_INPUT`, `SLL_PLATFORM_STREAM_OUTPUT` and `SLL_PLATFORM_STREAM_ERROR`
 - Sandbox flags (`SLL_SANDBOX_FLAG_DISABLE_FILE_IO`, `SLL_SANDBOX_FLAG_ENABLE_STDIN_IO`, `SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO` and `SLL_SANDBOX_FLAG_DISABLE_PATH_API`) ([#97])
 - Secure sandbox API: `sll_get_sandbox_flag` and `sll_set_sandbox_flags` ([#97])
+- Buffering for in `sll_file_read` and `sll_file_read_char`
 
 ### Changed
 
