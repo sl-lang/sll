@@ -547,9 +547,6 @@ _recurse_array_or_map:;
 				if (*str==':'&&*(str+1)=='>'){
 					o->t=SLL_OBJECT_TYPE_PRINT;
 				}
-				else if (*str=='<'&&*(str+1)==':'){
-					o->t=SLL_OBJECT_TYPE_INPUT;
-				}
 				else if (*str=='&'&&*(str+1)=='&'){
 					o->t=SLL_OBJECT_TYPE_AND;
 				}

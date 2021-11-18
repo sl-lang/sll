@@ -17,6 +17,10 @@
 - Fixed `sll_platform_enable_console_color`
 - The `sll_runtime_data_t` structure now contains a field for an error file (`sll_file_t* err`)
 
+### Removed
+
+- Unused object: Input (`(<:)`)
+
 ## [0.6.27] - 2021-11-14
 
 ### Added

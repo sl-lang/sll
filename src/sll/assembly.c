@@ -319,8 +319,6 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o;
-		case SLL_OBJECT_TYPE_INPUT:
-			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_AND:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_OR:
@@ -550,8 +548,6 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 			o=_generate(o,g_dt);
 			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
 			return o;
-		case SLL_OBJECT_TYPE_INPUT:
-			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_AND:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_OR:
@@ -957,8 +953,6 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_INPUT:
-			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_AND:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_OR:

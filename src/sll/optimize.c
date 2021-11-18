@@ -712,8 +712,6 @@ static uint8_t _get_cond_type(const sll_object_t* o,optimizer_data_t* o_dt,uint8
 			return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_OBJECT_TYPE_INLINE_FUNC:
 			SLL_UNIMPLEMENTED();
-		case SLL_OBJECT_TYPE_INPUT:
-			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_AND:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_OR:
@@ -1099,8 +1097,6 @@ _keep_assignment:;
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_INPUT:
-			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_AND:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_OR:

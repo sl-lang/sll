@@ -205,9 +205,6 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_PRINT:
 			PRINT_STATIC_STRING(":>",wf);
 			break;
-		case SLL_OBJECT_TYPE_INPUT:
-			PRINT_STATIC_STRING("<:",wf);
-			break;
 		case SLL_OBJECT_TYPE_AND:
 			PRINT_STATIC_STRING("&&",wf);
 			break;

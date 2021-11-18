@@ -787,28 +787,6 @@ Condition blocks are evaluated in the given order until one evaluates to a non-z
 ))
 ```
 
-#### Input (`<:`)
-
-##### Syntax
-
-```sll
-(<:)
-```
-
-##### Return Value
-
-TBD
-
-##### Description
-
-TBD
-
-##### Example
-
-```sll
-(<:)
-```
-
 #### Internal Function Declaration (`...`)
 
 ##### Syntax
