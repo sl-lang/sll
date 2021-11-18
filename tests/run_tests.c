@@ -447,12 +447,12 @@ int main(int argc,const char** argv){
 	}
 	sll_copy_data("/tmp_in",8,ti_fp+i);
 	sll_copy_data("/tmp_out",9,to_fp+i);
-	sll_copy_data("/../tests/data/",16,td_fp+i);
 #ifdef _MSC_VER
 	if (argc==2){
 		return !execute_test(argv[1][0]-1);
 	}
 #endif
+	sll_copy_data("/../tests/data/",16,td_fp+i);
 	test_result_t dt={
 		0,
 		0,

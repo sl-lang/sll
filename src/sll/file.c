@@ -169,7 +169,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 		if (!sll_platform_file_read(f->dt.fl.fd,&o,sizeof(sll_char_t))){
 			return SLL_END_OF_DATA;
 		}
-		f->_off++;
 	}
 	else{
 		if (!f->_r_bf_off&&!f->_r_bf_sz){
@@ -185,6 +184,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 			f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE);
 		}
 	}
+	f->_off++;
 	if (o=='\n'){
 		f->_l_num++;
 		f->_l_off=f->_off;
