@@ -1,22 +1,20 @@
-# Introduction to Sll
+# Overview
 
-## Overview
+## What is Sll?
 
-### What is Sll?
+Sll is a **general-purpose programming language** aimed at **all developers** looking for a **non-OOP** language with heavy compile-time optimization (and therefor **better runtime performance**).
 
-Sll is a **general-purpose programing language** aimed at **all developers** looking for a **non-OOP** language with heavy compile-time optimization (and therefor **better runtime performance**).
-
-### What can it be used for?
+## What can it be used for?
 
 Sll can be used for many different applications, from back-end server-side software development to complex AI-driven path-finding systems.
 
-### Key features of Sll
+## Key features of Sll
 
 - Cross-platform (Tested on Windows 10 64-bit and multiple Linux x64 distributions)
 - Easy to learn (Similar to Lisp)
 - Heavy compile-time optimization
 
-### Sll syntax
+## Sll syntax
 
 The syntax of the Sl Language is similar to Common Lisp (and other Lisp dialects).
 
@@ -24,7 +22,7 @@ It has one notable difference, that is it has no keywords. Sll uses only operato
 
 For more specific details, see [Syntax](#syntax)
 
-## Installation
+# Installation
 
 Sll can be download from the [GitHub website](https://github.com/sl-lang/sll/releases/latest). The primary target operating systems are Windows and POISX.
 
@@ -35,11 +33,11 @@ Sll has the ability to be installed in a folder, or as a standalone executable. 
 - `posix.zip`: POSIX build of Sll (platforms such as Linux, Ubuntu, Fedora, FreeBSD, etc.). Must be extracted into a single folder.
 - `posix_standalone`: POSIX standalone version of Sll.
 
-### Version Checking
+## Version Checking
 
 If using the standalone version of Sll, replace `sll` by `sll_standalone`. The most recent version of Sll is `0.6.27` (`0.6.28` is in development).
 
-#### Windows
+### Windows
 
 To check the version of Sll on Windows, type the following expression into a Command Prompt (or Power Shell):
 
@@ -47,7 +45,7 @@ To check the version of Sll on Windows, type the following expression into a Com
 sll -V
 ```
 
-#### POSIX
+### POSIX
 
 To check the version of Sll on POSIX systems, type the following expression into a Terminal:
 
@@ -55,13 +53,13 @@ To check the version of Sll on POSIX systems, type the following expression into
 sll -V
 ```
 
-## Syntax
+# Syntax
 
 The syntax of the Sl Language is similar to the syntax of Common Lisp and other Lisp dialects. The only main difference is that Sll does not have any keywords. Sll uses only operators to perform any function. This feature helps people with any language background to learn Sll.
 
 The building-block of the Sl Language is called an [object](#objects). An object can represent anything from an integer to a complex expression.
 
-### Comments
+## Comments
 
 Single-line comments begin with a semicolon, while block comments have to be surrounded with special symbols.
 
@@ -73,17 +71,17 @@ Single-line comments begin with a semicolon, while block comments have to be sur
 #|
 ```
 
-### Objects
+## Objects
 
 Each object represent either a [base type](#base-types) or an [operator](#operators). If an object represents the latter, it must be surrounded by parentheses and contain the symbol for the given operator, as well as its operands.
 
-All operands are split by whitespace. If an operator receives more arguments than it requires, it evaluates them as other expressions and not its operands.
+All operands are split by white space. If an operator receives more arguments than it requires, it evaluates them as other expressions and not its operands.
 
-#### Base Types
+### Base Types
 
 Base types have a different syntax than other objects. Unlike operators, they do not require parentheses in their syntax.
 
-##### Integer
+#### Integer
 
 A 64-bit signed integer.
 
@@ -95,41 +93,41 @@ By default, integers are represented in base 10, however, by using prefixes, it 
 
 Integers are case-insensitive. The prefixes, as well as the symbols (in case of base 16) can be both uppercase and lowercase.
 
-For clarity purposes, integers digits can be split by underscores (`_`). The only exception is that a number **can not** begin with an underscore, because it would be recognized as an identifier.
+For clarity purposes, integer digits can be split by underscores (`_`). The only exception is that a number **can not** begin with an underscore, because it would be recognized as an identifier.
 
-##### Float
+#### Float
 
 A 64-bit IEEE 754 floating-point number.
 
-##### Char
+#### Char
 
 An 8-bit unsigned integer representing a character.
 
-##### String
+#### String
 
 An array of [characters](#char).
 
-##### Array
+#### Array
 
 An array of objects.
 
-##### Map
+#### Map
 
 Creates a mapping (association) between different keys and values. The keys and values can represent any objects.
 
-##### Identifier
+#### Identifier
 
 A name of a variable.
 
 An identifier evaluates to the value of the variable pointed to by the identifier.
 
-##### Operation List
+#### Operation List
 
 A collection of objects to evaluate one by one.
 
 An operation list evaluates to `nil` (zero).
 
-##### Constant
+#### Constant
 
 The is the list of all of the constants as well as their corresponding integer values:
 
@@ -141,7 +139,7 @@ The is the list of all of the constants as well as their corresponding integer v
 
 The constants are replaced by their integer value during the parsing stage of the program.
 
-#### Operators
+### Operators
 
 All operators have the same structure:
 
@@ -151,471 +149,484 @@ All operators have the same structure:
 
 The operator type must be one of the following symbols:
 
-##### Access (`:`)
+#### Access (`:`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(: |# object #| |# index #|)
+
+OR
+
+(: |# object #| |# start index #| |# end index #|)
+
+OR
+
+(: |# object #| |# start index #| |# end index #| |# increment #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (:)
 ```
 
-###### Return Value
+#### Addition (`+`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
-
-```sll
-(:)
-```
-
-##### Addition (`+`)
-
-###### Syntax
+##### Syntax
 
 ```sll
 (+ |# term 1 #| |# term 2 #| |# term 3 #|)
 ```
 
-###### Return value
+##### Return value
 
 The sum of the operands
 
-###### Description
+##### Description
 
 All of the operands are evaluated, added together and the return value is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (+ 1 2 3) "\n")
 ```
 
-##### And (`&&`)
+#### And (`&&`)
 
-###### Syntax
-
-```sll
-(&&)
-```
-
-###### Return Value
-
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
-(&&)
+(&& |# expression 1 #| |# expression 2 #| |# expression 3 #|)
 ```
 
-##### Assignment (`=`)
+##### Return Value
 
-###### Syntax
+`true` if all of the expression evaluate to `true`, otherwise `false`
+
+##### Description
+
+All expressions are evaluated in the specified order. If all of the expressions evaluate to `true`, then the entire expression returns the value `true`. If any of the expressions evaluate to `false`, the evaluation stops and the value `false` is returned.
+
+##### Example
+
+```sll
+(= x 6)
+(? (&& (> x 5) (< x 10))
+	(:> x " is between 5 and 10!\n")
+)
+```
+
+#### Assignment (`=`)
+
+##### Syntax
 
 ```sll
 (= |# variable #| |# value #|)
 ```
 
-###### Return value
+##### Return value
 
 The value of the second operand.
 
-###### Description
+##### Description
 
 The value of the second operand is evaluated and assigned to the variable pointed by the first operand. If the first operand is not an identifier, the entire object behaves like an [operation list](#operation-list).
 
-###### Example
+##### Example
 
 ```sll
 (= variable "value" (:> "Extra expression"))
 ```
 
-##### Bitwise AND (`&`)
+#### Bitwise AND (`&`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (& |# term 1 #| |# term 2 #| |# term 3 #|)
 ```
 
-###### Return value
+##### Return value
 
 The bitwise AND product of all of the terms
 
-###### Description
+##### Description
 
 All of the operands are evaluated, and the bitwise AND product of all of the terms is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (& 0b101 0b1111) "\n")
 ```
 
-##### Bitwise NOT (One's Complement) (`~`)
+#### Bitwise NOT (One's Complement) (`~`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (~ |# expression #|)
 ```
 
-###### Return value
+##### Return value
 
 The bitwise NOT (One's complement) of the value is return
 
-###### Description
+##### Description
 
 The one's complement (bitwise NOT) of the first (and only) operand is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (& (~ 0xa5) 0xff) "\n")
 ```
 
-##### Bitwise OR (`|`)
+#### Bitwise OR (`|`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (| |# term 1 #| |# term 2 #| |# term 3 #|)
 ```
 
-###### Return value
+##### Return value
 
 The bitwise OR product of all of the terms
 
-###### Description
+##### Description
 
 All of the operands are evaluated, and the bitwise OR product of all of the terms is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (| 0x0f 0x80) "\n")
 ```
 
-##### Bitwise XOR (Exclusive OR) (`^`)
+#### Bitwise XOR (Exclusive OR) (`^`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (^ |# term 1 #| |# term 2 #| |# term 3 #|)
 ```
 
-###### Return value
+##### Return value
 
 The bitwise XOR (exclusive or) product of all of the terms
 
-###### Description
+##### Description
 
 All of the operands are evaluated, and the bitwise XOR (exclusive or) product of all of the terms is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (^ 0xff 0x80) "\n")
 ```
 
-##### Boolean Not (`!`)
+#### Boolean Not (`!`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (! |# expression #|)
 ```
 
-###### Return value
+##### Return value
 
 The inverted value
 
-###### Description
+##### Description
 
 The first (and only) operand is evaluated, its value is converted to a boolean and the inverse is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (! 0) ", " (! 1) "\n")
 ```
 
-##### Break (`@`)
+#### Break (`@`)
 
-###### Syntax
-
-```sll
-(@)
-```
-
-###### Return Value
-
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
 (@)
 ```
 
-##### Function Call (`<-`)
+##### Return Value
 
-###### Syntax
+TBD
+
+##### Description
+
+TBD
+
+##### Example
+
+```sll
+(@)
+```
+
+#### Function Call (`<-`)
+
+##### Syntax
 
 ```sll
 (<- |# function expression #| |# function argument 1 #| |# function argument 2 #| |# function argument 3 #|)
 ```
 
-###### Return value
+##### Return value
 
 The return value of the function called, or `nil`
 
-###### Description
+##### Description
 
 This object calls the function specified by the first operand with the arguments specified by the consecutive operands. If the function operand is an invalid function or internal function ID, a `nil` value is returned.
 
-###### Example
+##### Example
 
 ```sll
 (<- (... "file_write") stdout "Example Code\n")
 ```
 
-##### Cast (`::`)
+#### Cast (`::`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(:: |# object #| |# type 1 #| |# type 2 #| |# type 3 #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (::)
 ```
 
-###### Return Value
+#### Comma (`,`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
-(::)
+(, |# expression 1 #| |# expression 2 #| |# expression 3 #| |# returning expression #|)
 ```
 
-##### Comma (`,`)
-
-###### Syntax
-
-```sll
-(,)
-```
-
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 (,)
 ```
 
-##### Continue (`<<<`)
+#### Continue (`<<<`)
 
-###### Syntax
-
-```sll
-(<<<)
-```
-
-###### Return Value
-
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
 (<<<)
 ```
 
-##### Declaration (`#`)
+##### Return Value
 
-###### Syntax
+TBD
+
+##### Description
+
+TBD
+
+##### Example
+
+```sll
+(<<<)
+```
+
+#### Declaration (`#`)
+
+##### Syntax
+
+```sll
+(# |# variable 1 #| |# variable 2 #| |# variable 3 #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (#)
 ```
 
-###### Return Value
+#### Division (`/`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
-
-```sll
-(#)
-```
-
-##### Division (`/`)
-
-###### Syntax
+##### Syntax
 
 ```sll
 (/ |# dividend 1 #| |# divisor 1 #| |# divisor 2 #|)
 ```
 
-###### Return value
+##### Return value
 
 The quotient
 
-###### Description
+##### Description
 
 All of the operands are evaluated, the first operand (the dividend) is divided by all of the divisors and the quotient is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (/ 12 4) "\n")
 ```
 
-##### Equal (`==`)
+#### Equal (`==`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(== |# expression 1 #| |# expression 2 #| |# expression 3 #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (==)
 ```
 
-###### Return Value
+#### Exit (`@@@`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
-
-```sll
-(==)
-```
-
-##### Exit (`@@@`)
-
-###### Syntax
+##### Syntax
 
 ```sll
 (@@@)
 ```
 
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 (@@@)
 ```
 
-##### Export (`##`)
+#### Export (`##`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(## |# variable 1 #| |# variable 2 #| |# variable 3 #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (##)
 ```
 
-###### Return Value
+#### Floor Division (`//`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
-
-```sll
-(##)
-```
-
-##### Floor Division (`//`)
-
-###### Syntax
+##### Syntax
 
 ```sll
 (// |# dividend 1 #| |# divisor 1 #| |# divisor 2 #|)
 ```
 
-###### Return value
+##### Return value
 
 The quotient
 
-###### Description
+##### Description
 
 All of the operands are evaluated, the first operand (the dividend) is divided by all of the divisors, the result is rounded down and returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (// 13 4) "\n")
 ```
 
-##### For Loop (`->`)
+#### For Loop (`->`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(-> |# initialization #| |# condition #|
+	|# loop body #|
+)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (->)
 ```
 
-###### Return Value
+#### Function Declaration (`,,,`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
-
-```sll
-(->)
-```
-
-##### Function Declaration (`,,,`)
-
-###### Syntax
+##### Syntax
 
 ```sll
 (,,, |# argument 1 #| |# argument 2 #| |# argument 3 #|
@@ -623,15 +634,15 @@ TBD
 )
 ```
 
-###### Return value
+##### Return value
 
 An integer, which can be used to call the given function.
 
-###### Description
+##### Description
 
 The object defines a function. The first `n` consecutive identifiers are considered the arguments, and the rest of the operands (`operand_count - n`) are considered the body of the function.
 
-###### Example
+##### Example
 
 ```sll
 (= mult_func (,,, x y
@@ -640,9 +651,9 @@ The object defines a function. The first `n` consecutive identifiers are conside
 ))
 ```
 
-##### If (`?`)
+#### If (`?`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (? |# condition 1 #| |# code block 1 #|
@@ -652,15 +663,15 @@ The object defines a function. The first `n` consecutive identifiers are conside
 )
 ```
 
-###### Return value
+##### Return value
 
 No return value (`nil`)
 
-###### Description
+##### Description
 
 Condition blocks are evaluated in the given order until one evaluates to a non-zero value. The matching code block is executed. If every condition was false and an 'else' block is specified, it is executed.
 
-###### Example
+##### Example
 
 ```sll
 (= x 3)
@@ -673,67 +684,69 @@ Condition blocks are evaluated in the given order until one evaluates to a non-z
 })
 ```
 
-##### Import (`--`)
+#### Import (`--`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(-- "file_to_import_1.sll" "file_to_import_2.sll" "file_to_import_3.sll")
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (--)
 ```
 
-###### Return Value
+#### Infinite Loop (`><`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
-(--)
+(>< |# initialization #|
+	|# loop body #|
+)
 ```
 
-##### Infinite Loop (`><`)
-
-###### Syntax
-
-```sll
-(><)
-```
-
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 (><)
 ```
 
-##### Inline Function (`***`)
+#### Inline Function (`***`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (*** |# function body #|)
 ```
 
-###### Return value
+##### Return value
 
 The value returned by a return object, or `nil`
 
-###### Description
+##### Description
 
 This object works just like a function called without arguments. It can be used to write expressions more complex than [inline-if objects](#inline-if-).
 
-###### Example
+##### Example
 
 ```sll
 (***
@@ -743,9 +756,9 @@ This object works just like a function called without arguments. It can be used 
 )
 ```
 
-##### Inline If (`?:`)
+#### Inline If (`?:`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (?: |# condition 1 #| |# return value 1 #|
@@ -755,15 +768,15 @@ This object works just like a function called without arguments. It can be used 
 )
 ```
 
-###### Return value
+##### Return value
 
 The value returned by the given return block.
 
-###### Description
+##### Description
 
 Condition blocks are evaluated in the given order until one evaluates to a non-zero value. The matching code block is evaluated and the return value is returned. If every condition was false and an 'else' block is specified, it is evaluated and returned. Otherwise, if no 'else' block is specified, a `nil` value is returned.
 
-###### Example
+##### Example
 
 ```sll
 (= x 3)
@@ -774,283 +787,292 @@ Condition blocks are evaluated in the given order until one evaluates to a non-z
 ))
 ```
 
-##### Input (`<:`)
+#### Input (`<:`)
 
-###### Syntax
-
-```sll
-(<:)
-```
-
-###### Return Value
-
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
 (<:)
 ```
 
-##### Internal Function Declaration (`...`)
+##### Return Value
 
-###### Syntax
+TBD
+
+##### Description
+
+TBD
+
+##### Example
+
+```sll
+(<:)
+```
+
+#### Internal Function Declaration (`...`)
+
+##### Syntax
 
 ```sll
 (... "internal_function_name")
 ```
 
-###### Return value
+##### Return value
 
 An integer, which can be used to invoke the given internal function.
 
-###### Description
+##### Description
 
 The object declares an internal function. The operand is a string, which will be used to look-up the ID of the internal function. If the operand is not a string, the object behaves like an [operation list](#operation-list).
 
-###### Example
+##### Example
 
 ```sll
 (= parse_json (... "json_parse"))
 ```
 
-##### Left Bit Shift (`<<`)
+#### Left Bit Shift (`<<`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(<< |# object #| |# amount #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (<<)
 ```
 
-###### Return Value
+#### Length (`$`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
-(<<)
+($ |# object #|)
 ```
 
-##### Length (`$`)
-
-###### Syntax
-
-```sll
-($)
-```
-
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 ($)
 ```
 
-##### Less (`<`)
+#### Less (`<`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(< |# expression 1 #| |# expression 2 #| |# expression 3 #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (<)
 ```
 
-###### Return Value
+#### Less Or Equal (`<=`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
-(<)
+(<= |# expression 1 #| |# expression 2 #| |# expression 3 #|)
 ```
 
-##### Less Or Equal (`<=`)
-
-###### Syntax
-
-```sll
-(<=)
-```
-
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 (<=)
 ```
 
-##### Modulo (`%`)
+#### Modulo (`%`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (% |# dividend 1 #| |# divisor 1 #| |# divisor 2 #|)
 ```
 
-###### Return value
+##### Return value
 
 The remainder
 
-###### Description
+##### Description
 
 All of the operands are evaluated, the first operand (the dividend) is divided by all of the divisors and the remainder is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (% 13 4) "\n")
 ```
 
-##### More (`>`)
+#### More (`>`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(> |# expression 1 #| |# expression 2 #| |# expression 3 #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (>)
 ```
 
-###### Return Value
+#### More Or Equal (`>=`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
-(>)
+(>= |# expression 1 #| |# expression 2 #| |# expression 3 #|)
 ```
 
-##### More Or Equal (`>=`)
-
-###### Syntax
-
-```sll
-(>=)
-```
-
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 (>=)
 ```
 
-##### Multiplication (`*`)
+#### Multiplication (`*`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (* |# factor 1 #| |# factor 2 #| |# factor 3 #|)
 ```
 
-###### Return value
+##### Return value
 
 The product of the operands
 
-###### Description
+##### Description
 
 All of the operands are evaluated, multiplied together and the value is returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (* 5 4 3 2 1) "\n")
 ```
 
-##### Not Equal (`!=`)
+#### Not Equal (`!=`)
 
-###### Syntax
+##### Syntax
 
 ```sll
-(!=)
+(!= |# expression 1 #| |# expression 2 #| |# expression 3 #|)
 ```
 
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
-(!=)
+(= a 1)
+(= b 2)
+(= c 3)
+
+(? (!= a b c)
+	(:> "All numbers are unique!")
+)
 ```
 
-##### Or (`||`)
+#### Or (`||`)
 
-###### Syntax
+##### Syntax
 
 ```sll
-(||)
+(|| |# expression 1 #| |# expression 2 #| |# expression 3 #|)
 ```
 
-###### Return Value
+##### Return Value
 
-TBD
+`true` if at least one expression evaluate to `true`, otherwise `false`
 
-###### Description
+##### Description
 
-TBD
+All expressions are evaluated in the specified order. If one of the expressions evaluate to `true`, the evaluation process ends and `true` is returned. If all of the expressions evaluate to `false`, the value `false` is returned.
 
-###### Example
+##### Example
 
 ```sll
-(||)
+(= x 6)
+(? (|| (<= x 5) (>= x 10))
+	(:> x " is NOT between 5 and 10!\n")
+)
 ```
 
-##### Print (`:>`)
+#### Print (`:>`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (:> |# expression 1 #| |# expression 2 #| |# expression 3 #|)
 ```
 
-###### Return value
+##### Return value
 
 No return value (`nil`)
 
-###### Description
+##### Description
 
 Converts every argument to a string and writes it to the default output stream.
 
@@ -1060,147 +1082,147 @@ A print operator can be substituted by the following expression[^2] to obtain th
 (<- (... "file_write") -2 |# argument 1 #| |# argument 2 #| |# argument 3 #|)
 ```
 
-###### Example
+##### Example
 
 ```sll
 (:> "Array: " [1 2 3 4] "\n")
 ```
 
-##### Reference (`%%`)
+#### Reference (`%%`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(%% |# object #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (%%)
 ```
 
-###### Return Value
+#### Return (`@@`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
-(%%)
+(@@ |# object #|)
 ```
 
-##### Return (`@@`)
-
-###### Syntax
-
-```sll
-(@@)
-```
-
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 (@@)
 ```
 
-##### Right Bit Shift (`>>`)
+#### Right Bit Shift (`>>`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(>> |# object #| |# amount #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (>>)
 ```
 
-###### Return Value
+#### String Equal (`===`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
+##### Syntax
 
 ```sll
-(>>)
+(=== |# expression 1 #| |# expression 2 #| |# expression 3 #|)
 ```
 
-##### String Equal (`===`)
-
-###### Syntax
-
-```sll
-(===)
-```
-
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 (===)
 ```
 
-##### String Not Equal (`!==`)
+#### String Not Equal (`!==`)
 
-###### Syntax
+##### Syntax
+
+```sll
+(!== |# expression 1 #| |# expression 2 #| |# expression 3 #|)
+```
+
+##### Return Value
+
+TBD
+
+##### Description
+
+TBD
+
+##### Example
 
 ```sll
 (!==)
 ```
 
-###### Return Value
+#### Subtraction (`-`)
 
-TBD
-
-###### Description
-
-TBD
-
-###### Example
-
-```sll
-(!==)
-```
-
-##### Subtraction (`-`)
-
-###### Syntax
+##### Syntax
 
 ```sll
 (- |# minuend 1 #| |# subtrahend 1 #| |# subtrahend 2 #|)
 ```
 
-###### Return value
+##### Return value
 
 The difference of the operands
 
-###### Description
+##### Description
 
 All of the operands are evaluated, subtracted from the first operand and returned.
 
-###### Example
+##### Example
 
 ```sll
 (:> (- 6 1 2) "\n")
 ```
 
-##### Switch (`??`)
+#### Switch (`??`)
 
-###### Syntax
+##### Syntax
 
 ```sll
 (?: |# condition #|
@@ -1211,15 +1233,15 @@ All of the operands are evaluated, subtracted from the first operand and returne
 )
 ```
 
-###### Return value
+##### Return value
 
 No return value (`nil`)
 
-###### Description
+##### Description
 
 The condition expression is evaluated. If it is not an integer or character, the default case expression is evaluated (if it exists). Every case expression is evaluated. Any case expressions that are not integers or characters are skipped. The expression block is selected based on the condition value. If no code block is found and the default case expression exists, it is evaluated.
 
-###### Example
+##### Example
 
 ```sll
 (= x -1)
@@ -1230,23 +1252,25 @@ The condition expression is evaluated. If it is not an integer or character, the
 )
 ```
 
-##### While Loop (`>-`)
+#### While Loop (`>-`)
 
-###### Syntax
+##### Syntax
 
 ```sll
-(>-)
+(>- |# initialization #| |# condition #|
+	|# loop body #|
+)
 ```
 
-###### Return Value
+##### Return Value
 
 TBD
 
-###### Description
+##### Description
 
 TBD
 
-###### Example
+##### Example
 
 ```sll
 (>-)
