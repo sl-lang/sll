@@ -101,29 +101,49 @@ A 64-bit IEEE 754 floating-point number.
 
 #### Char
 
-An 8-bit unsigned integer representing a character.
+An 8-bit unsigned integer representing a single byte of data. It is denoted by a single character or [escape sequence](#escape-sequences) enclosed in a pair of apostrophes (`''`).
+
+If the apostrophes are empty or surround more than one character or escape sequence, a compile-time error is raised.
+
+##### Escape Sequences
+
+- `\"`: Quotation marks (`"`, ASCII 34)
+- `\'`: Apostrophe (`'`, ASCII 39)
+- `\\`: Backslash (`\`, ASCII 92)
+- `\f`: Form feed (ASCII 12)
+- `\n`: Line feed (ASCII 10)
+- `\r`: Carriage return (ASCII 13)
+- `\t`: Horizontal tab (ASCII 9)
+- `\v`: Vertical tab (ASCII 11)
+- `\x{value}`: Any character represented in base 16 padded to two digits. (ex. `\x41` maps to `A` and `\x0a` maps to a line feed (`\n`))
+
+Any other character following a backslash will raise a compile-time error.
 
 #### String
 
-An array of [characters](#char).
+An array of [characters](#char). It has to be surrounded by quotation marks (`""`).
+
+Strings support the same [escape sequences](#escape-sequences) as regular characters.
 
 #### Array
 
-An array of objects.
+An array of objects. It is denoted by an enclosing pair of square brackets (`[]`).
 
 #### Map
 
 Creates a mapping (association) between different keys and values. The keys and values can represent any objects.
 
+A map is constructed by a pair of angle brackets (`<>`) containing key-value pairs. Every object at an even index (starting with zero) is considered a key, whereas objects at odd indexes are values. There can not be two (strictly) equal keys in the same map.
+
 #### Identifier
 
-A name of a variable.
+A name of a variable. The name can consist of any combination of ASCII letter (uppercase and lowercase), digits or underscores (`_`). The only exceptions are that the name can not start with a digit. The other exception is that the name can not be one of the reserved [constants](#constant).
 
-An identifier evaluates to the value of the variable pointed to by the identifier.
+An identifier evaluates to the object of the variable pointed to by the identifier.
 
 #### Operation List
 
-A collection of objects to evaluate one by one.
+A collection of objects to evaluate in the given order. An operation list is marked by a pair of curly brackets (`{}`) containing zero or more expressions.
 
 An operation list evaluates to `nil` (zero).
 
