@@ -41,6 +41,49 @@ static sll_string_length_t _write_int(uint64_t v,sll_string_length_t i,sll_strin
 }
 
 
+static sll_string_length_t _write_char(sll_char_t c,sll_string_length_t i,sll_string_t* o){
+	if (c=='\"'||c=='\''||c=='\\'){
+		o->v[i]='\\';
+		o->v[i+1]=c;
+		return i+2;
+	}
+	else if (c=='\t'){
+		o->v[i]='\\';
+		o->v[i+1]='t';
+		return i+2;
+	}
+	else if (c=='\n'){
+		o->v[i]='\\';
+		o->v[i+1]='n';
+		return i+2;
+	}
+	else if (c=='\v'){
+		o->v[i]='\\';
+		o->v[i+1]='v';
+		return i+2;
+	}
+	else if (c=='\f'){
+		o->v[i]='\\';
+		o->v[i+1]='f';
+		return i+2;
+	}
+	else if (c=='\r'){
+		o->v[i]='\\';
+		o->v[i+1]='r';
+		return i+2;
+	}
+	else if (SLL_STRING_HEX_ESCAPE(c)){
+		o->v[i]='\\';
+		o->v[i+1]='x';
+		o->v[i+2]=(c>>4)+((c>>4)>9?87:48);
+		o->v[i+3]=(c&15)+((c&15)>9?87:48);
+		return i+4;
+	}
+	o->v[i]=c;
+	return i+1;
+}
+
+
 
 static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_string_t* o,sll_string_index_t i){
 	if (!a->rc){
@@ -62,49 +105,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 			if (q){
 				o->v[i]='\'';
-				i++;
-				sll_char_t c=a->dt.c;
-				if (c=='\"'||c=='\''||c=='\\'){
-					o->v[i]='\\';
-					o->v[i+1]=c;
-					i+=2;
-				}
-				else if (c=='\t'){
-					o->v[i]='\\';
-					o->v[i+1]='t';
-					i+=2;
-				}
-				else if (c=='\n'){
-					o->v[i]='\\';
-					o->v[i+1]='n';
-					i+=2;
-				}
-				else if (c=='\v'){
-					o->v[i]='\\';
-					o->v[i+1]='v';
-					i+=2;
-				}
-				else if (c=='\f'){
-					o->v[i]='\\';
-					o->v[i+1]='f';
-					i+=2;
-				}
-				else if (c=='\r'){
-					o->v[i]='\\';
-					o->v[i+1]='r';
-					i+=2;
-				}
-				else if (SLL_STRING_HEX_ESCAPE(c)){
-					o->v[i]='\\';
-					o->v[i+1]='x';
-					o->v[i+2]=(c>>4)+((c>>4)>9?87:48);
-					o->v[i+3]=(c&15)+((c&15)>9?87:48);
-					i+=4;
-				}
-				else{
-					o->v[i]=c;
-					i++;
-				}
+				i=_write_char(a->dt.c,i+1,o);
 				o->v[i]='\'';
 				return i+1;
 			}
@@ -115,48 +116,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 				o->v[i]='\"';
 				i++;
 				for (sll_string_length_t j=0;j<a->dt.s.l;j++){
-					sll_char_t c=a->dt.s.v[j];
-					if (c=='\"'||c=='\''||c=='\\'){
-						o->v[i]='\\';
-						o->v[i+1]=c;
-						i+=2;
-					}
-					else if (c=='\t'){
-						o->v[i]='\\';
-						o->v[i+1]='t';
-						i+=2;
-					}
-					else if (c=='\n'){
-						o->v[i]='\\';
-						o->v[i+1]='n';
-						i+=2;
-					}
-					else if (c=='\v'){
-						o->v[i]='\\';
-						o->v[i+1]='v';
-						i+=2;
-					}
-					else if (c=='\f'){
-						o->v[i]='\\';
-						o->v[i+1]='f';
-						i+=2;
-					}
-					else if (c=='\r'){
-						o->v[i]='\\';
-						o->v[i+1]='r';
-						i+=2;
-					}
-					else if (SLL_STRING_HEX_ESCAPE(c)){
-						o->v[i]='\\';
-						o->v[i+1]='x';
-						o->v[i+2]=(c>>4)+((c>>4)>9?87:48);
-						o->v[i+3]=(c&15)+((c&15)>9?87:48);
-						i+=4;
-					}
-					else{
-						o->v[i]=c;
-						i++;
-					}
+					i=_write_char(a->dt.s.v[j],i+1,o);
 				}
 				o->v[i]='\"';
 				i++;

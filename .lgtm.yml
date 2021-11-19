@@ -4,7 +4,6 @@ path_classifiers:
 queries:
   - include: "*"
   - exclude: cpp/complex-block
-  - exclude: cpp/complex-condition
   - exclude: cpp/long-switch
   - exclude: cpp/loop-variable-changed
   - exclude: cpp/poorly-documented-function

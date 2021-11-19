@@ -199,6 +199,7 @@ If the object is a mapping and there is more than one index, a list of values at
 (= array [0 1 2 3 4 5 6 7 8 9])
 (-> (= i 0) (< i ($ array)) {
 	(:> "Array at index " i " is equal to " (: array i) "\n")
+	(= i (+ i 1))
 })
 ```
 
@@ -268,7 +269,7 @@ The value of the second operand is evaluated and assigned to the variable pointe
 ##### Example
 
 ```sll
-(= variable "value" (:> "Extra expression"))
+(= name "John")
 ```
 
 #### Bitwise AND (`&`)
@@ -400,7 +401,14 @@ Moves to instruction pointer after the current innermost loop.
 ##### Example
 
 ```sll
-(@)
+(-> (= i 0) (< i 10) {
+	(:> "Number: " i "\n")
+	(? (== i 5) {
+		(:> "Early Exit!")
+		(@)
+	})
+	(= i (+ i 1))
+})
 ```
 
 #### Function Call (`<-`)
@@ -444,7 +452,11 @@ The given object is consequently casted to each of the given types. The new, cas
 ##### Example
 
 ```sll
-(::)
+(# int_type)
+(-- "types.sll")
+
+(= value 1.678)
+(= floored_value (:: value int_type))
 ```
 
 #### Comma (`,`)
@@ -466,7 +478,7 @@ All expression are evaluated an the value of the last one is returned.
 ##### Example
 
 ```sll
-(,)
+(= value (, (:> "Assigning '5' to variable value...") 5))
 ```
 
 #### Continue (`<<<`)
@@ -488,7 +500,15 @@ The instruction pointer is moved to the beginning of the loop, i.e. the just bef
 ##### Example
 
 ```sll
-(<<<)
+(-> (= i 0) (< i 10) {
+	(? (== i 5) {
+		(:> "Skipping 5!")
+		(= i (+ i 1))
+		(<<<)
+	})
+	(:> "Number: " i "\n")
+	(= i (+ i 1))
+})
 ```
 
 #### Declaration (`#`)
@@ -510,7 +530,10 @@ The variables are declared and not initialized. Their value is undefined.
 ##### Example
 
 ```sll
-(#)
+(# stdout)
+(-- "file.sll")
+
+(:> "Standard output file index: " stdout "\n")
 ```
 
 #### Division (`/`)
@@ -554,7 +577,11 @@ All of the expressions are evaluated sequentially. If a pair of expressions does
 ##### Example
 
 ```sll
-(==)
+(= age 20)
+
+(? (== age 20)
+	(:> "You are 20 years old!")
+)
 ```
 
 #### Exit (`@@@`)
@@ -576,7 +603,7 @@ The program is terminated and the `value` is casted to a 32-bit signed integer a
 ##### Example
 
 ```sll
-(@@@)
+(@@@ 0)
 ```
 
 #### Export (`##`)
@@ -598,7 +625,9 @@ Each of the variables are internally marked as exported and will not be removed 
 ##### Example
 
 ```sll
-(##)
+(= export_value 12345)
+
+(## export_value)
 ```
 
 #### Floor Division (`//`)
@@ -644,7 +673,10 @@ First, the initialization code is executed. Then, while the condition evaluates 
 ##### Example
 
 ```sll
-(->)
+(-> (= i 0) (< i 10) {
+	(:> "Number: " i '\n')
+	(= i (+ i 1))
+})
 ```
 
 #### Function Declaration (`,,,`)
@@ -717,16 +749,19 @@ Condition blocks are evaluated in the given order until one evaluates to a non-z
 
 ##### Return Value
 
-TBD
+No return value (`nil`)
 
 ##### Description
 
-TBD
+Each of the string arguments is treated as a file path. This can either be a built-in module name or an external file. If the file can not be found, a compile-time error is generated.
 
 ##### Example
 
 ```sll
-(--)
+(# write stdout)
+(-- "file.sll")
+
+(<- write stdout "Hello, World!\n")
 ```
 
 #### Infinite Loop (`><`)
@@ -750,7 +785,11 @@ First, the initialization code is executed. Then, the loop body is executed repe
 ##### Example
 
 ```sll
-(><)
+(>< (= i 0) {
+	(? (== i 10) (@))
+	(:> "Number: " i '\n')
+	(= i (+ i 1))
+})
 ```
 
 #### Inline Function (`***`)
@@ -775,6 +814,7 @@ This object works just like a function called without arguments. It can be used 
 (***
 	(-> (= i 0) (< i 10) {
 		(? (= i 5) (@@ i))
+		(= i (+ i 1))
 	})
 )
 ```
@@ -803,11 +843,11 @@ Condition blocks are evaluated in the given order until one evaluates to a non-z
 
 ```sll
 (= x 3)
-(:> (?:
+(:> "The number is " (?:
 	(< x 5) "below"
 	(> x 5) "above"
 	"equal"
-))
+) " five.\n")
 ```
 
 #### Internal Function Declaration (`...`)
@@ -864,16 +904,17 @@ The given objects is shifted left by a given amount. For integers, floats and ch
 
 ##### Return Value
 
-TBD
+The length of the object
 
 ##### Description
 
-TBD
+If the object has a storage type, the number of elements (length) of the given object is returned. Otherwise, `0` is returned.
 
 ##### Example
 
 ```sll
-($)
+(= arr [0 1 2 3 4 5 6 7 8 9])
+(:> "Length of array: " ($ arr) "\n")
 ```
 
 #### Less (`<`)
@@ -886,16 +927,19 @@ TBD
 
 ##### Return Value
 
-TBD
+If all of the expression get progressively bigger, `true` is returned, otherwise `false`
 
 ##### Description
 
-TBD
+All of the expressions are evaluated sequentially. If the first element in a pair of expressions is not smaller than the second one, the evaluation ends and `false` is returned. Otherwise, `true` is returned.
 
 ##### Example
 
 ```sll
-(<)
+(-> (= i 0) (< i 10) {
+	(:> "Number: " i '\n')
+	(= i (+ i 1))
+})
 ```
 
 #### Less Or Equal (`<=`)
@@ -908,16 +952,19 @@ TBD
 
 ##### Return Value
 
-TBD
+If all of the expression do not get progressively smaller, `true` is returned, otherwise `false`
 
 ##### Description
 
-TBD
+All of the expressions are evaluated sequentially. If the first element in a pair of expressions is bigger than the second one, the evaluation ends and `false` is returned. Otherwise, `true` is returned.
 
 ##### Example
 
 ```sll
-(<=)
+(-> (= i 0) (<= i 9) {
+	(:> "Digit: " i '\n')
+	(= i (+ i 1))
+})
 ```
 
 #### Modulo (`%`)
@@ -952,16 +999,22 @@ All of the operands are evaluated, the first operand (the dividend) is divided b
 
 ##### Return Value
 
-TBD
+If all of the expression get progressively bigger, `true` is returned, otherwise `false`
 
 ##### Description
 
-TBD
+All of the expressions are evaluated sequentially. If the first element in a pair of expressions is not bigger than the second one, the evaluation ends and `false` is returned. Otherwise, `true` is returned.
 
 ##### Example
 
 ```sll
-(>)
+(-> (= i 0) (< i 10) {
+	(?
+		(> i 4) (:> "Round up: " i "\n")
+		(:> "Round down: " i "\n")
+	)
+	(= i (+ i 1))
+})
 ```
 
 #### More Or Equal (`>=`)
@@ -974,16 +1027,22 @@ TBD
 
 ##### Return Value
 
-TBD
+If all of the expression do not get progressively bigger, `true` is returned, otherwise `false`
 
 ##### Description
 
-TBD
+All of the expressions are evaluated sequentially. If the first element in a pair of expressions is smaller than the second one, the evaluation ends and `false` is returned. Otherwise, `true` is returned.
 
 ##### Example
 
 ```sll
-(>=)
+(-> (= i 0) (< i 10) {
+	(?
+		(>= i 5) (:> "Round up: " i "\n")
+		(:> "Round down: " i "\n")
+	)
+	(= i (+ i 1))
+})
 ```
 
 #### Multiplication (`*`)
@@ -1018,21 +1077,20 @@ All of the operands are evaluated, multiplied together and the value is returned
 
 ##### Return Value
 
-TBD
+If each pair of expressions evaluates to two different values, `true` is returned, otherwise `false`
 
 ##### Description
 
-TBD
+All of the expressions are evaluated sequentially. If a pair of expressions evaluates to the same value, the evaluation ends and `false` is returned. Otherwise, `true` is returned.
 
 ##### Example
 
 ```sll
 (= a 1)
 (= b 2)
-(= c 3)
 
-(? (!= a b c)
-	(:> "All numbers are unique!")
+(? (!= a b)
+	(:> "Two different numbers!")
 )
 ```
 
@@ -1094,21 +1152,27 @@ A print operator can be substituted by the following expression[^2] to obtain th
 ##### Syntax
 
 ```sll
+(%%)
+
+OR
+
 (%% |# object #|)
 ```
 
 ##### Return Value
 
-TBD
+A handle to the object pointer, or a null pointer
 
 ##### Description
 
-TBD
+If there are no arguments, a handle to a null pointer is returned. Otherwise, a handle to the memory location of the given object is returned.
 
 ##### Example
 
 ```sll
-(%%)
+(= x 5)
+
+(:> "Address of 'x' in memory: " (%% x) '\n')
 ```
 
 #### Return (`@@`)
@@ -1121,16 +1185,18 @@ TBD
 
 ##### Return Value
 
-TBD
+Execution is returned back to the function call with the return value of `object`
 
 ##### Description
 
-TBD
+The instruction pointer is moved back to the place of the enclosing function call, which returns the `object`.
 
 ##### Example
 
 ```sll
-(@@)
+(= mult (,,, a b {
+	(@@ (* a b))
+}))
 ```
 
 #### Right Bit Shift (`>>`)
@@ -1152,7 +1218,7 @@ The given objects is shifted right by a given amount. For integers, floats and c
 ##### Example
 
 ```sll
-(>>)
+(:> "Bit 16 divided by 4: " (>> 16 2) "\n")
 ```
 
 #### String Equal (`===`)
@@ -1174,7 +1240,11 @@ All of the expressions are evaluated sequentially. If a pair of expressions does
 ##### Example
 
 ```sll
-(===)
+(= var 5.0)
+
+(? (=== var 5.0)
+	(:> "Float with a value of 5!")
+)
 ```
 
 #### String Not Equal (`!==`)
@@ -1187,16 +1257,20 @@ All of the expressions are evaluated sequentially. If a pair of expressions does
 
 ##### Return Value
 
-TBD
+If each pair of expressions evaluates to two different types or values, `true` is returned, otherwise `false`
 
 ##### Description
 
-TBD
+All of the expressions are evaluated sequentially. If a pair of expressions evaluates to the same type and the same value, the evaluation ends and `false` is returned. Otherwise, `true` is returned.
 
 ##### Example
 
 ```sll
-(!==)
+(= var 5)
+
+(? (!== var 5.0)
+	(:> "'var' should be a float with a value of 5!")
+)
 ```
 
 #### Subtraction (`-`)
@@ -1274,5 +1348,8 @@ First, the initialization code is executed. Then, the loop body is evaluated onc
 ##### Example
 
 ```sll
-(>-)
+(>- (= i 0) (<= i 9) {
+	(:> "Digit: " i '\n')
+	(= i (+ i 1))
+})
 ```
