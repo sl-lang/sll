@@ -59,7 +59,7 @@ The building-block of the Sl Language is called an [object](#objects). An object
 
 Single-line comments begin with a semicolon, while block comments have to be surrounded with special symbols.
 
-``` sll
+```sll
 ; Single-line comment
 
 |# Block comment
@@ -909,7 +909,7 @@ The given objects is shifted left by a given amount. For integers, floats and ch
 ##### Example
 
 ```sll
-(<<)
+(:> "Bit 16 multiplied by 4: " (<< 16 2) "\n")
 ```
 
 #### Length (`$`)
@@ -1318,7 +1318,7 @@ All of the operands are evaluated, subtracted from the first operand and returne
 ##### Syntax
 
 ```sll
-(?: |# condition #|
+(?? |# condition #|
 	|# case 1 #| |# expression 1 #|
 	|# case 2 #| |# expression 2 #|
 	|# case 3 #| |# expression 3 #|
