@@ -4,17 +4,13 @@
 
 Sll is a **general-purpose programming language** aimed at **all developers** looking for a **non-OOP** language with heavy compile-time optimization (and therefor **better runtime performance**).
 
-## What can it be used for?
-
-Sll can be used for many different applications, from back-end server-side software development to complex AI-driven path-finding systems.
-
-## Key features of Sll
+## Key Features of Sll
 
 - Cross-platform (Tested on Windows 10 64-bit and multiple Linux x64 distributions)
 - Easy to learn (Similar to Lisp)
 - Heavy compile-time optimization
 
-## Sll syntax
+## Sll Syntax
 
 The syntax of the Sl Language is similar to Common Lisp (and other Lisp dialects).
 
@@ -93,11 +89,13 @@ By default, integers are represented in base 10, however, by using prefixes, it 
 
 Integers are case-insensitive. The prefixes, as well as the symbols (in case of base 16) can be both uppercase and lowercase.
 
-For clarity purposes, integer digits can be split by underscores (`_`). The only exception is that a number **can not** begin with an underscore, because it would be recognized as an identifier.
+For clarity purposes, integer digits can be split by underscores (`_`). The only exception is that a number **cannot** begin with an underscore, because it would be recognized as an identifier.
 
 #### Float
 
-A 64-bit IEEE 754 floating-point number.
+A 64-bit IEEE 754 floating-point number. It consists of an option number followed by a period (`.`) and another number. The second number is not required if the first one is present. The entire expression can be followed by an `e` or `E` (denoting the scientific notation) combined with a signed integer representing an exponent. The sign of the number must be located before the first number (or period).
+
+Likewise, with integers, digits can be split by underscores (`_`) for clarity purposes. The only exceptions are that an underscore cannot begin the number nor the exponent.
 
 #### Char
 
@@ -133,11 +131,11 @@ An array of objects. It is denoted by an enclosing pair of square brackets (`[]`
 
 Creates a mapping (association) between different keys and values. The keys and values can represent any objects.
 
-A map is constructed by a pair of angle brackets (`<>`) containing key-value pairs. Every object at an even index (starting with zero) is considered a key, whereas objects at odd indexes are values. There can not be two (strictly) equal keys in the same map.
+A map is constructed by a pair of angle brackets (`<>`) containing key-value pairs. Every object at an even index (starting with zero) is considered a key, whereas objects at odd indexes are values. There cannot be two (strictly) equal keys in the same map.
 
 #### Identifier
 
-A name of a variable. The name can consist of any combination of ASCII letter (uppercase and lowercase), digits or underscores (`_`). The only exceptions are that the name can not start with a digit. The other exception is that the name can not be one of the reserved [constants](#constant).
+A name of a variable. The name can consist of any combination of ASCII letter (uppercase and lowercase), digits or underscores (`_`). The only exceptions are that the name cannot start with a digit. The other exception is that the name cannot be one of the reserved [constants](#constant).
 
 An identifier evaluates to the object of the variable pointed to by the identifier.
 
@@ -493,7 +491,7 @@ The last value of the expression
 
 ##### Description
 
-All expression are evaluated an the value of the last one is returned.
+All expression are evaluated and the value of the last one is returned.
 
 ##### Example
 
@@ -773,7 +771,7 @@ No return value (`nil`)
 
 ##### Description
 
-Each of the string arguments is treated as a file path. This can either be a built-in module name or an external file. If the file can not be found, a compile-time error is generated.
+Each of the string arguments is treated as a file path. This can either be a built-in module name or an external file. If the file cannot be found, a compile-time error is generated.
 
 ##### Example
 
@@ -857,7 +855,7 @@ The value returned by the given return block.
 
 ##### Description
 
-Condition blocks are evaluated in the given order until one evaluates to a non-zero value. The matching code block is evaluated and the return value is returned. If every condition was false and an 'else' block is specified, it is evaluated and returned. Otherwise, if no 'else' block is specified, a `nil` value is returned.
+Condition blocks are evaluated in the given order until one evaluates to a non-zero value. The matching code block is evaluated, and the return value is returned. If every condition was false and an 'else' block is specified, it is evaluated and returned. Otherwise, if no 'else' block is specified, a `nil` value is returned.
 
 ##### Example
 
@@ -962,7 +960,7 @@ All of the expressions are evaluated sequentially. If the first element in a pai
 })
 ```
 
-#### Less Or Equal (`<=`)
+#### Less or Equal (`<=`)
 
 ##### Syntax
 
@@ -1037,7 +1035,7 @@ All of the expressions are evaluated sequentially. If the first element in a pai
 })
 ```
 
-#### More Or Equal (`>=`)
+#### More or Equal (`>=`)
 
 ##### Syntax
 
