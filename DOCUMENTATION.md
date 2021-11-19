@@ -167,16 +167,39 @@ OR
 
 ##### Return Value
 
-TBD
+Value selected from the given object by the arguments, or, if the object does not support item indexing, the same object
 
 ##### Description
 
-TBD
+If the object does not support item indexing (i.e. it is not of a storage type) the same object is returned. Otherwise, the return value depends on the number of arguments.
+
+If there is only one argument, the value at that index in the given object is returned.
+
+A container refers to a string if the object is a string, otherwise it is an array.
+
+If there are two arguments, all of the values between the `start index` and `end index`. If `start index` is bigger than or equal to `end index`, an empty container is returned.
+
+Otherwise, when all of the 3 arguments are supplied, every value between `start index` and `end index`, `increment` indexes apart is returned in a container. If `increment` is equal to zero, an empty container is returned.
+
+If the object is a mapping and there is more than one index, a list of values at these indexes is returned. The following two examples evaluate to the same value:
+```sll
+(= map <'a' 0 'b' 1 'c' 2 'd' 3>)
+
+(= x (: map 'a' 'c'))
+|# is the same as #|
+(= x [
+	(: map 'a')
+	(: map 'c')
+])
+```
 
 ##### Example
 
 ```sll
-(:)
+(= array [0 1 2 3 4 5 6 7 8 9])
+(-> (= i 0) (< i ($ array)) {
+	(:> "Array at index " i " is equal to " (: array i) "\n")
+})
 ```
 
 #### Addition (`+`)
@@ -368,11 +391,11 @@ The first (and only) operand is evaluated, its value is converted to a boolean a
 
 ##### Return Value
 
-TBD
+Moves the execution outside of the current loop
 
 ##### Description
 
-TBD
+Moves to instruction pointer after the current innermost loop.
 
 ##### Example
 
@@ -412,11 +435,11 @@ This object calls the function specified by the first operand with the arguments
 
 ##### Return Value
 
-TBD
+The casted object
 
 ##### Description
 
-TBD
+The given object is consequently casted to each of the given types. The new, casted object is returned.
 
 ##### Example
 
@@ -434,11 +457,11 @@ TBD
 
 ##### Return Value
 
-TBD
+The last value of the expression
 
 ##### Description
 
-TBD
+All expression are evaluated an the value of the last one is returned.
 
 ##### Example
 
@@ -456,11 +479,11 @@ TBD
 
 ##### Return Value
 
-TBD
+Execution is directed to the beginning of the loop
 
 ##### Description
 
-TBD
+The instruction pointer is moved to the beginning of the loop, i.e. the just before the condition.
 
 ##### Example
 
@@ -478,11 +501,11 @@ TBD
 
 ##### Return Value
 
-TBD
+No return value (`nil`)
 
 ##### Description
 
-TBD
+The variables are declared and not initialized. Their value is undefined.
 
 ##### Example
 
@@ -522,11 +545,11 @@ All of the operands are evaluated, the first operand (the dividend) is divided b
 
 ##### Return Value
 
-TBD
+If all of the expression are equal, `true` is returned, otherwise `false`
 
 ##### Description
 
-TBD
+All of the expressions are evaluated sequentially. If a pair of expressions does not evaluate to the same value, the evaluation ends and `false` is returned. If all of the evaluated expression are equal, `true` is returned.
 
 ##### Example
 
@@ -539,16 +562,16 @@ TBD
 ##### Syntax
 
 ```sll
-(@@@)
+(@@@ |# value #|)
 ```
 
 ##### Return Value
 
-TBD
+Execution of the program ends with the value as the return code
 
 ##### Description
 
-TBD
+The program is terminated and the `value` is casted to a 32-bit signed integer and returned as the return code.
 
 ##### Example
 
@@ -566,11 +589,11 @@ TBD
 
 ##### Return Value
 
-TBD
+No return value (`nil`)
 
 ##### Description
 
-TBD
+Each of the variables are internally marked as exported and will not be removed by the optimizer.
 
 ##### Example
 
@@ -612,11 +635,11 @@ All of the operands are evaluated, the first operand (the dividend) is divided b
 
 ##### Return Value
 
-TBD
+No return value (`nil`)
 
 ##### Description
 
-TBD
+First, the initialization code is executed. Then, while the condition evaluates to `true`, the loop body is executed.
 
 ##### Example
 
@@ -718,11 +741,11 @@ TBD
 
 ##### Return Value
 
-TBD
+No return value (`nil`)
 
 ##### Description
 
-TBD
+First, the initialization code is executed. Then, the loop body is executed repeatedly.
 
 ##### Example
 
@@ -819,11 +842,11 @@ The object declares an internal function. The operand is a string, which will be
 
 ##### Return Value
 
-TBD
+The new object
 
 ##### Description
 
-TBD
+The given objects is shifted left by a given amount. For integers, floats and chars, this is equivalent to multiplying by `2**(amount)`. For arrays, this means that `amount` zeros are prepended to the array.
 
 ##### Example
 
@@ -1120,11 +1143,11 @@ TBD
 
 ##### Return Value
 
-TBD
+The new object
 
 ##### Description
 
-TBD
+The given objects is shifted right by a given amount. For integers, floats and chars, this is equivalent to dividing by `2**(amount)`. For arrays, this means that `amount` elements are removed from the beginning of the array.
 
 ##### Example
 
@@ -1142,11 +1165,11 @@ TBD
 
 ##### Return Value
 
-TBD
+If all of the expression (and their types) are equal, `true` is returned, otherwise `false`
 
 ##### Description
 
-TBD
+All of the expressions are evaluated sequentially. If a pair of expressions does not evaluate to the same type or the same value, the evaluation ends and `false` is returned. If all of the evaluated expression have the same type and are equal, `true` is returned.
 
 ##### Example
 
@@ -1242,11 +1265,11 @@ The condition expression is evaluated. If it is not an integer or character, the
 
 ##### Return Value
 
-TBD
+No return value (`nil`)
 
 ##### Description
 
-TBD
+First, the initialization code is executed. Then, the loop body is evaluated once, after which, while the condition evaluates to `true`, the loop body is executed again.
 
 ##### Example
 
