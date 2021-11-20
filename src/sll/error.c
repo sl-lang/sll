@@ -3,9 +3,9 @@
 #include <sll/error.h>
 #include <sll/file.h>
 #include <sll/memory.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
-#include <stdio.h>
 
 
 
@@ -14,31 +14,31 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 		switch (e->t){
 			default:
 			case SLL_ERROR_UNKNOWN:
-				printf("Unknown Error: %c%c\n",(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
+				sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Error: %c%c\n"),(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
 				return;
 			case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-				printf("Unknown Internal Function '%s'\n",e->dt.str);
+				sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Internal Function '%s'\n"),e->dt.str);
 				return;
 			case SLL_ERROR_NO_STACK:
-				printf("No Internal Stack\n");
+				sll_file_write_format(sll_stdout,SLL_CHAR("No Internal Stack\n"));
 				return;
 			case SLL_ERROR_DIVISION_BY_ZERO:
-				printf("Division By Zero\n");
+				sll_file_write_format(sll_stdout,SLL_CHAR("Division By Zero\n"));
 				return;
 			case SLL_ERROR_INVALID_FILE_FORMAT:
-				printf("Invalid File Format\n");
+				sll_file_write_format(sll_stdout,SLL_CHAR("Invalid File Format\n"));
 				return;
 			case SLL_ERROR_INVALID_INSTRUCTION:
-				printf("Invalid Instruction: 0x%.2hhx\n",e->dt.it);
+				sll_file_write_format(sll_stdout,SLL_CHAR("Invalid Instruction: 0x%.2hhx\n"),e->dt.it);
 				return;
 			case SLL_ERROR_STACK_CORRUPTED:
-				printf("Stack Corruption Detected\n");
+				sll_file_write_format(sll_stdout,SLL_CHAR("Stack Corruption Detected\n"));
 				return;
 			case SLL_ERROR_INVALID_INSTRUCTION_INDEX:
-				printf("Instruction Index Out of Bounds\n");
+				sll_file_write_format(sll_stdout,SLL_CHAR("Instruction Index Out of Bounds\n"));
 				return;
 			case SLL_ERROR_INVALID_STACK_INDEX:
-				printf("Stack Index Out of Bounds\n");
+				sll_file_write_format(sll_stdout,SLL_CHAR("Stack Index Out of Bounds\n"));
 				return;
 		}
 	}
@@ -93,109 +93,109 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 	putchar('\n');
 	switch (e->t){
 		default:
-			printf("Unknown Error: %c%c\n",(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Error: %c%c\n"),(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
 			return;
 		case SLL_ERROR_INTERNAL_STACK_OVERFLOW:
-			printf("Internal Stack Overflow\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Internal Stack Overflow\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_OPEN_PARENTHESES:
-			printf("Unmatched Left Parentheses\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Left Parentheses\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_CLOSE_PARENTHESES:
-			printf("Unmatched Right Parentheses\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Right Parentheses\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_OPEN_QUOTE:
-			printf("Unmatched Block Quote\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Block Quote\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_CURLY_OPEN_BRACKETS:
-			printf("Unmatched Left Curly Brackets\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Left Curly Brackets\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_CURLY_CLOSE_BRACKETS:
-			printf("Unmatched Right Curly Brackets\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Right Curly Brackets\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_ARRAY_OPEN_BRACKETS:
-			printf("Unmatched Left Array Brackets\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Left Array Brackets\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_ARRAY_CLOSE_BRACKETS:
-			printf("Unmatched Right Array Brackets\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Right Array Brackets\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_MAP_OPEN_BRACKETS:
-			printf("Unmatched Left Map Brackets\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Left Map Brackets\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_MAP_CLOSE_BRACKETS:
-			printf("Unmatched Right Map Brackets\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Right Map Brackets\n"));
 			return;
 		case SLL_ERROR_UNMATCHED_QUOTES:
 			if (t=='\''){
-				printf("Unmatched Single Quotes\n");
+				sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Single Quotes\n"));
 			}
 			else{
-				printf("Unmatched Double Quotes\n");
+				sll_file_write_format(sll_stdout,SLL_CHAR("Unmatched Double Quotes\n"));
 			}
 			return;
 		case SLL_ERROR_EMPTY_CHAR_STRING:
-			printf("Empty Character String\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Empty Character String\n"));
 			return;
 		case SLL_ERROR_UNTERMINATED_CHAR_STRING:
-			printf("Character String too Long\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Character String too Long\n"));
 			return;
 		case SLL_ERROR_UNTERMINATED_ESCAPE_SEQUENCE:
-			printf("Unterminated Escape Sequence\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unterminated Escape Sequence\n"));
 			return;
 		case SLL_ERROR_UNKNOWN_ESCAPE_CHARACTER:
-			printf("Unknown Escape Character: '%c'\n",t);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Escape Character: '%c'\n"),t);
 			return;
 		case SLL_ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE:
-			printf("Unterminated Hexadecimal Escape Sequence\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unterminated Hexadecimal Escape Sequence\n"));
 			return;
 		case SLL_ERROR_UNKNOWN_HEXADECIMAL_CHARCTER:
-			printf("Unknown Hexadecimal Character: '%c'\n",t);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Hexadecimal Character: '%c'\n"),t);
 			return;
 		case SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER:
-			printf("Unknown Decimal Character: '%c'\n",t);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Decimal Character: '%c'\n"),t);
 			return;
 		case SLL_ERROR_UNKNOWN_OCTAL_CHARCTER:
-			printf("Unknown Octal Character: '%c'\n",t);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Octal Character: '%c'\n"),t);
 			return;
 		case SLL_ERROR_UNKNOWN_BINARY_CHARCTER:
-			printf("Unknown Binary Character: '%c'\n",t);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Binary Character: '%c'\n"),t);
 			return;
 		case SLL_ERROR_UNKNOWN_SYMBOL:
 			*sp=0;
-			printf("Unknown Symbol: '%s'\n",sym);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Symbol: '%s'\n"),sym);
 			sll_deallocate(sym);
 			return;
 		case SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
-			printf("Unknown Identifier Character: '%c'\n",t);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Identifier Character: '%c'\n"),t);
 			return;
 		case SLL_ERROR_UNEXPECTED_CHARACTER:
-			printf("Unexpected Character: '%c'\n",t);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unexpected Character: '%c'\n"),t);
 			return;
 		case SLL_ERROR_SYMBOL_TOO_LONG:
-			printf("Symbol Too Long\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Symbol Too Long\n"));
 			return;
 		case SLL_ERROR_NO_SYMBOL:
-			printf("Expression Without a Symbol\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Expression Without a Symbol\n"));
 			return;
 		case SLL_ERROR_TOO_MANY_ARGUMENTS:
-			printf("Too Many Arguments\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Too Many Arguments\n"));
 			return;
 		case SLL_ERROR_ARRAY_TOO_LONG:
-			printf("Array Too Long\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Array Too Long\n"));
 			return;
 		case SLL_ERROR_MAP_TOO_LONG:
-			printf("Map Too Long\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Map Too Long\n"));
 			return;
 		case SLL_ERROR_UNKNOWN_IDENTIFIER:
 			*sp=0;
-			printf("Unknown Identifier '%s'\n",sym);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Identifier '%s'\n"),sym);
 			sll_deallocate(sym);
 			return;
 		case SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
-			printf("Internal Function Name Too Long\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Internal Function Name Too Long\n"));
 			return;
 		case SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII:
-			printf("Internal Function Names Must be ASCII\n");
+			sll_file_write_format(sll_stdout,SLL_CHAR("Internal Function Names Must be ASCII\n"));
 			return;
 	}
 }

@@ -486,6 +486,15 @@ INTERNAL_FUNCTION("sys_arg_get_count",sll_api_sys_arg_get_count_raw,0|0);
 
 
 
+__SLL_API_TYPE_sll_api_sys_get_executable sll_api_sys_get_executable(__SLL_API_ARGS_sll_api_sys_get_executable);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_get_executable_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
+	sll_runtime_object_t* out=sll_api_sys_get_executable();
+	return out;
+}
+INTERNAL_FUNCTION("sys_get_executable",sll_api_sys_get_executable_raw,0|0);
+
+
+
 __SLL_API_TYPE_sll_api_sys_get_platform sll_api_sys_get_platform(__SLL_API_ARGS_sll_api_sys_get_platform);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_get_platform_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	sll_runtime_object_t* out=sll_api_sys_get_platform();

@@ -36,6 +36,15 @@ __API_FUNC_DECL(sys_arg_get_count);
 
 /*~~DOCS~~
 TYPE api optimizable
+FUNC sll_api_sys_get_executable
+DESC Docs!
+RET O Docs!*/
+__API_FUNC_DECL(sys_get_executable);
+
+
+
+/*~~DOCS~~
+TYPE api optimizable
 FUNC sll_api_sys_get_platform
 DESC Docs!
 RET O Docs!*/

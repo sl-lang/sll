@@ -15,6 +15,7 @@
 
 static sll_integer_t _sys_argc=0;
 static sll_runtime_object_t** _sys_argv=NULL;
+static sll_runtime_object_t _sys_e={0,SLL_RUNTIME_OBJECT_TYPE_STRING,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.s=SLL_INIT_STRING_STRUCT}};
 static sll_runtime_object_t _sys_p={0,SLL_RUNTIME_OBJECT_TYPE_STRING,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.s=SLL_INIT_STRING_STRUCT}};
 static char _sys_end=0;
 
@@ -27,6 +28,10 @@ static void _sys_free_data(void){
 		}
 		sll_deallocate(_sys_argv);
 		_sys_argv=NULL;
+	}
+	if (_sys_e.dt.s.l){
+		sll_deinit_string(&(_sys_e.dt.s));
+		_sys_e.dt.s.l=0;
 	}
 	if (_sys_p.dt.s.l){
 		sll_deinit_string(&(_sys_p.dt.s));
@@ -82,6 +87,20 @@ __API_FUNC(sys_arg_get){
 
 __API_FUNC(sys_arg_get_count){
 	return _sys_argc;
+}
+
+
+
+__API_FUNC(sys_get_executable){
+	if (!_sys_e.dt.s.l){
+		sll_string_from_pointer(sll_platform_string,&(_sys_e.dt.s));
+		if (!_sys_end){
+			sll_register_cleanup(_sys_free_data);
+			_sys_end=1;
+		}
+	}
+	SLL_ACQUIRE(&_sys_e);
+	return &_sys_e;
 }
 
 

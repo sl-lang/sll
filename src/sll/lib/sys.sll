@@ -3,4 +3,6 @@
 (= argc (<- (... "sys_arg_get_count")))
 (= argv (... "sys_arg_get"))
 
-(## platform argc argv)
+(= executable (<- (... "sys_get_executable")))
+
+(## platform argc argv executable)
