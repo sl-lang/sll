@@ -356,10 +356,9 @@ def generate_header(h_dt,cm):
 				o+=b"..."
 				void=False
 				break
-			else:
-				o+=a[:-len(a.split(b" ")[-1])].strip()
-				if (len(a[:-len(a.split(b" ")[-1])].strip())>0):
-					void=False
+			o+=a[:-len(a.split(b" ")[-1])].strip()
+			if (len(a[:-len(a.split(b" ")[-1])].strip())>0):
+				void=False
 		if (void):
 			o+=b"void"
 		o+=b");"

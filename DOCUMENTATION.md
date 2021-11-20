@@ -1,6 +1,6 @@
 # Overview
 
-## What is Sll?
+## What is Sll
 
 Sll is a **general-purpose programming language** aimed at **all developers** looking for a **non-OOP** language with heavy compile-time optimization (and therefor **better runtime performance**).
 
@@ -1153,7 +1153,7 @@ No return value (`nil`)
 
 Converts every argument to a string and writes it to the default output stream.
 
-A print operator can be substituted by the following expression[^2] to obtain the number of bytes written:
+A print operator can be substituted by the following expression to obtain the number of bytes written:
 
 ```sll
 (<- (... "file_write") -2 |# argument 1 #| |# argument 2 #| |# argument 3 #|)
