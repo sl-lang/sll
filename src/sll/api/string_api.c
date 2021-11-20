@@ -116,7 +116,7 @@ static sll_string_length_t _object_to_string(const sll_runtime_object_t* a,sll_b
 				o->v[i]='\"';
 				i++;
 				for (sll_string_length_t j=0;j<a->dt.s.l;j++){
-					i=_write_char(a->dt.s.v[j],i+1,o);
+					i=_write_char(a->dt.s.v[j],i,o);
 				}
 				o->v[i]='\"';
 				i++;

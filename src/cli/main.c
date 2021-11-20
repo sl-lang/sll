@@ -732,9 +732,6 @@ _read_file_argument:
 		if (fl&FLAG_USE_COLORS){
 			PRINT_STATIC_STR("  Use Colors\n");
 		}
-		if (fl&FLAG_VERBOSE){
-			PRINT_STATIC_STR("  Verbose Mode\n");
-		}
 		PRINT_STATIC_STR("Include Path: \n  - '");
 		uint32_t i=0;
 		while (i<i_fpl){
