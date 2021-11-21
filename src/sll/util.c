@@ -258,10 +258,10 @@ __SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d){
 		uint64_t v=((*sp)-0x101010101010101ull)&0x8080808080808080ull&(~(*sp));
 		if (v){
 			SLL_ASSERT(FIND_FIRST_SET_BIT(v)>6&&(FIND_FIRST_SET_BIT(v)&7)==7);
-			v=FIND_FIRST_SET_BIT(v)+1;
-			o=(void*)(((uint64_t)op)+(v>>3)-1);
-			if (v>8){
-				v-=8;
+			v=FIND_FIRST_SET_BIT(v);
+			o=(void*)(((uint64_t)op)+(v>>3));
+			if (v>7){
+				v-=7;
 				*op=((*op)&(0xffffffffffffffffull<<v))|((*sp)&((1ull<<v)-1));
 			}
 			return o;
