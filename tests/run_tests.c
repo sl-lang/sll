@@ -445,14 +445,14 @@ int main(int argc,const char** argv){
 		to_fp[j]=e_fp[j];
 		td_fp[j]=e_fp[j];
 	}
-	SLL_COPY_STRING_NULL("/tmp_in",ti_fp+i);
-	SLL_COPY_STRING_NULL("/tmp_out",to_fp+i);
+	SLL_COPY_STRING_NULL(SLL_CHAR("/tmp_in"),ti_fp+i);
+	SLL_COPY_STRING_NULL(SLL_CHAR("/tmp_out"),to_fp+i);
 #ifdef _MSC_VER
 	if (argc==2){
 		return !execute_test(argv[1][0]-1);
 	}
 #endif
-	SLL_COPY_STRING_NULL("/../tests/data/",td_fp+i);
+	SLL_COPY_STRING_NULL(SLL_CHAR("/../tests/data/"),td_fp+i);
 	test_result_t dt={
 		0,
 		0,
