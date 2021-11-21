@@ -1,10 +1,10 @@
+%YAML 1.2
+---
 # This is a patched version of the default Markdown Syntax provied by Sublime Text.
 # Sourced from https://github.com/sublimehq/Packages/blob/master/Markdown/Markdown.sublime-syntax
 
-%YAML 1.2
----
 # http://www.sublimetext.com/docs/3/syntax.html
-name: Markdown
+name: Markdown (with Sll)
 file_extensions:
   - md
   - mdown

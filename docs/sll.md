@@ -410,7 +410,7 @@ The first (and only) operand is evaluated, its value is converted to a boolean a
 
 ##### Return value
 
-The inverted value
+`true` if the boolean value of the expression is zero, otherwise `false`
 
 ##### Description
 

@@ -1,5 +1,5 @@
 %YAML 1.2
-name: SLL
+name: Sll
 file_extensions:
   - sll
 scope: source.sll
