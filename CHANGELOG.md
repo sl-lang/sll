@@ -13,6 +13,7 @@
 - Sandbox flags (`SLL_SANDBOX_FLAG_DISABLE_FILE_IO`, `SLL_SANDBOX_FLAG_ENABLE_STDIN_IO`, `SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO` and `SLL_SANDBOX_FLAG_DISABLE_PATH_API`) ([#97])
 - Secure sandbox API: `sll_get_sandbox_flag` and `sll_set_sandbox_flags` ([#97])
 - `sll_api_sys_get_executable` and the `executable` variable in `sys.sll`
+- Type-check (typeof) operator (`(:?)`) ([#74])
 
 ### Changed
 
@@ -1052,6 +1053,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#78]: https://github.com/sl-lang/sll/issues/78
 [#77]: https://github.com/sl-lang/sll/issues/77
 [#76]: https://github.com/sl-lang/sll/issues/76
+[#74]: https://github.com/sl-lang/sll/issues/74
 [#71]: https://github.com/sl-lang/sll/issues/71
 [#69]: https://github.com/sl-lang/sll/issues/69
 [#67]: https://github.com/sl-lang/sll/issues/67

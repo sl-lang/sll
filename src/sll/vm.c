@@ -512,6 +512,15 @@ _cleanup_jump_table:;
 					*tos=n;
 					break;
 				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF:
+				{
+					sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
+					sll_runtime_object_t* n=sll_static_int[SLL_RUNTIME_OBJECT_GET_TYPE(*tos)];
+					SLL_ACQUIRE(n);
+					SLL_RELEASE(*tos);
+					*tos=n;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				{
 					si--;

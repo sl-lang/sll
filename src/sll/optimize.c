@@ -860,6 +860,7 @@ static sll_object_t* _check_remove(sll_object_t* o,sll_object_t* p,optimizer_dat
 		case SLL_OBJECT_TYPE_STRICT_EQUAL:
 		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
 		case SLL_OBJECT_TYPE_CAST:
+		case SLL_OBJECT_TYPE_TYPEOF:
 			{
 				o->t=SLL_OBJECT_TYPE_NOP;
 				sll_arg_count_t l=o->dt.ac;
@@ -1109,6 +1110,7 @@ _keep_assignment:;
 		case SLL_OBJECT_TYPE_BOOL:
 		case SLL_OBJECT_TYPE_BIT_NOT:
 		case SLL_OBJECT_TYPE_LENGTH:
+		case SLL_OBJECT_TYPE_TYPEOF:
 			{
 				sll_arg_count_t l=o->dt.ac;
 				if (!l){
@@ -1144,12 +1146,16 @@ _keep_assignment:;
 						o=_runtime_object_to_object(nv,o,o_dt);
 						SLL_RELEASE(nv);
 					}
-					else{
+					else if (r->t==SLL_OBJECT_TYPE_LENGTH){
 						sll_runtime_object_t* nv=sll_operator_len(rt);
 						SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(nv)==SLL_RUNTIME_OBJECT_TYPE_INT);
 						o->t=SLL_OBJECT_TYPE_INT;
 						o->dt.i=nv->dt.i;
 						SLL_RELEASE(nv);
+					}
+					else{
+						o->t=SLL_OBJECT_TYPE_INT;
+						o->dt.i=SLL_RUNTIME_OBJECT_GET_TYPE(rt);
 					}
 					r->t=SLL_OBJECT_TYPE_COMMA;
 					r->dt.ac++;

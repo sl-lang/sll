@@ -600,6 +600,9 @@ _recurse_array_or_map:;
 				else if (*str==':'&&*(str+1)==':'){
 					o->t=SLL_OBJECT_TYPE_CAST;
 				}
+				else if (*str==':'&&*(str+1)=='?'){
+					o->t=SLL_OBJECT_TYPE_TYPEOF;
+				}
 				else if (*str=='%'&&*(str+1)=='%'){
 					o->t=SLL_OBJECT_TYPE_REF;
 				}

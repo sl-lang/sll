@@ -399,6 +399,9 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 		case SLL_OBJECT_TYPE_CAST:
 			PRINT_STATIC_STRING("::",wf);
 			break;
+		case SLL_OBJECT_TYPE_TYPEOF:
+			PRINT_STATIC_STRING(":?",wf);
+			break;
 		case SLL_OBJECT_TYPE_BREAK:
 			sll_file_write_char(wf,'@');
 			break;
@@ -894,6 +897,9 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 					default:
 						SLL_UNREACHABLE();
 				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF:
+				PRINT_STATIC_STRING("TYPEOF",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				PRINT_STATIC_STRING("PRINT",wf);
