@@ -378,6 +378,28 @@ All of the operands are evaluated, and the bitwise XOR (exclusive or) product of
 (:> (^ 0xff 0x80) "\n")
 ```
 
+#### Boolean (`!!`)
+
+##### Syntax
+
+```sll
+(!! |# expression #|)
+```
+
+##### Return value
+
+`true` if the boolean value of the expression is nonzero, otherwise `false`
+
+##### Description
+
+The first (and only) operand is evaluated, its value is converted to a boolean and returned.
+
+##### Example
+
+```sll
+(:> (!! 0.0) ", " (!! 0.1) "\n")
+```
+
 #### Boolean Not (`!`)
 
 ##### Syntax
