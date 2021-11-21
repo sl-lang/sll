@@ -16,8 +16,8 @@ FUNC sll_api_sort_sort
 DESC Docs!
 ARG A Docs!
 ARG I? Docs!
-RET a Docs!
-RET I Success*/
+RET E Docs!
+RET A Success*/
 __API_FUNC_DECL(sort_sort);
 
 

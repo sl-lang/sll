@@ -42,11 +42,11 @@
 #define __SLL_API_TYPE_sll_api_path_join void
 #define __SLL_API_ARGS_sll_api_path_join const sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out
 
-#define __SLL_API_TYPE_sll_api_path_list_dir __SLL_CHECK_OUTPUT sll_runtime_object_t*
-#define __SLL_API_ARGS_sll_api_path_list_dir const sll_string_t* a
+#define __SLL_API_TYPE_sll_api_path_list_dir void
+#define __SLL_API_ARGS_sll_api_path_list_dir const sll_string_t* a,sll_array_t* out
 
-#define __SLL_API_TYPE_sll_api_path_recursive_list_dir __SLL_CHECK_OUTPUT sll_runtime_object_t*
-#define __SLL_API_ARGS_sll_api_path_recursive_list_dir const sll_string_t* a
+#define __SLL_API_TYPE_sll_api_path_recursive_list_dir void
+#define __SLL_API_ARGS_sll_api_path_recursive_list_dir const sll_string_t* a,sll_array_t* out
 
 #define __SLL_API_TYPE_sll_api_path_relative void
 #define __SLL_API_ARGS_sll_api_path_relative const sll_string_t* a,sll_string_t* out
@@ -57,8 +57,8 @@
 #define __SLL_API_TYPE_sll_api_path_size __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_path_size const sll_string_t* a
 
-#define __SLL_API_TYPE_sll_api_sort_sort __SLL_CHECK_OUTPUT sll_runtime_object_t*
-#define __SLL_API_ARGS_sll_api_sort_sort const sll_array_t* a,const sll_integer_t b
+#define __SLL_API_TYPE_sll_api_sort_sort void
+#define __SLL_API_ARGS_sll_api_sort_sort const sll_array_t* a,const sll_integer_t b,sll_array_t* out
 
 #define __SLL_API_TYPE_sll_api_string_convert void
 #define __SLL_API_ARGS_sll_api_string_convert const sll_runtime_object_t*const* a,sll_arg_count_t ac,sll_string_t* out

@@ -231,14 +231,18 @@ INTERNAL_FUNCTION("path_join",sll_api_path_join_raw,0|0);
 __SLL_API_TYPE_sll_api_path_list_dir sll_api_path_list_dir(__SLL_API_ARGS_sll_api_path_list_dir);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_list_dir_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC_INT(0);
+		return SLL_ACQUIRE_STATIC(array_zero);
 	}
 	const sll_runtime_object_t* a=*(al+0);
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC_INT(0);
+		return SLL_ACQUIRE_STATIC(array_zero);
 	}
-	sll_runtime_object_t* out=sll_api_path_list_dir(&(a->dt.s));
-	return out;
+	sll_array_t out;
+	sll_api_path_list_dir(&(a->dt.s),&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
 }
 INTERNAL_FUNCTION("path_list_dir",sll_api_path_list_dir_raw,0|0);
 
@@ -247,14 +251,18 @@ INTERNAL_FUNCTION("path_list_dir",sll_api_path_list_dir_raw,0|0);
 __SLL_API_TYPE_sll_api_path_recursive_list_dir sll_api_path_recursive_list_dir(__SLL_API_ARGS_sll_api_path_recursive_list_dir);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_path_recursive_list_dir_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC_INT(0);
+		return SLL_ACQUIRE_STATIC(array_zero);
 	}
 	const sll_runtime_object_t* a=*(al+0);
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC_INT(0);
+		return SLL_ACQUIRE_STATIC(array_zero);
 	}
-	sll_runtime_object_t* out=sll_api_path_recursive_list_dir(&(a->dt.s));
-	return out;
+	sll_array_t out;
+	sll_api_path_recursive_list_dir(&(a->dt.s),&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
 }
 INTERNAL_FUNCTION("path_recursive_list_dir",sll_api_path_recursive_list_dir_raw,0|0);
 
@@ -328,8 +336,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sort_sort_raw(co
 			return SLL_ACQUIRE_STATIC(array_zero);
 		}
 	}
-	sll_runtime_object_t* out=sll_api_sort_sort(&(a->dt.a),(b?b->dt.i:0));
-	return out;
+	sll_array_t out;
+	sll_api_sort_sort(&(a->dt.a),(b?b->dt.i:0),&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
 }
 INTERNAL_FUNCTION("sort_sort",sll_api_sort_sort_raw,0|SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL);
 

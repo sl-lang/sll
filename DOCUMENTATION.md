@@ -1198,16 +1198,20 @@ If there are no arguments, a handle to a null pointer is returned. Otherwise, a 
 ##### Syntax
 
 ```sll
+(@@)
+
+OR
+
 (@@ |# object #|)
 ```
 
 ##### Return Value
 
-Execution is returned back to the function call with the return value of `object`
+Execution is returned back to the function call with the return value of `object` or `nil`, if no object is supplied
 
 ##### Description
 
-The instruction pointer is moved back to the place of the enclosing function call, which returns the `object`.
+The instruction pointer is moved back to the place of the enclosing function call, which returns the `object` if it is supplied, otherwise returns `nil`.
 
 ##### Example
 

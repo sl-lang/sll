@@ -78,7 +78,7 @@ TYPE api optimizable
 FUNC sll_api_path_list_dir
 DESC Docs!
 ARG S Docs!
-RET 0 Failure
+RET E Failure
 RET A Success*/
 __API_FUNC_DECL(path_list_dir);
 
@@ -89,7 +89,7 @@ TYPE api optimizable
 FUNC sll_api_path_recursive_list_dir
 DESC Docs!
 ARG S Docs!
-RET 0 Failure
+RET E Failure
 RET A Success*/
 __API_FUNC_DECL(path_recursive_list_dir);
 

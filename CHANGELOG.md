@@ -15,8 +15,9 @@
 
 ### Changed
 
-- Fixed incorrect memory reallocation in `sll_string_increase`
 - Fixed `sll_platform_enable_console_color`
+- Fixed incorrect memory reallocation in `sll_string_increase`
+- Return types of multiple internal functions
 - The `sll_runtime_data_t` structure now contains a field for an error file (`sll_file_t* err`)
 
 ### Removed
