@@ -393,7 +393,7 @@ contexts:
       comment: |
         We terminate the block quote when seeing an empty line, a
         separator or a line with leading > characters. The latter is
-        to “reset” the quote level for quoted lines.
+        to "reset" the quote level for quoted lines.
         The idea here is to match block level elements first, then once
         we have confirmed there are no block level elements left, move to
         matching inline markdown. This prevents block level elements being
@@ -911,7 +911,7 @@ contexts:
           pop: true
         - match: (?={{html_entity}}[?!.,:*_~]*[\s<]) # If an autolink ends in a semicolon (;), we check to see if it appears to resemble an entity reference; if the preceding text is & followed by one or more alphanumeric characters. If so, it is excluded from the autolink
           pop: true
-        - match: \( # When an autolink ends in ), we scan the entire autolink for the total number of parentheses. If there is a greater number of closing parentheses than opening ones, we don’t consider the last character part of the autolink, in order to facilitate including an autolink inside a parenthesis
+        - match: \( # When an autolink ends in ), we scan the entire autolink for the total number of parentheses. If there is a greater number of closing parentheses than opening ones, we don't consider the last character part of the autolink, in order to facilitate including an autolink inside a parenthesis
           push:
             - meta_scope: markup.underline.link.markdown-gfm
             - match: (?=[?!.,:*_~]*[\s<])

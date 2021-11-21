@@ -1371,6 +1371,28 @@ The condition expression is evaluated. If it is not an integer or character, the
 )
 ```
 
+#### Typeof (`:?`)
+
+##### Syntax
+
+```sll
+(:? |# object #|)
+```
+
+##### Return Value
+
+The type of the object
+
+##### Description
+
+An integer representing the type of the given object is returned.
+
+##### Example
+
+```sll
+(:> "The type of an integer has the following ID: " (:? 12345) "\n")
+```
+
 #### While Loop (`>-`)
 
 ##### Syntax
