@@ -1,6 +1,5 @@
 #include <sll/_sll_internal.h>
 #include <sll/array.h>
-#include <sll/cast.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/init.h>
@@ -511,7 +510,7 @@ __SLL_EXTERNAL void sll_string_from_data(sll_runtime_object_t** v,sll_string_len
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(vl)*sizeof(sll_char_t));
 	INIT_PADDING(o->v,vl);
 	for (sll_string_length_t i=0;i<vl;i++){
-		sll_runtime_object_t* n=sll_operator_cast(*(v+i),sll_static_int[SLL_CONSTANT_TYPE_CHAR]);
+		sll_runtime_object_t* n=sll_operator_cast(*(v+i),sll_static_int[SLL_RUNTIME_OBJECT_TYPE_CHAR]);
 		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(n)==SLL_RUNTIME_OBJECT_TYPE_CHAR);
 		o->v[i]=n->dt.c;
 		o->c^=ROTATE_BITS(n->dt.c,(i&3)<<3);
@@ -807,7 +806,7 @@ __SLL_EXTERNAL void sll_string_op(const sll_string_t* a,const sll_string_t* b,sl
 	INIT_PADDING(o->v,o->l);
 	for (sll_string_length_t i=0;i<e;i++){
 		sll_runtime_object_t* v=f(sll_static_char[a->v[i]],sll_static_char[b->v[i]]);
-		sll_runtime_object_t* c=sll_operator_cast(v,sll_static_int[SLL_CONSTANT_TYPE_CHAR]);
+		sll_runtime_object_t* c=sll_operator_cast(v,sll_static_int[SLL_RUNTIME_OBJECT_TYPE_CHAR]);
 		SLL_RELEASE(v);
 		SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_CHAR);
 		o->v[i]=c->dt.c;

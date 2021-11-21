@@ -1,5 +1,4 @@
 #include <sll/_sll_internal.h>
-#include <sll/cast.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>

@@ -1,9 +1,9 @@
 #include <sll/_sll_internal.h>
 #include <sll/assembly.h>
-#include <sll/cast.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/object.h>
+#include <sll/runtime_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
@@ -867,31 +867,31 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				PRINT_STATIC_STRING("CAST ",wf);
 				switch (ai->dt.t){
-					case SLL_CONSTANT_TYPE_INT:
+					case SLL_RUNTIME_OBJECT_TYPE_INT:
 						PRINT_STATIC_STRING("int_type",wf);
 						break;
-					case SLL_CONSTANT_TYPE_FLOAT:
+					case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
 						PRINT_STATIC_STRING("float_type",wf);
 						break;
-					case SLL_CONSTANT_TYPE_CHAR:
+					case SLL_RUNTIME_OBJECT_TYPE_CHAR:
 						PRINT_STATIC_STRING("char_type",wf);
 						break;
-					case SLL_CONSTANT_TYPE_STRING:
+					case SLL_RUNTIME_OBJECT_TYPE_STRING:
 						PRINT_STATIC_STRING("string_type",wf);
 						break;
-					case SLL_CONSTANT_TYPE_ARRAY:
+					case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
 						PRINT_STATIC_STRING("array_type",wf);
 						break;
-					case SLL_CONSTANT_TYPE_HANDLE:
+					case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
 						PRINT_STATIC_STRING("handle_type",wf);
 						break;
-					case SLL_CONSTANT_TYPE_MAP:
+					case SLL_RUNTIME_OBJECT_TYPE_MAP:
 						PRINT_STATIC_STRING("map_type",wf);
 						break;
-					case SLL_CONSTANT_TYPE_MAP_KEY:
+					case SLL_RUNTIME_OBJECT_TYPE_MAP_KEYS:
 						PRINT_STATIC_STRING("map_key_type",wf);
 						break;
-					case SLL_CONSTANT_TYPE_MAP_VALUE:
+					case SLL_RUNTIME_OBJECT_TYPE_MAP_VALUES:
 						PRINT_STATIC_STRING("map_value_type",wf);
 						break;
 					default:

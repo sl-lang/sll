@@ -1,12 +1,12 @@
 #include <sll/_sll_internal.h>
 #include <sll/assembly.h>
-#include <sll/cast.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform.h>
+#include <sll/runtime_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -792,10 +792,10 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 					while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 						o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
-					if (o->t==SLL_OBJECT_TYPE_INT&&o->dt.i>0&&o->dt.i<=SLL_MAX_CONSTANT_TYPE){
+					if (o->t==SLL_OBJECT_TYPE_INT&&o->dt.i>0&&o->dt.i<=SLL_MAX_RUNTIME_OBEJCT_TYPE){
 						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 						ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE;
-						ai->dt.t=(sll_constant_type_t)(o->dt.i);
+						ai->dt.t=(sll_runtime_object_type_t)(o->dt.i);
 						o++;
 					}
 					else{

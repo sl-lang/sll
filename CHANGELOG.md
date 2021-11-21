@@ -20,10 +20,12 @@
 - Fixed `sll_platform_enable_console_color`
 - Fixed incorrect memory reallocation in `sll_string_increase`
 - Return types of multiple internal functions
+- `sll_debug_xxx` function now use the built-in file API
 - The `sll_runtime_data_t` structure now contains a field for an error file (`sll_file_t* err`)
 
 ### Removed
 
+- [`cast.h`][0.6.27/src/include/sll/cast.h] has been replaced by runtime object types
 - Unused object: Input (`(<:)`)
 
 ## [0.6.27] - 2021-11-14
@@ -1093,6 +1095,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[0.6.27/src/include/sll/cast.h]: https://github.com/sl-lang/sll/blob/v0.6.27/src/include/sll/cast.h
 [0.6.25/examples]: https://github.com/sl-lang/sll/tree/v0.6.25/examples
 [0.6.25/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/v0.6.25/src/include/sll/init.h
 [0.6.25/src/include/sll/util.h]: https://github.com/sl-lang/sll/blob/v0.6.25/src/include/sll/util.h

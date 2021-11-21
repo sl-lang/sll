@@ -369,7 +369,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 					e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 					return 0;
 				}
-				ai->dt.t=(sll_constant_type_t)c;
+				ai->dt.t=(sll_runtime_object_type_t)c;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
