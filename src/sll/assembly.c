@@ -336,7 +336,6 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 				if (l==1){
 					return _generate_jump(o,g_dt,lbl,!inv);
 				}
-				l--;
 				SLL_UNIMPLEMENTED();
 			}
 		case SLL_OBJECT_TYPE_BOOL:
@@ -352,7 +351,6 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 				if (l==1){
 					return _generate_jump(o,g_dt,lbl,inv);
 				}
-				l--;
 				SLL_UNIMPLEMENTED();
 			}
 		case SLL_OBJECT_TYPE_FUNC:
