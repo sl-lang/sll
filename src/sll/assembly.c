@@ -326,13 +326,34 @@ static const sll_object_t* _generate_jump(const sll_object_t* o,assembly_generat
 		case SLL_OBJECT_TYPE_NOT:
 			{
 				sll_arg_count_t l=o->dt.ac;
-				SLL_ASSERT(l);
-				l--;
-				o++;
-				while (l){
-					o=_generate(o,g_dt);
+				if (!l){
+					if (!inv){
+						GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+					}
+					return o+1;
 				}
-				return _generate_jump(o,g_dt,lbl,!inv);
+				o++;
+				if (l==1){
+					return _generate_jump(o,g_dt,lbl,!inv);
+				}
+				l--;
+				SLL_UNIMPLEMENTED();
+			}
+		case SLL_OBJECT_TYPE_BOOL:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					if (!inv){
+						GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+					}
+					return o+1;
+				}
+				o++;
+				if (l==1){
+					return _generate_jump(o,g_dt,lbl,inv);
+				}
+				l--;
+				SLL_UNIMPLEMENTED();
 			}
 		case SLL_OBJECT_TYPE_FUNC:
 		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
@@ -555,15 +576,32 @@ static const sll_object_t* _generate_on_stack(const sll_object_t* o,assembly_gen
 		case SLL_OBJECT_TYPE_NOT:
 			{
 				sll_arg_count_t l=o->dt.ac;
-				SLL_ASSERT(l);
-				l--;
-				o++;
-				while (l){
-					o=_generate(o,g_dt);
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					return o+1;
 				}
-				o=_generate_on_stack(o,g_dt);
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT);
-				return o;
+				o++;
+				if (l==1){
+					o=_generate_on_stack(o,g_dt);
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT);
+					return o;
+				}
+				SLL_UNIMPLEMENTED();
+			}
+		case SLL_OBJECT_TYPE_BOOL:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					return o+1;
+				}
+				o++;
+				if (l==1){
+					o=_generate_on_stack(o,g_dt);
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL);
+					return o;
+				}
+				SLL_UNIMPLEMENTED();
 			}
 		case SLL_OBJECT_TYPE_ASSIGN:
 			{
@@ -1522,7 +1560,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 			st[1]->dt.v=st[0]->dt.v;
 			SHIFT_UP(st);
 		}
-		else if (st[0]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP&&st[1]->t>=SLL_ASSEMBLY_INSTRUCTION_TYPE_INC&&st[1]->t<=SLL_ASSEMBLY_INSTRUCTION_TYPE_INV&&st[2]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD&&st[0]->dt.v==st[2]->dt.v){
+		else if (st[0]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP&&st[1]->t>=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT&&st[1]->t<=SLL_ASSEMBLY_INSTRUCTION_TYPE_INV&&st[2]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD&&st[0]->dt.v==st[2]->dt.v){
 			st[0]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;
 			st[2]->t=st[1]->t|SLL_ASSEMBLY_INSTRUCTION_INPLACE;
 			st[1]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP;

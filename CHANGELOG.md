@@ -4,6 +4,7 @@
 
 ### Added
 
+- Boolean operator (`(!!)`) ([#100])
 - Buffering for in `sll_file_read` and `sll_file_read_char`
 - CLI option for enabling sandbox flags (`-S`) ([#97])
 - Implemented `sll_platform_get_default_stream_descriptor`, `sll_file_write_format`, `sll_file_write_string`, `sll_string_format`, `sll_string_format_list` and `sll_string_select`
@@ -1031,6 +1032,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#100]: https://github.com/sl-lang/sll/issues/100
 [#98]: https://github.com/sl-lang/sll/issues/98
 [#97]: https://github.com/sl-lang/sll/issues/97
 [#95]: https://github.com/sl-lang/sll/issues/95

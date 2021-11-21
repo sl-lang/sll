@@ -718,6 +718,8 @@ static uint8_t _get_cond_type(const sll_object_t* o,optimizer_data_t* o_dt,uint8
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_NOT:
 			return (!o->dt.ac?COND_TYPE_ALWAYS_FALSE:_get_cond_type(o+1,o_dt,!inv,lv));
+		case SLL_OBJECT_TYPE_BOOL:
+			return (!o->dt.ac?COND_TYPE_ALWAYS_FALSE:_get_cond_type(o+1,o_dt,inv,lv));
 		case SLL_OBJECT_TYPE_ASSIGN:
 			SLL_ASSERT(o->dt.ac>=2);
 			return _get_cond_type(sll_skip_object_const(o+1),o_dt,inv,lv);
@@ -837,6 +839,8 @@ static sll_object_t* _check_remove(sll_object_t* o,sll_object_t* p,optimizer_dat
 				}
 				return o;
 			}
+		case SLL_OBJECT_TYPE_NOT:
+		case SLL_OBJECT_TYPE_BOOL:
 		case SLL_OBJECT_TYPE_ADD:
 		case SLL_OBJECT_TYPE_SUB:
 		case SLL_OBJECT_TYPE_MULT:
@@ -1102,6 +1106,7 @@ _keep_assignment:;
 		case SLL_OBJECT_TYPE_OR:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_NOT:
+		case SLL_OBJECT_TYPE_BOOL:
 		case SLL_OBJECT_TYPE_BIT_NOT:
 		case SLL_OBJECT_TYPE_LENGTH:
 			{
@@ -1124,11 +1129,15 @@ _keep_assignment:;
 					l--;
 				}
 				sll_runtime_object_t* rt=_get_as_runtime_object(v,o_dt,0);
-				if (rt->t!=RUNTIME_OBJECT_TYPE_UNKNOWN){
+				if (rt->t!=RUNTIME_OBJECT_TYPE_UNKNOWN&&!(rt->t&RUNTIME_OBJECT_CHANGE_IN_LOOP)){
 					_shift_objects(o,o_dt->c_dt,1);
 					if (r->t==SLL_OBJECT_TYPE_NOT){
 						o->t=SLL_OBJECT_TYPE_INT;
 						o->dt.i=!sll_operator_bool(rt);
+					}
+					else if (r->t==SLL_OBJECT_TYPE_BOOL){
+						o->t=SLL_OBJECT_TYPE_INT;
+						o->dt.i=sll_operator_bool(rt);
 					}
 					else if (r->t==SLL_OBJECT_TYPE_BIT_NOT){
 						sll_runtime_object_t* nv=sll_operator_inv(rt);

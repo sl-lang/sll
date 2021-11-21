@@ -553,6 +553,9 @@ _recurse_array_or_map:;
 				else if (*str=='|'&&*(str+1)=='|'){
 					o->t=SLL_OBJECT_TYPE_OR;
 				}
+				else if (*str=='!'&&*(str+1)=='!'){
+					o->t=SLL_OBJECT_TYPE_BOOL;
+				}
 				else if (*str=='<'&&*(str+1)=='-'){
 					o->t=SLL_OBJECT_TYPE_CALL;
 				}

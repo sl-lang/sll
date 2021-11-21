@@ -159,10 +159,12 @@
 )))
 (= array (<- sort (<- recursive_list_dir ".") false))
 (-> (= i 0) (< i ($ array))
+	(= first (!! i))
+	(? (! first) (:> "First file: "))
 	(:> (<- absolute (: array i)) " -> " (<- format_bytes (<- size (: array i))) "\n")
 	(= i (+ i 1))
 )
-(? (! FACTORIAL) nil {
+(? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)
 })

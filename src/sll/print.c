@@ -212,7 +212,10 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 			PRINT_STATIC_STRING("||",wf);
 			break;
 		case SLL_OBJECT_TYPE_NOT:
-			PRINT_STATIC_STRING("!",wf);
+			sll_file_write_char(wf,'!');
+			break;
+		case SLL_OBJECT_TYPE_BOOL:
+			PRINT_STATIC_STRING("!!",wf);
 			break;
 		case SLL_OBJECT_TYPE_ASSIGN:
 			PRINT_STATIC_STRING("=",wf);
@@ -703,6 +706,15 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				else{
 					PRINT_STATIC_STRING("NOT",wf);
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL:
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+					PRINT_STATIC_STRING("BOOL $",wf);
+					_print_int(ai->dt.v,wf);
+				}
+				else{
+					PRINT_STATIC_STRING("BOOL",wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:

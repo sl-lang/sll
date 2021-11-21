@@ -443,7 +443,23 @@ _cleanup_jump_table:;
 					continue;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
-				SLL_UNIMPLEMENTED();
+				{
+					sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
+					sll_runtime_object_t* n=sll_static_int[!sll_operator_bool(*tos)];
+					SLL_ACQUIRE(n);
+					SLL_RELEASE(*tos);
+					*tos=n;
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL:
+				{
+					sll_runtime_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
+					sll_runtime_object_t* n=sll_static_int[sll_operator_bool(*tos)];
+					SLL_ACQUIRE(n);
+					SLL_RELEASE(*tos);
+					*tos=n;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
 				OPERATOR_INSTRUCTION_UNARY(sll_operator_inc);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:

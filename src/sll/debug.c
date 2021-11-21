@@ -12,14 +12,14 @@
 
 __SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* a_dt){
 	sll_print_assembly(a_dt,sll_stdout);
-	putchar('\n');
+	sll_file_write_char(sll_stdout,'\n');
 }
 
 
 
 __SLL_EXTERNAL void sll_debug_print_object(const sll_object_t* o,const sll_compilation_data_t* c_dt){
 	sll_print_object(c_dt,NULL,o,sll_stdout);
-	putchar('\n');
+	sll_file_write_char(sll_stdout,'\n');
 }
 
 
@@ -34,5 +34,5 @@ __SLL_EXTERNAL void sll_debug_print_runtime_object(const sll_runtime_object_t* v
 		sll_file_write(sll_stdout,str.v,str.l*sizeof(sll_char_t));
 		sll_deinit_string(&str);
 	}
-	putchar('\n');
+	sll_file_write_char(sll_stdout,'\n');
 }
