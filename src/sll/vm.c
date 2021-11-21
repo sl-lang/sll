@@ -84,6 +84,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	ptr+=a_dt->vc*sizeof(sll_runtime_object_t*);
 	sll_runtime_object_t* cs=(sll_runtime_object_t*)ptr;
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
+		SLL_GC_ZERO_DEBUG_DATA(cs+i);
 		(cs+i)->rc=1;
 		(cs+i)->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 		(cs+i)->dt.s=*(a_dt->st.dt+i);

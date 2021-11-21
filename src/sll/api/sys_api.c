@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/init.h>
@@ -14,9 +15,9 @@
 
 
 static sll_integer_t _sys_argc=0;
-static sll_runtime_object_t** _sys_argv=NULL;
-static sll_runtime_object_t _sys_e={0,SLL_RUNTIME_OBJECT_TYPE_STRING,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.s=SLL_INIT_STRING_STRUCT}};
-static sll_runtime_object_t _sys_p={0,SLL_RUNTIME_OBJECT_TYPE_STRING,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.s=SLL_INIT_STRING_STRUCT}};
+static sll_string_t* _sys_argv=NULL;
+static sll_string_t _sys_e=SLL_INIT_STRING_STRUCT;
+static sll_string_t _sys_p=SLL_INIT_STRING_STRUCT;
 static char _sys_end=0;
 
 
@@ -24,18 +25,18 @@ static char _sys_end=0;
 static void _sys_free_data(void){
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc;i++){
-			SLL_RELEASE(*(_sys_argv+i));
+			sll_deinit_string(_sys_argv+i);
 		}
 		sll_deallocate(_sys_argv);
 		_sys_argv=NULL;
 	}
-	if (_sys_e.dt.s.l){
-		sll_deinit_string(&(_sys_e.dt.s));
-		_sys_e.dt.s.l=0;
+	if (_sys_e.l){
+		sll_deinit_string(&_sys_e);
+		_sys_e.l=0;
 	}
-	if (_sys_p.dt.s.l){
-		sll_deinit_string(&(_sys_p.dt.s));
-		_sys_p.dt.s.l=0;
+	if (_sys_p.l){
+		sll_deinit_string(&_sys_p);
+		_sys_p.l=0;
 	}
 }
 
@@ -45,11 +46,8 @@ __SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 	if (i<0||i>=_sys_argc){
 		return;
 	}
-	SLL_RELEASE(*(_sys_argv+i));
-	sll_runtime_object_t* n=SLL_CREATE();
-	n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-	sll_string_from_pointer(a,&(n->dt.s));
-	*(_sys_argv+i)=n;
+	sll_deinit_string(_sys_argv+i);
+	sll_string_from_pointer(a,_sys_argv+i);
 }
 
 
@@ -58,7 +56,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac){
 	SLL_ASSERT(ac>0);
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc;i++){
-			SLL_RELEASE(*(_sys_argv+i));
+			sll_deinit_string(_sys_argv+i);
 		}
 		sll_deallocate(_sys_argv);
 	}
@@ -67,9 +65,9 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac){
 		_sys_end=1;
 	}
 	_sys_argc=ac;
-	_sys_argv=sll_allocate(ac*sizeof(sll_runtime_object_t*));
+	_sys_argv=sll_allocate(ac*sizeof(sll_string_t));
 	for (sll_integer_t i=0;i<ac;i++){
-		*(_sys_argv+i)=SLL_ACQUIRE_STATIC(str_zero);
+		SLL_INIT_STRING(_sys_argv+i);
 	}
 }
 
@@ -77,10 +75,11 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac){
 
 __API_FUNC(sys_arg_get){
 	if (a<0||a>=_sys_argc){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		SLL_INIT_STRING(out);
 	}
-	SLL_ACQUIRE(*(_sys_argv+a));
-	return *(_sys_argv+a);
+	else{
+		sll_string_clone(_sys_argv+a,out);
+	}
 }
 
 
@@ -92,27 +91,27 @@ __API_FUNC(sys_arg_get_count){
 
 
 __API_FUNC(sys_get_executable){
-	if (!_sys_e.dt.s.l){
-		sll_string_from_pointer(sll_platform_string,&(_sys_e.dt.s));
+	if (!_sys_e.l){
+		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+		sll_string_length_t bfl=sll_platform_get_executable_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH);
+		sll_string_from_pointer_length(bf,bfl,&_sys_e);
 		if (!_sys_end){
 			sll_register_cleanup(_sys_free_data);
 			_sys_end=1;
 		}
 	}
-	SLL_ACQUIRE(&_sys_e);
-	return &_sys_e;
+	sll_string_clone(&_sys_e,out);
 }
 
 
 
 __API_FUNC(sys_get_platform){
-	if (!_sys_p.dt.s.l){
-		sll_string_from_pointer(sll_platform_string,&(_sys_p.dt.s));
+	if (!_sys_p.l){
+		sll_string_from_pointer(sll_platform_string,&_sys_p);
 		if (!_sys_end){
 			sll_register_cleanup(_sys_free_data);
 			_sys_end=1;
 		}
 	}
-	SLL_ACQUIRE(&_sys_p);
-	return &_sys_p;
+	sll_string_clone(&_sys_p,out);
 }

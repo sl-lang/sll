@@ -20,7 +20,7 @@ FUNC sll_api_sys_arg_get
 DESC Docs!
 ARG I Docs!
 RET Z Failure
-RET O Success*/
+RET S Success*/
 __API_FUNC_DECL(sys_arg_get);
 
 
@@ -38,7 +38,7 @@ __API_FUNC_DECL(sys_arg_get_count);
 TYPE api optimizable
 FUNC sll_api_sys_get_executable
 DESC Docs!
-RET O Docs!*/
+RET S Docs!*/
 __API_FUNC_DECL(sys_get_executable);
 
 
@@ -47,7 +47,7 @@ __API_FUNC_DECL(sys_get_executable);
 TYPE api optimizable
 FUNC sll_api_sys_get_platform
 DESC Docs!
-RET O Docs!*/
+RET S Docs!*/
 __API_FUNC_DECL(sys_get_platform);
 
 

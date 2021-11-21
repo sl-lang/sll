@@ -78,17 +78,17 @@
 #define __SLL_API_TYPE_sll_api_string_to_upper_case void
 #define __SLL_API_ARGS_sll_api_string_to_upper_case const sll_string_t* a,sll_string_t* out
 
-#define __SLL_API_TYPE_sll_api_sys_arg_get __SLL_CHECK_OUTPUT sll_runtime_object_t*
-#define __SLL_API_ARGS_sll_api_sys_arg_get const sll_integer_t a
+#define __SLL_API_TYPE_sll_api_sys_arg_get void
+#define __SLL_API_ARGS_sll_api_sys_arg_get const sll_integer_t a,sll_string_t* out
 
 #define __SLL_API_TYPE_sll_api_sys_arg_get_count __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_sys_arg_get_count void
 
-#define __SLL_API_TYPE_sll_api_sys_get_executable __SLL_CHECK_OUTPUT sll_runtime_object_t*
-#define __SLL_API_ARGS_sll_api_sys_get_executable void
+#define __SLL_API_TYPE_sll_api_sys_get_executable void
+#define __SLL_API_ARGS_sll_api_sys_get_executable sll_string_t* out
 
-#define __SLL_API_TYPE_sll_api_sys_get_platform __SLL_CHECK_OUTPUT sll_runtime_object_t*
-#define __SLL_API_ARGS_sll_api_sys_get_platform void
+#define __SLL_API_TYPE_sll_api_sys_get_platform void
+#define __SLL_API_ARGS_sll_api_sys_get_platform sll_string_t* out
 
 #define __SLL_API_TYPE_sll_api_time_current __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_time_current void

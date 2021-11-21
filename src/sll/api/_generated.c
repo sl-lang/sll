@@ -470,8 +470,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_arg_get_raw(
 	if (!(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT)){
 		return SLL_ACQUIRE_STATIC(str_zero);
 	}
-	sll_runtime_object_t* out=sll_api_sys_arg_get(a->dt.i);
-	return out;
+	sll_string_t out;
+	sll_api_sys_arg_get(a->dt.i,&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
 }
 INTERNAL_FUNCTION("sys_arg_get",sll_api_sys_arg_get_raw,0|0);
 
@@ -488,8 +492,12 @@ INTERNAL_FUNCTION("sys_arg_get_count",sll_api_sys_arg_get_count_raw,0|0);
 
 __SLL_API_TYPE_sll_api_sys_get_executable sll_api_sys_get_executable(__SLL_API_ARGS_sll_api_sys_get_executable);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_get_executable_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
-	sll_runtime_object_t* out=sll_api_sys_get_executable();
-	return out;
+	sll_string_t out;
+	sll_api_sys_get_executable(&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
 }
 INTERNAL_FUNCTION("sys_get_executable",sll_api_sys_get_executable_raw,0|0);
 
@@ -497,8 +505,12 @@ INTERNAL_FUNCTION("sys_get_executable",sll_api_sys_get_executable_raw,0|0);
 
 __SLL_API_TYPE_sll_api_sys_get_platform sll_api_sys_get_platform(__SLL_API_ARGS_sll_api_sys_get_platform);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_sys_get_platform_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
-	sll_runtime_object_t* out=sll_api_sys_get_platform();
-	return out;
+	sll_string_t out;
+	sll_api_sys_get_platform(&out);
+	sll_runtime_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
 }
 INTERNAL_FUNCTION("sys_get_platform",sll_api_sys_get_platform_raw,0|0);
 
