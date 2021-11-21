@@ -14,6 +14,8 @@
 #define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 4
 #define SLL_SANDBOX_FLAG_DISABLE_PATH_API 8
 
+#define SLL_COPY_STRING_NULL(s,d) (*((sll_char_t*)sll_copy_string((s),(d)))=0)
+
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s,sll_bool_t d);
@@ -29,6 +31,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 
 
 __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d);
+
+
+
+__SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d);
+
+
+
+__SLL_EXTERNAL void sll_copy_string_null(const sll_char_t* s,void* d);
 
 
 

@@ -47,7 +47,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const s
 	i++;
 	sll_copy_data(p->v,p->l,s.v+i);
 	i+=p->l;
-	sll_copy_data(" HTTP/1.1",9,s.v+i);
+	sll_copy_string(SLL_CHAR(" HTTP/1.1"),s.v+i);
 	i+=9;
 	for (sll_header_count_t j=0;j<hl->l;j++){
 		sll_header_t* kv=*(hl->dt+j);
@@ -61,11 +61,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_url_http_request(const s
 		s.v[i+1]='\n';
 		i+=2;
 	}
-	sll_copy_data("\r\nHost:",7,s.v+i);
+	sll_copy_string(SLL_CHAR("\r\nHost:"),s.v+i);
 	i+=7;
 	sll_copy_data(h->v,h->l,s.v+i);
 	i+=h->l;
-	sll_copy_data("\r\n\r\n",4,s.v+i);
+	sll_copy_string(SLL_CHAR("\r\n\r\n"),s.v+i);
 	i+=4;
 	sll_copy_data(dt->v,dt->l,s.v+i);
 	sll_string_t r=SLL_INIT_STRING_STRUCT;

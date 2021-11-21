@@ -8,6 +8,7 @@
 - Buffering for in `sll_file_read` and `sll_file_read_char`
 - CLI option for enabling sandbox flags (`-S`) ([#97])
 - Implemented `sll_platform_get_default_stream_descriptor`, `sll_file_write_format`, `sll_file_write_string`, `sll_string_format`, `sll_string_format_list` and `sll_string_select`
+- String copy API: `sll_copy_string`, `sll_copy_string_null` and `SLL_COPY_STRING_NULL` ([#79])
 - Integer can now have digits split by underscores (`_`)
 - Macro constants: `SLL_PLATFORM_STREAM_INPUT`, `SLL_PLATFORM_STREAM_OUTPUT` and `SLL_PLATFORM_STREAM_ERROR`
 - Sandbox flags (`SLL_SANDBOX_FLAG_DISABLE_FILE_IO`, `SLL_SANDBOX_FLAG_ENABLE_STDIN_IO`, `SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO` and `SLL_SANDBOX_FLAG_DISABLE_PATH_API`) ([#97])
@@ -1052,6 +1053,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#84]: https://github.com/sl-lang/sll/issues/84
 [#82]: https://github.com/sl-lang/sll/issues/82
 [#81]: https://github.com/sl-lang/sll/issues/81
+[#79]: https://github.com/sl-lang/sll/issues/79
 [#78]: https://github.com/sl-lang/sll/issues/78
 [#77]: https://github.com/sl-lang/sll/issues/77
 [#76]: https://github.com/sl-lang/sll/issues/76

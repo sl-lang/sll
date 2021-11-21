@@ -237,6 +237,49 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 
 
 
+__SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d){
+	if (!(*s)){
+		return d;
+	}
+	const sll_char_t* a=(const sll_char_t*)s;
+	sll_char_t* b=(sll_char_t*)d;
+	while (((uint64_t)b)&7){
+		*b=*a;
+		a++;
+		b++;
+		if (!(*a)){
+			return b;
+		}
+	}
+	SLL_ASSERT(!(((uint64_t)b)&7));
+	const uint64_t* ap=(const uint64_t*)a;
+	uint64_t* bp=(uint64_t*)b;
+	ASSUME_ALIGNED(bp,3,0);
+	while (1){
+		uint64_t v=((*ap)-0x101010101010101ull)&0x8080808080808080ull&(~(*ap));
+		if (v){
+			v=FIND_FIRST_SET_BIT(v);
+			void* o=(void*)(((uint64_t)bp)+(v>>3));
+			if (v){
+				v-=8;
+				*bp=((*bp)&(0xffffffffffffffffull<<v))|((*ap)&((1ull<<v)-1));
+			}
+			return o;
+		}
+		*bp=*ap;
+		ap++;
+		bp++;
+	}
+}
+
+
+
+__SLL_EXTERNAL void sll_copy_string_null(const sll_char_t* s,void* d){
+	*((sll_char_t*)sll_copy_string(s,d))=0;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
 	sll_string_t n;
 	sll_string_from_pointer_length(dt,l,&n);

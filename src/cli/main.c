@@ -104,7 +104,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		i+=j+1;
 		sll_copy_data(f_nm,f_nm_l,bf+j);
 		j+=f_nm_l;
-		sll_copy_data(".slc",5,bf+j);
+		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+j);
 		if (fl&FLAG_VERBOSE){
 			sll_file_write_format(sll_stdout,SLL_CHAR("Trying to Open File '%s'...\n"),bf);
 		}
@@ -252,7 +252,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 	if (l_fpl){
 		i=l_fpl+f_nm_l;
 		sll_copy_data(f_nm,f_nm_l,l_fp+l_fpl);
-		sll_copy_data(".slc",5,l_fp+i);
+		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),l_fp+i);
 		if (fl&FLAG_VERBOSE){
 			sll_file_write_format(sll_stdout,SLL_CHAR("Trying to Open File '%s'...\n"),l_fp);
 		}
@@ -409,7 +409,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		}
 		i++;
 		if (fl&FLAG_GENERATE_ASSEMBLY){
-			sll_copy_data(".sla",5,bf+i);
+			SLL_COPY_STRING_NULL(SLL_CHAR(".sla"),bf+i);
 			if (fl&FLAG_VERBOSE){
 				sll_file_write_format(sll_stdout,SLL_CHAR("Writing Assembly to File '%s'...\n"),bf);
 			}
@@ -427,7 +427,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			sll_file_close(&of);
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-			sll_copy_data(".slc",5,bf+i);
+			SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+i);
 			if (fl&FLAG_VERBOSE){
 				sll_file_write_format(sll_stdout,SLL_CHAR("Writing Compiled Object to File '%s'...\n"),bf);
 			}
@@ -496,7 +496,7 @@ int main(int argc,const char** argv){
 		}
 		l_fpl--;
 	}
-	sll_copy_data("lib/",5,l_fp+l_fpl+1);
+	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl+1);
 	l_fpl+=5;
 _skip_lib_path:
 #endif
