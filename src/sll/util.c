@@ -241,34 +241,34 @@ __SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d){
 	if (!(*s)){
 		return d;
 	}
-	const sll_char_t* a=(const sll_char_t*)s;
-	sll_char_t* b=(sll_char_t*)d;
-	while (((uint64_t)b)&7){
-		*b=*a;
-		a++;
-		b++;
-		if (!(*a)){
-			return b;
+	sll_char_t* o=(sll_char_t*)d;
+	while (((uint64_t)o)&7){
+		*o=*s;
+		s++;
+		o++;
+		if (!(*s)){
+			return o;
 		}
 	}
-	SLL_ASSERT(!(((uint64_t)b)&7));
-	const uint64_t* ap=(const uint64_t*)a;
-	uint64_t* bp=(uint64_t*)b;
-	ASSUME_ALIGNED(bp,3,0);
+	SLL_ASSERT(!(((uint64_t)o)&7));
+	const uint64_t* sp=(const uint64_t*)s;
+	uint64_t* op=(uint64_t*)o;
+	ASSUME_ALIGNED(op,3,0);
 	while (1){
-		uint64_t v=((*ap)-0x101010101010101ull)&0x8080808080808080ull&(~(*ap));
+		uint64_t v=((*sp)-0x101010101010101ull)&0x8080808080808080ull&(~(*sp));
 		if (v){
-			v=FIND_FIRST_SET_BIT(v);
-			void* o=(void*)(((uint64_t)bp)+(v>>3));
-			if (v){
+			SLL_ASSERT(FIND_FIRST_SET_BIT(v)>6&&(FIND_FIRST_SET_BIT(v)&7)==7);
+			v=FIND_FIRST_SET_BIT(v)+1;
+			o=(void*)(((uint64_t)op)+(v>>3));
+			if (v>8){
 				v-=8;
-				*bp=((*bp)&(0xffffffffffffffffull<<v))|((*ap)&((1ull<<v)-1));
+				*op=((*op)&(0xffffffffffffffffull<<v))|((*sp)&((1ull<<v)-1));
 			}
 			return o;
 		}
-		*bp=*ap;
-		ap++;
-		bp++;
+		*op=*sp;
+		sp++;
+		op++;
 	}
 }
 
