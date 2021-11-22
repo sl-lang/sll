@@ -47,6 +47,10 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
 
 
 
+__SLL_EXTERNAL __SLL_NO_RETURN void sll_platform_force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c);
+
+
+
 __SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_page_size_t sz);
 
 

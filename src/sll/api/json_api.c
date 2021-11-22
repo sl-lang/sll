@@ -4,6 +4,7 @@
 #include <sll/array.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/handle.h>
 #include <sll/init.h>
 #include <sll/map.h>
@@ -108,7 +109,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 				o->v[o->l]=((a>47&&a<58?a-48:(a>64&&a<71?a-55:a-87))<<4)|(b>47&&b<58?b-48:(b>64&&b<71?b-55:b-87));
 			}
 			else{
-				printf("Unknown Escape: \\%c\n",c);
+				sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Escape: \\%c\n"),c);
 				SLL_UNIMPLEMENTED();
 			}
 		}

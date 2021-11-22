@@ -5,6 +5,9 @@
 #endif
 #include <sll/api.h>
 #include <sll/api/_generated.h>
+#include <sll/file.h>
+#include <sll/platform.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <signal.h>
 #include <stdint.h>
@@ -77,12 +80,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define __strto_end __stop_strto
 #endif
 #ifdef DEBUG_BUILD
-#define SLL_UNREACHABLE() \
-	do{ \
-		printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): Unreachable Code\n",__func__); \
-		fflush(stdout); \
-		raise(SIGABRT); \
-	} while (0)
+#define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"));
 #endif
 
 
@@ -100,25 +98,23 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
 #define _SLL_ASSERT_STRINGIFY_(x) #x
 #define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
-#define SLL_UNIMPLEMENTED() \
-	do{ \
-		printf("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): Unimplemented\n",__func__); \
-		fflush(stdout); \
-		raise(SIGABRT); \
-	} while (0)
+#define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"));
 #ifdef DEBUG_BUILD
 #define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
 #define SLL_ASSERT(x) \
 	do{ \
 		if (!(x)){ \
-			fprintf(stdout,"File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" (%s): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n",__func__); \
-			fflush(stdout); \
-			raise(SIGABRT); \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n")); \
 		} \
 	} while (0)
 #else
 #define ASSUME_ALIGNED(p,n,x) _ASSUME_ALIGNED(p,(n),(x))
-#define SLL_ASSERT(x)
+#define SLL_ASSERT(x) \
+	do{ \
+		if (!(x)){ \
+			SLL_UNREACHABLE(); \
+		} \
+	} while (0)
 #endif
 
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
@@ -448,6 +444,14 @@ void _file_init_std_streams(void);
 
 
 void _file_release_std_streams(void);
+
+
+
+__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c);
+
+
+
+__SLL_NO_RETURN void _force_exit_platform(void);
 
 
 

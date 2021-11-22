@@ -79,6 +79,12 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 
 
 
+__SLL_NO_RETURN void _force_exit_platform(void){
+	TerminateProcess(GetCurrentProcess(),SIGABRT);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
 	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
 }

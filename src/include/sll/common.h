@@ -15,6 +15,7 @@
 #endif
 #endif
 #define __SLL_CHECK_OUTPUT _Check_return_
+#define __SLL_NO_RETURN __declspec(noreturn)
 #else
 #ifdef __SLL_STATIC__
 #define __SLL_EXTERNAL
@@ -26,6 +27,7 @@
 #endif
 #endif
 #define __SLL_CHECK_OUTPUT __attribute__((warn_unused_result))
+#define __SLL_NO_RETURN __attribute__((noreturn))
 #endif
 
 

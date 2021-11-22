@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/init.h>
 #include <sll/memory.h>
@@ -107,6 +108,18 @@ void _execute_cleanup(void){
 	_file_release_std_streams();
 	_memory_release_data();
 	_util_sandbox_flags=0;
+}
+
+
+
+__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c){
+	sll_file_flush(sll_stdout);
+	sll_file_flush(sll_stderr);
+	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
+	sll_platform_file_write(fd,a,sll_string_length_unaligned(a));
+	sll_platform_file_write(fd,b,sll_string_length_unaligned(b));
+	sll_platform_file_write(fd,c,sll_string_length_unaligned(c));
+	_force_exit_platform();
 }
 
 

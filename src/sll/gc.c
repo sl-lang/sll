@@ -29,29 +29,28 @@ static uint8_t _gc_verify=1;
 
 
 
-static const char* _get_type_string(sll_runtime_object_t* o){
+static const sll_char_t* _get_type_string(sll_runtime_object_t* o){
 	switch (SLL_RUNTIME_OBJECT_GET_TYPE(o)){
 		case SLL_RUNTIME_OBJECT_TYPE_INT:
-			return "int";
+			return SLL_CHAR("int");
 		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
-			return "float";
+			return SLL_CHAR("float");
 		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
-			return "char";
+			return SLL_CHAR("char");
 		case SLL_RUNTIME_OBJECT_TYPE_STRING:
-			return "string";
+			return SLL_CHAR("string");
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
-			return "array";
+			return SLL_CHAR("array");
 		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
-			return "handle";
+			return SLL_CHAR("handle");
 		case SLL_RUNTIME_OBJECT_TYPE_MAP:
-			return "map";
+			return SLL_CHAR("map");
 		case RUNTIME_OBJECT_TYPE_FUNCTION_ID:
-			return "<function id>";
+			return SLL_CHAR("<function id>");
 		case RUNTIME_OBJECT_TYPE_UNKNOWN:
-			return "<unknown>";
-		default:
-			return "<wrong type>";
+			return SLL_CHAR("<unknown>");
 	}
+	return SLL_CHAR("<unknown type>");
 }
 
 
@@ -59,16 +58,16 @@ static const char* _get_type_string(sll_runtime_object_t* o){
 static void _print_gc_data(sll_runtime_object_t* o,runtime_object_debug_data_t* dt){
 	sll_string_t str;
 	sll_object_to_string((const sll_runtime_object_t*const*)(&o),1,&str);
-	fprintf(stderr,"{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n",_get_type_string(o),o->rc,str.v,dt->all);
+	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),_get_type_string(o),o->rc,str.v,dt->all);
 	sll_deinit_string(&str);
 	for (uint32_t m=0;m<dt->all;m++){
 		runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+m);
-		fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
+		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),t_dt->fp,t_dt->ln,t_dt->fn);
 	}
-	fprintf(stderr,"  Release (%u):\n",dt->rll);
+	sll_file_write_format(sll_stderr,SLL_CHAR("  Release (%u):\n"),dt->rll);
 	for (uint32_t m=0;m<dt->rll;m++){
 		runtime_object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
-		fprintf(stderr,"    %s:%u (%s)\n",t_dt->fp,t_dt->ln,t_dt->fn);
+		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),t_dt->fp,t_dt->ln,t_dt->fn);
 	}
 }
 
@@ -248,6 +247,7 @@ __SLL_EXTERNAL void sll_remove_debug_data(sll_runtime_object_t* o){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_runtime_object_stack_cleanup(void){
+	sll_file_flush(sll_stdout);
 	uint8_t err=0;
 	_gc_verify=0;
 	fflush(stdout);
@@ -261,23 +261,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_runtime_object_stack_cle
 			if (c->rc){
 				if (!err){
 					err=1;
-					fputs("\nUnreleased Objects:\n",stderr);
+					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"));
 				}
 				uint32_t j=c->_dbg0|(c->_dbg1<<8);
 				if (j!=GC_MAX_DEBUG_ID){
 					runtime_object_debug_data_t* dt=*(_gc_dbg_dt+j);
 					if (dt->c.fp){
-						fprintf(stderr,"%s:%u (%s): ",dt->c.fp,dt->c.ln,dt->c.fn);
+						sll_file_write_format(sll_stderr,SLL_CHAR("%s:%u (%s): "),dt->c.fp,dt->c.ln,dt->c.fn);
 					}
 					else{
-						fprintf(stderr,"<unknown>: ");
+						sll_file_write_string(sll_stderr,SLL_CHAR("<unknown>: "));
 					}
 					_print_gc_data(c,dt);
 				}
 				else{
 					sll_string_t str;
 					sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
-					fprintf(stderr,"<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n",_get_type_string(c),c->rc,str.v);
+					sll_file_write_format(sll_stderr,SLL_CHAR("<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n"),_get_type_string(c),c->rc,str.v);
 					sll_deinit_string(&str);
 				}
 			}
@@ -295,10 +295,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_runtime_object_stack_cle
 			if (k->dt->rc>1){
 				if (!err){
 					err=1;
-					fputs("\nUnreleased Objects:\n",stderr);
+					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"));
 				}
 				SLL_ASSERT((k->dt->_dbg0|(k->dt->_dbg1<<8))!=GC_MAX_DEBUG_ID);
-				fprintf(stderr,"%s: %u (<static>): ",k->fp,k->ln);
+				sll_file_write_format(sll_stderr,SLL_CHAR("%s: %u (<static>): "),k->fp,k->ln);
 				_print_gc_data(k->dt,*(_gc_dbg_dt+(k->dt->_dbg0|(k->dt->_dbg1<<8))));
 			}
 			else{
@@ -308,6 +308,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_runtime_object_stack_cle
 		}
 		l++;
 	}
-	fflush(stderr);
+	sll_file_flush(sll_stderr);
 	return (err?0:1);
 }

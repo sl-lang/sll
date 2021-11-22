@@ -57,6 +57,12 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 
 
 
+__SLL_NO_RETURN void _force_exit_platform(void){
+	_exit(SIGABRT);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
 	return mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
 }
