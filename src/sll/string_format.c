@@ -45,7 +45,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			continue;
 		}
 		t++;
-		const sll_char_t* s=t;
+		const sll_char_t* b=t;
 		if (!(*t)){
 			sll_string_increase(o,1);
 			o->v[o->l]='%';
@@ -189,13 +189,25 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			if (*t=='d'||*t=='i'){
 				int64_t sn;
 				if (f&FLAGS_HH_BITS){
-					sn=(signed char)va_arg(va,signed int);
+					sn=va_arg(va,signed int);
+					if (sn<-0x80){
+						sn=-0x80;
+					}
+					else if (sn>0x7f){
+						sn=0x7f;
+					}
 				}
 				else if (f&FLAGS_H_BITS){
-					sn=(signed short int)va_arg(va,signed int);
+					sn=va_arg(va,signed int);
+					if (sn<-0x8000){
+						sn=-0x8000;
+					}
+					else if (sn>0x7fff){
+						sn=0x7fff;
+					}
 				}
 				else if (f&FLAGS_L_BITS){
-					sn=(signed long int)va_arg(va,signed long int);
+					sn=va_arg(va,signed long int);
 				}
 				else if (f&FLAGS_LL_BITS){
 					sn=va_arg(va,signed long long int);
@@ -212,10 +224,10 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			}
 			else{
 				if (f&FLAGS_HH_BITS){
-					n=(unsigned char)va_arg(va,unsigned int);
+					n=va_arg(va,unsigned int)&0xff;
 				}
 				else if (f&FLAGS_H_BITS){
-					n=(unsigned short int)va_arg(va,unsigned int);
+					n=va_arg(va,unsigned int)&0xffff;
 				}
 				else if (f&FLAGS_L_BITS){
 					n=va_arg(va,unsigned long int);
@@ -377,7 +389,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			sll_string_increase(o,1);
 			o->v[o->l]='%';
 			o->l++;
-			t=s;
+			t=b;
 			continue;
 		}
 		t++;
