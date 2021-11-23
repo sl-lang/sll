@@ -275,12 +275,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					o->l+=p;
 				}
 				else if (*t=='o'){
-					uint8_t sz=0;
-					uint64_t nv=n;
-					while (nv){
-						nv>>=3;
-						sz++;
-					}
+					uint8_t sz=(FIND_LAST_SET_BIT(n)+2)/3;
 					if (p<sz){
 						p=sz;
 					}
@@ -329,12 +324,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					}
 				}
 				else{
-					uint8_t sz=0;
-					uint64_t nv=n;
-					while (nv>0){
-						nv>>=4;
-						sz++;
-					}
+					uint8_t sz=(FIND_LAST_SET_BIT(n)+3)>>2;
 					if (p<sz){
 						p=sz;
 					}

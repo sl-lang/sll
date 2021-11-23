@@ -31,7 +31,7 @@ Sll has the ability to be installed in a folder, or as a standalone executable. 
 
 ## Version Checking
 
-If using the standalone version of Sll, replace `sll` by `sll_standalone`. The most recent version of Sll is `0.6.27` (`0.6.28` is in development).
+If using the standalone version of Sll, replace `sll` by `sll_standalone`. The most recent version of Sll is `0.6.28` (`0.6.29` is in development).
 
 ### Windows
 

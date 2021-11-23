@@ -2,7 +2,9 @@
 
 ## [0.6.29] - Ongoing
 
-*Nothing*
+### Changed
+
+- Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion
 
 ## [0.6.28] - 2021-11-22
 
