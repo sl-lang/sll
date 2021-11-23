@@ -6,6 +6,11 @@
 #include <sll/util.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <stdio.h>
+
+
+
+static const uint64_t _string_pow_of_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
 
 
 
@@ -223,7 +228,6 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 				else{
 					n=va_arg(va,unsigned int);
 				}
-
 				if (f&(STRING_FORMAT_FLAG_SIGN|STRING_FORMAT_FLAG_SPACE_SIGN)){
 					sll_string_increase(o,1);
 					o->v[o->l]='+';
@@ -298,14 +302,11 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					}
 				}
 				else if (*t!='x'&&*t!='X'){
-					uint8_t sz=1;
-					uint64_t pw=10;
-					while (pw<n+1){
-						sz++;
-						if (sz==20){
-							break;
-						}
-						pw*=10;
+					uint8_t sz=((FIND_LAST_SET_BIT(n)+1)*1233)>>12;
+					uint64_t pw=_string_pow_of_10[sz];
+					if (n<pw){
+						sz--;
+						pw=_string_pow_of_10[sz];
 					}
 					if (p<sz){
 						p=sz;
@@ -315,9 +316,6 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
-					}
-					if (sz!=20){
-						pw/=10;
 					}
 					do{
 						o->v[o->l]=48+((n/pw)%10);
