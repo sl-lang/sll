@@ -11,7 +11,6 @@
 #include <sll/types.h>
 #include <signal.h>
 #include <stdint.h>
-#include <stdio.h>
 
 
 
@@ -181,8 +180,19 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define ALLOCATOR_MAX_SMALL_SIZE 512
 
 #define FILE_FLAG_MEMORY SLL_FILE_FLAG_RESERVED
-
 #define FILE_BUFFER_SIZE 8192
+
+#define STRING_FORMAT_FLAG_PAD_ZERO 1
+#define STRING_FORMAT_FLAG_SIGN 2
+#define STRING_FORMAT_FLAG_SPACE_SIGN 4
+#define STRING_FORMAT_FLAG_JUSTIFY_LEFT 8
+#define STRING_FORMAT_FLAG_ALTERNATIVE_FORM 16
+#define STRING_FORMAT_FLAG_PERCISION 32
+#define STRING_FORMAT_FLAG_HH_BITS 64
+#define STRING_FORMAT_FLAG_H_BITS 128
+#define STRING_FORMAT_FLAG_L_BITS 256
+#define STRING_FORMAT_FLAG_LL_BITS 512
+#define STRING_FORMAT_FLAG_UPPERCASE 1024
 
 
 

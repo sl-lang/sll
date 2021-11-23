@@ -250,7 +250,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_runtime_object_stack_cle
 	sll_file_flush(sll_stdout);
 	uint8_t err=0;
 	_gc_verify=0;
-	fflush(stdout);
 	sll_page_size_t sz=sll_platform_get_page_size();
 	void* pg=_gc_page_ptr;
 	uint32_t i=0;

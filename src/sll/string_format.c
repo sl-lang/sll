@@ -6,21 +6,6 @@
 #include <sll/util.h>
 #include <stdarg.h>
 #include <stdint.h>
-#include <stdio.h>
-
-
-
-#define FLAGS_PAD_ZERO 1
-#define FLAGS_SIGN 2
-#define FLAGS_SPACE_SIGN 4
-#define FLAGS_JUSTIFY_LEFT 8
-#define FLAGS_ALTERNATIVE_FORM 16
-#define FLAGS_PERCISION 32
-#define FLAGS_HH_BITS 64
-#define FLAGS_H_BITS 128
-#define FLAGS_L_BITS 256
-#define FLAGS_LL_BITS 512
-#define FLAGS_UPPERCASE 1024
 
 
 
@@ -55,19 +40,19 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 		uint16_t f=0;
 		while (1){
 			if (*t=='0'){
-				f|=FLAGS_PAD_ZERO;
+				f|=STRING_FORMAT_FLAG_PAD_ZERO;
 			}
 			else if (*t=='+'){
-				f|=FLAGS_SIGN;
+				f|=STRING_FORMAT_FLAG_SIGN;
 			}
 			else if (*t==' '){
-				f|=FLAGS_SPACE_SIGN;
+				f|=STRING_FORMAT_FLAG_SPACE_SIGN;
 			}
 			else if (*t=='-'){
-				f|=FLAGS_JUSTIFY_LEFT;
+				f|=STRING_FORMAT_FLAG_JUSTIFY_LEFT;
 			}
 			else if (*t=='#'){
-				f|=FLAGS_ALTERNATIVE_FORM;
+				f|=STRING_FORMAT_FLAG_ALTERNATIVE_FORM;
 			}
 			else{
 				break;
@@ -79,7 +64,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 		if (*t=='*'){
 			int a=va_arg(va,int);
 			if (a<0){
-				f|=FLAGS_JUSTIFY_LEFT;
+				f|=STRING_FORMAT_FLAG_JUSTIFY_LEFT;
 				a=-a;
 			}
 			w=(unsigned int)a;
@@ -92,7 +77,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			}
 		}
 		if (*t=='.'){
-			f|=FLAGS_PERCISION;
+			f|=STRING_FORMAT_FLAG_PERCISION;
 			t++;
 			if (*t=='*'){
 				int a=va_arg(va,int);
@@ -112,25 +97,25 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 		if (*t=='h'){
 			t++;
 			if (*t=='h'){
-				f|=FLAGS_HH_BITS;
+				f|=STRING_FORMAT_FLAG_HH_BITS;
 				t++;
 			}
 			else{
-				f|=FLAGS_H_BITS;
+				f|=STRING_FORMAT_FLAG_H_BITS;
 			}
 		}
 		else if (*t=='l'){
 			t++;
 			if (*t=='l'){
-				f|=FLAGS_LL_BITS;
+				f|=STRING_FORMAT_FLAG_LL_BITS;
 				t++;
 			}
 			else{
-				f|=FLAGS_L_BITS;
+				f|=STRING_FORMAT_FLAG_L_BITS;
 			}
 		}
 		else if (*t=='j'||*t=='t'||*t=='z'){
-			f|=FLAGS_LL_BITS;
+			f|=STRING_FORMAT_FLAG_LL_BITS;
 			t++;
 		}
 		if (*t=='%'){
@@ -144,13 +129,13 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			}
 			sll_string_increase(o,w);
 			w--;
-			if (!(f&FLAGS_JUSTIFY_LEFT)){
+			if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 				sll_set_memory(o->v+o->l,w,' ');
 				o->l+=w;
 			}
 			o->v[o->l]=(sll_char_t)va_arg(va,int);
 			o->l++;
-			if (f&FLAGS_JUSTIFY_LEFT){
+			if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
 				sll_set_memory(o->v+o->l,w,' ');
 				o->l+=w;
 			}
@@ -164,18 +149,18 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			}
 			else{
 				sll_string_length_t l=p;
-				if (!(f&FLAGS_PERCISION)){
+				if (!(f&STRING_FORMAT_FLAG_PERCISION)){
 					l=sll_string_length_unaligned(s);
 				}
 				sll_string_increase(o,(l>w?l:w));
 				w=(w<l?0:w-l);
-				if (!(f&FLAGS_JUSTIFY_LEFT)){
+				if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 					sll_set_memory(o->v+o->l,w,' ');
 					o->l+=w;
 				}
 				sll_copy_data(s,l,o->v+o->l);
 				o->l+=l;
-				if (f&FLAGS_JUSTIFY_LEFT){
+				if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
 					sll_set_memory(o->v+o->l,w,' ');
 					o->l+=w;
 				}
@@ -183,12 +168,12 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 		}
 		else if (*t=='d'||*t=='i'||*t=='o'||*t=='u'||*t=='x'||*t=='X'){
 			if (*t=='X'){
-				f|=FLAGS_UPPERCASE;
+				f|=STRING_FORMAT_FLAG_UPPERCASE;
 			}
 			uint64_t n;
 			if (*t=='d'||*t=='i'){
 				int64_t sn;
-				if (f&FLAGS_HH_BITS){
+				if (f&STRING_FORMAT_FLAG_HH_BITS){
 					sn=va_arg(va,signed int);
 					if (sn<-0x80){
 						sn=-0x80;
@@ -197,7 +182,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 						sn=0x7f;
 					}
 				}
-				else if (f&FLAGS_H_BITS){
+				else if (f&STRING_FORMAT_FLAG_H_BITS){
 					sn=va_arg(va,signed int);
 					if (sn<-0x8000){
 						sn=-0x8000;
@@ -206,16 +191,16 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 						sn=0x7fff;
 					}
 				}
-				else if (f&FLAGS_L_BITS){
+				else if (f&STRING_FORMAT_FLAG_L_BITS){
 					sn=va_arg(va,signed long int);
 				}
-				else if (f&FLAGS_LL_BITS){
+				else if (f&STRING_FORMAT_FLAG_LL_BITS){
 					sn=va_arg(va,signed long long int);
 				}
 				else{
 					sn=va_arg(va,signed int);
 				}
-				if ((f&(FLAGS_SIGN|FLAGS_SPACE_SIGN))||sn<0){
+				if ((f&(STRING_FORMAT_FLAG_SIGN|STRING_FORMAT_FLAG_SPACE_SIGN))||sn<0){
 					sll_string_increase(o,1);
 					o->v[o->l]=(sn<0?'-':'+');
 					o->l++;
@@ -223,33 +208,33 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 				n=(uint64_t)(sn<0?-sn:sn);
 			}
 			else{
-				if (f&FLAGS_HH_BITS){
+				if (f&STRING_FORMAT_FLAG_HH_BITS){
 					n=va_arg(va,unsigned int)&0xff;
 				}
-				else if (f&FLAGS_H_BITS){
+				else if (f&STRING_FORMAT_FLAG_H_BITS){
 					n=va_arg(va,unsigned int)&0xffff;
 				}
-				else if (f&FLAGS_L_BITS){
+				else if (f&STRING_FORMAT_FLAG_L_BITS){
 					n=va_arg(va,unsigned long int);
 				}
-				else if (f&FLAGS_LL_BITS){
+				else if (f&STRING_FORMAT_FLAG_LL_BITS){
 					n=va_arg(va,unsigned long long int);
 				}
 				else{
 					n=va_arg(va,unsigned int);
 				}
 
-				if (f&(FLAGS_SIGN|FLAGS_SPACE_SIGN)){
+				if (f&(STRING_FORMAT_FLAG_SIGN|STRING_FORMAT_FLAG_SPACE_SIGN)){
 					sll_string_increase(o,1);
 					o->v[o->l]='+';
 					o->l++;
 				}
 			}
-			if (!(f&FLAGS_PERCISION)){
+			if (!(f&STRING_FORMAT_FLAG_PERCISION)){
 				p=1;
 			}
-			if (!p&&(f&FLAGS_PERCISION)&&!n){
-				if ((f&FLAGS_ALTERNATIVE_FORM)&&*t=='o'&&!p){
+			if (!p&&(f&STRING_FORMAT_FLAG_PERCISION)&&!n){
+				if ((f&STRING_FORMAT_FLAG_ALTERNATIVE_FORM)&&*t=='o'&&!p){
 					p=1;
 				}
 				sll_string_increase(o,p);
@@ -257,7 +242,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 				o->l+=p;
 			}
 			else{
-				if ((f&FLAGS_ALTERNATIVE_FORM)&&*t=='o'){
+				if ((f&STRING_FORMAT_FLAG_ALTERNATIVE_FORM)&&*t=='o'){
 					sll_string_increase(o,1);
 					o->v[o->l]='0';
 					o->l++;
@@ -265,10 +250,10 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 						p--;
 					}
 				}
-				else if ((f&FLAGS_ALTERNATIVE_FORM)&&(*t=='x'||*t=='X')){
+				else if ((f&STRING_FORMAT_FLAG_ALTERNATIVE_FORM)&&(*t=='x'||*t=='X')){
 					sll_string_increase(o,2);
 					o->v[o->l]='0';
-					o->v[o->l+1]=(f&FLAGS_UPPERCASE?'X':'x');
+					o->v[o->l+1]=(f&STRING_FORMAT_FLAG_UPPERCASE?'X':'x');
 					o->l+=2;
 					if (p>1){
 						p-=2;
@@ -297,7 +282,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					}
 					sll_string_increase(o,p);
 					p-=sz;
-					if (!(f&FLAGS_JUSTIFY_LEFT)){
+					if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -307,7 +292,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 						o->v[o->l]=48+((n>>i)&7);
 						o->l++;
 					} while (i);
-					if (f&FLAGS_JUSTIFY_LEFT){
+					if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -327,7 +312,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					}
 					sll_string_increase(o,p);
 					p-=sz;
-					if (!(f&FLAGS_JUSTIFY_LEFT)){
+					if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -340,7 +325,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 						sz--;
 						pw/=10;
 					} while (sz);
-					if (f&FLAGS_JUSTIFY_LEFT){
+					if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -357,19 +342,19 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					}
 					sll_string_increase(o,p);
 					p-=sz;
-					if (!(f&FLAGS_JUSTIFY_LEFT)){
+					if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
 					uint8_t i=sz<<2;
-					sll_char_t e=((f&FLAGS_UPPERCASE)?55:87);
+					sll_char_t e=((f&STRING_FORMAT_FLAG_UPPERCASE)?55:87);
 					do{
 						i-=4;
 						sll_char_t c=(n>>i)&0xf;
 						o->v[o->l]=c+(c>9?e:48);
 						o->l++;
 					} while (i);
-					if (f&FLAGS_JUSTIFY_LEFT){
+					if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
