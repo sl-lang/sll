@@ -6,7 +6,6 @@
 #include <sll/util.h>
 #include <stdarg.h>
 #include <stdint.h>
-#include <stdio.h>
 
 
 
@@ -134,13 +133,13 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			}
 			sll_string_increase(o,w);
 			w--;
-			if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+			if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 				sll_set_memory(o->v+o->l,w,' ');
 				o->l+=w;
 			}
 			o->v[o->l]=(sll_char_t)va_arg(va,int);
 			o->l++;
-			if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
+			if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 				sll_set_memory(o->v+o->l,w,' ');
 				o->l+=w;
 			}
@@ -159,13 +158,13 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 				}
 				sll_string_increase(o,(l>w?l:w));
 				w=(w<l?0:w-l);
-				if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+				if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 					sll_set_memory(o->v+o->l,w,' ');
 					o->l+=w;
 				}
 				sll_copy_data(s,l,o->v+o->l);
 				o->l+=l;
-				if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
+				if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 					sll_set_memory(o->v+o->l,w,' ');
 					o->l+=w;
 				}
@@ -281,7 +280,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					}
 					sll_string_increase(o,p);
 					p-=sz;
-					if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -291,7 +290,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 						o->v[o->l]=48+((n>>i)&7);
 						o->l++;
 					} while (i);
-					if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
+					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -308,7 +307,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					}
 					sll_string_increase(o,p);
 					p-=sz;
-					if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -318,7 +317,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 						sz--;
 						pw/=10;
 					} while (sz);
-					if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
+					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -330,7 +329,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					}
 					sll_string_increase(o,p);
 					p-=sz;
-					if (!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -338,11 +337,11 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 					sll_char_t e=((f&STRING_FORMAT_FLAG_UPPERCASE)?55:87);
 					do{
 						i-=4;
-						sll_char_t c=(n>>i)&0xf;
+						sll_char_t c=(n>>i)&15;
 						o->v[o->l]=c+(c>9?e:48);
 						o->l++;
 					} while (i);
-					if (f&STRING_FORMAT_FLAG_JUSTIFY_LEFT){
+					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
@@ -350,9 +349,9 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_st
 			}
 		}
 		else if (*t=='p'){
-			sll_string_increase(o,sizeof(void*)<<1);
+			sll_string_increase(o,16);
 			uint64_t ptr=(uint64_t)va_arg(va,void*);
-			for (int8_t i=(sizeof(void*)<<3)-4;i>=0;i-=4){
+			for (int8_t i=60;i>=0;i-=4){
 				sll_char_t c=(ptr>>i)&15;
 				o->v[o->l]=c+(c>9?87:48);
 				o->l++;
