@@ -505,7 +505,7 @@ _skip_lib_path:
 	sll_char_t** sl=NULL;
 	uint32_t sll=0;
 	sll_create_internal_function_table(&i_ft);
-	sll_register_standard_internal_functions(&i_ft);
+	sll_register_builtin_internal_functions(&i_ft);
 	const sll_char_t* o_fp=NULL;
 	sll_file_t f={0};
 	sll_assembly_data_t a_dt={0};

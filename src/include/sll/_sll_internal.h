@@ -48,8 +48,6 @@ static __inline __forceinline unsigned int FIND_LAST_SET_BIT(unsigned __int64 m)
 			__assume(0); \
 		} \
 	} while (0)
-#define INTERNAL_FUNCTION(nm,f,fl) const static internal_function_t _UNIQUE_NAME(__ifunc)={(nm),(f),(fl)};const static __declspec(allocate("ifunc$b")) internal_function_t* _UNIQUE_NAME(__ifunc_ptr)=&_UNIQUE_NAME(__ifunc)
-#define INTERNAL_FUNCTION_SETUP const static __declspec(allocate("ifunc$a")) internal_function_t* __ifunc_start=0;const static __declspec(allocate("ifunc$z")) internal_function_t* __ifunc_end=0
 #define STATIC_RUNTIME_OBJECT(rt) const static static_runtime_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __declspec(allocate("strto$b")) static_runtime_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
 #define STATIC_RUNTIME_OBJECT_SETUP const static __declspec(allocate("strto$a")) static_runtime_object_t* __strto_start=0;const static __declspec(allocate("strto$z")) static_runtime_object_t* __strto_end=0
 #else
@@ -75,12 +73,8 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 	do{ \
 		p=__builtin_assume_aligned((p),(n),(x)); \
 	} while (0)
-#define INTERNAL_FUNCTION(nm,f,fl) const static internal_function_t _UNIQUE_NAME(__ifunc)={(nm),(f),(fl)};const static __attribute__((used,section("ifunc"))) internal_function_t* _UNIQUE_NAME(__ifunc_ptr)=&_UNIQUE_NAME(__ifunc)
-#define INTERNAL_FUNCTION_SETUP extern const internal_function_t* __start_ifunc;extern const internal_function_t* __stop_ifunc
 #define STATIC_RUNTIME_OBJECT(rt) const static static_runtime_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __attribute__((used,section("strto"))) static_runtime_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
 #define STATIC_RUNTIME_OBJECT_SETUP extern const static_runtime_object_t* __start_strto;extern const static_runtime_object_t* __stop_strto
-#define __ifunc_start __start_ifunc
-#define __ifunc_end __stop_ifunc
 #define __strto_start __start_strto
 #define __strto_end __stop_strto
 #endif

@@ -27,7 +27,7 @@ static sll_bool_t execute_test(uint8_t id){
 	if (id==TEST_ID_PARSE){
 		sll_internal_function_table_t i_ft;
 		sll_create_internal_function_table(&i_ft);
-		sll_register_standard_internal_functions(&i_ft);
+		sll_register_builtin_internal_functions(&i_ft);
 		sll_file_t f;
 		if (!sll_file_open(ti_fp,SLL_FILE_FLAG_READ,&f)){
 			return 0;

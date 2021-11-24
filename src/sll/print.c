@@ -236,7 +236,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 					if (i_ft&&o->dt.fn.id<i_ft->l){
 						const sll_internal_function_t* f=*(i_ft->dt+o->dt.fn.id);
 						PRINT_STATIC_STRING("... \"",wf);
-						sll_file_write(wf,f->nm,f->nml);
+						sll_file_write(wf,f->nm.v,f->nm.l);
 						sll_file_write_char(wf,'\"');
 					}
 					else{
@@ -272,7 +272,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 						if (j<i_ft->l){
 							const sll_internal_function_t* f=*(i_ft->dt+j);
 							PRINT_STATIC_STRING(" (... \"",wf);
-							sll_file_write(wf,f->nm,f->nml);
+							sll_file_write(wf,f->nm.v,f->nm.l);
 							PRINT_STATIC_STRING("\")",wf);
 							i++;
 							o++;

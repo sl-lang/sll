@@ -5,6 +5,8 @@
 ### Changed
 
 - Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion
+- Renamed `sll_register_standard_internal_functions` to `sll_register_builtin_internal_functions`
+- Storage of built-in internal function and logic behind IFT-related functions
 
 ## [0.6.28] - 2021-11-22
 

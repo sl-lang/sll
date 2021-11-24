@@ -69,6 +69,7 @@ if ("--generate-api" in sys.argv):
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_API__GENERATED__\n#define __SLL_API__GENERATED__\n#include <sll/common.h>\n#include <sll/types.h>\n\n\n")
 		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/handle.h>\n#include <sll/ift.h>\n#include <sll/memory.h>\n#include <sll/runtime_object.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		fn_l=[]
 		for k in d_dt:
 			if ("api" in k["flag"]):
 				rt=RETURN_CODE_BASE_TYPE[k["ret"][0]["type"]]
@@ -134,8 +135,19 @@ if ("--generate-api" in sys.argv):
 				if (len(a)==0):
 					a="void"
 				hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n")
-				cf.write(f"}}\nINTERNAL_FUNCTION(\"{k['name'][8:]}\",{k['name']}_raw,{('0' if 'optimizable' in k['flag'] else 'SLL_INTERNAL_FUNCTION_FLAG_REQUIRED')}|{('SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL' if 'compilation_call' in k['flag'] else '0')});\n")
+				cf.write("}\n")
+				fl=""
+				if ("optimizable" not in k["flag"]):
+					fl="SLL_INTERNAL_FUNCTION_FLAG_REQUIRED"
+				if ("compilation_call" in k["flag"]):
+					if (len(fl)>0):
+						fl+="|"
+					fl+="SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL"
+				if (len(fl)==0):
+					fl="0"
+				fn_l.append(f"{{\"{k['name'][8:]}\",{k['name']}_raw,{fl}}}")
 		hf.write("\n\n\n#endif\n")
+		cf.write(f"\n\n\nstatic const internal_function_t _ifunc_data_ptr[]={{\n\t"+",\n\t".join(fn_l)+f"\n}};\n\n\n\nconst sll_function_index_t _ifunc_size={len(fn_l)};\nconst internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);\n")
 header.generate_help("rsrc/help.txt","build/help_text.h",vb)
 h_dt=header.parse_header("src/include/sll",vb)
 if (vb):

@@ -183,9 +183,11 @@ __SLL_EXTERNAL void sll_deinit_identifier_table(sll_identifier_table_t* idt){
 
 __SLL_EXTERNAL void sll_deinit_internal_function_table(sll_internal_function_table_t* ift){
 	for (sll_function_index_t i=0;i<ift->l;i++){
-		sll_deallocate(*(ift->dt+i));
+		const sll_internal_function_t* f=*(ift->dt+i);
+		sll_deinit_string((sll_string_t*)&(f->nm));
+		sll_deallocate((void*)f);
 	}
-	sll_deallocate(ift->dt);
+	sll_deallocate((void*)(ift->dt));
 	ift->dt=NULL;
 	ift->l=0;
 }

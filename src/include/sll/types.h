@@ -542,17 +542,15 @@ typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runti
 
 
 typedef struct __SLL_INTERNAL_FUNCTION{
-	sll_char_t nm[256];
-	sll_name_length_t nml;
-	sll_checksum_t c;
-	sll_internal_function_pointer_t p;
-	sll_internal_function_type_t t;
+	const sll_string_t nm;
+	const sll_internal_function_pointer_t p;
+	const sll_internal_function_type_t t;
 } sll_internal_function_t;
 
 
 
 typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
-	sll_internal_function_t** dt;
+	const sll_internal_function_t*const* dt;
 	sll_function_index_t l;
 } sll_internal_function_table_t;
 

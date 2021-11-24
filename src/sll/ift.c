@@ -2,12 +2,14 @@
 #include <sll/common.h>
 #include <sll/ift.h>
 #include <sll/memory.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
 
 
 
-INTERNAL_FUNCTION_SETUP;
+extern const sll_function_index_t _ifunc_size;
+extern const internal_function_t* _ifunc_data;
 
 
 
@@ -19,18 +21,13 @@ __SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_tab
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const sll_char_t* nm){
-	sll_name_length_t l=0;
-	sll_checksum_t c=0;
-	while (*(nm+l)){
-		c^=*(nm+l);
-		l++;
-	}
+	sll_string_t tmp;
+	sll_string_from_pointer(nm,&tmp);
 	for (sll_function_index_t i=0;i<i_ft->l;i++){
-		sll_internal_function_t* f=*(i_ft->dt+i);
-		if (f->c!=c||f->nml!=l||sll_compare_data(nm,f->nm,l)!=SLL_COMPARE_RESULT_EQUAL){
-			continue;
+		const sll_internal_function_t* f=*(i_ft->dt+i);
+		if (sll_string_equal(&(f->nm),&tmp)){
+			return i;
 		}
-		return i;
 	}
 	return SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX;
 }
@@ -39,29 +36,29 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_funct
 
 __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f,sll_internal_function_type_t t){
 	i_ft->l++;
-	i_ft->dt=sll_reallocate(i_ft->dt,i_ft->l*sizeof(sll_internal_function_t*));
+	i_ft->dt=sll_reallocate((void*)(i_ft->dt),i_ft->l*sizeof(const sll_internal_function_t*));
 	sll_internal_function_t* i_f=sll_allocate(sizeof(sll_internal_function_t));
-	i_f->nml=0;
-	i_f->c=0;
-	while (*(nm+i_f->nml)){
-		i_f->nm[i_f->nml]=*(nm+i_f->nml);
-		i_f->c^=*(nm+i_f->nml);
-		i_f->nml++;
-	}
-	i_f->p=f;
-	i_f->t=t;
-	*(i_ft->dt+i_ft->l-1)=i_f;
+	sll_string_from_pointer(nm,(sll_string_t*)&(i_f->nm));
+	*((sll_internal_function_pointer_t*)(&(i_f->p)))=f;
+	*((sll_internal_function_type_t*)(&(i_f->t)))=t;
+	*((const sll_internal_function_t**)(i_ft->dt+i_ft->l-1))=i_f;
 	return i_ft->l-1;
 }
 
 
 
-__SLL_EXTERNAL void sll_register_standard_internal_functions(sll_internal_function_table_t* i_ft){
-	const internal_function_t*const* f=&__ifunc_start;
-	while (f<&__ifunc_end){
-		if (*f){
-			sll_register_internal_function(i_ft,(*f)->nm,(*f)->f,(*f)->t);
-		}
+__SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_function_table_t* i_ft){
+	i_ft->l+=_ifunc_size;
+	i_ft->dt=sll_reallocate((void*)(i_ft->dt),i_ft->l*sizeof(const sll_internal_function_t*));
+	const internal_function_t* f=_ifunc_data;
+	const sll_internal_function_t** p=(const sll_internal_function_t**)(i_ft->dt+i_ft->l-_ifunc_size);
+	for (sll_function_index_t i=0;i<_ifunc_size;i++){
+		sll_internal_function_t* nf=sll_allocate(sizeof(sll_internal_function_t));
+		sll_string_from_pointer(f->nm,(sll_string_t*)&(nf->nm));
+		*((sll_internal_function_pointer_t*)(&(nf->p)))=f->f;
+		*((sll_internal_function_type_t*)(&(nf->t)))=f->t;
+		*p=nf;
 		f++;
+		p++;
 	}
 }
