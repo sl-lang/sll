@@ -65,7 +65,7 @@
 
 - All `memcpy` calls have been replaced by `sll_copy_data`, and all `memset` calls have been replaced by `sll_set_memory` or `sll_zero_memory`
 - Changed arguments of `sll_zero_allocate`
-- CLI and test sciript now use built-in sll types
+- CLI and test script now use built-in sll types
 - Expanded two macros: `SLL_RETURN_ERROR` to `0` and `SLL_RETURN_NO_ERROR` to `1`
 - Fixed incorrect union member access ([#84])
 - *\[POSIX only\]* Fixed return type of `sll_platform_get_page_size` ([#88])
@@ -104,7 +104,7 @@
 - Runtime object pool used by GC now allocates memory pages in larger chunks
 - `sll_execute_assembly` now expects the size of the stack instead of the stack itself
 - `sll_get_object_size` is now correctly exported
-- `sll_platform_list_directory` and `sll_platform_list_directory_recursive` now preallocate lists to reduce the number of memory reallocations
+- `sll_platform_list_directory` and `sll_platform_list_directory_recursive` now pre-allocates lists to reduce the number of memory reallocations
 - Strings are now aligned 8 bytes above a 16-byte boundary (like all memory returned by `sll_allocate`, `sll_reallocate` or `sll_zero_allocate`)
 
 ### Removed
@@ -191,7 +191,7 @@
 - Fixed bugs in optimization and merging of print objects
 - Fixed string merging in optimization of `SLL_OBJECT_TYPE_PRINT` objects
 - Fixed VM instruction jumps
-- Instruction counter now increases bef	ore the instruction is executed
+- Instruction counter now increases before the instruction is executed
 - Renamed `sll__add_debug_data` to `sll_add_debug_data`, `SLL_NO_DEBUG_DATA` to `SLL_GC_ZERO_DEBUG_DATA_STRUCT`, `SLL_LOOKUP_HANDLE_DESCRIPTOR_FAST` to `SLL_HANDLE_LOOKUP_DESCRIPTOR`, `SLL_UNKNOWN_HANLE_TYPE` to `SLL_HANDLE_UNKNOWN_TYPE`, `SLL_ZERO_integer_heap_queue_STRUCT` to `SLL_ZERO_INTEGER_HEAP_QUEUE_STRUCT`, `SLL_ABS_FLOAT` to `SLL_FLOAT_ABSOLUTE` and `SLL_ROUND_FLOAT` to `SLL_FLOAT_ROUND`
 - Renamed `SLL_STRING_COMBINE_CHECKSUMS_FAST` to `SLL_STRING_COMBINE_CHECKSUMS` (and removed the latter one)
 - Renamed integer lists to integer heap queues ([#71])
