@@ -35,6 +35,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_handle_type_t sll_create_handle(sll_handle
 
 
 
+__SLL_EXTERNAL void sll_free_handle_list(sll_handle_list_t* hl){
+	for (sll_handle_type_t i=0;i<hl->dtl;i++){
+		if ((*(hl->dt+i))->df){
+			(*(hl->dt+i))->df(SLL_HANDLE_FREE);
+		}
+	}
+	sll_deallocate(hl->dt);
+	hl->dt=NULL;
+	hl->dtl=0;
+}
+
+
+
 __SLL_EXTERNAL sll_runtime_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h){
 	sll_runtime_object_t* o=sll_create_object();
 	o->t=SLL_RUNTIME_OBJECT_TYPE_HANDLE;

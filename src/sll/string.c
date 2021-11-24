@@ -2,7 +2,6 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/operator.h>
@@ -19,6 +18,15 @@
 #define SPLIT_CHAR_ALLOCATION_SIZE 16
 
 #define STRING_DATA_PTR(x) ASSUME_ALIGNED(x,4,8)
+
+
+
+__SLL_EXTERNAL void sll_free_string(sll_string_t* s){
+	s->l=0;
+	s->c=0;
+	sll_deallocate(s->v);
+	s->v=NULL;
+}
 
 
 

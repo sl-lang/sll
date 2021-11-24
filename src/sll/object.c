@@ -1,0 +1,232 @@
+#include <sll/_sll_internal.h>
+#include <sll/common.h>
+#include <sll/memory.h>
+#include <sll/object.h>
+#include <sll/platform.h>
+#include <sll/types.h>
+#include <sll/util.h>
+
+
+
+static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_offset_t* sz){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		if (o->t==OBJECT_TYPE_CHANGE_STACK){
+			o=o->dt._p;
+		}
+		else{
+			(*sz)++;
+			o++;
+		}
+	}
+	switch (o->t){
+		case SLL_OBJECT_TYPE_UNKNOWN:
+		case SLL_OBJECT_TYPE_CHAR:
+		case SLL_OBJECT_TYPE_INT:
+		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			(*sz)++;
+			return o+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				sll_array_length_t l=o->dt.al;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_map_length_t l=o->dt.ml;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FUNC:
+		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
+				sll_arg_count_t l=o->dt.fn.ac;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
+			{
+				sll_arg_count_t l=o->dt.l.ac;
+				(*sz)++;
+				o++;
+				while (l){
+					l--;
+					o=_get_object_size(o,sz);
+				}
+				return o;
+			}
+	}
+	sll_arg_count_t l=o->dt.ac;
+	(*sz)++;
+	o++;
+	while (l){
+		l--;
+		o=_get_object_size(o,sz);
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
+	c_dt->rf=NULL;
+	c_dt->tm=0;
+	c_dt->h=NULL;
+	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		sll_identifier_list_t* e=c_dt->idt.s+i;
+		sll_deallocate(e->dt);
+		e->dt=NULL;
+		e->l=0;
+	}
+	sll_deallocate(c_dt->idt.il);
+	c_dt->idt.il=NULL;
+	c_dt->idt.ill=0;
+	sll_deallocate(c_dt->et.dt);
+	c_dt->et.dt=NULL;
+	c_dt->et.l=0;
+	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
+		sll_deallocate(*(c_dt->ft.dt+i));
+	}
+	sll_deallocate(c_dt->ft.dt);
+	c_dt->ft.dt=NULL;
+	c_dt->ft.l=0;
+	sll_free_string_table(&(c_dt->st));
+	void* pg=c_dt->_s.s;
+	sll_page_size_t sz=sll_platform_get_page_size()*OBJECT_STACK_PAGE_ALLOC_COUNT;
+	while (pg){
+		void* n=*((void**)pg);
+		sll_platform_free_page(pg,sz);
+		pg=n;
+	}
+	c_dt->_s.s=NULL;
+	c_dt->_s.e=NULL;
+	c_dt->_s.c=0;
+	c_dt->_s.p=NULL;
+	c_dt->_s.off=0;
+	c_dt->_n_sc_id=1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o){
+	sll_object_offset_t sz=0;
+	_get_object_size(o,&sz);
+	return sz;
+}
+
+
+
+__SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* rf,sll_compilation_data_t* o){
+	o->rf=rf;
+	o->tm=sll_platform_get_current_time();
+	o->h=NULL;
+	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		o->idt.s[i].dt=NULL;
+		o->idt.s[i].l=0;
+	}
+	o->idt.il=NULL;
+	o->idt.ill=0;
+	o->et.dt=NULL;
+	o->et.l=0;
+	o->ft.dt=NULL;
+	o->ft.l=0;
+	o->st.dt=NULL;
+	o->st.l=0;
+	_init_object_stack(o);
+	o->_n_sc_id=1;
+	IGNORE_RESULT(sll_create_string(&(o->st),fp,sll_string_length_unaligned(fp)));
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
+	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	}
+	switch (o->t){
+		case SLL_OBJECT_TYPE_UNKNOWN:
+		case SLL_OBJECT_TYPE_CHAR:
+		case SLL_OBJECT_TYPE_INT:
+		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_OBJECT_TYPE_FUNCTION_ID:
+			return o+1;
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				sll_array_length_t l=o->dt.al;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_map_length_t l=o->dt.ml;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FUNC:
+		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+			{
+				sll_arg_count_t l=o->dt.fn.ac;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_FOR:
+		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_OBJECT_TYPE_LOOP:
+			{
+				sll_arg_count_t l=o->dt.l.ac;
+				o++;
+				while (l){
+					l--;
+					o=sll_skip_object(o);
+				}
+				return o;
+			}
+	}
+	sll_arg_count_t l=o->dt.ac;
+	o++;
+	while (l){
+		l--;
+		o=sll_skip_object(o);
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_object_t* sll_skip_object_const(const sll_object_t* o){
+	return sll_skip_object((sll_object_t*)o);
+}

@@ -6,7 +6,6 @@
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/handle.h>
-#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/runtime_object.h>
@@ -302,6 +301,28 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	}
 	(*p)--;
 	return SLL_FROM_FLOAT(v*s);
+}
+
+
+
+__SLL_EXTERNAL void sll_free_json_object(sll_json_object_t* json){
+	if (json->t==SLL_JSON_OBJECT_TYPE_STRING){
+		sll_free_string(&(json->dt.s));
+	}
+	else if (json->t==SLL_JSON_OBJECT_TYPE_ARRAY){
+		for (sll_json_array_length_t i=0;i<json->dt.a.l;i++){
+			sll_free_json_object(json->dt.a.dt+i);
+		}
+		sll_deallocate(json->dt.a.dt);
+	}
+	else if (json->t==SLL_JSON_OBJECT_TYPE_MAP){
+		for (sll_json_map_length_t i=0;i<json->dt.m.l;i++){
+			sll_json_map_keypair_t* e=json->dt.m.dt+i;
+			sll_free_string(&(e->k));
+			sll_free_json_object(&(e->v));
+		}
+		sll_deallocate(json->dt.m.dt);
+	}
 }
 
 

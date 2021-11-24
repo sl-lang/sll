@@ -5,6 +5,19 @@
 
 
 
+#define SLL_INIT_MAP(o) \
+	do{ \
+		(o)->l=0; \
+		(o)->v=NULL; \
+	} while (0)
+#define SLL_INIT_MAP_STRUCT {0,NULL}
+
+
+
+__SLL_EXTERNAL void sll_free_map(sll_map_t* m);
+
+
+
 __SLL_EXTERNAL void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v,sll_map_t* o);
 
 

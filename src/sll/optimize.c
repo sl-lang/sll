@@ -5,7 +5,6 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
-#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -1522,7 +1521,7 @@ _keep_assignment:;
 					}
 					sll_integer_t i=(a->t==SLL_OBJECT_TYPE_INT?a->dt.i:a->dt.c);
 					if (cnd&&i==cnd->dt.i){
-						sll_deinit_binary_heap(&il);
+						sll_free_binary_heap(&il);
 						SLL_RELEASE(cnd);
 						r->t=SLL_OBJECT_TYPE_OPERATION_LIST;
 						_remove_up_to_end(cnd_n_o,((r->dt.ac-1)&0xfffffffe)-(l<<1)-1);
@@ -1539,7 +1538,7 @@ _keep_assignment:;
 						o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 					}
 				} while (l);
-				sll_deinit_binary_heap(&il);
+				sll_free_binary_heap(&il);
 				if (!(o->dt.ac&1)){
 					o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 				}

@@ -1,10 +1,11 @@
 #include <sll/_sll_internal.h>
 #include <sll/api/string.h>
+#include <sll/array.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
-#include <sll/init.h>
+#include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
@@ -59,7 +60,7 @@ static void _print_gc_data(sll_runtime_object_t* o,runtime_object_debug_data_t* 
 	sll_string_t str;
 	sll_object_to_string((const sll_runtime_object_t*const*)(&o),1,&str);
 	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),_get_type_string(o),o->rc,str.v,dt->all);
-	sll_deinit_string(&str);
+	sll_free_string(&str);
 	for (uint32_t m=0;m<dt->all;m++){
 		runtime_object_debug_data_trace_data_t* t_dt=*(dt->al+m);
 		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),t_dt->fp,t_dt->ln,t_dt->fn);
@@ -215,7 +216,28 @@ __SLL_EXTERNAL void sll_release_object(sll_runtime_object_t* o){
 	SLL_ASSERT(o->rc);
 	o->rc--;
 	if (!o->rc){
-		sll_deinit_runtime_object(o);
+		sll_remove_debug_data(o);
+		if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_STRING){
+			if (!(o->t&RUNTIME_OBJECT_EXTERNAL_STRING)){
+				sll_free_string(&(o->dt.s));
+			}
+		}
+		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
+			sll_free_array(&(o->dt.a));
+		}
+		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_HANDLE){
+			if (sll_current_runtime_data){
+				sll_handle_descriptor_t* hd=sll_handle_lookup_descriptor(sll_current_runtime_data->hl,o->dt.h.t);
+				if (hd&&hd->df){
+					hd->df(o->dt.h.h);
+				}
+			}
+		}
+		else if (SLL_RUNTIME_OBJECT_GET_TYPE(o)==SLL_RUNTIME_OBJECT_TYPE_MAP){
+			sll_free_map(&(o->dt.m));
+		}
+		o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+		o->dt.i=0;
 		GC_SET_NEXT_OBJECT(o,_gc_next_object);
 		_gc_next_object=o;
 		_gc_dealloc++;
@@ -277,7 +299,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_runtime_object_stack_cle
 					sll_string_t str;
 					sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
 					sll_file_write_format(sll_stderr,SLL_CHAR("<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n"),_get_type_string(c),c->rc,str.v);
-					sll_deinit_string(&str);
+					sll_free_string(&str);
 				}
 			}
 			i++;

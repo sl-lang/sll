@@ -68,9 +68,19 @@
 #define SLL_IS_OBJECT_TYPE_NOT_TYPE(o) ((o)->t>SLL_OBJECT_TYPE_FUNCTION_ID)
 #define SLL_IS_OBJECT_TYPE_IF(o) ((o)->t>=SLL_OBJECT_TYPE_IF&&(o)->t<=SLL_OBJECT_TYPE_SWITCH)
 
+#define SLL_INIT_COMPILATION_DATA_STRUCT {NULL,0,NULL,{.il=NULL,.ill=0},{NULL,0},{NULL,0},{NULL,0},{NULL,NULL,0,NULL,0},0}
+
+
+
+__SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt);
+
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o);
+
+
+
+__SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* rf,sll_compilation_data_t* o);
 
 
 

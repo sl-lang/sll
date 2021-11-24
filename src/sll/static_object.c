@@ -2,7 +2,6 @@
 #include <sll/array.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
-#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>

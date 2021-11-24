@@ -7,7 +7,6 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
-#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
@@ -169,7 +168,7 @@ __API_FUNC(file_write){
 	sll_string_t s;
 	sll_object_to_string(b,bc,&s);
 	sll_size_t o=sll_file_write(f,s.v,s.l*sizeof(sll_char_t));
-	sll_deinit_string(&s);
+	sll_free_string(&s);
 	return o*sizeof(sll_char_t);
 }
 

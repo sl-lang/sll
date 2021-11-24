@@ -104,6 +104,8 @@
 #define SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai) ((ai)->t>>7)
 #define SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai) ((ai)->t>>7)
 
+#define SLL_INIT_ASSEMBLY_DATA_STRUCT {0,NULL,0,0,{0,NULL},{NULL,0},{NULL,NULL,0,NULL}}
+
 
 
 __SLL_EXTERNAL extern sll_integer_t sll_current_instruction_count;
@@ -115,6 +117,10 @@ __SLL_EXTERNAL extern const sll_runtime_data_t* sll_current_runtime_data;
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,sll_page_size_t s_sz,const sll_runtime_data_t* r_dt,sll_error_t* e);
+
+
+
+__SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt);
 
 
 

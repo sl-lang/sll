@@ -1,7 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/file.h>
-#include <sll/init.h>
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -42,7 +41,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 	sll_file_flush(f);
 	if (!(f->f&FILE_FLAG_MEMORY)){
 		sll_platform_file_close(f->dt.fl.fd);
-		sll_deinit_string((sll_string_t*)(&(f->dt.fl.nm)));
+		sll_free_string((sll_string_t*)(&(f->dt.fl.nm)));
 		if (!(f->f&SLL_FILE_FLAG_NO_BUFFER)){
 			sll_page_size_t sz=sll_platform_get_page_size();
 			sz=(FILE_BUFFER_SIZE+sz-1)%sz;
@@ -338,7 +337,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 	sll_string_format_list(t,va,&str);
 	va_end(va);
 	sll_size_t o=sll_file_write(f,str.v,str.l);
-	sll_deinit_string(&str);
+	sll_free_string(&str);
 	return o;
 }
 

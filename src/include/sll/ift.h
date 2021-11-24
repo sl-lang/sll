@@ -17,6 +17,10 @@ __SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_tab
 
 
 
+__SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table_t* ift);
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const sll_char_t* nm);
 
 

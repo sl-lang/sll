@@ -5,7 +5,6 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
-#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/operator.h>
 #include <sll/runtime_object.h>
@@ -305,7 +304,7 @@ _add_to_string:
 					sb=tmp;
 				}
 				sll_string_join(&sa,&sb,&(o->dt.s));
-				sll_deinit_string((!inv?&sa:&sb));
+				sll_free_string((!inv?&sa:&sb));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
@@ -932,7 +931,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_dec(sll_run
 				sll_string_t str;
 				sll_string_from_char('1',&str);
 				sll_string_remove(&(a->dt.s),&str,&(o->dt.s));
-				sll_deinit_string(&str);
+				sll_free_string(&str);
 				return o;
 			}
 		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:

@@ -46,7 +46,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_strin
 
 
 
+__SLL_EXTERNAL void sll_deinit(void);
+
+
+
+__SLL_EXTERNAL void sll_free_string_table(sll_string_table_t* st);
+
+
+
 __SLL_EXTERNAL sll_bool_t sll_get_sandbox_flag(sll_sandbox_flags_t f);
+
+
+
+__SLL_EXTERNAL void sll_init(void);
 
 
 

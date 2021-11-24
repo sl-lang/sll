@@ -5,7 +5,6 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
-#include <sll/init.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
@@ -311,7 +310,7 @@ __API_FUNC(string_replace){
 			sll_string_t s;
 			sll_string_from_char(b->dt.c,&s);
 			sll_string_remove(a,&s,out);
-			sll_deinit_string(&s);
+			sll_free_string(&s);
 		}
 	}
 	else{
@@ -322,13 +321,13 @@ __API_FUNC(string_replace){
 			sll_string_t s;
 			sll_string_from_char(b->dt.c,&s);
 			sll_string_replace(a,&s,&(c->dt.s),out);
-			sll_deinit_string(&s);
+			sll_free_string(&s);
 		}
 		else if (SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
 			sll_string_t s;
 			sll_string_from_char(c->dt.c,&s);
 			sll_string_replace(a,&(b->dt.s),&s,out);
-			sll_deinit_string(&s);
+			sll_free_string(&s);
 		}
 		else{
 			sll_string_replace(a,&(b->dt.s),&(c->dt.s),out);

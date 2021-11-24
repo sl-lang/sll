@@ -8,7 +8,6 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
-#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/operator.h>
 #include <sll/platform.h>
@@ -534,7 +533,7 @@ _print_from_stack:;
 							sll_string_t str;
 							sll_object_to_string((const sll_runtime_object_t*const*)&tos,1,&str);
 							sll_file_write(r_dt->out,str.v,str.l*sizeof(sll_char_t));
-							sll_deinit_string(&str);
+							sll_free_string(&str);
 						}
 					}
 					SLL_RELEASE(tos);

@@ -43,7 +43,7 @@ static sll_bool_t execute_test(uint8_t id){
 			sll_file_write(&of,&e,sizeof(sll_error_t));
 			sll_file_close(&of);
 		}
-		sll_deinit_compilation_data(&c_dt);
+		sll_free_compilation_data(&c_dt);
 		sll_file_close(&f);
 		return 1;
 	}
@@ -416,7 +416,7 @@ _wrong_error:
 		o->p++;
 		printf("-> Test Case #%"PRIu32": OK\n",i);
 	}
-	sll_deinit_json_object(&json);
+	sll_free_json_object(&json);
 	return;
 _json_error:
 	if (f){
@@ -425,7 +425,7 @@ _json_error:
 	if (f_dt){
 		free(f_dt);
 	}
-	sll_deinit_json_object(&json);
+	sll_free_json_object(&json);
 	o->s++;
 	printf("JSON Error in File '%s'. Skipping Test...\n",fp);
 	return;
@@ -462,7 +462,7 @@ int main(int argc,const char** argv){
 	sll_array_length_t l=sll_platform_list_directory_recursive(td_fp,&a);
 	for (sll_array_length_t j=0;j<l;j++){
 		run_parser_test((a+j)->v,&dt);
-		sll_deinit_string(a+j);
+		sll_free_string(a+j);
 	}
 	sll_deallocate(a);
 	printf("%"PRIu32" Test%s Passed, %"PRIu32" Test%s Failed, %"PRIu32" Test%s Skipped\n",dt.p,(dt.p==1?"":"s"),dt.f,(dt.f==1?"":"s"),dt.s,(dt.s==1?"":"s"));

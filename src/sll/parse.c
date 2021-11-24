@@ -3,7 +3,6 @@
 #include <sll/error.h>
 #include <sll/file.h>
 #include <sll/ift.h>
-#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform.h>
@@ -1004,7 +1003,7 @@ _unknown_symbol:
 				uint8_t	sz=0;
 				do{
 					if (sz==255){
-						sll_deinit_string(&str);
+						sll_free_string(&str);
 						e->t=SLL_ERROR_INTERNAL_STACK_OVERFLOW;
 						e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
 						e->dt.r.sz=1;
@@ -1017,7 +1016,7 @@ _unknown_symbol:
 					sz++;
 					c=sll_file_read_char(rf);
 					if (c==SLL_END_OF_DATA){
-						sll_deinit_string(&str);
+						sll_free_string(&str);
 						goto _return_error;
 					}
 				} while ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123));
@@ -1032,12 +1031,12 @@ _unknown_symbol:
 					return 0;
 				}
 				if ((sz==3&&sll_compare_data(str.v,"nil",3)==SLL_COMPARE_RESULT_EQUAL)||(sz==5&&sll_compare_data(str.v,"false",5)==SLL_COMPARE_RESULT_EQUAL)){
-					sll_deinit_string(&str);
+					sll_free_string(&str);
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=0;
 				}
 				else if (sz==4&&sll_compare_data(str.v,"true",4)==SLL_COMPARE_RESULT_EQUAL){
-					sll_deinit_string(&str);
+					sll_free_string(&str);
 					arg->t=SLL_OBJECT_TYPE_INT;
 					arg->dt.i=1;
 				}
@@ -1069,7 +1068,7 @@ _unknown_symbol:
 								goto _check_new_var;
 							}
 							if ((o->t!=SLL_OBJECT_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
-								sll_deinit_string(&str);
+								sll_free_string(&str);
 								e->t=SLL_ERROR_UNKNOWN_IDENTIFIER;
 								e->dt.r.off=arg_s;
 								e->dt.r.sz=SLL_FILE_GET_OFFSET(rf)-arg_s-1;
@@ -1115,7 +1114,7 @@ _unknown_symbol:
 								goto _check_new_var;
 							}
 							if ((o->t!=SLL_OBJECT_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)){
-								sll_deinit_string(&str);
+								sll_free_string(&str);
 								e->t=SLL_ERROR_UNKNOWN_IDENTIFIER;
 								e->dt.r.off=arg_s;
 								e->dt.r.sz=SLL_FILE_GET_OFFSET(rf)-arg_s-1;
@@ -1138,7 +1137,7 @@ _unknown_symbol:
 						goto _identifier_created;
 					}
 _check_new_var:;
-					sll_deinit_string(&str);
+					sll_free_string(&str);
 					for (uint32_t i=0;i<e_c_dt->nv_dt->sz;i++){
 						if ((*(e_c_dt->nv_dt->dt+i))->dt.id==arg->dt.id){
 							arg->t=SLL_OBJECT_TYPE_INT;
@@ -1343,7 +1342,7 @@ _export_identifier_found:;
 					_patch_module(im.h,&im_dt);
 					sll_deallocate(im_dt.sm);
 					sll_deallocate(im_dt.eim);
-					sll_deinit_compilation_data(&im);
+					sll_free_compilation_data(&im);
 				}
 				else if ((fl&EXTRA_COMPILATION_DATA_EXPORT)&&arg->t==SLL_OBJECT_TYPE_IDENTIFIER){
 					for (sll_export_table_length_t j=0;j<c_dt->et.l;j++){

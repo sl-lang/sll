@@ -2,7 +2,6 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/operator.h>
@@ -607,4 +606,15 @@ __SLL_EXTERNAL void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_
 		o->v[i]=a->v[i];
 		i++;
 	}
+}
+
+
+
+__SLL_EXTERNAL void sll_free_array(sll_array_t* a){
+	for (sll_array_length_t i=0;i<a->l;i++){
+		sll_release_object(a->v[i]);
+	}
+	sll_deallocate(a->v);
+	a->v=NULL;
+	a->l=0;
 }

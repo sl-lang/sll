@@ -2,11 +2,21 @@
 
 ## [0.6.29] - Ongoing
 
+### Added
+
+- Miscellaneous object function are now located in [`object.c`][main/src/sll/object.c]
+
 ### Changed
 
+- All `sll_deinit_xxx` functions have been renamed to `sll_free_xxx` and moved to their corresponding source files
 - Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion
 - Renamed `sll_register_standard_internal_functions` to `sll_register_builtin_internal_functions`
-- Storage of built-in internal function and logic behind IFT-related functions
+- Storage of built-in internal functions and logic behind IFT-related functions
+
+### Removed
+
+- [`init.h`][0.6.28/src/include/sll/init.h], [`deinit.c`][0.6.28/src/sll/deinit.c], [`init.c`][0.6.28/src/sll/init.c]
+- Unused `sll_deinit_xxx` functions
 
 ## [0.6.28] - 2021-11-22
 
@@ -1105,6 +1115,10 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/sll/object.c]: https://github.com/sl-lang/sll/blob/main/src/sll/object.c
+[0.6.28/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/v0.6.28/src/include/sll/init.h
+[0.6.28/src/sll/deinit.c]: https://github.com/sl-lang/sll/blob/v0.6.28/src/sll/deinit.c
+[0.6.28/src/sll/init.c]: https://github.com/sl-lang/sll/blob/v0.6.28/src/sll/init.c
 [0.6.27/src/include/sll/cast.h]: https://github.com/sl-lang/sll/blob/v0.6.27/src/include/sll/cast.h
 [0.6.25/examples]: https://github.com/sl-lang/sll/tree/v0.6.25/examples
 [0.6.25/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/v0.6.25/src/include/sll/init.h

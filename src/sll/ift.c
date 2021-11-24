@@ -20,6 +20,19 @@ __SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_tab
 
 
 
+__SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table_t* ift){
+	for (sll_function_index_t i=0;i<ift->l;i++){
+		const sll_internal_function_t* f=*(ift->dt+i);
+		sll_free_string((sll_string_t*)&(f->nm));
+		sll_deallocate((void*)f);
+	}
+	sll_deallocate((void*)(ift->dt));
+	ift->dt=NULL;
+	ift->l=0;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const sll_char_t* nm){
 	sll_string_t tmp;
 	sll_string_from_pointer(nm,&tmp);

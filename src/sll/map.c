@@ -2,7 +2,6 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/operator.h>
@@ -10,6 +9,17 @@
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/util.h>
+
+
+
+__SLL_EXTERNAL void sll_free_map(sll_map_t* m){
+	for (sll_map_length_t j=0;j<(m->l<<1);j++){
+		sll_release_object(*(m->v+j));
+	}
+	sll_deallocate(m->v);
+	m->v=NULL;
+	m->l=0;
+}
 
 
 

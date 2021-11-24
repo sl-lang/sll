@@ -5,6 +5,15 @@
 
 
 
+#define SLL_INIT_ARRAY(o) \
+	do{ \
+		(o)->l=0; \
+		(o)->v=NULL; \
+	} while (0)
+#define SLL_INIT_ARRAY_STRUCT {0,NULL}
+
+
+
 __SLL_EXTERNAL void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
 
 
@@ -138,6 +147,10 @@ __SLL_EXTERNAL void sll_array_unshift(const sll_array_t* a,sll_runtime_object_t*
 
 
 __SLL_EXTERNAL void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+
+
+
+__SLL_EXTERNAL void sll_free_array(sll_array_t* a);
 
 
 

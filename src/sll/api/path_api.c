@@ -4,7 +4,6 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>

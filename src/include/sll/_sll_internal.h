@@ -445,10 +445,6 @@ sll_object_t* _acquire_next_object(sll_compilation_data_t* c_dt);
 
 
 
-void _execute_cleanup(void);
-
-
-
 void _file_init_std_streams(void);
 
 

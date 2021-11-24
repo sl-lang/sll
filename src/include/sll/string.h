@@ -7,12 +7,23 @@
 
 
 #define SLL_CHAR(x) ((sll_char_t*)(x))
+#define SLL_INIT_STRING(o) \
+	do{ \
+		(o)->l=0; \
+		(o)->c=0; \
+		(o)->v=NULL; \
+	} while (0)
+#define SLL_INIT_STRING_STRUCT {0,0,NULL}
 #define SLL_STRING_ALIGN_LENGTH(l) (((l)+16)&0xfffffffffffffff0ull)
 #define SLL_STRING_COMBINE_CHECKSUMS(a,l,b) (((sll_string_checksum_t)(a))^((((sll_string_checksum_t)(b))<<(((l)&3)<<3))|(((sll_string_checksum_t)(b))>>(32-(((l)&3)<<3)))))
 #define SLL_STRING_ESCAPE(c) ((c)=='\t'||(c)=='\n'||(c)=='\v'||(c)=='\f'||(c)=='\r'||(c)=='\"'||(c)=='\''||(c)=='\\')
 #define SLL_STRING_FORMAT_PADDING(v,l) ((*((uint64_t*)((v)+((l)&0xfffffffffffffff8ull))))&=(1ull<<(((l)&7)<<3))-1)
 #define SLL_STRING_HEX_ESCAPE(c) ((c)<32||(c)>126)
 #define SLL_STRING_INSERT_POINTER_STATIC(nm,i,s) sll_string_insert_pointer_length(SLL_CHAR((nm)),sizeof(nm)/sizeof(char)-1,(i),(s))
+
+
+
+__SLL_EXTERNAL void sll_free_string(sll_string_t* s);
 
 
 

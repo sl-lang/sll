@@ -1383,6 +1383,30 @@ static const sll_object_t* _generate(const sll_object_t* o,assembly_generator_da
 
 
 
+__SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
+	a_dt->tm=0;
+	a_dt->h=NULL;
+	a_dt->ic=0;
+	a_dt->vc=0;
+	sll_deallocate(a_dt->ft.dt);
+	a_dt->ft.dt=NULL;
+	a_dt->ft.l=0;
+	sll_free_string_table(&(a_dt->st));
+	void* pg=a_dt->_s.s;
+	sll_page_size_t sz=sll_platform_get_page_size()*ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT;
+	while (pg){
+		void* n=*((void**)pg);
+		sll_platform_free_page(pg,sz);
+		pg=n;
+	}
+	a_dt->_s.s=NULL;
+	a_dt->_s.e=NULL;
+	a_dt->_s.c=0;
+	a_dt->_s.p=NULL;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e){
 	if (!c_dt->_s.s){
 		e->t=SLL_ERROR_NO_STACK;

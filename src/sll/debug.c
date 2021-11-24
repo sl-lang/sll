@@ -2,11 +2,10 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>
-#include <sll/init.h>
 #include <sll/object.h>
 #include <sll/runtime_object.h>
+#include <sll/string.h>
 #include <sll/types.h>
-#include <stdio.h>
 
 
 
@@ -32,7 +31,7 @@ __SLL_EXTERNAL void sll_debug_print_runtime_object(const sll_runtime_object_t* v
 		sll_string_t str;
 		sll_object_to_string((const sll_runtime_object_t*const*)&v,1,&str);
 		sll_file_write(sll_stdout,str.v,str.l*sizeof(sll_char_t));
-		sll_deinit_string(&str);
+		sll_free_string(&str);
 	}
 	sll_file_write_char(sll_stdout,'\n');
 }

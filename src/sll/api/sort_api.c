@@ -2,7 +2,6 @@
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
-#include <sll/init.h>
 #include <sll/operator.h>
 #include <sll/runtime_object.h>
 #include <sll/static_object.h>

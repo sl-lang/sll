@@ -1,6 +1,5 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
-#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/string.h>
@@ -16,6 +15,38 @@
 
 
 static char _url_init=0;
+
+
+
+__SLL_EXTERNAL void sll_free_header_list(sll_header_list_t* hl){
+	for (sll_header_count_t i=0;i<hl->l;i++){
+		sll_header_t* kv=*(hl->dt+i);
+		sll_deallocate(kv->k.v);
+		sll_deallocate(kv->v.v);
+		sll_deallocate(*(hl->dt+i));
+	}
+	sll_deallocate(hl->dt);
+	hl->dt=NULL;
+	hl->l=0;
+}
+
+
+
+__SLL_EXTERNAL void sll_free_http_response(sll_http_response_t* r){
+	if (r->rc){
+		sll_deallocate(r->rc->v);
+		SLL_INIT_STRING(r->rc);
+	}
+	if (r->hl){
+		sll_free_header_list(r->hl);
+		r->hl->dt=NULL;
+		r->dt->l=0;
+	}
+	if (r->dt){
+		sll_deallocate(r->dt->v);
+		SLL_INIT_STRING(r->dt);
+	}
+}
 
 
 

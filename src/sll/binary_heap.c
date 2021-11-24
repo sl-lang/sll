@@ -5,50 +5,58 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* il,sll_integer_t v){
-	if (!il->l){
-		il->v=sll_allocate(sizeof(sll_integer_t));
-		il->l=1;
-		il->v[0]=v;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* bh,sll_integer_t v){
+	if (!bh->l){
+		bh->v=sll_allocate(sizeof(sll_integer_t));
+		bh->l=1;
+		bh->v[0]=v;
 		return 1;
 	}
-	if (il->l==1){
-		if (il->v[0]==v){
+	if (bh->l==1){
+		if (bh->v[0]==v){
 			return 0;
 		}
-		il->l=2;
-		il->v=sll_reallocate(il->v,2*sizeof(sll_integer_t));
-		if (il->v[0]<v){
-			il->v[1]=v;
+		bh->l=2;
+		bh->v=sll_reallocate(bh->v,2*sizeof(sll_integer_t));
+		if (bh->v[0]<v){
+			bh->v[1]=v;
 		}
 		else{
-			il->v[1]=il->v[0];
-			il->v[0]=v;
+			bh->v[1]=bh->v[0];
+			bh->v[0]=v;
 		}
 		return 1;
 	}
-	sll_array_length_t i=il->l;
-	il->l++;
-	il->v=sll_reallocate(il->v,il->l*sizeof(sll_integer_t));
+	sll_array_length_t i=bh->l;
+	bh->l++;
+	bh->v=sll_reallocate(bh->v,bh->l*sizeof(sll_integer_t));
 	do{
 		sll_array_length_t j=(i-1)>>1;
-		if (v>=il->v[j]){
+		if (v>=bh->v[j]){
 			break;
 		}
-		il->v[i]=il->v[j];
+		bh->v[i]=bh->v[j];
 		i=j;
 	} while (i);
-	if (i&&il->v[i-1]==v){
+	if (i&&bh->v[i-1]==v){
 		SLL_UNIMPLEMENTED();
 		return 0;
 	}
-	il->v[i]=v;
+	bh->v[i]=v;
 	return 1;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary_heap_t* il,sll_integer_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary_heap_t* bh,sll_integer_t v){
 	SLL_UNIMPLEMENTED();
 	return 0;
+}
+
+
+
+__SLL_EXTERNAL void sll_free_binary_heap(sll_binary_heap_t* bh){
+	sll_deallocate(bh->v);
+	bh->v=NULL;
+	bh->l=0;
 }

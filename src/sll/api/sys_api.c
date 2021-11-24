@@ -3,7 +3,6 @@
 #include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/runtime_object.h>
@@ -25,17 +24,17 @@ static char _sys_end=0;
 static void _sys_free_data(void){
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc;i++){
-			sll_deinit_string(_sys_argv+i);
+			sll_free_string(_sys_argv+i);
 		}
 		sll_deallocate(_sys_argv);
 		_sys_argv=NULL;
 	}
 	if (_sys_e.l){
-		sll_deinit_string(&_sys_e);
+		sll_free_string(&_sys_e);
 		_sys_e.l=0;
 	}
 	if (_sys_p.l){
-		sll_deinit_string(&_sys_p);
+		sll_free_string(&_sys_p);
 		_sys_p.l=0;
 	}
 }
@@ -46,7 +45,7 @@ __SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 	if (i<0||i>=_sys_argc){
 		return;
 	}
-	sll_deinit_string(_sys_argv+i);
+	sll_free_string(_sys_argv+i);
 	sll_string_from_pointer(a,_sys_argv+i);
 }
 
@@ -56,7 +55,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac){
 	SLL_ASSERT(ac>0);
 	if (_sys_argv){
 		for (sll_integer_t i=0;i<_sys_argc;i++){
-			sll_deinit_string(_sys_argv+i);
+			sll_free_string(_sys_argv+i);
 		}
 		sll_deallocate(_sys_argv);
 	}
