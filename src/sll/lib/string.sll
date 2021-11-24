@@ -1,5 +1,4 @@
 (= str (... "string_convert"))
-(= str_len (... "string_length"))
 
 (= replace (... "string_replace"))
 
@@ -7,4 +6,4 @@
 (= title_case (... "string_to_title_case"))
 (= upper_case (... "string_to_upper_case"))
 
-(## str str_len replace lower_case title_case upper_case)
+(## str replace lower_case title_case upper_case)

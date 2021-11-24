@@ -461,7 +461,7 @@ typedef struct __SLL_MAP{
 
 
 
-typedef sll_string_length_t (*sll_handle_stringify_t)(sll_handle_t h,sll_string_length_t i,sll_string_t* o);
+typedef void (*sll_handle_stringify_t)(sll_handle_t h,sll_string_t* o);
 
 
 

@@ -291,7 +291,7 @@ _add_to_string:
 				SLL_ASSERT(SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_STRING);
 				sll_string_t sa=a->dt.s;
 				sll_string_t sb;
-				sll_object_to_string((const sll_runtime_object_t*const*)&b,1,&sb);
+				sll_api_string_convert((const sll_runtime_object_t*const*)&b,1,&sb);
 				sll_runtime_object_t* o=SLL_CREATE();
 				o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
 				if (!sa.l){
@@ -600,7 +600,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_operator_cast(sll_ru
 				{
 					sll_runtime_object_t* o=SLL_CREATE();
 					o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
-					sll_object_to_string((const sll_runtime_object_t*const*)&a,1,&(o->dt.s));
+					sll_api_string_convert((const sll_runtime_object_t*const*)&a,1,&(o->dt.s));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_IA:

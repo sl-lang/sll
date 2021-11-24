@@ -86,7 +86,7 @@ static sll_object_t* _patch_module(sll_object_t* mo,const import_module_data_t* 
 
 
 
-static uint8_t _read_single_char(sll_file_t* rf,sll_file_offset_t st,sll_error_t* e,sll_char_t* o){
+static sll_char_t _read_single_char(sll_file_t* rf,sll_file_offset_t st,sll_error_t* e,sll_char_t* o){
 	sll_read_char_t c=sll_file_read_char(rf);
 	if (c==SLL_END_OF_DATA){
 		e->t=SLL_ERROR_UNMATCHED_QUOTES;
@@ -194,7 +194,7 @@ static uint8_t _read_single_char(sll_file_t* rf,sll_file_offset_t st,sll_error_t
 
 
 
-static uint8_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,const extra_compilation_data_t* e_c_dt,sll_error_t* e){
+static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c,const extra_compilation_data_t* e_c_dt,sll_error_t* e){
 	uint8_t fl=e_c_dt->fl;
 	const scope_data_t* l_sc=&(e_c_dt->sc);
 	scope_data_t n_l_sc={

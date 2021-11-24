@@ -531,7 +531,7 @@ _print_from_stack:;
 						}
 						else{
 							sll_string_t str;
-							sll_object_to_string((const sll_runtime_object_t*const*)&tos,1,&str);
+							sll_api_string_convert((const sll_runtime_object_t*const*)&tos,1,&str);
 							sll_file_write(r_dt->out,str.v,str.l*sizeof(sll_char_t));
 							sll_free_string(&str);
 						}

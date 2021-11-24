@@ -14,7 +14,7 @@
 
 
 
-static char _url_init=0;
+static sll_bool_t _url_init=0;
 
 
 

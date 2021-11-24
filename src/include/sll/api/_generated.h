@@ -63,9 +63,6 @@
 #define __SLL_API_TYPE_sll_api_string_convert void
 #define __SLL_API_ARGS_sll_api_string_convert const sll_runtime_object_t*const* a,sll_arg_count_t ac,sll_string_t* out
 
-#define __SLL_API_TYPE_sll_api_string_length __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_string_length const sll_runtime_object_t*const* a,sll_arg_count_t ac
-
 #define __SLL_API_TYPE_sll_api_string_replace void
 #define __SLL_API_ARGS_sll_api_string_replace const sll_string_t* a,const sll_runtime_object_t* b,const sll_runtime_object_t* c,sll_string_t* out
 

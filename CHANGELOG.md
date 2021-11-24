@@ -9,6 +9,9 @@
 ### Changed
 
 - All `sll_deinit_xxx` functions have been renamed to `sll_free_xxx` and moved to their corresponding source files
+- Changed declaration of `sll_handle_stringify_t`
+- Fixed critical bug in stack memory allocator
+- Fixed multiple return types
 - Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion
 - Renamed `sll_register_standard_internal_functions` to `sll_register_builtin_internal_functions`
 - Storage of built-in internal functions and logic behind IFT-related functions
@@ -16,6 +19,8 @@
 ### Removed
 
 - [`init.h`][0.6.28/src/include/sll/init.h], [`deinit.c`][0.6.28/src/sll/deinit.c], [`init.c`][0.6.28/src/sll/init.c]
+- `sll_object_to_string` has been replaced by `sll_api_string_convert
+- Unused functions: `sll_api_string_convert_length` and `sll_api_string_length` (and matching `string.sll` function declarations)
 - Unused `sll_deinit_xxx` functions
 
 ## [0.6.28] - 2021-11-22

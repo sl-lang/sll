@@ -26,7 +26,7 @@ static uint32_t _gc_dbg_dtl=0;
 static runtime_object_debug_data_t** _gc_dbg_dt=NULL;
 static uint32_t _gc_alloc=0;
 static uint32_t _gc_dealloc=0;
-static uint8_t _gc_verify=1;
+static sll_bool_t _gc_verify=1;
 
 
 
@@ -58,7 +58,7 @@ static const sll_char_t* _get_type_string(sll_runtime_object_t* o){
 
 static void _print_gc_data(sll_runtime_object_t* o,runtime_object_debug_data_t* dt){
 	sll_string_t str;
-	sll_object_to_string((const sll_runtime_object_t*const*)(&o),1,&str);
+	sll_api_string_convert((const sll_runtime_object_t*const*)(&o),1,&str);
 	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),_get_type_string(o),o->rc,str.v,dt->all);
 	sll_free_string(&str);
 	for (uint32_t m=0;m<dt->all;m++){
@@ -297,7 +297,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_runtime_object_stack_cle
 				}
 				else{
 					sll_string_t str;
-					sll_object_to_string((const sll_runtime_object_t*const*)&c,1,&str);
+					sll_api_string_convert((const sll_runtime_object_t*const*)&c,1,&str);
 					sll_file_write_format(sll_stderr,SLL_CHAR("<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n"),_get_type_string(c),c->rc,str.v);
 					sll_free_string(&str);
 				}

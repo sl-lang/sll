@@ -654,7 +654,7 @@ static const sll_object_t* _mark_loop_vars(const sll_object_t* o,optimizer_data_
 
 
 
-static uint8_t _get_cond_type(const sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_t lv){
+static sll_compare_result_t _get_cond_type(const sll_object_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_t lv){
 	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -1091,7 +1091,7 @@ _keep_assignment:;
 							}
 							_shift_objects(o,o_dt->c_dt,1);
 							sll_string_t s;
-							sll_object_to_string((const sll_runtime_object_t*const*)&v,1,&s);
+							sll_api_string_convert((const sll_runtime_object_t*const*)&v,1,&s);
 							o->t=SLL_OBJECT_TYPE_STRING;
 							o->dt.i=sll_add_string(&(o_dt->c_dt->st),&s,1);
 							o=_optimize(a,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);

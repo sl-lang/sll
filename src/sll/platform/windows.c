@@ -12,6 +12,7 @@
 #include <sll/util.h>
 #include <fcntl.h>
 #include <io.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #pragma comment(lib,"ws2_32.lib")

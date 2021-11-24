@@ -39,22 +39,19 @@ static void _memory_cleanup(sll_handle_t h){
 
 
 
-static sll_string_length_t _memory_stringify(sll_handle_t h,sll_string_length_t i,sll_string_t* o){
-	if (!o){
-		return i+17;
-	}
+static void _memory_stringify(sll_handle_t h,sll_string_t* o){
+	sll_string_increase(o,17);
 	uint8_t s=64;
 	do{
 		s-=4;
 		uint8_t v=(h>>s)&15;
-		o->v[i]=v+(v>9?87:48);
-		i++;
+		o->v[o->l]=v+(v>9?87:48);
+		o->l++;
 		if (s==32){
-			o->v[i]='\'';
-			i++;
+			o->v[o->l]='\'';
+			o->l++;
 		}
 	} while (s);
-	return i;
 }
 
 

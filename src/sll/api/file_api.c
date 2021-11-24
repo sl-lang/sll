@@ -166,7 +166,7 @@ __API_FUNC(file_write){
 		return 0;
 	}
 	sll_string_t s;
-	sll_object_to_string(b,bc,&s);
+	sll_api_string_convert(b,bc,&s);
 	sll_size_t o=sll_file_write(f,s.v,s.l*sizeof(sll_char_t));
 	sll_free_string(&s);
 	return o*sizeof(sll_char_t);

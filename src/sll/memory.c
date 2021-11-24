@@ -96,7 +96,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 #define GET_STACK_BLOCK_PREV_SIZE(b) (((b)->dt>>27)&0x7ffffff0)
 #define SET_STACK_BLOCK_SIZE(p_sz,sz) (((p_sz)<<27)|((sz)>>4))
 #define UPDATE_STACK_BLOCK_PREV_SIZE(b,p_sz) ((b)->dt=((b)->dt&0xffc0000007ffffffull)|((p_sz)<<27))
-#define UPDATE_STACK_BLOCK_SIZE(b,p_sz) ((b)->dt=((b)->dt&0xfffffffff8000000ull)|((sz)>>4))
+#define UPDATE_STACK_BLOCK_SIZE(b,sz) ((b)->dt=((b)->dt&0xfffffffff8000000ull)|((sz)>>4))
+
+#define ASSERT_CORRECT_TOP() SLL_ASSERT(!_memory_stack_top||((uint64_t)_memory_stack_top)+GET_STACK_BLOCK_SIZE(_memory_stack_top)==((uint64_t)_memory_stack_page)+_memory_stack_size)
 
 
 
@@ -236,6 +238,7 @@ static void* _allocate_chunk_stack(sll_size_t sz){
 			else{
 				_memory_stack_top=NULL;
 			}
+			ASSERT_CORRECT_TOP();
 			return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
 		}
 	}
@@ -326,11 +329,13 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 			}
 			sz+=GET_STACK_BLOCK_SIZE(n);
 			b->dt=SET_STACK_BLOCK_SIZE(p_sz,sz);
+			ASSERT_CORRECT_TOP();
 		}
 		if (p_sz){
 			mem_stack_block_t* pn=(mem_stack_block_t*)(((uint64_t)b)-p_sz);
 			if (!(pn->dt&USED_BLOCK_FLAG_USED)){
 				p_sz+=sz;
+				SLL_ASSERT(!(p_sz&15));
 				UPDATE_STACK_BLOCK_SIZE(pn,p_sz);
 				n=(mem_stack_block_t*)(((uint64_t)b)+sz);
 				if (((uint64_t)n)<((uint64_t)_memory_stack_page)+_memory_stack_size){
@@ -339,6 +344,7 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 				}
 				else if (((mem_stack_block_t*)b)==_memory_stack_top){
 					_memory_stack_top=pn;
+					ASSERT_CORRECT_TOP();
 				}
 			}
 		}
@@ -448,6 +454,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 					UPDATE_STACK_BLOCK_PREV_SIZE(nnn,n_sz);
 				}
 			}
+			ASSERT_CORRECT_TOP();
 			return p;
 		}
 		void* o=sll_allocate_stack(sz);

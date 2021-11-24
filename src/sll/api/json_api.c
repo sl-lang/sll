@@ -51,17 +51,22 @@ static void _json_cleanup(sll_handle_t h){
 
 
 
-static sll_string_length_t _json_stringify(sll_handle_t h,sll_string_length_t i,sll_string_t* o){
-	if (!o){
-		return (h<2?4:5);
-	}
+static void _json_stringify(sll_handle_t h,sll_string_t* o){
 	if (!h){
-		return SLL_STRING_INSERT_POINTER_STATIC("null",i,o);
+		sll_string_increase(o,4);
+		sll_copy_string(SLL_CHAR("null"),o->v+o->l);
+		o->l+=4;
 	}
-	if (h==1){
-		return SLL_STRING_INSERT_POINTER_STATIC("true",i,o);
+	else if (h==1){
+		sll_string_increase(o,4);
+		sll_copy_string(SLL_CHAR("true"),o->v+o->l);
+		o->l+=4;
 	}
-	return SLL_STRING_INSERT_POINTER_STATIC("false",i,o);
+	else{
+		sll_string_increase(o,5);
+		sll_copy_string(SLL_CHAR("false"),o->v+o->l);
+		o->l+=5;
+	}
 }
 
 

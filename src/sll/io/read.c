@@ -71,7 +71,7 @@ static int64_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
 
 
 
-static uint8_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
+static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 	sll_object_t* o=_acquire_next_object(c_dt);
 	READ_FIELD(o->t,rf);
 	while (o->t==SLL_OBJECT_TYPE_NOP){

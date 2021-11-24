@@ -346,19 +346,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_convert_r
 
 
 
-__SLL_API_TYPE_sll_api_string_length sll_api_string_length(__SLL_API_ARGS_sll_api_string_length);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_length_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
-	if (all<1){
-		return SLL_ACQUIRE_STATIC_INT(0);
-	}
-	const sll_runtime_object_t*const* a=al+0;
-	sll_arg_count_t ac=all-0;
-	sll_integer_t out=sll_api_string_length(a,ac);
-	return SLL_FROM_INT(out);
-}
-
-
-
 __SLL_API_TYPE_sll_api_string_replace sll_api_string_replace(__SLL_API_ARGS_sll_api_string_replace);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_api_string_replace_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
@@ -617,7 +604,6 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"path_size",sll_api_path_size_raw,0},
 	{"sort_sort",sll_api_sort_sort_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"string_convert",sll_api_string_convert_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
-	{"string_length",sll_api_string_length_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"string_replace",sll_api_string_replace_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"string_to_lower_case",sll_api_string_to_lower_case_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"string_to_title_case",sll_api_string_to_title_case_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
@@ -637,5 +623,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=35;
+const sll_function_index_t _ifunc_size=34;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

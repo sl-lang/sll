@@ -9,6 +9,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <netdb.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <sys/socket.h>
