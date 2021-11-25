@@ -16,7 +16,7 @@
 - Fixed multiple return types
 - Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion
 - Renamed `sll_register_standard_internal_functions` to `sll_register_builtin_internal_functions`
-- Renamed obejcts to nodes, and runtime objects to objects
+- Renamed objects to nodes, and runtime objects to objects
 - Storage of built-in internal functions and logic behind IFT-related functions
 
 ### Removed
