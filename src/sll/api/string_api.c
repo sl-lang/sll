@@ -235,6 +235,21 @@ __API_FUNC(string_convert){
 
 
 
+__API_FUNC(string_format){
+	sll_var_arg_list_t dt={
+		SLL_VAR_ARG_LIST_TYPE_SLL,
+		{
+			.sll={
+				b,
+				bc
+			}
+		}
+	};
+	sll_string_format_list(a->v,a->l,&dt,out);
+}
+
+
+
 __API_FUNC(string_replace){
 	if (!b){
 		sll_string_clone(a,out);

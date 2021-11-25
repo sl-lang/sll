@@ -99,7 +99,7 @@ __SLL_EXTERNAL void sll_string_format(const sll_char_t* t,sll_string_t* o,...);
 
 
 
-__SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,va_list va,sll_string_t* o);
+__SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length_t l,sll_var_arg_list_t* va,sll_string_t* o);
 
 
 

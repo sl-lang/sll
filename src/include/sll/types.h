@@ -1,6 +1,7 @@
 #ifndef __SLL_TYPES_H__
 #define __SLL_TYPES_H__ 1
 #include <stdint.h>
+#include <stdarg.h>
 
 
 
@@ -654,6 +655,27 @@ typedef struct __SLL_BINARY_HEAP{
 	sll_integer_t* v;
 	sll_array_length_t l;
 } sll_binary_heap_t;
+
+
+
+typedef struct __SLL_VAR_ARG_LIST_DATA_SLL{
+	const sll_runtime_object_t*const* p;
+	sll_arg_count_t l;
+} sll_var_arg_list_data_sll_t;
+
+
+
+typedef union __SLL_VAR_ARG_LIST_DATA{
+	va_list* c;
+	sll_var_arg_list_data_sll_t sll;
+} sll_var_arg_list_data_t;
+
+
+
+typedef struct __SLL_VAR_ARG_LIST{
+	sll_bool_t t;
+	sll_var_arg_list_data_t dt;
+} sll_var_arg_list_t;
 
 
 

@@ -445,7 +445,7 @@ __SLL_EXTERNAL void sll_string_from_char(sll_char_t c,sll_string_t* o){
 	o->c=c;
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(1)*sizeof(sll_char_t));
 	STRING_DATA_PTR(o->v);
-	*((uint64_t*)(o->v))=c;
+	*((uint64_t*)(o->v))=o->c;
 }
 
 

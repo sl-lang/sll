@@ -18,6 +18,18 @@ __API_FUNC_DECL(string_convert);
 
 
 /*~~DOCS~~
+TYPE api compilation_call optimizable var_arg
+FUNC sll_api_string_format
+DESC Docs!
+ARG S Docs!
+ARG O? Docs!
+RET Z Failure
+RET S Success*/
+__API_FUNC_DECL(string_format);
+
+
+
+/*~~DOCS~~
 TYPE api compilation_call optimizable
 FUNC sll_api_string_replace
 DESC Docs!

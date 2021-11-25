@@ -4,6 +4,8 @@
 
 ### Added
 
+- C and Sll variable argument list type: `sll_var_arg_list_t`
+- Implemeneted `sll_api_string_format`
 - Miscellaneous object function are now located in [`object.c`][main/src/sll/object.c]
 
 ### Changed

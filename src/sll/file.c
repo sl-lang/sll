@@ -333,8 +333,14 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 	}
 	va_list va;
 	va_start(va,t);
+	sll_var_arg_list_t dt={
+		SLL_VAR_ARG_LIST_TYPE_C,
+		{
+			.c=&va
+		}
+	};
 	sll_string_t str;
-	sll_string_format_list(t,va,&str);
+	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,&str);
 	va_end(va);
 	sll_size_t o=sll_file_write(f,str.v,str.l);
 	sll_free_string(&str);
