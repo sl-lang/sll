@@ -6,7 +6,7 @@
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -171,8 +171,8 @@ __API_FUNC(path_list_dir){
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);
 	sll_array_create(l,out);
 	for (sll_array_length_t i=0;i<l;i++){
-		sll_runtime_object_t* n=SLL_CREATE();
-		n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+		sll_object_t* n=SLL_CREATE();
+		n->t=SLL_OBJECT_TYPE_STRING;
 		n->dt.s=*(dt+i);
 		out->v[i]=n;
 	}
@@ -190,8 +190,8 @@ __API_FUNC(path_recursive_list_dir){
 	sll_array_length_t l=sll_platform_list_directory_recursive(a->v,&dt);
 	sll_array_create(l,out);
 	for (sll_array_length_t i=0;i<l;i++){
-		sll_runtime_object_t* n=SLL_CREATE();
-		n->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+		sll_object_t* n=SLL_CREATE();
+		n->t=SLL_OBJECT_TYPE_STRING;
 		n->dt.s=*(dt+i);
 		out->v[i]=n;
 	}

@@ -42,7 +42,7 @@ typedef uint32_t sll_identifier_index_t;
 
 
 
-struct __SLL_RUNTIME_OBJECT;
+struct __SLL_OBJECT;
 struct __SLL_JSON_OBJECT;
 struct __SLL_JSON_MAP_KEYPAIR;
 
@@ -68,7 +68,7 @@ typedef uint8_t sll_compare_result_t;
 
 
 
-typedef uint8_t sll_runtime_object_type_t;
+typedef uint8_t sll_object_type_t;
 
 
 
@@ -92,11 +92,11 @@ typedef uint8_t sll_name_length_t;
 
 
 
+typedef uint8_t sll_node_type_t;
+
+
+
 typedef uint8_t sll_object_type_t;
-
-
-
-typedef uint8_t sll_runtime_object_type_t;
 
 
 
@@ -160,7 +160,7 @@ typedef uint32_t sll_map_length_t;
 
 
 
-typedef uint32_t sll_object_offset_t;
+typedef uint32_t sll_node_offset_t;
 
 
 
@@ -272,31 +272,31 @@ typedef struct __SLL_FILE{
 
 
 
-typedef struct __SLL_EXTERNALTION_OBJECT_DATA{
+typedef struct __SLL_EXTERNALTION_NODE_DATA{
 	sll_arg_count_t ac;
 	sll_function_index_t id;
 	sll_scope_t sc;
-} sll_function_object_data_t;
+} sll_function_node_data_t;
 
 
 
-typedef struct __SLL_LOOP_OBEJCT_DATA{
+typedef struct __SLL_LOOP_NODE_DATA{
 	sll_arg_count_t ac;
 	sll_scope_t sc;
-} sll_loop_object_data_t;
+} sll_loop_node_data_t;
 
 
 
-typedef struct __SLL_DEBUG_OBJECT_DATA{
+typedef struct __SLL_DEBUG_NODE_DATA{
 	sll_string_index_t fpi;
 	sll_file_offset_t ln;
 	sll_file_offset_t cn;
 	sll_file_offset_t ln_off;
-} sll_debug_object_data_t;
+} sll_debug_node_data_t;
 
 
 
-typedef union __SLL_OBJECT_DATA{
+typedef union __SLL_NODE_DATA{
 	sll_char_t c;
 	sll_integer_t i;
 	sll_float_t f;
@@ -304,20 +304,20 @@ typedef union __SLL_OBJECT_DATA{
 	sll_array_length_t al;
 	sll_map_length_t ml;
 	sll_identifier_index_t id;
-	sll_function_object_data_t fn;
-	sll_loop_object_data_t l;
+	sll_function_node_data_t fn;
+	sll_loop_node_data_t l;
 	sll_arg_count_t ac;
-	sll_debug_object_data_t dbg;
+	sll_debug_node_data_t dbg;
 	sll_function_index_t fn_id;
 	void* _p;
-} sll_object_data_t;
+} sll_node_data_t;
 
 
 
-typedef struct __SLL_OBJECT{
-	sll_object_type_t t;
-	sll_object_data_t dt;
-} sll_object_t;
+typedef struct __SLL_NODE{
+	sll_node_type_t t;
+	sll_node_data_t dt;
+} sll_node_t;
 
 
 
@@ -351,7 +351,7 @@ typedef struct __SLL_EXPORT_TABLE{
 
 
 typedef struct __SLL_EXTERNALTION{
-	sll_object_offset_t off;
+	sll_node_offset_t off;
 	sll_arg_count_t al;
 	sll_identifier_index_t a[];
 } sll_function_t;
@@ -376,8 +376,8 @@ typedef struct __SLL_COMPILATION_STACK_DATA{
 	void* s;
 	void* e;
 	unsigned int c;
-	sll_object_t* p;
-	sll_object_offset_t off;
+	sll_node_t* p;
+	sll_node_offset_t off;
 } sll_compilation_stack_data_t;
 
 
@@ -385,7 +385,7 @@ typedef struct __SLL_COMPILATION_STACK_DATA{
 typedef struct __SLL_COMPILATION_DATA{
 	sll_file_t* rf;
 	sll_time_t tm;
-	sll_object_t* h;
+	sll_node_t* h;
 	sll_identifier_table_t idt;
 	sll_export_table_t et;
 	sll_function_table_t ft;
@@ -407,7 +407,7 @@ typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_arg_count_t ac;
 	sll_array_length_t al;
 	sll_map_length_t ml;
-	sll_runtime_object_type_t t;
+	sll_object_type_t t;
 	void* _p;
 } sll_assembly_instruction_data_t;
 
@@ -450,14 +450,14 @@ typedef struct __SLL_ASSEMBLY_DATA{
 
 typedef struct __SLL_ARRAY{
 	sll_array_length_t l;
-	struct __SLL_RUNTIME_OBJECT** v;
+	struct __SLL_OBJECT** v;
 } sll_array_t;
 
 
 
 typedef struct __SLL_MAP{
 	sll_map_length_t l;
-	struct __SLL_RUNTIME_OBJECT** v;
+	struct __SLL_OBJECT** v;
 } sll_map_t;
 
 
@@ -494,7 +494,7 @@ typedef struct __SLL_HANDLE_DATA{
 
 
 
-typedef union __SLL_RUNTIME_OBJECT_DATA{
+typedef union __SLL_OBJECT_DATA{
 	sll_char_t c;
 	sll_integer_t i;
 	sll_float_t f;
@@ -502,17 +502,17 @@ typedef union __SLL_RUNTIME_OBJECT_DATA{
 	sll_array_t a;
 	sll_handle_data_t h;
 	sll_map_t m;
-} sll_runtime_object_data_t;
+} sll_object_data_t;
 
 
 
-typedef struct __SLL_RUNTIME_OBJECT{
+typedef struct __SLL_OBJECT{
 	sll_ref_count_t rc;
-	sll_runtime_object_type_t t;
+	sll_object_type_t t;
 	uint8_t _dbg0;
 	uint16_t _dbg1;
-	sll_runtime_object_data_t dt;
-} sll_runtime_object_t;
+	sll_object_data_t dt;
+} sll_object_t;
 
 
 
@@ -538,7 +538,7 @@ typedef struct __SLL_ERROR{
 
 
 
-typedef sll_runtime_object_t* (*sll_internal_function_pointer_t)(const sll_runtime_object_t*const* al,sll_arg_count_t all);
+typedef sll_object_t* (*sll_internal_function_pointer_t)(const sll_object_t*const* al,sll_arg_count_t all);
 
 
 
@@ -635,19 +635,19 @@ typedef void (*sll_cleanup_function_t)(void);
 
 
 
-typedef sll_runtime_object_t* (*sll_unary_operator_t)(sll_runtime_object_t* a);
+typedef sll_object_t* (*sll_unary_operator_t)(sll_object_t* a);
 
 
 
-typedef sll_runtime_object_t* (*sll_binary_operator_t)(sll_runtime_object_t* a,sll_runtime_object_t* b);
+typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t* a,sll_object_t* b);
 
 
 
-typedef sll_runtime_object_t* (*sll_ternary_operator_t)(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c);
+typedef sll_object_t* (*sll_ternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c);
 
 
 
-typedef sll_runtime_object_t* (*sll_quaternary_operator_t)(sll_runtime_object_t* a,sll_runtime_object_t* b,sll_runtime_object_t* c,sll_runtime_object_t* d);
+typedef sll_object_t* (*sll_quaternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d);
 
 
 
@@ -659,7 +659,7 @@ typedef struct __SLL_BINARY_HEAP{
 
 
 typedef struct __SLL_VAR_ARG_LIST_DATA_SLL{
-	const sll_runtime_object_t*const* p;
+	const sll_object_t*const* p;
 	sll_arg_count_t l;
 } sll_var_arg_list_data_sll_t;
 

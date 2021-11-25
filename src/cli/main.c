@@ -119,7 +119,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_file_write_format(sll_stdout,SLL_CHAR("Found File '%s'\n"),f_fp);
 			}
 			sll_error_t e;
-			if (!sll_load_compiled_object(f,c_dt,&e)){
+			if (!sll_load_compiled_node(f,c_dt,&e)){
 				sll_free_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
@@ -133,7 +133,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -160,12 +160,12 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_free_assembly_data(a_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					sll_file_reset(f);
-					if (!sll_load_compiled_object(f,c_dt,&e)){
+					if (!sll_load_compiled_node(f,c_dt,&e)){
 						sll_free_compilation_data(c_dt);
 						if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 							sll_file_reset(f);
 							sll_init_compilation_data(f_fp,f,c_dt);
-							if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
+							if (!sll_parse_all_node(c_dt,&i_ft,load_import,&e)){
 								sll_free_compilation_data(c_dt);
 								if (e.t!=SLL_ERROR_UNKNOWN){
 									sll_print_error(f,&e);
@@ -174,7 +174,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 								return 0;
 							}
 							if (fl&FLAG_PRINT_OBJECT){
-								sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+								sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
 								sll_file_write_char(sll_stdout,'\n');
 							}
 							if (fl&FLAG_VERBOSE){
@@ -189,7 +189,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 					}
 					else{
 						if (fl&FLAG_PRINT_OBJECT){
-							sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+							sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
 							sll_file_write_char(sll_stdout,'\n');
 						}
 						if (fl&FLAG_VERBOSE){
@@ -225,7 +225,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			}
 			sll_file_from_data((void*)(m->dt),m->sz,SLL_FILE_FLAG_READ,f);
 			sll_error_t e;
-			if (!sll_load_compiled_object(f,c_dt,&e)){
+			if (!sll_load_compiled_node(f,c_dt,&e)){
 				sll_free_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
@@ -239,7 +239,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -267,7 +267,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_file_write_format(sll_stdout,SLL_CHAR("Found File '%s'\n"),f_fp);
 			}
 			sll_error_t e;
-			if (!sll_load_compiled_object(f,c_dt,&e)){
+			if (!sll_load_compiled_node(f,c_dt,&e)){
 				sll_free_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
@@ -281,7 +281,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -305,7 +305,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			}
 			sll_error_t e;
 			sll_init_compilation_data(l_fp,f,c_dt);
-			if (!sll_parse_all_objects(c_dt,&i_ft,load_import,&e)){
+			if (!sll_parse_all_node(c_dt,&i_ft,load_import,&e)){
 				sll_free_compilation_data(c_dt);
 				if (e.t!=SLL_ERROR_UNKNOWN){
 					sll_print_error(f,&e);
@@ -314,7 +314,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -338,22 +338,22 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Performing Global Optimization...\n");
 			}
-			sll_optimize_object(c_dt,&i_ft);
+			sll_optimize_node(c_dt,&i_ft);
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Removing Debug Data...\n");
 			}
-			sll_remove_object_debug_data(c_dt->h);
+			sll_remove_node_debug_data(c_dt->h);
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Removing Object Padding...\n");
 			}
-			sll_remove_object_padding(c_dt,c_dt->h);
+			sll_remove_node_padding(c_dt,c_dt->h);
 		}
 		if (fl&FLAG_PRINT_OBJECT){
-			sll_print_object(c_dt,&i_ft,c_dt->h,sll_stdout);
+			sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
 			sll_file_write_char(sll_stdout,'\n');
 		}
 		if (fl&FLAG_VERBOSE){
@@ -438,7 +438,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 				COLOR_RESET;
 				return 0;
 			}
-			sll_write_compiled_object(&of,c_dt);
+			sll_write_compiled_node(&of,c_dt);
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("File Written Successfully.\n");
 			}
@@ -777,19 +777,19 @@ _read_file_argument:
 			sll_free_assembly_data(&(a_dt));
 			if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 				sll_file_reset(&f);
-				if (!sll_load_compiled_object(&f,&c_dt,&e)){
+				if (!sll_load_compiled_node(&f,&c_dt,&e)){
 					sll_free_compilation_data(&c_dt);
 					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 						sll_file_reset(&f);
 						sll_init_compilation_data(SLL_CHAR("<console>"),&f,&c_dt);
-						if (!sll_parse_all_objects(&c_dt,&i_ft,load_import,&e)){
+						if (!sll_parse_all_node(&c_dt,&i_ft,load_import,&e)){
 							if (e.t!=SLL_ERROR_UNKNOWN){
 								sll_print_error(&f,&e);
 							}
 							goto _error;
 						}
 						if (fl&FLAG_PRINT_OBJECT){
-							sll_print_object(&c_dt,&i_ft,c_dt.h,sll_stdout);
+							sll_print_node(&c_dt,&i_ft,c_dt.h,sll_stdout);
 							sll_file_write_char(sll_stdout,'\n');
 						}
 						if (fl&FLAG_VERBOSE){
@@ -803,7 +803,7 @@ _read_file_argument:
 				}
 				else{
 					if (fl&FLAG_PRINT_OBJECT){
-						sll_print_object(&c_dt,&i_ft,c_dt.h,sll_stdout);
+						sll_print_node(&c_dt,&i_ft,c_dt.h,sll_stdout);
 						sll_file_write_char(sll_stdout,'\n');
 					}
 					if (fl&FLAG_VERBOSE){

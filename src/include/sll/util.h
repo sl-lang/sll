@@ -22,7 +22,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_t
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_string_table_t* st,sll_runtime_object_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_string_table_t* st,sll_object_t* v);
 
 
 

@@ -47,8 +47,8 @@ static __inline __forceinline unsigned int FIND_LAST_SET_BIT(unsigned __int64 m)
 			__assume(0); \
 		} \
 	} while (0)
-#define STATIC_RUNTIME_OBJECT(rt) const static static_runtime_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __declspec(allocate("strto$b")) static_runtime_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
-#define STATIC_RUNTIME_OBJECT_SETUP const static __declspec(allocate("strto$a")) static_runtime_object_t* __strto_start=0;const static __declspec(allocate("strto$z")) static_runtime_object_t* __strto_end=0
+#define STATIC_OBJECT(rt) const static static_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __declspec(allocate("strto$b")) static_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
+#define STATIC_OBJECT_SETUP const static __declspec(allocate("strto$a")) static_object_t* __strto_start=0;const static __declspec(allocate("strto$z")) static_object_t* __strto_end=0
 #else
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __builtin_unreachable()
@@ -72,8 +72,8 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 	do{ \
 		p=__builtin_assume_aligned((p),(n),(x)); \
 	} while (0)
-#define STATIC_RUNTIME_OBJECT(rt) const static static_runtime_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __attribute__((used,section("strto"))) static_runtime_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
-#define STATIC_RUNTIME_OBJECT_SETUP extern const static_runtime_object_t* __start_strto;extern const static_runtime_object_t* __stop_strto
+#define STATIC_OBJECT(rt) const static static_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __attribute__((used,section("strto"))) static_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
+#define STATIC_OBJECT_SETUP extern const static_object_t* __start_strto;extern const static_object_t* __stop_strto
 #define __strto_start __start_strto
 #define __strto_end __stop_strto
 #endif
@@ -84,10 +84,10 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 
 #define __API_FUNC(nm) __SLL_EXTERNAL __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
-#define __SLL_STATIC_INT_OBJECT(v) static sll_runtime_object_t _int_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=(v)}};STATIC_RUNTIME_OBJECT(&_int_##v##_static_data)
-#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_runtime_object_t _int_neg_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=-(v)}};STATIC_RUNTIME_OBJECT(&_int_neg_##v##_static_data)
-#define __SLL_STATIC_CHAR_OBJECT(v) static sll_runtime_object_t _char_##v##_static_data={1,SLL_RUNTIME_OBJECT_TYPE_CHAR,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.c=(sll_char_t)(v)}};STATIC_RUNTIME_OBJECT(&_char_##v##_static_data)
-#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_runtime_object_t _##nm##_static_data={1,t,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.f=v}};__SLL_EXTERNAL sll_runtime_object_t* sll_static_##nm=&_##nm##_static_data
+#define __SLL_STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=(v)}};STATIC_OBJECT(&_int_##v##_static_data)
+#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=-(v)}};STATIC_OBJECT(&_int_neg_##v##_static_data)
+#define __SLL_STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.c=(sll_char_t)(v)}};STATIC_OBJECT(&_char_##v##_static_data)
+#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
 
 
 
@@ -144,13 +144,13 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 #define CALL_STACK_SIZE 256
 
-#define RUNTIME_OBJECT_TYPE_FUNCTION_ID SLL_RUNTIME_OBJECT_TYPE_RESERVED2
-#define RUNTIME_OBJECT_TYPE_UNKNOWN SLL_RUNTIME_OBJECT_TYPE_RESERVED3
-#define RUNTIME_OBJECT_CHANGE_IN_LOOP SLL_RUNTIME_OBJECT_FLAG_RESERVED0
-#define RUNTIME_OBJECT_EXTERNAL_STRING SLL_RUNTIME_OBJECT_FLAG_RESERVED1
+#define OBJECT_TYPE_FUNCTION_ID SLL_OBJECT_TYPE_RESERVED2
+#define OBJECT_TYPE_UNKNOWN SLL_OBJECT_TYPE_RESERVED3
+#define OBJECT_CHANGE_IN_LOOP SLL_OBJECT_FLAG_RESERVED0
+#define OBJECT_EXTERNAL_STRING SLL_OBJECT_FLAG_RESERVED1
 
 #define GC_INIT_PAGE_COUNT 4
-#define GC_GET_NEXT_OBJECT(o) ((sll_runtime_object_t*)((o)->dt.s.v))
+#define GC_GET_NEXT_OBJECT(o) ((sll_object_t*)((o)->dt.s.v))
 #define GC_SET_NEXT_OBJECT(o,n) ((o)->dt.s.v=SLL_CHAR((n)))
 
 #define GC_MAX_DEBUG_ID 16777215
@@ -159,12 +159,12 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 #define MAX_ASSEMBLY_INSTRUCTION_LABEL SLL_MAX_INSTRUCTION_INDEX
 
-#define OBJECT_TYPE_CHANGE_STACK SLL_OBJECT_TYPE_RESERVED0
+#define OBJECT_TYPE_CHANGE_STACK SLL_NODE_TYPE_RESERVED0
 
 #define ALLOCATOR_PAGE_ALLOC_COUNT 16
 #define ALLOCATOR_STACK_PAGE_ALLOC_COUNT 64
 #define ASSEMBLY_INSTRUCTION_STACK_PAGE_ALLOC_COUNT 16
-#define GC_RUNTIME_OBJECT_POOL_PAGE_ALLOC_COUNT 16
+#define GC_OBJECT_POOL_PAGE_ALLOC_COUNT 16
 #define OBJECT_STACK_PAGE_ALLOC_COUNT 16
 
 #define STRING_COMPRESSION_MIN_LENGTH 64
@@ -173,7 +173,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 #define OPTIMIZER_ASSIGN_VARIABLE_REMOVE ((void*)0xffffffffffffffff)
 
-#define OPTIMIZER_NEW_RUNTIME_OBJECT 1
+#define OPTIMIZER_NEW_OBJECT 1
 #define OPTIMIZER_NO_VARIABLES 2
 
 #define ALLOCATOR_MAX_SMALL_SIZE 512
@@ -220,7 +220,7 @@ typedef struct __SCOPE_DATA{
 
 
 typedef struct __NEW_VARIABLE_DATA{
-	sll_object_t** dt;
+	sll_node_t** dt;
 	uint32_t sz;
 } new_variable_data_t;
 
@@ -295,8 +295,8 @@ typedef struct __OPTIMIZER_DATA{
 	uint32_t s_sm_l[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
 	uint32_t l_sm_l;
 	variable_assignment_data_t va;
-	sll_runtime_object_t** v;
-	sll_object_t* a_v;
+	sll_object_t** v;
+	sll_node_t* a_v;
 	uint8_t rm;
 } optimizer_data_t;
 
@@ -372,21 +372,21 @@ typedef struct __INTERNAL_FUNCTION{
 
 
 
-typedef struct __RUNTIME_OBJECT_DEBUG_DATA_TRACE_DATA{
+typedef struct __OBJECT_DEBUG_DATA_TRACE_DATA{
 	const char* fp;
 	unsigned int ln;
 	char fn[256];
-} runtime_object_debug_data_trace_data_t;
+} object_debug_data_trace_data_t;
 
 
 
-typedef struct __RUNTIME_OBJECT_DEBUG_DATA{
-	runtime_object_debug_data_trace_data_t c;
-	runtime_object_debug_data_trace_data_t** al;
+typedef struct __OBJECT_DEBUG_DATA{
+	object_debug_data_trace_data_t c;
+	object_debug_data_trace_data_t** al;
 	uint32_t all;
-	runtime_object_debug_data_trace_data_t** rl;
+	object_debug_data_trace_data_t** rl;
 	uint32_t rll;
-} runtime_object_debug_data_t;
+} object_debug_data_t;
 
 
 
@@ -397,16 +397,16 @@ typedef struct __FILE_LIST_DATA{
 
 
 
-typedef struct __STATIC_RUNTIME_OBJECT{
-	sll_runtime_object_t* dt;
+typedef struct __STATIC_OBJECT{
+	sll_object_t* dt;
 	const char* fp;
 	unsigned int ln;
-} static_runtime_object_t;
+} static_object_t;
 
 
 
 typedef struct __OBJECT_LABEL{
-	const sll_object_t* o;
+	const sll_node_t* o;
 	assembly_instruction_label_t l;
 } object_label_t;
 
@@ -440,7 +440,7 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 
-sll_object_t* _acquire_next_object(sll_compilation_data_t* c_dt);
+sll_node_t* _acquire_next_object(sll_compilation_data_t* c_dt);
 
 
 
@@ -468,7 +468,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 
 
 
-sll_object_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_object_offset_t off);
+sll_node_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_node_offset_t off);
 
 
 
@@ -484,7 +484,7 @@ void _memory_release_data(void);
 
 
 
-void _shift_objects(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_offset_t off);
+void _shift_objects(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off);
 
 
 

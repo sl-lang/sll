@@ -33,7 +33,7 @@ __SLL_EXTERNAL void sll_free_handle_list(sll_handle_list_t* hl);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h);
 
 
 

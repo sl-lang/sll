@@ -2,7 +2,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>
-#include <sll/object.h>
+#include <sll/node.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <sll/version.h>
@@ -25,8 +25,8 @@ static void _write_integer(sll_file_t* wf,uint64_t v){
 
 
 
-static const sll_object_t* _write_object(sll_file_t* wf,const sll_object_t* o){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
+static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
 		if (o->t==OBJECT_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 			continue;
@@ -36,21 +36,21 @@ static const sll_object_t* _write_object(sll_file_t* wf,const sll_object_t* o){
 	}
 	WRITE_FIELD(o->t,wf);
 	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_UNKNOWN:
 			return o+1;
-		case SLL_OBJECT_TYPE_CHAR:
+		case SLL_NODE_TYPE_CHAR:
 			WRITE_FIELD(o->dt.c,wf);
 			return o+1;
-		case SLL_OBJECT_TYPE_INT:
+		case SLL_NODE_TYPE_INT:
 			WRITE_SIGNED_INTEGER(wf,o->dt.i);
 			return o+1;
-		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_NODE_TYPE_FLOAT:
 			WRITE_FIELD(o->dt.f,wf);
 			return o+1;
-		case SLL_OBJECT_TYPE_STRING:
+		case SLL_NODE_TYPE_STRING:
 			_write_integer(wf,o->dt.s);
 			return o+1;
-		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_NODE_TYPE_ARRAY:
 			{
 				_write_integer(wf,o->dt.al);
 				sll_array_length_t l=o->dt.al;
@@ -61,7 +61,7 @@ static const sll_object_t* _write_object(sll_file_t* wf,const sll_object_t* o){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_MAP:
+		case SLL_NODE_TYPE_MAP:
 			{
 				_write_integer(wf,o->dt.ml);
 				sll_map_length_t l=o->dt.ml;
@@ -72,18 +72,18 @@ static const sll_object_t* _write_object(sll_file_t* wf,const sll_object_t* o){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_IDENTIFIER:
 			_write_integer(wf,o->dt.id);
 			return o+1;
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_FUNCTION_ID:
 			_write_integer(wf,o->dt.fn_id);
 			return o+1;
-		case SLL_OBJECT_TYPE_FUNC:
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				_write_integer(wf,o->dt.fn.ac);
 				_write_integer(wf,o->dt.fn.id);
-				if (o->t==SLL_OBJECT_TYPE_FUNC){
+				if (o->t==SLL_NODE_TYPE_FUNC){
 					_write_integer(wf,o->dt.fn.sc);
 				}
 				sll_arg_count_t l=o->dt.fn.ac;
@@ -94,9 +94,9 @@ static const sll_object_t* _write_object(sll_file_t* wf,const sll_object_t* o){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FOR:
-		case SLL_OBJECT_TYPE_WHILE:
-		case SLL_OBJECT_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
 			{
 				_write_integer(wf,o->dt.l.ac);
 				_write_integer(wf,o->dt.l.sc);
@@ -108,7 +108,7 @@ static const sll_object_t* _write_object(sll_file_t* wf,const sll_object_t* o){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_DEBUG_DATA:
+		case SLL_NODE_TYPE_DEBUG_DATA:
 			_write_integer(wf,o->dt.dbg.fpi);
 			_write_integer(wf,o->dt.dbg.ln);
 			_write_integer(wf,o->dt.dbg.cn);
@@ -323,13 +323,13 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 
 
 
-__SLL_EXTERNAL void sll_write_object(sll_file_t* wf,const sll_object_t* o){
+__SLL_EXTERNAL void sll_write_node(sll_file_t* wf,const sll_node_t* o){
 	_write_object(wf,o);
 }
 
 
 
-__SLL_EXTERNAL void sll_write_compiled_object(sll_file_t* wf,const sll_compilation_data_t* c_dt){
+__SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* c_dt){
 	uint32_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
 	sll_file_write(wf,(uint8_t*)(&n),sizeof(uint32_t));
 	sll_version_t v=SLL_VERSION;

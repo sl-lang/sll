@@ -1,12 +1,12 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
-#include <sll/object.h>
+#include <sll/node.h>
 #include <sll/types.h>
 
 
 
-static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_data_t* c_dt,sll_object_t** d,sll_object_offset_t* rm){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
+static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_t** d,sll_node_offset_t* rm){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
 		if (o->t==OBJECT_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 		}
@@ -21,15 +21,15 @@ static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_da
 		(*d)=(*d)->dt._p;
 	}
 	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
-		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_INT:
-		case SLL_OBJECT_TYPE_FLOAT:
-		case SLL_OBJECT_TYPE_STRING:
-		case SLL_OBJECT_TYPE_IDENTIFIER:
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_INT:
+		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
-		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_NODE_TYPE_ARRAY:
 			{
 				sll_array_length_t l=o->dt.al;
 				o++;
@@ -39,7 +39,7 @@ static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_da
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_MAP:
+		case SLL_NODE_TYPE_MAP:
 			{
 				sll_map_length_t l=o->dt.ml;
 				o++;
@@ -49,9 +49,9 @@ static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_da
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FUNC:
+		case SLL_NODE_TYPE_FUNC:
 			(*(c_dt->ft.dt+o->dt.fn.id))->off-=*rm;
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				sll_arg_count_t l=o->dt.fn.ac;
 				o++;
@@ -61,9 +61,9 @@ static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_da
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FOR:
-		case SLL_OBJECT_TYPE_WHILE:
-		case SLL_OBJECT_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;
@@ -73,7 +73,7 @@ static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_da
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_DEBUG_DATA:
+		case SLL_NODE_TYPE_DEBUG_DATA:
 			return _remove_padding_internal(o+1,c_dt,d,rm);
 	}
 	sll_arg_count_t l=o->dt.ac;
@@ -87,8 +87,8 @@ static sll_object_t* _remove_padding_internal(sll_object_t* o,sll_compilation_da
 
 
 
-__SLL_EXTERNAL void sll_remove_object_padding(sll_compilation_data_t* c_dt,sll_object_t* o){
-	sll_object_t* d=o;
-	sll_object_offset_t rm=0;
+__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt,sll_node_t* o){
+	sll_node_t* d=o;
+	sll_node_offset_t rm=0;
 	_remove_padding_internal(o,c_dt,&d,&rm);
 }

@@ -5,7 +5,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/types.h>
 #include <stdint.h>
 
@@ -23,7 +23,7 @@
 
 
 static sll_handle_type_t _memory_ht=SLL_HANDLE_UNKNOWN_TYPE;
-static sll_runtime_object_t* _memory_null_ref=NULL;
+static sll_object_t* _memory_null_ref=NULL;
 static sll_handle_descriptor_t _memory_type;
 
 
@@ -56,20 +56,20 @@ static void _memory_stringify(sll_handle_t h,sll_string_t* o){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_object(sll_runtime_object_t* v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_memory_from_object(sll_object_t* v){
 	SETUP_HANDLE;
 	void* p=v;
-	if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_STRING){
+	if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_STRING){
 		p=v->dt.s.v;
 	}
-	else if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_ARRAY){
+	else if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_ARRAY){
 		p=v->dt.a.v;
 	}
-	else if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&v->dt.h.t==_memory_ht){
+	else if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_HANDLE&&v->dt.h.t==_memory_ht){
 		SLL_ACQUIRE(v);
 		return v;
 	}
-	else if (SLL_RUNTIME_OBJECT_GET_TYPE(v)==SLL_RUNTIME_OBJECT_TYPE_MAP){
+	else if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_MAP){
 		p=v->dt.m.v;
 	}
 	return sll_memory_from_pointer(p);
@@ -77,14 +77,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_object(s
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_pointer(void* p){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_memory_from_pointer(void* p){
 	SETUP_HANDLE;
 	if (!p){
 		SLL_ACQUIRE(_memory_null_ref);
 		return _memory_null_ref;
 	}
-	sll_runtime_object_t* o=SLL_CREATE();
-	o->t=SLL_RUNTIME_OBJECT_TYPE_HANDLE;
+	sll_object_t* o=SLL_CREATE();
+	o->t=SLL_OBJECT_TYPE_HANDLE;
 	o->dt.h.t=_memory_ht;
 	o->dt.h.h=(sll_handle_t)p;
 	return o;
@@ -92,7 +92,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_from_pointer(
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_memory_get_null_pointer(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_memory_get_null_pointer(void){
 	SETUP_HANDLE;
 	SLL_ACQUIRE(_memory_null_ref);
 	return _memory_null_ref;

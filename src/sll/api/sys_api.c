@@ -5,7 +5,7 @@
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>

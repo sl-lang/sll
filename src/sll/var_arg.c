@@ -1,7 +1,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/operator.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -32,7 +32,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_
 	if (!va->dt.sll.l){
 		return 0;
 	}
-	sll_runtime_object_t* n=sll_operator_cast((sll_runtime_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_RUNTIME_OBJECT_TYPE_INT]);
+	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_integer_t o=n->dt.i;
 	SLL_RELEASE(n);
 	va->dt.sll.p++;
@@ -49,7 +49,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_var_arg_get_float(sll_var_arg_
 	if (!va->dt.sll.l){
 		return 0;
 	}
-	sll_runtime_object_t* n=sll_operator_cast((sll_runtime_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_RUNTIME_OBJECT_TYPE_FLOAT]);
+	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
 	sll_float_t o=n->dt.f;
 	SLL_RELEASE(n);
 	va->dt.sll.p++;
@@ -66,7 +66,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 	if (!va->dt.sll.l){
 		return 0;
 	}
-	sll_runtime_object_t* n=sll_operator_cast((sll_runtime_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_RUNTIME_OBJECT_TYPE_CHAR]);
+	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 	sll_char_t o=n->dt.c;
 	SLL_RELEASE(n);
 	va->dt.sll.p++;
@@ -84,7 +84,7 @@ __SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* 
 		sll_string_create(0,o);
 	}
 	else{
-		sll_runtime_object_t* n=sll_operator_cast((sll_runtime_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_RUNTIME_OBJECT_TYPE_STRING]);
+		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		sll_string_clone(&(n->dt.s),o);
 		SLL_RELEASE(n);
 		va->dt.sll.p++;

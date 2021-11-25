@@ -6,7 +6,7 @@
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/memory.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -89,15 +89,15 @@ static void _write_char(sll_char_t c,sll_string_t* o){
 
 
 
-static void _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_string_t* o){
+static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o){
 	if (!a->rc){
 		sll_string_increase(o,19);
 		sll_copy_string(SLL_CHAR("<released object>"),o->v+o->l);
 		o->l+=19;
 		return;
 	}
-	switch (SLL_RUNTIME_OBJECT_GET_TYPE(a)){
-		case SLL_RUNTIME_OBJECT_TYPE_INT:
+	switch (SLL_OBJECT_GET_TYPE(a)){
+		case SLL_OBJECT_TYPE_INT:
 			{
 				sll_integer_t v=a->dt.i;
 				if (v<0){
@@ -109,7 +109,7 @@ static void _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_str
 				_write_int(v,o);
 				return;
 			}
-		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_FLOAT:
 			{
 				sll_char_t bf[256];
 				sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.f);
@@ -118,7 +118,7 @@ static void _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_str
 				o->l+=bfl;
 				return;
 			}
-		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
+		case SLL_OBJECT_TYPE_CHAR:
 			if (q){
 				sll_string_increase(o,1);
 				o->v[o->l]='\'';
@@ -133,7 +133,7 @@ static void _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_str
 			o->v[o->l]=a->dt.c;
 			o->l++;
 			return;
-		case SLL_RUNTIME_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_STRING:
 			if (q){
 				sll_string_increase(o,1);
 				o->v[o->l]='\"';
@@ -150,7 +150,7 @@ static void _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_str
 			sll_copy_data(a->dt.s.v,a->dt.s.l,o->v+o->l);
 			o->l+=a->dt.s.l;
 			return;
-		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
+		case SLL_OBJECT_TYPE_ARRAY:
 			sll_string_increase(o,1);
 			o->v[o->l]='[';
 			o->l++;
@@ -166,7 +166,7 @@ static void _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_str
 			o->v[o->l]=']';
 			o->l++;
 			return;
-		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+		case SLL_OBJECT_TYPE_HANDLE:
 			{
 				sll_handle_descriptor_t* hd=(sll_current_runtime_data?SLL_HANDLE_LOOKUP_DESCRIPTOR(sll_current_runtime_data->hl,a->dt.h.t):NULL);
 				if (hd&&hd->sf){
@@ -186,7 +186,7 @@ static void _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_str
 				_write_int(a->dt.h.t,o);
 				return;
 			}
-		case SLL_RUNTIME_OBJECT_TYPE_MAP:
+		case SLL_OBJECT_TYPE_MAP:
 			sll_string_increase(o,1);
 			o->v[o->l]='<';
 			o->l++;
@@ -202,13 +202,13 @@ static void _object_to_string(const sll_runtime_object_t* a,sll_bool_t q,sll_str
 			o->v[o->l]='>';
 			o->l++;
 			return;
-		case RUNTIME_OBJECT_TYPE_FUNCTION_ID:
+		case OBJECT_TYPE_FUNCTION_ID:
 			sll_string_increase(o,1);
 			o->v[o->l]='#';
 			o->l++;
 			_write_int(a->dt.i,o);
 			return;
-		case RUNTIME_OBJECT_TYPE_UNKNOWN:
+		case OBJECT_TYPE_UNKNOWN:
 		default:
 			sll_string_increase(o,9);
 			sll_copy_string(SLL_CHAR("<unknown>"),o->v+o->l);
@@ -256,7 +256,7 @@ __API_FUNC(string_replace){
 		sll_string_clone(a,out);
 	}
 	else if (!c){
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_STRING){
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING){
 			sll_string_remove(a,&(b->dt.s),out);
 		}
 		else{
@@ -268,16 +268,16 @@ __API_FUNC(string_replace){
 		}
 	}
 	else{
-		if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_CHAR&&SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_CHAR){
 			sll_string_replace_char(a,b->dt.c,c->dt.c,out);
 		}
-		else if (SLL_RUNTIME_OBJECT_GET_TYPE(b)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+		else if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR){
 			sll_string_t s;
 			sll_string_from_char(b->dt.c,&s);
 			sll_string_replace(a,&s,&(c->dt.s),out);
 			sll_free_string(&s);
 		}
-		else if (SLL_RUNTIME_OBJECT_GET_TYPE(c)==SLL_RUNTIME_OBJECT_TYPE_CHAR){
+		else if (SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_CHAR){
 			sll_string_t s;
 			sll_string_from_char(c->dt.c,&s);
 			sll_string_replace(a,&(b->dt.s),&s,out);

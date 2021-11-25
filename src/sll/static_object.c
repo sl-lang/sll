@@ -3,7 +3,7 @@
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/map.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -269,7 +269,7 @@ __SLL_STATIC_INT_OBJECT(255);
 
 
 
-__SLL_EXTERNAL sll_runtime_object_t* sll_static_int[256]={
+__SLL_EXTERNAL sll_object_t* sll_static_int[256]={
 	&_int_0_static_data,&_int_1_static_data,&_int_2_static_data,&_int_3_static_data,&_int_4_static_data,&_int_5_static_data,
 	&_int_6_static_data,&_int_7_static_data,&_int_8_static_data,&_int_9_static_data,&_int_10_static_data,&_int_11_static_data,
 	&_int_12_static_data,&_int_13_static_data,&_int_14_static_data,&_int_15_static_data,&_int_16_static_data,&_int_17_static_data,
@@ -336,7 +336,7 @@ __SLL_STATIC_NEG_INT_OBJECT(16);
 
 
 
-__SLL_EXTERNAL sll_runtime_object_t* sll_static_negative_int[16]={
+__SLL_EXTERNAL sll_object_t* sll_static_negative_int[16]={
 	&_int_neg_1_static_data,&_int_neg_2_static_data,&_int_neg_3_static_data,&_int_neg_4_static_data,&_int_neg_5_static_data,
 	&_int_neg_6_static_data,&_int_neg_7_static_data,&_int_neg_8_static_data,&_int_neg_9_static_data,&_int_neg_10_static_data,
 	&_int_neg_11_static_data,&_int_neg_12_static_data,&_int_neg_13_static_data,&_int_neg_14_static_data,&_int_neg_15_static_data,
@@ -345,15 +345,15 @@ __SLL_EXTERNAL sll_runtime_object_t* sll_static_negative_int[16]={
 
 
 
-__SLL_STATIC_OBJECT(float_zero,SLL_RUNTIME_OBJECT_TYPE_FLOAT,f,0);
+__SLL_STATIC_OBJECT(float_zero,SLL_OBJECT_TYPE_FLOAT,f,0);
 
 
 
-__SLL_STATIC_OBJECT(float_one,SLL_RUNTIME_OBJECT_TYPE_FLOAT,f,1);
+__SLL_STATIC_OBJECT(float_one,SLL_OBJECT_TYPE_FLOAT,f,1);
 
 
 
-__SLL_STATIC_OBJECT(float_half,SLL_RUNTIME_OBJECT_TYPE_FLOAT,f,0.5);
+__SLL_STATIC_OBJECT(float_half,SLL_OBJECT_TYPE_FLOAT,f,0.5);
 
 
 
@@ -616,7 +616,7 @@ __SLL_STATIC_CHAR_OBJECT(255);
 
 
 
-__SLL_EXTERNAL sll_runtime_object_t* sll_static_char[256]={
+__SLL_EXTERNAL sll_object_t* sll_static_char[256]={
 	&_char_0_static_data,&_char_1_static_data,&_char_2_static_data,&_char_3_static_data,&_char_4_static_data,&_char_5_static_data,
 	&_char_6_static_data,&_char_7_static_data,&_char_8_static_data,&_char_9_static_data,&_char_10_static_data,&_char_11_static_data,
 	&_char_12_static_data,&_char_13_static_data,&_char_14_static_data,&_char_15_static_data,&_char_16_static_data,&_char_17_static_data,
@@ -663,23 +663,23 @@ __SLL_EXTERNAL sll_runtime_object_t* sll_static_char[256]={
 };
 
 
-__SLL_STATIC_OBJECT(str_zero,SLL_RUNTIME_OBJECT_TYPE_STRING,s,SLL_INIT_STRING_STRUCT);
+__SLL_STATIC_OBJECT(str_zero,SLL_OBJECT_TYPE_STRING,s,SLL_INIT_STRING_STRUCT);
 
 
 
-__SLL_STATIC_OBJECT(array_zero,SLL_RUNTIME_OBJECT_TYPE_ARRAY,a,SLL_INIT_ARRAY_STRUCT);
+__SLL_STATIC_OBJECT(array_zero,SLL_OBJECT_TYPE_ARRAY,a,SLL_INIT_ARRAY_STRUCT);
 
 
 
-__SLL_STATIC_OBJECT(handle_zero,SLL_RUNTIME_OBJECT_TYPE_HANDLE,h,SLL_INIT_HANDLE_DATA_STRUCT);
+__SLL_STATIC_OBJECT(handle_zero,SLL_OBJECT_TYPE_HANDLE,h,SLL_INIT_HANDLE_DATA_STRUCT);
 
 
 
-__SLL_STATIC_OBJECT(map_zero,SLL_RUNTIME_OBJECT_TYPE_MAP,m,SLL_INIT_MAP_STRUCT);
+__SLL_STATIC_OBJECT(map_zero,SLL_OBJECT_TYPE_MAP,m,SLL_INIT_MAP_STRUCT);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_integer_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v){
 	if (v>-1&&v<256){
 		SLL_ACQUIRE_NO_DEBUG(sll_static_int[v]);
 		return sll_static_int[v];
@@ -688,15 +688,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_in
 		SLL_ACQUIRE_NO_DEBUG(sll_static_negative_int[-v-1]);
 		return sll_static_negative_int[-v-1];
 	}
-	sll_runtime_object_t* o=sll_create_object();
-	o->t=SLL_RUNTIME_OBJECT_TYPE_INT;
+	sll_object_t* o=sll_create_object();
+	o->t=SLL_OBJECT_TYPE_INT;
 	o->dt.i=v;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_float_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t v){
 	if (!v){
 		SLL_ACQUIRE_NO_DEBUG(sll_static_float_zero);
 		return sll_static_float_zero;
@@ -709,15 +709,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_
 		SLL_ACQUIRE_NO_DEBUG(sll_static_float_half);
 		return sll_static_float_half;
 	}
-	sll_runtime_object_t* o=sll_create_object();
-	o->t=SLL_RUNTIME_OBJECT_TYPE_FLOAT;
+	sll_object_t* o=sll_create_object();
+	o->t=SLL_OBJECT_TYPE_FLOAT;
 	o->dt.f=v;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_char_to_object(sll_char_t v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v){
 	SLL_ACQUIRE_NO_DEBUG(sll_static_char[v]);
 	return sll_static_char[v];
 }

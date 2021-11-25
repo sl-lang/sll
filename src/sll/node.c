@@ -1,15 +1,15 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/memory.h>
-#include <sll/object.h>
+#include <sll/node.h>
 #include <sll/platform.h>
 #include <sll/types.h>
 #include <sll/util.h>
 
 
 
-static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_offset_t* sz){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* sz){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 		if (o->t==OBJECT_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 		}
@@ -19,59 +19,59 @@ static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_off
 		}
 	}
 	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
-		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_INT:
-		case SLL_OBJECT_TYPE_FLOAT:
-		case SLL_OBJECT_TYPE_STRING:
-		case SLL_OBJECT_TYPE_IDENTIFIER:
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_INT:
+		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FUNCTION_ID:
 			(*sz)++;
 			return o+1;
-		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_NODE_TYPE_ARRAY:
 			{
 				sll_array_length_t l=o->dt.al;
 				(*sz)++;
 				o++;
 				while (l){
 					l--;
-					o=_get_object_size(o,sz);
+					o=_get_node_size(o,sz);
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_MAP:
+		case SLL_NODE_TYPE_MAP:
 			{
 				sll_map_length_t l=o->dt.ml;
 				(*sz)++;
 				o++;
 				while (l){
 					l--;
-					o=_get_object_size(o,sz);
+					o=_get_node_size(o,sz);
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FUNC:
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				sll_arg_count_t l=o->dt.fn.ac;
 				(*sz)++;
 				o++;
 				while (l){
 					l--;
-					o=_get_object_size(o,sz);
+					o=_get_node_size(o,sz);
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FOR:
-		case SLL_OBJECT_TYPE_WHILE:
-		case SLL_OBJECT_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				(*sz)++;
 				o++;
 				while (l){
 					l--;
-					o=_get_object_size(o,sz);
+					o=_get_node_size(o,sz);
 				}
 				return o;
 			}
@@ -81,7 +81,7 @@ static const sll_object_t* _get_object_size(const sll_object_t* o,sll_object_off
 	o++;
 	while (l){
 		l--;
-		o=_get_object_size(o,sz);
+		o=_get_node_size(o,sz);
 	}
 	return o;
 }
@@ -128,9 +128,9 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_offset_t sll_get_object_size(const sll_object_t* o){
-	sll_object_offset_t sz=0;
-	_get_object_size(o,&sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_node_t* o){
+	sll_node_offset_t sz=0;
+	_get_node_size(o,&sz);
 	return sz;
 }
 
@@ -159,59 +159,59 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* r
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
-		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_INT:
-		case SLL_OBJECT_TYPE_FLOAT:
-		case SLL_OBJECT_TYPE_STRING:
-		case SLL_OBJECT_TYPE_IDENTIFIER:
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_INT:
+		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
-		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_NODE_TYPE_ARRAY:
 			{
 				sll_array_length_t l=o->dt.al;
 				o++;
 				while (l){
 					l--;
-					o=sll_skip_object(o);
+					o=sll_skip_node(o);
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_MAP:
+		case SLL_NODE_TYPE_MAP:
 			{
 				sll_map_length_t l=o->dt.ml;
 				o++;
 				while (l){
 					l--;
-					o=sll_skip_object(o);
+					o=sll_skip_node(o);
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FUNC:
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				sll_arg_count_t l=o->dt.fn.ac;
 				o++;
 				while (l){
 					l--;
-					o=sll_skip_object(o);
+					o=sll_skip_node(o);
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FOR:
-		case SLL_OBJECT_TYPE_WHILE:
-		case SLL_OBJECT_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;
 				while (l){
 					l--;
-					o=sll_skip_object(o);
+					o=sll_skip_node(o);
 				}
 				return o;
 			}
@@ -220,13 +220,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_skip_object(sll_object_t* o)
 	o++;
 	while (l){
 		l--;
-		o=sll_skip_object(o);
+		o=sll_skip_node(o);
 	}
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_object_t* sll_skip_object_const(const sll_object_t* o){
-	return sll_skip_object((sll_object_t*)o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sll_node_t* o){
+	return sll_skip_node((sll_node_t*)o);
 }

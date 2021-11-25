@@ -3,24 +3,24 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/operator.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/util.h>
 
 
 
-__SLL_EXTERNAL void sll_quicksort(const sll_runtime_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
+__SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<l;j++){
 		if (sll_operator_compare(*(a+j),*(a+l))==cmp){
-			const sll_runtime_object_t* t=*(a+i);
+			const sll_object_t* t=*(a+i);
 			*(a+i)=*(a+j);
 			*(a+j)=t;
 			i++;
 		}
 	}
-	const sll_runtime_object_t* t=*(a+i);
+	const sll_object_t* t=*(a+i);
 	*(a+i)=*(a+l);
 	*(a+l)=t;
 	if (i>1){
@@ -59,10 +59,10 @@ __API_FUNC(sort_sort){
 	out->v[a->l-1]=out->v[i];
 	out->v[i]=a->v[a->l-1];
 	if (i>1){
-		sll_quicksort((const sll_runtime_object_t**)(out->v),i-1,cmp);
+		sll_quicksort((const sll_object_t**)(out->v),i-1,cmp);
 	}
 	i++;
 	if (i<a->l-1){
-		sll_quicksort((const sll_runtime_object_t**)(out->v+i),a->l-i-1,cmp);
+		sll_quicksort((const sll_object_t**)(out->v+i),a->l-i-1,cmp);
 	}
 }

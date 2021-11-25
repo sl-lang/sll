@@ -22,11 +22,11 @@ __SLL_EXTERNAL void sll_array_clone(const sll_array_t* a,sll_array_t* o);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,sll_runtime_object_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,sll_object_t* v);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_runtime_object_t** v,sll_array_length_t vl);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_object_t** v,sll_array_length_t vl);
 
 
 
@@ -66,7 +66,7 @@ __SLL_EXTERNAL void sll_array_from_length(sll_array_length_t l,sll_array_t* o);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_get(const sll_array_t* a,sll_array_length_t i);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_get(const sll_array_t* a,sll_array_length_t i);
 
 
 
@@ -102,11 +102,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_array_parse_int(const sll_ar
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_pop(const sll_array_t* a,sll_array_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_pop(const sll_array_t* a,sll_array_t* o);
 
 
 
-__SLL_EXTERNAL void sll_array_push(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_push(const sll_array_t* a,sll_object_t* v,sll_array_t* o);
 
 
 
@@ -114,11 +114,11 @@ __SLL_EXTERNAL void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_
 
 
 
-__SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_array_t* o);
 
 
 
-__SLL_EXTERNAL void sll_array_remove_multiple(const sll_array_t* a,sll_runtime_object_t** v,sll_array_length_t vl,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_remove_multiple(const sll_array_t* a,sll_object_t** v,sll_array_length_t vl,sll_array_t* o);
 
 
 
@@ -130,11 +130,11 @@ __SLL_EXTERNAL void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_in
 
 
 
-__SLL_EXTERNAL void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_runtime_object_t* v);
+__SLL_EXTERNAL void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_object_t* v);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o);
 
 
 
@@ -142,7 +142,7 @@ __SLL_EXTERNAL void sll_array_to_map(const sll_array_t* a,sll_map_t* o);
 
 
 
-__SLL_EXTERNAL void sll_array_unshift(const sll_array_t* a,sll_runtime_object_t* v,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_unshift(const sll_array_t* a,sll_object_t* v,sll_array_t* o);
 
 
 

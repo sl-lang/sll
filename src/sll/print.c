@@ -2,8 +2,8 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>
+#include <sll/node.h>
 #include <sll/object.h>
-#include <sll/runtime_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
@@ -75,18 +75,18 @@ static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_da
 
 
 
-static const sll_object_t* _print_object_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_object_t* o,sll_file_t* wf){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
-	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_OBJECT_TYPE_OPERATION_LIST&&o->t!=SLL_OBJECT_TYPE_DEBUG_DATA){
+	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_NODE_TYPE_OPERATION_LIST&&o->t!=SLL_NODE_TYPE_DEBUG_DATA){
 		sll_file_write_char(wf,'(');
 	}
 	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_UNKNOWN:
 			PRINT_STATIC_STRING("(unknown)",wf);
 			return o+1;
-		case SLL_OBJECT_TYPE_CHAR:
+		case SLL_NODE_TYPE_CHAR:
 			{
 				sll_file_write_char(wf,'\'');
 				sll_char_t c=o->dt.c;
@@ -123,13 +123,13 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,'\'');
 				return o+1;
 			}
-		case SLL_OBJECT_TYPE_INT:
+		case SLL_NODE_TYPE_INT:
 			_print_int(o->dt.i,wf);
 			return o+1;
-		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_NODE_TYPE_FLOAT:
 			_print_float(o->dt.f,wf);
 			return o+1;
-		case SLL_OBJECT_TYPE_STRING:
+		case SLL_NODE_TYPE_STRING:
 			{
 				sll_file_write_char(wf,'"');
 				sll_string_t* s=c_dt->st.dt+o->dt.s;
@@ -169,7 +169,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,'"');
 				return o+1;
 			}
-		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_NODE_TYPE_ARRAY:
 			{
 				sll_file_write_char(wf,'[');
 				sll_array_length_t al=o->dt.al;
@@ -183,7 +183,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,']');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_MAP:
+		case SLL_NODE_TYPE_MAP:
 			{
 				sll_file_write_char(wf,'<');
 				sll_map_length_t ml=o->dt.ml;
@@ -197,31 +197,31 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,'>');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_IDENTIFIER:
 			_print_identifier(o->dt.id,c_dt,wf);
 			return o+1;
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_FUNCTION_ID:
 			_print_int(o->dt.fn_id,wf);
 			return o+1;
-		case SLL_OBJECT_TYPE_PRINT:
+		case SLL_NODE_TYPE_PRINT:
 			PRINT_STATIC_STRING(":>",wf);
 			break;
-		case SLL_OBJECT_TYPE_AND:
+		case SLL_NODE_TYPE_AND:
 			PRINT_STATIC_STRING("&&",wf);
 			break;
-		case SLL_OBJECT_TYPE_OR:
+		case SLL_NODE_TYPE_OR:
 			PRINT_STATIC_STRING("||",wf);
 			break;
-		case SLL_OBJECT_TYPE_NOT:
+		case SLL_NODE_TYPE_NOT:
 			sll_file_write_char(wf,'!');
 			break;
-		case SLL_OBJECT_TYPE_BOOL:
+		case SLL_NODE_TYPE_BOOL:
 			PRINT_STATIC_STRING("!!",wf);
 			break;
-		case SLL_OBJECT_TYPE_ASSIGN:
+		case SLL_NODE_TYPE_ASSIGN:
 			PRINT_STATIC_STRING("=",wf);
 			break;
-		case SLL_OBJECT_TYPE_FUNC:
+		case SLL_NODE_TYPE_FUNC:
 			{
 				PRINT_STATIC_STRING(",,,",wf);
 				const sll_function_t* f=*(c_dt->ft.dt+o->dt.fn.id);
@@ -230,9 +230,9 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 					_print_identifier(f->a[i],c_dt,wf);
 				}
 			}
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				if (o->t==SLL_OBJECT_TYPE_INTERNAL_FUNC){
+				if (o->t==SLL_NODE_TYPE_INTERNAL_FUNC){
 					if (i_ft&&o->dt.fn.id<i_ft->l){
 						const sll_internal_function_t* f=*(i_ft->dt+o->dt.fn.id);
 						PRINT_STATIC_STRING("... \"",wf);
@@ -254,20 +254,20 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,')');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_INLINE_FUNC:
+		case SLL_NODE_TYPE_INLINE_FUNC:
 			PRINT_STATIC_STRING("***",wf);
 			break;
-		case SLL_OBJECT_TYPE_CALL:
+		case SLL_NODE_TYPE_CALL:
 			{
 				PRINT_STATIC_STRING("<-",wf);
 				sll_arg_count_t ac=o->dt.ac;
 				o++;
 				if (ac){
-					while (o->t==SLL_OBJECT_TYPE_NOP||o->t==SLL_OBJECT_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
 						o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					sll_arg_count_t i=0;
-					if (i_ft&&o->t==SLL_OBJECT_TYPE_INT&&o->dt.i<0){
+					if (i_ft&&o->t==SLL_NODE_TYPE_INT&&o->dt.i<0){
 						sll_function_index_t j=(sll_function_index_t)(~(o->dt.i));
 						if (j<i_ft->l){
 							const sll_internal_function_t* f=*(i_ft->dt+j);
@@ -286,16 +286,16 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,')');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_IF:
+		case SLL_NODE_TYPE_IF:
 			sll_file_write_char(wf,'?');
 			break;
-		case SLL_OBJECT_TYPE_INLINE_IF:
+		case SLL_NODE_TYPE_INLINE_IF:
 			PRINT_STATIC_STRING("?:",wf);
 			break;
-		case SLL_OBJECT_TYPE_SWITCH:
+		case SLL_NODE_TYPE_SWITCH:
 			PRINT_STATIC_STRING("??",wf);
 			break;
-		case SLL_OBJECT_TYPE_FOR:
+		case SLL_NODE_TYPE_FOR:
 			{
 				PRINT_STATIC_STRING("->",wf);
 				sll_arg_count_t ac=o->dt.l.ac;
@@ -307,7 +307,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,')');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_WHILE:
+		case SLL_NODE_TYPE_WHILE:
 			{
 				PRINT_STATIC_STRING(">-",wf);
 				sll_arg_count_t ac=o->dt.l.ac;
@@ -319,7 +319,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,')');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_LOOP:
+		case SLL_NODE_TYPE_LOOP:
 			{
 				PRINT_STATIC_STRING("><",wf);
 				sll_arg_count_t ac=o->dt.l.ac;
@@ -331,94 +331,94 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,')');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_ADD:
+		case SLL_NODE_TYPE_ADD:
 			sll_file_write_char(wf,'+');
 			break;
-		case SLL_OBJECT_TYPE_SUB:
+		case SLL_NODE_TYPE_SUB:
 			sll_file_write_char(wf,'-');
 			break;
-		case SLL_OBJECT_TYPE_MULT:
+		case SLL_NODE_TYPE_MULT:
 			sll_file_write_char(wf,'*');
 			break;
-		case SLL_OBJECT_TYPE_DIV:
+		case SLL_NODE_TYPE_DIV:
 			sll_file_write_char(wf,'/');
 			break;
-		case SLL_OBJECT_TYPE_FLOOR_DIV:
+		case SLL_NODE_TYPE_FLOOR_DIV:
 			PRINT_STATIC_STRING("//",wf);
 			break;
-		case SLL_OBJECT_TYPE_MOD:
+		case SLL_NODE_TYPE_MOD:
 			sll_file_write_char(wf,'%');
 			break;
-		case SLL_OBJECT_TYPE_BIT_AND:
+		case SLL_NODE_TYPE_BIT_AND:
 			sll_file_write_char(wf,'&');
 			break;
-		case SLL_OBJECT_TYPE_BIT_OR:
+		case SLL_NODE_TYPE_BIT_OR:
 			sll_file_write_char(wf,'|');
 			break;
-		case SLL_OBJECT_TYPE_BIT_XOR:
+		case SLL_NODE_TYPE_BIT_XOR:
 			sll_file_write_char(wf,'^');
 			break;
-		case SLL_OBJECT_TYPE_BIT_NOT:
+		case SLL_NODE_TYPE_BIT_NOT:
 			sll_file_write_char(wf,'~');
 			break;
-		case SLL_OBJECT_TYPE_BIT_RSHIFT:
+		case SLL_NODE_TYPE_BIT_RSHIFT:
 			PRINT_STATIC_STRING(">>",wf);
 			break;
-		case SLL_OBJECT_TYPE_BIT_LSHIFT:
+		case SLL_NODE_TYPE_BIT_LSHIFT:
 			PRINT_STATIC_STRING("<<",wf);
 			break;
-		case SLL_OBJECT_TYPE_LESS:
+		case SLL_NODE_TYPE_LESS:
 			sll_file_write_char(wf,'<');
 			break;
-		case SLL_OBJECT_TYPE_LESS_EQUAL:
+		case SLL_NODE_TYPE_LESS_EQUAL:
 			PRINT_STATIC_STRING("<=",wf);
 			break;
-		case SLL_OBJECT_TYPE_EQUAL:
+		case SLL_NODE_TYPE_EQUAL:
 			PRINT_STATIC_STRING("==",wf);
 			break;
-		case SLL_OBJECT_TYPE_NOT_EQUAL:
+		case SLL_NODE_TYPE_NOT_EQUAL:
 			PRINT_STATIC_STRING("!=",wf);
 			break;
-		case SLL_OBJECT_TYPE_MORE:
+		case SLL_NODE_TYPE_MORE:
 			sll_file_write_char(wf,'>');
 			break;
-		case SLL_OBJECT_TYPE_MORE_EQUAL:
+		case SLL_NODE_TYPE_MORE_EQUAL:
 			PRINT_STATIC_STRING(">=",wf);
 			break;
-		case SLL_OBJECT_TYPE_STRICT_EQUAL:
+		case SLL_NODE_TYPE_STRICT_EQUAL:
 			PRINT_STATIC_STRING("===",wf);
 			break;
-		case SLL_OBJECT_TYPE_STRICT_NOT_EQUAL:
+		case SLL_NODE_TYPE_STRICT_NOT_EQUAL:
 			PRINT_STATIC_STRING("!==",wf);
 			break;
-		case SLL_OBJECT_TYPE_LENGTH:
+		case SLL_NODE_TYPE_LENGTH:
 			sll_file_write_char(wf,'$');
 			break;
-		case SLL_OBJECT_TYPE_ACCESS:
+		case SLL_NODE_TYPE_ACCESS:
 			sll_file_write_char(wf,':');
 			break;
-		case SLL_OBJECT_TYPE_CAST:
+		case SLL_NODE_TYPE_CAST:
 			PRINT_STATIC_STRING("::",wf);
 			break;
-		case SLL_OBJECT_TYPE_TYPEOF:
+		case SLL_NODE_TYPE_TYPEOF:
 			PRINT_STATIC_STRING(":?",wf);
 			break;
-		case SLL_OBJECT_TYPE_BREAK:
+		case SLL_NODE_TYPE_BREAK:
 			sll_file_write_char(wf,'@');
 			break;
-		case SLL_OBJECT_TYPE_CONTINUE:
+		case SLL_NODE_TYPE_CONTINUE:
 			PRINT_STATIC_STRING("<<<",wf);
 			break;
-		case SLL_OBJECT_TYPE_REF:
+		case SLL_NODE_TYPE_REF:
 			PRINT_STATIC_STRING("%%",wf);
 			break;
-		case SLL_OBJECT_TYPE_RETURN:
+		case SLL_NODE_TYPE_RETURN:
 			PRINT_STATIC_STRING("@@",wf);
 			break;
-		case SLL_OBJECT_TYPE_EXIT:
+		case SLL_NODE_TYPE_EXIT:
 			PRINT_STATIC_STRING("@@@",wf);
 			break;
-		case SLL_OBJECT_TYPE_OPERATION_LIST:
+		case SLL_NODE_TYPE_OPERATION_LIST:
 			{
 				sll_file_write_char(wf,'{');
 				sll_arg_count_t ac=o->dt.ac;
@@ -432,7 +432,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,'}');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_COMMA:
+		case SLL_NODE_TYPE_COMMA:
 			{
 				sll_file_write_char(wf,',');
 				sll_arg_count_t ac=o->dt.ac;
@@ -444,7 +444,7 @@ static const sll_object_t* _print_object_internal(const sll_compilation_data_t* 
 				sll_file_write_char(wf,')');
 				return o;
 			}
-		case SLL_OBJECT_TYPE_DEBUG_DATA:
+		case SLL_NODE_TYPE_DEBUG_DATA:
 			{
 				sll_file_write_char(wf,'|');
 				sll_file_write_char(wf,'#');
@@ -868,31 +868,31 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				PRINT_STATIC_STRING("CAST ",wf);
 				switch (ai->dt.t){
-					case SLL_RUNTIME_OBJECT_TYPE_INT:
+					case SLL_OBJECT_TYPE_INT:
 						PRINT_STATIC_STRING("int_type",wf);
 						break;
-					case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
+					case SLL_OBJECT_TYPE_FLOAT:
 						PRINT_STATIC_STRING("float_type",wf);
 						break;
-					case SLL_RUNTIME_OBJECT_TYPE_CHAR:
+					case SLL_OBJECT_TYPE_CHAR:
 						PRINT_STATIC_STRING("char_type",wf);
 						break;
-					case SLL_RUNTIME_OBJECT_TYPE_STRING:
+					case SLL_OBJECT_TYPE_STRING:
 						PRINT_STATIC_STRING("string_type",wf);
 						break;
-					case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
+					case SLL_OBJECT_TYPE_ARRAY:
 						PRINT_STATIC_STRING("array_type",wf);
 						break;
-					case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+					case SLL_OBJECT_TYPE_HANDLE:
 						PRINT_STATIC_STRING("handle_type",wf);
 						break;
-					case SLL_RUNTIME_OBJECT_TYPE_MAP:
+					case SLL_OBJECT_TYPE_MAP:
 						PRINT_STATIC_STRING("map_type",wf);
 						break;
-					case SLL_RUNTIME_OBJECT_TYPE_MAP_KEYS:
+					case SLL_OBJECT_TYPE_MAP_KEYS:
 						PRINT_STATIC_STRING("map_key_type",wf);
 						break;
-					case SLL_RUNTIME_OBJECT_TYPE_MAP_VALUES:
+					case SLL_OBJECT_TYPE_MAP_VALUES:
 						PRINT_STATIC_STRING("map_value_type",wf);
 						break;
 					default:
@@ -995,6 +995,6 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 
 
 
-__SLL_EXTERNAL void sll_print_object(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_object_t* o,sll_file_t* wf){
+__SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
 	_print_object_internal(c_dt,i_ft,o,wf);
 }

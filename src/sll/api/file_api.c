@@ -9,7 +9,7 @@
 #include <sll/handle.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -134,7 +134,7 @@ _found_index:;
 
 __API_FUNC(file_write){
 	sll_file_t* f=NULL;
-	if (SLL_RUNTIME_OBJECT_GET_TYPE(a)==SLL_RUNTIME_OBJECT_TYPE_INT){
+	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
 		if (a->dt.i==-2){
 			if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
 				return 0;

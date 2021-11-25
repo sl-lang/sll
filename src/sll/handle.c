@@ -3,7 +3,7 @@
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/memory.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/types.h>
 
 
@@ -48,9 +48,9 @@ __SLL_EXTERNAL void sll_free_handle_list(sll_handle_list_t* hl){
 
 
 
-__SLL_EXTERNAL sll_runtime_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h){
-	sll_runtime_object_t* o=sll_create_object();
-	o->t=SLL_RUNTIME_OBJECT_TYPE_HANDLE;
+__SLL_EXTERNAL sll_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h){
+	sll_object_t* o=sll_create_object();
+	o->t=SLL_OBJECT_TYPE_HANDLE;
 	o->dt.h.t=t;
 	o->dt.h.h=h;
 	return o;

@@ -18,7 +18,7 @@ __SLL_EXTERNAL void sll_free_map(sll_map_t* m);
 
 
 
-__SLL_EXTERNAL void sll_map_add(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_add(const sll_map_t* m,sll_object_t* k,sll_object_t* v,sll_map_t* o);
 
 
 
@@ -62,15 +62,15 @@ __SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get(const sll_map_t* m,const sll_runtime_object_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,const sll_object_t* v);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i);
 
 
 
@@ -82,7 +82,7 @@ __SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_map_remove(const sll_map_t* m,sll_runtime_object_t* k,sll_map_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* m,sll_object_t* k,sll_map_t* o);
 
 
 
@@ -98,15 +98,15 @@ __SLL_EXTERNAL void sll_map_remove_string(const sll_map_t* m,const sll_string_t*
 
 
 
-__SLL_EXTERNAL void sll_map_set(const sll_map_t* m,sll_runtime_object_t* k,sll_runtime_object_t* v);
+__SLL_EXTERNAL void sll_map_set(const sll_map_t* m,sll_object_t* k,sll_object_t* v);
 
 
 
-__SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_runtime_object_t* v);
+__SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_object_t* v);
 
 
 
-__SLL_EXTERNAL void sll_map_set_value(const sll_map_t* m,sll_map_length_t i,sll_runtime_object_t* v);
+__SLL_EXTERNAL void sll_map_set_value(const sll_map_t* m,sll_map_length_t i,sll_object_t* v);
 
 
 

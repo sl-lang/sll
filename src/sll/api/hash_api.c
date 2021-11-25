@@ -1,7 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/common.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <stdint.h>
@@ -116,18 +116,18 @@ static void _process_chunk(hash_state_t* st,const uint8_t* bf){
 
 
 
-static void _hash_object(const sll_runtime_object_t* o,hash_state_t* st){
-	switch (SLL_RUNTIME_OBJECT_GET_TYPE(o)){
-		case SLL_RUNTIME_OBJECT_TYPE_INT:
+static void _hash_object(const sll_object_t* o,hash_state_t* st){
+	switch (SLL_OBJECT_GET_TYPE(o)){
+		case SLL_OBJECT_TYPE_INT:
 			APPEND_SMALL(&(o->dt.i),sizeof(sll_integer_t),st);
 			return;
-		case SLL_RUNTIME_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_FLOAT:
 			APPEND_SMALL(&(o->dt.f),sizeof(sll_float_t),st);
 			return;
-		case SLL_RUNTIME_OBJECT_TYPE_CHAR:
+		case SLL_OBJECT_TYPE_CHAR:
 			APPEND_SMALL(&(o->dt.c),sizeof(sll_char_t),st);
 			return;
-		case SLL_RUNTIME_OBJECT_TYPE_STRING:
+		case SLL_OBJECT_TYPE_STRING:
 			{
 				sll_string_length_t l=o->dt.s.l;
 				sll_char_t* p=o->dt.s.v;
@@ -154,17 +154,17 @@ static void _hash_object(const sll_runtime_object_t* o,hash_state_t* st){
 				st->l=l;
 				return;
 			}
-		case SLL_RUNTIME_OBJECT_TYPE_ARRAY:
+		case SLL_OBJECT_TYPE_ARRAY:
 			APPEND_SMALL(&(o->dt.a.l),sizeof(sll_array_length_t),st);
 			for (sll_array_length_t i=0;i<o->dt.a.l;i++){
 				_hash_object(o->dt.a.v[i],st);
 			}
 			return;
-		case SLL_RUNTIME_OBJECT_TYPE_HANDLE:
+		case SLL_OBJECT_TYPE_HANDLE:
 			APPEND_SMALL(&(o->dt.h.t),sizeof(sll_handle_type_t),st);
 			APPEND_SMALL(&(o->dt.h.h),sizeof(sll_handle_t),st);
 			return;
-		case SLL_RUNTIME_OBJECT_TYPE_MAP:
+		case SLL_OBJECT_TYPE_MAP:
 			SLL_UNIMPLEMENTED();
 		default:
 			SLL_UNREACHABLE();

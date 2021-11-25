@@ -8,7 +8,7 @@
 #include <sll/handle.h>
 #include <sll/map.h>
 #include <sll/memory.h>
-#include <sll/runtime_object.h>
+#include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -31,9 +31,9 @@
 
 
 static sll_handle_type_t _json_ht=SLL_HANDLE_UNKNOWN_TYPE;
-static sll_runtime_object_t* _json_null=NULL;
-static sll_runtime_object_t* _json_true=NULL;
-static sll_runtime_object_t* _json_false=NULL;
+static sll_object_t* _json_null=NULL;
+static sll_object_t* _json_true=NULL;
+static sll_object_t* _json_false=NULL;
 static sll_handle_descriptor_t _json_type;
 
 
@@ -127,7 +127,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 
 
 
-static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
+static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	sll_char_t c=**p;
 	(*p)++;
 	while (c==' '||c=='\t'||c=='\n'||c=='\r'){
@@ -138,8 +138,8 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	if (c=='{'){
-		sll_runtime_object_t* o=SLL_CREATE();
-		o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;
+		sll_object_t* o=SLL_CREATE();
+		o->t=SLL_OBJECT_TYPE_MAP;
 		sll_map_t* m=&(o->dt.m);
 		SLL_INIT_MAP(m);
 		while (1){
@@ -157,10 +157,10 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 				(*p)++;
 			}
 			m->l++;
-			m->v=sll_reallocate(m->v,(m->l<<1)*sizeof(sll_runtime_object_t*));
-			sll_runtime_object_t* k=SLL_CREATE();
+			m->v=sll_reallocate(m->v,(m->l<<1)*sizeof(sll_object_t*));
+			sll_object_t* k=SLL_CREATE();
 			m->v[(m->l-1)<<1]=k;
-			k->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+			k->t=SLL_OBJECT_TYPE_STRING;
 			_parse_json_string(p,&(k->dt.s));
 			c=**p;
 			(*p)++;
@@ -168,7 +168,7 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 				c=**p;
 				(*p)++;
 			}
-			sll_runtime_object_t* v=_parse_json_as_object(p);
+			sll_object_t* v=_parse_json_as_object(p);
 			if (!v){
 				m->v[m->l-1]=SLL_ACQUIRE_STATIC_INT(0);
 				SLL_RELEASE(o);
@@ -191,8 +191,8 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='['){
-		sll_runtime_object_t* o=SLL_CREATE();
-		o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;
+		sll_object_t* o=SLL_CREATE();
+		o->t=SLL_OBJECT_TYPE_ARRAY;
 		sll_array_t* a=&(o->dt.a);
 		SLL_INIT_ARRAY(a);
 		while (c==' '||c=='\t'||c=='\n'||c=='\r'){
@@ -204,13 +204,13 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			return o;
 		}
 		while (1){
-			sll_runtime_object_t* k=_parse_json_as_object(p);
+			sll_object_t* k=_parse_json_as_object(p);
 			if (!k){
 				SLL_RELEASE(o);
 				return NULL;
 			}
 			a->l++;
-			a->v=sll_reallocate(a->v,a->l*sizeof(sll_runtime_object_t*));
+			a->v=sll_reallocate(a->v,a->l*sizeof(sll_object_t*));
 			a->v[a->l-1]=k;
 			c=**p;
 			(*p)++;
@@ -228,8 +228,8 @@ static sll_runtime_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='\"'){
-		sll_runtime_object_t* o=SLL_CREATE();
-		o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;
+		sll_object_t* o=SLL_CREATE();
+		o->t=SLL_OBJECT_TYPE_STRING;
 		_parse_json_string(p,&(o->dt.s));
 		return o;
 	}
@@ -517,7 +517,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 __API_FUNC(json_parse){
 	SETUP_HANDLE;
 	sll_json_parser_state_t p=a->v;
-	sll_runtime_object_t* o=_parse_json_as_object(&p);
+	sll_object_t* o=_parse_json_as_object(&p);
 	if (o){
 		return o;
 	}

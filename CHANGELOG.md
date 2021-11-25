@@ -6,7 +6,7 @@
 
 - C and Sll variable argument list API: `sll_var_arg_list_t`, `sll_var_arg_get`, `sll_var_arg_get_int`, `sll_var_arg_get_float`, `sll_var_arg_get_char` and `sll_var_arg_get_string`
 - Implemented `sll_api_string_format`
-- Miscellaneous object function are now located in [`object.c`][main/src/sll/object.c]
+- Miscellaneous node function are now located in [`node.c`][main/src/sll/node.c]
 
 ### Changed
 
@@ -16,6 +16,7 @@
 - Fixed multiple return types
 - Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion
 - Renamed `sll_register_standard_internal_functions` to `sll_register_builtin_internal_functions`
+- Renamed obejcts to nodes, and runtime objects to objects
 - Storage of built-in internal functions and logic behind IFT-related functions
 
 ### Removed
@@ -1122,7 +1123,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/src/sll/object.c]: https://github.com/sl-lang/sll/blob/main/src/sll/object.c
+[main/src/sll/node.c]: https://github.com/sl-lang/sll/blob/main/src/sll/node.c
 [0.6.28/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/v0.6.28/src/include/sll/init.h
 [0.6.28/src/sll/deinit.c]: https://github.com/sl-lang/sll/blob/v0.6.28/src/sll/deinit.c
 [0.6.28/src/sll/init.c]: https://github.com/sl-lang/sll/blob/v0.6.28/src/sll/init.c

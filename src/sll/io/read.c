@@ -4,7 +4,7 @@
 #include <sll/error.h>
 #include <sll/file.h>
 #include <sll/memory.h>
-#include <sll/object.h>
+#include <sll/node.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -72,19 +72,19 @@ static int64_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
 
 
 static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
-	sll_object_t* o=_acquire_next_object(c_dt);
+	sll_node_t* o=_acquire_next_object(c_dt);
 	READ_FIELD(o->t,rf);
-	while (o->t==SLL_OBJECT_TYPE_NOP){
+	while (o->t==SLL_NODE_TYPE_NOP){
 		o=_acquire_next_object(c_dt);
 		READ_FIELD(o->t,rf);
 	}
 	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_UNKNOWN:
 			return 1;
-		case SLL_OBJECT_TYPE_CHAR:
+		case SLL_NODE_TYPE_CHAR:
 			READ_FIELD(o->dt.c,rf);
 			return 1;
-		case SLL_OBJECT_TYPE_INT:
+		case SLL_NODE_TYPE_INT:
 			{
 				sll_bool_t e=0;
 				o->dt.i=(sll_integer_t)_read_signed_integer(rf,&e);
@@ -93,13 +93,13 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 				}
 				return 1;
 			}
-		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_NODE_TYPE_FLOAT:
 			READ_FIELD(o->dt.f,rf);
 			return 1;
-		case SLL_OBJECT_TYPE_STRING:
+		case SLL_NODE_TYPE_STRING:
 			CHECK_ERROR2(rf,o->dt.s,sll_string_index_t);
 			return 1;
-		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_NODE_TYPE_ARRAY:
 			CHECK_ERROR2(rf,o->dt.al,sll_array_length_t);
 			for (sll_array_length_t i=0;i<o->dt.al;i++){
 				if (!_read_object(c_dt,rf)){
@@ -107,7 +107,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 				}
 			}
 			return 1;
-		case SLL_OBJECT_TYPE_MAP:
+		case SLL_NODE_TYPE_MAP:
 			CHECK_ERROR2(rf,o->dt.ml,sll_map_length_t);
 			for (sll_map_length_t i=0;i<o->dt.ml;i++){
 				if (!_read_object(c_dt,rf)){
@@ -115,18 +115,18 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 				}
 			}
 			return 1;
-		case SLL_OBJECT_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_IDENTIFIER:
 			CHECK_ERROR2(rf,o->dt.id,sll_identifier_index_t);
 			return 1;
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_FUNCTION_ID:
 			CHECK_ERROR2(rf,o->dt.fn_id,sll_function_index_t);
 			return 1;
-		case SLL_OBJECT_TYPE_FUNC:
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				CHECK_ERROR2(rf,o->dt.fn.ac,sll_arg_count_t);
 				CHECK_ERROR2(rf,o->dt.fn.id,sll_function_index_t);
-				if (o->t==SLL_OBJECT_TYPE_FUNC){
+				if (o->t==SLL_NODE_TYPE_FUNC){
 					CHECK_ERROR2(rf,o->dt.fn.sc,sll_scope_t);
 				}
 				for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
@@ -136,9 +136,9 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 				}
 				return 1;
 			}
-		case SLL_OBJECT_TYPE_FOR:
-		case SLL_OBJECT_TYPE_WHILE:
-		case SLL_OBJECT_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
 			CHECK_ERROR2(rf,o->dt.l.ac,sll_arg_count_t);
 			CHECK_ERROR2(rf,o->dt.l.sc,sll_scope_t);
 			for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
@@ -147,7 +147,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 				}
 			}
 			return 1;
-		case SLL_OBJECT_TYPE_DEBUG_DATA:
+		case SLL_NODE_TYPE_DEBUG_DATA:
 			CHECK_ERROR2(rf,o->dt.dbg.fpi,sll_string_index_t);
 			CHECK_ERROR2(rf,o->dt.dbg.ln,sll_file_offset_t);
 			CHECK_ERROR2(rf,o->dt.dbg.cn,sll_file_offset_t);
@@ -369,7 +369,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 					e->t=SLL_ERROR_INVALID_FILE_FORMAT;
 					return 0;
 				}
-				ai->dt.t=(sll_runtime_object_type_t)c;
+				ai->dt.t=(sll_object_type_t)c;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
@@ -382,7 +382,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_object(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_error_t* e){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_error_t* e){
 	uint32_t n=0;
 	sll_version_t v=0;
 	if (sll_file_read(rf,(uint8_t*)(&n),sizeof(uint32_t))==SLL_END_OF_DATA||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||sll_file_read(rf,(void*)(&v),sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
@@ -413,8 +413,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_object(sll_file_t
 	CHECK_ERROR(rf,c_dt->ft.l,sll_function_index_t,e);
 	c_dt->ft.dt=sll_allocate(c_dt->ft.l*sizeof(sll_function_t*));
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
-		sll_object_offset_t off;
-		CHECK_ERROR(rf,off,sll_object_offset_t,e);
+		sll_node_offset_t off;
+		CHECK_ERROR(rf,off,sll_node_offset_t,e);
 		sll_arg_count_t al;
 		CHECK_ERROR(rf,al,sll_arg_count_t,e);
 		sll_function_t* k=sll_allocate(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));
@@ -445,7 +445,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_object(sll_file_t
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_object(sll_compilation_data_t* c_dt,sll_file_t* rf,sll_object_t** o,sll_error_t* e){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_node(sll_compilation_data_t* c_dt,sll_file_t* rf,sll_node_t** o,sll_error_t* e){
 	*o=c_dt->_s.p;
 	SLL_ASSERT(*o);
 	if (!_read_object(c_dt,rf)){

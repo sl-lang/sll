@@ -107,7 +107,7 @@ __SLL_EXTERNAL void sll_string_from_char(sll_char_t c,sll_string_t* o);
 
 
 
-__SLL_EXTERNAL void sll_string_from_data(sll_runtime_object_t** v,sll_string_length_t vl,sll_string_t* o);
+__SLL_EXTERNAL void sll_string_from_data(sll_object_t** v,sll_string_length_t vl,sll_string_t* o);
 
 
 

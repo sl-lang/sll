@@ -2,29 +2,29 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
-#include <sll/object.h>
+#include <sll/node.h>
 #include <sll/types.h>
 #include <stdint.h>
 
 
 
-static sll_object_t* _mark_strings(sll_object_t* o,uint64_t* m){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
+static sll_node_t* _mark_strings(sll_node_t* o,uint64_t* m){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
-		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_IDENTIFIER:
-		case SLL_OBJECT_TYPE_INT:
-		case SLL_OBJECT_TYPE_FLOAT:
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_INT:
+		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
-		case SLL_OBJECT_TYPE_STRING:
+		case SLL_NODE_TYPE_STRING:
 			*(m+(o->dt.s>>6))|=1ull<<(o->dt.s&63);
 			return o+1;
-		case SLL_OBJECT_TYPE_FUNC:
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				sll_arg_count_t l=o->dt.fn.ac;
 				o++;
@@ -34,9 +34,9 @@ static sll_object_t* _mark_strings(sll_object_t* o,uint64_t* m){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FOR:
-		case SLL_OBJECT_TYPE_WHILE:
-		case SLL_OBJECT_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;
@@ -46,7 +46,7 @@ static sll_object_t* _mark_strings(sll_object_t* o,uint64_t* m){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_DEBUG_DATA:
+		case SLL_NODE_TYPE_DEBUG_DATA:
 			*(m+(o->dt.dbg.fpi>>6))|=1ull<<(o->dt.dbg.fpi&63);
 			return _mark_strings(o+1,m);
 	}
@@ -61,23 +61,23 @@ static sll_object_t* _mark_strings(sll_object_t* o,uint64_t* m){
 
 
 
-static sll_object_t* _update_strings(sll_object_t* o,sll_string_index_t* sm){
-	while (o->t==SLL_OBJECT_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
+static sll_node_t* _update_strings(sll_node_t* o,sll_string_index_t* sm){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
 		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_OBJECT_TYPE_UNKNOWN:
-		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_IDENTIFIER:
-		case SLL_OBJECT_TYPE_INT:
-		case SLL_OBJECT_TYPE_FLOAT:
-		case SLL_OBJECT_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_INT:
+		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
-		case SLL_OBJECT_TYPE_STRING:
+		case SLL_NODE_TYPE_STRING:
 			o->dt.s=*(sm+o->dt.s);
 			return o+1;
-		case SLL_OBJECT_TYPE_FUNC:
-		case SLL_OBJECT_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				sll_arg_count_t l=o->dt.fn.ac;
 				o++;
@@ -87,9 +87,9 @@ static sll_object_t* _update_strings(sll_object_t* o,sll_string_index_t* sm){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_FOR:
-		case SLL_OBJECT_TYPE_WHILE:
-		case SLL_OBJECT_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;
@@ -99,7 +99,7 @@ static sll_object_t* _update_strings(sll_object_t* o,sll_string_index_t* sm){
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_DEBUG_DATA:
+		case SLL_NODE_TYPE_DEBUG_DATA:
 			o->dt.dbg.fpi=*(sm+o->dt.dbg.fpi);
 			return _update_strings(o+1,sm);
 	}

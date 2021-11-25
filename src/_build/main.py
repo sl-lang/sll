@@ -18,9 +18,9 @@ RETURN_CODE_BASE_TYPE={"0":"I","1":"I","h":"H","Z":"S","f":"F","I":"I","F":"F","
 RETURN_CODE_TYPE_MAP={"0":"return SLL_ACQUIRE_STATIC_INT(0)","1":"return SLL_ACQUIRE_STATIC_INT(1)","h":"return SLL_ACQUIRE_STATIC(handle_zero)","Z":"return SLL_ACQUIRE_STATIC(str_zero)","f":"return SLL_ACQUIRE_STATIC(float_zero)","E":"return SLL_ACQUIRE_STATIC(array_zero)"}
 TYPE_ACCESS_MAP={"I":"$->dt.i","F":"$->dt.f","C":"$->dt.c","S":"&($->dt.s)","A":"&($->dt.a)","H":"&($->dt.h)","M":"&($->dt.m)","O":"$"}
 TYPE_ACCESS_OPT_MAP={"I":"($?$->dt.i:0)","F":"($?$->dt.f:0)","C":"($?$->dt.c:0)","S":"($?&($->dt.s):NULL)","A":"($?&($->dt.a):NULL)","H":"($?&($->dt.h):NULL)","M":"($?&($->dt.m):NULL)","O":"$"}
-TYPE_CHECK_MAP={"I":"SLL_RUNTIME_OBJECT_GET_TYPE($)==SLL_RUNTIME_OBJECT_TYPE_INT","F":"SLL_RUNTIME_OBJECT_GET_TYPE($)==SLL_RUNTIME_OBJECT_TYPE_FLOAT","C":"SLL_RUNTIME_OBJECT_GET_TYPE($)==SLL_RUNTIME_OBJECT_TYPE_CHAR","S":"SLL_RUNTIME_OBJECT_GET_TYPE($)==SLL_RUNTIME_OBJECT_TYPE_STRING","A":"SLL_RUNTIME_OBJECT_GET_TYPE($)==SLL_RUNTIME_OBJECT_TYPE_ARRAY","H":"(SLL_RUNTIME_OBJECT_GET_TYPE($)==SLL_RUNTIME_OBJECT_TYPE_HANDLE&&$->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)","M":"SLL_RUNTIME_OBJECT_GET_TYPE($)==SLL_RUNTIME_OBJECT_TYPE_MAP"}
-TYPE_MAP={"I":"sll_integer_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t*","A":"sll_array_t*","H":"sll_handle_data_t*","M":"sll_map_t*","O":"sll_runtime_object_t*"}
-TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out)","F":"return SLL_FROM_FLOAT(out)","S":"sll_runtime_object_t* out_o=SLL_CREATE();out_o->t=SLL_RUNTIME_OBJECT_TYPE_STRING;out_o->dt.s=out;return out_o","A":"sll_runtime_object_t* out_o=SLL_CREATE();out_o->t=SLL_RUNTIME_OBJECT_TYPE_ARRAY;out_o->dt.a=out;return out_o","H":"sll_runtime_object_t* out_o=SLL_CREATE();out_o->t=SLL_RUNTIME_OBJECT_TYPE_HANDLE;out_o->dt.h=out;return out_o","M":"sll_runtime_object_t* out_o=SLL_CREATE();out_o->t=SLL_RUNTIME_OBJECT_TYPE_MAP;out_o->dt.m=out;return out_o"}
+TYPE_CHECK_MAP={"I":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_INT","F":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_FLOAT","C":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_CHAR","S":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_STRING","A":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_ARRAY","H":"(SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_HANDLE&&$->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)","M":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_MAP"}
+TYPE_MAP={"I":"sll_integer_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t*","A":"sll_array_t*","H":"sll_handle_data_t*","M":"sll_map_t*","O":"sll_object_t*"}
+TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out)","F":"return SLL_FROM_FLOAT(out)","S":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_STRING;out_o->dt.s=out;return out_o","A":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_ARRAY;out_o->dt.a=out;return out_o","H":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_HANDLE;out_o->dt.h=out;return out_o","M":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_MAP;out_o->dt.m=out;return out_o"}
 
 
 
@@ -68,7 +68,7 @@ if ("--generate-api" in sys.argv):
 		print(f"Generating Code & Signatures for {len(d_dt)} API functions...")
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_API__GENERATED__\n#define __SLL_API__GENERATED__\n#include <sll/common.h>\n#include <sll/types.h>\n\n\n")
-		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/handle.h>\n#include <sll/ift.h>\n#include <sll/memory.h>\n#include <sll/runtime_object.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/handle.h>\n#include <sll/ift.h>\n#include <sll/memory.h>\n#include <sll/object.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		fn_l=[]
 		for k in d_dt:
 			if ("api" in k["flag"]):
@@ -77,7 +77,7 @@ if ("--generate-api" in sys.argv):
 					if (RETURN_CODE_BASE_TYPE[k["ret"][i]["type"]]!=rt):
 						rt="O"
 						break
-				cf.write(f"\n\n\n__SLL_API_TYPE_{k['name']} {k['name']}(__SLL_API_ARGS_{k['name']});\n__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* {k['name']}_raw(const sll_runtime_object_t*const* al,sll_arg_count_t all){{\n")
+				cf.write(f"\n\n\n__SLL_API_TYPE_{k['name']} {k['name']}(__SLL_API_ARGS_{k['name']});\n__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* {k['name']}_raw(const sll_object_t*const* al,sll_arg_count_t all){{\n")
 				a=""
 				pc=""
 				end=""
@@ -95,19 +95,19 @@ if ("--generate-api" in sys.argv):
 						if (i==len(k["args"])-1 and "var_arg" in k["flag"]):
 							a+=f"const {TYPE_MAP[e['type']]+('const' if TYPE_MAP[e['type']][-1]=='*' else '')}* {ALPHABET[i]},sll_arg_count_t {ALPHABET[i]}c"
 							if (e["type"]=="O"):
-								cf.write(f"\tconst sll_runtime_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n")
+								cf.write(f"\tconst sll_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n")
 							else:
-								cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n\tconst {TYPE_MAP[e['type']]}* {ALPHABET[i]}=sll_allocate({ALPHABET[i]}c*sizeof({TYPE_MAP[e['type']]}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tconst sll_runtime_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\tsll_deallocate((void*){ALPHABET[i]});\n\t\t\t"+err_c.replace(";",";\n\t\t\t")+f";\n\t\t}}\n\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t}}\n")
+								cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n\tconst {TYPE_MAP[e['type']]}* {ALPHABET[i]}=sll_allocate({ALPHABET[i]}c*sizeof({TYPE_MAP[e['type']]}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tconst sll_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\tsll_deallocate((void*){ALPHABET[i]});\n\t\t\t"+err_c.replace(";",";\n\t\t\t")+f";\n\t\t}}\n\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t}}\n")
 								end=f"\tsll_deallocate((void*){ALPHABET[i]});\n"
 							pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
 						else:
-							a+=f"const {(TYPE_MAP[e['type']] if len(e['type'])==1 else 'sll_runtime_object_t*')} {ALPHABET[i]}"
+							a+=f"const {(TYPE_MAP[e['type']] if len(e['type'])==1 else 'sll_object_t*')} {ALPHABET[i]}"
 							e_tb=""
 							if (e["opt"]):
 								e_tb="\t"
-								cf.write(f"\tconst sll_runtime_object_t* {ALPHABET[i]}=NULL;\n\tif (all>{i}){{\n\t\t{ALPHABET[i]}=*(al+{i});\n")
+								cf.write(f"\tconst sll_object_t* {ALPHABET[i]}=NULL;\n\tif (all>{i}){{\n\t\t{ALPHABET[i]}=*(al+{i});\n")
 							else:
-								cf.write(f"\tconst sll_runtime_object_t* {ALPHABET[i]}=*(al+{i});\n")
+								cf.write(f"\tconst sll_object_t* {ALPHABET[i]}=*(al+{i});\n")
 							if ("O" not in e["type"]):
 								cf.write(e_tb+"\tif (!("+"||".join([TYPE_CHECK_MAP[se].replace('$',ALPHABET[i]) for se in e["type"]])+f")){{\n\t\t"+e_tb+err_c.replace(";",";\n\t\t"+e_tb)+f";\n{e_tb}\t}}\n")
 							if (e["opt"]):
@@ -118,8 +118,8 @@ if ("--generate-api" in sys.argv):
 								pc+=ALPHABET[i]
 				hf.write(f"\n#define __SLL_API_TYPE_{k['name']} ")
 				if (rt=="O"):
-					hf.write("__SLL_CHECK_OUTPUT sll_runtime_object_t*")
-					cf.write(f"\tsll_runtime_object_t* out={k['name']}({pc});\n{end}\treturn out;\n")
+					hf.write("__SLL_CHECK_OUTPUT sll_object_t*")
+					cf.write(f"\tsll_object_t* out={k['name']}({pc});\n{end}\treturn out;\n")
 				else:
 					if (TYPE_MAP[rt][-1]=="*"):
 						if (len(pc)>0):

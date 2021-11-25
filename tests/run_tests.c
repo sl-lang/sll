@@ -35,7 +35,7 @@ static sll_bool_t execute_test(uint8_t id){
 		sll_compilation_data_t c_dt;
 		sll_init_compilation_data(SLL_CHAR("<internal>"),&f,&c_dt);
 		sll_error_t e;
-		if (!sll_parse_all_objects(&c_dt,&i_ft,NULL,&e)){
+		if (!sll_parse_all_node(&c_dt,&i_ft,NULL,&e)){
 			sll_file_t of;
 			if (!sll_file_open(to_fp,SLL_FILE_FLAG_WRITE,&of)){
 				return 1;

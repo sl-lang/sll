@@ -14,55 +14,55 @@
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_int[256];
+__SLL_EXTERNAL extern sll_object_t* sll_static_int[256];
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_negative_int[16];
+__SLL_EXTERNAL extern sll_object_t* sll_static_negative_int[16];
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_float_zero;
+__SLL_EXTERNAL extern sll_object_t* sll_static_float_zero;
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_float_one;
+__SLL_EXTERNAL extern sll_object_t* sll_static_float_one;
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_float_half;
+__SLL_EXTERNAL extern sll_object_t* sll_static_float_half;
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_char[256];
+__SLL_EXTERNAL extern sll_object_t* sll_static_char[256];
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_str_zero;
+__SLL_EXTERNAL extern sll_object_t* sll_static_str_zero;
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_array_zero;
+__SLL_EXTERNAL extern sll_object_t* sll_static_array_zero;
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_handle_zero;
+__SLL_EXTERNAL extern sll_object_t* sll_static_handle_zero;
 
 
 
-__SLL_EXTERNAL extern sll_runtime_object_t* sll_static_map_zero;
+__SLL_EXTERNAL extern sll_object_t* sll_static_map_zero;
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_int_to_object(sll_integer_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_float_to_object(sll_float_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t v);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_runtime_object_t* sll_char_to_object(sll_char_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v);
 
 
 
