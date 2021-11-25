@@ -14,9 +14,6 @@
 #define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 4
 #define SLL_SANDBOX_FLAG_DISABLE_PATH_API 8
 
-#define SLL_VAR_ARG_LIST_TYPE_C 0
-#define SLL_VAR_ARG_LIST_TYPE_SLL 1
-
 #define SLL_COPY_STRING_NULL(s,d) (*((sll_char_t*)sll_copy_string((s),(d)))=0)
 
 

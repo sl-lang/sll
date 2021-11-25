@@ -502,14 +502,19 @@ __SLL_EXTERNAL void sll_string_from_int(sll_integer_t v,sll_string_t* o){
 
 
 __SLL_EXTERNAL void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
-	sll_string_from_pointer_length(s,sll_string_length_unaligned(s),o);
+	if (!s){
+		sll_string_create(0,o);
+	}
+	else{
+		sll_string_from_pointer_length(s,sll_string_length_unaligned(s),o);
+	}
 }
 
 
 
 __SLL_EXTERNAL void sll_string_from_pointer_length(const sll_char_t* s,sll_string_length_t l,sll_string_t* o){
 	if (!l){
-		SLL_INIT_STRING(o);
+		sll_string_create(0,o);
 		return;
 	}
 	o->l=l;

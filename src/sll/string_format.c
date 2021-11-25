@@ -1,35 +1,16 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/memory.h>
-#include <sll/operator.h>
-#include <sll/runtime_object.h>
-#include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <sll/var_arg.h>
 #include <stdarg.h>
 #include <stdint.h>
 
 
 
 static const uint64_t _string_pow_of_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
-
-
-
-static sll_integer_t _get_var_arg_int(sll_var_arg_list_t* va){
-	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		return va_arg(*(va->dt.c),sll_integer_t);
-	}
-	if (!va->dt.sll.l){
-		return 0;
-	}
-	sll_runtime_object_t* n=sll_operator_cast((sll_runtime_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_RUNTIME_OBJECT_TYPE_INT]);
-	sll_integer_t o=n->dt.i;
-	SLL_RELEASE(n);
-	va->dt.sll.p++;
-	va->dt.sll.l--;
-	return o;
-}
 
 
 
@@ -100,7 +81,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		unsigned int w=0;
 		unsigned int p=0;
 		if (*t=='*'){
-			int a=(int)_get_var_arg_int(va);
+			int a=(int)sll_var_arg_get_int(va);
 			if (a<0){
 				f|=STRING_FORMAT_FLAG_JUSTIFY_LEFT;
 				a=-a;
@@ -121,7 +102,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			i--;
 			t++;
 			if (*t=='*'){
-				int a=(int)_get_var_arg_int(va);
+				int a=(int)sll_var_arg_get_int(va);
 				p=(a<0?0:(unsigned int)a);
 				i--;
 				t++;
@@ -178,19 +159,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				sll_set_memory(o->v+o->l,w,' ');
 				o->l+=w;
 			}
-			if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-				o->v[o->l]=(sll_char_t)va_arg(*(va->dt.c),int);
-			}
-			else if (!va->dt.sll.l){
-				o->v[o->l]=0;
-			}
-			else{
-				sll_runtime_object_t* n=sll_operator_cast((sll_runtime_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_RUNTIME_OBJECT_TYPE_CHAR]);
-				o->v[o->l]=n->dt.c;
-				SLL_RELEASE(n);
-				va->dt.sll.p++;
-				va->dt.sll.l--;
-			}
+			o->v[o->l]=sll_var_arg_get_char(va);
 			o->l++;
 			if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 				sll_set_memory(o->v+o->l,w,' ');
@@ -198,48 +167,24 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			}
 		}
 		else if (*t=='s'){
-			const sll_char_t* s;
-			sll_string_length_t l;
-			sll_runtime_object_t* n=NULL;
-			if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-				s=va_arg(*(va->dt.c),const sll_char_t*);
-				l=sll_string_length_unaligned(s);
+			sll_string_t s;
+			sll_var_arg_get_string(va,&s);
+			sll_string_length_t l=s.l;
+			if (f&STRING_FORMAT_FLAG_PERCISION){
+				l=p;
 			}
-			else if (!va->dt.sll.l){
-				s=NULL;
-
+			sll_string_increase(o,(l>w?l:w));
+			w=(w<l?0:w-l);
+			if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+				sll_set_memory(o->v+o->l,w,' ');
+				o->l+=w;
 			}
-			else{
-				n=sll_operator_cast((sll_runtime_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_RUNTIME_OBJECT_TYPE_STRING]);
-				s=n->dt.s.v;
-				l=n->dt.s.l;
-				va->dt.sll.p++;
-				va->dt.sll.l--;
-			}
-			if (!s){
-				sll_string_increase(o,6);
-				sll_copy_data(SLL_CHAR("(null)"),6,o->v+o->l);
-				o->l+=6;
-			}
-			else{
-				if (f&STRING_FORMAT_FLAG_PERCISION){
-					l=p;
-				}
-				sll_string_increase(o,(l>w?l:w));
-				w=(w<l?0:w-l);
-				if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-					sll_set_memory(o->v+o->l,w,' ');
-					o->l+=w;
-				}
-				sll_copy_data(s,l,o->v+o->l);
-				o->l+=l;
-				if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-					sll_set_memory(o->v+o->l,w,' ');
-					o->l+=w;
-				}
-			}
-			if (n){
-				SLL_RELEASE(n);
+			sll_copy_data(s.v,l,o->v+o->l);
+			sll_free_string(&s);
+			o->l+=l;
+			if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+				sll_set_memory(o->v+o->l,w,' ');
+				o->l+=w;
 			}
 		}
 		else if (*t=='d'||*t=='j'||*t=='o'||*t=='u'||*t=='x'||*t=='X'){
@@ -250,7 +195,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			if (*t=='d'||*t=='j'){
 				int64_t sn;
 				if (f&STRING_FORMAT_FLAG_HH_BITS){
-					sn=_get_var_arg_int(va);
+					sn=sll_var_arg_get_int(va);
 					if (sn<-0x80){
 						sn=-0x80;
 					}
@@ -259,7 +204,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					}
 				}
 				else if (f&STRING_FORMAT_FLAG_H_BITS){
-					sn=_get_var_arg_int(va);
+					sn=sll_var_arg_get_int(va);
 					if (sn<-0x8000){
 						sn=-0x8000;
 					}
@@ -268,7 +213,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					}
 				}
 				else if (f&STRING_FORMAT_FLAG_L_BITS){
-					sn=_get_var_arg_int(va);
+					sn=sll_var_arg_get_int(va);
 					if (sn<-0x80000000ll){
 						sn=-0x80000000ll;
 					}
@@ -277,10 +222,10 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					}
 				}
 				else if (f&STRING_FORMAT_FLAG_LL_BITS){
-					sn=_get_var_arg_int(va);
+					sn=sll_var_arg_get_int(va);
 				}
 				else{
-					sn=_get_var_arg_int(va);
+					sn=sll_var_arg_get_int(va);
 					if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
 						if (sn<-0x80000000ll){
 							sn=-0x80000000ll;
@@ -299,19 +244,19 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			}
 			else{
 				if (f&STRING_FORMAT_FLAG_HH_BITS){
-					n=_get_var_arg_int(va)&0xff;
+					n=sll_var_arg_get_int(va)&0xff;
 				}
 				else if (f&STRING_FORMAT_FLAG_H_BITS){
-					n=_get_var_arg_int(va)&0xffff;
+					n=sll_var_arg_get_int(va)&0xffff;
 				}
 				else if (f&STRING_FORMAT_FLAG_L_BITS){
-					n=_get_var_arg_int(va)&0xffffffff;
+					n=sll_var_arg_get_int(va)&0xffffffff;
 				}
 				else if (f&STRING_FORMAT_FLAG_LL_BITS){
-					n=_get_var_arg_int(va);
+					n=sll_var_arg_get_int(va);
 				}
 				else{
-					n=_get_var_arg_int(va);
+					n=sll_var_arg_get_int(va);
 					if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
 						n&=0xffffffff;
 					}
@@ -439,15 +384,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		}
 		else if (*t=='p'){
 			sll_string_increase(o,16);
-			uint64_t ptr=0;
-			if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-				ptr=(uint64_t)va_arg(*(va->dt.c),void*);
-			}
-			else if (va->dt.sll.l){
-				ptr=(uint64_t)(*(va->dt.sll.p));
-				va->dt.sll.p++;
-				va->dt.sll.l--;
-			}
+			uint64_t ptr=(uint64_t)sll_var_arg_get(va);
 			for (int8_t j=60;j>=0;j-=4){
 				sll_char_t c=(ptr>>j)&15;
 				o->v[o->l]=c+(c>9?87:48);

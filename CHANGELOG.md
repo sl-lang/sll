@@ -4,8 +4,8 @@
 
 ### Added
 
-- C and Sll variable argument list type: `sll_var_arg_list_t`
-- Implemeneted `sll_api_string_format`
+- C and Sll variable argument list API: `sll_var_arg_list_t`, `sll_var_arg_get`, `sll_var_arg_get_int`, `sll_var_arg_get_float`, `sll_var_arg_get_char` and `sll_var_arg_get_string`
+- Implemented `sll_api_string_format`
 - Miscellaneous object function are now located in [`object.c`][main/src/sll/object.c]
 
 ### Changed
@@ -20,7 +20,7 @@
 
 ### Removed
 
-- [`init.h`][0.6.28/src/include/sll/init.h], [`deinit.c`][0.6.28/src/sll/deinit.c], [`init.c`][0.6.28/src/sll/init.c]
+- Deprecated initialization API: [`init.h`][0.6.28/src/include/sll/init.h], [`deinit.c`][0.6.28/src/sll/deinit.c] and [`init.c`][0.6.28/src/sll/init.c]
 - `sll_object_to_string` has been replaced by `sll_api_string_convert`
 - Unused functions: `sll_api_string_convert_length` and `sll_api_string_length` (and matching `string.sll` function declarations)
 - Unused `sll_deinit_xxx` functions
