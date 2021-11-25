@@ -21,7 +21,7 @@
 ### Removed
 
 - [`init.h`][0.6.28/src/include/sll/init.h], [`deinit.c`][0.6.28/src/sll/deinit.c], [`init.c`][0.6.28/src/sll/init.c]
-- `sll_object_to_string` has been replaced by `sll_api_string_convert
+- `sll_object_to_string` has been replaced by `sll_api_string_convert`
 - Unused functions: `sll_api_string_convert_length` and `sll_api_string_length` (and matching `string.sll` function declarations)
 - Unused `sll_deinit_xxx` functions
 
