@@ -289,6 +289,16 @@ __SLL_EXTERNAL void sll_string_create(sll_string_length_t l,sll_string_t* o){
 
 
 
+__SLL_EXTERNAL void sll_string_decrease(sll_string_t* s,sll_string_length_t l){
+	if (l!=s->l){
+		s->l=l;
+		s->v=sll_reallocate(s->v,SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
+		SLL_STRING_FORMAT_PADDING(s->v,s->l);
+	}
+}
+
+
+
 __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_string_length_t e,sll_string_t* o){
 	SLL_ASSERT(e<s->l);
 	sll_bool_t r=0;

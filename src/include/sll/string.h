@@ -79,6 +79,10 @@ __SLL_EXTERNAL void sll_string_create(sll_string_length_t l,sll_string_t* o);
 
 
 
+__SLL_EXTERNAL void sll_string_decrease(sll_string_t* s,sll_string_length_t l);
+
+
+
 __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t v,sll_string_length_t e,sll_string_t* o);
 
 

@@ -5,7 +5,7 @@
 ### Added
 
 - C and Sll variable argument list API: `sll_var_arg_list_t`, `sll_var_arg_get`, `sll_var_arg_get_int`, `sll_var_arg_get_float`, `sll_var_arg_get_char` and `sll_var_arg_get_string`
-- Implemented `sll_api_string_format`
+- Implemented `sll_api_string_format`, `sll_api_file_read`, `read`, `sll_string_decrease`
 - Miscellaneous node function are now located in [`node.c`][main/src/sll/node.c]
 
 ### Changed

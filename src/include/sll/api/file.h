@@ -30,6 +30,18 @@ __API_FUNC_DECL(file_open);
 
 
 /*~~DOCS~~
+TYPE api
+FUNC sll_api_file_read
+DESC Reads from a file prevoiusly opened by :sll_api_file_open:
+ARG HI Previously opened file handle
+ARG I? Maximum number of bytes to read
+RET Z Failure
+RET S The content of the file*/
+__API_FUNC_DECL(file_read);
+
+
+
+/*~~DOCS~~
 TYPE api var_arg
 FUNC sll_api_file_write
 DESC Writes to a file prevoiusly opened by :sll_api_file_open:

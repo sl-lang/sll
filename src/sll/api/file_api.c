@@ -132,6 +132,44 @@ _found_index:;
 
 
 
+__API_FUNC(file_read){
+	SLL_INIT_STRING(out);
+	sll_file_t* f=NULL;
+	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+		if (a->dt.i==-2){
+			if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDIN_IO)){
+				return;
+			}
+			SLL_ASSERT(sll_current_runtime_data);
+			f=sll_current_runtime_data->in;
+		}
+		else{
+			return;
+		}
+	}
+	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
+		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+			return;
+		}
+		f=*(_file_fl+a->dt.h.h);
+		if (!f){
+			return;
+		}
+	}
+	else{
+		return;
+	}
+	if (!b){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_string_length_t l=(sll_string_length_t)b;
+	sll_string_create(l,out);
+	sll_string_decrease(out,(sll_string_length_t)sll_file_read(f,out->v,l));
+	sll_string_calculate_checksum(out);
+}
+
+
+
 __API_FUNC(file_write){
 	sll_file_t* f=NULL;
 	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){

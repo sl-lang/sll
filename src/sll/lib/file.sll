@@ -2,8 +2,9 @@
 (= stdout -2)
 (= stderr -3)
 
-(= open (... "file_open"))
 (= close (... "file_close"))
+(= open (... "file_open"))
+(= read (... "file_read"))
 (= write (... "file_write"))
 
-(## stdin stdout stderr open close write)
+(## stdin stdout stderr close open read write)
