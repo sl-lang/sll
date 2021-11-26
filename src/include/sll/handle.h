@@ -21,22 +21,59 @@
 
 
 
+/**
+ * \flags func
+ * \name sll_cleanup_handles
+ * \desc Docs!
+ * \arg sll_handle_list_t* hl
+ * \arg sll_handle_type_t hll
+ */
 __SLL_EXTERNAL void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_verify_object_stack_cleanup
+ * \desc Docs!
+ * \arg sll_handle_list_t* hl
+ * \arg sll_handle_descriptor_t* hd
+ * \ret sll_handle_type_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_handle_type_t sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd);
 
 
 
+/**
+ * \flags func
+ * \name sll_free_handle_list
+ * \desc Docs!
+ * \arg sll_handle_list_t* hl
+ */
 __SLL_EXTERNAL void sll_free_handle_list(sll_handle_list_t* hl);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_handle_to_object
+ * \desc Docs!
+ * \arg sll_handle_type_t t
+ * \arg sll_handle_t h
+ * \ret sll_object_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_handle_to_object(sll_handle_type_t t,sll_handle_t h);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_handle_lookup_descriptor
+ * \desc Docs!
+ * \arg sll_handle_list_t* hl
+ * \arg sll_handle_type_t t
+ * \ret sll_handle_descriptor_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_handle_descriptor_t* sll_handle_lookup_descriptor(sll_handle_list_t* hl,sll_handle_type_t t);
 
 

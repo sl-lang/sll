@@ -221,6 +221,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_is_dir_raw(const sl
 
 __SLL_API_TYPE_sll_api_path_join sll_api_path_join(__SLL_API_ARGS_sll_api_path_join);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC(str_zero);
+	}
 	sll_arg_count_t ac=all-0;
 	const sll_string_t** a=sll_allocate(ac*sizeof(sll_string_t*));
 	for (sll_arg_count_t idx=0;idx<ac;idx++){

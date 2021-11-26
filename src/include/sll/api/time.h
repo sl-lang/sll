@@ -6,42 +6,46 @@
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_time_current
-DESC Docs!
-RET F Docs!*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_time_current
+ * \desc Docs!
+ * \ret F
+ */
 __API_FUNC_DECL(time_current);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_time_current_nanos
-DESC Docs!
-RET I Docs!*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_time_current_nanos
+ * \desc Docs!
+ * \ret I
+ */
 __API_FUNC_DECL(time_current_nanos);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_time_sleep
-DESC Docs!
-ARG IF Docs!
-RET f Failure
-RET F Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_time_sleep
+ * \desc Docs!
+ * \arg IF
+ * \ret f -> Failure
+ * \ret F -> Success
+ */
 __API_FUNC_DECL(time_sleep);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_time_sleep_nanos
-DESC Docs!
-ARG IF Docs!
-RET 0 Failure
-RET I Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_time_sleep_nanos
+ * \desc Docs!
+ * \arg IF
+ * \ret 0 -> Failure
+ * \ret I -> Success
+ */
 __API_FUNC_DECL(time_sleep_nanos);
 
 

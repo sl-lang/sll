@@ -13,17 +13,54 @@
 
 
 
+
+/**
+ * \flags func
+ * \name sll_identifier_add_index
+ * \desc Docs!
+ * \arg sll_identifier_index_t i
+ * \arg sll_identifier_index_t j
+ * \ret sll_identifier_index_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_index(sll_identifier_index_t i,sll_identifier_index_t j);
 
 
+
+
+/**
+ * \flags func
+ * \name sll_identifier_create_identifier
+ * \desc Docs!
+ * \arg sll_identifier_index_t i
+ * \arg sll_identifier_index_t j
+ * \ret sll_identifier_index_t
+ */
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create_identifier(sll_identifier_index_t i,sll_identifier_index_t j);
 
 
 
+
+/**
+ * \flags func
+ * \name sll_identifier_get_array_id
+ * \desc Docs!
+ * \arg sll_identifier_index_t i
+ * \ret sll_identifier_index_t
+ */
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_id(sll_identifier_index_t i);
 
 
+
+
+/**
+ * \flags func
+ * \name sll_identifier_get_array_index
+ * \desc Docs!
+ * \arg sll_identifier_index_t i
+ * \ret sll_identifier_index_t
+ */
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_index(sll_identifier_index_t i);
 

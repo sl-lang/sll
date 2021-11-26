@@ -6,22 +6,24 @@
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_util_instruction_count
-DESC Docs!
-RET I Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_util_instruction_count
+ * \desc Docs!
+ * \ret I -> Number of instruction executed by the VM from the start of the program
+ */
 __API_FUNC_DECL(util_instruction_count);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_util_ref_count
-DESC Docs!
-ARG O Docs!
-RET 0 Failure
-RET I Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_util_ref_count
+ * \desc Docs!
+ * \arg O
+ * \ret 0 -> Failure
+ * \ret I -> Number of references to the given object
+ */
 __API_FUNC_DECL(util_ref_count);
 
 

@@ -9,14 +9,36 @@
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_binary_heap_add
+ * \desc Docs!
+ * \arg sll_binary_heap_t* bh
+ * \arg sll_integer_t k
+ * \ret sll_bool_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap_t* bh,sll_integer_t k);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_binary_heap_contains
+ * \desc Docs!
+ * \arg sll_binary_heap_t* bh
+ * \arg sll_integer_t k
+ * \ret sll_bool_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary_heap_t* bh,sll_integer_t k);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_free_binary_heap
+ * \desc Docs!
+ * \arg sll_binary_heap_t* bh
+ */
 __SLL_EXTERNAL void sll_free_binary_heap(sll_binary_heap_t* bh);
 
 

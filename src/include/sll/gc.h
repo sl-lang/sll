@@ -18,26 +18,67 @@
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_add_debug_data
+ * \desc Docs!
+ * \arg sll_object_t* o
+ * \arg const char* fp
+ * \arg unsigned int ln
+ * \arg const char* fn
+ * \arg unsigned int t
+ * \ret sll_object_t*
+ */
 __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t);
 
 
 
+/**
+ * \flags func
+ * \name sll_acquire_object
+ * \desc Docs!
+ * \arg sll_object_t* o
+ */
 __SLL_EXTERNAL void sll_acquire_object(sll_object_t* o);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_create_object
+ * \desc Docs!
+ * \ret sll_object_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(void);
 
 
 
+/**
+ * \flags func
+ * \name sll_release_object
+ * \desc Docs!
+ * \arg sll_object_t* o
+ */
 __SLL_EXTERNAL void sll_release_object(sll_object_t* o);
 
 
 
+/**
+ * \flags func
+ * \name sll_remove_debug_data
+ * \desc Docs!
+ * \arg sll_object_t* o
+ */
 __SLL_EXTERNAL void sll_remove_debug_data(sll_object_t* o);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_verify_object_stack_cleanup
+ * \desc Docs!
+ * \ret sll_bool_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(void);
 
 

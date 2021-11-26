@@ -14,54 +14,135 @@
 
 
 
+/**
+ * \flags var
+ * \name sll_static_int
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_int[256];
 
 
 
+/**
+ * \flags var
+ * \name sll_static_negative_int
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_negative_int[16];
 
 
 
+/**
+ * \flags var
+ * \name sll_static_float_zero
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_float_zero;
 
 
 
+/**
+ * \flags var
+ * \name sll_static_float_one
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_float_one;
 
 
 
+/**
+ * \flags var
+ * \name sll_static_float_half
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_float_half;
 
 
 
+/**
+ * \flags var
+ * \name sll_static_char
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_char[256];
 
 
 
+/**
+ * \flags var
+ * \name sll_static_str_zero
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_str_zero;
 
 
 
+/**
+ * \flags var
+ * \name sll_static_array_zero
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_array_zero;
 
 
 
+/**
+ * \flags var
+ * \name sll_static_handle_zero
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_handle_zero;
 
 
 
+/**
+ * \flags var
+ * \name sll_static_map_zero
+ * \desc Docs!
+ * \type sll_object_t*
+ */
 __SLL_EXTERNAL extern sll_object_t* sll_static_map_zero;
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_int_to_object
+ * \desc Docs!
+ * \arg sll_integer_t v
+ * \ret sll_object_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_float_to_object
+ * \desc Docs!
+ * \arg sll_float_t v
+ * \ret sll_object_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t v);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_object_get_type
+ * \desc Docs!
+ * \arg sll_char_t v
+ * \ret sll_object_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v);
 
 

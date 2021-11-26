@@ -29,35 +29,38 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_json_parse
-DESC Converts a [JSON][https://www.json.org/json-en.html] string into Sll types
-ARG S The string to parse
-RET h Failure
-RET O The parsed object*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_json_parse
+ * \desc Converts a [JSON][https://www.json.org/json-en.html] string into Sll types
+ * \arg S -> The string to parse
+ * \ret h -> Failure
+ * \ret O -> The parsed object
+ */
 __API_FUNC_DECL(json_parse);
 
 
 
-/*~~DOCS~~
-TYPE api compilation_call optimizable
-FUNC sll_api_json_stringify
-DESC Docs!
-ARG O Docs!
-RET Z Failure
-RET S Success*/
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_json_stringify
+ * \desc Docs!
+ * \arg O
+ * \ret Z -> Failure
+ * \ret S -> Success
+ */
 __API_FUNC_DECL(json_stringify);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_json_type
-DESC Docs!
-ARG I Docs!
-RET h Failure
-RET H Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_json_type
+ * \desc Docs!
+ * \arg I
+ * \ret h -> Failure
+ * \ret H -> Success
+ */
 __API_FUNC_DECL(json_type);
 
 

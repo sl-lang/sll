@@ -60,11 +60,11 @@ __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_
 
 
 
-__SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_function_table_t* i_ft){
-	i_ft->l+=_ifunc_size;
-	i_ft->dt=sll_reallocate((void*)(i_ft->dt),i_ft->l*sizeof(const sll_internal_function_t*));
+__SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_function_table_t* ift){
+	ift->l+=_ifunc_size;
+	ift->dt=sll_reallocate((void*)(ift->dt),ift->l*sizeof(const sll_internal_function_t*));
 	const internal_function_t* f=_ifunc_data;
-	const sll_internal_function_t** p=(const sll_internal_function_t**)(i_ft->dt+i_ft->l-_ifunc_size);
+	const sll_internal_function_t** p=(const sll_internal_function_t**)(ift->dt+ift->l-_ifunc_size);
 	for (sll_function_index_t i=0;i<_ifunc_size;i++){
 		sll_internal_function_t* nf=sll_allocate(sizeof(sll_internal_function_t));
 		sll_string_from_pointer(f->nm,(sll_string_t*)&(nf->nm));

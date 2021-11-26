@@ -6,17 +6,18 @@
 
 
 
-/*~~DOCS~~
-TYPE api
-FUNC sll_api_url_execute_request
-DESC Docs!
-ARG S Docs!
-ARG S Docs!
-ARG S Docs!
-ARG M Docs!
-ARG S Docs!
-RET 0 Failure
-RET A Success*/
+/**
+ * \flags api func
+ * \name sll_api_url_execute_request
+ * \desc Docs!
+ * \arg S
+ * \arg S
+ * \arg S
+ * \arg M
+ * \arg S
+ * \ret 0 -> Failure
+ * \ret A -> Success
+ */
 __API_FUNC_DECL(url_execute_request);
 
 

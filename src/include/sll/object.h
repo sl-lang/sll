@@ -28,6 +28,13 @@
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_object_get_type
+ * \desc Docs!
+ * \arg const sll_object_t* o
+ * \ret sll_object_type_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_object_get_type(const sll_object_t* o);
 
 

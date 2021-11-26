@@ -20,109 +20,119 @@ __SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_cha
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_absolute
-DESC Docs!
-ARG S Docs!
-RET Z Failure
-RET S Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_absolute
+ * \desc Docs!
+ * \arg S
+ * \ret Z -> Failure
+ * \ret S -> Success
+ */
 __API_FUNC_DECL(path_absolute);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_exists
-DESC Docs!
-ARG S Docs!
-RET 0 Failure
-RET I Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_exists
+ * \desc Docs!
+ * \arg S
+ * \ret 0 -> Failure
+ * \ret I -> Success
+ */
 __API_FUNC_DECL(path_exists);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_get_cwd
-DESC Docs!
-RET S Docs!*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_get_cwd
+ * \desc Docs!
+ * \ret S -> Docs!
+ */
 __API_FUNC_DECL(path_get_cwd);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_is_dir
-DESC Docs!
-ARG S Docs!
-RET 0 Failure
-RET I Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_is_dir
+ * \desc Docs!
+ * \arg S
+ * \ret 0 -> Failure
+ * \ret I -> Success
+ */
 __API_FUNC_DECL(path_is_dir);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable var_arg
-FUNC sll_api_path_join
-DESC Docs!
-ARG S? Docs!
-RET Z Failure
-RET S Success*/
+/**
+ * \flags api func optimizable var_arg
+ * \name sll_api_path_join
+ * \desc Docs!
+ * \arg S
+ * \ret Z -> Failure
+ * \ret S -> Success
+ */
 __API_FUNC_DECL(path_join);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_list_dir
-DESC Docs!
-ARG S Docs!
-RET E Failure
-RET A Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_list_dir
+ * \desc Docs!
+ * \arg S
+ * \ret E -> Failure
+ * \ret A -> Success
+ */
 __API_FUNC_DECL(path_list_dir);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_recursive_list_dir
-DESC Docs!
-ARG S Docs!
-RET E Failure
-RET A Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_recursive_list_dir
+ * \desc Docs!
+ * \arg S
+ * \ret E -> Failure
+ * \ret A -> Success
+ */
 __API_FUNC_DECL(path_recursive_list_dir);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_relative
-DESC Docs!
-ARG S Docs!
-RET Z Failure
-RET S Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_relative
+ * \desc Docs!
+ * \arg S
+ * \ret Z -> Failure
+ * \ret S -> Success
+ */
 __API_FUNC_DECL(path_relative);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_set_cwd
-ARG S Docs!
-RET 0 Failure
-RET I Docs!*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_set_cwd
+ * \arg S
+ * \ret 0 -> Failure
+ * \ret I -> Docs!
+ */
 __API_FUNC_DECL(path_set_cwd);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_path_size
-DESC Docs!
-ARG S Docs!
-RET 0 Failure
-RET I Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_path_size
+ * \desc Docs!
+ * \arg S
+ * \ret 0 -> Failure
+ * \ret I -> Success
+ */
 __API_FUNC_DECL(path_size);
 
 

@@ -10,14 +10,15 @@ __SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sl
 
 
 
-/*~~DOCS~~
-TYPE api compilation_call optimizable
-FUNC sll_api_sort_sort
-DESC Docs!
-ARG A Docs!
-ARG I? Docs!
-RET E Docs!
-RET A Success*/
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_sort_sort
+ * \desc Docs!
+ * \arg A
+ * \arg I?
+ * \ret E -> Failure
+ * \ret A -> Success
+ */
 __API_FUNC_DECL(sort_sort);
 
 

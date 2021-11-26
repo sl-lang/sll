@@ -108,26 +108,70 @@
 
 
 
+/**
+ * \flags var
+ * \name sll_current_instruction_count
+ * \desc Docs!
+ * \type sll_integer_t
+ */
 __SLL_EXTERNAL extern sll_integer_t sll_current_instruction_count;
 
 
 
+/**
+ * \flags var
+ * \name sll_current_runtime_data
+ * \desc Docs!
+ * \type const sll_runtime_data_t*
+ */
 __SLL_EXTERNAL extern const sll_runtime_data_t* sll_current_runtime_data;
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_execute_assembly
+ * \desc Docs!
+ * \arg const sll_assembly_data_t* a_dt
+ * \arg sll_page_size_t s_sz
+ * \arg const sll_runtime_data_t* r_dt
+ * \arg sll_error_t* e
+ * \ret sll_return_code_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,sll_page_size_t s_sz,const sll_runtime_data_t* r_dt,sll_error_t* e);
 
 
 
+/**
+ * \flags func
+ * \name sll_free_assembly_data
+ * \desc Docs!
+ * \arg sll_assembly_data_t* a_dt
+ */
 __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_generate_assembly
+ * \desc Docs!
+ * \arg const sll_compilation_data_t* c_dt
+ * \arg sll_assembly_data_t* o
+ * \arg sll_error_t* e
+ * \ret sll_bool_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e);
 
 
 
+/**
+ * \flags func
+ * \name sll_print_assembly
+ * \desc Docs!
+ * \arg const sll_assembly_data_t* a_dt
+ * \arg sll_file_t* wf
+ */
 __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_t* wf);
 
 

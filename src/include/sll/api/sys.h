@@ -14,40 +14,44 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_sys_arg_get
-DESC Docs!
-ARG I Docs!
-RET Z Failure
-RET S Success*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_sys_arg_get
+ * \desc Docs!
+ * \arg I
+ * \ret Z -> Failure
+ * \ret S -> Success
+ */
 __API_FUNC_DECL(sys_arg_get);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_sys_arg_get_count
-DESC Docs!
-RET I Docs!*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_sys_arg_get_count
+ * \desc Docs!
+ * \ret I
+ */
 __API_FUNC_DECL(sys_arg_get_count);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_sys_get_executable
-DESC Docs!
-RET S Docs!*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_sys_get_executable
+ * \desc Docs!
+ * \ret S
+ */
 __API_FUNC_DECL(sys_get_executable);
 
 
 
-/*~~DOCS~~
-TYPE api optimizable
-FUNC sll_api_sys_get_platform
-DESC Docs!
-RET S Docs!*/
+/**
+ * \flags api func optimizable
+ * \name sll_api_sys_get_platform
+ * \desc Docs!
+ * \ret S
+ */
 __API_FUNC_DECL(sys_get_platform);
 
 

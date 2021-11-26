@@ -51,6 +51,13 @@
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_print_error
+ * \desc Docs!
+ * \arg sll_file_t* rf
+ * \arg const sll_error_t* e
+ */
 __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e);
 
 

@@ -13,22 +13,58 @@
 
 
 
+/**
+ * \flags func
+ * \name sll_create_internal_function_table
+ * \desc Docs!
+ * \arg sll_internal_function_table_t* o
+ */
 __SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_table_t* o);
 
 
 
+/**
+ * \flags func
+ * \name sll_free_internal_function_table
+ * \desc Docs!
+ * \arg sll_internal_function_table_t* ift
+ */
 __SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table_t* ift);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_lookup_internal_function
+ * \desc Docs!
+ * \arg const sll_internal_function_table_t* i_ft
+ * \arg const sll_char_t* nm
+ * \ret sll_function_index_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const sll_char_t* nm);
 
 
 
-__SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_function_table_t* i_ft);
+/**
+ * \flags func
+ * \name sll_register_builtin_internal_functions
+ * \desc Docs!
+ * \arg sll_internal_function_table_t* ift
+ */
+__SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_function_table_t* ift);
 
 
 
+/**
+ * \flags func
+ * \name sll_register_internal_function
+ * \desc Docs!
+ * \arg sll_internal_function_table_t* i_ft
+ * \arg const sll_char_t* nm
+ * \arg sll_internal_function_pointer_t f
+ * \arg sll_internal_function_type_t t
+ * \ret sll_function_index_t
+ */
 __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f,sll_internal_function_type_t t);
 
 
