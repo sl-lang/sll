@@ -2,6 +2,12 @@
 #define __SLL_FILE_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name File
+ * \group file
+ * \desc Docs!
+ */
 
 
 
@@ -23,6 +29,7 @@
 /**
  * \flags var
  * \name sll_stdin
+ * \group file
  * \desc Docs!
  * \type sll_file_t*
  */
@@ -33,6 +40,7 @@ __SLL_EXTERNAL extern sll_file_t* sll_stdin;
 /**
  * \flags var
  * \name sll_stdout
+ * \group file
  * \desc Docs!
  * \type sll_file_t*
  */
@@ -43,6 +51,7 @@ __SLL_EXTERNAL extern sll_file_t* sll_stdout;
 /**
  * \flags var
  * \name sll_stderr
+ * \group file
  * \desc Docs!
  * \type sll_file_t*
  */
@@ -53,6 +62,7 @@ __SLL_EXTERNAL extern sll_file_t* sll_stderr;
 /**
  * \flags check_output func
  * \name sll_file_close
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  */
@@ -63,6 +73,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f);
 /**
  * \flags check_output func
  * \name sll_file_flush
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  */
@@ -73,6 +84,7 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f);
 /**
  * \flags check_output func
  * \name sll_file_from_data
+ * \group file
  * \desc Docs!
  * \arg void* p
  * \arg sll_size_t sz
@@ -86,6 +98,7 @@ __SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,
 /**
  * \flags check_output func
  * \name sll_file_open
+ * \group file
  * \desc Docs!
  * \arg const sll_char_t* nm
  * \arg sll_file_flags_t f
@@ -99,6 +112,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open(const sll_char_t* nm,
 /**
  * \flags check_output func
  * \name sll_file_open_descriptor
+ * \group file
  * \desc Docs!
  * \arg const sll_char_t* nm
  * \arg sll_file_descriptor_t fd
@@ -113,6 +127,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open_descriptor(const sll_
 /**
  * \flags check_output func
  * \name sll_file_read
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg void* p
@@ -126,6 +141,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 /**
  * \flags check_output func
  * \name sll_file_read_char
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  * \ret sll_read_char_t
@@ -137,6 +153,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 /**
  * \flags check_output func
  * \name sll_file_reset
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  */
@@ -147,6 +164,7 @@ __SLL_EXTERNAL void sll_file_reset(sll_file_t* f);
 /**
  * \flags check_output func
  * \name sll_file_reset_line
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_file_offset_t off
@@ -158,6 +176,7 @@ __SLL_EXTERNAL void sll_file_reset_line(sll_file_t* f,sll_file_offset_t off);
 /**
  * \flags check_output func
  * \name sll_file_write
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg const void* p
@@ -171,6 +190,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 /**
  * \flags check_output func
  * \name sll_file_write_char
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_char_t c
@@ -183,6 +203,7 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c);
 /**
  * \flags check_output func var_arg
  * \name sll_file_write_format
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg const sll_char_t* t
@@ -195,6 +216,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 /**
  * \flags check_output func
  * \name sll_file_write_string
+ * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg const sll_char_t* p

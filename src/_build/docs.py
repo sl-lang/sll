@@ -10,10 +10,11 @@ DOCS_COMMENT_REGEX=re.compile(r"\/\*\*(.*?)\*\/",re.S)
 def create_docs(fl):
 	o=[]
 	ap_dt=[]
+	g_dt={}
 	for nm in fl:
 		with open(nm,"r") as f:
 			for k in DOCS_COMMENT_REGEX.findall(f.read().replace("\r\n","\n")):
-				dt={"flag":[],"name":None,"desc":None,"args":[],"ret":[],"type":None}
+				dt={"flag":[],"name":None,"group":None,"desc":None,"args":[],"ret":[],"type":None}
 				for e in k.split("\n"):
 					e=e.strip()
 					if (e[:1]=="*"):
@@ -27,11 +28,15 @@ def create_docs(fl):
 								dt["flag"].append(se)
 					elif (t=="\\name"):
 						if (dt["name"] is not None):
-							raise RuntimeError("Only one '\\name' tag can be present")
+							raise RuntimeError(f"{nm}: Only one '\\name' tag can be present")
 						dt["name"]=e.split(" ")[1]
+					elif (t=="\\group"):
+						if (dt["group"] is not None):
+							raise RuntimeError(f"{nm}: Only one '\\group' tag can be present")
+						dt["group"]=e.split(" ")[1]
 					elif (t=="\\desc"):
 						if (dt["desc"] is not None):
-							raise RuntimeError("Only one '\\desc' tag can be present")
+							raise RuntimeError(f"{nm}: Only one '\\desc' tag can be present")
 						dt["desc"]=e[6:]
 					elif (t=="\\arg"):
 						i=(e.index("->") if "->" in e else len(e))
@@ -47,24 +52,33 @@ def create_docs(fl):
 						dt["ret"].append({"type":e[4:i].strip(),"desc":e[i+2:].strip()})
 					elif (t=="\\type"):
 						if (dt["type"] is not None):
-							raise RuntimeError("Only one '\\type' tag can be present")
+							raise RuntimeError(f"{nm}: Only one '\\type' tag can be present")
 						i=(e.index("->") if "->" in e else len(e))
 						dt["type"]={"type":e[5:i].strip(),"desc":e[i+2:].strip()}
 					else:
-						raise RuntimeError(f"Unknown tag '{t}'")
+						raise RuntimeError(f"{nm}: Unknown tag '{t}'")
 				if (dt["name"] is None):
-					raise RuntimeError("A '\\name' tag is required")
+					raise RuntimeError(f"{nm}: A '\\name' tag is required")
+				if (dt["group"] is None):
+					raise RuntimeError(f"{nm}: A '\\group' tag is required")
 				if ("var" not in dt["flag"]):
 					del dt["type"]
 				elif ("api" in dt["flag"]):
-					raise RuntimeError("'api' and 'var' cannot be both present")
-				if ("api" in dt["flag"]):
+					raise RuntimeError(f"{nm}: 'api' and 'var' flags cannot be both present")
+				if ("group" in dt["flag"]):
+					if (len(dt["flag"])>1):
+						raise RuntimeError(f"{nm}: 'group' flag has to be alone")
+					g_dt[dt["group"]]={"name":dt["name"],"desc":dt["desc"]}
+				elif ("api" in dt["flag"]):
 					ap_dt.append(dt)
 				else:
 					if (len(dt["ret"])>1):
-						raise RuntimeError("Only one '\\ret' tag can be present")
+						raise RuntimeError(f"{nm}: Only one '\\ret' tag can be present")
 					dt["ret"]=(None if len(dt["ret"])==0 else dt["ret"][0])
 					o.append(dt)
+	for k in o:
+		if (k["group"] not in g_dt):
+			raise RuntimeError(f"{nm}: Unknown group '{k['group']}'")
 	with open("build/docs.json","w") as f:
-		f.write(json.dumps(o,indent="\t"))
+		f.write(json.dumps({"groups":g_dt,"data":o},indent="\t"))
 	return (o,ap_dt)

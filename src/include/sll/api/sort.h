@@ -3,12 +3,19 @@
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Sort API
+ * \group sort-api
+ * \desc Docs!
+ */
 
 
 
 /**
  * \flags func
  * \name sll_quicksort
+ * \group sort-api
  * \desc Docs!
  * \arg const sll_object_t** a
  * \arg sll_array_length_t l
@@ -21,6 +28,7 @@ __SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sl
 /**
  * \flags api compilation_call func optimizable
  * \name sll_api_sort_sort
+ * \group sort-api
  * \desc Docs!
  * \arg A
  * \arg I?

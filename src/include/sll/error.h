@@ -2,6 +2,12 @@
 #define __SLL_ERROR_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Error
+ * \group error
+ * \desc Docs!
+ */
 
 
 
@@ -54,6 +60,7 @@
 /**
  * \flags check_output func
  * \name sll_print_error
+ * \group error
  * \desc Docs!
  * \arg sll_file_t* rf
  * \arg const sll_error_t* e

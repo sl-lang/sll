@@ -2,6 +2,12 @@
 #define __SLL_IFT_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Internal Function Table
+ * \group ift
+ * \desc Docs!
+ */
 
 
 
@@ -16,6 +22,7 @@
 /**
  * \flags func
  * \name sll_create_internal_function_table
+ * \group ift
  * \desc Docs!
  * \arg sll_internal_function_table_t* o
  */
@@ -26,6 +33,7 @@ __SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_tab
 /**
  * \flags func
  * \name sll_free_internal_function_table
+ * \group ift
  * \desc Docs!
  * \arg sll_internal_function_table_t* ift
  */
@@ -36,6 +44,7 @@ __SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table
 /**
  * \flags check_output func
  * \name sll_lookup_internal_function
+ * \group ift
  * \desc Docs!
  * \arg const sll_internal_function_table_t* i_ft
  * \arg const sll_char_t* nm
@@ -48,6 +57,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_funct
 /**
  * \flags func
  * \name sll_register_builtin_internal_functions
+ * \group ift
  * \desc Docs!
  * \arg sll_internal_function_table_t* ift
  */
@@ -58,6 +68,7 @@ __SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_functio
 /**
  * \flags func
  * \name sll_register_internal_function
+ * \group ift
  * \desc Docs!
  * \arg sll_internal_function_table_t* i_ft
  * \arg const sll_char_t* nm

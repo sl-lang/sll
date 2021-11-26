@@ -3,6 +3,12 @@
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name JSON API
+ * \group json-api
+ * \desc Docs!
+ */
 
 
 
@@ -20,6 +26,7 @@
 /**
  * \flags func
  * \name sll_free_json_object
+ * \group json-api
  * \desc Docs!
  * \arg sll_json_object_t* json
  */
@@ -30,6 +37,7 @@ __SLL_EXTERNAL void sll_free_json_object(sll_json_object_t* json);
 /**
  * \flags check_output func
  * \name sll_json_get_by_key
+ * \group json-api
  * \desc Docs!
  * \arg sll_json_object_t* json
  * \arg const sll_string_t* k
@@ -42,6 +50,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_jso
 /**
  * \flags check_output func
  * \name sll_json_parse
+ * \group json-api
  * \desc Docs!
  * \arg sll_json_parser_state_t* p
  * \arg sll_json_object_t* o
@@ -54,6 +63,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 /**
  * \flags api func optimizable
  * \name sll_api_json_parse
+ * \group json-api
  * \desc Converts a [JSON][https://www.json.org/json-en.html] string into Sll types
  * \arg S -> The string to parse
  * \ret h -> Failure
@@ -66,6 +76,7 @@ __API_FUNC_DECL(json_parse);
 /**
  * \flags api compilation_call func optimizable
  * \name sll_api_json_stringify
+ * \group json-api
  * \desc Docs!
  * \arg O
  * \ret Z -> Failure
@@ -78,6 +89,7 @@ __API_FUNC_DECL(json_stringify);
 /**
  * \flags api func optimizable
  * \name sll_api_json_type
+ * \group json-api
  * \desc Docs!
  * \arg I
  * \ret h -> Failure

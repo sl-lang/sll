@@ -2,6 +2,12 @@
 #define __SLL_NODE_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Node
+ * \group node
+ * \desc Docs!
+ */
 
 
 
@@ -75,6 +81,7 @@
 /**
  * \flags func
  * \name sll_free_compilation_data
+ * \group node
  * \desc Docs!
  * \arg sll_compilation_data_t* c_dt
  */
@@ -85,6 +92,7 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt);
 /**
  * \flags check_output func
  * \name sll_get_node_size
+ * \group node
  * \desc Docs!
  * \arg const sll_node_t* o
  * \ret sll_node_offset_t
@@ -96,6 +104,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_
 /**
  * \flags func
  * \name sll_init_compilation_data
+ * \group node
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg sll_file_t* rf
@@ -108,6 +117,7 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* r
 /**
  * \flags func
  * \name sll_insert_debug_node
+ * \group node
  * \desc Docs!
  * \arg sll_compilation_data_t* c_dt
  * \arg sll_file_t* rf
@@ -119,6 +129,7 @@ __SLL_EXTERNAL void sll_insert_debug_node(sll_compilation_data_t* c_dt,sll_file_
 /**
  * \flags func
  * \name sll_optimize_metadata
+ * \group node
  * \desc Docs!
  * \arg sll_compilation_data_t* c_dt
  */
@@ -129,6 +140,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt);
 /**
  * \flags func
  * \name sll_optimize_node
+ * \group node
  * \desc Docs!
  * \arg sll_compilation_data_t* c_dt
  * \arg sll_internal_function_table_t* i_ft
@@ -140,6 +152,7 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 /**
  * \flags check_output func
  * \name sll_parse_all_nodes
+ * \group node
  * \desc Docs!
  * \arg sll_compilation_data_t* c_dt
  * \arg sll_internal_function_table_t* i_ft
@@ -154,6 +167,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_all_nodes(sll_compilation
 /**
  * \flags check_output func
  * \name sll_parse_node
+ * \group node
  * \desc Docs!
  * \arg sll_compilation_data_t* c_dt
  * \arg sll_internal_function_table_t* i_ft
@@ -169,6 +183,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_node(sll_compilation_data
 /**
  * \flags func
  * \name sll_print_node
+ * \group node
  * \desc Docs!
  * \arg const sll_compilation_data_t* c_dt
  * \arg const sll_internal_function_table_t* i_ft
@@ -182,6 +197,7 @@ __SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_
 /**
  * \flags func
  * \name sll_remove_node_debug_data
+ * \group node
  * \desc Docs!
  * \arg sll_node_t* o
  */
@@ -192,6 +208,7 @@ __SLL_EXTERNAL void sll_remove_node_debug_data(sll_node_t* o);
 /**
  * \flags func
  * \name sll_remove_node_padding
+ * \group node
  * \desc Docs!
  * \arg sll_compilation_data_t* c_dt
  * \arg sll_node_t* o
@@ -203,6 +220,7 @@ __SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt,sll_nod
 /**
  * \flags check_output func
  * \name sll_skip_node
+ * \group node
  * \desc Docs!
  * \arg sll_node_t* o
  * \ret sll_node_t*
@@ -214,6 +232,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o);
 /**
  * \flags check_output func
  * \name sll_skip_node_const
+ * \group node
  * \desc Docs!
  * \arg const sll_node_t* o
  * \ret const sll_node_t*

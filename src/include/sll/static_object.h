@@ -2,6 +2,12 @@
 #define __SLL_STATIC_OBJECT_H__ 1
 #include <sll/gc.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Static Object
+ * \group static-object
+ * \desc Docs!
+ */
 
 
 
@@ -17,6 +23,7 @@
 /**
  * \flags var
  * \name sll_static_int
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -27,6 +34,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_int[256];
 /**
  * \flags var
  * \name sll_static_negative_int
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -37,6 +45,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_negative_int[16];
 /**
  * \flags var
  * \name sll_static_float_zero
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -47,6 +56,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_float_zero;
 /**
  * \flags var
  * \name sll_static_float_one
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -57,6 +67,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_float_one;
 /**
  * \flags var
  * \name sll_static_float_half
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -67,6 +78,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_float_half;
 /**
  * \flags var
  * \name sll_static_char
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -77,6 +89,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_char[256];
 /**
  * \flags var
  * \name sll_static_str_zero
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -87,6 +100,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_str_zero;
 /**
  * \flags var
  * \name sll_static_array_zero
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -97,6 +111,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_array_zero;
 /**
  * \flags var
  * \name sll_static_handle_zero
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -107,6 +122,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_handle_zero;
 /**
  * \flags var
  * \name sll_static_map_zero
+ * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
@@ -117,6 +133,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_map_zero;
 /**
  * \flags check_output func
  * \name sll_int_to_object
+ * \group static-object
  * \desc Docs!
  * \arg sll_integer_t v
  * \ret sll_object_t*
@@ -128,6 +145,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
 /**
  * \flags check_output func
  * \name sll_float_to_object
+ * \group static-object
  * \desc Docs!
  * \arg sll_float_t v
  * \ret sll_object_t*
@@ -139,6 +157,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t 
 /**
  * \flags check_output func
  * \name sll_object_get_type
+ * \group static-object
  * \desc Docs!
  * \arg sll_char_t v
  * \ret sll_object_t*

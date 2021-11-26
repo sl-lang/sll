@@ -140,7 +140,7 @@ if ("--generate-api" in sys.argv):
 					cf.write("\t"+TYPE_MAP[rt]+f" out={k['name']}({pc});\n{end}\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
 			if (len(a)==0):
 				a="void"
-			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n/**\n * \\flags {('check_output ' if TYPE_MAP[rt][-1]!='*' else '')}func optimizable\n * \\name {k['name']}\n * \\desc {k['desc']}{d_str}\n */\n/**\n * \\flags check_output func optimizable\n * \\name {k['name']}_raw\n * \\desc Wrapper function for :{k['name']}:\n * \\arg const sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */\n\n\n")
+			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n/**\n * \\flags {('check_output ' if TYPE_MAP[rt][-1]!='*' else '')}func optimizable\n * \\name {k['name']}\n * \\group {k['group']}\n * \\desc {k['desc']}{d_str}\n */\n/**\n * \\flags check_output func optimizable\n * \\name {k['name']}_raw\n * \\group {k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg const sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */\n\n\n")
 			cf.write("}\n")
 			fl=""
 			if ("optimizable" not in k["flag"]):

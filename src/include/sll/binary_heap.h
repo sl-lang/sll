@@ -2,6 +2,12 @@
 #define __SLL_BINARY_HEAP_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Binary Heap
+ * \group binary-heap
+ * \desc Docs!
+ */
 
 
 
@@ -12,6 +18,7 @@
 /**
  * \flags check_output func
  * \name sll_binary_heap_add
+ * \group binary-heap
  * \desc Docs!
  * \arg sll_binary_heap_t* bh
  * \arg sll_integer_t k
@@ -24,6 +31,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_add(sll_binary_heap
 /**
  * \flags check_output func
  * \name sll_binary_heap_contains
+ * \group binary-heap
  * \desc Docs!
  * \arg sll_binary_heap_t* bh
  * \arg sll_integer_t k
@@ -36,6 +44,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_binary_heap_contains(sll_binary
 /**
  * \flags check_output func
  * \name sll_free_binary_heap
+ * \group binary-heap
  * \desc Docs!
  * \arg sll_binary_heap_t* bh
  */

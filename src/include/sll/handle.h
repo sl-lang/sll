@@ -2,6 +2,12 @@
 #define __SLL_HANDLE_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Handle
+ * \group handle
+ * \desc Docs!
+ */
 
 
 
@@ -24,6 +30,7 @@
 /**
  * \flags func
  * \name sll_cleanup_handles
+ * \group handle
  * \desc Docs!
  * \arg sll_handle_list_t* hl
  * \arg sll_handle_type_t hll
@@ -35,6 +42,7 @@ __SLL_EXTERNAL void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t 
 /**
  * \flags check_output func
  * \name sll_verify_object_stack_cleanup
+ * \group handle
  * \desc Docs!
  * \arg sll_handle_list_t* hl
  * \arg sll_handle_descriptor_t* hd
@@ -47,6 +55,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_handle_type_t sll_create_handle(sll_handle
 /**
  * \flags func
  * \name sll_free_handle_list
+ * \group handle
  * \desc Docs!
  * \arg sll_handle_list_t* hl
  */
@@ -57,6 +66,7 @@ __SLL_EXTERNAL void sll_free_handle_list(sll_handle_list_t* hl);
 /**
  * \flags check_output func
  * \name sll_handle_to_object
+ * \group handle
  * \desc Docs!
  * \arg sll_handle_type_t t
  * \arg sll_handle_t h
@@ -69,6 +79,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_handle_to_object(sll_handle_
 /**
  * \flags check_output func
  * \name sll_handle_lookup_descriptor
+ * \group handle
  * \desc Docs!
  * \arg sll_handle_list_t* hl
  * \arg sll_handle_type_t t

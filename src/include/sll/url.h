@@ -3,12 +3,19 @@
 #include <sll/common.h>
 #include <sll/string.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name URL
+ * \group url
+ * \desc Docs!
+ */
 
 
 
 /**
  * \flags func
  * \name sll_free_header_list
+ * \group url
  * \desc Docs!
  * \arg sll_header_list_t* h
  */
@@ -19,6 +26,7 @@ __SLL_EXTERNAL void sll_free_header_list(sll_header_list_t* hl);
 /**
  * \flags func
  * \name sll_free_http_response
+ * \group url
  * \desc Docs!
  * \arg sll_http_response_t* r
  */
@@ -29,6 +37,7 @@ __SLL_EXTERNAL void sll_free_http_response(sll_http_response_t* r);
 /**
  * \flags check_output func
  * \name sll_url_http_request
+ * \group url
  * \desc Docs!
  * \arg const sll_string_t* m
  * \arg const sll_string_t* h

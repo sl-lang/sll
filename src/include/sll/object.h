@@ -3,6 +3,12 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Object
+ * \group object
+ * \desc Docs!
+ */
 
 
 
@@ -31,6 +37,7 @@
 /**
  * \flags check_output func
  * \name sll_object_get_type
+ * \group object
  * \desc Docs!
  * \arg const sll_object_t* o
  * \ret sll_object_type_t

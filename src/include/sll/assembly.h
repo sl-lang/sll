@@ -2,6 +2,12 @@
 #define __SLL_ASSEMBLY_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Assembly
+ * \group assembly
+ * \desc Docs!
+ */
 
 
 
@@ -111,6 +117,7 @@
 /**
  * \flags var
  * \name sll_current_instruction_count
+ * \group assembly
  * \desc Docs!
  * \type sll_integer_t
  */
@@ -121,6 +128,7 @@ __SLL_EXTERNAL extern sll_integer_t sll_current_instruction_count;
 /**
  * \flags var
  * \name sll_current_runtime_data
+ * \group assembly
  * \desc Docs!
  * \type const sll_runtime_data_t*
  */
@@ -131,6 +139,7 @@ __SLL_EXTERNAL extern const sll_runtime_data_t* sll_current_runtime_data;
 /**
  * \flags check_output func
  * \name sll_execute_assembly
+ * \group assembly
  * \desc Docs!
  * \arg const sll_assembly_data_t* a_dt
  * \arg sll_page_size_t s_sz
@@ -145,6 +154,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 /**
  * \flags func
  * \name sll_free_assembly_data
+ * \group assembly
  * \desc Docs!
  * \arg sll_assembly_data_t* a_dt
  */
@@ -155,6 +165,7 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt);
 /**
  * \flags check_output func
  * \name sll_generate_assembly
+ * \group assembly
  * \desc Docs!
  * \arg const sll_compilation_data_t* c_dt
  * \arg sll_assembly_data_t* o
@@ -168,6 +179,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 /**
  * \flags func
  * \name sll_print_assembly
+ * \group assembly
  * \desc Docs!
  * \arg const sll_assembly_data_t* a_dt
  * \arg sll_file_t* wf

@@ -3,12 +3,19 @@
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name URL API
+ * \group url-api
+ * \desc Docs!
+ */
 
 
 
 /**
  * \flags api func
  * \name sll_api_url_execute_request
+ * \group url-api
  * \desc Docs!
  * \arg S
  * \arg S

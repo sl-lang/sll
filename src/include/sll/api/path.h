@@ -3,6 +3,12 @@
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Path API
+ * \group path-api
+ * \desc Docs!
+ */
 
 
 
@@ -19,6 +25,7 @@
 /**
  * \flags func
  * \name sll_path_absolute
+ * \group path-api
  * \desc Docs!
  * \arg const sll_char_t* s
  * \arg sll_char_t* o
@@ -32,6 +39,7 @@ __SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_cha
 /**
  * \flags api func optimizable
  * \name sll_api_path_absolute
+ * \group path-api
  * \desc Docs!
  * \arg S
  * \ret Z -> Failure
@@ -44,6 +52,7 @@ __API_FUNC_DECL(path_absolute);
 /**
  * \flags api func optimizable
  * \name sll_api_path_exists
+ * \group path-api
  * \desc Docs!
  * \arg S
  * \ret 0 -> Failure
@@ -56,6 +65,7 @@ __API_FUNC_DECL(path_exists);
 /**
  * \flags api func optimizable
  * \name sll_api_path_get_cwd
+ * \group path-api
  * \desc Docs!
  * \ret S -> Docs!
  */
@@ -66,6 +76,7 @@ __API_FUNC_DECL(path_get_cwd);
 /**
  * \flags api func optimizable
  * \name sll_api_path_is_dir
+ * \group path-api
  * \desc Docs!
  * \arg S
  * \ret 0 -> Failure
@@ -78,6 +89,7 @@ __API_FUNC_DECL(path_is_dir);
 /**
  * \flags api func optimizable var_arg
  * \name sll_api_path_join
+ * \group path-api
  * \desc Docs!
  * \arg S
  * \ret Z -> Failure
@@ -90,6 +102,7 @@ __API_FUNC_DECL(path_join);
 /**
  * \flags api func optimizable
  * \name sll_api_path_list_dir
+ * \group path-api
  * \desc Docs!
  * \arg S
  * \ret E -> Failure
@@ -102,6 +115,7 @@ __API_FUNC_DECL(path_list_dir);
 /**
  * \flags api func optimizable
  * \name sll_api_path_recursive_list_dir
+ * \group path-api
  * \desc Docs!
  * \arg S
  * \ret E -> Failure
@@ -114,6 +128,7 @@ __API_FUNC_DECL(path_recursive_list_dir);
 /**
  * \flags api func optimizable
  * \name sll_api_path_relative
+ * \group path-api
  * \desc Docs!
  * \arg S
  * \ret Z -> Failure
@@ -126,6 +141,8 @@ __API_FUNC_DECL(path_relative);
 /**
  * \flags api func optimizable
  * \name sll_api_path_set_cwd
+ * \group json-api
+ * \desc Docs!
  * \arg S
  * \ret 0 -> Failure
  * \ret I -> Docs!
@@ -137,6 +154,7 @@ __API_FUNC_DECL(path_set_cwd);
 /**
  * \flags api func optimizable
  * \name sll_api_path_size
+ * \group path-api
  * \desc Docs!
  * \arg S
  * \ret 0 -> Failure

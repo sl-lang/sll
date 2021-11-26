@@ -2,6 +2,12 @@
 #define __SLL_IDENTIFIER_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Identifier
+ * \group identifier
+ * \desc Docs!
+ */
 
 
 
@@ -17,6 +23,7 @@
 /**
  * \flags func
  * \name sll_identifier_add_index
+ * \group identifier
  * \desc Docs!
  * \arg sll_identifier_index_t i
  * \arg sll_identifier_index_t j
@@ -30,6 +37,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_inde
 /**
  * \flags func
  * \name sll_identifier_create_identifier
+ * \group identifier
  * \desc Docs!
  * \arg sll_identifier_index_t i
  * \arg sll_identifier_index_t j
@@ -44,6 +52,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create_i
 /**
  * \flags func
  * \name sll_identifier_get_array_id
+ * \group identifier
  * \desc Docs!
  * \arg sll_identifier_index_t i
  * \ret sll_identifier_index_t
@@ -57,6 +66,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_arra
 /**
  * \flags func
  * \name sll_identifier_get_array_index
+ * \group identifier
  * \desc Docs!
  * \arg sll_identifier_index_t i
  * \ret sll_identifier_index_t
