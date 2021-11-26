@@ -72,54 +72,152 @@
 
 
 
+/**
+ * \flags func
+ * \name sll_free_compilation_data
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ */
 __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_get_node_size
+ * \desc Docs!
+ * \arg const sll_node_t* o
+ * \ret sll_node_offset_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_node_t* o);
 
 
 
+/**
+ * \flags func
+ * \name sll_init_compilation_data
+ * \desc Docs!
+ * \arg const sll_char_t* fp
+ * \arg sll_file_t* rf
+ * \arg sll_compilation_data_t* o
+ */
 __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* rf,sll_compilation_data_t* o);
 
 
 
+/**
+ * \flags func
+ * \name sll_insert_debug_node
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ * \arg sll_file_t* rf
+ */
 __SLL_EXTERNAL void sll_insert_debug_node(sll_compilation_data_t* c_dt,sll_file_t* rf);
 
 
 
-__SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft);
-
-
-
+/**
+ * \flags func
+ * \name sll_optimize_metadata
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ */
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt);
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_all_node(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e);
+/**
+ * \flags func
+ * \name sll_optimize_node
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ * \arg sll_internal_function_table_t* i_ft
+ */
+__SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_parse_all_nodes
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ * \arg sll_internal_function_table_t* i_ft
+ * \arg sll_import_loader_t il
+ * \arg sll_error_t* e
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_all_nodes(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_parse_node
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ * \arg sll_internal_function_table_t* i_ft
+ * \arg sll_import_loader_t il
+ * \arg sll_error_t* e
+ * \arg sll_node_t** o
+ * \ret sll_bool_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_node(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e,sll_node_t** o);
 
 
 
+/**
+ * \flags func
+ * \name sll_print_node
+ * \desc Docs!
+ * \arg const sll_compilation_data_t* c_dt
+ * \arg const sll_internal_function_table_t* i_ft
+ * \arg const sll_node_t* o
+ * \arg sll_file_t* wf
+ */
 __SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf);
 
 
 
+/**
+ * \flags func
+ * \name sll_remove_node_debug_data
+ * \desc Docs!
+ * \arg sll_node_t* o
+ */
 __SLL_EXTERNAL void sll_remove_node_debug_data(sll_node_t* o);
 
 
 
+/**
+ * \flags func
+ * \name sll_remove_node_padding
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ * \arg sll_node_t* o
+ */
 __SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt,sll_node_t* o);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_skip_node
+ * \desc Docs!
+ * \arg sll_node_t* o
+ * \ret sll_node_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_skip_node_const
+ * \desc Docs!
+ * \arg const sll_node_t* o
+ * \ret const sll_node_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sll_node_t* o);
 
 

@@ -273,6 +273,33 @@ _next_key:;
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,const sll_object_t* v){
+	SLL_UNIMPLEMENTED();
+	return NULL;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i){
+	if (i<m->l){
+		SLL_ACQUIRE(m->v[i<<1]);
+		return m->v[i<<1];
+	}
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i){
+	if (i<m->l){
+		SLL_ACQUIRE(m->v[(i<<1)+1]);
+		return m->v[(i<<1)+1];
+	}
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
 __SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 	o->l=a->l+b->l;
 	if (!o->l){
@@ -306,33 +333,6 @@ _next_key:;
 		i--;
 		SLL_ACQUIRE(o->v[i]);
 	}
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,const sll_object_t* v){
-	SLL_UNIMPLEMENTED();
-	return NULL;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i){
-	if (i<m->l){
-		SLL_ACQUIRE(m->v[i<<1]);
-		return m->v[i<<1];
-	}
-	return SLL_ACQUIRE_STATIC_INT(0);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i){
-	if (i<m->l){
-		SLL_ACQUIRE(m->v[(i<<1)+1]);
-		return m->v[(i<<1)+1];
-	}
-	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 

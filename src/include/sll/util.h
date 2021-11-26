@@ -18,62 +18,171 @@
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_add_string
+ * \desc Docs!
+ * \arg sll_string_table_t* st
+ * \arg sll_string_t* s
+ * \arg sll_bool_t d
+ * \ret sll_string_index_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s,sll_bool_t d);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_add_string_runtime
+ * \desc Docs!
+ * \arg sll_string_table_t* st
+ * \arg sll_object_t* v
+ * \ret sll_string_index_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_string_table_t* st,sll_object_t* v);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_compare_data
+ * \desc Docs!
+ * \arg const void* a
+ * \arg const void* b
+ * \arg sll_size_t l
+ * \ret sll_compare_result_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* a,const void* b,sll_size_t l);
 
 
 
+/**
+ * \flags func
+ * \name sll_copy_data
+ * \desc Docs!
+ * \arg const void* s
+ * \arg sll_size_t l
+ * \arg void* d
+ */
 __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d);
 
 
 
+/**
+ * \flags func
+ * \name sll_copy_string
+ * \desc Docs!
+ * \arg const sll_char_t* s
+ * \arg void* d
+ * \ret void*
+ */
 __SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d);
 
 
 
+/**
+ * \flags func
+ * \name sll_copy_string_null
+ * \desc Docs!
+ * \arg const sll_char_t* s
+ * \arg void* d
+ */
 __SLL_EXTERNAL void sll_copy_string_null(const sll_char_t* s,void* d);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_create_string
+ * \desc Docs!
+ * \arg sll_string_table_t* st
+ * \arg const sll_char_t* dt
+ * \arg sll_string_length_t l
+ * \ret sll_string_index_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l);
 
 
 
+/**
+ * \flags func
+ * \name sll_deinit
+ * \desc Docs!
+ */
 __SLL_EXTERNAL void sll_deinit(void);
 
 
 
+/**
+ * \flags func
+ * \name sll_free_string_table
+ * \desc Docs!
+ * \arg sll_string_table_t* st
+ */
 __SLL_EXTERNAL void sll_free_string_table(sll_string_table_t* st);
 
 
 
+/**
+ * \flags func
+ * \name sll_get_sandbox_flag
+ * \desc Docs!
+ * \arg sll_sandbox_flags_t f
+ * \ret sll_bool_t
+ */
 __SLL_EXTERNAL sll_bool_t sll_get_sandbox_flag(sll_sandbox_flags_t f);
 
 
 
+/**
+ * \flags func
+ * \name sll_init
+ * \desc Docs!
+ */
 __SLL_EXTERNAL void sll_init(void);
 
 
 
+/**
+ * \flags func
+ * \name sll_set_memory
+ * \desc Docs!
+ * \arg void* p
+ * \arg sll_size_t l
+ * \arg sll_char_t v
+ */
 __SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v);
 
 
 
+/**
+ * \flags func
+ * \name sll_set_sandbox_flags
+ * \desc Docs!
+ * \arg sll_sandbox_flags_t f
+ * \ret sll_sandbox_flags_t
+ */
 __SLL_EXTERNAL sll_sandbox_flags_t sll_set_sandbox_flags(sll_sandbox_flags_t f);
 
 
 
+/**
+ * \flags func
+ * \name sll_register_cleanup
+ * \desc Docs!
+ * \arg sll_cleanup_function_t f
+ */
 __SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t f);
 
 
 
+/**
+ * \flags func
+ * \name sll_zero_memory
+ * \desc Docs!
+ * \arg void* p
+ * \arg sll_size_t l
+ */
 __SLL_EXTERNAL void sll_zero_memory(void* p,sll_size_t l);
 
 

@@ -17,14 +17,36 @@
 
 
 
+/**
+ * \flags func
+ * \name sll_free_json_object
+ * \desc Docs!
+ * \arg sll_json_object_t* json
+ */
 __SLL_EXTERNAL void sll_free_json_object(sll_json_object_t* json);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_json_get_by_key
+ * \desc Docs!
+ * \arg sll_json_object_t* json
+ * \arg const sll_string_t* k
+ * \ret sll_json_object_t*
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_json_parse
+ * \desc Docs!
+ * \arg sll_json_parser_state_t* p
+ * \arg sll_json_object_t* o
+ * \ret sll_bool_t
+ */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o);
 
 

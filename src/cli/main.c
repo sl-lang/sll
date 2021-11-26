@@ -165,7 +165,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 						if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 							sll_file_reset(f);
 							sll_init_compilation_data(f_fp,f,c_dt);
-							if (!sll_parse_all_node(c_dt,&i_ft,load_import,&e)){
+							if (!sll_parse_all_nodes(c_dt,&i_ft,load_import,&e)){
 								sll_free_compilation_data(c_dt);
 								if (e.t!=SLL_ERROR_UNKNOWN){
 									sll_print_error(f,&e);
@@ -305,7 +305,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			}
 			sll_error_t e;
 			sll_init_compilation_data(l_fp,f,c_dt);
-			if (!sll_parse_all_node(c_dt,&i_ft,load_import,&e)){
+			if (!sll_parse_all_nodes(c_dt,&i_ft,load_import,&e)){
 				sll_free_compilation_data(c_dt);
 				if (e.t!=SLL_ERROR_UNKNOWN){
 					sll_print_error(f,&e);
@@ -782,7 +782,7 @@ _read_file_argument:
 					if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 						sll_file_reset(&f);
 						sll_init_compilation_data(SLL_CHAR("<console>"),&f,&c_dt);
-						if (!sll_parse_all_node(&c_dt,&i_ft,load_import,&e)){
+						if (!sll_parse_all_nodes(&c_dt,&i_ft,load_import,&e)){
 							if (e.t!=SLL_ERROR_UNKNOWN){
 								sll_print_error(&f,&e);
 							}

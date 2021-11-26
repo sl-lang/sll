@@ -306,6 +306,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(cons
 
 
 
+__SLL_EXTERNAL void sll_platform_reset_console(void){
+	_setmode(_fileno(stdout),_win_stdout_m);
+	_setmode(_fileno(stderr),_win_stderr_m);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p){
 	return !!SetCurrentDirectoryA((char*)p);
 }
@@ -335,16 +342,6 @@ __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 		}
 		tm=c-e;
 	}
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_socket_init(void){
-	WSADATA dt;
-	if (WSAStartup(MAKEWORD(2,2),&dt)){
-		SLL_UNIMPLEMENTED();
-	}
-	sll_register_cleanup(WSACleanup);
 }
 
 
@@ -408,7 +405,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_execute(const s
 
 
 
-__SLL_EXTERNAL void sll_platform_reset_console(void){
-	_setmode(_fileno(stdout),_win_stdout_m);
-	_setmode(_fileno(stderr),_win_stderr_m);
+__SLL_EXTERNAL void sll_platform_socket_init(void){
+	WSADATA dt;
+	if (WSAStartup(MAKEWORD(2,2),&dt)){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_register_cleanup(WSACleanup);
 }

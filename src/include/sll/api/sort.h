@@ -6,6 +6,14 @@
 
 
 
+/**
+ * \flags func
+ * \name sll_quicksort
+ * \desc Docs!
+ * \arg const sll_object_t** a
+ * \arg sll_array_length_t l
+ * \arg sll_compare_result_t cmp
+ */
 __SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp);
 
 

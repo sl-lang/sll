@@ -248,6 +248,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(cons
 
 
 
+__SLL_EXTERNAL void sll_platform_reset_console(void){
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p){
 	return !chdir((char*)p);
 }
@@ -277,11 +282,6 @@ __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 		}
 		tm=c-e;
 	}
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_socket_init(void){
 }
 
 
@@ -346,5 +346,5 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_execute(const s
 
 
 
-__SLL_EXTERNAL void sll_platform_reset_console(void){
+__SLL_EXTERNAL void sll_platform_socket_init(void){
 }
