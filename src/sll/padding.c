@@ -6,8 +6,8 @@
 
 
 static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_t** d,sll_node_offset_t* rm){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
-		if (o->t==OBJECT_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
+		if (o->t==NODE_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 		}
 		else{
@@ -17,7 +17,7 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_compilation_data_t
 	}
 	**d=*o;
 	(*d)++;
-	if ((*d)->t==OBJECT_TYPE_CHANGE_STACK){
+	if ((*d)->t==NODE_TYPE_CHANGE_STACK){
 		(*d)=(*d)->dt._p;
 	}
 	switch (o->t){

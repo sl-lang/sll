@@ -15,14 +15,14 @@
 
 
 static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_dt){
-	sll_node_t* o=_acquire_next_object(im_dt->c_dt);
-	while (mo->t==SLL_NODE_TYPE_NOP||mo->t==OBJECT_TYPE_CHANGE_STACK){
-		if (mo->t==OBJECT_TYPE_CHANGE_STACK){
+	sll_node_t* o=_acquire_next_node(im_dt->c_dt);
+	while (mo->t==SLL_NODE_TYPE_NOP||mo->t==NODE_TYPE_CHANGE_STACK){
+		if (mo->t==NODE_TYPE_CHANGE_STACK){
 			mo=mo->dt._p;
 		}
 		else{
 			o->t=SLL_NODE_TYPE_NOP;
-			o=_acquire_next_object(im_dt->c_dt);
+			o=_acquire_next_node(im_dt->c_dt);
 			mo++;
 		}
 	}
@@ -232,8 +232,8 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 			}
 			if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
 				sll_node_t* id=o+1;
-				while (id->t==SLL_NODE_TYPE_NOP||id->t==SLL_NODE_TYPE_DEBUG_DATA||id->t==OBJECT_TYPE_CHANGE_STACK){
-					id=(id->t==OBJECT_TYPE_CHANGE_STACK?id->dt._p:id+1);
+				while (id->t==SLL_NODE_TYPE_NOP||id->t==SLL_NODE_TYPE_DEBUG_DATA||id->t==NODE_TYPE_CHANGE_STACK){
+					id=(id->t==NODE_TYPE_CHANGE_STACK?id->dt._p:id+1);
 				}
 				if (id->t==SLL_NODE_TYPE_IDENTIFIER&&id==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
 					e_c_dt->nv_dt->sz--;
@@ -250,8 +250,8 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 				}
 				else{
 					sll_node_t* a=o+1;
-					while (a->t==SLL_NODE_TYPE_NOP||a->t==SLL_NODE_TYPE_DEBUG_DATA||a->t==OBJECT_TYPE_CHANGE_STACK){
-						a=(a->t==OBJECT_TYPE_CHANGE_STACK?a->dt._p:a+1);
+					while (a->t==SLL_NODE_TYPE_NOP||a->t==SLL_NODE_TYPE_DEBUG_DATA||a->t==NODE_TYPE_CHANGE_STACK){
+						a=(a->t==NODE_TYPE_CHANGE_STACK?a->dt._p:a+1);
 					}
 					o->dt.ac=ac;
 				}
@@ -265,8 +265,8 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 					sll_arg_count_t i=0;
 					sll_node_t* arg=o+1;
 					for (;i<ac;i++){
-						while (arg->t==SLL_NODE_TYPE_NOP||arg->t==SLL_NODE_TYPE_DEBUG_DATA||arg->t==OBJECT_TYPE_CHANGE_STACK){
-							arg=(arg->t==OBJECT_TYPE_CHANGE_STACK?arg->dt._p:arg+1);
+						while (arg->t==SLL_NODE_TYPE_NOP||arg->t==SLL_NODE_TYPE_DEBUG_DATA||arg->t==NODE_TYPE_CHANGE_STACK){
+							arg=(arg->t==NODE_TYPE_CHANGE_STACK?arg->dt._p:arg+1);
 						}
 						if (arg->t!=SLL_NODE_TYPE_IDENTIFIER){
 							break;
@@ -286,8 +286,8 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 					f->al=i;
 					arg=o+1;
 					for (sll_arg_count_t j=0;j<i;j++){
-						while (arg->t==SLL_NODE_TYPE_NOP||arg->t==SLL_NODE_TYPE_DEBUG_DATA||arg->t==OBJECT_TYPE_CHANGE_STACK){
-							if (arg->t==OBJECT_TYPE_CHANGE_STACK){
+						while (arg->t==SLL_NODE_TYPE_NOP||arg->t==SLL_NODE_TYPE_DEBUG_DATA||arg->t==NODE_TYPE_CHANGE_STACK){
+							if (arg->t==NODE_TYPE_CHANGE_STACK){
 								arg=arg->dt._p;
 							}
 							else{
@@ -310,8 +310,8 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 				}
 				else{
 					sll_node_t* n=o+1;
-					while (n->t==SLL_NODE_TYPE_NOP||n->t==SLL_NODE_TYPE_DEBUG_DATA||n->t==OBJECT_TYPE_CHANGE_STACK){
-						n=(n->t==OBJECT_TYPE_CHANGE_STACK?n->dt._p:n+1);
+					while (n->t==SLL_NODE_TYPE_NOP||n->t==SLL_NODE_TYPE_DEBUG_DATA||n->t==NODE_TYPE_CHANGE_STACK){
+						n=(n->t==NODE_TYPE_CHANGE_STACK?n->dt._p:n+1);
 					}
 					if (n->t!=SLL_NODE_TYPE_STRING){
 						o->t=SLL_NODE_TYPE_OPERATION_LIST;
@@ -370,7 +370,7 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 			if (!o){
 				sll_insert_debug_node(c_dt,rf);
 				st_off=SLL_FILE_GET_OFFSET(rf)-1;
-				o=_acquire_next_object(c_dt);
+				o=_acquire_next_node(c_dt);
 				if (c=='{'){
 					o->t=SLL_NODE_TYPE_OPERATION_LIST;
 					ec='}';
@@ -398,8 +398,8 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 _recurse_array_or_map:;
 				if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
 					sll_node_t* id=o+1;
-					while (id->t==SLL_NODE_TYPE_NOP||id->t==SLL_NODE_TYPE_DEBUG_DATA||id->t==OBJECT_TYPE_CHANGE_STACK){
-						id=(id->t==OBJECT_TYPE_CHANGE_STACK?id->dt._p:id+1);
+					while (id->t==SLL_NODE_TYPE_NOP||id->t==SLL_NODE_TYPE_DEBUG_DATA||id->t==NODE_TYPE_CHANGE_STACK){
+						id=(id->t==NODE_TYPE_CHANGE_STACK?id->dt._p:id+1);
 					}
 					if (id->t==SLL_NODE_TYPE_IDENTIFIER&&id==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
 						e_c_dt->nv_dt->sz--;
@@ -527,6 +527,9 @@ _recurse_array_or_map:;
 				else if (*str==':'){
 					o->t=SLL_NODE_TYPE_ACCESS;
 				}
+				else if (*str=='.'){
+					o->t=SLL_NODE_TYPE_NEW;
+				}
 				else if (*str=='@'){
 					o->t=SLL_NODE_TYPE_BREAK;
 				}
@@ -600,6 +603,9 @@ _recurse_array_or_map:;
 				}
 				else if (*str==':'&&*(str+1)=='?'){
 					o->t=SLL_NODE_TYPE_TYPEOF;
+				}
+				else if (*str=='&'&&*(str+1)==':'){
+					o->t=SLL_NODE_TYPE_DECL;
 				}
 				else if (*str=='%'&&*(str+1)=='%'){
 					o->t=SLL_NODE_TYPE_REF;
@@ -677,7 +683,7 @@ _unknown_symbol:
 			}
 			sll_insert_debug_node(c_dt,rf);
 			st_off=SLL_FILE_GET_OFFSET(rf)-1;
-			o=_acquire_next_object(c_dt);
+			o=_acquire_next_node(c_dt);
 			o->t=(c=='['?SLL_NODE_TYPE_ARRAY:SLL_NODE_TYPE_MAP);
 			c=sll_file_read_char(rf);
 		}
@@ -731,7 +737,7 @@ _unknown_symbol:
 		else{
 			sll_insert_debug_node(c_dt,rf);
 			sll_file_offset_t arg_s=SLL_FILE_GET_OFFSET(rf)-1;
-			sll_node_t* arg=_acquire_next_object(c_dt);
+			sll_node_t* arg=_acquire_next_node(c_dt);
 			if (c=='\''){
 				arg->t=SLL_NODE_TYPE_CHAR;
 				uint8_t err=_read_single_char(rf,arg_s,e,&(arg->dt.c));
@@ -1195,8 +1201,8 @@ _identifier_created:;
 				}
 				else if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
 					sll_node_t* id=o+1;
-					while (id->t==SLL_NODE_TYPE_NOP||id->t==SLL_NODE_TYPE_DEBUG_DATA||id->t==OBJECT_TYPE_CHANGE_STACK){
-						id=(id->t==OBJECT_TYPE_CHANGE_STACK?id->dt._p:id+1);
+					while (id->t==SLL_NODE_TYPE_NOP||id->t==SLL_NODE_TYPE_DEBUG_DATA||id->t==NODE_TYPE_CHANGE_STACK){
+						id=(id->t==NODE_TYPE_CHANGE_STACK?id->dt._p:id+1);
 					}
 					if (id->t==SLL_NODE_TYPE_IDENTIFIER&&id==*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)){
 						e_c_dt->nv_dt->sz--;
@@ -1359,7 +1365,7 @@ _skip_export:;
 		}
 	}
 	if (!o){
-		o=_acquire_next_object(c_dt);
+		o=_acquire_next_node(c_dt);
 		o->t=SLL_NODE_TYPE_INT;
 		o->dt.i=0;
 		return 1;
@@ -1426,7 +1432,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_node(sll_compilation_data
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_all_nodes(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_loader_t il,sll_error_t* e){
-	c_dt->h=_acquire_next_object(c_dt);
+	c_dt->h=_acquire_next_node(c_dt);
 	c_dt->h->t=SLL_NODE_TYPE_OPERATION_LIST;
 	c_dt->h->dt.ac=0;
 	new_variable_data_t nv_dt={

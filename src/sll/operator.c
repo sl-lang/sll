@@ -587,7 +587,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_object_
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* a,sll_object_t* b){
-	if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<=SLL_MAX_RUNTIME_OBEJCT_TYPE&&b->dt.i!=SLL_OBJECT_GET_TYPE(a)){
+	if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<=SLL_MAX_OBJECT_TYPE&&b->dt.i!=SLL_OBJECT_GET_TYPE(a)){
 		switch (COMBINED_CAST_ARGS){
 			case COMBINED_CAST_TYPE_IF:
 				return SLL_FROM_FLOAT((sll_float_t)(a->dt.i));

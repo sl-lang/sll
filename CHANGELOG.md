@@ -7,8 +7,10 @@
 - C and Sll variable argument list API: `sll_var_arg_list_t`, `sll_var_arg_get`, `sll_var_arg_get_int`, `sll_var_arg_get_float`, `sll_var_arg_get_char` and `sll_var_arg_get_string`
 - Implemented `sll_api_string_format`, `sll_api_file_read`, `read`, `sll_string_decrease`
 - Miscellaneous node function are now located in [`node.c`][main/src/sll/node.c]
+- Object type table API: `sll_object_type_table_t`, `sll_object_type_data_t`, `sll_object_type_data_entry_t`, `sll_create_type` and `sll_free_object_type_list`
 - Option for the builder script to generate only documentation: `--docs-only`
 - String flip-case API: `flip_case`, `sll_api_string_flip_case`, `sll_api_string_flip_case_raw` and `sll_string_flip_case`
+- Structure definition operator: `(&:)` ([#99])
 
 ### Changed
 
@@ -17,9 +19,11 @@
 - Documentation format
 - Fixed critical bug in stack memory allocator
 - Fixed multiple return types
-- Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion
+- Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion ([#80])
 - Renamed `sll_register_standard_internal_functions` to `sll_register_builtin_internal_functions`
 - Renamed objects to nodes, and runtime objects to objects
+- Reworked syntax highlight
+- `sll_object_type_t` is now 32-bit
 - `sll_platform_file_size` now expects a file descriptor instead of a file path
 - Storage of built-in internal functions and logic behind IFT-related functions
 
@@ -27,8 +31,9 @@
 
 - Deprecated initialization API: [`init.h`][0.6.28/src/include/sll/init.h], [`deinit.c`][0.6.28/src/sll/deinit.c] and [`init.c`][0.6.28/src/sll/init.c]
 - `sll_object_to_string` has been replaced by `sll_api_string_convert`
-- Unused functions: `sll_api_string_convert_length` and `sll_api_string_length` (and matching `string.sll` function declarations)
 - Unused `sll_deinit_xxx` functions
+- Unused functions: `sll_api_string_convert_length` and `sll_api_string_length` (and matching `string.sll` function declarations)
+- Useless GC debug data API: `SLL_GC_ZERO_DEBUG_DATA` and `SLL_GC_ZERO_DEBUG_DATA_STRUCT`
 
 ## [0.6.28] - 2021-11-22
 
@@ -1083,6 +1088,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#84]: https://github.com/sl-lang/sll/issues/84
 [#82]: https://github.com/sl-lang/sll/issues/82
 [#81]: https://github.com/sl-lang/sll/issues/81
+[#80]: https://github.com/sl-lang/sll/issues/80
 [#79]: https://github.com/sl-lang/sll/issues/79
 [#78]: https://github.com/sl-lang/sll/issues/78
 [#77]: https://github.com/sl-lang/sll/issues/77

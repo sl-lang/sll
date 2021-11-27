@@ -83,9 +83,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	ptr+=a_dt->vc*sizeof(sll_object_t*);
 	sll_object_t* cs=(sll_object_t*)ptr;
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		SLL_GC_ZERO_DEBUG_DATA(cs+i);
 		(cs+i)->rc=1;
 		(cs+i)->t=SLL_OBJECT_TYPE_STRING;
+		(cs+i)->_dbg=NULL;
 		(cs+i)->dt.s=*(a_dt->st.dt+i);
 	}
 	ptr+=a_dt->st.l*sizeof(sll_object_t);
@@ -518,6 +518,23 @@ _cleanup_jump_table:;
 					SLL_ACQUIRE(n);
 					SLL_RELEASE(*tos);
 					*tos=n;
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
+				{
+					si-=ai->dt.ac<<1;
+					sll_object_type_t nt=sll_create_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac);
+					for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
+						SLL_RELEASE(*(s+si+i));
+					}
+					*(s+si)=sll_int_to_object(nt);
+					si++;
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
+				{
+					*(s+si)=sll_int_to_object(sll_create_type(sll_current_runtime_data->tt,NULL,0));
+					si++;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:

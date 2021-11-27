@@ -84,10 +84,10 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 
 #define __API_FUNC(nm) __SLL_EXTERNAL __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
-#define __SLL_STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=(v)}};STATIC_OBJECT(&_int_##v##_static_data)
-#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.i=-(v)}};STATIC_OBJECT(&_int_neg_##v##_static_data)
-#define __SLL_STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.c=(sll_char_t)(v)}};STATIC_OBJECT(&_char_##v##_static_data)
-#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,SLL_GC_ZERO_DEBUG_DATA_STRUCT,.dt={.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
+#define __SLL_STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,NULL,.dt={.i=(v)}};STATIC_OBJECT(&_int_##v##_static_data)
+#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,NULL,.dt={.i=-(v)}};STATIC_OBJECT(&_int_neg_##v##_static_data)
+#define __SLL_STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,NULL,.dt={.c=(sll_char_t)(v)}};STATIC_OBJECT(&_char_##v##_static_data)
+#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,NULL,.dt={.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
 
 
 
@@ -153,13 +153,11 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define GC_GET_NEXT_OBJECT(o) ((sll_object_t*)((o)->dt.s.v))
 #define GC_SET_NEXT_OBJECT(o,n) ((o)->dt.s.v=SLL_CHAR((n)))
 
-#define GC_MAX_DEBUG_ID 16777215
-
 #define MAX_CLEANUP_TABLE_SIZE 512
 
 #define MAX_ASSEMBLY_INSTRUCTION_LABEL SLL_MAX_INSTRUCTION_INDEX
 
-#define OBJECT_TYPE_CHANGE_STACK SLL_NODE_TYPE_RESERVED0
+#define NODE_TYPE_CHANGE_STACK SLL_NODE_TYPE_RESERVED0
 
 #define ALLOCATOR_PAGE_ALLOC_COUNT 16
 #define ALLOCATOR_STACK_PAGE_ALLOC_COUNT 64
@@ -440,7 +438,7 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 
-sll_node_t* _acquire_next_object(sll_compilation_data_t* c_dt);
+sll_node_t* _acquire_next_node(sll_compilation_data_t* c_dt);
 
 
 
@@ -468,7 +466,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 
 
 
-sll_node_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_node_offset_t off);
+sll_node_t* _get_node_at_offset(const sll_compilation_data_t* c_dt,sll_node_offset_t off);
 
 
 
@@ -476,7 +474,7 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt);
 
 
 
-void _init_object_stack(sll_compilation_data_t* c_dt);
+void _init_node_stack(sll_compilation_data_t* c_dt);
 
 
 
@@ -484,7 +482,7 @@ void _memory_release_data(void);
 
 
 
-void _shift_objects(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off);
+void _shift_nodes(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off);
 
 
 

@@ -139,7 +139,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				i--;
 			}
 		}
-		else if (*t=='j'||*t=='t'||*t=='z'){
+		else if (*t=='j'){
 			f|=STRING_FORMAT_FLAG_LL_BITS;
 			i--;
 			t++;
@@ -187,12 +187,12 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				o->l+=w;
 			}
 		}
-		else if (*t=='d'||*t=='j'||*t=='o'||*t=='u'||*t=='x'||*t=='X'){
+		else if (*t=='d'||*t=='o'||*t=='u'||*t=='x'||*t=='X'){
 			if (*t=='X'){
 				f|=STRING_FORMAT_FLAG_UPPERCASE;
 			}
 			uint64_t n;
-			if (*t=='d'||*t=='j'){
+			if (*t=='d'){
 				int64_t sn;
 				if (f&STRING_FORMAT_FLAG_HH_BITS){
 					sn=sll_var_arg_get_int(va);

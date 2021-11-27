@@ -72,10 +72,10 @@ static int64_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
 
 
 static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
-	sll_node_t* o=_acquire_next_object(c_dt);
+	sll_node_t* o=_acquire_next_node(c_dt);
 	READ_FIELD(o->t,rf);
 	while (o->t==SLL_NODE_TYPE_NOP){
-		o=_acquire_next_object(c_dt);
+		o=_acquire_next_node(c_dt);
 		READ_FIELD(o->t,rf);
 	}
 	switch (o->t){
@@ -373,6 +373,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 				CHECK_ERROR(rf,ai->dt.ac,sll_arg_count_t,e);
 				break;
 		}
@@ -433,7 +434,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 		}
 	}
 	CHECK_ERROR(rf,c_dt->_n_sc_id,sll_scope_t,e);
-	_init_object_stack(c_dt);
+	_init_node_stack(c_dt);
 	c_dt->h=c_dt->_s.p;
 	SLL_ASSERT(c_dt->h);
 	if (!_read_object(c_dt,rf)){

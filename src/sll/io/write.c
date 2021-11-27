@@ -26,8 +26,8 @@ static void _write_integer(sll_file_t* wf,uint64_t v){
 
 
 static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
-		if (o->t==OBJECT_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
+		if (o->t==NODE_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 			continue;
 		}
@@ -311,6 +311,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 				_write_integer(wf,ai->dt.ac);
 				break;
 		}

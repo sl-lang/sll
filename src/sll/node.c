@@ -9,8 +9,8 @@
 
 
 static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* sz){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
-		if (o->t==OBJECT_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+		if (o->t==NODE_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 		}
 		else{
@@ -152,7 +152,7 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* r
 	o->ft.l=0;
 	o->st.dt=NULL;
 	o->st.l=0;
-	_init_object_stack(o);
+	_init_node_stack(o);
 	o->_n_sc_id=1;
 	IGNORE_RESULT(sll_create_string(&(o->st),fp,sll_string_length_unaligned(fp)));
 }
@@ -160,8 +160,8 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* r
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
-		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:

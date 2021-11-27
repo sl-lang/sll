@@ -165,6 +165,11 @@
 	(:> (<- absolute (: array i)) " -> " (<- format_bytes (<- size (: array i))) "\n")
 	(= i (+ i 1))
 )
+(= type (&:
+	int_type "a"
+	string_type "str"
+))
+(:> type "\n" (&:) "\n")
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

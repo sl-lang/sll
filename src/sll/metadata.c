@@ -9,8 +9,8 @@
 
 
 static sll_node_t* _mark_strings(sll_node_t* o,uint64_t* m){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
-		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
+		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:
@@ -62,8 +62,8 @@ static sll_node_t* _mark_strings(sll_node_t* o,uint64_t* m){
 
 
 static sll_node_t* _update_strings(sll_node_t* o,sll_string_index_t* sm){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
-		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
+		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:

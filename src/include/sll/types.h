@@ -68,10 +68,6 @@ typedef uint8_t sll_compare_result_t;
 
 
 
-typedef uint8_t sll_object_type_t;
-
-
-
 typedef uint8_t sll_error_type_t;
 
 
@@ -93,10 +89,6 @@ typedef uint8_t sll_name_length_t;
 
 
 typedef uint8_t sll_node_type_t;
-
-
-
-typedef uint8_t sll_object_type_t;
 
 
 
@@ -161,6 +153,10 @@ typedef uint32_t sll_map_length_t;
 
 
 typedef uint32_t sll_node_offset_t;
+
+
+
+typedef uint32_t sll_object_type_t;
 
 
 
@@ -509,8 +505,7 @@ typedef union __SLL_OBJECT_DATA{
 typedef struct __SLL_OBJECT{
 	sll_ref_count_t rc;
 	sll_object_type_t t;
-	uint8_t _dbg0;
-	uint16_t _dbg1;
+	void* _dbg;
 	sll_object_data_t dt;
 } sll_object_t;
 
@@ -557,8 +552,30 @@ typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
 
 
 
+typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
+	sll_object_type_t t;
+	sll_string_t nm;
+} sll_object_type_data_entry_t;
+
+
+
+typedef struct __SLL_OBJECT_TYPE_DATA{
+	sll_arg_count_t l;
+	sll_object_type_data_entry_t dt[];
+} sll_object_type_data_t;
+
+
+
+typedef struct __SLL_OBJECT_TYPE_TABLE{
+	const sll_object_type_data_t** dt;
+	sll_object_type_t l;
+} sll_object_type_table_t;
+
+
+
 typedef struct __SLL_RUNTIME_DATA{
 	sll_internal_function_table_t* ift;
+	sll_object_type_table_t* tt;
 	sll_handle_list_t* hl;
 	sll_file_t* in;
 	sll_file_t* out;

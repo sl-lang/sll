@@ -5,15 +5,6 @@ file_extensions:
 scope: source.sll
 contexts:
   main:
-    - include: all
-  all:
-    - include: comments
-    - include: objects
-    - include: arrays
-    - include: numbers
-    - include: strings
-    - include: constants
-  comments:
     - match: '\|#'
       scope: punctuation.definition.comment.begin.sll
       push:
@@ -27,7 +18,6 @@ contexts:
       scope: comment.line.sll
       captures:
         1: punctuation.definition.comment.sll
-  objects:
     - match: '(\()\s*(?:(<-)\s*?([a-zA-Z_][a-zA-Z0-9_]*))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll meta.function-call.sll
@@ -38,7 +28,7 @@ contexts:
         - match: '\)'
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           pop: true
-        - include: all
+        - include: main
     - match: '(\()\s*(?:(=)\s*?([a-zA-Z_][a-zA-Z0-9_]*)\s*?(\())(,,,)(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll meta.function.sll
@@ -47,19 +37,22 @@ contexts:
         4: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         5: keyword.declaration.function.sll
       push:
-        - meta_scope: meta.group.sll meta.parens.sll
-        - match: '\)'
-          scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+        - match: '\s*[a-zA-Z0-9_]+'
+          scope: variable.parameter.sll
+        - match: '(?=[\s\S])'
           pop: true
           push:
             - meta_scope: meta.group.sll meta.parens.sll
             - match: '\)'
               scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
               pop: true
-            - include: all
-        - include: all
-        - match: '[a-zA-Z0-9_]+'
-          scope: variable.parameter.sll
+              push:
+                - meta_scope: meta.group.sll meta.parens.sll
+                - match: '\)'
+                  scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+                  pop: true
+                - include: main
+            - include: main
     - match: '(\()\s*(?:(=)\s*?([a-zA-Z_][a-zA-Z0-9_]*)\s*?(\())(\.\.\.)(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll meta.function.sll
@@ -77,27 +70,30 @@ contexts:
             - match: '\)'
               scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
               pop: true
-            - include: all
-        - include: all
-    - match: '(\()\s*(,,,)\s*'
+            - include: main
+        - include: main
+    - match: '(\()\s*(,,,)\s+'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.declaration.function.sll
       push:
-        - meta_scope: meta.group.sll meta.parens.sll
-        - match: '\)'
-          scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+        - match: '\s*[a-zA-Z0-9_]+'
+          scope: variable.parameter.sll
+        - match: '(?=[\s\S])'
           pop: true
           push:
-            - meta_scope: meta.group.sll meta.parens.sll
-            - match: '\)'
-              scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
-              pop: true
-            - include: all
-        - include: all
-        - match: '[a-zA-Z_][a-zA-Z0-9_]*'
-          scope: variable.parameter.sll
-    - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2})|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<|===|!==)|(=)|(--)|(,,,)|(:>)|(<-)|(@)|(@@)|(@@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*))(?=\s|\))'
+          - meta_scope: meta.group.sll meta.parens.sll
+          - match: '\)'
+            scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+            pop: true
+            push:
+              - meta_scope: meta.group.sll meta.parens.sll
+              - match: '\)'
+                scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+                pop: true
+              - include: main
+          - include: main
+    - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2})|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<|===|!==)|(=)|(--)|(,,,)|(:>)|(<-)|(@)|(@@)|(@@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.control.conditional.sll
@@ -124,12 +120,14 @@ contexts:
         23: keyword.control.continue.sll
         24: keyword.operator.reference.sll
         25: keyword.declaration.function.inline.sll
+        26: keyword.declaration.type.sll
+        27: keyword.control.new.sll
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - match: '\)'
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           pop: true
-        - include: all
+        - include: main
     - match: '(\()\s*(\))'
       scope: meta.group.sll meta.parens.sll
       captures:
@@ -140,7 +138,7 @@ contexts:
         - meta_scope: invalid.illegal.unknown-operator.sll
         - match: '\)'
           pop: true
-        - include: objects_no_highlight
+        - include: object_no_highlight
     - match: '\)'
       scope: invalid.illegal.stray-bracket-end.sll
     - match: '\{'
@@ -150,16 +148,9 @@ contexts:
         - match: '\}'
           scope: punctuation.section.block.end.sll punctuation.section.braces.end.sll
           pop: true
-        - include: all
+        - include: main
     - match: '\}'
       scope: invalid.illegal.stray-bracket-end.sll
-  objects_no_highlight:
-    - match: '\('
-      push:
-        - match: '\)'
-          pop: true
-        - include: objects_no_highlight
-  arrays:
     - match: '\['
       scope: punctuation.section.sequence.begin.sll
       push:
@@ -167,13 +158,9 @@ contexts:
         - match: '\]'
           scope: punctuation.section.sequence.end.sll
           pop: true
-        - include: all
+        - include: main
     - match: '\]'
       scope: invalid.illegal.stray-bracket-end.sll
-  constants:
-    - match: '\b(nil|true|false|stdin|stdout|stderr|int_type|float_type|char_type|string_type|array_type|handle_type|map_type|map_key_type|map_value_type)\b'
-      scope: constant.language.sll
-  numbers:
     - match: '(?:\b|-)0[bB][01][01_]*\b'
       scope: constant.numeric.integer.binary.sll
     - match: '(?:\b|-)0[oO][0-7][0-7_]*\b'
@@ -184,7 +171,6 @@ contexts:
       scope: constant.numeric.float.sll
     - match: '(?:\b|-)[0-9][0-9_]*\b'
       scope: constant.numeric.integer.decimal.sll
-  strings:
     - match: '\'''
       scope: punctuation.definition.string.begin.sll
       push:
@@ -202,8 +188,20 @@ contexts:
         - meta_scope: string.quoted.double.sll
         - match: '\\x[0-9a-fA-F]{2}|\\[\\tnvfr"'']'
           scope: constant.character.escape.sll
+        - match: '%[0+ -#]*([0-9]+|\*)?(\.([0-9]+|\*))?(h{1,2}|l{1,2})?[%csdouxX]'
+          scope: constant.other.placeholder.sll
         - match: '"'
           scope: punctuation.definition.string.end.sll
           pop: true
         - match: '\\.'
           scope: invalid.illegal.escape.sll
+    - match: '\b(nil|true|false|stdin|stdout|stderr|int_type|float_type|char_type|string_type|array_type|handle_type|map_type|map_key_type|map_value_type)\b'
+      scope: constant.language.sll
+    - match: '\b[a-zA-Z_][a-zA-Z0-9_]*\b'
+      scope: variable.other.sll
+  object_no_highlight:
+    - match: '\('
+      push:
+        - match: '\)'
+          pop: true
+        - include: object_no_highlight

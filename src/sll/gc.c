@@ -116,35 +116,14 @@ void _gc_release_data(void){
 
 
 __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t){
-	uint32_t i=o->_dbg0|(o->_dbg1<<8);
-	if (i==GC_MAX_DEBUG_ID){
-		i=0;
-		if (_gc_dbg_dt){
-			while (i<_gc_dbg_dtl){
-				if (!(*(_gc_dbg_dt+i))){
-					goto _found_index;
-				}
-				i++;
-			}
-		}
-		_gc_dbg_dtl++;
-		SLL_ASSERT(_gc_dbg_dtl<GC_MAX_DEBUG_ID);
-		void* tmp=sll_reallocate(_gc_dbg_dt,_gc_dbg_dtl*sizeof(object_debug_data_t*));
-		SLL_ASSERT(tmp||!"Unable to sll_reallocateate Debug Data Array");
-		_gc_dbg_dt=tmp;
-_found_index:
-		o->_dbg0=i&0xff;
-		o->_dbg1=i>>8;
+	if (!(o->_dbg)){
 		object_debug_data_t* dt=sll_allocate(sizeof(object_debug_data_t));
 		dt->c.fp=NULL;
 		dt->al=NULL;
 		dt->all=0;
 		dt->rl=NULL;
 		dt->rll=0;
-		*(_gc_dbg_dt+i)=dt;
-	}
-	else{
-		SLL_ASSERT(i<_gc_dbg_dtl);
+		o->_dbg=dt;
 	}
 	object_debug_data_trace_data_t* n=sll_allocate(sizeof(object_debug_data_trace_data_t));
 	n->fp=fp;
@@ -156,7 +135,7 @@ _found_index:
 		SLL_ASSERT(j);
 	}
 	n->fn[j]=0;
-	object_debug_data_t* dt=*(_gc_dbg_dt+i);
+	object_debug_data_t* dt=o->_dbg;
 	if (t==__SLL_DEBUG_TYPE_CREATE){
 		if (!dt->c.fp){
 			dt->c=*n;
@@ -203,8 +182,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(void){
 	sll_object_t* o=_gc_next_object;
 	_gc_next_object=GC_GET_NEXT_OBJECT(o);
 	o->rc=1;
-	o->_dbg0=0xff;
-	o->_dbg1=0xffff;
+	o->_dbg=NULL;
 	_gc_alloc++;
 	_gc_verify=1;
 	return o;
@@ -247,11 +225,9 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 
 
 __SLL_EXTERNAL void sll_remove_debug_data(sll_object_t* o){
-	uint32_t i=o->_dbg0|(o->_dbg1<<8);
-	if (i!=GC_MAX_DEBUG_ID){
-		SLL_ASSERT(i<_gc_dbg_dtl);
-		object_debug_data_t* dt=*(_gc_dbg_dt+i);
-		*(_gc_dbg_dt+i)=NULL;
+	if (o->_dbg){
+		object_debug_data_t* dt=o->_dbg;
+		o->_dbg=NULL;
 		for (uint32_t j=0;j<dt->all;j++){
 			sll_deallocate(*(dt->al+j));
 		}
@@ -262,8 +238,6 @@ __SLL_EXTERNAL void sll_remove_debug_data(sll_object_t* o){
 		sll_deallocate(dt->rl);
 		sll_deallocate(dt);
 	}
-	o->_dbg0=0xff;
-	o->_dbg1=0xffff;
 }
 
 
@@ -284,9 +258,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 					err=1;
 					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"));
 				}
-				uint32_t j=c->_dbg0|(c->_dbg1<<8);
-				if (j!=GC_MAX_DEBUG_ID){
-					object_debug_data_t* dt=*(_gc_dbg_dt+j);
+				if (c->_dbg){
+					object_debug_data_t* dt=c->_dbg;
 					if (dt->c.fp){
 						sll_file_write_format(sll_stderr,SLL_CHAR("%s:%u (%s): "),dt->c.fp,dt->c.ln,dt->c.fn);
 					}
@@ -318,9 +291,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 					err=1;
 					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"));
 				}
-				SLL_ASSERT((k->dt->_dbg0|(k->dt->_dbg1<<8))!=GC_MAX_DEBUG_ID);
+				SLL_ASSERT(k->dt->_dbg);
 				sll_file_write_format(sll_stderr,SLL_CHAR("%s: %u (<static>): "),k->fp,k->ln);
-				_print_gc_data(k->dt,*(_gc_dbg_dt+(k->dt->_dbg0|(k->dt->_dbg1<<8))));
+				_print_gc_data(k->dt,k->dt->_dbg);
 			}
 			else{
 				sll_remove_debug_data(k->dt);

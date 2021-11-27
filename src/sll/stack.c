@@ -34,7 +34,7 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 
-sll_node_t* _acquire_next_object(sll_compilation_data_t* c_dt){
+sll_node_t* _acquire_next_node(sll_compilation_data_t* c_dt){
 	sll_node_t* o=c_dt->_s.p;
 	c_dt->_s.off++;
 	c_dt->_s.c--;
@@ -45,14 +45,14 @@ sll_node_t* _acquire_next_object(sll_compilation_data_t* c_dt){
 		*((void**)(c_dt->_s.e))=n;
 		*((void**)n)=NULL;
 		sll_node_t* s=(sll_node_t*)((char*)n+sizeof(void*));
-		s->t=OBJECT_TYPE_CHANGE_STACK;
+		s->t=NODE_TYPE_CHANGE_STACK;
 		s->dt._p=c_dt->_s.p-1;
-		SLL_ASSERT(c_dt->_s.p->t==OBJECT_TYPE_CHANGE_STACK);
+		SLL_ASSERT(c_dt->_s.p->t==NODE_TYPE_CHANGE_STACK);
 		c_dt->_s.p->dt._p=s+1;
 		c_dt->_s.c=(uint32_t)(((sz-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
 		c_dt->_s.p=s+1;
 		s+=c_dt->_s.c+1;
-		s->t=OBJECT_TYPE_CHANGE_STACK;
+		s->t=NODE_TYPE_CHANGE_STACK;
 		s->dt._p=NULL;
 		c_dt->_s.e=n;
 	}
@@ -74,7 +74,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 
 
 
-sll_node_t* _get_object_at_offset(const sll_compilation_data_t* c_dt,sll_node_offset_t off){
+sll_node_t* _get_node_at_offset(const sll_compilation_data_t* c_dt,sll_node_offset_t off){
 	sll_page_size_t sz=sll_platform_get_page_size()*OBJECT_STACK_PAGE_ALLOC_COUNT;
 	sll_node_offset_t cnt=(sll_node_offset_t)(((sz-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
 	void* pg=c_dt->_s.s;
@@ -104,46 +104,46 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt){
 
 
 
-void _init_object_stack(sll_compilation_data_t* c_dt){
+void _init_node_stack(sll_compilation_data_t* c_dt){
 	sll_page_size_t sz=sll_platform_get_page_size()*OBJECT_STACK_PAGE_ALLOC_COUNT;
 	c_dt->_s.s=sll_platform_allocate_page(sz);
 	c_dt->_s.e=c_dt->_s.s;
 	*((void**)(c_dt->_s.s))=NULL;
 	sll_node_t* s=(sll_node_t*)((char*)(c_dt->_s.s)+sizeof(void*));
-	s->t=OBJECT_TYPE_CHANGE_STACK;
+	s->t=NODE_TYPE_CHANGE_STACK;
 	s->dt._p=NULL;
 	c_dt->_s.c=(uint32_t)(((sz-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
 	c_dt->_s.p=s+1;
 	s+=c_dt->_s.c+1;
-	s->t=OBJECT_TYPE_CHANGE_STACK;
+	s->t=NODE_TYPE_CHANGE_STACK;
 	s->dt._p=NULL;
 }
 
 
 
-void _shift_objects(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off){
+void _shift_nodes(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off){
 	if (!off){
 		return;
 	}
 	sll_node_t* s=c_dt->_s.p-1;
-	if (s->t==OBJECT_TYPE_CHANGE_STACK){
+	if (s->t==NODE_TYPE_CHANGE_STACK){
 		s=s->dt._p;
 	}
 	for (sll_node_offset_t i=1;i<off;i++){
-		_acquire_next_object(c_dt);
+		_acquire_next_node(c_dt);
 	}
-	sll_node_t* d=_acquire_next_object(c_dt);
+	sll_node_t* d=_acquire_next_node(c_dt);
 	do{
 		*d=*s;
 		if (d->t==SLL_NODE_TYPE_FUNC){
 			(*(c_dt->ft.dt+d->dt.fn.id))->off+=off;
 		}
 		s--;
-		if (s->t==OBJECT_TYPE_CHANGE_STACK){
+		if (s->t==NODE_TYPE_CHANGE_STACK){
 			s=s->dt._p;
 		}
 		d--;
-		if (d->t==OBJECT_TYPE_CHANGE_STACK){
+		if (d->t==NODE_TYPE_CHANGE_STACK){
 			d=d->dt._p;
 		}
 	} while (s!=o);

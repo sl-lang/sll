@@ -21,16 +21,48 @@
 #define SLL_OBJECT_TYPE_MAP 6
 #define SLL_OBJECT_TYPE_MAP_KEYS 7
 #define SLL_OBJECT_TYPE_MAP_VALUES 8
-#define SLL_OBJECT_TYPE_RESERVED2 62
-#define SLL_OBJECT_TYPE_RESERVED3 63
+#define SLL_OBJECT_TYPE_RESERVED2 0x3ffffffe
+#define SLL_OBJECT_TYPE_RESERVED3 0x3fffffff
 
-#define SLL_MAX_RUNTIME_OBEJCT_TYPE SLL_OBJECT_TYPE_MAP_VALUES
+#define SLL_MAX_OBJECT_TYPE SLL_OBJECT_TYPE_MAP_VALUES
 
-#define SLL_OBJECT_FLAG_RESERVED0 64
-#define SLL_OBJECT_FLAG_RESERVED1 128
+#define SLL_OBJECT_FLAG_RESERVED0 0x40000000
+#define SLL_OBJECT_FLAG_RESERVED1 0x80000000
 
-#define SLL_OBJECT_GET_TYPE(r) ((r)->t&0x3f)
+#define SLL_OBJECT_GET_TYPE(r) ((r)->t&0x3fffffff)
 #define SLL_OBJECT_IS_STORAGE(r) (SLL_OBJECT_GET_TYPE((r))==SLL_OBJECT_TYPE_STRING||SLL_OBJECT_GET_TYPE((r))==SLL_OBJECT_TYPE_ARRAY||SLL_OBJECT_GET_TYPE((r))==SLL_OBJECT_TYPE_MAP)
+
+#define SLL_INIT_OBJECT_TYPE_TABLE(o) \
+    do{ \
+        (o)->dt=NULL; \
+        (o)->l=0; \
+    } while (0)
+#define SLL_INIT_OBJECT_TYPE_TABLE_STRUCT {NULL,0}
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_create_type
+ * \group object
+ * \desc Docs!
+ * \arg sll_object_type_table_t* t
+ * \arg const sll_object_t*const* p
+ * \arg sll_arg_count_t l
+ * \ret sll_object_type_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_create_type(sll_object_type_table_t* tt,const sll_object_t*const* p,sll_arg_count_t l);
+
+
+
+/**
+ * \flags func
+ * \name sll_free_object_type_list
+ * \group object
+ * \desc Docs!
+ * \arg sll_object_type_table_t* t
+ */
+__SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt);
 
 
 

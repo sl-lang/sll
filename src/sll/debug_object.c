@@ -7,8 +7,8 @@
 
 
 static sll_node_t* _remove_debug_data_internal(sll_node_t* o){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==OBJECT_TYPE_CHANGE_STACK){
-		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
+		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:
@@ -58,7 +58,7 @@ static sll_node_t* _remove_debug_data_internal(sll_node_t* o){
 
 
 __SLL_EXTERNAL void sll_insert_debug_node(sll_compilation_data_t* c_dt,sll_file_t* rf){
-	sll_node_t* dbg=_acquire_next_object(c_dt);
+	sll_node_t* dbg=_acquire_next_node(c_dt);
 	dbg->t=SLL_NODE_TYPE_DEBUG_DATA;
 	dbg->dt.dbg.fpi=0;
 	dbg->dt.dbg.ln=SLL_FILE_GET_LINE_NUMBER(rf);

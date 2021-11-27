@@ -76,8 +76,8 @@ static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_da
 
 
 static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
-		o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_NODE_TYPE_OPERATION_LIST&&o->t!=SLL_NODE_TYPE_DEBUG_DATA){
 		sll_file_write_char(wf,'(');
@@ -263,8 +263,8 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 				sll_arg_count_t ac=o->dt.ac;
 				o++;
 				if (ac){
-					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==OBJECT_TYPE_CHANGE_STACK){
-						o=(o->t==OBJECT_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					sll_arg_count_t i=0;
 					if (i_ft&&o->t==SLL_NODE_TYPE_INT&&o->dt.i<0){
@@ -402,6 +402,12 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 			break;
 		case SLL_NODE_TYPE_TYPEOF:
 			PRINT_STATIC_STRING(":?",wf);
+			break;
+		case SLL_NODE_TYPE_DECL:
+			PRINT_STATIC_STRING("&:",wf);
+			break;
+		case SLL_NODE_TYPE_NEW:
+			sll_file_write_char(wf,'.');
 			break;
 		case SLL_NODE_TYPE_BREAK:
 			sll_file_write_char(wf,'@');
@@ -901,6 +907,13 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF:
 				PRINT_STATIC_STRING("TYPEOF",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
+				PRINT_STATIC_STRING("DECL ",wf);
+				_print_int(ai->dt.ac,wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
+				PRINT_STATIC_STRING("DECL 0",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				PRINT_STATIC_STRING("PRINT",wf);
