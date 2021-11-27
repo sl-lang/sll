@@ -157,17 +157,11 @@ __SLL_EXTERNAL void sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_off
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
-	HANDLE fh=CreateFileA(fp,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-	if (fh==INVALID_HANDLE_VALUE){
-		return 0;
-	}
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_descriptor_t fd){
 	LARGE_INTEGER sz;
-	if (!GetFileSizeEx(fh,&sz)){
-		CloseHandle(fh);
+	if (!GetFileSizeEx((HANDLE)fd,&sz)){
 		return 0;
 	}
-	CloseHandle(fh);
 	return sz.QuadPart;
 }
 

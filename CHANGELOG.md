@@ -20,6 +20,7 @@
 - Improved performance of `sll_string_format` and `sll_string_format_list` with regards to integer to string conversion
 - Renamed `sll_register_standard_internal_functions` to `sll_register_builtin_internal_functions`
 - Renamed objects to nodes, and runtime objects to objects
+- `sll_platform_file_size` now expects a file descriptor instead of a file path
 - Storage of built-in internal functions and logic behind IFT-related functions
 
 ### Removed

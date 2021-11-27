@@ -107,9 +107,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_des
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_descriptor_t fd){
 	struct stat st;
-	if (!stat((char*)fp,&st)){
+	if (!fstat((int)(uint64_t)fd,&st)){
 		return st.st_size;
 	}
 	return 0;

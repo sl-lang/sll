@@ -213,5 +213,14 @@ __API_FUNC(path_set_cwd){
 
 
 __API_FUNC(path_size){
-	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)?0:sll_platform_file_size(a->v));
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		return 0;
+	}
+	sll_file_descriptor_t fd=sll_platform_file_open(a->v,SLL_FILE_FLAG_READ);
+	if (fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
+		return 0;
+	}
+	sll_size_t o=sll_platform_file_size(fd);
+	sll_platform_file_close(fd);
+	return o;
 }

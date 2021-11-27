@@ -133,10 +133,10 @@ __SLL_EXTERNAL void sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_off
  * \group platform
  * \subgroup platform-file
  * \desc Docs!
- * \arg const sll_char_t* fp
- * \ret sll_integer_t
+ * \arg sll_file_descriptor_t fd
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll_char_t* fp);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_descriptor_t fd);
 
 
 
