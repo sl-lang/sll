@@ -2,10 +2,11 @@
 
 (= replace (... "string_replace"))
 
+(= flip_case (... "string_flip_case"))
 (= lower_case (... "string_to_lower_case"))
 (= title_case (... "string_to_title_case"))
 (= upper_case (... "string_to_upper_case"))
 
 (= format (... "string_format"))
 
-(## str replace lower_case title_case upper_case format)
+(## str replace flip_case lower_case title_case upper_case format)

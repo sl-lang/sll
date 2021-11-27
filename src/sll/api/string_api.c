@@ -251,6 +251,12 @@ __API_FUNC(string_format){
 
 
 
+__API_FUNC(string_flip_case){
+	sll_string_flip_case(a,out);
+}
+
+
+
 __API_FUNC(string_replace){
 	if (!b){
 		sll_string_clone(a,out);

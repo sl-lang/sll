@@ -8,6 +8,7 @@
 - Implemented `sll_api_string_format`, `sll_api_file_read`, `read`, `sll_string_decrease`
 - Miscellaneous node function are now located in [`node.c`][main/src/sll/node.c]
 - Option for the builder script to generate only documentation: `--docs-only`
+- String flip-case API: `flip_case`, `sll_api_string_flip_case`, `sll_api_string_flip_case_raw` and `sll_string_flip_case`
 
 ### Changed
 

@@ -526,6 +526,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_string_flip_case void
+#define __SLL_API_ARGS_sll_api_string_flip_case const sll_string_t* a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_string_flip_case
+ * \group string-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_flip_case_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_flip_case:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_string_replace void
 #define __SLL_API_ARGS_sll_api_string_replace const sll_string_t* a,const sll_object_t* b,const sll_object_t* c,sll_string_t* out
 /**

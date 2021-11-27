@@ -450,6 +450,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_stri
 
 
 
+__SLL_EXTERNAL void sll_string_flip_case(const sll_string_t* s,sll_string_t* o){
+	o->l=s->l;
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+	INIT_PADDING(o->v,o->l);
+	const uint64_t* a=(const uint64_t*)(s->v);
+	uint64_t* b=(uint64_t*)(o->v);
+	STRING_DATA_PTR(a);
+	STRING_DATA_PTR(b);
+	uint64_t c=0;
+	for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){
+		*(b+i)=(*(a+i))^((((((*(a+i))&0xc0c0c0c0c0c0c0c0ull)^0x4040404040404040ull)-0x101010101010101ull)&(0x9a9a9a9a9a9a9a9aull-((*(a+i))&0x1f1f1f1f1f1f1f1full))&(((*(a+i))&0x1f1f1f1f1f1f1f1full)+0x7f7f7f7f7f7f7f7full)&(~(*(a+i)))&0x8080808080808080ull)>>2);
+		c^=*(b+i);
+	}
+	o->c=(sll_string_length_t)(c^(c>>32));
+}
+
+
+
 __SLL_EXTERNAL void sll_string_from_char(sll_char_t c,sll_string_t* o){
 	o->l=1;
 	o->c=c;

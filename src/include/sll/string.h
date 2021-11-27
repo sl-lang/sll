@@ -301,6 +301,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_stri
 
 
 /**
+ * \flags func
+ * \name sll_string_flip_case
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_flip_case(const sll_string_t* s,sll_string_t* o);
+
+
+
+/**
  * \flags func var_arg
  * \name sll_string_format
  * \group string
