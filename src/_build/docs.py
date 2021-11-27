@@ -87,9 +87,9 @@ def create_docs(fl):
 					o.append(dt)
 	for k in o:
 		if (k["group"] not in g_dt):
-			raise RuntimeError(f"{nm}: Unknown group '{k['group']}'")
+			raise RuntimeError(f"Unknown group '{k['group']}'")
 		if (k["subgroup"] is not None and k["subgroup"] not in sg_dt):
-			raise RuntimeError(f"{nm}: Unknown subgroup '{k['subgroup']}'")
+			raise RuntimeError(f"Unknown subgroup '{k['subgroup']}'")
 	o={"groups":g_dt,"subgroups":sg_dt,"data":o}
 	with open("build/docs.json","w") as f:
 		f.write(json.dumps(o,indent=None,separators=(",",":")))
