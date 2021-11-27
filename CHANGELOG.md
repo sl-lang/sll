@@ -1072,6 +1072,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#100]: https://github.com/sl-lang/sll/issues/100
+[#99]: https://github.com/sl-lang/sll/issues/99
 [#98]: https://github.com/sl-lang/sll/issues/98
 [#97]: https://github.com/sl-lang/sll/issues/97
 [#95]: https://github.com/sl-lang/sll/issues/95
