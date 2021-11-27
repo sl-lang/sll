@@ -4,7 +4,7 @@
 #include <sll/types.h>
 /**
  * \flags group
- * \name Allocator & Memory Management
+ * \name Memory Management
  * \group memory
  * \desc Docs!
  */

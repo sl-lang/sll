@@ -19,11 +19,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_file_close_raw
- * \group file-api
+ * \group raw-api
+ * \subgroup raw-api-file-api
  * \desc Wrapper function for :sll_api_file_close:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name File
+ * \group raw-api
+ * \subgroup raw-api-file-api
+ * \desc Docs!
  */
 
 
@@ -41,7 +49,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_file_open_raw
- * \group file-api
+ * \group raw-api
+ * \subgroup raw-api-file-api
  * \desc Wrapper function for :sll_api_file_open:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -63,7 +72,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_file_read_raw
- * \group file-api
+ * \group raw-api
+ * \subgroup raw-api-file-api
  * \desc Wrapper function for :sll_api_file_read:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -87,7 +97,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_file_write_raw
- * \group file-api
+ * \group raw-api
+ * \subgroup raw-api-file-api
  * \desc Wrapper function for :sll_api_file_write:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -109,11 +120,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_hash_create_raw
- * \group hash-api
+ * \group raw-api
+ * \subgroup raw-api-hash-api
  * \desc Wrapper function for :sll_api_hash_create:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Hash
+ * \group raw-api
+ * \subgroup raw-api-hash-api
+ * \desc Docs!
  */
 
 
@@ -131,11 +150,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_json_parse_raw
- * \group json-api
+ * \group raw-api
+ * \subgroup raw-api-json-api
  * \desc Wrapper function for :sll_api_json_parse:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name JSON
+ * \group raw-api
+ * \subgroup raw-api-json-api
+ * \desc Docs!
  */
 
 
@@ -152,7 +179,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_json_stringify_raw
- * \group json-api
+ * \group raw-api
+ * \subgroup raw-api-json-api
  * \desc Wrapper function for :sll_api_json_stringify:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -173,7 +201,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_json_type_raw
- * \group json-api
+ * \group raw-api
+ * \subgroup raw-api-json-api
  * \desc Wrapper function for :sll_api_json_type:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -194,11 +223,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_absolute_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_absolute:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Path
+ * \group raw-api
+ * \subgroup raw-api-path-api
+ * \desc Docs!
  */
 
 
@@ -216,7 +253,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_exists_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_exists:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -236,7 +274,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_get_cwd_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_get_cwd:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -258,7 +297,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_is_dir_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_is_dir:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -280,7 +320,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_join_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_join:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -301,7 +342,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_list_dir_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_list_dir:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -322,7 +364,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_recursive_list_dir_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_recursive_list_dir:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -343,7 +386,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_relative_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_relative:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -365,7 +409,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_set_cwd_raw
- * \group json-api
+ * \group raw-api
+ * \subgroup raw-api-json-api
  * \desc Wrapper function for :sll_api_path_set_cwd:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -387,7 +432,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_path_size_raw
- * \group path-api
+ * \group raw-api
+ * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_size:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -409,11 +455,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_sort_sort_raw
- * \group sort-api
+ * \group raw-api
+ * \subgroup raw-api-sort-api
  * \desc Wrapper function for :sll_api_sort_sort:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Sort
+ * \group raw-api
+ * \subgroup raw-api-sort-api
+ * \desc Docs!
  */
 
 
@@ -431,11 +485,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_string_convert_raw
- * \group string-api
+ * \group raw-api
+ * \subgroup raw-api-string-api
  * \desc Wrapper function for :sll_api_string_convert:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name String
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Docs!
  */
 
 
@@ -454,7 +516,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_string_format_raw
- * \group string-api
+ * \group raw-api
+ * \subgroup raw-api-string-api
  * \desc Wrapper function for :sll_api_string_format:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -477,7 +540,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_string_replace_raw
- * \group string-api
+ * \group raw-api
+ * \subgroup raw-api-string-api
  * \desc Wrapper function for :sll_api_string_replace:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -498,7 +562,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_string_to_lower_case_raw
- * \group string-api
+ * \group raw-api
+ * \subgroup raw-api-string-api
  * \desc Wrapper function for :sll_api_string_to_lower_case:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -519,7 +584,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_string_to_title_case_raw
- * \group string-api
+ * \group raw-api
+ * \subgroup raw-api-string-api
  * \desc Wrapper function for :sll_api_string_to_title_case:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -540,7 +606,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_string_to_upper_case_raw
- * \group string-api
+ * \group raw-api
+ * \subgroup raw-api-string-api
  * \desc Wrapper function for :sll_api_string_to_upper_case:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -561,11 +628,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_sys_arg_get_raw
- * \group sys-api
+ * \group raw-api
+ * \subgroup raw-api-sys-api
  * \desc Wrapper function for :sll_api_sys_arg_get:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name System
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Docs!
  */
 
 
@@ -582,7 +657,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_sys_arg_get_count_raw
- * \group sys-api
+ * \group raw-api
+ * \subgroup raw-api-sys-api
  * \desc Wrapper function for :sll_api_sys_arg_get_count:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -602,7 +678,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_sys_get_executable_raw
- * \group sys-api
+ * \group raw-api
+ * \subgroup raw-api-sys-api
  * \desc Wrapper function for :sll_api_sys_get_executable:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -622,7 +699,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_sys_get_platform_raw
- * \group sys-api
+ * \group raw-api
+ * \subgroup raw-api-sys-api
  * \desc Wrapper function for :sll_api_sys_get_platform:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -643,11 +721,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_time_current_raw
- * \group time-api
+ * \group raw-api
+ * \subgroup raw-api-time-api
  * \desc Wrapper function for :sll_api_time_current:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Time
+ * \group raw-api
+ * \subgroup raw-api-time-api
+ * \desc Docs!
  */
 
 
@@ -664,7 +750,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_time_current_nanos_raw
- * \group time-api
+ * \group raw-api
+ * \subgroup raw-api-time-api
  * \desc Wrapper function for :sll_api_time_current_nanos:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -686,7 +773,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_time_sleep_raw
- * \group time-api
+ * \group raw-api
+ * \subgroup raw-api-time-api
  * \desc Wrapper function for :sll_api_time_sleep:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -708,7 +796,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_time_sleep_nanos_raw
- * \group time-api
+ * \group raw-api
+ * \subgroup raw-api-time-api
  * \desc Wrapper function for :sll_api_time_sleep_nanos:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -734,11 +823,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_url_execute_request_raw
- * \group url-api
+ * \group raw-api
+ * \subgroup raw-api-url-api
  * \desc Wrapper function for :sll_api_url_execute_request:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name URL
+ * \group raw-api
+ * \subgroup raw-api-url-api
+ * \desc Docs!
  */
 
 
@@ -755,11 +852,19 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_util_instruction_count_raw
- * \group util-api
+ * \group raw-api
+ * \subgroup raw-api-util-api
  * \desc Wrapper function for :sll_api_util_instruction_count:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Utility
+ * \group raw-api
+ * \subgroup raw-api-util-api
+ * \desc Docs!
  */
 
 
@@ -777,7 +882,8 @@
 /**
  * \flags check_output func optimizable
  * \name sll_api_util_ref_count_raw
- * \group util-api
+ * \group raw-api
+ * \subgroup raw-api-util-api
  * \desc Wrapper function for :sll_api_util_ref_count:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count

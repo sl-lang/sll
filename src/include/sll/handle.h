@@ -66,7 +66,8 @@ __SLL_EXTERNAL void sll_free_handle_list(sll_handle_list_t* hl);
 /**
  * \flags check_output func
  * \name sll_handle_to_object
- * \group handle
+ * \group static-object
+ * \subgroup static-object-create
  * \desc Docs!
  * \arg sll_handle_type_t t
  * \arg sll_handle_t h

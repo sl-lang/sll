@@ -3,6 +3,12 @@
 #include <sll/api/_generated.h>
 #include <sll/common.h>
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Raw API
+ * \group raw-api
+ * \desc Docs!
+ */
 
 
 

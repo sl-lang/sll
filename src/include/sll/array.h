@@ -8,6 +8,20 @@
  * \group array
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Content
+ * \group array
+ * \subgroup array-data
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
+ * \name Operations
+ * \group array
+ * \subgroup array-op
+ * \desc Docs!
+ */
 
 
 
@@ -24,6 +38,7 @@
  * \flags func
  * \name sll_array_and
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
@@ -49,6 +64,7 @@ __SLL_EXTERNAL void sll_array_clone(const sll_array_t* a,sll_array_t* o);
  * \flags func
  * \name sll_array_combinations
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
@@ -62,6 +78,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_a
  * \flags func
  * \name sll_array_combinations_string
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_string_t* s
@@ -102,6 +119,7 @@ __SLL_EXTERNAL void sll_array_combinations_string(const sll_array_t* a,const sll
  * \flags check_output func
  * \name sll_array_count
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_object_t* v
@@ -115,6 +133,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare(const s
  * \flags check_output func
  * \name sll_array_count_multiple
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_object_t** v
@@ -155,6 +174,7 @@ __SLL_EXTERNAL void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll
  * \flags check_output func
  * \name sll_array_equal
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
@@ -168,6 +188,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal(const sll_array_t* 
  * \flags check_output func
  * \name sll_array_equal_map
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_map_t* m
@@ -193,6 +214,7 @@ __SLL_EXTERNAL void sll_array_from_length(sll_array_length_t l,sll_array_t* o);
  * \flags check_output func
  * \name sll_array_get
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_array_length_t i
@@ -217,6 +239,7 @@ __SLL_EXTERNAL void sll_array_init(sll_array_t* o);
  * \flags func
  * \name sll_array_join
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
@@ -230,6 +253,7 @@ __SLL_EXTERNAL void sll_array_join(const sll_array_t* a,const sll_array_t* b,sll
  * \flags func
  * \name sll_array_op
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
@@ -244,6 +268,7 @@ __SLL_EXTERNAL void sll_array_op(const sll_array_t* a,const sll_array_t* b,sll_b
  * \flags func
  * \name sll_array_op_map
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_map_t* m
@@ -259,6 +284,7 @@ __SLL_EXTERNAL void sll_array_op_map(const sll_array_t* a,const sll_map_t* m,sll
  * \flags func
  * \name sll_array_or
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
@@ -308,6 +334,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_array_parse_int(const sll_ar
  * \flags check_output func
  * \name sll_array_pop
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_array_t* o
@@ -321,6 +348,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_pop(const sll_array_t*
  * \flags func
  * \name sll_array_push
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_object_t* v
@@ -348,6 +376,7 @@ __SLL_EXTERNAL void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_
  * \flags func
  * \name sll_array_remove
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_object_t* v
@@ -361,6 +390,7 @@ __SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_ar
  * \flags func
  * \name sll_array_remove_multiple
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_object_t** v
@@ -375,6 +405,7 @@ __SLL_EXTERNAL void sll_array_remove_multiple(const sll_array_t* a,sll_object_t*
  * \flags func
  * \name sll_array_resize
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_integer_t v
@@ -388,6 +419,7 @@ __SLL_EXTERNAL void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_ar
  * \flags func
  * \name sll_array_select
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* s
  * \arg sll_integer_t a
@@ -403,6 +435,7 @@ __SLL_EXTERNAL void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_in
  * \flags func
  * \name sll_array_set
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_array_length_t i
@@ -416,6 +449,7 @@ __SLL_EXTERNAL void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_
  * \flags check_output func
  * \name sll_array_shift
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_array_t* o
@@ -441,6 +475,7 @@ __SLL_EXTERNAL void sll_array_to_map(const sll_array_t* a,sll_map_t* o);
  * \flags func
  * \name sll_array_unshift
  * \group array
+ * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_object_t* v
@@ -454,6 +489,7 @@ __SLL_EXTERNAL void sll_array_unshift(const sll_array_t* a,sll_object_t* v,sll_a
  * \flags func
  * \name sll_array_xor
  * \group array
+ * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b

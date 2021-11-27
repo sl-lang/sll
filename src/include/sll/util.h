@@ -8,6 +8,20 @@
  * \group util
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Memory
+ * \group util
+ * \subgroup util-mem
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
+ * \name String Table
+ * \group util
+ * \subgroup util-str
+ * \desc Docs!
+ */
 
 
 
@@ -28,6 +42,7 @@
  * \flags check_output func
  * \name sll_add_string
  * \group util
+ * \subgroup util-str
  * \desc Docs!
  * \arg sll_string_table_t* st
  * \arg sll_string_t* s
@@ -42,6 +57,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_t
  * \flags check_output func
  * \name sll_add_string_runtime
  * \group util
+ * \subgroup util-str
  * \desc Docs!
  * \arg sll_string_table_t* st
  * \arg sll_object_t* v
@@ -55,6 +71,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_
  * \flags check_output func
  * \name sll_compare_data
  * \group util
+ * \subgroup util-mem
  * \desc Docs!
  * \arg const void* a
  * \arg const void* b
@@ -69,6 +86,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
  * \flags func
  * \name sll_copy_data
  * \group util
+ * \subgroup util-mem
  * \desc Docs!
  * \arg const void* s
  * \arg sll_size_t l
@@ -82,6 +100,7 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d);
  * \flags func
  * \name sll_copy_string
  * \group util
+ * \subgroup util-mem
  * \desc Docs!
  * \arg const sll_char_t* s
  * \arg void* d
@@ -95,6 +114,7 @@ __SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d);
  * \flags func
  * \name sll_copy_string_null
  * \group util
+ * \subgroup util-mem
  * \desc Docs!
  * \arg const sll_char_t* s
  * \arg void* d
@@ -107,6 +127,7 @@ __SLL_EXTERNAL void sll_copy_string_null(const sll_char_t* s,void* d);
  * \flags check_output func
  * \name sll_create_string
  * \group util
+ * \subgroup util-str
  * \desc Docs!
  * \arg sll_string_table_t* st
  * \arg const sll_char_t* dt
@@ -131,6 +152,7 @@ __SLL_EXTERNAL void sll_deinit(void);
  * \flags func
  * \name sll_free_string_table
  * \group util
+ * \subgroup util-str
  * \desc Docs!
  * \arg sll_string_table_t* st
  */
@@ -164,6 +186,7 @@ __SLL_EXTERNAL void sll_init(void);
  * \flags func
  * \name sll_set_memory
  * \group util
+ * \subgroup util-mem
  * \desc Docs!
  * \arg void* p
  * \arg sll_size_t l
@@ -200,6 +223,7 @@ __SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t f);
  * \flags func
  * \name sll_zero_memory
  * \group util
+ * \subgroup util-mem
  * \desc Docs!
  * \arg void* p
  * \arg sll_size_t l

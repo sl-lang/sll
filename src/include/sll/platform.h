@@ -8,6 +8,27 @@
  * \group platform
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Files
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
+ * \name Paths
+ * \group platform
+ * \subgroup platform-path
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
+ * \name Console
+ * \group platform
+ * \subgroup platform-console
+ * \desc Docs!
+ */
 
 
 
@@ -45,6 +66,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size
  * \flags func
  * \name sll_platform_enable_console_color
  * \group platform
+ * \subgroup platform-console
  * \desc Docs!
  */
 __SLL_EXTERNAL void sll_platform_enable_console_color(void);
@@ -55,6 +77,7 @@ __SLL_EXTERNAL void sll_platform_enable_console_color(void);
  * \flags func
  * \name sll_platform_file_close
  * \group platform
+ * \subgroup platform-file
  * \desc Docs!
  * \arg sll_file_descriptor_t fd
  */
@@ -66,6 +89,7 @@ __SLL_EXTERNAL void sll_platform_file_close(sll_file_descriptor_t fd);
  * \flags check_output func
  * \name sll_platform_file_open
  * \group platform
+ * \subgroup platform-file
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg sll_file_flags_t ff
@@ -79,6 +103,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(c
  * \flags check_output func
  * \name sll_platform_file_read
  * \group platform
+ * \subgroup platform-file
  * \desc Docs!
  * \arg sll_file_descriptor_t fd
  * \arg void* p
@@ -93,6 +118,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_des
  * \flags func
  * \name sll_platform_file_seek
  * \group platform
+ * \subgroup platform-file
  * \desc Docs!
  * \arg sll_file_descriptor_t fd
  * \arg sll_file_offset_t off
@@ -105,6 +131,7 @@ __SLL_EXTERNAL void sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_off
  * \flags check_output func
  * \name sll_platform_file_size
  * \group platform
+ * \subgroup platform-file
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \ret sll_integer_t
@@ -117,6 +144,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_platform_file_size(const sll
  * \flags func
  * \name sll_platform_file_write
  * \group platform
+ * \subgroup platform-file
  * \desc Docs!
  * \arg sll_file_descriptor_t fd
  * \arg const void* p
@@ -168,6 +196,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
  * \flags check_output func
  * \name sll_platform_get_current_working_directory
  * \group platform
+ * \subgroup platform-path
  * \desc Docs!
  * \arg sll_char_t* o
  * \arg sll_string_length_t ol
@@ -181,6 +210,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
  * \flags check_output func
  * \name sll_platform_get_default_stream_descriptor
  * \group platform
+ * \subgroup platform-file
  * \desc Docs!
  * \arg sll_char_t t
  * \ret sll_file_descriptor_t
@@ -193,6 +223,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default
  * \flags check_output func
  * \name sll_platform_get_executable_file_path
  * \group platform
+ * \subgroup platform-path
  * \desc Docs!
  * \arg sll_char_t* o
  * \arg sll_string_length_t ol
@@ -217,6 +248,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(voi
  * \flags check_output func
  * \name sll_platform_list_directory
  * \group platform
+ * \subgroup platform-path
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg sll_string_t** o
@@ -230,6 +262,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
  * \flags check_output func
  * \name sll_platform_list_directory_recursive
  * \group platform
+ * \subgroup platform-path
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg sll_string_t** o
@@ -243,6 +276,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
  * \flags check_output func
  * \name sll_platform_path_exists
  * \group platform
+ * \subgroup platform-path
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \ret sll_bool_t
@@ -255,6 +289,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_
  * \flags check_output func
  * \name sll_platform_path_is_directory
  * \group platform
+ * \subgroup platform-path
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \ret sll_bool_t
@@ -267,6 +302,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(cons
  * \flags func
  * \name sll_platform_reset_console
  * \group platform
+ * \subgroup platform-console
  * \desc Docs!
  */
 __SLL_EXTERNAL void sll_platform_reset_console(void);
@@ -277,6 +313,7 @@ __SLL_EXTERNAL void sll_platform_reset_console(void);
  * \flags check_output func
  * \name sll_platform_set_current_working_directory
  * \group platform
+ * \subgroup platform-path
  * \desc Docs!
  * \arg const sll_char_t* p
  * \ret sll_bool_t
@@ -289,6 +326,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_di
  * \flags func
  * \name sll_platform_setup_console
  * \group platform
+ * \subgroup platform-console
  * \desc Docs!
  */
 __SLL_EXTERNAL void sll_platform_setup_console(void);

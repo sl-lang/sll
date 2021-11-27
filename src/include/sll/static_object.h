@@ -8,6 +8,13 @@
  * \group static-object
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Creation
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ */
 
 
 
@@ -132,13 +139,14 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_map_zero;
 
 /**
  * \flags check_output func
- * \name sll_int_to_object
+ * \name sll_char_to_object
  * \group static-object
+ * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_integer_t v
+ * \arg sll_char_t v
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v);
 
 
 
@@ -146,6 +154,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
  * \flags check_output func
  * \name sll_float_to_object
  * \group static-object
+ * \subgroup static-object-create
  * \desc Docs!
  * \arg sll_float_t v
  * \ret sll_object_t*
@@ -156,13 +165,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t 
 
 /**
  * \flags check_output func
- * \name sll_object_get_type
+ * \name sll_int_to_object
  * \group static-object
+ * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_char_t v
+ * \arg sll_integer_t v
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v);
 
 
 

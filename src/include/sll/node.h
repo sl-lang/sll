@@ -8,6 +8,13 @@
  * \group node
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Utilites
+ * \group node
+ * \subgroup node-util
+ * \desc Docs!
+ */
 
 
 
@@ -93,6 +100,7 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt);
  * \flags check_output func
  * \name sll_get_node_size
  * \group node
+ * \subgroup node-util
  * \desc Docs!
  * \arg const sll_node_t* o
  * \ret sll_node_offset_t
@@ -184,6 +192,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_node(sll_compilation_data
  * \flags func
  * \name sll_print_node
  * \group node
+ * \subgroup node-util
  * \desc Docs!
  * \arg const sll_compilation_data_t* c_dt
  * \arg const sll_internal_function_table_t* i_ft
@@ -221,6 +230,7 @@ __SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt,sll_nod
  * \flags check_output func
  * \name sll_skip_node
  * \group node
+ * \subgroup node-util
  * \desc Docs!
  * \arg sll_node_t* o
  * \ret sll_node_t*
@@ -233,6 +243,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o);
  * \flags check_output func
  * \name sll_skip_node_const
  * \group node
+ * \subgroup node-util
  * \desc Docs!
  * \arg const sll_node_t* o
  * \ret const sll_node_t*

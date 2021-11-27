@@ -11,10 +11,11 @@ def create_docs(fl):
 	o=[]
 	ap_dt=[]
 	g_dt={}
+	sg_dt={}
 	for nm in fl:
 		with open(nm,"r") as f:
 			for k in DOCS_COMMENT_REGEX.findall(f.read().replace("\r\n","\n")):
-				dt={"flag":[],"name":None,"group":None,"desc":None,"args":[],"ret":[],"type":None}
+				dt={"flag":[],"name":None,"group":None,"subgroup":None,"desc":None,"args":[],"ret":[],"type":None}
 				for e in k.split("\n"):
 					e=e.strip()
 					if (e[:1]=="*"):
@@ -29,11 +30,15 @@ def create_docs(fl):
 					elif (t=="\\name"):
 						if (dt["name"] is not None):
 							raise RuntimeError(f"{nm}: Only one '\\name' tag can be present")
-						dt["name"]=e.split(" ")[1]
+						dt["name"]=e[5:].strip()
 					elif (t=="\\group"):
 						if (dt["group"] is not None):
 							raise RuntimeError(f"{nm}: Only one '\\group' tag can be present")
 						dt["group"]=e.split(" ")[1]
+					elif (t=="\\subgroup"):
+						if (dt["subgroup"] is not None):
+							raise RuntimeError(f"{nm}: Only one '\\subgroup' tag can be present")
+						dt["subgroup"]=e.split(" ")[1]
 					elif (t=="\\desc"):
 						if (dt["desc"] is not None):
 							raise RuntimeError(f"{nm}: Only one '\\desc' tag can be present")
@@ -69,6 +74,10 @@ def create_docs(fl):
 					if (len(dt["flag"])>1):
 						raise RuntimeError(f"{nm}: 'group' flag has to be alone")
 					g_dt[dt["group"]]={"name":dt["name"],"desc":dt["desc"]}
+				elif ("subgroup" in dt["flag"]):
+					if (len(dt["flag"])>1):
+						raise RuntimeError(f"{nm}: 'subgroup' flag has to be alone")
+					sg_dt[dt["subgroup"]]={"name":dt["name"],"group":dt["group"],"desc":dt["desc"]}
 				elif ("api" in dt["flag"]):
 					ap_dt.append(dt)
 				else:
@@ -79,6 +88,9 @@ def create_docs(fl):
 	for k in o:
 		if (k["group"] not in g_dt):
 			raise RuntimeError(f"{nm}: Unknown group '{k['group']}'")
+		if (k["subgroup"] is not None and k["subgroup"] not in sg_dt):
+			raise RuntimeError(f"{nm}: Unknown subgroup '{k['subgroup']}'")
+	o={"groups":g_dt,"subgroups":sg_dt,"data":o}
 	with open("build/docs.json","w") as f:
-		f.write(json.dumps({"groups":g_dt,"data":o},indent="\t"))
+		f.write(json.dumps(o,indent=None,separators=(",",":")))
 	return (o,ap_dt)

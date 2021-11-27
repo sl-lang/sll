@@ -63,6 +63,8 @@ if (vb):
 	print(f"  Found {len(d_fl)} Files")
 	print("Generating Documentation...")
 d_dt,api_dt=docs.create_docs(d_fl)
+if ("--docs-only" in sys.argv):
+	sys.exit(0)
 if ("--generate-api" in sys.argv):
 	if (vb):
 		print(f"Generating Code & Signatures for {len(api_dt)} API functions...")
@@ -70,6 +72,7 @@ if ("--generate-api" in sys.argv):
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_API__GENERATED__\n#define __SLL_API__GENERATED__\n#include <sll/common.h>\n#include <sll/types.h>\n\n\n")
 		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/common.h>\n#include <sll/handle.h>\n#include <sll/ift.h>\n#include <sll/memory.h>\n#include <sll/object.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		fn_l=[]
+		d_gl=[]
 		for k in api_dt:
 			rt=RETURN_CODE_BASE_TYPE[k["ret"][0]["type"]]
 			for i in range(1,len(k["ret"])):
@@ -140,7 +143,11 @@ if ("--generate-api" in sys.argv):
 					cf.write("\t"+TYPE_MAP[rt]+f" out={k['name']}({pc});\n{end}\t"+TYPE_RETURN_MAP[rt].replace(";",";\n\t")+";\n")
 			if (len(a)==0):
 				a="void"
-			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n/**\n * \\flags {('check_output ' if TYPE_MAP[rt][-1]!='*' else '')}func optimizable\n * \\name {k['name']}\n * \\group {k['group']}\n * \\desc {k['desc']}{d_str}\n */\n/**\n * \\flags check_output func optimizable\n * \\name {k['name']}_raw\n * \\group {k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg const sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */\n\n\n")
+			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n/**\n * \\flags {('check_output ' if TYPE_MAP[rt][-1]!='*' else '')}func optimizable\n * \\name {k['name']}\n * \\group {k['group']}\n * \\desc {k['desc']}{d_str}\n */\n/**\n * \\flags check_output func optimizable\n * \\name {k['name']}_raw\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg const sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */")
+			if (k["group"] not in d_gl):
+				d_gl.append(k["group"])
+				hf.write(f"\n/**\n * \\flags subgroup\n * \\name {d_dt['groups'][k['group']]['name'][:-3].strip()}\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Docs!\n */")
+			hf.write("\n\n\n")
 			cf.write("}\n")
 			fl=""
 			if ("optimizable" not in k["flag"]):

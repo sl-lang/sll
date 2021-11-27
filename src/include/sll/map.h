@@ -8,6 +8,20 @@
  * \group map
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Content
+ * \group map
+ * \subgroup map-data
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
+ * \name Operations
+ * \group map
+ * \subgroup map-op
+ * \desc Docs!
+ */
 
 
 
@@ -35,6 +49,7 @@ __SLL_EXTERNAL void sll_free_map(sll_map_t* m);
  * \flags func
  * \name sll_map_add
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_object_t* k
@@ -49,6 +64,7 @@ __SLL_EXTERNAL void sll_map_add(const sll_map_t* m,sll_object_t* k,sll_object_t*
  * \flags func
  * \name sll_map_add_array
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg const sll_array_t* a
@@ -62,6 +78,7 @@ __SLL_EXTERNAL void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sl
  * \flags func
  * \name sll_map_add_string
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg const sll_string_t* s
@@ -75,6 +92,7 @@ __SLL_EXTERNAL void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,
  * \flags func
  * \name sll_map_and
  * \group map
+ * \subgroup map-op
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
@@ -88,6 +106,7 @@ __SLL_EXTERNAL void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t*
  * \flags func
  * \name sll_map_and_array
  * \group map
+ * \subgroup map-op
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg const sll_array_t* a
@@ -101,6 +120,7 @@ __SLL_EXTERNAL void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sl
  * \flags func
  * \name sll_map_and_string
  * \group map
+ * \subgroup map-op
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg const sll_string_t* s
@@ -126,6 +146,7 @@ __SLL_EXTERNAL void sll_map_clone(const sll_map_t* m,sll_map_t* o);
  * \flags check_output func
  * \name sll_map_compare
  * \group map
+ * \subgroup map-op
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
@@ -151,6 +172,7 @@ __SLL_EXTERNAL void sll_map_create(sll_map_length_t l,sll_map_t* o);
  * \flags check_output func
  * \name sll_map_equal
  * \group map
+ * \subgroup map-op
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
@@ -164,6 +186,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_equal(const sll_map_t* a,co
  * \flags check_output func
  * \name sll_map_get
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg const sll_object_t* v
@@ -177,6 +200,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,c
  * \flags check_output func
  * \name sll_map_get_key
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_map_length_t i
@@ -190,6 +214,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t*
  * \flags check_output func
  * \name sll_map_get_value
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_map_length_t i
@@ -203,6 +228,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_
  * \flags func
  * \name sll_map_join
  * \group map
+ * \subgroup map-op
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
@@ -229,6 +255,7 @@ __SLL_EXTERNAL void sll_map_keys(const sll_map_t* m,sll_array_t* o);
  * \flags func
  * \name sll_map_op
  * \group map
+ * \subgroup map-op
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
@@ -243,6 +270,7 @@ __SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_
  * \flags check_output func
  * \name sll_map_remove
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_object_t* k
@@ -257,6 +285,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* 
  * \flags func
  * \name sll_map_remove_array
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg const sll_array_t* a
@@ -270,6 +299,7 @@ __SLL_EXTERNAL void sll_map_remove_array(const sll_map_t* m,const sll_array_t* a
  * \flags func
  * \name sll_map_remove_map
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
@@ -283,6 +313,7 @@ __SLL_EXTERNAL void sll_map_remove_map(const sll_map_t* a,const sll_map_t* b,sll
  * \flags func
  * \name sll_map_remove_string
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg const sll_string_t* s
@@ -296,6 +327,7 @@ __SLL_EXTERNAL void sll_map_remove_string(const sll_map_t* m,const sll_string_t*
  * \flags func
  * \name sll_map_set
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_object_t* k
@@ -309,6 +341,7 @@ __SLL_EXTERNAL void sll_map_set(const sll_map_t* m,sll_object_t* k,sll_object_t*
  * \flags func
  * \name sll_map_set_key
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_map_length_t i
@@ -323,6 +356,7 @@ __SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_ob
  * \flags func
  * \name sll_map_set_value
  * \group map
+ * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_map_length_t i
