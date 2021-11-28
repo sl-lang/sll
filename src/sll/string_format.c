@@ -348,6 +348,9 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					do{
 						o->v[o->l]=48+((n/pw)%10);
 						o->l++;
+						if (!sz){
+							break;
+						}
 						sz--;
 						pw/=10;
 					} while (sz);

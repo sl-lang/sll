@@ -95,6 +95,19 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt);
 
 /**
  * \flags check_output func
+ * \name sll_object_get_field
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_t* o
+ * \arg const sll_string_t* f
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_t* o,const sll_string_t* f);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_object_get_type
  * \group object
  * \desc Docs!
@@ -102,6 +115,19 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt);
  * \ret sll_object_type_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_object_get_type(const sll_object_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_object_get_field
+ * \group object
+ * \desc Docs!
+ * \arg sll_object_t* o
+ * \arg const sll_string_t* f
+ * \arg sll_object_t* v
+ */
+__SLL_EXTERNAL void sll_object_set_field(sll_object_t* o,const sll_string_t* f,sll_object_t* v);
 
 
 

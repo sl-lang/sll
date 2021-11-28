@@ -2,12 +2,13 @@
 #include <sll/api/memory.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
+#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/map.h>
-#include <sll/operator.h>
 #include <sll/object.h>
+#include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -193,6 +194,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 			}
 		}
 		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	else if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		return sll_object_get_field(a,&(b->dt.s));
 	}
 	SLL_ACQUIRE(a);
 	return a;
@@ -545,6 +549,9 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 	}
 	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
 		sll_map_set(&(a->dt.m),b,v);
+	}
+	else if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		sll_object_set_field(a,&(b->dt.s),v);
 	}
 }
 

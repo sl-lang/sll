@@ -868,6 +868,18 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE:
 				PRINT_STATIC_STRING("ACCESS_RANGE_STEP",wf);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR:
+				PRINT_STATIC_STRING("ASSIGN $",wf);
+				_print_int(ai->dt.v,wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO_VAR:
+				PRINT_STATIC_STRING("ASSIGN_RANGE $",wf);
+				_print_int(ai->dt.v,wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE_VAR:
+				PRINT_STATIC_STRING("ASSIGN_RANGE_STEP $",wf);
+				_print_int(ai->dt.v,wf);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
 				PRINT_STATIC_STRING("CAST",wf);
 				break;

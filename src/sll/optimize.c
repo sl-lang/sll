@@ -935,6 +935,10 @@ static sll_node_t* _optimize(sll_node_t* o,sll_node_t* p,optimizer_data_t* o_dt,
 			else{
 				SLL_UNIMPLEMENTED();
 			}
+			if (SLL_OBJECT_GET_TYPE(var)==OBJECT_TYPE_UNKNOWN){
+				o_dt->a_v=NULL;
+				goto _keep_assignment;
+			}
 			tmp++;
 			for (sll_arg_count_t i=1;i<vl;i++){
 				v[i-1]=_get_as_object(tmp,o_dt,0);
@@ -943,6 +947,7 @@ static sll_node_t* _optimize(sll_node_t* o,sll_node_t* p,optimizer_data_t* o_dt,
 						i--;
 						SLL_RELEASE(v[i]);
 					} while (i);
+					o_dt->a_v=NULL;
 					goto _keep_assignment;
 				}
 				tmp=sll_skip_node(tmp);
@@ -965,9 +970,6 @@ static sll_node_t* _optimize(sll_node_t* o,sll_node_t* p,optimizer_data_t* o_dt,
 			}
 			o_dt->a_v=OPTIMIZER_ASSIGN_VARIABLE_REMOVE;
 _keep_assignment:;
-			if (o_dt->a_v!=OPTIMIZER_ASSIGN_VARIABLE_REMOVE){
-				o_dt->a_v=NULL;
-			}
 		}
 	}
 	switch (o->t){
@@ -2179,19 +2181,21 @@ static sll_node_t* _remap_indexes_merge_print(sll_node_t* o,sll_node_t* p,optimi
 				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
 					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
-				SLL_ASSERT(o->t==SLL_NODE_TYPE_IDENTIFIER);
-				uint8_t rm=GET_VARIABLE_REMOVE(o,o_dt);
-				if (rm){
-					r->t=SLL_NODE_TYPE_OPERATION_LIST;
-					r->dt.ac=l-1;
-					o->t=SLL_NODE_TYPE_NOP;
-				}
-				else{
-					if (SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-						o->dt.id=*(o_dt->im.l+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id));
+				sll_bool_t rm=0;
+				if (o->t==SLL_NODE_TYPE_IDENTIFIER){
+					rm=GET_VARIABLE_REMOVE(o,o_dt);
+					if (rm){
+						r->t=SLL_NODE_TYPE_OPERATION_LIST;
+						r->dt.ac=l-1;
+						o->t=SLL_NODE_TYPE_NOP;
 					}
 					else{
-						o->dt.id=*(o_dt->im.s[SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id));
+						if (SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
+							o->dt.id=*(o_dt->im.l+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id));
+						}
+						else{
+							o->dt.id=*(o_dt->im.s[SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id));
+						}
 					}
 				}
 				o++;

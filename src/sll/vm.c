@@ -497,6 +497,16 @@ _cleanup_jump_table:;
 				OPERATOR_INSTRUCTION_TERNARY(sll_operator_access_range);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE:
 				OPERATOR_INSTRUCTION_QUATERNARY(sll_operator_access_range_step);
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR:
+				si-=2;
+				sll_operator_assign(*(v+ai->dt.v),*(s+si),*(s+si+1));
+				SLL_RELEASE(*(s+si));
+				SLL_RELEASE(*(s+si+1));
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO_VAR:
+				SLL_UNIMPLEMENTED();
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE_VAR:
+				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
 				OPERATOR_INSTRUCTION_BINARY(sll_operator_cast);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
@@ -527,13 +537,13 @@ _cleanup_jump_table:;
 					for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
 						SLL_RELEASE(*(s+si+i));
 					}
-					*(s+si)=sll_int_to_object(nt);
+					*(s+si)=SLL_FROM_INT(nt);
 					si++;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
 				{
-					*(s+si)=sll_int_to_object(sll_add_type(sll_current_runtime_data->tt,NULL,0));
+					*(s+si)=SLL_FROM_INT(sll_add_type(sll_current_runtime_data->tt,NULL,0));
 					si++;
 					break;
 				}
