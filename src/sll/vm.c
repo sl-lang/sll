@@ -542,7 +542,7 @@ _cleanup_jump_table:;
 					si-=ai->dt.ac;
 					sll_object_t* t=sll_operator_cast(*(s+si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					SLL_RELEASE(*(s+si-1));
-					sll_object_type_t ot=(t->dt.i<0||t->dt.i>=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.i));
+					sll_object_type_t ot=(t->dt.i<0||t->dt.i>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.i));
 					SLL_RELEASE(t);
 					*(s+si-1)=sll_create_object_type(sll_current_runtime_data->tt,ot,s+si,ai->dt.ac);
 					for (sll_arg_count_t i=0;i<ai->dt.ac;i++){
@@ -550,6 +550,10 @@ _cleanup_jump_table:;
 					}
 					break;
 				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL:
+				*(s+si)=sll_create_new_object_type(sll_current_runtime_data->tt);
+				si++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				{
 					si--;

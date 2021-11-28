@@ -222,6 +222,7 @@ _print_unknown:
 				sll_string_increase(o,3);
 				sll_copy_string(SLL_CHAR("<&:"),o->v+o->l);
 				o->l+=3;
+				_write_int(SLL_OBJECT_GET_TYPE(a),o);
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
 				void* p=a->dt.p;
 				sll_object_t tmp={1};

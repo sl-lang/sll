@@ -77,6 +77,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_object_type_table_t* tt){
+	tt->l++;
+	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED2);
+	tt->dt=sll_reallocate((void*)(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
+	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t));
+	n->sz=0;
+	n->l=0;
+	*(tt->dt+tt->l-1)=n;
+	sll_object_t* o=SLL_CREATE();
+	o->t=tt->l+SLL_MAX_OBJECT_TYPE;
+	o->dt.p=NULL;
+	return o;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll_object_type_table_t* tt,sll_object_type_t t,sll_object_t*const* p,sll_arg_count_t l){
 	if (t<=SLL_MAX_OBJECT_TYPE){
 		switch (t){

@@ -169,7 +169,7 @@
 	int_type "a"
 	string_type "str"
 ))
-(:> type "\n" (&:) "\n" (. int_type 5.59) "\n" (. map_type 1 'a' 2 'b' 3 'c') "\n" (. type 4) "\n")
+(:> type "\n" (. (&:)) "\n" (. int_type 5.59) "\n" (. map_type 1 'a' 2 'b' 3 'c') "\n" (. type 4) "\n")
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

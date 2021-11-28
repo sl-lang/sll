@@ -7,7 +7,7 @@
 - C and Sll variable argument list API: `sll_var_arg_list_t`, `sll_var_arg_get`, `sll_var_arg_get_int`, `sll_var_arg_get_float`, `sll_var_arg_get_char` and `sll_var_arg_get_string`
 - Implemented `sll_api_string_format`, `sll_api_file_read`, `read`, `sll_string_decrease`
 - Miscellaneous node function are now located in [`node.c`][main/src/sll/node.c]
-- Object type table API: `sll_object_type_table_t`, `sll_object_type_data_t`, `sll_object_type_data_entry_t`, `sll_add_type`, `sll_create_object_type` and `sll_free_object_type_list`
+- Object type table API: `sll_object_type_table_t`, `sll_object_type_data_t`, `sll_object_type_data_entry_t`, `sll_add_type`, `sll_create_new_object_type`, `sll_create_object_type` and `sll_free_object_type_list`
 - Option for the builder script to generate only documentation: `--docs-only`
 - String flip-case API: `flip_case`, `sll_api_string_flip_case`, `sll_api_string_flip_case_raw` and `sll_string_flip_case`
 - Structure definition (`(&:)`) and creation (`(.)`) operators ([#99])

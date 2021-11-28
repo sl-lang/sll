@@ -46,7 +46,7 @@
  * \name sll_add_type
  * \group object
  * \desc Docs!
- * \arg sll_object_type_table_t* t
+ * \arg sll_object_type_table_t* tt
  * \arg const sll_object_t*const* p
  * \arg sll_arg_count_t l
  * \ret sll_object_type_t
@@ -60,7 +60,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
  * \name sll_add_type
  * \group object
  * \desc Docs!
- * \arg const sll_object_type_table_t* t
+ * \arg sll_object_type_table_t* tt
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_object_type_table_t* tt);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_add_type
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_type_table_t* tt
  * \arg sll_object_type_t t
  * \arg sll_object_t*const* p
  * \arg sll_arg_count_t l
@@ -75,7 +87,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
  * \name sll_free_object_type_list
  * \group object
  * \desc Docs!
- * \arg sll_object_type_table_t* t
+ * \arg sll_object_type_table_t* tt
  */
 __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt);
 
