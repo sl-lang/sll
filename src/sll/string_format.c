@@ -345,15 +345,15 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
-					do{
+					while (1){
 						o->v[o->l]=48+((n/pw)%10);
 						o->l++;
-						if (!sz){
+						if (sz<=1){
 							break;
 						}
 						sz--;
 						pw/=10;
-					} while (sz);
+					}
 					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
