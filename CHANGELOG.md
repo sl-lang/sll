@@ -1,13 +1,17 @@
 # The Sl Programing Language Change Log
 
-## [0.6.29] - Ongoing
+## [0.6.30] - Ongoing
+
+*Nothing*
+
+## [0.6.29] - 2021-11-28
 
 ### Added
 
 - C and Sll variable argument list API: `sll_var_arg_list_t`, `sll_var_arg_get`, `sll_var_arg_get_int`, `sll_var_arg_get_float`, `sll_var_arg_get_char` and `sll_var_arg_get_string`
 - Implemented `sll_api_string_format`, `sll_api_file_read`, `read`, `sll_string_decrease`
 - Implemented assign-by-access
-- Miscellaneous node function are now located in [`node.c`][main/src/sll/node.c]
+- Miscellaneous node function are now located in [`node.c`][0.6.29/src/sll/node.c]
 - Object type table API: `sll_object_type_table_t`, `sll_object_type_data_t`, `sll_object_type_data_entry_t`, `sll_add_type`, `sll_create_new_object_type`, `sll_create_object_type`, `sll_object_get_field`, `sll_free_object_type_list`, `sll_object_set_field`
 - Option for the builder script to generate only documentation: `--docs-only`
 - String flip-case API: `flip_case`, `sll_api_string_flip_case`, `sll_api_string_flip_case_raw` and `sll_string_flip_case`
@@ -1015,7 +1019,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.29]: https://github.com/sl-lang/sll/compare/v0.6.28...main
+[0.6.30]: https://github.com/sl-lang/sll/compare/v0.6.29...main
+[0.6.29]: https://github.com/sl-lang/sll/compare/v0.6.28...v0.6.29
 [0.6.28]: https://github.com/sl-lang/sll/compare/v0.6.27...v0.6.28
 [0.6.27]: https://github.com/sl-lang/sll/compare/v0.6.26...v0.6.27
 [0.6.26]: https://github.com/sl-lang/sll/compare/v0.6.25...v0.6.26
@@ -1135,7 +1140,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/src/sll/node.c]: https://github.com/sl-lang/sll/blob/main/src/sll/node.c
+[0.6.29/src/sll/node.c]: https://github.com/sl-lang/sll/blob/v0.6.29/src/sll/node.c
 [0.6.28/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/v0.6.28/src/include/sll/init.h
 [0.6.28/src/sll/deinit.c]: https://github.com/sl-lang/sll/blob/v0.6.28/src/sll/deinit.c
 [0.6.28/src/sll/init.c]: https://github.com/sl-lang/sll/blob/v0.6.28/src/sll/init.c
