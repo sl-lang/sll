@@ -114,8 +114,8 @@ contexts:
         17: keyword.declaration.sll
         18: support.function.builtin.length.sll
         19: support.function.builtin.access.sll
-        20: support.function.builtin.cast.sll
-        21: support.function.builtin.typeof.sll
+        20: keyword.operator.cast.sll
+        21: keyword.operator.typeof.sll
         22: punctuation.separator.sll
         23: keyword.control.continue.sll
         24: keyword.operator.reference.sll

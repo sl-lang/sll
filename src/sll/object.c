@@ -20,6 +20,101 @@
 
 
 
+static void* _zero_struct(const sll_object_type_table_t* tt,void* op,sll_object_type_t t,sll_arg_count_t i){
+	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
+	while (i<dt->l){
+		switch (dt->dt[i].t){
+			case SLL_OBJECT_TYPE_INT:
+				SET_DATA(op,sll_integer_t,0);
+				break;
+			case SLL_OBJECT_TYPE_FLOAT:
+				SET_DATA(op,sll_float_t,0);
+				break;
+			case SLL_OBJECT_TYPE_CHAR:
+				SET_DATA(op,sll_integer_t,0);
+				break;
+			case SLL_OBJECT_TYPE_STRING:
+				{
+					sll_string_t s=SLL_INIT_STRING_STRUCT;
+					SET_DATA(op,sll_string_t,s);
+					break;
+				}
+			case SLL_OBJECT_TYPE_ARRAY:
+			case SLL_OBJECT_TYPE_MAP_KEYS:
+			case SLL_OBJECT_TYPE_MAP_VALUES:
+				{
+					sll_array_t a=SLL_INIT_ARRAY_STRUCT;
+					SET_DATA(op,sll_array_t,a);
+					break;
+				}
+			case SLL_OBJECT_TYPE_HANDLE:
+				{
+					sll_handle_data_t h_dt=SLL_INIT_HANDLE_DATA_STRUCT;
+					SET_DATA(op,sll_handle_data_t,h_dt);
+					break;
+				}
+			case SLL_OBJECT_TYPE_MAP:
+				{
+					sll_map_t m=SLL_INIT_MAP_STRUCT;
+					SET_DATA(op,sll_map_t,m);
+					break;
+				}
+			default:
+				op=_zero_struct(tt,op,dt->dt[i].t,0);
+				break;
+		}
+		i++;
+	}
+	return op;
+}
+
+
+
+static void* _init_struct(const sll_object_type_table_t* tt,sll_object_type_t t,void* op,sll_object_t*const* p,sll_arg_count_t l){
+	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
+	for (sll_arg_count_t i=0;i<dt->l;i++){
+		if (!l){
+			op=_zero_struct(tt,op,t,i);
+			break;
+		}
+		sll_object_t* n=sll_operator_cast(*p,sll_static_int[(dt->dt[i].t<=SLL_MAX_OBJECT_TYPE?dt->dt[i].t:SLL_OBJECT_TYPE_ARRAY)]);
+		switch (dt->dt[i].t){
+			case SLL_OBJECT_TYPE_INT:
+				SET_DATA(op,sll_integer_t,n->dt.i);
+				break;
+			case SLL_OBJECT_TYPE_FLOAT:
+				SET_DATA(op,sll_float_t,n->dt.f);
+				break;
+			case SLL_OBJECT_TYPE_CHAR:
+				SET_DATA(op,sll_integer_t,n->dt.c);
+				break;
+			case SLL_OBJECT_TYPE_STRING:
+				SET_DATA(op,sll_string_t,n->dt.s);
+				break;
+			case SLL_OBJECT_TYPE_ARRAY:
+			case SLL_OBJECT_TYPE_MAP_KEYS:
+			case SLL_OBJECT_TYPE_MAP_VALUES:
+				SET_DATA(op,sll_array_t,n->dt.a);
+				break;
+			case SLL_OBJECT_TYPE_HANDLE:
+				SET_DATA(op,sll_handle_data_t,n->dt.h);
+				break;
+			case SLL_OBJECT_TYPE_MAP:
+				SET_DATA(op,sll_map_t,n->dt.m);
+				break;
+			default:
+				op=_init_struct(tt,dt->dt[i].t,op,n->dt.a.v,n->dt.a.l);
+				break;
+		}
+		SLL_RELEASE(n);
+		l--;
+		p++;
+	}
+	return op;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* tt,const sll_object_t*const* p,sll_arg_count_t l){
 	tt->l++;
 	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
@@ -62,8 +157,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 					break;
 			}
 		}
+		else if (n->dt[i].t<=tt->l+SLL_MAX_OBJECT_TYPE-1){
+			n->sz+=(*(tt->dt+n->dt[i].t-SLL_MAX_OBJECT_TYPE-1))->sz;
+		}
 		else{
-			SLL_UNIMPLEMENTED();
+			n->dt[i].t=SLL_OBJECT_TYPE_INT;
+			n->sz+=sizeof(sll_integer_t);
 		}
 		p++;
 		v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_STRING]);
@@ -166,84 +265,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 	sll_object_t* o=SLL_CREATE();
 	o->t=t;
 	o->dt.p=sll_allocate(dt->sz);
-	void* op=o->dt.p;
-	sll_object_t tmp={1,SLL_OBJECT_TYPE_INT,NULL};
-	for (sll_arg_count_t i=0;i<dt->l;i++){
-		if (!l){
-			switch (dt->dt[i].t){
-				case SLL_OBJECT_TYPE_INT:
-					SET_DATA(op,sll_integer_t,0);
-					break;
-				case SLL_OBJECT_TYPE_FLOAT:
-					SET_DATA(op,sll_float_t,0);
-					break;
-				case SLL_OBJECT_TYPE_CHAR:
-					SET_DATA(op,sll_integer_t,0);
-					break;
-				case SLL_OBJECT_TYPE_STRING:
-					{
-						sll_string_t s=SLL_INIT_STRING_STRUCT;
-						SET_DATA(op,sll_string_t,s);
-						break;
-					}
-				case SLL_OBJECT_TYPE_ARRAY:
-				case SLL_OBJECT_TYPE_MAP_KEYS:
-				case SLL_OBJECT_TYPE_MAP_VALUES:
-					{
-						sll_array_t a=SLL_INIT_ARRAY_STRUCT;
-						SET_DATA(op,sll_array_t,a);
-						break;
-					}
-				case SLL_OBJECT_TYPE_HANDLE:
-					{
-						sll_handle_data_t h_dt=SLL_INIT_HANDLE_DATA_STRUCT;
-						SET_DATA(op,sll_handle_data_t,h_dt);
-						break;
-					}
-				case SLL_OBJECT_TYPE_MAP:
-					{
-						sll_map_t m=SLL_INIT_MAP_STRUCT;
-						SET_DATA(op,sll_map_t,m);
-						break;
-					}
-				default:
-					SLL_UNIMPLEMENTED();
-			}
-			continue;
-		}
-		tmp.dt.i=dt->dt[i].t;
-		sll_object_t* n=sll_operator_cast(*p,&tmp);
-		switch (dt->dt[i].t){
-			case SLL_OBJECT_TYPE_INT:
-				SET_DATA(op,sll_integer_t,n->dt.i);
-				break;
-			case SLL_OBJECT_TYPE_FLOAT:
-				SET_DATA(op,sll_float_t,n->dt.f);
-				break;
-			case SLL_OBJECT_TYPE_CHAR:
-				SET_DATA(op,sll_integer_t,n->dt.c);
-				break;
-			case SLL_OBJECT_TYPE_STRING:
-				SET_DATA(op,sll_string_t,n->dt.s);
-				break;
-			case SLL_OBJECT_TYPE_ARRAY:
-			case SLL_OBJECT_TYPE_MAP_KEYS:
-			case SLL_OBJECT_TYPE_MAP_VALUES:
-				SET_DATA(op,sll_array_t,n->dt.a);
-				break;
-			case SLL_OBJECT_TYPE_HANDLE:
-				SET_DATA(op,sll_handle_data_t,n->dt.h);
-				break;
-			case SLL_OBJECT_TYPE_MAP:
-				SET_DATA(op,sll_map_t,n->dt.m);
-				break;
-			default:
-				SLL_UNIMPLEMENTED();
-		}
-		SLL_RELEASE(n);
-		l--;
-		p++;
-	}
+	_init_struct(tt,t,o->dt.p,p,l);
 	return o;
 }
 

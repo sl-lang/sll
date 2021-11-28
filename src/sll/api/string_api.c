@@ -17,6 +17,10 @@
 
 
 
+static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o);
+
+
+
 static sll_string_length_t _write_int(uint64_t v,sll_string_t* o){
 	uint8_t i=0;
 	char bf[20];
@@ -85,6 +89,72 @@ static void _write_char(sll_char_t c,sll_string_t* o){
 		o->v[o->l]=c;
 		o->l++;
 	}
+}
+
+
+
+static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
+	sll_string_increase(o,3);
+	sll_copy_string(SLL_CHAR("<&:"),o->v+o->l);
+	o->l+=3;
+	_write_int(t,o);
+	sll_object_t tmp={1};
+	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
+	for (sll_arg_count_t i=0;i<dt->l;i++){
+		sll_string_t s=dt->dt[i].nm;
+		sll_string_increase(o,2);
+		o->v[o->l]=' ';
+		o->v[o->l+1]='\"';
+		o->l+=2;
+		for (sll_string_length_t j=0;j<s.l;j++){
+			_write_char(s.v[j],o);
+		}
+		sll_string_increase(o,2);
+		o->v[o->l]='\"';
+		o->v[o->l+1]=' ';
+		o->l+=2;
+		tmp.t=dt->dt[i].t;
+		switch (dt->dt[i].t){
+			case SLL_OBJECT_TYPE_INT:
+				tmp.dt.i=*((sll_integer_t*)p);
+				p=(void*)(((uint64_t)p)+sizeof(sll_integer_t));
+				break;
+			case SLL_OBJECT_TYPE_FLOAT:
+				tmp.dt.f=*((sll_float_t*)p);
+				p=(void*)(((uint64_t)p)+sizeof(sll_float_t));
+				break;
+			case SLL_OBJECT_TYPE_CHAR:
+				tmp.dt.c=(sll_char_t)(*((sll_integer_t*)p));
+				p=(void*)(((uint64_t)p)+sizeof(sll_integer_t));
+				break;
+			case SLL_OBJECT_TYPE_STRING:
+				tmp.dt.s=*((sll_string_t*)p);
+				p=(void*)(((uint64_t)p)+sizeof(sll_string_t));
+				break;
+			case SLL_OBJECT_TYPE_ARRAY:
+			case SLL_OBJECT_TYPE_MAP_KEYS:
+			case SLL_OBJECT_TYPE_MAP_VALUES:
+				tmp.dt.a=*((sll_array_t*)p);
+				p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
+				break;
+			case SLL_OBJECT_TYPE_HANDLE:
+				tmp.dt.h=*((sll_handle_data_t*)p);
+				p=(void*)(((uint64_t)p)+sizeof(sll_handle_data_t));
+				break;
+			case SLL_OBJECT_TYPE_MAP:
+				tmp.dt.m=*((sll_map_t*)p);
+				p=(void*)(((uint64_t)p)+sizeof(sll_map_t));
+				break;
+			default:
+				p=_print_custom_type(p,dt->dt[i].t,o);
+				continue;
+		}
+		_object_to_string(&tmp,1,o);
+	}
+	sll_string_increase(o,1);
+	o->v[o->l]='>';
+	o->l++;
+	return p;
 }
 
 
@@ -215,72 +285,11 @@ _print_unknown:
 			o->l+=9;
 			return;
 		default:
-			{
-				if (!sll_current_runtime_data||SLL_OBJECT_GET_TYPE(a)>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-					goto _print_unknown;
-				}
-				sll_string_increase(o,3);
-				sll_copy_string(SLL_CHAR("<&:"),o->v+o->l);
-				o->l+=3;
-				_write_int(SLL_OBJECT_GET_TYPE(a),o);
-				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
-				void* p=a->dt.p;
-				sll_object_t tmp={1};
-				for (sll_arg_count_t i=0;i<dt->l;i++){
-					sll_string_t s=dt->dt[i].nm;
-					sll_string_increase(o,2);
-					o->v[o->l]=' ';
-					o->v[o->l+1]='\"';
-					o->l+=2;
-					for (sll_string_length_t j=0;j<s.l;j++){
-						_write_char(s.v[j],o);
-					}
-					sll_string_increase(o,2);
-					o->v[o->l]='\"';
-					o->v[o->l+1]=' ';
-					o->l+=2;
-					tmp.t=dt->dt[i].t;
-					switch (dt->dt[i].t){
-						case SLL_OBJECT_TYPE_INT:
-							tmp.dt.i=*((sll_integer_t*)p);
-							p=(void*)(((uint64_t)p)+sizeof(sll_integer_t));
-							break;
-						case SLL_OBJECT_TYPE_FLOAT:
-							tmp.dt.f=*((sll_float_t*)p);
-							p=(void*)(((uint64_t)p)+sizeof(sll_float_t));
-							break;
-						case SLL_OBJECT_TYPE_CHAR:
-							tmp.dt.c=(sll_char_t)(*((sll_integer_t*)p));
-							p=(void*)(((uint64_t)p)+sizeof(sll_integer_t));
-							break;
-						case SLL_OBJECT_TYPE_STRING:
-							tmp.dt.s=*((sll_string_t*)p);
-							p=(void*)(((uint64_t)p)+sizeof(sll_string_t));
-							break;
-						case SLL_OBJECT_TYPE_ARRAY:
-						case SLL_OBJECT_TYPE_MAP_KEYS:
-						case SLL_OBJECT_TYPE_MAP_VALUES:
-							tmp.dt.a=*((sll_array_t*)p);
-							p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
-							break;
-						case SLL_OBJECT_TYPE_HANDLE:
-							tmp.dt.h=*((sll_handle_data_t*)p);
-							p=(void*)(((uint64_t)p)+sizeof(sll_handle_data_t));
-							break;
-						case SLL_OBJECT_TYPE_MAP:
-							tmp.dt.m=*((sll_map_t*)p);
-							p=(void*)(((uint64_t)p)+sizeof(sll_map_t));
-							break;
-						default:
-							SLL_UNIMPLEMENTED();
-					}
-					_object_to_string(&tmp,1,o);
-				}
-				sll_string_increase(o,1);
-				o->v[o->l]='>';
-				o->l++;
-				return;
+			if (!sll_current_runtime_data||SLL_OBJECT_GET_TYPE(a)>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+				goto _print_unknown;
 			}
+			_print_custom_type(a->dt.p,SLL_OBJECT_GET_TYPE(a),o);
+			return;
 	}
 	SLL_UNREACHABLE();
 }
