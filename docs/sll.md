@@ -26,12 +26,12 @@ Sll has the ability to be installed in a folder, or as a standalone executable. 
 
 - `win.zip`: Windows build of Sll, must be extracted into a folder before use.
 - `win_standalone.exe`: Windows standalone version, can be used out-of-the-box.
-- `posix.zip`: POSIX build of Sll (platforms such as Linux, Ubuntu, Fedora, FreeBSD, etc.). Must be extracted into a single folder.
+- `posix.zip`: POSIX build of Sll (platforms such as Linux, Ubuntu, Fedora, etc.). Must be extracted into a single folder.
 - `posix_standalone`: POSIX standalone version of Sll.
 
 ## Version Checking
 
-If using the standalone version of Sll, replace `sll` by `sll_standalone`. The most recent version of Sll is `0.6.28` (`0.6.29` is in development).
+If using the standalone version of Sll, replace `sll` by `sll_standalone`. The most recent version of Sll is `0.6.29` (`0.6.30` is in development).
 
 ### Windows
 
