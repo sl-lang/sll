@@ -523,7 +523,7 @@ _cleanup_jump_table:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 				{
 					si-=ai->dt.ac<<1;
-					sll_object_type_t nt=sll_create_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac);
+					sll_object_type_t nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac);
 					for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
 						SLL_RELEASE(*(s+si+i));
 					}
@@ -533,8 +533,21 @@ _cleanup_jump_table:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
 				{
-					*(s+si)=sll_int_to_object(sll_create_type(sll_current_runtime_data->tt,NULL,0));
+					*(s+si)=sll_int_to_object(sll_add_type(sll_current_runtime_data->tt,NULL,0));
 					si++;
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
+				{
+					si-=ai->dt.ac;
+					sll_object_t* t=sll_operator_cast(*(s+si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					SLL_RELEASE(*(s+si-1));
+					sll_object_type_t ot=(t->dt.i<0||t->dt.i>=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.i));
+					SLL_RELEASE(t);
+					*(s+si-1)=sll_create_object_type(sll_current_runtime_data->tt,ot,s+si,ai->dt.ac);
+					for (sll_arg_count_t i=0;i<ai->dt.ac;i++){
+						SLL_RELEASE(*(s+si+i));
+					}
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:

@@ -841,7 +841,23 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				return o;
 			}
 		case SLL_NODE_TYPE_NEW:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->dt.ac;
+				o++;
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					return o;
+				}
+				sll_arg_count_t v=l-1;
+				while (l){
+					l--;
+					o=_generate_on_stack(o,g_dt);
+				}
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW;
+				ai->dt.ac=v;
+				return o;
+			}
 		case SLL_NODE_TYPE_BREAK:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_CONTINUE:

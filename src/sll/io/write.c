@@ -312,6 +312,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
 				_write_integer(wf,ai->dt.ac);
 				break;
 		}

@@ -374,6 +374,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
 				CHECK_ERROR(rf,ai->dt.ac,sll_arg_count_t,e);
 				break;
 		}

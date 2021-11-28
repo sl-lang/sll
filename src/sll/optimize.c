@@ -1953,6 +1953,7 @@ _remove_cond:
 				return o;
 			}
 		case SLL_NODE_TYPE_DECL:
+		case SLL_NODE_TYPE_NEW:
 			{
 				if (fl&OPTIMIZER_FLAG_ASSIGN){
 					SLL_UNIMPLEMENTED();
@@ -1966,8 +1967,6 @@ _remove_cond:
 				}
 				return o;
 			}
-		case SLL_NODE_TYPE_NEW:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_BREAK:
 		case SLL_NODE_TYPE_CONTINUE:
 			{
