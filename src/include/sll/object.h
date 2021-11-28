@@ -57,7 +57,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 
 /**
  * \flags check_output func
- * \name sll_add_type
+ * \name sll_create_new_object_type
  * \group object
  * \desc Docs!
  * \arg sll_object_type_table_t* tt
@@ -69,7 +69,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 
 /**
  * \flags check_output func
- * \name sll_add_type
+ * \name sll_create_object_type
  * \group object
  * \desc Docs!
  * \arg const sll_object_type_table_t* tt
