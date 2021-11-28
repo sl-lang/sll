@@ -16,6 +16,15 @@
 
 
 
+#define SKIP_DATA(p,t) (p=(void*)(((uint64_t)(p))+sizeof(t)))
+#define RELEASE_DATA(p,t,f) \
+	do{ \
+		f((t*)(p)); \
+		p=(void*)(((uint64_t)(p))+sizeof(t)); \
+	} while (0)
+
+
+
 STATIC_OBJECT_SETUP;
 
 
@@ -200,7 +209,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 				sll_free_string(&(o->dt.s));
 			}
 		}
-		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_ARRAY){
+		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_ARRAY||SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP_KEYS||SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP_VALUES){
 			sll_free_array(&(o->dt.a));
 		}
 		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_HANDLE){
@@ -213,6 +222,46 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 		}
 		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP){
 			sll_free_map(&(o->dt.m));
+		}
+		else if (SLL_OBJECT_GET_TYPE(o)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(o)<SLL_OBJECT_TYPE_RESERVED2){
+			if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(o)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
+				void* op=o->dt.p;
+				for (sll_arg_count_t i=0;i<dt->l;i++){
+					switch (dt->dt[i].t){
+						case SLL_OBJECT_TYPE_INT:
+						case SLL_OBJECT_TYPE_CHAR:
+							SKIP_DATA(op,sll_integer_t);
+							break;
+						case SLL_OBJECT_TYPE_FLOAT:
+							SKIP_DATA(op,sll_float_t);
+							break;
+						case SLL_OBJECT_TYPE_STRING:
+							RELEASE_DATA(op,sll_string_t,sll_free_string);
+							break;
+						case SLL_OBJECT_TYPE_ARRAY:
+						case SLL_OBJECT_TYPE_MAP_KEYS:
+						case SLL_OBJECT_TYPE_MAP_VALUES:
+							RELEASE_DATA(op,sll_array_t,sll_free_array);
+							break;
+						case SLL_OBJECT_TYPE_HANDLE:
+							{
+								sll_handle_descriptor_t* hd=sll_handle_lookup_descriptor(sll_current_runtime_data->hl,((sll_handle_data_t*)op)->t);
+								if (hd&&hd->df){
+									hd->df(((sll_handle_data_t*)op)->h);
+								}
+								SKIP_DATA(op,sll_handle_data_t);
+								break;
+							}
+						case SLL_OBJECT_TYPE_MAP:
+							RELEASE_DATA(op,sll_map_t,sll_free_map);
+							break;
+						default:
+							SLL_UNIMPLEMENTED();
+					}
+				}
+			}
+			sll_deallocate(o->dt.p);
 		}
 		o->t=SLL_OBJECT_TYPE_INT;
 		o->dt.i=0;

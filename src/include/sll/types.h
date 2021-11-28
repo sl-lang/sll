@@ -491,13 +491,14 @@ typedef struct __SLL_HANDLE_DATA{
 
 
 typedef union __SLL_OBJECT_DATA{
-	sll_char_t c;
 	sll_integer_t i;
 	sll_float_t f;
+	sll_char_t c;
 	sll_string_t s;
 	sll_array_t a;
 	sll_handle_data_t h;
 	sll_map_t m;
+	void* p;
 } sll_object_data_t;
 
 
@@ -560,6 +561,7 @@ typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
 
 
 typedef struct __SLL_OBJECT_TYPE_DATA{
+	sll_size_t sz;
 	sll_arg_count_t l;
 	sll_object_type_data_entry_t dt[];
 } sll_object_type_data_t;
