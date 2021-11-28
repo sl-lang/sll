@@ -232,8 +232,8 @@ _print_unknown:
 					o->v[o->l]=' ';
 					o->v[o->l+1]='\"';
 					o->l+=2;
-					for (sll_string_length_t i=0;i<s.l;i++){
-						_write_char(s.v[i],o);
+					for (sll_string_length_t j=0;j<s.l;j++){
+						_write_char(s.v[j],o);
 					}
 					sll_string_increase(o,2);
 					o->v[o->l]='\"';
