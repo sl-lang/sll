@@ -186,14 +186,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 		}
 	}
 	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
-		sll_map_t m=a->dt.m;
-		for (sll_map_length_t i=0;i<m.l;i++){
-			if (sll_operator_equal(m.v[i<<1],b)){
-				SLL_ACQUIRE(m.v[(i<<1)+1]);
-				return m.v[(i<<1)+1];
-			}
-		}
-		return SLL_ACQUIRE_STATIC_INT(0);
+		return sll_map_get(&(a->dt.m),b);
 	}
 	else if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 		return sll_object_get_field(a,&(b->dt.s));

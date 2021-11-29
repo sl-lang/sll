@@ -273,9 +273,14 @@ _next_key:;
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,const sll_object_t* v){
-	SLL_UNIMPLEMENTED();
-	return NULL;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,const sll_object_t* k){
+	for (sll_map_length_t i=0;i<m->l;i++){
+		if (sll_operator_equal(m->v[i<<1],k)){
+			SLL_ACQUIRE(m->v[(i<<1)+1]);
+			return m->v[(i<<1)+1];
+		}
+	}
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 

@@ -20,16 +20,16 @@ jobs:
           - ' --standalone'
           - ' --standalone --release'
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-    - name: Build
-      run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}}
-    - name: Test
-      run: build/run_tests
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}}
+      - name: Test
+        run: build/run_tests
   windows:
     name: Windows, Args = 'sll${{matrix.args}}'
     runs-on: windows-latest
@@ -42,34 +42,37 @@ jobs:
           - ' --standalone'
           - ' --standalone --release'
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-    - name: Build
-      run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}} __ghactions
-      shell: cmd
-    - name: Test
-      run: build/run_tests
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}} __ghactions
+        shell: cmd
+      - name: Test
+        run: build/run_tests
   codeql:
     name: CodeQL
+    needs:
+      - ubuntu
+      - windows
     runs-on: ubuntu-latest
     permissions:
       security-events: write
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-      with:
-        languages: cpp
-    - name: Build
-      run: python src/_build/main.py --verbose --test --do-not-run-test
-    - name: Analyze
-      uses: github/codeql-action/analyze@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: cpp
+      - name: Build
+        run: python src/_build/main.py --verbose --test --do-not-run-test
+      - name: Analyze
+        uses: github/codeql-action/analyze@v1
