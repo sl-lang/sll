@@ -122,7 +122,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_object_get_type(const sl
 
 /**
  * \flags func
- * \name sll_object_get_field
+ * \name sll_object_set_field
  * \group object
  * \desc Docs!
  * \arg sll_object_t* o

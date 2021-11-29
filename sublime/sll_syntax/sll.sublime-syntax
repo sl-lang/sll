@@ -195,8 +195,10 @@ contexts:
           pop: true
         - match: '\\.'
           scope: invalid.illegal.escape.sll
-    - match: '\b(nil|true|false|stdin|stdout|stderr|int_type|float_type|char_type|string_type|array_type|handle_type|map_type|map_key_type|map_value_type)\b'
+    - match: '\b(nil|true|false|stdin|stdout|stderr)\b'
       scope: constant.language.sll
+    - match: '\b(int_type|float_type|char_type|string_type|array_type|handle_type|map_type|map_key_type|map_value_type)\b'
+      scope: storage.type.sll
     - match: '\b[a-zA-Z_][a-zA-Z0-9_]*\b'
       scope: variable.other.sll
   object_no_highlight:
