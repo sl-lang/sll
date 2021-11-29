@@ -2,7 +2,11 @@
 
 ## [0.6.30] - Ongoing
 
-*Nothing*
+### Added
+
+- Finished custom object type API ([#72])
+- Implemented `SLL_OBJECT_GET_TYPE_MASK`
+- Memory structures can have constant fields (denoted by inverting (`(~)`) the type) ([#99])
 
 ## [0.6.29] - 2021-11-28
 
@@ -1101,6 +1105,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#77]: https://github.com/sl-lang/sll/issues/77
 [#76]: https://github.com/sl-lang/sll/issues/76
 [#74]: https://github.com/sl-lang/sll/issues/74
+[#72]: https://github.com/sl-lang/sll/issues/72
 [#71]: https://github.com/sl-lang/sll/issues/71
 [#69]: https://github.com/sl-lang/sll/issues/69
 [#67]: https://github.com/sl-lang/sll/issues/67

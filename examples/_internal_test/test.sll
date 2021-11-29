@@ -167,14 +167,15 @@
 )
 (= point_type (&:
 	int_type "x"
-	int_type "y"
+	(~ int_type) "y"
 ))
 (= point_string_type (&:
 	point_type "p"
 	string_type "str"
 ))
 (= v (. point_type 4))
-(= (: v "y") 11)
+(= (: v "x") -5)
+(= (: v "y") 11111); Failure to assign value to 'const' field
 (:> point_type "\n" (. (&:)) "\n" (. int_type 5.59) "\n" (. map_type 1 'a' 2 'b' 3 'c') "\n" v "\n" (:? v) "\n" point_string_type "\n" (. point_string_type) "\n")
 (= test_type (&:
 	(&:

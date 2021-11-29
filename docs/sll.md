@@ -1107,6 +1107,41 @@ All of the operands are evaluated, multiplied together and the value is returned
 (:> (* 5 4 3 2 1) "\n")
 ```
 
+#### New (`.`)
+
+##### Syntax
+
+```sll
+(. |# type id #|
+	|# field value 1 #|
+	|# field value 2 #|
+	|# field value 3 #|
+)
+```
+
+##### Return Value
+
+The new object
+
+##### Description
+
+TBD
+
+##### Example
+
+```sll
+(# float_type)
+(-- "type.sll")
+
+(= point_type (&:
+	float_type "x"
+	float_type "y"
+))
+
+(= p (. point_type -5 -4))
+(:> "Point: " p "\nUnique object: " (. (&:)) "\n")
+```
+
 #### Not Equal (`!=`)
 
 ##### Syntax
@@ -1265,7 +1300,7 @@ The given objects is shifted right by a given amount. For integers, floats and c
 (:> "Bit 16 divided by 4: " (>> 16 2) "\n")
 ```
 
-#### String Equal (`===`)
+#### Strict Equal (`===`)
 
 ##### Syntax
 
@@ -1291,7 +1326,7 @@ All of the expressions are evaluated sequentially. If a pair of expressions does
 )
 ```
 
-#### String Not Equal (`!==`)
+#### Strict Not Equal (`!==`)
 
 ##### Syntax
 
@@ -1315,6 +1350,40 @@ All of the expressions are evaluated sequentially. If a pair of expressions eval
 (? (!== var 5.0)
 	(:> "'var' should be a float with a value of 5!")
 )
+```
+
+#### Structure Declaration (`&:`)
+
+##### Syntax
+
+```sll
+(&:
+	|# type 1 #| |# field name 1 #|
+	|# type 2 #| |# field name 2 #|
+	|# type 3 #| |# field name 3 #|
+)
+```
+
+##### Return Value
+
+New type ID
+
+##### Description
+
+TBD
+
+##### Example
+
+```sll
+(# int_type)
+(-- "type.sll")
+
+(= point_type (&:
+	int_type "x"
+	int_type "y"
+))
+
+(:> "Point: " (. point_type 1 -2) "\n")
 ```
 
 #### Subtraction (`-`)

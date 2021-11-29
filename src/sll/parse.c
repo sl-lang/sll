@@ -244,16 +244,9 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 				o->dt.i=0;
 			}
 			else if (o->t==SLL_NODE_TYPE_ASSIGN){
+				o->dt.ac=ac;
 				if (ac<2){
 					o->t=SLL_NODE_TYPE_OPERATION_LIST;
-					o->dt.ac=ac;
-				}
-				else{
-					sll_node_t* a=o+1;
-					while (a->t==SLL_NODE_TYPE_NOP||a->t==SLL_NODE_TYPE_DEBUG_DATA||a->t==NODE_TYPE_CHANGE_STACK){
-						a=(a->t==NODE_TYPE_CHANGE_STACK?a->dt._p:a+1);
-					}
-					o->dt.ac=ac;
 				}
 			}
 			else if (o->t==SLL_NODE_TYPE_FUNC){

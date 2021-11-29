@@ -1523,14 +1523,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		},
 		0,
 		{
-			.l=sll_allocate(c_dt->idt.ill*sizeof(identifier_data_t))
+			.l=sll_allocate(c_dt->idt.ill*sizeof(void*))
 		},
 		&g_dt_lt,
 		&g_dt_rt
 	};
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		g_dt.it.s_im[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(identifier_data_t));
-		g_dt.rm.s[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(identifier_data_t));
+		g_dt.rm.s[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(void*));
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			(g_dt.it.s_im[i]+j)->v=SLL_MAX_VARIABLE_INDEX;
 			*(g_dt.rm.s[i]+j)=NULL;

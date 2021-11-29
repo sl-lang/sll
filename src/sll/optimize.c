@@ -1893,6 +1893,15 @@ _remove_cond:
 				for (sll_arg_count_t j=0;j<i;j++){
 					SLL_RELEASE(v[j]);
 				}
+				if (fl&OPTIMIZER_FLAG_ASSIGN){
+					sll_node_t* tmp=r+1;
+					while (tmp->t==SLL_NODE_TYPE_NOP||tmp->t==SLL_NODE_TYPE_DEBUG_DATA||tmp->t==NODE_TYPE_CHANGE_STACK){
+						tmp=(tmp->t==NODE_TYPE_CHANGE_STACK?tmp->dt._p:tmp+1);
+					}
+					if (tmp->t==SLL_NODE_TYPE_IDENTIFIER){
+						DISABLE_REMOVE_VARIABLE(tmp,o_dt);
+					}
+				}
 				l=r->dt.ac;
 				while (i<l){
 					o=_optimize(o,r,o_dt,(i<5?OPTIMIZER_FLAG_ARGUMENT:0));
@@ -2197,8 +2206,11 @@ static sll_node_t* _remap_indexes_merge_print(sll_node_t* o,sll_node_t* p,optimi
 							o->dt.id=*(o_dt->im.s[SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id));
 						}
 					}
+					o++;
 				}
-				o++;
+				else{
+					o=_remap_indexes_merge_print(o,r,o_dt,fn_m);
+				}
 				l--;
 				while (l){
 					l--;
@@ -2374,6 +2386,8 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 			*(c_dt->idt.s[i].dt+j-k)=*(c_dt->idt.s[i].dt+j);
 			if ((o_dt.it.s_im[i]+j)->rm){
 				k++;
+			}
+			else{
 			}
 		}
 		if (k){

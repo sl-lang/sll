@@ -113,8 +113,7 @@ static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
 		o->v[o->l]='\"';
 		o->v[o->l+1]=' ';
 		o->l+=2;
-		tmp.t=dt->dt[i].t;
-		switch (dt->dt[i].t){
+		switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
 			case SLL_OBJECT_TYPE_INT:
 				tmp.dt.i=*((sll_integer_t*)p);
 				p=(void*)(((uint64_t)p)+sizeof(sll_integer_t));
@@ -146,9 +145,10 @@ static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
 				p=(void*)(((uint64_t)p)+sizeof(sll_map_t));
 				break;
 			default:
-				p=_print_custom_type(p,dt->dt[i].t,o);
+				p=_print_custom_type(p,SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t),o);
 				continue;
 		}
+		tmp.t=SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t);
 		_object_to_string(&tmp,1,o);
 	}
 	sll_string_increase(o,1);
