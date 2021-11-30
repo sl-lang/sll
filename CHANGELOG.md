@@ -13,10 +13,6 @@
 
 - URL & socket APIs (Therefor invalidated [#66])
 
-### Removed
-
-- URL & socket APIs (Therefor invalidated [#66])
-
 ## [0.6.29] - 2021-11-28
 
 ### Added
@@ -1119,7 +1115,6 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#71]: https://github.com/sl-lang/sll/issues/71
 [#69]: https://github.com/sl-lang/sll/issues/69
 [#67]: https://github.com/sl-lang/sll/issues/67
-[#66]: https://github.com/sl-lang/sll/issues/66
 [#66]: https://github.com/sl-lang/sll/issues/66
 [#54]: https://github.com/sl-lang/sll/issues/54
 [#53]: https://github.com/sl-lang/sll/issues/53

@@ -2387,8 +2387,6 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 			if ((o_dt.it.s_im[i]+j)->rm){
 				k++;
 			}
-			else{
-			}
 		}
 		if (k){
 			c_dt->idt.s[i].l-=k;
