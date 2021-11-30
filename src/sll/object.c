@@ -179,7 +179,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 			fl|=SLL_OBJECT_FLAG_CONSTANT;
 			vv=~vv;
 		}
-		SLL_ASSERT(v>=0);
+		SLL_ASSERT(vv>=0);
 		n->dt[i].t=(vv>tt->l+SLL_MAX_OBJECT_TYPE-1?SLL_OBJECT_TYPE_INT:(sll_object_type_t)vv);
 		if (n->dt[i].t<=SLL_MAX_OBJECT_TYPE){
 			switch (n->dt[i].t){
