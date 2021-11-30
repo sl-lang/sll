@@ -2323,8 +2323,12 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 		.a_v=NULL,
 		.rm=0
 	};
-	SLL_CHECK_NO_MEMORY(o_dt.it.l_im);
-	SLL_CHECK_NO_MEMORY(o_dt.it.sc_vi);
+	if (c_dt->idt.ill){
+		SLL_CHECK_NO_MEMORY(o_dt.it.l_im);
+	}
+	if (c_dt->_n_sc_id){
+		SLL_CHECK_NO_MEMORY(o_dt.it.sc_vi);
+	}
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		o_dt.it.s_im[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(identifier_data_t));
 		if (c_dt->idt.s[i].l){
