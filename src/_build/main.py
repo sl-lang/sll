@@ -102,7 +102,7 @@ if ("--generate-api" in sys.argv):
 						if (e["type"]=="O"):
 							cf.write(f"\tconst sll_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n")
 						else:
-							cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n\tconst {TYPE_MAP[e['type']]}* {ALPHABET[i]}=sll_allocate({ALPHABET[i]}c*sizeof({TYPE_MAP[e['type']]}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tconst sll_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\tsll_deallocate((void*){ALPHABET[i]});\n\t\t\t"+err_c.replace(";",";\n\t\t\t")+f";\n\t\t}}\n\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t}}\n")
+							cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n\tconst {TYPE_MAP[e['type']]}* {ALPHABET[i]}=sll_allocate_stack({ALPHABET[i]}c*sizeof({TYPE_MAP[e['type']]}));\n\tSLL_CHECK_NO_MEMORY({ALPHABET[i]});\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tconst sll_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\tsll_deallocate((void*){ALPHABET[i]});\n\t\t\t"+err_c.replace(";",";\n\t\t\t")+f";\n\t\t}}\n\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t}}\n")
 							end=f"\tsll_deallocate((void*){ALPHABET[i]});\n"
 						pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
 					else:

@@ -12,7 +12,6 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/mman.h>
-#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
@@ -34,10 +33,11 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
 				if (!(o->l&7)){
 					o->dt=sll_reallocate(o->dt,(o->l+8)*sizeof(sll_string_t));
+					SLL_CHECK_NO_MEMORY(o->dt);
 				}
 				sll_string_t* s=o->dt+o->l;
 				o->l++;
-				sll_string_create(i+j,s);
+				SLL_CHECK_NO_MEMORY(sll_string_create(i+j,s));
 				sll_string_insert_pointer_length(bf,i,0,s);
 				sll_string_insert_pointer_length(SLL_CHAR(dt->d_name),j,i,s);
 			}
@@ -188,6 +188,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(voi
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
 	DIR* d=opendir((char*)fp);
 	sll_string_t* op=sll_allocate_stack(1);
+	SLL_CHECK_NO_MEMORY(op);
 	sll_array_length_t ol=0;
 	if (d){
 		struct dirent* dt;
@@ -196,21 +197,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 				continue;
 			}
 			if (!(ol&7)){
-				void* tmp=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
-				if (!tmp){
-					*o=sll_reallocate(op,ol*sizeof(sll_string_t));
-					closedir(d);
-					return ol-1;
-				}
-				op=tmp;
+				op=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
+				SLL_CHECK_NO_MEMORY(op);
 			}
-			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
-			sll_string_from_pointer_length(SLL_CHAR(dt->d_name),l,op+ol);
+			SLL_CHECK_NO_MEMORY(sll_string_from_pointer(SLL_CHAR(dt->d_name),op+ol));
 			ol++;
 		}
 		closedir(d);
 	}
 	*o=sll_reallocate(op,ol*sizeof(sll_string_t));
+	SLL_CHECK_NO_MEMORY(*o);
 	return ol;
 }
 
@@ -228,8 +224,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 		sll_allocate_stack(1),
 		0
 	};
+	SLL_CHECK_NO_MEMORY(dt.dt);
 	_list_dir_files(bf,l,&dt);
 	*o=sll_reallocate(dt.dt,dt.l*sizeof(sll_string_t));
+	SLL_CHECK_NO_MEMORY(*o);
 	return dt.l;
 }
 
@@ -282,69 +280,4 @@ __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 		}
 		tm=c-e;
 	}
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
-	SLL_INIT_STRING(o);
-	struct addrinfo ah;
-	sll_zero_memory(&ah,sizeof(struct addrinfo));
-	ah.ai_family=AF_UNSPEC;
-	ah.ai_socktype=SOCK_STREAM;
-	ah.ai_protocol=IPPROTO_TCP;
-	struct addrinfo* r=NULL;
-	char ps[6]={0,0,0,0,0,0};
-	uint8_t i=4;
-	do{
-		ps[i]=(p%10)+48;
-		i--;
-		p/=10;
-	} while (p);
-	if (getaddrinfo((char*)h->v,ps+i+1,&ah,&r)){
-		return 0;
-	}
-	int s=-1;
-	for (struct addrinfo* k=r;k;k=k->ai_next){
-		s=socket(k->ai_family,k->ai_socktype,k->ai_protocol);
-		if (s==-1){
-			freeaddrinfo(r);
-			return 0;
-		}
-		if (!connect(s,k->ai_addr,(int)k->ai_addrlen)){
-			break;
-		}
-		s=-1;
-	}
-	freeaddrinfo(r);
-	if (s==-1){
-		return 0;
-	}
-	if (send(s,in->v,in->l,0)==-1){
-		close(s);
-		return 0;
-	}
-	sll_string_create(0,o);
-	sll_char_t bf[4096];
-	int l=recv(s,bf,4096,0);
-	shutdown(s,SHUT_WR);
-	while (l){
-		if (l<0){
-			close(s);
-			return 0;
-		}
-		sll_string_increase(o,l);
-		sll_copy_data(bf,l,o->v+o->l);
-		o->l+=l;
-		l=recv(s,bf,4096,0);
-	};
-	close(s);
-	o->v[o->l]=0;
-	sll_string_calculate_checksum(o);
-	return 1;
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_socket_init(void){
 }

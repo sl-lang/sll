@@ -344,29 +344,4 @@ __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm);
 
 
 
-/**
- * \flags check_output func
- * \name sll_platform_socket_execute
- * \group platform
- * \desc Docs!
- * \arg const sll_string_t* h
- * \arg unsigned int p
- * \arg const sll_string_t* in
- * \arg sll_string_t* o
- * \ret sll_bool_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o);
-
-
-
-/**
- * \flags func
- * \name sll_platform_socket_init
- * \group platform
- * \desc Docs!
- */
-__SLL_EXTERNAL void sll_platform_socket_init(void);
-
-
-
 #endif

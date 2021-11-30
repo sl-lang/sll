@@ -1,5 +1,5 @@
-(# time sleep open close write platform argc argv get_ref_count list_dir format recursive_list_dir size parse read_url separator instruction_count lower_case upper_case title_case replace hash int_type float_type string_type array_type map_type map_key_type map_value_type stdout absolute sort flip_case)
-(? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "url.sll" "string.sll" "hash.sll" "types.sll" "sort.sll"))
+(# time sleep open close write platform argc argv get_ref_count list_dir format recursive_list_dir size parse separator instruction_count lower_case upper_case title_case replace hash int_type float_type string_type array_type map_type map_key_type map_value_type stdout absolute sort flip_case)
+(? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -94,7 +94,6 @@
 (:> "Map: ") (<- print_map map) (:> "\n")
 (:> "Map: " map " Keys: " (:: map map_key_type) " Values: " (:: map map_value_type) "\n")
 (:> "Parsed: " (<- parse "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}") "\n")
-; (:> "URL: " (<- read_url "GET" "example.com" "/" <> "") "\n")
 (= v 5.943)
 (:> "Round Down: " v " -> " (:: v int_type) "\n")
 (:> "€\n")

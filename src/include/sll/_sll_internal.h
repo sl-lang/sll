@@ -97,6 +97,12 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define _SLL_ASSERT_STRINGIFY_(x) #x
 #define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
 #define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"));
+#define SLL_CHECK_NO_MEMORY(x) \
+	do{ \
+		if (!(x)){ \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Out of Memory\n")); \
+		} \
+	} while (0)
 #ifdef DEBUG_BUILD
 #define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
 #define SLL_ASSERT(x) \

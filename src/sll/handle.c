@@ -16,6 +16,9 @@ __SLL_EXTERNAL void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t 
 	}
 	hl->dtl=hll;
 	hl->dt=sll_reallocate(hl->dt,hll*sizeof(sll_handle_descriptor_t*));
+	if (hll){
+		SLL_CHECK_NO_MEMORY(hl->dt);
+	}
 }
 
 
@@ -23,6 +26,7 @@ __SLL_EXTERNAL void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_handle_type_t sll_create_handle(sll_handle_list_t* hl,sll_handle_descriptor_t* hd){
 	hl->dtl++;
 	hl->dt=sll_reallocate(hl->dt,hl->dtl*sizeof(sll_handle_descriptor_t*));
+	SLL_CHECK_NO_MEMORY(hl->dt);
 	hd->nml=0;
 	hd->c=0;
 	while (hd->nm[hd->nml]){

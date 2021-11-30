@@ -36,9 +36,8 @@ static sll_bool_t _free_file(sll_handle_t h){
 			_file_fll--;
 		} while (_file_fll&&!(_file_fl+_file_fll-1));
 		if (_file_fll){
-			void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t*));
-			SLL_ASSERT(tmp);
-			_file_fl=tmp;
+			_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t*));
+			SLL_CHECK_NO_MEMORY(_file_fl);
 		}
 		else{
 			sll_deallocate(_file_fl);
@@ -112,14 +111,11 @@ __API_FUNC(file_open){
 		i++;
 	}
 	_file_fll++;
-	void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t));
-	if (!tmp){
-		sll_file_close(&f);
-		return;
-	}
-	_file_fl=tmp;
+	_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t));
+	SLL_CHECK_NO_MEMORY(_file_fl);
 _found_index:;
 	sll_file_t* n=sll_allocate(sizeof(sll_file_t));
+	SLL_CHECK_NO_MEMORY(n);
 	sll_copy_data((void*)(&f),sizeof(sll_file_t),(void*)n);
 	*(_file_fl+i)=n;
 	if (_file_ht==SLL_HANDLE_UNKNOWN_TYPE){
@@ -163,8 +159,8 @@ __API_FUNC(file_read){
 		SLL_UNIMPLEMENTED();
 	}
 	sll_string_length_t l=(sll_string_length_t)b;
-	sll_string_create(l,out);
-	sll_string_decrease(out,(sll_string_length_t)sll_file_read(f,out->v,l));
+	SLL_CHECK_NO_MEMORY(sll_string_create(l,out));
+	SLL_CHECK_NO_MEMORY(sll_string_decrease(out,(sll_string_length_t)sll_file_read(f,out->v,l)));
 	sll_string_calculate_checksum(out);
 }
 

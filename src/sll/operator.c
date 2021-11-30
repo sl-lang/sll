@@ -202,7 +202,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_ob
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=SLL_CREATE();
 			o->t=SLL_OBJECT_TYPE_STRING;
-			sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,1,&(o->dt.s));
+			SLL_CHECK_NO_MEMORY(sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,1,&(o->dt.s)));
 			return o;
 		}
 	}
@@ -210,7 +210,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_ob
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=SLL_CREATE();
 			o->t=SLL_OBJECT_TYPE_ARRAY;
-			sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,1,&(o->dt.a));
+			SLL_CHECK_NO_MEMORY(sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,1,&(o->dt.a)));
 			return o;
 		}
 	}
@@ -222,7 +222,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_ob
 			2,
 			l
 		};
-		sll_map_and_array(&(a->dt.m),&arr,&(o->dt.m));
+		SLL_CHECK_NO_MEMORY(sll_map_and_array(&(a->dt.m),&arr,&(o->dt.m)));
 		return o;
 	}
 	SLL_ACQUIRE(a);
@@ -236,7 +236,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(s
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(d)==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=SLL_CREATE();
 			o->t=SLL_OBJECT_TYPE_STRING;
-			sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,d->dt.i,&(o->dt.s));
+			SLL_CHECK_NO_MEMORY(sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,d->dt.i,&(o->dt.s)));
 			return o;
 		}
 	}
@@ -244,7 +244,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(s
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(d)==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=SLL_CREATE();
 			o->t=SLL_OBJECT_TYPE_ARRAY;
-			sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,d->dt.i,&(o->dt.a));
+			SLL_CHECK_NO_MEMORY(sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,d->dt.i,&(o->dt.a)));
 			return o;
 		}
 	}
@@ -256,7 +256,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(s
 			3,
 			l
 		};
-		sll_map_and_array(&(a->dt.m),&arr,&(o->dt.m));
+		SLL_CHECK_NO_MEMORY(sll_map_and_array(&(a->dt.m),&arr,&(o->dt.m)));
 		return o;
 	}
 	SLL_ACQUIRE(a);
@@ -300,7 +300,7 @@ _add_to_string:
 					sa=sb;
 					sb=tmp;
 				}
-				sll_string_join(&sa,&sb,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_join(&sa,&sb,&(o->dt.s)));
 				sll_free_string((!inv?&sa:&sb));
 				return o;
 			}
@@ -312,10 +312,10 @@ _add_to_array:
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
 				if (inv){
-					sll_array_push(&(b->dt.a),a,&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_push(&(b->dt.a),a,&(o->dt.a)));
 				}
 				else{
-					sll_array_unshift(&(b->dt.a),a,&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_unshift(&(b->dt.a),a,&(o->dt.a)));
 				}
 				return o;
 			}
@@ -327,7 +327,7 @@ _add_to_map:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_add(&(b->dt.m),a,sll_static_int[0],&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_add(&(b->dt.m),a,sll_static_int[0],&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_IH:
@@ -351,7 +351,7 @@ _add_to_map:
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_join(&sa,&sb,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_join(&sa,&sb,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
@@ -368,7 +368,7 @@ _add_to_map:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_join(&(a->dt.a),&(b->dt.a),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_join(&(a->dt.a),&(b->dt.a),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AH:
@@ -396,7 +396,7 @@ _add_to_map:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_join(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_join(&(a->dt.m),&(b->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -420,7 +420,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_and_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_and_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_AH:
@@ -434,7 +434,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_and(a,b->dt.a.v[i]);
 				}
@@ -446,7 +446,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(b->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(b->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(b->dt.a.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(a->dt.m.v[i]);
@@ -462,7 +462,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_and_char(&(b->dt.s),a->dt.c,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_and_char(&(b->dt.s),a->dt.c,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_CH:
@@ -471,42 +471,42 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_and(&(a->dt.s),&(b->dt.s),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_and(&(a->dt.s),&(b->dt.s),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_and,inv,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_and,inv,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_and_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_and_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_and_string(&(b->dt.m),&(a->dt.s),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_and_string(&(b->dt.m),&(a->dt.s),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_and(&(a->dt.a),&(b->dt.a),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_and(&(a->dt.a),&(b->dt.a),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_and_array(&(b->dt.m),&(a->dt.a),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_and_array(&(b->dt.m),&(a->dt.a),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HH:
@@ -515,7 +515,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_and(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_and(&(a->dt.m),&(b->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -610,7 +610,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 					}
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_from_length((sll_array_length_t)(a->dt.i),&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_from_length((sll_array_length_t)(a->dt.i),&(o->dt.a)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_IH:
@@ -627,7 +627,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_MAP;
-					sll_map_create(1,&(o->dt.m));
+					SLL_CHECK_NO_MEMORY(sll_map_create(1,&(o->dt.m)));
 					o->dt.m.v[0]=SLL_ACQUIRE_STATIC_INT(0);
 					o->dt.m.v[1]=a;
 					SLL_ACQUIRE(a);
@@ -640,7 +640,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_create(1,&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_create(1,&(o->dt.a)));
 					o->dt.a.v[0]=SLL_ACQUIRE_STATIC_INT(0);
 					return o;
 				}
@@ -652,7 +652,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_create(1,&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_create(1,&(o->dt.a)));
 					o->dt.a.v[0]=a;
 					SLL_ACQUIRE(a);
 					return o;
@@ -669,7 +669,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 					}
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_from_length((sll_array_length_t)(n),&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_from_length((sll_array_length_t)(n),&(o->dt.a)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_CI:
@@ -680,7 +680,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_STRING;
-					sll_string_from_char(a->dt.c,&(o->dt.s));
+					SLL_CHECK_NO_MEMORY(sll_string_from_char(a->dt.c,&(o->dt.s)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_SI:
@@ -697,21 +697,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_string_to_array(&(a->dt.s),&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_string_to_array(&(a->dt.s),&(o->dt.a)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_SM:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_MAP;
-					sll_string_to_map(&(a->dt.s),&(o->dt.m));
+					SLL_CHECK_NO_MEMORY(sll_string_to_map(&(a->dt.s),&(o->dt.m)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_SK:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_range(0,a->dt.s.l,1,&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_range(0,a->dt.s.l,1,&(o->dt.a)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_AI:
@@ -727,21 +727,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_STRING;
-					sll_string_from_data(a->dt.a.v,a->dt.a.l,&(o->dt.s));
+					SLL_CHECK_NO_MEMORY(sll_string_from_data(a->dt.a.v,a->dt.a.l,&(o->dt.s)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_AM:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_MAP;
-					sll_array_to_map(&(a->dt.a),&(o->dt.m));
+					SLL_CHECK_NO_MEMORY(sll_array_to_map(&(a->dt.a),&(o->dt.m)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_AK:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_range(0,a->dt.a.l,1,&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_range(0,a->dt.a.l,1,&(o->dt.a)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_HI:
@@ -754,7 +754,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_create(2,&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_create(2,&(o->dt.a)));
 					o->dt.a.v[0]=SLL_FROM_INT(a->dt.h.t);
 					o->dt.a.v[1]=SLL_FROM_INT(a->dt.h.h);
 					return o;
@@ -769,21 +769,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_map_to_array(&(a->dt.m),&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_map_to_array(&(a->dt.m),&(o->dt.a)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_MK:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_map_keys(&(a->dt.m),&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_map_keys(&(a->dt.m),&(o->dt.a)));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_MV:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_map_values(&(a->dt.m),&(o->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_map_values(&(a->dt.m),&(o->dt.a)));
 					return o;
 				}
 			default:
@@ -929,8 +929,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
 				sll_string_t str;
-				sll_string_from_char('1',&str);
-				sll_string_remove(&(a->dt.s),&str,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_from_char('1',&str));
+				SLL_CHECK_NO_MEMORY(sll_string_remove(&(a->dt.s),&str,&(o->dt.s)));
 				sll_free_string(&str);
 				return o;
 			}
@@ -938,7 +938,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_remove(&(a->dt.a),sll_static_int[1],&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_remove(&(a->dt.a),sll_static_int[1],&(o->dt.a)));
 				return o;
 			}
 		case SLL_OBJECT_TYPE_HANDLE:
@@ -978,7 +978,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_div(a,sll_static_char[b->dt.s.v[i]]);
 				}
@@ -994,7 +994,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_div(a,b->dt.a.v[i]);
 				}
@@ -1012,7 +1012,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(b->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(b->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=b->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -1049,7 +1049,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(a->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(a->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_div(sll_static_char[a->dt.s.v[i]],b);
 				}
@@ -1061,14 +1061,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_div,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_div,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_remove_string(&(b->dt.m),&(a->dt.s),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_remove_string(&(b->dt.m),&(a->dt.s),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HI:
@@ -1089,7 +1089,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(a->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(a->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -1101,21 +1101,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_remove_string(&(a->dt.m),&(b->dt.s),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_remove_string(&(a->dt.m),&(b->dt.s),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_remove_array(&(a->dt.m),&(b->dt.a),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_remove_array(&(a->dt.m),&(b->dt.a),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_remove_map(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_remove_map(&(a->dt.m),&(b->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -1141,21 +1141,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_clone(&(a->dt.s),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_clone(&(a->dt.s),&(o->dt.s)));
 				return o;
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_clone(&(a->dt.a),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_clone(&(a->dt.a),&(o->dt.a)));
 				return o;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_clone(&(a->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_clone(&(a->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -1294,7 +1294,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_floor_div(a,sll_static_char[b->dt.s.v[i]]);
 				}
@@ -1310,7 +1310,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_floor_div(a,b->dt.a.v[i]);
 				}
@@ -1328,7 +1328,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(b->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(b->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=b->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -1363,7 +1363,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(a->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(a->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_floor_div(sll_static_char[a->dt.s.v[i]],b);
 				}
@@ -1377,14 +1377,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_floor_div,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_floor_div,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_remove_string(&(b->dt.m),&(a->dt.s),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_remove_string(&(b->dt.m),&(a->dt.s),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HI:
@@ -1405,7 +1405,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(a->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(a->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -1417,21 +1417,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_remove_string(&(a->dt.m),&(b->dt.s),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_remove_string(&(a->dt.m),&(b->dt.s),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_remove_array(&(a->dt.m),&(b->dt.a),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_remove_array(&(a->dt.m),&(b->dt.a),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_remove_map(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_remove_map(&(a->dt.m),&(b->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -1454,14 +1454,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_join_char(&(a->dt.s),'1',&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_join_char(&(a->dt.s),'1',&(o->dt.s)));
 				return o;
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_push(&(a->dt.a),sll_static_int[1],&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_push(&(a->dt.a),sll_static_int[1],&(o->dt.a)));
 				return o;
 			}
 		case SLL_OBJECT_TYPE_HANDLE:
@@ -1470,7 +1470,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_add(&(a->dt.m),sll_static_int[1],sll_static_int[0],&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_add(&(a->dt.m),sll_static_int[1],sll_static_int[0],&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -1493,14 +1493,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_inv(&(a->dt.s),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_inv(&(a->dt.s),&(o->dt.s)));
 				return o;
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(a->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(a->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<a->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_inv(a->dt.a.v[i]);
 				}
@@ -1512,7 +1512,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(a->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(a->dt.m.l,&(o->dt.m)));
 				for (sll_array_length_t i=0;i<(a->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -1564,7 +1564,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_mod(a,sll_static_char[b->dt.s.v[i]]);
 				}
@@ -1579,7 +1579,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_mod(a,b->dt.a.v[i]);
 				}
@@ -1596,7 +1596,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(b->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(b->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=b->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -1612,7 +1612,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_split_char(&(b->dt.s),a->dt.c,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_split_char(&(b->dt.s),a->dt.c,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_CH:
@@ -1625,7 +1625,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(a->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(a->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_mod(sll_static_char[a->dt.s.v[i]],b);
 				}
@@ -1635,28 +1635,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_split_char(&(a->dt.s),b->dt.c,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_split_char(&(a->dt.s),b->dt.c,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_split(&(a->dt.s),&(b->dt.s),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_split(&(a->dt.s),&(b->dt.s),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_mod,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_mod,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_mod,0,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_mod,0,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_AI:
@@ -1668,7 +1668,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(a->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(a->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<a->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_mod(a->dt.a.v[i],b);
 				}
@@ -1678,21 +1678,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(b->dt.s),&(a->dt.a),sll_operator_mod,1,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(b->dt.s),&(a->dt.a),sll_operator_mod,1,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_op(&(a->dt.a),&(b->dt.a),sll_operator_mod,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_op(&(a->dt.a),&(b->dt.a),sll_operator_mod,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_array_op_map(&(a->dt.a),&(b->dt.m),sll_operator_mod,0,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_array_op_map(&(a->dt.a),&(b->dt.m),sll_operator_mod,0,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HI:
@@ -1710,7 +1710,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(a->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(a->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -1722,21 +1722,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_and_string(&(a->dt.m),&(b->dt.s),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_and_string(&(a->dt.m),&(b->dt.s),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_and_array(&(a->dt.m),&(b->dt.a),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_and_array(&(a->dt.m),&(b->dt.a),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_and(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_and(&(a->dt.m),&(b->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -1761,14 +1761,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_duplicate(&(b->dt.s),a->dt.i,0,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_duplicate(&(b->dt.s),a->dt.i,0,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_duplicate(&(b->dt.a),a->dt.i,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_duplicate(&(b->dt.a),a->dt.i,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_IH:
@@ -1786,7 +1786,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(m.l<<1);i+=2){
 					SLL_ACQUIRE(m.v[i]);
 					o->dt.m.v[i]=m.v[i];
@@ -1803,7 +1803,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)SLL_FLOAT_ROUND(SLL_FLOAT_ABSOLUTE(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)SLL_FLOAT_ROUND(SLL_FLOAT_ABSOLUTE(a->dt.f-n)*b->dt.s.l),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_FA:
@@ -1811,7 +1811,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)SLL_FLOAT_ROUND(SLL_FLOAT_ABSOLUTE(a->dt.f-n)*b->dt.a.l),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)SLL_FLOAT_ROUND(SLL_FLOAT_ABSOLUTE(a->dt.f-n)*b->dt.a.l),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_FH:
@@ -1822,14 +1822,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_duplicate(&(b->dt.s),a->dt.c,0,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_duplicate(&(b->dt.s),a->dt.c,0,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_CA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_duplicate(&(b->dt.a),a->dt.c,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_duplicate(&(b->dt.a),a->dt.c,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_CH:
@@ -1843,7 +1843,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_combinations(&sa,&sb,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_combinations(&sa,&sb,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
@@ -1855,14 +1855,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_combinations_string(&ab,&sa,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_combinations_string(&ab,&sa,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_duplicate(&(a->dt.s),b->dt.h.h,0,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_duplicate(&(a->dt.s),b->dt.h.h,0,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
@@ -1874,14 +1874,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_combinations(&aa,&ab,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_combinations(&aa,&ab,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_duplicate(&(a->dt.a),b->dt.h.h,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_duplicate(&(a->dt.a),b->dt.h.h,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_HH:
@@ -1890,7 +1890,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_and(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_and(&(a->dt.m),&(b->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -1914,7 +1914,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_or_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_or_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_AH:
@@ -1928,7 +1928,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_or(a,b->dt.a.v[i]);
 				}
@@ -1940,7 +1940,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(b->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(b->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(b->dt.a.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(a->dt.m.v[i]);
@@ -1956,7 +1956,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_or_char(&(b->dt.s),a->dt.c,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_or_char(&(b->dt.s),a->dt.c,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_CH:
@@ -1965,42 +1965,42 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_or(&(a->dt.s),&(b->dt.s),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_or(&(a->dt.s),&(b->dt.s),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_or,inv,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_or,inv,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_or_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_or_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_add_string(&(b->dt.m),&(a->dt.s),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_add_string(&(b->dt.m),&(a->dt.s),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_or(&(a->dt.a),&(b->dt.a),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_or(&(a->dt.a),&(b->dt.a),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_add_array(&(b->dt.m),&(a->dt.a),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_add_array(&(b->dt.m),&(a->dt.a),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HH:
@@ -2009,7 +2009,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_join(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_join(&(a->dt.m),&(b->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -2039,7 +2039,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_shl(a,sll_static_char[b->dt.s.v[i]]);
 				}
@@ -2055,7 +2055,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_shl(a,b->dt.a.v[i]);
 				}
@@ -2073,7 +2073,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(b->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(b->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=b->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -2101,98 +2101,98 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),b->dt.i,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_shift(&(a->dt.s),b->dt.i,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SF:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),SLL_FLOAT_ROUND(a->dt.f),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_shift(&(a->dt.s),SLL_FLOAT_ROUND(a->dt.f),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SC:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),b->dt.c,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_shift(&(a->dt.s),b->dt.c,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_op(&(a->dt.s),&(b->dt.s),sll_operator_shl,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_op(&(a->dt.s),&(b->dt.s),sll_operator_shl,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_shl,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_shl,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),((sll_integer_t)(b->dt.h.h)),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_shift(&(a->dt.s),((sll_integer_t)(b->dt.h.h)),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_shl,0,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_shl,0,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_AI:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),b->dt.i,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_resize(&(a->dt.a),b->dt.i,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AF:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),SLL_FLOAT_ROUND(a->dt.f),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_resize(&(a->dt.a),SLL_FLOAT_ROUND(a->dt.f),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AC:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),b->dt.c,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_resize(&(a->dt.a),b->dt.c,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(b->dt.s),&(a->dt.a),sll_operator_shl,1,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(b->dt.s),&(a->dt.a),sll_operator_shl,1,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_op(&(a->dt.a),&(b->dt.a),sll_operator_shl,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_op(&(a->dt.a),&(b->dt.a),sll_operator_shl,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),b->dt.h.h,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_resize(&(a->dt.a),b->dt.h.h,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_array_op_map(&(a->dt.a),&(b->dt.m),sll_operator_shl,0,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_array_op_map(&(a->dt.a),&(b->dt.m),sll_operator_shl,0,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HI:
@@ -2213,7 +2213,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(a->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(a->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -2225,21 +2225,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_string_op_map(&(b->dt.s),&(a->dt.m),sll_operator_shl,1,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_string_op_map(&(b->dt.s),&(a->dt.m),sll_operator_shl,1,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_array_op_map(&(b->dt.a),&(a->dt.m),sll_operator_shl,1,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_array_op_map(&(b->dt.a),&(a->dt.m),sll_operator_shl,1,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_op(&(a->dt.m),&(b->dt.m),sll_operator_shl,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_op(&(a->dt.m),&(b->dt.m),sll_operator_shl,&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -2268,7 +2268,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_shr(a,sll_static_char[b->dt.s.v[i]]);
 				}
@@ -2284,7 +2284,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_shr(a,b->dt.a.v[i]);
 				}
@@ -2302,7 +2302,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(b->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(b->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=b->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -2330,98 +2330,98 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),-b->dt.i,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_shift(&(a->dt.s),-b->dt.i,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SF:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),-SLL_FLOAT_ROUND(a->dt.f),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_shift(&(a->dt.s),-SLL_FLOAT_ROUND(a->dt.f),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SC:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),-b->dt.c,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_shift(&(a->dt.s),-b->dt.c,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_op(&(a->dt.s),&(b->dt.s),sll_operator_shr,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_op(&(a->dt.s),&(b->dt.s),sll_operator_shr,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_shr,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_shr,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),-((sll_integer_t)(b->dt.h.h)),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_shift(&(a->dt.s),-((sll_integer_t)(b->dt.h.h)),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_shr,0,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_shr,0,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_AI:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),-b->dt.i,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_resize(&(a->dt.a),-b->dt.i,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AF:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),-SLL_FLOAT_ROUND(a->dt.f),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_resize(&(a->dt.a),-SLL_FLOAT_ROUND(a->dt.f),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AC:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),-b->dt.c,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_resize(&(a->dt.a),-b->dt.c,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(b->dt.s),&(a->dt.a),sll_operator_shr,1,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(b->dt.s),&(a->dt.a),sll_operator_shr,1,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_op(&(a->dt.a),&(b->dt.a),sll_operator_shr,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_op(&(a->dt.a),&(b->dt.a),sll_operator_shr,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),-((sll_integer_t)(b->dt.h.h)),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_resize(&(a->dt.a),-((sll_integer_t)(b->dt.h.h)),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_array_op_map(&(a->dt.a),&(b->dt.m),sll_operator_shr,0,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_array_op_map(&(a->dt.a),&(b->dt.m),sll_operator_shr,0,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HI:
@@ -2442,7 +2442,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(a->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(a->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(o->dt.m.v[i]);
@@ -2454,21 +2454,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_string_op_map(&(b->dt.s),&(a->dt.m),sll_operator_shr,1,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_string_op_map(&(b->dt.s),&(a->dt.m),sll_operator_shr,1,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_array_op_map(&(b->dt.a),&(a->dt.m),sll_operator_shr,1,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_array_op_map(&(b->dt.a),&(a->dt.m),sll_operator_shr,1,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_op(&(a->dt.m),&(b->dt.m),sll_operator_shr,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_op(&(a->dt.m),&(b->dt.m),sll_operator_shr,&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -2511,10 +2511,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 		sll_object_t* o=SLL_CREATE();
 		o->t=SLL_OBJECT_TYPE_ARRAY;
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_ARRAY){
-			sll_array_remove_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l,&(o->dt.a));
+			SLL_CHECK_NO_MEMORY(sll_array_remove_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l,&(o->dt.a)));
 		}
 		else{
-			sll_array_remove(&(a->dt.a),b,&(o->dt.a));
+			SLL_CHECK_NO_MEMORY(sll_array_remove(&(a->dt.a),b,&(o->dt.a)));
 		}
 		return o;
 	}
@@ -2542,7 +2542,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(as.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(as.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<as.l;i++){
 					o->dt.a.v[i]=sll_operator_sub(a,sll_static_char[as.v[i]]);
 				}
@@ -2559,7 +2559,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(ab.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(ab.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<ab.l;i++){
 					o->dt.a.v[i]=sll_operator_sub(a,ab.v[i]);
 				}
@@ -2578,7 +2578,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(m.l,&(o->dt.m)));
 				for (sll_array_length_t i=0;i<(m.l<<1);i+=2){
 					SLL_ACQUIRE(m.v[i]);
 					o->dt.m.v[i]=m.v[i];
@@ -2612,7 +2612,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 				}
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(a->dt.s.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(a->dt.s.l,&(o->dt.a)));
 				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
 					o->dt.a.v[i]=sll_operator_sub(sll_static_char[a->dt.s.v[i]],b);
 				}
@@ -2622,21 +2622,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_remove(&(a->dt.s),&(b->dt.s),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_remove(&(a->dt.s),&(b->dt.s),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_sub,0,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_sub,0,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_sub,0,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_sub,0,&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HI:
@@ -2668,7 +2668,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_xor_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_xor_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_AH:
@@ -2682,7 +2682,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(b->dt.a.l,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_create(b->dt.a.l,&(o->dt.a)));
 				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
 					o->dt.a.v[i]=sll_operator_xor(a,b->dt.a.v[i]);
 				}
@@ -2694,7 +2694,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_create(b->dt.m.l,&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_create(b->dt.m.l,&(o->dt.m)));
 				for (sll_map_length_t i=0;i<(b->dt.a.l<<1);i+=2){
 					o->dt.m.v[i]=a->dt.m.v[i];
 					SLL_ACQUIRE(a->dt.m.v[i]);
@@ -2710,7 +2710,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_xor_char(&(b->dt.s),a->dt.c,&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_xor_char(&(b->dt.s),a->dt.c,&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_CH:
@@ -2719,42 +2719,42 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_xor(&(a->dt.s),&(b->dt.s),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_xor(&(a->dt.s),&(b->dt.s),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_xor,inv,&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_xor,inv,&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_xor_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s));
+				SLL_CHECK_NO_MEMORY(sll_string_xor_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s)));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_add_string(&(b->dt.m),&(a->dt.s),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_add_string(&(b->dt.m),&(a->dt.s),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_xor(&(a->dt.a),&(b->dt.a),&(o->dt.a));
+				SLL_CHECK_NO_MEMORY(sll_array_xor(&(a->dt.a),&(b->dt.a),&(o->dt.a)));
 				return o;
 			}
 		case COMBINED_TYPE_AM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_add_array(&(b->dt.m),&(a->dt.a),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_add_array(&(b->dt.m),&(a->dt.a),&(o->dt.m)));
 				return o;
 			}
 		case COMBINED_TYPE_HH:
@@ -2763,7 +2763,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				sll_map_join(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				SLL_CHECK_NO_MEMORY(sll_map_join(&(a->dt.m),&(b->dt.m),&(o->dt.m)));
 				return o;
 			}
 		default:

@@ -1,7 +1,5 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/file.h>
@@ -66,6 +64,7 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
 				if (!(o->l&7)){
 					o->dt=sll_reallocate(o->dt,(o->l+8)*sizeof(sll_string_t));
+					SLL_CHECK_NO_MEMORY(o->dt);
 				}
 				sll_string_t* s=o->dt+o->l;
 				o->l++;
@@ -239,6 +238,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 	bf[fpl]='*';
 	bf[fpl+1]=0;
 	sll_string_t* op=sll_allocate_stack(1);
+	SLL_CHECK_NO_MEMORY(op);
 	sll_array_length_t ol=0;
 	WIN32_FIND_DATAA dt;
 	HANDLE fh=FindFirstFileA(bf,&dt);
@@ -248,13 +248,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 				continue;
 			}
 			if (!(ol&7)){
-				void* tmp=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
-				if (!tmp){
-					*o=sll_reallocate(op,ol*sizeof(sll_string_t));
-					FindClose(fh);
-					return ol-1;
-				}
-				op=tmp;
+				op=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
+				SLL_CHECK_NO_MEMORY(op);
 			}
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
 			sll_string_from_pointer_length(dt.cFileName,l,op+ol);
@@ -263,6 +258,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 		FindClose(fh);
 	}
 	*o=sll_reallocate(op,ol*sizeof(sll_string_t));
+	SLL_CHECK_NO_MEMORY(*o);
 	return ol;
 }
 
@@ -280,8 +276,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 		sll_allocate_stack(1),
 		0
 	};
+	SLL_CHECK_NO_MEMORY(dt.dt);
 	_list_dir_files(bf,i,&dt);
 	*o=sll_reallocate(dt.dt,dt.l*sizeof(sll_string_t));
+	SLL_CHECK_NO_MEMORY(*o);
 	return dt.l;
 }
 
@@ -336,73 +334,4 @@ __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 		}
 		tm=c-e;
 	}
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_execute(const sll_string_t* h,unsigned int p,const sll_string_t* in,sll_string_t* o){
-	sll_string_create(0,o);
-	struct addrinfo ah;
-	sll_zero_memory(&ah,sizeof(struct addrinfo));
-	ah.ai_family=AF_UNSPEC;
-	ah.ai_socktype=SOCK_STREAM;
-	ah.ai_protocol=IPPROTO_TCP;
-	struct addrinfo* r=NULL;
-	char ps[6]={0,0,0,0,0,0};
-	uint8_t i=4;
-	do{
-		ps[i]=(p%10)+48;
-		i--;
-		p/=10;
-	} while (p);
-	if (getaddrinfo(h->v,ps+i+1,&ah,&r)){
-		return 0;
-	}
-	SOCKET s=INVALID_SOCKET;
-	for (struct addrinfo* k=r;k;k=k->ai_next){
-		s=socket(k->ai_family,k->ai_socktype,k->ai_protocol);
-		if (s==INVALID_SOCKET){
-			freeaddrinfo(r);
-			return 0;
-		}
-		if (connect(s,k->ai_addr,(int)k->ai_addrlen)!=SOCKET_ERROR){
-			break;
-		}
-		s=INVALID_SOCKET;
-	}
-	freeaddrinfo(r);
-	if (s==INVALID_SOCKET){
-		return 0;
-	}
-	if (send(s,in->v,in->l,0)==SOCKET_ERROR){
-		closesocket(s);
-		return 0;
-	}
-	sll_char_t bf[4096];
-	int l=recv(s,bf,4096,0);
-	shutdown(s,SD_SEND);
-	while (l){
-		if (l<0){
-			closesocket(s);
-			return 0;
-		}
-		sll_string_increase(o,l);
-		sll_copy_data(bf,l,o->v+o->l);
-		o->l+=l;
-		l=recv(s,bf,4096,0);
-	};
-	closesocket(s);
-	o->v[o->l]=0;
-	sll_string_calculate_checksum(o);
-	return 1;
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_socket_init(void){
-	WSADATA dt;
-	if (WSAStartup(MAKEWORD(2,2),&dt)){
-		SLL_UNIMPLEMENTED();
-	}
-	sll_register_cleanup(WSACleanup);
 }

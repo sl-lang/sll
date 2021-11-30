@@ -4,9 +4,14 @@
 
 ### Added
 
+- Added error handling for memory allocation ([#83])
 - Finished custom object type API ([#72])
 - Implemented `SLL_OBJECT_GET_TYPE_MASK`
 - Memory structures can have constant fields (denoted by inverting (`(~)`) the type) ([#99])
+
+### Removed
+
+- URL & socket APIs (Therefor invalidated [#66])
 
 ## [0.6.29] - 2021-11-28
 
@@ -1097,6 +1102,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#86]: https://github.com/sl-lang/sll/issues/86
 [#85]: https://github.com/sl-lang/sll/issues/85
 [#84]: https://github.com/sl-lang/sll/issues/84
+[#83]: https://github.com/sl-lang/sll/issues/83
 [#82]: https://github.com/sl-lang/sll/issues/82
 [#81]: https://github.com/sl-lang/sll/issues/81
 [#80]: https://github.com/sl-lang/sll/issues/80
@@ -1109,6 +1115,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#71]: https://github.com/sl-lang/sll/issues/71
 [#69]: https://github.com/sl-lang/sll/issues/69
 [#67]: https://github.com/sl-lang/sll/issues/67
+[#66]: https://github.com/sl-lang/sll/issues/66
 [#54]: https://github.com/sl-lang/sll/issues/54
 [#53]: https://github.com/sl-lang/sll/issues/53
 [#52]: https://github.com/sl-lang/sll/issues/52

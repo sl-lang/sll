@@ -434,6 +434,7 @@ static const sll_node_t* _generate_inline_function(const sll_node_t* o,assembly_
 		sll_allocate((g_dt->rt->sz+1)*sizeof(assembly_instruction_label_t)),
 		g_dt->rt->sz+1
 	};
+	SLL_CHECK_NO_MEMORY(rt.dt);
 	for (uint32_t i=0;i<g_dt->rt->sz;i++){
 		*(rt.dt+i)=*(g_dt->rt->dt+i);
 	}
@@ -1200,6 +1201,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				o=_generate_on_stack(o+1,g_dt);
 				l=(l-1)>>1;
 				object_label_t* m=sll_allocate((l+1)*sizeof(object_label_t));
+				SLL_CHECK_NO_MEMORY(m);
 				sll_arg_count_t i=0;
 				while (l){
 					l--;
@@ -1254,6 +1256,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					sll_allocate((g_dt->lt->sz+1)*sizeof(loop_t)),
 					g_dt->lt->sz+1
 				};
+				SLL_CHECK_NO_MEMORY(lt.dt);
 				for (uint32_t i=0;i<g_dt->lt->sz;i++){
 					*(lt.dt+i)=*(g_dt->lt->dt+i);
 				}
@@ -1264,7 +1267,8 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				(lt.dt+lt.sz-1)->s=c;
 				(lt.dt+lt.sz-1)->e=e;
-				uint64_t* v_st=sll_zero_allocate(((g_dt->a_dt->vc>>6)+1)*sizeof(uint64_t));
+				uint64_t* v_st=sll_zero_allocate_stack(((g_dt->a_dt->vc>>6)+1)*sizeof(uint64_t));
+				SLL_CHECK_NO_MEMORY(v_st);
 				for (sll_arg_count_t i=1;i<l;i++){
 					o=_mark_loop_delete(o,g_dt,v_st,sc);
 				}
@@ -1306,6 +1310,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					sll_allocate((g_dt->lt->sz+1)*sizeof(loop_t)),
 					g_dt->lt->sz+1
 				};
+				SLL_CHECK_NO_MEMORY(lt.dt);
 				for (uint32_t i=0;i<g_dt->lt->sz;i++){
 					*(lt.dt+i)=*(g_dt->lt->dt+i);
 				}
@@ -1316,7 +1321,8 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				(lt.dt+lt.sz-1)->s=c;
 				(lt.dt+lt.sz-1)->e=e;
-				uint64_t* v_st=sll_zero_allocate(((g_dt->a_dt->vc>>6)+1)*sizeof(uint64_t));
+				uint64_t* v_st=sll_zero_allocate_stack(((g_dt->a_dt->vc>>6)+1)*sizeof(uint64_t));
+				SLL_CHECK_NO_MEMORY(v_st);
 				o=_mark_loop_delete(cnd,g_dt,v_st,o->dt.l.sc);
 				l-=2;
 				const sll_node_t* j=o;
@@ -1500,8 +1506,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	o->vc=0;
 	o->st.l=c_dt->st.l;
 	o->st.dt=sll_allocate(o->st.l*sizeof(sll_string_t));
+	SLL_CHECK_NO_MEMORY(o->st.dt);
 	for (sll_string_index_t i=0;i<o->st.l;i++){
-		sll_string_clone(c_dt->st.dt+i,o->st.dt+i);
+		SLL_CHECK_NO_MEMORY(sll_string_clone(c_dt->st.dt+i,o->st.dt+i));
 	}
 	loop_table_t g_dt_lt={
 		NULL,
@@ -1528,9 +1535,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		&g_dt_lt,
 		&g_dt_rt
 	};
+	SLL_CHECK_NO_MEMORY(g_dt.it.l_im);
+	SLL_CHECK_NO_MEMORY(g_dt.it.sc_vi);
+	SLL_CHECK_NO_MEMORY(g_dt.rm.l);
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		g_dt.it.s_im[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(identifier_data_t));
 		g_dt.rm.s[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(void*));
+		if (c_dt->idt.s[i].l){
+			SLL_CHECK_NO_MEMORY(g_dt.it.s_im[i]);
+			SLL_CHECK_NO_MEMORY(g_dt.rm.s[i]);
+		}
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			(g_dt.it.s_im[i]+j)->v=SLL_MAX_VARIABLE_INDEX;
 			*(g_dt.rm.s[i]+j)=NULL;
@@ -1576,6 +1590,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	o->ft.l=c_dt->ft.l;
 	o->ft.dt=sll_allocate(c_dt->ft.l*sizeof(sll_instruction_index_t));
 	g_dt_rt.dt=sll_allocate(sizeof(assembly_instruction_label_t));
+	SLL_CHECK_NO_MEMORY(o->ft.dt);
+	SLL_CHECK_NO_MEMORY(g_dt_rt.dt);
 	*(g_dt_rt.dt)=MAX_ASSEMBLY_INSTRUCTION_LABEL;
 	g_dt_rt.sz=1;
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
@@ -1825,14 +1841,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	}
 	strint_map_data_t sm={
 		(o->st.l>>6)+1,
-		sll_allocate(((o->st.l>>6)+1)*sizeof(uint64_t))
+		sll_allocate_stack(((o->st.l>>6)+1)*sizeof(uint64_t))
 	};
+	SLL_CHECK_NO_MEMORY(sm.m);
 	for (sll_string_index_t i=0;i<sm.ml;i++){
 		*(sm.m+i)=0;
 	}
 	ai=o->h;
 	sll_assembly_instruction_t* s=ai;
-	sll_instruction_index_t* lbl=sll_allocate(g_dt.n_lbl*sizeof(sll_instruction_index_t));
+	sll_instruction_index_t* lbl=sll_allocate_stack(g_dt.n_lbl*sizeof(sll_instruction_index_t));
+	SLL_CHECK_NO_MEMORY(lbl);
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
 		if (s->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP){
 _handle_nop:;
@@ -1866,6 +1884,7 @@ _handle_nop:;
 		}
 	}
 	sm.im=sll_allocate(o->st.l*sizeof(sll_string_t*));
+	SLL_CHECK_NO_MEMORY(sm.im);
 	sll_string_index_t k=0;
 	sll_string_index_t l=0;
 	for (sll_string_index_t i=0;i<sm.ml;i++){
@@ -1893,6 +1912,7 @@ _handle_nop:;
 	if (l){
 		o->st.l-=l;
 		o->st.dt=sll_reallocate(o->st.dt,o->st.l*sizeof(sll_string_t));
+		SLL_CHECK_NO_MEMORY(o->st.dt);
 	}
 	ai=o->h;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){

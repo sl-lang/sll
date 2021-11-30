@@ -116,7 +116,8 @@ static sll_node_t* _update_strings(sll_node_t* o,sll_string_index_t* sm){
 
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	uint32_t ml=(c_dt->st.l>>6)+1;
-	uint64_t* m=sll_zero_allocate(ml*sizeof(uint64_t));
+	uint64_t* m=sll_zero_allocate_stack(ml*sizeof(uint64_t));
+	SLL_CHECK_NO_MEMORY(m);
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_identifier_list_t* l=c_dt->idt.s+i;
 		for (sll_identifier_list_length_t j=0;j<l->l;j++){
@@ -127,7 +128,8 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		*(m+((c_dt->idt.il+i)->i>>6))|=1ull<<((c_dt->idt.il+i)->i&63);
 	}
 	_mark_strings(c_dt->h,m);
-	sll_string_index_t* sm=sll_allocate(c_dt->st.l*sizeof(sll_string_index_t));
+	sll_string_index_t* sm=sll_allocate_stack(c_dt->st.l*sizeof(sll_string_index_t));
+	SLL_CHECK_NO_MEMORY(sm);
 	uint32_t k=0;
 	uint32_t l=0;
 	for (uint32_t i=0;i<ml;i++){
@@ -155,6 +157,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	if (l){
 		c_dt->st.l-=l;
 		c_dt->st.dt=sll_reallocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
+		SLL_CHECK_NO_MEMORY(c_dt->st.dt);
 		for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 			sll_identifier_list_t* e=c_dt->idt.s+i;
 			for (sll_identifier_list_length_t j=0;j<e->l;j++){

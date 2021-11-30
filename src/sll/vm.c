@@ -204,7 +204,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_ARRAY;
 					sll_array_t* a=&(tos->dt.a);
-					sll_array_create(ai->dt.al,a);
+					SLL_CHECK_NO_MEMORY(sll_array_create(ai->dt.al,a));
 					si-=ai->dt.al;
 					for (sll_array_length_t i=0;i<ai->dt.al;i++){
 						a->v[i]=*(s+si+i);
@@ -221,7 +221,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 				{
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_create(1,&(tos->dt.a));
+					SLL_CHECK_NO_MEMORY(sll_array_create(1,&(tos->dt.a)));
 					tos->dt.a.v[0]=*(s+si-1);
 					*(s+si-1)=tos;
 					break;
@@ -231,7 +231,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_MAP;
 					sll_map_t* m=&(tos->dt.m);
-					sll_map_create((ai->dt.ml+1)>>1,m);
+					SLL_CHECK_NO_MEMORY(sll_map_create((ai->dt.ml+1)>>1,m));
 					si-=ai->dt.ml;
 					for (sll_map_length_t i=0;i<ai->dt.ml;i++){
 						m->v[i]=*(s+si+i);

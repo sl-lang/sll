@@ -1,3 +1,0 @@
-(= read_url (... "url_execute_request"))
-
-(## read_url)

@@ -828,40 +828,6 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_url_execute_request __SLL_CHECK_OUTPUT sll_object_t*
-#define __SLL_API_ARGS_sll_api_url_execute_request const sll_string_t* a,const sll_string_t* b,const sll_string_t* c,const sll_map_t* d,const sll_string_t* e
-/**
- * \flags func optimizable
- * \name sll_api_url_execute_request
- * \group url-api
- * \desc Docs!
- * \arg const sll_string_t* a -> 
- * \arg const sll_string_t* b -> 
- * \arg const sll_string_t* c -> 
- * \arg const sll_map_t* d -> 
- * \arg const sll_string_t* e -> 
- * \ret sll_object_t*
- */
-/**
- * \flags check_output func optimizable
- * \name sll_api_url_execute_request_raw
- * \group raw-api
- * \subgroup raw-api-url-api
- * \desc Wrapper function for :sll_api_url_execute_request:
- * \arg const sll_object_t*const* al -> Arguments
- * \arg sll_arg_count_t all -> Argument count
- * \ret sll_object_t* -> The return value of the function
- */
-/**
- * \flags subgroup
- * \name URL
- * \group raw-api
- * \subgroup raw-api-url-api
- * \desc Docs!
- */
-
-
-
 #define __SLL_API_TYPE_sll_api_util_instruction_count __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_util_instruction_count void
 /**

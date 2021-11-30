@@ -54,7 +54,8 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 	sll_char_t* sym=NULL;
 	sll_char_t* sp=NULL;
 	if (e->t==SLL_ERROR_UNKNOWN_SYMBOL||e->t==SLL_ERROR_UNKNOWN_IDENTIFIER){
-		sym=sll_allocate((oe-os+1)*sizeof(sll_char_t));
+		sym=sll_allocate_stack((oe-os+1)*sizeof(sll_char_t));
+		SLL_CHECK_NO_MEMORY(sym);
 		sp=sym;
 	}
 	while (c!='\n'&&c!='\r'&&c!=SLL_END_OF_DATA){
