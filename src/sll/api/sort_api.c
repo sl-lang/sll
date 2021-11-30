@@ -39,7 +39,7 @@ __API_FUNC(sort_sort){
 		SLL_INIT_ARRAY(out);
 		return;
 	}
-	SLL_CHECK_NO_MEMORY(sll_array_create(a->l,out));
+	sll_array_create(a->l,out);
 	if (a->l==1){
 		out->v[0]=a->v[0];
 		SLL_ACQUIRE(a->v[0]);

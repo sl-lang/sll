@@ -1,4 +1,3 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/operator.h>
@@ -79,14 +78,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 
 __SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* o){
 	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		SLL_CHECK_NO_MEMORY(sll_string_from_pointer(va_arg(*(va->dt.c),const sll_char_t*),o));
+		sll_string_from_pointer(va_arg(*(va->dt.c),const sll_char_t*),o);
 	}
 	else if (!va->dt.sll.l){
-		SLL_CHECK_NO_MEMORY(sll_string_create(0,o));
+		sll_string_create(0,o);
 	}
 	else{
 		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		SLL_CHECK_NO_MEMORY(sll_string_clone(&(n->dt.s),o));
+		sll_string_clone(&(n->dt.s),o);
 		SLL_RELEASE(n);
 		va->dt.sll.p++;
 		va->dt.sll.l--;

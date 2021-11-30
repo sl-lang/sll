@@ -99,7 +99,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open_descriptor(const sll_
 		return 0;
 	}
 	*((sll_file_descriptor_t*)(&(o->dt.fl.fd)))=fd;
-	SLL_CHECK_NO_MEMORY(sll_string_from_pointer(nm,(sll_string_t*)(&(o->dt.fl.nm))));
+	sll_string_from_pointer(nm,(sll_string_t*)(&(o->dt.fl.nm)));
 	*((sll_file_flags_t*)(&(o->f)))=f;
 	o->_l_num=0;
 	o->_l_off=0;
@@ -341,7 +341,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 		}
 	};
 	sll_string_t str;
-	SLL_CHECK_NO_MEMORY(sll_string_format_list(t,sll_string_length_unaligned(t),&dt,&str));
+	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,&str);
 	va_end(va);
 	sll_size_t o=sll_file_write(f,str.v,str.l);
 	sll_free_string(&str);

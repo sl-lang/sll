@@ -88,11 +88,11 @@ __SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_cha
 
 __API_FUNC(path_absolute){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		SLL_CHECK_NO_MEMORY(sll_string_clone(a,out));
+		sll_string_clone(a,out);
 		return;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	SLL_CHECK_NO_MEMORY(sll_string_from_pointer_length(bf,sll_path_absolute(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH),out));
+	sll_string_from_pointer_length(bf,sll_path_absolute(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 }
 
 
@@ -108,11 +108,11 @@ __API_FUNC(path_exists){
 
 __API_FUNC(path_get_cwd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		SLL_CHECK_NO_MEMORY(sll_string_create(0,out));
+		sll_string_create(0,out);
 		return;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	SLL_CHECK_NO_MEMORY(sll_string_from_pointer_length(bf,sll_platform_get_current_working_directory(bf,SLL_API_MAX_FILE_PATH_LENGTH),out));
+	sll_string_from_pointer_length(bf,sll_platform_get_current_working_directory(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 }
 
 
@@ -128,14 +128,14 @@ __API_FUNC(path_is_dir){
 
 __API_FUNC(path_join){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		SLL_CHECK_NO_MEMORY(sll_string_create(0,out));
+		sll_string_create(0,out);
 		return;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
 	if (ac){
 		if ((*a)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
-			SLL_CHECK_NO_MEMORY(sll_string_create(0,out));
+			sll_string_create(0,out);
 			return;
 		}
 		i=(*a)->l;
@@ -148,7 +148,7 @@ __API_FUNC(path_join){
 				i++;
 			}
 			if ((*a)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
-				SLL_CHECK_NO_MEMORY(sll_string_create(0,out));
+				sll_string_create(0,out);
 				return;
 			}
 			sll_copy_data((*a)->v,(*a)->l,bf+i);
@@ -157,7 +157,7 @@ __API_FUNC(path_join){
 			a++;
 		}
 	}
-	SLL_CHECK_NO_MEMORY(sll_string_from_pointer_length(bf,i,out));
+	sll_string_from_pointer_length(bf,i,out);
 }
 
 
@@ -169,7 +169,7 @@ __API_FUNC(path_list_dir){
 	}
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);
-	SLL_CHECK_NO_MEMORY(sll_array_create(l,out));
+	sll_array_create(l,out);
 	for (sll_array_length_t i=0;i<l;i++){
 		sll_object_t* n=SLL_CREATE();
 		n->t=SLL_OBJECT_TYPE_STRING;
@@ -188,7 +188,7 @@ __API_FUNC(path_recursive_list_dir){
 	}
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory_recursive(a->v,&dt);
-	SLL_CHECK_NO_MEMORY(sll_array_create(l,out));
+	sll_array_create(l,out);
 	for (sll_array_length_t i=0;i<l;i++){
 		sll_object_t* n=SLL_CREATE();
 		n->t=SLL_OBJECT_TYPE_STRING;

@@ -53,17 +53,17 @@ static void _json_cleanup(sll_handle_t h){
 
 static void _json_stringify(sll_handle_t h,sll_string_t* o){
 	if (!h){
-		SLL_CHECK_NO_MEMORY(sll_string_increase(o,4));
+		sll_string_increase(o,4);
 		sll_copy_string(SLL_CHAR("null"),o->v+o->l);
 		o->l+=4;
 	}
 	else if (h==1){
-		SLL_CHECK_NO_MEMORY(sll_string_increase(o,4));
+		sll_string_increase(o,4);
 		sll_copy_string(SLL_CHAR("true"),o->v+o->l);
 		o->l+=4;
 	}
 	else{
-		SLL_CHECK_NO_MEMORY(sll_string_increase(o,5));
+		sll_string_increase(o,5);
 		sll_copy_string(SLL_CHAR("false"),o->v+o->l);
 		o->l+=5;
 	}
@@ -72,12 +72,12 @@ static void _json_stringify(sll_handle_t h,sll_string_t* o){
 
 
 static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
-	SLL_CHECK_NO_MEMORY(sll_string_create(0,o));
+	sll_string_create(0,o);
 	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	sll_char_t c=**p;
 	(*p)++;
 	while (c!='\"'){
-		SLL_CHECK_NO_MEMORY(sll_string_increase(o,1));
+		sll_string_increase(o,1);
 		if (c!='\\'){
 			o->v[o->l]=c;
 		}
@@ -158,7 +158,6 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			}
 			m->l++;
 			m->v=sll_reallocate(m->v,(m->l<<1)*sizeof(sll_object_t*));
-			SLL_CHECK_NO_MEMORY(m->v);
 			sll_object_t* k=SLL_CREATE();
 			m->v[(m->l-1)<<1]=k;
 			k->t=SLL_OBJECT_TYPE_STRING;
@@ -212,7 +211,6 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			}
 			a->l++;
 			a->v=sll_reallocate(a->v,a->l*sizeof(sll_object_t*));
-			SLL_CHECK_NO_MEMORY(a->v);
 			a->v[a->l-1]=k;
 			c=**p;
 			(*p)++;
@@ -373,7 +371,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 			}
 			o->dt.m.l++;
 			o->dt.m.dt=sll_reallocate(o->dt.m.dt,o->dt.m.l*sizeof(sll_json_map_keypair_t));
-			SLL_CHECK_NO_MEMORY(o->dt.m.dt);
 			sll_json_map_keypair_t* k=o->dt.m.dt+o->dt.m.l-1;
 			_parse_json_string(p,&(k->k));
 			c=**p;
@@ -414,7 +411,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 		while (1){
 			o->dt.a.l++;
 			o->dt.a.dt=sll_reallocate(o->dt.a.dt,o->dt.a.l*sizeof(sll_json_object_t));
-			SLL_CHECK_NO_MEMORY(o->dt.a.dt);
 			if (!sll_json_parse(p,o->dt.a.dt+o->dt.a.l-1)){
 				return 0;
 			}

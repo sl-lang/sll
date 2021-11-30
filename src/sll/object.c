@@ -167,9 +167,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 	tt->l++;
 	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
 	tt->dt=sll_reallocate((void*)(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
-	SLL_CHECK_NO_MEMORY(tt->dt);
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
-	SLL_CHECK_NO_MEMORY(n);
 	n->sz=0;
 	n->l=l;
 	for (sll_arg_count_t i=0;i<l;i++){
@@ -219,7 +217,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		n->dt[i].t|=fl;
 		p++;
 		v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		SLL_CHECK_NO_MEMORY(sll_string_clone(&(v->dt.s),&(n->dt[i].nm)));
+		sll_string_clone(&(v->dt.s),&(n->dt[i].nm));
 		SLL_RELEASE(v);
 		p++;
 	}
@@ -233,9 +231,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 	tt->l++;
 	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
 	tt->dt=sll_reallocate((void*)(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
-	SLL_CHECK_NO_MEMORY(tt->dt);
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t));
-	SLL_CHECK_NO_MEMORY(n);
 	n->sz=0;
 	n->l=0;
 	*(tt->dt+tt->l-1)=n;
@@ -277,7 +273,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 					}
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					SLL_CHECK_NO_MEMORY(sll_array_create(l,&(o->dt.a)));
+					sll_array_create(l,&(o->dt.a));
 					for (sll_arg_count_t i=0;i<l;i++){
 						o->dt.a.v[i]=*(p+i);
 						SLL_ACQUIRE(*(p+i));
@@ -303,7 +299,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 					}
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_MAP;
-					SLL_CHECK_NO_MEMORY(sll_map_create((l+1)>>1,&(o->dt.m)));
+					sll_map_create((l+1)>>1,&(o->dt.m));
 					for (sll_arg_count_t i=0;i<l;i++){
 						o->dt.m.v[i]=*(p+i);
 						SLL_ACQUIRE(*(p+i));
@@ -321,7 +317,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 	sll_object_t* o=SLL_CREATE();
 	o->t=t;
 	o->dt.p=sll_allocate(dt->sz);
-	SLL_CHECK_NO_MEMORY(o->dt.p);
 	_init_struct(tt,t,o->dt.p,p,l);
 	return o;
 }
@@ -363,7 +358,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 			{
 				sll_object_t* n=SLL_CREATE();
 				n->t=SLL_OBJECT_TYPE_STRING;
-				SLL_CHECK_NO_MEMORY(sll_string_clone((sll_string_t*)p,&(n->dt.s)));
+				sll_string_clone((sll_string_t*)p,&(n->dt.s));
 				return n;
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
@@ -372,7 +367,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 			{
 				sll_object_t* n=SLL_CREATE();
 				n->t=SLL_OBJECT_TYPE_ARRAY;
-				SLL_CHECK_NO_MEMORY(sll_array_clone((sll_array_t*)p,&(n->dt.a)));
+				sll_array_clone((sll_array_t*)p,&(n->dt.a));
 				return n;
 			}
 		case SLL_OBJECT_TYPE_HANDLE:
@@ -386,7 +381,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 			{
 				sll_object_t* n=SLL_CREATE();
 				n->t=SLL_OBJECT_TYPE_MAP;
-				SLL_CHECK_NO_MEMORY(sll_map_clone((sll_map_t*)p,&(n->dt.m)));
+				sll_map_clone((sll_map_t*)p,&(n->dt.m));
 				return n;
 			}
 	}
@@ -394,7 +389,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 	n->t=t;
 	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
 	n->dt.p=sll_allocate(dt->sz);
-	SLL_CHECK_NO_MEMORY(n->dt.p);
 	sll_copy_data(p,dt->sz,n->dt.p);
 	return n;
 }

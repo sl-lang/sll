@@ -40,7 +40,7 @@ static void _memory_cleanup(sll_handle_t h){
 
 
 static void _memory_stringify(sll_handle_t h,sll_string_t* o){
-	SLL_CHECK_NO_MEMORY(sll_string_increase(o,17));
+	sll_string_increase(o,17);
 	uint8_t s=64;
 	do{
 		s-=4;

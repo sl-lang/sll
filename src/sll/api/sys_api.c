@@ -46,7 +46,7 @@ __SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 		return;
 	}
 	sll_free_string(_sys_argv+i);
-	SLL_CHECK_NO_MEMORY(sll_string_from_pointer(a,_sys_argv+i));
+	sll_string_from_pointer(a,_sys_argv+i);
 }
 
 
@@ -65,7 +65,6 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac){
 	}
 	_sys_argc=ac;
 	_sys_argv=sll_allocate(ac*sizeof(sll_string_t));
-	SLL_CHECK_NO_MEMORY(_sys_argv);
 	for (sll_integer_t i=0;i<ac;i++){
 		SLL_INIT_STRING(_sys_argv+i);
 	}
@@ -78,7 +77,7 @@ __API_FUNC(sys_arg_get){
 		SLL_INIT_STRING(out);
 	}
 	else{
-		SLL_CHECK_NO_MEMORY(sll_string_clone(_sys_argv+a,out));
+		sll_string_clone(_sys_argv+a,out);
 	}
 }
 
@@ -94,24 +93,24 @@ __API_FUNC(sys_get_executable){
 	if (!_sys_e.l){
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_string_length_t bfl=sll_platform_get_executable_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH);
-		SLL_CHECK_NO_MEMORY(sll_string_from_pointer_length(bf,bfl,&_sys_e));
+		sll_string_from_pointer_length(bf,bfl,&_sys_e);
 		if (!_sys_end){
 			sll_register_cleanup(_sys_free_data);
 			_sys_end=1;
 		}
 	}
-	SLL_CHECK_NO_MEMORY(sll_string_clone(&_sys_e,out));
+	sll_string_clone(&_sys_e,out);
 }
 
 
 
 __API_FUNC(sys_get_platform){
 	if (!_sys_p.l){
-		SLL_CHECK_NO_MEMORY(sll_string_from_pointer(sll_platform_string,&_sys_p));
+		sll_string_from_pointer(sll_platform_string,&_sys_p);
 		if (!_sys_end){
 			sll_register_cleanup(_sys_free_data);
 			_sys_end=1;
 		}
 	}
-	SLL_CHECK_NO_MEMORY(sll_string_clone(&_sys_p,out));
+	sll_string_clone(&_sys_p,out);
 }

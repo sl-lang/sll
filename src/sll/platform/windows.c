@@ -64,7 +64,6 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
 				if (!(o->l&7)){
 					o->dt=sll_reallocate(o->dt,(o->l+8)*sizeof(sll_string_t));
-					SLL_CHECK_NO_MEMORY(o->dt);
 				}
 				sll_string_t* s=o->dt+o->l;
 				o->l++;
@@ -238,7 +237,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 	bf[fpl]='*';
 	bf[fpl+1]=0;
 	sll_string_t* op=sll_allocate_stack(1);
-	SLL_CHECK_NO_MEMORY(op);
 	sll_array_length_t ol=0;
 	WIN32_FIND_DATAA dt;
 	HANDLE fh=FindFirstFileA(bf,&dt);
@@ -248,8 +246,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 				continue;
 			}
 			if (!(ol&7)){
-				op=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
-				SLL_CHECK_NO_MEMORY(op);
+				void* tmp=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
+				if (!tmp){
+					*o=sll_reallocate(op,ol*sizeof(sll_string_t));
+					FindClose(fh);
+					return ol-1;
+				}
+				op=tmp;
 			}
 			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
 			sll_string_from_pointer_length(dt.cFileName,l,op+ol);
@@ -258,7 +261,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 		FindClose(fh);
 	}
 	*o=sll_reallocate(op,ol*sizeof(sll_string_t));
-	SLL_CHECK_NO_MEMORY(*o);
 	return ol;
 }
 
@@ -276,10 +278,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 		sll_allocate_stack(1),
 		0
 	};
-	SLL_CHECK_NO_MEMORY(dt.dt);
 	_list_dir_files(bf,i,&dt);
 	*o=sll_reallocate(dt.dt,dt.l*sizeof(sll_string_t));
-	SLL_CHECK_NO_MEMORY(*o);
 	return dt.l;
 }
 

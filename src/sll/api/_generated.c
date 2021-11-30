@@ -225,8 +225,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(const sll_
 		return SLL_ACQUIRE_STATIC(str_zero);
 	}
 	sll_arg_count_t ac=all-0;
-	const sll_string_t** a=sll_allocate_stack(ac*sizeof(sll_string_t*));
-	SLL_CHECK_NO_MEMORY(a);
+	const sll_string_t** a=sll_allocate(ac*sizeof(sll_string_t*));
 	for (sll_arg_count_t idx=0;idx<ac;idx++){
 		const sll_object_t* tmp=*(al+idx+0);
 		if (!(SLL_OBJECT_GET_TYPE(tmp)==SLL_OBJECT_TYPE_STRING)){

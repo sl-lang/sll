@@ -14,7 +14,7 @@ static const uint64_t _string_pow_of_10[]={1ull,10ull,100ull,1000ull,10000ull,10
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format(const sll_char_t* t,sll_string_t* o,...){
+__SLL_EXTERNAL void sll_string_format(const sll_char_t* t,sll_string_t* o,...){
 	va_list va;
 	va_start(va,o);
 	sll_var_arg_list_t dt={
@@ -23,28 +23,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format(const sll_char_t*
 			.c=&va
 		}
 	};
-	sll_bool_t so=sll_string_format_list(t,sll_string_length_unaligned(t),&dt,o);
+	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,o);
 	va_end(va);
-	return so;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_char_t* t,sll_string_length_t sl,sll_var_arg_list_t* va,sll_string_t* o){
-	if (!sll_string_create(0,o)){
-		return 0;
-	}
+__SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length_t sl,sll_var_arg_list_t* va,sll_string_t* o){
+	sll_string_create(0,o);
 	if (!sl){
-		return 1;
+		return;
 	}
 	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	sll_string_length_t i=sl;
 	while (i){
 		if (*t!='%'){
-			if (!sll_string_increase(o,1)){
-				sll_deallocate(o->v);
-				return 0;
-			}
+			sll_string_increase(o,1);
 			o->v[o->l]=*t;
 			o->l++;
 			i--;
@@ -56,10 +50,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 		const sll_char_t* b=t;
 		sll_string_length_t bi=i;
 		if (!i){
-			if (!sll_string_increase(o,1)){
-				sll_deallocate(o->v);
-				return 0;
-			}
+			sll_string_increase(o,1);
 			o->v[o->l]='%';
 			o->l++;
 			break;
@@ -154,10 +145,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 			t++;
 		}
 		if (*t=='%'){
-			if (!sll_string_increase(o,1)){
-				sll_deallocate(o->v);
-				return 0;
-			}
+			sll_string_increase(o,1);
 			o->v[o->l]='%';
 			o->l++;
 		}
@@ -165,10 +153,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 			if (!w){
 				w=1;
 			}
-			if (!sll_string_increase(o,w)){
-				sll_deallocate(o->v);
-				return 0;
-			}
+			sll_string_increase(o,w);
 			w--;
 			if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 				sll_set_memory(o->v+o->l,w,' ');
@@ -188,10 +173,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 			if (f&STRING_FORMAT_FLAG_PERCISION){
 				l=p;
 			}
-			if (!sll_string_increase(o,(l>w?l:w))){
-				sll_deallocate(o->v);
-				return 0;
-			}
+			sll_string_increase(o,(l>w?l:w));
 			w=(w<l?0:w-l);
 			if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 				sll_set_memory(o->v+o->l,w,' ');
@@ -254,10 +236,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 					}
 				}
 				if ((f&(STRING_FORMAT_FLAG_SIGN|STRING_FORMAT_FLAG_SPACE_SIGN))||sn<0){
-					if (!sll_string_increase(o,1)){
-						sll_deallocate(o->v);
-						return 0;
-					}
+					sll_string_increase(o,1);
 					o->v[o->l]=(sn<0?'-':'+');
 					o->l++;
 				}
@@ -283,10 +262,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 					}
 				}
 				if (f&(STRING_FORMAT_FLAG_SIGN|STRING_FORMAT_FLAG_SPACE_SIGN)){
-					if (!sll_string_increase(o,1)){
-						sll_deallocate(o->v);
-						return 0;
-					}
+					sll_string_increase(o,1);
 					o->v[o->l]='+';
 					o->l++;
 				}
@@ -298,19 +274,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 				if ((f&STRING_FORMAT_FLAG_ALTERNATIVE_FORM)&&*t=='o'&&!p){
 					p=1;
 				}
-				if (!sll_string_increase(o,p)){
-					sll_deallocate(o->v);
-					return 0;
-				}
+				sll_string_increase(o,p);
 				sll_set_memory(o->v+o->l,p,'0');
 				o->l+=p;
 			}
 			else{
 				if ((f&STRING_FORMAT_FLAG_ALTERNATIVE_FORM)&&*t=='o'){
-					if (!sll_string_increase(o,1)){
-						sll_deallocate(o->v);
-						return 0;
-					}
+					sll_string_increase(o,1);
 					o->v[o->l]='0';
 					o->l++;
 					if (p>0){
@@ -318,10 +288,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 					}
 				}
 				else if ((f&STRING_FORMAT_FLAG_ALTERNATIVE_FORM)&&(*t=='x'||*t=='X')){
-					if (!sll_string_increase(o,2)){
-						sll_deallocate(o->v);
-						return 0;
-					}
+					sll_string_increase(o,2);
 					o->v[o->l]='0';
 					o->v[o->l+1]=(f&STRING_FORMAT_FLAG_UPPERCASE?'X':'x');
 					o->l+=2;
@@ -336,10 +303,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 					if (!p){
 						p=1;
 					}
-					if (!sll_string_increase(o,p)){
-						sll_deallocate(o->v);
-						return 0;
-					}
+					sll_string_increase(o,p);
 					sll_set_memory(o->v+o->l,p,'0');
 					o->l+=p;
 				}
@@ -348,10 +312,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 					if (p<sz){
 						p=sz;
 					}
-					if (!sll_string_increase(o,p)){
-						sll_deallocate(o->v);
-						return 0;
-					}
+					sll_string_increase(o,p);
 					p-=sz;
 					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
@@ -378,10 +339,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 					if (p<sz){
 						p=sz;
 					}
-					if (!sll_string_increase(o,p)){
-						sll_deallocate(o->v);
-						return 0;
-					}
+					sll_string_increase(o,p);
 					p-=sz;
 					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
@@ -406,10 +364,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 					if (p<sz){
 						p=sz;
 					}
-					if (!sll_string_increase(o,p)){
-						sll_deallocate(o->v);
-						return 0;
-					}
+					sll_string_increase(o,p);
 					p-=sz;
 					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
@@ -431,10 +386,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 			}
 		}
 		else if (*t=='p'){
-			if (!sll_string_increase(o,16)){
-				sll_deallocate(o->v);
-				return 0;
-			}
+			sll_string_increase(o,16);
 			uint64_t ptr=(uint64_t)sll_var_arg_get(va);
 			for (int8_t j=60;j>=0;j-=4){
 				sll_char_t c=(ptr>>j)&15;
@@ -443,10 +395,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 			}
 		}
 		else{
-			if (!sll_string_increase(o,1)){
-				sll_deallocate(o->v);
-				return 0;
-			}
+			sll_string_increase(o,1);
 			o->v[o->l]='%';
 			o->l++;
 			i=bi;
@@ -458,5 +407,4 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_format_list(const sll_ch
 	}
 	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(o);
-	return 1;
 }

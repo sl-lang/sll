@@ -33,11 +33,10 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 				sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
 				if (!(o->l&7)){
 					o->dt=sll_reallocate(o->dt,(o->l+8)*sizeof(sll_string_t));
-					SLL_CHECK_NO_MEMORY(o->dt);
 				}
 				sll_string_t* s=o->dt+o->l;
 				o->l++;
-				SLL_CHECK_NO_MEMORY(sll_string_create(i+j,s));
+				sll_string_create(i+j,s);
 				sll_string_insert_pointer_length(bf,i,0,s);
 				sll_string_insert_pointer_length(SLL_CHAR(dt->d_name),j,i,s);
 			}
@@ -188,7 +187,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(voi
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
 	DIR* d=opendir((char*)fp);
 	sll_string_t* op=sll_allocate_stack(1);
-	SLL_CHECK_NO_MEMORY(op);
 	sll_array_length_t ol=0;
 	if (d){
 		struct dirent* dt;
@@ -197,16 +195,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 				continue;
 			}
 			if (!(ol&7)){
-				op=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
-				SLL_CHECK_NO_MEMORY(op);
+				void* tmp=sll_reallocate(op,(ol+8)*sizeof(sll_string_t));
+				if (!tmp){
+					*o=sll_reallocate(op,ol*sizeof(sll_string_t));
+					closedir(d);
+					return ol-1;
+				}
+				op=tmp;
 			}
-			SLL_CHECK_NO_MEMORY(sll_string_from_pointer(SLL_CHAR(dt->d_name),op+ol));
+			sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
+			sll_string_from_pointer_length(SLL_CHAR(dt->d_name),l,op+ol);
 			ol++;
 		}
 		closedir(d);
 	}
 	*o=sll_reallocate(op,ol*sizeof(sll_string_t));
-	SLL_CHECK_NO_MEMORY(*o);
 	return ol;
 }
 
@@ -224,10 +227,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 		sll_allocate_stack(1),
 		0
 	};
-	SLL_CHECK_NO_MEMORY(dt.dt);
 	_list_dir_files(bf,l,&dt);
 	*o=sll_reallocate(dt.dt,dt.l*sizeof(sll_string_t));
-	SLL_CHECK_NO_MEMORY(*o);
 	return dt.l;
 }
 

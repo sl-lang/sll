@@ -1125,7 +1125,7 @@ The new object
 
 ##### Description
 
-Constructs a new object specified by the given type. If the type is a built-in type, the field values are interpreted as in the syntax of the given type (see [Base Types](#base-types)). Otherwise, the field values are assigned following the structure declaration of the given type. If the `type id` specifies an unknown type, it is assumed to be an integer (`int_type`).
+TBD
 
 ##### Example
 
@@ -1370,7 +1370,7 @@ New type ID
 
 ##### Description
 
-A new type is created with respect to the field types and names specified by the arguments. If the number of arguments is odd, the last type is ignored.
+TBD
 
 ##### Example
 

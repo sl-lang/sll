@@ -56,18 +56,12 @@
 
 static void _save_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* o){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		o->s_sm[i]=sll_allocate_stack(o_dt->s_sm_l[i]*sizeof(uint64_t));
-		if (o_dt->s_sm_l[i]){
-			SLL_CHECK_NO_MEMORY(o->s_sm[i]);
-		}
+		o->s_sm[i]=sll_allocate(o_dt->s_sm_l[i]*sizeof(uint64_t));
 		for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
 			*(o->s_sm[i]+j)=*(o_dt->va.s_sm[i]+j);
 		}
 	}
-	o->l_sm=sll_allocate_stack(o_dt->l_sm_l*sizeof(uint64_t));
-	if (o_dt->l_sm_l){
-		SLL_CHECK_NO_MEMORY(o->l_sm);
-	}
+	o->l_sm=sll_allocate(o_dt->l_sm_l*sizeof(uint64_t));
 	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
 		*(o->l_sm+i)=*(o_dt->va.l_sm+i);
 	}
@@ -351,7 +345,7 @@ static sll_object_t* _get_as_object(const sll_node_t* o,const optimizer_data_t* 
 				sll_array_length_t l=o->dt.al;
 				sll_object_t* v=SLL_CREATE();
 				v->t=SLL_OBJECT_TYPE_ARRAY;
-				SLL_CHECK_NO_MEMORY(sll_array_create(l,&(v->dt.a)));
+				sll_array_create(l,&(v->dt.a));
 				o++;
 				for (sll_array_length_t i=0;i<l;i++){
 					sll_object_t* n=_get_as_object(o,o_dt,fl);
@@ -377,7 +371,7 @@ static sll_object_t* _get_as_object(const sll_node_t* o,const optimizer_data_t* 
 				sll_map_length_t l=o->dt.ml;
 				sll_object_t* v=SLL_CREATE();
 				v->t=SLL_OBJECT_TYPE_MAP;
-				SLL_CHECK_NO_MEMORY(sll_map_create((l+1)>>1,&(v->dt.m)));
+				sll_map_create((l+1)>>1,&(v->dt.m));
 				o++;
 				for (sll_map_length_t i=0;i<l;i++){
 					sll_object_t* n=_get_as_object(o,o_dt,fl);
@@ -1303,7 +1297,7 @@ _keep_assignment:;
 					sll_node_t* e=o;
 					sll_function_index_t i=(sll_function_index_t)(~(fn->dt.i));
 					if (i<o_dt->i_ft->l&&((*(o_dt->i_ft->dt+i))->t&SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL)){
-						sll_object_t** al=sll_allocate_stack((r->dt.ac-1)*sizeof(sll_object_t*));
+						sll_object_t** al=sll_allocate((r->dt.ac-1)*sizeof(sll_object_t*));
 						o=fn;
 						for (sll_arg_count_t j=1;j<r->dt.ac;j++){
 							o=sll_skip_node(o);
@@ -1641,7 +1635,7 @@ _keep_assignment:;
 				sll_node_t* r=o;
 				o++;
 				sll_object_t* v=NULL;
-				sll_node_t** arg=sll_allocate_stack(l*sizeof(sll_node_t*));
+				sll_node_t** arg=sll_allocate(l*sizeof(sll_node_t*));
 				sll_arg_count_t i=0;
 				sll_arg_count_t j=0;
 				sll_node_t* pa=NULL;
@@ -2101,17 +2095,17 @@ static sll_node_t* _merge_print_strings(sll_node_t* o,optimizer_data_t* o_dt){
 			if (a){
 				sll_string_t tmp;
 				if (a->t==SLL_NODE_TYPE_CHAR&&o->t==SLL_NODE_TYPE_CHAR){
-					SLL_CHECK_NO_MEMORY(sll_string_join_chars(a->dt.c,o->dt.c,&tmp));
+					sll_string_join_chars(a->dt.c,o->dt.c,&tmp);
 				}
 				else if (a->t==SLL_NODE_TYPE_CHAR&&o->t==SLL_NODE_TYPE_STRING){
-					SLL_CHECK_NO_MEMORY(sll_string_prepend_char(o_dt->c_dt->st.dt+o->dt.s,a->dt.c,&tmp));
+					sll_string_prepend_char(o_dt->c_dt->st.dt+o->dt.s,a->dt.c,&tmp);
 				}
 				else if (a->t==SLL_NODE_TYPE_STRING&&o->t==SLL_NODE_TYPE_CHAR){
-					SLL_CHECK_NO_MEMORY(sll_string_join_char(o_dt->c_dt->st.dt+a->dt.s,o->dt.c,&tmp));
+					sll_string_join_char(o_dt->c_dt->st.dt+a->dt.s,o->dt.c,&tmp);
 				}
 				else{
 					SLL_ASSERT(a->t==SLL_NODE_TYPE_STRING&&o->t==SLL_NODE_TYPE_STRING);
-					SLL_CHECK_NO_MEMORY(sll_string_join(o_dt->c_dt->st.dt+a->dt.s,o_dt->c_dt->st.dt+o->dt.s,&tmp));
+					sll_string_join(o_dt->c_dt->st.dt+a->dt.s,o_dt->c_dt->st.dt+o->dt.s,&tmp);
 				}
 				a->t=SLL_NODE_TYPE_NOP;
 				o->t=SLL_NODE_TYPE_STRING;
@@ -2323,31 +2317,16 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 		.a_v=NULL,
 		.rm=0
 	};
-	if (c_dt->idt.ill){
-		SLL_CHECK_NO_MEMORY(o_dt.it.l_im);
-	}
-	if (c_dt->_n_sc_id){
-		SLL_CHECK_NO_MEMORY(o_dt.it.sc_vi);
-	}
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		o_dt.it.s_im[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(identifier_data_t));
-		if (c_dt->idt.s[i].l){
-			SLL_CHECK_NO_MEMORY(o_dt.it.s_im[i]);
-		}
 		o_dt.s_sm_l[i]=(c_dt->idt.s[i].l+63)>>6;
 		o_dt.va.s_sm[i]=sll_zero_allocate(o_dt.s_sm_l[i]*sizeof(uint64_t));
-		if (o_dt.s_sm_l[i]){
-			SLL_CHECK_NO_MEMORY(o_dt.va.s_sm[i]);
-		}
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			(o_dt.it.s_im[i]+j)->v=SLL_MAX_VARIABLE_INDEX;
 			(o_dt.it.s_im[i]+j)->rm=1;
 		}
 	}
 	o_dt.va.l_sm=sll_zero_allocate(o_dt.l_sm_l*sizeof(uint64_t));
-	if (o_dt.l_sm_l){
-		SLL_CHECK_NO_MEMORY(o_dt.va.l_sm);
-	}
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		(o_dt.it.l_im+i)->v=SLL_MAX_VARIABLE_INDEX;
 		(o_dt.it.l_im+i)->rm=1;
@@ -2391,7 +2370,6 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 		}
 	}
 	o_dt.v=sll_allocate(o_dt.it.vc*sizeof(sll_object_t*));
-	SLL_CHECK_NO_MEMORY(o_dt.v);
 	for (sll_variable_index_t i=0;i<o_dt.it.vc;i++){
 		sll_object_t* v=SLL_CREATE();
 		v->t=OBJECT_TYPE_UNKNOWN;
@@ -2402,9 +2380,6 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_deallocate(o_dt.va.s_sm[i]);
 		o_dt.im.s[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(sll_identifier_index_t));
-		if (c_dt->idt.s[i].l){
-			SLL_CHECK_NO_MEMORY(o_dt.im.s[i]);
-		}
 		sll_identifier_list_length_t k=0;
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			*(o_dt.im.s[i]+j)=SLL_CREATE_IDENTIFIER(j-k,i);
@@ -2418,13 +2393,9 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 		if (k){
 			c_dt->idt.s[i].l-=k;
 			c_dt->idt.s[i].dt=sll_reallocate(c_dt->idt.s[i].dt,c_dt->idt.s[i].l*sizeof(sll_identifier_t));
-			if (c_dt->idt.s[i].l){
-				SLL_CHECK_NO_MEMORY(c_dt->idt.s[i].dt);
-			}
 		}
 	}
 	o_dt.im.l=sll_allocate(c_dt->idt.ill*sizeof(sll_identifier_index_t));
-	SLL_CHECK_NO_MEMORY(o_dt.im.l);
 	sll_identifier_list_length_t j=0;
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		*(o_dt.im.l+i)=SLL_CREATE_IDENTIFIER(i-j,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
@@ -2436,12 +2407,10 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 	if (j){
 		c_dt->idt.ill-=j;
 		c_dt->idt.il=sll_reallocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
-		SLL_CHECK_NO_MEMORY(c_dt->idt.il);
 	}
 	o_dt.rm=0;
 	sll_function_index_t fn_off=0;
-	sll_function_index_t* fn_m=sll_allocate_stack(c_dt->ft.l*sizeof(sll_function_index_t));
-	SLL_CHECK_NO_MEMORY(fn_m);
+	sll_function_index_t* fn_m=sll_allocate(c_dt->ft.l*sizeof(sll_function_index_t));
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		sll_function_t* f=*(c_dt->ft.dt+i);
 		if (!f){

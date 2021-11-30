@@ -162,7 +162,6 @@ void _gc_release_data(void){
 __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t){
 	if (!(o->_dbg)){
 		object_debug_data_t* dt=sll_allocate(sizeof(object_debug_data_t));
-		SLL_CHECK_NO_MEMORY(dt);
 		dt->c.fp=NULL;
 		dt->al=NULL;
 		dt->all=0;
@@ -171,7 +170,6 @@ __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,u
 		o->_dbg=dt;
 	}
 	object_debug_data_trace_data_t* n=sll_allocate(sizeof(object_debug_data_trace_data_t));
-	SLL_CHECK_NO_MEMORY(n);
 	n->fp=fp;
 	n->ln=ln;
 	uint8_t j=0;
@@ -190,13 +188,11 @@ __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,u
 	if (t==__SLL_DEBUG_TYPE_RELEASE){
 		dt->all++;
 		dt->al=sll_reallocate(dt->al,dt->all*sizeof(object_debug_data_trace_data_t*));
-		SLL_CHECK_NO_MEMORY(dt->al);
 		*(dt->al+dt->all-1)=n;
 	}
 	else{
 		dt->rll++;
 		dt->rl=sll_reallocate(dt->rl,dt->rll*sizeof(object_debug_data_trace_data_t*));
-		SLL_CHECK_NO_MEMORY(dt->rl);
 		*(dt->rl+dt->rll-1)=n;
 	}
 	return o;

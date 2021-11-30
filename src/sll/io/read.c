@@ -167,7 +167,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 
 static sll_bool_t _read_string(sll_file_t* rf,sll_string_t* o,sll_error_t* err){
 	CHECK_ERROR(rf,o->l,sll_string_length_t,err);
-	SLL_CHECK_NO_MEMORY(sll_string_create(o->l,o));
+	sll_string_create(o->l,o);
 	if (o->l<STRING_COMPRESSION_MIN_LENGTH){
 		if (sll_file_read(rf,o->v,o->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
 			err->t=SLL_ERROR_INVALID_FILE_FORMAT;
@@ -243,13 +243,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 	CHECK_ERROR(rf,a_dt->vc,sll_variable_index_t,e);
 	CHECK_ERROR(rf,a_dt->ft.l,sll_function_index_t,e);
 	a_dt->ft.dt=sll_allocate(a_dt->ft.l*sizeof(sll_instruction_index_t));
-	SLL_CHECK_NO_MEMORY(a_dt->ft.dt);
 	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
 		CHECK_ERROR(rf,*(a_dt->ft.dt+i),sll_instruction_index_t,e);
 	}
 	CHECK_ERROR(rf,a_dt->st.l,sll_string_index_t,e);
 	a_dt->st.dt=sll_allocate(a_dt->st.l*sizeof(sll_string_t));
-	SLL_CHECK_NO_MEMORY(a_dt->st.dt);
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
 		if (!_read_string(rf,a_dt->st.dt+i,e)){
 			return 0;
@@ -401,9 +399,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		CHECK_ERROR(rf,c_dt->idt.s[i].l,sll_identifier_list_length_t,e);
 		c_dt->idt.s[i].dt=sll_allocate(c_dt->idt.s[i].l*sizeof(sll_identifier_t));
-		if (c_dt->idt.s[i].l){
-			SLL_CHECK_NO_MEMORY(c_dt->idt.s[i].dt);
-		}
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			CHECK_ERROR(rf,(c_dt->idt.s[i].dt+j)->sc,sll_scope_t,e);
 			CHECK_ERROR(rf,(c_dt->idt.s[i].dt+j)->i,sll_string_index_t,e);
@@ -411,33 +406,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 	}
 	CHECK_ERROR(rf,c_dt->idt.ill,sll_identifier_list_length_t,e);
 	c_dt->idt.il=sll_allocate(c_dt->idt.ill*sizeof(sll_identifier_t));
-	if (c_dt->idt.ill){
-		SLL_CHECK_NO_MEMORY(c_dt->idt.il);
-	}
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		CHECK_ERROR(rf,(c_dt->idt.il+i)->sc,sll_scope_t,e);
 		CHECK_ERROR(rf,(c_dt->idt.il+i)->i,sll_string_index_t,e);
 	}
 	CHECK_ERROR(rf,c_dt->et.l,sll_export_table_length_t,e);
 	c_dt->et.dt=sll_allocate(c_dt->et.l*sizeof(sll_identifier_index_t));
-	if (c_dt->et.l){
-		SLL_CHECK_NO_MEMORY(c_dt->et.dt);
-	}
 	for (sll_export_table_length_t i=0;i<c_dt->et.l;i++){
 		CHECK_ERROR(rf,*(c_dt->et.dt+i),sll_identifier_index_t,e);
 	}
 	CHECK_ERROR(rf,c_dt->ft.l,sll_function_index_t,e);
 	c_dt->ft.dt=sll_allocate(c_dt->ft.l*sizeof(sll_function_t*));
-	if (c_dt->ft.l){
-		SLL_CHECK_NO_MEMORY(c_dt->ft.dt);
-	}
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		sll_node_offset_t off;
 		CHECK_ERROR(rf,off,sll_node_offset_t,e);
 		sll_arg_count_t al;
 		CHECK_ERROR(rf,al,sll_arg_count_t,e);
 		sll_function_t* k=sll_allocate(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));
-		SLL_CHECK_NO_MEMORY(k);
 		k->off=off;
 		k->al=al;
 		for (sll_arg_count_t j=0;j<al;j++){
@@ -447,7 +432,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 	}
 	CHECK_ERROR(rf,c_dt->st.l,sll_string_index_t,e);
 	c_dt->st.dt=sll_allocate(c_dt->st.l*sizeof(sll_string_t));
-	SLL_CHECK_NO_MEMORY(c_dt->st.dt);
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
 		if (!_read_string(rf,c_dt->st.dt+i,e)){
 			return 0;
