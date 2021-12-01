@@ -21,6 +21,7 @@ static sll_node_t* _mark_strings(sll_node_t* o,uint64_t* m){
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_FIELD:
 			*(m+(o->dt.s>>6))|=1ull<<(o->dt.s&63);
 			return o+1;
 		case SLL_NODE_TYPE_FUNC:
@@ -74,6 +75,7 @@ static sll_node_t* _update_strings(sll_node_t* o,sll_string_index_t* sm){
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_FIELD:
 			o->dt.s=*(sm+o->dt.s);
 			return o+1;
 		case SLL_NODE_TYPE_FUNC:

@@ -17,6 +17,7 @@ static sll_node_t* _remove_debug_data_internal(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_FUNC:

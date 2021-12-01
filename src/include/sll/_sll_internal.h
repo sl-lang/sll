@@ -191,6 +191,8 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define STRING_FORMAT_FLAG_LL_BITS 512
 #define STRING_FORMAT_FLAG_UPPERCASE 1024
 
+#define NOT_FIELD(o) SLL_ASSERT((o)->t!=SLL_NODE_TYPE_FIELD)
+
 
 
 typedef uint16_t call_stack_size_t;

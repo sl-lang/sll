@@ -97,6 +97,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 			READ_FIELD(o->dt.f,rf);
 			return 1;
 		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_FIELD:
 			CHECK_ERROR2(rf,o->dt.s,sll_string_index_t);
 			return 1;
 		case SLL_NODE_TYPE_ARRAY:

@@ -1039,6 +1039,11 @@ _unknown_symbol:
 					arg->t=SLL_NODE_TYPE_INT;
 					arg->dt.i=1;
 				}
+				else if (o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
+					sll_string_calculate_checksum(&str);
+					arg->t=SLL_NODE_TYPE_FIELD;
+					arg->dt.s=sll_add_string(&(c_dt->st),&str,1);
+				}
 				else{
 					sll_string_calculate_checksum(&str);
 					arg->t=SLL_NODE_TYPE_IDENTIFIER;

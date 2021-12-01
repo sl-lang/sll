@@ -70,6 +70,7 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
@@ -259,6 +260,7 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
+	NOT_FIELD(o);
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:
 			return o+1;
@@ -460,6 +462,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
+	NOT_FIELD(o);
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:
 			return o+1;
@@ -827,10 +830,15 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 					return o;
 				}
 				sll_arg_count_t v=l;
-				l&=0xfffffffe;
+				l>>=1;
 				while (l){
 					l--;
 					o=_generate_on_stack(o,g_dt);
+					SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS;
+					ai->dt.s=o->dt.s;
+					o++;
 				}
 				if (v&1){
 					o=_generate(o,g_dt);
@@ -923,6 +931,7 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
@@ -992,6 +1001,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
+	NOT_FIELD(o);
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:

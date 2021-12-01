@@ -200,6 +200,12 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 		case SLL_NODE_TYPE_IDENTIFIER:
 			_print_identifier(o->dt.id,c_dt,wf);
 			return o+1;
+		case SLL_NODE_TYPE_FIELD:
+			{
+				sll_string_t* s=c_dt->st.dt+o->dt.s;
+				sll_file_write(wf,s->v,s->l);
+				return o+1;
+			}
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			_print_int(o->dt.fn_id,wf);
 			return o+1;

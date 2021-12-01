@@ -165,12 +165,12 @@
 	(= i (+ i 1))
 )
 (= point_type (&:
-	int_type "x"
-	(~ int_type) "y"
+	int_type x
+	(~ int_type) y
 ))
 (= point_string_type (&:
-	point_type "p"
-	string_type "str"
+	point_type p
+	string_type str
 ))
 (= v (. point_type 4))
 (= (: v "x") -5)
@@ -178,10 +178,10 @@
 (:> point_type "\n" (. (&:)) "\n" (. int_type 5.59) "\n" (. map_type 1 'a' 2 'b' 3 'c') "\n" v "\n" (:? v) "\n" point_string_type "\n" (. point_string_type) "\n")
 (= test_type (&:
 	(&:
-		float_type "x"
-		float_type "y"
-	) "p"
-	int_type "depth"
+		float_type x
+		float_type y
+	) p
+	int_type depth
 ))
 (:> (. test_type [1 2] 3) "\n" (: v "x") "\n" (: (. test_type [-1 -1]) "p") "\n")
 (= new_point (. point_string_type [1 2] -5687.7))

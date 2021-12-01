@@ -102,17 +102,15 @@ static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
 	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
 	for (sll_arg_count_t i=0;i<dt->l;i++){
 		sll_string_t s=dt->dt[i].nm;
-		sll_string_increase(o,2);
+		sll_string_increase(o,1);
 		o->v[o->l]=' ';
-		o->v[o->l+1]='\"';
-		o->l+=2;
+		o->l++;
 		for (sll_string_length_t j=0;j<s.l;j++){
 			_write_char(s.v[j],o);
 		}
-		sll_string_increase(o,2);
-		o->v[o->l]='\"';
-		o->v[o->l+1]=' ';
-		o->l+=2;
+		sll_string_increase(o,1);
+		o->v[o->l]=' ';
+		o->l++;
 		switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
 			case SLL_OBJECT_TYPE_INT:
 				tmp.dt.i=*((sll_integer_t*)p);

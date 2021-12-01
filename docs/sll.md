@@ -1379,8 +1379,8 @@ A new type is created with respect to the field types and names specified by the
 (-- "type.sll")
 
 (= point_type (&:
-	int_type "x"
-	int_type "y"
+	int_type x
+	int_type y
 ))
 
 (:> "Point: " (. point_type 1 -2) "\n")

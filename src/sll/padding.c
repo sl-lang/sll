@@ -27,6 +27,7 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_compilation_data_t
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:

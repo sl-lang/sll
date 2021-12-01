@@ -48,6 +48,7 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 			WRITE_FIELD(o->dt.f,wf);
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_FIELD:
 			_write_integer(wf,o->dt.s);
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:

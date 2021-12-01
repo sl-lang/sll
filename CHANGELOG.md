@@ -13,6 +13,8 @@
 ### Changed
 
 - Fixed storage type handling in structure objects
+- Structure fields are now declared as identifiers and are marked by an internal type (`SLL_NODE_TYPE_FIELD`)
+- The syntax highlight now currectly marks type declarations
 
 ### Removed
 

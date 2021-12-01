@@ -121,6 +121,7 @@ static sll_node_t* _remove_single_object(sll_node_t* o){
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
@@ -198,6 +199,7 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
@@ -300,6 +302,7 @@ static sll_object_t* _get_as_object(const sll_node_t* o,const optimizer_data_t* 
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
+	NOT_FIELD(o);
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
 			if (!(fl&OPTIMIZER_NEW_OBJECT)){
@@ -575,6 +578,7 @@ static const sll_node_t* _mark_loop_vars(const sll_node_t* o,optimizer_data_t* o
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
@@ -658,6 +662,7 @@ static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t*
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
+	NOT_FIELD(o);
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:
 			return COND_TYPE_UNKNOWN;
@@ -771,6 +776,7 @@ static sll_node_t* _check_remove(sll_node_t* o,sll_node_t* p,optimizer_data_t* o
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			DECREASE_PARENT(p);
 			o->t=SLL_NODE_TYPE_NOP;
@@ -1051,6 +1057,9 @@ _keep_assignment:;
 					DISABLE_REMOVE_VARIABLE(o,o_dt);
 				}
 			}
+			return o+1;
+		case SLL_NODE_TYPE_FIELD:
+			SLL_ASSERT(fl&OPTIMIZER_FLAG_ARGUMENT);
 			return o+1;
 		case SLL_NODE_TYPE_PRINT:
 			{
@@ -2135,6 +2144,7 @@ static sll_node_t* _remap_indexes_merge_print(sll_node_t* o,sll_node_t* p,optimi
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_FIELD:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
