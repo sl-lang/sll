@@ -7,6 +7,7 @@
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/map.h>
+#include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/static_object.h>
@@ -1135,8 +1136,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 		case SLL_OBJECT_TYPE_CHAR:
 			SLL_ACQUIRE(a);
 			return a;
-		case SLL_OBJECT_TYPE_HANDLE:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h);
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1151,6 +1150,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 				sll_array_clone(&(a->dt.a),&(o->dt.a));
 				return o;
 			}
+		case SLL_OBJECT_TYPE_HANDLE:
+			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h);
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1158,10 +1159,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 				sll_map_clone(&(a->dt.m),&(o->dt.m));
 				return o;
 			}
-		default:
-			SLL_UNREACHABLE();
 	}
-	return SLL_ACQUIRE_STATIC_INT(0);
+	SLL_ASSERT(SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE);
+	if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		return sll_object_clone(a);
+	}
+	SLL_UNIMPLEMENTED();
 }
 
 

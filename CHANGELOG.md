@@ -4,10 +4,15 @@
 
 ### Added
 
+- Ability to clone structures without references (by the `(: |# object #|)` syntax)
 - Added error handling for memory allocation ([#83])
 - Finished custom object type API ([#72])
 - Implemented `SLL_OBJECT_GET_TYPE_MASK`
 - Memory structures can have constant fields (denoted by inverting (`(~)`) the type) ([#99])
+
+### Changed
+
+- Fixed storage type handling in structure objects
 
 ### Removed
 

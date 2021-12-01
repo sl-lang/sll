@@ -16,6 +16,19 @@
 
 
 
+static void _fill_zero(void* o,sll_size_t sz){
+	uint64_t* p=o;
+	ASSUME_ALIGNED(p,4,8);
+	sz=(sz+7)>>3;
+	do{
+		*p=0;
+		p++;
+		sz--;
+	} while (sz);
+}
+
+
+
 #ifdef USE_BUILTIN_MALLOC
 
 
@@ -58,7 +71,8 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 
 
 
-__SLL_EXTERNAL void sll_memory_move(void* p,sll_bool_t d){
+__SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d){
+	return p;
 }
 
 
@@ -254,19 +268,6 @@ static void _release_chunk(user_mem_block_t* b){
 	n->n=((_memory_data_mask&(1<<i))?_memory_head_blocks[i]:NULL);
 	_memory_data_mask|=1<<i;
 	_memory_head_blocks[i]=n;
-}
-
-
-
-static void _fill_zero(void* o,sll_size_t sz){
-	uint64_t* p=o;
-	ASSUME_ALIGNED(p,4,8);
-	sz=(sz+7)>>3;
-	do{
-		*p=0;
-		p++;
-		sz--;
-	} while (sz);
 }
 
 

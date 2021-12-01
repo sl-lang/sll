@@ -97,6 +97,18 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt);
 
 /**
  * \flags check_output func
+ * \name sll_object_clone
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_t* o
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_t* o);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_object_get_field
  * \group object
  * \desc Docs!
