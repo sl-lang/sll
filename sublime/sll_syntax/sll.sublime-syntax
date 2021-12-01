@@ -3,6 +3,7 @@ name: Sll
 file_extensions:
   - sll
 scope: source.sll
+version: 2
 contexts:
   main:
     - match: '\|#'
@@ -37,7 +38,7 @@ contexts:
         4: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         5: keyword.declaration.function.sll
       push:
-        - match: '\s*[a-zA-Z0-9_]+'
+        - match: '\s*[a-zA-Z_][a-zA-Z0-9_]*'
           scope: variable.parameter.sll
         - match: '(?=[\s\S])'
           pop: true
@@ -77,7 +78,7 @@ contexts:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.declaration.function.sll
       push:
-        - match: '\s*[a-zA-Z0-9_]+'
+        - match: '\s*[a-zA-Z_][a-zA-Z0-9_]*'
           scope: variable.parameter.sll
         - match: '(?=[\s\S])'
           pop: true
@@ -93,6 +94,25 @@ contexts:
                 pop: true
               - include: main
           - include: main
+    - match: '(\()\s*(?:(=)\s*?([a-zA-Z_][a-zA-Z0-9_]*)\s*?(\())(&:)(?=\s|\))'
+      captures:
+        1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
+        2: keyword.operator.assignment.sll
+        3: entity.name.type.sll
+        4: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
+        5: keyword.declaration.type.sll
+      push:
+        - meta_scope: meta.group.sll meta.parens.sll
+        - match: '\)'
+          scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+          pop: true
+          push:
+            - meta_scope: meta.group.sll meta.parens.sll
+            - match: '\)'
+              scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+              pop: true
+            - include: main
+        - include: main
     - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2})|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%])|(>=|<=|==|!=|>|<|===|!==)|(=)|(--)|(,,,)|(:>)|(<-)|(@)|(@@)|(@@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
@@ -128,11 +148,6 @@ contexts:
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           pop: true
         - include: main
-    - match: '(\()\s*(\))'
-      scope: meta.group.sll meta.parens.sll
-      captures:
-        1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
-        2: punctuation.section.group.end.sll punctuation.section.parens.end.sll
     - match: '\('
       push:
         - meta_scope: invalid.illegal.unknown-operator.sll

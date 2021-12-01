@@ -44,13 +44,6 @@ if (not os.path.exists("build/lib")):
 	os.mkdir("build/lib")
 if (not os.path.exists("build/objects")):
 	os.mkdir("build/objects")
-if (vb):
-	print("Copying Modules...")
-for f in os.listdir("src/sll/lib"):
-	if (vb):
-		print(f"  Copying Module 'src/sll/lib/{f}'...")
-	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
-		wf.write(rf.read())
 ver=header.read_version("src/include/sll/version.h")
 if (vb):
 	print("Collecting Documentation Files...")
@@ -161,6 +154,13 @@ if ("--generate-api" in sys.argv):
 			fn_l.append(f"{{\"{k['name'][8:]}\",{k['name']}_raw,{fl}}}")
 		hf.write("\n#endif\n")
 		cf.write(f"\n\n\nstatic const internal_function_t _ifunc_data_ptr[]={{\n\t"+",\n\t".join(fn_l)+f"\n}};\n\n\n\nconst sll_function_index_t _ifunc_size={len(fn_l)};\nconst internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);\n")
+if (vb):
+	print("Copying Modules...")
+for f in os.listdir("src/sll/lib"):
+	if (vb):
+		print(f"  Copying Module 'src/sll/lib/{f}'...")
+	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
+		wf.write(rf.read())
 header.generate_help("rsrc/help.txt","build/help_text.h",vb)
 h_dt=header.parse_header("src/include/sll",vb)
 if (vb):
