@@ -1,4 +1,4 @@
-(# time sleep open close write platform argc argv get_ref_count list_dir format recursive_list_dir size parse separator instruction_count lower_case upper_case title_case replace hash int_type float_type string_type array_type map_type map_key_type map_value_type stdout absolute sort flip_case)
+(# time sleep file platform argc argv get_ref_count list_dir format recursive_list_dir size parse separator instruction_count lower_case upper_case title_case replace hash int_type float_type string_type array_type map_type map_key_type map_value_type stdout absolute sort flip_case)
 (? 1 (-- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -34,17 +34,17 @@
 (:> "Current Time (Internal Call): " (<- time) "\n")
 (? true nil 2 (:> "Dead Code") (@@@ 128 "False Exit"))
 (= fp (+ "build" separator "hello.txt"))
-(= f (<- open fp "wb"))
+(= f (<- file$open fp "wb"))
 (? f {
-	(<- write f "Hello!\n")
+	(<- file$write f "Hello!\n")
 	(:> "ABC\n")
 	(:> f ", " (+ f 1) ", " (<< 2 (+ f 1)) "\n")
-	|# (<- close f); Automatic Cleanup #|
+	|# (<- file$close f); Automatic Cleanup #|
 } {
 	(:> "Unable to open file!\n")
 } )
 (:> "File size: " (<- size "build/hello.txt") "\n")
-(<- write stdout "Argument Count: " argc "\n")
+(<- file$write stdout "Argument Count: " argc "\n")
 (-> (= i 0) (< i argc) (:> "[" i "] = " (<- argv i) "\n") (= i (+ i 1)))
 (:> "Platform: " platform "\n")
 (= string (+ "prefix_" (<- (,,, (@@ "test_string")))) (:> (<- get_ref_count string) "\n"))
@@ -155,7 +155,7 @@
 	(< sz (<< 1 10)) (@@ (+ sz " b"))
 	(< sz (<< 1 20)) (@@ (+ (>> sz 10) " kb"))
 	(< sz (<< 1 30)) (@@ (+ (>> sz 20) " Mb"))
-	(@@ (+ sz " b"))
+	(@@ (+ (>> sz 30) " Gb"))
 )))
 (= array (<- sort (<- recursive_list_dir ".") false))
 (-> (= i 0) (< i ($ array))
@@ -173,8 +173,8 @@
 	string_type str
 ))
 (= v (. point_type 4))
-(= (: v "x") -5)
-(= (: v "y") 11111); Failure to assign value to 'const' field
+(= v$x -5)
+(= v$y 11111); Failure to assign value to 'const' field
 (:> point_type "\n" (. (&:)) "\n" (. int_type 5.59) "\n" (. map_type 1 'a' 2 'b' 3 'c') "\n" v "\n" (:? v) "\n" point_string_type "\n" (. point_string_type) "\n")
 (= test_type (&:
 	(&:
@@ -183,11 +183,11 @@
 	) p
 	int_type depth
 ))
-(:> (. test_type [1 2] 3) "\n" (: v "x") "\n" (: (. test_type [-1 -1]) "p") "\n")
+(:> (. test_type [1 2] 3) "\n" v$x "\n" (: (. test_type [-1 -1]) "p") "\n")
 (= new_point (. point_string_type [1 2] -5687.7))
 (= p2 (: new_point))
-(= (: p2 "str") "point-2")
-(= (: new_point "p") (. point_type 5 6))
+(= p2$str "point-2")
+(= new_point$p (. point_type 5 6))
 (:> new_point "\n" p2 "\n")
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

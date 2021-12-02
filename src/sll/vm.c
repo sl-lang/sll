@@ -497,6 +497,25 @@ _cleanup_jump_table:;
 				OPERATOR_INSTRUCTION_TERNARY(sll_operator_access_range);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE:
 				OPERATOR_INSTRUCTION_QUATERNARY(sll_operator_access_range_step);
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
+				{
+					si-=ai->dt.va.l-1;
+					sll_object_t* d=*(v+ai->dt.va.v);
+					SLL_ACQUIRE(d);
+					sll_arg_count_t l=ai->dt.va.l;
+					sll_object_t*const* p=s+si-1;
+					do{
+						SLL_ASSERT((*p)->t==SLL_OBJECT_TYPE_STRING);
+						sll_object_t* nd=sll_operator_access(d,*p);
+						SLL_RELEASE(d);
+						SLL_RELEASE(*p);
+						d=nd;
+						p++;
+						l--;
+					} while (l);
+					*(s+si-1)=d;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR:
 				si-=2;
 				sll_operator_assign(*(v+ai->dt.v),*(s+si),*(s+si+1));
@@ -507,6 +526,30 @@ _cleanup_jump_table:;
 				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE_VAR:
 				SLL_UNIMPLEMENTED();
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
+				{
+					sll_object_t* nv=*(s+si-1);
+					si-=ai->dt.va.l+1;
+					sll_object_t* d=*(v+ai->dt.va.v);
+					SLL_ACQUIRE(d);
+					sll_arg_count_t l=ai->dt.va.l-1;
+					sll_object_t*const* p=s+si;
+					while (l){
+						SLL_ASSERT((*p)->t==SLL_OBJECT_TYPE_STRING);
+						sll_object_t* nd=sll_operator_access(d,*p);
+						SLL_RELEASE(d);
+						SLL_RELEASE(*p);
+						d=nd;
+						p++;
+						l--;
+					}
+					SLL_ASSERT((*p)->t==SLL_OBJECT_TYPE_STRING);
+					sll_operator_assign(d,*p,nv);
+					SLL_RELEASE(d);
+					SLL_RELEASE(*p);
+					SLL_RELEASE(nv);
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
 				OPERATOR_INSTRUCTION_BINARY(sll_operator_cast);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:

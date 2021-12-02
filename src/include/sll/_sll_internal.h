@@ -193,6 +193,10 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 #define NOT_FIELD(o) SLL_ASSERT((o)->t!=SLL_NODE_TYPE_FIELD)
 
+#define GET_VAR_INDEX_FLAG_UNKNOWN 1
+#define GET_VAR_INDEX_FLAG_ASSIGN 2
+#define GET_VAR_INDEX_FLAG_FUNC 4
+
 
 
 typedef uint16_t call_stack_size_t;

@@ -1,0 +1,13 @@
+; Sll File Size Example
+; @krzem5, 2021-12-01
+
+
+
+(# absolute size)
+(-- "path.sll")
+
+
+
+(= file_path "./main.sll")
+
+(:> "Size of '" (<- absolute file_path) "' is " (<- size file_path) " bytes.\n")

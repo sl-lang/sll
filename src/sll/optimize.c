@@ -918,8 +918,7 @@ static sll_node_t* _optimize(sll_node_t* o,sll_node_t* p,optimizer_data_t* o_dt,
 			*v=_get_as_object(o,o_dt,OPTIMIZER_NEW_OBJECT);
 			o_dt->a_v=NULL;
 		}
-		else{
-			SLL_ASSERT(o_dt->a_v->t==SLL_NODE_TYPE_ACCESS);
+		else if (o_dt->a_v->t==SLL_NODE_TYPE_ACCESS){
 			SLL_ASSERT(o_dt->a_v->dt.ac>1);
 			sll_object_t* v[3]={NULL,NULL,NULL};
 			sll_arg_count_t vl=(o_dt->a_v->dt.ac>4?4:o_dt->a_v->dt.ac);
@@ -976,6 +975,10 @@ static sll_node_t* _optimize(sll_node_t* o,sll_node_t* p,optimizer_data_t* o_dt,
 			}
 			o_dt->a_v=OPTIMIZER_ASSIGN_VARIABLE_REMOVE;
 _keep_assignment:;
+		}
+		else{
+			SLL_ASSERT(o_dt->a_v->t==SLL_NODE_TYPE_VAR_ACCESS);
+			o_dt->a_v=NULL;
 		}
 	}
 	switch (o->t){
@@ -1189,7 +1192,7 @@ _keep_assignment:;
 				while (id_o->t==SLL_NODE_TYPE_NOP||id_o->t==SLL_NODE_TYPE_DEBUG_DATA||id_o->t==NODE_TYPE_CHANGE_STACK){
 					id_o=(id_o->t==NODE_TYPE_CHANGE_STACK?id_o->dt._p:id_o+1);
 				}
-				if (id_o->t!=SLL_NODE_TYPE_IDENTIFIER&&id_o->t!=SLL_NODE_TYPE_ACCESS){
+				if (id_o->t!=SLL_NODE_TYPE_IDENTIFIER&&id_o->t!=SLL_NODE_TYPE_ACCESS&&id_o->t!=SLL_NODE_TYPE_VAR_ACCESS){
 					o=r;
 					o->t=SLL_NODE_TYPE_OPERATION_LIST;
 					goto _optimize_operation_list_comma;
@@ -1919,6 +1922,24 @@ _remove_cond:
 					}
 					i++;
 				}
+				return o;
+			}
+		case SLL_NODE_TYPE_VAR_ACCESS:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l>1);
+				o++;
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+				}
+				SLL_ASSERT(o->t==SLL_NODE_TYPE_IDENTIFIER);
+				DISABLE_REMOVE_VARIABLE(o,o_dt);
+				o++;
+				l--;
+				do{
+					l--;
+					o=sll_skip_node(o);
+				} while (l);
 				return o;
 			}
 		case SLL_NODE_TYPE_CAST:

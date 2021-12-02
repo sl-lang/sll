@@ -1,4 +1,5 @@
 (= int_type 0)
+(= func_type 0)
 (= float_type 1)
 (= char_type 2)
 (= string_type 3)
@@ -8,4 +9,4 @@
 (= map_key_type 7)
 (= map_value_type 8)
 
-(## int_type float_type char_type string_type array_type handle_type map_type map_key_type map_value_type)
+(## int_type func_type float_type char_type string_type array_type handle_type map_type map_key_type map_value_type)

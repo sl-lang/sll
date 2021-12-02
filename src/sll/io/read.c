@@ -367,6 +367,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 					CHECK_ERROR(rf,ai->dt.v,sll_variable_index_t,e);
 				}
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
+				CHECK_ERROR(rf,ai->dt.va.v,sll_variable_index_t,e);
+				CHECK_ERROR(rf,ai->dt.va.l,sll_arg_count_t,e);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				c=sll_file_read_char(rf);
 				if (c==SLL_END_OF_DATA){

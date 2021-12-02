@@ -310,6 +310,11 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 					_write_integer(wf,ai->dt.v);
 				}
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
+				_write_integer(wf,ai->dt.va.v);
+				_write_integer(wf,ai->dt.va.l);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				sll_file_write_char(wf,ai->dt.t);
 				break;

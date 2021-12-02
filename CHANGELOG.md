@@ -4,11 +4,14 @@
 
 ### Added
 
+- Ability to access elements of custom types (or maps) from variables by using the `|# variable #|$|# field 1#|$|# field 2#|$|# field 3#|` syntax
 - Ability to clone structures without references (by the `(: |# object #|)` syntax)
 - Added error handling for memory allocation ([#83])
 - Finished custom object type API ([#72])
+- `func_type` which is an alias to `int_type`
 - Implemented `SLL_OBJECT_GET_TYPE_MASK`
 - Memory structures can have constant fields (denoted by inverting (`(~)`) the type) ([#99])
+- More examples ([#77])
 
 ### Changed
 

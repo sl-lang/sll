@@ -79,7 +79,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
-	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_NODE_TYPE_OPERATION_LIST&&o->t!=SLL_NODE_TYPE_DEBUG_DATA){
+	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_NODE_TYPE_VAR_ACCESS&&o->t!=SLL_NODE_TYPE_OPERATION_LIST&&o->t!=SLL_NODE_TYPE_DEBUG_DATA){
 		sll_file_write_char(wf,'(');
 	}
 	switch (o->t){
@@ -403,6 +403,31 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 		case SLL_NODE_TYPE_ACCESS:
 			sll_file_write_char(wf,':');
 			break;
+		case SLL_NODE_TYPE_VAR_ACCESS:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l>1);
+				o++;
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+				}
+				SLL_ASSERT(o->t==SLL_NODE_TYPE_IDENTIFIER);
+				_print_identifier(o->dt.id,c_dt,wf);
+				o++;
+				l--;
+				do{
+					l--;
+					sll_file_write_char(wf,'$');
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					}
+					SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
+					sll_string_t* s=c_dt->st.dt+o->dt.s;
+					sll_file_write(wf,s->v,s->l);
+					o++;
+				} while (l);
+				return o;
+			}
 		case SLL_NODE_TYPE_CAST:
 			PRINT_STATIC_STRING("::",wf);
 			break;
@@ -874,6 +899,12 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE:
 				PRINT_STATIC_STRING("ACCESS_RANGE_STEP",wf);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
+				PRINT_STATIC_STRING("PUSH ",wf);
+				_print_int(ai->dt.va.l,wf);
+				PRINT_STATIC_STRING(" & ACCESS_VAR $",wf);
+				_print_int(ai->dt.va.v,wf);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR:
 				PRINT_STATIC_STRING("ASSIGN $",wf);
 				_print_int(ai->dt.v,wf);
@@ -885,6 +916,12 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE_VAR:
 				PRINT_STATIC_STRING("ASSIGN_RANGE_STEP $",wf);
 				_print_int(ai->dt.v,wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
+				PRINT_STATIC_STRING("PUSH ",wf);
+				_print_int(ai->dt.va.l,wf);
+				PRINT_STATIC_STRING(" & ASSIGN_VAR_ACCESS $",wf);
+				_print_int(ai->dt.va.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
 				PRINT_STATIC_STRING("CAST",wf);

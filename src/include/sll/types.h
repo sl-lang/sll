@@ -392,6 +392,13 @@ typedef struct __SLL_COMPILATION_DATA{
 
 
 
+typedef struct __SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
+	sll_variable_index_t v;
+	sll_arg_count_t l;
+} sll_assembly_instruction_data_var_access_t;
+
+
+
 typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_char_t c;
 	sll_integer_t i;
@@ -404,6 +411,7 @@ typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_array_length_t al;
 	sll_map_length_t ml;
 	sll_object_type_t t;
+	sll_assembly_instruction_data_var_access_t va;
 	void* _p;
 } sll_assembly_instruction_data_t;
 

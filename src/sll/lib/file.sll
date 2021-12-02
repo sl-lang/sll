@@ -1,3 +1,6 @@
+(# func_type)
+(-- "types.sll")
+
 (= stdin -1)
 (= stdout -2)
 (= stderr -3)
@@ -7,4 +10,10 @@
 (= read (... "file_read"))
 (= write (... "file_write"))
 
-(## stdin stdout stderr close open read write)
+(= file (. (&:
+	(~ func_type) close
+	(~ func_type) open
+	(~ func_type) read
+	(~ func_type) write
+) close open read write))
+(## stdin stdout stderr file)
