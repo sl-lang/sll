@@ -661,6 +661,12 @@ _recurse_array_or_map:;
 				else if (*str=='>'&&*(str+1)=='<'){
 					o->t=SLL_NODE_TYPE_LOOP;
 				}
+				else if (*str=='+'&&*(str+1)=='+'){
+					o->t=SLL_NODE_TYPE_INC;
+				}
+				else if (*str=='-'&&*(str+1)=='-'){
+					o->t=SLL_NODE_TYPE_DEC;
+				}
 				else if (*str=='/'&&*(str+1)=='/'){
 					o->t=SLL_NODE_TYPE_FLOOR_DIV;
 				}
@@ -697,10 +703,6 @@ _recurse_array_or_map:;
 				else if (*str=='@'&&*(str+1)=='@'){
 					o->t=((fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION)?SLL_NODE_TYPE_RETURN:SLL_NODE_TYPE_EXIT);
 				}
-				else if (*str=='-'&&*(str+1)=='-'){
-					o->t=SLL_NODE_TYPE_OPERATION_LIST;
-					fl|=EXTRA_COMPILATION_DATA_IMPORT;
-				}
 				else if (*str=='#'&&*(str+1)=='#'){
 					o->t=SLL_NODE_TYPE_OPERATION_LIST;
 					fl|=EXTRA_COMPILATION_DATA_EXPORT;
@@ -735,6 +737,10 @@ _recurse_array_or_map:;
 				}
 				else if (*str=='@'&&*(str+1)=='@'&&*(str+2)=='@'){
 					o->t=SLL_NODE_TYPE_EXIT;
+				}
+				else if (*str=='-'&&*(str+1)=='-'&&*(str+2)=='-'){
+					o->t=SLL_NODE_TYPE_OPERATION_LIST;
+					fl|=EXTRA_COMPILATION_DATA_IMPORT;
 				}
 				else{
 					goto _unknown_symbol;

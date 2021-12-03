@@ -1,5 +1,5 @@
 (# int_type func_type string_type)
-(-- "types.sll")
+(--- "types.sll")
 
 (= platform (<- (... "sll:sys_get_platform")))
 

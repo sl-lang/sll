@@ -1,5 +1,5 @@
 (# func_type)
-(-- "types.sll")
+(--- "types.sll")
 
 (= time_f (... "sll:time_current"))
 (= time_nanos (... "sll:time_current_nanos"))

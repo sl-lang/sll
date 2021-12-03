@@ -10,6 +10,7 @@
 - Finished custom object type API ([#72])
 - `func_type` which is an alias to `int_type`
 - Implemented `SLL_OBJECT_GET_TYPE_MASK`
+- Implemented increment (`(++)`) and decrement (`(--)`) operators ([#96])
 - Memory structures can have constant fields (denoted by inverting (`(~)`) the type) ([#99])
 - More examples ([#77])
 
@@ -17,6 +18,7 @@
 
 - Fixed storage type handling in structure objects
 - Internal Functions are now named according to [#73]
+- Renamed the import operator from `(--)` to `(---)` ([#96])
 - Structure fields are now declared as identifiers and are marked by an internal type (`SLL_NODE_TYPE_FIELD`)
 - The syntax highlight now currectly marks type declarations
 
@@ -1101,6 +1103,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#99]: https://github.com/sl-lang/sll/issues/99
 [#98]: https://github.com/sl-lang/sll/issues/98
 [#97]: https://github.com/sl-lang/sll/issues/97
+[#96]: https://github.com/sl-lang/sll/issues/96
 [#95]: https://github.com/sl-lang/sll/issues/95
 [#94]: https://github.com/sl-lang/sll/issues/94
 [#93]: https://github.com/sl-lang/sll/issues/93

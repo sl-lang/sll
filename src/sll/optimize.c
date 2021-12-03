@@ -646,6 +646,26 @@ static const sll_node_t* _mark_loop_vars(const sll_node_t* o,optimizer_data_t* o
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_INC:
+		case SLL_NODE_TYPE_DEC:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l);
+				o++;
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+				}
+				if (o->t==SLL_NODE_TYPE_IDENTIFIER){
+					(*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt)))->t|=OBJECT_CHANGE_IN_LOOP;
+				}
+				o++;
+				l--;
+				while (l){
+					l--;
+					o=_mark_loop_vars(o,o_dt);
+				}
+				return o;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;
@@ -1610,6 +1630,40 @@ _keep_assignment:;
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_LOOP:
 			SLL_UNIMPLEMENTED();
+		case SLL_NODE_TYPE_INC:
+		case SLL_NODE_TYPE_DEC:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l);
+				sll_node_t* r=o;
+				o++;
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+				}
+				if (o->t!=SLL_NODE_TYPE_IDENTIFIER){
+					r->t=SLL_NODE_TYPE_OPERATION_LIST;
+					o=r;
+					goto _optimize_operation_list_comma;
+				}
+				sll_object_t* v=*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt));
+				if (SLL_OBJECT_GET_TYPE(v)!=OBJECT_TYPE_UNKNOWN&&!(v->t&OBJECT_CHANGE_IN_LOOP)){
+					sll_object_t* nv=(r->t==SLL_NODE_TYPE_INC?sll_operator_inc(v):sll_operator_dec(v));
+					SLL_RELEASE(v);
+					*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt))=nv;
+					r->t=SLL_NODE_TYPE_OPERATION_LIST;
+					o->t=SLL_NODE_TYPE_NOP;
+					o=r;
+					o->dt.ac--;
+					goto _optimize_operation_list_comma;
+				}
+				l--;
+				o++;
+				while (l){
+					l--;
+					o=_optimize(o,r,o_dt,0);
+				}
+				return o;
+			}
 		case SLL_NODE_TYPE_LESS:
 		case SLL_NODE_TYPE_LESS_EQUAL:
 		case SLL_NODE_TYPE_EQUAL:

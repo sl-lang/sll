@@ -1,9 +1,9 @@
 (# int_type func_type separator)
-(-- "types.sll")
+(--- "types.sll")
 
 (? 1 {
 	(# sys)
-	(-- "sys.sll")
+	(--- "sys.sll")
 	(= separator (?: (=== sys$platform "windows") '\\' '/'))
 })
 

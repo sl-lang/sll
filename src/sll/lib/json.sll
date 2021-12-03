@@ -1,5 +1,5 @@
 (# func_type handle_type)
-(-- "types.sll")
+(--- "types.sll")
 
 (= json_null (<- (... "sll:json_type") 0))
 (= json_true (<- (... "sll:json_type") 1))

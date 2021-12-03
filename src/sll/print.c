@@ -337,6 +337,12 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 				sll_file_write_char(wf,')');
 				return o;
 			}
+		case SLL_NODE_TYPE_INC:
+			PRINT_STATIC_STRING("++",wf);
+			break;
+		case SLL_NODE_TYPE_DEC:
+			PRINT_STATIC_STRING("--",wf);
+			break;
 		case SLL_NODE_TYPE_ADD:
 			sll_file_write_char(wf,'+');
 			break;

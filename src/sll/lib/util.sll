@@ -1,5 +1,5 @@
 (# func_type)
-(-- "types.sll")
+(--- "types.sll")
 
 (= get_ref_count (... "sll:util_ref_count"))
 (= instruction_count (... "sll:util_instruction_count"))

@@ -1,5 +1,5 @@
 (# func_type)
-(-- "types.sll")
+(--- "types.sll")
 
 (= stdin -1)
 (= stdout -2)
