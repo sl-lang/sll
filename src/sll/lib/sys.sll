@@ -1,12 +1,12 @@
 (# int_type func_type string_type)
 (-- "types.sll")
 
-(= platform (<- (... "sys_get_platform")))
+(= platform (<- (... "sll:sys_get_platform")))
 
-(= argc (<- (... "sys_arg_get_count")))
-(= argv (... "sys_arg_get"))
+(= argc (<- (... "sll:sys_arg_get_count")))
+(= argv (... "sll:sys_arg_get"))
 
-(= executable (<- (... "sys_get_executable")))
+(= executable (<- (... "sll:sys_get_executable")))
 
 (= sys (. (&:
 	(~ string_type) platform

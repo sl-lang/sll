@@ -51,7 +51,8 @@ __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_
 	i_ft->l++;
 	i_ft->dt=sll_reallocate((void*)(i_ft->dt),i_ft->l*sizeof(const sll_internal_function_t*));
 	sll_internal_function_t* i_f=sll_allocate(sizeof(sll_internal_function_t));
-	sll_string_from_pointer(nm,(sll_string_t*)&(i_f->nm));
+	sll_string_from_pointer(nm,(sll_string_t*)(&(i_f->nm)));
+	CHECK_INTERNAL_FUNCTION_NAME(&(i_f->nm));
 	*((sll_internal_function_pointer_t*)(&(i_f->p)))=f;
 	*((sll_internal_function_type_t*)(&(i_f->t)))=t;
 	*((const sll_internal_function_t**)(i_ft->dt+i_ft->l-1))=i_f;
@@ -67,7 +68,8 @@ __SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_functio
 	const sll_internal_function_t** p=(const sll_internal_function_t**)(ift->dt+ift->l-_ifunc_size);
 	for (sll_function_index_t i=0;i<_ifunc_size;i++){
 		sll_internal_function_t* nf=sll_allocate(sizeof(sll_internal_function_t));
-		sll_string_from_pointer(f->nm,(sll_string_t*)&(nf->nm));
+		sll_string_from_pointer(f->nm,(sll_string_t*)(&(nf->nm)));
+		CHECK_INTERNAL_FUNCTION_NAME(&(nf->nm));
 		*((sll_internal_function_pointer_t*)(&(nf->p)))=f->f;
 		*((sll_internal_function_type_t*)(&(nf->t)))=f->t;
 		*p=nf;

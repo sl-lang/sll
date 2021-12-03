@@ -41,7 +41,7 @@
 	(:> f ", " (+ f 1) ", " (<< 2 (+ f 1)) "\n")
 	|# (<- file$close f); Automatic Cleanup #|
 } {
-	(:> "Unable to open file!\n")
+	(:> (<- string$format "Unable to open file '%s'!\n" fp))
 } )
 (:> "File size: " (<- path$size "build/hello.txt") "\n")
 (<- file$write stdout "Argument Count: " sys$argc "\n")

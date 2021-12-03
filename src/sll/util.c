@@ -18,13 +18,17 @@ static sll_sandbox_flags_t _util_sandbox_flags=0;
 
 
 
-__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c){
+__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c,const sll_char_t* d,const sll_char_t* e){
 	sll_file_flush(sll_stdout);
 	sll_file_flush(sll_stderr);
 	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
 	sll_platform_file_write(fd,a,sll_string_length_unaligned(a));
 	sll_platform_file_write(fd,b,sll_string_length_unaligned(b));
 	sll_platform_file_write(fd,c,sll_string_length_unaligned(c));
+	if (d){
+		sll_platform_file_write(fd,d,sll_string_length_unaligned(d));
+		sll_platform_file_write(fd,e,sll_string_length_unaligned(e));
+	}
 	_force_exit_platform();
 }
 

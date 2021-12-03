@@ -16,6 +16,7 @@
 ### Changed
 
 - Fixed storage type handling in structure objects
+- Internal Functions are now named according to [#73]
 - Structure fields are now declared as identifiers and are marked by an internal type (`SLL_NODE_TYPE_FIELD`)
 - The syntax highlight now currectly marks type declarations
 
@@ -1121,6 +1122,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#77]: https://github.com/sl-lang/sll/issues/77
 [#76]: https://github.com/sl-lang/sll/issues/76
 [#74]: https://github.com/sl-lang/sll/issues/74
+[#73]: https://github.com/sl-lang/sll/issues/73
 [#72]: https://github.com/sl-lang/sll/issues/72
 [#71]: https://github.com/sl-lang/sll/issues/71
 [#69]: https://github.com/sl-lang/sll/issues/69

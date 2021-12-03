@@ -5,10 +5,10 @@
 (= stdout -2)
 (= stderr -3)
 
-(= close (... "file_close"))
-(= open (... "file_open"))
-(= read (... "file_read"))
-(= write (... "file_write"))
+(= close (... "sll:file_close"))
+(= open (... "sll:file_open"))
+(= read (... "sll:file_read"))
+(= write (... "sll:file_write"))
 
 (= file (. (&:
 	(~ func_type) close

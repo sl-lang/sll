@@ -1,16 +1,16 @@
 (# func_type)
 (-- "types.sll")
 
-(= str (... "string_convert"))
+(= str (... "sll:string_convert"))
 
-(= replace (... "string_replace"))
+(= replace (... "sll:string_replace"))
 
-(= flip_case (... "string_flip_case"))
-(= lower_case (... "string_to_lower_case"))
-(= title_case (... "string_to_title_case"))
-(= upper_case (... "string_to_upper_case"))
+(= flip_case (... "sll:string_flip_case"))
+(= lower_case (... "sll:string_to_lower_case"))
+(= title_case (... "sll:string_to_title_case"))
+(= upper_case (... "sll:string_to_upper_case"))
 
-(= format (... "string_format"))
+(= format (... "sll:string_format"))
 
 (= string (. (&:
 	(~ func_type) str

@@ -1,7 +1,7 @@
 (# func_type)
 (-- "types.sll")
 
-(= sort_f (... "sort_sort"))
+(= sort_f (... "sll:sort_sort"))
 
 (= sort (. (&:
 	(~ func_type) sort

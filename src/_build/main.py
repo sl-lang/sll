@@ -151,7 +151,7 @@ if ("--generate-api" in sys.argv):
 				fl+="SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL"
 			if (len(fl)==0):
 				fl="0"
-			fn_l.append(f"{{\"{k['name'][8:]}\",{k['name']}_raw,{fl}}}")
+			fn_l.append(f"{{\"sll:{k['name'][8:]}\",{k['name']}_raw,{fl}}}")
 		hf.write("\n#endif\n")
 		cf.write(f"\n\n\nstatic const internal_function_t _ifunc_data_ptr[]={{\n\t"+",\n\t".join(fn_l)+f"\n}};\n\n\n\nconst sll_function_index_t _ifunc_size={len(fn_l)};\nconst internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);\n")
 if (vb):

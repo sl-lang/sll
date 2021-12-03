@@ -5,8 +5,6 @@
 #endif
 #include <sll/api.h>
 #include <sll/api/_generated.h>
-#include <sll/file.h>
-#include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <stdint.h>
@@ -78,7 +76,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define __strto_end __stop_strto
 #endif
 #ifdef DEBUG_BUILD
-#define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"));
+#define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"),NULL,NULL);
 #endif
 
 
@@ -96,13 +94,22 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
 #define _SLL_ASSERT_STRINGIFY_(x) #x
 #define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
-#define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"));
+#define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"),NULL,NULL);
 #ifdef DEBUG_BUILD
 #define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
 #define SLL_ASSERT(x) \
 	do{ \
 		if (!(x)){ \
-			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n")); \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n"),NULL,NULL); \
+		} \
+	} while (0)
+#define CHECK_INTERNAL_FUNCTION_NAME(s) \
+	do{ \
+		if ((s)->l>255){ \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Internal Function Name longer than 255 Characters: "),(s)->v,SLL_CHAR("\n")); \
+		} \
+		if (sll_string_count_char((s),':')!=1){ \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Internal Function Name does not contain one Colon (':'): "),(s)->v,SLL_CHAR("\n")); \
 		} \
 	} while (0)
 #else
@@ -113,6 +120,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 			SLL_UNREACHABLE(); \
 		} \
 	} while (0)
+#define CHECK_INTERNAL_FUNCTION_NAME(s)
 #endif
 
 #define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
@@ -456,7 +464,7 @@ void _file_release_std_streams(void);
 
 
 
-__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c);
+__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c,const sll_char_t* d,const sll_char_t* e);
 
 
 

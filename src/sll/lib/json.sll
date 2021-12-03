@@ -1,12 +1,12 @@
 (# func_type handle_type)
 (-- "types.sll")
 
-(= json_null (<- (... "json_type") 0))
-(= json_true (<- (... "json_type") 1))
-(= json_false (<- (... "json_type") 2))
+(= json_null (<- (... "sll:json_type") 0))
+(= json_true (<- (... "sll:json_type") 1))
+(= json_false (<- (... "sll:json_type") 2))
 
-(= parse (... "json_parse"))
-(= stringify (... "json_stringify"))
+(= parse (... "sll:json_parse"))
+(= stringify (... "sll:json_stringify"))
 
 (= json (. (&:
 	(~ handle_type) null

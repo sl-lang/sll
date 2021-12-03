@@ -1,7 +1,7 @@
 (# func_type)
 (-- "types.sll")
 
-(= hash_f (... "hash_create"))
+(= hash_f (... "sll:hash_create"))
 
 (= hash (. (&:
 	(~ func_type) hash

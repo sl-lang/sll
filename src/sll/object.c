@@ -419,7 +419,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 		case SLL_OBJECT_TYPE_FLOAT:
 			return SLL_FROM_FLOAT(*((sll_float_t*)p));
 		case SLL_OBJECT_TYPE_CHAR:
-			return SLL_FROM_CHAR(*((sll_float_t*)p));
+			return SLL_FROM_CHAR((sll_char_t)(*((sll_integer_t*)p)));
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				sll_object_t* n=SLL_CREATE();
