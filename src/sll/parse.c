@@ -1194,6 +1194,11 @@ _unknown_identifier_char:
 					}
 					return 0;
 				}
+				else if (o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
+					sll_string_calculate_checksum(&str);
+					arg->t=SLL_NODE_TYPE_FIELD;
+					arg->dt.s=sll_add_string(&(c_dt->st),&str,1);
+				}
 				else if ((sz==3&&sll_compare_data(str.v,"nil",3)==SLL_COMPARE_RESULT_EQUAL)||(sz==5&&sll_compare_data(str.v,"false",5)==SLL_COMPARE_RESULT_EQUAL)){
 					sll_free_string(&str);
 					arg->t=SLL_NODE_TYPE_INT;
@@ -1203,11 +1208,6 @@ _unknown_identifier_char:
 					sll_free_string(&str);
 					arg->t=SLL_NODE_TYPE_INT;
 					arg->dt.i=1;
-				}
-				else if (o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
-					sll_string_calculate_checksum(&str);
-					arg->t=SLL_NODE_TYPE_FIELD;
-					arg->dt.s=sll_add_string(&(c_dt->st),&str,1);
 				}
 				else{
 					sll_string_calculate_checksum(&str);

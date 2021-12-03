@@ -1,6 +1,6 @@
 ; Sll Quadratic Equation Solver Example
 ; @krzem5, 2021-10-31
-(# sqrt)
+(# math)
 (-- "math.sll")
 
 
@@ -11,7 +11,7 @@
 		(< d 0) (@@ [])
 		(= d 0) (@@ [(/ b (* -2 a))])
 		{
-			(= sqrt_d (<- sqrt d))
+			(= sqrt_d (<- math$sqrt d))
 			(@@ [
 				(/ (- b sqrt_d) (* -2 a))
 				(/ (+ b sqrt_d) (* -2 a))
