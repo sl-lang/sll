@@ -1,7 +1,16 @@
-(= time (... "time_current"))
+(# func_type)
+(-- "types.sll")
+
+(= time_f (... "time_current"))
 (= time_nanos (... "time_current_nanos"))
 
 (= sleep (... "time_sleep"))
 (= sleep_nanos (... "time_sleep_nanos"))
 
-(## time time_nanos sleep sleep_nanos)
+(= time (. (&:
+	(~ func_type) time
+	(~ func_type) time_nanos
+	(~ func_type) sleep
+	(~ func_type) sleep_nanos
+) time_f time_nanos sleep sleep_nanos))
+(## time)

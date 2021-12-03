@@ -21,7 +21,7 @@
 
 ### Removed
 
-- URL & socket APIs (Therefor invalidated [#66])
+- URL & socket APIs (Therefore invalidated [#66])
 
 ## [0.6.29] - 2021-11-28
 

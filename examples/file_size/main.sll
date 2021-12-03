@@ -3,11 +3,11 @@
 
 
 
-(# absolute size)
+(# path)
 (-- "path.sll")
 
 
 
 (= file_path "./main.sll")
 
-(:> "Size of '" (<- absolute file_path) "' is " (<- size file_path) " bytes.\n")
+(:> "Size of '" (<- path$absolute file_path) "' is " (<- path$size file_path) " bytes.\n")

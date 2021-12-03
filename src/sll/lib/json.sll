@@ -1,3 +1,6 @@
+(# func_type)
+(-- "types.sll")
+
 (= json_null (<- (... "json_type") 0))
 (= json_true (<- (... "json_type") 1))
 (= json_false (<- (... "json_type") 2))
@@ -5,4 +8,12 @@
 (= parse (... "json_parse"))
 (= stringify (... "json_stringify"))
 
-(## parse stringify)
+(= t (?: json_null))
+(= json (. (&:
+	(~ t) null
+	(~ t) true_
+	(~ t) false_
+	(~ func_type) parse
+	(~ func_type) stringify
+) json_null json_true json_false parse stringify))
+(## json)

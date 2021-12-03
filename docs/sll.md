@@ -798,10 +798,10 @@ Each of the string arguments is treated as a file path. This can either be a bui
 ##### Example
 
 ```sll
-(# write stdout)
+(# file stdout)
 (-- "file.sll")
 
-(<- write stdout "Hello, World!\n")
+(<- file$write stdout "Hello, World!\n")
 ```
 
 #### Infinite Loop (`><`)
