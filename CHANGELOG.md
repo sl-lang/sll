@@ -10,6 +10,7 @@
 - Finished custom object type API ([#72])
 - `func_type` which is an alias to `int_type`
 - Implemented `SLL_OBJECT_GET_TYPE_MASK`
+- Implemented buffered file reading
 - Implemented increment (`(++)`) and decrement (`(--)`) operators ([#96])
 - Memory structures can have constant fields (denoted by inverting (`(~)`) the type) ([#99])
 - More examples ([#77])

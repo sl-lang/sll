@@ -379,22 +379,22 @@ static sll_object_t* _get_as_object(const sll_node_t* o,const optimizer_data_t* 
 				for (sll_map_length_t i=0;i<l;i++){
 					sll_object_t* n=_get_as_object(o,o_dt,fl);
 					o=sll_skip_node_const(o);
-					v->dt.a.v[i]=n;
+					v->dt.m.v[i]=n;
 					if (n->t==OBJECT_TYPE_UNKNOWN){
 						while (1){
-							SLL_RELEASE(v->dt.a.v[i]);
+							SLL_RELEASE(v->dt.m.v[i]);
 							if (!i){
 								break;
 							}
 							i--;
 						}
-						sll_deallocate(v->dt.a.v);
+						sll_deallocate(v->dt.m.v);
 						v->t=OBJECT_TYPE_UNKNOWN;
 						break;
 					}
 				}
 				if (l&1){
-					v->dt.a.v[l]=SLL_ACQUIRE_STATIC_INT(0);
+					v->dt.m.v[l]=SLL_ACQUIRE_STATIC_INT(0);
 				}
 				return v;
 			}
@@ -684,8 +684,6 @@ static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t*
 	}
 	NOT_FIELD(o);
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
-			return COND_TYPE_UNKNOWN;
 		case SLL_NODE_TYPE_CHAR:
 			return (((!!o->dt.c)^inv)?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_NODE_TYPE_INT:
@@ -747,32 +745,8 @@ static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t*
 		case SLL_NODE_TYPE_ASSIGN:
 			SLL_ASSERT(o->dt.ac>=2);
 			return _get_cond_type(sll_skip_node_const(o+1),o_dt,inv,lv);
-		case SLL_NODE_TYPE_CALL:
-			return COND_TYPE_UNKNOWN;
 		case SLL_NODE_TYPE_INLINE_IF:
 			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_ADD:
-		case SLL_NODE_TYPE_SUB:
-		case SLL_NODE_TYPE_MULT:
-		case SLL_NODE_TYPE_DIV:
-		case SLL_NODE_TYPE_FLOOR_DIV:
-		case SLL_NODE_TYPE_MOD:
-		case SLL_NODE_TYPE_BIT_AND:
-		case SLL_NODE_TYPE_BIT_OR:
-		case SLL_NODE_TYPE_BIT_XOR:
-		case SLL_NODE_TYPE_BIT_NOT:
-		case SLL_NODE_TYPE_LESS:
-		case SLL_NODE_TYPE_LESS_EQUAL:
-		case SLL_NODE_TYPE_EQUAL:
-		case SLL_NODE_TYPE_NOT_EQUAL:
-		case SLL_NODE_TYPE_MORE:
-		case SLL_NODE_TYPE_MORE_EQUAL:
-		case SLL_NODE_TYPE_STRICT_EQUAL:
-		case SLL_NODE_TYPE_STRICT_NOT_EQUAL:
-		case SLL_NODE_TYPE_COMMA:
-			return COND_TYPE_UNKNOWN;
-		default:
-			SLL_UNREACHABLE();
 	}
 	return COND_TYPE_UNKNOWN;
 }
