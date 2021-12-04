@@ -1686,7 +1686,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO);
 	}
 	o->ft.l=c_dt->ft.l;
-	o->ft.dt=sll_allocate(c_dt->ft.l*sizeof(sll_instruction_index_t));
+	o->ft.dt=sll_allocate(c_dt->ft.l*sizeof(sll_assembly_function_t));
 	g_dt_rt.dt=sll_allocate(sizeof(assembly_instruction_label_t));
 	*(g_dt_rt.dt)=MAX_ASSEMBLY_INSTRUCTION_LABEL;
 	g_dt_rt.sz=1;
@@ -1696,6 +1696,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(o);
 		ai->t=ASSEMBLY_INSTRUCTION_TYPE_FUNC_START;
 		ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=i;
+		(o->ft.dt+i)->ac=j;
 		while (j){
 			j--;
 			ai=_acquire_next_instruction(o);
@@ -1961,7 +1962,7 @@ _handle_nop:;
 			*(sm.m+(ai->dt.s>>6))|=1ull<<(ai->dt.s&63);
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
-			*(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=i;
+			(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->i=i;
 			goto _handle_nop;
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){

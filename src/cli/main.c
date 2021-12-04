@@ -84,7 +84,7 @@ static sll_bool_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,s
 	if (fl&_FLAG_ASSEMBLY_GENERATED){
 		sll_free_assembly_data(&a_dt);
 		COLOR_RED;
-		PRINT_STATIC_STR("Importing Assembly into Compiled Objects is Not Allowed\n");
+		PRINT_STATIC_STR("Importing Assembly into Compiled Nodes is Not Allowed\n");
 		COLOR_RESET;
 		e->t=SLL_ERROR_UNKNOWN;
 		return 0;
@@ -123,7 +123,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_free_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
-					sll_file_write_format(sll_stdout,SLL_CHAR("File '%s' is not a Compiled Object.\n"),f_fp);
+					sll_file_write_format(sll_stdout,SLL_CHAR("File '%s' is not a Compiled Node.\n"),f_fp);
 					COLOR_RESET;
 				}
 				else{
@@ -229,7 +229,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_free_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
-					sll_file_write_format(sll_stdout,SLL_CHAR("Module '%s.slc' is not a Compiled Object.\n"),f_nm);
+					sll_file_write_format(sll_stdout,SLL_CHAR("Module '%s.slc' is not a Compiled Node.\n"),f_nm);
 					COLOR_RESET;
 				}
 				else{
@@ -271,7 +271,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_free_compilation_data(c_dt);
 				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
 					COLOR_RED;
-					sll_file_write_format(sll_stdout,SLL_CHAR("File '%s' is not a Compiled Object\n"),f_fp);
+					sll_file_write_format(sll_stdout,SLL_CHAR("File '%s' is not a Compiled Node\n"),f_fp);
 					COLOR_RESET;
 				}
 				else{
@@ -348,7 +348,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
 			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("Removing Object Padding...\n");
+				PRINT_STATIC_STR("Removing Node Padding...\n");
 			}
 			sll_remove_node_padding(c_dt,c_dt->h);
 		}
@@ -357,7 +357,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			sll_file_write_char(sll_stdout,'\n');
 		}
 		if (fl&FLAG_VERBOSE){
-			PRINT_STATIC_STR("Optimizing Object Metadata...\n");
+			PRINT_STATIC_STR("Optimizing Node Metadata...\n");
 		}
 		sll_optimize_metadata(c_dt);
 	}
@@ -429,7 +429,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
 			SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+i);
 			if (fl&FLAG_VERBOSE){
-				sll_file_write_format(sll_stdout,SLL_CHAR("Writing Compiled Object to File '%s'...\n"),bf);
+				sll_file_write_format(sll_stdout,SLL_CHAR("Writing Compiled Node to File '%s'...\n"),bf);
 			}
 			sll_file_t of;
 			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
@@ -706,7 +706,7 @@ _read_file_argument:
 			PRINT_STATIC_STR("  Assembly Generation Mode\n");
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
-			PRINT_STATIC_STR("  Compiled Object Generation Mode\n");
+			PRINT_STATIC_STR("  Compiled Node Generation Mode\n");
 		}
 		if (fl&FLAG_EXPAND_PATH){
 			PRINT_STATIC_STR("  Path Expand Mode\n");
@@ -718,7 +718,7 @@ _read_file_argument:
 			PRINT_STATIC_STR("  Assembly Print Mode\n");
 		}
 		if (fl&FLAG_PRINT_OBJECT){
-			PRINT_STATIC_STR("  Object Print Mode\n");
+			PRINT_STATIC_STR("  Node Print Mode\n");
 		}
 		if (!(fl&FLAG_NO_RUN)){
 			PRINT_STATIC_STR("  Program Run Mode\n");

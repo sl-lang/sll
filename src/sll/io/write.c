@@ -219,7 +219,8 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	_write_integer(wf,a_dt->vc);
 	_write_integer(wf,a_dt->ft.l);
 	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
-		_write_integer(wf,*(a_dt->ft.dt+i));
+		_write_integer(wf,(a_dt->ft.dt+i)->i);
+		_write_integer(wf,(a_dt->ft.dt+i)->ac);
 	}
 	_write_integer(wf,a_dt->st.l);
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){

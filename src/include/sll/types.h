@@ -424,9 +424,16 @@ typedef struct __SLL_ASSEMBLY_INSTRUCTION{
 
 
 
+typedef struct __SLL_ASSEMBLY_FUNCTION{
+	sll_instruction_index_t i;
+	sll_arg_count_t ac;
+} sll_assembly_function_t;
+
+
+
 typedef struct __SLL_ASSEMBLY_FUNCTION_TABLE{
 	sll_function_index_t l;
-	sll_instruction_index_t* dt;
+	sll_assembly_function_t* dt;
 } sll_assembly_function_table_t;
 
 

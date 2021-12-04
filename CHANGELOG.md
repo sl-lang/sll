@@ -17,6 +17,7 @@
 ### Changed
 
 - Fixed storage type handling in structure objects
+- Function calls now properly manage the stack ([#27])
 - Internal Functions are now named according to [#73]
 - Renamed the import operator from `(--)` to `(---)` ([#96])
 - Structure fields are now declared as identifiers and are marked by an internal type (`SLL_NODE_TYPE_FIELD`)
@@ -1152,6 +1153,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#32]: https://github.com/sl-lang/sll/issues/32
 [#30]: https://github.com/sl-lang/sll/issues/30
 [#29]: https://github.com/sl-lang/sll/issues/29
+[#27]: https://github.com/sl-lang/sll/issues/27
 [#23]: https://github.com/sl-lang/sll/issues/23
 [#20]: https://github.com/sl-lang/sll/issues/20
 [#19]: https://github.com/sl-lang/sll/issues/19
