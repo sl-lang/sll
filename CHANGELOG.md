@@ -11,8 +11,8 @@
 - `func_type` which is an alias to `int_type`
 - Implemented buffered file reading
 - Implemented increment (`(++)`) and decrement (`(--)`) operators ([#96])
-- Implemented `sll_api_string_split` and `sll:string_split`
-- Implemented `SLL_OBJECT_GET_TYPE_MASK`
+- Implemented `sll_api_string_split`, `sll_api_array_create`, `sll:string_split` and `sll:array_create` ([#87])
+- Implemented `SLL_OBJECT_GET_TYPE_MASK` and `sll_array_zero`
 - Memory structures can have constant fields (denoted by inverting (`(~)`) the type) ([#99])
 - More examples ([#77])
 

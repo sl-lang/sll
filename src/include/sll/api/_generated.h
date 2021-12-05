@@ -6,6 +6,35 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_array_create void
+#define __SLL_API_ARGS_sll_api_array_create const sll_integer_t a,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_array_create
+ * \group array-api
+ * \desc Docs!
+ * \arg const sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_create_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_create:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Array
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_close __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_file_close const sll_handle_data_t* a
 /**

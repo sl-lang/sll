@@ -158,6 +158,21 @@ __SLL_EXTERNAL void sll_array_create(sll_array_length_t l,sll_array_t* o){
 
 
 
+__SLL_EXTERNAL void sll_array_create_zero(sll_array_length_t l,sll_array_t* o){
+	if (!l){
+		SLL_INIT_ARRAY(o);
+		return;
+	}
+	o->l=l;
+	o->v=sll_allocate(l*sizeof(sll_object_t*));
+	sll_static_int[0]->rc+=l;
+	for (sll_array_length_t i=0;i<l;i++){
+		o->v[i]=sll_static_int[0];
+	}
+}
+
+
+
 __SLL_EXTERNAL void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll_array_length_t e,sll_array_t* o){
 	SLL_ASSERT(e<a->l);
 	sll_bool_t r=0;

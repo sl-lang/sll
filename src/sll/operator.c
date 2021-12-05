@@ -2093,11 +2093,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 		case COMBINED_TYPE_FH:
 			return SLL_FROM_FLOAT(a->dt.f*pow(2,(sll_float_t)(b->dt.h.h)));
 		case COMBINED_TYPE_CI:
-			return SLL_FROM_INT(a->dt.c<<b->dt.i);
+			return SLL_FROM_INT(((sll_integer_t)a->dt.c)<<b->dt.i);
 		case COMBINED_TYPE_CF:
 			return SLL_FROM_FLOAT(a->dt.c*pow(2,b->dt.f));
 		case COMBINED_TYPE_CC:
-			return SLL_FROM_CHAR(a->dt.c<<b->dt.c);
+			return SLL_FROM_CHAR((((sll_integer_t)a->dt.c))<<b->dt.c);
 		case COMBINED_TYPE_CH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c<<b->dt.h.h);
 		case COMBINED_TYPE_SI:

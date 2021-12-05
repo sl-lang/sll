@@ -13,7 +13,6 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
-#include <stdio.h>
 
 
 
@@ -84,7 +83,7 @@ __API_FUNC(file_open){
 				chk_e=0;
 			}
 			else if (b->v[i]=='r'||b->v[i]=='R'){
-				ff=SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND;
+				ff=SLL_FILE_FLAG_READ;
 				chk_e=0;
 			}
 			else if (b->v[i]=='w'||b->v[i]=='W'){

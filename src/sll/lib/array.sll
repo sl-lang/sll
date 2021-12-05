@@ -1,0 +1,9 @@
+(# func_type)
+(--- "types.sll")
+
+(= create (... "sll:array_create"))
+
+(= array (. (&:
+	(~ func_type) create
+) create))
+(## array)

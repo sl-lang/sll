@@ -158,6 +158,18 @@ __SLL_EXTERNAL void sll_array_create(sll_array_length_t l,sll_array_t* o);
 
 /**
  * \flags func
+ * \name sll_array_create_zero
+ * \group array
+ * \desc Docs!
+ * \arg sll_array_length_t l
+ * \arg sll_array_t* o
+ */
+__SLL_EXTERNAL void sll_array_create_zero(sll_array_length_t l,sll_array_t* o);
+
+
+
+/**
+ * \flags func
  * \name sll_array_duplicate
  * \group array
  * \desc Docs!
