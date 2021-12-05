@@ -239,6 +239,22 @@ if ("--bundle" in sys.argv):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			zf.write("build/lib/"+k,arcname="lib/"+k)
+if ("--upload" in sys.argv):
+	import release
+	if (os.name=="nt"):
+		if (vb):
+			print("Uploading 'win.zip'...")
+		release.upload_asset("build/sll.zip","win.zip",sys.argv[-1])
+		if (vb):
+			print("Uploading 'win_standalone.exe'...")
+		release.upload_asset("build/sll_standalone.exe","win_standalone.exe",sys.argv[-1])
+	else:
+		if (vb):
+			print("Uploading 'posix.zip'...")
+		release.upload_asset("build/sll.zip","posix.zip",sys.argv[-1])
+		if (vb):
+			print("Uploading 'posix_standalone'...")
+		release.upload_asset("build/sll_standalone","posix_standalone",sys.argv[-1])
 if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Test Executable...")

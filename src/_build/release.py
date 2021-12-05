@@ -1,0 +1,73 @@
+import datetime
+import header
+import json
+import os
+import re
+import requests
+import subprocess
+import sys
+
+
+
+FILE_PATH_MAIN_REGEX=re.compile(r"\[(`[^`]+?`)\]\[main((?:\/[a-zA-Z0-9_\-\.]+)+?)\]")
+FILE_PATH_REGEX=re.compile(r"\[`[^`]+?`\]\[([0-9]+\.[0-9]+\.[0-9]+)((?:\/[a-zA-Z0-9_\-\.]+)+?)\]")
+HEADING_REGEX=re.compile(r"\n#(#+) ")
+ISSUE_REGEX=re.compile(r"\[#([0-9]+)\]")
+
+
+
+def upload_asset(fp,nm,t):
+	with open("release-id.txt","r") as f:
+		r_id=int(f.read().strip())
+	with open(fp,"rb") as rf:
+		requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={nm}",headers={"Accept":"application/vnd.github.v3+json","Authorization":f"token {t}","Content-Type":"application/octet-stream"},data=rf.read())
+
+
+
+if (__name__=="__main__"):
+	if (os.path.exists("build")):
+		dl=[]
+		for r,ndl,fl in os.walk("build"):
+			r=r.replace("\\","/").rstrip("/")+"/"
+			for d in ndl:
+				dl.insert(0,r+d)
+			for f in fl:
+				os.remove(r+f)
+		for k in dl:
+			if (k!="build/lib" and k!="build/objects"):
+				os.rmdir(k)
+	else:
+		os.mkdir("build")
+	v=header.read_version("src/include/sll/version.h")
+	with open("CHANGELOG.md","r") as f:
+		dt=f.read().replace("\r\n","\n")
+		s=dt.index("\n",dt.index("\n## ")+1)+1
+		dt=FILE_PATH_MAIN_REGEX.sub(fr"[\1][{v[0]}.{v[1]}.{v[2]}\2]",dt[s:dt.index("\n## ",s+1)])
+		now=datetime.datetime.now()
+		desc=f"# Sll [{v[0]}.{v[1]}.{v[2]}] - {now.year}-{now.month:02}-{now.day:02}\n\n"+HEADING_REGEX.sub(r"\n\1 ",dt).strip()+f"\n\n[{v[0]}.{v[1]}.{v[2]}]: https://github.com/sl-lang/sll/compare/v{v[0]}.{v[1]}.{v[2]-1}...v{v[0]}.{v[1]}.{v[2]}\n"
+		for e in sorted(list(dict.fromkeys(map(int,ISSUE_REGEX.findall(dt)))),reverse=True):
+			desc+=f"[#{e}]: https://github.com/sl-lang/sll/issues/{e}\n"
+		l={}
+		for t,p in FILE_PATH_REGEX.findall(dt):
+			t=tuple(map(int,t.split(".")))
+			if (t not in l):
+				l[t]=[p]
+			else:
+				l[t].append(p)
+		for t,pl in sorted(l.items(),key=lambda e:e[0],reverse=True):
+			ts=".".join(map(str,t))
+			for p in sorted(pl):
+				desc+=f"[{ts}{p}]: https://github.com/sl-lang/sll/blob/v{ts}{p}\n"
+	cwd=os.getcwd()
+	os.chdir("build")
+	subprocess.run(["git","clone","https://github.com/sl-lang/sll.git"])
+	os.chdir("sll")
+	subprocess.run(["git","remote","set-url","origin",f"https://krzem5:{sys.argv[-1]}@github.com/sl-lang/sll.git"])
+	subprocess.run(["git","checkout","-b",f"v{v[0]}.{v[1]}.{v[2]}","main"])
+	subprocess.run(["git","tag",f"sll-v{v[0]}.{v[1]}.{v[2]}"])
+	subprocess.run(["git","push","origin",f"v{v[0]}.{v[1]}.{v[2]}"])
+	subprocess.run(["git","push","origin","--tags"])
+	os.chdir(cwd)
+	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers={"accept":"application/vnd.github.v3+json","Authorization":f"token {sys.argv[-1]}"},data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":f"v{v[0]}.{v[1]}.{v[2]}","prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
+	with open("release-id.txt","w") as f:
+		f.write(str(r_id))

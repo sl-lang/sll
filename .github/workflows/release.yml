@@ -1,0 +1,64 @@
+name: Release
+on:
+  - workflow_dispatch
+permissions: write-all
+jobs:
+  create:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Create Release
+        run: python src/_build/release.py ${{secrets.GITHUB_TOKEN}}
+      - name: Store Release ID
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-id
+          path: release-id.txt
+  upload-posix:
+    name: Upload POSIX Release
+    needs:
+      - create
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Load Release ID
+        uses: actions/download-artifact@v2
+        with:
+          name: release-id
+      - name: Create Release
+        run: python src/_build/main.py --verbose --bundle --standalone --release --upload ${{secrets.GITHUB_TOKEN}}
+  upload-win:
+    name: Upload Windows Release
+    needs:
+      - create
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Load Release ID
+        uses: actions/download-artifact@v2
+        with:
+          name: release-id
+      - name: Create Release
+        run: python src/_build/main.py __ghactions --verbose --bundle --standalone --release --upload ${{secrets.GITHUB_TOKEN}}

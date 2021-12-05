@@ -6,7 +6,6 @@
 
 - Ability to access elements of custom types (or maps) from variables by using the `|# variable #|$|# field 1#|$|# field 2#|$|# field 3#|` syntax
 - Ability to clone structures without references (by the `(: |# object #|)` syntax)
-- Added error handling for memory allocation ([#83])
 - Finished custom object type API ([#72])
 - `func_type` which is an alias to `int_type`
 - Implemented buffered file reading
@@ -1119,7 +1118,6 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#86]: https://github.com/sl-lang/sll/issues/86
 [#85]: https://github.com/sl-lang/sll/issues/85
 [#84]: https://github.com/sl-lang/sll/issues/84
-[#83]: https://github.com/sl-lang/sll/issues/83
 [#82]: https://github.com/sl-lang/sll/issues/82
 [#81]: https://github.com/sl-lang/sll/issues/81
 [#80]: https://github.com/sl-lang/sll/issues/80
