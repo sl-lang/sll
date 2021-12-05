@@ -83,4 +83,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Deployment
-        run: curl -X POST "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/${{secrets.CLOUDFLARE_TRIGGER_KEY}}"
+        run: curl -X POST "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/${{secrets.CLOUDFLARE_TRIGGER_KEY}}" &> /dev/null
