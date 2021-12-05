@@ -69,6 +69,20 @@ __API_FUNC_DECL(string_replace);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_string_split
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg CS
+ * \ret E -> Failure
+ * \ret A -> Success
+ */
+__API_FUNC_DECL(string_split);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_string_to_lower_case
  * \group string-api
  * \desc Docs!

@@ -371,6 +371,17 @@ __API_FUNC(string_replace){
 
 
 
+__API_FUNC(string_split){
+	if (b->t==SLL_OBJECT_TYPE_CHAR){
+		sll_string_split_char(a,b->dt.c,out);
+	}
+	else{
+		sll_string_split(a,&(b->dt.s),out);
+	}
+}
+
+
+
 __API_FUNC(string_to_lower_case){
 	sll_string_lower_case(a,out);
 }

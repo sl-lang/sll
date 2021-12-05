@@ -572,6 +572,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_string_split void
+#define __SLL_API_ARGS_sll_api_string_split const sll_string_t* a,const sll_object_t* b,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_string_split
+ * \group string-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ * \arg const sll_object_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_split_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_split:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_string_to_lower_case void
 #define __SLL_API_ARGS_sll_api_string_to_lower_case const sll_string_t* a,sll_string_t* out
 /**
