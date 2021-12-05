@@ -40,7 +40,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: release-id
-      - name: Create Release
+      - name: Create Release Assets & Upload
         run: python src/_build/main.py --verbose --bundle --standalone --release --upload ${{secrets.GITHUB_TOKEN}}
   upload-win:
     name: Upload Windows Release
@@ -60,5 +60,5 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: release-id
-      - name: Create Release
+      - name: Create Release Assets & Upload
         run: python src/_build/main.py __ghactions --verbose --bundle --standalone --release --upload ${{secrets.GITHUB_TOKEN}}
