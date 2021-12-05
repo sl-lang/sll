@@ -76,3 +76,11 @@ jobs:
         run: python src/_build/main.py --verbose --test --do-not-run-test
       - name: Analyze
         uses: github/codeql-action/analyze@v1
+  cloudflare:
+    name: Cloudflare Deployment
+    needs:
+      - codeql
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Deployment
+        run: curl -X POST "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/${{secrets.CLOUDFLARE_TRIGGER_KEY}}"
