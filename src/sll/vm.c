@@ -671,13 +671,13 @@ _print_from_stack:;
 							if (ai->dt.ac!=af->ac){
 								if (af->ac>ai->dt.ac){
 									sll_static_int[0]->rc+=af->ac-ai->dt.ac;
-									for (sll_arg_count_t i=0;i<af->ac-ai->dt.ac;i++){
-										*(s+si+i)=sll_static_int[0];
+									for (sll_arg_count_t j=0;j<af->ac-ai->dt.ac;j++){
+										*(s+si+j)=sll_static_int[0];
 									}
 									si+=af->ac-ai->dt.ac;
 								}
 								else{
-									for (sll_arg_count_t i=ai->dt.ac-af->ac;i;i--){
+									for (sll_arg_count_t j=ai->dt.ac-af->ac;j;j--){
 										si--;
 										SLL_RELEASE(*(s+si));
 									}

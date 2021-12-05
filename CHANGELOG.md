@@ -9,9 +9,10 @@
 - Added error handling for memory allocation ([#83])
 - Finished custom object type API ([#72])
 - `func_type` which is an alias to `int_type`
-- Implemented `SLL_OBJECT_GET_TYPE_MASK`
 - Implemented buffered file reading
 - Implemented increment (`(++)`) and decrement (`(--)`) operators ([#96])
+- Implemented `sll_api_string_split` and `sll:string_split`
+- Implemented `SLL_OBJECT_GET_TYPE_MASK`
 - Memory structures can have constant fields (denoted by inverting (`(~)`) the type) ([#99])
 - More examples ([#77])
 
