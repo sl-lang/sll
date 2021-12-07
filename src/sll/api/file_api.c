@@ -16,13 +16,6 @@
 
 
 
-typedef struct __EXTENDED_FILE{
-	sll_file_t f;
-	uint32_t rc;
-} extended_file_t;
-
-
-
 static extended_file_t** _file_fl=NULL;
 static sll_handle_t _file_fll=0;
 static sll_handle_type_t _file_ht=SLL_HANDLE_UNKNOWN_TYPE;

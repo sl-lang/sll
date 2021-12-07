@@ -449,6 +449,13 @@ typedef struct __MEM_STACK_BLOCK{
 
 
 
+typedef struct __EXTENDED_FILE{
+	sll_file_t f;
+	uint32_t rc;
+} extended_file_t;
+
+
+
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 

@@ -31,6 +31,9 @@ void _file_init_std_streams(void){
 
 
 void _file_release_std_streams(void){
+	(*((sll_file_flags_t*)(&(sll_stdin->f))))&=~FILE_FLAG_NO_RELEASE;
+	(*((sll_file_flags_t*)(&(sll_stdout->f))))&=~FILE_FLAG_NO_RELEASE;
+	(*((sll_file_flags_t*)(&(sll_stderr->f))))&=~FILE_FLAG_NO_RELEASE;
 	sll_file_close(sll_stdin);
 	sll_file_close(sll_stdout);
 	sll_file_close(sll_stderr);
@@ -69,6 +72,7 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f){
 	if (!(f->f&SLL_FILE_FLAG_WRITE)||(f->f&SLL_FILE_FLAG_NO_BUFFER)){
 		return;
 	}
+	if (f==sll_stdout) return;
 	sll_platform_file_write(f->dt.fl.fd,f->_w_bf,f->_w_bf_off);
 	f->_w_bf_off=0;
 }
@@ -314,16 +318,14 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 	sll_copy_data(p,i,f->_w_bf+f->_w_bf_off);
 	sll_platform_file_write(f->dt.fl.fd,f->_w_bf,FILE_BUFFER_SIZE);
 	const sll_char_t* v=((const sll_char_t*)p)+i;
-	sll_size_t o=i;
+	sll_size_t o=sz;
 	sz-=i;
 	i=sz&(FILE_BUFFER_SIZE-1);
 	if (sz-i){
 		sll_platform_file_write(f->dt.fl.fd,v,sz-i);
 		v+=sz-i;
 	}
-	if (i){
-		sll_copy_data(v,i,f->_w_bf);
-	}
+	sll_copy_data(v,i,f->_w_bf);
 	f->_w_bf_off=i;
 	return o;
 }
