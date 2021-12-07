@@ -1,9 +1,9 @@
 (# func_type)
 (--- "types.sll")
 
-(= stdin -1)
-(= stdout -2)
-(= stderr -3)
+(= stdin (<- (... "sll:file_std_handle") 0))
+(= stdout (<- (... "sll:file_std_handle") 1))
+(= stderr (<- (... "sll:file_std_handle") 2))
 
 (= close (... "sll:file_close"))
 (= open (... "sll:file_open"))
@@ -11,9 +11,12 @@
 (= write (... "sll:file_write"))
 
 (= file (. (&:
+	(~ handle_type) stdin
+	(~ handle_type) stdout
+	(~ handle_type) stderr
 	(~ func_type) close
 	(~ func_type) open
 	(~ func_type) read
 	(~ func_type) write
-) close open read write))
-(## stdin stdout stderr file)
+) stdin stdout stderr close open read write))
+(## file)

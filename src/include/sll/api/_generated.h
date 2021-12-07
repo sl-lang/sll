@@ -89,13 +89,13 @@
 
 
 #define __SLL_API_TYPE_sll_api_file_read void
-#define __SLL_API_ARGS_sll_api_file_read const sll_object_t* a,const sll_integer_t b,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_file_read const sll_handle_data_t* a,const sll_integer_t b,sll_string_t* out
 /**
  * \flags func optimizable
  * \name sll_api_file_read
  * \group file-api
  * \desc Reads from a file prevoiusly opened by :sll_api_file_open:
- * \arg const sll_object_t* a -> Previously opened file handle
+ * \arg const sll_handle_data_t* a -> Previously opened file handle
  * \arg const sll_integer_t b -> Maximum number of bytes to read
  */
 /**
@@ -111,14 +111,36 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_file_std_handle void
+#define __SLL_API_ARGS_sll_api_file_std_handle const sll_integer_t a,sll_handle_data_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_file_std_handle
+ * \group file-api
+ * \desc Docs!
+ * \arg const sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_file_std_handle_raw
+ * \group raw-api
+ * \subgroup raw-api-file-api
+ * \desc Wrapper function for :sll_api_file_std_handle:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_write __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_file_write const sll_object_t* a,const sll_object_t*const* b,sll_arg_count_t bc
+#define __SLL_API_ARGS_sll_api_file_write const sll_handle_data_t* a,const sll_object_t*const* b,sll_arg_count_t bc
 /**
  * \flags check_output func optimizable
  * \name sll_api_file_write
  * \group file-api
  * \desc Writes to a file prevoiusly opened by :sll_api_file_open:
- * \arg const sll_object_t* a -> Previously opened file handle
+ * \arg const sll_handle_data_t* a -> Previously opened file handle
  * \arg const sll_object_t*const* b -> The object to write to file
  * \arg sll_arg_count_t bc
  * \ret sll_integer_t

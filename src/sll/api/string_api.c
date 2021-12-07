@@ -241,17 +241,18 @@ static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o
 					hd->sf(a->dt.h.h,o);
 					return;
 				}
-				_write_int(a->dt.h.h,o);
-				sll_string_increase(o,1);
-				o->v[o->l]='$';
-				o->l++;
 				if (hd){
 					sll_string_increase(o,hd->nml);
 					sll_copy_data(hd->nm,hd->nml,o->v+o->l);
 					o->l+=hd->nml;
-					return;
 				}
-				_write_int(a->dt.h.t,o);
+				else{
+					_write_int(a->dt.h.t,o);
+				}
+				sll_string_increase(o,1);
+				o->v[o->l]=':';
+				o->l++;
+				_write_int(a->dt.h.h,o);
 				return;
 			}
 		case SLL_OBJECT_TYPE_MAP:

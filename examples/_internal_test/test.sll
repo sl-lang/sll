@@ -1,4 +1,4 @@
-(# time stdout file sys util path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort)
+(# time file sys util path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort)
 (? 1 (--- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll"))
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -44,7 +44,7 @@
 	(:> (<- string$format "Unable to open file '%s'!\n" fp))
 } )
 (:> "File size: " (<- path$size "build/hello.txt") "\n")
-(<- file$write stdout "Argument Count: " sys$argc "\n")
+(<- file$write file$stdout "Argument Count: " sys$argc "\n")
 (-> (= i 0) (< i sys$argc) (:> "[" i "] = " (<- sys$argv i) "\n") (= i (+ i 1)))
 (:> "Platform: " sys$platform "\n")
 (= str (+ "prefix_" (<- (,,, (@@ "test_string")))) (:> (<- util$get_ref_count str) "\n"))

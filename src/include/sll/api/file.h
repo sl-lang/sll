@@ -26,7 +26,7 @@ __API_FUNC_DECL(file_close);
 
 
 /**
- * \flags api func
+ * \flags api func optimizable
  * \name sll_api_file_open
  * \group file-api
  * \desc Opens a file with the specified mode
@@ -44,7 +44,7 @@ __API_FUNC_DECL(file_open);
  * \name sll_api_file_read
  * \group file-api
  * \desc Reads from a file prevoiusly opened by :sll_api_file_open:
- * \arg HI -> Previously opened file handle
+ * \arg H -> Previously opened file handle
  * \arg I? -> Maximum number of bytes to read
  * \ret Z -> Failure
  * \ret S -> The content of the file
@@ -54,11 +54,24 @@ __API_FUNC_DECL(file_read);
 
 
 /**
+ * \flags api func optimizable
+ * \name sll_api_file_std_handle
+ * \group file-api
+ * \desc Docs!
+ * \arg I
+ * \ret h -> Failure
+ * \ret H -> Success
+ */
+__API_FUNC_DECL(file_std_handle);
+
+
+
+/**
  * \flags api func var_arg
  * \name sll_api_file_write
  * \group file-api
  * \desc Writes to a file prevoiusly opened by :sll_api_file_open:
- * \arg HI -> Previously opened file handle
+ * \arg H -> Previously opened file handle
  * \arg O -> The object to write to file
  * \ret 0 -> Failure
  * \ret I -> Number of bytes written

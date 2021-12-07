@@ -2,7 +2,13 @@
 
 ## [0.6.31] - Ongoing
 
-*Nothing*
+### Added
+
+- Default file API: `sll_api_file_std_handle` and `file_std_handle`
+
+### Changed
+
+- Converting handels to strings now uses a new template
 
 ## [0.6.30] - 2021-12-05
 

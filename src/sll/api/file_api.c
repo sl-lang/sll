@@ -24,7 +24,7 @@ static sll_handle_descriptor_t _file_type;
 
 
 static sll_bool_t _free_file(sll_handle_t h){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||h>=_file_fll||!(*(_file_fl+h))){
+	if (h>=_file_fll||!(*(_file_fl+h))||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return 0;
 	}
 	sll_file_close(*(_file_fl+h));
@@ -51,7 +51,15 @@ static sll_bool_t _free_file(sll_handle_t h){
 
 static void _file_destructor(sll_handle_t h){
 	if (h==SLL_HANDLE_FREE){
-		SLL_ASSERT(!_file_fll);
+		for (sll_handle_t i=0;i<_file_fll;i++){
+			if (*(_file_fl+i)){
+				sll_file_close(*(_file_fl+h));
+				sll_deallocate(*(_file_fl+h));
+			}
+		}
+		sll_deallocate(_file_fl);
+		_file_fl=NULL;
+		_file_fll=0;
 		_file_ht=SLL_HANDLE_UNKNOWN_TYPE;
 		return;
 	}
@@ -60,8 +68,27 @@ static void _file_destructor(sll_handle_t h){
 
 
 
+static sll_handle_t _alloc_file(sll_file_t* f){
+	sll_handle_t o=0;
+	while (o<_file_fll){
+		if (!(_file_fl+o)){
+			goto _found_index;
+		}
+		o++;
+	}
+	_file_fll++;
+	_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t*));
+_found_index:;
+	sll_file_t* n=sll_allocate(sizeof(sll_file_t));
+	sll_copy_data(f,sizeof(sll_file_t),n);
+	*(_file_fl+o)=n;
+	return o;
+}
+
+
+
 __API_FUNC(file_close){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||a->t!=_file_ht||a->h>=_file_fll){
+	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return 0;
 	}
 	return _free_file(a->h);
@@ -71,7 +98,7 @@ __API_FUNC(file_close){
 
 __API_FUNC(file_open){
 	SLL_INIT_HANDLE_DATA(out);
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||a->l>SLL_API_MAX_FILE_PATH_LENGTH){
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return;
 	}
 	sll_file_flags_t ff=SLL_FILE_FLAG_READ;
@@ -103,30 +130,12 @@ __API_FUNC(file_open){
 	if (!sll_file_open(a->v,ff,&f)){
 		return;
 	}
-	sll_handle_t i=0;
-	while (i<_file_fll){
-		if (!(_file_fl+i)){
-			goto _found_index;
-		}
-		i++;
-	}
-	_file_fll++;
-	void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t));
-	if (!tmp){
-		sll_file_close(&f);
-		return;
-	}
-	_file_fl=tmp;
-_found_index:;
-	sll_file_t* n=sll_allocate(sizeof(sll_file_t));
-	sll_copy_data((void*)(&f),sizeof(sll_file_t),(void*)n);
-	*(_file_fl+i)=n;
 	if (_file_ht==SLL_HANDLE_UNKNOWN_TYPE){
 		SLL_ASSERT(sll_current_runtime_data);
 		_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type);
 	}
 	out->t=_file_ht;
-	out->h=i;
+	out->h=_alloc_file(&f);
 }
 
 
@@ -134,28 +143,11 @@ _found_index:;
 __API_FUNC(file_read){
 	SLL_INIT_STRING(out);
 	sll_file_t* f=NULL;
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-		if (a->dt.i==-2){
-			if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDIN_IO)){
-				return;
-			}
-			SLL_ASSERT(sll_current_runtime_data);
-			f=sll_current_runtime_data->in;
-		}
-		else{
-			return;
-		}
+	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+		return;
 	}
-	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
-		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
-			return;
-		}
-		f=*(_file_fl+a->dt.h.h);
-		if (!f){
-			return;
-		}
-	}
-	else{
+	f=*(_file_fl+a->h);
+	if (!f){
 		return;
 	}
 	if (!b){
@@ -169,37 +161,43 @@ __API_FUNC(file_read){
 
 
 
-__API_FUNC(file_write){
-	sll_file_t* f=NULL;
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-		if (a->dt.i==-2){
-			if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
-				return 0;
-			}
-			SLL_ASSERT(sll_current_runtime_data);
-			f=sll_current_runtime_data->out;
-		}
-		else if (a->dt.i==-3){
-			if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
-				return 0;
-			}
-			SLL_ASSERT(sll_current_runtime_data);
-			f=sll_current_runtime_data->err;
-		}
-		else{
-			return 0;
-		}
+__API_FUNC(file_std_handle){
+	if (_file_ht==SLL_HANDLE_UNKNOWN_TYPE){
+		SLL_ASSERT(sll_current_runtime_data);
+		_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type);
 	}
-	else if (a->dt.h.t==_file_ht&&a->dt.h.h<_file_fll){
-		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
-			return 0;
+	out->t=_file_ht;
+	if (!a){
+		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDIN_IO)){
+			SLL_INIT_HANDLE_DATA(out);
+			return;
 		}
-		f=*(_file_fl+a->dt.h.h);
-		if (!f){
-			return 0;
+		out->h=_alloc_file(sll_current_runtime_data->in);
+	}
+	else if (a==1){
+		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
+			SLL_INIT_HANDLE_DATA(out);
+			return;
 		}
+		out->h=_alloc_file(sll_current_runtime_data->out);
 	}
 	else{
+		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+			SLL_INIT_HANDLE_DATA(out);
+			return;
+		}
+		out->h=_alloc_file(sll_current_runtime_data->err);
+	}
+}
+
+
+
+__API_FUNC(file_write){
+	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+		return 0;
+	}
+	sll_file_t* f=*(_file_fl+a->h);
+	if (!f){
 		return 0;
 	}
 	sll_string_t s;
