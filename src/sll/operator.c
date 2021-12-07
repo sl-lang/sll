@@ -1151,7 +1151,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 				return o;
 			}
 		case SLL_OBJECT_TYPE_HANDLE:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h);
+			return SLL_FROM_HANDLE(a->dt.h.t,sll_handle_clone(a->dt.h.t,a->dt.h.h));
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=SLL_CREATE();

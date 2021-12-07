@@ -5,6 +5,8 @@
 ### Added
 
 - Default file API: `sll_api_file_std_handle` and `file_std_handle`
+- Handle clone API: `sll_handle_clone` ([#101])
+- Handles are now cloned when assigned to custom type objects ([#101])
 
 ### Changed
 
@@ -1112,6 +1114,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#101]: https://github.com/sl-lang/sll/issues/101
 [#100]: https://github.com/sl-lang/sll/issues/100
 [#99]: https://github.com/sl-lang/sll/issues/99
 [#98]: https://github.com/sl-lang/sll/issues/98

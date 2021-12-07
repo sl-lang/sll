@@ -481,12 +481,17 @@ typedef void (*sll_handle_destructor_t)(sll_handle_t h);
 
 
 
+typedef sll_handle_t (*sll_handle_clone_t)(sll_handle_t h);
+
+
+
 typedef struct __SLL_HANDLE_DESCRIPTOR{
 	sll_char_t nm[256];
 	sll_name_length_t nml;
 	sll_checksum_t c;
 	sll_handle_stringify_t sf;
 	sll_handle_destructor_t df;
+	sll_handle_clone_t cf;
 } sll_handle_descriptor_t;
 
 

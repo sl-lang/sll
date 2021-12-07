@@ -16,7 +16,14 @@
 
 
 
-static sll_file_t** _file_fl=NULL;
+typedef struct __EXTENDED_FILE{
+	sll_file_t f;
+	uint32_t rc;
+} extended_file_t;
+
+
+
+static extended_file_t** _file_fl=NULL;
 static sll_handle_t _file_fll=0;
 static sll_handle_type_t _file_ht=SLL_HANDLE_UNKNOWN_TYPE;
 static sll_handle_descriptor_t _file_type;
@@ -27,7 +34,11 @@ static sll_bool_t _free_file(sll_handle_t h){
 	if (h>=_file_fll||!(*(_file_fl+h))||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return 0;
 	}
-	sll_file_close(*(_file_fl+h));
+	(*(_file_fl+h))->rc--;
+	if ((*(_file_fl+h))->rc){
+		return 1;
+	}
+	sll_file_close(&((*(_file_fl+h))->f));
 	sll_deallocate(*(_file_fl+h));
 	*(_file_fl+h)=NULL;
 	if (h==_file_fll-1){
@@ -35,9 +46,7 @@ static sll_bool_t _free_file(sll_handle_t h){
 			_file_fll--;
 		} while (_file_fll&&!(_file_fl+_file_fll-1));
 		if (_file_fll){
-			void* tmp=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t*));
-			SLL_ASSERT(tmp);
-			_file_fl=tmp;
+			_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(extended_file_t*));
 		}
 		else{
 			sll_deallocate(_file_fl);
@@ -53,7 +62,7 @@ static void _file_destructor(sll_handle_t h){
 	if (h==SLL_HANDLE_FREE){
 		for (sll_handle_t i=0;i<_file_fll;i++){
 			if (*(_file_fl+i)){
-				sll_file_close(*(_file_fl+h));
+				sll_file_close(&((*(_file_fl+h))->f));
 				sll_deallocate(*(_file_fl+h));
 			}
 		}
@@ -77,12 +86,26 @@ static sll_handle_t _alloc_file(sll_file_t* f){
 		o++;
 	}
 	_file_fll++;
-	_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(sll_file_t*));
+	_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(extended_file_t*));
 _found_index:;
-	sll_file_t* n=sll_allocate(sizeof(sll_file_t));
-	sll_copy_data(f,sizeof(sll_file_t),n);
+	extended_file_t* n=sll_allocate(sizeof(extended_file_t));
+	sll_copy_data(f,sizeof(sll_file_t),&(n->f));
+	n->rc=1;
 	*(_file_fl+o)=n;
 	return o;
+}
+
+
+
+static sll_handle_t _file_clone(sll_handle_t h){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+		return 0;
+	}
+	if (h>=_file_fll||!(*(_file_fl+h))){
+		return h;
+	}
+	(*(_file_fl+h))->rc++;
+	return h;
 }
 
 
@@ -142,12 +165,10 @@ __API_FUNC(file_open){
 
 __API_FUNC(file_read){
 	SLL_INIT_STRING(out);
-	sll_file_t* f=NULL;
 	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return;
 	}
-	f=*(_file_fl+a->h);
-	if (!f){
+	if (!(*(_file_fl+a->h))){
 		return;
 	}
 	if (!b){
@@ -155,15 +176,15 @@ __API_FUNC(file_read){
 	}
 	sll_string_length_t l=(sll_string_length_t)b;
 	sll_string_create(l,out);
-	sll_string_decrease(out,(sll_string_length_t)sll_file_read(f,out->v,l));
+	sll_string_decrease(out,(sll_string_length_t)sll_file_read(&((*(_file_fl+a->h))->f),out->v,l));
 	sll_string_calculate_checksum(out);
 }
 
 
 
 __API_FUNC(file_std_handle){
+	SLL_ASSERT(sll_current_runtime_data);
 	if (_file_ht==SLL_HANDLE_UNKNOWN_TYPE){
-		SLL_ASSERT(sll_current_runtime_data);
 		_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type);
 	}
 	out->t=_file_ht;
@@ -196,13 +217,13 @@ __API_FUNC(file_write){
 	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return 0;
 	}
-	sll_file_t* f=*(_file_fl+a->h);
-	if (!f){
+	if (!(*(_file_fl+a->h))){
+		SLL_UNIMPLEMENTED();
 		return 0;
 	}
 	sll_string_t s;
 	sll_api_string_convert(b,bc,&s);
-	sll_size_t o=sll_file_write(f,s.v,s.l*sizeof(sll_char_t));
+	sll_size_t o=sll_file_write(&((*(_file_fl+a->h))->f),s.v,s.l*sizeof(sll_char_t));
 	sll_free_string(&s);
 	return o*sizeof(sll_char_t);
 }
@@ -212,5 +233,6 @@ __API_FUNC(file_write){
 static sll_handle_descriptor_t _file_type={
 	SLL_HANDLE_DESCRIPTOR_HEADER("sll_file_handle"),
 	NULL,
-	_file_destructor
+	_file_destructor,
+	_file_clone
 };

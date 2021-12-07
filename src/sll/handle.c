@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
@@ -44,6 +45,16 @@ __SLL_EXTERNAL void sll_free_handle_list(sll_handle_list_t* hl){
 	sll_deallocate(hl->dt);
 	hl->dt=NULL;
 	hl->dtl=0;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_handle_t sll_handle_clone(sll_handle_type_t t,sll_handle_t h){
+	sll_handle_descriptor_t* hd=sll_handle_lookup_descriptor(sll_current_runtime_data->hl,t);
+	if (!hd){
+		return 0;
+	}
+	return (hd->cf?hd->cf(h):h);
 }
 
 

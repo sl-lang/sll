@@ -103,5 +103,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_memory_get_null_pointer(void
 static sll_handle_descriptor_t _memory_type={
 	SLL_HANDLE_DESCRIPTOR_HEADER("sll_memory_handle"),
 	_memory_stringify,
-	_memory_cleanup
+	_memory_cleanup,
+	NULL
 };

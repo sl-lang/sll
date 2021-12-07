@@ -97,7 +97,8 @@ static void* _set_field(const sll_object_type_table_t* tt,void* p,sll_object_typ
 			p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
 			break;
 		case SLL_OBJECT_TYPE_HANDLE:
-			*((sll_handle_data_t*)p)=v->dt.h;
+			((sll_handle_data_t*)p)->t=v->dt.h.t;
+			((sll_handle_data_t*)p)->h=sll_handle_clone(v->dt.h.t,v->dt.h.h);
 			p=(void*)(((uint64_t)p)+sizeof(sll_handle_data_t));
 			break;
 		case SLL_OBJECT_TYPE_MAP:
@@ -197,7 +198,8 @@ static void* _copy_struct(void* p,const sll_object_type_data_t* dt,const void** 
 				*s=(void*)(((uint64_t)*s)+sizeof(sll_array_t));
 				break;
 			case SLL_OBJECT_TYPE_HANDLE:
-				*((sll_handle_data_t*)p)=*((sll_handle_data_t*)*s);
+				((sll_handle_data_t*)p)->t=((sll_handle_data_t*)*s)->t;
+				((sll_handle_data_t*)p)->h=sll_handle_clone(((sll_handle_data_t*)*s)->t,((sll_handle_data_t*)*s)->h);
 				p=(void*)(((uint64_t)p)+sizeof(sll_handle_data_t));
 				*s=(void*)(((uint64_t)*s)+sizeof(sll_handle_data_t));
 				break;
@@ -440,7 +442,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 			{
 				sll_object_t* n=SLL_CREATE();
 				n->t=SLL_OBJECT_TYPE_HANDLE;
-				n->dt.h=*((sll_handle_data_t*)p);
+				n->dt.h.t=((sll_handle_data_t*)p)->t;
+				n->dt.h.h=sll_handle_clone(((sll_handle_data_t*)p)->t,((sll_handle_data_t*)p)->h);
 				return n;
 			}
 		case SLL_OBJECT_TYPE_MAP:

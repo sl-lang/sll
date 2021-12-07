@@ -547,5 +547,6 @@ __API_FUNC(json_type){
 static sll_handle_descriptor_t _json_type={
 	SLL_HANDLE_DESCRIPTOR_HEADER("sll_json_type_handle"),
 	_json_stringify,
-	_json_cleanup
+	_json_cleanup,
+	NULL
 };
