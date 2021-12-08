@@ -72,7 +72,6 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f){
 	if (!(f->f&SLL_FILE_FLAG_WRITE)||(f->f&SLL_FILE_FLAG_NO_BUFFER)){
 		return;
 	}
-	if (f==sll_stdout) return;
 	sll_platform_file_write(f->dt.fl.fd,f->_w_bf,f->_w_bf_off);
 	f->_w_bf_off=0;
 }
@@ -318,14 +317,16 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 	sll_copy_data(p,i,f->_w_bf+f->_w_bf_off);
 	sll_platform_file_write(f->dt.fl.fd,f->_w_bf,FILE_BUFFER_SIZE);
 	const sll_char_t* v=((const sll_char_t*)p)+i;
-	sll_size_t o=sz;
+	sll_size_t o=i;
 	sz-=i;
 	i=sz&(FILE_BUFFER_SIZE-1);
 	if (sz-i){
 		sll_platform_file_write(f->dt.fl.fd,v,sz-i);
 		v+=sz-i;
 	}
-	sll_copy_data(v,i,f->_w_bf);
+	if (i){
+		sll_copy_data(v,i,f->_w_bf);
+	}
 	f->_w_bf_off=i;
 	return o;
 }

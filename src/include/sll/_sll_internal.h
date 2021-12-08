@@ -449,9 +449,17 @@ typedef struct __MEM_STACK_BLOCK{
 
 
 
-typedef struct __EXTENDED_FILE{
+typedef union __EXTENDED_FILE_DATA{
 	sll_file_t f;
+	sll_file_t* p;
+} extended_file_data_t;
+
+
+
+typedef struct __EXTENDED_FILE{
+	extended_file_data_t dt;
 	uint32_t rc;
+	sll_bool_t p;
 } extended_file_t;
 
 
