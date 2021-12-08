@@ -1586,10 +1586,9 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 	a_dt->ft.l=0;
 	sll_free_string_table(&(a_dt->st));
 	void* pg=a_dt->_s.s;
-	sll_page_size_t sz=SLL_PAGE_SIZE*ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE;
 	while (pg){
 		void* n=*((void**)pg);
-		sll_platform_free_page(pg,sz);
+		sll_platform_free_page(pg,SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE));
 		pg=n;
 	}
 	a_dt->_s.s=NULL;

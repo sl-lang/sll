@@ -14,8 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#pragma comment(lib,"ws2_32.lib")
-#pragma comment(lib,"mswsock.lib")
 #pragma comment(lib,"advapi32.lib")
 
 
@@ -103,11 +101,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size
 				}
 			}
 		}
+		SLL_ASSERT(SLL_ROUND_LARGE_PAGE(sz)==sz);
 		void* o=VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE|MEM_LARGE_PAGES,PAGE_READWRITE);
 		if (o){
 			return o;
 		}
 	}
+	SLL_ASSERT(SLL_ROUND_PAGE(sz)==sz);
 	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
 }
 
