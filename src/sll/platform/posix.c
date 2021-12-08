@@ -62,8 +62,16 @@ __SLL_NO_RETURN void _force_exit_platform(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
-	return mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz,sll_bool_t l){
+	if (l){
+		void* o=mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_HUGETLB,-1,0);
+		if (o!=MAP_FAILED){
+			return o;
+		}
+	}
+	SLL_ASSERT(sysconf(_SC_PAGESIZE)==SLL_PAGE_SIZE);
+	void* o=mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+	return (o==MAP_FAILED?NULL:o);
 }
 
 
@@ -174,12 +182,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executabl
 	}
 	*o=0;
 	return 0;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
-	return sysconf(_SC_PAGESIZE);
 }
 
 

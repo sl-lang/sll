@@ -36,6 +36,12 @@
 #define SLL_PLATFORM_STREAM_OUTPUT 1
 #define SLL_PLATFORM_STREAM_ERROR 2
 
+#define SLL_PAGE_SIZE 4096
+#define SLL_LARGE_PAGE_SIZE 2097152
+
+#define SLL_ROUND_PAGE(x) (((x)+SLL_PAGE_SIZE-1)&(-SLL_PAGE_SIZE))
+#define SLL_ROUND_LARGE_PAGE(x) (((x)+SLL_LARGE_PAGE_SIZE-1)&(-SLL_LARGE_PAGE_SIZE))
+
 
 
 /**
@@ -56,9 +62,10 @@ __SLL_EXTERNAL extern const sll_char_t* sll_platform_string;
  * \group platform
  * \desc Docs!
  * \arg sll_page_size_t sz
+ * \arg sll_bool_t l
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz,sll_bool_t l);
 
 
 
@@ -230,17 +237,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default
  * \ret sll_string_length_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol);
-
-
-
-/**
- * \flags check_output func
- * \name sll_platform_get_page_size
- * \group platform
- * \desc Docs!
- * \ret sll_page_size_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void);
 
 
 

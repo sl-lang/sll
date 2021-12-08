@@ -113,10 +113,9 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	c_dt->ft.l=0;
 	sll_free_string_table(&(c_dt->st));
 	void* pg=c_dt->_s.s;
-	sll_page_size_t sz=sll_platform_get_page_size()*OBJECT_STACK_PAGE_ALLOC_COUNT;
 	while (pg){
 		void* n=*((void**)pg);
-		sll_platform_free_page(pg,sz);
+		sll_platform_free_page(pg,SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE));
 		pg=n;
 	}
 	c_dt->_s.s=NULL;

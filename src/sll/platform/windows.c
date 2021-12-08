@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib,"mswsock.lib")
 #pragma comment(lib,"advapi32.lib")
@@ -28,6 +29,7 @@ static int _win_stdout_m=0;
 static int _win_stderr_m=0;
 static DWORD _win_stdout_cm=0xffffffff;
 static DWORD _win_stderr_cm=0xffffffff;
+static int _win_large_page=0;
 
 
 
@@ -84,7 +86,28 @@ __SLL_NO_RETURN void _force_exit_platform(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz,sll_bool_t l){
+	if (l&&_win_large_page!=2){
+		if (!_win_large_page){
+			_win_large_page=1;
+			HANDLE h;
+			TOKEN_PRIVILEGES tp;
+			if (!OpenProcessToken(GetCurrentProcess(),TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY,&h)||!LookupPrivilegeValueA(NULL,"SeLockMemoryPrivilege",&tp.Privileges[0].Luid)){
+				_win_large_page=2;
+			}
+			else{
+				tp.PrivilegeCount=1;
+				tp.Privileges[0].Attributes=SE_PRIVILEGE_ENABLED;
+				if (!AdjustTokenPrivileges(h,FALSE,&tp,0,NULL,0)||(GetLastError()!=ERROR_SUCCESS)||!CloseHandle(h)||!GetLargePageMinimum()!=SLL_LARGE_PAGE_SIZE){
+					_win_large_page=2;
+				}
+			}
+		}
+		void* o=VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE|MEM_LARGE_PAGES,PAGE_READWRITE);
+		if (o){
+			return o;
+		}
+	}
 	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
 }
 
@@ -214,14 +237,6 @@ sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
 	return GetModuleFileNameA(NULL,(char*)o,ol);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_page_size_t sll_platform_get_page_size(void){
-	SYSTEM_INFO si;
-	GetSystemInfo(&si);
-	return si.dwPageSize;
 }
 
 
