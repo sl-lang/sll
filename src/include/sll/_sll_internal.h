@@ -464,6 +464,13 @@ typedef struct __EXTENDED_FILE{
 
 
 
+typedef struct __CODE_GENERATION_DATA{
+	const sll_compilation_data_t* c_dt;
+	const sll_internal_function_table_t* i_ft;
+} code_generation_data_t;
+
+
+
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 

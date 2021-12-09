@@ -214,6 +214,21 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c);
 
 
 /**
+ * \flags check_output func
+ * \name sll_file_write_char_count
+ * \group file
+ * \subgroup file-io
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_char_t c
+ * \arg sll_size_t n
+ * \ret sll_size_t
+ */
+__SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,sll_size_t n);
+
+
+
+/**
  * \flags check_output func var_arg
  * \name sll_file_write_format
  * \group file

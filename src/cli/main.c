@@ -31,14 +31,15 @@
 #define FLAG_EXPAND_PATH 1
 #define FLAG_GENERATE_ASSEMBLY 2
 #define FLAG_GENERATE_COMPILED_OBJECT 4
-#define FLAG_HELP 8
-#define FLAG_NO_RUN 16
-#define FLAG_PRINT_ASSEMBLY 32
-#define FLAG_PRINT_OBJECT 64
-#define FLAG_USE_COLORS 128
-#define FLAG_VERBOSE 256
-#define FLAG_VERSION 512
-#define _FLAG_ASSEMBLY_GENERATED 1024
+#define FLAG_GENERATE_SLL 8
+#define FLAG_HELP 16
+#define FLAG_NO_RUN 32
+#define FLAG_PRINT_ASSEMBLY 64
+#define FLAG_PRINT_OBJECT 128
+#define FLAG_USE_COLORS 256
+#define FLAG_VERBOSE 512
+#define FLAG_VERSION 1024
+#define _FLAG_ASSEMBLY_GENERATED 2048
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
 #define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
@@ -444,6 +445,24 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			}
 			sll_file_close(&of);
 		}
+		if (fl&FLAG_GENERATE_SLL){
+			SLL_COPY_STRING_NULL(SLL_CHAR(".sll"),bf+i);
+			if (fl&FLAG_VERBOSE){
+				sll_file_write_format(sll_stdout,SLL_CHAR("Writing Sll Code to File '%s'...\n"),bf);
+			}
+			sll_file_t of;
+			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
+				COLOR_RED;
+				sll_file_write_format(sll_stdout,SLL_CHAR("Unable to Open Output File '%s'\n"),bf);
+				COLOR_RESET;
+				return 0;
+			}
+			sll_write_sll_code(c_dt,&i_ft,&of);
+			if (fl&FLAG_VERBOSE){
+				PRINT_STATIC_STR("File Written Successfully.\n");
+			}
+			sll_file_close(&of);
+		}
 	}
 	if (!(fl&FLAG_NO_RUN)){
 		sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
@@ -543,6 +562,9 @@ _skip_lib_path:
 				break;
 			}
 			goto _read_file_argument;
+		}
+		else if ((*e=='-'&&*(e+1)=='F'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-sll"))==SLL_COMPARE_RESULT_EQUAL){
+			fl|=FLAG_GENERATE_SLL;
 		}
 		else if ((*e=='-'&&*(e+1)=='h'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--help"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_HELP;
@@ -702,26 +724,29 @@ _read_file_argument:
 		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
 			PRINT_STATIC_STR("    Global Optimization\n");
 		}
+		if (fl&FLAG_EXPAND_PATH){
+			PRINT_STATIC_STR("  Path Expand Mode\n");
+		}
 		if (fl&FLAG_GENERATE_ASSEMBLY){
 			PRINT_STATIC_STR("  Assembly Generation Mode\n");
 		}
 		if (fl&FLAG_GENERATE_COMPILED_OBJECT){
 			PRINT_STATIC_STR("  Compiled Node Generation Mode\n");
 		}
-		if (fl&FLAG_EXPAND_PATH){
-			PRINT_STATIC_STR("  Path Expand Mode\n");
+		if (fl&FLAG_GENERATE_SLL){
+			PRINT_STATIC_STR("  Sll Generation Mode\n");
 		}
 		if (fl&FLAG_HELP){
 			PRINT_STATIC_STR("  Help Print Mode\n");
+		}
+		if (!(fl&FLAG_NO_RUN)){
+			PRINT_STATIC_STR("  Program Run Mode\n");
 		}
 		if (fl&FLAG_PRINT_ASSEMBLY){
 			PRINT_STATIC_STR("  Assembly Print Mode\n");
 		}
 		if (fl&FLAG_PRINT_OBJECT){
 			PRINT_STATIC_STR("  Node Print Mode\n");
-		}
-		if (!(fl&FLAG_NO_RUN)){
-			PRINT_STATIC_STR("  Program Run Mode\n");
 		}
 		if (fl&FLAG_USE_COLORS){
 			PRINT_STATIC_STR("  Use Colors\n");

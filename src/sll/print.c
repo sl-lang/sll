@@ -75,7 +75,7 @@ static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_da
 
 
 
-static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
+static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -178,7 +178,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 					if (i){
 						sll_file_write_char(wf,' ');
 					}
-					o=_print_object_internal(c_dt,i_ft,o,wf);
+					o=_print_node_internal(c_dt,i_ft,o,wf);
 				}
 				sll_file_write_char(wf,']');
 				return o;
@@ -192,7 +192,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 					if (i){
 						sll_file_write_char(wf,' ');
 					}
-					o=_print_object_internal(c_dt,i_ft,o,wf);
+					o=_print_node_internal(c_dt,i_ft,o,wf);
 				}
 				sll_file_write_char(wf,'>');
 				return o;
@@ -255,7 +255,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 				while (l){
 					l--;
 					sll_file_write_char(wf,' ');
-					o=_print_object_internal(c_dt,i_ft,o,wf);
+					o=_print_node_internal(c_dt,i_ft,o,wf);
 				}
 				sll_file_write_char(wf,')');
 				return o;
@@ -286,7 +286,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 					}
 					for (;i<ac;i++){
 						sll_file_write_char(wf,' ');
-						o=_print_object_internal(c_dt,i_ft,o,wf);
+						o=_print_node_internal(c_dt,i_ft,o,wf);
 					}
 				}
 				sll_file_write_char(wf,')');
@@ -308,7 +308,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 				o++;
 				for (sll_arg_count_t i=0;i<ac;i++){
 					sll_file_write_char(wf,' ');
-					o=_print_object_internal(c_dt,i_ft,o,wf);
+					o=_print_node_internal(c_dt,i_ft,o,wf);
 				}
 				sll_file_write_char(wf,')');
 				return o;
@@ -320,7 +320,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 				o++;
 				for (sll_arg_count_t i=0;i<ac;i++){
 					sll_file_write_char(wf,' ');
-					o=_print_object_internal(c_dt,i_ft,o,wf);
+					o=_print_node_internal(c_dt,i_ft,o,wf);
 				}
 				sll_file_write_char(wf,')');
 				return o;
@@ -332,7 +332,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 				o++;
 				for (sll_arg_count_t i=0;i<ac;i++){
 					sll_file_write_char(wf,' ');
-					o=_print_object_internal(c_dt,i_ft,o,wf);
+					o=_print_node_internal(c_dt,i_ft,o,wf);
 				}
 				sll_file_write_char(wf,')');
 				return o;
@@ -470,7 +470,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 					if (i){
 						sll_file_write_char(wf,' ');
 					}
-					o=_print_object_internal(c_dt,i_ft,o,wf);
+					o=_print_node_internal(c_dt,i_ft,o,wf);
 				}
 				sll_file_write_char(wf,'}');
 				return o;
@@ -482,7 +482,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 				o++;
 				for (sll_arg_count_t i=0;i<ac;i++){
 					sll_file_write_char(wf,' ');
-					o=_print_object_internal(c_dt,i_ft,o,wf);
+					o=_print_node_internal(c_dt,i_ft,o,wf);
 				}
 				sll_file_write_char(wf,')');
 				return o;
@@ -501,7 +501,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 				_print_int(o->dt.dbg.cn+1,wf);
 				sll_file_write_char(wf,'#');
 				sll_file_write_char(wf,'|');
-				return _print_object_internal(c_dt,i_ft,o+1,wf);
+				return _print_node_internal(c_dt,i_ft,o+1,wf);
 			}
 		default:
 			SLL_UNREACHABLE();
@@ -510,7 +510,7 @@ static const sll_node_t* _print_object_internal(const sll_compilation_data_t* c_
 	o++;
 	for (sll_arg_count_t i=0;i<ac;i++){
 		sll_file_write_char(wf,' ');
-		o=_print_object_internal(c_dt,i_ft,o,wf);
+		o=_print_node_internal(c_dt,i_ft,o,wf);
 	}
 	sll_file_write_char(wf,')');
 	return o;
@@ -1077,5 +1077,5 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 
 
 __SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
-	_print_object_internal(c_dt,i_ft,o,wf);
+	_print_node_internal(c_dt,i_ft,o,wf);
 }

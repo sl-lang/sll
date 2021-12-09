@@ -269,5 +269,5 @@ if ("--run" in sys.argv):
 		print("Running 'examples/_internal_test/test.sll'...")
 	e_nm=("build/sll_standalone" if "--standalone " in sys.argv else "build/sll")
 	subprocess.run([e_nm,"-h","-C"])
-	if (subprocess.run([e_nm,"examples/_internal_test/test.sll","-C","-v","-O3","-c","-o","build/test","-e","-I","examples/_internal_test","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-C","-v","-O0","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-C","-v","-P"]).returncode!=0):
+	if (subprocess.run([e_nm,"examples/_internal_test/test.sll","-C","-v","-O3","-c","-o","build/test","-e","-I","examples/_internal_test","-R","-F"]).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-C","-v","-O0","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-C","-v","-P"]).returncode!=0):
 		sys.exit(1)
