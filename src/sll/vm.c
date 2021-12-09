@@ -72,8 +72,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_current_instruction_count=0;
 	sll_current_runtime_data=r_dt;
 	const sll_assembly_instruction_t* ai=a_dt->h;
-	sll_page_size_t ptr_sz=SLL_ROUND_PAGE(s_sz+a_dt->vc*sizeof(sll_object_t*)+a_dt->st.l*sizeof(sll_object_t)+CALL_STACK_SIZE*sizeof(call_stack_frame_t));
-	uint64_t ptr=(uint64_t)sll_platform_allocate_page(ptr_sz,0);
+	sll_page_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(s_sz+a_dt->vc*sizeof(sll_object_t*)+a_dt->st.l*sizeof(sll_object_t)+CALL_STACK_SIZE*sizeof(call_stack_frame_t));
+	uint64_t ptr=(uint64_t)sll_platform_allocate_page(ptr_sz,1);
 	sll_object_t** v=(sll_object_t**)ptr;
 	sll_static_int[0]->rc+=a_dt->vc;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
