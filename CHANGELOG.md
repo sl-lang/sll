@@ -8,7 +8,7 @@
 - Handle clone API: `sll_handle_clone` ([#101])
 - Handles are now cloned when assigned to custom type objects ([#101])
 - Large page support: `SLL_ROUND_PAGE` and `SLL_ROUND_LARGE_PAGE` ([#102])
-- Optimizer now removes calls sto undefined functions ([#103])
+- Optimizer now removes calls to undefined functions ([#103])
 
 ### Changed
 
