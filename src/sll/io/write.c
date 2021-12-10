@@ -3,6 +3,7 @@
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/node.h>
+#include <sll/object.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <sll/version.h>
@@ -109,6 +110,9 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_DECL_COPY:
+			_write_integer(wf,o->dt.ot);
+			return o+1;
 		case SLL_NODE_TYPE_DEBUG_DATA:
 			_write_integer(wf,o->dt.dbg.fpi);
 			_write_integer(wf,o->dt.dbg.ln);
@@ -376,6 +380,19 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 	_write_integer(wf,c_dt->st.l);
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
 		_write_string(c_dt->st.dt+i,wf);
+	}
+	_write_integer(wf,c_dt->ot_it.l);
+	for (sll_object_type_t i=0;i<c_dt->ot_it.l;i++){
+		const sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
+		_write_integer(wf,oi->l);
+		for (sll_arg_count_t j=0;j<oi->l;j++){
+			if (oi->dt[j].t&SLL_OBJECT_FLAG_CONSTANT){
+				SLL_UNIMPLEMENTED();
+			}
+			_write_integer(wf,oi->dt[j].t);
+			_write_integer(wf,oi->dt[j].f);
+		}
+		SLL_UNIMPLEMENTED();
 	}
 	_write_integer(wf,c_dt->_n_sc_id);
 	_write_object(wf,c_dt->h);

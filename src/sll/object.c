@@ -219,6 +219,25 @@ static void* _copy_struct(void* p,const sll_object_type_data_t* dt,const void** 
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_initializer(sll_object_type_initializer_table_t* ot_it,const sll_object_type_field_t* p,sll_arg_count_t l){
+	ot_it->l++;
+	ot_it->dt=sll_reallocate(ot_it->dt,ot_it->l*sizeof(sll_object_type_initializer_t*));
+	sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+l*sizeof(sll_object_type_field_t));
+	n->l=l;
+	for (sll_arg_count_t i=0;i<l;i++){
+		n->dt[i].t=p->t;
+		if (SLL_OBJECT_GET_TYPE_MASK(p->t)==SLL_OBJECT_TYPE_MAP_KEYS||SLL_OBJECT_GET_TYPE_MASK(p->t)==SLL_OBJECT_TYPE_MAP_VALUES){
+			n->dt[i].t=SLL_OBJECT_TYPE_ARRAY|(p->t&SLL_OBJECT_FLAG_CONSTANT);
+		}
+		n->dt[i].f=p->f;
+		p++;
+	}
+	*(ot_it->dt+ot_it->l-1)=n;
+	return ot_it->l-1;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* tt,const sll_object_t*const* p,sll_arg_count_t l){
 	tt->l++;
 	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);

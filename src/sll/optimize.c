@@ -123,6 +123,7 @@ static sll_node_t* _remove_single_object(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
@@ -201,6 +202,7 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
@@ -526,7 +528,7 @@ static sll_node_t* _object_to_object(sll_object_t* v,sll_node_t* o,optimizer_dat
 			while (o_dt->c_dt->st.dt+o->dt.s!=&(v->dt.s)){
 				o->dt.s++;
 				if (o->dt.s==o_dt->c_dt->st.l){
-					o->dt.s=sll_add_string_runtime(&(o_dt->c_dt->st),v);
+					o->dt.s=sll_add_string_object(&(o_dt->c_dt->st),v);
 					return o;
 				}
 			}
@@ -580,6 +582,7 @@ static const sll_node_t* _mark_loop_vars(const sll_node_t* o,optimizer_data_t* o
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
@@ -772,6 +775,7 @@ static sll_node_t* _check_remove(sll_node_t* o,sll_node_t* p,optimizer_data_t* o
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			DECREASE_PARENT(p);
 			o->t=SLL_NODE_TYPE_NOP;
 			return o+1;
@@ -977,12 +981,14 @@ _keep_assignment:;
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_UNKNOWN:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_FIELD:
 			if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
 				DECREASE_PARENT(p);
 				o->t=SLL_NODE_TYPE_NOP;
@@ -1054,9 +1060,6 @@ _keep_assignment:;
 					DISABLE_REMOVE_VARIABLE(o,o_dt);
 				}
 			}
-			return o+1;
-		case SLL_NODE_TYPE_FIELD:
-			SLL_ASSERT(fl&OPTIMIZER_FLAG_ARGUMENT);
 			return o+1;
 		case SLL_NODE_TYPE_PRINT:
 			{
@@ -2043,6 +2046,65 @@ _remove_cond:
 				return o;
 			}
 		case SLL_NODE_TYPE_DECL:
+			{
+				if (fl&OPTIMIZER_FLAG_ASSIGN){
+					SLL_UNIMPLEMENTED();
+				}
+				sll_arg_count_t l=o->dt.ac;
+				sll_node_t* r=o;
+				o++;
+				sll_bool_t e=l&1;
+				l>>=1;
+				sll_object_type_field_t* a=sll_allocate_stack(l*sizeof(sll_object_type_field_t));
+				sll_arg_count_t i=0;
+				while (l){
+					l--;
+					sll_node_t* v=o;
+					o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+					if (a){
+						sll_object_t* nv=_get_as_object(v,o_dt,0);
+						if (SLL_OBJECT_GET_TYPE(nv)==OBJECT_TYPE_UNKNOWN||(nv->t&OBJECT_CHANGE_IN_LOOP)){
+							sll_deallocate(a);
+							a=NULL;
+						}
+						else{
+							sll_object_t* iv=sll_operator_cast(nv,sll_static_int[SLL_OBJECT_TYPE_INT]);
+							if (iv->dt.i<0){
+								(a+i)->t=((sll_object_type_t)(~(iv->dt.i)))|SLL_OBJECT_FLAG_CONSTANT;
+							}
+							else{
+								(a+i)->t=(sll_object_type_t)(iv->dt.i);
+							}
+							SLL_RELEASE(iv);
+						}
+						SLL_RELEASE(nv);
+					}
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					}
+					SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
+					if (a){
+						(a+i)->f=o->dt.s;
+						i++;
+					}
+					o++;
+				}
+				if (e){
+					o=_optimize(o,r,o_dt,0);
+				}
+				if (r->dt.ac<2||!a){
+					return o;
+				}
+				r->t=SLL_NODE_TYPE_COMMA;
+				r->dt.ac++;
+				_shift_nodes(o,o_dt->c_dt,1);
+				o->t=SLL_NODE_TYPE_DECL_COPY;
+				o->dt.ot=sll_add_initializer(&(o_dt->c_dt->ot_it),(const sll_object_type_field_t*)a,r->dt.ac>>1);
+				sll_deallocate(a);
+				o=r;
+				SLL_ASSERT(!(o_dt->rm));
+				goto _optimize_operation_list_comma;
+			}
 		case SLL_NODE_TYPE_NEW:
 			{
 				if (fl&OPTIMIZER_FLAG_ASSIGN){
@@ -2215,6 +2277,7 @@ static sll_node_t* _remap_indexes_merge_print(sll_node_t* o,sll_node_t* p,optimi
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{

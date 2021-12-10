@@ -305,6 +305,7 @@ typedef union __SLL_NODE_DATA{
 	sll_arg_count_t ac;
 	sll_debug_node_data_t dbg;
 	sll_function_index_t fn_id;
+	sll_object_type_t ot;
 	void* _p;
 } sll_node_data_t;
 
@@ -368,6 +369,27 @@ typedef struct __SLL_STRING_TABLE{
 
 
 
+typedef struct __SLL_OBJECT_TYPE_FIELD{
+	sll_object_type_t t;
+	sll_string_index_t f;
+} sll_object_type_field_t;
+
+
+
+typedef struct __SLL_OBJECT_TYPE_INITIALIZER{
+	sll_arg_count_t l;
+	sll_object_type_field_t dt[];
+} sll_object_type_initializer_t;
+
+
+
+typedef struct __SLL_OBJECT_TYPE_INIT_TABLE{
+	sll_object_type_initializer_t** dt;
+	sll_object_type_t l;
+} sll_object_type_initializer_table_t;
+
+
+
 typedef struct __SLL_COMPILATION_STACK_DATA{
 	void* s;
 	void* e;
@@ -386,6 +408,7 @@ typedef struct __SLL_COMPILATION_DATA{
 	sll_export_table_t et;
 	sll_function_table_t ft;
 	sll_string_table_t st;
+	sll_object_type_initializer_table_t ot_it;
 	sll_compilation_stack_data_t _s;
 	sll_scope_t _n_sc_id;
 } sll_compilation_data_t;

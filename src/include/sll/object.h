@@ -48,6 +48,20 @@
  * \name sll_add_type
  * \group object
  * \desc Docs!
+ * \arg sll_object_type_initializer_table_t* ot_it
+ * \arg const sll_object_type_field_t* p
+ * \arg sll_arg_count_t l
+ * \ret sll_object_type_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_initializer(sll_object_type_initializer_table_t* ot_it,const sll_object_type_field_t* p,sll_arg_count_t l);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_add_type
+ * \group object
+ * \desc Docs!
  * \arg sll_object_type_table_t* tt
  * \arg const sll_object_t*const* p
  * \arg sll_arg_count_t l

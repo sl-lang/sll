@@ -27,6 +27,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			(*sz)++;
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
@@ -172,6 +173,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{

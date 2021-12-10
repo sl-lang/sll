@@ -148,6 +148,9 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 				}
 			}
 			return 1;
+		case SLL_NODE_TYPE_DECL_COPY:
+			CHECK_ERROR2(rf,o->dt.ot,sll_object_type_t);
+			return 1;
 		case SLL_NODE_TYPE_DEBUG_DATA:
 			CHECK_ERROR2(rf,o->dt.dbg.fpi,sll_string_index_t);
 			CHECK_ERROR2(rf,o->dt.dbg.ln,sll_file_offset_t);

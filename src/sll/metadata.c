@@ -19,6 +19,7 @@ static sll_node_t* _mark_strings(sll_node_t* o,uint64_t* m){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
@@ -73,6 +74,7 @@ static sll_node_t* _update_strings(sll_node_t* o,sll_string_index_t* sm){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
@@ -117,6 +119,7 @@ static sll_node_t* _update_strings(sll_node_t* o,sll_string_index_t* sm){
 
 
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
+	return;
 	uint32_t ml=(c_dt->st.l>>6)+1;
 	uint64_t* m=sll_zero_allocate(ml*sizeof(uint64_t));
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){

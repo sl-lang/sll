@@ -443,6 +443,11 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 		case SLL_NODE_TYPE_DECL:
 			PRINT_STATIC_STRING("&:",wf);
 			break;
+		case SLL_NODE_TYPE_DECL_COPY:
+			PRINT_STATIC_STRING("&: @",wf);
+			_print_int(o->dt.ot,wf);
+			sll_file_write_char(wf,')');
+			return o+1;
 		case SLL_NODE_TYPE_NEW:
 			sll_file_write_char(wf,'.');
 			break;

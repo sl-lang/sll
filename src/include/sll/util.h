@@ -55,7 +55,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_t
 
 /**
  * \flags check_output func
- * \name sll_add_string_runtime
+ * \name sll_add_string_object
  * \group util
  * \subgroup util-str
  * \desc Docs!
@@ -63,7 +63,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_t
  * \arg sll_object_t* v
  * \ret sll_string_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_runtime(sll_string_table_t* st,sll_object_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_object(sll_string_table_t* st,sll_object_t* v);
 
 
 

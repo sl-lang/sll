@@ -33,6 +33,7 @@ static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_d
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return mo+1;
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
