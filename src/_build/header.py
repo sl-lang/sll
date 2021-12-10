@@ -10,7 +10,7 @@ DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t
 HEADER_INCLUDE_GUARD_REGEX=re.compile(br"^\s*#ifndef\s+(?P<h_nm>[a-zA-Z0-9_]+)\s+#define\s+(?P=h_nm)\s+(?:1\s+)?(.*)#endif\s*$",re.DOTALL)
 HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
-IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z0-9_]+\b")
+IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^>]*\")\s*$""",re.MULTILINE)
 INTERNAL_SLL_HEADER="_sll_internal.h"
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
@@ -271,9 +271,9 @@ def generate_header(h_dt,cm):
 				else:
 					break
 		nk+=b")"
-		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm)))
+		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm))).strip()
 		d_f[i]=(nk,v)
-		d_s+=b"\n#define "+nk+b" "+v.strip()
+		d_s+=b"\n#define "+nk+b" "+v
 	fl=[]
 	e_v=[]
 	for k in l:

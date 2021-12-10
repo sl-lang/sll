@@ -376,7 +376,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		sll_print_assembly(a_dt,sll_stdout);
 		sll_file_write_char(sll_stdout,'\n');
 	}
-	if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT)){
+	if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT|FLAG_GENERATE_SLL)){
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		uint16_t i=0;
 		sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
