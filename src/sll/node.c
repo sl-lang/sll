@@ -113,6 +113,12 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	c_dt->ft.dt=NULL;
 	c_dt->ft.l=0;
 	sll_free_string_table(&(c_dt->st));
+	for (sll_object_type_t i=0;i<c_dt->ot_it.l;i++){
+		sll_deallocate(*(c_dt->ot_it.dt+i));
+	}
+	sll_deallocate(c_dt->ot_it.dt);
+	c_dt->ot_it.dt=NULL;
+	c_dt->ot_it.l=0;
 	void* pg=c_dt->_s.s;
 	while (pg){
 		void* n=*((void**)pg);
@@ -153,6 +159,8 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* r
 	o->ft.l=0;
 	o->st.dt=NULL;
 	o->st.l=0;
+	o->ot_it.dt=NULL;
+	o->ot_it.l=0;
 	_init_node_stack(o);
 	o->_n_sc_id=1;
 	IGNORE_RESULT(sll_create_string(&(o->st),fp,sll_string_length_unaligned(fp)));

@@ -1627,10 +1627,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		const sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
 		SLL_ASSERT(oi->l);
 		sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+oi->l*sizeof(sll_object_type_field_t));
-		n->l=oi->l;
-		for (sll_arg_count_t j=0;j<n->l;j++){
-			n->dt[j]=oi->dt[j];
-		}
+		sll_copy_data(oi,sizeof(sll_object_type_initializer_t)+oi->l*sizeof(sll_object_type_field_t),n);
 		*(o->ot_it.dt+i)=n;
 	}
 	loop_table_t g_dt_lt={

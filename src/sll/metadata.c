@@ -140,6 +140,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
 		SLL_ASSERT(oi->l);
 		for (sll_arg_count_t j=0;j<oi->l;j++){
+			SLL_ASSERT(oi->dt[j].f<c_dt->st.l);
 			*(m+(oi->dt[j].f>>6))|=1ull<<(oi->dt[j].f&63);
 		}
 	}

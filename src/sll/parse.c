@@ -33,7 +33,6 @@ static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_d
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return mo+1;
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
@@ -73,6 +72,9 @@ static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_d
 				}
 				return mo;
 			}
+		case SLL_NODE_TYPE_DECL_COPY:
+			o->dt.ot+=im_dt->oi_off;
+			return mo+1;
 		case SLL_NODE_TYPE_DEBUG_DATA:
 			o->dt.dbg.fpi=*(im_dt->sm+o->dt.dbg.fpi);
 			return _patch_module(mo+1,im_dt);
@@ -1317,7 +1319,8 @@ _unknown_identifier_char:
 						.f_off=c_dt->ft.l,
 						.eiml=im.et.l,
 						.sc_off=c_dt->_n_sc_id,
-						.c_dt=c_dt
+						.c_dt=c_dt,
+						.oi_off=c_dt->ot_it.l
 					};
 					for (sll_string_index_t i=0;i<im.st.l;i++){
 						sll_string_t* s=im.st.dt+i;
@@ -1332,6 +1335,21 @@ _unknown_identifier_char:
 						c_dt->st.dt=sll_reallocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
 						sll_string_clone(s,c_dt->st.dt+c_dt->st.l-1);
 _merge_next_string:;
+					}
+					if (im.ot_it.l){
+						c_dt->ot_it.l+=im.ot_it.l;
+						c_dt->ot_it.dt=sll_reallocate(c_dt->ot_it.dt,c_dt->ot_it.l*sizeof(sll_object_type_initializer_t*));
+						for (sll_object_type_t i=0;i<im.ot_it.l;i++){
+							const sll_object_type_initializer_t* oi=*(im.ot_it.dt+i);
+							sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+oi->l*sizeof(sll_object_type_field_t));
+							n->l=oi->l;
+							SLL_ASSERT(n->l);
+							for (sll_arg_count_t j=0;j<n->l;j++){
+								n->dt[j].t=oi->dt[j].t;
+								n->dt[j].f=*(im_dt.sm+oi->dt[j].f);
+							}
+							*(c_dt->ot_it.dt+im_dt.oi_off+i)=n;
+						}
 					}
 					sll_identifier_list_length_t s_si[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
 					for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
