@@ -880,6 +880,13 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				ai->dt.ac=v>>1;
 				return o;
 			}
+		case SLL_NODE_TYPE_DECL_COPY:
+			{
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY;
+				ai->dt.t=o->dt.ot;
+				return o+1;
+			}
 		case SLL_NODE_TYPE_NEW:
 			{
 				sll_arg_count_t l=o->dt.ac;
@@ -1613,6 +1620,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	o->st.dt=sll_allocate(o->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<o->st.l;i++){
 		sll_string_clone(c_dt->st.dt+i,o->st.dt+i);
+	}
+	o->ot_it.l=c_dt->ot_it.l;
+	o->ot_it.dt=sll_allocate(o->st.l*sizeof(sll_object_type_initializer_t*));
+	for (sll_string_index_t i=0;i<o->ot_it.l;i++){
+		const sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
+		SLL_ASSERT(oi->l);
+		sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+oi->l*sizeof(sll_object_type_field_t));
+		n->l=oi->l;
+		for (sll_arg_count_t j=0;j<n->l;j++){
+			n->dt[j]=oi->dt[j];
+		}
+		*(o->ot_it.dt+i)=n;
 	}
 	loop_table_t g_dt_lt={
 		NULL,

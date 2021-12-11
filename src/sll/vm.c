@@ -589,6 +589,12 @@ _cleanup_jump_table:;
 					si++;
 					break;
 				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
+				{
+					*(s+si)=SLL_FROM_INT(sll_type_from_initializer(sll_current_runtime_data->tt,&(a_dt->st),*(a_dt->ot_it.dt+ai->dt.t)));
+					si++;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
 				{
 					si-=ai->dt.ac;

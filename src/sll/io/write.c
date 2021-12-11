@@ -230,6 +230,15 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
 		_write_string(a_dt->st.dt+i,wf);
 	}
+	_write_integer(wf,a_dt->ot_it.l);
+	for (sll_object_type_t i=0;i<a_dt->ot_it.l;i++){
+		const sll_object_type_initializer_t* oi=*(a_dt->ot_it.dt+i);
+		_write_integer(wf,oi->l);
+		for (sll_arg_count_t j=0;j<oi->l;j++){
+			_write_integer(wf,(SLL_OBJECT_GET_TYPE_MASK(oi->dt[j].t)<<1)|(!!(oi->dt[j].t&SLL_OBJECT_FLAG_CONSTANT)));
+			_write_integer(wf,oi->dt[j].f);
+		}
+	}
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
 		sll_file_write_char(wf,(uint8_t)ai->t);
@@ -321,6 +330,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 				_write_integer(wf,ai->dt.va.l);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
 				sll_file_write_char(wf,ai->dt.t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
@@ -386,13 +396,9 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 		const sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
 		_write_integer(wf,oi->l);
 		for (sll_arg_count_t j=0;j<oi->l;j++){
-			if (oi->dt[j].t&SLL_OBJECT_FLAG_CONSTANT){
-				SLL_UNIMPLEMENTED();
-			}
-			_write_integer(wf,oi->dt[j].t);
+			_write_integer(wf,(SLL_OBJECT_GET_TYPE_MASK(oi->dt[j].t)<<1)|(!!(oi->dt[j].t&SLL_OBJECT_FLAG_CONSTANT)));
 			_write_integer(wf,oi->dt[j].f);
 		}
-		SLL_UNIMPLEMENTED();
 	}
 	_write_integer(wf,c_dt->_n_sc_id);
 	_write_object(wf,c_dt->h);

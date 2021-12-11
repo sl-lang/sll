@@ -6,6 +6,7 @@
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/string.h>
+#include <sll/object.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <sll/version.h>
@@ -258,6 +259,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			return 0;
 		}
 	}
+	CHECK_ERROR(rf,a_dt->ot_it.l,sll_object_type_t,e);
+	a_dt->ot_it.dt=sll_allocate(a_dt->ot_it.l*sizeof(sll_object_type_initializer_t*));
+	for (sll_object_type_t i=0;i<a_dt->ot_it.l;i++){
+		sll_arg_count_t l;
+		CHECK_ERROR(rf,l,sll_arg_count_t,e);
+		sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+l*sizeof(sll_object_type_field_t));
+		*(a_dt->ot_it.dt+i)=n;
+		n->l=l;
+		SLL_ASSERT(l);
+		for (sll_arg_count_t j=0;j<l;j++){
+			sll_object_type_t v;
+			CHECK_ERROR(rf,v,sll_object_type_t,e);
+			n->dt[j].t=(v>>1)|(v&1?SLL_OBJECT_FLAG_CONSTANT:0);
+			CHECK_ERROR(rf,n->dt[j].f,sll_string_index_t,e);
+		}
+	}
 	_init_assembly_stack(a_dt);
 	a_dt->h=a_dt->_s.p;
 	sll_instruction_index_t i=a_dt->ic;
@@ -377,6 +394,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 				CHECK_ERROR(rf,ai->dt.va.l,sll_arg_count_t,e);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
 				c=sll_file_read_char(rf);
 				if (c==SLL_END_OF_DATA){
 					e->t=SLL_ERROR_INVALID_FILE_FORMAT;
@@ -445,6 +463,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
 		if (!_read_string(rf,c_dt->st.dt+i,e)){
 			return 0;
+		}
+	}
+	CHECK_ERROR(rf,c_dt->ot_it.l,sll_object_type_t,e);
+	c_dt->ot_it.dt=sll_allocate(c_dt->ot_it.l*sizeof(sll_object_type_initializer_t*));
+	for (sll_object_type_t i=0;i<c_dt->ot_it.l;i++){
+		sll_arg_count_t l;
+		CHECK_ERROR(rf,l,sll_arg_count_t,e);
+		sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+l*sizeof(sll_object_type_field_t));
+		*(c_dt->ot_it.dt+i)=n;
+		n->l=l;
+		SLL_ASSERT(l);
+		for (sll_arg_count_t j=0;j<l;j++){
+			sll_object_type_t v;
+			CHECK_ERROR(rf,v,sll_object_type_t,e);
+			n->dt[j].t=(v>>1)|(v&1?SLL_OBJECT_FLAG_CONSTANT:0);
+			CHECK_ERROR(rf,n->dt[j].f,sll_string_index_t,e);
 		}
 	}
 	CHECK_ERROR(rf,c_dt->_n_sc_id,sll_scope_t,e);

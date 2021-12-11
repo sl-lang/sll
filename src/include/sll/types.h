@@ -477,6 +477,7 @@ typedef struct __SLL_ASSEMBLY_DATA{
 	sll_variable_index_t vc;
 	sll_assembly_function_table_t ft;
 	sll_string_table_t st;
+	sll_object_type_initializer_table_t ot_it;
 	sll_assembly_stack_data_t _s;
 } sll_assembly_data_t;
 

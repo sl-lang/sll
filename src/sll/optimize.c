@@ -2020,7 +2020,8 @@ _remove_cond:
 						o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 						sll_object_t* n=_get_as_object(a,o_dt,0);
 						if (SLL_OBJECT_GET_TYPE(n)==OBJECT_TYPE_UNKNOWN||(n->t&OBJECT_CHANGE_IN_LOOP)){
-							SLL_UNIMPLEMENTED();
+							SLL_RELEASE(n);
+							goto _unknown_cast;
 						}
 						sll_object_t* tmp=sll_operator_cast(v,n);
 						SLL_RELEASE(v);
@@ -2035,6 +2036,7 @@ _remove_cond:
 					o=r;
 					goto _optimize_operation_list_comma;
 				}
+_unknown_cast:
 				SLL_RELEASE(v);
 				while (l){
 					l--;
@@ -2102,7 +2104,6 @@ _remove_cond:
 				o->dt.ot=sll_add_initializer(&(o_dt->c_dt->ot_it),(const sll_object_type_field_t*)a,r->dt.ac>>1);
 				sll_deallocate(a);
 				o=r;
-				SLL_ASSERT(!(o_dt->rm));
 				goto _optimize_operation_list_comma;
 			}
 		case SLL_NODE_TYPE_NEW:

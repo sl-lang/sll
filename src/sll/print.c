@@ -988,6 +988,10 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL:
 				PRINT_STATIC_STRING("DECL 0 & NEW 0",wf);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
+				PRINT_STATIC_STRING("DECL @",wf);
+				_print_int(ai->dt.t,wf);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				PRINT_STATIC_STRING("PRINT",wf);
 				break;

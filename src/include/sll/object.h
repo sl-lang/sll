@@ -159,4 +159,18 @@ __SLL_EXTERNAL void sll_object_set_field(sll_object_t* o,const sll_string_t* f,s
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_type_from_initializer
+ * \group object
+ * \desc Docs!
+ * \arg sll_object_type_table_t* tt
+ * \arg const sll_string_table_t* st
+ * \arg const sll_object_type_initializer_t* oi
+ * \ret sll_object_type_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sll_object_type_table_t* tt,const sll_string_table_t* st,const sll_object_type_initializer_t* oi);
+
+
+
 #endif
