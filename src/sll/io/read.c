@@ -1,4 +1,4 @@
-#include <sll/_sll_internal.h>
+ #include <sll/_sll_internal.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/error.h>
@@ -48,7 +48,7 @@ static uint64_t _read_integer(sll_file_t* rf,sll_bool_t* e){
 	}
 	uint64_t v=0;
 	uint8_t s=0;
-	while (c&0x80){
+	while ((c&0x80)&&s<56){
 		v|=((uint64_t)(c&0x7f))<<s;
 		s+=7;
 		c=sll_file_read_char(rf);
@@ -64,9 +64,6 @@ static uint64_t _read_integer(sll_file_t* rf,sll_bool_t* e){
 
 static int64_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
 	uint64_t v=_read_integer(rf,e);
-	if (*e){
-		return 0;
-	}
 	return (v>>1)^(-((int64_t)(v&1)));
 }
 

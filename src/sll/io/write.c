@@ -17,9 +17,11 @@
 
 
 static void _write_integer(sll_file_t* wf,uint64_t v){
-	while (v>0x7f){
+	uint8_t i=0;
+	while (i<8&&v>0x7f){
 		sll_file_write_char(wf,(uint8_t)((v&0x7f)|0x80));
 		v>>=7;
+		i++;
 	}
 	sll_file_write_char(wf,(uint8_t)v);
 }

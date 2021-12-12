@@ -2,7 +2,9 @@
 
 ## [0.6.32] - Ongoing
 
-*Nothing*
+### Changed
+
+- Improved large integer compression
 
 ## [0.6.31] - 2021-12-12
 
