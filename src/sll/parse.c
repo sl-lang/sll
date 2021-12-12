@@ -1351,18 +1351,16 @@ _merge_next_string:;
 							*(c_dt->ot_it.dt+im_dt.oi_off+i)=n;
 						}
 					}
-					sll_identifier_list_length_t s_si[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
 					for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 						sll_identifier_list_t* il=c_dt->idt.s+i;
 						sll_identifier_list_t mil=im.idt.s[i];
 						im_dt.off[i]=il->l;
 						if (mil.l){
-							s_si[i]=il->l;
 							il->l+=mil.l;
 							il->dt=sll_reallocate(il->dt,il->l*sizeof(sll_identifier_t));
 							for (sll_identifier_list_length_t j=0;j<mil.l;j++){
-								(il->dt+s_si[i]+j)->sc=(mil.dt+j)->sc+c_dt->_n_sc_id;
-								(il->dt+s_si[i]+j)->i=*(im_dt.sm+(mil.dt+j)->i);
+								(il->dt+im_dt.off[i]+j)->sc=(mil.dt+j)->sc+c_dt->_n_sc_id;
+								(il->dt+im_dt.off[i]+j)->i=*(im_dt.sm+(mil.dt+j)->i);
 							}
 						}
 					}
@@ -1388,7 +1386,7 @@ _merge_next_string:;
 							ei=c_dt->idt.il+si+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii);
 							for (sll_identifier_list_length_t k=0;k<c_dt->idt.ill;k++){
 								sll_identifier_t* n=c_dt->idt.il+k;
-								if (n->i!=ei->i){
+								if (k==si+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii)||n->i!=ei->i){
 									continue;
 								}
 								if (n->sc==l_sc->l_sc){
@@ -1403,11 +1401,11 @@ _merge_next_string:;
 							}
 						}
 						else{
-							ei=c_dt->idt.s[j].dt+s_si[j]+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii);
 							sll_identifier_list_t* il=c_dt->idt.s+j;
+							ei=il->dt+im_dt.off[j]+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii);
 							for (sll_identifier_list_length_t k=0;k<il->l;k++){
 								sll_identifier_t* n=il->dt+k;
-								if (n->i!=ei->i){
+								if (k==im_dt.off[j]+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii)||n->i!=ei->i){
 									continue;
 								}
 								if (n->sc==l_sc->l_sc){
@@ -1448,7 +1446,7 @@ _export_identifier_found:;
 					_patch_module(im.h,&im_dt);
 					sll_deallocate(im_dt.sm);
 					sll_deallocate(im_dt.eim);
-					sll_free_compilation_data(&im);
+						sll_free_compilation_data(&im);
 				}
 				else if ((fl&EXTRA_COMPILATION_DATA_EXPORT)&&arg->t==SLL_NODE_TYPE_IDENTIFIER){
 					for (sll_export_table_length_t j=0;j<c_dt->et.l;j++){

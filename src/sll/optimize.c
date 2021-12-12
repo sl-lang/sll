@@ -2049,62 +2049,63 @@ _unknown_cast:
 			}
 		case SLL_NODE_TYPE_DECL:
 			{
-				if (fl&OPTIMIZER_FLAG_ASSIGN){
-					SLL_UNIMPLEMENTED();
-				}
-				sll_arg_count_t l=o->dt.ac;
-				sll_node_t* r=o;
-				o++;
-				sll_bool_t e=l&1;
-				l>>=1;
-				sll_object_type_field_t* a=sll_allocate_stack(l*sizeof(sll_object_type_field_t));
-				sll_arg_count_t i=0;
-				while (l){
-					l--;
-					sll_node_t* v=o;
-					o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
-					if (a){
-						sll_object_t* nv=_get_as_object(v,o_dt,0);
-						if (SLL_OBJECT_GET_TYPE(nv)==OBJECT_TYPE_UNKNOWN||(nv->t&OBJECT_CHANGE_IN_LOOP)){
-							sll_deallocate(a);
-							a=NULL;
-						}
-						else{
-							sll_object_t* iv=sll_operator_cast(nv,sll_static_int[SLL_OBJECT_TYPE_INT]);
-							if (iv->dt.i<0){
-								(a+i)->t=((sll_object_type_t)(~(iv->dt.i)))|SLL_OBJECT_FLAG_CONSTANT;
-							}
-							else{
-								(a+i)->t=(sll_object_type_t)(iv->dt.i);
-							}
-							SLL_RELEASE(iv);
-						}
-						SLL_RELEASE(nv);
-					}
-					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
-						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
-					}
-					SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
-					if (a){
-						(a+i)->f=o->dt.s;
-						i++;
-					}
-					o++;
-				}
-				if (e){
-					o=_optimize(o,r,o_dt,0);
-				}
-				if (r->dt.ac<2||!a){
-					return o;
-				}
-				r->t=SLL_NODE_TYPE_COMMA;
-				r->dt.ac++;
-				_shift_nodes(o,o_dt->c_dt,1);
-				o->t=SLL_NODE_TYPE_DECL_COPY;
-				o->dt.ot=sll_add_initializer(&(o_dt->c_dt->ot_it),(const sll_object_type_field_t*)a,r->dt.ac>>1);
-				sll_deallocate(a);
-				o=r;
-				goto _optimize_operation_list_comma;
+				// if (fl&OPTIMIZER_FLAG_ASSIGN){
+				// 	SLL_UNIMPLEMENTED();
+				// }
+				// sll_arg_count_t l=o->dt.ac;
+				// sll_node_t* r=o;
+				// o++;
+				// sll_bool_t e=l&1;
+				// l>>=1;
+				// sll_object_type_field_t* a=sll_allocate_stack(l*sizeof(sll_object_type_field_t));
+				// sll_arg_count_t i=0;
+				// while (l){
+				// 	l--;
+				// 	sll_node_t* v=o;
+				// 	o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+				// 	if (a){
+				// 		sll_object_t* nv=_get_as_object(v,o_dt,0);
+				// 		if (SLL_OBJECT_GET_TYPE(nv)==OBJECT_TYPE_UNKNOWN||(nv->t&OBJECT_CHANGE_IN_LOOP)){
+				// 			sll_deallocate(a);
+				// 			a=NULL;
+				// 		}
+				// 		else{
+				// 			sll_object_t* iv=sll_operator_cast(nv,sll_static_int[SLL_OBJECT_TYPE_INT]);
+				// 			if (iv->dt.i<0){
+				// 				(a+i)->t=((sll_object_type_t)(~(iv->dt.i)))|SLL_OBJECT_FLAG_CONSTANT;
+				// 			}
+				// 			else{
+				// 				(a+i)->t=(sll_object_type_t)(iv->dt.i);
+				// 			}
+				// 			SLL_RELEASE(iv);
+				// 		}
+				// 		SLL_RELEASE(nv);
+				// 	}
+				// 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+				// 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+				// 	}
+				// 	SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
+				// 	if (a){
+				// 		(a+i)->f=o->dt.s;
+				// 		i++;
+				// 	}
+				// 	o++;
+				// }
+				// if (e){
+				// 	o=_optimize(o,r,o_dt,0);
+				// }
+				// if (r->dt.ac<2||!a){
+				// sll_deallocate(a);
+				// 	return o;
+				// }
+				// r->t=SLL_NODE_TYPE_COMMA;
+				// r->dt.ac++;
+				// _shift_nodes(o,o_dt->c_dt,1);
+				// o->t=SLL_NODE_TYPE_DECL_COPY;
+				// o->dt.ot=sll_add_initializer(&(o_dt->c_dt->ot_it),(const sll_object_type_field_t*)a,r->dt.ac>>1);
+				// sll_deallocate(a);
+				// o=r;
+				// goto _optimize_operation_list_comma;
 			}
 		case SLL_NODE_TYPE_NEW:
 			{
@@ -2550,7 +2551,16 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 		c_dt->idt.ill-=j;
 		c_dt->idt.il=sll_reallocate(c_dt->idt.il,c_dt->idt.ill*sizeof(sll_identifier_t));
 	}
-	o_dt.rm=0;
+	for (sll_export_table_length_t i=0;i<c_dt->et.l;i++){
+		if (SLL_IDENTIFIER_GET_ARRAY_ID(*(c_dt->et.dt+i))==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
+			SLL_ASSERT(!(o_dt.it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(*(c_dt->et.dt+i)))->rm);
+			*(c_dt->et.dt+i)=*(o_dt.im.l+SLL_IDENTIFIER_GET_ARRAY_INDEX(*(c_dt->et.dt+i)));
+		}
+		else{
+			SLL_ASSERT(!(o_dt.it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID(*(c_dt->et.dt+i))]+SLL_IDENTIFIER_GET_ARRAY_INDEX(*(c_dt->et.dt+i)))->rm);
+			*(c_dt->et.dt+i)=*(o_dt.im.s[SLL_IDENTIFIER_GET_ARRAY_ID(*(c_dt->et.dt+i))]+SLL_IDENTIFIER_GET_ARRAY_INDEX(*(c_dt->et.dt+i)));
+		}
+	}
 	sll_function_index_t fn_off=0;
 	sll_function_index_t* fn_m=sll_allocate(c_dt->ft.l*sizeof(sll_function_index_t));
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
@@ -2582,6 +2592,7 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 			c_dt->ft.dt=sll_reallocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 		}
 	}
+	o_dt.rm=0;
 	_remap_indexes_merge_print(c_dt->h,NULL,&o_dt,fn_m);
 	sll_deallocate(fn_m);
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){

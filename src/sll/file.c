@@ -10,6 +10,14 @@
 
 
 
+#ifdef DEBUG_BUILD
+#define EXTRA_FLAGS SLL_FILE_FLAG_NO_BUFFER
+#else
+#define EXTRA_FLAGS 0
+#endif
+
+
+
 static sll_file_t _file_stdin;
 static sll_file_t _file_stdout;
 static sll_file_t _file_stderr;
@@ -24,8 +32,8 @@ __SLL_EXTERNAL sll_file_t* sll_stderr=&_file_stderr;
 
 void _file_init_std_streams(void){
 	IGNORE_RESULT(sll_file_open_descriptor(SLL_CHAR("sll_stdin"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_INPUT),SLL_FILE_FLAG_READ|SLL_FILE_FLAG_NO_BUFFER|FILE_FLAG_NO_RELEASE,sll_stdin));
-	IGNORE_RESULT(sll_file_open_descriptor(SLL_CHAR("sll_stdout"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_OUTPUT),SLL_FILE_FLAG_WRITE|FILE_FLAG_NO_RELEASE,sll_stdout));
-	IGNORE_RESULT(sll_file_open_descriptor(SLL_CHAR("sll_stderr"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR),SLL_FILE_FLAG_WRITE|FILE_FLAG_NO_RELEASE,sll_stderr));
+	IGNORE_RESULT(sll_file_open_descriptor(SLL_CHAR("sll_stdout"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_OUTPUT),SLL_FILE_FLAG_WRITE|FILE_FLAG_NO_RELEASE|EXTRA_FLAGS,sll_stdout));
+	IGNORE_RESULT(sll_file_open_descriptor(SLL_CHAR("sll_stderr"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR),SLL_FILE_FLAG_WRITE|FILE_FLAG_NO_RELEASE|EXTRA_FLAGS,sll_stderr));
 }
 
 
