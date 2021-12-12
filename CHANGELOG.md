@@ -8,9 +8,12 @@
 - Default file API: `sll_api_file_std_handle` and `file_std_handle`
 - Handle clone API: `sll_handle_clone` ([#101])
 - Handles are now cloned when assigned to custom type objects ([#101])
+- Implemented `sll_add_initializer` ([#105])
 - Implemented `sll_file_write_char_count`
 - Implemented `sll_write_sll_code` ([#104])
+- Implemented custom type creation optimization ([#105])
 - Large page support: `SLL_ROUND_PAGE` and `SLL_ROUND_LARGE_PAGE` ([#102])
+- New node and assembly instruction type: `SLL_NODE_TYPE_DECL_COPY` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY` ([#105])
 - Optimizer now removes calls to undefined functions ([#103])
 
 ### Changed
@@ -1127,6 +1130,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#105]: https://github.com/sl-lang/sll/issues/105
 [#104]: https://github.com/sl-lang/sll/issues/104
 [#103]: https://github.com/sl-lang/sll/issues/103
 [#102]: https://github.com/sl-lang/sll/issues/102
