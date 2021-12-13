@@ -41,6 +41,21 @@ __API_FUNC_DECL(array_create);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_array_replace
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \arg O
+ * \ret E -> Failure
+ * \ret A -> Success
+ */
+__API_FUNC_DECL(array_replace);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_array_reverse
  * \group array-api
  * \desc Docs!

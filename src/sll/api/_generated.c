@@ -47,6 +47,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_create_raw(const s
 
 
 
+__SLL_API_TYPE_sll_api_array_replace sll_api_array_replace(__SLL_API_ARGS_sll_api_array_replace);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_replace_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all<3){
+		return SLL_ACQUIRE_STATIC(array_zero);
+	}
+	const sll_object_t* a=*(al+0);
+	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY)){
+		return SLL_ACQUIRE_STATIC(array_zero);
+	}
+	const sll_object_t* b=*(al+1);
+	const sll_object_t* c=*(al+2);
+	sll_array_t out;
+	sll_api_array_replace(&(a->dt.a),b,c,&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_array_reverse sll_api_array_reverse(__SLL_API_ARGS_sll_api_array_reverse);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
@@ -740,6 +761,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_util_ref_count_raw(const
 static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:array_count",sll_api_array_count_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:array_create",sll_api_array_create_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:array_replace",sll_api_array_replace_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:array_reverse",sll_api_array_reverse_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:file_open",sll_api_file_open_raw,0},
@@ -784,5 +806,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=42;
+const sll_function_index_t _ifunc_size=43;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

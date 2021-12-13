@@ -5,6 +5,7 @@
 ### Added
 
 - Implemented `sll:array_count` and `sll_api_array_count` ([#117])
+- Implemented `sll_array_replace`, `sll_api_array_replace` and `sll:array_replace` ([#120])
 - Implemented `sll_array_reverse`, `sll_api_array_reverse` and `sll:array_reverse` ([#116])
 - Implemented `sll_string_reverse`, `sll_api_string_reverse` and `sll:string_reverse` ([#87])
 
@@ -1144,6 +1145,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#120]: https://github.com/sl-lang/sll/issues/120
 [#117]: https://github.com/sl-lang/sll/issues/117
 [#116]: https://github.com/sl-lang/sll/issues/116
 [#105]: https://github.com/sl-lang/sll/issues/105

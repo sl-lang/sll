@@ -18,6 +18,12 @@ __API_FUNC(array_create){
 
 
 
+__API_FUNC(array_replace){
+	sll_array_replace(a,b,(sll_object_t*)c,out);
+}
+
+
+
 __API_FUNC(array_reverse){
 	sll_array_reverse(a,out);
 }

@@ -386,6 +386,21 @@ __SLL_EXTERNAL void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_
 
 /**
  * \flags func
+ * \name sll_array_replace
+ * \group array
+ * \subgroup array-data
+ * \desc Docs!
+ * \arg const sll_array_t* a
+ * \arg sll_object_t* k
+ * \arg sll_object_t* v
+ * \arg sll_array_t* o
+ */
+__SLL_EXTERNAL void sll_array_replace(const sll_array_t* a,const sll_object_t* k,sll_object_t* v,sll_array_t* o);
+
+
+
+/**
+ * \flags func
  * \name sll_array_remove
  * \group array
  * \subgroup array-data

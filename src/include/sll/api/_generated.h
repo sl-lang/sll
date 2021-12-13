@@ -59,6 +59,30 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_array_replace void
+#define __SLL_API_ARGS_sll_api_array_replace const sll_array_t* a,const sll_object_t* b,const sll_object_t* c,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_array_replace
+ * \group array-api
+ * \desc Docs!
+ * \arg const sll_array_t* a -> 
+ * \arg const sll_object_t* b -> 
+ * \arg const sll_object_t* c -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_replace_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_replace:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_array_reverse void
 #define __SLL_API_ARGS_sll_api_array_reverse const sll_array_t* a,sll_array_t* out
 /**

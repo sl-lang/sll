@@ -2,13 +2,15 @@
 (--- "types.sll")
 
 (= count (... "sll:array_count"))
+(= replace (... "sll:array_replace"))
+(= reverse (... "sll:array_reverse"))
 
 (= create (... "sll:array_create"))
-(= reverse (... "sll:array_reverse"))
 
 (= array (. (&:
 	(~ func_type) count
 	(~ func_type) create
 	(~ func_type) reverse
-) count create reverse))
+	(~ func_type) replace
+) count create reverse replace))
 (## array)

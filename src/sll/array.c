@@ -501,6 +501,27 @@ _skip_value:;
 
 
 
+__SLL_EXTERNAL void sll_array_replace(const sll_array_t* a,const sll_object_t* k,sll_object_t* v,sll_array_t* o){
+	if (!a->l){
+		SLL_INIT_ARRAY(o);
+		return;
+	}
+	o->l=a->l;
+	o->v=sll_allocate(a->l*sizeof(sll_object_t*));
+	for (sll_array_length_t i=0;i<a->l;i++){
+		if (sll_operator_strict_equal(a->v[i],k)){
+			o->v[i]=v;
+			SLL_ACQUIRE(v);
+		}
+		else{
+			o->v[i]=a->v[i];
+			SLL_ACQUIRE(o->v[i]);
+		}
+	}
+}
+
+
+
 __SLL_EXTERNAL void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_t* o){
 	if (v<0){
 		v=-v;
