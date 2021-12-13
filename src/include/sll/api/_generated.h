@@ -6,6 +6,37 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_array_count __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_array_count const sll_array_t* a,const sll_object_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_count
+ * \group array-api
+ * \desc Docs!
+ * \arg const sll_array_t* a -> 
+ * \arg const sll_object_t* b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_count_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_count:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Array
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_array_create void
 #define __SLL_API_ARGS_sll_api_array_create const sll_integer_t a,sll_array_t* out
 /**
@@ -24,13 +55,6 @@
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
- */
-/**
- * \flags subgroup
- * \name Array
- * \group raw-api
- * \subgroup raw-api-array-api
- * \desc Docs!
  */
 
 

@@ -65,10 +65,10 @@ __SLL_EXTERNAL void sll_array_clone(const sll_array_t* a,sll_array_t* o){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,sll_object_t* v){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,const sll_object_t* v){
 	sll_array_length_t o=0;
 	for (sll_array_length_t i=0;i<a->l;i++){
-		if (sll_operator_equal(a->v[i],v)){
+		if (sll_operator_strict_equal(a->v[i],v)){
 			o++;
 		}
 	}

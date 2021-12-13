@@ -4,11 +4,13 @@
 
 ### Added
 
+- Implemented `sll:array_count` and `sll_api_array_count` ([#117])
 - Implemented `sll_string_reverse`, `sll_api_string_reverse` and `sll:string_reverse` ([#87])
 
 ### Changed
 
 - Improved large integer compression
+- `sll_array_count` now uses `sll_operator_strict_equal` instead of `sll_operator_equal`
 
 ## [0.6.31] - 2021-12-12
 
@@ -1141,6 +1143,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#117]: https://github.com/sl-lang/sll/issues/117
 [#105]: https://github.com/sl-lang/sll/issues/105
 [#104]: https://github.com/sl-lang/sll/issues/104
 [#103]: https://github.com/sl-lang/sll/issues/103

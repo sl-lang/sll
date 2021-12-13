@@ -61,71 +61,16 @@ __SLL_EXTERNAL void sll_array_clone(const sll_array_t* a,sll_array_t* o);
 
 
 /**
- * \flags func
- * \name sll_array_combinations
- * \group array
- * \subgroup array-data
- * \desc Docs!
- * \arg const sll_array_t* a
- * \arg const sll_array_t* b
- * \arg sll_array_t* o
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,sll_object_t* v);
-
-
-
-/**
- * \flags func
- * \name sll_array_combinations_string
- * \group array
- * \subgroup array-data
- * \desc Docs!
- * \arg const sll_array_t* a
- * \arg const sll_string_t* s
- * \arg sll_array_t* o
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_object_t** v,sll_array_length_t vl);
-
-
-
-/**
- * \flags check_output func
- * \name sll_array_compare
- * \group array
- * \desc Docs!
- * \arg const sll_array_t* a
- * \arg const sll_array_t* b
- * \ret sll_compare_result_t
- */
-__SLL_EXTERNAL void sll_array_combinations(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
-
-
-
-/**
- * \flags check_output func
- * \name sll_array_compare_map
- * \group array
- * \desc Docs!
- * \arg const sll_array_t* a
- * \arg const sll_map_t* m
- * \arg sll_bool_t inv
- * \ret sll_compare_result_t
- */
-__SLL_EXTERNAL void sll_array_combinations_string(const sll_array_t* a,const sll_string_t* s,sll_array_t* o);
-
-
-
-/**
  * \flags check_output func
  * \name sll_array_count
  * \group array
  * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
- * \arg sll_object_t* v
+ * \arg const sll_object_t* v
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare(const sll_array_t* a,const sll_array_t* b);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,const sll_object_t* v);
 
 
 
@@ -139,6 +84,61 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare(const s
  * \arg sll_object_t** v
  * \arg sll_array_length_t vl
  * \ret sll_array_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_object_t** v,sll_array_length_t vl);
+
+
+
+/**
+ * \flags func
+ * \name sll_array_combinations
+ * \group array
+ * \subgroup array-data
+ * \desc Docs!
+ * \arg const sll_array_t* a
+ * \arg const sll_array_t* b
+ * \arg sll_array_t* o
+ */
+__SLL_EXTERNAL void sll_array_combinations(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_array_combinations_string
+ * \group array
+ * \subgroup array-data
+ * \desc Docs!
+ * \arg const sll_array_t* a
+ * \arg const sll_string_t* s
+ * \arg sll_array_t* o
+ */
+__SLL_EXTERNAL void sll_array_combinations_string(const sll_array_t* a,const sll_string_t* s,sll_array_t* o);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_array_compare
+ * \group array
+ * \desc Docs!
+ * \arg const sll_array_t* a
+ * \arg const sll_array_t* b
+ * \ret sll_compare_result_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare(const sll_array_t* a,const sll_array_t* b);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_array_compare_map
+ * \group array
+ * \desc Docs!
+ * \arg const sll_array_t* a
+ * \arg const sll_map_t* m
+ * \arg sll_bool_t inv
+ * \ret sll_compare_result_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare_map(const sll_array_t* a,const sll_map_t* m,sll_bool_t inv);
 

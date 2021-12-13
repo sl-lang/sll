@@ -12,6 +12,22 @@
 
 
 
+__SLL_API_TYPE_sll_api_array_count sll_api_array_count(__SLL_API_ARGS_sll_api_array_count);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_count_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all<2){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* a=*(al+0);
+	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* b=*(al+1);
+	sll_integer_t out=sll_api_array_count(&(a->dt.a),b);
+	return SLL_FROM_INT(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_array_create sll_api_array_create(__SLL_API_ARGS_sll_api_array_create);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_create_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
@@ -703,6 +719,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_util_ref_count_raw(const
 
 
 static const internal_function_t _ifunc_data_ptr[]={
+	{"sll:array_count",sll_api_array_count_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:array_create",sll_api_array_create_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:file_open",sll_api_file_open_raw,0},
@@ -747,5 +764,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=40;
+const sll_function_index_t _ifunc_size=41;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

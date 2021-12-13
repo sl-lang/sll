@@ -14,6 +14,20 @@
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_array_count
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \ret 0 -> Failure
+ * \ret I -> Success
+ */
+__API_FUNC_DECL(array_count);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_array_create
  * \group array-api
  * \desc Docs!
