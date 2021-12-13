@@ -721,6 +721,19 @@ __SLL_EXTERNAL void sll_string_replace_char(const sll_string_t* s,sll_char_t k,s
 
 /**
  * \flags func
+ * \name sll_string_reverse
+ * \group string
+ * \subgroup string-op
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_reverse(const sll_string_t* s,sll_string_t* o);
+
+
+
+/**
+ * \flags func
  * \name sll_string_select
  * \group string
  * \subgroup string-op

@@ -12,6 +12,7 @@
 (= upper_case (... "sll:string_to_upper_case"))
 
 (= format (... "sll:string_format"))
+(= reverse (... "sll:string_reverse"))
 
 (= string (. (&:
 	(~ func_type) str
@@ -22,5 +23,6 @@
 	(~ func_type) title_case
 	(~ func_type) upper_case
 	(~ func_type) format
-) str replace split flip_case lower_case title_case upper_case format))
+	(~ func_type) reverse
+) str replace split flip_case lower_case title_case upper_case format reverse))
 (## string)

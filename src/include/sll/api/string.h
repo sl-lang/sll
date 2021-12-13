@@ -69,6 +69,19 @@ __API_FUNC_DECL(string_replace);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_string_reverse
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \ret Z -> Failure
+ * \ret S -> Success
+ */
+__API_FUNC_DECL(string_reverse);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_string_split
  * \group string-api
  * \desc Docs!

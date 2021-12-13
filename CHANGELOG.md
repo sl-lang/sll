@@ -2,6 +2,10 @@
 
 ## [0.6.32] - Ongoing
 
+### Added
+
+- Implemented `sll_string_reverse`, `sll_api_string_reverse` and `sll:string_reverse` ([#87])
+
 ### Changed
 
 - Improved large integer compression

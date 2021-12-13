@@ -1075,6 +1075,19 @@ __SLL_EXTERNAL void sll_string_replace_char(const sll_string_t* s,sll_char_t k,s
 
 
 
+__SLL_EXTERNAL void sll_string_reverse(const sll_string_t* s,sll_string_t* o){
+	o->l=s->l;
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+	sll_string_length_t i=s->l;
+	for (sll_string_length_t j=0;j<s->l;j++){
+		i--;
+		o->v[j]=s->v[i];
+	}
+	sll_string_calculate_checksum(o);
+}
+
+
+
 __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_string_t* o){
 	a=(a<0?s->l:0)+(a%s->l);
 	b=(b<0?s->l:0)+(b%s->l);

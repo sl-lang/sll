@@ -372,6 +372,12 @@ __API_FUNC(string_replace){
 
 
 
+__API_FUNC(string_reverse){
+	sll_string_reverse(a,out);
+}
+
+
+
 __API_FUNC(string_split){
 	if (b->t==SLL_OBJECT_TYPE_CHAR){
 		sll_string_split_char(a,b->dt.c,out);
