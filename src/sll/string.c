@@ -1076,6 +1076,10 @@ __SLL_EXTERNAL void sll_string_replace_char(const sll_string_t* s,sll_char_t k,s
 
 
 __SLL_EXTERNAL void sll_string_reverse(const sll_string_t* s,sll_string_t* o){
+	if (!s->l){
+		SLL_INIT_STRING(o);
+		return;
+	}
 	o->l=s->l;
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	sll_string_length_t i=s->l;

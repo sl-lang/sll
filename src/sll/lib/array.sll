@@ -4,9 +4,11 @@
 (= count (... "sll:array_count"))
 
 (= create (... "sll:array_create"))
+(= reverse (... "sll:array_reverse"))
 
 (= array (. (&:
 	(~ func_type) count
 	(~ func_type) create
-) count create))
+	(~ func_type) reverse
+) count create reverse))
 (## array)

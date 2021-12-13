@@ -15,3 +15,9 @@ __API_FUNC(array_count){
 __API_FUNC(array_create){
 	sll_array_create_zero((a<0?0:(a>SLL_MAX_ARRAY_LENGTH?SLL_MAX_ARRAY_LENGTH:(sll_array_length_t)a)),out);
 }
+
+
+
+__API_FUNC(array_reverse){
+	sll_array_reverse(a,out);
+}

@@ -429,6 +429,19 @@ __SLL_EXTERNAL void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_ar
 
 /**
  * \flags func
+ * \name sll_array_reverse
+ * \group array
+ * \subgroup array-op
+ * \desc Docs!
+ * \arg const sll_array_t* a
+ * \arg sll_array_t* o
+ */
+__SLL_EXTERNAL void sll_array_reverse(const sll_array_t* a,sll_array_t* o);
+
+
+
+/**
+ * \flags func
  * \name sll_array_select
  * \group array
  * \subgroup array-op

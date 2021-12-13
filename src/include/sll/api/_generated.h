@@ -59,6 +59,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_array_reverse void
+#define __SLL_API_ARGS_sll_api_array_reverse const sll_array_t* a,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_array_reverse
+ * \group array-api
+ * \desc Docs!
+ * \arg const sll_array_t* a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_reverse_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_reverse:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_close __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_file_close const sll_handle_data_t* a
 /**

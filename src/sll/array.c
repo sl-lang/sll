@@ -530,6 +530,23 @@ __SLL_EXTERNAL void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_ar
 
 
 
+__SLL_EXTERNAL void sll_array_reverse(const sll_array_t* a,sll_array_t* o){
+	if (!a->l){
+		SLL_INIT_ARRAY(o);
+		return;
+	}
+	o->l=a->l;
+	o->v=sll_allocate(a->l*sizeof(sll_object_t*));
+	sll_array_length_t i=a->l;
+	for (sll_array_length_t j=0;j<a->l;j++){
+		i--;
+		o->v[j]=a->v[i];
+		SLL_ACQUIRE(o->v[j]);
+	}
+}
+
+
+
 __SLL_EXTERNAL void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_array_t* o){
 	SLL_UNIMPLEMENTED();
 }
