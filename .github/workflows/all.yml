@@ -55,7 +55,7 @@ jobs:
       - name: Test
         run: build/run_tests
   windows:
-    name: Windows${{matrix.args}}
+    name: Windows${{matrix.name}}
     needs:
       - diff
     if: fromJSON(needs.diff.outputs.data).sll-build
@@ -80,7 +80,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}} __ghactions
+        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.cmd}} __ghactions
         shell: cmd
       - name: Test
         run: build/run_tests
