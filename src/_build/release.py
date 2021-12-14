@@ -16,9 +16,7 @@ ISSUE_REGEX=re.compile(r"\[#([0-9]+)\]")
 
 
 
-def upload_asset(fp,nm,t):
-	with open("release-id.txt","r") as f:
-		r_id=int(f.read().strip())
+def upload_asset(fp,nm,t,r_id):
 	with open(fp,"rb") as rf:
 		requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={nm}",headers={"Accept":"application/vnd.github.v3+json","Authorization":f"token {t}","Content-Type":"application/octet-stream"},data=rf.read())
 
@@ -57,5 +55,4 @@ if (__name__=="__main__"):
 	subprocess.run(["git","push","origin","--tags"])
 	os.chdir(cwd)
 	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers={"accept":"application/vnd.github.v3+json","Authorization":f"token {sys.argv[-1]}"},data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":f"v{v[0]}.{v[1]}.{v[2]}","prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
-	with open("release-id.txt","w") as f:
-		f.write(str(r_id))
+	sys.stdout.write(f"::set-output name=id::{r_id}\n")

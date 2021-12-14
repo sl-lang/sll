@@ -223,17 +223,17 @@ if ("--upload" in sys.argv):
 	if (os.name=="nt"):
 		if (vb):
 			print("Uploading 'win.zip'...")
-		release.upload_asset("build/sll.zip","win.zip",sys.argv[-1])
+		release.upload_asset("build/sll.zip","win.zip",sys.argv[-2],sys.argv[-1])
 		if (vb):
 			print("Uploading 'win_standalone.exe'...")
-		release.upload_asset("build/sll_standalone.exe","win_standalone.exe",sys.argv[-1])
+		release.upload_asset("build/sll_standalone.exe","win_standalone.exe",sys.argv[-2],sys.argv[-1])
 	else:
 		if (vb):
 			print("Uploading 'posix.zip'...")
-		release.upload_asset("build/sll.zip","posix.zip",sys.argv[-1])
+		release.upload_asset("build/sll.zip","posix.zip",sys.argv[-2],sys.argv[-1])
 		if (vb):
 			print("Uploading 'posix_standalone'...")
-		release.upload_asset("build/sll_standalone","posix_standalone",sys.argv[-1])
+		release.upload_asset("build/sll_standalone","posix_standalone",sys.argv[-2],sys.argv[-1])
 if ("--test" in sys.argv):
 	if (vb):
 		print("Generating Test Executable...")
