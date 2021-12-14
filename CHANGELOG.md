@@ -10,6 +10,7 @@
 - Implemented `sll_array_reverse`, `sll_api_array_reverse` and `sll:array_reverse` ([#116])
 - Implemented `sll_string_pad_left`, `sll_string_pad_right`, `sll_api_string_pad_left`, `sll_api_string_pad_right`, `sll:string_pad_left`, `sll:string_pad_right`([#111] and [#112])
 - Implemented `sll_string_reverse`, `sll_api_string_reverse` and `sll:string_reverse` ([#87])
+- Website code in [`src/web`][main/src/web]
 
 ### Changed
 
@@ -1226,6 +1227,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
 [0.6.29/src/sll/node.c]: https://github.com/sl-lang/sll/blob/v0.6.29/src/sll/node.c
 [0.6.28/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/v0.6.28/src/include/sll/init.h
 [0.6.28/src/sll/deinit.c]: https://github.com/sl-lang/sll/blob/v0.6.28/src/sll/deinit.c
