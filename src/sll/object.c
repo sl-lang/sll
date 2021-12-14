@@ -389,6 +389,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 				SLL_UNREACHABLE();
 		}
 	}
+	SLL_ASSERT(t-SLL_MAX_OBJECT_TYPE-1<tt->l);
 	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
 	sll_object_t* o=SLL_CREATE();
 	o->t=t;
@@ -510,8 +511,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sl
 	n->l=oi->l;
 	for (sll_arg_count_t i=0;i<n->l;i++){
 		n->dt[i].t=oi->dt[i].t;
-		if (n->dt[i].t<=SLL_MAX_OBJECT_TYPE){
-			switch (n->dt[i].t){
+		if (SLL_OBJECT_GET_TYPE_MASK(n->dt[i].t)<=SLL_MAX_OBJECT_TYPE){
+			switch (SLL_OBJECT_GET_TYPE_MASK(n->dt[i].t)){
 				case SLL_OBJECT_TYPE_INT:
 				case SLL_OBJECT_TYPE_CHAR:
 					n->sz+=sizeof(sll_integer_t);
@@ -536,11 +537,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sl
 					break;
 			}
 		}
-		else if (n->dt[i].t<=tt->l+SLL_MAX_OBJECT_TYPE-1){
-			n->sz+=(*(tt->dt+n->dt[i].t-SLL_MAX_OBJECT_TYPE-1))->sz;
+		else if (SLL_OBJECT_GET_TYPE_MASK(n->dt[i].t)<=tt->l+SLL_MAX_OBJECT_TYPE-1){
+			n->sz+=(*(tt->dt+SLL_OBJECT_GET_TYPE_MASK(n->dt[i].t)-SLL_MAX_OBJECT_TYPE-1))->sz;
 		}
 		else{
-			n->dt[i].t=SLL_OBJECT_TYPE_INT;
+			n->dt[i].t=SLL_OBJECT_TYPE_INT|(oi->dt[i].t&SLL_OBJECT_FLAG_CONSTANT);
 			n->sz+=sizeof(sll_integer_t);
 		}
 		sll_string_clone(st->dt+oi->dt[i].f,&(n->dt[i].nm));

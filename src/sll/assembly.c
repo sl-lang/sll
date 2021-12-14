@@ -1621,15 +1621,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	for (sll_string_index_t i=0;i<o->st.l;i++){
 		sll_string_clone(c_dt->st.dt+i,o->st.dt+i);
 	}
-	o->ot_it.l=c_dt->ot_it.l;
-	o->ot_it.dt=sll_allocate(o->st.l*sizeof(sll_object_type_initializer_t*));
-	for (sll_string_index_t i=0;i<o->ot_it.l;i++){
-		const sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
-		SLL_ASSERT(oi->l);
-		sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+oi->l*sizeof(sll_object_type_field_t));
-		sll_copy_data(oi,sizeof(sll_object_type_initializer_t)+oi->l*sizeof(sll_object_type_field_t),n);
-		*(o->ot_it.dt+i)=n;
-	}
 	loop_table_t g_dt_lt={
 		NULL,
 		0
@@ -1958,6 +1949,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	for (sll_string_index_t i=0;i<sm.ml;i++){
 		*(sm.m+i)=0;
 	}
+	o->ot_it.l=c_dt->ot_it.l;
+	o->ot_it.dt=sll_allocate(o->st.l*sizeof(sll_object_type_initializer_t*));
+	for (sll_string_index_t i=0;i<o->ot_it.l;i++){
+		const sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
+		SLL_ASSERT(oi->l);
+		sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+oi->l*sizeof(sll_object_type_field_t));
+		n->l=oi->l;
+		for (sll_arg_count_t j=0;j<oi->l;j++){
+			n->dt[j].t=oi->dt[j].t;
+			n->dt[j].f=oi->dt[j].f;
+			*(sm.m+(n->dt[j].f>>6))|=1ull<<(n->dt[j].f&63);
+		}
+		*(o->ot_it.dt+i)=n;
+	}
 	ai=o->h;
 	sll_assembly_instruction_t* s=ai;
 	sll_instruction_index_t* lbl=sll_allocate(g_dt.n_lbl*sizeof(sll_instruction_index_t));
@@ -2021,6 +2026,13 @@ _handle_nop:;
 	if (l){
 		o->st.l-=l;
 		o->st.dt=sll_reallocate(o->st.dt,o->st.l*sizeof(sll_string_t));
+	}
+	for (sll_string_index_t i=0;i<o->ot_it.l;i++){
+		sll_object_type_initializer_t* oi=*(o->ot_it.dt+i);
+		SLL_ASSERT(oi->l);
+		for (sll_arg_count_t j=0;j<oi->l;j++){
+			oi->dt[j].f=*(sm.im+oi->dt[j].f);
+		}
 	}
 	ai=o->h;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){

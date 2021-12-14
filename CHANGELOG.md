@@ -11,6 +11,7 @@
 
 ### Changed
 
+- Fixed optimization of custom object types
 - Improved large integer compression
 - `sll_array_count` now uses `sll_operator_strict_equal` instead of `sll_operator_equal`
 
