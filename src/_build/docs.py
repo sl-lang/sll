@@ -1,4 +1,3 @@
-import json
 import re
 
 
@@ -90,7 +89,4 @@ def create_docs(fl):
 			raise RuntimeError(f"Unknown group '{k['group']}'")
 		if (k["subgroup"] is not None and k["subgroup"] not in sg_dt):
 			raise RuntimeError(f"Unknown subgroup '{k['subgroup']}'")
-	o={"groups":g_dt,"subgroups":sg_dt,"data":o}
-	with open("build/docs.json","w") as f:
-		f.write(json.dumps(o,indent=None,separators=(",",":")))
-	return (o,ap_dt)
+	return ({"groups":g_dt,"subgroups":sg_dt,"data":o},ap_dt)

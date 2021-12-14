@@ -1,5 +1,10 @@
+import os
 import subprocess
 import sys
+
+
+
+BUILD_PATHS=["build/lib","build/objects","build/web","build/web/css"]
 
 
 
@@ -17,3 +22,23 @@ def wrap_output(a,pfx=b"    "):
 			sys.stdout.buffer.flush()
 	p.wait()
 	return p
+
+
+
+def create_output_dir():
+	if (os.path.exists("build")):
+		dl=[]
+		for r,ndl,fl in os.walk("build"):
+			r=r.replace("\\","/").rstrip("/")+"/"
+			for d in ndl:
+				dl.insert(0,r+d)
+			for f in fl:
+				os.remove(r+f)
+		for k in dl:
+			if (k not in BUILD_PATHS):
+				os.rmdir(k)
+	else:
+		os.mkdir("build")
+	for k in BUILD_PATHS:
+		if (not os.path.exists(k)):
+			os.mkdir(k)

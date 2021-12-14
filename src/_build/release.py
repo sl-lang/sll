@@ -25,19 +25,7 @@ def upload_asset(fp,nm,t):
 
 
 if (__name__=="__main__"):
-	if (os.path.exists("build")):
-		dl=[]
-		for r,ndl,fl in os.walk("build"):
-			r=r.replace("\\","/").rstrip("/")+"/"
-			for d in ndl:
-				dl.insert(0,r+d)
-			for f in fl:
-				os.remove(r+f)
-		for k in dl:
-			if (k!="build/lib" and k!="build/objects"):
-				os.rmdir(k)
-	else:
-		os.mkdir("build")
+	util.create_output_dir()
 	v=header.read_version("src/include/sll/version.h")
 	with open("CHANGELOG.md","r") as f:
 		dt=f.read().replace("\r\n","\n")

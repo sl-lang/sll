@@ -27,23 +27,7 @@ TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out)","F":"return SLL_FROM_FLOAT(out)"
 vb=("--verbose" in sys.argv)
 if (vb):
 	print("Generating Build Directory...")
-if (os.path.exists("build")):
-	dl=[]
-	for r,ndl,fl in os.walk("build"):
-		r=r.replace("\\","/").rstrip("/")+"/"
-		for d in ndl:
-			dl.insert(0,r+d)
-		for f in fl:
-			os.remove(r+f)
-	for k in dl:
-		if (k!="build/lib" and k!="build/objects"):
-			os.rmdir(k)
-else:
-	os.mkdir("build")
-if (not os.path.exists("build/lib")):
-	os.mkdir("build/lib")
-if (not os.path.exists("build/objects")):
-	os.mkdir("build/objects")
+util.create_output_dir()
 ver=header.read_version("src/include/sll/version.h")
 if (vb):
 	print("Collecting Documentation Files...")
@@ -56,8 +40,6 @@ if (vb):
 	print(f"  Found {len(d_fl)} Files")
 	print("Generating Documentation...")
 d_dt,api_dt=docs.create_docs(d_fl)
-if ("--docs-only" in sys.argv):
-	sys.exit(0)
 if ("--generate-api" in sys.argv):
 	if (vb):
 		print(f"Generating Code & Signatures for {len(api_dt)} API functions...")
