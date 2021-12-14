@@ -31,11 +31,7 @@ util.create_output_dir()
 ver=header.read_version("src/include/sll/version.h")
 if (vb):
 	print("Collecting Documentation Files...")
-d_fl=[]
-for r,_,fl in os.walk("src/include/sll"):
-	for k in fl:
-		if (k!="_sll_internal.h"):
-			d_fl.append(os.path.join(r,k))
+d_fl=util.get_docs_files()
 if (vb):
 	print(f"  Found {len(d_fl)} Files")
 	print("Generating Documentation...")

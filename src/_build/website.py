@@ -36,7 +36,7 @@ util.create_output_dir()
 for k in os.listdir("src/web/css"):
 	with open("src/web/css/"+k,"rb") as rf,open("build/web/css/"+k,"wb") as wf:
 		wf.write(rf.read())
-d_dt=docs.create_docs(d_fl)[0]
+d_dt=docs.create_docs(util.get_docs_files())[0]
 with open("src/web/404.html","rb") as rf,open("build/web/404.html","wb") as wf:
 	wf.write(rf.read())
 with open("src/web/index.html","rb") as rf,open("build/web/index.html","wb") as wf:

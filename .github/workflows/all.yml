@@ -26,7 +26,7 @@ jobs:
         id: calc_diff
         run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build=.github/workflows/all.yml,src/_build,src/sll,src/include/sll cf-pages=.github/workflows/all.yml,src/include/sll,src/web
   ubuntu:
-    name: Ubuntu, Args = 'sll${{matrix.args}}'
+    name: Ubuntu, Args = 'sll${{matrix.name}}'
     needs:
       - diff
     if: fromJSON(needs.diff.outputs.data).sll-build
@@ -34,11 +34,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        args:
-          - ''
-          - ' --release'
-          - ' --standalone'
-          - ' --standalone --release'
+        include:
+          - cmd: ''
+            name: ''
+          - cmd: ' --release'
+            name: ' Release'
+          - cmd: ' --standalone'
+            name: ' Standalone'
+          - cmd: ' --standalone --release'
+            name: ' Standalone Release'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -47,7 +51,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.args}}
+        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.cmd}}
       - name: Test
         run: build/run_tests
   windows:
