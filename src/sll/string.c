@@ -901,6 +901,34 @@ __SLL_EXTERNAL void sll_string_or_char(const sll_string_t* s,sll_char_t v,sll_st
 
 
 
+__SLL_EXTERNAL void sll_string_pad_left(const sll_string_t* s,sll_string_length_t l,sll_char_t c,sll_string_t* o){
+	if (s->l>=l){
+		sll_string_clone(s,o);
+		return;
+	}
+	o->l=l;
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
+	sll_copy_data(s->v,s->l,o->v);
+	sll_set_memory(o->v+s->l,l-s->l,c);
+	sll_string_calculate_checksum(o);
+}
+
+
+
+__SLL_EXTERNAL void sll_string_pad_right(const sll_string_t* s,sll_string_length_t l,sll_char_t c,sll_string_t* o){
+	if (s->l>=l){
+		sll_string_clone(s,o);
+		return;
+	}
+	o->l=l;
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
+	sll_set_memory(o->v,l-s->l,c);
+	sll_copy_data(s->v,s->l,o->v+l-s->l);
+	sll_string_calculate_checksum(o);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_string_parse_char(const sll_string_t* s){
 	SLL_UNIMPLEMENTED();
 	return 0;

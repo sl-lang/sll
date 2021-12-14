@@ -54,6 +54,36 @@ __API_FUNC_DECL(string_flip_case);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_string_pad_left
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg I
+ * \arg C?
+ * \ret Z -> Failure
+ * \ret S -> Success
+ */
+__API_FUNC_DECL(string_pad_left);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_pad_right
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg I
+ * \arg C?
+ * \ret Z -> Failure
+ * \ret S -> Success
+ */
+__API_FUNC_DECL(string_pad_right);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_string_replace
  * \group string-api
  * \desc Docs!

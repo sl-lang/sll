@@ -17,7 +17,7 @@ PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix.c","nt":"src/sll/platform/
 RETURN_CODE_BASE_TYPE={"0":"I","1":"I","h":"H","Z":"S","f":"F","I":"I","F":"F","C":"C","S":"S","E":"A","A":"A","H":"H","M":"M","O":"O"}
 RETURN_CODE_TYPE_MAP={"0":"return SLL_ACQUIRE_STATIC_INT(0)","1":"return SLL_ACQUIRE_STATIC_INT(1)","h":"return SLL_ACQUIRE_STATIC(handle_zero)","Z":"return SLL_ACQUIRE_STATIC(str_zero)","f":"return SLL_ACQUIRE_STATIC(float_zero)","E":"return SLL_ACQUIRE_STATIC(array_zero)"}
 TYPE_ACCESS_MAP={"I":"$->dt.i","F":"$->dt.f","C":"$->dt.c","S":"&($->dt.s)","A":"&($->dt.a)","H":"&($->dt.h)","M":"&($->dt.m)","O":"$"}
-TYPE_ACCESS_OPT_MAP={"I":"($?$->dt.i:0)","F":"($?$->dt.f:0)","C":"($?$->dt.c:0)","S":"($?&($->dt.s):NULL)","A":"($?&($->dt.a):NULL)","H":"($?&($->dt.h):NULL)","M":"($?&($->dt.m):NULL)","O":"$"}
+TYPE_ACCESS_OPT_MAP={"I":"($?$->dt.i:0)","F":"($?$->dt.f:0)","C":"($?$->dt.c:SLL_NO_CHAR)","S":"($?&($->dt.s):NULL)","A":"($?&($->dt.a):NULL)","H":"($?&($->dt.h):NULL)","M":"($?&($->dt.m):NULL)","O":"$"}
 TYPE_CHECK_MAP={"I":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_INT","F":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_FLOAT","C":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_CHAR","S":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_STRING","A":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_ARRAY","H":"(SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_HANDLE&&$->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)","M":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_MAP"}
 TYPE_MAP={"I":"sll_integer_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t*","A":"sll_array_t*","H":"sll_handle_data_t*","M":"sll_map_t*","O":"sll_object_t*"}
 TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out)","F":"return SLL_FROM_FLOAT(out)","S":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_STRING;out_o->dt.s=out;return out_o","A":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_ARRAY;out_o->dt.a=out;return out_o","H":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_HANDLE;out_o->dt.h=out;return out_o","M":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_MAP;out_o->dt.m=out;return out_o"}
@@ -88,18 +88,19 @@ if ("--generate-api" in sys.argv):
 					if (i):
 						a+=","
 						pc+=","
+					at=("sll_read_char_t" if e["type"]=="C" and e["opt"] else (TYPE_MAP[e["type"]] if len(e["type"])==1 else "sll_object_t*"))
 					if (i==len(k["args"])-1 and "var_arg" in k["flag"]):
-						t=f"const {TYPE_MAP[e['type']]+('const' if TYPE_MAP[e['type']][-1]=='*' else '')}* {ALPHABET[i]}"
+						t=f"const {at+('const' if at[-1]=='*' else '')}* {ALPHABET[i]}"
 						a+=f"{t},sll_arg_count_t {ALPHABET[i]}c"
 						d_str+=f"\n * \\arg {t} -> {e['desc']}\n * \\arg sll_arg_count_t {ALPHABET[i]}c"
 						if (e["type"]=="O"):
 							cf.write(f"\tconst sll_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n")
 						else:
-							cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n\tconst {TYPE_MAP[e['type']]}* {ALPHABET[i]}=sll_allocate({ALPHABET[i]}c*sizeof({TYPE_MAP[e['type']]}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tconst sll_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\tsll_deallocate((void*){ALPHABET[i]});\n\t\t\t"+err_c.replace(";",";\n\t\t\t")+f";\n\t\t}}\n\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t}}\n")
+							cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c=all-{i};\n\tconst {at}* {ALPHABET[i]}=sll_allocate({ALPHABET[i]}c*sizeof({at}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tconst sll_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\tsll_deallocate((void*){ALPHABET[i]});\n\t\t\t"+err_c.replace(";",";\n\t\t\t")+f";\n\t\t}}\n\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t}}\n")
 							end=f"\tsll_deallocate((void*){ALPHABET[i]});\n"
 						pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
 					else:
-						t=f"const {(TYPE_MAP[e['type']] if len(e['type'])==1 else 'sll_object_t*')} {ALPHABET[i]}"
+						t=f"const {at} {ALPHABET[i]}"
 						a+=t
 						d_str+=f"\n * \\arg {t} -> {e['desc']}"
 						e_tb=""

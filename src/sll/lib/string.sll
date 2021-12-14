@@ -14,6 +14,9 @@
 (= format (... "sll:string_format"))
 (= reverse (... "sll:string_reverse"))
 
+(= pad_left (... "sll:string_pad_left"))
+(= pad_right (... "sll:string_pad_right"))
+
 (= string (. (&:
 	(~ func_type) str
 	(~ func_type) replace
@@ -24,5 +27,7 @@
 	(~ func_type) upper_case
 	(~ func_type) format
 	(~ func_type) reverse
-) str replace split flip_case lower_case title_case upper_case format reverse))
+	(~ func_type) pad_left
+	(~ func_type) pad_right
+) str replace split flip_case lower_case title_case upper_case format reverse pad_left pad_right))
 (## string)

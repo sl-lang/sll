@@ -626,6 +626,34 @@ __SLL_EXTERNAL void sll_string_or_char(const sll_string_t* s,sll_char_t v,sll_st
 
 
 /**
+ * \flags func
+ * \name sll_string_pad_left
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_string_length_t l
+ * \arg sll_char_t v
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_pad_left(const sll_string_t* s,sll_string_length_t l,sll_char_t c,sll_string_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_string_pad_right
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_string_length_t l
+ * \arg sll_char_t v
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_pad_right(const sll_string_t* s,sll_string_length_t l,sll_char_t c,sll_string_t* o);
+
+
+
+/**
  * \flags check_output func
  * \name sll_string_parse_char
  * \group string

@@ -669,6 +669,54 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_string_pad_left void
+#define __SLL_API_ARGS_sll_api_string_pad_left const sll_string_t* a,const sll_integer_t b,const sll_read_char_t c,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_string_pad_left
+ * \group string-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ * \arg const sll_integer_t b -> 
+ * \arg const sll_read_char_t c -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_pad_left_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_pad_left:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_string_pad_right void
+#define __SLL_API_ARGS_sll_api_string_pad_right const sll_string_t* a,const sll_integer_t b,const sll_read_char_t c,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_string_pad_right
+ * \group string-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ * \arg const sll_integer_t b -> 
+ * \arg const sll_read_char_t c -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_pad_right_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_pad_right:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_string_replace void
 #define __SLL_API_ARGS_sll_api_string_replace const sll_string_t* a,const sll_object_t* b,const sll_object_t* c,sll_string_t* out
 /**

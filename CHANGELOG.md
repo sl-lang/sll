@@ -4,9 +4,11 @@
 
 ### Added
 
+- Constant macro for unsupplied `sll_char_t` argument: `SLL_NO_CHAR`
 - Implemented `sll:array_count` and `sll_api_array_count` ([#117])
 - Implemented `sll_array_replace`, `sll_api_array_replace` and `sll:array_replace` ([#120])
 - Implemented `sll_array_reverse`, `sll_api_array_reverse` and `sll:array_reverse` ([#116])
+- Implemented `sll_string_pad_left`, `sll_string_pad_right`, `sll_api_string_pad_left`, `sll_api_string_pad_right`, `sll:string_pad_left`, `sll:string_pad_right`([#111] and [#112])
 - Implemented `sll_string_reverse`, `sll_api_string_reverse` and `sll:string_reverse` ([#87])
 
 ### Changed
@@ -1149,6 +1151,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#120]: https://github.com/sl-lang/sll/issues/120
 [#117]: https://github.com/sl-lang/sll/issues/117
 [#116]: https://github.com/sl-lang/sll/issues/116
+[#112]: https://github.com/sl-lang/sll/issues/112
+[#111]: https://github.com/sl-lang/sll/issues/111
 [#105]: https://github.com/sl-lang/sll/issues/105
 [#104]: https://github.com/sl-lang/sll/issues/104
 [#103]: https://github.com/sl-lang/sll/issues/103
