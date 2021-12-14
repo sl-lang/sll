@@ -111,7 +111,7 @@ jobs:
     name: Cloudflare Deployment
     needs:
       - diff
-    if: fromJSON(needs.diff.outputs.data).cf-pages
+    if: fromJSON(needs.diff.outputs.data).cf-pages&&github.event_name=="push"
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Deployment
