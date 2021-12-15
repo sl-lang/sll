@@ -44,20 +44,30 @@ def _diff(sha):
 
 
 
-t=_diff(os.environ["GITHUB_SHA"])
+dt=requests.get("https://api.github.com/repos/sl-lang/sll/actions/workflows/all.yml/runs?per_page=2",headers=GITHUB_HEADERS).json()["workflow_runs"]
 o=""
-for k in sys.argv[2:]:
-	k=k.split("=")
-	v="0"
-	for e in k[1].split(","):
-		if (e in t):
-			v="1"
-			break
-	if (v=="0"):
-		print(f"No changes found for '{k[0]}'")
-	else:
-		print(f"Changes found for '{k[0]}'")
-	if (len(o)!=0):
-		o+=","
-	o+=f"\"{k[0]}\":{v}"
+if (dt[0]["run_attempt"]>1 or dt[1]["conclusion"]!="success"):
+	for k in sys.argv[2:]:
+		k=k.split("=")[0]
+		print(f"Changes found for '{k}'")
+		if (len(o)!=0):
+			o+=","
+		o+=f"\"{k}\":1"
+else:
+	t=_diff(os.environ["GITHUB_SHA"])
+	o=""
+	for k in sys.argv[2:]:
+		k=k.split("=")
+		v="0"
+		for e in k[1].split(","):
+			if (e in t):
+				v="1"
+				break
+		if (v=="0"):
+			print(f"No changes found for '{k[0]}'")
+		else:
+			print(f"Changes found for '{k[0]}'")
+		if (len(o)!=0):
+			o+=","
+		o+=f"\"{k[0]}\":{v}"
 sys.stdout.write(f"::set-output name=table::{{{o}}}\n")
