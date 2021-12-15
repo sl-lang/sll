@@ -51,11 +51,9 @@ for k in sys.argv[2:]:
 	k=k.split("=")
 	v="0"
 	for e in k[1].split(","):
-		if (e[0]=="!"):
-			if (e[1:] in t):
-				v="0"
-		elif (e in t):
+		if (e in t):
 			v="1"
+			break
 	if (v=="0"):
 		print(f"No changes found for '{k[0]}'")
 	else:
