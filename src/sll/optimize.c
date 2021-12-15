@@ -2154,13 +2154,13 @@ _unknown_cast:
 					}
 					l--;
 				}
-				if (SLL_OBJECT_GET_TYPE(v)>SLL_MAX_OBJECT_TYPE){
-					SLL_UNIMPLEMENTED();
-				}
 				if (a){
 					sll_object_t* iv=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_INT]);
 					SLL_RELEASE(v);
-					sll_object_t* n=sll_create_object_type(NULL,iv->dt.i,a,i);
+					if (iv->dt.i>SLL_MAX_OBJECT_TYPE){
+						SLL_UNIMPLEMENTED();
+					}
+					sll_object_t* n=sll_create_object_type(NULL,(iv->dt.i<0?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(iv->dt.i)),a,i);
 					SLL_RELEASE(iv);
 					while (i){
 						i--;
