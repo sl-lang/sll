@@ -24,7 +24,7 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build=.github/workflows/all.yml,src/include/sll,src/_build,src/cli,src/sll cf-pages=.github/workflows/all.yml,src/include/sll,src/web
+        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll cf-pages=.github/workflows/all.yml,src/_build,src/include/sll,src/web
   ubuntu:
     name: Ubuntu${{matrix.name}}
     needs:
