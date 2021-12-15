@@ -24,12 +24,12 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build=.github/workflows/all.yml,src/_build,src/sll,src/include/sll cf-pages=.github/workflows/all.yml,src/include/sll,src/web
+        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} build-ubuntu=.github/workflows/all.yml,src/include/sll,src/_build,src/cli,src/sll,!src/sll/platform,src/sll/platform/posix.c build-windows=.github/workflows/all.yml,src/include/sll,src/_build,src/cli,src/sll,!src/sll/platform,src/sll/platform/windows.c cf-pages=.github/workflows/all.yml,src/include/sll,src/web
   ubuntu:
     name: Ubuntu${{matrix.name}}
     needs:
       - diff
-    if: fromJSON(needs.diff.outputs.data).sll-build
+    if: fromJSON(needs.diff.outputs.data).build-ubuntu
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -58,7 +58,7 @@ jobs:
     name: Windows${{matrix.name}}
     needs:
       - diff
-    if: fromJSON(needs.diff.outputs.data).sll-build
+    if: fromJSON(needs.diff.outputs.data).build-windows
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -87,9 +87,11 @@ jobs:
   codeql:
     name: CodeQL
     needs:
+      - diff
       - ubuntu
       - windows
     runs-on: ubuntu-latest
+    if: always()&&(fromJSON(needs.diff.outputs.data).build-ubuntu||fromJSON(needs.diff.outputs.data).build-windows)
     permissions:
       security-events: write
     steps:
@@ -111,7 +113,8 @@ jobs:
     name: Cloudflare Deployment
     needs:
       - diff
-    if: fromJSON(needs.diff.outputs.data).cf-pages&&github.event_name=='push'
+      - codeql
+    if: always()&&fromJSON(needs.diff.outputs.data).cf-pages&&github.event_name=='push'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Deployment
