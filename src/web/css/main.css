@@ -4,14 +4,14 @@
 	padding: 0;
 }
 .toc {
-	margin: 5em auto 0 auto;
+	margin: 5em auto 0;
 	width: 90em;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 20px;
 }
 .group {
-	padding: 0 15px 0 15px;
+	padding: 0 15px;
 }
 .title {
 	width: 100%;
