@@ -114,10 +114,11 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt);
  * \name sll_object_clone
  * \group object
  * \desc Docs!
+ * \arg const sll_object_type_table_t* tt
  * \arg const sll_object_t* o
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_type_table_t* tt,const sll_object_t* o);
 
 
 
@@ -126,11 +127,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
  * \name sll_object_get_field
  * \group object
  * \desc Docs!
+ * \arg const sll_object_type_table_t* tt
  * \arg const sll_object_t* o
  * \arg const sll_string_t* f
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_t* o,const sll_string_t* f);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_type_table_t* tt,const sll_object_t* o,const sll_string_t* f);
 
 
 
@@ -151,11 +153,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_object_get_type(const sl
  * \name sll_object_set_field
  * \group object
  * \desc Docs!
+ * \arg const sll_object_type_table_t* tt
  * \arg sll_object_t* o
  * \arg const sll_string_t* f
  * \arg sll_object_t* v
  */
-__SLL_EXTERNAL void sll_object_set_field(sll_object_t* o,const sll_string_t* f,sll_object_t* v);
+__SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_object_t* o,const sll_string_t* f,sll_object_t* v);
 
 
 

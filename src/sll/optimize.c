@@ -2109,10 +2109,19 @@ _unknown_cast:
 			}
 		case SLL_NODE_TYPE_NEW:
 			{
+				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+					o->t=SLL_NODE_TYPE_OPERATION_LIST;
+					goto _optimize_operation_list_comma;
+				}
 				if (fl&OPTIMIZER_FLAG_ASSIGN){
 					SLL_UNIMPLEMENTED();
 				}
 				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					o->t=SLL_NODE_TYPE_INT;
+					o->dt.i=0;
+					return o+1;
+				}
 				sll_node_t* r=o;
 				o++;
 				while (l){

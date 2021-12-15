@@ -417,8 +417,8 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_t* o){
-	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_type_table_t* tt,const sll_object_t* o){
+	const sll_object_type_data_t* dt=*(tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
 	sll_object_t* n=SLL_CREATE();
 	n->t=SLL_OBJECT_GET_TYPE(o);
 	n->dt.p=sll_allocate(dt->sz);
@@ -429,7 +429,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_t* o,const sll_string_t* f){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_type_table_t* tt,const sll_object_t* o,const sll_string_t* f){
 	sll_object_type_t t;
 	void* p=_get_offset(o,f,&t);
 	if (!p){
@@ -477,7 +477,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 	}
 	sll_object_t* n=SLL_CREATE();
 	n->t=t;
-	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
+	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
 	n->dt.p=sll_allocate(dt->sz);
 	sll_copy_data(p,dt->sz,n->dt.p);
 	return n;
@@ -491,13 +491,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_object_get_type(const sl
 
 
 
-__SLL_EXTERNAL void sll_object_set_field(sll_object_t* o,const sll_string_t* f,sll_object_t* v){
+__SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_object_t* o,const sll_string_t* f,sll_object_t* v){
 	sll_object_type_t t;
 	void* n=_get_offset(o,f,&t);
 	if (!n||(t&SLL_OBJECT_FLAG_CONSTANT)){
 		return;
 	}
-	_set_field(sll_current_runtime_data->tt,n,SLL_OBJECT_GET_TYPE_MASK(t),v);
+	_set_field(tt,n,SLL_OBJECT_GET_TYPE_MASK(t),v);
 }
 
 

@@ -190,7 +190,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 		return sll_map_get(&(a->dt.m),b);
 	}
 	else if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-		return sll_object_get_field(a,&(b->dt.s));
+		return sll_object_get_field(sll_current_runtime_data->tt,a,&(b->dt.s));
 	}
 	SLL_ACQUIRE(a);
 	return a;
@@ -545,7 +545,7 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 		sll_map_set(&(a->dt.m),b,v);
 	}
 	else if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-		sll_object_set_field(a,&(b->dt.s),v);
+		sll_object_set_field(sll_current_runtime_data->tt,a,&(b->dt.s),v);
 	}
 }
 
@@ -1162,7 +1162,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 	}
 	SLL_ASSERT(SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE);
 	if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-		return sll_object_clone(a);
+		return sll_object_clone(sll_current_runtime_data->tt,a);
 	}
 	SLL_UNIMPLEMENTED();
 }

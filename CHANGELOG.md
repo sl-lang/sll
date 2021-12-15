@@ -16,6 +16,7 @@
 
 - Fixed optimization of custom object types
 - Improved large integer compression
+- Object type functions now expect a `sll_object_type_table_t` instead of using the global `sll_current_runtime_data`
 - `sll_array_count` now uses `sll_operator_strict_equal` instead of `sll_operator_equal`
 
 ## [0.6.31] - 2021-12-12
