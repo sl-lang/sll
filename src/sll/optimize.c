@@ -505,7 +505,7 @@ _return_zero:
 
 
 
-static sll_node_t* _object_to_object(sll_object_t* v,sll_node_t* o,optimizer_data_t* o_dt){
+static sll_node_t* _object_to_node(sll_object_t* v,sll_node_t* o,optimizer_data_t* o_dt){
 	if (o->t==NODE_TYPE_CHANGE_STACK){
 		o=o->dt._p;
 	}
@@ -539,7 +539,7 @@ static sll_node_t* _object_to_object(sll_object_t* v,sll_node_t* o,optimizer_dat
 			o->dt.al=v->dt.a.l;
 			_shift_nodes(o,o_dt->c_dt,v->dt.a.l);
 			for (sll_array_length_t i=0;i<v->dt.a.l;i++){
-				o=_object_to_object(v->dt.a.v[i],o+1,o_dt);
+				o=_object_to_node(v->dt.a.v[i],o+1,o_dt);
 			}
 			return o;
 		case SLL_OBJECT_TYPE_HANDLE:
@@ -551,7 +551,7 @@ static sll_node_t* _object_to_object(sll_object_t* v,sll_node_t* o,optimizer_dat
 				o->dt.ml=l;
 				_shift_nodes(o,o_dt->c_dt,l);
 				for (sll_map_length_t i=0;i<l;i++){
-					o=_object_to_object(v->dt.m.v[i],o+1,o_dt);
+					o=_object_to_node(v->dt.m.v[i],o+1,o_dt);
 				}
 				return o;
 			}
@@ -1054,7 +1054,7 @@ _keep_assignment:;
 			else if (!(fl&OPTIMIZER_FLAG_ASSIGN)){
 				sll_object_t* v=*(o_dt->v+GET_VARIABLE_INDEX(o,o_dt));
 				if (SLL_OBJECT_GET_TYPE(v)!=OBJECT_TYPE_UNKNOWN&&!(v->t&OBJECT_CHANGE_IN_LOOP)){
-					o=_object_to_object(v,o,o_dt);
+					o=_object_to_node(v,o,o_dt);
 				}
 				else{
 					DISABLE_REMOVE_VARIABLE(o,o_dt);
@@ -1155,7 +1155,7 @@ _keep_assignment:;
 					}
 					else if (r->t==SLL_NODE_TYPE_BIT_NOT){
 						sll_object_t* nv=sll_operator_inv(rt);
-						o=_object_to_object(nv,o,o_dt);
+						o=_object_to_node(nv,o,o_dt);
 						SLL_RELEASE(nv);
 					}
 					else if (r->t==SLL_NODE_TYPE_LENGTH){
@@ -1340,7 +1340,7 @@ _keep_assignment:;
 									r->dt.ac++;
 									o=sll_skip_node(o);
 									_shift_nodes(o,o_dt->c_dt,1);
-									_object_to_object(n,o,o_dt);
+									_object_to_node(n,o,o_dt);
 									SLL_RELEASE(n);
 									return _optimize(r,p,o_dt,fl);
 								}
@@ -1836,7 +1836,7 @@ _remove_cond:
 								o->dt.i=1;
 							}
 							else{
-								_object_to_object(v,o,o_dt);
+								_object_to_node(v,o,o_dt);
 							}
 							SLL_RELEASE(v);
 							r->t=SLL_NODE_TYPE_COMMA;
@@ -1859,7 +1859,7 @@ _remove_cond:
 								o=o->dt._p;
 							}
 							_shift_nodes(o,o_dt->c_dt,1);
-							_object_to_object(v,o,o_dt);
+							_object_to_node(v,o,o_dt);
 							SLL_RELEASE(v);
 							o=tmp;
 							p=r;
@@ -1895,7 +1895,7 @@ _remove_cond:
 						r->t=SLL_NODE_TYPE_COMMA;
 						r->dt.ac=2;
 						_shift_nodes(o,o_dt->c_dt,1);
-						_object_to_object(v,o,o_dt);
+						_object_to_node(v,o,o_dt);
 						SLL_RELEASE(v);
 						o=r;
 						goto _optimize_operation_list_comma;
@@ -1949,7 +1949,7 @@ _remove_cond:
 					r->t=SLL_NODE_TYPE_COMMA;
 					r->dt.ac++;
 					_shift_nodes(o,o_dt->c_dt,1);
-					o=_object_to_object(n,o,o_dt)+1;
+					o=_object_to_node(n,o,o_dt)+1;
 					SLL_RELEASE(n);
 					o=r;
 					goto _optimize_operation_list_comma;
@@ -2031,7 +2031,7 @@ _remove_cond:
 					r->t=SLL_NODE_TYPE_COMMA;
 					r->dt.ac++;
 					_shift_nodes(o,o_dt->c_dt,1);
-					_object_to_object(v,o,o_dt);
+					_object_to_node(v,o,o_dt);
 					SLL_RELEASE(v);
 					o=r;
 					goto _optimize_operation_list_comma;
@@ -2123,10 +2123,58 @@ _unknown_cast:
 					return o+1;
 				}
 				sll_node_t* r=o;
-				o++;
+				o=_optimize(o+1,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+				sll_object_t* v=_get_as_object(r+1,o_dt,0);
+				l--;
+				if (SLL_OBJECT_GET_TYPE(v)==OBJECT_TYPE_UNKNOWN||(v->t&OBJECT_CHANGE_IN_LOOP)){
+					SLL_RELEASE(v);
+					while (l){
+						o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						l--;
+					}
+					return o;
+				}
+				sll_object_t** a=sll_allocate(l*sizeof(sll_object_t*));
+				sll_arg_count_t i=0;
 				while (l){
+					sll_node_t* tmp=o;
 					o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+					if (a){
+						sll_object_t* av=_get_as_object(tmp,o_dt,0);
+						*(a+i)=av;
+						i++;
+						if (SLL_OBJECT_GET_TYPE(av)==OBJECT_TYPE_UNKNOWN||(av->t&OBJECT_CHANGE_IN_LOOP)){
+							while (i){
+								i--;
+								SLL_RELEASE(*(a+i));
+							}
+							sll_deallocate(a);
+							a=NULL;
+						}
+					}
 					l--;
+				}
+				if (SLL_OBJECT_GET_TYPE(v)>SLL_MAX_OBJECT_TYPE){
+					SLL_UNIMPLEMENTED();
+				}
+				if (a){
+					sll_object_t* iv=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_INT]);
+					SLL_RELEASE(v);
+					sll_object_t* n=sll_create_object_type(NULL,iv->dt.i,a,i);
+					SLL_RELEASE(iv);
+					while (i){
+						i--;
+						SLL_RELEASE(*(a+i));
+					}
+					sll_deallocate(a);
+					SLL_ASSERT(n);
+					r->t=SLL_NODE_TYPE_COMMA;
+					r->dt.ac++;
+					_shift_nodes(o,o_dt->c_dt,1);
+					_object_to_node(n,o,o_dt);
+					SLL_RELEASE(n);
+					o=r;
+					goto _optimize_operation_list_comma;
 				}
 				return o;
 			}

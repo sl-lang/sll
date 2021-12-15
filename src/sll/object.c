@@ -389,6 +389,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 				SLL_UNREACHABLE();
 		}
 	}
+	if (!tt){
+		return NULL;
+	}
 	SLL_ASSERT(t-SLL_MAX_OBJECT_TYPE-1<tt->l);
 	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
 	sll_object_t* o=SLL_CREATE();
