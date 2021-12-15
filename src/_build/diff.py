@@ -1,16 +1,15 @@
-import json
 import os
 import requests
 import sys
 
 
 
-GH_HEADERS={"Authorization":f"token {sys.argv[1]}","Accept":"application/vnd.github.v3+json","User-Agent":"Sl-Lang Commit Diff"}
+GITHUB_HEADERS={"Authorization":f"token {sys.argv[1]}","Accept":"application/vnd.github.v3+json","User-Agent":"Sl-Lang Commit Diff"}
 
 
 
 def _get_tree(sha):
-	t=requests.get(url=f"https://api.github.com/repos/sl-lang/sll/git/trees/{sha}?recursive=true",headers=GH_HEADERS).json()
+	t=requests.get(url=f"https://api.github.com/repos/sl-lang/sll/git/trees/{sha}?recursive=true",headers=GITHUB_HEADERS).json()
 	if (t["truncated"]):
 		raise RuntimeError
 	return [(k["path"],k["size"],k["sha"]) for k in t["tree"] if k["type"]=="blob"]
@@ -19,7 +18,7 @@ def _get_tree(sha):
 
 def _diff(sha):
 	a=_get_tree(sha)
-	b=_get_tree(requests.get("https://api.github.com/repos/sl-lang/sll/git/commits/"+sha,headers=GH_HEADERS).json()["parents"][0]["sha"])
+	b=_get_tree(requests.get("https://api.github.com/repos/sl-lang/sll/git/commits/"+sha,headers=GITHUB_HEADERS).json()["parents"][0]["sha"])
 	l=[]
 	for k in a:
 		n=True
