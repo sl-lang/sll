@@ -177,3 +177,61 @@ def build_sll_test(vb,r):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
+
+
+
+def build_sll_extension(fl,v,vb,r):
+	nm=f"sll-ext-{v[0]}.{v[1]}.{v[2]}"
+	cd=os.getcwd()
+	os.chdir("build")
+	if (os.name=="nt"):
+		if (r):
+			if (vb):
+				print("  Compiling Library Files (Release Mode)...")
+			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__SLL_EXT_COMPILATION__","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/include","/I",".","/Foobjects_ext\\"]+["../"+e for e in fl]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+			if (vb):
+				print("  Linking Library Files (Release Mode)...")
+			if (util.wrap_output(["link",f"/OUT:{nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE"]+["objects_ext/"+e for e in os.listdir("objects_ext")]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+		else:
+			if (vb):
+				print("  Compiling Library Files...")
+			if (util.wrap_output(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","_UNICODE","/D","UNICODE","/D","__SLL_EXT_COMPILATION__","/D","WIN32_LEAN_AND_MEAN","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","../src/include","/I",".","/Foobjects_ext\\"]+["../"+e for e in fl]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+			if (vb):
+				print("  Linking Library Files...")
+			if (util.wrap_output(["link",f"/OUT:{nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE"]+["objects_ext/"+e for e in os.listdir("objects_ext")]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+	else:
+		if (r):
+			if (vb):
+				print("  Compiling Library Files (Release Mode)...")
+			os.chdir("objects_ext")
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_EXT_COMPILATION__","-Wall","-O3","-Werror","-I","../../src/include","-I","../"]+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+			os.chdir("..")
+			if (vb):
+				print("  Linking Library Files (Release Mode)...")
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",nm+".so"]+["objects_ext/"+e for e in os.listdir("objects_ext")]+["-lm"]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+		else:
+			if (vb):
+				print("  Compiling Library Files...")
+			os.chdir("objects_ext")
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_EXT_COMPILATION__","-D","DEBUG_BUILD","-Wall","-g","-O0","-Werror","-I","../../src/include","-I","../"]+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+			os.chdir("..")
+			if (vb):
+				print("  Linking Library Files...")
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-g","-O0","-o",nm+".so"]+["objects_ext/"+e for e in os.listdir("objects_ext")]+["-lm"]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+	os.chdir(cd)

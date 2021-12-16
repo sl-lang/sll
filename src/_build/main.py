@@ -55,10 +55,16 @@ if (vb):
 util.fix_env()
 if (vb):
 	print("Listing Source Code Files...")
-i_fl=util.get_sll_files()
+fl=util.get_sll_files()
 if (vb):
-	print("Generating Executable...")
-build.build_sll(i_fl,ver,vb,("--release" in sys.argv))
+	print("Compiling Sll...")
+build.build_sll(fl,ver,vb,("--release" in sys.argv))
+if (vb):
+	print("Listing Source Code Files...")
+fl=util.get_sll_ext_files()
+if (vb):
+	print("Compiling Sll Extension...")
+build.build_sll_extension(fl,ver,vb,("--release" in sys.argv))
 if (vb):
 	print("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
