@@ -993,6 +993,27 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_sys_get_version void
+#define __SLL_API_ARGS_sll_api_sys_get_version sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_sys_get_version
+ * \group sys-api
+ * \desc Docs!
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_get_version_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_get_version:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sys_load_library __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_sys_load_library const sll_string_t* a
 /**

@@ -15,6 +15,7 @@
 - Implemented `sll_string_starts`, `sll_api_string_starts` and `sll:string_starts` ([#124])
 - Implemented `sll_version` (function counterpart of `SLL_VERSION` macro)
 - Library API: `sll_library_handle_t`, `sll_platform_load_library`, `sll_platform_lookup_function`, `sll_platform_unload_library` and `sll_api_sys_load_library` ([#123])
+- Sll version API: `sll_api_sys_get_version` and `sll:sys_get_version`
 - Website code in [`src/web`][main/src/web]
 
 ### Changed

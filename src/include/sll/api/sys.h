@@ -87,6 +87,17 @@ __API_FUNC_DECL(sys_get_platform);
 
 /**
  * \flags api func optimizable
+ * \name sll_api_sys_get_version
+ * \group sys-api
+ * \desc Docs!
+ * \ret A
+ */
+__API_FUNC_DECL(sys_get_version);
+
+
+
+/**
+ * \flags api func optimizable
  * \name sll_api_sys_load_library
  * \group sys-api
  * \desc Docs!

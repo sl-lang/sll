@@ -2,6 +2,7 @@
 #include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
+#include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
@@ -130,6 +131,15 @@ __API_FUNC(sys_get_platform){
 		}
 	}
 	sll_string_clone(&_sys_p,out);
+}
+
+
+
+__API_FUNC(sys_get_version){
+	sll_array_create(3,out);
+	out->v[0]=SLL_FROM_INT(SLL_VERSION_MAJOR);
+	out->v[1]=SLL_FROM_INT(SLL_VERSION_MINOR);
+	out->v[2]=SLL_FROM_INT(SLL_VERSION_PATCH);
 }
 
 
