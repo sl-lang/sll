@@ -89,7 +89,7 @@ jobs:
     needs:
       - diff
       - ubuntu
-    if: always()&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    if: always()&&needs.ubuntu.result=='success'&&fromJSON(needs.diff.outputs.data).sll-build-ext
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -113,7 +113,7 @@ jobs:
     needs:
       - diff
       - windows
-    if: always()&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    if: always()&&needs.windows.result=='success'&&fromJSON(needs.diff.outputs.data).sll-build-ext
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -164,7 +164,7 @@ jobs:
       - diff
       - ubuntu
       - windows
-    if: always()&&fromJSON(needs.diff.outputs.data).cf-pages&&github.event_name=='push'
+    if: always()&&(!fromJSON(needs.diff.outputs.data).sll-build||(needs.ubuntu.result=='success'&&needs.windows.result=='success'))&&fromJSON(needs.diff.outputs.data).cf-pages&&github.event_name=='push'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Deployment

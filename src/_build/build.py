@@ -119,12 +119,12 @@ def build_sll_standalone(r):
 	else:
 		if (r):
 			util.log("  Compiling & Linking Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/cli/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-Wall","-lm","-Werror","-O3","../src/cli/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm","-ldl"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			util.log("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-g","-O0","../src/cli/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-D","__SLL_STATIC__","-D","STANDALONE_BUILD","-D","DEBUG_BUILD","-Wall","-lm","-Werror","-g","-O0","../src/cli/main.c","-o","sll_standalone","-I",".","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm","-ldl"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
@@ -156,12 +156,12 @@ def build_sll_test(r):
 	else:
 		if (r):
 			util.log("  Compiling & Linking Files (Release Mode)...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-Wall","-Werror","-O3","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-Wall","-Werror","-O3","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm","-ldl"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			util.log("  Compiling & Linking Files...")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-Wall","-Werror","-g","-O0","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-Wall","-Werror","-g","-O0","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm","-ldl"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
