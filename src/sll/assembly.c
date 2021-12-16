@@ -1688,9 +1688,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	sll_deallocate(g_dt.it.sc_vi);
 	o->vc=g_dt.it.vc;
 	_generate(c_dt->h,&g_dt);
-	if (_get_previous_instruction(&g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_END){
-		GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO);
-	}
+	GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO);
 	o->ft.l=c_dt->ft.l;
 	o->ft.dt=sll_allocate(c_dt->ft.l*sizeof(sll_assembly_function_t));
 	g_dt_rt.dt=sll_allocate(sizeof(assembly_instruction_label_t));

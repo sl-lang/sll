@@ -8,7 +8,7 @@
 	(= fp (: fl i))
 	(? (<- string$starts fp "sll-ext-") {
 		(? (<- string$ends fp sys$library_extension) {
-			(= fp (<- path$absolute fp))
+			(= fp (<- path$absolute (+ "build" path$separator fp)))
 			(@)
 		})
 	})

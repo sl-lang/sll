@@ -993,6 +993,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_sys_load_library __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_sys_load_library const sll_string_t* a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_load_library
+ * \group sys-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_load_library_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_load_library:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_time_current __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_time_current void
 /**

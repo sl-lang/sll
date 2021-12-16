@@ -1,6 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/path.h>
+#include <sll/api/sys.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
@@ -17,6 +18,8 @@ static sll_integer_t _sys_argc=0;
 static sll_string_t* _sys_argv=NULL;
 static sll_string_t _sys_e=SLL_INIT_STRING_STRUCT;
 static sll_string_t _sys_p=SLL_INIT_STRING_STRUCT;
+static sll_library_handle_t* _sys_lh=NULL;
+static sll_array_length_t _sys_lhl=0;
 static char _sys_end=0;
 
 
@@ -37,6 +40,19 @@ static void _sys_free_data(void){
 		sll_free_string(&_sys_p);
 		_sys_p.l=0;
 	}
+	if (_sys_lhl){
+		while (_sys_lhl){
+			_sys_lhl--;
+			void* fn=sll_platform_lookup_function(*(_sys_lh+_sys_lhl),SLL_CHAR("__sll_deinitialize"));
+			if (fn){
+				((void(*)(void))fn)();
+			}
+			sll_platform_unload_library(*(_sys_lh+_sys_lhl));
+		}
+		sll_deallocate(_sys_lh);
+		_sys_lh=NULL;
+	}
+	_sys_end=0;
 }
 
 
@@ -113,4 +129,33 @@ __API_FUNC(sys_get_platform){
 		}
 	}
 	sll_string_clone(&_sys_p,out);
+}
+
+
+
+__API_FUNC(sys_load_library){
+	if (a->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+		return 0;
+	}
+	sll_char_t fp[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_path_absolute(a->v,fp,SLL_API_MAX_FILE_PATH_LENGTH);
+	if (!sll_platform_path_exists(fp)){
+		return 0;
+	}
+	sll_library_handle_t h=sll_platform_load_library(fp);
+	if (h==SLL_UNKNOWN_LIBRARY_HANDLE){
+		return 0;
+	}
+	_sys_lhl++;
+	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(sll_library_handle_t));
+	*(_sys_lh+_sys_lhl-1)=h;
+	if (!_sys_end){
+		sll_register_cleanup(_sys_free_data);
+		_sys_end=1;
+	}
+	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_initialize"));
+	if (fn){
+		((void(*)(void))fn)();
+	}
+	return 1;
 }

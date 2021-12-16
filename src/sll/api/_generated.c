@@ -790,6 +790,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_platform_raw(con
 
 
 
+__SLL_API_TYPE_sll_api_sys_load_library sll_api_sys_load_library(__SLL_API_ARGS_sll_api_sys_load_library);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_load_library_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* a=*(al+0);
+	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_integer_t out=sll_api_sys_load_library(&(a->dt.s));
+	return SLL_FROM_INT(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_time_current sll_api_time_current(__SLL_API_ARGS_sll_api_time_current);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_current_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	sll_float_t out=sll_api_time_current();
@@ -898,6 +913,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:sys_arg_get_count",sll_api_sys_arg_get_count_raw,0},
 	{"sll:sys_get_executable",sll_api_sys_get_executable_raw,0},
 	{"sll:sys_get_platform",sll_api_sys_get_platform_raw,0},
+	{"sll:sys_load_library",sll_api_sys_load_library_raw,0},
 	{"sll:time_current",sll_api_time_current_raw,0},
 	{"sll:time_current_nanos",sll_api_time_current_nanos_raw,0},
 	{"sll:time_sleep",sll_api_time_sleep_raw,0},
@@ -908,5 +924,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=47;
+const sll_function_index_t _ifunc_size=48;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

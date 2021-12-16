@@ -220,6 +220,10 @@ typedef void* sll_file_descriptor_t;
 
 
 
+typedef void* sll_library_handle_t;
+
+
+
 typedef const sll_char_t* sll_json_parser_state_t;
 
 

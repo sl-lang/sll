@@ -10,6 +10,13 @@
  */
 /**
  * \flags subgroup
+ * \name Console
+ * \group platform
+ * \subgroup platform-console
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
  * \name Files
  * \group platform
  * \subgroup platform-file
@@ -20,13 +27,6 @@
  * \name Paths
  * \group platform
  * \subgroup platform-path
- * \desc Docs!
- */
-/**
- * \flags subgroup
- * \name Console
- * \group platform
- * \subgroup platform-console
  * \desc Docs!
  */
 
@@ -270,6 +270,31 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 /**
  * \flags check_output func
+ * \name sll_platform_load_library
+ * \group platform
+ * \desc Docs!
+ * \arg const sll_char_t* fp
+ * \ret sll_library_handle_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_platform_lookup_function
+ * \group platform
+ * \desc Docs!
+ * \arg sll_library_handle_t h
+ * \arg const sll_char_t* nm
+ * \ret void*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_lookup_function(sll_library_handle_t h,const sll_char_t* nm);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_path_exists
  * \group platform
  * \subgroup platform-path
@@ -337,6 +362,17 @@ __SLL_EXTERNAL void sll_platform_setup_console(void);
  * \arg sll_time_t tm
  */
 __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm);
+
+
+
+/**
+ * \flags func
+ * \name sll_platform_unload_library
+ * \group platform
+ * \desc Docs!
+ * \arg sll_library_handle_t h
+ */
+__SLL_EXTERNAL void sll_platform_unload_library(sll_library_handle_t h);
 
 
 

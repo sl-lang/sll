@@ -5,6 +5,7 @@
 ### Added
 
 - Constant macro for unsupplied `sll_char_t` argument: `SLL_NO_CHAR`
+- Constant string containg the extension of a library on the current platform: `sys$library_extension` ([#123])
 - Implemented `sll:array_count` and `sll_api_array_count` ([#117])
 - Implemented `sll_array_replace`, `sll_api_array_replace` and `sll:array_replace` ([#120])
 - Implemented `sll_array_reverse`, `sll_api_array_reverse` and `sll:array_reverse` ([#116])
@@ -12,7 +13,7 @@
 - Implemented `sll_string_pad_left`, `sll_string_pad_right`, `sll_api_string_pad_left`, `sll_api_string_pad_right`, `sll:string_pad_left`, `sll:string_pad_right`([#111] and [#112])
 - Implemented `sll_string_reverse`, `sll_api_string_reverse` and `sll:string_reverse` ([#87])
 - Implemented `sll_string_starts`, `sll_api_string_starts` and `sll:string_starts` ([#124])
-- Constant string containg the extension of a library on the current platform: `sys$library_extension` ([#123])
+- Library API: `sll_library_handle_t`, `sll_platform_load_library`, `sll_platform_lookup_function`, `sll_platform_unload_library` and `sll_api_sys_load_library` ([#123])
 - Website code in [`src/web`][main/src/web]
 
 ### Changed

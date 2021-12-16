@@ -37,6 +37,14 @@ if ("--standalone" in sys.argv or "--test" in sys.argv):
 		wf.write(b"#ifndef __SLL_STANDALONE_H__\n#define __SLL_STANDALONE_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES+[b"__SLL_STATIC__"])+b"\n#endif\n")
 util.log("Fixing Env Variables...")
 util.fix_env()
+util.log("Listing Source Code Files...")
+fl=util.get_sll_files()
+util.log("Compiling Sll...")
+build.build_sll(fl,ver,("--release" in sys.argv))
+if ("--extension-only" not in sys.argv):
+	util.log("Compiling Sll CLI...")
+	header.generate_help("rsrc/help.txt","build/help_text.h")
+	build.build_sll_cli(ver,("--release" in sys.argv))
 if ("--extension" in sys.argv):
 	util.log("Listing Source Code Files (Extension)...")
 	fl=util.get_sll_ext_files()
@@ -49,11 +57,6 @@ if ("--extension" in sys.argv):
 			util.log(f"Uploading '{nm}'...")
 			release.upload_asset(f"build/{nm}",nm,sys.argv[-2],sys.argv[-1])
 		sys.exit(0)
-util.log("Listing Source Code Files...")
-fl=util.get_sll_files()
-util.log("Compiling Sll...")
-header.generate_help("rsrc/help.txt","build/help_text.h")
-build.build_sll(fl,ver,("--release" in sys.argv))
 util.log("Copying Modules...")
 for f in os.listdir("src/sll/lib"):
 	util.log(f"  Copying Module 'src/sll/lib/{f}'...")
