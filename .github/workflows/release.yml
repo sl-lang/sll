@@ -52,3 +52,35 @@ jobs:
         run: pip install requests
       - name: Create Release Assets & Upload
         run: python src/_build/main.py __ghactions --verbose --bundle --standalone --release --upload ${{secrets.GITHUB_TOKEN}} ${{needs.create.outputs.id}}
+  upload-posix-ext:
+    name: Upload POSIX Extension Release
+    needs:
+      - create
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Create Release Assets & Upload
+        run: python src/_build/main.py --verbose --extension --extension-only --release --upload ${{secrets.GITHUB_TOKEN}} ${{needs.create.outputs.id}}
+  upload-win-ext:
+    name: Upload Windows Extension Release
+    needs:
+      - create
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Create Release Assets & Upload
+        run: python src/_build/main.py __ghactions --verbose --extension --extension-only --release --upload ${{secrets.GITHUB_TOKEN}} ${{needs.create.outputs.id}}

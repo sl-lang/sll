@@ -24,7 +24,7 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll cf-pages=.github/workflows/all.yml,src/_build,src/include/sll,src/web
+        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll sll-build-ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext cf-pages=.github/workflows/all.yml,src/_build,src/include/sll,src/web
   ubuntu:
     name: Ubuntu${{matrix.name}}
     needs:
@@ -84,11 +84,68 @@ jobs:
         shell: cmd
       - name: Test
         run: build/run_tests
+  ubuntu-ext:
+    name: Ubuntu Extension${{matrix.name}}
+    needs:
+      - diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-ext
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cmd: ''
+            name: ''
+          - cmd: ' --release'
+            name: ' Release'
+          - cmd: ' --standalone'
+            name: ' Standalone'
+          - cmd: ' --standalone --release'
+            name: ' Standalone Release'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: python src/_build/main.py --verbose --extension --extension-only ${{matrix.cmd}}
+  windows-ext:
+    name: Windows Extension${{matrix.name}}
+    needs:
+      - diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-ext
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cmd: ''
+            name: ''
+          - cmd: ' --release'
+            name: ' Release'
+          - cmd: ' --standalone'
+            name: ' Standalone'
+          - cmd: ' --standalone --release'
+            name: ' Standalone Release'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: python src/_build/main.py --verbose --extension --extension-only ${{matrix.cmd}} __ghactions
+        shell: cmd
   codeql:
     name: CodeQL
     needs:
       - ubuntu
       - windows
+      - ubuntu-ext
+      - windows-ext
     runs-on: ubuntu-latest
     permissions:
       security-events: write

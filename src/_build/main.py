@@ -27,12 +27,6 @@ if ("--generate-api" in sys.argv):
 	d_dt,api_dt=docs.create_docs(d_fl)
 	util.log(f"Generating Code & Signatures for {len(api_dt)} API functions...")
 	api.generate_c_api(d_dt,api_dt)
-util.log("Copying Modules...")
-for f in os.listdir("src/sll/lib"):
-	util.log(f"  Copying Module 'src/sll/lib/{f}'...")
-	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
-		wf.write(rf.read())
-header.generate_help("rsrc/help.txt","build/help_text.h")
 h_dt=header.parse_headers("src/include/sll")
 util.log("Generating Library Header File...")
 with open("build/sll.h","wb") as wf:
@@ -43,14 +37,28 @@ if ("--standalone" in sys.argv or "--test" in sys.argv):
 		wf.write(b"#ifndef __SLL_STANDALONE_H__\n#define __SLL_STANDALONE_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES+[b"__SLL_STATIC__"])+b"\n#endif\n")
 util.log("Fixing Env Variables...")
 util.fix_env()
+if ("--extension" in sys.argv):
+	util.log("Listing Source Code Files (Extension)...")
+	fl=util.get_sll_ext_files()
+	util.log("Compiling Sll Extension...")
+	build.build_sll_extension(fl,ver,("--release" in sys.argv))
+	if ("--extension-only" in sys.argv):
+		if ("--upload" in sys.argv):
+			import release
+			nm=f"sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so")
+			util.log(f"Uploading '{nm}'...")
+			release.upload_asset(f"build/{nm}",nm,sys.argv[-2],sys.argv[-1])
+		sys.exit(0)
 util.log("Listing Source Code Files...")
 fl=util.get_sll_files()
 util.log("Compiling Sll...")
+header.generate_help("rsrc/help.txt","build/help_text.h")
 build.build_sll(fl,ver,("--release" in sys.argv))
-util.log("Listing Source Code Files...")
-fl=util.get_sll_ext_files()
-util.log("Compiling Sll Extension...")
-build.build_sll_extension(fl,ver,("--release" in sys.argv))
+util.log("Copying Modules...")
+for f in os.listdir("src/sll/lib"):
+	util.log(f"  Copying Module 'src/sll/lib/{f}'...")
+	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
+		wf.write(rf.read())
 util.log("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
 if (util.wrap_output(["build/sll","-C","-c",("-O3" if "--release" in sys.argv else "-O1"),"-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else []),pfx=b"  ").returncode!=0):
