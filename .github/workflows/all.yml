@@ -88,7 +88,8 @@ jobs:
     name: Ubuntu Extension${{matrix.name}}
     needs:
       - diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-ext
+      - ubuntu
+    if: always()&&fromJSON(needs.diff.outputs.data).sll-build-ext
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -115,7 +116,8 @@ jobs:
     name: Windows Extension${{matrix.name}}
     needs:
       - diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-ext
+      - windows
+    if: always()&&fromJSON(needs.diff.outputs.data).sll-build-ext
     runs-on: windows-latest
     strategy:
       fail-fast: false
