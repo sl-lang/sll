@@ -1,6 +1,7 @@
 import datetime
 import os
 import re
+import util
 
 
 
@@ -112,9 +113,8 @@ def read_version(fp):
 
 
 
-def generate_help(i_fp,o_fp,vb):
-	if (vb):
-		print(f"Convering '{i_fp}' to Header File...")
+def generate_help(i_fp,o_fp):
+	util.log(f"Convering '{i_fp}' to Header File...")
 	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
 		wf.write(b"#ifndef __HELP_TEXT_H__\n#define __HELP_TEXT_H__ 1\n#include <stdint.h>\nconst uint8_t HELP_TEXT[]={")
 		st=True
@@ -127,9 +127,8 @@ def generate_help(i_fp,o_fp,vb):
 
 
 
-def parse_headers(fp,vb):
-	if (vb):
-		print("Combining Library Header Files...")
+def parse_headers(fp):
+	util.log("Combining Library Header Files...")
 	o=b""
 	il=[]
 	for r,_,fl in os.walk(fp):
@@ -143,8 +142,7 @@ def parse_headers(fp,vb):
 						o+=m.group(2)+b"\n"
 					else:
 						o+=dt+b"\n"
-	if (vb):
-		print(f"  Combined {len(il)} Files\nPreprocessing Combined Library Header File...")
+	util.log(f"  Combined {len(il)} Files\nPreprocessing Combined Library Header File...")
 	o=INCLUDE_REGEX.sub(lambda m:(b"" if m.group(1)[1:-1] in il else b"#include <"+(il.append(m.group(1)[1:-1]),m.group(1)[1:-1])[1]+b">"),DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX.sub(br"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(br"\n",COMMENT_REGEX.sub(br"",o).strip().replace(b"\r\n",b"\n")))).split(b"\n")
 	return o
 

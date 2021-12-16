@@ -11,6 +11,10 @@ EXT_PLATFORM_SOURCE_CODE={"posix":"src/sll_ext/platform/posix","nt":"src/sll_ext
 
 
 
+log=(print if "--verbose" in sys.argv else lambda *_,**__:None)
+
+
+
 def fix_env():
 	if (os.name=="nt"):
 		if ("__ghactions" in sys.argv):

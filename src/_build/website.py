@@ -29,28 +29,21 @@ def _generate_toc(dt):
 
 
 
-def generate(vb):
-	if (vb):
-		print("Copying CSS Files...")
+def generate():
+	util.log("Copying CSS Files...")
 	for k in os.listdir("src/web/css"):
-		if (vb):
-			print(f"Copying 'src/web/css/{k}' to 'build/web/css/{k}'...")
+		util.log(f"Copying 'src/web/css/{k}' to 'build/web/css/{k}'...")
 		with open("src/web/css/"+k,"rb") as rf,open("build/web/css/"+k,"wb") as wf:
 			wf.write(rf.read())
-	if (vb):
-		print("Collecting Documentation Files...")
+	util.log("Collecting Documentation Files...")
 	d_fl=util.get_docs_files()
-	if (vb):
-		print(f"  Found {len(d_fl)} Files\nGenerating Documentation...")
+	util.log(f"  Found {len(d_fl)} Files\nGenerating Documentation...")
 	d_dt=docs.create_docs(d_fl)[0]
-	if (vb):
-		print(f"Generating Table of Content for {len(d_dt['data'])} Definitions...")
+	util.log(f"Generating Table of Content for {len(d_dt['data'])} Definitions...")
 	toc=_generate_toc(d_dt)
-	if (vb):
-		print("Copying 'src/web/index.html' to 'build/web/index.html'...")
+	util.log("Copying 'src/web/index.html' to 'build/web/index.html'...")
 	with open("src/web/index.html","rb") as rf,open("build/web/index.html","wb") as wf:
 		wf.write(rf.read().replace(b"{{DATA}}",toc))
-	if (vb):
-		print("Copying 'src/web/404.html' to 'build/web/404.html'...")
+	util.log("Copying 'src/web/404.html' to 'build/web/404.html'...")
 	with open("src/web/404.html","rb") as rf,open("build/web/404.html","wb") as wf:
 		wf.write(rf.read())
