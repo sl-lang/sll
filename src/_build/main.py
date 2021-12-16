@@ -115,5 +115,6 @@ if ("--run" in sys.argv):
 	util.log("Running 'examples/_internal_test/test.sll'...")
 	e_nm=("build/sll_standalone" if "--standalone" in sys.argv else "build/sll")
 	subprocess.run([e_nm,"-h","-C"])
-	if (subprocess.run([e_nm,"examples/_internal_test/test.sll","-c","-C","-v","-O0","-o","build/raw","-e","-I","examples/_internal_test","-R","-F"]).returncode!=0 or subprocess.run([e_nm,"examples/_internal_test/test.sll","-C","-v","-O3","-c","-o","build/test","-e","-I","examples/_internal_test","-R","-F"]).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-C","-v","-O0","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-C","-v","-P"]).returncode!=0):
+	a=(["examples/_internal_test_ext/test.sll"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
+	if (subprocess.run([e_nm,"-c","-C","-v","-O0","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run([e_nm,"-C","-v","-O3","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-C","-v","-O0","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-C","-v","-P"]).returncode!=0):
 		sys.exit(1)

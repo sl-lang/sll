@@ -311,6 +311,15 @@ __API_FUNC(string_convert){
 
 
 
+__API_FUNC(string_ends){
+	if (b->t==SLL_OBJECT_TYPE_CHAR){
+		return (a->l&&a->v[a->l-1]==b->dt.c);
+	}
+	return sll_string_ends(a,&(b->dt.s));
+}
+
+
+
 __API_FUNC(string_format){
 	sll_var_arg_list_t dt={
 		SLL_VAR_ARG_LIST_TYPE_SLL,
@@ -407,6 +416,15 @@ __API_FUNC(string_split){
 	else{
 		sll_string_split(a,&(b->dt.s),out);
 	}
+}
+
+
+
+__API_FUNC(string_starts){
+	if (b->t==SLL_OBJECT_TYPE_CHAR){
+		return (a->l&&a->v[0]==b->dt.c);
+	}
+	return sll_string_starts(a,&(b->dt.s));
 }
 
 

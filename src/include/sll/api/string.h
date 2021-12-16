@@ -26,6 +26,20 @@ __API_FUNC_DECL(string_convert);
 
 
 /**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_ends
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg CS
+ * \ret 0 -> Failure
+ * \ret B -> Success
+ */
+__API_FUNC_DECL(string_ends);
+
+
+
+/**
  * \flags api compilation_call func optimizable var_arg
  * \name sll_api_string_format
  * \group string-api
@@ -121,6 +135,20 @@ __API_FUNC_DECL(string_reverse);
  * \ret A -> Success
  */
 __API_FUNC_DECL(string_split);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_starts
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg CS
+ * \ret 0 -> Failure
+ * \ret B -> Success
+ */
+__API_FUNC_DECL(string_starts);
 
 
 

@@ -623,6 +623,30 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_string_ends __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_string_ends const sll_string_t* a,const sll_object_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_ends
+ * \group string-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ * \arg const sll_object_t* b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_ends_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_ends:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_string_format void
 #define __SLL_API_ARGS_sll_api_string_format const sll_string_t* a,const sll_object_t*const* b,sll_arg_count_t bc,sll_string_t* out
 /**
@@ -779,6 +803,30 @@
  * \group raw-api
  * \subgroup raw-api-string-api
  * \desc Wrapper function for :sll_api_string_split:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_string_starts __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_string_starts const sll_string_t* a,const sll_object_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_starts
+ * \group string-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ * \arg const sll_object_t* b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_starts_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_starts:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

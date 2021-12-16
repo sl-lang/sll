@@ -8,8 +8,11 @@
 - Implemented `sll:array_count` and `sll_api_array_count` ([#117])
 - Implemented `sll_array_replace`, `sll_api_array_replace` and `sll:array_replace` ([#120])
 - Implemented `sll_array_reverse`, `sll_api_array_reverse` and `sll:array_reverse` ([#116])
+- Implemented `sll_string_ends`, `sll_api_string_ends` and `sll:string_ends` ([#125])
 - Implemented `sll_string_pad_left`, `sll_string_pad_right`, `sll_api_string_pad_left`, `sll_api_string_pad_right`, `sll:string_pad_left`, `sll:string_pad_right`([#111] and [#112])
 - Implemented `sll_string_reverse`, `sll_api_string_reverse` and `sll:string_reverse` ([#87])
+- Implemented `sll_string_starts`, `sll_api_string_starts` and `sll:string_starts` ([#124])
+- Constant string containg the extension of a library on the current platform: `sys$library_extension` ([#123])
 - Website code in [`src/web`][main/src/web]
 
 ### Changed
@@ -1151,6 +1154,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#125]: https://github.com/sl-lang/sll/issues/125
+[#124]: https://github.com/sl-lang/sll/issues/124
+[#123]: https://github.com/sl-lang/sll/issues/123
 [#120]: https://github.com/sl-lang/sll/issues/120
 [#117]: https://github.com/sl-lang/sll/issues/117
 [#116]: https://github.com/sl-lang/sll/issues/116

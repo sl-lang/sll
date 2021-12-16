@@ -1,0 +1,25 @@
+(# sys path string)
+(--- "sys.sll" "path.sll" "string.sll")
+
+(= fl (<- path$list_dir "build"))
+(= fp nil)
+(= i 0)
+(-> nil (< i ($ fl)) {
+	(= fp (: fl i))
+	(? (<- string$starts fp "sll-ext-") {
+		(? (<- string$ends fp sys$library_extension) {
+			(= fp (<- path$absolute fp))
+			(@)
+		})
+	})
+	(++ i)
+})
+(? (== i ($ fl)) {
+	(:> "No extension library found!\n")
+	(@@@ 1)
+})
+(:> (<- string$format "Found extension library: %s\n" fp))
+(? (! (<- sys$load_library fp)) {
+	(:> "Failed to load library!\n")
+	(@@@ 1)
+})

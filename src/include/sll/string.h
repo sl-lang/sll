@@ -260,6 +260,19 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t v,s
 
 /**
  * \flags check_output func
+ * \name sll_string_ends
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* a
+ * \arg const sll_string_t* b
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_ends(const sll_string_t* a,const sll_string_t* b);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_string_equal
  * \group string
  * \subgroup string-op
@@ -833,6 +846,19 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 
 
 /**
+ * \flags check_output func
+ * \name sll_string_starts
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* a
+ * \arg const sll_string_t* b
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_starts(const sll_string_t* a,const sll_string_t* b);
+
+
+
+/**
  * \flags func
  * \name sll_string_subtract_array
  * \group string
@@ -842,7 +868,6 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
  * \arg const sll_array_t* a
  * \arg sll_array_t* o
  */
-
 __SLL_EXTERNAL void sll_string_subtract_array(const sll_string_t* s,const sll_array_t* a,sll_array_t* o);
 
 

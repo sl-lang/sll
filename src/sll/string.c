@@ -392,6 +392,40 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,s
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_ends(const sll_string_t* a,const sll_string_t* b){
+	if (a->l<b->l){
+		return 0;
+	}
+	if (a->l==b->l){
+		return sll_string_equal(a,b);
+	}
+	const uint64_t* ap64=(const uint64_t*)(a->v+a->l-b->l);
+	const uint64_t* bp64=(const uint64_t*)(b->v);
+	STRING_DATA_PTR(bp64);
+	sll_string_length_t l=b->l;
+	while (l>7){
+		if (*ap64!=*bp64){
+			return 0;
+		}
+		ap64++;
+		bp64++;
+		l-=8;
+	}
+	const sll_char_t* ap=(const sll_char_t*)ap64;
+	const sll_char_t* bp=(const sll_char_t*)bp64;
+	while (l){
+		if (*ap!=*bp){
+			return 0;
+		}
+		ap++;
+		bp++;
+		l--;
+	}
+	return 1;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal(const sll_string_t* a,const sll_string_t* b){
 	if (a->l!=b->l||a->c!=b->c){
 		return 0;
@@ -1315,6 +1349,41 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 		o->l=i;
 		o->v=sll_reallocate(o->v,i*sizeof(sll_object_t*));
 	}
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_starts(const sll_string_t* a,const sll_string_t* b){
+	if (a->l<b->l){
+		return 0;
+	}
+	if (a->l==b->l){
+		return sll_string_equal(a,b);
+	}
+	const uint64_t* ap64=(const uint64_t*)(a->v);
+	const uint64_t* bp64=(const uint64_t*)(b->v);
+	STRING_DATA_PTR(ap64);
+	STRING_DATA_PTR(bp64);
+	sll_string_length_t l=b->l;
+	while (l>7){
+		if (*ap64!=*bp64){
+			return 0;
+		}
+		ap64++;
+		bp64++;
+		l-=8;
+	}
+	const sll_char_t* ap=(const sll_char_t*)ap64;
+	const sll_char_t* bp=(const sll_char_t*)bp64;
+	while (l){
+		if (*ap!=*bp){
+			return 0;
+		}
+		ap++;
+		bp++;
+		l--;
+	}
+	return 1;
 }
 
 

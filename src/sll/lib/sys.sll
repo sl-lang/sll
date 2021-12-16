@@ -8,10 +8,13 @@
 
 (= executable (<- (... "sll:sys_get_executable")))
 
+(= library_extension (?: (=== platform "windows") "dll" "so"))
+
 (= sys (. (&:
 	(~ string_type) platform
 	(~ int_type) argc
 	(~ func_type) argv
 	(~ string_type) executable
-) platform argc argv executable))
+	(~ string_type) library_extension
+) platform argc argv executable library_extension))
 (## sys)
