@@ -220,6 +220,17 @@ __SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t f);
 
 
 /**
+ * \flags check_output func
+ * \name sll_version
+ * \group util
+ * \desc Docs!
+ * \ret sll_version_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_version_t sll_version(void);
+
+
+
+/**
  * \flags func
  * \name sll_zero_memory
  * \group util

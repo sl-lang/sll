@@ -4,7 +4,8 @@
 
 
 
-#define __VERSION_STR(x) #x
+#define __VERSION_STR_(x) #x
+#define __VERSION_STR(x) __VERSION_STR_(x)
 
 
 

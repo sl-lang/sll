@@ -23,3 +23,4 @@
 	(:> "Failed to load library!\n")
 	(@@@ 1)
 })
+(:> "Extension library successfully loaded!\n")

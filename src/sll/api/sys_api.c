@@ -5,12 +5,13 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
-#include <sll/platform.h>
 #include <sll/object.h>
+#include <sll/platform.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <sll/version.h>
 
 
 
@@ -146,16 +147,18 @@ __API_FUNC(sys_load_library){
 	if (h==SLL_UNKNOWN_LIBRARY_HANDLE){
 		return 0;
 	}
+	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_initialize"));
+	if (fn){
+		if (!((sll_bool_t (*)(sll_version_t v))fn)(SLL_VERSION)){
+			return 0;
+		}
+	}
 	_sys_lhl++;
 	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(sll_library_handle_t));
 	*(_sys_lh+_sys_lhl-1)=h;
 	if (!_sys_end){
 		sll_register_cleanup(_sys_free_data);
 		_sys_end=1;
-	}
-	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_initialize"));
-	if (fn){
-		((void(*)(void))fn)();
 	}
 	return 1;
 }

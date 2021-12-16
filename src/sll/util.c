@@ -3,11 +3,12 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
-#include <sll/platform.h>
 #include <sll/object.h>
+#include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <sll/version.h>
 #include <stdint.h>
 
 
@@ -303,6 +304,12 @@ __SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v){
 __SLL_EXTERNAL sll_sandbox_flags_t sll_set_sandbox_flags(sll_sandbox_flags_t f){
 	_util_sandbox_flags|=f;
 	return _util_sandbox_flags;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_version_t sll_version(void){
+	return SLL_VERSION;
 }
 
 
