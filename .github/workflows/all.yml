@@ -99,10 +99,6 @@ jobs:
             name: ''
           - cmd: ' --release'
             name: ' Release'
-          - cmd: ' --standalone'
-            name: ' Standalone'
-          - cmd: ' --standalone --release'
-            name: ' Standalone Release'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -127,10 +123,6 @@ jobs:
             name: ''
           - cmd: ' --release'
             name: ' Release'
-          - cmd: ' --standalone'
-            name: ' Standalone'
-          - cmd: ' --standalone --release'
-            name: ' Standalone Release'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
