@@ -1,10 +1,26 @@
 import os
 import subprocess
 import sys
+import zipfile
 
 
 
 BUILD_PATHS=["build/lib","build/objects","build/web","build/web/css"]
+PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix","nt":"src/sll/platform/windows"}
+
+
+
+def fix_env():
+	if (os.name=="nt"):
+		if ("__ghactions" in sys.argv):
+			for k in str(subprocess.run([str(subprocess.run([os.environ["ProgramFiles(x86)"]+"/Microsoft Visual Studio/Installer/vswhere.exe","-nologo","-latest","-products","*","-requires","Microsoft.VisualStudio.Component.VC.Tools.x86.x64","-property","installationPath"],stdout=subprocess.PIPE).stdout.strip(),"utf-8")+"/VC/Auxiliary/Build/vcvarsall.bat","x64","&&","cls","&&","set"],shell=True,stdout=subprocess.PIPE).stdout.split(b"\x0c")[1],"utf-8").split("\r\n"):
+				k=[e.strip() for e in k.split("=")]
+				if (k[0].lower() in ["path","include","lib","libpath"]):
+					os.environ[k[0].upper()]=k[1]
+	else:
+		ld=os.getenv("LD_LIBRARY_PATH","")
+		if ("build:" not in ld):
+			os.environ["LD_LIBRARY_PATH"]="build:"+ld
 
 
 
@@ -52,3 +68,30 @@ def get_docs_files():
 			if (k!="_sll_internal.h"):
 				o.append(os.path.join(r,k))
 	return o
+
+
+
+def get_sll_files():
+	o=[]
+	for r,_,fl in os.walk(PLATFORM_SOURCE_CODE[os.name]):
+		r=r.replace("\\","/").rstrip("/")+"/"
+		for f in fl:
+			if (f[-2:]==".c"):
+				o.append(r+f)
+	for r,_,fl in os.walk("src/sll"):
+		r=r.replace("\\","/").rstrip("/")+"/"
+		if ("/platform/" in r.lower()):
+			continue
+		for f in fl:
+			if (f[-2:]==".c"):
+				o.append(r+f)
+	return o
+
+
+
+def bundle(v):
+	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
+		for k in (["build/sll.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
+			zf.write(k,arcname=k[6:])
+		for k in os.listdir("build/lib"):
+			zf.write("build/lib/"+k,arcname="lib/"+k)

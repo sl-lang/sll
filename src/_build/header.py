@@ -127,7 +127,7 @@ def generate_help(i_fp,o_fp,vb):
 
 
 
-def parse_header(fp,vb):
+def parse_headers(fp,vb):
 	if (vb):
 		print("Combining Library Header Files...")
 	o=b""
