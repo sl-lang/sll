@@ -16,6 +16,7 @@
 
 - Fixed optimization of custom object types
 - Improved large integer compression
+- Moved platform-dependent code from [`src/sll/platform/posix.c`][0.6.31/src/sll/platform/posix.c] and [`src/sll/platform/windows.c`][0.6.31/src/sll/platform/windows.c] to [`src/sll/platform/posix`][main/src/sll/platform/posix] and [`src/sll/platform/windows`][main/src/sll/platform/windows]
 - Object type functions now expect a `sll_object_type_table_t` instead of using the global `sll_current_runtime_data`
 - `sll_array_count` now uses `sll_operator_strict_equal` instead of `sll_operator_equal`
 
@@ -1228,7 +1229,11 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/sll/platform/posix]: https://github.com/sl-lang/sll/tree/main/src/sll/platform/posix
+[main/src/sll/platform/windows]: https://github.com/sl-lang/sll/tree/main/src/sll/platform/windows
 [main/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
+[0.6.31/src/sll/platform/posix.c]: https://github.com/sl-lang/sll/blob/v0.6.31/src/sll/platform/posix.c
+[0.6.31/src/sll/platform/windows.c]: https://github.com/sl-lang/sll/blob/v0.6.31/src/sll/platform/windows.c
 [0.6.29/src/sll/node.c]: https://github.com/sl-lang/sll/blob/v0.6.29/src/sll/node.c
 [0.6.28/src/include/sll/init.h]: https://github.com/sl-lang/sll/blob/v0.6.28/src/include/sll/init.h
 [0.6.28/src/sll/deinit.c]: https://github.com/sl-lang/sll/blob/v0.6.28/src/sll/deinit.c
