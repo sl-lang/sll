@@ -7,6 +7,7 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <sll/var_arg.h>
+#include <stdarg.h>
 
 
 
@@ -73,7 +74,7 @@ static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char
 	f_dt->dt=sll_reallocate(f_dt->dt,f_dt->dtl*sizeof(function_log_data_t*));
 	function_log_data_t* n=sll_allocate(sizeof(function_log_data_t));
 	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
-	n->st=_log_default;
+	n->st=f_dt->st;
 	*(f_dt->dt+i)=n;
 	return n;
 }
@@ -100,8 +101,8 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_
 			.c=&va
 		}
 	};
-	sll_string_t str;
-	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,&str);
+	sll_string_t s;
+	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,&s);
 	va_end(va);
 	sll_file_write_char(sll_stdout,'[');
 	sll_file_write(sll_stdout,f_dt->nm.v,f_dt->nm.l);
@@ -109,9 +110,33 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_
 	sll_file_write(sll_stdout,fn_dt->nm.v,fn_dt->nm.l);
 	sll_file_write_char(sll_stdout,']');
 	sll_file_write_char(sll_stdout,' ');
-	sll_file_write(sll_stdout,str.v,str.l);
+	sll_file_write(sll_stdout,s.v,s.l);
 	sll_file_write_char(sll_stdout,'\n');
-	sll_free_string(&str);
+	sll_free_string(&s);
+}
+
+
+
+__SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,const sll_string_t* s){
+	if (!_log_default&&!_log_f_dtl){
+		return;
+	}
+	file_log_data_t* f_dt=_get_file_index(fp);
+	if (!f_dt->st){
+		return;
+	}
+	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
+	if (!fn_dt->st){
+		return;
+	}
+	sll_file_write_char(sll_stdout,'[');
+	sll_file_write(sll_stdout,f_dt->nm.v,f_dt->nm.l);
+	sll_file_write_char(sll_stdout,':');
+	sll_file_write(sll_stdout,fn_dt->nm.v,fn_dt->nm.l);
+	sll_file_write_char(sll_stdout,']');
+	sll_file_write_char(sll_stdout,' ');
+	sll_file_write(sll_stdout,s->v,s->l);
+	sll_file_write_char(sll_stdout,'\n');
 }
 
 

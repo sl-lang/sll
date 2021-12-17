@@ -31,6 +31,19 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_
 
 /**
  * \flags func
+ * \name sll_log_raw
+ * \group log
+ * \desc Docs!
+ * \arg const sll_char_t* fp
+ * \arg const sll_char_t* fn
+ * \arg const sll_string_t* s
+ */
+__SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,const sll_string_t* s);
+
+
+
+/**
+ * \flags func
  * \name sll_set_log_default
  * \group log
  * \desc Docs!

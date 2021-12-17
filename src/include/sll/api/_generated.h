@@ -332,6 +332,105 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_log_log void
+#define __SLL_API_ARGS_sll_api_log_log const sll_object_t*const* a,sll_arg_count_t ac
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_log_log
+ * \group log-api
+ * \desc Docs!
+ * \arg const sll_object_t*const* a -> 
+ * \arg sll_arg_count_t ac
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_log_log_raw
+ * \group raw-api
+ * \subgroup raw-api-log-api
+ * \desc Wrapper function for :sll_api_log_log:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Logging
+ * \group raw-api
+ * \subgroup raw-api-log-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_log_set_default void
+#define __SLL_API_ARGS_sll_api_log_set_default const sll_bool_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_log_set_default
+ * \group log-api
+ * \desc Docs!
+ * \arg const sll_bool_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_log_set_default_raw
+ * \group raw-api
+ * \subgroup raw-api-log-api
+ * \desc Wrapper function for :sll_api_log_set_default:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_log_set_file void
+#define __SLL_API_ARGS_sll_api_log_set_file const sll_string_t* a,const sll_bool_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_log_set_file
+ * \group log-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ * \arg const sll_bool_t b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_log_set_file_raw
+ * \group raw-api
+ * \subgroup raw-api-log-api
+ * \desc Wrapper function for :sll_api_log_set_file:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_log_set_func void
+#define __SLL_API_ARGS_sll_api_log_set_func const sll_string_t* a,const sll_string_t* b,const sll_bool_t c
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_log_set_func
+ * \group log-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ * \arg const sll_string_t* b -> 
+ * \arg const sll_bool_t c -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_log_set_func_raw
+ * \group raw-api
+ * \subgroup raw-api-log-api
+ * \desc Wrapper function for :sll_api_log_set_func:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_path_absolute void
 #define __SLL_API_ARGS_sll_api_path_absolute const sll_string_t* a,sll_string_t* out
 /**

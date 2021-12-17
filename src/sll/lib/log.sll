@@ -1,0 +1,15 @@
+(# func_type)
+(--- "types.sll")
+
+(= log_f (... "sll:log_log"))
+(= set_default (... "sll:log_set_default"))
+(= set_file (... "sll:log_set_file"))
+(= set_func (... "sll:log_set_func"))
+
+(= log (. (&:
+	(~ func_type) log
+	(~ func_type) set_default
+	(~ func_type) set_file
+	(~ func_type) set_func
+) log_f set_default set_file set_func))
+(## log)

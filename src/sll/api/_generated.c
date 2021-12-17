@@ -252,6 +252,73 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_type_raw(const sll_
 
 
 
+__SLL_API_TYPE_sll_api_log_log sll_api_log_log(__SLL_API_ARGS_sll_api_log_log);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_log_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	const sll_object_t*const* a=al+0;
+	sll_arg_count_t ac=all-0;
+	sll_api_log_log(a,ac);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_log_set_default sll_api_log_set_default(__SLL_API_ARGS_sll_api_log_set_default);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_default_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* a=*(al+0);
+	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_log_set_default(!!(a->dt.i));
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_log_set_file sll_api_log_set_file(__SLL_API_ARGS_sll_api_log_set_file);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_file_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all<2){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* a=*(al+0);
+	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* b=*(al+1);
+	if (!(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_log_set_file(&(a->dt.s),!!(b->dt.i));
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_log_set_func sll_api_log_set_func(__SLL_API_ARGS_sll_api_log_set_func);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_func_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all<3){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* a=*(al+0);
+	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* b=*(al+1);
+	if (!(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* c=*(al+2);
+	if (!(SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_log_set_func(&(a->dt.s),&(b->dt.s),!!(c->dt.i));
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
 __SLL_API_TYPE_sll_api_path_absolute sll_api_path_absolute(__SLL_API_ARGS_sll_api_path_absolute);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_absolute_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
@@ -897,6 +964,10 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:json_parse",sll_api_json_parse_raw,0},
 	{"sll:json_stringify",sll_api_json_stringify_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:json_type",sll_api_json_type_raw,0},
+	{"sll:log_log",sll_api_log_log_raw,0},
+	{"sll:log_set_default",sll_api_log_set_default_raw,0},
+	{"sll:log_set_file",sll_api_log_set_file_raw,0},
+	{"sll:log_set_func",sll_api_log_set_func_raw,0},
 	{"sll:path_absolute",sll_api_path_absolute_raw,0},
 	{"sll:path_exists",sll_api_path_exists_raw,0},
 	{"sll:path_get_cwd",sll_api_path_get_cwd_raw,0},
@@ -937,5 +1008,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=49;
+const sll_function_index_t _ifunc_size=53;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

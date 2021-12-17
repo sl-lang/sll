@@ -296,10 +296,6 @@ _print_unknown:
 
 
 __API_FUNC(string_convert){
-	if (!ac){
-		SLL_INIT_STRING(out);
-		return;
-	}
 	sll_string_create(0,out);
 	out->v=sll_memory_move(out->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	for (sll_array_length_t i=0;i<ac;i++){
