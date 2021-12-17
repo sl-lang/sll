@@ -16,9 +16,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 			case SLL_ERROR_UNKNOWN:
 				sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Error: %c%c\n"),(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
 				return;
-			case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-				sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Internal Function '%s'\n"),e->dt.str);
-				return;
 			case SLL_ERROR_NO_STACK:
 				sll_file_write_format(sll_stderr,SLL_CHAR("No Internal Stack\n"));
 				return;

@@ -735,6 +735,8 @@ static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t*
 		case SLL_NODE_TYPE_EXIT:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_INLINE_FUNC:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_AND:
@@ -815,33 +817,7 @@ static sll_node_t* _check_remove(sll_node_t* o,sll_node_t* p,optimizer_data_t* o
 				}
 				return o;
 			}
-		case SLL_NODE_TYPE_INLINE_FUNC:
-			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_CALL:
-			{
-				sll_arg_count_t l=o->dt.ac;
-				SLL_ASSERT(l);
-				sll_node_t* r=o;
-				o++;
-				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
-					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
-				}
-				sll_object_t* rt=_get_as_object(o,o_dt,0);
-				if (rt->t==SLL_OBJECT_TYPE_INT&&rt->dt.i<0){
-					sll_function_index_t i=(sll_function_index_t)(~(rt->dt.i));
-					if (i<o_dt->i_ft->l&&!((*(o_dt->i_ft->dt+i))->t&SLL_INTERNAL_FUNCTION_FLAG_REQUIRED)){
-						r->t=SLL_NODE_TYPE_OPERATION_LIST;
-						r->dt.ac=l;
-						SLL_RELEASE(rt);
-						return _check_remove(r,p,o_dt);
-					}
-				}
-				SLL_RELEASE(rt);
-				for (sll_arg_count_t i=1;i<l;i++){
-					o=sll_skip_node(o);
-				}
-				return o;
-			}
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
 		case SLL_NODE_TYPE_NOT:
 		case SLL_NODE_TYPE_BOOL:
 		case SLL_NODE_TYPE_ADD:
@@ -874,6 +850,33 @@ static sll_node_t* _check_remove(sll_node_t* o,sll_node_t* p,optimizer_data_t* o
 				while (l){
 					l--;
 					o=_check_remove(o,p,o_dt);
+				}
+				return o;
+			}
+		case SLL_NODE_TYPE_INLINE_FUNC:
+			SLL_UNIMPLEMENTED();
+		case SLL_NODE_TYPE_CALL:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l);
+				sll_node_t* r=o;
+				o++;
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+				}
+				sll_object_t* rt=_get_as_object(o,o_dt,0);
+				if (rt->t==SLL_OBJECT_TYPE_INT&&rt->dt.i<0){
+					sll_function_index_t i=(sll_function_index_t)(~(rt->dt.i));
+					if (i<o_dt->i_ft->l&&!((*(o_dt->i_ft->dt+i))->t&SLL_INTERNAL_FUNCTION_FLAG_REQUIRED)){
+						r->t=SLL_NODE_TYPE_OPERATION_LIST;
+						r->dt.ac=l;
+						SLL_RELEASE(rt);
+						return _check_remove(r,p,o_dt);
+					}
+				}
+				SLL_RELEASE(rt);
+				for (sll_arg_count_t i=1;i<l;i++){
+					o=sll_skip_node(o);
 				}
 				return o;
 			}
@@ -1258,6 +1261,33 @@ _keep_assignment:;
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+			{
+				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+					o->t=SLL_NODE_TYPE_OPERATION_LIST;
+					goto _optimize_operation_list_comma;
+				}
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					o->t=SLL_NODE_TYPE_INT;
+					o->dt.i=0;
+					return o+1;
+				}
+				sll_node_t* r=o;
+				o=_optimize(o+1,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+				l--;
+				while (l){
+					l--;
+					o=_optimize(o,r,o_dt,0);
+					if (o_dt->rm){
+						_remove_up_to_end(o,l);
+						r->dt.ac-=l;
+						break;
+					}
+				}
+				return o;
+			}
+			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_INLINE_FUNC:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_CALL:

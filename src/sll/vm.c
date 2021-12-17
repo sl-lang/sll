@@ -8,10 +8,11 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
+#include <sll/ift.h>
 #include <sll/map.h>
+#include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/platform.h>
-#include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -280,6 +281,31 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(4);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP:
+				{
+					sll_object_t* v=sll_operator_cast(*(s+si-1),sll_static_int[SLL_OBJECT_TYPE_STRING]);
+					SLL_RELEASE(*(s+si-1));
+					if (v->dt.s.l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
+						SLL_RELEASE(v);
+						*(s+si-1)=SLL_ACQUIRE_STATIC_INT(0);
+						break;
+					}
+					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,v->dt.s.v);
+					SLL_RELEASE(v);
+					*(s+si-1)=(i==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(~((sll_integer_t)i)));
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
+			{
+				si++;
+				if ((a_dt->st.dt+ai->dt.s)->l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
+					*(s+si-1)=SLL_ACQUIRE_STATIC_INT(0);
+					break;
+				}
+				sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,(a_dt->st.dt+ai->dt.s)->v);
+				*(s+si-1)=(i==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(~((sll_integer_t)i)));
+				break;
+			}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 _jump:
 				ii=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ii+ai->dt.rj:ai->dt.j);

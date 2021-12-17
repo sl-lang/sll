@@ -80,7 +80,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.cmd}} __ghactions
+        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.cmd}}
         shell: cmd
       - name: Test
         run: build/run_tests
@@ -131,7 +131,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only ${{matrix.cmd}} __ghactions
+        run: python src/_build/main.py --verbose --extension --extension-only ${{matrix.cmd}}
         shell: cmd
   codeql:
     name: CodeQL

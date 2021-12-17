@@ -140,9 +140,6 @@ static sll_char_t* error_to_string(sll_error_t* e){
 		case SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII:
 			snprintf((char*)o,512,"<type=%"PRIu8", range=%"PRIu64"-%"PRIu64">",e->t,e->dt.r.off,e->dt.r.off+e->dt.r.sz);
 			break;
-		case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-			snprintf((char*)o,512,"<type=%"PRIu8", string='%s'>",e->t,e->dt.str);
-			break;
 		case SLL_ERROR_INVALID_INSTRUCTION:
 			snprintf((char*)o,512,"<type=%"PRIu8", opcode=%"PRIu8">",e->t,e->dt.it);
 			break;
@@ -336,17 +333,6 @@ static void run_parser_test(const sll_char_t* fp,test_result_t* o){
 				ne.dt.r.off=(sll_file_offset_t)err_v_e->dt.a.dt->dt.i;
 				ne.dt.r.sz=(sll_file_offset_t)(err_v_e->dt.a.dt+1)->dt.i-ne.dt.r.off;
 				break;
-			case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-				if (!err_v_e||err_v_e->t!=SLL_JSON_OBJECT_TYPE_STRING||err_v_e->dt.s.l>255){
-					o->s++;
-					printf("-> JSON Error in Test Case #%"PRIu32"\n",i);
-					continue;
-				}
-				for (sll_string_length_t j=0;j<err_v_e->dt.s.l;j++){
-					ne.dt.str[j]=*(err_v_e->dt.s.v+j);
-				}
-				ne.dt.str[err_v_e->dt.s.l]=0;
-				break;
 			case SLL_ERROR_INVALID_INSTRUCTION:
 				if (!err_v_e||err_v_e->t!=SLL_JSON_OBJECT_TYPE_INTEGER||err_v_e->dt.i<0||err_v_e->dt.i>SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE){
 					o->s++;
@@ -399,11 +385,6 @@ _wrong_error:
 			case SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
 			case SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII:
 				if (ne.dt.r.off!=e->dt.r.off||ne.dt.r.sz!=e->dt.r.sz){
-					goto _wrong_error;
-				}
-				break;
-			case SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION:
-				if (sll_string_compare_pointer(ne.dt.str,e->dt.str)!=SLL_COMPARE_RESULT_EQUAL){
 					goto _wrong_error;
 				}
 				break;

@@ -6,6 +6,7 @@
 
 - Constant macro for unsupplied `sll_char_t` argument: `SLL_NO_CHAR`
 - Constant string containg the extension of a library on the current platform: `sys$library_extension` ([#123])
+- External internal function declaration API: `SLL_NODE_TYPE_INTERNAL_FUNC_LOAD`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR`
 - Implemented `sll:array_count` and `sll_api_array_count` ([#117])
 - Implemented `sll_array_replace`, `sll_api_array_replace` and `sll:array_replace` ([#120])
 - Implemented `sll_array_reverse`, `sll_api_array_reverse` and `sll:array_reverse` ([#116])
@@ -15,6 +16,7 @@
 - Implemented `sll_string_starts`, `sll_api_string_starts` and `sll:string_starts` ([#124])
 - Implemented `sll_version` (function counterpart of `SLL_VERSION` macro)
 - Library API: `sll_library_handle_t`, `sll_platform_load_library`, `sll_platform_lookup_function`, `sll_platform_unload_library` and `sll_api_sys_load_library` ([#123])
+- Max internal function length: `SLL_INTERNAL_FUNCTION_MAX_LENGTH`
 - Sll version API: `sll_api_sys_get_version` and `sll:sys_get_version`
 - Website code in [`src/web`][main/src/web]
 
@@ -25,6 +27,11 @@
 - Moved platform-dependent code from [`src/sll/platform/posix.c`][0.6.31/src/sll/platform/posix.c] and [`src/sll/platform/windows.c`][0.6.31/src/sll/platform/windows.c] to [`src/sll/platform/posix`][main/src/sll/platform/posix] and [`src/sll/platform/windows`][main/src/sll/platform/windows]
 - Object type functions now expect a `sll_object_type_table_t` instead of using the global `sll_current_runtime_data`
 - `sll_array_count` now uses `sll_operator_strict_equal` instead of `sll_operator_equal`
+
+### Removed
+
+- Unused error type: `SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION`
+- Unneeded member `str` from `sll_error_data_t`
 
 ## [0.6.31] - 2021-12-12
 

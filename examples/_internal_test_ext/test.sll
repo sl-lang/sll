@@ -8,3 +8,4 @@
 	(@@@ 1)
 })
 (:> "Extension library successfully loaded!\n")
+(<- (... "sll_ext:test_func"))

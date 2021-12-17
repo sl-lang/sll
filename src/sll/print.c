@@ -260,6 +260,9 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				sll_file_write_char(wf,')');
 				return o;
 			}
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+			PRINT_STATIC_STRING("...",wf);
+			break;
 		case SLL_NODE_TYPE_INLINE_FUNC:
 			PRINT_STATIC_STRING("***",wf);
 			break;
@@ -648,6 +651,13 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("PUSH 4 & STORE $",wf);
 				_print_int(ai->dt.v,wf);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP:
+				PRINT_STATIC_STRING("LOOKUP",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
+				PRINT_STATIC_STRING("LOOKUP #",wf);
+				_print_int(ai->dt.s,wf);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 				PRINT_STATIC_STRING("JMP .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
@@ -939,37 +949,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				PRINT_STATIC_STRING("CAST ",wf);
-				switch (ai->dt.t){
-					case SLL_OBJECT_TYPE_INT:
-						PRINT_STATIC_STRING("int_type",wf);
-						break;
-					case SLL_OBJECT_TYPE_FLOAT:
-						PRINT_STATIC_STRING("float_type",wf);
-						break;
-					case SLL_OBJECT_TYPE_CHAR:
-						PRINT_STATIC_STRING("char_type",wf);
-						break;
-					case SLL_OBJECT_TYPE_STRING:
-						PRINT_STATIC_STRING("string_type",wf);
-						break;
-					case SLL_OBJECT_TYPE_ARRAY:
-						PRINT_STATIC_STRING("array_type",wf);
-						break;
-					case SLL_OBJECT_TYPE_HANDLE:
-						PRINT_STATIC_STRING("handle_type",wf);
-						break;
-					case SLL_OBJECT_TYPE_MAP:
-						PRINT_STATIC_STRING("map_type",wf);
-						break;
-					case SLL_OBJECT_TYPE_MAP_KEYS:
-						PRINT_STATIC_STRING("map_key_type",wf);
-						break;
-					case SLL_OBJECT_TYPE_MAP_VALUES:
-						PRINT_STATIC_STRING("map_value_type",wf);
-						break;
-					default:
-						SLL_UNREACHABLE();
-				}
+				_print_int(ai->dt.t,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF:
 				PRINT_STATIC_STRING("TYPEOF",wf);

@@ -361,6 +361,8 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return sll_skip_node_const(o);
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_INLINE_FUNC:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_IF:
@@ -649,6 +651,39 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
 				ai->dt.i=(o->t==SLL_NODE_TYPE_FUNC?o->dt.fn.id+1:~((sll_integer_t)o->dt.fn.id));
 				return sll_skip_node_const(o);
+			}
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					return o+1;
+				}
+				o++;
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+				}
+				if (o->t==SLL_NODE_TYPE_STRING){
+					sll_string_index_t i=o->dt.s;
+					o++;
+					l--;
+					while (l){
+						l--;
+						o=_generate(o,g_dt);
+					}
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR;
+					ai->dt.s=i;
+					return o;
+				}
+				o=_generate_on_stack(o,g_dt);
+				l--;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP);
+				return o;
 			}
 		case SLL_NODE_TYPE_INLINE_FUNC:
 			return _generate_inline_function(o,g_dt);
@@ -1215,6 +1250,8 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_INLINE_FUNC:
 			o=_generate_inline_function(o,g_dt);
 			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_POP);
@@ -1976,7 +2013,7 @@ _handle_nop:;
 			continue;
 		}
 		*ai=*s;
-		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
+		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
 			*(sm.m+(ai->dt.s>>6))|=1ull<<(ai->dt.s&63);
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
@@ -2051,7 +2088,7 @@ _handle_nop:;
 				}
 			}
 		}
-		else if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
+		else if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
 			ai->dt.s=*(sm.im+ai->dt.s);
 		}
 		ai++;

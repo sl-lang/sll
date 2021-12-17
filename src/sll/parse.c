@@ -51,7 +51,7 @@ static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_d
 			o->dt.fn.id+=im_dt->f_off;
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->dt.l.ac;
+				sll_arg_count_t l=o->dt.fn.ac;
 				mo++;
 				while (l){
 					l--;
@@ -405,23 +405,21 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 						o->dt.ac=ac;
 					}
 					else{
-						n->t=SLL_NODE_TYPE_NOP;
 						sll_string_t* s=c_dt->st.dt+n->dt.s;
-						if (!s->l||s->l>255){
+						if (!s->l||s->l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
 							e->t=SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG;
 							e->dt.r.off=st_off;
 							e->dt.r.sz=SLL_FILE_GET_OFFSET(rf)-st_off;
 							return 0;
 						}
-						o->dt.fn.ac=ac-1;
 						o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,s->v);
 						if (o->dt.fn.id==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX){
-							e->t=SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION;
-							for (sll_string_length_t i=0;i<s->l;i++){
-								e->dt.str[i]=s->v[i];
-							}
-							e->dt.str[s->l]=0;
-							return 0;
+							o->t=SLL_NODE_TYPE_INTERNAL_FUNC_LOAD;
+							o->dt.ac=ac;
+						}
+						else{
+							o->dt.fn.ac=ac-1;
+							n->t=SLL_NODE_TYPE_NOP;
 						}
 					}
 				}

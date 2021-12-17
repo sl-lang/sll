@@ -298,6 +298,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 				_write_integer(wf,ai->dt.v);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				_write_integer(wf,ai->dt.s);

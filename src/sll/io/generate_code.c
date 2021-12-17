@@ -265,6 +265,9 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				sll_file_write_char(wf,')');
 				return o;
 			}
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+			GENERATE_STATIC_STRING("...",wf);
+			break;
 		case SLL_NODE_TYPE_INLINE_FUNC:
 			GENERATE_STATIC_STRING("***",wf);
 		case SLL_NODE_TYPE_COMMA:

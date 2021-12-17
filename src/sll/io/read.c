@@ -357,6 +357,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 				CHECK_ERROR(rf,ai->dt.v,sll_variable_index_t,e);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				CHECK_ERROR(rf,ai->dt.s,sll_string_index_t,e);
