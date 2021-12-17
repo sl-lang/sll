@@ -18,6 +18,7 @@
 - Library API: `sll_library_handle_t`, `sll_platform_load_library`, `sll_platform_lookup_function`, `sll_platform_unload_library` and `sll_api_sys_load_library` ([#123])
 - Max internal function length: `SLL_INTERNAL_FUNCTION_MAX_LENGTH`
 - Sll version API: `sll_api_sys_get_version` and `sll:sys_get_version`
+- Logging API: `SLL_LOG`, `sll_log` and `sll_log_set_default` ([#126] and [#129])
 - Website code in [`src/web`][main/src/web]
 
 ### Changed
@@ -1164,6 +1165,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#129]: https://github.com/sl-lang/sll/issues/129
+[#126]: https://github.com/sl-lang/sll/issues/126
 [#125]: https://github.com/sl-lang/sll/issues/125
 [#124]: https://github.com/sl-lang/sll/issues/124
 [#123]: https://github.com/sl-lang/sll/issues/123

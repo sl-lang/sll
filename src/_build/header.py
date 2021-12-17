@@ -23,7 +23,7 @@ SPACE_CHARACTERS_REGEX=re.compile(b" \t\n\v\f\r")
 
 
 
-def _expand_macros(k,dm,dfm):
+def _expand_macros(k,dm,dfm,j_exp):
 	i=0
 	while (i<len(k)):
 		if ((i==0 or k[i-1:i] not in IDENTIFIER_CHARACTERS) and k[i] not in NUMBERS):
@@ -89,8 +89,8 @@ def _expand_macros(k,dm,dfm):
 						i=j-1
 						break
 		i+=1
-	if (b"##" in k):
-		return _expand_macros(k.replace(b"##",b""),dm,dfm)
+	if (j_exp and b"##" in k):
+		return _expand_macros(k.replace(b"##",b""),dm,dfm,j_exp)
 	return k
 
 
@@ -245,7 +245,7 @@ def generate_header(h_dt,cm):
 	d_s=b""
 	o=b""
 	for i,(k,v) in enumerate(sorted(d_v,key=lambda e:e[0])):
-		v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm))
+		v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm,True))
 		d_v[i]=(k,v)
 		d_s+=b"\n#define "+k+b" "+v.strip()
 	for i,(k,v) in enumerate(sorted(d_f,key=lambda e:e[0])):
@@ -256,8 +256,11 @@ def generate_header(h_dt,cm):
 		for e in k[k.index(b"(")+1:-1].split(b","):
 			if (len(j)>1 or j[0]!=0):
 				nk+=b","
-			a[e]=b"".join([LETTERS[m:m+1] for m in j])
-			nk+=a[e]
+			if (e==b"..."):
+				nk+=b"..."
+			else:
+				a[e]=b"".join([LETTERS[m:m+1] for m in j])
+				nk+=a[e]
 			j[-1]+=1
 			for m in range(len(j)-1,-1,-1):
 				if (j[m]==len(LETTERS)):
@@ -269,13 +272,13 @@ def generate_header(h_dt,cm):
 				else:
 					break
 		nk+=b")"
-		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm))).strip()
+		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm,False))).strip()
 		d_f[i]=(nk,v)
 		d_s+=b"\n#define "+nk+b" "+v
 	fl=[]
 	e_v=[]
 	for k in l:
-		k=_expand_macros(k,dm,dfm).strip()
+		k=_expand_macros(k,dm,dfm,True).strip()
 		if (len(k)==0):
 			continue
 		if (b"extern" in k):

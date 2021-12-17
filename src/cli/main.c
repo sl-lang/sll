@@ -703,6 +703,9 @@ _read_file_argument:
 			*(fp+fpl-1)=(sll_char_t*)e;
 		}
 	}
+	if (fl&FLAG_VERBOSE){
+		sll_log_set_default(1);
+	}
 	if (fl&FLAG_VERSION){
 		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)" ("STANDALONE_STRING TYPE_STRING SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 		sll_deinit();
