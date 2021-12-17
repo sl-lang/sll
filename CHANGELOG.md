@@ -33,8 +33,8 @@
 
 ### Removed
 
-- Unused error type: `SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION`
 - Unneeded member `str` from `sll_error_data_t`
+- Unused error type: `SLL_ERROR_UNKNOWN_INTERNAL_FUNCTION`
 
 ## [0.6.31] - 2021-12-12
 

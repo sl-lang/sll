@@ -283,15 +283,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP:
 				{
-					sll_object_t* v=sll_operator_cast(*(s+si-1),sll_static_int[SLL_OBJECT_TYPE_STRING]);
+					sll_object_t* n=sll_operator_cast(*(s+si-1),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 					SLL_RELEASE(*(s+si-1));
-					if (v->dt.s.l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
-						SLL_RELEASE(v);
+					if (n->dt.s.l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
+						SLL_RELEASE(n);
 						*(s+si-1)=SLL_ACQUIRE_STATIC_INT(0);
 						break;
 					}
-					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,v->dt.s.v);
-					SLL_RELEASE(v);
+					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,n->dt.s.v);
+					SLL_RELEASE(n);
 					*(s+si-1)=(i==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(~((sll_integer_t)i)));
 					break;
 				}
