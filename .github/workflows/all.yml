@@ -7,6 +7,8 @@ on:
     branches:
       - main
 permissions: read-all
+env:
+  BUILD_COMMAND: python src/_build/main.py --verbose --test --do-not-run-test
 jobs:
   diff:
     name: Diff Calculation
@@ -24,25 +26,12 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll sll-build-ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext cf-pages=.github/workflows/all.yml,src/_build,src/include/sll,src/web
+        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build-ubuntu=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/posix sll-build-windows=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/windows sll-build-ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext cf-pages=.github/workflows/all.yml,src/_build,src/include/sll,src/web
   ubuntu:
-    name: Ubuntu${{matrix.name}}
-    needs:
-      - diff
-    if: fromJSON(needs.diff.outputs.data).sll-build
+    name: Ubuntu
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-ubuntu
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - cmd: ''
-            name: ''
-          - cmd: ' --release'
-            name: ' Release'
-          - cmd: ' --standalone'
-            name: ' Standalone'
-          - cmd: ' --standalone --release'
-            name: ' Standalone Release'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -51,27 +40,62 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.cmd}}
+        run: ${{env.BUILD_COMMAND}}
+      - name: Test
+        run: build/run_tests
+  ubuntu-release:
+    name: Ubuntu Release
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --release
+      - name: Test
+        run: build/run_tests
+  ubuntu-standalone:
+    name: Ubuntu Standalone
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --standalone
+      - name: Test
+        run: build/run_tests
+  ubuntu-standalone-release:
+    name: Ubuntu Standalone Release
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --standalone --release
       - name: Test
         run: build/run_tests
   windows:
-    name: Windows${{matrix.name}}
-    needs:
-      - diff
-    if: fromJSON(needs.diff.outputs.data).sll-build
+    name: Windows
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-windows
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - cmd: ''
-            name: ''
-          - cmd: ' --release'
-            name: ' Release'
-          - cmd: ' --standalone'
-            name: ' Standalone'
-          - cmd: ' --standalone --release'
-            name: ' Standalone Release'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -80,25 +104,82 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --test --do-not-run-test${{matrix.cmd}}
-        shell: cmd
+        run: ${{env.BUILD_COMMAND}}
       - name: Test
         run: build/run_tests
-  ubuntu-ext:
-    name: Ubuntu Extension${{matrix.name}}
+  windows-release:
+    name: Windows Release
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --release
+      - name: Test
+        run: build/run_tests
+  windows-standalone:
+    name: Windows Standalone
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --standalone
+      - name: Test
+        run: build/run_tests
+  windows-standalone-release:
+    name: Windows Standalone Release
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).sll-build-windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --standalone --release
+      - name: Test
+        run: build/run_tests
+  cloudflare:
+    name: Cloudflare Deployment
     needs:
       - diff
       - ubuntu
-    if: always()&&needs.ubuntu.result=='success'&&fromJSON(needs.diff.outputs.data).sll-build-ext
+      - ubuntu-release
+      - ubuntu-standalone
+      - ubuntu-standalone-release
+      - windows
+      - windows-release
+      - windows-standalone
+      - windows-standalone-release
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).cf-pages&&github.event_name=='push'
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - cmd: ''
-            name: ''
-          - cmd: ' --release'
-            name: ' Release'
+    steps:
+      - name: Trigger Deployment
+        run: curl -X POST "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/${{secrets.CLOUDFLARE_TRIGGER_KEY}}" &> /dev/null
+  ubuntu-ext:
+    name: Ubuntu Extension
+    needs:
+      - diff
+      - ubuntu
+      - ubuntu-standalone
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -107,22 +188,32 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only ${{matrix.cmd}}
+        run: python src/_build/main.py --verbose --extension --extension-only
+  ubuntu-ext-release:
+    name: Ubuntu Extension Release
+    needs:
+      - diff
+      - ubuntu-release
+      - ubuntu-standalone-release
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: python src/_build/main.py --verbose --extension --extension-only --release
   windows-ext:
-    name: Windows Extension${{matrix.name}}
+    name: Windows Extension
     needs:
       - diff
       - windows
-    if: always()&&needs.windows.result=='success'&&fromJSON(needs.diff.outputs.data).sll-build-ext
+      - windows-standalone
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).sll-build-ext
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - cmd: ''
-            name: ''
-          - cmd: ' --release'
-            name: ' Release'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -131,15 +222,41 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only ${{matrix.cmd}}
-        shell: cmd
+        run: python src/_build/main.py --verbose --extension --extension-only
+  windows-ext-release:
+    name: Windows Extension Release
+    needs:
+      - diff
+      - windows-release
+      - windows-standalone-release
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: python src/_build/main.py --verbose --extension --extension-only --release
   codeql:
     name: CodeQL
     needs:
+      - diff
       - ubuntu
+      - ubuntu-release
+      - ubuntu-standalone
+      - ubuntu-standalone-release
       - windows
+      - windows-release
+      - windows-standalone
+      - windows-standalone-release
       - ubuntu-ext
+      - ubuntu-ext-release
       - windows-ext
+      - windows-ext-release
+    if: always()&&!contains(needs.*.result,'failed')&&(fromJSON(needs.diff.outputs.data).sll-build-ubuntu||fromJSON(needs.diff.outputs.data).sll-build-windows||fromJSON(needs.diff.outputs.data).sll-build-ext)
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -155,17 +272,6 @@ jobs:
         with:
           languages: cpp
       - name: Build
-        run: python src/_build/main.py --verbose --test --do-not-run-test
+        run: ${{env.BUILD_COMMAND}}
       - name: Analyze
         uses: github/codeql-action/analyze@v1
-  cloudflare:
-    name: Cloudflare Deployment
-    needs:
-      - diff
-      - ubuntu
-      - windows
-    if: always()&&(!fromJSON(needs.diff.outputs.data).sll-build||(needs.ubuntu.result=='success'&&needs.windows.result=='success'))&&fromJSON(needs.diff.outputs.data).cf-pages&&github.event_name=='push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Deployment
-        run: curl -X POST "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/${{secrets.CLOUDFLARE_TRIGGER_KEY}}" &> /dev/null

@@ -35,11 +35,16 @@ def _diff(sha):
 	o=set()
 	for k in l:
 		k=k.split("/")
-		o.add(k[0])
-		e=k[0]
-		for i in range(1,len(k)):
-			e+="/"+k[i]
+		i=len(k)-1
+		while (i and k[i-1]!="platform"):
+			i-=1
+		e="/".join(k[:i])
+		while (i<len(k)):
+			if (len(e)>0):
+				e+="/"
+			e+=k[i]
 			o.add(e)
+			i+=1
 	return o
 
 
