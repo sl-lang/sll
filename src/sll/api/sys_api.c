@@ -47,7 +47,7 @@ static void _sys_free_data(void){
 			_sys_lhl--;
 			void* fn=sll_platform_lookup_function(*(_sys_lh+_sys_lhl),SLL_CHAR("__sll_unload"));
 			if (fn){
-				((void(*)(void))fn)();
+				((void(*)(sll_bool_t))fn)(1);
 			}
 			sll_platform_unload_library(*(_sys_lh+_sys_lhl));
 		}
@@ -158,10 +158,9 @@ __API_FUNC(sys_load_library){
 		return 0;
 	}
 	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_load"));
-	if (fn){
-		if (!((sll_bool_t (*)(sll_version_t v))fn)(SLL_VERSION)){
-			return 0;
-		}
+	if (!fn||!((sll_bool_t (*)(sll_version_t,sll_bool_t))fn)(SLL_VERSION,1)){
+		sll_platform_unload_library(h);
+		return 0;
 	}
 	_sys_lhl++;
 	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(sll_library_handle_t));
