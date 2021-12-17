@@ -45,7 +45,7 @@ static void _sys_free_data(void){
 	if (_sys_lhl){
 		while (_sys_lhl){
 			_sys_lhl--;
-			void* fn=sll_platform_lookup_function(*(_sys_lh+_sys_lhl),SLL_CHAR("__sll_deinitialize"));
+			void* fn=sll_platform_lookup_function(*(_sys_lh+_sys_lhl),SLL_CHAR("__sll_unload"));
 			if (fn){
 				((void(*)(void))fn)();
 			}
@@ -157,7 +157,7 @@ __API_FUNC(sys_load_library){
 	if (h==SLL_UNKNOWN_LIBRARY_HANDLE){
 		return 0;
 	}
-	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_initialize"));
+	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_load"));
 	if (fn){
 		if (!((sll_bool_t (*)(sll_version_t v))fn)(SLL_VERSION)){
 			return 0;

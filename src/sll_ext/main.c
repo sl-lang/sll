@@ -4,7 +4,7 @@
 
 
 
-__SLL_EXT_EXTERNAL sll_bool_t __sll_initialize(sll_version_t v){
+__SLL_EXT_EXTERNAL sll_bool_t __sll_load(sll_version_t v){
 	if (v!=SLL_EXT_VERSION){
 		sll_file_write_string(sll_stdout,SLL_CHAR("<ext-lib> Invalid version!\n"));
 		return 0;
@@ -15,6 +15,6 @@ __SLL_EXT_EXTERNAL sll_bool_t __sll_initialize(sll_version_t v){
 
 
 
-__SLL_EXT_EXTERNAL void __sll_deinitialize(void){
+__SLL_EXT_EXTERNAL void __sll_unload(void){
 	sll_file_write_string(sll_stdout,SLL_CHAR("<ext-lib> Successfully unloaded extension library\n"));
 }
