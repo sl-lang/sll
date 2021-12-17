@@ -10,13 +10,14 @@
 - Implemented `sll:array_count` and `sll_api_array_count` ([#117])
 - Implemented `sll_array_replace`, `sll_api_array_replace` and `sll:array_replace` ([#120])
 - Implemented `sll_array_reverse`, `sll_api_array_reverse` and `sll:array_reverse` ([#116])
+- Implemented `sll_path_split`
 - Implemented `sll_string_ends`, `sll_api_string_ends` and `sll:string_ends` ([#125])
 - Implemented `sll_string_pad_left`, `sll_string_pad_right`, `sll_api_string_pad_left`, `sll_api_string_pad_right`, `sll:string_pad_left`, `sll:string_pad_right`([#111] and [#112])
 - Implemented `sll_string_reverse`, `sll_api_string_reverse` and `sll:string_reverse` ([#87])
 - Implemented `sll_string_starts`, `sll_api_string_starts` and `sll:string_starts` ([#124])
 - Implemented `sll_version` (function counterpart of `SLL_VERSION` macro)
 - Library API: `sll_library_handle_t`, `sll_platform_load_library`, `sll_platform_lookup_function`, `sll_platform_unload_library` and `sll_api_sys_load_library` ([#123])
-- Logging API: `SLL_LOG`, `sll_log` and `sll_log_set_default` ([#126] and [#129])
+- Logging API: `SLL_LOG`, `sll_log`, `sll_set_log_default`, `sll_set_log_file` and `sll_set_log_function` ([#126], [#128] and [#129])
 - Max internal function length: `SLL_INTERNAL_FUNCTION_MAX_LENGTH`
 - Sll version API: `sll_api_sys_get_version` and `sll:sys_get_version`
 - Website code in [`src/web`][main/src/web]
@@ -1166,6 +1167,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#129]: https://github.com/sl-lang/sll/issues/129
+[#128]: https://github.com/sl-lang/sll/issues/128
 [#126]: https://github.com/sl-lang/sll/issues/126
 [#125]: https://github.com/sl-lang/sll/issues/125
 [#124]: https://github.com/sl-lang/sll/issues/124

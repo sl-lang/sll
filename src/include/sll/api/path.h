@@ -37,6 +37,19 @@ __SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_cha
 
 
 /**
+ * \flags func
+ * \name sll_path_split
+ * \group path-api
+ * \desc Docs!
+ * \arg const sll_char_t* s
+ * \arg sll_string_length_t* l
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_char_t* s,sll_string_length_t* l);
+
+
+
+/**
  * \flags api func optimizable
  * \name sll_api_path_absolute
  * \group path-api

@@ -87,6 +87,22 @@ __SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_cha
 
 
 
+__SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_char_t* s,sll_string_length_t* l){
+	sll_string_length_t i=0;
+	sll_string_length_t j=0;
+	while (*s){
+		i++;
+		if ((*s=='/'||*s=='\\')&&*(s+1)){
+			j=i;
+		}
+		s++;
+	}
+	*l=i;
+	return j;
+}
+
+
+
 __API_FUNC(path_absolute){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		sll_string_clone(a,out);

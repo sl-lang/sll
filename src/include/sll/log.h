@@ -12,7 +12,7 @@
 
 
 
-#define SLL_LOG(t,...) sll_log(__FILE__,__func__,SLL_CHAR(t),##__VA_ARGS__)
+#define SLL_LOG(t,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),SLL_CHAR(t),##__VA_ARGS__)
 
 
 
@@ -21,22 +21,47 @@
  * \name sll_log
  * \group log
  * \desc Docs!
- * \arg const char* fp
- * \arg const char* fn
+ * \arg const sll_char_t* fp
+ * \arg const sll_char_t* fn
  * \arg const sll_char_t* t
  */
-__SLL_EXTERNAL void sll_log(const char* fp,const char* fn,const sll_char_t* t,...);
+__SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_char_t* t,...);
 
 
 
 /**
  * \flags func
- * \name sll_log_set_default
+ * \name sll_set_log_default
  * \group log
  * \desc Docs!
- * \arg sll_bool_t d
+ * \arg sll_bool_t st
  */
-__SLL_EXTERNAL void sll_log_set_default(sll_bool_t d);
+__SLL_EXTERNAL void sll_set_log_default(sll_bool_t st);
+
+
+
+/**
+ * \flags func
+ * \name sll_set_log_file
+ * \group log
+ * \desc Docs!
+ * \arg const sll_char_t* fp
+ * \arg sll_bool_t st
+ */
+__SLL_EXTERNAL void sll_set_log_file(const sll_char_t* fp,sll_bool_t st);
+
+
+
+/**
+ * \flags func
+ * \name sll_set_log_function
+ * \group log
+ * \desc Docs!
+ * \arg const sll_char_t* fp
+ * \arg const sll_char_t* fn
+ * \arg sll_bool_t st
+ */
+__SLL_EXTERNAL void sll_set_log_function(const sll_char_t* fp,const sll_char_t* fn,sll_bool_t st);
 
 
 
