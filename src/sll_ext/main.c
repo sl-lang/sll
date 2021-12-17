@@ -11,14 +11,10 @@ static sll_object_t* _external_func(const sll_object_t*const* al,sll_arg_count_t
 
 
 
-__SLL_EXT_EXTERNAL sll_bool_t __sll_load(sll_version_t v,sll_bool_t f){
+__SLL_EXT_EXTERNAL sll_bool_t __sll_load(sll_version_t v){
 	if (v!=SLL_EXT_VERSION){
 		sll_file_write_string(sll_stdout,SLL_CHAR("<ext-lib> Invalid version!\n"));
 		return 0;
-	}
-	if (!f){
-		sll_file_write_string(sll_stdout,SLL_CHAR("<ext-lib> Loaded extension library for v"SLL_EXT_VERSION_STRING"! (compilation)\n"));
-		return 1;
 	}
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:test_func"),_external_func,0);
 	sll_file_write_string(sll_stdout,SLL_CHAR("<ext-lib> Loaded extension library for v"SLL_EXT_VERSION_STRING"!\n"));
@@ -27,10 +23,6 @@ __SLL_EXT_EXTERNAL sll_bool_t __sll_load(sll_version_t v,sll_bool_t f){
 
 
 
-__SLL_EXT_EXTERNAL void __sll_unload(sll_bool_t f){
-	if (!f){
-		sll_file_write_string(sll_stdout,SLL_CHAR("<ext-lib> Successfully unloaded extension library (compilation)\n"));
-		return;
-	}
+__SLL_EXT_EXTERNAL void __sll_unload(void){
 	sll_file_write_string(sll_stdout,SLL_CHAR("<ext-lib> Successfully unloaded extension library\n"));
 }
