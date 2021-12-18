@@ -2,7 +2,11 @@
 
 ## [0.6.33] - Ongoing
 
-*Nothing*
+### Added
+
+- All functions now store their names (used by `sll:log_log`)
+- `sll_vm_config_t` is now used to pass arguments to `sll_execute_assembly`
+- VM call stack is now part of the public API
 
 ## [0.6.32] - 2021-12-18
 
