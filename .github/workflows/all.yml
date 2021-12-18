@@ -337,7 +337,7 @@ jobs:
         with:
           languages: cpp
       - name: Build
-        run: ${{env.BUILD_COMMAND}}
+        run: ${{env.BUILD_COMMAND}} --extension
       - name: Analyze
         uses: github/codeql-action/analyze@v1
   release:
