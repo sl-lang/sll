@@ -11,22 +11,6 @@
 
 
 
-typedef struct __FUNCTION_LOG_DATA{
-	const sll_string_t nm;
-	sll_bool_t st;
-} function_log_data_t;
-
-
-
-typedef struct __FILE_LOG_DATA{
-	const sll_string_t nm;
-	function_log_data_t** dt;
-	sll_array_length_t dtl;
-	sll_bool_t st;
-} file_log_data_t;
-
-
-
 static sll_bool_t _log_default=0;
 static file_log_data_t** _log_f_dt=NULL;
 static sll_array_length_t _log_f_dtl=0;

@@ -472,6 +472,22 @@ typedef struct __CODE_GENERATION_DATA{
 
 
 
+typedef struct __FUNCTION_LOG_DATA{
+	const sll_string_t nm;
+	sll_bool_t st;
+} function_log_data_t;
+
+
+
+typedef struct __FILE_LOG_DATA{
+	const sll_string_t nm;
+	function_log_data_t** dt;
+	sll_array_length_t dtl;
+	sll_bool_t st;
+} file_log_data_t;
+
+
+
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 
