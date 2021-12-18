@@ -86,9 +86,6 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_
 		return;
 	}
 	file_log_data_t* f_dt=_get_file_index(fp);
-	if (!f_dt->st){
-		return;
-	}
 	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
 	if (!fn_dt->st){
 		return;
@@ -122,9 +119,6 @@ __SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,const 
 		return;
 	}
 	file_log_data_t* f_dt=_get_file_index(fp);
-	if (!f_dt->st){
-		return;
-	}
 	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
 	if (!fn_dt->st){
 		return;

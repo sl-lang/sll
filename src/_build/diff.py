@@ -5,6 +5,15 @@ import sys
 
 
 GITHUB_HEADERS={"Authorization":f"token {sys.argv[1]}","Accept":"application/vnd.github.v3+json","User-Agent":"Sl-Lang Commit Diff"}
+GITHUB_OWNER_NAME="krzem5"
+
+
+
+def _force_all():
+	if (os.getenv("GITHUB_EVENT_NAME","")=="workflow_dispatch"):
+		return True
+	dt=requests.get("https://api.github.com/repos/sl-lang/sll/actions/workflows/all.yml/runs?per_page=2",headers=GITHUB_HEADERS).json()["workflow_runs"]
+	return (dt[0]["run_attempt"]>1 or dt[1]["conclusion"]!="success")
 
 
 
@@ -49,9 +58,10 @@ def _diff(sha):
 
 
 
-dt=requests.get("https://api.github.com/repos/sl-lang/sll/actions/workflows/all.yml/runs?per_page=2",headers=GITHUB_HEADERS).json()["workflow_runs"]
+if (os.getenv("GITHUB_EVENT_NAME","")=="workflow_dispatch" and os.getenv("GITHUB_EVENT_NAME","").lower()!=GITHUB_OWNER_NAME):
+	sys.exit(1)
 o=""
-if (dt[0]["run_attempt"]>1 or dt[1]["conclusion"]!="success"):
+if (_force_all()):
 	for k in sys.argv[2:]:
 		k=k.split("=")[0]
 		print(f"Changes found for '{k}'")

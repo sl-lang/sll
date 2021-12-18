@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 permissions: read-all
 env:
   BUILD_COMMAND: python src/_build/main.py --verbose --test --do-not-run-test
@@ -288,7 +289,7 @@ jobs:
       - ubuntu-ext-release
       - windows-ext
       - windows-ext-release
-    if: always()&&!contains(needs.*.result,'failed')&&(fromJSON(needs.diff.outputs.data).ubuntu||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)
+    if: always()&&!contains(needs.*.result,'failed')&&(fromJSON(needs.diff.outputs.data).ubuntu||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)&&github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -307,3 +308,99 @@ jobs:
         run: ${{env.BUILD_COMMAND}}
       - name: Analyze
         uses: github/codeql-action/analyze@v1
+  release:
+    name: Create Release
+    needs:
+      - ubuntu
+      - ubuntu-release
+      - ubuntu-standalone
+      - ubuntu-standalone-release
+      - windows
+      - windows-release
+      - windows-standalone
+      - windows-standalone-release
+      - ubuntu-ext
+      - ubuntu-ext-release
+      - windows-ext
+      - windows-ext-release
+    if: github.event_name=='workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions: write-all
+    outputs:
+      id: ${{steps.create_release.outputs.id}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Create Release
+        run: python src/_build/release.py ${{secrets.GITHUB_TOKEN}}
+        id: create_release
+  upload-posix:
+    name: Upload POSIX Release
+    needs: release
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Create Release Assets & Upload
+        run: python src/_build/main.py --verbose --bundle --standalone --release --upload ${{secrets.GITHUB_TOKEN}} ${{needs.release.outputs.id}}
+  upload-win:
+    name: Upload Windows Release
+    needs: release
+    runs-on: windows-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Create Release Assets & Upload
+        run: python src/_build/main.py __ghactions --verbose --bundle --standalone --release --upload ${{secrets.GITHUB_TOKEN}} ${{needs.release.outputs.id}}
+  upload-posix-ext:
+    name: Upload POSIX Extension Release
+    needs: release
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Create Release Assets & Upload
+        run: python src/_build/main.py --verbose --extension --extension-only --release --upload ${{secrets.GITHUB_TOKEN}} ${{needs.release.outputs.id}}
+  upload-win-ext:
+    name: Upload Windows Extension Release
+    needs: release
+    runs-on: windows-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Create Release Assets & Upload
+        run: python src/_build/main.py __ghactions --verbose --extension --extension-only --release --upload ${{secrets.GITHUB_TOKEN}} ${{needs.release.outputs.id}}
