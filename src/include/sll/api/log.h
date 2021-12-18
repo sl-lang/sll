@@ -51,7 +51,7 @@ __API_FUNC_DECL(log_set_file);
 
 /**
  * \flags api func optimizable
- * \name sll_api_log_set_func
+ * \name sll_api_log_set_function
  * \group log-api
  * \desc Docs!
  * \arg S
@@ -59,7 +59,7 @@ __API_FUNC_DECL(log_set_file);
  * \arg B
  * \ret V
  */
-__API_FUNC_DECL(log_set_func);
+__API_FUNC_DECL(log_set_function);
 
 
 

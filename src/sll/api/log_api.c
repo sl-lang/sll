@@ -32,6 +32,6 @@ __API_FUNC(log_set_file){
 
 
 
-__API_FUNC(log_set_func){
+__API_FUNC(log_set_function){
 	sll_set_log_function(a->v,b->v,c);
 }

@@ -407,11 +407,11 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_log_set_func void
-#define __SLL_API_ARGS_sll_api_log_set_func const sll_string_t* a,const sll_string_t* b,const sll_bool_t c
+#define __SLL_API_TYPE_sll_api_log_set_function void
+#define __SLL_API_ARGS_sll_api_log_set_function const sll_string_t* a,const sll_string_t* b,const sll_bool_t c
 /**
  * \flags check_output func optimizable
- * \name sll_api_log_set_func
+ * \name sll_api_log_set_function
  * \group log-api
  * \desc Docs!
  * \arg const sll_string_t* a -> 
@@ -420,10 +420,10 @@
  */
 /**
  * \flags check_output func optimizable
- * \name sll_api_log_set_func_raw
+ * \name sll_api_log_set_function_raw
  * \group raw-api
  * \subgroup raw-api-log-api
- * \desc Wrapper function for :sll_api_log_set_func:
+ * \desc Wrapper function for :sll_api_log_set_function:
  * \arg const sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

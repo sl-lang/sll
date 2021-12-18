@@ -19,7 +19,7 @@
 - Library API: `sll_library_handle_t`, `sll_platform_load_library`, `sll_platform_lookup_function`, `sll_platform_unload_library` and `sll_api_sys_load_library` ([#123])
 - Logging API: `SLL_LOG`, `sll_log`, `sll_set_log_default`, `sll_set_log_file` and `sll_set_log_function` ([#126], [#128] and [#129])
 - Max internal function length: `SLL_INTERNAL_FUNCTION_MAX_LENGTH`
-- Sll logging API: `sll_api_log_log`, `sll_api_log_set_default`, `sll_api_log_set_file`, `sll_api_log_set_func`, `sll:log_log`, `sll:log_set_default`, `sll:log_set_file` and `sll:log_set_func` ([#126] and [#127])
+- Sll logging API: `sll_api_log_log`, `sll_api_log_set_default`, `sll_api_log_set_file`, `sll_api_log_set_function`, `sll:log_log`, `sll:log_set_default`, `sll:log_set_file` and `sll:log_set_function` ([#126] and [#127])
 - Sll version API: `sll_api_sys_get_version` and `sll:sys_get_version`
 - Website code in [`src/web`][main/src/web]
 

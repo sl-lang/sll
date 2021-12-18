@@ -296,8 +296,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_file_raw(const s
 
 
 
-__SLL_API_TYPE_sll_api_log_set_func sll_api_log_set_func(__SLL_API_ARGS_sll_api_log_set_func);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_func_raw(const sll_object_t*const* al,sll_arg_count_t all){
+__SLL_API_TYPE_sll_api_log_set_function sll_api_log_set_function(__SLL_API_ARGS_sll_api_log_set_function);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_function_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<3){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
@@ -313,7 +313,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_func_raw(const s
 	if (!(SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_api_log_set_func(&(a->dt.s),&(b->dt.s),!!(c->dt.i));
+	sll_api_log_set_function(&(a->dt.s),&(b->dt.s),!!(c->dt.i));
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
@@ -967,7 +967,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:log_log",sll_api_log_log_raw,0},
 	{"sll:log_set_default",sll_api_log_set_default_raw,0},
 	{"sll:log_set_file",sll_api_log_set_file_raw,0},
-	{"sll:log_set_func",sll_api_log_set_func_raw,0},
+	{"sll:log_set_function",sll_api_log_set_function_raw,0},
 	{"sll:path_absolute",sll_api_path_absolute_raw,0},
 	{"sll:path_exists",sll_api_path_exists_raw,0},
 	{"sll:path_get_cwd",sll_api_path_get_cwd_raw,0},
