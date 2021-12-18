@@ -465,6 +465,13 @@ typedef struct __FILE_LOG_DATA{
 
 
 
+typedef struct __LIBRARY{
+	const sll_string_t nm;
+	sll_library_handle_t h;
+} library_t;
+
+
+
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 

@@ -9,6 +9,10 @@
 - VM call stack is now part of the public API
 - VM now recives configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
 
+### Changed
+
+- Libraries are now loaded only once ([#135])
+
 ## [0.6.32] - 2021-12-18
 
 ### Added
@@ -1177,6 +1181,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#135]: https://github.com/sl-lang/sll/issues/135
 [#134]: https://github.com/sl-lang/sll/issues/134
 [#129]: https://github.com/sl-lang/sll/issues/129
 [#128]: https://github.com/sl-lang/sll/issues/128

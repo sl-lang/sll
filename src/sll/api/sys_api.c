@@ -20,7 +20,7 @@ static sll_integer_t _sys_argc=0;
 static sll_string_t* _sys_argv=NULL;
 static sll_string_t _sys_e=SLL_INIT_STRING_STRUCT;
 static sll_string_t _sys_p=SLL_INIT_STRING_STRUCT;
-static sll_library_handle_t* _sys_lh=NULL;
+static library_t** _sys_lh=NULL;
 static sll_array_length_t _sys_lhl=0;
 static char _sys_end=0;
 
@@ -45,11 +45,14 @@ static void _sys_free_data(void){
 	if (_sys_lhl){
 		while (_sys_lhl){
 			_sys_lhl--;
-			void* fn=sll_platform_lookup_function(*(_sys_lh+_sys_lhl),SLL_CHAR("__sll_unload"));
+			library_t* l=*(_sys_lh+_sys_lhl);
+			sll_free_string((sll_string_t*)&(l->nm));
+			void* fn=sll_platform_lookup_function(l->h,SLL_CHAR("__sll_unload"));
 			if (fn){
 				((void(*)(void))fn)();
 			}
-			sll_platform_unload_library(*(_sys_lh+_sys_lhl));
+			sll_platform_unload_library(l->h);
+			sll_deallocate(l);
 		}
 		sll_deallocate(_sys_lh);
 		_sys_lh=NULL;
@@ -149,22 +152,34 @@ __API_FUNC(sys_load_library){
 		return 0;
 	}
 	sll_char_t fp[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_path_absolute(a->v,fp,SLL_API_MAX_FILE_PATH_LENGTH);
+	sll_string_length_t fpl=sll_path_absolute(a->v,fp,SLL_API_MAX_FILE_PATH_LENGTH);
 	if (!sll_platform_path_exists(fp)){
 		return 0;
 	}
+	sll_string_t s;
+	sll_string_from_pointer_length(fp,fpl,&s);
+	for (sll_array_length_t i=0;i<_sys_lhl;i++){
+		if (sll_string_equal(&((*(_sys_lh+i))->nm),&s)){
+			return 1;
+		}
+	}
 	sll_library_handle_t h=sll_platform_load_library(fp);
 	if (h==SLL_UNKNOWN_LIBRARY_HANDLE){
+		sll_free_string(&s);
 		return 0;
 	}
 	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_load"));
 	if (!fn||!((sll_bool_t (*)(sll_version_t))fn)(SLL_VERSION)){
 		sll_platform_unload_library(h);
+		sll_free_string(&s);
 		return 0;
 	}
 	_sys_lhl++;
-	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(sll_library_handle_t));
-	*(_sys_lh+_sys_lhl-1)=h;
+	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(library_t*));
+	library_t* n=sll_allocate(sizeof(library_t));
+	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
+	n->h=h;
+	*(_sys_lh+_sys_lhl-1)=n;
 	if (!_sys_end){
 		sll_register_cleanup(_sys_free_data);
 		_sys_end=1;
