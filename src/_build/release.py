@@ -55,10 +55,10 @@ if (__name__=="__main__"):
 	util.log("Creating Release...")
 	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers={"accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1]},data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":f"v{v[0]}.{v[1]}.{v[2]}","prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
 	util.log("Uploading Assets...")
-	for fl,_,r in os.walk("assets"):
+	for r,_,fl in os.walk("assets"):
 		for fp in fl:
 			if (fp[-3:]==".dt"):
 				continue
+			util.log(f"  Uploading '{os.path.join(r,fp)}'...")
 			with open(os.path.join(r,fp),"rb") as f:
-				util.log(f"  Uploading '{os.path.join(r,fp)}'...")
 				requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={fp}",headers={"Accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1],"Content-Type":"application/octet-stream"},data=f.read())
