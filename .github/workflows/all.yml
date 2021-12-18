@@ -27,7 +27,7 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} ubuntu=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/posix windows=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/windows ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext web=.github/workflows/all.yml,src/_build,src/include/sll,src/web
+        run: python src/_build/diff.py ubuntu=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/posix windows=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/windows ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext web=.github/workflows/all.yml,src/_build,src/include/sll,src/web ${{secrets.GITHUB_TOKEN}}
   ubuntu:
     name: Ubuntu
     needs: diff

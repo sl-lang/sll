@@ -4,7 +4,7 @@ import sys
 
 
 
-GITHUB_HEADERS={"Authorization":f"token {sys.argv[1]}","Accept":"application/vnd.github.v3+json","User-Agent":"Sl-Lang Commit Diff"}
+GITHUB_HEADERS={"Authorization":f"token {sys.argv[-1]}","Accept":"application/vnd.github.v3+json","User-Agent":"Sl-Lang Commit Diff"}
 GITHUB_OWNER_NAME="krzem5"
 
 
@@ -62,7 +62,7 @@ if (os.getenv("GITHUB_EVENT_NAME","")=="workflow_dispatch" and os.getenv("GITHUB
 	sys.exit(1)
 o=""
 if (_force_all()):
-	for k in sys.argv[2:]:
+	for k in sys.argv[1:-1]:
 		k=k.split("=")[0]
 		print(f"Changes found for '{k}'")
 		if (len(o)!=0):
@@ -71,7 +71,7 @@ if (_force_all()):
 else:
 	t=_diff(os.environ["GITHUB_SHA"])
 	o=""
-	for k in sys.argv[2:]:
+	for k in sys.argv[1:-1]:
 		k=k.split("=")
 		v="0"
 		for e in k[1].split(","):
