@@ -112,8 +112,21 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_DECL:
+			{
+				_write_integer(wf,o->dt.d.ac);
+				_write_integer(wf,o->dt.d.nm);
+				sll_arg_count_t l=o->dt.d.ac;
+				o++;
+				while (l){
+					l--;
+					o=_write_object(wf,o);
+				}
+				return o;
+			}
 		case SLL_NODE_TYPE_DECL_COPY:
-			_write_integer(wf,o->dt.ot);
+			_write_integer(wf,o->dt.dc.t);
+			_write_integer(wf,o->dt.dc.nm);
 			return o+1;
 		case SLL_NODE_TYPE_DEBUG_DATA:
 			_write_integer(wf,o->dt.dbg.fpi);

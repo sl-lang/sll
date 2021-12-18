@@ -97,9 +97,16 @@ static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
 	sll_string_increase(o,3);
 	sll_copy_string(SLL_CHAR("<&:"),o->v+o->l);
 	o->l+=3;
-	_write_int(t,o);
-	sll_object_t tmp={1};
 	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
+	if (!dt->nm.l){
+		_write_int(t,o);
+	}
+	else{
+		sll_string_increase(o,dt->nm.l);
+		sll_copy_data(dt->nm.v,dt->nm.l,o->v+o->l);
+		o->l+=dt->nm.l;
+	}
+	sll_object_t tmp={1};
 	for (sll_arg_count_t i=0;i<dt->l;i++){
 		sll_string_t s=dt->dt[i].nm;
 		sll_string_increase(o,1);

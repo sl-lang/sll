@@ -615,23 +615,44 @@ _cleanup_jump_table:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 				{
 					si-=ai->dt.ac<<1;
-					sll_object_type_t nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac);
-					for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
-						SLL_RELEASE(*(s+si+i));
+					sll_object_type_t nt;
+					if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*(s+si-1))==SLL_OBJECT_TYPE_STRING);
+						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac,&((*(s+si-1))->dt.s));
+						SLL_RELEASE(*(s+si-1));
+						for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
+							SLL_RELEASE(*(s+si+i));
+						}
 					}
-					*(s+si)=SLL_FROM_INT(nt);
-					si++;
+					else{
+						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac,NULL);
+						for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
+							SLL_RELEASE(*(s+si+i));
+						}
+						si++;
+					}
+					*(s+si-1)=SLL_FROM_INT(nt);
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
 				{
-					*(s+si)=SLL_FROM_INT(sll_add_type(sll_current_runtime_data->tt,NULL,0));
+					if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+						SLL_UNIMPLEMENTED();
+					}
+					*(s+si)=SLL_FROM_INT(sll_add_type(sll_current_runtime_data->tt,NULL,0,NULL));
 					si++;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
 				{
-					*(s+si)=SLL_FROM_INT(sll_type_from_initializer(sll_current_runtime_data->tt,&(a_dt->st),*(a_dt->ot_it.dt+ai->dt.t)));
+					if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*(s+si-1))==SLL_OBJECT_TYPE_STRING);
+						sll_object_type_t t=sll_type_from_initializer(sll_current_runtime_data->tt,&(a_dt->st),*(a_dt->ot_it.dt+ai->dt.t),&((*(s+si-1))->dt.s));
+						SLL_RELEASE(*(s+si-1));
+						*(s+si-1)=SLL_FROM_INT(t);
+						break;
+					}
+					*(s+si)=SLL_FROM_INT(sll_type_from_initializer(sll_current_runtime_data->tt,&(a_dt->st),*(a_dt->ot_it.dt+ai->dt.t),NULL));
 					si++;
 					break;
 				}

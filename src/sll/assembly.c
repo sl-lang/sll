@@ -890,10 +890,17 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			}
 		case SLL_NODE_TYPE_DECL:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.d.ac;
+				sll_assembly_instruction_type_t fl=0;
+				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS;
+					ai->dt.t=o->dt.d.nm;
+					fl|=SLL_ASSEMBLY_INSTRUCTION_ANONYMOUS;
+				}
 				o++;
 				if (!l){
-					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO);
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO|fl);
 					return o;
 				}
 				sll_arg_count_t v=l;
@@ -911,15 +918,20 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 					o=_generate(o,g_dt);
 				}
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
-				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL;
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL|fl;
 				ai->dt.ac=v>>1;
 				return o;
 			}
 		case SLL_NODE_TYPE_DECL_COPY:
 			{
+				if (o->dt.dc.nm!=SLL_MAX_STRING_INDEX){
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS;
+					ai->dt.t=o->dt.dc.nm;
+				}
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
-				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY;
-				ai->dt.t=o->dt.ot;
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY|(o->dt.dc.nm==SLL_MAX_STRING_INDEX?0:SLL_ASSEMBLY_INSTRUCTION_ANONYMOUS);
+				ai->dt.t=o->dt.dc.t;
 				return o+1;
 			}
 		case SLL_NODE_TYPE_NEW:

@@ -5,6 +5,7 @@
 ### Added
 
 - All functions now store their names (used by `sll:log_log`)
+- Custom types are now named when created in assignments ([#136])
 - Implemented `sll_ext_api_debug_get_call_stack` and `sll_ext:debug_get_call_stack` ([#134])
 - VM call stack is now part of the public API
 - VM now recives configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
@@ -1181,6 +1182,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#136]: https://github.com/sl-lang/sll/issues/136
 [#135]: https://github.com/sl-lang/sll/issues/135
 [#134]: https://github.com/sl-lang/sll/issues/134
 [#129]: https://github.com/sl-lang/sll/issues/129

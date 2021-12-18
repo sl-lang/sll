@@ -295,6 +295,20 @@ typedef struct __SLL_LOOP_NODE_DATA{
 
 
 
+typedef struct __SLL_DECL_NODE_DATA{
+	sll_arg_count_t ac;
+	sll_string_index_t nm;
+} sll_decl_node_data_t;
+
+
+
+typedef struct __SLL_DECL_COPY_NODE_DATA{
+	sll_object_type_t t;
+	sll_string_index_t nm;
+} sll_decl_copy_node_data_t;
+
+
+
 typedef struct __SLL_DEBUG_NODE_DATA{
 	sll_string_index_t fpi;
 	sll_file_offset_t ln;
@@ -314,6 +328,8 @@ typedef union __SLL_NODE_DATA{
 	sll_identifier_index_t id;
 	sll_function_node_data_t fn;
 	sll_loop_node_data_t l;
+	sll_decl_node_data_t d;
+	sll_decl_copy_node_data_t dc;
 	sll_arg_count_t ac;
 	sll_debug_node_data_t dbg;
 	sll_function_index_t fn_id;
@@ -618,6 +634,7 @@ typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
 
 
 typedef struct __SLL_OBJECT_TYPE_DATA{
+	const sll_string_t nm;
 	sll_size_t sz;
 	sll_arg_count_t l;
 	sll_object_type_data_entry_t dt[];

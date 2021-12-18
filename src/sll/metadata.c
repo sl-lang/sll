@@ -19,7 +19,6 @@ static sll_node_t* _mark(sll_node_t* o,uint64_t* m){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
@@ -48,6 +47,24 @@ static sll_node_t* _mark(sll_node_t* o,uint64_t* m){
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_DECL:
+			{
+				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
+					*(m+(o->dt.d.nm>>6))|=1ull<<(o->dt.d.nm&63);
+				}
+				sll_arg_count_t l=o->dt.d.ac;
+				o++;
+				while (l){
+					l--;
+					o=_mark(o,m);
+				}
+				return o;
+			}
+		case SLL_NODE_TYPE_DECL_COPY:
+			if (o->dt.dc.nm!=SLL_MAX_STRING_INDEX){
+				*(m+(o->dt.dc.nm>>6))|=1ull<<(o->dt.dc.nm&63);
+			}
+			return o+1;
 		case SLL_NODE_TYPE_DEBUG_DATA:
 			*(m+(o->dt.dbg.fpi>>6))|=1ull<<(o->dt.dbg.fpi&63);
 			return _mark(o+1,m);
@@ -74,7 +91,6 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
@@ -103,6 +119,24 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_DECL:
+			{
+				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
+					o->dt.d.nm=*(sm+o->dt.d.nm);
+				}
+				sll_arg_count_t l=o->dt.d.ac;
+				o++;
+				while (l){
+					l--;
+					o=_update(o,sm);
+				}
+				return o;
+			}
+		case SLL_NODE_TYPE_DECL_COPY:
+			if (o->dt.dc.nm!=SLL_MAX_STRING_INDEX){
+				o->dt.dc.nm=*(sm+o->dt.dc.nm);
+			}
+			return o+1;
 		case SLL_NODE_TYPE_DEBUG_DATA:
 			o->dt.dbg.fpi=*(sm+o->dt.dbg.fpi);
 			return _update(o+1,sm);

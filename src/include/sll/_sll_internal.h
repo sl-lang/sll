@@ -235,7 +235,7 @@ typedef struct __EXTRA_COMPILATION_DATA{
 	sll_internal_function_table_t* i_ft;
 	sll_import_loader_t il;
 	new_variable_data_t* nv_dt;
-	sll_string_index_t f_nm;
+	sll_string_index_t a_nm;
 } extra_compilation_data_t;
 
 

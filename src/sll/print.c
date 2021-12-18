@@ -449,11 +449,31 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 			PRINT_STATIC_STRING(":?",wf);
 			break;
 		case SLL_NODE_TYPE_DECL:
-			PRINT_STATIC_STRING("&:",wf);
-			break;
+			{
+				PRINT_STATIC_STRING("&:",wf);
+				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
+					PRINT_STATIC_STRING("|#",wf);
+					sll_file_write(wf,(c_dt->st.dt+o->dt.d.nm)->v,(c_dt->st.dt+o->dt.d.nm)->l);
+					PRINT_STATIC_STRING("#|",wf);
+				}
+				sll_arg_count_t ac=o->dt.d.ac;
+				o++;
+				for (sll_arg_count_t i=0;i<ac;i++){
+					sll_file_write_char(wf,' ');
+					o=_print_node_internal(c_dt,i_ft,o,wf);
+				}
+				sll_file_write_char(wf,')');
+				return o;
+			}
 		case SLL_NODE_TYPE_DECL_COPY:
-			PRINT_STATIC_STRING("&: @",wf);
-			_print_int(o->dt.ot,wf);
+			PRINT_STATIC_STRING("&:",wf);
+			if (o->dt.dc.nm!=SLL_MAX_STRING_INDEX){
+				PRINT_STATIC_STRING("|#",wf);
+				sll_file_write(wf,(c_dt->st.dt+o->dt.dc.nm)->v,(c_dt->st.dt+o->dt.dc.nm)->l);
+				PRINT_STATIC_STRING("#|",wf);
+			}
+			PRINT_STATIC_STRING(" @",wf);
+			_print_int(o->dt.dc.t,wf);
 			sll_file_write_char(wf,')');
 			return o+1;
 		case SLL_NODE_TYPE_NEW:
@@ -962,9 +982,19 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 				PRINT_STATIC_STRING("DECL ",wf);
 				_print_int(ai->dt.ac,wf);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+					PRINT_STATIC_STRING(" (anonymous)",wf);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
 				PRINT_STATIC_STRING("DECL 0",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
+				PRINT_STATIC_STRING("DECL @",wf);
+				_print_int(ai->dt.t,wf);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+					PRINT_STATIC_STRING(" (anonymous)",wf);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
 				PRINT_STATIC_STRING("NEW ",wf);
@@ -972,10 +1002,6 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL:
 				PRINT_STATIC_STRING("DECL 0 & NEW 0",wf);
-				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
-				PRINT_STATIC_STRING("DECL @",wf);
-				_print_int(ai->dt.t,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				PRINT_STATIC_STRING("PRINT",wf);

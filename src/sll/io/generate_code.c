@@ -613,7 +613,12 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		case SLL_NODE_TYPE_DECL:
 			{
 				GENERATE_STATIC_STRING("&:",wf);
-				sll_arg_count_t l=o->dt.ac;
+				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
+					GENERATE_STATIC_STRING("|#",wf);
+					sll_file_write(wf,(cg_dt->c_dt->st.dt+o->dt.d.nm)->v,(cg_dt->c_dt->st.dt+o->dt.d.nm)->l);
+					GENERATE_STATIC_STRING("#|",wf);
+				}
+				sll_arg_count_t l=o->dt.d.ac;
 				o++;
 				if (!l){
 					sll_file_write_char(wf,')');
@@ -642,7 +647,12 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		case SLL_NODE_TYPE_DECL_COPY:
 			{
 				GENERATE_STATIC_STRING("&:",wf);
-				sll_object_type_initializer_t* oi=*(cg_dt->c_dt->ot_it.dt+o->dt.ot);
+				if (o->dt.dc.nm!=SLL_MAX_STRING_INDEX){
+					GENERATE_STATIC_STRING("|#",wf);
+					sll_file_write(wf,(cg_dt->c_dt->st.dt+o->dt.dc.nm)->v,(cg_dt->c_dt->st.dt+o->dt.dc.nm)->l);
+					GENERATE_STATIC_STRING("#|",wf);
+				}
+				sll_object_type_initializer_t* oi=*(cg_dt->c_dt->ot_it.dt+o->dt.dc.t);
 				SLL_ASSERT(oi->l);
 				sll_file_write_char(wf,'\n');
 				for (sll_arg_count_t i=0;i<oi->l;i++){

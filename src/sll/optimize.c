@@ -168,6 +168,16 @@ static sll_node_t* _remove_single_object(sll_node_t* o){
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_DECL:
+			{
+				sll_arg_count_t l=o->dt.d.ac;
+				o++;
+				while (l){
+					l--;
+					o=_remove_single_object(o);
+				}
+				return o;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;
@@ -281,6 +291,16 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
+				o++;
+				while (l){
+					l--;
+					o=_map_identifiers(o,c_dt,im);
+				}
+				return o;
+			}
+		case SLL_NODE_TYPE_DECL:
+			{
+				sll_arg_count_t l=o->dt.d.ac;
 				o++;
 				while (l){
 					l--;
@@ -669,6 +689,16 @@ static const sll_node_t* _mark_loop_vars(const sll_node_t* o,optimizer_data_t* o
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_DECL:
+			{
+				sll_arg_count_t l=o->dt.d.ac;
+				o++;
+				while (l){
+					l--;
+					o=_mark_loop_vars(o,o_dt);
+				}
+				return o;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;
@@ -840,7 +870,6 @@ static sll_node_t* _check_remove(sll_node_t* o,sll_node_t* p,optimizer_data_t* o
 		case SLL_NODE_TYPE_STRICT_NOT_EQUAL:
 		case SLL_NODE_TYPE_CAST:
 		case SLL_NODE_TYPE_TYPEOF:
-		case SLL_NODE_TYPE_DECL:
 		case SLL_NODE_TYPE_NEW:
 			{
 				o->t=SLL_NODE_TYPE_NOP;
@@ -877,6 +906,18 @@ static sll_node_t* _check_remove(sll_node_t* o,sll_node_t* p,optimizer_data_t* o
 				SLL_RELEASE(rt);
 				for (sll_arg_count_t i=1;i<l;i++){
 					o=sll_skip_node(o);
+				}
+				return o;
+			}
+		case SLL_NODE_TYPE_DECL:
+			{
+				o->t=SLL_NODE_TYPE_NOP;
+				sll_arg_count_t l=o->dt.d.ac;
+				INCREASE_PARENT(p,l-1);
+				o++;
+				while (l){
+					l--;
+					o=_check_remove(o,p,o_dt);
 				}
 				return o;
 			}
@@ -2131,7 +2172,8 @@ _unknown_cast:
 				r->t=SLL_NODE_TYPE_COMMA;
 				_shift_nodes(o,o_dt->c_dt,1);
 				o->t=SLL_NODE_TYPE_DECL_COPY;
-				o->dt.ot=sll_add_initializer(&(o_dt->c_dt->ot_it),(const sll_object_type_field_t*)a,r->dt.ac>>1);
+				o->dt.dc.t=sll_add_initializer(&(o_dt->c_dt->ot_it),(const sll_object_type_field_t*)a,r->dt.ac>>1);
+				o->dt.dc.nm=r->dt.d.nm;
 				r->dt.ac++;
 				sll_deallocate(a);
 				o=r;
@@ -2471,6 +2513,17 @@ static sll_node_t* _remap_indexes_merge_print(sll_node_t* o,sll_node_t* p,optimi
 		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
+				sll_node_t* r=o;
+				o++;
+				while (l){
+					l--;
+					o=_remap_indexes_merge_print(o,r,o_dt,fn_m);
+				}
+				return o;
+			}
+		case SLL_NODE_TYPE_DECL:
+			{
+				sll_arg_count_t l=o->dt.d.ac;
 				sll_node_t* r=o;
 				o++;
 				while (l){

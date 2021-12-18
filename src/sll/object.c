@@ -239,11 +239,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_initializer(sll_obje
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* tt,const sll_object_t*const* p,sll_arg_count_t l){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* tt,const sll_object_t*const* p,sll_arg_count_t l,const sll_string_t* nm){
 	tt->l++;
 	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
 	tt->dt=sll_reallocate((void*)(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
+	if (nm){
+		sll_string_clone(nm,(sll_string_t*)(&(n->nm)));
+	}
+	else{
+		SLL_INIT_STRING((sll_string_t*)(&(n->nm)));
+	}
 	n->sz=0;
 	n->l=l;
 	for (sll_arg_count_t i=0;i<l;i++){
@@ -308,6 +314,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
 	tt->dt=sll_reallocate((void*)(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t));
+	SLL_INIT_STRING((sll_string_t*)(&(n->nm)));
 	n->sz=0;
 	n->l=0;
 	*(tt->dt+tt->l-1)=n;
@@ -407,6 +414,7 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt){
 	if (tt->l){
 		for (sll_object_type_t i=0;i<tt->l;i++){
 			const sll_object_type_data_t* k=*(tt->dt+i);
+			sll_free_string((sll_string_t*)(&(k->nm)));
 			for (sll_arg_count_t j=0;j<k->l;j++){
 				sll_free_string((sll_string_t*)(&(k->dt[j].nm)));
 			}
@@ -505,11 +513,17 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sll_object_type_table_t* tt,const sll_string_table_t* st,const sll_object_type_initializer_t* oi){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sll_object_type_table_t* tt,const sll_string_table_t* st,const sll_object_type_initializer_t* oi,const sll_string_t* nm){
 	tt->l++;
 	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
 	tt->dt=sll_reallocate((void*)(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+oi->l*sizeof(sll_object_type_data_entry_t));
+	if (nm){
+		sll_string_clone(nm,(sll_string_t*)(&(n->nm)));
+	}
+	else{
+		SLL_INIT_STRING((sll_string_t*)(&(n->nm)));
+	}
 	n->sz=0;
 	n->l=oi->l;
 	for (sll_arg_count_t i=0;i<n->l;i++){
