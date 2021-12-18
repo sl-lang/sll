@@ -52,10 +52,7 @@ if ("--extension" in sys.argv):
 	build.build_sll_extension(fl,ver,("--release" in sys.argv))
 	if ("--extension-only" in sys.argv):
 		if ("--upload" in sys.argv):
-			import release
-			nm=f"sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so")
-			util.log(f"Uploading '{nm}'...")
-			release.upload_asset(f"build/{nm}",nm,sys.argv[-2],sys.argv[-1])
+			os.rename(f"build/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),("win-ext.dll" if os.name=="nt" else "posix-ext.so"))
 		sys.exit(0)
 util.log("Copying Modules...")
 for f in os.listdir("src/sll/lib"):
@@ -96,17 +93,12 @@ if ("--bundle" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
 if ("--upload" in sys.argv):
-	import release
 	if (os.name=="nt"):
-		util.log("Uploading 'win.zip'...")
-		release.upload_asset("build/sll.zip","win.zip",sys.argv[-2],sys.argv[-1])
-		util.log("Uploading 'win_standalone.exe'...")
-		release.upload_asset("build/sll_standalone.exe","win_standalone.exe",sys.argv[-2],sys.argv[-1])
+		os.rename("build/sll.zip","win.zip")
+		os.rename("build/sll_standalone.exe","win_standalone.exe")
 	else:
-		util.log("Uploading 'posix.zip'...")
-		release.upload_asset("build/sll.zip","posix.zip",sys.argv[-2],sys.argv[-1])
-		util.log("Uploading 'posix_standalone'...")
-		release.upload_asset("build/sll_standalone","posix_standalone",sys.argv[-2],sys.argv[-1])
+		os.rename("build/sll.zip","posix.zip")
+		os.rename("build/sll_standalone","posix_standalone")
 if ("--test" in sys.argv):
 	util.log("Generating Test Executable...")
 	build.build_sll_test(("--release" in sys.argv))

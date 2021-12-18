@@ -17,21 +17,17 @@ ISSUE_REGEX=re.compile(r"\[#([0-9]+)\]")
 
 
 
-def upload_asset(fp,nm,t,r_id):
-	with open(fp,"rb") as rf:
-		requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={nm}",headers={"Accept":"application/vnd.github.v3+json","Authorization":f"token {t}","Content-Type":"application/octet-stream"},data=rf.read())
-
-
-
 if (__name__=="__main__"):
 	util.create_output_dir()
 	v=header.read_version("src/include/sll/version.h")
+	util.log("Generating Release Changelog...")
 	with open("CHANGELOG.md","r") as f:
 		dt=f.read().replace("\r\n","\n")
 		s=dt.index("\n",dt.index("\n## ")+1)+1
 		dt=FILE_PATH_MAIN_REGEX.sub(fr"[\1][{v[0]}.{v[1]}.{v[2]}\2]",dt[s:dt.index("\n## ",s+1)])
 		now=datetime.datetime.now()
 		desc=f"# Sll [{v[0]}.{v[1]}.{v[2]}] - {now.year}-{now.month:02}-{now.day:02}\n\n"+HEADING_REGEX.sub(r"\n\1 ",dt).strip()+f"\n\n[{v[0]}.{v[1]}.{v[2]}]: https://github.com/sl-lang/sll/compare/v{v[0]}.{v[1]}.{v[2]-1}...v{v[0]}.{v[1]}.{v[2]}\n"
+		util.log("  Generating Links...")
 		for e in sorted(list(dict.fromkeys(map(int,ISSUE_REGEX.findall(dt)))),reverse=True):
 			desc+=f"[#{e}]: https://github.com/sl-lang/sll/issues/{e}\n"
 		l={}
@@ -45,6 +41,7 @@ if (__name__=="__main__"):
 			ts=".".join(map(str,t))
 			for p in sorted(pl):
 				desc+=f"[{ts}{p}]: https://github.com/sl-lang/sll/blob/v{ts}{p}\n"
+	util.log("Creating Git Tags...")
 	cwd=os.getcwd()
 	os.chdir("build")
 	subprocess.run(["git","clone","https://github.com/sl-lang/sll.git"])
@@ -55,5 +52,10 @@ if (__name__=="__main__"):
 	subprocess.run(["git","push","origin",f"v{v[0]}.{v[1]}.{v[2]}"])
 	subprocess.run(["git","push","origin","--tags"])
 	os.chdir(cwd)
-	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers={"accept":"application/vnd.github.v3+json","Authorization":f"token {sys.argv[-1]}"},data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":f"v{v[0]}.{v[1]}.{v[2]}","prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
-	sys.stdout.write(f"::set-output name=id::{r_id}\n")
+	util.log("Creating Release...")
+	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers={"accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1]},data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":f"v{v[0]}.{v[1]}.{v[2]}","prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
+	util.log("Uploading Assets...")
+	for k in os.listdir("assets"):
+		with open("assets/"+k,"rb") as f:
+			util.log(f"  Uploading 'assets/{k}'...")
+			requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={k}",headers={"Accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1],"Content-Type":"application/octet-stream"},data=f.read())
