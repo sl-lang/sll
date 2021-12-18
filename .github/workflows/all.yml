@@ -238,7 +238,14 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only --release
+        run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --upload'||''}}
+      - name: Store Asset
+        uses: actions/upload-artifact@v2
+        if: github.event_name=='workflow_dispatch'
+        with:
+          name: release-posix-ext
+          path: posix-ext.so
+          retention-days: 1
   windows-ext:
     name: Windows Extension
     needs:
@@ -272,7 +279,14 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only --release
+        run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --upload'||''}}
+      - name: Store Asset
+        uses: actions/upload-artifact@v2
+        if: github.event_name=='workflow_dispatch'
+        with:
+          name: release-win-ext
+          path: win-ext.dll
+          retention-days: 1
   codeql:
     name: CodeQL
     needs:
@@ -360,57 +374,14 @@ jobs:
             win.zip
             win_standalone
           retention-days: 1
-  release-posix-ext:
-    name: Create POSIX Extension Release
-    needs: ubuntu-ext-release
-    if: github.event_name=='workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Set-Up Requests
-        run: pip install requests
-      - name: Create Release Asset
-        run: python src/_build/main.py --verbose --extension --extension-only --release --upload
-      - name: Store Asset
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-posix-ext
-          path: posix-ext.so
-          retention-days: 1
-  release-win-ext:
-    name: Create Windows Extension Release
-    needs: windows-ext-release
-    if: github.event_name=='workflow_dispatch'
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Set-Up Requests
-        run: pip install requests
-      - name: Create Release Asset
-        run: python src/_build/main.py --verbose --extension --extension-only --release --upload
-      - name: Store Asset
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-win-ext
-          path: win-ext.dll
-          retention-days: 1
   release:
     name: Create Release
     needs:
       - release-posix
       - release-win
-      - release-posix-ext
-      - release-win-ext
+      - ubuntu-ext-release
+      - windows-ext-release
+    if: github.event_name=='workflow_dispatch'
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
