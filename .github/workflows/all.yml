@@ -89,9 +89,18 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --standalone --release
+        run: ${{env.BUILD_COMMAND}} --standalone --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
       - name: Test
         run: build/run_tests
+      - name: Store Assets
+        uses: actions/upload-artifact@v2
+        if: github.event_name=='workflow_dispatch'
+        with:
+          name: release-posix
+          path: |
+            posix.zip
+            posix_standalone
+          retention-days: 1
   windows:
     name: Windows
     needs: diff
@@ -153,9 +162,18 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --standalone --release
+        run: ${{env.BUILD_COMMAND}} --standalone --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
       - name: Test
         run: build/run_tests
+      - name: Store Assets
+        uses: actions/upload-artifact@v2
+        if: github.event_name=='workflow_dispatch'
+        with:
+          name: release-win
+          path: |
+            win.zip
+            win_standalone.exe
+          retention-days: 1
   web:
     name: Website
     needs:
@@ -322,63 +340,11 @@ jobs:
         run: ${{env.BUILD_COMMAND}}
       - name: Analyze
         uses: github/codeql-action/analyze@v1
-  release-posix:
-    name: Create POSIX Release
-    needs:
-      - ubuntu-release
-      - ubuntu-standalone-release
-    if: github.event_name=='workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Set-Up Requests
-        run: pip install requests
-      - name: Create Release Assets
-        run: python src/_build/main.py --verbose --bundle --standalone --release --upload
-      - name: Store Assets
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-posix
-          path: |
-            posix.zip
-            posix_standalone
-          retention-days: 1
-  release-win:
-    name: Create Windows Release
-    needs:
-      - windows-release
-      - windows-standalone-release
-    if: github.event_name=='workflow_dispatch'
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Set-Up Requests
-        run: pip install requests
-      - name: Create Release Assets
-        run: python src/_build/main.py --verbose --bundle --standalone --release --upload
-      - name: Store Assets
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-win
-          path: |
-            win.zip
-            win_standalone
-          retention-days: 1
   release:
     name: Create Release
     needs:
-      - release-posix
-      - release-win
+      - ubuntu-standalone-release
+      - windows-standalone-release
       - ubuntu-ext-release
       - windows-ext-release
     if: github.event_name=='workflow_dispatch'

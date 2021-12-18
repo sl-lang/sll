@@ -41,24 +41,24 @@ if (__name__=="__main__"):
 			ts=".".join(map(str,t))
 			for p in sorted(pl):
 				desc+=f"[{ts}{p}]: https://github.com/sl-lang/sll/blob/v{ts}{p}\n"
-	util.log("Creating Git Tags...")
-	cwd=os.getcwd()
-	os.chdir("build")
-	subprocess.run(["git","clone","https://github.com/sl-lang/sll.git"])
-	os.chdir("sll")
-	subprocess.run(["git","remote","set-url","origin",f"https://krzem5:{sys.argv[-1]}@github.com/sl-lang/sll.git"])
-	subprocess.run(["git","checkout","-b",f"v{v[0]}.{v[1]}.{v[2]}","main"])
-	subprocess.run(["git","tag",f"sll-v{v[0]}.{v[1]}.{v[2]}"])
-	subprocess.run(["git","push","origin",f"v{v[0]}.{v[1]}.{v[2]}"])
-	subprocess.run(["git","push","origin","--tags"])
-	os.chdir(cwd)
-	util.log("Creating Release...")
-	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers={"accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1]},data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":f"v{v[0]}.{v[1]}.{v[2]}","prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
+	# util.log("Creating Git Tags...")
+	# cwd=os.getcwd()
+	# os.chdir("build")
+	# subprocess.run(["git","clone","https://github.com/sl-lang/sll.git"])
+	# os.chdir("sll")
+	# subprocess.run(["git","remote","set-url","origin",f"https://krzem5:{sys.argv[-1]}@github.com/sl-lang/sll.git"])
+	# subprocess.run(["git","checkout","-b",f"v{v[0]}.{v[1]}.{v[2]}","main"])
+	# subprocess.run(["git","tag",f"sll-v{v[0]}.{v[1]}.{v[2]}"])
+	# subprocess.run(["git","push","origin",f"v{v[0]}.{v[1]}.{v[2]}"])
+	# subprocess.run(["git","push","origin","--tags"])
+	# os.chdir(cwd)
+	# util.log("Creating Release...")
+	# r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers={"accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1]},data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":f"v{v[0]}.{v[1]}.{v[2]}","prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
 	util.log("Uploading Assets...")
 	for r,_,fl in os.walk("assets"):
 		for fp in fl:
 			if (fp[-3:]==".dt"):
 				continue
 			util.log(f"  Uploading '{os.path.join(r,fp)}'...")
-			with open(os.path.join(r,fp),"rb") as f:
-				requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={fp}",headers={"Accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1],"Content-Type":"application/octet-stream"},data=f.read())
+			# with open(os.path.join(r,fp),"rb") as f:
+			# 	requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={fp}",headers={"Accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1],"Content-Type":"application/octet-stream"},data=f.read())
