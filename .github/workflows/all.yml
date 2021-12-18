@@ -181,7 +181,7 @@ jobs:
       - name: Store Generated Website
         uses: actions/upload-artifact@v2
         with:
-          name: web-bundle.dt
+          name: web-bundle
           path: web-bundle.dt
   web-upload:
     name: Website Upload
@@ -200,8 +200,7 @@ jobs:
       - name: Load Generated Website
         uses: actions/download-artifact@v2
         with:
-          name: web-bundle.dt
-          path: web-bundle.dt
+          name: web-bundle
       - name: Upload
         run: python src/_build/website.py --verbose ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_NAMESPACE_ID}} ${{secrets.CLOUDFLARE_TOKEN}}
   ubuntu-ext:
