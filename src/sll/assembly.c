@@ -101,10 +101,10 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 					sll_identifier_t* id=c_dt->idt.il+i;
 					if (g_dt->it.l_sc!=id->sc){
 						*(g_dt->it.sc_vi+g_dt->it.l_sc)=g_dt->it.n_vi;
-						g_dt->it.l_sc=id->sc;
-						if (*(g_dt->it.sc_vi+g_dt->it.l_sc)!=SLL_MAX_SCOPE){
-							g_dt->it.n_vi=*(g_dt->it.sc_vi+g_dt->it.l_sc);
+						if (g_dt->it.l_sc>id->sc&&*(g_dt->it.sc_vi+id->sc)!=SLL_MAX_SCOPE){
+							g_dt->it.n_vi=*(g_dt->it.sc_vi+id->sc);
 						}
+						g_dt->it.l_sc=id->sc;
 					}
 					if (*(g_dt->rm.l+i)!=VARIABLE_OFFSET_NEVER_DELETE){
 						if (fn_sc==SLL_MAX_SCOPE||id->sc>=fn_sc){
@@ -126,10 +126,10 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 					sll_identifier_t* id=c_dt->idt.s[j].dt+i;
 					if (g_dt->it.l_sc!=id->sc){
 						*(g_dt->it.sc_vi+g_dt->it.l_sc)=g_dt->it.n_vi;
-						g_dt->it.l_sc=id->sc;
-						if (*(g_dt->it.sc_vi+g_dt->it.l_sc)!=SLL_MAX_SCOPE){
-							g_dt->it.n_vi=*(g_dt->it.sc_vi+g_dt->it.l_sc);
+						if (g_dt->it.l_sc>id->sc&&*(g_dt->it.sc_vi+id->sc)!=SLL_MAX_SCOPE){
+							g_dt->it.n_vi=*(g_dt->it.sc_vi+id->sc);
 						}
+						g_dt->it.l_sc=id->sc;
 					}
 					if (*(g_dt->rm.s[j]+i)!=VARIABLE_OFFSET_NEVER_DELETE){
 						if (fn_sc==SLL_MAX_SCOPE||id->sc>=fn_sc){

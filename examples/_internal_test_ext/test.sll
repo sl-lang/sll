@@ -1,15 +1,8 @@
-(# sys path log)
-(--- "sys.sll" "path.sll" "log.sll")
+(# debug)
+(--- "debug.sll")
 
-(<- log$set_default 0)
-(<- log$set_file "main.c" 0)
-(<- log$set_function "main.c" "_external_func" 1)
-
-(= fp (<- path$absolute (+ "build" path$separator "sll-ext-" sys$version$major "." sys$version$minor "." sys$version$patch "." sys$library_extension)))
-(:> "Extension library: " fp "\n")
-(? (! (<- sys$load_library fp)) {
-	(:> "Failed to load library!\n")
-	(@@@ 1)
-})
-(:> "Extension library successfully loaded!\n")
-(<- (... "sll_ext:test_func"))
+(:> (<- debug$get_call_stack) "\n")
+(= test_func (,,, (:> (<- debug$get_call_stack) "\n")))
+(<- test_func)
+(<- (,,, (:> (<- debug$get_call_stack) "\n")))
+(<- (,,, (<- test_func)))

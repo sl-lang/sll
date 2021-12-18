@@ -45,15 +45,6 @@ if ("--extension-only" not in sys.argv):
 	util.log("Compiling Sll CLI...")
 	header.generate_help("rsrc/help.txt","build/help_text.h")
 	build.build_sll_cli(ver,("--release" in sys.argv))
-if ("--extension" in sys.argv):
-	util.log("Listing Source Code Files (Extension)...")
-	fl=util.get_sll_ext_files()
-	util.log("Compiling Sll Extension...")
-	build.build_sll_extension(fl,ver,("--release" in sys.argv))
-	if ("--extension-only" in sys.argv):
-		if ("--upload" in sys.argv):
-			os.rename(f"build/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),("win-ext.dll" if os.name=="nt" else "posix-ext.so"))
-		sys.exit(0)
 util.log("Copying Modules...")
 for f in os.listdir("src/sll/lib"):
 	util.log(f"  Copying Module 'src/sll/lib/{f}'...")
@@ -66,7 +57,29 @@ if (util.wrap_output(["build/sll","-C","-c",("-O3" if "--release" in sys.argv el
 util.log("Removing Module Source Files...")
 for k in fl:
 	util.log(f"  Removing 'build/lib/{k}'...")
-	os.remove(f"build/lib/{k}")
+	os.remove("build/lib/"+k)
+if ("--extension" in sys.argv):
+	util.log("Listing Source Code Files (Extension)...")
+	fl=util.get_sll_ext_files()
+	util.log("Compiling Sll Extension...")
+	build.build_sll_extension(fl,ver,("--release" in sys.argv))
+	util.log("Copying Extension Modules...")
+	for f in os.listdir("src/sll_ext/lib"):
+		util.log(f"  Copying Extension Module 'src/sll_ext/lib/{f}'...")
+		with open(f"src/sll_ext/lib/{f}","rb") as rf,open(f"build/lib_ext/{f}","wb") as wf:
+			wf.write(rf.read())
+	util.log("Compiling Extension Modules...")
+	fl=list(os.listdir("build/lib_ext"))
+	if (util.wrap_output(["build/sll","-C","-c",("-O3" if "--release" in sys.argv else "-O1"),"-e","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else []),pfx=b"  ").returncode!=0):
+		sys.exit(1)
+	util.log("Removing Extension Module Source Files...")
+	for k in fl:
+		util.log(f"  Removing 'build/lib_ext/{k}'...")
+		os.remove("build/lib_ext/"+k)
+	if ("--extension-only" in sys.argv):
+		if ("--upload" in sys.argv):
+			os.rename(f"build/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),("win-ext.dll" if os.name=="nt" else "posix-ext.so"))
+		sys.exit(0)
 if ("--standalone" in sys.argv):
 	util.log(f"Converting Modules to Header File ({len(fl)} Modules)...")
 	with open("build/compiled_modules.h","wb") as f:
@@ -110,6 +123,6 @@ if ("--run" in sys.argv):
 	util.log("Running 'examples/_internal_test/test.sll'...")
 	e_nm=("build/sll_standalone" if "--standalone" in sys.argv else "build/sll")
 	subprocess.run([e_nm,"-h","-C"])
-	a=(["examples/_internal_test_ext/test.sll"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
+	a=(["examples/_internal_test_ext/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	if (subprocess.run([e_nm,"-c","-C","-v","-O0","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run([e_nm,"-C","-v","-O3","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-C","-v","-O0","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-C","-v","-P"]).returncode!=0):
 		sys.exit(1)

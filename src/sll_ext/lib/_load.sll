@@ -1,0 +1,3 @@
+(# sys path)
+(--- "sys.sll" "path.sll")
+(? (! (<- sys$load_library (<- path$absolute (+ "build" path$separator "sll-ext-" sys$version$major "." sys$version$minor "." sys$version$patch "." sys$library_extension)))) (@@@ 1))

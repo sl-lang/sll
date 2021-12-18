@@ -6,7 +6,7 @@ import zipfile
 
 
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-BUILD_PATHS=["build/lib","build/objects","build/objects_ext","build/web","build/web/css"]
+BUILD_PATHS=["build/lib","build/lib_ext","build/objects","build/objects_ext","build/web","build/web/css"]
 EXT_PLATFORM_SOURCE_CODE={"posix":"src/sll_ext/platform/posix","nt":"src/sll_ext/platform/windows"}
 PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix","nt":"src/sll/platform/windows"}
 

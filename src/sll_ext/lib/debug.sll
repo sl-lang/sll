@@ -1,0 +1,16 @@
+(# func_type string_type)
+(--- "_load.sll" "types.sll")
+
+(= call_stack_type (&:
+	(~ string_type) name
+))
+
+(<- (... "sll_ext:debug_set_type") call_stack_type)
+
+(= get_call_stack (... "sll_ext:debug_get_call_stack"))
+
+(= debug (. (&:
+	(~ int_type) call_stack_type
+	(~ func_type) get_call_stack
+) call_stack_type get_call_stack))
+(## debug)
