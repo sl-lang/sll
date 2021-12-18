@@ -26,11 +26,11 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} sll-build-ubuntu=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/posix sll-build-windows=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/windows sll-build-ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext cf-pages=.github/workflows/all.yml,src/_build,src/include/sll,src/web
+        run: python src/_build/diff.py ${{secrets.GITHUB_TOKEN}} build-ubuntu=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/posix build-windows=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/windows build-ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext build-web=.github/workflows/all.yml,src/_build,src/include/sll,src/web
   ubuntu:
     name: Ubuntu
     needs: diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-ubuntu
+    if: fromJSON(needs.diff.outputs.data).build-ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -46,7 +46,7 @@ jobs:
   ubuntu-release:
     name: Ubuntu Release
     needs: diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-ubuntu
+    if: fromJSON(needs.diff.outputs.data).build-ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -62,7 +62,7 @@ jobs:
   ubuntu-standalone:
     name: Ubuntu Standalone
     needs: diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-ubuntu
+    if: fromJSON(needs.diff.outputs.data).build-ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -78,7 +78,7 @@ jobs:
   ubuntu-standalone-release:
     name: Ubuntu Standalone Release
     needs: diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-ubuntu
+    if: fromJSON(needs.diff.outputs.data).build-ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -94,7 +94,7 @@ jobs:
   windows:
     name: Windows
     needs: diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-windows
+    if: fromJSON(needs.diff.outputs.data).build-windows
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -110,7 +110,7 @@ jobs:
   windows-release:
     name: Windows Release
     needs: diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-windows
+    if: fromJSON(needs.diff.outputs.data).build-windows
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -126,7 +126,7 @@ jobs:
   windows-standalone:
     name: Windows Standalone
     needs: diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-windows
+    if: fromJSON(needs.diff.outputs.data).build-windows
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -142,7 +142,7 @@ jobs:
   windows-standalone-release:
     name: Windows Standalone Release
     needs: diff
-    if: fromJSON(needs.diff.outputs.data).sll-build-windows
+    if: fromJSON(needs.diff.outputs.data).build-windows
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -155,8 +155,8 @@ jobs:
         run: ${{env.BUILD_COMMAND}} --standalone --release
       - name: Test
         run: build/run_tests
-  cloudflare:
-    name: Cloudflare Deployment
+  web:
+    name: Website
     needs:
       - diff
       - ubuntu
@@ -167,18 +167,48 @@ jobs:
       - windows-release
       - windows-standalone
       - windows-standalone-release
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).cf-pages&&github.event_name=='push'
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).build-web&&github.event_name=='push'
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Deployment
-        run: curl -X POST "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/${{secrets.CLOUDFLARE_TRIGGER_KEY}}" &> /dev/null
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: python src/_build/main.py --verbose --web
+      - name: Store Generated Website
+        uses: actions/upload-artifact@v2
+        with:
+          name: web-bundle.dt
+          path: web-bundle.dt
+  web-upload:
+    name: Website Upload
+    needs:
+      - web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Load Generated Website
+        uses: actions/download-artifact@v2
+        with:
+          name: web-bundle.dt
+          path: web-bundle.dt
+      - name: Upload
+        run: python src/_build/website.py --verbose ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_NAMESPACE_ID}} ${{secrets.CLOUDFLARE_TOKEN}}
   ubuntu-ext:
     name: Ubuntu Extension
     needs:
       - diff
       - ubuntu
       - ubuntu-standalone
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).build-ext
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -195,7 +225,7 @@ jobs:
       - diff
       - ubuntu-release
       - ubuntu-standalone-release
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).build-ext
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -212,7 +242,7 @@ jobs:
       - diff
       - windows
       - windows-standalone
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).build-ext
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -229,7 +259,7 @@ jobs:
       - diff
       - windows-release
       - windows-standalone-release
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).sll-build-ext
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).build-ext
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -256,7 +286,7 @@ jobs:
       - ubuntu-ext-release
       - windows-ext
       - windows-ext-release
-    if: always()&&!contains(needs.*.result,'failed')&&(fromJSON(needs.diff.outputs.data).sll-build-ubuntu||fromJSON(needs.diff.outputs.data).sll-build-windows||fromJSON(needs.diff.outputs.data).sll-build-ext)
+    if: always()&&!contains(needs.*.result,'failed')&&(fromJSON(needs.diff.outputs.data).build-ubuntu||fromJSON(needs.diff.outputs.data).build-windows||fromJSON(needs.diff.outputs.data).build-ext)
     runs-on: ubuntu-latest
     permissions:
       security-events: write

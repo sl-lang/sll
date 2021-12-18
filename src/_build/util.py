@@ -5,9 +5,10 @@ import zipfile
 
 
 
+BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 BUILD_PATHS=["build/lib","build/objects","build/objects_ext","build/web","build/web/css"]
-PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix","nt":"src/sll/platform/windows"}
 EXT_PLATFORM_SOURCE_CODE={"posix":"src/sll_ext/platform/posix","nt":"src/sll_ext/platform/windows"}
+PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix","nt":"src/sll/platform/windows"}
 
 
 
@@ -116,3 +117,19 @@ def bundle(v):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			zf.write("build/lib/"+k,arcname="lib/"+k)
+
+
+
+def encode(dt):
+	if (len(dt)==0):
+		return ""
+	o=""
+	i=0
+	while (i<len(dt)-2):
+		o+=BASE64_ALPHABET[dt[i]>>2]+BASE64_ALPHABET[((dt[i]<<4)&0x3f)|(dt[i+1]>>4)]+BASE64_ALPHABET[((dt[i+1]<<2)&0x3f)|(dt[i+2]>>6)]+BASE64_ALPHABET[dt[i+2]&0x3f]
+		i+=3
+	if (i==len(dt)-2):
+		return o+BASE64_ALPHABET[dt[i]>>2]+BASE64_ALPHABET[((dt[i]<<4)&0x3f)|(dt[i+1]>>4)]+BASE64_ALPHABET[(dt[i+1]<<2)&0x3f]+"="
+	if (i==len(dt)-1):
+		return o+BASE64_ALPHABET[dt[i]>>2]+BASE64_ALPHABET[(dt[i]<<4)&0x3f]+"=="
+	return o

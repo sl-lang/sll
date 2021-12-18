@@ -75,4 +75,4 @@ else:
 		if (len(o)!=0):
 			o+=","
 		o+=f"\"{k[0]}\":{v}"
-sys.stdout.write(f"::set-output name=table::{{{o}}}\n")
+sys.stdout.write(f"::set-output name=table::{{{o}}}")
