@@ -311,17 +311,11 @@ jobs:
   release:
     name: Create Release
     needs:
-      - ubuntu
       - ubuntu-release
-      - ubuntu-standalone
       - ubuntu-standalone-release
-      - windows
       - windows-release
-      - windows-standalone
       - windows-standalone-release
-      - ubuntu-ext
       - ubuntu-ext-release
-      - windows-ext
       - windows-ext-release
     if: github.event_name=='workflow_dispatch'
     runs-on: ubuntu-latest
