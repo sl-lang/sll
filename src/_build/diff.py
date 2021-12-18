@@ -58,7 +58,7 @@ def _diff(sha):
 
 
 
-if (os.getenv("GITHUB_EVENT_NAME","")=="workflow_dispatch" and os.getenv("GITHUB_EVENT_NAME","").lower()!=GITHUB_OWNER_NAME):
+if (os.getenv("GITHUB_EVENT_NAME","")=="workflow_dispatch" and os.getenv("GITHUB_ACTOR","").lower()!=GITHUB_OWNER_NAME):
 	sys.exit(1)
 o=""
 if (_force_all()):
