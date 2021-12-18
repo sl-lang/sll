@@ -364,4 +364,4 @@ jobs:
         with:
           path: assets
       - name: Create Release
-        run: python src/_build/release.py ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/release.py --verbose ${{secrets.GITHUB_TOKEN}}
