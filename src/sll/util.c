@@ -227,6 +227,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 	}
 	_gc_release_data();
 	_file_release_std_streams();
+	_log_release_data();
 	_memory_release_data();
 	sll_platform_reset_console();
 	_util_sandbox_flags=0;

@@ -81,6 +81,25 @@ static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char
 
 
 
+void _log_release_data(void){
+	while (_log_f_dtl){
+		_log_f_dtl--;
+		file_log_data_t* k=*(_log_f_dt+_log_f_dtl);
+		sll_free_string((sll_string_t*)(&(k->nm)));
+		for (sll_arg_count_t i=0;i<k->dtl;i++){
+			function_log_data_t* e=*(k->dt+i);
+			sll_free_string((sll_string_t*)(&(e->nm)));
+			sll_deallocate(e);
+		}
+		sll_deallocate(k->dt);
+		sll_deallocate(k);
+	}
+	sll_deallocate(_log_f_dt);
+	_log_f_dt=NULL;
+}
+
+
+
 __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_char_t* t,...){
 	if (!_log_default&&!_log_f_dtl){
 		return;

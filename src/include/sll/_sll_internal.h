@@ -516,6 +516,10 @@ void _init_node_stack(sll_compilation_data_t* c_dt);
 
 
 
+void _log_release_data(void);
+
+
+
 void _memory_release_data(void);
 
 
