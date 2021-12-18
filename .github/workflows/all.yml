@@ -195,6 +195,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
       - name: Load Generated Website
         uses: actions/download-artifact@v2
         with:
