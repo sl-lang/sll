@@ -35,13 +35,13 @@
 - Max internal function length: `SLL_INTERNAL_FUNCTION_MAX_LENGTH`
 - Sll logging API: `sll_api_log_log`, `sll_api_log_set_default`, `sll_api_log_set_file`, `sll_api_log_set_function`, `sll:log_log`, `sll:log_set_default`, `sll:log_set_file` and `sll:log_set_function` ([#126] and [#127])
 - Sll version API: `sll_api_sys_get_version` and `sll:sys_get_version`
-- Website code in [`src/web`][main/src/web]
+- Website code in [`src/web`][0.6.32/src/web]
 
 ### Changed
 
 - Fixed optimization of custom object types
 - Improved large integer compression
-- Moved platform-dependent code from [`src/sll/platform/posix.c`][0.6.31/src/sll/platform/posix.c] and [`src/sll/platform/windows.c`][0.6.31/src/sll/platform/windows.c] to [`src/sll/platform/posix`][main/src/sll/platform/posix] and [`src/sll/platform/windows`][main/src/sll/platform/windows]
+- Moved platform-dependent code from [`src/sll/platform/posix.c`][0.6.31/src/sll/platform/posix.c] and [`src/sll/platform/windows.c`][0.6.31/src/sll/platform/windows.c] to [`src/sll/platform/posix`][0.6.32/src/sll/platform/posix] and [`src/sll/platform/windows`][0.6.32/src/sll/platform/windows]
 - Object type functions now expect a `sll_object_type_table_t` instead of using the global `sll_current_runtime_data`
 - `sll_array_count` now uses `sll_operator_strict_equal` instead of `sll_operator_equal`
 

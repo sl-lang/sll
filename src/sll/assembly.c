@@ -1743,7 +1743,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	g_dt_rt.dt=sll_allocate(sizeof(assembly_instruction_label_t));
 	*(g_dt_rt.dt)=MAX_ASSEMBLY_INSTRUCTION_LABEL;
 	g_dt_rt.sz=1;
-	sll_function_index_t n=0;
+	sll_function_index_t fn_n=0;
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
 		sll_arg_count_t j=k->al;
@@ -1753,8 +1753,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		(o->ft.dt+i)->ac=j;
 		if (k->nm==SLL_MAX_STRING_INDEX){
 			sll_string_t str;
-			sll_string_format(SLL_CHAR("@%u"),&str,n);
-			n++;
+			sll_string_format(SLL_CHAR("@%u"),&str,fn_n);
+			fn_n++;
 			(o->ft.dt+i)->nm=sll_add_string(&(o->st),&str,0);
 		}
 		else{
