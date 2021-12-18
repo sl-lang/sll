@@ -248,6 +248,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
 		CHECK_ERROR(rf,(a_dt->ft.dt+i)->i,sll_instruction_index_t,e);
 		CHECK_ERROR(rf,(a_dt->ft.dt+i)->ac,sll_arg_count_t,e);
+		CHECK_ERROR(rf,(a_dt->ft.dt+i)->nm,sll_string_index_t,e);
 	}
 	CHECK_ERROR(rf,a_dt->st.l,sll_string_index_t,e);
 	a_dt->st.dt=sll_allocate(a_dt->st.l*sizeof(sll_string_t));
@@ -449,6 +450,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 		sll_arg_count_t al;
 		CHECK_ERROR(rf,al,sll_arg_count_t,e);
 		sll_function_t* k=sll_allocate(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));
+		CHECK_ERROR(rf,k->nm,sll_string_index_t,e);
 		k->off=off;
 		k->al=al;
 		for (sll_arg_count_t j=0;j<al;j++){

@@ -69,7 +69,7 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 			if (off<oe){
 				oe_tb+=ERROR_DISPLAY_TAB_WIDTH-1;
 			}
-			for (uint8_t i=0;i<ERROR_DISPLAY_TAB_WIDTH;i++){
+			for (unsigned int i=0;i<ERROR_DISPLAY_TAB_WIDTH;i++){
 				sll_file_write_char(sll_stderr,' ');
 			}
 		}

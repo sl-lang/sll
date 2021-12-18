@@ -371,6 +371,12 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 					sll_function_t* f=sll_allocate(sizeof(sll_function_t)+i*sizeof(sll_identifier_index_t));
 					f->off=f_off;
 					f->al=i;
+					if (e_c_dt->f_nm!=SLL_MAX_STRING_INDEX){
+						f->nm=e_c_dt->f_nm;
+					}
+					else{
+						f->nm=SLL_MAX_STRING_INDEX;
+					}
 					arg=o+1;
 					for (sll_arg_count_t j=0;j<i;j++){
 						while (arg->t==SLL_NODE_TYPE_NOP||arg->t==SLL_NODE_TYPE_DEBUG_DATA||arg->t==NODE_TYPE_CHANGE_STACK){
@@ -505,8 +511,18 @@ _recurse_array_or_map:;
 					*l_sc,
 					e_c_dt->i_ft,
 					e_c_dt->il,
-					e_c_dt->nv_dt
+					e_c_dt->nv_dt,
+					SLL_MAX_STRING_INDEX
 				};
+				if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1){
+					sll_node_t* a=o+1;
+					while (a->t==SLL_NODE_TYPE_NOP||a->t==SLL_NODE_TYPE_DEBUG_DATA||a->t==NODE_TYPE_CHANGE_STACK){
+						a=(a->t==NODE_TYPE_CHANGE_STACK?a->dt._p:a+1);
+					}
+					if (a->t==SLL_NODE_TYPE_IDENTIFIER){
+						n_e_c_dt.f_nm=(SLL_IDENTIFIER_GET_ARRAY_ID(a->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?c_dt->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(a->dt.id):c_dt->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(a->dt.id)].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(a->dt.id))->i;
+					}
+				}
 				if (!_read_object_internal(c_dt,c,&n_e_c_dt,e)){
 					if (n_l_sc.m){
 						sll_deallocate(n_l_sc.m);
@@ -759,10 +775,8 @@ _unknown_symbol:
 				n_l_sc.ml=(n_l_sc.l_sc+65)>>6;
 				n_l_sc.m=sll_allocate(n_l_sc.ml*sizeof(uint64_t));
 				n_l_sc.m[n_l_sc.ml-1]=0;
-				for (scope_data_mask_length_t i=0;i<l_sc->ml;i++){
-					*(n_l_sc.m+i)=*(l_sc->m+i);
-				}
-				n_l_sc.m[n_l_sc.ml-1]|=1ull<<(n_l_sc.l_sc&63);
+				sll_copy_data(l_sc->m,l_sc->ml*sizeof(uint64_t),n_l_sc.m);
+				n_l_sc.m[n_l_sc.l_sc>>6]|=1ull<<(n_l_sc.l_sc&63);
 				c_dt->_n_sc_id++;
 				b_l_sc=l_sc;
 				l_sc=&n_l_sc;
@@ -1118,7 +1132,7 @@ _unknown_symbol:
 					}
 				} while ((c>47&&c<58)||(c>64&&c<91)||c=='_'||(c>96&&c<123));
 				str.l=sz;
-				if ((o->t!=SLL_NODE_TYPE_DECL||!(ac&1))&&c=='$'){
+				if (o&&(o->t!=SLL_NODE_TYPE_DECL||!(ac&1))&&c=='$'){
 					c=sll_file_read_char(rf);
 					if (c==SLL_END_OF_DATA){
 						sll_free_string(&str);
@@ -1201,7 +1215,7 @@ _unknown_identifier_char:
 					}
 					return 0;
 				}
-				else if (o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
+				else if (o&&o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
 					sll_string_calculate_checksum(&str);
 					arg->t=SLL_NODE_TYPE_FIELD;
 					arg->dt.s=sll_add_string(&(c_dt->st),&str,1);
@@ -1219,7 +1233,7 @@ _unknown_identifier_char:
 				else{
 					sll_string_calculate_checksum(&str);
 					arg->t=SLL_NODE_TYPE_IDENTIFIER;
-					arg->dt.id=_get_var_index(c_dt,e_c_dt,l_sc,&str,arg,((o->t!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o->t==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o->t==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0)),e);
+					arg->dt.id=_get_var_index(c_dt,e_c_dt,l_sc,&str,arg,((!o||o->t!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->t==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->t==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0)),e);
 					if (arg->dt.i==SLL_MAX_VARIABLE_INDEX){
 						sll_free_string(&str);
 						e->t=SLL_ERROR_UNKNOWN_IDENTIFIER;
@@ -1435,6 +1449,7 @@ _export_identifier_found:;
 						sll_function_t* nf=sll_allocate(sizeof(sll_function_t)+f->al*sizeof(sll_identifier_index_t));
 						nf->off=(sll_node_offset_t)(f->off+c_dt->_s.off);
 						nf->al=f->al;
+						nf->nm=(f->nm==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(im_dt.sm+f->nm));
 						for (sll_arg_count_t k=0;k<f->al;k++){
 							nf->a[k]=f->a[k];
 						}
@@ -1511,7 +1526,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_node(sll_compilation_data
 		},
 		i_ft,
 		il,
-		&nv_dt
+		&nv_dt,
+		SLL_MAX_STRING_INDEX
 	};
 	e_c_dt.sc.m[0]=1;
 	if (!_read_object_internal(c_dt,c,&e_c_dt,e)){
@@ -1544,7 +1560,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_all_nodes(sll_compilation
 		},
 		i_ft,
 		il,
-		&nv_dt
+		&nv_dt,
+		SLL_MAX_STRING_INDEX
 	};
 	e_c_dt.sc.m[0]=1;
 	while (1){

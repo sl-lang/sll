@@ -1,5 +1,5 @@
-(# time file sys util path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort)
-(--- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll")
+(# time file sys util path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log)
+(--- "time.sll" "file.sll" "sys.sll" "util.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -189,6 +189,10 @@
 (= p2$str "point-2")
 (= new_point$p (. point_type 5 6))
 (:> new_point "\n" p2 "\n" (<- 57 1 5) "\n")
+(<- log$log "No Function")
+(= test_log_func (,,, (<- log$log "Named Function")))
+(<- test_log_func)
+(<- (,,, (<- log$log "Anonymous Function")))
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

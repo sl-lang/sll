@@ -150,8 +150,6 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 #define COND_TYPE_ALWAYS_TRUE 1
 #define COND_TYPE_ALWAYS_FALSE 2
 
-#define CALL_STACK_SIZE 256
-
 #define OBJECT_TYPE_FUNCTION_ID SLL_OBJECT_TYPE_RESERVED0
 #define OBJECT_TYPE_UNKNOWN SLL_OBJECT_TYPE_RESERVED1
 #define OBJECT_CHANGE_IN_LOOP SLL_OBJECT_FLAG_RESERVED0
@@ -208,15 +206,7 @@ static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS6
 
 
 
-typedef uint16_t call_stack_size_t;
-
-
-
 typedef uint16_t scope_data_mask_length_t;
-
-
-
-typedef uint32_t stack_offset_t;
 
 
 
@@ -245,6 +235,7 @@ typedef struct __EXTRA_COMPILATION_DATA{
 	sll_internal_function_table_t* i_ft;
 	sll_import_loader_t il;
 	new_variable_data_t* nv_dt;
+	sll_string_index_t f_nm;
 } extra_compilation_data_t;
 
 
@@ -361,20 +352,6 @@ typedef struct __STRING_MAP_DATA{
 	uint64_t* m;
 	sll_string_index_t* im;
 } strint_map_data_t;
-
-
-
-typedef struct __CALL_STACK_FRAME{
-	sll_instruction_index_t ii;
-	stack_offset_t s;
-} call_stack_frame_t;
-
-
-
-typedef struct __CALL_STACK{
-	call_stack_frame_t* dt;
-	call_stack_size_t l;
-} call_stack_t;
 
 
 

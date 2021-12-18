@@ -130,6 +130,12 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		*(m+((c_dt->idt.il+i)->i>>6))|=1ull<<((c_dt->idt.il+i)->i&63);
 	}
+	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
+		sll_string_index_t j=(*(c_dt->ft.dt+i))->nm;
+		if (j!=SLL_MAX_STRING_INDEX){
+			*(m+(j>>6))|=1ull<<(j&63);
+		}
+	}
 	for (sll_object_type_t i=0;i<c_dt->ot_it.l;i++){
 		sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
 		SLL_ASSERT(oi->l);
@@ -175,6 +181,11 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		}
 		for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 			(c_dt->idt.il+i)->i=*(sm+(c_dt->idt.il+i)->i);
+		}
+		for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
+			if ((*(c_dt->ft.dt+i))->nm!=SLL_MAX_STRING_INDEX){
+				(*(c_dt->ft.dt+i))->nm=*(sm+(*(c_dt->ft.dt+i))->nm);
+			}
 		}
 		for (sll_object_type_t i=0;i<c_dt->ot_it.l;i++){
 			sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);

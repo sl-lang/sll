@@ -100,6 +100,10 @@ typedef uint16_t sll_read_char_t;
 
 
 
+typedef uint16_t sll_call_stack_size_t;
+
+
+
 typedef int32_t sll_relative_instruction_index_t;
 
 
@@ -165,6 +169,10 @@ typedef uint32_t sll_ref_count_t;
 
 
 typedef uint32_t sll_scope_t;
+
+
+
+typedef uint32_t sll_stack_offset_t;
 
 
 
@@ -272,7 +280,7 @@ typedef struct __SLL_FILE{
 
 
 
-typedef struct __SLL_EXTERNALTION_NODE_DATA{
+typedef struct __SLL_FUNCTION_NODE_DATA{
 	sll_arg_count_t ac;
 	sll_function_index_t id;
 	sll_scope_t sc;
@@ -351,15 +359,16 @@ typedef struct __SLL_EXPORT_TABLE{
 
 
 
-typedef struct __SLL_EXTERNALTION{
+typedef struct __SLL_FUNCTION{
 	sll_node_offset_t off;
+	sll_string_index_t nm;
 	sll_arg_count_t al;
 	sll_identifier_index_t a[];
 } sll_function_t;
 
 
 
-typedef struct __SLL_EXTERNALTION_TABLE{
+typedef struct __SLL_FUNCTION_TABLE{
 	sll_function_t** dt;
 	sll_function_index_t l;
 } sll_function_table_t;
@@ -454,6 +463,7 @@ typedef struct __SLL_ASSEMBLY_INSTRUCTION{
 typedef struct __SLL_ASSEMBLY_FUNCTION{
 	sll_instruction_index_t i;
 	sll_arg_count_t ac;
+	sll_string_index_t nm;
 } sll_assembly_function_t;
 
 
@@ -622,14 +632,40 @@ typedef struct __SLL_OBJECT_TYPE_TABLE{
 
 
 
+typedef struct __SLL_CALL_STACK_FRAME{
+	sll_string_index_t nm;
+	sll_instruction_index_t _ii;
+	sll_stack_offset_t _s;
+} sll_call_stack_frame_t;
+
+
+
+typedef struct __SLL_CALL_STACK{
+	sll_call_stack_frame_t* dt;
+	sll_call_stack_size_t l;
+} sll_call_stack_t;
+
+
+
 typedef struct __SLL_RUNTIME_DATA{
+	const sll_assembly_data_t* a_dt;
 	sll_internal_function_table_t* ift;
 	sll_object_type_table_t* tt;
 	sll_handle_list_t* hl;
 	sll_file_t* in;
 	sll_file_t* out;
 	sll_file_t* err;
+	sll_call_stack_t* c_st;
 } sll_runtime_data_t;
+
+
+
+typedef struct __SLL_VM_CONFIG{
+	sll_page_size_t s_sz;
+	sll_file_t* in;
+	sll_file_t* out;
+	sll_file_t* err;
+} sll_vm_config_t;
 
 
 

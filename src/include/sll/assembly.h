@@ -124,6 +124,8 @@
 
 #define SLL_INIT_ASSEMBLY_DATA_STRUCT {0,NULL,0,0,{0,NULL},{NULL,0},{NULL,0},{NULL,NULL,0,NULL}}
 
+#define SLL_CALL_STACK_SIZE 256
+
 
 
 /**
@@ -154,12 +156,11 @@ __SLL_EXTERNAL extern const sll_runtime_data_t* sll_current_runtime_data;
  * \group assembly
  * \desc Docs!
  * \arg const sll_assembly_data_t* a_dt
- * \arg sll_page_size_t s_sz
- * \arg const sll_runtime_data_t* r_dt
+ * \arg const sll_vm_config_t* cfg
  * \arg sll_error_t* e
  * \ret sll_return_code_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,sll_page_size_t s_sz,const sll_runtime_data_t* r_dt,sll_error_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg,sll_error_t* e);
 
 
 

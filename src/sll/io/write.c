@@ -227,6 +227,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
 		_write_integer(wf,(a_dt->ft.dt+i)->i);
 		_write_integer(wf,(a_dt->ft.dt+i)->ac);
+		_write_integer(wf,(a_dt->ft.dt+i)->nm);
 	}
 	_write_integer(wf,a_dt->st.l);
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
@@ -386,6 +387,7 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 		const sll_function_t* k=*(c_dt->ft.dt+i);
 		_write_integer(wf,k->off);
 		_write_integer(wf,k->al);
+		_write_integer(wf,k->nm);
 		for (sll_arg_count_t j=0;j<k->al;j++){
 			_write_integer(wf,k->a[j]);
 		}

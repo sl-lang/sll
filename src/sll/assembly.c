@@ -1731,6 +1731,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	g_dt_rt.dt=sll_allocate(sizeof(assembly_instruction_label_t));
 	*(g_dt_rt.dt)=MAX_ASSEMBLY_INSTRUCTION_LABEL;
 	g_dt_rt.sz=1;
+	sll_function_index_t n=0;
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
 		sll_arg_count_t j=k->al;
@@ -1738,6 +1739,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		ai->t=ASSEMBLY_INSTRUCTION_TYPE_FUNC_START;
 		ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=i;
 		(o->ft.dt+i)->ac=j;
+		if (k->nm==SLL_MAX_STRING_INDEX){
+			sll_string_t str;
+			sll_string_format(SLL_CHAR("@%u"),&str,n);
+			n++;
+			(o->ft.dt+i)->nm=sll_add_string(&(o->st),&str,0);
+		}
+		else{
+			(o->ft.dt+i)->nm=k->nm;
+		}
 		while (j){
 			j--;
 			ai=_acquire_next_instruction(o);
@@ -1984,9 +1994,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	for (sll_string_index_t i=0;i<sm.ml;i++){
 		*(sm.m+i)=0;
 	}
+	for (sll_function_index_t i=0;i<o->ft.l;i++){
+		sll_string_index_t j=(o->ft.dt+i)->nm;
+		*(sm.m+(j>>6))|=1ull<<(j&63);
+	}
 	o->ot_it.l=c_dt->ot_it.l;
 	o->ot_it.dt=sll_allocate(o->st.l*sizeof(sll_object_type_initializer_t*));
-	for (sll_string_index_t i=0;i<o->ot_it.l;i++){
+	for (sll_object_type_t i=0;i<o->ot_it.l;i++){
 		const sll_object_type_initializer_t* oi=*(c_dt->ot_it.dt+i);
 		SLL_ASSERT(oi->l);
 		sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+oi->l*sizeof(sll_object_type_field_t));
@@ -2062,7 +2076,10 @@ _handle_nop:;
 		o->st.l-=l;
 		o->st.dt=sll_reallocate(o->st.dt,o->st.l*sizeof(sll_string_t));
 	}
-	for (sll_string_index_t i=0;i<o->ot_it.l;i++){
+	for (sll_function_index_t i=0;i<o->ft.l;i++){
+		(o->ft.dt+i)->nm=*(sm.im+(o->ft.dt+i)->nm);
+	}
+	for (sll_object_type_t i=0;i<o->ot_it.l;i++){
 		sll_object_type_initializer_t* oi=*(o->ot_it.dt+i);
 		SLL_ASSERT(oi->l);
 		for (sll_arg_count_t j=0;j<oi->l;j++){

@@ -465,12 +465,8 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		}
 	}
 	if (!(fl&FLAG_NO_RUN)){
-		sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
-		sll_handle_list_t hl=SLL_INIT_HANDLE_LIST_STRUCT;
-		sll_runtime_data_t r_dt={
-			&i_ft,
-			&tt,
-			&hl,
+		sll_vm_config_t cfg={
+			VM_STACK_SIZE,
 			sll_stdin,
 			sll_stdout,
 			sll_stderr
@@ -478,10 +474,8 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		sll_error_t e={
 			SLL_ERROR_UNKNOWN
 		};
-		sll_return_code_t r=sll_execute_assembly(a_dt,VM_STACK_SIZE,&r_dt,&e);
+		sll_return_code_t r=sll_execute_assembly(a_dt,&cfg,&e);
 		sll_file_flush(sll_stderr);
-		sll_free_object_type_list(&tt);
-		sll_free_handle_list(&hl);
 		if (e.t!=SLL_ERROR_UNKNOWN){
 			sll_print_error(NULL,&e);
 			return 0;

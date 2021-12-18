@@ -255,10 +255,10 @@ __SLL_EXTERNAL void sll_file_reset_line(sll_file_t* f,sll_file_offset_t off){
 			return;
 		}
 		const sll_char_t* dt=f->dt.mm.p;
-		while (off&&dt[off]!='\n'&&dt[off]!='\r'){
+		while (off&&dt[off]!='\n'){
 			off--;
 		}
-		if (dt[off]=='\n'||dt[off]=='\r'){
+		if (dt[off]=='\n'){
 			off++;
 		}
 		f->_off=off;
@@ -266,29 +266,33 @@ __SLL_EXTERNAL void sll_file_reset_line(sll_file_t* f,sll_file_offset_t off){
 	}
 	sll_platform_file_seek(f->dt.fl.fd,off);
 	sll_char_t c;
-	if (!sll_file_read(f,&c,sizeof(sll_char_t))){
+	if (!sll_platform_file_read(f->dt.fl.fd,&c,sizeof(sll_char_t))){
 		f->_l_num=0;
 		f->_l_off=0;
 		f->_off=0;
 		return;
 	}
-	while (off&&c!='\n'&&c!='\r'){
+	while (off&&c!='\n'){
 		off--;
 		sll_platform_file_seek(f->dt.fl.fd,off);
-		if (!sll_file_read(f,&c,sizeof(sll_char_t))){
+		if (!sll_platform_file_read(f->dt.fl.fd,&c,sizeof(sll_char_t))){
 			f->_l_num=0;
 			f->_l_off=0;
 			f->_off=0;
 			return;
 		}
 	}
-	if (c!='\n'&&c!='\r'){
+	if (c!='\n'){
 		sll_platform_file_seek(f->dt.fl.fd,off);
 	}
 	else{
 		off++;
 	}
 	f->_off=off;
+	if (!(f->f&SLL_FILE_FLAG_NO_BUFFER)){
+		f->_r_bf_off=0;
+		f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE);
+	}
 }
 
 

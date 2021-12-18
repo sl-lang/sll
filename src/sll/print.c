@@ -231,6 +231,11 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 			{
 				PRINT_STATIC_STRING(",,,",wf);
 				const sll_function_t* f=*(c_dt->ft.dt+o->dt.fn.id);
+				if (f->nm!=SLL_MAX_STRING_INDEX){
+					PRINT_STATIC_STRING("|#",wf);
+					sll_file_write(wf,(c_dt->st.dt+f->nm)->v,(c_dt->st.dt+f->nm)->l);
+					PRINT_STATIC_STRING("#|",wf);
+				}
 				for (sll_arg_count_t i=0;i<f->al;i++){
 					sll_file_write_char(wf,' ');
 					_print_identifier(f->a[i],c_dt,wf);

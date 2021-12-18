@@ -330,12 +330,12 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					}
 				}
 				else if (*t!='x'&&*t!='X'){
-					uint8_t sz=((FIND_LAST_SET_BIT(n)+1)*1233)>>12;
-					uint64_t pw=_string_pow_of_10[sz];
-					if (n<pw){
-						sz--;
-						pw=_string_pow_of_10[sz];
-					}
+					uint64_t tmp=n;
+					uint8_t sz=0;
+					do{
+						sz++;
+						tmp/=10;
+					} while (tmp);
 					if (p<sz){
 						p=sz;
 					}
@@ -345,13 +345,14 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
+					uint64_t pw=_string_pow_of_10[sz-1];
 					while (1){
+						sz--;
 						o->v[o->l]=48+((n/pw)%10);
 						o->l++;
 						if (sz<=1){
 							break;
 						}
-						sz--;
 						pw/=10;
 					}
 					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
