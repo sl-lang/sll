@@ -22,6 +22,7 @@
 - All optimization levels have been removed in favor of one CLI flag (`-O`)
 - Fixed `SLL_STRING_FORMAT_PADDING`
 - Libraries are now loaded only once ([#135])
+- `SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP` is no longer part of the public API
 - `SLL_NODE_TYPE_UNKNOWN` is no longer part of the public API ([#139])
 - `sll_remove_debug_data` has been renamed to `sll_remove_object_debug_data`
 

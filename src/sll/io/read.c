@@ -73,6 +73,10 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 	sll_node_t* o=_acquire_next_node(c_dt);
 	READ_FIELD(o->t,rf);
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG){
+		if (o->t==SLL_NODE_TYPE_DBG){
+			CHECK_ERROR2(rf,o->dt.s,sll_string_index_t);
+			o->dt.s--;
+		}
 		o=_acquire_next_node(c_dt);
 		READ_FIELD(o->t,rf);
 	}
@@ -147,6 +151,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 		case SLL_NODE_TYPE_DECL:
 			CHECK_ERROR2(rf,o->dt.d.ac,sll_arg_count_t);
 			CHECK_ERROR2(rf,o->dt.d.nm,sll_string_index_t);
+			o->dt.d.nm--;
 			for (sll_arg_count_t i=0;i<o->dt.d.ac;i++){
 				if (!_read_object(c_dt,rf)){
 					return 0;
@@ -156,6 +161,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 		case SLL_NODE_TYPE_DECL_COPY:
 			CHECK_ERROR2(rf,o->dt.dc.t,sll_object_type_t);
 			CHECK_ERROR2(rf,o->dt.dc.nm,sll_string_index_t);
+			o->dt.dc.nm--;
 			return 1;
 	}
 	CHECK_ERROR2(rf,o->dt.ac,sll_arg_count_t);
@@ -483,6 +489,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 			oi->dt[j].t=(t>>1)|(t&1?SLL_OBJECT_FLAG_CONSTANT:0);
 			CHECK_ERROR(rf,oi->dt[j].f,sll_string_index_t,e);
 		}
+	}
+	CHECK_ERROR(rf,c_dt->fpt.l,sll_string_index_t,e);
+	c_dt->fpt.dt=sll_allocate(c_dt->fpt.l*sizeof(sll_string_index_t));
+	for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
+		CHECK_ERROR(rf,*(c_dt->fpt.dt+i),sll_string_index_t,e);
 	}
 	CHECK_ERROR(rf,c_dt->_n_sc_id,sll_scope_t,e);
 	_init_node_stack(c_dt);

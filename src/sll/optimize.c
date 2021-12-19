@@ -580,9 +580,8 @@ static sll_node_t* _object_to_node(sll_object_t* v,sll_node_t* o,optimizer_data_
 		case OBJECT_TYPE_UNKNOWN:
 			SLL_UNIMPLEMENTED();
 		default:
-			SLL_UNREACHABLE();
+			SLL_UNIMPLEMENTED();
 	}
-	return o;
 }
 
 
@@ -1322,7 +1321,6 @@ _keep_assignment:;
 				}
 				return o;
 			}
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_INLINE_FUNC:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_CALL:
@@ -2701,6 +2699,7 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		sll_function_t* f=*(c_dt->ft.dt+i);
 		if (!f){
+			SLL_ASSERT(0);
 			fn_off++;
 			continue;
 		}

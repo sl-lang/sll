@@ -170,6 +170,9 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 			*(m+(oi->dt[j].f>>6))|=1ull<<(oi->dt[j].f&63);
 		}
 	}
+	for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
+		*(m+((*(c_dt->fpt.dt+i))>>6))|=1ull<<((*(c_dt->fpt.dt+i))&63);
+	}
 	_mark(c_dt->h,m);
 	sll_string_index_t* sm=sll_allocate_stack(c_dt->st.l*sizeof(sll_string_index_t));
 	uint32_t k=0;
@@ -219,6 +222,9 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 			for (sll_arg_count_t j=0;j<oi->l;j++){
 				oi->dt[j].f=*(sm+oi->dt[j].f);
 			}
+		}
+		for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
+			*(c_dt->fpt.dt+i)=*(sm+(*(c_dt->fpt.dt+i)));
 		}
 		_update(c_dt->h,sm);
 	}

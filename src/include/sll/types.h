@@ -409,6 +409,13 @@ typedef struct __SLL_OBJECT_TYPE_INIT_TABLE{
 
 
 
+typedef struct __SLL_FILE_PATH_TABEL{
+	sll_string_index_t* dt;
+	sll_string_index_t l;
+} sll_file_path_table_t;
+
+
+
 typedef struct __SLL_COMPILATION_STACK_DATA{
 	void* s;
 	void* e;
@@ -428,6 +435,7 @@ typedef struct __SLL_COMPILATION_DATA{
 	sll_function_table_t ft;
 	sll_string_table_t st;
 	sll_object_type_initializer_table_t ot_it;
+	sll_file_path_table_t fpt;
 	sll_compilation_stack_data_t _s;
 	sll_scope_t _n_sc_id;
 } sll_compilation_data_t;

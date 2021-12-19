@@ -35,6 +35,9 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 			continue;
 		}
 		WRITE_FIELD(o->t,wf);
+		if (o->t==SLL_NODE_TYPE_DBG){
+			_write_integer(wf,o->dt.s+1);
+		}
 		o++;
 	}
 	WRITE_FIELD(o->t,wf);
@@ -113,7 +116,7 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 		case SLL_NODE_TYPE_DECL:
 			{
 				_write_integer(wf,o->dt.d.ac);
-				_write_integer(wf,o->dt.d.nm);
+				_write_integer(wf,o->dt.d.nm+1);
 				sll_arg_count_t l=o->dt.d.ac;
 				o++;
 				while (l){
@@ -124,7 +127,7 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 			}
 		case SLL_NODE_TYPE_DECL_COPY:
 			_write_integer(wf,o->dt.dc.t);
-			_write_integer(wf,o->dt.dc.nm);
+			_write_integer(wf,o->dt.dc.nm+1);
 			return o+1;
 	}
 	_write_integer(wf,o->dt.ac);
@@ -409,6 +412,10 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 			_write_integer(wf,(SLL_OBJECT_GET_TYPE_MASK(oi->dt[j].t)<<1)|(!!(oi->dt[j].t&SLL_OBJECT_FLAG_CONSTANT)));
 			_write_integer(wf,oi->dt[j].f);
 		}
+	}
+	_write_integer(wf,c_dt->fpt.l);
+	for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
+		_write_integer(wf,*(c_dt->fpt.dt+i));
 	}
 	_write_integer(wf,c_dt->_n_sc_id);
 	_write_object(wf,c_dt->h);

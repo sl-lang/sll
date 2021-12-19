@@ -120,6 +120,9 @@ void _shift_nodes(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t o
 		return;
 	}
 	sll_node_t* s=c_dt->_s.p-1;
+	if (o->t==NODE_TYPE_CHANGE_STACK){
+		o=o->dt._p;
+	}
 	if (s->t==NODE_TYPE_CHANGE_STACK){
 		s=s->dt._p;
 	}

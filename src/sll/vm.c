@@ -121,8 +121,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 		}
 		sll_current_instruction_count++;
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP:
-				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_POP:
 				si--;
 				SLL_RELEASE(*(s+si));

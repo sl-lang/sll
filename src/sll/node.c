@@ -196,6 +196,9 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 		sll_platform_free_page(pg,SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE));
 		pg=n;
 	}
+	sll_deallocate(c_dt->fpt.dt);
+	c_dt->fpt.dt=NULL;
+	c_dt->fpt.l=0;
 	c_dt->_s.s=NULL;
 	c_dt->_s.e=NULL;
 	c_dt->_s.c=0;
@@ -232,6 +235,9 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* r
 	o->st.l=0;
 	o->ot_it.dt=NULL;
 	o->ot_it.l=0;
+	o->fpt.dt=sll_allocate(sizeof(sll_string_index_t));
+	o->fpt.l=1;
+	*(o->fpt.dt)=0;
 	_init_node_stack(o);
 	o->_n_sc_id=1;
 	IGNORE_RESULT(sll_create_string(&(o->st),fp,sll_string_length_unaligned(fp)));

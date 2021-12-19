@@ -21,14 +21,16 @@ static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_d
 			mo=mo->dt._p;
 		}
 		else{
-			o->t=SLL_NODE_TYPE_NOP;
+			o->t=mo->t;
+			if (mo->t==SLL_NODE_TYPE_DBG){
+				o->dt.s=(mo->dt.s==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:mo->dt.s+im_dt->fp_off);
+			}
 			o=_acquire_next_node(im_dt->c_dt);
 			mo++;
 		}
 	}
 	*o=*mo;
 	switch (o->t){
-		case NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
@@ -311,7 +313,9 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 		if ((c>8&&c<14)||c==' '){
 			while ((c>8&&c<14)||c==' '){
 				if (c=='\n'){
-					_acquire_next_node(c_dt)->t=SLL_NODE_TYPE_DBG;
+					sll_node_t* dbg=_acquire_next_node(c_dt);
+					dbg->t=SLL_NODE_TYPE_DBG;
+					dbg->dt.s=SLL_MAX_STRING_INDEX;
 				}
 				c=sll_file_read_char(rf);
 			}
@@ -382,13 +386,7 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 					arg=o+1;
 					for (sll_arg_count_t j=0;j<i;j++){
 						while (arg->t==SLL_NODE_TYPE_NOP||arg->t==SLL_NODE_TYPE_DBG||arg->t==NODE_TYPE_CHANGE_STACK){
-							if (arg->t==NODE_TYPE_CHANGE_STACK){
-								arg=arg->dt._p;
-							}
-							else{
-								arg->t=SLL_NODE_TYPE_NOP;
-								arg++;
-							}
+							arg=(arg->t==NODE_TYPE_CHANGE_STACK?arg->dt._p:arg+1);
 						}
 						SLL_ASSERT(arg->t==SLL_NODE_TYPE_IDENTIFIER);
 						f->a[j]=arg->dt.id;
@@ -1279,6 +1277,9 @@ _unknown_identifier_char:
 						e->dt.r.sz=SLL_FILE_GET_OFFSET(rf)-arg_s-1;
 						return 0;
 					}
+					sll_node_t* dbg=_acquire_next_node(c_dt);
+					dbg->t=SLL_NODE_TYPE_DBG;
+					dbg->dt.s=c_dt->fpt.l;
 					ac++;
 					sll_compilation_data_t im=SLL_INIT_COMPILATION_DATA_STRUCT;
 					if (e_c_dt->il(c_dt->st.dt+arg->dt.s,&im,e)==0){
@@ -1290,7 +1291,8 @@ _unknown_identifier_char:
 						.eiml=im.et.l,
 						.sc_off=c_dt->_n_sc_id,
 						.c_dt=c_dt,
-						.oi_off=c_dt->ot_it.l
+						.oi_off=c_dt->ot_it.l,
+						.fp_off=c_dt->fpt.l
 					};
 					for (sll_string_index_t i=0;i<im.st.l;i++){
 						sll_string_t* s=im.st.dt+i;
@@ -1305,6 +1307,11 @@ _unknown_identifier_char:
 						c_dt->st.dt=sll_reallocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
 						sll_string_clone(s,c_dt->st.dt+c_dt->st.l-1);
 _merge_next_string:;
+					}
+					c_dt->fpt.l+=im.fpt.l;
+					c_dt->fpt.dt=sll_reallocate(c_dt->fpt.dt,c_dt->fpt.l*sizeof(sll_string_index_t));
+					for (sll_string_index_t i=0;i<im.fpt.l;i++){
+						*(c_dt->fpt.dt+im_dt.fp_off+i)=*(im_dt.sm+(*(im.fpt.dt+i)));
 					}
 					if (im.ot_it.l){
 						c_dt->ot_it.l+=im.ot_it.l;
@@ -1417,7 +1424,10 @@ _export_identifier_found:;
 					_patch_module(im.h,&im_dt);
 					sll_deallocate(im_dt.sm);
 					sll_deallocate(im_dt.eim);
-						sll_free_compilation_data(&im);
+					sll_free_compilation_data(&im);
+					dbg=_acquire_next_node(c_dt);
+					dbg->t=SLL_NODE_TYPE_DBG;
+					dbg->dt.s=0;
 				}
 				else if ((fl&EXTRA_COMPILATION_DATA_EXPORT)&&arg->t==SLL_NODE_TYPE_IDENTIFIER){
 					for (sll_export_table_length_t j=0;j<c_dt->et.l;j++){

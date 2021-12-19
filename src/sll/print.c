@@ -2,6 +2,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>
+#include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/object.h>
 #include <sll/string.h>
@@ -75,19 +76,28 @@ static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_da
 
 
 
-static void _print_line(sll_file_offset_t* ln,sll_file_t* wf){
-	(*ln)++;
-	PRINT_STATIC_STRING("|# :",wf);
-	_print_int(*ln,wf);
-	PRINT_STATIC_STRING(" #|",wf);
+static void _print_line(sll_string_index_t s,const sll_compilation_data_t* c_dt,file_line_data_t* ln,sll_file_t* wf){
+	if (s==SLL_MAX_STRING_INDEX){
+		(*(ln->dt+ln->c))++;
+		PRINT_STATIC_STRING("|# :",wf);
+		_print_int(*(ln->dt+ln->c),wf);
+		PRINT_STATIC_STRING(" #|",wf);
+	}
+	else{
+		ln->c=s;
+		sll_string_t* fp=c_dt->st.dt+(*(c_dt->fpt.dt+s));
+		PRINT_STATIC_STRING("|# ",wf);
+		sll_file_write(wf,fp->v,fp->l);
+		PRINT_STATIC_STRING(" #| |# :1 #|",wf);
+	}
 }
 
 
 
-static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf,sll_file_offset_t* ln){
+static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf,file_line_data_t* ln){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 		if (o->t==SLL_NODE_TYPE_DBG){
-			_print_line(ln,wf);
+			_print_line(o->dt.s,c_dt,ln,wf);
 		}
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -288,7 +298,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				if (ac){
 					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 						if (o->t==SLL_NODE_TYPE_DBG){
-							_print_line(ln,wf);
+							_print_line(o->dt.s,c_dt,ln,wf);
 						}
 						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
@@ -436,7 +446,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				o++;
 				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 					if (o->t==SLL_NODE_TYPE_DBG){
-						_print_line(ln,wf);
+						_print_line(o->dt.s,c_dt,ln,wf);
 					}
 					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
@@ -449,7 +459,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 					sll_file_write_char(wf,'$');
 					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 						if (o->t==SLL_NODE_TYPE_DBG){
-							_print_line(ln,wf);
+							_print_line(o->dt.s,c_dt,ln,wf);
 						}
 						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
@@ -560,9 +570,6 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			sll_file_write_char(wf,',');
 		}
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP:
-				PRINT_STATIC_STRING("NOP",wf);
-				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_POP:
 				PRINT_STATIC_STRING("POP",wf);
 				break;
@@ -1099,6 +1106,13 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 
 
 __SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
-	sll_file_offset_t ln=0;
-	_print_node_internal(c_dt,i_ft,o,wf,&ln);
+	file_line_data_t dt={
+		sll_allocate(c_dt->fpt.l*sizeof(sll_file_offset_t)),
+		0
+	};
+	for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
+		*(dt.dt+i)=1;
+	}
+	_print_node_internal(c_dt,i_ft,o,wf,&dt);
+	sll_deallocate(dt.dt);
 }
