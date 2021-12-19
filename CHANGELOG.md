@@ -5,21 +5,25 @@
 ### Added
 
 - All functions now store their names (used by `sll:log_log`)
+- CLI flag for removing debugging data: `-D`
 - Custom types are now named when created in assignments ([#136])
 - File to object API: `sll_file_to_object` and `SLL_FROM_FILE`
 - Implemented `sll_ext:debug_get_call_stack` ([#130] and [#134])
 - Implemented `sll_ext:debug_get_instruction_count` and `sll_ext:debug_get_ref_count`
 - Implemented `sll_ext:debug_get_name` ([#130] and [#137])
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
+- Implemented `sll_remove_debug_data`
 - New node type representing source code lines: `SLL_NODE_TYPE_DBG` ([#140])
 - VM call stack is now part of the public API
 - VM now recives configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
 
 ### Changed
 
+- All optimization levels have been removed in favor of one CLI flag (`-O`)
 - Fixed `SLL_STRING_FORMAT_PADDING`
 - Libraries are now loaded only once ([#135])
 - `SLL_NODE_TYPE_UNKNOWN` is no longer part of the public API ([#139])
+- `sll_remove_debug_data` has been renamed to `sll_remove_object_debug_data`
 
 ### Removed
 

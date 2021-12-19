@@ -69,12 +69,12 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o);
 
 /**
  * \flags func
- * \name sll_remove_debug_data
+ * \name sll_remove_object_debug_data
  * \group gc
  * \desc Docs!
  * \arg sll_object_t* o
  */
-__SLL_EXTERNAL void sll_remove_debug_data(sll_object_t* o);
+__SLL_EXTERNAL void sll_remove_object_debug_data(sll_object_t* o);
 
 
 

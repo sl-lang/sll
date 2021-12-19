@@ -201,6 +201,17 @@ __SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_
 
 /**
  * \flags func
+ * \name sll_remove_debug_data
+ * \group node
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ */
+__SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt);
+
+
+
+/**
+ * \flags func
  * \name sll_remove_node_padding
  * \group node
  * \desc Docs!

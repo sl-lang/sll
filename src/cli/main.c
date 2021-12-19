@@ -34,15 +34,14 @@
 #define FLAG_GENERATE_SLL 8
 #define FLAG_HELP 16
 #define FLAG_NO_RUN 32
-#define FLAG_PRINT_ASSEMBLY 64
-#define FLAG_PRINT_OBJECT 128
-#define FLAG_USE_COLORS 256
-#define FLAG_VERBOSE 512
-#define FLAG_VERSION 1024
-#define _FLAG_ASSEMBLY_GENERATED 2048
-#define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
-#define OPTIMIZE_LEVEL_REMOVE_PADDING 1
-#define OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE 2
+#define FLAG_OPTIMIZE 64
+#define FLAG_PRINT_ASSEMBLY 128
+#define FLAG_PRINT_OBJECT 256
+#define FLAG_STRIP_DEBUG 512
+#define FLAG_USE_COLORS 1024
+#define FLAG_VERBOSE 2048
+#define FLAG_VERSION 4096
+#define _FLAG_ASSEMBLY_GENERATED 8192
 #ifdef SLL_VERSION_STANDALONE
 #define STANDALONE_STRING "standalone, "
 #else
@@ -56,7 +55,6 @@
 
 
 
-static uint8_t ol;
 static uint16_t fl;
 static sll_char_t* i_fp;
 static sll_string_length_t i_fpl;
@@ -334,18 +332,22 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 
 static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_file_t* f,const sll_char_t* o_fp,int* ec){
 	if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
-		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
+		if (fl&FLAG_OPTIMIZE){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Performing Global Optimization...\n");
 			}
 			sll_optimize_node(c_dt,&i_ft);
 		}
-		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
+		if (fl&FLAG_STRIP_DEBUG){
 			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("Removing Node Padding...\n");
+				PRINT_STATIC_STR("Removing Debugging Data...\n");
 			}
-			sll_remove_node_padding(c_dt,c_dt->h);
+			sll_remove_debug_data(c_dt);
 		}
+		if (fl&FLAG_VERBOSE){
+			PRINT_STATIC_STR("Removing Node Padding...\n");
+		}
+		sll_remove_node_padding(c_dt,c_dt->h);
 		if (fl&FLAG_PRINT_OBJECT){
 			sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
 			sll_file_write_char(sll_stdout,'\n');
@@ -450,7 +452,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 				COLOR_RESET;
 				return 0;
 			}
-			sll_write_sll_code(c_dt,&i_ft,&of);
+			sll_write_sll_code(c_dt,&i_ft,1,&of);
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("File Written Successfully.\n");
 			}
@@ -487,7 +489,6 @@ int main(int argc,const char** argv){
 	sll_init();
 	sll_platform_enable_console_color();
 	int ec=1;
-	ol=OPTIMIZE_LEVEL_REMOVE_PADDING;
 	fl=0;
 	i_fp=malloc(sizeof(sll_char_t));
 	if (!i_fp){
@@ -539,6 +540,9 @@ _skip_lib_path:
 		}
 		else if ((*e=='-'&&*(e+1)=='C'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--use-colors"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_USE_COLORS;
+		}
+		else if ((*e=='-'&&*(e+1)=='D'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--string-debug"))==SLL_COMPARE_RESULT_EQUAL){
+			fl|=FLAG_STRIP_DEBUG;
 		}
 		else if ((*e=='-'&&*(e+1)=='e'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--expand-file-paths"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_EXPAND_PATH;
@@ -596,19 +600,8 @@ _skip_lib_path:
 			}
 			o_fp=(const sll_char_t*)(argv[i]);
 		}
-		else if (*e=='-'&&*(e+1)=='O'&&*(e+3)==0){
-			if (*(e+2)=='0'){
-				ol=OPTIMIZE_LEVEL_NO_OPTIMIZE;
-			}
-			else if (*(e+2)=='1'){
-				ol=OPTIMIZE_LEVEL_REMOVE_PADDING;
-			}
-			else if (*(e+2)=='2'){
-				ol=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE;
-			}
-			else{
-				goto _unkown_switch;
-			}
+		else if ((*e=='-'&&*(e+1)=='O'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--optimize"))==SLL_COMPARE_RESULT_EQUAL){
+			fl|=FLAG_OPTIMIZE;
 		}
 		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--print-objects"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_PRINT_OBJECT;
@@ -667,7 +660,6 @@ _skip_lib_path:
 			fl|=FLAG_VERSION;
 		}
 		else if (*e=='-'){
-_unkown_switch:
 			COLOR_RED;
 				sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Switch '%s'\n"),e);
 			COLOR_RESET;
@@ -698,16 +690,7 @@ _read_file_argument:
 	sll_set_sandbox_flags(s_fl);
 	im_fpl=fpl;
 	if (fl&FLAG_VERBOSE){
-		PRINT_STATIC_STR("Configuration:\n  Optimization Level:\n");
-		if (ol==OPTIMIZE_LEVEL_NO_OPTIMIZE){
-			PRINT_STATIC_STR("    No Optimization\n");
-		}
-		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
-			PRINT_STATIC_STR("    Padding Reduction\n");
-		}
-		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
-			PRINT_STATIC_STR("    Global Optimization\n");
-		}
+		PRINT_STATIC_STR("Configuration:\n");
 		if (fl&FLAG_EXPAND_PATH){
 			PRINT_STATIC_STR("  Path Expand Mode\n");
 		}
@@ -726,11 +709,17 @@ _read_file_argument:
 		if (!(fl&FLAG_NO_RUN)){
 			PRINT_STATIC_STR("  Program Run Mode\n");
 		}
+		if (fl&FLAG_OPTIMIZE){
+			PRINT_STATIC_STR("  Optimization Mode\n");
+		}
 		if (fl&FLAG_PRINT_ASSEMBLY){
 			PRINT_STATIC_STR("  Assembly Print Mode\n");
 		}
 		if (fl&FLAG_PRINT_OBJECT){
 			PRINT_STATIC_STR("  Node Print Mode\n");
+		}
+		if (fl&FLAG_STRIP_DEBUG){
+			PRINT_STATIC_STR("  Debug Data Stripping Mode\n");
 		}
 		if (fl&FLAG_USE_COLORS){
 			PRINT_STATIC_STR("  Use Colors\n");

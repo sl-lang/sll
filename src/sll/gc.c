@@ -237,7 +237,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 	SLL_ASSERT(o->rc);
 	o->rc--;
 	if (!o->rc){
-		sll_remove_debug_data(o);
+		sll_remove_object_debug_data(o);
 		if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_STRING){
 			if (!(o->t&OBJECT_EXTERNAL_STRING)){
 				sll_free_string(&(o->dt.s));
@@ -273,7 +273,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 
 
 
-__SLL_EXTERNAL void sll_remove_debug_data(sll_object_t* o){
+__SLL_EXTERNAL void sll_remove_object_debug_data(sll_object_t* o){
 	if (o->_dbg){
 		object_debug_data_t* dt=o->_dbg;
 		o->_dbg=NULL;
@@ -344,7 +344,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 				_print_gc_data(k->dt,k->dt->_dbg);
 			}
 			else{
-				sll_remove_debug_data(k->dt);
+				sll_remove_object_debug_data(k->dt);
 			}
 			i++;
 		}
