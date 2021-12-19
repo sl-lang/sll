@@ -19,6 +19,7 @@
 ### Removed
 
 - Node debugging data: `sll_debug_node_data_t`, `SLL_NODE_TYPE_DEBUG_DATA`, [`src/sll/debug_object.c`][0.6.32/src/sll/debug_object.c], `sll_insert_debug_node` and `sll_remove_node_debug_data`
+- Unneeded error types: `SLL_ERROR_INTERNAL_STACK_OVERFLOW`, `SLL_ERROR_EMPTY_CHAR_STRING`, `SLL_ERROR_UNTERMINATED_CHAR_STRING`, `SLL_ERROR_UNTERMINATED_ESCAPE_SEQUENCE`, `SLL_ERROR_UNKNOWN_ESCAPE_CHARACTER`, `SLL_ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE`, `SLL_ERROR_UNKNOWN_SYMBOL`, `SLL_ERROR_SYMBOL_TOO_LONG`, `SLL_ERROR_NO_SYMBOL`, `SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG`, `SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII`, `SLL_ERROR_NO_STACK`, `SLL_ERROR_DIVISION_BY_ZERO` and `SLL_ERROR_STACK_CORRUPTED` ([#138])
 - Unused function `sll_cleanup_handles`
 - Utility API: `sll_api_util_instruction_count`, `sll_api_util_ref_count`, `sll:util_instruction_count` `sll:util_ref_count`, [`src/include/sll/api/util.h`][0.6.32/src/include/sll/api/util.h] and [`src/sll/api/util_api.c`][0.6.32/src/sll/api/util_api.c]
 - VM I/O files have been removed from `sll_runtime_data_t` (they are accessible through `sll_current_vm_config`)
@@ -1191,6 +1192,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#138]: https://github.com/sl-lang/sll/issues/138
 [#137]: https://github.com/sl-lang/sll/issues/137
 [#136]: https://github.com/sl-lang/sll/issues/136
 [#135]: https://github.com/sl-lang/sll/issues/135

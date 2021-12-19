@@ -1656,8 +1656,19 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e){
-	if (!c_dt->_s.s){
-		e->t=SLL_ERROR_NO_STACK;
+	if (!c_dt->h){
+		_init_assembly_stack(o);
+		o->tm=sll_platform_get_current_time();
+		o->h=o->_s.p;
+		_acquire_next_instruction(o)->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO;
+		o->ic=0;
+		o->vc=0;
+		o->ft.l=0;
+		o->ft.dt=NULL;
+		o->st.l=0;
+		o->st.dt=NULL;
+		o->ot_it.l=0;
+		o->ot_it.dt=NULL;
 		return 0;
 	}
 	_init_assembly_stack(o);

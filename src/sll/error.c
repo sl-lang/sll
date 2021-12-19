@@ -16,20 +16,11 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 			case SLL_ERROR_UNKNOWN:
 				sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Error: %c%c\n"),(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
 				return;
-			case SLL_ERROR_NO_STACK:
-				sll_file_write_format(sll_stderr,SLL_CHAR("No Internal Stack\n"));
-				return;
-			case SLL_ERROR_DIVISION_BY_ZERO:
-				sll_file_write_format(sll_stderr,SLL_CHAR("Division By Zero\n"));
-				return;
 			case SLL_ERROR_INVALID_FILE_FORMAT:
 				sll_file_write_format(sll_stderr,SLL_CHAR("Invalid File Format\n"));
 				return;
 			case SLL_ERROR_INVALID_INSTRUCTION:
 				sll_file_write_format(sll_stderr,SLL_CHAR("Invalid Instruction: 0x%.2hhx\n"),e->dt.it);
-				return;
-			case SLL_ERROR_STACK_CORRUPTED:
-				sll_file_write_format(sll_stderr,SLL_CHAR("Stack Corruption Detected\n"));
 				return;
 			case SLL_ERROR_INVALID_INSTRUCTION_INDEX:
 				sll_file_write_format(sll_stderr,SLL_CHAR("Instruction Index Out of Bounds\n"));
@@ -50,7 +41,7 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 	sll_char_t t=0;
 	sll_char_t* sym=NULL;
 	sll_char_t* sp=NULL;
-	if (e->t==SLL_ERROR_UNKNOWN_SYMBOL||e->t==SLL_ERROR_UNKNOWN_IDENTIFIER){
+	if (e->t==SLL_ERROR_UNKNOWN_IDENTIFIER){
 		sym=sll_allocate((oe-os+1)*sizeof(sll_char_t));
 		sp=sym;
 	}
@@ -92,9 +83,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 		default:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Error: %c%c\n"),(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
 			return;
-		case SLL_ERROR_INTERNAL_STACK_OVERFLOW:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Internal Stack Overflow\n"));
-			return;
 		case SLL_ERROR_UNMATCHED_OPEN_PARENTHESES:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unmatched Left Parentheses\n"));
 			return;
@@ -130,21 +118,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 				sll_file_write_format(sll_stderr,SLL_CHAR("Unmatched Double Quotes\n"));
 			}
 			return;
-		case SLL_ERROR_EMPTY_CHAR_STRING:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Empty Character String\n"));
-			return;
-		case SLL_ERROR_UNTERMINATED_CHAR_STRING:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Character String too Long\n"));
-			return;
-		case SLL_ERROR_UNTERMINATED_ESCAPE_SEQUENCE:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Unterminated Escape Sequence\n"));
-			return;
-		case SLL_ERROR_UNKNOWN_ESCAPE_CHARACTER:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Escape Character: '%c'\n"),t);
-			return;
-		case SLL_ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Unterminated Hexadecimal Escape Sequence\n"));
-			return;
 		case SLL_ERROR_UNKNOWN_HEXADECIMAL_CHARCTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Hexadecimal Character: '%c'\n"),t);
 			return;
@@ -157,22 +130,11 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 		case SLL_ERROR_UNKNOWN_BINARY_CHARCTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Binary Character: '%c'\n"),t);
 			return;
-		case SLL_ERROR_UNKNOWN_SYMBOL:
-			*sp=0;
-			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Symbol: '%s'\n"),sym);
-			sll_deallocate(sym);
-			return;
 		case SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Identifier Character: '%c'\n"),t);
 			return;
 		case SLL_ERROR_UNEXPECTED_CHARACTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unexpected Character: '%c'\n"),t);
-			return;
-		case SLL_ERROR_SYMBOL_TOO_LONG:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Symbol Too Long\n"));
-			return;
-		case SLL_ERROR_NO_SYMBOL:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Expression Without a Symbol\n"));
 			return;
 		case SLL_ERROR_TOO_MANY_ARGUMENTS:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Too Many Arguments\n"));
@@ -187,12 +149,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 			*sp=0;
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Identifier '%s'\n"),sym);
 			sll_deallocate(sym);
-			return;
-		case SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Internal Function Name Too Long\n"));
-			return;
-		case SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Internal Function Names Must be ASCII\n"));
 			return;
 	}
 }

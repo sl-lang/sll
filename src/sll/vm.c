@@ -907,10 +907,6 @@ _return:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END:
 				{
 					si--;
-					if (s<v+a_dt->vc){
-						e->t=SLL_ERROR_STACK_CORRUPTED;
-						goto _end;
-					}
 					sll_object_t* tos=*(s+si);
 					switch (SLL_OBJECT_GET_TYPE(tos)){
 						case SLL_OBJECT_TYPE_INT:

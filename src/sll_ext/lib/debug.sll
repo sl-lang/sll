@@ -1,4 +1,4 @@
-(# func_type string_type)
+(# int_type func_type string_type)
 (--- "_load.sll" "types.sll")
 
 (= call_stack_type (&:
