@@ -100,7 +100,7 @@ static sll_object_t* _debug_get_vm_config(const sll_object_t*const* al,sll_arg_c
 
 
 
-static sll_object_t* _debug_set_type(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug__set_type(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all>1){
 		const sll_object_t* a=*al;
 		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
@@ -122,5 +122,5 @@ void _register_debug_functions(void){
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_name"),_debug_get_name,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_ref_count"),_debug_get_ref_count,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_vm_config"),_debug_get_vm_config,0);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_set_type"),_debug_set_type,0);
+	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug__set_type"),_debug__set_type,0);
 }

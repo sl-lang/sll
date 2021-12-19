@@ -13,7 +13,7 @@
 	(~ handle_type) err
 ))
 
-(<- (... "sll_ext:debug_set_type") call_stack_type vm_config_type)
+(<- (... "sll_ext:debug__set_type") call_stack_type vm_config_type)
 
 (= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
 (= get_ref_count (... "sll_ext:debug_get_ref_count"))

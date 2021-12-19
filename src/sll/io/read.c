@@ -72,7 +72,7 @@ static int64_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
 static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 	sll_node_t* o=_acquire_next_node(c_dt);
 	READ_FIELD(o->t,rf);
-	while (o->t==SLL_NODE_TYPE_NOP){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG){
 		o=_acquire_next_node(c_dt);
 		READ_FIELD(o->t,rf);
 	}
