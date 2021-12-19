@@ -1092,13 +1092,15 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_sys_get_version void
-#define __SLL_API_ARGS_sll_api_sys_get_version sll_array_t* out
+#define __SLL_API_TYPE_sll_api_sys_get_version __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_sys_get_version const sll_integer_t a
 /**
  * \flags func optimizable
  * \name sll_api_sys_get_version
  * \group sys-api
  * \desc Docs!
+ * \arg const sll_integer_t a -> 
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func optimizable

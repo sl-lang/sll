@@ -1,12 +1,12 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/memory.h>
-#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/object.h>
 #include <sll/types.h>
+#include <sll/vm.h>
 #include <stdint.h>
 
 

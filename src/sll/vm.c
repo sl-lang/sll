@@ -16,6 +16,7 @@
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <sll/vm.h>
 
 
 
@@ -65,12 +66,14 @@
 
 __SLL_EXTERNAL sll_integer_t sll_current_instruction_count=0;
 __SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
+__SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg,sll_error_t* e){
 	e->t=SLL_ERROR_UNKNOWN;
 	sll_current_instruction_count=0;
+	sll_current_vm_config=cfg;
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	sll_page_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(cfg->s_sz+a_dt->vc*sizeof(sll_object_t*)+a_dt->st.l*sizeof(sll_object_t)+SLL_CALL_STACK_SIZE*sizeof(sll_call_stack_frame_t));
 	uint64_t ptr=(uint64_t)sll_platform_allocate_page(ptr_sz,1);
@@ -103,9 +106,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 		&ift,
 		&tt,
 		&hl,
-		cfg->in,
-		cfg->out,
-		cfg->err,
 		&c_st
 	};
 	sll_current_runtime_data=&r_dt;
@@ -680,12 +680,12 @@ _print_from_stack:;
 					sll_object_t* tos=*(s+si);
 					if (io){
 						if (tos->t==SLL_OBJECT_TYPE_STRING){
-							sll_file_write(r_dt.out,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t));
+							sll_file_write(cfg->out,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t));
 						}
 						else{
 							sll_string_t str;
 							sll_api_string_convert((const sll_object_t*const*)&tos,1,&str);
-							sll_file_write(r_dt.out,str.v,str.l*sizeof(sll_char_t));
+							sll_file_write(cfg->out,str.v,str.l*sizeof(sll_char_t));
 							sll_free_string(&str);
 						}
 					}
@@ -694,12 +694,12 @@ _print_from_stack:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 				if (io){
-					sll_file_write_char(r_dt.out,ai->dt.c);
+					sll_file_write_char(cfg->out,ai->dt.c);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				if (io){
-					sll_file_write(r_dt.out,(a_dt->st.dt+ai->dt.s)->v,(a_dt->st.dt+ai->dt.s)->l*sizeof(sll_char_t));
+					sll_file_write(cfg->out,(a_dt->st.dt+ai->dt.s)->v,(a_dt->st.dt+ai->dt.s)->l*sizeof(sll_char_t));
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:

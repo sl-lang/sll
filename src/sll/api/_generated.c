@@ -859,12 +859,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_platform_raw(con
 
 __SLL_API_TYPE_sll_api_sys_get_version sll_api_sys_get_version(__SLL_API_ARGS_sll_api_sys_get_version);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_version_raw(const sll_object_t*const* al,sll_arg_count_t all){
-	sll_array_t out;
-	sll_api_sys_get_version(&out);
-	sll_object_t* out_o=SLL_CREATE();
-	out_o->t=SLL_OBJECT_TYPE_ARRAY;
-	out_o->dt.a=out;
-	return out_o;
+	if (all<1){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	const sll_object_t* a=*(al+0);
+	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* out=sll_api_sys_get_version(a->dt.i);
+	return out;
 }
 
 

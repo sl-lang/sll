@@ -1,6 +1,5 @@
 #include <sll/_sll_internal.h>
 #include <sll/array.h>
-#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/handle.h>
 #include <sll/map.h>
@@ -11,6 +10,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <sll/vm.h>
 
 
 

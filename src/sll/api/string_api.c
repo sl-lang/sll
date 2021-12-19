@@ -1,7 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/string.h>
-#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
@@ -12,6 +11,7 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <sll/var_arg.h>
+#include <sll/vm.h>
 #include <stdint.h>
 #include <stdio.h>
 

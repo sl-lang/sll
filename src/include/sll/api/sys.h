@@ -90,7 +90,9 @@ __API_FUNC_DECL(sys_get_platform);
  * \name sll_api_sys_get_version
  * \group sys-api
  * \desc Docs!
- * \ret A
+ * \arg I
+ * \ret 0
+ * \ret O
  */
 __API_FUNC_DECL(sys_get_version);
 

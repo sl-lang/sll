@@ -2,17 +2,17 @@
 #include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/api/string.h>
-#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/memory.h>
-#include <sll/platform.h>
 #include <sll/object.h>
+#include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <sll/vm.h>
 
 
 
@@ -188,32 +188,32 @@ __API_FUNC(file_read){
 
 
 __API_FUNC(file_std_handle){
-	if (!sll_current_runtime_data){
+	if (!sll_current_runtime_data||!sll_current_vm_config){
 		SLL_INIT_HANDLE_DATA(out);
 		return;
 	}
-	SLL_ASSERT(sll_current_runtime_data);
+	SLL_ASSERT(sll_current_runtime_data&&sll_current_vm_config);
 	sll_file_t* p=NULL;
 	if (!a){
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDIN_IO)){
 			SLL_INIT_HANDLE_DATA(out);
 			return;
 		}
-		p=sll_current_runtime_data->in;
+		p=sll_current_vm_config->in;
 	}
 	else if (a==1){
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
 			SLL_INIT_HANDLE_DATA(out);
 			return;
 		}
-		p=sll_current_runtime_data->out;
+		p=sll_current_vm_config->out;
 	}
 	else{
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 			SLL_INIT_HANDLE_DATA(out);
 			return;
 		}
-		p=sll_current_runtime_data->err;
+		p=sll_current_vm_config->err;
 	}
 	if (_file_ht==SLL_HANDLE_UNKNOWN_TYPE){
 		_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type);

@@ -2,10 +2,10 @@
 #include <sll/api.h>
 #include <sll/api/string.h>
 #include <sll/api/sys.h>
-#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/log.h>
 #include <sll/types.h>
+#include <sll/vm.h>
 
 
 

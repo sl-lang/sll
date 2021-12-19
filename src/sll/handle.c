@@ -1,23 +1,11 @@
 #include <sll/_sll_internal.h>
-#include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/handle.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/types.h>
-
-
-
-__SLL_EXTERNAL void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll){
-	for (sll_handle_type_t i=hll;i<hl->dtl;i++){
-		if ((*(hl->dt+i))->df){
-			(*(hl->dt+i))->df(SLL_HANDLE_FREE);
-		}
-	}
-	hl->dtl=hll;
-	hl->dt=sll_reallocate(hl->dt,hll*sizeof(sll_handle_descriptor_t*));
-}
+#include <sll/vm.h>
 
 
 

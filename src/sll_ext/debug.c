@@ -30,7 +30,7 @@ __SLL_EXT_EXTERNAL sll_object_t* sll_ext_api_debug_set_type(const sll_object_t*c
 	if (all){
 		const sll_object_t* a=*al;
 		if (a->t==SLL_OBJECT_TYPE_INT){
-			_debug_type=(sll_object_type_t)a->dt.i;
+			_debug_type=(sll_object_type_t)(a->dt.i);
 		}
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);

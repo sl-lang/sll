@@ -669,9 +669,6 @@ typedef struct __SLL_RUNTIME_DATA{
 	sll_internal_function_table_t* ift;
 	sll_object_type_table_t* tt;
 	sll_handle_list_t* hl;
-	sll_file_t* in;
-	sll_file_t* out;
-	sll_file_t* err;
 	sll_call_stack_t* c_st;
 } sll_runtime_data_t;
 

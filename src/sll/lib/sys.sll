@@ -1,7 +1,13 @@
 (# int_type func_type string_type)
 (--- "types.sll")
 
-(= version (<- (... "sll:sys_get_version")))
+(= version_type (&:
+	(~ int_type) major
+	(~ int_type) minor
+	(~ int_type) patch
+))
+
+(= version (<- (... "sll:sys_get_version") version_type))
 
 (= platform (<- (... "sll:sys_get_platform")))
 
@@ -14,11 +20,7 @@
 (= library_extension (?: (=== platform "windows") "dll" "so"))
 
 (= sys (. (&:
-	(~ (&:
-		(~ int_type) major
-		(~ int_type) minor
-		(~ int_type) patch
-	)) version
+	(~ version_type) version
 	(~ string_type) platform
 	(~ int_type) argc
 	(~ func_type) argv

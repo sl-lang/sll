@@ -28,18 +28,6 @@
 
 
 /**
- * \flags func
- * \name sll_cleanup_handles
- * \group handle
- * \desc Docs!
- * \arg sll_handle_list_t* hl
- * \arg sll_handle_type_t hll
- */
-__SLL_EXTERNAL void sll_cleanup_handles(sll_handle_list_t* hl,sll_handle_type_t hll);
-
-
-
-/**
  * \flags check_output func
  * \name sll_verify_object_stack_cleanup
  * \group handle

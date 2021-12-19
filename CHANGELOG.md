@@ -14,6 +14,11 @@
 
 - Libraries are now loaded only once ([#135])
 
+### Removed
+
+- Unused function `sll_cleanup_handles`
+- VM I/O files have been removed from `sll_runtime_data_t` (they are accessible through `sll_current_vm_config`)
+
 ## [0.6.32] - 2021-12-18
 
 ### Added
