@@ -20,9 +20,9 @@
  * \name sll_current_instruction_count
  * \group assembly
  * \desc Docs!
- * \type sll_integer_t
+ * \type sll_instruction_index_t
  */
-__SLL_EXTERNAL extern sll_integer_t sll_current_instruction_count;
+__SLL_EXTERNAL extern sll_instruction_index_t sll_current_instruction_count;
 
 
 

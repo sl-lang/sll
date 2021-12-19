@@ -64,7 +64,7 @@
 
 
 
-__SLL_EXTERNAL sll_integer_t sll_current_instruction_count=0;
+__SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_count=0;
 __SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
 __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 

@@ -1,5 +1,4 @@
 #include <sll_ext/common.h>
-#include <sll_ext/debug.h>
 #include <sll.h>
 
 
@@ -8,26 +7,7 @@ static sll_object_type_t _debug_type=0;
 
 
 
-static sll_object_t* _debug_set_type(const sll_object_t*const* al,sll_arg_count_t all){
-	if (all){
-		const sll_object_t* a=*al;
-		if (a->t==SLL_OBJECT_TYPE_INT){
-			_debug_type=(sll_object_type_t)(a->dt.i);
-		}
-	}
-	return SLL_ACQUIRE_STATIC_INT(0);
-}
-
-
-
-void _register_debug_functions(void){
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_call_stack"),sll_ext_api_debug_get_call_stack,0);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_set_type"),_debug_set_type,0);
-}
-
-
-
-__SLL_EXT_EXTERNAL sll_object_t* sll_ext_api_debug_get_call_stack(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug_get_call_stack(const sll_object_t*const* al,sll_arg_count_t all){
 	if (!sll_current_runtime_data||!_debug_type){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
@@ -50,4 +30,40 @@ __SLL_EXT_EXTERNAL sll_object_t* sll_ext_api_debug_get_call_stack(const sll_obje
 		SLL_RELEASE(dt[2]);
 	}
 	return o;
+}
+
+
+
+static sll_object_t* _debug_get_instruction_count(const sll_object_t*const* al,sll_arg_count_t all){
+	return SLL_FROM_INT(sll_current_instruction_count);
+}
+
+
+
+static sll_object_t* _debug_get_ref_count(const sll_object_t*const* al,sll_arg_count_t all){
+	if (!all){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	return SLL_FROM_INT((*al)->rc);
+}
+
+
+
+static sll_object_t* _debug_set_type(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all){
+		const sll_object_t* a=*al;
+		if (a->t==SLL_OBJECT_TYPE_INT){
+			_debug_type=(sll_object_type_t)(a->dt.i);
+		}
+	}
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+void _register_debug_functions(void){
+	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_call_stack"),_debug_get_call_stack,0);
+	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_instruction_count"),_debug_get_instruction_count,0);
+	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_ref_count"),_debug_get_ref_count,0);
+	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_set_type"),_debug_set_type,0);
 }

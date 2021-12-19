@@ -8,11 +8,15 @@
 ))
 
 (<- (... "sll_ext:debug_set_type") call_stack_type)
-
 (= get_call_stack (... "sll_ext:debug_get_call_stack"))
+
+(= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
+(= get_ref_count (... "sll_ext:debug_get_ref_count"))
 
 (= debug (. (&:
 	(~ int_type) call_stack_type
 	(~ func_type) get_call_stack
-) call_stack_type get_call_stack))
+	(~ func_type) get_instruction_count
+	(~ func_type) get_ref_count
+) call_stack_type get_call_stack get_instruction_count get_ref_count))
 (## debug)

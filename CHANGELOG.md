@@ -6,7 +6,8 @@
 
 - All functions now store their names (used by `sll:log_log`)
 - Custom types are now named when created in assignments ([#136])
-- Implemented `sll_ext_api_debug_get_call_stack` and `sll_ext:debug_get_call_stack` ([#134])
+- Implemented `sll_ext:debug_get_call_stack` ([#134])
+- Implemented `sll_ext:debug_get_instruction_count` and `sll_ext:debug_get_ref_count`
 - VM call stack is now part of the public API
 - VM now recives configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
 
@@ -18,6 +19,7 @@
 
 - Node debugging data: `sll_debug_node_data_t`, `SLL_NODE_TYPE_DEBUG_DATA`, [`src/sll/debug_object.c`][0.6.32/src/sll/debug_object.c], `sll_insert_debug_node` and `sll_remove_node_debug_data`
 - Unused function `sll_cleanup_handles`
+- Utility API: `sll_api_util_instruction_count`, `sll_api_util_ref_count`, `sll:util_instruction_count` `sll:util_ref_count`, [`src/include/sll/api/util.h`][0.6.32/src/include/sll/api/util.h] and [`src/sll/api/util_api.c`][0.6.32/src/sll/api/util_api.c]
 - VM I/O files have been removed from `sll_runtime_data_t` (they are accessible through `sll_current_vm_config`)
 
 ## [0.6.32] - 2021-12-18
@@ -1276,6 +1278,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[0.6.32/src/include/sll/api/util.h]: https://github.com/sl-lang/sll/blob/v0.6.32/src/include/sll/api/util.h
+[0.6.32/src/sll/api/util_api.c]: https://github.com/sl-lang/sll/blob/v0.6.32/src/sll/api/util_api.c
 [0.6.32/src/sll/debug_object.c]: https://github.com/sl-lang/sll/blob/v0.6.32/src/sll/debug_object.c
 [0.6.32/src/sll/platform/posix]: https://github.com/sl-lang/sll/tree/v0.6.32/src/sll/platform/posix
 [0.6.32/src/sll/platform/windows]: https://github.com/sl-lang/sll/tree/v0.6.32/src/sll/platform/windows
