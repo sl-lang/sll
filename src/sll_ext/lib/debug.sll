@@ -1,4 +1,4 @@
-(# int_type func_type string_type)
+(# int_type func_type string_type handle_type)
 (--- "_load.sll" "types.sll")
 
 (= call_stack_type (&:
@@ -6,14 +6,22 @@
 	(~ int_type) return_address
 	(~ int_type) stack_offset
 ))
+(= vm_config_type (&:
+	(~ int_type) stack_size
+	(~ handle_type) in
+	(~ handle_type) out
+	(~ handle_type) err
+))
 
-(<- (... "sll_ext:debug_set_type") call_stack_type)
-(= get_call_stack (... "sll_ext:debug_get_call_stack"))
+(<- (... "sll_ext:debug_set_type") call_stack_type vm_config_type)
 
 (= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
 (= get_ref_count (... "sll_ext:debug_get_ref_count"))
 
 (= get_name (... "sll_ext:debug_get_name"))
+
+(= get_call_stack (... "sll_ext:debug_get_call_stack"))
+(= get_vm_config (... "sll_ext:debug_get_vm_config"))
 
 (= debug (. (&:
 	(~ int_type) call_stack_type
@@ -21,5 +29,6 @@
 	(~ func_type) get_instruction_count
 	(~ func_type) get_ref_count
 	(~ func_type) get_name
-) call_stack_type get_call_stack get_instruction_count get_ref_count get_name))
+	(~ func_type) get_vm_config
+) call_stack_type get_call_stack get_instruction_count get_ref_count get_name get_vm_config))
 (## debug)

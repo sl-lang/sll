@@ -2,6 +2,7 @@
 #define __SLL_API_FILE_H__ 1
 #include <sll/api.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -9,6 +10,21 @@
  * \group file-api
  * \desc Docs!
  */
+
+
+
+#define SLL_FROM_FILE(f) __SLL_ADD_DEBUG_DATA(sll_file_to_object((f)),__SLL_DEBUG_TYPE_CREATE)
+
+
+/**
+ * \flags check_output func
+ * \name sll_file_to_object
+ * \group file-api
+ * \desc Desc!
+ * \arg sll_file_t* f
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_file_to_object(sll_file_t* f);
 
 
 

@@ -112,6 +112,22 @@ static sll_handle_t _file_clone(sll_handle_t h){
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_file_to_object(sll_file_t* f){
+	if (_file_ht==SLL_HANDLE_UNKNOWN_TYPE){
+		SLL_ASSERT(sll_current_runtime_data);
+		_file_ht=sll_create_handle(sll_current_runtime_data->hl,&_file_type);
+	}
+	sll_object_t* o=SLL_CREATE();
+	o->t=SLL_OBJECT_TYPE_HANDLE;
+	o->dt.h.t=_file_ht;
+	o->dt.h.h=_alloc_file();
+	(*(_file_fl+o->dt.h.h))->dt.p=f;
+	(*(_file_fl+o->dt.h.h))->p=1;
+	return o;
+}
+
+
+
 __API_FUNC(file_close){
 	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return 0;
