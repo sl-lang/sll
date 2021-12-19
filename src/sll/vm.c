@@ -64,6 +64,10 @@
 
 
 
+static sll_runtime_data_t _vm_runtime;
+
+
+
 __SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_count=0;
 __SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
 __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
@@ -101,14 +105,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_register_builtin_internal_functions(&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
 	sll_handle_list_t hl=SLL_INIT_HANDLE_LIST_STRUCT;
-	sll_runtime_data_t r_dt={
-		a_dt,
-		&ift,
-		&tt,
-		&hl,
-		&c_st
-	};
-	sll_current_runtime_data=&r_dt;
+	_vm_runtime.a_dt=a_dt;
+	_vm_runtime.ift=&ift;
+	_vm_runtime.tt=&tt;
+	_vm_runtime.hl=&hl;
+	_vm_runtime.c_st=&c_st;
+	sll_current_runtime_data=&_vm_runtime;
 	sll_return_code_t rc=0;
 	sll_object_t** s=(sll_object_t**)ptr;
 	sll_stack_offset_t si=0;
