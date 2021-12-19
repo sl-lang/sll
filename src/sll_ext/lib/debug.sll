@@ -3,6 +3,8 @@
 
 (= call_stack_type (&:
 	(~ string_type) name
+	(~ int_type) return_address
+	(~ int_type) stack_offset
 ))
 
 (<- (... "sll_ext:debug_set_type") call_stack_type)

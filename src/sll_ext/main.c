@@ -1,3 +1,4 @@
+#include <sll_ext/_sll_ext_internal.h>
 #include <sll_ext/common.h>
 #include <sll_ext/debug.h>
 #include <sll_ext/version.h>
@@ -10,8 +11,7 @@ __SLL_EXT_EXTERNAL sll_bool_t __sll_load(sll_version_t v){
 		SLL_LOG("Version mismatch!");
 		return 0;
 	}
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_call_stack"),sll_ext_api_debug_get_call_stack,0);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_set_type"),sll_ext_api_debug_set_type,0);
+	_register_debug_functions();
 	return 1;
 }
 

@@ -9,8 +9,4 @@ __SLL_EXT_EXTERNAL sll_object_t* sll_ext_api_debug_get_call_stack(const sll_obje
 
 
 
-__SLL_EXT_EXTERNAL sll_object_t* sll_ext_api_debug_set_type(const sll_object_t*const* al,sll_arg_count_t all);
-
-
-
 #endif
