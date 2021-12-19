@@ -418,7 +418,10 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 					else{
 						sll_string_t* s=c_dt->st.dt+n->dt.s;
 						if (!s->l||s->l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
-							SLL_UNIMPLEMENTED();
+							sll_string_t ns;
+							sll_string_select(s,0,SLL_INTERNAL_FUNCTION_MAX_LENGTH,1,&ns);
+							n->dt.s=sll_add_string(&(c_dt->st),&ns,1);
+							s=c_dt->st.dt+n->dt.s;
 						}
 						o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,s->v);
 						if (o->dt.fn.id==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX){
