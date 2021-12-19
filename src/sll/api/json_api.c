@@ -84,10 +84,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 		else{
 			c=**p;
 			(*p)++;
-			if (c=='/'||c=='\\'||c=='\''||c=='\"'){
-				o->v[o->l]=c;
-			}
-			else if (c=='b'){
+			if (c=='b'){
 				o->v[o->l]=8;
 			}
 			else if (c=='f'){
@@ -113,8 +110,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 				o->v[o->l]=((a>47&&a<58?a-48:(a>64&&a<71?a-55:a-87))<<4)|(b>47&&b<58?b-48:(b>64&&b<71?b-55:b-87));
 			}
 			else{
-				sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Escape: \\%c\n"),c);
-				SLL_UNIMPLEMENTED();
+				o->v[o->l]=c;
 			}
 		}
 		o->l++;

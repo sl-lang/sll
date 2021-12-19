@@ -14,6 +14,7 @@
 
 ### Changed
 
+- Fixed `SLL_STRING_FORMAT_PADDING`
 - Libraries are now loaded only once ([#135])
 
 ### Removed
