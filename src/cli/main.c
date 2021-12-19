@@ -42,8 +42,7 @@
 #define _FLAG_ASSEMBLY_GENERATED 2048
 #define OPTIMIZE_LEVEL_NO_OPTIMIZE 0
 #define OPTIMIZE_LEVEL_REMOVE_PADDING 1
-#define OPTIMIZE_LEVEL_STRIP_DEBUG_DATA 2
-#define OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE 3
+#define OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE 2
 #ifdef SLL_VERSION_STANDALONE
 #define STANDALONE_STRING "standalone, "
 #else
@@ -341,12 +340,6 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			}
 			sll_optimize_node(c_dt,&i_ft);
 		}
-		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
-			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("Removing Debug Data...\n");
-			}
-			sll_remove_node_debug_data(c_dt->h);
-		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
 			if (fl&FLAG_VERBOSE){
 				PRINT_STATIC_STR("Removing Node Padding...\n");
@@ -494,7 +487,7 @@ int main(int argc,const char** argv){
 	sll_init();
 	sll_platform_enable_console_color();
 	int ec=1;
-	ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
+	ol=OPTIMIZE_LEVEL_REMOVE_PADDING;
 	fl=0;
 	i_fp=malloc(sizeof(sll_char_t));
 	if (!i_fp){
@@ -611,9 +604,6 @@ _skip_lib_path:
 				ol=OPTIMIZE_LEVEL_REMOVE_PADDING;
 			}
 			else if (*(e+2)=='2'){
-				ol=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA;
-			}
-			else if (*(e+2)=='3'){
 				ol=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE;
 			}
 			else{
@@ -714,9 +704,6 @@ _read_file_argument:
 		}
 		if (ol>=OPTIMIZE_LEVEL_REMOVE_PADDING){
 			PRINT_STATIC_STR("    Padding Reduction\n");
-		}
-		if (ol>=OPTIMIZE_LEVEL_STRIP_DEBUG_DATA){
-			PRINT_STATIC_STR("    Debug Data Stripping\n");
 		}
 		if (ol>=OPTIMIZE_LEVEL_STRIP_GLOBAL_OPTIMIZE){
 			PRINT_STATIC_STR("    Global Optimization\n");

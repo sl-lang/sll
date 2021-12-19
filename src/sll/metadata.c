@@ -65,9 +65,6 @@ static sll_node_t* _mark(sll_node_t* o,uint64_t* m){
 				*(m+(o->dt.dc.nm>>6))|=1ull<<(o->dt.dc.nm&63);
 			}
 			return o+1;
-		case SLL_NODE_TYPE_DEBUG_DATA:
-			*(m+(o->dt.dbg.fpi>>6))|=1ull<<(o->dt.dbg.fpi&63);
-			return _mark(o+1,m);
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;
@@ -137,9 +134,6 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 				o->dt.dc.nm=*(sm+o->dt.dc.nm);
 			}
 			return o+1;
-		case SLL_NODE_TYPE_DEBUG_DATA:
-			o->dt.dbg.fpi=*(sm+o->dt.dbg.fpi);
-			return _update(o+1,sm);
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;

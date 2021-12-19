@@ -128,12 +128,6 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 			_write_integer(wf,o->dt.dc.t);
 			_write_integer(wf,o->dt.dc.nm);
 			return o+1;
-		case SLL_NODE_TYPE_DEBUG_DATA:
-			_write_integer(wf,o->dt.dbg.fpi);
-			_write_integer(wf,o->dt.dbg.ln);
-			_write_integer(wf,o->dt.dbg.cn);
-			_write_integer(wf,o->dt.dbg.ln_off);
-			return _write_object(wf,o+1);
 	}
 	_write_integer(wf,o->dt.ac);
 	sll_arg_count_t l=o->dt.ac;

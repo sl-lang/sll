@@ -82,7 +82,6 @@
 #define SLL_NODE_TYPE_EXIT 61
 #define SLL_NODE_TYPE_COMMA 62
 #define SLL_NODE_TYPE_OPERATION_LIST 63
-#define SLL_NODE_TYPE_DEBUG_DATA 64
 #define SLL_NODE_TYPE_RESERVED0 254
 #define SLL_NODE_TYPE_NOP 255
 
@@ -127,18 +126,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_
  * \arg sll_compilation_data_t* o
  */
 __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* rf,sll_compilation_data_t* o);
-
-
-
-/**
- * \flags func
- * \name sll_insert_debug_node
- * \group node
- * \desc Docs!
- * \arg sll_compilation_data_t* c_dt
- * \arg sll_file_t* rf
- */
-__SLL_EXTERNAL void sll_insert_debug_node(sll_compilation_data_t* c_dt,sll_file_t* rf);
 
 
 
@@ -208,17 +195,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_node(sll_compilation_data
  * \arg sll_file_t* wf
  */
 __SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf);
-
-
-
-/**
- * \flags func
- * \name sll_remove_node_debug_data
- * \group node
- * \desc Docs!
- * \arg sll_node_t* o
- */
-__SLL_EXTERNAL void sll_remove_node_debug_data(sll_node_t* o);
 
 
 

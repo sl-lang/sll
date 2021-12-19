@@ -9,7 +9,7 @@
 
 
 static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* sz){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
 		if (o->t==NODE_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 		}
@@ -169,7 +169,7 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* r
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){

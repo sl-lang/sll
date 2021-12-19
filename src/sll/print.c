@@ -76,10 +76,10 @@ static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_da
 
 
 static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
-	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_NODE_TYPE_VAR_ACCESS&&o->t!=SLL_NODE_TYPE_OPERATION_LIST&&o->t!=SLL_NODE_TYPE_DEBUG_DATA){
+	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->t!=SLL_NODE_TYPE_VAR_ACCESS&&o->t!=SLL_NODE_TYPE_OPERATION_LIST){
 		sll_file_write_char(wf,'(');
 	}
 	switch (o->t){
@@ -277,7 +277,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				sll_arg_count_t ac=o->dt.ac;
 				o++;
 				if (ac){
-					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
 						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					sll_arg_count_t i=0;
@@ -422,7 +422,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l>1);
 				o++;
-				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
 					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				SLL_ASSERT(o->t==SLL_NODE_TYPE_IDENTIFIER);
@@ -432,7 +432,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				do{
 					l--;
 					sll_file_write_char(wf,'$');
-					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DEBUG_DATA||o->t==NODE_TYPE_CHANGE_STACK){
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==NODE_TYPE_CHANGE_STACK){
 						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
@@ -519,22 +519,6 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				}
 				sll_file_write_char(wf,')');
 				return o;
-			}
-		case SLL_NODE_TYPE_DEBUG_DATA:
-			{
-				sll_file_write_char(wf,'|');
-				sll_file_write_char(wf,'#');
-				sll_string_t* fp=c_dt->st.dt+o->dt.dbg.fpi;
-				for (sll_string_length_t i=0;i<fp->l;i++){
-					sll_file_write_char(wf,fp->v[i]);
-				}
-				sll_file_write_char(wf,':');
-				_print_int(o->dt.dbg.ln+1,wf);
-				sll_file_write_char(wf,':');
-				_print_int(o->dt.dbg.cn+1,wf);
-				sll_file_write_char(wf,'#');
-				sll_file_write_char(wf,'|');
-				return _print_node_internal(c_dt,i_ft,o+1,wf);
 			}
 		default:
 			SLL_UNREACHABLE();

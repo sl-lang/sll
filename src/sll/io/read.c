@@ -159,12 +159,6 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 			CHECK_ERROR2(rf,o->dt.dc.t,sll_object_type_t);
 			CHECK_ERROR2(rf,o->dt.dc.nm,sll_string_index_t);
 			return 1;
-		case SLL_NODE_TYPE_DEBUG_DATA:
-			CHECK_ERROR2(rf,o->dt.dbg.fpi,sll_string_index_t);
-			CHECK_ERROR2(rf,o->dt.dbg.ln,sll_file_offset_t);
-			CHECK_ERROR2(rf,o->dt.dbg.cn,sll_file_offset_t);
-			CHECK_ERROR2(rf,o->dt.dbg.ln_off,sll_file_offset_t);
-			return _read_object(c_dt,rf);
 	}
 	CHECK_ERROR2(rf,o->dt.ac,sll_arg_count_t);
 	for (sll_arg_count_t i=0;i<o->dt.ac;i++){

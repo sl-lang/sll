@@ -85,8 +85,6 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_compilation_data_t
 				}
 				return o;
 			}
-		case SLL_NODE_TYPE_DEBUG_DATA:
-			return _remove_padding_internal(o+1,c_dt,d,rm);
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;

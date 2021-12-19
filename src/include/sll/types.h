@@ -309,15 +309,6 @@ typedef struct __SLL_DECL_COPY_NODE_DATA{
 
 
 
-typedef struct __SLL_DEBUG_NODE_DATA{
-	sll_string_index_t fpi;
-	sll_file_offset_t ln;
-	sll_file_offset_t cn;
-	sll_file_offset_t ln_off;
-} sll_debug_node_data_t;
-
-
-
 typedef union __SLL_NODE_DATA{
 	sll_char_t c;
 	sll_integer_t i;
@@ -331,7 +322,6 @@ typedef union __SLL_NODE_DATA{
 	sll_decl_node_data_t d;
 	sll_decl_copy_node_data_t dc;
 	sll_arg_count_t ac;
-	sll_debug_node_data_t dbg;
 	sll_function_index_t fn_id;
 	sll_object_type_t ot;
 	void* _p;
