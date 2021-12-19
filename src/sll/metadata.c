@@ -13,7 +13,6 @@ static sll_node_t* _mark(sll_node_t* o,uint64_t* m){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_INT:
@@ -82,7 +81,6 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_INT:

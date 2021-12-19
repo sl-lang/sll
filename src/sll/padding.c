@@ -21,7 +21,6 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_compilation_data_t
 		(*d)=(*d)->dt._p;
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:

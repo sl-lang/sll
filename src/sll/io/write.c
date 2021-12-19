@@ -39,8 +39,6 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 	}
 	WRITE_FIELD(o->t,wf);
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
-			return o+1;
 		case SLL_NODE_TYPE_CHAR:
 			WRITE_FIELD(o->dt.c,wf);
 			return o+1;

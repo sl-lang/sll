@@ -83,9 +83,6 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 		sll_file_write_char(wf,'(');
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
-			PRINT_STATIC_STRING("(unknown)",wf);
-			return o+1;
 		case SLL_NODE_TYPE_CHAR:
 			{
 				sll_file_write_char(wf,'\'');

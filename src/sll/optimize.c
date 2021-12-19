@@ -115,7 +115,6 @@ static sll_node_t* _remove_single_object(sll_node_t* o){
 	sll_node_type_t t=o->t;
 	o->t=SLL_NODE_TYPE_NOP;
 	switch (t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
@@ -205,7 +204,6 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_INT:
@@ -594,7 +592,6 @@ static const sll_node_t* _mark_loop_vars(const sll_node_t* o,optimizer_data_t* o
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
@@ -1024,9 +1021,6 @@ _keep_assignment:;
 		}
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
-		case SLL_NODE_TYPE_DECL_COPY:
-			return o+1;
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
@@ -2179,6 +2173,8 @@ _unknown_cast:
 				o=r;
 				goto _optimize_operation_list_comma;
 			}
+		case SLL_NODE_TYPE_DECL_COPY:
+			return o+1;
 		case SLL_NODE_TYPE_NEW:
 			{
 				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
@@ -2402,7 +2398,6 @@ static sll_node_t* _remap_indexes_merge_print(sll_node_t* o,sll_node_t* p,optimi
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:

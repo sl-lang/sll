@@ -16,6 +16,7 @@
 
 - Fixed `SLL_STRING_FORMAT_PADDING`
 - Libraries are now loaded only once ([#135])
+- `SLL_NODE_TYPE_UNKNOWN` is no longer part of the public API ([#139])
 
 ### Removed
 
@@ -1193,6 +1194,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#139]: https://github.com/sl-lang/sll/issues/139
 [#138]: https://github.com/sl-lang/sll/issues/138
 [#137]: https://github.com/sl-lang/sll/issues/137
 [#136]: https://github.com/sl-lang/sll/issues/136

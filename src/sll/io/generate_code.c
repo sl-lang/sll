@@ -76,8 +76,6 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		sll_file_write_char(wf,'(');
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
-			return o+1;
 		case SLL_NODE_TYPE_CHAR:
 			{
 				sll_file_write_char(wf,'\'');

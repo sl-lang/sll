@@ -77,8 +77,6 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 		READ_FIELD(o->t,rf);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
-			return 1;
 		case SLL_NODE_TYPE_CHAR:
 			READ_FIELD(o->dt.c,rf);
 			return 1;

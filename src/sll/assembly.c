@@ -65,7 +65,6 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_INT:
@@ -262,8 +261,6 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 	}
 	NOT_FIELD(o);
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
-			return o+1;
 		case SLL_NODE_TYPE_CHAR:
 			if ((!!(o->dt.c))^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
@@ -466,8 +463,6 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 	}
 	NOT_FIELD(o);
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
-			return o+1;
 		case SLL_NODE_TYPE_CHAR:
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
@@ -1012,7 +1007,6 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
@@ -1089,7 +1083,6 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 	}
 	NOT_FIELD(o);
 	switch (o->t){
-		case SLL_NODE_TYPE_UNKNOWN:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
