@@ -88,7 +88,7 @@ static void _print_line(sll_string_index_t s,const sll_compilation_data_t* c_dt,
 		sll_string_t* fp=c_dt->st.dt+(*(c_dt->fpt.dt+s));
 		PRINT_STATIC_STRING("|# ",wf);
 		sll_file_write(wf,fp->v,fp->l);
-		PRINT_STATIC_STRING(" #| |# :1 #|",wf);
+		PRINT_STATIC_STRING(" #||# :1 #|",wf);
 	}
 }
 
