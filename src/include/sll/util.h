@@ -161,14 +161,29 @@ __SLL_EXTERNAL void sll_free_string_table(sll_string_table_t* st);
 
 
 /**
- * \flags func
+ * \flags check_output func
+ * \name sll_get_location
+ * \group util
+ * \desc Docs!
+ * \arg const sll_assembly_data_t* a_dt
+ * \arg sll_instruction_index_t ii
+ * \arg sll_string_index_t* fp
+ * \arg sll_string_index_t* fn
+ * \ret sll_file_offset_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* a_dt,sll_instruction_index_t ii,sll_string_index_t* fp,sll_string_index_t* fn);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_get_sandbox_flag
  * \group util
  * \desc Docs!
  * \arg sll_sandbox_flags_t f
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_get_sandbox_flag(sll_sandbox_flags_t f);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_flags_t f);
 
 
 

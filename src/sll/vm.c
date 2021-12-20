@@ -69,6 +69,7 @@ static sll_runtime_data_t _vm_runtime;
 
 
 __SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_count=0;
+__SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_index=0;
 __SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
 __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
@@ -122,6 +123,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 			goto _end;
 		}
 		sll_current_instruction_count++;
+		sll_current_instruction_index=ii;
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_POP:
 				si--;

@@ -1,10 +1,19 @@
 (# int_type func_type string_type handle_type)
 (--- "_load.sll" "types.sll")
 
-(= call_stack_type (&:
-	(~ string_type) name
+(= location_type (&:
+	(~ string_type) file
+	(~ string_type) function
+	(~ int_type) line
+))
+(= call_stack_raw_type (&:
 	(~ int_type) return_address
 	(~ int_type) stack_offset
+))
+(= call_stack_type (&:
+	(~ string_type) name
+	(~ location_type) return
+	(~ call_stack_raw_type) raw
 ))
 (= vm_config_type (&:
 	(~ int_type) stack_size
@@ -13,22 +22,26 @@
 	(~ handle_type) err
 ))
 
-(<- (... "sll_ext:debug__set_type") call_stack_type vm_config_type)
+(<- (... "sll_ext:debug__set_type") call_stack_type call_stack_raw_type location_type vm_config_type)
 
 (= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
 (= get_ref_count (... "sll_ext:debug_get_ref_count"))
 
 (= get_name (... "sll_ext:debug_get_name"))
+(= get_location (... "sll_ext:debug_get_location"))
 
 (= get_call_stack (... "sll_ext:debug_get_call_stack"))
 (= get_vm_config (... "sll_ext:debug_get_vm_config"))
 
 (= debug (. (&:
 	(~ int_type) call_stack_type
+	(~ int_type) location_type
+	(~ int_type) vm_config_type
 	(~ func_type) get_call_stack
 	(~ func_type) get_instruction_count
 	(~ func_type) get_ref_count
 	(~ func_type) get_name
 	(~ func_type) get_vm_config
-) call_stack_type get_call_stack get_instruction_count get_ref_count get_name get_vm_config))
+	(~ func_type) get_location
+) call_stack_type location_type vm_config_type get_call_stack get_instruction_count get_ref_count get_name get_vm_config get_location))
 (## debug)

@@ -29,3 +29,6 @@
 (:> (<- debug$get_name test_func) "\n")
 (:> (<- debug$get_name (. debug$call_stack_type)) "\n")
 (:> (<- debug$get_vm_config) "\n")
+
+(:> (<- debug$get_location) "\n")
+(<- (,,, (:> (<- debug$get_location) "\n")))

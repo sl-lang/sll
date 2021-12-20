@@ -28,6 +28,17 @@ __SLL_EXTERNAL extern sll_instruction_index_t sll_current_instruction_count;
 
 /**
  * \flags var
+ * \name sll_current_instruction_index
+ * \group assembly
+ * \desc Docs!
+ * \type sll_instruction_index_t
+ */
+__SLL_EXTERNAL extern sll_instruction_index_t sll_current_instruction_index;
+
+
+
+/**
+ * \flags var
  * \name sll_current_runtime_data
  * \group assembly
  * \desc Docs!

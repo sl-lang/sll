@@ -1914,7 +1914,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC){
-				o->dbg.l++;
+				o->dbg.l+=(ai->dt.s==SLL_MAX_STRING_INDEX?1:3);
 			}
 			ai++;
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
@@ -2186,6 +2186,9 @@ _handle_nop:;
 				*(sm.m+(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)>>6))|=1ull<<(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)&63);
 				f_l_dt.c=ai->dt.s;
 				dbg_i++;
+				(o->dbg.dt+dbg_i)->ii=0;
+				(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
+				dbg_i++;
 			}
 			l_dbg_ii=i;
 			goto _handle_nop;
@@ -2202,9 +2205,13 @@ _handle_nop:;
 				(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
 				(o->dbg.dt+dbg_i)->ln=(*(c_dt->fpt.dt+f_l_dt.c))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
 				dbg_i++;
+				l_dbg_ii=i;
 			}
-			*(f_l_dt.dt+f_l_dt.c)=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln;
 			(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
+			(o->dbg.dt+dbg_i)->ln=(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->nm|SLL_DEBUG_LINE_DATA_FLAG_FUNC;
+			dbg_i++;
+			*(f_l_dt.dt+f_l_dt.c)=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln;
+			(o->dbg.dt+dbg_i)->ii=0;
 			(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
 			dbg_i++;
 			l_dbg_ii=i;
@@ -2267,10 +2274,8 @@ _handle_nop:;
 		}
 	}
 	for (sll_instruction_index_t i=0;i<o->dbg.l;i++){
-		if ((o->dbg.dt+i)->ln&SLL_DEBUG_LINE_DATA_FLAG_FILE){
-			(o->dbg.dt+i)->ln=(*(sm.im+SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+i)))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
-		}
-		else{
+		if ((o->dbg.dt+i)->ln&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC)){
+			(o->dbg.dt+i)->ln=(*(sm.im+SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+i)))|((o->dbg.dt+i)->ln&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC));
 		}
 	}
 	ai=o->h;
