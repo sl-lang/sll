@@ -1658,6 +1658,15 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 	a_dt->ft.dt=NULL;
 	a_dt->ft.l=0;
 	sll_free_string_table(&(a_dt->st));
+	for (sll_object_type_t i=0;i<a_dt->ot_it.l;i++){
+		sll_deallocate(*(a_dt->ot_it.dt+i));
+	}
+	sll_deallocate(a_dt->ot_it.dt);
+	a_dt->ot_it.dt=NULL;
+	a_dt->ot_it.l=0;
+	sll_deallocate(a_dt->dbg.dt);
+	a_dt->dbg.dt=NULL;
+	a_dt->dbg.l=0;
 	void* pg=a_dt->_s.s;
 	while (pg){
 		void* n=*((void**)pg);
@@ -1821,8 +1830,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		&_assembly_nop,
 		&_assembly_nop
 	};
+	o->dbg.l=0;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
 		if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_NOP||ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG){
+			if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG){
+				o->dbg.l++;
+			}
 			ai++;
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 				ai=ai->dt._p;
@@ -2053,6 +2066,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		*(o->ot_it.dt+i)=n;
 	}
 	ai=o->h;
+	o->dbg.dt=sll_allocate(o->dbg.l*sizeof(sll_debug_line_data_t));
+	sll_instruction_index_t dbg_i=0;
+	file_line_data_t f_l_dt={
+		sll_zero_allocate(c_dt->fpt.l*sizeof(sll_file_offset_t)),
+		0
+	};
 	sll_instruction_index_t l_ln=0;
 	sll_assembly_instruction_t* s=ai;
 	sll_instruction_index_t* lbl=sll_allocate(g_dt.n_lbl*sizeof(sll_instruction_index_t));
@@ -2072,8 +2091,23 @@ _handle_nop:;
 			*(sm.m+(ai->dt.s>>6))|=1ull<<(ai->dt.s&63);
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG){
-			if (i!=l_ln){
-				/***/
+			if (ai->dt.s!=SLL_MAX_STRING_INDEX){
+				if (i==l_ln&&dbg_i){
+					dbg_i--;
+				}
+				(o->dbg.dt+dbg_i)->ii=i;
+				(o->dbg.dt+dbg_i)->ln=(*(c_dt->fpt.dt+ai->dt.s))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+				*(sm.m+(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)>>6))|=1ull<<(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)&63);
+				f_l_dt.c=ai->dt.s;
+				dbg_i++;
+			}
+			else{
+				(*(f_l_dt.dt+f_l_dt.c))++;
+				if (i!=l_ln||(dbg_i&&((o->dbg.dt+dbg_i-1)->ln&SLL_DEBUG_LINE_DATA_FLAG_FILE))){
+					(o->dbg.dt+dbg_i)->ii=i;
+					(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
+					dbg_i++;
+				}
 			}
 			l_ln=i;
 			goto _handle_nop;
@@ -2095,6 +2129,9 @@ _handle_nop:;
 			s=s->dt._p;
 		}
 	}
+	sll_deallocate(f_l_dt.dt);
+	o->dbg.dt=sll_reallocate(o->dbg.dt,dbg_i*sizeof(sll_debug_line_data_t));
+	o->dbg.l=dbg_i;
 	sm.im=sll_allocate(o->st.l*sizeof(sll_string_t*));
 	sll_string_index_t k=0;
 	sll_string_index_t l=0;
@@ -2132,6 +2169,11 @@ _handle_nop:;
 		SLL_ASSERT(oi->l);
 		for (sll_arg_count_t j=0;j<oi->l;j++){
 			oi->dt[j].f=*(sm.im+oi->dt[j].f);
+		}
+	}
+	for (sll_instruction_index_t i=0;i<o->dbg.l;i++){
+		if ((o->dbg.dt+i)->ln&SLL_DEBUG_LINE_DATA_FLAG_FILE){
+			(o->dbg.dt+i)->ln=(*(sm.im+SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+i)))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
 		}
 	}
 	ai=o->h;

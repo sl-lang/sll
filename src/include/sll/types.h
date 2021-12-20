@@ -489,6 +489,20 @@ typedef struct __SLL_ASSEMBLY_FUNCTION_TABLE{
 
 
 
+typedef struct __SLL_DEBUG_LINE_DATA{
+	sll_instruction_index_t ii;
+	sll_file_offset_t ln;
+} sll_debug_line_data_t;
+
+
+
+typedef struct __SLL_DEBUG_DATA{
+	sll_debug_line_data_t* dt;
+	sll_instruction_index_t l;
+} sll_debug_data_t;
+
+
+
 typedef struct __SLL_ASSEMBLY_STACK_DATA{
 	void* s;
 	void* e;
@@ -506,6 +520,7 @@ typedef struct __SLL_ASSEMBLY_DATA{
 	sll_assembly_function_table_t ft;
 	sll_string_table_t st;
 	sll_object_type_initializer_table_t ot_it;
+	sll_debug_data_t dbg;
 	sll_assembly_stack_data_t _s;
 } sll_assembly_data_t;
 
