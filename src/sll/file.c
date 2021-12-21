@@ -200,6 +200,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 	if (!(f->f&SLL_FILE_FLAG_READ)){
 		return SLL_END_OF_DATA;
 	}
+	if (f->f&FILE_FLAG_MEMORY){
+		if (f->_off==f->dt.mm.sz){
+			return SLL_END_OF_DATA;
+		}
+		sll_char_t o=*((sll_char_t*)((void*)((uint64_t)(f->dt.mm.p)+f->_off)));
+		f->_off++;
+		return o;
+	}
 	sll_char_t o;
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		if (!sll_platform_file_read(f->dt.fl.fd,&o,sizeof(sll_char_t))){

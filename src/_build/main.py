@@ -51,7 +51,7 @@ for f in os.listdir("src/sll/lib"):
 		wf.write(rf.read())
 util.log("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
-if (util.wrap_output(["build/sll","-C","-c","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-O"] if "--release" in sys.argv else []),pfx=b"  ").returncode!=0):
+if (util.wrap_output(["build/sll","-C","-c","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-O","-D"] if "--release" in sys.argv else []),pfx=b"  ").returncode!=0):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
@@ -69,7 +69,7 @@ if ("--extension" in sys.argv):
 			wf.write(rf.read())
 	util.log("Compiling Extension Modules...")
 	fl=list(os.listdir("build/lib_ext"))
-	if (util.wrap_output(["build/sll","-C","-c","-e","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-O"] if "--release" in sys.argv else []),pfx=b"  ").returncode!=0):
+	if (util.wrap_output(["build/sll","-C","-c","-e","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-O","-D"] if "--release" in sys.argv else []),pfx=b"  ").returncode!=0):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:
@@ -82,13 +82,15 @@ if ("--extension" in sys.argv):
 if ("--standalone" in sys.argv):
 	util.log(f"Converting Modules to Header File ({len(fl)} Modules)...")
 	with open("build/compiled_modules.h","wb") as f:
-		f.write(bytes(f"#ifndef __COMPILED_MODULES_H__\n#define __COMPILED_MODULES_H__\n#include <stdint.h>\n#define COMPILED_MODULE_COUNT {len(fl)}\ntypedef struct __MODULE{{const char* nm;uint32_t nml;uint8_t c;uint32_t sz;const uint8_t* dt;}} module_t;\n","utf-8"))
+		f.write(bytes(f"#ifndef __COMPILED_MODULES_H__\n#define __COMPILED_MODULES_H__\n#include <stdint.h>\ntypedef struct __MODULE{{const char* nm;uint32_t nml;uint8_t c;uint32_t sz;const uint8_t* dt;}} module_t;\n","utf-8"))
 		m_dt=[]
-		for i,e in enumerate(fl):
+		i=0
+		for e in os.listdir("build/lib"):
 			f.write(bytes(f"const uint8_t _m{i}[]={{","utf-8"))
-			with open(f"build/lib/{e}.slc","rb") as rf:
+			with open(f"build/lib/"+e,"rb") as rf:
 				dt=rf.read()
-				util.log(f"  Converting Module 'build/lib/{e}.slc' ({len(dt)} bytes)")
+				util.log(f"  Converting Module 'build/lib/{e}' ({len(dt)} bytes)")
+				e=e[:-4]
 				c=0
 				for k in bytes(e,"utf-8"):
 					c^=k
@@ -98,7 +100,8 @@ if ("--standalone" in sys.argv):
 					f.write((b"," if st else b"")+bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
 					st=True
 			f.write(b"};\n")
-		f.write(b"const module_t m_dt[]={"+b",".join(m_dt)+b"};\n#endif")
+			i+=1
+		f.write(b"const module_t internal_module_data[]={"+b",".join(m_dt)+b"};\nconst uint32_t internal_module_count="+bytes(str(i),"utf-8")+b";\n#endif")
 	util.log("Generating Standalone Executable...")
 	build.build_sll_standalone(("--release" in sys.argv))
 if ("--bundle" in sys.argv):

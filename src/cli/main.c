@@ -92,6 +92,29 @@ static sll_bool_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,s
 
 
 
+static sll_bool_t parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* fp){
+	sll_init_compilation_data(fp,f,c_dt);
+	sll_error_t e;
+	if (!sll_parse_all_nodes(c_dt,&i_ft,load_import,&e)){
+		sll_free_compilation_data(c_dt);
+		if (e.t!=SLL_ERROR_UNKNOWN){
+			sll_print_error(f,&e);
+		}
+		sll_file_close(f);
+		return 0;
+	}
+	if (fl&FLAG_PRINT_OBJECT){
+		sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
+		sll_file_write_char(sll_stdout,'\n');
+	}
+	if (fl&FLAG_VERBOSE){
+		PRINT_STATIC_STR("File Successfully Read.\n");
+	}
+	return 1;
+}
+
+
+
 static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_file_t* f,sll_char_t* f_fp){
 	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -156,49 +179,28 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			sll_error_t e;
 			if (!sll_load_assembly(f,a_dt,&e)){
 				sll_free_assembly_data(a_dt);
-				if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-					sll_file_reset(f);
-					if (!sll_load_compiled_node(f,c_dt,&e)){
-						sll_free_compilation_data(c_dt);
-						if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-							sll_file_reset(f);
-							sll_init_compilation_data(f_fp,f,c_dt);
-							if (!sll_parse_all_nodes(c_dt,&i_ft,load_import,&e)){
-								sll_free_compilation_data(c_dt);
-								if (e.t!=SLL_ERROR_UNKNOWN){
-									sll_print_error(f,&e);
-								}
-								sll_file_close(f);
-								return 0;
-							}
-							if (fl&FLAG_PRINT_OBJECT){
-								sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
-								sll_file_write_char(sll_stdout,'\n');
-							}
-							if (fl&FLAG_VERBOSE){
-								PRINT_STATIC_STR("File Successfully Read.\n");
-							}
-						}
-						else{
-							sll_print_error(f,&e);
-							sll_file_close(f);
-							return 0;
-						}
-					}
-					else{
-						if (fl&FLAG_PRINT_OBJECT){
-							sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
-							sll_file_write_char(sll_stdout,'\n');
-						}
-						if (fl&FLAG_VERBOSE){
-							PRINT_STATIC_STR("File Successfully Read.\n");
-						}
-					}
-				}
-				else{
+				if (e.t!=SLL_ERROR_INVALID_FILE_FORMAT){
 					sll_print_error(f,&e);
 					sll_file_close(f);
 					return 0;
+				}
+				sll_file_reset(f);
+				if (!sll_load_compiled_node(f,c_dt,&e)){
+					sll_free_compilation_data(c_dt);
+					if (e.t!=SLL_ERROR_INVALID_FILE_FORMAT){
+						sll_print_error(f,&e);
+						sll_file_close(f);
+						return 0;
+					}
+					sll_file_reset(f);
+					return parse_file(c_dt,f,f_fp);
+				}
+				if (fl&FLAG_PRINT_OBJECT){
+					sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
+					sll_file_write_char(sll_stdout,'\n');
+				}
+				if (fl&FLAG_VERBOSE){
+					PRINT_STATIC_STR("File Successfully Read.\n");
 				}
 			}
 			else{
@@ -215,8 +217,8 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 	for (i=0;i<f_nm_l;i++){
 		c^=*(f_nm+i);
 	}
-	for (uint32_t j=0;j<COMPILED_MODULE_COUNT;j++){
-		const module_t* m=m_dt+j;
+	for (uint32_t j=0;j<internal_module_count;j++){
+		const module_t* m=internal_module_data+j;
 		if (m->c==c&&m->nml==f_nm_l&&sll_compare_data(m->nm,f_nm,f_nm_l)==SLL_COMPARE_RESULT_EQUAL){
 			if (fl&FLAG_VERBOSE){
 				sll_file_write_format(sll_stdout,SLL_CHAR("Found Internal Module '%s.slc'...\n"),f_nm);
@@ -301,24 +303,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			if (fl&FLAG_VERBOSE){
 				sll_file_write_format(sll_stdout,SLL_CHAR("Found File '%s'\n"),f_fp);
 			}
-			sll_error_t e;
-			sll_init_compilation_data(l_fp,f,c_dt);
-			if (!sll_parse_all_nodes(c_dt,&i_ft,load_import,&e)){
-				sll_free_compilation_data(c_dt);
-				if (e.t!=SLL_ERROR_UNKNOWN){
-					sll_print_error(f,&e);
-				}
-				sll_file_close(f);
-				return 0;
-			}
-			if (fl&FLAG_PRINT_OBJECT){
-				sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
-				sll_file_write_char(sll_stdout,'\n');
-			}
-			if (fl&FLAG_VERBOSE){
-				PRINT_STATIC_STR("File Successfully Read.\n");
-			}
-			return 1;
+			return parse_file(c_dt,f,l_fp);
 		}
 	}
 #endif
