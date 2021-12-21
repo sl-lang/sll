@@ -1024,6 +1024,46 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_index_reverse_lis
 
 
 
+__SLL_API_TYPE_sll_api_string_join sll_api_string_join(__SLL_API_ARGS_sll_api_string_join);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_join_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING||SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_CHAR){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		SLL_UNIMPLEMENTED();
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		SLL_UNIMPLEMENTED();
+	}
+	sll_string_t out;
+	sll_api_string_join(a,&(b->dt.a),&out);
+	SLL_RELEASE(a);
+	SLL_RELEASE(b);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_string_pad_left sll_api_string_pad_left(__SLL_API_ARGS_sll_api_string_pad_left);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_left_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -1556,6 +1596,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:string_index_list",sll_api_string_index_list_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_index_reverse",sll_api_string_index_reverse_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_index_reverse_list",sll_api_string_index_reverse_list_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:string_join",sll_api_string_join_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_pad_left",sll_api_string_pad_left_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_pad_right",sll_api_string_pad_right_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_replace",sll_api_string_replace_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
@@ -1579,5 +1620,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=56;
+const sll_function_index_t _ifunc_size=57;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

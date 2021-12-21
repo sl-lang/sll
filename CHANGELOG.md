@@ -9,6 +9,7 @@
 - Custom types are now named when created in assignments ([#136])
 - File to object API: `sll_file_to_object` and `SLL_FROM_FILE`
 - Implemented `sll:path_split` ([#146])
+- Implemented `sll:string_join` ([#106])
 - Implemented `sll_current_instruction_index` and `sll_remove_debug_data`
 - Implemented `sll_ext:debug_get_call_stack` ([#130] and [#134])
 - Implemented `sll_ext:debug_get_instruction_count` and `sll_ext:debug_get_ref_count`
@@ -16,8 +17,8 @@
 - Implemented `sll_ext:debug_get_name` ([#130] and [#137])
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
 - Implemented `sll_get_location` and `sll_ext:debug_get_location` ([#141])
-- Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index`, `sll_api_string_index_list`, `sll:string_index` and `sll:string_index_list` ([#142])
 - Implemented `sll_string_index_reverse`, `sll_string_index_reverse_char`, `sll_string_index_reverse_multiple`, `sll_api_string_index_reverse`, `sll_api_string_index_reverse_list`, `sll:string_index_reverse` and `sll:string_index_reverse_list` ([#143])
+- Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index`, `sll_api_string_index_list`, `sll:string_index` and `sll:string_index_list` ([#142])
 - Implemented `sys$library_path` ([#145])
 - New node type representing source code lines: `SLL_NODE_TYPE_DBG` ([#140])
 - VM call stack is now part of the public API
@@ -1240,6 +1241,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#116]: https://github.com/sl-lang/sll/issues/116
 [#112]: https://github.com/sl-lang/sll/issues/112
 [#111]: https://github.com/sl-lang/sll/issues/111
+[#106]: https://github.com/sl-lang/sll/issues/106
 [#105]: https://github.com/sl-lang/sll/issues/105
 [#104]: https://github.com/sl-lang/sll/issues/104
 [#103]: https://github.com/sl-lang/sll/issues/103

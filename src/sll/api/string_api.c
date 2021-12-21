@@ -6,6 +6,7 @@
 #include <sll/handle.h>
 #include <sll/memory.h>
 #include <sll/object.h>
+#include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -368,6 +369,33 @@ __API_FUNC(string_index_reverse){
 __API_FUNC(string_index_reverse_list){
 	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c):sll_string_index_reverse_multiple(a,b->dt.s.v,b->dt.s.l));
 	return (o==SLL_MAX_STRING_INDEX?-1:o);
+}
+
+
+
+__API_FUNC_DECL(string_join){
+	sll_string_create(0,out);
+	out->v=sll_memory_move(out->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	for (sll_array_length_t i=0;i<b->l;i++){
+		if (i){
+			if (a->t==SLL_OBJECT_TYPE_CHAR){
+				sll_string_increase(out,1);
+				out->v[out->l]=a->dt.c;
+			}
+			else{
+				sll_string_increase(out,a->dt.s.l);
+				sll_copy_data(a->dt.s.v,a->dt.s.l,out->v+out->l);
+				out->l+=a->dt.s.l;
+			}
+		}
+		sll_object_t* n=sll_operator_cast(b->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		sll_string_increase(out,n->dt.s.l);
+		sll_copy_data(n->dt.s.v,n->dt.s.l,out->v+out->l);
+		out->l+=n->dt.s.l;
+		SLL_RELEASE(n);
+	}
+	out->v=sll_memory_move(out->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_string_calculate_checksum(out);
 }
 
 

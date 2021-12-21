@@ -910,6 +910,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_string_join void
+#define __SLL_API_ARGS_sll_api_string_join sll_object_t* a,sll_array_t* b,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_string_join
+ * \group string-api
+ * \desc Docs!
+ * \arg sll_object_t* a -> 
+ * \arg sll_array_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_join_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_join:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_string_pad_left void
 #define __SLL_API_ARGS_sll_api_string_pad_left sll_string_t* a,sll_integer_t b,sll_read_char_t c,sll_string_t* out
 /**

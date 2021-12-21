@@ -116,6 +116,19 @@ __API_FUNC_DECL(string_index_reverse_list);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_string_join
+ * \group string-api
+ * \desc Docs!
+ * \arg SC
+ * \arg A
+ * \ret S
+ */
+__API_FUNC_DECL(string_join);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_string_pad_left
  * \group string-api
  * \desc Docs!

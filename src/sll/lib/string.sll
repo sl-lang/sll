@@ -25,6 +25,8 @@
 (= index_reverse (... "sll:string_index_reverse"))
 (= index_reverse_list (... "sll:string_index_reverse_list"))
 
+(= join (... "sll:string_join"))
+
 (= string (. (&:
 	(~ func_type) str
 	(~ func_type) replace
@@ -43,5 +45,6 @@
 	(~ func_type) index_list
 	(~ func_type) index_reverse
 	(~ func_type) index_reverse_list
-) str replace split flip_case lower_case title_case upper_case format reverse pad_left pad_right starts ends index index_list index_reverse index_reverse_list))
+	(~ func_type) join
+) str replace split flip_case lower_case title_case upper_case format reverse pad_left pad_right starts ends index index_list index_reverse index_reverse_list join))
 (## string)
