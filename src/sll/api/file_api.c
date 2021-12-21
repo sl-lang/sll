@@ -137,6 +137,16 @@ __API_FUNC(file_close){
 
 
 
+__API_FUNC(file_flush){
+	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+a->h))){
+		return;
+	}
+	extended_file_t* ef=*(_file_fl+a->h);
+	sll_file_flush((ef->p?ef->dt.p:&(ef->dt.f)));
+}
+
+
+
 __API_FUNC(file_open){
 	SLL_INIT_HANDLE_DATA(out);
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
@@ -185,10 +195,7 @@ __API_FUNC(file_open){
 
 __API_FUNC(file_read){
 	SLL_INIT_STRING(out);
-	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
-		return;
-	}
-	if (!(*(_file_fl+a->h))){
+	if (a->t!=_file_ht||a->h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+a->h))){
 		return;
 	}
 	if (!b){

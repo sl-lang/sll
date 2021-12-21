@@ -6,6 +6,7 @@
 (= stderr (<- (... "sll:file_std_handle") 2))
 
 (= close (... "sll:file_close"))
+(= flush (... "sll:file_flush"))
 (= open (... "sll:file_open"))
 (= read (... "sll:file_read"))
 (= write (... "sll:file_write"))
@@ -15,8 +16,9 @@
 	(~ handle_type) stdout
 	(~ handle_type) stderr
 	(~ func_type) close
+	(~ func_type) flush
 	(~ func_type) open
 	(~ func_type) read
 	(~ func_type) write
-) stdin stdout stderr close open read write))
+) stdin stdout stderr close flush open read write))
 (## file)

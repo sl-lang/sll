@@ -10,6 +10,7 @@
 - File to object API: `sll_file_to_object` and `SLL_FROM_FILE`
 - Implemented `sll:path_split` ([#146])
 - Implemented `sll:string_join` ([#106])
+- Implemented `sll_api_file_flush` and `sll:file_flush`
 - Implemented `sll_current_instruction_index` and `sll_remove_debug_data`
 - Implemented `sll_ext:debug_get_call_stack` ([#130] and [#134])
 - Implemented `sll_ext:debug_get_instruction_count` and `sll_ext:debug_get_ref_count`
