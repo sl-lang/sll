@@ -12,7 +12,7 @@
 - Implemented `sll_current_instruction_index` and `sll_remove_debug_data`
 - Implemented `sll_ext:debug_get_call_stack` ([#130] and [#134])
 - Implemented `sll_ext:debug_get_instruction_count` and `sll_ext:debug_get_ref_count`
-- Implemented `sll_ext:debug_get_instruction_index` ([#144])
+- Implemented `sll_ext:debug_get_instruction_index` ([#130] and [#144])
 - Implemented `sll_ext:debug_get_name` ([#130] and [#137])
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
 - Implemented `sll_get_location` and `sll_ext:debug_get_location` ([#141])

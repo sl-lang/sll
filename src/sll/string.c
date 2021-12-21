@@ -671,10 +671,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 	}
 	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
 		uint64_t k=*p;
-		uint64_t e=0;
 		uint64_t v=0;
 		for (sll_string_length_t j=0;j<cll;j++){
-			e=k^(*(ml+i));
+			uint64_t e=k^(*(ml+i));
 			v|=(e-0x101010101010101ull)&(~e);
 		}
 		v&=0x8080808080808080ull;
@@ -742,10 +741,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 	for (sll_string_length_t i=0;i<l;i++){
 		p--;
 		uint64_t k=*p;
-		uint64_t e=0;
 		uint64_t v=0;
 		for (sll_string_length_t j=0;j<cll;j++){
-			e=k^(*(ml+i));
+			uint64_t e=k^(*(ml+i));
 			v|=(e-0x101010101010101ull)&(~e);
 		}
 		v&=0x8080808080808080ull;
