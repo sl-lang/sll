@@ -68,6 +68,62 @@ __API_FUNC_DECL(string_flip_case);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_string_index
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg CS
+ * \ret n -> Failure
+ * \ret I -> Success
+ */
+__API_FUNC_DECL(string_index);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_index_list
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg CS
+ * \ret n -> Failure
+ * \ret I -> Success
+ */
+__API_FUNC_DECL(string_index_list);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_index_reverse
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg CS
+ * \ret n -> Failure
+ * \ret I -> Success
+ */
+__API_FUNC_DECL(string_index_reverse);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_index_reverse_list
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg CS
+ * \ret n -> Failure
+ * \ret I -> Success
+ */
+__API_FUNC_DECL(string_index_reverse_list);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_string_pad_left
  * \group string-api
  * \desc Docs!

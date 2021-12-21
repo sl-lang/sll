@@ -87,20 +87,13 @@ __SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_cha
 
 
 
-__SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_char_t* s,sll_string_length_t* l){
-	sll_string_length_t i=0;
-	sll_string_length_t j=0;
-	while (*s){
-		i++;
-		if (*s=='/'||*s=='\\'){
-			j=i;
-		}
-		s++;
-	}
-	if (l){
-		*l=i;
-	}
-	return j;
+__SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s){
+	sll_char_t dt[2]={
+		'/',
+		'\\'
+	};
+	sll_string_length_t o=sll_string_index_reverse_multiple(s,dt,2);
+	return (o==SLL_MAX_STRING_INDEX?0:o+1);
 }
 
 
@@ -247,7 +240,7 @@ __API_FUNC(path_size){
 
 
 __API_FUNC(path_split){
-	sll_string_length_t i=sll_path_split(a->v,NULL);
+	sll_string_length_t i=sll_path_split(a);
 	sll_array_create(2,out);
 	out->v[0]=SLL_CREATE();
 	out->v[0]->t=SLL_OBJECT_TYPE_STRING;

@@ -448,6 +448,92 @@ __SLL_EXTERNAL void sll_string_increase(sll_string_t* s,sll_string_length_t l);
 
 
 /**
+ * \flags check_output func
+ * \name sll_string_index
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* a
+ * \arg const sll_string_t* b
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll_string_t* a,const sll_string_t* b);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_index_char
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_char_t c
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_index_multiple
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg const sll_char_t* cl
+ * \arg sll_string_length_t cll
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_index_reverse
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* a
+ * \arg const sll_string_t* b
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse(const sll_string_t* a,const sll_string_t* b);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_index_reverse_char
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_char_t c
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_char(const sll_string_t* s,sll_char_t c);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_index_reverse_multiple
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg const sll_char_t* cl
+ * \arg sll_string_length_t cll
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll);
+
+
+
+/**
  * \flags func
  * \name sll_string_insert_pointer
  * \group string

@@ -18,10 +18,12 @@ static sll_array_length_t _log_f_dtl=0;
 
 
 static file_log_data_t* _get_file_index(const sll_char_t* fp){
-	sll_string_length_t l;
-	sll_string_length_t i=sll_path_split(SLL_CHAR(fp),&l);
+	sll_string_t fp_s;
+	sll_string_from_pointer(fp,&fp_s);
+	sll_string_length_t i=sll_path_split(&fp_s);
 	sll_string_t s;
-	sll_string_from_pointer_length(SLL_CHAR(fp)+i,l-i,&s);
+	sll_string_from_pointer_length(fp+i,fp_s.l-i,&s);
+	sll_free_string(&fp_s);
 	sll_array_length_t j=0;
 	for (;j<_log_f_dtl;j++){
 		file_log_data_t* k=*(_log_f_dt+j);

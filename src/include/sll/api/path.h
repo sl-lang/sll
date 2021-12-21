@@ -41,11 +41,10 @@ __SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_cha
  * \name sll_path_split
  * \group path-api
  * \desc Docs!
- * \arg const sll_char_t* s
- * \arg sll_string_length_t* l
+ * \arg const sll_string_t* s
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_char_t* s,sll_string_length_t* l);
+__SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s);
 
 
 

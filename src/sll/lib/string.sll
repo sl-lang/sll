@@ -20,6 +20,9 @@
 (= starts (... "sll:string_starts"))
 (= ends (... "sll:string_ends"))
 
+(= index (... "sll:string_index"))
+(= index_reverse (... "sll:string_index_reverse"))
+
 (= string (. (&:
 	(~ func_type) str
 	(~ func_type) replace
@@ -34,5 +37,7 @@
 	(~ func_type) pad_right
 	(~ func_type) starts
 	(~ func_type) ends
-) str replace split flip_case lower_case title_case upper_case format reverse pad_left pad_right starts ends))
+	(~ func_type) index
+	(~ func_type) index_reverse
+) str replace split flip_case lower_case title_case upper_case format reverse pad_left pad_right starts ends index index_reverse))
 (## string)

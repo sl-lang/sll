@@ -344,6 +344,34 @@ __API_FUNC(string_flip_case){
 
 
 
+__API_FUNC(string_index){
+	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c):sll_string_index(a,&(b->dt.s)));
+	return (o==SLL_MAX_STRING_INDEX?-1:o);
+}
+
+
+
+__API_FUNC(string_index_list){
+	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c):sll_string_index_multiple(a,b->dt.s.v,b->dt.s.l));
+	return (o==SLL_MAX_STRING_INDEX?-1:o);
+}
+
+
+
+__API_FUNC(string_index_reverse){
+	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c):sll_string_index_reverse(a,&(b->dt.s)));
+	return (o==SLL_MAX_STRING_INDEX?-1:o);
+}
+
+
+
+__API_FUNC(string_index_reverse_list){
+	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c):sll_string_index_reverse_multiple(a,b->dt.s.v,b->dt.s.l));
+	return (o==SLL_MAX_STRING_INDEX?-1:o);
+}
+
+
+
 __API_FUNC(string_pad_left){
 	if (b<0){
 		sll_string_pad_right(a,(b<-((sll_integer_t)SLL_MAX_STRING_LENGTH)?SLL_MAX_STRING_LENGTH:(sll_string_length_t)(-b)),(c==SLL_NO_CHAR?' ':(sll_char_t)SLL_NO_CHAR),out);
