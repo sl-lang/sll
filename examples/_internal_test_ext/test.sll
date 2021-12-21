@@ -32,3 +32,4 @@
 
 (:> (<- debug$get_location) "\n")
 (<- (,,, (:> (<- debug$get_location) "\n")))
+(:> (<- debug$get_location (- (<- debug$get_instruction_index) 50)) "\n")

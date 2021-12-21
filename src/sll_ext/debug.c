@@ -105,6 +105,12 @@ static sll_object_t* _debug_get_instruction_count(const sll_object_t*const* al,s
 
 
 
+static sll_object_t* _debug_get_instruction_index(const sll_object_t*const* al,sll_arg_count_t all){
+	return SLL_FROM_INT(sll_current_instruction_index);
+}
+
+
+
 static sll_object_t* _debug_get_location(const sll_object_t*const* al,sll_arg_count_t all){
 	sll_instruction_index_t ii=sll_current_instruction_index;
 	if (all){
@@ -180,6 +186,7 @@ void _register_debug_functions(void){
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug__set_type"),_debug__set_type,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_call_stack"),_debug_get_call_stack,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_instruction_count"),_debug_get_instruction_count,0);
+	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_instruction_index"),_debug_get_instruction_index,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_location"),_debug_get_location,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_name"),_debug_get_name,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_ref_count"),_debug_get_ref_count,0);
