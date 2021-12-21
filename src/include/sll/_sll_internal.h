@@ -52,7 +52,7 @@ static __inline __forceinline unsigned int FIND_LAST_SET_BIT(unsigned __int64 m)
 #define SLL_UNREACHABLE() __builtin_unreachable()
 #endif
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
-#define FIND_LAST_SET_BIT(m) (64-__builtin_clzll((m)))
+#define FIND_LAST_SET_BIT(m) (63-__builtin_clzll((m)))
 #define POPULATION_COUNT(m) __builtin_popcountll((m))
 static inline __attribute__((always_inline)) unsigned int ROTATE_BITS(unsigned int a,unsigned char b){
 	__asm__("rol %1,%0":"+r"(a):"c"(b));

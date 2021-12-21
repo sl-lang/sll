@@ -2,6 +2,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/_generated.h>
+#include <sll/array.h>
 #include <sll/common.h>
 #include <sll/handle.h>
 #include <sll/ift.h>
@@ -31,11 +32,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_count_raw(const sl
 __SLL_API_TYPE_sll_api_array_create sll_api_array_create(__SLL_API_ARGS_sll_api_array_create);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_create_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	sll_array_t out;
 	sll_api_array_create(a->dt.i,&out);
@@ -50,11 +57,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_create_raw(const s
 __SLL_API_TYPE_sll_api_array_replace sll_api_array_replace(__SLL_API_ARGS_sll_api_array_replace);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_replace_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<3){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* b=*(al+1);
 	const sll_object_t* c=*(al+2);
@@ -71,11 +84,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_replace_raw(const 
 __SLL_API_TYPE_sll_api_array_reverse sll_api_array_reverse(__SLL_API_ARGS_sll_api_array_reverse);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	sll_array_t out;
 	sll_api_array_reverse(&(a->dt.a),&out);
@@ -131,17 +150,26 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_open_raw(const sll_
 __SLL_API_TYPE_sll_api_file_read sll_api_file_read(__SLL_API_ARGS_sll_api_file_read);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!((SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE))){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* b=NULL;
 	if (all>1){
 		b=*(al+1);
 		if (!(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT)){
-			return SLL_ACQUIRE_STATIC(str_zero);
+			sll_object_t* out=SLL_CREATE();
+			out->t=SLL_OBJECT_TYPE_STRING;
+			sll_string_create(0,&(out->dt.s));
+			return out;
 		}
 	}
 	sll_string_t out;
@@ -220,7 +248,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse_raw(const sll
 __SLL_API_TYPE_sll_api_json_stringify sll_api_json_stringify(__SLL_API_ARGS_sll_api_json_stringify);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_stringify_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	sll_string_t out;
@@ -322,11 +353,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_function_raw(con
 __SLL_API_TYPE_sll_api_path_absolute sll_api_path_absolute(__SLL_API_ARGS_sll_api_path_absolute);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_absolute_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_string_t out;
 	sll_api_path_absolute(&(a->dt.s),&out);
@@ -383,7 +420,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_is_dir_raw(const sl
 __SLL_API_TYPE_sll_api_path_join sll_api_path_join(__SLL_API_ARGS_sll_api_path_join);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_arg_count_t ac=all-0;
 	const sll_string_t** a=sll_allocate(ac*sizeof(sll_string_t*));
@@ -391,7 +431,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(const sll_
 		const sll_object_t* tmp=*(al+idx+0);
 		if (!(SLL_OBJECT_GET_TYPE(tmp)==SLL_OBJECT_TYPE_STRING)){
 			sll_deallocate((void*)a);
-			return SLL_ACQUIRE_STATIC(str_zero);
+			sll_object_t* out=SLL_CREATE();
+			out->t=SLL_OBJECT_TYPE_STRING;
+			sll_string_create(0,&(out->dt.s));
+			return out;
 		}
 		*(a+idx)=&(tmp->dt.s);
 	}
@@ -409,11 +452,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(const sll_
 __SLL_API_TYPE_sll_api_path_list_dir sll_api_path_list_dir(__SLL_API_ARGS_sll_api_path_list_dir);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	sll_array_t out;
 	sll_api_path_list_dir(&(a->dt.s),&out);
@@ -428,11 +477,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir_raw(const 
 __SLL_API_TYPE_sll_api_path_recursive_list_dir sll_api_path_recursive_list_dir(__SLL_API_ARGS_sll_api_path_recursive_list_dir);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	sll_array_t out;
 	sll_api_path_recursive_list_dir(&(a->dt.s),&out);
@@ -447,11 +502,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir_
 __SLL_API_TYPE_sll_api_path_relative sll_api_path_relative(__SLL_API_ARGS_sll_api_path_relative);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_relative_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_string_t out;
 	sll_api_path_relative(&(a->dt.s),&out);
@@ -496,11 +557,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_size_raw(const sll_
 __SLL_API_TYPE_sll_api_path_split sll_api_path_split(__SLL_API_ARGS_sll_api_path_split);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	sll_array_t out;
 	sll_api_path_split(&(a->dt.s),&out);
@@ -515,17 +582,26 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_raw(const sll
 __SLL_API_TYPE_sll_api_sort_sort sll_api_sort_sort(__SLL_API_ARGS_sll_api_sort_sort);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_sort_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* b=NULL;
 	if (all>1){
 		b=*(al+1);
 		if (!(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT)){
-			return SLL_ACQUIRE_STATIC(array_zero);
+			sll_object_t* out=SLL_CREATE();
+			out->t=SLL_OBJECT_TYPE_ARRAY;
+			sll_array_create(0,&(out->dt.a));
+			return out;
 		}
 	}
 	sll_array_t out;
@@ -541,7 +617,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_sort_raw(const sll_
 __SLL_API_TYPE_sll_api_string_convert sll_api_string_convert(__SLL_API_ARGS_sll_api_string_convert);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_convert_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t*const* a=al+0;
 	sll_arg_count_t ac=all-0;
@@ -577,11 +656,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_ends_raw(const sl
 __SLL_API_TYPE_sll_api_string_format sll_api_string_format(__SLL_API_ARGS_sll_api_string_format);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_format_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t*const* b=al+1;
 	sll_arg_count_t bc=all-1;
@@ -598,11 +683,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_format_raw(const 
 __SLL_API_TYPE_sll_api_string_flip_case sll_api_string_flip_case(__SLL_API_ARGS_sll_api_string_flip_case);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_flip_case_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_string_t out;
 	sll_api_string_flip_case(&(a->dt.s),&out);
@@ -693,21 +784,33 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_index_reverse_lis
 __SLL_API_TYPE_sll_api_string_pad_left sll_api_string_pad_left(__SLL_API_ARGS_sll_api_string_pad_left);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_left_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<2){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* b=*(al+1);
 	if (!(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* c=NULL;
 	if (all>2){
 		c=*(al+2);
 		if (!(SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_CHAR)){
-			return SLL_ACQUIRE_STATIC(str_zero);
+			sll_object_t* out=SLL_CREATE();
+			out->t=SLL_OBJECT_TYPE_STRING;
+			sll_string_create(0,&(out->dt.s));
+			return out;
 		}
 	}
 	sll_string_t out;
@@ -723,21 +826,33 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_left_raw(cons
 __SLL_API_TYPE_sll_api_string_pad_right sll_api_string_pad_right(__SLL_API_ARGS_sll_api_string_pad_right);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_right_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<2){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* b=*(al+1);
 	if (!(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* c=NULL;
 	if (all>2){
 		c=*(al+2);
 		if (!(SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_CHAR)){
-			return SLL_ACQUIRE_STATIC(str_zero);
+			sll_object_t* out=SLL_CREATE();
+			out->t=SLL_OBJECT_TYPE_STRING;
+			sll_string_create(0,&(out->dt.s));
+			return out;
 		}
 	}
 	sll_string_t out;
@@ -753,24 +868,36 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_right_raw(con
 __SLL_API_TYPE_sll_api_string_replace sll_api_string_replace(__SLL_API_ARGS_sll_api_string_replace);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_replace_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* b=NULL;
 	if (all>1){
 		b=*(al+1);
 		if (!(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR||SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING)){
-			return SLL_ACQUIRE_STATIC(str_zero);
+			sll_object_t* out=SLL_CREATE();
+			out->t=SLL_OBJECT_TYPE_STRING;
+			sll_string_create(0,&(out->dt.s));
+			return out;
 		}
 	}
 	const sll_object_t* c=NULL;
 	if (all>2){
 		c=*(al+2);
 		if (!(SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_CHAR||SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_STRING)){
-			return SLL_ACQUIRE_STATIC(str_zero);
+			sll_object_t* out=SLL_CREATE();
+			out->t=SLL_OBJECT_TYPE_STRING;
+			sll_string_create(0,&(out->dt.s));
+			return out;
 		}
 	}
 	sll_string_t out;
@@ -786,11 +913,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_replace_raw(const
 __SLL_API_TYPE_sll_api_string_reverse sll_api_string_reverse(__SLL_API_ARGS_sll_api_string_reverse);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_reverse_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_string_t out;
 	sll_api_string_reverse(&(a->dt.s),&out);
@@ -805,15 +938,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_reverse_raw(const
 __SLL_API_TYPE_sll_api_string_split sll_api_string_split(__SLL_API_ARGS_sll_api_string_split);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_split_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<2){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	const sll_object_t* b=*(al+1);
 	if (!(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR||SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(array_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_array_create(0,&(out->dt.a));
+		return out;
 	}
 	sll_array_t out;
 	sll_api_string_split(&(a->dt.s),b,&out);
@@ -847,11 +989,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_starts_raw(const 
 __SLL_API_TYPE_sll_api_string_to_lower_case sll_api_string_to_lower_case(__SLL_API_ARGS_sll_api_string_to_lower_case);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_lower_case_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_string_t out;
 	sll_api_string_to_lower_case(&(a->dt.s),&out);
@@ -866,11 +1014,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_lower_case_raw
 __SLL_API_TYPE_sll_api_string_to_title_case sll_api_string_to_title_case(__SLL_API_ARGS_sll_api_string_to_title_case);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_title_case_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_string_t out;
 	sll_api_string_to_title_case(&(a->dt.s),&out);
@@ -885,11 +1039,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_title_case_raw
 __SLL_API_TYPE_sll_api_string_to_upper_case sll_api_string_to_upper_case(__SLL_API_ARGS_sll_api_string_to_upper_case);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_upper_case_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_string_t out;
 	sll_api_string_to_upper_case(&(a->dt.s),&out);
@@ -904,11 +1064,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_upper_case_raw
 __SLL_API_TYPE_sll_api_sys_arg_get sll_api_sys_arg_get(__SLL_API_ARGS_sll_api_sys_arg_get);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_arg_get_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	const sll_object_t* a=*(al+0);
 	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT)){
-		return SLL_ACQUIRE_STATIC(str_zero);
+		sll_object_t* out=SLL_CREATE();
+		out->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(out->dt.s));
+		return out;
 	}
 	sll_string_t out;
 	sll_api_sys_arg_get(a->dt.i,&out);

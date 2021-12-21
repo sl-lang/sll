@@ -228,9 +228,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO:
-				*(s+si)=SLL_ACQUIRE_STATIC(array_zero);
-				si++;
-				break;
+				{
+					sll_object_t* tos=SLL_CREATE();
+					tos->t=SLL_OBJECT_TYPE_ARRAY;
+					sll_array_create(0,&(tos->dt.a));
+					*(s+si)=tos;
+					si++;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE:
 				{
 					sll_object_t* tos=SLL_CREATE();
@@ -258,9 +263,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO:
-				*(s+si)=SLL_ACQUIRE_STATIC(map_zero);
-				si++;
-				break;
+				{
+					sll_object_t* tos=SLL_CREATE();
+					tos->t=SLL_OBJECT_TYPE_MAP;
+					sll_map_create(0,&(tos->dt.m));
+					*(s+si)=tos;
+					si++;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				SLL_RELEASE(*(v+ai->dt.v));
 				*(v+ai->dt.v)=*(s+si-1);

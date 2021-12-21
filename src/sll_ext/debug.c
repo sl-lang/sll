@@ -124,11 +124,12 @@ static sll_object_t* _debug_get_location(const sll_object_t*const* al,sll_arg_co
 
 
 static sll_object_t* _debug_get_name(const sll_object_t*const* al,sll_arg_count_t all){
-	if (!all){
-		return SLL_ACQUIRE_STATIC(str_zero);
-	}
 	sll_object_t* o=SLL_CREATE();
 	o->t=SLL_OBJECT_TYPE_STRING;
+	if (!all){
+		sll_string_create(0,&(o->dt.s));
+		return o;
+	}
 	const sll_object_t* v=*al;
 	if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_INT){
 		if (v->dt.i<0){

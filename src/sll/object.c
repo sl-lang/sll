@@ -349,9 +349,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 			case SLL_OBJECT_TYPE_MAP_KEYS:
 			case SLL_OBJECT_TYPE_MAP_VALUES:
 				{
-					if (!l){
-						return SLL_ACQUIRE_STATIC(array_zero);
-					}
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
 					sll_array_create(l,&(o->dt.a));
@@ -375,11 +372,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 				return SLL_FROM_HANDLE(ot,h);
 			case SLL_OBJECT_TYPE_MAP:
 				{
-					if (!l){
-						return SLL_ACQUIRE_STATIC(map_zero);
-					}
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_MAP;
+					if (!l){
+						sll_map_create(0,&(o->dt.m));
+						return o;
+					}
 					sll_map_create((l+1)>>1,&(o->dt.m));
 					for (sll_arg_count_t i=0;i<l;i++){
 						o->dt.m.v[i]=*(p+i);

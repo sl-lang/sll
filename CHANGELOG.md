@@ -16,8 +16,8 @@
 - Implemented `sll_ext:debug_get_name` ([#130] and [#137])
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
 - Implemented `sll_get_location` and `sll_ext:debug_get_location` ([#141])
-- Implemented `sll_string_index_reverse`, `sll_string_index_reverse_char`, `sll_string_index_reverse_multiple`, `sll_api_string_index_reverse` and `sll:string_index_reverse` ([#143])
-- Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index` and `sll:string_index` ([#142])
+- Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index`, `sll_api_string_index_list`, `sll:string_index` and `sll:string_index_list` ([#142])
+- Implemented `sll_string_index_reverse`, `sll_string_index_reverse_char`, `sll_string_index_reverse_multiple`, `sll_api_string_index_reverse`, `sll_api_string_index_reverse_list`, `sll:string_index_reverse` and `sll:string_index_reverse_list` ([#143])
 - Implemented `sys$library_path` ([#145])
 - New node type representing source code lines: `SLL_NODE_TYPE_DBG` ([#140])
 - VM call stack is now part of the public API
@@ -35,6 +35,7 @@
 ### Removed
 
 - Node debugging data: `sll_debug_node_data_t`, `SLL_NODE_TYPE_DEBUG_DATA`, [`src/sll/debug_object.c`][0.6.32/src/sll/debug_object.c], `sll_insert_debug_node` and `sll_remove_node_debug_data`
+- Static storage types ([#147])
 - Unneeded error types: `SLL_ERROR_INTERNAL_STACK_OVERFLOW`, `SLL_ERROR_EMPTY_CHAR_STRING`, `SLL_ERROR_UNTERMINATED_CHAR_STRING`, `SLL_ERROR_UNTERMINATED_ESCAPE_SEQUENCE`, `SLL_ERROR_UNKNOWN_ESCAPE_CHARACTER`, `SLL_ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE`, `SLL_ERROR_UNKNOWN_SYMBOL`, `SLL_ERROR_SYMBOL_TOO_LONG`, `SLL_ERROR_NO_SYMBOL`, `SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG`, `SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII`, `SLL_ERROR_NO_STACK`, `SLL_ERROR_DIVISION_BY_ZERO` and `SLL_ERROR_STACK_CORRUPTED` ([#138])
 - Unused function `sll_cleanup_handles`
 - Utility API: `sll_api_util_instruction_count`, `sll_api_util_ref_count`, `sll:util_instruction_count` `sll:util_ref_count`, [`src/include/sll/api/util.h`][0.6.32/src/include/sll/api/util.h] and [`src/sll/api/util_api.c`][0.6.32/src/sll/api/util_api.c]
@@ -1208,6 +1209,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#147]: https://github.com/sl-lang/sll/issues/147
 [#146]: https://github.com/sl-lang/sll/issues/146
 [#145]: https://github.com/sl-lang/sll/issues/145
 [#144]: https://github.com/sl-lang/sll/issues/144

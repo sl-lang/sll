@@ -172,10 +172,12 @@
 (= p2$str "point-2")
 (= new_point$p (. point_type 5 6))
 (:> new_point "\n" p2 "\n" (<- 57 1 5) "\n")
+
 (<- log$log "No Function")
 (= test_log_func (,,, (<- log$log "Named Function")))
 (<- test_log_func)
 (<- (,,, (<- log$log "Anonymous Function")))
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

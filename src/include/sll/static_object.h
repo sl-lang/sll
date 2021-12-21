@@ -95,45 +95,12 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_char[256];
 
 /**
  * \flags var
- * \name sll_static_str_zero
- * \group static-object
- * \desc Docs!
- * \type sll_object_t*
- */
-__SLL_EXTERNAL extern sll_object_t* sll_static_str_zero;
-
-
-
-/**
- * \flags var
- * \name sll_static_array_zero
- * \group static-object
- * \desc Docs!
- * \type sll_object_t*
- */
-__SLL_EXTERNAL extern sll_object_t* sll_static_array_zero;
-
-
-
-/**
- * \flags var
  * \name sll_static_handle_zero
  * \group static-object
  * \desc Docs!
  * \type sll_object_t*
  */
 __SLL_EXTERNAL extern sll_object_t* sll_static_handle_zero;
-
-
-
-/**
- * \flags var
- * \name sll_static_map_zero
- * \group static-object
- * \desc Docs!
- * \type sll_object_t*
- */
-__SLL_EXTERNAL extern sll_object_t* sll_static_map_zero;
 
 
 
