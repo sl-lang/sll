@@ -9,7 +9,7 @@
 - Custom types are now named when created in assignments ([#136])
 - File to object API: `sll_file_to_object` and `SLL_FROM_FILE`
 - Implemented `sll:path_split` ([#146])
-- Implemented `sll:string_join` ([#106])
+- Implemented `sll_string_join`, `sll_string_join_char` and `sll:string_join` ([#106])
 - Implemented `sll_api_file_flush` and `sll:file_flush`
 - Implemented `sll_current_instruction_index` and `sll_remove_debug_data`
 - Implemented `sll_ext:debug_get_call_stack` ([#130] and [#134])
@@ -31,6 +31,7 @@
 - Fixed `SLL_STRING_FORMAT_PADDING`
 - Internal functions no longer return error values with invalid argument configuration ([#148])
 - Libraries are now loaded only once ([#135])
+- Renamed `sll_string_join`, `sll_string_join_char` and `sll_string_join_chars` to `sll_string_concat`, `sll_string_concat_char` and `sll_string_concat_chars`
 - `SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP` is no longer part of the public API
 - `sll_internal_function_pointer_t` now uses `sll_object_t*` instead of `const sll_object_t*`
 - `SLL_NODE_TYPE_UNKNOWN` is no longer part of the public API ([#139])

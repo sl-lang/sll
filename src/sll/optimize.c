@@ -2361,17 +2361,17 @@ static sll_node_t* _merge_print_strings(sll_node_t* o,optimizer_data_t* o_dt){
 			if (a){
 				sll_string_t tmp;
 				if (a->t==SLL_NODE_TYPE_CHAR&&o->t==SLL_NODE_TYPE_CHAR){
-					sll_string_join_chars(a->dt.c,o->dt.c,&tmp);
+					sll_string_concat_chars(a->dt.c,o->dt.c,&tmp);
 				}
 				else if (a->t==SLL_NODE_TYPE_CHAR&&o->t==SLL_NODE_TYPE_STRING){
 					sll_string_prepend_char(o_dt->c_dt->st.dt+o->dt.s,a->dt.c,&tmp);
 				}
 				else if (a->t==SLL_NODE_TYPE_STRING&&o->t==SLL_NODE_TYPE_CHAR){
-					sll_string_join_char(o_dt->c_dt->st.dt+a->dt.s,o->dt.c,&tmp);
+					sll_string_concat_char(o_dt->c_dt->st.dt+a->dt.s,o->dt.c,&tmp);
 				}
 				else{
 					SLL_ASSERT(a->t==SLL_NODE_TYPE_STRING&&o->t==SLL_NODE_TYPE_STRING);
-					sll_string_join(o_dt->c_dt->st.dt+a->dt.s,o_dt->c_dt->st.dt+o->dt.s,&tmp);
+					sll_string_concat(o_dt->c_dt->st.dt+a->dt.s,o_dt->c_dt->st.dt+o->dt.s,&tmp);
 				}
 				a->t=SLL_NODE_TYPE_NOP;
 				o->t=SLL_NODE_TYPE_STRING;

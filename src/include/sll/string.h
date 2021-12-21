@@ -197,6 +197,47 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 
 
 /**
+ * \flags func
+ * \name sll_string_concat
+ * \group string
+ * \subgroup string-op
+ * \desc Docs!
+ * \arg const sll_string_t* a
+ * \arg const sll_string_t* b
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_concat(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_string_concat_char
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_char_t c
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_concat_char(const sll_string_t* s,sll_char_t c,sll_string_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_string_concat_chars
+ * \group string
+ * \desc Docs!
+ * \arg sll_char_t a
+ * \arg sll_char_t b
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_concat_chars(sll_char_t a,sll_char_t b,sll_string_t* o);
+
+
+
+/**
  * \flags check_output func
  * \name sll_string_count
  * \group string
@@ -581,13 +622,14 @@ __SLL_EXTERNAL void sll_string_inv(const sll_string_t* s,sll_string_t* o);
  * \flags func
  * \name sll_string_join
  * \group string
- * \subgroup string-op
+ * \subgroup string-data
  * \desc Docs!
- * \arg const sll_string_t* a
- * \arg const sll_string_t* b
+ * \arg const sll_string_t* s
+ * \arg sll_object_t*const* a
+ * \arg sll_array_length_t al
  * \arg sll_string_t* o
  */
-__SLL_EXTERNAL void sll_string_join(const sll_string_t* a,const sll_string_t* b,sll_string_t* o);
+__SLL_EXTERNAL void sll_string_join(const sll_string_t* s,sll_object_t*const* a,sll_array_length_t al,sll_string_t* o);
 
 
 
@@ -597,24 +639,12 @@ __SLL_EXTERNAL void sll_string_join(const sll_string_t* a,const sll_string_t* b,
  * \group string
  * \subgroup string-data
  * \desc Docs!
- * \arg const sll_string_t* s
  * \arg sll_char_t c
+ * \arg sll_object_t*const* a
+ * \arg sll_array_length_t al
  * \arg sll_string_t* o
  */
-__SLL_EXTERNAL void sll_string_join_char(const sll_string_t* s,sll_char_t c,sll_string_t* o);
-
-
-
-/**
- * \flags func
- * \name sll_string_join_chars
- * \group string
- * \desc Docs!
- * \arg sll_char_t a
- * \arg sll_char_t b
- * \arg sll_string_t* o
- */
-__SLL_EXTERNAL void sll_string_join_chars(sll_char_t a,sll_char_t b,sll_string_t* o);
+__SLL_EXTERNAL void sll_string_join_char(sll_char_t c,sll_object_t*const* a,sll_array_length_t al,sll_string_t* o);
 
 
 

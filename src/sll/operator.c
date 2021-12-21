@@ -301,7 +301,7 @@ _add_to_string:
 					sa=sb;
 					sb=tmp;
 				}
-				sll_string_join(&sa,&sb,&(o->dt.s));
+				sll_string_concat(&sa,&sb,&(o->dt.s));
 				sll_free_string((!inv?&sa:&sb));
 				return o;
 			}
@@ -353,7 +353,7 @@ _add_to_map:
 					sll_string_create(0,&(o->dt.s));
 				}
 				else{
-					sll_string_join(&sa,&sb,&(o->dt.s));
+					sll_string_concat(&sa,&sb,&(o->dt.s));
 				}
 				return o;
 			}
@@ -1433,7 +1433,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_join_char(&(a->dt.s),'1',&(o->dt.s));
+				sll_string_concat_char(&(a->dt.s),'1',&(o->dt.s));
 				return o;
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
