@@ -289,7 +289,7 @@ _add_to_string:
 				SLL_ASSERT(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING);
 				sll_string_t sa=a->dt.s;
 				sll_string_t sb;
-				sll_api_string_convert((const sll_object_t*const*)&b,1,&sb);
+				sll_api_string_convert(&b,1,&sb);
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
 				if (!sa.l){
@@ -603,7 +603,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_STRING;
-					sll_api_string_convert((const sll_object_t*const*)&a,1,&(o->dt.s));
+					sll_api_string_convert(&a,1,&(o->dt.s));
 					return o;
 				}
 			case COMBINED_CAST_TYPE_IA:

@@ -42,7 +42,7 @@ static sll_object_t* _ii_to_loc(sll_instruction_index_t ii){
 
 
 
-static sll_object_t* _debug__set_type(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug__set_type(sll_object_t*const* al,sll_arg_count_t all){
 	if (all>2){
 		const sll_object_t* a=*al;
 		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
@@ -66,7 +66,7 @@ static sll_object_t* _debug__set_type(const sll_object_t*const* al,sll_arg_count
 
 
 
-static sll_object_t* _debug_get_call_stack(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug_get_call_stack(sll_object_t*const* al,sll_arg_count_t all){
 	if (!_debug_cs_type){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
@@ -99,19 +99,19 @@ static sll_object_t* _debug_get_call_stack(const sll_object_t*const* al,sll_arg_
 
 
 
-static sll_object_t* _debug_get_instruction_count(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug_get_instruction_count(sll_object_t*const* al,sll_arg_count_t all){
 	return SLL_FROM_INT(sll_current_instruction_count);
 }
 
 
 
-static sll_object_t* _debug_get_instruction_index(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug_get_instruction_index(sll_object_t*const* al,sll_arg_count_t all){
 	return SLL_FROM_INT(sll_current_instruction_index);
 }
 
 
 
-static sll_object_t* _debug_get_location(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug_get_location(sll_object_t*const* al,sll_arg_count_t all){
 	sll_instruction_index_t ii=sll_current_instruction_index;
 	if (all){
 		sll_object_t* ii_o=sll_operator_cast((sll_object_t*)(*al),sll_static_int[SLL_OBJECT_TYPE_INT]);
@@ -123,7 +123,7 @@ static sll_object_t* _debug_get_location(const sll_object_t*const* al,sll_arg_co
 
 
 
-static sll_object_t* _debug_get_name(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug_get_name(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* o=SLL_CREATE();
 	o->t=SLL_OBJECT_TYPE_STRING;
 	if (!all){
@@ -154,7 +154,7 @@ static sll_object_t* _debug_get_name(const sll_object_t*const* al,sll_arg_count_
 
 
 
-static sll_object_t* _debug_get_ref_count(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug_get_ref_count(sll_object_t*const* al,sll_arg_count_t all){
 	if (!all){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
@@ -163,7 +163,7 @@ static sll_object_t* _debug_get_ref_count(const sll_object_t*const* al,sll_arg_c
 
 
 
-static sll_object_t* _debug_get_vm_config(const sll_object_t*const* al,sll_arg_count_t all){
+static sll_object_t* _debug_get_vm_config(sll_object_t*const* al,sll_arg_count_t all){
 	if (!_debug_vm_cfg_type){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}

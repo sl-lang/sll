@@ -27,8 +27,10 @@
 
 - All optimization levels have been removed in favor of one CLI flag (`-O`)
 - Fixed `SLL_STRING_FORMAT_PADDING`
+- Internal functions no longer return error values with invalid argument configuration ([#148])
 - Libraries are now loaded only once ([#135])
 - `SLL_ASSEMBLY_INSTRUCTION_TYPE_NOP` is no longer part of the public API
+- `sll_internal_function_pointer_t` now uses `sll_object_t*` instead of `const sll_object_t*`
 - `SLL_NODE_TYPE_UNKNOWN` is no longer part of the public API ([#139])
 - `sll_remove_debug_data` has been renamed to `sll_remove_object_debug_data`
 
@@ -1209,6 +1211,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#148]: https://github.com/sl-lang/sll/issues/148
 [#147]: https://github.com/sl-lang/sll/issues/147
 [#146]: https://github.com/sl-lang/sll/issues/146
 [#145]: https://github.com/sl-lang/sll/issues/145

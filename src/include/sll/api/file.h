@@ -34,8 +34,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_file_to_object(sll_file_t* f
  * \group file-api
  * \desc Closes a file previously opened by :sll_api_file_open: and invalidates its handle
  * \arg H -> Previously allocated file handle
- * \ret 0 -> Failure
- * \ret 1 -> Success
+ * \ret B
  */
 __API_FUNC_DECL(file_close);
 
@@ -48,8 +47,7 @@ __API_FUNC_DECL(file_close);
  * \desc Opens a file with the specified mode
  * \arg S -> The path to the file to open
  * \arg S? -> The optional file mode
- * \ret h -> Failure
- * \ret H -> Success
+ * \ret H
  */
 __API_FUNC_DECL(file_open);
 
@@ -62,7 +60,6 @@ __API_FUNC_DECL(file_open);
  * \desc Reads from a file prevoiusly opened by :sll_api_file_open:
  * \arg H -> Previously opened file handle
  * \arg I? -> Maximum number of bytes to read
- * \ret Z -> Failure
  * \ret S -> The content of the file
  */
 __API_FUNC_DECL(file_read);
@@ -75,8 +72,7 @@ __API_FUNC_DECL(file_read);
  * \group file-api
  * \desc Docs!
  * \arg I
- * \ret h -> Failure
- * \ret H -> Success
+ * \ret H
  */
 __API_FUNC_DECL(file_std_handle);
 
@@ -89,7 +85,6 @@ __API_FUNC_DECL(file_std_handle);
  * \desc Writes to a file prevoiusly opened by :sll_api_file_open:
  * \arg H -> Previously opened file handle
  * \arg O -> The object to write to file
- * \ret 0 -> Failure
  * \ret I -> Number of bytes written
  */
 __API_FUNC_DECL(file_write);

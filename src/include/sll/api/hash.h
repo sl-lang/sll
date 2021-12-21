@@ -18,8 +18,7 @@
  * \group hash-api
  * \desc Docs!
  * \arg O
- * \ret 0 -> Failure
- * \ret I -> Success
+ * \ret I
  */
 __API_FUNC_DECL(hash_create);
 

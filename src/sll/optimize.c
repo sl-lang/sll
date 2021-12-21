@@ -1141,7 +1141,7 @@ _keep_assignment:;
 							}
 							_shift_nodes(o,o_dt->c_dt,1);
 							sll_string_t s;
-							sll_api_string_convert((const sll_object_t*const*)&v,1,&s);
+							sll_api_string_convert(&v,1,&s);
 							o->t=SLL_NODE_TYPE_STRING;
 							o->dt.i=sll_add_string(&(o_dt->c_dt->st),&s,1);
 							o=_optimize(a,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
@@ -1394,7 +1394,7 @@ _keep_assignment:;
 									}
 								}
 								if (al){
-									sll_object_t* n=(*(o_dt->i_ft->dt+i))->p((const sll_object_t*const*)al,r->dt.ac-1);
+									sll_object_t* n=(*(o_dt->i_ft->dt+i))->p(al,r->dt.ac-1);
 									for (sll_arg_count_t j=0;j<r->dt.ac-1;j++){
 										SLL_RELEASE(*(al+j));
 									}

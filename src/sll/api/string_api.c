@@ -328,7 +328,7 @@ __API_FUNC(string_format){
 		SLL_VAR_ARG_LIST_TYPE_SLL,
 		{
 			.sll={
-				b,
+				(const sll_object_t*const*)b,
 				bc
 			}
 		}

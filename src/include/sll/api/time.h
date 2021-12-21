@@ -39,9 +39,8 @@ __API_FUNC_DECL(time_current_nanos);
  * \name sll_api_time_sleep
  * \group time-api
  * \desc Docs!
- * \arg IF
- * \ret f -> Failure
- * \ret F -> Success
+ * \arg FI
+ * \ret F
  */
 __API_FUNC_DECL(time_sleep);
 
@@ -52,9 +51,8 @@ __API_FUNC_DECL(time_sleep);
  * \name sll_api_time_sleep_nanos
  * \group time-api
  * \desc Docs!
- * \arg IF
- * \ret 0 -> Failure
- * \ret I -> Success
+ * \arg IFI
+ * \ret I
  */
 __API_FUNC_DECL(time_sleep_nanos);
 

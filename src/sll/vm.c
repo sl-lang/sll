@@ -694,7 +694,7 @@ _print_from_stack:;
 						}
 						else{
 							sll_string_t str;
-							sll_api_string_convert((const sll_object_t*const*)&tos,1,&str);
+							sll_api_string_convert(&tos,1,&str);
 							sll_file_write(cfg->out,str.v,str.l*sizeof(sll_char_t));
 							sll_free_string(&str);
 						}
@@ -728,7 +728,7 @@ _print_from_stack:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<ift.l){
 								si-=ai->dt.ac;
-								sll_object_t* n=(*(ift.dt+j))->p((const sll_object_t*const*)(s+si),ai->dt.ac);
+								sll_object_t* n=(*(ift.dt+j))->p((s+si),ai->dt.ac);
 								for (sll_arg_count_t k=0;k<ai->dt.ac;k++){
 									SLL_RELEASE(*(s+si+k));
 								}
@@ -820,7 +820,7 @@ _print_from_stack:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<ift.l){
-						sll_object_t* n=(*(ift.dt+i))->p((const sll_object_t*const*)(s+si-1),1);
+						sll_object_t* n=(*(ift.dt+i))->p(s+si-1,1);
 						SLL_RELEASE(*(s+si-1));
 						*(s+si-1)=n;
 						break;

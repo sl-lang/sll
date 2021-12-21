@@ -18,8 +18,7 @@
  * \group string-api
  * \desc Docs!
  * \arg O
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_convert);
 
@@ -31,9 +30,8 @@ __API_FUNC_DECL(string_convert);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg CS
- * \ret 0 -> Failure
- * \ret B -> Success
+ * \arg SC
+ * \ret B
  */
 __API_FUNC_DECL(string_ends);
 
@@ -46,8 +44,7 @@ __API_FUNC_DECL(string_ends);
  * \desc Docs!
  * \arg S
  * \arg O?
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_format);
 
@@ -59,8 +56,7 @@ __API_FUNC_DECL(string_format);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_flip_case);
 
@@ -72,9 +68,8 @@ __API_FUNC_DECL(string_flip_case);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg CS
- * \ret n -> Failure
- * \ret I -> Success
+ * \arg SC
+ * \ret I
  */
 __API_FUNC_DECL(string_index);
 
@@ -86,9 +81,8 @@ __API_FUNC_DECL(string_index);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg CS
- * \ret n -> Failure
- * \ret I -> Success
+ * \arg SC
+ * \ret I
  */
 __API_FUNC_DECL(string_index_list);
 
@@ -100,9 +94,8 @@ __API_FUNC_DECL(string_index_list);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg CS
- * \ret n -> Failure
- * \ret I -> Success
+ * \arg SC
+ * \ret I
  */
 __API_FUNC_DECL(string_index_reverse);
 
@@ -114,9 +107,8 @@ __API_FUNC_DECL(string_index_reverse);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg CS
- * \ret n -> Failure
- * \ret I -> Success
+ * \arg SC
+ * \ret I
  */
 __API_FUNC_DECL(string_index_reverse_list);
 
@@ -130,8 +122,7 @@ __API_FUNC_DECL(string_index_reverse_list);
  * \arg S
  * \arg I
  * \arg C?
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_pad_left);
 
@@ -145,8 +136,7 @@ __API_FUNC_DECL(string_pad_left);
  * \arg S
  * \arg I
  * \arg C?
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_pad_right);
 
@@ -158,10 +148,9 @@ __API_FUNC_DECL(string_pad_right);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg CS?
- * \arg CS?
- * \ret Z -> Failure
- * \ret S -> Success
+ * \arg SC?
+ * \arg SC?
+ * \ret S
  */
 __API_FUNC_DECL(string_replace);
 
@@ -173,8 +162,7 @@ __API_FUNC_DECL(string_replace);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_reverse);
 
@@ -186,9 +174,8 @@ __API_FUNC_DECL(string_reverse);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg CS
- * \ret E -> Failure
- * \ret A -> Success
+ * \arg SC
+ * \ret A
  */
 __API_FUNC_DECL(string_split);
 
@@ -200,9 +187,8 @@ __API_FUNC_DECL(string_split);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg CS
- * \ret 0 -> Failure
- * \ret B -> Success
+ * \arg SC
+ * \ret B
  */
 __API_FUNC_DECL(string_starts);
 
@@ -214,8 +200,7 @@ __API_FUNC_DECL(string_starts);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_to_lower_case);
 
@@ -227,8 +212,7 @@ __API_FUNC_DECL(string_to_lower_case);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_to_title_case);
 
@@ -240,8 +224,7 @@ __API_FUNC_DECL(string_to_title_case);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(string_to_upper_case);
 

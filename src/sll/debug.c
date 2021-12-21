@@ -29,7 +29,7 @@ __SLL_EXTERNAL void sll_debug_print_object(const sll_object_t* v){
 	}
 	else{
 		sll_string_t str;
-		sll_api_string_convert((const sll_object_t*const*)&v,1,&str);
+		sll_api_string_convert((sll_object_t*const*)&v,1,&str);
 		sll_file_write(sll_stdout,str.v,str.l*sizeof(sll_char_t));
 		sll_free_string(&str);
 	}

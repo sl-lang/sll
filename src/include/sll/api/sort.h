@@ -32,8 +32,7 @@ __SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sl
  * \desc Docs!
  * \arg A
  * \arg I?
- * \ret E -> Failure
- * \ret A -> Success
+ * \ret A
  */
 __API_FUNC_DECL(sort_sort);
 

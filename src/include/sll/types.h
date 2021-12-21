@@ -620,7 +620,7 @@ typedef struct __SLL_ERROR{
 
 
 
-typedef sll_object_t* (*sll_internal_function_pointer_t)(const sll_object_t*const* al,sll_arg_count_t all);
+typedef sll_object_t* (*sll_internal_function_pointer_t)(sll_object_t*const* al,sll_arg_count_t all);
 
 
 

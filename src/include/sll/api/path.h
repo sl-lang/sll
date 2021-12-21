@@ -54,8 +54,7 @@ __SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(path_absolute);
 
@@ -67,8 +66,7 @@ __API_FUNC_DECL(path_absolute);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret 0 -> Failure
- * \ret I -> Success
+ * \ret I
  */
 __API_FUNC_DECL(path_exists);
 
@@ -79,7 +77,7 @@ __API_FUNC_DECL(path_exists);
  * \name sll_api_path_get_cwd
  * \group path-api
  * \desc Docs!
- * \ret S -> Docs!
+ * \ret S
  */
 __API_FUNC_DECL(path_get_cwd);
 
@@ -91,8 +89,7 @@ __API_FUNC_DECL(path_get_cwd);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret 0 -> Failure
- * \ret I -> Success
+ * \ret I
  */
 __API_FUNC_DECL(path_is_dir);
 
@@ -104,8 +101,7 @@ __API_FUNC_DECL(path_is_dir);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(path_join);
 
@@ -117,8 +113,7 @@ __API_FUNC_DECL(path_join);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret E -> Failure
- * \ret A -> Success
+ * \ret A
  */
 __API_FUNC_DECL(path_list_dir);
 
@@ -130,8 +125,7 @@ __API_FUNC_DECL(path_list_dir);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret E -> Failure
- * \ret A -> Success
+ * \ret A
  */
 __API_FUNC_DECL(path_recursive_list_dir);
 
@@ -143,8 +137,7 @@ __API_FUNC_DECL(path_recursive_list_dir);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(path_relative);
 
@@ -156,8 +149,7 @@ __API_FUNC_DECL(path_relative);
  * \group json-api
  * \desc Docs!
  * \arg S
- * \ret 0 -> Failure
- * \ret I -> Docs!
+ * \ret I
  */
 __API_FUNC_DECL(path_set_cwd);
 
@@ -169,8 +161,7 @@ __API_FUNC_DECL(path_set_cwd);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret 0 -> Failure
- * \ret I -> Success
+ * \ret I
  */
 __API_FUNC_DECL(path_size);
 
@@ -182,8 +173,7 @@ __API_FUNC_DECL(path_size);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret E -> Failure
- * \ret A -> Success
+ * \ret A
  */
 __API_FUNC_DECL(path_split);
 

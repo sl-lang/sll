@@ -66,8 +66,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
  * \group json-api
  * \desc Converts a [JSON][https://www.json.org/json-en.html] string into Sll types
  * \arg S -> The string to parse
- * \ret h -> Failure
- * \ret O -> The parsed object
+ * \ret O
  */
 __API_FUNC_DECL(json_parse);
 
@@ -79,8 +78,7 @@ __API_FUNC_DECL(json_parse);
  * \group json-api
  * \desc Docs!
  * \arg O
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(json_stringify);
 
@@ -92,8 +90,7 @@ __API_FUNC_DECL(json_stringify);
  * \group json-api
  * \desc Docs!
  * \arg I
- * \ret h -> Failure
- * \ret H -> Success
+ * \ret H
  */
 __API_FUNC_DECL(json_type);
 

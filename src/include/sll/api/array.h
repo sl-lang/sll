@@ -19,8 +19,7 @@
  * \desc Docs!
  * \arg A
  * \arg O
- * \ret 0 -> Failure
- * \ret I -> Success
+ * \ret I
  */
 __API_FUNC_DECL(array_count);
 
@@ -32,8 +31,7 @@ __API_FUNC_DECL(array_count);
  * \group array-api
  * \desc Docs!
  * \arg I
- * \ret E -> Failure
- * \ret A -> Success
+ * \ret A
  */
 __API_FUNC_DECL(array_create);
 
@@ -47,8 +45,7 @@ __API_FUNC_DECL(array_create);
  * \arg A
  * \arg O
  * \arg O
- * \ret E -> Failure
- * \ret A -> Success
+ * \ret A
  */
 __API_FUNC_DECL(array_replace);
 
@@ -60,8 +57,7 @@ __API_FUNC_DECL(array_replace);
  * \group array-api
  * \desc Docs!
  * \arg A
- * \ret E -> Failure
- * \ret A -> Success
+ * \ret A
  */
 __API_FUNC_DECL(array_reverse);
 

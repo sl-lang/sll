@@ -45,8 +45,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac);
  * \group sys-api
  * \desc Docs!
  * \arg I
- * \ret Z -> Failure
- * \ret S -> Success
+ * \ret S
  */
 __API_FUNC_DECL(sys_arg_get);
 
@@ -91,7 +90,6 @@ __API_FUNC_DECL(sys_get_platform);
  * \group sys-api
  * \desc Docs!
  * \arg I
- * \ret 0
  * \ret O
  */
 __API_FUNC_DECL(sys_get_version);
@@ -104,7 +102,6 @@ __API_FUNC_DECL(sys_get_version);
  * \group sys-api
  * \desc Docs!
  * \arg S
- * \ret 0
  * \ret B
  */
 __API_FUNC_DECL(sys_load_library);

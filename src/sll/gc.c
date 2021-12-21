@@ -59,7 +59,7 @@ static const sll_char_t* _get_type_string(sll_object_t* o){
 
 static void _print_gc_data(sll_object_t* o,object_debug_data_t* dt){
 	sll_string_t str;
-	sll_api_string_convert((const sll_object_t*const*)(&o),1,&str);
+	sll_api_string_convert(&o,1,&str);
 	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),_get_type_string(o),o->rc,str.v,dt->all);
 	sll_free_string(&str);
 	for (uint32_t m=0;m<dt->all;m++){
@@ -318,7 +318,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 				}
 				else{
 					sll_string_t str;
-					sll_api_string_convert((const sll_object_t*const*)&c,1,&str);
+					sll_api_string_convert(&c,1,&str);
 					sll_file_write_format(sll_stderr,SLL_CHAR("<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n"),_get_type_string(c),c->rc,str.v);
 					sll_free_string(&str);
 				}

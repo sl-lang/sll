@@ -14,7 +14,7 @@ def create_docs(fl):
 	for nm in fl:
 		with open(nm,"r") as f:
 			for k in DOCS_COMMENT_REGEX.findall(f.read().replace("\r\n","\n")):
-				dt={"flag":[],"name":None,"group":None,"subgroup":None,"desc":None,"args":[],"ret":[],"type":None}
+				dt={"flag":[],"name":None,"group":None,"subgroup":None,"desc":None,"args":[],"ret":None,"type":None}
 				for e in k.split("\n"):
 					e=e.strip()
 					if (e[:1]=="*"):
@@ -52,8 +52,10 @@ def create_docs(fl):
 							i=se.rindex(" ")
 							dt["args"].append({"type":se[:i],"name":se[i+1:],"desc":e})
 					elif (t=="\\ret"):
+						if (dt["ret"] is not None):
+							raise RuntimeError(f"{nm}: Only one '\\ret' tag can be present")
 						i=(e.index("->") if "->" in e else len(e))
-						dt["ret"].append({"type":e[4:i].strip(),"desc":e[i+2:].strip()})
+						dt["ret"]={"type":e[4:i].strip(),"desc":e[i+2:].strip()}
 					elif (t=="\\type"):
 						if (dt["type"] is not None):
 							raise RuntimeError(f"{nm}: Only one '\\type' tag can be present")
@@ -78,11 +80,10 @@ def create_docs(fl):
 						raise RuntimeError(f"{nm}: 'subgroup' flag has to be alone")
 					sg_dt[dt["subgroup"]]={"name":dt["name"],"group":dt["group"],"desc":dt["desc"]}
 				elif ("api" in dt["flag"]):
+					if (dt["ret"] is None):
+						raise RuntimeError(f"{nm}: A '\\ret' tag is required")
 					ap_dt.append(dt)
 				else:
-					if (len(dt["ret"])>1):
-						raise RuntimeError(f"{nm}: Only one '\\ret' tag can be present")
-					dt["ret"]=(None if len(dt["ret"])==0 else dt["ret"][0])
 					o.append(dt)
 	for k in o:
 		if (k["group"] not in g_dt):
