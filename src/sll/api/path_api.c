@@ -92,12 +92,14 @@ __SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_char_t* s,sll_string
 	sll_string_length_t j=0;
 	while (*s){
 		i++;
-		if ((*s=='/'||*s=='\\')&&*(s+1)){
+		if (*s=='/'||*s=='\\'){
 			j=i;
 		}
 		s++;
 	}
-	*l=i;
+	if (l){
+		*l=i;
+	}
 	return j;
 }
 
@@ -240,4 +242,17 @@ __API_FUNC(path_size){
 	sll_size_t o=sll_platform_file_size(fd);
 	sll_platform_file_close(fd);
 	return o;
+}
+
+
+
+__API_FUNC(path_split){
+	sll_string_length_t i=sll_path_split(a->v,NULL);
+	sll_array_create(2,out);
+	out->v[0]=SLL_CREATE();
+	out->v[0]->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_from_pointer_length(a->v,i,&(out->v[0]->dt.s));
+	out->v[1]=SLL_CREATE();
+	out->v[1]->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_from_pointer_length(a->v+i,a->l-i,&(out->v[1]->dt.s));
 }

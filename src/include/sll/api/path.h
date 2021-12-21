@@ -177,4 +177,17 @@ __API_FUNC_DECL(path_size);
 
 
 
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_path_split
+ * \group path-api
+ * \desc Docs!
+ * \arg S
+ * \ret E -> Failure
+ * \ret A -> Success
+ */
+__API_FUNC_DECL(path_split);
+
+
+
 #endif

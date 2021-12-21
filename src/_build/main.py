@@ -119,9 +119,13 @@ if ("--test" in sys.argv):
 		if (util.wrap_output(["build/run_tests"]).returncode!=0):
 			sys.exit(1)
 if ("--run" in sys.argv):
-	util.log("Running 'examples/_internal_test/test.sll'...")
+	if ("--extension" in sys.argv):
+		util.log("Installing extension library...")
+		with open(f"build/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"rb") as rf,open(f"build/sys_lib/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"wb") as wf:
+			wf.write(rf.read())
+	a=(["examples/_internal_test_ext/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
+	util.log(f"Running '{a[0]}...")
 	e_nm=("build/sll_standalone" if "--standalone" in sys.argv else "build/sll")
 	subprocess.run([e_nm,"-h","-C"])
-	a=(["examples/_internal_test_ext/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	if (subprocess.run([e_nm,"-c","-C","-v","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run([e_nm,"-C","-v","-O","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-C","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-C","-v","-P"]).returncode!=0):
 		sys.exit(1)

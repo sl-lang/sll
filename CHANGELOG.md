@@ -8,6 +8,7 @@
 - CLI flag for removing debugging data: `-D`
 - Custom types are now named when created in assignments ([#136])
 - File to object API: `sll_file_to_object` and `SLL_FROM_FILE`
+- Implemented `sll:path_split` ([#146])
 - Implemented `sll_current_instruction_index` and `sll_remove_debug_data`
 - Implemented `sll_ext:debug_get_call_stack` ([#130] and [#134])
 - Implemented `sll_ext:debug_get_instruction_count` and `sll_ext:debug_get_ref_count`
@@ -15,6 +16,7 @@
 - Implemented `sll_ext:debug_get_name` ([#130] and [#137])
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
 - Implemented `sll_get_location` and `sll_ext:debug_get_location` ([#141])
+- Implemented `sys$library_path` ([#145])
 - New node type representing source code lines: `SLL_NODE_TYPE_DBG` ([#140])
 - VM call stack is now part of the public API
 - VM now recives configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
@@ -1204,6 +1206,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#146]: https://github.com/sl-lang/sll/issues/146
+[#145]: https://github.com/sl-lang/sll/issues/145
 [#144]: https://github.com/sl-lang/sll/issues/144
 [#141]: https://github.com/sl-lang/sll/issues/141
 [#140]: https://github.com/sl-lang/sll/issues/140

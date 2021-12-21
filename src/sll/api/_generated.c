@@ -493,6 +493,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_size_raw(const sll_
 
 
 
+__SLL_API_TYPE_sll_api_path_split sll_api_path_split(__SLL_API_ARGS_sll_api_path_split);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_raw(const sll_object_t*const* al,sll_arg_count_t all){
+	if (all<1){
+		return SLL_ACQUIRE_STATIC(array_zero);
+	}
+	const sll_object_t* a=*(al+0);
+	if (!(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING)){
+		return SLL_ACQUIRE_STATIC(array_zero);
+	}
+	sll_array_t out;
+	sll_api_path_split(&(a->dt.s),&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_sort_sort sll_api_sort_sort(__SLL_API_ARGS_sll_api_sort_sort);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_sort_raw(const sll_object_t*const* al,sll_arg_count_t all){
 	if (all<1){
@@ -961,6 +980,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:path_relative",sll_api_path_relative_raw,0},
 	{"sll:path_set_cwd",sll_api_path_set_cwd_raw,0},
 	{"sll:path_size",sll_api_path_size_raw,0},
+	{"sll:path_split",sll_api_path_split_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:sort_sort",sll_api_sort_sort_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_convert",sll_api_string_convert_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_ends",sll_api_string_ends_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
@@ -989,5 +1009,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=51;
+const sll_function_index_t _ifunc_size=52;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

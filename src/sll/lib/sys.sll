@@ -1,5 +1,5 @@
-(# int_type func_type string_type)
-(--- "types.sll")
+(# int_type func_type string_type path)
+(--- "types.sll" "path.sll")
 
 (= version_type (&:
 	(~ int_type) major
@@ -17,6 +17,7 @@
 (= executable (<- (... "sll:sys_get_executable")))
 
 (= load_library (... "sll:sys_load_library"))
+(= library_path (<- path$absolute (+ (: (<- path$split executable) 0) path$separator "sys_lib" path$separator)))
 (= library_extension (?: (=== platform "windows") "dll" "so"))
 
 (= sys (. (&:
@@ -26,6 +27,7 @@
 	(~ func_type) argv
 	(~ string_type) executable
 	(~ func_type) load_library
+	(~ string_type) library_path
 	(~ string_type) library_extension
-) version platform argc argv executable load_library library_extension))
+) version platform argc argv executable load_library library_path library_extension))
 (## sys)

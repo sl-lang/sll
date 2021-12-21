@@ -662,6 +662,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_path_split void
+#define __SLL_API_ARGS_sll_api_path_split const sll_string_t* a,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_path_split
+ * \group path-api
+ * \desc Docs!
+ * \arg const sll_string_t* a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_path_split_raw
+ * \group raw-api
+ * \subgroup raw-api-path-api
+ * \desc Wrapper function for :sll_api_path_split:
+ * \arg const sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sort_sort void
 #define __SLL_API_ARGS_sll_api_sort_sort const sll_array_t* a,const sll_integer_t b,sll_array_t* out
 /**
