@@ -11,7 +11,7 @@ static char _win_large_page=0;
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz,sll_bool_t l){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l){
 	if (l&&_win_large_page!=2){
 		if (!_win_large_page){
 			_win_large_page=1;
@@ -40,6 +40,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size
 
 
 
-__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_page_size_t sz){
+__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_size_t sz){
 	VirtualFree(pg,0,MEM_RELEASE);
 }

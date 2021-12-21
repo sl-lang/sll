@@ -7,7 +7,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz,sll_bool_t l){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l){
 	if (l){
 		SLL_ASSERT(SLL_ROUND_LARGE_PAGE(sz)==sz);
 		void* o=mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_HUGETLB,-1,0);
@@ -23,6 +23,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size
 
 
 
-__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_page_size_t sz){
+__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_size_t sz){
 	munmap(pg,sz);
 }

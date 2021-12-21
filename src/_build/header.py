@@ -295,29 +295,8 @@ def generate_header(h_dt,cm):
 		o+=b"\n"+k.strip()
 	i=0
 	while (i<len(o)):
-		if (i<len(o)-7 and o[i:i+1] not in IDENTIFIER_CHARACTERS and o[i+1:i+6]==b"union" and o[i+6:i+7] not in IDENTIFIER_CHARACTERS):
-			i+=6
-			while (o[i] not in b";{"):
-				i+=1
-			if (o[i:i+1]==b"{"):
-				b=1
-				i+=1
-				while (b!=0):
-					if (o[i:i+1]==b"{"):
-						b+=1
-					elif (o[i:i+1]==b"}"):
-						b-=1
-					else:
-						j=i
-						while (i<len(o) and o[i] in SPACE_CHARACTERS):
-							i+=1
-						if (i!=j):
-							o=o[:j]+(b"" if o[j-1] not in IDENTIFIER_CHARACTERS else b" ")+o[i:]
-							i-=i-j+(0 if o[j-1] not in IDENTIFIER_CHARACTERS else -1)
-							continue
-					i+=1
-		elif (i<len(o)-8 and o[i:i+1] not in IDENTIFIER_CHARACTERS and o[i+1:i+7]==b"struct" and o[i+7:i+8] not in IDENTIFIER_CHARACTERS):
-			i+=7
+		if (i<len(o)-8 and o[i:i+1] not in IDENTIFIER_CHARACTERS and ((o[i+1:i+6]==b"union" and o[i+6:i+7] not in IDENTIFIER_CHARACTERS) or (o[i+1:i+7]==b"struct" and o[i+7:i+8] not in IDENTIFIER_CHARACTERS))):
+			i+=(6 if o[i+1:i+2]==b"u" else 7)
 			while (o[i] not in b";{"):
 				i+=1
 			if (o[i:i+1]==b"{"):

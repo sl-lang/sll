@@ -39,6 +39,7 @@
 
 ### Removed
 
+- Duplicate type `sll_page_size_t` (replaced by `sll_size_t`)
 - Node debugging data: `sll_debug_node_data_t`, `SLL_NODE_TYPE_DEBUG_DATA`, [`src/sll/debug_object.c`][0.6.32/src/sll/debug_object.c], `sll_insert_debug_node` and `sll_remove_node_debug_data`
 - Static storage types ([#147])
 - Unneeded error types: `SLL_ERROR_INTERNAL_STACK_OVERFLOW`, `SLL_ERROR_EMPTY_CHAR_STRING`, `SLL_ERROR_UNTERMINATED_CHAR_STRING`, `SLL_ERROR_UNTERMINATED_ESCAPE_SEQUENCE`, `SLL_ERROR_UNKNOWN_ESCAPE_CHARACTER`, `SLL_ERROR_UNTERMINATED_HEX_ESCAPE_SEQUENCE`, `SLL_ERROR_UNKNOWN_SYMBOL`, `SLL_ERROR_SYMBOL_TOO_LONG`, `SLL_ERROR_NO_SYMBOL`, `SLL_ERROR_INTERNAL_FUNCTION_NAME_TOO_LONG`, `SLL_ERROR_INTERNAL_FUNCTION_NAME_NOT_ASCII`, `SLL_ERROR_NO_STACK`, `SLL_ERROR_DIVISION_BY_ZERO` and `SLL_ERROR_STACK_CORRUPTED` ([#138])

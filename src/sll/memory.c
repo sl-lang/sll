@@ -203,7 +203,7 @@ _find_block:
 	page_header_t* h=pg;
 	h->n=_memory_page_head;
 	_memory_page_head=h;
-	sll_page_size_t pg_sz=(SLL_ROUND_PAGE(ALLOCATOR_ALLOC_SIZE)-sizeof(page_header_t))&0xfffffffffffffff0ull;
+	sll_size_t pg_sz=(SLL_ROUND_PAGE(ALLOCATOR_ALLOC_SIZE)-sizeof(page_header_t))&0xfffffffffffffff0ull;
 	pg=(void*)((((uint64_t)pg)+sizeof(page_header_t)+15)&0xfffffffffffffff0ull);
 	while (pg_sz>=ALLOCATOR_MAX_SMALL_SIZE){
 		mem_block_t* b=pg;

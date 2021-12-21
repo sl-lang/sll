@@ -61,11 +61,11 @@ __SLL_EXTERNAL extern const sll_char_t* sll_platform_string;
  * \name sll_platform_allocate_page
  * \group platform
  * \desc Docs!
- * \arg sll_page_size_t sz
+ * \arg sll_size_t sz
  * \arg sll_bool_t l
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_page_size_t sz,sll_bool_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l);
 
 
 
@@ -182,9 +182,9 @@ __SLL_EXTERNAL __SLL_NO_RETURN void sll_platform_force_exit(const sll_char_t* a,
  * \group platform
  * \desc Docs!
  * \arg void* pg
- * \arg sll_page_size_t sz
+ * \arg sll_size_t sz
  */
-__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_page_size_t sz);
+__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_size_t sz);
 
 
 

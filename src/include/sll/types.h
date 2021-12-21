@@ -208,7 +208,7 @@ typedef uint64_t sll_handle_t;
 
 
 
-typedef uint64_t sll_page_size_t;
+typedef uint64_t sll_size_t;
 
 
 
@@ -688,7 +688,7 @@ typedef struct __SLL_RUNTIME_DATA{
 
 
 typedef struct __SLL_VM_CONFIG{
-	sll_page_size_t s_sz;
+	sll_size_t s_sz;
 	sll_file_t* in;
 	sll_file_t* out;
 	sll_file_t* err;
