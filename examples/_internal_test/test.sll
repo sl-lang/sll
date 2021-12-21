@@ -178,6 +178,8 @@
 (<- test_log_func)
 (<- (,,, (<- log$log "Anonymous Function")))
 
+(:> (<- string$join "A") "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

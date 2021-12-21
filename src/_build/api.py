@@ -7,6 +7,7 @@ TYPE_CHECK_MAP={"I":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_INT","B":"SLL_OBJEC
 TYPE_COPY_MAP={"I":"#=$->dt.i","B":"#=$->dt.i","F":"#=$->dt.f","C":"#=$->dt.c","S":"sll_string_clone(&($->dt.s),#)","A":"sll_array_clone(&($->dt.a),#)","H":"#=$","M":"sll_map_clone(&($->dt.m),#)"}
 TYPE_FULL_NAME_MAP={"I":"INT","B":"INT","F":"FLOAT","C":"CHAR","S":"STRING","A":"ARRAY","H":"HANDLE","M":"MAP"}
 TYPE_MAP={"I":"sll_integer_t","B":"sll_bool_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t*","A":"sll_array_t*","H":"sll_handle_data_t*","M":"sll_map_t*","O":"sll_object_t*","V":"void"}
+TYPE_NIL_MAP={"I":"$=SLL_ACQUIRE_STATIC_INT(0)","B":"$=SLL_ACQUIRE_STATIC_INT(0)","F":"$=SLL_ACQUIRE_STATIC(float_zero)","C":"$=SLL_ACQUIRE_STATIC_CHAR(0)","S":"$=SLL_CREATE();$->t=SLL_OBJECT_TYPE_STRING;sll_string_create(0,&($->dt.s))","A":"$=SLL_CREATE();$->t=SLL_OBJECT_TYPE_ARRAY;sll_array_create(0,&($->dt.a))","H":"$=SLL_CREATE();$->t=SLL_OBJECT_TYPE_HANDLE;SLL_INIT_HANDLE_DATA(&($->dt.h))","M":"$=SLL_CREATE();$->t=SLL_OBJECT_TYPE_MAP;sll_map_create(0,&($->dt.m))","O":"$=SLL_ACQUIRE_STATIC_INT(0)"}
 TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return SLL_FROM_FLOAT(out)","S":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_STRING;out_o->dt.s=out;return out_o","A":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_ARRAY;out_o->dt.a=out;return out_o","H":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_HANDLE;out_o->dt.h=out;return out_o","M":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_MAP;out_o->dt.m=out;return out_o"}
 
 
@@ -41,19 +42,21 @@ def generate_c_api(d_dt,api_dt):
 							cf.write(f"\tsll_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c={sz};\n")
 						else:
 							cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c={sz};\n\t{at}* {ALPHABET[i]}=sll_allocate({ALPHABET[i]}c*sizeof({at}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tsll_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\ttmp=sll_operator_cast(tmp,sll_static_int[SLL_OBJECT_TYPE_{TYPE_FULL_NAME_MAP[e['type']]}]);\n\t\t\t{TYPE_COPY_MAP[e['type']].replace('#','*('+ALPHABET[i]+'+idx)').replace('$','tmp')};\n\t\t\tSLL_RELEASE(tmp);\n\t\t}}\n\t\telse{{\n\t\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t\t}}\n\t}}\n")
-							end+=f"\tsll_deallocate((void*){ALPHABET[i]});\n"
+							end=f"\tsll_deallocate((void*){ALPHABET[i]});\n"+end
 						pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
 					else:
 						t=f"{at} {ALPHABET[i]}"
 						a+=t
 						d_str+=f"\n * \\arg {t} -> {e['desc']}"
+						end=f"\tSLL_RELEASE({ALPHABET[i]});\n"+end
 						cf.write(f"\tsll_object_t* {ALPHABET[i]}=NULL;\n\tif (all>{i}){{\n\t\t{ALPHABET[i]}=*(al+{i});\n")
 						if ("O" not in e["type"]):
 							cf.write("\t\tif ("+"||".join([TYPE_CHECK_MAP[se].replace('$',ALPHABET[i]) for se in e["type"]])+f"){{\n\t\t\tSLL_ACQUIRE({ALPHABET[i]});\n\t\t}}\n\t\telse{{\n\t\t\t{ALPHABET[i]}=sll_operator_cast({ALPHABET[i]},sll_static_int[SLL_OBJECT_TYPE_{TYPE_FULL_NAME_MAP[e['type'][0]]}]);\n\t\t}}\n")
-							end+=f"\tSLL_RELEASE({ALPHABET[i]});\n"
+						else:
+							cf.write(f"\t\tSLL_ACQUIRE({ALPHABET[i]});\n")
 						cf.write("\t}\n")
 						if (not e["opt"]):
-							cf.write("\telse{\n\t\tSLL_UNIMPLEMENTED();\n\t}\n")
+							cf.write("\telse{\n\t\t"+TYPE_NIL_MAP[e["type"][0]].replace("$",ALPHABET[i]).replace(";",";\n\t\t")+";\n\t}\n")
 						if (len(e["type"])==1):
 							pc+=(TYPE_ACCESS_OPT_MAP[e["type"]] if e["opt"] else TYPE_ACCESS_MAP[e["type"]]).replace("$",ALPHABET[i])
 						else:
