@@ -20,7 +20,11 @@ For more specific details, see [Syntax](#syntax)
 
 # Installation
 
-Sll can be download from the [GitHub website](https://github.com/sl-lang/sll/releases/latest). The primary target operating systems are Windows and POISX.
+Sll can be download from the [GitHub website][installation-from-github] or an [`apt` package][installation-with-apt]. The primary target operating systems are Windows and Linux.
+
+## Installation from GitHub
+
+The latest Sll releases can be found in the [Releases](https://github.com/sl-lang/sll/releases/latest) page on GitHub.
 
 Sll has the ability to be installed in a folder, or as a standalone executable. Here is a list of file names:
 
@@ -28,6 +32,24 @@ Sll has the ability to be installed in a folder, or as a standalone executable. 
 - `win_standalone.exe`: Windows standalone version, can be used out-of-the-box.
 - `posix.zip`: POSIX build of Sll (platforms such as Linux, Ubuntu, Fedora, etc.). Must be extracted into a single folder.
 - `posix_standalone`: POSIX standalone version of Sll.
+
+## Installation with `apt`
+
+On systems based on Debian (e.g. Ubuntu), Sll can be installed by running the following command in a shell (with administrator privileges):
+
+```bash
+wget -qO - "https://sll.krzem.workers.dev/sh"|bash
+```
+
+The script takes care of installing GPG keys and `apt` sources. If the script has already been previously executed on a given system, then the Sll installation can be managed by `apt`:
+
+```bash
+apt install sll
+
+apt upgrade sll
+
+apt remove sll
+```
 
 ## Version Checking
 
@@ -41,9 +63,9 @@ To check the version of Sll on Windows, type the following expression into a Com
 sll -V
 ```
 
-### POSIX
+### Linux
 
-To check the version of Sll on POSIX systems, type the following expression into a Terminal:
+To check the version of Sll on Linux, type the following expression into a Terminal:
 
 ```bash
 sll -V
