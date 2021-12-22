@@ -20,7 +20,7 @@ For more specific details, see [Syntax](#syntax)
 
 # Installation
 
-Sll can be download from the [GitHub website][installation-from-github] or an [`apt` package][installation-with-apt]. The primary target operating systems are Windows and Linux.
+Sll can be download from the [GitHub website](#installation-from-github) or an [`apt` package](#installation-with-apt). The primary target operating systems are Windows and Linux.
 
 ## Installation from GitHub
 
