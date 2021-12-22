@@ -82,8 +82,9 @@ if (__name__=="__main__"):
 	h={"Authorization":"Bearer "+sys.argv[-1],"Content-Type":"application/json"}
 	util.log("Listing Current KV Keys...")
 	l=requests.get(url+"keys",headers=h).json()["result"]
+	l=[k["name"] for k in l if k["name"][:5]!="/apt/"]
 	util.log(f"  Found {len(l)} Keys\nClearing KV Storage...")
-	requests.delete(url+"bulk",headers=h,data="["+",".join(["\""+e["name"]+"\"" for e in l])+"]")
+	requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in l])+"]")
 	util.log("Generating Request...")
 	with open("web-bundle.dt","rb") as f:
 		dt=f.read()
