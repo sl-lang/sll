@@ -86,8 +86,8 @@ static sll_bool_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,s
 
 
 
-static sll_bool_t parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* fp){
-	sll_init_compilation_data(fp,f,c_dt);
+static sll_bool_t parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* f_fp){
+	sll_init_compilation_data(f_fp,f,c_dt);
 	sll_error_t e;
 	if (!sll_parse_all_nodes(c_dt,&i_ft,load_import,&e)){
 		sll_free_compilation_data(c_dt);
