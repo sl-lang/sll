@@ -57,7 +57,7 @@ def generate():
 	util.log("Reading 'src/web/404.html'...")
 	with open("src/web/404.html","rb") as rf:
 		o+=_add_data("/404.html",rf.read())
-	util.log("Reading 'src/web/404.html'...")
+	util.log("Reading 'src/web/shell_install.sh'...")
 	with open("src/web/shell_install.sh","rb") as rf:
 		o+=_add_data("shell_install.sh",rf.read())
 	if (os.getenv("GITHUB_ACTIONS",None) is not None):
