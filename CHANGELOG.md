@@ -11,6 +11,7 @@
 - Implemented `sll:path_split` ([#146])
 - Implemented `sll_api_file_flush`, `sll_api_string_count`, `sll:file_flush` and `sll:string_count`
 - Implemented `sll_api_string_count_left` and `sll:string_count_left` ([#113])
+- Implemented `sll_api_string_count_right` and `sll:string_count_right` ([#114])
 - Implemented `sll_current_instruction_index` and `sll_remove_debug_data`
 - Implemented `sll_ext:debug_get_call_stack` ([#130] and [#134])
 - Implemented `sll_ext:debug_get_instruction_count` and `sll_ext:debug_get_ref_count`
@@ -1246,6 +1247,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#120]: https://github.com/sl-lang/sll/issues/120
 [#117]: https://github.com/sl-lang/sll/issues/117
 [#116]: https://github.com/sl-lang/sll/issues/116
+[#114]: https://github.com/sl-lang/sll/issues/114
 [#113]: https://github.com/sl-lang/sll/issues/113
 [#112]: https://github.com/sl-lang/sll/issues/112
 [#111]: https://github.com/sl-lang/sll/issues/111

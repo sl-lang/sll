@@ -29,6 +29,7 @@
 
 (= count (... "sll:string_count"))
 (= count_left (... "sll:string_count_left"))
+(= count_right (... "sll:string_count_right"))
 
 (= string (. (&:
 	(~ func_type) str
@@ -51,5 +52,6 @@
 	(~ func_type) join
 	(~ func_type) count
 	(~ func_type) count_left
-) str replace split flip_case lower_case title_case upper_case format reverse pad_left pad_right starts ends index index_list index_reverse index_reverse_list join count count_left))
+	(~ func_type) count_right
+) str replace split flip_case lower_case title_case upper_case format reverse pad_left pad_right starts ends index index_list index_reverse index_reverse_list join count count_left count_right))
 (## string)

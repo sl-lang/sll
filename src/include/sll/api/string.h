@@ -52,6 +52,19 @@ __API_FUNC_DECL(string_count_left);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_string_count_right
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg C
+ * \ret I
+ */
+__API_FUNC_DECL(string_count_right);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_string_ends
  * \group string-api
  * \desc Docs!

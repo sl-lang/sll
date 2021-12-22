@@ -814,6 +814,30 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_string_count_right __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_string_count_right sll_string_t* a,sll_char_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_count_right
+ * \group string-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \arg sll_char_t b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_count_right_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_count_right:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_string_ends __SLL_CHECK_OUTPUT sll_bool_t
 #define __SLL_API_ARGS_sll_api_string_ends sll_string_t* a,sll_object_t* b
 /**

@@ -350,7 +350,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_char(cons
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_left(const sll_string_t* s,sll_char_t c){
-	if (!s->l){
+	if (!s->l||s->v[0]!=c){
 		return 0;
 	}
 	const uint64_t* p=(const uint64_t*)(s->v);
@@ -358,7 +358,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_left(cons
 	uint64_t m=0x101010101010101ull*c;
 	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
 		uint64_t v=(*p)^m;
-		v=(~(v-0x101010101010101ull))&v&0x8080808080808080ull;
+		v=((~(v-0x101010101010101ull))|v)&0x8080808080808080ull;
 		if (v){
 			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
 			return (!c&&o>=s->l?s->l:o);
@@ -371,10 +371,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_left(cons
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_right(const sll_string_t* s,sll_char_t c){
-	if (!s->l){
+	if (!s->l||s->v[s->l-1]!=c){
 		return 0;
 	}
-	SLL_UNIMPLEMENTED();
+	if (!c){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_string_length_t l=(s->l+7)>>3;
+	const uint64_t* p=((const uint64_t*)(s->v))+l;
+	STRING_DATA_PTR(p);
+	uint64_t m=0x101010101010101ull*c;
+	uint64_t n=m<<(((s->l&7))<<3);
+	for (sll_string_length_t i=0;i<l;i++){
+		p--;
+		uint64_t v=((*p)|n)^m;
+		v=((~(v-0x101010101010101ull))|v)&0x8080808080808080ull;
+		if (v){
+			return (i<<3)+(s->l&7)-(FIND_LAST_SET_BIT(v)>>3)-1;
+		}
+		n=0;
+	}
+	return s->l;
 }
 
 

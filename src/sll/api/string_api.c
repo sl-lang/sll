@@ -327,6 +327,12 @@ __API_FUNC_DECL(string_count_left){
 
 
 
+__API_FUNC_DECL(string_count_right){
+	return sll_string_count_right(a,b);
+}
+
+
+
 __API_FUNC(string_ends){
 	if (b->t==SLL_OBJECT_TYPE_CHAR){
 		return (a->l&&a->v[a->l-1]==b->dt.c);
