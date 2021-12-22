@@ -5,13 +5,8 @@
 #include <linux/limits.h>
 #include <unistd.h>
 #endif
-#ifdef STANDALONE_BUILD
-#include <sll_standalone.h>
-#include <compiled_modules.h>
-#else
-#include <sll.h>
-#endif
 #include <help_text.h>
+#include <sll.h>
 #include <stdlib.h>
 
 
@@ -194,43 +189,6 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		sll_file_reset(f);
 		return parse_file(c_dt,f,f_fp);
 	}
-#ifdef STANDALONE_BUILD
-	uint8_t c=0;
-	for (i=0;i<f_nm_l;i++){
-		c^=*(f_nm+i);
-	}
-	for (uint32_t j=0;j<internal_module_count;j++){
-		const module_t* m=internal_module_data+j;
-		if (m->c==c&&m->nml==f_nm_l&&sll_compare_data(m->nm,f_nm,f_nm_l)==SLL_COMPARE_RESULT_EQUAL){
-			if (fl&FLAG_VERBOSE){
-				sll_file_write_format(sll_stdout,SLL_CHAR("Found Internal Module '%s.slc'...\n"),f_nm);
-			}
-			sll_file_from_data((void*)(m->dt),m->sz,SLL_FILE_FLAG_READ,f);
-			sll_error_t e;
-			if (sll_load_compiled_node(f,c_dt,&e)){
-				if (fl&FLAG_PRINT_OBJECT){
-					sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
-					sll_file_write_char(sll_stdout,'\n');
-				}
-				if (fl&FLAG_VERBOSE){
-					PRINT_STATIC_STR("File Successfully Read.\n");
-				}
-				return 1;
-			}
-			sll_free_compilation_data(c_dt);
-			if (e.t==SLL_ERROR_INVALID_FILE_FORMAT){
-				COLOR_RED;
-				sll_file_write_format(sll_stdout,SLL_CHAR("Module '%s.slc' is not a Compiled Node.\n"),f_nm);
-				COLOR_RESET;
-			}
-			else{
-				sll_print_error(f,&e);
-			}
-			sll_file_close(f);
-			return 0;
-		}
-	}
-#else
 	if (l_fpl){
 		i=l_fpl+f_nm_l;
 		sll_copy_data(f_nm,f_nm_l,l_fp+l_fpl);
@@ -282,7 +240,6 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			return parse_file(c_dt,f,l_fp);
 		}
 	}
-#endif
 	COLOR_RED;
 	sll_file_write_format(sll_stdout,SLL_CHAR("Unable to Find File '%s'\n"),f_nm);
 	COLOR_RESET;
@@ -461,7 +418,6 @@ int main(int argc,const char** argv){
 	*i_fp=0;
 	i_fpl=1;
 	l_fpl=sll_platform_get_executable_file_path(l_fp,SLL_API_MAX_FILE_PATH_LENGTH);
-#ifndef STANDALONE_BUILD
 	while (l_fp[l_fpl]!='/'&&l_fp[l_fpl]!='\\'){
 		if (!l_fpl){
 			goto _skip_lib_path;
@@ -471,7 +427,6 @@ int main(int argc,const char** argv){
 	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl+1);
 	l_fpl+=5;
 _skip_lib_path:
-#endif
 	fp=NULL;
 	fpl=0;
 	sll_char_t** sl=NULL;
@@ -696,10 +651,7 @@ _read_file_argument:
 			sll_file_write(sll_stdout,i_fp+i,sz);
 			i+=sz+1;
 		}
-		PRINT_STATIC_STR("'\n");
-#ifndef STANDALONE_BUILD
-		sll_file_write_format(sll_stdout,SLL_CHAR("Library Path '%s'\n"),l_fp);
-#endif
+		sll_file_write_format(sll_stdout,SLL_CHAR("'\nLibrary Path '%s'\n"),l_fp);
 	}
 	if (fl&FLAG_HELP){
 		goto _help;

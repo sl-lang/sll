@@ -57,39 +57,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --release
-      - name: Test
-        run: build/run_tests
-  ubuntu-standalone:
-    name: Ubuntu Standalone
-    needs: diff
-    if: fromJSON(needs.diff.outputs.data).ubuntu
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: ${{env.BUILD_COMMAND}} --standalone
-      - name: Test
-        run: build/run_tests
-  ubuntu-standalone-release:
-    name: Ubuntu Standalone Release
-    needs: diff
-    if: fromJSON(needs.diff.outputs.data).ubuntu
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: ${{env.BUILD_COMMAND}} --standalone --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
+        run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
       - name: Test
         run: build/run_tests
       - name: Store Assets
@@ -97,9 +65,7 @@ jobs:
         if: github.event_name=='workflow_dispatch'
         with:
           name: release-posix
-          path: |
-            posix.zip
-            posix_standalone
+          path: posix.zip
           retention-days: 1
   windows:
     name: Windows
@@ -130,39 +96,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --release
-      - name: Test
-        run: build/run_tests
-  windows-standalone:
-    name: Windows Standalone
-    needs: diff
-    if: fromJSON(needs.diff.outputs.data).windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: ${{env.BUILD_COMMAND}} --standalone
-      - name: Test
-        run: build/run_tests
-  windows-standalone-release:
-    name: Windows Standalone Release
-    needs: diff
-    if: fromJSON(needs.diff.outputs.data).windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: ${{env.BUILD_COMMAND}} --standalone --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
+        run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
       - name: Test
         run: build/run_tests
       - name: Store Assets
@@ -170,9 +104,7 @@ jobs:
         if: github.event_name=='workflow_dispatch'
         with:
           name: release-win
-          path: |
-            win.zip
-            win_standalone.exe
+          path: win.zip
           retention-days: 1
   web:
     name: Website
@@ -180,12 +112,8 @@ jobs:
       - diff
       - ubuntu
       - ubuntu-release
-      - ubuntu-standalone
-      - ubuntu-standalone-release
       - windows
       - windows-release
-      - windows-standalone
-      - windows-standalone-release
     if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).web&&github.event_name=='push'
     runs-on: ubuntu-latest
     steps:
@@ -228,7 +156,6 @@ jobs:
     needs:
       - diff
       - ubuntu
-      - ubuntu-standalone
     if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).ext
     runs-on: ubuntu-latest
     steps:
@@ -245,7 +172,6 @@ jobs:
     needs:
       - diff
       - ubuntu-release
-      - ubuntu-standalone-release
     if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).ext
     runs-on: ubuntu-latest
     steps:
@@ -269,7 +195,6 @@ jobs:
     needs:
       - diff
       - windows
-      - windows-standalone
     if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).ext
     runs-on: windows-latest
     steps:
@@ -286,7 +211,6 @@ jobs:
     needs:
       - diff
       - windows-release
-      - windows-standalone-release
     if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).ext
     runs-on: windows-latest
     steps:
@@ -311,12 +235,8 @@ jobs:
       - diff
       - ubuntu
       - ubuntu-release
-      - ubuntu-standalone
-      - ubuntu-standalone-release
       - windows
       - windows-release
-      - windows-standalone
-      - windows-standalone-release
       - ubuntu-ext
       - ubuntu-ext-release
       - windows-ext
@@ -343,8 +263,8 @@ jobs:
   release:
     name: Create Release
     needs:
-      - ubuntu-standalone-release
-      - windows-standalone-release
+      - ubuntu-release
+      - windows-release
       - ubuntu-ext-release
       - windows-ext-release
     if: github.event_name=='workflow_dispatch'

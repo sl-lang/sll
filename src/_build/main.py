@@ -31,7 +31,7 @@ h_dt=header.parse_headers("src/include/sll")
 util.log("Generating Library Header File...")
 with open("build/sll.h","wb") as wf:
 	wf.write(b"#ifndef __SLL_H__\n#define __SLL_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES)+b"\n#endif\n")
-if ("--standalone" in sys.argv or "--test" in sys.argv):
+if ("--test" in sys.argv):
 	util.log("Generating Standalone Library Header File...")
 	with open("build/sll_standalone.h","wb") as wf:
 		wf.write(b"#ifndef __SLL_STANDALONE_H__\n#define __SLL_STANDALONE_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES+[b"__SLL_STATIC__"])+b"\n#endif\n")
@@ -79,41 +79,11 @@ if ("--extension" in sys.argv):
 		if ("--upload" in sys.argv):
 			os.rename(f"build/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),("win-ext.dll" if os.name=="nt" else "posix-ext.so"))
 		sys.exit(0)
-if ("--standalone" in sys.argv):
-	util.log(f"Converting Modules to Header File ({len(fl)} Modules)...")
-	with open("build/compiled_modules.h","wb") as f:
-		f.write(bytes(f"#ifndef __COMPILED_MODULES_H__\n#define __COMPILED_MODULES_H__\n#include <stdint.h>\ntypedef struct __MODULE{{const char* nm;uint32_t nml;uint8_t c;uint32_t sz;const uint8_t* dt;}} module_t;\n","utf-8"))
-		m_dt=[]
-		i=0
-		for e in os.listdir("build/lib"):
-			f.write(bytes(f"const uint8_t _m{i}[]={{","utf-8"))
-			with open(f"build/lib/"+e,"rb") as rf:
-				dt=rf.read()
-				util.log(f"  Converting Module 'build/lib/{e}' ({len(dt)} bytes)")
-				e=e[:-4]
-				c=0
-				for k in bytes(e,"utf-8"):
-					c^=k
-				m_dt.append(bytes(f"{{\"{e.replace(chr(34),chr(92)+chr(34))}\",{len(e)},{c},{len(dt)},_m{i}}}","utf-8"))
-				st=False
-				for c in dt:
-					f.write((b"," if st else b"")+bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
-					st=True
-			f.write(b"};\n")
-			i+=1
-		f.write(b"const module_t internal_module_data[]={"+b",".join(m_dt)+b"};\nconst uint32_t internal_module_count="+bytes(str(i),"utf-8")+b";\n#endif")
-	util.log("Generating Standalone Executable...")
-	build.build_sll_standalone(("--release" in sys.argv))
 if ("--bundle" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
 if ("--upload" in sys.argv):
-	if (os.name=="nt"):
-		os.rename("build/sll.zip","win.zip")
-		os.rename("build/sll_standalone.exe","win_standalone.exe")
-	else:
-		os.rename("build/sll.zip","posix.zip")
-		os.rename("build/sll_standalone","posix_standalone")
+	os.rename("build/sll.zip",("win.zip" if os.name=="nt" else "posix.zip"))
 if ("--test" in sys.argv):
 	util.log("Generating Test Executable...")
 	build.build_sll_test(("--release" in sys.argv))
@@ -128,7 +98,6 @@ if ("--run" in sys.argv):
 			wf.write(rf.read())
 	a=(["examples/_internal_test_ext/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	util.log(f"Running '{a[0]}...")
-	e_nm=("build/sll_standalone" if "--standalone" in sys.argv else "build/sll")
-	subprocess.run([e_nm,"-h","-C"])
-	if (subprocess.run([e_nm,"-c","-C","-v","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run([e_nm,"-C","-v","-O","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run([e_nm,"build/test.slc","-C","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run([e_nm,"build/test2.sla","-C","-v","-P"]).returncode!=0):
+	subprocess.run(["build/sll","-h","-C"])
+	if (subprocess.run(["build/sll","-c","-C","-v","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","-C","-v","-O","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","build/test.slc","-C","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/sll","build/test2.sla","-C","-v","-P"]).returncode!=0):
 		sys.exit(1)
