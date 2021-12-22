@@ -32,7 +32,7 @@ def _generate_toc(dt):
 
 
 def _add_data(nm,dt):
-	nm=nm.replace("\\","/").lstrip("/")[:255].encode("ascii","ignore")
+	nm=nm.replace("\\","/")[:255].encode("ascii","ignore")
 	dt=dt[:16777215]
 	return bytearray([len(nm),len(dt)&0xff,(len(dt)>>8)&0xff,len(dt)>>16])+nm+dt
 
@@ -44,7 +44,7 @@ def generate():
 	for k in os.listdir("src/web/css"):
 		util.log(f"  Found file 'src/web/css/{k}'")
 		with open("src/web/css/"+k,"rb") as rf:
-			o+=_add_data("css/"+k,rf.read())
+			o+=_add_data("/css/"+k,rf.read())
 	util.log("Collecting Documentation Files...")
 	d_fl=util.get_docs_files()
 	util.log(f"  Found {len(d_fl)} Files\nGenerating Documentation...")
@@ -53,10 +53,13 @@ def generate():
 	toc=_generate_toc(d_dt)
 	util.log("Reading 'src/web/index.html'...")
 	with open("src/web/index.html","rb") as rf:
-		o+=_add_data("index.html",rf.read().replace(b"{{DATA}}",toc))
+		o+=_add_data("/index.html",rf.read().replace(b"{{DATA}}",toc))
 	util.log("Reading 'src/web/404.html'...")
 	with open("src/web/404.html","rb") as rf:
-		o+=_add_data("404.html",rf.read())
+		o+=_add_data("/404.html",rf.read())
+	util.log("Reading 'src/web/404.html'...")
+	with open("src/web/shell_install.sh","rb") as rf:
+		o+=_add_data("shell_install.sh",rf.read())
 	if (os.getenv("GITHUB_ACTIONS",None) is not None):
 		with open("web-bundle.dt","wb") as f:
 			f.write(o)
@@ -97,7 +100,7 @@ if (__name__=="__main__"):
 		fp=dt[i:i+l].decode("ascii","ignore")
 		i+=l
 		util.log(f"  Encoding File '{fp}' ({sz} bytes)...")
-		o.append({"key":"/"+fp,"value":util.encode(dt[i:i+sz]),"base64":True})
+		o.append({"key":fp,"value":util.encode(dt[i:i+sz]),"base64":True})
 		i+=sz
 	util.log("Uploading Data...")
 	requests.put(url+"bulk",headers=h,data=json.dumps(o))
