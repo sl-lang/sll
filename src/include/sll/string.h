@@ -266,6 +266,34 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_char(cons
 
 
 /**
+ * \flags check_output func
+ * \name sll_string_count_left
+ * \group string
+ * \subgroup string-op
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_char_t c
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_left(const sll_string_t* s,sll_char_t c);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_count_right
+ * \group string
+ * \subgroup string-op
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_char_t c
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_right(const sll_string_t* s,sll_char_t c);
+
+
+
+/**
  * \flags func
  * \name sll_string_create
  * \group string

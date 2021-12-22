@@ -865,6 +865,84 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_convert_raw(sll_o
 
 
 
+__SLL_API_TYPE_sll_api_string_count sll_api_string_count(__SLL_API_ARGS_sll_api_string_count);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_count_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(a->dt.s));
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING||SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		b=SLL_CREATE();
+		b->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(b->dt.s));
+	}
+	sll_integer_t out=sll_api_string_count(&(a->dt.s),b);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_FROM_INT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_string_count_left sll_api_string_count_left(__SLL_API_ARGS_sll_api_string_count_left);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_count_left_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(a->dt.s));
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_CHAR(0);
+	}
+	sll_integer_t out=sll_api_string_count_left(&(a->dt.s),b->dt.c);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_FROM_INT(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_string_ends sll_api_string_ends(__SLL_API_ARGS_sll_api_string_ends);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_ends_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -1718,6 +1796,8 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:path_split",sll_api_path_split_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:sort_sort",sll_api_sort_sort_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_convert",sll_api_string_convert_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:string_count",sll_api_string_count_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:string_count_left",sll_api_string_count_left_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_ends",sll_api_string_ends_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_format",sll_api_string_format_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_flip_case",sll_api_string_flip_case_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
@@ -1749,5 +1829,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=58;
+const sll_function_index_t _ifunc_size=60;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

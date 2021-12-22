@@ -349,6 +349,36 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_char(cons
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_left(const sll_string_t* s,sll_char_t c){
+	if (!s->l){
+		return 0;
+	}
+	const uint64_t* p=(const uint64_t*)(s->v);
+	STRING_DATA_PTR(p);
+	uint64_t m=0x101010101010101ull*c;
+	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+		uint64_t v=(*p)^m;
+		v=(~(v-0x101010101010101ull))&v&0x8080808080808080ull;
+		if (v){
+			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
+			return (!c&&o>=s->l?s->l:o);
+		}
+		p++;
+	}
+	return s->l;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_right(const sll_string_t* s,sll_char_t c){
+	if (!s->l){
+		return 0;
+	}
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __SLL_EXTERNAL void sll_string_create(sll_string_length_t l,sll_string_t* o){
 	o->l=l;
 	o->c=0;
