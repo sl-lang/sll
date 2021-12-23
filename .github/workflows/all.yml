@@ -206,7 +206,9 @@ jobs:
   web-upload:
     name: Website Upload
     needs:
+      - diff
       - web
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
