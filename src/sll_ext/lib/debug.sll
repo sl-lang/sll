@@ -1,4 +1,4 @@
-(# int_type func_type string_type handle_type)
+(# int_type func_type type_type string_type handle_type)
 (--- "_load.sll" "types.sll")
 
 (= location_type (&:
@@ -36,9 +36,9 @@
 (= get_vm_config (... "sll_ext:debug_get_vm_config"))
 
 (= debug (. (&:
-	(~ int_type) call_stack_type
-	(~ int_type) location_type
-	(~ int_type) vm_config_type
+	(~ type_type) call_stack_type
+	(~ type_type) location_type
+	(~ type_type) vm_config_type
 	(~ func_type) get_call_stack
 	(~ func_type) get_instruction_count
 	(~ func_type) get_ref_count

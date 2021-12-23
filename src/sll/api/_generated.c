@@ -147,6 +147,124 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_date_merge sll_api_date_merge(__SLL_API_ARGS_sll_api_date_merge);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_merge_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* c=NULL;
+	if (all>2){
+		c=*(al+2);
+		if (SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(c);
+		}
+		else{
+			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		c=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* d=NULL;
+	if (all>3){
+		d=*(al+3);
+		if (SLL_OBJECT_GET_TYPE(d)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(d);
+		}
+		else{
+			d=sll_operator_cast(d,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		d=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* e=NULL;
+	if (all>4){
+		e=*(al+4);
+		if (SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(e);
+		}
+		else{
+			e=sll_operator_cast(e,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		e=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* f=NULL;
+	if (all>5){
+		f=*(al+5);
+		if (SLL_OBJECT_GET_TYPE(f)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(f);
+		}
+		else{
+			f=sll_operator_cast(f,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		f=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_float_t out=sll_api_date_merge(a->dt.i,b->dt.i,c->dt.i,d->dt.i,e->dt.i,f->dt.f);
+	SLL_RELEASE(f);
+	SLL_RELEASE(e);
+	SLL_RELEASE(d);
+	SLL_RELEASE(c);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_FROM_FLOAT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_date_split sll_api_date_split(__SLL_API_ARGS_sll_api_date_split);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_split_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_array_t out;
+	sll_api_date_split(a->dt.f,&out);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_file_close sll_api_file_close(__SLL_API_ARGS_sll_api_file_close);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_close_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -1807,6 +1925,8 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:array_create",sll_api_array_create_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:array_replace",sll_api_array_replace_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:array_reverse",sll_api_array_reverse_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:date_merge",sll_api_date_merge_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:date_split",sll_api_date_split_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:file_flush",sll_api_file_flush_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:file_open",sll_api_file_open_raw,0},
@@ -1868,5 +1988,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=61;
+const sll_function_index_t _ifunc_size=63;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

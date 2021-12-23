@@ -51,6 +51,7 @@ static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_d
 			return mo+1;
 		case SLL_NODE_TYPE_FUNC:
 			o->dt.fn.id+=im_dt->f_off;
+			o->dt.fn.sc+=im_dt->sc_off;
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				sll_arg_count_t l=o->dt.fn.ac;

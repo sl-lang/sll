@@ -237,14 +237,6 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
 				uint8_t j=SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
 				if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					sll_identifier_t* id=c_dt->idt.il+i;
-					if (im->l_sc!=id->sc){
-						*(im->sc_vi+im->l_sc)=im->n_vi;
-						im->l_sc=id->sc;
-						if (*(im->sc_vi+im->l_sc)!=SLL_MAX_SCOPE){
-							im->n_vi=*(im->sc_vi+im->l_sc);
-						}
-					}
 					if ((im->l_im+i)->v==SLL_MAX_VARIABLE_INDEX){
 						(im->l_im+i)->v=im->n_vi;
 						im->n_vi++;
@@ -254,14 +246,6 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 					}
 				}
 				else{
-					sll_identifier_t* id=c_dt->idt.s[j].dt+i;
-					if (im->l_sc!=id->sc){
-						*(im->sc_vi+im->l_sc)=im->n_vi;
-						im->l_sc=id->sc;
-						if (*(im->sc_vi+im->l_sc)!=SLL_MAX_SCOPE){
-							im->n_vi=*(im->sc_vi+im->l_sc);
-						}
-					}
 					if ((im->s_im[j]+i)->v==SLL_MAX_VARIABLE_INDEX){
 						(im->s_im[j]+i)->v=im->n_vi;
 						im->n_vi++;
@@ -465,41 +449,6 @@ _return_zero:
 				sll_object_t* v=SLL_CREATE();
 				v->t=SLL_OBJECT_TYPE_INT;
 				v->dt.i=~((sll_integer_t)(o->dt.fn.id));
-				return v;
-			}
-		case SLL_NODE_TYPE_CAST:
-			{
-				if (!o->dt.ac){
-					goto _return_zero;
-				}
-				sll_arg_count_t l=o->dt.ac-1;
-				o++;
-				if (o->t==NODE_TYPE_CHANGE_STACK){
-					o=o->dt._p;
-				}
-				sll_object_t* v=_get_as_object(o,o_dt,fl);
-				if (SLL_OBJECT_GET_TYPE(v)==OBJECT_TYPE_UNKNOWN){
-					return v;
-				}
-				while (l){
-					l--;
-					o=sll_skip_node_const(o);
-					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
-						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
-					}
-					sll_object_t* t=_get_as_object(o,o_dt,fl);
-					if (SLL_OBJECT_GET_TYPE(t)==OBJECT_TYPE_UNKNOWN){
-						SLL_RELEASE(v);
-						return t;
-					}
-					sll_object_t* n=sll_operator_cast(v,t);
-					SLL_RELEASE(v);
-					SLL_RELEASE(t);
-					if (SLL_OBJECT_GET_TYPE(n)==OBJECT_TYPE_UNKNOWN){
-						return n;
-					}
-					v=n;
-				}
 				return v;
 			}
 		case SLL_NODE_TYPE_COMMA:
@@ -995,8 +944,11 @@ static sll_node_t* _optimize(sll_node_t* o,sll_node_t* p,optimizer_data_t* o_dt,
 				}
 				tmp=sll_skip_node(tmp);
 			}
-			SLL_ASSERT(var);
 			sll_object_t* val=_get_as_object(o,o_dt,OPTIMIZER_NEW_OBJECT);
+			if (SLL_OBJECT_GET_TYPE(val)==OBJECT_TYPE_UNKNOWN||(val->t&OBJECT_CHANGE_IN_LOOP)){
+				SLL_RELEASE(val);
+				SLL_UNIMPLEMENTED();
+			}
 			if (vl==2){
 				sll_operator_assign(var,v[0],val);
 			}

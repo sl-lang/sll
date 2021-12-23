@@ -4,10 +4,19 @@
 
 ### Added
 
+- `type_type` which is an alias to `int_type`
 - All functions now store their names (used by `sll:log_log`)
+- C Date API: `sll_date_t`, `sll_year_t`, `sll_month_t`, `sll_day_t`, `sll_hour_t`, `sll_minute_t`, `sll_second_t`, `sll_date_from_time` and `sll_date_to_time` ([#56] and [#157])
 - CLI flag for removing debugging data: `-D`
 - Custom types are now named when created in assignments ([#136])
 - File to object API: `sll_file_to_object` and `SLL_FROM_FILE`
+- Implemented `date$current` ([#56] and [#156])
+- Implemented `date$DAYS` ([#56] and [#155])
+- Implemented `date$MONTHS` ([#56] and [#154])
+- Implemented `date$time_zone_type` ([#56] and [#153])
+- Implemented `date.sll` ([#56])
+- Implemented `sll:date_merge` and `date$to_time` ([#56] and [#150])
+- Implemented `sll:date_split` and `date$from_time` ([#56] and [#151])
 - Implemented `sll:path_split` ([#146])
 - Implemented `sll_api_file_flush`, `sll_api_string_count`, `sll:file_flush` and `sll:string_count`
 - Implemented `sll_api_string_count_left` and `sll:string_count_left` ([#113])
@@ -31,6 +40,8 @@
 
 - All optimization levels have been removed in favor of one CLI flag (`-O`)
 - Fixed `SLL_STRING_FORMAT_PADDING`
+- Fixed code generation for arrays and maps
+- Fixed handling of floating-point numbers in `sll_operator_mod`
 - Internal functions no longer return error values with invalid argument configuration ([#148])
 - Libraries are now loaded only once ([#135])
 - Renamed `sll_string_join`, `sll_string_join_char` and `sll_string_join_chars` to `sll_string_concat`, `sll_string_concat_char` and `sll_string_concat_chars`
@@ -1220,6 +1231,13 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#157]: https://github.com/sl-lang/sll/issues/157
+[#156]: https://github.com/sl-lang/sll/issues/156
+[#155]: https://github.com/sl-lang/sll/issues/155
+[#154]: https://github.com/sl-lang/sll/issues/154
+[#153]: https://github.com/sl-lang/sll/issues/153
+[#151]: https://github.com/sl-lang/sll/issues/151
+[#150]: https://github.com/sl-lang/sll/issues/150
 [#149]: https://github.com/sl-lang/sll/issues/149
 [#148]: https://github.com/sl-lang/sll/issues/148
 [#147]: https://github.com/sl-lang/sll/issues/147
@@ -1289,6 +1307,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#69]: https://github.com/sl-lang/sll/issues/69
 [#67]: https://github.com/sl-lang/sll/issues/67
 [#66]: https://github.com/sl-lang/sll/issues/66
+[#56]: https://github.com/sl-lang/sll/issues/56
 [#54]: https://github.com/sl-lang/sll/issues/54
 [#53]: https://github.com/sl-lang/sll/issues/53
 [#52]: https://github.com/sl-lang/sll/issues/52

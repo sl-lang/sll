@@ -83,7 +83,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 			{
 				sll_file_write_char(wf,'\'');
 				sll_char_t c=o->dt.c;
-				if (c=='\''||c=='"'||c=='\\'){
+				if (c=='\''||c=='\\'){
 					sll_file_write_char(wf,'\\');
 				}
 				else if (c=='\t'){
@@ -128,7 +128,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				sll_string_t* s=cg_dt->c_dt->st.dt+o->dt.s;
 				for (sll_string_length_t i=0;i<s->l;i++){
 					sll_char_t c=s->v[i];
-					if (c=='\''||c=='"'||c=='\\'){
+					if (c=='"'||c=='\\'){
 						sll_file_write_char(wf,'\\');
 					}
 					else if (c=='\t'){
@@ -167,11 +167,26 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				sll_file_write_char(wf,'[');
 				sll_array_length_t al=o->dt.al;
 				o++;
-				for (sll_array_length_t i=0;i<al;i++){
-					if (i){
-						sll_file_write_char(wf,' ');
+				if (!al){
+					sll_file_write_char(wf,']');
+					return o;
+				}
+				if (cg_dt->p){
+					sll_file_write_char(wf,'\n');
+					for (sll_arg_count_t i=0;i<al;i++){
+						sll_file_write_char_count(wf,'\t',lvl+1);
+						o=_generate_code_internal(cg_dt,o,lvl+1,wf);
+						sll_file_write_char(wf,'\n');
 					}
-					o=_generate_code_internal(cg_dt,o,lvl,wf);
+					sll_file_write_char_count(wf,'\t',lvl);
+				}
+				else{
+					for (sll_arg_count_t i=0;i<al;i++){
+						if (i){
+							sll_file_write_char(wf,' ');
+						}
+						o=_generate_code_internal(cg_dt,o,lvl,wf);
+					}
 				}
 				sll_file_write_char(wf,']');
 				return o;
@@ -181,11 +196,33 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				sll_file_write_char(wf,'<');
 				sll_map_length_t ml=o->dt.ml;
 				o++;
-				for (sll_map_length_t i=0;i<ml;i++){
-					if (i){
+				if (!ml){
+					sll_file_write_char(wf,'>');
+					return o;
+				}
+				if (cg_dt->p){
+					sll_file_write_char(wf,'\n');
+					sll_bool_t e=ml&1;
+					ml>>=1;
+					for (sll_arg_count_t i=0;i<ml;i++){
+						sll_file_write_char_count(wf,'\t',lvl+1);
+						o=_generate_code_internal(cg_dt,o,lvl+1,wf);
 						sll_file_write_char(wf,' ');
+						o=_generate_code_internal(cg_dt,o,lvl+1,wf);
+						sll_file_write_char(wf,'\n');
 					}
-					o=_generate_code_internal(cg_dt,o,lvl,wf);
+					if (e){
+						o=_generate_code_internal(cg_dt,o,lvl+1,wf);
+					}
+					sll_file_write_char_count(wf,'\t',lvl);
+				}
+				else{
+					for (sll_arg_count_t i=0;i<ml;i++){
+						if (i){
+							sll_file_write_char(wf,' ');
+						}
+						o=_generate_code_internal(cg_dt,o,lvl,wf);
+					}
 				}
 				sll_file_write_char(wf,'>');
 				return o;

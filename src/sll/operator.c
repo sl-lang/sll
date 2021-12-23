@@ -581,10 +581,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_object_
 			return !!a->dt.h.t;
 		case SLL_OBJECT_TYPE_MAP:
 			return !!a->dt.m.l;
-		default:
-			SLL_UNREACHABLE();
 	}
-	return 0;
+	return 1;
 }
 
 
@@ -1529,13 +1527,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a,sll_object_t* b){
-	REMOVE_FLOAT;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i%b->dt.i);
+		case COMBINED_TYPE_IF:
+			return SLL_FROM_FLOAT(fmod((sll_float_t)(a->dt.i),b->dt.f));
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i%b->dt.c);
 		case COMBINED_TYPE_IS:
+		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_HS:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1547,6 +1547,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_IA:
+		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
 		case COMBINED_TYPE_HA:
 			{
@@ -1561,6 +1562,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_IH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i%b->dt.h.h);
 		case COMBINED_TYPE_IM:
+		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
 		case COMBINED_TYPE_HM:
 			{
@@ -1574,8 +1576,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				return o;
 			}
+		case COMBINED_TYPE_FI:
+			return SLL_FROM_FLOAT(fmod(a->dt.f,(sll_float_t)(b->dt.i)));
+		case COMBINED_TYPE_FF:
+			return SLL_FROM_FLOAT(fmod(a->dt.f,b->dt.f));
+		case COMBINED_TYPE_FC:
+			return SLL_FROM_FLOAT(fmod(a->dt.f,b->dt.c));
+		case COMBINED_TYPE_FH:
+			return SLL_FROM_FLOAT(fmod(a->dt.f,(sll_float_t)(b->dt.h.h)));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c%b->dt.i);
+		case COMBINED_TYPE_CF:
+			return SLL_FROM_FLOAT(fmod(a->dt.c,b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c%b->dt.c);
 		case COMBINED_TYPE_CS:
@@ -1588,6 +1600,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_CH:
 			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c%b->dt.h.h);
 		case COMBINED_TYPE_SI:
+		case COMBINED_TYPE_SF:
 		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1627,6 +1640,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_AI:
+		case COMBINED_TYPE_AF:
 		case COMBINED_TYPE_AC:
 		case COMBINED_TYPE_AH:
 			{
@@ -1661,11 +1675,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			}
 		case COMBINED_TYPE_HI:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.i);
+		case COMBINED_TYPE_HF:
+			return SLL_FROM_FLOAT(fmod((sll_float_t)(a->dt.h.h),b->dt.f));
 		case COMBINED_TYPE_HC:
 			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.c);
 		case COMBINED_TYPE_HH:
 			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.h.h):SLL_FROM_INT(a->dt.h.h%b->dt.h.h));
 		case COMBINED_TYPE_MI:
+		case COMBINED_TYPE_MF:
 		case COMBINED_TYPE_MC:
 		case COMBINED_TYPE_MH:
 			{

@@ -9,7 +9,7 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
+// #include <sll/util.h>
 #include <sll/vm.h>
 
 
@@ -486,7 +486,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 	n->t=t;
 	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
 	n->dt.p=sll_allocate(dt->sz);
-	sll_copy_data(p,dt->sz,n->dt.p);
+	const void** pp=(const void**)&p;
+	_copy_struct(n->dt.p,dt,pp);
 	return n;
 }
 

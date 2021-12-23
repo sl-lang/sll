@@ -1,5 +1,5 @@
-(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log)
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll")
+(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date)
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -29,7 +29,7 @@
 })
 (:> FACTORIAL "! = " i '\n')
 (< 10 5 (:> "This Should Never Happen"))
-(? 1 (--- "import.sll"))
+(--- "import.sll")
 (:> "Call: " (<- func 10 2) "\n")
 (:> "Current Time (Internal Call): " (<- time$time) "\n")
 (? true nil 2 (:> "Dead Code") (@@@ 128 "False Exit"))
@@ -179,6 +179,10 @@
 (<- (,,, (<- log$log "Anonymous Function")))
 
 (:> (<- string$count_left "aaabcdefg" 'a') "\n" (<- string$count_right "abcdefggggg" 'g') "\n")
+
+(= tm (<- time$time))
+(= dt (<- date$from_time tm))
+(:> dt "\n" (<- date$to_time dt) "\n" (- (<- date$to_time dt) tm) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

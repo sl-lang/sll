@@ -76,11 +76,23 @@ typedef uint8_t sll_file_flags_t;
 
 
 
-typedef uint8_t sll_json_object_type_t;
+typedef uint8_t sll_hour_t;
 
 
 
 typedef uint8_t sll_internal_function_type_t;
+
+
+
+typedef uint8_t sll_json_object_type_t;
+
+
+
+typedef uint8_t sll_minute_t;
+
+
+
+typedef uint8_t sll_month_t;
 
 
 
@@ -96,11 +108,19 @@ typedef uint8_t sll_sandbox_flags_t;
 
 
 
-typedef uint16_t sll_read_char_t;
+typedef uint8_t sll_day_t;
 
 
 
 typedef uint16_t sll_call_stack_size_t;
+
+
+
+typedef uint16_t sll_read_char_t;
+
+
+
+typedef uint16_t sll_year_t;
 
 
 
@@ -221,6 +241,10 @@ typedef uint64_t sll_time_t;
 
 
 typedef double sll_float_t;
+
+
+
+typedef sll_float_t sll_second_t;
 
 
 
@@ -805,6 +829,18 @@ typedef struct __SLL_VAR_ARG_LIST{
 	sll_bool_t t;
 	sll_var_arg_list_data_t dt;
 } sll_var_arg_list_t;
+
+
+
+typedef struct __SLL_DATE{
+	sll_year_t y;
+	sll_month_t m;
+	sll_day_t d;
+	sll_day_t wd;
+	sll_hour_t h;
+	sll_minute_t mn;
+	sll_second_t s;
+} sll_date_t;
 
 
 
