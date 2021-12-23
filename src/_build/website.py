@@ -6,6 +6,10 @@ import util
 
 
 
+WORKER_NAME="sll"
+
+
+
 def _generate_toc(dt):
 	m={}
 	for k in dt["groups"]:
@@ -81,26 +85,31 @@ def generate():
 
 if (__name__=="__main__"):
 	import requests
-	url=f"https://api.cloudflare.com/client/v4/accounts/{sys.argv[-3]}/storage/kv/namespaces/{sys.argv[-2]}/"
-	h={"Authorization":"Bearer "+sys.argv[-1],"Content-Type":"application/json"}
-	util.log("Listing Current KV Keys...")
-	l=requests.get(url+"keys",headers=h).json()["result"]
-	l=[k["name"] for k in l if k["name"][:5]!="/apt/"]
-	util.log(f"  Found {len(l)} Keys\nClearing KV Storage...")
-	requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in l])+"]")
-	util.log("Generating Request...")
-	with open("web-bundle.dt","rb") as f:
-		dt=f.read()
-	i=0
-	o=[]
-	while (i<len(dt)):
-		l=dt[i]
-		sz=dt[i+1]|(dt[i+2]<<8)|(dt[i+3]<<16)
-		i+=4
-		fp=dt[i:i+l].decode("ascii","ignore")
-		i+=l
-		util.log(f"  Encoding File '{fp}' ({sz} bytes)...")
-		o.append({"key":fp,"value":util.encode(dt[i:i+sz]),"base64":True})
-		i+=sz
-	util.log("Uploading Data...")
-	requests.put(url+"bulk",headers=h,data=json.dumps(o))
+	if ("--server" in sys.argv):
+		with open("src/web/server/main.js","rb") as f:
+			util.log("Uploading Server Code...")
+			requests.put(f"https://api.cloudflare.com/client/v4/accounts/{sys.argv[-3]}/workers/scripts/{sys.argv[-2]}",data=f.read(),headers={"Authorization":"Bearer "+sys.argv[-1],"Content-Type":"application/javascript"})
+	else:
+		url=f"https://api.cloudflare.com/client/v4/accounts/{sys.argv[-3]}/storage/kv/namespaces/{sys.argv[-2]}/"
+		h={"Authorization":"Bearer "+sys.argv[-1],"Content-Type":"application/json"}
+		util.log("Listing Current KV Keys...")
+		l=requests.get(url+"keys",headers=h).json()["result"]
+		l=[k["name"] for k in l if k["name"][:5]!="/apt/"]
+		util.log(f"  Found {len(l)} Keys\nClearing KV Storage...")
+		requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in l])+"]")
+		util.log("Generating Request...")
+		with open("web-bundle.dt","rb") as f:
+			dt=f.read()
+		i=0
+		o=[]
+		while (i<len(dt)):
+			l=dt[i]
+			sz=dt[i+1]|(dt[i+2]<<8)|(dt[i+3]<<16)
+			i+=4
+			fp=dt[i:i+l].decode("ascii","ignore")
+			i+=l
+			util.log(f"  Encoding File '{fp}' ({sz} bytes)...")
+			o.append({"key":fp,"value":util.encode(dt[i:i+sz]),"base64":True})
+			i+=sz
+		util.log("Uploading Data...")
+		requests.put(url+"bulk",headers=h,data=json.dumps(o))

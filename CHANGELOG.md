@@ -38,6 +38,7 @@
 - `sll_internal_function_pointer_t` now uses `sll_object_t*` instead of `const sll_object_t*`
 - `SLL_NODE_TYPE_UNKNOWN` is no longer part of the public API ([#139])
 - `sll_remove_debug_data` has been renamed to `sll_remove_object_debug_data`
+- Updated structure of the [`src/web`][main/src/web] folder
 
 ### Removed
 
@@ -1325,6 +1326,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
 [0.6.32/src/include/sll/api/util.h]: https://github.com/sl-lang/sll/blob/v0.6.32/src/include/sll/api/util.h
 [0.6.32/src/sll/api/util_api.c]: https://github.com/sl-lang/sll/blob/v0.6.32/src/sll/api/util_api.c
 [0.6.32/src/sll/debug_object.c]: https://github.com/sl-lang/sll/blob/v0.6.32/src/sll/debug_object.c

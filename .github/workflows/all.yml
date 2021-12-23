@@ -11,6 +11,37 @@ permissions: read-all
 env:
   BUILD_COMMAND: python src/_build/main.py --verbose --test --do-not-run-test
 jobs:
+  codeql:
+    name: CodeQL
+    needs:
+      - diff
+      - ubuntu
+      - ubuntu-release
+      - windows
+      - windows-release
+      - ubuntu-ext
+      - ubuntu-ext-release
+      - windows-ext
+      - windows-ext-release
+    if: always()&&!contains(needs.*.result,'failed')&&(fromJSON(needs.diff.outputs.data).ubuntu||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)&&github.event_name!='workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: cpp
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --extension
+      - name: Analyze
+        uses: github/codeql-action/analyze@v1
   diff:
     name: Diff Calculation
     runs-on: ubuntu-latest
@@ -27,7 +58,32 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py ubuntu=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/posix windows=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/windows ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext web=.github/workflows/all.yml,src/_build,src/include/sll,src/web ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py ubuntu=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/posix windows=.github/workflows/all.yml,src/_build,src/include/sll,src/cli,src/sll,src/sll/platform/windows ext=.github/workflows/all.yml,src/_build,src/include/sll,src/include/sll_ext,src/sll_ext web-client=.github/workflows/all.yml,src/_build,src/include/sll,src/web/client web-server=.github/workflows/all.yml,src/_build,src/include/sll,src/web/server ${{secrets.GITHUB_TOKEN}}
+  release:
+    name: Create Release
+    needs:
+      - ubuntu-release
+      - windows-release
+      - ubuntu-ext-release
+      - windows-ext-release
+    if: github.event_name=='workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Load Assets
+        uses: actions/download-artifact@v2
+        with:
+          path: assets
+      - name: Create Release
+        run: python src/_build/release.py --verbose ${{secrets.GITHUB_TOKEN}}
   ubuntu:
     name: Ubuntu
     needs: diff
@@ -67,90 +123,6 @@ jobs:
           name: release-posix
           path: posix.zip
           retention-days: 1
-  windows:
-    name: Windows
-    needs: diff
-    if: fromJSON(needs.diff.outputs.data).windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: ${{env.BUILD_COMMAND}}
-      - name: Test
-        run: build/run_tests
-  windows-release:
-    name: Windows Release
-    needs: diff
-    if: fromJSON(needs.diff.outputs.data).windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Test
-        run: build/run_tests
-      - name: Store Assets
-        uses: actions/upload-artifact@v2
-        if: github.event_name=='workflow_dispatch'
-        with:
-          name: release-win
-          path: win.zip
-          retention-days: 1
-  web:
-    name: Website
-    needs:
-      - diff
-      - ubuntu
-      - ubuntu-release
-      - windows
-      - windows-release
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).web&&github.event_name=='push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: python src/_build/main.py --verbose --web
-      - name: Store Generated Website
-        uses: actions/upload-artifact@v2
-        with:
-          name: web-bundle
-          path: web-bundle.dt
-          retention-days: 1
-  web-upload:
-    name: Website Upload
-    needs:
-      - web
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Set-Up Requests
-        run: pip install requests
-      - name: Load Generated Website
-        uses: actions/download-artifact@v2
-        with:
-          name: web-bundle
-      - name: Upload
-        run: python src/_build/website.py --verbose ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_NAMESPACE_ID}} ${{secrets.CLOUDFLARE_TOKEN}}
   ubuntu-ext:
     name: Ubuntu Extension
     needs:
@@ -189,6 +161,104 @@ jobs:
         with:
           name: release-posix-ext
           path: posix-ext.so
+          retention-days: 1
+  web:
+    name: Website
+    needs:
+      - diff
+      - ubuntu
+      - ubuntu-release
+      - windows
+      - windows-release
+    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: python src/_build/main.py --verbose --web
+      - name: Store Generated Website
+        uses: actions/upload-artifact@v2
+        with:
+          name: web-bundle
+          path: web-bundle.dt
+          retention-days: 1
+  web-server:
+    name: Website Server
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).web-server&&github.event_name=='push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Upload
+        run: python src/_build/website.py --verbose --server ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_WORKER_NAME}} ${{secrets.CLOUDFLARE_TOKEN}}
+  web-upload:
+    name: Website Upload
+    needs:
+      - web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
+      - name: Load Generated Website
+        uses: actions/download-artifact@v2
+        with:
+          name: web-bundle
+      - name: Upload
+        run: python src/_build/website.py --verbose ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_NAMESPACE_ID}} ${{secrets.CLOUDFLARE_TOKEN}}
+  windows:
+    name: Windows
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}}
+      - name: Test
+        run: build/run_tests
+  windows-release:
+    name: Windows Release
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
+      - name: Test
+        run: build/run_tests
+      - name: Store Assets
+        uses: actions/upload-artifact@v2
+        if: github.event_name=='workflow_dispatch'
+        with:
+          name: release-win
+          path: win.zip
           retention-days: 1
   windows-ext:
     name: Windows Extension
@@ -229,59 +299,3 @@ jobs:
           name: release-win-ext
           path: win-ext.dll
           retention-days: 1
-  codeql:
-    name: CodeQL
-    needs:
-      - diff
-      - ubuntu
-      - ubuntu-release
-      - windows
-      - windows-release
-      - ubuntu-ext
-      - ubuntu-ext-release
-      - windows-ext
-      - windows-ext-release
-    if: always()&&!contains(needs.*.result,'failed')&&(fromJSON(needs.diff.outputs.data).ubuntu||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)&&github.event_name!='workflow_dispatch'
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: cpp
-      - name: Build
-        run: ${{env.BUILD_COMMAND}} --extension
-      - name: Analyze
-        uses: github/codeql-action/analyze@v1
-  release:
-    name: Create Release
-    needs:
-      - ubuntu-release
-      - windows-release
-      - ubuntu-ext-release
-      - windows-ext-release
-    if: github.event_name=='workflow_dispatch'
-    runs-on: ubuntu-latest
-    permissions: write-all
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Set-Up Requests
-        run: pip install requests
-      - name: Load Assets
-        uses: actions/download-artifact@v2
-        with:
-          path: assets
-      - name: Create Release
-        run: python src/_build/release.py --verbose ${{secrets.GITHUB_TOKEN}}
