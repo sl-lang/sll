@@ -6,10 +6,6 @@ import util
 
 
 
-WORKER_NAME="sll"
-
-
-
 def _generate_toc(dt):
 	m={}
 	for k in dt["groups"]:
@@ -45,9 +41,9 @@ def _add_data(nm,dt):
 def generate():
 	o=bytearray()
 	util.log("Reading CSS Files...")
-	for k in os.listdir("src/web/css"):
-		util.log(f"  Found file 'src/web/css/{k}'")
-		with open("src/web/css/"+k,"rb") as rf:
+	for k in os.listdir("src/web/client/css"):
+		util.log(f"  Found file 'src/web/client/css/{k}'")
+		with open("src/web/client/css/"+k,"rb") as rf:
 			o+=_add_data("/css/"+k,rf.read())
 	util.log("Collecting Documentation Files...")
 	d_fl=util.get_docs_files()
@@ -55,14 +51,14 @@ def generate():
 	d_dt=docs.create_docs(d_fl)[0]
 	util.log(f"Generating Table of Content for {len(d_dt['data'])} Definitions...")
 	toc=_generate_toc(d_dt)
-	util.log("Reading 'src/web/index.html'...")
-	with open("src/web/index.html","rb") as rf:
+	util.log("Reading 'src/web/client/index.html'...")
+	with open("src/web/client/index.html","rb") as rf:
 		o+=_add_data("/index.html",rf.read().replace(b"{{DATA}}",toc))
-	util.log("Reading 'src/web/404.html'...")
-	with open("src/web/404.html","rb") as rf:
+	util.log("Reading 'src/web/client/404.html'...")
+	with open("src/web/client/404.html","rb") as rf:
 		o+=_add_data("/404.html",rf.read())
-	util.log("Reading 'src/web/shell_install.sh'...")
-	with open("src/web/shell_install.sh","rb") as rf:
+	util.log("Reading 'src/web/client/shell_install.sh'...")
+	with open("src/web/client/shell_install.sh","rb") as rf:
 		o+=_add_data("shell_install.sh",rf.read())
 	if (os.getenv("GITHUB_ACTIONS",None) is not None):
 		with open("web-bundle.dt","wb") as f:

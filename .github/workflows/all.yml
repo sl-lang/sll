@@ -199,6 +199,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - name: Set-Up Requests
+        run: pip install requests
       - name: Upload
         run: python src/_build/website.py --verbose --server ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_WORKER_NAME}} ${{secrets.CLOUDFLARE_TOKEN}}
   web-upload:
