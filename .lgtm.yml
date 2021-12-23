@@ -17,6 +17,9 @@ extraction:
     index:
       build_command:
         - python3.8 src/_build/main.py --verbose --extension --test --do-not-run-test
+  javascript:
+    index:
+      typescript: none
   python:
     python_setup:
       version: 3
