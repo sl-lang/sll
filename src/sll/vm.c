@@ -218,7 +218,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_ARRAY;
 					sll_array_t* a=&(tos->dt.a);
-					sll_array_create(ai->dt.al,a);
+					if (!sll_array_create(ai->dt.al,a)){
+						SLL_UNIMPLEMENTED();
+					}
 					si-=ai->dt.al;
 					for (sll_array_length_t i=0;i<ai->dt.al;i++){
 						a->v[i]=*(s+si+i);
@@ -231,7 +233,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 				{
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_create(0,&(tos->dt.a));
+					if (!sll_array_create(0,&(tos->dt.a))){
+						SLL_UNIMPLEMENTED();
+					}
 					*(s+si)=tos;
 					si++;
 					break;
@@ -240,7 +244,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 				{
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_create(1,&(tos->dt.a));
+					if (!sll_array_create(1,&(tos->dt.a))){
+						SLL_UNIMPLEMENTED();
+					}
 					tos->dt.a.v[0]=*(s+si-1);
 					*(s+si-1)=tos;
 					break;

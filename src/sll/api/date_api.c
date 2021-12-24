@@ -92,7 +92,9 @@ __API_FUNC(date_merge){
 __API_FUNC(date_split){
 	sll_date_t dt;
 	sll_date_from_time(a,&dt);
-	sll_array_create(7,out);
+	if (!sll_array_create(7,out)){
+		SLL_UNIMPLEMENTED();
+	}
 	out->v[0]=SLL_FROM_INT(dt.y);
 	out->v[1]=SLL_ACQUIRE_STATIC_INT(dt.m);
 	out->v[2]=SLL_ACQUIRE_STATIC_INT(dt.d);

@@ -9,6 +9,7 @@
 - C Date API: `sll_date_t`, `sll_year_t`, `sll_month_t`, `sll_day_t`, `sll_hour_t`, `sll_minute_t`, `sll_second_t`, `sll_date_from_time` and `sll_date_to_time` ([#56] and [#157])
 - CLI flag for removing debugging data: `-D`
 - Custom types are now named when created in assignments ([#136])
+- Error handling related to memory allocation array functions ([#83])
 - File to object API: `sll_file_to_object` and `SLL_FROM_FILE`
 - Implemented `date$current` ([#56] and [#156])
 - Implemented `date$DAYS` ([#56] and [#155])
@@ -1293,6 +1294,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#86]: https://github.com/sl-lang/sll/issues/86
 [#85]: https://github.com/sl-lang/sll/issues/85
 [#84]: https://github.com/sl-lang/sll/issues/84
+[#83]: https://github.com/sl-lang/sll/issues/83
 [#82]: https://github.com/sl-lang/sll/issues/82
 [#81]: https://github.com/sl-lang/sll/issues/81
 [#80]: https://github.com/sl-lang/sll/issues/80

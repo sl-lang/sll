@@ -9,7 +9,6 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
-// #include <sll/util.h>
 #include <sll/vm.h>
 
 
@@ -85,7 +84,9 @@ static void* _copy_struct(void* p,const sll_object_type_data_t* dt,const void** 
 			case SLL_OBJECT_TYPE_ARRAY:
 			case SLL_OBJECT_TYPE_MAP_KEYS:
 			case SLL_OBJECT_TYPE_MAP_VALUES:
-				sll_array_clone(*s,p);
+				if (!sll_array_clone(*s,p)){
+					SLL_UNIMPLEMENTED();
+				}
 				p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
 				*s=(void*)(((uint64_t)*s)+sizeof(sll_array_t));
 				break;
@@ -139,7 +140,9 @@ static void* _set_field(const sll_object_type_table_t* tt,void* p,sll_object_typ
 		case SLL_OBJECT_TYPE_ARRAY:
 		case SLL_OBJECT_TYPE_MAP_KEYS:
 		case SLL_OBJECT_TYPE_MAP_VALUES:
-			sll_array_clone(&(v->dt.a),p);
+			if (!sll_array_clone(&(v->dt.a),p)){
+				SLL_UNIMPLEMENTED();
+			}
 			p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
 			break;
 		case SLL_OBJECT_TYPE_HANDLE:
@@ -351,7 +354,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
-					sll_array_create(l,&(o->dt.a));
+					if (!sll_array_create(l,&(o->dt.a))){
+						SLL_UNIMPLEMENTED();
+					}
 					for (sll_arg_count_t i=0;i<l;i++){
 						o->dt.a.v[i]=*(p+i);
 						SLL_ACQUIRE(*(p+i));
@@ -463,7 +468,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 			{
 				sll_object_t* n=SLL_CREATE();
 				n->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_clone((sll_array_t*)p,&(n->dt.a));
+				if (!sll_array_clone((sll_array_t*)p,&(n->dt.a))){
+					SLL_UNIMPLEMENTED();
+				}
 				return n;
 			}
 		case SLL_OBJECT_TYPE_HANDLE:

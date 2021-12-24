@@ -352,7 +352,9 @@ static sll_object_t* _get_as_object(const sll_node_t* o,const optimizer_data_t* 
 				sll_array_length_t l=o->dt.al;
 				sll_object_t* v=SLL_CREATE();
 				v->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_create(l,&(v->dt.a));
+				if (!sll_array_create(l,&(v->dt.a))){
+					SLL_UNIMPLEMENTED();
+				}
 				o++;
 				for (sll_array_length_t i=0;i<l;i++){
 					sll_object_t* n=_get_as_object(o,o_dt,fl);
