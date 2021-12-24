@@ -6,9 +6,9 @@ async function _read_url(url){
 	else if (url.endsWith("/")){
 		url+="index.html"
 	}
-	else if (!url.startsWith("/apt/")){
+	else{
 		const s=url.split("/");
-		if (s[s.length-1].indexOf(".")==-1){
+		if (!["apt","bin"].includes(s[1])&&s[s.length-1].indexOf(".")==-1){
 			url+=".html";
 		}
 	}
