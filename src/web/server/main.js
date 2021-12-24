@@ -1,11 +1,9 @@
 async function _read_url(url){
 	url="/"+url.match(/^\/*([^?#]*)/)[1];
 	if (url=="/sh"){
-		r=new Response(await SLL.get("shell_install.sh","arrayBuffer"));
-		r.headers.set("Content-Type","text/plain;charset=utf-8")
-		return r;
+		url="shell_install.sh";
 	}
-	if (url.endsWith("/")){
+	else if (url.endsWith("/")){
 		url+="index.html"
 	}
 	else if (!url.startsWith("/apt/")){
@@ -14,14 +12,14 @@ async function _read_url(url){
 			url+=".html";
 		}
 	}
-	dt=await SLL.get(url,"arrayBuffer");
+	let dt=await SLL.get(url,"arrayBuffer");
 	if (!dt){
 		url="404.html"
 		dt=await SLL.get("/404.html","arrayBuffer");
 	}
 	r=new Response(dt);
 	url=url.split(".");
-	ct="text/plain";
+	let ct="text/plain";
 	switch (url[url.length-1]){
 		case "css":
 			ct="text/css";
@@ -36,7 +34,7 @@ async function _read_url(url){
 			ct="application/javascript";
 			break;
 	}
-	r.headers.set("Content-Type",ct+";charset=utf-8")
+	r.headers.set("Content-Type",ct+";charset=utf-8");
 	return r;
 }
 
