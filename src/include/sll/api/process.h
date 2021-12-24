@@ -13,6 +13,18 @@
 
 
 /**
+ * \flags api func
+ * \name sll_api_process_execute_shell
+ * \group process-api
+ * \desc Docs!
+ * \arg S
+ * \ret B
+ */
+__API_FUNC_DECL(process_execute_shell);
+
+
+
+/**
  * \flags api func optimizable
  * \name sll_api_process_get_pid
  * \group process-api

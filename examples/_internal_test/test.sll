@@ -184,7 +184,8 @@
 (= dt (<- date$from_time tm))
 (:> dt "\n" (<- date$to_time dt) "\n" (- (<- date$to_time dt) tm) "\n")
 
-(:> "Current PID: " (<- process$get_pid) "\n")
+(:> "Current PID: " process$pid "\n")
+(<- process$shell "echo Shell!")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

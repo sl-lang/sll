@@ -1,9 +1,11 @@
-(# func_type)
+(# int_type func_type)
 (--- "types.sll")
 
-(= get_pid (... "sll:process_get_pid"))
+(= pid (<- (... "sll:process_get_pid")))
+(= shell (... "sll:process_execute_shell"))
 
 (= process (. (&:
-	(~ func_type) get_pid
-) get_pid))
+	(~ int_type) pid
+	(~ func_type) shell
+) pid shell))
 (## process)

@@ -6,6 +6,12 @@
 
 
 
+__API_FUNC(process_execute_shell){
+	return sll_platform_execute_shell(a->v);
+}
+
+
+
 __API_FUNC(process_get_pid){
 	return sll_platform_get_pid();
 }

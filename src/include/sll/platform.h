@@ -95,6 +95,19 @@ __SLL_EXTERNAL void sll_platform_enable_console_color(void);
 
 
 /**
+ * \flags check_output func
+ * \name sll_platform_execute_shell
+ * \group platform
+ * \subgroup platform-process
+ * \desc Docs!
+ * \arg const sll_char_t* cmd
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sll_char_t* cmd);
+
+
+
+/**
  * \flags func
  * \name sll_platform_file_close
  * \group platform

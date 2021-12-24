@@ -763,6 +763,36 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_process_execute_shell __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_process_execute_shell sll_string_t* a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_process_execute_shell
+ * \group process-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_process_execute_shell_raw
+ * \group raw-api
+ * \subgroup raw-api-process-api
+ * \desc Wrapper function for :sll_api_process_execute_shell:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Process
+ * \group raw-api
+ * \subgroup raw-api-process-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_process_get_pid __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_process_get_pid void
 /**
@@ -781,13 +811,6 @@
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
- */
-/**
- * \flags subgroup
- * \name Process
- * \group raw-api
- * \subgroup raw-api-process-api
- * \desc Docs!
  */
 
 
