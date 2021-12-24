@@ -34,6 +34,7 @@
 - Implemented `sll_string_join`, `sll_string_join_char` and `sll:string_join` ([#106])
 - Implemented `sys$library_path` ([#145])
 - New node type representing source code lines: `SLL_NODE_TYPE_DBG` ([#140])
+- Server request handler
 - VM call stack is now part of the public API
 - VM now recives configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
 
