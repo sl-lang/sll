@@ -4,7 +4,6 @@
 
 ### Added
 
-- `type_type` which is an alias to `int_type`
 - All functions now store their names (used by `sll:log_log`)
 - C Date API: `sll_date_t`, `sll_year_t`, `sll_month_t`, `sll_day_t`, `sll_hour_t`, `sll_minute_t`, `sll_second_t`, `sll_date_from_time` and `sll_date_to_time` ([#56] and [#157])
 - CLI flag for removing debugging data: `-D`
@@ -33,8 +32,10 @@
 - Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index`, `sll_api_string_index_list`, `sll:string_index` and `sll:string_index_list` ([#142])
 - Implemented `sll_string_join`, `sll_string_join_char` and `sll:string_join` ([#106])
 - Implemented `sys$library_path` ([#145])
+- Logging API now also print the line number
 - New node type representing source code lines: `SLL_NODE_TYPE_DBG` ([#140])
 - Server request handler
+- `type_type` which is an alias to `int_type`
 - VM call stack is now part of the public API
 - VM now recives configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
 

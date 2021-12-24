@@ -33,7 +33,7 @@ static void _print_int(int64_t v,sll_file_t* wf){
 		v=-v;
 		sll_file_write_char(wf,'-');
 	}
-	char bf[20];
+	sll_char_t bf[20];
 	uint8_t i=0;
 	while (v){
 		bf[i]=v%10;

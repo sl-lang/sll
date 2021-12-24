@@ -67,6 +67,30 @@ static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char
 
 
 
+static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file_offset_t ln,sll_file_t* wf){
+	sll_file_write_char(sll_stdout,'[');
+	sll_file_write(sll_stdout,fp->v,fp->l);
+	sll_file_write_char(sll_stdout,':');
+	sll_file_write(sll_stdout,fn->v,fn->l);
+	sll_file_write_char(sll_stdout,':');
+	SLL_ASSERT(ln);
+	sll_char_t bf[20];
+	uint8_t i=0;
+	while (ln){
+		bf[i]=ln%10;
+		ln/=10;
+		i++;
+	}
+	while (i){
+		i--;
+		sll_file_write_char(wf,bf[i]+48);
+	}
+	sll_file_write_char(sll_stdout,']');
+	sll_file_write_char(sll_stdout,' ');
+}
+
+
+
 void _log_release_data(void){
 	while (_log_f_dtl){
 		_log_f_dtl--;
@@ -86,7 +110,7 @@ void _log_release_data(void){
 
 
 
-__SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_char_t* t,...){
+__SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,const sll_char_t* t,...){
 	if (!_log_default&&!_log_f_dtl){
 		return;
 	}
@@ -106,12 +130,7 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_
 	sll_string_t s;
 	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,&s);
 	va_end(va);
-	sll_file_write_char(sll_stdout,'[');
-	sll_file_write(sll_stdout,f_dt->nm.v,f_dt->nm.l);
-	sll_file_write_char(sll_stdout,':');
-	sll_file_write(sll_stdout,fn_dt->nm.v,fn_dt->nm.l);
-	sll_file_write_char(sll_stdout,']');
-	sll_file_write_char(sll_stdout,' ');
+	_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
 	sll_file_write(sll_stdout,s.v,s.l);
 	sll_file_write_char(sll_stdout,'\n');
 	sll_free_string(&s);
@@ -119,7 +138,7 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_
 
 
 
-__SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,const sll_string_t* s){
+__SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,const sll_string_t* s){
 	if (!_log_default&&!_log_f_dtl){
 		return;
 	}
@@ -128,12 +147,7 @@ __SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,const 
 	if (!fn_dt->st){
 		return;
 	}
-	sll_file_write_char(sll_stdout,'[');
-	sll_file_write(sll_stdout,f_dt->nm.v,f_dt->nm.l);
-	sll_file_write_char(sll_stdout,':');
-	sll_file_write(sll_stdout,fn_dt->nm.v,fn_dt->nm.l);
-	sll_file_write_char(sll_stdout,']');
-	sll_file_write_char(sll_stdout,' ');
+	_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
 	sll_file_write(sll_stdout,s->v,s->l);
 	sll_file_write_char(sll_stdout,'\n');
 }

@@ -12,7 +12,7 @@
 
 
 
-#define SLL_LOG(t,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),SLL_CHAR(t),##__VA_ARGS__)
+#define SLL_LOG(t,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),__LINE__,SLL_CHAR(t),##__VA_ARGS__)
 
 
 
@@ -23,9 +23,10 @@
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg const sll_char_t* fn
+ * \arg sll_file_offset_t ln
  * \arg const sll_char_t* t
  */
-__SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_char_t* t,...);
+__SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,const sll_char_t* t,...);
 
 
 
@@ -36,9 +37,10 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,const sll_
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg const sll_char_t* fn
+ * \arg sll_file_offset_t ln
  * \arg const sll_string_t* s
  */
-__SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,const sll_string_t* s);
+__SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,const sll_string_t* s);
 
 
 
