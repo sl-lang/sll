@@ -1,5 +1,5 @@
-(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date)
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll")
+(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process)
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -183,6 +183,8 @@
 (= tm (<- time$time))
 (= dt (<- date$from_time tm))
 (:> dt "\n" (<- date$to_time dt) "\n" (- (<- date$to_time dt) tm) "\n")
+
+(:> "Current PID: " (<- process$get_pid) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

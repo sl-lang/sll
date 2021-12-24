@@ -936,6 +936,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_raw(sll_objec
 
 
 
+__SLL_API_TYPE_sll_api_process_get_pid sll_api_process_get_pid(__SLL_API_ARGS_sll_api_process_get_pid);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_get_pid_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t out=sll_api_process_get_pid();
+	return SLL_FROM_INT(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_sort_sort sll_api_sort_sort(__SLL_API_ARGS_sll_api_sort_sort);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_sort_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -1962,6 +1970,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:path_set_cwd",sll_api_path_set_cwd_raw,0},
 	{"sll:path_size",sll_api_path_size_raw,0},
 	{"sll:path_split",sll_api_path_split_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:process_get_pid",sll_api_process_get_pid_raw,0},
 	{"sll:sort_sort",sll_api_sort_sort_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_convert",sll_api_string_convert_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_count",sll_api_string_count_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
@@ -1998,5 +2007,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=63;
+const sll_function_index_t _ifunc_size=64;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

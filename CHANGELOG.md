@@ -15,6 +15,7 @@
 - Implemented `date$MONTHS` ([#56] and [#154])
 - Implemented `date$time_zone_type` ([#56] and [#153])
 - Implemented `date.sll` ([#56])
+- Implemented `process.sll` ([#22])
 - Implemented `sll:date_merge` and `date$to_time` ([#56] and [#150])
 - Implemented `sll:date_split` and `date$from_time` ([#56] and [#151])
 - Implemented `sll:path_split` ([#146])
@@ -28,6 +29,7 @@
 - Implemented `sll_ext:debug_get_name` ([#130] and [#137])
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
 - Implemented `sll_get_location` and `sll_ext:debug_get_location` ([#141])
+- Implemented `sll_platform_get_pid`, `sll_pid_t`, `sll:process_get_pid` and `process$get_pid` ([#160])
 - Implemented `sll_string_index_reverse`, `sll_string_index_reverse_char`, `sll_string_index_reverse_multiple`, `sll_api_string_index_reverse`, `sll_api_string_index_reverse_list`, `sll:string_index_reverse` and `sll:string_index_reverse_list` ([#143])
 - Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index`, `sll_api_string_index_list`, `sll:string_index` and `sll:string_index_list` ([#142])
 - Implemented `sll_string_join`, `sll_string_join_char` and `sll:string_join` ([#106])
@@ -1234,6 +1236,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#160]: https://github.com/sl-lang/sll/issues/160
 [#157]: https://github.com/sl-lang/sll/issues/157
 [#156]: https://github.com/sl-lang/sll/issues/156
 [#155]: https://github.com/sl-lang/sll/issues/155

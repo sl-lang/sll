@@ -184,6 +184,10 @@ typedef uint32_t sll_object_type_t;
 
 
 
+typedef uint32_t sll_pid_t;
+
+
+
 typedef uint32_t sll_ref_count_t;
 
 
