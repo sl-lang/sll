@@ -1,50 +1,14 @@
-async function _read_url(url){
-	url="/"+url.match(/^\/*([^?#]*)/)[1];
-	if (url=="/sh"){
-		url="shell_install.sh";
-	}
-	else if (url.endsWith("/")){
-		url+="index.html"
-	}
-	else{
-		const s=url.split("/");
-		if (!["apt","bin"].includes(s[1])&&s[s.length-1].indexOf(".")==-1){
-			url+=".html";
-		}
-	}
-	let dt=await SLL.get(url,"arrayBuffer");
-	if (!dt){
-		url="404.html"
-		dt=await SLL.get("/404.html","arrayBuffer");
-	}
-	r=new Response(dt);
-	url=url.split(".");
-	let ct="text/plain";
-	switch (url[url.length-1]){
-		case "css":
-			ct="text/css";
-			break;
-		case "gz":
-			ct="application/gzip";
-			break;
-		case "html":
-			ct="text/html";
-			break;
-		case "js":
-			ct="application/javascript";
-			break;
-	}
-	r.headers.set("Content-Type",ct+";charset=utf-8");
-	return r;
-}
+const MIME_TYPES={"css":"text/css;charset=utf-8","deb":"application/octet-stream","dll":"application/octet-stream","gz":"application/gzip","html":"text/html;charset=utf-8","js":"application/javascript;charset=utf-8","so":"application/octet-stream","zip":"application/zip"};
+const REDIRECTS={"/":"/index.html","/sh":"shell_install.sh"};
 
 
 
 addEventListener("fetch",(e)=>{
-	try{
-		return e.respondWith(_read_url(new URL(e.request.url).pathname));
-	}
-	catch (err){
-		return e.respondWith(new Response("Internal Error",{status:500}));
-	}
+	return e.respondWith((async _=>{
+		let url="/"+e.request.url.toLowerCase().match(/^https?:\/\/[a-z0-9._]+\/+([^?#]*)/)[1];
+		url=REDIRECTS[url]||(((await SLL.list({prefix:url,limit:1})).keys[0]||{}).name==url?url:"/404.html");
+		return new Response(await SLL.get(url,"arrayBuffer"),{headers:new Headers({
+			"Content-Type":(MIME_TYPES[url.split(".").at(-1)]||"text/plain;charset=utf-8")
+		})});
+	})());
 });
