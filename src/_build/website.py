@@ -94,7 +94,7 @@ if (__name__=="__main__"):
 		tb_r.decode_content=True
 		l=[]
 		n_tb=[]
-		for k in tb_r.read().split("\x00"):
+		for k in tb_r.read().split(b"\x00"):
 			if (k[:5]==b"/apt/" or k[:5]==b"/bin/"):
 				n_tb.append(k)
 			else:
