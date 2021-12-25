@@ -53,7 +53,7 @@ apt remove sll
 
 ## Version Checking
 
-If using the standalone version of Sll, replace `sll` by `sll_standalone`. The most recent version of Sll is `0.6.32` (`0.6.33` is in development).
+If using the standalone version of Sll, replace `sll` by `sll_standalone`. The most recent version of Sll is `0.6.33` (`0.6.34` is in development).
 
 ### Windows
 

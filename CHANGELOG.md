@@ -1,6 +1,10 @@
 # The Sl Programing Language Change Log
 
-## [0.6.33] - Ongoing
+## [0.6.34] - Ongoing
+
+*Nothing*
+
+## [0.6.33] - 2021-12-25
 
 ### Added
 
@@ -59,7 +63,7 @@
 - `sll_internal_function_pointer_t` now uses `sll_object_t*` instead of `const sll_object_t*`
 - `SLL_NODE_TYPE_UNKNOWN` is no longer part of the public API ([#139])
 - `sll_remove_debug_data` has been renamed to `sll_remove_object_debug_data`
-- Updated structure of the [`src/web`][main/src/web] folder
+- Updated structure of the [`src/web`][0.6.33/src/web] folder
 
 ### Removed
 
@@ -1180,7 +1184,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.33]: https://github.com/sl-lang/sll/compare/v0.6.32...main
+[0.6.34]: https://github.com/sl-lang/sll/compare/v0.6.33...main
+[0.6.33]: https://github.com/sl-lang/sll/compare/v0.6.32...v0.6.33
 [0.6.32]: https://github.com/sl-lang/sll/compare/v0.6.31...v0.6.32
 [0.6.31]: https://github.com/sl-lang/sll/compare/v0.6.30...v0.6.31
 [0.6.30]: https://github.com/sl-lang/sll/compare/v0.6.29...v0.6.30
@@ -1360,7 +1365,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
+[0.6.33/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
 [0.6.32/src/include/sll/api/util.h]: https://github.com/sl-lang/sll/blob/v0.6.32/src/include/sll/api/util.h
 [0.6.32/src/sll/api/util_api.c]: https://github.com/sl-lang/sll/blob/v0.6.32/src/sll/api/util_api.c
 [0.6.32/src/sll/debug_object.c]: https://github.com/sl-lang/sll/blob/v0.6.32/src/sll/debug_object.c
