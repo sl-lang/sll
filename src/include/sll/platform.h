@@ -216,6 +216,18 @@ __SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_size_t sz);
 
 
 /**
+ * \flags func
+ * \name sll_platform_close_process_handle
+ * \group platform
+ * \subgroup platform-process
+ * \desc Docs!
+ * \arg sll_process_handle_t ph
+ */
+__SLL_EXTERNAL void sll_platform_close_process_handle(sll_process_handle_t ph);
+
+
+
+/**
  * \flags check_output func
  * \name sll_platform_get_current_time
  * \group platform
@@ -407,6 +419,20 @@ __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm);
 
 
 /**
+ * \flags check_output func
+ * \name sll_platform_start_process
+ * \group platform
+ * \subgroup platform-process
+ * \desc Docs!
+ * \arg const sll_char_t*const* a
+ * \arg const sll_char_t*const* env
+ * \ret sll_process_handle_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env);
+
+
+
+/**
  * \flags func
  * \name sll_platform_unload_library
  * \group platform
@@ -415,6 +441,19 @@ __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm);
  * \arg sll_library_handle_t h
  */
 __SLL_EXTERNAL void sll_platform_unload_library(sll_library_handle_t h);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_platform_wait_process
+ * \group platform
+ * \subgroup platform-process
+ * \desc Docs!
+ * \arg sll_process_handle_t ph
+ * \ret sll_return_code_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_process_handle_t ph);
 
 
 

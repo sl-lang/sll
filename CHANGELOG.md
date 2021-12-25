@@ -20,6 +20,7 @@
 - Implemented `sll:date_split` and `date$from_time` ([#56] and [#151])
 - Implemented `sll:path_split` ([#146])
 - Implemented `sll_api_file_flush`, `sll_api_string_count`, `sll:file_flush` and `sll:string_count`
+- Implemented `sll_api_process_start`, `process$FLAG_xxx`, `process$process_config_type`, `process$default_process_config` and `process$start` ([#22] and [#159])
 - Implemented `sll_api_string_count_left` and `sll:string_count_left` ([#113])
 - Implemented `sll_api_string_count_right` and `sll:string_count_right` ([#114])
 - Implemented `sll_current_instruction_index` and `sll_remove_debug_data`
@@ -29,7 +30,7 @@
 - Implemented `sll_ext:debug_get_name` ([#130] and [#137])
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
 - Implemented `sll_get_location` and `sll_ext:debug_get_location` ([#141])
-- Implemented `sll_platform_execute_shell`, `sll:process_execute_shell` and `process$shell` ([#158])
+- Implemented `sll_platform_execute_shell`, `sll:process_execute_shell`, `process$shell` and `process$shell_path` ([#158])
 - Implemented `sll_platform_get_pid`, `sll_pid_t`, `sll:process_get_pid` and `process$pid` ([#160])
 - Implemented `sll_string_index_reverse`, `sll_string_index_reverse_char`, `sll_string_index_reverse_multiple`, `sll_api_string_index_reverse`, `sll_api_string_index_reverse_list`, `sll:string_index_reverse` and `sll:string_index_reverse_list` ([#143])
 - Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index`, `sll_api_string_index_list`, `sll:string_index` and `sll:string_index_list` ([#142])
@@ -37,6 +38,7 @@
 - Implemented `sys$library_path` ([#145])
 - Logging API now also print the line number
 - New node type representing source code lines: `SLL_NODE_TYPE_DBG` ([#140])
+- Platform process creation API: `sll_process_handle_t`, `sll_platform_close_process_handle`, `sll_platform_start_process` and `sll_platform_wait_process`
 - Server request handler
 - `type_type` which is an alias to `int_type`
 - VM call stack is now part of the public API
@@ -1238,6 +1240,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#160]: https://github.com/sl-lang/sll/issues/160
+[#159]: https://github.com/sl-lang/sll/issues/159
 [#158]: https://github.com/sl-lang/sll/issues/158
 [#157]: https://github.com/sl-lang/sll/issues/157
 [#156]: https://github.com/sl-lang/sll/issues/156

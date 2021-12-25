@@ -1407,7 +1407,7 @@ _export_identifier_found:;
 						nf->al=f->al;
 						nf->nm=(f->nm==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(im_dt.sm+f->nm));
 						for (sll_arg_count_t k=0;k<f->al;k++){
-							nf->a[k]=f->a[k];
+							nf->a[k]=SLL_IDENTIFIER_ADD_INDEX(f->a[k],im_dt.off[SLL_IDENTIFIER_GET_ARRAY_ID(f->a[k])]);
 						}
 						*(c_dt->ft.dt+i+j)=nf;
 					}

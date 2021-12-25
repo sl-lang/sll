@@ -763,6 +763,35 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_process__init void
+#define __SLL_API_ARGS_sll_api_process__init sll_integer_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_process__init
+ * \group process-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_process__init_raw
+ * \group raw-api
+ * \subgroup raw-api-process-api
+ * \desc Wrapper function for :sll_api_process__init:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Process
+ * \group raw-api
+ * \subgroup raw-api-process-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_process_execute_shell __SLL_CHECK_OUTPUT sll_bool_t
 #define __SLL_API_ARGS_sll_api_process_execute_shell sll_string_t* a
 /**
@@ -783,13 +812,6 @@
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
  */
-/**
- * \flags subgroup
- * \name Process
- * \group raw-api
- * \subgroup raw-api-process-api
- * \desc Docs!
- */
 
 
 
@@ -808,6 +830,31 @@
  * \group raw-api
  * \subgroup raw-api-process-api
  * \desc Wrapper function for :sll_api_process_get_pid:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_process_start __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_process_start sll_array_t* a,sll_object_t* b,sll_string_t* c
+/**
+ * \flags func optimizable
+ * \name sll_api_process_start
+ * \group process-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \arg sll_object_t* b -> 
+ * \arg sll_string_t* c -> 
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_process_start_raw
+ * \group raw-api
+ * \subgroup raw-api-process-api
+ * \desc Wrapper function for :sll_api_process_start:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

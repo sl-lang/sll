@@ -12,6 +12,25 @@
 
 
 
+#define SLL_PROCESS_FLAG_PASS_STDIN 1
+#define SLL_PROCESS_FLAG_CAPTURE_STDOUT 2
+#define SLL_PROCESS_FLAG_CAPTURE_STDERR 4
+#define SLL_PROCESS_FLAG_WAIT 8
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_process__init
+ * \group process-api
+ * \desc Docs!
+ * \arg I
+ * \ret V
+ */
+__API_FUNC_DECL(process__init);
+
+
+
 /**
  * \flags api func
  * \name sll_api_process_execute_shell
@@ -32,6 +51,20 @@ __API_FUNC_DECL(process_execute_shell);
  * \ret I
  */
 __API_FUNC_DECL(process_get_pid);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_process_start
+ * \group process-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \arg S
+ * \ret O
+ */
+__API_FUNC_DECL(process_start);
 
 
 

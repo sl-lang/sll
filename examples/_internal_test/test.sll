@@ -186,6 +186,7 @@
 
 (:> "Current PID: " process$pid "\n")
 (<- process$shell "echo Shell!")
+(:> (<- process$start [sys$executable "-V"]) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

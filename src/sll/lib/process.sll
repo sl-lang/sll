@@ -1,11 +1,60 @@
-(# int_type func_type)
-(--- "types.sll")
+(# sys int_type func_type type_type string_type array_type)
+(--- "sys.sll" "types.sll")
+
+(= FLAG_PASS_STDIN 1)
+(= FLAG_CAPTURE_STDOUT 2)
+(= FLAG_CAPTURE_STDERR 4)
+(= FLAG_WAIT 8)
+
+(= process_config_type (&:
+	string_type cwd
+	int_type flags
+))
+
+(= stream_data_type (&:
+	(~ string_type) stdin
+	(~ string_type) stdout
+	(~ string_type) stderr
+))
+
+(= process_type (&:
+	array_type args
+	process_config_type cfg
+	(~ int_type) return_code
+	(~ stream_data_type) streams
+))
+
+(<- (... "sll:process__init") process_type)
+
+(= default_process_config (. process_config_type
+	""
+	FLAG_WAIT
+))
 
 (= pid (<- (... "sll:process_get_pid")))
+
 (= shell (... "sll:process_execute_shell"))
 
+(= start (,,, args cfg stdin
+	(@@ (<- (... "sll:process_start")
+		(?: (=== (:? args) string_type) [args] (:: args array_type))
+		(?: cfg (:: cfg process_config_type) default_process_config)
+		(?: stdin (:: stdin string_type) "")
+	))
+))
+
+(= shell_path (?: (=== sys$platform "windows") "C:\\Windows\\System32\\cmd.exe" "/bin/sh"))
+
 (= process (. (&:
+	(~ int_type) FLAG_PASS_STDIN
+	(~ int_type) FLAG_CAPTURE_STDOUT
+	(~ int_type) FLAG_CAPTURE_STDERR
+	(~ int_type) FLAG_WAIT
+	(~ type_type) process_config_type
 	(~ int_type) pid
 	(~ func_type) shell
-) pid shell))
+	(~ func_type) start
+	(~ process_config_type) default_process_config
+	(~ string_type) shell_path
+) FLAG_PASS_STDIN FLAG_CAPTURE_STDOUT FLAG_CAPTURE_STDERR FLAG_WAIT process_config_type pid shell start default_process_config shell_path))
 (## process)

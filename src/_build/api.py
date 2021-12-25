@@ -47,7 +47,10 @@ def generate_c_api(d_dt,api_dt):
 						t=f"{at} {ALPHABET[i]}"
 						a+=t
 						d_str+=f"\n * \\arg {t} -> {e['desc']}"
-						end=f"\tSLL_RELEASE({ALPHABET[i]});\n"+end
+						if (e["opt"]):
+							end=f"\tif ({ALPHABET[i]}){{\n\t\tSLL_RELEASE({ALPHABET[i]});\n\t}}\n"+end
+						else:
+							end=f"\tSLL_RELEASE({ALPHABET[i]});\n"+end
 						cf.write(f"\tsll_object_t* {ALPHABET[i]}=NULL;\n\tif (all>{i}){{\n\t\t{ALPHABET[i]}=*(al+{i});\n")
 						if ("O" not in e["type"]):
 							cf.write("\t\tif ("+"||".join([TYPE_CHECK_MAP[se].replace('$',ALPHABET[i]) for se in e["type"]])+f"){{\n\t\t\tSLL_ACQUIRE({ALPHABET[i]});\n\t\t}}\n\t\telse{{\n\t\t\t{ALPHABET[i]}=sll_operator_cast({ALPHABET[i]},sll_static_int[SLL_OBJECT_TYPE_{TYPE_FULL_NAME_MAP[e['type'][0]]}]);\n\t\t}}\n")

@@ -186,14 +186,14 @@ __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,u
 		}
 	}
 	if (t==__SLL_DEBUG_TYPE_RELEASE){
-		dt->all++;
-		dt->al=sll_reallocate(dt->al,dt->all*sizeof(object_debug_data_trace_data_t*));
-		*(dt->al+dt->all-1)=n;
-	}
-	else{
 		dt->rll++;
 		dt->rl=sll_reallocate(dt->rl,dt->rll*sizeof(object_debug_data_trace_data_t*));
 		*(dt->rl+dt->rll-1)=n;
+	}
+	else{
+		dt->all++;
+		dt->al=sll_reallocate(dt->al,dt->all*sizeof(object_debug_data_trace_data_t*));
+		*(dt->al+dt->all-1)=n;
 	}
 	return o;
 }
