@@ -118,6 +118,6 @@ if (__name__=="__main__"):
 			n_tb.append(fp)
 			o.append({"key":h,"value":util.encode(dt[i:i+sz]),"base64":True})
 			i+=sz
-		o.append({"key":"__table","value":util.encode(json.dumps(n_tb)),"base64":True})
+		o.append({"key":"__table","value":util.encode(bytes(json.dumps(n_tb),"utf-8")),"base64":True})
 		util.log("Uploading Data...")
 		requests.put(url+"bulk",headers=h,data=json.dumps(o))
