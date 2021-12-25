@@ -2,7 +2,9 @@
 
 ## [0.6.34] - Ongoing
 
-*Nothing*
+### Removed
+
+- `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
 
 ## [0.6.33] - 2021-12-25
 

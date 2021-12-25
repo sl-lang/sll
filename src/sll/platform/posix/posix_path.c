@@ -7,6 +7,7 @@
 #include <sll/util.h>
 #include <dirent.h>
 #include <dlfcn.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -45,6 +46,27 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 
 
 
+__SLL_EXTERNAL sll_string_length_t sll_platform_absolute_path(const sll_char_t* lnk,sll_char_t* o,sll_string_length_t ol){
+	if (ol>=PATH_MAX){
+		if (!realpath((const char*)lnk,(char*)o)){
+			return 0;
+		}
+		return sll_string_length_unaligned(o);
+	}
+	sll_char_t bf[PATH_MAX];
+	if (!realpath((const char*)lnk,(char*)bf)){
+		return 0;
+	}
+	sll_string_length_t l=sll_string_length_unaligned(bf)+1;
+	if (l>ol){
+		l=ol;
+	}
+	sll_copy_data(bf,l,o);
+	return l;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol){
 	if (!getcwd((char*)o,ol)){
 		*o=0;
@@ -56,7 +78,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
-	ssize_t i=readlink("/proc/self/exe",(char*)o,ol);
+	ssize_t i=readlink("/proc/self/exe",(char*)o,ol-1);
 	if (i!=-1){
 		*(o+i)=0;
 		return (sll_string_length_t)i;
@@ -72,7 +94,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_f
 	if (!dladdr(sll_platform_get_library_file_path,&dt)){
 		return 0;
 	}
-	return sll_path_absolute((const sll_char_t*)(dt.dli_fname),o,ol);
+	return sll_platform_absolute_path((const sll_char_t*)(dt.dli_fname),o,ol);
 }
 
 

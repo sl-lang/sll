@@ -179,7 +179,7 @@ __API_FUNC(sys_load_library){
 		return 0;
 	}
 	sll_char_t fp[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_length_t fpl=sll_path_absolute(a->v,fp,SLL_API_MAX_FILE_PATH_LENGTH);
+	sll_string_length_t fpl=sll_platform_absolute_path(a->v,fp,SLL_API_MAX_FILE_PATH_LENGTH);
 	if (!sll_platform_path_exists(fp)){
 		return 0;
 	}

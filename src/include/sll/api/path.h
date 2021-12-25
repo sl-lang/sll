@@ -24,20 +24,6 @@
 
 /**
  * \flags func
- * \name sll_path_absolute
- * \group path-api
- * \desc Docs!
- * \arg const sll_char_t* s
- * \arg sll_char_t* o
- * \arg sll_string_length_t ol
- * \ret sll_string_length_t
- */
-__SLL_EXTERNAL sll_string_length_t sll_path_absolute(const sll_char_t* s,sll_char_t* o,sll_string_length_t ol);
-
-
-
-/**
- * \flags func
  * \name sll_path_split
  * \group path-api
  * \desc Docs!

@@ -71,6 +71,21 @@ __SLL_EXTERNAL extern const sll_char_t* sll_platform_string;
 
 
 /**
+ * \flags func
+ * \name sll_platform_absolute_path
+ * \group platform
+ * \subgroup platform-pathh
+ * \desc Docs!
+ * \arg const sll_char_t* fp
+ * \arg sll_char_t* o
+ * \arg sll_string_length_t ol
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL sll_string_length_t sll_platform_absolute_path(const sll_char_t* fp,sll_char_t* o,sll_string_length_t ol);
+
+
+
+/**
  * \flags check_output func
  * \name sll_platform_allocate_page
  * \group platform

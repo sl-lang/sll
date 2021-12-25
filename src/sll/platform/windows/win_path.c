@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <winioctl.h>
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/memory.h>
@@ -38,6 +39,12 @@ static void _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_
 		} while (FindNextFileA(fh,&dt));
 		FindClose(fh);
 	}
+}
+
+
+
+__SLL_EXTERNAL sll_string_length_t sll_platform_absolute_path(const sll_char_t* fp,sll_char_t* o,sll_string_length_t ol){
+	return GetFullPathNameA(fp,ol,o,NULL);
 }
 
 

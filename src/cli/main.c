@@ -128,7 +128,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_copy_data(bf,j+1,f_fp);
 			}
 			else{
-				sll_path_absolute(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
+				sll_platform_absolute_path(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
 			if (fl&FLAG_VERBOSE){
 				sll_file_write_format(sll_stdout,SLL_CHAR("Found File '%s'\n"),f_fp);
@@ -161,7 +161,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			sll_copy_data(bf,j+1,f_fp);
 		}
 		else{
-			sll_path_absolute(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
+			sll_platform_absolute_path(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 		}
 		if (fl&FLAG_VERBOSE){
 			sll_file_write_format(sll_stdout,SLL_CHAR("Found File '%s'\n"),f_fp);
@@ -201,7 +201,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_copy_data(l_fp,i+5,f_fp);
 			}
 			else{
-				sll_path_absolute(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
+				sll_platform_absolute_path(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
 			if (fl&FLAG_VERBOSE){
 				sll_file_write_format(sll_stdout,SLL_CHAR("Found File '%s'\n"),f_fp);
@@ -232,7 +232,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				sll_copy_data(l_fp,l_fpl+5,f_fp);
 			}
 			else{
-				sll_path_absolute(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
+				sll_platform_absolute_path(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
 			if (fl&FLAG_VERBOSE){
 				sll_file_write_format(sll_stdout,SLL_CHAR("Found File '%s'\n"),f_fp);
@@ -669,7 +669,7 @@ _read_file_argument:
 			goto _error;
 		}
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_path_absolute(*(fp+j),bf,SLL_API_MAX_FILE_PATH_LENGTH);
+		sll_platform_absolute_path(*(fp+j),bf,SLL_API_MAX_FILE_PATH_LENGTH);
 		sll_set_argument(0,bf);
 		if (!execute(f_fp,&c_dt,&a_dt,&f,o_fp,&ec)){
 			goto _error;
