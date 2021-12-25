@@ -8,7 +8,7 @@ addEventListener("fetch",(e)=>{
 		let url="/"+e.request.url.toLowerCase().match(/^https?:\/\/[a-z0-9._]+\/+([^?#]*)/)[1];
 		url=REDIRECTS[url]||(((await SLL.list({prefix:url,limit:1})).keys[0]||{}).name==url?url:"/404.html");
 		return new Response(await SLL.get(url,"arrayBuffer"),{headers:new Headers({
-			"Content-Type":(MIME_TYPES[url.split(".").at(-1)]||"text/plain;charset=utf-8")
+			"Content-Type":MIME_TYPES[url.split(".").at(-1)]||"text/plain;charset=utf-8"
 		})});
 	})());
 });

@@ -30,8 +30,8 @@
 - Implemented `sll_ext:debug_get_name` ([#130] and [#137])
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
 - Implemented `sll_get_location` and `sll_ext:debug_get_location` ([#141])
-- Implemented `sll_platform_execute_shell`, `sll:process_execute_shell`, `process$shell` and `process$shell_path` ([#158])
-- Implemented `sll_platform_get_pid`, `sll_pid_t`, `sll:process_get_pid` and `process$pid` ([#160])
+- Implemented `sll_platform_execute_shell`, `sll:process_execute_shell`, `process$shell` and `process$shell_path` ([#22] and [#158])
+- Implemented `sll_platform_get_pid`, `sll_pid_t`, `sll:process_get_pid` and `process$pid` ([#22] and [#160])
 - Implemented `sll_string_index_reverse`, `sll_string_index_reverse_char`, `sll_string_index_reverse_multiple`, `sll_api_string_index_reverse`, `sll_api_string_index_reverse_list`, `sll:string_index_reverse` and `sll:string_index_reverse_list` ([#143])
 - Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index`, `sll_api_string_index_list`, `sll:string_index` and `sll:string_index_list` ([#142])
 - Implemented `sll_string_join`, `sll_string_join_char` and `sll:string_join` ([#106])
@@ -1343,6 +1343,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#29]: https://github.com/sl-lang/sll/issues/29
 [#27]: https://github.com/sl-lang/sll/issues/27
 [#23]: https://github.com/sl-lang/sll/issues/23
+[#22]: https://github.com/sl-lang/sll/issues/22
 [#20]: https://github.com/sl-lang/sll/issues/20
 [#19]: https://github.com/sl-lang/sll/issues/19
 [#18]: https://github.com/sl-lang/sll/issues/18
