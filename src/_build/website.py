@@ -1,4 +1,5 @@
 import docs
+import hashlib
 import json
 import os
 import sys
@@ -89,9 +90,16 @@ if (__name__=="__main__"):
 		url=f"https://api.cloudflare.com/client/v4/accounts/{sys.argv[-3]}/storage/kv/namespaces/{sys.argv[-2]}/"
 		h={"Authorization":"Bearer "+sys.argv[-1],"Content-Type":"application/json"}
 		util.log("Listing Current KV Keys...")
-		l=requests.get(url+"keys",headers=h).json()["result"]
-		l=[k["name"] for k in l if k["name"][:5]!="/apt/" and k["name"][:5]!="/bin/"]
-		util.log(f"  Found {len(l)} Keys\nClearing KV Storage...")
+		tb=requests.get(url+"values/__table",headers=h).json()
+		l=[]
+		n_tb=[]
+		for k in tb:
+			if (k[:5]=="/apt/" or k[:5]=="/bin/"):
+				n_tb.append(k)
+			else:
+				util.log(f"  Found Key '{k}' ")
+				l.append(hashlib.sha1(bytes(k,"ascii","ignore")).hexdigest())
+		util.log("Clearing KV Storage...")
 		requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in l])+"]")
 		util.log("Generating Request...")
 		with open("web-bundle.dt","rb") as f:
@@ -102,10 +110,14 @@ if (__name__=="__main__"):
 			l=dt[i]
 			sz=dt[i+1]|(dt[i+2]<<8)|(dt[i+3]<<16)
 			i+=4
-			fp=dt[i:i+l].decode("ascii","ignore")
+			fp=dt[i:i+l]
 			i+=l
-			util.log(f"  Encoding File '{fp}' ({sz} bytes)...")
-			o.append({"key":fp,"value":util.encode(dt[i:i+sz]),"base64":True})
+			h=hashlib.sha1(fp).hexdigest()
+			fp=fp.decode("ascii","ignore")
+			util.log(f"  Encoding File '{fp}' ({sz} bytes) -> '{h}'...")
+			n_tb.append(fp)
+			o.append({"key":h,"value":util.encode(dt[i:i+sz]),"base64":True})
 			i+=sz
+		o.append({"key":"__table","value":util.encode(json.dumps(n_tb)),"base64":True})
 		util.log("Uploading Data...")
 		requests.put(url+"bulk",headers=h,data=json.dumps(o))
