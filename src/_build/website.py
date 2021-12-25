@@ -112,11 +112,11 @@ if (__name__=="__main__"):
 			i+=4
 			fp=dt[i:i+l]
 			i+=l
-			h=hashlib.sha1(fp).hexdigest()
+			fp_h=hashlib.sha1(fp).hexdigest()
 			fp=fp.decode("ascii","ignore")
-			util.log(f"  Encoding File '{fp}' ({sz} bytes) -> '{h}'...")
+			util.log(f"  Encoding File '{fp}' ({sz} bytes) -> '{fp_h}'...")
 			n_tb.append(fp)
-			o.append({"key":h,"value":util.encode(dt[i:i+sz]),"base64":True})
+			o.append({"key":fp_h,"value":util.encode(dt[i:i+sz]),"base64":True})
 			i+=sz
 		o.append({"key":"__table","value":util.encode(bytes(json.dumps(n_tb),"utf-8")),"base64":True})
 		util.log("Uploading Data...")
