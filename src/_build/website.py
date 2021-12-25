@@ -99,7 +99,7 @@ if (__name__=="__main__"):
 				n_tb.append(k)
 			else:
 				util.log(f"  Found Key '{k.decode('ascii','ignore')}' ")
-				l.append(hashlib.sha1(k).hexdigest())
+				l.append(hashlib.sha256(k).hexdigest())
 		util.log("Clearing KV Storage...")
 		requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in l])+"]")
 		util.log("Generating Request...")
@@ -113,7 +113,7 @@ if (__name__=="__main__"):
 			i+=4
 			fp=dt[i:i+l]
 			i+=l
-			fp_h=hashlib.sha1(fp).hexdigest()
+			fp_h=hashlib.sha256(fp).hexdigest()
 			util.log(f"  Encoding File '{fp.decode('ascii','ignore')}' ({sz} bytes) -> '{fp_h}'...")
 			n_tb.append(fp)
 			o.append({"key":fp_h,"value":util.encode(dt[i:i+sz]),"base64":True})

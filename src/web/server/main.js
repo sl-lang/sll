@@ -7,7 +7,7 @@ addEventListener("fetch",(e)=>{
 	return e.respondWith((async _=>{
 		let url="/"+e.request.url.match(/^https?:\/\/[a-z0-9._]+\/+([^?#]*)/)[1];
 		url=REDIRECTS[url]||((await SLL.get("__table")).split("\x00").includes(url)?url:"/404.html");
-		return new Response(await SLL.get(Array.from(new Uint8Array(await crypto.subtle.digest("SHA-1",new TextEncoder().encode(url)))).map(e=>{
+		return new Response(await SLL.get(Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(url)))).map(e=>{
 			return e.toString(16).padStart(2,"0");
 		}).join(""),"arrayBuffer"),{headers:new Headers({
 			"Content-Type":MIME_TYPES[url.split(".").at(-1)]||"text/plain;charset=utf-8"
