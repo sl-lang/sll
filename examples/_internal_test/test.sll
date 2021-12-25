@@ -188,6 +188,8 @@
 (<- process$shell "echo Shell!")
 (:> (<- process$start [sys$executable "-V"]) "\n")
 
+(:> sys$library "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

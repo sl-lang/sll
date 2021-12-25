@@ -281,6 +281,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executabl
 
 /**
  * \flags check_output func
+ * \name sll_platform_get_library_file_path
+ * \group platform
+ * \subgroup platform-path
+ * \desc Docs!
+ * \arg sll_char_t* o
+ * \arg sll_string_length_t ol
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_char_t* o,sll_string_length_t ol);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_get_pid
  * \group platform
  * \subgroup platform-process

@@ -7,11 +7,15 @@
 
 
 
-__SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("windows");
-
-
-
 static HANDLE _win_wh=INVALID_HANDLE_VALUE;
+
+
+
+void* _win_dll_handle=NULL;
+
+
+
+__SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("windows");
 
 
 
@@ -53,4 +57,13 @@ __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 		}
 		tm=c-e;
 	}
+}
+
+
+
+BOOL WINAPI DllMain(HINSTANCE dll_h,DWORD t,LPVOID r){
+	if (!_win_dll_handle){
+		_win_dll_handle=dll_h;
+	}
+	return TRUE;
 }

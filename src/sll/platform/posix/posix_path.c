@@ -1,10 +1,12 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
 #include <dirent.h>
+#include <dlfcn.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -61,6 +63,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executabl
 	}
 	*o=0;
 	return 0;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_char_t* o,sll_string_length_t ol){
+	Dl_info dt;
+	if (!dladdr(sll_platform_get_library_file_path,&dt)){
+		return 0;
+	}
+	return sll_path_absolute((const sll_char_t*)(dt.dli_fname),o,ol);
 }
 
 

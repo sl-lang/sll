@@ -33,7 +33,7 @@ def build_sll(fl,v,r):
 		if (r):
 			util.log("  Compiling Files (Release Mode)...")
 			os.chdir("objects")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-Wall","-O3","-Werror","-I","../../src/include"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","_GNU_SOURCE","-Wall","-O3","-Werror","-I","../../src/include"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
@@ -44,7 +44,7 @@ def build_sll(fl,v,r):
 		else:
 			util.log("  Compiling Files...")
 			os.chdir("objects")
-			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-Wall","-g","-O0","-Werror","-I","../../src/include"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (util.wrap_output(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-D","_GNU_SOURCE","-Wall","-g","-O0","-Werror","-I","../../src/include"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")

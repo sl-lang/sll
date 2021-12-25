@@ -20,6 +20,7 @@
 static sll_integer_t _sys_argc=0;
 static sll_string_t* _sys_argv=NULL;
 static sll_string_t _sys_e=SLL_INIT_STRING_STRUCT;
+static sll_string_t _sys_l=SLL_INIT_STRING_STRUCT;
 static sll_string_t _sys_p=SLL_INIT_STRING_STRUCT;
 static library_t** _sys_lh=NULL;
 static sll_array_length_t _sys_lhl=0;
@@ -38,6 +39,10 @@ static void _sys_free_data(void){
 	if (_sys_e.l){
 		sll_free_string(&_sys_e);
 		_sys_e.l=0;
+	}
+	if (_sys_l.l){
+		sll_free_string(&_sys_l);
+		_sys_l.l=0;
 	}
 	if (_sys_p.l){
 		sll_free_string(&_sys_p);
@@ -122,6 +127,21 @@ __API_FUNC(sys_get_executable){
 		}
 	}
 	sll_string_clone(&_sys_e,out);
+}
+
+
+
+__API_FUNC(sys_get_library){
+	if (!_sys_l.l){
+		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+		sll_string_length_t bfl=sll_platform_get_library_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH);
+		sll_string_from_pointer_length(bf,bfl,&_sys_l);
+		if (!_sys_end){
+			sll_register_cleanup(_sys_free_data);
+			_sys_end=1;
+		}
+	}
+	sll_string_clone(&_sys_l,out);
 }
 
 

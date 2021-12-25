@@ -417,7 +417,7 @@ int main(int argc,const char** argv){
 	}
 	*i_fp=0;
 	i_fpl=1;
-	l_fpl=sll_platform_get_executable_file_path(l_fp,SLL_API_MAX_FILE_PATH_LENGTH);
+	l_fpl=sll_platform_get_library_file_path(l_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 	while (l_fp[l_fpl]!='/'&&l_fp[l_fpl]!='\\'){
 		if (!l_fpl){
 			goto _skip_lib_path;

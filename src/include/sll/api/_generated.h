@@ -1462,6 +1462,27 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_sys_get_library void
+#define __SLL_API_ARGS_sll_api_sys_get_library sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_sys_get_library
+ * \group sys-api
+ * \desc Docs!
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_get_library_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_get_library:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sys_get_platform void
 #define __SLL_API_ARGS_sll_api_sys_get_platform sll_string_t* out
 /**

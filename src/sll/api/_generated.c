@@ -1931,6 +1931,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_executable_raw(s
 
 
 
+__SLL_API_TYPE_sll_api_sys_get_library sll_api_sys_get_library(__SLL_API_ARGS_sll_api_sys_get_library);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_library_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_string_t out;
+	sll_api_sys_get_library(&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_sys_get_platform sll_api_sys_get_platform(__SLL_API_ARGS_sll_api_sys_get_platform);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_platform_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t out;
@@ -2111,6 +2123,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:sys_arg_get",sll_api_sys_arg_get_raw,0},
 	{"sll:sys_arg_get_count",sll_api_sys_arg_get_count_raw,0},
 	{"sll:sys_get_executable",sll_api_sys_get_executable_raw,0},
+	{"sll:sys_get_library",sll_api_sys_get_library_raw,0},
 	{"sll:sys_get_platform",sll_api_sys_get_platform_raw,0},
 	{"sll:sys_get_version",sll_api_sys_get_version_raw,0},
 	{"sll:sys_load_library",sll_api_sys_load_library_raw,0},
@@ -2122,5 +2135,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=67;
+const sll_function_index_t _ifunc_size=68;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

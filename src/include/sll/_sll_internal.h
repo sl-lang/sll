@@ -492,6 +492,12 @@ typedef struct __FILE_LINE{
 
 
 
+#ifdef _MSC_VER
+extern void* _win_dll_handle;
+#endif
+
+
+
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 

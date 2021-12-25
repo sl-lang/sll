@@ -15,6 +15,7 @@
 (= argv (... "sll:sys_arg_get"))
 
 (= executable (<- (... "sll:sys_get_executable")))
+(= library (<- (... "sll:sys_get_library")))
 
 (= load_library (... "sll:sys_load_library"))
 (= library_path (<- path$absolute (+ (: (<- path$split executable) 0) path$separator "sys_lib" path$separator)))
@@ -26,8 +27,9 @@
 	(~ int_type) argc
 	(~ func_type) argv
 	(~ string_type) executable
+	(~ string_type) library
 	(~ func_type) load_library
 	(~ string_type) library_path
 	(~ string_type) library_extension
-) version platform argc argv executable load_library library_path library_extension))
+) version platform argc argv executable library load_library library_path library_extension))
 (## sys)

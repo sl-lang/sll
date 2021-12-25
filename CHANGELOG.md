@@ -31,6 +31,7 @@
 - Implemented `sll_ext:debug_get_vm_config` ([#130] and [#132])
 - Implemented `sll_get_location` and `sll_ext:debug_get_location` ([#141])
 - Implemented `sll_platform_execute_shell`, `sll:process_execute_shell`, `process$shell` and `process$shell_path` ([#22] and [#158])
+- Implemented `sll_platform_get_library_file_path` and `sys$library`
 - Implemented `sll_platform_get_pid`, `sll_pid_t`, `sll:process_get_pid` and `process$pid` ([#22] and [#160])
 - Implemented `sll_string_index_reverse`, `sll_string_index_reverse_char`, `sll_string_index_reverse_multiple`, `sll_api_string_index_reverse`, `sll_api_string_index_reverse_list`, `sll:string_index_reverse` and `sll:string_index_reverse_list` ([#143])
 - Implemented `sll_string_index`, `sll_string_index_char`, `sll_string_index_multiple`, `sll_api_string_index`, `sll_api_string_index_list`, `sll:string_index` and `sll:string_index_list` ([#142])
@@ -47,6 +48,7 @@
 ### Changed
 
 - All optimization levels have been removed in favor of one CLI flag (`-O`)
+- CLI now searches for builtin module in a directory relative to the Sll library (acquired by `sll_platform_get_library_file_path`)
 - Fixed `SLL_STRING_FORMAT_PADDING`
 - Fixed code generation for arrays and maps
 - Fixed handling of floating-point numbers in `sll_operator_mod`

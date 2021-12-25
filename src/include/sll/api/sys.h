@@ -75,6 +75,17 @@ __API_FUNC_DECL(sys_get_executable);
 
 /**
  * \flags api func optimizable
+ * \name sll_api_sys_get_library
+ * \group sys-api
+ * \desc Docs!
+ * \ret S
+ */
+__API_FUNC_DECL(sys_get_library);
+
+
+
+/**
+ * \flags api func optimizable
  * \name sll_api_sys_get_platform
  * \group sys-api
  * \desc Docs!
