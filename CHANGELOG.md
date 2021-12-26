@@ -9,9 +9,9 @@
 ### Removed
 
 - Handle API ([#162])
-- Unused memory API and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 - `SLL_FROM_FILE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
+- Unused memory API and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 
 ## [0.6.33] - 2021-12-25
 

@@ -268,9 +268,9 @@ _add_to_string:
 					return o;
 				}
 				if (!inv){
-					sll_string_t tmp=sa;
+					sll_string_t tmp_s=sa;
 					sa=sb;
-					sb=tmp;
+					sb=tmp_s;
 				}
 				sll_string_concat(&sa,&sb,&(o->dt.s));
 				sll_free_string((!inv?&sa:&sb));
