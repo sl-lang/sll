@@ -2154,7 +2154,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 	file_line_t* fn_ln=sll_allocate(c_dt->ft.l*sizeof(file_line_t));
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
 		if (s->t==ASSEMBLY_INSTRUCTION_TYPE_NOP){
-_handle_nop:;
+_remove_nop:;
 			s++;
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 				s=s->dt._p;
@@ -2187,12 +2187,12 @@ _handle_nop:;
 				dbg_i++;
 			}
 			l_dbg_ii=i;
-			goto _handle_nop;
+			goto _remove_nop;
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC){
 			(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln=*(f_l_dt.dt+f_l_dt.c);
 			(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp=f_l_dt.c;
-			goto _handle_nop;
+			goto _remove_nop;
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
 			(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->i=i;
@@ -2211,11 +2211,11 @@ _handle_nop:;
 			(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
 			dbg_i++;
 			l_dbg_ii=i;
-			goto _handle_nop;
+			goto _remove_nop;
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
 			*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=i;
-			goto _handle_nop;
+			goto _remove_nop;
 		}
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){

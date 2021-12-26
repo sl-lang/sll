@@ -3,7 +3,6 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/handle.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -24,49 +23,36 @@
 #define COMBINED_TYPE_IC COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_TYPE_IS COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_TYPE_IA COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_TYPE_IH COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_TYPE_IM COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_TYPE_FI COMBINE_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_INT)
 #define COMBINED_TYPE_FF COMBINE_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_FLOAT)
 #define COMBINED_TYPE_FC COMBINE_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_TYPE_FS COMBINE_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_TYPE_FA COMBINE_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_TYPE_FH COMBINE_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_TYPE_FM COMBINE_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_TYPE_CI COMBINE_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_INT)
 #define COMBINED_TYPE_CF COMBINE_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_FLOAT)
 #define COMBINED_TYPE_CC COMBINE_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_TYPE_CS COMBINE_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_TYPE_CA COMBINE_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_TYPE_CH COMBINE_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_TYPE_CM COMBINE_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_TYPE_SI COMBINE_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_INT)
 #define COMBINED_TYPE_SF COMBINE_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_FLOAT)
 #define COMBINED_TYPE_SC COMBINE_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_TYPE_SS COMBINE_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_TYPE_SA COMBINE_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_TYPE_SH COMBINE_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_TYPE_SM COMBINE_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_TYPE_AI COMBINE_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_INT)
 #define COMBINED_TYPE_AF COMBINE_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_FLOAT)
 #define COMBINED_TYPE_AC COMBINE_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_TYPE_AS COMBINE_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_TYPE_AA COMBINE_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_TYPE_AH COMBINE_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_TYPE_AM COMBINE_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_MAP)
-#define COMBINED_TYPE_HI COMBINE_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_INT)
-#define COMBINED_TYPE_HF COMBINE_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_FLOAT)
-#define COMBINED_TYPE_HC COMBINE_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_CHAR)
-#define COMBINED_TYPE_HS COMBINE_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_STRING)
-#define COMBINED_TYPE_HA COMBINE_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_TYPE_HH COMBINE_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_HANDLE)
-#define COMBINED_TYPE_HM COMBINE_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_TYPE_MI COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_INT)
 #define COMBINED_TYPE_MF COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_FLOAT)
 #define COMBINED_TYPE_MC COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_TYPE_MS COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_TYPE_MA COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_TYPE_MH COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_TYPE_MM COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_MAP)
 
 #define COMBINE_CAST_TYPES(a,b) (((unsigned int)(a)<<8)|(b))
@@ -76,7 +62,6 @@
 #define COMBINED_CAST_TYPE_IC COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_CAST_TYPE_IS COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_CAST_TYPE_IA COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_CAST_TYPE_IH COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_CAST_TYPE_IM COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_CAST_TYPE_IK COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_MAP_KEYS)
 #define COMBINED_CAST_TYPE_IV COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_MAP_VALUES)
@@ -85,7 +70,6 @@
 #define COMBINED_CAST_TYPE_FC COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_CAST_TYPE_FS COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_CAST_TYPE_FA COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_CAST_TYPE_FH COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_CAST_TYPE_FM COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_CAST_TYPE_FK COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_MAP_KEYS)
 #define COMBINED_CAST_TYPE_FV COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_FLOAT,SLL_OBJECT_TYPE_MAP_VALUES)
@@ -94,7 +78,6 @@
 #define COMBINED_CAST_TYPE_CC COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_CAST_TYPE_CS COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_CAST_TYPE_CA COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_CAST_TYPE_CH COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_CAST_TYPE_CM COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_CAST_TYPE_CK COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_MAP_KEYS)
 #define COMBINED_CAST_TYPE_CV COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_CHAR,SLL_OBJECT_TYPE_MAP_VALUES)
@@ -103,7 +86,6 @@
 #define COMBINED_CAST_TYPE_SC COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_CAST_TYPE_SS COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_CAST_TYPE_SA COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_CAST_TYPE_SH COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_CAST_TYPE_SM COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_CAST_TYPE_SK COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_MAP_KEYS)
 #define COMBINED_CAST_TYPE_SV COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_STRING,SLL_OBJECT_TYPE_MAP_VALUES)
@@ -112,25 +94,14 @@
 #define COMBINED_CAST_TYPE_AC COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_CAST_TYPE_AS COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_CAST_TYPE_AA COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_CAST_TYPE_AH COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_CAST_TYPE_AM COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_CAST_TYPE_AK COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_MAP_KEYS)
 #define COMBINED_CAST_TYPE_AV COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_ARRAY,SLL_OBJECT_TYPE_MAP_VALUES)
-#define COMBINED_CAST_TYPE_HI COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_INT)
-#define COMBINED_CAST_TYPE_HF COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_FLOAT)
-#define COMBINED_CAST_TYPE_HC COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_CHAR)
-#define COMBINED_CAST_TYPE_HS COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_STRING)
-#define COMBINED_CAST_TYPE_HA COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_CAST_TYPE_HH COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_HANDLE)
-#define COMBINED_CAST_TYPE_HM COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_MAP)
-#define COMBINED_CAST_TYPE_HK COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_MAP_KEYS)
-#define COMBINED_CAST_TYPE_HV COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_HANDLE,SLL_OBJECT_TYPE_MAP_VALUES)
 #define COMBINED_CAST_TYPE_MI COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_INT)
 #define COMBINED_CAST_TYPE_MF COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_FLOAT)
 #define COMBINED_CAST_TYPE_MC COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_CHAR)
 #define COMBINED_CAST_TYPE_MS COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_STRING)
 #define COMBINED_CAST_TYPE_MA COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_ARRAY)
-#define COMBINED_CAST_TYPE_MH COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_HANDLE)
 #define COMBINED_CAST_TYPE_MM COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_MAP)
 #define COMBINED_CAST_TYPE_MK COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_MAP_KEYS)
 #define COMBINED_CAST_TYPE_MV COMBINE_CAST_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_MAP_VALUES)
@@ -285,10 +256,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_add(sll_object_t* a
 				sll_object_t* tmp=a;
 				a=b;
 				b=tmp;
-			}
-		case COMBINED_TYPE_SH:
 _add_to_string:
-			{
 				SLL_ASSERT(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING);
 				sll_string_t sa=a->dt.s;
 				sll_string_t sb;
@@ -323,7 +291,6 @@ _add_to_array:
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 _add_to_map:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -331,18 +298,12 @@ _add_to_map:
 				sll_map_add(&(b->dt.m),a,sll_static_int[0],&(o->dt.m));
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i+b->dt.h.h);
 		case COMBINED_TYPE_FF:
 			return SLL_FROM_FLOAT(a->dt.f+b->dt.f);
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_FLOAT(a->dt.f+b->dt.c);
-		case COMBINED_TYPE_FH:
-			return SLL_FROM_FLOAT(a->dt.f+b->dt.h.h);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c+b->dt.c);
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c+b->dt.h.h);
 		case COMBINED_TYPE_SS:
 			{
 				sll_string_t sa=a->dt.s;
@@ -376,12 +337,6 @@ _add_to_map:
 				}
 				return o;
 			}
-		case COMBINED_TYPE_AH:
-			{
-				sll_object_t* tmp=a;
-				a=b;
-				b=tmp;
-			}
 		case COMBINED_TYPE_AM:
 			{
 				if (inv){
@@ -392,11 +347,6 @@ _add_to_map:
 				b=tmp;
 				goto _add_to_array;
 			}
-		case COMBINED_TYPE_HH:
-			if (a->dt.h.t==b->dt.h.t){
-				return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h+b->dt.h.h);
-			}
-			return SLL_FROM_INT(a->dt.h.h+b->dt.h.h);
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -428,12 +378,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 				sll_string_and_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
 				return o;
 			}
-		case COMBINED_TYPE_AH:
-			{
-				sll_object_t* c=a;
-				a=b;
-				b=c;
-			}
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_CA:
 			{
@@ -449,7 +393,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			}
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -461,8 +404,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i&b->dt.h.h);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c&b->dt.c);
 		case COMBINED_TYPE_CS:
@@ -472,8 +413,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 				sll_string_and_char(&(b->dt.s),a->dt.c,&(o->dt.s));
 				return o;
 			}
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c&b->dt.h.h);
 		case COMBINED_TYPE_SS:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -486,13 +425,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
 				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_and,inv,&(o->dt.a));
-				return o;
-			}
-		case COMBINED_TYPE_SH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_and_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
@@ -518,8 +450,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 				sll_map_and_array(&(b->dt.m),&(a->dt.a),&(o->dt.m));
 				return o;
 			}
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h&b->dt.h.h):SLL_FROM_INT(a->dt.h.h&b->dt.h.h));
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -583,8 +513,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_object_
 			return !!a->dt.s.l;
 		case SLL_OBJECT_TYPE_ARRAY:
 			return !!a->dt.a.l;
-		case SLL_OBJECT_TYPE_HANDLE:
-			return !!a->dt.h.t;
 		case SLL_OBJECT_TYPE_MAP:
 			return !!a->dt.m.l;
 	}
@@ -602,7 +530,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				return SLL_FROM_CHAR(a->dt.c);
 			case COMBINED_CAST_TYPE_IS:
 			case COMBINED_CAST_TYPE_FS:
-			case COMBINED_CAST_TYPE_HS:
 			case COMBINED_CAST_TYPE_MS:
 				{
 					sll_object_t* o=SLL_CREATE();
@@ -619,17 +546,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 					}
 					return o;
 				}
-			case COMBINED_CAST_TYPE_IH:
-			case COMBINED_CAST_TYPE_FH:
-			case COMBINED_CAST_TYPE_CH:
-			case COMBINED_CAST_TYPE_SH:
-			case COMBINED_CAST_TYPE_AH:
-			case COMBINED_CAST_TYPE_MH:
-				return SLL_FROM_INT((sll_integer_t)(sll_size_t)(void*)a);
 			case COMBINED_CAST_TYPE_IM:
 			case COMBINED_CAST_TYPE_FM:
 			case COMBINED_CAST_TYPE_CM:
-			case COMBINED_CAST_TYPE_HM:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_MAP;
@@ -642,7 +561,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			case COMBINED_CAST_TYPE_IK:
 			case COMBINED_CAST_TYPE_FK:
 			case COMBINED_CAST_TYPE_CK:
-			case COMBINED_CAST_TYPE_HK:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -656,7 +574,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			case COMBINED_CAST_TYPE_FV:
 			case COMBINED_CAST_TYPE_CA:
 			case COMBINED_CAST_TYPE_CV:
-			case COMBINED_CAST_TYPE_HV:
 				{
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -759,23 +676,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 					}
 					return o;
 				}
-			case COMBINED_CAST_TYPE_HI:
-				return SLL_FROM_INT(a->dt.h.h);
-			case COMBINED_CAST_TYPE_HF:
-				return SLL_FROM_FLOAT((sll_float_t)(a->dt.h.h));
-			case COMBINED_CAST_TYPE_HC:
-				return SLL_FROM_CHAR((sll_char_t)(a->dt.h.h));
-			case COMBINED_CAST_TYPE_HA:
-				{
-					sll_object_t* o=SLL_CREATE();
-					o->t=SLL_OBJECT_TYPE_ARRAY;
-					if (!sll_array_create(2,&(o->dt.a))){
-						SLL_UNIMPLEMENTED();
-					}
-					o->dt.a.v[0]=SLL_FROM_INT(a->dt.h.t);
-					o->dt.a.v[1]=SLL_FROM_INT(a->dt.h.h);
-					return o;
-				}
 			case COMBINED_CAST_TYPE_MI:
 				return SLL_FROM_INT(a->dt.m.l);
 			case COMBINED_CAST_TYPE_MF:
@@ -825,8 +725,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(cons
 			return COMPARE_RESULT(a->dt.i,b->dt.s.l);
 		case COMBINED_TYPE_IA:
 			return COMPARE_RESULT(a->dt.i,b->dt.a.l);
-		case COMBINED_TYPE_IH:
-			return (a->dt.i<0?SLL_COMPARE_RESULT_BELOW:COMPARE_RESULT((sll_handle_t)(a->dt.i),b->dt.h.h));
 		case COMBINED_TYPE_IM:
 			return COMPARE_RESULT(a->dt.i,b->dt.m.l);
 		case COMBINED_TYPE_FI:
@@ -839,8 +737,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(cons
 			return COMPARE_RESULT_FLOAT(a->dt.f,b->dt.s.l);
 		case COMBINED_TYPE_FA:
 			return COMPARE_RESULT_FLOAT(a->dt.f,b->dt.a.l);
-		case COMBINED_TYPE_FH:
-			return COMPARE_RESULT_FLOAT(a->dt.f,b->dt.h.h);
 		case COMBINED_TYPE_FM:
 			return COMPARE_RESULT_FLOAT(a->dt.f,b->dt.m.l);
 		case COMBINED_TYPE_CI:
@@ -859,8 +755,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(cons
 			return (b->dt.s.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_BELOW);
 		case COMBINED_TYPE_CA:
 			return COMPARE_RESULT(a->dt.c,b->dt.a.l);
-		case COMBINED_TYPE_CH:
-			return COMPARE_RESULT(a->dt.c,b->dt.h.h);
 		case COMBINED_TYPE_CM:
 			return COMPARE_RESULT(a->dt.c,b->dt.m.l);
 		case COMBINED_TYPE_SI:
@@ -879,8 +773,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(cons
 			return sll_string_compare(&(a->dt.s),&(b->dt.s));
 		case COMBINED_TYPE_SA:
 			return sll_string_compare_array(&(a->dt.s),&(b->dt.a),0);
-		case COMBINED_TYPE_SH:
-			return COMPARE_RESULT(a->dt.s.l,b->dt.h.h);
 		case COMBINED_TYPE_SM:
 			return sll_string_compare_map(&(a->dt.s),&(b->dt.m),0);
 		case COMBINED_TYPE_AI:
@@ -893,24 +785,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(cons
 			return sll_string_compare_array(&(b->dt.s),&(a->dt.a),1);
 		case COMBINED_TYPE_AA:
 			return sll_array_compare(&(a->dt.a),&(b->dt.a));
-		case COMBINED_TYPE_AH:
-			return COMPARE_RESULT(a->dt.a.l,b->dt.h.h);
 		case COMBINED_TYPE_AM:
 			return sll_array_compare_map(&(a->dt.a),&(b->dt.m),0);
-		case COMBINED_TYPE_HI:
-			return (b->dt.i<0?SLL_COMPARE_RESULT_ABOVE:COMPARE_RESULT(a->dt.h.h,(sll_handle_t)(b->dt.i)));
-		case COMBINED_TYPE_HF:
-			return COMPARE_RESULT_FLOAT(a->dt.h.h,b->dt.f);
-		case COMBINED_TYPE_HC:
-			return COMPARE_RESULT(a->dt.h.h,b->dt.c);
-		case COMBINED_TYPE_HS:
-			return COMPARE_RESULT(a->dt.h.h,b->dt.s.l);
-		case COMBINED_TYPE_HA:
-			return COMPARE_RESULT(a->dt.h.h,b->dt.a.l);
-		case COMBINED_TYPE_HH:
-			return COMPARE_RESULT(a->dt.h.h,b->dt.h.h);
-		case COMBINED_TYPE_HM:
-			return COMPARE_RESULT(a->dt.h.h,b->dt.m.l);
 		case COMBINED_TYPE_MI:
 			return COMPARE_RESULT(a->dt.m.l,b->dt.i);
 		case COMBINED_TYPE_MF:
@@ -921,8 +797,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(cons
 			return sll_string_compare_map(&(b->dt.s),&(a->dt.m),1);
 		case COMBINED_TYPE_MA:
 			return sll_array_compare_map(&(b->dt.a),&(a->dt.m),1);
-		case COMBINED_TYPE_MH:
-			return COMPARE_RESULT(a->dt.m.l,b->dt.h.h);
 		case COMBINED_TYPE_MM:
 			return sll_map_compare(&(a->dt.m),&(b->dt.m));
 		default:
@@ -960,8 +834,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_HANDLE:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-1);
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -990,7 +862,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.i))/b->dt.c);
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
-		case COMBINED_TYPE_HS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1005,7 +876,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
-		case COMBINED_TYPE_HA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1017,12 +887,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.i))/b->dt.h.h);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -1040,8 +907,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 			return SLL_FROM_FLOAT(a->dt.f/b->dt.f);
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_FLOAT(a->dt.f/b->dt.c);
-		case COMBINED_TYPE_FH:
-			return SLL_FROM_FLOAT(a->dt.f/b->dt.h.h);
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.c))/b->dt.i);
 		case COMBINED_TYPE_CF:
@@ -1050,13 +915,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.c))/b->dt.c);
 		case COMBINED_TYPE_CS:
 			return SLL_FROM_INT(sll_string_count_char(&(b->dt.s),a->dt.c));
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.c))/b->dt.h.h);
 		case COMBINED_TYPE_SC:
 			return SLL_FROM_INT(sll_string_count_char(&(a->dt.s),b->dt.c));
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
-		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1084,18 +946,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 				sll_map_remove_string(&(b->dt.m),&(a->dt.s),&(o->dt.m));
 				return o;
 			}
-		case COMBINED_TYPE_HI:
-			return SLL_FROM_FLOAT(((sll_float_t)(b->dt.h.h))/a->dt.i);
-		case COMBINED_TYPE_HF:
-			return SLL_FROM_FLOAT(((sll_float_t)(b->dt.h.h))/a->dt.f);
-		case COMBINED_TYPE_HC:
-			return SLL_FROM_FLOAT(((sll_float_t)(b->dt.h.h))/a->dt.c);
-		case COMBINED_TYPE_HH:
-			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.h.h))/b->dt.h.h);
 		case COMBINED_TYPE_MI:
 		case COMBINED_TYPE_MF:
 		case COMBINED_TYPE_MC:
-		case COMBINED_TYPE_MH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -1161,8 +1014,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_HANDLE:
-			return SLL_FROM_HANDLE(a->dt.h.t,sll_handle_clone(a->dt.h.t,a->dt.h.h));
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1192,8 +1043,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_object
 			return a->dt.i==b->dt.s.l;
 		case COMBINED_TYPE_IA:
 			return a->dt.i==b->dt.a.l;
-		case COMBINED_TYPE_IH:
-			return a->dt.i==b->dt.h.h;
 		case COMBINED_TYPE_IM:
 			return a->dt.i==b->dt.m.l;
 		case COMBINED_TYPE_FI:
@@ -1206,8 +1055,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_object
 			return EQUAL_FLOAT(a->dt.f,b->dt.s.l);
 		case COMBINED_TYPE_FA:
 			return EQUAL_FLOAT(a->dt.f,b->dt.a.l);
-		case COMBINED_TYPE_FH:
-			return EQUAL_FLOAT(a->dt.f,b->dt.h.h);
 		case COMBINED_TYPE_FM:
 			return EQUAL_FLOAT(a->dt.f,b->dt.m.l);
 		case COMBINED_TYPE_CI:
@@ -1220,8 +1067,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_object
 			return (b->dt.s.l==1&&b->dt.s.v[0]==a->dt.c);
 		case COMBINED_TYPE_CA:
 			return a->dt.c==b->dt.a.l;
-		case COMBINED_TYPE_CH:
-			return a->dt.c==b->dt.h.h;
 		case COMBINED_TYPE_CM:
 			return a->dt.c==b->dt.m.l;
 		case COMBINED_TYPE_SI:
@@ -1234,8 +1079,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_object
 			return sll_string_equal(&(a->dt.s),&(b->dt.s));
 		case COMBINED_TYPE_SA:
 			return sll_string_equal_array(&(a->dt.s),&(b->dt.a));
-		case COMBINED_TYPE_SH:
-			return a->dt.s.l==b->dt.h.h;
 		case COMBINED_TYPE_SM:
 			return sll_string_equal_map(&(a->dt.s),&(b->dt.m));
 		case COMBINED_TYPE_AI:
@@ -1248,24 +1091,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_object
 			return sll_string_equal_array(&(b->dt.s),&(a->dt.a));
 		case COMBINED_TYPE_AA:
 			return sll_array_equal(&(a->dt.a),&(b->dt.a));
-		case COMBINED_TYPE_AH:
-			return a->dt.a.l==b->dt.h.h;
 		case COMBINED_TYPE_AM:
 			return sll_array_equal_map(&(a->dt.a),&(b->dt.m));
-		case COMBINED_TYPE_HI:
-			return a->dt.h.h==b->dt.i;
-		case COMBINED_TYPE_HF:
-			return EQUAL_FLOAT(a->dt.h.h,b->dt.f);
-		case COMBINED_TYPE_HC:
-			return a->dt.h.h==b->dt.c;
-		case COMBINED_TYPE_HS:
-			return a->dt.h.h==b->dt.s.l;
-		case COMBINED_TYPE_HA:
-			return a->dt.h.h==b->dt.a.l;
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t&&a->dt.h.h==b->dt.h.h);
-		case COMBINED_TYPE_HM:
-			return a->dt.h.h==b->dt.m.l;
 		case COMBINED_TYPE_MI:
 			return a->dt.m.l==b->dt.i;
 		case COMBINED_TYPE_MF:
@@ -1276,8 +1103,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_object
 			return sll_string_equal_map(&(b->dt.s),&(a->dt.m));
 		case COMBINED_TYPE_MA:
 			return sll_array_equal_map(&(b->dt.a),&(a->dt.m));
-		case COMBINED_TYPE_MH:
-			return a->dt.m.l==b->dt.h.h;
 		case COMBINED_TYPE_MM:
 			return sll_map_equal(&(a->dt.m),&(b->dt.m));
 		default:
@@ -1301,7 +1126,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 			return SLL_FROM_INT(a->dt.i/b->dt.c);
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
-		case COMBINED_TYPE_HS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1316,7 +1140,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
-		case COMBINED_TYPE_HA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1328,12 +1151,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i/b->dt.h.h);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -1351,8 +1171,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.f/b->dt.f));
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.f/b->dt.c));
-		case COMBINED_TYPE_FH:
-			return SLL_FROM_HANDLE(b->dt.h.t,SLL_FLOAT_ROUND(a->dt.f/b->dt.h.h));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c/b->dt.i);
 		case COMBINED_TYPE_CF:
@@ -1361,11 +1179,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 			return SLL_FROM_CHAR(a->dt.c/b->dt.c);
 		case COMBINED_TYPE_CS:
 			return SLL_FROM_INT(sll_string_count_char(&(b->dt.s),a->dt.c));
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c/b->dt.h.h);
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
-		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1395,18 +1210,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				sll_map_remove_string(&(b->dt.m),&(a->dt.s),&(o->dt.m));
 				return o;
 			}
-		case COMBINED_TYPE_HI:
-			return SLL_FROM_HANDLE(b->dt.h.t,b->dt.h.h/a->dt.i);
-		case COMBINED_TYPE_HF:
-			return SLL_FROM_HANDLE(b->dt.h.t,SLL_FLOAT_ROUND(b->dt.h.h/a->dt.f));
-		case COMBINED_TYPE_HC:
-			return SLL_FROM_HANDLE(b->dt.h.t,b->dt.h.h/a->dt.c);
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h/b->dt.h.h):SLL_FROM_INT(a->dt.h.h/b->dt.h.h));
 		case COMBINED_TYPE_MI:
 		case COMBINED_TYPE_MF:
 		case COMBINED_TYPE_MC:
-		case COMBINED_TYPE_MH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -1471,8 +1277,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_HANDLE:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h+1);
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1515,8 +1319,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
 				}
 				return o;
 			}
-		case SLL_OBJECT_TYPE_HANDLE:
-			return SLL_FROM_HANDLE(a->dt.h.t,~a->dt.h.h);
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1542,8 +1344,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_CHAR:
-		case SLL_OBJECT_TYPE_HANDLE:
-			return SLL_ACQUIRE_STATIC_INT(0);
 		case SLL_OBJECT_TYPE_STRING:
 			return SLL_FROM_INT(a->dt.s.l);
 		case SLL_OBJECT_TYPE_ARRAY:
@@ -1568,7 +1368,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			return SLL_FROM_INT(a->dt.i%b->dt.c);
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
-		case COMBINED_TYPE_HS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1583,7 +1382,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
-		case COMBINED_TYPE_HA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1595,12 +1393,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i%b->dt.h.h);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -1618,8 +1413,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			return SLL_FROM_FLOAT(fmod(a->dt.f,b->dt.f));
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_FLOAT(fmod(a->dt.f,b->dt.c));
-		case COMBINED_TYPE_FH:
-			return SLL_FROM_FLOAT(fmod(a->dt.f,(sll_float_t)(b->dt.h.h)));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c%b->dt.i);
 		case COMBINED_TYPE_CF:
@@ -1633,11 +1426,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				sll_string_split_char(&(b->dt.s),a->dt.c,&(o->dt.a));
 				return o;
 			}
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c%b->dt.h.h);
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
-		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1680,7 +1470,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_AI:
 		case COMBINED_TYPE_AF:
 		case COMBINED_TYPE_AC:
-		case COMBINED_TYPE_AH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1717,18 +1506,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_HI:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.i);
-		case COMBINED_TYPE_HF:
-			return SLL_FROM_FLOAT(fmod((sll_float_t)(a->dt.h.h),b->dt.f));
-		case COMBINED_TYPE_HC:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.c);
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h%b->dt.h.h):SLL_FROM_INT(a->dt.h.h%b->dt.h.h));
 		case COMBINED_TYPE_MI:
 		case COMBINED_TYPE_MF:
 		case COMBINED_TYPE_MC:
-		case COMBINED_TYPE_MH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -1795,14 +1575,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i*b->dt.h.h);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
 		case COMBINED_TYPE_SM:
 		case COMBINED_TYPE_AM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_map_t m=b->dt.m;
 				sll_object_t* o=SLL_CREATE();
@@ -1837,8 +1614,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				return o;
 			}
-		case COMBINED_TYPE_FH:
-			return SLL_FROM_FLOAT(a->dt.f*b->dt.h.h);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c*b->dt.c);
 		case COMBINED_TYPE_CS:
@@ -1857,8 +1632,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				return o;
 			}
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c*b->dt.h.h);
 		case COMBINED_TYPE_SS:
 			{
 				sll_string_t sa=a->dt.s;
@@ -1886,13 +1659,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				return o;
 			}
-		case COMBINED_TYPE_SH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_duplicate(&(a->dt.s),b->dt.h.h,0,&(o->dt.s));
-				return o;
-			}
 		case COMBINED_TYPE_AA:
 			{
 				sll_array_t aa=a->dt.a;
@@ -1904,17 +1670,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				}
 				return o;
 			}
-		case COMBINED_TYPE_AH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_duplicate(&(a->dt.a),b->dt.h.h,0,&(o->dt.a))){
-					SLL_UNIMPLEMENTED();
-				}
-				return o;
-			}
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h*b->dt.h.h):SLL_FROM_INT(a->dt.h.h*b->dt.h.h));
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1946,12 +1701,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 				sll_string_or_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
 				return o;
 			}
-		case COMBINED_TYPE_AH:
-			{
-				sll_object_t* c=a;
-				a=b;
-				b=c;
-			}
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_CA:
 			{
@@ -1967,7 +1716,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			}
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -1979,8 +1727,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i|b->dt.h.h);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c|b->dt.c);
 		case COMBINED_TYPE_CS:
@@ -1990,8 +1736,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 				sll_string_or_char(&(b->dt.s),a->dt.c,&(o->dt.s));
 				return o;
 			}
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c|b->dt.h.h);
 		case COMBINED_TYPE_SS:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2004,13 +1748,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
 				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_or,inv,&(o->dt.a));
-				return o;
-			}
-		case COMBINED_TYPE_SH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_or_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
@@ -2036,8 +1773,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 				sll_map_add_array(&(b->dt.m),&(a->dt.a),&(o->dt.m));
 				return o;
 			}
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h|b->dt.h.h):SLL_FROM_INT(a->dt.h.h|b->dt.h.h));
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2065,7 +1800,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_CS:
-		case COMBINED_TYPE_HS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -2080,7 +1814,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
-		case COMBINED_TYPE_HA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -2092,12 +1825,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i<<b->dt.h.h);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -2115,16 +1845,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 			return SLL_FROM_FLOAT(a->dt.f*pow(2,b->dt.f));
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_FLOAT(a->dt.f*pow(2,b->dt.c));
-		case COMBINED_TYPE_FH:
-			return SLL_FROM_FLOAT(a->dt.f*pow(2,(sll_float_t)(b->dt.h.h)));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(((sll_integer_t)a->dt.c)<<b->dt.i);
 		case COMBINED_TYPE_CF:
 			return SLL_FROM_FLOAT(a->dt.c*pow(2,b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR((((sll_integer_t)a->dt.c))<<b->dt.c);
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c<<b->dt.h.h);
 		case COMBINED_TYPE_SI:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2158,13 +1884,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
 				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_shl,0,&(o->dt.a));
-				return o;
-			}
-		case COMBINED_TYPE_SH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),((sll_integer_t)(b->dt.h.h)),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
@@ -2217,15 +1936,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_AH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_resize(&(a->dt.a),b->dt.h.h,&(o->dt.a))){
-					SLL_UNIMPLEMENTED();
-				}
-				return o;
-			}
 		case COMBINED_TYPE_AM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2235,18 +1945,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_HI:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h<<b->dt.i);
-		case COMBINED_TYPE_HF:
-			return SLL_FROM_FLOAT(a->dt.h.h*pow(2,b->dt.f));
-		case COMBINED_TYPE_HC:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h<<b->dt.c);
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h<<b->dt.h.h):SLL_FROM_INT(a->dt.h.h<<b->dt.h.h));
 		case COMBINED_TYPE_MI:
 		case COMBINED_TYPE_MF:
 		case COMBINED_TYPE_MC:
-		case COMBINED_TYPE_MH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -2300,7 +2001,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_CS:
-		case COMBINED_TYPE_HS:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -2315,7 +2015,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
-		case COMBINED_TYPE_HA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -2327,12 +2026,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i>>b->dt.h.h);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -2350,16 +2046,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 			return SLL_FROM_FLOAT(a->dt.f/pow(2,b->dt.f));
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_FLOAT(a->dt.f/pow(2,b->dt.c));
-		case COMBINED_TYPE_FH:
-			return SLL_FROM_FLOAT(a->dt.f/pow(2,(sll_float_t)(b->dt.h.h)));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c>>b->dt.i);
 		case COMBINED_TYPE_CF:
 			return SLL_FROM_FLOAT(a->dt.c/pow(2,b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c>>b->dt.c);
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c>>b->dt.h.h);
 		case COMBINED_TYPE_SI:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2393,13 +2085,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
 				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_shr,0,&(o->dt.a));
-				return o;
-			}
-		case COMBINED_TYPE_SH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),-((sll_integer_t)(b->dt.h.h)),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
@@ -2452,15 +2137,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_AH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_resize(&(a->dt.a),-((sll_integer_t)(b->dt.h.h)),&(o->dt.a))){
-					SLL_UNIMPLEMENTED();
-				}
-				return o;
-			}
 		case COMBINED_TYPE_AM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2470,18 +2146,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_HI:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h>>b->dt.i);
-		case COMBINED_TYPE_HF:
-			return SLL_FROM_FLOAT(a->dt.h.h/pow(2,b->dt.f));
-		case COMBINED_TYPE_HC:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h>>b->dt.c);
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h>>b->dt.h.h):SLL_FROM_INT(a->dt.h.h>>b->dt.h.h));
 		case COMBINED_TYPE_MI:
 		case COMBINED_TYPE_MF:
 		case COMBINED_TYPE_MC:
-		case COMBINED_TYPE_MH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -2539,8 +2206,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(const sll
 			return sll_string_equal(&(a->dt.s),&(b->dt.s));
 		case SLL_OBJECT_TYPE_ARRAY:
 			return sll_array_equal(&(a->dt.a),&(b->dt.a));
-		case SLL_OBJECT_TYPE_HANDLE:
-			return (a->dt.h.t==b->dt.h.t&&a->dt.h.h==b->dt.h.h);
 		case SLL_OBJECT_TYPE_MAP:
 			return sll_map_equal(&(a->dt.m),&(b->dt.m));
 		default:
@@ -2576,7 +2241,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_CS:
-		case COMBINED_TYPE_HS:
 			{
 				sll_string_t as=b->dt.s;
 				sll_object_t* o=SLL_CREATE();
@@ -2592,7 +2256,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
-		case COMBINED_TYPE_HA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -2604,12 +2267,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i-b->dt.h.h);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_map_t m=b->dt.m;
 				sll_object_t* o=SLL_CREATE();
@@ -2628,20 +2288,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 			return SLL_FROM_FLOAT(a->dt.f-b->dt.f);
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_FLOAT(a->dt.f-b->dt.c);
-		case COMBINED_TYPE_FH:
-			return SLL_FROM_FLOAT(a->dt.f-b->dt.h.h);
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c-b->dt.i);
 		case COMBINED_TYPE_CF:
 			return SLL_FROM_FLOAT(a->dt.c-b->dt.f);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c-b->dt.c);
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c-b->dt.h.h);
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
 		case COMBINED_TYPE_SC:
-		case COMBINED_TYPE_SH:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -2674,14 +2329,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 				sll_string_op_map(&(a->dt.s),&(b->dt.m),sll_operator_sub,0,&(o->dt.m));
 				return o;
 			}
-		case COMBINED_TYPE_HI:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-b->dt.i);
-		case COMBINED_TYPE_HF:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-SLL_FLOAT_ROUND(b->dt.f));
-		case COMBINED_TYPE_HC:
-			return SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-b->dt.c);
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h-b->dt.h.h):SLL_FROM_INT(a->dt.h.h-b->dt.h.h));
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -2706,12 +2353,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 				sll_string_xor_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
 				return o;
 			}
-		case COMBINED_TYPE_AH:
-			{
-				sll_object_t* c=a;
-				a=b;
-				b=c;
-			}
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_CA:
 			{
@@ -2727,7 +2368,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			}
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_CM:
-		case COMBINED_TYPE_HM:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
@@ -2739,8 +2379,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 				}
 				return o;
 			}
-		case COMBINED_TYPE_IH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.i^b->dt.h.h);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c^b->dt.c);
 		case COMBINED_TYPE_CS:
@@ -2750,8 +2388,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 				sll_string_xor_char(&(b->dt.s),a->dt.c,&(o->dt.s));
 				return o;
 			}
-		case COMBINED_TYPE_CH:
-			return SLL_FROM_HANDLE(b->dt.h.t,a->dt.c^b->dt.h.h);
 		case COMBINED_TYPE_SS:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2764,13 +2400,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
 				sll_string_op_array(&(a->dt.s),&(b->dt.a),sll_operator_xor,inv,&(o->dt.a));
-				return o;
-			}
-		case COMBINED_TYPE_SH:
-			{
-				sll_object_t* o=SLL_CREATE();
-				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_xor_char(&(a->dt.s),(sll_char_t)(b->dt.h.h),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
@@ -2796,8 +2425,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 				sll_map_add_array(&(b->dt.m),&(a->dt.a),&(o->dt.m));
 				return o;
 			}
-		case COMBINED_TYPE_HH:
-			return (a->dt.h.t==b->dt.h.t?SLL_FROM_HANDLE(a->dt.h.t,a->dt.h.h^b->dt.h.h):SLL_FROM_INT(a->dt.h.h^b->dt.h.h));
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=SLL_CREATE();

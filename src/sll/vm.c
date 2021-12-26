@@ -6,7 +6,6 @@
 #include <sll/error.h>
 #include <sll/file.h>
 #include <sll/gc.h>
-#include <sll/handle.h>
 #include <sll/ift.h>
 #include <sll/map.h>
 #include <sll/object.h>
@@ -100,12 +99,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_create_internal_function_table(&ift);
 	sll_register_builtin_internal_functions(&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
-	sll_handle_list_t hl=SLL_INIT_HANDLE_LIST_STRUCT;
 	sll_runtime_data_t r_dt={
 		a_dt,
 		&ift,
 		&tt,
-		&hl,
 		&c_st
 	};
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
@@ -979,7 +976,6 @@ _end:
 	sll_platform_free_page((void*)(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-SLL_CALL_STACK_SIZE*sizeof(sll_call_stack_frame_t)),ptr_sz);
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
-	sll_free_handle_list(&hl);
 	sll_current_runtime_data=NULL;
 	return rc;
 }

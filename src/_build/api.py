@@ -1,20 +1,20 @@
 ALPHABET="abcdefghijklmnopqrstuvwxyz"
 API_CODE_FILE_PATH="src/sll/api/_generated.c"
 API_HEADER_FILE_PATH="src/include/sll/api/_generated.h"
-TYPE_ACCESS_MAP={"I":"$->dt.i","B":"!!($->dt.i)","F":"$->dt.f","C":"$->dt.c","S":"&($->dt.s)","A":"&($->dt.a)","H":"&($->dt.h)","M":"&($->dt.m)","O":"$"}
-TYPE_ACCESS_OPT_MAP={"I":"($?$->dt.i:0)","B":"($?!!($->dt.i):0)","F":"($?$->dt.f:0)","C":"($?$->dt.c:SLL_NO_CHAR)","S":"($?&($->dt.s):NULL)","A":"($?&($->dt.a):NULL)","H":"($?&($->dt.h):NULL)","M":"($?&($->dt.m):NULL)","O":"$"}
-TYPE_CHECK_MAP={"I":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_INT","B":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_INT","F":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_FLOAT","C":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_CHAR","S":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_STRING","A":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_ARRAY","H":"(SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_HANDLE&&$->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)","M":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_MAP"}
-TYPE_COPY_MAP={"I":"#=$->dt.i","B":"#=$->dt.i","F":"#=$->dt.f","C":"#=$->dt.c","S":"sll_string_clone(&($->dt.s),#)","A":"sll_array_clone(&($->dt.a),#)","H":"#=$","M":"sll_map_clone(&($->dt.m),#)"}
-TYPE_FULL_NAME_MAP={"I":"INT","B":"INT","F":"FLOAT","C":"CHAR","S":"STRING","A":"ARRAY","H":"HANDLE","M":"MAP"}
-TYPE_MAP={"I":"sll_integer_t","B":"sll_bool_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t*","A":"sll_array_t*","H":"sll_handle_data_t*","M":"sll_map_t*","O":"sll_object_t*","V":"void"}
-TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return SLL_FROM_FLOAT(out)","S":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_STRING;out_o->dt.s=out;return out_o","A":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_ARRAY;out_o->dt.a=out;return out_o","H":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_HANDLE;out_o->dt.h=out;return out_o","M":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_MAP;out_o->dt.m=out;return out_o"}
+TYPE_ACCESS_MAP={"I":"$->dt.i","B":"!!($->dt.i)","F":"$->dt.f","C":"$->dt.c","S":"&($->dt.s)","A":"&($->dt.a)","M":"&($->dt.m)","O":"$"}
+TYPE_ACCESS_OPT_MAP={"I":"($?$->dt.i:0)","B":"($?!!($->dt.i):0)","F":"($?$->dt.f:0)","C":"($?$->dt.c:SLL_NO_CHAR)","S":"($?&($->dt.s):NULL)","A":"($?&($->dt.a):NULL)","M":"($?&($->dt.m):NULL)","O":"$"}
+TYPE_CHECK_MAP={"I":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_INT","B":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_INT","F":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_FLOAT","C":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_CHAR","S":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_STRING","A":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_ARRAY","M":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_MAP"}
+TYPE_COPY_MAP={"I":"#=$->dt.i","B":"#=$->dt.i","F":"#=$->dt.f","C":"#=$->dt.c","S":"sll_string_clone(&($->dt.s),#)","A":"sll_array_clone(&($->dt.a),#)","M":"sll_map_clone(&($->dt.m),#)"}
+TYPE_FULL_NAME_MAP={"I":"INT","B":"INT","F":"FLOAT","C":"CHAR","S":"STRING","A":"ARRAY","M":"MAP"}
+TYPE_MAP={"I":"sll_integer_t","B":"sll_bool_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t*","A":"sll_array_t*","M":"sll_map_t*","O":"sll_object_t*","V":"void"}
+TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return SLL_FROM_FLOAT(out)","S":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_STRING;out_o->dt.s=out;return out_o","A":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_ARRAY;out_o->dt.a=out;return out_o","M":"sll_object_t* out_o=SLL_CREATE();out_o->t=SLL_OBJECT_TYPE_MAP;out_o->dt.m=out;return out_o"}
 
 
 
 def generate_c_api(d_dt,api_dt):
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_API__GENERATED__\n#define __SLL_API__GENERATED__\n#include <sll/common.h>\n#include <sll/types.h>\n\n\n")
-		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/array.h>\n#include <sll/common.h>\n#include <sll/handle.h>\n#include <sll/ift.h>\n#include <sll/memory.h>\n#include <sll/object.h>\n#include <sll/operator.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/array.h>\n#include <sll/common.h>\n#include <sll/ift.h>\n#include <sll/memory.h>\n#include <sll/object.h>\n#include <sll/operator.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		fn_l=[]
 		d_gl=[]
 		for k in api_dt:

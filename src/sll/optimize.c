@@ -511,8 +511,6 @@ static sll_node_t* _object_to_node(sll_object_t* v,sll_node_t* o,optimizer_data_
 				o=_object_to_node(v->dt.a.v[i],o+1,o_dt);
 			}
 			return o;
-		case SLL_OBJECT_TYPE_HANDLE:
-			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				o->t=SLL_NODE_TYPE_MAP;

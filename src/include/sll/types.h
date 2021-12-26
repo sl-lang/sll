@@ -148,10 +148,6 @@ typedef uint32_t sll_function_index_t;
 
 
 
-typedef uint32_t sll_handle_type_t;
-
-
-
 typedef uint32_t sll_header_count_t;
 
 
@@ -225,10 +221,6 @@ typedef int64_t sll_integer_t;
 
 
 typedef uint64_t sll_file_offset_t;
-
-
-
-typedef uint64_t sll_handle_t;
 
 
 
@@ -572,50 +564,12 @@ typedef struct __SLL_MAP{
 
 
 
-typedef void (*sll_handle_stringify_t)(sll_handle_t h,sll_string_t* o);
-
-
-
-typedef void (*sll_handle_destructor_t)(sll_handle_t h);
-
-
-
-typedef sll_handle_t (*sll_handle_clone_t)(sll_handle_t h);
-
-
-
-typedef struct __SLL_HANDLE_DESCRIPTOR{
-	sll_char_t nm[256];
-	sll_name_length_t nml;
-	sll_checksum_t c;
-	sll_handle_stringify_t sf;
-	sll_handle_destructor_t df;
-	sll_handle_clone_t cf;
-} sll_handle_descriptor_t;
-
-
-
-typedef struct __SLL_HANDLE_LIST{
-	sll_handle_descriptor_t** dt;
-	sll_handle_type_t dtl;
-} sll_handle_list_t;
-
-
-
-typedef struct __SLL_HANDLE_DATA{
-	sll_handle_type_t t;
-	sll_handle_t h;
-} sll_handle_data_t;
-
-
-
 typedef union __SLL_OBJECT_DATA{
 	sll_integer_t i;
 	sll_float_t f;
 	sll_char_t c;
 	sll_string_t s;
 	sll_array_t a;
-	sll_handle_data_t h;
 	sll_map_t m;
 	void* p;
 } sll_object_data_t;
@@ -713,7 +667,6 @@ typedef struct __SLL_RUNTIME_DATA{
 	const sll_assembly_data_t* a_dt;
 	sll_internal_function_table_t* ift;
 	sll_object_type_table_t* tt;
-	sll_handle_list_t* hl;
 	sll_call_stack_t* c_st;
 } sll_runtime_data_t;
 

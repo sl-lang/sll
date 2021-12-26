@@ -3,7 +3,6 @@
 #include <sll/api/string.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/handle.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
@@ -142,10 +141,6 @@ static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
 				tmp.dt.a=*((sll_array_t*)p);
 				p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
 				break;
-			case SLL_OBJECT_TYPE_HANDLE:
-				tmp.dt.h=*((sll_handle_data_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_handle_data_t));
-				break;
 			case SLL_OBJECT_TYPE_MAP:
 				tmp.dt.m=*((sll_map_t*)p);
 				p=(void*)(((uint64_t)p)+sizeof(sll_map_t));
@@ -242,27 +237,6 @@ static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o
 			o->v[o->l]=']';
 			o->l++;
 			return;
-		case SLL_OBJECT_TYPE_HANDLE:
-			{
-				sll_handle_descriptor_t* hd=(sll_current_runtime_data?SLL_HANDLE_LOOKUP_DESCRIPTOR(sll_current_runtime_data->hl,a->dt.h.t):NULL);
-				if (hd&&hd->sf){
-					hd->sf(a->dt.h.h,o);
-					return;
-				}
-				if (hd){
-					sll_string_increase(o,hd->nml);
-					sll_copy_data(hd->nm,hd->nml,o->v+o->l);
-					o->l+=hd->nml;
-				}
-				else{
-					_write_int(a->dt.h.t,o);
-				}
-				sll_string_increase(o,1);
-				o->v[o->l]=':';
-				o->l++;
-				_write_int(a->dt.h.h,o);
-				return;
-			}
 		case SLL_OBJECT_TYPE_MAP:
 			sll_string_increase(o,1);
 			o->v[o->l]='<';

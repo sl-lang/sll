@@ -5,7 +5,6 @@
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/gc.h>
-#include <sll/handle.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform.h>

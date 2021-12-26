@@ -4,7 +4,6 @@
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/gc.h>
-#include <sll/handle.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -43,8 +42,6 @@ static const sll_char_t* _get_type_string(sll_object_t* o){
 			return SLL_CHAR("string");
 		case SLL_OBJECT_TYPE_ARRAY:
 			return SLL_CHAR("array");
-		case SLL_OBJECT_TYPE_HANDLE:
-			return SLL_CHAR("handle");
 		case SLL_OBJECT_TYPE_MAP:
 			return SLL_CHAR("map");
 		case OBJECT_TYPE_FUNCTION_ID:
@@ -96,15 +93,6 @@ static void* _release_custom_type(void* p,sll_object_type_t t){
 				sll_free_array((sll_array_t*)p);
 				p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
 				break;
-			case SLL_OBJECT_TYPE_HANDLE:
-				{
-					sll_handle_descriptor_t* hd=sll_handle_lookup_descriptor(sll_current_runtime_data->hl,((sll_handle_data_t*)p)->t);
-					if (hd&&hd->df){
-						hd->df(((sll_handle_data_t*)p)->h);
-					}
-					p=(void*)(((uint64_t)p)+sizeof(sll_handle_data_t));
-					break;
-				}
 			case SLL_OBJECT_TYPE_MAP:
 				sll_free_map((sll_map_t*)p);
 				p=(void*)(((uint64_t)p)+sizeof(sll_map_t));
@@ -245,14 +233,6 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 		}
 		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_ARRAY||SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP_KEYS||SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP_VALUES){
 			sll_free_array(&(o->dt.a));
-		}
-		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_HANDLE){
-			if (sll_current_runtime_data){
-				sll_handle_descriptor_t* hd=sll_handle_lookup_descriptor(sll_current_runtime_data->hl,o->dt.h.t);
-				if (hd&&hd->df){
-					hd->df(o->dt.h.h);
-				}
-			}
 		}
 		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP){
 			sll_free_map(&(o->dt.m));

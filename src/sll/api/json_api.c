@@ -4,7 +4,6 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/file.h>
-#include <sll/handle.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -493,7 +492,7 @@ __API_FUNC(json_parse){
 	if (o){
 		return o;
 	}
-	return SLL_ACQUIRE_STATIC(handle_zero);
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 

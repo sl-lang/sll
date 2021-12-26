@@ -4,7 +4,6 @@
 #include <sll/api/_generated.h>
 #include <sll/array.h>
 #include <sll/common.h>
-#include <sll/handle.h>
 #include <sll/ift.h>
 #include <sll/memory.h>
 #include <sll/object.h>

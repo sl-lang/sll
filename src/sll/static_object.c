@@ -1,7 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/array.h>
 #include <sll/gc.h>
-#include <sll/handle.h>
 #include <sll/map.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
@@ -668,10 +667,6 @@ __SLL_STATIC_OBJECT(str_zero,SLL_OBJECT_TYPE_STRING,s,SLL_INIT_STRING_STRUCT);
 
 
 __SLL_STATIC_OBJECT(array_zero,SLL_OBJECT_TYPE_ARRAY,a,SLL_INIT_ARRAY_STRUCT);
-
-
-
-__SLL_STATIC_OBJECT(handle_zero,SLL_OBJECT_TYPE_HANDLE,h,SLL_INIT_HANDLE_DATA_STRUCT);
 
 
 
