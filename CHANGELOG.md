@@ -4,7 +4,7 @@
 
 ### Changed
 
-- File API now uses types instead of handles
+- File & JSON APIs now uses custom types instead of handles ([#162])
 
 ### Removed
 
@@ -1253,6 +1253,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#162]: https://github.com/sl-lang/sll/issues/162
 [#160]: https://github.com/sl-lang/sll/issues/160
 [#159]: https://github.com/sl-lang/sll/issues/159
 [#158]: https://github.com/sl-lang/sll/issues/158

@@ -61,6 +61,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 
 
 /**
+ * \flags api func
+ * \name sll_api_json__init
+ * \group json-api
+ * \desc Docs!
+ * \arg O
+ * \arg O
+ * \arg O
+ * \ret V
+ */
+__API_FUNC_DECL(json__init);
+
+
+
+/**
  * \flags api func optimizable
  * \name sll_api_json_parse
  * \group json-api
@@ -81,18 +95,6 @@ __API_FUNC_DECL(json_parse);
  * \ret S
  */
 __API_FUNC_DECL(json_stringify);
-
-
-
-/**
- * \flags api func optimizable
- * \name sll_api_json_type
- * \group json-api
- * \desc Docs!
- * \arg I
- * \ret H
- */
-__API_FUNC_DECL(json_type);
 
 
 

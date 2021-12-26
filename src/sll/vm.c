@@ -633,6 +633,13 @@ _cleanup_jump_table:;
 					si-=ai->dt.ac<<1;
 					sll_object_type_t nt;
 					if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac,NULL);
+						for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
+							SLL_RELEASE(*(s+si+i));
+						}
+						si++;
+					}
+					else{
 						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*(s+si-1))==SLL_OBJECT_TYPE_STRING);
 						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac,&((*(s+si-1))->dt.s));
 						SLL_RELEASE(*(s+si-1));
@@ -640,23 +647,21 @@ _cleanup_jump_table:;
 							SLL_RELEASE(*(s+si+i));
 						}
 					}
-					else{
-						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac,NULL);
-						for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
-							SLL_RELEASE(*(s+si+i));
-						}
-						si++;
-					}
 					*(s+si-1)=SLL_FROM_INT(nt);
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
 				{
 					if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
-						SLL_UNIMPLEMENTED();
+						*(s+si)=SLL_FROM_INT(sll_add_type(sll_current_runtime_data->tt,NULL,0,NULL));
+						si++;
 					}
-					*(s+si)=SLL_FROM_INT(sll_add_type(sll_current_runtime_data->tt,NULL,0,NULL));
-					si++;
+					else{
+						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*(s+si-1))==SLL_OBJECT_TYPE_STRING);
+						sll_object_type_t nt=sll_add_type(sll_current_runtime_data->tt,NULL,0,&((*(s+si-1))->dt.s));
+						SLL_RELEASE(*(s+si-1));
+						*(s+si-1)=SLL_FROM_INT(nt);
+					}
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:

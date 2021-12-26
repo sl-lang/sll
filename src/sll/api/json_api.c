@@ -17,56 +17,19 @@
 
 
 
-#define SETUP_HANDLE \
-	do{ \
-		if (_json_ht==SLL_HANDLE_UNKNOWN_TYPE){ \
-			SLL_ASSERT(sll_current_runtime_data); \
-			_json_ht=sll_create_handle(sll_current_runtime_data->hl,&_json_type); \
-			_json_null=SLL_FROM_HANDLE(_json_ht,0); \
-			_json_true=SLL_FROM_HANDLE(_json_ht,1); \
-			_json_false=SLL_FROM_HANDLE(_json_ht,2); \
-		} \
-	} while (0)
-
-
-
-static sll_handle_type_t _json_ht=SLL_HANDLE_UNKNOWN_TYPE;
 static sll_object_t* _json_null=NULL;
 static sll_object_t* _json_true=NULL;
 static sll_object_t* _json_false=NULL;
-static sll_handle_descriptor_t _json_type;
 
 
 
-static void _json_cleanup(sll_handle_t h){
-	if (h==SLL_HANDLE_FREE){
-		SLL_RELEASE(_json_null);
-		SLL_RELEASE(_json_true);
-		SLL_RELEASE(_json_false);
-		_json_null=NULL;
-		_json_true=NULL;
-		_json_false=NULL;
-	}
-}
-
-
-
-static void _json_stringify(sll_handle_t h,sll_string_t* o){
-	if (!h){
-		sll_string_increase(o,4);
-		sll_copy_string(SLL_CHAR("null"),o->v+o->l);
-		o->l+=4;
-	}
-	else if (h==1){
-		sll_string_increase(o,4);
-		sll_copy_string(SLL_CHAR("true"),o->v+o->l);
-		o->l+=4;
-	}
-	else{
-		sll_string_increase(o,5);
-		sll_copy_string(SLL_CHAR("false"),o->v+o->l);
-		o->l+=5;
-	}
+static void _release_data(void){
+	SLL_RELEASE(_json_null);
+	SLL_RELEASE(_json_true);
+	SLL_RELEASE(_json_false);
+	_json_null=NULL;
+	_json_true=NULL;
+	_json_false=NULL;
 }
 
 
@@ -510,8 +473,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 
 
 
+__API_FUNC(json__init){
+	if (!_json_null){
+		sll_register_cleanup(_release_data);
+	}
+	SLL_ACQUIRE(a);
+	SLL_ACQUIRE(b);
+	SLL_ACQUIRE(c);
+	_json_null=a;
+	_json_true=b;
+	_json_false=c;
+}
+
+
+
 __API_FUNC(json_parse){
-	SETUP_HANDLE;
 	sll_json_parser_state_t p=a->v;
 	sll_object_t* o=_parse_json_as_object(&p);
 	if (o){
@@ -525,24 +501,3 @@ __API_FUNC(json_parse){
 __API_FUNC(json_stringify){
 	SLL_UNIMPLEMENTED();
 }
-
-
-
-__API_FUNC(json_type){
-	SETUP_HANDLE;
-	if (a>=0&&a<3){
-		out->t=_json_ht;
-		out->h=a;
-		return;
-	}
-	SLL_INIT_HANDLE_DATA(out);
-}
-
-
-
-static sll_handle_descriptor_t _json_type={
-	SLL_HANDLE_DESCRIPTOR_HEADER("sll_json_type_handle"),
-	_json_stringify,
-	_json_cleanup,
-	NULL
-};

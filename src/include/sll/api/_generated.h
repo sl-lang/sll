@@ -340,6 +340,37 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_json__init void
+#define __SLL_API_ARGS_sll_api_json__init sll_object_t* a,sll_object_t* b,sll_object_t* c
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_json__init
+ * \group json-api
+ * \desc Docs!
+ * \arg sll_object_t* a -> 
+ * \arg sll_object_t* b -> 
+ * \arg sll_object_t* c -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_json__init_raw
+ * \group raw-api
+ * \subgroup raw-api-json-api
+ * \desc Wrapper function for :sll_api_json__init:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name JSON
+ * \group raw-api
+ * \subgroup raw-api-json-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_json_parse __SLL_CHECK_OUTPUT sll_object_t*
 #define __SLL_API_ARGS_sll_api_json_parse sll_string_t* a
 /**
@@ -360,13 +391,6 @@
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
  */
-/**
- * \flags subgroup
- * \name JSON
- * \group raw-api
- * \subgroup raw-api-json-api
- * \desc Docs!
- */
 
 
 
@@ -385,28 +409,6 @@
  * \group raw-api
  * \subgroup raw-api-json-api
  * \desc Wrapper function for :sll_api_json_stringify:
- * \arg sll_object_t*const* al -> Arguments
- * \arg sll_arg_count_t all -> Argument count
- * \ret sll_object_t* -> The return value of the function
- */
-
-
-
-#define __SLL_API_TYPE_sll_api_json_type void
-#define __SLL_API_ARGS_sll_api_json_type sll_integer_t a,sll_handle_data_t* out
-/**
- * \flags func optimizable
- * \name sll_api_json_type
- * \group json-api
- * \desc Docs!
- * \arg sll_integer_t a -> 
- */
-/**
- * \flags check_output func optimizable
- * \name sll_api_json_type_raw
- * \group raw-api
- * \subgroup raw-api-json-api
- * \desc Wrapper function for :sll_api_json_type:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

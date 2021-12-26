@@ -997,6 +997,9 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
 				PRINT_STATIC_STRING("DECL 0",wf);
+				if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+					PRINT_STATIC_STRING(" (anonymous)",wf);
+				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
 				PRINT_STATIC_STRING("DECL @",wf);

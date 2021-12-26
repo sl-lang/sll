@@ -458,6 +458,41 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_create_raw(sll_obje
 
 
 
+__SLL_API_TYPE_sll_api_json__init sll_api_json__init(__SLL_API_ARGS_sll_api_json__init);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json__init_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		SLL_ACQUIRE(a);
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		SLL_ACQUIRE(b);
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* c=NULL;
+	if (all>2){
+		c=*(al+2);
+		SLL_ACQUIRE(c);
+	}
+	else{
+		c=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_json__init(a,b,c);
+	SLL_RELEASE(c);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
 __SLL_API_TYPE_sll_api_json_parse sll_api_json_parse(__SLL_API_ARGS_sll_api_json_parse);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -498,32 +533,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_stringify_raw(sll_o
 	sll_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_OBJECT_TYPE_STRING;
 	out_o->dt.s=out;
-	return out_o;
-}
-
-
-
-__SLL_API_TYPE_sll_api_json_type sll_api_json_type(__SLL_API_ARGS_sll_api_json_type);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_type_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_object_t* a=NULL;
-	if (all>0){
-		a=*(al+0);
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-			SLL_ACQUIRE(a);
-		}
-		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
-		}
-	}
-	else{
-		a=SLL_ACQUIRE_STATIC_INT(0);
-	}
-	sll_handle_data_t out;
-	sll_api_json_type(a->dt.i,&out);
-	SLL_RELEASE(a);
-	sll_object_t* out_o=SLL_CREATE();
-	out_o->t=SLL_OBJECT_TYPE_HANDLE;
-	out_o->dt.h=out;
 	return out_o;
 }
 
@@ -2063,9 +2072,9 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:file_std_handle",sll_api_file_std_handle_raw,0},
 	{"sll:file_write",sll_api_file_write_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:hash_create",sll_api_hash_create_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:json__init",sll_api_json__init_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:json_parse",sll_api_json_parse_raw,0},
 	{"sll:json_stringify",sll_api_json_stringify_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
-	{"sll:json_type",sll_api_json_type_raw,0},
 	{"sll:log_log",sll_api_log_log_raw,0},
 	{"sll:log_set_default",sll_api_log_set_default_raw,0},
 	{"sll:log_set_file",sll_api_log_set_file_raw,0},

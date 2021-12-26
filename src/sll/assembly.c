@@ -961,12 +961,12 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 		case SLL_NODE_TYPE_DECL:
 			{
 				sll_arg_count_t l=o->dt.d.ac;
-				sll_assembly_instruction_type_t fl=0;
+				sll_assembly_instruction_type_t fl=SLL_ASSEMBLY_INSTRUCTION_ANONYMOUS;
 				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
 					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS;
 					ai->dt.t=o->dt.d.nm;
-					fl|=SLL_ASSEMBLY_INSTRUCTION_ANONYMOUS;
+					fl=0;
 				}
 				o++;
 				if (!l){
