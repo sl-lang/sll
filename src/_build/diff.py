@@ -40,7 +40,8 @@ def _diff(sha):
 				break
 		if (n):
 			l.append(k[0])
-	l.extend(b)
+	for k in b:
+		l.append(k[0])
 	o=set()
 	for k in l:
 		k=k.split("/")
