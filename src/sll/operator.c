@@ -1,5 +1,4 @@
 #include <sll/_sll_internal.h>
-#include <sll/api/memory.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -626,7 +625,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			case COMBINED_CAST_TYPE_SH:
 			case COMBINED_CAST_TYPE_AH:
 			case COMBINED_CAST_TYPE_MH:
-				return sll_memory_from_pointer(a);
+				return SLL_FROM_INT((sll_integer_t)(sll_size_t)(void*)a);
 			case COMBINED_CAST_TYPE_IM:
 			case COMBINED_CAST_TYPE_FM:
 			case COMBINED_CAST_TYPE_CM:

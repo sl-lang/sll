@@ -8,7 +8,8 @@
 
 ### Removed
 
-- `SLL_FROM_FILE`
+- Memory API
+- `SLL_FROM_FILE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
 
 ## [0.6.33] - 2021-12-25

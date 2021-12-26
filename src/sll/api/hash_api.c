@@ -160,10 +160,6 @@ static void _hash_object(const sll_object_t* o,hash_state_t* st){
 				_hash_object(o->dt.a.v[i],st);
 			}
 			return;
-		case SLL_OBJECT_TYPE_HANDLE:
-			APPEND_SMALL(&(o->dt.h.t),sizeof(sll_handle_type_t),st);
-			APPEND_SMALL(&(o->dt.h.h),sizeof(sll_handle_t),st);
-			return;
 		case SLL_OBJECT_TYPE_MAP:
 			SLL_UNIMPLEMENTED();
 		default:

@@ -1,5 +1,4 @@
 #include <sll/_sll_internal.h>
-#include <sll/api/memory.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/assembly.h>
@@ -193,10 +192,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				*(s+si)=SLL_ACQUIRE_STATIC_CHAR(ai->dt.c);
-				si++;
-				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL:
-				*(s+si)=sll_memory_get_null_pointer();
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
@@ -866,9 +861,9 @@ _print_from_stack:;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_REF:
 				{
-					sll_object_t* n=sll_memory_from_object(*(s+si-1));
+					sll_integer_t a=(sll_integer_t)(sll_size_t)(void*)(*(s+si-1));
 					SLL_RELEASE(*(s+si-1));
-					*(s+si-1)=n;
+					*(s+si-1)=SLL_FROM_INT(a);
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET:

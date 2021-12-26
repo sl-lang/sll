@@ -615,9 +615,6 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("PUSH c",wf);
 				_print_int(ai->dt.c,wf);
 				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL:
-				PRINT_STATIC_STRING("PUSH null_ref",wf);
-				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 				PRINT_STATIC_STRING("PUSH .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){

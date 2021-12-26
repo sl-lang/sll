@@ -1,4 +1,4 @@
-(# func_type handle_type)
+(# func_type)
 (--- "types.sll")
 
 (= json_null (&:))
