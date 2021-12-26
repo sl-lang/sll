@@ -163,13 +163,13 @@
 
 
 #define __SLL_API_TYPE_sll_api_file_close __SLL_CHECK_OUTPUT sll_bool_t
-#define __SLL_API_ARGS_sll_api_file_close sll_handle_data_t* a
+#define __SLL_API_ARGS_sll_api_file_close sll_integer_t a
 /**
  * \flags check_output func optimizable
  * \name sll_api_file_close
  * \group file-api
- * \desc Closes a file previously opened by :sll_api_file_open: and invalidates its handle
- * \arg sll_handle_data_t* a -> Previously allocated file handle
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
  * \ret sll_bool_t
  */
 /**
@@ -192,14 +192,15 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_file_flush void
-#define __SLL_API_ARGS_sll_api_file_flush sll_handle_data_t* a
+#define __SLL_API_TYPE_sll_api_file_flush __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_file_flush sll_integer_t a
 /**
  * \flags check_output func optimizable
  * \name sll_api_file_flush
  * \group file-api
  * \desc Docs!
- * \arg sll_handle_data_t* a -> 
+ * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
  */
 /**
  * \flags check_output func optimizable
@@ -214,15 +215,16 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_file_open void
-#define __SLL_API_ARGS_sll_api_file_open sll_string_t* a,sll_string_t* b,sll_handle_data_t* out
+#define __SLL_API_TYPE_sll_api_file_open __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_file_open sll_string_t* a,sll_integer_t b
 /**
- * \flags func optimizable
+ * \flags check_output func optimizable
  * \name sll_api_file_open
  * \group file-api
- * \desc Opens a file with the specified mode
- * \arg sll_string_t* a -> The path to the file to open
- * \arg sll_string_t* b -> The optional file mode
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \arg sll_integer_t b -> 
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func optimizable
@@ -238,14 +240,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_file_read void
-#define __SLL_API_ARGS_sll_api_file_read sll_handle_data_t* a,sll_integer_t b,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_file_read sll_integer_t a,sll_integer_t b,sll_string_t* out
 /**
  * \flags func optimizable
  * \name sll_api_file_read
  * \group file-api
- * \desc Reads from a file prevoiusly opened by :sll_api_file_open:
- * \arg sll_handle_data_t* a -> Previously opened file handle
- * \arg sll_integer_t b -> Maximum number of bytes to read
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
  */
 /**
  * \flags check_output func optimizable
@@ -260,14 +262,15 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_file_std_handle void
-#define __SLL_API_ARGS_sll_api_file_std_handle sll_integer_t a,sll_handle_data_t* out
+#define __SLL_API_TYPE_sll_api_file_std_handle __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_file_std_handle sll_integer_t a
 /**
- * \flags func optimizable
+ * \flags check_output func optimizable
  * \name sll_api_file_std_handle
  * \group file-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func optimizable
@@ -283,14 +286,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_file_write __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_file_write sll_handle_data_t* a,sll_object_t*const* b,sll_arg_count_t bc
+#define __SLL_API_ARGS_sll_api_file_write sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc
 /**
  * \flags check_output func optimizable
  * \name sll_api_file_write
  * \group file-api
- * \desc Writes to a file prevoiusly opened by :sll_api_file_open:
- * \arg sll_handle_data_t* a -> Previously opened file handle
- * \arg sll_object_t*const* b -> The object to write to file
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_object_t*const* b -> 
  * \arg sll_arg_count_t bc
  * \ret sll_integer_t
  */

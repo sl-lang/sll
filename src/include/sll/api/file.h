@@ -13,18 +13,15 @@
 
 
 
-#define SLL_FROM_FILE(f) __SLL_ADD_DEBUG_DATA(sll_file_to_object((f)),__SLL_DEBUG_TYPE_CREATE)
-
-
 /**
  * \flags check_output func
- * \name sll_file_to_object
+ * \name sll_file_to_handle
  * \group file-api
  * \desc Desc!
  * \arg sll_file_t* f
- * \ret sll_object_t*
+ * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_file_to_object(sll_file_t* f);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_file_to_handle(sll_file_t* f);
 
 
 
@@ -32,8 +29,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_file_to_object(sll_file_t* f
  * \flags api func
  * \name sll_api_file_close
  * \group file-api
- * \desc Closes a file previously opened by :sll_api_file_open: and invalidates its handle
- * \arg H -> Previously allocated file handle
+ * \desc Docs!
+ * \arg I
  * \ret B
  */
 __API_FUNC_DECL(file_close);
@@ -45,8 +42,8 @@ __API_FUNC_DECL(file_close);
  * \name sll_api_file_flush
  * \group file-api
  * \desc Docs!
- * \arg H
- * \ret V
+ * \arg I
+ * \ret B
  */
 __API_FUNC_DECL(file_flush);
 
@@ -56,10 +53,10 @@ __API_FUNC_DECL(file_flush);
  * \flags api func optimizable
  * \name sll_api_file_open
  * \group file-api
- * \desc Opens a file with the specified mode
- * \arg S -> The path to the file to open
- * \arg S? -> The optional file mode
- * \ret H
+ * \desc Docs!
+ * \arg S
+ * \arg I
+ * \ret I
  */
 __API_FUNC_DECL(file_open);
 
@@ -69,10 +66,10 @@ __API_FUNC_DECL(file_open);
  * \flags api func
  * \name sll_api_file_read
  * \group file-api
- * \desc Reads from a file prevoiusly opened by :sll_api_file_open:
- * \arg H -> Previously opened file handle
- * \arg I? -> Maximum number of bytes to read
- * \ret S -> The content of the file
+ * \desc Docs!
+ * \arg I
+ * \arg I
+ * \ret S
  */
 __API_FUNC_DECL(file_read);
 
@@ -84,7 +81,7 @@ __API_FUNC_DECL(file_read);
  * \group file-api
  * \desc Docs!
  * \arg I
- * \ret H
+ * \ret I
  */
 __API_FUNC_DECL(file_std_handle);
 
@@ -94,10 +91,10 @@ __API_FUNC_DECL(file_std_handle);
  * \flags api func var_arg
  * \name sll_api_file_write
  * \group file-api
- * \desc Writes to a file prevoiusly opened by :sll_api_file_open:
- * \arg H -> Previously opened file handle
- * \arg O -> The object to write to file
- * \ret I -> Number of bytes written
+ * \desc Docs!
+ * \arg I
+ * \arg O
+ * \ret I
  */
 __API_FUNC_DECL(file_write);
 

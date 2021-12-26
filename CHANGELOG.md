@@ -2,8 +2,13 @@
 
 ## [0.6.34] - Ongoing
 
+### Changed
+
+- File API now uses types instead of handles
+
 ### Removed
 
+- `SLL_FROM_FILE`
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
 
 ## [0.6.33] - 2021-12-25

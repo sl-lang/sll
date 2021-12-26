@@ -276,19 +276,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_close_raw(sll_objec
 	sll_object_t* a=NULL;
 	if (all>0){
 		a=*(al+0);
-		if ((SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)){
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
 			SLL_ACQUIRE(a);
 		}
 		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_HANDLE]);
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
 		}
 	}
 	else{
-		a=SLL_CREATE();
-		a->t=SLL_OBJECT_TYPE_HANDLE;
-		SLL_INIT_HANDLE_DATA(&(a->dt.h));
+		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_bool_t out=sll_api_file_close(&(a->dt.h));
+	sll_bool_t out=sll_api_file_close(a->dt.i);
 	SLL_RELEASE(a);
 	SLL_ACQUIRE(sll_static_int[out]);
 	return sll_static_int[out];
@@ -301,21 +299,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_flush_raw(sll_objec
 	sll_object_t* a=NULL;
 	if (all>0){
 		a=*(al+0);
-		if ((SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)){
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
 			SLL_ACQUIRE(a);
 		}
 		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_HANDLE]);
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
 		}
 	}
 	else{
-		a=SLL_CREATE();
-		a->t=SLL_OBJECT_TYPE_HANDLE;
-		SLL_INIT_HANDLE_DATA(&(a->dt.h));
+		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_api_file_flush(&(a->dt.h));
+	sll_bool_t out=sll_api_file_flush(a->dt.i);
 	SLL_RELEASE(a);
-	return SLL_ACQUIRE_STATIC_INT(0);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
 }
 
 
@@ -340,23 +337,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_open_raw(sll_object
 	sll_object_t* b=NULL;
 	if (all>1){
 		b=*(al+1);
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING){
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
 			SLL_ACQUIRE(b);
 		}
 		else{
-			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
 		}
 	}
-	sll_handle_data_t out;
-	sll_api_file_open(&(a->dt.s),(b?&(b->dt.s):NULL),&out);
-	if (b){
-		SLL_RELEASE(b);
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	sll_integer_t out=sll_api_file_open(&(a->dt.s),b->dt.i);
+	SLL_RELEASE(b);
 	SLL_RELEASE(a);
-	sll_object_t* out_o=SLL_CREATE();
-	out_o->t=SLL_OBJECT_TYPE_HANDLE;
-	out_o->dt.h=out;
-	return out_o;
+	return SLL_FROM_INT(out);
 }
 
 
@@ -366,17 +360,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read_raw(sll_object
 	sll_object_t* a=NULL;
 	if (all>0){
 		a=*(al+0);
-		if ((SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)){
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
 			SLL_ACQUIRE(a);
 		}
 		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_HANDLE]);
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
 		}
 	}
 	else{
-		a=SLL_CREATE();
-		a->t=SLL_OBJECT_TYPE_HANDLE;
-		SLL_INIT_HANDLE_DATA(&(a->dt.h));
+		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -388,11 +380,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read_raw(sll_object
 			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
 		}
 	}
-	sll_string_t out;
-	sll_api_file_read(&(a->dt.h),(b?b->dt.i:0),&out);
-	if (b){
-		SLL_RELEASE(b);
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	sll_string_t out;
+	sll_api_file_read(a->dt.i,b->dt.i,&out);
+	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_OBJECT_TYPE_STRING;
@@ -417,13 +410,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_std_handle_raw(sll_
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_handle_data_t out;
-	sll_api_file_std_handle(a->dt.i,&out);
+	sll_integer_t out=sll_api_file_std_handle(a->dt.i);
 	SLL_RELEASE(a);
-	sll_object_t* out_o=SLL_CREATE();
-	out_o->t=SLL_OBJECT_TYPE_HANDLE;
-	out_o->dt.h=out;
-	return out_o;
+	return SLL_FROM_INT(out);
 }
 
 
@@ -433,21 +422,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_write_raw(sll_objec
 	sll_object_t* a=NULL;
 	if (all>0){
 		a=*(al+0);
-		if ((SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_HANDLE&&a->dt.h.t!=SLL_HANDLE_UNKNOWN_TYPE)){
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
 			SLL_ACQUIRE(a);
 		}
 		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_HANDLE]);
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
 		}
 	}
 	else{
-		a=SLL_CREATE();
-		a->t=SLL_OBJECT_TYPE_HANDLE;
-		SLL_INIT_HANDLE_DATA(&(a->dt.h));
+		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
 	sll_object_t*const* b=al+1;
 	sll_arg_count_t bc=(all>1?all-1:0);
-	sll_integer_t out=sll_api_file_write(&(a->dt.h),b,bc);
+	sll_integer_t out=sll_api_file_write(a->dt.i,b,bc);
 	SLL_RELEASE(a);
 	return SLL_FROM_INT(out);
 }

@@ -1,24 +1,93 @@
-(# func_type)
-(--- "types.sll")
+(# type_type func_type string_type string)
+(--- "types.sll" "string.sll")
 
-(= stdin (<- (... "sll:file_std_handle") 0))
-(= stdout (<- (... "sll:file_std_handle") 1))
-(= stderr (<- (... "sll:file_std_handle") 2))
+(= file_type (&:
+	(~ string_type) name
+	(~ int_type) flags
+	(~ int_type) _handle
+))
 
-(= close (... "sll:file_close"))
-(= flush (... "sll:file_flush"))
-(= open (... "sll:file_open"))
-(= read (... "sll:file_read"))
-(= write (... "sll:file_write"))
+(= FLAG_READ 1)
+(= FLAG_WRITE 2)
+(= FLAG_APPEND 4)
+
+(= stdin (. file_type
+	"<stdin>"
+	FLAG_READ
+	(<- (... "sll:file_std_handle") 0)
+))
+(= stdout (. file_type
+	"<stdout>"
+	FLAG_WRITE
+	(<- (... "sll:file_std_handle") 1)
+))
+(= stderr (. file_type
+	"<stderr>"
+	FLAG_WRITE
+	(<- (... "sll:file_std_handle") 2)
+))
+
+(= close (,,, f
+	(? (=== f nil) (@@ nil))
+	(= f (:: f file_type))
+	(@@ (<- (... "sll:file_close") f$_handle))
+))
+
+(= flush (,,, f
+	(? (=== f nil) (@@ nil))
+	(= f (:: f file_type))
+	(<- (... "sll:file_flush") f$_handle)
+))
+
+(= open (,,, path mode
+	(? (=== path nil) (@@ nil))
+	(= path (:: path string_type))
+	(= flags FLAG_READ)
+	(? (!== mode nil) {
+		(= mode (<- string$lower_case (:: mode string_type)))
+		(-> (= i 0) (< i ($ mode)) {
+			(?? (: mode i)
+				'a' (= flags (| FLAG_WRITE FLAG_APPEND))
+				'r' (= flags FLAG_READ)
+				'w' (= flags FLAG_WRITE)
+			)
+		})
+	})
+	(= handle (<- (... "sll:file_open")
+		path
+		flags
+	))
+	(? (=== handle -1) (@@ nil))
+	(@@ (. file_type
+		path
+		flags
+		handle
+	))
+))
+
+(= read (,,, f c
+	(? (=== f nil) (@@ nil))
+	(= f (:: f file_type))
+	(= c (:: c int_type))
+	(? (< c 0) (@@ ""))
+	(@@ (<- (... "sll:file_read") f$_handle c))
+))
+
+(= write (,,, f dt
+	(? (=== f nil) (@@ nil))
+	(= f (:: f file_type))
+	(@@ (<- (... "sll:file_write") f$_handle (:: dt string_type)))
+))
 
 (= file (. (&:
-	(~ handle_type) stdin
-	(~ handle_type) stdout
-	(~ handle_type) stderr
+	(~ type_type) file_type
 	(~ func_type) close
 	(~ func_type) flush
 	(~ func_type) open
 	(~ func_type) read
 	(~ func_type) write
-) stdin stdout stderr close flush open read write))
+	(~ file_type) stdin
+	(~ file_type) stdout
+	(~ file_type) stderr
+) file_type close flush open read write stdin stdout stderr))
 (## file)

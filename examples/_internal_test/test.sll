@@ -38,8 +38,8 @@
 (? f {
 	(<- file$write f "Hello!\n")
 	(:> "ABC\n")
-	(:> f ", " (+ f 1) ", " (<< 2 (+ f 1)) "\n")
-	|# (<- file$close f); Automatic Cleanup #|
+	(:> f "\n")
+	(<- file$close f)
 } {
 	(:> (<- string$format "Unable to open file '%s'!\n" fp))
 } )
@@ -189,6 +189,8 @@
 (:> (<- process$start [sys$executable "-V"]) "\n")
 
 (:> sys$library "\n")
+
+(:> file$stdout "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
