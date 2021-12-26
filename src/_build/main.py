@@ -19,7 +19,7 @@ util.create_output_dir()
 if ("--web" in sys.argv):
 	website.generate()
 	sys.exit(0)
-ver=header.read_version("src/include/sll/version.h")
+ver=header.read_version("src/sll/include/sll/version.h")
 if ("--generate-api" in sys.argv):
 	util.log("Collecting Documentation Files...")
 	d_fl=util.get_docs_files()
@@ -27,7 +27,7 @@ if ("--generate-api" in sys.argv):
 	d_dt,api_dt=docs.create_docs(d_fl)
 	util.log(f"Generating Code & Signatures for {len(api_dt)} API functions...")
 	api.generate_c_api(d_dt,api_dt)
-h_dt=header.parse_headers("src/include/sll")
+h_dt=header.parse_headers("src/sll/include")
 util.log("Generating Library Header File...")
 with open("build/sll.h","wb") as wf:
 	wf.write(b"#ifndef __SLL_H__\n#define __SLL_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES)+b"\n#endif\n")
@@ -59,13 +59,13 @@ for k in fl:
 	os.remove("build/lib/"+k)
 if ("--extension" in sys.argv):
 	util.log("Listing Source Code Files (Extension)...")
-	fl=util.get_sll_ext_files()
+	fl=util.get_ext_files()
 	util.log("Compiling Sll Extension...")
 	build.build_sll_extension(fl,ver,("--release" in sys.argv))
 	util.log("Copying Extension Modules...")
-	for f in os.listdir("src/sll_ext/lib"):
-		util.log(f"  Copying Extension Module 'src/sll_ext/lib/{f}'...")
-		with open(f"src/sll_ext/lib/{f}","rb") as rf,open(f"build/lib_ext/{f}","wb") as wf:
+	for f in os.listdir("src/ext/debug/lib"):
+		util.log(f"  Copying Extension Module 'src/ext/debug/lib/{f}'...")
+		with open(f"src/ext/debug/lib/{f}","rb") as rf,open(f"build/lib_ext/{f}","wb") as wf:
 			wf.write(rf.read())
 	util.log("Compiling Extension Modules...")
 	fl=list(os.listdir("build/lib_ext"))
@@ -77,7 +77,7 @@ if ("--extension" in sys.argv):
 		os.remove("build/lib_ext/"+k)
 	if ("--extension-only" in sys.argv):
 		if ("--upload" in sys.argv):
-			os.rename(f"build/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),("win-ext.dll" if os.name=="nt" else "posix-ext.so"))
+			os.rename(f"build/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),("win-ext-debug.dll" if os.name=="nt" else "posix-ext-debug.so"))
 		sys.exit(0)
 if ("--bundle" in sys.argv):
 	util.log("Compressing executable files...")
@@ -94,7 +94,7 @@ if ("--test" in sys.argv):
 if ("--run" in sys.argv):
 	if ("--extension" in sys.argv):
 		util.log("Installing extension library...")
-		with open(f"build/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"rb") as rf,open(f"build/sys_lib/sll-ext-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"wb") as wf:
+		with open(f"build/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"rb") as rf,open(f"build/sys_lib/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"wb") as wf:
 			wf.write(rf.read())
 	a=(["examples/_internal_test_ext/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	util.log(f"Running '{a[0]}...")

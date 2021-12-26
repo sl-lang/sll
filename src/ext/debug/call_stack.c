@@ -1,0 +1,39 @@
+#include <debug/util.h>
+#include <sll.h>
+
+
+
+sll_object_t* debug_get_call_stack(sll_object_t*const* al,sll_arg_count_t all){
+	if (!debug_cs_type||!debug_cs_raw_type){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* o=SLL_CREATE();
+	o->t=SLL_OBJECT_TYPE_ARRAY;
+	if (!sll_array_create(sll_current_runtime_data->c_st->l,&(o->dt.a))){
+		o->t=SLL_OBJECT_TYPE_INT;
+		o->dt.i=0;
+		return o;
+	}
+	for (sll_call_stack_size_t i=0;i<sll_current_runtime_data->c_st->l;i++){
+		const sll_call_stack_frame_t* k=sll_current_runtime_data->c_st->dt+i;
+		sll_object_t* dt_raw[2]={
+			SLL_FROM_INT(k->_ii),
+			SLL_FROM_INT(k->_s)
+		};
+		sll_object_t* nm=SLL_CREATE();
+		nm->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_clone(sll_current_runtime_data->a_dt->st.dt+k->nm,&(nm->dt.s));
+		sll_object_t* dt[3]={
+			nm,
+			ii_to_loc(k->_ii),
+			sll_create_object_type(sll_current_runtime_data->tt,debug_cs_raw_type,dt_raw,2)
+		};
+		SLL_RELEASE(dt_raw[0]);
+		SLL_RELEASE(dt_raw[1]);
+		o->dt.a.v[i]=sll_create_object_type(sll_current_runtime_data->tt,debug_cs_type,dt,3);
+		SLL_RELEASE(nm);
+		SLL_RELEASE(dt[1]);
+		SLL_RELEASE(dt[2]);
+	}
+	return o;
+}

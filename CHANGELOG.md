@@ -5,6 +5,7 @@
 ### Changed
 
 - File & JSON APIs now uses custom types instead of handles ([#162])
+- Repository file layout
 
 ### Removed
 

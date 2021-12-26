@@ -1,9 +1,0 @@
-(# sys)
-(--- "sys.sll")
-
-(= ext_fp (+ sys$library_path "sll-ext-" sys$version$major "." sys$version$minor "." sys$version$patch "." sys$library_extension))
-
-(? (! (<- sys$load_library ext_fp)) {
-	(:> "Failed to load extension library: " ext_fp "\n")
-	(@@@ 1)
-})

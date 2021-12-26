@@ -1,5 +1,12 @@
-(# int_type func_type type_type string_type)
-(--- "_load.sll" "types.sll")
+(# sys int_type func_type type_type string_type)
+(--- "sys.sll" "types.sll")
+
+(= ext_fp (+ sys$library_path "sll-ext-debug-" sys$version$major "." sys$version$minor "." sys$version$patch "." sys$library_extension))
+
+(? (! (<- sys$load_library ext_fp)) {
+	(:> "Failed to load extension library: " ext_fp "\n")
+	(@@@ 1)
+})
 
 (= location_type (&:
 	(~ string_type) file
@@ -22,7 +29,7 @@
 	(~ int_type) err
 ))
 
-(<- (... "sll_ext:debug__set_type") call_stack_type call_stack_raw_type location_type vm_config_type)
+(<- (... "sll_ext:debug__init") call_stack_type call_stack_raw_type location_type vm_config_type)
 
 (= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
 (= get_instruction_index (... "sll_ext:debug_get_instruction_index"))

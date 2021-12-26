@@ -1,5 +1,5 @@
-#ifndef __SLL_EXT_VERSION_H__
-#define __SLL_EXT_VERSION_H__ 1
+#ifndef __EXT_DEBUG_VERSION_H__
+#define __EXT_DEBUG_VERSION_H__ 1
 #include <sll.h>
 
 

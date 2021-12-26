@@ -131,11 +131,12 @@ def parse_headers(fp):
 	util.log("Combining Library Header Files...")
 	o=b""
 	il=[]
+	fp=fp.replace("\\","/").rstrip("/")+"/"
 	for r,_,fl in os.walk(fp):
 		for f in fl:
 			if (f[-2:]==".h" and f!=INTERNAL_SLL_HEADER):
 				with open(os.path.join(r,f),"rb") as rf:
-					il.append(bytes(f,"utf-8"))
+					il.append(bytes(os.path.join(r,f)[len(fp):].replace("\\","/"),"utf-8"))
 					dt=rf.read()
 					m=HEADER_INCLUDE_GUARD_REGEX.fullmatch(dt)
 					if (m is not None):

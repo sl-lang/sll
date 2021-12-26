@@ -160,7 +160,7 @@ jobs:
         if: github.event_name=='workflow_dispatch'
         with:
           name: release-posix-ext
-          path: posix-ext.so
+          path: posix-ext-debug.so
           retention-days: 1
   web:
     name: Build Website
@@ -301,5 +301,5 @@ jobs:
         if: github.event_name=='workflow_dispatch'
         with:
           name: release-win-ext
-          path: win-ext.dll
+          path: win-ext-debug.dll
           retention-days: 1

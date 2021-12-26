@@ -7,7 +7,6 @@ import zipfile
 
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 BUILD_PATHS=["build/lib","build/lib_ext","build/sys_lib","build/objects","build/objects_ext","build/web","build/web/css"]
-EXT_PLATFORM_SOURCE_CODE={"posix":"src/sll_ext/platform/posix","nt":"src/sll_ext/platform/windows"}
 PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix","nt":"src/sll/platform/windows"}
 
 
@@ -93,17 +92,10 @@ def get_sll_files():
 
 
 
-def get_sll_ext_files():
+def get_ext_files():
 	o=[]
-	for r,_,fl in os.walk(EXT_PLATFORM_SOURCE_CODE[os.name]):
+	for r,_,fl in os.walk("src/ext/debug"):
 		r=r.replace("\\","/").rstrip("/")+"/"
-		for f in fl:
-			if (f[-2:]==".c"):
-				o.append(r+f)
-	for r,_,fl in os.walk("src/sll_ext"):
-		r=r.replace("\\","/").rstrip("/")+"/"
-		if ("/platform/" in r.lower()):
-			continue
 		for f in fl:
 			if (f[-2:]==".c"):
 				o.append(r+f)
