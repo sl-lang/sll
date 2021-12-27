@@ -404,7 +404,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 
 
 
-int main(int argc,const char** argv){
+int main(unsigned int argc,const char** argv){
 	sll_init();
 	sll_platform_enable_console_color();
 	int ec=1;
@@ -440,14 +440,14 @@ _skip_lib_path:
 	uint32_t im_fpl=UINT32_MAX;
 	sll_sandbox_flags_t s_fl=0;
 	sll_set_argument_count(1);
-	for (int i=1;i<argc;i++){
+	for (unsigned int i=1;i<argc;i++){
 		const sll_char_t* e=SLL_CHAR(argv[i]);
 		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-assembly"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_GENERATE_ASSEMBLY;
 		}
 		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			sll_set_argument_count(argc-i);
-			for (sll_integer_t j=0;j<(sll_integer_t)(argc-i-1);j++){
+			for (sll_array_length_t j=0;j<argc-i-1;j++){
 				sll_set_argument(j+1,SLL_CHAR(*(argv+i+j+1)));
 			}
 			break;
