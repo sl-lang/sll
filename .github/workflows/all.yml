@@ -205,10 +205,8 @@ jobs:
         run: python src/_build/website.py --verbose --server ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_WORKER_NAME}} ${{secrets.CLOUDFLARE_TOKEN}}
   web-upload:
     name: Upload Website
-    needs:
-      - diff
-      - web
-    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
+    needs: web
+    if: github.event_name=='push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
