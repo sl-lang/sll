@@ -14,13 +14,18 @@
 
 /**
  * \flags api compilation_call func optimizable
- * \name sll_api_hash_create
+ * \name sll_api_hash_sha1
  * \group hash-api
  * \desc Docs!
- * \arg O
- * \ret I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg S
+ * \ret A
  */
-__API_FUNC_DECL(hash_create);
+__API_FUNC_DECL(hash_sha1);
 
 
 

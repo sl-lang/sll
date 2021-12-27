@@ -1384,9 +1384,13 @@ __SLL_EXTERNAL void sll_string_reverse(const sll_string_t* s,sll_string_t* o){
 
 
 __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_string_t* o){
-	a=(a<0?s->l:0)+(a%s->l);
-	b=(b<0?s->l:0)+(b%s->l);
-	if (!s->l||a==b||!c){
+	while (a<0){
+		a+=s->l;
+	}
+	while (b<0){
+		b+=s->l;
+	}
+	if (!s->l||a==b||!c||(a<=b&&a>=s->l)||(b<=a&&b>=s->l)){
 		SLL_INIT_STRING(o);
 		return;
 	}

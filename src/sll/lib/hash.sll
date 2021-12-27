@@ -1,9 +1,128 @@
-(# func_type)
+(# int_type func_type char_type string_type)
 (--- "types.sll")
 
-(= hash_f (... "sll:hash_create"))
+(= sha1_type (&:
+	string_type _bf
+	int_type _sz
+	int_type _a
+	int_type _b
+	int_type _c
+	int_type _d
+	int_type _e
+))
+
+(= sha1_init (,,,
+	(@@ (. sha1_type
+		""
+		0
+		0x67452301
+		0xefcdab89
+		0x98badcfe
+		0x10325476
+		0xc3d2e1f0
+	))
+))
+
+(= sha1_update (,,, dt sha
+	(= sha (:: sha sha1_type))
+	(? (=== dt nil)
+		(@@ (: sha))
+	)
+	(= dt (:: dt string_type))
+	(= len ($ dt))
+	(? (! len)
+		(@@ (: sha))
+	)
+	(= n_sz (+ sha$_sz len))
+	(= n_sz (& n_sz 0xffffffffffffffff))
+	(= dt (+ sha$_bf dt))
+	(= n_sz (& n_sz 0xffffffffffffffff))
+	(= len (+ len ($ sha$_bf)))
+	(= i (& len 0xffffffffffffffc0))
+	(? (! i) {
+		(= o (: sha))
+		(= o$_bf dt)
+		(= o$_sz n_sz)
+		(@@ o)
+	})
+	(= new_data (<- (... "sll:hash_sha1")
+		sha$_a
+		sha$_b
+		sha$_c
+		sha$_d
+		sha$_e
+		(: dt 0 i)
+	))
+	(@@ (. sha1_type
+		(: dt i len)
+		n_sz
+		(: new_data 0)
+		(: new_data 1)
+		(: new_data 2)
+		(: new_data 3)
+		(: new_data 4)
+	))
+))
+
+(= sha1_digest (,,, sha
+	(= sha (:: sha sha1_type))
+	(= extra sha$_bf)
+	(= len ($ extra))
+	(= padding (- (?: (< len 56) 55 119) len))
+	(= n (<< sha$_sz 3))
+	(= extra (+
+		extra
+		'\x80'
+		(* "\x00" padding)
+		(:: (>> n 56) char_type)
+		(:: (>> n 48) char_type)
+		(:: (>> n 40) char_type)
+		(:: (>> n 32) char_type)
+		(:: (>> n 24) char_type)
+		(:: (>> n 16) char_type)
+		(:: (>> n 8) char_type)
+		(:: n char_type)
+	))
+	(= sha_data (<- (... "sll:hash_sha1")
+		sha$_a
+		sha$_b
+		sha$_c
+		sha$_d
+		sha$_e
+		extra
+	))
+	(= o "")
+	(-> (= i 0) (< i 5) {
+		(= n (: sha_data i))
+		(= o (+ o
+			(:: (>> n 24) char_type)
+			(:: (>> n 16) char_type)
+			(:: (>> n 8) char_type)
+			(:: n char_type)
+		))
+		(++ i)
+	})
+	(@@ o)
+))
+
+(= hexdigest (,,, d
+	(= l ($ d))
+	(= o "")
+	(-> (= i 0) (< i l) {
+		(= c (: d i))
+		(= o (+ o
+			(:: (+ (>> c 4) (?: (> (>> c 4) 9) 87 48)) char_type)
+			(:: (+ (& c 15) (?: (> (& c 15) 9) 87 48)) char_type)
+		))
+		(++ i)
+	})
+	(@@ o)
+))
 
 (= hash (. (&:
-	(~ func_type) hash
-) hash_f))
+	(~ func_type) sha1_init
+	(~ func_type) sha1_update
+	(~ func_type) sha1_digest
+	(~ func_type) hexdigest
+) sha1_init sha1_update sha1_digest hexdigest))
 (## hash)

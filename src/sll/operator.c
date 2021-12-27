@@ -527,7 +527,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			case COMBINED_CAST_TYPE_IF:
 				return SLL_FROM_FLOAT((sll_float_t)(a->dt.i));
 			case COMBINED_CAST_TYPE_IC:
-				return SLL_FROM_CHAR(a->dt.c);
+				return SLL_FROM_CHAR((a->dt.i)&0xff);
 			case COMBINED_CAST_TYPE_IS:
 			case COMBINED_CAST_TYPE_FS:
 			case COMBINED_CAST_TYPE_MS:

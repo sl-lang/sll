@@ -60,7 +60,7 @@ sll_node_t* _acquire_next_node(sll_compilation_data_t* c_dt){
 
 
 sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t* a_dt,sll_instruction_index_t off){
-	sll_instruction_index_t cnt=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
+	sll_instruction_index_t cnt=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t)));
 	void* pg=a_dt->_s.s;
 	while (off>=cnt){
 		pg=*((void**)pg);

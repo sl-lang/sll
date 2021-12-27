@@ -310,22 +310,26 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_hash_create __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_hash_create sll_object_t* a
+#define __SLL_API_TYPE_sll_api_hash_sha1 void
+#define __SLL_API_ARGS_sll_api_hash_sha1 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_string_t* f,sll_array_t* out
 /**
- * \flags check_output func optimizable
- * \name sll_api_hash_create
+ * \flags func optimizable
+ * \name sll_api_hash_sha1
  * \group hash-api
  * \desc Docs!
- * \arg sll_object_t* a -> 
- * \ret sll_integer_t
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ * \arg sll_integer_t c -> 
+ * \arg sll_integer_t d -> 
+ * \arg sll_integer_t e -> 
+ * \arg sll_string_t* f -> 
  */
 /**
  * \flags check_output func optimizable
- * \name sll_api_hash_create_raw
+ * \name sll_api_hash_sha1_raw
  * \group raw-api
  * \subgroup raw-api-hash-api
- * \desc Wrapper function for :sll_api_hash_create:
+ * \desc Wrapper function for :sll_api_hash_sha1:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

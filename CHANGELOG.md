@@ -2,14 +2,22 @@
 
 ## [0.6.34] - Ongoing
 
+### Added
+
+- Implemented `hash.sll` and `hash$hexdigest` ([#23])
+- Implemented `sll_api_hash_sha1`, `hash$sha1_init`, `hash$sha1_update` and `hash$sha1_digest` ([#23] and [#164])
+
 ### Changed
 
 - File & JSON APIs now uses custom types instead of handles ([#162])
+- Fixed `sll_string_select`
+- Fixed multiple optimizer and assembly generator bugs
 - Repository file layout
 
 ### Removed
 
 - Handle API ([#162])
+- Old hash API
 - `SLL_FROM_FILE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
 - Unused memory API and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
@@ -1256,6 +1264,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#164]: https://github.com/sl-lang/sll/issues/164
 [#162]: https://github.com/sl-lang/sll/issues/162
 [#160]: https://github.com/sl-lang/sll/issues/160
 [#159]: https://github.com/sl-lang/sll/issues/159

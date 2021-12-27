@@ -11,6 +11,7 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <stdint.h>
+#include <stdio.h>
 
 
 
@@ -1969,7 +1970,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 			st[1]->dt.v=st[0]->dt.v;
 			SHIFT_UP(st);
 		}
-		else if (st[0]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP&&st[1]->t>=SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT&&st[1]->t<=SLL_ASSEMBLY_INSTRUCTION_TYPE_INV&&st[2]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD&&st[0]->dt.v==st[2]->dt.v){
+		else if (st[0]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP&&(st[1]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT||st[1]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL||st[1]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH||st[1]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_INV)&&st[2]->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD&&st[0]->dt.v==st[2]->dt.v){
 			st[0]->t=ASSEMBLY_INSTRUCTION_TYPE_NOP;
 			st[2]->t=st[1]->t|SLL_ASSEMBLY_INSTRUCTION_INPLACE;
 			st[1]->t=ASSEMBLY_INSTRUCTION_TYPE_NOP;
