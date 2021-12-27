@@ -23,7 +23,7 @@ jobs:
       - ubuntu-ext-release
       - windows-ext
       - windows-ext-release
-    if: always()&&!contains(needs.*.result,'failed')&&(fromJSON(needs.diff.outputs.data).ubuntu||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)&&github.event_name!='workflow_dispatch'
+    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).ubuntu||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)&&github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -128,7 +128,7 @@ jobs:
     needs:
       - diff
       - ubuntu
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).ext
+    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -144,7 +144,7 @@ jobs:
     needs:
       - diff
       - ubuntu-release
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).ext
+    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -170,7 +170,7 @@ jobs:
       - ubuntu-release
       - windows
       - windows-release
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
+    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -208,7 +208,7 @@ jobs:
     needs:
       - diff
       - web
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
+    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -269,7 +269,7 @@ jobs:
     needs:
       - diff
       - windows
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).ext
+    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -285,7 +285,7 @@ jobs:
     needs:
       - diff
       - windows-release
-    if: always()&&!contains(needs.*.result,'failed')&&fromJSON(needs.diff.outputs.data).ext
+    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
     runs-on: windows-latest
     steps:
       - name: Checkout
