@@ -5,12 +5,12 @@
 ### Added
 
 - Implemented `hash.sll` and `hash$hexdigest` ([#23])
-- Implemented `sll_api_hash_sha1`, `hash$sha1_init`, `hash$sha1_update` and `hash$sha1_digest` ([#23] and [#164])
+- Implemented `sll_api_hash_sha1`, `hash$SHA1_BLOCK_SIZE`, `hash$SHA1_DIGEST_SIZE`, `hash$sha1`, `hash$sha1_init`, `hash$sha1_update` and `hash$sha1_digest` ([#23] and [#164])
 
 ### Changed
 
 - File & JSON APIs now uses custom types instead of handles ([#162])
-- Fixed `sll_string_select`
+- Fixed `sll_string_duplicate` and `sll_string_select`
 - Fixed multiple optimizer and assembly generator bugs
 - Repository file layout
 

@@ -426,7 +426,6 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,s
 		n=-n;
 		r=1;
 	}
-	n*=s->l;
 	if (!n){
 		if (!e||!s->l){
 			SLL_INIT_STRING(o);
@@ -451,6 +450,7 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,s
 		o->c=(sll_string_length_t)(c^(c>>32));
 		return;
 	}
+	n*=s->l;
 	SLL_ASSERT(n<SLL_MAX_STRING_LENGTH);
 	o->l=((sll_string_length_t)n)+e;
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
@@ -485,12 +485,15 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,s
 	n+=e;
 	uint64_t c=0;
 	if (i<n){
-		const uint64_t* ap=(const uint64_t*)(o->v+8-(s->l&7));
+		const uint64_t* ap=(const uint64_t*)(o->v+(s->l&7?8-(s->l&7):0));
 		i>>=3;
 		for (sll_string_length_t j=0;j<i;j++){
 			c^=*(op+j);
 		}
-		n=((n+7)>>3)-1;
+		n=(n+7)>>3;
+		if (s->l&7){
+			n--;
+		}
 		sll_string_length_t j=0;
 		while (i<n){
 			*(op+i)=*(ap+j);

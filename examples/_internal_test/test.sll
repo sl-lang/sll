@@ -193,8 +193,8 @@
 (:> file$stdout "\n")
 
 (= h (<- hash$sha1_init))
-(= h (<- hash$sha1_update "abc" h))
-(= h (<- hash$sha1_update "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABC" h))
+(= h (<- hash$sha1_update h "abc"))
+(= h (<- hash$sha1_update h "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABC"))
 (:> (<- hash$hexdigest (<- hash$sha1_digest h)) "\n7c79894450f353c7108e70f45776ee6772947e0d\n")
 
 (? (! (!! FACTORIAL)) nil {

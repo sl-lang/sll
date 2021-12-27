@@ -11,6 +11,9 @@
 	int_type _e
 ))
 
+(= SHA1_BLOCK_SIZE 64)
+(= SHA1_DIGEST_SIZE 20)
+
 (= sha1_init (,,,
 	(@@ (. sha1_type
 		""
@@ -23,7 +26,7 @@
 	))
 ))
 
-(= sha1_update (,,, dt sha
+(= sha1_update (,,, sha dt
 	(= sha (:: sha sha1_type))
 	(? (=== dt nil)
 		(@@ (: sha))
@@ -105,6 +108,10 @@
 	(@@ o)
 ))
 
+(= sha1 (,,, dt
+	(@@ (<- sha1_digest (<- sha1_update (<- sha1_init) dt)))
+))
+
 (= hexdigest (,,, d
 	(= l ($ d))
 	(= o "")
@@ -120,9 +127,12 @@
 ))
 
 (= hash (. (&:
+	(~ int_type) SHA1_BLOCK_SIZE
+	(~ int_type) SHA1_DIGEST_SIZE
+	(~ func_type) sha1
 	(~ func_type) sha1_init
 	(~ func_type) sha1_update
 	(~ func_type) sha1_digest
 	(~ func_type) hexdigest
-) sha1_init sha1_update sha1_digest hexdigest))
+) SHA1_BLOCK_SIZE SHA1_DIGEST_SIZE sha1 sha1_init sha1_update sha1_digest hexdigest))
 (## hash)

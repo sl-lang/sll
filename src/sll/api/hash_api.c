@@ -16,25 +16,23 @@
 
 
 #define SHA1_STAGE(t,i) \
-	do{ \
-		if (i>3){ \
-			w[i*5]=ROTATE_BITS(w[i*5-3]^w[i*5-8]^w[i*5-14]^w[i*5-16],1); \
-			w[i*5+1]=ROTATE_BITS(w[i*5-2]^w[i*5-7]^w[i*5-13]^w[i*5-15],1); \
-			w[i*5+2]=ROTATE_BITS(w[i*5-1]^w[i*5-6]^w[i*5-12]^w[i*5-14],1); \
-			w[i*5+3]=ROTATE_BITS(w[i*5]^w[i*5-5]^w[i*5-11]^w[i*5-13],1); \
-			w[i*5+4]=ROTATE_BITS(w[i*5+1]^w[i*5-4]^w[i*5-10]^w[i*5-12],1); \
-		} \
-		de=ROTATE_BITS(da,5)+SHA1_STAGE##t(db,dc,dd)+de+w[i*5]; \
-		db=ROTATE_BITS(db,30); \
-		dd=ROTATE_BITS(de,5)+SHA1_STAGE##t(da,db,dc)+dd+w[i*5+1]; \
-		da=ROTATE_BITS(da,30); \
-		dc=ROTATE_BITS(dd,5)+SHA1_STAGE##t(de,da,db)+dc+w[i*5+2]; \
-		de=ROTATE_BITS(de,30); \
-		db=ROTATE_BITS(dc,5)+SHA1_STAGE##t(dd,de,da)+db+w[i*5+3]; \
-		dd=ROTATE_BITS(dd,30); \
-		da=ROTATE_BITS(db,5)+SHA1_STAGE##t(dc,dd,de)+da+w[i*5+4]; \
-		dc=ROTATE_BITS(dc,30); \
-	} while (0)
+	if (i>3){ \
+		w[i*5]=ROTATE_BITS(w[i*5-3]^w[i*5-8]^w[i*5-14]^w[i*5-16],1); \
+		w[i*5+1]=ROTATE_BITS(w[i*5-2]^w[i*5-7]^w[i*5-13]^w[i*5-15],1); \
+		w[i*5+2]=ROTATE_BITS(w[i*5-1]^w[i*5-6]^w[i*5-12]^w[i*5-14],1); \
+		w[i*5+3]=ROTATE_BITS(w[i*5]^w[i*5-5]^w[i*5-11]^w[i*5-13],1); \
+		w[i*5+4]=ROTATE_BITS(w[i*5+1]^w[i*5-4]^w[i*5-10]^w[i*5-12],1); \
+	} \
+	de=ROTATE_BITS(da,5)+SHA1_STAGE##t(db,dc,dd)+de+w[i*5]; \
+	db=ROTATE_BITS(db,30); \
+	dd=ROTATE_BITS(de,5)+SHA1_STAGE##t(da,db,dc)+dd+w[i*5+1]; \
+	da=ROTATE_BITS(da,30); \
+	dc=ROTATE_BITS(dd,5)+SHA1_STAGE##t(de,da,db)+dc+w[i*5+2]; \
+	de=ROTATE_BITS(de,30); \
+	db=ROTATE_BITS(dc,5)+SHA1_STAGE##t(dd,de,da)+db+w[i*5+3]; \
+	dd=ROTATE_BITS(dd,30); \
+	da=ROTATE_BITS(db,5)+SHA1_STAGE##t(dc,dd,de)+da+w[i*5+4]; \
+	dc=ROTATE_BITS(dc,30);
 
 
 
@@ -48,8 +46,7 @@ __API_FUNC(hash_sha1){
 	uint32_t w[80];
 	const uint32_t* ptr=(const uint32_t*)(f->v);
 	for (sll_string_length_t i=0;i<(f->l>>6);i++){
-		uint8_t j=0;
-		for (;j<16;j++){
+		for (uint8_t j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
 			ptr++;
 		}
