@@ -1,9 +1,19 @@
 (# func_type)
 (--- "types.sll")
 
-(= sort_f (... "sll:sort_sort"))
 
-(= sort (. (&:
+
+(= sort_module_type (&:
 	(~ func_type) sort
-) sort_f))
+))
+
+
+
+(= quicksort (... "sll:sort_quicksort"))
+
+
+
+(= sort (. sort_module_type
+	quicksort
+))
 (## sort)

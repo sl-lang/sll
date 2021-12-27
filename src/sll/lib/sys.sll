@@ -1,5 +1,7 @@
-(# int_type func_type string_type path)
+(# int_type func_type string_type array_type path)
 (--- "types.sll" "path.sll")
+
+
 
 (= version_type (&:
 	(~ int_type) major
@@ -7,29 +9,45 @@
 	(~ int_type) patch
 ))
 
-(= version (<- (... "sll:sys_get_version") version_type))
+(= sys_module_type (&:
+	(~ array_type) ARGV
+	(~ string_type) EXECUTABLE
+	(~ string_type) LIBRARY
+	(~ string_type) LIBRARY_EXTENSION
+	(~ string_type) LIBRARY_PATH
+	(~ string_type) PLATFORM
+	(~ version_type) VERSION
+	(~ func_type) load_library
+))
 
-(= platform (<- (... "sll:sys_get_platform")))
 
-(= argc (<- (... "sll:sys_arg_get_count")))
-(= argv (... "sll:sys_arg_get"))
 
-(= executable (<- (... "sll:sys_get_executable")))
-(= library (<- (... "sll:sys_get_library")))
+(= ARGV (<- (... "sll:sys_get_args")))
+
+(= EXECUTABLE (<- (... "sll:sys_get_executable")))
+
+(= PLATFORM (<- (... "sll:sys_get_platform")))
+
+(= LIBRARY (<- (... "sll:sys_get_library")))
+(= LIBRARY_PATH (+ (<- path$absolute (+ (: (<- path$split LIBRARY) 0) path$SEPARATOR "sys_lib")) path$SEPARATOR))
+(= LIBRARY_EXTENSION (?: (=== PLATFORM "windows") "dll" "so"))
+
+(= VERSION (<- (... "sll:sys_get_version") version_type))
+
+
 
 (= load_library (... "sll:sys_load_library"))
-(= library_path (+ (<- path$absolute (+ (: (<- path$split library) 0) path$separator "sys_lib")) path$separator))
-(= library_extension (?: (=== platform "windows") "dll" "so"))
 
-(= sys (. (&:
-	(~ version_type) version
-	(~ string_type) platform
-	(~ int_type) argc
-	(~ func_type) argv
-	(~ string_type) executable
-	(~ string_type) library
-	(~ func_type) load_library
-	(~ string_type) library_path
-	(~ string_type) library_extension
-) version platform argc argv executable library load_library library_path library_extension))
+
+
+(= sys (. sys_module_type
+	ARGV
+	EXECUTABLE
+	LIBRARY
+	LIBRARY_EXTENSION
+	LIBRARY_PATH
+	PLATFORM
+	VERSION
+	load_library
+))
 (## sys)

@@ -1,16 +1,29 @@
 (# func_type)
 (--- "types.sll")
 
+
+
+(= array_module_type (&:
+	(~ func_type) count
+	(~ func_type) create
+	(~ func_type) replace
+	(~ func_type) reverse
+))
+
+
+
+(= create (... "sll:array_create"))
+
 (= count (... "sll:array_count"))
 (= replace (... "sll:array_replace"))
 (= reverse (... "sll:array_reverse"))
 
-(= create (... "sll:array_create"))
 
-(= array (. (&:
-	(~ func_type) count
-	(~ func_type) create
-	(~ func_type) reverse
-	(~ func_type) replace
-) count create reverse replace))
+
+(= array (. array_module_type
+	count
+	create
+	replace
+	reverse
+))
 (## array)

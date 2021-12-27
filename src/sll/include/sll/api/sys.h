@@ -21,10 +21,10 @@
  * \name sll_set_argument
  * \group sys-api
  * \desc Docs!
- * \arg sll_integer_t i
+ * \arg sll_array_length_t i
  * \arg const sll_char_t* a
  */
-__SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a);
+__SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a);
 
 
 
@@ -33,32 +33,20 @@ __SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a);
  * \name sll_set_argument_count
  * \group sys-api
  * \desc Docs!
- * \arg sll_integer_t ac
+ * \arg sll_array_length_t ac
  */
-__SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac);
+__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
 
 
 
 /**
  * \flags api func optimizable
- * \name sll_api_sys_arg_get
+ * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
- * \arg I
- * \ret S
+ * \ret A
  */
-__API_FUNC_DECL(sys_arg_get);
-
-
-
-/**
- * \flags api func optimizable
- * \name sll_api_sys_arg_get_count
- * \group sys-api
- * \desc Docs!
- * \ret I
- */
-__API_FUNC_DECL(sys_arg_get_count);
+__API_FUNC_DECL(sys_get_args);
 
 
 

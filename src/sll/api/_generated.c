@@ -1122,8 +1122,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_start_raw(sll_ob
 
 
 
-__SLL_API_TYPE_sll_api_sort_sort sll_api_sort_sort(__SLL_API_ARGS_sll_api_sort_sort);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_sort_raw(sll_object_t*const* al,sll_arg_count_t all){
+__SLL_API_TYPE_sll_api_sort_quicksort sll_api_sort_quicksort(__SLL_API_ARGS_sll_api_sort_quicksort);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
 	if (all>0){
 		a=*(al+0);
@@ -1152,7 +1152,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_sort_raw(sll_object
 		}
 	}
 	sll_array_t out;
-	sll_api_sort_sort(&(a->dt.a),(b?b->dt.i:0),&out);
+	sll_api_sort_quicksort(&(a->dt.a),(b?b->dt.i:0),&out);
 	if (b){
 		SLL_RELEASE(b);
 	}
@@ -1961,36 +1961,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_upper_case_raw
 
 
 
-__SLL_API_TYPE_sll_api_sys_arg_get sll_api_sys_arg_get(__SLL_API_ARGS_sll_api_sys_arg_get);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_arg_get_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_object_t* a=NULL;
-	if (all>0){
-		a=*(al+0);
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-			SLL_ACQUIRE(a);
-		}
-		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
-		}
-	}
-	else{
-		a=SLL_ACQUIRE_STATIC_INT(0);
-	}
-	sll_string_t out;
-	sll_api_sys_arg_get(a->dt.i,&out);
-	SLL_RELEASE(a);
+__SLL_API_TYPE_sll_api_sys_get_args sll_api_sys_get_args(__SLL_API_ARGS_sll_api_sys_get_args);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_args_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_array_t out;
+	sll_api_sys_get_args(&out);
 	sll_object_t* out_o=SLL_CREATE();
-	out_o->t=SLL_OBJECT_TYPE_STRING;
-	out_o->dt.s=out;
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
 	return out_o;
-}
-
-
-
-__SLL_API_TYPE_sll_api_sys_arg_get_count sll_api_sys_arg_get_count(__SLL_API_ARGS_sll_api_sys_arg_get_count);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_arg_get_count_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_integer_t out=sll_api_sys_arg_get_count();
-	return SLL_FROM_INT(out);
 }
 
 
@@ -2174,7 +2152,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:process_execute_shell",sll_api_process_execute_shell_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:process_get_pid",sll_api_process_get_pid_raw,0},
 	{"sll:process_start",sll_api_process_start_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
-	{"sll:sort_sort",sll_api_sort_sort_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:sort_quicksort",sll_api_sort_quicksort_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_convert",sll_api_string_convert_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_count",sll_api_string_count_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_count_left",sll_api_string_count_left_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
@@ -2196,8 +2174,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:string_to_lower_case",sll_api_string_to_lower_case_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_to_title_case",sll_api_string_to_title_case_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_to_upper_case",sll_api_string_to_upper_case_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
-	{"sll:sys_arg_get",sll_api_sys_arg_get_raw,0},
-	{"sll:sys_arg_get_count",sll_api_sys_arg_get_count_raw,0},
+	{"sll:sys_get_args",sll_api_sys_get_args_raw,0},
 	{"sll:sys_get_executable",sll_api_sys_get_executable_raw,0},
 	{"sll:sys_get_library",sll_api_sys_get_library_raw,0},
 	{"sll:sys_get_platform",sll_api_sys_get_platform_raw,0},
@@ -2211,5 +2188,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=68;
+const sll_function_index_t _ifunc_size=67;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

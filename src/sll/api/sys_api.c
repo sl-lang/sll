@@ -17,7 +17,7 @@
 
 
 
-static sll_integer_t _sys_argc=0;
+static sll_array_length_t _sys_argc=0;
 static sll_string_t* _sys_argv=NULL;
 static sll_string_t _sys_e=SLL_INIT_STRING_STRUCT;
 static sll_string_t _sys_l=SLL_INIT_STRING_STRUCT;
@@ -30,7 +30,7 @@ static char _sys_end=0;
 
 static void _sys_free_data(void){
 	if (_sys_argv){
-		for (sll_integer_t i=0;i<_sys_argc;i++){
+		for (sll_array_length_t i=0;i<_sys_argc;i++){
 			sll_free_string(_sys_argv+i);
 		}
 		sll_deallocate(_sys_argv);
@@ -68,7 +68,7 @@ static void _sys_free_data(void){
 
 
 
-__SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a){
+__SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a){
 	if (i<0||i>=_sys_argc){
 		return;
 	}
@@ -78,10 +78,10 @@ __SLL_EXTERNAL void sll_set_argument(sll_integer_t i,const sll_char_t* a){
 
 
 
-__SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac){
+__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 	SLL_ASSERT(ac>0);
 	if (_sys_argv){
-		for (sll_integer_t i=0;i<_sys_argc;i++){
+		for (sll_array_length_t i=0;i<_sys_argc;i++){
 			sll_free_string(_sys_argv+i);
 		}
 		sll_deallocate(_sys_argv);
@@ -92,26 +92,23 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_integer_t ac){
 	}
 	_sys_argc=ac;
 	_sys_argv=sll_allocate(ac*sizeof(sll_string_t));
-	for (sll_integer_t i=0;i<ac;i++){
+	for (sll_array_length_t i=0;i<ac;i++){
 		SLL_INIT_STRING(_sys_argv+i);
 	}
 }
 
 
 
-__API_FUNC(sys_arg_get){
-	if (a<0||a>=_sys_argc){
-		SLL_INIT_STRING(out);
+__API_FUNC(sys_get_args){
+	if (!sll_array_create(_sys_argc,out)){
+		SLL_UNIMPLEMENTED();
 	}
-	else{
-		sll_string_clone(_sys_argv+a,out);
+	for (sll_array_length_t i=0;i<_sys_argc;i++){
+		sll_object_t* n=SLL_CREATE();
+		n->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_clone(_sys_argv+i,&(n->dt.s));
+		out->v[i]=n;
 	}
-}
-
-
-
-__API_FUNC(sys_arg_get_count){
-	return _sys_argc;
 }
 
 

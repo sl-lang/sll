@@ -1,7 +1,27 @@
-(# int_type func_type)
+(# func_type char_type)
 (--- "types.sll")
 
-(= separator (?: (=== (<- (... "sll:sys_get_platform")) "windows") '\\' '/'))
+
+
+(= path_module_type (&:
+	(~ char_type) SEPARATOR
+	(~ func_type) absolute
+	(~ func_type) exists
+	(~ func_type) get_cwd
+	(~ func_type) is_dir
+	(~ func_type) list_dir
+	(~ func_type) recursive_list_dir
+	(~ func_type) relative
+	(~ func_type) set_cwd
+	(~ func_type) size
+	(~ func_type) split
+))
+
+
+
+(= SEPARATOR (?: (=== (<- (... "sll:sys_get_platform")) "windows") '\\' '/'))
+
+
 
 (= absolute (... "sll:path_absolute"))
 (= exists (... "sll:path_exists"))
@@ -14,17 +34,19 @@
 (= size (... "sll:path_size"))
 (= split (... "sll:path_split"))
 
-(= path (. (&:
-	(~ char_type) separator
-	(~ func_type) absolute
-	(~ func_type) exists
-	(~ func_type) get_cwd
-	(~ func_type) is_dir
-	(~ func_type) list_dir
-	(~ func_type) recursive_list_dir
-	(~ func_type) relative
-	(~ func_type) set_cwd
-	(~ func_type) size
-	(~ func_type) split
-) separator absolute exists get_cwd is_dir list_dir recursive_list_dir relative set_cwd size split))
+
+
+(= path (. path_module_type
+	SEPARATOR
+	absolute
+	exists
+	get_cwd
+	is_dir
+	list_dir
+	recursive_list_dir
+	relative
+	set_cwd
+	size
+	split
+))
 (## path)

@@ -871,11 +871,11 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_sort_sort void
-#define __SLL_API_ARGS_sll_api_sort_sort sll_array_t* a,sll_integer_t b,sll_array_t* out
+#define __SLL_API_TYPE_sll_api_sort_quicksort void
+#define __SLL_API_ARGS_sll_api_sort_quicksort sll_array_t* a,sll_integer_t b,sll_array_t* out
 /**
  * \flags func optimizable
- * \name sll_api_sort_sort
+ * \name sll_api_sort_quicksort
  * \group sort-api
  * \desc Docs!
  * \arg sll_array_t* a -> 
@@ -883,10 +883,10 @@
  */
 /**
  * \flags check_output func optimizable
- * \name sll_api_sort_sort_raw
+ * \name sll_api_sort_quicksort_raw
  * \group raw-api
  * \subgroup raw-api-sort-api
- * \desc Wrapper function for :sll_api_sort_sort:
+ * \desc Wrapper function for :sll_api_sort_quicksort:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
@@ -1399,21 +1399,20 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_sys_arg_get void
-#define __SLL_API_ARGS_sll_api_sys_arg_get sll_integer_t a,sll_string_t* out
+#define __SLL_API_TYPE_sll_api_sys_get_args void
+#define __SLL_API_ARGS_sll_api_sys_get_args sll_array_t* out
 /**
  * \flags func optimizable
- * \name sll_api_sys_arg_get
+ * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
- * \arg sll_integer_t a -> 
  */
 /**
  * \flags check_output func optimizable
- * \name sll_api_sys_arg_get_raw
+ * \name sll_api_sys_get_args_raw
  * \group raw-api
  * \subgroup raw-api-sys-api
- * \desc Wrapper function for :sll_api_sys_arg_get:
+ * \desc Wrapper function for :sll_api_sys_get_args:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
@@ -1424,28 +1423,6 @@
  * \group raw-api
  * \subgroup raw-api-sys-api
  * \desc Docs!
- */
-
-
-
-#define __SLL_API_TYPE_sll_api_sys_arg_get_count __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_sys_arg_get_count void
-/**
- * \flags check_output func optimizable
- * \name sll_api_sys_arg_get_count
- * \group sys-api
- * \desc Docs!
- * \ret sll_integer_t
- */
-/**
- * \flags check_output func optimizable
- * \name sll_api_sys_arg_get_count_raw
- * \group raw-api
- * \subgroup raw-api-sys-api
- * \desc Wrapper function for :sll_api_sys_arg_get_count:
- * \arg sll_object_t*const* al -> Arguments
- * \arg sll_arg_count_t all -> Argument count
- * \ret sll_object_t* -> The return value of the function
  */
 
 

@@ -33,7 +33,7 @@
 (:> "Call: " (<- func 10 2) "\n")
 (:> "Current Time (Internal Call): " (<- time$time) "\n")
 (? true nil 2 (:> "Dead Code") (@@@ 128 "False Exit"))
-(= fp (+ "build" path$separator "hello.txt"))
+(= fp (+ "build" path$SEPARATOR "hello.txt"))
 (= f (<- file$open fp "wb"))
 (? f {
 	(<- file$write f "Hello!\n")
@@ -44,9 +44,11 @@
 	(:> (<- string$format "Unable to open file '%s'!\n" fp))
 } )
 (:> "File size: " (<- path$size "build/hello.txt") "\n")
-(<- file$write file$stdout "Argument Count: " sys$argc "\n")
-(-> (= i 0) (< i sys$argc) (:> "[" i "] = " (<- sys$argv i) "\n") (= i (+ i 1)))
-(:> "Platform: " sys$platform "\n")
+(<- file$write file$stdout "Argument Count: " ($ sys$ARGV) "\n")
+(-> (= i 0) (< i ($ sys$ARGV))
+	(:> "[" i "] = " (: sys$ARGV i) "\n") (= i (+ i 1))
+)
+(:> "Platform: " sys$PLATFORM "\n")
 (= st (<- time$time))
 (= tm (<- time$sleep 0.1))
 (= et (<- time$time))
@@ -184,18 +186,18 @@
 (= dt (<- date$from_time tm))
 (:> dt "\n" (<- date$to_time dt) "\n" (- (<- date$to_time dt) tm) "\n")
 
-(:> "Current PID: " process$pid "\n")
+(:> "Current PID: " process$PID "\n")
 (<- process$shell "echo Shell!")
-(:> (<- process$start [sys$executable "-V"]) "\n")
+(:> (<- process$start [sys$EXECUTABLE "-V"]) "\n")
 
-(:> sys$library "\n")
+(:> sys$LIBRARY "\n")
 
 (:> file$stdout "\n")
 
-(= h (<- hash$sha1_init))
-(= h (<- hash$sha1_update h "abc"))
-(= h (<- hash$sha1_update h "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABC"))
-(:> (<- hash$hexdigest (<- hash$sha1_digest h)) "\n7c79894450f353c7108e70f45776ee6772947e0d\n")
+(= h (<- hash$sha1$init))
+(= h (<- hash$sha1$update h "abc"))
+(= h (<- hash$sha1$update h "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABC"))
+(:> (<- hash$hexdigest (<- hash$sha1$digest h)) "\n7c79894450f353c7108e70f45776ee6772947e0d\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

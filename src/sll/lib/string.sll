@@ -1,6 +1,34 @@
 (# func_type)
 (--- "types.sll")
 
+
+
+(= string_module_type (&:
+	(~ func_type) count
+	(~ func_type) count_left
+	(~ func_type) count_right
+	(~ func_type) ends
+	(~ func_type) flip_case
+	(~ func_type) format
+	(~ func_type) index
+	(~ func_type) index_list
+	(~ func_type) index_reverse
+	(~ func_type) index_reverse_list
+	(~ func_type) join
+	(~ func_type) lower_case
+	(~ func_type) pad_left
+	(~ func_type) pad_right
+	(~ func_type) replace
+	(~ func_type) reverse
+	(~ func_type) split
+	(~ func_type) starts
+	(~ func_type) str
+	(~ func_type) title_case
+	(~ func_type) upper_case
+))
+
+
+
 (= str (... "sll:string_convert"))
 
 (= split (... "sll:string_split"))
@@ -31,27 +59,29 @@
 (= count_left (... "sll:string_count_left"))
 (= count_right (... "sll:string_count_right"))
 
-(= string (. (&:
-	(~ func_type) str
-	(~ func_type) replace
-	(~ func_type) split
-	(~ func_type) flip_case
-	(~ func_type) lower_case
-	(~ func_type) title_case
-	(~ func_type) upper_case
-	(~ func_type) format
-	(~ func_type) reverse
-	(~ func_type) pad_left
-	(~ func_type) pad_right
-	(~ func_type) starts
-	(~ func_type) ends
-	(~ func_type) index
-	(~ func_type) index_list
-	(~ func_type) index_reverse
-	(~ func_type) index_reverse_list
-	(~ func_type) join
-	(~ func_type) count
-	(~ func_type) count_left
-	(~ func_type) count_right
-) str replace split flip_case lower_case title_case upper_case format reverse pad_left pad_right starts ends index index_list index_reverse index_reverse_list join count count_left count_right))
+
+
+(= string (. string_module_type
+	count
+	count_left
+	count_right
+	ends
+	flip_case
+	format
+	index
+	index_list
+	index_reverse
+	index_reverse_list
+	join
+	lower_case
+	pad_left
+	pad_right
+	replace
+	reverse
+	split
+	starts
+	str
+	title_case
+	upper_case
+))
 (## string)

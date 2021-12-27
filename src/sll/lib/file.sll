@@ -1,15 +1,33 @@
 (# type_type func_type string_type string)
 (--- "types.sll" "string.sll")
 
+
+
 (= file_type (&:
 	(~ string_type) name
 	(~ int_type) flags
 	(~ int_type) _handle
 ))
 
+(= file_module_type (&:
+	(~ type_type) file_type
+	(~ file_type) stdin
+	(~ file_type) stdout
+	(~ file_type) stderr
+	(~ func_type) close
+	(~ func_type) flush
+	(~ func_type) open
+	(~ func_type) read
+	(~ func_type) write
+))
+
+
+
 (= FLAG_READ 1)
 (= FLAG_WRITE 2)
 (= FLAG_APPEND 4)
+
+
 
 (= stdin (. file_type
 	"<stdin>"
@@ -26,6 +44,8 @@
 	FLAG_WRITE
 	(<- (... "sll:file_std_handle") 2)
 ))
+
+
 
 (= close (,,, f
 	(? (=== f nil) (@@ nil))
@@ -79,15 +99,17 @@
 	(@@ (<- (... "sll:file_write") f$_handle (:: dt string_type)))
 ))
 
-(= file (. (&:
-	(~ type_type) file_type
-	(~ func_type) close
-	(~ func_type) flush
-	(~ func_type) open
-	(~ func_type) read
-	(~ func_type) write
-	(~ file_type) stdin
-	(~ file_type) stdout
-	(~ file_type) stderr
-) file_type close flush open read write stdin stdout stderr))
+
+
+(= file (. file_module_type
+	file_type
+	stdin
+	stdout
+	stderr
+	close
+	flush
+	open
+	read
+	write
+))
 (## file)

@@ -16,7 +16,7 @@
 
 
 #define SHA1_STAGE(t,i) \
-	if (i>3){ \
+	if (t){ \
 		w[i*5]=ROTATE_BITS(w[i*5-3]^w[i*5-8]^w[i*5-14]^w[i*5-16],1); \
 		w[i*5+1]=ROTATE_BITS(w[i*5-2]^w[i*5-7]^w[i*5-13]^w[i*5-15],1); \
 		w[i*5+2]=ROTATE_BITS(w[i*5-1]^w[i*5-6]^w[i*5-12]^w[i*5-14],1); \

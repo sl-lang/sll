@@ -27,14 +27,14 @@ __SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sl
 
 /**
  * \flags api compilation_call func optimizable
- * \name sll_api_sort_sort
+ * \name sll_api_sort_quicksort
  * \group sort-api
  * \desc Docs!
  * \arg A
  * \arg I?
  * \ret A
  */
-__API_FUNC_DECL(sort_sort);
+__API_FUNC_DECL(sort_quicksort);
 
 
 

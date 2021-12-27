@@ -5,14 +5,17 @@
 ### Added
 
 - Implemented `hash.sll` and `hash$hexdigest` ([#23])
-- Implemented `sll_api_hash_sha1`, `hash$SHA1_BLOCK_SIZE`, `hash$SHA1_DIGEST_SIZE`, `hash$sha1`, `hash$sha1_init`, `hash$sha1_update` and `hash$sha1_digest` ([#23] and [#164])
+- Implemented `sll_api_hash_sha1`, `hash$sha1$BLOCK_SIZE`, `hash$sha1$DIGEST_SIZE`, `hash$sha1$init`, `hash$sha1$update`, `hash$sha1$digest` and `hash$sha1$process` ([#23] and [#164])
 
 ### Changed
 
 - File & JSON APIs now uses custom types instead of handles ([#162])
 - Fixed `sll_string_duplicate` and `sll_string_select`
 - Fixed multiple optimizer and assembly generator bugs
+- Renamed `sll_api_sort_sort` to `sll_api_sort_quicksort`
+- Renamed `sll_api_sys_arg_get` to `sll_api_sys_get_args`
 - Repository file layout
+- `sys$argv` is now an array insetad of a function
 
 ### Removed
 
@@ -20,6 +23,7 @@
 - Old hash API
 - `SLL_FROM_FILE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
+- `sys_arg_get_count` and `sys$argc`
 - Unused memory API and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 
 ## [0.6.33] - 2021-12-25

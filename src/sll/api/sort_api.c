@@ -34,7 +34,7 @@ __SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sl
 
 
 
-__API_FUNC(sort_sort){
+__API_FUNC(sort_quicksort){
 	if (!a->l){
 		SLL_INIT_ARRAY(out);
 		return;

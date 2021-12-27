@@ -1,6 +1,8 @@
 (# int_type func_type type_type float_type array_type map_type time)
 (--- "types.sll" "time.sll")
 
+
+
 (= time_zone_type (&:
 	float_type time_offset
 	string_type name
@@ -17,10 +19,26 @@
 	time_zone_type time_zone
 ))
 
-(= utc (. time_zone_type 0 "UTC"))
+(= date_module_type (&:
+	(~ type_type) time_zone_type
+	(~ type_type) date_type
+	(~ array_type) DAYS
+	(~ array_type) MONTHS
+	(~ map_type) TIME_ZONE_NAMES
+	(~ time_zone_type) UTC_TIME_ZONE
+	(~ func_type) current
+	(~ func_type) from_time
+	(~ func_type) to_time
+))
+
+
+
+(= UTC_TIME_ZONE (. time_zone_type 0 "UTC"))
 
 (= DAYS ["Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday"])
+
 (= MONTHS ["January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December"])
+
 (= TIME_ZONE_NAMES <
 	"Australian Central Daylight Saving Time" (. time_zone_type 10.5 "ACDT")
 	"Australian Central Standard Time" (. time_zone_type 9.5 "ACST")
@@ -189,7 +207,7 @@
 	"Tuvalu Time" (. time_zone_type 12 "TVT")
 	"Ulaanbaatar Summer Time" (. time_zone_type 9 "ULAST")
 	"Ulaanbaatar Standard Time" (. time_zone_type 8 "ULAT")
-	"Coordinated Universal Time" utc
+	"Coordinated Universal Time" UTC_TIME_ZONE
 	"Uruguay Summer Time" (. time_zone_type -2 "UYST")
 	"Uruguay Standard Time" (. time_zone_type -3 "UYT")
 	"Uzbekistan Time" (. time_zone_type 5 "UZT")
@@ -211,8 +229,10 @@
 	"Yekaterinburg Time" (. time_zone_type 5 "YEKT")
 >)
 
+
+
 (= from_time (,,, tm tz
-	(= tz (?: tz (:: tz date_type) utc))
+	(= tz (?: tz (:: tz date_type) UTC_TIME_ZONE))
 	(= dt (<- (... "sll:date_split") (+ (:: tm float_type) (* tz$time_offset 3600))))
 	(@@ (. date_type
 		(: dt 0)
@@ -227,7 +247,7 @@
 ))
 
 (= current (,,,
-	(@@ (<- from_time (<- time$time) utc)))
+	(@@ (<- from_time (<- time$time) UTC_TIME_ZONE)))
 )
 
 (= to_time (,,, dt
@@ -242,15 +262,17 @@
 	) (* dt$time_zone$time_offset 3600)))
 ))
 
-(= date (. (&:
-	(~ type_type) time_zone_type
-	(~ type_type) date_type
-	(~ array_type) DAYS
-	(~ array_type) MONTHS
-	(~ map_type) TIME_ZONE_NAMES
-	(~ func_type) current
-	(~ func_type) from_time
-	(~ func_type) to_time
-	(~ time_zone_type) utc
-) time_zone_type date_type DAYS MONTHS TIME_ZONE_NAMES current from_time to_time utc))
+
+
+(= date (. date_module_type
+	time_zone_type
+	date_type
+	DAYS
+	MONTHS
+	TIME_ZONE_NAMES
+	UTC_TIME_ZONE
+	current
+	from_time
+	to_time
+))
 (## date)
