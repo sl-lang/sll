@@ -69,9 +69,7 @@
 		(@@ (: md5))
 	)
 	(= n_sz (+ md5$_sz len))
-	(= n_sz (& n_sz 0xffffffffffffffff))
 	(= dt (+ md5$_bf dt))
-	(= n_sz (& n_sz 0xffffffffffffffff))
 	(= len (+ len ($ md5$_bf)))
 	(= i (& len 0xffffffffffffffc0))
 	(? (! i) {
@@ -166,9 +164,7 @@
 		(@@ (: sha1))
 	)
 	(= n_sz (+ sha1$_sz len))
-	(= n_sz (& n_sz 0xffffffffffffffff))
 	(= dt (+ sha1$_bf dt))
-	(= n_sz (& n_sz 0xffffffffffffffff))
 	(= len (+ len ($ sha1$_bf)))
 	(= i (& len 0xffffffffffffffc0))
 	(? (! i) {

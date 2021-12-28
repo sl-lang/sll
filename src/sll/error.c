@@ -136,15 +136,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 		case SLL_ERROR_UNEXPECTED_CHARACTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unexpected Character: '%c'\n"),t);
 			return;
-		case SLL_ERROR_TOO_MANY_ARGUMENTS:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Too Many Arguments\n"));
-			return;
-		case SLL_ERROR_ARRAY_TOO_LONG:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Array Too Long\n"));
-			return;
-		case SLL_ERROR_MAP_TOO_LONG:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Map Too Long\n"));
-			return;
 		case SLL_ERROR_UNKNOWN_IDENTIFIER:
 			*sp=0;
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Identifier '%s'\n"),sym);
