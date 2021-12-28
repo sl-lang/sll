@@ -310,6 +310,39 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_hash_md5 void
+#define __SLL_API_ARGS_sll_api_hash_md5 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_string_t* e,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_hash_md5
+ * \group hash-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ * \arg sll_integer_t c -> 
+ * \arg sll_integer_t d -> 
+ * \arg sll_string_t* e -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_hash_md5_raw
+ * \group raw-api
+ * \subgroup raw-api-hash-api
+ * \desc Wrapper function for :sll_api_hash_md5:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Hash
+ * \group raw-api
+ * \subgroup raw-api-hash-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_hash_sha1 void
 #define __SLL_API_ARGS_sll_api_hash_sha1 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_string_t* f,sll_array_t* out
 /**
@@ -333,13 +366,6 @@
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
- */
-/**
- * \flags subgroup
- * \name Hash
- * \group raw-api
- * \subgroup raw-api-hash-api
- * \desc Docs!
  */
 
 

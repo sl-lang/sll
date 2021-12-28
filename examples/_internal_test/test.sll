@@ -199,6 +199,11 @@
 (= h (<- hash$sha1$update h "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABC"))
 (:> (<- hash$hexdigest (<- hash$sha1$digest h)) "\n7c79894450f353c7108e70f45776ee6772947e0d\n")
 
+(= h (<- hash$md5$init))
+(= h (<- hash$md5$update h "abc"))
+(= h (<- hash$md5$update h "defg"))
+(:> (<- hash$hexdigest (<- hash$md5$digest h)) "\n7ac66c0f148de9519b8bd264312c4d64\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

@@ -3,6 +3,15 @@
 
 
 
+(= md5_type (&:
+	string_type _bf
+	int_type _sz
+	int_type _a
+	int_type _b
+	int_type _c
+	int_type _d
+))
+
 (= sha1_type (&:
 	string_type _bf
 	int_type _sz
@@ -23,14 +32,114 @@
 ))
 
 (= hash_module_type (&:
+	(~ hash_type) md5
 	(~ hash_type) sha1
 	(~ func_type) hexdigest
 ))
 
 
 
+(= MD5_BLOCK_SIZE 64)
+(= MD5_DIGEST_SIZE 16)
+
 (= SHA1_BLOCK_SIZE 64)
 (= SHA1_DIGEST_SIZE 20)
+
+
+
+(= md5_init (,,,
+	(@@ (. md5_type
+		""
+		0
+		0x67452301
+		0xefcdab89
+		0x98badcfe
+		0x10325476
+	))
+))
+
+(= md5_update (,,, md5 dt
+	(= md5 (:: md5 md5_type))
+	(? (=== dt nil)
+		(@@ (: md5))
+	)
+	(= dt (:: dt string_type))
+	(= len ($ dt))
+	(? (! len)
+		(@@ (: md5))
+	)
+	(= n_sz (+ md5$_sz len))
+	(= n_sz (& n_sz 0xffffffffffffffff))
+	(= dt (+ md5$_bf dt))
+	(= n_sz (& n_sz 0xffffffffffffffff))
+	(= len (+ len ($ md5$_bf)))
+	(= i (& len 0xffffffffffffffc0))
+	(? (! i) {
+		(= o (: md5))
+		(= o$_bf dt)
+		(= o$_sz n_sz)
+		(@@ o)
+	})
+	(= new_data (<- (... "sll:hash_md5")
+		md5$_a
+		md5$_b
+		md5$_c
+		md5$_d
+		(: dt 0 i)
+	))
+	(@@ (. md5_type
+		(: dt i len)
+		n_sz
+		(: new_data 0)
+		(: new_data 1)
+		(: new_data 2)
+		(: new_data 3)
+	))
+))
+
+(= md5_digest (,,, md5
+	(= md5 (:: md5 md5_type))
+	(= extra md5$_bf)
+	(= len ($ extra))
+	(= padding (- (?: (< len 56) 55 119) len))
+	(= n (<< md5$_sz 3))
+	(= extra (+
+		extra
+		'\x80'
+		(* "\x00" padding)
+		(:: n char_type)
+		(:: (>> n 8) char_type)
+		(:: (>> n 16) char_type)
+		(:: (>> n 24) char_type)
+		(:: (>> n 32) char_type)
+		(:: (>> n 40) char_type)
+		(:: (>> n 48) char_type)
+		(:: (>> n 56) char_type)
+	))
+	(= md5_data (<- (... "sll:hash_md5")
+		md5$_a
+		md5$_b
+		md5$_c
+		md5$_d
+		extra
+	))
+	(= o "")
+	(-> (= i 0) (< i 4) {
+		(= n (: md5_data i))
+		(= o (+ o
+			(:: n char_type)
+			(:: (>> n 8) char_type)
+			(:: (>> n 16) char_type)
+			(:: (>> n 24) char_type)
+		))
+		(++ i)
+	})
+	(@@ o)
+))
+
+(= md5_process (,,, dt
+	(@@ (<- md5_digest (<- md5_update (<- md5_init) dt)))
+))
 
 
 
@@ -46,34 +155,34 @@
 	))
 ))
 
-(= sha1_update (,,, sha dt
-	(= sha (:: sha sha1_type))
+(= sha1_update (,,, sha1 dt
+	(= sha1 (:: sha1 sha1_type))
 	(? (=== dt nil)
-		(@@ (: sha))
+		(@@ (: sha1))
 	)
 	(= dt (:: dt string_type))
 	(= len ($ dt))
 	(? (! len)
-		(@@ (: sha))
+		(@@ (: sha1))
 	)
-	(= n_sz (+ sha$_sz len))
+	(= n_sz (+ sha1$_sz len))
 	(= n_sz (& n_sz 0xffffffffffffffff))
-	(= dt (+ sha$_bf dt))
+	(= dt (+ sha1$_bf dt))
 	(= n_sz (& n_sz 0xffffffffffffffff))
-	(= len (+ len ($ sha$_bf)))
+	(= len (+ len ($ sha1$_bf)))
 	(= i (& len 0xffffffffffffffc0))
 	(? (! i) {
-		(= o (: sha))
+		(= o (: sha1))
 		(= o$_bf dt)
 		(= o$_sz n_sz)
 		(@@ o)
 	})
 	(= new_data (<- (... "sll:hash_sha1")
-		sha$_a
-		sha$_b
-		sha$_c
-		sha$_d
-		sha$_e
+		sha1$_a
+		sha1$_b
+		sha1$_c
+		sha1$_d
+		sha1$_e
 		(: dt 0 i)
 	))
 	(@@ (. sha1_type
@@ -87,12 +196,12 @@
 	))
 ))
 
-(= sha1_digest (,,, sha
-	(= sha (:: sha sha1_type))
-	(= extra sha$_bf)
+(= sha1_digest (,,, sha1
+	(= sha1 (:: sha1 sha1_type))
+	(= extra sha1$_bf)
 	(= len ($ extra))
 	(= padding (- (?: (< len 56) 55 119) len))
-	(= n (<< sha$_sz 3))
+	(= n (<< sha1$_sz 3))
 	(= extra (+
 		extra
 		'\x80'
@@ -106,17 +215,17 @@
 		(:: (>> n 8) char_type)
 		(:: n char_type)
 	))
-	(= sha_data (<- (... "sll:hash_sha1")
-		sha$_a
-		sha$_b
-		sha$_c
-		sha$_d
-		sha$_e
+	(= sha1_data (<- (... "sll:hash_sha1")
+		sha1$_a
+		sha1$_b
+		sha1$_c
+		sha1$_d
+		sha1$_e
 		extra
 	))
 	(= o "")
 	(-> (= i 0) (< i 5) {
-		(= n (: sha_data i))
+		(= n (: sha1_data i))
 		(= o (+ o
 			(:: (>> n 24) char_type)
 			(:: (>> n 16) char_type)
@@ -151,6 +260,14 @@
 
 
 (= hash (. hash_module_type
+	[
+		MD5_BLOCK_SIZE
+		MD5_DIGEST_SIZE
+		md5_init
+		md5_update
+		md5_digest
+		md5_process
+	]
 	[
 		SHA1_BLOCK_SIZE
 		SHA1_DIGEST_SIZE
