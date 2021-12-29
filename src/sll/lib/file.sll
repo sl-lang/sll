@@ -89,7 +89,9 @@
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
 	(= c (:: c int_type))
-	(? (< c 0) (@@ ""))
+	(? (< c 0) {
+		(@@ "")
+	})
 	(@@ (<- (... "sll:file_read") f$_handle c))
 ))
 
