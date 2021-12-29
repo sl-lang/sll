@@ -116,14 +116,20 @@ def read_version(fp):
 def generate_help(i_fp,o_fp):
 	util.log(f"Convering '{i_fp}' to Header File...")
 	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
-		wf.write(b"#ifndef __HELP_TEXT_H__\n#define __HELP_TEXT_H__ 1\n#include <stdint.h>\nconst uint8_t HELP_TEXT[]={")
+		dt=rf.read().replace(b"\r\n",b"\n")
+		wf.write(b"#ifndef __HELP_TEXT_H__\n#define __HELP_TEXT_H__ 1\n#include <sll.h>\n\n\n\n#define HELP_TEXT_SIZE "+bytes(str(len(dt)),"utf-8")+b"\n\n\n\nstatic const sll_char_t HELP_TEXT[]={\n\t")
 		st=True
-		for c in rf.read().replace(b"\r\n",b"\n"):
+		i=0
+		for c in dt:
 			if (st is False):
 				wf.write(b",")
+				if (i==8):
+					wf.write(b"\n\t")
+					i=0
 			wf.write(bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
+			i+=1
 			st=False
-		wf.write(b",0x00};\n#endif")
+		wf.write(b"\n};\n\n\n\n#endif")
 
 
 

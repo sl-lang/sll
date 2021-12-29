@@ -1,5 +1,17 @@
-const MIME_TYPES={"css":"text/css;charset=utf-8","deb":"application/octet-stream","dll":"application/octet-stream","gz":"application/gzip","html":"text/html;charset=utf-8","js":"application/javascript;charset=utf-8","so":"application/octet-stream","zip":"application/zip"};
-const REDIRECTS={"/":"/index.html","/sh":"shell_install.sh"};
+const MIME_TYPES={
+	"css": "text/css;charset=utf-8",
+	"deb": "application/octet-stream",
+	"dll": "application/octet-stream",
+	"gz": "application/gzip",
+	"html": "text/html;charset=utf-8",
+	"js": "application/javascript;charset=utf-8",
+	"so": "application/octet-stream",
+	"zip": "application/zip"
+};
+const REDIRECTS={
+	"/": "/index.html",
+	"/sh": "shell_install.sh"
+};
 
 
 

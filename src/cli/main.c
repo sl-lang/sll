@@ -723,7 +723,7 @@ _read_file_argument:
 	sll_deinit();
 	return 0;
 _help:
-	PRINT_STATIC_STR(HELP_TEXT);
+	sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);
 _error:
 	while (im_fpl<fpl){
 		free(*(fp+im_fpl));

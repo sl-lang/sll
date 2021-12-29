@@ -45,7 +45,7 @@ fl=util.get_sll_files()
 util.log("Compiling Sll...")
 build.build_sll(fl,ver,("--release" in sys.argv))
 util.log("Compiling Sll CLI...")
-header.generate_help("src/cli/data/help.txt","build/help_text.h")
+header.generate_help("src/cli/data/help.txt","src/cli/include/help_text.h")
 build.build_sll_cli(ver,("--release" in sys.argv))
 util.log("Copying Modules...")
 for f in os.listdir("src/sll/lib"):
