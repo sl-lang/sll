@@ -40,26 +40,22 @@ def _parse_value(v):
 
 
 
-def _generate_cond(f,dt,lvl):
+def _generate_cond(f,dt,lvl,sl):
 	if (type(dt)==str):
 		for k in dt.split(","):
+			f.write("\t"*lvl)
 			k=k.split("=")
 			k[0]=k[0].strip()
 			if (k[0][0]=="$"):
 				n=int(k[0][1:])
-				i=0
-				while (i<OPTIMIZER_STACK_SIZE-1):
-					if (i+n>=OPTIMIZER_STACK_SIZE):
-						f.write("\t"*lvl+f"st[{i}]=nop;\n")
-					else:
-						f.write("\t"*lvl+f"st[{i}]=st[{i+n}];\n")
-					i+=1
+				sl.add(n)
+				f.write(f"goto _shift_{n};\n")
 			else:
 				e=k[0].split(".")
 				if (len(e)==1):
-					f.write("\t"*lvl+f"st[{int(e[0])}]->t=")
+					f.write(f"st[{int(e[0])}]->t=")
 				else:
-					f.write("\t"*lvl+f"st[{int(e[0])}]->dt.{e[1].strip()}=")
+					f.write(f"st[{int(e[0])}]->dt.{e[1].strip()}=")
 				f.write(_parse_value(k[1])+";\n")
 		return
 	pfx=""
@@ -83,7 +79,7 @@ def _generate_cond(f,dt,lvl):
 			f.write(obj+cmp_+_parse_value(k))
 			st=False
 		f.write("){\n")
-		_generate_cond(f,dt[1][i],lvl+1)
+		_generate_cond(f,dt[1][i],lvl+1,sl)
 		f.write("\t"*lvl+"}\n")
 
 
@@ -118,5 +114,15 @@ def generate_assembly_optimizer():
 	util.log("  Generating Code...")
 	with open(ASSEMBLY_OPTIMIZER_FILE_PATH,"w") as f:
 		f.write("#include <sll/_sll_internal.h>\n#include <sll/assembly.h>\n#include <sll/types.h>\n\n\n\nstatic SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){\n")
-		_generate_cond(f,data,1)
+		sl=set()
+		_generate_cond(f,data,1,sl)
+		for k in sl:
+			f.write(f"\treturn;\n_shift_{k}:\n")
+			i=0
+			while (i<OPTIMIZER_STACK_SIZE-1):
+				if (i+k>=OPTIMIZER_STACK_SIZE):
+					f.write("\t"+f"st[{i}]=nop;\n")
+				else:
+					f.write("\t"+f"st[{i}]=st[{i+k}];\n")
+				i+=1
 		f.write("}\n")

@@ -699,6 +699,8 @@ static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t*
 		case SLL_NODE_TYPE_PRINT:
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+		case SLL_NODE_TYPE_INLINE_FUNC:
 		case SLL_NODE_TYPE_IF:
 		case SLL_NODE_TYPE_SWITCH:
 		case SLL_NODE_TYPE_FOR:
@@ -710,18 +712,6 @@ static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t*
 		case SLL_NODE_TYPE_EXIT:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
-		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
-			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_INLINE_FUNC:
-			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_AND:
-			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_OR:
-			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_NOT:
-			return (!o->dt.ac?COND_TYPE_ALWAYS_FALSE:_get_cond_type(o+1,o_dt,!inv,lv));
-		case SLL_NODE_TYPE_BOOL:
-			return (!o->dt.ac?COND_TYPE_ALWAYS_FALSE:_get_cond_type(o+1,o_dt,inv,lv));
 		case SLL_NODE_TYPE_ASSIGN:
 			SLL_ASSERT(o->dt.ac>=2);
 			return _get_cond_type(sll_skip_node_const(o+1),o_dt,inv,lv);
@@ -1104,7 +1094,30 @@ _keep_assignment:;
 				return o;
 			}
 		case SLL_NODE_TYPE_AND:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					o->t=SLL_NODE_TYPE_INT;
+					o->dt.i=0;
+					return o+1;
+				}
+				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
+					SLL_UNIMPLEMENTED();
+				}
+				sll_node_t* r=o;
+				o++;
+				while (l){
+					l--;
+					sll_node_t* a=o;
+					o=_optimize(o,r,o_dt,fl|OPTIMIZER_FLAG_ARGUMENT);
+					sll_object_t* v=_get_as_object(a,o_dt,0);
+					if (v->t!=OBJECT_TYPE_UNKNOWN&&!(v->t&OBJECT_CHANGE_IN_LOOP)){
+						SLL_UNIMPLEMENTED();
+					}
+					SLL_RELEASE(v);
+				}
+				return o;
+			}
 		case SLL_NODE_TYPE_OR:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_NOT:

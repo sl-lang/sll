@@ -4,10 +4,11 @@
 
 ### Added
 
+- Implemented `and` (`(&&)`) operator ([#168])
 - Implemented `hash.sll` and `hash$hexdigest` ([#23])
 - Implemented `sll_api_hash_md5`, `hash$md5$BLOCK_SIZE`, `hash$md5$DIGEST_SIZE`, `hash$md5$init`, `hash$md5$update`, `hash$md5$digest` and `hash$md5$process` ([#23] and [#163])
 - Implemented `sll_api_hash_sha1`, `hash$sha1$BLOCK_SIZE`, `hash$sha1$DIGEST_SIZE`, `hash$sha1$init`, `hash$sha1$update`, `hash$sha1$digest` and `hash$sha1$process` ([#23] and [#164])
-- Implemented `sll_process_join_args`, `process$split` and `process$join` [#161]
+- Implemented `sll_process_join_args`, `process$split` and `process$join` ([#161])
 
 ### Changed
 
@@ -1274,6 +1275,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#168]: https://github.com/sl-lang/sll/issues/168
 [#167]: https://github.com/sl-lang/sll/issues/167
 [#164]: https://github.com/sl-lang/sll/issues/164
 [#163]: https://github.com/sl-lang/sll/issues/163
