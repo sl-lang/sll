@@ -330,7 +330,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					sll_bool_t re=0;
 					ai->dt.i=(sll_relative_instruction_index_t)_read_signed_integer(rf,&re);
 					if (re){
@@ -385,7 +385,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					CHECK_ERROR(rf,ai->dt.v,sll_variable_index_t);
 				}
 				break;

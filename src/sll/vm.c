@@ -20,7 +20,7 @@
 
 #define OPERATOR_INSTRUCTION_UNARY(nm) \
 	{ \
-		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
+		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
 		sll_object_t* n=nm(*tos); \
 		SLL_RELEASE(*tos); \
 		*tos=n; \
@@ -29,7 +29,7 @@
 #define OPERATOR_INSTRUCTION_BINARY(nm) \
 	{ \
 		si--; \
-		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
+		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
 		sll_object_t* n=nm(*tos,*(s+si)); \
 		SLL_RELEASE(*tos); \
 		SLL_RELEASE(*(s+si)); \
@@ -39,7 +39,7 @@
 #define OPERATOR_INSTRUCTION_TERNARY(nm) \
 	{ \
 		si-=2; \
-		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
+		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
 		sll_object_t* n=nm(*tos,*(s+si),*(s+si+1)); \
 		SLL_RELEASE(*tos); \
 		SLL_RELEASE(*(s+si)); \
@@ -50,7 +50,7 @@
 #define OPERATOR_INSTRUCTION_QUATERNARY(nm) \
 	{ \
 		si-=3; \
-		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
+		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1); \
 		sll_object_t* n=nm(*tos,*(s+si),*(s+si+1),*(s+si+2)); \
 		SLL_RELEASE(*tos); \
 		SLL_RELEASE(*(s+si)); \
@@ -192,7 +192,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
-				*(s+si)=SLL_FROM_INT((SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ii+ai->dt.rj:ai->dt.j));
+				*(s+si)=SLL_FROM_INT((SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?ii+ai->dt.rj:ai->dt.j));
 				si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
@@ -330,7 +330,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 			}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 _jump:
-				ii=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?ii+ai->dt.rj:ai->dt.j);
+				ii=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?ii+ai->dt.rj:ai->dt.j);
 				ai=_get_instruction_at_offset(a_dt,ii);
 				continue;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
@@ -490,7 +490,7 @@ _cleanup_jump_table:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 				{
-					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
+					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
 					sll_object_t* n=sll_static_int[!sll_operator_bool(*tos)];
 					SLL_ACQUIRE(n);
 					SLL_RELEASE(*tos);
@@ -499,7 +499,7 @@ _cleanup_jump_table:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL:
 				{
-					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
+					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
 					sll_object_t* n=sll_static_int[sll_operator_bool(*tos)];
 					SLL_ACQUIRE(n);
 					SLL_RELEASE(*tos);
@@ -601,7 +601,7 @@ _cleanup_jump_table:;
 				OPERATOR_INSTRUCTION_BINARY(sll_operator_cast);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				{
-					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
+					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
 					sll_object_t* t=SLL_CREATE();
 					t->t=SLL_OBJECT_TYPE_INT;
 					t->dt.i=ai->dt.t;
@@ -613,7 +613,7 @@ _cleanup_jump_table:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF:
 				{
-					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
+					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?v+ai->dt.v:s+si-1);
 					sll_object_t* n=sll_static_int[SLL_OBJECT_GET_TYPE(*tos)];
 					SLL_ACQUIRE(n);
 					SLL_RELEASE(*tos);
@@ -624,7 +624,7 @@ _cleanup_jump_table:;
 				{
 					si-=ai->dt.ac<<1;
 					sll_object_type_t nt;
-					if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+					if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
 						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(s+si),ai->dt.ac,NULL);
 						for (sll_arg_count_t i=0;i<(ai->dt.ac<<1);i++){
 							SLL_RELEASE(*(s+si+i));
@@ -644,7 +644,7 @@ _cleanup_jump_table:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
 				{
-					if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+					if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
 						*(s+si)=SLL_FROM_INT(sll_add_type(sll_current_runtime_data->tt,NULL,0,NULL));
 						si++;
 					}
@@ -658,7 +658,7 @@ _cleanup_jump_table:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
 				{
-					if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+					if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
 						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*(s+si-1))==SLL_OBJECT_TYPE_STRING);
 						sll_object_type_t t=sll_type_from_initializer(sll_current_runtime_data->tt,&(a_dt->st),*(a_dt->ot_it.dt+ai->dt.t),&((*(s+si-1))->dt.s));
 						SLL_RELEASE(*(s+si-1));

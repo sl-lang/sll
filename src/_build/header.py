@@ -13,7 +13,7 @@ HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^>]*\")\s*$""",re.MULTILINE)
-INTERNAL_SLL_HEADER="_sll_internal.h"
+INTERNAL_SLL_HEADERS=["_sll_internal.h","_generated_assembly_optimizer.h"]
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
 MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
@@ -134,7 +134,7 @@ def parse_headers(fp):
 	fp=fp.replace("\\","/").rstrip("/")+"/"
 	for r,_,fl in os.walk(fp):
 		for f in fl:
-			if (f[-2:]==".h" and f!=INTERNAL_SLL_HEADER):
+			if (f[-2:]==".h" and f not in INTERNAL_SLL_HEADERS):
 				with open(os.path.join(r,f),"rb") as rf:
 					il.append(bytes(os.path.join(r,f)[len(fp):].replace("\\","/"),"utf-8"))
 					dt=rf.read()

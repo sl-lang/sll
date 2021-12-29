@@ -1,4 +1,5 @@
 import api
+import assembly
 import build
 import docs
 import header
@@ -27,6 +28,8 @@ if ("--generate-api" in sys.argv):
 	d_dt,api_dt=docs.create_docs(d_fl)
 	util.log(f"Generating Code & Signatures for {len(api_dt)} API functions...")
 	api.generate_c_api(d_dt,api_dt)
+if ("--generate-assembly" in sys.argv):
+	assembly.generate_assembly_optimizer()
 h_dt=header.parse_headers("src/sll/include")
 util.log("Generating Library Header File...")
 with open("build/sll.h","wb") as wf:

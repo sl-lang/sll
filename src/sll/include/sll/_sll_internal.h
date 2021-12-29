@@ -25,12 +25,13 @@
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __assume(0)
 #endif
-static __inline __forceinline unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m){
+#define SLL_FORCE_INLINE __inline __forceinline
+static SLL_FORCE_INLINE unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m){
 	unsigned long o;
 	_BitScanForward64(&o,m);
 	return o;
 }
-static __inline __forceinline unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
+static SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 	unsigned long o;
 	_BitScanReverse64(&o,m);
 	return o;
@@ -52,15 +53,16 @@ static __inline __forceinline unsigned int FIND_LAST_SET_BIT(unsigned __int64 m)
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __builtin_unreachable()
 #endif
+#define SLL_FORCE_INLINE inline __attribute__((always_inline))
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
 #define FIND_LAST_SET_BIT(m) (63-__builtin_clzll((m)))
 #define POPULATION_COUNT(m) __builtin_popcountll((m))
 #define SWAP_BYTES(m) __builtin_bswap32((m))
-static inline __attribute__((always_inline)) unsigned int ROTATE_BITS(unsigned int a,unsigned char b){
+static SLL_FORCE_INLINE unsigned int ROTATE_BITS(unsigned int a,unsigned char b){
 	__asm__("rol %1,%0":"+r"(a):"c"(b));
 	return a;
 }
-static inline __attribute__((always_inline)) unsigned long long int ROTATE_BITS64(unsigned long long int a,unsigned char b){
+static SLL_FORCE_INLINE unsigned long long int ROTATE_BITS64(unsigned long long int a,unsigned char b){
 	__asm__("rolq %1,%0":"+r"(a):"c"(b));
 	return a;
 }

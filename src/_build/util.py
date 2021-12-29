@@ -51,8 +51,7 @@ def get_docs_files():
 	o=[]
 	for r,_,fl in os.walk("src/sll/include/sll"):
 		for k in fl:
-			if (k!="_sll_internal.h"):
-				o.append(os.path.join(r,k))
+			o.append(os.path.join(r,k))
 	return o
 
 

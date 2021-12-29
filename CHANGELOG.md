@@ -11,6 +11,7 @@
 
 ### Changed
 
+- Assembly optimizer code is now auto-generated from a file ([`src/sll/data/assembly_optimizer.txt`][main/src/sll/data/assembly_optimizer.txt]) ([#167])
 - File & JSON APIs now uses custom types instead of handles ([#162])
 - Fixed `sll_string_duplicate` and `sll_string_select`
 - Fixed multiple optimizer and assembly generator bugs
@@ -1271,6 +1272,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#167]: https://github.com/sl-lang/sll/issues/167
 [#164]: https://github.com/sl-lang/sll/issues/164
 [#163]: https://github.com/sl-lang/sll/issues/163
 [#162]: https://github.com/sl-lang/sll/issues/162
@@ -1394,6 +1396,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/sll/data/assembly_optimizer.txt]: https://github.com/sl-lang/sll/blob/main/src/sll/data/assembly_optimizer.txt
 [0.6.33/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
 [0.6.32/src/include/sll/api/util.h]: https://github.com/sl-lang/sll/blob/v0.6.32/src/include/sll/api/util.h
 [0.6.32/src/sll/api/util_api.c]: https://github.com/sl-lang/sll/blob/v0.6.32/src/sll/api/util_api.c

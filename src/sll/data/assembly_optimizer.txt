@@ -1,0 +1,44 @@
+0=!call|print|ret, 1=push_int, 1.i=-1 -> 1=push_minus_one
+0=!call|print|ret, 1=push_int, 1.i=+0 -> 1=push_zero
+0=!call|print|ret, 1=push_int, 1.i=+1 -> 1=push_one
+0=!call|print|ret, 1=push_int, 1.i=+2 -> 1=push_two
+0=!call|print|ret, 1=push_int, 1.i=+3 -> 1=push_three
+0=!call|print|ret, 1=push_int, 1.i=+4 -> 1=push_four
+
+0=pop, 1=rot -> 0=nop, 1=rot_pop, $1
+0=pop, 1=call -> 0=nop, 1=call_pop, $1
+
+0=load, 1=store_pop, 0.v=1.v -> 0=nop, 1=store, $1
+0=load_del, 1=store_pop, 0.v=1.v -> 0=nop, 1=nop, $2
+
+0=store_pop, 1=push_minus_one -> 1=store_minus_one, 1.v=0.v, 0=nop, $1
+0=store_pop, 1=push_zero -> 1=store_zero, 1.v=0.v, 0=nop, $1
+0=store_pop, 1=push_one -> 1=store_one, 1.v=0.v, 0=nop, $1
+0=store_pop, 1=push_two -> 1=store_two, 1.v=0.v, 0=nop, $1
+0=store_pop, 1=push_three -> 1=store_three, 1.v=0.v, 0=nop, $1
+0=store_pop, 1=push_four -> 1=store_four, 1.v=0.v, 0=nop, $1
+
+0=store_pop, 1=not, 2=load, 0.v=2.v -> 0=nop, 2=1|flag_inplace, 1=nop, $2
+
+0=print, 1=push_char -> 0=nop, 1=print_char, $1
+0=print, 1=load -> 0=nop, 1=print_var, $1
+0=print, 1=loads -> 0=nop, 1=print_str, $1
+
+0=call, 1=push_int, 0.ac=+0 -> 0=nop, 1=call_zero, $1
+0=call, 1=push_int, 0.ac=+1 -> 0=nop, 1=call_one, $1
+
+0=add, 1=push_minus_one -> 0=nop, 1=dec, $1
+0=add, 1=push_one -> 0=nop, 1=inc, $1
+0=sub, 1=push_minus_one -> 0=nop, 1=inc, $1
+0=sub, 1=push_one -> 0=nop, 1=dec, $1
+
+0=new, 1=decl_zero, 0.ac=+0 -> 0=nop, 1=new_decl, $1
+
+0=ret, 1=push_int -> 0=nop, 1=ret_int, $1
+0=ret, 1=push_float -> 0=nop, 1=ret_float, $1
+0=ret, 1=push_char -> 0=nop, 1=ret_char, $1
+0=ret, 1=loads -> 0=nop, 1=ret_str, $1
+0=ret, 1=load -> 0=nop, 1=ret_var, $1
+
+0=end, 1=push_zero -> 0=nop, 1=end_zero, $1
+0=end, 1=push_one -> 0=nop, 1=end_one, $1

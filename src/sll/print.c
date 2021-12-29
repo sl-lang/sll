@@ -617,7 +617,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 				PRINT_STATIC_STRING("PUSH .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -691,7 +691,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 				PRINT_STATIC_STRING("JMP .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -700,7 +700,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
 				PRINT_STATIC_STRING("JB .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -709,7 +709,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
 				PRINT_STATIC_STRING("JBE .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -718,7 +718,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
 				PRINT_STATIC_STRING("JA .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -727,7 +727,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
 				PRINT_STATIC_STRING("JAE .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -736,7 +736,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
 				PRINT_STATIC_STRING("JE .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -745,7 +745,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
 				PRINT_STATIC_STRING("JNE .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -754,7 +754,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 				PRINT_STATIC_STRING("JZ .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -763,7 +763,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				PRINT_STATIC_STRING("JNZ .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -772,7 +772,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
 				PRINT_STATIC_STRING("JSE .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -781,7 +781,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
 				PRINT_STATIC_STRING("JSNE .",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}
 				else{
@@ -793,7 +793,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				_print_int(ai->dt.i,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("NOT $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -802,7 +802,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("BOOL $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -811,7 +811,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("INC $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -820,7 +820,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("DEC $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -829,7 +829,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("ADD $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -838,7 +838,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("SUB $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -847,7 +847,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("MULT $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -856,7 +856,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DIV:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("DIV $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -865,7 +865,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("FDIV $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -874,7 +874,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MOD:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("MOD $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -883,7 +883,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_AND:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("AND $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -892,7 +892,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("OR $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -901,7 +901,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("XOR $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -910,7 +910,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("INV $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -919,7 +919,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHR:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("SHR $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -928,7 +928,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHL:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("SHL $",wf);
 					_print_int(ai->dt.v,wf);
 				}
@@ -988,20 +988,20 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 				PRINT_STATIC_STRING("DECL ",wf);
 				_print_int(ai->dt.ac,wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
 					PRINT_STATIC_STRING(" (anonymous)",wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO:
 				PRINT_STATIC_STRING("DECL 0",wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
 					PRINT_STATIC_STRING(" (anonymous)",wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
 				PRINT_STATIC_STRING("DECL @",wf);
 				_print_int(ai->dt.t,wf);
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_ANONYMOUS(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
 					PRINT_STATIC_STRING(" (anonymous)",wf);
 				}
 				break;

@@ -286,7 +286,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_RELATIVE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					WRITE_SIGNED_INTEGER(wf,ai->dt.rj);
 				}
 				else{
@@ -337,7 +337,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
-				if (SLL_ASSEMBLY_INSTRUCTION_IS_INPLACE(ai)){
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					_write_integer(wf,ai->dt.v);
 				}
 				break;
