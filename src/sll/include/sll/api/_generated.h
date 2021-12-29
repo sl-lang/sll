@@ -827,6 +827,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_process_join void
+#define __SLL_API_ARGS_sll_api_process_join sll_array_t* a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_process_join
+ * \group process-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_process_join_raw
+ * \group raw-api
+ * \subgroup raw-api-process-api
+ * \desc Wrapper function for :sll_api_process_join:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_process_execute_shell __SLL_CHECK_OUTPUT sll_bool_t
 #define __SLL_API_ARGS_sll_api_process_execute_shell sll_string_t* a
 /**
@@ -890,6 +912,28 @@
  * \group raw-api
  * \subgroup raw-api-process-api
  * \desc Wrapper function for :sll_api_process_start:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_process_split void
+#define __SLL_API_ARGS_sll_api_process_split sll_string_t* a,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_process_split
+ * \group process-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_process_split_raw
+ * \group raw-api
+ * \subgroup raw-api-process-api
+ * \desc Wrapper function for :sll_api_process_split:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
@@ -1219,7 +1263,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_pad_left void
-#define __SLL_API_ARGS_sll_api_string_pad_left sll_string_t* a,sll_integer_t b,sll_read_char_t c,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_string_pad_left sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out
 /**
  * \flags func optimizable
  * \name sll_api_string_pad_left
@@ -1227,7 +1271,7 @@
  * \desc Docs!
  * \arg sll_string_t* a -> 
  * \arg sll_integer_t b -> 
- * \arg sll_read_char_t c -> 
+ * \arg sll_char_t c -> 
  */
 /**
  * \flags check_output func optimizable
@@ -1243,7 +1287,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_pad_right void
-#define __SLL_API_ARGS_sll_api_string_pad_right sll_string_t* a,sll_integer_t b,sll_read_char_t c,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_string_pad_right sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out
 /**
  * \flags func optimizable
  * \name sll_api_string_pad_right
@@ -1251,7 +1295,7 @@
  * \desc Docs!
  * \arg sll_string_t* a -> 
  * \arg sll_integer_t b -> 
- * \arg sll_read_char_t c -> 
+ * \arg sll_char_t c -> 
  */
 /**
  * \flags check_output func optimizable

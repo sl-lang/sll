@@ -30,7 +30,9 @@
 	(~ int_type) FLAG_WAIT
 	(~ int_type) PID
 	(~ string_type) SHELL_PATH
+	(~ func_type) join
 	(~ func_type) shell
+	(~ func_type) split
 	(~ func_type) start
 ))
 
@@ -54,7 +56,11 @@
 
 
 
+(= join (... "sll:process_join"))
+
 (= shell (... "sll:process_execute_shell"))
+
+(= split (... "sll:process_split"))
 
 (= start (,,, args cfg stdin
 	(@@ (<- (... "sll:process_start")
@@ -75,7 +81,9 @@
 	FLAG_WAIT
 	PID
 	SHELL_PATH
+	join
 	shell
+	split
 	start
 ))
 (## process)

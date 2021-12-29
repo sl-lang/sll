@@ -1122,6 +1122,36 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process__init_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_process_join sll_api_process_join(__SLL_API_ARGS_sll_api_process_join);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_join_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(a->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_string_t out;
+	sll_api_process_join(&(a->dt.a),&out);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_process_execute_shell sll_api_process_execute_shell(__SLL_API_ARGS_sll_api_process_execute_shell);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_execute_shell_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -1206,6 +1236,34 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_start_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_process_split sll_api_process_split(__SLL_API_ARGS_sll_api_process_split);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_split_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(a->dt.s));
+	}
+	sll_array_t out;
+	sll_api_process_split(&(a->dt.s),&out);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_sort_quicksort sll_api_sort_quicksort(__SLL_API_ARGS_sll_api_sort_quicksort);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -1235,11 +1293,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort_raw(sll_o
 			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
 		}
 	}
-	sll_array_t out;
-	sll_api_sort_quicksort(&(a->dt.a),(b?b->dt.i:0),&out);
-	if (b){
-		SLL_RELEASE(b);
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	sll_array_t out;
+	sll_api_sort_quicksort(&(a->dt.a),b->dt.i,&out);
+	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -1724,11 +1783,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_left_raw(sll_
 			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 		}
 	}
-	sll_string_t out;
-	sll_api_string_pad_left(&(a->dt.s),b->dt.i,(c?c->dt.c:SLL_NO_CHAR),&out);
-	if (c){
-		SLL_RELEASE(c);
+	else{
+		c=SLL_ACQUIRE_STATIC_CHAR(0);
 	}
+	sll_string_t out;
+	sll_api_string_pad_left(&(a->dt.s),b->dt.i,c->dt.c,&out);
+	SLL_RELEASE(c);
 	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();
@@ -1779,11 +1839,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_right_raw(sll
 			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 		}
 	}
-	sll_string_t out;
-	sll_api_string_pad_right(&(a->dt.s),b->dt.i,(c?c->dt.c:SLL_NO_CHAR),&out);
-	if (c){
-		SLL_RELEASE(c);
+	else{
+		c=SLL_ACQUIRE_STATIC_CHAR(0);
 	}
+	sll_string_t out;
+	sll_api_string_pad_right(&(a->dt.s),b->dt.i,c->dt.c,&out);
+	SLL_RELEASE(c);
 	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();
@@ -1821,6 +1882,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_replace_raw(sll_o
 			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		}
 	}
+	else{
+		b=SLL_CREATE();
+		b->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(b->dt.s));
+	}
 	sll_object_t* c=NULL;
 	if (all>2){
 		c=*(al+2);
@@ -1831,14 +1897,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_replace_raw(sll_o
 			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		}
 	}
+	else{
+		c=SLL_CREATE();
+		c->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(c->dt.s));
+	}
 	sll_string_t out;
 	sll_api_string_replace(&(a->dt.s),b,c,&out);
-	if (c){
-		SLL_RELEASE(c);
-	}
-	if (b){
-		SLL_RELEASE(b);
-	}
+	SLL_RELEASE(c);
+	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_OBJECT_TYPE_STRING;
@@ -2234,9 +2301,11 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:path_size",sll_api_path_size_raw,0},
 	{"sll:path_split",sll_api_path_split_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:process__init",sll_api_process__init_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
+	{"sll:process_join",sll_api_process_join_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:process_execute_shell",sll_api_process_execute_shell_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:process_get_pid",sll_api_process_get_pid_raw,0},
 	{"sll:process_start",sll_api_process_start_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
+	{"sll:process_split",sll_api_process_split_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:sort_quicksort",sll_api_sort_quicksort_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_convert",sll_api_string_convert_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:string_count",sll_api_string_count_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
@@ -2273,5 +2342,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=68;
+const sll_function_index_t _ifunc_size=70;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

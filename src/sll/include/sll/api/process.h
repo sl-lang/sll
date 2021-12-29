@@ -20,6 +20,18 @@
 
 
 /**
+ * \flags func
+ * \name sll_process_join_args
+ * \group process-api
+ * \desc Docs!
+ * \arg const sll_char_t*const* a
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t* o);
+
+
+
+/**
  * \flags api func
  * \name sll_api_process__init
  * \group process-api
@@ -28,6 +40,18 @@
  * \ret V
  */
 __API_FUNC_DECL(process__init);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_process_join
+ * \group process-api
+ * \desc Docs!
+ * \arg A
+ * \ret S
+ */
+__API_FUNC_DECL(process_join);
 
 
 
@@ -65,6 +89,18 @@ __API_FUNC_DECL(process_get_pid);
  * \ret O
  */
 __API_FUNC_DECL(process_start);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_process_split
+ * \group process-api
+ * \desc Docs!
+ * \arg S
+ * \ret A
+ */
+__API_FUNC_DECL(process_split);
 
 
 

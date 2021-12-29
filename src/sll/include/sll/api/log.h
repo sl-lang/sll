@@ -17,7 +17,7 @@
  * \name sll_api_log_log
  * \group log-api
  * \desc Docs!
- * \arg O?
+ * \arg O
  * \ret V
  */
 __API_FUNC_DECL(log_log);

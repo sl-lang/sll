@@ -69,7 +69,7 @@ static void _sys_free_data(void){
 
 
 __SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a){
-	if (i<0||i>=_sys_argc){
+	if (i>=_sys_argc){
 		return;
 	}
 	sll_free_string(_sys_argv+i);

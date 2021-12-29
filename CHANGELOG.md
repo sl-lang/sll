@@ -7,6 +7,7 @@
 - Implemented `hash.sll` and `hash$hexdigest` ([#23])
 - Implemented `sll_api_hash_md5`, `hash$md5$BLOCK_SIZE`, `hash$md5$DIGEST_SIZE`, `hash$md5$init`, `hash$md5$update`, `hash$md5$digest` and `hash$md5$process` ([#23] and [#163])
 - Implemented `sll_api_hash_sha1`, `hash$sha1$BLOCK_SIZE`, `hash$sha1$DIGEST_SIZE`, `hash$sha1$init`, `hash$sha1$update`, `hash$sha1$digest` and `hash$sha1$process` ([#23] and [#164])
+- Implemented `sll_process_join_args`, `process$split` and `process$join` [#161]
 
 ### Changed
 
@@ -1273,6 +1274,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#164]: https://github.com/sl-lang/sll/issues/164
 [#163]: https://github.com/sl-lang/sll/issues/163
 [#162]: https://github.com/sl-lang/sll/issues/162
+[#161]: https://github.com/sl-lang/sll/issues/161
 [#160]: https://github.com/sl-lang/sll/issues/160
 [#159]: https://github.com/sl-lang/sll/issues/159
 [#158]: https://github.com/sl-lang/sll/issues/158

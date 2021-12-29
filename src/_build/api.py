@@ -24,14 +24,11 @@ def generate_c_api(d_dt,api_dt):
 			pc=""
 			end=""
 			if (len(k["args"])>0):
-				i=len(k["args"])
-				while (i>0 and k["args"][i-1]["opt"]):
-					i-=1
 				for i,e in enumerate(k["args"]):
 					if (i):
 						a+=","
 						pc+=","
-					at=("sll_read_char_t" if e["type"]=="C" and e["opt"] else (TYPE_MAP[e["type"]] if len(e["type"])==1 else "sll_object_t*"))
+					at=(TYPE_MAP[e["type"]] if len(e["type"])==1 else "sll_object_t*")
 					if (i==len(k["args"])-1 and "var_arg" in k["flag"]):
 						t=f"{at+('const' if at[-1]=='*' else '')}* {ALPHABET[i]}"
 						a+=f"{t},sll_arg_count_t {ALPHABET[i]}c"
@@ -47,37 +44,32 @@ def generate_c_api(d_dt,api_dt):
 						t=f"{at} {ALPHABET[i]}"
 						a+=t
 						d_str+=f"\n * \\arg {t} -> {e['desc']}"
-						if (e["opt"]):
-							end=f"\tif ({ALPHABET[i]}){{\n\t\tSLL_RELEASE({ALPHABET[i]});\n\t}}\n"+end
-						else:
-							end=f"\tSLL_RELEASE({ALPHABET[i]});\n"+end
+						end=f"\tSLL_RELEASE({ALPHABET[i]});\n"+end
 						cf.write(f"\tsll_object_t* {ALPHABET[i]}=NULL;\n\tif (all>{i}){{\n\t\t{ALPHABET[i]}=*(al+{i});\n")
 						if ("O" not in e["type"]):
 							cf.write("\t\tif ("+"||".join([TYPE_CHECK_MAP[se].replace('$',ALPHABET[i]) for se in e["type"]])+f"){{\n\t\t\tSLL_ACQUIRE({ALPHABET[i]});\n\t\t}}\n\t\telse{{\n\t\t\t{ALPHABET[i]}=sll_operator_cast({ALPHABET[i]},sll_static_int[SLL_OBJECT_TYPE_{TYPE_FULL_NAME_MAP[e['type'][0]]}]);\n\t\t}}\n")
 						else:
 							cf.write(f"\t\tSLL_ACQUIRE({ALPHABET[i]});\n")
-						cf.write("\t}\n")
-						if (not e["opt"]):
-							cf.write("\telse{\n\t\t")
-							if (e["type"][0] in ["I","B","O"]):
-								cf.write(ALPHABET[i]+"=SLL_ACQUIRE_STATIC_INT(0);")
-							elif (e["type"][0]=="F"):
-								cf.write(ALPHABET[i]+"=SLL_ACQUIRE_STATIC(float_zero);")
-							elif (e["type"][0]=="C"):
-								cf.write(ALPHABET[i]+"=SLL_ACQUIRE_STATIC_CHAR(0);")
-							elif (e["type"][0]=="S"):
-								cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_STRING;\n\t\tsll_string_create(0,&({ALPHABET[i]}->dt.s));")
-							elif (e["type"][0]=="A"):
-								cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_ARRAY;\n\t\tif (!sll_array_create(0,&({ALPHABET[i]}->dt.a))){{\n\t\t\tSLL_UNIMPLEMENTED();\n\t\t}}")
-							elif (e["type"][0]=="H"):
-								cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_HANDLE;\n\t\tSLL_INIT_HANDLE_DATA(&({ALPHABET[i]}->dt.h));")
-							else:
-								if (e["type"][0]!="M"):
-									raise RuntimeError
-								cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_MAP;\n\t\tsll_map_create(0,&({ALPHABET[i]}->dt.m));")
-							cf.write("\n\t}\n")
+						cf.write("\t}\n\telse{\n\t\t")
+						if (e["type"][0] in ["I","B","O"]):
+							cf.write(ALPHABET[i]+"=SLL_ACQUIRE_STATIC_INT(0);")
+						elif (e["type"][0]=="F"):
+							cf.write(ALPHABET[i]+"=SLL_ACQUIRE_STATIC(float_zero);")
+						elif (e["type"][0]=="C"):
+							cf.write(ALPHABET[i]+"=SLL_ACQUIRE_STATIC_CHAR(0);")
+						elif (e["type"][0]=="S"):
+							cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_STRING;\n\t\tsll_string_create(0,&({ALPHABET[i]}->dt.s));")
+						elif (e["type"][0]=="A"):
+							cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_ARRAY;\n\t\tif (!sll_array_create(0,&({ALPHABET[i]}->dt.a))){{\n\t\t\tSLL_UNIMPLEMENTED();\n\t\t}}")
+						elif (e["type"][0]=="H"):
+							cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_HANDLE;\n\t\tSLL_INIT_HANDLE_DATA(&({ALPHABET[i]}->dt.h));")
+						else:
+							if (e["type"][0]!="M"):
+								raise RuntimeError
+							cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_MAP;\n\t\tsll_map_create(0,&({ALPHABET[i]}->dt.m));")
+						cf.write("\n\t}\n")
 						if (len(e["type"])==1):
-							pc+=(TYPE_ACCESS_OPT_MAP[e["type"]] if e["opt"] else TYPE_ACCESS_MAP[e["type"]]).replace("$",ALPHABET[i])
+							pc+=TYPE_ACCESS_MAP[e["type"]].replace("$",ALPHABET[i])
 						else:
 							pc+=ALPHABET[i]
 			hf.write(f"\n#define __SLL_API_TYPE_{k['name']} ")

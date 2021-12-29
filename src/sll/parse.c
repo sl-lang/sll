@@ -14,23 +14,6 @@
 
 
 
-#define PUSH_SCOPE \
-	do{ \
-		if (n_l_sc.m){ \
-			sll_deallocate(n_l_sc.m); \
-		} \
-		n_l_sc.l_sc=c_dt->_n_sc_id; \
-		n_l_sc.ml=(n_l_sc.l_sc+65)>>6; \
-		n_l_sc.m=sll_allocate(n_l_sc.ml*sizeof(uint64_t)); \
-		n_l_sc.m[n_l_sc.ml-1]=0; \
-		sll_copy_data(b_l_sc->m,b_l_sc->ml*sizeof(uint64_t),n_l_sc.m); \
-		n_l_sc.m[n_l_sc.ml-1]|=1ull<<(n_l_sc.l_sc&63); \
-		c_dt->_n_sc_id++; \
-		l_sc=&n_l_sc; \
-	} while (0)
-
-
-
 static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_dt){
 	sll_node_t* o=_acquire_next_node(im_dt->c_dt);
 	while (mo->t==SLL_NODE_TYPE_NOP||mo->t==SLL_NODE_TYPE_DBG||mo->t==NODE_TYPE_CHANGE_STACK){
@@ -124,6 +107,7 @@ static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_d
 
 
 static sll_identifier_index_t _get_var_index(sll_compilation_data_t* c_dt,const extra_compilation_data_t* e_c_dt,const scope_data_t* l_sc,sll_string_t* str,void* arg,uint8_t fl,sll_error_t* e){
+	SLL_ASSERT(str->l);
 	sll_identifier_index_t o=SLL_MAX_VARIABLE_INDEX;
 	if (str->l<=SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 		sll_identifier_list_t* k=c_dt->idt.s+str->l-1;
@@ -282,7 +266,6 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 	scope_data_t n_l_sc={
 		NULL
 	};
-	const scope_data_t* b_l_sc=l_sc;
 	sll_file_t* rf=c_dt->rf;
 	sll_file_offset_t st_off=0;
 	int ec=-1;
@@ -446,9 +429,6 @@ static sll_bool_t _read_object_internal(sll_compilation_data_t* c_dt,sll_read_ch
 				}
 			}
 			else{
-				if (SLL_IS_OBJECT_TYPE_IF(o)&&(ac&1)){
-					PUSH_SCOPE;
-				}
 _recurse_array_or_map:;
 				if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
 					sll_node_t* id=o+1;
@@ -688,7 +668,14 @@ _recurse_array_or_map:;
 				}
 			}
 			if ((o->t>=SLL_NODE_TYPE_IF&&o->t<=SLL_NODE_TYPE_SWITCH)||o->t==SLL_NODE_TYPE_FOR||o->t==SLL_NODE_TYPE_WHILE||o->t==SLL_NODE_TYPE_LOOP||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC){
-				PUSH_SCOPE;
+				n_l_sc.l_sc=c_dt->_n_sc_id;
+				n_l_sc.ml=(n_l_sc.l_sc+65)>>6;
+				n_l_sc.m=sll_allocate(n_l_sc.ml*sizeof(uint64_t));
+				n_l_sc.m[n_l_sc.ml-1]=0;
+				sll_copy_data(l_sc->m,l_sc->ml*sizeof(uint64_t),n_l_sc.m);
+				n_l_sc.m[n_l_sc.ml-1]|=1ull<<(n_l_sc.l_sc&63);
+				c_dt->_n_sc_id++;
+				l_sc=&n_l_sc;
 			}
 		}
 		else if (c=='['||c=='<'){
@@ -1156,10 +1143,7 @@ _unknown_identifier_char:
 				ml++;
 			}
 			else{
-				if (SLL_IS_OBJECT_TYPE_IF(o)&&(ac&1)){
-					PUSH_SCOPE;
-				}
-				else if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
+				if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1&&e_c_dt->nv_dt->sz){
 					sll_node_t* id=o+1;
 					while (id->t==SLL_NODE_TYPE_NOP||id->t==SLL_NODE_TYPE_DBG||id->t==NODE_TYPE_CHANGE_STACK){
 						id=(id->t==NODE_TYPE_CHANGE_STACK?id->dt._p:id+1);

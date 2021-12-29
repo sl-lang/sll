@@ -82,7 +82,7 @@ __API_FUNC_DECL(string_ends);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg O?
+ * \arg O
  * \ret S
  */
 __API_FUNC_DECL(string_format);
@@ -173,7 +173,7 @@ __API_FUNC_DECL(string_join);
  * \desc Docs!
  * \arg S
  * \arg I
- * \arg C?
+ * \arg C
  * \ret S
  */
 __API_FUNC_DECL(string_pad_left);
@@ -187,7 +187,7 @@ __API_FUNC_DECL(string_pad_left);
  * \desc Docs!
  * \arg S
  * \arg I
- * \arg C?
+ * \arg C
  * \ret S
  */
 __API_FUNC_DECL(string_pad_right);
@@ -200,8 +200,8 @@ __API_FUNC_DECL(string_pad_right);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC?
- * \arg SC?
+ * \arg SC
+ * \arg SC
  * \ret S
  */
 __API_FUNC_DECL(string_replace);

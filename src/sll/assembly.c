@@ -75,32 +75,13 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
-		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
-		case SLL_NODE_TYPE_ARRAY:
-			{
-				sll_array_length_t l=o->dt.al;
-				o++;
-				while (l){
-					l--;
-					o=_map_identifiers(o,c_dt,g_dt,fn_sc);
-				}
-				return o;
-			}
-		case SLL_NODE_TYPE_MAP:
-			{
-				sll_map_length_t l=o->dt.ml;
-				o++;
-				while (l){
-					l--;
-					o=_map_identifiers(o,c_dt,g_dt,fn_sc);
-				}
-				return o;
-			}
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
 				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
@@ -143,11 +124,31 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 				}
 				return o+1;
 			}
+		case SLL_NODE_TYPE_ARRAY:
+			{
+				sll_array_length_t l=o->dt.al;
+				o++;
+				while (l){
+					l--;
+					o=_map_identifiers(o,c_dt,g_dt,fn_sc);
+				}
+				return o;
+			}
+		case SLL_NODE_TYPE_MAP:
+			{
+				sll_map_length_t l=o->dt.ml;
+				o++;
+				while (l){
+					l--;
+					o=_map_identifiers(o,c_dt,g_dt,fn_sc);
+				}
+				return o;
+			}
 		case SLL_NODE_TYPE_FUNC:
 			return sll_skip_node_const(o);
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->dt.ac;
+				sll_arg_count_t l=o->dt.fn.ac;
 				o++;
 				while (l){
 					l--;
@@ -1095,7 +1096,15 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_array_length_t l=o->dt.al;
+				o++;
+				while (l){
+					l--;
+					o=_mark_loop_delete(o,g_dt,v_st,sc);
+				}
+				return o;
+			}
 		case SLL_NODE_TYPE_MAP:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_IDENTIFIER:

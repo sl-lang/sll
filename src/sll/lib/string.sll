@@ -1,4 +1,4 @@
-(# func_type)
+(# int_type func_type char_type string_type)
 (--- "types.sll")
 
 
@@ -32,7 +32,24 @@
 (= str (... "sll:string_convert"))
 
 (= split (... "sll:string_split"))
-(= replace (... "sll:string_replace"))
+
+(= replace (,,, dt k v
+	(? (=== k nil) {
+		(= k "")
+	} (!== (:? k char_type)) {
+		(= k (:: k string_type))
+	})
+	(? (=== v nil) {
+		(= v "")
+	} (!== (:? v char_type)) {
+		(= v (:: v string_type))
+	})
+	(@@ (<- (... "sll:string_replace")
+		(:: dt string_type)
+		k
+		v
+	))
+))
 
 (= flip_case (... "sll:string_flip_case"))
 (= lower_case (... "sll:string_to_lower_case"))
@@ -42,8 +59,20 @@
 (= format (... "sll:string_format"))
 (= reverse (... "sll:string_reverse"))
 
-(= pad_left (... "sll:string_pad_left"))
-(= pad_right (... "sll:string_pad_right"))
+(= pad_left (,,, s l c
+	(@@ (<- (... "sll:string_pad_left")
+		(:: s string_type)
+		(:: l int_type)
+		(?: (=== c nil) ' ' (:: c char_type))
+	))
+))
+(= pad_right (,,, s l c
+	(@@ (<- (... "sll:string_pad_right")
+		(:: s string_type)
+		(:: l int_type)
+		(?: (=== c nil) ' ' (:: c char_type))
+	))
+))
 
 (= starts (... "sll:string_starts"))
 (= ends (... "sll:string_ends"))
