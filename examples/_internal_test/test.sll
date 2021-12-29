@@ -204,9 +204,12 @@
 (= h (<- hash$md5$update h "defg"))
 (:> (<- hash$hexdigest (<- hash$md5$digest h)) "\n7ac66c0f148de9519b8bd264312c4d64\n")
 
-(-> (= i 0) (< i 20) {
+(-> (= i 0) (<= i 20) {
 	(? (&& (! (% i 2)) (! (% i 3))) {
 		(:> "Multiple of 6: " i "\n")
+	})
+	(? (|| (! (% i 3)) (! (% i 5))) {
+		(:> "Multiple of 3 or 5: " i "\n")
 	})
 	(++ i)
 })

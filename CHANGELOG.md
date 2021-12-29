@@ -4,11 +4,12 @@
 
 ### Added
 
-- Implemented `and` (`(&&)`) operator ([#168])
+- Implemented `and` (`(&&)`) and `or` (`(||)`) operators ([#168])
 - Implemented `hash.sll` and `hash$hexdigest` ([#23])
 - Implemented `sll_api_hash_md5`, `hash$md5$BLOCK_SIZE`, `hash$md5$DIGEST_SIZE`, `hash$md5$init`, `hash$md5$update`, `hash$md5$digest` and `hash$md5$process` ([#23] and [#163])
 - Implemented `sll_api_hash_sha1`, `hash$sha1$BLOCK_SIZE`, `hash$sha1$DIGEST_SIZE`, `hash$sha1$init`, `hash$sha1$update`, `hash$sha1$digest` and `hash$sha1$process` ([#23] and [#164])
 - Implemented `sll_process_join_args`, `process$split` and `process$join` ([#161])
+- Replaced jumping to jump with the target of the second jump
 
 ### Changed
 

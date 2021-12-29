@@ -1094,6 +1094,7 @@ _keep_assignment:;
 				return o;
 			}
 		case SLL_NODE_TYPE_AND:
+		case SLL_NODE_TYPE_OR:
 			{
 				sll_arg_count_t l=o->dt.ac;
 				if (!l){
@@ -1118,8 +1119,6 @@ _keep_assignment:;
 				}
 				return o;
 			}
-		case SLL_NODE_TYPE_OR:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_NOT:
 		case SLL_NODE_TYPE_BOOL:
 		case SLL_NODE_TYPE_BIT_NOT:
