@@ -378,10 +378,10 @@ __API_FUNC_DECL(string_join){
 
 __API_FUNC(string_pad_left){
 	if (b<0){
-		sll_string_pad_right(a,(b<-((sll_integer_t)SLL_MAX_STRING_LENGTH)?SLL_MAX_STRING_LENGTH:(sll_string_length_t)(-b)),(c==SLL_NO_CHAR?' ':(sll_char_t)SLL_NO_CHAR),out);
+		sll_string_pad_right(a,(b<-((sll_integer_t)SLL_MAX_STRING_LENGTH)?SLL_MAX_STRING_LENGTH:(sll_string_length_t)(-b)),c,out);
 	}
 	else{
-		sll_string_pad_left(a,(b>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)b),(c==SLL_NO_CHAR?' ':(sll_char_t)SLL_NO_CHAR),out);
+		sll_string_pad_left(a,(b>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)b),c,out);
 	}
 }
 
@@ -389,10 +389,10 @@ __API_FUNC(string_pad_left){
 
 __API_FUNC(string_pad_right){
 	if (b<0){
-		sll_string_pad_right(a,(b<-((sll_integer_t)SLL_MAX_STRING_LENGTH)?SLL_MAX_STRING_LENGTH:(sll_string_length_t)(-b)),(c==SLL_NO_CHAR?' ':(sll_char_t)SLL_NO_CHAR),out);
+		sll_string_pad_right(a,(b<-((sll_integer_t)SLL_MAX_STRING_LENGTH)?SLL_MAX_STRING_LENGTH:(sll_string_length_t)(-b)),c,out);
 	}
 	else{
-		sll_string_pad_left(a,(b>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)b),(c==SLL_NO_CHAR?' ':(sll_char_t)SLL_NO_CHAR),out);
+		sll_string_pad_left(a,(b>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)b),c,out);
 	}
 }
 

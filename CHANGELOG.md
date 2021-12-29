@@ -24,7 +24,8 @@
 
 - Handle API ([#162])
 - Old hash API
-- `SLL_FROM_FILE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
+- Optional arguments from internal functions
+- `SLL_FROM_FILE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL` and `SLL_NO_CHAR`
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
 - `sys_arg_get_count` and `sys$argc`
 - Unneeded parser errors and function: `SLL_ERROR_TOO_MANY_ARGUMENTS`, `SLL_ERROR_ARRAY_TOO_LONG`, `SLL_ERROR_MAP_TOO_LONG` and `sll_parse_node`
