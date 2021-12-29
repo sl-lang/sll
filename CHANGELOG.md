@@ -15,6 +15,7 @@
 - File & JSON APIs now uses custom types instead of handles ([#162])
 - Fixed `sll_string_duplicate` and `sll_string_select`
 - Fixed multiple optimizer and assembly generator bugs
+- Moved CLI help file from [`rsrc/help.txt`][0.6.33/rsrc/help.txt] to [`src/cli/data/help.txt`][main/src/cli/data/help.txt]
 - Renamed `sll_api_sort_sort` to `sll_api_sort_quicksort`
 - Renamed `sll_api_sys_arg_get` to `sll_api_sys_get_args`
 - Repository file layout
@@ -1397,7 +1398,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/cli/data/help.txt]: https://github.com/sl-lang/sll/blob/main/src/cli/data/help.txt
 [main/src/sll/data/assembly_optimizer.txt]: https://github.com/sl-lang/sll/blob/main/src/sll/data/assembly_optimizer.txt
+[0.6.33/rsrc/help.txt]: https://github.com/sl-lang/sll/blob/v0.6.33/rsrc/help.txt
 [0.6.33/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
 [0.6.32/src/include/sll/api/util.h]: https://github.com/sl-lang/sll/blob/v0.6.32/src/include/sll/api/util.h
 [0.6.32/src/sll/api/util_api.c]: https://github.com/sl-lang/sll/blob/v0.6.32/src/sll/api/util_api.c
