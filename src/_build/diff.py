@@ -74,11 +74,14 @@ else:
 	o=""
 	for k in sys.argv[1:-1]:
 		k=k.split("=")
-		v="0"
-		for e in k[1].split(","):
-			if (e in t):
-				v="1"
-				break
+		if (".github/workflows/all.yml" in t or "src/_build" in t):
+			v="1"
+		else:
+			v="0"
+			for e in k[1].split(","):
+				if (e in t):
+					v="1"
+					break
 		if (v=="0"):
 			print(f"No changes found for '{k[0]}'")
 		else:

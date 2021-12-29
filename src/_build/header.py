@@ -114,7 +114,7 @@ def read_version(fp):
 
 
 def generate_help(i_fp,o_fp):
-	util.log(f"Convering '{i_fp}' to Header File...")
+	util.log(f"Convering '{i_fp}' to {o_fp}...")
 	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
 		dt=rf.read().replace(b"\r\n",b"\n")
 		wf.write(b"#ifndef __HELP_TEXT_H__\n#define __HELP_TEXT_H__ 1\n#include <sll.h>\n\n\n\n#define HELP_TEXT_SIZE "+bytes(str(len(dt)),"utf-8")+b"\n\n\n\nstatic const sll_char_t HELP_TEXT[]={\n\t")
