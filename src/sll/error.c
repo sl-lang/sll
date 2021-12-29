@@ -89,9 +89,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 		case SLL_ERROR_UNMATCHED_CLOSE_PARENTHESES:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unmatched Right Parentheses\n"));
 			return;
-		case SLL_ERROR_UNMATCHED_OPEN_QUOTE:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Unmatched Block Quote\n"));
-			return;
 		case SLL_ERROR_UNMATCHED_CURLY_OPEN_BRACKETS:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unmatched Left Curly Brackets\n"));
 			return;

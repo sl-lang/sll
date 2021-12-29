@@ -722,16 +722,10 @@ _recurse_array_or_map:;
 			do{
 				lc=c;
 				c=sll_file_read_char(rf);
-				if (c==SLL_END_OF_DATA){
-					e->t=SLL_ERROR_UNMATCHED_OPEN_QUOTE;
-					e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-3;
-					e->dt.r.sz=1;
-					if (n_l_sc.m){
-						sll_deallocate(n_l_sc.m);
-					}
-					return 0;
-				}
-			} while (c!='|'||lc!='#');
+			} while (c!=SLL_END_OF_DATA&&(c!='|'||lc!='#'));
+			if (c==SLL_END_OF_DATA){
+				break;
+			}
 			c=sll_file_read_char(rf);
 		}
 		else{

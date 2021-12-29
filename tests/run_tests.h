@@ -16,8 +16,4 @@ typedef struct __TEST_RESULT{
 
 
 
-typedef void (*file_callback_t)(const char* fp,test_result_t* o);
-
-
-
 #endif
