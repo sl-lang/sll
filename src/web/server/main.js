@@ -16,8 +16,15 @@ const REDIRECTS={
 
 
 addEventListener("fetch",(e)=>e.respondWith((async (url)=>{
-	url=REDIRECTS[url]||((await SLL.get("__table")).split("\x00").includes(url)?url:"/404.html");
-	return new Response(await SLL.get(Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(url)))).map(k=>k.toString(16).padStart(2,"0")).join(""),"arrayBuffer"),{headers:new Headers({
+	url=REDIRECTS[url]||url;
+	let h={};
+	if (!(await SLL.get("__table")).split("\x00").includes(url)){
+		h.status=404;
+		h.statusText="Not Found";
+		url="not_found.html"
+	}
+	h.headers=new Headers({
 		"Content-Type":MIME_TYPES[url.split(".").at(-1)]||"text/plain;charset=utf-8"
-	})});
+	});
+	return new Response(await SLL.get(Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(url)))).map(k=>k.toString(16).padStart(2,"0")).join(""),"arrayBuffer"),h);
 })("/"+e.request.url.match(/^https?:\/\/[a-z0-9._]+\/+([^?#]*)/)[1])));
