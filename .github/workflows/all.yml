@@ -168,8 +168,8 @@ jobs:
       - windows-release
     if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
     runs-on: ubuntu-latest
-    environment:
-      CLOUDFLARE_ANALYTICS: ${{secrets.CLOUDFLARE_ANALYTICS_CODE}}
+    env:
+      ANALYTICS: ${{secrets.ANALYTICS_CODE}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
