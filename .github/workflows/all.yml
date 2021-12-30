@@ -150,7 +150,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --upload'||''}}
+        run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
       - name: Store Asset
         uses: actions/upload-artifact@v2
         if: github.event_name=='workflow_dispatch'
@@ -285,7 +285,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --upload'||''}}
+        run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
       - name: Store Asset
         uses: actions/upload-artifact@v2
         if: github.event_name=='workflow_dispatch'

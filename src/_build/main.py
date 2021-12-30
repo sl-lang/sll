@@ -50,7 +50,7 @@ util.log("Removing Module Source Files...")
 for k in fl:
 	util.log(f"  Removing 'build/lib/{k}'...")
 	os.remove("build/lib/"+k)
-if ("--bundle" in sys.argv):
+if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
 if ("--extension" in sys.argv):
@@ -71,7 +71,7 @@ if ("--extension" in sys.argv):
 	for k in fl:
 		util.log(f"  Removing 'build/lib_ext/{k}'...")
 		os.remove("build/lib_ext/"+k)
-	if ("--bundle" in sys.argv):
+	if ("--bundle" in sys.argv or "--upload" in sys.argv):
 		util.log("Compressing extension files...")
 		util.bundle_ext(ver)
 	if ("--extension-only" in sys.argv):
