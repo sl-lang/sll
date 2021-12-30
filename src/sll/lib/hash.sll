@@ -47,6 +47,7 @@
 (= hash_module_type (&:
 	(~ hash_type) md5
 	(~ hash_type) sha1
+	(~ hash_type) sha224
 	(~ hash_type) sha256
 	(~ func_type) hexdigest
 ))
@@ -58,6 +59,9 @@
 
 (= SHA1_BLOCK_SIZE 64)
 (= SHA1_DIGEST_SIZE 20)
+
+(= SHA224_BLOCK_SIZE 64)
+(= SHA224_DIGEST_SIZE 28)
 
 (= SHA256_BLOCK_SIZE 64)
 (= SHA256_DIGEST_SIZE 32)
@@ -366,6 +370,32 @@
 
 
 
+(= sha224_init (,,,
+	(@@ (. sha256_type
+		""
+		0
+		0xc1059ed8
+		0x367cd507
+		0x3070dd17
+		0xf70e5939
+		0xffc00b31
+		0x68581511
+		0x64f98fa7
+		0xbefa4fa4
+	))
+))
+
+(= sha224_digest (,,, sha224
+	(= o (<- sha256_digest sha224))
+	(@@ (: o 0 28))
+))
+
+(= sha224_process (,,, dt
+	(@@ (<- sha224_digest (<- sha256_update (<- sha224_init) dt)))
+))
+
+
+
 (= hexdigest (,,, d
 	(= l ($ d))
 	(= o "")
@@ -398,6 +428,14 @@
 		sha1_update
 		sha1_digest
 		sha1_process
+	]
+	[
+		SHA224_BLOCK_SIZE
+		SHA224_DIGEST_SIZE
+		sha224_init
+		sha256_update
+		sha224_digest
+		sha224_process
 	]
 	[
 		SHA256_BLOCK_SIZE

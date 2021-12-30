@@ -8,6 +8,7 @@
 - Implemented `hash.sll` and `hash$hexdigest` ([#23])
 - Implemented `sll_api_hash_md5`, `hash$md5$BLOCK_SIZE`, `hash$md5$DIGEST_SIZE`, `hash$md5$init`, `hash$md5$update`, `hash$md5$digest` and `hash$md5$process` ([#23] and [#163])
 - Implemented `sll_api_hash_sha1`, `hash$sha1$BLOCK_SIZE`, `hash$sha1$DIGEST_SIZE`, `hash$sha1$init`, `hash$sha1$update`, `hash$sha1$digest` and `hash$sha1$process` ([#23] and [#164])
+- Implemented `sll_api_hash_sha224`, `hash$sha224$BLOCK_SIZE`, `hash$sha224$DIGEST_SIZE`, `hash$sha224$init`, `hash$sha224$update`, `hash$sha224$digest` and `hash$sha224$process` ([#23] and [#165])
 - Implemented `sll_api_hash_sha256`, `hash$sha256$BLOCK_SIZE`, `hash$sha256$DIGEST_SIZE`, `hash$sha256$init`, `hash$sha256$update`, `hash$sha256$digest` and `hash$sha256$process` ([#23] and [#165])
 - Implemented `sll_api_string_checksum` and `string$checksum`
 - Implemented `sll_file_peek_char`

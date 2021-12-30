@@ -194,15 +194,19 @@
 
 (:> file$stdout "\n")
 
+(= h (<- hash$md5$init))
+(= h (<- hash$md5$update h "abc"))
+(= h (<- hash$md5$update h "defg"))
+(:> (<- hash$hexdigest (<- hash$md5$digest h)) "\n7ac66c0f148de9519b8bd264312c4d64\n")
+
 (= h (<- hash$sha1$init))
 (= h (<- hash$sha1$update h "abc"))
 (= h (<- hash$sha1$update h "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABC"))
 (:> (<- hash$hexdigest (<- hash$sha1$digest h)) "\n7c79894450f353c7108e70f45776ee6772947e0d\n")
 
-(= h (<- hash$md5$init))
-(= h (<- hash$md5$update h "abc"))
-(= h (<- hash$md5$update h "defg"))
-(:> (<- hash$hexdigest (<- hash$md5$digest h)) "\n7ac66c0f148de9519b8bd264312c4d64\n")
+(= h (<- hash$sha224$init))
+(= h (<- hash$sha224$update h "Hello World!"))
+(:> (<- hash$hexdigest (<- hash$sha224$digest h)) "\n4575bb4ec129df6380cedde6d71217fe0536f8ffc4e18bca530a7a1b\n")
 
 (= h (<- hash$sha256$init))
 (= h (<- hash$sha256$update h "aBcDeFgHi"))
