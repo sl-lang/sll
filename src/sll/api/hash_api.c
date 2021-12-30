@@ -23,24 +23,9 @@
 #define SHA1_STEP2(b,c,d) ((b&c)|(b&d)|(c&d))+0x8f1bbcdc
 #define SHA1_STEP3(b,c,d) (b^c^d)+0xca62c1d6
 
-#define SHA1_STEP(t,i) \
-	if (i>3){ \
-		w[i*5]=ROTATE_BITS(w[i*5-3]^w[i*5-8]^w[i*5-14]^w[i*5-16],1); \
-		w[i*5+1]=ROTATE_BITS(w[i*5-2]^w[i*5-7]^w[i*5-13]^w[i*5-15],1); \
-		w[i*5+2]=ROTATE_BITS(w[i*5-1]^w[i*5-6]^w[i*5-12]^w[i*5-14],1); \
-		w[i*5+3]=ROTATE_BITS(w[i*5]^w[i*5-5]^w[i*5-11]^w[i*5-13],1); \
-		w[i*5+4]=ROTATE_BITS(w[i*5+1]^w[i*5-4]^w[i*5-10]^w[i*5-12],1); \
-	} \
-	de=ROTATE_BITS(da,5)+SHA1_STEP##t(db,dc,dd)+de+w[i*5]; \
-	db=ROTATE_BITS(db,30); \
-	dd=ROTATE_BITS(de,5)+SHA1_STEP##t(da,db,dc)+dd+w[i*5+1]; \
-	da=ROTATE_BITS(da,30); \
-	dc=ROTATE_BITS(dd,5)+SHA1_STEP##t(de,da,db)+dc+w[i*5+2]; \
-	de=ROTATE_BITS(de,30); \
-	db=ROTATE_BITS(dc,5)+SHA1_STEP##t(dd,de,da)+db+w[i*5+3]; \
-	dd=ROTATE_BITS(dd,30); \
-	da=ROTATE_BITS(db,5)+SHA1_STEP##t(dc,dd,de)+da+w[i*5+4]; \
-	dc=ROTATE_BITS(dc,30);
+#define SHA1_STEP(a,b,c,d,e,fn,v) \
+	e=ROTATE_BITS(a,5)+SHA1_STEP##fn(b,c,d)+e+v; \
+	b=ROTATE_BITS(b,30);
 
 
 
@@ -166,31 +151,94 @@ __API_FUNC(hash_sha1){
 			w[j]=SWAP_BYTES(*ptr);
 			ptr++;
 		}
-		w[16]=ROTATE_BITS(w[13]^w[8]^w[2]^w[0],1);
-		w[17]=ROTATE_BITS(w[14]^w[9]^w[3]^w[1],1);
-		w[18]=ROTATE_BITS(w[15]^w[10]^w[4]^w[2],1);
-		w[19]=ROTATE_BITS(w[16]^w[11]^w[5]^w[3],1);
+		for (uint8_t j=16;j<80;j++){
+			w[j]=ROTATE_BITS(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);
+		}
 		uint32_t da=av;
 		uint32_t db=bv;
 		uint32_t dc=cv;
 		uint32_t dd=dv;
 		uint32_t de=ev;
-		SHA1_STEP(0,0);
-		SHA1_STEP(0,1);
-		SHA1_STEP(0,2);
-		SHA1_STEP(0,3);
-		SHA1_STEP(1,4);
-		SHA1_STEP(1,5);
-		SHA1_STEP(1,6);
-		SHA1_STEP(1,7);
-		SHA1_STEP(2,8);
-		SHA1_STEP(2,9);
-		SHA1_STEP(2,10);
-		SHA1_STEP(2,11);
-		SHA1_STEP(3,12);
-		SHA1_STEP(3,13);
-		SHA1_STEP(3,14);
-		SHA1_STEP(3,15);
+		SHA1_STEP(da,db,dc,dd,de,0,w[0]);
+		SHA1_STEP(de,da,db,dc,dd,0,w[1]);
+		SHA1_STEP(dd,de,da,db,dc,0,w[2]);
+		SHA1_STEP(dc,dd,de,da,db,0,w[3]);
+		SHA1_STEP(db,dc,dd,de,da,0,w[4]);
+		SHA1_STEP(da,db,dc,dd,de,0,w[5]);
+		SHA1_STEP(de,da,db,dc,dd,0,w[6]);
+		SHA1_STEP(dd,de,da,db,dc,0,w[7]);
+		SHA1_STEP(dc,dd,de,da,db,0,w[8]);
+		SHA1_STEP(db,dc,dd,de,da,0,w[9]);
+		SHA1_STEP(da,db,dc,dd,de,0,w[10]);
+		SHA1_STEP(de,da,db,dc,dd,0,w[11]);
+		SHA1_STEP(dd,de,da,db,dc,0,w[12]);
+		SHA1_STEP(dc,dd,de,da,db,0,w[13]);
+		SHA1_STEP(db,dc,dd,de,da,0,w[14]);
+		SHA1_STEP(da,db,dc,dd,de,0,w[15]);
+		SHA1_STEP(de,da,db,dc,dd,0,w[16]);
+		SHA1_STEP(dd,de,da,db,dc,0,w[17]);
+		SHA1_STEP(dc,dd,de,da,db,0,w[18]);
+		SHA1_STEP(db,dc,dd,de,da,0,w[19]);
+		SHA1_STEP(da,db,dc,dd,de,1,w[20]);
+		SHA1_STEP(de,da,db,dc,dd,1,w[21]);
+		SHA1_STEP(dd,de,da,db,dc,1,w[22]);
+		SHA1_STEP(dc,dd,de,da,db,1,w[23]);
+		SHA1_STEP(db,dc,dd,de,da,1,w[24]);
+		SHA1_STEP(da,db,dc,dd,de,1,w[25]);
+		SHA1_STEP(de,da,db,dc,dd,1,w[26]);
+		SHA1_STEP(dd,de,da,db,dc,1,w[27]);
+		SHA1_STEP(dc,dd,de,da,db,1,w[28]);
+		SHA1_STEP(db,dc,dd,de,da,1,w[29]);
+		SHA1_STEP(da,db,dc,dd,de,1,w[30]);
+		SHA1_STEP(de,da,db,dc,dd,1,w[31]);
+		SHA1_STEP(dd,de,da,db,dc,1,w[32]);
+		SHA1_STEP(dc,dd,de,da,db,1,w[33]);
+		SHA1_STEP(db,dc,dd,de,da,1,w[34]);
+		SHA1_STEP(da,db,dc,dd,de,1,w[35]);
+		SHA1_STEP(de,da,db,dc,dd,1,w[36]);
+		SHA1_STEP(dd,de,da,db,dc,1,w[37]);
+		SHA1_STEP(dc,dd,de,da,db,1,w[38]);
+		SHA1_STEP(db,dc,dd,de,da,1,w[39]);
+		SHA1_STEP(da,db,dc,dd,de,2,w[40]);
+		SHA1_STEP(de,da,db,dc,dd,2,w[41]);
+		SHA1_STEP(dd,de,da,db,dc,2,w[42]);
+		SHA1_STEP(dc,dd,de,da,db,2,w[43]);
+		SHA1_STEP(db,dc,dd,de,da,2,w[44]);
+		SHA1_STEP(da,db,dc,dd,de,2,w[45]);
+		SHA1_STEP(de,da,db,dc,dd,2,w[46]);
+		SHA1_STEP(dd,de,da,db,dc,2,w[47]);
+		SHA1_STEP(dc,dd,de,da,db,2,w[48]);
+		SHA1_STEP(db,dc,dd,de,da,2,w[49]);
+		SHA1_STEP(da,db,dc,dd,de,2,w[50]);
+		SHA1_STEP(de,da,db,dc,dd,2,w[51]);
+		SHA1_STEP(dd,de,da,db,dc,2,w[52]);
+		SHA1_STEP(dc,dd,de,da,db,2,w[53]);
+		SHA1_STEP(db,dc,dd,de,da,2,w[54]);
+		SHA1_STEP(da,db,dc,dd,de,2,w[55]);
+		SHA1_STEP(de,da,db,dc,dd,2,w[56]);
+		SHA1_STEP(dd,de,da,db,dc,2,w[57]);
+		SHA1_STEP(dc,dd,de,da,db,2,w[58]);
+		SHA1_STEP(db,dc,dd,de,da,2,w[59]);
+		SHA1_STEP(da,db,dc,dd,de,3,w[60]);
+		SHA1_STEP(de,da,db,dc,dd,3,w[61]);
+		SHA1_STEP(dd,de,da,db,dc,3,w[62]);
+		SHA1_STEP(dc,dd,de,da,db,3,w[63]);
+		SHA1_STEP(db,dc,dd,de,da,3,w[64]);
+		SHA1_STEP(da,db,dc,dd,de,3,w[65]);
+		SHA1_STEP(de,da,db,dc,dd,3,w[66]);
+		SHA1_STEP(dd,de,da,db,dc,3,w[67]);
+		SHA1_STEP(dc,dd,de,da,db,3,w[68]);
+		SHA1_STEP(db,dc,dd,de,da,3,w[69]);
+		SHA1_STEP(da,db,dc,dd,de,3,w[70]);
+		SHA1_STEP(de,da,db,dc,dd,3,w[71]);
+		SHA1_STEP(dd,de,da,db,dc,3,w[72]);
+		SHA1_STEP(dc,dd,de,da,db,3,w[73]);
+		SHA1_STEP(db,dc,dd,de,da,3,w[74]);
+		SHA1_STEP(da,db,dc,dd,de,3,w[75]);
+		SHA1_STEP(de,da,db,dc,dd,3,w[76]);
+		SHA1_STEP(dd,de,da,db,dc,3,w[77]);
+		SHA1_STEP(dc,dd,de,da,db,3,w[78]);
+		SHA1_STEP(db,dc,dd,de,da,3,w[79]);
 		av+=da;
 		bv+=db;
 		cv+=dc;
@@ -220,7 +268,6 @@ __API_FUNC(hash_sha256){
 	uint32_t hv=(uint32_t)h;
 	SLL_ASSERT(!(i->l&63));
 	uint32_t w[64];
-	uint32_t t;
 	const uint32_t* ptr=(const uint32_t*)(i->v);
 	for (sll_string_length_t idx=0;idx<(i->l>>6);idx++){
 		for (uint8_t j=0;j<16;j++){
@@ -238,6 +285,7 @@ __API_FUNC(hash_sha256){
 		uint32_t df=fv;
 		uint32_t dg=gv;
 		uint32_t dh=hv;
+		uint32_t t;
 		SHA256_STEP(da,db,dc,dd,de,df,dg,dh,w[0]+0x428a2f98);
 		SHA256_STEP(dh,da,db,dc,dd,de,df,dg,w[1]+0x71374491);
 		SHA256_STEP(dg,dh,da,db,dc,dd,de,df,w[2]+0xb5c0fbcf);
@@ -337,7 +385,6 @@ __API_FUNC(hash_sha512){
 	uint64_t hv=(uint64_t)h;
 	SLL_ASSERT(!(i->l&127));
 	uint64_t w[80];
-	uint64_t t;
 	const uint64_t* ptr=(const uint64_t*)(i->v);
 	for (sll_string_length_t idx=0;idx<(i->l>>7);idx++){
 		for (uint8_t j=0;j<16;j++){
@@ -355,6 +402,7 @@ __API_FUNC(hash_sha512){
 		uint64_t df=fv;
 		uint64_t dg=gv;
 		uint64_t dh=hv;
+		uint64_t t;
 		SHA512_STEP(da,db,dc,dd,de,df,dg,dh,w[0]+0x428a2f98d728ae22ull);
 		SHA512_STEP(dh,da,db,dc,dd,de,df,dg,w[1]+0x7137449123ef65cdull);
 		SHA512_STEP(dg,dh,da,db,dc,dd,de,df,w[2]+0xb5c0fbcfec4d3b2full);
