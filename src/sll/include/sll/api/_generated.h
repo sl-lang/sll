@@ -400,6 +400,36 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_hash_sha512 void
+#define __SLL_API_ARGS_sll_api_hash_sha512 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_hash_sha512
+ * \group hash-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ * \arg sll_integer_t c -> 
+ * \arg sll_integer_t d -> 
+ * \arg sll_integer_t e -> 
+ * \arg sll_integer_t f -> 
+ * \arg sll_integer_t g -> 
+ * \arg sll_integer_t h -> 
+ * \arg sll_string_t* i -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_hash_sha512_raw
+ * \group raw-api
+ * \subgroup raw-api-hash-api
+ * \desc Wrapper function for :sll_api_hash_sha512:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_json__init void
 #define __SLL_API_ARGS_sll_api_json__init sll_object_t* a,sll_object_t* b,sll_object_t* c
 /**

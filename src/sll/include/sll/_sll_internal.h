@@ -38,9 +38,11 @@ static SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 }
 #define POPULATION_COUNT(m) __popcnt64((m))
 #define SWAP_BYTES(m) _byteswap_ulong((m))
+#define SWAP_BYTES64(m) _byteswap_uint64((m))
 #define ROTATE_BITS(a,b) _rotl((a),(b))
 #define ROTATE_BITS_RIGHT(a,b) _rotr((a),(b))
 #define ROTATE_BITS64(a,b) _rotl64((a),(b))
+#define ROTATE_BITS_RIGHT64(a,b) _rotr64((a),(b))
 #define IGNORE_RESULT(x) ((void)(x))
 #define _ASSUME_ALIGNED(p,n,x) \
 	do{ \
@@ -59,6 +61,7 @@ static SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 #define FIND_LAST_SET_BIT(m) (63-__builtin_clzll((m)))
 #define POPULATION_COUNT(m) __builtin_popcountll((m))
 #define SWAP_BYTES(m) __builtin_bswap32((m))
+#define SWAP_BYTES64(m) __builtin_bswap64((m))
 static SLL_FORCE_INLINE unsigned int ROTATE_BITS(unsigned int a,unsigned char b){
 	__asm__("rol %1,%0":"+r"(a):"c"(b));
 	return a;
@@ -69,6 +72,10 @@ static SLL_FORCE_INLINE unsigned int ROTATE_BITS_RIGHT(unsigned int a,unsigned c
 }
 static SLL_FORCE_INLINE unsigned long long int ROTATE_BITS64(unsigned long long int a,unsigned char b){
 	__asm__("rolq %1,%0":"+r"(a):"c"(b));
+	return a;
+}
+static SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned long long int a,unsigned char b){
+	__asm__("rorq %1,%0":"+r"(a):"c"(b));
 	return a;
 }
 #define IGNORE_RESULT(x) \

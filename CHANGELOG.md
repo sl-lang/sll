@@ -10,6 +10,8 @@
 - Implemented `sll_api_hash_sha1`, `hash$sha1$BLOCK_SIZE`, `hash$sha1$DIGEST_SIZE`, `hash$sha1$init`, `hash$sha1$update`, `hash$sha1$digest` and `hash$sha1$process` ([#23] and [#164])
 - Implemented `sll_api_hash_sha224`, `hash$sha224$BLOCK_SIZE`, `hash$sha224$DIGEST_SIZE`, `hash$sha224$init`, `hash$sha224$update`, `hash$sha224$digest` and `hash$sha224$process` ([#23] and [#165])
 - Implemented `sll_api_hash_sha256`, `hash$sha256$BLOCK_SIZE`, `hash$sha256$DIGEST_SIZE`, `hash$sha256$init`, `hash$sha256$update`, `hash$sha256$digest` and `hash$sha256$process` ([#23] and [#165])
+- Implemented `sll_api_hash_sha384`, `hash$sha384$BLOCK_SIZE`, `hash$sha384$DIGEST_SIZE`, `hash$sha384$init`, `hash$sha384$update`, `hash$sha384$digest` and `hash$sha384$process` ([#23] and [#166])
+- Implemented `sll_api_hash_sha512`, `hash$sha512$BLOCK_SIZE`, `hash$sha512$DIGEST_SIZE`, `hash$sha512$init`, `hash$sha512$update`, `hash$sha512$digest` and `hash$sha512$process` ([#23] and [#166])
 - Implemented `sll_api_string_checksum` and `string$checksum`
 - Implemented `sll_file_peek_char`
 - Implemented `sll_process_join_args`, `process$split` and `process$join` ([#161])
@@ -1286,6 +1288,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#168]: https://github.com/sl-lang/sll/issues/168
 [#167]: https://github.com/sl-lang/sll/issues/167
+[#166]: https://github.com/sl-lang/sll/issues/166
 [#165]: https://github.com/sl-lang/sll/issues/165
 [#164]: https://github.com/sl-lang/sll/issues/164
 [#163]: https://github.com/sl-lang/sll/issues/163

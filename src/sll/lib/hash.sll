@@ -35,6 +35,19 @@
 	int_type _h
 ))
 
+(= sha512_type (&:
+	string_type _bf
+	int_type _sz
+	int_type _a
+	int_type _b
+	int_type _c
+	int_type _d
+	int_type _e
+	int_type _f
+	int_type _g
+	int_type _h
+))
+
 (= hash_type (&:
 	(~ int_type) BLOCK_SIZE
 	(~ int_type) DIGEST_SIZE
@@ -49,6 +62,8 @@
 	(~ hash_type) sha1
 	(~ hash_type) sha224
 	(~ hash_type) sha256
+	(~ hash_type) sha384
+	(~ hash_type) sha512
 	(~ func_type) hexdigest
 ))
 
@@ -65,6 +80,12 @@
 
 (= SHA256_BLOCK_SIZE 64)
 (= SHA256_DIGEST_SIZE 32)
+
+(= SHA384_BLOCK_SIZE 128)
+(= SHA384_DIGEST_SIZE 48)
+
+(= SHA512_BLOCK_SIZE 128)
+(= SHA512_DIGEST_SIZE 64)
 
 
 
@@ -397,6 +418,147 @@
 
 
 
+(= sha512_init (,,,
+	(@@ (. sha512_type
+		""
+		0
+		0x6a09e667f3bcc908
+		0xbb67ae8584caa73b
+		0x3c6ef372fe94f82b
+		0xa54ff53a5f1d36f1
+		0x510e527fade682d1
+		0x9b05688c2b3e6c1f
+		0x1f83d9abfb41bd6b
+		0x5be0cd19137e2179
+	))
+))
+
+(= sha512_update (,,, sha512 dt
+	(= sha512 (:: sha512 sha512_type))
+	(? (=== dt nil)
+		(@@ (: sha512))
+	)
+	(= dt (:: dt string_type))
+	(= len ($ dt))
+	(? (! len)
+		(@@ (: sha512))
+	)
+	(= n_sz (+ sha512$_sz len))
+	(= dt (+ sha512$_bf dt))
+	(= len (+ len ($ sha512$_bf)))
+	(= i (& len 0xffffffffffffff80))
+	(? (! i) {
+		(= o (: sha512))
+		(= o$_bf dt)
+		(= o$_sz n_sz)
+		(@@ o)
+	})
+	(= new_data (<- (... "sll:hash_sha512")
+		sha512$_a
+		sha512$_b
+		sha512$_c
+		sha512$_d
+		sha512$_e
+		sha512$_f
+		sha512$_g
+		sha512$_h
+		(: dt 0 i)
+	))
+	(@@ (. sha512_type
+		(: dt i len)
+		n_sz
+		(: new_data 0)
+		(: new_data 1)
+		(: new_data 2)
+		(: new_data 3)
+		(: new_data 4)
+		(: new_data 5)
+		(: new_data 6)
+		(: new_data 7)
+	))
+))
+
+(= sha512_digest (,,, sha512
+	(= sha512 (:: sha512 sha512_type))
+	(= extra sha512$_bf)
+	(= len ($ extra))
+	(= padding (+ (- (?: (< len 112) 111 239) len) 8))
+	(= n (<< sha512$_sz 3))
+	(= extra (+
+		extra
+		'\x80'
+		(* "\x00" padding)
+		(:: (>> n 56) char_type)
+		(:: (>> n 48) char_type)
+		(:: (>> n 40) char_type)
+		(:: (>> n 32) char_type)
+		(:: (>> n 24) char_type)
+		(:: (>> n 16) char_type)
+		(:: (>> n 8) char_type)
+		(:: n char_type)
+	))
+	(= sha512_data (<- (... "sll:hash_sha512")
+		sha512$_a
+		sha512$_b
+		sha512$_c
+		sha512$_d
+		sha512$_e
+		sha512$_f
+		sha512$_g
+		sha512$_h
+		extra
+	))
+	(= o "")
+	(-> (= i 0) (< i 8) {
+		(= n (: sha512_data i))
+		(= o (+ o
+			(:: (>> n 56) char_type)
+			(:: (>> n 48) char_type)
+			(:: (>> n 40) char_type)
+			(:: (>> n 32) char_type)
+			(:: (>> n 24) char_type)
+			(:: (>> n 16) char_type)
+			(:: (>> n 8) char_type)
+			(:: n char_type)
+		))
+		(++ i)
+	})
+	(@@ o)
+))
+
+(= sha512_process (,,, dt
+	(@@ (<- sha512_digest (<- sha512_update (<- sha512_init) dt)))
+))
+
+
+
+(= sha384_init (,,,
+	(@@ (. sha512_type
+		""
+		0
+		0xcbbb9d5dc1059ed8
+		0x629a292a367cd507
+		0x9159015a3070dd17
+		0x152fecd8f70e5939
+		0x67332667ffc00b31
+		0x8eb44a8768581511
+		0xdb0c2e0d64f98fa7
+		0x47b5481dbefa4fa4
+	))
+))
+
+(= sha384_update sha512_update)
+
+(= sha384_digest (,,, sha384
+	(@@ (: (<- sha512_digest sha384) 0 48))
+))
+
+(= sha384_process (,,, dt
+	(@@ (<- sha384_digest (<- sha384_update (<- sha384_init) dt)))
+))
+
+
+
 (= hexdigest (,,, d
 	(= l ($ d))
 	(= o "")
@@ -445,6 +607,22 @@
 		sha256_update
 		sha256_digest
 		sha256_process
+	]
+	[
+		SHA384_BLOCK_SIZE
+		SHA384_DIGEST_SIZE
+		sha384_init
+		sha384_update
+		sha384_digest
+		sha384_process
+	]
+	[
+		SHA512_BLOCK_SIZE
+		SHA512_DIGEST_SIZE
+		sha512_init
+		sha512_update
+		sha512_digest
+		sha512_process
 	]
 	hexdigest
 ))

@@ -212,6 +212,14 @@
 (= h (<- hash$sha256$update h "aBcDeFgHi"))
 (:> (<- hash$hexdigest (<- hash$sha256$digest h)) "\n5ba40d59ca7520b5f8a6eb48be70f9c6e8d0f30490d859ea860aa0d8fe5578b6\n")
 
+(= h (<- hash$sha384$init))
+(= h (<- hash$sha384$update h "Example Message"))
+(:> (<- hash$hexdigest (<- hash$sha384$digest h)) "\n007bd747919d9fd354ba252a15f06136cb2783c08e57069f629accff0553eddd123e148395b99a39959c7daf04d66c81\n")
+
+(= h (<- hash$sha512$init))
+(= h (<- hash$sha512$update h "sha-512 test"))
+(:> (<- hash$hexdigest (<- hash$sha512$digest h)) "\n00f3c0160c8e98c2e6617333bc8b3778d69e020e138204016100f89551995215d5790fbe410cb46dc84d90a3c53701aece1953f975a587eaa6c9745b705f3f81\n")
+
 (-> (= i 0) (<= i 20) {
 	(? (&& (! (% i 2)) (! (% i 3))) {
 		(:> "Multiple of 6: " i "\n")
