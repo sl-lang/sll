@@ -117,6 +117,17 @@ contexts:
               pop: true
             - include: main
         - include: main
+    - match: '(\()\s*(\.)\s+({{identifier}})'
+      captures:
+        1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
+        2: keyword.control.new.sll
+        3: storage.type.custom.sll
+      push:
+        - meta_scope: meta.group.sll meta.parens.sll
+        - match: '\)'
+          scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
+          pop: true
+        - include: main
     - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2})|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%]|\+\+|\-\-)|(>=|<=|==|!=|>|<|===|!==)|(=)|(---)|(,,,)|(:>)|(<-)|(@)|(@@)|(@@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
@@ -180,21 +191,21 @@ contexts:
         - include: main
     - match: '\]'
       scope: invalid.illegal.stray-bracket-end.sll
-    - match: '(?:\b|-)0[bB][01][01_]*\b'
+    - match: '(?:\b|\+|-)0[bB][01][01_]*\b'
       scope: constant.numeric.integer.binary.sll
-    - match: '(?:\b|-)0[oO][0-7][0-7_]*\b'
+    - match: '(?:\b|\+|-)0[oO][0-7][0-7_]*\b'
       scope: constant.numeric.integer.octal.sll
-    - match: '(?:\b|-)0[xX][0-9a-fA-F][0-9a-fA-F_]*\b'
+    - match: '(?:\b|\+|-)0[xX][0-9a-fA-F][0-9a-fA-F_]*\b'
       scope: constant.numeric.integer.hexadecimal.sll
-    - match: '(?:\b|-)(?:[0-9][0-9_]*\.[0-9_]*|\.[0-9_]+)(?:[eE][\+\-]?[0-9][0-9_]*)?\b'
+    - match: '(?:\b|\+|-)(?:[0-9][0-9_]*\.[0-9_]*|\.[0-9_]+)(?:[eE][\+\-]?[0-9][0-9_]*)?\b'
       scope: constant.numeric.float.sll
-    - match: '(?:\b|-)[0-9][0-9_]*\b'
+    - match: '(?:\b|\+|-)[0-9][0-9_]*\b'
       scope: constant.numeric.integer.decimal.sll
     - match: '\'''
       scope: punctuation.definition.string.begin.sll
       push:
         - meta_scope: string.quoted.single.sll
-        - match: '\\x[0-9a-fA-F]{2}|\\[\\tnvfr"'']'
+        - match: '\\(?:[\\tnvfr"'']|x[0-9a-fA-F]{2})'
           scope: constant.character.escape.sll
         - match: '\'''
           scope: punctuation.definition.string.end.sll
@@ -214,7 +225,7 @@ contexts:
           pop: true
         - match: '\\.'
           scope: invalid.illegal.escape.sll
-    - match: '\b(nil|true|false|stdin|stdout|stderr)\b'
+    - match: '\b(nil|true|false)\b'
       scope: constant.language.sll
     - match: '\b(int_type|func_type|type_type|float_type|char_type|string_type|array_type|map_type|map_key_type|map_value_type)\b'
       scope: storage.type.sll
