@@ -26,12 +26,10 @@ Sll can be download from the [GitHub website](#installation-from-github) or an [
 
 The latest Sll releases can be found in the [Releases](https://github.com/sl-lang/sll/releases/latest) page on GitHub.
 
-Sll has the ability to be installed in a folder, or as a standalone executable. Here is a list of file names:
+Sll has the ability to be installed in a folder. Here is a list of file names:
 
 - `win.zip`: Windows build of Sll, must be extracted into a folder before use.
-- `win_standalone.exe`: Windows standalone version, can be used out-of-the-box.
 - `posix.zip`: POSIX build of Sll (platforms such as Linux, Ubuntu, Fedora, etc.). Must be extracted into a single folder.
-- `posix_standalone`: POSIX standalone version of Sll.
 
 ## Installation with `apt`
 
@@ -53,7 +51,7 @@ apt remove sll
 
 ## Version Checking
 
-If using the standalone version of Sll, replace `sll` by `sll_standalone`. The most recent version of Sll is `0.6.33` (`0.6.34` is in development).
+The most recent version of Sll is `0.6.34` (`0.6.35` is in development).
 
 ### Windows
 

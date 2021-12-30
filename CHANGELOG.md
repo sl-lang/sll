@@ -1,6 +1,10 @@
 # The Sl Programing Language Change Log
 
-## [0.6.34] - Ongoing
+## [0.6.35] - Ongoing
+
+*Nothing*
+
+## [0.6.34] - 2021-12-30
 
 ### Added
 
@@ -20,11 +24,11 @@
 
 ### Changed
 
-- Assembly optimizer code is now auto-generated from a file ([`src/sll/data/assembly_optimizer.txt`][main/src/sll/data/assembly_optimizer.txt]) ([#167])
+- Assembly optimizer code is now auto-generated from a file ([`src/sll/data/assembly_optimizer.txt`][0.6.34/src/sll/data/assembly_optimizer.txt]) ([#167])
 - File & JSON APIs now uses custom types instead of handles ([#162])
 - Fixed `sll_string_duplicate` and `sll_string_select`
 - Fixed multiple optimizer and assembly generator bugs
-- Moved CLI help file from [`rsrc/help.txt`][0.6.33/rsrc/help.txt] to [`src/cli/data/help.txt`][main/src/cli/data/help.txt]
+- Moved CLI help file from [`rsrc/help.txt`][0.6.33/rsrc/help.txt] to [`src/cli/data/help.txt`][0.6.34/src/cli/data/help.txt]
 - Renamed `sll_api_sort_sort` to `sll_api_sort_quicksort`
 - Renamed `sll_api_sys_arg_get` to `sll_api_sys_get_args`
 - Repository file layout
@@ -1224,7 +1228,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.34]: https://github.com/sl-lang/sll/compare/v0.6.33...main
+[0.6.35]: https://github.com/sl-lang/sll/compare/v0.6.34...main
+[0.6.34]: https://github.com/sl-lang/sll/compare/v0.6.33...v0.6.34
 [0.6.33]: https://github.com/sl-lang/sll/compare/v0.6.32...v0.6.33
 [0.6.32]: https://github.com/sl-lang/sll/compare/v0.6.31...v0.6.32
 [0.6.31]: https://github.com/sl-lang/sll/compare/v0.6.30...v0.6.31
@@ -1413,8 +1418,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/src/cli/data/help.txt]: https://github.com/sl-lang/sll/blob/main/src/cli/data/help.txt
-[main/src/sll/data/assembly_optimizer.txt]: https://github.com/sl-lang/sll/blob/main/src/sll/data/assembly_optimizer.txt
+[0.6.34/src/cli/data/help.txt]: https://github.com/sl-lang/sll/blob/v0.6.34/src/cli/data/help.txt
+[0.6.34/src/sll/data/assembly_optimizer.txt]: https://github.com/sl-lang/sll/blob/v0.6.34/src/sll/data/assembly_optimizer.txt
 [0.6.33/rsrc/help.txt]: https://github.com/sl-lang/sll/blob/v0.6.33/rsrc/help.txt
 [0.6.33/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
 [0.6.32/src/include/sll/api/util.h]: https://github.com/sl-lang/sll/blob/v0.6.32/src/include/sll/api/util.h
