@@ -40,6 +40,9 @@ def _add_data(nm,dt):
 
 
 def generate():
+	cf_a_dt=bytes(os.getenv("ANALYTICS",""),"utf-8")
+	if (len(cf_a_dt)>0):
+		cf_a_dt=b"-->"+cf_a_dt+b"<!--"
 	o=bytearray()
 	util.log("Reading CSS Files...")
 	for k in os.listdir("src/web/client/css"):
@@ -54,13 +57,10 @@ def generate():
 	toc=_generate_toc(d_dt)
 	util.log("Reading 'src/web/client/index.html'...")
 	with open("src/web/client/index.html","rb") as rf:
-		cf_a_dt=bytes(os.getenv("ANALYTICS",""),"utf-8")
-		if (len(cf_a_dt)>0):
-			cf_a_dt=b"-->"+cf_a_dt+b"<!--"
 		o+=_add_data("/index.html",rf.read().replace(b"{{DATA}}",toc).replace(b"{{ANALYTICS}}",cf_a_dt))
 	util.log("Reading 'src/web/client/not_found.html'...")
 	with open("src/web/client/not_found.html","rb") as rf:
-		o+=_add_data("not_found.html",rf.read())
+		o+=_add_data("not_found.html",rf.read().replace(b"{{ANALYTICS}}",cf_a_dt))
 	util.log("Reading 'src/web/client/shell_install.sh'...")
 	with open("src/web/client/shell_install.sh","rb") as rf:
 		o+=_add_data("shell_install.sh",rf.read())
