@@ -12,7 +12,6 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <stdint.h>
-#include <stdio.h>
 
 
 
@@ -2175,7 +2174,6 @@ _remove_nop:;
 				*(lbl+lbl_i)=j;
 				lbl_i=n;
 			}
-			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP)printf("[%u] -> %u (#%u)\n",i,j,ASSEMBLY_INSTRUCTION_MISC_FIELD(ai));
 			if (j<128){
 				ai->dt.j=j;
 			}

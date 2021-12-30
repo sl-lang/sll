@@ -4,7 +4,7 @@ Options:
   -a, --generate-assembly -> Generate assembly (.sla)
   -A <arg1> <arg2> <arg3>, --args <arg1> <arg2> <arg3> -> Pass argumnets to the VM
   -c, --generate-compiled-object -> Generate compiled objects (.slc)
-  -C, --enable-color -> Use ANSI Escape Codes
+  -C, --enable-color -> Use ANSI escape codes
   -D, --string-debug -> Remove name source code line number data
   -e, --expand-file-paths -> Expand file paths
   -f <file>, --file <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))

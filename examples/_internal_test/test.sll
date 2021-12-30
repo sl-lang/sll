@@ -220,7 +220,7 @@
 (= h (<- hash$sha512$update h "sha-512 test"))
 (:> (<- hash$hexdigest (<- hash$sha512$digest h)) "\n00f3c0160c8e98c2e6617333bc8b3778d69e020e138204016100f89551995215d5790fbe410cb46dc84d90a3c53701aece1953f975a587eaa6c9745b705f3f81\n")
 
-(-> (= i 0) (<= i 20) {
+(-> (= i 1) (<= i 20) {
 	(? (&& (! (% i 2)) (! (% i 3))) {
 		(:> "Multiple of 6: " i "\n")
 	})
