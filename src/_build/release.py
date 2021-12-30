@@ -19,7 +19,7 @@ ISSUE_REGEX=re.compile(r"\[#([0-9]+)\]")
 
 if (__name__=="__main__"):
 	util.create_output_dir()
-	v=header.read_version("src/include/sll/version.h")
+	v=header.read_version("src/sll/include/sll/version.h")
 	util.log("Generating Release Changelog...")
 	with open("CHANGELOG.md","r") as f:
 		dt=f.read().replace("\r\n","\n")
