@@ -22,6 +22,19 @@
 	int_type _e
 ))
 
+(= sha256_type (&:
+	string_type _bf
+	int_type _sz
+	int_type _a
+	int_type _b
+	int_type _c
+	int_type _d
+	int_type _e
+	int_type _f
+	int_type _g
+	int_type _h
+))
+
 (= hash_type (&:
 	(~ int_type) BLOCK_SIZE
 	(~ int_type) DIGEST_SIZE
@@ -34,6 +47,7 @@
 (= hash_module_type (&:
 	(~ hash_type) md5
 	(~ hash_type) sha1
+	(~ hash_type) sha256
 	(~ func_type) hexdigest
 ))
 
@@ -44,6 +58,9 @@
 
 (= SHA1_BLOCK_SIZE 64)
 (= SHA1_DIGEST_SIZE 20)
+
+(= SHA256_BLOCK_SIZE 64)
+(= SHA256_DIGEST_SIZE 32)
 
 
 
@@ -239,6 +256,116 @@
 
 
 
+(= sha256_init (,,,
+	(@@ (. sha256_type
+		""
+		0
+		0x6a09e667
+		0xbb67ae85
+		0x3c6ef372
+		0xa54ff53a
+		0x510e527f
+		0x9b05688c
+		0x1f83d9ab
+		0x5be0cd19
+	))
+))
+
+(= sha256_update (,,, sha256 dt
+	(= sha256 (:: sha256 sha256_type))
+	(? (=== dt nil)
+		(@@ (: sha256))
+	)
+	(= dt (:: dt string_type))
+	(= len ($ dt))
+	(? (! len)
+		(@@ (: sha256))
+	)
+	(= n_sz (+ sha256$_sz len))
+	(= dt (+ sha256$_bf dt))
+	(= len (+ len ($ sha256$_bf)))
+	(= i (& len 0xffffffffffffffc0))
+	(? (! i) {
+		(= o (: sha256))
+		(= o$_bf dt)
+		(= o$_sz n_sz)
+		(@@ o)
+	})
+	(= new_data (<- (... "sll:hash_sha256")
+		sha256$_a
+		sha256$_b
+		sha256$_c
+		sha256$_d
+		sha256$_e
+		sha256$_f
+		sha256$_g
+		sha256$_h
+		(: dt 0 i)
+	))
+	(@@ (. sha256_type
+		(: dt i len)
+		n_sz
+		(: new_data 0)
+		(: new_data 1)
+		(: new_data 2)
+		(: new_data 3)
+		(: new_data 4)
+		(: new_data 5)
+		(: new_data 6)
+		(: new_data 7)
+	))
+))
+
+(= sha256_digest (,,, sha256
+	(= sha256 (:: sha256 sha256_type))
+	(= extra sha256$_bf)
+	(= len ($ extra))
+	(= padding (- (?: (< len 56) 55 119) len))
+	(= n (<< sha256$_sz 3))
+	(= extra (+
+		extra
+		'\x80'
+		(* "\x00" padding)
+		(:: (>> n 56) char_type)
+		(:: (>> n 48) char_type)
+		(:: (>> n 40) char_type)
+		(:: (>> n 32) char_type)
+		(:: (>> n 24) char_type)
+		(:: (>> n 16) char_type)
+		(:: (>> n 8) char_type)
+		(:: n char_type)
+	))
+	(= sha256_data (<- (... "sll:hash_sha256")
+		sha256$_a
+		sha256$_b
+		sha256$_c
+		sha256$_d
+		sha256$_e
+		sha256$_f
+		sha256$_g
+		sha256$_h
+		extra
+	))
+	(= o "")
+	(-> (= i 0) (< i 8) {
+		(= n (: sha256_data i))
+		(= o (+ o
+			(:: (>> n 24) char_type)
+			(:: (>> n 16) char_type)
+			(:: (>> n 8) char_type)
+			(:: n char_type)
+		))
+		(++ i)
+	})
+	(@@ o)
+))
+
+(= sha256_process (,,, dt
+	(@@ (<- sha256_digest (<- sha256_update (<- sha256_init) dt)))
+))
+
+
+
 (= hexdigest (,,, d
 	(= l ($ d))
 	(= o "")
@@ -271,6 +398,14 @@
 		sha1_update
 		sha1_digest
 		sha1_process
+	]
+	[
+		SHA256_BLOCK_SIZE
+		SHA256_DIGEST_SIZE
+		sha256_init
+		sha256_update
+		sha256_digest
+		sha256_process
 	]
 	hexdigest
 ))

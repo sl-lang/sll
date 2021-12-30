@@ -622,6 +622,146 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_sha1_raw(sll_object
 
 
 
+__SLL_API_TYPE_sll_api_hash_sha256 sll_api_hash_sha256(__SLL_API_ARGS_sll_api_hash_sha256);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_sha256_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* c=NULL;
+	if (all>2){
+		c=*(al+2);
+		if (SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(c);
+		}
+		else{
+			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		c=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* d=NULL;
+	if (all>3){
+		d=*(al+3);
+		if (SLL_OBJECT_GET_TYPE(d)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(d);
+		}
+		else{
+			d=sll_operator_cast(d,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		d=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* e=NULL;
+	if (all>4){
+		e=*(al+4);
+		if (SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(e);
+		}
+		else{
+			e=sll_operator_cast(e,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		e=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* f=NULL;
+	if (all>5){
+		f=*(al+5);
+		if (SLL_OBJECT_GET_TYPE(f)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(f);
+		}
+		else{
+			f=sll_operator_cast(f,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		f=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* g=NULL;
+	if (all>6){
+		g=*(al+6);
+		if (SLL_OBJECT_GET_TYPE(g)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(g);
+		}
+		else{
+			g=sll_operator_cast(g,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		g=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* h=NULL;
+	if (all>7){
+		h=*(al+7);
+		if (SLL_OBJECT_GET_TYPE(h)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(h);
+		}
+		else{
+			h=sll_operator_cast(h,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		h=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* i=NULL;
+	if (all>8){
+		i=*(al+8);
+		if (SLL_OBJECT_GET_TYPE(i)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(i);
+		}
+		else{
+			i=sll_operator_cast(i,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		i=SLL_CREATE();
+		i->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(i->dt.s));
+	}
+	sll_array_t out;
+	sll_api_hash_sha256(a->dt.i,b->dt.i,c->dt.i,d->dt.i,e->dt.i,f->dt.i,g->dt.i,h->dt.i,&(i->dt.s),&out);
+	SLL_RELEASE(i);
+	SLL_RELEASE(h);
+	SLL_RELEASE(g);
+	SLL_RELEASE(f);
+	SLL_RELEASE(e);
+	SLL_RELEASE(d);
+	SLL_RELEASE(c);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_json__init sll_api_json__init(__SLL_API_ARGS_sll_api_json__init);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json__init_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -2306,6 +2446,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:file_write",sll_api_file_write_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:hash_md5",sll_api_hash_md5_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:hash_sha1",sll_api_hash_sha1_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:hash_sha256",sll_api_hash_sha256_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:json__init",sll_api_json__init_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
 	{"sll:json_parse",sll_api_json_parse_raw,0},
 	{"sll:json_stringify",sll_api_json_stringify_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
@@ -2367,5 +2508,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=71;
+const sll_function_index_t _ifunc_size=72;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

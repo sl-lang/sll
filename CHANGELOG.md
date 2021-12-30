@@ -8,6 +8,7 @@
 - Implemented `hash.sll` and `hash$hexdigest` ([#23])
 - Implemented `sll_api_hash_md5`, `hash$md5$BLOCK_SIZE`, `hash$md5$DIGEST_SIZE`, `hash$md5$init`, `hash$md5$update`, `hash$md5$digest` and `hash$md5$process` ([#23] and [#163])
 - Implemented `sll_api_hash_sha1`, `hash$sha1$BLOCK_SIZE`, `hash$sha1$DIGEST_SIZE`, `hash$sha1$init`, `hash$sha1$update`, `hash$sha1$digest` and `hash$sha1$process` ([#23] and [#164])
+- Implemented `sll_api_hash_sha256`, `hash$sha256$BLOCK_SIZE`, `hash$sha256$DIGEST_SIZE`, `hash$sha256$init`, `hash$sha256$update`, `hash$sha256$digest` and `hash$sha256$process` ([#23] and [#165])
 - Implemented `sll_api_string_checksum` and `string$checksum`
 - Implemented `sll_file_peek_char`
 - Implemented `sll_process_join_args`, `process$split` and `process$join` ([#161])
@@ -28,8 +29,8 @@
 
 ### Removed
 
-- Error types: `SLL_ERROR_UNKNOWN`, `SLL_ERROR_UNEXPECTED_CHARACTER`, `SLL_ERROR_TOO_MANY_ARGUMENTS`, `SLL_ERROR_ARRAY_TOO_LONG`, `SLL_ERROR_MAP_TOO_LONG`, `SLL_ERROR_UNMATCHED_OPEN_QUOTE`, `SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER`, `SLL_ERROR_UNKNOWN_IDENTIFIER`, `SLL_ERROR_UNMATCHED_QUOTES`, `SLL_ERROR_INVALID_FILE_FORMAT`, `SLL_ERROR_INVALID_INSTRUCTION`, `SLL_ERROR_INVALID_INSTRUCTION_INDEX` and `SLL_ERROR_INVALID_STACK_INDEX`
 - Error argument from `sll_execute_assembly` and `sll_import_loader_t`
+- Error types: `SLL_ERROR_UNKNOWN`, `SLL_ERROR_UNEXPECTED_CHARACTER`, `SLL_ERROR_TOO_MANY_ARGUMENTS`, `SLL_ERROR_ARRAY_TOO_LONG`, `SLL_ERROR_MAP_TOO_LONG`, `SLL_ERROR_UNMATCHED_OPEN_QUOTE`, `SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER`, `SLL_ERROR_UNKNOWN_IDENTIFIER`, `SLL_ERROR_UNMATCHED_QUOTES`, `SLL_ERROR_INVALID_FILE_FORMAT`, `SLL_ERROR_INVALID_INSTRUCTION`, `SLL_ERROR_INVALID_INSTRUCTION_INDEX` and `SLL_ERROR_INVALID_STACK_INDEX`
 - Handle API ([#162])
 - Old hash API
 - Optional arguments from internal functions
@@ -1284,6 +1285,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#168]: https://github.com/sl-lang/sll/issues/168
 [#167]: https://github.com/sl-lang/sll/issues/167
+[#165]: https://github.com/sl-lang/sll/issues/165
 [#164]: https://github.com/sl-lang/sll/issues/164
 [#163]: https://github.com/sl-lang/sll/issues/163
 [#162]: https://github.com/sl-lang/sll/issues/162

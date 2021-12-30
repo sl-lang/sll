@@ -45,4 +45,24 @@ __API_FUNC_DECL(hash_sha1);
 
 
 
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_hash_sha256
+ * \group hash-api
+ * \desc Docs!
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg S
+ * \ret A
+ */
+__API_FUNC_DECL(hash_sha256);
+
+
+
 #endif

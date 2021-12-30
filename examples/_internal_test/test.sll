@@ -204,6 +204,10 @@
 (= h (<- hash$md5$update h "defg"))
 (:> (<- hash$hexdigest (<- hash$md5$digest h)) "\n7ac66c0f148de9519b8bd264312c4d64\n")
 
+(= h (<- hash$sha256$init))
+(= h (<- hash$sha256$update h "aBcDeFgHi"))
+(:> (<- hash$hexdigest (<- hash$sha256$digest h)) "\n5ba40d59ca7520b5f8a6eb48be70f9c6e8d0f30490d859ea860aa0d8fe5578b6\n")
+
 (-> (= i 0) (<= i 20) {
 	(? (&& (! (% i 2)) (! (% i 3))) {
 		(:> "Multiple of 6: " i "\n")
