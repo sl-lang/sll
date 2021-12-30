@@ -135,6 +135,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open_descriptor(const sll_
 
 /**
  * \flags check_output func
+ * \name sll_file_peek_char
+ * \group file
+ * \subgroup file-io
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \ret sll_read_char_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t* f);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_file_read
  * \group file
  * \subgroup file-io

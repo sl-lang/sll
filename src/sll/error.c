@@ -10,9 +10,6 @@
 
 
 __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
-	if (e->t==SLL_ERROR_UNKNOWN){
-		return;
-	}
 	sll_file_offset_t os=e->dt.r.off;
 	sll_file_offset_t oe=os+e->dt.r.sz;
 	sll_file_reset_line(rf,os);
@@ -22,19 +19,9 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 	uint32_t oe_tb=0;
 	sll_read_char_t c=sll_file_read_char(rf);
 	sll_char_t t=0;
-	sll_char_t* sym=NULL;
-	sll_char_t* sp=NULL;
-	if (e->t==SLL_ERROR_UNKNOWN_IDENTIFIER){
-		sym=sll_allocate((oe-os+1)*sizeof(sll_char_t));
-		sp=sym;
-	}
 	while (c!='\n'&&c!='\r'&&c!=SLL_END_OF_DATA){
 		if (off==os){
 			t=(sll_char_t)c;
-		}
-		if (off>=os&&off<oe&&sp){
-			*sp=(sll_char_t)c;
-			sp++;
 		}
 		if (c=='\t'){
 			if (off<os){
@@ -101,14 +88,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 			return;
 		case SLL_ERROR_UNKNOWN_BINARY_CHARCTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Binary Character: '%c'\n"),t);
-			return;
-		case SLL_ERROR_UNEXPECTED_CHARACTER:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Unexpected Character: '%c'\n"),t);
-			return;
-		case SLL_ERROR_UNKNOWN_IDENTIFIER:
-			*sp=0;
-			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Identifier '%s'\n"),sym);
-			sll_deallocate(sym);
 			return;
 	}
 }

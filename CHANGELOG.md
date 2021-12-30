@@ -9,6 +9,7 @@
 - Implemented `sll_api_hash_md5`, `hash$md5$BLOCK_SIZE`, `hash$md5$DIGEST_SIZE`, `hash$md5$init`, `hash$md5$update`, `hash$md5$digest` and `hash$md5$process` ([#23] and [#163])
 - Implemented `sll_api_hash_sha1`, `hash$sha1$BLOCK_SIZE`, `hash$sha1$DIGEST_SIZE`, `hash$sha1$init`, `hash$sha1$update`, `hash$sha1$digest` and `hash$sha1$process` ([#23] and [#164])
 - Implemented `sll_api_string_checksum` and `string$checksum`
+- Implemented `sll_file_peek_char`
 - Implemented `sll_process_join_args`, `process$split` and `process$join` ([#161])
 - Replaced jumping to jump with the target of the second jump
 - VM error return value constants: `SLL_VM_INVALID_INSTRUCTION_INDEX` and `SLL_VM_INVALID_STACK_INDEX`
@@ -27,8 +28,8 @@
 
 ### Removed
 
-- Deprecated errors: `SLL_ERROR_UNMATCHED_OPEN_QUOTE`, `SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER`, `SLL_ERROR_UNMATCHED_QUOTES`, `SLL_ERROR_INVALID_FILE_FORMAT`, `SLL_ERROR_INVALID_INSTRUCTION`, `SLL_ERROR_INVALID_INSTRUCTION_INDEX` and `SLL_ERROR_INVALID_STACK_INDEX`
-- Error argument from `sll_execute_assembly`
+- Error types: `SLL_ERROR_UNKNOWN`, `SLL_ERROR_UNEXPECTED_CHARACTER`, `SLL_ERROR_TOO_MANY_ARGUMENTS`, `SLL_ERROR_ARRAY_TOO_LONG`, `SLL_ERROR_MAP_TOO_LONG`, `SLL_ERROR_UNMATCHED_OPEN_QUOTE`, `SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER`, `SLL_ERROR_UNKNOWN_IDENTIFIER`, `SLL_ERROR_UNMATCHED_QUOTES`, `SLL_ERROR_INVALID_FILE_FORMAT`, `SLL_ERROR_INVALID_INSTRUCTION`, `SLL_ERROR_INVALID_INSTRUCTION_INDEX` and `SLL_ERROR_INVALID_STACK_INDEX`
+- Error argument from `sll_execute_assembly` and `sll_import_loader_t`
 - Handle API ([#162])
 - Old hash API
 - Optional arguments from internal functions
@@ -36,7 +37,7 @@
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
 - `sys_arg_get_count` and `sys$argc`
 - Test script
-- Unneeded parser errors and function: `SLL_ERROR_TOO_MANY_ARGUMENTS`, `SLL_ERROR_ARRAY_TOO_LONG`, `SLL_ERROR_MAP_TOO_LONG` and `sll_parse_node`
+- Unneeded function: `sll_parse_node`
 - Unused memory API and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 
 ## [0.6.33] - 2021-12-25

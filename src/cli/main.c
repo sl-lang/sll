@@ -65,8 +65,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 
 
 
-static sll_bool_t load_import(const sll_string_t* nm,sll_compilation_data_t* o,sll_error_t* e){
-	e->t=SLL_ERROR_UNKNOWN;
+static sll_bool_t load_import(const sll_string_t* nm,sll_compilation_data_t* o){
 	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 	sll_file_t f;
 	sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -91,9 +90,7 @@ static sll_bool_t parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sl
 	sll_error_t e;
 	if (!sll_parse_all_nodes(c_dt,&i_ft,load_import,&e)){
 		sll_free_compilation_data(c_dt);
-		if (e.t!=SLL_ERROR_UNKNOWN){
-			sll_print_error(f,&e);
-		}
+		sll_print_error(f,&e);
 		sll_file_close(f);
 		return 0;
 	}
@@ -683,9 +680,7 @@ _read_file_argument:
 		sll_init_compilation_data(SLL_CHAR("@console"),&f,&c_dt);
 		sll_error_t e;
 		if (!sll_parse_all_nodes(&c_dt,&i_ft,load_import,&e)){
-			if (e.t!=SLL_ERROR_UNKNOWN){
-				sll_print_error(&f,&e);
-			}
+			sll_print_error(&f,&e);
 			goto _error;
 		}
 		if (fl&FLAG_PRINT_OBJECT){

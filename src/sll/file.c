@@ -132,6 +132,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open_descriptor(const sll_
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t* f){
+	if (!(f->f&SLL_FILE_FLAG_READ)){
+		return SLL_END_OF_DATA;
+	}
+	if (f->f&FILE_FLAG_MEMORY){
+		if (f->_off==f->dt.mm.sz){
+			return SLL_END_OF_DATA;
+		}
+		return *((sll_char_t*)((void*)((uint64_t)(f->dt.mm.p)+f->_off)));
+	}
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p,sll_size_t sz){
 	if (!(f->f&SLL_FILE_FLAG_READ)||!sz){
 		return 0;
