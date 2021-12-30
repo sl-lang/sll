@@ -44,12 +44,15 @@ for f in os.listdir("src/sll/lib"):
 		wf.write(rf.read())
 util.log("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
-if (subprocess.run(["build/sll","-C","-c","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-O","-D"] if "--release" in sys.argv else [])).returncode!=0):
+if (subprocess.run(["build/sll","-C","-c","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
 	util.log(f"  Removing 'build/lib/{k}'...")
 	os.remove("build/lib/"+k)
+if ("--bundle" in sys.argv):
+	util.log("Compressing executable files...")
+	util.bundle(ver)
 if ("--extension" in sys.argv):
 	util.log("Listing Source Code Files (Extension)...")
 	fl=util.get_ext_files()
@@ -62,19 +65,19 @@ if ("--extension" in sys.argv):
 			wf.write(rf.read())
 	util.log("Compiling Extension Modules...")
 	fl=list(os.listdir("build/lib_ext"))
-	if (subprocess.run(["build/sll","-C","-c","-e","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-O","-D"] if "--release" in sys.argv else [])).returncode!=0):
+	if (subprocess.run(["build/sll","-C","-c","-e","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:
 		util.log(f"  Removing 'build/lib_ext/{k}'...")
 		os.remove("build/lib_ext/"+k)
+	if ("--bundle" in sys.argv):
+		util.log("Compressing extension files...")
+		util.bundle_ext(ver)
 	if ("--extension-only" in sys.argv):
 		if ("--upload" in sys.argv):
-			os.rename(f"build/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),("win-ext-debug.dll" if os.name=="nt" else "posix-ext-debug.so"))
+			os.rename("build/sll_ext_debug.zip",("win_ext_debug.zip" if os.name=="nt" else "posix_ext_debug.zip"))
 		sys.exit(0)
-if ("--bundle" in sys.argv):
-	util.log("Compressing executable files...")
-	util.bundle(ver)
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",("win.zip" if os.name=="nt" else "posix.zip"))
 if ("--run" in sys.argv):

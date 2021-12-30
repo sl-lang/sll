@@ -94,6 +94,15 @@ def bundle(v):
 
 
 
+def bundle_ext(v):
+	with zipfile.ZipFile("build/sll_ext_debug.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
+		for k in ([f"build/sll-ext-debug-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else [f"build/sll-ext-debug-{v[0]}.{v[1]}.{v[2]}.so"]):
+			zf.write(k,arcname=k[6:])
+		for k in os.listdir("build/lib_ext"):
+			zf.write("build/lib_ext/"+k,arcname="lib/"+k)
+
+
+
 def encode(dt):
 	if (len(dt)==0):
 		return ""
