@@ -277,6 +277,12 @@ _print_unknown:
 
 
 
+__API_FUNC(string_checksum){
+	return a->c;
+}
+
+
+
 __API_FUNC(string_convert){
 	sll_string_create(0,out);
 	out->v=sll_memory_move(out->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);

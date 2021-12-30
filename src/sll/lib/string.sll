@@ -4,6 +4,7 @@
 
 
 (= string_module_type (&:
+	(~ func_type) checksum
 	(~ func_type) count
 	(~ func_type) count_left
 	(~ func_type) count_right
@@ -88,9 +89,12 @@
 (= count_left (... "sll:string_count_left"))
 (= count_right (... "sll:string_count_right"))
 
+(= checksum (... "sll:string_checksum"))
+
 
 
 (= string (. string_module_type
+	checksum
 	count
 	count_left
 	count_right

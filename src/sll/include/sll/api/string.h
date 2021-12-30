@@ -13,6 +13,18 @@
 
 
 /**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_checksum
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \ret I
+ */
+__API_FUNC_DECL(string_checksum);
+
+
+
+/**
  * \flags api compilation_call func optimizable var_arg
  * \name sll_api_string_convert
  * \group string-api

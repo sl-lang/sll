@@ -214,6 +214,8 @@
 	(++ i)
 })
 
+(:> "Checksum of 'abc': " (<- string$checksum "abc") "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)
