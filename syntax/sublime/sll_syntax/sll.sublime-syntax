@@ -5,8 +5,7 @@ file_extensions:
 scope: source.sll
 version: 2
 variables:
-  identifier_const: '[A-Z][A-Z0-9_]*'
-  identifier: '[a-zA-Z_][a-zA-Z0-9_]*'
+  identifier: '[^\s$\(\);<>\[\]\{\}0-9][^\s$\(\);<>\[\]\{\}]*'
   identifier_access: '(?:{{identifier}}\$)*{{identifier}}'
 contexts:
   main:
@@ -230,8 +229,6 @@ contexts:
       scope: constant.language.sll
     - match: '\b(int_type|func_type|type_type|float_type|char_type|string_type|array_type|map_type|map_key_type|map_value_type)\b'
       scope: storage.type.sll
-    - match: '\b{{identifier_const}}\b'
-      scope: constant.other.custom.sll
     - match: '\b{{identifier_access}}\b'
       scope: variable.other.sll
   object_no_highlight:

@@ -385,13 +385,14 @@
 	))
 ))
 
+(= sha224_update sha256_update)
+
 (= sha224_digest (,,, sha224
-	(= o (<- sha256_digest sha224))
-	(@@ (: o 0 28))
+	(@@ (: (<- sha256_digest sha224) 0 28))
 ))
 
 (= sha224_process (,,, dt
-	(@@ (<- sha224_digest (<- sha256_update (<- sha224_init) dt)))
+	(@@ (<- sha224_digest (<- sha224_update (<- sha224_init) dt)))
 ))
 
 
@@ -433,7 +434,7 @@
 		SHA224_BLOCK_SIZE
 		SHA224_DIGEST_SIZE
 		sha224_init
-		sha256_update
+		sha224_update
 		sha224_digest
 		sha224_process
 	]

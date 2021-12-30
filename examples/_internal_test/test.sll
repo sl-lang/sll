@@ -222,6 +222,10 @@
 	(++ i)
 })
 
+(= ū̆́ẗᶂ―⓼ (<- (,,, (@@ 4.5))))
+(= str "ū̆́ẗᶂ―⓼")
+(:> ū̆́ẗᶂ―⓼ "\n" str ", " [str] "\n")
+
 (:> "Checksum of 'abc': " (<- string$checksum "abc") "\n")
 
 (? (! (!! FACTORIAL)) nil {
