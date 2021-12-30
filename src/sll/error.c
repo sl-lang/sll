@@ -127,9 +127,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 		case SLL_ERROR_UNKNOWN_BINARY_CHARCTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Binary Character: '%c'\n"),t);
 			return;
-		case SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
-			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Identifier Character: '%c'\n"),t);
-			return;
 		case SLL_ERROR_UNEXPECTED_CHARACTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unexpected Character: '%c'\n"),t);
 			return;

@@ -117,7 +117,6 @@ static sll_char_t* error_to_string(sll_error_t* e){
 		case SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER:
 		case SLL_ERROR_UNKNOWN_OCTAL_CHARCTER:
 		case SLL_ERROR_UNKNOWN_BINARY_CHARCTER:
-		case SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
 		case SLL_ERROR_UNEXPECTED_CHARACTER:
 		case SLL_ERROR_UNKNOWN_IDENTIFIER:
 			snprintf((char*)o,512,"<type=%"PRIu8", range=%"PRIu64"-%"PRIu64">",e->t,e->dt.r.off,e->dt.r.off+e->dt.r.sz);
@@ -289,7 +288,6 @@ static void run_parser_test(const sll_char_t* fp,test_result_t* o){
 			case SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER:
 			case SLL_ERROR_UNKNOWN_OCTAL_CHARCTER:
 			case SLL_ERROR_UNKNOWN_BINARY_CHARCTER:
-			case SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
 			case SLL_ERROR_UNEXPECTED_CHARACTER:
 			case SLL_ERROR_UNKNOWN_IDENTIFIER:
 				if (!err_v_e||err_v_e->t!=SLL_JSON_OBJECT_TYPE_ARRAY||err_v_e->dt.a.l!=2||err_v_e->dt.a.dt->t!=SLL_JSON_OBJECT_TYPE_INTEGER||err_v_e->dt.a.dt->dt.i<0||err_v_e->dt.a.dt->dt.i>SLL_MAX_FILE_OFFSET||(err_v_e->dt.a.dt+1)->t!=SLL_JSON_OBJECT_TYPE_INTEGER||(err_v_e->dt.a.dt+1)->dt.i<0||(err_v_e->dt.a.dt+1)->dt.i>UINT32_MAX){
@@ -333,7 +331,6 @@ _wrong_error:
 			case SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER:
 			case SLL_ERROR_UNKNOWN_OCTAL_CHARCTER:
 			case SLL_ERROR_UNKNOWN_BINARY_CHARCTER:
-			case SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER:
 			case SLL_ERROR_UNEXPECTED_CHARACTER:
 			case SLL_ERROR_UNKNOWN_IDENTIFIER:
 				if (ne.dt.r.off!=e->dt.r.off||ne.dt.r.sz!=e->dt.r.sz){

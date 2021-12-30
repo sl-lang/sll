@@ -32,7 +32,7 @@
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
 - `sys_arg_get_count` and `sys$argc`
 - Unneeded parser errors and function: `SLL_ERROR_TOO_MANY_ARGUMENTS`, `SLL_ERROR_ARRAY_TOO_LONG`, `SLL_ERROR_MAP_TOO_LONG` and `sll_parse_node`
-- Unused error: `SLL_ERROR_UNMATCHED_OPEN_QUOTE`
+- Unused errors: `SLL_ERROR_UNMATCHED_OPEN_QUOTE` and `SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER`
 - Unused memory API and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 
 ## [0.6.33] - 2021-12-25
