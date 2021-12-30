@@ -54,7 +54,10 @@ def generate():
 	toc=_generate_toc(d_dt)
 	util.log("Reading 'src/web/client/index.html'...")
 	with open("src/web/client/index.html","rb") as rf:
-		o+=_add_data("/index.html",rf.read().replace(b"{{DATA}}",toc))
+		cf_a_dt=os.getenv("CLOUDFLARE_ANALYTICS",b"")
+		if (len(cf_a_dt)>0):
+			cf_a_dt=b"-->"+cf_a_dt+b"<!--"
+		o+=_add_data("/index.html",rf.read().replace(b"{{DATA}}",toc).replace(b"{{ANALYTICS}}",cf_a_dt))
 	util.log("Reading 'src/web/client/404.html'...")
 	with open("src/web/client/404.html","rb") as rf:
 		o+=_add_data("/404.html",rf.read())
