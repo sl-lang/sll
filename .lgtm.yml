@@ -1,6 +1,3 @@
-path_classifiers:
-  test:
-    - exclude: tests
 queries:
   - include: "*"
   - exclude: cpp/complex-block
@@ -16,7 +13,7 @@ extraction:
         - python3.8
     index:
       build_command:
-        - python3.8 src/_build/main.py --verbose --extension --test --do-not-run-test
+        - python3.8 src/_build/main.py --verbose --extension
   javascript:
     index:
       typescript: none

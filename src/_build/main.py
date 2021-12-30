@@ -11,10 +11,6 @@ import website
 
 
 
-COMPILATION_DEFINES=([b"_MSC_VER",b"_WINDOWS",b"WINDLL",b"USERDLL",b"_UNICODE",b"UNICODE"]+([b"NDEBUG"] if "--release" in sys.argv else [b"_DEBUG",b"DEBUG_BUILD"]) if os.name=="nt" else ([] if "--release" in sys.argv else [b"DEBUG_BUILD"]))
-
-
-
 util.log("Generating Build Directory...")
 util.create_output_dir()
 if ("--web" in sys.argv):
@@ -31,11 +27,7 @@ assembly.generate_assembly_optimizer()
 h_dt=header.parse_headers("src/sll/include")
 util.log("Generating Library Header File...")
 with open("build/sll.h","wb") as wf:
-	wf.write(b"#ifndef __SLL_H__\n#define __SLL_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES)+b"\n#endif\n")
-if ("--test" in sys.argv):
-	util.log("Generating Standalone Library Header File...")
-	with open("build/sll_standalone.h","wb") as wf:
-		wf.write(b"#ifndef __SLL_STANDALONE_H__\n#define __SLL_STANDALONE_H__ 1"+header.generate_header(h_dt,COMPILATION_DEFINES+[b"__SLL_STATIC__"])+b"\n#endif\n")
+	wf.write(b"#ifndef __SLL_H__\n#define __SLL_H__ 1"+header.generate_header(h_dt)+b"\n#endif\n")
 util.log("Fixing Env Variables...")
 util.fix_env()
 util.log("Listing Source Code Files...")
@@ -85,13 +77,6 @@ if ("--bundle" in sys.argv):
 	util.bundle(ver)
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",("win.zip" if os.name=="nt" else "posix.zip"))
-if ("--test" in sys.argv):
-	util.log("Generating Test Executable...")
-	build.build_sll_test(("--release" in sys.argv))
-	if ("--do-not-run-test" not in sys.argv):
-		util.log("  Running Tests...")
-		if (subprocess.run(["build/run_tests"]).returncode!=0):
-			sys.exit(1)
 if ("--run" in sys.argv):
 	if ("--extension" in sys.argv):
 		util.log("Installing extension library...")

@@ -95,43 +95,6 @@ def build_sll_cli(v,r):
 
 
 
-def build_sll_test(r):
-	cd=os.getcwd()
-	os.chdir("build")
-	if (os.name=="nt"):
-		if (r):
-			util.log("  Compiling Files (Release Mode)...")
-			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","__SLL_STATIC__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../tests","/I","../src/sll/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
-				os.chdir(cd)
-				sys.exit(1)
-			util.log("  Linking Files (Release Mode)...")
-			if (subprocess.run(["link","run_tests.obj","/OUT:run_tests.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
-				os.chdir(cd)
-				sys.exit(1)
-		else:
-			util.log("  Compiling Files...")
-			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","_UNICODE","/D","UNICODE","/D","DEBUG_BUILD","/D","__SLL_STATIC__","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",".","/I","../tests","/I","../src/sll/include","/Forun_tests.obj","../tests/run_tests.c"]).returncode!=0):
-				os.chdir(cd)
-				sys.exit(1)
-			util.log("  Linking Files...")
-			if (subprocess.run(["link","run_tests.obj","/OUT:run_tests.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
-				os.chdir(cd)
-				sys.exit(1)
-	else:
-		if (r):
-			util.log("  Compiling & Linking Files (Release Mode)...")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-Wall","-Werror","-O3","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/sll/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm","-ldl"]).returncode!=0):
-				os.chdir(cd)
-				sys.exit(1)
-		else:
-			util.log("  Compiling & Linking Files...")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-Wall","-Werror","-g","-O0","../tests/run_tests.c","-o","run_tests","-I",".","-I","../tests","-I","../src/sll/include"]+["objects/"+e for e in os.listdir("objects")]+["-lm","-ldl"]).returncode!=0):
-				os.chdir(cd)
-				sys.exit(1)
-	os.chdir(cd)
-
-
-
 def build_sll_extension(fl,v,r):
 	b_nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
 	nm=f"sll-ext-debug-{v[0]}.{v[1]}.{v[2]}"

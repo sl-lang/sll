@@ -1,6 +1,7 @@
 import datetime
 import os
 import re
+import sys
 import util
 
 
@@ -155,7 +156,7 @@ def parse_headers(fp):
 
 
 
-def generate_header(h_dt,cm):
+def generate_header(h_dt):
 	l=[]
 	st=[True]
 	tm=datetime.datetime.now()
@@ -163,8 +164,11 @@ def generate_header(h_dt,cm):
 	if (os.getenv("GITHUB_SHA") is not None):
 		dm[b"__SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")[:7]+"\"","utf-8")
 		dm[b"__FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")
-	for k in cm:
-		dm[k]=b"1"
+	if ("--release" not in sys.argv):
+		dm[b"DEBUG_BUILD"]=b"1"
+	if (os.name=="nt"):
+		dm.update({b"_MSC_VER":b"1",b"_WINDOWS":b"1",b"WINDLL":b"1",b"USERDLL":b"1",b"_UNICODE":b"1",b"UNICODE":b"1"})
+		dm[(b"NDEBUG" if "--release" in sys.argv else b"_DEBUG")]=b"1"
 	dfm={}
 	d_v=[]
 	d_f=[]

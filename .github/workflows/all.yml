@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 permissions: read-all
 env:
-  BUILD_COMMAND: python src/_build/main.py --verbose --test --do-not-run-test
+  BUILD_COMMAND: python src/_build/main.py --verbose
 jobs:
   codeql:
     name: Analyze (CodeQL)
@@ -98,8 +98,6 @@ jobs:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}}
-      - name: Test
-        run: build/run_tests
   ubuntu-release:
     name: Build Ubuntu Release
     needs: diff
@@ -114,8 +112,6 @@ jobs:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Test
-        run: build/run_tests
       - name: Store Assets
         uses: actions/upload-artifact@v2
         if: github.event_name=='workflow_dispatch'
@@ -237,8 +233,6 @@ jobs:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}}
-      - name: Test
-        run: build/run_tests
   windows-release:
     name: Build Windows Release
     needs: diff
@@ -253,8 +247,6 @@ jobs:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Test
-        run: build/run_tests
       - name: Store Assets
         uses: actions/upload-artifact@v2
         if: github.event_name=='workflow_dispatch'
