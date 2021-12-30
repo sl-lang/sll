@@ -384,16 +384,9 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			sll_stdout,
 			sll_stderr
 		};
-		sll_error_t e={
-			SLL_ERROR_UNKNOWN
-		};
-		sll_return_code_t r=sll_execute_assembly(a_dt,&cfg,&e);
+		sll_return_code_t r=sll_execute_assembly(a_dt,&cfg);
 		sll_file_flush(sll_stdout);
 		sll_file_flush(sll_stderr);
-		if (e.t!=SLL_ERROR_UNKNOWN){
-			sll_print_error(NULL,&e);
-			return 0;
-		}
 		if (r){
 			*ec=r;
 			return 0;

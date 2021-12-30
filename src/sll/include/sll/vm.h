@@ -13,6 +13,9 @@
 
 #define SLL_CALL_STACK_SIZE 256
 
+#define SLL_VM_INVALID_INSTRUCTION_INDEX (-0x7fffffff)
+#define SLL_VM_INVALID_STACK_INDEX (-0x80000000ll)
+
 
 
 /**
@@ -66,10 +69,9 @@ __SLL_EXTERNAL extern const sll_vm_config_t* sll_current_vm_config;
  * \desc Docs!
  * \arg const sll_assembly_data_t* a_dt
  * \arg const sll_vm_config_t* cfg
- * \arg sll_error_t* e
  * \ret sll_return_code_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg,sll_error_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg);
 
 
 

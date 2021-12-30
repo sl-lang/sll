@@ -11,6 +11,7 @@
 - Implemented `sll_api_string_checksum` and `string$checksum`
 - Implemented `sll_process_join_args`, `process$split` and `process$join` ([#161])
 - Replaced jumping to jump with the target of the second jump
+- VM error return value constants: `SLL_VM_INVALID_INSTRUCTION_INDEX` and `SLL_VM_INVALID_STACK_INDEX`
 
 ### Changed
 
@@ -26,15 +27,16 @@
 
 ### Removed
 
+- Deprecated errors: `SLL_ERROR_UNMATCHED_OPEN_QUOTE`, `SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER`, `SLL_ERROR_UNMATCHED_QUOTES`, `SLL_ERROR_INVALID_FILE_FORMAT`, `SLL_ERROR_INVALID_INSTRUCTION`, `SLL_ERROR_INVALID_INSTRUCTION_INDEX` and `SLL_ERROR_INVALID_STACK_INDEX`
+- Error argument from `sll_execute_assembly`
 - Handle API ([#162])
 - Old hash API
 - Optional arguments from internal functions
-- `SLL_FROM_FILE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL` and `SLL_NO_CHAR`
+- `SLL_FROM_FILE`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`, `SLL_MAX_COMPILATION_ERROR` and `SLL_NO_CHAR`
 - `sll_path_absolute` (replaced by `sll_platform_absolute_path`)
 - `sys_arg_get_count` and `sys$argc`
 - Test script
 - Unneeded parser errors and function: `SLL_ERROR_TOO_MANY_ARGUMENTS`, `SLL_ERROR_ARRAY_TOO_LONG`, `SLL_ERROR_MAP_TOO_LONG` and `sll_parse_node`
-- Unused errors: `SLL_ERROR_UNMATCHED_OPEN_QUOTE` and `SLL_ERROR_UNKNOWN_IDENTIFIER_CHARACTER`
 - Unused memory API and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_NULL`
 
 ## [0.6.33] - 2021-12-25

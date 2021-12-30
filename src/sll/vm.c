@@ -69,8 +69,7 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg,sll_error_t* e){
-	e->t=SLL_ERROR_UNKNOWN;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg){
 	sll_current_instruction_count=0;
 	sll_current_vm_config=cfg;
 	const sll_assembly_instruction_t* ai=a_dt->h;
@@ -113,8 +112,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_bool_t io=!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO);
 	while (1){
 		if (ii>=a_dt->ic){
-			e->t=SLL_ERROR_INVALID_INSTRUCTION_INDEX;
-			goto _end;
+			rc=SLL_VM_INVALID_INSTRUCTION_INDEX;
+			break;
 		}
 		sll_current_instruction_count++;
 		sll_current_instruction_index=ii;
@@ -955,10 +954,6 @@ _return:;
 				*(v+ai->dt.v)=SLL_ACQUIRE_STATIC_INT(0);
 				si++;
 				break;
-			default:
-				e->t=SLL_ERROR_INVALID_INSTRUCTION;
-				e->dt.it=SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai);
-				goto _end;
 		}
 		ai++;
 		if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
@@ -966,7 +961,8 @@ _return:;
 		}
 		ii++;
 		if (si>=cfg->s_sz){
-			e->t=SLL_ERROR_INVALID_STACK_INDEX;
+			rc=SLL_VM_INVALID_STACK_INDEX;
+			break;
 		}
 	}
 _end:

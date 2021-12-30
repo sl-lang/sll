@@ -197,18 +197,18 @@ _check_new_var:;
 
 
 
-static uint8_t _read_single_char(sll_file_t* rf,sll_file_offset_t st,sll_error_t* e,sll_char_t* o){
+static uint8_t _read_single_char(sll_file_t* rf,sll_char_t* o){
 	sll_read_char_t c=sll_file_read_char(rf);
-	if (c=='\r'||c=='\n'||c==SLL_END_OF_DATA){
-		goto _error;
+	if (c==SLL_END_OF_DATA){
+		return 1;
 	}
 	if (c!='\\'){
 		*o=(sll_char_t)c;
 		return 0;
 	}
 	c=sll_file_read_char(rf);
-	if (c=='\r'||c=='\n'||c==SLL_END_OF_DATA){
-		goto _error;
+	if (c==SLL_END_OF_DATA){
+		return 1;
 	}
 	if (c=='\''||c=='"'||c=='\\'){
 		*o=(sll_char_t)c;
@@ -218,8 +218,8 @@ static uint8_t _read_single_char(sll_file_t* rf,sll_file_offset_t st,sll_error_t
 		sll_char_t v=0;
 		for (uint8_t i=0;i<2;i++){
 			c=sll_file_read_char(rf);
-			if (c=='\r'||c=='\n'||c==SLL_END_OF_DATA){
-				goto _error;
+			if (c==SLL_END_OF_DATA){
+				return 1;
 			}
 			if (c>96){
 				c-=32;
@@ -251,11 +251,6 @@ static uint8_t _read_single_char(sll_file_t* rf,sll_file_offset_t st,sll_error_t
 	}
 	*o=(sll_char_t)c;
 	return 0;
-_error:
-	e->t=SLL_ERROR_UNMATCHED_QUOTES;
-	e->dt.r.off=st;
-	e->dt.r.sz=SLL_FILE_GET_OFFSET(rf)-st-1;
-	return 1;
 }
 
 
@@ -733,12 +728,9 @@ _recurse_array_or_map:;
 			sll_node_t* arg=_acquire_next_node(c_dt);
 			if (c=='\''){
 				arg->t=SLL_NODE_TYPE_CHAR;
-				uint8_t err=_read_single_char(rf,arg_s,e,&(arg->dt.c));
+				uint8_t err=_read_single_char(rf,&(arg->dt.c));
 				if (err==1){
-					if (n_l_sc.m){
-						sll_deallocate(n_l_sc.m);
-					}
-					return 0;
+					goto _return_error;
 				}
 				if (!err&&arg->dt.c=='\''){
 					arg->dt.c=0;
@@ -746,12 +738,9 @@ _recurse_array_or_map:;
 				else{
 					sll_char_t tmp;
 					do{
-						err=_read_single_char(rf,arg_s,e,&tmp);
+						err=_read_single_char(rf,&tmp);
 						if (err==1){
-							if (n_l_sc.m){
-								sll_deallocate(n_l_sc.m);
-							}
-							return 0;
+							goto _return_error;
 						}
 					} while (err||tmp!='\'');
 				}
@@ -764,13 +753,10 @@ _recurse_array_or_map:;
 				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 				while (1){
 					sll_string_increase(&s,1);
-					uint8_t err=_read_single_char(rf,arg_s,e,s.v+s.l);
+					uint8_t err=_read_single_char(rf,s.v+s.l);
 					if (err==1){
 						sll_deallocate(s.v);
-						if (n_l_sc.m){
-							sll_deallocate(n_l_sc.m);
-						}
-						return 0;
+						goto _return_error;
 					}
 					if (!err&&s.v[s.l]=='"'){
 						break;

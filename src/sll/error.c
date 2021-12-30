@@ -10,25 +10,8 @@
 
 
 __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
-	if (e->t==SLL_ERROR_UNKNOWN||e->t>SLL_MAX_COMPILATION_ERROR){
-		switch (e->t){
-			default:
-			case SLL_ERROR_UNKNOWN:
-				sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Error: %c%c\n"),(e->t>>4)+((e->t>>4)>9?87:48),(e->t&0xf)+((e->t&0xf)>9?87:48));
-				return;
-			case SLL_ERROR_INVALID_FILE_FORMAT:
-				sll_file_write_format(sll_stderr,SLL_CHAR("Invalid File Format\n"));
-				return;
-			case SLL_ERROR_INVALID_INSTRUCTION:
-				sll_file_write_format(sll_stderr,SLL_CHAR("Invalid Instruction: 0x%.2hhx\n"),e->dt.it);
-				return;
-			case SLL_ERROR_INVALID_INSTRUCTION_INDEX:
-				sll_file_write_format(sll_stderr,SLL_CHAR("Instruction Index Out of Bounds\n"));
-				return;
-			case SLL_ERROR_INVALID_STACK_INDEX:
-				sll_file_write_format(sll_stderr,SLL_CHAR("Stack Index Out of Bounds\n"));
-				return;
-		}
+	if (e->t==SLL_ERROR_UNKNOWN){
+		return;
 	}
 	sll_file_offset_t os=e->dt.r.off;
 	sll_file_offset_t oe=os+e->dt.r.sz;
@@ -106,14 +89,6 @@ __SLL_EXTERNAL void sll_print_error(sll_file_t* rf,const sll_error_t* e){
 			return;
 		case SLL_ERROR_UNMATCHED_MAP_CLOSE_BRACKETS:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unmatched Right Map Brackets\n"));
-			return;
-		case SLL_ERROR_UNMATCHED_QUOTES:
-			if (t=='\''){
-				sll_file_write_format(sll_stderr,SLL_CHAR("Unmatched Single Quotes\n"));
-			}
-			else{
-				sll_file_write_format(sll_stderr,SLL_CHAR("Unmatched Double Quotes\n"));
-			}
 			return;
 		case SLL_ERROR_UNKNOWN_HEXADECIMAL_CHARCTER:
 			sll_file_write_format(sll_stderr,SLL_CHAR("Unknown Hexadecimal Character: '%c'\n"),t);
