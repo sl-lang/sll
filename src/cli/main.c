@@ -400,7 +400,7 @@ int main(int argc,const char** argv){
 	sll_platform_enable_console_color();
 	int ec=1;
 	fl=0;
-	i_fp=malloc(sizeof(sll_char_t));
+	i_fp=sll_allocate(sizeof(sll_char_t));
 	*i_fp=0;
 	i_fpl=1;
 	l_fpl=sll_platform_get_library_file_path(l_fp,SLL_API_MAX_FILE_PATH_LENGTH);
@@ -473,7 +473,7 @@ _skip_lib_path:
 			if (sz){
 				uint32_t j=i_fpl;
 				i_fpl+=sz+(*(e+sz-1)!='\\'&&*(e+sz-1)!='/'?2:1);
-				i_fp=realloc(i_fp,i_fpl*sizeof(sll_char_t));
+				i_fp=sll_reallocate(i_fp,i_fpl*sizeof(sll_char_t));
 				sll_copy_data(e,sz,i_fp+j);
 				j+=sz;
 				if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
@@ -514,7 +514,7 @@ _skip_lib_path:
 				break;
 			}
 			sll++;
-			sl=realloc(sl,sll*sizeof(sll_char_t*));
+			sl=sll_reallocate(sl,sll*sizeof(sll_char_t*));
 			*(sl+sll-1)=(sll_char_t*)argv[i];
 		}
 		else if ((*e=='-'&&*(e+1)=='S'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
@@ -550,14 +550,14 @@ _skip_lib_path:
 		}
 		else if (*e=='-'){
 			COLOR_RED;
-				sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Switch '%s'\n"),e);
+			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Switch '%s'\n"),e);
 			COLOR_RESET;
 			goto _help;
 		}
 		else{
 _read_file_argument:
 			fpl++;
-			fp=realloc(fp,fpl*sizeof(sll_char_t*));
+			fp=sll_reallocate(fp,fpl*sizeof(sll_char_t*));
 			*(fp+fpl-1)=(sll_char_t*)e;
 		}
 	}
@@ -674,15 +674,15 @@ _read_file_argument:
 		sll_free_compilation_data(&c_dt);
 	}
 	while (im_fpl<fpl){
-		free(*(fp+im_fpl));
+		sll_deallocate(*(fp+im_fpl));
 		im_fpl++;
 	}
-	free(i_fp);
+	sll_deallocate(i_fp);
 	if (fp){
-		free(fp);
+		sll_deallocate(fp);
 	}
-	if (sll){
-		free(sl);
+	if (sl){
+		sll_deallocate(sl);
 	}
 	sll_free_internal_function_table(&i_ft);
 	sll_deinit();
@@ -691,15 +691,15 @@ _help:
 	sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);
 _error:
 	while (im_fpl<fpl){
-		free(*(fp+im_fpl));
+		sll_deallocate(*(fp+im_fpl));
 		im_fpl++;
 	}
-	free(i_fp);
+	sll_deallocate(i_fp);
 	if (fp){
-		free(fp);
+		sll_deallocate(fp);
 	}
-	if (sll){
-		free(sl);
+	if (sl){
+		sll_deallocate(sl);
 	}
 	sll_free_assembly_data(&a_dt);
 	sll_free_compilation_data(&c_dt);
