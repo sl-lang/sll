@@ -37,7 +37,7 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,sll_date_t* o){
 	d-=y*365+y/4-y/100;
 	sll_size_t m=(d*5+2)/153;
 	d=d-(m*153+2)/5;
-	SLL_ASSERT(d<30);
+	SLL_ASSERT(d<31);
 	o->d=(sll_day_t)d;
 	if (m<10){
 		m+=2;

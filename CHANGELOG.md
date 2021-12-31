@@ -2,7 +2,12 @@
 
 ## [0.6.35] - Ongoing
 
-*Nothing*
+### Added
+
+- Implemented `base64.sll` ([#169])
+- Implemented `base64$ALPHABET` ([#169] and [#170])
+- Implemented `sll_api_base64_decode` and `base64$decode` ([#169] and [#172])
+- Implemented `sll_api_base64_encode` and `base64$encode` ([#169] and [#172])
 
 ## [0.6.34] - 2021-12-30
 
@@ -1291,7 +1296,10 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
-[#168]: https://github.com/sl-lang/sll/issues/168
+[#172]: https://github.com/sl-lang/sll/issues/172
+[#171]: https://github.com/sl-lang/sll/issues/171
+[#170]: https://github.com/sl-lang/sll/issues/170
+[#169]: https://github.com/sl-lang/sll/issues/169
 [#167]: https://github.com/sl-lang/sll/issues/167
 [#166]: https://github.com/sl-lang/sll/issues/166
 [#165]: https://github.com/sl-lang/sll/issues/165

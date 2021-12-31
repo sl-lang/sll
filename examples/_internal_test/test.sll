@@ -1,5 +1,5 @@
-(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process)
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll")
+(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process base64)
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
 		(:> i '*' j " is equal to " (* i j) "\n")
@@ -235,6 +235,10 @@
 (:> ū̆́ẗᶂ―⓼ "\n" str ", " [str] "\n")
 
 (:> "Checksum of 'abc': " (<- string$checksum "abc") "\n")
+
+(:> (<- base64$encode "Example message to encode") "\nRXhhbXBsZSBtZXNzYWdlIHRvIGVuY29kZQ==\n")
+(:> (<- base64$decode "RXhhbXBsZSBtZXNzYWdlIHRvIGVuY29kZQ==") "\nExample message to encode\n")
+
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

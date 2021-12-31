@@ -105,6 +105,58 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_base64_decode __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_base64_decode sll_string_t* a
+/**
+ * \flags func optimizable
+ * \name sll_api_base64_decode
+ * \group base64-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_base64_decode_raw
+ * \group raw-api
+ * \subgroup raw-api-base64-api
+ * \desc Wrapper function for :sll_api_base64_decode:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Base 64
+ * \group raw-api
+ * \subgroup raw-api-base64-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_base64_encode void
+#define __SLL_API_ARGS_sll_api_base64_encode sll_string_t* a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_base64_encode
+ * \group base64-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_base64_encode_raw
+ * \group raw-api
+ * \subgroup raw-api-base64-api
+ * \desc Wrapper function for :sll_api_base64_encode:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_date_merge __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_date_merge sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_float_t f
 /**

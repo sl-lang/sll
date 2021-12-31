@@ -1,0 +1,28 @@
+(# func_type string_type)
+(--- "types.sll")
+
+
+
+(= base64_module_type (&:
+	(~ string_type) ALPHABET
+	(~ func_type) decode
+	(~ func_type) encode
+))
+
+
+
+(= ALPHABET "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+
+
+
+(= decode (... "sll:base64_decode"))
+(= encode (... "sll:base64_encode"))
+
+
+
+(= base64 (. base64_module_type
+	ALPHABET
+	decode
+	encode
+))
+(## base64)

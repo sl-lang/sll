@@ -152,6 +152,58 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_base64_decode sll_api_base64_decode(__SLL_API_ARGS_sll_api_base64_decode);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(a->dt.s));
+	}
+	sll_object_t* out=sll_api_base64_decode(&(a->dt.s));
+	SLL_RELEASE(a);
+	return out;
+}
+
+
+
+__SLL_API_TYPE_sll_api_base64_encode sll_api_base64_encode(__SLL_API_ARGS_sll_api_base64_encode);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_encode_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(a->dt.s));
+	}
+	sll_string_t out;
+	sll_api_base64_encode(&(a->dt.s),&out);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_date_merge sll_api_date_merge(__SLL_API_ARGS_sll_api_date_merge);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_merge_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -2576,6 +2628,8 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:array_create",sll_api_array_create_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:array_replace",sll_api_array_replace_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:array_reverse",sll_api_array_reverse_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:base64_decode",sll_api_base64_decode_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:base64_encode",sll_api_base64_encode_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:date_merge",sll_api_date_merge_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:date_split",sll_api_date_split_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:file_close",sll_api_file_close_raw,SLL_INTERNAL_FUNCTION_FLAG_REQUIRED},
@@ -2649,5 +2703,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=73;
+const sll_function_index_t _ifunc_size=75;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);
