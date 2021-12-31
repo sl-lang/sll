@@ -6,10 +6,10 @@
 
 - Implemented `base64$ALPHABET` ([#169] and [#170])
 - Implemented `base64.sll` ([#169])
-- Implemented `sll_api_base64_decode` and `base64$decode` ([#169] and [#172])
+- Implemented `sll_api_base64_decode` and `base64$decode` ([#169] and [#171])
 - Implemented `sll_api_base64_encode` and `base64$encode` ([#169] and [#172])
 - Implemented `sll_api_json_stringify` and `json$stringify` ([#58])
-- Implemented `sll_clone_internal_function_table`
+- Implemented `sll_clone_internal_function_table`s
 - Internal function table field in the VM config structure
 - Version tag macro constant: `SLL_VERSION_TAG`
 
@@ -1308,6 +1308,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#171]: https://github.com/sl-lang/sll/issues/171
 [#170]: https://github.com/sl-lang/sll/issues/170
 [#169]: https://github.com/sl-lang/sll/issues/169
+[#168]: https://github.com/sl-lang/sll/issues/168
 [#167]: https://github.com/sl-lang/sll/issues/167
 [#166]: https://github.com/sl-lang/sll/issues/166
 [#165]: https://github.com/sl-lang/sll/issues/165
@@ -1395,6 +1396,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#69]: https://github.com/sl-lang/sll/issues/69
 [#67]: https://github.com/sl-lang/sll/issues/67
 [#66]: https://github.com/sl-lang/sll/issues/66
+[#58]: https://github.com/sl-lang/sll/issues/58
 [#56]: https://github.com/sl-lang/sll/issues/56
 [#54]: https://github.com/sl-lang/sll/issues/54
 [#53]: https://github.com/sl-lang/sll/issues/53
