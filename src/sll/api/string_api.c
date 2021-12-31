@@ -21,9 +21,9 @@ static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o
 
 
 
-static sll_string_length_t _write_int(uint64_t v,sll_string_t* o){
+static void _write_int(uint64_t v,sll_string_t* o){
 	uint8_t i=0;
-	char bf[20];
+	sll_char_t bf[20];
 	do{
 		bf[i]=v%10;
 		i++;
@@ -35,7 +35,6 @@ static sll_string_length_t _write_int(uint64_t v,sll_string_t* o){
 		o->v[o->l]=bf[i]+48;
 		o->l++;
 	}
-	return i;
 }
 
 

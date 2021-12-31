@@ -519,8 +519,8 @@
  * \flags func optimizable
  * \name sll_api_json_parse
  * \group json-api
- * \desc Converts a [JSON][https://www.json.org/json-en.html] string into Sll types
- * \arg sll_string_t* a -> The string to parse
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
  * \ret sll_object_t*
  */
 /**

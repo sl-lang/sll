@@ -78,8 +78,8 @@ __API_FUNC_DECL(json__init);
  * \flags api func optimizable
  * \name sll_api_json_parse
  * \group json-api
- * \desc Converts a [JSON][https://www.json.org/json-en.html] string into Sll types
- * \arg S -> The string to parse
+ * \desc Docs!
+ * \arg S
  * \ret O
  */
 __API_FUNC_DECL(json_parse);

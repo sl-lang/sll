@@ -8,6 +8,7 @@
 - Implemented `base64$ALPHABET` ([#169] and [#170])
 - Implemented `sll_api_base64_decode` and `base64$decode` ([#169] and [#172])
 - Implemented `sll_api_base64_encode` and `base64$encode` ([#169] and [#172])
+- Implemented `sll_api_json_stringify` and `json$stringify` ([#58])
 
 ## [0.6.34] - 2021-12-30
 
