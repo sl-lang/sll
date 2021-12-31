@@ -681,7 +681,7 @@ typedef struct __SLL_VM_CONFIG{
 
 
 
-typedef sll_bool_t (*sll_import_loader_t)(const sll_string_t* s,sll_compilation_data_t* o);
+typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* s,sll_compilation_data_t* o);
 
 
 

@@ -38,13 +38,9 @@
 #define FLAG_VERBOSE 2048
 #define FLAG_VERSION 4096
 #define _FLAG_ASSEMBLY_GENERATED 8192
-#ifdef SLL_VERSION_STANDALONE
-#define STANDALONE_STRING "standalone, "
-#else
-#define STANDALONE_STRING ""
-#endif
+#define _FLAG_SINGLE_OUTPUT 16384
 #ifdef SLL_VERSION_HAS_SHA
-#define TYPE_STRING "commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_FULL_SHA"], "
+#define TYPE_STRING "commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_TAG"], "
 #else
 #define TYPE_STRING "local, "
 #endif
@@ -54,8 +50,6 @@
 static uint16_t fl;
 static sll_char_t* i_fp;
 static sll_string_length_t i_fpl;
-static sll_char_t** fp;
-static sll_string_length_t fpl;
 static sll_char_t l_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 static sll_string_length_t l_fpl;
 static sll_internal_function_table_t i_ft;
@@ -66,7 +60,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 
 
 
-static sll_bool_t load_import(const sll_string_t* nm,sll_compilation_data_t* o){
+static sll_bool_t import_file(const sll_string_t* nm,sll_compilation_data_t* o){
 	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 	sll_file_t f;
 	sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -89,7 +83,7 @@ static sll_bool_t load_import(const sll_string_t* nm,sll_compilation_data_t* o){
 static sll_bool_t parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* f_fp){
 	sll_init_compilation_data(f_fp,f,c_dt);
 	sll_error_t e;
-	if (!sll_parse_all_nodes(c_dt,&i_ft,load_import,&e)){
+	if (!sll_parse_all_nodes(c_dt,&i_ft,import_file,&e)){
 		sll_free_compilation_data(c_dt);
 		sll_print_error(f,&e);
 		sll_file_close(f);
@@ -296,7 +290,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 			i=f_fp_l-1;
 		}
 		else{
-			if (fpl==1){
+			if (fl&_FLAG_SINGLE_OUTPUT){
 				i=sll_string_length_unaligned(o_fp);
 				sll_copy_data(o_fp,i,bf);
 				i-=1;
@@ -397,7 +391,6 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 
 int main(int argc,const char** argv){
 	sll_init();
-	sll_platform_enable_console_color();
 	int ec=1;
 	fl=0;
 	i_fp=sll_allocate(sizeof(sll_char_t));
@@ -406,15 +399,14 @@ int main(int argc,const char** argv){
 	l_fpl=sll_platform_get_library_file_path(l_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 	while (l_fp[l_fpl]!='/'&&l_fp[l_fpl]!='\\'){
 		if (!l_fpl){
-			goto _skip_lib_path;
+			break;
 		}
 		l_fpl--;
 	}
 	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl+1);
 	l_fpl+=5;
-_skip_lib_path:
-	fp=NULL;
-	fpl=0;
+	const sll_char_t** fp=NULL;
+	sll_string_length_t fpl=0;
 	sll_char_t** sl=NULL;
 	uint32_t sll=0;
 	sll_create_internal_function_table(&i_ft);
@@ -423,7 +415,6 @@ _skip_lib_path:
 	sll_file_t f={0};
 	sll_assembly_data_t a_dt={0};
 	sll_compilation_data_t c_dt={0};
-	uint32_t im_fpl=UINT32_MAX;
 	sll_sandbox_flags_t s_fl=0;
 	sll_set_argument_count(1);
 	for (int i=1;i<argc;i++){
@@ -558,14 +549,17 @@ _skip_lib_path:
 _read_file_argument:
 			fpl++;
 			fp=sll_reallocate(fp,fpl*sizeof(sll_char_t*));
-			*(fp+fpl-1)=(sll_char_t*)e;
+			*(fp+fpl-1)=e;
 		}
 	}
 	if (fl&FLAG_VERBOSE){
 		sll_set_log_default(1);
 	}
+	if (fl&FLAG_USE_COLORS){
+		sll_platform_enable_console_color();
+	}
 	if (fl&FLAG_VERSION){
-		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)" ("STANDALONE_STRING TYPE_STRING SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
+		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)" ("TYPE_STRING SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 		sll_deinit();
 		return 0;
 	}
@@ -573,7 +567,6 @@ _read_file_argument:
 		goto _help;
 	}
 	sll_set_sandbox_flags(s_fl);
-	im_fpl=fpl;
 	if (fl&FLAG_VERBOSE){
 		PRINT_STATIC_STR("Configuration:\n");
 		if (fl&FLAG_EXPAND_PATH){
@@ -629,6 +622,9 @@ _read_file_argument:
 		PRINT_STATIC_STR("WARNING: Optimizer is currently an alpha feature!\n");
 		COLOR_RESET;
 	}
+	if (fpl==1){
+		fl|=_FLAG_SINGLE_OUTPUT;
+	}
 	for (uint32_t j=0;j<fpl;j++){
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		fl&=~_FLAG_ASSEMBLY_GENERATED;
@@ -656,7 +652,7 @@ _read_file_argument:
 		}
 		sll_init_compilation_data(SLL_CHAR("@console"),&f,&c_dt);
 		sll_error_t e;
-		if (!sll_parse_all_nodes(&c_dt,&i_ft,load_import,&e)){
+		if (!sll_parse_all_nodes(&c_dt,&i_ft,import_file,&e)){
 			sll_print_error(&f,&e);
 			goto _error;
 		}
@@ -673,10 +669,6 @@ _read_file_argument:
 		sll_free_assembly_data(&a_dt);
 		sll_free_compilation_data(&c_dt);
 	}
-	while (im_fpl<fpl){
-		sll_deallocate(*(fp+im_fpl));
-		im_fpl++;
-	}
 	sll_deallocate(i_fp);
 	if (fp){
 		sll_deallocate(fp);
@@ -690,10 +682,6 @@ _read_file_argument:
 _help:
 	sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);
 _error:
-	while (im_fpl<fpl){
-		sll_deallocate(*(fp+im_fpl));
-		im_fpl++;
-	}
 	sll_deallocate(i_fp);
 	if (fp){
 		sll_deallocate(fp);
