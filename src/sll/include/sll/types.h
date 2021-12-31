@@ -674,6 +674,7 @@ typedef struct __SLL_RUNTIME_DATA{
 
 typedef struct __SLL_VM_CONFIG{
 	sll_size_t s_sz;
+	sll_internal_function_table_t* ift;
 	sll_file_t* in;
 	sll_file_t* out;
 	sll_file_t* err;

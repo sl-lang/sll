@@ -372,6 +372,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 	if (!(fl&FLAG_NO_RUN)){
 		sll_vm_config_t cfg={
 			VM_STACK_SIZE,
+			&i_ft,
 			sll_stdin,
 			sll_stdout,
 			sll_stderr

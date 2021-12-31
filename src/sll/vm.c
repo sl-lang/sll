@@ -95,8 +95,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	};
 	ptr+=SLL_CALL_STACK_SIZE*sizeof(sll_call_stack_frame_t);
 	sll_internal_function_table_t ift;
-	sll_create_internal_function_table(&ift);
-	sll_register_builtin_internal_functions(&ift);
+	sll_clone_internal_function_table(cfg->ift,&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
 	sll_runtime_data_t r_dt={
 		a_dt,

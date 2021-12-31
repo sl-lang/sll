@@ -9,6 +9,8 @@
 - Implemented `sll_api_base64_decode` and `base64$decode` ([#169] and [#172])
 - Implemented `sll_api_base64_encode` and `base64$encode` ([#169] and [#172])
 - Implemented `sll_api_json_stringify` and `json$stringify` ([#58])
+- Implemented `sll_clone_internal_function_table`
+- Internal function table field in the VM config structure
 - Version tag macro constant: `SLL_VERSION_TAG`
 
 ### Changed

@@ -13,6 +13,21 @@ extern const internal_function_t* _ifunc_data;
 
 
 
+__SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_table_t* ift,sll_internal_function_table_t* o){
+	o->l=ift->l;
+	o->dt=sll_allocate(o->l*sizeof(const sll_internal_function_t*));
+	for (sll_function_index_t i=0;i<o->l;i++){
+		const sll_internal_function_t* f=*(ift->dt+i);
+		sll_internal_function_t* n=sll_allocate(sizeof(sll_internal_function_t));
+		sll_string_clone(&(f->nm),(sll_string_t*)(&(n->nm)));
+		*((sll_internal_function_pointer_t*)(&(n->p)))=f->p;
+		*((sll_internal_function_type_t*)(&(n->t)))=f->t;
+		*((const sll_internal_function_t**)(o->dt+i))=n;
+	}
+}
+
+
+
 __SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_table_t* o){
 	o->dt=NULL;
 	o->l=0;

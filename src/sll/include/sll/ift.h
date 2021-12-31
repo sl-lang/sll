@@ -23,6 +23,18 @@
 
 /**
  * \flags func
+ * \name sll_clone_internal_function_table
+ * \group ift
+ * \desc Docs!
+ * \arg sll_internal_function_table_t* ift
+ * \arg sll_internal_function_table_t* o
+ */
+__SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_table_t* ift,sll_internal_function_table_t* o);
+
+
+
+/**
+ * \flags func
  * \name sll_create_internal_function_table
  * \group ift
  * \desc Docs!
