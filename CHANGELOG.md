@@ -4,8 +4,8 @@
 
 ### Added
 
-- Implemented `base64.sll` ([#169])
 - Implemented `base64$ALPHABET` ([#169] and [#170])
+- Implemented `base64.sll` ([#169])
 - Implemented `sll_api_base64_decode` and `base64$decode` ([#169] and [#172])
 - Implemented `sll_api_base64_encode` and `base64$encode` ([#169] and [#172])
 - Implemented `sll_api_json_stringify` and `json$stringify` ([#58])

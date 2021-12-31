@@ -1,10 +1,10 @@
 const MIME_TYPES={
-	"css": "text/css;charset=utf-8",
-	"deb": "application/octet-stream",
-	"gz": "application/gzip",
-	"html": "text/html;charset=utf-8",
-	"js": "application/javascript;charset=utf-8",
-	"zip": "application/zip"
+	".css": "text/css;charset=utf-8",
+	".deb": "application/octet-stream",
+	".gz": "application/gzip",
+	".html": "text/html;charset=utf-8",
+	".js": "application/javascript;charset=utf-8",
+	".zip": "application/zip"
 };
 const REDIRECTS={
 	"/": "/index.html",
@@ -28,12 +28,12 @@ const _get_page=async (url)=>{
 
 addEventListener("fetch",(e)=>e.respondWith((async (url)=>{
 	url=REDIRECTS[url]||url;
-	const ext=url.split(".").at(-1);
+	const ext="."+url.split(".").at(-1);
 	const headers=new Headers({
 		"Content-Type": MIME_TYPES[ext]||"text/plain;charset=utf-8"
 	});
 	if (!(await SLL.get("__table")).split("\x00").includes(url)){
-		return new Response((ext==="html"?await _get_page("not_found.html"):"Not Found"),{
+		return new Response((ext===".html"?await _get_page("not_found.html"):"Not Found"),{
 			status: 404,
 			statusText: "Not Found",
 			headers: headers

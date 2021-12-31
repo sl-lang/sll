@@ -438,7 +438,7 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 		s->v[s->l+1]='a';
 		s->v[s->l+2]='l';
 		s->v[s->l+3]='s';
-		s->v[s->l+3]='e';
+		s->v[s->l+4]='e';
 		s->l+=5;
 		return;
 	}
