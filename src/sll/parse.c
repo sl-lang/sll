@@ -444,7 +444,7 @@ _recurse_array_or_map:;
 					fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION,
 					*l_sc,
 					e_c_dt->i_ft,
-					e_c_dt->il,
+					e_c_dt->ir,
 					e_c_dt->nv_dt,
 					SLL_MAX_STRING_INDEX
 				};
@@ -1105,7 +1105,7 @@ _identifier_end:;
 					dbg->dt.s=c_dt->fpt.l;
 					ac++;
 					sll_compilation_data_t im=SLL_INIT_COMPILATION_DATA_STRUCT;
-					if (e_c_dt->il(c_dt->st.dt+arg->dt.s,&im)==0){
+					if (e_c_dt->ir(c_dt->st.dt+arg->dt.s,&im)==0){
 						return 0;
 					}
 					import_module_data_t im_dt={

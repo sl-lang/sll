@@ -281,7 +281,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		sll_print_assembly(a_dt,sll_stdout);
 		sll_file_write_char(sll_stdout,'\n');
 	}
-	if (fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT|FLAG_GENERATE_SLL)){
+	if (f_fp&&(fl&(FLAG_GENERATE_ASSEMBLY|FLAG_GENERATE_COMPILED_OBJECT|FLAG_GENERATE_SLL))){
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		uint16_t i=0;
 		sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
@@ -405,10 +405,10 @@ int main(int argc,const char** argv){
 	}
 	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl+1);
 	l_fpl+=5;
-	const sll_char_t** fp=NULL;
+	int* fp=NULL;
 	sll_string_length_t fpl=0;
-	sll_char_t** sl=NULL;
-	uint32_t sll=0;
+	int* sl=NULL;
+	sll_string_length_t sll=0;
 	sll_create_internal_function_table(&i_ft);
 	sll_register_builtin_internal_functions(&i_ft);
 	const sll_char_t* o_fp=NULL;
@@ -505,8 +505,8 @@ int main(int argc,const char** argv){
 				break;
 			}
 			sll++;
-			sl=sll_reallocate(sl,sll*sizeof(sll_char_t*));
-			*(sl+sll-1)=(sll_char_t*)argv[i];
+			sl=sll_reallocate(sl,sll*sizeof(int));
+			*(sl+sll-1)=i;
 		}
 		else if ((*e=='-'&&*(e+1)=='S'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
@@ -548,8 +548,8 @@ int main(int argc,const char** argv){
 		else{
 _read_file_argument:
 			fpl++;
-			fp=sll_reallocate(fp,fpl*sizeof(sll_char_t*));
-			*(fp+fpl-1)=e;
+			fp=sll_reallocate(fp,fpl*sizeof(int));
+			*(fp+fpl-1)=i;
 		}
 	}
 	if (fl&FLAG_VERBOSE){
@@ -625,14 +625,14 @@ _read_file_argument:
 	if (fpl==1){
 		fl|=_FLAG_SINGLE_OUTPUT;
 	}
-	for (uint32_t j=0;j<fpl;j++){
+	for (sll_string_length_t j=0;j<fpl;j++){
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		fl&=~_FLAG_ASSEMBLY_GENERATED;
-		if (!load_file(*(fp+j),&a_dt,&c_dt,&f,f_fp)){
+		if (!load_file(SLL_CHAR(argv[*(fp+j)]),&a_dt,&c_dt,&f,f_fp)){
 			goto _error;
 		}
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_platform_absolute_path(*(fp+j),bf,SLL_API_MAX_FILE_PATH_LENGTH);
+		sll_platform_absolute_path(SLL_CHAR(argv[*(fp+j)]),bf,SLL_API_MAX_FILE_PATH_LENGTH);
 		sll_set_argument(0,bf);
 		if (!execute(f_fp,&c_dt,&a_dt,&f,o_fp,&ec)){
 			goto _error;
@@ -643,10 +643,9 @@ _read_file_argument:
 		sll_free_assembly_data(&a_dt);
 		sll_free_compilation_data(&c_dt);
 	}
-	for (uint32_t j=0;j<sll;j++){
+	for (sll_string_length_t j=0;j<sll;j++){
 		sll_set_argument(0,SLL_CHAR("<console>"));
-		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_file_from_data(*(sl+j),sll_string_length_unaligned(*(sl+j)),SLL_FILE_FLAG_READ,&f);
+		sll_file_from_data(SLL_CHAR(argv[*(fp+j)]),sll_string_length_unaligned(SLL_CHAR(argv[*(fp+j)])),SLL_FILE_FLAG_READ,&f);
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Compiling console input...\n");
 		}
@@ -663,7 +662,7 @@ _read_file_argument:
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Input successfully read.\n");
 		}
-		if (!execute(f_fp,&c_dt,&a_dt,&f,o_fp,&ec)){
+		if (!execute(NULL,&c_dt,&a_dt,&f,o_fp,&ec)){
 			goto _error;
 		}
 		sll_free_assembly_data(&a_dt);
