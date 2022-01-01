@@ -12,7 +12,7 @@
  * \flags subgroup
  * \name Memory
  * \group util
- * \subgroup util-mem
+ * \subgroup util-memory
  * \desc Docs!
  */
 /**
@@ -71,7 +71,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_object(sll_s
  * \flags check_output func
  * \name sll_compare_data
  * \group util
- * \subgroup util-mem
+ * \subgroup util-memory
  * \desc Docs!
  * \arg const void* a
  * \arg const void* b
@@ -86,7 +86,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
  * \flags func
  * \name sll_copy_data
  * \group util
- * \subgroup util-mem
+ * \subgroup util-memory
  * \desc Docs!
  * \arg const void* s
  * \arg sll_size_t l
@@ -100,7 +100,7 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d);
  * \flags func
  * \name sll_copy_string
  * \group util
- * \subgroup util-mem
+ * \subgroup util-memory
  * \desc Docs!
  * \arg const sll_char_t* s
  * \arg void* d
@@ -114,7 +114,7 @@ __SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d);
  * \flags func
  * \name sll_copy_string_null
  * \group util
- * \subgroup util-mem
+ * \subgroup util-memory
  * \desc Docs!
  * \arg const sll_char_t* s
  * \arg void* d
@@ -201,7 +201,7 @@ __SLL_EXTERNAL void sll_init(void);
  * \flags func
  * \name sll_set_memory
  * \group util
- * \subgroup util-mem
+ * \subgroup util-memory
  * \desc Docs!
  * \arg void* p
  * \arg sll_size_t l
@@ -249,7 +249,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_version_t sll_version(void);
  * \flags func
  * \name sll_zero_memory
  * \group util
- * \subgroup util-mem
+ * \subgroup util-memory
  * \desc Docs!
  * \arg void* p
  * \arg sll_size_t l
