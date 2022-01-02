@@ -88,5 +88,5 @@ if ("--run" in sys.argv):
 	a=(["examples/_internal_test_ext_debug/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	util.log(f"Running '{a[0]}...")
 	subprocess.run(["build/sll","-h","-C"])
-	if (subprocess.run(["build/sll","-c","-C","-v","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","-C","-v","-O","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","build/test.slc","-C","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/sll","build/test2.sla","-C","-v","-P"]).returncode!=0):
+	if (subprocess.run(["build/sll","-c","-C","-v","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","-C","-v","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","build/test.slc","-C","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/sll","build/test2.sla","-C","-v","-P"]).returncode!=0):
 		sys.exit(1)

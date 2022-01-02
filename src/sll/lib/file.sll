@@ -71,6 +71,7 @@
 				'r' (= flags FLAG_READ)
 				'w' (= flags FLAG_WRITE)
 			)
+			(++ i)
 		})
 	})
 	(= handle (<- (... "sll:file_open")

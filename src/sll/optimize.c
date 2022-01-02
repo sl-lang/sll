@@ -2273,7 +2273,7 @@ _optimize_operation_list_comma:
 					l--;
 					o=_optimize(o,r,o_dt,(!rm&&!l&&r->t==SLL_NODE_TYPE_COMMA?OPTIMIZER_FLAG_ARGUMENT:0));
 					if (o_dt->rm){
-						_remove_up_to_end(o,l);
+						o=_remove_up_to_end(o,l);
 						sll_node_t* e=r+1;
 						r->dt.ac=0;
 						do{
@@ -2296,7 +2296,7 @@ _optimize_operation_list_comma:
 				else if (r->dt.ac==1&&(r->t==SLL_NODE_TYPE_COMMA||!(fl&OPTIMIZER_FLAG_ARGUMENT))){
 					r->t=SLL_NODE_TYPE_NOP;
 				}
-				else if ((p&&(p->t==SLL_NODE_TYPE_FUNC||p->t==SLL_NODE_TYPE_INLINE_FUNC||p->t==SLL_NODE_TYPE_COMMA||p->t==SLL_NODE_TYPE_OPERATION_LIST))){
+				else if (p&&(p->t==SLL_NODE_TYPE_FUNC||p->t==SLL_NODE_TYPE_INLINE_FUNC||p->t==SLL_NODE_TYPE_COMMA||p->t==SLL_NODE_TYPE_OPERATION_LIST)){
 					INCREASE_PARENT(p,r->dt.ac-1);
 					r->t=SLL_NODE_TYPE_NOP;
 				}

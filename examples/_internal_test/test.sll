@@ -1,5 +1,5 @@
-(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process base64)
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll")
+(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process base64 math)
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -47,7 +47,8 @@
 (:> "File size: " (<- path$size "build/hello.txt") "\n")
 (<- file$write file$stdout "Argument Count: " ($ sys$ARGV) "\n")
 (-> (= i 0) (< i ($ sys$ARGV))
-	(:> "[" i "] = " (: sys$ARGV i) "\n") (= i (+ i 1))
+	(:> "[" i "] = " (: sys$ARGV i) "\n")
+	(++ i)
 )
 (:> "Platform: " sys$PLATFORM "\n")
 (= st (<- time$time))
@@ -241,6 +242,8 @@
 (:> (<- base64$decode "RXhhbXBsZSBtZXNzYWdlIHRvIGVuY29kZQ==") "\nExample message to encode\n")
 
 (:> (<- json$stringify (<- json$parse JSON_STRING)) "\n")
+
+(:> math "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

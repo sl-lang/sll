@@ -14,6 +14,16 @@
 
 
 
+#define PUSH_REWIND_CHAR(c) \
+	do{ \
+		if (rewind_bf_l<255){ \
+			rewind_bf[rewind_bf_l]=(sll_char_t)(c); \
+			rewind_bf_l++; \
+		} \
+	} while (0)
+
+
+
 static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_dt){
 	sll_node_t* o=_acquire_next_node(im_dt->c_dt);
 	while (mo->t==SLL_NODE_TYPE_NOP||mo->t==SLL_NODE_TYPE_DBG||mo->t==NODE_TYPE_CHANGE_STACK){
@@ -665,13 +675,13 @@ _recurse_array_or_map:;
 					fl|=EXTRA_COMPILATION_DATA_IMPORT;
 				}
 			}
-			if ((o->t>=SLL_NODE_TYPE_IF&&o->t<=SLL_NODE_TYPE_SWITCH)||o->t==SLL_NODE_TYPE_FOR||o->t==SLL_NODE_TYPE_WHILE||o->t==SLL_NODE_TYPE_LOOP||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC){
+			if ((o->t>=SLL_NODE_TYPE_FOR&&o->t<=SLL_NODE_TYPE_LOOP)||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC){
 				n_l_sc.l_sc=c_dt->_n_sc_id;
-				n_l_sc.ml=(n_l_sc.l_sc+65)>>6;
+				n_l_sc.ml=(n_l_sc.l_sc>>6)+1;
 				n_l_sc.m=sll_allocate(n_l_sc.ml*sizeof(uint64_t));
 				n_l_sc.m[n_l_sc.ml-1]=0;
 				sll_copy_data(l_sc->m,l_sc->ml*sizeof(uint64_t),n_l_sc.m);
-				n_l_sc.m[n_l_sc.ml-1]|=1ull<<(n_l_sc.l_sc&63);
+				n_l_sc.m[n_l_sc.l_sc>>6]|=1ull<<(n_l_sc.l_sc&63);
 				c_dt->_n_sc_id++;
 				l_sc=&n_l_sc;
 			}
@@ -720,6 +730,8 @@ _recurse_array_or_map:;
 		}
 		else{
 			sll_node_t* arg=_acquire_next_node(c_dt);
+			sll_char_t rewind_bf[255];
+			uint8_t rewind_bf_l=0;
 			if (c=='\''){
 				arg->t=SLL_NODE_TYPE_CHAR;
 				uint8_t err=_read_single_char(rf,&(arg->dt.c));
@@ -766,6 +778,7 @@ _recurse_array_or_map:;
 			else if ((c>47&&c<58)||c=='-'){
 				int8_t m=1;
 				if (c=='-'){
+					PUSH_REWIND_CHAR('-');
 					m=-1;
 					c=sll_file_read_char(rf);
 					if (c==SLL_END_OF_DATA){
@@ -774,27 +787,25 @@ _recurse_array_or_map:;
 				}
 				sll_integer_t v=0;
 				if (c=='0'){
+					PUSH_REWIND_CHAR('0');
 					c=sll_file_read_char(rf);
 					if (c==SLL_END_OF_DATA){
 						break;
 					}
+					PUSH_REWIND_CHAR(c);
 					if (c=='x'||c=='X'){
 						c=sll_file_read_char(rf);
 						if (c==SLL_END_OF_DATA){
 							break;
 						}
 						do{
+							PUSH_REWIND_CHAR(c);
 							if (c>96){
 								c-=32;
 							}
 							if (c<48||(c>57&&c<65)||(c>70&&c!='_')){
-								e->t=SLL_ERROR_UNKNOWN_HEXADECIMAL_CHARCTER;
-								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
-								e->dt.r.sz=1;
-								if (n_l_sc.m){
-									sll_deallocate(n_l_sc.m);
-								}
-								return 0;
+								rewind_bf_l--;
+								goto _parse_identifier;
 							}
 							if (c!='_'){
 								v=(v<<4)+(c>64?c-55:c-48);
@@ -812,14 +823,9 @@ _recurse_array_or_map:;
 						}
 						do{
 							if (c<48||(c>55&&c!='_')){
-								e->t=SLL_ERROR_UNKNOWN_OCTAL_CHARCTER;
-								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
-								e->dt.r.sz=1;
-								if (n_l_sc.m){
-									sll_deallocate(n_l_sc.m);
-								}
-								return 0;
+								goto _parse_identifier;
 							}
+							PUSH_REWIND_CHAR(c);
 							if (c!='_'){
 								v=(v<<3)+(c-48);
 							}
@@ -836,14 +842,9 @@ _recurse_array_or_map:;
 						}
 						do{
 							if (c!='0'&&c!='1'&&c!='_'){
-								e->t=SLL_ERROR_UNKNOWN_BINARY_CHARCTER;
-								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
-								e->dt.r.sz=1;
-								if (n_l_sc.m){
-									sll_deallocate(n_l_sc.m);
-								}
-								return 0;
+								goto _parse_identifier;
 							}
+							PUSH_REWIND_CHAR(c);
 							if (c!='_'){
 								v=(v<<1)+(c-48);
 							}
@@ -854,17 +855,12 @@ _recurse_array_or_map:;
 						} while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'));
 					}
 					if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!='.'&&c!='e'&&c!='E'&&(c<48||c>57))){
-						e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-						e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
-						e->dt.r.sz=1;
-						if (n_l_sc.m){
-							sll_deallocate(n_l_sc.m);
-						}
-						return 0;
+						goto _parse_identifier;
 					}
 				}
 				if (c>47&&c<58){
 					while (1){
+						PUSH_REWIND_CHAR(c);
 						if (c!='_'){
 							v=v*10+(c-48);
 						}
@@ -876,13 +872,7 @@ _recurse_array_or_map:;
 							break;
 						}
 						if (c<48||(c>57&&c!='_')){
-							e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-							e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
-							e->dt.r.sz=1;
-							if (n_l_sc.m){
-								sll_deallocate(n_l_sc.m);
-							}
-							return 0;
+							goto _parse_identifier;
 						}
 					}
 				}
@@ -890,6 +880,7 @@ _recurse_array_or_map:;
 					int16_t ex=0;
 					if (c=='.'){
 						while (1){
+							PUSH_REWIND_CHAR(c);
 							c=sll_file_read_char(rf);
 							if (c==SLL_END_OF_DATA){
 								break;
@@ -898,13 +889,7 @@ _recurse_array_or_map:;
 								break;
 							}
 							if (c<48||(c>57&&c!='_')){
-								e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
-								e->dt.r.sz=1;
-								if (n_l_sc.m){
-									sll_deallocate(n_l_sc.m);
-								}
-								return 0;
+								goto _parse_identifier;
 							}
 							ex--;
 							if (c!='_'){
@@ -913,6 +898,7 @@ _recurse_array_or_map:;
 						}
 					}
 					if (c=='e'||c=='E'){
+						PUSH_REWIND_CHAR(c);
 						int8_t em=1;
 						int16_t ev=0;
 						c=sll_file_read_char(rf);
@@ -920,6 +906,7 @@ _recurse_array_or_map:;
 							break;
 						}
 						if (c=='-'){
+							PUSH_REWIND_CHAR(c);
 							em=-1;
 							c=sll_file_read_char(rf);
 							if (c==SLL_END_OF_DATA){
@@ -927,6 +914,7 @@ _recurse_array_or_map:;
 							}
 						}
 						else if (c=='+'){
+							PUSH_REWIND_CHAR(c);
 							c=sll_file_read_char(rf);
 							if (c==SLL_END_OF_DATA){
 								break;
@@ -937,14 +925,9 @@ _recurse_array_or_map:;
 								break;
 							}
 							if (c<48||(c>57&&c!='_')){
-								e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-								e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
-								e->dt.r.sz=1;
-								if (n_l_sc.m){
-									sll_deallocate(n_l_sc.m);
-								}
-								return 0;
+								goto _parse_identifier;
 							}
+							PUSH_REWIND_CHAR(c);
 							if (c!='_'){
 								ev=ev*10+(c-48);
 							}
@@ -956,13 +939,7 @@ _recurse_array_or_map:;
 						ex+=ev*em;
 					}
 					if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
-						e->t=SLL_ERROR_UNKNOWN_DECIMAL_CHARCTER;
-						e->dt.r.off=SLL_FILE_GET_OFFSET(rf)-1;
-						e->dt.r.sz=1;
-						if (n_l_sc.m){
-							sll_deallocate(n_l_sc.m);
-						}
-						return 0;
+						goto _parse_identifier;
 					}
 					arg->t=SLL_NODE_TYPE_FLOAT;
 					arg->dt.f=((sll_float_t)v)*pow(5,ex)*pow(2,ex)*m;
@@ -973,15 +950,21 @@ _recurse_array_or_map:;
 				}
 			}
 			else{
-				while (c=='$'){
-					c=sll_file_read_char(rf);
-					if (c==SLL_END_OF_DATA){
-						goto _return_error;
+_parse_identifier:
+				if (!rewind_bf_l){
+					while (c=='$'){
+						c=sll_file_read_char(rf);
+						if (c==SLL_END_OF_DATA){
+							goto _return_error;
+						}
 					}
 				}
 				sll_string_t str;
 				sll_string_create(255,&str);
-				uint8_t	sz=0;
+				if (rewind_bf_l){
+					sll_copy_data(rewind_bf,rewind_bf_l,str.v);
+				}
+				uint8_t	sz=rewind_bf_l;
 				do{
 					if (sz<255){
 						str.v[sz]=(sll_char_t)c;
