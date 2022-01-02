@@ -24,8 +24,12 @@
 	(~ func_type) ceil
 	(~ func_type) copy_sign
 	(~ func_type) floor
+	(~ func_type) int_log2
 	(~ func_type) int_pow
 	(~ func_type) int_sqrt
+	(~ func_type) log
+	(~ func_type) log2
+	(~ func_type) log10
 	(~ func_type) pow
 	(~ func_type) round
 	(~ func_type) sign
@@ -62,9 +66,17 @@
 
 (= floor (... "sll:math_floor"))
 
+(= int_log2 (... "sll:math_int_log2"))
+
 (= int_pow (... "sll:math_int_pow"))
 
 (= int_sqrt (... "sll:math_int_sqrt"))
+
+(= log (... "sll:math_log"))
+
+(= log2 (... "sll:math_log2"))
+
+(= log10 (... "sll:math_log10"))
 
 (= pow (... "sll:math_pow"))
 
@@ -108,8 +120,12 @@
 	ceil
 	copy_sign
 	floor
+	int_log2
 	int_pow
 	int_sqrt
+	log
+	log2
+	log10
 	pow
 	round
 	sign

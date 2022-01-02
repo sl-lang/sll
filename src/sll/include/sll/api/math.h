@@ -75,6 +75,18 @@ __API_FUNC_DECL(math_floor);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_math_int_log2
+ * \group math-api
+ * \desc Docs!
+ * \arg I
+ * \ret I
+ */
+__API_FUNC_DECL(math_int_log2);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_math_int_pow
  * \group math-api
  * \desc Docs!
@@ -95,6 +107,42 @@ __API_FUNC_DECL(math_int_pow);
  * \ret I
  */
 __API_FUNC_DECL(math_int_sqrt);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_math_log
+ * \group math-api
+ * \desc Docs!
+ * \arg F
+ * \ret F
+ */
+__API_FUNC_DECL(math_log);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_math_log2
+ * \group math-api
+ * \desc Docs!
+ * \arg F
+ * \ret F
+ */
+__API_FUNC_DECL(math_log2);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_math_log10
+ * \group math-api
+ * \desc Docs!
+ * \arg F
+ * \ret F
+ */
+__API_FUNC_DECL(math_log10);
 
 
 

@@ -47,6 +47,15 @@ __API_FUNC(math_floor){
 
 
 
+__API_FUNC(math_int_log2){
+	if (a<0){
+		SLL_UNIMPLEMENTED();
+	}
+	return FIND_FIRST_SET_BIT(a);
+}
+
+
+
 __API_FUNC(math_int_pow){
 	if (b<0){
 		SLL_UNIMPLEMENTED();
@@ -90,6 +99,24 @@ __API_FUNC(math_int_sqrt){
 		j=(i+v/i)>>1;
 	} while (j<i);
 	return i;
+}
+
+
+
+__API_FUNC(math_log){
+	return log(a);
+}
+
+
+
+__API_FUNC(math_log2){
+	return log2(a);
+}
+
+
+
+__API_FUNC(math_log10){
+	return log10(a);
 }
 
 

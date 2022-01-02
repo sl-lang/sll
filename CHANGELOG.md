@@ -10,6 +10,7 @@
 - Implemented `math$abs`, `math$ceil`, `math$floor` and `math$round` ([#182] and [#185])
 - Implemented `math$cbrt`, `math$int_pow`, `math$int_sqrt`, `math$pow` and `math$sqrt` ([#182] and [#189])
 - Implemented `math$copy_sign` and `math$sign` ([#182] and [#187])
+- Implemented `math$log`, `math$int_log2`, `math$log2` and `math$log10` ([#182] and [#188])
 - Implemented `math.sll` ([#182])
 - Implemented `sll_api_base64_decode` and `base64$decode` ([#169] and [#171])
 - Implemented `sll_api_base64_encode` and `base64$encode` ([#169] and [#172])
@@ -1312,6 +1313,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#190]: https://github.com/sl-lang/sll/issues/190
 [#189]: https://github.com/sl-lang/sll/issues/189
+[#188]: https://github.com/sl-lang/sll/issues/188
 [#187]: https://github.com/sl-lang/sll/issues/187
 [#185]: https://github.com/sl-lang/sll/issues/185
 [#183]: https://github.com/sl-lang/sll/issues/183
