@@ -16,6 +16,12 @@ __API_FUNC(math_abs){
 
 
 
+__API_FUNC(math_cbrt){
+	return cbrt(a);
+}
+
+
+
 __API_FUNC(math_ceil){
 	return ceil(a);
 }
@@ -41,6 +47,65 @@ __API_FUNC(math_floor){
 
 
 
+__API_FUNC(math_int_pow){
+	if (b<0){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_integer_t o=1;
+	if (a<0){
+		a=-a;
+		if (b&1){
+			o=-1;
+		}
+	}
+	uint64_t v=(uint64_t)a;
+	uint64_t e=(uint64_t)b;
+	while (1){
+		if (e&1){
+			o*=v;
+		}
+		e>>=1;
+		if (!e){
+			break;
+		}
+		v*=v;
+	}
+	return o;
+}
+
+
+
+__API_FUNC(math_int_sqrt){
+	if (a<0){
+		SLL_UNIMPLEMENTED();
+	}
+	uint64_t v=(uint64_t)a;
+	uint64_t i=v>>1;
+	if (!i){
+		return v;
+	}
+	uint64_t j=i;
+	do{
+		i=j;
+		j=(i+v/i)>>1;
+	} while (j<i);
+	return i;
+}
+
+
+
+__API_FUNC(math_pow){
+	return pow(a,b);
+}
+
+
+
 __API_FUNC(math_round){
 	return round(a);
+}
+
+
+
+__API_FUNC(math_sqrt){
+	return sqrt(a);
 }

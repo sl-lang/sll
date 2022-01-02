@@ -20,11 +20,16 @@
 	(~ float_type) SQRT2
 	(~ float_type) TAU
 	(~ func_type) abs
+	(~ func_type) cbrt
 	(~ func_type) ceil
 	(~ func_type) copy_sign
 	(~ func_type) floor
+	(~ func_type) int_pow
+	(~ func_type) int_sqrt
+	(~ func_type) pow
 	(~ func_type) round
 	(~ func_type) sign
+	(~ func_type) sqrt
 ))
 
 
@@ -49,11 +54,19 @@
 
 (= abs (... "sll:math_abs"))
 
+(= cbrt (... "sll:math_cbrt"))
+
 (= ceil (... "sll:math_ceil"))
 
 (= copy_sign (... "sll:math_copy_sign"))
 
 (= floor (... "sll:math_floor"))
+
+(= int_pow (... "sll:math_int_pow"))
+
+(= int_sqrt (... "sll:math_int_sqrt"))
+
+(= pow (... "sll:math_pow"))
 
 (= round (... "sll:math_round"))
 
@@ -69,6 +82,8 @@
 		(@@ 0)
 	})
 ))
+
+(= sqrt (... "sll:math_sqrt"))
 
 
 
@@ -89,10 +104,15 @@
 	SQRT2
 	TAU
 	abs
+	cbrt
 	ceil
 	copy_sign
 	floor
+	int_pow
+	int_sqrt
+	pow
 	round
 	sign
+	sqrt
 ))
 (## math)

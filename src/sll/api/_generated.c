@@ -1180,6 +1180,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_abs_raw(sll_object_
 
 
 
+__SLL_API_TYPE_sll_api_math_cbrt sll_api_math_cbrt(__SLL_API_ARGS_sll_api_math_cbrt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_cbrt_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_float_t out=sll_api_math_cbrt(a->dt.f);
+	SLL_RELEASE(a);
+	return SLL_FROM_FLOAT(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_math_ceil sll_api_math_ceil(__SLL_API_ARGS_sll_api_math_ceil);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_ceil_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -1260,6 +1282,100 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_floor_raw(sll_objec
 
 
 
+__SLL_API_TYPE_sll_api_math_int_pow sll_api_math_int_pow(__SLL_API_ARGS_sll_api_math_int_pow);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_int_pow_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_integer_t out=sll_api_math_int_pow(a->dt.i,b->dt.i);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_FROM_INT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_math_int_sqrt sll_api_math_int_sqrt(__SLL_API_ARGS_sll_api_math_int_sqrt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_int_sqrt_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_integer_t out=sll_api_math_int_sqrt(a->dt.i);
+	SLL_RELEASE(a);
+	return SLL_FROM_INT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_math_pow sll_api_math_pow(__SLL_API_ARGS_sll_api_math_pow);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_pow_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_float_t out=sll_api_math_pow(a->dt.f,b->dt.f);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_FROM_FLOAT(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_math_round sll_api_math_round(__SLL_API_ARGS_sll_api_math_round);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_round_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -1276,6 +1392,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_round_raw(sll_objec
 		a=SLL_ACQUIRE_STATIC(float_zero);
 	}
 	sll_float_t out=sll_api_math_round(a->dt.f);
+	SLL_RELEASE(a);
+	return SLL_FROM_FLOAT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_math_sqrt sll_api_math_sqrt(__SLL_API_ARGS_sll_api_math_sqrt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_sqrt_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_float_t out=sll_api_math_sqrt(a->dt.f);
 	SLL_RELEASE(a);
 	return SLL_FROM_FLOAT(out);
 }
@@ -2774,10 +2912,15 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{"sll:log_set_file",sll_api_log_set_file_raw,0},
 	{"sll:log_set_function",sll_api_log_set_function_raw,0},
 	{"sll:math_abs",sll_api_math_abs_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:math_cbrt",sll_api_math_cbrt_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:math_ceil",sll_api_math_ceil_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:math_copy_sign",sll_api_math_copy_sign_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:math_floor",sll_api_math_floor_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:math_int_pow",sll_api_math_int_pow_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:math_int_sqrt",sll_api_math_int_sqrt_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:math_pow",sll_api_math_pow_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:math_round",sll_api_math_round_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
+	{"sll:math_sqrt",sll_api_math_sqrt_raw,SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL},
 	{"sll:path_absolute",sll_api_path_absolute_raw,0},
 	{"sll:path_exists",sll_api_path_exists_raw,0},
 	{"sll:path_get_cwd",sll_api_path_get_cwd_raw,0},
@@ -2832,5 +2975,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=80;
+const sll_function_index_t _ifunc_size=85;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);
