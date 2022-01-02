@@ -829,7 +829,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_c
 	}
 	sll_string_length_t l=(s->l+7)>>3;
 	const uint64_t* p=((const uint64_t*)(s->v))+l;
-	STRING_DATA_PTR(p);
 	uint64_t m=0x101010101010101ull*c;
 	for (sll_string_length_t i=0;i<l;i++){
 		p--;

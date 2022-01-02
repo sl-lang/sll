@@ -21,6 +21,7 @@
 - Internal function table field in the VM config structure
 - Math constants ([#182] and [#183])
 - Math trigonometric functions ([#182] and [#184])
+- Module for looking-up MIME types: `mime.sll` ([#194])
 - Version tag macro constant: `SLL_VERSION_TAG`
 
 ### Changed
@@ -1314,6 +1315,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#194]: https://github.com/sl-lang/sll/issues/194
 [#191]: https://github.com/sl-lang/sll/issues/191
 [#190]: https://github.com/sl-lang/sll/issues/190
 [#189]: https://github.com/sl-lang/sll/issues/189

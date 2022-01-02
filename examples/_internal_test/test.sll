@@ -1,5 +1,5 @@
-(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process base64 math int)
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll")
+(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process base64 math int mime)
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -247,6 +247,8 @@
 (:> (<- math$combinations 5 3) "\n")
 
 (:> (<- int$to_bin -4657) "\n" (<- int$to_oct -4657) "\n" (<- int$to_hex -4657) "\n")
+
+(:> (<- mime$get_type "file.css") "," (<- mime$get_ext "application/javascript") "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
