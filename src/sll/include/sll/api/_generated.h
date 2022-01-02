@@ -687,6 +687,168 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_math_acos __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_acos sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_acos
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_acos_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_acos:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_acosh __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_acosh sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_acosh
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_acosh_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_acosh:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_asin __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_asin sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_asin
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_asin_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_asin:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_asinh __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_asinh sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_asinh
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_asinh_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_asinh:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_atan __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_atan sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_atan
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_atan_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_atan:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_atan2 __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_atan2 sll_float_t a,sll_float_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_atan2
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \arg sll_float_t b -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_atan2_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_atan2:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_atanh __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_atanh sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_atanh
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_atanh_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_atanh:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_math_cbrt __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_math_cbrt sll_float_t a
 /**
@@ -703,6 +865,52 @@
  * \group raw-api
  * \subgroup raw-api-math-api
  * \desc Wrapper function for :sll_api_math_cbrt:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_cos __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_cos sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_cos
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_cos_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_cos:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_cosh __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_cosh sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_cosh
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_cosh_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_cosh:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
@@ -966,6 +1174,52 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_math_sin __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_sin sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_sin
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_sin_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_sin:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_sinh __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_sinh sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_sinh
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_sinh_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_sinh:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_math_sqrt __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_math_sqrt sll_float_t a
 /**
@@ -982,6 +1236,52 @@
  * \group raw-api
  * \subgroup raw-api-math-api
  * \desc Wrapper function for :sll_api_math_sqrt:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_tan __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_tan sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_tan
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_tan_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_tan:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_tanh __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_tanh sll_float_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_tanh
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_tanh_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_tanh:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

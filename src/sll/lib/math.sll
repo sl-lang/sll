@@ -20,7 +20,16 @@
 	(~ float_type) SQRT2
 	(~ float_type) TAU
 	(~ func_type) abs
+	(~ func_type) acos
+	(~ func_type) acosh
+	(~ func_type) asin
+	(~ func_type) asinh
+	(~ func_type) atan
+	(~ func_type) atan2
+	(~ func_type) atanh
 	(~ func_type) cbrt
+	(~ func_type) cos
+	(~ func_type) cosh
 	(~ func_type) ceil
 	(~ func_type) copy_sign
 	(~ func_type) floor
@@ -33,7 +42,11 @@
 	(~ func_type) pow
 	(~ func_type) round
 	(~ func_type) sign
+	(~ func_type) sin
+	(~ func_type) sinh
 	(~ func_type) sqrt
+	(~ func_type) tan
+	(~ func_type) tanh
 ))
 
 
@@ -58,7 +71,25 @@
 
 (= abs (... "sll:math_abs"))
 
+(= acos (... "sll:math_acos"))
+
+(= acosh (... "sll:math_acosh"))
+
+(= asin (... "sll:math_asin"))
+
+(= asinh (... "sll:math_asinh"))
+
+(= atan (... "sll:math_atan"))
+
+(= atan2 (... "sll:math_atan2"))
+
+(= atanh (... "sll:math_atanh"))
+
 (= cbrt (... "sll:math_cbrt"))
+
+(= cos (... "sll:math_cos"))
+
+(= cosh (... "sll:math_cosh"))
 
 (= ceil (... "sll:math_ceil"))
 
@@ -95,7 +126,15 @@
 	})
 ))
 
+(= sin (... "sll:math_sin"))
+
+(= sinh (... "sll:math_sinh"))
+
 (= sqrt (... "sll:math_sqrt"))
+
+(= tan (... "sll:math_tan"))
+
+(= tanh (... "sll:math_tanh"))
 
 
 
@@ -116,7 +155,16 @@
 	SQRT2
 	TAU
 	abs
+	acos
+	acosh
+	asin
+	asinh
+	atan
+	atan2
+	atanh
 	cbrt
+	cos
+	cosh
 	ceil
 	copy_sign
 	floor
@@ -129,6 +177,10 @@
 	pow
 	round
 	sign
+	sin
+	sinh
 	sqrt
+	tan
+	tanh
 ))
 (## math)

@@ -16,8 +16,62 @@ __API_FUNC(math_abs){
 
 
 
+__API_FUNC(math_acos){
+	return acos(a);
+}
+
+
+
+__API_FUNC(math_acosh){
+	return acosh(a);
+}
+
+
+
+__API_FUNC(math_asin){
+	return asin(a);
+}
+
+
+
+__API_FUNC(math_asinh){
+	return asinh(a);
+}
+
+
+
+__API_FUNC(math_atan){
+	return atan(a);
+}
+
+
+
+__API_FUNC(math_atan2){
+	return atan2(a,b);
+}
+
+
+
+__API_FUNC(math_atanh){
+	return atanh(a);
+}
+
+
+
 __API_FUNC(math_cbrt){
 	return cbrt(a);
+}
+
+
+
+__API_FUNC(math_cos){
+	return cos(a);
+}
+
+
+
+__API_FUNC(math_cosh){
+	return cosh(a);
 }
 
 
@@ -133,6 +187,30 @@ __API_FUNC(math_round){
 
 
 
+__API_FUNC(math_sin){
+	return sin(a);
+}
+
+
+
+__API_FUNC(math_sinh){
+	return sinh(a);
+}
+
+
+
 __API_FUNC(math_sqrt){
 	return sqrt(a);
+}
+
+
+
+__API_FUNC(math_tan){
+	return tan(a);
+}
+
+
+
+__API_FUNC(math_tanh){
+	return tanh(a);
 }

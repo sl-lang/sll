@@ -18,6 +18,7 @@
 - Implemented `sll_clone_internal_function_table`
 - Internal function table field in the VM config structure
 - Math constants ([#182] and [#183])
+- Math trigonometric functions ([#182] and [#184])
 - Version tag macro constant: `SLL_VERSION_TAG`
 
 ### Changed
@@ -1316,6 +1317,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#188]: https://github.com/sl-lang/sll/issues/188
 [#187]: https://github.com/sl-lang/sll/issues/187
 [#185]: https://github.com/sl-lang/sll/issues/185
+[#184]: https://github.com/sl-lang/sll/issues/184
 [#183]: https://github.com/sl-lang/sll/issues/183
 [#182]: https://github.com/sl-lang/sll/issues/182
 [#172]: https://github.com/sl-lang/sll/issues/172
