@@ -244,6 +244,7 @@
 (:> (<- json$stringify (<- json$parse JSON_STRING)) "\n")
 
 (:> math "\n")
+(:> (<- math$combinations 5 3) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

@@ -123,6 +123,19 @@ __API_FUNC_DECL(math_cbrt);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_math_combinations
+ * \group math-api
+ * \desc Docs!
+ * \arg I
+ * \arg I
+ * \ret I
+ */
+__API_FUNC_DECL(math_combinations);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_math_cos
  * \group math-api
  * \desc Docs!
@@ -167,6 +180,31 @@ __API_FUNC_DECL(math_ceil);
  * \ret F
  */
 __API_FUNC_DECL(math_copy_sign);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_math_factorial
+ * \group math-api
+ * \desc Docs!
+ * \arg I
+ * \ret I
+ */
+__API_FUNC_DECL(math_factorial);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_math_gcd
+ * \group math-api
+ * \desc Docs!
+ * \arg I
+ * \arg I
+ * \ret I
+ */
+__API_FUNC_DECL(math_gcd);
 
 
 
@@ -252,6 +290,19 @@ __API_FUNC_DECL(math_log2);
  * \ret F
  */
 __API_FUNC_DECL(math_log10);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_math_permutations
+ * \group math-api
+ * \desc Docs!
+ * \arg I
+ * \arg I
+ * \ret I
+ */
+__API_FUNC_DECL(math_permutations);
 
 
 

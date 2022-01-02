@@ -872,6 +872,30 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_math_combinations __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_math_combinations sll_integer_t a,sll_integer_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_combinations
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_combinations_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_combinations:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_math_cos __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_math_cos sll_float_t a
 /**
@@ -958,6 +982,53 @@
  * \group raw-api
  * \subgroup raw-api-math-api
  * \desc Wrapper function for :sll_api_math_copy_sign:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_factorial __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_math_factorial sll_integer_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_factorial
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_factorial_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_factorial:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_gcd __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_math_gcd sll_integer_t a,sll_integer_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_gcd
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_gcd_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_gcd:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
@@ -1120,6 +1191,30 @@
  * \group raw-api
  * \subgroup raw-api-math-api
  * \desc Wrapper function for :sll_api_math_log10:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_permutations __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_math_permutations sll_integer_t a,sll_integer_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_permutations
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_permutations_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_permutations:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

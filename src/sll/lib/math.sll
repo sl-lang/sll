@@ -28,17 +28,21 @@
 	(~ func_type) atan2
 	(~ func_type) atanh
 	(~ func_type) cbrt
+	(~ func_type) combinations
 	(~ func_type) cos
 	(~ func_type) cosh
 	(~ func_type) ceil
 	(~ func_type) copy_sign
+	(~ func_type) factorial
 	(~ func_type) floor
+	(~ func_type) gcd
 	(~ func_type) int_log2
 	(~ func_type) int_pow
 	(~ func_type) int_sqrt
 	(~ func_type) log
 	(~ func_type) log2
 	(~ func_type) log10
+	(~ func_type) permutations
 	(~ func_type) pow
 	(~ func_type) round
 	(~ func_type) sign
@@ -87,6 +91,8 @@
 
 (= cbrt (... "sll:math_cbrt"))
 
+(= combinations (... "sll:math_combinations"))
+
 (= cos (... "sll:math_cos"))
 
 (= cosh (... "sll:math_cosh"))
@@ -95,7 +101,11 @@
 
 (= copy_sign (... "sll:math_copy_sign"))
 
+(= factorial (... "sll:math_factorial"))
+
 (= floor (... "sll:math_floor"))
+
+(= gcd (... "sll:math_gcd"))
 
 (= int_log2 (... "sll:math_int_log2"))
 
@@ -108,6 +118,8 @@
 (= log2 (... "sll:math_log2"))
 
 (= log10 (... "sll:math_log10"))
+
+(= permutations (... "sll:math_permutations"))
 
 (= pow (... "sll:math_pow"))
 
@@ -163,17 +175,21 @@
 	atan2
 	atanh
 	cbrt
+	combinations
 	cos
 	cosh
 	ceil
 	copy_sign
+	factorial
 	floor
+	gcd
 	int_log2
 	int_pow
 	int_sqrt
 	log
 	log2
 	log10
+	permutations
 	pow
 	round
 	sign

@@ -9,6 +9,7 @@
 - Implemented `base64.sll` ([#169])
 - Implemented `math$abs`, `math$ceil`, `math$floor` and `math$round` ([#182] and [#185])
 - Implemented `math$cbrt`, `math$int_pow`, `math$int_sqrt`, `math$pow` and `math$sqrt` ([#182] and [#189])
+- Implemented `math$combinations`, `math$factorial`, `math$gcd` and `math$permutations` ([#182] and [#186])
 - Implemented `math$copy_sign` and `math$sign` ([#182] and [#187])
 - Implemented `math$log`, `math$int_log2`, `math$log2` and `math$log10` ([#182] and [#188])
 - Implemented `math.sll` ([#182])
@@ -53,7 +54,7 @@
 - Renamed `sll_api_sort_sort` to `sll_api_sort_quicksort`
 - Renamed `sll_api_sys_arg_get` to `sll_api_sys_get_args`
 - Repository file layout
-- `sys$argv` is now an array insetad of a function
+- `sys$argv` is now an array instead of a function
 
 ### Removed
 
@@ -112,7 +113,7 @@
 - Server request handler
 - `type_type` which is an alias to `int_type`
 - VM call stack is now part of the public API
-- VM now recives configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
+- VM now receive configuration from `sll_vm_config_t` rather than `sll_runtime_data_t`
 
 ### Changed
 
@@ -147,7 +148,7 @@
 ### Added
 
 - Constant macro for unsupplied `sll_char_t` argument: `SLL_NO_CHAR`
-- Constant string containg the extension of a library on the current platform: `sys$library_extension` ([#123])
+- Constant string containing the extension of a library on the current platform: `sys$library_extension` ([#123])
 - External internal function declaration API: `SLL_NODE_TYPE_INTERNAL_FUNC_LOAD`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR`
 - Implemented `sll:array_count` and `sll_api_array_count` ([#117])
 - Implemented `sll_array_replace`, `sll_api_array_replace` and `sll:array_replace` ([#120])
@@ -196,7 +197,7 @@
 
 ### Changed
 
-- Converting handels to strings now uses a new template
+- Converting handles to strings now uses a new template
 - Fixed critical invalid identifier index bug in the optimizer
 - Memory page size can now be accessed via `SLL_PAGE_SIZE` and `SLL_LARGE_PAGE_SIZE` macros ([#102])
 - `sll_platform_allocate_page` now accepts an argument to allocate large pages ([#102])
@@ -228,7 +229,7 @@
 - Internal Functions are now named according to [#73]
 - Renamed the import operator from `(--)` to `(---)` ([#96])
 - Structure fields are now declared as identifiers and are marked by an internal type (`SLL_NODE_TYPE_FIELD`)
-- The syntax highlight now currectly marks type declarations
+- Syntax highlight now correctly marks type declarations
 
 ### Removed
 
@@ -1316,6 +1317,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#189]: https://github.com/sl-lang/sll/issues/189
 [#188]: https://github.com/sl-lang/sll/issues/188
 [#187]: https://github.com/sl-lang/sll/issues/187
+[#186]: https://github.com/sl-lang/sll/issues/186
 [#185]: https://github.com/sl-lang/sll/issues/185
 [#184]: https://github.com/sl-lang/sll/issues/184
 [#183]: https://github.com/sl-lang/sll/issues/183

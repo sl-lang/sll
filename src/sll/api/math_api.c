@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/api/math.h>
 #include <sll/common.h>
 #include <sll/types.h>
 #include <math.h>
@@ -64,6 +65,38 @@ __API_FUNC(math_cbrt){
 
 
 
+__API_FUNC(math_combinations){
+	if (b>a||b<=0){
+		return 0;
+	}
+	if (a==b){
+		return 1;
+	}
+	if (b==1){
+		return 1;
+	}
+	uint64_t o=1;
+	uint64_t i=a-b;
+	uint64_t j=2;
+	do{
+		i++;
+		o*=i;
+		if (j&&!(o%j)){
+			o/=j;
+			j=(j==b?0:j+1);
+		}
+	} while (i<a);
+	if (j){
+		while (j<=b){
+			o/=j;
+			j++;
+		}
+	}
+	return o;
+}
+
+
+
 __API_FUNC(math_cos){
 	return cos(a);
 }
@@ -95,8 +128,34 @@ __API_FUNC(math_copy_sign){
 
 
 
+__API_FUNC(math_factorial){
+	if (a<0){
+		SLL_UNIMPLEMENTED();
+	}
+	uint64_t o=1;
+	while (a>1){
+		o*=a;
+		a--;
+	}
+	return o;
+}
+
+
+
 __API_FUNC(math_floor){
 	return floor(a);
+}
+
+
+
+__API_FUNC(math_gcd){
+	uint64_t t;
+	while (b){
+		t=a%b;
+		a=b;
+		b=t;
+	}
+	return a;
 }
 
 
@@ -171,6 +230,27 @@ __API_FUNC(math_log2){
 
 __API_FUNC(math_log10){
 	return log10(a);
+}
+
+
+
+__API_FUNC(math_permutations){
+	if (b>a||b<=0){
+		return 0;
+	}
+	if (a==b){
+		return sll_api_math_factorial(a);
+	}
+	if (b==1){
+		return a;
+	}
+	uint64_t o=1;
+	uint64_t i=a-b;
+	do{
+		i++;
+		o*=i;
+	} while (i<a);
+	return o;
 }
 
 
