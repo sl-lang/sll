@@ -1,4 +1,4 @@
-(# func_type float_type)
+(# int_type func_type float_type)
 (--- "types.sll")
 
 
@@ -19,6 +19,8 @@
 	(~ float_type) RAD_TO_DEG
 	(~ float_type) SQRT2
 	(~ float_type) TAU
+	(~ func_type) copy_sign
+	(~ func_type) sign
 ))
 
 
@@ -41,6 +43,35 @@
 
 
 
+(= copy_sign (,,, a b
+	(? (!== (:? a) int_type)
+		(= a (:: a float_type))
+	)
+	(? (!== (:? b) int_type)
+		(= b (:: b float_type))
+	)
+	(? (< a 0) {
+		(@@ (?: (> b 0) (- 0 b) b))
+	} {
+		(@@ (?: (< b 0) (- 0 b) b))
+	})
+))
+
+(= sign (,,, v
+	(? (!== (:? v) int_type)
+		(= v (:: v float_type))
+	)
+	(? (< v 0) {
+		(@@ -1)
+	} (> v 0){
+		(@@ 1)
+	} {
+		(@@ 0)
+	})
+))
+
+
+
 (= math (. math_module_type
 	1_DIV_PI
 	1_DIV_SQRT2
@@ -57,5 +88,7 @@
 	RAD_TO_DEG
 	SQRT2
 	TAU
+	copy_sign
+	sign
 ))
 (## math)
