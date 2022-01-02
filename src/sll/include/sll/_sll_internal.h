@@ -510,6 +510,13 @@ typedef struct __FILE_LINE{
 
 
 
+typedef union __FLOAT_DATA{
+	sll_float_t v;
+	uint64_t dt;
+} float_data_t;
+
+
+
 #ifdef _MSC_VER
 extern void* _win_dll_handle;
 #endif

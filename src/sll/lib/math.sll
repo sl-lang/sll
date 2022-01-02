@@ -19,7 +19,11 @@
 	(~ float_type) RAD_TO_DEG
 	(~ float_type) SQRT2
 	(~ float_type) TAU
+	(~ func_type) abs
+	(~ func_type) ceil
 	(~ func_type) copy_sign
+	(~ func_type) floor
+	(~ func_type) round
 	(~ func_type) sign
 ))
 
@@ -43,19 +47,15 @@
 
 
 
-(= copy_sign (,,, a b
-	(? (!== (:? a) int_type)
-		(= a (:: a float_type))
-	)
-	(? (!== (:? b) int_type)
-		(= b (:: b float_type))
-	)
-	(? (< a 0) {
-		(@@ (?: (> b 0) (- 0 b) b))
-	} {
-		(@@ (?: (< b 0) (- 0 b) b))
-	})
-))
+(= abs (... "sll:math_abs"))
+
+(= ceil (... "sll:math_ceil"))
+
+(= copy_sign (... "sll:math_copy_sign"))
+
+(= floor (... "sll:math_floor"))
+
+(= round (... "sll:math_round"))
 
 (= sign (,,, v
 	(? (!== (:? v) int_type)
@@ -88,7 +88,11 @@
 	RAD_TO_DEG
 	SQRT2
 	TAU
+	abs
+	ceil
 	copy_sign
+	floor
+	round
 	sign
 ))
 (## math)

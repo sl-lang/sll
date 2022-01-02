@@ -2,7 +2,6 @@
 #define __SLL_API_FILE_H__ 1
 #include <sll/api.h>
 #include <sll/common.h>
-#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group
