@@ -4,6 +4,16 @@
 
 
 (= string_module_type (&:
+	(~ string_type) BINARY_DIGITS
+	(~ string_type) DIGITS
+	(~ string_type) HEXADECIMAL_DIGITS
+	(~ string_type) LETTERS
+	(~ string_type) LOWERCASE_LETTERS
+	(~ string_type) OCTAL_DIGITS
+	(~ string_type) PRINTABLE_CHARACTERS
+	(~ string_type) PUNCTUATION_CHARACTERS
+	(~ string_type) UPPERCASE_LETTERS
+	(~ string_type) WHITESPACE_CHARACTERS
 	(~ func_type) checksum
 	(~ func_type) count
 	(~ func_type) count_left
@@ -27,6 +37,19 @@
 	(~ func_type) title_case
 	(~ func_type) upper_case
 ))
+
+
+
+(= BINARY_DIGITS "01")
+(= DIGITS "0123456789")
+(= HEXADECIMAL_DIGITS "0123456789abcdefABCDEF")
+(= LETTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+(= LOWERCASE_LETTERS "abcdefghijklmnopqrstuvwxyz")
+(= OCTAL_DIGITS "01234567")
+(= PRINTABLE_CHARACTERS " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+(= PUNCTUATION_CHARACTERS "!\"#%&'()*,./:;?@[\\]^_`{|}~")
+(= UPPERCASE_LETTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+(= WHITESPACE_CHARACTERS "\t\n\v\f\r ")
 
 
 
@@ -94,6 +117,16 @@
 
 
 (= string (. string_module_type
+	BINARY_DIGITS
+	DIGITS
+	HEXADECIMAL_DIGITS
+	LETTERS
+	LOWERCASE_LETTERS
+	OCTAL_DIGITS
+	PRINTABLE_CHARACTERS
+	PUNCTUATION_CHARACTERS
+	UPPERCASE_LETTERS
+	WHITESPACE_CHARACTERS
 	checksum
 	count
 	count_left

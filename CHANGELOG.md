@@ -4,6 +4,7 @@
 
 ### Added
 
+- Character constants in `string.sll`: `string$BINARY_DIGITS`, `string$DIGITS`, `string$HEXADECIMAL_DIGITS`, `string$LETTERS`, `string$LOWERCASE_LETTERS`, `string$OCTAL_DIGITS`, `string$PRINTABLE_CHARACTERS`, `string$PUNCTUATION_CHARACTERS`, `string$UPPERCASE_LETTERS` and `string$WHITESPACE_CHARACTERS` ([#190])
 - Implemented `base64$ALPHABET` ([#169] and [#170])
 - Implemented `base64.sll` ([#169])
 - Implemented `sll_api_base64_decode` and `base64$decode` ([#169] and [#171])
@@ -1304,6 +1305,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#190]: https://github.com/sl-lang/sll/issues/190
 [#172]: https://github.com/sl-lang/sll/issues/172
 [#171]: https://github.com/sl-lang/sll/issues/171
 [#170]: https://github.com/sl-lang/sll/issues/170
