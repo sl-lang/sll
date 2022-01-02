@@ -75,6 +75,8 @@ __API_FUNC(math_combinations){
 	if (b==1){
 		return 1;
 	}
+	uint64_t av=(sll_integer_t)a;
+	uint64_t bv=(sll_integer_t)b;
 	uint64_t o=1;
 	uint64_t i=a-b;
 	uint64_t j=2;
@@ -85,9 +87,9 @@ __API_FUNC(math_combinations){
 			o/=j;
 			j=(j==b?0:j+1);
 		}
-	} while (i<a);
+	} while (i<av);
 	if (j){
-		while (j<=b){
+		while (j<=bv){
 			o/=j;
 			j++;
 		}
@@ -244,12 +246,13 @@ __API_FUNC(math_permutations){
 	if (b==1){
 		return a;
 	}
+	uint64_t v=(sll_integer_t)a;
 	uint64_t o=1;
 	uint64_t i=a-b;
 	do{
 		i++;
 		o*=i;
-	} while (i<a);
+	} while (i<v);
 	return o;
 }
 
