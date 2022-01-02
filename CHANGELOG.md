@@ -17,6 +17,7 @@
 - Implemented `sll_api_base64_encode` and `base64$encode` ([#169] and [#172])
 - Implemented `sll_api_json_stringify` and `json$stringify` ([#58])
 - Implemented `sll_clone_internal_function_table`
+- Integer to string conversion module: `int.sll` ([#191])
 - Internal function table field in the VM config structure
 - Math constants ([#182] and [#183])
 - Math trigonometric functions ([#182] and [#184])
@@ -1313,6 +1314,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#191]: https://github.com/sl-lang/sll/issues/191
 [#190]: https://github.com/sl-lang/sll/issues/190
 [#189]: https://github.com/sl-lang/sll/issues/189
 [#188]: https://github.com/sl-lang/sll/issues/188

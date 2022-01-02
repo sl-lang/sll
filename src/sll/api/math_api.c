@@ -166,7 +166,7 @@ __API_FUNC(math_int_log2){
 	if (a<0){
 		SLL_UNIMPLEMENTED();
 	}
-	return FIND_FIRST_SET_BIT(a);
+	return FIND_LAST_SET_BIT(a);
 }
 
 

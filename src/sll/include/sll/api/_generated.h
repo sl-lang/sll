@@ -482,6 +482,79 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_int_to_bin void
+#define __SLL_API_ARGS_sll_api_int_to_bin sll_integer_t a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_int_to_bin
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_int_to_bin_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_int_to_bin:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Math
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_int_to_hex void
+#define __SLL_API_ARGS_sll_api_int_to_hex sll_integer_t a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_int_to_hex
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_int_to_hex_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_int_to_hex:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_int_to_oct void
+#define __SLL_API_ARGS_sll_api_int_to_oct sll_integer_t a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_int_to_oct
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_int_to_oct_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_int_to_oct:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_json__init void
 #define __SLL_API_ARGS_sll_api_json__init sll_object_t* a,sll_object_t* b,sll_object_t* c
 /**
@@ -676,13 +749,6 @@
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
- */
-/**
- * \flags subgroup
- * \name Math
- * \group raw-api
- * \subgroup raw-api-math-api
- * \desc Docs!
  */
 
 

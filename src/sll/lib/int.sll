@@ -1,0 +1,27 @@
+(# func_type)
+(--- "types.sll")
+
+
+
+(= int_module_type (&:
+	(~ func_type) to_bin
+	(~ func_type) to_hex
+	(~ func_type) to_oct
+))
+
+
+
+(= to_bin (... "sll:int_to_bin"))
+
+(= to_hex (... "sll:int_to_hex"))
+
+(= to_oct (... "sll:int_to_oct"))
+
+
+
+(= int (. int_module_type
+	to_bin
+	to_hex
+	to_oct
+))
+(## int)
