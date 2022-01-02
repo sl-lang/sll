@@ -202,8 +202,8 @@
 - Converting handles to strings now uses a new template
 - Fixed critical invalid identifier index bug in the optimizer
 - Memory page size can now be accessed via `SLL_PAGE_SIZE` and `SLL_LARGE_PAGE_SIZE` macros ([#102])
-- `sll_platform_allocate_page` now accepts an argument to allocate large pages ([#102])
 - Renamed `sll_add_string_runtime` to `sll_add_string_object`
+- `sll_platform_allocate_page` now accepts an argument to allocate large pages ([#102])
 
 ### Removed
 

@@ -151,9 +151,8 @@ __API_FUNC(math_floor){
 
 
 __API_FUNC(math_gcd){
-	uint64_t t;
 	while (b){
-		t=a%b;
+		sll_integer_t t=a%b;
 		a=b;
 		b=t;
 	}
