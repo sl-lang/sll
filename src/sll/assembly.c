@@ -2,7 +2,6 @@
 #include <sll/_generated_assembly_optimizer.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
-#include <sll/error.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/node.h>
@@ -1816,7 +1815,7 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o){
 	if (!c_dt->h){
 		_init_assembly_stack(o);
 		o->tm=sll_platform_get_current_time();

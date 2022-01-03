@@ -17,7 +17,7 @@
 
 
 
-static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o);
+static void _object_to_string(const sll_object_t* a,sll_string_t* o);
 
 
 
@@ -149,7 +149,7 @@ static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
 				continue;
 		}
 		tmp.t=SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t);
-		_object_to_string(&tmp,1,o);
+		_object_to_string(&tmp,o);
 	}
 	sll_string_increase(o,1);
 	o->v[o->l]='>';
@@ -159,7 +159,7 @@ static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
 
 
 
-static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o){
+static void _object_to_string(const sll_object_t* a,sll_string_t* o){
 	if (!a->rc){
 		sll_string_increase(o,19);
 		sll_copy_string(SLL_CHAR("<released object>"),o->v+o->l);
@@ -189,36 +189,24 @@ static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o
 				return;
 			}
 		case SLL_OBJECT_TYPE_CHAR:
-			if (q){
-				sll_string_increase(o,1);
-				o->v[o->l]='\'';
-				o->l++;
-				_write_char(a->dt.c,o);
-				sll_string_increase(o,1);
-				o->v[o->l]='\'';
-				o->l++;
-				return;
-			}
 			sll_string_increase(o,1);
-			o->v[o->l]=a->dt.c;
+			o->v[o->l]='\'';
+			o->l++;
+			_write_char(a->dt.c,o);
+			sll_string_increase(o,1);
+			o->v[o->l]='\'';
 			o->l++;
 			return;
 		case SLL_OBJECT_TYPE_STRING:
-			if (q){
-				sll_string_increase(o,1);
-				o->v[o->l]='\"';
-				o->l++;
-				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
-					_write_char(a->dt.s.v[i],o);
-				}
-				sll_string_increase(o,1);
-				o->v[o->l]='\"';
-				o->l++;
-				return;
+			sll_string_increase(o,1);
+			o->v[o->l]='\"';
+			o->l++;
+			for (sll_string_length_t i=0;i<a->dt.s.l;i++){
+				_write_char(a->dt.s.v[i],o);
 			}
-			sll_string_increase(o,a->dt.s.l);
-			sll_copy_data(a->dt.s.v,a->dt.s.l,o->v+o->l);
-			o->l+=a->dt.s.l;
+			sll_string_increase(o,1);
+			o->v[o->l]='\"';
+			o->l++;
 			return;
 		case SLL_OBJECT_TYPE_ARRAY:
 			sll_string_increase(o,1);
@@ -230,7 +218,7 @@ static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o
 					o->v[o->l]=' ';
 					o->l++;
 				}
-				_object_to_string(*(a->dt.a.v+i),1,o);
+				_object_to_string(*(a->dt.a.v+i),o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]=']';
@@ -246,7 +234,7 @@ static void _object_to_string(const sll_object_t* a,sll_bool_t q,sll_string_t* o
 					o->v[o->l]=' ';
 					o->l++;
 				}
-				_object_to_string(*(a->dt.m.v+i),1,o);
+				_object_to_string(*(a->dt.m.v+i),o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]='>';
@@ -286,7 +274,20 @@ __API_FUNC(string_convert){
 	sll_string_create(0,out);
 	out->v=sll_memory_move(out->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	for (sll_array_length_t i=0;i<ac;i++){
-		_object_to_string(*(a+i),0,out);
+		sll_object_t* v=*(a+i);
+		if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_CHAR){
+			sll_string_increase(out,1);
+			out->v[out->l]=v->dt.c;
+			out->l++;
+		}
+		else if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_STRING){
+			sll_string_increase(out,v->dt.s.l);
+			sll_copy_data(v->dt.s.v,v->dt.s.l,out->v+out->l);
+			out->l+=v->dt.s.l;
+		}
+		else{
+			_object_to_string(*(a+i),out);
+		}
 	}
 	out->v=sll_memory_move(out->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(out);

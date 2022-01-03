@@ -82,15 +82,13 @@ static sll_bool_t import_file(const sll_string_t* nm,sll_compilation_data_t* o){
 
 static sll_bool_t parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* f_fp){
 	sll_init_compilation_data(f_fp,f,c_dt);
-	sll_error_t e;
-	if (!sll_parse_all_nodes(c_dt,&i_ft,import_file,&e)){
+	if (!sll_parse_all_nodes(c_dt,&i_ft,import_file)){
 		sll_free_compilation_data(c_dt);
-		sll_print_error(f,&e);
 		sll_file_close(f);
 		return 0;
 	}
 	if (fl&FLAG_PRINT_OBJECT){
-		sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
+		sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
 		sll_file_write_char(sll_stdout,'\n');
 	}
 	if (fl&FLAG_VERBOSE){
@@ -134,7 +132,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 				return 0;
 			}
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -169,7 +167,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		sll_file_reset(f);
 		if (sll_load_compiled_node(f,c_dt)){
 			if (fl&FLAG_PRINT_OBJECT){
-				sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
+				sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n');
 			}
 			if (fl&FLAG_VERBOSE){
@@ -200,7 +198,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			}
 			if (sll_load_compiled_node(f,c_dt)){
 				if (fl&FLAG_PRINT_OBJECT){
-					sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
+					sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
 					sll_file_write_char(sll_stdout,'\n');
 				}
 				if (fl&FLAG_VERBOSE){
@@ -263,7 +261,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		}
 		sll_optimize_metadata(c_dt);
 		if (fl&FLAG_PRINT_OBJECT){
-			sll_print_node(c_dt,&i_ft,c_dt->h,sll_stdout);
+			sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
 			sll_file_write_char(sll_stdout,'\n');
 		}
 	}
@@ -271,9 +269,7 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Generating assembly...\n");
 		}
-		sll_error_t e;
-		if (!sll_generate_assembly(c_dt,a_dt,&e)){
-			sll_print_error(f,&e);
+		if (!sll_generate_assembly(c_dt,a_dt)){
 			return 0;
 		}
 	}
@@ -651,13 +647,11 @@ _read_file_argument:
 			PRINT_STATIC_STR("Compiling console input...\n");
 		}
 		sll_init_compilation_data(SLL_CHAR("@console"),&f,&c_dt);
-		sll_error_t e;
-		if (!sll_parse_all_nodes(&c_dt,&i_ft,import_file,&e)){
-			sll_print_error(&f,&e);
+		if (!sll_parse_all_nodes(&c_dt,&i_ft,import_file)){
 			goto _error;
 		}
 		if (fl&FLAG_PRINT_OBJECT){
-			sll_print_node(&c_dt,&i_ft,c_dt.h,sll_stdout);
+			sll_print_node(&c_dt,&i_ft,NULL,sll_stdout);
 			sll_file_write_char(sll_stdout,'\n');
 		}
 		if (fl&FLAG_VERBOSE){

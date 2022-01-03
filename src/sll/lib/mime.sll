@@ -14,7 +14,6 @@
 
 
 (= DEFAULT_TYPE "text/plain")
-
 (= EXT_TO_TYPE <
 	"3g2" "video/3gpp2"
 	"3gp" "video/3gpp"
@@ -91,7 +90,6 @@
 	"xul" "application/vnd.mozilla.xul+xml"
 	"zip" "application/zip"
 >)
-
 (= TYPE_TO_EXT <
 	"application/epub+zip" "epub"
 	"application/gzip" "gz"

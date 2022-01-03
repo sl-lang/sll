@@ -36,7 +36,6 @@
 (= UTC_TIME_ZONE (. time_zone_type 0 "UTC"))
 
 (= DAYS ["Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday"])
-
 (= MONTHS ["January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December"])
 
 (= TIME_ZONE_NAMES <

@@ -1113,6 +1113,6 @@ __SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_
 	for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
 		*(dt.dt+i)=1;
 	}
-	_print_node_internal(c_dt,i_ft,o,wf,&dt);
+	_print_node_internal(c_dt,i_ft,(o?o:c_dt->h),wf,&dt);
 	sll_deallocate(dt.dt);
 }

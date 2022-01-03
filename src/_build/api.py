@@ -111,6 +111,6 @@ def generate_c_api(d_dt,api_dt):
 				fl+="SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL"
 			if (len(fl)==0):
 				fl="0"
-			fn_l.append(f"{{\"sll:{k['name'][8:]}\",{k['name']}_raw,{fl}}}")
+			fn_l.append(f"{{\n\t\t\"sll:{k['name'][8:]}\",\n\t\t{k['name']}_raw,\n\t\t{fl}\n\t}}")
 		hf.write("\n#endif\n")
 		cf.write(f"\n\n\nstatic const internal_function_t _ifunc_data_ptr[]={{\n\t"+",\n\t".join(fn_l)+f"\n}};\n\n\n\nconst sll_function_index_t _ifunc_size={len(fn_l)};\nconst internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);\n")

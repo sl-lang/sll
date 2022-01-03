@@ -24,9 +24,14 @@
 - Module for looking-up MIME types: `mime.sll` ([#194])
 - Version tag macro constant: `SLL_VERSION_TAG`
 
-### Changed
+### Change
 
+- Moved `sll_operator_cast` from [`src/sll/operator.c`][0.6.34/src/sll/operator.c] to [`src/sll/cast.c`][main/src/sll/cast.c]
 - Renamed `sll_import_loader_t` to `sll_import_resolver_t`
+
+### Removed
+
+- Error API
 
 ## [0.6.34] - 2021-12-30
 
@@ -1458,6 +1463,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[main/src/sll/cast.c]: https://github.com/sl-lang/sll/blob/main/src/sll/cast.c
+[0.6.34/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/v0.6.34/src/sll/operator.c
 [0.6.34/src/cli/data/help.txt]: https://github.com/sl-lang/sll/blob/v0.6.34/src/cli/data/help.txt
 [0.6.34/src/sll/data/assembly_optimizer.txt]: https://github.com/sl-lang/sll/blob/v0.6.34/src/sll/data/assembly_optimizer.txt
 [0.6.33/rsrc/help.txt]: https://github.com/sl-lang/sll/blob/v0.6.33/rsrc/help.txt

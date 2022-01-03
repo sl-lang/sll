@@ -3,7 +3,6 @@
 #include <sll/array.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
-#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/ift.h>

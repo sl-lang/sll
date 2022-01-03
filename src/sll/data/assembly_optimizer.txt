@@ -18,7 +18,7 @@
 0=store_pop, 1=push_three -> 1=store_three, 1.v=0.v, 0=nop, $1
 0=store_pop, 1=push_four -> 1=store_four, 1.v=0.v, 0=nop, $1
 
-0=store_pop, 1=not, 2=load, 0.v=2.v -> 0=nop, 2=1|flag_inplace, 1=nop, $2
+0=store_pop, 1=not|bool|inv|length|copy, 2=load, 0.v=2.v -> 0=nop, 2=1|flag_inplace, 1=nop, $2
 
 0=print, 1=push_char -> 0=nop, 1=print_char, $1
 0=print, 1=load -> 0=nop, 1=print_var, $1

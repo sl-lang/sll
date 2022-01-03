@@ -24,14 +24,23 @@
 
 
 (= absolute (... "sll:path_absolute"))
+
 (= exists (... "sll:path_exists"))
+
 (= get_cwd (... "sll:path_get_cwd"))
+
 (= is_dir (... "sll:path_is_dir"))
+
 (= list_dir (... "sll:path_list_dir"))
+
 (= recursive_list_dir (... "sll:path_recursive_list_dir"))
+
 (= relative (... "sll:path_relative"))
+
 (= set_cwd (... "sll:path_set_cwd"))
+
 (= size (... "sll:path_size"))
+
 (= split (... "sll:path_split"))
 
 

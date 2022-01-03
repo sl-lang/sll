@@ -151,10 +151,9 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt);
  * \desc Docs!
  * \arg const sll_compilation_data_t* c_dt
  * \arg sll_assembly_data_t* o
- * \arg sll_error_t* e
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o,sll_error_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o);
 
 
 

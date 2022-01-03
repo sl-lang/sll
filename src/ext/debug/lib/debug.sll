@@ -1,27 +1,25 @@
 (# sys int_type func_type type_type string_type)
 (--- "sys.sll" "types.sll")
 
-(= ext_fp (+ sys$LIBRARY_PATH "sll-ext-debug-" sys$VERSION$major "." sys$VERSION$minor "." sys$VERSION$patch "." sys$LIBRARY_EXTENSION))
 
-(? (! (<- sys$load_library ext_fp)) {
-	(:> "Failed to load extension library: " ext_fp "\n")
-	(@@@ 1)
-})
 
 (= location_type (&:
 	(~ string_type) file
 	(~ string_type) function
 	(~ int_type) line
 ))
+
 (= call_stack_raw_type (&:
 	(~ int_type) return_address
 	(~ int_type) stack_offset
 ))
+
 (= call_stack_type (&:
 	(~ string_type) name
 	(~ location_type) return
 	(~ call_stack_raw_type) raw
 ))
+
 (= vm_config_type (&:
 	(~ int_type) stack_size
 	(~ int_type) in
@@ -29,29 +27,57 @@
 	(~ int_type) err
 ))
 
-(<- (... "sll_ext:debug__init") call_stack_type call_stack_raw_type location_type vm_config_type)
-
-(= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
-(= get_instruction_index (... "sll_ext:debug_get_instruction_index"))
-
-(= get_ref_count (... "sll_ext:debug_get_ref_count"))
-
-(= get_name (... "sll_ext:debug_get_name"))
-(= get_location (... "sll_ext:debug_get_location"))
-
-(= get_call_stack (... "sll_ext:debug_get_call_stack"))
-(= get_vm_config (... "sll_ext:debug_get_vm_config"))
-
-(= debug (. (&:
+(= debug_module_type (&:
 	(~ type_type) call_stack_type
 	(~ type_type) location_type
 	(~ type_type) vm_config_type
 	(~ func_type) get_call_stack
 	(~ func_type) get_instruction_count
-	(~ func_type) get_ref_count
-	(~ func_type) get_name
-	(~ func_type) get_vm_config
-	(~ func_type) get_location
 	(~ func_type) get_instruction_index
-) call_stack_type location_type vm_config_type get_call_stack get_instruction_count get_ref_count get_name get_vm_config get_location get_instruction_index))
+	(~ func_type) get_location
+	(~ func_type) get_name
+	(~ func_type) get_ref_count
+	(~ func_type) get_vm_config
+))
+
+
+
+(= ext_fp (+ sys$LIBRARY_PATH "sll-ext-debug-" sys$VERSION$major "." sys$VERSION$minor "." sys$VERSION$patch "." sys$LIBRARY_EXTENSION))
+(? (! (<- sys$load_library ext_fp)) {
+	(:> "Failed to load extension library: " ext_fp "\n")
+	(@@@ 1)
+})
+
+(<- (... "sll_ext:debug__init") call_stack_type call_stack_raw_type location_type vm_config_type)
+
+
+
+(= get_call_stack (... "sll_ext:debug_get_call_stack"))
+
+(= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
+
+(= get_instruction_index (... "sll_ext:debug_get_instruction_index"))
+
+(= get_location (... "sll_ext:debug_get_location"))
+
+(= get_name (... "sll_ext:debug_get_name"))
+
+(= get_ref_count (... "sll_ext:debug_get_ref_count"))
+
+(= get_vm_config (... "sll_ext:debug_get_vm_config"))
+
+
+
+(= debug (. debug_module_type
+	call_stack_type
+	location_type
+	vm_config_type
+	get_call_stack
+	get_instruction_count
+	get_instruction_index
+	get_location
+	get_name
+	get_ref_count
+	get_vm_config
+))
 (## debug)

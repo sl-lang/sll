@@ -68,10 +68,6 @@ typedef uint8_t sll_compare_result_t;
 
 
 
-typedef uint8_t sll_error_type_t;
-
-
-
 typedef uint8_t sll_file_flags_t;
 
 
@@ -582,27 +578,6 @@ typedef struct __SLL_OBJECT{
 	void* _dbg;
 	sll_object_data_t dt;
 } sll_object_t;
-
-
-
-typedef struct __SLL_ERROR_DATA_RANGE{
-	sll_file_offset_t off;
-	sll_file_offset_t sz;
-} sll_error_data_range_t;
-
-
-
-typedef union __SLL_ERROR_DATA{
-	sll_error_data_range_t r;
-	sll_assembly_instruction_type_t it;
-} sll_error_data_t;
-
-
-
-typedef struct __SLL_ERROR{
-	sll_error_type_t t;
-	sll_error_data_t dt;
-} sll_error_t;
 
 
 

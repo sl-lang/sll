@@ -1,7 +1,6 @@
  #include <sll/_sll_internal.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
-#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/memory.h>
 #include <sll/node.h>

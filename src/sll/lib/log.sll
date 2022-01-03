@@ -13,8 +13,11 @@
 
 
 (= log_f (... "sll:log_log"))
+
 (= set_default (... "sll:log_set_default"))
+
 (= set_file (... "sll:log_set_file"))
+
 (= set_function (... "sll:log_set_function"))
 
 

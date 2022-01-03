@@ -12,10 +12,12 @@
 
 
 
+(= count (... "sll:array_count"))
+
 (= create (... "sll:array_create"))
 
-(= count (... "sll:array_count"))
 (= replace (... "sll:array_replace"))
+
 (= reverse (... "sll:array_reverse"))
 
 
