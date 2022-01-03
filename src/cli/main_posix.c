@@ -8,7 +8,7 @@
 
 
 #define APT_INSTALL_PATH "/usr/bin/"
-#define APT_LIB_PATH "/usr/lib/sll_"SLL_VERSION_STRING LIBRARY_NAME
+#define APT_LIB_PATH "/usr/lib/sll_"SLL_VERSION_STRING"/"LIBRARY_NAME
 
 #define LIBRARY_NAME "sll-"SLL_VERSION_STRING".so"
 #define STRLEN(x) (sizeof(x)/sizeof(char)-1)
@@ -29,7 +29,7 @@ int main(int argc,const char** argv){
 	}
 	bfl++;
 	if (bfl==STRLEN(APT_INSTALL_PATH)&&!memcmp(bf,APT_INSTALL_PATH,STRLEN(APT_INSTALL_PATH))){
-		memcpy(bf,APT_LIB_PATH,STRLEN(APT_LIB_PATH)+1);
+		bf=APT_LIB_PATH;
 	}
 	else{
 		memcpy(bf+bfl,LIBRARY_NAME,STRLEN(LIBRARY_NAME)+1);

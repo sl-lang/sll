@@ -7,7 +7,7 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp){
-	void* o=dlopen((char*)fp,RTLD_LAZY);
+	void* o=dlopen((char*)fp,RTLD_NOW);
 	return (!o?SLL_UNKNOWN_LIBRARY_HANDLE:o);
 }
 

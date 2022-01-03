@@ -9,6 +9,7 @@
 ### Changed
 
 - Moved CLI code from [`src/cli/main.c`][0.6.35/src/cli/main.c] to [`src/sll/cli.c`][0.6.36/src/sll/cli.c]
+- *\[POSIX only\]* Shared libraries are now loaded with `RTLD_NOW` instead of `RTLD_LAZY`
 
 ## [0.6.35] - 2022-01-03
 
