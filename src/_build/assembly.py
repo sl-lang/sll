@@ -2,8 +2,6 @@ import util
 
 
 
-ASSEMBLY_OPTIMIZER_CONFIGURATION_FILE_PATH="src/sll/data/assembly_optimizer.txt"
-ASSEMBLY_OPTIMIZER_FILE_PATH="src/sll/include/sll/_generated_assembly_optimizer.h"
 OPTIMIZER_STACK_SIZE=5
 
 
@@ -84,9 +82,9 @@ def _generate_cond(f,dt,lvl,sl):
 
 
 
-def generate_assembly_optimizer():
-	util.log("Generating Assembly Optimizer...\n  Reading Configuration file...")
-	with open(ASSEMBLY_OPTIMIZER_CONFIGURATION_FILE_PATH,"r") as f:
+def generate_assembly_optimizer(cfg_fp,o_fp):
+	util.log(f"Generating Assembly Optimizer from '{cfg_fp}'...\n  Reading Configuration file...")
+	with open(cfg_fp,"r") as f:
 		dt=f.read().split("\n")
 	util.log("  Parsing Data...")
 	data=([],[])
@@ -111,8 +109,8 @@ def generate_assembly_optimizer():
 			raise RuntimeError(f"Duplicated condition: {','.join(cond)}")
 		c[0].append(e)
 		c[1].append(res)
-	util.log("  Generating Code...")
-	with open(ASSEMBLY_OPTIMIZER_FILE_PATH,"w") as f:
+	util.log(f"  Generating Code to '{o_fp}'...")
+	with open(o_fp,"w") as f:
 		f.write("#include <sll/_sll_internal.h>\n#include <sll/assembly.h>\n#include <sll/types.h>\n\n\n\nstatic SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){\n")
 		sl=set()
 		_generate_cond(f,data,1,sl)

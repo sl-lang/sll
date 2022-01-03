@@ -14,7 +14,7 @@ HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^>]*\")\s*$""",re.MULTILINE)
-INTERNAL_SLL_HEADERS=["_sll_internal.h","_generated_assembly_optimizer.h"]
+INTERNAL_SLL_HEADERS=["_generated_assembly_optimizer.h","_generated_help_text.h","_sll_internal.h"]
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
 MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
@@ -118,7 +118,7 @@ def generate_help(i_fp,o_fp):
 	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
 	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
 		dt=rf.read().replace(b"\r\n",b"\n")
-		wf.write(b"#ifndef __HELP_TEXT_H__\n#define __HELP_TEXT_H__ 1\n#include <sll.h>\n\n\n\n#define HELP_TEXT_SIZE "+bytes(str(len(dt)),"utf-8")+b"\n\n\n\nstatic const sll_char_t HELP_TEXT[]={\n\t")
+		wf.write(b"#ifndef __HELP_TEXT_H__\n#define __HELP_TEXT_H__ 1\n#include <sll/types.h>\n\n\n\n#define HELP_TEXT_SIZE "+bytes(str(len(dt)),"utf-8")+b"\n\n\n\nstatic const sll_char_t HELP_TEXT[]={\n\t")
 		st=True
 		i=0
 		for c in dt:

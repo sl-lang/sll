@@ -1,25 +1,28 @@
-#ifdef _MSC_VER
-#define WIN32_LEAN_AND_MEAN 1
-#include <windows.h>
-#else
-#include <linux/limits.h>
-#include <unistd.h>
-#endif
-#include <help_text.h>
-#include <sll.h>
-#include <stdlib.h>
+#include <sll/_generated_help_text.h>
+#include <sll/api/path.h>
+#include <sll/api/sys.h>
+#include <sll/assembly.h>
+#include <sll/file.h>
+#include <sll/ift.h>
+#include <sll/io.h>
+#include <sll/log.h>
+#include <sll/memory.h>
+#include <sll/node.h>
+#include <sll/platform.h>
+#include <sll/string.h>
+#include <sll/types.h>
+#include <sll/util.h>
+#include <sll/version.h>
+#include <sll/vm.h>
+#include <stdint.h>
 
 
 
 #define PRINT_STATIC_STR(s) sll_file_write(sll_stdout,(s),sizeof(s)/sizeof(sll_char_t)-1)
-#define _STR(x) #x
-#define STR(x) _STR(x)
 #define _PRINT_IF_USE_COLOR(x) \
-	do{ \
-		if (fl&FLAG_USE_COLORS){ \
-			PRINT_STATIC_STR(x); \
-		} \
-	} while (0)
+	if (fl&FLAG_USE_COLORS){ \
+		PRINT_STATIC_STR(x); \
+	}
 #define COLOR_RESET _PRINT_IF_USE_COLOR("\x1b[0m")
 #define COLOR_RED _PRINT_IF_USE_COLOR("\x1b[91m")
 #define COLOR_YELLOW _PRINT_IF_USE_COLOR("\x1b[33m")
@@ -56,15 +59,15 @@ static sll_internal_function_table_t i_ft;
 
 
 
-static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_file_t* f,sll_char_t* f_fp);
+static sll_bool_t _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_file_t* f,sll_char_t* f_fp);
 
 
 
-static sll_bool_t import_file(const sll_string_t* nm,sll_compilation_data_t* o){
+static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o){
 	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 	sll_file_t f;
 	sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
-	if (!load_file(nm->v,&a_dt,o,&f,f_fp)){
+	if (!_load_file(nm->v,&a_dt,o,&f,f_fp)){
 		return 0;
 	}
 	sll_file_close(&f);
@@ -80,9 +83,9 @@ static sll_bool_t import_file(const sll_string_t* nm,sll_compilation_data_t* o){
 
 
 
-static sll_bool_t parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* f_fp){
+static sll_bool_t _parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* f_fp){
 	sll_init_compilation_data(f_fp,f,c_dt);
-	if (!sll_parse_all_nodes(c_dt,&i_ft,import_file)){
+	if (!sll_parse_all_nodes(c_dt,&i_ft,_import_file)){
 		sll_free_compilation_data(c_dt);
 		sll_file_close(f);
 		return 0;
@@ -99,7 +102,7 @@ static sll_bool_t parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sl
 
 
 
-static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_file_t* f,sll_char_t* f_fp){
+static sll_bool_t _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_file_t* f,sll_char_t* f_fp){
 	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
@@ -177,7 +180,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 		}
 		sll_free_compilation_data(c_dt);
 		sll_file_reset(f);
-		return parse_file(c_dt,f,f_fp);
+		return _parse_file(c_dt,f,f_fp);
 	}
 	if (l_fpl){
 		i=l_fpl+f_nm_l;
@@ -227,7 +230,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 			if (fl&FLAG_VERBOSE){
 				sll_file_write_format(sll_stdout,SLL_CHAR("Found file '%s'\n"),f_fp);
 			}
-			return parse_file(c_dt,f,l_fp);
+			return _parse_file(c_dt,f,l_fp);
 		}
 	}
 	COLOR_RED;
@@ -238,7 +241,7 @@ static sll_bool_t load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll
 
 
 
-static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_file_t* f,const sll_char_t* o_fp,int* ec){
+static sll_bool_t _execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,sll_file_t* f,const sll_char_t* o_fp,int* ec){
 	if (!(fl&_FLAG_ASSEMBLY_GENERATED)){
 		if (fl&FLAG_OPTIMIZE){
 			if (fl&FLAG_VERBOSE){
@@ -386,9 +389,9 @@ static sll_bool_t execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sl
 
 
 
-int main(int argc,const char** argv){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_length_t argc,const sll_char_t*const* argv){
 	sll_init();
-	int ec=1;
+	sll_return_code_t ec=1;
 	fl=0;
 	i_fp=sll_allocate(sizeof(sll_char_t));
 	*i_fp=0;
@@ -402,9 +405,9 @@ int main(int argc,const char** argv){
 	}
 	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl+1);
 	l_fpl+=5;
-	int* fp=NULL;
+	sll_array_length_t* fp=NULL;
 	sll_string_length_t fpl=0;
-	int* sl=NULL;
+	sll_array_length_t* sl=NULL;
 	sll_string_length_t sll=0;
 	sll_create_internal_function_table(&i_ft);
 	sll_register_builtin_internal_functions(&i_ft);
@@ -414,14 +417,14 @@ int main(int argc,const char** argv){
 	sll_compilation_data_t c_dt={0};
 	sll_sandbox_flags_t s_fl=0;
 	sll_set_argument_count(1);
-	for (int i=1;i<argc;i++){
+	for (sll_array_length_t i=1;i<argc;i++){
 		const sll_char_t* e=SLL_CHAR(argv[i]);
 		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-assembly"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=FLAG_GENERATE_ASSEMBLY;
 		}
 		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			sll_set_argument_count(argc-i);
-			for (sll_array_length_t j=0;j<(sll_array_length_t)(argc-i-1);j++){
+			for (sll_array_length_t j=0;j<argc-i-1;j++){
 				sll_set_argument(j+1,SLL_CHAR(*(argv+i+j+1)));
 			}
 			break;
@@ -476,7 +479,7 @@ int main(int argc,const char** argv){
 				COLOR_RED;
 				PRINT_STATIC_STR("Multplie output files supplied\n");
 				COLOR_RESET;
-				goto _help;
+				goto _error;
 			}
 			i++;
 			if (i==argc){
@@ -502,7 +505,7 @@ int main(int argc,const char** argv){
 				break;
 			}
 			sll++;
-			sl=sll_reallocate(sl,sll*sizeof(int));
+			sl=sll_reallocate(sl,sll*sizeof(sll_array_length_t));
 			*(sl+sll-1)=i;
 		}
 		else if ((*e=='-'&&*(e+1)=='S'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
@@ -540,12 +543,12 @@ int main(int argc,const char** argv){
 			COLOR_RED;
 			sll_file_write_format(sll_stdout,SLL_CHAR("Unknown Switch '%s'\n"),e);
 			COLOR_RESET;
-			goto _help;
+			goto _error;
 		}
 		else{
 _read_file_argument:
 			fpl++;
-			fp=sll_reallocate(fp,fpl*sizeof(int));
+			fp=sll_reallocate(fp,fpl*sizeof(sll_array_length_t));
 			*(fp+fpl-1)=i;
 		}
 	}
@@ -556,12 +559,13 @@ _read_file_argument:
 		sll_platform_enable_console_color();
 	}
 	if (fl&FLAG_VERSION){
-		PRINT_STATIC_STR("sll "STR(SLL_VERSION_MAJOR)"."STR(SLL_VERSION_MINOR)"."STR(SLL_VERSION_PATCH)" ("TYPE_STRING SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
+		PRINT_STATIC_STR("sll "SLL_VERSION_STRING" ("TYPE_STRING SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n");
 		sll_deinit();
 		return 0;
 	}
 	if (fl&FLAG_HELP){
-		goto _help;
+		sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);
+		goto _error;
 	}
 	sll_set_sandbox_flags(s_fl);
 	if (fl&FLAG_VERBOSE){
@@ -612,7 +616,7 @@ _read_file_argument:
 		COLOR_RED;
 		PRINT_STATIC_STR("No input files supplied\n");
 		COLOR_RESET;
-		goto _help;
+		goto _error;
 	}
 	if (fl&FLAG_OPTIMIZE){
 		COLOR_YELLOW;
@@ -625,13 +629,13 @@ _read_file_argument:
 	for (sll_string_length_t j=0;j<fpl;j++){
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		fl&=~_FLAG_ASSEMBLY_GENERATED;
-		if (!load_file(SLL_CHAR(argv[*(fp+j)]),&a_dt,&c_dt,&f,f_fp)){
+		if (!_load_file(SLL_CHAR(argv[*(fp+j)]),&a_dt,&c_dt,&f,f_fp)){
 			goto _error;
 		}
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_platform_absolute_path(SLL_CHAR(argv[*(fp+j)]),bf,SLL_API_MAX_FILE_PATH_LENGTH);
 		sll_set_argument(0,bf);
-		if (!execute(f_fp,&c_dt,&a_dt,&f,o_fp,&ec)){
+		if (!_execute(f_fp,&c_dt,&a_dt,&f,o_fp,&ec)){
 			goto _error;
 		}
 		if (f.f){
@@ -647,7 +651,7 @@ _read_file_argument:
 			PRINT_STATIC_STR("Compiling console input...\n");
 		}
 		sll_init_compilation_data(SLL_CHAR("@console"),&f,&c_dt);
-		if (!sll_parse_all_nodes(&c_dt,&i_ft,import_file)){
+		if (!sll_parse_all_nodes(&c_dt,&i_ft,_import_file)){
 			goto _error;
 		}
 		if (fl&FLAG_PRINT_OBJECT){
@@ -657,7 +661,7 @@ _read_file_argument:
 		if (fl&FLAG_VERBOSE){
 			PRINT_STATIC_STR("Input successfully read.\n");
 		}
-		if (!execute(NULL,&c_dt,&a_dt,&f,o_fp,&ec)){
+		if (!_execute(NULL,&c_dt,&a_dt,&f,o_fp,&ec)){
 			goto _error;
 		}
 		sll_free_assembly_data(&a_dt);
@@ -673,8 +677,6 @@ _read_file_argument:
 	sll_free_internal_function_table(&i_ft);
 	sll_deinit();
 	return 0;
-_help:
-	sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);
 _error:
 	sll_deallocate(i_fp);
 	if (fp){
