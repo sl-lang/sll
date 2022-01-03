@@ -8,7 +8,7 @@
 
 
 #define APT_INSTALL_PATH "/usr/bin/"
-#define APT_LIB_PATH "/usr/lib/sll_"SLL_VERSION_STRING"sll-"SLL_VERSION_STRING".so"
+#define APT_LIB_PATH "/usr/lib/sll_"SLL_VERSION_STRING LIBRARY_NAME
 
 #define LIBRARY_NAME "sll-"SLL_VERSION_STRING".so"
 #define STRLEN(x) (sizeof(x)/sizeof(char)-1)
@@ -34,7 +34,7 @@ int main(int argc,const char** argv){
 	else{
 		memcpy(bf+bfl,LIBRARY_NAME,STRLEN(LIBRARY_NAME)+1);
 	}
-	void* lh=dlopen(bf,RTLD_LAZY);
+	void* lh=dlopen(bf,RTLD_NOW|RTLD_GLOBAL);
 	if (!lh){
 		return -1;
 	}
