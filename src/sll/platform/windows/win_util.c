@@ -26,6 +26,11 @@ static void _release_handle(void){
 
 
 
+void _fix_load_mode(void){
+}
+
+
+
 __SLL_NO_RETURN void _force_exit_platform(void){
 	TerminateProcess(GetCurrentProcess(),SIGABRT);
 }

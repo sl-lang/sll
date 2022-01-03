@@ -539,6 +539,10 @@ void _file_release_std_streams(void);
 
 
 
+void _fix_load_mode(void);
+
+
+
 __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c,const sll_char_t* d,const sll_char_t* e);
 
 

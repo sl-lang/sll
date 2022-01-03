@@ -1,3 +1,4 @@
+#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -5,10 +6,19 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+#include <dlfcn.h>
 
 
 
 __SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("posix");
+
+
+
+void _fix_load_mode(void){
+	Dl_info dt;
+	SLL_ASSERT(dladdr(_fix_load_mode,&dt));
+	dlclose(dlopen(dt.dli_fname,RTLD_NOW|RTLD_GLOBAL|RTLD_NOLOAD));
+}
 
 
 

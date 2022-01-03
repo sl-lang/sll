@@ -29,12 +29,12 @@ int main(int argc,const char** argv){
 	}
 	bfl++;
 	if (bfl==STRLEN(APT_INSTALL_PATH)&&!memcmp(bf,APT_INSTALL_PATH,STRLEN(APT_INSTALL_PATH))){
-		bf=APT_LIB_PATH;
+		memcpy(bf,APT_LIB_PATH,STRLEN(APT_LIB_PATH)+1);
 	}
 	else{
 		memcpy(bf+bfl,LIBRARY_NAME,STRLEN(LIBRARY_NAME)+1);
 	}
-	void* lh=dlopen(bf,RTLD_NOW|RTLD_GLOBAL);
+	void* lh=dlopen(bf,RTLD_LAZY);
 	if (!lh){
 		return -1;
 	}
