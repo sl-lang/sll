@@ -1,6 +1,10 @@
 # The Sl Programing Language Change Log
 
-## [0.6.35] - Ongoing
+## [0.6.36] - Ongoing
+
+*Nothing*
+
+## [0.6.35] - 2022-01-03
 
 ### Added
 
@@ -26,7 +30,7 @@
 
 ### Change
 
-- Moved `sll_operator_cast` from [`src/sll/operator.c`][0.6.34/src/sll/operator.c] to [`src/sll/cast.c`][main/src/sll/cast.c]
+- Moved `sll_operator_cast` from [`src/sll/operator.c`][0.6.34/src/sll/operator.c] to [`src/sll/cast.c`][0.6.35/src/sll/cast.c]
 - Renamed `sll_import_loader_t` to `sll_import_resolver_t`
 
 ### Removed
@@ -1257,7 +1261,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.35]: https://github.com/sl-lang/sll/compare/sll-v0.6.34...main
+[0.6.36]: https://github.com/sl-lang/sll/compare/sll-v0.6.35...main
+[0.6.35]: https://github.com/sl-lang/sll/compare/sll-v0.6.34...sll-v0.6.35
 [0.6.34]: https://github.com/sl-lang/sll/compare/sll-v0.6.33...sll-v0.6.34
 [0.6.33]: https://github.com/sl-lang/sll/compare/sll-v0.6.32...sll-v0.6.33
 [0.6.32]: https://github.com/sl-lang/sll/compare/sll-v0.6.31...sll-v0.6.32
@@ -1463,7 +1468,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[main/src/sll/cast.c]: https://github.com/sl-lang/sll/blob/main/src/sll/cast.c
+[0.6.35/src/sll/cast.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/sll/cast.c
 [0.6.34/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.34/src/sll/operator.c
 [0.6.34/src/cli/data/help.txt]: https://github.com/sl-lang/sll/blob/sll-v0.6.34/src/cli/data/help.txt
 [0.6.34/src/sll/data/assembly_optimizer.txt]: https://github.com/sl-lang/sll/blob/sll-v0.6.34/src/sll/data/assembly_optimizer.txt
