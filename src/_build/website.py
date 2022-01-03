@@ -7,35 +7,93 @@ import util
 
 
 
-def _generate_toc(dt):
-	m={}
-	for k in dt["groups"]:
-		m[k]={"":[]}
-	for k in dt["data"]:
-		e=(k["name"],f"<li><a href=\"/{k['name']}\">{k['name']+('()' if 'func' in k['flag'] else '')}</a></li>")
-		if (k["subgroup"] is None):
-			m[k["group"]][""].append(e)
-		elif (k["subgroup"] not in m[k["group"]]):
-			m[k["group"]][k["subgroup"]]=[e]
-		else:
-			m[k["group"]][k["subgroup"]].append(e)
-	o=""
-	for k,v in sorted(m.items(),key=lambda e:dt["groups"][e[0]]["name"]):
-		o+=f"<div class=\"group\" id=\"{k}\"><h2 class=\"title\">{dt['groups'][k]['name']}</h2><div class=\"group-box\">"
-		if (v[""]):
-			o+=f"<div class=\"subgroup\"><ul>{''.join([e[1] for e in sorted(v[''],key=lambda se:se[0])])}</ul></div>"
-		del v[""]
-		for sk,sv in sorted(v.items(),key=lambda e:dt["subgroups"][e[0]]["name"]):
-			o+=f"<div class=\"subgroup\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3><ul>{''.join([e[1] for e in sorted(sv,key=lambda se:se[0])])}</ul></div>"
-		o+="</div></div>"
-	return bytes(o,"utf-8")
+FLAG_NAME_MAP={"check_output":"Check Output","optimizable":"Optimizable"}
+IGNORE_FLAG_NAME=["func","var","var_arg"]
 
 
 
 def _add_data(nm,dt):
 	nm=nm.replace("\\","/")[:255].encode("ascii","ignore")
 	dt=dt[:16777215]
+	if (nm[-5:]==b".html"):
+		dt=dt.replace(b"{{ROOT}}",(b"" if os.getenv("GITHUB_ACTIONS",None) is not None else bytes(os.path.abspath(os.getcwd()+"/build/web"),"utf-8")))
 	return bytearray([len(nm),len(dt)&0xff,(len(dt)>>8)&0xff,len(dt)>>16])+nm+dt
+
+
+
+def _generate_data(dt,pg_src):
+	m={}
+	for k in dt["groups"]:
+		m[k]={"":[]}
+	for k in dt["data"]:
+		if (k["subgroup"] is None):
+			m[k["group"]][""].append(k)
+		elif (k["subgroup"] not in m[k["group"]]):
+			m[k["group"]][k["subgroup"]]=[k]
+		else:
+			m[k["group"]][k["subgroup"]].append(k)
+	toc=""
+	pg_dt=b""
+	for k,v in sorted(m.items(),key=lambda e:dt["groups"][e[0]]["name"]):
+		toc+=f"<div class=\"group\" id=\"{k}\"><a href=\"{{{{ROOT}}}}/{k}.html\"><h2 class=\"title\">{dt['groups'][k]['name']}</h2></a><div class=\"group-box\">"
+		pg=f"<h1>{dt['groups'][k]['name']}</h1>"
+		for sk,sv in sorted(v.items(),key=lambda e:("" if e[0]=="" else dt["subgroups"][e[0]]["name"])):
+			if (len(sv)==0):
+				continue
+			toc+="<div class=\"subgroup\">"
+			if (sk!=""):
+				toc+=f"<a href=\"{{{{ROOT}}}}/{k}.html#{sk}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
+				pg+=f"<a id=\"{sk}\" href=\"#{sk}\" style=\"text-decoration: none;color: #3010ff\"><h2>{dt['subgroups'][sk]['name']}</h2></a>"
+			toc+="<ul>"
+			for e in sorted(sv,key=lambda se:se["name"]):
+				toc+=f"<li><a href=\"{{{{ROOT}}}}/{e['group']}.html#{e['name']}\">{e['name']+('()' if 'func' in e['flag'] else '')}</a></li>"
+				pg+=f"<div><a id=\"{e['name']}\" href=\"#{e['name']}\" style=\"text-decoration: none;color: #ff0000\"><pre>"
+				if ("func" in e["flag"]):
+					if (e["ret"] is not None):
+						pg+=e["ret"]["type"]
+					else:
+						pg+="void"
+					pg+=" "+e["name"]+"("
+					if (len(e["args"])==0):
+						pg+="void"
+					else:
+						st=True
+						for a in e["args"]:
+							if (st):
+								st=False
+							else:
+								pg+=","
+							pg+=a["type"]+" "+a["name"]
+					if ("var_arg" in e["flag"]):
+						pg+=",..."
+					pg+=")"
+				else:
+					pg+=e["name"]
+				pg+=f"</pre></a><pre>Flags:"
+				st=True
+				for f in e["flag"]:
+					if (f in IGNORE_FLAG_NAME):
+						continue
+					if (st):
+						st=False
+					else:
+						pg+=","
+					pg+=" "+FLAG_NAME_MAP[f]
+				if (st):
+					pg+=" (none)"
+				pg+=f"\nDescription: {e['desc']}"
+				if (len(e["args"])!=0):
+					pg+="\nArguments:"
+					for a in e["args"]:
+						pg+=f"\n  {a['name']} -> {a['desc']}"
+				if (e["ret"] is not None):
+					pg+=f"\nReturn Value: {e['ret']['desc']}"
+				pg+="</pre></div>"
+			toc+="</ul></div>"
+		toc+="</div></div>"
+		util.log(f"  Generating '/{k}.html'...")
+		pg_dt+=_add_data(f"/{k}.html",pg_src.replace(b"{{DATA}}",bytes(pg,"utf-8")).replace(b"{{NAME}}",bytes(dt["groups"][k]["name"],"utf-8")))
+	return bytes(toc,"utf-8"),pg_dt
 
 
 
@@ -49,12 +107,21 @@ def generate():
 		util.log(f"  Found file 'src/web/client/css/{k}'")
 		with open("src/web/client/css/"+k,"rb") as rf:
 			o+=_add_data("/css/"+k,rf.read())
+	util.log("Reading JS Files...")
+	for k in os.listdir("src/web/client/js"):
+		util.log(f"  Found file 'src/web/client/js/{k}'")
+		with open("src/web/client/js/"+k,"rb") as rf:
+			o+=_add_data("/js/"+k,rf.read())
 	util.log("Collecting Documentation Files...")
 	d_fl=util.get_docs_files()
 	util.log(f"  Found {len(d_fl)} Files\nGenerating Documentation...")
 	d_dt=docs.create_docs(d_fl)[0]
-	util.log(f"Generating Table of Content for {len(d_dt['data'])} Definitions...")
-	toc=_generate_toc(d_dt)
+	util.log("Reading 'src/web/client/page.html'...")
+	with open("src/web/client/page.html","rb") as rf:
+		pg_src=rf.read()
+	util.log(f"Generating Table of Content & Pages for {len(d_dt['data'])} Symbols...")
+	toc,pg_dt=_generate_data(d_dt,pg_src)
+	o+=pg_dt
 	util.log("Reading 'src/web/client/index.html'...")
 	with open("src/web/client/index.html","rb") as rf:
 		o+=_add_data("/index.html",rf.read().replace(b"{{DATA}}",toc).replace(b"{{ANALYTICS}}",cf_a_dt))
@@ -75,6 +142,7 @@ def generate():
 			sz=o[i+1]|(o[i+2]<<8)|(o[i+3]<<16)
 			i+=4
 			fp="build/web/"+o[i:i+l].decode("ascii","ignore")
+			os.makedirs(fp[:fp.rindex("/")],exist_ok=True)
 			i+=l
 			util.log(f"  Writing '{fp}' ({sz} bytes)...")
 			with open(fp,"wb") as f:
