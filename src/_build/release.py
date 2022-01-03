@@ -26,7 +26,7 @@ if (__name__=="__main__"):
 		s=dt.index("\n",dt.index("\n## ")+1)+1
 		dt=FILE_PATH_MAIN_REGEX.sub(fr"[\1][{v[0]}.{v[1]}.{v[2]}\2]",dt[s:dt.index("\n## ",s+1)])
 		now=datetime.datetime.now()
-		desc=f"# Sll [{v[0]}.{v[1]}.{v[2]}] - {now.year}-{now.month:02}-{now.day:02}\n\n"+HEADING_REGEX.sub(r"\n\1 ",dt).strip()+f"\n\n[{v[0]}.{v[1]}.{v[2]}]: https://github.com/sl-lang/sll/compare/v{v[0]}.{v[1]}.{v[2]-1}...v{v[0]}.{v[1]}.{v[2]}\n"
+		desc=f"# Sll [{v[0]}.{v[1]}.{v[2]}] - {now.year}-{now.month:02}-{now.day:02}\n\n"+HEADING_REGEX.sub(r"\n\1 ",dt).strip()+f"\n\n[{v[0]}.{v[1]}.{v[2]}]: https://github.com/sl-lang/sll/compare/sll-v{v[0]}.{v[1]}.{v[2]-1}...sll-v{v[0]}.{v[1]}.{v[2]}\n"
 		util.log("  Generating Links...")
 		for e in sorted(list(dict.fromkeys(map(int,ISSUE_REGEX.findall(dt)))),reverse=True):
 			desc+=f"[#{e}]: https://github.com/sl-lang/sll/issues/{e}\n"
@@ -40,20 +40,14 @@ if (__name__=="__main__"):
 		for t,pl in sorted(l.items(),key=lambda e:e[0],reverse=True):
 			ts=".".join(map(str,t))
 			for p in sorted(pl):
-				desc+=f"[{ts}{p}]: https://github.com/sl-lang/sll/blob/v{ts}{p}\n"
-	util.log("Creating Git Tags...")
-	cwd=os.getcwd()
-	os.chdir("build")
-	subprocess.run(["git","clone","https://github.com/sl-lang/sll.git"])
-	os.chdir("sll")
-	subprocess.run(["git","remote","set-url","origin",f"https://krzem5:{sys.argv[-1]}@github.com/sl-lang/sll.git"])
-	subprocess.run(["git","checkout","-b",f"v{v[0]}.{v[1]}.{v[2]}","main"])
-	subprocess.run(["git","tag",f"sll-v{v[0]}.{v[1]}.{v[2]}"])
-	subprocess.run(["git","push","origin",f"v{v[0]}.{v[1]}.{v[2]}"])
-	subprocess.run(["git","push","origin","--tags"])
-	os.chdir(cwd)
+				desc+=f"[{ts}{p}]: https://github.com/sl-lang/sll/blob/sll-v{ts}{p}\n"
+	headers={"Accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1],"Content-Type":"application/octet-stream"}
+	util.log("Creating Git Tag...")
+	sha=requests.get("https://api.github.com/repos/sl-lang/sll/git/refs/heads/main",headers=headers).json()["object"]["sha"]
+	requests.post("https://api.github.com/repos/sl-lang/sll/git/tags",headers=headers,data=json.dumps({"tag":f"sll-v{v[0]}.{v[1]}.{v[2]}","object":sha,"message":f"sll-v{v[0]}.{v[1]}.{v[2]}","type":"commit"}))
+	requests.post("https://api.github.com/repos/sl-lang/sll/git/refs",headers=headers,data=json.dumps({"ref":f"refs/tags/sll-v{v[0]}.{v[1]}.{v[2]}","sha":sha}))
 	util.log("Creating Release...")
-	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers={"accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1]},data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":f"v{v[0]}.{v[1]}.{v[2]}","prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
+	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers=headers,data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":sha,"prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
 	util.log("Uploading Assets...")
 	for r,_,fl in os.walk("assets"):
 		for fp in fl:
@@ -61,4 +55,4 @@ if (__name__=="__main__"):
 				continue
 			util.log(f"  Uploading '{os.path.join(r,fp)}'...")
 			with open(os.path.join(r,fp),"rb") as f:
-				requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={fp}",headers={"Accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1],"Content-Type":"application/octet-stream"},data=f.read())
+				requests.post(f"https://uploads.github.com/repos/sl-lang/sll/releases/{r_id}/assets?name={fp}",headers=headers,data=f.read())

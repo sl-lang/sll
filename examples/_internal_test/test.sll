@@ -248,7 +248,7 @@
 
 (:> (<- int$to_bin -4657) "\n" (<- int$to_oct -4657) "\n" (<- int$to_hex -4657) "\n")
 
-(:> (<- mime$get_type "file.css") "," (<- mime$get_ext "application/javascript") "\n")
+(:> (<- mime$get_type "file.css") ", " (<- mime$get_ext "application/javascript") "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
