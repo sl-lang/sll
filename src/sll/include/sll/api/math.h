@@ -9,6 +9,13 @@
  * \group math-api
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Trigonometry
+ * \group math-api
+ * \subgroup math-api-trig
+ * \desc Docs!
+ */
 
 
 
@@ -28,6 +35,7 @@ __API_FUNC_DECL(math_abs);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_acos
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -40,6 +48,7 @@ __API_FUNC_DECL(math_acos);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_acosh
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -52,6 +61,7 @@ __API_FUNC_DECL(math_acosh);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_asin
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -64,6 +74,7 @@ __API_FUNC_DECL(math_asin);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_asinh
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -76,6 +87,7 @@ __API_FUNC_DECL(math_asinh);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_atan
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -88,6 +100,7 @@ __API_FUNC_DECL(math_atan);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_atan2
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \arg F
@@ -101,6 +114,7 @@ __API_FUNC_DECL(math_atan2);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_atanh
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -138,6 +152,7 @@ __API_FUNC_DECL(math_combinations);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_cos
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -150,6 +165,7 @@ __API_FUNC_DECL(math_cos);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_cosh
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -335,6 +351,7 @@ __API_FUNC_DECL(math_round);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_sin
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -347,6 +364,7 @@ __API_FUNC_DECL(math_sin);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_sinh
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -371,6 +389,7 @@ __API_FUNC_DECL(math_sqrt);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_tan
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
@@ -383,6 +402,7 @@ __API_FUNC_DECL(math_tan);
  * \flags api compilation_call func optimizable
  * \name sll_api_math_tanh
  * \group math-api
+ * \subgroup math-api-trig
  * \desc Docs!
  * \arg F
  * \ret F
