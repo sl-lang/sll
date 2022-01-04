@@ -13,9 +13,6 @@ import website
 
 util.log("Generating Build Directory...")
 util.create_output_dir()
-if ("--web" in sys.argv):
-	website.generate()
-	sys.exit(0)
 ver=header.read_version("src/sll/include/sll/version.h")
 util.log("Collecting Documentation Files...")
 d_fl=util.get_docs_files()
@@ -24,6 +21,10 @@ d_dt,api_dt=docs.create_docs(d_fl)
 util.log(f"Generating Code & Signatures for {len(api_dt)} API functions...")
 api.generate_c_api(d_dt,api_dt)
 assembly.generate_assembly_optimizer("src/sll/data/assembly_optimizer.txt","src/sll/include/sll/_generated_assembly_optimizer.h")
+header.generate_help("src/sll/data/help.txt","src/sll/include/sll/_generated_help_text.h")
+if ("--web" in sys.argv):
+	website.generate()
+	sys.exit(0)
 h_dt=header.parse_headers("src/sll/include")
 util.log("Generating Library Header File...")
 with open("build/sll.h","wb") as wf:
@@ -33,7 +34,6 @@ util.fix_env()
 util.log("Listing Source Code Files...")
 fl=util.get_sll_files()
 util.log("Compiling Sll...")
-header.generate_help("src/sll/data/help.txt","src/sll/include/sll/_generated_help_text.h")
 build.build_sll(fl,ver,("--release" in sys.argv))
 util.log("Compiling Sll CLI...")
 build.build_sll_cli()

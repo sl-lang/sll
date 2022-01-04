@@ -72,6 +72,10 @@ typedef uint8_t sll_file_flags_t;
 
 
 
+typedef uint8_t sll_flags_t;
+
+
+
 typedef uint8_t sll_hour_t;
 
 
@@ -649,6 +653,7 @@ typedef struct __SLL_RUNTIME_DATA{
 
 typedef struct __SLL_VM_CONFIG{
 	sll_size_t s_sz;
+	sll_size_t c_st_sz;
 	sll_internal_function_table_t* ift;
 	sll_file_t* in;
 	sll_file_t* out;

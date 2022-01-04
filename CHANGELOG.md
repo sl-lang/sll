@@ -4,6 +4,8 @@
 
 ### Added
 
+- Call stack size member in the `sll_vm_config_t` structure
+- Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
 - New CLI code to dynamically find the shared library
 
 ### Changed
@@ -11,6 +13,11 @@
 - *\[POSIX only\]* After calling `sll_init` the library load flags are automatically fixed
 - Moved CLI code from [`src/cli/main.c`][0.6.35/src/cli/main.c] to [`src/sll/cli.c`][0.6.36/src/sll/cli.c]
 - *\[POSIX only\]* Shared libraries are now loaded with `RTLD_NOW` instead of `RTLD_LAZY`
+
+### Removed
+
+- Macro constant: `SLL_CALL_STACK_SIZE`
+- Return value of `sll_parse_all_nodes` and `sll_generate_assembly`
 
 ## [0.6.35] - 2022-01-03
 

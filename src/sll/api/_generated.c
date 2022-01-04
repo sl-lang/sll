@@ -1137,7 +1137,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_default_raw(sll_
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_api_log_set_default(!!(a->dt.i));
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_log_set_default(a->dt.i,!!(b->dt.i));
+	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -1174,7 +1188,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_file_raw(sll_obj
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_api_log_set_file(&(a->dt.s),!!(b->dt.i));
+	sll_object_t* c=NULL;
+	if (all>2){
+		c=*(al+2);
+		if (SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(c);
+		}
+		else{
+			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		c=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_log_set_file(&(a->dt.s),b->dt.i,!!(c->dt.i));
+	SLL_RELEASE(c);
 	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
@@ -1227,7 +1255,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_function_raw(sll
 	else{
 		c=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_api_log_set_function(&(a->dt.s),&(b->dt.s),!!(c->dt.i));
+	sll_object_t* d=NULL;
+	if (all>3){
+		d=*(al+3);
+		if (SLL_OBJECT_GET_TYPE(d)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(d);
+		}
+		else{
+			d=sll_operator_cast(d,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		d=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_log_set_function(&(a->dt.s),&(b->dt.s),c->dt.i,!!(d->dt.i));
+	SLL_RELEASE(d);
 	SLL_RELEASE(c);
 	SLL_RELEASE(b);
 	SLL_RELEASE(a);

@@ -29,6 +29,7 @@ __API_FUNC_DECL(log_log);
  * \name sll_api_log_set_default
  * \group log-api
  * \desc Docs!
+ * \arg I
  * \arg B
  * \ret V
  */
@@ -42,6 +43,7 @@ __API_FUNC_DECL(log_set_default);
  * \group log-api
  * \desc Docs!
  * \arg S
+ * \arg I
  * \arg B
  * \ret V
  */
@@ -56,6 +58,7 @@ __API_FUNC_DECL(log_set_file);
  * \desc Docs!
  * \arg S
  * \arg S
+ * \arg I
  * \arg B
  * \ret V
  */

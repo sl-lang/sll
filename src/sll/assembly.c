@@ -1815,7 +1815,7 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o){
+__SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o){
 	if (!c_dt->h){
 		_init_assembly_stack(o);
 		o->tm=sll_platform_get_current_time();
@@ -1829,7 +1829,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_generate_assembly(const sll_com
 		o->st.dt=NULL;
 		o->ot_it.l=0;
 		o->ot_it.dt=NULL;
-		return 0;
+		return;
 	}
 	_init_assembly_stack(o);
 	o->tm=sll_platform_get_current_time();
@@ -2197,5 +2197,4 @@ _remove_nop:;
 	}
 	sll_deallocate(lbl);
 	sll_deallocate(sm.im);
-	return 1;
 }

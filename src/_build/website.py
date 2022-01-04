@@ -49,6 +49,8 @@ def _generate_data(dt,pg_src):
 				toc+=f"<li><a href=\"{{{{ROOT}}}}/{e['group']}.html#{e['name']}\">{e['name']+('()' if 'func' in e['flag'] else '')}</a></li>"
 				pg+=f"<div><a id=\"{e['name']}\" href=\"#{e['name']}\" style=\"text-decoration: none;color: #ff0000\"><pre>"
 				if ("func" in e["flag"]):
+					if ("check_output" in e["flag"]):
+						pg+="<span style=\"color: #cf89a2\">(check_output)</span> "
 					if (e["ret"] is not None):
 						pg+=e["ret"]["type"]
 					else:
@@ -69,19 +71,7 @@ def _generate_data(dt,pg_src):
 					pg+=")"
 				else:
 					pg+=e["name"]
-				pg+=f"</pre></a><pre>Flags:"
-				st=True
-				for f in e["flag"]:
-					if (f in IGNORE_FLAG_NAME):
-						continue
-					if (st):
-						st=False
-					else:
-						pg+=","
-					pg+=" "+FLAG_NAME_MAP[f]
-				if (st):
-					pg+=" (none)"
-				pg+=f"\nDescription: {e['desc']}"
+				pg+=f"</pre></a><pre>Description: {e['desc']}"
 				if (len(e["args"])!=0):
 					pg+="\nArguments:"
 					for a in e["args"]:
@@ -98,9 +88,7 @@ def _generate_data(dt,pg_src):
 
 
 def generate():
-	cf_a_dt=bytes(os.getenv("ANALYTICS",""),"utf-8")
-	if (len(cf_a_dt)>0):
-		cf_a_dt=b"-->"+cf_a_dt+b"<!--"
+	cf_a_dt=b"-->"+bytes(os.getenv("ANALYTICS",""),"utf-8")+b"<!--"
 	o=bytearray()
 	util.log("Reading CSS Files...")
 	for k in os.listdir("src/web/client/css"):
@@ -120,7 +108,7 @@ def generate():
 	with open("src/web/client/page.html","rb") as rf:
 		pg_src=rf.read()
 	util.log(f"Generating Table of Content & Pages for {len(d_dt['data'])} Symbols...")
-	toc,pg_dt=_generate_data(d_dt,pg_src)
+	toc,pg_dt=_generate_data(d_dt,pg_src.replace(b"{{ANALYTICS}}",cf_a_dt))
 	o+=pg_dt
 	util.log("Reading 'src/web/client/index.html'...")
 	with open("src/web/client/index.html","rb") as rf:

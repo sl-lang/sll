@@ -22,8 +22,6 @@ def fix_env():
 				k=[e.strip() for e in k.split("=")]
 				if (k[0].lower() in ["path","include","lib","libpath"]):
 					os.environ[k[0].upper()]=k[1]
-	else:
-		os.environ["LD_LIBRARY_PATH"]="build:"+os.getenv("LD_LIBRARY_PATH","")
 
 
 

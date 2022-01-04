@@ -7,6 +7,7 @@
 #include <sll/api/_generated.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/version.h>
 #include <stdint.h>
 
 
@@ -92,7 +93,7 @@ static SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned long
 #define __strto_end __stop_strto
 #endif
 #ifdef DEBUG_BUILD
-#define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"),NULL,NULL);
+#define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"),NULL,NULL);
 #endif
 
 
@@ -108,24 +109,26 @@ static SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned long
 #define _UNIQUE_NAME_JOIN2(a,b) a##_##b
 #define _UNIQUE_NAME_JOIN(a,b) _UNIQUE_NAME_JOIN2(a,b)
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
-#define _SLL_ASSERT_STRINGIFY_(x) #x
-#define _SLL_ASSERT_STRINGIFY(x) _SLL_ASSERT_STRINGIFY_(x)
-#define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"),NULL,NULL);
+
+#define _STRINGIFY_(x) #x
+#define _STRINGIFY(x) _STRINGIFY_(x)
+
+#define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"),NULL,NULL);
 #ifdef DEBUG_BUILD
 #define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
 #define SLL_ASSERT(x) \
 	do{ \
 		if (!(x)){ \
-			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_SLL_ASSERT_STRINGIFY(x)": Assertion Failed\n"),NULL,NULL); \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_STRINGIFY(x)": Assertion Failed\n"),NULL,NULL); \
 		} \
 	} while (0)
 #define CHECK_INTERNAL_FUNCTION_NAME(s) \
 	do{ \
 		if ((s)->l>255){ \
-			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Internal Function Name longer than 255 Characters: "),(s)->v,SLL_CHAR("\n")); \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Internal Function Name longer than 255 Characters: "),(s)->v,SLL_CHAR("\n")); \
 		} \
 		if (sll_string_count_char((s),':')!=1){ \
-			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_ASSERT_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Internal Function Name does not contain one Colon (':'): "),(s)->v,SLL_CHAR("\n")); \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Internal Function Name does not contain one Colon (':'): "),(s)->v,SLL_CHAR("\n")); \
 		} \
 	} while (0)
 #else
@@ -225,6 +228,31 @@ static SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned long
 #define GET_VAR_INDEX_FLAG_UNKNOWN 1
 #define GET_VAR_INDEX_FLAG_ASSIGN 2
 #define GET_VAR_INDEX_FLAG_FUNC 4
+
+#define CLI_VM_STACK_SIZE 65536
+#define CLI_VM_CALL_STACK_SIZE 256
+
+#define CLI_FLAG_EXPAND_PATH 1
+#define CLI_FLAG_GENERATE_ASSEMBLY 2
+#define CLI_FLAG_GENERATE_COMPILED_OBJECT 4
+#define CLI_FLAG_GENERATE_SLL 8
+#define CLI_FLAG_HELP 16
+#define CLI_FLAG_NO_RUN 32
+#define CLI_FLAG_OPTIMIZE 64
+#define CLI_FLAG_PRINT_ASSEMBLY 128
+#define CLI_FLAG_PRINT_OBJECT 256
+#define CLI_FLAG_STRIP_DEBUG 512
+#define CLI_FLAG_USE_COLORS 1024
+#define CLI_FLAG_VERBOSE 2048
+#define CLI_FLAG_VERSION 4096
+#define CLI_FLAG_ASSEMBLY_GENERATED 8192
+#define CLI_FLAG_SINGLE_OUTPUT 16384
+
+#ifdef SLL_VERSION_HAS_SHA
+#define CLI_BUILD_TYPE_STRING "commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_TAG"]"
+#else
+#define CLI_BUILD_TYPE_STRING "local"
+#endif
 
 
 
@@ -475,7 +503,7 @@ typedef struct __CODE_GENERATION_DATA{
 
 typedef struct __FUNCTION_LOG_DATA{
 	const sll_string_t nm;
-	sll_bool_t st;
+	uint8_t fl;
 } function_log_data_t;
 
 
@@ -484,7 +512,7 @@ typedef struct __FILE_LOG_DATA{
 	const sll_string_t nm;
 	function_log_data_t** dt;
 	sll_array_length_t dtl;
-	sll_bool_t st;
+	uint8_t fl;
 } file_log_data_t;
 
 

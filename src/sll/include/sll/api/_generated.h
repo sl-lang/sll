@@ -487,7 +487,7 @@
 /**
  * \flags func optimizable
  * \name sll_api_int_to_bin
- * \group math-api
+ * \group int-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
  */
@@ -495,7 +495,7 @@
  * \flags check_output func optimizable
  * \name sll_api_int_to_bin_raw
  * \group raw-api
- * \subgroup raw-api-math-api
+ * \subgroup raw-api-int-api
  * \desc Wrapper function for :sll_api_int_to_bin:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -503,9 +503,9 @@
  */
 /**
  * \flags subgroup
- * \name Math
+ * \name Integer
  * \group raw-api
- * \subgroup raw-api-math-api
+ * \subgroup raw-api-int-api
  * \desc Docs!
  */
 
@@ -516,7 +516,7 @@
 /**
  * \flags func optimizable
  * \name sll_api_int_to_hex
- * \group math-api
+ * \group int-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
  */
@@ -524,7 +524,7 @@
  * \flags check_output func optimizable
  * \name sll_api_int_to_hex_raw
  * \group raw-api
- * \subgroup raw-api-math-api
+ * \subgroup raw-api-int-api
  * \desc Wrapper function for :sll_api_int_to_hex:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -538,7 +538,7 @@
 /**
  * \flags func optimizable
  * \name sll_api_int_to_oct
- * \group math-api
+ * \group int-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
  */
@@ -546,7 +546,7 @@
  * \flags check_output func optimizable
  * \name sll_api_int_to_oct_raw
  * \group raw-api
- * \subgroup raw-api-math-api
+ * \subgroup raw-api-int-api
  * \desc Wrapper function for :sll_api_int_to_oct:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
@@ -662,13 +662,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_log_set_default void
-#define __SLL_API_ARGS_sll_api_log_set_default sll_bool_t a
+#define __SLL_API_ARGS_sll_api_log_set_default sll_integer_t a,sll_bool_t b
 /**
  * \flags check_output func optimizable
  * \name sll_api_log_set_default
  * \group log-api
  * \desc Docs!
- * \arg sll_bool_t a -> 
+ * \arg sll_integer_t a -> 
+ * \arg sll_bool_t b -> 
  */
 /**
  * \flags check_output func optimizable
@@ -684,14 +685,15 @@
 
 
 #define __SLL_API_TYPE_sll_api_log_set_file void
-#define __SLL_API_ARGS_sll_api_log_set_file sll_string_t* a,sll_bool_t b
+#define __SLL_API_ARGS_sll_api_log_set_file sll_string_t* a,sll_integer_t b,sll_bool_t c
 /**
  * \flags check_output func optimizable
  * \name sll_api_log_set_file
  * \group log-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_bool_t b -> 
+ * \arg sll_integer_t b -> 
+ * \arg sll_bool_t c -> 
  */
 /**
  * \flags check_output func optimizable
@@ -707,7 +709,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_log_set_function void
-#define __SLL_API_ARGS_sll_api_log_set_function sll_string_t* a,sll_string_t* b,sll_bool_t c
+#define __SLL_API_ARGS_sll_api_log_set_function sll_string_t* a,sll_string_t* b,sll_integer_t c,sll_bool_t d
 /**
  * \flags check_output func optimizable
  * \name sll_api_log_set_function
@@ -715,7 +717,8 @@
  * \desc Docs!
  * \arg sll_string_t* a -> 
  * \arg sll_string_t* b -> 
- * \arg sll_bool_t c -> 
+ * \arg sll_integer_t c -> 
+ * \arg sll_bool_t d -> 
  */
 /**
  * \flags check_output func optimizable
@@ -749,6 +752,13 @@
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Math
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Docs!
  */
 
 

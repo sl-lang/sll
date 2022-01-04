@@ -22,6 +22,7 @@
 
 (= vm_config_type (&:
 	(~ int_type) stack_size
+	(~ int_type) call_stack_size
 	(~ int_type) in
 	(~ int_type) out
 	(~ int_type) err

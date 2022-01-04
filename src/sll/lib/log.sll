@@ -5,27 +5,32 @@
 
 (= log_module_type (&:
 	(~ func_type) log
-	(~ func_type) set_default
 	(~ func_type) set_file
 	(~ func_type) set_function
+	(~ func_type) set_global
 ))
 
 
 
-(= log_f (... "sll:log_log"))
+(= FLAG_DO_NOT_HIDE 1)
+(= FLAG_NO_HEADER 2)
 
-(= set_default (... "sll:log_set_default"))
+
+
+(= log_log (... "sll:log_log"))
 
 (= set_file (... "sll:log_set_file"))
 
 (= set_function (... "sll:log_set_function"))
 
+(= set_global (... "sll:log_set_default"))
+
 
 
 (= log (. log_module_type
-	log_f
-	set_default
+	log_log
 	set_file
 	set_function
+	set_global
 ))
 (## log)

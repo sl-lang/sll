@@ -161,9 +161,8 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
  * \arg sll_compilation_data_t* c_dt
  * \arg sll_internal_function_table_t* i_ft
  * \arg sll_import_resolver_t il
- * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_parse_all_nodes(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
+__SLL_EXTERNAL void sll_parse_all_nodes(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
 
 
 

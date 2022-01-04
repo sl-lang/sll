@@ -250,6 +250,8 @@
 
 (:> (<- mime$get_type "file.css") ", " (<- mime$get_ext "application/javascript") "\n")
 
+(--- "path/to/nonexistent/file.sll")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@@ false)

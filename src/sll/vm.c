@@ -72,7 +72,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_current_instruction_count=0;
 	sll_current_vm_config=cfg;
 	const sll_assembly_instruction_t* ai=a_dt->h;
-	sll_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(cfg->s_sz+a_dt->vc*sizeof(sll_object_t*)+a_dt->st.l*sizeof(sll_object_t)+SLL_CALL_STACK_SIZE*sizeof(sll_call_stack_frame_t));
+	sll_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(cfg->s_sz+a_dt->vc*sizeof(sll_object_t*)+a_dt->st.l*sizeof(sll_object_t)+cfg->c_st_sz*sizeof(sll_call_stack_frame_t));
 	uint64_t ptr=(uint64_t)sll_platform_allocate_page(ptr_sz,1);
 	sll_object_t** v=(sll_object_t**)ptr;
 	sll_static_int[0]->rc+=a_dt->vc;
@@ -92,7 +92,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 		(sll_call_stack_frame_t*)ptr,
 		0
 	};
-	ptr+=SLL_CALL_STACK_SIZE*sizeof(sll_call_stack_frame_t);
+	ptr+=cfg->c_st_sz*sizeof(sll_call_stack_frame_t);
 	sll_internal_function_table_t ift;
 	sll_clone_internal_function_table(cfg->ift,&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
@@ -759,7 +759,7 @@ _print_from_stack:;
 									}
 								}
 							}
-							SLL_ASSERT(c_st.l<=SLL_CALL_STACK_SIZE);
+							SLL_ASSERT(c_st.l<=cfg->c_st_sz);
 							SLL_ASSERT(si>=af->ac);
 							(c_st.dt+c_st.l)->nm=af->nm;
 							(c_st.dt+c_st.l)->_ii=ii;
@@ -803,7 +803,7 @@ _print_from_stack:;
 							si+=af->ac;
 						}
 					}
-					SLL_ASSERT(c_st.l<=SLL_CALL_STACK_SIZE);
+					SLL_ASSERT(c_st.l<=cfg->c_st_sz);
 					SLL_ASSERT(si>=af->ac);
 					(c_st.dt+c_st.l)->nm=af->nm;
 					(c_st.dt+c_st.l)->_ii=ii;
@@ -841,7 +841,7 @@ _print_from_stack:;
 							si+=af->ac-1;
 						}
 					}
-					SLL_ASSERT(c_st.l<=SLL_CALL_STACK_SIZE);
+					SLL_ASSERT(c_st.l<=cfg->c_st_sz);
 					(c_st.dt+c_st.l)->nm=af->nm;
 					(c_st.dt+c_st.l)->_ii=ii;
 					(c_st.dt+c_st.l)->_s=si-1;
@@ -967,7 +967,7 @@ _end:
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		SLL_RELEASE(*(v+i));
 	}
-	sll_platform_free_page((void*)(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-SLL_CALL_STACK_SIZE*sizeof(sll_call_stack_frame_t)),ptr_sz);
+	sll_platform_free_page((void*)(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-cfg->c_st_sz*sizeof(sll_call_stack_frame_t)),ptr_sz);
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
 	sll_current_runtime_data=NULL;
