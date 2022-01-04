@@ -36,14 +36,14 @@ def _generate_data(dt,pg_src):
 	pg_dt=b""
 	for k,v in sorted(m.items(),key=lambda e:dt["groups"][e[0]]["name"]):
 		toc+=f"<div class=\"group\" id=\"{k}\"><a href=\"{{{{ROOT}}}}/{k}.html\"><h2 class=\"title\">{dt['groups'][k]['name']}</h2></a><div class=\"group-box\">"
-		pg=f"<h1>{dt['groups'][k]['name']}</h1>"
+		pg=f"<h1>{dt['groups'][k]['name']}</h1><h3>{dt['groups'][k]['desc']}</h3>"
 		for sk,sv in sorted(v.items(),key=lambda e:("" if e[0]=="" else dt["subgroups"][e[0]]["name"])):
 			if (len(sv)==0):
 				continue
 			toc+="<div class=\"subgroup\">"
 			if (sk!=""):
 				toc+=f"<a href=\"{{{{ROOT}}}}/{k}.html#{sk}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
-				pg+=f"<a id=\"{sk}\" href=\"#{sk}\" style=\"text-decoration: none;color: #3010ff\"><h2>{dt['subgroups'][sk]['name']}</h2></a>"
+				pg+=f"<a id=\"{sk}\" href=\"#{sk}\" style=\"text-decoration: none;color: #3010ff\"><h2>{dt['subgroups'][sk]['name']}</h2></a><h4>{dt['subgroups'][sk]['desc']}</h4>"
 			toc+="<ul>"
 			for e in sorted(sv,key=lambda se:se["name"]):
 				toc+=f"<li><a href=\"{{{{ROOT}}}}/{e['group']}.html#{e['name']}\">{e['name']+('()' if 'func' in e['flag'] else '')}</a></li>"

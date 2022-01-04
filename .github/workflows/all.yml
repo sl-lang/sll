@@ -58,7 +58,7 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py ubuntu=src/include/sll,src/cli,src/sll,src/sll/platform/posix windows=src/include/sll,src/cli,src/sll,src/sll/platform/windows ext=src/include/sll,src/include/sll_ext,src/sll_ext web-client=src/include/sll,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py ubuntu=src/sll/include,src/cli,src/sll,src/sll/platform/posix windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows ext=src/sll/include,src/ext web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
   release:
     name: Create Release
     needs:
