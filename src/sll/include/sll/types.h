@@ -24,7 +24,6 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_EXPORT_TABLE_LENGTH UINT32_MAX
 #define SLL_MAX_FILE_OFFSET UINT64_MAX
 #define SLL_MAX_HANDLE_TYPE UINT32_MAX
-#define SLL_MAX_HEADER_COUNT UINT32_MAX
 #define SLL_MAX_IDENTIFIER_LIST_LENGTH UINT32_MAX
 #define SLL_MAX_INSTRUCTION_INDEX UINT32_MAX
 #define SLL_MAX_JSON_ARRAY_LENGTH UINT32_MAX
@@ -145,10 +144,6 @@ typedef uint32_t sll_export_table_length_t;
 
 
 typedef uint32_t sll_function_index_t;
-
-
-
-typedef uint32_t sll_header_count_t;
 
 
 
@@ -663,28 +658,6 @@ typedef struct __SLL_VM_CONFIG{
 
 
 typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* s,sll_compilation_data_t* o);
-
-
-
-typedef struct __SLL_HEADER{
-	sll_string_t k;
-	sll_string_t v;
-} sll_header_t;
-
-
-
-typedef struct __SLL_HEADER_LIST{
-	sll_header_t** dt;
-	sll_header_count_t l;
-} sll_header_list_t;
-
-
-
-typedef struct __SLL_HTTP_RESPONSE{
-	sll_string_t* rc;
-	sll_header_list_t* hl;
-	sll_string_t* dt;
-} sll_http_response_t;
 
 
 

@@ -17,6 +17,7 @@
 ### Removed
 
 - Binary heap API
+- Leftover URL-related functions and type definitions
 - Macro constant: `SLL_CALL_STACK_SIZE`
 - Return value of `sll_parse_all_nodes` and `sll_generate_assembly`
 
