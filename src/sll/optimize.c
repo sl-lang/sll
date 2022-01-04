@@ -1,7 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
-#include <sll/binary_heap.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
@@ -1569,7 +1568,8 @@ _keep_assignment:;
 				}
 				SLL_ASSERT(!cnd||SLL_OBJECT_GET_TYPE(cnd)==SLL_OBJECT_TYPE_INT);
 				l=(l-1)>>1;
-				sll_binary_heap_t il=SLL_INIT_BINARY_HEAP_STRUCT;
+				sll_integer_t* il=NULL;
+				sll_array_length_t ill=0;
 				do{
 					l--;
 					sll_node_t* a=o;
@@ -1582,7 +1582,7 @@ _keep_assignment:;
 					}
 					sll_integer_t i=(a->t==SLL_NODE_TYPE_INT?a->dt.i:a->dt.c);
 					if (cnd&&i==cnd->dt.i){
-						sll_free_binary_heap(&il);
+						sll_deallocate(il);
 						SLL_RELEASE(cnd);
 						r->t=SLL_NODE_TYPE_OPERATION_LIST;
 						_remove_up_to_end(cnd_n_o,((r->dt.ac-1)&0xfffffffe)-(l<<1)-1);
@@ -1592,14 +1592,25 @@ _keep_assignment:;
 						o=r;
 						goto _optimize_operation_list_comma;
 					}
-					else if (!sll_binary_heap_add(&il,i)){
-						o=_remove_single_object(_remove_single_object(a));
-					}
 					else{
-						o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+						sll_array_length_t j=0;
+						for (;j<ill;j++){
+							if (*(il+j)==i){
+								break;
+							}
+						}
+						if (j==ill){
+							o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
+							ill++;
+							il=sll_reallocate(il,ill*sizeof(sll_integer_t));
+							*(il+ill-1)=i;
+						}
+						else{
+							o=_remove_single_object(_remove_single_object(a));
+						}
 					}
 				} while (l);
-				sll_free_binary_heap(&il);
+				sll_deallocate(il);
 				if (!(o->dt.ac&1)){
 					o=_optimize(o,r,o_dt,OPTIMIZER_FLAG_ARGUMENT);
 				}

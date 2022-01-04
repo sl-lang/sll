@@ -746,13 +746,6 @@ typedef sll_object_t* (*sll_quaternary_operator_t)(sll_object_t* a,sll_object_t*
 
 
 
-typedef struct __SLL_BINARY_HEAP{
-	sll_integer_t* v;
-	sll_array_length_t l;
-} sll_binary_heap_t;
-
-
-
 typedef struct __SLL_VAR_ARG_LIST_DATA_SLL{
 	const sll_object_t*const* p;
 	sll_arg_count_t l;
