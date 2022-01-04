@@ -4,7 +4,6 @@ import json
 import os
 import re
 import requests
-import subprocess
 import sys
 import util
 

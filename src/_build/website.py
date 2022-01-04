@@ -41,7 +41,7 @@ def _generate_data(dt,pg_src):
 			if (len(sv)==0):
 				continue
 			toc+="<div class=\"subgroup\">"
-			if (sk!=""):
+			if (len(sk)!=0):
 				toc+=f"<a href=\"{{{{ROOT}}}}/{k}.html#{sk}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
 				pg+=f"<a id=\"{sk}\" href=\"#{sk}\" style=\"text-decoration: none;color: #3010ff\"><h2>{dt['subgroups'][sk]['name']}</h2></a><h4>{dt['subgroups'][sk]['desc']}</h4>"
 			toc+="<ul>"

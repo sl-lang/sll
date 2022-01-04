@@ -96,7 +96,8 @@ def generate_c_api(d_dt,api_dt):
 				cf.write(f"\n{end}\t"+TYPE_RETURN_MAP[k["ret"]["type"]].replace(";",";\n\t")+";\n")
 			if (len(a)==0):
 				a="void"
-			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n/**\n * \\flags {('check_output ' if TYPE_MAP[k['ret']['type']][-1]!='*' else '')}func optimizable\n * \\name {k['name']}\n * \\group {k['group']}\n * \\desc {k['desc']}{d_str}\n */\n/**\n * \\flags check_output func optimizable\n * \\name {k['name']}_raw\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */")
+			sg=("" if k["subgroup"] is None else f"\n\\subgroup {k['subgroup']}")
+			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n/**\n * \\flags {('check_output ' if TYPE_MAP[k['ret']['type']][-1]!='*' else '')}func optimizable\n * \\name {k['name']}\n * \\group {k['group']}{sg}\n * \\desc {k['desc']}{d_str}\n */\n/**\n * \\flags check_output func optimizable\n * \\name {k['name']}_raw\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */")
 			if (k["group"] not in d_gl):
 				d_gl.append(k["group"])
 				hf.write(f"\n/**\n * \\flags subgroup\n * \\name {d_dt['groups'][k['group']]['name'][:-3].strip()}\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Docs!\n */")

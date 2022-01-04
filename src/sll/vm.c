@@ -70,7 +70,7 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg){
 	sll_current_instruction_count=0;
-	sll_current_vm_config=cfg;
+	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	sll_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(cfg->s_sz+a_dt->vc*sizeof(sll_object_t*)+a_dt->st.l*sizeof(sll_object_t)+cfg->c_st_sz*sizeof(sll_call_stack_frame_t));
 	uint64_t ptr=(uint64_t)sll_platform_allocate_page(ptr_sz,1);
