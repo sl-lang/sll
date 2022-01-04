@@ -1484,8 +1484,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [0.6.36/src/sll/cli.c]: https://github.com/sl-lang/sll/blob/main/src/sll/cli.c
+[0.6.35/src/cli/main.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/cli/main.c
 [0.6.35/src/sll/cast.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/sll/cast.c
-[0.6.35/src/sll/cli.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/sll/cli.c
 [0.6.34/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.34/src/sll/operator.c
 [0.6.34/src/cli/data/help.txt]: https://github.com/sl-lang/sll/blob/sll-v0.6.34/src/cli/data/help.txt
 [0.6.34/src/sll/data/assembly_optimizer.txt]: https://github.com/sl-lang/sll/blob/sll-v0.6.34/src/sll/data/assembly_optimizer.txt

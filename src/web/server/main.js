@@ -15,26 +15,11 @@ const REDIRECTS={
 
 addEventListener("fetch",(e)=>e.respondWith((async (url)=>{
 	url=REDIRECTS[url]||url;
-	const url_l=url.split("/");
-	const ext_l=url_l.at(-1).split(".");
-	let ext;
-	if (ext_l.length==1){
-		if (url_l[1]=="apt"){
-			ext=".txt";
-		}
-		else{
-			ext=".html";
-			url+=".html";
-		}
-	}
-	else{
-		ext="."+ext_l.at(-1);
-	}
 	const opt={
 		status: 200,
 		statusText: "OK",
 		headers: new Headers({
-			"Content-Type": MIME_TYPES[ext]||"text/plain;charset=utf-8"
+			"Content-Type": MIME_TYPES["."+url.split("/").at(-1).split(".").at(-1)]||"text/plain;charset=utf-8"
 		})
 	};
 	if (!(await SLL.get("__table")).split("\x00").includes(url)){

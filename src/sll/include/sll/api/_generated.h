@@ -769,7 +769,7 @@
  * \flags check_output func optimizable
  * \name sll_api_math_acos
  * \group math-api
-\subgroup math-api-trig
+\subgroup math-api-inv-trig
  * \desc Docs!
  * \arg sll_float_t a -> 
  * \ret sll_float_t
@@ -793,7 +793,7 @@
  * \flags check_output func optimizable
  * \name sll_api_math_acosh
  * \group math-api
-\subgroup math-api-trig
+\subgroup math-api-inv-trig
  * \desc Docs!
  * \arg sll_float_t a -> 
  * \ret sll_float_t
@@ -817,7 +817,7 @@
  * \flags check_output func optimizable
  * \name sll_api_math_asin
  * \group math-api
-\subgroup math-api-trig
+\subgroup math-api-inv-trig
  * \desc Docs!
  * \arg sll_float_t a -> 
  * \ret sll_float_t
@@ -841,7 +841,7 @@
  * \flags check_output func optimizable
  * \name sll_api_math_asinh
  * \group math-api
-\subgroup math-api-trig
+\subgroup math-api-inv-trig
  * \desc Docs!
  * \arg sll_float_t a -> 
  * \ret sll_float_t
@@ -865,7 +865,7 @@
  * \flags check_output func optimizable
  * \name sll_api_math_atan
  * \group math-api
-\subgroup math-api-trig
+\subgroup math-api-inv-trig
  * \desc Docs!
  * \arg sll_float_t a -> 
  * \ret sll_float_t
@@ -889,7 +889,7 @@
  * \flags check_output func optimizable
  * \name sll_api_math_atan2
  * \group math-api
-\subgroup math-api-trig
+\subgroup math-api-inv-trig
  * \desc Docs!
  * \arg sll_float_t a -> 
  * \arg sll_float_t b -> 
@@ -914,7 +914,7 @@
  * \flags check_output func optimizable
  * \name sll_api_math_atanh
  * \group math-api
-\subgroup math-api-trig
+\subgroup math-api-inv-trig
  * \desc Docs!
  * \arg sll_float_t a -> 
  * \ret sll_float_t
