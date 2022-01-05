@@ -33,7 +33,7 @@
 (--- "import.sll")
 (:> "Call: " (<- func 10 2) "\n")
 (:> "Current Time (Internal Call): " (<- time$time) "\n")
-(? true nil 2 (:> "Dead Code") (@@@ 128 "False Exit"))
+(? true nil 2 (:> "Dead Code") (@@ 128 "False Exit"))
 (= fp (+ "build" path$SEPARATOR "hello.txt"))
 (= f (<- file$open fp "wb"))
 (? f {
@@ -254,7 +254,7 @@
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
-	(@@@ false)
+	(@@ false)
 })
-(:> "Useless Code")
-(@@@ 1)
+(:> "Useless Code\n")
+(@@ 1)

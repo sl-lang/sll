@@ -421,7 +421,6 @@ static sll_object_t* _get_as_object(const sll_node_t* o,const optimizer_data_t* 
 		case SLL_NODE_TYPE_SWITCH:
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_RETURN:
-		case SLL_NODE_TYPE_EXIT:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 _return_zero:
 			{
@@ -708,7 +707,6 @@ static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t*
 		case SLL_NODE_TYPE_CONTINUE:
 		case SLL_NODE_TYPE_BREAK:
 		case SLL_NODE_TYPE_RETURN:
-		case SLL_NODE_TYPE_EXIT:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			return (inv?COND_TYPE_ALWAYS_TRUE:COND_TYPE_ALWAYS_FALSE);
 		case SLL_NODE_TYPE_ASSIGN:
@@ -2257,7 +2255,6 @@ _unknown_cast:
 				return o;
 			}
 		case SLL_NODE_TYPE_RETURN:
-		case SLL_NODE_TYPE_EXIT:
 			{
 				sll_arg_count_t l=o->dt.ac;
 				sll_node_t* r=o;

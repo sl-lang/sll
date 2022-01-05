@@ -623,7 +623,7 @@ typedef struct __SLL_OBJECT_TYPE_TABLE{
 
 
 typedef struct __SLL_CALL_STACK_FRAME{
-	sll_string_index_t nm;
+	const sll_char_t* nm;
 	sll_instruction_index_t _ii;
 	sll_stack_offset_t _s;
 } sll_call_stack_frame_t;
@@ -641,7 +641,7 @@ typedef struct __SLL_RUNTIME_DATA{
 	const sll_assembly_data_t* a_dt;
 	sll_internal_function_table_t* ift;
 	sll_object_type_table_t* tt;
-	sll_call_stack_t* c_st;
+	sll_call_stack_t c_st;
 } sll_runtime_data_t;
 
 

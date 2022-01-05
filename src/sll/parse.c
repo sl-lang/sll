@@ -442,7 +442,7 @@ static void _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c
 					o->t=SLL_NODE_TYPE_REF;
 				}
 				else if (*str=='@'&&*(str+1)=='@'){
-					o->t=((fl&EXTRA_COMPILATION_DATA_INSIDE_FUNCTION)?SLL_NODE_TYPE_RETURN:SLL_NODE_TYPE_EXIT);
+					o->t=SLL_NODE_TYPE_RETURN;
 				}
 				else if (*str=='#'&&*(str+1)=='#'){
 					o->t=SLL_NODE_TYPE_OPERATION_LIST;
@@ -473,9 +473,6 @@ static void _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c
 				}
 				else if (*str=='<'&&*(str+1)=='<'&&*(str+2)=='<'){
 					o->t=SLL_NODE_TYPE_CONTINUE;
-				}
-				else if (*str=='@'&&*(str+1)=='@'&&*(str+2)=='@'){
-					o->t=SLL_NODE_TYPE_EXIT;
 				}
 				else if (*str=='-'&&*(str+1)=='-'&&*(str+2)=='-'){
 					o->t=SLL_NODE_TYPE_OPERATION_LIST;

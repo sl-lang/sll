@@ -415,9 +415,9 @@ typedef struct __INTERNAL_FUNCTION{
 
 
 typedef struct __OBJECT_DEBUG_DATA_TRACE_DATA{
-	const char* fp;
+	sll_char_t fp[256];
+	sll_char_t fn[256];
 	unsigned int ln;
-	char fn[256];
 } object_debug_data_trace_data_t;
 
 

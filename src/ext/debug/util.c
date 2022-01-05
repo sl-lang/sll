@@ -41,6 +41,18 @@ sll_object_t* ii_to_loc(sll_instruction_index_t ii){
 
 
 
+sll_object_t* debug_call_function(sll_object_t*const* al,sll_arg_count_t all){
+	if (!all||SLL_OBJECT_GET_TYPE(*al)!=SLL_OBJECT_TYPE_INT){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* o=sll_execute_function((*al)->dt.i,al+1,all-1);
+	SLL_ACQUIRE(o);
+	return o;
+}
+
+
+
+
 sll_object_t* debug_init(sll_object_t*const* al,sll_arg_count_t all){
 	if (all>3){
 		const sll_object_t* a=*al;

@@ -644,28 +644,6 @@ All of the expressions are evaluated sequentially. If a pair of expressions does
 )
 ```
 
-#### Exit (`@@@`)
-
-##### Syntax
-
-```sll
-(@@@ |# value #|)
-```
-
-##### Return Value
-
-Execution of the program ends with the value as the return code
-
-##### Description
-
-The program is terminated and the `value` is casted to a 32-bit signed integer and returned as the return code.
-
-##### Example
-
-```sll
-(@@@ 0)
-```
-
 #### Export (`##`)
 
 ##### Syntax

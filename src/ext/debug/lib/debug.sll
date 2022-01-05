@@ -32,6 +32,7 @@
 	(~ type_type) call_stack_type
 	(~ type_type) location_type
 	(~ type_type) vm_config_type
+	(~ func_type) call_function
 	(~ func_type) get_call_stack
 	(~ func_type) get_instruction_count
 	(~ func_type) get_instruction_index
@@ -46,12 +47,14 @@
 (= ext_fp (+ sys$LIBRARY_PATH "sll-ext-debug-" sys$VERSION$major "." sys$VERSION$minor "." sys$VERSION$patch "." sys$LIBRARY_EXTENSION))
 (? (! (<- sys$load_library ext_fp)) {
 	(:> "Failed to load extension library: " ext_fp "\n")
-	(@@@ 1)
+	(@@ 1)
 })
 
 (<- (... "sll_ext:debug__init") call_stack_type call_stack_raw_type location_type vm_config_type)
 
 
+
+(= call_function (... "sll_ext:debug_call_function"))
 
 (= get_call_stack (... "sll_ext:debug_get_call_stack"))
 
@@ -73,6 +76,7 @@
 	call_stack_type
 	location_type
 	vm_config_type
+	call_function
 	get_call_stack
 	get_instruction_count
 	get_instruction_index

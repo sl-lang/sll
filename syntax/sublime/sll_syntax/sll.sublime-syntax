@@ -128,7 +128,7 @@ contexts:
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           pop: true
         - include: main
-    - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2})|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%]|\+\+|\-\-)|(>=|<=|==|!=|>|<|===|!==)|(=)|(---)|(,,,)|(:>)|(<-)|(@)|(@@)|(@@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2})|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%]|\+\+|\-\-)|(>=|<=|==|!=|>|<|===|!==)|(=)|(---)|(,,,)|(:>)|(<-)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.control.conditional.sll
@@ -143,20 +143,19 @@ contexts:
         11: keyword.control.call.sll
         12: keyword.control.break.sll
         13: keyword.control.return.sll
-        14: support.function.builtin.exit.sll
-        15: keyword.declaration.function.internal.sll
-        16: storage.modifier.export.sll
-        17: keyword.declaration.sll
-        18: support.function.builtin.length.sll
-        19: support.function.builtin.access.sll
-        20: keyword.operator.cast.sll
-        21: keyword.operator.typeof.sll
-        22: punctuation.separator.sll
-        23: keyword.control.continue.sll
-        24: keyword.operator.reference.sll
-        25: keyword.declaration.function.inline.sll
-        26: keyword.declaration.type.sll
-        27: keyword.control.new.sll
+        14: keyword.declaration.function.internal.sll
+        15: storage.modifier.export.sll
+        16: keyword.declaration.sll
+        17: support.function.builtin.length.sll
+        18: support.function.builtin.access.sll
+        19: keyword.operator.cast.sll
+        20: keyword.operator.typeof.sll
+        21: punctuation.separator.sll
+        22: keyword.control.continue.sll
+        23: keyword.operator.reference.sll
+        24: keyword.declaration.function.inline.sll
+        25: keyword.declaration.type.sll
+        26: keyword.control.new.sll
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - match: '\)'

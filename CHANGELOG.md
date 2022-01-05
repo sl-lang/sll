@@ -7,16 +7,19 @@
 - Call stack size member in the `sll_vm_config_t` structure
 - Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
 - New CLI code to dynamically find the shared library
+- Sll-from-C function calling to the VM: `sll_execute_function` ([#176])
 
 ### Changed
 
 - *\[POSIX only\]* After calling `sll_init` the library load flags are automatically fixed
+- Call stack is no longer a pointer in the `sll_runtime_data_t` structure
 - Moved CLI code from [`src/cli/main.c`][0.6.35/src/cli/main.c] to [`src/sll/cli.c`][0.6.36/src/sll/cli.c]
 - *\[POSIX only\]* Shared libraries are now loaded with `RTLD_NOW` instead of `RTLD_LAZY`
 
 ### Removed
 
 - Binary heap API
+- End/Exit (`(@@@)`) node type (replaced by a return from module-level)
 - Leftover URL-related functions and type definitions
 - Macro constant: `SLL_CALL_STACK_SIZE`
 - Return value of `sll_parse_all_nodes` and `sll_generate_assembly`
@@ -1353,6 +1356,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#184]: https://github.com/sl-lang/sll/issues/184
 [#183]: https://github.com/sl-lang/sll/issues/183
 [#182]: https://github.com/sl-lang/sll/issues/182
+[#176]: https://github.com/sl-lang/sll/issues/176
 [#172]: https://github.com/sl-lang/sll/issues/172
 [#171]: https://github.com/sl-lang/sll/issues/171
 [#170]: https://github.com/sl-lang/sll/issues/170

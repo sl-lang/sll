@@ -26,7 +26,6 @@ static uint32_t _gc_dbg_dtl=0;
 static object_debug_data_t** _gc_dbg_dt=NULL;
 static uint32_t _gc_alloc=0;
 static uint32_t _gc_dealloc=0;
-static sll_bool_t _gc_verify=1;
 
 
 
@@ -111,12 +110,6 @@ void _gc_release_data(void){
 	if (!_gc_page_ptr){
 		return;
 	}
-	if (_gc_verify){
-		if (!sll_verify_object_stack_cleanup()){
-			SLL_UNIMPLEMENTED();
-		}
-		_gc_verify=0;
-	}
 	SLL_ASSERT(_gc_alloc<=_gc_dealloc);
 	for (uint32_t i=0;i<_gc_dbg_dtl;i++){
 		if (*(_gc_dbg_dt+i)){
@@ -150,7 +143,7 @@ void _gc_release_data(void){
 __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t){
 	if (!(o->_dbg)){
 		object_debug_data_t* dt=sll_allocate(sizeof(object_debug_data_t));
-		dt->c.fp=NULL;
+		dt->c.fp[0]=0;
 		dt->al=NULL;
 		dt->all=0;
 		dt->rl=NULL;
@@ -158,15 +151,21 @@ __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,u
 		o->_dbg=dt;
 	}
 	object_debug_data_trace_data_t* n=sll_allocate(sizeof(object_debug_data_trace_data_t));
-	n->fp=fp;
-	n->ln=ln;
-	uint8_t j=0;
-	while (*(fn+j)){
-		n->fn[j]=*(fn+j);
-		j++;
-		SLL_ASSERT(j);
+	uint8_t i=0;
+	while (*(fp+i)){
+		n->fp[i]=*(fp+i);
+		i++;
+		SLL_ASSERT(i);
 	}
-	n->fn[j]=0;
+	n->fp[i]=0;
+	i=0;
+	while (*(fn+i)){
+		n->fn[i]=*(fn+i);
+		i++;
+		SLL_ASSERT(i);
+	}
+	n->fn[i]=0;
+	n->ln=ln;
 	object_debug_data_t* dt=o->_dbg;
 	if (t==__SLL_DEBUG_TYPE_CREATE){
 		if (!dt->c.fp){
@@ -215,7 +214,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(void){
 	o->rc=1;
 	o->_dbg=NULL;
 	_gc_alloc++;
-	_gc_verify=1;
 	return o;
 }
 
@@ -274,7 +272,6 @@ __SLL_EXTERNAL void sll_remove_object_debug_data(sll_object_t* o){
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(void){
 	sll_file_flush(sll_stdout);
 	uint8_t err=0;
-	_gc_verify=0;
 	void* pg=_gc_page_ptr;
 	uint32_t i=0;
 	while (pg){
@@ -288,7 +285,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 				}
 				if (c->_dbg){
 					object_debug_data_t* dt=c->_dbg;
-					if (dt->c.fp){
+					if (dt->c.fp[0]){
 						sll_file_write_format(sll_stderr,SLL_CHAR("%s:%u (%s): "),dt->c.fp,dt->c.ln,dt->c.fn);
 					}
 					else{

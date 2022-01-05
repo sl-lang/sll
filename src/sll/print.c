@@ -519,9 +519,6 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 		case SLL_NODE_TYPE_RETURN:
 			PRINT_STATIC_STRING("@@",wf);
 			break;
-		case SLL_NODE_TYPE_EXIT:
-			PRINT_STATIC_STRING("@@@",wf);
-			break;
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			{
 				sll_file_write_char(wf,'{');
@@ -1074,15 +1071,6 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 				PRINT_STATIC_STRING("RET $",wf);
 				_print_int(ai->dt.v,wf);
-				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END:
-				PRINT_STATIC_STRING("END",wf);
-				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ZERO:
-				PRINT_STATIC_STRING("END 0",wf);
-				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_END_ONE:
-				PRINT_STATIC_STRING("END 1",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 				PRINT_STATIC_STRING("DEL $",wf);
