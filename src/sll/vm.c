@@ -817,8 +817,8 @@ _print_from_stack:;
 							if (j<sll_current_runtime_data->ift->l){
 								_vm_si-=ai->dt.ac;
 								sll_object_t* n=_call_internal_func(j,_vm_stack+_vm_si,ai->dt.ac);
-								for (sll_arg_count_t j=0;j<ai->dt.ac;j++){
-									SLL_RELEASE(*(_vm_stack+_vm_si+j));
+								for (sll_arg_count_t k=0;k<ai->dt.ac;k++){
+									SLL_RELEASE(*(_vm_stack+_vm_si+k));
 								}
 								if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP){
 									*(_vm_stack+_vm_si)=n;
