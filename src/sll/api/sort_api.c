@@ -2,15 +2,17 @@
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
-#include <sll/operator.h>
+#include <sll/memory.h>
 #include <sll/object.h>
+#include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/util.h>
+#include <sll/vm.h>
 
 
 
-__SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
+static void _quicksort_raw(const sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<l;j++){
 		if (sll_operator_compare(*(a+j),*(a+l))==cmp){
@@ -24,47 +26,70 @@ __SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sl
 	*(a+i)=*(a+l);
 	*(a+l)=t;
 	if (i>1){
-		sll_quicksort(a,i-1,cmp);
+		_quicksort_raw(a,i-1,cmp);
 	}
 	i++;
 	if (i<l){
-		sll_quicksort(a+i,l-i,cmp);
+		_quicksort_raw(a+i,l-i,cmp);
 	}
 }
 
 
 
-__API_FUNC(sort_quicksort){
-	if (!a->l){
-		SLL_INIT_ARRAY(out);
-		return;
-	}
-	if (!sll_array_create(a->l,out)){
-		SLL_UNIMPLEMENTED();
-	}
-	if (a->l==1){
-		out->v[0]=a->v[0];
-		SLL_ACQUIRE(a->v[0]);
-		return;
-	}
-	sll_compare_result_t cmp=(b?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW);
-	sll_string_length_t i=0;
-	for (sll_array_length_t j=0;j<a->l;j++){
-		out->v[j]=a->v[j];
-		SLL_ACQUIRE(a->v[j]);
-		if (j<a->l-1&&sll_operator_compare(a->v[j],a->v[a->l-1])==cmp){
-			out->v[j]=out->v[i];
-			out->v[i]=a->v[j];
+static void _quicksort_extra(const sll_object_t** a,const sll_object_t** b,sll_array_length_t l,sll_compare_result_t cmp){
+	sll_array_length_t i=0;
+	for (sll_array_length_t j=0;j<l;j++){
+		if (sll_operator_compare(*(a+j),*(a+l))==cmp){
+			const sll_object_t* t=*(a+i);
+			*(a+i)=*(a+j);
+			*(a+j)=t;
+			t=*(b+i);
+			*(b+i)=*(b+j);
+			*(b+j)=t;
 			i++;
 		}
 	}
-	out->v[a->l-1]=out->v[i];
-	out->v[i]=a->v[a->l-1];
+	const sll_object_t* t=*(a+i);
+	*(a+i)=*(a+l);
+	*(a+l)=t;
+	t=*(b+i);
+	*(b+i)=*(b+l);
+	*(b+l)=t;
 	if (i>1){
-		sll_quicksort((const sll_object_t**)(out->v),i-1,cmp);
+		_quicksort_extra(a,b,i-1,cmp);
 	}
 	i++;
-	if (i<a->l-1){
-		sll_quicksort((const sll_object_t**)(out->v+i),a->l-i-1,cmp);
+	if (i<l){
+		_quicksort_extra(a+i,b,l-i,cmp);
 	}
+}
+
+
+
+__SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp,sll_integer_t fn){
+	if (!fn){
+		_quicksort_raw((const sll_object_t**)a,l-1,cmp);
+		return;
+	}
+	sll_object_t** tmp=sll_allocate_stack(l*sizeof(sll_object_t*));
+	for (sll_array_length_t i=0;i<l;i++){
+		*(tmp+i)=sll_execute_function(fn,a+i,1);
+	}
+	_quicksort_extra((const sll_object_t**)tmp,(const sll_object_t**)a,l-1,cmp);
+	for (sll_array_length_t i=0;i<l;i++){
+		SLL_RELEASE(*(tmp+i));
+	}
+	sll_deallocate(tmp);
+}
+
+
+
+__API_FUNC(sort_quicksort){
+	if (!sll_array_clone(a,out)){
+		SLL_UNIMPLEMENTED();
+	}
+	if (a->l<2){
+		return;
+	}
+	sll_quicksort(out->v,out->l,(b?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),c);
 }

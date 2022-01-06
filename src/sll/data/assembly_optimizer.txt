@@ -40,4 +40,4 @@
 0=ret, 1=loads -> 0=nop, 1=ret_str, $1
 0=ret, 1=load -> 0=nop, 1=ret_var, $1
 
-0=ret_int, 0.i=0 -> 0=ret_zero
+0=ret_int, 0.i=+0 -> 0=ret_zero

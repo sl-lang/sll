@@ -2528,8 +2528,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort_raw(sll_o
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	sll_object_t* c=NULL;
+	if (all>2){
+		c=*(al+2);
+		if (SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(c);
+		}
+		else{
+			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		c=SLL_ACQUIRE_STATIC_INT(0);
+	}
 	sll_array_t out;
-	sll_api_sort_quicksort(&(a->dt.a),b->dt.i,&out);
+	sll_api_sort_quicksort(&(a->dt.a),b->dt.i,c->dt.i,&out);
+	SLL_RELEASE(c);
 	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();

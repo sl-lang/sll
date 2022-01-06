@@ -17,11 +17,12 @@
  * \name sll_quicksort
  * \group sort-api
  * \desc Docs!
- * \arg const sll_object_t** a
+ * \arg sll_object_t** a
  * \arg sll_array_length_t l
  * \arg sll_compare_result_t cmp
+ * \arg sll_integer_t fn
  */
-__SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp);
+__SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp,sll_integer_t fn);
 
 
 
@@ -31,6 +32,7 @@ __SLL_EXTERNAL void sll_quicksort(const sll_object_t** a,sll_array_length_t l,sl
  * \group sort-api
  * \desc Docs!
  * \arg A
+ * \arg I
  * \arg I
  * \ret A
  */

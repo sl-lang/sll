@@ -197,7 +197,7 @@ static SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,
 		}
 	}
 	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT){
-		if (st[0]->dt.i==SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])){
+		if (st[0]->dt.i==0){
 			st[0]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO;
 		}
 	}

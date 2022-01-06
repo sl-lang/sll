@@ -15,6 +15,7 @@
 - Call stack is no longer a pointer in the `sll_runtime_data_t` structure
 - Moved CLI code from [`src/cli/main.c`][0.6.35/src/cli/main.c] to [`src/sll/cli.c`][0.6.36/src/sll/cli.c]
 - *\[POSIX only\]* Shared libraries are now loaded with `RTLD_NOW` instead of `RTLD_LAZY`
+- `sll_quicksort` (and `sort$sort`) now support a `fn` function argument
 
 ### Removed
 

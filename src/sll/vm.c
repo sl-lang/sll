@@ -548,15 +548,8 @@ _jump:
 					SLL_RELEASE(cnd);
 					while (_vm_si<e_si){
 						sll_object_t* k=*(_vm_stack+_vm_si);
-						if (SLL_OBJECT_GET_TYPE(k)==SLL_OBJECT_TYPE_INT){
-							if (k->dt.i==cnd_v){
-								goto _cleanup_jump_table;
-							}
-						}
-						else if (SLL_OBJECT_GET_TYPE(k)==SLL_OBJECT_TYPE_CHAR){
-							if (k->dt.c==cnd_v){
-								goto _cleanup_jump_table;
-							}
+						if ((SLL_OBJECT_GET_TYPE(k)==SLL_OBJECT_TYPE_INT&&k->dt.i==cnd_v)||(SLL_OBJECT_GET_TYPE(k)==SLL_OBJECT_TYPE_CHAR&&k->dt.c==cnd_v)){
+							goto _cleanup_jump_table;
 						}
 						SLL_RELEASE(k);
 						SLL_RELEASE(*(_vm_stack+_vm_si+1));

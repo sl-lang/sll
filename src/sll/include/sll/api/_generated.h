@@ -1879,7 +1879,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_sort_quicksort void
-#define __SLL_API_ARGS_sll_api_sort_quicksort sll_array_t* a,sll_integer_t b,sll_array_t* out
+#define __SLL_API_ARGS_sll_api_sort_quicksort sll_array_t* a,sll_integer_t b,sll_integer_t c,sll_array_t* out
 /**
  * \flags func optimizable
  * \name sll_api_sort_quicksort
@@ -1887,6 +1887,7 @@
  * \desc Docs!
  * \arg sll_array_t* a -> 
  * \arg sll_integer_t b -> 
+ * \arg sll_integer_t c -> 
  */
 /**
  * \flags check_output func optimizable
