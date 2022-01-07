@@ -184,7 +184,7 @@ static SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned long
 
 #define MAX_CLEANUP_TABLE_SIZE 512
 
-#define MAX_ASSEMBLY_INSTRUCTION_FLAG_LABEL SLL_MAX_INSTRUCTION_INDEX
+#define MAX_ASSEMBLY_INSTRUCTION_LABEL SLL_MAX_INSTRUCTION_INDEX
 
 #define NODE_TYPE_UNKNOWN SLL_NODE_TYPE_RESERVED0
 #define NODE_TYPE_CHANGE_STACK SLL_NODE_TYPE_RESERVED1
@@ -370,13 +370,6 @@ typedef struct __LOOP{
 
 
 
-typedef struct __LOOP_TABLE{
-	loop_t* dt;
-	uint32_t sz;
-} loop_table_t;
-
-
-
 typedef struct __RETURN_TABLE{
 	assembly_instruction_label_t* dt;
 	uint32_t sz;
@@ -390,7 +383,7 @@ typedef struct __ASSEMBLY_GENERATOR_DATA{
 	identifier_map_data_t it;
 	assembly_instruction_label_t n_lbl;
 	identifier_remove_data_t rm;
-	loop_table_t* lt;
+	loop_t l_dt;
 	return_table_t* rt;
 } assembly_generator_data_t;
 
@@ -540,6 +533,13 @@ typedef union __FLOAT_DATA{
 	sll_float_t v;
 	uint64_t dt;
 } float_data_t;
+
+
+
+typedef struct __ASSEMBLY_LOOP_GENERATOR_DATA{
+	loop_t p_l_dt;
+	uint64_t* v_st;
+} assembly_loop_generator_data_t;
 
 
 

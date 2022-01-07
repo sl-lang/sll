@@ -4,7 +4,7 @@
 
 ### Added
 
-- Array generator operator (`([>)`) ([#206])
+- Array generator operator (`([>)` and `([<)`) ([#206])
 - Call stack size member in the `sll_vm_config_t` structure
 - Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
 - File listing example
