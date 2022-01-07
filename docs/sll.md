@@ -1,5 +1,7 @@
 # Overview
 
+:warning: **WARNING:** This documentation is NOT up to date. (Consider submiting a PR to fix this!) :warning:
+
 ## What is Sll
 
 Sll is a **general-purpose programming language** aimed at **all developers** looking for a **non-OOP** language with heavy compile-time optimization (and therefor **better runtime performance**).
