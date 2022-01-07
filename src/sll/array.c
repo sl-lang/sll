@@ -323,6 +323,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_get(const sll_array_t*
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_includes(const sll_array_t* a,const sll_object_t* e){
+	for (sll_array_length_t i=0;i<a->l;i++){
+		if (sll_operator_strict_equal(a->v[i],e)){
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_join(const sll_array_t* a,const sll_array_t* b,sll_array_t* o){
 	o->l=a->l+b->l;
 	if (!o->l){

@@ -699,6 +699,9 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				} while (l);
 				return o;
 			}
+		case SLL_NODE_TYPE_HAS:
+			GENERATE_STATIC_STRING("|:",wf);
+			break;
 		case SLL_NODE_TYPE_CAST:
 			GENERATE_STATIC_STRING("::",wf);
 			break;

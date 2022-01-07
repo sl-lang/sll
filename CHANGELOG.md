@@ -5,11 +5,15 @@
 ### Added
 
 - Array generator operators: `([>)` and `([<)` ([#206])
+- Assembly membership test instructions: `SLL_ASSEMBLY_INSTRUCTION_TYPE_JI` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI` ([#207])
 - Call stack size member in the `sll_vm_config_t` structure
 - Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
 - File listing example
 - Map generator operators: `({>)` and `({<)` ([#206])
+- Membership test functions: `sll_string_includes`, `sll_string_includes_char`, `sll_array_includes` and `sll_map_includes` ([#207])
+- Membership test operator: `(|:)` ([#207])
 - New CLI code to dynamically find the shared library
+- New operator: `sll_operator_includes` ([#207])
 - Sll-from-C function calling to the VM: `sll_execute_function` ([#176])
 
 ### Changed
@@ -29,6 +33,7 @@
 - Leftover URL-related functions and type definitions
 - Macro constant: `SLL_CALL_STACK_SIZE`
 - Return value of `sll_parse_all_nodes` and `sll_generate_assembly`
+- VM error codes: `SLL_VM_INVALID_INSTRUCTION_INDEX` and `SLL_VM_INVALID_STACK_INDEX`
 
 ## [0.6.35] - 2022-01-03
 
@@ -1351,6 +1356,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#207]: https://github.com/sl-lang/sll/issues/207
 [#206]: https://github.com/sl-lang/sll/issues/206
 [#194]: https://github.com/sl-lang/sll/issues/194
 [#191]: https://github.com/sl-lang/sll/issues/191

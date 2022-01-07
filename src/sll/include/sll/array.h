@@ -246,13 +246,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_get(const sll_array_t*
 
 /**
  * \flags check_output func
- * \name sll_array_init
+ * \name sll_array_includes
  * \group array
  * \desc Docs!
- * \arg sll_array_t* o
+ * \arg const sll_array_t* a
+ * \arg const sll_object_t* e
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_init(sll_array_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_includes(const sll_array_t* a,const sll_object_t* e);
 
 
 

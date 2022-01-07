@@ -225,6 +225,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_
 
 
 /**
+ * \flags check_output func
+ * \name sll_map_includes
+ * \group map
+ * \desc Docs!
+ * \arg const sll_map_t* m
+ * \arg const sll_object_t* e
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m,const sll_object_t* e);
+
+
+
+/**
  * \flags func
  * \name sll_map_join
  * \group map

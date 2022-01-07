@@ -426,103 +426,99 @@ _jump:
 				ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_vm_ii);
 				continue;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
-				{
-					if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))==SLL_COMPARE_RESULT_BELOW){
-						_vm_si-=2;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						SLL_RELEASE(*(_vm_stack+_vm_si+1));
-						goto _jump;
-					}
-					break;
+				if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))==SLL_COMPARE_RESULT_BELOW){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
-				{
-					if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))!=SLL_COMPARE_RESULT_ABOVE){
-						_vm_si-=2;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						SLL_RELEASE(*(_vm_stack+_vm_si+1));
-						goto _jump;
-					}
-					break;
+				if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))!=SLL_COMPARE_RESULT_ABOVE){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
-				{
-					if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))==SLL_COMPARE_RESULT_ABOVE){
-						_vm_si-=2;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						SLL_RELEASE(*(_vm_stack+_vm_si+1));
-						goto _jump;
-					}
-					break;
+				if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))==SLL_COMPARE_RESULT_ABOVE){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
-				{
-					if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))!=SLL_COMPARE_RESULT_BELOW){
-						_vm_si-=2;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						SLL_RELEASE(*(_vm_stack+_vm_si+1));
-						goto _jump;
-					}
-					break;
+				if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))!=SLL_COMPARE_RESULT_BELOW){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
-				{
-					if (sll_operator_equal(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
-						_vm_si-=2;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						SLL_RELEASE(*(_vm_stack+_vm_si+1));
-						goto _jump;
-					}
-					break;
+				if (sll_operator_equal(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
-				{
-					if (!sll_operator_equal(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
-						_vm_si-=2;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						SLL_RELEASE(*(_vm_stack+_vm_si+1));
-						goto _jump;
-					}
-					break;
+				if (!sll_operator_equal(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
-				{
-					if (!sll_operator_bool(*(_vm_stack+_vm_si-1))){
-						_vm_si--;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						goto _jump;
-					}
-					break;
+				if (!sll_operator_bool(*(_vm_stack+_vm_si-1))){
+					_vm_si--;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
-				{
-					if (sll_operator_bool(*(_vm_stack+_vm_si-1))){
-						_vm_si--;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						goto _jump;
-					}
-					break;
+				if (sll_operator_bool(*(_vm_stack+_vm_si-1))){
+					_vm_si--;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
-				{
-					if (sll_operator_strict_equal(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
-						_vm_si-=2;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						SLL_RELEASE(*(_vm_stack+_vm_si+1));
-						goto _jump;
-					}
-					break;
+				if (sll_operator_strict_equal(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
 				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
-				{
-					if (!sll_operator_strict_equal(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
-						_vm_si-=2;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-						SLL_RELEASE(*(_vm_stack+_vm_si+1));
-						goto _jump;
-					}
-					break;
+				if (!sll_operator_strict_equal(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
 				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
+				if (sll_operator_includes(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
+				if (!sll_operator_includes(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))){
+					_vm_si-=2;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					goto _jump;
+				}
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
 				{
 					_vm_si--;

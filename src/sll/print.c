@@ -470,6 +470,9 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				} while (l);
 				return o;
 			}
+		case SLL_NODE_TYPE_HAS:
+			PRINT_STATIC_STRING("|:",wf);
+			break;
 		case SLL_NODE_TYPE_CAST:
 			PRINT_STATIC_STRING("::",wf);
 			break;
@@ -790,6 +793,24 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
 				PRINT_STATIC_STRING("JSNE .",wf);
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,wf);
+				}
+				else{
+					_print_int(ai->dt.j,wf);
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
+				PRINT_STATIC_STRING("JI .",wf);
+				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
+					PRINT_INT_SIGN(ai->dt.rj,wf);
+				}
+				else{
+					_print_int(ai->dt.j,wf);
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
+				PRINT_STATIC_STRING("JNI .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					PRINT_INT_SIGN(ai->dt.rj,wf);
 				}

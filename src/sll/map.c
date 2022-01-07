@@ -305,6 +305,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m,const sll_object_t* e){
+	for (sll_map_length_t i=0;i<m->l;i++){
+		if (sll_operator_strict_equal(m->v[i<<1],e)){
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+
 __SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* o){
 	o->l=a->l+b->l;
 	if (!o->l){

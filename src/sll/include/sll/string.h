@@ -504,6 +504,32 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_string_get(const sll_string_t* 
 
 
 /**
+ * \flags check_output func
+ * \name sll_string_includes
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* a
+ * \arg const sll_string_t* b
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_includes(const sll_string_t* a,const sll_string_t* b);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_includes_char
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_char_t c
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_includes_char(const sll_string_t* s,sll_char_t c);
+
+
+
+/**
  * \flags func
  * \name sll_string_increase
  * \group string

@@ -11,11 +11,6 @@
 
 
 
-#define SLL_VM_INVALID_INSTRUCTION_INDEX (-0x7fffffff)
-#define SLL_VM_INVALID_STACK_INDEX (-0x80000000ll)
-
-
-
 /**
  * \flags var
  * \name sll_current_instruction_count

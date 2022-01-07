@@ -253,6 +253,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a
 
 /**
  * \flags check_output func
+ * \name sll_operator_includes
+ * \group operator
+ * \desc Docs!
+ * \arg sll_object_t* a
+ * \arg sll_object_t* b
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_includes(sll_object_t* a,sll_object_t* b);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_operator_inv
  * \group operator
  * \desc Docs!

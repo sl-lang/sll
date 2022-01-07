@@ -433,6 +433,9 @@ static void _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c
 				else if (*str=='>'&&*(str+1)=='='){
 					o->t=SLL_NODE_TYPE_MORE_EQUAL;
 				}
+				else if (*str=='|'&&*(str+1)==':'){
+					o->t=SLL_NODE_TYPE_HAS;
+				}
 				else if (*str==':'&&*(str+1)==':'){
 					o->t=SLL_NODE_TYPE_CAST;
 				}

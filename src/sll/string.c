@@ -727,6 +727,32 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_string_get(const sll_string_t* 
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_includes(const sll_string_t* a,const sll_string_t* b){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_includes_char(const sll_string_t* s,sll_char_t c){
+	if (!s->l){
+		return 0;
+	}
+	const uint64_t* p=(const uint64_t*)(s->v);
+	STRING_DATA_PTR(p);
+	uint64_t m=0x101010101010101ull*c;
+	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+		uint64_t v=(*p)^m;
+		v=(v-0x101010101010101ull)&0x8080808080808080ull&(~v);
+		if (v){
+			return (c?1:((i<<3)+(FIND_FIRST_SET_BIT(v)>>3)<s->l));
+		}
+		p++;
+	}
+	return 0;
+}
+
+
+
 __SLL_EXTERNAL void sll_string_increase(sll_string_t* s,sll_string_length_t l){
 	if (!l){
 		return;

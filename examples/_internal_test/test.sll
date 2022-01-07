@@ -269,6 +269,17 @@
 (:> ([> (= i 0) (< i 10) (= o i) (++ i) o) "\n")
 (:> ({< (= i 0) (< i 26) (++ i) (:: (+ i 64) char_type) (:: (+ i 96) char_type)) "\n")
 
+(= str (<- string$upper_case "The quick brown fox jumps over the dog"))
+(-> (= i 0) (< i 26) {
+	(= ch (:: (+ i 65) char_type))
+	(? (|: str ch) {
+		(:> "Contains letter '" ch "'\n")
+	} {
+		(:> "Doesn't contains letter '" ch "'\n")
+	})
+	(++ i)
+})
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

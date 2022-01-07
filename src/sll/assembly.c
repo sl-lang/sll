@@ -514,6 +514,31 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE));
 		case SLL_NODE_TYPE_STRICT_NOT_EQUAL:
 			return _generate_cond_jump(o,g_dt,lbl,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE));
+		case SLL_NODE_TYPE_HAS:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				if (!l){
+					if (inv){
+						GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+					}
+					return o+1;
+				}
+				o=_generate_on_stack(o+1,g_dt);
+				l--;
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+				}
+				else{
+					o=_generate_on_stack(o,g_dt);
+					l--;
+					while (l){
+						l--;
+						o=_generate(o,g_dt);
+					}
+				}
+				GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:SLL_ASSEMBLY_INSTRUCTION_TYPE_JI),lbl);
+				return o;
+			}
 		case SLL_NODE_TYPE_BREAK:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_CONTINUE:
@@ -1095,10 +1120,15 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				ai->dt.va.l=vl;
 				return o;
 			}
+		case SLL_NODE_TYPE_HAS:
+			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_CAST:
 			{
 				sll_arg_count_t l=o->dt.ac;
-				SLL_ASSERT(l);
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					return o+1;
+				}
 				if (l==1){
 					return _generate(o+1,g_dt);
 				}
@@ -2298,7 +2328,7 @@ _remove_nop:;
 	}
 	ai=o->h;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
-		if ((SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE))&&(ai->t&ASSEMBLY_INSTRUCTION_FLAG_LABEL)){
+		if ((SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI))&&(ai->t&ASSEMBLY_INSTRUCTION_FLAG_LABEL)){
 			ai->t&=~ASSEMBLY_INSTRUCTION_FLAG_LABEL;
 			assembly_instruction_label_t lbl_i=ASSEMBLY_INSTRUCTION_MISC_FIELD(ai);
 			sll_instruction_index_t j;
