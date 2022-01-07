@@ -507,6 +507,12 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 		case SLL_NODE_TYPE_NEW:
 			sll_file_write_char(wf,'.');
 			break;
+		case SLL_NODE_TYPE_FOR_ARRAY:
+			PRINT_STATIC_STRING("[>",wf);
+			break;
+		case SLL_NODE_TYPE_WHILE_ARRAY:
+			PRINT_STATIC_STRING("[<",wf);
+			break;
 		case SLL_NODE_TYPE_BREAK:
 			sll_file_write_char(wf,'@');
 			break;

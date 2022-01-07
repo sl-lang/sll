@@ -65,6 +65,8 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_compilation_data_t
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR_ARRAY:
+		case SLL_NODE_TYPE_WHILE_ARRAY:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;

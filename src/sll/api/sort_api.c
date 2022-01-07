@@ -60,7 +60,7 @@ static void _quicksort_extra(const sll_object_t** a,const sll_object_t** b,sll_a
 	}
 	i++;
 	if (i<l){
-		_quicksort_extra(a+i,b,l-i,cmp);
+		_quicksort_extra(a+i,b+i,l-i,cmp);
 	}
 }
 
@@ -85,11 +85,22 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 
 
 __API_FUNC(sort_quicksort){
-	if (!sll_array_clone(a,out)){
-		SLL_UNIMPLEMENTED();
+	sll_object_t* o;
+	sll_array_t* out;
+	if (c){
+		o=SLL_ACQUIRE_STATIC_INT(0);
+		out=a;
 	}
-	if (a->l<2){
-		return;
+	else{
+		o=SLL_CREATE();
+		o->t=SLL_OBJECT_TYPE_ARRAY;
+		out=&(o->dt.a);
+		if (!sll_array_clone(a,out)){
+			SLL_UNIMPLEMENTED();
+		}
 	}
-	sll_quicksort(out->v,out->l,(b?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),c);
+	if (a->l>1){
+		sll_quicksort(out->v,out->l,(b?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),d);
+	}
+	return o;
 }

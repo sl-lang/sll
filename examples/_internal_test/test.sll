@@ -138,19 +138,33 @@
 (:> (: "abcdefghijklmnopqrstuvwxyz" 5 2 -1) "\n" (<- string$flip_case "Hello, World!") "\n")
 (:> "Type: " (:? array) "\n" (<- string$format "%s - %c - %.2x\n" "string" 'C' 15.46))
 (:> (<- path$list_dir ".") "\n")
+
 (= format_bytes (,,, sz (?
 	(< sz (<< 1 10)) (@@ (+ sz " b"))
 	(< sz (<< 1 20)) (@@ (+ (>> sz 10) " kb"))
 	(< sz (<< 1 30)) (@@ (+ (>> sz 20) " Mb"))
 	(@@ (+ (>> sz 30) " Gb"))
 )))
-(= array (<- sort$sort (<- path$recursive_list_dir ".") false))
+(= file_and_size_type (&:
+	(~ string_type) fp
+	(~ int_type) sz
+))
+(= file_list (<- path$recursive_list_dir "src"))
+(= array ([> (= i 0) (< i ($ file_list))
+	(= k (: file_list i))
+	(++ i)
+	(. file_and_size_type
+		(<- path$absolute k)
+		(<- path$size k)
+	)
+))
+(<- sort$sort array false true (,,, k (@@ k$sz)))
 (-> (= i 0) (< i ($ array))
-	(= first (!! i))
-	(? (! first) (:> "First file: "))
-	(:> (<- path$absolute (: array i)) " -> " (<- format_bytes (<- path$size (: array i))) "\n")
+	(= e (: array i))
+	(:> e$fp " -> " (<- format_bytes e$sz) "\n")
 	(++ i)
 )
+
 (= point_type (&:
 	int_type x
 	(~ int_type) y
@@ -251,6 +265,8 @@
 (:> (<- mime$get_type "file.css") ", " (<- mime$get_ext "application/javascript") "\n")
 
 (--- "path/to/nonexistent/file.sll")
+
+(:> ([> (= i 0) (< i 10) (= o i) (++ i) o) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

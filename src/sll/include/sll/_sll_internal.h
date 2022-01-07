@@ -147,10 +147,9 @@ static SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned long
 #define ASSEMBLY_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','A',0)
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','C',0)
 
-#define EXTRA_COMPILATION_DATA_INSIDE_FUNCTION 1
-#define EXTRA_COMPILATION_DATA_IMPORT 2
-#define EXTRA_COMPILATION_DATA_EXPORT 4
-#define EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION 8
+#define EXTRA_COMPILATION_DATA_IMPORT 1
+#define EXTRA_COMPILATION_DATA_EXPORT 2
+#define EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION 4
 
 #define VARIABLE_OFFSET_NEVER_DELETE ((void*)0xffffffffffffffff)
 
@@ -280,7 +279,6 @@ typedef struct __NEW_VARIABLE_DATA{
 
 
 typedef struct __EXTRA_COMPILATION_DATA{
-	uint8_t fl;
 	scope_data_t sc;
 	sll_internal_function_table_t* i_ft;
 	sll_import_resolver_t ir;

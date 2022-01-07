@@ -102,6 +102,8 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR_ARRAY:
+		case SLL_NODE_TYPE_WHILE_ARRAY:
 			{
 				_write_integer(wf,o->dt.l.ac);
 				_write_integer(wf,o->dt.l.sc);

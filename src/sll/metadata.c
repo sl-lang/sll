@@ -37,6 +37,8 @@ static sll_node_t* _mark(sll_node_t* o,uint64_t* m){
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR_ARRAY:
+		case SLL_NODE_TYPE_WHILE_ARRAY:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;
@@ -105,6 +107,8 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR_ARRAY:
+		case SLL_NODE_TYPE_WHILE_ARRAY:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;

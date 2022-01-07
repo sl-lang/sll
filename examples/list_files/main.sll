@@ -1,0 +1,45 @@
+; Sll Recursive File Listing Example
+; @krzem5, 2022-01-07
+
+
+
+(# path sort)
+(--- "path.sll" "sort.sll")
+
+
+
+(= file_and_size_type (&:
+	(~ string_type) fp
+	(~ int_type) sz
+))
+
+
+
+(= FILE_DIRECTORY ".")
+
+
+
+(= format_bytes (,,, sz (?
+	(< sz (<< 1 10)) (@@ (+ sz " b"))
+	(< sz (<< 1 20)) (@@ (+ (>> sz 10) " kb"))
+	(< sz (<< 1 30)) (@@ (+ (>> sz 20) " Mb"))
+	(@@ (+ (>> sz 30) " Gb"))
+)))
+
+
+
+(= file_list (<- path$recursive_list_dir FILE_DIRECTORY))
+(= array ([> (= i 0) (< i ($ file_list))
+	(= k (: file_list i))
+	(++ i)
+	(. file_and_size_type
+		(<- path$absolute k)
+		(<- path$size k)
+	)
+))
+(<- sort$sort array false true (,,, k (@@ k$sz)))
+(-> (= i 0) (< i ($ array))
+	(= e (: array i))
+	(:> e$fp " -> " (<- format_bytes e$sz) "\n")
+	(++ i)
+)

@@ -130,6 +130,8 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR_ARRAY:
+		case SLL_NODE_TYPE_WHILE_ARRAY:
 			CHECK_ERROR(rf,o->dt.l.ac,sll_arg_count_t);
 			CHECK_ERROR(rf,o->dt.l.sc,sll_scope_t);
 			for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){

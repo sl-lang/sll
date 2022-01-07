@@ -110,7 +110,7 @@ void _gc_release_data(void){
 	if (!_gc_page_ptr){
 		return;
 	}
-	SLL_ASSERT(_gc_alloc<=_gc_dealloc);
+	SLL_ASSERT(_gc_alloc==_gc_dealloc);
 	for (uint32_t i=0;i<_gc_dbg_dtl;i++){
 		if (*(_gc_dbg_dt+i)){
 			object_debug_data_t* dt=*(_gc_dbg_dt+i);

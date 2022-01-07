@@ -944,6 +944,7 @@ _return:;
 						if (o_c_st){
 							_pop_call_stack();
 						}
+						SLL_ACQUIRE(tmp);
 						return tmp;
 					}
 					_pop_call_stack();

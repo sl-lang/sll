@@ -32,9 +32,10 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
  * \group sort-api
  * \desc Docs!
  * \arg A
+ * \arg B
+ * \arg B
  * \arg I
- * \arg I
- * \ret A
+ * \ret O
  */
 __API_FUNC_DECL(sort_quicksort);
 

@@ -4,8 +4,10 @@
 
 ### Added
 
+- Array generator operator (`([>)`) ([#206])
 - Call stack size member in the `sll_vm_config_t` structure
 - Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
+- File listing example
 - New CLI code to dynamically find the shared library
 - Sll-from-C function calling to the VM: `sll_execute_function` ([#176])
 
@@ -16,6 +18,7 @@
 - Moved CLI code from [`src/cli/main.c`][0.6.35/src/cli/main.c] to [`src/sll/cli.c`][0.6.36/src/sll/cli.c]
 - *\[POSIX only\]* Shared libraries are now loaded with `RTLD_NOW` instead of `RTLD_LAZY`
 - `sll_quicksort` (and `sort$sort`) now support a `fn` function argument
+- `sort$sort` also includes an in-place boolean flag argument
 
 ### Removed
 
@@ -1346,6 +1349,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#206]: https://github.com/sl-lang/sll/issues/206
 [#194]: https://github.com/sl-lang/sll/issues/194
 [#191]: https://github.com/sl-lang/sll/issues/191
 [#190]: https://github.com/sl-lang/sll/issues/190
