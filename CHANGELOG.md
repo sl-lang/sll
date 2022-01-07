@@ -4,16 +4,18 @@
 
 ### Added
 
-- Array generator operator (`([>)` and `([<)`) ([#206])
+- Array generator operators: `([>)` and `([<)` ([#206])
 - Call stack size member in the `sll_vm_config_t` structure
 - Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
 - File listing example
+- Map generator operators: `({>)` and `({<)` ([#206])
 - New CLI code to dynamically find the shared library
 - Sll-from-C function calling to the VM: `sll_execute_function` ([#176])
 
 ### Changed
 
 - *\[POSIX only\]* After calling `sll_init` the library load flags are automatically fixed
+- All of the `SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_XXX` instruction now support the in-place flag instead of the `_VAR` suffix
 - Call stack is no longer a pointer in the `sll_runtime_data_t` structure
 - Moved CLI code from [`src/cli/main.c`][0.6.35/src/cli/main.c] to [`src/sll/cli.c`][0.6.36/src/sll/cli.c]
 - *\[POSIX only\]* Shared libraries are now loaded with `RTLD_NOW` instead of `RTLD_LAZY`

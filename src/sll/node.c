@@ -68,6 +68,8 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 		case SLL_NODE_TYPE_LOOP:
 		case SLL_NODE_TYPE_FOR_ARRAY:
 		case SLL_NODE_TYPE_WHILE_ARRAY:
+		case SLL_NODE_TYPE_FOR_MAP:
+		case SLL_NODE_TYPE_WHILE_MAP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				(*sz)++;
@@ -144,6 +146,8 @@ static sll_node_t* _remove_debug_data(sll_node_t* o){
 		case SLL_NODE_TYPE_LOOP:
 		case SLL_NODE_TYPE_FOR_ARRAY:
 		case SLL_NODE_TYPE_WHILE_ARRAY:
+		case SLL_NODE_TYPE_FOR_MAP:
+		case SLL_NODE_TYPE_WHILE_MAP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;
@@ -305,6 +309,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 		case SLL_NODE_TYPE_LOOP:
 		case SLL_NODE_TYPE_FOR_ARRAY:
 		case SLL_NODE_TYPE_WHILE_ARRAY:
+		case SLL_NODE_TYPE_FOR_MAP:
+		case SLL_NODE_TYPE_WHILE_MAP:
 			{
 				sll_arg_count_t l=o->dt.l.ac;
 				o++;

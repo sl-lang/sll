@@ -409,8 +409,20 @@ __SLL_EXTERNAL void sll_map_remove_string(const sll_map_t* m,const sll_string_t*
 
 
 
-__SLL_EXTERNAL void sll_map_set(const sll_map_t* m,sll_object_t* k,sll_object_t* v){
-	SLL_UNIMPLEMENTED();
+__SLL_EXTERNAL void sll_map_set(sll_map_t* m,sll_object_t* k,sll_object_t* v){
+	SLL_ACQUIRE(v);
+	for (sll_map_length_t i=0;i<m->l;i++){
+		if (sll_operator_strict_equal(m->v[i<<1],k)){
+			SLL_RELEASE(m->v[(i<<1)+1]);
+			m->v[(i<<1)+1]=v;
+			return;
+		}
+	}
+	m->l++;
+	m->v=sll_reallocate(m->v,(m->l<<1)*sizeof(sll_object_t*));
+	m->v[(m->l-1)<<1]=k;
+	m->v[(m->l<<1)-1]=v;
+	SLL_ACQUIRE(k);
 }
 
 

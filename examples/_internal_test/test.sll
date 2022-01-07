@@ -267,6 +267,7 @@
 (--- "path/to/nonexistent/file.sll")
 
 (:> ([> (= i 0) (< i 10) (= o i) (++ i) o) "\n")
+(:> ({< (= i 0) (< i 26) (++ i) (:: (+ i 64) char_type) (:: (+ i 96) char_type)) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

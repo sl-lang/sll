@@ -104,6 +104,8 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 		case SLL_NODE_TYPE_LOOP:
 		case SLL_NODE_TYPE_FOR_ARRAY:
 		case SLL_NODE_TYPE_WHILE_ARRAY:
+		case SLL_NODE_TYPE_FOR_MAP:
+		case SLL_NODE_TYPE_WHILE_MAP:
 			{
 				_write_integer(wf,o->dt.l.ac);
 				_write_integer(wf,o->dt.l.sc);
@@ -304,9 +306,6 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO_VAR:
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
@@ -339,6 +338,9 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					_write_integer(wf,ai->dt.v);
 				}

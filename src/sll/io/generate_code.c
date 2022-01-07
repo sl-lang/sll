@@ -802,6 +802,12 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		case SLL_NODE_TYPE_WHILE_ARRAY:
 			GENERATE_STATIC_STRING("[<",wf);
 			break;
+		case SLL_NODE_TYPE_FOR_MAP:
+			GENERATE_STATIC_STRING("{>",wf);
+			break;
+		case SLL_NODE_TYPE_WHILE_MAP:
+			GENERATE_STATIC_STRING("{<",wf);
+			break;
 		case SLL_NODE_TYPE_BREAK:
 			sll_file_write_char(wf,'@');
 			break;

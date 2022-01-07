@@ -76,6 +76,8 @@ static sll_node_t* _patch_module(sll_node_t* mo,const import_module_data_t* im_d
 		case SLL_NODE_TYPE_LOOP:
 		case SLL_NODE_TYPE_FOR_ARRAY:
 		case SLL_NODE_TYPE_WHILE_ARRAY:
+		case SLL_NODE_TYPE_FOR_MAP:
+		case SLL_NODE_TYPE_WHILE_MAP:
 			{
 				o->dt.l.sc+=im_dt->sc_off;
 				sll_arg_count_t l=o->dt.l.ac;
@@ -446,6 +448,12 @@ static void _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c
 				else if (*str=='['&&*(str+1)=='<'){
 					o->t=SLL_NODE_TYPE_WHILE_ARRAY;
 				}
+				else if (*str=='{'&&*(str+1)=='>'){
+					o->t=SLL_NODE_TYPE_FOR_MAP;
+				}
+				else if (*str=='{'&&*(str+1)=='<'){
+					o->t=SLL_NODE_TYPE_WHILE_MAP;
+				}
 				else if (*str=='%'&&*(str+1)=='%'){
 					o->t=SLL_NODE_TYPE_REF;
 				}
@@ -485,7 +493,7 @@ static void _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c
 					fl|=EXTRA_COMPILATION_DATA_IMPORT;
 				}
 			}
-			if ((o->t>=SLL_NODE_TYPE_FOR&&o->t<=SLL_NODE_TYPE_LOOP)||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC||(o->t>=SLL_NODE_TYPE_FOR_ARRAY&&o->t<=SLL_NODE_TYPE_WHILE_ARRAY)){
+			if ((o->t>=SLL_NODE_TYPE_FOR&&o->t<=SLL_NODE_TYPE_LOOP)||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC||(o->t>=SLL_NODE_TYPE_FOR_ARRAY&&o->t<=SLL_NODE_TYPE_WHILE_MAP)){
 				n_l_sc.l_sc=c_dt->_n_sc_id;
 				n_l_sc.ml=(n_l_sc.l_sc>>6)+1;
 				n_l_sc.m=sll_allocate(n_l_sc.ml*sizeof(uint64_t));
@@ -1152,7 +1160,7 @@ _return_node:;
 			}
 		}
 	}
-	else if ((o->t>=SLL_NODE_TYPE_FOR&&o->t<=SLL_NODE_TYPE_LOOP)||(o->t>=SLL_NODE_TYPE_FOR_ARRAY&&o->t<=SLL_NODE_TYPE_WHILE_ARRAY)){
+	else if ((o->t>=SLL_NODE_TYPE_FOR&&o->t<=SLL_NODE_TYPE_LOOP)||(o->t>=SLL_NODE_TYPE_FOR_ARRAY&&o->t<=SLL_NODE_TYPE_WHILE_MAP)){
 		o->dt.l.ac=ac;
 	}
 	else if (o->t==SLL_NODE_TYPE_DECL){

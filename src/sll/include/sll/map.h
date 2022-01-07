@@ -329,11 +329,11 @@ __SLL_EXTERNAL void sll_map_remove_string(const sll_map_t* m,const sll_string_t*
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
+ * \arg sll_map_t* m
  * \arg sll_object_t* k
  * \arg sll_object_t* v
  */
-__SLL_EXTERNAL void sll_map_set(const sll_map_t* m,sll_object_t* k,sll_object_t* v);
+__SLL_EXTERNAL void sll_map_set(sll_map_t* m,sll_object_t* k,sll_object_t* v);
 
 
 

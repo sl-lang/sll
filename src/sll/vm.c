@@ -648,15 +648,17 @@ _cleanup_jump_table:;
 					*(_vm_stack+_vm_si-1)=d;
 					break;
 				}
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR:
-				_vm_si-=2;
-				sll_operator_assign(*(_vm_var_data+ai->dt.v),*(_vm_stack+_vm_si),*(_vm_stack+_vm_si+1));
-				SLL_RELEASE(*(_vm_stack+_vm_si));
-				SLL_RELEASE(*(_vm_stack+_vm_si+1));
-				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO_VAR:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN:
+				{
+					_vm_si-=2;
+					sll_operator_assign((SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)?*(_vm_var_data+ai->dt.v):*(_vm_stack+_vm_si-1)),*(_vm_stack+_vm_si),*(_vm_stack+_vm_si+1));
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+					SLL_RELEASE(*(_vm_stack+_vm_si+1));
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO:
 				SLL_UNIMPLEMENTED();
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE_VAR:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE:
 				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
 				{
