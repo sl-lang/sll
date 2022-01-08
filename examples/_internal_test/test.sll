@@ -282,6 +282,24 @@
 
 (:> sys$CPU_COUNT "\n")
 
+(= extra_func_type (&:
+	(,,, a {
+		(:> "[init: \"" a "\"]")
+	}) @@init@@
+	(,,, a {
+		(= a$cnt (+ a$cnt 1))
+		(:> "[copy: \"" a "\"]")
+	}) @@copy@@
+	(,,, a {
+		(:> "[delete: \"" a "\"]")
+	}) @@delete@@
+	int_type cnt
+))
+
+(= test (. extra_func_type))
+(= test-2 (: test))
+(:> test-2 "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

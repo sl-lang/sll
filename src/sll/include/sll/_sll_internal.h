@@ -605,6 +605,14 @@ void _memory_release_data(void);
 
 
 
+void _push_call_stack(const sll_char_t* nm,sll_stack_offset_t si);
+
+
+
+void _pop_call_stack(void);
+
+
+
 void _shift_nodes(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off);
 
 

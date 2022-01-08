@@ -69,29 +69,29 @@ static sll_object_t** _vm_stack;
 
 
 
-static void _push_call_stack(const sll_char_t* nm,sll_stack_offset_t si){
-	SLL_ASSERT(sll_current_runtime_data->c_st.l<=sll_current_vm_config->c_st_sz);
-	(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->nm=nm;
-	(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->_ii=_vm_ii;
-	(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->_s=si;
-	(*((sll_call_stack_size_t*)(&(sll_current_runtime_data->c_st.l))))++;
-}
-
-
-
-static void _pop_call_stack(void){
-	(*((sll_call_stack_size_t*)(&(sll_current_runtime_data->c_st.l))))--;
-	_vm_ii=(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->_ii;
-	_vm_si=(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->_s;
-}
-
-
-
 static sll_object_t* _call_internal_func(sll_function_index_t i,sll_object_t*const* a,sll_arg_count_t ac){
 	_push_call_stack((*(sll_current_runtime_data->ift->dt+i))->nm.v,_vm_si);
 	sll_object_t* o=(*(sll_current_runtime_data->ift->dt+i))->p(a,ac);
 	_pop_call_stack();
 	return o;
+}
+
+
+
+void _push_call_stack(const sll_char_t* nm,sll_stack_offset_t si){
+	SLL_ASSERT(sll_current_runtime_data->c_st.l<=sll_current_vm_config->c_st_sz);
+	(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->nm=nm;
+	(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->_ii=_vm_ii;
+	(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->_s=(si==SLL_MAX_STACK_OFFSET?_vm_si:si);
+	(*((sll_call_stack_size_t*)(&(sll_current_runtime_data->c_st.l))))++;
+}
+
+
+
+void _pop_call_stack(void){
+	(*((sll_call_stack_size_t*)(&(sll_current_runtime_data->c_st.l))))--;
+	_vm_ii=(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->_ii;
+	_vm_si=(sll_current_runtime_data->c_st.dt+sll_current_runtime_data->c_st.l)->_s;
 }
 
 

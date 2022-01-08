@@ -8,11 +8,44 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
 #include <sll/vm.h>
 
 
 
+static sll_string_t _object_copy_str=SLL_INIT_STRING_STRUCT;
+static sll_string_t _object_delete_str=SLL_INIT_STRING_STRUCT;
+static sll_string_t _object_init_str=SLL_INIT_STRING_STRUCT;
+
+
+
 static void* _init_struct(const sll_object_type_table_t* tt,sll_object_type_t t,void* op,sll_object_t*const* p,sll_arg_count_t l);
+
+
+
+static void _release_data(void){
+	if (_object_copy_str.v){
+		sll_free_string(&_object_copy_str);
+		sll_free_string(&_object_delete_str);
+		sll_free_string(&_object_init_str);
+	}
+}
+
+
+
+static void _execute_init(const sll_object_type_table_t* tt,void* p,sll_object_type_t t){
+	t=SLL_OBJECT_GET_TYPE_MASK(t);
+	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
+	if (!dt->fn.init){
+		return;
+	}
+	sll_object_t* tmp=SLL_CREATE();
+	SLL_ACQUIRE(tmp);
+	tmp->t=t;
+	tmp->dt.p=p;
+	SLL_RELEASE(sll_execute_function(dt->fn.init,&tmp,1));
+	SLL_RELEASE(tmp);
+}
 
 
 
@@ -47,8 +80,12 @@ static void* _zero_struct(const sll_object_type_table_t* tt,void* op,sll_object_
 				op=(void*)(((uint64_t)op)+sizeof(sll_map_t));
 				break;
 			default:
-				op=_zero_struct(tt,op,dt->dt[i].t,0);
-				break;
+				{
+					void* p=op;
+					op=_zero_struct(tt,op,dt->dt[i].t,0);
+					_execute_init(tt,p,dt->dt[i].t);
+					break;
+				}
 		}
 		i++;
 	}
@@ -91,9 +128,13 @@ static void* _copy_struct(void* p,const sll_object_type_data_t* dt,const void** 
 				*s=(void*)(((uint64_t)*s)+sizeof(sll_map_t));
 				break;
 			default:
-				SLL_ASSERT(SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE);
-				p=_copy_struct(p,*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)-SLL_MAX_OBJECT_TYPE-1),s);
-				break;
+				{
+					SLL_ASSERT(SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE);
+					void* sp=p;
+					p=_copy_struct(p,*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)-SLL_MAX_OBJECT_TYPE-1),s);
+					_execute_init(sll_current_runtime_data->tt,sp,dt->dt[i].t);
+					break;
+				}
 		}
 	}
 	return p;
@@ -150,6 +191,7 @@ static void* _set_field(const sll_object_type_table_t* tt,void* p,sll_object_typ
 
 static void* _init_struct(const sll_object_type_table_t* tt,sll_object_type_t t,void* op,sll_object_t*const* p,sll_arg_count_t l){
 	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
+	void* sp=op;
 	for (sll_arg_count_t i=0;i<dt->l;i++){
 		if (!l){
 			op=_zero_struct(tt,op,t,i);
@@ -159,6 +201,7 @@ static void* _init_struct(const sll_object_type_table_t* tt,sll_object_type_t t,
 		l--;
 		p++;
 	}
+	_execute_init(tt,sp,t);
 	return op;
 }
 
@@ -233,14 +276,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		SLL_INIT_STRING((sll_string_t*)(&(n->nm)));
 	}
 	n->sz=0;
-	n->l=l;
+	n->fn.copy=0;
+	n->fn.del=0;
+	n->fn.init=0;
 	for (sll_arg_count_t i=0;i<l;i++){
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
 		sll_integer_t vv=v->dt.i;
 		SLL_RELEASE(v);
 		sll_object_type_t fl=0;
 		if (vv<0){
-			fl|=SLL_OBJECT_FLAG_CONSTANT;
+			fl=SLL_OBJECT_FLAG_CONSTANT;
 			vv=~vv;
 		}
 		SLL_ASSERT(vv>=0);
@@ -275,14 +320,41 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 			n->dt[i].t=SLL_OBJECT_TYPE_INT;
 			n->sz+=sizeof(sll_integer_t);
 		}
-		n->dt[i].t|=fl;
 		p++;
 		v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		p++;
+		if (v->dt.s.l>4&&v->dt.s.v[0]=='@'&&v->dt.s.v[1]=='@'&&v->dt.s.v[v->dt.s.l-2]=='@'&&v->dt.s.v[v->dt.s.l-1]=='@'){
+			if (!_object_copy_str.v){
+				sll_string_from_pointer(SLL_CHAR("@@copy@@"),&_object_copy_str);
+				sll_string_from_pointer(SLL_CHAR("@@delete@@"),&_object_delete_str);
+				sll_string_from_pointer(SLL_CHAR("@@init@@"),&_object_init_str);
+				sll_register_cleanup(_release_data);
+			}
+			if (sll_string_equal(&(v->dt.s),&_object_copy_str)){
+				n->fn.copy=(fl?~vv:vv);
+				i--;
+				l--;
+				continue;
+			}
+			else if (sll_string_equal(&(v->dt.s),&_object_delete_str)){
+				n->fn.del=(fl?~vv:vv);
+				i--;
+				l--;
+				continue;
+			}
+			else if (sll_string_equal(&(v->dt.s),&_object_init_str)){
+				n->fn.init=(fl?~vv:vv);
+				i--;
+				l--;
+				continue;
+			}
+		}
 		sll_string_clone(&(v->dt.s),&(n->dt[i].nm));
 		SLL_RELEASE(v);
-		p++;
+		n->dt[i].t|=fl;
 	}
-	*(tt->dt+tt->l-1)=n;
+	n->l=l;
+	*(tt->dt+tt->l-1)=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
 	return tt->l+SLL_MAX_OBJECT_TYPE;
 }
 
@@ -296,6 +368,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 	SLL_INIT_STRING((sll_string_t*)(&(n->nm)));
 	n->sz=0;
 	n->l=0;
+	n->fn.copy=0;
+	n->fn.del=0;
+	n->fn.init=0;
 	*(tt->dt+tt->l-1)=n;
 	sll_object_t* o=SLL_CREATE();
 	o->t=tt->l+SLL_MAX_OBJECT_TYPE;
@@ -367,11 +442,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 		return NULL;
 	}
 	SLL_ASSERT(t-SLL_MAX_OBJECT_TYPE-1<tt->l);
-	const sll_object_type_data_t* dt=*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
 	sll_object_t* o=SLL_CREATE();
 	o->t=t;
-	o->dt.p=sll_allocate(dt->sz);
+	o->dt.p=sll_allocate((*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1))->sz);
+	_push_call_stack(SLL_CHAR("@sll_create_object_type"),SLL_MAX_STACK_OFFSET);
 	_init_struct(tt,t,o->dt.p,p,l);
+	_pop_call_stack();
 	return o;
 }
 
@@ -402,6 +478,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 	n->dt.p=sll_allocate(dt->sz);
 	const void* p=o->dt.p;
 	_copy_struct(n->dt.p,dt,&p);
+	if (dt->fn.copy){
+		_push_call_stack(SLL_CHAR("@sll_object_clone"),SLL_MAX_STACK_OFFSET);
+		SLL_RELEASE(sll_execute_function(dt->fn.copy,&n,1));
+		_pop_call_stack();
+	}
 	return n;
 }
 
@@ -453,6 +534,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 	n->dt.p=sll_allocate(dt->sz);
 	const void** pp=(const void**)&p;
 	_copy_struct(n->dt.p,dt,pp);
+	if (dt->fn.copy){
+		SLL_UNIMPLEMENTED();
+	}
 	return n;
 }
 
@@ -488,6 +572,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sl
 	}
 	n->sz=0;
 	n->l=oi->l;
+	n->fn.copy=0;
+	n->fn.del=0;
+	n->fn.init=0;
 	for (sll_arg_count_t i=0;i<n->l;i++){
 		n->dt[i].t=oi->dt[i].t;
 		if (SLL_OBJECT_GET_TYPE_MASK(n->dt[i].t)<=SLL_MAX_OBJECT_TYPE){
@@ -522,6 +609,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sl
 		}
 		sll_string_clone(st->dt+oi->dt[i].f,&(n->dt[i].nm));
 	}
-	*(tt->dt+tt->l-1)=n;
+	*(tt->dt+tt->l-1)=sll_reallocate(n,sizeof(sll_object_type_data_t)+n->l*sizeof(sll_object_type_data_entry_t));
 	return tt->l+SLL_MAX_OBJECT_TYPE;
 }

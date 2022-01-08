@@ -201,6 +201,20 @@ static SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,
 			st[0]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO;
 		}
 	}
+	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL){
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP){
+			if (st[0]->dt.v==st[1]->dt.v){
+				st[0]->t=ASSEMBLY_INSTRUCTION_TYPE_NOP;
+				st[1]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_POP;
+				goto _shift_1;
+			}
+		}
+		else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL){
+			st[0]->t=ASSEMBLY_INSTRUCTION_TYPE_NOP;
+			st[1]->t=ASSEMBLY_INSTRUCTION_TYPE_NOP;
+			goto _shift_2;
+		}
+	}
 	return;
 _shift_1:
 	st[0]=st[1];

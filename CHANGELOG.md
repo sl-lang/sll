@@ -16,6 +16,7 @@
 - New CLI code to dynamically find the shared library
 - New operator: `sll_operator_includes` ([#207])
 - Sll-from-C function calling to the VM: `sll_execute_function` ([#176])
+- Support for special structure memebers fields: `@@copy@@`, `@@delete@@` and `@@init@@` ([#205])
 
 ### Changed
 
@@ -1359,6 +1360,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#207]: https://github.com/sl-lang/sll/issues/207
 [#206]: https://github.com/sl-lang/sll/issues/206
+[#205]: https://github.com/sl-lang/sll/issues/205
 [#196]: https://github.com/sl-lang/sll/issues/196
 [#194]: https://github.com/sl-lang/sll/issues/194
 [#191]: https://github.com/sl-lang/sll/issues/191

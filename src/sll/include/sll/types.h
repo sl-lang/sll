@@ -34,6 +34,7 @@ typedef uint32_t sll_identifier_index_t;
 #define SLL_MAX_REF_COUNT UINT32_MAX
 #define SLL_MAX_SCOPE UINT32_MAX
 #define SLL_MAX_SIZE UINT64_MAX
+#define SLL_MAX_STACK_OFFSET UINT32_MAX
 #define SLL_MAX_STRING_INDEX UINT32_MAX
 #define SLL_MAX_STRING_LENGTH UINT32_MAX
 #define SLL_MAX_TIME UINT64_MAX
@@ -599,6 +600,14 @@ typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
 
 
 
+typedef struct __SLL_OBJECT_TYPE_DATA_FUNCTIONS{
+	sll_integer_t copy;
+	sll_integer_t del;
+	sll_integer_t init;
+} sll_object_type_data_functions_t;
+
+
+
 typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
 	sll_object_type_t t;
 	sll_string_t nm;
@@ -610,6 +619,7 @@ typedef struct __SLL_OBJECT_TYPE_DATA{
 	const sll_string_t nm;
 	sll_size_t sz;
 	sll_arg_count_t l;
+	sll_object_type_data_functions_t fn;
 	sll_object_type_data_entry_t dt[];
 } sll_object_type_data_t;
 

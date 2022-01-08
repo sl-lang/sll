@@ -73,6 +73,16 @@ static void _print_gc_data(sll_object_t* o,object_debug_data_t* dt){
 
 static void* _release_custom_type(void* p,sll_object_type_t t){
 	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
+	if (dt->fn.del){
+		sll_object_t* tmp=SLL_CREATE();
+		SLL_ACQUIRE(tmp);
+		tmp->t=t;
+		tmp->dt.p=p;
+		_push_call_stack(SLL_CHAR("@sll_release_object"),SLL_MAX_STACK_OFFSET);
+		SLL_RELEASE(sll_execute_function(dt->fn.del,&tmp,1));
+		_pop_call_stack();
+		SLL_RELEASE(tmp);
+	}
 	for (sll_arg_count_t i=0;i<dt->l;i++){
 		switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
 			case SLL_OBJECT_TYPE_INT:
