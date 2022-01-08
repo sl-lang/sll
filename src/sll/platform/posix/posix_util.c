@@ -36,6 +36,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void){
+	return sysconf(_SC_NPROCESSORS_ONLN);
+}
+
+
+
 __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 	struct timespec ts;
 	clock_gettime(CLOCK_REALTIME,&ts);

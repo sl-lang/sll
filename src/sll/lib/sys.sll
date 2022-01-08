@@ -11,6 +11,7 @@
 
 (= sys_module_type (&:
 	(~ array_type) ARGV
+	(~ int_type) CPU_COUNT
 	(~ string_type) EXECUTABLE
 	(~ string_type) LIBRARY
 	(~ string_type) LIBRARY_EXTENSION
@@ -23,6 +24,8 @@
 
 
 (= ARGV (<- (... "sll:sys_get_args")))
+
+(= CPU_COUNT (<- (... "sll:sys_get_cpu_count")))
 
 (= EXECUTABLE (<- (... "sll:sys_get_executable")))
 
@@ -42,6 +45,7 @@
 
 (= sys (. sys_module_type
 	ARGV
+	CPU_COUNT
 	EXECUTABLE
 	LIBRARY
 	LIBRARY_EXTENSION

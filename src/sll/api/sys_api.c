@@ -113,6 +113,12 @@ __API_FUNC(sys_get_args){
 
 
 
+__API_FUNC(sys_get_cpu_count){
+	return sll_platform_get_cpu_count();
+}
+
+
+
 __API_FUNC(sys_get_executable){
 	if (!_sys_e.l){
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];

@@ -280,6 +280,8 @@
 	(++ i)
 })
 
+(:> sys$CPU_COUNT "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

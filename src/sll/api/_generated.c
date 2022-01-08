@@ -3404,6 +3404,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_args_raw(sll_obj
 
 
 
+__SLL_API_TYPE_sll_api_sys_get_cpu_count sll_api_sys_get_cpu_count(__SLL_API_ARGS_sll_api_sys_get_cpu_count);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_cpu_count_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t out=sll_api_sys_get_cpu_count();
+	return SLL_FROM_INT(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_sys_get_executable sll_api_sys_get_executable(__SLL_API_ARGS_sll_api_sys_get_executable);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_executable_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t out;
@@ -4049,6 +4057,11 @@ static const internal_function_t _ifunc_data_ptr[]={
 		0
 	},
 	{
+		"sll:sys_get_cpu_count",
+		sll_api_sys_get_cpu_count_raw,
+		0
+	},
+	{
 		"sll:sys_get_executable",
 		sll_api_sys_get_executable_raw,
 		0
@@ -4097,5 +4110,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=109;
+const sll_function_index_t _ifunc_size=110;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

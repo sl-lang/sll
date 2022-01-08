@@ -2460,6 +2460,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_sys_get_cpu_count __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_sys_get_cpu_count void
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_get_cpu_count
+ * \group sys-api
+ * \desc Docs!
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_get_cpu_count_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_get_cpu_count:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sys_get_executable void
 #define __SLL_API_ARGS_sll_api_sys_get_executable sll_string_t* out
 /**

@@ -45,6 +45,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void){
+	SYSTEM_INFO si;
+	GetSystemInfo(&si);
+	return si.dwNumberOfProcessors;
+}
+
+
+
 __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 	if (_win_wh==INVALID_HANDLE_VALUE){
 		_win_wh=CreateEventA(NULL,TRUE,FALSE,FALSE);

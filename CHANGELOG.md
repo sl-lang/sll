@@ -7,6 +7,7 @@
 - Array generator operators: `([>)` and `([<)` ([#206])
 - Assembly membership test instructions: `SLL_ASSEMBLY_INSTRUCTION_TYPE_JI` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI` ([#207])
 - Call stack size member in the `sll_vm_config_t` structure
+- CPU count constant in `sys.sll`: `sll_platform_get_cpu_count` and `sys$CPU_COUNT` ([#196])
 - Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
 - File listing example
 - Map generator operators: `({>)` and `({<)` ([#206])
@@ -1358,6 +1359,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#207]: https://github.com/sl-lang/sll/issues/207
 [#206]: https://github.com/sl-lang/sll/issues/206
+[#196]: https://github.com/sl-lang/sll/issues/196
 [#194]: https://github.com/sl-lang/sll/issues/194
 [#191]: https://github.com/sl-lang/sll/issues/191
 [#190]: https://github.com/sl-lang/sll/issues/190

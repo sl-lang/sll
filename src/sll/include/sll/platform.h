@@ -255,6 +255,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 
 /**
  * \flags check_output func
+ * \name sll_platform_get_cpu_count
+ * \group platform
+ * \desc Docs!
+ * \ret sll_size_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_get_current_working_directory
  * \group platform
  * \subgroup platform-path
