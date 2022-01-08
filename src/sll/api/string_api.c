@@ -92,78 +92,11 @@ static void _write_char(sll_char_t c,sll_string_t* o){
 
 
 
-static void* _print_custom_type(void* p,sll_object_type_t t,sll_string_t* o){
-	sll_string_increase(o,3);
-	sll_copy_string(SLL_CHAR("<&:"),o->v+o->l);
-	o->l+=3;
-	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
-	if (!dt->nm.l){
-		_write_int(t,o);
-	}
-	else{
-		sll_string_increase(o,dt->nm.l);
-		sll_copy_data(dt->nm.v,dt->nm.l,o->v+o->l);
-		o->l+=dt->nm.l;
-	}
-	sll_object_t tmp={1};
-	for (sll_arg_count_t i=0;i<dt->l;i++){
-		sll_string_t s=dt->dt[i].nm;
-		sll_string_increase(o,1);
-		o->v[o->l]=' ';
-		o->l++;
-		for (sll_string_length_t j=0;j<s.l;j++){
-			_write_char(s.v[j],o);
-		}
-		sll_string_increase(o,1);
-		o->v[o->l]=' ';
-		o->l++;
-		switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
-			case SLL_OBJECT_TYPE_INT:
-				tmp.dt.i=*((sll_integer_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_integer_t));
-				break;
-			case SLL_OBJECT_TYPE_FLOAT:
-				tmp.dt.f=*((sll_float_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_float_t));
-				break;
-			case SLL_OBJECT_TYPE_CHAR:
-				tmp.dt.c=(sll_char_t)(*((sll_integer_t*)p));
-				p=(void*)(((uint64_t)p)+sizeof(sll_integer_t));
-				break;
-			case SLL_OBJECT_TYPE_STRING:
-				tmp.dt.s=*((sll_string_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_string_t));
-				break;
-			case SLL_OBJECT_TYPE_ARRAY:
-			case SLL_OBJECT_TYPE_MAP_KEYS:
-			case SLL_OBJECT_TYPE_MAP_VALUES:
-				tmp.dt.a=*((sll_array_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
-				break;
-			case SLL_OBJECT_TYPE_MAP:
-				tmp.dt.m=*((sll_map_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_map_t));
-				break;
-			default:
-				p=_print_custom_type(p,SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t),o);
-				continue;
-		}
-		tmp.t=SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t);
-		_object_to_string(&tmp,o);
-	}
-	sll_string_increase(o,1);
-	o->v[o->l]='>';
-	o->l++;
-	return p;
-}
-
-
-
 static void _object_to_string(const sll_object_t* a,sll_string_t* o){
 	if (!a->rc){
-		sll_string_increase(o,19);
+		sll_string_increase(o,17);
 		sll_copy_string(SLL_CHAR("<released object>"),o->v+o->l);
-		o->l+=19;
+		o->l+=17;
 		return;
 	}
 	switch (SLL_OBJECT_GET_TYPE(a)){
@@ -253,11 +186,59 @@ _print_unknown:
 			o->l+=9;
 			return;
 		default:
-			if (!sll_current_runtime_data||SLL_OBJECT_GET_TYPE(a)>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-				goto _print_unknown;
+			{
+				if (!sll_current_runtime_data||SLL_OBJECT_GET_TYPE(a)>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+					goto _print_unknown;
+				}
+				sll_string_increase(o,3);
+				sll_copy_string(SLL_CHAR("<&:"),o->v+o->l);
+				o->l+=3;
+				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
+				if (!dt->nm.l){
+					_write_int(SLL_OBJECT_GET_TYPE(a),o);
+				}
+				else{
+					sll_string_increase(o,dt->nm.l);
+					sll_copy_data(dt->nm.v,dt->nm.l,o->v+o->l);
+					o->l+=dt->nm.l;
+				}
+				sll_object_t tmp;
+				sll_object_field_t* p=a->dt.p;
+				for (sll_arg_count_t i=0;i<dt->l;i++){
+					sll_string_t s=dt->dt[i].nm;
+					sll_string_increase(o,1);
+					o->v[o->l]=' ';
+					o->l++;
+					for (sll_string_length_t j=0;j<s.l;j++){
+						_write_char(s.v[j],o);
+					}
+					sll_string_increase(o,1);
+					o->v[o->l]=' ';
+					o->l++;
+					switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
+						case SLL_OBJECT_TYPE_INT:
+							tmp.dt.i=p->i;
+							break;
+						case SLL_OBJECT_TYPE_FLOAT:
+							tmp.dt.f=p->f;
+							break;
+						case SLL_OBJECT_TYPE_CHAR:
+							tmp.dt.c=p->c;
+							break;
+						default:
+							tmp=*(p->o);
+							break;
+					}
+					tmp.rc=1;
+					tmp.t=SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t);
+					_object_to_string(&tmp,o);
+					p++;
+				}
+				sll_string_increase(o,1);
+				o->v[o->l]='>';
+				o->l++;
+				return;
 			}
-			_print_custom_type(a->dt.p,SLL_OBJECT_GET_TYPE(a),o);
-			return;
 	}
 	SLL_UNREACHABLE();
 }

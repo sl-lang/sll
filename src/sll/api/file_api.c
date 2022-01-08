@@ -114,6 +114,15 @@ __API_FUNC(file_flush){
 
 
 
+__API_FUNC(file_inc_handle){
+	if (a<0||a>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+a))){
+		return;
+	}
+	(*(_file_fl+a))->rc++;
+}
+
+
+
 __API_FUNC(file_open){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return -1;

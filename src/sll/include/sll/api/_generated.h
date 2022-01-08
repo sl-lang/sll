@@ -267,6 +267,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_file_inc_handle void
+#define __SLL_API_ARGS_sll_api_file_inc_handle sll_integer_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_file_inc_handle
+ * \group file-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_file_inc_handle_raw
+ * \group raw-api
+ * \subgroup raw-api-file-api
+ * \desc Wrapper function for :sll_api_file_inc_handle:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_open __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_file_open sll_string_t* a,sll_integer_t b
 /**

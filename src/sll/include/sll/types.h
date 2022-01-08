@@ -560,6 +560,15 @@ typedef struct __SLL_MAP{
 
 
 
+typedef struct __SLL_OBJECT_FIELD{
+	sll_integer_t i;
+	sll_float_t f;
+	sll_char_t c;
+	struct __SLL_OBJECT* o;
+} sll_object_field_t;
+
+
+
 typedef union __SLL_OBJECT_DATA{
 	sll_integer_t i;
 	sll_float_t f;
@@ -567,7 +576,7 @@ typedef union __SLL_OBJECT_DATA{
 	sll_string_t s;
 	sll_array_t a;
 	sll_map_t m;
-	void* p;
+	sll_object_field_t* p;
 } sll_object_data_t;
 
 
@@ -617,7 +626,6 @@ typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
 
 typedef struct __SLL_OBJECT_TYPE_DATA{
 	const sll_string_t nm;
-	sll_size_t sz;
 	sll_arg_count_t l;
 	sll_object_type_data_functions_t fn;
 	sll_object_type_data_entry_t dt[];

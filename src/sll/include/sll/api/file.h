@@ -49,6 +49,18 @@ __API_FUNC_DECL(file_flush);
 
 
 /**
+ * \flags api func
+ * \name sll_api_file_inc_handle
+ * \group file-api
+ * \desc Docs!
+ * \arg I
+ * \ret V
+ */
+__API_FUNC_DECL(file_inc_handle);
+
+
+
+/**
  * \flags api func optimizable
  * \name sll_api_file_open
  * \group file-api

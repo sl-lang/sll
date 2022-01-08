@@ -368,6 +368,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_flush_raw(sll_objec
 
 
 
+__SLL_API_TYPE_sll_api_file_inc_handle sll_api_file_inc_handle(__SLL_API_ARGS_sll_api_file_inc_handle);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_inc_handle_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_file_inc_handle(a->dt.i);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
 __SLL_API_TYPE_sll_api_file_open sll_api_file_open(__SLL_API_ARGS_sll_api_file_open);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_open_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -3607,6 +3629,11 @@ static const internal_function_t _ifunc_data_ptr[]={
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
+		"sll:file_inc_handle",
+		sll_api_file_inc_handle_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
+	},
+	{
 		"sll:file_open",
 		sll_api_file_open_raw,
 		0
@@ -4110,5 +4137,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=110;
+const sll_function_index_t _ifunc_size=111;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

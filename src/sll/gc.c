@@ -53,7 +53,8 @@ static const sll_char_t* _get_type_string(sll_object_t* o){
 
 
 
-static void _print_gc_data(sll_object_t* o,object_debug_data_t* dt){
+static void _print_gc_data(sll_object_t* o){
+	object_debug_data_t* dt=(object_debug_data_t*)(o->_dbg);
 	sll_string_t str;
 	sll_api_string_convert(&o,1,&str);
 	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),_get_type_string(o),o->rc,str.v,dt->all);
@@ -67,51 +68,6 @@ static void _print_gc_data(sll_object_t* o,object_debug_data_t* dt){
 		object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
 		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),t_dt->fp,t_dt->ln,t_dt->fn);
 	}
-}
-
-
-
-static void* _release_custom_type(void* p,sll_object_type_t t){
-	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+t-SLL_MAX_OBJECT_TYPE-1);
-	if (dt->fn.del){
-		sll_object_t* tmp=SLL_CREATE();
-		SLL_ACQUIRE(tmp);
-		tmp->t=t;
-		tmp->dt.p=p;
-		_push_call_stack(SLL_CHAR("@sll_release_object"),SLL_MAX_STACK_OFFSET);
-		SLL_RELEASE(sll_execute_function(dt->fn.del,&tmp,1));
-		_pop_call_stack();
-		SLL_RELEASE(tmp);
-	}
-	for (sll_arg_count_t i=0;i<dt->l;i++){
-		switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
-			case SLL_OBJECT_TYPE_INT:
-			case SLL_OBJECT_TYPE_CHAR:
-				p=(void*)(((uint64_t)p)+sizeof(sll_integer_t));
-				break;
-			case SLL_OBJECT_TYPE_FLOAT:
-				p=(void*)(((uint64_t)p)+sizeof(sll_float_t));
-				break;
-			case SLL_OBJECT_TYPE_STRING:
-				sll_free_string((sll_string_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_string_t));
-				break;
-			case SLL_OBJECT_TYPE_ARRAY:
-			case SLL_OBJECT_TYPE_MAP_KEYS:
-			case SLL_OBJECT_TYPE_MAP_VALUES:
-				sll_free_array((sll_array_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_array_t));
-				break;
-			case SLL_OBJECT_TYPE_MAP:
-				sll_free_map((sll_map_t*)p);
-				p=(void*)(((uint64_t)p)+sizeof(sll_map_t));
-				break;
-			default:
-				p=_release_custom_type(p,SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t));
-				break;
-		}
-	}
-	return p;
 }
 
 
@@ -233,7 +189,6 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 	SLL_ASSERT(o->rc);
 	o->rc--;
 	if (!o->rc){
-		sll_remove_object_debug_data(o);
 		if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_STRING){
 			if (!(o->t&OBJECT_EXTERNAL_STRING)){
 				sll_free_string(&(o->dt.s));
@@ -247,10 +202,28 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 		}
 		else if (SLL_OBJECT_GET_TYPE(o)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(o)<SLL_OBJECT_TYPE_RESERVED0){
 			if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(o)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-				_release_custom_type(o->dt.p,SLL_OBJECT_GET_TYPE(o));
+				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
+				if (dt->fn.del){
+					o->rc++;
+					_push_call_stack(SLL_CHAR("@sll_release_object"),SLL_MAX_STACK_OFFSET);
+					SLL_RELEASE(sll_execute_function(dt->fn.del,&o,1));
+					_pop_call_stack();
+					o->rc--;
+					if (o->rc){
+						return;
+					}
+				}
+				sll_object_field_t* p=o->dt.p;
+				for (sll_arg_count_t i=0;i<dt->l;i++){
+					if (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)>SLL_OBJECT_TYPE_CHAR){
+						SLL_RELEASE(p->o);
+					}
+					p++;
+				}
 			}
 			sll_deallocate(o->dt.p);
 		}
+		sll_remove_object_debug_data(o);
 		o->t=SLL_OBJECT_TYPE_INT;
 		o->dt.i=0;
 		GC_SET_NEXT_OBJECT(o,_gc_next_object);
@@ -301,7 +274,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 					else{
 						sll_file_write_string(sll_stderr,SLL_CHAR("<unknown>: "));
 					}
-					_print_gc_data(c,dt);
+					_print_gc_data(c);
 				}
 				else{
 					sll_string_t str;
@@ -328,7 +301,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 				}
 				SLL_ASSERT(k->dt->_dbg);
 				sll_file_write_format(sll_stderr,SLL_CHAR("%s: %u (<static>): "),k->fp,k->ln);
-				_print_gc_data(k->dt,k->dt->_dbg);
+				_print_gc_data(k->dt);
 			}
 			else{
 				sll_remove_object_debug_data(k->dt);

@@ -4,6 +4,12 @@
 
 
 (= file_type (&:
+	(,,, dt {
+		(<- (... "sll:file_inc_handle") dt$_handle)
+	}) @@copy@@
+	(,,, dt {
+		(<- (... "sll:file_close") dt$_handle)
+	}) @@delete@@
 	(~ string_type) name
 	(~ int_type) flags
 	(~ int_type) _handle

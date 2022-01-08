@@ -144,13 +144,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	SLL_RELEASE(o);
 	sll_return_code_t rc=(sll_return_code_t)(rc_o->dt.i);
 	SLL_RELEASE(rc_o);
+	sll_current_runtime_data=NULL;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		SLL_RELEASE(*(_vm_var_data+i));
 	}
 	sll_platform_free_page((void*)(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-cfg->c_st_sz*sizeof(sll_call_stack_frame_t)),ptr_sz);
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
-	sll_current_runtime_data=NULL;
 	return rc;
 }
 
