@@ -44,7 +44,7 @@ for f in os.listdir("src/sll/lib"):
 		wf.write(rf.read())
 util.log("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
-if (subprocess.run(["build/sll","-C","-c","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+if (subprocess.run(["build/sll","-c","-e","-R"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
@@ -65,7 +65,7 @@ if ("--extension" in sys.argv):
 			wf.write(rf.read())
 	util.log("Compiling Extension Modules...")
 	fl=list(os.listdir("build/lib_ext"))
-	if (subprocess.run(["build/sll","-C","-c","-e","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+	if (subprocess.run(["build/sll","-c","-e","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:
@@ -87,6 +87,6 @@ if ("--run" in sys.argv):
 			wf.write(rf.read())
 	a=(["examples/_internal_test_ext_debug/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	util.log(f"Running '{a[0]}...")
-	subprocess.run(["build/sll","-h","-C"])
-	if (subprocess.run(["build/sll","-c","-C","-v","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","-C","-v","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","build/test.slc","-C","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/sll","build/test2.sla","-C","-v","-P"]).returncode!=0):
+	subprocess.run(["build/sll","-h"])
+	if (subprocess.run(["build/sll","-c","-v","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","-v","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/sll","build/test2.sla","-v","-P"]).returncode!=0):
 		sys.exit(1)
