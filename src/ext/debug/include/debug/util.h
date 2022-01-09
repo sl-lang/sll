@@ -15,10 +15,6 @@ sll_object_t* ii_to_loc(sll_instruction_index_t ii);
 
 
 
-sll_object_t* debug_call_function(sll_object_t*const* al,sll_arg_count_t all);
-
-
-
 sll_object_t* debug_init(sll_object_t*const* al,sll_arg_count_t all);
 
 

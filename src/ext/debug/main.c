@@ -22,7 +22,6 @@ EXPORT sll_bool_t __sll_load(sll_version_t v){
 		return 0;
 	}
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug__init"),debug_init,0);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_call_function"),debug_call_function,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_call_stack"),debug_get_call_stack,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_instruction_count"),debug_get_instruction_count,0);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext:debug_get_instruction_index"),debug_get_instruction_index,0);

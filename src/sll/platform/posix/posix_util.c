@@ -2,11 +2,14 @@
 #include <sll/common.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/util.h>
+#include <dlfcn.h>
+#include <errno.h>
 #include <signal.h>
+#include <sys/random.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-#include <dlfcn.h>
 
 
 
@@ -38,6 +41,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void){
 	return sysconf(_SC_NPROCESSORS_ONLN);
+}
+
+
+
+__SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
+	while (l){
+		ssize_t n=getrandom(bf,l,0);
+		if (n==-1){
+			if (errno==EINTR){
+				continue;
+			}
+			sll_set_memory(bf,l,0);
+			return;
+		}
+		l-=n;
+		bf=(void*)(((uint64_t)bf)+n);
+	}
 }
 
 

@@ -380,9 +380,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-compiled-object"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_GENERATE_COMPILED_OBJECT;
 		}
-		else if ((*e=='-'&&*(e+1)=='C'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--use-colors"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_USE_COLORS;
-		}
 		else if ((*e=='-'&&*(e+1)=='D'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--string-debug"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_STRIP_DEBUG;
 		}
@@ -488,9 +485,6 @@ _read_file_argument:
 			*(fp+fpl-1)=i;
 		}
 	}
-	if (fl&CLI_FLAG_USE_COLORS){
-		sll_platform_enable_console_color();
-	}
 	if (fl&CLI_FLAG_VERBOSE){
 		sll_set_log_default(SLL_LOG_FLAG_SHOW,1);
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
@@ -533,9 +527,6 @@ _read_file_argument:
 		}
 		if (fl&CLI_FLAG_STRIP_DEBUG){
 			SLL_LOG(SLL_CHAR("  Debug data stripping"));
-		}
-		if (fl&CLI_FLAG_USE_COLORS){
-			SLL_LOG(SLL_CHAR("  Ansi escape codes"));
 		}
 		SLL_LOG(SLL_CHAR("Include path:"));
 		sll_string_length_t i=0;

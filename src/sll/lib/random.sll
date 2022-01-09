@@ -1,0 +1,78 @@
+(# int_type func_type char_type string_type)
+(--- "types.sll")
+
+
+
+(= random_module_type (&:
+	(~ func_type) get_int
+	(~ func_type) get_float
+	(~ func_type) get_char
+	(~ func_type) get_string
+))
+
+
+
+(= get_int (,,, mn mx {
+	(= mn (:: mn int_type))
+	(= mx (:: mx int_type))
+	(@@ (<- (... "sll:random_get_int")
+		mn
+		(?: (=== mn mx) (+ mx 1) mx)
+	))
+}))
+
+(= get_float (,,, mn mx {
+	(= mn (:: mn float_type))
+	(= mx (:: mx float_type))
+	(@@ (<- (... "sll:random_get_float")
+		mn
+		(?: (=== mn mx) (+ mx 1) mx)
+	))
+}))
+
+(= get_char (,,, mn mx {
+	(= mn (:: mn char_type))
+	(= mx (:: mx char_type))
+	(? (=== mn mx) {
+		(= mn 0)
+		(= mx 255)
+	})
+	(@@ (:: (<- (... "sll:random_get_int")
+		mn
+		mx
+	) char_type))
+}))
+
+(= get_string (,,, l mn mx {
+	(= l (:: l int_type))
+	(? (< l 1) {
+		(@@ "")
+	})
+	(= mn (:: mn char_type))
+	(= mx (:: mx char_type))
+	(? (< mx mn) {
+		d
+		(= mx 255)
+	} (=== mn mx) {
+		(? mn {
+			(@@ (* (:: mn string_type) l))
+		} {
+			(= mx 255)
+		})
+	})
+	(@@ (<- (... "sll:random_get_string")
+		l
+		mn
+		mx
+	))
+}))
+
+
+
+(= random (. random_module_type
+	get_int
+	get_float
+	get_char
+	get_string
+))
+(## random)

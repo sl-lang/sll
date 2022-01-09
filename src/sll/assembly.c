@@ -616,6 +616,7 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
+		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
@@ -628,7 +629,15 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 				return o;
 			}
 		case SLL_NODE_TYPE_MAP:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_map_length_t l=o->dt.ml;
+				o++;
+				while (l){
+					l--;
+					o=_mark_loop_delete(o,g_dt,v_st,sc);
+				}
+				return o;
+			}
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
 				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
@@ -662,8 +671,6 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 				}
 				return o;
 			}
-		case SLL_NODE_TYPE_INLINE_FUNC:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:

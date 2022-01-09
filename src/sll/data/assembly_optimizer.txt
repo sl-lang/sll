@@ -42,5 +42,5 @@
 
 0=ret_int, 0.i=+0 -> 0=ret_zero
 
-0=del, 1=store_pop, 0.v=1.v -> 0=nop, 1=pop, $1
-0=del, 1=new_decl -> 0=nop, 1=nop, $2
+0=del, 1=store_pop, 0.v=1.v -> 0=del, 1=pop
+0=pop, 1=new_decl -> 0=nop, 1=nop, $2

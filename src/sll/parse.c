@@ -129,14 +129,14 @@ static sll_identifier_index_t _get_var_index(sll_compilation_data_t* c_dt,const 
 		if (!(fl&GET_VAR_INDEX_FLAG_FUNC)){
 			for (sll_identifier_list_length_t i=0;i<k->l;i++){
 				sll_identifier_t* si=k->dt+i;
-				if (si->sc==SLL_MAX_SCOPE||!sll_string_equal(c_dt->st.dt+si->i,str)){
+				if (si->sc==SLL_MAX_SCOPE||l_sc->l_sc<si->sc||!sll_string_equal(c_dt->st.dt+si->i,str)){
 					continue;
 				}
 				if (si->sc==l_sc->l_sc){
 					o=SLL_CREATE_IDENTIFIER(i,str->l-1);
 					goto _check_new_var;
 				}
-				else if ((l_sc->m[si->sc>>6]&(1ull<<(si->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||si->sc>mx_sc)){
+				else if ((mx_sc==SLL_MAX_SCOPE||si->sc>mx_sc)&&(l_sc->m[si->sc>>6]&(1ull<<(si->sc&0x3f)))){
 					mx_sc=si->sc;
 					mx_i=SLL_CREATE_IDENTIFIER(i,str->l-1);
 				}
@@ -146,7 +146,8 @@ static sll_identifier_index_t _get_var_index(sll_compilation_data_t* c_dt,const 
 				goto _check_new_var;
 			}
 			if (fl&GET_VAR_INDEX_FLAG_UNKNOWN){
-				goto _error;
+				sll_free_string(str);
+				return SLL_MAX_VARIABLE_INDEX;
 			}
 		}
 		k->l++;
@@ -167,14 +168,14 @@ static sll_identifier_index_t _get_var_index(sll_compilation_data_t* c_dt,const 
 		for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 			sll_identifier_t* k=c_dt->idt.il+i;
 			sll_string_t* s=c_dt->st.dt+k->i;
-			if (k->sc==SLL_MAX_SCOPE||!sll_string_equal(s,str)){
+			if (k->sc==SLL_MAX_SCOPE||l_sc->l_sc<k->sc||!sll_string_equal(s,str)){
 				continue;
 			}
 			if (k->sc==l_sc->l_sc){
 				o=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 				goto _check_new_var;
 			}
-			else if ((l_sc->m[k->sc>>6]&(1ull<<(k->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||k->sc>mx_sc)){
+			else if ((mx_sc==SLL_MAX_SCOPE||k->sc>mx_sc)&&(l_sc->m[k->sc>>6]&(1ull<<(k->sc&0x3f)))){
 				mx_sc=k->sc;
 				mx_i=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 			}
@@ -184,7 +185,8 @@ static sll_identifier_index_t _get_var_index(sll_compilation_data_t* c_dt,const 
 			goto _check_new_var;
 		}
 		if (fl&GET_VAR_INDEX_FLAG_UNKNOWN){
-			goto _error;
+			sll_free_string(str);
+			return SLL_MAX_VARIABLE_INDEX;
 		}
 	}
 	c_dt->idt.ill++;
@@ -206,9 +208,6 @@ _check_new_var:;
 		}
 	}
 	return o;
-_error:
-	sll_free_string(str);
-	return SLL_MAX_VARIABLE_INDEX;
 }
 
 
@@ -447,15 +446,19 @@ static void _read_object_internal(sll_compilation_data_t* c_dt,sll_read_char_t c
 				}
 				else if (*str=='['&&*(str+1)=='>'){
 					o->t=SLL_NODE_TYPE_FOR_ARRAY;
+					o->dt.l.sc=c_dt->_n_sc_id;
 				}
 				else if (*str=='['&&*(str+1)=='<'){
 					o->t=SLL_NODE_TYPE_WHILE_ARRAY;
+					o->dt.l.sc=c_dt->_n_sc_id;
 				}
 				else if (*str=='{'&&*(str+1)=='>'){
 					o->t=SLL_NODE_TYPE_FOR_MAP;
+					o->dt.l.sc=c_dt->_n_sc_id;
 				}
 				else if (*str=='{'&&*(str+1)=='<'){
 					o->t=SLL_NODE_TYPE_WHILE_MAP;
+					o->dt.l.sc=c_dt->_n_sc_id;
 				}
 				else if (*str=='%'&&*(str+1)=='%'){
 					o->t=SLL_NODE_TYPE_REF;
@@ -856,6 +859,7 @@ _parse_identifier:
 				else{
 					sll_string_calculate_checksum(&str);
 					arg->t=SLL_NODE_TYPE_IDENTIFIER;
+					sll_char_t tmp[256];sll_copy_data(str.v,str.l+1,tmp);
 					arg->dt.id=_get_var_index(c_dt,e_c_dt,l_sc,&str,arg,((!o||o->t!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->t==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->t==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0)));
 					if (arg->dt.i==SLL_MAX_VARIABLE_INDEX){
 						arg->t=SLL_NODE_TYPE_INT;

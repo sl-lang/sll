@@ -1,5 +1,5 @@
-(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process base64 math int mime)
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll")
+(# time file sys path json string hash int_type float_type string_type array_type map_type map_key_type map_value_type sort log date process base64 math int mime random)
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -271,7 +271,7 @@
 
 (= str (<- string$upper_case "The quick brown fox jumps over the dog"))
 (-> (= i 0) (< i 26) {
-	(= ch (:: (+ i 65) char_type))
+	(= ch (:: (+ i 65) 2))
 	(? (|: str ch) {
 		(:> "Contains letter '" ch "'\n")
 	} {
@@ -299,6 +299,11 @@
 (= test (. extra_func_type))
 (= test-2 (: test))
 (:> test-2 "\n")
+
+(-> (= i 0) (< i 10) {
+	(:> [(<- random$get_string 5) (<- random$get_float) (<- random$get_int 0 100) (<- random$get_char 65 90)] "\n")
+	(++ i)
+})
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

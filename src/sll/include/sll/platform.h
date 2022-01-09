@@ -414,6 +414,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(cons
 
 /**
  * \flags func
+ * \name sll_platform_random
+ * \group platform
+ * \desc Docs!
+ * \arg void* bf
+ * \arg sll_size_t l
+ */
+__SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l);
+
+
+
+/**
+ * \flags func
  * \name sll_platform_reset_console
  * \group platform
  * \subgroup platform-console

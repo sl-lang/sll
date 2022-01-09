@@ -1900,6 +1900,85 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_random_get_float __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_random_get_float sll_float_t a,sll_float_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_random_get_float
+ * \group random-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \arg sll_float_t b -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_random_get_float_raw
+ * \group raw-api
+ * \subgroup raw-api-random-api
+ * \desc Wrapper function for :sll_api_random_get_float:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Random
+ * \group raw-api
+ * \subgroup raw-api-random-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_random_get_int __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_random_get_int sll_integer_t a,sll_integer_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_random_get_int
+ * \group random-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_random_get_int_raw
+ * \group raw-api
+ * \subgroup raw-api-random-api
+ * \desc Wrapper function for :sll_api_random_get_int:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_random_get_string void
+#define __SLL_API_ARGS_sll_api_random_get_string sll_integer_t a,sll_char_t b,sll_char_t c,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_random_get_string
+ * \group random-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_char_t b -> 
+ * \arg sll_char_t c -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_random_get_string_raw
+ * \group raw-api
+ * \subgroup raw-api-random-api
+ * \desc Wrapper function for :sll_api_random_get_string:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sort_quicksort __SLL_CHECK_OUTPUT sll_object_t*
 #define __SLL_API_ARGS_sll_api_sort_quicksort sll_array_t* a,sll_bool_t b,sll_bool_t c,sll_integer_t d
 /**

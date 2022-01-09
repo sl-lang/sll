@@ -32,7 +32,6 @@
 	(~ type_type) call_stack_type
 	(~ type_type) location_type
 	(~ type_type) vm_config_type
-	(~ func_type) call_function
 	(~ func_type) get_call_stack
 	(~ func_type) get_instruction_count
 	(~ func_type) get_instruction_index
@@ -54,8 +53,6 @@
 
 
 
-(= call_function (... "sll_ext:debug_call_function"))
-
 (= get_call_stack (... "sll_ext:debug_get_call_stack"))
 
 (= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
@@ -76,7 +73,6 @@
 	call_stack_type
 	location_type
 	vm_config_type
-	call_function
 	get_call_stack
 	get_instruction_count
 	get_instruction_index

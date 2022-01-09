@@ -10,6 +10,11 @@
 - CPU count constant in `sys.sll`: `sll_platform_get_cpu_count` and `sys$CPU_COUNT` ([#196])
 - Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
 - File listing example
+- Implemented `random.sll` module and `sll_platform_random` ([#208])
+- Implemented `sll_api_random_get_char` and `random$get_char` ([#211])
+- Implemented `sll_api_random_get_float` and `random$get_float` ([#210])
+- Implemented `sll_api_random_get_int` and `random$get_int` ([#209])
+- Implemented `sll_api_random_get_string` and `random$get_string` ([#212])
 - Map generator operators: `({>)` and `({<)` ([#206])
 - Membership test functions: `sll_string_includes`, `sll_string_includes_char`, `sll_array_includes` and `sll_map_includes` ([#207])
 - Membership test operator: `(|:)` ([#207])
@@ -32,6 +37,7 @@
 ### Removed
 
 - Binary heap API
+- CLI option to enable color (`-C`)
 - End/Exit (`(@@@)`) node type (replaced by a return from module-level)
 - Leftover URL-related functions and type definitions
 - Macro constant: `SLL_CALL_STACK_SIZE`
@@ -1359,6 +1365,11 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#212]: https://github.com/sl-lang/sll/issues/212
+[#211]: https://github.com/sl-lang/sll/issues/211
+[#210]: https://github.com/sl-lang/sll/issues/210
+[#209]: https://github.com/sl-lang/sll/issues/209
+[#208]: https://github.com/sl-lang/sll/issues/208
 [#207]: https://github.com/sl-lang/sll/issues/207
 [#206]: https://github.com/sl-lang/sll/issues/206
 [#205]: https://github.com/sl-lang/sll/issues/205

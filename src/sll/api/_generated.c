@@ -2518,6 +2518,132 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_split_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_random_get_float sll_api_random_get_float(__SLL_API_ARGS_sll_api_random_get_float);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_random_get_float_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_float_t out=sll_api_random_get_float(a->dt.f,b->dt.f);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_FROM_FLOAT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_random_get_int sll_api_random_get_int(__SLL_API_ARGS_sll_api_random_get_int);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_random_get_int_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_integer_t out=sll_api_random_get_int(a->dt.i,b->dt.i);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_FROM_INT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_random_get_string sll_api_random_get_string(__SLL_API_ARGS_sll_api_random_get_string);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_random_get_string_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_CHAR(0);
+	}
+	sll_object_t* c=NULL;
+	if (all>2){
+		c=*(al+2);
+		if (SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_CHAR){
+			SLL_ACQUIRE(c);
+		}
+		else{
+			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
+		}
+	}
+	else{
+		c=SLL_ACQUIRE_STATIC_CHAR(0);
+	}
+	sll_string_t out;
+	sll_api_random_get_string(a->dt.i,b->dt.c,c->dt.c,&out);
+	SLL_RELEASE(c);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_sort_quicksort sll_api_sort_quicksort(__SLL_API_ARGS_sll_api_sort_quicksort);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -3964,6 +4090,21 @@ static const internal_function_t _ifunc_data_ptr[]={
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
+		"sll:random_get_float",
+		sll_api_random_get_float_raw,
+		0
+	},
+	{
+		"sll:random_get_int",
+		sll_api_random_get_int_raw,
+		0
+	},
+	{
+		"sll:random_get_string",
+		sll_api_random_get_string_raw,
+		0
+	},
+	{
 		"sll:sort_quicksort",
 		sll_api_sort_quicksort_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
@@ -4137,5 +4278,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=111;
+const sll_function_index_t _ifunc_size=114;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);
