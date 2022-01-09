@@ -300,11 +300,11 @@
 ))
 
 (= test (. extra_func_type))
-(= test-2 (: test))
+(= test-2 (: (: test)))
 (:> test-2 "\n")
 
 (-> (= i 0) (< i 10) {
-	(:> [(<- random$get_string 5) (<- random$get_float) (<- random$get_int 0 100) (<- random$get_char 65 90)] "\n")
+	(:> [(<- random$get_int 0 100) (<- random$get_float) (<- random$get_char 65 90) (<- random$get_string 5)] "\n")
 	(++ i)
 })
 
