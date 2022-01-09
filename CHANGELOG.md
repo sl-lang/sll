@@ -1,6 +1,6 @@
 # The Sl Programing Language Change Log
 
-## [0.6.37] - Ongiong
+## [0.6.37] - Ongoing
 
 ### Added
 
