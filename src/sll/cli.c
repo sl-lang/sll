@@ -490,7 +490,7 @@ _read_file_argument:
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
 	}
 	if (fl&CLI_FLAG_VERSION){
-		SLL_LOG(SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")"));
+		sll_file_write_string(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")"));
 		sll_deinit();
 		return 0;
 	}
