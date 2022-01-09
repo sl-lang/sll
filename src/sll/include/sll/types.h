@@ -415,20 +415,6 @@ typedef struct __SLL_OBJECT_TYPE_FIELD{
 
 
 
-typedef struct __SLL_OBJECT_TYPE_INITIALIZER{
-	sll_arg_count_t l;
-	sll_object_type_field_t dt[];
-} sll_object_type_initializer_t;
-
-
-
-typedef struct __SLL_OBJECT_TYPE_INIT_TABLE{
-	sll_object_type_initializer_t** dt;
-	sll_object_type_t l;
-} sll_object_type_initializer_table_t;
-
-
-
 typedef struct __SLL_FILE_PATH_TABEL{
 	sll_string_index_t* dt;
 	sll_string_index_t l;
@@ -447,14 +433,12 @@ typedef struct __SLL_COMPILATION_STACK_DATA{
 
 
 typedef struct __SLL_COMPILATION_DATA{
-	sll_file_t* rf;
 	sll_time_t tm;
 	sll_node_t* h;
 	sll_identifier_table_t idt;
 	sll_export_table_t et;
 	sll_function_table_t ft;
 	sll_string_table_t st;
-	sll_object_type_initializer_table_t ot_it;
 	sll_file_path_table_t fpt;
 	sll_compilation_stack_data_t _s;
 	sll_scope_t _n_sc_id;
@@ -539,7 +523,6 @@ typedef struct __SLL_ASSEMBLY_DATA{
 	sll_variable_index_t vc;
 	sll_assembly_function_table_t ft;
 	sll_string_table_t st;
-	sll_object_type_initializer_table_t ot_it;
 	sll_debug_data_t dbg;
 	sll_assembly_stack_data_t _s;
 } sll_assembly_data_t;
@@ -613,6 +596,7 @@ typedef struct __SLL_OBJECT_TYPE_DATA_FUNCTIONS{
 	sll_integer_t copy;
 	sll_integer_t del;
 	sll_integer_t init;
+	sll_integer_t str;
 } sll_object_type_data_functions_t;
 
 

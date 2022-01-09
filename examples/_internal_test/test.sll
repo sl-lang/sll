@@ -260,7 +260,7 @@
 (:> math "\n")
 (:> (<- math$combinations 5 3) "\n")
 
-(:> (<- int$to_bin -4657) "\n" (<- int$to_oct -4657) "\n" (<- int$to_hex -4657) "\n")
+(:> (<- int$to_bin -4657) "\n" (<- int$to_oct -4657) "\n" (<- int$to_hex -4657) "\n" (<- int$to_dec -4657) "\n")
 
 (:> (<- mime$get_type "file.css") ", " (<- mime$get_ext "application/javascript") "\n")
 
@@ -290,6 +290,9 @@
 		(= a$cnt (+ a$cnt 1))
 		(:> "[copy: \"" a "\"]")
 	}) @@copy@@
+	(,,, a {
+		(@@ (<- string$format "<counter=%u>" a$cnt))
+	}) @@string@@
 	(,,, a {
 		(:> "[delete: \"" a "\"]")
 	}) @@delete@@

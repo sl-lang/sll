@@ -73,19 +73,18 @@
 #define SLL_NODE_TYPE_CAST 52
 #define SLL_NODE_TYPE_TYPEOF 53
 #define SLL_NODE_TYPE_DECL 54
-#define SLL_NODE_TYPE_DECL_COPY 55
-#define SLL_NODE_TYPE_NEW 56
-#define SLL_NODE_TYPE_FOR_ARRAY 57
-#define SLL_NODE_TYPE_WHILE_ARRAY 58
-#define SLL_NODE_TYPE_FOR_MAP 59
-#define SLL_NODE_TYPE_WHILE_MAP 60
-#define SLL_NODE_TYPE_BREAK 61
-#define SLL_NODE_TYPE_CONTINUE 62
-#define SLL_NODE_TYPE_REF 63
-#define SLL_NODE_TYPE_RETURN 64
-#define SLL_NODE_TYPE_COMMA 65
-#define SLL_NODE_TYPE_OPERATION_LIST 66
-#define SLL_NODE_TYPE_DBG 67
+#define SLL_NODE_TYPE_NEW 55
+#define SLL_NODE_TYPE_FOR_ARRAY 56
+#define SLL_NODE_TYPE_WHILE_ARRAY 57
+#define SLL_NODE_TYPE_FOR_MAP 58
+#define SLL_NODE_TYPE_WHILE_MAP 59
+#define SLL_NODE_TYPE_BREAK 60
+#define SLL_NODE_TYPE_CONTINUE 61
+#define SLL_NODE_TYPE_REF 62
+#define SLL_NODE_TYPE_RETURN 63
+#define SLL_NODE_TYPE_COMMA 64
+#define SLL_NODE_TYPE_OPERATION_LIST 65
+#define SLL_NODE_TYPE_DBG 66
 #define SLL_NODE_TYPE_RESERVED0 253
 #define SLL_NODE_TYPE_RESERVED1 254
 #define SLL_NODE_TYPE_NOP 255
@@ -93,7 +92,7 @@
 #define SLL_IS_OBJECT_TYPE_NOT_TYPE(o) ((o)->t>SLL_NODE_TYPE_FUNCTION_ID)
 #define SLL_IS_OBJECT_TYPE_IF(o) ((o)->t>=SLL_NODE_TYPE_IF&&(o)->t<=SLL_NODE_TYPE_SWITCH)
 
-#define SLL_INIT_COMPILATION_DATA_STRUCT {NULL,0,NULL,{.il=NULL,.ill=0},{NULL,0},{NULL,0},{NULL,0},{NULL,0},{NULL,0},{NULL,NULL,0,NULL,0},0}
+#define SLL_INIT_COMPILATION_DATA_STRUCT {0,NULL,{.il=NULL,.ill=0},{NULL,0},{NULL,0},{NULL,0},{NULL,0},{NULL,NULL,0,NULL,0},0}
 
 
 
@@ -127,10 +126,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_
  * \group node
  * \desc Docs!
  * \arg const sll_char_t* fp
- * \arg sll_file_t* rf
  * \arg sll_compilation_data_t* o
  */
-__SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* rf,sll_compilation_data_t* o);
+__SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilation_data_t* o);
 
 
 
@@ -162,11 +160,12 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
  * \name sll_parse_all_nodes
  * \group node
  * \desc Docs!
+ * \arg sll_file_t* rf
  * \arg sll_compilation_data_t* c_dt
  * \arg sll_internal_function_table_t* i_ft
  * \arg sll_import_resolver_t il
  */
-__SLL_EXTERNAL void sll_parse_all_nodes(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
+__SLL_EXTERNAL void sll_parse_all_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
 
 
 

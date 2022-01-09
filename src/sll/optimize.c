@@ -121,7 +121,6 @@ static sll_node_t* _remove_single_object(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
@@ -209,7 +208,6 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
@@ -545,7 +543,6 @@ static const sll_node_t* _mark_loop_vars(const sll_node_t* o,optimizer_data_t* o
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
@@ -739,7 +736,6 @@ static sll_node_t* _check_remove(sll_node_t* o,sll_node_t* p,optimizer_data_t* o
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			DECREASE_PARENT(p);
 			o->t=SLL_NODE_TYPE_NOP;
 			return o+1;
@@ -2134,18 +2130,8 @@ _unknown_cast:
 					sll_deallocate(a);
 					return o;
 				}
-				r->t=SLL_NODE_TYPE_COMMA;
-				_shift_nodes(o,o_dt->c_dt,1);
-				o->t=SLL_NODE_TYPE_DECL_COPY;
-				o->dt.dc.t=sll_add_initializer(&(o_dt->c_dt->ot_it),(const sll_object_type_field_t*)a,r->dt.ac>>1);
-				o->dt.dc.nm=r->dt.d.nm;
-				r->dt.ac++;
-				sll_deallocate(a);
-				o=r;
-				goto _optimize_operation_list_comma;
+				SLL_UNIMPLEMENTED();
 			}
-		case SLL_NODE_TYPE_DECL_COPY:
-			return o+1;
 		case SLL_NODE_TYPE_NEW:
 			{
 				if (!(fl&OPTIMIZER_FLAG_ARGUMENT)){
@@ -2373,7 +2359,6 @@ static sll_node_t* _remap_indexes_merge_print(sll_node_t* o,sll_node_t* p,optimi
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{

@@ -3,6 +3,12 @@
 
 
 
+(= FLAG_READ 1)
+(= FLAG_WRITE 2)
+(= FLAG_APPEND 4)
+
+
+
 (= file_type (&:
 	(,,, dt {
 		(<- (... "sll:file_inc_handle") dt$_handle)
@@ -10,6 +16,13 @@
 	(,,, dt {
 		(<- (... "sll:file_close") dt$_handle)
 	}) @@delete@@
+	(,,, dt {
+		(= m "")
+		(? (& dt$flags FLAG_APPEND) (= m (+ m "A")))
+		(? (& dt$flags FLAG_READ) (= m (+ m "R")))
+		(? (& dt$flags FLAG_WRITE) (= m (+ m "W")))
+		(@@ (<- string$format "<path=%s, mode=%s>" dt$name m))
+	}) @@string@@
 	(~ string_type) name
 	(~ int_type) flags
 	(~ int_type) _handle
@@ -29,24 +42,18 @@
 
 
 
-(= FLAG_READ 1)
-(= FLAG_WRITE 2)
-(= FLAG_APPEND 4)
-
-
-
 (= stdin (. file_type
-	"<stdin>"
+	"@stdin"
 	FLAG_READ
 	(<- (... "sll:file_std_handle") 0)
 ))
 (= stdout (. file_type
-	"<stdout>"
+	"@stdout"
 	FLAG_WRITE
 	(<- (... "sll:file_std_handle") 1)
 ))
 (= stderr (. file_type
-	"<stderr>"
+	"@stderr"
 	FLAG_WRITE
 	(<- (... "sll:file_std_handle") 2)
 ))

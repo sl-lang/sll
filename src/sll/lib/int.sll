@@ -5,6 +5,7 @@
 
 (= int_module_type (&:
 	(~ func_type) to_bin
+	(~ func_type) to_dec
 	(~ func_type) to_hex
 	(~ func_type) to_oct
 ))
@@ -12,6 +13,8 @@
 
 
 (= to_bin (... "sll:int_to_bin"))
+
+(= to_dec (... "sll:int_to_dec"))
 
 (= to_hex (... "sll:int_to_hex"))
 
@@ -21,6 +24,7 @@
 
 (= int (. int_module_type
 	to_bin
+	to_dec
 	to_hex
 	to_oct
 ))

@@ -750,52 +750,6 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				sll_file_write_char(wf,')');
 				return o;
 			}
-		case SLL_NODE_TYPE_DECL_COPY:
-			{
-				GENERATE_STATIC_STRING("&:",wf);
-				if (o->dt.dc.nm!=SLL_MAX_STRING_INDEX){
-					GENERATE_STATIC_STRING(" |#",wf);
-					sll_file_write(wf,(cg_dt->c_dt->st.dt+o->dt.dc.nm)->v,(cg_dt->c_dt->st.dt+o->dt.dc.nm)->l);
-					GENERATE_STATIC_STRING("#|",wf);
-				}
-				sll_object_type_initializer_t* oi=*(cg_dt->c_dt->ot_it.dt+o->dt.dc.t);
-				SLL_ASSERT(oi->l);
-				if (cg_dt->p){
-					sll_file_write_char(wf,'\n');
-					for (sll_arg_count_t i=0;i<oi->l;i++){
-						sll_file_write_char_count(wf,'\t',lvl+1);
-						if (oi->dt[i].t&SLL_OBJECT_FLAG_CONSTANT){
-							sll_file_write_char(wf,'-');
-							_generate_int(SLL_OBJECT_GET_TYPE_MASK(oi->dt[i].t)+1,wf);
-						}
-						else{
-							_generate_int(oi->dt[i].t,wf);
-						}
-						sll_file_write_char(wf,' ');
-						sll_string_t* s=cg_dt->c_dt->st.dt+oi->dt[i].f;
-						sll_file_write(wf,s->v,s->l);
-						sll_file_write_char(wf,'\n');
-					}
-					sll_file_write_char_count(wf,'\t',lvl);
-				}
-				else{
-					for (sll_arg_count_t i=0;i<oi->l;i++){
-						sll_file_write_char(wf,' ');
-						if (oi->dt[i].t&SLL_OBJECT_FLAG_CONSTANT){
-							sll_file_write_char(wf,'-');
-							_generate_int(SLL_OBJECT_GET_TYPE_MASK(oi->dt[i].t)+1,wf);
-						}
-						else{
-							_generate_int(oi->dt[i].t,wf);
-						}
-						sll_file_write_char(wf,' ');
-						sll_string_t* s=cg_dt->c_dt->st.dt+oi->dt[i].f;
-						sll_file_write(wf,s->v,s->l);
-					}
-				}
-				sll_file_write_char(wf,')');
-				return o+1;
-			}
 		case SLL_NODE_TYPE_NEW:
 			sll_file_write_char(wf,'.');
 			break;

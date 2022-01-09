@@ -47,20 +47,6 @@
  * \name sll_add_type
  * \group object
  * \desc Docs!
- * \arg sll_object_type_initializer_table_t* ot_it
- * \arg const sll_object_type_field_t* p
- * \arg sll_arg_count_t l
- * \ret sll_object_type_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_initializer(sll_object_type_initializer_table_t* ot_it,const sll_object_type_field_t* p,sll_arg_count_t l);
-
-
-
-/**
- * \flags check_output func
- * \name sll_add_type
- * \group object
- * \desc Docs!
  * \arg sll_object_type_table_t* tt
  * \arg const sll_object_t*const* p
  * \arg sll_arg_count_t l
@@ -159,21 +145,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_object_get_type(const sl
  * \arg sll_object_t* v
  */
 __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_object_t* o,const sll_string_t* f,sll_object_t* v);
-
-
-
-/**
- * \flags check_output func
- * \name sll_type_from_initializer
- * \group object
- * \desc Docs!
- * \arg sll_object_type_table_t* tt
- * \arg const sll_string_table_t* st
- * \arg const sll_object_type_initializer_t* oi
- * \arg const sll_string_t* nm
- * \ret sll_object_type_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sll_object_type_table_t* tt,const sll_string_table_t* st,const sll_object_type_initializer_t* oi,const sll_string_t* nm);
 
 
 

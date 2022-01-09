@@ -26,7 +26,6 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			(*sz)++;
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
@@ -108,7 +107,6 @@ static sll_node_t* _remove_debug_data(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
@@ -170,7 +168,6 @@ static sll_node_t* _remove_debug_data(sll_node_t* o){
 
 
 __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
-	c_dt->rf=NULL;
 	c_dt->tm=0;
 	c_dt->h=NULL;
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
@@ -192,12 +189,6 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	c_dt->ft.dt=NULL;
 	c_dt->ft.l=0;
 	sll_free_string_table(&(c_dt->st));
-	for (sll_object_type_t i=0;i<c_dt->ot_it.l;i++){
-		sll_deallocate(*(c_dt->ot_it.dt+i));
-	}
-	sll_deallocate(c_dt->ot_it.dt);
-	c_dt->ot_it.dt=NULL;
-	c_dt->ot_it.l=0;
 	void* pg=c_dt->_s.s;
 	while (pg){
 		void* n=*((void**)pg);
@@ -225,8 +216,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_
 
 
 
-__SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* rf,sll_compilation_data_t* o){
-	o->rf=rf;
+__SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilation_data_t* o){
 	o->tm=sll_platform_get_current_time();
 	o->h=NULL;
 	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
@@ -241,8 +231,6 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_file_t* r
 	o->ft.l=0;
 	o->st.dt=NULL;
 	o->st.l=0;
-	o->ot_it.dt=NULL;
-	o->ot_it.l=0;
 	o->fpt.dt=sll_allocate(sizeof(sll_string_index_t));
 	o->fpt.l=1;
 	*(o->fpt.dt)=0;
@@ -271,7 +259,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-		case SLL_NODE_TYPE_DECL_COPY:
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{

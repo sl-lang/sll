@@ -2,7 +2,20 @@
 
 ## [0.6.37] - Ongiong
 
-*Nothing*
+### Added
+
+- Integer to decimal string conversion: `int$to_dec`
+- Special structure field: `@@string@@`
+
+### Changed
+
+- Moved file argument from `sll_compilation_data_t` to `sll_parse_all_nodes`
+
+### Removed
+
+- Copy declaration node and assembly types
+- File argument from `sll_init_compilation_data`
+- Object type initializer API
 
 ## [0.6.36] - 2021-01-09
 
@@ -25,7 +38,7 @@
 - New CLI code to dynamically find the shared library
 - New operator: `sll_operator_includes` ([#207])
 - Sll-from-C function calling to the VM: `sll_execute_function` ([#176])
-- Support for special structure memebers fields: `@@copy@@`, `@@delete@@` and `@@init@@` ([#205])
+- Support for special structure fields: `@@copy@@`, `@@delete@@` and `@@init@@` ([#205])
 
 ### Changed
 

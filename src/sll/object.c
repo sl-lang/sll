@@ -16,6 +16,7 @@
 static sll_string_t _object_copy_str=SLL_INIT_STRING_STRUCT;
 static sll_string_t _object_delete_str=SLL_INIT_STRING_STRUCT;
 static sll_string_t _object_init_str=SLL_INIT_STRING_STRUCT;
+static sll_string_t _object_string_str=SLL_INIT_STRING_STRUCT;
 
 
 
@@ -28,6 +29,7 @@ static void _release_data(void){
 		sll_free_string(&_object_copy_str);
 		sll_free_string(&_object_delete_str);
 		sll_free_string(&_object_init_str);
+		sll_free_string(&_object_string_str);
 	}
 }
 
@@ -165,26 +167,6 @@ static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_st
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_initializer(sll_object_type_initializer_table_t* ot_it,const sll_object_type_field_t* p,sll_arg_count_t l){
-	ot_it->l++;
-	ot_it->dt=sll_reallocate(ot_it->dt,ot_it->l*sizeof(sll_object_type_initializer_t*));
-	sll_object_type_initializer_t* n=sll_allocate(sizeof(sll_object_type_initializer_t)+l*sizeof(sll_object_type_field_t));
-	n->l=l;
-	SLL_ASSERT(l);
-	for (sll_arg_count_t i=0;i<l;i++){
-		n->dt[i].t=p->t;
-		if (SLL_OBJECT_GET_TYPE_MASK(p->t)==SLL_OBJECT_TYPE_MAP_KEYS||SLL_OBJECT_GET_TYPE_MASK(p->t)==SLL_OBJECT_TYPE_MAP_VALUES){
-			n->dt[i].t=SLL_OBJECT_TYPE_ARRAY|(p->t&SLL_OBJECT_FLAG_CONSTANT);
-		}
-		n->dt[i].f=p->f;
-		p++;
-	}
-	*(ot_it->dt+ot_it->l-1)=n;
-	return ot_it->l-1;
-}
-
-
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* tt,const sll_object_t*const* p,sll_arg_count_t l,const sll_string_t* nm){
 	tt->l++;
 	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
@@ -199,6 +181,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 	n->fn.copy=0;
 	n->fn.del=0;
 	n->fn.init=0;
+	n->fn.str=0;
 	for (sll_arg_count_t i=0;i<l;i++){
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
 		sll_integer_t vv=v->dt.i;
@@ -221,6 +204,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 				sll_string_from_pointer(SLL_CHAR("@@copy@@"),&_object_copy_str);
 				sll_string_from_pointer(SLL_CHAR("@@delete@@"),&_object_delete_str);
 				sll_string_from_pointer(SLL_CHAR("@@init@@"),&_object_init_str);
+				sll_string_from_pointer(SLL_CHAR("@@string@@"),&_object_string_str);
 				sll_register_cleanup(_release_data);
 			}
 			if (sll_string_equal(&(v->dt.s),&_object_copy_str)){
@@ -237,6 +221,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 			}
 			else if (sll_string_equal(&(v->dt.s),&_object_init_str)){
 				n->fn.init=(fl?~vv:vv);
+				i--;
+				l--;
+				continue;
+			}
+			else if (sll_string_equal(&(v->dt.s),&_object_string_str)){
+				n->fn.str=(fl?~vv:vv);
 				i--;
 				l--;
 				continue;
@@ -263,6 +253,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 	n->fn.copy=0;
 	n->fn.del=0;
 	n->fn.init=0;
+	n->fn.str=0;
 	*(tt->dt+tt->l-1)=n;
 	sll_object_t* o=SLL_CREATE();
 	o->t=tt->l+SLL_MAX_OBJECT_TYPE;
@@ -434,32 +425,4 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 		return;
 	}
 	_set_field(tt,o->dt.p+off,SLL_OBJECT_GET_TYPE_MASK(t),v);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_type_from_initializer(sll_object_type_table_t* tt,const sll_string_table_t* st,const sll_object_type_initializer_t* oi,const sll_string_t* nm){
-	tt->l++;
-	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
-	tt->dt=sll_reallocate((void*)(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
-	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+oi->l*sizeof(sll_object_type_data_entry_t));
-	if (nm){
-		sll_string_clone(nm,(sll_string_t*)(&(n->nm)));
-	}
-	else{
-		SLL_INIT_STRING((sll_string_t*)(&(n->nm)));
-	}
-	n->l=oi->l;
-	n->fn.copy=0;
-	n->fn.del=0;
-	n->fn.init=0;
-	for (sll_arg_count_t i=0;i<n->l;i++){
-		n->dt[i].t=oi->dt[i].t;
-		if (SLL_OBJECT_GET_TYPE_MASK(n->dt[i].t)>tt->l+SLL_MAX_OBJECT_TYPE-1){
-			n->dt[i].t=SLL_OBJECT_TYPE_INT|(oi->dt[i].t&SLL_OBJECT_FLAG_CONSTANT);
-		}
-		sll_string_clone(st->dt+oi->dt[i].f,&(n->dt[i].nm));
-	}
-	*(tt->dt+tt->l-1)=n;
-	return tt->l+SLL_MAX_OBJECT_TYPE;
 }

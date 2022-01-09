@@ -533,6 +533,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_int_to_dec void
+#define __SLL_API_ARGS_sll_api_int_to_dec sll_integer_t a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_int_to_dec
+ * \group int-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_int_to_dec_raw
+ * \group raw-api
+ * \subgroup raw-api-int-api
+ * \desc Wrapper function for :sll_api_int_to_dec:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_int_to_hex void
 #define __SLL_API_ARGS_sll_api_int_to_hex sll_integer_t a,sll_string_t* out
 /**

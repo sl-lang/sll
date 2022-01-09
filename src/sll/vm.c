@@ -739,19 +739,6 @@ _cleanup_jump_table:;
 					}
 					break;
 				}
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_COPY:
-				{
-					if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
-						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*(_vm_stack+_vm_si-1))==SLL_OBJECT_TYPE_STRING);
-						sll_object_type_t t=sll_type_from_initializer(sll_current_runtime_data->tt,&(sll_current_runtime_data->a_dt->st),*(sll_current_runtime_data->a_dt->ot_it.dt+ai->dt.t),&((*(_vm_stack+_vm_si-1))->dt.s));
-						SLL_RELEASE(*(_vm_stack+_vm_si-1));
-						*(_vm_stack+_vm_si-1)=SLL_FROM_INT(t);
-						break;
-					}
-					*(_vm_stack+_vm_si)=SLL_FROM_INT(sll_type_from_initializer(sll_current_runtime_data->tt,&(sll_current_runtime_data->a_dt->st),*(sll_current_runtime_data->a_dt->ot_it.dt+ai->dt.t),NULL));
-					_vm_si++;
-					break;
-				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
 				{
 					_vm_si-=ai->dt.ac;
