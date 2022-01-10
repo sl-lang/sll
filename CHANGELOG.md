@@ -9,6 +9,7 @@
 
 ### Changed
 
+- Fixed integer overflow when parsing floats
 - Moved file argument from `sll_compilation_data_t` to `sll_parse_all_nodes`
 
 ### Removed
