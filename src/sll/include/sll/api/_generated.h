@@ -59,6 +59,98 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_array_extend void
+#define __SLL_API_ARGS_sll_api_array_extend sll_array_t* a,sll_array_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_extend
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \arg sll_array_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_extend_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_extend:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_array_join void
+#define __SLL_API_ARGS_sll_api_array_join sll_array_t* a,sll_object_t* b,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_array_join
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \arg sll_object_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_join_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_join:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_array_push void
+#define __SLL_API_ARGS_sll_api_array_push sll_array_t* a,sll_object_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_push
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \arg sll_object_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_push_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_push:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_array_remove void
+#define __SLL_API_ARGS_sll_api_array_remove sll_array_t* a,sll_object_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_remove
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \arg sll_object_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_remove_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_remove:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_array_replace void
 #define __SLL_API_ARGS_sll_api_array_replace sll_array_t* a,sll_object_t* b,sll_object_t* c,sll_array_t* out
 /**
@@ -98,6 +190,29 @@
  * \group raw-api
  * \subgroup raw-api-array-api
  * \desc Wrapper function for :sll_api_array_reverse:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_array_split void
+#define __SLL_API_ARGS_sll_api_array_split sll_array_t* a,sll_object_t* b,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_array_split
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \arg sll_object_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_split_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_split:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

@@ -294,6 +294,48 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal_map(const sll_array
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_extend(const sll_array_t* a,const sll_array_t* b,sll_array_t* o){
+	if (!a){
+		if (!b->l){
+			return 1;
+		}
+		o->l+=b->l;
+		o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
+		if (!o->v){
+			return 0;
+		}
+		sll_array_length_t i=o->l-b->l;
+		for (sll_array_length_t j=0;j<b->l;j++){
+			o->v[i]=b->v[j];
+			SLL_ACQUIRE(b->v[j]);
+			i++;
+		}
+		return 1;
+	}
+	if (!a->l){
+		return sll_array_clone(b,o);
+	}
+	if (!b->l){
+		return sll_array_clone(a,o);
+	}
+	if (!sll_array_create(a->l+b->l,o)){
+		return 0;
+	}
+	sll_array_length_t i=0;
+	for (;i<a->l;i++){
+		o->v[i]=a->v[i];
+		SLL_ACQUIRE(a->v[i]);
+	}
+	for (sll_array_length_t j=0;j<b->l;j++){
+		o->v[i]=b->v[j];
+		SLL_ACQUIRE(b->v[j]);
+		i++;
+	}
+	return 1;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_from_length(sll_array_length_t l,sll_array_t* o){
 	if (!l){
 		SLL_INIT_ARRAY(o);
@@ -353,6 +395,35 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_join(const sll_array_t* a
 		o->v[i]=b->v[j];
 		SLL_ACQUIRE(o->v[i]);
 		i++;
+	}
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_join_arrays(const sll_array_t*const* al,sll_array_length_t all,sll_object_t* e,sll_array_t* o){
+	o->l=all-1;
+	e->rc+=o->l;
+	for (sll_array_length_t i=0;i<all;i++){
+		o->l+=(*(al+i))->l;
+	}
+	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
+	if (!o->v){
+		e->rc-=all-1;
+		return 0;
+	}
+	sll_array_length_t i=0;
+	for (sll_array_length_t j=0;j<all;j++){
+		if (j){
+			o->v[i]=e;
+			i++;
+		}
+		const sll_array_t* a=*(al+j);
+		for (sll_array_length_t k=0;k<a->l;k++){
+			o->v[i]=a->v[k];
+			SLL_ACQUIRE(a->v[k]);
+			i++;
+		}
 	}
 	return 1;
 }
@@ -519,6 +590,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_range(sll_integer_t s,sll
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_array_t* o){
+	if (!a){
+		sll_array_length_t i=0;
+		for (sll_array_length_t j=0;j<o->l;j++){
+			if (!sll_operator_equal(o->v[j],v)){
+				o->v[i]=o->v[j];
+				i++;
+			}
+			else{
+				SLL_RELEASE(o->v[j]);
+			}
+		}
+		o->l=i;
+		if (!o->l){
+			sll_deallocate(o->v);
+			o->v=NULL;
+		}
+		else{
+			o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
+		}
+		return 1;
+	}
 	if (!a->l){
 		SLL_INIT_ARRAY(o);
 		return 1;
@@ -668,6 +760,41 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_reverse(const sll_array_t
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_select(const sll_array_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_array_t* o){
 	SLL_UNIMPLEMENTED();
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_split(const sll_array_t* a,sll_object_t* e,sll_array_t* o){
+	o->l=1;
+	o->v=sll_allocate_stack(sizeof(sll_object_t*));
+	sll_object_t* oa=SLL_CREATE();
+	oa->t=SLL_OBJECT_TYPE_ARRAY;
+	oa->dt.a.l=0;
+	oa->dt.a.v=sll_allocate_stack(a->l*sizeof(sll_object_t*));
+	o->v[0]=oa;
+	for (sll_array_length_t i=0;i<a->l;i++){
+		if (sll_operator_strict_equal(a->v[i],e)){
+			oa->dt.a.v=sll_reallocate(oa->dt.a.v,oa->dt.a.l*sizeof(sll_object_t*));
+			oa->dt.a.v=sll_memory_move(oa->dt.a.v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+			oa=SLL_CREATE();
+			oa->t=SLL_OBJECT_TYPE_ARRAY;
+			oa->dt.a.l=0;
+			oa->dt.a.v=sll_allocate_stack(1);
+			o->l++;
+			o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
+			o->v[o->l-1]=oa;
+		}
+		else{
+			oa->dt.a.l++;
+			oa->dt.a.v=sll_reallocate(oa->dt.a.v,oa->dt.a.l*sizeof(sll_object_t*));
+			oa->dt.a.v[oa->dt.a.l-1]=a->v[i];
+			SLL_ACQUIRE(a->v[i]);
+		}
+	}
+	oa->dt.a.v=sll_reallocate(oa->dt.a.v,oa->dt.a.l*sizeof(sll_object_t*));
+	oa->dt.a.v=sll_memory_move(oa->dt.a.v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	return 1;
 }
 
 

@@ -6,8 +6,13 @@
 (= array_module_type (&:
 	(~ func_type) count
 	(~ func_type) create
+	(~ func_type) extend
+	(~ func_type) join
+	(~ func_type) push
+	(~ func_type) remove
 	(~ func_type) replace
 	(~ func_type) reverse
+	(~ func_type) split
 ))
 
 
@@ -16,16 +21,31 @@
 
 (= create (... "sll:array_create"))
 
+(= extend (... "sll:array_extend"))
+
+(= join (... "sll:array_join"))
+
+(= push (... "sll:array_push"))
+
+(= remove (... "sll:array_remove"))
+
 (= replace (... "sll:array_replace"))
 
 (= reverse (... "sll:array_reverse"))
+
+(= split (... "sll:array_split"))
 
 
 
 (= array (. array_module_type
 	count
 	create
+	extend
+	join
+	push
+	remove
 	replace
 	reverse
+	split
 ))
 (## array)

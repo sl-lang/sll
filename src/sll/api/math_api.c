@@ -45,7 +45,7 @@
 
 
 
-sll_size_t sll_math_euler_phi(sll_size_t n){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n){
 	if (n<2){
 		return 0;
 	}
@@ -88,7 +88,7 @@ sll_size_t sll_math_euler_phi(sll_size_t n){
 
 
 
-sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol){
 	if (n<2){
 		*ol=0;
 		return NULL;
@@ -138,7 +138,7 @@ sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol){
 
 
 
-sll_float_t sll_math_mod(sll_float_t a,sll_float_t b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_float_t b){
 	return fmod(a,b);
 }
 

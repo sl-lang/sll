@@ -74,6 +74,159 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_create_raw(sll_obj
 
 
 
+__SLL_API_TYPE_sll_api_array_extend sll_api_array_extend(__SLL_API_ARGS_sll_api_array_extend);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_extend_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(a->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		b=SLL_CREATE();
+		b->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(b->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_api_array_extend(&(a->dt.a),&(b->dt.a));
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_array_join sll_api_array_join(__SLL_API_ARGS_sll_api_array_join);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_join_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(a->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		SLL_ACQUIRE(b);
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_array_t out;
+	sll_api_array_join(&(a->dt.a),b,&out);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
+__SLL_API_TYPE_sll_api_array_push sll_api_array_push(__SLL_API_ARGS_sll_api_array_push);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_push_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(a->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		SLL_ACQUIRE(b);
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_array_push(&(a->dt.a),b);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_array_remove sll_api_array_remove(__SLL_API_ARGS_sll_api_array_remove);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_remove_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(a->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		SLL_ACQUIRE(b);
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_array_remove(&(a->dt.a),b);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
 __SLL_API_TYPE_sll_api_array_replace sll_api_array_replace(__SLL_API_ARGS_sll_api_array_replace);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_replace_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -143,6 +296,45 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(sll_ob
 	}
 	sll_array_t out;
 	sll_api_array_reverse(&(a->dt.a),&out);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
+__SLL_API_TYPE_sll_api_array_split sll_api_array_split(__SLL_API_ARGS_sll_api_array_split);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_split_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(a->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		SLL_ACQUIRE(b);
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_array_t out;
+	sll_api_array_split(&(a->dt.a),b,&out);
+	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -3789,6 +3981,26 @@ static const internal_function_t _ifunc_data_ptr[]={
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
+		"sll:array_extend",
+		sll_api_array_extend_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
+	},
+	{
+		"sll:array_join",
+		sll_api_array_join_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
+	},
+	{
+		"sll:array_push",
+		sll_api_array_push_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
+	},
+	{
+		"sll:array_remove",
+		sll_api_array_remove_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
+	},
+	{
 		"sll:array_replace",
 		sll_api_array_replace_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
@@ -3796,6 +4008,11 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		"sll:array_reverse",
 		sll_api_array_reverse_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
+	},
+	{
+		"sll:array_split",
+		sll_api_array_split_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
@@ -4367,5 +4584,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=117;
+const sll_function_index_t _ifunc_size=122;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

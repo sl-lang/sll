@@ -39,6 +39,58 @@ __API_FUNC_DECL(array_create);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_array_extend
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg A
+ * \ret V
+ */
+__API_FUNC_DECL(array_extend);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_array_join
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \ret A
+ */
+__API_FUNC_DECL(array_join);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_array_push
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \ret V
+ */
+__API_FUNC_DECL(array_push);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_array_remove
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \ret V
+ */
+__API_FUNC_DECL(array_remove);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_array_replace
  * \group array-api
  * \desc Docs!
@@ -60,6 +112,19 @@ __API_FUNC_DECL(array_replace);
  * \ret A
  */
 __API_FUNC_DECL(array_reverse);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_array_split
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \ret A
+ */
+__API_FUNC_DECL(array_split);
 
 
 

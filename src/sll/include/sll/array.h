@@ -219,6 +219,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal_map(const sll_array
 
 /**
  * \flags check_output func
+ * \name sll_array_extend
+ * \group array
+ * \subgroup array-op
+ * \desc Docs!
+ * \arg const sll_array_t* a
+ * \arg const sll_array_t* b
+ * \arg sll_array_t* o
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_extend(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_array_from_length
  * \group array
  * \desc Docs!
@@ -269,6 +284,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_includes(const sll_array_
  * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_join(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_array_join_arrays
+ * \group array
+ * \subgroup array-op
+ * \desc Docs!
+ * \arg const sll_array_t*const* al
+ * \arg sll_array_length_t all
+ * \arg sll_object_t* e
+ * \arg sll_array_t* o
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_join_arrays(const sll_array_t*const* al,sll_array_length_t all,sll_object_t* e,sll_array_t* o);
 
 
 
@@ -490,6 +520,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_reverse(const sll_array_t
  * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_select(const sll_array_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_array_t* o);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_array_split
+ * \group array
+ * \subgroup array-op
+ * \desc Docs!
+ * \arg const sll_array_t* s
+ * \arg const sll_array_t* a
+ * \arg sll_object_t* e
+ * \arg sll_array_t* o
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_split(const sll_array_t* a,sll_object_t* e,sll_array_t* o);
 
 
 

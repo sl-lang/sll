@@ -41,19 +41,19 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_math_euler_phi
  * \group math-api
  * \desc Docs!
  * \arg sll_size_t n
  * \ret sll_size_t
  */
-sll_size_t sll_math_euler_phi(sll_size_t n);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n);
 
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_math_factors
  * \group math-api
  * \desc Docs!
@@ -61,12 +61,12 @@ sll_size_t sll_math_euler_phi(sll_size_t n);
  * \arg sll_array_length_t* ol
  * \ret sll_factor_t*
  */
-sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol);
 
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_math_mod
  * \group math-api
  * \desc Docs!
@@ -74,7 +74,7 @@ sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol);
  * \arg sll_float_t b
  * \ret sll_float_t
  */
-sll_float_t sll_math_mod(sll_float_t a,sll_float_t b);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_float_t b);
 
 
 

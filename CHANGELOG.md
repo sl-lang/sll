@@ -6,6 +6,11 @@
 
 - Euler's totient/phi function: `sll_math_euler_phi` and `math$euler_phi`
 - Floating-point number operation functions: `sll_math_mod`
+- Implemented `sll:array_push` ([#87] and [#118])
+- Implemented `sll:array_remove` ([#87] and [#121])
+- Implemented `sll_array_extend` and `sll:array_extend` ([#87] and [#119])
+- Implemented `sll_array_join_arrays` and `sll:array_join` ([#87] and [#115])
+- Implemented `sll_array_split` and `sll:array_split` ([#87] and [#122])
 - Integer to decimal string conversion: `int$to_dec`
 - Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
 - Special structure field: `@@string@@`
@@ -13,8 +18,8 @@
 ### Changed
 
 - Fixed integer overflow when parsing floats
+- In-place operations are now supported in some array functions: `sll_array_push` and `sll_array_remove` ([#87], [#118] and [#121])
 - Moved file argument from `sll_compilation_data_t` to `sll_parse_all_nodes`
-- `sll_array_push` supports in-place operations
 
 ### Removed
 
@@ -1458,9 +1463,14 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#125]: https://github.com/sl-lang/sll/issues/125
 [#124]: https://github.com/sl-lang/sll/issues/124
 [#123]: https://github.com/sl-lang/sll/issues/123
+[#122]: https://github.com/sl-lang/sll/issues/122
+[#121]: https://github.com/sl-lang/sll/issues/121
 [#120]: https://github.com/sl-lang/sll/issues/120
+[#119]: https://github.com/sl-lang/sll/issues/119
+[#118]: https://github.com/sl-lang/sll/issues/118
 [#117]: https://github.com/sl-lang/sll/issues/117
 [#116]: https://github.com/sl-lang/sll/issues/116
+[#115]: https://github.com/sl-lang/sll/issues/115
 [#114]: https://github.com/sl-lang/sll/issues/114
 [#113]: https://github.com/sl-lang/sll/issues/113
 [#112]: https://github.com/sl-lang/sll/issues/112
