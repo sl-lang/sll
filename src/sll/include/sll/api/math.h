@@ -66,6 +66,19 @@ sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol);
 
 
 /**
+ * \flags func
+ * \name sll_math_mod
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a
+ * \arg sll_float_t b
+ * \ret sll_float_t
+ */
+sll_float_t sll_math_mod(sll_float_t a,sll_float_t b);
+
+
+
+/**
  * \flags api compilation_call func optimizable
  * \name sll_api_math_abs
  * \group math-api
@@ -227,7 +240,7 @@ __API_FUNC_DECL(math_cosh);
  * \group math-api
  * \desc Docs!
  * \arg F
- * \ret F
+ * \ret I
  */
 __API_FUNC_DECL(math_ceil);
 
@@ -301,7 +314,7 @@ __API_FUNC_DECL(math_gcd);
  * \group math-api
  * \desc Docs!
  * \arg F
- * \ret F
+ * \ret I
  */
 __API_FUNC_DECL(math_floor);
 
@@ -419,7 +432,7 @@ __API_FUNC_DECL(math_pow);
  * \group math-api
  * \desc Docs!
  * \arg F
- * \ret F
+ * \ret I
  */
 __API_FUNC_DECL(math_round);
 

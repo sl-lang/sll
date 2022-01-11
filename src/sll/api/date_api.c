@@ -1,18 +1,18 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
-#include <math.h>
 
 
 
 __SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,sll_date_t* o){
 	// Based on http://howardhinnant.github.io/date_algorithms.html#civil_from_days
-	sll_float_t hms=fmod(tm,86400)+(tm<0?86400:0);
-	o->s=fmod(hms,60);
+	sll_float_t hms=sll_math_mod(tm,86400)+(tm<0?86400:0);
+	o->s=sll_math_mod(hms,60);
 	sll_integer_t hms_i=((sll_integer_t)hms)/60;
 	o->mn=hms_i%60;
 	o->h=(hms_i/60)%60;

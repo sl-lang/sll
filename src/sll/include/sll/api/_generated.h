@@ -1072,7 +1072,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_math_ceil __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_TYPE_sll_api_math_ceil __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_math_ceil sll_float_t a
 /**
  * \flags check_output func optimizable
@@ -1080,7 +1080,7 @@
  * \group math-api
  * \desc Docs!
  * \arg sll_float_t a -> 
- * \ret sll_float_t
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func optimizable
@@ -1211,7 +1211,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_math_floor __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_TYPE_sll_api_math_floor __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_math_floor sll_float_t a
 /**
  * \flags check_output func optimizable
@@ -1219,7 +1219,7 @@
  * \group math-api
  * \desc Docs!
  * \arg sll_float_t a -> 
- * \ret sll_float_t
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func optimizable
@@ -1428,7 +1428,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_math_round __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_TYPE_sll_api_math_round __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_math_round sll_float_t a
 /**
  * \flags check_output func optimizable
@@ -1436,7 +1436,7 @@
  * \group math-api
  * \desc Docs!
  * \arg sll_float_t a -> 
- * \ret sll_float_t
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func optimizable

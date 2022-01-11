@@ -1,6 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/json.h>
+#include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/file.h>
@@ -13,7 +14,6 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <sll/vm.h>
-#include <math.h>
 #include <stdio.h>
 
 
@@ -262,7 +262,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			(*p)++;
 		}
 		pw*=pw_s;
-		v*=pow(2,(sll_float_t)pw)*pow(5,(sll_float_t)pw);
+		v*=sll_api_math_pow(10,(sll_float_t)pw);
 	}
 	(*p)--;
 	return SLL_FROM_FLOAT(v*s);
@@ -641,7 +641,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 			(*p)++;
 		}
 		pw*=pw_s;
-		v*=pow(2,(sll_float_t)pw)*pow(5,(sll_float_t)pw);
+		v*=sll_api_math_pow(10,(sll_float_t)pw);
 	}
 	(*p)--;
 	o->t=SLL_JSON_OBJECT_TYPE_FLOAT;

@@ -5,6 +5,7 @@
 ### Added
 
 - Euler's totient/phi function: `sll_math_euler_phi` and `math$euler_phi`
+- Floating-point number operation functions: `sll_math_mod`
 - Integer to decimal string conversion: `int$to_dec`
 - Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
 - Special structure field: `@@string@@`
@@ -17,9 +18,11 @@
 
 ### Removed
 
+- Builtin header included files: `stddef.h` and `math.h`
 - Copy declaration node and assembly types
 - File argument from `sll_init_compilation_data`
 - Object type initializer API
+- Old operator number macros: `SLL_FLOAT_ABSOLUTE` and `SLL_FLOAT_ROUND`
 
 ## [0.6.36] - 2021-01-09
 

@@ -1633,9 +1633,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_ceil_raw(sll_object
 	else{
 		a=SLL_ACQUIRE_STATIC(float_zero);
 	}
-	sll_float_t out=sll_api_math_ceil(a->dt.f);
+	sll_integer_t out=sll_api_math_ceil(a->dt.f);
 	SLL_RELEASE(a);
-	return SLL_FROM_FLOAT(out);
+	return SLL_FROM_INT(out);
 }
 
 
@@ -1797,9 +1797,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_floor_raw(sll_objec
 	else{
 		a=SLL_ACQUIRE_STATIC(float_zero);
 	}
-	sll_float_t out=sll_api_math_floor(a->dt.f);
+	sll_integer_t out=sll_api_math_floor(a->dt.f);
 	SLL_RELEASE(a);
-	return SLL_FROM_FLOAT(out);
+	return SLL_FROM_INT(out);
 }
 
 
@@ -2037,9 +2037,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_round_raw(sll_objec
 	else{
 		a=SLL_ACQUIRE_STATIC(float_zero);
 	}
-	sll_float_t out=sll_api_math_round(a->dt.f);
+	sll_integer_t out=sll_api_math_round(a->dt.f);
 	SLL_RELEASE(a);
-	return SLL_FROM_FLOAT(out);
+	return SLL_FROM_INT(out);
 }
 
 

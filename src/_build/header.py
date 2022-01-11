@@ -214,7 +214,7 @@ def generate_header(h_dt):
 					else:
 						al=tuple(al)
 					k=b" ".join(f[2:])
-					if (f[1][:2]!=b"__"):
+					if (f[1][:4]==b"SLL_"):
 						d_f.append((f[1],k))
 					sl=[b""]
 					sli=0
@@ -248,7 +248,7 @@ def generate_header(h_dt):
 					dfm[f[1].split(b"(")[0]]=(al,va,tuple(sl))
 				else:
 					dm[f[1]]=b" ".join(f[2:])
-					if (f[1][:2]!=b"__"):
+					if (f[1][:4]==b"SLL_"):
 						d_v.append((f[1],b" ".join(f[2:])))
 				continue
 		if (False not in st):
@@ -353,4 +353,5 @@ def generate_header(h_dt):
 		if (void):
 			o+=b"void"
 		o+=b");"
-	return il+d_s+b"\n"+o.strip()
+	o=d_s+b"\n"+o.strip()
+	return il+o

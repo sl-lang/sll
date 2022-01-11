@@ -2,18 +2,12 @@
 #define __SLL_OPERATOR_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
-#include <math.h>
 /**
  * \flags group
  * \name Operator
  * \group operator
  * \desc Docs!
  */
-
-
-
-#define SLL_FLOAT_ABSOLUTE(v) fabs((v))
-#define SLL_FLOAT_ROUND(v) llround((v))
 
 
 

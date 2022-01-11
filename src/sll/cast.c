@@ -1,11 +1,11 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/math.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/object.h>
-#include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -134,7 +134,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				return SLL_FROM_CHAR((sll_char_t)(a->dt.f));
 			case COMBINED_TYPE_FA:
 				{
-					sll_integer_t n=SLL_FLOAT_ROUND(a->dt.f);
+					sll_integer_t n=sll_api_math_round(a->dt.f);
 					sll_object_t* o=SLL_CREATE();
 					o->t=SLL_OBJECT_TYPE_ARRAY;
 					if (!(n<1?sll_array_create(0,&(o->dt.a)):sll_array_from_length((sll_array_length_t)(n),&(o->dt.a)))){

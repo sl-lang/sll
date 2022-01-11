@@ -138,6 +138,12 @@ sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol){
 
 
 
+sll_float_t sll_math_mod(sll_float_t a,sll_float_t b){
+	return fmod(a,b);
+}
+
+
+
 __API_FUNC(math_abs){
 	float_data_t dt={
 		.v=a
@@ -243,7 +249,7 @@ __API_FUNC(math_cosh){
 
 
 __API_FUNC(math_ceil){
-	return ceil(a);
+	return (sll_integer_t)ceil(a);
 }
 
 
@@ -307,7 +313,7 @@ __API_FUNC(math_factors){
 
 
 __API_FUNC(math_floor){
-	return floor(a);
+	return (sll_integer_t)floor(a);
 }
 
 
@@ -426,7 +432,7 @@ __API_FUNC(math_pow){
 
 
 __API_FUNC(math_round){
-	return round(a);
+	return (sll_integer_t)round(a);
 }
 
 

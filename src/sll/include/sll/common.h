@@ -1,6 +1,5 @@
 #ifndef __SLL_COMMON_H__
 #define __SLL_COMMON_H__ 1
-#include <stddef.h>
 
 
 
@@ -40,6 +39,12 @@
 #define __SLL_DEBUG_TYPE_CREATE 0
 #define __SLL_DEBUG_TYPE_ACQUIRE 1
 #define __SLL_DEBUG_TYPE_RELEASE 2
+
+
+
+#ifndef NULL
+#define NULL ((void*)0)
+#endif
 
 
 

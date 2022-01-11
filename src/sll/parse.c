@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/math.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/ift.h>
@@ -8,7 +9,6 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
-#include <math.h>
 #include <stdint.h>
 
 
@@ -762,9 +762,9 @@ static void _read_object_internal(sll_file_t* rf,sll_compilation_data_t* c_dt,sl
 					}
 					else{
 						SLL_ASSERT(vc<=38);
-						arg->dt.f=((sll_float_t)v)*pow(10,vc-19)+v2;
+						arg->dt.f=((sll_float_t)v)*sll_api_math_pow(10,vc-19)+v2;
 					}
-					arg->dt.f*=pow(10,ex);
+					arg->dt.f*=sll_api_math_pow(10,ex);
 					if (neg){
 						arg->dt.f=-arg->dt.f;
 					}

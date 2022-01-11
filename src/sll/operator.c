@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/math.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -12,7 +13,6 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <sll/vm.h>
-#include <math.h>
 
 
 
@@ -57,7 +57,7 @@
 
 #define COMPARE_RESULT(a,b) ((a)<(b)?SLL_COMPARE_RESULT_BELOW:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_EQUAL))
 #define COMPARE_RESULT_FLOAT(a,b) (EQUAL_FLOAT((a),(b))?SLL_COMPARE_RESULT_EQUAL:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW))
-#define EQUAL_FLOAT(a,b) (SLL_FLOAT_ABSOLUTE((a)-(b))<sll_float_compare_error)
+#define EQUAL_FLOAT(a,b) (sll_api_math_abs((a)-(b))<sll_float_compare_error)
 
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
@@ -76,12 +76,12 @@
 	do{ \
 		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){ \
 			__tmp0.t=SLL_OBJECT_TYPE_INT; \
-			__tmp0.dt.i=SLL_FLOAT_ROUND(a->dt.f); \
+			__tmp0.dt.i=sll_api_math_round(a->dt.f); \
 			a=&__tmp0; \
 		} \
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_FLOAT){ \
 			__tmp1.t=SLL_OBJECT_TYPE_INT; \
-			__tmp1.dt.i=SLL_FLOAT_ROUND(b->dt.f); \
+			__tmp1.dt.i=sll_api_math_round(b->dt.f); \
 			b=&__tmp1; \
 		} \
 	} while (0)
@@ -878,7 +878,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i/b->dt.i);
 		case COMBINED_TYPE_IF:
-			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.i/b->dt.f));
+			return SLL_FROM_INT(sll_api_math_round(a->dt.i/b->dt.f));
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i/b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -923,15 +923,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.f/b->dt.i));
+			return SLL_FROM_INT(sll_api_math_round(a->dt.f/b->dt.i));
 		case COMBINED_TYPE_FF:
-			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.f/b->dt.f));
+			return SLL_FROM_INT(sll_api_math_round(a->dt.f/b->dt.f));
 		case COMBINED_TYPE_FC:
-			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.f/b->dt.c));
+			return SLL_FROM_INT(sll_api_math_round(a->dt.f/b->dt.c));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c/b->dt.i);
 		case COMBINED_TYPE_CF:
-			return SLL_FROM_INT(SLL_FLOAT_ROUND(a->dt.c/b->dt.f));
+			return SLL_FROM_INT(sll_api_math_round(a->dt.c/b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c/b->dt.c);
 		case COMBINED_TYPE_CS:
@@ -1074,7 +1074,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
 		case SLL_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(~a->dt.i);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return SLL_FROM_INT(~SLL_FLOAT_ROUND(a->dt.f));
+			return SLL_FROM_INT(~sll_api_math_round(a->dt.f));
 		case SLL_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(~a->dt.c);
 		case SLL_OBJECT_TYPE_STRING:
@@ -1140,7 +1140,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i%b->dt.i);
 		case COMBINED_TYPE_IF:
-			return SLL_FROM_FLOAT(fmod((sll_float_t)(a->dt.i),b->dt.f));
+			return SLL_FROM_FLOAT(sll_math_mod((sll_float_t)(a->dt.i),b->dt.f));
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i%b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -1185,15 +1185,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return SLL_FROM_FLOAT(fmod(a->dt.f,(sll_float_t)(b->dt.i)));
+			return SLL_FROM_FLOAT(sll_math_mod(a->dt.f,(sll_float_t)(b->dt.i)));
 		case COMBINED_TYPE_FF:
-			return SLL_FROM_FLOAT(fmod(a->dt.f,b->dt.f));
+			return SLL_FROM_FLOAT(sll_math_mod(a->dt.f,b->dt.f));
 		case COMBINED_TYPE_FC:
-			return SLL_FROM_FLOAT(fmod(a->dt.f,b->dt.c));
+			return SLL_FROM_FLOAT(sll_math_mod(a->dt.f,b->dt.c));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c%b->dt.i);
 		case COMBINED_TYPE_CF:
-			return SLL_FROM_FLOAT(fmod(a->dt.c,b->dt.f));
+			return SLL_FROM_FLOAT(sll_math_mod(a->dt.c,b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c%b->dt.c);
 		case COMBINED_TYPE_CS:
@@ -1378,7 +1378,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)SLL_FLOAT_ROUND(SLL_FLOAT_ABSOLUTE(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
+				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)sll_api_math_round(sll_api_math_abs(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_FA:
@@ -1386,7 +1386,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				if (!sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)SLL_FLOAT_ROUND(SLL_FLOAT_ABSOLUTE(a->dt.f-n)*b->dt.a.l),&(o->dt.a))){
+				if (!sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)sll_api_math_round(sll_api_math_abs(a->dt.f-n)*b->dt.a.l),&(o->dt.a))){
 					SLL_UNIMPLEMENTED();
 				}
 				return o;
@@ -1571,7 +1571,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i<<b->dt.i);
 		case COMBINED_TYPE_IF:
-			return SLL_FROM_FLOAT(a->dt.i*pow(2,b->dt.f));
+			return SLL_FROM_FLOAT(a->dt.i*sll_api_math_pow(2,b->dt.f));
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i<<b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -1617,15 +1617,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return SLL_FROM_FLOAT(a->dt.f*pow(2,(sll_float_t)(b->dt.i)));
+			return SLL_FROM_FLOAT(a->dt.f*sll_api_math_pow(2,(sll_float_t)(b->dt.i)));
 		case COMBINED_TYPE_FF:
-			return SLL_FROM_FLOAT(a->dt.f*pow(2,b->dt.f));
+			return SLL_FROM_FLOAT(a->dt.f*sll_api_math_pow(2,b->dt.f));
 		case COMBINED_TYPE_FC:
-			return SLL_FROM_FLOAT(a->dt.f*pow(2,b->dt.c));
+			return SLL_FROM_FLOAT(a->dt.f*sll_api_math_pow(2,b->dt.c));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(((sll_integer_t)a->dt.c)<<b->dt.i);
 		case COMBINED_TYPE_CF:
-			return SLL_FROM_FLOAT(a->dt.c*pow(2,b->dt.f));
+			return SLL_FROM_FLOAT(a->dt.c*sll_api_math_pow(2,b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR((((sll_integer_t)a->dt.c))<<b->dt.c);
 		case COMBINED_TYPE_SI:
@@ -1639,7 +1639,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),SLL_FLOAT_ROUND(a->dt.f),&(o->dt.s));
+				sll_string_shift(&(a->dt.s),sll_api_math_round(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SC:
@@ -1683,7 +1683,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_resize(&(a->dt.a),SLL_FLOAT_ROUND(a->dt.f),&(o->dt.a))){
+				if (!sll_array_resize(&(a->dt.a),sll_api_math_round(a->dt.f),&(o->dt.a))){
 					SLL_UNIMPLEMENTED();
 				}
 				return o;
@@ -1772,7 +1772,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i>>b->dt.i);
 		case COMBINED_TYPE_IF:
-			return SLL_FROM_FLOAT(a->dt.i/pow(2,b->dt.f));
+			return SLL_FROM_FLOAT(a->dt.i/sll_api_math_pow(2,b->dt.f));
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i>>b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -1818,15 +1818,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return SLL_FROM_FLOAT(a->dt.f/pow(2,(sll_float_t)(b->dt.i)));
+			return SLL_FROM_FLOAT(a->dt.f/sll_api_math_pow(2,(sll_float_t)(b->dt.i)));
 		case COMBINED_TYPE_FF:
-			return SLL_FROM_FLOAT(a->dt.f/pow(2,b->dt.f));
+			return SLL_FROM_FLOAT(a->dt.f/sll_api_math_pow(2,b->dt.f));
 		case COMBINED_TYPE_FC:
-			return SLL_FROM_FLOAT(a->dt.f/pow(2,b->dt.c));
+			return SLL_FROM_FLOAT(a->dt.f/sll_api_math_pow(2,b->dt.c));
 		case COMBINED_TYPE_CI:
 			return SLL_FROM_INT(a->dt.c>>b->dt.i);
 		case COMBINED_TYPE_CF:
-			return SLL_FROM_FLOAT(a->dt.c/pow(2,b->dt.f));
+			return SLL_FROM_FLOAT(a->dt.c/sll_api_math_pow(2,b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c>>b->dt.c);
 		case COMBINED_TYPE_SI:
@@ -1840,7 +1840,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),-SLL_FLOAT_ROUND(a->dt.f),&(o->dt.s));
+				sll_string_shift(&(a->dt.s),-sll_api_math_round(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SC:
@@ -1884,7 +1884,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_resize(&(a->dt.a),-SLL_FLOAT_ROUND(a->dt.f),&(o->dt.a))){
+				if (!sll_array_resize(&(a->dt.a),-sll_api_math_round(a->dt.f),&(o->dt.a))){
 					SLL_UNIMPLEMENTED();
 				}
 				return o;
