@@ -14,6 +14,7 @@
 - Implemented `sll_array_extend` and `sll:array_extend` ([#87] and [#119])
 - Implemented `sll_array_join_arrays` and `sll:array_join` ([#87] and [#115])
 - Implemented `sll_array_split` and `sll:array_split` ([#87] and [#122])
+- Implemented `sll_string_pad` and `sll:string_pad` ([#87] and [#110])
 - Integer to decimal string conversion: `int$to_dec`
 - Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
 - Special structure field: `@@string@@`
@@ -1481,6 +1482,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#113]: https://github.com/sl-lang/sll/issues/113
 [#112]: https://github.com/sl-lang/sll/issues/112
 [#111]: https://github.com/sl-lang/sll/issues/111
+[#110]: https://github.com/sl-lang/sll/issues/110
 [#106]: https://github.com/sl-lang/sll/issues/106
 [#105]: https://github.com/sl-lang/sll/issues/105
 [#104]: https://github.com/sl-lang/sll/issues/104

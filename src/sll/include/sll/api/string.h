@@ -180,6 +180,20 @@ __API_FUNC_DECL(string_join);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_string_pad
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg I
+ * \arg C
+ * \ret S
+ */
+__API_FUNC_DECL(string_pad);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_string_pad_left
  * \group string-api
  * \desc Docs!

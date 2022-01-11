@@ -372,6 +372,15 @@ __API_FUNC_DECL(string_join){
 
 
 
+__API_FUNC(string_pad){
+	if (b<0){
+		b=-b;
+	}
+	sll_string_pad(a,(b>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)b),c,out);
+}
+
+
+
 __API_FUNC(string_pad_left){
 	if (b<0){
 		sll_string_pad_right(a,(b<-((sll_integer_t)SLL_MAX_STRING_LENGTH)?SLL_MAX_STRING_LENGTH:(sll_string_length_t)(-b)),c,out);
