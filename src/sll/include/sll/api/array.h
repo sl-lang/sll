@@ -65,6 +65,18 @@ __API_FUNC_DECL(array_join);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_array_pop
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \ret O
+ */
+__API_FUNC_DECL(array_pop);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_array_push
  * \group array-api
  * \desc Docs!

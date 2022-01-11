@@ -8,6 +8,7 @@
 	(~ func_type) create
 	(~ func_type) extend
 	(~ func_type) join
+	(~ func_type) pop
 	(~ func_type) push
 	(~ func_type) remove
 	(~ func_type) replace
@@ -24,6 +25,8 @@
 (= extend (... "sll:array_extend"))
 
 (= join (... "sll:array_join"))
+
+(= pop (... "sll:array_pop"))
 
 (= push (... "sll:array_push"))
 
@@ -42,6 +45,7 @@
 	create
 	extend
 	join
+	pop
 	push
 	remove
 	replace

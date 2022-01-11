@@ -52,6 +52,13 @@ __API_FUNC(array_join){
 
 
 
+__API_FUNC(array_pop){
+	return sll_array_pop(NULL,a);
+}
+
+
+
+
 __API_FUNC(array_push){
 	if (!sll_array_push(NULL,b,a)){
 		SLL_UNIMPLEMENTED();

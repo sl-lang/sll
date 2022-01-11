@@ -105,6 +105,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_array_pop __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_array_pop sll_array_t* a
+/**
+ * \flags func optimizable
+ * \name sll_api_array_pop
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_pop_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_pop:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_array_push void
 #define __SLL_API_ARGS_sll_api_array_push sll_array_t* a,sll_object_t* b
 /**

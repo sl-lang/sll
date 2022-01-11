@@ -506,6 +506,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_array_parse_int(const sll_ar
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_pop(const sll_array_t* a,sll_array_t* o){
+	if (!a){
+		if (!o->l){
+			return SLL_ACQUIRE_STATIC_INT(0);
+		}
+		sll_object_t* e=o->v[o->l-1];
+		o->l--;
+		o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
+		return e;
+	}
 	if (!a->l){
 		SLL_INIT_ARRAY(o);
 		return SLL_ACQUIRE_STATIC_INT(0);
