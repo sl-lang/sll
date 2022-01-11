@@ -457,6 +457,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_pop(const sll_array_t*
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_push(const sll_array_t* a,sll_object_t* v,sll_array_t* o){
+	if (!a){
+		o->l++;
+		o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
+		if (!o->v){
+			return 0;
+		}
+		SLL_ACQUIRE(v);
+		o->v[o->l-1]=v;
+		return 1;
+	}
 	o->l=a->l+1;
 	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
 	if (!o->v){

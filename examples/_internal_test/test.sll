@@ -308,6 +308,8 @@
 	(++ i)
 })
 
+(:> (<- math$factors 1269774) "\n" (<- math$euler_phi 20) "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

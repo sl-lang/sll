@@ -41,6 +41,31 @@
 
 
 /**
+ * \flags func
+ * \name sll_math_euler_phi
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_size_t n
+ * \ret sll_size_t
+ */
+sll_size_t sll_math_euler_phi(sll_size_t n);
+
+
+
+/**
+ * \flags func
+ * \name sll_math_factors
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_size_t n
+ * \arg sll_array_length_t* ol
+ * \ret sll_factor_t*
+ */
+sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol);
+
+
+
+/**
  * \flags api compilation_call func optimizable
  * \name sll_api_math_abs
  * \group math-api
@@ -223,6 +248,18 @@ __API_FUNC_DECL(math_copy_sign);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_math_euler_phi
+ * \group math-api
+ * \desc Docs!
+ * \arg I
+ * \ret I
+ */
+__API_FUNC_DECL(math_euler_phi);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_math_factorial
  * \group math-api
  * \desc Docs!
@@ -230,6 +267,18 @@ __API_FUNC_DECL(math_copy_sign);
  * \ret I
  */
 __API_FUNC_DECL(math_factorial);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_math_factors
+ * \group math-api
+ * \desc Docs!
+ * \arg I
+ * \ret A
+ */
+__API_FUNC_DECL(math_factors);
 
 
 

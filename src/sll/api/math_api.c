@@ -1,9 +1,140 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/math.h>
+#include <sll/array.h>
 #include <sll/common.h>
+#include <sll/memory.h>
+#include <sll/object.h>
+#include <sll/static_object.h>
 #include <sll/types.h>
 #include <math.h>
+
+
+
+#define PUSH_FACTOR(v,c) \
+	do{ \
+		j++; \
+		o=sll_reallocate(o,j*sizeof(sll_factor_t)); \
+		(o+j-1)->n=v; \
+		(o+j-1)->pw=c; \
+	} while (0)
+#define WHEEL_STEP(x) \
+	if (!(n%f)){ \
+		i=0; \
+		do{ \
+			i++; \
+			n/=f; \
+		} while (!(n%f)); \
+		PUSH_FACTOR(f,i); \
+	} \
+	f+=x; \
+	if (f*f>n){ \
+		break; \
+	}
+#define WHEEL_STEP_EULER(x) \
+	if (!(n%f)){ \
+		do{ \
+			n/=f; \
+		} while (!(n%f)); \
+		o-=o/f; \
+	} \
+	f+=x; \
+	if (f*f>n){ \
+		break; \
+	}
+
+
+
+sll_size_t sll_math_euler_phi(sll_size_t n){
+	if (n<2){
+		return 0;
+	}
+	sll_size_t o=n;
+	sll_size_t c=FIND_FIRST_SET_BIT(n);
+	if (c){
+		n>>=c;
+		o>>=1;
+	}
+	if (!(n%3)){
+		do{
+			n/=3;
+		} while (!(n%3));
+		o-=o/3;
+	}
+	if (!(n%5)){
+		do{
+			n/=5;
+		} while (!(n%5));
+		o-=o/5;
+	}
+	sll_size_t f=7;
+	if (n>48){
+		while (1){
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(6);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(6);
+		}
+	}
+	if (n!=1){
+		o-=o/n;
+	}
+	return o;
+}
+
+
+
+sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol){
+	if (n<2){
+		*ol=0;
+		return NULL;
+	}
+	sll_size_t i=FIND_FIRST_SET_BIT(n);
+	sll_factor_t* o=sll_allocate_stack(1);
+	sll_array_length_t j=0;
+	if (i){
+		n>>=i;
+		PUSH_FACTOR(2,i);
+	}
+	if (!(n%3)){
+		i=0;
+		do{
+			i++;
+			n/=3;
+		} while (!(n%3));
+		PUSH_FACTOR(3,i);
+	}
+	if (!(n%5)){
+		i=0;
+		do{
+			i++;
+			n/=5;
+		} while (!(n%5));
+		PUSH_FACTOR(5,i);
+	}
+	uint64_t f=7;
+	if (n>48){
+		while (1){
+			WHEEL_STEP(4);
+			WHEEL_STEP(2);
+			WHEEL_STEP(4);
+			WHEEL_STEP(2);
+			WHEEL_STEP(4);
+			WHEEL_STEP(6);
+			WHEEL_STEP(2);
+			WHEEL_STEP(6);
+		}
+	}
+	if (n!=1){
+		PUSH_FACTOR(n,1);
+	}
+	*ol=j;
+	return o;
+}
 
 
 
@@ -130,6 +261,12 @@ __API_FUNC(math_copy_sign){
 
 
 
+__API_FUNC(math_euler_phi){
+	return (a<0?0:sll_math_euler_phi((sll_size_t)a));
+}
+
+
+
 __API_FUNC(math_factorial){
 	if (a<0){
 		SLL_UNIMPLEMENTED();
@@ -140,6 +277,31 @@ __API_FUNC(math_factorial){
 		a--;
 	}
 	return o;
+}
+
+
+
+__API_FUNC(math_factors){
+	if (a<0){
+		SLL_INIT_ARRAY(out);
+		return;
+	}
+	sll_array_length_t l;
+	sll_factor_t* dt=sll_math_factors(a,&l);
+	if (!sll_array_create(l,out)){
+		SLL_UNIMPLEMENTED();
+	}
+	for (sll_array_length_t i=0;i<l;i++){
+		sll_object_t* n=SLL_CREATE();
+		n->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(2,&(n->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+		n->dt.a.v[0]=SLL_FROM_INT((dt+i)->n);
+		n->dt.a.v[1]=SLL_FROM_INT((dt+i)->pw);
+		out->v[i]=n;
+	}
+	sll_deallocate(dt);
 }
 
 

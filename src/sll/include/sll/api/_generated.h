@@ -1119,6 +1119,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_math_euler_phi __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_math_euler_phi sll_integer_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_euler_phi
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_euler_phi_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_euler_phi:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_math_factorial __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_math_factorial sll_integer_t a
 /**
@@ -1135,6 +1158,28 @@
  * \group raw-api
  * \subgroup raw-api-math-api
  * \desc Wrapper function for :sll_api_math_factorial:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_math_factors void
+#define __SLL_API_ARGS_sll_api_math_factors sll_integer_t a,sll_array_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_math_factors
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_math_factors_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_factors:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

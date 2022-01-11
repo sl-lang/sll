@@ -4,13 +4,16 @@
 
 ### Added
 
+- Euler's totient/phi function: `sll_math_euler_phi` and `math$euler_phi`
 - Integer to decimal string conversion: `int$to_dec`
+- Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
 - Special structure field: `@@string@@`
 
 ### Changed
 
 - Fixed integer overflow when parsing floats
 - Moved file argument from `sll_compilation_data_t` to `sll_parse_all_nodes`
+- `sll_array_push` supports in-place operations
 
 ### Removed
 

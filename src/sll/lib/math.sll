@@ -1,9 +1,15 @@
-(# int_type func_type float_type)
+(# int_type func_type type_type float_type)
 (--- "types.sll")
 
 
 
+(= factor_type (&:
+	int_type prime
+	int_type power
+))
+
 (= math_module_type (&:
+	(~ type_type) factor_type
 	(~ float_type) 1_DIV_PI
 	(~ float_type) 1_DIV_SQRT2
 	(~ float_type) 2_DIV_PI
@@ -33,7 +39,9 @@
 	(~ func_type) cosh
 	(~ func_type) ceil
 	(~ func_type) copy_sign
+	(~ func_type) euler_phi
 	(~ func_type) factorial
+	(~ func_type) factors
 	(~ func_type) floor
 	(~ func_type) gcd
 	(~ func_type) int_log2
@@ -101,7 +109,26 @@
 
 (= copy_sign (... "sll:math_copy_sign"))
 
+(= euler_phi (... "sll:math_euler_phi"))
+
 (= factorial (... "sll:math_factorial"))
+
+(= factors (,,, n {
+	(= n (:: n int_type))
+	(= neg [])
+	(? (< o 0) {
+		(= neg [(. factor_type -1 1)])
+		(= n (- 0 n))
+	})
+	(= l (<- (... "sll:math_factors") n))
+	(@@ (+ neg
+		([> (= i 0) (< i ($ l))
+			(= k (: l i))
+			(++ i)
+			(. factor_type (: k 0) (: k 1))
+		)
+	))
+}))
 
 (= floor (... "sll:math_floor"))
 
@@ -151,6 +178,7 @@
 
 
 (= math (. math_module_type
+	factor_type
 	1_DIV_PI
 	1_DIV_SQRT2
 	2_DIV_PI
@@ -180,7 +208,9 @@
 	cosh
 	ceil
 	copy_sign
+	euler_phi
 	factorial
+	factors
 	floor
 	gcd
 	int_log2

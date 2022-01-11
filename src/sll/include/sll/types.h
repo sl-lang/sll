@@ -754,4 +754,11 @@ typedef struct __SLL_DATE{
 
 
 
+typedef struct __SLL_FACTOR{
+	sll_size_t n;
+	sll_size_t pw;
+} sll_factor_t;
+
+
+
 #endif
