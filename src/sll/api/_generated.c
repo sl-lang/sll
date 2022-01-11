@@ -331,6 +331,32 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_array_shift sll_api_array_shift(__SLL_API_ARGS_sll_api_array_shift);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_shift_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(a->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_object_t* out=sll_api_array_shift(&(a->dt.a));
+	SLL_RELEASE(a);
+	return out;
+}
+
+
+
 __SLL_API_TYPE_sll_api_array_split sll_api_array_split(__SLL_API_ARGS_sll_api_array_split);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_split_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -366,6 +392,41 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_split_raw(sll_obje
 	out_o->t=SLL_OBJECT_TYPE_ARRAY;
 	out_o->dt.a=out;
 	return out_o;
+}
+
+
+
+__SLL_API_TYPE_sll_api_array_unshift sll_api_array_unshift(__SLL_API_ARGS_sll_api_array_unshift);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_unshift_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_ARRAY;
+		if (!sll_array_create(0,&(a->dt.a))){
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		SLL_ACQUIRE(b);
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_array_unshift(&(a->dt.a),b);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -4042,8 +4103,18 @@ static const internal_function_t _ifunc_data_ptr[]={
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
+		"sll:array_shift",
+		sll_api_array_shift_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
+	},
+	{
 		"sll:array_split",
 		sll_api_array_split_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
+	},
+	{
+		"sll:array_unshift",
+		sll_api_array_unshift_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
@@ -4615,5 +4686,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=123;
+const sll_function_index_t _ifunc_size=125;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

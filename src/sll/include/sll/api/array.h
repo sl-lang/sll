@@ -129,6 +129,18 @@ __API_FUNC_DECL(array_reverse);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_array_shift
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \ret O
+ */
+__API_FUNC_DECL(array_shift);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_array_split
  * \group array-api
  * \desc Docs!
@@ -137,6 +149,19 @@ __API_FUNC_DECL(array_reverse);
  * \ret A
  */
 __API_FUNC_DECL(array_split);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_array_unshift
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \ret V
+ */
+__API_FUNC_DECL(array_unshift);
 
 
 

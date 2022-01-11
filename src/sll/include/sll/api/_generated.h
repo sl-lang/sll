@@ -220,6 +220,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_array_shift __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_array_shift sll_array_t* a
+/**
+ * \flags func optimizable
+ * \name sll_api_array_shift
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_shift_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_shift:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_array_split void
 #define __SLL_API_ARGS_sll_api_array_split sll_array_t* a,sll_object_t* b,sll_array_t* out
 /**
@@ -236,6 +259,29 @@
  * \group raw-api
  * \subgroup raw-api-array-api
  * \desc Wrapper function for :sll_api_array_split:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_array_unshift void
+#define __SLL_API_ARGS_sll_api_array_unshift sll_array_t* a,sll_object_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_unshift
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \arg sll_object_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_array_unshift_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_unshift:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

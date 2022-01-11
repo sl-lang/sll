@@ -821,6 +821,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_set(const sll_array_t* a,
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o){
+	if (!a){
+		if (!o->l){
+			return SLL_ACQUIRE_STATIC_INT(0);
+		}
+		sll_object_t* e=o->v[0];
+		o->l--;
+		for (sll_array_length_t i=0;i<o->l;i++){
+			o->v[i]=o->v[i+1];
+		}
+		o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
+		return e;
+	}
 	if (!a->l){
 		SLL_INIT_ARRAY(o);
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -869,6 +881,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_to_map(const sll_array_t*
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_unshift(const sll_array_t* a,sll_object_t* v,sll_array_t* o){
+	if (!a){
+		o->l++;
+		o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
+		if (!o->v){
+			return 0;
+		}
+		for (sll_array_length_t i=o->l-1;i;i--){
+			o->v[i]=o->v[i-1];
+		}
+		o->v[0]=v;
+		SLL_ACQUIRE(v);
+		return 1;
+	}
 	o->l=a->l+1;
 	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
 	if (!o->v){

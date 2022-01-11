@@ -13,7 +13,9 @@
 	(~ func_type) remove
 	(~ func_type) replace
 	(~ func_type) reverse
+	(~ func_type) shift
 	(~ func_type) split
+	(~ func_type) unshift
 ))
 
 
@@ -36,7 +38,11 @@
 
 (= reverse (... "sll:array_reverse"))
 
+(= shift (... "sll:array_shift"))
+
 (= split (... "sll:array_split"))
+
+(= unshift (... "sll:array_unshift"))
 
 
 
@@ -50,6 +56,8 @@
 	remove
 	replace
 	reverse
+	shift
 	split
+	unshift
 ))
 (## array)

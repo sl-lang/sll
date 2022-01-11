@@ -91,8 +91,22 @@ __API_FUNC(array_reverse){
 
 
 
+__API_FUNC(array_shift){
+	return sll_array_shift(NULL,a);
+}
+
+
+
 __API_FUNC(array_split){
 	if (!sll_array_split(a,b,out)){
+		SLL_UNIMPLEMENTED();
+	}
+}
+
+
+
+__API_FUNC(array_unshift){
+	if (!sll_array_unshift(NULL,b,a)){
 		SLL_UNIMPLEMENTED();
 	}
 }

@@ -322,6 +322,9 @@
 (= arr (<- array$join arr 5))
 (:> arr "\n")
 (:> (<- array$pop arr) ", " arr "\n")
+(:> (<- array$shift arr) ", " arr "\n")
+(<- array$unshift arr 1)
+(:> arr "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
