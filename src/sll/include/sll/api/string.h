@@ -133,6 +133,7 @@ __API_FUNC_DECL(string_index);
  * \desc Docs!
  * \arg S
  * \arg SC
+ * \arg B
  * \ret I
  */
 __API_FUNC_DECL(string_index_list);
@@ -159,6 +160,7 @@ __API_FUNC_DECL(string_index_reverse);
  * \desc Docs!
  * \arg S
  * \arg SC
+ * \arg B
  * \ret I
  */
 __API_FUNC_DECL(string_index_reverse_list);
@@ -293,6 +295,42 @@ __API_FUNC_DECL(string_to_lower_case);
  * \ret S
  */
 __API_FUNC_DECL(string_to_title_case);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_trim
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \ret S
+ */
+__API_FUNC_DECL(string_trim);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_trim_left
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \ret S
+ */
+__API_FUNC_DECL(string_trim_left);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
+ * \name sll_api_string_trim_right
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \ret S
+ */
+__API_FUNC_DECL(string_trim_right);
 
 
 

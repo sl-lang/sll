@@ -1,14 +1,41 @@
-(# int_type func_type type_type string_type array_type sys)
-(--- "types.sll" "sys.sll")
+(# int_type func_type type_type string_type array_type sys string array)
+(--- "types.sll" "sys.sll" "string.sll" "array.sll")
+
+
+
+(# FLAG_PASS_STDIN FLAG_CAPTURE_STDOUT FLAG_CAPTURE_STDERR FLAG_WAIT)
 
 
 
 (= process_config_type (&:
+	(,,, dt {
+		(? (! ($ dt$cwd)) {
+			(= dt$cwd ".")
+		})
+	}) @@init@@
+	(,,, dt {
+		(= fl [])
+		(? (& dt$flags FLAG_PASS_STDIN) (<- array$push fl "FLAG_PASS_STDIN"))
+		(? (& dt$flags FLAG_PASS_STDOUT) (<- array$push fl "FLAG_PASS_STDOUT"))
+		(? (& dt$flags FLAG_PASS_STDERR) (<- array$push fl "FLAG_PASS_STDERR"))
+		(? (& dt$flags FLAG_WAIT) (<- array$push fl "FLAG_WAIT"))
+		(@@ (<- string$format "<cwd=\"%s\" flags=%s>"
+			dt$cwd
+			(<- string$join ", " fl)
+		))
+	}) @@string@@
 	string_type cwd
 	int_type flags
 ))
 
 (= stream_data_type (&:
+	(,,, dt {
+		(@@ (<- string$format "<in=\"%s\" out=\"%s\" err=\"%s\">"
+			dt$stdin
+			dt$stdout
+			dt$stderr
+		))
+	}) @@string@@
 	(~ string_type) stdin
 	(~ string_type) stdout
 	(~ string_type) stderr

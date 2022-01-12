@@ -20,7 +20,7 @@ __SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s){
 		'/',
 		'\\'
 	};
-	sll_string_length_t o=sll_string_index_reverse_multiple(s,dt,2);
+	sll_string_length_t o=sll_string_index_reverse_multiple(s,dt,2,0);
 	return (o==SLL_MAX_STRING_INDEX?0:o+1);
 }
 

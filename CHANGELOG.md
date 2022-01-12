@@ -15,15 +15,22 @@
 - Implemented `sll_array_join_arrays` and `sll:array_join` ([#87] and [#115])
 - Implemented `sll_array_split` and `sll:array_split` ([#87] and [#122])
 - Implemented `sll_string_pad` and `sll:string_pad` ([#87] and [#110])
+- Implemented `sll_string_trim_left` and `sll:string_trim_left` ([#87] and [#108])
+- Implemented `sll_string_trim_right` and `sll:string_trim_right` ([#87] and [#109])
+- Implemented `sll_string_trim` and `sll:string_trim` ([#87] and [#107])
 - Integer to decimal string conversion: `int$to_dec`
+- Inversion flag to `sll_string_index_char`, `sll_string_index_multiple`, `sll_string_index_reverse_char` and `sll_string_index_reverse_multiple` ([#108] and [#109])
 - Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
 - Special structure field: `@@string@@`
+- Type-to-string in custom types: `date$time_zone_type`, `date$date_type`, `file$file_type`, `json$json_null`, `json$json_true`, `json$json_false`, `math$factor_type`, `process$process_config_type`, `process$stream_data_type` and `sys$VERSION`
 
 ### Changed
 
 - Fixed integer overflow when parsing floats
+- Fixed integer-to-string conversion in `sll_string_format` and `sll_string_format_list`
 - In-place operations are now supported in some array functions: `sll_array_pop`, `sll_array_push`, `sll_array_remove`, `sll_array_shift` and `sll_array_unshift` ([#87], [#118], [#121], [#213], [#214] and [#215])
 - Moved file argument from `sll_compilation_data_t` to `sll_parse_all_nodes`
+- `time_zone_type$time_offset` is now an integer offset in minutes
 
 ### Removed
 
@@ -32,6 +39,7 @@
 - File argument from `sll_init_compilation_data`
 - Object type initializer API
 - Old operator number macros: `SLL_FLOAT_ABSOLUTE` and `SLL_FLOAT_ROUND`
+- Unused string functions: `sll_string_subtract_array` and `sll_string_subtract_map`
 
 ## [0.6.36] - 2021-01-09
 
@@ -1483,6 +1491,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#112]: https://github.com/sl-lang/sll/issues/112
 [#111]: https://github.com/sl-lang/sll/issues/111
 [#110]: https://github.com/sl-lang/sll/issues/110
+[#109]: https://github.com/sl-lang/sll/issues/109
+[#108]: https://github.com/sl-lang/sll/issues/108
+[#107]: https://github.com/sl-lang/sll/issues/107
 [#106]: https://github.com/sl-lang/sll/issues/106
 [#105]: https://github.com/sl-lang/sll/issues/105
 [#104]: https://github.com/sl-lang/sll/issues/104

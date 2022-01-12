@@ -1,9 +1,12 @@
-(# int_type func_type string_type array_type path)
-(--- "types.sll" "path.sll")
+(# int_type func_type string_type array_type path string)
+(--- "types.sll" "path.sll" "string.sll")
 
 
 
 (= version_type (&:
+	(,,, dt {
+		(@@ (<- string$format "sll-v%u.%u.%u" dt$major dt$minor dt$patch))
+	}) @@string@@
 	(~ int_type) major
 	(~ int_type) minor
 	(~ int_type) patch

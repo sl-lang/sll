@@ -68,7 +68,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
  * \arg O
  * \arg O
  * \arg O
- * \ret V
  */
 __API_FUNC_DECL(json__init);
 

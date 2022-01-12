@@ -287,19 +287,19 @@ static void _read_object_internal(sll_file_t* rf,sll_compilation_data_t* c_dt,sl
 	sll_node_offset_t f_off=0;
 	while (c!=SLL_END_OF_DATA){
 		if ((c>8&&c<14)||c==' '){
-			while ((c>8&&c<14)||c==' '){
+			do{
 				if (c=='\n'){
 					sll_node_t* dbg=_acquire_next_node(c_dt);
 					dbg->t=SLL_NODE_TYPE_DBG;
 					dbg->dt.s=SLL_MAX_STRING_INDEX;
 				}
 				c=sll_file_read_char(rf);
-			}
+			} while ((c>8&&c<14)||c==' ');
 		}
 		else if (c==';'){
-			while (c!='\n'&&c!=SLL_END_OF_DATA){
+			do{
 				c=sll_file_read_char(rf);
-			}
+			} while (c!='\n'&&c!=SLL_END_OF_DATA);
 		}
 		else if (o&&o->t==NODE_TYPE_UNKNOWN){
 			sll_char_t str[256];
@@ -505,8 +505,7 @@ static void _read_object_internal(sll_file_t* rf,sll_compilation_data_t* c_dt,sl
 			if ((o->t>=SLL_NODE_TYPE_FOR&&o->t<=SLL_NODE_TYPE_LOOP)||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC||(o->t>=SLL_NODE_TYPE_FOR_ARRAY&&o->t<=SLL_NODE_TYPE_WHILE_MAP)){
 				n_l_sc.l_sc=c_dt->_n_sc_id;
 				n_l_sc.ml=(n_l_sc.l_sc>>6)+1;
-				n_l_sc.m=sll_allocate(n_l_sc.ml*sizeof(uint64_t));
-				n_l_sc.m[n_l_sc.ml-1]=0;
+				n_l_sc.m=sll_zero_allocate(n_l_sc.ml*sizeof(uint64_t));
 				sll_copy_data(l_sc->m,l_sc->ml*sizeof(uint64_t),n_l_sc.m);
 				n_l_sc.m[n_l_sc.l_sc>>6]|=1ull<<(n_l_sc.l_sc&63);
 				c_dt->_n_sc_id++;

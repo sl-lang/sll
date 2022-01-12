@@ -18,7 +18,6 @@
  * \group log-api
  * \desc Docs!
  * \arg O
- * \ret V
  */
 __API_FUNC_DECL(log_log);
 
@@ -31,7 +30,6 @@ __API_FUNC_DECL(log_log);
  * \desc Docs!
  * \arg I
  * \arg B
- * \ret V
  */
 __API_FUNC_DECL(log_set_default);
 
@@ -45,7 +43,6 @@ __API_FUNC_DECL(log_set_default);
  * \arg S
  * \arg I
  * \arg B
- * \ret V
  */
 __API_FUNC_DECL(log_set_file);
 
@@ -60,7 +57,6 @@ __API_FUNC_DECL(log_set_file);
  * \arg S
  * \arg I
  * \arg B
- * \ret V
  */
 __API_FUNC_DECL(log_set_function);
 

@@ -11,6 +11,7 @@
 #include <sll/types.h>
 #include <sll/util.h>
 #include <stdint.h>
+#include <stdio.h>
 
 
 
@@ -18,6 +19,11 @@
 #define SPLIT_CHAR_ALLOCATION_SIZE 16
 
 #define STRING_DATA_PTR(x) ASSUME_ALIGNED(x,4,8)
+
+
+
+static const sll_char_t _string_whitespace[]={'\t','\n','\v','\x0c','\r',' '};
+static const sll_string_length_t _string_whitespace_count=sizeof(_string_whitespace)/sizeof(const sll_char_t);
 
 
 
@@ -774,7 +780,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 		return SLL_MAX_STRING_LENGTH;
 	}
 	if (b->l==1){
-		return sll_string_index_char(a,b->v[0]);
+		return sll_string_index_char(a,b->v[0],0);
 	}
 	SLL_UNIMPLEMENTED();
 	return SLL_MAX_STRING_LENGTH;
@@ -782,7 +788,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv){
 	if (!s->l){
 		return SLL_MAX_STRING_LENGTH;
 	}
@@ -791,7 +797,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(cons
 	uint64_t m=0x101010101010101ull*c;
 	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
 		uint64_t v=(*p)^m;
-		v=(v-0x101010101010101ull)&0x8080808080808080ull&(~v);
+		v=(v-0x101010101010101ull)&(~v);
+		if (inv){
+			v=~v;
+		}
+		v&=0x8080808080808080ull;
 		if (v){
 			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
 			return (!c&&o>=s->l?SLL_MAX_STRING_LENGTH:o);
@@ -803,7 +813,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(cons
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll,sll_bool_t inv){
 	if (!s->l||!cll){
 		return SLL_MAX_STRING_LENGTH;
 	}
@@ -819,6 +829,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 		for (sll_string_length_t j=0;j<cll;j++){
 			uint64_t e=k^(*(ml+j));
 			v|=(e-0x101010101010101ull)&(~e);
+		}
+		if (inv){
+			v=~v;
 		}
 		v&=0x8080808080808080ull;
 		if (v){
@@ -841,7 +854,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse(c
 		return SLL_MAX_STRING_LENGTH;
 	}
 	if (b->l==1){
-		return sll_string_index_reverse_char(a,b->v[0]);
+		return sll_string_index_reverse_char(a,b->v[0],0);
 	}
 	SLL_UNIMPLEMENTED();
 	return SLL_MAX_STRING_LENGTH;
@@ -849,7 +862,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse(c
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_char(const sll_string_t* s,sll_char_t c){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv){
 	if (!s->l){
 		return SLL_MAX_STRING_LENGTH;
 	}
@@ -859,8 +872,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_c
 	for (sll_string_length_t i=0;i<l;i++){
 		p--;
 		uint64_t v=(*p)^m;
-		v=(v-0x101010101010101ull)&0x8080808080808080ull&(~v);
+		v=(v-0x101010101010101ull)&(~v);
+		if (inv){
+			v=~v;
+		}
+		v&=0x8080808080808080ull;
 		if (v){
+			if (!i&&(s->l&7)){
+				v&=0xffffffffffffffffull>>((8-s->l)<<3);
+				if (!v){
+					continue;
+				}
+			}
 			sll_string_length_t o=((l-i-1)<<3)+(FIND_LAST_SET_BIT(v)>>3);
 			return (!c&&o>=s->l?SLL_MAX_STRING_LENGTH:o);
 		}
@@ -870,7 +893,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_c
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll,sll_bool_t inv){
 	if (!s->l||!cll){
 		return SLL_MAX_STRING_LENGTH;
 	}
@@ -889,8 +912,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 			uint64_t e=k^(*(ml+j));
 			v|=(e-0x101010101010101ull)&(~e);
 		}
+		if (inv){
+			v=~v;
+		}
 		v&=0x8080808080808080ull;
 		if (v){
+			if (!i&&(s->l&7)){
+				v&=0xffffffffffffffffull>>((8-s->l)<<3);
+				if (!v){
+					continue;
+				}
+			}
 			sll_string_length_t o=((l-i-1)<<3)+(FIND_LAST_SET_BIT(v)>>3);
 			return (o>=s->l?SLL_MAX_STRING_LENGTH:o);
 		}
@@ -1125,7 +1157,43 @@ __SLL_EXTERNAL void sll_string_op_array(const sll_string_t* s,const sll_array_t*
 
 
 __SLL_EXTERNAL void sll_string_op_map(const sll_string_t* s,const sll_map_t* m,sll_binary_operator_t f,sll_bool_t inv,sll_map_t* o){
-	SLL_UNIMPLEMENTED();
+	o->l=s->l+m->l;
+	o->v=sll_allocate((s->l<<1)*sizeof(sll_object_t*));
+	sll_string_length_t sml=(s->l+63)>>6;
+	uint64_t* sm=sll_zero_allocate_stack(sml*sizeof(uint64_t));
+	sll_map_length_t i=0;
+	for (sll_map_length_t j=0;j<m->l;j++){
+		SLL_ACQUIRE(m->v[j<<1]);
+		o->v[i]=m->v[j<<1];
+		sll_integer_t idx=m->v[j<<1]->dt.i;
+		if (SLL_OBJECT_GET_TYPE(m->v[j<<1])==SLL_OBJECT_TYPE_INT&&idx>=0&&idx<s->l){
+			*(sm+(idx>>6))|=1ull<<(idx&63);
+			o->v[i+1]=(inv?f(m->v[(j<<1)+1],sll_static_char[s->v[idx]]):f(sll_static_char[s->v[idx]],m->v[(j<<1)+1]));
+		}
+		else{
+			o->v[i+1]=m->v[(j<<1)+1];
+			SLL_ACQUIRE(m->v[(j<<1)+1]);
+		}
+		i+=2;
+	}
+	for (sll_string_length_t j=0;j<sml;j++){
+		uint64_t v=~(*(sm+j));
+		while (v){
+			sll_string_length_t k=FIND_FIRST_SET_BIT(v)|(j<<6);
+			if (k>=s->l){
+				break;
+			}
+			v&=v-1;
+			o->v[i]=SLL_FROM_INT(k);
+			o->v[i+1]=SLL_FROM_CHAR(s->v[k]);
+			i+=2;
+		}
+	}
+	sll_deallocate(sm);
+	if ((i>>1)!=o->l){
+		o->l=i>>1;
+		o->v=sll_reallocate(o->v,i*sizeof(sll_object_t*));
+	}
 }
 
 
@@ -1706,19 +1774,6 @@ __SLL_EXTERNAL void sll_string_subtract_array(const sll_string_t* s,const sll_ar
 
 
 
-__SLL_EXTERNAL void sll_string_subtract_map(const sll_string_t* s,const sll_map_t* m,sll_map_t* o){
-	o->l=s->l+m->l;
-	o->v=sll_allocate((o->l<<1)*sizeof(sll_object_t*));
-	sll_map_length_t i=0;
-	SLL_UNIMPLEMENTED();
-	if ((i>>1)!=o->l){
-		o->l=i>>1;
-		o->v=sll_reallocate(o->v,i*sizeof(sll_object_t*));
-	}
-}
-
-
-
 __SLL_EXTERNAL void sll_string_title_case(const sll_string_t* s,sll_string_t* o){
 	o->l=s->l;
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
@@ -1774,6 +1829,57 @@ __SLL_EXTERNAL void sll_string_to_map(const sll_string_t* s,sll_map_t* o){
 		o->v[j+1]=SLL_FROM_CHAR(s->v[i]);
 		i++;
 	}
+}
+
+
+
+__SLL_EXTERNAL void sll_string_trim(const sll_string_t* s,sll_string_t* o){
+	SLL_INIT_STRING(o);
+	if (!s->l){
+		return;
+	}
+	sll_string_length_t i=sll_string_index_multiple(s,_string_whitespace,_string_whitespace_count,1);
+	sll_string_length_t j=sll_string_index_reverse_multiple(s,_string_whitespace,_string_whitespace_count,1);
+	if (i==SLL_MAX_STRING_LENGTH&&j==SLL_MAX_STRING_LENGTH){
+		return;
+	}
+	j++;
+	sll_string_create(j-i,o);
+	sll_copy_data(s->v+i,j-i,o->v);
+	sll_string_calculate_checksum(o);
+}
+
+
+
+__SLL_EXTERNAL void sll_string_trim_left(const sll_string_t* s,sll_string_t* o){
+	SLL_INIT_STRING(o);
+	if (!s->l){
+		return;
+	}
+	sll_string_length_t i=sll_string_index_multiple(s,_string_whitespace,_string_whitespace_count,1);
+	if (i==SLL_MAX_STRING_LENGTH){
+		return;
+	}
+	sll_string_create(s->l-i,o);
+	sll_copy_data(s->v+i,o->l,o->v);
+	sll_string_calculate_checksum(o);
+}
+
+
+
+__SLL_EXTERNAL void sll_string_trim_right(const sll_string_t* s,sll_string_t* o){
+	SLL_INIT_STRING(o);
+	if (!s->l){
+		return;
+	}
+	sll_string_length_t i=sll_string_index_reverse_multiple(s,_string_whitespace,_string_whitespace_count,1);
+	if (i==SLL_MAX_STRING_LENGTH){
+		return;
+	}
+	i++;
+	sll_string_create(i,o);
+	sll_copy_data(s->v,i,o->v);
+	sll_string_calculate_checksum(o);
 }
 
 

@@ -36,6 +36,9 @@
 	(~ func_type) starts
 	(~ func_type) str
 	(~ func_type) title_case
+	(~ func_type) trim
+	(~ func_type) trim_left
+	(~ func_type) trim_right
 	(~ func_type) upper_case
 ))
 
@@ -132,6 +135,12 @@
 
 (= title_case (... "sll:string_to_title_case"))
 
+(= trim (... "sll:string_trim"))
+
+(= trim_left (... "sll:string_trim_left"))
+
+(= trim_right (... "sll:string_trim_right"))
+
 (= upper_case (... "sll:string_to_upper_case"))
 
 
@@ -169,6 +178,9 @@
 	starts
 	str
 	title_case
+	trim
+	trim_left
+	trim_right
 	upper_case
 ))
 (## string)

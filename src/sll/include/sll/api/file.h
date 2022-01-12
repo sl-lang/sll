@@ -54,7 +54,6 @@ __API_FUNC_DECL(file_flush);
  * \group file-api
  * \desc Docs!
  * \arg I
- * \ret V
  */
 __API_FUNC_DECL(file_inc_handle);
 

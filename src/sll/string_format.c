@@ -308,7 +308,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					o->l+=p;
 				}
 				else if (*t=='o'){
-					uint8_t sz=(FIND_LAST_SET_BIT(n)+2)/3;
+					uint8_t sz=FIND_LAST_SET_BIT(n)/3+1;
 					if (p<sz){
 						p=sz;
 					}
@@ -318,24 +318,23 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
-					uint8_t j=sz*3;
+					sll_string_length_t j=o->l+sz;
 					do{
-						j-=3;
-						o->v[o->l]=48+((n>>j)&7);
-						o->l++;
-					} while (j);
+						j--;
+						o->v[j]=(n&7)+48;
+						n>>=3;
+					} while (n);
+					o->l+=sz;
 					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
 				}
 				else if (*t!='x'&&*t!='X'){
-					uint64_t tmp=n;
-					uint8_t sz=0;
-					do{
+					uint8_t sz=((FIND_LAST_SET_BIT(n)+2)*1233)>>12;
+					if (n>=_string_pow_of_10[sz]){
 						sz++;
-						tmp/=10;
-					} while (tmp);
+					}
 					if (p<sz){
 						p=sz;
 					}
@@ -345,23 +344,20 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
-					uint64_t pw=_string_pow_of_10[sz-1];
-					while (1){
-						sz--;
-						o->v[o->l]=48+((n/pw)%10);
-						o->l++;
-						if (sz<=1){
-							break;
-						}
-						pw/=10;
-					}
+					sll_string_length_t j=o->l+sz;
+					do{
+						j--;
+						o->v[j]=(n%10)+48;
+						n/=10;
+					} while (n);
+					o->l+=sz;
 					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
 				}
 				else{
-					uint8_t sz=(FIND_LAST_SET_BIT(n)+3)>>2;
+					uint8_t sz=(FIND_LAST_SET_BIT(n)>>2)+1;
 					if (p<sz){
 						p=sz;
 					}
@@ -371,14 +367,14 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;
 					}
-					uint8_t j=sz<<2;
 					sll_char_t e=((f&STRING_FORMAT_FLAG_UPPERCASE)?55:87);
+					sll_string_length_t j=o->l+sz;
 					do{
-						j-=4;
-						sll_char_t c=(n>>j)&15;
-						o->v[o->l]=c+(c>9?e:48);
-						o->l++;
-					} while (j);
+						j--;
+						o->v[j]=(n&15)+((n&15)>9?e:48);
+						n>>=4;
+					} while (n);
+					o->l+=sz;
 					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
 						sll_set_memory(o->v+o->l,p,'0');
 						o->l+=p;

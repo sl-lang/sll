@@ -564,9 +564,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
  * \desc Docs!
  * \arg const sll_string_t* s
  * \arg sll_char_t c
+ * \arg sll_bool_t inv
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv);
 
 
 
@@ -579,9 +580,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(cons
  * \arg const sll_string_t* s
  * \arg const sll_char_t* cl
  * \arg sll_string_length_t cll
+ * \arg sll_bool_t inv
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll,sll_bool_t inv);
 
 
 
@@ -607,9 +609,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse(c
  * \desc Docs!
  * \arg const sll_string_t* s
  * \arg sll_char_t c
+ * \arg sll_bool_t inv
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_char(const sll_string_t* s,sll_char_t c);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv);
 
 
 
@@ -622,9 +625,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_c
  * \arg const sll_string_t* s
  * \arg const sll_char_t* cl
  * \arg sll_string_length_t cll
+ * \arg sll_bool_t inv
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_multiple(const sll_string_t* s,const sll_char_t* cl,sll_string_length_t cll,sll_bool_t inv);
 
 
 
@@ -1050,34 +1054,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_starts(const sll_string_
 
 /**
  * \flags func
- * \name sll_string_subtract_array
- * \group string
- * \subgroup string-op
- * \desc Docs!
- * \arg const sll_string_t* s
- * \arg const sll_array_t* a
- * \arg sll_array_t* o
- */
-__SLL_EXTERNAL void sll_string_subtract_array(const sll_string_t* s,const sll_array_t* a,sll_array_t* o);
-
-
-
-/**
- * \flags func
- * \name sll_string_subtract_map
- * \group string
- * \subgroup string-op
- * \desc Docs!
- * \arg const sll_string_t* s
- * \arg const sll_map_t* m
- * \arg sll_map_t* o
- */
-__SLL_EXTERNAL void sll_string_subtract_map(const sll_string_t* s,const sll_map_t* m,sll_map_t* o);
-
-
-
-/**
- * \flags func
  * \name sll_string_title_case
  * \group string
  * \subgroup string-data
@@ -1110,6 +1086,42 @@ __SLL_EXTERNAL void sll_string_to_array(const sll_string_t* s,sll_array_t* o);
  * \arg sll_map_t* o
  */
 __SLL_EXTERNAL void sll_string_to_map(const sll_string_t* s,sll_map_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_string_trim
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_trim(const sll_string_t* s,sll_string_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_string_trim_left
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_trim_left(const sll_string_t* s,sll_string_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_string_trim_right
+ * \group string
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_trim_right(const sll_string_t* s,sll_string_t* o);
 
 
 

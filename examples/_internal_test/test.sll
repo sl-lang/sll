@@ -328,6 +328,12 @@
 
 (:> (<- string$pad "> Title <" 15 '=') "\n")
 
+(:> [(<- string$trim_left " \t\n\r\vLeft \t\n")] "\n")
+(:> [(<- string$trim_right " \t\n\r\vRight \t\n")] "\n")
+(:> [(<- string$trim " \t\n\r\vBoth \t\n")] "\n")
+
+(:> sys$VERSION "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

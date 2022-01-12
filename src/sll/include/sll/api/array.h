@@ -44,7 +44,6 @@ __API_FUNC_DECL(array_create);
  * \desc Docs!
  * \arg A
  * \arg A
- * \ret V
  */
 __API_FUNC_DECL(array_extend);
 
@@ -82,7 +81,6 @@ __API_FUNC_DECL(array_pop);
  * \desc Docs!
  * \arg A
  * \arg O
- * \ret V
  */
 __API_FUNC_DECL(array_push);
 
@@ -95,7 +93,6 @@ __API_FUNC_DECL(array_push);
  * \desc Docs!
  * \arg A
  * \arg O
- * \ret V
  */
 __API_FUNC_DECL(array_remove);
 
@@ -159,7 +156,6 @@ __API_FUNC_DECL(array_split);
  * \desc Docs!
  * \arg A
  * \arg O
- * \ret V
  */
 __API_FUNC_DECL(array_unshift);
 

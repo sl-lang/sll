@@ -1,9 +1,15 @@
-(# int_type func_type type_type float_type)
-(--- "types.sll")
+(# int_type func_type type_type float_type string_type string)
+(--- "types.sll" "string.sll")
 
 
 
 (= factor_type (&:
+	(,,, dt {
+		(? (< dt$power 2) {
+			(@@ (:: dt$prime string_type))
+		})
+		(@@ (<- string$format "%llu^%llu" dt$prime dt$power))
+	}) @@string@@
 	int_type prime
 	int_type power
 ))

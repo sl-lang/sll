@@ -4,7 +4,7 @@
 
 
 
-static SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){
+static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){
 	if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT){
 			if (st[1]->dt.i==-1){

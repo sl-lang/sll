@@ -81,7 +81,7 @@ def create_docs(fl):
 					sg_dt[dt["subgroup"]]={"name":dt["name"],"group":dt["group"],"desc":dt["desc"]}
 				elif ("api" in dt["flag"]):
 					if (dt["ret"] is None):
-						raise RuntimeError(f"{nm}: A '\\ret' tag is required")
+						dt["ret"]={"type":"V","desc":"TBD"}
 					ap_dt.append(dt)
 				else:
 					o.append(dt)
@@ -90,4 +90,4 @@ def create_docs(fl):
 			raise RuntimeError(f"Unknown group '{k['group']}'")
 		if (k["subgroup"] is not None and k["subgroup"] not in sg_dt):
 			raise RuntimeError(f"Unknown subgroup '{k['subgroup']}'")
-	return ({"groups":g_dt,"subgroups":sg_dt,"data":o},ap_dt)
+	return ({"groups":g_dt,"subgroups":sg_dt,"data":o},sorted(ap_dt,key=lambda e:e["name"]))

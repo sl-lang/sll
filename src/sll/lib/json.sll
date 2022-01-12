@@ -3,9 +3,15 @@
 
 
 
-(= json_null (&:))
-(= json_true (&:))
-(= json_false (&:))
+(= json_null (&:
+	(,,, (@@ "null")) @@string@@
+))
+(= json_true (&:
+	(,,, (@@ "true")) @@string@@
+))
+(= json_false (&:
+	(,,, (@@ "false")) @@string@@
+))
 
 (= json_module_type (&:
 	(~ json_null) null

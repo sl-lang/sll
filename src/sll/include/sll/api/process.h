@@ -37,7 +37,6 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
  * \group process-api
  * \desc Docs!
  * \arg I
- * \ret V
  */
 __API_FUNC_DECL(process__init);
 

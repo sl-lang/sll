@@ -334,28 +334,28 @@ __API_FUNC(string_flip_case){
 
 
 __API_FUNC(string_index){
-	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c):sll_string_index(a,&(b->dt.s)));
+	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c,0):sll_string_index(a,&(b->dt.s)));
 	return (o==SLL_MAX_STRING_INDEX?-1:o);
 }
 
 
 
 __API_FUNC(string_index_list){
-	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c):sll_string_index_multiple(a,b->dt.s.v,b->dt.s.l));
+	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c,c):sll_string_index_multiple(a,b->dt.s.v,b->dt.s.l,c));
 	return (o==SLL_MAX_STRING_INDEX?-1:o);
 }
 
 
 
 __API_FUNC(string_index_reverse){
-	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c):sll_string_index_reverse(a,&(b->dt.s)));
+	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,0):sll_string_index_reverse(a,&(b->dt.s)));
 	return (o==SLL_MAX_STRING_INDEX?-1:o);
 }
 
 
 
 __API_FUNC(string_index_reverse_list){
-	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c):sll_string_index_reverse_multiple(a,b->dt.s.v,b->dt.s.l));
+	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,c):sll_string_index_reverse_multiple(a,b->dt.s.v,b->dt.s.l,c));
 	return (o==SLL_MAX_STRING_INDEX?-1:o);
 }
 
@@ -477,6 +477,24 @@ __API_FUNC(string_to_lower_case){
 
 __API_FUNC(string_to_title_case){
 	sll_string_title_case(a,out);
+}
+
+
+
+__API_FUNC(string_trim){
+	sll_string_trim(a,out);
+}
+
+
+
+__API_FUNC(string_trim_left){
+	sll_string_trim_left(a,out);
+}
+
+
+
+__API_FUNC(string_trim_right){
+	sll_string_trim_right(a,out);
 }
 
 
