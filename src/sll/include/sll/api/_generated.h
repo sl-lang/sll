@@ -2697,6 +2697,30 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_string_secure_equal __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_string_secure_equal sll_string_t* a,sll_string_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_secure_equal
+ * \group string-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \arg sll_string_t* b -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_string_secure_equal_raw
+ * \group raw-api
+ * \subgroup raw-api-string-api
+ * \desc Wrapper function for :sll_api_string_secure_equal:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_string_split void
 #define __SLL_API_ARGS_sll_api_string_split sll_string_t* a,sll_object_t* b,sll_array_t* out
 /**

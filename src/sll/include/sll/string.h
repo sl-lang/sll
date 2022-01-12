@@ -968,6 +968,20 @@ __SLL_EXTERNAL void sll_string_reverse(const sll_string_t* s,sll_string_t* o);
 
 
 /**
+ * \flags check_output func
+ * \name sll_string_secure_equal
+ * \group string
+ * \subgroup string-op
+ * \desc Docs!
+ * \arg const sll_string_t* a
+ * \arg const sll_string_t* b
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL sll_bool_t sll_string_secure_equal(const sll_string_t* a,const sll_string_t* b);
+
+
+
+/**
  * \flags func
  * \name sll_string_select
  * \group string

@@ -32,6 +32,7 @@
 	(~ func_type) pad_right
 	(~ func_type) replace
 	(~ func_type) reverse
+	(~ func_type) secure_compare
 	(~ func_type) split
 	(~ func_type) starts
 	(~ func_type) str
@@ -127,6 +128,8 @@
 
 (= reverse (... "sll:string_reverse"))
 
+(= secure_equal (... "sll:string_secure_equal"))
+
 (= split (... "sll:string_split"))
 
 (= starts (... "sll:string_starts"))
@@ -174,6 +177,7 @@
 	pad_right
 	replace
 	reverse
+	secure_compare
 	split
 	starts
 	str

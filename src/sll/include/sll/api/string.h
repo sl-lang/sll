@@ -250,6 +250,19 @@ __API_FUNC_DECL(string_reverse);
 
 /**
  * \flags api compilation_call func optimizable
+ * \name sll_api_string_secure_equal
+ * \group string-api
+ * \desc Docs!
+ * \arg S
+ * \arg S
+ * \ret B
+ */
+__API_FUNC_DECL(string_secure_equal);
+
+
+
+/**
+ * \flags api compilation_call func optimizable
  * \name sll_api_string_split
  * \group string-api
  * \desc Docs!

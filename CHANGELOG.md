@@ -15,6 +15,7 @@
 - Implemented `sll_array_join_arrays` and `sll:array_join` ([#87] and [#115])
 - Implemented `sll_array_split` and `sll:array_split` ([#87] and [#122])
 - Implemented `sll_string_pad` and `sll:string_pad` ([#87] and [#110])
+- Implemented `sll_string_secure_equal` and `string$secure_equal`
 - Implemented `sll_string_trim_left` and `sll:string_trim_left` ([#87] and [#108])
 - Implemented `sll_string_trim_right` and `sll:string_trim_right` ([#87] and [#109])
 - Implemented `sll_string_trim` and `sll:string_trim` ([#87] and [#107])

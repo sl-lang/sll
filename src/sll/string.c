@@ -1494,6 +1494,26 @@ __SLL_EXTERNAL void sll_string_reverse(const sll_string_t* s,sll_string_t* o){
 
 
 
+__SLL_EXTERNAL sll_bool_t sll_string_secure_equal(const sll_string_t* a,const sll_string_t* b){
+	if (a->l<b->l){
+		const sll_string_t* t=a;
+		a=b;
+		b=t;
+	}
+	const uint64_t* ap=(const uint64_t*)(a->v);
+	const uint64_t* bp=(const uint64_t*)(b->v);
+	STRING_DATA_PTR(ap);
+	STRING_DATA_PTR(bp);
+	uint64_t o=0;
+	sll_string_length_t i=0;
+	for (;i<((b->l+7)>>3);i++){
+		o|=(*(ap+i))^(*(bp+i));
+	}
+	return (a->l==b->l&&!o);
+}
+
+
+
 __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_string_t* o){
 	while (a<0){
 		a+=s->l;

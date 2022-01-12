@@ -449,6 +449,12 @@ __API_FUNC(string_reverse){
 
 
 
+__API_FUNC(string_secure_equal){
+	return sll_string_secure_equal(a,b);
+}
+
+
+
 __API_FUNC(string_split){
 	if (b->t==SLL_OBJECT_TYPE_CHAR){
 		sll_string_split_char(a,b->dt.c,out);
