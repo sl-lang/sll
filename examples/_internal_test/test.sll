@@ -334,7 +334,9 @@
 
 (:> sys$VERSION "\n")
 
+(:> (<- uuid$uuid3 uuid$NAMESPACE_DNS "123") "\n")
 (:> (<- uuid$uuid4) "\n")
+(:> (<- uuid$uuid5 uuid$NAMESPACE_URL "abc") "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

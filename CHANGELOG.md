@@ -21,7 +21,9 @@
 - Implemented `uuid$from_bytes` ([#193] and [#218])
 - Implemented `uuid$NIL` ([#193] and [#217])
 - Implemented `uuid$to_bytes` ([#193] and [#219])
+- Implemented `uuid$uuid3` ([#193] and [#220])
 - Implemented `uuid$uuid4` ([#193] and [#221])
+- Implemented `uuid$uuid5` ([#193] and [#222])
 - Implemented `uuid$uuid_type` ([#193] and [#216])
 - Implemented `uuid.sll` ([#193])
 - Integer to decimal string conversion: `int$to_dec`
@@ -1413,7 +1415,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#222]: hhtps://github.com/sl-lang/sll/issues/222
 [#221]: hhtps://github.com/sl-lang/sll/issues/221
+[#220]: hhtps://github.com/sl-lang/sll/issues/220
 [#219]: hhtps://github.com/sl-lang/sll/issues/219
 [#218]: hhtps://github.com/sl-lang/sll/issues/218
 [#217]: hhtps://github.com/sl-lang/sll/issues/217

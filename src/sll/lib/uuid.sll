@@ -1,5 +1,5 @@
-(# int_type func_type type_type char_type string_type string random)
-(--- "types.sll" "string.sll" "random.sll")
+(# int_type func_type type_type char_type string_type string random hash)
+(--- "types.sll" "string.sll" "random.sll" "hash.sll")
 
 
 
@@ -24,10 +24,16 @@
 
 (= uuid_module_type (&:
 	(~ type_type) uuid_type
+	(~ uuid_type) NAMESPACE_DNS
+	(~ uuid_type) NAMESPACE_OID
+	(~ uuid_type) NAMESPACE_URL
+	(~ uuid_type) NAMESPACE_X500
 	(~ uuid_type) NIL
 	(~ func_type) from_bytes
 	(~ func_type) to_bytes
+	(~ func_type) uuid3
 	(~ func_type) uuid4
+	(~ func_type) uuid5
 ))
 
 
@@ -39,6 +45,42 @@
 	0
 	0
 	0
+))
+
+(= NAMESPACE_DNS (. uuid_type
+	0x6ba7b810
+	0x9dad
+	0x11d1
+	0x80
+	0xb4
+	0x00c04fd430c8
+))
+
+(= NAMESPACE_OID (. uuid_type
+	0x6ba7b812
+	0x9dad
+	0x11d1
+	0x80
+	0xb4
+	0x00c04fd430c8
+))
+
+(= NAMESPACE_URL (. uuid_type
+	0x6ba7b811
+	0x9dad
+	0x11d1
+	0x80
+	0xb4
+	0x00c04fd430c8
+))
+
+(= NAMESPACE_X500 (. uuid_type
+	0x6ba7b813
+	0x9dad
+	0x11d1
+	0x80
+	0xb4
+	0x00c04fd430c8
 ))
 
 
@@ -89,17 +131,43 @@
 	))
 ))
 
+(= uuid3 (,,, ns nm
+	(@@ (<- from_bytes
+		(: (<- hash$md5$process (+
+			(<- to_bytes (:: ns uuid_type))
+			(:: nm string_type)
+		)) 0 16)
+		5
+	))
+))
+
 (= uuid4 (,,,
 	(@@ (<- from_bytes (<- random$get_string 16) 4))
+))
+
+(= uuid5 (,,, ns nm
+	(@@ (<- from_bytes
+		(: (<- hash$sha1$process (+
+			(<- to_bytes (:: ns uuid_type))
+			(:: nm string_type)
+		)) 0 16)
+		5
+	))
 ))
 
 
 
 (= uuid (. uuid_module_type
 	uuid_type
+	NAMESPACE_DNS
+	NAMESPACE_OID
+	NAMESPACE_URL
+	NAMESPACE_X500
 	NIL
 	from_bytes
 	to_bytes
+	uuid3
 	uuid4
+	uuid5
 ))
 (## uuid)
