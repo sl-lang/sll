@@ -18,6 +18,12 @@
 - Implemented `sll_string_trim_left` and `sll:string_trim_left` ([#87] and [#108])
 - Implemented `sll_string_trim_right` and `sll:string_trim_right` ([#87] and [#109])
 - Implemented `sll_string_trim` and `sll:string_trim` ([#87] and [#107])
+- Implemented `uuid$from_bytes` ([#193] and [#218])
+- Implemented `uuid$NIL` ([#193] and [#217])
+- Implemented `uuid$to_bytes` ([#193] and [#219])
+- Implemented `uuid$uuid4` ([#193] and [#221])
+- Implemented `uuid$uuid_type` ([#193] and [#216])
+- Implemented `uuid.sll` ([#193])
 - Integer to decimal string conversion: `int$to_dec`
 - Inversion flag to `sll_string_index_char`, `sll_string_index_multiple`, `sll_string_index_reverse_char` and `sll_string_index_reverse_multiple` ([#108] and [#109])
 - Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
@@ -1407,6 +1413,11 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#221]: hhtps://github.com/sl-lang/sll/issues/221
+[#219]: hhtps://github.com/sl-lang/sll/issues/219
+[#218]: hhtps://github.com/sl-lang/sll/issues/218
+[#217]: hhtps://github.com/sl-lang/sll/issues/217
+[#216]: hhtps://github.com/sl-lang/sll/issues/216
 [#215]: https://github.com/sl-lang/sll/issues/215
 [#214]: https://github.com/sl-lang/sll/issues/214
 [#213]: https://github.com/sl-lang/sll/issues/213
@@ -1420,6 +1431,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#205]: https://github.com/sl-lang/sll/issues/205
 [#196]: https://github.com/sl-lang/sll/issues/196
 [#194]: https://github.com/sl-lang/sll/issues/194
+[#193]: https://github.com/sl-lang/sll/issues/193
 [#191]: https://github.com/sl-lang/sll/issues/191
 [#190]: https://github.com/sl-lang/sll/issues/190
 [#189]: https://github.com/sl-lang/sll/issues/189

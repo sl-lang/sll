@@ -1,0 +1,105 @@
+(# int_type func_type type_type char_type string_type string random)
+(--- "types.sll" "string.sll" "random.sll")
+
+
+
+(= uuid_type (&:
+	(,,, dt {
+		(@@ (<- string$format "%.8x-%.4x-%.4x-%.2x%.2x-%.12x"
+			dt$time_low
+			dt$time_mid
+			dt$time_hi_and_version
+			dt$clock_seq_hi_and_reserved
+			dt$clock_seq_low
+			dt$node
+		))
+	}) @@string@@
+	int_type time_low
+	int_type time_mid
+	int_type time_hi_and_version
+	int_type clock_seq_hi_and_reserved
+	int_type clock_seq_low
+	int_type node
+))
+
+(= uuid_module_type (&:
+	(~ type_type) uuid_type
+	(~ uuid_type) NIL
+	(~ func_type) from_bytes
+	(~ func_type) to_bytes
+	(~ func_type) uuid4
+))
+
+
+
+(= NIL (. uuid_type
+	0
+	0
+	0
+	0
+	0
+	0
+))
+
+
+
+(= from_bytes (,,, dt v
+	(= dt (:: dt string_type))
+	(? (< ($ dt) 16) {
+		(= dt (+
+			(* '\x00' (- 16 ($ dt)))
+			dt
+		))
+	})
+	(= o (. uuid_type
+		(| (<< (: dt 0) 24) (<< (: dt 1) 16) (<< (: dt 2) 8) (: dt 3))
+		(| (<< (: dt 4) 8) (: dt 5))
+		(| (<< (: dt 6) 8) (: dt 7))
+		(: dt 8)
+		(: dt 9)
+		(| (<< (: dt 10) 40) (<< (: dt 11) 32) (<< (: dt 12) 24) (<< (: dt 13) 16) (<< (: dt 14) 8) (: dt 15))
+	))
+	(= (:: v int_type))
+	(? (&& (> v 0) (< v 5)) {
+		(= o$clock_seq_hi_and_reserved (| 0x80 (& o$clock_seq_hi_and_reserved 0x3f)))
+		(= o$time_hi_and_version (| (<< v 12) (& o$time_hi_and_version 0xfff)))
+	})
+	(@@ o)
+))
+
+(= to_bytes (,,, dt
+	(= dt (:: dt uuid_type))
+	(@@ (+
+		(:: (>> dt$time_low 24) char_type)
+		(:: (>> dt$time_low 16) char_type)
+		(:: (>> dt$time_low 8) char_type)
+		(:: dt$time_low char_type)
+		(:: (>> dt$time_mid 8) char_type)
+		(:: dt$time_mid char_type)
+		(:: (>> dt$time_hi_and_version 8) char_type)
+		(:: dt$time_hi_and_version char_type)
+		(:: dt$clock_seq_hi_and_reserved char_type)
+		(:: dt$clock_seq_low char_type)
+		(:: (>> dt$node 40) char_type)
+		(:: (>> dt$node 32) char_type)
+		(:: (>> dt$node 24) char_type)
+		(:: (>> dt$node 16) char_type)
+		(:: (>> dt$node 8) char_type)
+		(:: dt$node char_type)
+	))
+))
+
+(= uuid4 (,,,
+	(@@ (<- from_bytes (<- random$get_string 16) 4))
+))
+
+
+
+(= uuid (. uuid_module_type
+	uuid_type
+	NIL
+	from_bytes
+	to_bytes
+	uuid4
+))
+(## uuid)
