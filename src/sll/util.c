@@ -286,7 +286,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_fl
 __SLL_EXTERNAL void sll_init(void){
 	sll_platform_setup_console();
 	_file_init_std_streams();
-	_fix_load_mode();
+	_init_platform();
 }
 
 

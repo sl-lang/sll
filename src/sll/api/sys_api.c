@@ -5,6 +5,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform.h>
@@ -115,6 +116,23 @@ __API_FUNC(sys_get_args){
 
 __API_FUNC(sys_get_cpu_count){
 	return sll_platform_get_cpu_count();
+}
+
+
+
+__API_FUNC(sys_get_env){
+	sll_map_create(sll_environment->l,out);
+	for (sll_array_length_t i=0;i<sll_environment->l;i++){
+		const sll_environment_variable_t* kv=*(sll_environment->dt+i);
+		sll_object_t* k=SLL_CREATE();
+		k->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_clone(&(kv->k),&(k->dt.s));
+		out->v[i<<1]=k;
+		sll_object_t* v=SLL_CREATE();
+		v->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_clone(&(kv->v),&(v->dt.s));
+		out->v[(i<<1)+1]=v;
+	}
 }
 
 

@@ -761,4 +761,18 @@ typedef struct __SLL_FACTOR{
 
 
 
+typedef struct __SLL_ENVIRONMENT_VARIABLE{
+	const sll_string_t k;
+	const sll_string_t v;
+} sll_environment_variable_t;
+
+
+
+typedef struct __SLL_ENVIRONMENT{
+	const sll_environment_variable_t*const* dt;
+	const sll_array_length_t l;
+} sll_environment_t;
+
+
+
 #endif

@@ -350,6 +350,8 @@
 (:> (<- file$read buffer 15) " (" (<- file$peek buffer) ")\n")
 (:> (<- file$read buffer 15) " (" (<- file$peek buffer) ")\n")
 
+(:> sys$ENVIRONMENT "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

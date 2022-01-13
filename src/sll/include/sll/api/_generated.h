@@ -2997,6 +2997,27 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_sys_get_env void
+#define __SLL_API_ARGS_sll_api_sys_get_env sll_map_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_sys_get_env
+ * \group sys-api
+ * \desc Docs!
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_get_env_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_get_env:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sys_get_executable void
 #define __SLL_API_ARGS_sll_api_sys_get_executable sll_string_t* out
 /**

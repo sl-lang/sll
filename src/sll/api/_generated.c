@@ -4182,6 +4182,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_cpu_count_raw(sl
 
 
 
+__SLL_API_TYPE_sll_api_sys_get_env sll_api_sys_get_env(__SLL_API_ARGS_sll_api_sys_get_env);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_env_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_map_t out;
+	sll_api_sys_get_env(&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_MAP;
+	out_o->dt.m=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_sys_get_executable sll_api_sys_get_executable(__SLL_API_ARGS_sll_api_sys_get_executable);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_executable_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t out;
@@ -4942,6 +4954,11 @@ static const internal_function_t _ifunc_data_ptr[]={
 		0
 	},
 	{
+		"sll:sys_get_env",
+		sll_api_sys_get_env_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
+	},
+	{
 		"sll:sys_get_executable",
 		sll_api_sys_get_executable_raw,
 		0
@@ -4990,5 +5007,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=132;
+const sll_function_index_t _ifunc_size=133;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

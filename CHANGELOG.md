@@ -6,6 +6,7 @@
 
 - Casting custom types to strings
 - Error return code in `sll_file_from_data` ([#83])
+- Environment variable API: `sll_environment_t`, `sll_environment_variable_t`, `sll_environment` and `sys$ENVIRONMENT`
 - Euler's totient/phi function: `sll_math_euler_phi` and `math$euler_phi`
 - Extra function in the file API: `file$from_data` and `file$peek` ([#192])
 - Floating-point number operation functions: `sll_math_mod`

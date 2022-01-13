@@ -62,6 +62,17 @@ __API_FUNC_DECL(sys_get_cpu_count);
 
 
 /**
+ * \flags api func
+ * \name sll_api_sys_get_env
+ * \group sys-api
+ * \desc Docs!
+ * \ret M
+ */
+__API_FUNC_DECL(sys_get_env);
+
+
+
+/**
  * \flags api func optimizable
  * \name sll_api_sys_get_executable
  * \group sys-api

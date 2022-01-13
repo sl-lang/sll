@@ -1,4 +1,4 @@
-(# int_type func_type string_type array_type path string)
+(# int_type func_type string_type array_type map_type path string)
 (--- "types.sll" "path.sll" "string.sll")
 
 
@@ -15,6 +15,7 @@
 (= sys_module_type (&:
 	(~ array_type) ARGV
 	(~ int_type) CPU_COUNT
+	(~ map_type) ENVIRONMENT
 	(~ string_type) EXECUTABLE
 	(~ string_type) LIBRARY
 	(~ string_type) LIBRARY_EXTENSION
@@ -29,6 +30,8 @@
 (= ARGV (<- (... "sll:sys_get_args")))
 
 (= CPU_COUNT (<- (... "sll:sys_get_cpu_count")))
+
+(= ENVIRONMENT (<- (... "sll:sys_get_env")))
 
 (= EXECUTABLE (<- (... "sll:sys_get_executable")))
 
@@ -49,6 +52,7 @@
 (= sys (. sys_module_type
 	ARGV
 	CPU_COUNT
+	ENVIRONMENT
 	EXECUTABLE
 	LIBRARY
 	LIBRARY_EXTENSION

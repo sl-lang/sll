@@ -559,7 +559,7 @@ void _file_release_std_streams(void);
 
 
 
-void _fix_load_mode(void);
+void _init_platform(void);
 
 
 

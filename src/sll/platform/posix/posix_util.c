@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -13,14 +14,72 @@
 
 
 
+static sll_environment_t _posix_env={NULL,0};
+
+
+
 __SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("posix");
+__SLL_EXTERNAL const sll_environment_t* sll_environment=&_posix_env;
 
 
 
-void _fix_load_mode(void){
-	Dl_info dt;
-	SLL_ASSERT(dladdr(_fix_load_mode,&dt));
-	dlclose(dlopen(dt.dli_fname,RTLD_NOW|RTLD_GLOBAL|RTLD_NOLOAD));
+extern char** environ;
+
+
+
+static void _cleanup_env_data(void){
+	for (sll_array_length_t i=0;i<_posix_env.l;i++){
+		const sll_environment_variable_t* kv=*(_posix_env.dt+i);
+		sll_free_string((sll_string_t*)(&(kv->k)));
+		sll_free_string((sll_string_t*)(&(kv->v)));
+		sll_deallocate((void*)kv);
+	}
+	*((sll_array_length_t*)(&(_posix_env.l)))=0;
+	_posix_env.dt=NULL;
+	sll_deallocate((void*)(_posix_env.dt));
+}
+
+
+
+void _init_platform(void){
+	Dl_info fn_dt;
+	SLL_ASSERT(dladdr(_init_platform,&fn_dt));
+	dlclose(dlopen(fn_dt.dli_fname,RTLD_NOW|RTLD_GLOBAL|RTLD_NOLOAD));
+	sll_array_length_t l=0;
+	char** dt=environ;
+	while (*dt){
+		l++;
+		dt++;
+	}
+	_posix_env.dt=sll_allocate(l*sizeof(sll_environment_variable_t*));
+	sll_array_length_t i=0;
+	dt=environ;
+	while (*dt){
+		sll_char_t* e=SLL_CHAR(*dt);
+		dt++;
+		if (*e=='='){
+			continue;
+		}
+		sll_string_index_t j=0;
+		while (*e&&*e!='='){
+			j++;
+			e++;
+		}
+		if (!(*e)){
+			continue;
+		}
+		sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
+		sll_string_from_pointer_length(e-j,j,(sll_string_t*)(&(n->k)));
+		sll_string_from_pointer(e+1,(sll_string_t*)(&(n->v)));
+		*(((const sll_environment_variable_t**)(_posix_env.dt))+i)=n;
+		i++;
+	}
+	if (i!=l){
+		l=i;
+		_posix_env.dt=sll_reallocate((const sll_environment_variable_t**)(_posix_env.dt),l*sizeof(sll_environment_variable_t*));
+	}
+	*((sll_array_length_t*)(&(_posix_env.l)))=l;
+	sll_register_cleanup(_cleanup_env_data);
 }
 
 

@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <bcrypt.h>
 #include <sll/common.h>
+#include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/util.h>
@@ -10,6 +11,7 @@
 
 
 static HANDLE _win_wh=INVALID_HANDLE_VALUE;
+static sll_environment_t _win_env={NULL,0};
 
 
 
@@ -18,6 +20,21 @@ void* _win_dll_handle=NULL;
 
 
 __SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("windows");
+__SLL_EXTERNAL const sll_environment_t* sll_environment=&_win_env;
+
+
+
+static void _cleanup_env_data(void){
+	for (sll_array_length_t i=0;i<_win_env.l;i++){
+		const sll_environment_variable_t* kv=*(_win_env.dt+i);
+		sll_free_string((sll_string_t*)(&(kv->k)));
+		sll_free_string((sll_string_t*)(&(kv->v)));
+		sll_deallocate((void*)kv);
+	}
+	*((sll_array_length_t*)(&(_win_env.l)))=0;
+	sll_deallocate((void*)(_win_env.dt));
+	_win_env.dt=NULL;
+}
 
 
 
@@ -28,7 +45,42 @@ static void _release_handle(void){
 
 
 
-void _fix_load_mode(void){
+void _init_platform(void){
+	LPCH dt=GetEnvironmentStrings();
+	sll_array_length_t l=0;
+	sll_environment_variable_t** kv=sll_allocate_stack(1);
+	LPCH p=dt;
+	while (*p){
+		LPCH e=p;
+		if (*p=='='){
+			p+=sll_string_length_unaligned(p)+1;
+			continue;
+		}
+		while (*p&&*p!='='){
+			p++;
+		}
+		if (!(*p)){
+			continue;
+		}
+		l++;
+		kv=sll_reallocate(kv,l*sizeof(sll_environment_variable_t*));
+		sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
+		sll_string_from_pointer_length(e,(sll_string_length_t)(p-e),(sll_string_t*)(&(n->k)));
+		p++;
+		sll_string_length_t i=sll_string_length_unaligned(p);
+		sll_string_from_pointer_length(p,i,(sll_string_t*)(&(n->v)));
+		p+=i+1;
+		*(kv+l-1)=n;
+	}
+	FreeEnvironmentStringsA(dt);
+	if (!l){
+		_win_env.dt=NULL;
+	}
+	else{
+		_win_env.dt=sll_memory_move(kv,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	}
+	*((sll_array_length_t*)(&(_win_env.l)))=l;
+	sll_register_cleanup(_cleanup_env_data);
 }
 
 
