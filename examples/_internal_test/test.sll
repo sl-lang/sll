@@ -352,6 +352,8 @@
 
 (:> sys$ENVIRONMENT "\n")
 
+(:> file$TEMP_FILE_PATH "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

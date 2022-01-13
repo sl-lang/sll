@@ -1,4 +1,4 @@
-(# type_type func_type string_type string)
+(# int_type func_type type_type string_type string)
 (--- "types.sll" "string.sll")
 
 
@@ -28,6 +28,10 @@
 
 (= file_module_type (&:
 	(~ type_type) file_type
+	(~ int_type) FLAG_APPEND
+	(~ int_type) FLAG_READ
+	(~ int_type) FLAG_WRITE
+	(~ string_type) TEMP_FILE_PATH
 	(~ file_type) stdin
 	(~ file_type) stdout
 	(~ file_type) stderr
@@ -45,6 +49,8 @@
 (= FLAG_READ 1)
 (= FLAG_WRITE 2)
 (= FLAG_APPEND 4)
+
+(= TEMP_FILE_PATH (<- (... "sll:file_get_temp_path")))
 
 (= stdin (. file_type
 	"@stdin"
@@ -141,6 +147,10 @@
 
 (= file (. file_module_type
 	file_type
+	FLAG_APPEND
+	FLAG_READ
+	FLAG_WRITE
+	TEMP_FILE_PATH
 	stdin
 	stdout
 	stderr

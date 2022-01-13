@@ -685,6 +685,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_from_data_raw(sll_o
 
 
 
+__SLL_API_TYPE_sll_api_file_get_temp_path sll_api_file_get_temp_path(__SLL_API_ARGS_sll_api_file_get_temp_path);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_get_temp_path_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_string_t out;
+	sll_api_file_get_temp_path(&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_file_inc_handle sll_api_file_inc_handle(__SLL_API_ARGS_sll_api_file_inc_handle);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_inc_handle_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -4434,6 +4446,11 @@ static const internal_function_t _ifunc_data_ptr[]={
 		0
 	},
 	{
+		"sll:file_get_temp_path",
+		sll_api_file_get_temp_path_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
+	},
+	{
 		"sll:file_inc_handle",
 		sll_api_file_inc_handle_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
@@ -5007,5 +5024,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=133;
+const sll_function_index_t _ifunc_size=134;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

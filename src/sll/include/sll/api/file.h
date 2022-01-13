@@ -63,6 +63,17 @@ __API_FUNC_DECL(file_from_data);
 
 /**
  * \flags api func
+ * \name sll_api_file_get_temp_path
+ * \group file-api
+ * \desc Docs!
+ * \ret S
+ */
+__API_FUNC_DECL(file_get_temp_path);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_file_inc_handle
  * \group file-api
  * \desc Docs!

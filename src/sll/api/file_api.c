@@ -130,6 +130,13 @@ __API_FUNC(file_from_data){
 
 
 
+__API_FUNC(file_get_temp_path){
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(bf,sll_platform_get_temporary_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+}
+
+
+
 __API_FUNC(file_inc_handle){
 	if (a<0||a>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+a))){
 		return;

@@ -5,10 +5,10 @@
 ### Added
 
 - Casting custom types to strings
+- Environment variable API: `sll_environment_t`, `sll_environment_variable_t`, `sll_environment`, `sll_get_environment_variable` and `sys$ENVIRONMENT`
 - Error return code in `sll_file_from_data` ([#83])
-- Environment variable API: `sll_environment_t`, `sll_environment_variable_t`, `sll_environment` and `sys$ENVIRONMENT`
 - Euler's totient/phi function: `sll_math_euler_phi` and `math$euler_phi`
-- Extra function in the file API: `file$from_data` and `file$peek` ([#192])
+- Extra function in the file API: `file$TEMP_FILE_PATH`, `file$from_data` and `file$peek` ([#192])
 - Floating-point number operation functions: `sll_math_mod`
 - Implemented `sll:array_pop` ([#87] and [#215])
 - Implemented `sll:array_push` ([#87] and [#118])
@@ -18,6 +18,7 @@
 - Implemented `sll_array_extend` and `sll:array_extend` ([#87] and [#119])
 - Implemented `sll_array_join_arrays` and `sll:array_join` ([#87] and [#115])
 - Implemented `sll_array_split` and `sll:array_split` ([#87] and [#122])
+- Implemented `sll_platform_get_temporary_file_path` ([#192])
 - Implemented `sll_string_pad` and `sll:string_pad` ([#87] and [#110])
 - Implemented `sll_string_secure_equal` and `string$secure_equal`
 - Implemented `sll_string_trim_left` and `sll:string_trim_left` ([#87] and [#108])

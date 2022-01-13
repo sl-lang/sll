@@ -247,6 +247,21 @@ __SLL_EXTERNAL void sll_free_string_table(sll_string_table_t* st){
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll_string_t* o){
+	for (sll_array_length_t i=0;i<sll_environment->l;i++){
+		const sll_environment_variable_t* kv=*(sll_environment->dt+i);
+		if (sll_string_equal(&(kv->k),k)){
+			if (o){
+				sll_string_clone(&(kv->v),o);
+			}
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* a_dt,sll_instruction_index_t ii,sll_string_index_t* fp,sll_string_index_t* fn){
 	if (ii>=a_dt->ic){
 		*fp=0;

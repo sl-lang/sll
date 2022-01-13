@@ -162,6 +162,19 @@ __SLL_EXTERNAL void sll_free_string_table(sll_string_table_t* st);
 
 /**
  * \flags check_output func
+ * \name sll_get_environment_variable
+ * \group util
+ * \desc Docs!
+ * \arg const sll_string_t* k
+ * \arg sll_string_t* o
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll_string_t* o);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_get_location
  * \group util
  * \desc Docs!

@@ -69,6 +69,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_f
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_temporary_file_path(sll_char_t* o,sll_string_length_t ol){
+	return GetTempPathA(ol,(char*)o);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
 	char bf[MAX_PATH+1];
 	sll_string_length_t fpl=sll_string_length_unaligned(fp);

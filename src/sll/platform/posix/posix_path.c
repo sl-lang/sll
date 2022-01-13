@@ -97,6 +97,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_f
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_temporary_file_path(sll_char_t* o,sll_string_length_t ol){
+	sll_string_t k;
+	sll_string_from_pointer(SLL_CHAR("TMPDIR"),&k);
+	sll_string_t v;
+	sll_bool_t st=sll_get_environment_variable(&k,&v);
+	sll_free_string(&k);
+	if (st){
+		sll_string_length_t l=(v.l>ol?ol:v.l);
+		sll_copy_data(v.v,l,o);
+		sll_free_string(&v);
+		return l;
+	}
+	sll_string_length_t l=(ol<4?ol:4);
+	sll_copy_data("/tmp",l,o);
+	return l;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o){
 	DIR* d=opendir((char*)fp);
 	sll_string_t* op=sll_allocate_stack(1);
