@@ -33,12 +33,18 @@
 	(~ file_type) stderr
 	(~ func_type) close
 	(~ func_type) flush
+	(~ func_type) from_data
 	(~ func_type) open
+	(~ func_type) peek
 	(~ func_type) read
 	(~ func_type) write
 ))
 
 
+
+(= FLAG_READ 1)
+(= FLAG_WRITE 2)
+(= FLAG_APPEND 4)
 
 (= stdin (. file_type
 	"@stdin"
@@ -70,6 +76,17 @@
 	(<- (... "sll:file_flush") f$_handle)
 ))
 
+(= from_data (,,, bf
+	(= bf (?: (=== bf nil) "" (:: bf string_type)))
+	(= handle (<- (... "sll:file_from_data") bf FLAG_READ))
+	(? (=== handle -1) (@@ nil))
+	(@@ (. file_type
+		"@data"
+		FLAG_READ
+		handle
+	))
+))
+
 (= open (,,, path mode
 	(? (=== path nil) (@@ nil))
 	(= path (:: path string_type))
@@ -97,6 +114,12 @@
 	))
 ))
 
+(= peek (,,, f
+	(? (=== f nil) (@@ nil))
+	(= f (:: f file_type))
+	(@@ (<- (... "sll:file_peek") f$_handle))
+))
+
 (= read (,,, f c
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
@@ -110,7 +133,8 @@
 (= write (,,, f dt
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
-	(@@ (<- (... "sll:file_write") f$_handle (:: dt string_type)))
+	(= dt (:: dt string_type))
+	(@@ (<- (... "sll:file_write") f$_handle dt))
 ))
 
 
@@ -122,7 +146,9 @@
 	stderr
 	close
 	flush
+	from_data
 	open
+	peek
 	read
 	write
 ))

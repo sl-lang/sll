@@ -4,7 +4,10 @@
 
 ### Added
 
+- Casting custom types to strings
+- Error return code in `sll_file_from_data` ([#83])
 - Euler's totient/phi function: `sll_math_euler_phi` and `math$euler_phi`
+- Extra function in the file API: `file$from_data` and `file$peek` ([#192])
 - Floating-point number operation functions: `sll_math_mod`
 - Implemented `sll:array_pop` ([#87] and [#215])
 - Implemented `sll:array_push` ([#87] and [#118])
@@ -31,7 +34,7 @@
 - Inversion flag to `sll_string_index_char`, `sll_string_index_multiple`, `sll_string_index_reverse_char` and `sll_string_index_reverse_multiple` ([#108] and [#109])
 - Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
 - Special structure field: `@@string@@`
-- Type-to-string in custom types: `date$time_zone_type`, `date$date_type`, `file$file_type`, `json$json_null`, `json$json_true`, `json$json_false`, `math$factor_type`, `process$process_config_type`, `process$stream_data_type` and `sys$VERSION`
+- Type-to-string in custom types: `date$time_zone_type`, `date$date_type`, `file$file_type`, `json$json_null`, `json$json_true`, `json$json_false`, `math$factor_type`, `process$process_config_type`, `process$stream_data_type`, `sys$VERSION` and `uuid$uuid_type`
 
 ### Changed
 
@@ -39,6 +42,7 @@
 - Fixed integer-to-string conversion in `sll_string_format` and `sll_string_format_list`
 - In-place operations are now supported in some array functions: `sll_array_pop`, `sll_array_push`, `sll_array_remove`, `sll_array_shift` and `sll_array_unshift` ([#87], [#118], [#121], [#213], [#214] and [#215])
 - Moved file argument from `sll_compilation_data_t` to `sll_parse_all_nodes`
+- `sll_file_from_data` now internally duplicates the input buffer
 - `time_zone_type$time_offset` is now an integer offset in minutes
 
 ### Removed
@@ -1437,6 +1441,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#196]: https://github.com/sl-lang/sll/issues/196
 [#194]: https://github.com/sl-lang/sll/issues/194
 [#193]: https://github.com/sl-lang/sll/issues/193
+[#192]: https://github.com/sl-lang/sll/issues/192
 [#191]: https://github.com/sl-lang/sll/issues/191
 [#190]: https://github.com/sl-lang/sll/issues/190
 [#189]: https://github.com/sl-lang/sll/issues/189

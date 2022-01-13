@@ -1,6 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/file.h>
+#include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -68,6 +69,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 	}
 	else{
 		SLL_ASSERT(f->f&SLL_FILE_FLAG_NO_BUFFER);
+		sll_deallocate((void*)(f->dt.mm.p));
 	}
 	*((sll_file_flags_t*)(&(f->f)))=FILE_FLAG_NO_RELEASE;
 }
@@ -84,13 +86,22 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f){
 
 
 
-__SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o){
-	*((void**)(&(o->dt.mm.p)))=p;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o){
+	void* n=sll_allocate(sz);
+	if (!n){
+		return 0;
+	}
+	sll_copy_data(p,sz,n);
+	*((void**)(&(o->dt.mm.p)))=n;
 	*((sll_size_t*)(&(o->dt.mm.sz)))=sz;
 	*((sll_file_flags_t*)(&(o->f)))=f|SLL_FILE_FLAG_NO_BUFFER|FILE_FLAG_MEMORY;
 	o->_l_num=0;
 	o->_l_off=0;
 	o->_off=0;
+	if (f&SLL_FILE_FLAG_WRITE){
+		SLL_UNIMPLEMENTED();
+	}
+	return 1;
 }
 
 

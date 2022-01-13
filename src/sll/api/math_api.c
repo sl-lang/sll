@@ -342,6 +342,9 @@ __API_FUNC(math_int_pow){
 	if (b<0){
 		SLL_UNIMPLEMENTED();
 	}
+	if (!b){
+		return 1;
+	}
 	sll_integer_t o=1;
 	if (a<0){
 		a=-a;

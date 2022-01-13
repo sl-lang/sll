@@ -451,6 +451,30 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_file_from_data __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_file_from_data sll_string_t* a,sll_integer_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_file_from_data
+ * \group file-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \arg sll_integer_t b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_file_from_data_raw
+ * \group raw-api
+ * \subgroup raw-api-file-api
+ * \desc Wrapper function for :sll_api_file_from_data:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_inc_handle void
 #define __SLL_API_ARGS_sll_api_file_inc_handle sll_integer_t a
 /**
@@ -490,6 +514,29 @@
  * \group raw-api
  * \subgroup raw-api-file-api
  * \desc Wrapper function for :sll_api_file_open:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_file_peek __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_file_peek sll_integer_t a
+/**
+ * \flags func optimizable
+ * \name sll_api_file_peek
+ * \group file-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_file_peek_raw
+ * \group raw-api
+ * \subgroup raw-api-file-api
+ * \desc Wrapper function for :sll_api_file_peek:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

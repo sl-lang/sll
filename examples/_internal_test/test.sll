@@ -308,7 +308,14 @@
 	(++ i)
 })
 
-(:> (<- math$factors 1269774) "\n" (<- math$euler_phi 20) "\n")
+(= fl (<- math$factors 1269774))
+(= n 1)
+(-> (= i 0) (< i ($ fl)) {
+	(= f (: fl i))
+	(= n (* n (<- math$int_pow f$prime f$power)))
+	(++ i)
+})
+(:> (<- string$join '*' fl) ", " n "\n" (<- math$euler_phi 20) "\n")
 
 (= arr [0 1 2 3 4 5])
 (<- array$push arr 6)
@@ -337,6 +344,11 @@
 (:> (<- uuid$uuid3 uuid$NAMESPACE_DNS "123") "\n")
 (:> (<- uuid$uuid4) "\n")
 (:> (<- uuid$uuid5 uuid$NAMESPACE_URL "abc") "\n")
+
+(= buffer (<- file$from_data "Abcdefghijklmnopqrstuvwxyz"))
+(:> buffer "\n")
+(:> (<- file$read buffer 15) " (" (<- file$peek buffer) ")\n")
+(:> (<- file$read buffer 15) " (" (<- file$peek buffer) ")\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

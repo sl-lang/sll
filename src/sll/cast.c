@@ -9,6 +9,7 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/vm.h>
 
 
 
@@ -66,7 +67,26 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* a,sll_object_t* b){
-	if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<=SLL_MAX_OBJECT_TYPE&&b->dt.i!=SLL_OBJECT_GET_TYPE(a)){
+	if (SLL_OBJECT_GET_TYPE(b)!=SLL_OBJECT_TYPE_INT||b->dt.i<0||b->dt.i>SLL_MAX_OBJECT_TYPE||b->dt.i==SLL_OBJECT_GET_TYPE(a)){
+		SLL_ACQUIRE(a);
+		return a;
+	}
+	if (SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE){
+		if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
+			if (dt->fn.str){
+				_push_call_stack(SLL_CHAR("@sll_api_string_convert"),SLL_MAX_STACK_OFFSET);
+				sll_object_t* v=sll_execute_function(dt->fn.str,&a,1);
+				_pop_call_stack();
+				sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+				SLL_RELEASE(v);
+				return str;
+			}
+		}
+		SLL_ACQUIRE(a);
+		return a;
+	}
+	if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
 		switch (COMBINE_TYPES(SLL_OBJECT_GET_TYPE(a),b->dt.i)){
 			case COMBINED_TYPE_IF:
 				return SLL_FROM_FLOAT((sll_float_t)(a->dt.i));

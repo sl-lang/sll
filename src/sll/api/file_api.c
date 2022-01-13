@@ -114,6 +114,22 @@ __API_FUNC(file_flush){
 
 
 
+__API_FUNC(file_from_data){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+		return -1;
+	}
+	sll_file_t f;
+	if (!sll_file_from_data(a->v,a->l,(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND)),&f)){
+		return -1;
+	}
+	sll_integer_t h=_alloc_file();
+	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+h))->dt.f));
+	(*(_file_fl+h))->p=0;
+	return h;
+}
+
+
+
 __API_FUNC(file_inc_handle){
 	if (a<0||a>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+a))){
 		return;
@@ -135,6 +151,17 @@ __API_FUNC(file_open){
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+h))->dt.f));
 	(*(_file_fl+h))->p=0;
 	return h;
+}
+
+
+
+__API_FUNC(file_peek){
+	if (a<0||a>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+a))){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	extended_file_t* ef=*(_file_fl+a);
+	sll_read_char_t o=sll_file_peek_char((ef->p?ef->dt.p:&(ef->dt.f)));
+	return (o==SLL_END_OF_DATA?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_CHAR(o));
 }
 
 

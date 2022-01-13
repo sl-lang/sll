@@ -49,6 +49,19 @@ __API_FUNC_DECL(file_flush);
 
 
 /**
+ * \flags api func optimizable
+ * \name sll_api_file_from_data
+ * \group file-api
+ * \desc Docs!
+ * \arg S
+ * \arg I
+ * \ret I
+ */
+__API_FUNC_DECL(file_from_data);
+
+
+
+/**
  * \flags api func
  * \name sll_api_file_inc_handle
  * \group file-api
@@ -69,6 +82,18 @@ __API_FUNC_DECL(file_inc_handle);
  * \ret I
  */
 __API_FUNC_DECL(file_open);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_file_peek
+ * \group file-api
+ * \desc Docs!
+ * \arg I
+ * \ret O
+ */
+__API_FUNC_DECL(file_peek);
 
 
 
