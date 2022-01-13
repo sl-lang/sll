@@ -1953,7 +1953,12 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 	sll_deallocate(a_dt->ft.dt);
 	a_dt->ft.dt=NULL;
 	a_dt->ft.l=0;
-	sll_free_string_table(&(a_dt->st));
+	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
+		sll_free_string(a_dt->st.dt+i);
+	}
+	sll_deallocate(a_dt->st.dt);
+	a_dt->st.dt=NULL;
+	a_dt->st.l=0;
 	sll_deallocate(a_dt->dbg.dt);
 	a_dt->dbg.dt=NULL;
 	a_dt->dbg.l=0;

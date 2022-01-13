@@ -236,17 +236,6 @@ __SLL_EXTERNAL void sll_deinit(void){
 
 
 
-__SLL_EXTERNAL void sll_free_string_table(sll_string_table_t* st){
-	for (sll_string_index_t i=0;i<st->l;i++){
-		sll_free_string(st->dt+i);
-	}
-	sll_deallocate(st->dt);
-	st->dt=NULL;
-	st->l=0;
-}
-
-
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll_string_t* o){
 	for (sll_array_length_t i=0;i<sll_environment->l;i++){
 		const sll_environment_variable_t* kv=*(sll_environment->dt+i);

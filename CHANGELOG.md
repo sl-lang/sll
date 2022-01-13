@@ -51,6 +51,7 @@
 
 - Builtin header included files: `stddef.h` and `math.h`
 - Copy declaration node and assembly types
+- Deprecated deinitialization function: `sll_free_string_table`
 - File argument from `sll_init_compilation_data`
 - Object type initializer API
 - Old operator number macros: `SLL_FLOAT_ABSOLUTE` and `SLL_FLOAT_ROUND`

@@ -188,7 +188,12 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	sll_deallocate(c_dt->ft.dt);
 	c_dt->ft.dt=NULL;
 	c_dt->ft.l=0;
-	sll_free_string_table(&(c_dt->st));
+	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
+		sll_free_string(c_dt->st.dt+i);
+	}
+	sll_deallocate(c_dt->st.dt);
+	c_dt->st.dt=NULL;
+	c_dt->st.l=0;
 	void* pg=c_dt->_s.s;
 	while (pg){
 		void* n=*((void**)pg);

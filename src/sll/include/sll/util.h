@@ -149,18 +149,6 @@ __SLL_EXTERNAL void sll_deinit(void);
 
 
 /**
- * \flags func
- * \name sll_free_string_table
- * \group util
- * \subgroup util-str
- * \desc Docs!
- * \arg sll_string_table_t* st
- */
-__SLL_EXTERNAL void sll_free_string_table(sll_string_table_t* st);
-
-
-
-/**
  * \flags check_output func
  * \name sll_get_environment_variable
  * \group util
