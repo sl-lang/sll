@@ -14,7 +14,7 @@ TYPE_RETURN_MAP={"I":"return SLL_FROM_INT(out)","B":"SLL_ACQUIRE(sll_static_int[
 def generate_c_api(d_dt,api_dt):
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_API__GENERATED__\n#define __SLL_API__GENERATED__\n#include <sll/common.h>\n#include <sll/types.h>\n\n\n")
-		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/array.h>\n#include <sll/common.h>\n#include <sll/ift.h>\n#include <sll/memory.h>\n#include <sll/object.h>\n#include <sll/operator.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_sll_internal.h>\n#include <sll/api.h>\n#include <sll/api/_generated.h>\n#include <sll/array.h>\n#include <sll/common.h>\n#include <sll/ift.h>\n#include <sll/map.h>\n#include <sll/memory.h>\n#include <sll/object.h>\n#include <sll/operator.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		fn_l=[]
 		d_gl=[]
 		for k in api_dt:

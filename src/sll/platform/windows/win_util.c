@@ -120,6 +120,18 @@ __SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
 
 
 
+__SLL_EXTERNAL void sll_platform_remove_environment_variable(const sll_char_t* k){
+	SetEnvironmentVariable((char*)k,NULL);
+}
+
+
+
+__SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,const sll_char_t* v){
+	SetEnvironmentVariable((char*)k,(char*)v);
+}
+
+
+
 __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 	if (_win_wh==INVALID_HANDLE_VALUE){
 		_win_wh=CreateEventA(NULL,TRUE,FALSE,FALSE);

@@ -93,18 +93,28 @@ __API_FUNC(process__init){
 
 
 __API_FUNC(process_execute_shell){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
+		return 0;
+	}
 	return sll_platform_execute_shell(a->v);
 }
 
 
 
 __API_FUNC(process_get_pid){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
+		return -1;
+	}
 	return sll_platform_get_pid();
 }
 
 
 
 __API_FUNC(process_join){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
+		SLL_INIT_STRING(out);
+		return;
+	}
 	sll_char_t** dt=sll_allocate_stack(a->l*sizeof(sll_char_t*));
 	for (sll_array_length_t i=0;i<a->l;i++){
 		sll_object_t* n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
@@ -129,6 +139,9 @@ __API_FUNC(process_split){
 
 
 __API_FUNC(process_start){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
 	SLL_ASSERT(_process_ret_type);
 	if (!a->l){
 		sll_object_t* oa=SLL_CREATE();

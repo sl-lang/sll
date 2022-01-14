@@ -107,6 +107,17 @@ __API_FUNC_DECL(sys_get_platform);
 
 /**
  * \flags api func optimizable
+ * \name sll_api_sys_get_sandbox_flags
+ * \group sys-api
+ * \desc Docs!
+ * \ret I
+ */
+__API_FUNC_DECL(sys_get_sandbox_flags);
+
+
+
+/**
+ * \flags api func optimizable
  * \name sll_api_sys_get_version
  * \group sys-api
  * \desc Docs!
@@ -126,6 +137,29 @@ __API_FUNC_DECL(sys_get_version);
  * \ret B
  */
 __API_FUNC_DECL(sys_load_library);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_sys_remove_env
+ * \group sys-api
+ * \desc Docs!
+ * \arg S
+ */
+__API_FUNC_DECL(sys_remove_env);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_sys_set_env
+ * \group sys-api
+ * \desc Docs!
+ * \arg S
+ * \arg S
+ */
+__API_FUNC_DECL(sys_set_env);
 
 
 

@@ -351,6 +351,11 @@
 (:> (<- file$read buffer 15) " (" (<- file$peek buffer) ")\n")
 
 (:> sys$ENVIRONMENT "\n")
+(:> (<- sys$get_env "A" "<No value>") "\n")
+(<- sys$set_env "A" "0123456789")
+(:> (<- sys$get_env "A" "<No value>") "\n")
+(<- sys$remove_env "A")
+(:> (<- sys$get_env "A" "<No value>") "\n")
 
 (:> file$TEMP_FILE_PATH "\n")
 

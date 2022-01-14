@@ -470,6 +470,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			else if (sll_string_compare_pointer(e,SLL_CHAR("no-path-api"))==SLL_COMPARE_RESULT_EQUAL){
 				s_fl|=SLL_SANDBOX_FLAG_DISABLE_PATH_API;
 			}
+			else if (sll_string_compare_pointer(e,SLL_CHAR("no-process-api"))==SLL_COMPARE_RESULT_EQUAL){
+				s_fl|=SLL_SANDBOX_FLAG_DISABLE_PROCESS_API;
+			}
 			else{
 				SLL_WARN(SLL_CHAR("Ignoring unknown Sandbox Flag '%s'"),e);
 			}

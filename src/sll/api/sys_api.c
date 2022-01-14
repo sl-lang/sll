@@ -142,6 +142,12 @@ __API_FUNC(sys_get_platform){
 
 
 
+__API_FUNC(sys_get_sandbox_flags){
+	return sll_get_sandbox_flags();
+}
+
+
+
 __API_FUNC(sys_get_version){
 	sll_object_t* dt[3]={
 		SLL_FROM_INT(SLL_VERSION_MAJOR),
@@ -195,4 +201,16 @@ __API_FUNC(sys_load_library){
 		_sys_end=1;
 	}
 	return 1;
+}
+
+
+
+__API_FUNC(sys_remove_env){
+	sll_remove_environment_variable(a);
+}
+
+
+
+__API_FUNC(sys_set_env){
+	sll_set_environment_variable(a,b);
 }

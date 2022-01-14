@@ -5,6 +5,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/ift.h>
+#include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
@@ -1670,6 +1671,79 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_function_raw(sll
 	sll_api_log_set_function(&(a->dt.s),&(b->dt.s),c->dt.i,!!(d->dt.i));
 	SLL_RELEASE(d);
 	SLL_RELEASE(c);
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_map_extend sll_api_map_extend(__SLL_API_ARGS_sll_api_map_extend);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_map_extend_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_MAP]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_MAP;
+		sll_map_create(0,&(a->dt.m));
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_MAP){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_MAP]);
+		}
+	}
+	else{
+		b=SLL_CREATE();
+		b->t=SLL_OBJECT_TYPE_MAP;
+		sll_map_create(0,&(b->dt.m));
+	}
+	sll_api_map_extend(&(a->dt.m),&(b->dt.m));
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_map_remove sll_api_map_remove(__SLL_API_ARGS_sll_api_map_remove);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_map_remove_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_MAP]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_MAP;
+		sll_map_create(0,&(a->dt.m));
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		SLL_ACQUIRE(b);
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_map_remove(&(a->dt.m),b);
 	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
@@ -4242,6 +4316,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_platform_raw(sll
 
 
 
+__SLL_API_TYPE_sll_api_sys_get_sandbox_flags sll_api_sys_get_sandbox_flags(__SLL_API_ARGS_sll_api_sys_get_sandbox_flags);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_sandbox_flags_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t out=sll_api_sys_get_sandbox_flags();
+	return SLL_FROM_INT(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_sys_get_version sll_api_sys_get_version(__SLL_API_ARGS_sll_api_sys_get_version);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_version_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -4285,6 +4367,70 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_load_library_raw(sll
 	SLL_RELEASE(a);
 	SLL_ACQUIRE(sll_static_int[out]);
 	return sll_static_int[out];
+}
+
+
+
+__SLL_API_TYPE_sll_api_sys_remove_env sll_api_sys_remove_env(__SLL_API_ARGS_sll_api_sys_remove_env);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_remove_env_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(a->dt.s));
+	}
+	sll_api_sys_remove_env(&(a->dt.s));
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_sys_set_env sll_api_sys_set_env(__SLL_API_ARGS_sll_api_sys_set_env);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_set_env_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=SLL_CREATE();
+		a->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(a->dt.s));
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		b=SLL_CREATE();
+		b->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(b->dt.s));
+	}
+	sll_api_sys_set_env(&(a->dt.s),&(b->dt.s));
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -4554,6 +4700,16 @@ static const internal_function_t _ifunc_data_ptr[]={
 		"sll:log_set_function",
 		sll_api_log_set_function_raw,
 		0
+	},
+	{
+		"sll:map_extend",
+		sll_api_map_extend_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
+	},
+	{
+		"sll:map_remove",
+		sll_api_map_remove_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
 		"sll:math_abs",
@@ -4991,6 +5147,11 @@ static const internal_function_t _ifunc_data_ptr[]={
 		0
 	},
 	{
+		"sll:sys_get_sandbox_flags",
+		sll_api_sys_get_sandbox_flags_raw,
+		0
+	},
+	{
 		"sll:sys_get_version",
 		sll_api_sys_get_version_raw,
 		0
@@ -4999,6 +5160,16 @@ static const internal_function_t _ifunc_data_ptr[]={
 		"sll:sys_load_library",
 		sll_api_sys_load_library_raw,
 		0
+	},
+	{
+		"sll:sys_remove_env",
+		sll_api_sys_remove_env_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
+	},
+	{
+		"sll:sys_set_env",
+		sll_api_sys_set_env_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
 		"sll:time_current",
@@ -5024,5 +5195,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=134;
+const sll_function_index_t _ifunc_size=139;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

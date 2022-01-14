@@ -7,6 +7,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <sys/random.h>
 #include <sys/types.h>
 #include <time.h>
@@ -117,6 +118,18 @@ __SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
 		l-=n;
 		bf=(void*)(((uint64_t)bf)+n);
 	}
+}
+
+
+
+__SLL_EXTERNAL void sll_platform_remove_environment_variable(const sll_char_t* k){
+	unsetenv((char*)k);
+}
+
+
+
+__SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,const sll_char_t* v){
+	setenv((char*)k,(char*)v,1);
 }
 
 

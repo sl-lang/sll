@@ -5,7 +5,7 @@
 ### Added
 
 - Casting custom types to strings
-- Environment variable API: `sll_environment_t`, `sll_environment_variable_t`, `sll_environment`, `sll_get_environment_variable` and `sys$ENVIRONMENT`
+- Environment variable API: `sll_environment_t`, `sll_environment_variable_t`, `sll_environment`, `sll_platform_remove_environment_variable`, `sll_platform_set_environment_variable`, `sll_get_environment_variable`, `sll_remove_environment_variable`, `sll_set_environment_variable`, `sys$ENVIRONMENT`, `sys$remove_env` and `sys$set_env`
 - Error return code in `sll_file_from_data` ([#83])
 - Euler's totient/phi function: `sll_math_euler_phi` and `math$euler_phi`
 - Extra function in the file API: `file$TEMP_FILE_PATH`, `file$from_data` and `file$peek` ([#192])
@@ -32,9 +32,12 @@
 - Implemented `uuid$uuid5` ([#193] and [#222])
 - Implemented `uuid$uuid_type` ([#193] and [#216])
 - Implemented `uuid.sll` ([#193])
+- Extension to the sandbox API: `sll_get_sandbox_flags`, `sys$get_sandbox_flags`, `sys$FLAG_DISABLE_FILE_IO`, `sys$FLAG_ENABLE_STDIN_IO`, `sys$FLAG_ENABLE_STDOUT_IO`, `sys$FLAG_DISABLE_PATH_API` and `sys$FLAG_DISABLE_PROCESS_API`
 - Integer to decimal string conversion: `int$to_dec`
 - Inversion flag to `sll_string_index_char`, `sll_string_index_multiple`, `sll_string_index_reverse_char` and `sll_string_index_reverse_multiple` ([#108] and [#109])
+- New sandbox flag: `SLL_SANDBOX_FLAG_DISABLE_PROCESS_API`
 - Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
+- Sll map module: `map$extend` and `map$remove`
 - Special structure field: `@@string@@`
 - Type-to-string in custom types: `date$time_zone_type`, `date$date_type`, `file$file_type`, `json$json_null`, `json$json_true`, `json$json_false`, `math$factor_type`, `process$process_config_type`, `process$stream_data_type`, `sys$VERSION` and `uuid$uuid_type`
 
@@ -42,7 +45,9 @@
 
 - Fixed integer overflow when parsing floats
 - Fixed integer-to-string conversion in `sll_string_format` and `sll_string_format_list`
+- In-place operations are now supported by `sll_map_remove`
 - In-place operations are now supported in some array functions: `sll_array_pop`, `sll_array_push`, `sll_array_remove`, `sll_array_shift` and `sll_array_unshift` ([#87], [#118], [#121], [#213], [#214] and [#215])
+- Map functions now use `sll_operator_strict_equal` instead of `sll_operator_equal`
 - Moved file argument from `sll_compilation_data_t` to `sll_parse_all_nodes`
 - `sll_file_from_data` now internally duplicates the input buffer
 - `time_zone_type$time_offset` is now an integer offset in minutes

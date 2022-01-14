@@ -1,5 +1,5 @@
-(# int_type func_type string_type array_type map_type path string)
-(--- "types.sll" "path.sll" "string.sll")
+(# int_type func_type string_type array_type map_type path string map)
+(--- "types.sll" "path.sll" "string.sll" "map.sll")
 
 
 
@@ -17,12 +17,21 @@
 	(~ int_type) CPU_COUNT
 	(~ map_type) ENVIRONMENT
 	(~ string_type) EXECUTABLE
+	(~ int_type) FLAG_DISABLE_FILE_IO
+	(~ int_type) FLAG_ENABLE_STDIN_IO
+	(~ int_type) FLAG_ENABLE_STDOUT_IO
+	(~ int_type) FLAG_DISABLE_PATH_API
+	(~ int_type) FLAG_DISABLE_PROCESS_API
 	(~ string_type) LIBRARY
 	(~ string_type) LIBRARY_EXTENSION
 	(~ string_type) LIBRARY_PATH
 	(~ string_type) PLATFORM
 	(~ version_type) VERSION
+	(~ func_type) get_env
+	(~ func_type) get_sandbox_flags
 	(~ func_type) load_library
+	(~ func_type) remove_env
+	(~ func_type) set_env
 ))
 
 
@@ -33,19 +42,45 @@
 
 (= ENVIRONMENT (<- (... "sll:sys_get_env")))
 
-(= EXECUTABLE (<- (... "sll:sys_get_executable")))
+(= FLAG_DISABLE_FILE_IO 1)
+(= FLAG_ENABLE_STDIN_IO 2)
+(= FLAG_ENABLE_STDOUT_IO 4)
+(= FLAG_DISABLE_PATH_API 8)
+(= FLAG_DISABLE_PROCESS_API 16)
 
-(= PLATFORM (<- (... "sll:sys_get_platform")))
+(= EXECUTABLE (<- (... "sll:sys_get_executable")))
 
 (= LIBRARY (<- (... "sll:sys_get_library")))
 (= LIBRARY_PATH (+ (<- path$absolute (+ (: (<- path$split LIBRARY) 0) path$SEPARATOR "sys_lib")) path$SEPARATOR))
 (= LIBRARY_EXTENSION (?: (=== PLATFORM "windows") "dll" "so"))
 
+(= PLATFORM (<- (... "sll:sys_get_platform")))
+
 (= VERSION (<- (... "sll:sys_get_version") version_type))
 
 
 
+(= get_env (,,, k v
+	(= k (:: k string_type))
+	(@@ (|| (: ENVIRONMENT k) v))
+))
+
+(= get_sandbox_flags (... "sll:sys_get_sandbox_flags"))
+
 (= load_library (... "sll:sys_load_library"))
+
+(= remove_env (,,, k
+	(= k (<- string$replace (:: k string_type) '=' ""))
+	(<- map$remove ENVIRONMENT k)
+	(<- (... "sll:sys_remove_env" k v))
+))
+
+(= set_env (,,, k v
+	(= k (<- string$replace (:: k string_type) '=' ""))
+	(= v (:: v string_type))
+	(= (: ENVIRONMENT k) v)
+	(<- (... "sll:sys_set_env" k v))
+))
 
 
 
@@ -54,11 +89,20 @@
 	CPU_COUNT
 	ENVIRONMENT
 	EXECUTABLE
+	FLAG_DISABLE_FILE_IO
+	FLAG_ENABLE_STDIN_IO
+	FLAG_ENABLE_STDOUT_IO
+	FLAG_DISABLE_PATH_API
+	FLAG_DISABLE_PROCESS_API
 	LIBRARY
 	LIBRARY_EXTENSION
 	LIBRARY_PATH
 	PLATFORM
 	VERSION
+	get_env
+	get_sandbox_flags
 	load_library
+	remove_env
+	set_env
 ))
 (## sys)

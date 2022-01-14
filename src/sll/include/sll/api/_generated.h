@@ -1029,6 +1029,59 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_map_extend void
+#define __SLL_API_ARGS_sll_api_map_extend sll_map_t* a,sll_map_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_map_extend
+ * \group map-api
+ * \desc Docs!
+ * \arg sll_map_t* a -> 
+ * \arg sll_map_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_map_extend_raw
+ * \group raw-api
+ * \subgroup raw-api-map-api
+ * \desc Wrapper function for :sll_api_map_extend:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Map
+ * \group raw-api
+ * \subgroup raw-api-map-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_map_remove void
+#define __SLL_API_ARGS_sll_api_map_remove sll_map_t* a,sll_object_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_map_remove
+ * \group map-api
+ * \desc Docs!
+ * \arg sll_map_t* a -> 
+ * \arg sll_object_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_map_remove_raw
+ * \group raw-api
+ * \subgroup raw-api-map-api
+ * \desc Wrapper function for :sll_api_map_remove:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_math_abs __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_math_abs sll_float_t a
 /**
@@ -3102,6 +3155,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_sys_get_sandbox_flags __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_sys_get_sandbox_flags void
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_get_sandbox_flags
+ * \group sys-api
+ * \desc Docs!
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_get_sandbox_flags_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_get_sandbox_flags:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sys_get_version __SLL_CHECK_OUTPUT sll_object_t*
 #define __SLL_API_ARGS_sll_api_sys_get_version sll_integer_t a
 /**
@@ -3141,6 +3216,51 @@
  * \group raw-api
  * \subgroup raw-api-sys-api
  * \desc Wrapper function for :sll_api_sys_load_library:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_sys_remove_env void
+#define __SLL_API_ARGS_sll_api_sys_remove_env sll_string_t* a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_remove_env
+ * \group sys-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_remove_env_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_remove_env:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_sys_set_env void
+#define __SLL_API_ARGS_sll_api_sys_set_env sll_string_t* a,sll_string_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_set_env
+ * \group sys-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \arg sll_string_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_sys_set_env_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_set_env:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

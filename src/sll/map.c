@@ -31,7 +31,7 @@ __SLL_EXTERNAL void sll_map_add(const sll_map_t* m,sll_object_t* k,sll_object_t*
 	for (sll_map_length_t i=0;i<l;i+=2){
 		o->v[i]=m->v[i];
 		SLL_ACQUIRE(o->v[i]);
-		if (sll_operator_equal(m->v[i],k)){
+		if (sll_operator_strict_equal(m->v[i],k)){
 			o->l--;
 			o->v=sll_reallocate(o->v,l*sizeof(sll_object_t*));
 			o->v[i+1]=v;
@@ -151,7 +151,7 @@ __SLL_EXTERNAL void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t*
 	for (sll_map_length_t j=0;j<(a->l<<1);j+=2){
 		sll_object_t* e=a->v[j];
 		for (sll_map_length_t k=0;k<(b->l<<1);k+=2){
-			if (sll_operator_equal(e,b->v[k])){
+			if (sll_operator_strict_equal(e,b->v[k])){
 				o->v[i]=e;
 				SLL_ACQUIRE(e);
 				o->v[i+1]=sll_operator_add(a->v[j+1],b->v[k+1]);
@@ -258,8 +258,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_equal(const sll_map_t* a,co
 	for (sll_map_length_t i=0;i<(a->l<<1);i+=2){
 		sll_object_t* e=a->v[i];
 		for (sll_map_length_t j=0;j<(b->l<<1);j+=2){
-			if (sll_operator_equal(e,b->v[j])){
-				if (!sll_operator_equal(a->v[i+1],b->v[j+1])){
+			if (sll_operator_strict_equal(e,b->v[j])){
+				if (!sll_operator_strict_equal(a->v[i+1],b->v[j+1])){
 					return 0;
 				}
 				goto _next_key;
@@ -275,7 +275,7 @@ _next_key:;
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,const sll_object_t* k){
 	for (sll_map_length_t i=0;i<m->l;i++){
-		if (sll_operator_equal(m->v[i<<1],k)){
+		if (sll_operator_strict_equal(m->v[i<<1],k)){
 			SLL_ACQUIRE(m->v[(i<<1)+1]);
 			return m->v[(i<<1)+1];
 		}
@@ -331,7 +331,7 @@ __SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t
 	for (sll_map_length_t j=0;j<(b->l<<1);j+=2){
 		sll_object_t* e=b->v[j];
 		for (sll_map_length_t k=0;k<al;k+=2){
-			if (sll_operator_equal(o->v[k],e)){
+			if (sll_operator_strict_equal(o->v[k],e)){
 				o->v[k+1]=b->v[j+1];
 				goto _next_key;
 			}
@@ -375,9 +375,27 @@ __SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* m,sll_object_t* k,sll_map_t* o){
+	if (!m){
+		for (sll_map_length_t i=0;i<o->l;i++){
+			if (sll_operator_strict_equal(o->v[i<<1],k)){
+				SLL_RELEASE(o->v[i<<1]);
+				sll_object_t* v=o->v[(i<<1)+1];
+				i++;
+				while (i<o->l){
+					o->v[i<<1]=o->v[(i<<1)+2];
+					o->v[(i<<1)+1]=o->v[(i<<1)+3];
+					i++;
+				}
+				o->l--;
+				o->v=sll_reallocate(o->v,(o->l<<1)*sizeof(sll_object_t*));
+				return v;
+			}
+		}
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
 	for (sll_map_length_t i=0;i<m->l;i++){
 		SLL_ACQUIRE(m->v[(i<<1)+1]);
-		if (sll_operator_equal(m->v[i<<1],k)){
+		if (sll_operator_strict_equal(m->v[i<<1],k)){
 			o->l=m->l-1;
 			o->v=sll_allocate((o->l<<1)*sizeof(sll_object_t*));
 			for (sll_map_length_t j=0;j<(i<<1);j++){

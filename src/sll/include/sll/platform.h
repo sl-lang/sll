@@ -450,6 +450,18 @@ __SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l);
 
 /**
  * \flags func
+ * \name sll_platform_remove_environment_variable
+ * \group platform
+ * \subgroup platform-path
+ * \desc Docs!
+ * \arg const sll_char_t* k
+ */
+__SLL_EXTERNAL void sll_platform_remove_environment_variable(const sll_char_t* k);
+
+
+
+/**
+ * \flags func
  * \name sll_platform_reset_console
  * \group platform
  * \subgroup platform-console
@@ -469,6 +481,19 @@ __SLL_EXTERNAL void sll_platform_reset_console(void);
  * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p);
+
+
+
+/**
+ * \flags func
+ * \name sll_platform_set_environment_variable
+ * \group platform
+ * \subgroup platform-path
+ * \desc Docs!
+ * \arg const sll_char_t* k
+ * \arg const sll_char_t* v
+ */
+__SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,const sll_char_t* v);
 
 
 

@@ -33,6 +33,7 @@
 #define SLL_SANDBOX_FLAG_ENABLE_STDIN_IO 2
 #define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 4
 #define SLL_SANDBOX_FLAG_DISABLE_PATH_API 8
+#define SLL_SANDBOX_FLAG_DISABLE_PROCESS_API 16
 
 #define SLL_COPY_STRING_NULL(s,d) (*((sll_char_t*)sll_copy_string((s),(d)))=0)
 
@@ -189,12 +190,46 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_fl
 
 
 /**
+ * \flags check_output func
+ * \name sll_get_sandbox_flags
+ * \group util
+ * \desc Docs!
+ * \ret sll_sandbox_flags_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_sandbox_flags_t sll_get_sandbox_flags(void);
+
+
+
+/**
  * \flags func
  * \name sll_init
  * \group util
  * \desc Docs!
  */
 __SLL_EXTERNAL void sll_init(void);
+
+
+
+/**
+ * \flags func
+ * \name sll_remove_environment_variable
+ * \group util
+ * \desc Docs!
+ * \arg const sll_string_t* k
+ */
+__SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k);
+
+
+
+/**
+ * \flags func
+ * \name sll_set_environment_variable
+ * \group util
+ * \desc Docs!
+ * \arg const sll_string_t* k
+ * \arg const sll_string_t* v
+ */
+__SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* k,const sll_string_t* v);
 
 
 

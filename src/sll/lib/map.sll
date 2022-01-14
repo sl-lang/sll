@@ -1,0 +1,23 @@
+(# func_type)
+(--- "types.sll")
+
+
+
+(= map_module_type (&:
+	(~ func_type) extend
+	(~ func_type) remove
+))
+
+
+
+(= extend (... "sll:map_extend"))
+
+(= remove (... "sll:map_remove"))
+
+
+
+(= map (. map_module_type
+	extend
+	remove
+))
+(## map)
