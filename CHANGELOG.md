@@ -8,6 +8,7 @@
 - Environment variable API: `sll_environment_t`, `sll_environment_variable_t`, `sll_environment`, `sll_platform_remove_environment_variable`, `sll_platform_set_environment_variable`, `sll_get_environment_variable`, `sll_remove_environment_variable`, `sll_set_environment_variable`, `sys$ENVIRONMENT`, `sys$remove_env` and `sys$set_env`
 - Error return code in `sll_file_from_data` ([#83])
 - Euler's totient/phi function: `sll_math_euler_phi` and `math$euler_phi`
+- Extension to the sandbox API: `sll_get_sandbox_flags`, `sys$get_sandbox_flags`, `sys$FLAG_DISABLE_FILE_IO`, `sys$FLAG_ENABLE_STDIN_IO`, `sys$FLAG_ENABLE_STDOUT_IO`, `sys$FLAG_DISABLE_PATH_API` and `sys$FLAG_DISABLE_PROCESS_API`
 - Extra function in the file API: `file$TEMP_FILE_PATH`, `file$from_data` and `file$peek` ([#192])
 - Floating-point number operation functions: `sll_math_mod`
 - Implemented `sll:array_pop` ([#87] and [#215])
@@ -32,7 +33,6 @@
 - Implemented `uuid$uuid5` ([#193] and [#222])
 - Implemented `uuid$uuid_type` ([#193] and [#216])
 - Implemented `uuid.sll` ([#193])
-- Extension to the sandbox API: `sll_get_sandbox_flags`, `sys$get_sandbox_flags`, `sys$FLAG_DISABLE_FILE_IO`, `sys$FLAG_ENABLE_STDIN_IO`, `sys$FLAG_ENABLE_STDOUT_IO`, `sys$FLAG_DISABLE_PATH_API` and `sys$FLAG_DISABLE_PROCESS_API`
 - Integer to decimal string conversion: `int$to_dec`
 - Inversion flag to `sll_string_index_char`, `sll_string_index_multiple`, `sll_string_index_reverse_char` and `sll_string_index_reverse_multiple` ([#108] and [#109])
 - New sandbox flag: `SLL_SANDBOX_FLAG_DISABLE_PROCESS_API`
