@@ -107,7 +107,7 @@ void _gc_release_data(void){
 
 
 __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t){
-	if (!(o->_dbg)){
+	if (!o->_dbg){
 		object_debug_data_t* dt=sll_allocate(sizeof(object_debug_data_t));
 		dt->c.fp[0]=0;
 		dt->al=NULL;

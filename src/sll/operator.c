@@ -71,18 +71,12 @@
 	} while (0)
 
 #define REMOVE_FLOAT \
-	sll_object_t __tmp0; \
-	sll_object_t __tmp1; \
 	do{ \
 		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){ \
-			__tmp0.t=SLL_OBJECT_TYPE_INT; \
-			__tmp0.dt.i=sll_api_math_round(a->dt.f); \
-			a=&__tmp0; \
+			a=SLL_FROM_INT(sll_api_math_round(a->dt.f)); \
 		} \
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_FLOAT){ \
-			__tmp1.t=SLL_OBJECT_TYPE_INT; \
-			__tmp1.dt.i=sll_api_math_round(b->dt.f); \
-			b=&__tmp1; \
+			b=SLL_FROM_INT(sll_api_math_round(b->dt.f)); \
 		} \
 	} while (0)
 

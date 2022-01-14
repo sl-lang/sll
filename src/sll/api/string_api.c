@@ -211,7 +211,6 @@ _print_unknown:
 					sll_copy_data(dt->nm.v,dt->nm.l,o->v+o->l);
 					o->l+=dt->nm.l;
 				}
-				sll_object_t tmp;
 				sll_object_field_t* p=a->dt.p;
 				for (sll_arg_count_t i=0;i<dt->l;i++){
 					sll_string_t s=dt->dt[i].nm;
@@ -224,23 +223,24 @@ _print_unknown:
 					sll_string_increase(o,1);
 					o->v[o->l]=' ';
 					o->l++;
+					sll_object_t* tmp;
 					switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
 						case SLL_OBJECT_TYPE_INT:
-							tmp.dt.i=p->i;
+							tmp=SLL_FROM_INT(p->i);
 							break;
 						case SLL_OBJECT_TYPE_FLOAT:
-							tmp.dt.f=p->f;
+							tmp=SLL_FROM_FLOAT(p->f);
 							break;
 						case SLL_OBJECT_TYPE_CHAR:
-							tmp.dt.c=p->c;
+							tmp=SLL_FROM_CHAR(p->c);
 							break;
 						default:
-							tmp=*(p->o);
+							tmp=p->o;
+							SLL_ACQUIRE(tmp);
 							break;
 					}
-					tmp.rc=1;
-					tmp.t=SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t);
-					_object_to_string(&tmp,o);
+					_object_to_string(tmp,o);
+					SLL_RELEASE(tmp);
 					p++;
 				}
 				sll_string_increase(o,1);
