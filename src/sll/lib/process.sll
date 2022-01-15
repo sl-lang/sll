@@ -1,4 +1,3 @@
-(# int_type func_type type_type string_type array_type sys string array)
 (--- "types.sll" "sys.sll" "string.sll" "array.sll")
 
 

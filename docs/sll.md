@@ -514,8 +514,7 @@ The given object is consequently casted to each of the given types. The new, cas
 ##### Example
 
 ```sll
-(# int_type)
-(-- "types.sll")
+(--- "types.sll")
 
 (= value 1.678)
 (= floored_value (:: value int_type))
@@ -592,10 +591,9 @@ The variables are declared and not initialized. Their value is undefined.
 ##### Example
 
 ```sll
-(# stdout)
-(-- "file.sll")
+(--- "file.sll")
 
-(:> "Standard output file index: " stdout "\n")
+(:> "Standard output file index: " file$stdout "\n")
 ```
 
 #### Division (`/`)
@@ -779,12 +777,12 @@ Condition blocks are evaluated in the given order until one evaluates to a non-z
 })
 ```
 
-#### Import (`--`)
+#### Import (`---`)
 
 ##### Syntax
 
 ```sll
-(-- "file_to_import_1.sll" "file_to_import_2.sll" "file_to_import_3.sll")
+(--- "file_to_import_1.sll" "file_to_import_2.sll" "file_to_import_3.sll")
 ```
 
 ##### Return Value
@@ -798,8 +796,7 @@ Each of the string arguments is treated as a file path. This can either be a bui
 ##### Example
 
 ```sll
-(# file stdout)
-(-- "file.sll")
+(--- "file.sll")
 
 (<- file$write stdout "Hello, World!\n")
 ```
@@ -1130,8 +1127,7 @@ Constructs a new object specified by the given type. If the type is a built-in t
 ##### Example
 
 ```sll
-(# float_type)
-(-- "type.sll")
+(--- "type.sll")
 
 (= point_type (&:
 	float_type "x"
@@ -1375,8 +1371,7 @@ A new type is created with respect to the field types and names specified by the
 ##### Example
 
 ```sll
-(# int_type)
-(-- "type.sll")
+(--- "type.sll")
 
 (= point_type (&:
 	int_type x

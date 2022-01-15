@@ -562,7 +562,7 @@ _read_file_argument:
 		sll_free_compilation_data(&c_dt);
 	}
 	for (sll_string_length_t j=0;j<sll;j++){
-		if (!sll_file_from_data(SLL_CHAR(argv[*(fp+j)]),sll_string_length_unaligned(SLL_CHAR(argv[*(fp+j)])),SLL_FILE_FLAG_READ,&f)){
+		if (!sll_file_from_data(SLL_CHAR(argv[*(sl+j)]),sll_string_length_unaligned(SLL_CHAR(argv[*(sl+j)])),SLL_FILE_FLAG_READ,&f)){
 			SLL_WARN(SLL_CHAR("Failed to create input file"));
 			continue;
 		}

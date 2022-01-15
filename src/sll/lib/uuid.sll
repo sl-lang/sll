@@ -1,4 +1,3 @@
-(# int_type func_type type_type char_type string_type string random hash)
 (--- "types.sll" "string.sll" "random.sll" "hash.sll")
 
 
