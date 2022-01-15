@@ -10,7 +10,7 @@ def build_sll(fl,v,r):
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
-		e_fl=(["/D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","/D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])+(["/D","USE_BUILTIN_MALLOC=1"] if len(os.getenv("USE_BUILTIN_MALLOC",""))!=0 else [])
+		e_fl=(["/D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","/D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])+(["/D","USE_STACK_ALLOCATOR=1"] if len(os.getenv("USE_STACK_ALLOCATOR",""))!=0 else [])
 		if (r):
 			util.log("  Compiling Files (Release Mode)...")
 			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","__SLL_COMPILATION__","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/sll/include","/Foobjects\\"]+e_fl+["../"+e for e in fl]).returncode!=0):
@@ -30,7 +30,7 @@ def build_sll(fl,v,r):
 				os.chdir(cd)
 				sys.exit(1)
 	else:
-		e_fl=(["-D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","-D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])+(["-D","USE_BUILTIN_MALLOC=1"] if len(os.getenv("USE_BUILTIN_MALLOC",""))!=0 else [])
+		e_fl=(["-D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","-D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])+(["-D","USE_STACK_ALLOCATOR=1"] if len(os.getenv("USE_STACK_ALLOCATOR",""))!=0 else [])
 		if (r):
 			util.log("  Compiling Files (Release Mode)...")
 			os.chdir("objects")

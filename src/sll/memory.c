@@ -29,83 +29,7 @@ static void _fill_zero(void* o,sll_size_t sz){
 
 
 
-#ifdef USE_BUILTIN_MALLOC
-
-
-
-void _memory_release_data(void){
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
-	if (!sz){
-		return NULL;
-	}
-	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
-	user_mem_block_t* b=malloc(sz);
-	if (!b){
-		return NULL;
-	}
-	b->dt=USED_BLOCK_FLAG_USED|sz;
-	return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
-	return sll_allocate(sz);
-}
-
-
-
-__SLL_EXTERNAL void sll_deallocate(void* p){
-	if (!p){
-		return;
-	}
-	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
-	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
-	SLL_ASSERT(!(b->dt&USED_BLOCK_FLAG_STACK));
-	free(b);
-}
-
-
-
-__SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d){
-	return p;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
-	if (!p){
-		return sll_allocate(sz);
-	}
-	if (!sz){
-		sll_deallocate(p);
-		return NULL;
-	}
-	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
-	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
-	SLL_ASSERT(!(b->dt&USED_BLOCK_FLAG_STACK));
-	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
-	if (USED_BLOCK_GET_SIZE(b)==sz){
-		return p;
-	}
-	b=realloc(b,sz);
-	if (!b){
-		return NULL;
-	}
-	b->dt=USED_BLOCK_FLAG_USED|sz;
-	return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
-}
-
-
-
-#else
-
-
-
+#ifdef USE_STACK_ALLOCATOR
 #define GET_STACK_BLOCK_SIZE(b) (((b)->dt&0x7ffffff)<<4)
 #define GET_STACK_BLOCK_PREV_SIZE(b) (((b)->dt>>27)&0x7ffffff0)
 #define SET_STACK_BLOCK_SIZE(p_sz,sz) (((p_sz)<<27)|((sz)>>4))
@@ -113,14 +37,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 #define UPDATE_STACK_BLOCK_SIZE(b,sz) ((b)->dt=((b)->dt&0xfffffffff8000000ull)|((sz)>>4))
 
 #define ASSERT_CORRECT_TOP() SLL_ASSERT(!_memory_stack_top||((uint64_t)_memory_stack_top)+GET_STACK_BLOCK_SIZE(_memory_stack_top)==((uint64_t)_memory_stack_page)+SLL_ROUND_LARGE_PAGE(ALLOCATOR_STACK_ALLOC_SIZE))
+#endif
 
 
 
 static uint32_t _memory_data_mask=0;
 static mem_block_t* _memory_head_blocks[ALLOCATOR_MAX_SMALL_SIZE>>4];
 static page_header_t* _memory_page_head=NULL;
+#ifdef USE_STACK_ALLOCATOR
 static void* _memory_stack_page=NULL;
 static mem_stack_block_t* _memory_stack_top=0;
+#endif
 
 
 
@@ -134,10 +61,12 @@ void _memory_release_data(void){
 		}
 		_memory_page_head=NULL;
 	}
+#ifdef USE_STACK_ALLOCATOR
 	if (_memory_stack_page){
 		sll_platform_free_page(_memory_stack_page,SLL_ROUND_LARGE_PAGE(ALLOCATOR_STACK_ALLOC_SIZE));
 		_memory_stack_page=NULL;
 	}
+#endif
 }
 
 
@@ -225,6 +154,7 @@ _find_block:
 
 
 
+#ifdef USE_STACK_ALLOCATOR
 static void* _allocate_chunk_stack(sll_size_t sz){
 	if (sz<=SLL_ROUND_LARGE_PAGE(ALLOCATOR_STACK_ALLOC_SIZE)){
 		if (!_memory_stack_page){
@@ -252,6 +182,7 @@ static void* _allocate_chunk_stack(sll_size_t sz){
 	}
 	return NULL;
 }
+#endif
 
 
 
@@ -285,6 +216,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
+#ifdef USE_STACK_ALLOCATOR
 	if (!sz){
 		return NULL;
 	}
@@ -299,6 +231,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
 	}
 	b->dt=USED_BLOCK_FLAG_USED|sz;
 	return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
+#else
+	return sll_allocate(sz);
+#endif
 }
 
 
@@ -309,6 +244,7 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 	}
 	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
 	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
+#ifdef USE_STACK_ALLOCATOR
 	if (b->dt&USED_BLOCK_FLAG_STACK){
 		sll_size_t p_sz=GET_STACK_BLOCK_PREV_SIZE(b);
 		sll_size_t sz=GET_STACK_BLOCK_SIZE(b);
@@ -344,7 +280,9 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 			}
 		}
 	}
-	else if (USED_BLOCK_GET_SIZE(b)>ALLOCATOR_MAX_SMALL_SIZE){
+	else
+#endif
+	if (USED_BLOCK_GET_SIZE(b)>ALLOCATOR_MAX_SMALL_SIZE){
 		free(b);
 	}
 	else{
@@ -355,6 +293,7 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 
 
 __SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d){
+#ifdef USE_STACK_ALLOCATOR
 	if (!p){
 		return NULL;
 	}
@@ -388,6 +327,9 @@ __SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d){
 	}
 	sll_deallocate(p);
 	return n;
+#else
+	return p;
+#endif
 }
 
 
@@ -403,6 +345,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 	user_mem_block_t* b=(user_mem_block_t*)(((uint64_t)p)-sizeof(user_mem_block_t));
 	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
 	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
+#ifdef USE_STACK_ALLOCATOR
 	if (b->dt&USED_BLOCK_FLAG_STACK){
 		if (GET_STACK_BLOCK_SIZE(b)==sz){
 			return p;
@@ -465,6 +408,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 		sll_deallocate(p);
 		return o;
 	}
+#endif
 	if (USED_BLOCK_GET_SIZE(b)==sz){
 		return p;
 	}
@@ -514,10 +458,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
 	b->dt=USED_BLOCK_FLAG_USED|sz;
 	return (void*)(((uint64_t)b)+sizeof(user_mem_block_t));
 }
-
-
-
-#endif
 
 
 

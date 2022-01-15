@@ -36,6 +36,7 @@
 - Integer to decimal string conversion: `int$to_dec`
 - Inversion flag to `sll_string_index_char`, `sll_string_index_multiple`, `sll_string_index_reverse_char` and `sll_string_index_reverse_multiple` ([#108] and [#109])
 - New sandbox flag: `SLL_SANDBOX_FLAG_DISABLE_PROCESS_API`
+- Option macro to enable experimental stack allocator (`USE_STACK_ALLOCATOR`)
 - Prime factorization: `sll_factor_t`, `sll_math_factors`, `math$factor_type` and `math$factors`
 - Sll map module: `map$extend` and `map$remove`
 - Special structure field: `@@string@@`
