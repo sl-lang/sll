@@ -15,6 +15,7 @@
 
 
 static sll_cleanup_function_t _util_exit_table[MAX_CLEANUP_TABLE_SIZE];
+static sll_bool_t _util_init=0;
 static uint16_t _util_exit_table_size=0;
 static sll_sandbox_flags_t _util_sandbox_flags=0;
 
@@ -222,6 +223,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_strin
 
 
 __SLL_EXTERNAL void sll_deinit(void){
+	if (!_util_init){
+		return;
+	}
 	while (_util_exit_table_size){
 		_util_exit_table_size--;
 		_util_exit_table[_util_exit_table_size]();
@@ -232,6 +236,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 	_memory_release_data();
 	sll_platform_reset_console();
 	_util_sandbox_flags=0;
+	_util_init=0;
 }
 
 
@@ -294,6 +299,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_sandbox_flags_t sll_get_sandbox_flags(void
 
 
 __SLL_EXTERNAL void sll_init(void){
+	if (_util_init){
+		return;
+	}
 	sll_platform_setup_console();
 	_file_init_std_streams();
 	_init_platform();

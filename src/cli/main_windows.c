@@ -8,7 +8,7 @@
 
 
 
-int main(int argc,const char** argv){
+int WinMain(HINSTANCE a,HINSTANCE b,LPSTR c,int d){
 	char bf[256+STRLEN(LIBRARY_NAME)];
 	DWORD bfl=GetModuleFileNameA(NULL,bf,256);
 	while (bfl&&bf[bfl]!='\\'&&bf[bfl]!='/'){
@@ -27,12 +27,12 @@ int main(int argc,const char** argv){
 	if (!lh){
 		return 0;
 	}
-	void* cli=GetProcAddress(lh,"sll_cli_main");
+	void* cli=GetProcAddress(lh,"sll_cli_main_raw");
 	if (!cli){
 		FreeLibrary(lh);
 		return 0;
 	}
-	sll_return_code_t o=((sll_return_code_t(*)(sll_array_length_t,const sll_char_t*const*))cli)(argc,argv);
+	sll_return_code_t o=((sll_return_code_t(*)(const sll_char_t*))cli)(GetCommandLineA());
 	FreeLibrary(lh);
 	return o;
 }

@@ -12,7 +12,10 @@
 
 
 
-int main(int argc,const char** argv){
+int main(int argc,const char*const* argv){
+	if (!argc){
+		return 0;
+	}
 	char bf[4096+STRLEN(LIBRARY_NAME)];
 	ssize_t bfl=readlink("/proc/self/exe",bf,4096);
 	if (bfl==-1){
@@ -55,7 +58,7 @@ _not_apt:
 		dlclose(lh);
 		return 0;
 	}
-	sll_return_code_t o=((sll_return_code_t(*)(sll_array_length_t,const sll_char_t*const*))cli)(argc,(const sll_char_t*const*)argv);
+	sll_return_code_t o=((sll_return_code_t(*)(sll_array_length_t,const sll_char_t*const*))cli)(argc-1,(const sll_char_t*const*)(argv+1));
 	dlclose(lh);
 	return o;
 }

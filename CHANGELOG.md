@@ -2,6 +2,11 @@
 
 ## [0.6.38] - Ongoing
 
+### Added
+
+- Console option to do not create a console: `-w` (Windows only)
+- Implemented `sll_platform_create_console` and `sll_cli_main_raw`
+
 ### Changed
 
 - Updated CLI code

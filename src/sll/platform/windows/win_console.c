@@ -29,6 +29,19 @@ static void _reset_console_color(void){
 
 
 
+__SLL_EXTERNAL void sll_platform_create_console(void){
+	if (!AttachConsole(ATTACH_PARENT_PROCESS)){
+		AllocConsole();
+	}
+	freopen("CONIN$","r",stdin);
+	freopen("CONOUT$","w",stderr);
+	freopen("CONOUT$","w",stdout);
+	_file_release_std_streams();
+	_file_init_std_streams();
+}
+
+
+
 __SLL_EXTERNAL void sll_platform_enable_console_color(void){
 	sll_bool_t st=0;
 	if (_win_stdout_cm==0xffffffff&&_isatty(1)){

@@ -24,4 +24,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_cli_main_raw
+ * \group cli
+ * \desc Docs!
+ * \arg const sll_char_t*
+ * \ret sll_return_code_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main_raw(const sll_char_t* cmd);
+
+
+
 #endif
