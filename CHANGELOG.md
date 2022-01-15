@@ -2,7 +2,9 @@
 
 ## [0.6.38] - Ongoing
 
-*Nothing*
+### Changed
+
+- Updated CLI code
 
 ## [0.6.37] - 20212-01-15
 

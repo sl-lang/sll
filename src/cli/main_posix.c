@@ -1,9 +1,6 @@
 #include <sll.h>
-#include <linux/limits.h>
-#include <string.h>
 #include <unistd.h>
 #include <dlfcn.h>
-#include <stdio.h>
 
 
 
@@ -16,32 +13,47 @@
 
 
 int main(int argc,const char** argv){
-	char bf[PATH_MAX+STRLEN(LIBRARY_NAME)];
-	ssize_t bfl=readlink("/proc/self/exe",bf,PATH_MAX);
+	char bf[4096+STRLEN(LIBRARY_NAME)];
+	ssize_t bfl=readlink("/proc/self/exe",bf,4096);
 	if (bfl==-1){
-		return -1;
-	}
-	while (bfl&&bf[bfl]!='/'){
-		bfl--;
-	}
-	if (!bfl){
-		return -1;
-	}
-	bfl++;
-	if (bfl==STRLEN(APT_INSTALL_PATH)&&!memcmp(bf,APT_INSTALL_PATH,STRLEN(APT_INSTALL_PATH))){
-		memcpy(bf,APT_LIB_PATH,STRLEN(APT_LIB_PATH)+1);
+		bf[0]='/';
+		bfl=0;
 	}
 	else{
-		memcpy(bf+bfl,LIBRARY_NAME,STRLEN(LIBRARY_NAME)+1);
+		while (bfl&&bf[bfl]!='/'){
+			bfl--;
+		}
+		if (!bfl){
+			bf[0]='/';
+		}
+	}
+	bfl++;
+	if (bfl>=STRLEN(APT_INSTALL_PATH)){
+		for (unsigned int i=0;i<STRLEN(APT_INSTALL_PATH);i++){
+			if (bf[i]!=APT_INSTALL_PATH[i]){
+				goto _not_apt;
+			}
+		}
+		for (unsigned int i=0;i<STRLEN(APT_LIB_PATH);i++){
+			bf[i]=APT_LIB_PATH[i];
+		}
+		bf[STRLEN(APT_LIB_PATH)]=0;
+	}
+	else{
+_not_apt:
+		for (unsigned int i=0;i<STRLEN(LIBRARY_NAME);i++){
+			bf[bfl+i]=LIBRARY_NAME[i];
+		}
+		bf[bfl+STRLEN(LIBRARY_NAME)]=0;
 	}
 	void* lh=dlopen(bf,RTLD_LAZY);
 	if (!lh){
-		return -1;
+		return 0;
 	}
 	void* cli=dlsym(lh,"sll_cli_main");
 	if (!cli){
 		dlclose(lh);
-		return -1;
+		return 0;
 	}
 	sll_return_code_t o=((sll_return_code_t(*)(sll_array_length_t,const sll_char_t*const*))cli)(argc,(const sll_char_t*const*)argv);
 	dlclose(lh);
