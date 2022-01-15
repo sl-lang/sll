@@ -14,21 +14,6 @@
 
 #define USED_BLOCK_GET_SIZE(b) ((b)->dt&0x3fffffffffffffffull)
 
-
-
-static void _fill_zero(void* o,sll_size_t sz){
-	uint64_t* p=o;
-	ASSUME_ALIGNED(p,4,8);
-	sz=(sz+7)>>3;
-	do{
-		*p=0;
-		p++;
-		sz--;
-	} while (sz);
-}
-
-
-
 #ifdef USE_STACK_ALLOCATOR
 #define GET_STACK_BLOCK_SIZE(b) (((b)->dt&0x7ffffff)<<4)
 #define GET_STACK_BLOCK_PREV_SIZE(b) (((b)->dt>>27)&0x7ffffff0)
@@ -51,22 +36,15 @@ static mem_stack_block_t* _memory_stack_top=0;
 
 
 
-void _memory_release_data(void){
-	if (_memory_page_head){
-		page_header_t* p=_memory_page_head;
-		while (p){
-			page_header_t* n=p->n;
-			sll_platform_free_page(p,SLL_ROUND_PAGE(ALLOCATOR_ALLOC_SIZE));
-			p=n;
-		}
-		_memory_page_head=NULL;
-	}
-#ifdef USE_STACK_ALLOCATOR
-	if (_memory_stack_page){
-		sll_platform_free_page(_memory_stack_page,SLL_ROUND_LARGE_PAGE(ALLOCATOR_STACK_ALLOC_SIZE));
-		_memory_stack_page=NULL;
-	}
-#endif
+static void _fill_zero(void* o,sll_size_t sz){
+	uint64_t* p=o;
+	ASSUME_ALIGNED(p,4,8);
+	sz=(sz+7)>>3;
+	do{
+		*p=0;
+		p++;
+		sz--;
+	} while (sz);
 }
 
 
@@ -193,6 +171,26 @@ static void _release_chunk(user_mem_block_t* b){
 	n->n=((_memory_data_mask&(1<<i))?_memory_head_blocks[i]:NULL);
 	_memory_data_mask|=1<<i;
 	_memory_head_blocks[i]=n;
+}
+
+
+
+void _memory_release_data(void){
+	if (_memory_page_head){
+		page_header_t* p=_memory_page_head;
+		while (p){
+			page_header_t* n=p->n;
+			sll_platform_free_page(p,SLL_ROUND_PAGE(ALLOCATOR_ALLOC_SIZE));
+			p=n;
+		}
+		_memory_page_head=NULL;
+	}
+#ifdef USE_STACK_ALLOCATOR
+	if (_memory_stack_page){
+		sll_platform_free_page(_memory_stack_page,SLL_ROUND_LARGE_PAGE(ALLOCATOR_STACK_ALLOC_SIZE));
+		_memory_stack_page=NULL;
+	}
+#endif
 }
 
 
