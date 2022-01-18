@@ -15,7 +15,7 @@ __API_FUNC(time_current){
 
 
 
-__API_FUNC(time_current_nanos){
+__API_FUNC(time_current_ns){
 	return sll_platform_get_current_time();
 }
 
@@ -29,7 +29,7 @@ __API_FUNC(time_sleep){
 
 
 
-__API_FUNC(time_sleep_nanos){
+__API_FUNC(time_sleep_ns){
 	sll_time_t st=sll_platform_get_current_time();
 	sll_platform_sleep((SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT?a->dt.i:sll_api_math_round(a->dt.f)));
 	return sll_platform_get_current_time()-st;

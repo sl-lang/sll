@@ -4326,22 +4326,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_sandbox_flags_ra
 
 __SLL_API_TYPE_sll_api_sys_get_version sll_api_sys_get_version(__SLL_API_ARGS_sll_api_sys_get_version);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_version_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_object_t* a=NULL;
-	if (all>0){
-		a=*(al+0);
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-			SLL_ACQUIRE(a);
-		}
-		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
-		}
-	}
-	else{
-		a=SLL_ACQUIRE_STATIC_INT(0);
-	}
-	sll_object_t* out=sll_api_sys_get_version(a->dt.i);
-	SLL_RELEASE(a);
-	return out;
+	sll_array_t out;
+	sll_api_sys_get_version(&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
 }
 
 
@@ -4443,9 +4433,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_current_raw(sll_obj
 
 
 
-__SLL_API_TYPE_sll_api_time_current_nanos sll_api_time_current_nanos(__SLL_API_ARGS_sll_api_time_current_nanos);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_current_nanos_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_integer_t out=sll_api_time_current_nanos();
+__SLL_API_TYPE_sll_api_time_current_ns sll_api_time_current_ns(__SLL_API_ARGS_sll_api_time_current_ns);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_current_ns_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t out=sll_api_time_current_ns();
 	return SLL_FROM_INT(out);
 }
 
@@ -4473,8 +4463,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_raw(sll_objec
 
 
 
-__SLL_API_TYPE_sll_api_time_sleep_nanos sll_api_time_sleep_nanos(__SLL_API_ARGS_sll_api_time_sleep_nanos);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_nanos_raw(sll_object_t*const* al,sll_arg_count_t all){
+__SLL_API_TYPE_sll_api_time_sleep_ns sll_api_time_sleep_ns(__SLL_API_ARGS_sll_api_time_sleep_ns);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_ns_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
 	if (all>0){
 		a=*(al+0);
@@ -4488,7 +4478,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_nanos_raw(sll
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_integer_t out=sll_api_time_sleep_nanos(a);
+	sll_integer_t out=sll_api_time_sleep_ns(a);
 	SLL_RELEASE(a);
 	return SLL_FROM_INT(out);
 }
@@ -5177,8 +5167,8 @@ static const internal_function_t _ifunc_data_ptr[]={
 		0
 	},
 	{
-		"sll:time_current_nanos",
-		sll_api_time_current_nanos_raw,
+		"sll:time_current_ns",
+		sll_api_time_current_ns_raw,
 		0
 	},
 	{
@@ -5187,8 +5177,8 @@ static const internal_function_t _ifunc_data_ptr[]={
 		0
 	},
 	{
-		"sll:time_sleep_nanos",
-		sll_api_time_sleep_nanos_raw,
+		"sll:time_sleep_ns",
+		sll_api_time_sleep_ns_raw,
 		0
 	}
 };

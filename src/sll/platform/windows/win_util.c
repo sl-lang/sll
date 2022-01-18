@@ -13,7 +13,7 @@
 
 static HANDLE _win_wh=INVALID_HANDLE_VALUE;
 static sll_environment_t _win_env={NULL,0};
-static STATIC_STRING(_win_platform_str,"windows");
+static __STATIC_STRING(_win_platform_str,"windows");
 
 
 

@@ -18,6 +18,17 @@
 
 
 
+static __STATIC_STRING_CODE(_sys_executable,{
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(bf,sll_platform_get_executable_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+});
+static __STATIC_STRING_CODE(_sys_library,{
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(bf,sll_platform_get_library_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+});
+#ifdef SLL_VERSION_HAS_SHA
+static __STATIC_STRING(_sys_full_commit,SLL_VERSION_FULL_SHA);
+#endif
 static sll_array_length_t _sys_argc=0;
 static sll_string_t* _sys_argv=NULL;
 static library_t** _sys_lh=NULL;
@@ -123,15 +134,13 @@ __API_FUNC(sys_get_env){
 
 
 __API_FUNC(sys_get_executable){
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_get_executable_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_string_clone(&_sys_executable,out);
 }
 
 
 
 __API_FUNC(sys_get_library){
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_get_library_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_string_clone(&_sys_library,out);
 }
 
 
@@ -149,16 +158,21 @@ __API_FUNC(sys_get_sandbox_flags){
 
 
 __API_FUNC(sys_get_version){
-	sll_object_t* dt[3]={
-		SLL_FROM_INT(SLL_VERSION_MAJOR),
-		SLL_FROM_INT(SLL_VERSION_MINOR),
-		SLL_FROM_INT(SLL_VERSION_PATCH)
-	};
-	sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,(sll_object_type_t)a,dt,3);
-	SLL_RELEASE(dt[0]);
-	SLL_RELEASE(dt[1]);
-	SLL_RELEASE(dt[2]);
-	return o;
+	if (!sll_array_create(5,out)){
+		SLL_UNIMPLEMENTED();
+	}
+	out->v[0]=SLL_FROM_INT(SLL_VERSION_MAJOR);
+	out->v[1]=SLL_FROM_INT(SLL_VERSION_MINOR);
+	out->v[2]=SLL_FROM_INT(SLL_VERSION_PATCH);
+	sll_object_t* cmt=SLL_CREATE();
+	cmt->t=SLL_OBJECT_TYPE_STRING;
+#ifdef SLL_VERSION_HAS_SHA
+	sll_string_clone(_sys_full_commit,&(cmt->dt.s));
+#else
+	SLL_INIT_STRING(&(cmt->dt.s));
+#endif
+	out->v[3]=cmt;
+	out->v[4]=SLL_FROM_INT(SLL_VERSION_BUILD_TIME_RAW);
 }
 
 

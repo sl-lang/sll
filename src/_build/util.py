@@ -1,12 +1,14 @@
 import os
 import subprocess
 import sys
+import time
 import zipfile
 
 
 
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 BUILD_PATHS=["build/lib","build/lib_ext","build/sys_lib","build/objects","build/objects_ext","build/web"]
+BUILD_TIME=time.time_ns()
 PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix","nt":"src/sll/platform/windows"}
 
 

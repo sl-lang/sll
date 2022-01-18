@@ -5,11 +5,14 @@
 ### Added
 
 - Console option to do not create a console: `-w` (Windows only)
+- Implemented `date$from_time_ns`
 - Implemented `debug$backtrace`
 - Implemented `sll_platform_create_console` and `sll_cli_main_raw`
+- Implemented `sys$version_type$commit`, `sys$version_type$full_commit`, `sys$version_type$url` and `sys$version_type$time`
 
 ### Changed
 
+- Renamed `sll_api_time_current_nanos`, `sll_api_time_sleep_nanos`, `time$time_nanos` and `time$sleep_nanos` to `sll_api_time_current_ns`, `sll_api_time_sleep_ns`, `time$time_ns` and `time$sleep_ns`
 - Renamed [`src/sll/api/_generated.c`][0.6.37/src/sll/api/_generated.c] and [`src/sll/include/sll/api/_generated.h`][0.6.37/src/sll/include/sll/api/_generated.h] to [`src/sll/api/_generated_raw.c`][0.6.38/src/sll/api/_generated_raw.c] and [`src/sll/include/sll/api/_generated_raw.h`][0.6.38/src/sll/include/sll/api/_generated_raw.h]
 - `sll_platform_string` is now a `const sll_string_t*` instead of `const sll_char_t*`
 - Static strings are now initialized after the call to `sll_init` funcion

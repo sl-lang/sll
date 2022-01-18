@@ -597,6 +597,8 @@ _read_file_argument:
 		sll_deallocate(sl);
 	}
 	sll_free_internal_function_table(&i_ft);
+	sll_file_flush(sll_stdout);
+	sll_file_flush(sll_stderr);
 	return 0;
 _error:
 	sll_deallocate(i_fp);
@@ -612,6 +614,8 @@ _error:
 		sll_file_close(&f);
 	}
 	sll_free_internal_function_table(&i_ft);
+	sll_file_flush(sll_stdout);
+	sll_file_flush(sll_stderr);
 	return ec;
 }
 

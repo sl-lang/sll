@@ -1,4 +1,4 @@
-(--- "types.sll" "path.sll" "string.sll" "map.sll")
+(--- "types.sll" "path.sll" "string.sll" "map.sll" "date.sll")
 
 
 
@@ -9,6 +9,10 @@
 	(~ int_type) major
 	(~ int_type) minor
 	(~ int_type) patch
+	(~ string_type) commit
+	(~ string_type) full_commit
+	(~ string_type) url
+	(~ date$date_type) time
 ))
 
 (= sys_module_type (&:
@@ -55,7 +59,27 @@
 (= LIBRARY_PATH (+ (<- path$absolute (+ (: (<- path$split LIBRARY) 0) path$SEPARATOR "sys_lib")) path$SEPARATOR))
 (= LIBRARY_EXTENSION (?: (=== PLATFORM "windows") "dll" "so"))
 
-(= VERSION (<- (... "sll:sys_get_version") version_type))
+(= v_dt (<- (... "sll:sys_get_version")))
+(= commit (: v_dt 3))
+(= short_commit "")
+(= url "")
+(? commit {
+	(= short_commit (: commit 0 7))
+	(= url (<- string$format "https://github.com/sl-lang/sll/tree/sll-v%u.%u.%u"
+		(: v_dt 0)
+		(: v_dt 1)
+		(: v_dt 2)
+	))
+})
+(= VERSION (. version_type
+	(: v_dt 0)
+	(: v_dt 1)
+	(: v_dt 2)
+	short_commit
+	commit
+	url
+	(<- date$from_time_ns (: v_dt 4))
+))
 
 
 

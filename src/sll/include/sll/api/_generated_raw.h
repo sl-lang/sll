@@ -3177,15 +3177,13 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_sys_get_version __SLL_CHECK_OUTPUT sll_object_t*
-#define __SLL_API_ARGS_sll_api_sys_get_version sll_integer_t a
+#define __SLL_API_TYPE_sll_api_sys_get_version void
+#define __SLL_API_ARGS_sll_api_sys_get_version sll_array_t* out
 /**
  * \flags func optimizable
  * \name sll_api_sys_get_version
  * \group sys-api
  * \desc Docs!
- * \arg sll_integer_t a -> 
- * \ret sll_object_t*
  */
 /**
  * \flags check_output func optimizable
@@ -3297,21 +3295,21 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_time_current_nanos __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_time_current_nanos void
+#define __SLL_API_TYPE_sll_api_time_current_ns __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_time_current_ns void
 /**
  * \flags check_output func optimizable
- * \name sll_api_time_current_nanos
+ * \name sll_api_time_current_ns
  * \group time-api
  * \desc Docs!
  * \ret sll_integer_t
  */
 /**
  * \flags check_output func optimizable
- * \name sll_api_time_current_nanos_raw
+ * \name sll_api_time_current_ns_raw
  * \group raw-api
  * \subgroup raw-api-time-api
- * \desc Wrapper function for :sll_api_time_current_nanos:
+ * \desc Wrapper function for :sll_api_time_current_ns:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
@@ -3342,11 +3340,11 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_time_sleep_nanos __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_time_sleep_nanos sll_object_t* a
+#define __SLL_API_TYPE_sll_api_time_sleep_ns __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_time_sleep_ns sll_object_t* a
 /**
  * \flags check_output func optimizable
- * \name sll_api_time_sleep_nanos
+ * \name sll_api_time_sleep_ns
  * \group time-api
  * \desc Docs!
  * \arg sll_object_t* a -> 
@@ -3354,10 +3352,10 @@
  */
 /**
  * \flags check_output func optimizable
- * \name sll_api_time_sleep_nanos_raw
+ * \name sll_api_time_sleep_ns_raw
  * \group raw-api
  * \subgroup raw-api-time-api
- * \desc Wrapper function for :sll_api_time_sleep_nanos:
+ * \desc Wrapper function for :sll_api_time_sleep_ns:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

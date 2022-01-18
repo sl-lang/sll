@@ -321,7 +321,12 @@ __SLL_EXTERNAL void sll_init(void){
 	while (l<&__s_str_end){
 		const static_string_t* k=*l;
 		if (k){
-			sll_string_from_pointer_length(k->dt,k->dtl,k->p);
+			if (k->dtl==SLL_MAX_STRING_LENGTH){
+				k->dt.fn(k->p);
+			}
+			else{
+				sll_string_from_pointer_length(k->dt.s,k->dtl,k->p);
+			}
 		}
 		l++;
 	}

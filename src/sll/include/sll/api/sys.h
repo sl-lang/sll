@@ -121,8 +121,7 @@ __API_FUNC_DECL(sys_get_sandbox_flags);
  * \name sll_api_sys_get_version
  * \group sys-api
  * \desc Docs!
- * \arg I
- * \ret O
+ * \ret A
  */
 __API_FUNC_DECL(sys_get_version);
 

@@ -338,7 +338,10 @@
 (:> [(<- string$trim_right " \t\n\r\vRight \t\n")] "\n")
 (:> [(<- string$trim " \t\n\r\vBoth \t\n")] "\n")
 
-(:> sys$VERSION "\n")
+(:> sys$VERSION ", " (?: ($ sys$VERSION$commit)
+	(<- string$format "commit/%s [%s]" sys$VERSION$commit sys$VERSION$url)
+	"local"
+) ", " sys$VERSION$time "\n")
 
 (:> (<- uuid$uuid3 uuid$NAMESPACE_DNS "123") "\n")
 (:> (<- uuid$uuid4) "\n")

@@ -16,7 +16,7 @@
 
 
 static sll_environment_t _posix_env={NULL,0};
-static STATIC_STRING(_posix_platform_str,"posix");
+static __STATIC_STRING(_posix_platform_str,"posix");
 
 
 

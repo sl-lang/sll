@@ -13,10 +13,10 @@
 
 
 
-static STATIC_STRING(_object_copy_str,"@@copy@@");
-static STATIC_STRING(_object_delete_str,"@@delete@@");
-static STATIC_STRING(_object_init_str,"@@init@@");
-static STATIC_STRING(_object_string_str,"@@string@@");
+static __STATIC_STRING(_object_copy_str,"@@copy@@");
+static __STATIC_STRING(_object_delete_str,"@@delete@@");
+static __STATIC_STRING(_object_init_str,"@@init@@");
+static __STATIC_STRING(_object_string_str,"@@string@@");
 
 
 

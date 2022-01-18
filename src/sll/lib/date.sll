@@ -2,6 +2,10 @@
 
 
 
+(# from_time)
+
+
+
 (= time_zone_type (&:
 	(,,, dt {
 		(= h (// dt$offset 60))
@@ -29,7 +33,7 @@
 	(,,, dt {
 		(= h (// dt$time_zone$offset 60))
 		(= min (- dt$time_zone$offset (* h 60)))
-		(@@ (<- string$format "<%.4u/%.2u/%.2u %.2u:%.2u:%.2u %+.2u:%.2u (%s)>"
+		(@@ (<- string$format "%.4u/%.2u/%.2u %.2u:%.2u:%.2u %+.2u:%.2u (%s)"
 			dt$year
 			(+ dt$month 1)
 			(+ dt$day 1)
@@ -60,6 +64,7 @@
 	(~ time_zone_type) UTC_TIME_ZONE
 	(~ func_type) current
 	(~ func_type) from_time
+	(~ func_type) from_time_ns
 	(~ func_type) to_time
 ))
 
@@ -262,6 +267,10 @@
 
 
 
+(= current (,,,
+	(@@ (<- from_time (<- time$time) UTC_TIME_ZONE)))
+)
+
 (= from_time (,,, tm tz
 	(= tz (?: tz (:: tz date_type) UTC_TIME_ZONE))
 	(= dt (<- (... "sll:date_split") (+ (:: tm float_type) (* tz$time_offset 3600))))
@@ -277,9 +286,12 @@
 	))
 ))
 
-(= current (,,,
-	(@@ (<- from_time (<- time$time) UTC_TIME_ZONE)))
-)
+(= from_time_ns (,,, tm tz
+	(@@ (<- from_time
+		(* (:: tm int_type) 1e-9)
+		tz
+	))
+))
 
 (= to_time (,,, dt
 	(= dt (:: dt date_type))
@@ -304,6 +316,7 @@
 	UTC_TIME_ZONE
 	current
 	from_time
+	from_time_ns
 	to_time
 ))
 (## date)

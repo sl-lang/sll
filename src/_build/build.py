@@ -13,7 +13,7 @@ def build_sll(fl,v,r):
 		e_fl=(["/D",f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"","/D",f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\""] if os.getenv("GITHUB_SHA") else [])+(["/D","USE_STACK_ALLOCATOR=1"] if len(os.getenv("USE_STACK_ALLOCATOR",""))!=0 else [])
 		if (r):
 			util.log("  Compiling Files (Release Mode)...")
-			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","__SLL_COMPILATION__","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/sll/include","/Foobjects\\"]+e_fl+["../"+e for e in fl]).returncode!=0):
+			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","__SLL_COMPILATION__","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I","../src/sll/include","/Foobjects\\","/D",f"__TIME_RAW__={util.BUILD_TIME}"]+e_fl+["../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			util.log("  Linking Files (Release Mode)...")
@@ -22,7 +22,7 @@ def build_sll(fl,v,r):
 				sys.exit(1)
 		else:
 			util.log("  Compiling Files...")
-			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","__SLL_COMPILATION__","/D","WIN32_LEAN_AND_MEAN","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","../src/sll/include","/Foobjects\\"]+e_fl+["../"+e for e in fl]).returncode!=0):
+			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","__SLL_COMPILATION__","/D","WIN32_LEAN_AND_MEAN","/D","DEBUG_BUILD","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","../src/sll/include","/Foobjects\\","/D",f"__TIME_RAW__={util.BUILD_TIME}"]+e_fl+["../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			util.log("  Linking Files...")
@@ -34,7 +34,7 @@ def build_sll(fl,v,r):
 		if (r):
 			util.log("  Compiling Files (Release Mode)...")
 			os.chdir("objects")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","_GNU_SOURCE","-Wall","-O3","-Werror","-I","../../src/sll/include"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","_GNU_SOURCE","-Wall","-O3","-Werror","-I","../../src/sll/include","-D",f"__TIME_RAW__={util.BUILD_TIME}"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
@@ -45,7 +45,7 @@ def build_sll(fl,v,r):
 		else:
 			util.log("  Compiling Files...")
 			os.chdir("objects")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-D","_GNU_SOURCE","-Wall","-g","-O0","-Werror","-I","../../src/sll/include"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-D","__SLL_COMPILATION__","-D","DEBUG_BUILD","-D","_GNU_SOURCE","-Wall","-g","-O0","-Werror","-I","../../src/sll/include","-D",f"__TIME_RAW__={util.BUILD_TIME}"]+e_fl+["../../"+e for e in fl]+["-lm"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
