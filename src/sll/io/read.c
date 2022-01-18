@@ -1,13 +1,13 @@
  #include <sll/_sll_internal.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/file.h>
 #include <sll/memory.h>
 #include <sll/node.h>
-#include <sll/string.h>
 #include <sll/object.h>
+#include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <sll/version.h>
 #include <stdint.h>
 

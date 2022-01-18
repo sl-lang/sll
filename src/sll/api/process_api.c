@@ -3,6 +3,7 @@
 #include <sll/api/process.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>

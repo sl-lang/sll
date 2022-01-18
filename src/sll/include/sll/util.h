@@ -10,13 +10,6 @@
  */
 /**
  * \flags subgroup
- * \name Memory
- * \group util
- * \subgroup util-memory
- * \desc Docs!
- */
-/**
- * \flags subgroup
  * \name String Table
  * \group util
  * \subgroup util-str
@@ -34,8 +27,6 @@
 #define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 4
 #define SLL_SANDBOX_FLAG_DISABLE_PATH_API 8
 #define SLL_SANDBOX_FLAG_DISABLE_PROCESS_API 16
-
-#define SLL_COPY_STRING_NULL(s,d) (*((sll_char_t*)sll_copy_string((s),(d)))=0)
 
 
 
@@ -65,62 +56,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_t
  * \ret sll_string_index_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_object(sll_string_table_t* st,sll_object_t* v);
-
-
-
-/**
- * \flags check_output func
- * \name sll_compare_data
- * \group util
- * \subgroup util-memory
- * \desc Docs!
- * \arg const void* a
- * \arg const void* b
- * \arg sll_size_t l
- * \ret sll_compare_result_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* a,const void* b,sll_size_t l);
-
-
-
-/**
- * \flags func
- * \name sll_copy_data
- * \group util
- * \subgroup util-memory
- * \desc Docs!
- * \arg const void* s
- * \arg sll_size_t l
- * \arg void* d
- */
-__SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d);
-
-
-
-/**
- * \flags func
- * \name sll_copy_string
- * \group util
- * \subgroup util-memory
- * \desc Docs!
- * \arg const sll_char_t* s
- * \arg void* d
- * \ret void*
- */
-__SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d);
-
-
-
-/**
- * \flags func
- * \name sll_copy_string_null
- * \group util
- * \subgroup util-memory
- * \desc Docs!
- * \arg const sll_char_t* s
- * \arg void* d
- */
-__SLL_EXTERNAL void sll_copy_string_null(const sll_char_t* s,void* d);
 
 
 
@@ -235,20 +170,6 @@ __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* k,const sll
 
 /**
  * \flags func
- * \name sll_set_memory
- * \group util
- * \subgroup util-memory
- * \desc Docs!
- * \arg void* p
- * \arg sll_size_t l
- * \arg sll_char_t v
- */
-__SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v);
-
-
-
-/**
- * \flags func
  * \name sll_set_sandbox_flags
  * \group util
  * \desc Docs!
@@ -267,30 +188,6 @@ __SLL_EXTERNAL sll_sandbox_flags_t sll_set_sandbox_flags(sll_sandbox_flags_t f);
  * \arg sll_cleanup_function_t f
  */
 __SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t f);
-
-
-
-/**
- * \flags check_output func
- * \name sll_version
- * \group util
- * \desc Docs!
- * \ret sll_version_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_version_t sll_version(void);
-
-
-
-/**
- * \flags func
- * \name sll_zero_memory
- * \group util
- * \subgroup util-memory
- * \desc Docs!
- * \arg void* p
- * \arg sll_size_t l
- */
-__SLL_EXTERNAL void sll_zero_memory(void* p,sll_size_t l);
 
 
 

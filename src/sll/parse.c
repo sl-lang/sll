@@ -1,6 +1,7 @@
 #include <sll/_sll_internal.h>
 #include <sll/api/math.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/file.h>
 #include <sll/ift.h>
 #include <sll/memory.h>

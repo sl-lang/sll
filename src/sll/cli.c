@@ -3,6 +3,7 @@
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/assembly.h>
+#include <sll/data.h>
 #include <sll/file.h>
 #include <sll/ift.h>
 #include <sll/io.h>

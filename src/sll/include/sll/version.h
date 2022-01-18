@@ -1,6 +1,12 @@
 #ifndef __SLL_VERSION_H__
 #define __SLL_VERSION_H__ 1
 #include <sll/types.h>
+/**
+ * \flags group
+ * \name Build Version
+ * \group version
+ * \desc Docs!
+ */
 
 
 
@@ -35,6 +41,17 @@
 #define SLL_GET_MAJOR(v) ((v)>>24)
 #define SLL_GET_MINOR(v) (((v)>>16)&0xff)
 #define SLL_GET_PATCH(v) ((v)&0xffff)
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_version
+ * \group version
+ * \desc Docs!
+ * \ret sll_version_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_version_t sll_version(void);
 
 
 

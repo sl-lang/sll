@@ -98,7 +98,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define __s_str_end __stop_s_str
 #endif
 #ifdef DEBUG_BUILD
-#define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"),NULL,NULL);
+#define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"));
 #endif
 
 
@@ -120,23 +120,21 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define _STRINGIFY_(x) #x
 #define _STRINGIFY(x) _STRINGIFY_(x)
 
-#define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"),NULL,NULL);
+
+
+#define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"));
 #ifdef DEBUG_BUILD
 #define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
 #define SLL_ASSERT(x) \
 	do{ \
 		if (!(x)){ \
-			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_STRINGIFY(x)": Assertion Failed\n"),NULL,NULL); \
+			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_STRINGIFY(x)": Assertion Failed\n")); \
 		} \
 	} while (0)
 #define CHECK_INTERNAL_FUNCTION_NAME(s) \
 	do{ \
-		if ((s)->l>255){ \
-			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Internal Function Name longer than 255 Characters: "),(s)->v,SLL_CHAR("\n")); \
-		} \
-		if (sll_string_count_char((s),':')!=1){ \
-			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Internal Function Name does not contain one Colon (':'): "),(s)->v,SLL_CHAR("\n")); \
-		} \
+		SLL_ASSERT((s)->l<256); \
+		SLL_ASSERT(sll_string_count_char((s),':')==1); \
 	} while (0)
 #else
 #define ASSUME_ALIGNED(p,n,x) _ASSUME_ALIGNED(p,(n),(x))
@@ -586,7 +584,7 @@ void _init_platform(void);
 
 
 
-__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c,const sll_char_t* d,const sll_char_t* e);
+__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c);
 
 
 
