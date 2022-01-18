@@ -11,6 +11,8 @@
 ### Changed
 
 - Renamed [`src/sll/api/_generated.c`][0.6.37/src/sll/api/_generated.c] and [`src/sll/include/sll/api/_generated.h`][0.6.37/src/sll/include/sll/api/_generated.h] to [`src/sll/api/_generated_raw.c`][0.6.38/src/sll/api/_generated_raw.c] and [`src/sll/include/sll/api/_generated_raw.h`][0.6.38/src/sll/include/sll/api/_generated_raw.h]
+- `sll_platform_string` is now a `const sll_string_t*` instead of `const sll_char_t*`
+- Static strings are now initialized after the call to `sll_init` funcion
 - Updated CLI code
 
 ## [0.6.37] - 20212-01-15

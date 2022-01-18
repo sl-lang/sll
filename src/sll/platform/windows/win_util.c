@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <bcrypt.h>
+#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/memory.h>
 #include <sll/string.h>
@@ -12,6 +13,7 @@
 
 static HANDLE _win_wh=INVALID_HANDLE_VALUE;
 static sll_environment_t _win_env={NULL,0};
+static STATIC_STRING(_win_platform_str,"windows");
 
 
 
@@ -19,8 +21,8 @@ void* _win_dll_handle=NULL;
 
 
 
-__SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("windows");
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_win_env;
+__SLL_EXTERNAL const sll_string_t* sll_platform_string=&_win_platform_str;
 
 
 

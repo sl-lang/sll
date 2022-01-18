@@ -137,7 +137,7 @@ __API_FUNC(sys_get_library){
 
 
 __API_FUNC(sys_get_platform){
-	sll_string_from_pointer(sll_platform_string,out);
+	sll_string_clone(sll_platform_string,out);
 }
 
 

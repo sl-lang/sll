@@ -14,6 +14,10 @@
 
 
 
+STATIC_STRING_SETUP;
+
+
+
 static sll_cleanup_function_t _util_exit_table[MAX_CLEANUP_TABLE_SIZE];
 static sll_bool_t _util_init=0;
 static uint16_t _util_exit_table_size=0;
@@ -230,6 +234,14 @@ __SLL_EXTERNAL void sll_deinit(void){
 		_util_exit_table_size--;
 		_util_exit_table[_util_exit_table_size]();
 	}
+	const static_string_t*const* l=&__s_str_start;
+	while (l<&__s_str_end){
+		const static_string_t* k=*l;
+		if (k){
+			sll_free_string(k->p);
+		}
+		l++;
+	}
 	_gc_release_data();
 	_file_release_std_streams();
 	_log_release_data();
@@ -305,6 +317,14 @@ __SLL_EXTERNAL void sll_init(void){
 	sll_platform_setup_console();
 	_file_init_std_streams();
 	_init_platform();
+	const static_string_t*const* l=&__s_str_start;
+	while (l<&__s_str_end){
+		const static_string_t* k=*l;
+		if (k){
+			sll_string_from_pointer_length(k->dt,k->dtl,k->p);
+		}
+		l++;
+	}
 }
 
 

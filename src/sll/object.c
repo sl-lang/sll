@@ -13,25 +13,14 @@
 
 
 
-static sll_string_t _object_copy_str=SLL_INIT_STRING_STRUCT;
-static sll_string_t _object_delete_str=SLL_INIT_STRING_STRUCT;
-static sll_string_t _object_init_str=SLL_INIT_STRING_STRUCT;
-static sll_string_t _object_string_str=SLL_INIT_STRING_STRUCT;
+static STATIC_STRING(_object_copy_str,"@@copy@@");
+static STATIC_STRING(_object_delete_str,"@@delete@@");
+static STATIC_STRING(_object_init_str,"@@init@@");
+static STATIC_STRING(_object_string_str,"@@string@@");
 
 
 
 static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_object_t*const* s,sll_arg_count_t l);
-
-
-
-static void _release_data(void){
-	if (_object_copy_str.v){
-		sll_free_string(&_object_copy_str);
-		sll_free_string(&_object_delete_str);
-		sll_free_string(&_object_init_str);
-		sll_free_string(&_object_string_str);
-	}
-}
 
 
 
@@ -200,13 +189,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		p++;
 		if (v->dt.s.l>4&&v->dt.s.v[0]=='@'&&v->dt.s.v[1]=='@'&&v->dt.s.v[v->dt.s.l-2]=='@'&&v->dt.s.v[v->dt.s.l-1]=='@'){
-			if (!_object_copy_str.v){
-				sll_string_from_pointer(SLL_CHAR("@@copy@@"),&_object_copy_str);
-				sll_string_from_pointer(SLL_CHAR("@@delete@@"),&_object_delete_str);
-				sll_string_from_pointer(SLL_CHAR("@@init@@"),&_object_init_str);
-				sll_string_from_pointer(SLL_CHAR("@@string@@"),&_object_string_str);
-				sll_register_cleanup(_release_data);
-			}
 			if (sll_string_equal(&(v->dt.s),&_object_copy_str)){
 				n->fn.copy=(fl?~vv:vv);
 				i--;

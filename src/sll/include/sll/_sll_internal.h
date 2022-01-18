@@ -17,12 +17,12 @@
 #pragma intrinsic(__popcnt64)
 #pragma intrinsic(_rotl)
 #pragma intrinsic(_rotl64)
-#pragma section("ifunc$a",read)
-#pragma section("ifunc$b",read)
-#pragma section("ifunc$z",read)
 #pragma section("strto$a",read)
 #pragma section("strto$b",read)
 #pragma section("strto$z",read)
+#pragma section("s_str$a",read)
+#pragma section("s_str$b",read)
+#pragma section("s_str$z",read)
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __assume(0)
 #endif
@@ -47,12 +47,14 @@ static __SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 #define IGNORE_RESULT(x) ((void)(x))
 #define _ASSUME_ALIGNED(p,n,x) \
 	do{ \
-		if (((((uint64_t)(p))-(x))&((1<<(n))-1))!=0){ \
+		if ((((uint64_t)(p))-(x))&((1<<(n))-1)){ \
 			__assume(0); \
 		} \
 	} while (0)
 #define STATIC_OBJECT(rt) const static static_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};const static __declspec(allocate("strto$b")) static_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
 #define STATIC_OBJECT_SETUP const static __declspec(allocate("strto$a")) static_object_t* __strto_start=0;const static __declspec(allocate("strto$z")) static_object_t* __strto_end=0
+#define STATIC_STRING(nm,s) sll_string_t nm=SLL_INIT_STRING_STRUCT;const static static_string_t _UNIQUE_NAME(__s_str)={&(nm),SLL_CHAR(s),sizeof(s)/sizeof(char)-1};const static __declspec(allocate("s_str$b")) static_string_t* _UNIQUE_NAME(__s_str_ptr)=&_UNIQUE_NAME(__s_str)
+#define STATIC_STRING_SETUP const static __declspec(allocate("s_str$a")) static_string_t* __s_str_start=0;const static __declspec(allocate("s_str$z")) static_string_t* __s_str_end=0
 #else
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __builtin_unreachable()
@@ -91,6 +93,10 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define STATIC_OBJECT_SETUP extern const static_object_t* __start_strto;extern const static_object_t* __stop_strto
 #define __strto_start __start_strto
 #define __strto_end __stop_strto
+#define STATIC_STRING(nm,s) sll_string_t nm=SLL_INIT_STRING_STRUCT;const static static_string_t _UNIQUE_NAME(__s_str)={&(nm),SLL_CHAR(s),sizeof(s)/sizeof(char)-1};const static __attribute__((used,section("s_str"))) static_string_t* _UNIQUE_NAME(__s_str_ptr)=&_UNIQUE_NAME(__s_str)
+#define STATIC_STRING_SETUP extern const static_string_t* __start_s_str;extern const static_string_t* __stop_s_str
+#define __s_str_start __start_s_str
+#define __s_str_end __stop_s_str
 #endif
 #ifdef DEBUG_BUILD
 #define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"),NULL,NULL);
@@ -535,6 +541,14 @@ typedef struct __ASSEMBLY_LOOP_GENERATOR_DATA{
 	loop_t p_l_dt;
 	uint64_t* v_st;
 } assembly_loop_generator_data_t;
+
+
+
+typedef struct __STATIC_STRING{
+	sll_string_t* p;
+	const sll_char_t* dt;
+	sll_string_length_t dtl;
+} static_string_t;
 
 
 

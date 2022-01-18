@@ -16,11 +16,12 @@
 
 
 static sll_environment_t _posix_env={NULL,0};
+static STATIC_STRING(_posix_platform_str,"posix");
 
 
 
-__SLL_EXTERNAL const sll_char_t* sll_platform_string=SLL_CHAR("posix");
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_posix_env;
+__SLL_EXTERNAL const sll_string_t* sll_platform_string=&_posix_platform_str;
 
 
 
