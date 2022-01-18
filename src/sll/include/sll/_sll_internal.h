@@ -4,7 +4,7 @@
 #include <intrin.h>
 #endif
 #include <sll/api.h>
-#include <sll/api/_generated.h>
+#include <sll/api/_generated_raw.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/version.h>

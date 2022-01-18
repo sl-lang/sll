@@ -100,7 +100,7 @@
 		(: dt 9)
 		(| (<< (: dt 10) 40) (<< (: dt 11) 32) (<< (: dt 12) 24) (<< (: dt 13) 16) (<< (: dt 14) 8) (: dt 15))
 	))
-	(= (:: v int_type))
+	(= v (:: v int_type))
 	(? (&& (> v 0) (< v 6)) {
 		(= o$clock_seq_hi_and_reserved (| 0x80 (& o$clock_seq_hi_and_reserved 0x3f)))
 		(= o$time_hi_and_version (| (<< v 12) (& o$time_hi_and_version 0xfff)))

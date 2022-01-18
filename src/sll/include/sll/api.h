@@ -1,6 +1,6 @@
 #ifndef __SLL_API_H__
 #define __SLL_API_H__ 1
-#include <sll/api/_generated.h>
+#include <sll/api/_generated_raw.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/types.h>

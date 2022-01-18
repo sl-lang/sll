@@ -1,4 +1,7 @@
-(--- "sys.sll" "types.sll")
+(--- "sys.sll" "types.sll" "string.sll")
+
+
+(# get_call_stack)
 
 
 
@@ -31,6 +34,7 @@
 	(~ type_type) call_stack_type
 	(~ type_type) location_type
 	(~ type_type) vm_config_type
+	(~ func_type) backtrace
 	(~ func_type) get_call_stack
 	(~ func_type) get_instruction_count
 	(~ func_type) get_instruction_index
@@ -52,6 +56,17 @@
 
 
 
+(= backtrace (,,,
+	(= o "")
+	(= c_st (<- get_call_stack))
+	(-> (= i 0) (< i ($ c_st)) {
+		(= k (: c_st i))
+		(= o (+ o (<- string$format "%s:%u (%s)\n" k$return$file k$return$line k$return$function)))
+		(++ i)
+	})
+	(@@ o)
+))
+
 (= get_call_stack (... "sll_ext:debug_get_call_stack"))
 
 (= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
@@ -72,6 +87,7 @@
 	call_stack_type
 	location_type
 	vm_config_type
+	backtrace
 	get_call_stack
 	get_instruction_count
 	get_instruction_index

@@ -5,10 +5,12 @@
 ### Added
 
 - Console option to do not create a console: `-w` (Windows only)
+- Implemented `debug$backtrace`
 - Implemented `sll_platform_create_console` and `sll_cli_main_raw`
 
 ### Changed
 
+- Renamed [`src/sll/api/_generated.c`][0.6.37/src/sll/api/_generated.c] and [`src/sll/include/sll/api/_generated.h`][0.6.37/src/sll/include/sll/api/_generated.h] to [`src/sll/api/_generated_raw.c`][0.6.38/src/sll/api/_generated_raw.c] and [`src/sll/include/sll/api/_generated_raw.h`][0.6.38/src/sll/include/sll/api/_generated_raw.h]
 - Updated CLI code
 
 ## [0.6.37] - 20212-01-15
@@ -1614,7 +1616,10 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
-[test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[0.6.38/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.38/src/sll/api/_generated_raw.c
+[0.6.38/src/sll/include/sll/api/_generated_raw.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.38/src/sll/include/sll/api/_generated_raw.h
+[0.6.37/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/api/_generated.c
+[0.6.37/src/sll/include/sll/api/_generated.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/api/_generated.h
 [0.6.36/src/sll/cli.c]: https://github.com/sl-lang/sll/blob/main/src/sll/cli.c
 [0.6.35/src/cli/main.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/cli/main.c
 [0.6.35/src/sll/cast.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/sll/cast.c
