@@ -167,7 +167,7 @@ __API_FUNC(sys_get_version){
 	sll_object_t* cmt=SLL_CREATE();
 	cmt->t=SLL_OBJECT_TYPE_STRING;
 #ifdef SLL_VERSION_HAS_SHA
-	sll_string_clone(_sys_full_commit,&(cmt->dt.s));
+	sll_string_clone(&_sys_full_commit,&(cmt->dt.s));
 #else
 	SLL_INIT_STRING(&(cmt->dt.s));
 #endif
