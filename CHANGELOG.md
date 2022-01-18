@@ -15,7 +15,7 @@
 - Static strings are now initialized after the call to `sll_init` funcion
 - Updated CLI code
 
-## [0.6.37] - 20212-01-15
+## [0.6.37] - 2022-01-15
 
 ### Added
 
@@ -78,7 +78,7 @@
 - Old operator number macros: `SLL_FLOAT_ABSOLUTE` and `SLL_FLOAT_ROUND`
 - Unused string functions: `sll_string_subtract_array` and `sll_string_subtract_map`
 
-## [0.6.36] - 2021-01-09
+## [0.6.36] - 2022-01-09
 
 ### Added
 
@@ -1618,6 +1618,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
+[test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [0.6.38/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.38/src/sll/api/_generated_raw.c
 [0.6.38/src/sll/include/sll/api/_generated_raw.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.38/src/sll/include/sll/api/_generated_raw.h
 [0.6.37/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/api/_generated.c

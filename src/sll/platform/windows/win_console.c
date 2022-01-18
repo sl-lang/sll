@@ -33,9 +33,9 @@ __SLL_EXTERNAL void sll_platform_create_console(void){
 	if (!AttachConsole(ATTACH_PARENT_PROCESS)){
 		AllocConsole();
 	}
-	freopen("CONIN$","r",stdin);
-	freopen("CONOUT$","w",stderr);
-	freopen("CONOUT$","w",stdout);
+	if (!freopen("CONIN$","r",stdin)||!freopen("CONOUT$","w",stderr)||!freopen("CONOUT$","w",stdout)){
+		SLL_UNIMPLEMENTED();
+	}
 	_file_release_std_streams();
 	_file_init_std_streams();
 }
