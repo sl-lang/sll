@@ -1,6 +1,6 @@
 # The Sl Programing Language Change Log
 
-## [0.6.38] - Ongoing
+## [0.7.0] - Ongoing
 
 ### Added
 
@@ -12,12 +12,12 @@
 
 ### Changed
 
-- Moved `SLL_COPY_STRING_NULL`, `sll_compare_data`, `sll_copy_data`, `sll_copy_string`, `sll_copy_string_null`, `sll_set_memory` and `sll_zero_memory` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/data.c`][0.6.38/src/sll/data.c] and [`src/sll/include/sll/data.h`][0.6.38/src/sll/include/sll/data.h]
-- Moved `sll_deinit`, `sll_init` and `sll_register_cleanup` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/init.c`][0.6.38/src/sll/init.c] and [`src/sll/include/sll/init.h`][0.6.38/src/sll/include/sll/init.h]
-- Moved `sll_get_environment_variable`, `sll_remove_environment_variable` and `sll_set_environment_variable` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/env.c`][0.6.38/src/sll/env.c] and [`src/sll/include/sll/env.h`][0.6.38/src/sll/include/sll/env.h]
-- Moved `sll_version` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/version.c`][0.6.38/src/sll/version.c] and [`src/sll/include/sll/version.h`][0.6.38/src/sll/include/sll/version.h]
+- Moved `SLL_COPY_STRING_NULL`, `sll_compare_data`, `sll_copy_data`, `sll_copy_string`, `sll_copy_string_null`, `sll_set_memory` and `sll_zero_memory` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/data.c`][0.7.0/src/sll/data.c] and [`src/sll/include/sll/data.h`][0.7.0/src/sll/include/sll/data.h]
+- Moved `sll_deinit`, `sll_init` and `sll_register_cleanup` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/init.c`][0.7.0/src/sll/init.c] and [`src/sll/include/sll/init.h`][0.7.0/src/sll/include/sll/init.h]
+- Moved `sll_get_environment_variable`, `sll_remove_environment_variable` and `sll_set_environment_variable` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/env.c`][0.7.0/src/sll/env.c] and [`src/sll/include/sll/env.h`][0.7.0/src/sll/include/sll/env.h]
+- Moved `sll_version` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/version.c`][0.7.0/src/sll/version.c] and [`src/sll/include/sll/version.h`][0.7.0/src/sll/include/sll/version.h]
 - Renamed `sll_api_time_current_nanos`, `sll_api_time_sleep_nanos`, `time$time_nanos` and `time$sleep_nanos` to `sll_api_time_current_ns`, `sll_api_time_sleep_ns`, `time$time_ns` and `time$sleep_ns`
-- Renamed [`src/sll/api/_generated.c`][0.6.37/src/sll/api/_generated.c] and [`src/sll/include/sll/api/_generated.h`][0.6.37/src/sll/include/sll/api/_generated.h] to [`src/sll/api/_generated_raw.c`][0.6.38/src/sll/api/_generated_raw.c] and [`src/sll/include/sll/api/_generated_raw.h`][0.6.38/src/sll/include/sll/api/_generated_raw.h]
+- Renamed [`src/sll/api/_generated.c`][0.6.37/src/sll/api/_generated.c] and [`src/sll/include/sll/api/_generated.h`][0.6.37/src/sll/include/sll/api/_generated.h] to [`src/sll/api/_generated_raw.c`][0.7.0/src/sll/api/_generated_raw.c] and [`src/sll/include/sll/api/_generated_raw.h`][0.7.0/src/sll/include/sll/api/_generated_raw.h]
 - `sll_platform_string` is now a `const sll_string_t*` instead of `const sll_char_t*`
 - Static strings are now initialized after the call to `sll_init` funcion
 - Updated CLI code
@@ -1386,7 +1386,7 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.6.38]: https://github.com/sl-lang/sll/compare/sll-v0.6.37...main
+[0.7.0]: https://github.com/sl-lang/sll/compare/sll-v0.6.37...main
 [0.6.37]: https://github.com/sl-lang/sll/compare/sll-v0.6.36...sll-v0.6.37
 [0.6.36]: https://github.com/sl-lang/sll/compare/sll-v0.6.35...sll-v0.6.36
 [0.6.35]: https://github.com/sl-lang/sll/compare/sll-v0.6.34...sll-v0.6.35
@@ -1626,16 +1626,16 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[0.6.38/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/_generated_raw.c
-[0.6.38/src/sll/data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/data.c
-[0.6.38/src/sll/env.c]: https://github.com/sl-lang/sll/blob/main/src/sll/env.c
-[0.6.38/src/sll/include/sll/api/_generated_raw.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/api/_generated_raw.h
-[0.6.38/src/sll/include/sll/data.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/data.h
-[0.6.38/src/sll/include/sll/env.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/env.h
-[0.6.38/src/sll/include/sll/init.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/init.h
-[0.6.38/src/sll/include/sll/version.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/version.h
-[0.6.38/src/sll/init.c]: https://github.com/sl-lang/sll/blob/main/src/sll/init.c
-[0.6.38/src/sll/version.c]: https://github.com/sl-lang/sll/blob/main/src/sll/version.c
+[0.7.0/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/_generated_raw.c
+[0.7.0/src/sll/data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/data.c
+[0.7.0/src/sll/env.c]: https://github.com/sl-lang/sll/blob/main/src/sll/env.c
+[0.7.0/src/sll/include/sll/api/_generated_raw.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/api/_generated_raw.h
+[0.7.0/src/sll/include/sll/data.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/data.h
+[0.7.0/src/sll/include/sll/env.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/env.h
+[0.7.0/src/sll/include/sll/init.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/init.h
+[0.7.0/src/sll/include/sll/version.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/version.h
+[0.7.0/src/sll/init.c]: https://github.com/sl-lang/sll/blob/main/src/sll/init.c
+[0.7.0/src/sll/version.c]: https://github.com/sl-lang/sll/blob/main/src/sll/version.c
 [0.6.37/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/api/_generated.c
 [0.6.37/src/sll/include/sll/api/_generated.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/api/_generated.h
 [0.6.37/src/sll/include/sll/util.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/util.h
