@@ -628,6 +628,10 @@ void _pop_call_stack(void);
 
 
 
+void _reset_sandbox(void);
+
+
+
 void _shift_nodes(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off);
 
 

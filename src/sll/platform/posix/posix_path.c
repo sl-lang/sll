@@ -2,10 +2,10 @@
 #include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/env.h>
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <dirent.h>
 #include <dlfcn.h>
 #include <stdlib.h>

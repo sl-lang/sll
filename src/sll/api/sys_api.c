@@ -5,15 +5,17 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/env.h>
 #include <sll/gc.h>
+#include <sll/init.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform.h>
+#include <sll/sandbox.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <sll/version.h>
 #include <sll/vm.h>
 

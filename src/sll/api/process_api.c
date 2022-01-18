@@ -8,10 +8,10 @@
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/platform.h>
+#include <sll/sandbox.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <sll/vm.h>
 #include <stdint.h>
 

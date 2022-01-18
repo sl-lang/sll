@@ -1,8 +1,8 @@
 #include <windows.h>
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/init.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <fcntl.h>
 #include <io.h>
 #include <stdio.h>

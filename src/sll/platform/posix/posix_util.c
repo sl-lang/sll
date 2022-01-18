@@ -1,10 +1,10 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <signal.h>
