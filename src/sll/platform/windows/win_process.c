@@ -53,7 +53,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_proces
 	si.cb=sizeof(STARTUPINFOA);
 	si.dwFlags=0;
 	PROCESS_INFORMATION pi;
-	if (!CreateProcessA((char*)(*a),s.v,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,(void*)env,NULL,&si,&pi)){
+	if (!CreateProcessA((char*)(*a),s.v,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,PTR(env),NULL,&si,&pi)){
 		sll_free_string(&s);
 		return 0;
 	}

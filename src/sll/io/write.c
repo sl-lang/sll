@@ -7,23 +7,22 @@
 #include <sll/object.h>
 #include <sll/types.h>
 #include <sll/version.h>
-#include <stdint.h>
 
 
 
-#define WRITE_FIELD(f,wf) sll_file_write((wf),(void*)(&(f)),sizeof((f)))
+#define WRITE_FIELD(f,wf) sll_file_write((wf),&(f),sizeof((f)))
 #define WRITE_SIGNED_INTEGER(wf,n) _write_integer((wf),((n)<0?((~(n))<<1)|1:(n)<<1))
 
 
 
-static void _write_integer(sll_file_t* wf,uint64_t v){
-	uint8_t i=0;
+static void _write_integer(sll_file_t* wf,sll_size_t v){
+	unsigned int i=0;
 	while (i<8&&v>0x7f){
-		sll_file_write_char(wf,(uint8_t)((v&0x7f)|0x80));
+		sll_file_write_char(wf,(v&0x7f)|0x80);
 		v>>=7;
 		i++;
 	}
-	sll_file_write_char(wf,(uint8_t)v);
+	sll_file_write_char(wf,(sll_char_t)v);
 }
 
 
@@ -148,29 +147,29 @@ static void _write_string(const sll_string_t* s,sll_file_t* wf){
 		sll_file_write(wf,s->v,s->l*sizeof(sll_char_t));
 		return;
 	}
-	uint64_t v=0;
-	uint8_t bc=64;
+	wide_data_t v=0;
+	unsigned int bc=64;
 	sll_char_t bf[1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)];
 	sll_set_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1),0xff);
 	sll_string_length_t si=0;
-	uint16_t i=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
+	unsigned int i=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{
 		bf[i]=s->v[si];
 		i++;
 		si++;
 	} while (si<s->l&&i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)));
-	uint16_t r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
+	unsigned int r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{
-		uint16_t st=0;
-		uint16_t l=1;
-		uint16_t mn=i-r;
+		unsigned int st=0;
+		unsigned int l=1;
+		unsigned int mn=i-r;
 		if (mn>(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1){
 			mn=(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1;
 		}
 		sll_char_t c=bf[r];
-		for (uint16_t j=r-(((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));j<r;j++){
+		for (unsigned int j=r-(((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));j<r;j++){
 			if (bf[j]==c){
-				uint16_t k=1;
+				unsigned int k=1;
 				while (k<mn&&bf[j+k]==bf[r+k]){
 					k++;
 				}
@@ -180,8 +179,8 @@ static void _write_string(const sll_string_t* s,sll_file_t* wf){
 				}
 			}
 		}
-		uint16_t e;
-		uint8_t el;
+		unsigned int e;
+		unsigned int el;
 		if (l==1){
 			e=256|c;
 			el=9;
@@ -193,7 +192,7 @@ static void _write_string(const sll_string_t* s,sll_file_t* wf){
 		SLL_ASSERT(el<=15);
 		if (bc<el){
 			v=(v<<bc)|(e>>(el-bc));
-			sll_file_write(wf,(void*)(&v),sizeof(uint64_t));
+			sll_file_write(wf,&v,sizeof(wide_data_t));
 			v=e;
 			bc+=64-el;
 		}
@@ -203,7 +202,7 @@ static void _write_string(const sll_string_t* s,sll_file_t* wf){
 		}
 		r+=l;
 		if (r>=(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1){
-			for (uint16_t j=0;j<(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT);j++){
+			for (unsigned int j=0;j<(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT);j++){
 				bf[j]=bf[j+(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)];
 			}
 			i-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
@@ -217,17 +216,17 @@ static void _write_string(const sll_string_t* s,sll_file_t* wf){
 	} while (r<i);
 	if (bc!=64){
 		v<<=bc;
-		sll_file_write(wf,(void*)(&v),sizeof(uint64_t));
+		sll_file_write(wf,&v,sizeof(wide_data_t));
 	}
 }
 
 
 
 __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t* a_dt){
-	uint32_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
-	sll_file_write(wf,(uint8_t*)(&n),sizeof(uint32_t));
+	magic_number_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
+	sll_file_write(wf,&n,sizeof(magic_number_t));
 	sll_version_t v=SLL_VERSION;
-	sll_file_write(wf,(uint8_t*)(&v),sizeof(sll_version_t));
+	sll_file_write(wf,&v,sizeof(sll_version_t));
 	_write_integer(wf,a_dt->tm);
 	_write_integer(wf,a_dt->ic);
 	_write_integer(wf,a_dt->vc);
@@ -248,7 +247,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	}
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
-		sll_file_write_char(wf,(uint8_t)ai->t);
+		sll_file_write_char(wf,ai->t);
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
@@ -258,7 +257,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				sll_file_write(wf,(uint8_t*)(&(ai->dt.f)),sizeof(sll_float_t));
+				sll_file_write(wf,&(ai->dt.f),sizeof(sll_float_t));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
@@ -365,12 +364,12 @@ __SLL_EXTERNAL void sll_write_node(sll_file_t* wf,const sll_node_t* o){
 
 
 __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* c_dt){
-	uint32_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
-	sll_file_write(wf,(uint8_t*)(&n),sizeof(uint32_t));
+	magic_number_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
+	sll_file_write(wf,&n,sizeof(magic_number_t));
 	sll_version_t v=SLL_VERSION;
-	sll_file_write(wf,(uint8_t*)(&v),sizeof(sll_version_t));
+	sll_file_write(wf,&v,sizeof(sll_version_t));
 	_write_integer(wf,c_dt->tm);
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		const sll_identifier_list_t* l=c_dt->idt.s+i;
 		_write_integer(wf,l->l);
 		for (sll_identifier_list_length_t j=0;j<l->l;j++){

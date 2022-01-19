@@ -11,7 +11,6 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>
-#include <stdint.h>
 
 
 
@@ -21,10 +20,8 @@ STATIC_OBJECT_SETUP;
 
 static void* _gc_page_ptr=NULL;
 static sll_object_t* _gc_next_object=NULL;
-static uint32_t _gc_dbg_dtl=0;
-static object_debug_data_t** _gc_dbg_dt=NULL;
-static uint32_t _gc_alloc=0;
-static uint32_t _gc_dealloc=0;
+static sll_ref_count_t _gc_alloc=0;
+static sll_ref_count_t _gc_dealloc=0;
 
 
 
@@ -58,12 +55,12 @@ static void _print_gc_data(sll_object_t* o){
 	sll_api_string_convert(&o,1,&str);
 	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),_get_type_string(o),o->rc,str.v,dt->all);
 	sll_free_string(&str);
-	for (uint32_t m=0;m<dt->all;m++){
+	for (sll_array_length_t m=0;m<dt->all;m++){
 		object_debug_data_trace_data_t* t_dt=*(dt->al+m);
 		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),t_dt->fp,t_dt->ln,t_dt->fn);
 	}
 	sll_file_write_format(sll_stderr,SLL_CHAR("  Release (%u):\n"),dt->rll);
-	for (uint32_t m=0;m<dt->rll;m++){
+	for (sll_array_length_t m=0;m<dt->rll;m++){
 		object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
 		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),t_dt->fp,t_dt->ln,t_dt->fn);
 	}
@@ -76,24 +73,6 @@ void _gc_release_data(void){
 		return;
 	}
 	SLL_ASSERT(_gc_alloc==_gc_dealloc);
-	for (uint32_t i=0;i<_gc_dbg_dtl;i++){
-		if (*(_gc_dbg_dt+i)){
-			object_debug_data_t* dt=*(_gc_dbg_dt+i);
-			*(_gc_dbg_dt+i)=NULL;
-			for (uint32_t j=0;j<dt->all;j++){
-				sll_deallocate(*(dt->al+j));
-			}
-			sll_deallocate(dt->al);
-			for (uint32_t j=0;j<dt->rll;j++){
-				sll_deallocate(*(dt->rl+j));
-			}
-			sll_deallocate(dt->rl);
-			sll_deallocate(dt);
-		}
-	}
-	sll_deallocate(_gc_dbg_dt);
-	_gc_dbg_dtl=0;
-	_gc_dbg_dt=NULL;
 	void* c=_gc_page_ptr;
 	while (c){
 		void* n=*((void**)c);
@@ -116,18 +95,16 @@ __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,u
 		o->_dbg=dt;
 	}
 	object_debug_data_trace_data_t* n=sll_allocate(sizeof(object_debug_data_trace_data_t));
-	uint8_t i=0;
-	while (*(fp+i)){
+	sll_string_length_t i=0;
+	while (*(fp+i)&&i<255){
 		n->fp[i]=*(fp+i);
 		i++;
-		SLL_ASSERT(i);
 	}
 	n->fp[i]=0;
 	i=0;
-	while (*(fn+i)){
+	while (*(fn+i)&&i<255){
 		n->fn[i]=*(fn+i);
 		i++;
-		SLL_ASSERT(i);
 	}
 	n->fn[i]=0;
 	n->ln=ln;
@@ -163,10 +140,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(void){
 		void* pg=sll_platform_allocate_page(SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE),0);
 		*((void**)pg)=_gc_page_ptr;
 		_gc_page_ptr=pg;
-		sll_object_t* c=(sll_object_t*)((uint64_t)pg+sizeof(void*));
+		sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(void*));
 		_gc_next_object=c;
-		void* e=(void*)((uint64_t)pg+sizeof(void*)+((SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE)-sizeof(void*))/sizeof(sll_object_t)-1)*sizeof(sll_object_t));
-		while ((void*)c<e){
+		void* e=PTR(ADDR(pg)+sizeof(void*)+((SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE)-sizeof(void*))/sizeof(sll_object_t)-1)*sizeof(sll_object_t));
+		while (PTR(c)<e){
 			GC_SET_NEXT_OBJECT(c,c+1);
 			c->rc=0;
 			c++;
@@ -237,11 +214,11 @@ __SLL_EXTERNAL void sll_remove_object_debug_data(sll_object_t* o){
 	if (o->_dbg){
 		object_debug_data_t* dt=o->_dbg;
 		o->_dbg=NULL;
-		for (uint32_t j=0;j<dt->all;j++){
+		for (sll_array_length_t j=0;j<dt->all;j++){
 			sll_deallocate(*(dt->al+j));
 		}
 		sll_deallocate(dt->al);
-		for (uint32_t j=0;j<dt->rll;j++){
+		for (sll_array_length_t j=0;j<dt->rll;j++){
 			sll_deallocate(*(dt->rl+j));
 		}
 		sll_deallocate(dt->rl);
@@ -253,13 +230,12 @@ __SLL_EXTERNAL void sll_remove_object_debug_data(sll_object_t* o){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(void){
 	sll_file_flush(sll_stdout);
-	uint8_t err=0;
+	sll_bool_t err=0;
 	void* pg=_gc_page_ptr;
-	uint32_t i=0;
 	while (pg){
-		sll_object_t* c=(sll_object_t*)((uint64_t)pg+sizeof(void*));
-		void* e=(void*)((uint64_t)pg+sizeof(void*)+(SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE)-sizeof(void*))/sizeof(sll_object_t)*sizeof(sll_object_t));
-		while ((void*)c<e){
+		sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(void*));
+		void* e=PTR(ADDR(pg)+sizeof(void*)+(SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE)-sizeof(void*))/sizeof(sll_object_t)*sizeof(sll_object_t));
+		while (PTR(c)<e){
 			if (c->rc){
 				if (!err){
 					err=1;
@@ -282,12 +258,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 					sll_free_string(&str);
 				}
 			}
-			i++;
 			c++;
 		}
 		pg=*((void**)pg);
 	}
-	i=0;
 	const static_object_t*const* l=&__s_obj_start;
 	while (l<&__s_obj_end){
 		const static_object_t* k=*l;
@@ -305,7 +279,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 			else{
 				sll_remove_object_debug_data(k->dt);
 			}
-			i++;
 		}
 		l++;
 	}

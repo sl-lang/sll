@@ -96,7 +96,7 @@ __API_FUNC(base64_encode){
 		SLL_INIT_STRING(out);
 		return;
 	}
-	uint8_t p=(3-(a->l%3))%3;
+	sll_string_length_t p=(3-(a->l%3))%3;
 	sll_string_length_t l=(a->l+p)*4/3;
 	sll_string_create(l,out);
 	sll_string_length_t i=0;

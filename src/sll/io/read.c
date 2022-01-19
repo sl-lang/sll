@@ -9,7 +9,6 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/version.h>
-#include <stdint.h>
 
 
 
@@ -30,16 +29,16 @@
 
 
 
-static uint64_t _read_integer(sll_file_t* rf,sll_bool_t* e){
+static sll_size_t _read_integer(sll_file_t* rf,sll_bool_t* e){
 	sll_read_char_t c=sll_file_read_char(rf);
 	if (c==SLL_END_OF_DATA){
 		*e=1;
 		return 0;
 	}
-	uint64_t v=0;
-	uint8_t s=0;
+	sll_size_t v=0;
+	sll_string_length_t s=0;
 	while ((c&0x80)&&s<56){
-		v|=((uint64_t)(c&0x7f))<<s;
+		v|=((sll_size_t)(c&0x7f))<<s;
 		s+=7;
 		c=sll_file_read_char(rf);
 		if (c==SLL_END_OF_DATA){
@@ -47,14 +46,14 @@ static uint64_t _read_integer(sll_file_t* rf,sll_bool_t* e){
 			return 0;
 		}
 	}
-	return v|(((uint64_t)c)<<s);
+	return v|(((sll_size_t)c)<<s);
 }
 
 
 
-static int64_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
-	uint64_t v=_read_integer(rf,e);
-	return (v>>1)^(-((int64_t)(v&1)));
+static sll_integer_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
+	sll_size_t v=_read_integer(rf,e);
+	return (v>>1)^(-((sll_integer_t)(v&1)));
 }
 
 
@@ -175,26 +174,26 @@ static sll_bool_t _read_string(sll_file_t* rf,sll_string_t* o){
 	else{
 		sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
 		sll_set_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1),0xff);
-		uint64_t v;
-		if (sll_file_read(rf,(void*)(&v),sizeof(uint64_t))==SLL_END_OF_DATA){
+		wide_data_t v;
+		if (sll_file_read(rf,&v,sizeof(wide_data_t))==SLL_END_OF_DATA){
 			return 0;
 		}
-		uint8_t bc=64;
+		unsigned int bc=64;
 		sll_string_length_t i=0;
-		uint16_t r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
+		unsigned int r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 		do{
 			if (!bc){
-				if (sll_file_read(rf,(void*)(&v),sizeof(uint64_t))==SLL_END_OF_DATA){
+				if (sll_file_read(rf,&v,sizeof(wide_data_t))==SLL_END_OF_DATA){
 					return 0;
 				}
 				bc=64;
 			}
 			bc--;
-			uint16_t e;
-			uint8_t el=((v&(1ull<<bc))?8:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT);
+			unsigned int e;
+			unsigned int el=((v&(1ull<<bc))?8:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT);
 			if (bc<el){
 				e=(v&((1<<bc)-1))<<(el-bc);
-				if (sll_file_read(rf,(void*)(&v),sizeof(uint64_t))==SLL_END_OF_DATA){
+				if (sll_file_read(rf,&v,sizeof(wide_data_t))==SLL_END_OF_DATA){
 					return 0;
 				}
 				bc+=64-el;
@@ -211,8 +210,8 @@ static sll_bool_t _read_string(sll_file_t* rf,sll_string_t* o){
 				r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
 			}
 			else{
-				uint16_t k=e>>STRING_COMPRESSION_LENGTH_BIT_COUNT;
-				uint16_t l=k+(e&((1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1))+2;
+				unsigned int k=e>>STRING_COMPRESSION_LENGTH_BIT_COUNT;
+				unsigned int l=k+(e&((1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1))+2;
 				do{
 					bf[r]=bf[k&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1)];
 					o->v[i]=bf[r];
@@ -230,9 +229,9 @@ static sll_bool_t _read_string(sll_file_t* rf,sll_string_t* o){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* a_dt){
-	uint32_t n;
+	magic_number_t n;
 	sll_version_t v;
-	if (sll_file_read(rf,(uint8_t*)(&n),sizeof(uint32_t))==SLL_END_OF_DATA||n!=ASSEMBLY_FILE_MAGIC_NUMBER||sll_file_read(rf,(uint8_t*)(&v),sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
+	if (sll_file_read(rf,&n,sizeof(magic_number_t))==SLL_END_OF_DATA||n!=ASSEMBLY_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
 		return 0;
 	}
 	CHECK_ERROR(rf,a_dt->tm,sll_time_t);
@@ -287,7 +286,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				if (sll_file_read(rf,(void*)(&(ai->dt.f)),sizeof(sll_float_t))==SLL_END_OF_DATA){
+				if (sll_file_read(rf,PTR(&(ai->dt.f)),sizeof(sll_float_t))==SLL_END_OF_DATA){
 					return 0;
 				}
 				break;
@@ -399,13 +398,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* rf,sll_compilation_data_t* c_dt){
-	uint32_t n=0;
-	sll_version_t v=0;
-	if (sll_file_read(rf,(uint8_t*)(&n),sizeof(uint32_t))==SLL_END_OF_DATA||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||sll_file_read(rf,(void*)(&v),sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
+	magic_number_t n;
+	sll_version_t v;
+	if (sll_file_read(rf,&n,sizeof(magic_number_t))==SLL_END_OF_DATA||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
 		return 0;
 	}
 	CHECK_ERROR(rf,c_dt->tm,sll_time_t);
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		CHECK_ERROR(rf,c_dt->idt.s[i].l,sll_identifier_list_length_t);
 		c_dt->idt.s[i].dt=sll_allocate(c_dt->idt.s[i].l*sizeof(sll_identifier_t));
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){

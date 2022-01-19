@@ -55,13 +55,13 @@
 
 
 static void _save_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* o){
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		o->s_sm[i]=sll_allocate(o_dt->s_sm_l[i]*sizeof(uint64_t));
+	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		o->s_sm[i]=sll_allocate(o_dt->s_sm_l[i]*sizeof(bitmap_t));
 		for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
 			*(o->s_sm[i]+j)=*(o_dt->va.s_sm[i]+j);
 		}
 	}
-	o->l_sm=sll_allocate(o_dt->l_sm_l*sizeof(uint64_t));
+	o->l_sm=sll_allocate(o_dt->l_sm_l*sizeof(bitmap_t));
 	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
 		*(o->l_sm+i)=*(o_dt->va.l_sm+i);
 	}
@@ -72,7 +72,7 @@ static void _save_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* o)
 static void _restore_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* va_dt,sll_bool_t s){
 	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
-			uint64_t v=(*(o_dt->va.s_sm[i]+j))^(*(va_dt->s_sm[i]+j));
+			bitmap_t v=(*(o_dt->va.s_sm[i]+j))^(*(va_dt->s_sm[i]+j));
 			*(o_dt->va.s_sm[i]+j)=*(va_dt->s_sm[i]+j);
 			if (!s){
 				continue;
@@ -89,7 +89,7 @@ static void _restore_var_data(optimizer_data_t* o_dt,variable_assignment_data_t*
 		sll_deallocate(va_dt->s_sm[i]);
 	}
 	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
-		uint64_t v=(*(o_dt->va.l_sm+i))^(*(va_dt->l_sm+i));
+		bitmap_t v=(*(o_dt->va.l_sm+i))^(*(va_dt->l_sm+i));
 		*(o_dt->va.l_sm+i)=*(va_dt->l_sm+i);
 		if (!s){
 			continue;

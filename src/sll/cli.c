@@ -17,11 +17,10 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>
-#include <stdint.h>
 
 
 
-static uint16_t fl;
+static unsigned int fl;
 static sll_char_t* i_fp;
 static sll_string_length_t i_fpl;
 static sll_char_t l_fp[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -696,7 +695,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main_raw(const sll_c
 		sll_deinit();
 		return 0;
 	}
-	sll_char_t* d=(sll_char_t*)(((uint64_t)argv)+argc*sizeof(sll_char_t*));
+	sll_char_t* d=(sll_char_t*)(ADDR(argv)+argc*sizeof(sll_char_t*));
 	sll_copy_data(o_cmd,cmd-o_cmd,d);
 	argv[0]=d;
 	argc=1;

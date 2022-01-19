@@ -425,9 +425,9 @@ typedef struct __SLL_FILE_PATH_TABEL{
 typedef struct __SLL_COMPILATION_STACK_DATA{
 	void* s;
 	void* e;
-	unsigned int c;
 	sll_node_t* p;
 	sll_node_offset_t off;
+	sll_size_t c;
 } sll_compilation_stack_data_t;
 
 
@@ -510,8 +510,8 @@ typedef struct __SLL_DEBUG_DATA{
 typedef struct __SLL_ASSEMBLY_STACK_DATA{
 	void* s;
 	void* e;
-	unsigned int c;
 	sll_assembly_instruction_t* p;
+	sll_size_t c;
 } sll_assembly_stack_data_t;
 
 

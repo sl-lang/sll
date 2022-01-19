@@ -6,7 +6,6 @@
 #include <sll/object.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <stdint.h>
 #include <stdio.h>
 
 
@@ -14,7 +13,7 @@
 #define GENERATE_STATIC_STRING(s,wf) sll_file_write((wf),SLL_CHAR((s)),sizeof(s)/sizeof(char)-1)
 #define GENERATE_INT_SIGN(v,wf) \
 	do{ \
-		int64_t __v=(v); \
+		sll_integer_t __v=(v); \
 		if (__v>=0){ \
 			sll_file_write_char((wf),'+'); \
 		} \
@@ -23,7 +22,7 @@
 
 
 
-static void _generate_int(int64_t v,sll_file_t* wf){
+static void _generate_int(sll_integer_t v,sll_file_t* wf){
 	if (!v){
 		sll_file_write_char(wf,'0');
 		return;
@@ -33,7 +32,7 @@ static void _generate_int(int64_t v,sll_file_t* wf){
 		sll_file_write_char(wf,'-');
 	}
 	sll_char_t bf[20];
-	uint8_t i=0;
+	sll_string_length_t i=0;
 	while (v){
 		bf[i]=v%10;
 		v/=10;
@@ -50,7 +49,7 @@ static void _generate_int(int64_t v,sll_file_t* wf){
 static void _generate_float(double v,sll_file_t* wf){
 	char bf[128];
 	int sz=snprintf(bf,128,"%.16lg",v);
-	sll_file_write(wf,(uint8_t*)bf,sz*sizeof(char));
+	sll_file_write(wf,bf,sz*sizeof(char));
 }
 
 
@@ -109,7 +108,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				else if (c<32||c>126){
 					sll_file_write_char(wf,'\\');
 					sll_file_write_char(wf,'x');
-					sll_file_write_char(wf,(((uint8_t)c)>>4)+(((uint8_t)c)>159?87:48));
+					sll_file_write_char(wf,(c>>4)+(c>159?87:48));
 					c=(c&0xf)+((c&0xf)>9?87:48);
 				}
 				sll_file_write_char(wf,c);
@@ -154,7 +153,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 					else if (c<32||c>126){
 						sll_file_write_char(wf,'\\');
 						sll_file_write_char(wf,'x');
-						sll_file_write_char(wf,(((uint8_t)c)>>4)+(((uint8_t)c)>159?87:48));
+						sll_file_write_char(wf,(c>>4)+(c>159?87:48));
 						c=(c&0xf)+((c&0xf)>9?87:48);
 					}
 					sll_file_write_char(wf,c);

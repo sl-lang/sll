@@ -143,11 +143,11 @@ __API_FUNC(hash_sha1){
 	uint32_t w[80];
 	const uint32_t* ptr=(const uint32_t*)(f->v);
 	for (sll_string_length_t i=0;i<(f->l>>6);i++){
-		for (uint8_t j=0;j<16;j++){
+		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
 			ptr++;
 		}
-		for (uint8_t j=16;j<80;j++){
+		for (unsigned int j=16;j<80;j++){
 			w[j]=ROTATE_BITS(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);
 		}
 		uint32_t da=av;
@@ -266,11 +266,11 @@ __API_FUNC(hash_sha256){
 	uint32_t w[64];
 	const uint32_t* ptr=(const uint32_t*)(i->v);
 	for (sll_string_length_t idx=0;idx<(i->l>>6);idx++){
-		for (uint8_t j=0;j<16;j++){
+		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
 			ptr++;
 		}
-		for (uint8_t j=16;j<64;j++){
+		for (unsigned int j=16;j<64;j++){
 			w[j]=(ROTATE_BITS_RIGHT(w[j-2],17)^ROTATE_BITS_RIGHT(w[j-2],19)^(w[j-2]>>10))+w[j-7]+(ROTATE_BITS_RIGHT(w[j-15],7)^ROTATE_BITS_RIGHT(w[j-15],18)^(w[j-15]>>3))+w[j-16];
 		}
 		uint32_t da=av;
@@ -383,11 +383,11 @@ __API_FUNC(hash_sha512){
 	uint64_t w[80];
 	const uint64_t* ptr=(const uint64_t*)(i->v);
 	for (sll_string_length_t idx=0;idx<(i->l>>7);idx++){
-		for (uint8_t j=0;j<16;j++){
+		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES64(*ptr);
 			ptr++;
 		}
-		for (uint8_t j=16;j<80;j++){
+		for (unsigned int j=16;j<80;j++){
 			w[j]=(ROTATE_BITS_RIGHT64(w[j-2],19)^ROTATE_BITS_RIGHT64(w[j-2],61)^(w[j-2]>>6))+w[j-7]+(ROTATE_BITS_RIGHT64(w[j-15],1)^ROTATE_BITS_RIGHT64(w[j-15],8)^(w[j-15]>>7))+w[j-16];
 		}
 		uint64_t da=av;

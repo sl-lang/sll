@@ -116,7 +116,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sl
 		} while (!(n%5));
 		PUSH_FACTOR(5,i);
 	}
-	uint64_t f=7;
+	wide_integer_t f=7;
 	if (n>48){
 		while (1){
 			WHEEL_STEP(4);
@@ -212,11 +212,11 @@ __API_FUNC(math_combinations){
 	if (b==1){
 		return 1;
 	}
-	uint64_t av=(sll_integer_t)a;
-	uint64_t bv=(sll_integer_t)b;
-	uint64_t o=1;
-	uint64_t i=a-b;
-	uint64_t j=2;
+	wide_integer_t av=(wide_integer_t)a;
+	wide_integer_t bv=(wide_integer_t)b;
+	wide_integer_t o=1;
+	wide_integer_t i=a-b;
+	wide_integer_t j=2;
 	do{
 		i++;
 		o*=i;
@@ -277,7 +277,7 @@ __API_FUNC(math_factorial){
 	if (a<0){
 		SLL_UNIMPLEMENTED();
 	}
-	uint64_t o=1;
+	wide_integer_t o=1;
 	while (a>1){
 		o*=a;
 		a--;
@@ -345,15 +345,15 @@ __API_FUNC(math_int_pow){
 	if (!b){
 		return 1;
 	}
-	sll_integer_t o=1;
+	wide_integer_t o=1;
 	if (a<0){
 		a=-a;
 		if (b&1){
 			o=-1;
 		}
 	}
-	uint64_t v=(uint64_t)a;
-	uint64_t e=(uint64_t)b;
+	wide_integer_t v=(wide_integer_t)a;
+	wide_integer_t e=(wide_integer_t)b;
 	while (1){
 		if (e&1){
 			o*=v;
@@ -364,7 +364,7 @@ __API_FUNC(math_int_pow){
 		}
 		v*=v;
 	}
-	return o;
+	return (sll_integer_t)o;
 }
 
 
@@ -373,12 +373,12 @@ __API_FUNC(math_int_sqrt){
 	if (a<0){
 		SLL_UNIMPLEMENTED();
 	}
-	uint64_t v=(uint64_t)a;
-	uint64_t i=v>>1;
+	wide_integer_t v=(wide_integer_t)a;
+	wide_integer_t i=v>>1;
 	if (!i){
 		return v;
 	}
-	uint64_t j=i;
+	wide_integer_t j=i;
 	do{
 		i=j;
 		j=(i+v/i)>>1;
@@ -416,9 +416,9 @@ __API_FUNC(math_permutations){
 	if (b==1){
 		return a;
 	}
-	uint64_t v=(sll_integer_t)a;
-	uint64_t o=1;
-	uint64_t i=a-b;
+	wide_integer_t v=(wide_integer_t)a;
+	wide_integer_t o=1;
+	wide_integer_t i=a-b;
 	do{
 		i++;
 		o*=i;

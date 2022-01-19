@@ -38,7 +38,7 @@ def generate_c_api(d_dt,api_dt):
 							cf.write(f"\tsll_object_t*const* {ALPHABET[i]}=al+{i};\n\tsll_arg_count_t {ALPHABET[i]}c={sz};\n")
 						else:
 							cf.write(f"\tsll_arg_count_t {ALPHABET[i]}c={sz};\n\t{at}* {ALPHABET[i]}=sll_allocate({ALPHABET[i]}c*sizeof({at}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tsll_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\ttmp=sll_operator_cast(tmp,sll_static_int[SLL_OBJECT_TYPE_{TYPE_FULL_NAME_MAP[e['type']]}]);\n\t\t\t{TYPE_COPY_MAP[e['type']].replace('#','*('+ALPHABET[i]+'+idx)').replace('$','tmp')};\n\t\t\tSLL_RELEASE(tmp);\n\t\t}}\n\t\telse{{\n\t\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t\t}}\n\t}}\n")
-							end=f"\tsll_deallocate((void*){ALPHABET[i]});\n"+end
+							end=f"\tsll_deallocate(PTR({ALPHABET[i]}));\n"+end
 						pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
 					else:
 						t=f"{at} {ALPHABET[i]}"

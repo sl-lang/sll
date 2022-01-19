@@ -12,13 +12,12 @@
 #include <sll/types.h>
 #include <sll/var_arg.h>
 #include <sll/vm.h>
-#include <stdint.h>
 #include <stdio.h>
 
 
 
-static void _write_int(uint64_t v,sll_string_t* o){
-	uint8_t i=0;
+static void _write_int(sll_size_t v,sll_string_t* o){
+	sll_string_length_t i=0;
 	sll_char_t bf[20];
 	do{
 		bf[i]=v%10;

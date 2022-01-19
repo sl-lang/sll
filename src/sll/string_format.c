@@ -6,11 +6,10 @@
 #include <sll/data.h>
 #include <sll/var_arg.h>
 #include <stdarg.h>
-#include <stdint.h>
 
 
 
-static const uint64_t _string_pow_of_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
+static const sll_size_t _string_pow_of_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
 
 
 
@@ -55,7 +54,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			o->l++;
 			break;
 		}
-		uint16_t f=0;
+		unsigned int f=0;
 		while (1){
 			if (*t=='0'){
 				f|=STRING_FORMAT_FLAG_PAD_ZERO;
@@ -191,9 +190,9 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			if (*t=='X'){
 				f|=STRING_FORMAT_FLAG_UPPERCASE;
 			}
-			uint64_t n;
+			sll_size_t n;
 			if (*t=='d'){
-				int64_t sn;
+				sll_integer_t sn;
 				if (f&STRING_FORMAT_FLAG_HH_BITS){
 					sn=sll_var_arg_get_int(va);
 					if (sn<-0x80){
@@ -240,7 +239,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					o->v[o->l]=(sn<0?'-':'+');
 					o->l++;
 				}
-				n=(uint64_t)(sn<0?-sn:sn);
+				n=(sll_size_t)(sn<0?-sn:sn);
 			}
 			else{
 				if (f&STRING_FORMAT_FLAG_HH_BITS){
@@ -308,7 +307,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					o->l+=p;
 				}
 				else if (*t=='o'){
-					uint8_t sz=FIND_LAST_SET_BIT(n)/3+1;
+					sll_string_length_t sz=FIND_LAST_SET_BIT(n)/3+1;
 					if (p<sz){
 						p=sz;
 					}
@@ -331,7 +330,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					}
 				}
 				else if (*t!='x'&&*t!='X'){
-					uint8_t sz=((FIND_LAST_SET_BIT(n)+2)*1233)>>12;
+					sll_string_length_t sz=((FIND_LAST_SET_BIT(n)+2)*1233)>>12;
 					if (n>=_string_pow_of_10[sz]){
 						sz++;
 					}
@@ -357,7 +356,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					}
 				}
 				else{
-					uint8_t sz=(FIND_LAST_SET_BIT(n)>>2)+1;
+					sll_string_length_t sz=(FIND_LAST_SET_BIT(n)>>2)+1;
 					if (p<sz){
 						p=sz;
 					}
@@ -384,8 +383,10 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		}
 		else if (*t=='p'){
 			sll_string_increase(o,16);
-			uint64_t ptr=(uint64_t)sll_var_arg_get(va);
-			for (int8_t j=60;j>=0;j-=4){
+			addr_t ptr=(addr_t)sll_var_arg_get(va);
+			sll_string_length_t j=64;
+			while (j){
+				j-=4;
 				sll_char_t c=(ptr>>j)&15;
 				o->v[o->l]=c+(c>9?87:48);
 				o->l++;

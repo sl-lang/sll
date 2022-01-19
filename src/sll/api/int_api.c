@@ -5,7 +5,7 @@
 
 
 
-static const uint64_t _int_pow_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
+static const sll_size_t _int_pow_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
 
 
 
@@ -15,7 +15,7 @@ __API_FUNC(int_to_bin){
 		return;
 	}
 	sll_bool_t neg=(a<0);
-	uint64_t v=(neg?-a:a);
+	sll_size_t v=(neg?-a:a);
 	sll_string_create(FIND_LAST_SET_BIT(v)+neg+1,out);
 	if (neg){
 		out->v[0]='-';
@@ -37,7 +37,7 @@ __API_FUNC(int_to_dec){
 		return;
 	}
 	sll_bool_t neg=(a<0);
-	uint64_t v=(neg?-a:a);
+	sll_size_t v=(neg?-a:a);
 	sll_string_length_t l=((FIND_LAST_SET_BIT(v)+2)*1233)>>12;
 	if (v<_int_pow_10[l]){
 		l--;
@@ -63,7 +63,7 @@ __API_FUNC(int_to_hex){
 		return;
 	}
 	sll_bool_t neg=(a<0);
-	uint64_t v=(neg?-a:a);
+	sll_size_t v=(neg?-a:a);
 	sll_string_create((FIND_LAST_SET_BIT(v)>>2)+neg+1,out);
 	if (neg){
 		out->v[0]='-';
@@ -85,7 +85,7 @@ __API_FUNC(int_to_oct){
 		return;
 	}
 	sll_bool_t neg=(a<0);
-	uint64_t v=(neg?-a:a);
+	sll_size_t v=(neg?-a:a);
 	sll_string_create(FIND_LAST_SET_BIT(v)/3+neg+1,out);
 	if (neg){
 		out->v[0]='-';

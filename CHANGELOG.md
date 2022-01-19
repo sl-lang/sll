@@ -33,6 +33,7 @@
 ### Removed
 
 - Date version macro: `SLL_VERSION_BUILD_DATE`
+- `uintXX_t` constants (in favor of custom typedefs)
 
 ## [0.6.37] - 2022-01-15
 

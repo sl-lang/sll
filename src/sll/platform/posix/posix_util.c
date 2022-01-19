@@ -35,11 +35,11 @@ static void _cleanup_env_data(void){
 		const sll_environment_variable_t* kv=*(_posix_env.dt+i);
 		sll_free_string((sll_string_t*)(&(kv->k)));
 		sll_free_string((sll_string_t*)(&(kv->v)));
-		sll_deallocate((void*)kv);
+		sll_deallocate(PTR(kv));
 	}
 	*((sll_array_length_t*)(&(_posix_env.l)))=0;
 	_posix_env.dt=NULL;
-	sll_deallocate((void*)(_posix_env.dt));
+	sll_deallocate(PTR(_posix_env.dt));
 }
 
 
@@ -118,7 +118,7 @@ __SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
 			return;
 		}
 		l-=n;
-		bf=(void*)(((uint64_t)bf)+n);
+		bf=PTR(ADDR(bf)+n);
 	}
 }
 

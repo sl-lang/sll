@@ -69,7 +69,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 	}
 	else{
 		SLL_ASSERT(f->f&SLL_FILE_FLAG_NO_BUFFER);
-		sll_deallocate((void*)(f->dt.mm.p));
+		sll_deallocate(PTR(f->dt.mm.p));
 	}
 	*((sll_file_flags_t*)(&(f->f)))=FILE_FLAG_NO_RELEASE;
 }
@@ -151,7 +151,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 		if (f->_off==f->dt.mm.sz){
 			return SLL_END_OF_DATA;
 		}
-		return *((sll_char_t*)((void*)((uint64_t)(f->dt.mm.p)+f->_off)));
+		return *((sll_char_t*)(PTR(ADDR(f->dt.mm.p)+f->_off)));
 	}
 	SLL_UNIMPLEMENTED();
 }
@@ -166,7 +166,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 		if (f->_off+sz>=f->dt.mm.sz){
 			sz=f->dt.mm.sz-f->_off;
 		}
-		sll_copy_data((void*)((uint64_t)(f->dt.mm.p)+f->_off),sz,p);
+		sll_copy_data(PTR(ADDR(f->dt.mm.p)+f->_off),sz,p);
 		f->_off+=sz;
 		return sz;
 	}
@@ -193,7 +193,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 	sll_size_t o=f->_r_bf_sz-f->_r_bf_off;
 	sz-=o;
 	sll_copy_data(f->_r_bf+f->_r_bf_off,o,p);
-	p=(void*)(((uint64_t)p)+o);
+	p=PTR(ADDR(p)+o);
 	while (sz>FILE_BUFFER_SIZE){
 		f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,p,FILE_BUFFER_SIZE);
 		if (f->_r_bf_sz!=FILE_BUFFER_SIZE){
@@ -204,7 +204,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 		}
 		o+=FILE_BUFFER_SIZE;
 		sz-=FILE_BUFFER_SIZE;
-		p=(void*)(((uint64_t)p)+FILE_BUFFER_SIZE);
+		p=PTR(ADDR(p)+FILE_BUFFER_SIZE);
 	}
 	f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE);
 	if (f->_r_bf_sz<sz){
@@ -230,7 +230,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 		if (f->_off==f->dt.mm.sz){
 			return SLL_END_OF_DATA;
 		}
-		sll_char_t o=*((sll_char_t*)((void*)((uint64_t)(f->dt.mm.p)+f->_off)));
+		sll_char_t o=*((sll_char_t*)(PTR(ADDR(f->dt.mm.p)+f->_off)));
 		f->_off++;
 		return o;
 	}

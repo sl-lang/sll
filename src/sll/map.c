@@ -57,7 +57,7 @@ __SLL_EXTERNAL void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sl
 	o->l=m->l+a->l;
 	o->v=sll_allocate((o->l<<1)*sizeof(sll_object_t*));
 	sll_map_length_t i=m->l<<1;
-	uint64_t* sm=sll_zero_allocate(((a->l+63)>>6)*sizeof(uint64_t));
+	bitmap_t* sm=sll_zero_allocate(((a->l+63)>>6)*sizeof(bitmap_t));
 	for (sll_map_length_t j=0;j<i;j+=2){
 		sll_object_t* e=m->v[j];
 		SLL_ACQUIRE(e);
@@ -73,7 +73,7 @@ __SLL_EXTERNAL void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sl
 		SLL_ACQUIRE(o->v[j+1]);
 	}
 	for (sll_array_length_t j=0;j<((a->l+63)>>6);j++){
-		uint64_t v=~(*(sm+j));
+		bitmap_t v=~(*(sm+j));
 		while (v){
 			sll_array_length_t k=(j<<6)|FIND_FIRST_SET_BIT(v);
 			if (k>=a->l){
@@ -99,7 +99,7 @@ __SLL_EXTERNAL void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,
 	o->l=m->l+s->l;
 	o->v=sll_allocate((o->l<<1)*sizeof(sll_object_t*));
 	sll_map_length_t i=m->l<<1;
-	uint64_t* sm=sll_zero_allocate(((s->l+63)>>6)*sizeof(uint64_t));
+	bitmap_t* sm=sll_zero_allocate(((s->l+63)>>6)*sizeof(bitmap_t));
 	for (sll_map_length_t j=0;j<i;j+=2){
 		sll_object_t* e=m->v[j];
 		SLL_ACQUIRE(e);
@@ -114,7 +114,7 @@ __SLL_EXTERNAL void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,
 		SLL_ACQUIRE(o->v[j+1]);
 	}
 	for (sll_string_length_t j=0;j<((s->l+63)>>6);j++){
-		uint64_t v=~(*(sm+j));
+		bitmap_t v=~(*(sm+j));
 		while (v){
 			sll_string_length_t k=(j<<6)|FIND_FIRST_SET_BIT(v);
 			if (k>=s->l){

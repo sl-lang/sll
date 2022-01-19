@@ -76,7 +76,7 @@ static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file
 	sll_file_write_char(sll_stdout,':');
 	SLL_ASSERT(ln);
 	sll_char_t bf[20];
-	uint8_t i=0;
+	sll_string_length_t i=0;
 	while (ln){
 		bf[i]=ln%10;
 		ln/=10;

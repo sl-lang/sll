@@ -13,11 +13,10 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>
-#include <stdint.h>
 
 
 
-static const uint64_t _process_quote_chars[4]={
+static const bitmap_t _process_quote_chars[4]={
 	0xd80087dfffffffff,// %+,-.0123456789:=
 	0xf800000178000000,// @ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
 	0xffffffffffffffff,

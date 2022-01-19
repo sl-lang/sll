@@ -21,7 +21,7 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 		s->dt._p=a_dt->_s.p-1;
 		SLL_ASSERT(a_dt->_s.p->t==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
 		a_dt->_s.p->dt._p=s+1;
-		a_dt->_s.c=(uint32_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t)));
+		a_dt->_s.c=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
 		a_dt->_s.p=s+1;
 		s+=a_dt->_s.c+1;
 		s->t=ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
@@ -47,7 +47,7 @@ sll_node_t* _acquire_next_node(sll_compilation_data_t* c_dt){
 		s->dt._p=c_dt->_s.p-1;
 		SLL_ASSERT(c_dt->_s.p->t==NODE_TYPE_CHANGE_STACK);
 		c_dt->_s.p->dt._p=s+1;
-		c_dt->_s.c=(uint32_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
+		c_dt->_s.c=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
 		c_dt->_s.p=s+1;
 		s+=c_dt->_s.c+1;
 		s->t=NODE_TYPE_CHANGE_STACK;
@@ -90,7 +90,7 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt){
 	sll_assembly_instruction_t* s=(sll_assembly_instruction_t*)((char*)(a_dt->_s.s)+sizeof(void*));
 	s->t=ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 	s->dt._p=NULL;
-	a_dt->_s.c=(uint32_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t)));
+	a_dt->_s.c=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
 	a_dt->_s.p=s+1;
 	s+=a_dt->_s.c+1;
 	s->t=ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
@@ -106,7 +106,7 @@ void _init_node_stack(sll_compilation_data_t* c_dt){
 	sll_node_t* s=(sll_node_t*)((char*)(c_dt->_s.s)+sizeof(void*));
 	s->t=NODE_TYPE_CHANGE_STACK;
 	s->dt._p=NULL;
-	c_dt->_s.c=(uint32_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
+	c_dt->_s.c=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
 	c_dt->_s.p=s+1;
 	s+=c_dt->_s.c+1;
 	s->t=NODE_TYPE_CHANGE_STACK;

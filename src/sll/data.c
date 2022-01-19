@@ -2,7 +2,6 @@
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/types.h>
-#include <stdint.h>
 
 
 
@@ -20,24 +19,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 		}
 		return SLL_COMPARE_RESULT_EQUAL;
 	}
-	if ((((uint64_t)ap)&7)&&(((uint64_t)bp)&7)){
-		if ((((uint64_t)ap)&7)<(((uint64_t)bp)&7)){
+	if ((ADDR(ap)&7)&&(ADDR(bp)&7)){
+		if ((ADDR(ap)&7)<(ADDR(bp)&7)){
 			ap=(const sll_char_t*)b;
 			bp=(const sll_char_t*)a;
 		}
 		SLL_UNIMPLEMENTED();
 	}
-	else if (((uint64_t)ap)&7){
+	else if (ADDR(ap)&7){
 		ap=(const sll_char_t*)b;
 		bp=(const sll_char_t*)a;
 	}
-	const uint64_t* ap64=(const uint64_t*)ap;
-	const uint64_t* bp64=(const uint64_t*)bp;
-	SLL_ASSERT(!(((uint64_t)ap64)&7));
+	const wide_data_t* ap64=(const wide_data_t*)ap;
+	const wide_data_t* bp64=(const wide_data_t*)bp;
+	SLL_ASSERT(!(ADDR(ap64)&7));
 	do{
 		if (*ap64!=*bp64){
-			uint64_t av=ROTATE_BITS64(*ap64,32);
-			uint64_t bv=ROTATE_BITS64(*bp64,32);
+			wide_data_t av=ROTATE_BITS64(*ap64,32);
+			wide_data_t bv=ROTATE_BITS64(*bp64,32);
 			av=((av&0xffff0000ffffull)<<16)|((av&0xffff0000ffff0000ull)>>16);
 			bv=((bv&0xffff0000ffffull)<<16)|((bv&0xffff0000ffff0000ull)>>16);
 			return ((((av&0xff00ff00ff00ffull)<<8)|((av&0xff00ff00ff00ff00ull)>>8))<(((bv&0xff00ff00ff00ffull)<<8)|((bv&0xff00ff00ff00ff00ull)>>8))?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
@@ -73,8 +72,8 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 		}
 		return;
 	}
-	if (((uint64_t)d)&7){
-		sll_size_t i=8-(((uint64_t)d)&7);
+	if (ADDR(d)&7){
+		sll_size_t i=8-(ADDR(d)&7);
 		a+=i;
 		b+=i;
 		l-=i;
@@ -83,9 +82,9 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 			i--;
 		} while (i);
 	}
-	SLL_ASSERT(!(((uint64_t)b)&7));
-	const uint64_t* ap=(const uint64_t*)a;
-	uint64_t* bp=(uint64_t*)b;
+	SLL_ASSERT(!(ADDR(b)&7));
+	const wide_data_t* ap=(const wide_data_t*)a;
+	wide_data_t* bp=(wide_data_t*)b;
 	ASSUME_ALIGNED(bp,3,0);
 	sll_size_t i=0;
 	for (;i<(l>>3);i++){
@@ -104,7 +103,7 @@ __SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d){
 		return d;
 	}
 	sll_char_t* o=(sll_char_t*)d;
-	while (((uint64_t)o)&7){
+	while (ADDR(o)&7){
 		*o=*s;
 		s++;
 		o++;
@@ -112,16 +111,16 @@ __SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d){
 			return o;
 		}
 	}
-	SLL_ASSERT(!(((uint64_t)o)&7));
-	const uint64_t* sp=(const uint64_t*)s;
-	uint64_t* op=(uint64_t*)o;
+	SLL_ASSERT(!(ADDR(o)&7));
+	const wide_data_t* sp=(const wide_data_t*)s;
+	wide_data_t* op=(wide_data_t*)o;
 	ASSUME_ALIGNED(op,3,0);
 	while (1){
-		uint64_t v=((*sp)-0x101010101010101ull)&0x8080808080808080ull&(~(*sp));
+		wide_data_t v=((*sp)-0x101010101010101ull)&0x8080808080808080ull&(~(*sp));
 		if (v){
 			SLL_ASSERT(FIND_FIRST_SET_BIT(v)>6&&(FIND_FIRST_SET_BIT(v)&7)==7);
 			v=FIND_FIRST_SET_BIT(v);
-			o=(void*)(((uint64_t)op)+(v>>3));
+			o=PTR(ADDR(op)+(v>>3));
 			if (v>7){
 				v-=7;
 				*op=((*op)&(0xffffffffffffffffull<<v))|((*sp)&((1ull<<v)-1));
@@ -152,8 +151,8 @@ __SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v){
 		}
 		return;
 	}
-	if (((uint64_t)o)&7){
-		sll_size_t i=8-(((uint64_t)o)&7);
+	if (ADDR(o)&7){
+		sll_size_t i=8-(ADDR(o)&7);
 		l-=i;
 		do{
 			*o=v;
@@ -161,11 +160,11 @@ __SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v){
 			i--;
 		} while (i);
 	}
-	SLL_ASSERT(!(((uint64_t)o)&7));
-	uint64_t* op=(uint64_t*)o;
+	SLL_ASSERT(!(ADDR(o)&7));
+	wide_data_t* op=(wide_data_t*)o;
 	ASSUME_ALIGNED(op,3,0);
 	sll_size_t i=0;
-	uint64_t v64=0x101010101010101ull*v;
+	wide_data_t v64=0x101010101010101ull*v;
 	for (;i<(l>>3);i++){
 		*(op+i)=v64;
 	}
@@ -187,8 +186,8 @@ __SLL_EXTERNAL void sll_zero_memory(void* p,sll_size_t l){
 		}
 		return;
 	}
-	if (((uint64_t)o)&7){
-		sll_size_t i=8-(((uint64_t)o)&7);
+	if (ADDR(o)&7){
+		sll_size_t i=8-(ADDR(o)&7);
 		l-=i;
 		do{
 			*o=0;
@@ -196,8 +195,8 @@ __SLL_EXTERNAL void sll_zero_memory(void* p,sll_size_t l){
 			i--;
 		} while (i);
 	}
-	SLL_ASSERT(!(((uint64_t)o)&7));
-	uint64_t* op=(uint64_t*)o;
+	SLL_ASSERT(!(ADDR(o)&7));
+	wide_data_t* op=(wide_data_t*)o;
 	ASSUME_ALIGNED(op,3,0);
 	sll_size_t i=0;
 	for (;i<(l>>3);i++){

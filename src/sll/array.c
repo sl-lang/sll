@@ -28,7 +28,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_and(const sll_array_t* a,
 		return 0;
 	}
 	sll_array_length_t i=0;
-	uint64_t* m=sll_zero_allocate(((b->l+63)>>6)*sizeof(uint64_t));
+	bitmap_t* m=sll_zero_allocate(((b->l+63)>>6)*sizeof(bitmap_t));
 	if (!m){
 		sll_deallocate(o->v);
 		return 0;
@@ -37,7 +37,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_and(const sll_array_t* a,
 		sll_object_t* e=a->v[j];
 		for (sll_array_length_t k=0;k<b->l;k++){
 			if (sll_operator_equal(e,b->v[k])){
-				uint64_t n=1ull<<(k&63);
+				bitmap_t n=1ull<<(k&63);
 				if (!((*(m+(k>>6)))&n)){
 					(*(m+(k>>6)))|=n;
 					o->v[i]=e;
@@ -459,7 +459,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_or(const sll_array_t* a,c
 		o->v[a->l+i]=b->v[i];
 	}
 	sll_array_length_t i=0;
-	uint64_t* m=sll_zero_allocate(((o->l+63)>>6)*sizeof(uint64_t));
+	bitmap_t* m=sll_zero_allocate(((o->l+63)>>6)*sizeof(bitmap_t));
 	if (!m){
 		return 0;
 	}

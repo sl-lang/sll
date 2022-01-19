@@ -2684,7 +2684,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(sll_object
 	}
 	sll_string_t out;
 	sll_api_path_join(a,ac,&out);
-	sll_deallocate((void*)a);
+	sll_deallocate(PTR(a));
 	sll_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_OBJECT_TYPE_STRING;
 	out_o->dt.s=out;

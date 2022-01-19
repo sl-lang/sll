@@ -35,7 +35,7 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k){
 				*(((const sll_environment_variable_t**)(sll_environment->dt))+i-1)=*(sll_environment->dt+i);
 			}
 			(*((sll_array_length_t*)(&(sll_environment->l))))--;
-			*((const sll_environment_variable_t*const**)(&(sll_environment->dt)))=sll_reallocate((void*)(sll_environment->dt),sll_environment->l*sizeof(sll_environment_variable_t*));
+			*((const sll_environment_variable_t*const**)(&(sll_environment->dt)))=sll_reallocate(PTR(sll_environment->dt),sll_environment->l*sizeof(sll_environment_variable_t*));
 			return;
 		}
 	}
@@ -54,7 +54,7 @@ __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* k,const sll
 		}
 	}
 	(*((sll_array_length_t*)(&(sll_environment->l))))++;
-	*((const sll_environment_variable_t*const**)(&(sll_environment->dt)))=sll_reallocate((void*)(sll_environment->dt),sll_environment->l*sizeof(sll_environment_variable_t*));
+	*((const sll_environment_variable_t*const**)(&(sll_environment->dt)))=sll_reallocate(PTR(sll_environment->dt),sll_environment->l*sizeof(sll_environment_variable_t*));
 	sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
 	sll_string_clone(k,(sll_string_t*)(&(n->k)));
 	sll_string_clone(v,(sll_string_t*)(&(n->v)));

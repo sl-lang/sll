@@ -212,13 +212,13 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	if ((c<48||c>57)&&c!='.'&&c!='e'&&c!='E'&&c!='-'&&c!='+'){
 		return NULL;
 	}
-	int8_t s=1;
+	sll_bool_t neg=0;
 	if (c=='+'){
 		c=**p;
 		(*p)++;
 	}
 	else if (c=='-'){
-		s=-1;
+		neg=1;
 		c=**p;
 		(*p)++;
 	}
@@ -230,7 +230,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	}
 	if (c!='.'&&c!='e'&&c!='E'){
 		(*p)--;
-		return SLL_FROM_INT((sll_integer_t)(v*s));
+		return SLL_FROM_INT((sll_integer_t)(neg?-v:v));
 	}
 	if (c=='.'){
 		sll_float_t pw=0.1;
@@ -246,27 +246,26 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	if (c=='e'||c=='E'){
 		c=**p;
 		(*p)++;
-		int8_t pw_s=1;
+		sll_bool_t neg_pw=0;
 		if (c=='+'){
 			c=**p;
 			(*p)++;
 		}
 		else if (c=='-'){
+			neg_pw=1;
 			c=**p;
 			(*p)++;
-			pw_s=-1;
 		}
-		int64_t pw=0;
+		sll_integer_t pw=0;
 		while (c>47&&c<58){
 			pw=pw*10+(c-48);
 			c=**p;
 			(*p)++;
 		}
-		pw*=pw_s;
-		v*=sll_api_math_pow(10,(sll_float_t)pw);
+		v*=sll_api_math_pow(10,(sll_float_t)(neg_pw?-pw:pw));
 	}
 	(*p)--;
-	return SLL_FROM_FLOAT(v*s);
+	return SLL_FROM_FLOAT((neg?-v:v));
 }
 
 
@@ -345,7 +344,7 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 					s->l++;
 					v=-v;
 				}
-				uint8_t i=0;
+				sll_string_length_t i=0;
 				sll_char_t bf[20];
 				do{
 					bf[i]=v%10;
@@ -589,13 +588,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 	if ((c<48||c>57)&&c!='.'&&c!='e'&&c!='E'&&c!='-'&&c!='+'){
 		return 0;
 	}
-	int8_t s=1;
+	sll_bool_t neg=0;
 	if (c=='+'){
 		c=**p;
 		(*p)++;
 	}
 	else if (c=='-'){
-		s=-1;
+		neg=1;
 		c=**p;
 		(*p)++;
 	}
@@ -608,7 +607,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 	if (c!='.'&&c!='e'&&c!='E'){
 		(*p)--;
 		o->t=SLL_JSON_OBJECT_TYPE_INTEGER;
-		o->dt.i=(sll_integer_t)(v*s);
+		o->dt.i=(sll_integer_t)(neg?-v:v);
 		return 1;
 	}
 	if (c=='.'){
@@ -625,28 +624,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 	if (c=='e'||c=='E'){
 		c=**p;
 		(*p)++;
-		int8_t pw_s=1;
+		sll_bool_t neg_pw=0;
 		if (c=='+'){
 			c=**p;
 			(*p)++;
 		}
 		else if (c=='-'){
+			neg_pw=1;
 			c=**p;
 			(*p)++;
-			pw_s=-1;
 		}
-		int64_t pw=0;
+		sll_integer_t pw=0;
 		while (c>47&&c<58){
 			pw=pw*10+(c-48);
 			c=**p;
 			(*p)++;
 		}
-		pw*=pw_s;
-		v*=sll_api_math_pow(10,(sll_float_t)pw);
+		v*=sll_api_math_pow(10,(sll_float_t)(neg_pw?-pw:pw));
 	}
 	(*p)--;
 	o->t=SLL_JSON_OBJECT_TYPE_FLOAT;
-	o->dt.f=v*s;
+	o->dt.f=(neg?-v:v);
 	return 1;
 }
 

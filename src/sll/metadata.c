@@ -4,11 +4,10 @@
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/types.h>
-#include <stdint.h>
 
 
 
-static sll_node_t* _mark(sll_node_t* o,uint64_t* m){
+static sll_node_t* _mark(sll_node_t* o,bitmap_t* m){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -143,9 +142,9 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 
 
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
-	uint32_t ml=(c_dt->st.l>>6)+1;
-	uint64_t* m=sll_zero_allocate_stack(ml*sizeof(uint64_t));
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+	sll_string_index_t ml=(c_dt->st.l>>6)+1;
+	bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
+	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_identifier_list_t* l=c_dt->idt.s+i;
 		for (sll_identifier_list_length_t j=0;j<l->l;j++){
 			*(m+((l->dt+j)->i>>6))|=1ull<<((l->dt+j)->i&63);
@@ -165,17 +164,17 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	}
 	_mark(c_dt->h,m);
 	sll_string_index_t* sm=sll_allocate_stack(c_dt->st.l*sizeof(sll_string_index_t));
-	uint32_t k=0;
-	uint32_t l=0;
-	for (uint32_t i=0;i<ml;i++){
-		uint64_t v=~(*(m+i));
+	sll_string_index_t k=0;
+	sll_string_index_t l=0;
+	for (sll_string_index_t i=0;i<ml;i++){
+		bitmap_t v=~(*(m+i));
 		while (v){
 			sll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
 			if (j==c_dt->st.l){
 				break;
 			}
 			sll_free_string(c_dt->st.dt+j);
-			for (uint32_t n=k;n<j;n++){
+			for (sll_string_index_t n=k;n<j;n++){
 				*(c_dt->st.dt+n-l)=*(c_dt->st.dt+n);
 				*(sm+n)=n-l;
 			}
@@ -185,14 +184,14 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		}
 	}
 	sll_deallocate(m);
-	for (uint32_t i=k;i<c_dt->st.l;i++){
+	for (sll_string_index_t i=k;i<c_dt->st.l;i++){
 		*(c_dt->st.dt+i-l)=*(c_dt->st.dt+i);
 		*(sm+i)=i-l;
 	}
 	if (l){
 		c_dt->st.l-=l;
 		c_dt->st.dt=sll_reallocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
-		for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 			sll_identifier_list_t* e=c_dt->idt.s+i;
 			for (sll_identifier_list_length_t j=0;j<e->l;j++){
 				(e->dt+j)->i=*(sm+(e->dt+j)->i);

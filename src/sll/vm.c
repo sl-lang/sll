@@ -110,7 +110,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_current_instruction_count=0;
 	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
 	sll_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(cfg->s_sz+a_dt->vc*sizeof(sll_object_t*)+a_dt->st.l*sizeof(sll_object_t)+cfg->c_st_sz*sizeof(sll_call_stack_frame_t));
-	uint64_t ptr=(uint64_t)sll_platform_allocate_page(ptr_sz,1);
+	addr_t ptr=ADDR(sll_platform_allocate_page(ptr_sz,1));
 	_vm_var_data=(sll_object_t**)ptr;
 	sll_static_int[0]->rc+=a_dt->vc;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
@@ -149,7 +149,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		SLL_RELEASE(*(_vm_var_data+i));
 	}
-	sll_platform_free_page((void*)(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-cfg->c_st_sz*sizeof(sll_call_stack_frame_t)),ptr_sz);
+	sll_platform_free_page(PTR(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-cfg->c_st_sz*sizeof(sll_call_stack_frame_t)),ptr_sz);
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
 	return rc;
@@ -917,7 +917,7 @@ _print_from_stack:;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_REF:
 				{
-					sll_integer_t a=(sll_integer_t)(sll_size_t)(void*)(*(_vm_stack+_vm_si-1));
+					sll_integer_t a=(sll_integer_t)ADDR(*(_vm_stack+_vm_si-1));
 					SLL_RELEASE(*(_vm_stack+_vm_si-1));
 					*(_vm_stack+_vm_si-1)=SLL_FROM_INT(a);
 					break;

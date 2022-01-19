@@ -258,9 +258,44 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define CLI_BUILD_TYPE_STRING "local"
 #endif
 
+#define ADDR(x) ((addr_t)(x))
+#define PTR(x) ((void*)(addr_t)(x))
+
+
+
+typedef uint8_t bucket_index_t;
+
 
 
 typedef sll_instruction_index_t assembly_instruction_label_t;
+
+
+
+typedef uint32_t magic_number_t;
+
+
+
+typedef uint32_t return_table_size_t;
+
+
+
+typedef uint32_t small_bitmap_t;
+
+
+
+typedef uint64_t addr_t;
+
+
+
+typedef uint64_t bitmap_t;
+
+
+
+typedef uint64_t wide_data_t;
+
+
+
+typedef uint64_t wide_integer_t;
 
 
 
@@ -274,7 +309,7 @@ typedef struct __SCOPE_DATA{
 
 typedef struct __NEW_VARIABLE_DATA{
 	sll_node_t** dt;
-	uint32_t sz;
+	sll_arg_count_t sz;
 } new_variable_data_t;
 
 
@@ -351,7 +386,7 @@ typedef struct __OPTIMIZER_DATA{
 	variable_assignment_data_t va;
 	sll_object_t** v;
 	sll_node_t* a_v;
-	uint8_t rm;
+	sll_bool_t rm;
 } optimizer_data_t;
 
 
@@ -372,7 +407,7 @@ typedef struct __LOOP{
 
 typedef struct __RETURN_TABLE{
 	assembly_instruction_label_t* dt;
-	uint32_t sz;
+	return_table_size_t sz;
 } return_table_t;
 
 
@@ -399,8 +434,8 @@ typedef struct __STRING_MAP_DATA{
 
 typedef struct __INTERNAL_FUNCTION{
 	const sll_char_t nm[256];
-	sll_internal_function_pointer_t f;
-	sll_internal_function_type_t t;
+	const sll_internal_function_pointer_t f;
+	const sll_internal_function_type_t t;
 } internal_function_t;
 
 
@@ -416,9 +451,9 @@ typedef struct __OBJECT_DEBUG_DATA_TRACE_DATA{
 typedef struct __OBJECT_DEBUG_DATA{
 	object_debug_data_trace_data_t c;
 	object_debug_data_trace_data_t** al;
-	uint32_t all;
+	sll_array_length_t all;
 	object_debug_data_trace_data_t** rl;
-	uint32_t rll;
+	sll_array_length_t rll;
 } object_debug_data_t;
 
 
