@@ -95,7 +95,7 @@
 (= remove_env (,,, k
 	(= k (<- string$replace (:: k string_type) '=' ""))
 	(<- map$remove ENVIRONMENT k)
-	(<- (... "sll:sys_remove_env" k v))
+	(<- (... "sll:sys_remove_env" k))
 ))
 
 (= set_env (,,, k v

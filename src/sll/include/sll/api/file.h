@@ -38,6 +38,19 @@ __API_FUNC_DECL(file_close);
 
 /**
  * \flags api func
+ * \name sll_api_file_copy
+ * \group file-api
+ * \desc Docs!
+ * \arg S
+ * \arg S
+ * \ret B
+ */
+__API_FUNC_DECL(file_copy);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_file_flush
  * \group file-api
  * \desc Docs!
@@ -118,6 +131,19 @@ __API_FUNC_DECL(file_peek);
  * \ret S
  */
 __API_FUNC_DECL(file_read);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_file_rename
+ * \group file-api
+ * \desc Docs!
+ * \arg S
+ * \arg S
+ * \ret B
+ */
+__API_FUNC_DECL(file_rename);
 
 
 

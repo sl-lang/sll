@@ -9,6 +9,8 @@
 - Implemented `debug$backtrace`
 - Implemented `sll_date_from_time_ns`
 - Implemented `sll_platform_create_console` and `sll_cli_main_raw`
+- Implemented `sll_platform_path_copy` and `file$copy` ([#192])
+- Implemented `sll_platform_path_rename` and `file$rename` ([#192])
 - Implemented `sys$version_type$commit`, `sys$version_type$full_commit`, `sys$version_type$url` and `sys$version_type$time`
 
 ### Changed

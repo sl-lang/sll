@@ -105,6 +105,15 @@ __API_FUNC(file_close){
 
 
 
+__API_FUNC(file_copy){
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+		return 0;
+	}
+	return sll_platform_path_copy(a->v,b->v);
+}
+
+
+
 __API_FUNC(file_flush){
 	if (a<0||a>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+a))){
 		return 0;
@@ -188,6 +197,15 @@ __API_FUNC(file_read){
 	extended_file_t* ef=*(_file_fl+a);
 	sll_string_decrease(out,(sll_string_length_t)sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),out->v,l));
 	sll_string_calculate_checksum(out);
+}
+
+
+
+__API_FUNC(file_rename){
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+		return 0;
+	}
+	return sll_platform_path_rename(a->v,b->v);
 }
 
 

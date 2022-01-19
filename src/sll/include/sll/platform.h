@@ -423,6 +423,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_lookup_function(sll_library
 
 /**
  * \flags check_output func
+ * \name sll_platform_path_copy
+ * \group platform
+ * \subgroup platform-path
+ * \desc Docs!
+ * \arg const sll_char_t* s
+ * \arg const sll_char_t* d
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_path_exists
  * \group platform
  * \subgroup platform-path
@@ -444,6 +458,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_
  * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sll_char_t* fp);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_platform_path_rename
+ * \group platform
+ * \subgroup platform-path
+ * \desc Docs!
+ * \arg const sll_char_t* s
+ * \arg const sll_char_t* d
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_rename(const sll_char_t* s,const sll_char_t* d);
 
 
 

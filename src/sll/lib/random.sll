@@ -50,7 +50,6 @@
 	(= mn (:: mn char_type))
 	(= mx (:: mx char_type))
 	(? (< mx mn) {
-		d
 		(= mx 255)
 	} (=== mn mx) {
 		(? mn {

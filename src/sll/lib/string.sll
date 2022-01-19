@@ -31,7 +31,7 @@
 	(~ func_type) pad_right
 	(~ func_type) replace
 	(~ func_type) reverse
-	(~ func_type) secure_compare
+	(~ func_type) secure_equal
 	(~ func_type) split
 	(~ func_type) starts
 	(~ func_type) str
@@ -176,7 +176,7 @@
 	pad_right
 	replace
 	reverse
-	secure_compare
+	secure_equal
 	split
 	starts
 	str

@@ -8,7 +8,10 @@
 #include <sll/types.h>
 #include <dirent.h>
 #include <dlfcn.h>
+#include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -171,6 +174,35 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d){
+	int s_fd=open((const char*)s,O_RDONLY);
+	if (s_fd==-1){
+		return 0;
+	}
+	struct stat st;
+	fstat(s_fd,&st);
+	int d_fd=creat((const char*)d,st.st_mode&(S_IRWXU|S_IRWXG|S_IRWXO));
+	if (d_fd==-1){
+		close(s_fd);
+		return 0;
+	}
+	size_t sz=st.st_size;
+	sll_bool_t o=1;
+	while (sz){
+		int v=sendfile(d_fd,s_fd,NULL,st.st_size);
+		if (v==-1){
+			o=1;
+			break;
+		}
+		sz-=v;
+	}
+	close(s_fd);
+	close(d_fd);
+	return o;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_char_t* fp){
 	return !access((char*)fp,F_OK);
 }
@@ -180,6 +212,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(const sll_char_t* fp){
 	struct stat st;
 	return (!stat((char*)fp,&st)&&(st.st_mode&S_IFDIR));
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_rename(const sll_char_t* s,const sll_char_t* d){
+	return !rename((const char*)s,(const char*)d);
 }
 
 

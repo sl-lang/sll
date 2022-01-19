@@ -121,7 +121,7 @@
 (= factors (,,, n {
 	(= n (:: n int_type))
 	(= neg [])
-	(? (< o 0) {
+	(? (< n 0) {
 		(= neg [(. factor_type -1 1)])
 		(= n (- 0 n))
 	})

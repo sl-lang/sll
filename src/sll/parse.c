@@ -159,7 +159,7 @@ static sll_identifier_index_t _get_var_index(sll_compilation_data_t* c_dt,const 
 		(k->dt+k->l-1)->sc=l_sc->l_sc;
 		o=SLL_CREATE_IDENTIFIER(k->l-1,str->l-1);
 		(k->dt+k->l-1)->i=sll_add_string(&(c_dt->st),str,1);
-		if (fl&GET_VAR_INDEX_FLAG_ASSIGN){
+		if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 			e_c_dt->nv_dt->sz++;
 			e_c_dt->nv_dt->dt=sll_reallocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_node_t*));
 			*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)=arg;
@@ -198,7 +198,7 @@ static sll_identifier_index_t _get_var_index(sll_compilation_data_t* c_dt,const 
 	o=SLL_CREATE_IDENTIFIER(c_dt->idt.ill-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 	(c_dt->idt.il+c_dt->idt.ill-1)->sc=l_sc->l_sc;
 	(c_dt->idt.il+c_dt->idt.ill-1)->i=sll_add_string(&(c_dt->st),str,1);
-	if (fl&GET_VAR_INDEX_FLAG_ASSIGN){
+	if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 		e_c_dt->nv_dt->sz++;
 		e_c_dt->nv_dt->dt=sll_reallocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_node_t*));
 		*(e_c_dt->nv_dt->dt+e_c_dt->nv_dt->sz-1)=arg;
@@ -1009,56 +1009,9 @@ _merge_next_string:;
 					for (sll_export_table_length_t i=0;i<im.et.l;i++){
 						sll_identifier_index_t eii=*(im.et.dt+i);
 						(im_dt.eim+i)->a=eii;
-						sll_scope_t mx_sc=SLL_MAX_SCOPE;
-						sll_identifier_index_t mx_i=0;
-						sll_identifier_t* ei;
-						sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_ID(eii);
-						if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-							ei=c_dt->idt.il+si+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii);
-							for (sll_identifier_list_length_t k=0;k<c_dt->idt.ill;k++){
-								sll_identifier_t* n=c_dt->idt.il+k;
-								if (k==si+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii)||n->i!=ei->i){
-									continue;
-								}
-								if (n->sc==l_sc->l_sc){
-									ei->sc=SLL_MAX_SCOPE;
-									(im_dt.eim+i)->b=SLL_CREATE_IDENTIFIER(k,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
-									goto _export_identifier_found;
-								}
-								if ((l_sc->m[n->sc>>6]&(1ull<<(n->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||n->sc>mx_sc)){
-									mx_sc=n->sc;
-									mx_i=SLL_CREATE_IDENTIFIER(k,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
-								}
-							}
-						}
-						else{
-							sll_identifier_list_t* il=c_dt->idt.s+j;
-							ei=il->dt+im_dt.off[j]+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii);
-							for (sll_identifier_list_length_t k=0;k<il->l;k++){
-								sll_identifier_t* n=il->dt+k;
-								if (k==im_dt.off[j]+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii)||n->i!=ei->i){
-									continue;
-								}
-								if (n->sc==l_sc->l_sc){
-									ei->sc=SLL_MAX_SCOPE;
-									(im_dt.eim+i)->b=SLL_CREATE_IDENTIFIER(k,j);
-									goto _export_identifier_found;
-								}
-								if ((l_sc->m[n->sc>>6]&(1ull<<(n->sc&0x3f)))&&(mx_sc==SLL_MAX_SCOPE||n->sc>mx_sc)){
-									mx_sc=n->sc;
-									mx_i=SLL_CREATE_IDENTIFIER(k,j);
-								}
-							}
-						}
-						if (mx_sc!=SLL_MAX_SCOPE){
-							ei->sc=SLL_MAX_SCOPE;
-							(im_dt.eim+i)->b=mx_i;
-						}
-						else{
-							ei->sc=l_sc->l_sc;
-							(im_dt.eim+i)->a=SLL_MAX_IDENTIFIER_INDEX;
-						}
-_export_identifier_found:;
+						sll_string_t tmp;
+						sll_string_clone(im.st.dt+((SLL_IDENTIFIER_GET_ARRAY_ID(eii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?im.idt.il:im.idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(eii)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(eii))->i,&tmp);
+						(im_dt.eim+i)->b=_get_var_index(c_dt,e_c_dt,l_sc,&tmp,NULL,GET_VAR_INDEX_FLAG_ASSIGN);
 					}
 					sll_function_index_t j=c_dt->ft.l;
 					c_dt->ft.l+=im.ft.l;

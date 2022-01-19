@@ -115,6 +115,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d){
+	return !!CopyFileA((const char*)s,(const char*)d,FALSE);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length_unaligned(fp);
@@ -151,6 +157,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(cons
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_rename(const sll_char_t* s,const sll_char_t* d){
+	return !!MoveFileA((const char*)s,(const char*)d);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p){
-	return !!SetCurrentDirectoryA((char*)p);
+	return !!SetCurrentDirectoryA((const char*)p);
 }

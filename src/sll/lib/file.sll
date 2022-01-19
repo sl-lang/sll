@@ -35,11 +35,13 @@
 	(~ file_type) stdout
 	(~ file_type) stderr
 	(~ func_type) close
+	(~ func_type) copy
 	(~ func_type) flush
 	(~ func_type) from_data
 	(~ func_type) open
 	(~ func_type) peek
 	(~ func_type) read
+	(~ func_type) rename
 	(~ func_type) write
 ))
 
@@ -73,6 +75,13 @@
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
 	(@@ (<- (... "sll:file_close") f$_handle))
+))
+
+(= copy (,,, s d
+	(? (|| (! s) (! d)) (@@ nil))
+	(= s (:: s string_type))
+	(= d (:: d string_type))
+	(@@ (<- (... "sll:file_copy") s d))
 ))
 
 (= flush (,,, f
@@ -135,6 +144,13 @@
 	(@@ (<- (... "sll:file_read") f$_handle c))
 ))
 
+(= rename (,,, s d
+	(? (|| (! s) (! d)) (@@ nil))
+	(= s (:: s string_type))
+	(= d (:: d string_type))
+	(@@ (<- (... "sll:file_rename") s d))
+))
+
 (= write (,,, f dt
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
@@ -154,11 +170,13 @@
 	stdout
 	stderr
 	close
+	copy
 	flush
 	from_data
 	open
 	peek
 	read
+	rename
 	write
 ))
 (## file)

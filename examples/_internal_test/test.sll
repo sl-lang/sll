@@ -361,6 +361,10 @@
 
 (:> file$TEMP_FILE_PATH "\n")
 
+(<- file$rename "build/hello.txt" "build/hello-rename.txt")
+
+(<- file$copy "build/hello-rename.txt" "build/new-hello.txt")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)
