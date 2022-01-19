@@ -10,7 +10,6 @@
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <sll/vm.h>
 #include <stdint.h>
 
@@ -289,8 +288,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 		pg=*((void**)pg);
 	}
 	i=0;
-	const static_object_t*const* l=&__strto_start;
-	while (l<&__strto_end){
+	const static_object_t*const* l=&__s_obj_start;
+	while (l<&__s_obj_end){
 		const static_object_t* k=*l;
 		if (k){
 			SLL_ASSERT(k->dt->rc);

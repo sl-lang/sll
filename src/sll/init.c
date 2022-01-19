@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -11,8 +12,20 @@ STATIC_STRING_SETUP;
 
 
 static sll_cleanup_function_t _util_exit_table[MAX_CLEANUP_TABLE_SIZE];
-static sll_bool_t _util_init=0;
 static unsigned int _util_exit_table_size=0;
+static sll_bool_t _util_init=0;
+
+
+
+__SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c){
+	_file_release_std_streams();
+	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
+	sll_platform_file_write(fd,a,sll_string_length_unaligned(a));
+	sll_platform_file_write(fd,b,sll_string_length_unaligned(b));
+	sll_platform_file_write(fd,c,sll_string_length_unaligned(c));
+	_force_exit_platform();
+}
+
 
 
 __SLL_EXTERNAL void sll_deinit(void){
@@ -32,8 +45,8 @@ __SLL_EXTERNAL void sll_deinit(void){
 		l++;
 	}
 	_gc_release_data();
-	_file_release_std_streams();
 	_log_release_data();
+	_file_release_std_streams();
 	_memory_release_data();
 	sll_platform_reset_console();
 	_reset_sandbox();
@@ -67,7 +80,9 @@ __SLL_EXTERNAL void sll_init(void){
 
 
 __SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t f){
-	SLL_ASSERT(_util_exit_table_size<MAX_CLEANUP_TABLE_SIZE);
+	if (_util_exit_table_size>=MAX_CLEANUP_TABLE_SIZE){
+		SLL_UNREACHABLE();
+	}
 	_util_exit_table[_util_exit_table_size]=f;
 	_util_exit_table_size++;
 }

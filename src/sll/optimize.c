@@ -2,6 +2,7 @@
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
 #include <sll/map.h>
@@ -11,8 +12,8 @@
 #include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <stdint.h>
 
 

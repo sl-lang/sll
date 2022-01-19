@@ -1,10 +1,11 @@
-#include <sll/_generated_help_text.h>
 #include <sll/_sll_internal.h>
+#include <sll/api/date.h>
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/assembly.h>
 #include <sll/data.h>
 #include <sll/file.h>
+#include <sll/generated/help_text.h>
 #include <sll/ift.h>
 #include <sll/init.h>
 #include <sll/io.h>
@@ -15,7 +16,6 @@
 #include <sll/sandbox.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <sll/vm.h>
 #include <stdint.h>
 
@@ -506,9 +506,10 @@ _read_file_argument:
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
 	}
 	if (fl&CLI_FLAG_VERSION){
-		sll_file_write_string(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", "SLL_VERSION_BUILD_DATE", "SLL_VERSION_BUILD_TIME")\n"));
-		sll_deinit();
-		return 0;
+		sll_date_t d;
+		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,&d);
+		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),d.y,d.m+1,d.d+1,d.h,d.mn,(sll_integer_t)(d.s));
+		goto _error;
 	}
 	if (fl&CLI_FLAG_HELP){
 		sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);

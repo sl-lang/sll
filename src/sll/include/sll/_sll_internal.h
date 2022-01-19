@@ -4,7 +4,7 @@
 #include <intrin.h>
 #endif
 #include <sll/api.h>
-#include <sll/api/_generated_raw.h>
+#include <sll/generated/api.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/version.h>
@@ -17,9 +17,9 @@
 #pragma intrinsic(__popcnt64)
 #pragma intrinsic(_rotl)
 #pragma intrinsic(_rotl64)
-#pragma section("strto$a",read)
-#pragma section("strto$b",read)
-#pragma section("strto$z",read)
+#pragma section("s_obj$a",read)
+#pragma section("s_obj$b",read)
+#pragma section("s_obj$z",read)
 #pragma section("s_str$a",read)
 #pragma section("s_str$b",read)
 #pragma section("s_str$z",read)
@@ -53,7 +53,7 @@ static __SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 	} while (0)
 #define _CUSTOM_SECTION(nm) __declspec(allocate(#nm))
 #define CUSTOM_SECTION(nm) _CUSTOM_SECTION(nm##$b)
-#define STATIC_OBJECT_SETUP static const __declspec(allocate("strto$a")) static_object_t* __strto_start=0;static const __declspec(allocate("strto$z")) static_object_t* __strto_end=0
+#define STATIC_OBJECT_SETUP static const __declspec(allocate("s_obj$a")) static_object_t* __s_obj_start=0;static const __declspec(allocate("s_obj$z")) static_object_t* __s_obj_end=0
 #define STATIC_STRING_SETUP static const __declspec(allocate("s_str$a")) static_string_t* __s_str_start=0;static const __declspec(allocate("s_str$z")) static_string_t* __s_str_end=0
 #else
 #ifndef DEBUG_BUILD
@@ -90,10 +90,10 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 		p=__builtin_assume_aligned((p),(n),(x)); \
 	} while (0)
 #define CUSTOM_SECTION(nm) __attribute__((used,section(#nm)))
-#define STATIC_OBJECT_SETUP extern const static_object_t* __start_strto;extern const static_object_t* __stop_strto
+#define STATIC_OBJECT_SETUP extern const static_object_t* __start_s_obj;extern const static_object_t* __stop_s_obj
 #define STATIC_STRING_SETUP extern const static_string_t* __start_s_str;extern const static_string_t* __stop_s_str
-#define __strto_start __start_strto
-#define __strto_end __stop_strto
+#define __s_obj_start __start_s_obj
+#define __s_obj_end __stop_s_obj
 #define __s_str_start __start_s_str
 #define __s_str_end __stop_s_str
 #endif
@@ -113,7 +113,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 
 
-#define _DECL_GC_OBJECT(rt) static const static_object_t _UNIQUE_NAME(__strto)={(rt),__FILE__,__LINE__};static const CUSTOM_SECTION(strto) static_object_t* _UNIQUE_NAME(__strto_ptr)=&_UNIQUE_NAME(__strto)
+#define _DECL_GC_OBJECT(rt) static const static_object_t _UNIQUE_NAME(__s_obj)={(rt),__FILE__,__LINE__};static const CUSTOM_SECTION(s_obj) static_object_t* _UNIQUE_NAME(__s_obj_ptr)=&_UNIQUE_NAME(__s_obj)
 #define _UNIQUE_NAME_JOIN2(a,b) a##_##b
 #define _UNIQUE_NAME_JOIN(a,b) _UNIQUE_NAME_JOIN2(a,b)
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)

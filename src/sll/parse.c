@@ -8,8 +8,8 @@
 #include <sll/node.h>
 #include <sll/platform.h>
 #include <sll/string.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <stdint.h>
 
 

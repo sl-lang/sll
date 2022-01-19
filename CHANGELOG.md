@@ -7,20 +7,32 @@
 - Console option to do not create a console: `-w` (Windows only)
 - Implemented `date$from_time_ns`
 - Implemented `debug$backtrace`
+- Implemented `sll_date_from_time_ns`
 - Implemented `sll_platform_create_console` and `sll_cli_main_raw`
 - Implemented `sys$version_type$commit`, `sys$version_type$full_commit`, `sys$version_type$url` and `sys$version_type$time`
 
 ### Changed
 
-- Moved `SLL_COPY_STRING_NULL`, `sll_compare_data`, `sll_copy_data`, `sll_copy_string`, `sll_copy_string_null`, `sll_set_memory` and `sll_zero_memory` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/data.c`][0.7.0/src/sll/data.c] and [`src/sll/include/sll/data.h`][0.7.0/src/sll/include/sll/data.h]
+- Changed internal executable section names
+- Moved `SLL_COPY_STRING_NULL`, `SLL_COMPARE_RESULT_BELOW`, `SLL_COMPARE_RESULT_EQUAL`, `SLL_COMPARE_RESULT_ABOVE` types, `sll_compare_data`, `sll_copy_data`, `sll_copy_string`, `sll_copy_string_null`, `sll_set_memory` and `sll_zero_memory` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/data.c`][0.7.0/src/sll/data.c] and [`src/sll/include/sll/data.h`][0.7.0/src/sll/include/sll/data.h]
+- Moved `SLL_DEBUG_LINE_DATA_GET_DATA`, `SLL_DEBUG_LINE_DATA_FLAG_FILE` and `SLL_DEBUG_LINE_DATA_FLAG_FUNC` from [`src/sll/include/sll/assembly.h`][0.6.37/src/sll/include/sll/assembly.h] to [`src/sll/location.c`][0.7.0/src/sll/location.c] and [`src/sll/include/sll/location.h`][0.7.0/src/sll/include/sll/location.h]
 - Moved `sll_deinit`, `sll_init` and `sll_register_cleanup` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/init.c`][0.7.0/src/sll/init.c] and [`src/sll/include/sll/init.h`][0.7.0/src/sll/include/sll/init.h]
 - Moved `sll_get_environment_variable`, `sll_remove_environment_variable` and `sll_set_environment_variable` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/env.c`][0.7.0/src/sll/env.c] and [`src/sll/include/sll/env.h`][0.7.0/src/sll/include/sll/env.h]
+- Moved `sll_get_location` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/location.c`][0.7.0/src/sll/location.c] and [`src/sll/include/sll/location.h`][0.7.0/src/sll/include/sll/location.h]
+- Moved `SLL_SANDBOX_FLAG_xxx` flags, `sll_get_sandbox_flag`, `sll_get_sandbox_flags` and `sll_set_sandbox_flags` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/sandbox.c`][0.7.0/src/sll/sandbox.c] and [`src/sll/include/sll/sandbox.h`][0.7.0/src/sll/include/sll/sandbox.h]
 - Moved `sll_version` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/version.c`][0.7.0/src/sll/version.c] and [`src/sll/include/sll/version.h`][0.7.0/src/sll/include/sll/version.h]
+- Moved generated header files to the [`src/sll/include/sll/generated`][0.7.0/src/sll/include/sll/generated] directory
+- Platform identifier string (`sll_platform_string`) is now a `const sll_string_t*` instead of `const sll_char_t*`
+- Renamed [`src/sll/api/_generated.c`][0.6.37/src/sll/api/_generated.c] and [`src/sll/include/sll/api/_generated.h`][0.6.37/src/sll/include/sll/api/_generated.h] to [`src/sll/api/_generated_raw.c`][0.7.0/src/sll/api/_generated_raw.c] and [`src/sll/include/sll/generated/api.h`][0.7.0/src/sll/include/sll/generated/api.h]
+- Renamed [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/string_table.c`][0.7.0/src/sll/string_table.c] and [`src/sll/include/sll/string_table.h`][0.7.0/src/sll/include/sll/string_table.h]
 - Renamed `sll_api_time_current_nanos`, `sll_api_time_sleep_nanos`, `time$time_nanos` and `time$sleep_nanos` to `sll_api_time_current_ns`, `sll_api_time_sleep_ns`, `time$time_ns` and `time$sleep_ns`
-- Renamed [`src/sll/api/_generated.c`][0.6.37/src/sll/api/_generated.c] and [`src/sll/include/sll/api/_generated.h`][0.6.37/src/sll/include/sll/api/_generated.h] to [`src/sll/api/_generated_raw.c`][0.7.0/src/sll/api/_generated_raw.c] and [`src/sll/include/sll/api/_generated_raw.h`][0.7.0/src/sll/include/sll/api/_generated_raw.h]
-- `sll_platform_string` is now a `const sll_string_t*` instead of `const sll_char_t*`
 - Static strings are now initialized after the call to `sll_init` funcion
+- Time version macro (`SLL_VERSION_BUILD_TIME`) now specifies nanoseconds instead of a string (can be converted by `sll_date_from_time_ns`)
 - Updated CLI code
+
+### Removed
+
+- Date version macro: `SLL_VERSION_BUILD_DATE`
 
 ## [0.6.37] - 2022-01-15
 
@@ -1629,15 +1641,23 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.7.0/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/_generated_raw.c
 [0.7.0/src/sll/data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/data.c
 [0.7.0/src/sll/env.c]: https://github.com/sl-lang/sll/blob/main/src/sll/env.c
-[0.7.0/src/sll/include/sll/api/_generated_raw.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/api/_generated_raw.h
 [0.7.0/src/sll/include/sll/data.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/data.h
 [0.7.0/src/sll/include/sll/env.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/env.h
+[0.7.0/src/sll/include/sll/generated/api.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/generated/api.h
+[0.7.0/src/sll/include/sll/generated]: https://github.com/sl-lang/sll/tree/main/src/sll/include/sll/generated
 [0.7.0/src/sll/include/sll/init.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/init.h
+[0.7.0/src/sll/include/sll/location.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/location.h
+[0.7.0/src/sll/include/sll/sandbox.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/sandbox.h
+[0.7.0/src/sll/include/sll/string_table.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/string_table.h
 [0.7.0/src/sll/include/sll/version.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/version.h
 [0.7.0/src/sll/init.c]: https://github.com/sl-lang/sll/blob/main/src/sll/init.c
+[0.7.0/src/sll/location.c]: https://github.com/sl-lang/sll/blob/main/src/sll/location.c
+[0.7.0/src/sll/sandbox.c]: https://github.com/sl-lang/sll/blob/main/src/sll/sandbox.c
+[0.7.0/src/sll/string_table.c]: https://github.com/sl-lang/sll/blob/main/src/sll/string_table.c
 [0.7.0/src/sll/version.c]: https://github.com/sl-lang/sll/blob/main/src/sll/version.c
 [0.6.37/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/api/_generated.c
 [0.6.37/src/sll/include/sll/api/_generated.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/api/_generated.h
+[0.6.37/src/sll/include/sll/assembly.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/assembly.h
 [0.6.37/src/sll/include/sll/util.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/util.h
 [0.6.37/src/sll/util.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/util.c
 [0.6.36/src/sll/cli.c]: https://github.com/sl-lang/sll/blob/main/src/sll/cli.c

@@ -1,15 +1,16 @@
 #include <sll/_sll_internal.h>
-#include <sll/_generated_assembly_optimizer.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/generated/assembly_optimizer.h>
+#include <sll/location.h>
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/object.h>
 #include <sll/platform.h>
 #include <sll/string.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <stdint.h>
 
 

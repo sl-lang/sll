@@ -11,6 +11,10 @@
 
 
 
+#define SLL_COMPARE_RESULT_BELOW 0
+#define SLL_COMPARE_RESULT_EQUAL 1
+#define SLL_COMPARE_RESULT_ABOVE 2
+
 #define SLL_COPY_STRING_NULL(s,d) (*((sll_char_t*)sll_copy_string((s),(d)))=0)
 
 

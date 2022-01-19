@@ -1,5 +1,5 @@
-#ifndef __SLL__GENERATED_HELP_TEXT_H__
-#define __SLL__GENERATED_HELP_TEXT_H__ 1
+#ifndef __SLL_GENERATED_HELP_TEXT_H__
+#define __SLL_GENERATED_HELP_TEXT_H__ 1
 #include <sll/types.h>
 
 

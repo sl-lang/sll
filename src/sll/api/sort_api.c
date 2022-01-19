@@ -2,12 +2,12 @@
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <sll/vm.h>
 
 

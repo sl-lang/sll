@@ -3,7 +3,6 @@
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <stdint.h>
 #include <stdlib.h>
 

@@ -55,6 +55,12 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,sll_date_t* o){
 
 
 
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_size_t tm,sll_date_t* o){
+	sll_date_from_time(tm*1e-9,o);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* dt){
 	// Based on http://howardhinnant.github.io/date_algorithms.html#days_from_civil
 	sll_size_t y=dt->y;

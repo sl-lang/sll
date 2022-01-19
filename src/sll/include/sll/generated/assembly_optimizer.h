@@ -1,3 +1,5 @@
+#ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__
+#define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1
 #include <sll/_sll_internal.h>
 #include <sll/assembly.h>
 #include <sll/types.h>
@@ -227,3 +229,7 @@ _shift_2:
 	st[2]=st[4];
 	st[3]=nop;
 }
+
+
+
+#endif

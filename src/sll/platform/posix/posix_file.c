@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/platform.h>
 #include <sll/types.h>
 #include <fcntl.h>

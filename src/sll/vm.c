@@ -3,6 +3,7 @@
 #include <sll/array.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
@@ -13,7 +14,6 @@
 #include <sll/sandbox.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <sll/vm.h>
 
 

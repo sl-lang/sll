@@ -1,4 +1,3 @@
-import datetime
 import os
 import re
 import sys
@@ -14,7 +13,7 @@ HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^>]*\")\s*$""",re.MULTILINE)
-INTERNAL_SLL_HEADERS=["_generated_assembly_optimizer.h","_generated_help_text.h","_sll_internal.h"]
+INTERNAL_SLL_HEADERS=["assembly_optimizer.h","help_text.h","_sll_internal.h"]
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
 MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
@@ -96,6 +95,34 @@ def _expand_macros(k,dm,dfm,j_exp):
 
 
 
+def _merge_strings(k):
+	i=0
+	while (i<len(k)):
+		if (k[i:i+1]==b"\'"):
+			i+=1
+			while (k[i:i+1]!=b"\'"):
+				if (k[i:i+1]==b"\\"):
+					i+=1
+				i+=1
+		elif (k[i:i+1]==b"\""):
+			i+=1
+			while (True):
+				while (i<len(k) and k[i:i+1]!=b"\""):
+					if (k[i:i+1]==b"\\"):
+						i+=1
+					i+=1
+				j=i
+				i+=1
+				while (i<len(k) and k[i:i+1] in SPACE_CHARACTERS):
+					i+=1
+				if (k[i:i+1]!=b"\""):
+					break
+				k=k[:j]+k[i+1:]
+		i+=1
+	return k
+
+
+
 def read_version(fp):
 	o=[0,0,0]
 	with open(fp,"rb") as f:
@@ -118,7 +145,7 @@ def generate_help(i_fp,o_fp):
 	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
 	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
 		dt=rf.read().replace(b"\r\n",b"\n")
-		wf.write(b"#ifndef __SLL__GENERATED_HELP_TEXT_H__\n#define __SLL__GENERATED_HELP_TEXT_H__ 1\n#include <sll/types.h>\n\n\n\n#define HELP_TEXT_SIZE "+bytes(str(len(dt)),"utf-8")+b"\n\n\n\nstatic const sll_char_t HELP_TEXT[]={\n\t")
+		wf.write(b"#ifndef __SLL_GENERATED_HELP_TEXT_H__\n#define __SLL_GENERATED_HELP_TEXT_H__ 1\n#include <sll/types.h>\n\n\n\n#define HELP_TEXT_SIZE "+bytes(str(len(dt)),"utf-8")+b"\n\n\n\nstatic const sll_char_t HELP_TEXT[]={\n\t")
 		st=True
 		i=0
 		for c in dt:
@@ -159,15 +186,14 @@ def parse_headers(fp):
 def generate_header(h_dt):
 	l=[]
 	st=[True]
-	tm=datetime.datetime.now()
-	dm={b"__TIME__":bytes(tm.strftime("\"%H:%M:%S\""),"utf-8"),b"__TIME_RAW__":bytes(str(util.BUILD_TIME),"utf-8"),b"__DATE__":bytes(tm.strftime(f"\"{MONTHS[tm.month-1]} %d %Y\""),"utf-8"),b"UINT8_MAX":b"255",b"UINT16_MAX":b"65535",b"UINT32_MAX":b"4294967295u",b"UINT64_MAX":b"18446744073709551615ull"}
+	dm={b"__TIME_RAW__":bytes(str(util.BUILD_TIME),"utf-8"),b"UINT8_MAX":b"(255)",b"UINT16_MAX":b"(65535)",b"UINT32_MAX":b"(4294967295u)",b"UINT64_MAX":b"(18446744073709551615ull)"}
 	if (os.getenv("GITHUB_SHA") is not None):
 		dm[b"__SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")[:7]+"\"","utf-8")
 		dm[b"__FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")
 	if ("--release" not in sys.argv):
 		dm[b"DEBUG_BUILD"]=b"1"
 	if (os.name=="nt"):
-		dm.update({b"_MSC_VER":b"1",b"_WINDOWS":b"1",b"WINDLL":b"1",b"USERDLL":b"1",b"_UNICODE":b"1",b"UNICODE":b"1"})
+		dm.update({b"_MSC_VER":b"1",b"_WINDOWS":b"1",b"WINDLL":b"1",b"USERDLL":b"1"})
 		dm[(b"NDEBUG" if "--release" in sys.argv else b"_DEBUG")]=b"1"
 	dfm={}
 	d_v=[]
@@ -258,34 +284,36 @@ def generate_header(h_dt):
 	for i,(k,v) in enumerate(sorted(d_v,key=lambda e:e[0])):
 		v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm,True))
 		d_v[i]=(k,v)
-		d_s+=b"\n#define "+k+b" "+v.strip()
+		d_s+=b"\n#define "+k+b" "+_merge_strings(v).strip()
 	for i,(k,v) in enumerate(sorted(d_f,key=lambda e:e[0])):
 		k=SPACE_CHARACTERS_REGEX.sub(b"",k)
 		a={}
 		j=[0]
 		nk=k.split(b"(")[0]+b"("
-		for e in k[k.index(b"(")+1:-1].split(b","):
-			if (len(j)>1 or j[0]!=0):
-				nk+=b","
-			if (e==b"..."):
-				nk+=b"..."
-			else:
-				a[e]=b"".join([LETTERS[m:m+1] for m in j])
-				nk+=a[e]
-			j[-1]+=1
-			for m in range(len(j)-1,-1,-1):
-				if (j[m]==len(LETTERS)):
-					j[m]=0
-					if (m==0):
-						j.insert(0,0)
-					else:
-						j[m-1]+=1
+		args=k[k.index(b"(")+1:-1].strip()
+		if (len(args)>0):
+			for e in args.split(b","):
+				if (len(j)>1 or j[0]!=0):
+					nk+=b","
+				if (e==b"..."):
+					nk+=b"..."
 				else:
-					break
+					a[e]=b"".join([LETTERS[m:m+1] for m in j])
+					nk+=a[e]
+				j[-1]+=1
+				for m in range(len(j)-1,-1,-1):
+					if (j[m]==len(LETTERS)):
+						j[m]=0
+						if (m==0):
+							j.insert(0,0)
+						else:
+							j[m-1]+=1
+					else:
+						break
 		nk+=b")"
 		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm,False))).strip()
 		d_f[i]=(nk,v)
-		d_s+=b"\n#define "+nk+b" "+v
+		d_s+=b"\n#define "+nk+b" "+_merge_strings(v).strip()
 	fl=[]
 	e_v=[]
 	for k in l:

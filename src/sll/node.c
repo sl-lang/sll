@@ -3,8 +3,8 @@
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/platform.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
-#include <sll/util.h>
 
 
 
@@ -170,7 +170,7 @@ static sll_node_t* _remove_debug_data(sll_node_t* o){
 __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	c_dt->tm=0;
 	c_dt->h=NULL;
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_identifier_list_t* e=c_dt->idt.s+i;
 		sll_deallocate(e->dt);
 		e->dt=NULL;

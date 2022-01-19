@@ -175,7 +175,7 @@ __API_FUNC(sys_get_version){
 	SLL_INIT_STRING(&(cmt->dt.s));
 #endif
 	out->v[3]=cmt;
-	out->v[4]=SLL_FROM_INT(SLL_VERSION_BUILD_TIME_RAW);
+	out->v[4]=SLL_FROM_INT(SLL_VERSION_BUILD_TIME);
 }
 
 

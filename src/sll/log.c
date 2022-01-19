@@ -7,7 +7,6 @@
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/util.h>
 #include <sll/var_arg.h>
 #include <stdarg.h>
 

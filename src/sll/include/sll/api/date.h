@@ -25,6 +25,18 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,sll_date_t* o);
 
 
 /**
+ * \flags func
+ * \name sll_date_from_time_ns
+ * \group date-api
+ * \desc Docs!
+ * \arg sll_size_t tm
+ * \arg sll_date_t* o
+ */
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_size_t tm,sll_date_t* o);
+
+
+
+/**
  * \flags check_output func
  * \name sll_date_to_time
  * \group date-api
