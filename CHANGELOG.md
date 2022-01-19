@@ -26,6 +26,7 @@
 - Renamed [`src/sll/api/_generated.c`][0.6.37/src/sll/api/_generated.c] and [`src/sll/include/sll/api/_generated.h`][0.6.37/src/sll/include/sll/api/_generated.h] to [`src/sll/api/_generated_raw.c`][0.7.0/src/sll/api/_generated_raw.c] and [`src/sll/include/sll/generated/api.h`][0.7.0/src/sll/include/sll/generated/api.h]
 - Renamed [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/string_table.c`][0.7.0/src/sll/string_table.c] and [`src/sll/include/sll/string_table.h`][0.7.0/src/sll/include/sll/string_table.h]
 - Renamed `sll_api_time_current_nanos`, `sll_api_time_sleep_nanos`, `time$time_nanos` and `time$sleep_nanos` to `sll_api_time_current_ns`, `sll_api_time_sleep_ns`, `time$time_ns` and `time$sleep_ns`
+- Split [`src/sll/node.c`][0.6.37/src/sll/node.c] into [`src/sll/compilation_data.c`][0.7.0/src/sll/compilation_data.c], [`src/sll/debug_data.c`][0.7.0/src/sll/debug_data.c], [`src/sll/skip.c`][0.7.0/src/sll/skip.c] and [`src/sll/size.c`][0.7.0/src/sll/size.c]
 - Static strings are now initialized after the call to `sll_init` funcion
 - Time version macro (`SLL_VERSION_BUILD_TIME`) now specifies nanoseconds instead of a string (can be converted by `sll_date_from_time_ns`)
 - Updated CLI code
@@ -1640,7 +1641,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
 [0.7.0/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/_generated_raw.c
+[0.7.0/src/sll/compilation_data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/compilation_data.c
 [0.7.0/src/sll/data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/data.c
+[0.7.0/src/sll/debug_data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/debug_data.c
 [0.7.0/src/sll/env.c]: https://github.com/sl-lang/sll/blob/main/src/sll/env.c
 [0.7.0/src/sll/include/sll/data.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/data.h
 [0.7.0/src/sll/include/sll/env.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/env.h
@@ -1654,12 +1657,15 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.7.0/src/sll/init.c]: https://github.com/sl-lang/sll/blob/main/src/sll/init.c
 [0.7.0/src/sll/location.c]: https://github.com/sl-lang/sll/blob/main/src/sll/location.c
 [0.7.0/src/sll/sandbox.c]: https://github.com/sl-lang/sll/blob/main/src/sll/sandbox.c
+[0.7.0/src/sll/size.c]: https://github.com/sl-lang/sll/blob/main/src/sll/size.c
+[0.7.0/src/sll/skip.c]: https://github.com/sl-lang/sll/blob/main/src/sll/skip.c
 [0.7.0/src/sll/string_table.c]: https://github.com/sl-lang/sll/blob/main/src/sll/string_table.c
 [0.7.0/src/sll/version.c]: https://github.com/sl-lang/sll/blob/main/src/sll/version.c
 [0.6.37/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/api/_generated.c
 [0.6.37/src/sll/include/sll/api/_generated.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/api/_generated.h
 [0.6.37/src/sll/include/sll/assembly.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/assembly.h
 [0.6.37/src/sll/include/sll/util.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/util.h
+[0.6.37/src/sll/node.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/node.c
 [0.6.37/src/sll/util.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/util.c
 [0.6.36/src/sll/cli.c]: https://github.com/sl-lang/sll/blob/main/src/sll/cli.c
 [0.6.35/src/cli/main.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/cli/main.c
