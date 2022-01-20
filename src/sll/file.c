@@ -99,11 +99,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_from_data(void* p,sll_size
 	}
 	if (f&SLL_FILE_FLAG_WRITE){
 		f|=FILE_FLAG_DYNAMIC_BUFFERS;
-		dynamic_buffer_chunk_t* p=sll_platform_allocate_page(FILE_DYNAMIC_BUFFER_ALLOC_SIZE,0);
-		p->sz=FILE_DYNAMIC_BUFFER_ALLOC_SIZE;
-		p->n=NULL;
-		o->_w.d.b=p;
-		o->_w.d.t=p;
+		dynamic_buffer_chunk_t* bf=sll_platform_allocate_page(FILE_DYNAMIC_BUFFER_ALLOC_SIZE,0);
+		bf->sz=FILE_DYNAMIC_BUFFER_ALLOC_SIZE;
+		bf->n=NULL;
+		o->_w.d.b=bf;
+		o->_w.d.t=bf;
 		o->_w.d.sz=0;
 		o->_w.d.off=0;
 	}
