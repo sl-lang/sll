@@ -1,10 +1,15 @@
+#include <sll/_size_types.h>
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
-#include <stdint.h>
+
+
+
+#define u32 __SLL_U32
+#define u64 __SLL_U64
 
 
 
@@ -41,17 +46,17 @@
 
 
 __API_FUNC(hash_md5){
-	uint32_t av=(uint32_t)a;
-	uint32_t bv=(uint32_t)b;
-	uint32_t cv=(uint32_t)c;
-	uint32_t dv=(uint32_t)d;
+	u32 av=(u32)a;
+	u32 bv=(u32)b;
+	u32 cv=(u32)c;
+	u32 dv=(u32)d;
 	SLL_ASSERT(!(e->l&63));
-	const uint32_t* ptr=(const uint32_t*)(e->v);
+	const u32* ptr=(const u32*)(e->v);
 	for (sll_string_length_t i=0;i<(e->l>>6);i++){
-		uint32_t da=av;
-		uint32_t db=bv;
-		uint32_t dc=cv;
-		uint32_t dd=dv;
+		u32 da=av;
+		u32 db=bv;
+		u32 dc=cv;
+		u32 dd=dv;
 		MD5_STEP(da,db,dc,dd,0,7,(*ptr)+0xd76aa478);
 		MD5_STEP(dd,da,db,dc,0,12,(*(ptr+1))+0xe8c7b756);
 		MD5_STEP(dc,dd,da,db,0,17,(*(ptr+2))+0x242070db);
@@ -134,14 +139,14 @@ __API_FUNC(hash_md5){
 
 
 __API_FUNC(hash_sha1){
-	uint32_t av=(uint32_t)a;
-	uint32_t bv=(uint32_t)b;
-	uint32_t cv=(uint32_t)c;
-	uint32_t dv=(uint32_t)d;
-	uint32_t ev=(uint32_t)e;
+	u32 av=(u32)a;
+	u32 bv=(u32)b;
+	u32 cv=(u32)c;
+	u32 dv=(u32)d;
+	u32 ev=(u32)e;
 	SLL_ASSERT(!(f->l&63));
-	uint32_t w[80];
-	const uint32_t* ptr=(const uint32_t*)(f->v);
+	u32 w[80];
+	const u32* ptr=(const u32*)(f->v);
 	for (sll_string_length_t i=0;i<(f->l>>6);i++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
@@ -150,11 +155,11 @@ __API_FUNC(hash_sha1){
 		for (unsigned int j=16;j<80;j++){
 			w[j]=ROTATE_BITS(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);
 		}
-		uint32_t da=av;
-		uint32_t db=bv;
-		uint32_t dc=cv;
-		uint32_t dd=dv;
-		uint32_t de=ev;
+		u32 da=av;
+		u32 db=bv;
+		u32 dc=cv;
+		u32 dd=dv;
+		u32 de=ev;
 		SHA1_STEP(da,db,dc,dd,de,0,w[0]);
 		SHA1_STEP(de,da,db,dc,dd,0,w[1]);
 		SHA1_STEP(dd,de,da,db,dc,0,w[2]);
@@ -254,17 +259,17 @@ __API_FUNC(hash_sha1){
 
 
 __API_FUNC(hash_sha256){
-	uint32_t av=(uint32_t)a;
-	uint32_t bv=(uint32_t)b;
-	uint32_t cv=(uint32_t)c;
-	uint32_t dv=(uint32_t)d;
-	uint32_t ev=(uint32_t)e;
-	uint32_t fv=(uint32_t)f;
-	uint32_t gv=(uint32_t)g;
-	uint32_t hv=(uint32_t)h;
+	u32 av=(u32)a;
+	u32 bv=(u32)b;
+	u32 cv=(u32)c;
+	u32 dv=(u32)d;
+	u32 ev=(u32)e;
+	u32 fv=(u32)f;
+	u32 gv=(u32)g;
+	u32 hv=(u32)h;
 	SLL_ASSERT(!(i->l&63));
-	uint32_t w[64];
-	const uint32_t* ptr=(const uint32_t*)(i->v);
+	u32 w[64];
+	const u32* ptr=(const u32*)(i->v);
 	for (sll_string_length_t idx=0;idx<(i->l>>6);idx++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
@@ -273,15 +278,15 @@ __API_FUNC(hash_sha256){
 		for (unsigned int j=16;j<64;j++){
 			w[j]=(ROTATE_BITS_RIGHT(w[j-2],17)^ROTATE_BITS_RIGHT(w[j-2],19)^(w[j-2]>>10))+w[j-7]+(ROTATE_BITS_RIGHT(w[j-15],7)^ROTATE_BITS_RIGHT(w[j-15],18)^(w[j-15]>>3))+w[j-16];
 		}
-		uint32_t da=av;
-		uint32_t db=bv;
-		uint32_t dc=cv;
-		uint32_t dd=dv;
-		uint32_t de=ev;
-		uint32_t df=fv;
-		uint32_t dg=gv;
-		uint32_t dh=hv;
-		uint32_t t;
+		u32 da=av;
+		u32 db=bv;
+		u32 dc=cv;
+		u32 dd=dv;
+		u32 de=ev;
+		u32 df=fv;
+		u32 dg=gv;
+		u32 dh=hv;
+		u32 t;
 		SHA256_STEP(da,db,dc,dd,de,df,dg,dh,w[0]+0x428a2f98);
 		SHA256_STEP(dh,da,db,dc,dd,de,df,dg,w[1]+0x71374491);
 		SHA256_STEP(dg,dh,da,db,dc,dd,de,df,w[2]+0xb5c0fbcf);
@@ -371,17 +376,17 @@ __API_FUNC(hash_sha256){
 
 
 __API_FUNC(hash_sha512){
-	uint64_t av=(uint64_t)a;
-	uint64_t bv=(uint64_t)b;
-	uint64_t cv=(uint64_t)c;
-	uint64_t dv=(uint64_t)d;
-	uint64_t ev=(uint64_t)e;
-	uint64_t fv=(uint64_t)f;
-	uint64_t gv=(uint64_t)g;
-	uint64_t hv=(uint64_t)h;
+	u64 av=(u64)a;
+	u64 bv=(u64)b;
+	u64 cv=(u64)c;
+	u64 dv=(u64)d;
+	u64 ev=(u64)e;
+	u64 fv=(u64)f;
+	u64 gv=(u64)g;
+	u64 hv=(u64)h;
 	SLL_ASSERT(!(i->l&127));
-	uint64_t w[80];
-	const uint64_t* ptr=(const uint64_t*)(i->v);
+	u64 w[80];
+	const u64* ptr=(const u64*)(i->v);
 	for (sll_string_length_t idx=0;idx<(i->l>>7);idx++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES64(*ptr);
@@ -390,15 +395,15 @@ __API_FUNC(hash_sha512){
 		for (unsigned int j=16;j<80;j++){
 			w[j]=(ROTATE_BITS_RIGHT64(w[j-2],19)^ROTATE_BITS_RIGHT64(w[j-2],61)^(w[j-2]>>6))+w[j-7]+(ROTATE_BITS_RIGHT64(w[j-15],1)^ROTATE_BITS_RIGHT64(w[j-15],8)^(w[j-15]>>7))+w[j-16];
 		}
-		uint64_t da=av;
-		uint64_t db=bv;
-		uint64_t dc=cv;
-		uint64_t dd=dv;
-		uint64_t de=ev;
-		uint64_t df=fv;
-		uint64_t dg=gv;
-		uint64_t dh=hv;
-		uint64_t t;
+		u64 da=av;
+		u64 db=bv;
+		u64 dc=cv;
+		u64 dd=dv;
+		u64 de=ev;
+		u64 df=fv;
+		u64 dg=gv;
+		u64 dh=hv;
+		u64 t;
 		SHA512_STEP(da,db,dc,dd,de,df,dg,dh,w[0]+0x428a2f98d728ae22ull);
 		SHA512_STEP(dh,da,db,dc,dd,de,df,dg,w[1]+0x7137449123ef65cdull);
 		SHA512_STEP(dg,dh,da,db,dc,dd,de,df,w[2]+0xb5c0fbcfec4d3b2full);

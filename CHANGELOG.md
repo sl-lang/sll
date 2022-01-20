@@ -35,8 +35,8 @@
 
 ### Removed
 
+- All `stdint.h` typedefs and macros (replaced by [`src/sll/include/sll/_size_types.h`][0.7.0/src/sll/include/sll/_size_types.h])
 - Date version macro: `SLL_VERSION_BUILD_DATE`
-- `uintXX_t` constants (in favor of custom typedefs)
 
 ## [0.6.37] - 2022-01-15
 
@@ -1647,6 +1647,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.7.0/src/sll/data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/data.c
 [0.7.0/src/sll/debug_data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/debug_data.c
 [0.7.0/src/sll/env.c]: https://github.com/sl-lang/sll/blob/main/src/sll/env.c
+[0.7.0/src/sll/include/sll/_size_types.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/_size_types.h
 [0.7.0/src/sll/include/sll/data.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/data.h
 [0.7.0/src/sll/include/sll/env.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/env.h
 [0.7.0/src/sll/include/sll/generated/api.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/generated/api.h

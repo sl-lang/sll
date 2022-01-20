@@ -48,4 +48,8 @@
 
 
 
+#define SLL_MAX_SHORT_IDENTIFIER_LENGTH 15
+
+
+
 #endif

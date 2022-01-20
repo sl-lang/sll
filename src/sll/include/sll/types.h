@@ -1,44 +1,34 @@
 #ifndef __SLL_TYPES_H__
 #define __SLL_TYPES_H__ 1
-#include <stdint.h>
+#include <sll/_size_types.h>
+#include <sll/common.h>
 #include <stdarg.h>
 
 
 
-#define SLL_MAX_IDENTIFIER_INDEX UINT32_MAX
-
-
-
-typedef uint32_t sll_identifier_index_t;
-
-
-
-#include <sll/identifier.h>
-
-
-
-#define SLL_MAX_ARG_COUNT UINT32_MAX
-#define SLL_MAX_ARRAY_LENGTH UINT32_MAX
-#define SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE UINT8_MAX
-#define SLL_MAX_CHAR UINT8_MAX
-#define SLL_MAX_EXPORT_TABLE_LENGTH UINT32_MAX
-#define SLL_MAX_FILE_OFFSET UINT64_MAX
-#define SLL_MAX_HANDLE_TYPE UINT32_MAX
-#define SLL_MAX_IDENTIFIER_LIST_LENGTH UINT32_MAX
-#define SLL_MAX_INSTRUCTION_INDEX UINT32_MAX
-#define SLL_MAX_JSON_ARRAY_LENGTH UINT32_MAX
-#define SLL_MAX_JSON_MAP_LENGTH UINT32_MAX
-#define SLL_MAX_MAP_LENGTH UINT32_MAX
-#define SLL_MAX_OBJECT_OFFSET UINT32_MAX
-#define SLL_MAX_PAGE_SIZE UINT64_MAX
-#define SLL_MAX_REF_COUNT UINT32_MAX
-#define SLL_MAX_SCOPE UINT32_MAX
-#define SLL_MAX_SIZE UINT64_MAX
-#define SLL_MAX_STACK_OFFSET UINT32_MAX
-#define SLL_MAX_STRING_INDEX UINT32_MAX
-#define SLL_MAX_STRING_LENGTH UINT32_MAX
-#define SLL_MAX_TIME UINT64_MAX
-#define SLL_MAX_VARIABLE_INDEX UINT32_MAX
+#define SLL_MAX_ARG_COUNT __SLL_U32_MAX
+#define SLL_MAX_ARRAY_LENGTH __SLL_U32_MAX
+#define SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE __SLL_U8_MAX
+#define SLL_MAX_CHAR __SLL_U8_MAX
+#define SLL_MAX_EXPORT_TABLE_LENGTH __SLL_U32_MAX
+#define SLL_MAX_FILE_OFFSET __SLL_U64_MAX
+#define SLL_MAX_HANDLE_TYPE __SLL_U32_MAX
+#define SLL_MAX_IDENTIFIER_INDEX __SLL_U32_MAX
+#define SLL_MAX_IDENTIFIER_LIST_LENGTH __SLL_U32_MAX
+#define SLL_MAX_INSTRUCTION_INDEX __SLL_U32_MAX
+#define SLL_MAX_JSON_ARRAY_LENGTH __SLL_U32_MAX
+#define SLL_MAX_JSON_MAP_LENGTH __SLL_U32_MAX
+#define SLL_MAX_MAP_LENGTH __SLL_U32_MAX
+#define SLL_MAX_OBJECT_OFFSET __SLL_U32_MAX
+#define SLL_MAX_PAGE_SIZE __SLL_U64_MAX
+#define SLL_MAX_REF_COUNT __SLL_U32_MAX
+#define SLL_MAX_SCOPE __SLL_U32_MAX
+#define SLL_MAX_SIZE __SLL_U64_MAX
+#define SLL_MAX_STACK_OFFSET __SLL_U32_MAX
+#define SLL_MAX_STRING_INDEX __SLL_U32_MAX
+#define SLL_MAX_STRING_LENGTH __SLL_U32_MAX
+#define SLL_MAX_TIME __SLL_U64_MAX
+#define SLL_MAX_VARIABLE_INDEX __SLL_U32_MAX
 
 
 
@@ -52,187 +42,191 @@ typedef _Bool sll_bool_t;
 
 
 
-typedef uint8_t sll_assembly_instruction_type_t;
+typedef __SLL_U8 sll_assembly_instruction_type_t;
 
 
 
-typedef uint8_t sll_char_t;
+typedef __SLL_U8 sll_char_t;
 
 
 
-typedef uint8_t sll_checksum_t;
+typedef __SLL_U8 sll_checksum_t;
 
 
 
-typedef uint8_t sll_compare_result_t;
+typedef __SLL_U8 sll_compare_result_t;
 
 
 
-typedef uint8_t sll_file_flags_t;
+typedef __SLL_U8 sll_file_flags_t;
 
 
 
-typedef uint8_t sll_flags_t;
+typedef __SLL_U8 sll_flags_t;
 
 
 
-typedef uint8_t sll_hour_t;
+typedef __SLL_U8 sll_hour_t;
 
 
 
-typedef uint8_t sll_internal_function_type_t;
+typedef __SLL_U8 sll_internal_function_type_t;
 
 
 
-typedef uint8_t sll_json_object_type_t;
+typedef __SLL_U8 sll_json_object_type_t;
 
 
 
-typedef uint8_t sll_minute_t;
+typedef __SLL_U8 sll_minute_t;
 
 
 
-typedef uint8_t sll_month_t;
+typedef __SLL_U8 sll_month_t;
 
 
 
-typedef uint8_t sll_name_length_t;
+typedef __SLL_U8 sll_name_length_t;
 
 
 
-typedef uint8_t sll_node_type_t;
+typedef __SLL_U8 sll_node_type_t;
 
 
 
-typedef uint8_t sll_sandbox_flags_t;
+typedef __SLL_U8 sll_sandbox_flags_t;
 
 
 
-typedef uint8_t sll_day_t;
+typedef __SLL_U8 sll_day_t;
 
 
 
-typedef uint16_t sll_call_stack_size_t;
+typedef __SLL_U16 sll_call_stack_size_t;
 
 
 
-typedef uint16_t sll_read_char_t;
+typedef __SLL_U16 sll_read_char_t;
 
 
 
-typedef uint16_t sll_year_t;
+typedef __SLL_U16 sll_year_t;
 
 
 
-typedef int32_t sll_relative_instruction_index_t;
+typedef __SLL_S32 sll_relative_instruction_index_t;
 
 
 
-typedef int32_t sll_return_code_t;
+typedef __SLL_S32 sll_return_code_t;
 
 
 
-typedef uint32_t sll_arg_count_t;
+typedef __SLL_U32 sll_arg_count_t;
 
 
 
-typedef uint32_t sll_array_length_t;
+typedef __SLL_U32 sll_array_length_t;
 
 
 
-typedef uint32_t sll_export_table_length_t;
+typedef __SLL_U32 sll_export_table_length_t;
 
 
 
-typedef uint32_t sll_function_index_t;
+typedef __SLL_U32 sll_function_index_t;
 
 
 
-typedef uint32_t sll_identifier_list_length_t;
+typedef __SLL_U32 sll_identifier_list_length_t;
 
 
 
-typedef uint32_t sll_instruction_index_t;
+typedef __SLL_U32 sll_identifier_index_t;
 
 
 
-typedef uint32_t sll_json_array_length_t;
+typedef __SLL_U32 sll_instruction_index_t;
 
 
 
-typedef uint32_t sll_json_map_length_t;
+typedef __SLL_U32 sll_json_array_length_t;
 
 
 
-typedef uint32_t sll_map_length_t;
+typedef __SLL_U32 sll_json_map_length_t;
 
 
 
-typedef uint32_t sll_node_offset_t;
+typedef __SLL_U32 sll_map_length_t;
 
 
 
-typedef uint32_t sll_object_type_t;
+typedef __SLL_U32 sll_node_offset_t;
 
 
 
-typedef uint32_t sll_pid_t;
+typedef __SLL_U32 sll_object_type_t;
 
 
 
-typedef uint32_t sll_ref_count_t;
+typedef __SLL_U32 sll_pid_t;
 
 
 
-typedef uint32_t sll_scope_t;
+typedef __SLL_U32 sll_ref_count_t;
 
 
 
-typedef uint32_t sll_stack_offset_t;
+typedef __SLL_U32 sll_scope_t;
 
 
 
-typedef uint32_t sll_string_checksum_t;
+typedef __SLL_U32 sll_stack_offset_t;
 
 
 
-typedef uint32_t sll_string_index_t;
+typedef __SLL_U32 sll_string_checksum_t;
 
 
 
-typedef uint32_t sll_string_length_t;
+typedef __SLL_U32 sll_string_index_t;
 
 
 
-typedef uint32_t sll_variable_index_t;
+typedef __SLL_U32 sll_string_length_t;
 
 
 
-typedef uint32_t sll_version_t;
+typedef __SLL_U32 sll_variable_index_t;
 
 
 
-typedef int64_t sll_integer_t;
+typedef __SLL_U32 sll_version_t;
 
 
 
-typedef uint64_t sll_file_offset_t;
+typedef __SLL_S64 sll_integer_t;
 
 
 
-typedef uint64_t sll_size_t;
+typedef __SLL_U64 sll_file_offset_t;
 
 
 
-typedef uint64_t sll_size_t;
+typedef __SLL_U64 sll_size_t;
 
 
 
-typedef uint64_t sll_time_t;
+typedef __SLL_U64 sll_size_t;
 
 
 
-typedef double sll_float_t;
+typedef __SLL_U64 sll_time_t;
+
+
+
+typedef __SLL_F64 sll_float_t;
 
 
 

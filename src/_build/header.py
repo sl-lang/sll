@@ -15,7 +15,6 @@ IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^>]*\")\s*$""",re.MULTILINE)
 INTERNAL_SLL_HEADERS=["assembly_optimizer.h","help_text.h","_sll_internal.h"]
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
-MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
 NUMBERS=b"0123456789"
 SPACE_CHARACTERS=b" \t\n\v\f\r"
@@ -186,7 +185,7 @@ def parse_headers(fp):
 def generate_header(h_dt):
 	l=[]
 	st=[True]
-	dm={b"__TIME_RAW__":bytes(str(util.BUILD_TIME),"utf-8"),b"UINT8_MAX":b"(255)",b"UINT16_MAX":b"(65535)",b"UINT32_MAX":b"(4294967295u)",b"UINT64_MAX":b"(18446744073709551615ull)"}
+	dm={b"__TIME_RAW__":bytes(str(util.BUILD_TIME),"utf-8")}
 	if (os.getenv("GITHUB_SHA") is not None):
 		dm[b"__SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")[:7]+"\"","utf-8")
 		dm[b"__FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")

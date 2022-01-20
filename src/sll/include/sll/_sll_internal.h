@@ -3,12 +3,12 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
+#include <sll/_size_types.h>
 #include <sll/api.h>
 #include <sll/generated/api.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/version.h>
-#include <stdint.h>
 
 
 
@@ -47,12 +47,12 @@ static __SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 #define IGNORE_RESULT(x) ((void)(x))
 #define _ASSUME_ALIGNED(p,n,x) \
 	do{ \
-		if ((((uint64_t)(p))-(x))&((1<<(n))-1)){ \
+		if ((ADDR(p)-(x))&((1ull<<(n))-1)){ \
 			__assume(0); \
 		} \
 	} while (0)
-#define _CUSTOM_SECTION(nm) __declspec(allocate(#nm))
-#define CUSTOM_SECTION(nm) _CUSTOM_SECTION(nm##$b)
+#define _CUSTOM_SECTION_(nm) __declspec(allocate(#nm))
+#define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(nm##$b)
 #define STATIC_OBJECT_SETUP static const __declspec(allocate("s_obj$a")) static_object_t* __s_obj_start=0;static const __declspec(allocate("s_obj$z")) static_object_t* __s_obj_end=0
 #define STATIC_STRING_SETUP static const __declspec(allocate("s_str$a")) static_string_t* __s_str_start=0;static const __declspec(allocate("s_str$z")) static_string_t* __s_str_end=0
 #else
@@ -89,7 +89,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 	do{ \
 		p=__builtin_assume_aligned((p),(n),(x)); \
 	} while (0)
-#define CUSTOM_SECTION(nm) __attribute__((used,section(#nm)))
+#define _CUSTOM_SECTION(nm) __attribute__((used,section(#nm)))
 #define STATIC_OBJECT_SETUP extern const static_object_t* __start_s_obj;extern const static_object_t* __stop_s_obj
 #define STATIC_STRING_SETUP extern const static_string_t* __start_s_str;extern const static_string_t* __stop_s_str
 #define __s_obj_start __start_s_obj
@@ -104,8 +104,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 
 #define __API_FUNC(nm) __SLL_EXTERNAL __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
-#define __STATIC_STRING(nm,dt) sll_string_t nm=SLL_INIT_STRING_STRUCT;static const static_string_t _UNIQUE_NAME(__s_str)={&(nm),{.s=SLL_CHAR(dt)},sizeof(dt)/sizeof(char)-1};static const CUSTOM_SECTION(s_str) static_string_t* _UNIQUE_NAME(__s_str_ptr)=&_UNIQUE_NAME(__s_str)
-#define __STATIC_STRING_CODE(nm,c) sll_string_t nm=SLL_INIT_STRING_STRUCT;static void _UNIQUE_NAME(__s_str_fn)(sll_string_t* out){c};static const static_string_t _UNIQUE_NAME(__s_str)={&(nm),{.fn=_UNIQUE_NAME(__s_str_fn)},SLL_MAX_STRING_LENGTH};static const CUSTOM_SECTION(s_str) static_string_t* _UNIQUE_NAME(__s_str_ptr)=&_UNIQUE_NAME(__s_str)
+#define __STATIC_STRING(nm,dt) sll_string_t nm=SLL_INIT_STRING_STRUCT;static const static_string_t _UNIQUE_NAME(__s_str)={&(nm),{.s=SLL_CHAR(dt)},sizeof(dt)/sizeof(char)-1};static const _CUSTOM_SECTION(s_str) static_string_t* _UNIQUE_NAME(__s_str_ptr)=&_UNIQUE_NAME(__s_str)
+#define __STATIC_STRING_CODE(nm,c) sll_string_t nm=SLL_INIT_STRING_STRUCT;static void _UNIQUE_NAME(__s_str_fn)(sll_string_t* out){c};static const static_string_t _UNIQUE_NAME(__s_str)={&(nm),{.fn=_UNIQUE_NAME(__s_str_fn)},SLL_MAX_STRING_LENGTH};static const _CUSTOM_SECTION(s_str) static_string_t* _UNIQUE_NAME(__s_str_ptr)=&_UNIQUE_NAME(__s_str)
 #define __SLL_STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,NULL,.dt={.i=(v)}};_DECL_GC_OBJECT(&_int_##v##_static_data)
 #define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,NULL,.dt={.i=-(v)}};_DECL_GC_OBJECT(&_int_neg_##v##_static_data)
 #define __SLL_STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,NULL,.dt={.c=(sll_char_t)(v)}};_DECL_GC_OBJECT(&_char_##v##_static_data)
@@ -113,7 +113,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 
 
-#define _DECL_GC_OBJECT(rt) static const static_object_t _UNIQUE_NAME(__s_obj)={(rt),__FILE__,__LINE__};static const CUSTOM_SECTION(s_obj) static_object_t* _UNIQUE_NAME(__s_obj_ptr)=&_UNIQUE_NAME(__s_obj)
+#define _DECL_GC_OBJECT(rt) static const static_object_t _UNIQUE_NAME(__s_obj)={(rt),__FILE__,__LINE__};static const _CUSTOM_SECTION(s_obj) static_object_t* _UNIQUE_NAME(__s_obj_ptr)=&_UNIQUE_NAME(__s_obj)
 #define _UNIQUE_NAME_JOIN2(a,b) a##_##b
 #define _UNIQUE_NAME_JOIN(a,b) _UNIQUE_NAME_JOIN2(a,b)
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
@@ -124,7 +124,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"));
 #ifdef DEBUG_BUILD
-#define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((((uint64_t)(p))-(x))&((1<<(n))-1)))
+#define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((ADDR(p)-(x))&((1ull<<(n))-1)))
 #define SLL_ASSERT(x) \
 	do{ \
 		if (!(x)){ \
@@ -147,7 +147,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define CHECK_INTERNAL_FUNCTION_NAME(s)
 #endif
 
-#define CONSTRUCT_DWORD(a,b,c,d) ((((uint32_t)(d))<<24)|(((uint32_t)(c))<<16)|(((uint32_t)(b))<<8)|(a))
+#define CONSTRUCT_DWORD(a,b,c,d) ((((magic_number_t)(d))<<24)|(((magic_number_t)(c))<<16)|(((magic_number_t)(b))<<8)|(a))
 
 #define ASSEMBLY_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','A',0)
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','C',0)
@@ -263,7 +263,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 
 
-typedef uint8_t bucket_index_t;
+typedef __SLL_U8 bucket_index_t;
 
 
 
@@ -271,36 +271,32 @@ typedef sll_instruction_index_t assembly_instruction_label_t;
 
 
 
-typedef uint32_t magic_number_t;
+typedef __SLL_U32 magic_number_t;
 
 
 
-typedef uint32_t return_table_size_t;
+typedef __SLL_U32 return_table_size_t;
 
 
 
-typedef uint32_t small_bitmap_t;
+typedef __SLL_U32 small_bitmap_t;
 
 
 
-typedef uint64_t addr_t;
+typedef __SLL_U64 addr_t;
 
 
 
-typedef uint64_t bitmap_t;
+typedef __SLL_U64 bitmap_t;
 
 
 
-typedef uint64_t wide_data_t;
-
-
-
-typedef uint64_t wide_integer_t;
+typedef __SLL_U64 wide_data_t;
 
 
 
 typedef struct __SCOPE_DATA{
-	uint64_t* m;
+	bitmap_t* m;
 	sll_scope_t l_sc;
 	sll_scope_t ml;
 } scope_data_t;
@@ -346,7 +342,7 @@ typedef struct __IMPORT_MODULE_DATA{
 
 typedef struct __IDENTIFIER_DATA{
 	sll_variable_index_t v;
-	uint8_t rm;
+	sll_bool_t rm;
 } identifier_data_t;
 
 
@@ -370,8 +366,8 @@ typedef struct __IDENTIFIER_REMAP_DATA{
 
 
 typedef struct __VARIABLE_ASSIGNMENT_DATA{
-	uint64_t* s_sm[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	uint64_t* l_sm;
+	bitmap_t* s_sm[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	bitmap_t* l_sm;
 } variable_assignment_data_t;
 
 
@@ -381,8 +377,8 @@ typedef struct __OPTIMIZER_DATA{
 	sll_internal_function_table_t* i_ft;
 	identifier_map_data_t it;
 	identifier_remap_data_t im;
-	uint32_t s_sm_l[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	uint32_t l_sm_l;
+	sll_identifier_index_t s_sm_l[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	sll_identifier_index_t l_sm_l;
 	variable_assignment_data_t va;
 	sll_object_t** v;
 	sll_node_t* a_v;
@@ -399,16 +395,9 @@ typedef struct __IDENTIFIER_REMOVE_DATA{
 
 
 typedef struct __LOOP{
-	assembly_instruction_label_t s;
-	assembly_instruction_label_t e;
+	assembly_instruction_label_t cnt;
+	assembly_instruction_label_t brk;
 } loop_t;
-
-
-
-typedef struct __RETURN_TABLE{
-	assembly_instruction_label_t* dt;
-	return_table_size_t sz;
-} return_table_t;
 
 
 
@@ -419,14 +408,14 @@ typedef struct __ASSEMBLY_GENERATOR_DATA{
 	assembly_instruction_label_t n_lbl;
 	identifier_remove_data_t rm;
 	loop_t l_dt;
-	return_table_t* rt;
+	assembly_instruction_label_t rt;
 } assembly_generator_data_t;
 
 
 
 typedef struct __STRING_MAP_DATA{
 	sll_string_index_t ml;
-	uint64_t* m;
+	bitmap_t* m;
 	sll_string_index_t* im;
 } strint_map_data_t;
 
@@ -487,7 +476,7 @@ typedef struct __PAGE_HEADER{
 
 
 typedef struct __USER_MEM_BLOCK{
-	uint64_t dt;
+	__SLL_U64 dt;
 } user_mem_block_t;
 
 
@@ -499,7 +488,7 @@ typedef struct __MEM_BLOCK{
 
 
 typedef struct __MEM_STACK_BLOCK{
-	uint64_t dt;
+	__SLL_U64 dt;
 } mem_stack_block_t;
 
 
@@ -513,7 +502,7 @@ typedef union __EXTENDED_FILE_DATA{
 
 typedef struct __EXTENDED_FILE{
 	extended_file_data_t dt;
-	uint32_t rc;
+	sll_ref_count_t rc;
 	sll_bool_t p;
 } extended_file_t;
 
@@ -529,7 +518,7 @@ typedef struct __CODE_GENERATION_DATA{
 
 typedef struct __FUNCTION_LOG_DATA{
 	const sll_string_t nm;
-	uint8_t fl;
+	sll_flags_t fl;
 } function_log_data_t;
 
 
@@ -538,7 +527,7 @@ typedef struct __FILE_LOG_DATA{
 	const sll_string_t nm;
 	function_log_data_t** dt;
 	sll_array_length_t dtl;
-	uint8_t fl;
+	sll_flags_t fl;
 } file_log_data_t;
 
 
@@ -566,14 +555,14 @@ typedef struct __FILE_LINE{
 
 typedef union __FLOAT_DATA{
 	sll_float_t v;
-	uint64_t dt;
+	__SLL_U64 dt;
 } float_data_t;
 
 
 
 typedef struct __ASSEMBLY_LOOP_GENERATOR_DATA{
 	loop_t p_l_dt;
-	uint64_t* v_st;
+	bitmap_t* v_st;
 } assembly_loop_generator_data_t;
 
 

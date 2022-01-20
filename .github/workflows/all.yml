@@ -12,7 +12,7 @@ env:
   BUILD_COMMAND: python src/_build/main.py --verbose
 jobs:
   codeql:
-    name: Analyze (CodeQL)
+    name: Analyze Code
     needs:
       - diff
       - ubuntu

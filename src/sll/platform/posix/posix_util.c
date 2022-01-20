@@ -93,16 +93,16 @@ __SLL_NO_RETURN void _force_exit_platform(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
-	struct timespec tm;
-	clock_gettime(CLOCK_REALTIME,&tm);
-	return tm.tv_sec*1000000000+tm.tv_nsec;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void){
+	return sysconf(_SC_NPROCESSORS_ONLN);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void){
-	return sysconf(_SC_NPROCESSORS_ONLN);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
+	struct timespec tm;
+	clock_gettime(CLOCK_REALTIME,&tm);
+	return tm.tv_sec*1000000000+tm.tv_nsec;
 }
 
 

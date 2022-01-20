@@ -265,23 +265,23 @@ __SLL_EXTERNAL void sll_platform_close_process_handle(sll_process_handle_t ph);
 
 /**
  * \flags check_output func
- * \name sll_platform_get_current_time
- * \group platform
- * \desc Docs!
- * \ret sll_time_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void);
-
-
-
-/**
- * \flags check_output func
  * \name sll_platform_get_cpu_count
  * \group platform
  * \desc Docs!
  * \ret sll_size_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_platform_get_current_time
+ * \group platform
+ * \desc Docs!
+ * \ret sll_time_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void);
 
 
 

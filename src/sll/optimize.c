@@ -4,6 +4,7 @@
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/gc.h>
+#include <sll/identifier.h>
 #include <sll/ift.h>
 #include <sll/map.h>
 #include <sll/memory.h>
@@ -14,7 +15,6 @@
 #include <sll/string.h>
 #include <sll/string_table.h>
 #include <sll/types.h>
-#include <stdint.h>
 
 
 
@@ -57,12 +57,12 @@
 static void _save_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* o){
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		o->s_sm[i]=sll_allocate(o_dt->s_sm_l[i]*sizeof(bitmap_t));
-		for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
+		for (sll_identifier_index_t j=0;j<o_dt->s_sm_l[i];j++){
 			*(o->s_sm[i]+j)=*(o_dt->va.s_sm[i]+j);
 		}
 	}
 	o->l_sm=sll_allocate(o_dt->l_sm_l*sizeof(bitmap_t));
-	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
+	for (sll_identifier_index_t i=0;i<o_dt->l_sm_l;i++){
 		*(o->l_sm+i)=*(o_dt->va.l_sm+i);
 	}
 }
@@ -70,8 +70,8 @@ static void _save_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* o)
 
 
 static void _restore_var_data(optimizer_data_t* o_dt,variable_assignment_data_t* va_dt,sll_bool_t s){
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		for (uint32_t j=0;j<o_dt->s_sm_l[i];j++){
+	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+		for (sll_identifier_index_t j=0;j<o_dt->s_sm_l[i];j++){
 			bitmap_t v=(*(o_dt->va.s_sm[i]+j))^(*(va_dt->s_sm[i]+j));
 			*(o_dt->va.s_sm[i]+j)=*(va_dt->s_sm[i]+j);
 			if (!s){
@@ -88,7 +88,7 @@ static void _restore_var_data(optimizer_data_t* o_dt,variable_assignment_data_t*
 		}
 		sll_deallocate(va_dt->s_sm[i]);
 	}
-	for (uint32_t i=0;i<o_dt->l_sm_l;i++){
+	for (sll_identifier_index_t i=0;i<o_dt->l_sm_l;i++){
 		bitmap_t v=(*(o_dt->va.l_sm+i))^(*(va_dt->l_sm+i));
 		*(o_dt->va.l_sm+i)=*(va_dt->l_sm+i);
 		if (!s){
@@ -233,7 +233,7 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
 				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id);
-				uint8_t j=SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
+				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id);
 				if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 					if ((im->l_im+i)->v==SLL_MAX_VARIABLE_INDEX){
 						(im->l_im+i)->v=im->n_vi;
@@ -300,7 +300,7 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilat
 
 
 
-static sll_object_t* _get_as_object(const sll_node_t* o,const optimizer_data_t* o_dt,uint8_t fl){
+static sll_object_t* _get_as_object(const sll_node_t* o,const optimizer_data_t* o_dt,unsigned int fl){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -652,7 +652,7 @@ static const sll_node_t* _mark_loop_vars(const sll_node_t* o,optimizer_data_t* o
 
 
 
-static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t* o_dt,uint8_t inv,uint8_t lv){
+static sll_compare_result_t _get_cond_type(const sll_node_t* o,optimizer_data_t* o_dt,sll_bool_t inv,sll_bool_t lv){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -869,7 +869,7 @@ static sll_node_t* _check_remove(sll_node_t* o,sll_node_t* p,optimizer_data_t* o
 
 
 
-static sll_node_t* _optimize(sll_node_t* o,sll_node_t* p,optimizer_data_t* o_dt,uint8_t fl){
+static sll_node_t* _optimize(sll_node_t* o,sll_node_t* p,optimizer_data_t* o_dt,unsigned int fl){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -1413,7 +1413,7 @@ _keep_assignment:;
 						if (o_dt->rm){
 							SLL_UNIMPLEMENTED();
 						}
-						uint8_t cnd=_get_cond_type(cnd_o,o_dt,0,0);
+						sll_compare_result_t cnd=_get_cond_type(cnd_o,o_dt,0,0);
 						if (cnd==COND_TYPE_ALWAYS_TRUE){
 							if (r->dt.ac>3){
 								_shift_nodes(cnd_o,o_dt->c_dt,1);
@@ -1481,7 +1481,7 @@ _keep_assignment:;
 						if (o_dt->rm){
 							SLL_UNIMPLEMENTED();
 						}
-						uint8_t cnd=_get_cond_type(cnd_o,o_dt,0,0);
+						sll_compare_result_t cnd=_get_cond_type(cnd_o,o_dt,0,0);
 						if (cnd==COND_TYPE_ALWAYS_TRUE){
 							if (r->dt.ac>2){
 								_shift_nodes(cnd_o,o_dt->c_dt,1);
@@ -1637,7 +1637,7 @@ _keep_assignment:;
 					tmp=_mark_loop_vars(tmp,o_dt);
 				}
 				o=_optimize(cnd_o,NULL,o_dt,OPTIMIZER_FLAG_ARGUMENT);
-				uint8_t cnd=_get_cond_type(cnd_o,o_dt,1,1);
+				sll_compare_result_t cnd=_get_cond_type(cnd_o,o_dt,1,1);
 				if (cnd==COND_TYPE_ALWAYS_TRUE){
 					SLL_UNIMPLEMENTED();
 				}
@@ -2553,16 +2553,16 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 		.a_v=NULL,
 		.rm=0
 	};
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		o_dt.it.s_im[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(identifier_data_t));
 		o_dt.s_sm_l[i]=(c_dt->idt.s[i].l+63)>>6;
-		o_dt.va.s_sm[i]=sll_zero_allocate(o_dt.s_sm_l[i]*sizeof(uint64_t));
+		o_dt.va.s_sm[i]=sll_zero_allocate(o_dt.s_sm_l[i]*sizeof(bitmap_t));
 		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
 			(o_dt.it.s_im[i]+j)->v=SLL_MAX_VARIABLE_INDEX;
 			(o_dt.it.s_im[i]+j)->rm=1;
 		}
 	}
-	o_dt.va.l_sm=sll_zero_allocate(o_dt.l_sm_l*sizeof(uint64_t));
+	o_dt.va.l_sm=sll_zero_allocate(o_dt.l_sm_l*sizeof(bitmap_t));
 	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
 		(o_dt.it.l_im+i)->v=SLL_MAX_VARIABLE_INDEX;
 		(o_dt.it.l_im+i)->rm=1;
@@ -2613,7 +2613,7 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 	}
 	_optimize(c_dt->h,NULL,&o_dt,0);
 	sll_deallocate(o_dt.va.l_sm);
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_deallocate(o_dt.va.s_sm[i]);
 		o_dt.im.s[i]=sll_allocate(c_dt->idt.s[i].l*sizeof(sll_identifier_index_t));
 		sll_identifier_list_length_t k=0;
@@ -2687,7 +2687,7 @@ __SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_
 	o_dt.rm=0;
 	_remap_indexes_merge_print(c_dt->h,NULL,&o_dt,fn_m);
 	sll_deallocate(fn_m);
-	for (uint8_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		sll_deallocate(o_dt.it.s_im[i]);
 		sll_deallocate(o_dt.im.s[i]);
 	}

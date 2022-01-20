@@ -1,5 +1,6 @@
 #ifndef __SLL_FILE_H__
 #define __SLL_FILE_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -31,7 +32,7 @@
 
 #define SLL_UNKNOWN_FILE_DESCRIPTOR ((void*)0xffffffffffffffffull)
 
-#define SLL_END_OF_DATA UINT16_MAX
+#define SLL_END_OF_DATA __SLL_U16_MAX
 
 
 /**

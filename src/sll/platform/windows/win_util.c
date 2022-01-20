@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <bcrypt.h>
+#include <sll/_size_types.h>
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -111,7 +112,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void){
 
 __SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
 	while (l){
-		ULONG n=(l>UINT32_MAX?UINT32_MAX:(ULONG)l);
+		ULONG n=(l>__SLL_U32_MAX?__SLL_U32_MAX:(ULONG)l);
 		if (BCryptGenRandom(NULL,bf,n,BCRYPT_USE_SYSTEM_PREFERRED_RNG)<0){
 			sll_set_memory(bf,l,0);
 		}
