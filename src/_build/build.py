@@ -42,6 +42,10 @@ def build_sll(fl,v,r):
 			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",nm+".so"]+["objects/"+e for e in os.listdir("objects")]+["-lm","-ldl"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
+			util.log("  Stripping Executable...")
+			if (subprocess.run(["strip",nm+".so","-s","-R",".note.*","-R",".comment"]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
 		else:
 			util.log("  Compiling Files...")
 			os.chdir("objects")
@@ -72,6 +76,10 @@ def build_sll_cli():
 	else:
 		util.log("  Compiling & Linking Files...")
 		if (subprocess.run(["gcc","-fdiagnostics-color=always","-Wall","-lm","-Werror","-O3","../src/cli/main_posix.c","-o","sll","-I",".","-ldl"]).returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
+		util.log("  Stripping Executable...")
+		if (subprocess.run(["strip","sll","-s","-R",".note.*","-R",".comment"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	os.chdir(cd)
@@ -106,23 +114,27 @@ def build_sll_extension(fl,v,r):
 		if (r):
 			util.log("  Compiling Library Files (Release Mode)...")
 			os.chdir("objects_ext")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","../../src/ext/debug/include","-I","../"]+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","../../src/ext/debug/include","-I","../"]+["../../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
 			util.log("  Linking Library Files (Release Mode)...")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",nm+".so"]+["objects_ext/"+e for e in os.listdir("objects_ext")]+["-lm"]).returncode!=0):
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",nm+".so"]+["objects_ext/"+e for e in os.listdir("objects_ext")]).returncode!=0):
+				os.chdir(cd)
+				sys.exit(1)
+			util.log("  Stripping Executable...")
+			if (subprocess.run(["strip",nm+".so","-s","-R",".note.*","-R",".comment"]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			util.log("  Compiling Library Files...")
 			os.chdir("objects_ext")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I","../../src/ext/debug/include","-I","../"]+["../../"+e for e in fl]+["-lm"]).returncode!=0):
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I","../../src/ext/debug/include","-I","../"]+["../../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
 			util.log("  Linking Library Files...")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-g","-O0","-o",nm+".so"]+["objects_ext/"+e for e in os.listdir("objects_ext")]+["-lm"]).returncode!=0):
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-g","-O0","-o",nm+".so"]+["objects_ext/"+e for e in os.listdir("objects_ext")]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)

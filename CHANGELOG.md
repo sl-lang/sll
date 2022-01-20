@@ -8,6 +8,7 @@
 - Implemented `date$from_time_ns`
 - Implemented `debug$backtrace`
 - Implemented `sll_date_from_time_ns`
+- Implemented `sll_file_get_buffer` and `file$get_buffer`
 - Implemented `sll_platform_create_console` and `sll_cli_main_raw`
 - Implemented `sll_platform_path_copy` and `file$copy` ([#192])
 - Implemented `sll_platform_path_rename` and `file$rename` ([#192])
@@ -15,7 +16,9 @@
 
 ### Changed
 
+- Build script now removes symbols from the generated execuatbles
 - Changed internal executable section names
+- Increased `sll_file_flags_t` to 16 bits
 - Moved `SLL_COPY_STRING_NULL`, `SLL_COMPARE_RESULT_BELOW`, `SLL_COMPARE_RESULT_EQUAL`, `SLL_COMPARE_RESULT_ABOVE` types, `sll_compare_data`, `sll_copy_data`, `sll_copy_string`, `sll_copy_string_null`, `sll_set_memory` and `sll_zero_memory` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/data.c`][0.7.0/src/sll/data.c] and [`src/sll/include/sll/data.h`][0.7.0/src/sll/include/sll/data.h]
 - Moved `SLL_DEBUG_LINE_DATA_GET_DATA`, `SLL_DEBUG_LINE_DATA_FLAG_FILE` and `SLL_DEBUG_LINE_DATA_FLAG_FUNC` from [`src/sll/include/sll/assembly.h`][0.6.37/src/sll/include/sll/assembly.h] to [`src/sll/location.c`][0.7.0/src/sll/location.c] and [`src/sll/include/sll/location.h`][0.7.0/src/sll/include/sll/location.h]
 - Moved `sll_deinit`, `sll_init` and `sll_register_cleanup` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/init.c`][0.7.0/src/sll/init.c] and [`src/sll/include/sll/init.h`][0.7.0/src/sll/include/sll/init.h]

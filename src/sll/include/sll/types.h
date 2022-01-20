@@ -58,10 +58,6 @@ typedef __SLL_U8 sll_compare_result_t;
 
 
 
-typedef __SLL_U8 sll_file_flags_t;
-
-
-
 typedef __SLL_U8 sll_flags_t;
 
 
@@ -103,6 +99,10 @@ typedef __SLL_U8 sll_day_t;
 
 
 typedef __SLL_U16 sll_call_stack_size_t;
+
+
+
+typedef __SLL_U16 sll_file_flags_t;
 
 
 
@@ -279,6 +279,29 @@ typedef union __SLL_FILE_DATA{
 
 
 
+typedef struct __SLL_FILE_WRITE_DATA_BUFFERED{
+	sll_char_t* p;
+	sll_file_offset_t off;
+} sll_file_write_data_buffered_t;
+
+
+
+typedef struct __SLL_FILE_WRITE_DATA_DYNAMIC{
+	void* b;
+	void* t;
+	sll_file_offset_t sz;
+	sll_file_offset_t off;
+} sll_file_write_data_dynamic_t;
+
+
+
+typedef union __SLL_FILE_WRITE_DATA{
+	sll_file_write_data_buffered_t bf;
+	sll_file_write_data_dynamic_t d;
+} sll_file_write_data_t;
+
+
+
 typedef struct __SLL_FILE{
 	const sll_file_data_t dt;
 	const sll_file_flags_t f;
@@ -288,8 +311,7 @@ typedef struct __SLL_FILE{
 	sll_char_t* _r_bf;
 	sll_file_offset_t _r_bf_off;
 	sll_file_offset_t _r_bf_sz;
-	sll_char_t* _w_bf;
-	sll_file_offset_t _w_bf_off;
+	sll_file_write_data_t _w;
 } sll_file_t;
 
 

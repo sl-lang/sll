@@ -25,6 +25,7 @@
 #define SLL_FILE_FLAG_NO_BUFFER 8
 #define SLL_FILE_FLAG_RESERVED0 64
 #define SLL_FILE_FLAG_RESERVED1 128
+#define SLL_FILE_FLAG_RESERVED2 256
 
 #define SLL_FILE_GET_LINE_NUMBER(f) ((f)->_l_num)
 #define SLL_FILE_GET_LINE_OFFSET(f) ((f)->_l_off)
@@ -103,6 +104,19 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f);
  * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_file_get_buffer
+ * \group file
+ * \desc Docs!
+ * \arg void* p
+ * \arg sll_file_t* f
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* f,sll_string_t* o);
 
 
 

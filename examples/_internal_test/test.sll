@@ -365,6 +365,11 @@
 
 (<- file$copy "build/hello-rename.txt" "build/new-hello.txt")
 
+(= f (<- file$from_data "" file$FLAG_WRITE))
+(<- file$write f "abc")
+(<- file$write f '#')
+(:> (<- file$get_buffer f) "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

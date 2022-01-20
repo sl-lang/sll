@@ -499,6 +499,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_file_get_buffer void
+#define __SLL_API_ARGS_sll_api_file_get_buffer sll_integer_t a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_file_get_buffer
+ * \group file-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_file_get_buffer_raw
+ * \group raw-api
+ * \subgroup raw-api-file-api
+ * \desc Wrapper function for :sll_api_file_get_buffer:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_get_temp_path void
 #define __SLL_API_ARGS_sll_api_file_get_temp_path sll_string_t* out
 /**

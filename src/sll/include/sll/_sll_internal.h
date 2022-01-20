@@ -197,6 +197,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define ALLOCATOR_ALLOC_SIZE 65536
 #define ALLOCATOR_STACK_ALLOC_SIZE 262144
 #define ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE 65536
+#define FILE_DYNAMIC_BUFFER_ALLOC_SIZE 65536
 #define GC_OBJECT_POOL_ALLOC_SIZE 65536
 #define NODE_STACK_ALLOC_SIZE 65536
 
@@ -213,6 +214,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define FILE_FLAG_MEMORY SLL_FILE_FLAG_RESERVED0
 #define FILE_FLAG_NO_RELEASE SLL_FILE_FLAG_RESERVED1
+#define FILE_FLAG_DYNAMIC_BUFFERS SLL_FILE_FLAG_RESERVED2
 #define FILE_BUFFER_SIZE 2097152
 
 #define STRING_FORMAT_FLAG_PAD_ZERO 1
@@ -574,11 +576,19 @@ typedef union __STATIC_STRING_SOURCE{
 
 
 
-typedef struct ____STATIC_STRING{
+typedef struct __STATIC_STRING{
 	sll_string_t* p;
 	static_string_source_t dt;
 	sll_string_length_t dtl;
 } static_string_t;
+
+
+
+typedef struct __DYNAMIC_BUFFER_CHUNK{
+	sll_size_t sz;
+	struct __DYNAMIC_BUFFER_CHUNK* n;
+	sll_char_t dt[];
+} dynamic_buffer_chunk_t;
 
 
 

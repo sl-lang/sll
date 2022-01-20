@@ -38,6 +38,7 @@
 	(~ func_type) copy
 	(~ func_type) flush
 	(~ func_type) from_data
+	(~ func_type) get_buffer
 	(~ func_type) open
 	(~ func_type) peek
 	(~ func_type) read
@@ -90,15 +91,23 @@
 	(<- (... "sll:file_flush") f$_handle)
 ))
 
-(= from_data (,,, bf
+(= from_data (,,, bf fl
 	(= bf (?: (=== bf nil) "" (:: bf string_type)))
-	(= handle (<- (... "sll:file_from_data") bf FLAG_READ))
+	(= fl (?: (=== fl nil) FLAG_READ (:: fl int_type)))
+	(= handle (<- (... "sll:file_from_data") bf fl))
 	(? (=== handle -1) (@@ nil))
 	(@@ (. file_type
 		"@data"
-		FLAG_READ
+		fl
 		handle
 	))
+))
+
+(= get_buffer (,,, f
+	(? (=== f nil) (@@ ""))
+	(= f (:: f file_type))
+	(? (! (& f$flags FLAG_WRITE)) (@@ ""))
+	(@@ (<- (... "sll:file_get_buffer") f$_handle))
 ))
 
 (= open (,,, path mode
@@ -173,6 +182,7 @@
 	copy
 	flush
 	from_data
+	get_buffer
 	open
 	peek
 	read
