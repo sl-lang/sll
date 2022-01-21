@@ -2,7 +2,9 @@
 
 ## [0.7.1] - Ongoing
 
-*Nothing*
+### Changed
+
+- Custom ELF secions have been renamed from `s_str` and `s_obj` to `.initstr` and `.sobject`
 
 ## [0.7.0] - 2022-01-21
 

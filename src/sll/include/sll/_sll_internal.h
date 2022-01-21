@@ -17,12 +17,12 @@
 #pragma intrinsic(__popcnt64)
 #pragma intrinsic(_rotl)
 #pragma intrinsic(_rotl64)
-#pragma section("s_obj$a",read)
-#pragma section("s_obj$b",read)
-#pragma section("s_obj$z",read)
-#pragma section("s_str$a",read)
-#pragma section("s_str$b",read)
-#pragma section("s_str$z",read)
+#pragma section(".sobject$a",read)
+#pragma section(".sobject$b",read)
+#pragma section(".sobject$z",read)
+#pragma section(".initstr$a",read)
+#pragma section(".initstr$b",read)
+#pragma section(".initstr$z",read)
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __assume(0)
 #endif
@@ -52,9 +52,9 @@ static __SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 		} \
 	} while (0)
 #define _CUSTOM_SECTION_(nm) __declspec(allocate(#nm))
-#define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(nm##$b)
-#define STATIC_OBJECT_SETUP static const __declspec(allocate("s_obj$a")) static_object_t* __s_obj_start=0;static const __declspec(allocate("s_obj$z")) static_object_t* __s_obj_end=0
-#define STATIC_STRING_SETUP static const __declspec(allocate("s_str$a")) static_string_t* __s_str_start=0;static const __declspec(allocate("s_str$z")) static_string_t* __s_str_end=0
+#define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(.##nm##$b)
+#define STATIC_OBJECT_SETUP static const __declspec(allocate(".sobject$a")) static_object_t* __static_object_start=0;static const __declspec(allocate(".sobject$z")) static_object_t* __static_object_end=0
+#define INIT_STRING_SETUP static const __declspec(allocate(".initstr$a")) init_string_t* __init_string_start=0;static const __declspec(allocate(".initstr$z")) init_string_t* __init_string_end=0
 #else
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __builtin_unreachable()
@@ -89,13 +89,14 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 	do{ \
 		p=__builtin_assume_aligned((p),(n),(x)); \
 	} while (0)
-#define _CUSTOM_SECTION(nm) __attribute__((used,section(#nm)))
-#define STATIC_OBJECT_SETUP extern const static_object_t* __start_s_obj;extern const static_object_t* __stop_s_obj
-#define STATIC_STRING_SETUP extern const static_string_t* __start_s_str;extern const static_string_t* __stop_s_str
-#define __s_obj_start __start_s_obj
-#define __s_obj_end __stop_s_obj
-#define __s_str_start __start_s_str
-#define __s_str_end __stop_s_str
+#define _CUSTOM_SECTION_(nm) __attribute__((used,section(#nm)))
+#define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(nm)
+#define STATIC_OBJECT_SETUP extern const static_object_t* __start_sobject;extern const static_object_t* __stop_sobject
+#define INIT_STRING_SETUP extern const init_string_t* __start_initstr;extern const init_string_t* __stop_initstr
+#define __static_object_start __start_sobject
+#define __static_object_end __stop_sobject
+#define __init_string_start __start_initstr
+#define __init_string_end __stop_initstr
 #endif
 #ifdef DEBUG_BUILD
 #define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"));
@@ -104,8 +105,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 
 #define __API_FUNC(nm) __SLL_EXTERNAL __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
-#define __STATIC_STRING(nm,dt) sll_string_t nm=SLL_INIT_STRING_STRUCT;static const static_string_t _UNIQUE_NAME(__s_str)={&(nm),{.s=SLL_CHAR(dt)},sizeof(dt)/sizeof(char)-1};static const _CUSTOM_SECTION(s_str) static_string_t* _UNIQUE_NAME(__s_str_ptr)=&_UNIQUE_NAME(__s_str)
-#define __STATIC_STRING_CODE(nm,c) sll_string_t nm=SLL_INIT_STRING_STRUCT;static void _UNIQUE_NAME(__s_str_fn)(sll_string_t* out){c};static const static_string_t _UNIQUE_NAME(__s_str)={&(nm),{.fn=_UNIQUE_NAME(__s_str_fn)},SLL_MAX_STRING_LENGTH};static const _CUSTOM_SECTION(s_str) static_string_t* _UNIQUE_NAME(__s_str_ptr)=&_UNIQUE_NAME(__s_str)
+#define __STATIC_STRING(nm,dt) sll_string_t nm=SLL_INIT_STRING_STRUCT;static const init_string_t _UNIQUE_NAME(__init_string)={&(nm),{.s=SLL_CHAR(dt)},sizeof(dt)/sizeof(char)-1};static const _CUSTOM_SECTION(initstr) init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
+#define __STATIC_STRING_CODE(nm,c) sll_string_t nm=SLL_INIT_STRING_STRUCT;static void _UNIQUE_NAME(__init_string_fn)(sll_string_t* out){c};static const init_string_t _UNIQUE_NAME(__init_string)={&(nm),{.fn=_UNIQUE_NAME(__init_string_fn)},SLL_MAX_STRING_LENGTH};static const _CUSTOM_SECTION(initstr) init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
 #define __SLL_STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,NULL,.dt={.i=(v)}};_DECL_GC_OBJECT(&_int_##v##_static_data)
 #define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,NULL,.dt={.i=-(v)}};_DECL_GC_OBJECT(&_int_neg_##v##_static_data)
 #define __SLL_STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,NULL,.dt={.c=(sll_char_t)(v)}};_DECL_GC_OBJECT(&_char_##v##_static_data)
@@ -113,7 +114,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 
 
-#define _DECL_GC_OBJECT(rt) static const static_object_t _UNIQUE_NAME(__s_obj)={(rt),__FILE__,__LINE__};static const _CUSTOM_SECTION(s_obj) static_object_t* _UNIQUE_NAME(__s_obj_ptr)=&_UNIQUE_NAME(__s_obj)
+#define _DECL_GC_OBJECT(rt) static const static_object_t _UNIQUE_NAME(__static_object)={(rt),__FILE__,__LINE__};static const _CUSTOM_SECTION(sobject) static_object_t* _UNIQUE_NAME(__static_object_ptr)=&_UNIQUE_NAME(__static_object)
 #define _UNIQUE_NAME_JOIN2(a,b) a##_##b
 #define _UNIQUE_NAME_JOIN(a,b) _UNIQUE_NAME_JOIN2(a,b)
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
@@ -576,11 +577,11 @@ typedef union __STATIC_STRING_SOURCE{
 
 
 
-typedef struct __STATIC_STRING{
+typedef struct __INIT_STRING{
 	sll_string_t* p;
 	static_string_source_t dt;
 	sll_string_length_t dtl;
-} static_string_t;
+} init_string_t;
 
 
 
