@@ -4,9 +4,15 @@
 
 (= serial_module_type (&:
 	(~ func_type) decode
+	(~ func_type) decode_float
+	(~ func_type) decode_int
 	(~ func_type) decode_string
+	(~ func_type) decode_unsigned_int
 	(~ func_type) encode
+	(~ func_type) encode_float
+	(~ func_type) encode_int
 	(~ func_type) encode_string
+	(~ func_type) encode_unsigned_int
 ))
 
 
@@ -17,16 +23,48 @@
 	(@@ (<- (... "sll:serial_decode_object") f$_handle))
 ))
 
+(= decode_float (,,, f
+	(? (=== f nil) (@@ 0.0))
+	(= f (:: f file$file_type))
+	(@@ (<- (... "sll:serial_decode_float") f$_handle))
+))
+
+(= decode_int (,,, f
+	(? (=== f nil) (@@ 0))
+	(= f (:: f file$file_type))
+	(@@ (<- (... "sll:serial_decode_signed_int") f$_handle))
+))
+
 (= decode_string (,,, f
 	(? (=== f nil) (@@ ""))
 	(= f (:: f file$file_type))
 	(@@ (<- (... "sll:serial_decode_string") f$_handle))
 ))
 
+(= decode_unsigned_int (,,, f
+	(? (=== f nil) (@@ 0))
+	(= f (:: f file$file_type))
+	(@@ (<- (... "sll:serial_decode_int") f$_handle))
+))
+
 (= encode (,,, f a
 	(? (=== f nil) (@@))
 	(= f (:: f file$file_type))
 	(<- (... "sll:serial_encode_object") f$_handle a)
+))
+
+(= encode_float (,,, f v
+	(? (=== f nil) (@@))
+	(= f (:: f file$file_type))
+	(= v (:: v float_type))
+	(<- (... "sll:serial_encode_float") f$_handle v)
+))
+
+(= encode_int (,,, f v
+	(? (=== f nil) (@@))
+	(= f (:: f file$file_type))
+	(= v (:: v int_type))
+	(<- (... "sll:serial_encode_signed_integer") f$_handle v)
 ))
 
 (= encode_string (,,, f s
@@ -36,12 +74,25 @@
 	(<- (... "sll:serial_encode_string") f$_handle s)
 ))
 
+(= encode_unsigned_int (,,, f v
+	(? (=== f nil) (@@))
+	(= f (:: f file$file_type))
+	(= v (:: v int_type))
+	(<- (... "sll:serial_encode_integer") f$_handle v)
+))
+
 
 
 (= serial (. serial_module_type
 	decode
+	decode_float
+	decode_int
 	decode_string
+	decode_unsigned_int
 	encode
+	encode_float
+	encode_int
 	encode_string
+	encode_unsigned_int
 ))
 (## serial)

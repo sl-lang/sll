@@ -16,7 +16,7 @@
 #define CHECK_ERROR(rf,o,ot) \
 	do{ \
 		sll_bool_t __e=0; \
-		(o)=(ot)_read_integer((rf),&__e); \
+		(o)=(ot)sll_decode_integer((rf),&__e); \
 		if (__e){ \
 			return 0; \
 		} \
@@ -27,35 +27,6 @@
 			return 0; \
 		} \
 	} while(0)
-
-
-
-static sll_size_t _read_integer(sll_file_t* rf,sll_bool_t* e){
-	sll_read_char_t c=sll_file_read_char(rf);
-	if (c==SLL_END_OF_DATA){
-		*e=1;
-		return 0;
-	}
-	sll_size_t v=0;
-	sll_string_length_t s=0;
-	while ((c&0x80)&&s<56){
-		v|=((sll_size_t)(c&0x7f))<<s;
-		s+=7;
-		c=sll_file_read_char(rf);
-		if (c==SLL_END_OF_DATA){
-			*e=1;
-			return 0;
-		}
-	}
-	return v|(((sll_size_t)c)<<s);
-}
-
-
-
-static sll_integer_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
-	sll_size_t v=_read_integer(rf,e);
-	return (v>>1)^(-((sll_integer_t)(v&1)));
-}
 
 
 
@@ -77,7 +48,7 @@ static sll_bool_t _read_node(sll_compilation_data_t* c_dt,sll_file_t* rf){
 		case SLL_NODE_TYPE_INT:
 			{
 				sll_bool_t e=0;
-				o->dt.i=(sll_integer_t)_read_signed_integer(rf,&e);
+				o->dt.i=sll_decode_signed_integer(rf,&e);
 				if (e){
 					return 0;
 				}
@@ -214,7 +185,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
 				{
 					sll_bool_t re=0;
-					ai->dt.i=(sll_integer_t)_read_signed_integer(rf,&re);
+					ai->dt.i=sll_decode_signed_integer(rf,&re);
 					if (re){
 						return 0;
 					}
@@ -251,7 +222,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					sll_bool_t re=0;
-					ai->dt.i=(sll_relative_instruction_index_t)_read_signed_integer(rf,&re);
+					ai->dt.i=(sll_relative_instruction_index_t)sll_decode_signed_integer(rf,&re);
 					if (re){
 						return 0;
 					}

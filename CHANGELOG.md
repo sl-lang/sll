@@ -7,8 +7,10 @@
 - Console option to do not create a console: `-w` (Windows only)
 - Implemented `date$from_time_ns`
 - Implemented `debug$backtrace`
+- Implemented `serial$decode_float`, `serial$decode_int`, `serial$decode_unsigned_int`, `serial$encode_float`, `serial$encode_int` and `serial$encode_unsigned_int`
 - Implemented `serial.sll` ([#199])
 - Implemented `sll_date_from_time_ns`
+- Implemented `sll_decode_integer`, `sll_decode_signed_integer`, `sll_encode_integer` and `sll_encode_signed_integer`
 - Implemented `sll_decode_object` and `serial$decode` ([#199] and [#200])
 - Implemented `sll_decode_string` and `serial$decode_string` ([#199] and [#201])
 - Implemented `sll_encode_object` and `serial$encode` ([#199] and [#202])

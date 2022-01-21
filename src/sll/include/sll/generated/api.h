@@ -2421,6 +2421,59 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_serial_decode_float __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_serial_decode_float sll_integer_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_decode_float
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_decode_float_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_decode_float:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Serialization
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_serial_decode_integer __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_serial_decode_integer sll_integer_t a
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_decode_integer
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_decode_integer_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_decode_integer:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_serial_decode_object __SLL_CHECK_OUTPUT sll_object_t*
 #define __SLL_API_ARGS_sll_api_serial_decode_object sll_integer_t a
 /**
@@ -2441,12 +2494,28 @@
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
  */
+
+
+
+#define __SLL_API_TYPE_sll_api_serial_decode_signed_integer __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_serial_decode_signed_integer sll_integer_t a
 /**
- * \flags subgroup
- * \name Serialization
+ * \flags check_output func optimizable
+ * \name sll_api_serial_decode_signed_integer
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_decode_signed_integer_raw
  * \group raw-api
  * \subgroup raw-api-serial-api
- * \desc Docs!
+ * \desc Wrapper function for :sll_api_serial_decode_signed_integer:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
  */
 
 
@@ -2473,6 +2542,52 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_serial_encode_float void
+#define __SLL_API_ARGS_sll_api_serial_encode_float sll_integer_t a,sll_float_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_float
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_float_t b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_float_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_encode_float:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_serial_encode_integer void
+#define __SLL_API_ARGS_sll_api_serial_encode_integer sll_integer_t a,sll_integer_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_integer
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_integer_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_encode_integer:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_serial_encode_object void
 #define __SLL_API_ARGS_sll_api_serial_encode_object sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc
 /**
@@ -2490,6 +2605,29 @@
  * \group raw-api
  * \subgroup raw-api-serial-api
  * \desc Wrapper function for :sll_api_serial_encode_object:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_serial_encode_signed_integer void
+#define __SLL_API_ARGS_sll_api_serial_encode_signed_integer sll_integer_t a,sll_integer_t b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_signed_integer
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_signed_integer_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_encode_signed_integer:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
