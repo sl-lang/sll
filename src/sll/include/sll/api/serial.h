@@ -9,6 +9,13 @@
  * \group serial-api
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Compression
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ */
 
 
 
@@ -16,6 +23,7 @@
  * \flags check_output func
  * \name sll_decode_integer
  * \group serial-api
+ * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_bool_t* err
@@ -29,6 +37,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sl
  * \flags check_output func
  * \name sll_decode_signed_integer
  * \group serial-api
+ * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_bool_t* err
@@ -42,6 +51,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_fi
  * \flags check_output func
  * \name sll_decode_object
  * \group serial-api
+ * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
  * \ret sll_object_t*
@@ -54,6 +64,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
  * \flags func
  * \name sll_decode_string
  * \group serial-api
+ * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_string_t* o
@@ -67,6 +78,7 @@ __SLL_EXTERNAL sll_bool_t sll_decode_string(sll_file_t* f,sll_string_t* o);
  * \flags func
  * \name sll_encode_integer
  * \group serial-api
+ * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_size_t v
@@ -79,6 +91,7 @@ __SLL_EXTERNAL void sll_encode_integer(sll_file_t* f,sll_size_t v);
  * \flags func
  * \name sll_encode_signed_integer
  * \group serial-api
+ * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_integer_t v
@@ -91,6 +104,7 @@ __SLL_EXTERNAL void sll_encode_signed_integer(sll_file_t* f,sll_integer_t v);
  * \flags func
  * \name sll_encode_object
  * \group serial-api
+ * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_object_t*const* a
@@ -104,6 +118,7 @@ __SLL_EXTERNAL void sll_encode_object(sll_file_t* f,sll_object_t*const* a,sll_ar
  * \flags func
  * \name sll_encode_string
  * \group serial-api
+ * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg const sll_string_t* s
