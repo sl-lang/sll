@@ -63,6 +63,16 @@ _found_index:;
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_integer_t h){
+	if (h<0||h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+h))){
+		return NULL;
+	}
+	extended_file_t* ef=*(_file_fl+h);
+	return (ef->p?ef->dt.p:&(ef->dt.f));
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_file_to_handle(sll_file_t* f){
 	sll_integer_t o=_alloc_file();
 	(*(_file_fl+o))->dt.p=f;

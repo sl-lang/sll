@@ -7,7 +7,13 @@
 - Console option to do not create a console: `-w` (Windows only)
 - Implemented `date$from_time_ns`
 - Implemented `debug$backtrace`
+- Implemented `serial.sll` ([#199])
 - Implemented `sll_date_from_time_ns`
+- Implemented `sll_decode_object` and `serial$decode` ([#199] and [#200])
+- Implemented `sll_decode_string` and `serial$decode_string` ([#199] and [#201])
+- Implemented `sll_encode_object` and `serial$encode` ([#199] and [#202])
+- Implemented `sll_encode_string` and `serial$encode_string` ([#199] and [#203])
+- Implemented `sll_file_from_handle`
 - Implemented `sll_file_get_buffer` and `file$get_buffer`
 - Implemented `sll_platform_create_console` and `sll_cli_main_raw`
 - Implemented `sll_platform_path_copy` and `file$copy` ([#192])
@@ -1489,6 +1495,11 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#207]: https://github.com/sl-lang/sll/issues/207
 [#206]: https://github.com/sl-lang/sll/issues/206
 [#205]: https://github.com/sl-lang/sll/issues/205
+[#203]: https://github.com/sl-lang/sll/issues/203
+[#202]: https://github.com/sl-lang/sll/issues/202
+[#201]: https://github.com/sl-lang/sll/issues/201
+[#200]: https://github.com/sl-lang/sll/issues/200
+[#199]: https://github.com/sl-lang/sll/issues/199
 [#196]: https://github.com/sl-lang/sll/issues/196
 [#194]: https://github.com/sl-lang/sll/issues/194
 [#193]: https://github.com/sl-lang/sll/issues/193

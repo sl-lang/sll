@@ -68,9 +68,14 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 		}
 	}
 	else{
-		SLL_ASSERT(!(f->f&SLL_FILE_FLAG_NO_BUFFER));
+		SLL_ASSERT(f->f&SLL_FILE_FLAG_NO_BUFFER);
 		if (f->f&FILE_FLAG_DYNAMIC_BUFFERS){
-			SLL_UNIMPLEMENTED();
+			dynamic_buffer_chunk_t* c=f->_w.d.b;
+			do{
+				dynamic_buffer_chunk_t* n=c->n;
+				sll_platform_free_page(c,c->sz);
+				c=n;
+			} while (c);
 		}
 		sll_deallocate(PTR(f->dt.mm.p));
 	}
@@ -99,8 +104,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_from_data(void* p,sll_size
 	}
 	if (f&SLL_FILE_FLAG_WRITE){
 		f|=FILE_FLAG_DYNAMIC_BUFFERS;
-		dynamic_buffer_chunk_t* bf=sll_platform_allocate_page(FILE_DYNAMIC_BUFFER_ALLOC_SIZE,0);
-		bf->sz=FILE_DYNAMIC_BUFFER_ALLOC_SIZE;
+		dynamic_buffer_chunk_t* bf=sll_platform_allocate_page(SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE),0);
+		bf->sz=SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE);
 		bf->n=NULL;
 		o->_w.d.b=bf;
 		o->_w.d.t=bf;

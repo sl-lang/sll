@@ -1,4 +1,5 @@
- #include <sll/_sll_internal.h>
+#include <sll/_sll_internal.h>
+#include <sll/api/serial.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -15,14 +16,14 @@
 #define CHECK_ERROR(rf,o,ot) \
 	do{ \
 		sll_bool_t __e=0; \
-		(o)=(ot)_read_integer(rf,&__e); \
+		(o)=(ot)_read_integer((rf),&__e); \
 		if (__e){ \
 			return 0; \
 		} \
 	} while (0)
 #define READ_FIELD(f,rf) \
 	do{ \
-		if (sll_file_read((rf),SLL_CHAR(&(f)),sizeof((f)))==SLL_END_OF_DATA){ \
+		if (sll_file_read((rf),&(f),sizeof(f))==SLL_END_OF_DATA){ \
 			return 0; \
 		} \
 	} while(0)
@@ -58,7 +59,7 @@ static sll_integer_t _read_signed_integer(sll_file_t* rf,sll_bool_t* e){
 
 
 
-static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
+static sll_bool_t _read_node(sll_compilation_data_t* c_dt,sll_file_t* rf){
 	sll_node_t* o=_acquire_next_node(c_dt);
 	READ_FIELD(o->t,rf);
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG){
@@ -92,7 +93,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 		case SLL_NODE_TYPE_ARRAY:
 			CHECK_ERROR(rf,o->dt.al,sll_array_length_t);
 			for (sll_array_length_t i=0;i<o->dt.al;i++){
-				if (!_read_object(c_dt,rf)){
+				if (!_read_node(c_dt,rf)){
 					return 0;
 				}
 			}
@@ -100,7 +101,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 		case SLL_NODE_TYPE_MAP:
 			CHECK_ERROR(rf,o->dt.ml,sll_map_length_t);
 			for (sll_map_length_t i=0;i<o->dt.ml;i++){
-				if (!_read_object(c_dt,rf)){
+				if (!_read_node(c_dt,rf)){
 					return 0;
 				}
 			}
@@ -120,7 +121,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 					CHECK_ERROR(rf,o->dt.fn.sc,sll_scope_t);
 				}
 				for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
-					if (!_read_object(c_dt,rf)){
+					if (!_read_node(c_dt,rf)){
 						return 0;
 					}
 				}
@@ -136,7 +137,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 			CHECK_ERROR(rf,o->dt.l.ac,sll_arg_count_t);
 			CHECK_ERROR(rf,o->dt.l.sc,sll_scope_t);
 			for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
-				if (!_read_object(c_dt,rf)){
+				if (!_read_node(c_dt,rf)){
 					return 0;
 				}
 			}
@@ -146,7 +147,7 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 			CHECK_ERROR(rf,o->dt.d.nm,sll_string_index_t);
 			o->dt.d.nm--;
 			for (sll_arg_count_t i=0;i<o->dt.d.ac;i++){
-				if (!_read_object(c_dt,rf)){
+				if (!_read_node(c_dt,rf)){
 					return 0;
 				}
 			}
@@ -154,75 +155,10 @@ static sll_bool_t _read_object(sll_compilation_data_t* c_dt,sll_file_t* rf){
 	}
 	CHECK_ERROR(rf,o->dt.ac,sll_arg_count_t);
 	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
-		if (!_read_object(c_dt,rf)){
+		if (!_read_node(c_dt,rf)){
 			return 0;
 		}
 	}
-	return 1;
-}
-
-
-
-static sll_bool_t _read_string(sll_file_t* rf,sll_string_t* o){
-	CHECK_ERROR(rf,o->l,sll_string_length_t);
-	sll_string_create(o->l,o);
-	if (o->l<STRING_COMPRESSION_MIN_LENGTH){
-		if (sll_file_read(rf,o->v,o->l*sizeof(sll_char_t))==SLL_END_OF_DATA){
-			return 0;
-		}
-	}
-	else{
-		sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
-		sll_set_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1),0xff);
-		wide_data_t v;
-		if (sll_file_read(rf,&v,sizeof(wide_data_t))==SLL_END_OF_DATA){
-			return 0;
-		}
-		unsigned int bc=64;
-		sll_string_length_t i=0;
-		unsigned int r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
-		do{
-			if (!bc){
-				if (sll_file_read(rf,&v,sizeof(wide_data_t))==SLL_END_OF_DATA){
-					return 0;
-				}
-				bc=64;
-			}
-			bc--;
-			unsigned int e;
-			unsigned int el=((v&(1ull<<bc))?8:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT);
-			if (bc<el){
-				e=(v&((1<<bc)-1))<<(el-bc);
-				if (sll_file_read(rf,&v,sizeof(wide_data_t))==SLL_END_OF_DATA){
-					return 0;
-				}
-				bc+=64-el;
-				e|=v>>bc;
-			}
-			else{
-				bc-=el;
-				e=(v>>bc)&((1<<el)-1);
-			}
-			if (el==8){
-				o->v[i]=(sll_char_t)e;
-				bf[r]=(sll_char_t)e;
-				i++;
-				r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
-			}
-			else{
-				unsigned int k=e>>STRING_COMPRESSION_LENGTH_BIT_COUNT;
-				unsigned int l=k+(e&((1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1))+2;
-				do{
-					bf[r]=bf[k&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1)];
-					o->v[i]=bf[r];
-					i++;
-					r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
-					k++;
-				} while (k<l);
-			}
-		} while (i<o->l);
-	}
-	sll_string_calculate_checksum(o);
 	return 1;
 }
 
@@ -247,7 +183,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 	CHECK_ERROR(rf,a_dt->st.l,sll_string_index_t);
 	a_dt->st.dt=sll_allocate(a_dt->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		if (!_read_string(rf,a_dt->st.dt+i)){
+		if (!sll_decode_string(rf,a_dt->st.dt+i)){
 			return 0;
 		}
 	}
@@ -443,7 +379,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 	CHECK_ERROR(rf,c_dt->st.l,sll_string_index_t);
 	c_dt->st.dt=sll_allocate(c_dt->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
-		if (!_read_string(rf,c_dt->st.dt+i)){
+		if (!sll_decode_string(rf,c_dt->st.dt+i)){
 			return 0;
 		}
 	}
@@ -455,7 +391,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 	CHECK_ERROR(rf,c_dt->_n_sc_id,sll_scope_t);
 	_init_node_stack(c_dt);
 	c_dt->h=c_dt->_s.p;
-	return _read_object(c_dt,rf);
+	return _read_node(c_dt,rf);
 }
 
 
@@ -463,5 +399,5 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_node(sll_compilation_data_t* c_dt,sll_file_t* rf,sll_node_t** o){
 	*o=c_dt->_s.p;
 	SLL_ASSERT(*o);
-	return _read_object(c_dt,rf);
+	return _read_node(c_dt,rf);
 }

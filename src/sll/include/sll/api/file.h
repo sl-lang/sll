@@ -14,6 +14,18 @@
 
 /**
  * \flags check_output func
+ * \name sll_file_from_handle
+ * \group file-api
+ * \desc Desc!
+ * \arg sll_integer_t h
+ * \ret sll_file_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_integer_t h);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_file_to_handle
  * \group file-api
  * \desc Desc!

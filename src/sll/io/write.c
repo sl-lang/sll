@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/serial.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -27,7 +28,7 @@ static void _write_integer(sll_file_t* wf,sll_size_t v){
 
 
 
-static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
+static const sll_node_t* _write_node(sll_file_t* wf,const sll_node_t* o){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
 		if (o->t==NODE_TYPE_CHANGE_STACK){
 			o=o->dt._p;
@@ -61,7 +62,7 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 				o++;
 				while (l){
 					l--;
-					o=_write_object(wf,o);
+					o=_write_node(wf,o);
 				}
 				return o;
 			}
@@ -72,7 +73,7 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 				o++;
 				while (l){
 					l--;
-					o=_write_object(wf,o);
+					o=_write_node(wf,o);
 				}
 				return o;
 			}
@@ -94,7 +95,7 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 				o++;
 				while (l){
 					l--;
-					o=_write_object(wf,o);
+					o=_write_node(wf,o);
 				}
 				return o;
 			}
@@ -112,7 +113,7 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 				o++;
 				while (l){
 					l--;
-					o=_write_object(wf,o);
+					o=_write_node(wf,o);
 				}
 				return o;
 			}
@@ -124,7 +125,7 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 				o++;
 				while (l){
 					l--;
-					o=_write_object(wf,o);
+					o=_write_node(wf,o);
 				}
 				return o;
 			}
@@ -134,90 +135,9 @@ static const sll_node_t* _write_object(sll_file_t* wf,const sll_node_t* o){
 	o++;
 	while (l){
 		l--;
-		o=_write_object(wf,o);
+		o=_write_node(wf,o);
 	}
 	return o;
-}
-
-
-
-static void _write_string(const sll_string_t* s,sll_file_t* wf){
-	_write_integer(wf,s->l);
-	if (s->l<STRING_COMPRESSION_MIN_LENGTH){
-		sll_file_write(wf,s->v,s->l*sizeof(sll_char_t));
-		return;
-	}
-	wide_data_t v=0;
-	unsigned int bc=64;
-	sll_char_t bf[1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)];
-	sll_set_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1),0xff);
-	sll_string_length_t si=0;
-	unsigned int i=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
-	do{
-		bf[i]=s->v[si];
-		i++;
-		si++;
-	} while (si<s->l&&i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)));
-	unsigned int r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
-	do{
-		unsigned int st=0;
-		unsigned int l=1;
-		unsigned int mn=i-r;
-		if (mn>(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1){
-			mn=(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1;
-		}
-		sll_char_t c=bf[r];
-		for (unsigned int j=r-(((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));j<r;j++){
-			if (bf[j]==c){
-				unsigned int k=1;
-				while (k<mn&&bf[j+k]==bf[r+k]){
-					k++;
-				}
-				if (k>l){
-					st=j;
-					l=k;
-				}
-			}
-		}
-		unsigned int e;
-		unsigned int el;
-		if (l==1){
-			e=256|c;
-			el=9;
-		}
-		else{
-			e=((st&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1))<<STRING_COMPRESSION_LENGTH_BIT_COUNT)|(l-2);
-			el=STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT+1;
-		}
-		SLL_ASSERT(el<=15);
-		if (bc<el){
-			v=(v<<bc)|(e>>(el-bc));
-			sll_file_write(wf,&v,sizeof(wide_data_t));
-			v=e;
-			bc+=64-el;
-		}
-		else{
-			v=(v<<el)|e;
-			bc-=el;
-		}
-		r+=l;
-		if (r>=(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1){
-			for (unsigned int j=0;j<(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT);j++){
-				bf[j]=bf[j+(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)];
-			}
-			i-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
-			r-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
-			while (i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))&&si<s->l){
-				bf[i]=s->v[si];
-				i++;
-				si++;
-			}
-		}
-	} while (r<i);
-	if (bc!=64){
-		v<<=bc;
-		sll_file_write(wf,&v,sizeof(wide_data_t));
-	}
 }
 
 
@@ -238,7 +158,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	}
 	_write_integer(wf,a_dt->st.l);
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		_write_string(a_dt->st.dt+i,wf);
+		sll_encode_string(wf,a_dt->st.dt+i);
 	}
 	_write_integer(wf,a_dt->dbg.l);
 	for (sll_instruction_index_t i=0;i<a_dt->dbg.l;i++){
@@ -358,7 +278,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 
 
 __SLL_EXTERNAL void sll_write_node(sll_file_t* wf,const sll_node_t* o){
-	_write_object(wf,o);
+	_write_node(wf,o);
 }
 
 
@@ -398,12 +318,12 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 	}
 	_write_integer(wf,c_dt->st.l);
 	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
-		_write_string(c_dt->st.dt+i,wf);
+		sll_encode_string(wf,c_dt->st.dt+i);
 	}
 	_write_integer(wf,c_dt->fpt.l);
 	for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
 		_write_integer(wf,*(c_dt->fpt.dt+i));
 	}
 	_write_integer(wf,c_dt->_n_sc_id);
-	_write_object(wf,c_dt->h);
+	_write_node(wf,c_dt->h);
 }

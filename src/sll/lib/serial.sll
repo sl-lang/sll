@@ -1,0 +1,47 @@
+(--- "types.sll" "file.sll")
+
+
+
+(= serial_module_type (&:
+	(~ func_type) decode
+	(~ func_type) decode_string
+	(~ func_type) encode
+	(~ func_type) encode_string
+))
+
+
+
+(= decode (,,, f
+	(? (=== f nil) (@@ nil))
+	(= f (:: f file$file_type))
+	(@@ (<- (... "sll:serial_decode_object") f$_handle))
+))
+
+(= decode_string (,,, f
+	(? (=== f nil) (@@ ""))
+	(= f (:: f file$file_type))
+	(@@ (<- (... "sll:serial_decode_string") f$_handle))
+))
+
+(= encode (,,, f a
+	(? (=== f nil) (@@))
+	(= f (:: f file$file_type))
+	(<- (... "sll:serial_encode_object") f$_handle a)
+))
+
+(= encode_string (,,, f s
+	(? (=== f nil) (@@))
+	(= f (:: f file$file_type))
+	(= s (:: s string_type))
+	(<- (... "sll:serial_encode_string") f$_handle s)
+))
+
+
+
+(= serial (. serial_module_type
+	decode
+	decode_string
+	encode
+	encode_string
+))
+(## serial)

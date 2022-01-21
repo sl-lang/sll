@@ -3251,6 +3251,116 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_random_get_string_raw(sl
 
 
 
+__SLL_API_TYPE_sll_api_serial_decode_object sll_api_serial_decode_object(__SLL_API_ARGS_sll_api_serial_decode_object);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* out=sll_api_serial_decode_object(a->dt.i);
+	SLL_RELEASE(a);
+	return out;
+}
+
+
+
+__SLL_API_TYPE_sll_api_serial_decode_string sll_api_serial_decode_string(__SLL_API_ARGS_sll_api_serial_decode_string);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_string_t out;
+	sll_api_serial_decode_string(a->dt.i,&out);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_STRING;
+	out_o->dt.s=out;
+	return out_o;
+}
+
+
+
+__SLL_API_TYPE_sll_api_serial_encode_object sll_api_serial_encode_object(__SLL_API_ARGS_sll_api_serial_encode_object);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_encode_object_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t*const* b=al+1;
+	sll_arg_count_t bc=(all>1?all-1:0);
+	sll_api_serial_encode_object(a->dt.i,b,bc);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_serial_encode_string sll_api_serial_encode_string(__SLL_API_ARGS_sll_api_serial_encode_string);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_encode_string_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		b=SLL_CREATE();
+		b->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(b->dt.s));
+	}
+	sll_api_serial_encode_string(a->dt.i,&(b->dt.s));
+	SLL_RELEASE(b);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
 __SLL_API_TYPE_sll_api_sort_quicksort sll_api_sort_quicksort(__SLL_API_ARGS_sll_api_sort_quicksort);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -5090,6 +5200,26 @@ static const internal_function_t _ifunc_data_ptr[]={
 		0
 	},
 	{
+		"sll:serial_decode_object",
+		sll_api_serial_decode_object_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
+	},
+	{
+		"sll:serial_decode_string",
+		sll_api_serial_decode_string_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
+	},
+	{
+		"sll:serial_encode_object",
+		sll_api_serial_encode_object_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
+	},
+	{
+		"sll:serial_encode_string",
+		sll_api_serial_encode_string_raw,
+		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
+	},
+	{
 		"sll:sort_quicksort",
 		sll_api_sort_quicksort_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
@@ -5308,5 +5438,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=142;
+const sll_function_index_t _ifunc_size=146;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

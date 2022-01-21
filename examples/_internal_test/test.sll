@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -369,6 +369,17 @@
 (<- file$write f "abc")
 (<- file$write f '#')
 (:> (<- file$get_buffer f) "\n")
+(<- file$close f)
+
+(= tmp (<- file$from_data "" file$FLAG_WRITE))
+(<- serial$encode tmp <"#a" 56 "very-long-key" JSON_STRING [44 -0.0505e7]>)
+(= enc (<- file$get_buffer tmp))
+(<- file$close tmp)
+(:> [enc] "\n")
+(= tmp (<- file$from_data enc file$FLAG_READ))
+(= obj (<- serial$decode tmp))
+(<- file$close tmp)
+(:> obj "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

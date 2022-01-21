@@ -2421,6 +2421,105 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_serial_decode_object __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_serial_decode_object sll_integer_t a
+/**
+ * \flags func optimizable
+ * \name sll_api_serial_decode_object
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_decode_object_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_decode_object:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Serialization
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_serial_decode_string void
+#define __SLL_API_ARGS_sll_api_serial_decode_string sll_integer_t a,sll_string_t* out
+/**
+ * \flags func optimizable
+ * \name sll_api_serial_decode_string
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_decode_string_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_decode_string:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_serial_encode_object void
+#define __SLL_API_ARGS_sll_api_serial_encode_object sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_object
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_object_t*const* b -> 
+ * \arg sll_arg_count_t bc
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_object_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_encode_object:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_serial_encode_string void
+#define __SLL_API_ARGS_sll_api_serial_encode_string sll_integer_t a,sll_string_t* b
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_string
+ * \group serial-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_string_t* b -> 
+ */
+/**
+ * \flags check_output func optimizable
+ * \name sll_api_serial_encode_string_raw
+ * \group raw-api
+ * \subgroup raw-api-serial-api
+ * \desc Wrapper function for :sll_api_serial_encode_string:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sort_quicksort __SLL_CHECK_OUTPUT sll_object_t*
 #define __SLL_API_ARGS_sll_api_sort_quicksort sll_array_t* a,sll_bool_t b,sll_bool_t c,sll_integer_t d
 /**
