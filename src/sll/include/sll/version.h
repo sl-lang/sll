@@ -17,7 +17,7 @@
 
 #define SLL_VERSION_MAJOR 0
 #define SLL_VERSION_MINOR 7
-#define SLL_VERSION_PATCH 0
+#define SLL_VERSION_PATCH 1
 #ifdef __SLL_STATIC__
 #define SLL_VERSION_STANDALONE 1
 #endif

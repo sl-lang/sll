@@ -1,6 +1,10 @@
 # The Sl Programing Language Change Log
 
-## [0.7.0] - Ongoing
+## [0.7.1] - Ongoing
+
+*Nothing*
+
+## [0.7.0] - 2022-01-21
 
 ### Added
 
@@ -1413,7 +1417,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.7.0]: https://github.com/sl-lang/sll/compare/sll-v0.6.37...main
+[0.7.1]: https://github.com/sl-lang/sll/compare/sll-v0.7.0...main
+[0.7.0]: https://github.com/sl-lang/sll/compare/sll-v0.6.37...sll-v0.7.0
 [0.6.37]: https://github.com/sl-lang/sll/compare/sll-v0.6.36...sll-v0.6.37
 [0.6.36]: https://github.com/sl-lang/sll/compare/sll-v0.6.35...sll-v0.6.36
 [0.6.35]: https://github.com/sl-lang/sll/compare/sll-v0.6.34...sll-v0.6.35
@@ -1658,28 +1663,28 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[0.7.0/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/main/src/sll/api/_generated_raw.c
-[0.7.0/src/sll/compilation_data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/compilation_data.c
-[0.7.0/src/sll/data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/data.c
-[0.7.0/src/sll/debug_data.c]: https://github.com/sl-lang/sll/blob/main/src/sll/debug_data.c
-[0.7.0/src/sll/env.c]: https://github.com/sl-lang/sll/blob/main/src/sll/env.c
-[0.7.0/src/sll/include/sll/_size_types.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/_size_types.h
-[0.7.0/src/sll/include/sll/data.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/data.h
-[0.7.0/src/sll/include/sll/env.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/env.h
-[0.7.0/src/sll/include/sll/generated/api.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/generated/api.h
-[0.7.0/src/sll/include/sll/generated]: https://github.com/sl-lang/sll/tree/main/src/sll/include/sll/generated
-[0.7.0/src/sll/include/sll/init.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/init.h
-[0.7.0/src/sll/include/sll/location.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/location.h
-[0.7.0/src/sll/include/sll/sandbox.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/sandbox.h
-[0.7.0/src/sll/include/sll/string_table.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/string_table.h
-[0.7.0/src/sll/include/sll/version.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/version.h
-[0.7.0/src/sll/init.c]: https://github.com/sl-lang/sll/blob/main/src/sll/init.c
-[0.7.0/src/sll/location.c]: https://github.com/sl-lang/sll/blob/main/src/sll/location.c
-[0.7.0/src/sll/sandbox.c]: https://github.com/sl-lang/sll/blob/main/src/sll/sandbox.c
-[0.7.0/src/sll/size.c]: https://github.com/sl-lang/sll/blob/main/src/sll/size.c
-[0.7.0/src/sll/skip.c]: https://github.com/sl-lang/sll/blob/main/src/sll/skip.c
-[0.7.0/src/sll/string_table.c]: https://github.com/sl-lang/sll/blob/main/src/sll/string_table.c
-[0.7.0/src/sll/version.c]: https://github.com/sl-lang/sll/blob/main/src/sll/version.c
+[0.7.0/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/api/_generated_raw.c
+[0.7.0/src/sll/compilation_data.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/compilation_data.c
+[0.7.0/src/sll/data.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/data.c
+[0.7.0/src/sll/debug_data.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/debug_data.c
+[0.7.0/src/sll/env.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/env.c
+[0.7.0/src/sll/include/sll/_size_types.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/_size_types.h
+[0.7.0/src/sll/include/sll/data.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/data.h
+[0.7.0/src/sll/include/sll/env.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/env.h
+[0.7.0/src/sll/include/sll/generated/api.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/generated/api.h
+[0.7.0/src/sll/include/sll/generated]: https://github.com/sl-lang/sll/tree/sll-v0.7.0/src/sll/include/sll/generated
+[0.7.0/src/sll/include/sll/init.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/init.h
+[0.7.0/src/sll/include/sll/location.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/location.h
+[0.7.0/src/sll/include/sll/sandbox.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/sandbox.h
+[0.7.0/src/sll/include/sll/string_table.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/string_table.h
+[0.7.0/src/sll/include/sll/version.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/include/sll/version.h
+[0.7.0/src/sll/init.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/init.c
+[0.7.0/src/sll/location.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/location.c
+[0.7.0/src/sll/sandbox.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/sandbox.c
+[0.7.0/src/sll/size.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/size.c
+[0.7.0/src/sll/skip.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/skip.c
+[0.7.0/src/sll/string_table.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/string_table.c
+[0.7.0/src/sll/version.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/version.c
 [0.6.37/src/sll/api/_generated.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/api/_generated.c
 [0.6.37/src/sll/include/sll/api/_generated.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/api/_generated.h
 [0.6.37/src/sll/include/sll/assembly.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/assembly.h
