@@ -48,7 +48,7 @@ static sll_integer_t _decode_signed_integer(sll_file_t* rf,sll_bool_t* e){
 
 
 static void _encode_integer(sll_file_t* f,sll_size_t v){
-	sll_char_t bf[8];
+	sll_char_t bf[9];
 	sll_string_length_t i=0;
 	while (i<8&&v>0x7f){
 		bf[i]=(v&0x7f)|0x80;
