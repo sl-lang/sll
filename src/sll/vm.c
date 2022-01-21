@@ -62,11 +62,18 @@
 
 
 
-static sll_object_t** _vm_var_data;
-static sll_object_t* _vm_const_string;
-static sll_identifier_index_t _vm_ii;
-static sll_stack_offset_t _vm_si;
-static sll_object_t** _vm_stack;
+static sll_object_t** _vm_var_data=NULL;
+static sll_object_t* _vm_const_string=NULL;
+static sll_identifier_index_t _vm_ii=0;
+static sll_stack_offset_t _vm_si=0;
+static sll_object_t** _vm_stack=NULL;
+
+
+
+__SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_count=0;
+__SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_index=0;
+__SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
+__SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 
@@ -97,14 +104,16 @@ void _pop_call_stack(void){
 
 
 
-__SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_count=0;
-__SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_index=0;
-__SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
-__SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
-
-
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg){
+	sll_object_t** old_vm_var_data=_vm_var_data;
+	sll_object_t* old_vm_const_string=_vm_const_string;
+	sll_identifier_index_t old_vm_ii=_vm_ii;
+	sll_stack_offset_t old_vm_si=_vm_si;
+	sll_object_t** old_vm_stack=_vm_stack;
+	sll_instruction_index_t old_instruction_count=sll_current_instruction_count;
+	sll_instruction_index_t old_instruction_index=sll_current_instruction_index;
+	const sll_runtime_data_t* old_runtime_data=sll_current_runtime_data;
+	const sll_vm_config_t* old_vm_config=sll_current_vm_config;
 	_vm_ii=0;
 	_vm_si=0;
 	sll_current_instruction_count=0;
@@ -152,6 +161,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_platform_free_page(PTR(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-cfg->c_st_sz*sizeof(sll_call_stack_frame_t)),ptr_sz);
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
+	_vm_var_data=old_vm_var_data;
+	_vm_const_string=old_vm_const_string;
+	_vm_ii=old_vm_ii;
+	_vm_si=old_vm_si;
+	_vm_stack=old_vm_stack;
+	sll_current_instruction_count=old_instruction_count;
+	sll_current_instruction_index=old_instruction_index;
+	sll_current_runtime_data=old_runtime_data;
+	sll_current_vm_config=old_vm_config;
 	return rc;
 }
 
