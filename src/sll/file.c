@@ -440,7 +440,15 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c){
 	}
 	if (f->f&FILE_FLAG_MEMORY){
 		if (f->f&FILE_FLAG_DYNAMIC_BUFFERS){
+			dynamic_buffer_chunk_t* k=f->_w.d.t;
+			if (k->sz>f->_w.d.off){
+				k->dt[f->_w.d.off]=c;
+				f->_w.d.sz++;
+				f->_w.d.off++;
+				return 1;
+			}
 			SLL_UNIMPLEMENTED();
+			return 1;
 		}
 		if (f->_off+1>=f->dt.mm.sz){
 			return 0;

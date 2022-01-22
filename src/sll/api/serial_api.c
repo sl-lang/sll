@@ -47,14 +47,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 	if (!f){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_bool_t err=0;
-	sll_object_type_t t=(sll_object_type_t)sll_decode_integer(f,&err);
-	if (err){
-		return SLL_ACQUIRE_STATIC_INT(0);
-	}
-	switch (t){
+	switch (sll_file_read_char(f)){
 		case SLL_OBJECT_TYPE_INT:
 			{
+				sll_bool_t err=0;
 				sll_integer_t v=sll_decode_signed_integer(f,&err);
 				return (err?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(v));
 			}
@@ -87,6 +83,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
+				sll_bool_t err=0;
 				sll_array_length_t l=(sll_array_length_t)sll_decode_integer(f,&err);
 				if (err){
 					SLL_INIT_ARRAY(&(o->dt.a));
@@ -105,6 +102,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
+				sll_bool_t err=0;
 				sll_map_length_t l=(sll_map_length_t)sll_decode_integer(f,&err);
 				if (err){
 					SLL_INIT_MAP(&(o->dt.m));
@@ -118,8 +116,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 				}
 				return o;
 			}
-		default:
+		case SERIAL_OBJECT_TYPE:
 			SLL_UNIMPLEMENTED();
+		case SLL_END_OF_DATA:
+			return SLL_ACQUIRE_STATIC_INT(0);
+		default:
+			SLL_UNREACHABLE();
 	}
 }
 
@@ -217,7 +219,7 @@ __SLL_EXTERNAL void sll_encode_integer(sll_file_t* f,sll_size_t v){
 
 
 __SLL_EXTERNAL void sll_encode_signed_integer(sll_file_t* f,sll_integer_t v){
-	sll_encode_integer(f,(v<0?((~v)<<1)|1:v<<1));
+	sll_encode_integer(f,((v<0?~v:v)<<1)|(v<0));
 }
 
 
@@ -230,7 +232,7 @@ __SLL_EXTERNAL void sll_encode_object(sll_file_t* f,sll_object_t*const* a,sll_ar
 		sll_object_t* k=*a;
 		a++;
 		ac--;
-		sll_encode_integer(f,SLL_OBJECT_GET_TYPE(k));
+		sll_file_write_char(f,(SLL_OBJECT_GET_TYPE(k)>SLL_MAX_OBJECT_TYPE?SERIAL_OBJECT_TYPE:SLL_OBJECT_GET_TYPE(k)));
 		switch (SLL_OBJECT_GET_TYPE(k)){
 			case SLL_OBJECT_TYPE_INT:
 				sll_encode_signed_integer(f,k->dt.i);

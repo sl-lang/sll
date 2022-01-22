@@ -261,6 +261,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define CLI_BUILD_TYPE_STRING "local"
 #endif
 
+#define SERIAL_OBJECT_TYPE (SLL_MAX_OBJECT_TYPE+1)
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
