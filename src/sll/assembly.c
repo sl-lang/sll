@@ -1577,40 +1577,46 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					GENERATE_DEBUG_DATA(g_dt,o);
 					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
+				sll_identifier_index_t id=SLL_MAX_IDENTIFIER_INDEX;
 				if (o->t==SLL_NODE_TYPE_IDENTIFIER){
-					sll_identifier_index_t id=GET_VARIABLE_INDEX(o,g_dt);
+					id=GET_VARIABLE_INDEX(o,g_dt);
 					o++;
-					sll_arg_count_t io_l=io->dt.ac-1;
-					sll_assembly_instruction_type_t ai_t=SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN;
-					sll_arg_count_t i=io_l;
-					if (io_l==2){
-						ai_t=SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO;
-					}
-					else if (io_l>=3){
-						ai_t=SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE;
-						i=3;
-					}
-					io_l-=i;
-					while (i){
-						i--;
-						o=_generate_on_stack(o,g_dt);
-					}
-					while (io_l){
-						io_l--;
-						o=_generate(o,g_dt);
-					}
-					o=_generate_on_stack(o,g_dt);
-					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
-					ai->t=ai_t|SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE;
-					ai->dt.v=id;
-					l-=2;
-					while (l){
-						l--;
-						o=_generate(o,g_dt);
-					}
-					return o;
 				}
-				SLL_UNIMPLEMENTED();
+				else{
+					o=_generate_on_stack(o,g_dt);
+				}
+				sll_arg_count_t io_l=io->dt.ac-1;
+				sll_assembly_instruction_type_t ai_t=SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN;
+				sll_arg_count_t i=io_l;
+				if (io_l==2){
+					ai_t=SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO;
+				}
+				else if (io_l>=3){
+					ai_t=SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE;
+					i=3;
+				}
+				io_l-=i;
+				while (i){
+					i--;
+					o=_generate_on_stack(o,g_dt);
+				}
+				while (io_l){
+					io_l--;
+					o=_generate(o,g_dt);
+				}
+				o=_generate_on_stack(o,g_dt);
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+				ai->t=ai_t;
+				if (id!=SLL_MAX_IDENTIFIER_INDEX){
+					ai->t|=SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE;
+					ai->dt.v=id;
+				}
+				l-=2;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				return o;
 			}
 		case SLL_NODE_TYPE_FUNC:
 			{

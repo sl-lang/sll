@@ -7,6 +7,7 @@
 	(~ func_type) time_ns
 	(~ func_type) sleep
 	(~ func_type) sleep_ns
+	(~ func_type) time_function
 ))
 
 
@@ -19,11 +20,20 @@
 
 (= sleep_ns (... "sll:time_sleep_ns"))
 
+(= time_function (,,, fn
+	(= fn (:: fn int_type))
+	(= st (<- get))
+	(<- fn)
+	(= et (<- get))
+	(@@ (- et st))
+))
+
 
 (= time (. time_module_type
 	get
 	get_ns
 	sleep
 	sleep_ns
+	time_function
 ))
 (## time)

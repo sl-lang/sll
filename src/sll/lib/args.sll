@@ -1,0 +1,62 @@
+(--- "types.sll" "sys.sll")
+
+
+
+(= arg_name_type (&:
+	(~ array_type) names
+	(~ type_type) type
+	(~ object_type) default
+))
+
+(= state_type (&:
+	(~ map_type) dt
+))
+
+(= args_module_type (&:
+	(~ func_type) add_option
+	(~ func_type) parse
+))
+
+
+
+(= add_option (,,, st key names type default
+	(? (=== st nil) {
+		(= st (. state_type))
+	})
+	(= st (:: st state_type))
+	(? (|| (=== key nil) (=== names nil)) (@@ st))
+	(? (=== (:? names) string_type) {
+		(= names [names])
+	})
+	(= dt (. arg_name_type
+		names
+		type
+		(:: default type)
+	))
+	(= (: st$dt key) dt)
+	(@@ st)
+))
+
+(= parse (,,, st
+	(? (=== st nil) {
+		(@@ <>)
+	})
+	(= st (:: st state_type))
+	(= keys (:: st$dt map_key_type))
+	(= o <>)
+	(-> (= i 0) (< i ($ keys)) {
+		(= key (: keys i))
+		(= data (: st$dt key))
+		(= (: o key) data$default)
+		(++ i)
+	})
+	(@@ o)
+))
+
+
+
+(= args (. args_module_type
+	add_option
+	parse
+))
+(## args)

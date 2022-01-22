@@ -2,6 +2,14 @@
 
 ## [0.7.1] - Ongoing
 
+### Added
+
+- Implemented `args$add_option` ([#179] and [#180])
+- Implemented `args$parse` ([#179] and [#181])
+- Implemented `args.sll` ([#179])
+- Implemented `time$time_function` ([#195])
+- Object type support: `SLL_OBJECT_TYPE_OBJECT` and `object_type`
+
 ### Changed
 
 - Custom ELF secions have been renamed from `s_str` and `s_obj` to `.initstr` and `.sobject`
@@ -1511,6 +1519,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#200]: https://github.com/sl-lang/sll/issues/200
 [#199]: https://github.com/sl-lang/sll/issues/199
 [#196]: https://github.com/sl-lang/sll/issues/196
+[#195]: https://github.com/sl-lang/sll/issues/195
 [#194]: https://github.com/sl-lang/sll/issues/194
 [#193]: https://github.com/sl-lang/sll/issues/193
 [#192]: https://github.com/sl-lang/sll/issues/192
@@ -1524,6 +1533,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#184]: https://github.com/sl-lang/sll/issues/184
 [#183]: https://github.com/sl-lang/sll/issues/183
 [#182]: https://github.com/sl-lang/sll/issues/182
+[#181]: https://github.com/sl-lang/sll/issues/181
+[#180]: https://github.com/sl-lang/sll/issues/180
+[#179]: https://github.com/sl-lang/sll/issues/179
 [#176]: https://github.com/sl-lang/sll/issues/176
 [#172]: https://github.com/sl-lang/sll/issues/172
 [#171]: https://github.com/sl-lang/sll/issues/171
