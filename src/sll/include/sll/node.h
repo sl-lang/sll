@@ -144,18 +144,6 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt);
 
 
 /**
- * \flags func
- * \name sll_optimize_node
- * \group node
- * \desc Docs!
- * \arg sll_compilation_data_t* c_dt
- * \arg sll_internal_function_table_t* i_ft
- */
-__SLL_EXTERNAL void sll_optimize_node(sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft);
-
-
-
-/**
  * \flags check_output func
  * \name sll_parse_all_nodes
  * \group node

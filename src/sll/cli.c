@@ -207,12 +207,6 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 
 static void _execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,const sll_char_t* o_fp,int* ec){
 	if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)){
-		if (fl&CLI_FLAG_OPTIMIZE){
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("Performing global optimization..."));
-			}
-			sll_optimize_node(c_dt,&i_ft);
-		}
 		if (fl&CLI_FLAG_STRIP_DEBUG){
 			if (fl&CLI_FLAG_VERBOSE){
 				SLL_LOG(SLL_CHAR("Removing debugging data..."));
@@ -432,9 +426,6 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 			}
 			o_fp=(const sll_char_t*)(argv[i]);
 		}
-		else if ((*e=='-'&&*(e+1)=='O'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--optimize"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_OPTIMIZE;
-		}
 		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--print-objects"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_PRINT_OBJECT;
 		}
@@ -532,9 +523,6 @@ _read_file_argument:
 		if (!(fl&CLI_FLAG_NO_RUN)){
 			SLL_LOG(SLL_CHAR("  Execution"));
 		}
-		if (fl&CLI_FLAG_OPTIMIZE){
-			SLL_LOG(SLL_CHAR("  Optimization"));
-		}
 		if (fl&CLI_FLAG_PRINT_ASSEMBLY){
 			SLL_LOG(SLL_CHAR("  Assembly printing"));
 		}
@@ -551,9 +539,6 @@ _read_file_argument:
 			i+=sll_string_length_unaligned(i_fp+i)+1;
 		}
 		SLL_LOG(SLL_CHAR("Library path: '%s'"),l_fp);
-	}
-	if (fl&CLI_FLAG_OPTIMIZE){
-		SLL_WARN(SLL_CHAR("WARNING: Optimizer is currently an alpha feature!"));
 	}
 	if (fpl+sll==1){
 		fl|=CLI_FLAG_SINGLE_OUTPUT;

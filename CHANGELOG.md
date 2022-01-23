@@ -15,6 +15,10 @@
 - Custom ELF secions have been renamed from `s_str` and `s_obj` to `.initstr` and `.sobject`
 - Recursive calls to `sll_execute_assembly` no longer corrupt internal data
 
+### Removed
+
+- Broken optimizer
+
 ## [0.7.0] - 2022-01-21
 
 ### Added
