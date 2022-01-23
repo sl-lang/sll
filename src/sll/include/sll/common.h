@@ -32,7 +32,7 @@
 
 
 #ifdef DEBUG_BUILD
-#define __SLL_ADD_DEBUG_DATA(o,t) sll_add_debug_data((o),__FILE__,__LINE__,__func__,(t))
+#define __SLL_ADD_DEBUG_DATA(o,t) sll_add_debug_data((o),(sll_char_t*)(__FILE__),__LINE__,(sll_char_t*)(__func__),(t))
 #else
 #define __SLL_ADD_DEBUG_DATA(o,t) o
 #endif

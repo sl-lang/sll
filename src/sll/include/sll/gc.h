@@ -24,13 +24,13 @@
  * \group gc
  * \desc Docs!
  * \arg sll_object_t* o
- * \arg const char* fp
+ * \arg const sll_char_t* fp
  * \arg unsigned int ln
- * \arg const char* fn
+ * \arg const sll_char_t* fn
  * \arg unsigned int t
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t);
+__SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const sll_char_t* fp,unsigned int ln,const sll_char_t* fn,unsigned int t);
 
 
 

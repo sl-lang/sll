@@ -12,12 +12,14 @@
 
 ### Changed
 
-- Custom ELF secions have been renamed from `s_str` and `s_obj` to `.initstr` and `.sobject`
+- Custom ELF sections have been renamed from `s_str` and `s_obj` to `.initstr` and `.sobject`
 - Recursive calls to `sll_execute_assembly` no longer corrupt internal data
+- `sll_add_debug_data` now uses `const sll_char_t*` instead of `const char*`
 
 ### Removed
 
 - Broken optimizer
+- Various code duplications
 
 ## [0.7.0] - 2022-01-21
 
@@ -43,7 +45,7 @@
 
 ### Changed
 
-- Build script now removes symbols from the generated execuatbles
+- Build script now removes symbols from the generated executables
 - Changed internal executable section names
 - Increased `sll_file_flags_t` to 16 bits
 - Moved `SLL_COPY_STRING_NULL`, `SLL_COMPARE_RESULT_BELOW`, `SLL_COMPARE_RESULT_EQUAL`, `SLL_COMPARE_RESULT_ABOVE` types, `sll_compare_data`, `sll_copy_data`, `sll_copy_string`, `sll_copy_string_null`, `sll_set_memory` and `sll_zero_memory` from [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/data.c`][0.7.0/src/sll/data.c] and [`src/sll/include/sll/data.h`][0.7.0/src/sll/include/sll/data.h]
@@ -59,7 +61,7 @@
 - Renamed [`src/sll/util.c`][0.6.37/src/sll/util.c] and [`src/sll/include/sll/util.h`][0.6.37/src/sll/include/sll/util.h] to [`src/sll/string_table.c`][0.7.0/src/sll/string_table.c] and [`src/sll/include/sll/string_table.h`][0.7.0/src/sll/include/sll/string_table.h]
 - Renamed `sll_api_time_current_nanos`, `sll_api_time_sleep_nanos`, `time$time_nanos` and `time$sleep_nanos` to `sll_api_time_current_ns`, `sll_api_time_sleep_ns`, `time$time_ns` and `time$sleep_ns`
 - Split [`src/sll/node.c`][0.6.37/src/sll/node.c] into [`src/sll/compilation_data.c`][0.7.0/src/sll/compilation_data.c], [`src/sll/debug_data.c`][0.7.0/src/sll/debug_data.c], [`src/sll/skip.c`][0.7.0/src/sll/skip.c] and [`src/sll/size.c`][0.7.0/src/sll/size.c]
-- Static strings are now initialized after the call to `sll_init` funcion
+- Static strings are now initialized after the call to `sll_init` function
 - Time version macro (`SLL_VERSION_BUILD_TIME`) now specifies nanoseconds instead of a string (can be converted by `sll_date_from_time_ns`)
 - Updated CLI code
 

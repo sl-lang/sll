@@ -2,6 +2,7 @@
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/map.h>
@@ -84,7 +85,7 @@ void _gc_release_data(void){
 
 
 
-__SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,unsigned int ln,const char* fn,unsigned int t){
+__SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const sll_char_t* fp,unsigned int ln,const sll_char_t* fn,unsigned int t){
 	if (!o->_dbg){
 		object_debug_data_t* dt=sll_allocate(sizeof(object_debug_data_t));
 		dt->c.fp[0]=0;
@@ -95,24 +96,22 @@ __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,u
 		o->_dbg=dt;
 	}
 	object_debug_data_trace_data_t* n=sll_allocate(sizeof(object_debug_data_trace_data_t));
-	sll_string_length_t i=0;
-	while (*(fp+i)&&i<255){
-		n->fp[i]=*(fp+i);
-		i++;
+	sll_string_length_t i=sll_string_length_unaligned(fp);
+	if (i>255){
+		i=255;
 	}
+	sll_copy_data(fp,i,n->fp);
 	n->fp[i]=0;
-	i=0;
-	while (*(fn+i)&&i<255){
-		n->fn[i]=*(fn+i);
-		i++;
+	i=sll_string_length_unaligned(fn);
+	if (i>255){
+		i=255;
 	}
+	sll_copy_data(fn,i,n->fn);
 	n->fn[i]=0;
 	n->ln=ln;
 	object_debug_data_t* dt=o->_dbg;
-	if (t==__SLL_DEBUG_TYPE_CREATE){
-		if (!dt->c.fp[0]){
-			dt->c=*n;
-		}
+	if (t==__SLL_DEBUG_TYPE_CREATE&&!dt->c.fp[0]){
+		dt->c=*n;
 	}
 	if (t==__SLL_DEBUG_TYPE_RELEASE){
 		dt->rll++;
