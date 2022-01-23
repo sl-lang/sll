@@ -264,6 +264,9 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define PRINT_STATIC_STRING(s,wf) sll_file_write((wf),(s),sizeof(s)/sizeof(char)-1)
 
+#define JSON_NUMBER_INT 0
+#define JSON_NUMBER_FLOAT 1
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
@@ -593,6 +596,13 @@ typedef struct __DYNAMIC_BUFFER_CHUNK{
 	struct __DYNAMIC_BUFFER_CHUNK* n;
 	sll_char_t dt[];
 } dynamic_buffer_chunk_t;
+
+
+
+typedef union __JSON_NUMBER{
+	sll_integer_t i;
+	sll_float_t f;
+} json_number_t;
 
 
 

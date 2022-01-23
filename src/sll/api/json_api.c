@@ -88,6 +88,67 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 
 
 
+static sll_bool_t _parse_number(sll_char_t c,sll_json_parser_state_t* p,json_number_t* o){
+	sll_bool_t neg=0;
+	if (c=='+'){
+		c=**p;
+		(*p)++;
+	}
+	else if (c=='-'){
+		neg=1;
+		c=**p;
+		(*p)++;
+	}
+	sll_float_t v=0;
+	while (c>47&&c<58){
+		v=v*10+(c-48);
+		c=**p;
+		(*p)++;
+	}
+	if (c!='.'&&c!='e'&&c!='E'){
+		(*p)--;
+		o->i=(sll_integer_t)(neg?-v:v);
+		return JSON_NUMBER_INT;
+	}
+	if (c=='.'){
+		sll_float_t pw=0.1;
+		c=**p;
+		(*p)++;
+		while (c>47&&c<58){
+			v+=pw*(c-48);
+			pw*=0.1;
+			c=**p;
+			(*p)++;
+		}
+	}
+	if (c=='e'||c=='E'){
+		c=**p;
+		(*p)++;
+		sll_bool_t neg_pw=0;
+		if (c=='+'){
+			c=**p;
+			(*p)++;
+		}
+		else if (c=='-'){
+			neg_pw=1;
+			c=**p;
+			(*p)++;
+		}
+		sll_integer_t pw=0;
+		while (c>47&&c<58){
+			pw=pw*10+(c-48);
+			c=**p;
+			(*p)++;
+		}
+		v*=sll_api_math_pow(10,(sll_float_t)(neg_pw?-pw:pw));
+	}
+	(*p)--;
+	o->f=(neg?-v:v);
+	return JSON_NUMBER_FLOAT;
+}
+
+
+
 static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	sll_char_t c=**p;
 	(*p)++;
@@ -212,60 +273,8 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	if ((c<48||c>57)&&c!='.'&&c!='e'&&c!='E'&&c!='-'&&c!='+'){
 		return NULL;
 	}
-	sll_bool_t neg=0;
-	if (c=='+'){
-		c=**p;
-		(*p)++;
-	}
-	else if (c=='-'){
-		neg=1;
-		c=**p;
-		(*p)++;
-	}
-	sll_float_t v=0;
-	while (c>47&&c<58){
-		v=v*10+(c-48);
-		c=**p;
-		(*p)++;
-	}
-	if (c!='.'&&c!='e'&&c!='E'){
-		(*p)--;
-		return SLL_FROM_INT((sll_integer_t)(neg?-v:v));
-	}
-	if (c=='.'){
-		sll_float_t pw=0.1;
-		c=**p;
-		(*p)++;
-		while (c>47&&c<58){
-			v+=pw*(c-48);
-			pw*=0.1;
-			c=**p;
-			(*p)++;
-		}
-	}
-	if (c=='e'||c=='E'){
-		c=**p;
-		(*p)++;
-		sll_bool_t neg_pw=0;
-		if (c=='+'){
-			c=**p;
-			(*p)++;
-		}
-		else if (c=='-'){
-			neg_pw=1;
-			c=**p;
-			(*p)++;
-		}
-		sll_integer_t pw=0;
-		while (c>47&&c<58){
-			pw=pw*10+(c-48);
-			c=**p;
-			(*p)++;
-		}
-		v*=sll_api_math_pow(10,(sll_float_t)(neg_pw?-pw:pw));
-	}
-	(*p)--;
-	return SLL_FROM_FLOAT((neg?-v:v));
+	json_number_t n;
+	return (_parse_number(c,p,&n)==JSON_NUMBER_INT?SLL_FROM_INT(n.i):SLL_FROM_FLOAT(n.f));
 }
 
 
@@ -588,63 +597,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 	if ((c<48||c>57)&&c!='.'&&c!='e'&&c!='E'&&c!='-'&&c!='+'){
 		return 0;
 	}
-	sll_bool_t neg=0;
-	if (c=='+'){
-		c=**p;
-		(*p)++;
-	}
-	else if (c=='-'){
-		neg=1;
-		c=**p;
-		(*p)++;
-	}
-	sll_float_t v=0;
-	while (c>47&&c<58){
-		v=v*10+(c-48);
-		c=**p;
-		(*p)++;
-	}
-	if (c!='.'&&c!='e'&&c!='E'){
-		(*p)--;
+	json_number_t n;
+	if (_parse_number(c,p,&n)==JSON_NUMBER_INT){
 		o->t=SLL_JSON_OBJECT_TYPE_INTEGER;
-		o->dt.i=(sll_integer_t)(neg?-v:v);
-		return 1;
+		o->dt.i=n.i;
 	}
-	if (c=='.'){
-		sll_float_t pw=0.1;
-		c=**p;
-		(*p)++;
-		while (c>47&&c<58){
-			v+=pw*(c-48);
-			pw*=0.1;
-			c=**p;
-			(*p)++;
-		}
+	else{
+		o->t=SLL_JSON_OBJECT_TYPE_FLOAT;
+		o->dt.f=n.f;
 	}
-	if (c=='e'||c=='E'){
-		c=**p;
-		(*p)++;
-		sll_bool_t neg_pw=0;
-		if (c=='+'){
-			c=**p;
-			(*p)++;
-		}
-		else if (c=='-'){
-			neg_pw=1;
-			c=**p;
-			(*p)++;
-		}
-		sll_integer_t pw=0;
-		while (c>47&&c<58){
-			pw=pw*10+(c-48);
-			c=**p;
-			(*p)++;
-		}
-		v*=sll_api_math_pow(10,(sll_float_t)(neg_pw?-pw:pw));
-	}
-	(*p)--;
-	o->t=SLL_JSON_OBJECT_TYPE_FLOAT;
-	o->dt.f=(neg?-v:v);
 	return 1;
 }
 
