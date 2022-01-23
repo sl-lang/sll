@@ -110,7 +110,7 @@ __SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const char* fp,u
 	n->ln=ln;
 	object_debug_data_t* dt=o->_dbg;
 	if (t==__SLL_DEBUG_TYPE_CREATE){
-		if (!dt->c.fp){
+		if (!dt->c.fp[0]){
 			dt->c=*n;
 		}
 	}
