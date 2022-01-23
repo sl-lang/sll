@@ -12,7 +12,6 @@
 
 
 
-#define PRINT_STATIC_STRING(s,wf) sll_file_write((wf),SLL_CHAR((s)),sizeof(s)/sizeof(char)-1)
 #define PRINT_INT_SIGN(v,wf) \
 	do{ \
 		sll_integer_t __v=(v); \
@@ -21,38 +20,6 @@
 		} \
 		_print_int(__v,(wf)); \
 	} while(0)
-
-
-
-static void _print_int(sll_integer_t v,sll_file_t* wf){
-	if (!v){
-		sll_file_write_char(wf,'0');
-		return;
-	}
-	if (v<0){
-		v=-v;
-		sll_file_write_char(wf,'-');
-	}
-	sll_char_t bf[20];
-	sll_string_length_t i=0;
-	while (v){
-		bf[i]=v%10;
-		v/=10;
-		i++;
-	}
-	while (i){
-		i--;
-		sll_file_write_char(wf,bf[i]+48);
-	}
-}
-
-
-
-static void _print_float(double v,sll_file_t* wf){
-	char bf[128];
-	int sz=snprintf(bf,128,"%.16lg",v);
-	sll_file_write(wf,bf,sz*sizeof(char));
-}
 
 
 
@@ -108,37 +75,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 		case SLL_NODE_TYPE_CHAR:
 			{
 				sll_file_write_char(wf,'\'');
-				sll_char_t c=o->dt.c;
-				if (c=='\''||c=='"'||c=='\\'){
-					sll_file_write_char(wf,'\\');
-				}
-				else if (c=='\t'){
-					sll_file_write_char(wf,'\\');
-					c='t';
-				}
-				else if (c=='\n'){
-					sll_file_write_char(wf,'\\');
-					c='n';
-				}
-				else if (c=='\v'){
-					sll_file_write_char(wf,'\\');
-					c='v';
-				}
-				else if (c=='\f'){
-					sll_file_write_char(wf,'\\');
-					c='f';
-				}
-				else if (c=='\r'){
-					sll_file_write_char(wf,'\\');
-					c='r';
-				}
-				else if (c<32||c>126){
-					sll_file_write_char(wf,'\\');
-					sll_file_write_char(wf,'x');
-					sll_file_write_char(wf,(c>>4)+(c>159?87:48));
-					c=(c&0xf)+((c&0xf)>9?87:48);
-				}
-				sll_file_write_char(wf,c);
+				_print_char(o->dt.c,wf);
 				sll_file_write_char(wf,'\'');
 				return o+1;
 			}
@@ -153,37 +90,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 				sll_file_write_char(wf,'"');
 				sll_string_t* s=c_dt->st.dt+o->dt.s;
 				for (sll_string_length_t i=0;i<s->l;i++){
-					sll_char_t c=s->v[i];
-					if (c=='\''||c=='"'||c=='\\'){
-						sll_file_write_char(wf,'\\');
-					}
-					else if (c=='\t'){
-						sll_file_write_char(wf,'\\');
-						c='t';
-					}
-					else if (c=='\n'){
-						sll_file_write_char(wf,'\\');
-						c='n';
-					}
-					else if (c=='\v'){
-						sll_file_write_char(wf,'\\');
-						c='v';
-					}
-					else if (c=='\f'){
-						sll_file_write_char(wf,'\\');
-						c='f';
-					}
-					else if (c=='\r'){
-						sll_file_write_char(wf,'\\');
-						c='r';
-					}
-					else if (c<32||c>126){
-						sll_file_write_char(wf,'\\');
-						sll_file_write_char(wf,'x');
-						sll_file_write_char(wf,(c>>4)+(c>159?87:48));
-						c=(c&0xf)+((c&0xf)>9?87:48);
-					}
-					sll_file_write_char(wf,c);
+					_print_char(s->v[i],wf);
 				}
 				sll_file_write_char(wf,'"');
 				return o+1;
@@ -560,6 +467,74 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 	}
 	sll_file_write_char(wf,')');
 	return o;
+}
+
+
+
+void _print_char(sll_char_t c,sll_file_t* wf){
+	sll_char_t bf[4]={'\\'};
+	sll_string_length_t bfl=2;
+	if (c=='\''||c=='"'||c=='\\'){
+		bf[1]=c;
+	}
+	else if (c=='\t'){
+		bf[1]='t';
+	}
+	else if (c=='\n'){
+		bf[1]='n';
+	}
+	else if (c=='\v'){
+		bf[1]='v';
+	}
+	else if (c=='\f'){
+		bf[1]='f';
+	}
+	else if (c=='\r'){
+		bf[1]='r';
+	}
+	else if (c<32||c>126){
+		bf[1]='x';
+		bf[2]=(c>>4)+(c>159?87:48);
+		bf[3]=(c&0xf)+((c&0xf)>9?87:48);
+		bfl=4;
+	}
+	else{
+		sll_file_write_char(wf,c);
+		return;
+	}
+	sll_file_write(wf,bf,bfl);
+}
+
+
+
+void _print_float(sll_float_t v,sll_file_t* wf){
+	char bf[128];
+	int sz=snprintf(bf,128,"%.16lg",v);
+	sll_file_write(wf,bf,sz*sizeof(char));
+}
+
+
+
+void _print_int(sll_integer_t v,sll_file_t* wf){
+	if (!v){
+		sll_file_write_char(wf,'0');
+		return;
+	}
+	if (v<0){
+		v=-v;
+		sll_file_write_char(wf,'-');
+	}
+	sll_char_t bf[20];
+	sll_string_length_t i=0;
+	while (v){
+		bf[i]=v%10;
+		v/=10;
+		i++;
+	}
+	while (i){
+		i--;
+		sll_file_write_char(wf,bf[i]+48);
+	}
 }
 
 

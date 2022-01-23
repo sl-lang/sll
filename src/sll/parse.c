@@ -282,6 +282,24 @@ static unsigned int _read_single_char(sll_file_t* rf,sll_char_t* o){
 
 
 
+static sll_read_char_t _read_identifier(sll_string_t* str,sll_string_length_t sz,sll_file_t* rf,sll_read_char_t c){
+	do{
+		if (sz<255){
+			str->v[sz]=(sll_char_t)c;
+			sz++;
+		}
+		c=sll_file_read_char(rf);
+		if (c==SLL_END_OF_DATA){
+			break;
+		}
+	} while (c<9||(c>13&&c!='$'&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'));
+	str->l=sz;
+	sll_string_calculate_checksum(str);
+	return c;
+}
+
+
+
 static void _read_object_internal(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_read_char_t c,const extra_compilation_data_t* e_c_dt){
 	unsigned int fl=0;
 	const scope_data_t* l_sc=&(e_c_dt->sc);
@@ -816,19 +834,7 @@ _parse_identifier:
 				if (rewind_bf_l){
 					sll_copy_data(rewind_bf,rewind_bf_l,str.v);
 				}
-				sll_string_length_t sz=rewind_bf_l;
-				do{
-					if (sz<255){
-						str.v[sz]=(sll_char_t)c;
-						sz++;
-					}
-					c=sll_file_read_char(rf);
-					if (c==SLL_END_OF_DATA){
-						sll_free_string(&str);
-						break;
-					}
-				} while (c<9||(c>13&&c!='$'&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'));
-				str.l=sz;
+				c=_read_identifier(&str,rewind_bf_l,rf,c);
 				if (o&&(o->t!=SLL_NODE_TYPE_DECL||!(ac&1))&&c=='$'){
 					do{
 						c=sll_file_read_char(rf);
@@ -838,7 +844,6 @@ _parse_identifier:
 						}
 					} while (c=='$');
 					if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
-						sll_string_calculate_checksum(&str);
 						sll_identifier_index_t ii=_get_var_index(c_dt,e_c_dt,l_sc,&str,arg,GET_VAR_INDEX_FLAG_UNKNOWN);
 						if (ii==SLL_MAX_VARIABLE_INDEX){
 							arg->t=SLL_NODE_TYPE_INT;
@@ -858,20 +863,7 @@ _parse_identifier:
 							v->dt.id=ii;
 							while (c!=SLL_END_OF_DATA){
 								sll_string_create(255,&str);
-								sz=0;
-								do{
-									if (sz<255){
-										str.v[sz]=(sll_char_t)c;
-										sz++;
-									}
-									c=sll_file_read_char(rf);
-									if (c==SLL_END_OF_DATA){
-										sll_free_string(&str);
-										break;
-									}
-								} while (c<9||(c>13&&c!='$'&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'));
-								str.l=sz;
-								sll_string_calculate_checksum(&str);
+								c=_read_identifier(&str,0,rf,c);
 								arg->dt.ac++;
 								v=_acquire_next_node(c_dt);
 								v->t=SLL_NODE_TYPE_FIELD;
@@ -890,12 +882,12 @@ _parse_identifier:
 					arg->t=SLL_NODE_TYPE_FIELD;
 					arg->dt.s=sll_add_string(&(c_dt->st),&str,1);
 				}
-				else if ((sz==3&&sll_compare_data(str.v,"nil",3)==SLL_COMPARE_RESULT_EQUAL)||(sz==5&&sll_compare_data(str.v,"false",5)==SLL_COMPARE_RESULT_EQUAL)){
+				else if ((str.l==3&&sll_compare_data(str.v,"nil",3)==SLL_COMPARE_RESULT_EQUAL)||(str.l==5&&sll_compare_data(str.v,"false",5)==SLL_COMPARE_RESULT_EQUAL)){
 					sll_free_string(&str);
 					arg->t=SLL_NODE_TYPE_INT;
 					arg->dt.i=0;
 				}
-				else if (sz==4&&sll_compare_data(str.v,"true",4)==SLL_COMPARE_RESULT_EQUAL){
+				else if (str.l==4&&sll_compare_data(str.v,"true",4)==SLL_COMPARE_RESULT_EQUAL){
 					sll_free_string(&str);
 					arg->t=SLL_NODE_TYPE_INT;
 					arg->dt.i=1;

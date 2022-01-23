@@ -262,6 +262,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define SERIAL_OBJECT_TYPE (SLL_MAX_OBJECT_TYPE+1)
 
+#define PRINT_STATIC_STRING(s,wf) sll_file_write((wf),(s),sizeof(s)/sizeof(char)-1)
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
@@ -661,6 +663,18 @@ void _push_call_stack(const sll_char_t* nm,sll_stack_offset_t si);
 
 
 void _pop_call_stack(void);
+
+
+
+void _print_char(sll_char_t c,sll_file_t* wf);
+
+
+
+void _print_float(sll_float_t v,sll_file_t* wf);
+
+
+
+void _print_int(sll_integer_t v,sll_file_t* wf);
 
 
 
