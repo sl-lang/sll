@@ -12,7 +12,7 @@ env:
   BUILD_COMMAND: python src/_build/main.py --verbose
 jobs:
   codeql:
-    name: Analyze Code
+    name: Analyze code
     needs:
       - diff
       - linux
@@ -24,17 +24,17 @@ jobs:
       - windows-ext
       - windows-ext-release
     if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)&&github.event_name!='workflow_dispatch'
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     permissions:
       security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Initialize CodeQL
+      - name: Initialize codeql@1
         uses: github/codeql-action/init@v1
         with:
           languages: cpp
@@ -43,51 +43,51 @@ jobs:
       - name: Analyze
         uses: github/codeql-action/analyze@v1
   diff:
-    name: Calculate Commit
-    runs-on: linux-latest
+    name: Calculate commit
+    runs-on: ubuntu-latest
     outputs:
       data: ${{steps.calc_diff.outputs.table}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Set-Up Requests
+      - name: Set-up requests
         run: pip install requests
       - name: Build
         id: calc_diff
         run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows ext=src/sll/include,src/ext web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
   linux:
-    name: Build Linux
+    name: Build linux
     needs: diff
     if: fromJSON(needs.diff.outputs.data).linux
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}}
   linux-release:
-    name: Build Linux Release
+    name: Build linux release
     needs: diff
     if: fromJSON(needs.diff.outputs.data).linux
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Store Assets
+      - name: Store assets
         uses: actions/upload-artifact@v2
         if: github.event_name=='workflow_dispatch'
         with:
@@ -95,38 +95,38 @@ jobs:
           path: linux.zip
           retention-days: 1
   linux-ext:
-    name: Build Linux Extension
+    name: Build linux extension
     needs:
       - diff
       - linux
     if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: python src/_build/main.py --verbose --extension --extension-only
   linux-ext-release:
-    name: Build Linux Extension Release
+    name: Build linux extension release
     needs:
       - diff
       - linux-release
     if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Store Asset
+      - name: Store asset
         uses: actions/upload-artifact@v2
         if: github.event_name=='workflow_dispatch'
         with:
@@ -134,32 +134,32 @@ jobs:
           path: linux_ext_debug.zip
           retention-days: 1
   release:
-    name: Create Release
+    name: Create release
     needs:
       - linux-release
       - windows-release
       - linux-ext-release
       - windows-ext-release
     if: github.event_name=='workflow_dispatch'
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Set-Up Requests
+      - name: Set-up requests
         run: pip install requests
-      - name: Load Assets
+      - name: Load assets
         uses: actions/download-artifact@v2
         with:
           path: assets
-      - name: Create Release
+      - name: Create release
         run: python src/_build/release.py --verbose ${{secrets.GITHUB_TOKEN}}
   web:
-    name: Build Website
+    name: Build website
     needs:
       - diff
       - linux
@@ -167,89 +167,89 @@ jobs:
       - windows
       - windows-release
     if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     env:
       ANALYTICS: ${{secrets.ANALYTICS_CODE}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: python src/_build/main.py --verbose --web
-      - name: Store Generated Website
+      - name: Store generated website
         uses: actions/upload-artifact@v2
         with:
           name: web-bundle
           path: web-bundle.dt
           retention-days: 1
   web-server:
-    name: Upload Website Server
+    name: Upload website server
     needs: diff
     if: fromJSON(needs.diff.outputs.data).web-server&&github.event_name=='push'
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Set-Up Requests
+      - name: Set-up requests
         run: pip install requests
       - name: Upload
         run: python src/_build/website.py --verbose --server ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_WORKER_NAME}} ${{secrets.CLOUDFLARE_TOKEN}}
   web-upload:
-    name: Upload Website
+    name: Upload website
     needs: web
     if: github.event_name=='push'
-    runs-on: linux-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Set-Up Requests
+      - name: Set-up requests
         run: pip install requests
-      - name: Load Generated Website
+      - name: Load generated website
         uses: actions/download-artifact@v2
         with:
           name: web-bundle
       - name: Upload
         run: python src/_build/website.py --verbose ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_NAMESPACE_ID}} ${{secrets.CLOUDFLARE_TOKEN}}
   windows:
-    name: Build Windows
+    name: Build windows
     needs: diff
     if: fromJSON(needs.diff.outputs.data).windows
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}}
   windows-release:
-    name: Build Windows Release
+    name: Build windows release
     needs: diff
     if: fromJSON(needs.diff.outputs.data).windows
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Store Assets
+      - name: Store assets
         uses: actions/upload-artifact@v2
         if: github.event_name=='workflow_dispatch'
         with:
@@ -257,7 +257,7 @@ jobs:
           path: win.zip
           retention-days: 1
   windows-ext:
-    name: Build Windows Extension
+    name: Build windows extension
     needs:
       - diff
       - windows
@@ -266,14 +266,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: python src/_build/main.py --verbose --extension --extension-only
   windows-ext-release:
-    name: Build Windows Extension Release
+    name: Build windows extension release
     needs:
       - diff
       - windows-release
@@ -282,13 +282,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup Python 3.9
+      - name: Setup python@3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - name: Build
         run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Store Asset
+      - name: Store asset
         uses: actions/upload-artifact@v2
         if: github.event_name=='workflow_dispatch'
         with:
