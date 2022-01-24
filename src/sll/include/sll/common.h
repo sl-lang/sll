@@ -3,7 +3,7 @@
 
 
 
-#ifdef _MSC_VER
+#ifdef __SLL_BUILD_WINDOWS
 #ifdef __SLL_STATIC__
 #define __SLL_EXTERNAL
 #else

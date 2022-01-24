@@ -7,7 +7,7 @@ import util
 
 def build_sll(fl,v,r):
 	nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
-	def_l=["__SLL_COMPILATION__=1",f"__TIME_RAW__={util.BUILD_TIME}"]
+	def_l=["__SLL_COMPILATION__",f"__TIME_RAW__={util.BUILD_TIME}"]
 	if (len(os.getenv("GITHUB_SHA",""))>0):
 		def_l.append(f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"")
 		def_l.append(f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\"")
@@ -18,7 +18,7 @@ def build_sll(fl,v,r):
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
-		def_l.extend(["_WINDOWS","WINDLL","USERDLL","WIN32_LEAN_AND_MEAN","_CRT_SECURE_NO_WARNINGS"])
+		def_l.extend(["_WINDOWS","WINDLL","USERDLL","WIN32_LEAN_AND_MEAN","_CRT_SECURE_NO_WARNINGS","__SLL_BUILD_WINDOWS"])
 		win_def=[]
 		for k in def_l:
 			win_def.append("/D")
@@ -42,7 +42,7 @@ def build_sll(fl,v,r):
 				os.chdir(cd)
 				sys.exit(1)
 	else:
-		def_l.append("_GNU_SOURCE")
+		def_l.extend(["_GNU_SOURCE","__SLL_BUILD_LINUX"])
 		linux_def=[]
 		for k in def_l:
 			linux_def.append("-D")

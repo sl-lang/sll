@@ -1,6 +1,6 @@
 #ifndef __SLL__SLL_INTERNAL_H__
 #define __SLL__SLL_INTERNAL_H__ 1
-#ifdef _MSC_VER
+#ifdef __SLL_BUILD_WINDOWS
 #include <intrin.h>
 #endif
 #include <sll/_size_types.h>
@@ -12,7 +12,7 @@
 
 
 
-#ifdef _MSC_VER
+#ifdef __SLL_BUILD_WINDOWS
 #pragma intrinsic(_BitScanForward64)
 #pragma intrinsic(__popcnt64)
 #pragma intrinsic(_rotl)
@@ -606,7 +606,7 @@ typedef union __JSON_NUMBER{
 
 
 
-#ifdef _MSC_VER
+#ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
 
