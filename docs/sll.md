@@ -31,7 +31,7 @@ The latest Sll releases can be found in the [Releases](https://github.com/sl-lan
 Sll has the ability to be installed in a folder. Here is a list of file names:
 
 - `win.zip`: Windows build of Sll, must be extracted into a folder before use.
-- `posix.zip`: POSIX build of Sll (platforms such as Linux, Ubuntu, Fedora, etc.). Must be extracted into a single folder.
+- `linux.zip`: Linux build of Sll (platforms such as Ubuntu, Fedora, etc.). Must be extracted into a single folder.
 
 ## Installation with `apt`
 

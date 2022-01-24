@@ -76,10 +76,10 @@ if ("--extension" in sys.argv):
 		util.bundle_ext(ver)
 	if ("--extension-only" in sys.argv):
 		if ("--upload" in sys.argv):
-			os.rename("build/sll_ext_debug.zip",("win_ext_debug.zip" if os.name=="nt" else "posix_ext_debug.zip"))
+			os.rename("build/sll_ext_debug.zip",("win_ext_debug.zip" if os.name=="nt" else "linux_ext_debug.zip"))
 		sys.exit(0)
 if ("--upload" in sys.argv):
-	os.rename("build/sll.zip",("win.zip" if os.name=="nt" else "posix.zip"))
+	os.rename("build/sll.zip",("win.zip" if os.name=="nt" else "linux.zip"))
 if ("--run" in sys.argv):
 	if ("--extension" in sys.argv):
 		util.log("Installing extension library...")

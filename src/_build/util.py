@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 import sys
 import time
@@ -9,7 +10,7 @@ import zipfile
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 BUILD_PATHS=["build/lib","build/lib_ext","build/sys_lib","build/objects","build/objects_ext","build/web"]
 BUILD_TIME=time.time_ns()
-PLATFORM_SOURCE_CODE={"posix":"src/sll/platform/posix","nt":"src/sll/platform/windows"}
+PLATFORM_SOURCE_CODE={"linux":"src/sll/platform/linux","windows":"src/sll/platform/windows"}
 
 
 
@@ -58,7 +59,7 @@ def get_docs_files():
 
 def get_sll_files():
 	o=[]
-	for r,_,fl in os.walk(PLATFORM_SOURCE_CODE[os.name]):
+	for r,_,fl in os.walk(PLATFORM_SOURCE_CODE[platform.system().lower()]):
 		r=r.replace("\\","/").rstrip("/")+"/"
 		for f in fl:
 			if (f[-2:]==".c"):

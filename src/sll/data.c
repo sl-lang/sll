@@ -32,7 +32,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 	}
 	const wide_data_t* ap64=(const wide_data_t*)ap;
 	const wide_data_t* bp64=(const wide_data_t*)bp;
-	SLL_ASSERT(!(ADDR(ap64)&7));
+	ASSUME_ALIGNED(ap64,3,0);
 	do{
 		if (*ap64!=*bp64){
 			wide_data_t av=ROTATE_BITS64(*ap64,32);

@@ -87,7 +87,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 	} while (0)
 #define _ASSUME_ALIGNED(p,n,x) \
 	do{ \
-		p=__builtin_assume_aligned((p),(n),(x)); \
+		p=__builtin_assume_aligned((p),1<<(n),(x)); \
 	} while (0)
 #define _CUSTOM_SECTION_(nm) __attribute__((used,section(#nm)))
 #define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(nm)

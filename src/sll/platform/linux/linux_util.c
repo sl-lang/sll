@@ -16,13 +16,13 @@
 
 
 
-static sll_environment_t _posix_env={NULL,0};
-static __STATIC_STRING(_posix_platform_str,"posix");
+static sll_environment_t _linux_env={NULL,0};
+static __STATIC_STRING(_linux_platform_str,"linux");
 
 
 
-__SLL_EXTERNAL const sll_environment_t* sll_environment=&_posix_env;
-__SLL_EXTERNAL const sll_string_t* sll_platform_string=&_posix_platform_str;
+__SLL_EXTERNAL const sll_environment_t* sll_environment=&_linux_env;
+__SLL_EXTERNAL const sll_string_t* sll_platform_string=&_linux_platform_str;
 
 
 
@@ -31,15 +31,15 @@ extern char** environ;
 
 
 static void _cleanup_env_data(void){
-	for (sll_array_length_t i=0;i<_posix_env.l;i++){
-		const sll_environment_variable_t* kv=*(_posix_env.dt+i);
+	for (sll_array_length_t i=0;i<_linux_env.l;i++){
+		const sll_environment_variable_t* kv=*(_linux_env.dt+i);
 		sll_free_string((sll_string_t*)(&(kv->k)));
 		sll_free_string((sll_string_t*)(&(kv->v)));
 		sll_deallocate(PTR(kv));
 	}
-	*((sll_array_length_t*)(&(_posix_env.l)))=0;
-	_posix_env.dt=NULL;
-	sll_deallocate(PTR(_posix_env.dt));
+	*((sll_array_length_t*)(&(_linux_env.l)))=0;
+	_linux_env.dt=NULL;
+	sll_deallocate(PTR(_linux_env.dt));
 }
 
 
@@ -54,7 +54,7 @@ void _init_platform(void){
 		l++;
 		dt++;
 	}
-	_posix_env.dt=sll_allocate(l*sizeof(sll_environment_variable_t*));
+	_linux_env.dt=sll_allocate(l*sizeof(sll_environment_variable_t*));
 	sll_array_length_t i=0;
 	dt=environ;
 	while (*dt){
@@ -74,14 +74,14 @@ void _init_platform(void){
 		sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
 		sll_string_from_pointer_length(e-j,j,(sll_string_t*)(&(n->k)));
 		sll_string_from_pointer(e+1,(sll_string_t*)(&(n->v)));
-		*(((const sll_environment_variable_t**)(_posix_env.dt))+i)=n;
+		*(((const sll_environment_variable_t**)(_linux_env.dt))+i)=n;
 		i++;
 	}
 	if (i!=l){
 		l=i;
-		_posix_env.dt=sll_reallocate((const sll_environment_variable_t**)(_posix_env.dt),l*sizeof(sll_environment_variable_t*));
+		_linux_env.dt=sll_reallocate((const sll_environment_variable_t**)(_linux_env.dt),l*sizeof(sll_environment_variable_t*));
 	}
-	*((sll_array_length_t*)(&(_posix_env.l)))=l;
+	*((sll_array_length_t*)(&(_linux_env.l)))=l;
 	sll_register_cleanup(_cleanup_env_data);
 }
 
