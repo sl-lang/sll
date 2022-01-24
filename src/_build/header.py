@@ -192,8 +192,10 @@ def generate_header(h_dt):
 	if ("--release" not in sys.argv):
 		dm[b"DEBUG_BUILD"]=b"1"
 	if (os.name=="nt"):
-		dm.update({b"_MSC_VER":b"1",b"_WINDOWS":b"1",b"WINDLL":b"1",b"USERDLL":b"1"})
+		dm.update({b"_MSC_VER":b"1",b"_WINDOWS":b"1",b"WINDLL":b"1",b"USERDLL":b"1",b"__SLL_BUILD_WINDOWS":b"1"})
 		dm[(b"NDEBUG" if "--release" in sys.argv else b"_DEBUG")]=b"1"
+	else:
+		dm[b"__SLL_BUILD_LINUX"]=b"1"
 	dfm={}
 	d_v=[]
 	d_f=[]
