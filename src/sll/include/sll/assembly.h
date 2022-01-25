@@ -8,114 +8,1284 @@
  * \group assembly
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Instructions
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ */
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_POP
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_POP 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_POP_TWO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_POP_TWO 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ROT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ROT 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ROT_POP
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ROT_POP 3
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_DUP
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_DUP 4
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT 5
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE 6
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO 7
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ONE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ONE 8
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TWO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TWO 9
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_THREE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_THREE 10
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FOUR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FOUR 11
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT 12
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR 13
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL 14
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD 15
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS 16
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK 17
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO 18
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE 19
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP 20
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO 21
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE 22
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP 23
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE 24
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO 25
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE 26
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO 27
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE 28
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR 29
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP 30
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR 31
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP 32
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JB
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JB 33
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE 34
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JA
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JA 35
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE 36
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JE 37
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE 38
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ 39
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ 40
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE 41
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE 42
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JI
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JI 43
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI 44
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_JT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_JT 45
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT 46
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL 47
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_INC
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_INC 48
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC 49
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD 50
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB 51
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT 52
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_DIV
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_DIV 53
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV 54
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_MOD
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_MOD 55
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_AND
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_AND 56
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_OR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_OR 57
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR 58
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_INV
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_INV 59
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_SHR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_SHR 60
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_SHL
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_SHL 61
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH 62
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY 63
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS 64
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_TWO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_TWO 65
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_THREE 66
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR 67
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN 68
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO 69
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE 70
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS 71
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST 72
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE 73
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF 74
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL 75
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO 76
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW 77
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL 78
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT 79
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR 80
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR 81
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR 82
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL 83
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP 84
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO 85
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE 86
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_REF
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_REF 87
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RET
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET 88
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT 89
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO 90
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT 91
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR 92
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR 93
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR 94
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL 95
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL 96
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED0
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED0 122
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED1
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED1 123
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED2
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED2 124
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED3
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED3 125
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED4
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED4 126
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED5
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED5 127
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_ANONYMOUS
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_FLAG_ANONYMOUS 128
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE 128
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_RELATIVE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_FLAG_RELATIVE 128
 
 

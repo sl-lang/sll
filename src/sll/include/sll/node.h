@@ -10,6 +10,13 @@
  */
 /**
  * \flags subgroup
+ * \name Types
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
  * \name Utilites
  * \group node
  * \subgroup node-util
@@ -18,75 +25,823 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_CHAR
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_CHAR 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_INT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_INT 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_FLOAT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_FLOAT 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_STRING
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_STRING 3
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_ARRAY
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_ARRAY 4
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_MAP
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_MAP 5
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_IDENTIFIER
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_IDENTIFIER 6
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_FIELD
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_FIELD 7
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_FUNCTION_ID
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_FUNCTION_ID 8
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_PRINT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_PRINT 9
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_AND
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_AND 10
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_OR
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_OR 11
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_NOT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_NOT 12
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_BOOL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_BOOL 13
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_ASSIGN
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_ASSIGN 14
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_FUNC
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_FUNC 15
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_INTERNAL_FUNC
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_INTERNAL_FUNC 16
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_INTERNAL_FUNC_LOAD
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_INTERNAL_FUNC_LOAD 17
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_INLINE_FUNC
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_INLINE_FUNC 18
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_CALL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_CALL 19
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_IF
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_IF 20
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_INLINE_IF
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_INLINE_IF 21
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_SWITCH
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_SWITCH 22
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_FOR
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_FOR 23
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_WHILE
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_WHILE 24
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_LOOP
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_LOOP 25
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_INC
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_INC 26
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_DEC
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_DEC 27
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_ADD
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_ADD 28
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_SUB
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_SUB 29
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_MULT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_MULT 30
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_DIV
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_DIV 31
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_FLOOR_DIV
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_FLOOR_DIV 32
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_MOD
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_MOD 33
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_BIT_AND
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_BIT_AND 34
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_BIT_OR
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_BIT_OR 35
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_BIT_XOR
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_BIT_XOR 36
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_BIT_NOT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_BIT_NOT 37
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_BIT_RSHIFT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_BIT_RSHIFT 38
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_BIT_LSHIFT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_BIT_LSHIFT 39
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_LESS
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_LESS 40
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_LESS_EQUAL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_LESS_EQUAL 41
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_EQUAL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_EQUAL 42
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_NOT_EQUAL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_NOT_EQUAL 43
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_MORE
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_MORE 44
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_MORE_EQUAL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_MORE_EQUAL 45
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_STRICT_EQUAL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_STRICT_EQUAL 46
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_STRICT_NOT_EQUAL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_STRICT_NOT_EQUAL 47
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_LENGTH
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_LENGTH 48
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_ACCESS
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_ACCESS 49
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_VAR_ACCESS
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_VAR_ACCESS 50
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_HAS
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_HAS 51
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_CAST
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_CAST 52
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_TYPEOF
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_TYPEOF 53
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_DECL
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_DECL 54
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_NEW
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_NEW 55
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_FOR_ARRAY
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_FOR_ARRAY 56
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_WHILE_ARRAY
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_WHILE_ARRAY 57
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_FOR_MAP
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_FOR_MAP 58
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_WHILE_MAP
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_WHILE_MAP 59
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_BREAK
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_BREAK 60
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_CONTINUE
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_CONTINUE 61
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_REF
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_REF 62
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_RETURN
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_RETURN 63
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_COMMA
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_COMMA 64
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_OPERATION_LIST
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_OPERATION_LIST 65
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_DBG
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_DBG 66
+
+
+
 #define SLL_NODE_TYPE_RESERVED0 253
 #define SLL_NODE_TYPE_RESERVED1 254
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_NOP
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_NOP 255
 
 
