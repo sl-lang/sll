@@ -16,13 +16,14 @@ jobs:
     needs:
       - diff
       - linux
-      - linux-release
-      - windows
-      - windows-release
       - linux-ext
       - linux-ext-release
+      - linux-release
+      - web-server
+      - windows
       - windows-ext
       - windows-ext-release
+      - windows-release
     if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)&&github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
@@ -37,7 +38,9 @@ jobs:
       - name: Initialize codeql@1
         uses: github/codeql-action/init@v1
         with:
-          languages: cpp
+          languages:
+            - cpp
+            - javascript
       - name: Build
         run: ${{env.BUILD_COMMAND}} --extension
       - name: Analyze
