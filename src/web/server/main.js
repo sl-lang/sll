@@ -19,7 +19,16 @@ addEventListener("fetch",(e)=>e.respondWith((async (url)=>{
 		status: 200,
 		statusText: "OK",
 		headers: new Headers({
-			"Content-Type": MIME_TYPES["."+url.split("/").at(-1).split(".").at(-1)]||"text/plain;charset=utf-8"
+			"Content-Security-Policy": "default-src 'self'; object-src 'none'; style-src-elem https: ; script-src-elem https: ; font-src https: ",
+			"Content-Type": MIME_TYPES["."+url.split("/").at(-1).split(".").at(-1)]||"text/plain;charset=utf-8",
+			"Expect-CT": `max-age=0, report-uri="https://${REPORT_URI_NAME}.report-uri.com/r/d/ct/reportOnly"`,
+			"NEL": `{"report_to":"default","max_age":31536000,"include_subdomains":true}`,
+			"Permissions-Policy": "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()",
+			"Referrer-Policy": "no-referrer",
+			"Report-To": `{"group":"default","max_age":31536000,"endpoints":[{"url":"https://${REPORT_URI_NAME}.report-uri.com/a/d/g"}],"include_subdomains":true}`,
+			"Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+			"X-Content-Type-Options": "nosniff",
+			"X-Frame-Options": "DENY"
 		})
 	};
 	if (!(await SLL.get("__table")).split("\x00").includes(url)){
