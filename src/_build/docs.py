@@ -3,6 +3,7 @@ import re
 
 
 DOCS_COMMENT_REGEX=re.compile(r"\/\*\*(.*?)\*\/",re.S)
+VALID_FLAGS=["api","check_output","func","group","macro","subgroup","var","var_arg"]
 
 
 
@@ -24,6 +25,8 @@ def create_docs(fl):
 					t=e.split(" ")[0]
 					if (t=="\\flags"):
 						for se in e.lower().split(" ")[1:]:
+							if (se not in VALID_FLAGS):
+								raise RuntimeError(f"{nm}: Unknown flag '{se}'")
 							if (se not in dt["flag"]):
 								dt["flag"].append(se)
 					elif (t=="\\name"):

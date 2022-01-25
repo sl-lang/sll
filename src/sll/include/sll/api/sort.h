@@ -27,7 +27,7 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_sort_quicksort
  * \group sort-api
  * \desc Docs!

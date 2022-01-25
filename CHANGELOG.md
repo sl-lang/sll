@@ -21,6 +21,7 @@
 
 - Broken optimizer
 - Internal function table name length limit: `SLL_INTERNAL_FUNCTION_MAX_LENGTH`
+- Internal function flags: `SLL_INTERNAL_FUNCTION_FLAG_REQUIRED`, `SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL` and `sll_internal_function_type_t`
 - Various code duplications
 
 ## [0.7.0] - 2022-01-21
@@ -676,7 +677,7 @@
 - Hash module ([#23])
 - Implemented **ALL** operators ([#14])
 - Implemented `sll_array_and_array`, `sll_array_combinations`, `sll_array_equal`, `sll_array_equal_map`, `sll_array_or_array`, `sll_array_xor_array`, `sll_array_range`, `sll_array_string_combinations`, `sll_map_add_array`, `sll_map_add_string`, `sll_map_and`, `sll_map_and_array`, `sll_map_and_string`, `sll_map_equal`, `sll_string_duplicate`, `sll_string_equal_array`, `sll_string_equal_map`, `sll_string_from_int`, `sll_string_replace_char` and `sll_string_split_char`
-- Internal function can now be declared as `SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL`, which would make them be optimizable at compile-time
+- Internal function can now be declared as `SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL`, which would make them be at compile-time
 - Memory API & reference operator ([#42])
 
 ### Changed

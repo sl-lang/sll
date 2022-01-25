@@ -49,7 +49,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* dt);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_date_merge
  * \group date-api
  * \desc Docs!
@@ -66,7 +66,7 @@ __API_FUNC_DECL(date_merge);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_date_split
  * \group date-api
  * \desc Docs!

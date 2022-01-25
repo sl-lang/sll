@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_base64_decode
  * \group base64-api
  * \desc Docs!
@@ -25,7 +25,7 @@ __API_FUNC_DECL(base64_decode);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_base64_encode
  * \group base64-api
  * \desc Docs!

@@ -24,21 +24,93 @@
 #define SLL_OBJECT_TYPE_RESERVED1 0x1ffffffe
 #define SLL_OBJECT_TYPE_OBJECT 0x1fffffff
 
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_OBJECT_TYPE
+ * \group object
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_MAX_OBJECT_TYPE SLL_OBJECT_TYPE_MAP_VALUES
 
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_FLAG_CONSTANT
+ * \group object
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_FLAG_CONSTANT 0x20000000
+
+
+
 #define SLL_OBJECT_FLAG_RESERVED0 0x40000000
 #define SLL_OBJECT_FLAG_RESERVED1 0x80000000
 
+
+
+/**
+ * \flags func macro
+ * \name SLL_OBJECT_GET_TYPE
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_t* r
+ * \ret sll_object_type_t
+ */
 #define SLL_OBJECT_GET_TYPE(r) ((r)->t&0x1fffffff)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_OBJECT_GET_TYPE_MASK
+ * \group object
+ * \desc Docs!
+ * \arg sll_object_type_t t
+ * \ret sll_object_type_t
+ */
 #define SLL_OBJECT_GET_TYPE_MASK(t) ((t)&0x1fffffff)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_OBJECT_IS_STORAGE
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_t* r
+ * \ret sll_bool_t
+ */
 #define SLL_OBJECT_IS_STORAGE(r) (SLL_OBJECT_GET_TYPE((r))>=SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE((r))<=SLL_OBJECT_TYPE_MAP_VALUES)
 
+
+
+/**
+ * \flags func macro
+ * \name SLL_INIT_OBJECT_TYPE_TABLE
+ * \group object
+ * \desc Docs!
+ * \arg sll_object_type_table_t* o
+ */
 #define SLL_INIT_OBJECT_TYPE_TABLE(o) \
     do{ \
         (o)->dt=NULL; \
         (o)->l=0; \
     } while (0)
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_INIT_OBJECT_TYPE_TABLE_STRUCT
+ * \group object
+ * \desc Docs!
+ * \type sll_object_type_table_t
+ */
 #define SLL_INIT_OBJECT_TYPE_TABLE_STRUCT {NULL,0}
 
 

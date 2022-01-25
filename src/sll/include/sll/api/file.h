@@ -74,7 +74,7 @@ __API_FUNC_DECL(file_flush);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_file_from_data
  * \group file-api
  * \desc Docs!
@@ -121,7 +121,7 @@ __API_FUNC_DECL(file_inc_handle);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_file_open
  * \group file-api
  * \desc Docs!
@@ -172,7 +172,7 @@ __API_FUNC_DECL(file_rename);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_file_std_handle
  * \group file-api
  * \desc Docs!

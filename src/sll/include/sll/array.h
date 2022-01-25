@@ -25,11 +25,28 @@
 
 
 
+/**
+ * \flags func macro
+ * \name SLL_INIT_ARRAY
+ * \group array
+ * \desc Docs!
+ * \arg sll_array_t* o
+ */
 #define SLL_INIT_ARRAY(o) \
 	do{ \
 		(o)->l=0; \
 		(o)->v=NULL; \
 	} while (0)
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_INIT_ARRAY_STRUCT
+ * \group array
+ * \desc Docs!
+ * \type sll_array_t
+ */
 #define SLL_INIT_ARRAY_STRUCT {0,NULL}
 
 

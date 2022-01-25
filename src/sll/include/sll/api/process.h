@@ -67,7 +67,7 @@ __API_FUNC_DECL(process_execute_shell);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_process_get_pid
  * \group process-api
  * \desc Docs!

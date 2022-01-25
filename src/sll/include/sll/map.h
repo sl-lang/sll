@@ -25,11 +25,28 @@
 
 
 
+/**
+ * \flags func macro
+ * \name SLL_INIT_MAP
+ * \group map
+ * \desc Docs!
+ * \arg sll_map_t* o
+ */
 #define SLL_INIT_MAP(o) \
 	do{ \
 		(o)->l=0; \
 		(o)->v=NULL; \
 	} while (0)
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_INIT_MAP_STRUCT
+ * \group map
+ * \desc Docs!
+ * \type sll_map_t
+ */
 #define SLL_INIT_MAP_STRUCT {0,NULL}
 
 

@@ -7,11 +7,6 @@ import util
 
 
 
-FLAG_NAME_MAP={"check_output":"Check Output","optimizable":"Optimizable"}
-IGNORE_FLAG_NAME=["func","var","var_arg"]
-
-
-
 def _add_data(nm,dt):
 	nm=nm.replace("\\","/")[:255].encode("ascii","ignore")
 	dt=dt[:16777215]
@@ -49,28 +44,48 @@ def _generate_data(dt,pg_src):
 				toc+=f"<li><a href=\"{{{{ROOT}}}}/{e['group']}.html#{e['name']}\">{e['name']+('()' if 'func' in e['flag'] else '')}</a></li>"
 				pg+=f"<div><a id=\"{e['name']}\" href=\"#{e['name']}\" style=\"text-decoration: none;color: #ff0000\"><pre>"
 				if ("func" in e["flag"]):
-					if ("check_output" in e["flag"]):
-						pg+="<span style=\"color: #cf89a2\">(check_output)</span> "
-					if (e["ret"] is not None):
-						pg+=e["ret"]["type"]
-					else:
-						pg+="void"
-					pg+=" "+e["name"]+"("
-					if (len(e["args"])==0):
-						pg+="void"
-					else:
+					if ("macro" in e["flag"]):
+						pg+="#define "+e["name"]+"("
 						st=True
 						for a in e["args"]:
 							if (st):
 								st=False
 							else:
 								pg+=","
-							pg+=a["type"]+" "+a["name"]
-					if ("var_arg" in e["flag"]):
-						pg+=",..."
-					pg+=")"
+							pg+="<span style=\"color: #ceb187\">"+a["type"]+"</span> "+a["name"]
+						if ("var_arg" in e["flag"]):
+							if (not st):
+								pg+=","
+							pg+="..."
+						pg+=")"
+						if (e["ret"] is not None):
+							pg+=" -> "+e["ret"]["type"]
+					else:
+						if ("check_output" in e["flag"]):
+							pg+="<span style=\"color: #cf89a2\">(check_output)</span> "
+						if (e["ret"] is not None):
+							pg+=e["ret"]["type"]
+						else:
+							pg+="void"
+						pg+=" "+e["name"]+"("
+						if (len(e["args"])==0):
+							pg+="void"
+						else:
+							st=True
+							for a in e["args"]:
+								if (st):
+									st=False
+								else:
+									pg+=","
+								pg+=a["type"]+" "+a["name"]
+						if ("var_arg" in e["flag"]):
+							pg+=",..."
+						pg+=");"
 				else:
-					pg+=e["name"]
+					if ("macro" in e["flag"]):
+						pg+="#define "+e["name"]+" -> "+e["type"]["type"]
+					else:
+						pg+=e["type"]["type"]+" "+e["name"]+";"
 				pg+=f"</pre></a><pre>Description: {e['desc']}"
 				if (len(e["args"])!=0):
 					pg+="\nArguments:"

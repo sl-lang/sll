@@ -40,7 +40,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
@@ -51,7 +51,7 @@ __API_FUNC_DECL(sys_get_args);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_sys_get_cpu_count
  * \group sys-api
  * \desc Docs!
@@ -73,7 +73,7 @@ __API_FUNC_DECL(sys_get_env);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_sys_get_executable
  * \group sys-api
  * \desc Docs!
@@ -84,7 +84,7 @@ __API_FUNC_DECL(sys_get_executable);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_sys_get_library
  * \group sys-api
  * \desc Docs!
@@ -95,7 +95,7 @@ __API_FUNC_DECL(sys_get_library);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_sys_get_platform
  * \group sys-api
  * \desc Docs!
@@ -106,7 +106,7 @@ __API_FUNC_DECL(sys_get_platform);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
@@ -117,7 +117,7 @@ __API_FUNC_DECL(sys_get_sandbox_flags);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_sys_get_version
  * \group sys-api
  * \desc Docs!
@@ -128,7 +128,7 @@ __API_FUNC_DECL(sys_get_version);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_sys_load_library
  * \group sys-api
  * \desc Docs!

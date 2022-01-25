@@ -11,10 +11,24 @@
 
 
 
-#define SLL_INTERNAL_FUNCTION_FLAG_REQUIRED 1
-#define SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL 2
-
+/**
+ * \flags macro var
+ * \name SLL_MAX_FUNCTION_INDEX
+ * \group identifier
+ * \desc Docs!
+ * \type sll_function_index_t
+ */
 #define SLL_MAX_FUNCTION_INDEX 0xfffffffe
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX
+ * \group identifier
+ * \desc Docs!
+ * \type sll_function_index_t
+ */
 #define SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX 0xffffffff
 
 
@@ -85,10 +99,9 @@ __SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_functio
  * \arg sll_internal_function_table_t* i_ft
  * \arg const sll_char_t* nm
  * \arg sll_internal_function_pointer_t f
- * \arg sll_internal_function_type_t t
  * \ret sll_function_index_t
  */
-__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f,sll_internal_function_type_t t);
+__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f);
 
 
 

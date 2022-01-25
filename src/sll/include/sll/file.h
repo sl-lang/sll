@@ -11,6 +11,13 @@
  */
 /**
  * \flags subgroup
+ * \name Access Flags
+ * \group file
+ * \subgroup file-flag
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
  * \name I/O
  * \group file
  * \subgroup file-io
@@ -19,20 +26,114 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_READ
+ * \group file
+ * \subgroup file-flag
+ * \desc Docs!
+ * \type sll_file_flags_t
+ */
 #define SLL_FILE_FLAG_READ 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_WRITE
+ * \group file
+ * \subgroup file-flag
+ * \desc Docs!
+ * \type sll_file_flags_t
+ */
 #define SLL_FILE_FLAG_WRITE 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_APPEND
+ * \group file
+ * \subgroup file-flag
+ * \desc Docs!
+ * \type sll_file_flags_t
+ */
 #define SLL_FILE_FLAG_APPEND 4
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_NO_BUFFER
+ * \group file
+ * \subgroup file-flag
+ * \desc Docs!
+ * \type sll_file_flags_t
+ */
 #define SLL_FILE_FLAG_NO_BUFFER 8
+
+
+
 #define SLL_FILE_FLAG_RESERVED0 64
 #define SLL_FILE_FLAG_RESERVED1 128
 #define SLL_FILE_FLAG_RESERVED2 256
 
+
+
+/**
+ * \flags func macro
+ * \name SLL_FILE_GET_LINE_NUMBER
+ * \group file
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \ret sll_file_offset_t
+ */
 #define SLL_FILE_GET_LINE_NUMBER(f) ((f)->_l_num)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_FILE_GET_LINE_OFFSET
+ * \group file
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \ret sll_file_offset_t
+ */
 #define SLL_FILE_GET_LINE_OFFSET(f) ((f)->_l_off)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_FILE_GET_OFFSET
+ * \group file
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \ret sll_file_offset_t
+ */
 #define SLL_FILE_GET_OFFSET(f) ((f)->_off)
 
-#define SLL_UNKNOWN_FILE_DESCRIPTOR ((void*)0xffffffffffffffffull)
 
+
+/**
+ * \flags macro var
+ * \name SLL_UNKNOWN_FILE_DESCRIPTOR
+ * \group file
+ * \desc Docs!
+ * \type sll_file_descriptor_t
+ */
+#define SLL_UNKNOWN_FILE_DESCRIPTOR ((sll_file_descriptor_t)0xffffffffffffffffull)
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_END_OF_DATA
+ * \group file
+ * \desc Docs!
+ * \type sll_read_char_t
+ */
 #define SLL_END_OF_DATA __SLL_U16_MAX
 
 

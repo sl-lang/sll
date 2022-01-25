@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api func optimizable var_arg
+ * \flags api func var_arg
  * \name sll_api_log_log
  * \group log-api
  * \desc Docs!
@@ -24,7 +24,7 @@ __API_FUNC_DECL(log_log);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_log_set_default
  * \group log-api
  * \desc Docs!
@@ -36,7 +36,7 @@ __API_FUNC_DECL(log_set_default);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_log_set_file
  * \group log-api
  * \desc Docs!
@@ -49,7 +49,7 @@ __API_FUNC_DECL(log_set_file);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_log_set_function
  * \group log-api
  * \desc Docs!

@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_int_to_bin
  * \group int-api
  * \desc Docs!
@@ -25,7 +25,7 @@ __API_FUNC_DECL(int_to_bin);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_int_to_dec
  * \group int-api
  * \desc Docs!
@@ -37,7 +37,7 @@ __API_FUNC_DECL(int_to_dec)
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_int_to_hex
  * \group int-api
  * \desc Docs!
@@ -49,7 +49,7 @@ __API_FUNC_DECL(int_to_hex);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_int_to_oct
  * \group int-api
  * \desc Docs!

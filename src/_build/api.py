@@ -97,21 +97,12 @@ def generate_c_api(d_dt,api_dt):
 			if (len(a)==0):
 				a="void"
 			sg=("" if k["subgroup"] is None else f"\n\\subgroup {k['subgroup']}")
-			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n/**\n * \\flags {('check_output ' if TYPE_MAP[k['ret']['type']][-1]!='*' else '')}func optimizable\n * \\name {k['name']}\n * \\group {k['group']}{sg}\n * \\desc {k['desc']}{d_str}\n */\n/**\n * \\flags check_output func optimizable\n * \\name {k['name']}_raw\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */")
+			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {a}\n/**\n * \\flags {('check_output ' if TYPE_MAP[k['ret']['type']][-1]!='*' else '')}func\n * \\name {k['name']}\n * \\group {k['group']}{sg}\n * \\desc {k['desc']}{d_str}\n */\n/**\n * \\flags check_output func\n * \\name {k['name']}_raw\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */")
 			if (k["group"] not in d_gl):
 				d_gl.append(k["group"])
 				hf.write(f"\n/**\n * \\flags subgroup\n * \\name {d_dt['groups'][k['group']]['name'][:-3].strip()}\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Docs!\n */")
 			hf.write("\n\n\n")
 			cf.write("}\n")
-			fl=""
-			if ("optimizable" not in k["flag"]):
-				fl="SLL_INTERNAL_FUNCTION_FLAG_REQUIRED"
-			if ("compilation_call" in k["flag"]):
-				if (len(fl)>0):
-					fl+="|"
-				fl+="SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL"
-			if (len(fl)==0):
-				fl="0"
-			fn_l.append(f"{{\n\t\tSLL_CHAR(\"sll:{k['name'][8:]}\"),\n\t\t{k['name']}_raw,\n\t\t{fl}\n\t}}")
+			fn_l.append(f"{{\n\t\tSLL_CHAR(\"sll:{k['name'][8:]}\"),\n\t\t{k['name']}_raw\n\t}}")
 		hf.write("\n#endif\n")
 		cf.write(f"\n\n\nstatic const internal_function_t _ifunc_data_ptr[]={{\n\t"+",\n\t".join(fn_l)+f"\n}};\n\n\n\nconst sll_function_index_t _ifunc_size={len(fn_l)};\nconst internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);\n")

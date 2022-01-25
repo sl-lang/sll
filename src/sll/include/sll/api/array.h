@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_count
  * \group array-api
  * \desc Docs!
@@ -26,7 +26,7 @@ __API_FUNC_DECL(array_count);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_create
  * \group array-api
  * \desc Docs!
@@ -38,7 +38,7 @@ __API_FUNC_DECL(array_create);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_extend
  * \group array-api
  * \desc Docs!
@@ -50,7 +50,7 @@ __API_FUNC_DECL(array_extend);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_join
  * \group array-api
  * \desc Docs!
@@ -63,7 +63,7 @@ __API_FUNC_DECL(array_join);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_pop
  * \group array-api
  * \desc Docs!
@@ -75,7 +75,7 @@ __API_FUNC_DECL(array_pop);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_push
  * \group array-api
  * \desc Docs!
@@ -87,7 +87,7 @@ __API_FUNC_DECL(array_push);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_remove
  * \group array-api
  * \desc Docs!
@@ -99,7 +99,7 @@ __API_FUNC_DECL(array_remove);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_replace
  * \group array-api
  * \desc Docs!
@@ -113,7 +113,7 @@ __API_FUNC_DECL(array_replace);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_reverse
  * \group array-api
  * \desc Docs!
@@ -125,7 +125,7 @@ __API_FUNC_DECL(array_reverse);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_shift
  * \group array-api
  * \desc Docs!
@@ -137,7 +137,7 @@ __API_FUNC_DECL(array_shift);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_split
  * \group array-api
  * \desc Docs!
@@ -150,7 +150,7 @@ __API_FUNC_DECL(array_split);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_array_unshift
  * \group array-api
  * \desc Docs!

@@ -11,7 +11,24 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_MEMORY_MOVE_DIRECTION_FROM_STACK
+ * \group memory
+ * \desc Docs!
+ * \type sll_bool_t
+ */
 #define SLL_MEMORY_MOVE_DIRECTION_FROM_STACK 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MEMORY_MOVE_DIRECTION_TO_STACK
+ * \group memory
+ * \desc Docs!
+ * \type sll_bool_t
+ */
 #define SLL_MEMORY_MOVE_DIRECTION_TO_STACK 1
 
 

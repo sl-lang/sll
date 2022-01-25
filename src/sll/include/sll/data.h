@@ -11,10 +11,47 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_COMPARE_RESULT_BELOW
+ * \group data
+ * \desc Docs!
+ * \type sll_compare_result_t
+ */
 #define SLL_COMPARE_RESULT_BELOW 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_COMPARE_RESULT_EQUAL
+ * \group data
+ * \desc Docs!
+ * \type sll_compare_result_t
+ */
 #define SLL_COMPARE_RESULT_EQUAL 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_COMPARE_RESULT_ABOVE
+ * \group data
+ * \desc Docs!
+ * \type sll_compare_result_t
+ */
 #define SLL_COMPARE_RESULT_ABOVE 2
 
+
+
+/**
+ * \flags func macro
+ * \name SLL_COPY_STRING_NULL
+ * \group data
+ * \desc Docs!
+ * \arg const sll_char_t* s
+ * \arg void* d
+ */
 #define SLL_COPY_STRING_NULL(s,d) (*((sll_char_t*)sll_copy_string((s),(d)))=0)
 
 

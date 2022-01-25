@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_random_get_float
  * \group random-api
  * \desc Docs!
@@ -26,7 +26,7 @@ __API_FUNC_DECL(random_get_float);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_random_get_int
  * \group random-api
  * \desc Docs!
@@ -39,7 +39,7 @@ __API_FUNC_DECL(random_get_int);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_random_get_string
  * \group random-api
  * \desc Docs!

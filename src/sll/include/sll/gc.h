@@ -11,9 +11,46 @@
 
 
 
+/**
+ * \flags func macro
+ * \name SLL_ACQUIRE
+ * \group gc
+ * \desc Docs!
+ * \arg sll_object_t* x
+ */
 #define SLL_ACQUIRE(x) SLL_ACQUIRE_NO_DEBUG(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_ACQUIRE))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ACQUIRE_NO_DEBUG
+ * \group gc
+ * \desc Docs!
+ * \arg sll_object_t* x
+ */
 #define SLL_ACQUIRE_NO_DEBUG(x) ((x)->rc++)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_CREATE
+ * \group gc
+ * \desc Docs!
+ * \ret sll_object_t*
+ */
 #define SLL_CREATE() __SLL_ADD_DEBUG_DATA(sll_create_object(),__SLL_DEBUG_TYPE_CREATE)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_RELEASE
+ * \group gc
+ * \desc Docs!
+ * \arg sll_object_t* x
+ */
 #define SLL_RELEASE(x) sll_release_object(__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_RELEASE))
 
 

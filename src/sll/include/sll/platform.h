@@ -31,6 +31,13 @@
  */
 /**
  * \flags subgroup
+ * \name Virtual Memory Management
+ * \group platform
+ * \subgroup platform-memory
+ * \desc Docs!
+ */
+/**
+ * \flags subgroup
  * \name Paths
  * \group platform
  * \subgroup platform-path
@@ -46,14 +53,88 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_PLATFORM_STREAM_INPUT
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ * \type sll_char_t
+ */
 #define SLL_PLATFORM_STREAM_INPUT 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_PLATFORM_STREAM_OUTPUT
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ * \type sll_char_t
+ */
 #define SLL_PLATFORM_STREAM_OUTPUT 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_PLATFORM_STREAM_ERROR
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ * \type sll_char_t
+ */
 #define SLL_PLATFORM_STREAM_ERROR 2
 
+
+
+/**
+ * \flags macro var
+ * \name SLL_PAGE_SIZE
+ * \group platform
+ * \subgroup platform-memory
+ * \desc Docs!
+ * \type sll_size_t
+ */
 #define SLL_PAGE_SIZE 4096
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_LARGE_PAGE_SIZE
+ * \group platform
+ * \subgroup platform-memory
+ * \desc Docs!
+ * \type sll_size_t
+ */
 #define SLL_LARGE_PAGE_SIZE 2097152
 
+
+
+/**
+ * \flags func macro
+ * \name SLL_ROUND_PAGE
+ * \group platform
+ * \subgroup platform-memory
+ * \desc Docs!
+ * \arg sll_size_t x
+ * \ret sll_size_t
+ */
 #define SLL_ROUND_PAGE(x) (((x)+SLL_PAGE_SIZE-1)&(-SLL_PAGE_SIZE))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ROUND_PAGE_LARGE
+ * \group platform
+ * \subgroup platform-memory
+ * \desc Docs!
+ * \arg sll_size_t x
+ * \ret sll_size_t
+ */
 #define SLL_ROUND_LARGE_PAGE(x) (((x)+SLL_LARGE_PAGE_SIZE-1)&(-SLL_LARGE_PAGE_SIZE))
 
 
@@ -99,6 +180,7 @@ __SLL_EXTERNAL sll_string_length_t sll_platform_absolute_path(const sll_char_t* 
  * \flags check_output func
  * \name sll_platform_allocate_page
  * \group platform
+ * \subgroup platform-memory
  * \desc Docs!
  * \arg sll_size_t sz
  * \arg sll_bool_t l
@@ -243,6 +325,7 @@ __SLL_EXTERNAL __SLL_NO_RETURN void sll_platform_force_exit(const sll_char_t* a,
  * \flags func
  * \name sll_platform_free_page
  * \group platform
+ * \subgroup platform-memory
  * \desc Docs!
  * \arg void* pg
  * \arg sll_size_t sz

@@ -66,10 +66,6 @@ typedef __SLL_U8 sll_hour_t;
 
 
 
-typedef __SLL_U8 sll_internal_function_type_t;
-
-
-
 typedef __SLL_U8 sll_json_object_type_t;
 
 
@@ -596,7 +592,6 @@ typedef sll_object_t* (*sll_internal_function_pointer_t)(sll_object_t*const* al,
 typedef struct __SLL_INTERNAL_FUNCTION{
 	const sll_string_t nm;
 	const sll_internal_function_pointer_t p;
-	const sll_internal_function_type_t t;
 } sll_internal_function_t;
 
 

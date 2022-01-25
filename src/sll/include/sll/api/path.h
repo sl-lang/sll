@@ -35,7 +35,7 @@ __SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_absolute
  * \group path-api
  * \desc Docs!
@@ -47,7 +47,7 @@ __API_FUNC_DECL(path_absolute);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_exists
  * \group path-api
  * \desc Docs!
@@ -59,7 +59,7 @@ __API_FUNC_DECL(path_exists);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_get_cwd
  * \group path-api
  * \desc Docs!
@@ -70,7 +70,7 @@ __API_FUNC_DECL(path_get_cwd);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_is_dir
  * \group path-api
  * \desc Docs!
@@ -82,7 +82,7 @@ __API_FUNC_DECL(path_is_dir);
 
 
 /**
- * \flags api func optimizable var_arg
+ * \flags api func var_arg
  * \name sll_api_path_join
  * \group path-api
  * \desc Docs!
@@ -94,7 +94,7 @@ __API_FUNC_DECL(path_join);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_list_dir
  * \group path-api
  * \desc Docs!
@@ -106,7 +106,7 @@ __API_FUNC_DECL(path_list_dir);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_recursive_list_dir
  * \group path-api
  * \desc Docs!
@@ -118,7 +118,7 @@ __API_FUNC_DECL(path_recursive_list_dir);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_relative
  * \group path-api
  * \desc Docs!
@@ -130,7 +130,7 @@ __API_FUNC_DECL(path_relative);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_set_cwd
  * \group json-api
  * \desc Docs!
@@ -142,7 +142,7 @@ __API_FUNC_DECL(path_set_cwd);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_path_size
  * \group path-api
  * \desc Docs!
@@ -154,7 +154,7 @@ __API_FUNC_DECL(path_size);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_path_split
  * \group path-api
  * \desc Docs!

@@ -89,9 +89,39 @@
 #define SLL_NODE_TYPE_RESERVED1 254
 #define SLL_NODE_TYPE_NOP 255
 
+
+
+/**
+ * \flags func macro
+ * \name SLL_IS_OBJECT_TYPE_NOT_TYPE
+ * \group node
+ * \desc Docs!
+ * \arg const sll_node_t* o
+ * \ret sll_bool_t
+ */
 #define SLL_IS_OBJECT_TYPE_NOT_TYPE(o) ((o)->t>SLL_NODE_TYPE_FUNCTION_ID)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_IS_OBJECT_TYPE_IF
+ * \group node
+ * \desc Docs!
+ * \arg const sll_node_t* o
+ * \ret sll_bool_t
+ */
 #define SLL_IS_OBJECT_TYPE_IF(o) ((o)->t>=SLL_NODE_TYPE_IF&&(o)->t<=SLL_NODE_TYPE_SWITCH)
 
+
+
+/**
+ * \flags macro var
+ * \name SLL_INIT_COMPILATION_DATA_STRUCT
+ * \group node
+ * \desc Docs!
+ * \type sll_compilation_data_t
+ */
 #define SLL_INIT_COMPILATION_DATA_STRUCT {0,NULL,{.il=NULL,.ill=0},{NULL,0},{NULL,0},{NULL,0},{NULL,0},{NULL,NULL,NULL,0,0},0}
 
 

@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_checksum
  * \group string-api
  * \desc Docs!
@@ -25,7 +25,7 @@ __API_FUNC_DECL(string_checksum);
 
 
 /**
- * \flags api compilation_call func optimizable var_arg
+ * \flags api func var_arg
  * \name sll_api_string_convert
  * \group string-api
  * \desc Docs!
@@ -37,7 +37,7 @@ __API_FUNC_DECL(string_convert);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_count
  * \group string-api
  * \desc Docs!
@@ -50,7 +50,7 @@ __API_FUNC_DECL(string_count);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_count_left
  * \group string-api
  * \desc Docs!
@@ -63,7 +63,7 @@ __API_FUNC_DECL(string_count_left);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_count_right
  * \group string-api
  * \desc Docs!
@@ -76,7 +76,7 @@ __API_FUNC_DECL(string_count_right);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_ends
  * \group string-api
  * \desc Docs!
@@ -89,7 +89,7 @@ __API_FUNC_DECL(string_ends);
 
 
 /**
- * \flags api compilation_call func optimizable var_arg
+ * \flags api func var_arg
  * \name sll_api_string_format
  * \group string-api
  * \desc Docs!
@@ -102,7 +102,7 @@ __API_FUNC_DECL(string_format);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_flip_case
  * \group string-api
  * \desc Docs!
@@ -114,7 +114,7 @@ __API_FUNC_DECL(string_flip_case);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_index
  * \group string-api
  * \desc Docs!
@@ -127,7 +127,7 @@ __API_FUNC_DECL(string_index);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_index_list
  * \group string-api
  * \desc Docs!
@@ -141,7 +141,7 @@ __API_FUNC_DECL(string_index_list);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_index_reverse
  * \group string-api
  * \desc Docs!
@@ -154,7 +154,7 @@ __API_FUNC_DECL(string_index_reverse);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_index_reverse_list
  * \group string-api
  * \desc Docs!
@@ -168,7 +168,7 @@ __API_FUNC_DECL(string_index_reverse_list);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_join
  * \group string-api
  * \desc Docs!
@@ -181,7 +181,7 @@ __API_FUNC_DECL(string_join);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_pad
  * \group string-api
  * \desc Docs!
@@ -195,7 +195,7 @@ __API_FUNC_DECL(string_pad);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_pad_left
  * \group string-api
  * \desc Docs!
@@ -209,7 +209,7 @@ __API_FUNC_DECL(string_pad_left);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_pad_right
  * \group string-api
  * \desc Docs!
@@ -223,7 +223,7 @@ __API_FUNC_DECL(string_pad_right);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_replace
  * \group string-api
  * \desc Docs!
@@ -237,7 +237,7 @@ __API_FUNC_DECL(string_replace);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_reverse
  * \group string-api
  * \desc Docs!
@@ -249,7 +249,7 @@ __API_FUNC_DECL(string_reverse);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_secure_equal
  * \group string-api
  * \desc Docs!
@@ -262,7 +262,7 @@ __API_FUNC_DECL(string_secure_equal);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_split
  * \group string-api
  * \desc Docs!
@@ -275,7 +275,7 @@ __API_FUNC_DECL(string_split);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_starts
  * \group string-api
  * \desc Docs!
@@ -288,7 +288,7 @@ __API_FUNC_DECL(string_starts);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_to_lower_case
  * \group string-api
  * \desc Docs!
@@ -300,7 +300,7 @@ __API_FUNC_DECL(string_to_lower_case);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_to_title_case
  * \group string-api
  * \desc Docs!
@@ -312,7 +312,7 @@ __API_FUNC_DECL(string_to_title_case);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_trim
  * \group string-api
  * \desc Docs!
@@ -324,7 +324,7 @@ __API_FUNC_DECL(string_trim);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_trim_left
  * \group string-api
  * \desc Docs!
@@ -336,7 +336,7 @@ __API_FUNC_DECL(string_trim_left);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_trim_right
  * \group string-api
  * \desc Docs!
@@ -348,7 +348,7 @@ __API_FUNC_DECL(string_trim_right);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_string_to_upper_case
  * \group string-api
  * \desc Docs!

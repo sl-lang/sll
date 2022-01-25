@@ -12,10 +12,46 @@
 
 
 
+/**
+ * \flags func macro var_arg
+ * \name SLL_LOG
+ * \group log
+ * \desc Docs!
+ * \arg const sll_char_t* t
+ */
 #define SLL_LOG(t,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),__LINE__,0,SLL_CHAR(t),##__VA_ARGS__)
+
+
+
+/**
+ * \flags func macro var_arg
+ * \name SLL_WARN
+ * \group log
+ * \desc Docs!
+ * \arg const sll_char_t* t
+ */
 #define SLL_WARN(t,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),__LINE__,1,SLL_CHAR(t),##__VA_ARGS__)
 
+
+
+/**
+ * \flags macro var
+ * \name SLL_LOG_FLAG_SHOW
+ * \group log
+ * \desc Docs!
+ * \type sll_flags_t
+ */
 #define SLL_LOG_FLAG_SHOW 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_LOG_FLAG_NO_HEADER
+ * \group log
+ * \desc Docs!
+ * \type sll_flags_t
+ */
 #define SLL_LOG_FLAG_NO_HEADER 2
 
 

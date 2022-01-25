@@ -14,7 +14,7 @@
 /**
  * \flags var
  * \name sll_current_instruction_count
- * \group assembly
+ * \group vm
  * \desc Docs!
  * \type sll_instruction_index_t
  */
@@ -25,7 +25,7 @@ __SLL_EXTERNAL extern sll_instruction_index_t sll_current_instruction_count;
 /**
  * \flags var
  * \name sll_current_instruction_index
- * \group assembly
+ * \group vm
  * \desc Docs!
  * \type sll_instruction_index_t
  */
@@ -36,7 +36,7 @@ __SLL_EXTERNAL extern sll_instruction_index_t sll_current_instruction_index;
 /**
  * \flags var
  * \name sll_current_runtime_data
- * \group assembly
+ * \group vm
  * \desc Docs!
  * \type const sll_runtime_data_t*
  */
@@ -47,7 +47,7 @@ __SLL_EXTERNAL extern const sll_runtime_data_t* sll_current_runtime_data;
 /**
  * \flags var
  * \name sll_current_vm_config
- * \group assembly
+ * \group vm
  * \desc Docs!
  * \type const sll_vm_config_t*
  */
@@ -74,8 +74,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
  * \group vm
  * \desc Docs!
  * \arg sll_integer_t i
- * \arg sll_object_t*const* al;
- * \arg sll_arg_count_t all;
+ * \arg sll_object_t*const* al
+ * \arg sll_arg_count_t all
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t i,sll_object_t*const* al,sll_arg_count_t all);

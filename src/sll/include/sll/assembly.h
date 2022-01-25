@@ -118,11 +118,63 @@
 #define SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE 128
 #define SLL_ASSEMBLY_INSTRUCTION_FLAG_RELATIVE 128
 
+
+
+/**
+ * \flags func macro
+ * \name SLL_ASSEMBLY_INSTRUCTION_GET_TYPE
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_assembly_instruction_type_t ai
+ * \ret sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai) ((ai)->t&0x7f)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_assembly_instruction_type_t ai
+ * \ret sll_bool_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai) ((ai)->t>>7)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_assembly_instruction_type_t ai
+ * \ret sll_bool_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai) ((ai)->t>>7)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_assembly_instruction_type_t ai
+ * \ret sll_bool_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai) ((ai)->t>>7)
 
+
+
+/**
+ * \flags macro var
+ * \name SLL_INIT_ASSEMBLY_DATA_STRUCT
+ * \group assembly
+ * \desc Docs!
+ * \type sll_assembly_data_t
+ */
 #define SLL_INIT_ASSEMBLY_DATA_STRUCT {0,NULL,0,0,{0,NULL},{NULL,0},{NULL,0},{NULL,NULL,NULL,0}}
 
 

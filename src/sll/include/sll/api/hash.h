@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_hash_md5
  * \group hash-api
  * \desc Docs!
@@ -29,7 +29,7 @@ __API_FUNC_DECL(hash_md5);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_hash_sha1
  * \group hash-api
  * \desc Docs!
@@ -46,7 +46,7 @@ __API_FUNC_DECL(hash_sha1);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_hash_sha256
  * \group hash-api
  * \desc Docs!
@@ -66,7 +66,7 @@ __API_FUNC_DECL(hash_sha256);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_hash_sha512
  * \group hash-api
  * \desc Docs!

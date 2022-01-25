@@ -11,11 +11,53 @@
 
 
 
+/**
+ * \flags func macro
+ * \name SLL_IDENTIFIER_GET_ARRAY_ID
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_index_t i
+ * \ret sll_identifier_index_t
+ */
 #define SLL_IDENTIFIER_GET_ARRAY_ID(i) ((i)&0xf)
-#define SLL_IDENTIFIER_GET_ARRAY_INDEX(i) ((i)>>4)
-#define SLL_IDENTIFIER_ADD_INDEX(i,j) ((i)+((j)<<4))
-#define SLL_CREATE_IDENTIFIER(i,j) (((i)<<4)|(j))
 
+
+
+/**
+ * \flags func macro
+ * \name SLL_IDENTIFIER_GET_ARRAY_INDEX
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_index_t i
+ * \ret sll_identifier_index_t
+ */
+#define SLL_IDENTIFIER_GET_ARRAY_INDEX(i) ((i)>>4)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_IDENTIFIER_ADD_INDEX
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_index_t i
+ * \arg sll_identifier_index_t j
+ * \ret sll_identifier_index_t
+ */
+#define SLL_IDENTIFIER_ADD_INDEX(i,j) ((i)+((j)<<4))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_CREATE_IDENTIFIER
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_index_t i
+ * \arg sll_identifier_index_t j
+ * \ret sll_identifier_index_t
+ */
+#define SLL_CREATE_IDENTIFIER(i,j) (((i)<<4)|(j))
 
 
 
@@ -32,7 +74,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_inde
 
 
 
-
 /**
  * \flags func
  * \name sll_identifier_create_identifier
@@ -42,9 +83,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_inde
  * \arg sll_identifier_index_t j
  * \ret sll_identifier_index_t
  */
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create_identifier(sll_identifier_index_t i,sll_identifier_index_t j);
-
 
 
 
@@ -56,9 +95,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create_i
  * \arg sll_identifier_index_t i
  * \ret sll_identifier_index_t
  */
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_id(sll_identifier_index_t i);
-
 
 
 
@@ -70,7 +107,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_arra
  * \arg sll_identifier_index_t i
  * \ret sll_identifier_index_t
  */
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_index(sll_identifier_index_t i);
 
 

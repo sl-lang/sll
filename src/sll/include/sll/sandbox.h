@@ -8,13 +8,72 @@
  * \group sandbox
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Flags
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ */
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_DISABLE_FILE_IO
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
 #define SLL_SANDBOX_FLAG_DISABLE_FILE_IO 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_ENABLE_STDIN_IO
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
 #define SLL_SANDBOX_FLAG_ENABLE_STDIN_IO 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
 #define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 4
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_DISABLE_PATH_API
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
 #define SLL_SANDBOX_FLAG_DISABLE_PATH_API 8
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_DISABLE_PROCESS_API
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
 #define SLL_SANDBOX_FLAG_DISABLE_PROCESS_API 16
 
 

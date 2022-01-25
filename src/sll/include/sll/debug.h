@@ -11,7 +11,6 @@
 
 
 
-
 /**
  * \flags check_output func
  * \name sll_debug_print_assembly
@@ -20,7 +19,6 @@
  * \arg const sll_assembly_data_t* a_dt
  */
 __SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* a_dt);
-
 
 
 
@@ -33,7 +31,6 @@ __SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* a_dt);
  * \arg const sll_compilation_data_t* c_dt
  */
 __SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* o,const sll_compilation_data_t* c_dt);
-
 
 
 

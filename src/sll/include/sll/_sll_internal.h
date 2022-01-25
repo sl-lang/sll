@@ -429,7 +429,6 @@ typedef struct __STRING_MAP_DATA{
 typedef struct __INTERNAL_FUNCTION{
 	const sll_char_t* nm;
 	const sll_internal_function_pointer_t f;
-	const sll_internal_function_type_t t;
 } internal_function_t;
 
 

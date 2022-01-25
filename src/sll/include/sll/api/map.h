@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_map_extend
  * \group map-api
  * \desc Docs!
@@ -25,7 +25,7 @@ __API_FUNC_DECL(map_extend);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_map_remove
  * \group map-api
  * \desc Docs!

@@ -13,7 +13,7 @@
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_time_current
  * \group time-api
  * \desc Docs!
@@ -24,7 +24,7 @@ __API_FUNC_DECL(time_current);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_time_current_ns
  * \group time-api
  * \desc Docs!
@@ -35,7 +35,7 @@ __API_FUNC_DECL(time_current_ns);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_time_sleep
  * \group time-api
  * \desc Docs!
@@ -47,7 +47,7 @@ __API_FUNC_DECL(time_sleep);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_time_sleep_ns
  * \group time-api
  * \desc Docs!

@@ -74,7 +74,7 @@ __API_FUNC_DECL(json__init);
 
 
 /**
- * \flags api func optimizable
+ * \flags api func
  * \name sll_api_json_parse
  * \group json-api
  * \desc Docs!
@@ -86,7 +86,7 @@ __API_FUNC_DECL(json_parse);
 
 
 /**
- * \flags api compilation_call func optimizable
+ * \flags api func
  * \name sll_api_json_stringify
  * \group json-api
  * \desc Docs!
