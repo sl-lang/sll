@@ -19,6 +19,7 @@ jobs:
       - linux-ext
       - linux-ext-release
       - linux-release
+      - web
       - web-server
       - windows
       - windows-ext
