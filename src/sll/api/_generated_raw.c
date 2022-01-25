@@ -4879,762 +4879,762 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_ns_raw(sll_ob
 
 static const internal_function_t _ifunc_data_ptr[]={
 	{
-		"sll:array_count",
+		SLL_CHAR("sll:array_count"),
 		sll_api_array_count_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_create",
+		SLL_CHAR("sll:array_create"),
 		sll_api_array_create_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_extend",
+		SLL_CHAR("sll:array_extend"),
 		sll_api_array_extend_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_join",
+		SLL_CHAR("sll:array_join"),
 		sll_api_array_join_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_pop",
+		SLL_CHAR("sll:array_pop"),
 		sll_api_array_pop_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_push",
+		SLL_CHAR("sll:array_push"),
 		sll_api_array_push_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_remove",
+		SLL_CHAR("sll:array_remove"),
 		sll_api_array_remove_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_replace",
+		SLL_CHAR("sll:array_replace"),
 		sll_api_array_replace_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_reverse",
+		SLL_CHAR("sll:array_reverse"),
 		sll_api_array_reverse_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_shift",
+		SLL_CHAR("sll:array_shift"),
 		sll_api_array_shift_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_split",
+		SLL_CHAR("sll:array_split"),
 		sll_api_array_split_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:array_unshift",
+		SLL_CHAR("sll:array_unshift"),
 		sll_api_array_unshift_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:base64_decode",
+		SLL_CHAR("sll:base64_decode"),
 		sll_api_base64_decode_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:base64_encode",
+		SLL_CHAR("sll:base64_encode"),
 		sll_api_base64_encode_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:date_merge",
+		SLL_CHAR("sll:date_merge"),
 		sll_api_date_merge_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:date_split",
+		SLL_CHAR("sll:date_split"),
 		sll_api_date_split_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:file_close",
+		SLL_CHAR("sll:file_close"),
 		sll_api_file_close_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_copy",
+		SLL_CHAR("sll:file_copy"),
 		sll_api_file_copy_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_flush",
+		SLL_CHAR("sll:file_flush"),
 		sll_api_file_flush_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_from_data",
+		SLL_CHAR("sll:file_from_data"),
 		sll_api_file_from_data_raw,
 		0
 	},
 	{
-		"sll:file_get_buffer",
+		SLL_CHAR("sll:file_get_buffer"),
 		sll_api_file_get_buffer_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_get_temp_path",
+		SLL_CHAR("sll:file_get_temp_path"),
 		sll_api_file_get_temp_path_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_inc_handle",
+		SLL_CHAR("sll:file_inc_handle"),
 		sll_api_file_inc_handle_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_open",
+		SLL_CHAR("sll:file_open"),
 		sll_api_file_open_raw,
 		0
 	},
 	{
-		"sll:file_peek",
+		SLL_CHAR("sll:file_peek"),
 		sll_api_file_peek_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_read",
+		SLL_CHAR("sll:file_read"),
 		sll_api_file_read_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_rename",
+		SLL_CHAR("sll:file_rename"),
 		sll_api_file_rename_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:file_std_handle",
+		SLL_CHAR("sll:file_std_handle"),
 		sll_api_file_std_handle_raw,
 		0
 	},
 	{
-		"sll:file_write",
+		SLL_CHAR("sll:file_write"),
 		sll_api_file_write_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:hash_md5",
+		SLL_CHAR("sll:hash_md5"),
 		sll_api_hash_md5_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:hash_sha1",
+		SLL_CHAR("sll:hash_sha1"),
 		sll_api_hash_sha1_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:hash_sha256",
+		SLL_CHAR("sll:hash_sha256"),
 		sll_api_hash_sha256_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:hash_sha512",
+		SLL_CHAR("sll:hash_sha512"),
 		sll_api_hash_sha512_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:int_to_bin",
+		SLL_CHAR("sll:int_to_bin"),
 		sll_api_int_to_bin_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:int_to_dec",
+		SLL_CHAR("sll:int_to_dec"),
 		sll_api_int_to_dec_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:int_to_hex",
+		SLL_CHAR("sll:int_to_hex"),
 		sll_api_int_to_hex_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:int_to_oct",
+		SLL_CHAR("sll:int_to_oct"),
 		sll_api_int_to_oct_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:json__init",
+		SLL_CHAR("sll:json__init"),
 		sll_api_json__init_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:json_parse",
+		SLL_CHAR("sll:json_parse"),
 		sll_api_json_parse_raw,
 		0
 	},
 	{
-		"sll:json_stringify",
+		SLL_CHAR("sll:json_stringify"),
 		sll_api_json_stringify_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:log_log",
+		SLL_CHAR("sll:log_log"),
 		sll_api_log_log_raw,
 		0
 	},
 	{
-		"sll:log_set_default",
+		SLL_CHAR("sll:log_set_default"),
 		sll_api_log_set_default_raw,
 		0
 	},
 	{
-		"sll:log_set_file",
+		SLL_CHAR("sll:log_set_file"),
 		sll_api_log_set_file_raw,
 		0
 	},
 	{
-		"sll:log_set_function",
+		SLL_CHAR("sll:log_set_function"),
 		sll_api_log_set_function_raw,
 		0
 	},
 	{
-		"sll:map_extend",
+		SLL_CHAR("sll:map_extend"),
 		sll_api_map_extend_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:map_remove",
+		SLL_CHAR("sll:map_remove"),
 		sll_api_map_remove_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_abs",
+		SLL_CHAR("sll:math_abs"),
 		sll_api_math_abs_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_acos",
+		SLL_CHAR("sll:math_acos"),
 		sll_api_math_acos_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_acosh",
+		SLL_CHAR("sll:math_acosh"),
 		sll_api_math_acosh_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_asin",
+		SLL_CHAR("sll:math_asin"),
 		sll_api_math_asin_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_asinh",
+		SLL_CHAR("sll:math_asinh"),
 		sll_api_math_asinh_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_atan",
+		SLL_CHAR("sll:math_atan"),
 		sll_api_math_atan_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_atan2",
+		SLL_CHAR("sll:math_atan2"),
 		sll_api_math_atan2_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_atanh",
+		SLL_CHAR("sll:math_atanh"),
 		sll_api_math_atanh_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_cbrt",
+		SLL_CHAR("sll:math_cbrt"),
 		sll_api_math_cbrt_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_ceil",
+		SLL_CHAR("sll:math_ceil"),
 		sll_api_math_ceil_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_combinations",
+		SLL_CHAR("sll:math_combinations"),
 		sll_api_math_combinations_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_copy_sign",
+		SLL_CHAR("sll:math_copy_sign"),
 		sll_api_math_copy_sign_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_cos",
+		SLL_CHAR("sll:math_cos"),
 		sll_api_math_cos_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_cosh",
+		SLL_CHAR("sll:math_cosh"),
 		sll_api_math_cosh_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_euler_phi",
+		SLL_CHAR("sll:math_euler_phi"),
 		sll_api_math_euler_phi_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_factorial",
+		SLL_CHAR("sll:math_factorial"),
 		sll_api_math_factorial_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_factors",
+		SLL_CHAR("sll:math_factors"),
 		sll_api_math_factors_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_floor",
+		SLL_CHAR("sll:math_floor"),
 		sll_api_math_floor_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_gcd",
+		SLL_CHAR("sll:math_gcd"),
 		sll_api_math_gcd_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_int_log2",
+		SLL_CHAR("sll:math_int_log2"),
 		sll_api_math_int_log2_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_int_pow",
+		SLL_CHAR("sll:math_int_pow"),
 		sll_api_math_int_pow_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_int_sqrt",
+		SLL_CHAR("sll:math_int_sqrt"),
 		sll_api_math_int_sqrt_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_log",
+		SLL_CHAR("sll:math_log"),
 		sll_api_math_log_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_log10",
+		SLL_CHAR("sll:math_log10"),
 		sll_api_math_log10_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_log2",
+		SLL_CHAR("sll:math_log2"),
 		sll_api_math_log2_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_permutations",
+		SLL_CHAR("sll:math_permutations"),
 		sll_api_math_permutations_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_pow",
+		SLL_CHAR("sll:math_pow"),
 		sll_api_math_pow_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_round",
+		SLL_CHAR("sll:math_round"),
 		sll_api_math_round_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_sin",
+		SLL_CHAR("sll:math_sin"),
 		sll_api_math_sin_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_sinh",
+		SLL_CHAR("sll:math_sinh"),
 		sll_api_math_sinh_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_sqrt",
+		SLL_CHAR("sll:math_sqrt"),
 		sll_api_math_sqrt_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_tan",
+		SLL_CHAR("sll:math_tan"),
 		sll_api_math_tan_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:math_tanh",
+		SLL_CHAR("sll:math_tanh"),
 		sll_api_math_tanh_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:path_absolute",
+		SLL_CHAR("sll:path_absolute"),
 		sll_api_path_absolute_raw,
 		0
 	},
 	{
-		"sll:path_exists",
+		SLL_CHAR("sll:path_exists"),
 		sll_api_path_exists_raw,
 		0
 	},
 	{
-		"sll:path_get_cwd",
+		SLL_CHAR("sll:path_get_cwd"),
 		sll_api_path_get_cwd_raw,
 		0
 	},
 	{
-		"sll:path_is_dir",
+		SLL_CHAR("sll:path_is_dir"),
 		sll_api_path_is_dir_raw,
 		0
 	},
 	{
-		"sll:path_join",
+		SLL_CHAR("sll:path_join"),
 		sll_api_path_join_raw,
 		0
 	},
 	{
-		"sll:path_list_dir",
+		SLL_CHAR("sll:path_list_dir"),
 		sll_api_path_list_dir_raw,
 		0
 	},
 	{
-		"sll:path_recursive_list_dir",
+		SLL_CHAR("sll:path_recursive_list_dir"),
 		sll_api_path_recursive_list_dir_raw,
 		0
 	},
 	{
-		"sll:path_relative",
+		SLL_CHAR("sll:path_relative"),
 		sll_api_path_relative_raw,
 		0
 	},
 	{
-		"sll:path_set_cwd",
+		SLL_CHAR("sll:path_set_cwd"),
 		sll_api_path_set_cwd_raw,
 		0
 	},
 	{
-		"sll:path_size",
+		SLL_CHAR("sll:path_size"),
 		sll_api_path_size_raw,
 		0
 	},
 	{
-		"sll:path_split",
+		SLL_CHAR("sll:path_split"),
 		sll_api_path_split_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:process__init",
+		SLL_CHAR("sll:process__init"),
 		sll_api_process__init_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:process_execute_shell",
+		SLL_CHAR("sll:process_execute_shell"),
 		sll_api_process_execute_shell_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:process_get_pid",
+		SLL_CHAR("sll:process_get_pid"),
 		sll_api_process_get_pid_raw,
 		0
 	},
 	{
-		"sll:process_join",
+		SLL_CHAR("sll:process_join"),
 		sll_api_process_join_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:process_split",
+		SLL_CHAR("sll:process_split"),
 		sll_api_process_split_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:process_start",
+		SLL_CHAR("sll:process_start"),
 		sll_api_process_start_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:random_get_float",
+		SLL_CHAR("sll:random_get_float"),
 		sll_api_random_get_float_raw,
 		0
 	},
 	{
-		"sll:random_get_int",
+		SLL_CHAR("sll:random_get_int"),
 		sll_api_random_get_int_raw,
 		0
 	},
 	{
-		"sll:random_get_string",
+		SLL_CHAR("sll:random_get_string"),
 		sll_api_random_get_string_raw,
 		0
 	},
 	{
-		"sll:serial_decode_float",
+		SLL_CHAR("sll:serial_decode_float"),
 		sll_api_serial_decode_float_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_decode_integer",
+		SLL_CHAR("sll:serial_decode_integer"),
 		sll_api_serial_decode_integer_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_decode_object",
+		SLL_CHAR("sll:serial_decode_object"),
 		sll_api_serial_decode_object_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_decode_signed_integer",
+		SLL_CHAR("sll:serial_decode_signed_integer"),
 		sll_api_serial_decode_signed_integer_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_decode_string",
+		SLL_CHAR("sll:serial_decode_string"),
 		sll_api_serial_decode_string_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_encode_float",
+		SLL_CHAR("sll:serial_encode_float"),
 		sll_api_serial_encode_float_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_encode_integer",
+		SLL_CHAR("sll:serial_encode_integer"),
 		sll_api_serial_encode_integer_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_encode_object",
+		SLL_CHAR("sll:serial_encode_object"),
 		sll_api_serial_encode_object_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_encode_signed_integer",
+		SLL_CHAR("sll:serial_encode_signed_integer"),
 		sll_api_serial_encode_signed_integer_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:serial_encode_string",
+		SLL_CHAR("sll:serial_encode_string"),
 		sll_api_serial_encode_string_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:sort_quicksort",
+		SLL_CHAR("sll:sort_quicksort"),
 		sll_api_sort_quicksort_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_checksum",
+		SLL_CHAR("sll:string_checksum"),
 		sll_api_string_checksum_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_convert",
+		SLL_CHAR("sll:string_convert"),
 		sll_api_string_convert_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_count",
+		SLL_CHAR("sll:string_count"),
 		sll_api_string_count_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_count_left",
+		SLL_CHAR("sll:string_count_left"),
 		sll_api_string_count_left_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_count_right",
+		SLL_CHAR("sll:string_count_right"),
 		sll_api_string_count_right_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_ends",
+		SLL_CHAR("sll:string_ends"),
 		sll_api_string_ends_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_flip_case",
+		SLL_CHAR("sll:string_flip_case"),
 		sll_api_string_flip_case_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_format",
+		SLL_CHAR("sll:string_format"),
 		sll_api_string_format_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_index",
+		SLL_CHAR("sll:string_index"),
 		sll_api_string_index_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_index_list",
+		SLL_CHAR("sll:string_index_list"),
 		sll_api_string_index_list_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_index_reverse",
+		SLL_CHAR("sll:string_index_reverse"),
 		sll_api_string_index_reverse_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_index_reverse_list",
+		SLL_CHAR("sll:string_index_reverse_list"),
 		sll_api_string_index_reverse_list_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_join",
+		SLL_CHAR("sll:string_join"),
 		sll_api_string_join_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_pad",
+		SLL_CHAR("sll:string_pad"),
 		sll_api_string_pad_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_pad_left",
+		SLL_CHAR("sll:string_pad_left"),
 		sll_api_string_pad_left_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_pad_right",
+		SLL_CHAR("sll:string_pad_right"),
 		sll_api_string_pad_right_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_replace",
+		SLL_CHAR("sll:string_replace"),
 		sll_api_string_replace_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_reverse",
+		SLL_CHAR("sll:string_reverse"),
 		sll_api_string_reverse_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_secure_equal",
+		SLL_CHAR("sll:string_secure_equal"),
 		sll_api_string_secure_equal_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_split",
+		SLL_CHAR("sll:string_split"),
 		sll_api_string_split_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_starts",
+		SLL_CHAR("sll:string_starts"),
 		sll_api_string_starts_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_to_lower_case",
+		SLL_CHAR("sll:string_to_lower_case"),
 		sll_api_string_to_lower_case_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_to_title_case",
+		SLL_CHAR("sll:string_to_title_case"),
 		sll_api_string_to_title_case_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_to_upper_case",
+		SLL_CHAR("sll:string_to_upper_case"),
 		sll_api_string_to_upper_case_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_trim",
+		SLL_CHAR("sll:string_trim"),
 		sll_api_string_trim_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_trim_left",
+		SLL_CHAR("sll:string_trim_left"),
 		sll_api_string_trim_left_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:string_trim_right",
+		SLL_CHAR("sll:string_trim_right"),
 		sll_api_string_trim_right_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_COMPILATION_CALL
 	},
 	{
-		"sll:sys_get_args",
+		SLL_CHAR("sll:sys_get_args"),
 		sll_api_sys_get_args_raw,
 		0
 	},
 	{
-		"sll:sys_get_cpu_count",
+		SLL_CHAR("sll:sys_get_cpu_count"),
 		sll_api_sys_get_cpu_count_raw,
 		0
 	},
 	{
-		"sll:sys_get_env",
+		SLL_CHAR("sll:sys_get_env"),
 		sll_api_sys_get_env_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:sys_get_executable",
+		SLL_CHAR("sll:sys_get_executable"),
 		sll_api_sys_get_executable_raw,
 		0
 	},
 	{
-		"sll:sys_get_library",
+		SLL_CHAR("sll:sys_get_library"),
 		sll_api_sys_get_library_raw,
 		0
 	},
 	{
-		"sll:sys_get_platform",
+		SLL_CHAR("sll:sys_get_platform"),
 		sll_api_sys_get_platform_raw,
 		0
 	},
 	{
-		"sll:sys_get_sandbox_flags",
+		SLL_CHAR("sll:sys_get_sandbox_flags"),
 		sll_api_sys_get_sandbox_flags_raw,
 		0
 	},
 	{
-		"sll:sys_get_version",
+		SLL_CHAR("sll:sys_get_version"),
 		sll_api_sys_get_version_raw,
 		0
 	},
 	{
-		"sll:sys_load_library",
+		SLL_CHAR("sll:sys_load_library"),
 		sll_api_sys_load_library_raw,
 		0
 	},
 	{
-		"sll:sys_remove_env",
+		SLL_CHAR("sll:sys_remove_env"),
 		sll_api_sys_remove_env_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:sys_set_env",
+		SLL_CHAR("sll:sys_set_env"),
 		sll_api_sys_set_env_raw,
 		SLL_INTERNAL_FUNCTION_FLAG_REQUIRED
 	},
 	{
-		"sll:time_current",
+		SLL_CHAR("sll:time_current"),
 		sll_api_time_current_raw,
 		0
 	},
 	{
-		"sll:time_current_ns",
+		SLL_CHAR("sll:time_current_ns"),
 		sll_api_time_current_ns_raw,
 		0
 	},
 	{
-		"sll:time_sleep",
+		SLL_CHAR("sll:time_sleep"),
 		sll_api_time_sleep_raw,
 		0
 	},
 	{
-		"sll:time_sleep_ns",
+		SLL_CHAR("sll:time_sleep_ns"),
 		sll_api_time_sleep_ns_raw,
 		0
 	}

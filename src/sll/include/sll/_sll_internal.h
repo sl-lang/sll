@@ -132,11 +132,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_STRINGIFY(x)": Assertion Failed\n")); \
 		} \
 	} while (0)
-#define CHECK_INTERNAL_FUNCTION_NAME(s) \
-	do{ \
-		SLL_ASSERT((s)->l<256); \
-		SLL_ASSERT(sll_string_count_char((s),':')==1); \
-	} while (0)
+#define CHECK_INTERNAL_FUNCTION_NAME(s) SLL_ASSERT(sll_string_count_char((s),':')==1)
 #else
 #define ASSUME_ALIGNED(p,n,x) _ASSUME_ALIGNED(p,(n),(x))
 #define SLL_ASSERT(x) \
@@ -431,7 +427,7 @@ typedef struct __STRING_MAP_DATA{
 
 
 typedef struct __INTERNAL_FUNCTION{
-	const sll_char_t nm[256];
+	const sll_char_t* nm;
 	const sll_internal_function_pointer_t f;
 	const sll_internal_function_type_t t;
 } internal_function_t;

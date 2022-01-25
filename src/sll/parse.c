@@ -1121,14 +1121,7 @@ _return_node:;
 				o->dt.ac=ac;
 			}
 			else{
-				sll_string_t* s=c_dt->st.dt+n->dt.s;
-				if (!s->l||s->l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
-					sll_string_t ns;
-					sll_string_select(s,0,SLL_INTERNAL_FUNCTION_MAX_LENGTH,1,&ns);
-					n->dt.s=sll_add_string(&(c_dt->st),&ns,1);
-					s=c_dt->st.dt+n->dt.s;
-				}
-				o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,s->v);
+				o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,(c_dt->st.dt+n->dt.s)->v);
 				if (o->dt.fn.id==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX){
 					o->t=SLL_NODE_TYPE_INTERNAL_FUNC_LOAD;
 					o->dt.ac=ac;

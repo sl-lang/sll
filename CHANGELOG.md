@@ -20,6 +20,7 @@
 ### Removed
 
 - Broken optimizer
+- Internal function table name length limit: `SLL_INTERNAL_FUNCTION_MAX_LENGTH`
 - Various code duplications
 
 ## [0.7.0] - 2022-01-21

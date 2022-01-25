@@ -418,11 +418,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 				{
 					sll_object_t* n=sll_operator_cast(*(_vm_stack+_vm_si-1),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 					SLL_RELEASE(*(_vm_stack+_vm_si-1));
-					if (n->dt.s.l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
-						SLL_RELEASE(n);
-						*(_vm_stack+_vm_si-1)=SLL_ACQUIRE_STATIC_INT(0);
-						break;
-					}
 					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,n->dt.s.v);
 					SLL_RELEASE(n);
 					*(_vm_stack+_vm_si-1)=(i==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(~((sll_integer_t)i)));
@@ -431,10 +426,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 			{
 				_vm_si++;
-				if ((sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->l>SLL_INTERNAL_FUNCTION_MAX_LENGTH){
-					*(_vm_stack+_vm_si-1)=SLL_ACQUIRE_STATIC_INT(0);
-					break;
-				}
 				sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->v);
 				*(_vm_stack+_vm_si-1)=(i==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(~((sll_integer_t)i)));
 				break;
