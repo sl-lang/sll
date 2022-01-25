@@ -4,26 +4,18 @@
 
 
 #ifdef __SLL_BUILD_WINDOWS
-#ifdef __SLL_STATIC__
-#define __SLL_EXTERNAL
-#else
 #ifdef __SLL_COMPILATION__
 #define __SLL_EXTERNAL __declspec(dllexport)
 #else
 #define __SLL_EXTERNAL __declspec(dllimport)
 #endif
-#endif
 #define __SLL_CHECK_OUTPUT _Check_return_
 #define __SLL_NO_RETURN __declspec(noreturn)
-#else
-#ifdef __SLL_STATIC__
-#define __SLL_EXTERNAL
 #else
 #ifdef __SLL_COMPILATION__
 #define __SLL_EXTERNAL __attribute__((visibility("default")))
 #else
 #define __SLL_EXTERNAL
-#endif
 #endif
 #define __SLL_CHECK_OUTPUT __attribute__((warn_unused_result))
 #define __SLL_NO_RETURN __attribute__((noreturn))

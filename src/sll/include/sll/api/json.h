@@ -9,16 +9,108 @@
  * \group json-api
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Types
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ */
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_JSON_OBJECT_TYPE_NULL
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ * \type sll_json_object_type_t
+ */
 #define SLL_JSON_OBJECT_TYPE_NULL 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_JSON_OBJECT_TYPE_FALSE
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ * \type sll_json_object_type_t
+ */
 #define SLL_JSON_OBJECT_TYPE_FALSE 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_JSON_OBJECT_TYPE_TRUE
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ * \type sll_json_object_type_t
+ */
 #define SLL_JSON_OBJECT_TYPE_TRUE 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_JSON_OBJECT_TYPE_INTEGER
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ * \type sll_json_object_type_t
+ */
 #define SLL_JSON_OBJECT_TYPE_INTEGER 3
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_JSON_OBJECT_TYPE_FLOAT
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ * \type sll_json_object_type_t
+ */
 #define SLL_JSON_OBJECT_TYPE_FLOAT 4
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_JSON_OBJECT_TYPE_STRING
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ * \type sll_json_object_type_t
+ */
 #define SLL_JSON_OBJECT_TYPE_STRING 5
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_JSON_OBJECT_TYPE_ARRAY
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ * \type sll_json_object_type_t
+ */
 #define SLL_JSON_OBJECT_TYPE_ARRAY 6
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_JSON_OBJECT_TYPE_MAP
+ * \group json-api
+ * \subgroup json-api-type
+ * \desc Docs!
+ * \type sll_json_object_type_t
+ */
 #define SLL_JSON_OBJECT_TYPE_MAP 7
 
 

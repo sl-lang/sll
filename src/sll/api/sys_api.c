@@ -29,7 +29,7 @@ static __STATIC_STRING_CODE(_sys_library,{
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_from_pointer_length(bf,sll_platform_get_library_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 });
-#ifdef SLL_VERSION_HAS_SHA
+#if SLL_VERSION_HAS_SHA
 static __STATIC_STRING(_sys_full_commit,SLL_VERSION_FULL_SHA);
 #endif
 static sll_array_length_t _sys_argc=0;
@@ -169,7 +169,7 @@ __API_FUNC(sys_get_version){
 	out->v[2]=SLL_FROM_INT(SLL_VERSION_PATCH);
 	sll_object_t* cmt=SLL_CREATE();
 	cmt->t=SLL_OBJECT_TYPE_STRING;
-#ifdef SLL_VERSION_HAS_SHA
+#if SLL_VERSION_HAS_SHA
 	sll_string_clone(&_sys_full_commit,&(cmt->dt.s));
 #else
 	SLL_INIT_STRING(&(cmt->dt.s));

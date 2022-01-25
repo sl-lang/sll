@@ -12,6 +12,20 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_API_FILE_PATH_SEPARATOR
+ * \group version
+ * \desc Docs!
+ * \type sll_char_t
+ */
+/**
+ * \flags macro var
+ * \name SLL_API_MAX_FILE_PATH_LENGTH
+ * \group version
+ * \desc Docs!
+ * \type sll_string_length_t
+ */
 #ifdef __SLL_BUILD_WINDOWS
 #define SLL_API_FILE_PATH_SEPARATOR '\\'
 #define SLL_API_MAX_FILE_PATH_LENGTH 261

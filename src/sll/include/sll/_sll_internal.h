@@ -250,7 +250,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define CLI_FLAG_VERBOSE 4096
 #define CLI_FLAG_VERSION 8192
 
-#ifdef SLL_VERSION_HAS_SHA
+#if SLL_VERSION_HAS_SHA
 #define CLI_BUILD_TYPE_STRING "commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_TAG"]"
 #else
 #define CLI_BUILD_TYPE_STRING "local"

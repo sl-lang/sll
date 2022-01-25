@@ -25,25 +25,120 @@
 
 
 
+/**
+ * \flags func macro
+ * \name SLL_CHAR
+ * \group string
+ * \desc Docs!
+ * \arg char* x
+ * \ret sll_char_t*
+ */
 #define SLL_CHAR(x) ((sll_char_t*)(x))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_INIT_STRING
+ * \group string
+ * \desc Docs!
+ * \arg sll_string_t* o
+ */
 #define SLL_INIT_STRING(o) \
 	do{ \
 		(o)->l=0; \
 		(o)->c=0; \
 		(o)->v=NULL; \
 	} while (0)
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_INIT_STRING_STRUCT
+ * \group string
+ * \desc Docs!
+ * \type sll_string_t
+ */
 #define SLL_INIT_STRING_STRUCT {0,0,NULL}
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_STRING_ALIGN_LENGTH
+ * \group string
+ * \desc Docs!
+ * \arg sll_string_length_t l
+ * \ret sll_string_length_t
+ */
 #define SLL_STRING_ALIGN_LENGTH(l) (((l)+16)&0xfffffffffffffff0ull)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_STRING_COMBINE_CHECKSUMS
+ * \group string
+ * \desc Docs!
+ * \arg sll_string_checksum_t a
+ * \arg sll_string_length_t l
+ * \arg sll_string_checksum_t b
+ * \ret sll_string_checksum_t
+ */
 #define SLL_STRING_COMBINE_CHECKSUMS(a,l,b) (((sll_string_checksum_t)(a))^((((sll_string_checksum_t)(b))<<(((l)&3)<<3))|(((sll_string_checksum_t)(b))>>(32-(((l)&3)<<3)))))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_STRING_ESCAPE
+ * \group string
+ * \desc Docs!
+ * \arg sll_char_t c
+ * \ret sll_bool_t
+ */
 #define SLL_STRING_ESCAPE(c) ((c)=='\t'||(c)=='\n'||(c)=='\v'||(c)=='\f'||(c)=='\r'||(c)=='\"'||(c)=='\''||(c)=='\\')
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_STRING_FORMAT_PADDING
+ * \group string
+ * \desc Docs!
+ * \arg sll_char_t* v
+ * \arg sll_string_length_t l
+ */
 #define SLL_STRING_FORMAT_PADDING(v,l) \
-    do{ \
-        if (((l)&15)<8){ \
-            (*((__SLL_U64*)((v)+((l)&0xfffffffffffffff0ull))))&=(1ull<<(((l)&15)<<3))-1; \
-        } \
-        (*((__SLL_U64*)((v)+((l)&0xfffffffffffffff0ull)+8)))&=(1ull<<((((l)&15)-8)<<3))-1; \
-    } while (0)
+	do{ \
+		if (((l)&15)<8){ \
+			(*((__SLL_U64*)((v)+((l)&0xfffffffffffffff0ull))))&=(1ull<<(((l)&15)<<3))-1; \
+		} \
+		(*((__SLL_U64*)((v)+((l)&0xfffffffffffffff0ull)+8)))&=(1ull<<((((l)&15)-8)<<3))-1; \
+	} while (0)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_STRING_HEX_ESCAPE
+ * \group string
+ * \desc Docs!
+ * \arg sll_char_t c
+ * \ret sll_bool_t
+ */
 #define SLL_STRING_HEX_ESCAPE(c) ((c)<32||(c)>126)
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_OBJECT_TYPE
+ * \group object
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_STRING_INSERT_POINTER_STATIC(nm,i,s) sll_string_insert_pointer_length(SLL_CHAR(nm),sizeof(nm)/sizeof(char)-1,(i),(s))
 
 

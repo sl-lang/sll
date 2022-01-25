@@ -11,7 +11,24 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_VAR_ARG_LIST_TYPE_C
+ * \group var-arg
+ * \desc Docs!
+ * \type sll_bool_t
+ */
 #define SLL_VAR_ARG_LIST_TYPE_C 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_VAR_ARG_LIST_TYPE_SLL
+ * \group var-arg
+ * \desc Docs!
+ * \type sll_bool_t
+ */
 #define SLL_VAR_ARG_LIST_TYPE_SLL 1
 
 

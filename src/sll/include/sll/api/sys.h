@@ -12,7 +12,14 @@
 
 
 
-#define SLL_UNKNOWN_LIBRARY_HANDLE ((void*)0xffffffffffffffffull)
+/**
+ * \flags macro var
+ * \name SLL_UNKNOWN_LIBRARY_HANDLE
+ * \group sys-api
+ * \desc Docs!
+ * \type sll_library_handle_t
+ */
+#define SLL_UNKNOWN_LIBRARY_HANDLE ((sll_library_handle_t)0xffffffffffffffffull)
 
 
 
