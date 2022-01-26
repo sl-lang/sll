@@ -1232,10 +1232,10 @@
 
 /**
  * \flags macro var
- * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED4
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED5
  * \group assembly
  * \subgroup assembly-instruction
- * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK`
+ * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_NOP`
  * \type sll_assembly_instruction_type_t
  */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED4 126
@@ -1244,13 +1244,13 @@
 
 /**
  * \flags macro var
- * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED5
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK
  * \group assembly
  * \subgroup assembly-instruction
- * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_NOP`
+ * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED5 127
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 127
 
 
 

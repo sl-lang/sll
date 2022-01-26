@@ -71,8 +71,8 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 
 
 static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilation_data_t* c_dt,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
-		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
+		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
@@ -191,18 +191,18 @@ static sll_assembly_instruction_t* _get_previous_instruction(assembly_generator_
 		if (!i){
 			return &_assembly_nop;
 		}
-		o=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?o->dt._p:o-1);
+		o=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?o->dt._p:o-1);
 		i--;
-	} while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
+	} while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
 	return o;
 }
 
 
 
 static const sll_node_t* _skip_with_dbg(const sll_node_t* o,assembly_generator_data_t* g_dt){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		GENERATE_DEBUG_DATA(g_dt,o);
-		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
@@ -329,9 +329,9 @@ static const sll_node_t* _generate_cond_jump(const sll_node_t* o,assembly_genera
 
 
 static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,sll_bool_t inv){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		GENERATE_DEBUG_DATA(g_dt,o);
-		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	NOT_FIELD(o);
 	switch (o->t){
@@ -595,8 +595,8 @@ static const sll_node_t* _generate_inline_function(const sll_node_t* o,assembly_
 
 
 static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_generator_data_t* g_dt,bitmap_t* v_st,sll_scope_t sc){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
-		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
+		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
@@ -721,9 +721,9 @@ static void _generate_loop_end(assembly_generator_data_t* g_dt,assembly_loop_gen
 
 
 static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generator_data_t* g_dt){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		GENERATE_DEBUG_DATA(g_dt,o);
-		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	NOT_FIELD(o);
 	switch (o->t){
@@ -942,9 +942,9 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 					return o+1;
 				}
 				o++;
-				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 					GENERATE_DEBUG_DATA(g_dt,o);
-					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				if (o->t==SLL_NODE_TYPE_STRING){
 					sll_string_index_t i=o->dt.s;
@@ -1095,9 +1095,9 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l>1);
 				o++;
-				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 					GENERATE_DEBUG_DATA(g_dt,o);
-					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				SLL_ASSERT(o->t==SLL_NODE_TYPE_IDENTIFIER);
 				sll_variable_index_t vi=GET_VARIABLE_INDEX(o,g_dt);
@@ -1105,9 +1105,9 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				l--;
 				sll_arg_count_t vl=l;
 				do{
-					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 						GENERATE_DEBUG_DATA(g_dt,o);
-						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+						o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
 					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
@@ -1138,9 +1138,9 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				l--;
 				while (l){
 					l--;
-					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 						GENERATE_DEBUG_DATA(g_dt,o);
-						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+						o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					if (o->t==SLL_NODE_TYPE_INT&&o->dt.i>0&&o->dt.i<=SLL_MAX_OBJECT_TYPE){
 						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
@@ -1188,9 +1188,9 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				while (l){
 					l--;
 					o=_generate_on_stack(o,g_dt);
-					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+					while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 						GENERATE_DEBUG_DATA(g_dt,o);
-						o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+						o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
 					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
@@ -1355,9 +1355,9 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 
 
 static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t* g_dt){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		GENERATE_DEBUG_DATA(g_dt,o);
-		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
@@ -1425,9 +1425,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l>=2);
 				o++;
-				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 					GENERATE_DEBUG_DATA(g_dt,o);
-					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				const sll_node_t* io=o;
 				if (io->t==SLL_NODE_TYPE_IDENTIFIER){
@@ -1455,9 +1455,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					sll_arg_count_t io_l=io->dt.ac;
 					SLL_ASSERT(io_l>1);
 					io++;
-					while (io->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||io->t==NODE_TYPE_CHANGE_STACK){
+					while (io->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||io->t==SLL_NODE_TYPE_CHANGE_STACK){
 						GENERATE_DEBUG_DATA(g_dt,o);
-						io=(io->t==NODE_TYPE_CHANGE_STACK?io->dt._p:io+1);
+						io=(io->t==SLL_NODE_TYPE_CHANGE_STACK?io->dt._p:io+1);
 					}
 					SLL_ASSERT(io->t==SLL_NODE_TYPE_IDENTIFIER);
 					sll_variable_index_t vi=GET_VARIABLE_INDEX(io,g_dt);
@@ -1465,9 +1465,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					io_l--;
 					sll_arg_count_t vl=io_l;
 					do{
-						while (io->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||io->t==NODE_TYPE_CHANGE_STACK){
+						while (io->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||io->t==SLL_NODE_TYPE_CHANGE_STACK){
 							GENERATE_DEBUG_DATA(g_dt,o);
-							io=(io->t==NODE_TYPE_CHANGE_STACK?io->dt._p:io+1);
+							io=(io->t==SLL_NODE_TYPE_CHANGE_STACK?io->dt._p:io+1);
 						}
 						SLL_ASSERT(io->t==SLL_NODE_TYPE_FIELD);
 						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
@@ -1491,9 +1491,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				SLL_ASSERT(io->t==SLL_NODE_TYPE_ACCESS);
 				SLL_ASSERT(io->dt.ac>=2);
 				o++;
-				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 					GENERATE_DEBUG_DATA(g_dt,o);
-					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				sll_identifier_index_t id=SLL_MAX_IDENTIFIER_INDEX;
 				if (o->t==SLL_NODE_TYPE_IDENTIFIER){
@@ -1725,9 +1725,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l);
 				o++;
-				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+				while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 					GENERATE_DEBUG_DATA(g_dt,o);
-					o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+					o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 				}
 				SLL_ASSERT(o->t==SLL_NODE_TYPE_IDENTIFIER);
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
@@ -2039,8 +2039,8 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 	};
 	o->dbg.l=0;
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
-		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 				ai=ai->dt._p;
 			}
 			else{
@@ -2058,7 +2058,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 		st[0]=ai;
 		_optimize_assembly(st,&_assembly_nop);
 		ai++;
-		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			ai=ai->dt._p;
 		}
 	}
@@ -2088,7 +2088,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 		if (s->t==ASSEMBLY_INSTRUCTION_TYPE_NOP){
 _remove_nop:;
 			s++;
-			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 				s=s->dt._p;
 			}
 			i--;
@@ -2147,8 +2147,8 @@ _remove_nop:;
 		}
 		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
 			sll_assembly_instruction_t* tmp=s+1;
-			while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-				tmp=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?tmp->dt._p:tmp+1);
+			while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+				tmp=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?tmp->dt._p:tmp+1);
 			}
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&(tmp->t&ASSEMBLY_INSTRUCTION_FLAG_LABEL)){
 				*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=ASSEMBLY_INSTRUCTION_MISC_FIELD(tmp)|ASSEMBLY_INSTRUCTION_FLAG_LABEL_REF;
@@ -2159,11 +2159,11 @@ _remove_nop:;
 			goto _remove_nop;
 		}
 		ai++;
-		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			ai=ai->dt._p;
 		}
 		s++;
-		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			s=s->dt._p;
 		}
 	}
@@ -2242,7 +2242,7 @@ _remove_nop:;
 			ai->dt.s=*(sm.im+ai->dt.s);
 		}
 		ai++;
-		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			ai=ai->dt._p;
 		}
 	}

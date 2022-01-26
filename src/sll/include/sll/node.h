@@ -843,13 +843,13 @@
 
 /**
  * \flags macro var
- * \name SLL_NODE_TYPE_RESERVED1
+ * \name SLL_NODE_TYPE_CHANGE_STACK
  * \group node
  * \subgroup node-type
- * \desc Internally used as `NODE_TYPE_CHANGE_STACK`
+ * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_RESERVED1 254
+#define SLL_NODE_TYPE_CHANGE_STACK 254
 
 
 

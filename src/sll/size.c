@@ -6,8 +6,8 @@
 
 
 static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* sz){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
-		if (o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
+		if (o->t==SLL_NODE_TYPE_CHANGE_STACK){
 			o=o->dt._p;
 		}
 		else{

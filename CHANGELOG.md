@@ -13,6 +13,7 @@
 ### Changed
 
 - Custom ELF sections have been renamed from `s_str` and `s_obj` to `.initstr` and `.sobject`
+- Page splitting assembly (`SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK`) and node (`SLL_NODE_TYPE_CHANGE_STACK`) types are no longer internal
 - Recursive calls to `sll_execute_assembly` no longer corrupt internal data
 - Renamed everything related to `posix` to `linux` (to allow future transition into MacOS support)
 - `sll_add_debug_data` now uses `const sll_char_t*` instead of `const char*`

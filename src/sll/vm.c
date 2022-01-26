@@ -1000,7 +1000,7 @@ _return:;
 				break;
 		}
 		ai++;
-		if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			ai=ai->dt._p;
 		}
 		_vm_ii++;

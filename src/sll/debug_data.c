@@ -6,11 +6,11 @@
 
 
 static sll_node_t* _remove_debug_data(sll_node_t* o){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==NODE_TYPE_CHANGE_STACK){
+	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		if (o->t==SLL_NODE_TYPE_DBG){
 			o->t=SLL_NODE_TYPE_NOP;
 		}
-		o=(o->t==NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
