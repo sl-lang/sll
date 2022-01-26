@@ -1182,11 +1182,74 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED0
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_DBG`
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED0 122
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED1
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC`
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED1 123
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED2
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_FUNC_START`
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED2 124
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED3
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET`
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED3 125
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED4
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK`
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED4 126
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED5
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_NOP`
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED5 127
 
 

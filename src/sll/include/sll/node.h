@@ -829,7 +829,26 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_RESERVED0
+ * \group node
+ * \subgroup node-type
+ * \desc Internally used as `NODE_TYPE_UNKNOWN`
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_RESERVED0 253
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_RESERVED1
+ * \group node
+ * \subgroup node-type
+ * \desc Internally used as `NODE_TYPE_CHANGE_STACK`
+ * \type sll_node_type_t
+ */
 #define SLL_NODE_TYPE_RESERVED1 254
 
 
