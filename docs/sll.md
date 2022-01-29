@@ -53,7 +53,7 @@ apt remove sll
 
 ## Version Checking
 
-The most recent version of Sll is `0.7.0` (`0.7.1` is in development).
+The most recent version of Sll is `0.7.1` (`0.7.2` is in development).
 
 ### Windows
 

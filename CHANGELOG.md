@@ -1,6 +1,10 @@
 # The Sl Programing Language Change Log
 
-## [0.7.1] - Ongoing
+## [0.7.2] - Ongoing
+
+*Nothing*
+
+## [0.7.1] - 2022-01-29
 
 ### Added
 
@@ -1716,7 +1720,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.6.37/src/sll/include/sll/util.h]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/include/sll/util.h
 [0.6.37/src/sll/node.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/node.c
 [0.6.37/src/sll/util.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.37/src/sll/util.c
-[0.6.36/src/sll/cli.c]: https://github.com/sl-lang/sll/blob/main/src/sll/cli.c
+[0.6.36/src/sll/cli.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.36/src/sll/cli.c
 [0.6.35/src/cli/main.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/cli/main.c
 [0.6.35/src/sll/cast.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.35/src/sll/cast.c
 [0.6.34/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/sll-v0.6.34/src/sll/operator.c
