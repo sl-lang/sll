@@ -219,6 +219,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 		}
 	}
 	else{
+		_vm_ii=0;
+		_vm_si=0;
 		ai=sll_current_runtime_data->a_dt->h;
 	}
 	sll_call_stack_size_t o_c_st=sll_current_runtime_data->c_st.l;
