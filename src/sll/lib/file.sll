@@ -2,7 +2,7 @@
 
 
 
-(# FLAG_READ FLAG_WRITE FLAG_APPEND)
+(# FLAG_READ FLAG_WRITE FLAG_APPEND FLAG_NO_BUFFER)
 
 
 
@@ -16,6 +16,7 @@
 	(,,, dt {
 		(= m "")
 		(? (& dt$flags FLAG_APPEND) (= m (+ m "A")))
+		(? (& dt$flags FLAG_NO_BUFFER) (= m (+ m "B")))
 		(? (& dt$flags FLAG_READ) (= m (+ m "R")))
 		(? (& dt$flags FLAG_WRITE) (= m (+ m "W")))
 		(@@ (<- string$format "<path=%s, mode=%s>" dt$name m))
@@ -28,6 +29,7 @@
 (= file_module_type (&:
 	(~ type_type) file_type
 	(~ int_type) FLAG_APPEND
+	(~ int_type) FLAG_NO_BUFFER
 	(~ int_type) FLAG_READ
 	(~ int_type) FLAG_WRITE
 	(~ string_type) TEMP_FILE_PATH
@@ -51,12 +53,13 @@
 (= FLAG_READ 1)
 (= FLAG_WRITE 2)
 (= FLAG_APPEND 4)
+(= FLAG_NO_BUFFER 8)
 
 (= TEMP_FILE_PATH (<- (... "sll:file_get_temp_path")))
 
 (= stdin (. file_type
 	"@stdin"
-	FLAG_READ
+	(| FLAG_READ FLAG_NO_BUFFER)
 	(<- (... "sll:file_std_handle") 0)
 ))
 (= stdout (. file_type
@@ -172,6 +175,7 @@
 (= file (. file_module_type
 	file_type
 	FLAG_APPEND
+	FLAG_NO_BUFFER
 	FLAG_READ
 	FLAG_WRITE
 	TEMP_FILE_PATH

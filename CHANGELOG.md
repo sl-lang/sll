@@ -2,7 +2,9 @@
 
 ## [0.7.2] - Ongoing
 
-*Nothing*
+### Added
+
+- Implemented `file$FLAG_NO_BUFFER`
 
 ## [0.7.1] - 2022-01-29
 
