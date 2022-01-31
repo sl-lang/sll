@@ -1444,7 +1444,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.7.1]: https://github.com/sl-lang/sll/compare/sll-v0.7.0...main
+[0.7.2]: https://github.com/sl-lang/sll/compare/sll-v0.7.1...main
+[0.7.1]: https://github.com/sl-lang/sll/compare/sll-v0.7.0...sll-v0.7.1
 [0.7.0]: https://github.com/sl-lang/sll/compare/sll-v0.6.37...sll-v0.7.0
 [0.6.37]: https://github.com/sl-lang/sll/compare/sll-v0.6.36...sll-v0.6.37
 [0.6.36]: https://github.com/sl-lang/sll/compare/sll-v0.6.35...sll-v0.6.36
