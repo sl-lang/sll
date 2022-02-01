@@ -3,14 +3,7 @@
 
 
 (= sort_module_type (&:
-	(~ func_type) default_sort_func
 	(~ func_type) sort
-))
-
-
-
-(= default_sort_func (,,, e
-	(@@ e)
 ))
 
 
@@ -20,7 +13,6 @@
 
 
 (= sort (. sort_module_type
-	default_sort_func
 	quicksort
 ))
 (## sort)

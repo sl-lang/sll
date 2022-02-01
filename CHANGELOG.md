@@ -5,6 +5,18 @@
 ### Added
 
 - Implemented `file$FLAG_NO_BUFFER`
+- New sandbox flags: `SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT`, `SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY`, `SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES`, `SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME` and `SLL_SANDBOX_FLAG_ENABLE_FILE_COPY`
+
+### Changed
+
+- Flags returned by `sll_get_sandbox_flags` and `sys$get_sandbox_flags` are a list of strings
+- Renamed `sll_set_sandbox_flags` to `sll_set_sandbox_flag`
+- Setting a sandbox flag via `sll_set_sandbox_flag` no longer returns the current flags
+
+### Removed
+
+- Internal sanbdox flag values: `FLAG_DISABLE_FILE_IO`, `FLAG_ENABLE_STDIN_IO`, `FLAG_ENABLE_STDOUT_IO`, `FLAG_DISABLE_PATH_API` and `FLAG_DISABLE_PROCESS_API`
+- Unused `sort$default_sort_func`
 
 ## [0.7.1] - 2022-01-29
 

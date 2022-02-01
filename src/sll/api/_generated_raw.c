@@ -4710,8 +4710,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_platform_raw(sll
 
 __SLL_API_TYPE_sll_api_sys_get_sandbox_flags sll_api_sys_get_sandbox_flags(__SLL_API_ARGS_sll_api_sys_get_sandbox_flags);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_sandbox_flags_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_integer_t out=sll_api_sys_get_sandbox_flags();
-	return SLL_FROM_INT(out);
+	sll_array_t out;
+	sll_api_sys_get_sandbox_flags(&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
 }
 
 

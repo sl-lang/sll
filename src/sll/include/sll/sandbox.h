@@ -26,7 +26,7 @@
  * \desc Docs!
  * \type sll_sandbox_flags_t
  */
-#define SLL_SANDBOX_FLAG_DISABLE_FILE_IO 1
+#define SLL_SANDBOX_FLAG_DISABLE_FILE_IO 0
 
 
 
@@ -38,7 +38,7 @@
  * \desc Docs!
  * \type sll_sandbox_flags_t
  */
-#define SLL_SANDBOX_FLAG_ENABLE_STDIN_IO 2
+#define SLL_SANDBOX_FLAG_ENABLE_STDIN_IO 1
 
 
 
@@ -50,7 +50,7 @@
  * \desc Docs!
  * \type sll_sandbox_flags_t
  */
-#define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 4
+#define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 2
 
 
 
@@ -62,7 +62,7 @@
  * \desc Docs!
  * \type sll_sandbox_flags_t
  */
-#define SLL_SANDBOX_FLAG_DISABLE_PATH_API 8
+#define SLL_SANDBOX_FLAG_DISABLE_PATH_API 3
 
 
 
@@ -74,7 +74,67 @@
  * \desc Docs!
  * \type sll_sandbox_flags_t
  */
-#define SLL_SANDBOX_FLAG_DISABLE_PROCESS_API 16
+#define SLL_SANDBOX_FLAG_DISABLE_PROCESS_API 4
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
+#define SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT 5
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
+#define SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY 6
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
+#define SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES 7
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
+#define SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME 8
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_ENABLE_FILE_COPY
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
+#define SLL_SANDBOX_FLAG_ENABLE_FILE_COPY 9
 
 
 
@@ -95,21 +155,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_fl
  * \name sll_get_sandbox_flags
  * \group sandbox
  * \desc Docs!
- * \ret sll_sandbox_flags_t
+ * \arg sll_array_t* o
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_sandbox_flags_t sll_get_sandbox_flags(void);
+__SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o);
 
 
 
 /**
  * \flags func
- * \name sll_set_sandbox_flags
+ * \name sll_set_sandbox_flag
  * \group sandbox
  * \desc Docs!
  * \arg sll_sandbox_flags_t f
- * \ret sll_sandbox_flags_t
+ * \ret void
  */
-__SLL_EXTERNAL sll_sandbox_flags_t sll_set_sandbox_flags(sll_sandbox_flags_t f);
+__SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flags_t f);
 
 
 

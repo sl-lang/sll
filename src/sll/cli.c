@@ -366,7 +366,6 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 	sll_file_t f={0};
 	sll_assembly_data_t a_dt={0};
 	sll_compilation_data_t c_dt={0};
-	sll_sandbox_flags_t s_fl=0;
 	sll_set_argument_count(1);
 	sll_array_length_t i=0;
 	do{
@@ -455,19 +454,34 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 			}
 			e=SLL_CHAR(argv[i]);
 			if (sll_string_compare_pointer(e,SLL_CHAR("no-file-io"))==SLL_COMPARE_RESULT_EQUAL){
-				s_fl|=SLL_SANDBOX_FLAG_DISABLE_FILE_IO;
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 			}
-			else if (sll_string_compare_pointer(e,SLL_CHAR("enable-stdin-io"))==SLL_COMPARE_RESULT_EQUAL){
-				s_fl|=SLL_SANDBOX_FLAG_ENABLE_STDIN_IO;
+			else if (sll_string_compare_pointer(e,SLL_CHAR("stdin-io"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDIN_IO);
 			}
-			else if (sll_string_compare_pointer(e,SLL_CHAR("enable-stdout-io"))==SLL_COMPARE_RESULT_EQUAL){
-				s_fl|=SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO;
+			else if (sll_string_compare_pointer(e,SLL_CHAR("stdout-io"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO);
 			}
 			else if (sll_string_compare_pointer(e,SLL_CHAR("no-path-api"))==SLL_COMPARE_RESULT_EQUAL){
-				s_fl|=SLL_SANDBOX_FLAG_DISABLE_PATH_API;
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 			}
 			else if (sll_string_compare_pointer(e,SLL_CHAR("no-process-api"))==SLL_COMPARE_RESULT_EQUAL){
-				s_fl|=SLL_SANDBOX_FLAG_DISABLE_PROCESS_API;
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API);
+			}
+			else if (sll_string_compare_pointer(e,SLL_CHAR("no-environment"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT);
+			}
+			else if (sll_string_compare_pointer(e,SLL_CHAR("no-load-library"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY);
+			}
+			else if (sll_string_compare_pointer(e,SLL_CHAR("buffer-files"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES);
+			}
+			else if (sll_string_compare_pointer(e,SLL_CHAR("file-rename"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME);
+			}
+			else if (sll_string_compare_pointer(e,SLL_CHAR("file-copy"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_COPY);
 			}
 			else{
 				SLL_WARN(SLL_CHAR("Ignoring unknown Sandbox Flag '%s'"),e);
@@ -510,7 +524,6 @@ _read_file_argument:
 		sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);
 		goto _error;
 	}
-	sll_set_sandbox_flags(s_fl);
 	if (fl&CLI_FLAG_VERBOSE){
 		SLL_LOG(SLL_CHAR("Configuration:"));
 		if (fl&CLI_FLAG_EXPAND_PATH){

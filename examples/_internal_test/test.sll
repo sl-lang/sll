@@ -381,6 +381,8 @@
 (<- file$close tmp)
 (:> obj "\n")
 
+(:> (<- sys$get_sandbox_flags) "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

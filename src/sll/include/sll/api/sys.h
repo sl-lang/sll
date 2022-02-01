@@ -117,7 +117,7 @@ __API_FUNC_DECL(sys_get_platform);
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
- * \ret I
+ * \ret A
  */
 __API_FUNC_DECL(sys_get_sandbox_flags);
 

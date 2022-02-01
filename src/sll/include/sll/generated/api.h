@@ -3462,14 +3462,13 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_sys_get_sandbox_flags __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_sys_get_sandbox_flags void
+#define __SLL_API_TYPE_sll_api_sys_get_sandbox_flags void
+#define __SLL_API_ARGS_sll_api_sys_get_sandbox_flags sll_array_t* out
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
- * \ret sll_integer_t
  */
 /**
  * \flags check_output func

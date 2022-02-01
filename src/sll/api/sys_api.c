@@ -120,6 +120,10 @@ __API_FUNC(sys_get_cpu_count){
 
 
 __API_FUNC(sys_get_env){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
+		SLL_INIT_MAP(out);
+		return;
+	}
 	sll_map_create(sll_environment->l,out);
 	for (sll_array_length_t i=0;i<sll_environment->l;i++){
 		const sll_environment_variable_t* kv=*(sll_environment->dt+i);
@@ -155,7 +159,7 @@ __API_FUNC(sys_get_platform){
 
 
 __API_FUNC(sys_get_sandbox_flags){
-	return sll_get_sandbox_flags();
+	sll_get_sandbox_flags(out);
 }
 
 
@@ -181,7 +185,7 @@ __API_FUNC(sys_get_version){
 
 
 __API_FUNC(sys_load_library){
-	if (a->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||a->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
 	sll_char_t fp[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -223,11 +227,15 @@ __API_FUNC(sys_load_library){
 
 
 __API_FUNC(sys_remove_env){
-	sll_remove_environment_variable(a);
+	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
+		sll_remove_environment_variable(a);
+	}
 }
 
 
 
 __API_FUNC(sys_set_env){
-	sll_set_environment_variable(a,b);
+	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
+		sll_set_environment_variable(a,b);
+	}
 }

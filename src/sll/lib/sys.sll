@@ -20,11 +20,6 @@
 	(~ int_type) CPU_COUNT
 	(~ map_type) ENVIRONMENT
 	(~ string_type) EXECUTABLE
-	(~ int_type) FLAG_DISABLE_FILE_IO
-	(~ int_type) FLAG_ENABLE_STDIN_IO
-	(~ int_type) FLAG_ENABLE_STDOUT_IO
-	(~ int_type) FLAG_DISABLE_PATH_API
-	(~ int_type) FLAG_DISABLE_PROCESS_API
 	(~ string_type) LIBRARY
 	(~ string_type) LIBRARY_EXTENSION
 	(~ string_type) LIBRARY_PATH
@@ -44,12 +39,6 @@
 (= CPU_COUNT (<- (... "sll:sys_get_cpu_count")))
 
 (= ENVIRONMENT (<- (... "sll:sys_get_env")))
-
-(= FLAG_DISABLE_FILE_IO 1)
-(= FLAG_ENABLE_STDIN_IO 2)
-(= FLAG_ENABLE_STDOUT_IO 4)
-(= FLAG_DISABLE_PATH_API 8)
-(= FLAG_DISABLE_PROCESS_API 16)
 
 (= EXECUTABLE (<- (... "sll:sys_get_executable")))
 
@@ -112,11 +101,6 @@
 	CPU_COUNT
 	ENVIRONMENT
 	EXECUTABLE
-	FLAG_DISABLE_FILE_IO
-	FLAG_ENABLE_STDIN_IO
-	FLAG_ENABLE_STDOUT_IO
-	FLAG_DISABLE_PATH_API
-	FLAG_DISABLE_PROCESS_API
 	LIBRARY
 	LIBRARY_EXTENSION
 	LIBRARY_PATH
