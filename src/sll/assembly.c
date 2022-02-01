@@ -2084,87 +2084,90 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 	sll_assembly_instruction_t* s=ai;
 	sll_instruction_index_t* lbl=sll_allocate(g_dt.n_lbl*sizeof(sll_instruction_index_t));
 	file_line_t* fn_ln=sll_allocate(c_dt->ft.l*sizeof(file_line_t));
-	for (sll_instruction_index_t i=0;i<o->ic;i++){
-		if (s->t==ASSEMBLY_INSTRUCTION_TYPE_NOP){
-_remove_nop:;
+	{
+		sll_instruction_index_t i=0;
+		while (i<o->ic){
+			if (s->t==ASSEMBLY_INSTRUCTION_TYPE_NOP){
+_remove_nop:
+				s++;
+				if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+					s=s->dt._p;
+				}
+				o->ic--;
+				continue;
+			}
+			*ai=*s;
+			if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
+				*(sm.m+(ai->dt.s>>6))|=1ull<<(ai->dt.s&63);
+			}
+			else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG){
+				if (ai->dt.s==SLL_MAX_STRING_INDEX){
+					(*(f_l_dt.dt+f_l_dt.c))++;
+					if (i!=l_dbg_ii||(dbg_i&&((o->dbg.dt+dbg_i-1)->ln&SLL_DEBUG_LINE_DATA_FLAG_FILE))){
+						(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
+						(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
+						dbg_i++;
+					}
+				}
+				else{
+					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
+					(o->dbg.dt+dbg_i)->ln=(*(c_dt->fpt.dt+ai->dt.s))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+					*(sm.m+(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)>>6))|=1ull<<(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)&63);
+					f_l_dt.c=ai->dt.s;
+					dbg_i++;
+					(o->dbg.dt+dbg_i)->ii=0;
+					(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
+					dbg_i++;
+				}
+				l_dbg_ii=i;
+				goto _remove_nop;
+			}
+			else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC){
+				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln=*(f_l_dt.dt+f_l_dt.c);
+				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp=f_l_dt.c;
+				goto _remove_nop;
+			}
+			else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
+				(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->i=i;
+				if (f_l_dt.c!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp){
+					f_l_dt.c=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp;
+					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
+					(o->dbg.dt+dbg_i)->ln=(*(c_dt->fpt.dt+f_l_dt.c))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+					dbg_i++;
+					l_dbg_ii=i;
+				}
+				(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
+				(o->dbg.dt+dbg_i)->ln=(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->nm|SLL_DEBUG_LINE_DATA_FLAG_FUNC;
+				dbg_i++;
+				*(f_l_dt.dt+f_l_dt.c)=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln;
+				(o->dbg.dt+dbg_i)->ii=0;
+				(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
+				dbg_i++;
+				l_dbg_ii=i;
+				goto _remove_nop;
+			}
+			else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
+				sll_assembly_instruction_t* tmp=s+1;
+				while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+					tmp=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?tmp->dt._p:tmp+1);
+				}
+				if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&(tmp->t&ASSEMBLY_INSTRUCTION_FLAG_LABEL)){
+					*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=ASSEMBLY_INSTRUCTION_MISC_FIELD(tmp)|ASSEMBLY_INSTRUCTION_FLAG_LABEL_REF;
+				}
+				else{
+					*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=i;
+				}
+				goto _remove_nop;
+			}
+			ai++;
+			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+				ai=ai->dt._p;
+			}
 			s++;
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 				s=s->dt._p;
 			}
-			i--;
-			o->ic--;
-			continue;
-		}
-		*ai=*s;
-		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
-			*(sm.m+(ai->dt.s>>6))|=1ull<<(ai->dt.s&63);
-		}
-		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG){
-			if (ai->dt.s==SLL_MAX_STRING_INDEX){
-				(*(f_l_dt.dt+f_l_dt.c))++;
-				if (i!=l_dbg_ii||(dbg_i&&((o->dbg.dt+dbg_i-1)->ln&SLL_DEBUG_LINE_DATA_FLAG_FILE))){
-					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-					(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
-					dbg_i++;
-				}
-			}
-			else{
-				(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-				(o->dbg.dt+dbg_i)->ln=(*(c_dt->fpt.dt+ai->dt.s))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
-				*(sm.m+(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)>>6))|=1ull<<(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)&63);
-				f_l_dt.c=ai->dt.s;
-				dbg_i++;
-				(o->dbg.dt+dbg_i)->ii=0;
-				(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
-				dbg_i++;
-			}
-			l_dbg_ii=i;
-			goto _remove_nop;
-		}
-		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC){
-			(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln=*(f_l_dt.dt+f_l_dt.c);
-			(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp=f_l_dt.c;
-			goto _remove_nop;
-		}
-		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
-			(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->i=i;
-			if (f_l_dt.c!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp){
-				f_l_dt.c=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp;
-				(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-				(o->dbg.dt+dbg_i)->ln=(*(c_dt->fpt.dt+f_l_dt.c))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
-				dbg_i++;
-				l_dbg_ii=i;
-			}
-			(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-			(o->dbg.dt+dbg_i)->ln=(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->nm|SLL_DEBUG_LINE_DATA_FLAG_FUNC;
-			dbg_i++;
-			*(f_l_dt.dt+f_l_dt.c)=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln;
-			(o->dbg.dt+dbg_i)->ii=0;
-			(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
-			dbg_i++;
-			l_dbg_ii=i;
-			goto _remove_nop;
-		}
-		else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
-			sll_assembly_instruction_t* tmp=s+1;
-			while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-				tmp=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?tmp->dt._p:tmp+1);
-			}
-			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&(tmp->t&ASSEMBLY_INSTRUCTION_FLAG_LABEL)){
-				*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=ASSEMBLY_INSTRUCTION_MISC_FIELD(tmp)|ASSEMBLY_INSTRUCTION_FLAG_LABEL_REF;
-			}
-			else{
-				*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=i;
-			}
-			goto _remove_nop;
-		}
-		ai++;
-		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-			ai=ai->dt._p;
-		}
-		s++;
-		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-			s=s->dt._p;
+			i++;
 		}
 	}
 	sll_deallocate(fn_ln);

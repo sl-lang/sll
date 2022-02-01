@@ -18,6 +18,10 @@
 
 
 
+#define JUMP_INSTRUCTION \
+	_vm_ii=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?_vm_ii+ai->dt.rj:ai->dt.j); \
+	ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_vm_ii); \
+	continue;
 #define OPERATOR_INSTRUCTION_UNARY(nm) \
 	{ \
 		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?_vm_var_data+ai->dt.v:_vm_stack+_vm_si-1); \
@@ -433,16 +437,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 				break;
 			}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
-_jump:
-				_vm_ii=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?_vm_ii+ai->dt.rj:ai->dt.j);
-				ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_vm_ii);
-				continue;
+				JUMP_INSTRUCTION;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
 				if (sll_operator_compare(*(_vm_stack+_vm_si-2),*(_vm_stack+_vm_si-1))==SLL_COMPARE_RESULT_BELOW){
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
@@ -450,7 +451,7 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
@@ -458,7 +459,7 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
@@ -466,7 +467,7 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
@@ -474,7 +475,7 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
@@ -482,21 +483,21 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 				if (!sll_operator_bool(*(_vm_stack+_vm_si-1))){
 					_vm_si--;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				if (sll_operator_bool(*(_vm_stack+_vm_si-1))){
 					_vm_si--;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
@@ -504,7 +505,7 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
@@ -512,7 +513,7 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
@@ -520,7 +521,7 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
@@ -528,7 +529,7 @@ _jump:
 					_vm_si-=2;
 					SLL_RELEASE(*(_vm_stack+_vm_si));
 					SLL_RELEASE(*(_vm_stack+_vm_si+1));
-					goto _jump;
+					JUMP_INSTRUCTION;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
@@ -768,10 +769,13 @@ _cleanup_jump_table:;
 				*(_vm_stack+_vm_si)=sll_create_new_object_type(sll_current_runtime_data->tt);
 				_vm_si++;
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
+				*(_vm_stack+_vm_si)=*(_vm_var_data+ai->dt.v);
+				SLL_ACQUIRE(*(_vm_stack+_vm_si));
+				_vm_si++;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT:
 				{
 					_vm_si--;
-_print_from_stack:;
 					sll_object_t* tos=*(_vm_stack+_vm_si);
 					if (io){
 						if (tos->t==SLL_OBJECT_TYPE_STRING){
@@ -797,10 +801,6 @@ _print_from_stack:;
 					sll_file_write(sll_current_vm_config->out,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->v,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->l*sizeof(sll_char_t));
 				}
 				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
-				*(_vm_stack+_vm_si)=*(_vm_var_data+ai->dt.v);
-				SLL_ACQUIRE(*(_vm_stack+_vm_si));
-				goto _print_from_stack;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 				{

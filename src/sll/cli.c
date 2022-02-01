@@ -339,6 +339,9 @@ static void _execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_ass
 
 
 static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*const* argv){
+	if (!argc){
+		return 0;
+	}
 	sll_return_code_t ec=1;
 	fl=0;
 	i_fp=sll_allocate(sizeof(sll_char_t));
@@ -365,7 +368,8 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 	sll_compilation_data_t c_dt={0};
 	sll_sandbox_flags_t s_fl=0;
 	sll_set_argument_count(1);
-	for (sll_array_length_t i=0;i<argc;i++){
+	sll_array_length_t i=0;
+	do{
 		const sll_char_t* e=SLL_CHAR(argv[i]);
 		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-assembly"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_GENERATE_ASSEMBLY;
@@ -487,7 +491,8 @@ _read_file_argument:
 			fp=sll_reallocate(fp,fpl*sizeof(sll_array_length_t));
 			*(fp+fpl-1)=i;
 		}
-	}
+		i++;
+	} while (i<argc);
 	if (!(fl&CLI_FLAG_NO_CONSOLE)){
 		sll_platform_create_console();
 	}
@@ -533,10 +538,10 @@ _read_file_argument:
 			SLL_LOG(SLL_CHAR("  Debug data stripping"));
 		}
 		SLL_LOG(SLL_CHAR("Include path:"));
-		sll_string_length_t i=0;
-		while (i<i_fpl){
-			SLL_LOG(SLL_CHAR("  '%s'"),i_fp+i);
-			i+=sll_string_length_unaligned(i_fp+i)+1;
+		sll_string_length_t j=0;
+		while (j<i_fpl){
+			SLL_LOG(SLL_CHAR("  '%s'"),i_fp+j);
+			j+=sll_string_length_unaligned(i_fp+j)+1;
 		}
 		SLL_LOG(SLL_CHAR("Library path: '%s'"),l_fp);
 	}

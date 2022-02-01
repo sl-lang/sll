@@ -2,8 +2,6 @@ queries:
   - include: "*"
   - exclude: cpp/complex-block
   - exclude: cpp/long-switch
-  - exclude: cpp/loop-variable-changed
-  - exclude: cpp/path-injection
   - exclude: cpp/poorly-documented-function
   - exclude: cpp/use-of-goto
 extraction:
