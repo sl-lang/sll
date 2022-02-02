@@ -67,7 +67,6 @@
 
 
 static sll_object_t** _vm_var_data=NULL;
-static sll_object_t* _vm_const_string=NULL;
 static sll_identifier_index_t _vm_ii=0;
 static sll_stack_offset_t _vm_si=0;
 static sll_object_t** _vm_stack=NULL;
@@ -110,7 +109,6 @@ void _pop_call_stack(void){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg){
 	sll_object_t** old_vm_var_data=_vm_var_data;
-	sll_object_t* old_vm_const_string=_vm_const_string;
 	sll_identifier_index_t old_vm_ii=_vm_ii;
 	sll_stack_offset_t old_vm_si=_vm_si;
 	sll_object_t** old_vm_stack=_vm_stack;
@@ -122,7 +120,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	_vm_si=0;
 	sll_current_instruction_count=0;
 	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
-	sll_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(cfg->s_sz+a_dt->vc*sizeof(sll_object_t*)+a_dt->st.l*sizeof(sll_object_t)+cfg->c_st_sz*sizeof(sll_call_stack_frame_t));
+	sll_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(cfg->s_sz+a_dt->vc*sizeof(sll_object_t*)+cfg->c_st_sz*sizeof(sll_call_stack_frame_t));
 	addr_t ptr=ADDR(sll_platform_allocate_page(ptr_sz,1));
 	_vm_var_data=(sll_object_t**)ptr;
 	sll_static_int[0]->rc+=a_dt->vc;
@@ -130,14 +128,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 		*(_vm_var_data+i)=sll_static_int[0];
 	}
 	ptr+=a_dt->vc*sizeof(sll_object_t*);
-	_vm_const_string=(sll_object_t*)ptr;
-	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		(_vm_const_string+i)->rc=1;
-		(_vm_const_string+i)->t=SLL_OBJECT_TYPE_STRING;
-		(_vm_const_string+i)->_dbg=NULL;
-		(_vm_const_string+i)->dt.s=*(a_dt->st.dt+i);
-	}
-	ptr+=a_dt->st.l*sizeof(sll_object_t);
 	sll_internal_function_table_t ift;
 	sll_clone_internal_function_table(cfg->ift,&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
@@ -166,7 +156,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
 	_vm_var_data=old_vm_var_data;
-	_vm_const_string=old_vm_const_string;
 	_vm_ii=old_vm_ii;
 	_vm_si=old_vm_si;
 	_vm_stack=old_vm_stack;
@@ -318,8 +307,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 				_vm_si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
-				*(_vm_stack+_vm_si)=_vm_const_string+ai->dt.s;
-				SLL_ACQUIRE(*(_vm_stack+_vm_si));
+				*(_vm_stack+_vm_si)=SLL_CREATE();
+				(*(_vm_stack+_vm_si))->t=SLL_OBJECT_TYPE_STRING;
+				sll_string_clone(sll_current_runtime_data->a_dt->st.dt+ai->dt.s,&((*(_vm_stack+_vm_si))->dt.s));
 				_vm_si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
@@ -982,8 +972,9 @@ _return:;
 				_vm_si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				*(_vm_stack+_vm_si)=_vm_const_string+ai->dt.s;
-				SLL_ACQUIRE(*(_vm_stack+_vm_si));
+				*(_vm_stack+_vm_si)=SLL_CREATE();
+				(*(_vm_stack+_vm_si))->t=SLL_OBJECT_TYPE_STRING;
+				sll_string_clone(sll_current_runtime_data->a_dt->st.dt+ai->dt.s,&((*(_vm_stack+_vm_si))->dt.s));
 				_vm_si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:

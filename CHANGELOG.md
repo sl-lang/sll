@@ -9,6 +9,7 @@
 
 ### Changed
 
+- Fixed constant string modification
 - Flags returned by `sll_get_sandbox_flags` and `sys$get_sandbox_flags` are a list of strings
 - Renamed `sll_set_sandbox_flags` to `sll_set_sandbox_flag`
 - Setting a sandbox flag via `sll_set_sandbox_flag` no longer returns the current flags
