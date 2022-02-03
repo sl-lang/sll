@@ -2961,28 +2961,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_raw(sll_objec
 
 
 
-__SLL_API_TYPE_sll_api_process__init sll_api_process__init(__SLL_API_ARGS_sll_api_process__init);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process__init_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_object_t* a=NULL;
-	if (all>0){
-		a=*(al+0);
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-			SLL_ACQUIRE(a);
-		}
-		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
-		}
-	}
-	else{
-		a=SLL_ACQUIRE_STATIC_INT(0);
-	}
-	sll_api_process__init(a->dt.i);
-	SLL_RELEASE(a);
-	return SLL_ACQUIRE_STATIC_INT(0);
-}
-
-
-
 __SLL_API_TYPE_sll_api_process_execute_shell sll_api_process_execute_shell(__SLL_API_ARGS_sll_api_process_execute_shell);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_execute_shell_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -3116,11 +3094,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_start_raw(sll_ob
 		c->t=SLL_OBJECT_TYPE_STRING;
 		sll_string_create(0,&(c->dt.s));
 	}
-	sll_object_t* out=sll_api_process_start(&(a->dt.a),b,&(c->dt.s));
+	sll_array_t out;
+	sll_api_process_start(&(a->dt.a),b,&(c->dt.s),&out);
 	SLL_RELEASE(c);
 	SLL_RELEASE(b);
 	SLL_RELEASE(a);
-	return out;
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
 }
 
 
@@ -5243,10 +5225,6 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_path_split_raw
 	},
 	{
-		SLL_CHAR("sll:process__init"),
-		sll_api_process__init_raw
-	},
-	{
 		SLL_CHAR("sll:process_execute_shell"),
 		sll_api_process_execute_shell_raw
 	},
@@ -5494,5 +5472,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=152;
+const sll_function_index_t _ifunc_size=151;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

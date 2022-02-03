@@ -412,3 +412,36 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 	}
 	_set_field(tt,o->dt.p+off,SLL_OBJECT_GET_TYPE_MASK(t),v);
 }
+
+
+
+__SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* tt,const sll_object_t* o,sll_array_t* out){
+	sll_object_type_t t=SLL_OBJECT_GET_TYPE(o);
+	if (t<=SLL_MAX_OBJECT_TYPE){
+		SLL_UNIMPLEMENTED();
+	}
+	SLL_ASSERT(t-SLL_MAX_OBJECT_TYPE-1<tt->l);
+	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
+	if (!sll_array_create(dt->l,out)){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_object_field_t* v=o->dt.p;
+	for (sll_arg_count_t i=0;i<dt->l;i++){
+		switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
+			case SLL_OBJECT_TYPE_INT:
+				out->v[i]=SLL_FROM_INT(v->i);
+				break;
+			case SLL_OBJECT_TYPE_FLOAT:
+				out->v[i]=SLL_FROM_FLOAT(v->f);
+				break;
+			case SLL_OBJECT_TYPE_CHAR:
+				out->v[i]=SLL_FROM_CHAR(v->c);
+				break;
+			default:
+				SLL_ACQUIRE(v->o);
+				out->v[i]=v->o;
+				break;
+		}
+		v++;
+	}
+}

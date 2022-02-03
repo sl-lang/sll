@@ -22,7 +22,38 @@ static const bitmap_t _process_quote_chars[4]={
 	0xffffffffffffffff,
 	0xffffffffffffffff
 };
-static sll_object_type_t _process_ret_type=0;
+
+
+
+static void _create_process_object(const sll_array_t* arg,sll_object_t* cfg,sll_return_code_t rc,const sll_string_t* in,const sll_string_t* out,const sll_string_t* err,sll_array_t* o){
+	sll_object_t* oa=SLL_CREATE();
+	oa->t=SLL_OBJECT_TYPE_ARRAY;
+	if (!sll_array_clone(arg,&(oa->dt.a))){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_object_t* std=SLL_CREATE();
+	std->t=SLL_OBJECT_TYPE_ARRAY;
+	if (!sll_array_create(3,&(std->dt.a))){
+		SLL_UNIMPLEMENTED();
+	}
+	std->dt.a.v[0]=SLL_CREATE();
+	std->dt.a.v[0]->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_clone(in,&(std->dt.a.v[0]->dt.s));
+	std->dt.a.v[1]=SLL_CREATE();
+	std->dt.a.v[1]->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_clone(out,&(std->dt.a.v[1]->dt.s));
+	std->dt.a.v[2]=SLL_CREATE();
+	std->dt.a.v[2]->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_clone(err,&(std->dt.a.v[2]->dt.s));
+	if (!sll_array_create(4,o)){
+		SLL_UNIMPLEMENTED();
+	}
+	SLL_ACQUIRE(cfg);
+	o->v[0]=oa;
+	o->v[1]=cfg;
+	o->v[2]=SLL_FROM_INT(rc);
+	o->v[3]=std;
+}
 
 
 
@@ -86,12 +117,6 @@ _continue:
 
 
 
-__API_FUNC(process__init){
-	_process_ret_type=(sll_object_type_t)a;
-}
-
-
-
 __API_FUNC(process_execute_shell){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		return 0;
@@ -139,35 +164,10 @@ __API_FUNC(process_split){
 
 
 __API_FUNC(process_start){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
-		return SLL_ACQUIRE_STATIC_INT(0);
-	}
-	SLL_ASSERT(_process_ret_type);
-	if (!a->l){
-		sll_object_t* oa=SLL_CREATE();
-		oa->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(oa->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
-		sll_object_t* std=SLL_CREATE();
-		std->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(1,&(std->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
-		sll_object_t* stdin=SLL_CREATE();
-		stdin->t=SLL_OBJECT_TYPE_STRING;
-		sll_string_clone(c,&(stdin->dt.s));
-		std->dt.a.v[0]=stdin;
-		sll_object_t* dt[]={
-			oa,
-			b,
-			sll_static_int[0],
-			std
-		};
-		sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,_process_ret_type,dt,4);
-		SLL_RELEASE(oa);
-		SLL_RELEASE(std);
-		return o;
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!a->l){
+		sll_string_t empty=SLL_INIT_STRING_STRUCT;
+		_create_process_object(a,b,0,c,&empty,&empty,out);
+		return;
 	}
 	sll_char_t** args=sll_allocate((a->l+1)*sizeof(sll_char_t*));
 	for (sll_array_length_t i=0;i<a->l;i++){
@@ -199,29 +199,6 @@ __API_FUNC(process_start){
 		sll_deallocate(*(args+i));
 	}
 	sll_deallocate(args);
-	sll_object_t* oa=SLL_CREATE();
-	oa->t=SLL_OBJECT_TYPE_ARRAY;
-	if (!sll_array_clone(a,&(oa->dt.a))){
-		SLL_UNIMPLEMENTED();
-	}
-	sll_object_t* std=SLL_CREATE();
-	std->t=SLL_OBJECT_TYPE_ARRAY;
-	if (!sll_array_create(1,&(std->dt.a))){
-		SLL_UNIMPLEMENTED();
-	}
-	sll_object_t* stdin=SLL_CREATE();
-	stdin->t=SLL_OBJECT_TYPE_STRING;
-	sll_string_clone(c,&(stdin->dt.s));
-	std->dt.a.v[0]=stdin;
-	sll_object_t* dt[]={
-		oa,
-		b,
-		SLL_FROM_INT(rc),
-		std
-	};
-	sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,_process_ret_type,dt,4);
-	SLL_RELEASE(oa);
-	SLL_RELEASE(dt[2]);
-	SLL_RELEASE(std);
-	return o;
+	sll_string_t empty=SLL_INIT_STRING_STRUCT;
+	_create_process_object(a,b,rc,c,&empty,&empty,out);
 }

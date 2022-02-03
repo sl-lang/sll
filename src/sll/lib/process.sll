@@ -8,11 +8,6 @@
 
 (= process_config_type (&:
 	(,,, dt {
-		(? (! ($ dt$cwd)) {
-			(= dt$cwd ".")
-		})
-	}) @@init@@
-	(,,, dt {
 		(= fl [])
 		(? (& dt$flags FLAG_PASS_STDIN) (<- array$push fl "FLAG_PASS_STDIN"))
 		(? (& dt$flags FLAG_PASS_STDOUT) (<- array$push fl "FLAG_PASS_STDOUT"))
@@ -70,15 +65,13 @@
 (= FLAG_WAIT 8)
 
 (= DEFAULT_PROCESS_CONFIG (. process_config_type
-	""
+	"."
 	FLAG_WAIT
 ))
 
 (= PID (<- (... "sll:process_get_pid")))
 
 (= SHELL_PATH (?: (=== sys$platform "windows") "C:\\Windows\\System32\\cmd.exe" "/bin/sh"))
-
-(<- (... "sll:process__init") process_type)
 
 
 
@@ -89,11 +82,11 @@
 (= split (... "sll:process_split"))
 
 (= start (,,, args cfg stdin
-	(@@ (<- (... "sll:process_start")
+	(@@ (:: (<- (... "sll:process_start")
 		(?: (=== (:? args) string_type) [args] (:: args array_type))
 		(?: cfg (:: cfg process_config_type) DEFAULT_PROCESS_CONFIG)
 		(?: stdin (:: stdin string_type) "")
-	))
+	) process_type))
 ))
 
 

@@ -330,6 +330,8 @@ static void _execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_ass
 			sll_stdout,
 			sll_stderr
 		};
+		sll_file_flush(sll_stdout);
+		sll_file_flush(sll_stderr);
 		*ec=sll_execute_assembly(a_dt,&cfg);
 		sll_file_flush(sll_stdout);
 		sll_file_flush(sll_stderr);
@@ -342,7 +344,7 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 	if (!argc){
 		return 0;
 	}
-	sll_return_code_t ec=1;
+	sll_return_code_t ec=0;
 	fl=0;
 	i_fp=sll_allocate(sizeof(sll_char_t));
 	*i_fp=0;

@@ -221,4 +221,17 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 
 
 
+/**
+ * \flags func
+ * \name sll_object_to_array
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_type_table_t* tt
+ * \arg const sll_object_t* o
+ * \arg sll_array_t* out
+ */
+__SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* tt,const sll_object_t* o,sll_array_t* out);
+
+
+
 #endif

@@ -81,17 +81,6 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
 
 /**
  * \flags api func
- * \name sll_api_process__init
- * \group process-api
- * \desc Docs!
- * \arg I
- */
-__API_FUNC_DECL(process__init);
-
-
-
-/**
- * \flags api func
  * \name sll_api_process_join
  * \group process-api
  * \desc Docs!
@@ -133,7 +122,7 @@ __API_FUNC_DECL(process_get_pid);
  * \arg A
  * \arg O
  * \arg S
- * \ret O
+ * \ret A
  */
 __API_FUNC_DECL(process_start);
 
