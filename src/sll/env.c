@@ -23,7 +23,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_environment_variable(const 
 
 
 __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k){
-	for (sll_array_length_t i=0;i<sll_environment->l;i++){
+	sll_array_length_t i=0;
+	while (i<sll_environment->l){
 		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->dt+i));
 		if (sll_string_equal(k,&(kv->k))){
 			sll_platform_remove_environment_variable(k->v);
@@ -38,6 +39,7 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k){
 			*((const sll_environment_variable_t*const**)(&(sll_environment->dt)))=sll_reallocate(PTR(sll_environment->dt),sll_environment->l*sizeof(sll_environment_variable_t*));
 			return;
 		}
+		i++;
 	}
 }
 

@@ -178,7 +178,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 	n->fn.del=0;
 	n->fn.init=0;
 	n->fn.str=0;
-	for (sll_arg_count_t i=0;i<l;i++){
+	sll_arg_count_t i=0;
+	while (i<l){
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
 		sll_integer_t vv=v->dt.i;
 		SLL_RELEASE(v);
@@ -195,25 +196,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		if (v->dt.s.l>4&&v->dt.s.v[0]=='@'&&v->dt.s.v[1]=='@'&&v->dt.s.v[v->dt.s.l-2]=='@'&&v->dt.s.v[v->dt.s.l-1]=='@'){
 			if (sll_string_equal(&(v->dt.s),&_object_copy_str)){
 				n->fn.copy=(fl?~vv:vv);
-				i--;
 				l--;
 				continue;
 			}
 			else if (sll_string_equal(&(v->dt.s),&_object_delete_str)){
 				n->fn.del=(fl?~vv:vv);
-				i--;
 				l--;
 				continue;
 			}
 			else if (sll_string_equal(&(v->dt.s),&_object_init_str)){
 				n->fn.init=(fl?~vv:vv);
-				i--;
 				l--;
 				continue;
 			}
 			else if (sll_string_equal(&(v->dt.s),&_object_string_str)){
 				n->fn.str=(fl?~vv:vv);
-				i--;
 				l--;
 				continue;
 			}
@@ -221,6 +218,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		sll_string_clone(&(v->dt.s),&(n->dt[i].nm));
 		SLL_RELEASE(v);
 		n->dt[i].t|=fl;
+		i++;
 	}
 	n->l=l;
 	*(tt->dt+tt->l-1)=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
