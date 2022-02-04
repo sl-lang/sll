@@ -1086,7 +1086,7 @@ _return_node:;
 			if (arg->t!=SLL_NODE_TYPE_IDENTIFIER){
 				break;
 			}
-			if (SLL_IDENTIFIER_GET_ARRAY_INDEX(arg->dt.id)>3){
+			if (SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)>3){
 				sll_string_t* nm=c_dt->st.dt+((SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?c_dt->idt.il:c_dt->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(arg->dt.id))->i;
 				SLL_ASSERT(nm->l>4);
 				if (nm->v[0]=='@'&&nm->v[1]=='@'&&nm->v[nm->l-2]=='@'&&nm->v[nm->l-1]=='@'){
