@@ -230,29 +230,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 			return SLL_ACQUIRE_STATIC_INT(0);
 		}
 		else if (fn_idx&&fn_idx<=sll_current_runtime_data->a_dt->ft.l){
-			sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+fn_idx-1;
 			for (sll_arg_count_t i=0;i<all;i++){
 				*(_vm_stack+_vm_si+i)=*(al+i);
 				SLL_ACQUIRE(*(al+i));
 			}
 			_vm_si+=all;
-			if (all!=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)){
-				if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>all){
-					sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-all;
-					for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-all;i++){
-						*(_vm_stack+_vm_si+i)=sll_static_int[0];
-					}
-					_vm_si+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-all;
-				}
-				else{
-					for (sll_arg_count_t i=all-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);i;i--){
-						_vm_si--;
-						SLL_RELEASE(*(_vm_stack+_vm_si));
-					}
-				}
-			}
-			_push_call_stack((sll_current_runtime_data->a_dt->st.dt+af->nm)->v,_vm_si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af));
-			_vm_ii=af->i;
+			_call_function((sll_function_index_t)(fn_idx-1),all);
 			ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_vm_ii);
 		}
 		else{

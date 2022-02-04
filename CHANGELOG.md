@@ -2,7 +2,9 @@
 
 ## [0.7.3] - Ongoing
 
-*Nothing*
+### Changed
+
+- Fixed variable function calling via `sll_execute_function`
 
 ## [0.7.2] - 2022-02-04
 
