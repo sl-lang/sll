@@ -161,7 +161,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 					sll_file_write(wf,(cg_dt->c_dt->st.dt+f->nm)->v,(cg_dt->c_dt->st.dt+f->nm)->l);
 					PRINT_STATIC_STRING("#|",wf);
 				}
-				for (sll_arg_count_t i=0;i<f->al;i++){
+				for (sll_arg_count_t i=0;i<SLL_FUNCTION_GET_ARGUMENT_COUNT(f);i++){
 					sll_file_write_char(wf,' ');
 					_generate_identifier(f->a[i],cg_dt,wf);
 				}

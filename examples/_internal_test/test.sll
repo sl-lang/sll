@@ -383,6 +383,13 @@
 
 (:> (<- sys$get_sandbox_flags) "\n")
 
+(= var_arg_func (,,, x y @@extra@@
+	(:> x ", " y ", " @@extra@@ "\n")
+))
+(<- var_arg_func)
+(<- var_arg_func 1 2 3 4 5)
+(<- var_arg_func 1 2 [3 4 5] 6 7)
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

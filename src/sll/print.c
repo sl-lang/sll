@@ -162,7 +162,7 @@ static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt
 					sll_file_write(wf,(c_dt->st.dt+f->nm)->v,(c_dt->st.dt+f->nm)->l);
 					PRINT_STATIC_STRING("#|",wf);
 				}
-				for (sll_arg_count_t i=0;i<f->al;i++){
+				for (sll_arg_count_t i=0;i<SLL_FUNCTION_GET_ARGUMENT_COUNT(f);i++){
 					sll_file_write_char(wf,' ');
 					_print_identifier(f->a[i],c_dt,wf);
 				}

@@ -80,11 +80,59 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 
-static sll_object_t* _call_internal_func(sll_function_index_t i,sll_object_t*const* a,sll_arg_count_t ac){
+static sll_object_t* _call_internal_function(sll_function_index_t i,sll_object_t*const* a,sll_arg_count_t ac){
 	_push_call_stack((*(sll_current_runtime_data->ift->dt+i))->nm.v,_vm_si);
 	sll_object_t* o=(*(sll_current_runtime_data->ift->dt+i))->p(a,ac);
 	_pop_call_stack();
 	return o;
+}
+
+
+
+static void _call_function(sll_function_index_t fn,sll_arg_count_t ac){
+	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+fn;
+	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
+		sll_object_t* tos=SLL_CREATE();
+		tos->t=SLL_OBJECT_TYPE_ARRAY;
+		if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
+			sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;
+			for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;i++){
+				*(_vm_stack+_vm_si)=sll_static_int[0];
+				_vm_si++;
+			}
+			SLL_INIT_ARRAY(&(tos->dt.a));
+		}
+		else{
+			if (!sll_array_create(ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)+1,&(tos->dt.a))){
+				SLL_UNIMPLEMENTED();
+			}
+			_vm_si-=tos->dt.a.l;
+			for (sll_array_length_t i=0;i<tos->dt.a.l;i++){
+				tos->dt.a.v[i]=*(_vm_stack+_vm_si+i);
+			}
+		}
+		*(_vm_stack+_vm_si)=tos;
+		_vm_si++;
+	}
+	else{
+		if (ac!=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)){
+			if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
+				sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;
+				for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;i++){
+					*(_vm_stack+_vm_si+i)=sll_static_int[0];
+				}
+				_vm_si+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;
+			}
+			else{
+				for (sll_arg_count_t i=ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);i;i--){
+					_vm_si--;
+					SLL_RELEASE(*(_vm_stack+_vm_si));
+				}
+			}
+		}
+	}
+	_push_call_stack((sll_current_runtime_data->a_dt->st.dt+af->nm)->v,_vm_si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af));
+	_vm_ii=af->i;
 }
 
 
@@ -177,7 +225,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 		if (fn_idx<0){
 			sll_function_index_t i=(sll_function_index_t)(~fn_idx);
 			if (i<sll_current_runtime_data->ift->l){
-				return _call_internal_func(i,al,all);
+				return _call_internal_function(i,al,all);
 			}
 			return SLL_ACQUIRE_STATIC_INT(0);
 		}
@@ -188,22 +236,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 				SLL_ACQUIRE(*(al+i));
 			}
 			_vm_si+=all;
-			if (all!=af->ac){
-				if (af->ac>all){
-					sll_static_int[0]->rc+=af->ac-all;
-					for (sll_arg_count_t i=0;i<af->ac-all;i++){
+			if (all!=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)){
+				if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>all){
+					sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-all;
+					for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-all;i++){
 						*(_vm_stack+_vm_si+i)=sll_static_int[0];
 					}
-					_vm_si+=af->ac-all;
+					_vm_si+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-all;
 				}
 				else{
-					for (sll_arg_count_t i=all-af->ac;i;i--){
+					for (sll_arg_count_t i=all-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);i;i--){
 						_vm_si--;
 						SLL_RELEASE(*(_vm_stack+_vm_si));
 					}
 				}
 			}
-			_push_call_stack((sll_current_runtime_data->a_dt->st.dt+af->nm)->v,_vm_si-af->ac);
+			_push_call_stack((sll_current_runtime_data->a_dt->st.dt+af->nm)->v,_vm_si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af));
 			_vm_ii=af->i;
 			ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_vm_ii);
 		}
@@ -803,7 +851,7 @@ _cleanup_jump_table:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
 								_vm_si-=ai->dt.ac;
-								sll_object_t* n=_call_internal_func(j,_vm_stack+_vm_si,ai->dt.ac);
+								sll_object_t* n=_call_internal_function(j,_vm_stack+_vm_si,ai->dt.ac);
 								for (sll_arg_count_t k=0;k<ai->dt.ac;k++){
 									SLL_RELEASE(*(_vm_stack+_vm_si+k));
 								}
@@ -818,24 +866,7 @@ _cleanup_jump_table:;
 							}
 						}
 						else if (i&&i<=sll_current_runtime_data->a_dt->ft.l){
-							sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+i-1;
-							if (ai->dt.ac!=af->ac){
-								if (af->ac>ai->dt.ac){
-									sll_static_int[0]->rc+=af->ac-ai->dt.ac;
-									for (sll_arg_count_t j=0;j<af->ac-ai->dt.ac;j++){
-										*(_vm_stack+_vm_si+j)=sll_static_int[0];
-									}
-									_vm_si+=af->ac-ai->dt.ac;
-								}
-								else{
-									for (sll_arg_count_t j=ai->dt.ac-af->ac;j;j--){
-										_vm_si--;
-										SLL_RELEASE(*(_vm_stack+_vm_si));
-									}
-								}
-							}
-							_push_call_stack((sll_current_runtime_data->a_dt->st.dt+af->nm)->v,_vm_si-af->ac);
-							_vm_ii=af->i;
+							_call_function((sll_function_index_t)(i-1),ai->dt.ac);
 							ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_vm_ii);
 							continue;
 						}
@@ -857,24 +888,13 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						*(_vm_stack+_vm_si)=_call_internal_func(i,NULL,0);
+						*(_vm_stack+_vm_si)=_call_internal_function(i,NULL,0);
 						_vm_si++;
 						break;
 					}
 				}
 				else if (ai->dt.i&&ai->dt.i<=sll_current_runtime_data->a_dt->ft.l){
-					sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+ai->dt.i-1;
-					if (ai->dt.ac!=af->ac){
-						if (af->ac){
-							sll_static_int[0]->rc+=af->ac;
-							for (sll_arg_count_t i=0;i<af->ac;i++){
-								*(_vm_stack+_vm_si+i)=sll_static_int[0];
-							}
-							_vm_si+=af->ac;
-						}
-					}
-					_push_call_stack((sll_current_runtime_data->a_dt->st.dt+af->nm)->v,_vm_si);
-					_vm_ii=af->i;
+					_call_function((sll_function_index_t)(ai->dt.i-1),0);
 					ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_vm_ii);
 					continue;
 				}
@@ -886,7 +906,7 @@ _cleanup_jump_table:;
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
 						_vm_si--;
-						sll_object_t* n=_call_internal_func(i,_vm_stack+_vm_si,1);
+						sll_object_t* n=_call_internal_function(i,_vm_stack+_vm_si,1);
 						_vm_si++;
 						SLL_RELEASE(*(_vm_stack+_vm_si-1));
 						*(_vm_stack+_vm_si-1)=n;
@@ -894,22 +914,7 @@ _cleanup_jump_table:;
 					}
 				}
 				else if (ai->dt.i&&ai->dt.i<=sll_current_runtime_data->a_dt->ft.l){
-					sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+ai->dt.i-1;
-					if (af->ac!=1){
-						if (!af->ac){
-							_vm_si--;
-							SLL_RELEASE(*(_vm_stack+_vm_si));
-						}
-						else{
-							sll_static_int[0]->rc+=af->ac-1;
-							for (sll_arg_count_t i=0;i<af->ac-1;i++){
-								*(_vm_stack+_vm_si+i)=sll_static_int[0];
-							}
-							_vm_si+=af->ac-1;
-						}
-					}
-					_push_call_stack((sll_current_runtime_data->a_dt->st.dt+af->nm)->v,_vm_si-1);
-					_vm_ii=af->i;
+					_call_function((sll_function_index_t)(ai->dt.i-1),1);
 					ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_vm_ii);
 					continue;
 				}

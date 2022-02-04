@@ -1350,6 +1350,30 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT
+ * \group assembly
+ * \desc Docs!
+ * \arg const sll_assembly_function_t* f
+ * \ret sll_arg_count_t
+ */
+#define SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(f) ((f)->ac>>1)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG
+ * \group assembly
+ * \desc Docs!
+ * \arg const sll_assembly_function_t* f
+ * \ret sll_bool_t
+ */
+#define SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(f) ((f)->ac&1)
+
+
+
+/**
  * \flags func
  * \name sll_free_assembly_data
  * \group assembly

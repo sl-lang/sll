@@ -901,6 +901,42 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_FUNCTION_GET_ARGUMENT_COUNT
+ * \group node
+ * \desc Docs!
+ * \arg const sll_function_t* f
+ * \ret sll_arg_count_t
+ */
+#define SLL_FUNCTION_GET_ARGUMENT_COUNT(f) ((f)->al>>1)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW
+ * \group node
+ * \desc Docs!
+ * \arg sll_arg_count_t al
+ * \ret sll_arg_count_t
+ */
+#define SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al) ((al)>>1)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_FUNCTION_IS_VAR_ARG
+ * \group node
+ * \desc Docs!
+ * \arg const sll_function_t* f
+ * \ret sll_bool_t
+ */
+#define SLL_FUNCTION_IS_VAR_ARG(f) ((f)->al&1)
+
+
+
+/**
  * \flags func
  * \name sll_free_compilation_data
  * \group node

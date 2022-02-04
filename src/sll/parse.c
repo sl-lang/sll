@@ -1011,11 +1011,11 @@ _merge_next_string:;
 					c_dt->ft.dt=sll_reallocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 					for (sll_function_index_t i=0;i<im.ft.l;i++){
 						sll_function_t* f=*(im.ft.dt+i);
-						sll_function_t* nf=sll_allocate(sizeof(sll_function_t)+f->al*sizeof(sll_identifier_index_t));
+						sll_function_t* nf=sll_allocate(sizeof(sll_function_t)+SLL_FUNCTION_GET_ARGUMENT_COUNT(f)*sizeof(sll_identifier_index_t));
 						nf->off=(sll_node_offset_t)(f->off+c_dt->_s.off);
 						nf->al=f->al;
 						nf->nm=(f->nm==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(im_dt.sm+f->nm));
-						for (sll_arg_count_t k=0;k<f->al;k++){
+						for (sll_arg_count_t k=0;k<SLL_FUNCTION_GET_ARGUMENT_COUNT(f);k++){
 							nf->a[k]=SLL_IDENTIFIER_ADD_INDEX(f->a[k],im_dt.off[SLL_IDENTIFIER_GET_ARRAY_ID(f->a[k])]);
 						}
 						*(c_dt->ft.dt+i+j)=nf;
@@ -1076,6 +1076,7 @@ _return_node:;
 		}
 	}
 	else if (o->t==SLL_NODE_TYPE_FUNC){
+		sll_bool_t va=0;
 		sll_arg_count_t i=0;
 		sll_node_t* arg=o+1;
 		for (;i<ac;i++){
@@ -1085,6 +1086,15 @@ _return_node:;
 			if (arg->t!=SLL_NODE_TYPE_IDENTIFIER){
 				break;
 			}
+			if (SLL_IDENTIFIER_GET_ARRAY_INDEX(arg->dt.id)>3){
+				sll_string_t* nm=c_dt->st.dt+((SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?c_dt->idt.il:c_dt->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(arg->dt.id))->i;
+				SLL_ASSERT(nm->l>4);
+				if (nm->v[0]=='@'&&nm->v[1]=='@'&&nm->v[nm->l-2]=='@'&&nm->v[nm->l-1]=='@'){
+					i++;
+					va=1;
+					break;
+				}
+			}
 			arg++;
 		}
 		o->dt.fn.ac=ac-i;
@@ -1092,7 +1102,7 @@ _return_node:;
 		c_dt->ft.dt=sll_reallocate(c_dt->ft.dt,c_dt->ft.l*sizeof(sll_function_t*));
 		sll_function_t* f=sll_allocate(sizeof(sll_function_t)+i*sizeof(sll_identifier_index_t));
 		f->off=f_off;
-		f->al=i;
+		f->al=(i<<1)|va;
 		f->nm=e_c_dt->a_nm;
 		arg=o+1;
 		for (sll_arg_count_t j=0;j<i;j++){

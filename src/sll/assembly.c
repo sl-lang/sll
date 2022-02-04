@@ -1959,7 +1959,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 	_map_identifiers(c_dt->h,c_dt,&g_dt,SLL_MAX_SCOPE);
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
-		for (sll_arg_count_t j=0;j<k->al;j++){
+		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(k);j++){
 			sll_identifier_index_t ii=k->a[j];
 			if (SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 				(g_dt.it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->v=g_dt.it.vc;
@@ -1991,11 +1991,11 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 	sll_function_index_t fn_n=0;
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
-		sll_arg_count_t j=k->al;
+		sll_arg_count_t j=SLL_FUNCTION_GET_ARGUMENT_COUNT(k);
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(o);
 		ai->t=ASSEMBLY_INSTRUCTION_TYPE_FUNC_START;
 		ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=i;
-		(o->ft.dt+i)->ac=j;
+		(o->ft.dt+i)->ac=(j<<1)|SLL_FUNCTION_IS_VAR_ARG(k);
 		if (k->nm==SLL_MAX_STRING_INDEX){
 			sll_string_t str;
 			sll_string_format(SLL_CHAR("@%u"),&str,fn_n);

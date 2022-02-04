@@ -337,12 +337,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 		CHECK_ERROR(rf,off,sll_node_offset_t);
 		sll_arg_count_t al;
 		CHECK_ERROR(rf,al,sll_arg_count_t);
-		sll_function_t* k=sll_allocate(sizeof(sll_function_t)+al*sizeof(sll_identifier_index_t));
+		sll_function_t* k=sll_allocate(sizeof(sll_function_t)+SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al)*sizeof(sll_identifier_index_t));
 		k->off=off;
 		k->al=al;
 		CHECK_ERROR(rf,k->nm,sll_string_index_t);
 		k->nm--;
-		for (sll_arg_count_t j=0;j<al;j++){
+		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al);j++){
 			CHECK_ERROR(rf,k->a[j],sll_identifier_index_t);
 		}
 		*(c_dt->ft.dt+i)=k;
