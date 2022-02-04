@@ -49,7 +49,7 @@ static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o)
 
 static void _parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* f_fp){
 	sll_init_compilation_data(f_fp,c_dt);
-	sll_parse_all_nodes(f,c_dt,&i_ft,_import_file);
+	sll_parse_nodes(f,c_dt,&i_ft,_import_file);
 	sll_file_close(f);
 	if (fl&CLI_FLAG_PRINT_OBJECT){
 		sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
@@ -584,7 +584,7 @@ _read_file_argument:
 			SLL_LOG(SLL_CHAR("Compiling console input..."));
 		}
 		sll_init_compilation_data(SLL_CHAR("@console"),&c_dt);
-		sll_parse_all_nodes(&f,&c_dt,&i_ft,_import_file);
+		sll_parse_nodes(&f,&c_dt,&i_ft,_import_file);
 		sll_file_close(&f);
 		if (fl&CLI_FLAG_PRINT_OBJECT){
 			sll_print_node(&c_dt,&i_ft,NULL,sll_stdout);

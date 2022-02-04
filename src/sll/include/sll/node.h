@@ -985,7 +985,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt);
 
 /**
  * \flags check_output func
- * \name sll_parse_all_nodes
+ * \name sll_parse_nodes
  * \group node
  * \desc Docs!
  * \arg sll_file_t* rf
@@ -993,7 +993,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt);
  * \arg sll_internal_function_table_t* i_ft
  * \arg sll_import_resolver_t il
  */
-__SLL_EXTERNAL void sll_parse_all_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
+__SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
 
 
 

@@ -304,18 +304,6 @@ __SLL_EXTERNAL void sll_file_reset(sll_file_t* f);
 
 /**
  * \flags check_output func
- * \name sll_file_reset_line
- * \group file
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg sll_file_offset_t off
- */
-__SLL_EXTERNAL void sll_file_reset_line(sll_file_t* f,sll_file_offset_t off);
-
-
-
-/**
- * \flags check_output func
  * \name sll_file_write
  * \group file
  * \subgroup file-io

@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/hash.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
@@ -31,6 +32,11 @@ __SLL_EXTERNAL sll_file_t* sll_stderr=&_file_stderr;
 
 
 
+void _file_end_hash(sll_file_t* f){
+}
+
+
+
 void _file_init_std_streams(void){
 	IGNORE_RESULT(sll_file_open_descriptor(SLL_CHAR("sll_stdin"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_INPUT),SLL_FILE_FLAG_READ|SLL_FILE_FLAG_NO_BUFFER|FILE_FLAG_NO_RELEASE,sll_stdin));
 	IGNORE_RESULT(sll_file_open_descriptor(SLL_CHAR("sll_stdout"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_OUTPUT),SLL_FILE_FLAG_WRITE|FILE_FLAG_NO_RELEASE|EXTRA_FLAGS,sll_stdout));
@@ -46,6 +52,11 @@ void _file_release_std_streams(void){
 	sll_file_close(sll_stdin);
 	sll_file_close(sll_stdout);
 	sll_file_close(sll_stderr);
+}
+
+
+
+void _file_start_hash(sll_file_t* f){
 }
 
 
@@ -320,60 +331,6 @@ __SLL_EXTERNAL void sll_file_reset(sll_file_t* f){
 	f->_l_num=0;
 	f->_l_off=0;
 	f->_off=0;
-}
-
-
-
-__SLL_EXTERNAL void sll_file_reset_line(sll_file_t* f,sll_file_offset_t off){
-	if (!(f->f&SLL_FILE_FLAG_READ)){
-		return;
-	}
-	if (f->f&FILE_FLAG_MEMORY){
-		if (off>=f->dt.mm.sz){
-			f->_l_num=0;
-			f->_l_off=0;
-			f->_off=f->dt.mm.sz;
-			return;
-		}
-		const sll_char_t* dt=f->dt.mm.p;
-		while (off&&dt[off]!='\n'){
-			off--;
-		}
-		if (dt[off]=='\n'){
-			off++;
-		}
-		f->_off=off;
-		return;
-	}
-	sll_platform_file_seek(f->dt.fl.fd,off);
-	sll_char_t c;
-	if (!sll_platform_file_read(f->dt.fl.fd,&c,sizeof(sll_char_t))){
-		f->_l_num=0;
-		f->_l_off=0;
-		f->_off=0;
-		return;
-	}
-	while (off&&c!='\n'){
-		off--;
-		sll_platform_file_seek(f->dt.fl.fd,off);
-		if (!sll_platform_file_read(f->dt.fl.fd,&c,sizeof(sll_char_t))){
-			f->_l_num=0;
-			f->_l_off=0;
-			f->_off=0;
-			return;
-		}
-	}
-	if (c!='\n'){
-		sll_platform_file_seek(f->dt.fl.fd,off);
-	}
-	else{
-		off++;
-	}
-	f->_off=off;
-	if (!(f->f&SLL_FILE_FLAG_NO_BUFFER)){
-		f->_r_bf_off=0;
-		f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE);
-	}
 }
 
 

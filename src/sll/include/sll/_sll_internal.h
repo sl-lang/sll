@@ -261,6 +261,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define JSON_NUMBER_INT 0
 #define JSON_NUMBER_FLOAT 1
 
+#define DISABLE_FILE_HASH 255
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
@@ -613,6 +615,10 @@ sll_node_t* _acquire_next_node(sll_compilation_data_t* c_dt);
 
 
 
+void _file_end_hash(sll_file_t* f);
+
+
+
 void _file_init_std_streams(void);
 
 
@@ -621,7 +627,7 @@ void _file_release_std_streams(void);
 
 
 
-void _init_platform(void);
+void _file_start_hash(sll_file_t* f);
 
 
 
@@ -650,6 +656,10 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt);
 
 
 void _init_node_stack(sll_compilation_data_t* c_dt);
+
+
+
+void _init_platform(void);
 
 
 

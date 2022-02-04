@@ -1160,7 +1160,7 @@ _return_node:;
 
 
 
-__SLL_EXTERNAL void sll_parse_all_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il){
+__SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il){
 	c_dt->h=_acquire_next_node(c_dt);
 	c_dt->h->t=SLL_NODE_TYPE_OPERATION_LIST;
 	c_dt->h->dt.ac=0;
@@ -1180,10 +1180,12 @@ __SLL_EXTERNAL void sll_parse_all_nodes(sll_file_t* rf,sll_compilation_data_t* c
 		SLL_MAX_STRING_INDEX
 	};
 	e_c_dt.sc.m[0]=1;
+	_file_start_hash(rf);
 	sll_read_char_t c=sll_file_read_char(rf);
 	while (c!=SLL_END_OF_DATA){
 		_read_object_internal(rf,c_dt,c,&e_c_dt);
 		c_dt->h->dt.ac++;
 		c=sll_file_read_char(rf);
 	}
+	_file_end_hash(rf);
 }
