@@ -8,12 +8,13 @@
 
 ### Changed
 
+- File creation functions (`sll_file_from_data`, `sll_file_open` and `sll_file_open_descriptor`) now remove invalid file flags
 - Fixed variable function calling via `sll_execute_function`
 - Renamed `sll_parse_all_nodes` to `sll_parse_nodes`
 
 ### Removed
 
-- Unused file function: `sll_file_reset_line`
+- Unused file APIs: `SLL_FILE_GET_LINE_OFFSET` and `sll_file_reset_line`
 
 ## [0.7.2] - 2022-02-04
 

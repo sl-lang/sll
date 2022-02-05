@@ -343,16 +343,24 @@ typedef union __SLL_FILE_WRITE_DATA{
 
 
 
+typedef struct __SLL_FILE_HASH{
+	sll_sha256_data_t h;
+	sll_char_t bf[64];
+	__SLL_U8 bfl;
+} sll_file_hash_t;
+
+
+
 typedef struct __SLL_FILE{
 	const sll_file_data_t dt;
 	const sll_file_flags_t f;
 	sll_file_offset_t _l_num;
-	sll_file_offset_t _l_off;
 	sll_file_offset_t _off;
 	sll_char_t* _r_bf;
 	sll_file_offset_t _r_bf_off;
 	sll_file_offset_t _r_bf_sz;
 	sll_file_write_data_t _w;
+	sll_file_hash_t _h;
 } sll_file_t;
 
 

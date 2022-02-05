@@ -94,18 +94,6 @@
 
 /**
  * \flags func macro
- * \name SLL_FILE_GET_LINE_OFFSET
- * \group file
- * \desc Docs!
- * \arg sll_file_t* f
- * \ret sll_file_offset_t
- */
-#define SLL_FILE_GET_LINE_OFFSET(f) ((f)->_l_off)
-
-
-
-/**
- * \flags func macro
  * \name SLL_FILE_GET_OFFSET
  * \group file
  * \desc Docs!
