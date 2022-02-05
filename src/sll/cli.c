@@ -79,7 +79,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		sll_file_t f;
 		if (sll_file_open(bf,SLL_FILE_FLAG_READ,&f)){
 			if (!(fl&CLI_FLAG_EXPAND_PATH)){
-				sll_copy_data(bf,j+1,f_fp);
+				SLL_COPY_STRING_NULL(bf,f_fp);
 			}
 			else{
 				sll_platform_absolute_path(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
@@ -112,7 +112,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 			continue;
 		}
 		if (!(fl&CLI_FLAG_EXPAND_PATH)){
-			sll_copy_data(bf,j+1,f_fp);
+			SLL_COPY_STRING_NULL(bf,f_fp);
 		}
 		else{
 			sll_platform_absolute_path(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
@@ -147,16 +147,15 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		return;
 	}
 	if (l_fpl){
-		i=l_fpl+f_nm_l;
 		sll_copy_data(f_nm,f_nm_l,l_fp+l_fpl);
-		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),l_fp+i);
+		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),l_fp+l_fpl+f_nm_l);
 		if (fl&CLI_FLAG_VERBOSE){
 			SLL_LOG(SLL_CHAR("Trying to open file '%s'..."),l_fp);
 		}
 		sll_file_t f;
 		if (sll_file_open(l_fp,SLL_FILE_FLAG_READ,&f)){
 			if (!(fl&CLI_FLAG_EXPAND_PATH)){
-				sll_copy_data(l_fp,i+5,f_fp);
+				SLL_COPY_STRING_NULL(l_fp,f_fp);
 			}
 			else{
 				sll_platform_absolute_path(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
@@ -180,23 +179,6 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 			if (fl&CLI_FLAG_VERBOSE){
 				SLL_LOG(SLL_CHAR("File is not a compiled program"));
 			}
-		}
-		*(l_fp+i)=0;
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Trying to open file '%s'..."),l_fp);
-		}
-		if (sll_file_open(l_fp,SLL_FILE_FLAG_READ,&f)){
-			if (!(fl&CLI_FLAG_EXPAND_PATH)){
-				sll_copy_data(l_fp,l_fpl+5,f_fp);
-			}
-			else{
-				sll_platform_absolute_path(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
-			}
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("Found file '%s'"),f_fp);
-			}
-			_parse_file(c_dt,&f,l_fp);
-			return;
 		}
 	}
 	SLL_WARN(SLL_CHAR("Unable to find file '%s'"),f_nm);

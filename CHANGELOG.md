@@ -9,6 +9,7 @@
 
 ### Changed
 
+- Compiled modules no longer contain full file paths from the host file system
 - File creation functions (`sll_file_from_data`, `sll_file_open` and `sll_file_open_descriptor`) now remove invalid file flags
 - File path table now stores file hashes and lengths (`sll_file_path_t` instead `sll_string_length_t`) ([#55])
 - Fixed variable function calling via `sll_execute_function`

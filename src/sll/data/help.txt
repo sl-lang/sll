@@ -25,3 +25,10 @@ Sandbox Flags:
   enable-stdin-io -> Enable reading from standard input (overrides 'no-file-io' flag)
   enable-stdout-io -> Enable writing to standard output (overrides 'no-file-io' flag)
   no-path-api -> Disable the path API
+  no-process-api -> Disable the process creation API
+  no-environment -> Disable environment access and modification
+  no-load-library -> Disable external library loading
+  buffer-files -> Enable creating in-memory files (overrides 'no-file-io' flag)
+  file-rename -> Enable file renaming
+  file-copy -> Enable file copying
+  no-float-error-change -> Disable floating-point error modification
