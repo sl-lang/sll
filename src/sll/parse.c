@@ -1188,4 +1188,6 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 		c=sll_file_read_char(rf);
 	}
 	_file_end_hash(rf);
+	c_dt->_h=rf->_h.h;
+	c_dt->_f_sz=rf->_off;
 }

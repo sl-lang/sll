@@ -360,6 +360,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 		CHECK_ERROR(rf,*(c_dt->fpt.dt+i),sll_string_index_t);
 	}
 	CHECK_ERROR(rf,c_dt->_n_sc_id,sll_scope_t);
+	if (sll_file_read(rf,&(c_dt->_h),sizeof(sll_sha256_data_t))==SLL_END_OF_DATA){
+		return 0;
+	}
+	CHECK_ERROR(rf,c_dt->_f_sz,sll_file_offset_t);
 	_init_node_stack(c_dt);
 	c_dt->h=c_dt->_s.p;
 	return _read_node(c_dt,rf);

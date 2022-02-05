@@ -507,6 +507,8 @@ typedef struct __SLL_COMPILATION_DATA{
 	sll_file_path_table_t fpt;
 	sll_compilation_stack_data_t _s;
 	sll_scope_t _n_sc_id;
+	sll_sha256_data_t _h;
+	sll_file_offset_t _f_sz;
 } sll_compilation_data_t;
 
 

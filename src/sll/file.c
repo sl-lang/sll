@@ -33,11 +33,23 @@ __SLL_EXTERNAL sll_file_t* sll_stderr=&_file_stderr;
 
 
 void _file_end_hash(sll_file_t* f){
-	if (!(f->f&SLL_FILE_FLAG_READ)||f->_h.bfl==DISABLE_FILE_HASH||!f->_h.bfl){
+	if (!(f->f&SLL_FILE_FLAG_READ)||f->_h.bfl==DISABLE_FILE_HASH){
 		return;
 	}
-	sll_set_memory(f->_h.bf+f->_h.bfl,64-f->_h.bfl,0);
-	sll_hash_sha256(&(f->_h.h),f->_h.bf,64);
+	sll_char_t tmp[128];
+	sll_set_memory(tmp,128,0);
+	sll_copy_data(f->_h.bf,f->_h.bfl,tmp);
+	__SLL_U8 offset=(f->_h.bfl<56?56:120);
+	tmp[f->_h.bfl]=128;
+	tmp[offset]=(f->_off>>53)&0xff;
+	tmp[offset+1]=(f->_off>>45)&0xff;
+	tmp[offset+2]=(f->_off>>37)&0xff;
+	tmp[offset+3]=(f->_off>>29)&0xff;
+	tmp[offset+4]=(f->_off>>21)&0xff;
+	tmp[offset+5]=(f->_off>>12)&0xff;
+	tmp[offset+6]=(f->_off>>5)&0xff;
+	tmp[offset+7]=(f->_off<<3)&0xff;
+	sll_hash_sha256(&(f->_h.h),tmp,(f->_h.bfl<56?64:128));
 }
 
 
@@ -233,18 +245,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 	if (!(f->f&SLL_FILE_FLAG_READ)||!sz){
 		return 0;
 	}
+	sll_size_t o;
 	if (f->f&FILE_FLAG_MEMORY){
 		if (f->_off+sz>=f->dt.mm.sz){
 			sz=f->dt.mm.sz-f->_off;
 		}
 		sll_copy_data(PTR(ADDR(f->dt.mm.p)+f->_off),sz,p);
 		f->_off+=sz;
-		return sz;
+		o=sz;
+		goto _hash_data;
 	}
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		sz=sll_platform_file_read(f->dt.fl.fd,p,sz);
 		f->_off+=sz;
-		return sz;
+		o=sz;
+		goto _hash_data;
 	}
 	if (!f->_r_bf_off&&!f->_r_bf_sz){
 		f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE);
@@ -259,9 +274,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 			f->_r_bf_off=0;
 			f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE);
 		}
-		return sz;
+		o=sz;
+		goto _hash_data;
 	}
-	sll_size_t o=f->_r_bf_sz-f->_r_bf_off;
+	o=f->_r_bf_sz-f->_r_bf_off;
 	sz-=o;
 	sll_copy_data(f->_r_bf+f->_r_bf_off,o,p);
 	p=PTR(ADDR(p)+o);
@@ -271,7 +287,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 			SLL_UNIMPLEMENTED();
 			f->_r_bf_off=0;
 			f->_r_bf_sz=0;
-			return o;
+			goto _hash_data;
 		}
 		o+=FILE_BUFFER_SIZE;
 		sz-=FILE_BUFFER_SIZE;
@@ -283,11 +299,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 		sll_copy_data(f->_r_bf,f->_r_bf_sz,p);
 		f->_r_bf_off=0;
 		f->_r_bf_sz=0;
-		return o;
+		goto _hash_data;
 	}
 	o+=sz;
 	f->_r_bf_off=sz;
 	sll_copy_data(f->_r_bf,sz,p);
+_hash_data:
+	if (f->_h.bfl!=DISABLE_FILE_HASH){
+		SLL_UNIMPLEMENTED();
+	}
 	return o;
 }
 
@@ -297,16 +317,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 	if (!(f->f&SLL_FILE_FLAG_READ)){
 		return SLL_END_OF_DATA;
 	}
+	sll_char_t o;
 	if (f->f&FILE_FLAG_MEMORY){
 		if (f->_off==f->dt.mm.sz){
 			return SLL_END_OF_DATA;
 		}
-		sll_char_t o=*((sll_char_t*)(PTR(ADDR(f->dt.mm.p)+f->_off)));
-		f->_off++;
-		return o;
+		o=*((sll_char_t*)(PTR(ADDR(f->dt.mm.p)+f->_off)));
 	}
-	sll_char_t o;
-	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
+	else if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		if (!sll_platform_file_read(f->dt.fl.fd,&o,sizeof(sll_char_t))){
 			return SLL_END_OF_DATA;
 		}
@@ -328,6 +346,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 	f->_off++;
 	if (o=='\n'){
 		f->_l_num++;
+	}
+	if (f->_h.bfl!=DISABLE_FILE_HASH){
+		f->_h.bf[f->_h.bfl]=o;
+		if (f->_h.bfl==63){
+			f->_h.bfl=0;
+			sll_hash_sha256(&(f->_h.h),f->_h.bf,64);
+		}
+		else{
+			f->_h.bfl++;
+		}
 	}
 	return o;
 }

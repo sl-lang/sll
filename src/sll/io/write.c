@@ -264,12 +264,6 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 
 
 
-__SLL_EXTERNAL void sll_write_node(sll_file_t* wf,const sll_node_t* o){
-	_write_node(wf,o);
-}
-
-
-
 __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* c_dt){
 	magic_number_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
 	sll_file_write(wf,&n,sizeof(magic_number_t));
@@ -312,5 +306,13 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 		sll_encode_integer(wf,*(c_dt->fpt.dt+i));
 	}
 	sll_encode_integer(wf,c_dt->_n_sc_id);
+	sll_file_write(wf,&(c_dt->_h),sizeof(sll_sha256_data_t));
+	sll_encode_integer(wf,c_dt->_f_sz);
 	_write_node(wf,c_dt->h);
+}
+
+
+
+__SLL_EXTERNAL void sll_write_node(sll_file_t* wf,const sll_node_t* o){
+	_write_node(wf,o);
 }
