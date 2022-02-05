@@ -1,3 +1,4 @@
+#include <sll/_size_types.h>
 #include <sll/_sll_internal.h>
 #include <sll/api/math.h>
 #include <sll/api/string.h>
@@ -70,15 +71,7 @@
 		} \
 	} while (0)
 
-#define REMOVE_FLOAT \
-	do{ \
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){ \
-			a=SLL_FROM_INT(sll_api_math_round(a->dt.f)); \
-		} \
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_FLOAT){ \
-			b=SLL_FROM_INT(sll_api_math_round(b->dt.f)); \
-		} \
-	} while (0)
+#define TO_FLOAT_BITS(n) ((n)->dt.i)
 
 
 
@@ -307,11 +300,16 @@ _add_to_map:
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a,sll_object_t* b){
 	COMMUTATIVE_OPERATOR;
-	IGNORE_RESULT(inv);
-	REMOVE_FLOAT;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i&b->dt.i);
+		case COMBINED_TYPE_IF:
+			{
+				float_data_t v={
+					.dt=a->dt.i&TO_FLOAT_BITS(b)
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i&b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -322,6 +320,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_IA:
+		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -335,6 +334,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_IM:
+		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -345,6 +345,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 					SLL_ACQUIRE(a->dt.m.v[i]);
 					o->dt.m.v[i+1]=sll_operator_and(a,b->dt.m.v[i+1]);
 				}
+				return o;
+			}
+		case COMBINED_TYPE_FF:
+			{
+				float_data_t v={
+					.dt=TO_FLOAT_BITS(a)&TO_FLOAT_BITS(b)
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
+		case COMBINED_TYPE_FC:
+			{
+				float_data_t v={
+					.dt=TO_FLOAT_BITS(a)&b->dt.c
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
+		case COMBINED_TYPE_FS:
+			{
+				sll_object_t* o=SLL_CREATE();
+				o->t=SLL_OBJECT_TYPE_STRING;
+				sll_string_and_char(&(b->dt.s),(sll_char_t)sll_api_math_round(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
@@ -1459,10 +1480,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,sll_object_t* b){
 	COMMUTATIVE_OPERATOR;
 	IGNORE_RESULT(inv);
-	REMOVE_FLOAT;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i|b->dt.i);
+		case COMBINED_TYPE_IF:
+			{
+				float_data_t v={
+					.dt=a->dt.i|TO_FLOAT_BITS(b)
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i|b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -1473,6 +1500,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 				return o;
 			}
 		case COMBINED_TYPE_IA:
+		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1486,6 +1514,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 				return o;
 			}
 		case COMBINED_TYPE_IM:
+		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -1496,6 +1525,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 					SLL_ACQUIRE(a->dt.m.v[i]);
 					o->dt.m.v[i+1]=sll_operator_or(a,b->dt.m.v[i+1]);
 				}
+				return o;
+			}
+		case COMBINED_TYPE_FF:
+			{
+				float_data_t v={
+					.dt=TO_FLOAT_BITS(a)|TO_FLOAT_BITS(b)
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
+		case COMBINED_TYPE_FC:
+			{
+				float_data_t v={
+					.dt=TO_FLOAT_BITS(a)|b->dt.c
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
+		case COMBINED_TYPE_FS:
+			{
+				sll_object_t* o=SLL_CREATE();
+				o->t=SLL_OBJECT_TYPE_STRING;
+				sll_string_or_char(&(b->dt.s),(sll_char_t)sll_api_math_round(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
@@ -1560,7 +1610,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a,sll_object_t* b){
-	REMOVE_FLOAT;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i<<b->dt.i);
@@ -2111,10 +2160,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a,sll_object_t* b){
 	COMMUTATIVE_OPERATOR;
 	IGNORE_RESULT(inv);
-	REMOVE_FLOAT;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i^b->dt.i);
+		case COMBINED_TYPE_IF:
+			{
+				float_data_t v={
+					.dt=a->dt.i^TO_FLOAT_BITS(b)
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_INT(a->dt.i^b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -2125,6 +2180,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_IA:
+		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2138,6 +2194,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_IM:
+		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
 			{
 				sll_object_t* o=SLL_CREATE();
@@ -2148,6 +2205,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 					SLL_ACQUIRE(a->dt.m.v[i]);
 					o->dt.m.v[i+1]=sll_operator_xor(a,b->dt.m.v[i+1]);
 				}
+				return o;
+			}
+		case COMBINED_TYPE_FF:
+			{
+				float_data_t v={
+					.dt=TO_FLOAT_BITS(a)^TO_FLOAT_BITS(b)
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
+		case COMBINED_TYPE_FC:
+			{
+				float_data_t v={
+					.dt=TO_FLOAT_BITS(a)^b->dt.c
+				};
+				return SLL_FROM_FLOAT(v.v);
+			}
+		case COMBINED_TYPE_FS:
+			{
+				sll_object_t* o=SLL_CREATE();
+				o->t=SLL_OBJECT_TYPE_STRING;
+				sll_string_xor_char(&(b->dt.s),(sll_char_t)sll_api_math_round(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
