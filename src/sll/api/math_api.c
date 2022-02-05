@@ -294,15 +294,11 @@ __API_FUNC(math_factors){
 	}
 	sll_array_length_t l;
 	sll_factor_t* dt=sll_math_factors(a,&l);
-	if (!sll_array_create(l,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(l,out);
 	for (sll_array_length_t i=0;i<l;i++){
 		sll_object_t* n=SLL_CREATE();
 		n->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(2,&(n->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(2,&(n->dt.a));
 		n->dt.a.v[0]=SLL_FROM_INT((dt+i)->n);
 		n->dt.a.v[1]=SLL_FROM_INT((dt+i)->pw);
 		out->v[i]=n;

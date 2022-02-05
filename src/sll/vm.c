@@ -103,9 +103,7 @@ static void _call_function(sll_function_index_t fn,sll_arg_count_t ac){
 			SLL_INIT_ARRAY(&(tos->dt.a));
 		}
 		else{
-			if (!sll_array_create(ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)+1,&(tos->dt.a))){
-				SLL_UNIMPLEMENTED();
-			}
+			sll_array_create(ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)+1,&(tos->dt.a));
 			_vm_si-=tos->dt.a.l;
 			for (sll_array_length_t i=0;i<tos->dt.a.l;i++){
 				tos->dt.a.v[i]=*(_vm_stack+_vm_si+i);
@@ -348,9 +346,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_ARRAY;
 					sll_array_t* a=&(tos->dt.a);
-					if (!sll_array_create(ai->dt.al,a)){
-						SLL_UNIMPLEMENTED();
-					}
+					sll_array_create(ai->dt.al,a);
 					_vm_si-=ai->dt.al;
 					for (sll_array_length_t i=0;i<ai->dt.al;i++){
 						a->v[i]=*(_vm_stack+_vm_si+i);
@@ -363,9 +359,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 				{
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_ARRAY;
-					if (!sll_array_create(0,&(tos->dt.a))){
-						SLL_UNIMPLEMENTED();
-					}
+					sll_array_create(0,&(tos->dt.a));
 					*(_vm_stack+_vm_si)=tos;
 					_vm_si++;
 					break;
@@ -374,9 +368,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 				{
 					sll_object_t* tos=SLL_CREATE();
 					tos->t=SLL_OBJECT_TYPE_ARRAY;
-					if (!sll_array_create(1,&(tos->dt.a))){
-						SLL_UNIMPLEMENTED();
-					}
+					sll_array_create(1,&(tos->dt.a));
 					tos->dt.a.v[0]=*(_vm_stack+_vm_si-1);
 					*(_vm_stack+_vm_si-1)=tos;
 					break;

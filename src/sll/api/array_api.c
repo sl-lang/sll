@@ -17,17 +17,13 @@ __API_FUNC(array_count){
 
 
 __API_FUNC(array_create){
-	if (!sll_array_create_zero((a<0?0:(a>SLL_MAX_ARRAY_LENGTH?SLL_MAX_ARRAY_LENGTH:(sll_array_length_t)a)),out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create_zero((a<0?0:(a>SLL_MAX_ARRAY_LENGTH?SLL_MAX_ARRAY_LENGTH:(sll_array_length_t)a)),out);
 }
 
 
 
 __API_FUNC(array_extend){
-	if (!sll_array_extend(NULL,b,a)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_extend(NULL,b,a);
 }
 
 
@@ -39,9 +35,7 @@ __API_FUNC(array_join){
 		*(obj+i)=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
 		*(al+i)=&((*(obj+i))->dt.a);
 	}
-	if (!sll_array_join_arrays((const sll_array_t*const*)al,a->l,b,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_join_arrays((const sll_array_t*const*)al,a->l,b,out);
 	for (sll_array_length_t i=0;i<a->l;i++){
 		SLL_RELEASE(*(obj+i));
 	}
@@ -60,33 +54,25 @@ __API_FUNC(array_pop){
 
 
 __API_FUNC(array_push){
-	if (!sll_array_push(NULL,b,a)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_push(NULL,b,a);
 }
 
 
 
 __API_FUNC(array_remove){
-	if (!sll_array_remove(NULL,b,a)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_remove(NULL,b,a);
 }
 
 
 
 __API_FUNC(array_replace){
-	if (!sll_array_replace(a,b,(sll_object_t*)c,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_replace(a,b,(sll_object_t*)c,out);
 }
 
 
 
 __API_FUNC(array_reverse){
-	if (!sll_array_reverse(a,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_reverse(a,out);
 }
 
 
@@ -98,15 +84,11 @@ __API_FUNC(array_shift){
 
 
 __API_FUNC(array_split){
-	if (!sll_array_split(a,b,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_split(a,b,out);
 }
 
 
 
 __API_FUNC(array_unshift){
-	if (!sll_array_unshift(NULL,b,a)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_unshift(NULL,b,a);
 }

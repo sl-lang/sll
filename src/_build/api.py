@@ -60,7 +60,7 @@ def generate_c_api(d_dt,api_dt):
 						elif (e["type"][0]=="S"):
 							cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_STRING;\n\t\tsll_string_create(0,&({ALPHABET[i]}->dt.s));")
 						elif (e["type"][0]=="A"):
-							cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_ARRAY;\n\t\tif (!sll_array_create(0,&({ALPHABET[i]}->dt.a))){{\n\t\t\tSLL_UNIMPLEMENTED();\n\t\t}}")
+							cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_ARRAY;\n\t\tsll_array_create(0,&({ALPHABET[i]}->dt.a));")
 						elif (e["type"][0]=="H"):
 							cf.write(f"{ALPHABET[i]}=SLL_CREATE();\n\t\t{ALPHABET[i]}->t=SLL_OBJECT_TYPE_HANDLE;\n\t\tSLL_INIT_HANDLE_DATA(&({ALPHABET[i]}->dt.h));")
 						else:

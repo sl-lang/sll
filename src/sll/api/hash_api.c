@@ -454,9 +454,7 @@ __API_FUNC(hash_md5){
 		(u32)d
 	};
 	sll_hash_md5(&dt,e->v,e->l);
-	if (!sll_array_create(4,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(4,out);
 	out->v[0]=SLL_FROM_INT(dt.a);
 	out->v[1]=SLL_FROM_INT(dt.b);
 	out->v[2]=SLL_FROM_INT(dt.c);
@@ -474,9 +472,7 @@ __API_FUNC(hash_sha1){
 		(u32)e
 	};
 	sll_hash_sha1(&dt,f->v,f->l);
-	if (!sll_array_create(5,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(5,out);
 	out->v[0]=SLL_FROM_INT(dt.a);
 	out->v[1]=SLL_FROM_INT(dt.b);
 	out->v[2]=SLL_FROM_INT(dt.c);
@@ -498,9 +494,7 @@ __API_FUNC(hash_sha256){
 		(u32)h
 	};
 	sll_hash_sha256(&dt,i->v,i->l);
-	if (!sll_array_create(8,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(8,out);
 	out->v[0]=SLL_FROM_INT(dt.a);
 	out->v[1]=SLL_FROM_INT(dt.b);
 	out->v[2]=SLL_FROM_INT(dt.c);
@@ -525,9 +519,7 @@ __API_FUNC(hash_sha512){
 		(u64)h
 	};
 	sll_hash_sha512(&dt,i->v,i->l);
-	if (!sll_array_create(8,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(8,out);
 	out->v[0]=SLL_FROM_INT(dt.a);
 	out->v[1]=SLL_FROM_INT(dt.b);
 	out->v[2]=SLL_FROM_INT(dt.c);

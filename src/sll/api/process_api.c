@@ -28,14 +28,10 @@ static const bitmap_t _process_quote_chars[4]={
 static void _create_process_object(const sll_array_t* arg,sll_object_t* cfg,sll_return_code_t rc,const sll_string_t* in,const sll_string_t* out,const sll_string_t* err,sll_array_t* o){
 	sll_object_t* oa=SLL_CREATE();
 	oa->t=SLL_OBJECT_TYPE_ARRAY;
-	if (!sll_array_clone(arg,&(oa->dt.a))){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_clone(arg,&(oa->dt.a));
 	sll_object_t* std=SLL_CREATE();
 	std->t=SLL_OBJECT_TYPE_ARRAY;
-	if (!sll_array_create(3,&(std->dt.a))){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(3,&(std->dt.a));
 	std->dt.a.v[0]=SLL_CREATE();
 	std->dt.a.v[0]->t=SLL_OBJECT_TYPE_STRING;
 	sll_string_clone(in,&(std->dt.a.v[0]->dt.s));
@@ -45,9 +41,7 @@ static void _create_process_object(const sll_array_t* arg,sll_object_t* cfg,sll_
 	std->dt.a.v[2]=SLL_CREATE();
 	std->dt.a.v[2]->t=SLL_OBJECT_TYPE_STRING;
 	sll_string_clone(err,&(std->dt.a.v[2]->dt.s));
-	if (!sll_array_create(4,o)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(4,o);
 	SLL_ACQUIRE(cfg);
 	o->v[0]=oa;
 	o->v[1]=cfg;

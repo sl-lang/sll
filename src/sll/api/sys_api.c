@@ -100,9 +100,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 
 
 __API_FUNC(sys_get_args){
-	if (!sll_array_create(_sys_argc,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(_sys_argc,out);
 	for (sll_array_length_t i=0;i<_sys_argc;i++){
 		sll_object_t* n=SLL_CREATE();
 		n->t=SLL_OBJECT_TYPE_STRING;
@@ -165,9 +163,7 @@ __API_FUNC(sys_get_sandbox_flags){
 
 
 __API_FUNC(sys_get_version){
-	if (!sll_array_create(5,out)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(5,out);
 	out->v[0]=SLL_FROM_INT(SLL_VERSION_MAJOR);
 	out->v[1]=SLL_FROM_INT(SLL_VERSION_MINOR);
 	out->v[2]=SLL_FROM_INT(SLL_VERSION_PATCH);

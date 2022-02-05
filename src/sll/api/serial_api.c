@@ -89,9 +89,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 					SLL_INIT_ARRAY(&(o->dt.a));
 				}
 				else{
-					if (!sll_array_create(l,&(o->dt.a))){
-						SLL_UNIMPLEMENTED();
-					}
+					sll_array_create(l,&(o->dt.a));
 					for (sll_array_length_t i=0;i<l;i++){
 						o->dt.a.v[i]=sll_decode_object(f);
 					}

@@ -15,6 +15,7 @@
 
 ### Removed
 
+- Array functions no longer return value based on memory allocation functions ([#83])
 - Unused file APIs: `SLL_FILE_GET_LINE_OFFSET` and `sll_file_reset_line`
 
 ## [0.7.2] - 2022-02-04

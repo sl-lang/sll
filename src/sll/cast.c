@@ -139,8 +139,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!(a->dt.i<1?sll_array_create(0,&(o->dt.a)):sll_array_from_length((sll_array_length_t)(a->dt.i),&(o->dt.a)))){
-					SLL_UNIMPLEMENTED();
+				if (a->dt.i<1){
+					sll_array_create(0,&(o->dt.a));
+				}
+				else{
+					sll_array_from_length((sll_array_length_t)(a->dt.i),&(o->dt.a));
 				}
 				return o;
 			}
@@ -162,9 +165,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_create(1,&(o->dt.a))){
-					SLL_UNIMPLEMENTED();
-				}
+				sll_array_create(1,&(o->dt.a));
 				o->dt.a.v[0]=SLL_ACQUIRE_STATIC_INT(0);
 				return o;
 			}
@@ -175,9 +176,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_create(1,&(o->dt.a))){
-					SLL_UNIMPLEMENTED();
-				}
+				sll_array_create(1,&(o->dt.a));
 				o->dt.a.v[0]=a;
 				SLL_ACQUIRE(a);
 				return o;
@@ -191,8 +190,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				sll_integer_t n=sll_api_math_round(a->dt.f);
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!(n<1?sll_array_create(0,&(o->dt.a)):sll_array_from_length((sll_array_length_t)(n),&(o->dt.a)))){
-					SLL_UNIMPLEMENTED();
+				if (n<1){
+					sll_array_create(0,&(o->dt.a));
+				}
+				else{
+					sll_array_from_length((sll_array_length_t)(n),&(o->dt.a));
 				}
 				return o;
 			}
@@ -235,9 +237,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_range(0,a->dt.s.l,1,&(o->dt.a))){
-					SLL_UNIMPLEMENTED();
-				}
+				sll_array_range(0,a->dt.s.l,1,&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_AI:
@@ -260,18 +260,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_MAP;
-				if (!sll_array_to_map(&(a->dt.a),&(o->dt.m))){
-					SLL_UNIMPLEMENTED();
-				}
+				sll_array_to_map(&(a->dt.a),&(o->dt.m));
 				return o;
 			}
 		case COMBINED_TYPE_AK:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				if (!sll_array_range(0,a->dt.a.l,1,&(o->dt.a))){
-					SLL_UNIMPLEMENTED();
-				}
+				sll_array_range(0,a->dt.a.l,1,&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_MI:

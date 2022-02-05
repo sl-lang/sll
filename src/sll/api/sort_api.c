@@ -95,9 +95,7 @@ __API_FUNC(sort_quicksort){
 		o=SLL_CREATE();
 		o->t=SLL_OBJECT_TYPE_ARRAY;
 		out=&(o->dt.a);
-		if (!sll_array_clone(a,out)){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_clone(a,out);
 	}
 	if (a->l>1){
 		sll_quicksort(out->v,out->l,(b?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),d);

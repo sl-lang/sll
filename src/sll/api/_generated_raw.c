@@ -29,9 +29,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_count_raw(sll_obje
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -90,9 +88,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_extend_raw(sll_obj
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -107,9 +103,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_extend_raw(sll_obj
 	else{
 		b=SLL_CREATE();
 		b->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(b->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(b->dt.a));
 	}
 	sll_api_array_extend(&(a->dt.a),&(b->dt.a));
 	SLL_RELEASE(b);
@@ -134,9 +128,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_join_raw(sll_objec
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -173,9 +165,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_pop_raw(sll_object
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* out=sll_api_array_pop(&(a->dt.a));
 	SLL_RELEASE(a);
@@ -199,9 +189,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_push_raw(sll_objec
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -234,9 +222,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_remove_raw(sll_obj
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -269,9 +255,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_replace_raw(sll_ob
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -317,9 +301,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(sll_ob
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_array_t out;
 	sll_api_array_reverse(&(a->dt.a),&out);
@@ -347,9 +329,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_shift_raw(sll_obje
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* out=sll_api_array_shift(&(a->dt.a));
 	SLL_RELEASE(a);
@@ -373,9 +353,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_split_raw(sll_obje
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -412,9 +390,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_unshift_raw(sll_ob
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -3039,9 +3015,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_join_raw(sll_obj
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_string_t out;
 	sll_api_process_join(&(a->dt.a),&out);
@@ -3097,9 +3071,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_start_raw(sll_ob
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -3562,9 +3534,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort_raw(sll_o
 	else{
 		a=SLL_CREATE();
 		a->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(a->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(a->dt.a));
 	}
 	sll_object_t* b=NULL;
 	if (all>1){
@@ -4086,9 +4056,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_join_raw(sll_obje
 	else{
 		b=SLL_CREATE();
 		b->t=SLL_OBJECT_TYPE_ARRAY;
-		if (!sll_array_create(0,&(b->dt.a))){
-			SLL_UNIMPLEMENTED();
-		}
+		sll_array_create(0,&(b->dt.a));
 	}
 	sll_string_t out;
 	sll_api_string_join(a,&(b->dt.a),&out);

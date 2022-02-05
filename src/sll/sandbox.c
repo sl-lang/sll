@@ -48,9 +48,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_fl
 
 __SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o){
 	sll_array_length_t l=(sll_array_length_t)POPULATION_COUNT(_util_sandbox_flags);
-	if (!sll_array_create(l,o)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_array_create(l,o);
 	sll_array_length_t i=0;
 	CHECK_FLAG(DISABLE_FILE_IO);
 	CHECK_FLAG(ENABLE_STDIN_IO);
