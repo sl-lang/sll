@@ -1215,44 +1215,10 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			}
 		case SLL_NODE_TYPE_FOR_ARRAY:
 		case SLL_NODE_TYPE_WHILE_ARRAY:
-			{
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO);
-				sll_arg_count_t l=o->dt.l.ac;
-				if (!l){
-					return o+1;
-				}
-				if (l==1){
-					return _generate(o+1,g_dt);
-				}
-				assembly_loop_generator_data_t lg_dt;
-				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
-				assembly_instruction_label_t c=NEXT_LABEL(g_dt);
-				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
-				const sll_node_t* cnd=_generate_loop_start(g_dt,o,&lg_dt,c,e);
-				o=(o->t==SLL_NODE_TYPE_FOR_ARRAY?_generate_jump(cnd,g_dt,e,1):sll_skip_node_const(cnd));
-				DEFINE_LABEL(g_dt,s);
-				l-=2;
-				while (l){
-					l--;
-					if (!l){
-						o=_generate_on_stack(o,g_dt);
-					}
-					else{
-						o=_generate(o,g_dt);
-					}
-				}
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE);
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD);
-				DEFINE_LABEL(g_dt,c);
-				_generate_jump(cnd,g_dt,s,0);
-				DEFINE_LABEL(g_dt,e);
-				_generate_loop_end(g_dt,&lg_dt);
-				return o;
-			}
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
 			{
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO);
+				GENERATE_OPCODE(g_dt,(o->t>=SLL_NODE_TYPE_FOR_MAP?SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO:SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO));
 				sll_arg_count_t l=o->dt.l.ac;
 				if (!l){
 					return o+1;
@@ -1265,13 +1231,15 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				assembly_instruction_label_t c=NEXT_LABEL(g_dt);
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				const sll_node_t* cnd=_generate_loop_start(g_dt,o,&lg_dt,c,e);
-				o=(o->t==SLL_NODE_TYPE_FOR_MAP?_generate_jump(cnd,g_dt,e,1):sll_skip_node_const(cnd));
+				const sll_node_t* r=o;
+				o=(r->t==SLL_NODE_TYPE_FOR_ARRAY||r->t==SLL_NODE_TYPE_FOR_MAP?_generate_jump(cnd,g_dt,e,1):sll_skip_node_const(cnd));
 				DEFINE_LABEL(g_dt,s);
 				l-=2;
-				sll_bool_t extra=(l==1);
+				sll_bool_t extra=(l==(r->t>=SLL_NODE_TYPE_FOR_MAP));
+				sll_arg_count_t end=(r->t>=SLL_NODE_TYPE_FOR_MAP);
 				while (l){
 					l--;
-					if (l<2){
+					if (l<=end){
 						o=_generate_on_stack(o,g_dt);
 					}
 					else{
@@ -1281,7 +1249,13 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				if (extra){
 					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
 				}
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN);
+				if (r->t>=SLL_NODE_TYPE_FOR_MAP){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN);
+				}
+				else{
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE);
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD);
+				}
 				DEFINE_LABEL(g_dt,c);
 				_generate_jump(cnd,g_dt,s,0);
 				DEFINE_LABEL(g_dt,e);
