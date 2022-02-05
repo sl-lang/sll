@@ -485,6 +485,9 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 			else if (sll_string_compare_pointer(e,SLL_CHAR("file-copy"))==SLL_COMPARE_RESULT_EQUAL){
 				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_COPY);
 			}
+			else if (sll_string_compare_pointer(e,SLL_CHAR("no-float-error-change"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FLOAT_COMPARE_ERROR_CHANGE);
+			}
 			else{
 				SLL_WARN(SLL_CHAR("Ignoring unknown Sandbox Flag '%s'"),e);
 			}

@@ -974,6 +974,36 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_write_raw(sll_objec
 
 
 
+__SLL_API_TYPE_sll_api_float_get_compare_error sll_api_float_get_compare_error(__SLL_API_ARGS_sll_api_float_get_compare_error);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_float_get_compare_error_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_float_t out=sll_api_float_get_compare_error();
+	return SLL_FROM_FLOAT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_float_set_compare_error sll_api_float_set_compare_error(__SLL_API_ARGS_sll_api_float_set_compare_error);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_float_set_compare_error_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC(float_zero);
+	}
+	sll_api_float_set_compare_error(a->dt.f);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
 __SLL_API_TYPE_sll_api_hash_md5 sll_api_hash_md5(__SLL_API_ARGS_sll_api_hash_md5);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_md5_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -4981,6 +5011,14 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_file_write_raw
 	},
 	{
+		SLL_CHAR("sll:float_get_compare_error"),
+		sll_api_float_get_compare_error_raw
+	},
+	{
+		SLL_CHAR("sll:float_set_compare_error"),
+		sll_api_float_set_compare_error_raw
+	},
+	{
 		SLL_CHAR("sll:hash_md5"),
 		sll_api_hash_md5_raw
 	},
@@ -5472,5 +5510,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=151;
+const sll_function_index_t _ifunc_size=153;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

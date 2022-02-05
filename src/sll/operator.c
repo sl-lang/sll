@@ -82,7 +82,7 @@
 
 
 
-__SLL_EXTERNAL const sll_float_t sll_float_compare_error=1e-6;
+__SLL_EXTERNAL sll_float_t sll_float_compare_error=1e-6;
 
 
 
@@ -666,8 +666,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 			return SLL_FROM_FLOAT(((sll_float_t)(a->dt.c))/b->dt.c);
 		case COMBINED_TYPE_CS:
 			return SLL_FROM_INT(sll_string_count_char(&(b->dt.s),a->dt.c));
-		case COMBINED_TYPE_SC:
-			return SLL_FROM_INT(sll_string_count_char(&(a->dt.s),b->dt.c));
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
 			{
@@ -681,6 +679,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 				}
 				return o;
 			}
+		case COMBINED_TYPE_SC:
+			return SLL_FROM_INT(sll_string_count_char(&(a->dt.s),b->dt.c));
 		case COMBINED_TYPE_SS:
 			return SLL_FROM_INT(sll_string_count(&(a->dt.s),&(b->dt.s)));
 		case COMBINED_TYPE_SA:

@@ -5,6 +5,7 @@
 ### Added
 
 - C hashing API: `sll_md5_data_t`, `sll_sha1_data_t`, `sll_sha256_data_t`, `sll_sha512_data_t`, `SLL_INIT_MD5`, `SLL_INIT_SHA1`, `SLL_INIT_SHA256`, `SLL_INIT_SHA512`, `SLL_INIT_MD5_STRUCT`, `SLL_INIT_SHA1_STRUCT`, `SLL_INIT_SHA256_STRUCT`, `SLL_INIT_SHA512_STRUCT`, `sll_hash_md5`, `sll_hash_sha1`, `sll_hash_sha256` and `sll_hash_sha512`
+- Implemented `float.sll`, `float$get_compare_error`, `float$set_compare_error` and `SLL_SANDBOX_FLAG_DISABLE_FLOAT_COMPARE_ERROR_CHANGE`
 
 ### Changed
 

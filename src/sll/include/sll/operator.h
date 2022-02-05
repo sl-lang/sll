@@ -16,9 +16,9 @@
  * \name sll_float_compare_error
  * \group operator
  * \desc Docs!
- * \type const sll_float_t
+ * \type sll_float_t
  */
-__SLL_EXTERNAL extern const sll_float_t sll_float_compare_error;
+__SLL_EXTERNAL extern sll_float_t sll_float_compare_error;
 
 
 

@@ -1,0 +1,22 @@
+(--- "types.sll")
+
+
+
+(= float_module_type (&:
+	(~ func_type) get_compare_error
+	(~ func_type) set_compare_error
+))
+
+
+
+(= get_compare_error (... "sll:float_get_compare_error"))
+
+(= set_compare_error (... "sll:float_set_compare_error"))
+
+
+
+(= float (. float_module_type
+	get_compare_error
+	set_compare_error
+))
+(## float)

@@ -139,6 +139,18 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_DISABLE_FLOAT_COMPARE_ERROR_CHANGE
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
+#define SLL_SANDBOX_FLAG_DISABLE_FLOAT_COMPARE_ERROR_CHANGE 10
+
+
+
+/**
  * \flags check_output func
  * \name sll_get_sandbox_flag
  * \group sandbox

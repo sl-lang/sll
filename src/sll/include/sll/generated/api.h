@@ -706,6 +706,57 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_float_get_compare_error __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_float_get_compare_error void
+/**
+ * \flags check_output func
+ * \name sll_api_float_get_compare_error
+ * \group float-api
+ * \desc Docs!
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_float_get_compare_error_raw
+ * \group raw-api
+ * \subgroup raw-api-float-api
+ * \desc Wrapper function for :sll_api_float_get_compare_error:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Floating-Point
+ * \group raw-api
+ * \subgroup raw-api-float-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_float_set_compare_error void
+#define __SLL_API_ARGS_sll_api_float_set_compare_error sll_float_t a
+/**
+ * \flags check_output func
+ * \name sll_api_float_set_compare_error
+ * \group float-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_float_set_compare_error_raw
+ * \group raw-api
+ * \subgroup raw-api-float-api
+ * \desc Wrapper function for :sll_api_float_set_compare_error:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_hash_md5 void
 #define __SLL_API_ARGS_sll_api_hash_md5 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_string_t* e,sll_array_t* out
 /**
