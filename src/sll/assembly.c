@@ -378,7 +378,7 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_MAP:
 			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_IDENTIIER:
+		case SLL_NODE_TYPE_IDENTIFIER:
 			_generate_identifier(o,g_dt);
 			GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
 			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_POP);
@@ -796,7 +796,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				ai->dt.ml=ml;
 				return o;
 			}
-		case SLL_NODE_TYPE_IDENTIIER:
+		case SLL_NODE_TYPE_IDENTIFIER:
 			_generate_identifier(o,g_dt);
 			return o+1;
 		case SLL_NODE_TYPE_FUNCTION_ID:
