@@ -9,11 +9,7 @@ sll_object_t* debug_get_call_stack(sll_object_t*const* al,sll_arg_count_t all){
 	}
 	sll_object_t* o=SLL_CREATE();
 	o->t=SLL_OBJECT_TYPE_ARRAY;
-	if (!sll_array_create(sll_current_runtime_data->c_st.l-1,&(o->dt.a))){
-		o->t=SLL_OBJECT_TYPE_INT;
-		o->dt.i=0;
-		return o;
-	}
+	sll_array_create(sll_current_runtime_data->c_st.l-1,&(o->dt.a));
 	for (sll_call_stack_size_t i=0;i<sll_current_runtime_data->c_st.l-1;i++){
 		const sll_call_stack_frame_t* k=sll_current_runtime_data->c_st.dt+i;
 		sll_object_t* dt_raw[2]={
