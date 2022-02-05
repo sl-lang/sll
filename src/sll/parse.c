@@ -1079,7 +1079,7 @@ _return_node:;
 		sll_bool_t va=0;
 		sll_arg_count_t i=0;
 		sll_node_t* arg=o+1;
-		for (;i<ac;i++){
+		while (i<ac){
 			while (arg->t==SLL_NODE_TYPE_NOP||arg->t==SLL_NODE_TYPE_DBG||arg->t==SLL_NODE_TYPE_CHANGE_STACK){
 				arg=(arg->t==SLL_NODE_TYPE_CHANGE_STACK?arg->dt._p:arg+1);
 			}
@@ -1095,6 +1095,7 @@ _return_node:;
 					break;
 				}
 			}
+			i++;
 			arg++;
 		}
 		o->dt.fn.ac=ac-i;
