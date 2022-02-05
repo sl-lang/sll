@@ -10,6 +10,7 @@
 ### Changed
 
 - File creation functions (`sll_file_from_data`, `sll_file_open` and `sll_file_open_descriptor`) now remove invalid file flags
+- File path table now stores file hashes and lengths (`sll_file_path_t` instead `sll_string_length_t`) ([#55])
 - Fixed variable function calling via `sll_execute_function`
 - Renamed `sll_parse_all_nodes` to `sll_parse_nodes`
 
@@ -1693,6 +1694,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#66]: https://github.com/sl-lang/sll/issues/66
 [#58]: https://github.com/sl-lang/sll/issues/58
 [#56]: https://github.com/sl-lang/sll/issues/56
+[#55]: https://github.com/sl-lang/sll/issues/55
 [#54]: https://github.com/sl-lang/sll/issues/54
 [#53]: https://github.com/sl-lang/sll/issues/53
 [#52]: https://github.com/sl-lang/sll/issues/52
