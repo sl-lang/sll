@@ -480,9 +480,17 @@ typedef struct __SLL_OBJECT_TYPE_FIELD{
 
 
 
-typedef struct __SLL_FILE_PATH_TABEL{
-	sll_string_index_t* dt;
-	sll_string_index_t l;
+typedef struct __SLL_FILE_PATH{
+	sll_file_offset_t sz;
+	sll_string_index_t nm;
+	sll_sha256_data_t h;
+} sll_file_path_t;
+
+
+
+typedef struct __SLL_FILE_PATH_TABLE{
+	sll_file_path_t* dt;
+	sll_array_length_t l;
 } sll_file_path_table_t;
 
 
@@ -507,8 +515,6 @@ typedef struct __SLL_COMPILATION_DATA{
 	sll_file_path_table_t fpt;
 	sll_compilation_stack_data_t _s;
 	sll_scope_t _n_sc_id;
-	sll_sha256_data_t _h;
-	sll_file_offset_t _f_sz;
 } sll_compilation_data_t;
 
 

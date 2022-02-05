@@ -302,12 +302,12 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 		sll_encode_string(wf,c_dt->st.dt+i);
 	}
 	sll_encode_integer(wf,c_dt->fpt.l);
-	for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
-		sll_encode_integer(wf,*(c_dt->fpt.dt+i));
+	for (sll_array_length_t i=0;i<c_dt->fpt.l;i++){
+		sll_encode_integer(wf,(c_dt->fpt.dt+i)->sz);
+		sll_encode_integer(wf,(c_dt->fpt.dt+i)->nm);
+		sll_file_write(wf,&((c_dt->fpt.dt+i)->h),sizeof(sll_sha256_data_t));
 	}
 	sll_encode_integer(wf,c_dt->_n_sc_id);
-	sll_file_write(wf,&(c_dt->_h),sizeof(sll_sha256_data_t));
-	sll_encode_integer(wf,c_dt->_f_sz);
 	_write_node(wf,c_dt->h);
 }
 

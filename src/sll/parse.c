@@ -971,9 +971,11 @@ _identifier_end:;
 _merge_next_string:;
 					}
 					c_dt->fpt.l+=im.fpt.l;
-					c_dt->fpt.dt=sll_reallocate(c_dt->fpt.dt,c_dt->fpt.l*sizeof(sll_string_index_t));
-					for (sll_string_index_t i=0;i<im.fpt.l;i++){
-						*(c_dt->fpt.dt+im_dt.fp_off+i)=*(im_dt.sm+(*(im.fpt.dt+i)));
+					c_dt->fpt.dt=sll_reallocate(c_dt->fpt.dt,c_dt->fpt.l*sizeof(sll_file_path_t));
+					for (sll_array_length_t i=0;i<im.fpt.l;i++){
+						(c_dt->fpt.dt+im_dt.fp_off+i)->sz=(im.fpt.dt+i)->sz;
+						(c_dt->fpt.dt+im_dt.fp_off+i)->nm=*(im_dt.sm+(im.fpt.dt+i)->nm);
+						(c_dt->fpt.dt+im_dt.fp_off+i)->h=(im.fpt.dt+i)->h;
 					}
 					for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 						sll_identifier_list_t* il=c_dt->idt.s+i;
@@ -1189,6 +1191,6 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 		c=sll_file_read_char(rf);
 	}
 	_file_end_hash(rf);
-	c_dt->_h=rf->_h.h;
-	c_dt->_f_sz=rf->_off;
+	c_dt->fpt.dt->sz=SLL_FILE_GET_OFFSET(rf);
+	c_dt->fpt.dt->h=rf->_h.h;
 }

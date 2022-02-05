@@ -68,9 +68,9 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilati
 	o->ft.l=0;
 	o->st.dt=NULL;
 	o->st.l=0;
-	o->fpt.dt=sll_allocate(sizeof(sll_string_index_t));
+	o->fpt.dt=sll_allocate(sizeof(sll_file_path_t));
 	o->fpt.l=1;
-	*(o->fpt.dt)=0;
+	o->fpt.dt->nm=0;
 	_init_node_stack(o);
 	o->_n_sc_id=1;
 	IGNORE_RESULT(sll_create_string(&(o->st),fp,sll_string_length_unaligned(fp)));

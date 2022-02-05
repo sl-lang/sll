@@ -2074,7 +2074,7 @@ _remove_nop:
 				}
 				else{
 					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-					(o->dbg.dt+dbg_i)->ln=(*(c_dt->fpt.dt+ai->dt.s))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+					(o->dbg.dt+dbg_i)->ln=(c_dt->fpt.dt+ai->dt.s)->nm|SLL_DEBUG_LINE_DATA_FLAG_FILE;
 					*(sm.m+(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)>>6))|=1ull<<(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)&63);
 					f_l_dt.c=ai->dt.s;
 					dbg_i++;
@@ -2095,7 +2095,7 @@ _remove_nop:
 				if (f_l_dt.c!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp){
 					f_l_dt.c=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp;
 					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-					(o->dbg.dt+dbg_i)->ln=(*(c_dt->fpt.dt+f_l_dt.c))|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+					(o->dbg.dt+dbg_i)->ln=(c_dt->fpt.dt+f_l_dt.c)->nm|SLL_DEBUG_LINE_DATA_FLAG_FILE;
 					dbg_i++;
 					l_dbg_ii=i;
 				}
