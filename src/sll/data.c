@@ -24,13 +24,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 			ap=(const sll_char_t*)b;
 			bp=(const sll_char_t*)a;
 		}
-		for (sll_size_t i=8-(ADDR(ap)&7);i;i--){
+		sll_size_t i=8-(ADDR(ap)&7);
+		l-=i;
+		do{
 			if (*ap!=*bp){
 				return (*ap<*bp?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
 			}
 			ap++;
 			bp++;
-		}
+			i--;
+		} while (i);
 	}
 	else if (ADDR(ap)&7){
 		ap=(const sll_char_t*)b;
