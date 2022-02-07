@@ -12,6 +12,7 @@
 ### Changed
 
 - Compiled modules no longer contain full file paths from the host file system
+- Date functions (`date$current`, `date$from_time` and `date$from_time_ns`) now defualt to the local time zone (`date$LOCAL_TIME_ZONE`) instead of UTC (`date$UTC_TIME_ZONE`)
 - Date functions (`sll_date_from_time` and `sll_date_from_time_ns`) now expect a time zone argument
 - File creation functions (`sll_file_from_data`, `sll_file_open` and `sll_file_open_descriptor`) now remove invalid file flags
 - File path table now stores file hashes and lengths (`sll_file_path_t` instead `sll_string_length_t`) ([#55])
