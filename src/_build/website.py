@@ -166,16 +166,14 @@ if (__name__=="__main__"):
 		util.log("Listing Current KV Keys...")
 		tb_r=requests.get(url+"values/__table",headers=h,stream=True).raw
 		tb_r.decode_content=True
-		l=[]
+		rm_l=[]
 		n_tb=[]
 		for k in tb_r.read().split(b"\x00"):
 			if (k[:5]==b"/apt/" or k[:5]==b"/bin/"):
 				n_tb.append(k)
 			else:
 				util.log(f"  Found Key '{k.decode('ascii','ignore')}' ")
-				l.append(hashlib.sha256(k).hexdigest())
-		util.log("Clearing KV Storage...")
-		requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in l])+"]")
+				rm_l.append(hashlib.sha256(k).hexdigest())
 		util.log("Generating Request...")
 		with open("web-bundle.dt","rb") as f:
 			dt=f.read()
@@ -188,10 +186,15 @@ if (__name__=="__main__"):
 			fp=dt[i:i+l]
 			i+=l
 			fp_h=hashlib.sha256(fp).hexdigest()
+			if (fp_h in rm_l):
+				rm_l.remove(fp_h)
 			util.log(f"  Encoding File '{fp.decode('ascii','ignore')}' ({sz} bytes) -> '{fp_h}'...")
 			n_tb.append(fp)
 			o.append({"key":fp_h,"value":util.encode(dt[i:i+sz]),"base64":True})
 			i+=sz
 		o.append({"key":"__table","value":util.encode(b"\x00".join(n_tb)),"base64":True})
+		if (len(rm_l)>0):
+			util.log("Clearing KV Storage...")
+			requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in rm_l])+"]")
 		util.log("Uploading Data...")
 		requests.put(url+"bulk",headers=h,data=json.dumps(o))
