@@ -162,6 +162,17 @@ __SLL_EXTERNAL extern const sll_string_t* sll_platform_string;
 
 
 /**
+ * \flags var
+ * \name sll_platform_time_zone
+ * \group platform
+ * \desc Docs!
+ * \type const sll_time_zone_t*
+ */
+__SLL_EXTERNAL extern const sll_time_zone_t* sll_platform_time_zone;
+
+
+
+/**
  * \flags func
  * \name sll_platform_absolute_path
  * \group platform

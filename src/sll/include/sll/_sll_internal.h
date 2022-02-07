@@ -242,11 +242,16 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define CLI_FLAG_NO_CONSOLE 64
 #define CLI_FLAG_NO_RUN 128
 #define CLI_FLAG_PRINT_ASSEMBLY 256
-#define CLI_FLAG_PRINT_OBJECT 512
+#define CLI_FLAG_PRINT_NODES 512
 #define CLI_FLAG_SINGLE_OUTPUT 1024
 #define CLI_FLAG_STRIP_DEBUG 2048
 #define CLI_FLAG_VERBOSE 4096
 #define CLI_FLAG_VERSION 8192
+
+#define CLI_LOG_IF_VERBOSE(t,...) \
+	if (fl&CLI_FLAG_VERBOSE){ \
+		SLL_LOG(t,##__VA_ARGS__); \
+	}
 
 #if SLL_VERSION_HAS_SHA
 #define CLI_BUILD_TYPE_STRING "commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_TAG"]"

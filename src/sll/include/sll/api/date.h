@@ -13,14 +13,26 @@
 
 
 /**
+ * \flags var
+ * \name sll_utc_time_zone
+ * \group date-api
+ * \desc Docs!
+ * \type const sll_time_zone_t*
+ */
+__SLL_EXTERNAL extern const sll_time_zone_t* sll_utc_time_zone;
+
+
+
+/**
  * \flags func
  * \name sll_date_from_time
  * \group date-api
  * \desc Docs!
  * \arg sll_float_t tm
+ * \arg const sll_time_zone_t* tz
  * \arg sll_date_t* o
  */
-__SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,sll_date_t* o);
+__SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,const sll_time_zone_t* tz,sll_date_t* o);
 
 
 
@@ -30,9 +42,10 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,sll_date_t* o);
  * \group date-api
  * \desc Docs!
  * \arg sll_size_t tm
+ * \arg const sll_time_zone_t* tz
  * \arg sll_date_t* o
  */
-__SLL_EXTERNAL void sll_date_from_time_ns(sll_size_t tm,sll_date_t* o);
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_size_t tm,const sll_time_zone_t* tz,sll_date_t* o);
 
 
 

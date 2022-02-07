@@ -814,6 +814,13 @@ typedef struct __SLL_VAR_ARG_LIST{
 
 
 
+typedef struct __SLL_TIME_ZONE{
+	sll_char_t nm[32];
+	sll_time_t off;
+} sll_time_zone_t;
+
+
+
 typedef struct __SLL_DATE{
 	sll_year_t y;
 	sll_month_t m;
@@ -822,6 +829,7 @@ typedef struct __SLL_DATE{
 	sll_hour_t h;
 	sll_minute_t mn;
 	sll_second_t s;
+	sll_time_zone_t tz;
 } sll_date_t;
 
 

@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/date.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/init.h>
@@ -18,15 +19,20 @@
 
 static sll_environment_t _linux_env={NULL,0};
 static __STATIC_STRING(_linux_platform_str,"linux");
+static sll_time_zone_t _linux_platform_time_zone={"GMT",0};
 
 
 
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_linux_env;
 __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_linux_platform_str;
+__SLL_EXTERNAL const sll_time_zone_t* sll_platform_time_zone=&_linux_platform_time_zone;
 
 
 
 extern char** environ;
+extern int daylight;
+extern long timezone;
+extern char* tzname[2];
 
 
 
@@ -40,6 +46,7 @@ static void _cleanup_env_data(void){
 	*((sll_array_length_t*)(&(_linux_env.l)))=0;
 	_linux_env.dt=NULL;
 	sll_deallocate(PTR(_linux_env.dt));
+	_linux_platform_time_zone=*sll_utc_time_zone;
 }
 
 
@@ -83,6 +90,15 @@ void _init_platform(void){
 	}
 	*((sll_array_length_t*)(&(_linux_env.l)))=l;
 	sll_register_cleanup(_cleanup_env_data);
+	tzset();
+	const sll_char_t* nm=SLL_CHAR(tzname[!!daylight]);
+	sll_string_length_t sz=sll_string_length_unaligned(nm);
+	if (sz>31){
+		sz=31;
+	}
+	sll_copy_data(nm,sz,_linux_platform_time_zone.nm);
+	_linux_platform_time_zone.nm[sz]=0;
+	_linux_platform_time_zone.off=-timezone;
 }
 
 

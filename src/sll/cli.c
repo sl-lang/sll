@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/api/date.h>
+#include <sll/api/math.h>
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/assembly.h>
@@ -51,13 +52,8 @@ static void _parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_cha
 	sll_init_compilation_data(f_fp,c_dt);
 	sll_parse_nodes(f,c_dt,&i_ft,_import_file);
 	sll_file_close(f);
-	if (fl&CLI_FLAG_PRINT_OBJECT){
-		sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
-		sll_file_write_char(sll_stdout,'\n');
-	}
-	if (fl&CLI_FLAG_VERBOSE){
-		SLL_LOG(SLL_CHAR("File successfully read."));
-	}
+	CLI_LOG_IF_VERBOSE("File successfully read.");
+
 }
 
 
@@ -73,9 +69,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		sll_copy_data(f_nm,f_nm_l,bf+j);
 		j+=f_nm_l;
 		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+j);
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Trying to open file '%s'..."),bf);
-		}
+		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",bf);
 		sll_file_t f;
 		if (sll_file_open(bf,SLL_FILE_FLAG_READ,&f)){
 			if (!(fl&CLI_FLAG_EXPAND_PATH)){
@@ -84,30 +78,18 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 			else{
 				sll_platform_absolute_path(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("Found file '%s'"),f_fp);
-			}
+			CLI_LOG_IF_VERBOSE("Found file '%s'",f_fp);
 			if (sll_load_compiled_node(&f,c_dt)){
 				sll_file_close(&f);
-				if (fl&CLI_FLAG_PRINT_OBJECT){
-					sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
-					sll_file_write_char(sll_stdout,'\n');
-				}
-				if (fl&CLI_FLAG_VERBOSE){
-					SLL_LOG(SLL_CHAR("File successfully read."));
-				}
+				CLI_LOG_IF_VERBOSE("File successfully read.");
 				return;
 			}
 			sll_free_compilation_data(c_dt);
 			sll_file_close(&f);
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("File is not a compiled program"));
-			}
+			CLI_LOG_IF_VERBOSE("File is not a compiled program");
 		}
 		bf[j]=0;
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Trying to open file '%s'..."),bf);
-		}
+		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",bf);
 		if (!sll_file_open(bf,SLL_FILE_FLAG_READ,&f)){
 			continue;
 		}
@@ -117,28 +99,18 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		else{
 			sll_platform_absolute_path(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 		}
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Found file '%s'"),f_fp);
-		}
+		CLI_LOG_IF_VERBOSE("Found file '%s'",f_fp);
 		if (sll_load_assembly(&f,a_dt)){
 			sll_file_close(&f);
 			fl|=CLI_FLAG_ASSEMBLY_GENERATED;
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("File successfully read."));
-			}
+			CLI_LOG_IF_VERBOSE("File successfully read.");
 			return;
 		}
 		sll_free_assembly_data(a_dt);
 		sll_file_reset(&f);
 		if (sll_load_compiled_node(&f,c_dt)){
 			sll_file_close(&f);
-			if (fl&CLI_FLAG_PRINT_OBJECT){
-				sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
-				sll_file_write_char(sll_stdout,'\n');
-			}
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("File successfully read."));
-			}
+			CLI_LOG_IF_VERBOSE("File successfully read.");
 			return;
 		}
 		sll_free_compilation_data(c_dt);
@@ -149,9 +121,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 	if (l_fpl){
 		sll_copy_data(f_nm,f_nm_l,l_fp+l_fpl);
 		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),l_fp+l_fpl+f_nm_l);
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Trying to open file '%s'..."),l_fp);
-		}
+		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",l_fp);
 		sll_file_t f;
 		if (sll_file_open(l_fp,SLL_FILE_FLAG_READ,&f)){
 			if (!(fl&CLI_FLAG_EXPAND_PATH)){
@@ -160,28 +130,18 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 			else{
 				sll_platform_absolute_path(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
 			}
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("Found file '%s'"),f_fp);
-			}
+			CLI_LOG_IF_VERBOSE("Found file '%s'",f_fp);
 			if (sll_load_compiled_node(&f,c_dt)){
 				sll_file_close(&f);
-				if (fl&CLI_FLAG_PRINT_OBJECT){
-					sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
-					sll_file_write_char(sll_stdout,'\n');
-				}
-				if (fl&CLI_FLAG_VERBOSE){
-					SLL_LOG(SLL_CHAR("File successfully read."));
-				}
+				CLI_LOG_IF_VERBOSE("File successfully read.");
 				return;
 			}
 			sll_free_compilation_data(c_dt);
 			sll_file_close(&f);
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("File is not a compiled program"));
-			}
+			CLI_LOG_IF_VERBOSE("File is not a compiled program");
 		}
 	}
-	SLL_WARN(SLL_CHAR("Unable to find file '%s'"),f_nm);
+	SLL_WARN("Unable to find file '%s'",f_nm);
 	sll_init_compilation_data(f_nm,c_dt);
 }
 
@@ -190,28 +150,20 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 static void _execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,const sll_char_t* o_fp,int* ec){
 	if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)){
 		if (fl&CLI_FLAG_STRIP_DEBUG){
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("Removing debugging data..."));
-			}
+			CLI_LOG_IF_VERBOSE("Removing debugging data...");
 			sll_remove_debug_data(c_dt);
 		}
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Removing node padding..."));
-		}
+		CLI_LOG_IF_VERBOSE("Removing node padding...");
 		sll_remove_node_padding(c_dt,c_dt->h);
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Optimizing node metadata..."));
-		}
+		CLI_LOG_IF_VERBOSE("Optimizing node metadata...");
 		sll_optimize_metadata(c_dt);
-		if (fl&CLI_FLAG_PRINT_OBJECT){
+		if (fl&CLI_FLAG_PRINT_NODES){
 			sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
 			sll_file_write_char(sll_stdout,'\n');
 		}
 	}
 	if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)&&((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN))){
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Generating assembly..."));
-		}
+		CLI_LOG_IF_VERBOSE("Generating assembly...");
 		sll_generate_assembly(c_dt,a_dt);
 	}
 	if (fl&CLI_FLAG_PRINT_ASSEMBLY){
@@ -253,52 +205,40 @@ static void _execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_ass
 		i++;
 		if (fl&CLI_FLAG_GENERATE_ASSEMBLY){
 			SLL_COPY_STRING_NULL(SLL_CHAR(".sla"),bf+i);
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("Writing assembly to file '%s'..."),bf);
-			}
+			CLI_LOG_IF_VERBOSE("Writing assembly to file '%s'...",bf);
 			sll_file_t of;
 			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
-				SLL_WARN(SLL_CHAR("Unable to open output file '%s'"),bf);
+				SLL_WARN("Unable to open output file '%s'",bf);
 			}
 			else{
 				sll_write_assembly(&of,a_dt);
-				if (fl&CLI_FLAG_VERBOSE){
-					SLL_LOG(SLL_CHAR("File written successfully."));
-				}
+				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);
 			}
 		}
 		if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
 			SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+i);
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("Writing compiled program to file '%s'..."),bf);
-			}
+			CLI_LOG_IF_VERBOSE("Writing compiled program to file '%s'...",bf);
 			sll_file_t of;
 			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
-				SLL_WARN(SLL_CHAR("Unable to open output file '%s'"),bf);
+				SLL_WARN("Unable to open output file '%s'",bf);
 			}
 			else{
 				sll_write_compiled_node(&of,c_dt);
-				if (fl&CLI_FLAG_VERBOSE){
-					SLL_LOG(SLL_CHAR("File written successfully."));
-				}
+				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);
 			}
 		}
 		if (fl&CLI_FLAG_GENERATE_SLL){
 			SLL_COPY_STRING_NULL(SLL_CHAR(".sll"),bf+i);
-			if (fl&CLI_FLAG_VERBOSE){
-				SLL_LOG(SLL_CHAR("Writing sll code to file '%s'..."),bf);
-			}
+			CLI_LOG_IF_VERBOSE("Writing sll code to file '%s'...",bf);
 			sll_file_t of;
 			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
-				SLL_WARN(SLL_CHAR("Unable to open output file '%s'"),bf);
+				SLL_WARN("Unable to open output file '%s'",bf);
 			}
 			else{
 				sll_write_sll_code(c_dt,&i_ft,1,&of);
-				if (fl&CLI_FLAG_VERBOSE){
-					SLL_LOG(SLL_CHAR("File written successfully."));
-				}
+				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);
 			}
 		}
@@ -414,7 +354,7 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 			o_fp=(const sll_char_t*)(argv[i]);
 		}
 		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--print-objects"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_PRINT_OBJECT;
+			fl|=CLI_FLAG_PRINT_NODES;
 		}
 		else if ((*e=='-'&&*(e+1)=='P'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--print-assembly"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_PRINT_ASSEMBLY;
@@ -503,47 +443,47 @@ _read_file_argument:
 	}
 	if (fl&CLI_FLAG_VERSION){
 		sll_date_t d;
-		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,&d);
-		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),d.y,d.m+1,d.d+1,d.h,d.mn,(sll_integer_t)(d.s));
-		goto _error;
+		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
+		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),d.y,d.m+1,d.d+1,d.h,d.mn,sll_api_math_floor(d.s));
+		goto _cleanup;
 	}
 	if (fl&CLI_FLAG_HELP){
 		sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);
-		goto _error;
+		goto _cleanup;
 	}
 	if (fl&CLI_FLAG_VERBOSE){
-		SLL_LOG(SLL_CHAR("Configuration:"));
+		SLL_LOG("Configuration:");
 		if (fl&CLI_FLAG_EXPAND_PATH){
-			SLL_LOG(SLL_CHAR("  Path expansion"));
+			SLL_LOG("  Path expansion");
 		}
 		if (fl&CLI_FLAG_GENERATE_ASSEMBLY){
-			SLL_LOG(SLL_CHAR("  Assembly generation"));
+			SLL_LOG("  Assembly generation");
 		}
 		if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
-			SLL_LOG(SLL_CHAR("  Compiled program generation"));
+			SLL_LOG("  Compiled program generation");
 		}
 		if (fl&CLI_FLAG_GENERATE_SLL){
-			SLL_LOG(SLL_CHAR("  Sll code generation mode"));
+			SLL_LOG("  Sll code generation mode");
 		}
 		if (!(fl&CLI_FLAG_NO_RUN)){
-			SLL_LOG(SLL_CHAR("  Execution"));
+			SLL_LOG("  Execution");
 		}
 		if (fl&CLI_FLAG_PRINT_ASSEMBLY){
-			SLL_LOG(SLL_CHAR("  Assembly printing"));
+			SLL_LOG("  Assembly printing");
 		}
-		if (fl&CLI_FLAG_PRINT_OBJECT){
-			SLL_LOG(SLL_CHAR("  Compiled program printing"));
+		if (fl&CLI_FLAG_PRINT_NODES){
+			SLL_LOG("  Compiled program printing");
 		}
 		if (fl&CLI_FLAG_STRIP_DEBUG){
-			SLL_LOG(SLL_CHAR("  Debug data stripping"));
+			SLL_LOG("  Debug data stripping");
 		}
-		SLL_LOG(SLL_CHAR("Include path:"));
+		SLL_LOG("Include path:");
 		sll_string_length_t j=0;
 		while (j<i_fpl){
-			SLL_LOG(SLL_CHAR("  '%s'"),i_fp+j);
+			SLL_LOG("  '%s'",i_fp+j);
 			j+=sll_string_length_unaligned(i_fp+j)+1;
 		}
-		SLL_LOG(SLL_CHAR("Library path: '%s'"),l_fp);
+		SLL_LOG("Library path: '%s'",l_fp);
 	}
 	if (fpl+sll==1){
 		fl|=CLI_FLAG_SINGLE_OUTPUT;
@@ -561,47 +501,23 @@ _read_file_argument:
 	}
 	for (sll_string_length_t j=0;j<sll;j++){
 		sll_file_from_data(SLL_CHAR(argv[*(sl+j)]),sll_string_length_unaligned(SLL_CHAR(argv[*(sl+j)])),SLL_FILE_FLAG_READ,&f);
-		sll_set_argument(0,SLL_CHAR("<console>"));
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Compiling console input..."));
-		}
+		sll_set_argument(0,SLL_CHAR("@console"));
+		CLI_LOG_IF_VERBOSE("Compiling console input...");
 		sll_init_compilation_data(SLL_CHAR("@console"),&c_dt);
 		sll_parse_nodes(&f,&c_dt,&i_ft,_import_file);
 		sll_file_close(&f);
-		if (fl&CLI_FLAG_PRINT_OBJECT){
-			sll_print_node(&c_dt,&i_ft,NULL,sll_stdout);
-			sll_file_write_char(sll_stdout,'\n');
-		}
-		if (fl&CLI_FLAG_VERBOSE){
-			SLL_LOG(SLL_CHAR("Input successfully read."));
-		}
+		CLI_LOG_IF_VERBOSE("Input successfully read.");
 		_execute(NULL,&c_dt,&a_dt,o_fp,&ec);
 		sll_free_assembly_data(&a_dt);
 		sll_free_compilation_data(&c_dt);
 	}
+_cleanup:
 	sll_deallocate(i_fp);
 	if (fp){
 		sll_deallocate(fp);
 	}
 	if (sl){
 		sll_deallocate(sl);
-	}
-	sll_free_internal_function_table(&i_ft);
-	sll_file_flush(sll_stdout);
-	sll_file_flush(sll_stderr);
-	return 0;
-_error:
-	sll_deallocate(i_fp);
-	if (fp){
-		sll_deallocate(fp);
-	}
-	if (sl){
-		sll_deallocate(sl);
-	}
-	sll_free_assembly_data(&a_dt);
-	sll_free_compilation_data(&c_dt);
-	if (f.f){
-		sll_file_close(&f);
 	}
 	sll_free_internal_function_table(&i_ft);
 	sll_file_flush(sll_stdout);

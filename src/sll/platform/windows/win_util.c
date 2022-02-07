@@ -2,6 +2,7 @@
 #include <bcrypt.h>
 #include <sll/_size_types.h>
 #include <sll/_sll_internal.h>
+#include <sll/api/date.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/init.h>
@@ -15,6 +16,7 @@
 static HANDLE _win_wh=INVALID_HANDLE_VALUE;
 static sll_environment_t _win_env={NULL,0};
 static __STATIC_STRING(_win_platform_str,"windows");
+static sll_time_zone_t _win_platform_time_zone={"GMT",0};
 
 
 
@@ -24,10 +26,15 @@ void* _win_dll_handle=NULL;
 
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_win_env;
 __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_win_platform_str;
+__SLL_EXTERNAL const sll_time_zone_t* sll_platform_time_zone=&_win_platform_time_zone;
 
 
 
-static void _cleanup_env_data(void){
+static void _cleanup_data(void){
+	if (_win_wh!=INVALID_HANDLE_VALUE){
+		CloseHandle(_win_wh);
+		_win_wh=INVALID_HANDLE_VALUE;
+	}
 	for (sll_array_length_t i=0;i<_win_env.l;i++){
 		const sll_environment_variable_t* kv=*(_win_env.dt+i);
 		sll_free_string((sll_string_t*)(&(kv->k)));
@@ -37,6 +44,7 @@ static void _cleanup_env_data(void){
 	*((sll_array_length_t*)(&(_win_env.l)))=0;
 	sll_deallocate(PTR(_win_env.dt));
 	_win_env.dt=NULL;
+	_win_platform_time_zone=*sll_utc_time_zone;
 }
 
 
@@ -83,7 +91,25 @@ void _init_platform(void){
 		_win_env.dt=sll_memory_move(kv,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	}
 	*((sll_array_length_t*)(&(_win_env.l)))=l;
-	sll_register_cleanup(_cleanup_env_data);
+	sll_register_cleanup(_cleanup_data);
+	TIME_ZONE_INFORMATION tz;
+	DWORD tz_st=GetTimeZoneInformation(&tz);
+	WCHAR* nm;
+	_win_platform_time_zone.off=tz.Bias;
+	if (tz_st==TIME_ZONE_ID_DAYLIGHT){
+		nm=tz.DaylightName;
+		_win_platform_time_zone.off+=tz.DaylightBias;
+	}
+	else{
+		nm=tz.StandardName;
+		_win_platform_time_zone.off+=tz.StandardBias;
+	}
+	sll_string_length_t i=0;
+	do{
+		i++;
+	} while (*(nm+i-1));
+	WideCharToMultiByte(CP_UTF8,0,nm,i,_win_platform_time_zone.nm,32,NULL,NULL);
+	_win_platform_time_zone.off*=-60;
 }
 
 
@@ -138,7 +164,6 @@ __SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,co
 __SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
 	if (_win_wh==INVALID_HANDLE_VALUE){
 		_win_wh=CreateEventA(NULL,TRUE,FALSE,FALSE);
-		sll_register_cleanup(_release_handle);
 	}
 	sll_time_t e=GetTickCount64()*1000000+tm;
 	while (1){

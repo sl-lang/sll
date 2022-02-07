@@ -4,13 +4,15 @@
 
 ### Added
 
-- Base memory allocation function (`sll_allocate`, `sll_allocate_stack`, `sll_reallocate`, `sll_zero_allocate` and `sll_zero_allocate_stack`) now raise critical errors when memory requests cannot be fulfilled ([#83])
+- Base memory allocation function (`sll_allocate`, `sll_allocate_stack`, `sll_reallocate`, `sll_zero_allocate` and `sll_zero_allocate_stack`) raise critical errors when memory requests cannot be fulfilled ([#83])
 - C hashing API: `sll_md5_data_t`, `sll_sha1_data_t`, `sll_sha256_data_t`, `sll_sha512_data_t`, `SLL_INIT_MD5`, `SLL_INIT_SHA1`, `SLL_INIT_SHA256`, `SLL_INIT_SHA512`, `SLL_INIT_MD5_STRUCT`, `SLL_INIT_SHA1_STRUCT`, `SLL_INIT_SHA256_STRUCT`, `SLL_INIT_SHA512_STRUCT`, `sll_hash_md5`, `sll_hash_sha1`, `sll_hash_sha256` and `sll_hash_sha512`
 - Implemented `float.sll`, `float$get_compare_error`, `float$set_compare_error` and `SLL_SANDBOX_FLAG_DISABLE_FLOAT_COMPARE_ERROR_CHANGE`
+- Implemented `sll_time_zone_t`, `sll_utc_time_zone` and `sll_platform_time_zone`
 
 ### Changed
 
 - Compiled modules no longer contain full file paths from the host file system
+- Date functions (`sll_date_from_time` and `sll_date_from_time_ns`) now expect a time zone argument
 - File creation functions (`sll_file_from_data`, `sll_file_open` and `sll_file_open_descriptor`) now remove invalid file flags
 - File path table now stores file hashes and lengths (`sll_file_path_t` instead `sll_string_length_t`) ([#55])
 - Fixed `sll_compare_data`

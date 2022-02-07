@@ -69,7 +69,7 @@ static __SLL_NO_RETURN void _raise_error(sll_char_t t,void* p,sll_size_t sz){
 			nm=SLL_CHAR("sll_zero_allocate_stack");
 			break;
 	}
-	sll_char_t bf[128];
+	sll_char_t bf[64];
 	sll_string_length_t i=sll_string_length_unaligned(nm);
 	sll_copy_data(nm,i,bf);
 	bf[i]='(';
