@@ -38,7 +38,7 @@ Sll has the ability to be installed in a folder. Here is a list of file names:
 On systems based on Debian (e.g. Ubuntu), Sll can be installed by running the following command in a shell (with administrator privileges):
 
 ```bash
-wget -qO - "https://sll.krzem.workers.dev/sh"|bash
+curl -s "https://sll.krzem.workers.dev/sh"|bash
 ```
 
 The script takes care of installing GPG keys and `apt` sources. If the script has already been previously executed on a given system, then the Sll installation can be managed by `apt`:
@@ -55,17 +55,7 @@ apt remove sll
 
 The most recent version of Sll is `0.7.2` (`0.7.3` is in development).
 
-### Windows
-
-To check the version of Sll on Windows, type the following expression into a Command Prompt (or Power Shell):
-
-```batch
-sll -V
-```
-
-### Linux
-
-To check the version of Sll on Linux, type the following expression into a Terminal:
+To check the version of Sll on any platform, type the following expression into a command interpreter(Command Prompt, Power Shell or Terminal):
 
 ```bash
 sll -V
