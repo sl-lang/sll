@@ -27,12 +27,17 @@ int WinMain(HINSTANCE a,HINSTANCE b,LPSTR c,int d){
 	if (!lh){
 		return 0;
 	}
+	sll_return_code_t o=0;
+	void* ver=GetProcAddress(lh,"sll_version");
+	if (!ver||((sll_version_t(*)(void))ver)()!=SLL_VERSION){
+		goto _end;
+	}
 	void* cli=GetProcAddress(lh,"sll_cli_main_raw");
 	if (!cli){
-		FreeLibrary(lh);
-		return 0;
+		goto _end;
 	}
-	sll_return_code_t o=((sll_return_code_t(*)(const sll_char_t*))cli)(GetCommandLineA());
+	o=((sll_return_code_t(*)(const sll_char_t*))cli)(GetCommandLineA());
+_end:
 	FreeLibrary(lh);
 	return o;
 }
