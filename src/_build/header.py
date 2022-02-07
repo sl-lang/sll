@@ -122,6 +122,21 @@ def _merge_strings(k):
 
 
 
+def _write_byte_array(wf,dt):
+	st=True
+	i=0
+	for c in dt:
+		if (st is False):
+			wf.write(b",")
+			if (i==8):
+				wf.write(b"\n\t")
+				i=0
+		wf.write(bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
+		i+=1
+		st=False
+
+
+
 def read_version(fp):
 	o=[0,0,0]
 	with open(fp,"rb") as f:
@@ -145,17 +160,19 @@ def generate_help(i_fp,o_fp):
 	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
 		dt=rf.read().replace(b"\r\n",b"\n")
 		wf.write(b"#ifndef __SLL_GENERATED_HELP_TEXT_H__\n#define __SLL_GENERATED_HELP_TEXT_H__ 1\n#include <sll/types.h>\n\n\n\n#define HELP_TEXT_SIZE "+bytes(str(len(dt)),"utf-8")+b"\n\n\n\nstatic const sll_char_t HELP_TEXT[]={\n\t")
-		st=True
-		i=0
-		for c in dt:
-			if (st is False):
-				wf.write(b",")
-				if (i==8):
-					wf.write(b"\n\t")
-					i=0
-			wf.write(bytearray([48,120,(48 if (c>>4)<10 else 87)+(c>>4),(48 if (c&0xf)<10 else 87)+(c&0xf)]))
-			i+=1
-			st=False
+		_write_byte_array(wf,dt)
+		wf.write(b"\n};\n\n\n\n#endif")
+
+
+
+def generate_memory_fail(i_fp,o_fp):
+	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
+	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
+		dt=rf.read().replace(b"\r\n",b"\n").split(b"$$$")
+		wf.write(b"#ifndef __SLL_GENERATED_MEMORY_FAIL_H__\n#define __SLL_GENERATED_MEMORY_FAIL_H__ 1\n#include <sll/types.h>\n\n\n\n#define MEMORY_FAIL_START_SIZE "+bytes(str(len(dt[0])),"utf-8")+b"\n#define MEMORY_FAIL_END_SIZE "+bytes(str(len(dt[1])),"utf-8")+b"\n\n\nstatic const sll_char_t MEMORY_FAIL_START[]={\n\t")
+		_write_byte_array(wf,dt[0])
+		wf.write(b"\n};\n\n\n\nstatic const sll_char_t MEMORY_FAIL_END[]={\n\t")
+		_write_byte_array(wf,dt[1])
 		wf.write(b"\n};\n\n\n\n#endif")
 
 

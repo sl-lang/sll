@@ -130,11 +130,7 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o){
-	void* n=sll_allocate(sz);
-	if (sz&&!n){
-		return 0;
-	}
+__SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o){
 	if (f&SLL_FILE_FLAG_APPEND){
 		SLL_UNIMPLEMENTED();
 	}
@@ -148,6 +144,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_from_data(void* p,sll_size
 		o->_w.d.sz=0;
 		o->_w.d.off=0;
 	}
+	void* n=sll_allocate(sz);
 	sll_copy_data(p,sz,n);
 	*((void**)(&(o->dt.mm.p)))=n;
 	*((sll_size_t*)(&(o->dt.mm.sz)))=sz;
@@ -155,7 +152,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_from_data(void* p,sll_size
 	o->_l_num=0;
 	o->_off=0;
 	o->_h.bfl=DISABLE_FILE_HASH;
-	return 1;
 }
 
 

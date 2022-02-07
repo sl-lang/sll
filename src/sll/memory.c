@@ -1,5 +1,8 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/data.h>
+#include <sll/file.h>
+#include <sll/generated/memory_fail.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
 #include <sll/types.h>
@@ -21,6 +24,18 @@
 #define UPDATE_STACK_BLOCK_SIZE(b,sz) ((b)->dt=((b)->dt&0xfffffffff8000000ull)|((sz)>>4))
 #endif
 
+#define POINTER_TO_STRING(p) \
+	do{ \
+		addr_t ptr=(addr_t)(p); \
+		sll_string_length_t j=64; \
+		do{ \
+			j-=4; \
+			sll_char_t c=(ptr>>j)&15; \
+			bf[i]=c+(c>9?87:48); \
+			i++; \
+		} while (j); \
+	} while (0)
+
 
 
 static small_bitmap_t _memory_data_mask=0;
@@ -30,6 +45,49 @@ static page_header_t* _memory_page_head=NULL;
 static void* _memory_stack_page=NULL;
 static mem_stack_block_t* _memory_stack_top=0;
 #endif
+
+
+
+static __SLL_NO_RETURN void _raise_error(sll_char_t t,void* p,sll_size_t sz){
+	sll_file_flush(sll_stdout);
+	sll_file_flush(sll_stderr);
+	const sll_char_t* nm;
+	switch (t){
+		case 0:
+			nm=SLL_CHAR("sll_allocate");
+			break;
+		case 1:
+			nm=SLL_CHAR("sll_allocate_stack");
+			break;
+		case 2:
+			nm=SLL_CHAR("sll_reallocate");
+			break;
+		case 3:
+			nm=SLL_CHAR("sll_zero_allocate");
+			break;
+		default:
+			nm=SLL_CHAR("sll_zero_allocate_stack");
+			break;
+	}
+	sll_char_t bf[128];
+	sll_string_length_t i=sll_string_length_unaligned(nm);
+	sll_copy_data(nm,i,bf);
+	bf[i]='(';
+	i++;
+	if (nm[4]=='r'){
+		POINTER_TO_STRING(p);
+		bf[i]=',';
+		i++;
+	}
+	POINTER_TO_STRING(sz);
+	bf[i]=')';
+	bf[i+1]=0;
+	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
+	sll_platform_file_write(fd,MEMORY_FAIL_START,MEMORY_FAIL_START_SIZE);
+	sll_platform_file_write(fd,bf,i+2);
+	sll_platform_file_write(fd,MEMORY_FAIL_END,MEMORY_FAIL_END_SIZE);
+	_force_exit_platform();
+}
 
 
 
@@ -196,6 +254,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
+	void* o=sll_allocate_fail(sz);
+	if (!o){
+		_raise_error(0,NULL,sz);
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_fail(sll_size_t sz){
+	if (!sz){
+		return NULL;
+	}
 	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
 	if (sz<=ALLOCATOR_MAX_SMALL_SIZE){
 		return _allocate_chunk(sz);
@@ -211,6 +282,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
+	if (!sz){
+		return NULL;
+	}
+	void* o=sll_allocate_stack_fail(sz);
+	if (!o){
+		_raise_error(1,NULL,sz);
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_fail(sll_size_t sz){
 #ifdef USE_STACK_ALLOCATOR
 	if (!sz){
 		return NULL;
@@ -330,8 +414,18 @@ __SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz){
+	void* o=sll_reallocate_fail(p,sz);
+	if (!o&&sz){
+		_raise_error(2,p,sz);
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_fail(void* p,sll_size_t sz){
 	if (!p){
-		return sll_allocate(sz);
+		return sll_allocate_fail(sz);
 	}
 	if (!sz){
 		sll_deallocate(p);
@@ -460,7 +554,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
-	void* o=sll_allocate(sz);
+	void* o=sll_allocate_fail(sz);
+	if (!o){
+		_raise_error(3,NULL,sz);
+	}
+	_fill_zero(o,sz);
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_fail(sll_size_t sz){
+	if (!sz){
+		return NULL;
+	}
+	void* o=sll_allocate_fail(sz);
+	if (!o){
+		return NULL;
+	}
 	_fill_zero(o,sz);
 	return o;
 }
@@ -471,7 +582,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
-	void* o=sll_allocate_stack(sz);
+	void* o=sll_allocate_stack_fail(sz);
+	if (!o){
+		_raise_error(4,NULL,sz);
+	}
+	_fill_zero(o,sz);
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack_fail(sll_size_t sz){
+	if (!sz){
+		return NULL;
+	}
+	void* o=sll_allocate_stack_fail(sz);
+	if (!o){
+		return NULL;
+	}
 	_fill_zero(o,sz);
 	return o;
 }

@@ -560,10 +560,7 @@ _read_file_argument:
 		sll_free_compilation_data(&c_dt);
 	}
 	for (sll_string_length_t j=0;j<sll;j++){
-		if (!sll_file_from_data(SLL_CHAR(argv[*(sl+j)]),sll_string_length_unaligned(SLL_CHAR(argv[*(sl+j)])),SLL_FILE_FLAG_READ,&f)){
-			SLL_WARN(SLL_CHAR("Failed to create input file"));
-			continue;
-		}
+		sll_file_from_data(SLL_CHAR(argv[*(sl+j)]),sll_string_length_unaligned(SLL_CHAR(argv[*(sl+j)])),SLL_FILE_FLAG_READ,&f);
 		sll_set_argument(0,SLL_CHAR("<console>"));
 		if (fl&CLI_FLAG_VERBOSE){
 			SLL_LOG(SLL_CHAR("Compiling console input..."));
@@ -680,11 +677,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main_raw(const sll_c
 		} while (*cmd);
 	}
 	sll_char_t** argv=sll_allocate(argc*sizeof(sll_char_t*)+(cmd-o_cmd+1)*sizeof(sll_char_t));
-	if (!argv){
-		sll_file_write_char(sll_stdout,'$');
-		sll_deinit();
-		return 0;
-	}
 	sll_char_t* d=(sll_char_t*)(ADDR(argv)+argc*sizeof(sll_char_t*));
 	sll_copy_data(o_cmd,cmd-o_cmd,d);
 	argv[0]=d;

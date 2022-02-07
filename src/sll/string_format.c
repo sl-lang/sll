@@ -385,12 +385,12 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			sll_string_increase(o,16);
 			addr_t ptr=(addr_t)sll_var_arg_get(va);
 			sll_string_length_t j=64;
-			while (j){
+			do{
 				j-=4;
 				sll_char_t c=(ptr>>j)&15;
 				o->v[o->l]=c+(c>9?87:48);
 				o->l++;
-			}
+			} while (j);
 		}
 		else{
 			sll_string_increase(o,1);

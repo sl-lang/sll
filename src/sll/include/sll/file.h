@@ -182,7 +182,7 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_file_from_data
  * \group file
  * \desc Docs!
@@ -190,9 +190,8 @@ __SLL_EXTERNAL void sll_file_flush(sll_file_t* f);
  * \arg sll_size_t sz
  * \arg sll_file_flags_t f
  * \arg sll_file_t* o
- * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o);
+__SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o);
 
 
 

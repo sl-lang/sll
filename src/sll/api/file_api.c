@@ -140,9 +140,7 @@ __API_FUNC(file_from_data){
 		return -1;
 	}
 	sll_file_t f;
-	if (!sll_file_from_data(a->v,a->l,(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f)){
-		return -1;
-	}
+	sll_file_from_data(a->v,a->l,(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
 	sll_integer_t h=_alloc_file();
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+h))->dt.f));
 	(*(_file_fl+h))->p=0;
