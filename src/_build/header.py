@@ -161,7 +161,7 @@ def generate_help(i_fp,o_fp):
 		dt=rf.read().replace(b"\r\n",b"\n")
 		wf.write(b"#ifndef __SLL_GENERATED_HELP_TEXT_H__\n#define __SLL_GENERATED_HELP_TEXT_H__ 1\n#include <sll/types.h>\n\n\n\n#define HELP_TEXT_SIZE "+bytes(str(len(dt)),"utf-8")+b"\n\n\n\nstatic const sll_char_t HELP_TEXT[]={\n\t")
 		_write_byte_array(wf,dt)
-		wf.write(b"\n};\n\n\n\n#endif")
+		wf.write(b"\n};\n\n\n\n#endif\n")
 
 
 
@@ -173,7 +173,7 @@ def generate_memory_fail(i_fp,o_fp):
 		_write_byte_array(wf,dt[0])
 		wf.write(b"\n};\n\n\n\nstatic const sll_char_t MEMORY_FAIL_END[]={\n\t")
 		_write_byte_array(wf,dt[1])
-		wf.write(b"\n};\n\n\n\n#endif")
+		wf.write(b"\n};\n\n\n\n#endif\n")
 
 
 

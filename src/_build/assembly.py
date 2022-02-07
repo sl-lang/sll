@@ -123,4 +123,4 @@ def generate_assembly_optimizer(cfg_fp,o_fp):
 				else:
 					f.write("\t"+f"st[{i}]=st[{i+k}];\n")
 				i+=1
-		f.write("}\n\n\n\n#endif")
+		f.write("}\n\n\n\n#endif\n")
