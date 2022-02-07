@@ -341,6 +341,34 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_date_get_time_zone void
+#define __SLL_API_ARGS_sll_api_date_get_time_zone sll_array_t* out
+/**
+ * \flags func
+ * \name sll_api_date_get_time_zone
+ * \group date-api
+ * \desc Docs!
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_date_get_time_zone_raw
+ * \group raw-api
+ * \subgroup raw-api-date-api
+ * \desc Wrapper function for :sll_api_date_get_time_zone:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Date
+ * \group raw-api
+ * \subgroup raw-api-date-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_date_merge __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_date_merge sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_float_t f
 /**
@@ -365,13 +393,6 @@
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
- */
-/**
- * \flags subgroup
- * \name Date
- * \group raw-api
- * \subgroup raw-api-date-api
- * \desc Docs!
  */
 
 

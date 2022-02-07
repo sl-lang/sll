@@ -3,7 +3,9 @@
 #include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/object.h>
 #include <sll/operator.h>
+#include <sll/platform.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -24,7 +26,7 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,const sll_time_zone_t* tz,
 		tz=sll_utc_time_zone;
 	}
 	o->tz=*tz;
-	tm+=o->tz.off;
+	tm+=o->tz.off*60;
 	sll_float_t hms=sll_math_mod(tm,86400)+(tm<0?86400:0);
 	o->s=sll_math_mod(hms,60);
 	sll_integer_t hms_i=((sll_integer_t)hms)/60;
@@ -82,7 +84,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* dt){
 	}
 	sll_size_t e=y/400;
 	y-=e*400;
-	return (e*146097+y*365+y/4-y/100+(153*(dt->m+1+(dt->m+1>2?-3:9))+2)/5+dt->d+1-1-719468)*86400+dt->h*3600+dt->mn*60+dt->s-dt->tz.off;
+	return (e*146097+y*365+y/4-y/100+(153*(dt->m+1+(dt->m+1>2?-3:9))+2)/5+dt->d+1-1-719468)*86400+dt->h*3600+dt->mn*60+dt->s-dt->tz.off*60;
+}
+
+
+
+__API_FUNC(date_get_time_zone){
+	sll_array_create(2,out);
+	out->v[0]=SLL_FROM_INT(sll_platform_time_zone->off);
+	out->v[1]=SLL_CREATE();
+	out->v[1]->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_from_pointer(sll_platform_time_zone->nm,&(out->v[1]->dt.s));
 }
 
 

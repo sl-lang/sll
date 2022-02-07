@@ -460,6 +460,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_encode_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_date_get_time_zone sll_api_date_get_time_zone(__SLL_API_ARGS_sll_api_date_get_time_zone);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_get_time_zone_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_array_t out;
+	sll_api_date_get_time_zone(&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_date_merge sll_api_date_merge(__SLL_API_ARGS_sll_api_date_merge);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_merge_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -4919,6 +4931,10 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_base64_encode_raw
 	},
 	{
+		SLL_CHAR("sll:date_get_time_zone"),
+		sll_api_date_get_time_zone_raw
+	},
+	{
 		SLL_CHAR("sll:date_merge"),
 		sll_api_date_merge_raw
 	},
@@ -5478,5 +5494,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=153;
+const sll_function_index_t _ifunc_size=154;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);
