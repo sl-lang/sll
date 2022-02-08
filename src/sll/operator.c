@@ -62,14 +62,12 @@
 
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
-	do{ \
-		if (SLL_OBJECT_GET_TYPE(a)>SLL_OBJECT_GET_TYPE(b)){ \
-			sll_object_t* __tmp=a; \
-			a=b; \
-			b=__tmp; \
-			inv=1; \
-		} \
-	} while (0)
+	if (SLL_OBJECT_GET_TYPE(a)>SLL_OBJECT_GET_TYPE(b)){ \
+		sll_object_t* __tmp=a; \
+		a=b; \
+		b=__tmp; \
+		inv=1; \
+	} \
 
 #define TO_FLOAT_BITS(n) ((n)->dt.i)
 
@@ -1304,7 +1302,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* a,sll_object_t* b){
 	COMMUTATIVE_OPERATOR;
-	IGNORE_RESULT(inv);
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i*b->dt.i);
@@ -1316,14 +1313,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_duplicate(&(b->dt.s),a->dt.i,0,&(o->dt.s));
+				sll_string_duplicate(&(b->dt.s),a->dt.i*(inv?-1:1),0,&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_duplicate(&(b->dt.a),a->dt.i,0,&(o->dt.a));
+				sll_array_duplicate(&(b->dt.a),a->dt.i*(inv?-1:1),0,&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_IM:
@@ -1438,7 +1435,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,sll_object_t* b){
 	COMMUTATIVE_OPERATOR;
-	IGNORE_RESULT(inv);
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i|b->dt.i);
@@ -2079,7 +2075,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a,sll_object_t* b){
 	COMMUTATIVE_OPERATOR;
-	IGNORE_RESULT(inv);
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return SLL_FROM_INT(a->dt.i^b->dt.i);

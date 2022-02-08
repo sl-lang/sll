@@ -66,12 +66,12 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilati
 	o->et.l=0;
 	o->ft.dt=NULL;
 	o->ft.l=0;
-	o->st.dt=NULL;
-	o->st.l=0;
+	o->st.dt=sll_allocate(sizeof(sll_string_t));
+	o->st.l=1;
+	sll_string_from_pointer(fp,o->st.dt);
 	o->fpt.dt=sll_allocate(sizeof(sll_file_path_t));
 	o->fpt.l=1;
 	o->fpt.dt->nm=0;
 	_init_node_stack(o);
 	o->_n_sc_id=1;
-	IGNORE_RESULT(sll_create_string(&(o->st),fp,sll_string_length_unaligned(fp)));
 }

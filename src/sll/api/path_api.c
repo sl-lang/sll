@@ -53,12 +53,7 @@ __SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sl
 		sll_free_string(&nb);
 		return;
 	}
-#else
-	sll_string_length_t s_drv=0;
-	sll_string_length_t b_drv=0;
 #endif
-	IGNORE_RESULT(s_drv);
-	IGNORE_RESULT(b_drv);
 	SLL_UNIMPLEMENTED();
 }
 

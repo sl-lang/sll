@@ -44,7 +44,6 @@ static __SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 #define ROTATE_BITS_RIGHT(a,b) _rotr((a),(b))
 #define ROTATE_BITS64(a,b) _rotl64((a),(b))
 #define ROTATE_BITS_RIGHT64(a,b) _rotr64((a),(b))
-#define IGNORE_RESULT(x) ((void)(x))
 #define _ASSUME_ALIGNED(p,n,x) \
 	do{ \
 		if ((ADDR(p)-(x))&((1ull<<(n))-1)){ \
@@ -81,10 +80,6 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 	__asm__("rorq %1,%0":"+r"(a):"c"(b));
 	return a;
 }
-#define IGNORE_RESULT(x) \
-	do{ \
-		unsigned long long int __tmp __attribute__((unused))=(unsigned long long int)(x); \
-	} while (0)
 #define _ASSUME_ALIGNED(p,n,x) \
 	do{ \
 		p=__builtin_assume_aligned((p),1<<(n),(x)); \

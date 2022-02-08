@@ -71,7 +71,8 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+j);
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",bf);
 		sll_file_t f;
-		if (sll_file_open(bf,SLL_FILE_FLAG_READ,&f)){
+		if (sll_platform_path_exists(bf)){
+			sll_file_open(bf,SLL_FILE_FLAG_READ,&f);
 			if (!(fl&CLI_FLAG_EXPAND_PATH)){
 				SLL_COPY_STRING_NULL(bf,f_fp);
 			}
@@ -90,9 +91,10 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		}
 		bf[j]=0;
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",bf);
-		if (!sll_file_open(bf,SLL_FILE_FLAG_READ,&f)){
+		if (!sll_platform_path_exists(bf)){
 			continue;
 		}
+		sll_file_open(bf,SLL_FILE_FLAG_READ,&f);
 		if (!(fl&CLI_FLAG_EXPAND_PATH)){
 			SLL_COPY_STRING_NULL(bf,f_fp);
 		}
@@ -123,7 +125,8 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),l_fp+l_fpl+f_nm_l);
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",l_fp);
 		sll_file_t f;
-		if (sll_file_open(l_fp,SLL_FILE_FLAG_READ,&f)){
+		if (sll_platform_path_exists(l_fp)){
+			sll_file_open(l_fp,SLL_FILE_FLAG_READ,&f);
 			if (!(fl&CLI_FLAG_EXPAND_PATH)){
 				SLL_COPY_STRING_NULL(l_fp,f_fp);
 			}
@@ -207,40 +210,28 @@ static void _execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_ass
 			SLL_COPY_STRING_NULL(SLL_CHAR(".sla"),bf+i);
 			CLI_LOG_IF_VERBOSE("Writing assembly to file '%s'...",bf);
 			sll_file_t of;
-			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
-				SLL_WARN("Unable to open output file '%s'",bf);
-			}
-			else{
-				sll_write_assembly(&of,a_dt);
-				CLI_LOG_IF_VERBOSE("File written successfully.");
-				sll_file_close(&of);
-			}
+			sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+			sll_write_assembly(&of,a_dt);
+			CLI_LOG_IF_VERBOSE("File written successfully.");
+			sll_file_close(&of);
 		}
 		if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
 			SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+i);
 			CLI_LOG_IF_VERBOSE("Writing compiled program to file '%s'...",bf);
 			sll_file_t of;
-			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
-				SLL_WARN("Unable to open output file '%s'",bf);
-			}
-			else{
-				sll_write_compiled_node(&of,c_dt);
-				CLI_LOG_IF_VERBOSE("File written successfully.");
-				sll_file_close(&of);
-			}
+			sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+			sll_write_compiled_node(&of,c_dt);
+			CLI_LOG_IF_VERBOSE("File written successfully.");
+			sll_file_close(&of);
 		}
 		if (fl&CLI_FLAG_GENERATE_SLL){
 			SLL_COPY_STRING_NULL(SLL_CHAR(".sll"),bf+i);
 			CLI_LOG_IF_VERBOSE("Writing sll code to file '%s'...",bf);
 			sll_file_t of;
-			if (!sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of)){
-				SLL_WARN("Unable to open output file '%s'",bf);
-			}
-			else{
-				sll_write_sll_code(c_dt,&i_ft,1,&of);
-				CLI_LOG_IF_VERBOSE("File written successfully.");
-				sll_file_close(&of);
-			}
+			sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+			sll_write_sll_code(c_dt,&i_ft,1,&of);
+			CLI_LOG_IF_VERBOSE("File written successfully.");
+			sll_file_close(&of);
 		}
 	}
 	if (!(fl&CLI_FLAG_NO_RUN)){

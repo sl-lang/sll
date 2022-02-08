@@ -209,21 +209,20 @@ __SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* f,sll_string_t* o);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_file_open
  * \group file
  * \desc Docs!
  * \arg const sll_char_t* nm
  * \arg sll_file_flags_t f
  * \arg sll_file_t* o
- * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open(const sll_char_t* nm,sll_file_flags_t f,sll_file_t* o);
+__SLL_EXTERNAL void sll_file_open(const sll_char_t* nm,sll_file_flags_t f,sll_file_t* o);
 
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_file_open_descriptor
  * \group file
  * \desc Docs!
@@ -231,9 +230,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open(const sll_char_t* nm,
  * \arg sll_file_descriptor_t fd
  * \arg sll_file_flags_t f
  * \arg sll_file_t* o
- * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_open_descriptor(const sll_char_t* nm,sll_file_descriptor_t fd,sll_file_flags_t f,sll_file_t* o);
+__SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* nm,sll_file_descriptor_t fd,sll_file_flags_t f,sll_file_t* o);
 
 
 

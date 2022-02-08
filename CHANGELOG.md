@@ -14,6 +14,7 @@
 ### Changed
 
 - Compiled modules no longer contain full file paths from the host file system
+- Creating a file from an invalid file descriptor (`SLL_UNKNOWN_FILE_DESCRIPTOR`) with `sll_file_open_descriptor` now creates a null file
 - Date functions (`date$current`, `date$from_time` and `date$from_time_ns`) now defualt to the local time zone (`date$LOCAL_TIME_ZONE`) instead of UTC (`date$UTC_TIME_ZONE`)
 - Date functions (`sll_date_from_time` and `sll_date_from_time_ns`) now expect a time zone argument
 - File creation functions (`sll_file_from_data`, `sll_file_open` and `sll_file_open_descriptor`) now remove invalid file flags
