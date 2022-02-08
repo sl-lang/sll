@@ -128,109 +128,6 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 
 
 
-static void _execute(const sll_char_t* f_fp,sll_compilation_data_t* c_dt,sll_assembly_data_t* a_dt,const sll_char_t* o_fp,int* ec){
-	if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)){
-		if (fl&CLI_FLAG_STRIP_DEBUG){
-			CLI_LOG_IF_VERBOSE("Removing debugging data...");
-			sll_remove_debug_data(c_dt);
-		}
-		CLI_LOG_IF_VERBOSE("Removing node padding...");
-		sll_remove_node_padding(c_dt,c_dt->h);
-		CLI_LOG_IF_VERBOSE("Optimizing node metadata...");
-		sll_optimize_metadata(c_dt);
-		if (fl&CLI_FLAG_PRINT_NODES){
-			sll_print_node(c_dt,&i_ft,NULL,sll_stdout);
-			sll_file_write_char(sll_stdout,'\n');
-		}
-	}
-	if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)&&((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN))){
-		CLI_LOG_IF_VERBOSE("Generating assembly...");
-		sll_generate_assembly(c_dt,a_dt);
-	}
-	if (fl&CLI_FLAG_PRINT_ASSEMBLY){
-		sll_print_assembly(a_dt,sll_stdout);
-		sll_file_write_char(sll_stdout,'\n');
-	}
-	if (f_fp[0]&&(fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_GENERATE_COMPILED_OBJECT|CLI_FLAG_GENERATE_SLL))){
-		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_string_length_t i=0;
-		sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
-		if (!o_fp){
-			sll_copy_data(f_fp,f_fp_l,bf);
-			i=f_fp_l-1;
-		}
-		else{
-			if (fl&CLI_FLAG_SINGLE_OUTPUT){
-				i=sll_string_length_unaligned(o_fp);
-				sll_copy_data(o_fp,i,bf);
-				i-=1;
-			}
-			else{
-				i=sll_string_length_unaligned(o_fp);
-				while (*(o_fp+i)!='\\'&&*(o_fp+i)!='/'){
-					if (i==0){
-						i--;
-						break;
-					}
-					i--;
-				}
-				i++;
-				sll_string_length_t j=f_fp_l;
-				while (j&&*(f_fp+j-1)!='\\'&&*(f_fp+j-1)!='/'){
-					j--;
-				}
-				sll_copy_data(f_fp+j,f_fp_l-j,bf+i);
-				i+=f_fp_l-j-1;
-			}
-		}
-		i++;
-		if (fl&CLI_FLAG_GENERATE_ASSEMBLY){
-			SLL_COPY_STRING_NULL(SLL_CHAR(".sla"),bf+i);
-			CLI_LOG_IF_VERBOSE("Writing assembly to file '%s'...",bf);
-			sll_file_t of;
-			sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
-			sll_write_assembly(&of,a_dt);
-			CLI_LOG_IF_VERBOSE("File written successfully.");
-			sll_file_close(&of);
-		}
-		if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
-			SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+i);
-			CLI_LOG_IF_VERBOSE("Writing compiled program to file '%s'...",bf);
-			sll_file_t of;
-			sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
-			sll_write_compiled_node(&of,c_dt);
-			CLI_LOG_IF_VERBOSE("File written successfully.");
-			sll_file_close(&of);
-		}
-		if (fl&CLI_FLAG_GENERATE_SLL){
-			SLL_COPY_STRING_NULL(SLL_CHAR(".sll"),bf+i);
-			CLI_LOG_IF_VERBOSE("Writing sll code to file '%s'...",bf);
-			sll_file_t of;
-			sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
-			sll_write_sll_code(c_dt,&i_ft,1,&of);
-			CLI_LOG_IF_VERBOSE("File written successfully.");
-			sll_file_close(&of);
-		}
-	}
-	if (!(fl&CLI_FLAG_NO_RUN)){
-		sll_vm_config_t cfg={
-			CLI_VM_STACK_SIZE,
-			CLI_VM_CALL_STACK_SIZE,
-			&i_ft,
-			sll_stdin,
-			sll_stdout,
-			sll_stderr
-		};
-		sll_file_flush(sll_stdout);
-		sll_file_flush(sll_stderr);
-		*ec=sll_execute_assembly(a_dt,&cfg);
-		sll_file_flush(sll_stdout);
-		sll_file_flush(sll_stderr);
-	}
-}
-
-
-
 static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*const* argv){
 	if (!argc){
 		return 0;
@@ -465,7 +362,6 @@ _read_file_argument:
 			sll_set_argument(0,bf);
 		}
 		else{
-			f_fp[0]=0;
 			CLI_LOG_IF_VERBOSE("Compiling console input...");
 			sll_init_compilation_data(SLL_CHAR("@console"),&c_dt);
 			sll_file_t f;
@@ -475,9 +371,111 @@ _read_file_argument:
 			CLI_LOG_IF_VERBOSE("Input successfully read.");
 			sll_set_argument(0,SLL_CHAR("@console"));
 		}
-		_execute(f_fp,&c_dt,&a_dt,o_fp,&ec);
+		if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)){
+			if (fl&CLI_FLAG_STRIP_DEBUG){
+				CLI_LOG_IF_VERBOSE("Removing debugging data...");
+				sll_remove_debug_data(&c_dt);
+			}
+			CLI_LOG_IF_VERBOSE("Removing node padding...");
+			sll_remove_node_padding(&c_dt,c_dt.h);
+			CLI_LOG_IF_VERBOSE("Optimizing node metadata...");
+			sll_optimize_metadata(&c_dt);
+			if (fl&CLI_FLAG_PRINT_NODES){
+				sll_print_node(&c_dt,&i_ft,NULL,sll_stdout);
+				sll_file_write_char(sll_stdout,'\n');
+			}
+		}
+		if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)&&((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN))){
+			CLI_LOG_IF_VERBOSE("Generating assembly...");
+			sll_generate_assembly(&c_dt,&a_dt);
+		}
+		if (fl&CLI_FLAG_PRINT_ASSEMBLY){
+			sll_print_assembly(&a_dt,sll_stdout);
+			sll_file_write_char(sll_stdout,'\n');
+		}
+		if (j<fpl&&(fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_GENERATE_COMPILED_OBJECT|CLI_FLAG_GENERATE_SLL))){
+			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+			sll_string_length_t k=0;
+			sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
+			if (!o_fp){
+				sll_copy_data(f_fp,f_fp_l,bf);
+				k=f_fp_l-1;
+			}
+			else{
+				if (fl&CLI_FLAG_SINGLE_OUTPUT){
+					k=sll_string_length_unaligned(o_fp);
+					sll_copy_data(o_fp,k,bf);
+					k-=1;
+				}
+				else{
+					k=sll_string_length_unaligned(o_fp);
+					while (*(o_fp+k)!='\\'&&*(o_fp+k)!='/'){
+						if (!k){
+							k--;
+							break;
+						}
+						k--;
+					}
+					k++;
+					sll_string_length_t l=f_fp_l;
+					while (l&&*(f_fp+l-1)!='\\'&&*(f_fp+l-1)!='/'){
+						l--;
+					}
+					sll_copy_data(f_fp+l,f_fp_l-l,bf+k);
+					k+=f_fp_l-l-1;
+				}
+			}
+			bf[k+1]='.';
+			bf[k+2]='s';
+			bf[k+3]='l';
+			bf[k+5]=0;
+			k+=4;
+			if (fl&CLI_FLAG_GENERATE_ASSEMBLY){
+				bf[k]='a';
+				CLI_LOG_IF_VERBOSE("Writing assembly to file '%s'...",bf);
+				sll_file_t of;
+				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+				sll_write_assembly(&of,&a_dt);
+				CLI_LOG_IF_VERBOSE("File written successfully.");
+				sll_file_close(&of);
+			}
+			if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
+				bf[k]='c';
+				CLI_LOG_IF_VERBOSE("Writing compiled program to file '%s'...",bf);
+				sll_file_t of;
+				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+				sll_write_compiled_node(&of,&c_dt);
+				CLI_LOG_IF_VERBOSE("File written successfully.");
+				sll_file_close(&of);
+			}
+			if (fl&CLI_FLAG_GENERATE_SLL){
+				bf[k]='l';
+				CLI_LOG_IF_VERBOSE("Writing sll code to file '%s'...",bf);
+				sll_file_t of;
+				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+				sll_write_sll_code(&c_dt,&i_ft,1,&of);
+				CLI_LOG_IF_VERBOSE("File written successfully.");
+				sll_file_close(&of);
+			}
+		}
+		if (!(fl&CLI_FLAG_NO_RUN)){
+			sll_vm_config_t cfg={
+				CLI_VM_STACK_SIZE,
+				CLI_VM_CALL_STACK_SIZE,
+				&i_ft,
+				sll_stdin,
+				sll_stdout,
+				sll_stderr
+			};
+			sll_file_flush(sll_stdout);
+			sll_file_flush(sll_stderr);
+			ec=sll_execute_assembly(&a_dt,&cfg);
+			sll_file_flush(sll_stdout);
+			sll_file_flush(sll_stderr);
+		}
 		sll_free_assembly_data(&a_dt);
 		sll_free_compilation_data(&c_dt);
+		fl&=~CLI_FLAG_ASSEMBLY_GENERATED;
 	}
 _cleanup:
 	sll_deallocate(i_fp);
