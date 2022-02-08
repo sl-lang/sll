@@ -101,8 +101,8 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_compilation_data_t
 
 
 
-__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt,sll_node_t* o){
-	sll_node_t* d=o;
+__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt){
+	sll_node_t* d=c_dt->h;
 	sll_node_offset_t rm=0;
-	_remove_padding_internal(o,c_dt,&d,&rm);
+	_remove_padding_internal(c_dt->h,c_dt,&d,&rm);
 }

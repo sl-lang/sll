@@ -21,8 +21,10 @@
 - File path table now stores file hashes and lengths (`sll_file_path_t` instead `sll_string_length_t`) ([#55])
 - Fixed `sll_compare_data`
 - Fixed variable function calling via `sll_execute_function`
+- Removing node padding via `sll_remove_node_padding` no longer requires a node argument
 - Renamed `sll_allocate`, `sll_allocate_stack`, `sll_reallocate`, `sll_zero_allocate` and `sll_zero_allocate_stack` to `sll_allocate_fail`, `sll_allocate_stack_fail`, `sll_reallocate_fail`, `sll_zero_allocate_fail` and `sll_zero_allocate_stack_fail` ([#83])
 - Renamed `sll_parse_all_nodes` to `sll_parse_nodes`
+- Rewritten CLI code
 
 ### Removed
 

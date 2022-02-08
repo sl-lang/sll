@@ -377,7 +377,7 @@ _read_file_argument:
 				sll_remove_debug_data(&c_dt);
 			}
 			CLI_LOG_IF_VERBOSE("Removing node padding...");
-			sll_remove_node_padding(&c_dt,c_dt.h);
+			sll_remove_node_padding(&c_dt);
 			CLI_LOG_IF_VERBOSE("Optimizing node metadata...");
 			sll_optimize_metadata(&c_dt);
 			if (fl&CLI_FLAG_PRINT_NODES){

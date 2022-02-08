@@ -1029,9 +1029,8 @@ __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt);
  * \group node
  * \desc Docs!
  * \arg sll_compilation_data_t* c_dt
- * \arg sll_node_t* o
  */
-__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt,sll_node_t* o);
+__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt);
 
 
 
