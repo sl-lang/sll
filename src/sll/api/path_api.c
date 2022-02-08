@@ -16,6 +16,12 @@
 
 
 
+__SLL_EXTERNAL void sll_path_relative(const sll_string_t* s,const sll_string_t* b,sll_string_t* o){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s){
 	sll_char_t dt[2]={
 		'/',
@@ -23,6 +29,20 @@ __SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s){
 	};
 	sll_string_length_t o=sll_string_index_reverse_multiple(s,dt,2,0);
 	return (o==SLL_MAX_STRING_INDEX?0:o+1);
+}
+
+
+
+__SLL_EXTERNAL sll_string_length_t sll_path_split_drive(const sll_string_t* s){
+#ifdef __SLL_BUILD_WINDOWS
+	if (s->l>1&&s->v[1]==':'){
+		return 2;
+	}
+	if (s->l>2&&s->v[0]=='\\'&&s->v[1]=='\\'&&s->v[2]!='\\'){
+		SLL_UNIMPLEMENTED();
+	}
+#endif
+	return 0;
 }
 
 
@@ -142,7 +162,11 @@ __API_FUNC(path_recursive_list_dir){
 
 
 __API_FUNC(path_relative){
-	SLL_UNIMPLEMENTED();
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		sll_string_clone(a,out);
+		return;
+	}
+	sll_path_relative(a,b,out);
 }
 
 
@@ -170,6 +194,19 @@ __API_FUNC(path_size){
 
 __API_FUNC(path_split){
 	sll_string_length_t i=sll_path_split(a);
+	sll_array_create(2,out);
+	out->v[0]=SLL_CREATE();
+	out->v[0]->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_from_pointer_length(a->v,i,&(out->v[0]->dt.s));
+	out->v[1]=SLL_CREATE();
+	out->v[1]->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_from_pointer_length(a->v+i,a->l-i,&(out->v[1]->dt.s));
+}
+
+
+
+__API_FUNC(path_split_drive){
+	sll_string_length_t i=sll_path_split_drive(a);
 	sll_array_create(2,out);
 	out->v[0]=SLL_CREATE();
 	out->v[0]->t=SLL_OBJECT_TYPE_STRING;

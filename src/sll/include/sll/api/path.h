@@ -38,6 +38,19 @@
 
 /**
  * \flags func
+ * \name sll_path_relative
+ * \group path-api
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg const sll_string_t* b
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_path_relative(const sll_string_t* s,const sll_string_t* b,sll_string_t* o);
+
+
+
+/**
+ * \flags func
  * \name sll_path_split
  * \group path-api
  * \desc Docs!
@@ -45,6 +58,18 @@
  * \ret sll_string_length_t
  */
 __SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s);
+
+
+
+/**
+ * \flags func
+ * \name sll_path_split_drive
+ * \group path-api
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL sll_string_length_t sll_path_split_drive(const sll_string_t* s);
 
 
 
@@ -137,6 +162,7 @@ __API_FUNC_DECL(path_recursive_list_dir);
  * \group path-api
  * \desc Docs!
  * \arg S
+ * \arg S
  * \ret S
  */
 __API_FUNC_DECL(path_relative);
@@ -176,6 +202,18 @@ __API_FUNC_DECL(path_size);
  * \ret A
  */
 __API_FUNC_DECL(path_split);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_path_split_drive
+ * \group path-api
+ * \desc Docs!
+ * \arg S
+ * \ret A
+ */
+__API_FUNC_DECL(path_split_drive);
 
 
 

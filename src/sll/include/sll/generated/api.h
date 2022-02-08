@@ -2182,13 +2182,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_path_relative void
-#define __SLL_API_ARGS_sll_api_path_relative sll_string_t* a,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_path_relative sll_string_t* a,sll_string_t* b,sll_string_t* out
 /**
  * \flags func
  * \name sll_api_path_relative
  * \group path-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
+ * \arg sll_string_t* b -> 
  */
 /**
  * \flags check_output func
@@ -2264,6 +2265,28 @@
  * \group raw-api
  * \subgroup raw-api-path-api
  * \desc Wrapper function for :sll_api_path_split:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_path_split_drive void
+#define __SLL_API_ARGS_sll_api_path_split_drive sll_string_t* a,sll_array_t* out
+/**
+ * \flags func
+ * \name sll_api_path_split_drive
+ * \group path-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_path_split_drive_raw
+ * \group raw-api
+ * \subgroup raw-api-path-api
+ * \desc Wrapper function for :sll_api_path_split_drive:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

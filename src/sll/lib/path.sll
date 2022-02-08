@@ -14,6 +14,7 @@
 	(~ func_type) set_cwd
 	(~ func_type) size
 	(~ func_type) split
+	(~ func_type) split_drive
 ))
 
 
@@ -34,13 +35,20 @@
 
 (= recursive_list_dir (... "sll:path_recursive_list_dir"))
 
-(= relative (... "sll:path_relative"))
+(= relative (,,, path base
+	(@@ (<- (... "sll:path_relative")
+		(:: path string_type)
+		(?: (=== base nil) (<- get_cwd) (:: base string_type))
+	))
+))
 
 (= set_cwd (... "sll:path_set_cwd"))
 
 (= size (... "sll:path_size"))
 
 (= split (... "sll:path_split"))
+
+(= split_drive (... "sll:path_split_drive"))
 
 
 
@@ -56,5 +64,6 @@
 	set_cwd
 	size
 	split
+	split_drive
 ))
 (## path)
