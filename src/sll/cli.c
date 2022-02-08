@@ -48,16 +48,6 @@ static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o)
 
 
 
-static void _parse_file(sll_compilation_data_t* c_dt,sll_file_t* f,const sll_char_t* f_fp){
-	sll_init_compilation_data(f_fp,c_dt);
-	sll_parse_nodes(f,c_dt,&i_ft,_import_file);
-	sll_file_close(f);
-	CLI_LOG_IF_VERBOSE("File successfully read.");
-
-}
-
-
-
 static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_char_t* f_fp){
 	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -73,12 +63,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		sll_file_t f;
 		if (sll_platform_path_exists(bf)){
 			sll_file_open(bf,SLL_FILE_FLAG_READ,&f);
-			if (!(fl&CLI_FLAG_EXPAND_PATH)){
-				SLL_COPY_STRING_NULL(bf,f_fp);
-			}
-			else{
-				sll_platform_absolute_path(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
-			}
+			CLI_EXPAND_PATH(bf,f_fp);
 			CLI_LOG_IF_VERBOSE("Found file '%s'",f_fp);
 			if (sll_load_compiled_node(&f,c_dt)){
 				sll_file_close(&f);
@@ -95,12 +80,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 			continue;
 		}
 		sll_file_open(bf,SLL_FILE_FLAG_READ,&f);
-		if (!(fl&CLI_FLAG_EXPAND_PATH)){
-			SLL_COPY_STRING_NULL(bf,f_fp);
-		}
-		else{
-			sll_platform_absolute_path(bf,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
-		}
+		CLI_EXPAND_PATH(bf,f_fp);
 		CLI_LOG_IF_VERBOSE("Found file '%s'",f_fp);
 		if (sll_load_assembly(&f,a_dt)){
 			sll_file_close(&f);
@@ -117,7 +97,10 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		}
 		sll_free_compilation_data(c_dt);
 		sll_file_reset(&f);
-		_parse_file(c_dt,&f,f_fp);
+		sll_init_compilation_data(f_fp,c_dt);
+		sll_parse_nodes(&f,c_dt,&i_ft,_import_file);
+		sll_file_close(&f);
+		CLI_LOG_IF_VERBOSE("File successfully read.");
 		return;
 	}
 	if (l_fpl){
@@ -127,12 +110,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		sll_file_t f;
 		if (sll_platform_path_exists(l_fp)){
 			sll_file_open(l_fp,SLL_FILE_FLAG_READ,&f);
-			if (!(fl&CLI_FLAG_EXPAND_PATH)){
-				SLL_COPY_STRING_NULL(l_fp,f_fp);
-			}
-			else{
-				sll_platform_absolute_path(l_fp,f_fp,SLL_API_MAX_FILE_PATH_LENGTH);
-			}
+			CLI_EXPAND_PATH(l_fp,f_fp);
 			CLI_LOG_IF_VERBOSE("Found file '%s'",f_fp);
 			if (sll_load_compiled_node(&f,c_dt)){
 				sll_file_close(&f);

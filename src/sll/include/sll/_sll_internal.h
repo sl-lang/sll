@@ -247,6 +247,13 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 	if (fl&CLI_FLAG_VERBOSE){ \
 		SLL_LOG(t,##__VA_ARGS__); \
 	}
+#define CLI_EXPAND_PATH(s,d) \
+	if (fl&CLI_FLAG_EXPAND_PATH){ \
+		sll_platform_absolute_path(s,d,SLL_API_MAX_FILE_PATH_LENGTH); \
+	} \
+	else{ \
+		SLL_COPY_STRING_NULL(s,d); \
+	}
 
 #if SLL_VERSION_HAS_SHA
 #define CLI_BUILD_TYPE_STRING "commit/"SLL_VERSION_SHA" [https://github.com/sl-lang/sll/tree/"SLL_VERSION_TAG"]"
