@@ -41,11 +41,11 @@
  * \name sll_path_relative
  * \group path-api
  * \desc Docs!
- * \arg const sll_string_t* s
- * \arg const sll_string_t* b
+ * \arg const sll_char_t* s
+ * \arg const sll_char_t* b
  * \arg sll_string_t* o
  */
-__SLL_EXTERNAL void sll_path_relative(const sll_string_t* s,const sll_string_t* b,sll_string_t* o);
+__SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sll_string_t* o);
 
 
 
