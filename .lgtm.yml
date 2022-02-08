@@ -3,7 +3,6 @@ queries:
   - exclude: cpp/complex-block
   - exclude: cpp/long-switch
   - exclude: cpp/poorly-documented-function
-  - exclude: cpp/use-of-goto
 extraction:
   cpp:
     prepare:
