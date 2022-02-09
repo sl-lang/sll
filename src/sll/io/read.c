@@ -378,6 +378,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 				CHECK_ERROR(rf,if_->dt[j],sll_identifier_index_t);
 			}
 		}
+		CHECK_ERROR(rf,sf->fp_nm,sll_string_index_t);
 		CHECK_ERROR(rf,sf->_n_sc_id,sll_scope_t);
 		_init_node_stack(sf);
 		sf->dt=sf->_s.p;

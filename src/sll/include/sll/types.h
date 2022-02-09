@@ -523,6 +523,7 @@ typedef struct __SLL_SOURCE_FILE{
 	sll_function_table_t ft;
 	sll_string_table_t st;
 	sll_import_table_t it;
+	sll_string_index_t fp_nm;
 	sll_node_stack_t _s;
 	sll_scope_t _n_sc_id;
 } sll_source_file_t;

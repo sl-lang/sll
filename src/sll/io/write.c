@@ -315,6 +315,7 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 				sll_encode_integer(wf,if_->dt[j]);
 			}
 		}
+		sll_encode_integer(wf,sf->fp_nm);
 		sll_encode_integer(wf,sf->_n_sc_id);
 		_write_node(wf,sf->dt);
 	}

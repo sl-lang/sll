@@ -551,13 +551,6 @@ typedef struct __LIBRARY{
 
 
 
-typedef struct __FILE_LINE_DATA{
-	sll_file_offset_t* dt;
-	sll_string_index_t c;
-} file_line_data_t;
-
-
-
 typedef struct __FILE_LINE{
 	sll_file_offset_t ln;
 	sll_string_index_t fp;
@@ -606,6 +599,15 @@ typedef union __JSON_NUMBER{
 	sll_integer_t i;
 	sll_float_t f;
 } json_number_t;
+
+
+
+typedef struct __SOURCE_FILE_MAPPING_DATA{
+	sll_string_index_t* sm;
+	sll_function_index_t f_id_off;
+	sll_scope_t sc_off;
+	sll_identifier_index_t* idx_off[SLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
+} source_file_mapping_data_t;
 
 
 
@@ -700,10 +702,6 @@ void _print_int(sll_integer_t v,sll_file_t* wf);
 
 
 void _reset_sandbox(void);
-
-
-
-void _shift_nodes(sll_node_t* o,sll_source_file_t* c_dt,sll_node_offset_t off);
 
 
 

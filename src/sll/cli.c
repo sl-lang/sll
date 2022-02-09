@@ -355,7 +355,7 @@ _read_file_argument:
 		sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 		sll_compilation_data_t c_dt=SLL_INIT_COMPILATION_DATA_STRUCT;
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_source_file_t a_dt_sf;
+		sll_source_file_t* a_dt_sf=NULL;
 		if (j<fpl){
 			_load_file(SLL_CHAR(argv[*(fp+j)]),&a_dt,&c_dt,f_fp);
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -375,10 +375,11 @@ _read_file_argument:
 		if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)){
 			if ((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN)){
 				CLI_LOG_IF_VERBOSE("Combining source files...");
-				sll_unify_compilation_data(&c_dt,&a_dt_sf);
+				a_dt_sf=sll_allocate(sizeof(sll_source_file_t));
+				sll_unify_compilation_data(&c_dt,a_dt_sf);
 				sll_free_compilation_data(&c_dt);
 				c_dt.dt=sll_allocate(sizeof(sll_source_file_t*));
-				*(c_dt.dt)=&a_dt_sf;
+				*(c_dt.dt)=a_dt_sf;
 				c_dt.l=1;
 			}
 			if (fl&CLI_FLAG_STRIP_DEBUG){
@@ -395,7 +396,7 @@ _read_file_argument:
 			}
 			if ((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN)){
 				CLI_LOG_IF_VERBOSE("Generating assembly...");
-				sll_generate_assembly(&a_dt_sf,&a_dt);
+				sll_generate_assembly(a_dt_sf,&a_dt);
 			}
 		}
 		if (fl&CLI_FLAG_PRINT_ASSEMBLY){

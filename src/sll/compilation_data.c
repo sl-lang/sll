@@ -61,6 +61,7 @@ __SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* sf){
 	sll_deallocate(sf->it.dt);
 	sf->it.dt=NULL;
 	sf->it.l=0;
+	sf->fp_nm=0;
 	sf->_s.s=NULL;
 	sf->_s.e=NULL;
 	sf->_s.c=0;
@@ -91,6 +92,7 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilati
 	sll_string_from_pointer(fp,sf->st.dt);
 	sf->it.dt=NULL;
 	sf->it.l=0;
+	sf->fp_nm=0;
 	_init_node_stack(sf);
 	sf->_n_sc_id=1;
 	o->dt=sll_allocate(sizeof(sll_source_file_t*));

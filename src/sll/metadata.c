@@ -9,7 +9,15 @@
 
 static sll_node_t* _mark(sll_node_t* o,bitmap_t* m){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
-		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+		if (o->t==SLL_NODE_TYPE_CHANGE_STACK){
+			o=o->dt._p;
+		}
+		else{
+			if (o->t==SLL_NODE_TYPE_DBG&&o->dt.s!=SLL_MAX_STRING_INDEX){
+				*(m+(o->dt.s>>6))|=1ull<<(o->dt.s&63);
+			}
+			o++;
+		}
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
@@ -76,7 +84,15 @@ static sll_node_t* _mark(sll_node_t* o,bitmap_t* m){
 
 static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
-		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+		if (o->t==SLL_NODE_TYPE_CHANGE_STACK){
+			o=o->dt._p;
+		}
+		else{
+			if (o->t==SLL_NODE_TYPE_DBG&&o->dt.s!=SLL_MAX_STRING_INDEX){
+				o->dt.s=*(sm+o->dt.s);
+			}
+			o++;
+		}
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_CHAR:
@@ -146,6 +162,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		sll_source_file_t* sf=*(c_dt->dt+idx);
 		sll_string_index_t ml=(sf->st.l>>6)+1;
 		bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
+		*(m+(sf->fp_nm>>6))|=1ull<<(sf->fp_nm&63);
 		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 			sll_identifier_list_t* l=sf->idt.s+i;
 			for (sll_identifier_list_length_t j=0;j<l->l;j++){
@@ -204,6 +221,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 					(*(sf->ft.dt+i))->nm=*(sm+(*(sf->ft.dt+i))->nm);
 				}
 			}
+			sf->fp_nm=*(sm+sf->fp_nm);
 			_update(sf->dt,sm);
 		}
 		sll_deallocate(sm);
