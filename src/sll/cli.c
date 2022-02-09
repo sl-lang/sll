@@ -463,10 +463,10 @@ _read_file_argument:
 				CLI_LOG_IF_VERBOSE("Writing sll code to file '%s'...",bf);
 				sll_file_t of;
 				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
-				sll_source_file_index_t i=c_dt.l;
-				while (i){
-					i--;
-					sll_write_sll_code(*(c_dt.dt+i),&i_ft,1,&of);
+				sll_source_file_index_t l=c_dt.l;
+				while (l){
+					l--;
+					sll_write_sll_code(*(c_dt.dt+l),&i_ft,1,&of);
 				}
 				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);
