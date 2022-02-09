@@ -53,7 +53,7 @@ apt remove sll
 
 ## Version Checking
 
-The most recent version of Sll is `0.7.2` (`0.7.3` is in development).
+The most recent version of Sll is `0.7.3` (`0.7.4` is in development).
 
 To check the version of Sll on any platform, type the following expression into a command interpreter(Command Prompt, Power Shell or Terminal):
 
