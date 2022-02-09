@@ -142,6 +142,10 @@ typedef __SLL_U32 sll_identifier_index_t;
 
 
 
+typedef __SLL_U32 sll_import_index_t;
+
+
+
 typedef __SLL_U32 sll_instruction_index_t;
 
 
@@ -175,6 +179,10 @@ typedef __SLL_U32 sll_ref_count_t;
 
 
 typedef __SLL_U32 sll_scope_t;
+
+
+
+typedef __SLL_U32 sll_source_file_index_t;
 
 
 
@@ -480,41 +488,50 @@ typedef struct __SLL_OBJECT_TYPE_FIELD{
 
 
 
-typedef struct __SLL_FILE_PATH{
-	sll_file_offset_t sz;
-	sll_string_index_t nm;
-	sll_sha256_data_t h;
-} sll_file_path_t;
+typedef struct __SLL_IMPORT_FILE{
+	sll_source_file_index_t sfi;
+	sll_identifier_list_length_t l;
+	sll_identifier_index_t dt[];
+} sll_import_file_t;
 
 
 
-typedef struct __SLL_FILE_PATH_TABLE{
-	sll_file_path_t* dt;
-	sll_array_length_t l;
-} sll_file_path_table_t;
+typedef struct __SLL_IMPORT_TABLE{
+	sll_import_file_t** dt;
+	sll_import_index_t l;
+} sll_import_table_t;
 
 
 
-typedef struct __SLL_COMPILATION_STACK_DATA{
+typedef struct __SLL_NODE_STACK{
 	void* s;
 	void* e;
 	sll_node_t* p;
 	sll_node_offset_t off;
 	sll_size_t c;
-} sll_compilation_stack_data_t;
+} sll_node_stack_t;
 
 
 
-typedef struct __SLL_COMPILATION_DATA{
+typedef struct __SLL_SOURCE_FILE{
 	sll_time_t tm;
-	sll_node_t* h;
+	sll_file_offset_t sz;
+	sll_sha256_data_t h;
+	sll_node_t* dt;
 	sll_identifier_table_t idt;
 	sll_export_table_t et;
 	sll_function_table_t ft;
 	sll_string_table_t st;
-	sll_file_path_table_t fpt;
-	sll_compilation_stack_data_t _s;
+	sll_import_table_t it;
+	sll_node_stack_t _s;
 	sll_scope_t _n_sc_id;
+} sll_source_file_t;
+
+
+
+typedef struct __SLL_COMPILATION_DATA{
+	sll_source_file_t** dt;
+	sll_source_file_index_t l;
 } sll_compilation_data_t;
 
 

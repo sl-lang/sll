@@ -33,7 +33,7 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 
-sll_node_t* _acquire_next_node(sll_compilation_data_t* c_dt){
+sll_node_t* _acquire_next_node(sll_source_file_t* c_dt){
 	sll_node_t* o=c_dt->_s.p;
 	c_dt->_s.off++;
 	c_dt->_s.c--;
@@ -71,7 +71,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 
 
 
-sll_node_t* _get_node_at_offset(const sll_compilation_data_t* c_dt,sll_node_offset_t off){
+sll_node_t* _get_node_at_offset(const sll_source_file_t* c_dt,sll_node_offset_t off){
 	sll_node_offset_t cnt=(sll_node_offset_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
 	void* pg=c_dt->_s.s;
 	while (off>=cnt){
@@ -99,7 +99,7 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt){
 
 
 
-void _init_node_stack(sll_compilation_data_t* c_dt){
+void _init_node_stack(sll_source_file_t* c_dt){
 	c_dt->_s.s=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0);
 	c_dt->_s.e=c_dt->_s.s;
 	*((void**)(c_dt->_s.s))=NULL;
@@ -115,7 +115,7 @@ void _init_node_stack(sll_compilation_data_t* c_dt){
 
 
 
-void _shift_nodes(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off){
+void _shift_nodes(sll_node_t* o,sll_source_file_t* c_dt,sll_node_offset_t off){
 	if (!off){
 		return;
 	}

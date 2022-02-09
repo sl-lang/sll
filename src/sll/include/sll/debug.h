@@ -28,9 +28,9 @@ __SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* a_dt);
  * \group debug
  * \desc Docs!
  * \arg const sll_node_t* o
- * \arg const sll_compilation_data_t* c_dt
+ * \arg const sll_source_file_t* c_dt
  */
-__SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* o,const sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* o,const sll_source_file_t* c_dt);
 
 
 

@@ -81,5 +81,7 @@ static sll_node_t* _remove_debug_data(sll_node_t* o){
 
 
 __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt){
-	_remove_debug_data(c_dt->h);
+	for (sll_source_file_index_t i=0;i<c_dt->l;i++){
+		_remove_debug_data((*(c_dt->dt+i))->dt);
+	}
 }

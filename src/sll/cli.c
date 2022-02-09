@@ -355,6 +355,7 @@ _read_file_argument:
 		sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 		sll_compilation_data_t c_dt=SLL_INIT_COMPILATION_DATA_STRUCT;
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
+		sll_source_file_t a_dt_sf;
 		if (j<fpl){
 			_load_file(SLL_CHAR(argv[*(fp+j)]),&a_dt,&c_dt,f_fp);
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -372,6 +373,14 @@ _read_file_argument:
 			sll_set_argument(0,SLL_CHAR("@console"));
 		}
 		if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)){
+			if ((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN)){
+				CLI_LOG_IF_VERBOSE("Combining source files...");
+				sll_unify_compilation_data(&c_dt,&a_dt_sf);
+				sll_free_compilation_data(&c_dt);
+				c_dt.dt=sll_allocate(sizeof(sll_source_file_t*));
+				*(c_dt.dt)=&a_dt_sf;
+				c_dt.l=1;
+			}
 			if (fl&CLI_FLAG_STRIP_DEBUG){
 				CLI_LOG_IF_VERBOSE("Removing debugging data...");
 				sll_remove_debug_data(&c_dt);
@@ -381,13 +390,13 @@ _read_file_argument:
 			CLI_LOG_IF_VERBOSE("Optimizing node metadata...");
 			sll_optimize_metadata(&c_dt);
 			if (fl&CLI_FLAG_PRINT_NODES){
-				sll_print_node(&c_dt,&i_ft,NULL,sll_stdout);
+				sll_print_node(*(c_dt.dt),&i_ft,NULL,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n');
 			}
-		}
-		if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)&&((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN))){
-			CLI_LOG_IF_VERBOSE("Generating assembly...");
-			sll_generate_assembly(&c_dt,&a_dt);
+			if ((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN)){
+				CLI_LOG_IF_VERBOSE("Generating assembly...");
+				sll_generate_assembly(&a_dt_sf,&a_dt);
+			}
 		}
 		if (fl&CLI_FLAG_PRINT_ASSEMBLY){
 			sll_print_assembly(&a_dt,sll_stdout);
@@ -453,7 +462,11 @@ _read_file_argument:
 				CLI_LOG_IF_VERBOSE("Writing sll code to file '%s'...",bf);
 				sll_file_t of;
 				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
-				sll_write_sll_code(&c_dt,&i_ft,1,&of);
+				sll_source_file_index_t i=c_dt.l;
+				while (i){
+					i--;
+					sll_write_sll_code(*(c_dt.dt+i),&i_ft,1,&of);
+				}
 				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);
 			}

@@ -324,6 +324,7 @@ typedef struct __NEW_VARIABLE_DATA{
 
 typedef struct __EXTRA_COMPILATION_DATA{
 	scope_data_t sc;
+	sll_compilation_data_t* c_dt;
 	sll_internal_function_table_t* i_ft;
 	sll_import_resolver_t ir;
 	new_variable_data_t* nv_dt;
@@ -346,7 +347,7 @@ typedef struct __IMPORT_MODULE_DATA{
 	identifier_pair_t* eim;
 	sll_export_table_length_t eiml;
 	sll_scope_t sc_off;
-	sll_compilation_data_t* c_dt;
+	sll_source_file_t* c_dt;
 	sll_string_index_t fp_off;
 } import_module_data_t;
 
@@ -385,7 +386,7 @@ typedef struct __VARIABLE_ASSIGNMENT_DATA{
 
 
 typedef struct __OPTIMIZER_DATA{
-	sll_compilation_data_t* c_dt;
+	sll_source_file_t* c_dt;
 	sll_internal_function_table_t* i_ft;
 	identifier_map_data_t it;
 	identifier_remap_data_t im;
@@ -415,7 +416,7 @@ typedef struct __LOOP{
 
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	sll_assembly_data_t* a_dt;
-	const sll_compilation_data_t* c_dt;
+	const sll_source_file_t* c_dt;
 	identifier_map_data_t it;
 	assembly_instruction_label_t n_lbl;
 	identifier_remove_data_t rm;
@@ -520,7 +521,7 @@ typedef struct __EXTENDED_FILE{
 
 
 typedef struct __CODE_GENERATION_DATA{
-	const sll_compilation_data_t* c_dt;
+	const sll_source_file_t* sf;
 	const sll_internal_function_table_t* i_ft;
 	sll_bool_t p;
 } code_generation_data_t;
@@ -618,7 +619,7 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 
-sll_node_t* _acquire_next_node(sll_compilation_data_t* c_dt);
+sll_node_t* _acquire_next_node(sll_source_file_t* c_dt);
 
 
 
@@ -654,7 +655,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 
 
 
-sll_node_t* _get_node_at_offset(const sll_compilation_data_t* c_dt,sll_node_offset_t off);
+sll_node_t* _get_node_at_offset(const sll_source_file_t* c_dt,sll_node_offset_t off);
 
 
 
@@ -662,7 +663,7 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt);
 
 
 
-void _init_node_stack(sll_compilation_data_t* c_dt);
+void _init_node_stack(sll_source_file_t* c_dt);
 
 
 
@@ -702,7 +703,7 @@ void _reset_sandbox(void);
 
 
 
-void _shift_nodes(sll_node_t* o,sll_compilation_data_t* c_dt,sll_node_offset_t off);
+void _shift_nodes(sll_node_t* o,sll_source_file_t* c_dt,sll_node_offset_t off);
 
 
 

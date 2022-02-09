@@ -1,5 +1,6 @@
 #ifndef __SLL_NODE_H__
 #define __SLL_NODE_H__ 1
+#include <sll/api/hash.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -896,7 +897,7 @@
  * \desc Docs!
  * \type sll_compilation_data_t
  */
-#define SLL_INIT_COMPILATION_DATA_STRUCT {0,NULL,{.il=NULL,.ill=0},{NULL,0},{NULL,0},{NULL,0},{NULL,0},{NULL,NULL,NULL,0,0},0}
+#define SLL_INIT_COMPILATION_DATA_STRUCT {NULL,0}
 
 
 
@@ -944,6 +945,17 @@
  * \arg sll_compilation_data_t* c_dt
  */
 __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt);
+
+
+
+/**
+ * \flags func
+ * \name sll_free_source_file
+ * \group node
+ * \desc Docs!
+ * \arg sll_source_file_t* sf
+ */
+__SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* sf);
 
 
 
@@ -1003,12 +1015,12 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
  * \group node
  * \subgroup node-util
  * \desc Docs!
- * \arg const sll_compilation_data_t* c_dt
+ * \arg const sll_source_file_t* c_dt
  * \arg const sll_internal_function_table_t* i_ft
  * \arg const sll_node_t* o
  * \arg sll_file_t* wf
  */
-__SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf);
+__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf);
 
 
 
@@ -1057,6 +1069,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o);
  * \ret const sll_node_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sll_node_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_unify_compilation_data
+ * \group node
+ * \desc Docs!
+ * \arg const sll_compilation_data_t* c_dt
+ * \arg sll_source_file_t* o
+ */
+__SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_dt,sll_source_file_t* o);
 
 
 

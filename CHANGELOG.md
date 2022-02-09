@@ -8,8 +8,10 @@
 - C hashing API: `sll_md5_data_t`, `sll_sha1_data_t`, `sll_sha256_data_t`, `sll_sha512_data_t`, `SLL_INIT_MD5`, `SLL_INIT_SHA1`, `SLL_INIT_SHA256`, `SLL_INIT_SHA512`, `SLL_INIT_MD5_STRUCT`, `SLL_INIT_SHA1_STRUCT`, `SLL_INIT_SHA256_STRUCT`, `SLL_INIT_SHA512_STRUCT`, `sll_hash_md5`, `sll_hash_sha1`, `sll_hash_sha256` and `sll_hash_sha512`
 - CLI loader now checks the internal library version via a `sll_version` call (i.e. renaming the dynamic library will not change the version)
 - Implemented `float.sll`, `float$get_compare_error`, `float$set_compare_error` and `SLL_SANDBOX_FLAG_DISABLE_FLOAT_COMPARE_ERROR_CHANGE`
+- Implemented `sll_free_source_file` and `sll_unify_compilation_data` ([#55])
 - Implemented `sll_path_split_drive` and `path$split_drive`
 - Implemented `sll_time_zone_t`, `sll_utc_time_zone`, `sll_platform_time_zone` and `date$LOCAL_TIME_ZONE`
+- Rewritten large part of the codebase to execute modules only once ([#55])
 
 ### Changed
 
@@ -29,6 +31,7 @@
 ### Removed
 
 - Array functions no longer return value based on memory allocation functions ([#83])
+- Single node reading and writing functions: `sll_load_node` and `sll_write_node`
 - Unused file APIs: `SLL_FILE_GET_LINE_OFFSET` and `sll_file_reset_line`
 
 ## [0.7.2] - 2022-02-04

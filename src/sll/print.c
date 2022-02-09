@@ -23,7 +23,7 @@
 
 
 
-static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_data_t* c_dt,sll_file_t* wf){
+static void _print_identifier(sll_identifier_index_t ii,const sll_source_file_t* c_dt,sll_file_t* wf){
 	sll_identifier_list_length_t j=SLL_IDENTIFIER_GET_ARRAY_ID(ii);
 	if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 		sll_string_t* s=c_dt->st.dt+(c_dt->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->i;
@@ -43,7 +43,7 @@ static void _print_identifier(sll_identifier_index_t ii,const sll_compilation_da
 
 
 
-static void _print_line(sll_string_index_t s,const sll_compilation_data_t* c_dt,file_line_data_t* ln,sll_file_t* wf){
+static void _print_line(sll_string_index_t s,const sll_source_file_t* c_dt,file_line_data_t* ln,sll_file_t* wf){
 	if (s==SLL_MAX_STRING_INDEX){
 		(*(ln->dt+ln->c))++;
 		PRINT_STATIC_STRING("|# :",wf);
@@ -52,7 +52,7 @@ static void _print_line(sll_string_index_t s,const sll_compilation_data_t* c_dt,
 	}
 	else{
 		ln->c=s;
-		sll_string_t* fp=c_dt->st.dt+(c_dt->fpt.dt+s)->nm;
+		sll_string_t* fp=c_dt->st.dt+s;
 		PRINT_STATIC_STRING("|# ",wf);
 		sll_file_write(wf,fp->v,fp->l);
 		PRINT_STATIC_STRING(" #||# :1 #|",wf);
@@ -61,7 +61,7 @@ static void _print_line(sll_string_index_t s,const sll_compilation_data_t* c_dt,
 
 
 
-static const sll_node_t* _print_node_internal(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf,file_line_data_t* ln){
+static const sll_node_t* _print_node_internal(const sll_source_file_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf,file_line_data_t* ln){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		if (o->t==SLL_NODE_TYPE_DBG){
 			_print_line(o->dt.s,c_dt,ln,wf);
@@ -1098,14 +1098,14 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 
 
 
-__SLL_EXTERNAL void sll_print_node(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
+__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
 	file_line_data_t dt={
-		sll_allocate(c_dt->fpt.l*sizeof(sll_file_offset_t)),
+		sll_allocate(c_dt->it.l*sizeof(sll_file_offset_t)),
 		0
 	};
-	for (sll_string_index_t i=0;i<c_dt->fpt.l;i++){
+	for (sll_import_index_t i=0;i<c_dt->it.l;i++){
 		*(dt.dt+i)=1;
 	}
-	_print_node_internal(c_dt,i_ft,(o?o:c_dt->h),wf,&dt);
+	_print_node_internal(c_dt,i_ft,(o?o:c_dt->dt),wf,&dt);
 	sll_deallocate(dt.dt);
 }

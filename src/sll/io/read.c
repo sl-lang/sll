@@ -30,7 +30,7 @@
 
 
 
-static sll_bool_t _read_node(sll_compilation_data_t* c_dt,sll_file_t* rf){
+static sll_bool_t _read_node(sll_source_file_t* c_dt,sll_file_t* rf){
 	sll_node_t* o=_acquire_next_node(c_dt);
 	READ_FIELD(o->t,rf);
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG){
@@ -310,69 +310,80 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 	if (sll_file_read(rf,&n,sizeof(magic_number_t))==SLL_END_OF_DATA||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
 		return 0;
 	}
-	CHECK_ERROR(rf,c_dt->tm,sll_time_t);
-	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		CHECK_ERROR(rf,c_dt->idt.s[i].l,sll_identifier_list_length_t);
-		c_dt->idt.s[i].dt=sll_allocate(c_dt->idt.s[i].l*sizeof(sll_identifier_t));
-		for (sll_identifier_list_length_t j=0;j<c_dt->idt.s[i].l;j++){
-			CHECK_ERROR(rf,(c_dt->idt.s[i].dt+j)->sc,sll_scope_t);
-			CHECK_ERROR(rf,(c_dt->idt.s[i].dt+j)->i,sll_string_index_t);
+	CHECK_ERROR(rf,c_dt->l,sll_source_file_index_t);
+	c_dt->dt=sll_allocate(c_dt->l*sizeof(sll_source_file_t*));
+	for (sll_source_file_index_t idx=0;idx<c_dt->l;idx++){
+		sll_source_file_t* sf=sll_allocate(sizeof(sll_source_file_t));
+		*(c_dt->dt+idx)=sf;
+		CHECK_ERROR(rf,sf->tm,sll_time_t);
+		CHECK_ERROR(rf,sf->sz,sll_file_offset_t);
+		if (sll_file_read(rf,&(sf->h),sizeof(sll_sha256_data_t))==SLL_END_OF_DATA){
+			return 0;
 		}
-	}
-	CHECK_ERROR(rf,c_dt->idt.ill,sll_identifier_list_length_t);
-	c_dt->idt.il=sll_allocate(c_dt->idt.ill*sizeof(sll_identifier_t));
-	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
-		CHECK_ERROR(rf,(c_dt->idt.il+i)->sc,sll_scope_t);
-		CHECK_ERROR(rf,(c_dt->idt.il+i)->i,sll_string_index_t);
-	}
-	CHECK_ERROR(rf,c_dt->et.l,sll_export_table_length_t);
-	c_dt->et.dt=sll_allocate(c_dt->et.l*sizeof(sll_identifier_index_t));
-	for (sll_export_table_length_t i=0;i<c_dt->et.l;i++){
-		CHECK_ERROR(rf,*(c_dt->et.dt+i),sll_identifier_index_t);
-	}
-	CHECK_ERROR(rf,c_dt->ft.l,sll_function_index_t);
-	c_dt->ft.dt=sll_allocate(c_dt->ft.l*sizeof(sll_function_t*));
-	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
-		sll_node_offset_t off;
-		CHECK_ERROR(rf,off,sll_node_offset_t);
-		sll_arg_count_t al;
-		CHECK_ERROR(rf,al,sll_arg_count_t);
-		sll_function_t* k=sll_allocate(sizeof(sll_function_t)+SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al)*sizeof(sll_identifier_index_t));
-		k->off=off;
-		k->al=al;
-		CHECK_ERROR(rf,k->nm,sll_string_index_t);
-		k->nm--;
-		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al);j++){
-			CHECK_ERROR(rf,k->a[j],sll_identifier_index_t);
+		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+			CHECK_ERROR(rf,sf->idt.s[i].l,sll_identifier_list_length_t);
+			sf->idt.s[i].dt=sll_allocate(sf->idt.s[i].l*sizeof(sll_identifier_t));
+			for (sll_identifier_list_length_t j=0;j<sf->idt.s[i].l;j++){
+				CHECK_ERROR(rf,(sf->idt.s[i].dt+j)->sc,sll_scope_t);
+				CHECK_ERROR(rf,(sf->idt.s[i].dt+j)->i,sll_string_index_t);
+			}
 		}
-		*(c_dt->ft.dt+i)=k;
-	}
-	CHECK_ERROR(rf,c_dt->st.l,sll_string_index_t);
-	c_dt->st.dt=sll_allocate(c_dt->st.l*sizeof(sll_string_t));
-	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
-		if (!sll_decode_string(rf,c_dt->st.dt+i)){
+		CHECK_ERROR(rf,sf->idt.ill,sll_identifier_list_length_t);
+		sf->idt.il=sll_allocate(sf->idt.ill*sizeof(sll_identifier_t));
+		for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
+			CHECK_ERROR(rf,(sf->idt.il+i)->sc,sll_scope_t);
+			CHECK_ERROR(rf,(sf->idt.il+i)->i,sll_string_index_t);
+		}
+		CHECK_ERROR(rf,sf->et.l,sll_export_table_length_t);
+		sf->et.dt=sll_allocate(sf->et.l*sizeof(sll_identifier_index_t));
+		for (sll_export_table_length_t i=0;i<sf->et.l;i++){
+			CHECK_ERROR(rf,*(sf->et.dt+i),sll_identifier_index_t);
+		}
+		CHECK_ERROR(rf,sf->ft.l,sll_function_index_t);
+		sf->ft.dt=sll_allocate(sf->ft.l*sizeof(sll_function_t*));
+		for (sll_function_index_t i=0;i<sf->ft.l;i++){
+			sll_node_offset_t off;
+			CHECK_ERROR(rf,off,sll_node_offset_t);
+			sll_arg_count_t al;
+			CHECK_ERROR(rf,al,sll_arg_count_t);
+			sll_function_t* k=sll_allocate(sizeof(sll_function_t)+SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al)*sizeof(sll_identifier_index_t));
+			k->off=off;
+			k->al=al;
+			CHECK_ERROR(rf,k->nm,sll_string_index_t);
+			k->nm--;
+			for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al);j++){
+				CHECK_ERROR(rf,k->a[j],sll_identifier_index_t);
+			}
+			*(sf->ft.dt+i)=k;
+		}
+		CHECK_ERROR(rf,sf->st.l,sll_string_index_t);
+		sf->st.dt=sll_allocate(sf->st.l*sizeof(sll_string_t));
+		for (sll_string_index_t i=0;i<sf->st.l;i++){
+			if (!sll_decode_string(rf,sf->st.dt+i)){
+				return 0;
+			}
+		}
+		CHECK_ERROR(rf,sf->it.l,sll_import_index_t);
+		sf->it.dt=sll_allocate(sf->it.l*sizeof(sll_import_file_t*));
+		for (sll_import_index_t i=0;i<sf->it.l;i++){
+			sll_source_file_index_t sfi;
+			CHECK_ERROR(rf,sfi,sll_source_file_index_t);
+			sll_identifier_list_length_t l;
+			CHECK_ERROR(rf,l,sll_identifier_list_length_t);
+			sll_import_file_t* if_=sll_allocate(sizeof(sll_import_file_t)+l*sizeof(sll_identifier_index_t));
+			*(sf->it.dt+i)=if_;
+			if_->sfi=sfi;
+			if_->l=l;
+			for (sll_identifier_list_length_t j=0;j<l;j++){
+				CHECK_ERROR(rf,if_->dt[j],sll_identifier_index_t);
+			}
+		}
+		CHECK_ERROR(rf,sf->_n_sc_id,sll_scope_t);
+		_init_node_stack(sf);
+		sf->dt=sf->_s.p;
+		if (!_read_node(sf,rf)){
 			return 0;
 		}
 	}
-	CHECK_ERROR(rf,c_dt->fpt.l,sll_array_length_t);
-	c_dt->fpt.dt=sll_allocate(c_dt->fpt.l*sizeof(sll_file_path_t));
-	for (sll_array_length_t i=0;i<c_dt->fpt.l;i++){
-		CHECK_ERROR(rf,(c_dt->fpt.dt+i)->sz,sll_file_offset_t);
-		CHECK_ERROR(rf,(c_dt->fpt.dt+i)->nm,sll_string_index_t);
-		if (sll_file_read(rf,&((c_dt->fpt.dt+i)->h),sizeof(sll_sha256_data_t))==SLL_END_OF_DATA){
-			return 0;
-		}
-	}
-	CHECK_ERROR(rf,c_dt->_n_sc_id,sll_scope_t);
-	_init_node_stack(c_dt);
-	c_dt->h=c_dt->_s.p;
-	return _read_node(c_dt,rf);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_node(sll_compilation_data_t* c_dt,sll_file_t* rf,sll_node_t** o){
-	*o=c_dt->_s.p;
-	SLL_ASSERT(*o);
-	return _read_node(c_dt,rf);
+	return 1;
 }

@@ -13,11 +13,11 @@
 static void _generate_identifier(sll_identifier_index_t ii,const code_generation_data_t* cg_dt,sll_file_t* wf){
 	sll_identifier_list_length_t j=SLL_IDENTIFIER_GET_ARRAY_ID(ii);
 	if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-		sll_string_t* s=cg_dt->c_dt->st.dt+(cg_dt->c_dt->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->i;
+		sll_string_t* s=cg_dt->sf->st.dt+(cg_dt->sf->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->i;
 		sll_file_write(wf,s->v,s->l);
 	}
 	else{
-		sll_file_write(wf,(cg_dt->c_dt->st.dt+(cg_dt->c_dt->idt.s[j].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->i)->v,j+1);
+		sll_file_write(wf,(cg_dt->sf->st.dt+(cg_dt->sf->idt.s[j].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->i)->v,j+1);
 	}
 }
 
@@ -50,7 +50,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		case SLL_NODE_TYPE_STRING:
 			{
 				sll_file_write_char(wf,'"');
-				sll_string_t* s=cg_dt->c_dt->st.dt+o->dt.s;
+				sll_string_t* s=cg_dt->sf->st.dt+o->dt.s;
 				for (sll_string_length_t i=0;i<s->l;i++){
 					_print_char(s->v[i],wf);
 				}
@@ -127,7 +127,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 			return o+1;
 		case SLL_NODE_TYPE_FIELD:
 			{
-				sll_string_t* s=cg_dt->c_dt->st.dt+o->dt.s;
+				sll_string_t* s=cg_dt->sf->st.dt+o->dt.s;
 				sll_file_write(wf,s->v,s->l);
 				return o+1;
 			}
@@ -155,10 +155,10 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		case SLL_NODE_TYPE_FUNC:
 			{
 				PRINT_STATIC_STRING(",,,",wf);
-				const sll_function_t* f=*(cg_dt->c_dt->ft.dt+o->dt.fn.id);
+				const sll_function_t* f=*(cg_dt->sf->ft.dt+o->dt.fn.id);
 				if (f->nm!=SLL_MAX_STRING_INDEX){
 					PRINT_STATIC_STRING(" |#",wf);
-					sll_file_write(wf,(cg_dt->c_dt->st.dt+f->nm)->v,(cg_dt->c_dt->st.dt+f->nm)->l);
+					sll_file_write(wf,(cg_dt->sf->st.dt+f->nm)->v,(cg_dt->sf->st.dt+f->nm)->l);
 					PRINT_STATIC_STRING("#|",wf);
 				}
 				for (sll_arg_count_t i=0;i<SLL_FUNCTION_GET_ARGUMENT_COUNT(f);i++){
@@ -588,7 +588,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 						o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 					}
 					SLL_ASSERT(o->t==SLL_NODE_TYPE_FIELD);
-					sll_string_t* s=cg_dt->c_dt->st.dt+o->dt.s;
+					sll_string_t* s=cg_dt->sf->st.dt+o->dt.s;
 					sll_file_write(wf,s->v,s->l);
 					o++;
 				} while (l);
@@ -608,7 +608,7 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				PRINT_STATIC_STRING("&:",wf);
 				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
 					PRINT_STATIC_STRING(" |#",wf);
-					sll_file_write(wf,(cg_dt->c_dt->st.dt+o->dt.d.nm)->v,(cg_dt->c_dt->st.dt+o->dt.d.nm)->l);
+					sll_file_write(wf,(cg_dt->sf->st.dt+o->dt.d.nm)->v,(cg_dt->sf->st.dt+o->dt.d.nm)->l);
 					PRINT_STATIC_STRING("#|",wf);
 				}
 				sll_arg_count_t l=o->dt.d.ac;
@@ -716,15 +716,15 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 
 
 
-__SLL_EXTERNAL void sll_write_sll_code(const sll_compilation_data_t* c_dt,const sll_internal_function_table_t* i_ft,sll_bool_t p,sll_file_t* wf){
+__SLL_EXTERNAL void sll_write_sll_code(const sll_source_file_t* sf,const sll_internal_function_table_t* i_ft,sll_bool_t p,sll_file_t* wf){
 	code_generation_data_t cg_dt={
-		c_dt,
+		sf,
 		i_ft,
 		p
 	};
-	if (p&&c_dt->h->t==SLL_NODE_TYPE_OPERATION_LIST){
-		sll_arg_count_t ac=c_dt->h->dt.ac;
-		const sll_node_t* o=c_dt->h+1;
+	if (p&&sf->dt->t==SLL_NODE_TYPE_OPERATION_LIST){
+		sll_arg_count_t ac=sf->dt->dt.ac;
+		const sll_node_t* o=sf->dt+1;
 		while (ac){
 			o=_generate_code_internal(&cg_dt,o,0,wf);
 			sll_file_write_char(wf,'\n');
@@ -732,7 +732,7 @@ __SLL_EXTERNAL void sll_write_sll_code(const sll_compilation_data_t* c_dt,const 
 		}
 	}
 	else{
-		_generate_code_internal(&cg_dt,c_dt->h,0,wf);
+		_generate_code_internal(&cg_dt,sf->dt,0,wf);
 		if (p){
 			sll_file_write_char(wf,'\n');
 		}

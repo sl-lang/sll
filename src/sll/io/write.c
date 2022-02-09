@@ -269,50 +269,53 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 	sll_file_write(wf,&n,sizeof(magic_number_t));
 	sll_version_t v=SLL_VERSION;
 	sll_file_write(wf,&v,sizeof(sll_version_t));
-	sll_encode_integer(wf,c_dt->tm);
-	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		const sll_identifier_list_t* l=c_dt->idt.s+i;
-		sll_encode_integer(wf,l->l);
-		for (sll_identifier_list_length_t j=0;j<l->l;j++){
-			sll_encode_integer(wf,(l->dt+j)->sc);
-			sll_encode_integer(wf,(l->dt+j)->i);
+	sll_encode_integer(wf,c_dt->l);
+	for (sll_source_file_index_t idx=0;idx<c_dt->l;idx++){
+		const sll_source_file_t* sf=*(c_dt->dt+idx);
+		sll_encode_integer(wf,sf->tm);
+		sll_encode_integer(wf,sf->sz);
+		sll_file_write(wf,&(sf->h),sizeof(sll_sha256_data_t));
+		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+			const sll_identifier_list_t* l=sf->idt.s+i;
+			sll_encode_integer(wf,l->l);
+			for (sll_identifier_list_length_t j=0;j<l->l;j++){
+				sll_encode_integer(wf,(l->dt+j)->sc);
+				sll_encode_integer(wf,(l->dt+j)->i);
+			}
 		}
-	}
-	sll_encode_integer(wf,c_dt->idt.ill);
-	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
-		sll_encode_integer(wf,(c_dt->idt.il+i)->sc);
-		sll_encode_integer(wf,(c_dt->idt.il+i)->i);
-	}
-	sll_encode_integer(wf,c_dt->et.l);
-	for (sll_export_table_length_t i=0;i<c_dt->et.l;i++){
-		sll_encode_integer(wf,*(c_dt->et.dt+i));
-	}
-	sll_encode_integer(wf,c_dt->ft.l);
-	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
-		const sll_function_t* k=*(c_dt->ft.dt+i);
-		sll_encode_integer(wf,k->off);
-		sll_encode_integer(wf,k->al);
-		sll_encode_integer(wf,k->nm+1);
-		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(k);j++){
-			sll_encode_integer(wf,k->a[j]);
+		sll_encode_integer(wf,sf->idt.ill);
+		for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
+			sll_encode_integer(wf,(sf->idt.il+i)->sc);
+			sll_encode_integer(wf,(sf->idt.il+i)->i);
 		}
+		sll_encode_integer(wf,sf->et.l);
+		for (sll_export_table_length_t i=0;i<sf->et.l;i++){
+			sll_encode_integer(wf,*(sf->et.dt+i));
+		}
+		sll_encode_integer(wf,sf->ft.l);
+		for (sll_function_index_t i=0;i<sf->ft.l;i++){
+			const sll_function_t* k=*(sf->ft.dt+i);
+			sll_encode_integer(wf,k->off);
+			sll_encode_integer(wf,k->al);
+			sll_encode_integer(wf,k->nm+1);
+			for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(k);j++){
+				sll_encode_integer(wf,k->a[j]);
+			}
+		}
+		sll_encode_integer(wf,sf->st.l);
+		for (sll_string_index_t i=0;i<sf->st.l;i++){
+			sll_encode_string(wf,sf->st.dt+i);
+		}
+		sll_encode_integer(wf,sf->it.l);
+		for (sll_import_index_t i=0;i<sf->it.l;i++){
+			sll_import_file_t* if_=*(sf->it.dt+i);
+			sll_encode_integer(wf,if_->sfi);
+			sll_encode_integer(wf,if_->l);
+			for (sll_identifier_list_length_t j=0;j<if_->l;j++){
+				sll_encode_integer(wf,if_->dt[j]);
+			}
+		}
+		sll_encode_integer(wf,sf->_n_sc_id);
+		_write_node(wf,sf->dt);
 	}
-	sll_encode_integer(wf,c_dt->st.l);
-	for (sll_string_index_t i=0;i<c_dt->st.l;i++){
-		sll_encode_string(wf,c_dt->st.dt+i);
-	}
-	sll_encode_integer(wf,c_dt->fpt.l);
-	for (sll_array_length_t i=0;i<c_dt->fpt.l;i++){
-		sll_encode_integer(wf,(c_dt->fpt.dt+i)->sz);
-		sll_encode_integer(wf,(c_dt->fpt.dt+i)->nm);
-		sll_file_write(wf,&((c_dt->fpt.dt+i)->h),sizeof(sll_sha256_data_t));
-	}
-	sll_encode_integer(wf,c_dt->_n_sc_id);
-	_write_node(wf,c_dt->h);
-}
-
-
-
-__SLL_EXTERNAL void sll_write_node(sll_file_t* wf,const sll_node_t* o){
-	_write_node(wf,o);
 }

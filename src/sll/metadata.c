@@ -142,73 +142,70 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 
 
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
-	sll_string_index_t ml=(c_dt->st.l>>6)+1;
-	bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
-	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sll_identifier_list_t* l=c_dt->idt.s+i;
-		for (sll_identifier_list_length_t j=0;j<l->l;j++){
-			*(m+((l->dt+j)->i>>6))|=1ull<<((l->dt+j)->i&63);
-		}
-	}
-	for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
-		*(m+((c_dt->idt.il+i)->i>>6))|=1ull<<((c_dt->idt.il+i)->i&63);
-	}
-	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
-		sll_string_index_t j=(*(c_dt->ft.dt+i))->nm;
-		if (j!=SLL_MAX_STRING_INDEX){
-			*(m+(j>>6))|=1ull<<(j&63);
-		}
-	}
-	for (sll_array_length_t i=0;i<c_dt->fpt.l;i++){
-		*(m+((c_dt->fpt.dt+i)->nm>>6))|=1ull<<((c_dt->fpt.dt+i)->nm&63);
-	}
-	_mark(c_dt->h,m);
-	sll_string_index_t* sm=sll_allocate_stack(c_dt->st.l*sizeof(sll_string_index_t));
-	sll_string_index_t k=0;
-	sll_string_index_t l=0;
-	for (sll_string_index_t i=0;i<ml;i++){
-		bitmap_t v=~(*(m+i));
-		while (v){
-			sll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
-			if (j==c_dt->st.l){
-				break;
-			}
-			sll_free_string(c_dt->st.dt+j);
-			for (sll_string_index_t n=k;n<j;n++){
-				*(c_dt->st.dt+n-l)=*(c_dt->st.dt+n);
-				*(sm+n)=n-l;
-			}
-			k=j+1;
-			l++;
-			v&=v-1;
-		}
-	}
-	sll_deallocate(m);
-	for (sll_string_index_t i=k;i<c_dt->st.l;i++){
-		*(c_dt->st.dt+i-l)=*(c_dt->st.dt+i);
-		*(sm+i)=i-l;
-	}
-	if (l){
-		c_dt->st.l-=l;
-		c_dt->st.dt=sll_reallocate(c_dt->st.dt,c_dt->st.l*sizeof(sll_string_t));
+	for (sll_source_file_index_t idx=0;idx<c_dt->l;idx++){
+		sll_source_file_t* sf=*(c_dt->dt+idx);
+		sll_string_index_t ml=(sf->st.l>>6)+1;
+		bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
 		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-			sll_identifier_list_t* e=c_dt->idt.s+i;
-			for (sll_identifier_list_length_t j=0;j<e->l;j++){
-				(e->dt+j)->i=*(sm+(e->dt+j)->i);
+			sll_identifier_list_t* l=sf->idt.s+i;
+			for (sll_identifier_list_length_t j=0;j<l->l;j++){
+				*(m+((l->dt+j)->i>>6))|=1ull<<((l->dt+j)->i&63);
 			}
 		}
-		for (sll_identifier_list_length_t i=0;i<c_dt->idt.ill;i++){
-			(c_dt->idt.il+i)->i=*(sm+(c_dt->idt.il+i)->i);
+		for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
+			*(m+((sf->idt.il+i)->i>>6))|=1ull<<((sf->idt.il+i)->i&63);
 		}
-		for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
-			if ((*(c_dt->ft.dt+i))->nm!=SLL_MAX_STRING_INDEX){
-				(*(c_dt->ft.dt+i))->nm=*(sm+(*(c_dt->ft.dt+i))->nm);
+		for (sll_function_index_t i=0;i<sf->ft.l;i++){
+			sll_string_index_t j=(*(sf->ft.dt+i))->nm;
+			if (j!=SLL_MAX_STRING_INDEX){
+				*(m+(j>>6))|=1ull<<(j&63);
 			}
 		}
-		for (sll_array_length_t i=0;i<c_dt->fpt.l;i++){
-			(c_dt->fpt.dt+i)->nm=*(sm+(c_dt->fpt.dt+i)->nm);
+		_mark(sf->dt,m);
+		sll_string_index_t* sm=sll_allocate_stack(sf->st.l*sizeof(sll_string_index_t));
+		sll_string_index_t k=0;
+		sll_string_index_t l=0;
+		for (sll_string_index_t i=0;i<ml;i++){
+			bitmap_t v=~(*(m+i));
+			while (v){
+				sll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
+				if (j==sf->st.l){
+					break;
+				}
+				sll_free_string(sf->st.dt+j);
+				for (sll_string_index_t n=k;n<j;n++){
+					*(sf->st.dt+n-l)=*(sf->st.dt+n);
+					*(sm+n)=n-l;
+				}
+				k=j+1;
+				l++;
+				v&=v-1;
+			}
 		}
-		_update(c_dt->h,sm);
+		sll_deallocate(m);
+		for (sll_string_index_t i=k;i<sf->st.l;i++){
+			*(sf->st.dt+i-l)=*(sf->st.dt+i);
+			*(sm+i)=i-l;
+		}
+		if (l){
+			sf->st.l-=l;
+			sf->st.dt=sll_reallocate(sf->st.dt,sf->st.l*sizeof(sll_string_t));
+			for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
+				sll_identifier_list_t* e=sf->idt.s+i;
+				for (sll_identifier_list_length_t j=0;j<e->l;j++){
+					(e->dt+j)->i=*(sm+(e->dt+j)->i);
+				}
+			}
+			for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
+				(sf->idt.il+i)->i=*(sm+(sf->idt.il+i)->i);
+			}
+			for (sll_function_index_t i=0;i<sf->ft.l;i++){
+				if ((*(sf->ft.dt+i))->nm!=SLL_MAX_STRING_INDEX){
+					(*(sf->ft.dt+i))->nm=*(sm+(*(sf->ft.dt+i))->nm);
+				}
+			}
+			_update(sf->dt,sm);
+		}
+		sll_deallocate(sm);
 	}
-	sll_deallocate(sm);
 }

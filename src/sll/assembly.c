@@ -70,7 +70,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 
 
 
-static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_compilation_data_t* c_dt,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
+static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_source_file_t* c_dt,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
@@ -1860,8 +1860,8 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 
 
 
-__SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll_assembly_data_t* o){
-	if (!c_dt->h){
+__SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* c_dt,sll_assembly_data_t* o){
+	if (!c_dt->dt){
 		_init_assembly_stack(o);
 		o->tm=sll_platform_get_current_time();
 		o->h=o->_s.p;
@@ -1919,7 +1919,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 	for (sll_scope_t i=0;i<c_dt->_n_sc_id;i++){
 		*(g_dt.it.sc_vi+i)=SLL_MAX_VARIABLE_INDEX;
 	}
-	_map_identifiers(c_dt->h,c_dt,&g_dt,SLL_MAX_SCOPE);
+	_map_identifiers(c_dt->dt,c_dt,&g_dt,SLL_MAX_SCOPE);
 	for (sll_function_index_t i=0;i<c_dt->ft.l;i++){
 		const sll_function_t* k=*(c_dt->ft.dt+i);
 		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(k);j++){
@@ -1946,7 +1946,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 	}
 	sll_deallocate(g_dt.it.sc_vi);
 	o->vc=g_dt.it.vc;
-	_generate(c_dt->h,&g_dt);
+	_generate(c_dt->dt,&g_dt);
 	SLL_ASSERT(g_dt.rt==MAX_ASSEMBLY_INSTRUCTION_LABEL);
 	GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO);
 	o->ft.l=c_dt->ft.l;
@@ -2040,7 +2040,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_compilation_data_t* c_dt,sll
 	o->dbg.dt=sll_allocate(o->dbg.l*sizeof(sll_debug_line_data_t));
 	sll_instruction_index_t dbg_i=0;
 	file_line_data_t f_l_dt={
-		sll_zero_allocate(c_dt->fpt.l*sizeof(sll_file_offset_t)),
+		sll_zero_allocate(c_dt->it.l*sizeof(sll_file_offset_t)),
 		0
 	};
 	sll_instruction_index_t l_dbg_ii=0;
@@ -2074,7 +2074,7 @@ _remove_nop:
 				}
 				else{
 					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-					(o->dbg.dt+dbg_i)->ln=(c_dt->fpt.dt+ai->dt.s)->nm|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+					(o->dbg.dt+dbg_i)->ln=ai->dt.s|SLL_DEBUG_LINE_DATA_FLAG_FILE;
 					*(sm.m+(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)>>6))|=1ull<<(SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+dbg_i)&63);
 					f_l_dt.c=ai->dt.s;
 					dbg_i++;
@@ -2091,22 +2091,23 @@ _remove_nop:
 				goto _remove_nop;
 			}
 			else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
-				(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->i=i;
-				if (f_l_dt.c!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp){
-					f_l_dt.c=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp;
-					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-					(o->dbg.dt+dbg_i)->ln=(c_dt->fpt.dt+f_l_dt.c)->nm|SLL_DEBUG_LINE_DATA_FLAG_FILE;
-					dbg_i++;
-					l_dbg_ii=i;
-				}
-				(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-				(o->dbg.dt+dbg_i)->ln=(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->nm|SLL_DEBUG_LINE_DATA_FLAG_FUNC;
-				dbg_i++;
-				*(f_l_dt.dt+f_l_dt.c)=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln;
-				(o->dbg.dt+dbg_i)->ii=0;
-				(o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
-				dbg_i++;
-				l_dbg_ii=i;
+				SLL_UNIMPLEMENTED();
+				// (o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->i=i;
+				// if (f_l_dt.c!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp){
+				// 	f_l_dt.c=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp;
+				// 	(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
+				// 	(o->dbg.dt+dbg_i)->ln=(c_dt->fpt.dt+f_l_dt.c)->nm|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+				// 	dbg_i++;
+				// 	l_dbg_ii=i;
+				// }
+				// (o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
+				// (o->dbg.dt+dbg_i)->ln=(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->nm|SLL_DEBUG_LINE_DATA_FLAG_FUNC;
+				// dbg_i++;
+				// *(f_l_dt.dt+f_l_dt.c)=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln;
+				// (o->dbg.dt+dbg_i)->ii=0;
+				// (o->dbg.dt+dbg_i)->ln=*(f_l_dt.dt+f_l_dt.c);
+				// dbg_i++;
+				// l_dbg_ii=i;
 				goto _remove_nop;
 			}
 			else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
