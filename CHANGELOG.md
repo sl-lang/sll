@@ -4,7 +4,7 @@
 
 ### Removed
 
-- Memory fail text from the exporrted header file
+- Memory fail text from the exported header file
 
 ## [0.7.3] - 2022-02-09
 
