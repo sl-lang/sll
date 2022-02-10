@@ -2,6 +2,10 @@
 
 ## [0.7.4] - Ongoing
 
+### Changed
+
+- Fixed variable names related to compilation data and source files
+
 ### Removed
 
 - Memory fail text from the exported header file

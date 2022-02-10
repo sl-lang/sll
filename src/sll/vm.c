@@ -166,8 +166,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	_vm_si=0;
 	sll_current_instruction_count=0;
 	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
-	sll_size_t ptr_sz=SLL_ROUND_LARGE_PAGE(cfg->s_sz+a_dt->vc*sizeof(sll_object_t*)+cfg->c_st_sz*sizeof(sll_call_stack_frame_t));
-	addr_t ptr=ADDR(sll_platform_allocate_page(ptr_sz,1));
+	sll_size_t ptr_sz=SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)+cfg->c_st_sz*sizeof(sll_call_stack_frame_t));
+	addr_t ptr=ADDR(sll_platform_allocate_page(ptr_sz,0));
 	_vm_var_data=(sll_object_t**)ptr;
 	sll_static_int[0]->rc+=a_dt->vc;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
@@ -188,7 +188,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	};
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
 	ptr+=cfg->c_st_sz*sizeof(sll_call_stack_frame_t);
-	_vm_stack=(sll_object_t**)ptr;
+	_vm_stack=sll_platform_allocate_page(SLL_ROUND_PAGE(cfg->s_sz),0);
 	sll_object_t* o=sll_execute_function(0,NULL,0);
 	sll_object_t* rc_o=sll_operator_cast(o,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	SLL_RELEASE(o);
@@ -198,6 +198,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		SLL_RELEASE(*(_vm_var_data+i));
 	}
+	sll_platform_free_page(_vm_stack,SLL_ROUND_PAGE(cfg->s_sz));
 	sll_platform_free_page(PTR(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-cfg->c_st_sz*sizeof(sll_call_stack_frame_t)),ptr_sz);
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
@@ -248,8 +249,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 	sll_call_stack_size_t o_c_st=sll_current_runtime_data->c_st.l;
 	sll_bool_t io=!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO);
 	while (1){
-		if (_vm_ii>=sll_current_runtime_data->a_dt->ic){
-			SLL_UNIMPLEMENTED();
+		if (_vm_ii>=sll_current_runtime_data->a_dt->ic||_vm_si>=sll_current_vm_config->s_sz){
+			return SLL_ACQUIRE_STATIC_INT(0);
 		}
 		sll_current_instruction_count++;
 		sll_current_instruction_index=_vm_ii;
@@ -977,8 +978,5 @@ _return:;
 			ai=ai->dt._p;
 		}
 		_vm_ii++;
-		if (_vm_si>=sll_current_vm_config->s_sz){
-			SLL_UNIMPLEMENTED();
-		}
 	}
 }

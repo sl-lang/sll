@@ -333,26 +333,6 @@ typedef struct __EXTRA_COMPILATION_DATA{
 
 
 
-typedef struct __IDENTIFIER_PAIR{
-	sll_identifier_index_t a;
-	sll_identifier_index_t b;
-} identifier_pair_t;
-
-
-
-typedef struct __IMPORT_MODULE_DATA{
-	sll_identifier_list_length_t off[SLL_MAX_SHORT_IDENTIFIER_LENGTH+1];
-	sll_string_index_t* sm;
-	sll_function_index_t f_off;
-	identifier_pair_t* eim;
-	sll_export_table_length_t eiml;
-	sll_scope_t sc_off;
-	sll_source_file_t* c_dt;
-	sll_string_index_t fp_off;
-} import_module_data_t;
-
-
-
 typedef struct __IDENTIFIER_DATA{
 	sll_variable_index_t v;
 	sll_bool_t rm;
@@ -368,35 +348,6 @@ typedef struct __IDENTIFIER_MAP_DATA{
 	sll_variable_index_t* sc_vi;
 	sll_variable_index_t vc;
 } identifier_map_data_t;
-
-
-
-typedef struct __IDENTIFIER_REMAP_DATA{
-	sll_identifier_index_t* s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	sll_identifier_index_t* l;
-} identifier_remap_data_t;
-
-
-
-typedef struct __VARIABLE_ASSIGNMENT_DATA{
-	bitmap_t* s_sm[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	bitmap_t* l_sm;
-} variable_assignment_data_t;
-
-
-
-typedef struct __OPTIMIZER_DATA{
-	sll_source_file_t* c_dt;
-	sll_internal_function_table_t* i_ft;
-	identifier_map_data_t it;
-	identifier_remap_data_t im;
-	sll_identifier_index_t s_sm_l[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	sll_identifier_index_t l_sm_l;
-	variable_assignment_data_t va;
-	sll_object_t** v;
-	sll_node_t* a_v;
-	sll_bool_t rm;
-} optimizer_data_t;
 
 
 
@@ -416,7 +367,7 @@ typedef struct __LOOP{
 
 typedef struct __ASSEMBLY_GENERATOR_DATA{
 	sll_assembly_data_t* a_dt;
-	const sll_source_file_t* c_dt;
+	const sll_source_file_t* sf;
 	identifier_map_data_t it;
 	assembly_instruction_label_t n_lbl;
 	identifier_remove_data_t rm;
@@ -621,7 +572,7 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 
-sll_node_t* _acquire_next_node(sll_source_file_t* c_dt);
+sll_node_t* _acquire_next_node(sll_source_file_t* sf);
 
 
 
@@ -657,7 +608,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 
 
 
-sll_node_t* _get_node_at_offset(const sll_source_file_t* c_dt,sll_node_offset_t off);
+sll_node_t* _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t off);
 
 
 
@@ -665,7 +616,7 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt);
 
 
 
-void _init_node_stack(sll_source_file_t* c_dt);
+void _init_node_stack(sll_source_file_t* sf);
 
 
 

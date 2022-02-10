@@ -1389,10 +1389,10 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt);
  * \name sll_generate_assembly
  * \group assembly
  * \desc Docs!
- * \arg const sll_source_file_t* c_dt
+ * \arg const sll_source_file_t* sf
  * \arg sll_assembly_data_t* o
  */
-__SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* c_dt,sll_assembly_data_t* o);
+__SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assembly_data_t* o);
 
 
 

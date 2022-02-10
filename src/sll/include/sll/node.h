@@ -1015,12 +1015,12 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
  * \group node
  * \subgroup node-util
  * \desc Docs!
- * \arg const sll_source_file_t* c_dt
+ * \arg const sll_source_file_t* sf
  * \arg const sll_internal_function_table_t* i_ft
  * \arg const sll_node_t* o
  * \arg sll_file_t* wf
  */
-__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* c_dt,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf);
+__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* sf,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf);
 
 
 

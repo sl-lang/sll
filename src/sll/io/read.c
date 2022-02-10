@@ -30,15 +30,15 @@
 
 
 
-static sll_bool_t _read_node(sll_source_file_t* c_dt,sll_file_t* rf){
-	sll_node_t* o=_acquire_next_node(c_dt);
+static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
+	sll_node_t* o=_acquire_next_node(sf);
 	READ_FIELD(o->t,rf);
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG){
 		if (o->t==SLL_NODE_TYPE_DBG){
 			CHECK_ERROR(rf,o->dt.s,sll_string_index_t);
 			o->dt.s--;
 		}
-		o=_acquire_next_node(c_dt);
+		o=_acquire_next_node(sf);
 		READ_FIELD(o->t,rf);
 	}
 	switch (o->t){
@@ -64,7 +64,7 @@ static sll_bool_t _read_node(sll_source_file_t* c_dt,sll_file_t* rf){
 		case SLL_NODE_TYPE_ARRAY:
 			CHECK_ERROR(rf,o->dt.al,sll_array_length_t);
 			for (sll_array_length_t i=0;i<o->dt.al;i++){
-				if (!_read_node(c_dt,rf)){
+				if (!_read_node(sf,rf)){
 					return 0;
 				}
 			}
@@ -72,7 +72,7 @@ static sll_bool_t _read_node(sll_source_file_t* c_dt,sll_file_t* rf){
 		case SLL_NODE_TYPE_MAP:
 			CHECK_ERROR(rf,o->dt.ml,sll_map_length_t);
 			for (sll_map_length_t i=0;i<o->dt.ml;i++){
-				if (!_read_node(c_dt,rf)){
+				if (!_read_node(sf,rf)){
 					return 0;
 				}
 			}
@@ -92,7 +92,7 @@ static sll_bool_t _read_node(sll_source_file_t* c_dt,sll_file_t* rf){
 					CHECK_ERROR(rf,o->dt.fn.sc,sll_scope_t);
 				}
 				for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
-					if (!_read_node(c_dt,rf)){
+					if (!_read_node(sf,rf)){
 						return 0;
 					}
 				}
@@ -108,7 +108,7 @@ static sll_bool_t _read_node(sll_source_file_t* c_dt,sll_file_t* rf){
 			CHECK_ERROR(rf,o->dt.l.ac,sll_arg_count_t);
 			CHECK_ERROR(rf,o->dt.l.sc,sll_scope_t);
 			for (sll_arg_count_t i=0;i<o->dt.l.ac;i++){
-				if (!_read_node(c_dt,rf)){
+				if (!_read_node(sf,rf)){
 					return 0;
 				}
 			}
@@ -118,7 +118,7 @@ static sll_bool_t _read_node(sll_source_file_t* c_dt,sll_file_t* rf){
 			CHECK_ERROR(rf,o->dt.d.nm,sll_string_index_t);
 			o->dt.d.nm--;
 			for (sll_arg_count_t i=0;i<o->dt.d.ac;i++){
-				if (!_read_node(c_dt,rf)){
+				if (!_read_node(sf,rf)){
 					return 0;
 				}
 			}
@@ -126,7 +126,7 @@ static sll_bool_t _read_node(sll_source_file_t* c_dt,sll_file_t* rf){
 	}
 	CHECK_ERROR(rf,o->dt.ac,sll_arg_count_t);
 	for (sll_arg_count_t i=0;i<o->dt.ac;i++){
-		if (!_read_node(c_dt,rf)){
+		if (!_read_node(sf,rf)){
 			return 0;
 		}
 	}

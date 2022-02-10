@@ -5,7 +5,7 @@
 
 
 
-static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* c_dt,sll_node_t** d,sll_node_offset_t* rm){
+static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* sf,sll_node_t** d,sll_node_offset_t* rm){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		if (o->t==SLL_NODE_TYPE_CHANGE_STACK){
 			o=o->dt._p;
@@ -35,7 +35,7 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* c_d
 				o++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,c_dt,d,rm);
+					o=_remove_padding_internal(o,sf,d,rm);
 				}
 				return o;
 			}
@@ -45,19 +45,19 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* c_d
 				o++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,c_dt,d,rm);
+					o=_remove_padding_internal(o,sf,d,rm);
 				}
 				return o;
 			}
 		case SLL_NODE_TYPE_FUNC:
-			(*(c_dt->ft.dt+o->dt.fn.id))->off-=*rm;
+			(*(sf->ft.dt+o->dt.fn.id))->off-=*rm;
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				sll_arg_count_t l=o->dt.fn.ac;
 				o++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,c_dt,d,rm);
+					o=_remove_padding_internal(o,sf,d,rm);
 				}
 				return o;
 			}
@@ -73,7 +73,7 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* c_d
 				o++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,c_dt,d,rm);
+					o=_remove_padding_internal(o,sf,d,rm);
 				}
 				return o;
 			}
@@ -83,18 +83,18 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* c_d
 				o++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,c_dt,d,rm);
+					o=_remove_padding_internal(o,sf,d,rm);
 				}
 				return o;
 			}
 		case SLL_NODE_TYPE_DBG:
-			return _remove_padding_internal(o+1,c_dt,d,rm);
+			return _remove_padding_internal(o+1,sf,d,rm);
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;
 	while (l){
 		l--;
-		o=_remove_padding_internal(o,c_dt,d,rm);
+		o=_remove_padding_internal(o,sf,d,rm);
 	}
 	return o;
 }
