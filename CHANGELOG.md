@@ -2,7 +2,9 @@
 
 ## [0.7.4] - Ongoing
 
-*Nothing*
+### Removed
+
+- Memory fail text from the exporrted header file
 
 ## [0.7.3] - 2022-02-09
 

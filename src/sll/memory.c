@@ -304,18 +304,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_fail(sll_size_t sz){
 	if (o){
 		return o;
 	}
-	user_mem_block_t* b=malloc(sz);
-	if (!b){
-		return NULL;
-	}
-	b->dt=USED_BLOCK_FLAG_USED|sz;
-	return PTR(ADDR(b)+sizeof(user_mem_block_t));
-#else
-	return sll_allocate(sz);
 #endif
+	return sll_allocate(sz);
 }
 
-
+;
 
 __SLL_EXTERNAL void sll_deallocate(void* p){
 	if (!p){
