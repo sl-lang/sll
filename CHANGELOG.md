@@ -5,10 +5,12 @@
 ### Changed
 
 - Fixed variable names related to compilation data and source files
+- VM now stores execution data based on threads ([#173] and [#177])
 
 ### Removed
 
 - Memory fail text from the exported header file
+- Recursvie calls to `sll_execute_assembly` no longer work
 
 ## [0.7.3] - 2022-02-09
 
@@ -1616,7 +1618,9 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#181]: https://github.com/sl-lang/sll/issues/181
 [#180]: https://github.com/sl-lang/sll/issues/180
 [#179]: https://github.com/sl-lang/sll/issues/179
+[#177]: https://github.com/sl-lang/sll/issues/177
 [#176]: https://github.com/sl-lang/sll/issues/176
+[#173]: https://github.com/sl-lang/sll/issues/173
 [#172]: https://github.com/sl-lang/sll/issues/172
 [#171]: https://github.com/sl-lang/sll/issues/171
 [#170]: https://github.com/sl-lang/sll/issues/170

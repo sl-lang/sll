@@ -202,6 +202,10 @@ typedef __SLL_U32 sll_string_length_t;
 
 
 
+typedef __SLL_U32 sll_thread_index_t;
+
+
+
 typedef __SLL_U32 sll_variable_index_t;
 
 

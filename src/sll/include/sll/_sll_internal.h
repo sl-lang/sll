@@ -562,6 +562,16 @@ typedef struct __SOURCE_FILE_MAPPING_DATA{
 
 
 
+typedef struct __THREAD_DATA{
+	sll_object_t** s;
+	sll_thread_index_t idx;
+	sll_instruction_index_t ii;
+	sll_stack_offset_t si;
+	sll_char_t tm;
+} thread_data_t;
+
+
+
 #ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
