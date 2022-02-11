@@ -52,7 +52,7 @@
 		} \
 		break; \
 	}
-#define CMP_INSTRUCTION_EQ(eq) \
+#define CMP_INSTRUCTION_FUNCTION(eq) \
 	{ \
 		WRITE_THREAD_DATA; \
 		sll_bool_t st=eq(*(stack+si-2),*(stack+si-1)); \
@@ -529,21 +529,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
 				CMP_INSTRUCTION(0,SLL_COMPARE_RESULT_BELOW);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
-				CMP_INSTRUCTION_EQ(sll_operator_equal);
+				CMP_INSTRUCTION_FUNCTION(sll_operator_equal);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
-				CMP_INSTRUCTION_EQ(!sll_operator_equal);
+				CMP_INSTRUCTION_FUNCTION(!sll_operator_equal);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 				CMP_INSTRUCTION_BOOL(0);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				CMP_INSTRUCTION_BOOL(1);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
-				CMP_INSTRUCTION_EQ(sll_operator_strict_equal);
+				CMP_INSTRUCTION_FUNCTION(sll_operator_strict_equal);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
-				CMP_INSTRUCTION_EQ(!sll_operator_strict_equal);
+				CMP_INSTRUCTION_FUNCTION(!sll_operator_strict_equal);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
-				CMP_INSTRUCTION_EQ(sll_operator_includes);
+				CMP_INSTRUCTION_FUNCTION(sll_operator_includes);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
-				CMP_INSTRUCTION_EQ(!sll_operator_includes);
+				CMP_INSTRUCTION_FUNCTION(!sll_operator_includes);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
 				{
 					si--;
@@ -936,7 +936,6 @@ _return:;
 						if (o_c_st){
 							WRITE_THREAD_DATA;
 							_pop_call_stack();
-							READ_THREAD_DATA;
 						}
 						SLL_ACQUIRE(tmp);
 						return tmp;
