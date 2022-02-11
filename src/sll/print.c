@@ -600,6 +600,10 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 					_print_int(ai->dt.j,wf);
 				}
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
+				PRINT_STATIC_STRING("PUSH 0 x ",wf);
+				_print_int(ai->dt.so,wf);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				PRINT_STATIC_STRING("LOAD $",wf);
 				_print_int(ai->dt.v,wf);

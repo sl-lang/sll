@@ -192,6 +192,9 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 					sll_encode_integer(wf,ai->dt.rj);
 				}
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
+				sll_encode_integer(wf,ai->dt.so);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:

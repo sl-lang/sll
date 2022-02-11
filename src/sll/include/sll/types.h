@@ -561,6 +561,7 @@ typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_map_length_t ml;
 	sll_object_type_t t;
 	sll_assembly_instruction_data_var_access_t va;
+	sll_stack_offset_t so;
 	void* _p;
 } sll_assembly_instruction_data_t;
 
@@ -722,6 +723,7 @@ typedef struct __SLL_CALL_STACK_FRAME{
 	const sll_char_t* nm;
 	sll_instruction_index_t _ii;
 	sll_stack_offset_t _s;
+	void* _var_mem_off;
 } sll_call_stack_frame_t;
 
 

@@ -4,7 +4,7 @@
 (= test_func (,,, (:> (<- debug$get_call_stack) "\n")))
 (<- test_func)
 (<- (,,, (:> (<- debug$get_call_stack) "\n")))
-(<- debug$call_function (,,, (<- test_func)))
+(<- (,,, (<- test_func)))
 
 (= str (+ "prefix_" (<- (,,, (@@ "test_string")))) (:> (<- debug$get_ref_count str) "\n"))
 (:> "String: " str " (RC: " (<- debug$get_ref_count str) ")\n")

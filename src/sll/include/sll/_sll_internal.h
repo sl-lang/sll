@@ -345,7 +345,6 @@ typedef struct __IDENTIFIER_DATA{
 typedef struct __IDENTIFIER_MAP_DATA{
 	identifier_data_t* s_im[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
 	identifier_data_t* l_im;
-	sll_variable_index_t n_vi;
 	sll_scope_t l_sc;
 	sll_variable_index_t* sc_vi;
 	sll_variable_index_t vc;

@@ -2,9 +2,14 @@
 
 ## [0.7.4] - Ongoing
 
+### Added
+
+- Assembly instruction to reserve space on the stack: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK` ([#26])
+
 ### Changed
 
 - Fixed variable names related to compilation data and source files
+- Function variables are now stack based and not register-based ([#26])
 - If (`(?)`), inline if (`(?:)`) and switch (`(??)`) operators now assign new scopes for every condition and code block pair
 - VM now stores execution data based on threads ([#173] and [#177])
 
@@ -1748,6 +1753,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#30]: https://github.com/sl-lang/sll/issues/30
 [#29]: https://github.com/sl-lang/sll/issues/29
 [#27]: https://github.com/sl-lang/sll/issues/27
+[#26]: https://github.com/sl-lang/sll/issues/26
 [#23]: https://github.com/sl-lang/sll/issues/23
 [#22]: https://github.com/sl-lang/sll/issues/22
 [#20]: https://github.com/sl-lang/sll/issues/20

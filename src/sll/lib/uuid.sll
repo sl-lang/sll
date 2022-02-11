@@ -111,7 +111,7 @@
 (= to_bytes (,,, dt
 	(= dt (:: dt uuid_type))
 	(@@ (+
-		(:: (>> dt$time_low 24) char_type)
+		(:: (>> dt$time_low 24) char_type string_type)
 		(:: (>> dt$time_low 16) char_type)
 		(:: (>> dt$time_low 8) char_type)
 		(:: dt$time_low char_type)

@@ -231,6 +231,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 					CHECK_ERROR(rf,ai->dt.rj,sll_instruction_index_t);
 				}
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
+				CHECK_ERROR(rf,ai->dt.so,sll_stack_offset_t);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:

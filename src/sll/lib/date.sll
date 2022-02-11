@@ -275,8 +275,8 @@
 )
 
 (= from_time (,,, tm tz
-	(= tz (?: tz (:: tz date_type) LOCAL_TIME_ZONE))
-	(= dt (<- (... "sll:date_split") (+ (:: tm float_type) (* tz$offset 3600))))
+	(= tz (?: (=== tz nil) LOCAL_TIME_ZONE (:: tz time_zone_type)))
+	(= dt (<- (... "sll:date_split") (+ (:: tm float_type) (* tz$offset 60))))
 	(@@ (. date_type
 		(: dt 0)
 		(: dt 1)
@@ -305,7 +305,7 @@
 		dt$hour
 		dt$minute
 		dt$second
-	) (* dt$time_zone$offset 3600)))
+	) (* dt$time_zone$offset 60)))
 ))
 
 
