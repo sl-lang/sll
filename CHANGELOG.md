@@ -11,12 +11,13 @@
 - Fixed variable names related to compilation data and source files
 - Function variables are now stack based and not register-based ([#26])
 - If (`(?)`), inline if (`(?:)`) and switch (`(??)`) operators now assign new scopes for every condition and code block pair
+- Variable arguments are now properly handled in `file$write`
 - VM now stores execution data based on threads ([#173] and [#177])
 
 ### Removed
 
-- Memory fail text from the exported header file
-- Recursvie calls to `sll_execute_assembly` no longer work
+- Memory fail text is no longer present in the exported header file
+- Recursvie calls to `sll_execute_assembly` are no longer allowed
 
 ## [0.7.3] - 2022-02-09
 

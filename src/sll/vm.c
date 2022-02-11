@@ -16,6 +16,7 @@
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/vm.h>
+#include <sll/debug.h>//////////////////////
 
 
 
@@ -959,6 +960,7 @@ _cleanup_jump_table:;
 _return:;
 				{
 					sll_object_t* tmp=*(stack+si-1);
+					SLL_ACQUIRE(tmp);
 					if (sll_current_runtime_data->c_st.l==o_c_st){
 						if (o_c_st){
 							WRITE_THREAD_DATA;

@@ -163,11 +163,18 @@
 	(@@ (<- (... "sll:file_rename") s d))
 ))
 
-(= write (,,, f dt
+(= write (,,, f @@dt@@
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
-	(= dt (:: dt string_type))
-	(@@ (<- (... "sll:file_write") f$_handle dt))
+	(= o 0)
+	(-> (= i 0) (< i ($ @@dt@@)) {
+		(= o (+ o (<- (... "sll:file_write")
+			f$_handle
+			(:: (: @@dt@@ i) string_type)
+		)))
+		(++ i)
+	})
+	(@@ o)
 ))
 
 
