@@ -175,16 +175,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			o->l++;
 			_write_int(a->dt.i,o);
 			return;
-		case OBJECT_TYPE_UNKNOWN:
-_print_unknown:
-			sll_string_increase(o,9);
-			sll_copy_string(SLL_CHAR("<unknown>"),o->v+o->l);
-			o->l+=9;
-			return;
 		default:
 			{
 				if (!sll_current_runtime_data||SLL_OBJECT_GET_TYPE(a)>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-					goto _print_unknown;
+					sll_string_increase(o,13);
+					sll_copy_string(SLL_CHAR("<custom-type>"),o->v+o->l);
+					o->l+=13;
+					return;
 				}
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->fn.str){

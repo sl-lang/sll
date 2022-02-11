@@ -42,10 +42,8 @@ static const sll_char_t* _get_type_string(sll_object_t* o){
 			return SLL_CHAR("map");
 		case OBJECT_TYPE_FUNCTION_ID:
 			return SLL_CHAR("<function id>");
-		case OBJECT_TYPE_UNKNOWN:
-			return SLL_CHAR("<unknown>");
 	}
-	return SLL_CHAR("<unknown type>");
+	return SLL_CHAR("<custom type>");
 }
 
 
