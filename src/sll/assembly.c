@@ -2000,7 +2000,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 			(o->ft.dt+i)->nm=k->nm;
 		}
 		if (*(fn_vc+i)){
-			sll_assembly_instruction_t* ai=_acquire_next_instruction(o);
+			ai=_acquire_next_instruction(o);
 			ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK;
 			ai->dt.so=*(fn_vc+i);
 		}
