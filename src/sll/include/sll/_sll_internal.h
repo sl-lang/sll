@@ -225,7 +225,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define GET_VAR_INDEX_FLAG_ASSIGN 2
 #define GET_VAR_INDEX_FLAG_FUNC 4
 
-#define CLI_VM_STACK_SIZE 65536
+#define CLI_VM_STACK_SIZE 32768
 #define CLI_VM_CALL_STACK_SIZE 256
 
 #define CLI_FLAG_ASSEMBLY_GENERATED 1
@@ -269,6 +269,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define JSON_NUMBER_FLOAT 1
 
 #define DISABLE_FILE_HASH 255
+
+#define THREAD_SCHEDULER_INSTRUCTION_COUNT 10
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
@@ -567,6 +569,7 @@ typedef struct __THREAD_DATA{
 	sll_thread_index_t idx;
 	sll_instruction_index_t ii;
 	sll_stack_offset_t si;
+	sll_call_stack_t c_st;
 	sll_char_t tm;
 } thread_data_t;
 

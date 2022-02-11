@@ -226,54 +226,52 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	}
 	sll_current_instruction_count=0;
 	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
-	sll_size_t ptr_sz=SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)+cfg->c_st_sz*sizeof(sll_call_stack_frame_t));
-	addr_t ptr=ADDR(sll_platform_allocate_page(ptr_sz,0));
-	_vm_var_data=(sll_object_t**)ptr;
+	_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)),0);
 	sll_static_int[0]->rc+=a_dt->vc;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		*(_vm_var_data+i)=sll_static_int[0];
 	}
-	ptr+=a_dt->vc*sizeof(sll_object_t*);
 	sll_internal_function_table_t ift;
 	sll_clone_internal_function_table(cfg->ift,&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
 	sll_runtime_data_t r_dt={
 		a_dt,
 		&ift,
-		&tt,
-		{
-			(sll_call_stack_frame_t*)ptr,
-			0
-		}
+		&tt
 	};
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
-	ptr+=cfg->c_st_sz*sizeof(sll_call_stack_frame_t);
 	_vm_thr=sll_allocate(sizeof(thread_data_t));
-	_vm_thr->s=sll_platform_allocate_page(SLL_ROUND_PAGE(cfg->s_sz),0);
+	_vm_thr->s=sll_platform_allocate_page(SLL_ROUND_PAGE(cfg->s_sz+cfg->c_st_sz*sizeof(sll_call_stack_frame_t)),0);
 	_vm_thr->idx=0;
 	_vm_thr->ii=0;
 	_vm_thr->si=0;
-	_vm_thr->tm=0;
+	_vm_thr->c_st.dt=PTR(ADDR(_vm_thr->s)+cfg->s_sz);
+	_vm_thr->c_st.l=0;
+	_vm_thr->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
 	_vm_thr_idx=0;
 	_vm_thr_count=1;
+	r_dt.c_st=_vm_thr->c_st;
 	sll_object_t* o=sll_execute_function(0,NULL,0);
 	sll_object_t* rc_o=sll_operator_cast(o,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	SLL_RELEASE(o);
 	sll_return_code_t rc=(sll_return_code_t)(rc_o->dt.i);
 	SLL_RELEASE(rc_o);
+	if (_vm_thr_count>1){
+		SLL_UNIMPLEMENTED();
+	}
 	sll_current_runtime_data=NULL;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		SLL_RELEASE(*(_vm_var_data+i));
 	}
+	sll_platform_free_page(_vm_var_data,SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)));
+	_vm_var_data=NULL;
 	while (_vm_thr_count){
 		_vm_thr_count--;
 		sll_platform_free_page((_vm_thr+_vm_thr_count)->s,SLL_ROUND_PAGE(cfg->s_sz));
 	}
 	sll_deallocate(_vm_thr);
-	sll_platform_free_page(PTR(ptr-a_dt->vc*sizeof(sll_object_t*)-a_dt->st.l*sizeof(sll_object_t)-cfg->c_st_sz*sizeof(sll_call_stack_frame_t)),ptr_sz);
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
-	_vm_var_data=NULL;
 	return rc;
 }
 
