@@ -5,6 +5,7 @@
 ### Changed
 
 - Fixed variable names related to compilation data and source files
+- If (`(?)`) and inline if (`(?:)`) operators now assign new scopes for every condition and code block pair
 - VM now stores execution data based on threads ([#173] and [#177])
 
 ### Removed
