@@ -33,7 +33,7 @@
 	} while (0)
 #define UPDATE_IF_SCOPE \
 	do{ \
-		if (o&&(o->t==SLL_NODE_TYPE_IF||o->t==SLL_NODE_TYPE_INLINE_IF)&&(ac&1)==1){ \
+		if (o&&o->t>=SLL_NODE_TYPE_IF&&o->t<=SLL_NODE_TYPE_SWITCH&&(ac&1)==1){ \
 			SLL_ASSERT(n_l_sc.m); \
 			sll_deallocate(n_l_sc.m); \
 			n_l_sc.l_sc=sf->_n_sc_id; \
@@ -451,7 +451,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					fl|=EXTRA_COMPILATION_DATA_IMPORT;
 				}
 			}
-			if ((o->t>=SLL_NODE_TYPE_FOR&&o->t<=SLL_NODE_TYPE_LOOP)||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC||o->t==SLL_NODE_TYPE_IF||o->t==SLL_NODE_TYPE_INLINE_IF||(o->t>=SLL_NODE_TYPE_FOR_ARRAY&&o->t<=SLL_NODE_TYPE_WHILE_MAP)){
+			if ((o->t>=SLL_NODE_TYPE_IF&&o->t<=SLL_NODE_TYPE_LOOP)||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC||(o->t>=SLL_NODE_TYPE_FOR_ARRAY&&o->t<=SLL_NODE_TYPE_WHILE_MAP)){
 				n_l_sc.l_sc=sf->_n_sc_id;
 				n_l_sc.ml=(n_l_sc.l_sc>>6)+1;
 				n_l_sc.m=sll_zero_allocate_stack(n_l_sc.ml*sizeof(bitmap_t));

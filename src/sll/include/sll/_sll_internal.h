@@ -375,6 +375,7 @@ typedef struct __ASSEMBLY_GENERATOR_DATA{
 	identifier_remove_data_t rm;
 	loop_t l_dt;
 	assembly_instruction_label_t rt;
+	sll_stack_offset_t s_off;
 } assembly_generator_data_t;
 
 
