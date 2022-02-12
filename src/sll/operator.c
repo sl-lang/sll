@@ -747,9 +747,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a){
 	switch (SLL_OBJECT_GET_TYPE(a)){
 		case SLL_OBJECT_TYPE_INT:
-			return SLL_FROM_INT(a->dt.i);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return SLL_FROM_FLOAT(a->dt.f);
 		case SLL_OBJECT_TYPE_CHAR:
 			SLL_ACQUIRE(a);
 			return a;
@@ -779,7 +777,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 	if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 		return sll_object_clone(sll_current_runtime_data->tt,a);
 	}
-	SLL_UNIMPLEMENTED();
+	SLL_ACQUIRE(a);
+	return a;
 }
 
 

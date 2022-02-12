@@ -49,7 +49,6 @@ __SLL_EXTERNAL void sll_deinit(void){
 	_log_release_data();
 	_file_release_std_streams();
 	_memory_release_data();
-	sll_platform_reset_console();
 	_reset_sandbox();
 	_util_init=0;
 }
@@ -60,7 +59,7 @@ __SLL_EXTERNAL void sll_init(void){
 	if (_util_init){
 		return;
 	}
-	sll_platform_setup_console();
+	_util_init=1;
 	_file_init_std_streams();
 	_init_platform();
 	const init_string_t*const* l=&__init_string_start;

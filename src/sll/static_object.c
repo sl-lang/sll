@@ -662,17 +662,6 @@ __SLL_EXTERNAL sll_object_t* sll_static_char[256]={
 };
 
 
-__SLL_STATIC_OBJECT(str_zero,SLL_OBJECT_TYPE_STRING,s,SLL_INIT_STRING_STRUCT);
-
-
-
-__SLL_STATIC_OBJECT(array_zero,SLL_OBJECT_TYPE_ARRAY,a,SLL_INIT_ARRAY_STRUCT);
-
-
-
-__SLL_STATIC_OBJECT(map_zero,SLL_OBJECT_TYPE_MAP,m,SLL_INIT_MAP_STRUCT);
-
-
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v){
 	if (v>-1&&v<256){

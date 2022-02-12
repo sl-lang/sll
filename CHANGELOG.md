@@ -8,6 +8,7 @@
 
 ### Changed
 
+- Fixed memory leaks related to unreleased objects (invalidated [#25])
 - Fixed variable names related to compilation data and source files
 - Function variables are now stack based and not register-based ([#26])
 - If (`(?)`), inline if (`(?:)`) and switch (`(??)`) operators now assign new scopes for every condition and code block pair
@@ -16,6 +17,7 @@
 
 ### Removed
 
+- Console initalization functions: `sll_platform_setup_console` and `sll_platform_reset_console`
 - Memory fail text is no longer present in the exported header file
 - Recursvie calls to `sll_execute_assembly` are no longer allowed
 
@@ -1755,6 +1757,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#29]: https://github.com/sl-lang/sll/issues/29
 [#27]: https://github.com/sl-lang/sll/issues/27
 [#26]: https://github.com/sl-lang/sll/issues/26
+[#25]: https://github.com/sl-lang/sll/issues/25
 [#23]: https://github.com/sl-lang/sll/issues/23
 [#22]: https://github.com/sl-lang/sll/issues/22
 [#20]: https://github.com/sl-lang/sll/issues/20

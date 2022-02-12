@@ -36,7 +36,7 @@
 	} while (0)
 #define RELEASE(x) \
 	do{ \
-		if ((x)->rc==1){ \
+		if (__SLL_ADD_DEBUG_DATA((x),__SLL_DEBUG_TYPE_RELEASE)->rc==1){ \
 			WRITE_THREAD_DATA; \
 			sll_release_object((x)); \
 			READ_THREAD_DATA; \
@@ -295,12 +295,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	if (_vm_thr_count>1){
 		SLL_UNIMPLEMENTED();
 	}
-	sll_current_runtime_data=NULL;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		SLL_RELEASE(*(_vm_var_data+i));
 	}
 	sll_platform_free_page(_vm_var_data,SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)));
 	_vm_var_data=NULL;
+	sll_current_runtime_data=NULL;
 	while (_vm_thr_count){
 		_vm_thr_count--;
 		sll_platform_free_page((_vm_thr+_vm_thr_count)->s,SLL_ROUND_PAGE(cfg->s_sz));
@@ -794,7 +794,9 @@ _cleanup_jump_table:;
 					sll_stack_offset_t off=ai->dt.ac<<1;
 					sll_object_type_t nt;
 					if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
+						WRITE_THREAD_DATA;
 						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(stack+si-off),ai->dt.ac,NULL);
+						READ_THREAD_DATA;
 						for (sll_arg_count_t i=0;i<off;i++){
 							si--;
 							RELEASE(*(stack+si));
@@ -803,7 +805,9 @@ _cleanup_jump_table:;
 					}
 					else{
 						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*(stack+si-off-1))==SLL_OBJECT_TYPE_STRING);
+						WRITE_THREAD_DATA;
 						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(stack+si-off),ai->dt.ac,&((*(stack+si-off-1))->dt.s));
+						READ_THREAD_DATA;
 						for (sll_arg_count_t i=0;i<off;i++){
 							si--;
 							RELEASE(*(stack+si));
@@ -831,9 +835,11 @@ _cleanup_jump_table:;
 				{
 					WRITE_THREAD_DATA;
 					sll_object_t* t=sll_operator_cast(*(stack+si-ai->dt.ac-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					READ_THREAD_DATA;
 					RELEASE(*(stack+si-ai->dt.ac-1));
 					sll_object_type_t ot=(t->dt.i<0||t->dt.i>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.i));
 					RELEASE(t);
+					WRITE_THREAD_DATA;
 					*(stack+si-ai->dt.ac-1)=sll_create_object_type(sll_current_runtime_data->tt,ot,stack+si-ai->dt.ac,ai->dt.ac);
 					READ_THREAD_DATA;
 					for (sll_arg_count_t i=0;i<ai->dt.ac;i++){
@@ -855,7 +861,7 @@ _cleanup_jump_table:;
 					si--;
 					sll_object_t* tos=*(stack+si);
 					if (io){
-						if (tos->t==SLL_OBJECT_TYPE_STRING){
+						if (SLL_OBJECT_GET_TYPE(tos)==SLL_OBJECT_TYPE_STRING){
 							sll_file_write(sll_current_vm_config->out,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t));
 						}
 						else{

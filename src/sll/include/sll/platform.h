@@ -594,17 +594,6 @@ __SLL_EXTERNAL void sll_platform_remove_environment_variable(const sll_char_t* k
 
 
 /**
- * \flags func
- * \name sll_platform_reset_console
- * \group platform
- * \subgroup platform-console
- * \desc Docs!
- */
-__SLL_EXTERNAL void sll_platform_reset_console(void);
-
-
-
-/**
  * \flags check_output func
  * \name sll_platform_set_current_working_directory
  * \group platform
@@ -627,17 +616,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_di
  * \arg const sll_char_t* v
  */
 __SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,const sll_char_t* v);
-
-
-
-/**
- * \flags func
- * \name sll_platform_setup_console
- * \group platform
- * \subgroup platform-console
- * \desc Docs!
- */
-__SLL_EXTERNAL void sll_platform_setup_console(void);
 
 
 

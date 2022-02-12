@@ -615,6 +615,9 @@ __API_FUNC(json__init){
 	if (!_json_null){
 		sll_register_cleanup(_release_data);
 	}
+	else{
+		_release_data();
+	}
 	SLL_ACQUIRE(a);
 	SLL_ACQUIRE(b);
 	SLL_ACQUIRE(c);

@@ -193,30 +193,31 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		p++;
 		v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		p++;
-		if (v->dt.s.l>4&&v->dt.s.v[0]=='@'&&v->dt.s.v[1]=='@'&&v->dt.s.v[v->dt.s.l-2]=='@'&&v->dt.s.v[v->dt.s.l-1]=='@'){
-			if (sll_string_equal(&(v->dt.s),&_object_copy_str)){
+		sll_string_t str=v->dt.s;
+		SLL_RELEASE(v);
+		if (str.l>4&&str.v[0]=='@'&&str.v[1]=='@'&&str.v[str.l-2]=='@'&&str.v[str.l-1]=='@'){
+			if (sll_string_equal(&str,&_object_copy_str)){
 				n->fn.copy=(fl?~vv:vv);
 				l--;
 				continue;
 			}
-			else if (sll_string_equal(&(v->dt.s),&_object_delete_str)){
+			else if (sll_string_equal(&str,&_object_delete_str)){
 				n->fn.del=(fl?~vv:vv);
 				l--;
 				continue;
 			}
-			else if (sll_string_equal(&(v->dt.s),&_object_init_str)){
+			else if (sll_string_equal(&str,&_object_init_str)){
 				n->fn.init=(fl?~vv:vv);
 				l--;
 				continue;
 			}
-			else if (sll_string_equal(&(v->dt.s),&_object_string_str)){
+			else if (sll_string_equal(&str,&_object_string_str)){
 				n->fn.str=(fl?~vv:vv);
 				l--;
 				continue;
 			}
 		}
-		sll_string_clone(&(v->dt.s),&(n->dt[i].nm));
-		SLL_RELEASE(v);
+		sll_string_clone(&str,&(n->dt[i].nm));
 		n->dt[i].t|=fl;
 		i++;
 	}
@@ -407,6 +408,9 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 	sll_object_type_t t=dt->dt[off].t;
 	if (t&SLL_OBJECT_FLAG_CONSTANT){
 		return;
+	}
+	if (SLL_OBJECT_GET_TYPE_MASK(t)>SLL_OBJECT_TYPE_CHAR){
+		SLL_RELEASE((o->dt.p+off)->o);
 	}
 	_set_field(tt,o->dt.p+off,SLL_OBJECT_GET_TYPE_MASK(t),v);
 }

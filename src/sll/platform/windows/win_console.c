@@ -58,17 +58,3 @@ __SLL_EXTERNAL void sll_platform_enable_console_color(void){
 		sll_register_cleanup(_reset_console_color);
 	}
 }
-
-
-
-__SLL_EXTERNAL void sll_platform_reset_console(void){
-	_setmode(_fileno(stdout),_win_stdout_m);
-	_setmode(_fileno(stderr),_win_stderr_m);
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_setup_console(void){
-	_win_stdout_m=_setmode(_fileno(stdout),_O_BINARY);
-	_win_stderr_m=_setmode(_fileno(stderr),_O_BINARY);
-}

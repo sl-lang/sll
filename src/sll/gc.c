@@ -41,9 +41,9 @@ static const sll_char_t* _get_type_string(sll_object_t* o){
 		case SLL_OBJECT_TYPE_MAP:
 			return SLL_CHAR("map");
 		case OBJECT_TYPE_FUNCTION_ID:
-			return SLL_CHAR("<function id>");
+			return SLL_CHAR("<function-id>");
 	}
-	return SLL_CHAR("<custom type>");
+	return SLL_CHAR("<custom-type>");
 }
 
 
@@ -70,6 +70,9 @@ static void _print_gc_data(sll_object_t* o){
 void _gc_release_data(void){
 	if (!_gc_page_ptr){
 		return;
+	}
+	if (!sll_verify_object_stack_cleanup()){
+		SLL_UNIMPLEMENTED();
 	}
 	SLL_ASSERT(_gc_alloc==_gc_dealloc);
 	void* c=_gc_page_ptr;
