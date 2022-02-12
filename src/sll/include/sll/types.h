@@ -739,7 +739,6 @@ typedef struct __SLL_RUNTIME_DATA{
 	const sll_assembly_data_t* a_dt;
 	sll_internal_function_table_t* ift;
 	sll_object_type_table_t* tt;
-	sll_call_stack_t c_st;
 } sll_runtime_data_t;
 
 

@@ -270,6 +270,11 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define DISABLE_FILE_HASH 255
 
 #define THREAD_SCHEDULER_INSTRUCTION_COUNT 10
+#define THREAD_UNKNOWN_INDEX 0xffffffff
+
+#define THREAD_WAIT_HANDLE_TYPE_THREAD 0
+#define THREAD_WAIT_HANDLE_THREAD(id) (((id)<<1)|THREAD_WAIT_HANDLE_TYPE_THREAD)
+#define THREAD_WAIT_HANDLE_GET_TYPE(wh) ((wh)&1)
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
@@ -288,6 +293,10 @@ typedef __SLL_U32 magic_number_t;
 
 
 
+typedef __SLL_U32 queue_length_t;
+
+
+
 typedef __SLL_U32 return_table_size_t;
 
 
@@ -296,11 +305,19 @@ typedef __SLL_U32 small_bitmap_t;
 
 
 
+typedef __SLL_U32 wait_list_length_t;
+
+
+
 typedef __SLL_U64 addr_t;
 
 
 
 typedef __SLL_U64 bitmap_t;
+
+
+
+typedef __SLL_U64 wait_handle_t;
 
 
 
@@ -564,10 +581,11 @@ typedef struct __SOURCE_FILE_MAPPING_DATA{
 
 
 typedef struct __THREAD_DATA{
-	sll_object_t** s;
-	sll_thread_index_t idx;
+	sll_object_t** stack;
 	sll_instruction_index_t ii;
 	sll_stack_offset_t si;
+	wait_handle_t wh;
+	sll_object_t* ret;
 	sll_call_stack_t c_st;
 	sll_char_t tm;
 } thread_data_t;
@@ -577,6 +595,10 @@ typedef struct __THREAD_DATA{
 #ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
+extern thread_data_t** _vm_thr;
+extern thread_data_t* _vm_current_thread;
+extern sll_thread_index_t _vm_thr_idx;
+extern sll_thread_index_t _vm_thr_count;
 
 
 
@@ -644,14 +666,6 @@ void _memory_release_data(void);
 
 
 
-void _push_call_stack(const sll_char_t* nm,sll_stack_offset_t si);
-
-
-
-void _pop_call_stack(void);
-
-
-
 void _print_char(sll_char_t c,sll_file_t* wf);
 
 
@@ -665,6 +679,46 @@ void _print_int(sll_integer_t v,sll_file_t* wf);
 
 
 void _reset_sandbox(void);
+
+
+
+void _scheduler_deinit(void);
+
+
+
+void _scheduler_delete_thread(sll_thread_index_t t);
+
+
+
+void _scheduler_init(void);
+
+
+
+sll_thread_index_t _scheduler_new_thread(void);
+
+
+
+void _scheduler_queue_next(void);
+
+
+
+sll_thread_index_t _scheduler_queue_pop(void);
+
+
+
+void _scheduler_queue_thread(sll_thread_index_t t);
+
+
+
+void _scheduler_set_thread(sll_thread_index_t t);
+
+
+
+void _scheduler_terminate_thread(sll_object_t* ret);
+
+
+
+void _scheduler_wait_thread(sll_thread_index_t w);
 
 
 

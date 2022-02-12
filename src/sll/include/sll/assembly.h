@@ -1196,13 +1196,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_START
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_START 98
+
+
+
+/**
+ * \flags macro var
  * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK
  * \group assembly
  * \subgroup assembly-instruction
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 98
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 99
 
 
 

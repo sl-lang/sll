@@ -185,9 +185,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 				}
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->fn.str){
-					_push_call_stack(SLL_CHAR("@sll_api_string_convert"),SLL_MAX_STACK_OFFSET);
 					sll_object_t* v=sll_execute_function(dt->fn.str,&a,1);
-					_pop_call_stack();
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 					SLL_RELEASE(v);
 					sll_string_increase(o,str->dt.s.l);

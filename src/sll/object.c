@@ -313,9 +313,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 	sll_object_t* o=SLL_CREATE();
 	o->t=t;
 	o->dt.p=sll_allocate((*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1))->l*sizeof(sll_object_field_t));
-	_push_call_stack(SLL_CHAR("@sll_create_object_type"),SLL_MAX_STACK_OFFSET);
 	_init_struct(tt,o,p,l);
-	_pop_call_stack();
 	return o;
 }
 
@@ -363,9 +361,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 		d++;
 	}
 	if (dt->fn.copy){
-		_push_call_stack(SLL_CHAR("@sll_object_clone"),SLL_MAX_STACK_OFFSET);
 		SLL_RELEASE(sll_execute_function(dt->fn.copy,&n,1));
-		_pop_call_stack();
 	}
 	return n;
 }

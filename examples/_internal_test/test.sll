@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -389,6 +389,21 @@
 (<- var_arg_func)
 (<- var_arg_func 1 2 3 4 5)
 (<- var_arg_func 1 2 [3 4 5] 6 7)
+
+(= thr (<- thread$start (,,,
+	(-> (= idx 0) (< idx 10) {
+		(:> (+ "thread-1: " idx "\n"))
+		(++ idx)
+	})
+)))
+(= thr2 (<- thread$start (,,,
+	(-> (= idx 0) (< idx 10) {
+		(:> (+ "thread-2: " idx "\n"))
+		(++ idx)
+	})
+)))
+(:> thr "\n")
+(:> thr2 "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

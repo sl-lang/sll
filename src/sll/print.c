@@ -430,6 +430,18 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		case SLL_NODE_TYPE_RETURN:
 			PRINT_STATIC_STRING("@@",wf);
 			break;
+		case SLL_NODE_TYPE_COMMA:
+			{
+				sll_file_write_char(wf,',');
+				sll_arg_count_t ac=o->dt.ac;
+				o++;
+				for (sll_arg_count_t i=0;i<ac;i++){
+					sll_file_write_char(wf,' ');
+					o=_print_node_internal(sf,i_ft,o,wf,ln);
+				}
+				sll_file_write_char(wf,')');
+				return o;
+			}
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			{
 				sll_file_write_char(wf,'{');
@@ -444,18 +456,12 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 				sll_file_write_char(wf,'}');
 				return o;
 			}
-		case SLL_NODE_TYPE_COMMA:
-			{
-				sll_file_write_char(wf,',');
-				sll_arg_count_t ac=o->dt.ac;
-				o++;
-				for (sll_arg_count_t i=0;i<ac;i++){
-					sll_file_write_char(wf,' ');
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
-				}
-				sll_file_write_char(wf,')');
-				return o;
-			}
+		case SLL_NODE_TYPE_THREAD_START:
+			PRINT_STATIC_STRING("!<-",wf);
+			break;
+		case SLL_NODE_TYPE_THREAD_WAIT:
+			PRINT_STATIC_STRING("!<<",wf);
+			break;
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -1089,6 +1095,9 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("LOAD $",wf);
 				_print_int(ai->dt.v,wf);
 				PRINT_STATIC_STRING(" & DEL",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_START:
+				PRINT_STATIC_STRING("THREAD_START",wf);
 				break;
 			default:
 				SLL_UNREACHABLE();

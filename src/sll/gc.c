@@ -181,9 +181,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->fn.del){
 					o->rc++;
-					_push_call_stack(SLL_CHAR("@sll_release_object"),SLL_MAX_STACK_OFFSET);
 					SLL_RELEASE(sll_execute_function(dt->fn.del,&o,1));
-					_pop_call_stack();
 					o->rc--;
 					if (o->rc){
 						return;

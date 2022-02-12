@@ -1,0 +1,21 @@
+(--- "types.sll" )
+
+
+
+(= thread_module_type (&:
+	(~ func_type) start
+))
+
+
+
+(= start (,,, fn @@args@@
+	(= tid (!<- fn @@args@@))
+	(@@ tid)
+))
+
+
+
+(= thread (. thread_module_type
+	start
+))
+(## thread)

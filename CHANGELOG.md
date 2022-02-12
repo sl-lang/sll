@@ -1,10 +1,12 @@
-# The Sl Programing Language Change Log
+ # The Sl Programing Language Change Log
 
 ## [0.7.4] - Ongoing
 
 ### Added
 
 - Assembly instruction to reserve space on the stack: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK` ([#26])
+- Implemented `thread.sll` ([#173] and [#175])
+- Multithreading support ([#173] and [#177])
 
 ### Changed
 
@@ -1629,6 +1631,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#179]: https://github.com/sl-lang/sll/issues/179
 [#177]: https://github.com/sl-lang/sll/issues/177
 [#176]: https://github.com/sl-lang/sll/issues/176
+[#175]: https://github.com/sl-lang/sll/issues/175
+[#174]: https://github.com/sl-lang/sll/issues/174
 [#173]: https://github.com/sl-lang/sll/issues/173
 [#172]: https://github.com/sl-lang/sll/issues/172
 [#171]: https://github.com/sl-lang/sll/issues/171

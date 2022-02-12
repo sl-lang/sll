@@ -83,9 +83,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 					SLL_UNIMPLEMENTED();
 				case SLL_OBJECT_TYPE_STRING:
 					if (dt->fn.str){
-						_push_call_stack(SLL_CHAR("@sll_api_string_convert"),SLL_MAX_STACK_OFFSET);
 						sll_object_t* v=sll_execute_function(dt->fn.str,&a,1);
-						_pop_call_stack();
 						sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 						SLL_RELEASE(v);
 						return str;
