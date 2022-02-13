@@ -1,10 +1,11 @@
- # The Sl Programing Language Change Log
+# The Sl Programing Language Change Log
 
 ## [0.7.4] - Ongoing
 
 ### Added
 
 - Assembly instruction to reserve space on the stack: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK` ([#26])
+- Implemented `sll_api_thread_create` ([#173] and [#174])
 - Implemented `thread$STATE_RUNNING`, `thread$STATE_WAITING`, `thread$STATE_TERMINATED`, `thread$current`, `thread$get`, `thread$join` and `thread$start` ([#173] and [#175])
 - Implemented `thread.sll` ([#173] and [#175])
 - Multithreading support ([#173] and [#177])
