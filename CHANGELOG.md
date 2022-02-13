@@ -11,6 +11,7 @@
 - Implemented `thread.sll` ([#173] and [#175])
 - Multithreading support ([#173] and [#177])
 - Thread waiting operator (`(!<<)`) and current thread identification getter (`(!.)`) ([#173] and [#175])
+- Variable argument function call operator (`(<-*)`) ([#232])
 
 ### Changed
 
@@ -1592,13 +1593,14 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
-[#222]: hhtps://github.com/sl-lang/sll/issues/222
-[#221]: hhtps://github.com/sl-lang/sll/issues/221
-[#220]: hhtps://github.com/sl-lang/sll/issues/220
-[#219]: hhtps://github.com/sl-lang/sll/issues/219
-[#218]: hhtps://github.com/sl-lang/sll/issues/218
-[#217]: hhtps://github.com/sl-lang/sll/issues/217
-[#216]: hhtps://github.com/sl-lang/sll/issues/216
+[#232]: https://github.com/sl-lang/sll/issues/232
+[#222]: https://github.com/sl-lang/sll/issues/222
+[#221]: https://github.com/sl-lang/sll/issues/221
+[#220]: https://github.com/sl-lang/sll/issues/220
+[#219]: https://github.com/sl-lang/sll/issues/219
+[#218]: https://github.com/sl-lang/sll/issues/218
+[#217]: https://github.com/sl-lang/sll/issues/217
+[#216]: https://github.com/sl-lang/sll/issues/216
 [#215]: https://github.com/sl-lang/sll/issues/215
 [#214]: https://github.com/sl-lang/sll/issues/214
 [#213]: https://github.com/sl-lang/sll/issues/213

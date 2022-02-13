@@ -812,6 +812,46 @@ _cleanup_jump_table:;
 				SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
 				*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=SLL_ACQUIRE_STATIC_INT(0);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ARRAY:
+				{
+					_scheduler_current_thread->si--;
+					sll_object_t* tos=*(_scheduler_current_thread->stack+_scheduler_current_thread->si);
+					if (SLL_OBJECT_GET_TYPE(tos)==SLL_OBJECT_TYPE_INT){
+						sll_integer_t i=tos->dt.i;
+						SLL_RELEASE(tos);
+						tos=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
+						if (i<0){
+							sll_function_index_t j=(sll_function_index_t)(~i);
+							if (j<sll_current_runtime_data->ift->l){
+								SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
+								sll_object_t* n=_call_internal_function(j,tos->dt.a.v,tos->dt.a.l);
+								SLL_RELEASE(tos);
+								*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=n;
+								break;
+							}
+						}
+						else if (i&&i<=sll_current_runtime_data->a_dt->ft.l){
+							_scheduler_current_thread->si--;
+							SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
+							for (sll_array_length_t j=0;j<tos->dt.a.l;j++){
+								*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos->dt.a.v[j];
+								_scheduler_current_thread->si++;
+								SLL_ACQUIRE(tos->dt.a.v[j]);
+							}
+							SLL_RELEASE(tos);
+							_call_function((sll_function_index_t)(i-1),ai->dt.ac);
+							RELOAD_THREAD_DATA;
+							continue;
+						}
+						SLL_RELEASE(tos);
+					}
+					else{
+						SLL_RELEASE(tos);
+					}
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
+					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_ACQUIRE_STATIC_INT(0);
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_REF:
 				{
 					sll_integer_t a=(sll_integer_t)ADDR(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));

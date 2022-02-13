@@ -440,6 +440,9 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					o->t=SLL_NODE_TYPE_INLINE_FUNC;
 					o->dt.fn.sc=sf->_n_sc_id;
 				}
+				else if (*str=='<'&&*(str+1)=='-'&&*(str+2)=='*'){
+					o->t=SLL_NODE_TYPE_CALL_ARRAY;
+				}
 				else if (*str=='='&&*(str+1)=='='&&*(str+2)=='='){
 					o->t=SLL_NODE_TYPE_STRICT_EQUAL;
 				}

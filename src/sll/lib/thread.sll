@@ -70,7 +70,7 @@
 
 
 (= _thread_runner (,,, fn args
-	(= o (<- fn args))
+	(= o (<-* fn args))
 	(= thr nil)
 	(>- (= id (!.)) (=== thr nil)
 		(= thr (: thread_map id))

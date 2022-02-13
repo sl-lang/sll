@@ -246,8 +246,14 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 				return o;
 			}
 		case SLL_NODE_TYPE_CALL:
+		case SLL_NODE_TYPE_CALL_ARRAY:
 			{
-				PRINT_STATIC_STRING("<-",wf);
+				if (o->t==SLL_NODE_TYPE_CALL){
+					PRINT_STATIC_STRING("<-",wf);
+				}
+				else{
+					PRINT_STATIC_STRING("<-*",wf);
+				}
 				sll_arg_count_t ac=o->dt.ac;
 				o++;
 				if (ac){

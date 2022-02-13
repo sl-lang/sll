@@ -1076,13 +1076,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ARRAY
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ARRAY 88
+
+
+
+/**
+ * \flags macro var
  * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_REF
  * \group assembly
  * \subgroup assembly-instruction
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_REF 88
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_REF 89
 
 
 
@@ -1094,7 +1106,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET 89
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET 90
 
 
 
@@ -1106,7 +1118,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT 90
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT 91
 
 
 
@@ -1118,7 +1130,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO 91
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO 92
 
 
 
@@ -1130,7 +1142,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT 92
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT 93
 
 
 
@@ -1142,7 +1154,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR 93
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR 94
 
 
 
@@ -1154,7 +1166,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR 94
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR 95
 
 
 
@@ -1166,7 +1178,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR 95
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR 96
 
 
 
@@ -1178,7 +1190,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL 96
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL 97
 
 
 
@@ -1190,7 +1202,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL 97
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL 98
 
 
 
@@ -1202,7 +1214,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT 98
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT 99
 
 
 
@@ -1214,7 +1226,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID 99
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID 100
 
 
 
@@ -1226,7 +1238,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK 100
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK 101
 
 
 
@@ -1238,7 +1250,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 101
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 102
 
 
 

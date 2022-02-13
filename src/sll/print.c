@@ -198,8 +198,14 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 			PRINT_STATIC_STRING("***",wf);
 			break;
 		case SLL_NODE_TYPE_CALL:
+		case SLL_NODE_TYPE_CALL_ARRAY:
 			{
-				PRINT_STATIC_STRING("<-",wf);
+				if (o->t==SLL_NODE_TYPE_CALL){
+					PRINT_STATIC_STRING("<-",wf);
+				}
+				else{
+					PRINT_STATIC_STRING("<-*",wf);
+				}
 				sll_arg_count_t ac=o->dt.ac;
 				o++;
 				if (ac){
@@ -1060,6 +1066,9 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("PUSH ",wf);
 				_print_int(ai->dt.i,wf);
 				PRINT_STATIC_STRING(" & CALL 1",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ARRAY:
+				PRINT_STATIC_STRING("CALL_ARRAY",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_REF:
 				PRINT_STATIC_STRING("REF",wf);
