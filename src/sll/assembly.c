@@ -549,6 +549,8 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_THREAD_ID:
 			SLL_UNIMPLEMENTED();
+		case SLL_NODE_TYPE_THREAD_LOCK:
+			SLL_UNIMPLEMENTED();
 	}
 	o=_generate_on_stack(o,g_dt);
 	GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
@@ -1458,6 +1460,8 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID);
 				return o;
 			}
+		case SLL_NODE_TYPE_THREAD_LOCK:
+			SLL_UNIMPLEMENTED();
 	}
 	sll_arg_count_t l=o->dt.ac;
 	sll_assembly_instruction_type_t t=o->t+(SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD-SLL_NODE_TYPE_ADD);
@@ -1724,7 +1728,8 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				assembly_instruction_label_t c=NEXT_LABEL(g_dt);
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				assembly_loop_generator_data_t lg_dt;
-				const sll_node_t* cnd=sll_skip_node_const(_generate_loop_start(g_dt,o,&lg_dt,c,e));
+				const sll_node_t* cnd=_generate_loop_start(g_dt,o,&lg_dt,c,e);
+				o=sll_skip_node_const(cnd);
 				DEFINE_LABEL(g_dt,s);
 				while (l){
 					l--;
@@ -1860,7 +1865,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				return o;
 			}
 		case SLL_NODE_TYPE_THREAD_WAIT:
+		case SLL_NODE_TYPE_THREAD_LOCK:
 			{
+				sll_assembly_instruction_type_t ai_t=(o->t==SLL_NODE_TYPE_THREAD_WAIT?SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT:SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK);
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l);
 				o++;
@@ -1875,7 +1882,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					l--;
 					o=_generate(o,g_dt);
 				}
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT);
+				GENERATE_OPCODE(g_dt,ai_t);
 				POP;
 				return o;
 			}

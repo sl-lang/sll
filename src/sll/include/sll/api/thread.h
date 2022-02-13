@@ -25,4 +25,26 @@ __API_FUNC_DECL(thread_create);
 
 
 
+/**
+ * \flags api func
+ * \name sll_api_thread_create_lock
+ * \group thread-api
+ * \desc Docs!
+ * \ret I
+ */
+__API_FUNC_DECL(thread_create_lock);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_thread_release_lock
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ */
+__API_FUNC_DECL(thread_release_lock);
+
+
+
 #endif

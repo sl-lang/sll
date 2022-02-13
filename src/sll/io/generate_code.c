@@ -707,6 +707,9 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		case SLL_NODE_TYPE_THREAD_ID:
 			PRINT_STATIC_STRING("!.",wf);
 			break;
+		case SLL_NODE_TYPE_THREAD_LOCK:
+			PRINT_STATIC_STRING("!<*",wf);
+			break;
 		default:
 			SLL_UNREACHABLE();
 	}

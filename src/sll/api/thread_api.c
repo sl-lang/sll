@@ -10,3 +10,15 @@ __API_FUNC(thread_create){
 	_scheduler_queue_thread(tid);
 	return tid;
 }
+
+
+
+__API_FUNC(thread_create_lock){
+	return _scheduler_new_lock();
+}
+
+
+
+__API_FUNC(thread_release_lock){
+	_scheduler_release_lock(a);
+}

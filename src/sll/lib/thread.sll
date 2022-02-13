@@ -2,41 +2,61 @@
 
 
 
-(# STATE_RUNNING STATE_WAITING STATE_TERMINATED thread_map)
+(# STATE_RUNNING STATE_WAITING_THREAD STATE_WAITING_LOCK STATE_TERMINATED thread_map)
 
 
+
+(= lock_type (&:
+	(,,, dt
+		(= state (?: (=== dt$blocking_thread -1)
+			"unlocked"
+			(+ "locked blocking_thread=" (<- string$str (: thread_map dt$blocking_thread)))
+		))
+		(@@ (<- string$format "<id=%u state=%s>" dt$id state))
+	) @@string@@
+	(~ int_type) id
+	int_type blocking_thread
+))
 
 (= thread_type (&:
 	(,,, dt
 		(= state nil)
 		(?? dt$state
 			STATE_RUNNING (= state "running")
-			STATE_WAITING (= state (+ "waiting blocking_thread=" (<- string$str (: thread_map dt$blocking_thread))))
+			STATE_WAITING_THREAD (= state (+ "waiting blocking=" (<- string$str (: thread_map dt$blocking))))
+			STATE_WAITING_LOCK (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
 			(= state (+ "terminated return_value=" (<- string$str dt$return_value)))
 		)
 		(@@ (<- string$format "<id=%u state=%s>" dt$id state))
 	) @@string@@
 	(~ int_type) id
 	int_type state
-	int_type blocking_thread
+	object_type blocking
 	object_type return_value
 ))
 
 (= thread_module_type (&:
+	(~ type_type) lock_type
+	(~ type_type) thread_type
 	(~ int_type) STATE_RUNNING
-	(~ int_type) STATE_WAITING
 	(~ int_type) STATE_TERMINATED
+	(~ int_type) STATE_WAITING_LOCK
+	(~ int_type) STATE_WAITING_THREAD
+	(~ func_type) acquire_lock
+	(~ func_type) create_lock
 	(~ func_type) currenct
 	(~ func_type) get
 	(~ func_type) join
+	(~ func_type) release_lock
 	(~ func_type) start
 ))
 
 
 
 (= STATE_RUNNING 0)
-(= STATE_WAITING 1)
-(= STATE_TERMINATED 2)
+(= STATE_WAITING_THREAD 1)
+(= STATE_WAITING_LOCK 2)
+(= STATE_TERMINATED 3)
 
 
 
@@ -52,12 +72,30 @@
 (= _thread_runner (,,, fn args
 	(= o (<- fn args))
 	(= thr nil)
-	(-> (= id (!.)) (=== thr nil)
+	(>- (= id (!.)) (=== thr nil)
 		(= thr (: thread_map id))
 	)
 	(= thr$return_value o)
 	(= thr$state STATE_TERMINATED)
 	(@@ o)
+))
+
+(= acquire_lock (,,, lck
+	(? (=== lck nil) (@@))
+	(= lck (:: lck lock_type))
+	(= thr (: thread_map (!.)))
+	(= thr$blocking lck)
+	(= thr$state STATE_WAITING_LOCK)
+	(!<* lck$id)
+	(= thr$state STATE_RUNNING)
+	(= lck$blocking_thread (!.))
+))
+
+(= create_lock (,,,
+	(@@ (. lock_type
+		(<- (... "sll:thread_create_lock"))
+		-1
+	))
 ))
 
 (= current (,,,
@@ -73,11 +111,19 @@
 	(= thr (:: thr thread_type))
 	(? (!== thr$state STATE_TERMINATED) {
 		(= c_thr (: thread_map (!.)))
-		(= c_thr$blocking_thread thr$id)
-		(= c_thr$state STATE_WAITING)
+		(= c_thr$blocking thr$id)
+		(= c_thr$state STATE_WAITING_THREAD)
 		(!<< thr$id)
 		(= c_thr$state STATE_RUNNING)
 	})
+))
+
+(= release_lock (,,, lck
+	(? (=== lck nil) (@@))
+	(= lck (:: lck lock_type))
+	(? (=== lck$blocking_thread -1) (@@))
+	(= lck$blocking_thread -1)
+	(<- (... "sll:thread_release_lock") lck$id)
 ))
 
 (= start (,,, fn @@args@@
@@ -101,12 +147,18 @@
 
 
 (= thread (. thread_module_type
+	lock_type
+	thread_type
 	STATE_RUNNING
-	STATE_WAITING
 	STATE_TERMINATED
+	STATE_WAITING_LOCK
+	STATE_WAITING_THREAD
+	acquire_lock
+	create_lock
 	current
 	get
 	join
+	release_lock
 	start
 ))
 (## thread)

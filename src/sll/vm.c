@@ -212,10 +212,8 @@ static sll_object_t* _wait_for_result(sll_thread_index_t tid){
 	sll_thread_index_t s_tid=_scheduler_thread_idx;
 	_scheduler_thread_idx=THREAD_UNKNOWN_INDEX;
 	_scheduler_set_thread(tid);
-	sll_object_t* ret=NULL;
+	thread_data_t* tid_dt=_scheduler_current_thread;
 	if (_scheduler_current_thread->ret){
-		ret=_scheduler_current_thread->ret;
-		SLL_ACQUIRE(ret);
 		goto _cleanup;
 	}
 	const sll_assembly_instruction_t* ai=NULL;
@@ -229,11 +227,9 @@ static sll_object_t* _wait_for_result(sll_thread_index_t tid){
 		if (!_scheduler_current_thread->tm){
 			_scheduler_queue_next();
 			RELOAD_THREAD_DATA;
-		}
-		if (_scheduler_thread_idx!=tid&&_scheduler_current_thread->ret){
-			ret=_scheduler_current_thread->ret;
-			SLL_ACQUIRE(ret);
-			goto _cleanup;
+			if (_scheduler_thread_idx!=tid&&tid_dt->ret){
+				goto _cleanup;
+			}
 		}
 		_scheduler_current_thread->tm--;
 		sll_current_instruction_count++;
@@ -835,11 +831,10 @@ _return:;
 						}
 						sll_thread_index_t idx=_scheduler_thread_idx;
 						_scheduler_terminate_thread(tmp);
+						SLL_RELEASE(tmp);
 						if (idx==tid){
-							ret=tmp;
 							goto _cleanup;
 						}
-						SLL_RELEASE(tmp);
 						RELOAD_THREAD_DATA;
 						continue;
 					}
@@ -912,6 +907,9 @@ _return:;
 						c_thr->ii++;
 						n_tid=_scheduler_queue_pop();
 						if (n_tid==THREAD_UNKNOWN_INDEX){
+							if (tid_dt->ret){
+								goto _cleanup;
+							}
 							SLL_UNIMPLEMENTED();
 						}
 						_scheduler_set_thread((sll_thread_index_t)n_tid);
@@ -924,6 +922,29 @@ _return:;
 				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_FROM_INT(_scheduler_thread_idx);
 				_scheduler_current_thread->si++;
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK:
+				{
+					sll_object_t* lck_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					_scheduler_current_thread->si--;
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
+					sll_integer_t lck=lck_o->dt.i;
+					SLL_RELEASE(lck_o);
+					thread_data_t* c_thr=_scheduler_current_thread;
+					if (_scheduler_wait_lock(lck)){
+						c_thr->ii++;
+						sll_thread_index_t n_tid=_scheduler_queue_pop();
+						if (n_tid==THREAD_UNKNOWN_INDEX){
+							if (tid_dt->ret){
+								goto _cleanup;
+							}
+							SLL_UNIMPLEMENTED();
+						}
+						_scheduler_set_thread(n_tid);
+						RELOAD_THREAD_DATA;
+						continue;
+					}
+					break;
+				}
 			default:
 				SLL_UNREACHABLE();
 		}
@@ -937,6 +958,8 @@ _cleanup:
 	if (s_tid!=THREAD_UNKNOWN_INDEX){
 		_scheduler_set_thread(s_tid);
 	}
+	sll_object_t* ret=tid_dt->ret;
+	SLL_ACQUIRE(ret);
 	return ret;
 }
 

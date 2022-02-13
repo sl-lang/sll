@@ -390,16 +390,23 @@
 (<- var_arg_func 1 2 3 4 5)
 (<- var_arg_func 1 2 [3 4 5] 6 7)
 
+(= lock (<- thread$create_lock))
+(:> lock "\n")
 (= thr (<- thread$start (,,,
-	(-> (= idx 0) (< idx 50) {
-		(:> (+ "thread-1: " idx "\n"))
+	(-> (= idx 0) (< idx 30) {
+		(<- thread$acquire_lock lock)
+		(? (=== idx 1) (:> lock "\n"))
+		(:> "thread-1: " idx "\n")
+		(<- thread$release_lock lock)
 		(++ idx)
 	})
 	(:> (+ "thread-0-state: " (:: (<- thread$get 0) string_type) "\n"))
 )))
 (= thr2 (<- thread$start (,,,
 	(-> (= idx 0) (< idx 20) {
-		(:> (+ "thread-2: " idx "\n"))
+		(<- thread$acquire_lock lock)
+		(:> "thread-2: " idx "\n")
+		(<- thread$release_lock lock)
 		(++ idx)
 	})
 )))

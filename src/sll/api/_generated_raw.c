@@ -4895,6 +4895,36 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_create_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_thread_create_lock sll_api_thread_create_lock(__SLL_API_ARGS_sll_api_thread_create_lock);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_create_lock_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t out=sll_api_thread_create_lock();
+	return SLL_FROM_INT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_thread_release_lock sll_api_thread_release_lock(__SLL_API_ARGS_sll_api_thread_release_lock);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_release_lock_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_api_thread_release_lock(a->dt.i);
+	SLL_RELEASE(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
 __SLL_API_TYPE_sll_api_time_current sll_api_time_current(__SLL_API_ARGS_sll_api_time_current);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_current_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_float_t out=sll_api_time_current();
@@ -5565,6 +5595,14 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_thread_create_raw
 	},
 	{
+		SLL_CHAR("sll:thread_create_lock"),
+		sll_api_thread_create_lock_raw
+	},
+	{
+		SLL_CHAR("sll:thread_release_lock"),
+		sll_api_thread_release_lock_raw
+	},
+	{
 		SLL_CHAR("sll:time_current"),
 		sll_api_time_current_raw
 	},
@@ -5584,5 +5622,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=156;
+const sll_function_index_t _ifunc_size=158;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

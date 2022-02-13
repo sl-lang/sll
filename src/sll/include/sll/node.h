@@ -844,13 +844,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_NODE_TYPE_THREAD_LOCK
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_THREAD_LOCK 68
+
+
+
+/**
+ * \flags macro var
  * \name SLL_NODE_TYPE_DBG
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_DBG 68
+#define SLL_NODE_TYPE_DBG 69
 
 
 
@@ -862,7 +874,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_CHANGE_STACK 69
+#define SLL_NODE_TYPE_CHANGE_STACK 70
 
 
 
