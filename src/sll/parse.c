@@ -422,6 +422,9 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					o->t=SLL_NODE_TYPE_OPERATION_LIST;
 					fl|=EXTRA_COMPILATION_DATA_EXPORT;
 				}
+				else if (*str=='!'&&*(str+1)=='.'){
+					o->t=SLL_NODE_TYPE_THREAD_ID;
+				}
 			}
 			else if (sz==3){
 				if (*str==','&&*(str+1)==','&&*(str+2)==','){
@@ -449,9 +452,6 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				else if (*str=='-'&&*(str+1)=='-'&&*(str+2)=='-'){
 					o->t=SLL_NODE_TYPE_OPERATION_LIST;
 					fl|=EXTRA_COMPILATION_DATA_IMPORT;
-				}
-				else if (*str=='!'&&*(str+1)=='<'&&*(str+2)=='-'){
-					o->t=SLL_NODE_TYPE_THREAD_START;
 				}
 				else if (*str=='!'&&*(str+1)=='<'&&*(str+2)=='<'){
 					o->t=SLL_NODE_TYPE_THREAD_WAIT;

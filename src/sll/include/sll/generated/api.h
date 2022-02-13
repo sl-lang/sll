@@ -3644,6 +3644,37 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_thread_create __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_thread_create sll_integer_t a,sll_array_t* b
+/**
+ * \flags check_output func
+ * \name sll_api_thread_create
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_array_t* b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_create_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_create:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Threading
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_time_current __SLL_CHECK_OUTPUT sll_float_t
 #define __SLL_API_ARGS_sll_api_time_current void
 /**

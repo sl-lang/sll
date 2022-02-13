@@ -391,19 +391,21 @@
 (<- var_arg_func 1 2 [3 4 5] 6 7)
 
 (= thr (<- thread$start (,,,
-	(-> (= idx 0) (< idx 10) {
+	(-> (= idx 0) (< idx 50) {
 		(:> (+ "thread-1: " idx "\n"))
 		(++ idx)
 	})
+	(:> (+ "thread-0-state: " (:: (<- thread$get 0) string_type) "\n"))
 )))
 (= thr2 (<- thread$start (,,,
-	(-> (= idx 0) (< idx 10) {
+	(-> (= idx 0) (< idx 20) {
 		(:> (+ "thread-2: " idx "\n"))
 		(++ idx)
 	})
 )))
+(:> [thr thr2] "\n")
+(<- thread$join thr)
 (:> thr "\n")
-(:> thr2 "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

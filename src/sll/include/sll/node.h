@@ -820,25 +820,25 @@
 
 /**
  * \flags macro var
- * \name SLL_NODE_TYPE_THREAD_START
- * \group node
- * \subgroup node-type
- * \desc Docs!
- * \type sll_node_type_t
- */
-#define SLL_NODE_TYPE_THREAD_START 66
-
-
-
-/**
- * \flags macro var
  * \name SLL_NODE_TYPE_THREAD_WAIT
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_THREAD_WAIT 67
+#define SLL_NODE_TYPE_THREAD_WAIT 66
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_THREAD_ID
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_THREAD_ID 67
 
 
 

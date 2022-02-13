@@ -545,9 +545,9 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_COMMA:
 			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_THREAD_START:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_THREAD_WAIT:
+			SLL_UNIMPLEMENTED();
+		case SLL_NODE_TYPE_THREAD_ID:
 			SLL_UNIMPLEMENTED();
 	}
 	o=_generate_on_stack(o,g_dt);
@@ -1445,36 +1445,19 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				}
 				return _generate_on_stack(o,g_dt);
 			}
-		case SLL_NODE_TYPE_THREAD_START:
-			{
-				sll_arg_count_t l=o->dt.ac;
-				SLL_ASSERT(l);
-				o++;
-				if (!l){
-					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
-					PUSH;
-					return o;
-				}
-				o=_generate_on_stack(o,g_dt);
-				l--;
-				if (!l){
-					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO);
-					PUSH;
-				}
-				else{
-					o=_generate_on_stack(o,g_dt);
-					l--;
-					while (l){
-						l--;
-						o=_generate(o,g_dt);
-					}
-				}
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_START);
-				POP;
-				return o;
-			}
 		case SLL_NODE_TYPE_THREAD_WAIT:
 			SLL_UNIMPLEMENTED();
+		case SLL_NODE_TYPE_THREAD_ID:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				o++;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID);
+				return o;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	sll_assembly_instruction_type_t t=o->t+(SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD-SLL_NODE_TYPE_ADD);
@@ -1690,9 +1673,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					if ((m+j)->o){
 						DEFINE_LABEL(g_dt,(m+j)->l);
 						o=_generate((m+j)->o,g_dt);
-						if (j<i-(d?1:0)){
-							GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
-						}
+						GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
 					}
 				}
 				sll_deallocate(m);
@@ -1878,10 +1859,26 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				}
 				return o;
 			}
-		case SLL_NODE_TYPE_THREAD_START:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_THREAD_WAIT:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->dt.ac;
+				SLL_ASSERT(l);
+				o++;
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					PUSH;
+					return o;
+				}
+				o=_generate_on_stack(o,g_dt);
+				l--;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT);
+				POP;
+				return o;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	o++;

@@ -1,21 +1,112 @@
-(--- "types.sll" )
+(--- "types.sll" "string.sll")
 
 
+
+(# STATE_RUNNING STATE_WAITING STATE_TERMINATED thread_map)
+
+
+
+(= thread_type (&:
+	(,,, dt
+		(= state nil)
+		(?? dt$state
+			STATE_RUNNING (= state "running")
+			STATE_WAITING (= state (+ "waiting blocking_thread=" (<- string$str (: thread_map dt$blocking_thread))))
+			(= state (+ "terminated return_value=" (<- string$str dt$return_value)))
+		)
+		(@@ (<- string$format "<id=%u state=%s>" dt$id state))
+	) @@string@@
+	(~ int_type) id
+	int_type state
+	int_type blocking_thread
+	object_type return_value
+))
 
 (= thread_module_type (&:
+	(~ int_type) STATE_RUNNING
+	(~ int_type) STATE_WAITING
+	(~ int_type) STATE_TERMINATED
+	(~ func_type) currenct
+	(~ func_type) get
+	(~ func_type) join
 	(~ func_type) start
 ))
 
 
 
+(= STATE_RUNNING 0)
+(= STATE_WAITING 1)
+(= STATE_TERMINATED 2)
+
+
+
+(= thread_map <0 (. thread_type
+	0
+	STATE_RUNNING
+	nil
+	nil
+)>)
+
+
+
+(= _thread_runner (,,, fn args
+	(= o (<- fn args))
+	(= thr nil)
+	(-> (= id (!.)) (=== thr nil)
+		(= thr (: thread_map id))
+	)
+	(= thr$return_value o)
+	(= thr$state STATE_TERMINATED)
+	(@@ o)
+))
+
+(= current (,,,
+	(@@ (: thread_map (!.)))
+))
+
+(= get (,,, id
+	(@@ (: thread_map id))
+))
+
+(= join (,,, thr
+	(? (=== thr nil) (@@))
+	(= thr (:: thr thread_type))
+	(? (!== thr$state STATE_TERMINATED) {
+		(= c_thr (: thread_map (!.)))
+		(= c_thr$blocking_thread thr$id)
+		(= c_thr$state STATE_WAITING)
+		(!<< thr$id)
+		(= c_thr$state STATE_RUNNING)
+	})
+))
+
 (= start (,,, fn @@args@@
-	(= tid (!<- fn @@args@@))
-	(@@ tid)
+	(= tid (<- (... "sll:thread_create")
+		_thread_runner
+		[
+			(:: fn func_type)
+			@@args@@
+		]
+	))
+	(= o (. thread_type
+		tid
+		STATE_RUNNING
+		nil
+		nil
+	))
+	(= (: thread_map tid) o)
+	(@@ o)
 ))
 
 
 
 (= thread (. thread_module_type
+	STATE_RUNNING
+	STATE_WAITING
+	STATE_TERMINATED
+	current
+	get
+	join
 	start
 ))
 (## thread)

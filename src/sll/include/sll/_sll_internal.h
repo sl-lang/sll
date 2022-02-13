@@ -595,10 +595,8 @@ typedef struct __THREAD_DATA{
 #ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
-extern thread_data_t** _vm_thr;
-extern thread_data_t* _vm_current_thread;
-extern sll_thread_index_t _vm_thr_idx;
-extern sll_thread_index_t _vm_thr_count;
+extern thread_data_t* _scheduler_current_thread;
+extern sll_thread_index_t _scheduler_thread_idx;
 
 
 
@@ -655,6 +653,10 @@ void _init_node_stack(sll_source_file_t* sf);
 
 
 void _init_platform(void);
+
+
+
+sll_thread_index_t _init_thread_stack(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all);
 
 
 
@@ -718,7 +720,7 @@ void _scheduler_terminate_thread(sll_object_t* ret);
 
 
 
-void _scheduler_wait_thread(sll_thread_index_t w);
+sll_bool_t _scheduler_wait_thread(sll_integer_t w);
 
 
 

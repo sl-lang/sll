@@ -456,11 +456,11 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 				sll_file_write_char(wf,'}');
 				return o;
 			}
-		case SLL_NODE_TYPE_THREAD_START:
-			PRINT_STATIC_STRING("!<-",wf);
-			break;
 		case SLL_NODE_TYPE_THREAD_WAIT:
 			PRINT_STATIC_STRING("!<<",wf);
+			break;
+		case SLL_NODE_TYPE_THREAD_ID:
+			PRINT_STATIC_STRING("!.",wf);
 			break;
 		default:
 			SLL_UNREACHABLE();
@@ -1096,8 +1096,11 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				_print_int(ai->dt.v,wf);
 				PRINT_STATIC_STRING(" & DEL",wf);
 				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_START:
-				PRINT_STATIC_STRING("THREAD_START",wf);
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT:
+				PRINT_STATIC_STRING("THREAD_WAIT",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID:
+				PRINT_STATIC_STRING("PUSH tid",wf);
 				break;
 			default:
 				SLL_UNREACHABLE();
