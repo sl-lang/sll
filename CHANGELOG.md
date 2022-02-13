@@ -6,6 +6,7 @@
 
 - Assembly instruction to reserve space on the stack: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK` ([#26])
 - Implemented `sll_api_thread_create` ([#173] and [#174])
+- Implemented `sll_get_call_stack` ([#173])
 - Implemented `thread$lock_type`, `thread$acquire_lock`, `thread$create_lock` and `thread$release_lock` ([#173] and [#175])
 - Implemented `thread$thread_type`, `thread$STATE_RUNNING`, `thread$STATE_WAITING`, `thread$STATE_TERMINATED`, `thread$current`, `thread$get`, `thread$join` and `thread$start` ([#173] and [#175])
 - Implemented `thread.sll` ([#173] and [#175])

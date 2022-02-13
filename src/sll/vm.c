@@ -1089,3 +1089,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 	}
 	return o;
 }
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_get_call_stack(void){
+	return &(_scheduler_current_thread->c_st);
+}
