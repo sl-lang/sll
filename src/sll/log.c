@@ -72,8 +72,6 @@ static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file
 	sll_file_write_char(sll_stdout,'[');
 	sll_file_write(sll_stdout,fp->v,fp->l);
 	sll_file_write_char(sll_stdout,':');
-	sll_file_write(sll_stdout,fn->v,fn->l);
-	sll_file_write_char(sll_stdout,':');
 	SLL_ASSERT(ln);
 	sll_char_t bf[20];
 	sll_string_length_t i=0;
@@ -86,8 +84,9 @@ static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file
 		i--;
 		sll_file_write_char(wf,bf[i]+48);
 	}
-	sll_file_write_char(sll_stdout,']');
-	sll_file_write_char(sll_stdout,' ');
+	sll_file_write_char(sll_stdout,'(');
+	sll_file_write(sll_stdout,fn->v,fn->l);
+	PRINT_STATIC_STRING(")] ",sll_stdout);
 }
 
 

@@ -181,7 +181,7 @@ __SLL_EXTERNAL void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sl
 		if (SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT&&e->dt.i>=0&&e->dt.i<a->l){
 			o->v[i]=e;
 			SLL_ACQUIRE(e);
-			o->v[i+1]=sll_operator_add(m->v[i+1],a->v[e->dt.i]);
+			o->v[i+1]=sll_operator_add(m->v[j+1],a->v[e->dt.i]);
 			i+=2;
 		}
 	}

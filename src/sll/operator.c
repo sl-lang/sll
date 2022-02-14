@@ -79,13 +79,21 @@ __SLL_EXTERNAL sll_float_t sll_float_compare_error=1e-6;
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b){
 	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<a->dt.s.l){
-			return SLL_FROM_CHAR(a->dt.s.v[b->dt.i]);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.a.l*a->dt.a.l;
+			if (idx<0){
+				idx+=a->dt.a.l;
+			}
+			return SLL_FROM_CHAR(a->dt.s.v[idx]);
 		}
 	}
 	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&b->dt.i>=0&&b->dt.i<a->dt.a.l){
-			sll_object_t* o=a->dt.a.v[b->dt.i];
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.a.l*a->dt.a.l;
+			if (idx<0){
+				idx+=a->dt.a.l;
+			}
+			sll_object_t* o=a->dt.a.v[idx];
 			SLL_ACQUIRE(o);
 			return o;
 		}

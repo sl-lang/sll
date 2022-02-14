@@ -1,13 +1,37 @@
-(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll")
+(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "debug.sll")
 
 
 
 (= _test_results nil)
 (= _test_data nil)
+(= _gh_actions (!! (: sys$ENVIRONMENT "GITHUB_ACTIONS")))
 
 
 
-(= run (,,, fn
+(= expect (,,, result value name
+	(? (=== _test_results nil) {
+		(:> "Function 'expect' executed outside of function 'run'!\n")
+		(@@)
+	})
+	(? (=== result value) {
+		(= (: _test_data "success") (+ (: _test_data "success") 1))
+		(:> "+ " name "\n")
+	} {
+		(= (: _test_data "error") (+ (: _test_data "error") 1))
+		(:> "- " name "\n")
+		(= err (+ "Expected " (<- string$str value) ", got " (<- string$str result)))
+		(? _gh_actions {
+			(= loc (: (: (<- debug$get_call_stack) -1) "return"))
+			(:> (<- string$format "::warning file=%s,line=%u,title=Test%3A %s::%s\n" loc$file loc$line name err))
+		} {
+			(:> "  " err "\n")
+		})
+	})
+))
+
+
+
+(= run (,,, name fn
 	(? (!== _test_results nil) {
 		(:> "Function 'run' execute more than once!\n")
 		(@@)
@@ -24,10 +48,18 @@
 		(= _test_results (<- json$parse bf))
 	})
 	(= id (: (<- string$split (: (<- path$split (: sys$ARGV 0)) 1) ".") 0))
-	(= _test_data <"success" 0 "skipped" 0 "error" 0 "time" 0>)
+	(= _test_data <"name" name "success" 0 "error" 0 "time" 0>)
 	(= (: _test_results id) _test_data)
+	(? _gh_actions {
+		(:> "::group::" name "\n")
+	} {
+		(:> ">>> " name "\n")
+	})
 	(= start_time (<- time$time))
 	(<- fn)
+	(? _gh_actions {
+		(:> "::endgroup::\n")
+	})
 	(= _test_data$time (- (<- time$time) start_time))
 	(= f (<- file$open "build/test_results.json" "w"))
 	(<- file$write f (<- json$stringify _test_results))
@@ -36,4 +68,4 @@
 
 
 
-(## run)
+(## expect run)

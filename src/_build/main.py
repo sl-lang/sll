@@ -54,7 +54,7 @@ for k in fl:
 if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
-if ("--extension" in sys.argv):
+if ("--extension" in sys.argv or "--test" in sys.argv):
 	util.log("Listing Source Code Files (Extension)...")
 	fl=util.get_ext_files()
 	util.log("Compiling Sll Extension...")
@@ -79,15 +79,16 @@ if ("--extension" in sys.argv):
 		if ("--upload" in sys.argv):
 			os.rename("build/sll_ext_debug.zip",("win_ext_debug.zip" if os.name=="nt" else "linux_ext_debug.zip"))
 		sys.exit(0)
+if ("--test" in sys.argv or ("--run" in sys.argv and "--extension" in sys.argv)):
+	util.log("Installing extension library...")
+	with open(f"build/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"rb") as rf,open(f"build/sys_lib/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"wb") as wf:
+		wf.write(rf.read())
 if ("--test" in sys.argv):
-	subprocess.run(["build/sll","-I","tests"]+list(["tests/"+k for k in os.listdir("tests") if k[0]!="_"]))
+	util.log("Running tests...")
+	subprocess.run(["build/sll","-I","tests","-I","build/lib_ext"]+list(["tests/"+k for k in os.listdir("tests") if k[0]!="_"]))
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",("win.zip" if os.name=="nt" else "linux.zip"))
 if ("--run" in sys.argv):
-	if ("--extension" in sys.argv):
-		util.log("Installing extension library...")
-		with open(f"build/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"rb") as rf,open(f"build/sys_lib/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"wb") as wf:
-			wf.write(rf.read())
 	a=(["examples/_internal_test_ext_debug/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	util.log(f"Running '{a[0]}...")
 	subprocess.run(["build/sll","-h"])
