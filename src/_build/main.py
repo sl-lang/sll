@@ -79,6 +79,8 @@ if ("--extension" in sys.argv):
 		if ("--upload" in sys.argv):
 			os.rename("build/sll_ext_debug.zip",("win_ext_debug.zip" if os.name=="nt" else "linux_ext_debug.zip"))
 		sys.exit(0)
+if ("--test" in sys.argv):
+	subprocess.run(["build/sll","-I","tests"]+list(["tests/"+k for k in os.listdir("tests") if k[0]!="_"]))
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",("win.zip" if os.name=="nt" else "linux.zip"))
 if ("--run" in sys.argv):

@@ -27,20 +27,19 @@
 	{ \
 		sll_compare_result_t cmp=sll_operator_compare(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2),*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)); \
 		if ((cmp==v)==eq){ \
+			SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2)); \
+			SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)); \
 			_scheduler_current_thread->si-=2; \
-			SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si)); \
-			SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si+1)); \
 			JUMP_INSTRUCTION; \
 		} \
 		break; \
 	}
 #define CMP_INSTRUCTION_FUNCTION(eq) \
 	{ \
-		sll_bool_t st=eq(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2),*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)); \
-		if (st){ \
+		if (eq(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2),*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1))){ \
+			SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2)); \
+			SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)); \
 			_scheduler_current_thread->si-=2; \
-			SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si)); \
-			SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si+1)); \
 			JUMP_INSTRUCTION; \
 		} \
 		break; \

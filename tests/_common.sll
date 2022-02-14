@@ -1,0 +1,39 @@
+(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll")
+
+
+
+(= _test_results nil)
+(= _test_data nil)
+
+
+
+(= run (,,, fn
+	(? (!== _test_results nil) {
+		(:> "Function 'run' execute more than once!\n")
+		(@@)
+	})
+	(= _test_results <>)
+	(= f (<- file$open "build/test_results.json" "r"))
+	(? (!== f nil) {
+		(= bf "")
+		(>- (= chunk "") chunk
+			(= chunk (<- file$read f 1024))
+			(= bf (+ bf chunk))
+		)
+		(<- file$close f)
+		(= _test_results (<- json$parse bf))
+	})
+	(= id (: (<- string$split (: (<- path$split (: sys$ARGV 0)) 1) ".") 0))
+	(= _test_data <"success" 0 "skipped" 0 "error" 0 "time" 0>)
+	(= (: _test_results id) _test_data)
+	(= start_time (<- time$time))
+	(<- fn)
+	(= _test_data$time (- (<- time$time) start_time))
+	(= f (<- file$open "build/test_results.json" "w"))
+	(<- file$write f (<- json$stringify _test_results))
+	(<- file$close f)
+))
+
+
+
+(## run)

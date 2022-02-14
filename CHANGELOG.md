@@ -11,6 +11,7 @@
 - Implemented `thread$thread_type`, `thread$STATE_RUNNING`, `thread$STATE_WAITING`, `thread$STATE_TERMINATED`, `thread$current`, `thread$get`, `thread$join` and `thread$start` ([#173] and [#175])
 - Implemented `thread.sll` ([#173] and [#175])
 - Multithreading support ([#173] and [#177])
+- Tests ([#8])
 - Thread waiting operator (`(!<<)`) and current thread identification getter (`(!.)`) ([#173] and [#175])
 - Variable argument function call operator (`(<-*)`) ([#232])
 
@@ -18,6 +19,7 @@
 
 - Fixed memory leaks related to unreleased objects (invalidated [#25])
 - Fixed variable names related to compilation data and source files
+- Function `time$time_function` now accepts arguments passed to the timed function
 - Function variables are now stack based and not register-based ([#26])
 - If (`(?)`), inline if (`(?:)`) and switch (`(??)`) operators now assign new scopes for every condition and code block pair
 - Variable arguments are now properly handled in `file$write`
@@ -1781,6 +1783,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#12]: https://github.com/sl-lang/sll/issues/12
 [#11]: https://github.com/sl-lang/sll/issues/11
 [#10]: https://github.com/sl-lang/sll/issues/10
+[#8]: https://github.com/sl-lang/sll/issues/8
 [#5]: https://github.com/sl-lang/sll/issues/5
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2

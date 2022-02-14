@@ -20,10 +20,10 @@
 
 (= sleep_ns (... "sll:time_sleep_ns"))
 
-(= time_function (,,, fn
+(= time_function (,,, fn @@args@@
 	(= fn (:: fn int_type))
 	(= st (<- get))
-	(<- fn)
+	(<-* fn @@args@@)
 	(= et (<- get))
 	(@@ (- et st))
 ))
