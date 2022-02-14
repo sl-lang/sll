@@ -22,7 +22,7 @@
 		(= err (+ "Expected " (<- string$str value) ", got " (<- string$str result)))
 		(? _gh_actions {
 			(= loc (: (: (<- debug$get_call_stack) -1) "return"))
-			(:> (<- string$format "::warning file=%s,line=%u,title=Test%3A %s (%s)::%s\n" loc$file loc$line name sys$PLATFORM err))
+			(:> (<- string$format "::warning file=%s,line=%u,title=%s%3A %s::%s\n" loc$file loc$line (<- string$title_case sys$PLATFORM) (<- string$replace name "," "%2C") err))
 		} {
 			(:> "  " err "\n")
 		})
