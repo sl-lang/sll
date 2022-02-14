@@ -3,8 +3,8 @@
 (<- run "Array operators" (,,,
 	(<- expect (: [1 2 3 4] 0) 1 "Access array in-bounds")
 	(<- expect (: [1 2 3 4] -1) 4 "Access array from end")
-	(<- expect (: [1 2 3 4] 4) nil "Access array out-of-bounds")
-	(<- expect (: [1 2 3 4] -5) nil "Access array from end, out-of-bounds")
+	(<- expect (: [1 2 3 4] 4) 1 "Access array out-of-bounds")
+	(<- expect (: [1 2 3 4] -5) 4 "Access array from end, out-of-bounds")
 	; (<- expect (: [1 2 3 4] 1 3) [2 3] "Access array range, in-bounds")
 	; (<- expect (: [1 2 3 4] 1 -1) [2 3] "Access array range, index from end, in-bounds")
 	; (<- expect (: [1 2 3 4] 0 3 2) [1 3] "Access array range and step, in-bounds")
