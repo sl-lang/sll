@@ -953,9 +953,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_write_raw(sll_objec
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_object_t*const* b=al+1;
-	sll_arg_count_t bc=(all>1?all-1:0);
-	sll_integer_t out=sll_api_file_write(a->dt.i,b,bc);
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		b=SLL_CREATE();
+		b->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(b->dt.s));
+	}
+	sll_integer_t out=sll_api_file_write(a->dt.i,&(b->dt.s));
+	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	return SLL_FROM_INT(out);
 }

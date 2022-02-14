@@ -261,7 +261,7 @@ _add_to_string:
 			if (inv){
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_unshift(&(b->dt.a),a,&(o->dt.a));
+				sll_array_push(&(b->dt.a),a,&(o->dt.a));
 				return o;
 			}
 			goto _add_to_string;

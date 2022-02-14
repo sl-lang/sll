@@ -13,6 +13,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>
+#include <sll/file.h>/////////////////////////
 
 
 
@@ -66,8 +67,8 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
 		a++;
 		if (!tmp.l){
 			sll_string_increase(o,2);
-			o->v[o->l]='\'';
-			o->v[o->l+1]='\'';
+			o->v[o->l]='"';
+			o->v[o->l+1]='"';
 			o->l+=2;
 			goto _continue;
 		}
@@ -82,17 +83,15 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
 		goto _continue;
 _quote:
 		sll_string_increase(o,1);
-		o->v[o->l]='\'';
+		o->v[o->l]='"';
 		o->l++;
 		for (sll_string_length_t i=0;i<tmp.l;i++){
-			if (tmp.v[i]=='\''){
-				sll_string_increase(o,5);
-				o->v[o->l]='\'';
+			if (tmp.v[i]=='"'){
+				sll_string_increase(o,3);
+				o->v[o->l]='"';
 				o->v[o->l+1]='"';
-				o->v[o->l+2]='\'';
-				o->v[o->l+3]='"';
-				o->v[o->l+4]='\'';
-				o->l+=5;
+				o->v[o->l+2]='"';
+				o->l+=3;
 			}
 			else{
 				sll_string_increase(o,1);
@@ -101,7 +100,7 @@ _quote:
 			}
 		}
 		sll_string_increase(o,1);
-		o->v[o->l]='\'';
+		o->v[o->l]='"';
 		o->l++;
 _continue:
 		sll_free_string(&tmp);

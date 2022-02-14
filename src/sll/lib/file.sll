@@ -11,6 +11,7 @@
 		(<- (... "sll:file_inc_handle") dt$_handle)
 	}) @@copy@@
 	(,,, dt {
+		(? (=== f$_handle -1) (@@))
 		(<- (... "sll:file_close") dt$_handle)
 	}) @@delete@@
 	(,,, dt {
@@ -23,7 +24,7 @@
 	}) @@string@@
 	(~ string_type) name
 	(~ int_type) flags
-	(~ int_type) _handle
+	int_type _handle
 ))
 
 (= file_module_type (&:
@@ -78,7 +79,8 @@
 (= close (,,, f
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
-	(@@ (<- (... "sll:file_close") f$_handle))
+	(? (! (<- (... "sll:file_close") f$_handle)) (@@))
+	(= f$_handle -1)
 ))
 
 (= copy (,,, s d
@@ -167,13 +169,13 @@
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
 	(= o 0)
-	(-> (= i 0) (< i ($ @@dt@@)) {
+	(-> (= i 0) (< i ($ @@dt@@))
 		(= o (+ o (<- (... "sll:file_write")
 			f$_handle
 			(:: (: @@dt@@ i) string_type)
 		)))
 		(++ i)
-	})
+	)
 	(@@ o)
 ))
 

@@ -703,15 +703,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_file_write __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_file_write sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc
+#define __SLL_API_ARGS_sll_api_file_write sll_integer_t a,sll_string_t* b
 /**
  * \flags check_output func
  * \name sll_api_file_write
  * \group file-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
- * \arg sll_object_t*const* b -> 
- * \arg sll_arg_count_t bc
+ * \arg sll_string_t* b -> 
  * \ret sll_integer_t
  */
 /**

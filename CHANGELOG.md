@@ -18,6 +18,8 @@
 ### Changed
 
 - Fixed memory leaks related to unreleased objects (invalidated [#25])
+- Fixed reference counting and double-free in `file.sll`
+- Fixed `sll_process_join_args`
 - Fixed variable names related to compilation data and source files
 - Function `time$time_function` now accepts arguments passed to the timed function
 - Function variables are now stack based and not register-based ([#26])

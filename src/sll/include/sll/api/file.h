@@ -184,12 +184,12 @@ __API_FUNC_DECL(file_std_handle);
 
 
 /**
- * \flags api func var_arg
+ * \flags api func
  * \name sll_api_file_write
  * \group file-api
  * \desc Docs!
  * \arg I
- * \arg O
+ * \arg S
  * \ret I
  */
 __API_FUNC_DECL(file_write);

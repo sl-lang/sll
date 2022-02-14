@@ -48,13 +48,14 @@ static sll_integer_t _alloc_file(void){
 	sll_integer_t o=0;
 	while (o<_file_fll){
 		if (!(_file_fl+o)){
-			goto _found_index;
+			break;
 		}
 		o++;
 	}
-	_file_fll++;
-	_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(extended_file_t*));
-_found_index:;
+	if (o==_file_fll){
+		_file_fll++;
+		_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(extended_file_t*));
+	}
 	extended_file_t* n=sll_allocate(sizeof(extended_file_t));
 	n->rc=1;
 	*(_file_fl+o)=n;
@@ -102,13 +103,7 @@ __API_FUNC(file_close){
 		do{
 			_file_fll--;
 		} while (_file_fll&&!(_file_fl+_file_fll-1));
-		if (_file_fll){
-			_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(extended_file_t*));
-		}
-		else{
-			sll_deallocate(_file_fl);
-			_file_fl=NULL;
-		}
+		_file_fl=sll_reallocate(_file_fl,_file_fll*sizeof(extended_file_t*));
 	}
 	return 1;
 }
@@ -263,10 +258,7 @@ __API_FUNC(file_write){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return 0;
 	}
-	sll_string_t s;
-	sll_api_string_convert(b,bc,&s);
 	extended_file_t* ef=*(_file_fl+a);
-	sll_size_t o=sll_file_write((ef->p?ef->dt.p:&(ef->dt.f)),s.v,s.l*sizeof(sll_char_t));
-	sll_free_string(&s);
+	sll_size_t o=sll_file_write((ef->p?ef->dt.p:&(ef->dt.f)),b->v,b->l*sizeof(sll_char_t));
 	return o*sizeof(sll_char_t);
 }
