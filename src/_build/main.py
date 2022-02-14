@@ -45,7 +45,7 @@ for f in os.listdir("src/sll/lib"):
 		wf.write(rf.read())
 util.log("Compiling Modules...")
 fl=list(os.listdir("build/lib"))
-if (subprocess.run(["build/sll","-c","-R","-I","build/lib"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+if (subprocess.run(["build/sll","-c","-R","-w","-I","build/lib"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
@@ -66,7 +66,7 @@ if ("--extension" in sys.argv or "--test" in sys.argv):
 			wf.write(rf.read())
 	util.log("Compiling Extension Modules...")
 	fl=list(os.listdir("build/lib_ext"))
-	if (subprocess.run(["build/sll","-c","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+	if (subprocess.run(["build/sll","-c","-R","-w","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:

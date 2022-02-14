@@ -29,7 +29,7 @@ def build_sll(fl,v,r):
 				os.chdir(cd)
 				sys.exit(1)
 			util.log("  Linking Files (Release Mode)...")
-			if (subprocess.run(["link",f"/OUT:{nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE","bcrypt.lib"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
+			if (subprocess.run(["link",f"/OUT:{nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE","bcrypt.lib"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
@@ -38,7 +38,7 @@ def build_sll(fl,v,r):
 				os.chdir(cd)
 				sys.exit(1)
 			util.log("  Linking Files...")
-			if (subprocess.run(["link",f"/OUT:{nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","bcrypt.lib"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
+			if (subprocess.run(["link",f"/OUT:{nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","bcrypt.lib"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	else:

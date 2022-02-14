@@ -72,11 +72,11 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
 
 sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t){
 	if (t==SLL_PLATFORM_STREAM_INPUT){
-		return TO_HANDLE(STDIN_FILENO);
+		return TO_HANDLE(dup(STDIN_FILENO));
 	}
 	if (t==SLL_PLATFORM_STREAM_OUTPUT){
-		return TO_HANDLE(STDOUT_FILENO);
+		return TO_HANDLE(dup(STDOUT_FILENO));
 	}
 	SLL_ASSERT(t==SLL_PLATFORM_STREAM_ERROR);
-	return TO_HANDLE(STDERR_FILENO);
+	return TO_HANDLE(dup(STDERR_FILENO));
 }

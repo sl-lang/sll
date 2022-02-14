@@ -16,6 +16,12 @@ static DWORD _win_stderr_cm=0xffffffff;
 
 
 
+static void _cleanup_console(void){
+	FreeConsole();
+}
+
+
+
 static void _reset_console_color(void){
 	if (_win_stdout_cm!=0xffffffff){
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm);
@@ -32,6 +38,7 @@ static void _reset_console_color(void){
 __SLL_EXTERNAL void sll_platform_create_console(void){
 	if (!AttachConsole(ATTACH_PARENT_PROCESS)){
 		AllocConsole();
+		sll_register_cleanup(_cleanup_console);
 	}
 	if (!freopen("CONIN$","r",stdin)||!freopen("CONOUT$","w",stderr)||!freopen("CONOUT$","w",stdout)){
 		SLL_UNIMPLEMENTED();
