@@ -283,9 +283,6 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 		else if ((*e=='-'&&*(e+1)=='V'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--version"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_VERSION;
 		}
-		else if ((*e=='-'&&*(e+1)=='w'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--no-console"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_NO_CONSOLE;
-		}
 		else if (*e=='-'){
 			SLL_WARN(SLL_CHAR("Ignroing unknown Switch '%s'"),e);
 		}
@@ -297,9 +294,6 @@ _read_file_argument:
 		}
 		i++;
 	} while (i<argc);
-	if (!(fl&CLI_FLAG_NO_CONSOLE)){
-		sll_platform_create_console();
-	}
 	if (fl&CLI_FLAG_VERBOSE){
 		sll_set_log_default(SLL_LOG_FLAG_SHOW,1);
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);

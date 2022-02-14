@@ -76,11 +76,11 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
 
 sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t){
 	if (t==SLL_PLATFORM_STREAM_INPUT){
-		return sll_platform_file_open(SLL_CHAR("CONIN$"),SLL_FILE_FLAG_READ);
+		return (sll_file_descriptor_t)GetStdHandle(STD_INPUT_HANDLE);
 	}
 	if (t==SLL_PLATFORM_STREAM_OUTPUT){
-		return sll_platform_file_open(SLL_CHAR("CONOUT$"),SLL_FILE_FLAG_WRITE);
+		return (sll_file_descriptor_t)GetStdHandle(STD_OUTPUT_HANDLE);
 	}
 	SLL_ASSERT(t==SLL_PLATFORM_STREAM_ERROR);
-	return sll_platform_file_open(SLL_CHAR("CONOUT$"),SLL_FILE_FLAG_WRITE);
+	return (sll_file_descriptor_t)GetStdHandle(STD_ERROR_HANDLE);
 }

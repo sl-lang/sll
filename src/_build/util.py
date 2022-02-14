@@ -88,7 +88,7 @@ def get_ext_files():
 
 def bundle(v):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		for k in (["build/sll.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
+		for k in (["build/sll.exe","build/sllw.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
 			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			zf.write("build/lib/"+k,arcname="lib/"+k)
@@ -97,8 +97,8 @@ def bundle(v):
 
 def bundle_ext(v):
 	with zipfile.ZipFile("build/sll_ext_debug.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		for k in ([f"build/sll-ext-debug-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else [f"build/sll-ext-debug-{v[0]}.{v[1]}.{v[2]}.so"]):
-			zf.write(k,arcname=k[6:])
+		fp=(f"build/sll-ext-debug-{v[0]}.{v[1]}.{v[2]}.dll" if os.name=="nt" else f"build/sll-ext-debug-{v[0]}.{v[1]}.{v[2]}.so")
+		zf.write(fp,arcname=fp[6:])
 		for k in os.listdir("build/lib_ext"):
 			zf.write("build/lib_ext/"+k,arcname="lib/"+k)
 

@@ -203,17 +203,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 
 /**
  * \flags func
- * \name sll_platform_create_console
- * \group platform
- * \subgroup platform-console
- * \desc Docs!
- */
-__SLL_EXTERNAL void sll_platform_create_console(void);
-
-
-
-/**
- * \flags func
  * \name sll_platform_enable_console_color
  * \group platform
  * \subgroup platform-console

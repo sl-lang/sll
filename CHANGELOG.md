@@ -22,11 +22,13 @@
 - Function `time$time_function` now accepts arguments passed to the timed function
 - Function variables are now stack based and not register-based ([#26])
 - If (`(?)`), inline if (`(?:)`) and switch (`(??)`) operators now assign new scopes for every condition and code block pair
+- *\[Windows only\]* Separate executables for console mode (`sll.exe`) and window mode (`sllw.exe`) are now generated
 - Variable arguments are now properly handled in `file$write`
 - VM now stores execution data based on threads ([#173] and [#177])
 
 ### Removed
 
+- Console creation function (`sll_platform_create_console`) and CLI option to suppress window creation
 - Console initalization functions: `sll_platform_setup_console` and `sll_platform_reset_console`
 - Memory fail text is no longer present in the exported header file
 - Recursvie calls to `sll_execute_assembly` are no longer allowed

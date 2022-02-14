@@ -18,7 +18,6 @@ Options:
   -S <flag>, --sandbox <flag> -> enable the sandbox <flag> (see Sandbox Flags)
   -v, --verbose -> Enable verbose mode
   -V, --version -> Print SLL version and exit
-  -w, --no-console -> Do not create a console (Windows only)
 
 Sandbox Flags:
   no-file-io -> Disable all file IO (does not include the C sll_file_xxx and sll_platform_file_xxx APIs)

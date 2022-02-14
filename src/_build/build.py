@@ -81,12 +81,20 @@ def build_sll_cli():
 	cd=os.getcwd()
 	os.chdir("build")
 	if (os.name=="nt"):
+		util.log("  Compiling Files (Release Console Mode)...")
+		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/Fomain.obj","../src/cli/main_windows_console.c"]).returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
+		util.log("  Linking Files (Release Console Mode)...")
+		if (subprocess.run(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"]).returncode!=0):
+			os.chdir(cd)
+			sys.exit(1)
 		util.log("  Compiling Files (Release Mode)...")
 		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/Fomain.obj","../src/cli/main_windows.c"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		util.log("  Linking Files (Release Mode)...")
-		if (subprocess.run(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"]).returncode!=0):
+		if (subprocess.run(["link","main.obj","/OUT:sllw.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	else:
