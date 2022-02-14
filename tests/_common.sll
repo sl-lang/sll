@@ -2,9 +2,9 @@
 
 
 
-(= _test_results nil)
-(= _test_data nil)
 (= _gh_actions (!! (: sys$ENVIRONMENT "GITHUB_ACTIONS")))
+(= _test_data nil)
+(= _test_results nil)
 
 
 
@@ -14,7 +14,7 @@
 		(@@)
 	})
 	(? (=== result value) {
-		(= _test_data$success (+ _test_data$success 1))
+		(<- array$push _test_data$success name)
 		(:> "+ " name "\n")
 	} {
 		(<- array$push _test_data$error name)
@@ -33,7 +33,7 @@
 
 (= run (,,, name fn
 	(? (!== _test_results nil) {
-		(:> "Function 'run' execute more than once!\n")
+		(:> "Function 'run' executed more than once!\n")
 		(@@)
 	})
 	(= _test_results <>)
@@ -48,7 +48,7 @@
 		(= _test_results (<- json$parse bf))
 	})
 	(= id (: (<- string$split (: (<- path$split (: sys$ARGV 0)) 1) ".") 0))
-	(= _test_data <"name" name "success" 0 "error" [] "time" 0>)
+	(= _test_data <"name" name "success" [] "error" [] "time" 0>)
 	(= (: _test_results id) _test_data)
 	(? _gh_actions {
 		(:> "::group::" name "\n")

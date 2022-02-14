@@ -1,26 +1,89 @@
 (--- "_common.sll")
 
 (<- run "Array operators" (,,,
-	(<- expect (: [1 2 3 4] 0) 1 "Access array in-bounds")
-	(<- expect (: [1 2 3 4] -1) 4 "Access array from end")
-	(<- expect (: [1 2 3 4] 4) 1 "Access array out-of-bounds")
-	(<- expect (: [1 2 3 4] -5) 4 "Access array from end, out-of-bounds")
-	; (<- expect (: [1 2 3 4] 1 3) [2 3] "Access array range, in-bounds")
-	; (<- expect (: [1 2 3 4] 1 -1) [2 3] "Access array range, index from end, in-bounds")
-	; (<- expect (: [1 2 3 4] 0 3 2) [1 3] "Access array range and step, in-bounds")
-	(<- expect (+ [1 2 3] 4) [1 2 3 4] "Add array and integer")
-	(<- expect (+ [1 2 3] 4.1) [1 2 3 4.1] "Add array and float")
-	(<- expect (+ [1 2 3] '4') [1 2 3 '4'] "Add array and char")
-	(<- expect (+ [1 2 3] "4") [1 2 3 "4"] "Add array and string")
-	(<- expect (+ [1 2 3] [4 5]) [1 2 3 4 5] "Add array and array")
-	(<- expect (+ [1 2 3] <4 5>) [1 2 3 <4 5>] "Add array and map")
-	(<- expect (& [1 2 3] 2) [0 2 2] "Bitwise AND of array and integer")
-	(<- expect (& [1 2.0 3] 2.0) [0.0 2.0 0.0] "Bitwise AND of array and float")
-	(<- expect (& [1 2 3] '2') [0 2 2] "Bitwise AND of array and char")
-	(<- expect (& [1 2 3] "\x01\x02\x00") [1 2 0] "Bitwise AND of array and string")
-	(<- expect (& [1 2 3] [2 4 5]) [2] "Bitwise AND of array and array")
-	(<- expect (& [1 2 3] <4 5 2 3>) <2 6> "Bitwise AND of array and map")
+	; Access
+	(<- expect (: [1 2 3 4] 0) 1 "Access")
+	(<- expect (: [1 2 3 4] -1) 4 "Access from end")
+	(<- expect (: [1 2 3 4] 4) 1 "Access out-of-bounds")
+	(<- expect (: [1 2 3 4] -5) 4 "Access from end, out-of-bounds")
+	; ; Access Range
+	; (<- expect (: [1 2 3 4] 1 3) [2 3] "Access range")
+	; (<- expect (: [1 2 3 4] 1 -1) [2 3] "Access range, index from end")
+	; ; Access Range + Step
+	; (<- expect (: [1 2 3 4] 0 3 2) [1 3] "Access range and step")
+	; Add
+	(<- expect (+ [1 2 3] 4) [1 2 3 4] "Add integer")
+	(<- expect (+ [1 2 3] 4.1) [1 2 3 4.1] "Add float")
+	(<- expect (+ [1 2 3] '4') [1 2 3 '4'] "Add char")
+	(<- expect (+ [1 2 3] "4") [1 2 3 "4"] "Add string")
+	(<- expect (+ [1 2 3] [4 5]) [1 2 3 4 5] "Add array")
+	(<- expect (+ [1 2 3] <4 5>) [1 2 3 <4 5>] "Add map")
+	; Bitwise AND / Intersection
+	(<- expect (& [1 2 3] 2) [0 2 2] "Bitwise AND with integer")
+	(<- expect (& [1 2.0 3] 2.0) [0.0 2.0 0.0] "Bitwise AND with float")
+	(<- expect (& [1 2 3] '2') [0 2 2] "Bitwise AND with char")
+	(<- expect (& [1 2 3] "\x01\x02\x00") [1 2 0] "Bitwise AND with string")
+	(<- expect (& [1 2 3] [2 4 5]) [2] "Bitwise AND with array")
+	(<- expect (& [1 2 3] <4 5 2 3>) <2 6> "Bitwise AND with map")
+	; Assign
+	(<- expect (,
+		(= arr [1 2 3])
+		(= (: arr 1) 'b')
+		arr
+	) [1 'b' 3] "Assign value")
+	(<- expect (,
+		(= arr [1 2 3])
+		(= (: arr -3) 'a')
+		arr
+	) ['a' 2 3] "Assign value from end")
+	(<- expect (,
+		(= arr [1 2 3])
+		(= (: arr 11) 'c')
+		arr
+	) [1 2 'c'] "Assign value out-of-bounds")
+	; Assign Range
+	|# TODO #|
+	; Assign Range + Step
+	|# TODO #|
+	; Boolean / Truth value
+	(<- expect (!! []) 0 "Truth value of empty array")
+	(<- expect (!! [1]) 1 "Truth value of non-empty array")
+	; Compare
+	|# TODO #|
+	; Decrement
+	|# TODO #|
+	; Division / Elements counting
+	|# TODO #|
+	; Duplicate
+	|# TODO #|
+	; Equality
+	|# TODO #|
+	; Floored Division / Elements counting
+	|# TODO #|
+	; Increment
+	|# TODO #|
+	; Membership check
+	|# TODO #|
+	; Element inversion
+	|# TODO #|
+	; Length
 	(<- expect ($ []) 0 "Length of empty array")
-	(<- expect ($ [1 2 3 4 5]) 5 "Length of an array")
+	(<- expect ($ [1 2 3 4 5]) 5 "Length of array")
 	(<- expect ($ [[1 2 3]]) 1 "Length of nested array")
+	; Element modulo
+	|# TODO #|
+	; Multiplication / Combinations
+	|# TODO #|
+	; Bitwise OR
+	|# TODO #|
+	; Left shift / Resize
+	|# TODO #|
+	; Right shift / Resize
+	|# TODO #|
+	; Strict equality
+	|# TODO #|
+	; Subtraction / Element removing
+	|# TODO #|
+	; Bitwise Exclusive OR
+	|# TODO #|
 ))
