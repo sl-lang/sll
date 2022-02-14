@@ -60,7 +60,7 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows ext=src/sll/include,src/ext web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows ext=src/sll/include,src/ext web-client=src/sll/include,src/web/client web-server=src/web/server test=tests ${{secrets.GITHUB_TOKEN}}
   linux:
     name: Build linux
     needs: diff
@@ -141,7 +141,7 @@ jobs:
       - diff
       - linux-release
       - linux-ext-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).ext)
+    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).ext||fromJSON(needs.diff.outputs.data).test)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -320,7 +320,7 @@ jobs:
       - diff
       - windows-release
       - windows-ext-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)
+    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext||fromJSON(needs.diff.outputs.data).test)
     runs-on: windows-latest
     steps:
       - name: Checkout
