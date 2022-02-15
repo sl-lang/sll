@@ -21,6 +21,7 @@
 - Fixed `sll_process_join_args`
 - Fixed incorrect results returned by `sll_string_compare_pointer`
 - Fixed memory leaks related to unreleased objects (invalidated [#25])
+- Fixed mulitple inconsistencies with different operators
 - Fixed reference counting and double-free in `file.sll`
 - Fixed variable names related to compilation data and source files
 - Function `time$time_function` now accepts arguments passed to the timed function

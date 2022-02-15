@@ -68,9 +68,9 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 				o->v[o->l]=11;
 			}
 			else if (c=='u'){
-				__SLL_U16 v=0;
+				sll_wide_char_t v=0;
 				for (unsigned int i=0;i<4;i++){
-					sll_char_t c=**p;
+					c=**p;
 					v=(v<<4)|((__SLL_U16)(c>47&&c<58?c-48:(c>64&&c<71?c-55:c-87)));
 				}
 				if (v>255){

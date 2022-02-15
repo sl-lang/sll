@@ -214,6 +214,10 @@ typedef __SLL_U32 sll_version_t;
 
 
 
+typedef __SLL_U32 sll_wide_char_t;
+
+
+
 typedef __SLL_S64 sll_integer_t;
 
 

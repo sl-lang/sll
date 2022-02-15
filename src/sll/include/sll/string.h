@@ -133,13 +133,27 @@
 
 
 /**
- * \flags macro var
- * \name SLL_MAX_OBJECT_TYPE
- * \group object
+ * \flags func macro
+ * \name SLL_STRING_INSERT_POINTER_STATIC
+ * \group string
  * \desc Docs!
- * \type sll_object_type_t
+ * \arg const sll_char_t* nm
+ * \arg sll_string_length_t i
+ * \arg sll_string_t* s
+ * \ret sll_string_length_t
  */
 #define SLL_STRING_INSERT_POINTER_STATIC(nm,i,s) sll_string_insert_pointer_length(SLL_CHAR(nm),sizeof(nm)/sizeof(char)-1,(i),(s))
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_INVALID_CHARACTER
+ * \group string
+ * \desc Docs!
+ * \type sll_wide_char_t
+ */
+#define SLL_INVALID_CHARACTER 0xffffffff
 
 
 
