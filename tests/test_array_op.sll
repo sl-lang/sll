@@ -52,7 +52,7 @@
 	|# TODO #|
 	; Decrement
 	; (<- expect (-- [1 2 3]) [2 3] "Decrement array")
-	; Division / Element counting
+	; Element counting
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) 2 "Count integer (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) 0 "Count float (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') 1 "Count char (division)")
@@ -69,7 +69,7 @@
 	(<- expect (== [1 2 3 4] "\x01\x02\x03\x04") 1 "Equal to string")
 	(<- expect (== [1 2 3 4] [1 2 3 4]) 1 "Equal to array")
 	(<- expect (== [1 2 3 4] <0 1 1 2 2 3 3 4>) 1 "Equal to map")
-	; Floored Division / Element counting
+	; Element counting
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) 2 "Count integer (floored division)")
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) 0 "Count float (floored division)")
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') 1 "Count char (floored division)")
@@ -99,11 +99,17 @@
 	|# TODO #|
 	; Strict equality
 	(<- expect (=== [1 2 3 4] 4) 0 "Strict equal to integer")
+	(<- expect (!== [1 2 3 4] 4) 1 "Strict not equal to integer")
 	(<- expect (=== [1 2 3 4] 4.0) 0 "Strict equal to float")
+	(<- expect (!== [1 2 3 4] 4.0) 1 "Strict not equal to float")
 	(<- expect (=== [1 2 3 4] '\x04') 0 "Strict equal to char")
+	(<- expect (!== [1 2 3 4] '\x04') 1 "Strict not equal to char")
 	(<- expect (=== [1 2 3 4] "\x01\x02\x03\x04") 0 "Strict equal to string")
+	(<- expect (!== [1 2 3 4] "\x01\x02\x03\x04") 1 "Strict not equal to string")
 	(<- expect (=== [1 2 3 4] [1 2 3 4]) 1 "Strict equal to array")
+	(<- expect (!== [1 2 3 4] [1 2 3 4]) 0 "Strict not equal to array")
 	(<- expect (=== [1 2 3 4] <0 1 1 2 2 3 3 4>) 0 "Strict equal to map")
+	(<- expect (!== [1 2 3 4] <0 1 1 2 2 3 3 4>) 1 "Strict not equal to map")
 	; Subtraction / Element removing
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) [2.0 "3" 'a' "3" [3 1 4] <"A" 'a'>] "Remove integer")
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Remove float")
