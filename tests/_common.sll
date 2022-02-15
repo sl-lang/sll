@@ -1,4 +1,4 @@
-(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "debug.sll" "array.sll")
+(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "debug.sll" "array.sll" "serial.sll" "base64.sll")
 
 
 
@@ -8,21 +8,37 @@
 
 
 
+(= _encode_object (,,, obj
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- serial$encode f obj)
+	(= out (<- file$get_buffer f))
+	(<- file$close f)
+	(@@ (<- base64$encode out))
+))
+
+
+
 (= expect (,,, result value name
 	(? (=== _test_results nil) {
 		(:> "Function 'expect' executed outside of function 'run'!\n")
 		(@@)
 	})
 	(? (=== result value) {
-		(<- array$push _test_data$success name)
+		(= _test_data$success (+ _test_data$success 1))
 		(:> "+ " name "\n")
 	} {
-		(<- array$push _test_data$error name)
 		(:> "- " name "\n")
 		(= err (+ "Expected " (<- string$str value) ", got " (<- string$str result)))
+		(= loc (: (: (<- debug$get_call_stack) -1) "return"))
+		(<- array$push _test_data$error <
+			"name" name
+			"file" loc$file
+			"line" loc$line
+			"output" (<- _encode_object result)
+			"target" (<- _encode_object value)
+		>)
 		(? _gh_actions {
-			(= loc (: (: (<- debug$get_call_stack) -1) "return"))
-			(:> (<- string$format "::warning file=%s,line=%u,title=%s%3A %s::%s\n" loc$file loc$line (<- string$title_case sys$PLATFORM) (<- string$replace name "," "%2C") err))
+			(:> (<- string$format "::warning file=%s,line=%u,title=%s%3A %s%3A %s::%s\n" loc$file loc$line (<- string$title_case sys$PLATFORM) _test_data$name (<- string$replace name "," "%2C") err))
 		} {
 			(:> "  " err "\n")
 		})
@@ -48,7 +64,12 @@
 		(= _test_results (<- json$parse bf))
 	})
 	(= id (: (<- string$split (: (<- path$split (: sys$ARGV 0)) 1) ".") 0))
-	(= _test_data <"name" name "success" [] "error" [] "time" 0>)
+	(= _test_data <
+		"name" name
+		"success" 0
+		"error" []
+		"time" 0
+	>)
 	(= (: _test_results id) _test_data)
 	(? _gh_actions {
 		(:> "::group::" name "\n")

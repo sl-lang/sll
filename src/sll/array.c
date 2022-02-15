@@ -631,15 +631,15 @@ __SLL_EXTERNAL void sll_array_replace(const sll_array_t* a,const sll_object_t* k
 __SLL_EXTERNAL void sll_array_resize(const sll_array_t* a,sll_integer_t v,sll_array_t* o){
 	if (v<0){
 		v=-v;
-		if (v>a->l){
+		if (v>=a->l){
 			SLL_INIT_ARRAY(o);
 			return;
 		}
 		o->l=(sll_array_length_t)(a->l-v);
 		o->v=sll_allocate(o->l*sizeof(sll_object_t*));
-		for (sll_array_length_t i=0;i<o->l;i++){
-			o->v[i]=a->v[i];
-			SLL_ACQUIRE(o->v[i]);
+		for (sll_array_length_t i=(sll_array_length_t)v;i<a->l;i++){
+			o->v[i-v]=a->v[i];
+			SLL_ACQUIRE(a->v[i]);
 		}
 		return;
 	}

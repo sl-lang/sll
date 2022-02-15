@@ -1651,7 +1651,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),sll_api_math_round(a->dt.f),&(o->dt.s));
+				sll_string_shift(&(a->dt.s),sll_api_math_round(b->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SC:
@@ -1693,7 +1693,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),sll_api_math_round(a->dt.f),&(o->dt.a));
+				sll_array_resize(&(a->dt.a),sll_api_math_round(b->dt.f),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_AC:
@@ -1836,7 +1836,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_shift(&(a->dt.s),-sll_api_math_round(a->dt.f),&(o->dt.s));
+				sll_string_shift(&(a->dt.s),-sll_api_math_round(b->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SC:
@@ -1878,7 +1878,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_resize(&(a->dt.a),-sll_api_math_round(a->dt.f),&(o->dt.a));
+				sll_array_resize(&(a->dt.a),-sll_api_math_round(b->dt.f),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_AC:

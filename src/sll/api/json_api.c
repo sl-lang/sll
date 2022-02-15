@@ -67,12 +67,16 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 			else if (c=='v'){
 				o->v[o->l]=11;
 			}
-			else if (c=='x'){
-				sll_char_t a=**p;
-				(*p)++;
-				sll_char_t b=**p;
-				(*p)++;
-				o->v[o->l]=((a>47&&a<58?a-48:(a>64&&a<71?a-55:a-87))<<4)|(b>47&&b<58?b-48:(b>64&&b<71?b-55:b-87));
+			else if (c=='u'){
+				__SLL_U16 v=0;
+				for (unsigned int i=0;i<4;i++){
+					sll_char_t c=**p;
+					v=(v<<4)|((__SLL_U16)(c>47&&c<58?c-48:(c>64&&c<71?c-55:c-87)));
+				}
+				if (v>255){
+					SLL_UNIMPLEMENTED();
+				}
+				o->v[o->l]=v&0xff;
 			}
 			else{
 				o->v[o->l]=c;
@@ -322,12 +326,14 @@ static void _stringify_string(const sll_char_t* c,sll_string_length_t l,sll_stri
 			o->l+=2;
 		}
 		else if (SLL_STRING_HEX_ESCAPE(v)){
-			sll_string_increase(o,4);
+			sll_string_increase(o,6);
 			o->v[o->l]='\\';
-			o->v[o->l+1]='x';
-			o->v[o->l+2]=(v>>4)+((v>>4)>9?87:48);
-			o->v[o->l+3]=(v&15)+((v&15)>9?87:48);
-			o->l+=4;
+			o->v[o->l+1]='u';
+			o->v[o->l+2]='0';
+			o->v[o->l+3]='0';
+			o->v[o->l+4]=(v>>4)+((v>>4)>9?87:48);
+			o->v[o->l+5]=(v&15)+((v&15)>9?87:48);
+			o->l+=6;
 		}
 		else{
 			sll_string_increase(o,1);

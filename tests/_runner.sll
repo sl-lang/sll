@@ -46,7 +46,7 @@
 (= data (:: results map_value_type))
 (-> (= i 0) (< i ($ data))
 	(= k (: data i))
-	(= success (+ success ($ k$success)))
+	(= success (+ success k$success))
 	(= error (+ error ($ k$error)))
 	(++ i)
 )

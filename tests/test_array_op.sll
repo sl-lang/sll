@@ -102,8 +102,8 @@
 	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] 2.5) [0.0 2.0 [0.5] 1.0 2.0 [0.5] [0.5 1.0 1.5] <"A" 2.0>] "Modulo float")
 	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] 'a') [3 2.0 ["5"] 1 '\x00' ["5"] [3 1 4] <"A" '\x00'>] "Modulo char")
 	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] "3") [49 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] "Modulo string")
-	; (<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] [3 1 4]) 1 "Modulo array")
-	; (<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Modulo map")
+	; (<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] [3 1 4]) nil "Modulo array")
+	; (<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] <"A" 'a'>) nil "Modulo map")
 	; Multiplication / Combinations
 	(<- expect (* [1 2 3 4] 1) [1 2 3 4] "Multiplication by integer")
 	(<- expect (* [1 2 3 4] -2) [4 3 2 1 4 3 2 1] "Multiplication by negative integer")
@@ -121,9 +121,23 @@
 	(<- expect (| [1 2 3 4] [0 3 1 4 5]) [1 2 3 4 0 5] "Bitwise OR with array")
 	(<- expect (| [1 2 3 4] <"A" 3.75 3 10>) <"A" 3.75 3 4 0 1 1 2 2 3> "Bitwise OR with map")
 	; Left shift / Resize
-	|# TODO #|
+	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 5) [0 0 0 0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by integer")
+	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] -5) ["3" [3 1 4] <"A" 'a'>] "Left shift by negative integer")
+	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 2.0) [0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by float")
+	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] -2.0) ["3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by negative float")
+	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] '\x03') [0 0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by char")
+	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3\x02\x01") [0x8000000000000 8.0 "f" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by string")
+	; (<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [3 1 4]) nil "Left shift by array")
+	; (<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) nil "Left shift by map")
 	; Right shift / Resize
-	|# TODO #|
+	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 5) ["3" [3 1 4] <"A" 'a'>] "Right shift by integer")
+	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] -5) [0 0 0 0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by negative integer")
+	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 2.0) ["3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by float")
+	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] -2.0) [0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by negative float")
+	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] '\x03') [1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by char")
+	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3\x02\x01") [0 0.5 "\x19" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by string")
+	; (<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [3 1 4]) nil "Right shift by array")
+	; (<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) nil "Right shift by map")
 	; Strict equality
 	(<- expect (=== [1 2 3 4] 4) 0 "Strict equal to integer")
 	(<- expect (!== [1 2 3 4] 4) 1 "Strict not equal to integer")
@@ -146,5 +160,10 @@
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) [1 2.0 "3" 1 'a' "3" <"A" 'a'>] "Remove array")
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) [1 2.0 "3" 1 'a' "3" [3 1 4]] "Remove map")
 	; Bitwise Exclusive OR
-	|# TODO #|
+	(<- expect (^ [1 2 3 4] 1) [0 3 2 5] "Bitwise OR with integer")
+	(<- expect (^ [1 2 3 4] 0.5) [0.5000000000000001 0.5000000000000002 0.5000000000000003 0.5000000000000004] "Bitwise OR with float")
+	(<- expect (^ [1 2 3 4] '\x05') [4 7 6 1] "Bitwise OR with char")
+	(<- expect (^ [1 2 3 4] "3Ab") [50 67 97 4] "Bitwise OR with string")
+	(<- expect (^ [1 2 3 4] [0 3 1 4 5]) [1 1 2 0 5] "Bitwise OR with array")
+	(<- expect (^ [1 2 3 4] <"A" 3.75 3 10>) <"A" 3.75 3 4 0 1 1 2 2 3> "Bitwise OR with map")
 ))

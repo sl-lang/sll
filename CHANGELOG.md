@@ -11,7 +11,7 @@
 - Implemented `thread$thread_type`, `thread$STATE_RUNNING`, `thread$STATE_WAITING`, `thread$STATE_TERMINATED`, `thread$current`, `thread$get`, `thread$join` and `thread$start` ([#173] and [#175])
 - Implemented `thread.sll` ([#173] and [#175])
 - Multithreading support ([#173] and [#177])
-- Tests ([#8])
+- Tests can be executed by running `sll tests/_runner.sll` or by passing the `--test` flag to the builder script ([#8])
 - Thread waiting operator (`(!<<)`) and current thread identification getter (`(!.)`) ([#173] and [#175])
 - Variable argument function call operator (`(<-*)`) ([#232])
 
@@ -25,6 +25,7 @@
 - Function `time$time_function` now accepts arguments passed to the timed function
 - Function variables are now stack based and not register-based ([#26])
 - If (`(?)`), inline if (`(?:)`) and switch (`(??)`) operators now assign new scopes for every condition and code block pair
+- JSON API functions now encode and decode the 4-character escape (`\u00{N}{N}`) instead of the invalid 2-character escape (`\x{N}{N}`)
 - *\[Windows only\]* Separate executables for console mode (`sll.exe`) and window mode (`sllw.exe`) are now generated
 - Variable arguments are now properly handled in `file$write`
 - VM now stores execution data based on threads ([#173] and [#177])
