@@ -206,11 +206,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 			i--;
 		} while (i);
 	}
-	else if (ADDR(a)&7){
-		const sll_char_t* t=a;
-		a=b;
-		b=t;
-	}
 	const wide_data_t* ap=(const wide_data_t*)a;
 	const wide_data_t* bp=(const wide_data_t*)b;
 	while (1){
@@ -218,11 +213,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 		wide_data_t bv=*bp;
 		wide_data_t al=(av-0x101010101010101ull)&0x8080808080808080ull&(~av);
 		wide_data_t bl=(bv-0x101010101010101ull)&0x8080808080808080ull&(~bv);
-		al=(al?FIND_FIRST_SET_BIT(al):64);
-		bl=(bl?FIND_FIRST_SET_BIT(bl):64);
-		wide_data_t m=(1ull<<(al<bl?al:bl))-1;
-		av&=m;
-		bv&=m;
+		if (al||bl){
+			al=(al?FIND_FIRST_SET_BIT(al):64);
+			bl=(bl?FIND_FIRST_SET_BIT(bl):64);
+			wide_data_t m=(1ull<<(al<bl?al:bl))-1;
+			av&=m;
+			bv&=m;
+		}
 		if (av!=bv){
 			av=ROTATE_BITS64(av,32);
 			bv=ROTATE_BITS64(bv,32);
