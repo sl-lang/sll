@@ -1084,7 +1084,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
 		case SLL_OBJECT_TYPE_INT:
 			return SLL_FROM_INT(~a->dt.i);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return SLL_FROM_INT(~sll_api_math_round(a->dt.f));
+			return SLL_FROM_FLOAT(-a->dt.f-1);
 		case SLL_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(~a->dt.c);
 		case SLL_OBJECT_TYPE_STRING:

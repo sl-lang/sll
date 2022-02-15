@@ -29,7 +29,7 @@ __SLL_EXTERNAL void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_
 	for (sll_array_length_t j=0;j<a->l;j++){
 		sll_object_t* e=a->v[j];
 		for (sll_array_length_t k=0;k<b->l;k++){
-			if (sll_operator_equal(e,b->v[k])){
+			if (sll_operator_strict_equal(e,b->v[k])){
 				bitmap_t n=1ull<<(k&63);
 				if (!((*(m+(k>>6)))&n)){
 					(*(m+(k>>6)))|=n;
@@ -77,11 +77,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_a
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_object_t** v,sll_array_length_t vl){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_object_t*const* v,sll_array_length_t vl){
 	sll_array_length_t o=0;
 	for (sll_array_length_t i=0;i<a->l;i++){
 		for (sll_array_length_t j=0;j<vl;j++){
-			if (sll_operator_equal(a->v[i],*(v+j))){
+			if (sll_operator_strict_equal(a->v[i],*(v+j))){
 				o++;
 				break;
 			}
@@ -238,7 +238,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal(const sll_array_t* 
 		return 0;
 	}
 	for (sll_array_length_t i=0;i<a->l;i++){
-		if (!sll_operator_equal(a->v[i],b->v[i])){
+		if (!sll_operator_strict_equal(a->v[i],b->v[i])){
 			return 0;
 		}
 	}
@@ -253,7 +253,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal_map(const sll_array
 	}
 	for (sll_map_length_t i=0;i<(m->l<<1);i+=2){
 		sll_object_t* e=m->v[i];
-		if (SLL_OBJECT_GET_TYPE(e)!=SLL_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=a->l||!sll_operator_equal(m->v[i+1],a->v[e->dt.i])){
+		if (SLL_OBJECT_GET_TYPE(e)!=SLL_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=a->l||!sll_operator_strict_equal(m->v[i+1],a->v[e->dt.i])){
 			return 0;
 		}
 	}
@@ -417,7 +417,7 @@ __SLL_EXTERNAL void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_a
 		SLL_ACQUIRE(o->v[i]);
 		i++;
 		for (sll_array_length_t k=j+1;k<o->l;k++){
-			if (sll_operator_equal(e,o->v[k])){
+			if (sll_operator_strict_equal(e,o->v[k])){
 				(*(m+(k>>6)))|=1ull<<(k&63);
 			}
 		}
@@ -532,7 +532,7 @@ __SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_ar
 	if (!a){
 		sll_array_length_t i=0;
 		for (sll_array_length_t j=0;j<o->l;j++){
-			if (!sll_operator_equal(o->v[j],v)){
+			if (!sll_operator_strict_equal(o->v[j],v)){
 				o->v[i]=o->v[j];
 				i++;
 			}
@@ -558,7 +558,7 @@ __SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_ar
 	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<a->l;j++){
-		if (!sll_operator_equal(a->v[j],v)){
+		if (!sll_operator_strict_equal(a->v[j],v)){
 			o->v[i]=a->v[j];
 			SLL_ACQUIRE(o->v[i]);
 			i++;
@@ -586,7 +586,7 @@ __SLL_EXTERNAL void sll_array_remove_multiple(const sll_array_t* a,sll_object_t*
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<a->l;j++){
 		for (sll_array_length_t k=0;k<vl;k++){
-			if (sll_operator_equal(a->v[j],*(v+k))){
+			if (sll_operator_strict_equal(a->v[j],*(v+k))){
 				goto _skip_value;
 			}
 		}

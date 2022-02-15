@@ -98,11 +98,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_a
  * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
- * \arg sll_object_t** v
+ * \arg sll_object_t*const* v
  * \arg sll_array_length_t vl
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_object_t** v,sll_array_length_t vl);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_object_t*const* v,sll_array_length_t vl);
 
 
 

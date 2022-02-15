@@ -51,21 +51,38 @@
 	; Compare
 	|# TODO #|
 	; Decrement
-	|# TODO #|
-	; Division / Elements counting
-	|# TODO #|
+	; (<- expect (-- [1 2 3]) [2 3] "Decrement array")
+	; Division / Element counting
+	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) 2 "Count integer (division)")
+	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) 0 "Count float (division)")
+	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') 1 "Count char (division)")
+	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3") 2 "Count string (division)")
+	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [1 2.0 'a']) 4 "Count multiple (division)")
+	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) 1 "Count array (division)")
+	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Count map (division)")
 	; Duplicate
 	|# TODO #|
 	; Equality
-	|# TODO #|
-	; Floored Division / Elements counting
-	|# TODO #|
+	(<- expect (== [1 2 3 4] 4) 1 "Equal to integer")
+	(<- expect (== [1 2 3 4] 4.0) 1 "Equal to float")
+	(<- expect (== [1 2 3 4] '\x04') 1 "Equal to char")
+	(<- expect (== [1 2 3 4] "\x01\x02\x03\x04") 1 "Equal to string")
+	(<- expect (== [1 2 3 4] [1 2 3 4]) 1 "Equal to array")
+	(<- expect (== [1 2 3 4] <0 1 1 2 2 3 3 4>) 1 "Equal to map")
+	; Floored Division / Element counting
+	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) 2 "Count integer (floored division)")
+	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) 0 "Count float (floored division)")
+	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') 1 "Count char (floored division)")
+	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3") 2 "Count string (floored division)")
+	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [1 2.0 'a']) 4 "Count multiple (floored division)")
+	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) 1 "Count array (floored division)")
+	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Count map (floored division)")
 	; Increment
-	|# TODO #|
-	; Membership check
+	; (<- expect (++ [1 2 3]) [1 2 3 1] "Increment array")
+	; Membership test
 	|# TODO #|
 	; Element inversion
-	|# TODO #|
+	(<- expect (~ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>]) [-2 -3.0 "\xcc" -2 '\x9e' "\xcc" [-4 -2 -5] <"A" '\x9e'>] "Element inversion")
 	; Length
 	(<- expect ($ []) 0 "Length of empty array")
 	(<- expect ($ [1 2 3 4 5]) 5 "Length of array")
@@ -81,9 +98,20 @@
 	; Right shift / Resize
 	|# TODO #|
 	; Strict equality
-	|# TODO #|
+	(<- expect (=== [1 2 3 4] 4) 0 "Strict equal to integer")
+	(<- expect (=== [1 2 3 4] 4.0) 0 "Strict equal to float")
+	(<- expect (=== [1 2 3 4] '\x04') 0 "Strict equal to char")
+	(<- expect (=== [1 2 3 4] "\x01\x02\x03\x04") 0 "Strict equal to string")
+	(<- expect (=== [1 2 3 4] [1 2 3 4]) 1 "Strict equal to array")
+	(<- expect (=== [1 2 3 4] <0 1 1 2 2 3 3 4>) 0 "Strict equal to map")
 	; Subtraction / Element removing
-	|# TODO #|
+	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) [2.0 "3" 'a' "3" [3 1 4] <"A" 'a'>] "Remove integer")
+	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Remove float")
+	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') [1 2.0 "3" 1 "3" [3 1 4] <"A" 'a'>] "Remove char")
+	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3") [1 2.0 1 'a' [3 1 4] <"A" 'a'>] "Remove string")
+	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [1 2.0 'a']) ["3" "3" [3 1 4] <"A" 'a'>] "Remove multiple")
+	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) [1 2.0 "3" 1 'a' "3" <"A" 'a'>] "Remove array")
+	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) [1 2.0 "3" 1 'a' "3" [3 1 4]] "Remove map")
 	; Bitwise Exclusive OR
 	|# TODO #|
 ))

@@ -17,6 +17,7 @@
 
 ### Changed
 
+- Array functions now use `sll_operator_strict_equal` instead of `sll_operator_equal`
 - Fixed memory leaks related to unreleased objects (invalidated [#25])
 - Fixed reference counting and double-free in `file.sll`
 - Fixed `sll_process_join_args`
