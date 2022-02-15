@@ -1195,7 +1195,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_FLOAT(sll_math_mod(a->dt.f,b->dt.c));
 		case COMBINED_TYPE_CI:
-			return SLL_FROM_INT(a->dt.c%b->dt.i);
+			return SLL_FROM_CHAR(a->dt.c%b->dt.i);
 		case COMBINED_TYPE_CF:
 			return SLL_FROM_FLOAT(sll_math_mod(a->dt.c,b->dt.f));
 		case COMBINED_TYPE_CC:
@@ -1335,14 +1335,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_duplicate(&(b->dt.s),a->dt.i*(inv?-1:1),0,&(o->dt.s));
+				sll_string_duplicate(&(b->dt.s),a->dt.i*(inv?1:-1),0,&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_ARRAY;
-				sll_array_duplicate(&(b->dt.a),a->dt.i*(inv?-1:1),0,&(o->dt.a));
+				sll_array_duplicate(&(b->dt.a),a->dt.i*(inv?1:-1),0,&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_IM:

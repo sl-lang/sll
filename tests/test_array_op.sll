@@ -85,7 +85,12 @@
 	; Increment
 	; (<- expect (++ [1 2 3]) [1 2 3 1] "Increment array")
 	; Membership test
-	|# TODO #|
+	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) 1 "Inclusion of integer")
+	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 2.0) 1 "Inclusion of float")
+	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') 1 "Inclusion of char")
+	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3") 1 "Inclusion of string")
+	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [3 1 4]) 1 "Inclusion of array")
+	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Inclusion of map")
 	; Element inversion
 	(<- expect (~ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>]) [-2 -3.0 "\xcc" -2 '\x9e' "\xcc" [-4 -2 -5] <"A" '\x9e'>] "Element inversion")
 	; Length
@@ -93,11 +98,28 @@
 	(<- expect ($ [1 2 3 4 5]) 5 "Length of array")
 	(<- expect ($ [[1 2 3]]) 1 "Length of nested array")
 	; Element modulo
-	|# TODO #|
+	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] 3) [1 2.0 ['\x02'] 1 '\x01' ['\x02'] [0 1 1] <"A" '\x01'>] "Modulo integer")
+	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] 2.5) [0.0 2.0 [0.5] 1.0 2.0 [0.5] [0.5 1.0 1.5] <"A" 2.0>] "Modulo float")
+	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] 'a') [3 2.0 ["5"] 1 '\x00' ["5"] [3 1 4] <"A" '\x00'>] "Modulo char")
+	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] "3") [49 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] "Modulo string")
+	; (<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] [3 1 4]) 1 "Modulo array")
+	; (<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Modulo map")
 	; Multiplication / Combinations
-	|# TODO #|
+	(<- expect (* [1 2 3 4] 1) [1 2 3 4] "Multiplication by integer")
+	(<- expect (* [1 2 3 4] -2) [4 3 2 1 4 3 2 1] "Multiplication by negative integer")
+	(<- expect (* [1 2 3 4] 2.5) [1 2 3 4 1 2 3 4 1 2] "Multiplication by float")
+	(<- expect (* [1 2 3 4] -1.25) [4 3 2 1 4] "Multiplication by negative float")
+	(<- expect (* [1 2 3 4] '\x05') [1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4] "Multiplication by char")
+	(<- expect (* [1 2 3 4] "ABC") [66 67 68 67 68 69 68 69 70 69 70 71] "Combinations with string")
+	(<- expect (* [1 2 3 4] [3 1 4]) [4 2 5 5 3 6 6 4 7 7 5 8] "Combinations with array")
+	(<- expect (* [1 2 3 4] <"A" 3.75>) <"A" [1 2 3 4 1 2 3 4 1 2 3 4 1 2 3]> "Multiplication by map")
 	; Bitwise OR
-	|# TODO #|
+	(<- expect (| [1 2 3 4] 1) [1 3 3 5] "Bitwise OR with integer")
+	(<- expect (| [1 2 3 4] 256.0) [256.0000000000000568 256.0000000000001137 256.0000000000001705 256.0000000000002274] "Bitwise OR with float")
+	(<- expect (| [1 2 3 4] '\x05') [5 7 7 5] "Bitwise OR with char")
+	(<- expect (| [1 2 3 4] "3Ab") [51 67 99 4] "Bitwise OR with string")
+	(<- expect (| [1 2 3 4] [0 3 1 4 5]) [1 2 3 4 0 5] "Bitwise OR with array")
+	(<- expect (| [1 2 3 4] <"A" 3.75 3 10>) <"A" 3.75 3 4 0 1 1 2 2 3> "Bitwise OR with map")
 	; Left shift / Resize
 	|# TODO #|
 	; Right shift / Resize
