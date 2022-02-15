@@ -61,7 +61,12 @@
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) 1 "Count array (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Count map (division)")
 	; Duplicate
-	|# TODO #|
+	(<- expect (,
+		(= arr [1 2 3])
+		(= new (: arr))
+		(= (: new 0) "A")
+		arr
+	) [1 2 3] "Duplication")
 	; Equality
 	(<- expect (== [1 2 3 4] 4) 1 "Equal to integer")
 	(<- expect (== [1 2 3 4] 4.0) 1 "Equal to float")
