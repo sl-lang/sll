@@ -1,6 +1,10 @@
 # The Sl Programing Language Change Log
 
-## [0.7.4] - Ongoing
+## [0.7.5] - Ongoing
+
+*Nothing*
+
+## [0.7.4] - 2022-02-15
 
 ### Added
 
@@ -1534,7 +1538,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.7.4]: https://github.com/sl-lang/sll/compare/sll-v0.7.3...main
+[0.7.5]: https://github.com/sl-lang/sll/compare/sll-v0.7.4...main
+[0.7.4]: https://github.com/sl-lang/sll/compare/sll-v0.7.3...sll-v0.7.4
 [0.7.3]: https://github.com/sl-lang/sll/compare/sll-v0.7.2...sll-v0.7.3
 [0.7.2]: https://github.com/sl-lang/sll/compare/sll-v0.7.1...sll-v0.7.2
 [0.7.1]: https://github.com/sl-lang/sll/compare/sll-v0.7.0...sll-v0.7.1

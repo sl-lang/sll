@@ -141,7 +141,7 @@ jobs:
       - diff
       - linux-release
       - linux-ext-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).ext||fromJSON(needs.diff.outputs.data).test)
+    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).ext||fromJSON(needs.diff.outputs.data).test)&&github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -322,7 +322,7 @@ jobs:
       - diff
       - windows-release
       - windows-ext-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext||fromJSON(needs.diff.outputs.data).test)
+    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext||fromJSON(needs.diff.outputs.data).test)&&github.event_name!='workflow_dispatch'
     runs-on: windows-latest
     steps:
       - name: Checkout
