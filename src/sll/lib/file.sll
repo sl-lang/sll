@@ -39,6 +39,7 @@
 	(~ file_type) stderr
 	(~ func_type) close
 	(~ func_type) copy
+	(~ func_type) delete
 	(~ func_type) flush
 	(~ func_type) from_data
 	(~ func_type) get_buffer
@@ -88,6 +89,12 @@
 	(= s (:: s string_type))
 	(= d (:: d string_type))
 	(@@ (<- (... "sll:file_copy") s d))
+))
+
+(= delete (,,, fp
+	(? (! fp) (@@ nil))
+	(= fp (:: fp string_type))
+	(@@ (<- (... "sll:file_delete") fp))
 ))
 
 (= flush (,,, f
@@ -193,6 +200,7 @@
 	stderr
 	close
 	copy
+	delete
 	flush
 	from_data
 	get_buffer

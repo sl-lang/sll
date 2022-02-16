@@ -416,6 +416,8 @@
 (<- thread$join thr)
 (:> thr "\n")
 
+(<- file$delete "build/new-hello.txt")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

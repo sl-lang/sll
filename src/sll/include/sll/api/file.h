@@ -63,6 +63,18 @@ __API_FUNC_DECL(file_copy);
 
 /**
  * \flags api func
+ * \name sll_api_file_delete
+ * \group file-api
+ * \desc Docs!
+ * \arg S
+ * \ret B
+ */
+__API_FUNC_DECL(file_delete);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_file_flush
  * \group file-api
  * \desc Docs!

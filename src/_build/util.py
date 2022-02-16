@@ -38,7 +38,7 @@ def create_output_dir():
 			for f in fl:
 				os.remove(r+f)
 		for k in dl:
-			if (k not in BUILD_PATHS):
+			if ("_sll_runtime" not in k and k not in BUILD_PATHS):
 				os.rmdir(k)
 	else:
 		os.mkdir("build")

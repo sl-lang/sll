@@ -151,6 +151,18 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flags_t
+ */
+#define SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE 11
+
+
+
+/**
  * \flags check_output func
  * \name sll_get_sandbox_flag
  * \group sandbox

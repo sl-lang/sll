@@ -30,6 +30,7 @@ FLAG(ENABLE_BUFFER_FILES,"buffer-files");
 FLAG(ENABLE_FILE_RENAME,"file-rename");
 FLAG(ENABLE_FILE_COPY,"file-copy");
 FLAG(DISABLE_FLOAT_COMPARE_ERROR_CHANGE,"no-float-error-change");
+FLAG(ENABLE_FILE_DELETE,"file-delete");
 static wide_data_t _util_sandbox_flags=0;
 
 
@@ -61,6 +62,7 @@ __SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o){
 	CHECK_FLAG(ENABLE_FILE_RENAME);
 	CHECK_FLAG(ENABLE_FILE_COPY);
 	CHECK_FLAG(DISABLE_FLOAT_COMPARE_ERROR_CHANGE);
+	CHECK_FLAG(ENABLE_FILE_DELETE);
 	SLL_ASSERT(i==l);
 }
 

@@ -203,6 +203,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_ch
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_delete(const sll_char_t* fp){
+	return !remove((char*)fp);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_exists(const sll_char_t* fp){
 	return !access((char*)fp,F_OK);
 }

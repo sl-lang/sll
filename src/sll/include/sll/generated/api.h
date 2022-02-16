@@ -473,6 +473,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_file_delete __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_file_delete sll_string_t* a
+/**
+ * \flags check_output func
+ * \name sll_api_file_delete
+ * \group file-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_file_delete_raw
+ * \group raw-api
+ * \subgroup raw-api-file-api
+ * \desc Wrapper function for :sll_api_file_delete:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_flush __SLL_CHECK_OUTPUT sll_bool_t
 #define __SLL_API_ARGS_sll_api_file_flush sll_integer_t a
 /**

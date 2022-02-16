@@ -119,6 +119,15 @@ __API_FUNC(file_copy){
 
 
 
+__API_FUNC(file_delete){
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||(sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE))){
+		return 0;
+	}
+	return sll_platform_path_delete(a->v);
+}
+
+
+
 __API_FUNC(file_flush){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return 0;

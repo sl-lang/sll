@@ -2,6 +2,10 @@
 
 ## [0.7.5] - Ongoing
 
+### Added
+
+- Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`
+
 ### Changed
 
 - Fixed another bug in `sll_string_compare_pointer`

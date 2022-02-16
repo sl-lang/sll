@@ -121,6 +121,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_ch
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_delete(const sll_char_t* fp){
+	DWORD a=GetFileAttributesA(fp);
+	if (a==INVALID_FILE_ATTRIBUTES){
+		return 0;
+	}
+	return (a&FILE_ATTRIBUTE_DIRECTORY?!!RemoveDirectoryA(fp):!DeleteFileA(fp));
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o){
 	sll_char_t bf[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length_unaligned(fp);

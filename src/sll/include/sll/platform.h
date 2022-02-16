@@ -520,6 +520,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_ch
 
 /**
  * \flags check_output func
+ * \name sll_platform_path_delete
+ * \group platform
+ * \subgroup platform-path
+ * \desc Docs!
+ * \arg const sll_char_t* fp
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_delete(const sll_char_t* fp);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_path_exists
  * \group platform
  * \subgroup platform-path
