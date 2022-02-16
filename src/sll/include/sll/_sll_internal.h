@@ -347,7 +347,7 @@ typedef struct __EXTRA_COMPILATION_DATA{
 	sll_internal_function_table_t* i_ft;
 	sll_import_resolver_t ir;
 	new_variable_data_t* nv_dt;
-	scope_data_t* not_fn_sc;
+	const scope_data_t* not_fn_sc;
 	sll_string_index_t a_nm;
 	sll_bool_t fn;
 } extra_compilation_data_t;
