@@ -2,7 +2,9 @@
 
 ## [0.7.5] - Ongoing
 
-*Nothing*
+### Changed
+
+- Fixed another bug in `sll_string_compare_pointer`
 
 ## [0.7.4] - 2022-02-15
 

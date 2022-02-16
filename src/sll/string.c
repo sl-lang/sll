@@ -220,6 +220,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 			av&=m;
 			bv&=m;
 		}
+		else{
+			al=64;
+			bl=64;
+		}
 		if (av!=bv){
 			av=ROTATE_BITS64(av,32);
 			bv=ROTATE_BITS64(bv,32);
