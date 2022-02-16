@@ -261,6 +261,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				c=sll_file_read_char(rf);
 			} while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='{'&&c!='}'&&c!=SLL_END_OF_DATA));
 			o->t=SLL_NODE_TYPE_OPERATION_LIST;
+			const scope_data_t* src=l_sc;
 			if (sz==1){
 				if (*str=='!'){
 					o->t=SLL_NODE_TYPE_NOT;
@@ -430,6 +431,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				if (*str==','&&*(str+1)==','&&*(str+2)==','){
 					o->t=SLL_NODE_TYPE_FUNC;
 					f_off=sf->_s.off-1;
+					src=e_c_dt->not_fn_sc;
 					o->dt.fn.id=sf->ft.l;
 					o->dt.fn.sc=sf->_n_sc_id;
 				}
@@ -467,7 +469,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				n_l_sc.l_sc=sf->_n_sc_id;
 				n_l_sc.ml=(n_l_sc.l_sc>>6)+1;
 				n_l_sc.m=sll_zero_allocate_stack(n_l_sc.ml*sizeof(bitmap_t));
-				sll_copy_data(l_sc->m,l_sc->ml*sizeof(bitmap_t),n_l_sc.m);
+				sll_copy_data(src->m,src->ml*sizeof(bitmap_t),n_l_sc.m);
 				n_l_sc.m[n_l_sc.l_sc>>6]|=1ull<<(n_l_sc.l_sc&63);
 				sf->_n_sc_id++;
 				l_sc=&n_l_sc;
@@ -511,8 +513,11 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					e_c_dt->i_ft,
 					e_c_dt->ir,
 					e_c_dt->nv_dt,
-					SLL_MAX_STRING_INDEX
+					NULL,
+					SLL_MAX_STRING_INDEX,
+					(o->t==SLL_NODE_TYPE_FUNC||e_c_dt->fn)
 				};
+				n_e_c_dt.not_fn_sc=(n_e_c_dt.fn?e_c_dt->not_fn_sc:l_sc);
 				if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1){
 					sll_node_t* a=o+1;
 					while (a->t==SLL_NODE_TYPE_NOP||a->t==SLL_NODE_TYPE_DBG||a->t==SLL_NODE_TYPE_CHANGE_STACK){
@@ -1091,8 +1096,11 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 		i_ft,
 		ir,
 		&nv_dt,
-		SLL_MAX_STRING_INDEX
+		NULL,
+		SLL_MAX_STRING_INDEX,
+		0
 	};
+	e_c_dt.not_fn_sc=&(e_c_dt.sc);
 	e_c_dt.sc.m[0]=1;
 	_file_start_hash(rf);
 	sll_read_char_t c=sll_file_read_char(rf);
