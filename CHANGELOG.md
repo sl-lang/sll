@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Fixed another bug in `sll_string_compare_pointer
+- Fixed another bug in `sll_string_compare_pointer`
 - Improved performance of the scheduler
 
 ## [0.7.4] - 2022-02-15
