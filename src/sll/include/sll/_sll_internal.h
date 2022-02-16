@@ -271,14 +271,6 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define THREAD_SCHEDULER_INSTRUCTION_COUNT 10
 #define THREAD_UNKNOWN_INDEX 0xffffffff
 
-#define THREAD_WAIT_HANDLE_TYPE_THREAD 0
-#define THREAD_WAIT_HANDLE_TYPE_LOCK 0
-#define THREAD_WAIT_HANDLE_THREAD(id) (((id)<<1)|THREAD_WAIT_HANDLE_TYPE_THREAD)
-#define THREAD_WAIT_HANDLE_LOCK(id) (((id)<<1)|THREAD_WAIT_HANDLE_TYPE_LOCK)
-#define THREAD_WAIT_HANDLE_GET_TYPE(wh) ((wh)&1)
-
-#define THREAD_WAIT_HANDLE_UNKNOWN 0xffffffffffffffffull
-
 #define THREAD_LOCK_UNUSED 0xfffffffe
 
 #define ADDR(x) ((addr_t)(x))
@@ -327,10 +319,6 @@ typedef __SLL_U64 addr_t;
 
 
 typedef __SLL_U64 bitmap_t;
-
-
-
-typedef __SLL_U64 wait_handle_t;
 
 
 
@@ -597,11 +585,20 @@ typedef struct __THREAD_DATA{
 	sll_object_t** stack;
 	sll_instruction_index_t ii;
 	sll_stack_offset_t si;
-	wait_handle_t wh;
+	sll_thread_index_t nxt;
+	sll_thread_index_t wait;
 	sll_object_t* ret;
 	sll_call_stack_t c_st;
 	sll_char_t tm;
 } thread_data_t;
+
+
+
+typedef struct __LOCK{
+	sll_thread_index_t lock;
+	sll_thread_index_t first;
+	thread_data_t* last;
+} lock_t;
 
 
 

@@ -155,11 +155,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare(const 
 		wide_data_t av=*(ap+i);
 		wide_data_t bv=*(bp+i);
 		if (av!=bv){
-			av=ROTATE_BITS64(av,32);
-			bv=ROTATE_BITS64(bv,32);
-			av=((av&0xffff0000ffffull)<<16)|((av&0xffff0000ffff0000ull)>>16);
-			bv=((bv&0xffff0000ffffull)<<16)|((bv&0xffff0000ffff0000ull)>>16);
-			return ((((av&0xff00ff00ff00ffull)<<8)|((av&0xff00ff00ff00ff00ull)>>8))<(((bv&0xff00ff00ff00ffull)<<8)|((bv&0xff00ff00ff00ff00ull)>>8))?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+			return (SWAP_BYTES64(av)<SWAP_BYTES64(bv)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
 		}
 	}
 	return (a->l==b->l?SLL_COMPARE_RESULT_EQUAL:(a->l<b->l?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE));
@@ -225,11 +221,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 			bl=64;
 		}
 		if (av!=bv){
-			av=ROTATE_BITS64(av,32);
-			bv=ROTATE_BITS64(bv,32);
-			av=((av&0xffff0000ffffull)<<16)|((av&0xffff0000ffff0000ull)>>16);
-			bv=((bv&0xffff0000ffffull)<<16)|((bv&0xffff0000ffff0000ull)>>16);
-			return ((((av&0xff00ff00ff00ffull)<<8)|((av&0xff00ff00ff00ff00ull)>>8))<(((bv&0xff00ff00ff00ffull)<<8)|((bv&0xff00ff00ff00ff00ull)>>8))?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+			return (SWAP_BYTES64(av)<SWAP_BYTES64(bv)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
 		}
 		if (al!=bl){
 			return (al<bl?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);

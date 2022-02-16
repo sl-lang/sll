@@ -44,11 +44,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 	ASSUME_ALIGNED(ap64,3,0);
 	do{
 		if (*ap64!=*bp64){
-			wide_data_t av=ROTATE_BITS64(*ap64,32);
-			wide_data_t bv=ROTATE_BITS64(*bp64,32);
-			av=((av&0xffff0000ffffull)<<16)|((av&0xffff0000ffff0000ull)>>16);
-			bv=((bv&0xffff0000ffffull)<<16)|((bv&0xffff0000ffff0000ull)>>16);
-			return ((((av&0xff00ff00ff00ffull)<<8)|((av&0xff00ff00ff00ff00ull)>>8))<(((bv&0xff00ff00ff00ffull)<<8)|((bv&0xff00ff00ff00ff00ull)>>8))?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+			return (SWAP_BYTES64(*ap64)<SWAP_BYTES64(*bp64)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
 		}
 		ap64++;
 		bp64++;
