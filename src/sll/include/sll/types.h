@@ -18,6 +18,7 @@
 #define SLL_MAX_INSTRUCTION_INDEX __SLL_U32_MAX
 #define SLL_MAX_JSON_ARRAY_LENGTH __SLL_U32_MAX
 #define SLL_MAX_JSON_MAP_LENGTH __SLL_U32_MAX
+#define SLL_MAX_LOCK_INDEX __SLL_U32_MAX
 #define SLL_MAX_MAP_LENGTH __SLL_U32_MAX
 #define SLL_MAX_OBJECT_OFFSET __SLL_U32_MAX
 #define SLL_MAX_PAGE_SIZE __SLL_U64_MAX
@@ -155,6 +156,10 @@ typedef __SLL_U32 sll_json_array_length_t;
 
 
 typedef __SLL_U32 sll_json_map_length_t;
+
+
+
+typedef __SLL_U32 sll_lock_index_t;
 
 
 

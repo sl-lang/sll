@@ -123,7 +123,7 @@
 	(= lck (:: lck lock_type))
 	(? (=== lck$blocking_thread -1) (@@))
 	(= lck$blocking_thread -1)
-	(<- (... "sll:thread_release_lock") lck$id)
+	(@@ (<- (... "sll:thread_release_lock") lck$id))
 ))
 
 (= start (,,, fn @@args@@

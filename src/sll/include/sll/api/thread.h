@@ -42,6 +42,7 @@ __API_FUNC_DECL(thread_create_lock);
  * \group thread-api
  * \desc Docs!
  * \arg I
+ * \ret B
  */
 __API_FUNC_DECL(thread_release_lock);
 

@@ -270,8 +270,13 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define THREAD_SCHEDULER_INSTRUCTION_COUNT 10
 #define THREAD_UNKNOWN_INDEX 0xffffffff
+#define THREAD_IS_UNUSED(t) (ADDR(t)>>63)
+#define THREAD_NEXT_UNUSED(id) (PTR((id)|0x8000000000000000ull))
+#define THREAD_GET_NEXT_UNUSED(t) ((sll_thread_index_t)(ADDR((t))&0x7fffffffffffffffull))
 
 #define THREAD_LOCK_UNUSED 0xfffffffe
+#define THREAD_LOCK_GET_NEXT_ID(l) ((sll_lock_index_t)ADDR((l)->last))
+#define THREAD_LOCK_SET_NEXT_ID(l,v) ((l)->last=PTR((sll_lock_index_t)v))
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
@@ -283,10 +288,6 @@ typedef __SLL_U8 bucket_index_t;
 
 
 typedef sll_instruction_index_t assembly_instruction_label_t;
-
-
-
-typedef __SLL_U32 lock_index_t;
 
 
 
@@ -700,15 +701,7 @@ void _scheduler_deinit(void);
 
 
 
-void _scheduler_delete_thread(sll_thread_index_t t);
-
-
-
 void _scheduler_init(void);
-
-
-
-lock_index_t _scheduler_new_lock(void);
 
 
 
@@ -725,10 +718,6 @@ sll_thread_index_t _scheduler_queue_pop(void);
 
 
 void _scheduler_queue_thread(sll_thread_index_t t);
-
-
-
-void _scheduler_release_lock(sll_integer_t l);
 
 
 

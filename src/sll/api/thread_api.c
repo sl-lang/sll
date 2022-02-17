@@ -1,24 +1,26 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/common.h>
+#include <sll/scheduler.h>
 #include <sll/types.h>
 
 
 
 __API_FUNC(thread_create){
-	sll_thread_index_t tid=_init_thread_stack(a,b->v,b->l);
-	_scheduler_queue_thread(tid);
-	return tid;
+	return sll_create_thread(a,b->v,b->l);
 }
 
 
 
 __API_FUNC(thread_create_lock){
-	return _scheduler_new_lock();
+	return sll_create_lock();
 }
 
 
 
 __API_FUNC(thread_release_lock){
-	_scheduler_release_lock(a);
+	if (a<0||a>SLL_MAX_LOCK_INDEX){
+		return 0;
+	}
+	return sll_release_lock((sll_lock_index_t)a);
 }

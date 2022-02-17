@@ -1,3 +1,3 @@
 @echo off
-cls
+if not exist build mkdir build
 python src\_build\main.py %*

@@ -73,12 +73,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
  * \name sll_execute_function
  * \group vm
  * \desc Docs!
- * \arg sll_integer_t i
+ * \arg sll_integer_t fn_idx
  * \arg sll_object_t*const* al
  * \arg sll_arg_count_t all
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t i,sll_object_t*const* al,sll_arg_count_t all);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all);
 
 
 

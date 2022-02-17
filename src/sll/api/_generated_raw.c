@@ -5008,9 +5008,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_release_lock_raw(
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_api_thread_release_lock(a->dt.i);
+	sll_bool_t out=sll_api_thread_release_lock(a->dt.i);
 	SLL_RELEASE(a);
-	return SLL_ACQUIRE_STATIC_INT(0);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
 }
 
 

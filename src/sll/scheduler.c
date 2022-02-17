@@ -9,91 +9,68 @@
 
 
 static thread_data_t** _scheduler_thread;
+static sll_thread_index_t _scheduler_thread_next;
 static sll_thread_index_t _scheduler_thread_len;
 static sll_thread_index_t* _scheduler_queue;
 static queue_length_t _scheduler_queue_idx;
 static queue_length_t _scheduler_queue_len;
-static lock_t* _scheduler_lock_list;
-static lock_list_length_t _scheduler_lock_list_len;
+static lock_t* _scheduler_lock;
+static sll_lock_index_t _scheduler_lock_next;
+static lock_list_length_t _scheduler_lock_len;
 
 
 
 thread_data_t* _scheduler_current_thread;
-sll_thread_index_t _scheduler_thread_idx;
+
+
+
+__SLL_EXTERNAL sll_thread_index_t sll_current_thread_idx=0;
 
 
 
 void _scheduler_deinit(void){
 	while (_scheduler_thread_len){
-		_scheduler_delete_thread(_scheduler_thread_len-1);
 		_scheduler_thread_len--;
+		thread_data_t* thr=*(_scheduler_thread+_scheduler_thread_len);
+		if (THREAD_IS_UNUSED(thr)){
+			continue;
+		}
+		if (thr->ret){
+			SLL_RELEASE(thr->ret);
+		}
+		sll_platform_free_page(thr,SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz));
 	}
 	sll_deallocate(_scheduler_thread);
 	sll_deallocate(_scheduler_queue);
-	sll_deallocate(_scheduler_lock_list);
-}
-
-
-
-void _scheduler_delete_thread(sll_thread_index_t t){
-	if (t>=_scheduler_thread_len){
-		return;
-	}
-	thread_data_t* thr=*(_scheduler_thread+t);
-	if (!thr){
-		return;
-	}
-	SLL_ASSERT(thr->ret);
-	*(_scheduler_thread+t)=NULL;
-	SLL_RELEASE(thr->ret);
-	sll_platform_free_page(thr,SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz));
-
+	sll_deallocate(_scheduler_lock);
 }
 
 
 
 void _scheduler_init(void){
 	_scheduler_thread=NULL;
+	_scheduler_thread_next=THREAD_UNKNOWN_INDEX;
 	_scheduler_thread_len=0;
-	_scheduler_thread_idx=THREAD_UNKNOWN_INDEX;
 	_scheduler_queue=NULL;
 	_scheduler_queue_idx=0;
 	_scheduler_queue_len=0;
-	_scheduler_lock_list=NULL;
-	_scheduler_lock_list_len=0;
-}
-
-
-
-lock_index_t _scheduler_new_lock(void){
-	lock_index_t o=0;
-	while (o<_scheduler_lock_list_len){
-		if ((_scheduler_lock_list+o)->lock==THREAD_LOCK_UNUSED){
-			break;
-		}
-		o++;
-	}
-	if (o==_scheduler_lock_list_len){
-		_scheduler_lock_list_len++;
-		_scheduler_lock_list=sll_reallocate(_scheduler_lock_list,_scheduler_lock_list_len*sizeof(lock_t));
-	}
-	(_scheduler_lock_list+o)->lock=THREAD_UNKNOWN_INDEX;
-	return o;
+	_scheduler_lock=NULL;
+	_scheduler_lock_next=THREAD_LOCK_UNUSED;
+	_scheduler_lock_len=0;
+	sll_current_thread_idx=THREAD_UNKNOWN_INDEX;
 }
 
 
 
 sll_thread_index_t _scheduler_new_thread(void){
-	sll_thread_index_t o=0;
-	while (o<_scheduler_thread_len){
-		if (!*(_scheduler_thread+o)){
-			break;
-		}
-		o++;
-	}
-	if (o==_scheduler_thread_len){
+	sll_thread_index_t o=_scheduler_thread_next;
+	if (o==THREAD_UNKNOWN_INDEX){
+		o=_scheduler_thread_len;
 		_scheduler_thread_len++;
 		_scheduler_thread=sll_reallocate(_scheduler_thread,_scheduler_thread_len*sizeof(thread_data_t*));
+	}
+	else{
+		_scheduler_thread_next=THREAD_GET_NEXT_UNUSED(*(_scheduler_thread+o));
 	}
 	void* ptr=sll_platform_allocate_page(SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz),0);
 	thread_data_t* n=ptr;
@@ -106,9 +83,9 @@ sll_thread_index_t _scheduler_new_thread(void){
 	n->c_st.l=0;
 	n->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
 	*(_scheduler_thread+o)=n;
-	if (_scheduler_thread_idx==THREAD_UNKNOWN_INDEX){
+	if (sll_current_thread_idx==THREAD_UNKNOWN_INDEX){
 		_scheduler_current_thread=n;
-		_scheduler_thread_idx=o;
+		sll_current_thread_idx=o;
 	}
 	return o;
 }
@@ -121,12 +98,12 @@ void _scheduler_queue_next(void){
 		return;
 	}
 	sll_thread_index_t tmp=*(_scheduler_queue+_scheduler_queue_idx);
-	*(_scheduler_queue+_scheduler_queue_idx)=_scheduler_thread_idx;
+	*(_scheduler_queue+_scheduler_queue_idx)=sll_current_thread_idx;
 	if (!_scheduler_queue_idx){
 		_scheduler_queue_idx=_scheduler_queue_len;
 	}
 	_scheduler_queue_idx--;
-	_scheduler_thread_idx=tmp;
+	sll_current_thread_idx=tmp;
 	_scheduler_current_thread=*(_scheduler_thread+tmp);
 }
 
@@ -164,30 +141,14 @@ void _scheduler_queue_thread(sll_thread_index_t t){
 
 
 
-void _scheduler_release_lock(sll_integer_t l){
-	if (l<0||l>=_scheduler_lock_list_len||(_scheduler_lock_list+l)->lock==THREAD_LOCK_UNUSED){
-		return;
-	}
-	SLL_ASSERT((_scheduler_lock_list+l)->lock!=THREAD_UNKNOWN_INDEX);
-	(_scheduler_lock_list+l)->lock=(_scheduler_lock_list+l)->first;
-	if ((_scheduler_lock_list+l)->first==THREAD_UNKNOWN_INDEX){
-		return;
-	}
-	thread_data_t* thr=*(_scheduler_thread+(_scheduler_lock_list+l)->lock);
-	(_scheduler_lock_list+l)->first=thr->nxt;
-	_scheduler_queue_thread((_scheduler_lock_list+l)->lock);
-}
-
-
-
 void _scheduler_set_thread(sll_thread_index_t t){
-	if (_scheduler_thread_idx==t){
+	if (sll_current_thread_idx==t){
 		return;
 	}
-	if (_scheduler_thread_idx!=THREAD_UNKNOWN_INDEX){
+	if (sll_current_thread_idx!=THREAD_UNKNOWN_INDEX){
 		SLL_UNIMPLEMENTED();
 	}
-	_scheduler_thread_idx=t;
+	sll_current_thread_idx=t;
 	_scheduler_current_thread=*(_scheduler_thread+t);
 }
 
@@ -197,56 +158,127 @@ void _scheduler_terminate_thread(sll_object_t* ret){
 	SLL_ASSERT(!_scheduler_current_thread->ret);
 	SLL_ACQUIRE(ret);
 	_scheduler_current_thread->ret=ret;
-	_scheduler_thread_idx=_scheduler_current_thread->wait;
-	if (_scheduler_thread_idx==THREAD_UNKNOWN_INDEX){
-		_scheduler_thread_idx=_scheduler_queue_pop();
-		if (_scheduler_thread_idx!=THREAD_UNKNOWN_INDEX){
-			_scheduler_current_thread=*(_scheduler_thread+_scheduler_thread_idx);
+	sll_current_thread_idx=_scheduler_current_thread->wait;
+	if (sll_current_thread_idx==THREAD_UNKNOWN_INDEX){
+		sll_current_thread_idx=_scheduler_queue_pop();
+		if (sll_current_thread_idx!=THREAD_UNKNOWN_INDEX){
+			_scheduler_current_thread=*(_scheduler_thread+sll_current_thread_idx);
 		}
 		return;
 	}
-	_scheduler_current_thread=*(_scheduler_thread+_scheduler_thread_idx);
+	_scheduler_current_thread=*(_scheduler_thread+sll_current_thread_idx);
 	while (_scheduler_current_thread->nxt!=THREAD_UNKNOWN_INDEX){
-		_scheduler_queue_thread(_scheduler_thread_idx);
-		_scheduler_thread_idx=_scheduler_current_thread->nxt;
-		_scheduler_current_thread=*(_scheduler_thread+_scheduler_thread_idx);
+		_scheduler_queue_thread(sll_current_thread_idx);
+		sll_current_thread_idx=_scheduler_current_thread->nxt;
+		_scheduler_current_thread=*(_scheduler_thread+sll_current_thread_idx);
 	}
 }
 
 
 
 sll_bool_t _scheduler_wait_lock(sll_integer_t w){
-	if (w<0||w>=_scheduler_lock_list_len||(_scheduler_lock_list+w)->lock==THREAD_LOCK_UNUSED){
+	if (w<0||w>=_scheduler_lock_len||(_scheduler_lock+w)->lock==THREAD_LOCK_UNUSED){
 		return 0;
 	}
-	SLL_ASSERT((_scheduler_lock_list+w)->lock!=_scheduler_thread_idx);
-	if ((_scheduler_lock_list+w)->lock==THREAD_UNKNOWN_INDEX){
-		(_scheduler_lock_list+w)->lock=_scheduler_thread_idx;
-		(_scheduler_lock_list+w)->first=THREAD_UNKNOWN_INDEX;
+	SLL_ASSERT((_scheduler_lock+w)->lock!=sll_current_thread_idx);
+	if ((_scheduler_lock+w)->lock==THREAD_UNKNOWN_INDEX){
+		(_scheduler_lock+w)->lock=sll_current_thread_idx;
+		(_scheduler_lock+w)->first=THREAD_UNKNOWN_INDEX;
 		return 0;
 	}
-	if ((_scheduler_lock_list+w)->first==THREAD_UNKNOWN_INDEX){
-		(_scheduler_lock_list+w)->first=_scheduler_thread_idx;
+	if ((_scheduler_lock+w)->first==THREAD_UNKNOWN_INDEX){
+		(_scheduler_lock+w)->first=sll_current_thread_idx;
 	}
 	else{
-		(_scheduler_lock_list+w)->last->nxt=_scheduler_thread_idx;
+		(_scheduler_lock+w)->last->nxt=sll_current_thread_idx;
 	}
-	(_scheduler_lock_list+w)->last=_scheduler_current_thread;
+	(_scheduler_lock+w)->last=_scheduler_current_thread;
 	_scheduler_current_thread->nxt=THREAD_UNKNOWN_INDEX;
-	_scheduler_thread_idx=THREAD_UNKNOWN_INDEX;
+	sll_current_thread_idx=THREAD_UNKNOWN_INDEX;
 	return 1;
 }
 
 
 
 sll_bool_t _scheduler_wait_thread(sll_integer_t w){
-	if (w<0||w>=_scheduler_thread_len||!*(_scheduler_thread+w)||w==_scheduler_thread_idx||(*(_scheduler_thread+w))->ret){
+	if (w<0||w>=_scheduler_thread_len||!*(_scheduler_thread+w)||w==sll_current_thread_idx||(*(_scheduler_thread+w))->ret){
 		return 0;
 	}
 	_scheduler_current_thread->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
 	thread_data_t* thr=*(_scheduler_thread+w);
 	_scheduler_current_thread->nxt=thr->wait;
-	thr->wait=_scheduler_thread_idx;
-	_scheduler_thread_idx=THREAD_UNKNOWN_INDEX;
+	thr->wait=sll_current_thread_idx;
+	sll_current_thread_idx=THREAD_UNKNOWN_INDEX;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_create_lock(void){
+	sll_lock_index_t o=_scheduler_lock_next;
+	if (o==THREAD_LOCK_UNUSED){
+		o=_scheduler_lock_len;
+		_scheduler_lock_len++;
+		_scheduler_lock=sll_reallocate(_scheduler_lock,_scheduler_lock_len*sizeof(lock_t));
+	}
+	else{
+		_scheduler_lock_next=THREAD_LOCK_GET_NEXT_ID(_scheduler_lock+o);
+	}
+	(_scheduler_lock+o)->lock=THREAD_UNKNOWN_INDEX;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_create_thread(sll_integer_t fn,sll_object_t*const* al,sll_arg_count_t all){
+	sll_thread_index_t tid=_init_thread_stack(fn,al,all);
+	_scheduler_queue_thread(tid);
+	return tid;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_lock(sll_lock_index_t l){
+	if (l>=_scheduler_lock_len||(_scheduler_lock+l)->lock==THREAD_LOCK_UNUSED){
+		return 0;
+	}
+	SLL_ASSERT((_scheduler_lock+l)->lock==THREAD_UNKNOWN_INDEX);
+	(_scheduler_lock+l)->lock=THREAD_LOCK_UNUSED;
+	THREAD_LOCK_SET_NEXT_ID(_scheduler_lock+l,_scheduler_lock_next);
+	_scheduler_lock_next=l;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_thread(sll_thread_index_t t){
+	if (t>=_scheduler_thread_len){
+		return 0;
+	}
+	thread_data_t* thr=*(_scheduler_thread+t);
+	if (THREAD_IS_UNUSED(thr)){
+		return 0;
+	}
+	SLL_ASSERT(thr->ret);
+	*(_scheduler_thread+t)=THREAD_NEXT_UNUSED(_scheduler_thread_next);
+	_scheduler_thread_next=t;
+	SLL_RELEASE(thr->ret);
+	sll_platform_free_page(thr,SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz));
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_release_lock(sll_lock_index_t l){
+	if (l>=_scheduler_lock_len||(_scheduler_lock+l)->lock==THREAD_LOCK_UNUSED||(_scheduler_lock+l)->lock==THREAD_UNKNOWN_INDEX){
+		return 0;
+	}
+	(_scheduler_lock+l)->lock=(_scheduler_lock+l)->first;
+	if ((_scheduler_lock+l)->first==THREAD_UNKNOWN_INDEX){
+		return 1;
+	}
+	thread_data_t* thr=*(_scheduler_thread+(_scheduler_lock+l)->lock);
+	(_scheduler_lock+l)->first=thr->nxt;
+	_scheduler_queue_thread((_scheduler_lock+l)->lock);
 	return 1;
 }

@@ -4,6 +4,7 @@
 
 ### Added
 
+- Exposed `sll_current_thread_idx`, `sll_create_lock`, `sll_create_thread`, `sll_delete_lock`, `sll_delete_thread` and `sll_release_lock` ([#173] and [#177])
 - Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type` and `error$create` ([#196])
 - Implemented `sll_platform_create_directory` and `path$mkdir`
 - Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`

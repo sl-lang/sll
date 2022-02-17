@@ -3771,7 +3771,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_thread_release_lock void
+#define __SLL_API_TYPE_sll_api_thread_release_lock __SLL_CHECK_OUTPUT sll_bool_t
 #define __SLL_API_ARGS_sll_api_thread_release_lock sll_integer_t a
 /**
  * \flags check_output func
@@ -3779,6 +3779,7 @@
  * \group thread-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
  */
 /**
  * \flags check_output func

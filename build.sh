@@ -1,3 +1,3 @@
 #!/bin/bash
-clear
+[ ! -d "build" ]&&mkdir build
 python src/_build/main.py "$@"

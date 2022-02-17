@@ -14,7 +14,11 @@
 		(-> (= i ($ err$backtrace)) i {
 			(-- i)
 			(= frame (: err$backtrace i))
-			(= o (+ o (<- string$format "\nat %s:%u (%s)" frame$file frame$line frame$func)))
+			(= o (+ o (<- string$format "\nat %s:%u (%s)"
+				frame$file
+				frame$line
+				frame$func
+			)))
 		})
 		(@@ o)
 	) @@string@@
