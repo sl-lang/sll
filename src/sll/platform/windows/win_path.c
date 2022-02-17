@@ -115,6 +115,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_create_directory(const sll_char_t* fp,sll_bool_t all){
+	if (all){
+		SLL_UNIMPLEMENTED();
+	}
+	return !!CreateDirectoryA(fp,NULL);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d){
 	return !!CopyFileA((const char*)s,(const char*)d,FALSE);
 }

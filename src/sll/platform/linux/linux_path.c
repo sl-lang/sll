@@ -174,6 +174,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_create_directory(const sll_char_t* fp,sll_bool_t all){
+	if (all){
+		SLL_UNIMPLEMENTED();
+	}
+	return !mkdir((char*)fp,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d){
 	int s_fd=open((const char*)s,O_RDONLY);
 	if (s_fd==-1){

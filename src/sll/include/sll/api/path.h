@@ -146,6 +146,19 @@ __API_FUNC_DECL(path_list_dir);
 
 /**
  * \flags api func
+ * \name sll_api_path_mkdir
+ * \group path-api
+ * \desc Docs!
+ * \arg S
+ * \arg B
+ * \ret B
+ */
+__API_FUNC_DECL(path_mkdir);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_path_recursive_list_dir
  * \group path-api
  * \desc Docs!

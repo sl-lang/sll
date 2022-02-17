@@ -418,6 +418,8 @@
 
 (<- file$delete "build/new-hello.txt")
 
+(<- path$mkdir "build/test")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

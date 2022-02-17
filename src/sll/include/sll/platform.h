@@ -202,6 +202,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 
 
 /**
+ * \flags check_output func
+ * \name sll_platform_create_directory
+ * \group platform
+ * \subgroup platform-path
+ * \desc Docs!
+ * \arg const sll_char_t* fp
+ * \arg sll_bool_t all
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_create_directory(const sll_char_t* fp,sll_bool_t all);
+
+
+
+/**
  * \flags func
  * \name sll_platform_enable_console_color
  * \group platform

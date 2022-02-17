@@ -2181,6 +2181,30 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_path_mkdir __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_path_mkdir sll_string_t* a,sll_bool_t b
+/**
+ * \flags check_output func
+ * \name sll_api_path_mkdir
+ * \group path-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \arg sll_bool_t b -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_path_mkdir_raw
+ * \group raw-api
+ * \subgroup raw-api-path-api
+ * \desc Wrapper function for :sll_api_path_mkdir:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_path_recursive_list_dir void
 #define __SLL_API_ARGS_sll_api_path_recursive_list_dir sll_string_t* a,sll_array_t* out
 /**
