@@ -3,6 +3,7 @@
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/platform.h>
+#include <sll/scheduler.h>
 #include <sll/types.h>
 #include <sll/vm.h>
 
