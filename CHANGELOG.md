@@ -4,8 +4,8 @@
 
 ### Added
 
-- Implemented `sll_platform_create_directory` and `path$mkdir`
 - Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type` and `error$create` ([#196])
+- Implemented `sll_platform_create_directory` and `path$mkdir`
 - Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`
 
 ### Changed
@@ -253,7 +253,7 @@
 - Array generator operators: `([>)` and `([<)` ([#206])
 - Assembly membership test instructions: `SLL_ASSEMBLY_INSTRUCTION_TYPE_JI` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI` ([#207])
 - Call stack size member in the `sll_vm_config_t` structure
-- CPU count constant in `sys.sll`: `sll_platform_get_cpu_count` and `sys$CPU_COUNT` ([#196])
+- CPU count constant in `sys.sll`: `sll_platform_get_cpu_count` and `sys$CPU_COUNT` ([#197])
 - Extension to the logging API: `SLL_WARN`, `SLL_LOG_FLAG_SHOW` and `SLL_LOG_FLAG_NO_HEADER`
 - File listing example
 - Implemented `random.sll` module and `sll_platform_random` ([#208])
@@ -1642,6 +1642,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#201]: https://github.com/sl-lang/sll/issues/201
 [#200]: https://github.com/sl-lang/sll/issues/200
 [#199]: https://github.com/sl-lang/sll/issues/199
+[#197]: https://github.com/sl-lang/sll/issues/197
 [#196]: https://github.com/sl-lang/sll/issues/196
 [#195]: https://github.com/sl-lang/sll/issues/195
 [#194]: https://github.com/sl-lang/sll/issues/194
