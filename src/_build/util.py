@@ -8,7 +8,7 @@ import zipfile
 
 
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-BUILD_PATHS=["build/lib","build/lib_ext","build/sys_lib","build/objects","build/objects_ext","build/web"]
+BUILD_PATHS=["build/lib","build/lib/debug","build/sys_lib","build/objects","build/objects_ext","build/web"]
 BUILD_TIME=time.time_ns()
 PLATFORM_SOURCE_CODE={"linux":"src/sll/platform/linux","windows":"src/sll/platform/windows"}
 
@@ -99,8 +99,8 @@ def bundle_ext(v):
 	with zipfile.ZipFile("build/sll_ext_debug.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
 		fp=(f"build/sll-ext-debug-{v[0]}.{v[1]}.{v[2]}.dll" if os.name=="nt" else f"build/sll-ext-debug-{v[0]}.{v[1]}.{v[2]}.so")
 		zf.write(fp,arcname=fp[6:])
-		for k in os.listdir("build/lib_ext"):
-			zf.write("build/lib_ext/"+k,arcname="lib/"+k)
+		for k in os.listdir("build/lib/debug"):
+			zf.write("build/lib/debug/"+k,arcname="lib/"+k)
 
 
 

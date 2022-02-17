@@ -1,4 +1,4 @@
-(--- "debug.sll")
+(--- "debug/debug.sll")
 
 (:> (<- debug$get_call_stack) "\n")
 (= test_func (,,, (:> (<- debug$get_call_stack) "\n")))

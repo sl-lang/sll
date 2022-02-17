@@ -3,14 +3,14 @@
 
 
 (= call_frame_type (&:
-	string_type file
-	int_type line
-	string_type func
+	(~ string_type) file
+	(~ int_type) line
+	(~ string_type) func
 ))
 
 (= error_type (&:
 	(,,, err
-		(= o (<- string$format "Error: %s" err$name))
+		(= o (<- string$format "Error: %s" err$str))
 		(-> (= i ($ err$backtrace)) i {
 			(-- i)
 			(= frame (: err$backtrace i))
@@ -18,58 +18,37 @@
 		})
 		(@@ o)
 	) @@string@@
-	string_type name
-	array_type backtrace
+	(~ int_type) error_type
+	(~ object_type) error_data
+	(~ string_type) str
+	(~ array_type) backtrace
 ))
 
 (= error_module_type (&:
 	(~ type_type) error_type
-	(~ func_type) peek
-	(~ func_type) pop
-	(~ func_type) push
+	(~ func_type) create
 ))
 
 
 
-(= _error_thread_data <>)
-
-
-
-(= pop (,,,
-	(= arr (: _error_thread_data (!.)))
-	(? (|| (! arr) (! ($ arr))) (@@ nil))
-	(@@ (<- array$pop arr))
-))
-
-(= peek (,,,
-	(= arr (: _error_thread_data (!.)))
-	(? (|| (! arr) (! ($ arr))) (@@ nil))
-	(@@ (: arr -1))
-))
-
-(= push (,,, nm
+(= create (,,, type data str
 	(= backtrace (<- (... "sll:error_get_backtrace")))
-	(? (! (|: _error_thread_data (!.))) {
-		(= (: _error_thread_data (!.)) [])
-	})
-	(<- array$push (: _error_thread_data (!.))
-		(. error_type
-			(:: nm string_type)
-			([> (= i 0) (< i ($ backtrace))
-				(= k (: backtrace i))
-				(++ i)
-				(:: k call_frame_type)
-			)
+	(@@ (. error_type
+		(:: type type_type)
+		data
+		(:: str string_type)
+		([> (= i 0) (< i ($ backtrace))
+			(= k (: backtrace i))
+			(++ i)
+			(:: k call_frame_type)
 		)
-	)
+	))
 ))
 
 
 
 (= error (. error_module_type
 	error_type
-	peek
-	pop
-	push
+	create
 ))
 (## error)

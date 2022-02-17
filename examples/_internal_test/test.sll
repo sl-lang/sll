@@ -35,7 +35,7 @@
 (? true nil 2 (:> "Dead Code") (@@ 128 "False Exit"))
 (= fp (+ "build" path$SEPARATOR "hello.txt"))
 (= f (<- file$open fp "wb"))
-(? f {
+(? (=== f$error_type nil) {
 	(<- file$write f "Hello!\n")
 	(:> "ABC\n")
 	(:> f "\n")
@@ -420,8 +420,8 @@
 
 (<- path$mkdir "build/test")
 
-(<- file$open "this/file/does/not/exist.txt")
-(:> (: (<- error$peek) "name") ", " (: (<- error$pop) "name") ", " (: (<- error$peek) "name") ", " (: (<- error$pop) "name") "\n")
+(= f (<- file$open "this/file/does/not/exist.txt"))
+(:> f$error_type "\n" f "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

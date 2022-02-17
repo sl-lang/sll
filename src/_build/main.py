@@ -39,18 +39,19 @@ build.build_sll(fl,ver,("--release" in sys.argv))
 util.log("Compiling Sll CLI...")
 build.build_sll_cli()
 util.log("Copying Modules...")
+fl=[]
 for f in os.listdir("src/sll/lib"):
 	util.log(f"  Copying Module 'src/sll/lib/{f}'...")
 	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
 		wf.write(rf.read())
+	fl.append("build/lib/"+f)
 util.log("Compiling Modules...")
-fl=list(os.listdir("build/lib"))
-if (subprocess.run(["build/sll","-c","-R","-I","build/lib"]+["build/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+if (subprocess.run(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
-	util.log(f"  Removing 'build/lib/{k}'...")
-	os.remove("build/lib/"+k)
+	util.log(f"  Removing '{k}'...")
+	os.remove(k)
 if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
@@ -60,18 +61,19 @@ if ("--extension" in sys.argv or "--test" in sys.argv):
 	util.log("Compiling Sll Extension...")
 	build.build_sll_extension(fl,ver,("--release" in sys.argv))
 	util.log("Copying Extension Modules...")
+	fl=[]
 	for f in os.listdir("src/ext/debug/lib"):
 		util.log(f"  Copying Extension Module 'src/ext/debug/lib/{f}'...")
-		with open(f"src/ext/debug/lib/{f}","rb") as rf,open(f"build/lib_ext/{f}","wb") as wf:
+		with open(f"src/ext/debug/lib/{f}","rb") as rf,open(f"build/lib/debug/{f}","wb") as wf:
 			wf.write(rf.read())
+		fl.append("build/lib/debug/"+f)
 	util.log("Compiling Extension Modules...")
-	fl=list(os.listdir("build/lib_ext"))
-	if (subprocess.run(["build/sll","-c","-R","-I","build/lib_ext"]+["build/lib_ext/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+	if (subprocess.run(["build/sll","-c","-R","-I","build/lib/debug"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:
-		util.log(f"  Removing 'build/lib_ext/{k}'...")
-		os.remove("build/lib_ext/"+k)
+		util.log(f"  Removing '{k}'...")
+		os.remove(k)
 	if ("--bundle" in sys.argv or "--upload" in sys.argv):
 		util.log("Compressing extension files...")
 		util.bundle_ext(ver)

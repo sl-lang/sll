@@ -29,6 +29,7 @@
 
 (= file_module_type (&:
 	(~ type_type) file_type
+	(~ type_type) FILE_NOT_FOUND
 	(~ int_type) FLAG_APPEND
 	(~ int_type) FLAG_NO_BUFFER
 	(~ int_type) FLAG_READ
@@ -51,6 +52,8 @@
 ))
 
 
+
+(= FILE_NOT_FOUND (&:))
 
 (= FLAG_READ 1)
 (= FLAG_WRITE 2)
@@ -142,8 +145,7 @@
 		flags
 	))
 	(? (=== handle -1) {
-		(<- error$push (<- string$format "Unable to open file '%s'" path))
-		(@@ nil)
+		(@@ (<- error$create FILE_NOT_FOUND path (<- string$format "Unable to open file '%s'" path)))
 	})
 	(@@ (. file_type
 		path
@@ -193,6 +195,7 @@
 
 (= file (. file_module_type
 	file_type
+	FILE_NOT_FOUND
 	FLAG_APPEND
 	FLAG_NO_BUFFER
 	FLAG_READ

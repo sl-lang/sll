@@ -1,4 +1,4 @@
-(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "debug.sll" "array.sll" "serial.sll" "base64.sll")
+(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "debug/debug.sll" "array.sll" "serial.sll" "base64.sll")
 
 
 
@@ -53,8 +53,8 @@
 		(@@)
 	})
 	(= _test_results <>)
-	(? (<- path$exists "build/test_results.json") {
-		(= f (<- file$open "build/test_results.json" "r"))
+	(= f (<- file$open "build/test_results.json" "r"))
+	(? (=== f$error_type nil) {
 		(= bf "")
 		(>- (= chunk "") chunk
 			(= chunk (<- file$read f 1024))
