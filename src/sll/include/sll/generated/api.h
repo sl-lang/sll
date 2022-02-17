@@ -419,6 +419,34 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_error_get_backtrace void
+#define __SLL_API_ARGS_sll_api_error_get_backtrace sll_array_t* out
+/**
+ * \flags func
+ * \name sll_api_error_get_backtrace
+ * \group error-api
+ * \desc Docs!
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_error_get_backtrace_raw
+ * \group raw-api
+ * \subgroup raw-api-error-api
+ * \desc Wrapper function for :sll_api_error_get_backtrace:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Error
+ * \group raw-api
+ * \subgroup raw-api-error-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_close __SLL_CHECK_OUTPUT sll_bool_t
 #define __SLL_API_ARGS_sll_api_file_close sll_integer_t a
 /**

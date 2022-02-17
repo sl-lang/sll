@@ -420,6 +420,8 @@
 
 (<- path$mkdir "build/test")
 
+(:> (<- file$open "this/file/does/not/exist.txt") "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

@@ -1,4 +1,4 @@
-(--- "types.sll" "string.sll")
+(--- "types.sll" "string.sll" "error.sll")
 
 
 
@@ -141,7 +141,9 @@
 		path
 		flags
 	))
-	(? (=== handle -1) (@@ nil))
+	(? (=== handle -1)
+		(@@ (<- error$create (<- string$format "Unable to open file '%s'" path)))
+	)
 	(@@ (. file_type
 		path
 		flags

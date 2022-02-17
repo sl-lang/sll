@@ -1,0 +1,50 @@
+(--- "types.sll" "string.sll")
+
+
+
+(= call_frame_type (&:
+	string_type file
+	int_type line
+	string_type func
+))
+
+(= error_type (&:
+	(,,, err
+		(= o (<- string$format "Error: %s" err$name))
+		(-> (= i ($ err$backtrace)) i {
+			(-- i)
+			(= frame (: err$backtrace i))
+			(= o (+ o (<- string$format "\nat %s:%u (%s)" frame$file frame$line frame$func)))
+		})
+		(@@ o)
+	) @@string@@
+	string_type name
+	array_type backtrace
+))
+
+(= error_module_type (&:
+	(~ type_type) error_type
+	(~ func_type) create
+))
+
+
+
+(= create (,,, nm
+	(= backtrace (<- (... "sll:error_get_backtrace")))
+	(@@ (. error_type
+		(:: nm string_type)
+		([> (= i 0) (< i ($ backtrace))
+			(= k (: backtrace i))
+			(++ i)
+			(:: k call_frame_type)
+		)
+	))
+))
+
+
+
+(= error (. error_module_type
+	error_type
+	create
+))
+(## error)

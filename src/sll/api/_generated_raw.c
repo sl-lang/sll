@@ -590,6 +590,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_split_raw(sll_objec
 
 
 
+__SLL_API_TYPE_sll_api_error_get_backtrace sll_api_error_get_backtrace(__SLL_API_ARGS_sll_api_error_get_backtrace);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_backtrace_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_array_t out;
+	sll_api_error_get_backtrace(&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_file_close sll_api_file_close(__SLL_API_ARGS_sll_api_file_close);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_close_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -5133,6 +5145,10 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_date_split_raw
 	},
 	{
+		SLL_CHAR("sll:error_get_backtrace"),
+		sll_api_error_get_backtrace_raw
+	},
+	{
 		SLL_CHAR("sll:file_close"),
 		sll_api_file_close_raw
 	},
@@ -5708,5 +5724,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=160;
+const sll_function_index_t _ifunc_size=161;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

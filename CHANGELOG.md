@@ -4,8 +4,9 @@
 
 ### Added
 
-- Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`
 - Implemented `sll_platform_create_directory` and `path$mkdir`
+- Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type` and `error$create` ([#196])
+- Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`
 
 ### Changed
 
