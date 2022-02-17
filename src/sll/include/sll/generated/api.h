@@ -2666,14 +2666,15 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_serial_decode_string void
-#define __SLL_API_ARGS_sll_api_serial_decode_string sll_integer_t a,sll_string_t* out
+#define __SLL_API_TYPE_sll_api_serial_decode_string __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_serial_decode_string sll_integer_t a
 /**
  * \flags func
  * \name sll_api_serial_decode_string
  * \group serial-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func

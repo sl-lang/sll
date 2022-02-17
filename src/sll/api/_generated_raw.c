@@ -3484,13 +3484,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string_raw
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_string_t out;
-	sll_api_serial_decode_string(a->dt.i,&out);
+	sll_object_t* out=sll_api_serial_decode_string(a->dt.i);
 	SLL_RELEASE(a);
-	sll_object_t* out_o=SLL_CREATE();
-	out_o->t=SLL_OBJECT_TYPE_STRING;
-	out_o->dt.s=out;
-	return out_o;
+	return out;
 }
 
 

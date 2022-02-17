@@ -74,7 +74,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 			{
 				sll_object_t* o=SLL_CREATE();
 				o->t=SLL_OBJECT_TYPE_STRING;
-				sll_decode_string(f,&(o->dt.s));
+				sll_string_t str;
+				if (!sll_decode_string(f,&str)){
+					sll_string_create(0,&(o->dt.s));
+				}
+				else{
+					o->dt.s=str;
+				}
 				return o;
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
@@ -125,7 +131,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_decode_string(sll_file_t* f,sll_string_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_decode_string(sll_file_t* f,sll_string_t* o){
 	if (!f){
 		goto _error;
 	}
@@ -380,7 +386,14 @@ __API_FUNC(serial_decode_object){
 
 
 __API_FUNC(serial_decode_string){
-	sll_decode_string(sll_file_from_handle(a),out);
+	sll_string_t str;
+	if (!sll_decode_string(sll_file_from_handle(a),&str)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* o=SLL_CREATE();
+	o->t=SLL_OBJECT_TYPE_STRING;
+	o->dt.s=str;
+	return o;
 }
 
 

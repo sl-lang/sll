@@ -50,26 +50,26 @@ __SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_path_split
  * \group path-api
  * \desc Docs!
  * \arg const sll_string_t* s
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split(const sll_string_t* s);
 
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_path_split_drive
  * \group path-api
  * \desc Docs!
  * \arg const sll_string_t* s
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL sll_string_length_t sll_path_split_drive(const sll_string_t* s);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const sll_string_t* s);
 
 
 

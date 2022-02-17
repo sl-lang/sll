@@ -59,7 +59,7 @@ __SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sl
 
 
 
-__SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split(const sll_string_t* s){
 	sll_char_t dt[2]={
 		'/',
 		'\\'
@@ -70,7 +70,7 @@ __SLL_EXTERNAL sll_string_length_t sll_path_split(const sll_string_t* s){
 
 
 
-__SLL_EXTERNAL sll_string_length_t sll_path_split_drive(const sll_string_t* s){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const sll_string_t* s){
 #ifdef __SLL_BUILD_WINDOWS
 	if (s->l>1&&s->v[1]==':'){
 		return 2;

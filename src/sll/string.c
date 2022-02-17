@@ -1487,7 +1487,7 @@ __SLL_EXTERNAL void sll_string_reverse(const sll_string_t* s,sll_string_t* o){
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_string_secure_equal(const sll_string_t* a,const sll_string_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_secure_equal(const sll_string_t* a,const sll_string_t* b){
 	if (a->l<b->l){
 		const sll_string_t* t=a;
 		a=b;

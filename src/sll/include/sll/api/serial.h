@@ -61,7 +61,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_decode_string
  * \group serial-api
  * \subgroup serial-api-compression
@@ -70,7 +70,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
  * \arg sll_string_t* o
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_decode_string(sll_file_t* f,sll_string_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_decode_string(sll_file_t* f,sll_string_t* o);
 
 
 
@@ -181,7 +181,7 @@ __API_FUNC_DECL(serial_decode_object);
  * \group serial-api
  * \desc Docs!
  * \arg I
- * \ret S
+ * \ret O
  */
 __API_FUNC_DECL(serial_decode_string);
 
