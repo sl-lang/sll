@@ -135,7 +135,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_delete(const sll_
 	if (a==INVALID_FILE_ATTRIBUTES){
 		return 0;
 	}
-	return (a&FILE_ATTRIBUTE_DIRECTORY?!!RemoveDirectoryA(fp):!DeleteFileA(fp));
+	return ((a&FILE_ATTRIBUTE_DIRECTORY)?!!RemoveDirectoryA(fp):!DeleteFileA(fp));
 }
 
 
