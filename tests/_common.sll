@@ -53,8 +53,8 @@
 		(@@)
 	})
 	(= _test_results <>)
-	(= f (<- file$open "build/test_results.json" "r"))
-	(? (!== f nil) {
+	(? (<- path$exists "build/test_results.json") {
+		(= f (<- file$open "build/test_results.json" "r"))
 		(= bf "")
 		(>- (= chunk "") chunk
 			(= chunk (<- file$read f 1024))

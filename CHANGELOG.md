@@ -4,7 +4,7 @@
 
 ### Added
 
-- Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type` and `error$create` ([#196])
+- Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type`, `error$peek`, `error$pop` and `error$push` ([#196])
 - Implemented `sll_platform_create_directory` and `path$mkdir`
 - Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`
 

@@ -141,9 +141,10 @@
 		path
 		flags
 	))
-	(? (=== handle -1)
-		(@@ (<- error$create (<- string$format "Unable to open file '%s'" path)))
-	)
+	(? (=== handle -1) {
+		(<- error$push (<- string$format "Unable to open file '%s'" path))
+		(@@ nil)
+	})
 	(@@ (. file_type
 		path
 		flags

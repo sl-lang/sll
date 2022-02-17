@@ -1,4 +1,4 @@
-(--- "types.sll" "string.sll")
+(--- "types.sll" "string.sll" "array.sll")
 
 
 
@@ -24,27 +24,52 @@
 
 (= error_module_type (&:
 	(~ type_type) error_type
-	(~ func_type) create
+	(~ func_type) peek
+	(~ func_type) pop
+	(~ func_type) push
 ))
 
 
 
-(= create (,,, nm
+(= _error_thread_data <>)
+
+
+
+(= pop (,,,
+	(= arr (: _error_thread_data (!.)))
+	(? (|| (! arr) (! ($ arr))) (@@ nil))
+	(@@ (<- array$pop arr))
+))
+
+(= peek (,,,
+	(= arr (: _error_thread_data (!.)))
+	(? (|| (! arr) (! ($ arr))) (@@ nil))
+	(@@ (: arr -1))
+))
+
+(= push (,,, nm
 	(= backtrace (<- (... "sll:error_get_backtrace")))
-	(@@ (. error_type
-		(:: nm string_type)
-		([> (= i 0) (< i ($ backtrace))
-			(= k (: backtrace i))
-			(++ i)
-			(:: k call_frame_type)
+	(? (! (|: _error_thread_data (!.))) {
+		(= (: _error_thread_data (!.)) [])
+	})
+	(<- array$push (: _error_thread_data (!.))
+		(. error_type
+			(:: nm string_type)
+			([> (= i 0) (< i ($ backtrace))
+				(= k (: backtrace i))
+				(++ i)
+				(:: k call_frame_type)
+			)
 		)
-	))
+	)
 ))
 
 
 
 (= error (. error_module_type
 	error_type
-	create
+	peek
+	pop
+	push
 ))
 (## error)

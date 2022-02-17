@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -420,7 +420,8 @@
 
 (<- path$mkdir "build/test")
 
-(:> (<- file$open "this/file/does/not/exist.txt") "\n")
+(<- file$open "this/file/does/not/exist.txt")
+(:> (: (<- error$peek) "name") ", " (: (<- error$pop) "name") ", " (: (<- error$peek) "name") ", " (: (<- error$pop) "name") "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
