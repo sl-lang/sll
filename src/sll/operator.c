@@ -767,7 +767,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* a){
 	switch (SLL_OBJECT_GET_TYPE(a)){
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
@@ -798,7 +798,52 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dup(sll_object_t* a
 	}
 	SLL_ASSERT(SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE);
 	if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-		return sll_object_clone(sll_current_runtime_data->tt,a);
+		return sll_object_clone(sll_current_runtime_data->tt,a,0);
+	}
+	SLL_ACQUIRE(a);
+	return a;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_deep_copy(sll_object_t* a){
+	switch (SLL_OBJECT_GET_TYPE(a)){
+		case SLL_OBJECT_TYPE_INT:
+		case SLL_OBJECT_TYPE_FLOAT:
+		case SLL_OBJECT_TYPE_CHAR:
+			SLL_ACQUIRE(a);
+			return a;
+		case SLL_OBJECT_TYPE_STRING:
+			{
+				sll_object_t* o=SLL_CREATE();
+				o->t=SLL_OBJECT_TYPE_STRING;
+				sll_string_clone(&(a->dt.s),&(o->dt.s));
+				return o;
+			}
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				sll_object_t* o=SLL_CREATE();
+				o->t=SLL_OBJECT_TYPE_ARRAY;
+				sll_array_create(a->dt.a.l,&(o->dt.a));
+				for (sll_map_length_t i=0;i<a->dt.a.l;i++){
+					o->dt.a.v[i]=sll_operator_deep_copy(a->dt.a.v[i]);
+				}
+				return o;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_object_t* o=SLL_CREATE();
+				o->t=SLL_OBJECT_TYPE_MAP;
+				sll_map_create(a->dt.m.l,&(o->dt.m));
+				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i++){
+					o->dt.m.v[i]=sll_operator_deep_copy(a->dt.m.v[i]);
+				}
+				return o;
+			}
+	}
+	SLL_ASSERT(SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE);
+	if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		return sll_object_clone(sll_current_runtime_data->tt,a,1);
 	}
 	SLL_ACQUIRE(a);
 	return a;

@@ -174,9 +174,10 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt);
  * \desc Docs!
  * \arg const sll_object_type_table_t* tt
  * \arg const sll_object_t* o
+ * \arg sll_bool_t d
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_type_table_t* tt,const sll_object_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_type_table_t* tt,const sll_object_t* o,sll_bool_t d);
 
 
 

@@ -337,28 +337,28 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_type_table_t* tt,const sll_object_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_type_table_t* tt,const sll_object_t* o,sll_bool_t d){
 	const sll_object_type_data_t* dt=*(tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
 	sll_object_t* n=SLL_CREATE();
 	n->t=SLL_OBJECT_GET_TYPE(o);
 	n->dt.p=sll_allocate(dt->l*sizeof(sll_object_field_t));
-	const sll_object_field_t* s=o->dt.p;
-	sll_object_field_t* d=n->dt.p;
+	const sll_object_field_t* src=o->dt.p;
+	sll_object_field_t* dst=n->dt.p;
 	for (sll_arg_count_t i=0;i<dt->l;i++){
 		switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
 			case SLL_OBJECT_TYPE_INT:
 			case SLL_OBJECT_TYPE_CHAR:
-				d->i=s->i;
+				dst->i=src->i;
 				break;
 			case SLL_OBJECT_TYPE_FLOAT:
-				d->f=s->f;
+				dst->f=src->f;
 				break;
 			default:
-				d->o=sll_operator_dup(s->o);
+				dst->o=(d?sll_operator_deep_copy:sll_operator_copy)(src->o);
 				break;
 		}
-		s++;
-		d++;
+		src++;
+		dst++;
 	}
 	if (dt->fn.copy){
 		SLL_RELEASE(sll_execute_function(dt->fn.copy,&n,1));

@@ -1237,6 +1237,24 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				}
 				return o;
 			}
+		case SLL_NODE_TYPE_DEEP_COPY:
+			{
+				sll_arg_count_t l=o->dt.ac;
+				o++;
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					PUSH;
+					return o;
+				}
+				o=_generate_on_stack(o,g_dt);
+				l--;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_DEEP_COPY);
+				return o;
+			}
 		case SLL_NODE_TYPE_VAR_ACCESS:
 			{
 				sll_arg_count_t l=o->dt.ac;

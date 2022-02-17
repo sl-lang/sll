@@ -60,13 +60,27 @@
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [1 2.0 'a']) 4 "Count multiple (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) 1 "Count array (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Count map (division)")
-	; Duplicate
+	; Copy
 	(<- expect (,
 		(= arr [1 2 3])
 		(= new (: arr))
 		(= (: new 0) "A")
 		arr
-	) [1 2 3] "Duplication")
+	) [1 2 3] "Copy")
+	(<- expect (,
+		(= arr [[1 2] [3 4]])
+		(= new (: arr))
+		(= (: (: new 0) 0) 'A')
+		(= (: new 1) [5 6])
+		arr
+	) [['A' 2] [3 4]] "Copy with deep access")
+	; Deep copy
+	(<- expect (,
+		(= arr [[1 2] [3 4]])
+		(= new (:! arr))
+		(= (: (: new 0) 0) 'A')
+		arr
+	) [[1 2] [3 4]] "Deep copy")
 	; Equality
 	(<- expect (== [1 2 3 4] 4) 1 "Equal to integer")
 	(<- expect (== [1 2 3 4] 4.0) 1 "Equal to float")

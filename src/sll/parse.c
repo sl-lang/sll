@@ -385,6 +385,9 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				else if (*str=='>'&&*(str+1)=='='){
 					o->t=SLL_NODE_TYPE_MORE_EQUAL;
 				}
+				else if (*str==':'&&*(str+1)=='!'){
+					o->t=SLL_NODE_TYPE_DEEP_COPY;
+				}
 				else if (*str=='|'&&*(str+1)==':'){
 					o->t=SLL_NODE_TYPE_HAS;
 				}

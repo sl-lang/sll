@@ -352,6 +352,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		case SLL_NODE_TYPE_ACCESS:
 			sll_file_write_char(wf,':');
 			break;
+		case SLL_NODE_TYPE_DEEP_COPY:
+			PRINT_STATIC_STRING(":!",wf);
+			break;
 		case SLL_NODE_TYPE_VAR_ACCESS:
 			{
 				sll_arg_count_t l=o->dt.ac;
@@ -954,6 +957,9 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY:
 				PRINT_STATIC_STRING("COPY",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEEP_COPY:
+				PRINT_STATIC_STRING("DEEP_COPY",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS:
 				PRINT_STATIC_STRING("ACCESS",wf);

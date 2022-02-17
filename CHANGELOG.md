@@ -4,8 +4,11 @@
 
 ### Added
 
+- Deep copy operator: `(:!)` ([#233])
 - Exposed `sll_current_thread_idx`, `sll_create_lock`, `sll_create_thread`, `sll_delete_lock`, `sll_delete_thread` and `sll_release_lock` ([#173] and [#177])
+- Extra parameter in `sll_object_clone` to enable deep value copy
 - Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type` and `error$create` ([#196])
+- Implemented `sll_operator_deep_copy` ([#233])
 - Implemented `sll_platform_create_directory` and `path$mkdir`
 - Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`
 
@@ -13,6 +16,7 @@
 
 - Fixed another bug in `sll_string_compare_pointer`
 - Improved performance of the scheduler
+- Renamed `sll_operator_dup` to `sll_operator_copy`
 
 ## [0.7.4] - 2022-02-15
 
@@ -1619,6 +1623,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#233]: https://github.com/sl-lang/sll/issues/233
 [#232]: https://github.com/sl-lang/sll/issues/232
 [#222]: https://github.com/sl-lang/sll/issues/222
 [#221]: https://github.com/sl-lang/sll/issues/221

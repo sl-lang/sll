@@ -423,6 +423,11 @@
 (= f (<- file$open "this/file/does/not/exist.txt"))
 (:> f$error_type "\n" f "\n")
 
+(= arr [[1 2] [3 4]])
+(= n_arr (:! arr))
+(= (: (: arr 0) 0) 'A')
+(:> arr ", " n_arr "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)
