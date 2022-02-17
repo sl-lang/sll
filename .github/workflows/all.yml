@@ -41,7 +41,7 @@ jobs:
         with:
           languages: cpp, javascript
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --extension
+        run: ${{env.BUILD_COMMAND}}
       - name: Analyze
         uses: github/codeql-action/analyze@v1
   diff:
@@ -60,7 +60,7 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows ext=src/sll/include,src/ext web-client=src/sll/include,src/web/client web-server=src/web/server test=tests ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,sll/ext windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows web-client=src/sll/include,src/web/client web-server=src/web/server test=tests ${{secrets.GITHUB_TOKEN}}
   linux:
     name: Build linux
     needs: diff
@@ -75,45 +75,6 @@ jobs:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}}
-  linux-ext:
-    name: Build linux extension
-    needs:
-      - diff
-      - linux
-    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup python@3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only
-  linux-ext-release:
-    name: Build linux extension release
-    needs:
-      - diff
-      - linux-release
-    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup python@3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Store asset
-        uses: actions/upload-artifact@v2
-        if: github.event_name=='workflow_dispatch'
-        with:
-          name: release-linux-ext
-          path: linux_ext_debug.zip
-          retention-days: 1
   linux-release:
     name: Build linux release
     needs: diff
@@ -140,8 +101,7 @@ jobs:
     needs:
       - diff
       - linux-release
-      - linux-ext-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).ext||fromJSON(needs.diff.outputs.data).test)&&github.event_name!='workflow_dispatch'
+    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).test)&&github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -151,7 +111,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --release --extension
+        run: ${{env.BUILD_COMMAND}} --release
       - name: Test
         run: build/sll tests/_runner.sll
   release:
@@ -159,8 +119,6 @@ jobs:
     needs:
       - linux-release
       - windows-release
-      - linux-ext-release
-      - windows-ext-release
     if: github.event_name=='workflow_dispatch'
     runs-on: ubuntu-latest
     permissions: write-all
@@ -256,45 +214,6 @@ jobs:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND}}
-  windows-ext:
-    name: Build windows extension
-    needs:
-      - diff
-      - windows
-    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup python@3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only
-  windows-ext-release:
-    name: Build windows extension release
-    needs:
-      - diff
-      - windows-release
-    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).ext
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup python@3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Build
-        run: python src/_build/main.py --verbose --extension --extension-only --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
-      - name: Store asset
-        uses: actions/upload-artifact@v2
-        if: github.event_name=='workflow_dispatch'
-        with:
-          name: release-win-ext
-          path: win_ext_debug.zip
-          retention-days: 1
   windows-release:
     name: Build windows release
     needs: diff
@@ -321,8 +240,7 @@ jobs:
     needs:
       - diff
       - windows-release
-      - windows-ext-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext||fromJSON(needs.diff.outputs.data).test)&&github.event_name!='workflow_dispatch'
+    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).test)&&github.event_name!='workflow_dispatch'
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -332,6 +250,6 @@ jobs:
         with:
           python-version: 3.9
       - name: Build & Test
-        run: ${{env.BUILD_COMMAND}} --release --extension
+        run: ${{env.BUILD_COMMAND}} --release
       - name: Test
         run: build/sll.exe tests/_runner.sll

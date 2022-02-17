@@ -55,20 +55,20 @@ for k in fl:
 if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
-if ("--extension" in sys.argv or "--test" in sys.argv):
-	util.log("Listing Source Code Files (Extension)...")
-	fl=util.get_ext_files()
-	util.log("Compiling Sll Extension...")
-	build.build_sll_extension(fl,ver,("--release" in sys.argv))
-	util.log("Copying Extension Modules...")
+for nm in util.get_ext_list():
+	util.log(f"Listing Source Code Files ({nm})...")
+	fl=util.get_ext_files(nm)
+	util.log(f"Compiling Sll Extension ({nm})...")
+	build.build_sll_extension(nm,fl,ver,("--release" in sys.argv))
+	util.log(f"Copying Extension Modules ({nm})...")
 	fl=[]
-	for f in os.listdir("src/ext/debug/lib"):
-		util.log(f"  Copying Extension Module 'src/ext/debug/lib/{f}'...")
-		with open(f"src/ext/debug/lib/{f}","rb") as rf,open(f"build/lib/debug/{f}","wb") as wf:
+	for f in os.listdir(f"src/ext/{nm}/lib"):
+		util.log(f"  Copying Extension Module 'src/ext/{nm}/lib/{f}'...")
+		with open(f"src/ext/{nm}/lib/{f}","rb") as rf,open(f"build/lib/{nm}/{f}","wb") as wf:
 			wf.write(rf.read())
-		fl.append("build/lib/debug/"+f)
+		fl.append(f"build/lib/{nm}/"+f)
 	util.log("Compiling Extension Modules...")
-	if (subprocess.run(["build/sll","-c","-R","-I","build/lib/debug"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+	if (subprocess.run(["build/sll","-c","-R","-I","build/lib/"+nm]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:
@@ -76,13 +76,11 @@ if ("--extension" in sys.argv or "--test" in sys.argv):
 		os.remove(k)
 	if ("--bundle" in sys.argv or "--upload" in sys.argv):
 		util.log("Compressing extension files...")
-		util.bundle_ext(ver)
-	if ("--extension-only" in sys.argv):
+		util.bundle_ext(nm,ver)
 		if ("--upload" in sys.argv):
-			os.rename("build/sll_ext_debug.zip",("win_ext_debug.zip" if os.name=="nt" else "linux_ext_debug.zip"))
-		sys.exit(0)
+			os.rename(f"build/sll_ext_{nm}.zip",("win" if os.name=="nt" else "linux")+f"_ext_{nm}.zip")
 	util.log("Installing extension library...")
-	with open(f"build/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"rb") as rf,open(f"build/sys_lib/sll-ext-debug-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"wb") as wf:
+	with open(f"build/sll-ext-{nm}-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"rb") as rf,open(f"build/sys_lib/sll-ext-{nm}-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"wb") as wf:
 		wf.write(rf.read())
 if ("--test" in sys.argv):
 	util.log("Running tests...")

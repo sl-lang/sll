@@ -10,7 +10,7 @@ extraction:
         - python3.8
     index:
       build_command:
-        - python3.8 src/_build/main.py --verbose --extension
+        - python3.8 src/_build/main.py --verbose
   javascript:
     index:
       typescript: none
