@@ -16,16 +16,12 @@ jobs:
     needs:
       - diff
       - linux
-      - linux-ext
-      - linux-ext-release
       - linux-release
       - web
       - web-server
       - windows
-      - windows-ext
-      - windows-ext-release
       - windows-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).ext)&&github.event_name!='workflow_dispatch'
+    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).windows)&&github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -60,7 +56,7 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,sll/ext windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows web-client=src/sll/include,src/web/client web-server=src/web/server test=tests ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,sll/ext windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,sll/ext web-client=src/sll/include,src/web/client web-server=src/web/server test=tests ${{secrets.GITHUB_TOKEN}}
   linux:
     name: Build linux
     needs: diff
