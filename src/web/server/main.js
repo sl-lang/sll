@@ -31,7 +31,7 @@ addEventListener("fetch",(e)=>e.respondWith((async (url)=>{
 			"X-Frame-Options": "DENY"
 		})
 	};
-	if (!(await SLL.get("__table")).split("\x00").includes(url)){
+	if (!(await SLL.get("__links")).split("\n").includes(url)){
 		opt.status=404;
 		opt.statusText="Not Found";
 		url="not_found.html";

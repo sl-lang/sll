@@ -157,18 +157,18 @@ def generate():
 if (__name__=="__main__"):
 	import requests
 	if ("--server" in sys.argv):
+		util.log("Uploading Server Code...")
 		with open("src/web/server/main.js","rb") as f:
-			util.log("Uploading Server Code...")
 			requests.put(f"https://api.cloudflare.com/client/v4/accounts/{sys.argv[-3]}/workers/scripts/{sys.argv[-2]}",data=f.read(),headers={"Authorization":"Bearer "+sys.argv[-1],"Content-Type":"application/javascript"})
 	else:
 		url=f"https://api.cloudflare.com/client/v4/accounts/{sys.argv[-3]}/storage/kv/namespaces/{sys.argv[-2]}/"
 		h={"Authorization":"Bearer "+sys.argv[-1],"Content-Type":"application/json"}
 		util.log("Listing Current KV Keys...")
-		tb_r=requests.get(url+"values/__table",headers=h,stream=True).raw
+		tb_r=requests.get(url+"values/__links",headers=h,stream=True).raw
 		tb_r.decode_content=True
 		rm_l=[]
 		n_tb=[]
-		for k in tb_r.read().split(b"\x00"):
+		for k in tb_r.read().split(b"\n"):
 			if (k[:5]==b"/apt/" or k[:5]==b"/bin/"):
 				n_tb.append(k)
 			else:
@@ -192,7 +192,7 @@ if (__name__=="__main__"):
 			n_tb.append(fp)
 			o.append({"key":fp_h,"value":util.encode(dt[i:i+sz]),"base64":True})
 			i+=sz
-		o.append({"key":"__table","value":util.encode(b"\x00".join(n_tb)),"base64":True})
+		o.append({"key":"__links","value":util.encode(b"\n".join(n_tb)),"base64":True})
 		if (len(rm_l)>0):
 			util.log("Clearing KV Storage...")
 			requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in rm_l])+"]")

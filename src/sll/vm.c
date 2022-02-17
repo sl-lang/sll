@@ -210,7 +210,7 @@ static void _call_function(sll_function_index_t fn,sll_arg_count_t ac){
 
 static sll_object_t* _wait_for_result(sll_thread_index_t tid){
 	sll_thread_index_t s_tid=sll_current_thread_idx;
-	sll_current_thread_idx=THREAD_UNKNOWN_INDEX;
+	sll_current_thread_idx=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_set_thread(tid);
 	thread_data_t* tid_dt=_scheduler_current_thread;
 	if (_scheduler_current_thread->ret){
@@ -946,7 +946,7 @@ _return:;
 					if (_scheduler_wait_thread(n_tid)){
 						c_thr->ii++;
 						n_tid=_scheduler_queue_pop();
-						if (n_tid==THREAD_UNKNOWN_INDEX){
+						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
 							if (tid_dt->ret){
 								goto _cleanup;
 							}
@@ -973,7 +973,7 @@ _return:;
 					if (_scheduler_wait_lock(lck)){
 						c_thr->ii++;
 						sll_thread_index_t n_tid=_scheduler_queue_pop();
-						if (n_tid==THREAD_UNKNOWN_INDEX){
+						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
 							if (tid_dt->ret){
 								goto _cleanup;
 							}
@@ -995,7 +995,7 @@ _return:;
 		_scheduler_current_thread->ii++;
 	}
 _cleanup:
-	if (s_tid!=THREAD_UNKNOWN_INDEX){
+	if (s_tid!=SLL_UNKNOWN_THREAD_INDEX){
 		_scheduler_set_thread(s_tid);
 	}
 	sll_object_t* ret=tid_dt->ret;
@@ -1012,14 +1012,14 @@ sll_thread_index_t _init_thread_stack(sll_integer_t fn_idx,sll_object_t*const* a
 	if (fn_idx&&fn_idx<=sll_current_runtime_data->a_dt->ft.l){
 		sll_thread_index_t o=_scheduler_new_thread();
 		sll_thread_index_t tmp=sll_current_thread_idx;
-		sll_current_thread_idx=THREAD_UNKNOWN_INDEX;
+		sll_current_thread_idx=SLL_UNKNOWN_THREAD_INDEX;
 		_scheduler_set_thread(o);
 		for (;_scheduler_current_thread->si<all;_scheduler_current_thread->si++){
 			*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=*(al+_scheduler_current_thread->si);
 			SLL_ACQUIRE(*(al+_scheduler_current_thread->si));
 		}
 		_call_function((sll_function_index_t)(fn_idx-1),all);
-		sll_current_thread_idx=THREAD_UNKNOWN_INDEX;
+		sll_current_thread_idx=SLL_UNKNOWN_THREAD_INDEX;
 		_scheduler_set_thread(tmp);
 		return o;
 	}
@@ -1057,7 +1057,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	SLL_RELEASE(rc_o);
 	while (1){
 		sll_thread_index_t n_tid=_scheduler_queue_pop();
-		if (n_tid==THREAD_UNKNOWN_INDEX){
+		if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
 			break;
 		}
 		SLL_RELEASE(_wait_for_result(n_tid));

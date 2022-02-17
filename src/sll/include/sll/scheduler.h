@@ -12,6 +12,17 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_UNKNOWN_THREAD_INDEX
+ * \group scheduler
+ * \desc Docs!
+ * \type sll_thread_index_t
+ */
+#define SLL_UNKNOWN_THREAD_INDEX 0xffffffff
+
+
+
+/**
  * \flags var
  * \name sll_current_thread_idx
  * \group scheduler

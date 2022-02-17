@@ -269,7 +269,6 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define DISABLE_FILE_HASH 255
 
 #define THREAD_SCHEDULER_INSTRUCTION_COUNT 10
-#define THREAD_UNKNOWN_INDEX 0xffffffff
 #define THREAD_IS_UNUSED(t) (ADDR(t)>>63)
 #define THREAD_NEXT_UNUSED(id) (PTR((id)|0x8000000000000000ull))
 #define THREAD_GET_NEXT_UNUSED(t) ((sll_thread_index_t)(ADDR((t))&0x7fffffffffffffffull))
@@ -308,6 +307,10 @@ typedef __SLL_U32 return_table_size_t;
 
 
 typedef __SLL_U32 small_bitmap_t;
+
+
+
+typedef __SLL_U32 thread_list_length_t;
 
 
 
