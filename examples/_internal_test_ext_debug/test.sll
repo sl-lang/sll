@@ -1,4 +1,5 @@
 (--- "debug/debug.sll")
+(--- "opengl/gl.sll")
 
 (:> (<- debug$get_call_stack) "\n")
 (= test_func (,,, (:> (<- debug$get_call_stack) "\n")))

@@ -56,6 +56,7 @@ if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
 for nm in util.get_ext_list():
+	os.mkdir("build/lib/"+nm)
 	util.log(f"Listing Source Code Files ({nm})...")
 	fl=util.get_ext_files(nm)
 	util.log(f"Compiling Sll Extension ({nm})...")

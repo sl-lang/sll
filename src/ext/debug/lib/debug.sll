@@ -52,7 +52,7 @@
 	(@@ 1)
 })
 
-(<- (... "sll_ext:debug__init") call_stack_type call_stack_raw_type location_type vm_config_type)
+(<- (... "sll_ext_debug:_init") call_stack_type call_stack_raw_type location_type vm_config_type)
 
 
 
@@ -67,19 +67,19 @@
 	(@@ o)
 ))
 
-(= get_call_stack (... "sll_ext:debug_get_call_stack"))
+(= get_call_stack (... "sll_ext_debug:get_call_stack"))
 
-(= get_instruction_count (... "sll_ext:debug_get_instruction_count"))
+(= get_instruction_count (... "sll_ext_debug:get_instruction_count"))
 
-(= get_instruction_index (... "sll_ext:debug_get_instruction_index"))
+(= get_instruction_index (... "sll_ext_debug:get_instruction_index"))
 
-(= get_location (... "sll_ext:debug_get_location"))
+(= get_location (... "sll_ext_debug:get_location"))
 
-(= get_name (... "sll_ext:debug_get_name"))
+(= get_name (... "sll_ext_debug:get_name"))
 
-(= get_ref_count (... "sll_ext:debug_get_ref_count"))
+(= get_ref_count (... "sll_ext_debug:get_ref_count"))
 
-(= get_vm_config (... "sll_ext:debug_get_vm_config"))
+(= get_vm_config (... "sll_ext_debug:get_vm_config"))
 
 
 

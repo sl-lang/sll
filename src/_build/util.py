@@ -8,7 +8,7 @@ import zipfile
 
 
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-BUILD_PATHS=["build/lib","build/lib/debug","build/sys_lib","build/objects","build/objects_ext","build/web"]
+BUILD_PATHS=["build/lib","build/sys_lib","build/objects","build/web"]
 BUILD_TIME=time.time_ns()
 PLATFORM_SOURCE_CODE={"linux":"src/sll/platform/linux","windows":"src/sll/platform/windows"}
 
@@ -79,6 +79,8 @@ def get_ext_files(nm):
 	o=[]
 	for r,_,fl in os.walk("src/ext/"+nm):
 		r=r.replace("\\","/").rstrip("/")+"/"
+		if ("data" in r):
+			continue
 		for f in fl:
 			if (f[-2:]==".c"):
 				o.append(r+f)
@@ -123,3 +125,9 @@ def encode(dt):
 	if (i==len(dt)-1):
 		return o+BASE64_ALPHABET[dt[i]>>2]+BASE64_ALPHABET[(dt[i]<<4)&0x3f]+"=="
 	return o
+
+
+
+def clean_objects():
+	for k in os.listdir("build/objects"):
+		os.remove("build/objects/"+k)

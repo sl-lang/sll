@@ -74,6 +74,7 @@ def build_sll(fl,v,r):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
+	util.clean_objects()
 
 
 
@@ -82,19 +83,19 @@ def build_sll_cli():
 	os.chdir("build")
 	if (os.name=="nt"):
 		util.log("  Compiling Files (Release Console Mode)...")
-		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../src/cli/include","/Fomain.obj","../src/cli/main_windows_console.c"]).returncode!=0):
+		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../src/cli/include","/Foobjects/main.obj","../src/cli/main_windows_console.c"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		util.log("  Linking Files (Release Console Mode)...")
-		if (subprocess.run(["link","main.obj","/OUT:sll.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"]).returncode!=0):
+		if (subprocess.run(["link","objects/main.obj","/OUT:sll.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		util.log("  Compiling Files (Release Mode)...")
-		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../src/cli/include","/Fomain.obj","../src/cli/main_windows.c"]).returncode!=0):
+		if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",".","/I","../src/cli/include","/Foobjects/main.obj","../src/cli/main_windows.c"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 		util.log("  Linking Files (Release Mode)...")
-		if (subprocess.run(["link","main.obj","/OUT:sllw.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"]).returncode!=0):
+		if (subprocess.run(["link","objects/main.obj","/OUT:sllw.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"]).returncode!=0):
 			os.chdir(cd)
 			sys.exit(1)
 	else:
@@ -107,6 +108,7 @@ def build_sll_cli():
 			os.chdir(cd)
 			sys.exit(1)
 	os.chdir(cd)
+	util.clean_objects()
 
 
 
@@ -118,32 +120,32 @@ def build_sll_extension(nm,fl,v,r):
 	if (os.name=="nt"):
 		if (r):
 			util.log("  Compiling Library Files (Release Mode)...")
-			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",f"../src/ext/{nm}/include","/I",".","/Foobjects_ext\\"]+["../"+e for e in fl]).returncode!=0):
+			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_BUILD_WINDOWS","/D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/Zi","/O2","/MD","/I",f"../src/ext/{nm}/include","/I",".","/Foobjects/"]+["../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			util.log("  Linking Library Files (Release Mode)...")
-			if (subprocess.run(["link",f"/OUT:{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE",b_nm+".lib"]+["objects_ext/"+e for e in os.listdir("objects_ext")]).returncode!=0):
+			if (subprocess.run(["link",f"/OUT:{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE",b_nm+".lib"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 		else:
 			util.log("  Compiling Library Files...")
-			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",f"../src/ext/{nm}/include","/I",".","/Foobjects_ext\\"]+["../"+e for e in fl]).returncode!=0):
+			if (subprocess.run(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_BUILD_WINDOWS","/D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",f"../src/ext/{nm}/include","/I",".","/Foobjects/"]+["../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			util.log("  Linking Library Files...")
-			if (subprocess.run(["link",f"/OUT:{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE",b_nm+".lib"]+["objects_ext/"+e for e in os.listdir("objects_ext")]).returncode!=0):
+			if (subprocess.run(["link",f"/OUT:{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE",b_nm+".lib"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	else:
 		if (r):
 			util.log("  Compiling Library Files (Release Mode)...")
-			os.chdir("objects_ext")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I",f"../../src/ext/{nm}/include","-I","../"]+["../../"+e for e in fl]).returncode!=0):
+			os.chdir("objects")
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-D","__SLL_BUILD_LINUX","-D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","-I",f"../../src/ext/{nm}/include","-I","../"]+["../../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
 			util.log("  Linking Library Files (Release Mode)...")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",lib_nm+".so"]+["objects_ext/"+e for e in os.listdir("objects_ext")]).returncode!=0):
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",lib_nm+".so"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			util.log("  Stripping Executable...")
@@ -152,13 +154,14 @@ def build_sll_extension(nm,fl,v,r):
 				sys.exit(1)
 		else:
 			util.log("  Compiling Library Files...")
-			os.chdir("objects_ext")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I",f"../../src/ext/{nm}/include","-I","../"]+["../../"+e for e in fl]).returncode!=0):
+			os.chdir("objects")
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-D","__SLL_BUILD_LINUX","-D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","-I",f"../../src/ext/{nm}/include","-I","../"]+["../../"+e for e in fl]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 			os.chdir("..")
 			util.log("  Linking Library Files...")
-			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-g","-O0","-o",lib_nm+".so"]+["objects_ext/"+e for e in os.listdir("objects_ext")]).returncode!=0):
+			if (subprocess.run(["gcc","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-g","-O0","-o",lib_nm+".so"]+["objects/"+e for e in os.listdir("objects")]).returncode!=0):
 				os.chdir(cd)
 				sys.exit(1)
 	os.chdir(cd)
+	util.clean_objects()

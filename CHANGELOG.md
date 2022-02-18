@@ -14,9 +14,14 @@
 
 ### Changed
 
+- Factorizing a negative number via `math$factors` correctly returns a factor of `-1` raised to the 1st power
 - Fixed another bug in `sll_string_compare_pointer`
 - Improved performance of the scheduler
 - Renamed `sll_operator_dup` to `sll_operator_copy`
+
+### Removed
+
+- Extension version macros
 
 ## [0.7.4] - 2022-02-15
 
