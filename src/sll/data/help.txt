@@ -31,3 +31,4 @@ Sandbox Flags:
   file-rename -> Enable file renaming
   file-copy -> Enable file copying
   no-float-error-change -> Disable floating-point error modification
+  file-delete -> Enable file deleting

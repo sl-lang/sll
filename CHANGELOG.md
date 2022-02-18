@@ -19,6 +19,7 @@
 - Fixed another bug in `sll_string_compare_pointer`
 - Improved performance of the scheduler
 - Renamed `sll_operator_dup` to `sll_operator_copy`
+- Updated CLI help string
 
 ### Removed
 
