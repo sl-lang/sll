@@ -145,7 +145,7 @@
 		flags
 	))
 	(? (=== handle -1) {
-		(@@ (<- error$create FILE_NOT_FOUND path (<- string$format "Unable to open file '%s'" path)))
+		(@@ (<- error$create ERROR_FILE_NOT_FOUND path (<- string$format "Unable to open file '%s'" path)))
 	})
 	(@@ (. file_type
 		path
