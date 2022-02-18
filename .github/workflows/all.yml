@@ -108,7 +108,9 @@ jobs:
           name: release-linux
           path: build
       - name: Unpack release
-        run: unzip -o build/linux.zip -d build
+        run: |
+          unzip -o build/linux.zip -d build
+          unzip -o build/linux-ext-debug.zip -d build
       - name: Test
         run: build/sll tests/_runner.sll
   release:
@@ -248,7 +250,9 @@ jobs:
           name: release-win
           path: build
       - name: Unpack release
-        run: Expand-Archive -Force 'build\win.zip' 'build\'
+        run: |
+          Expand-Archive -Force 'build\win.zip' 'build\'
+          Expand-Archive -Force 'build\win-ext-debug.zip' 'build\'
         shell: powershell
       - name: Test
         run: build/sll.exe tests/_runner.sll
