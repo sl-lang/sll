@@ -11,7 +11,7 @@ def _add_data(nm,dt):
 	nm=nm.replace("\\","/")[:255].encode("ascii","ignore")
 	dt=dt[:16777215]
 	if (nm[-5:]==b".html"):
-		dt=dt.replace(b"{{ROOT}}",(b"" if os.getenv("GITHUB_ACTIONS",None) is not None else b"."))
+		dt=dt.replace(b"{{ROOT}}",(b"" if os.getenv("DOMAIN_ROOT",None) is not None else b"."))
 	return bytearray([len(nm),len(dt)&0xff,(len(dt)>>8)&0xff,len(dt)>>16])+nm+dt
 
 
