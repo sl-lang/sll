@@ -7,6 +7,7 @@
 - Deep copy operator: `(:!)` ([#233])
 - Exposed `sll_current_thread_index`, `sll_create_lock`, `sll_create_thread`, `sll_delete_lock`, `sll_delete_thread` and `sll_release_lock` ([#173] and [#177])
 - Extra parameter in `sll_object_clone` to enable deep value copy
+- *\[Windows only\]* Icons to CLI executables
 - Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type` and `error$create` ([#196])
 - Implemented `sll_operator_deep_copy` ([#233])
 - Implemented `sll_platform_create_directory` and `path$mkdir`
