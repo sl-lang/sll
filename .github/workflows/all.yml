@@ -90,7 +90,8 @@ jobs:
         if: github.event_name=='workflow_dispatch'
         with:
           name: release-linux
-          path: linux.zip
+          path: |
+            *.zip
           retention-days: 1
   linux-test:
     name: Test linux release
@@ -102,12 +103,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup python@3.9
-        uses: actions/setup-python@v2
+      - name: Download linux release
+        uses: actions/download-artifact@v2
         with:
-          python-version: 3.9
-      - name: Build
-        run: ${{env.BUILD_COMMAND}} --release
+          name: release-linux
+          path: build
+      - name: Unpack release
+        run: unzip -o build/linux.zip -d build/
       - name: Test
         run: build/sll tests/_runner.sll
   release:
@@ -229,7 +231,8 @@ jobs:
         if: github.event_name=='workflow_dispatch'
         with:
           name: release-win
-          path: win.zip
+          path: |
+            *.zip
           retention-days: 1
   windows-test:
     name: Test windows release
