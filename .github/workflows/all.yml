@@ -97,7 +97,7 @@ jobs:
     needs:
       - diff
       - linux-release
-    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).linux&&github.event_name!='workflow_dispatch'
+    if: github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -109,9 +109,9 @@ jobs:
           path: build
       - name: Unpack release
         run: |
-          unzip -n -o build/linux.zip -d build
-          unzip -n -o build/linux_ext_debug.zip -d build\_debug_ext
-          rsync --ignore-existing build\_debug_ext build
+          unzip -o build/linux.zip -d build
+          unzip -o build/linux_ext_debug.zip -d build/_debug_ext
+          rsync --ignore-existing build/_debug_ext build
       - name: Test
         run: build/sll tests/_runner.sll
   release:
@@ -240,7 +240,7 @@ jobs:
     needs:
       - diff
       - windows-release
-    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).windows&&github.event_name!='workflow_dispatch'
+    if: github.event_name!='workflow_dispatch'
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -253,7 +253,7 @@ jobs:
       - name: Unpack release
         run: |
           Expand-Archive -Force 'build\win.zip' 'build\'
-          Expand-Archive -Force 'build\win_ext_debug.zip' ' build\_debug_ext\'
+          Expand-Archive -Force 'build\win_ext_debug.zip' 'build\_debug_ext\'
           robocopy /move "build\_debug_ext" "build" *
         shell: powershell
       - name: Test
