@@ -56,7 +56,7 @@ jobs:
         run: pip install requests
       - name: Build
         id: calc_diff
-        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,sll/ext windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,sll/ext web-client=src/sll/include,src/web/client web-server=src/web/server test=tests ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,sll/ext,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,sll/ext,tests web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
   linux:
     name: Build linux
     needs: diff
@@ -97,18 +97,18 @@ jobs:
     needs:
       - diff
       - linux-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).test)&&github.event_name!='workflow_dispatch'
+    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).linux&&github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download linux release
+      - name: Download release build
         uses: actions/download-artifact@v2
         with:
           name: release-linux
           path: build
       - name: Unpack release
-        run: unzip -o build/linux.zip -d build/
+        run: unzip -o build/linux.zip -d build
       - name: Test
         run: build/sll tests/_runner.sll
   release:
@@ -224,10 +224,9 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --release${{github.event_name=='workflow_dispatch'&&' --bundle --upload'||''}}
+        run: ${{env.BUILD_COMMAND}} --release --bundle --upload
       - name: Store assets
         uses: actions/upload-artifact@v2
-        if: github.event_name=='workflow_dispatch'
         with:
           name: release-win
           path: |
@@ -238,16 +237,18 @@ jobs:
     needs:
       - diff
       - windows-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).windows||fromJSON(needs.diff.outputs.data).test)&&github.event_name!='workflow_dispatch'
+    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).windows&&github.event_name!='workflow_dispatch'
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup python@3.9
-        uses: actions/setup-python@v2
+      - name: Download release build
+        uses: actions/download-artifact@v2
         with:
-          python-version: 3.9
-      - name: Build & Test
-        run: ${{env.BUILD_COMMAND}} --release
+          name: release-win
+          path: build
+      - name: Unpack release
+        run: Expand-Archive -Force 'build\win.zip' 'build\'
+        shell: powershell
       - name: Test
         run: build/sll.exe tests/_runner.sll
