@@ -96,7 +96,7 @@ def get_ext_list():
 def bundle(v):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
 		for k in (["build/sll.exe","build/sllw.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
-			zf.write(k,arcname="sys_lib/"+k[6:])
+			zf.write(k,arcname=k[6:])
 		for k in os.listdir("build/lib"):
 			if (os.path.isfile("build/lib/"+k)):
 				zf.write("build/lib/"+k,arcname="lib/"+k)
@@ -106,7 +106,7 @@ def bundle(v):
 def bundle_ext(nm,v):
 	with zipfile.ZipFile(f"build/sll_ext_{nm}.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
 		fp=(f"build/sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}.dll" if os.name=="nt" else f"build/sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}.so")
-		zf.write(fp,arcname=fp[6:])
+		zf.write(fp,arcname="sys_lib/"+fp[6:])
 		for k in os.listdir("build/lib/"+nm):
 			zf.write(f"build/lib/{nm}/{k}",arcname=f"lib/{nm}/{k}")
 

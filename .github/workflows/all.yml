@@ -111,7 +111,7 @@ jobs:
         run: |
           unzip -o build/linux.zip -d build
           unzip -o build/linux_ext_debug.zip -d build/_debug_ext
-          rsync --ignore-existing build/_debug_ext build
+          cp -r build/_debug_ext/* build
       - name: Test
         run: build/sll tests/_runner.sll
   release:
@@ -252,9 +252,9 @@ jobs:
           path: build
       - name: Unpack release
         run: |
-          Expand-Archive -Force 'build\win.zip' 'build\'
-          Expand-Archive -Force 'build\win_ext_debug.zip' 'build\_debug_ext\'
-          robocopy /move "build\_debug_ext" "build" *
+          Expand-Archive -Force build\win.zip build\
+          Expand-Archive -Force build\win_ext_debug.zip build\_debug_ext\
+          robocopy /s build\_debug_ext build
         shell: powershell
       - name: Test
         run: build/sll.exe tests/_runner.sll
