@@ -140,7 +140,7 @@
 	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 2.0) [0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by float")
 	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] -2.0) ["3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by negative float")
 	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] '\x03') [0 0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by char")
-	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3\x02\x01") [0x8000000000000 8.0 "f" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by string")
+	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3\x02\x01") [0x8000000000000 8.0 "\x003" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by string")
 	; (<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [3 1 4]) nil "Left shift by array")
 	; (<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) nil "Left shift by map")
 	; Right shift / Resize
@@ -149,7 +149,7 @@
 	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 2.0) ["3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by float")
 	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] -2.0) [0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by negative float")
 	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] '\x03') [1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by char")
-	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3\x02\x01") [0 0.5 "\x19" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by string")
+	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3\x02\x01") [0 0.5 "" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by string")
 	; (<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [3 1 4]) nil "Right shift by array")
 	; (<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) nil "Right shift by map")
 	; Strict equality
