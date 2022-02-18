@@ -429,7 +429,8 @@
 (:> arr ", " n_arr "\n")
 
 (= s (<- struct$create "HIhd"))
-(:> s ", " [(<- struct$encode s 0x1234 0xff77ff77 -0x5678 123.456e78)] "\n")
+(= enc (<- struct$encode s 0x1234 0xff77ff77 -0x5678 123.456e7))
+(:> s ", " [enc] ", " (<- struct$decode s enc) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

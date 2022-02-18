@@ -1474,6 +1474,33 @@ __SLL_EXTERNAL void sll_string_replace_char(const sll_string_t* s,sll_char_t k,s
 
 
 
+__SLL_EXTERNAL void sll_string_resize(const sll_string_t* s,sll_integer_t v,sll_string_t* o){
+	if (v<0){
+		v=-v;
+		if (v>=s->l){
+			SLL_INIT_STRING(o);
+			return;
+		}
+		o->l=(sll_string_length_t)(s->l-v);
+		o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
+		sll_copy_data(s->v+v,o->l,o->v);
+		sll_string_calculate_checksum(o);
+		return;
+	}
+	SLL_ASSERT(s->l+v<=SLL_MAX_STRING_LENGTH);
+	o->l=(sll_string_length_t)(s->l+v);
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
+	wide_data_t* p=(wide_data_t*)(o->v);
+	for (sll_string_length_t i=0;i<((v+7)>>3);i++){
+		*p=0;
+		p++;
+	}
+	sll_copy_data(s->v,s->l,o->v+v);
+	sll_string_calculate_checksum(o);
+}
+
+
+
 __SLL_EXTERNAL void sll_string_reverse(const sll_string_t* s,sll_string_t* o){
 	if (!s->l){
 		SLL_INIT_STRING(o);
@@ -1579,56 +1606,6 @@ __SLL_EXTERNAL void sll_string_set_char(sll_char_t c,sll_string_length_t i,sll_s
 		o->c^=((sll_string_checksum_t)(o->v[i]^c))<<((i&3)<<3);
 		o->v[i]=c;
 	}
-}
-
-
-
-__SLL_EXTERNAL void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_string_t* o){
-	if (!s->l){
-		SLL_INIT_STRING(o);
-		return;
-	}
-	o->l=s->l;
-	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
-	const wide_data_t* a=(const wide_data_t*)(s->v);
-	wide_data_t* b=(wide_data_t*)(o->v);
-	STRING_DATA_PTR(a);
-	STRING_DATA_PTR(b);
-	if (!v){
-		o->c=s->c;
-		for (sll_string_length_t i=0;i<((s->l+8)>>3);i++){
-			*(b+i)=*(a+i);
-		}
-		return;
-	}
-	if (v<-7||v>7){
-		o->c=0;
-		for (sll_string_length_t i=0;i<((s->l+8)>>3);i++){
-			*(b+i)=0;
-		}
-		return;
-	}
-	INIT_PADDING(o->v,s->l);
-	sll_string_length_t l=(s->l+7)>>3;
-	wide_data_t c=0;
-	if (v<0){
-		v=-v;
-		wide_data_t m=0x101010101010101ull*((0xff<<v)&0xff);
-		do{
-			l--;
-			*(b+l)=((*(a+l))&m)>>v;
-			c^=*(b+l);
-		} while (l);
-	}
-	else{
-		wide_data_t m=0x101010101010101ull*(0xff>>v);
-		do{
-			l--;
-			*(b+l)=((*(a+l))&m)<<v;
-			c^=*(b+l);
-		} while (l);
-	}
-	o->c=(sll_string_length_t)(c^(c>>32));
 }
 
 
