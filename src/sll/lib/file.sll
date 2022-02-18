@@ -29,7 +29,7 @@
 
 (= file_module_type (&:
 	(~ type_type) file_type
-	(~ type_type) FILE_NOT_FOUND
+	(~ type_type) ERROR_FILE_NOT_FOUND
 	(~ int_type) FLAG_APPEND
 	(~ int_type) FLAG_NO_BUFFER
 	(~ int_type) FLAG_READ
@@ -53,7 +53,7 @@
 
 
 
-(= FILE_NOT_FOUND (&:))
+(= ERROR_FILE_NOT_FOUND (&:))
 
 (= FLAG_READ 1)
 (= FLAG_WRITE 2)
@@ -195,7 +195,7 @@
 
 (= file (. file_module_type
 	file_type
-	FILE_NOT_FOUND
+	ERROR_FILE_NOT_FOUND
 	FLAG_APPEND
 	FLAG_NO_BUFFER
 	FLAG_READ

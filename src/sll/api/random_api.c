@@ -12,7 +12,7 @@ __API_FUNC(random_get_float){
 	sll_platform_random(&v,sizeof(sll_size_t));
 	v&=0xfffffffffffffull;
 	sll_size_t l=FIND_LAST_SET_BIT(v);
-	float_data_t o={
+	double_data_t o={
 		.dt=((l+971)<<52)|((v<<(52-l))&0xfffffffffffffull)
 	};
 	return o.v*(b-a)+a;

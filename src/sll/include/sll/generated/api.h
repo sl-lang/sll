@@ -3475,6 +3475,105 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_struct_double_from_bits __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_struct_double_from_bits sll_integer_t a
+/**
+ * \flags check_output func
+ * \name sll_api_struct_double_from_bits
+ * \group struct-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_struct_double_from_bits_raw
+ * \group raw-api
+ * \subgroup raw-api-struct-api
+ * \desc Wrapper function for :sll_api_struct_double_from_bits:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Memory Structure
+ * \group raw-api
+ * \subgroup raw-api-struct-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_struct_double_to_bits __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_struct_double_to_bits sll_float_t a
+/**
+ * \flags check_output func
+ * \name sll_api_struct_double_to_bits
+ * \group struct-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_struct_double_to_bits_raw
+ * \group raw-api
+ * \subgroup raw-api-struct-api
+ * \desc Wrapper function for :sll_api_struct_double_to_bits:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_struct_float_from_bits __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_struct_float_from_bits sll_integer_t a
+/**
+ * \flags check_output func
+ * \name sll_api_struct_float_from_bits
+ * \group struct-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_struct_float_from_bits_raw
+ * \group raw-api
+ * \subgroup raw-api-struct-api
+ * \desc Wrapper function for :sll_api_struct_float_from_bits:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_struct_float_to_bits __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_struct_float_to_bits sll_float_t a
+/**
+ * \flags check_output func
+ * \name sll_api_struct_float_to_bits
+ * \group struct-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_struct_float_to_bits_raw
+ * \group raw-api
+ * \subgroup raw-api-struct-api
+ * \desc Wrapper function for :sll_api_struct_float_to_bits:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_sys_get_args void
 #define __SLL_API_ARGS_sll_api_sys_get_args sll_array_t* out
 /**

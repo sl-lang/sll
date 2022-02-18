@@ -535,9 +535,16 @@ typedef struct __FILE_LINE{
 
 
 typedef union __FLOAT_DATA{
-	sll_float_t v;
-	__SLL_U64 dt;
+	float v;
+	__SLL_U32 dt;
 } float_data_t;
+
+
+
+typedef union __DOUBLE_DATA{
+	double v;
+	__SLL_U64 dt;
+} double_data_t;
 
 
 

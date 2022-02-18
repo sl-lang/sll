@@ -9,14 +9,17 @@
 - Extra parameter in `sll_object_clone` to enable deep value copy
 - *\[Windows only\]* Icons to CLI executables
 - Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type` and `error$create` ([#196])
+- Implemented `sll_api_struct_float_to_bits`, `sll_api_struct_double_to_bits` and `struct$encode` ([#227] and [#229])
 - Implemented `sll_operator_deep_copy` ([#233])
 - Implemented `sll_platform_create_directory` and `path$mkdir`
 - Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`
+- Implemented `struct.sll`, `struct$ERROR_OUT_OF_RANGE`, `struct$ERROR_UNKNOWN_TYPE` and `struct$create` ([#227])
 
 ### Changed
 
 - Factorizing a negative number via `math$factors` correctly returns a factor of `-1` raised to the 1st power
 - Fixed another bug in `sll_string_compare_pointer`
+- Fixed edge cases in `sll_string_duplicate`
 - Improved performance of the scheduler
 - Renamed `sll_operator_dup` to `sll_operator_copy`
 - Updated CLI help string
@@ -1632,6 +1635,8 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
 [#233]: https://github.com/sl-lang/sll/issues/233
 [#232]: https://github.com/sl-lang/sll/issues/232
+[#229]: https://github.com/sl-lang/sll/issues/229
+[#227]: https://github.com/sl-lang/sll/issues/227
 [#222]: https://github.com/sl-lang/sll/issues/222
 [#221]: https://github.com/sl-lang/sll/issues/221
 [#220]: https://github.com/sl-lang/sll/issues/220

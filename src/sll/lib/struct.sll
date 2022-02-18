@@ -1,0 +1,303 @@
+(--- "types.sll" "string.sll" "error.sll" "array.sll")
+
+
+
+(# STRUCT_ELEM_TYPE_INT STRUCT_ELEM_TYPE_FLOAT STRUCT_ELEM_TYPE_PADDING STRUCT_ELEM_TYPE_MASK STRUCT_ELEM_SIZE_BIT STRUCT_ELEM_SIZE_BYTE STRUCT_ELEM_SIZE_WORD STRUCT_ELEM_SIZE_DWORD STRUCT_ELEM_SIZE_QWORD STRUCT_ELEM_SIZE_BINARY32 STRUCT_ELEM_SIZE_BINARY64 STRUCT_ELEM_SIZE_SHIFT STRUCT_ELEM_SIZE_MASK STRUCT_ELEM_SIGNED)
+
+
+
+(= struct_type (&:
+	(,,, dt {
+		(= o "<")
+		(-> (= i 0) (< i ($ dt$_format))
+			(= e (: dt$_format i))
+			(?? (& e STRUCT_ELEM_TYPE_MASK)
+				STRUCT_ELEM_TYPE_INT {
+					(?? (& e STRUCT_ELEM_SIZE_MASK)
+						STRUCT_ELEM_SIZE_BIT {
+							(= o (+ o '?'))
+						}
+						STRUCT_ELEM_SIZE_BYTE {
+							(= o (+ o 'B'))
+						}
+						STRUCT_ELEM_SIZE_WORD {
+							(= o (+ o 'H'))
+						}
+						STRUCT_ELEM_SIZE_DWORD {
+							(= o (+ o 'I'))
+						}
+						STRUCT_ELEM_SIZE_QWORD {
+							(= o (+ o 'Q'))
+						}
+					)
+					(? (& e STRUCT_ELEM_SIGNED) {
+						(= (: o -1) (+ (: o -1) 32))
+					})
+				}
+				STRUCT_ELEM_TYPE_FLOAT {
+					(= o (+
+						o
+						(?: (=== (& e STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY32) 'f' 'd')
+					))
+				}
+				STRUCT_ELEM_TYPE_PADDING {
+					(= o (+
+						o
+						(* "-" (>> e STRUCT_ELEM_SIZE_SHIFT))
+					))
+				}
+			)
+			(++ i)
+		)
+		(@@ (+ o '>'))
+	}) @@string@@
+	(~ array_type) _format
+))
+
+(= struct_module_type (&:
+	(~ type_type) ERROR_OUT_OF_RANGE
+	(~ type_type) ERROR_UNKNOWN_TYPE
+	(~ func_type) create
+	(~ func_type) decode
+	(~ func_type) encode
+))
+
+
+
+(= ERROR_OUT_OF_RANGE (&:))
+
+(= ERROR_UNKNOWN_TYPE (&:))
+
+(= STRUCT_ELEM_TYPE_INT 0b00)
+(= STRUCT_ELEM_TYPE_FLOAT 0b01)
+(= STRUCT_ELEM_TYPE_PADDING 0b10)
+
+(= STRUCT_ELEM_TYPE_MASK 0b11)
+
+(= STRUCT_ELEM_SIZE_BIT 0b00000)
+(= STRUCT_ELEM_SIZE_BYTE 0b00100)
+(= STRUCT_ELEM_SIZE_WORD 0b01000)
+(= STRUCT_ELEM_SIZE_DWORD 0b01100)
+(= STRUCT_ELEM_SIZE_QWORD 0b10000)
+(= STRUCT_ELEM_SIZE_BINARY32 0b00000)
+(= STRUCT_ELEM_SIZE_BINARY64 0b01000)
+
+(= STRUCT_ELEM_SIZE_SHIFT 2)
+(= STRUCT_ELEM_SIZE_MASK 0b11100)
+
+(= STRUCT_ELEM_SIGNED 0b100000)
+
+
+
+(= _check_range (,,, v min max
+	(? (|| (< v min) (> v max)) {
+		(@@ (<- error$create ERROR_OUT_OF_RANGE [v min max] (<- string$format "Value '%lld' is not between %lld and %lld" v min max)))
+	})
+	(@@ nil)
+))
+
+(= create (,,, dt ignore_padding
+	(? (=== dt nil) (@@ nil))
+	(= dt (:: dt string_type))
+	(= max_size 0)
+	(= total_size 0)
+	(= o [])
+	(-> (= i 0) (< i ($ dt)) {
+		(= size 0)
+		(= type (: dt i))
+		(= elem nil)
+		(?? type
+			'?' {
+				(= size 1)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BIT))
+			}
+			'b' {
+				(= size 1)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BYTE STRUCT_ELEM_SIGNED))
+			}
+			'B' {
+				(= size 1)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BYTE))
+			}
+			'h' {
+				(= size 2)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_WORD STRUCT_ELEM_SIGNED))
+			}
+			'H' {
+				(= size 2)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_WORD))
+			}
+			'i' {
+				(= size 4)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_DWORD STRUCT_ELEM_SIGNED))
+			}
+			'I' {
+				(= size 4)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_DWORD))
+			}
+			'q' {
+				(= size 8)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD STRUCT_ELEM_SIGNED))
+			}
+			'Q' {
+				(= size 8)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD))
+			}
+			'f' {
+				(= size 4)
+				(= elem (| STRUCT_ELEM_TYPE_FLOAT STRUCT_ELEM_SIZE_BINARY32))
+			}
+			'd' {
+				(= size 8)
+				(= elem (| STRUCT_ELEM_TYPE_FLOAT STRUCT_ELEM_SIZE_BINARY64))
+			}
+			'P' {
+				(= size 8)
+				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD))
+			}
+			(@@ (<- error$create ERROR_UNKNOWN_TYPE type (<- string$format "Unknown type: '%c'" type)))
+		)
+		(? (> size max_size) (= max_size size))
+		(? (&& (! ignore_padding) (> size 1)) {
+			(= pad (& total_size (- size 1)))
+			(? pad {
+				(= pad (- size pad))
+				(<- array$push o (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
+				(= total_size (+ total_size pad))
+			})
+		})
+		(<- array$push o elem)
+		(= total_size (+ total_size size))
+		(++ i)
+	})
+	(@@ (. struct_type o))
+))
+
+(= decode (,,, fmt data
+	(? (=== fmt nil) (@@ ""))
+	(= fmt (:: fmt struct_type))
+	(= o [])
+	(@@ o)
+))
+
+(= encode (,,, fmt @@data@@
+	(? (=== fmt nil) (@@ ""))
+	(= fmt (:: fmt struct_type))
+	(= o "")
+	(-> (= i 0) (< i ($ fmt$_format))
+		(= e (: fmt$_format i))
+		(?? (& e STRUCT_ELEM_TYPE_MASK)
+			STRUCT_ELEM_TYPE_INT {
+				(= v (:: (<- array$shift @@data@@) int_type))
+				(= sgn (& e STRUCT_ELEM_SIGNED))
+				(?? (& e STRUCT_ELEM_SIZE_MASK)
+					STRUCT_ELEM_SIZE_BIT {
+						(= o (+
+							o
+							(:: (!! v) char_type)
+						))
+					}
+					STRUCT_ELEM_SIZE_BYTE {
+						(? sgn {
+							(= err (<- _check_range v -0x80 0x7f))
+							(? err (@@ err))
+						} {
+							(= err (<- _check_range v 0 0xff))
+							(? err (@@ err))
+						})
+						(= o (+
+							o
+							(:: v char_type)
+						))
+					}
+					STRUCT_ELEM_SIZE_WORD {
+						(? sgn {
+							(= err (<- _check_range v -0x8000 0x7fff))
+							(? err (@@ err))
+						} {
+							(= err (<- _check_range v 0 0xffff))
+							(? err (@@ err))
+						})
+						(= o (+
+							o
+							(:: v char_type)
+							(:: (>> v 8) char_type)
+						))
+					}
+					STRUCT_ELEM_SIZE_DWORD {
+						(? sgn {
+							(= err (<- _check_range v -0x80000000 0x7fffffff))
+							(? err (@@ err))
+						} {
+							(= err (<- _check_range v 0 0xffffffff))
+							(? err (@@ err))
+						})
+						(= o (+
+							o
+							(:: v char_type)
+							(:: (>> v 8) char_type)
+							(:: (>> v 16) char_type)
+							(:: (>> v 24) char_type)
+						))
+					}
+					STRUCT_ELEM_SIZE_QWORD {
+						(= o (+
+							o
+							(:: v char_type)
+							(:: (>> v 8) char_type)
+							(:: (>> v 16) char_type)
+							(:: (>> v 24) char_type)
+							(:: (>> v 32) char_type)
+							(:: (>> v 40) char_type)
+							(:: (>> v 48) char_type)
+							(:: (>> v 56) char_type)
+						))
+					}
+				)
+			}
+			STRUCT_ELEM_TYPE_FLOAT {
+				(= v (<- (?: (=== (& e STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY32)
+						(... "sll:struct_float_to_bits")
+						(... "sll:struct_double_to_bits")
+					)
+					(:: (<- array$shift @@data@@) float_type)
+				))
+				(= o (+
+					o
+					(:: v char_type)
+					(:: (>> v 8) char_type)
+					(:: (>> v 16) char_type)
+					(:: (>> v 24) char_type)
+				))
+				(? (=== (& e STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY64) {
+					(= o (+
+						o
+						(:: (>> v 32) char_type)
+						(:: (>> v 40) char_type)
+						(:: (>> v 48) char_type)
+						(:: (>> v 56) char_type)
+					))
+				})
+			}
+			STRUCT_ELEM_TYPE_PADDING {
+				(= o (+
+					o
+					(* "\x00" (>> e STRUCT_ELEM_SIZE_SHIFT))
+				))
+			}
+		)
+		(++ i)
+	)
+	(@@ o)
+))
+
+
+
+(= struct (. struct_module_type
+	ERROR_OUT_OF_RANGE
+	ERROR_UNKNOWN_TYPE
+	create
+	decode
+	encode
+))
+(## struct)

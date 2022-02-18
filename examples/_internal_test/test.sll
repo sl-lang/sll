@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -427,6 +427,9 @@
 (= n_arr (:! arr))
 (= (: (: arr 0) 0) 'A')
 (:> arr ", " n_arr "\n")
+
+(= s (<- struct$create "HIhd"))
+(:> s ", " [(<- struct$encode s 0x1234 0xff77ff77 -0x5678 123.456e78)] "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

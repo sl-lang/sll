@@ -170,21 +170,6 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_source_f
 
 
 
-static sll_assembly_instruction_t* _get_previous_instruction(assembly_generator_data_t* g_dt){
-	sll_assembly_instruction_t* o=g_dt->a_dt->_s.p;
-	sll_instruction_index_t i=g_dt->a_dt->ic;
-	do{
-		if (!i){
-			return &_assembly_nop;
-		}
-		o=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?o->dt._p:o-1);
-		i--;
-	} while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(o)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
-	return o;
-}
-
-
-
 static const sll_node_t* _skip_with_dbg(const sll_node_t* o,assembly_generator_data_t* g_dt){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		GENERATE_DEBUG_DATA(g_dt,o);
@@ -1141,10 +1126,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 					assembly_instruction_label_t nxt=NEXT_LABEL(g_dt);
 					o=_generate_jump(o,g_dt,nxt,1);
 					o=_generate_on_stack(o,g_dt);
-					sll_assembly_instruction_t* p_ai=_get_previous_instruction(g_dt);
-					if (p_ai->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
-						GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
-					}
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
 					DEFINE_LABEL(g_dt,nxt);
 					POP;
 				}
@@ -1681,9 +1663,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 						assembly_instruction_label_t nxt=NEXT_LABEL(g_dt);
 						o=_generate_jump(o,g_dt,nxt,1);
 						o=_generate(o,g_dt);
-						if (_get_previous_instruction(g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
-							GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
-						}
+						GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
 						DEFINE_LABEL(g_dt,nxt);
 					} while (l);
 					o=_generate(o,g_dt);
@@ -1698,9 +1678,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 						o=_generate_jump(o,g_dt,nxt,1);
 						o=_generate(o,g_dt);
 						if (l){
-							if (_get_previous_instruction(g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
-								GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
-							}
+							GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
 						}
 						DEFINE_LABEL(g_dt,nxt);
 					} while (l);
@@ -2121,9 +2099,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 			ac--;
 			fo=_generate(fo,&g_dt);
 		}
-		if (_get_previous_instruction(&g_dt)->t!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
-			GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO);
-		}
+		GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO);
 	}
 	sll_deallocate(fn_vc);
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){

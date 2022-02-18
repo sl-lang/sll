@@ -315,7 +315,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			return SLL_FROM_INT(a->dt.i&b->dt.i);
 		case COMBINED_TYPE_IF:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=a->dt.i&TO_FLOAT_BITS(b)
 				};
 				return SLL_FROM_FLOAT(v.v);
@@ -357,14 +357,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			}
 		case COMBINED_TYPE_FF:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=TO_FLOAT_BITS(a)&TO_FLOAT_BITS(b)
 				};
 				return SLL_FROM_FLOAT(v.v);
 			}
 		case COMBINED_TYPE_FC:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=TO_FLOAT_BITS(a)&b->dt.c
 				};
 				return SLL_FROM_FLOAT(v.v);
@@ -1507,7 +1507,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			return SLL_FROM_INT(a->dt.i|b->dt.i);
 		case COMBINED_TYPE_IF:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=a->dt.i|TO_FLOAT_BITS(b)
 				};
 				return SLL_FROM_FLOAT(v.v);
@@ -1549,14 +1549,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			}
 		case COMBINED_TYPE_FF:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=TO_FLOAT_BITS(a)|TO_FLOAT_BITS(b)
 				};
 				return SLL_FROM_FLOAT(v.v);
 			}
 		case COMBINED_TYPE_FC:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=TO_FLOAT_BITS(a)|b->dt.c
 				};
 				return SLL_FROM_FLOAT(v.v);
@@ -2147,7 +2147,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			return SLL_FROM_INT(a->dt.i^b->dt.i);
 		case COMBINED_TYPE_IF:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=a->dt.i^TO_FLOAT_BITS(b)
 				};
 				return SLL_FROM_FLOAT(v.v);
@@ -2189,14 +2189,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			}
 		case COMBINED_TYPE_FF:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=TO_FLOAT_BITS(a)^TO_FLOAT_BITS(b)
 				};
 				return SLL_FROM_FLOAT(v.v);
 			}
 		case COMBINED_TYPE_FC:
 			{
-				float_data_t v={
+				double_data_t v={
 					.dt=TO_FLOAT_BITS(a)^b->dt.c
 				};
 				return SLL_FROM_FLOAT(v.v);

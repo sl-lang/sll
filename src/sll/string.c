@@ -416,6 +416,10 @@ __SLL_EXTERNAL void sll_string_decrease(sll_string_t* s,sll_string_length_t l){
 
 
 __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,sll_string_length_t e,sll_string_t* o){
+	if (!s->l){
+		SLL_INIT_STRING(o);
+		return;
+	}
 	SLL_ASSERT(e<s->l);
 	sll_bool_t r=0;
 	if (n<0){
@@ -423,7 +427,7 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,s
 		r=1;
 	}
 	if (!n){
-		if (!e||!s->l){
+		if (!e){
 			SLL_INIT_STRING(o);
 			return;
 		}
@@ -472,7 +476,7 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* s,sll_integer_t n,s
 	}
 	sll_string_length_t i=s->l;
 	if (s->l&7){
-		sll_string_length_t j=(o->l<8?s->l:(s->l+15)&0xfffffff0);
+		sll_string_length_t j=(o->l<16?o->l:(s->l+15)&0xfffffff0);
 		while (i<j){
 			o->v[i]=o->v[i-s->l];
 			i++;
