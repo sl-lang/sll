@@ -2,6 +2,7 @@ import api
 import assembly
 import build
 import docs
+import hashlist
 import header
 import os
 import subprocess
@@ -26,6 +27,7 @@ header.generate_memory_fail("src/sll/data/memory_fail.txt","src/sll/include/sll/
 if ("--web" in sys.argv):
 	website.generate()
 	sys.exit(0)
+hashlist.load_hash_list("build/.files")
 h_dt=header.parse_headers("src/sll/include")
 util.log("Generating Library Header File...")
 with open("build/sll.h","wb") as wf:
@@ -56,7 +58,8 @@ if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
 for nm in util.get_ext_list():
-	os.mkdir("build/lib/"+nm)
+	if (not os.path.exists("build/lib/"+nm)):
+		os.mkdir("build/lib/"+nm)
 	util.log(f"Listing Source Code Files ({nm})...")
 	fl=util.get_ext_files(nm)
 	util.log(f"Compiling Sll Extension ({nm})...")

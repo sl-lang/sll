@@ -20,7 +20,7 @@
 
 ### Changed
 
-- String shift
+- Builder script no longer recompiles unchanged files (works across configurations)
 - Factorizing a negative number via `math$factors` correctly returns a factor of `-1` raised to the 1st power
 - Fixed another bug in `sll_string_compare_pointer`
 - Fixed edge cases in `sll_string_duplicate`
