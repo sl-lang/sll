@@ -8,6 +8,7 @@
 - Exposed `sll_current_thread_index`, `sll_create_lock`, `sll_create_thread`, `sll_delete_lock`, `sll_delete_thread` and `sll_release_lock` ([#173] and [#177])
 - Extra parameter in `sll_object_clone` to enable deep value copy
 - *\[Windows only\]* Icons to CLI executables
+- Implemented `data_file.sll` ([#235])
 - Implemented `sll_api_error_get_backtrace`, `error.sll`, `error$error_type` and `error$create` ([#196])
 - Implemented `sll_api_struct_float_from_bits`, `sll_api_struct_double_from_bits` and `struct$decode` ([#227] and [#228])
 - Implemented `sll_api_struct_float_to_bits`, `sll_api_struct_double_to_bits` and `struct$encode` ([#227] and [#229])
@@ -1637,6 +1638,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#235]: https://github.com/sl-lang/sll/issues/235
 [#233]: https://github.com/sl-lang/sll/issues/233
 [#232]: https://github.com/sl-lang/sll/issues/232
 [#229]: https://github.com/sl-lang/sll/issues/229

@@ -1,0 +1,321 @@
+(--- "types.sll" "file.sll")
+
+
+
+(= data_file_module_type (&:
+	(~ func_type) read_byte
+	(~ func_type) read_word
+	(~ func_type) read_dword
+	(~ func_type) read_qword
+	(~ func_type) read_sbyte
+	(~ func_type) read_sword
+	(~ func_type) read_sdword
+	(~ func_type) read_sqword
+	(~ func_type) read_byte_be
+	(~ func_type) read_word_be
+	(~ func_type) read_dword_be
+	(~ func_type) read_qword_be
+	(~ func_type) read_sbyte_be
+	(~ func_type) read_sword_be
+	(~ func_type) read_sdword_be
+	(~ func_type) read_sqword_be
+	(~ func_type) read_byte_le
+	(~ func_type) read_word_le
+	(~ func_type) read_dword_le
+	(~ func_type) read_qword_le
+	(~ func_type) read_sbyte_le
+	(~ func_type) read_sword_le
+	(~ func_type) read_sdword_le
+	(~ func_type) read_sqword_le
+	(~ func_type) read_float
+	(~ func_type) read_double
+	(~ func_type) write_byte
+	(~ func_type) write_word
+	(~ func_type) write_dword
+	(~ func_type) write_qword
+	(~ func_type) write_sbyte
+	(~ func_type) write_sword
+	(~ func_type) write_sdword
+	(~ func_type) write_sqword
+	(~ func_type) write_byte_be
+	(~ func_type) write_word_be
+	(~ func_type) write_dword_be
+	(~ func_type) write_qword_be
+	(~ func_type) write_sbyte_be
+	(~ func_type) write_sword_be
+	(~ func_type) write_sdword_be
+	(~ func_type) write_sqword_be
+	(~ func_type) write_byte_le
+	(~ func_type) write_word_le
+	(~ func_type) write_dword_le
+	(~ func_type) write_qword_le
+	(~ func_type) write_sbyte_le
+	(~ func_type) write_sword_le
+	(~ func_type) write_sdword_le
+	(~ func_type) write_sqword_le
+	(~ func_type) write_float
+	(~ func_type) write_double
+))
+
+
+
+(= read_byte (,,, f
+	(? (=== f nil) (@@ 0))
+	(@@ (:: (: (<- file$read (:: f file$file_type) 1) 0) int_type))
+))
+
+(= read_word_le (,,, f
+	(? (=== f nil) (@@ 0))
+	(= bf (<- file$read (:: f file$file_type) 2))
+	(@@ (|
+		(: bf 0)
+		(<< (: bf 1) 8)
+	))
+))
+
+(= read_dword_le (,,, f
+	(? (=== f nil) (@@ 0))
+	(= bf (<- file$read (:: f file$file_type) 4))
+	(@@ (|
+		(: bf 0)
+		(<< (: bf 1) 8)
+		(<< (: bf 2) 16)
+		(<< (: bf 3) 24)
+	))
+))
+
+(= read_qword_le (,,, f
+	(? (=== f nil) (@@ 0))
+	(= bf (<- file$read (:: f file$file_type) 8))
+	(@@ (|
+		(: bf 0)
+		(<< (: bf 1) 8)
+		(<< (: bf 2) 16)
+		(<< (: bf 3) 24)
+		(<< (: bf 4) 32)
+		(<< (: bf 5) 40)
+		(<< (: bf 6) 48)
+		(<< (: bf 7) 56)
+	))
+))
+
+(= read_sbyte (,,, f
+	(= v (<- read_byte f))
+	(@@ (?: v (~ (& (~ v) 0xff)) v))
+))
+
+(= read_sword_le (,,, f
+	(= v (<- read_word_le f))
+	(@@ (?: v (~ (& (~ v) 0xffff)) v))
+))
+
+(= read_sdword_le (,,, f
+	(= v (<- read_word_le f))
+	(@@ (?: v (~ (& (~ v) 0xffffffff)) v))
+))
+
+(= read_sqword_le read_qword_le)
+
+(= read_word_be (,,, f
+	(? (=== f nil) (@@ 0))
+	(= bf (<- file$read (:: f file$file_type) 2))
+	(@@ (|
+		(<< (: bf 0) 8)
+		(: bf 1)
+	))
+))
+
+(= read_dword_be (,,, f
+	(? (=== f nil) (@@ 0))
+	(= bf (<- file$read (:: f file$file_type) 4))
+	(@@ (|
+		(<< (: bf 0) 24)
+		(<< (: bf 1) 16)
+		(<< (: bf 2) 8)
+		(: bf 3)
+	))
+))
+
+(= read_qword_be (,,, f
+	(? (=== f nil) (@@ 0))
+	(= bf (<- file$read (:: f file$file_type) 8))
+	(@@ (|
+		(<< (: bf 0) 56)
+		(<< (: bf 1) 48)
+		(<< (: bf 2) 40)
+		(<< (: bf 3) 32)
+		(<< (: bf 4) 24)
+		(<< (: bf 5) 16)
+		(<< (: bf 6) 8)
+		(: bf 7)
+	))
+))
+
+(= read_sword_be (,,, f
+	(= v (<- read_word_be f))
+	(@@ (?: v (~ (& (~ v) 0xffff)) v))
+))
+
+(= read_sdword_be (,,, f
+	(= v (<- read_word_be f))
+	(@@ (?: v (~ (& (~ v) 0xffffffff)) v))
+))
+
+(= read_sqword_be read_qword_be)
+
+(= read_float (,,, f
+	(@@ (<- (... "sll:struct_float_from_bits") (<- read_dword_le f)))
+))
+
+(= read_double (,,, f
+	(@@ (<- (... "sll:struct_double_from_bits") (<- read_qword_le f)))
+))
+
+(= write_byte (,,, f v
+	(? (=== f nil) (@@ 0))
+	(@@ (<- file$write (:: f file$file_type) (:: v char_type string_type)))
+))
+
+(= write_word_le (,,, f v
+	(? (=== f nil) (@@ 0))
+	(@@ (<- file$write (:: f file$file_type) (|
+		(:: v char_type)
+		(:: (>> v 8) char_type)
+	)))
+))
+
+(= write_dword_le (,,, f v
+	(? (=== f nil) (@@ 0))
+	(@@ (<- file$write (:: f file$file_type) (|
+		(:: v char_type)
+		(:: (>> v 8) char_type)
+		(:: (>> v 16) char_type)
+		(:: (>> v 24) char_type)
+	)))
+))
+
+(= write_qword_le (,,, f v
+	(? (=== f nil) (@@ 0))
+	(@@ (<- file$write (:: f file$file_type) (|
+		(:: v char_type)
+		(:: (>> v 8) char_type)
+		(:: (>> v 16) char_type)
+		(:: (>> v 24) char_type)
+		(:: (>> v 32) char_type)
+		(:: (>> v 40) char_type)
+		(:: (>> v 48) char_type)
+		(:: (>> v 56) char_type)
+	)))
+))
+
+(= write_sbyte write_byte)
+
+(= write_sword_le write_word_le)
+
+(= write_sdword_le write_dword_le)
+
+(= write_sqword_le write_qword_le)
+
+(= write_word_be (,,, f v
+	(? (=== f nil) (@@ 0))
+	(@@ (<- file$write (:: f file$file_type) (|
+		(:: (>> v 8) char_type)
+		(:: v char_type)
+	)))
+))
+
+(= write_dword_be (,,, f v
+	(? (=== f nil) (@@ 0))
+	(@@ (<- file$write (:: f file$file_type) (|
+		(:: (>> v 24) char_type)
+		(:: (>> v 16) char_type)
+		(:: (>> v 8) char_type)
+		(:: v char_type)
+	)))
+))
+
+(= write_qword_be (,,, f v
+	(? (=== f nil) (@@ 0))
+	(@@ (<- file$write (:: f file$file_type) (|
+		(:: (>> v 56) char_type)
+		(:: (>> v 48) char_type)
+		(:: (>> v 40) char_type)
+		(:: (>> v 32) char_type)
+		(:: (>> v 24) char_type)
+		(:: (>> v 16) char_type)
+		(:: (>> v 8) char_type)
+		(:: v char_type)
+	)))
+))
+
+(= write_sword_be write_word_be)
+
+(= write_sdword_be write_dword_be)
+
+(= write_sqword_be write_qword_be)
+
+(= write_float (,,, f v
+	(<- write_dword_le f (<- (... "sll:struct_float_to_bits") v))
+))
+
+(= write_double (,,, f v
+	(<- write_qword_le f (<- (... "sll:struct_double_to_bits") v))
+))
+
+
+
+(= file (. file_module_type
+	read_byte
+	read_word_le
+	read_dword_le
+	read_qword_le
+	read_sbyte
+	read_sword_le
+	read_sdword_le
+	read_sqword_le
+	read_byte
+	read_word_be
+	read_dword_be
+	read_qword_be
+	read_sbyte
+	read_sword_be
+	read_sdword_be
+	read_sqword_be
+	read_byte
+	read_word_le
+	read_dword_le
+	read_qword_le
+	read_sbyte
+	read_sword_le
+	read_sdword_le
+	read_sqword_le
+	read_float
+	read_double
+	write_byte
+	write_word_le
+	write_dword_le
+	write_qword_le
+	write_sbyte
+	write_sword_le
+	write_sdword_le
+	write_sqword_le
+	write_byte
+	write_word_be
+	write_dword_be
+	write_qword_be
+	write_sbyte
+	write_sword_be
+	write_sdword_be
+	write_sqword_be
+	write_byte
+	write_word_le
+	write_dword_le
+	write_qword_le
+	write_sbyte
+	write_sword_le
+	write_sdword_le
+	write_sqword_le
+	write_float
+	write_double
+))
+(## file)
