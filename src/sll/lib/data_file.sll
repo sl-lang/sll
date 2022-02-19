@@ -264,7 +264,7 @@
 
 
 
-(= file (. file_module_type
+(= data_file (. data_file_module_type
 	read_byte
 	read_word_le
 	read_dword_le
@@ -318,4 +318,4 @@
 	write_float
 	write_double
 ))
-(## file)
+(## data_file)
