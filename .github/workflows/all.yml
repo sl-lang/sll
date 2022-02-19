@@ -54,7 +54,7 @@ jobs:
           python-version: 3.9
       - name: Set-up requests
         run: pip install requests
-      - name: Build
+      - name: Calculate
         id: calc_diff
         run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,sll/ext,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,sll/ext,tests web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
   linux:
