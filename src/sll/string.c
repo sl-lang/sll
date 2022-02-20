@@ -1610,6 +1610,56 @@ __SLL_EXTERNAL void sll_string_set_char(sll_char_t c,sll_string_length_t i,sll_s
 
 
 
+__SLL_EXTERNAL void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_string_t* o){
+	if (!s->l){
+		SLL_INIT_STRING(o);
+		return;
+	}
+	o->l=s->l;
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
+	const wide_data_t* a=(const wide_data_t*)(s->v);
+	wide_data_t* b=(wide_data_t*)(o->v);
+	STRING_DATA_PTR(a);
+	STRING_DATA_PTR(b);
+	if (!v){
+		o->c=s->c;
+		for (sll_string_length_t i=0;i<((s->l+8)>>3);i++){
+			*(b+i)=*(a+i);
+		}
+		return;
+	}
+	if (v<-7||v>7){
+		o->c=0;
+		for (sll_string_length_t i=0;i<((s->l+8)>>3);i++){
+			*(b+i)=0;
+		}
+		return;
+	}
+	INIT_PADDING(o->v,s->l);
+	sll_string_length_t l=(s->l+7)>>3;
+	wide_data_t c=0;
+	if (v<0){
+		v=-v;
+		wide_data_t m=0x101010101010101ull*((0xff<<v)&0xff);
+		do{
+			l--;
+			*(b+l)=((*(a+l))&m)>>v;
+			c^=*(b+l);
+		} while (l);
+	}
+	else{
+		wide_data_t m=0x101010101010101ull*(0xff>>v);
+		do{
+			l--;
+			*(b+l)=((*(a+l))&m)<<v;
+			c^=*(b+l);
+		} while (l);
+	}
+	o->c=(sll_string_length_t)(c^(c>>32));
+}
+
+
+
 __SLL_EXTERNAL void sll_string_split(const sll_string_t* s,const sll_string_t* p,sll_array_t* o){
 	if (!s->l){
 		o->l=1;

@@ -1136,6 +1136,20 @@ __SLL_EXTERNAL void sll_string_set_char(sll_char_t c,sll_string_length_t i,sll_s
 
 /**
  * \flags func
+ * \name sll_string_shift
+ * \group string
+ * \subgroup string-data
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \arg sll_integer_t v
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_string_t* o);
+
+
+
+/**
+ * \flags func
  * \name sll_string_split
  * \group string
  * \subgroup string-data

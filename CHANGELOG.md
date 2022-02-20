@@ -34,7 +34,6 @@
 ### Removed
 
 - Extension version macros
-- Useless function `sll_string_shift`
 
 ## [0.7.4] - 2022-02-15
 
