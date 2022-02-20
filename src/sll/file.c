@@ -123,7 +123,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 
 
 __SLL_EXTERNAL void sll_file_flush(sll_file_t* f){
-	if (!(f->f&SLL_FILE_FLAG_WRITE)||(f->f&SLL_FILE_FLAG_NO_BUFFER)){
+	if (!(f->f&SLL_FILE_FLAG_WRITE)||(f->f&SLL_FILE_FLAG_NO_BUFFER)||!f->_w.bf.off){
 		return;
 	}
 	sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,f->_w.bf.off);

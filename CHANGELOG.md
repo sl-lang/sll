@@ -21,11 +21,13 @@
 ### Changed
 
 - Builder script no longer recompiles unchanged files (works across configurations)
+- Calling `sll_file_flush` on files with empty buffers no longer generates system calls
 - Factorizing a negative number via `math$factors` correctly returns a factor of `-1` raised to the 1st power
 - Fixed another bug in `sll_string_compare_pointer`
 - Fixed edge cases in `sll_string_duplicate`
 - Improved performance of the scheduler
 - Renamed `sll_operator_dup` to `sll_operator_copy`
+- Thread objects are now recycled instead of released immediately to the OS
 - Updated CLI help string
 - VM stack size now specifies the number of Sll objects instead of the raw memory size
 

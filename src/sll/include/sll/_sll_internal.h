@@ -272,6 +272,9 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define THREAD_IS_UNUSED(t) (ADDR(t)>>63)
 #define THREAD_NEXT_UNUSED(id) (PTR((id)|0x8000000000000000ull))
 #define THREAD_GET_NEXT_UNUSED(t) ((sll_thread_index_t)(ADDR((t))&0x7fffffffffffffffull))
+#define THREAD_SIZE SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz*sizeof(sll_object_t*))
+
+#define THREAD_ALLOCATOR_CACHE_POOL_SIZE 16
 
 #define THREAD_LOCK_UNUSED 0xfffffffe
 #define THREAD_LOCK_GET_NEXT_ID(l) ((sll_lock_index_t)ADDR((l)->last))

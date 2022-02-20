@@ -18,6 +18,8 @@ static queue_length_t _scheduler_queue_len;
 static lock_t* _scheduler_lock;
 static sll_lock_index_t _scheduler_lock_next;
 static lock_list_length_t _scheduler_lock_len;
+static void* _scheduler_allocator_pool[THREAD_ALLOCATOR_CACHE_POOL_SIZE];
+static sll_array_length_t _scheduler_allocator_pool_len;
 
 
 
@@ -39,7 +41,11 @@ void _scheduler_deinit(void){
 		if (thr->ret){
 			SLL_RELEASE(thr->ret);
 		}
-		sll_platform_free_page(thr,SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz*sizeof(sll_object_t*)));
+		sll_platform_free_page(thr,THREAD_SIZE);
+	}
+	while (_scheduler_allocator_pool_len){
+		_scheduler_allocator_pool_len--;
+		sll_platform_free_page(_scheduler_allocator_pool[_scheduler_allocator_pool_len],THREAD_SIZE);
 	}
 	sll_deallocate(_scheduler_thread);
 	sll_deallocate(_scheduler_queue);
@@ -58,6 +64,7 @@ void _scheduler_init(void){
 	_scheduler_lock=NULL;
 	_scheduler_lock_next=THREAD_LOCK_UNUSED;
 	_scheduler_lock_len=0;
+	_scheduler_allocator_pool_len=0;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 }
 
@@ -73,7 +80,14 @@ sll_thread_index_t _scheduler_new_thread(void){
 	else{
 		_scheduler_thread_next=THREAD_GET_NEXT_UNUSED(*(_scheduler_thread+o));
 	}
-	void* ptr=sll_platform_allocate_page(SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz*sizeof(sll_object_t*)),0);
+	void* ptr=NULL;
+	if (_scheduler_allocator_pool_len){
+		_scheduler_allocator_pool_len--;
+		ptr=_scheduler_allocator_pool[_scheduler_allocator_pool_len];
+	}
+	else{
+		ptr=sll_platform_allocate_page(THREAD_SIZE,0);
+	}
 	thread_data_t* n=ptr;
 	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t));
 	n->ii=0;
@@ -264,7 +278,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_thread(sll_thread_index_
 	*(_scheduler_thread+t)=THREAD_NEXT_UNUSED(_scheduler_thread_next);
 	_scheduler_thread_next=t;
 	SLL_RELEASE(thr->ret);
-	sll_platform_free_page(thr,SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz*sizeof(sll_object_t*)));
+	if (_scheduler_allocator_pool_len<THREAD_ALLOCATOR_CACHE_POOL_SIZE){
+		_scheduler_allocator_pool[_scheduler_allocator_pool_len]=thr;
+		_scheduler_allocator_pool_len++;
+	}
+	else{
+		sll_platform_free_page(thr,THREAD_SIZE);
+	}
 	return 1;
 }
 
