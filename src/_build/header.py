@@ -208,7 +208,7 @@ def generate_header(h_dt):
 		dm[b"__FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")
 	if ("--release" not in sys.argv):
 		dm[b"DEBUG_BUILD"]=b"1"
-	if (os.name=="nt"):
+	if (util.system=="windows"):
 		dm.update({b"_MSC_VER":b"1",b"_WINDOWS":b"1",b"WINDLL":b"1",b"USERDLL":b"1",b"__SLL_BUILD_WINDOWS":b"1"})
 		dm[(b"NDEBUG" if "--release" in sys.argv else b"_DEBUG")]=b"1"
 	else:

@@ -82,15 +82,15 @@ for nm in util.get_ext_list():
 		util.log("Compressing extension files...")
 		util.bundle_ext(nm,ver)
 		if ("--upload" in sys.argv):
-			os.rename(f"build/sll_ext_{nm}.zip",("win" if os.name=="nt" else "linux")+f"_ext_{nm}.zip")
+			os.rename(f"build/sll_ext_{nm}.zip",util.system+f"_ext_{nm}.zip")
 	util.log("Installing extension library...")
-	with open(f"build/sll-ext-{nm}-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"rb") as rf,open(f"build/sys_lib/sll-ext-{nm}-{ver[0]}.{ver[1]}.{ver[2]}."+("dll" if os.name=="nt" else "so"),"wb") as wf:
+	with open(f"build/sll-ext-{nm}-{ver[0]}.{ver[1]}.{ver[2]}"+util.LIBRARY_EXTENSION[util.system],"rb") as rf,open(f"build/sys_lib/sll-ext-{nm}-{ver[0]}.{ver[1]}.{ver[2]}"+util.LIBRARY_EXTENSION[util.system],"wb") as wf:
 		wf.write(rf.read())
 if ("--test" in sys.argv):
 	util.log("Running tests...")
 	subprocess.run(["build/sll","tests/_runner.sll"])
 if ("--upload" in sys.argv):
-	os.rename("build/sll.zip",("win.zip" if os.name=="nt" else "linux.zip"))
+	os.rename("build/sll.zip",util.system+".zip")
 if ("--run" in sys.argv):
 	a=(["examples/_internal_test_ext_debug/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	util.log(f"Running '{a[0]}...")

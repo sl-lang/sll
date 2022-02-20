@@ -16,7 +16,7 @@ def build_sll(fl,v,r):
 		def_l.append("USE_STACK_ALLOCATOR=1")
 	if (not r):
 		def_l.append("DEBUG_BUILD")
-	if (os.name=="nt"):
+	if (util.system=="windows"):
 		def_l.extend(["_WINDOWS","WINDLL","USERDLL","WIN32_LEAN_AND_MEAN","_CRT_SECURE_NO_WARNINGS","__SLL_BUILD_WINDOWS"])
 		win_def=[]
 		for k in def_l:
@@ -83,7 +83,7 @@ def build_sll(fl,v,r):
 
 
 def build_sll_cli():
-	if (os.name=="nt"):
+	if (util.system=="windows"):
 		util.log("  Compiling Resource Files...")
 		if (subprocess.run(["rc","/r","/fo","build/app.res","/nologo","src/cli/resources/app.rc"]).returncode!=0):
 			sys.exit(1)
@@ -121,7 +121,7 @@ def build_sll_cli():
 def build_sll_extension(nm,fl,v,r):
 	b_nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
 	lib_nm=f"sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}"
-	if (os.name=="nt"):
+	if (util.system=="windows"):
 		if (r):
 			util.log("  Compiling Library Files (Release Mode)...")
 			out_fl=[]

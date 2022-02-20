@@ -11,21 +11,23 @@ BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+
 BUILD_PATHS=["build/lib","build/sys_lib","build/objects","build/web"]
 BUILD_TIME=time.time_ns()
 CLEAR_PATHS=["build/lib","build/sys_lib"]
+EXECUTABLE_EXTENSION={"linux":"","windows":".exe"}
+LIBRARY_EXTENSION={"linux":".so","windows":".dll"}
 PLATFORM_SOURCE_CODE={"linux":"src/sll/platform/linux","windows":"src/sll/platform/windows"}
 
 
 
-log=(print if "--verbose" in sys.argv else lambda *_:None)
+log=(print if "--verbose" in sys.argv else lambda _:None)
+system=platform.system().lower()
 
 
 
 def fix_env():
-	if (os.name=="nt"):
-		if (os.getenv("GITHUB_ACTIONS",None) is not None):
-			for k in str(subprocess.run([str(subprocess.run([os.environ["ProgramFiles(x86)"]+"/Microsoft Visual Studio/Installer/vswhere.exe","-nologo","-latest","-products","*","-requires","Microsoft.VisualStudio.Component.VC.Tools.x86.x64","-property","installationPath"],stdout=subprocess.PIPE).stdout.strip(),"utf-8")+"/VC/Auxiliary/Build/vcvarsall.bat","x64","&&","cls","&&","set"],shell=True,stdout=subprocess.PIPE).stdout.split(b"\x0c")[1],"utf-8").split("\r\n"):
-				k=[e.strip() for e in k.split("=")]
-				if (k[0].lower() in ["path","include","lib","libpath"]):
-					os.environ[k[0].upper()]=k[1]
+	if (system=="windows" and len(os.getenv("GITHUB_ACTIONS",""))!=0):
+		for k in str(subprocess.run([str(subprocess.run([os.environ["ProgramFiles(x86)"]+"/Microsoft Visual Studio/Installer/vswhere.exe","-nologo","-latest","-products","*","-requires","Microsoft.VisualStudio.Component.VC.Tools.x86.x64","-property","installationPath"],stdout=subprocess.PIPE).stdout.strip(),"utf-8")+"/VC/Auxiliary/Build/vcvarsall.bat","x64","&&","cls","&&","set"],shell=True,stdout=subprocess.PIPE).stdout.split(b"\x0c")[1],"utf-8").split("\r\n"):
+			k=[e.strip() for e in k.split("=")]
+			if (k[0].lower() in ["path","include","lib","libpath"]):
+				os.environ[k[0].upper()]=k[1]
 
 
 
@@ -54,12 +56,12 @@ def create_output_dir():
 
 
 def unique_file_path(fp):
-	return platform.system().lower()+":"+("release" if "--release" in sys.argv else "debug")+":"+fp.replace("\\","/")
+	return system+":"+("release" if "--release" in sys.argv else "debug")+":"+fp.replace("\\","/")
 
 
 
 def output_file_path(fp):
-	return "build/objects/"+platform.system().lower()+"_"+("release" if "--release" in sys.argv else "debug")+"_"+fp.replace("\\","/").replace("/","$")+".o"
+	return "build/objects/"+system+"_"+("release" if "--release" in sys.argv else "debug")+"_"+fp.replace("\\","/").replace("/","$")+".o"
 
 
 
@@ -74,7 +76,7 @@ def get_docs_files():
 
 def get_sll_files():
 	o=[]
-	for r,_,fl in os.walk(PLATFORM_SOURCE_CODE[platform.system().lower()]):
+	for r,_,fl in os.walk(PLATFORM_SOURCE_CODE[system]):
 		r=r.replace("\\","/").rstrip("/")+"/"
 		for f in fl:
 			if (f[-2:]==".c"):
@@ -110,8 +112,10 @@ def get_ext_list():
 
 def bundle(v):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		for k in (["build/sll.exe","build/sllw.exe",f"build/sll-{v[0]}.{v[1]}.{v[2]}.dll"] if os.name=="nt" else ["build/sll",f"build/sll-{v[0]}.{v[1]}.{v[2]}.so"]):
+		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],f"build/sll-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system]]:
 			zf.write(k,arcname=k[6:])
+		if (system=="windows"):
+			zf.write("build/sllw.exe",arcname="sllw.exe")
 		for k in os.listdir("build/lib"):
 			if (os.path.isfile("build/lib/"+k)):
 				zf.write("build/lib/"+k,arcname="lib/"+k)
@@ -120,7 +124,7 @@ def bundle(v):
 
 def bundle_ext(nm,v):
 	with zipfile.ZipFile(f"build/sll_ext_{nm}.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		fp=(f"build/sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}.dll" if os.name=="nt" else f"build/sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}.so")
+		fp=f"build/sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system]
 		zf.write(fp,arcname="sys_lib/"+fp[6:])
 		for k in os.listdir("build/lib/"+nm):
 			zf.write(f"build/lib/{nm}/{k}",arcname=f"lib/{nm}/{k}")
