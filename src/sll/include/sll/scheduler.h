@@ -94,4 +94,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_release_lock(sll_lock_index_t l
 
 
 
+/**
+ * \flags func
+ * \name sll_start_thread
+ * \group scheduler
+ * \desc Docs!
+ * \arg sll_thread_index_t t
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL sll_bool_t sll_start_thread(sll_thread_index_t t);
+
+
+
 #endif

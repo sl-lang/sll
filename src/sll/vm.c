@@ -129,13 +129,13 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 
-static void _push_call_stack(const sll_char_t* nm,sll_stack_offset_t si){
-	SLL_ASSERT(_scheduler_current_thread->c_st.l<=sll_current_vm_config->c_st_sz);
-	(_scheduler_current_thread->c_st.dt+_scheduler_current_thread->c_st.l)->nm=nm;
-	(_scheduler_current_thread->c_st.dt+_scheduler_current_thread->c_st.l)->_ii=_scheduler_current_thread->ii;
-	(_scheduler_current_thread->c_st.dt+_scheduler_current_thread->c_st.l)->_s=(si==SLL_MAX_STACK_OFFSET?_scheduler_current_thread->si:si);
-	(_scheduler_current_thread->c_st.dt+_scheduler_current_thread->c_st.l)->_var_mem_off=PTR(ADDR(_scheduler_current_thread->stack+(_scheduler_current_thread->c_st.dt+_scheduler_current_thread->c_st.l)->_s)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->vc));
-	(*((sll_call_stack_size_t*)(&(_scheduler_current_thread->c_st.l))))++;
+static void _push_call_stack(thread_data_t* thr,const sll_char_t* nm,sll_stack_offset_t si){
+	SLL_ASSERT(thr->c_st.l<=sll_current_vm_config->c_st_sz);
+	(thr->c_st.dt+thr->c_st.l)->nm=nm;
+	(thr->c_st.dt+thr->c_st.l)->_ii=thr->ii;
+	(thr->c_st.dt+thr->c_st.l)->_s=(si==SLL_MAX_STACK_OFFSET?thr->si:si);
+	(thr->c_st.dt+thr->c_st.l)->_var_mem_off=PTR(ADDR(thr->stack+(thr->c_st.dt+thr->c_st.l)->_s)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->vc));
+	(*((sll_call_stack_size_t*)(&(thr->c_st.l))))++;
 }
 
 
@@ -154,56 +154,10 @@ static void _pop_call_stack(void){
 
 
 static sll_object_t* _call_internal_function(sll_function_index_t i,sll_object_t*const* a,sll_arg_count_t ac){
-	_push_call_stack((*(sll_current_runtime_data->ift->dt+i))->nm.v,_scheduler_current_thread->si);
+	_push_call_stack(_scheduler_current_thread,(*(sll_current_runtime_data->ift->dt+i))->nm.v,_scheduler_current_thread->si);
 	sll_object_t* o=(*(sll_current_runtime_data->ift->dt+i))->p(a,ac);
 	_pop_call_stack();
 	return o;
-}
-
-
-
-static void _call_function(sll_function_index_t fn,sll_arg_count_t ac){
-	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+fn;
-	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
-		sll_object_t* tos=SLL_CREATE();
-		tos->t=SLL_OBJECT_TYPE_ARRAY;
-		if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
-			sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;
-			for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;i++){
-				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_static_int[0];
-				_scheduler_current_thread->si++;
-			}
-			SLL_INIT_ARRAY(&(tos->dt.a));
-		}
-		else{
-			sll_array_create(ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)+1,&(tos->dt.a));
-			_scheduler_current_thread->si-=tos->dt.a.l;
-			for (sll_array_length_t i=0;i<tos->dt.a.l;i++){
-				tos->dt.a.v[i]=*(_scheduler_current_thread->stack+_scheduler_current_thread->si+i);
-			}
-		}
-		*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
-		_scheduler_current_thread->si++;
-	}
-	else{
-		if (ac!=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)){
-			if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
-				sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;
-				for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;i++){
-					*(_scheduler_current_thread->stack+_scheduler_current_thread->si+i)=sll_static_int[0];
-				}
-				_scheduler_current_thread->si+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;
-			}
-			else{
-				for (sll_arg_count_t i=ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);i;i--){
-					_scheduler_current_thread->si--;
-					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
-				}
-			}
-		}
-	}
-	_push_call_stack((sll_current_runtime_data->a_dt->st.dt+af->nm)->v,_scheduler_current_thread->si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af));
-	_scheduler_current_thread->ii=af->i;
 }
 
 
@@ -760,7 +714,7 @@ _cleanup_jump_table:;
 							}
 						}
 						else if (i&&i<=sll_current_runtime_data->a_dt->ft.l){
-							_call_function((sll_function_index_t)(i-1),ai->dt.ac);
+							_call_function(_scheduler_current_thread,(sll_function_index_t)(i-1),ai->dt.ac);
 							RELOAD_THREAD_DATA;
 							continue;
 						}
@@ -789,7 +743,7 @@ _cleanup_jump_table:;
 					}
 				}
 				else if (ai->dt.i&&ai->dt.i<=sll_current_runtime_data->a_dt->ft.l){
-					_call_function((sll_function_index_t)(ai->dt.i-1),0);
+					_call_function(_scheduler_current_thread,(sll_function_index_t)(ai->dt.i-1),0);
 					RELOAD_THREAD_DATA;
 					continue;
 				}
@@ -807,7 +761,7 @@ _cleanup_jump_table:;
 					}
 				}
 				else if (ai->dt.i&&ai->dt.i<=sll_current_runtime_data->a_dt->ft.l){
-					_call_function((sll_function_index_t)(ai->dt.i-1),1);
+					_call_function(_scheduler_current_thread,(sll_function_index_t)(ai->dt.i-1),1);
 					RELOAD_THREAD_DATA;
 					continue;
 				}
@@ -841,7 +795,7 @@ _cleanup_jump_table:;
 								SLL_ACQUIRE(tos->dt.a.v[j]);
 							}
 							SLL_RELEASE(tos);
-							_call_function((sll_function_index_t)(i-1),ai->dt.ac);
+							_call_function(_scheduler_current_thread,(sll_function_index_t)(i-1),ai->dt.ac);
 							RELOAD_THREAD_DATA;
 							continue;
 						}
@@ -1007,25 +961,48 @@ _cleanup:
 
 
 
-sll_thread_index_t _init_thread_stack(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all){
-	if (fn_idx<0){
-		SLL_UNIMPLEMENTED();
-	}
-	if (fn_idx&&fn_idx<=sll_current_runtime_data->a_dt->ft.l){
-		sll_thread_index_t o=_scheduler_new_thread();
-		sll_thread_index_t tmp=sll_current_thread_index;
-		sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
-		_scheduler_set_thread(o);
-		for (;_scheduler_current_thread->si<all;_scheduler_current_thread->si++){
-			*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=*(al+_scheduler_current_thread->si);
-			SLL_ACQUIRE(*(al+_scheduler_current_thread->si));
+void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac){
+	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+fn;
+	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
+		sll_object_t* tos=SLL_CREATE();
+		tos->t=SLL_OBJECT_TYPE_ARRAY;
+		if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
+			sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;
+			for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;i++){
+				*(thr->stack+thr->si)=sll_static_int[0];
+				thr->si++;
+			}
+			SLL_INIT_ARRAY(&(tos->dt.a));
 		}
-		_call_function((sll_function_index_t)(fn_idx-1),all);
-		sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
-		_scheduler_set_thread(tmp);
-		return o;
+		else{
+			sll_array_create(ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)+1,&(tos->dt.a));
+			thr->si-=tos->dt.a.l;
+			for (sll_array_length_t i=0;i<tos->dt.a.l;i++){
+				tos->dt.a.v[i]=*(thr->stack+thr->si+i);
+			}
+		}
+		*(thr->stack+thr->si)=tos;
+		thr->si++;
 	}
-	SLL_UNIMPLEMENTED();
+	else{
+		if (ac!=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)){
+			if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
+				sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;
+				for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;i++){
+					*(thr->stack+thr->si+i)=sll_static_int[0];
+				}
+				thr->si+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;
+			}
+			else{
+				for (sll_arg_count_t i=ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);i;i--){
+					thr->si--;
+					SLL_RELEASE(*(thr->stack+thr->si));
+				}
+			}
+		}
+	}
+	_push_call_stack(thr,(sll_current_runtime_data->a_dt->st.dt+af->nm)->v,thr->si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af));
+	thr->ii=af->i;
 }
 
 
@@ -1088,7 +1065,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 	if (!sll_current_runtime_data||!sll_current_vm_config){
 		return NULL;
 	}
-	sll_thread_index_t tid=_init_thread_stack(fn_idx,al,all);
+	sll_thread_index_t tid=sll_create_thread(fn_idx,al,all);
 	sll_object_t* o=_wait_for_result(tid);
 	if (!sll_delete_thread(tid)){
 		SLL_UNREACHABLE();

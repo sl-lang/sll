@@ -280,12 +280,24 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define THREAD_LOCK_GET_NEXT_ID(l) ((sll_lock_index_t)ADDR((l)->last))
 #define THREAD_LOCK_SET_NEXT_ID(l,v) ((l)->last=PTR((sll_lock_index_t)v))
 
+#define THREAD_STATE_INITIALIZED 0
+#define THREAD_STATE_RUNNING 1
+#define THREAD_STATE_QUEUED 2
+#define THREAD_STATE_WAIT_THREAD 3
+#define THREAD_STATE_WAIT_LOCK 4
+#define THREAD_STATE_TERMINATED 5
+#define THREAD_STATE_UNDEFINED 255
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
 
 
 typedef __SLL_U8 bucket_index_t;
+
+
+
+typedef __SLL_U8 thread_state_t;
 
 
 
@@ -606,6 +618,7 @@ typedef struct __THREAD_DATA{
 	sll_object_t* ret;
 	sll_call_stack_t c_st;
 	sll_char_t tm;
+	thread_state_t st;
 } thread_data_t;
 
 
@@ -631,6 +644,10 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 sll_node_t* _acquire_next_node(sll_source_file_t* sf);
+
+
+
+void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac);
 
 
 
@@ -682,10 +699,6 @@ void _init_platform(void);
 
 
 
-sll_thread_index_t _init_thread_stack(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all);
-
-
-
 void _log_release_data(void);
 
 
@@ -711,6 +724,10 @@ void _reset_sandbox(void);
 
 
 void _scheduler_deinit(void);
+
+
+
+thread_data_t* _scheduler_get_thread(sll_thread_index_t t);
 
 
 

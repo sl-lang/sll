@@ -7,7 +7,9 @@
 
 
 __API_FUNC(thread_create){
-	return sll_create_thread(a,b->v,b->l);
+	sll_thread_index_t o=sll_create_thread(a,b->v,b->l);
+	sll_start_thread(o);
+	return o;
 }
 
 
