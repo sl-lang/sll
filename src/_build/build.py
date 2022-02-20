@@ -114,9 +114,10 @@ def build_sll_cli():
 		util.log("  Linking Files...")
 		if (subprocess.run(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fvisibility=hidden","-Wall","-O3","-Werror","-o","build/sll",out_fp,"-ldl"]).returncode!=0):
 			sys.exit(1)
-		util.log("  Stripping Executable...")
-		if (subprocess.run(["strip","build/sll","-s","-R",".note.*","-R",".comment"]).returncode!=0):
-			sys.exit(1)
+		if (util.system!="darwin"):
+			util.log("  Stripping Executable...")
+			if (subprocess.run(["strip","build/sll","-s","-R",".note.*","-R",".comment"]).returncode!=0):
+				sys.exit(1)
 
 
 
