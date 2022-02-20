@@ -42,6 +42,7 @@ if (__name__=="__main__"):
 				desc+=f"[{ts}{p}]: https://github.com/sl-lang/sll/blob/sll-v{ts}{p}\n"
 	headers={"Accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1],"Content-Type":"application/json"}
 	util.log("Creating Release...")
+	sha=requests.get("https://api.github.com/repos/sl-lang/sll/git/ref/heads/main",headers=headers).json()["object"]["sha"]
 	r_id=requests.post("https://api.github.com/repos/sl-lang/sll/releases",headers=headers,data=json.dumps({"tag_name":f"sll-v{v[0]}.{v[1]}.{v[2]}","target_commitish":sha,"prerelease":True,"body":desc,"name":f"sll-v{v[0]}.{v[1]}.{v[2]}"})).json()["id"]
 	util.log("Uploading Assets...")
 	headers["Content-Type"]="application/octet-stream"
