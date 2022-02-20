@@ -252,8 +252,8 @@ jobs:
           path: build
       - name: Unpack release
         run: |
-          Expand-Archive -Force build\win.zip build\
-          Expand-Archive -Force build\win_ext_debug.zip build\_debug_ext\
+          Expand-Archive -Force build\windows.zip build\
+          Expand-Archive -Force build\windows_ext_debug.zip build\_debug_ext\
           robocopy /s build\_debug_ext build
           exit 0
         shell: powershell
