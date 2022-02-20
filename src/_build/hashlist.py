@@ -33,7 +33,9 @@ def _check(fp):
 
 
 def fail(fp):
-	del hash_list[util.unique_file_path(fp)]
+	fp=util.unique_file_path(fp)
+	if (fp in hash_list):
+		del hash_list[fp]
 
 
 

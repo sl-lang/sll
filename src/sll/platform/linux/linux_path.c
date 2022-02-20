@@ -11,9 +11,14 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/sendfile.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef __SLL_BUILD_DARWIN
+#include <sys/socket.h>
+#include <sys/syslimits.h>
+#else
+#include <sys/sendfile.h>
+#endif
 
 
 
@@ -198,7 +203,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_ch
 	size_t sz=st.st_size;
 	sll_bool_t o=1;
 	while (sz){
+#ifdef __SLL_BUILD_DARWIN
+		off_t sz=st.st_size;
+		int v=sendfile(d_fd,s_fd,0,&sz,NULL,0);
+#else
 		int v=sendfile(d_fd,s_fd,NULL,st.st_size);
+#endif
 		if (v==-1){
 			o=1;
 			break;
