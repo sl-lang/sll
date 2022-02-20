@@ -16,6 +16,7 @@
 - Implemented `sll_platform_create_directory` and `path$mkdir`
 - Implemented `SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE`, `sll_platform_path_delete` and `file$delete`
 - Implemented `struct.sll`, `struct$ERROR_OUT_OF_RANGE`, `struct$ERROR_UNKNOWN_TYPE` and `struct$create` ([#227])
+- MacOS support
 - String resize function: `sll_string_resize`
 
 ### Changed

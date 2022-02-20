@@ -18,7 +18,13 @@
 
 
 static sll_environment_t _linux_env={NULL,0};
-static __STATIC_STRING(_linux_platform_str,"linux");
+static __STATIC_STRING(_linux_platform_str,
+#ifdef __SLL_BUILD_DARWIN
+	"darwin"
+#else
+	"linux"
+#endif
+);
 static sll_time_zone_t _linux_platform_time_zone={"GMT",0};
 
 
@@ -125,7 +131,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 
 __SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
 	while (l){
+#ifdef __SLL_BUILD_DARWIN
+		ssize_t n=getentropy(bf,(l>256?256:l));
+#else
 		ssize_t n=getrandom(bf,l,0);
+#endif
 		if (n==-1){
 			if (errno==EINTR){
 				continue;

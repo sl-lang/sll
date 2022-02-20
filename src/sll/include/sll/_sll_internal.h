@@ -84,10 +84,16 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 	do{ \
 		p=__builtin_assume_aligned((p),1<<(n),(x)); \
 	} while (0)
-#define _CUSTOM_SECTION_(nm) __attribute__((used,section(#nm)))
 #define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(nm)
+#ifdef __SLL_BUILD_DARWIN
+#define _CUSTOM_SECTION_(nm) __attribute__((used,__section__("__DATA,"#nm)))
+#define STATIC_OBJECT_SETUP extern unsigned long long int __start_sobject __asm("section$start$__TEXT$sobject");extern unsigned long long int __stop_sobject __asm("section$end$__TEXT$sobject")
+#define INIT_STRING_SETUP extern unsigned long long int __start_initstr __asm("section$start$__TEXT$initstr");extern unsigned long long int __stop_initstr __asm("section$end$__TEXT$initstr")
+#else
+#define _CUSTOM_SECTION_(nm) __attribute__((used,section(#nm)))
 #define STATIC_OBJECT_SETUP extern const static_object_t* __start_sobject;extern const static_object_t* __stop_sobject
 #define INIT_STRING_SETUP extern const init_string_t* __start_initstr;extern const init_string_t* __stop_initstr
+#endif
 #define __static_object_start __start_sobject
 #define __static_object_end __stop_sobject
 #define __init_string_start __start_initstr

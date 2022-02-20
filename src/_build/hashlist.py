@@ -13,7 +13,7 @@ update_list=None
 
 def _check(fp):
 	nm=util.unique_file_path(fp)
-	if (nm in update_list):
+	if (nm in update_list or fp[-2:]==".c" and not os.path.exists(util.output_file_path(fp))):
 		return 1
 	sha256=hashlib.sha256()
 	with open(fp,"rb") as rf:

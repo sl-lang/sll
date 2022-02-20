@@ -37,8 +37,8 @@ __SLL_EXTERNAL void sll_deinit(void){
 		_util_exit_table_size--;
 		_util_exit_table[_util_exit_table_size]();
 	}
-	const init_string_t*const* l=&__init_string_start;
-	while (l<&__init_string_end){
+	const init_string_t*const* l=(const init_string_t*const*)(&__init_string_start);
+	while (l<(const init_string_t*const*)(&__init_string_end)){
 		const init_string_t* k=*l;
 		if (k){
 			sll_free_string(k->p);
@@ -62,8 +62,8 @@ __SLL_EXTERNAL void sll_init(void){
 	_util_init=1;
 	_file_init_std_streams();
 	_init_platform();
-	const init_string_t*const* l=&__init_string_start;
-	while (l<&__init_string_end){
+	const init_string_t*const* l=(const init_string_t*const*)(&__init_string_start);
+	while (l<(const init_string_t*const*)(&__init_string_end)){
 		const init_string_t* k=*l;
 		if (k){
 			if (k->dtl==SLL_MAX_STRING_LENGTH){

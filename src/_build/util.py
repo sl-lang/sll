@@ -11,9 +11,9 @@ BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+
 BUILD_PATHS=["build/lib","build/sys_lib","build/objects","build/web"]
 BUILD_TIME=time.time_ns()
 CLEAR_PATHS=["build/lib","build/sys_lib"]
-EXECUTABLE_EXTENSION={"linux":"","windows":".exe"}
-LIBRARY_EXTENSION={"linux":".so","windows":".dll"}
-PLATFORM_SOURCE_CODE={"linux":"src/sll/platform/linux","windows":"src/sll/platform/windows"}
+EXECUTABLE_EXTENSION={"darwin":"","linux":"","windows":".exe"}
+LIBRARY_EXTENSION={"darwin":".so","linux":".so","windows":".dll"}
+PLATFORM_SOURCE_CODE={"darwin":"src/sll/platform/linux","linux":"src/sll/platform/linux","windows":"src/sll/platform/windows"}
 
 
 

@@ -260,8 +260,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 		}
 		pg=*((void**)pg);
 	}
-	const static_object_t*const* l=&__static_object_start;
-	while (l<&__static_object_end){
+	const static_object_t*const* l=(const static_object_t*const*)(&__static_object_start);
+	while (l<(const static_object_t*const*)(&__static_object_end)){
 		const static_object_t* k=*l;
 		if (k){
 			SLL_ASSERT(k->dt->rc);
