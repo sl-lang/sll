@@ -15,6 +15,8 @@ jobs:
     name: Analyze code
     needs:
       - diff
+      - darwin
+      - darwin-release
       - linux
       - linux-release
       - web
@@ -57,6 +59,63 @@ jobs:
       - name: Calculate
         id: calc_diff
         run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,sll/ext,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,sll/ext,tests web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
+  darwin:
+    name: Build darwin
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).linux
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup python@3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}}
+  darwin-release:
+    name: Build darwin release
+    needs: diff
+    if: fromJSON(needs.diff.outputs.data).linux
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup python@3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build
+        run: ${{env.BUILD_COMMAND}} --release --bundle --upload
+      - name: Store assets
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-darwin
+          path: |
+            *.zip
+          retention-days: 1
+  darwin-test:
+    name: Test darwin release
+    needs:
+      - darwin
+      - darwin-release
+    if: github.event_name!='workflow_dispatch'
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download release build
+        uses: actions/download-artifact@v2
+        with:
+          name: release-darwin
+          path: build
+      - name: Unpack release
+        run: |
+          unzip -o build/darwin.zip -d build
+          unzip -o build/darwin_ext_debug.zip -d build/_debug_ext
+          cp -r build/_debug_ext/* build
+      - name: Test
+        run: build/sll tests/_runner.sll
   linux:
     name: Build linux
     needs: diff
@@ -117,6 +176,7 @@ jobs:
   release:
     name: Create release
     needs:
+      - darwin-release
       - linux-release
       - windows-release
     if: github.event_name=='workflow_dispatch'
