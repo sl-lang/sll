@@ -75,15 +75,14 @@ jobs:
         with:
           name: release-darwin
           path: |
-            darwin.zip
-            darwin_ext_debug.zip
+            *.zip
           retention-days: 1
   darwin-test:
     name: Test darwin release
     needs:
       - darwin
       - darwin-release
-    if: github.event_name!='workflow_dispatch'
+    if: never()&&github.event_name!='workflow_dispatch'
     runs-on: macos-latest
     steps:
       - name: Checkout
