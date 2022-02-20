@@ -38,7 +38,19 @@
  * \arg sll_integer_t v
  * \ret sll_object_t*
  */
-#define SLL_ACQUIRE_STATIC_INT(v) (SLL_ACQUIRE(((v)<0?sll_static_negative_int[-(v)-1]:sll_static_int[(v)])),((v)<0?sll_static_negative_int[-(v)-1]:sll_static_int[(v)]))
+#define SLL_ACQUIRE_STATIC_INT(v) (SLL_ACQUIRE(sll_static_int[(v)]),sll_static_int[(v)])
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ACQUIRE_STATIC_NEG_INT
+ * \group static-object
+ * \desc Docs!
+ * \arg sll_integer_t v
+ * \ret sll_object_t*
+ */
+#define SLL_ACQUIRE_STATIC_NEG_INT(v) (SLL_ACQUIRE(sll_static_negative_int[(v)-1]),sll_static_negative_int[(v)-1])
 
 
 

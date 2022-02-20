@@ -300,7 +300,7 @@ __API_FUNC(math_factors){
 		sll_object_t* n=SLL_CREATE();
 		n->t=SLL_OBJECT_TYPE_ARRAY;
 		sll_array_create(2,&(n->dt.a));
-		n->dt.a.v[0]=SLL_ACQUIRE_STATIC_INT(-1);
+		n->dt.a.v[0]=SLL_ACQUIRE_STATIC_NEG_INT(1);
 		n->dt.a.v[1]=SLL_ACQUIRE_STATIC_INT(1);
 		out->v[0]=n;
 	}

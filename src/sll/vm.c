@@ -220,7 +220,7 @@ static sll_object_t* _wait_for_result(sll_thread_index_t tid){
 				_scheduler_current_thread->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE:
-				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_ACQUIRE_STATIC_INT(-1);
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_ACQUIRE_STATIC_NEG_INT(1);
 				_scheduler_current_thread->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO:
@@ -349,7 +349,7 @@ static sll_object_t* _wait_for_result(sll_thread_index_t tid){
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE:
 				SLL_RELEASE(*VAR_REF(ai->dt.v));
-				*VAR_REF(ai->dt.v)=SLL_ACQUIRE_STATIC_INT(-1);
+				*VAR_REF(ai->dt.v)=SLL_ACQUIRE_STATIC_NEG_INT(1);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO:
 				SLL_RELEASE(*VAR_REF(ai->dt.v));

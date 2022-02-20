@@ -27,6 +27,7 @@
 - Fixed edge cases in `sll_string_duplicate`
 - Improved performance of the scheduler
 - Renamed `sll_operator_dup` to `sll_operator_copy`
+- Split `SLL_ACQUIRE_STATIC_INT` macro to `SLL_ACQUIRE_STATIC_INT` and `SLL_ACQUIRE_STATIC_NEG_INT`
 - Thread objects are now recycled instead of released immediately to the OS
 - Updated CLI help string
 - VM stack size now specifies the number of Sll objects instead of the raw memory size
