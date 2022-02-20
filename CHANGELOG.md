@@ -27,6 +27,7 @@
 - Improved performance of the scheduler
 - Renamed `sll_operator_dup` to `sll_operator_copy`
 - Updated CLI help string
+- VM stack size now specifies the number of Sll objects instead of the raw memory size
 
 ### Removed
 
