@@ -2,7 +2,7 @@
 
 
 
-(# STATE_RUNNING STATE_WAITING_THREAD STATE_WAITING_LOCK STATE_TERMINATED thread_map)
+(# STATE_RUNNING STATE_WAITING_THREAD STATE_WAITING_LOCK STATE_WAITING_SEMAPHORE STATE_TERMINATED thread_map)
 
 
 
@@ -18,6 +18,15 @@
 	int_type blocking_thread
 ))
 
+(= semaphore_type (&:
+	(,,, dt
+		(@@ (<- string$format "<id=%u counter=%u/%u>" dt$id dt$counter dt$max))
+	) @@string@@
+	(~ int_type) id
+	(~ int_type) max
+	int_type counter
+))
+
 (= thread_type (&:
 	(,,, dt
 		(= state nil)
@@ -25,6 +34,7 @@
 			STATE_RUNNING (= state "running")
 			STATE_WAITING_THREAD (= state (+ "waiting blocking=" (<- string$str (: thread_map dt$blocking))))
 			STATE_WAITING_LOCK (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
+			STATE_WAITING_SEMAPHORE (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
 			(= state (+ "terminated return_value=" (<- string$str dt$return_value)))
 		)
 		(@@ (<- string$format "<id=%u state=%s>" dt$id state))
@@ -37,17 +47,22 @@
 
 (= thread_module_type (&:
 	(~ type_type) lock_type
+	(~ type_type) semaphore_type
 	(~ type_type) thread_type
 	(~ int_type) STATE_RUNNING
 	(~ int_type) STATE_TERMINATED
 	(~ int_type) STATE_WAITING_LOCK
+	(~ int_type) STATE_WAITING_SEMAPHORE
 	(~ int_type) STATE_WAITING_THREAD
 	(~ func_type) acquire_lock
+	(~ func_type) acquire_semaphore
 	(~ func_type) create_lock
+	(~ func_type) create_semaphore
 	(~ func_type) currenct
 	(~ func_type) get
 	(~ func_type) join
 	(~ func_type) release_lock
+	(~ func_type) release_semaphore
 	(~ func_type) start
 ))
 
@@ -56,7 +71,8 @@
 (= STATE_RUNNING 0)
 (= STATE_WAITING_THREAD 1)
 (= STATE_WAITING_LOCK 2)
-(= STATE_TERMINATED 3)
+(= STATE_WAITING_SEMAPHORE 3)
+(= STATE_TERMINATED 4)
 
 
 
@@ -91,10 +107,31 @@
 	(= lck$blocking_thread (!.))
 ))
 
+(= acquire_semaphore (,,, sem
+	(? (=== sem nil) (@@))
+	(= sem (:: sem semaphore_type))
+	(= thr (: thread_map (!.)))
+	(= thr$blocking sem)
+	(= thr$state STATE_WAITING_SEMAPHORE)
+	(!<+ sem$id)
+	(= sem$counter (- sem$counter 1))
+	(= thr$state STATE_RUNNING)
+))
+
 (= create_lock (,,,
 	(@@ (. lock_type
 		(<- (... "sll:thread_create_lock"))
 		-1
+	))
+))
+
+(= create_semaphore (,,, c
+	(= c (:: c int_type))
+	(? (<= c 0) (@@ nil))
+	(@@ (. semaphore_type
+		(<- (... "sll:thread_create_semaphore") c)
+		c
+		c
 	))
 ))
 
@@ -126,6 +163,14 @@
 	(@@ (<- (... "sll:thread_release_lock") lck$id))
 ))
 
+(= release_semaphore (,,, sem
+	(? (=== sem nil) (@@))
+	(= sem (:: sem semaphore_type))
+	(? (=== sem$counter sem$max) (@@))
+	(= sem$counter (+ sem$counter 1))
+	(@@ (<- (... "sll:thread_release_semaphore") sem$id))
+))
+
 (= start (,,, fn @@args@@
 	(= tid (<- (... "sll:thread_create")
 		_thread_runner
@@ -148,17 +193,22 @@
 
 (= thread (. thread_module_type
 	lock_type
+	semaphore_type
 	thread_type
 	STATE_RUNNING
 	STATE_TERMINATED
 	STATE_WAITING_LOCK
+	STATE_WAITING_SEMAPHORE
 	STATE_WAITING_THREAD
 	acquire_lock
+	acquire_semaphore
 	create_lock
+	create_semaphore
 	current
 	get
 	join
 	release_lock
+	release_semaphore
 	start
 ))
 (## thread)

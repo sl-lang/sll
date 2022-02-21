@@ -530,11 +530,11 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_COMMA:
 			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_THREAD_WAIT:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_THREAD_ID:
 			SLL_UNIMPLEMENTED();
+		case SLL_NODE_TYPE_THREAD_WAIT:
 		case SLL_NODE_TYPE_THREAD_LOCK:
+		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
 			SLL_UNIMPLEMENTED();
 	}
 	o=_generate_on_stack(o,g_dt);
@@ -1508,8 +1508,6 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				}
 				return _generate_on_stack(o,g_dt);
 			}
-		case SLL_NODE_TYPE_THREAD_WAIT:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_THREAD_ID:
 			{
 				sll_arg_count_t l=o->dt.ac;
@@ -1521,7 +1519,9 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID);
 				return o;
 			}
+		case SLL_NODE_TYPE_THREAD_WAIT:
 		case SLL_NODE_TYPE_THREAD_LOCK:
+		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
 			SLL_UNIMPLEMENTED();
 	}
 	sll_arg_count_t l=o->dt.ac;
@@ -1912,8 +1912,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 			}
 		case SLL_NODE_TYPE_THREAD_WAIT:
 		case SLL_NODE_TYPE_THREAD_LOCK:
+		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
 			{
-				sll_assembly_instruction_type_t ai_t=(o->t==SLL_NODE_TYPE_THREAD_WAIT?SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT:SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK);
+				sll_assembly_instruction_type_t ai_t=(o->t-SLL_NODE_TYPE_THREAD_WAIT+SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT);
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l);
 				o++;

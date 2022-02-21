@@ -20,9 +20,24 @@ __API_FUNC(thread_create_lock){
 
 
 
+__API_FUNC(thread_create_semaphore){
+	return sll_create_semaphore((a<0?0:(sll_semaphore_counter_t)a));
+}
+
+
+
 __API_FUNC(thread_release_lock){
 	if (a<0||a>SLL_MAX_LOCK_INDEX){
 		return 0;
 	}
 	return sll_release_lock((sll_lock_index_t)a);
+}
+
+
+
+__API_FUNC(thread_release_semaphore){
+	if (a<0||a>SLL_MAX_SEMAPHORE_INDEX){
+		return 0;
+	}
+	return sll_release_semaphore((sll_semaphore_index_t)a);
 }

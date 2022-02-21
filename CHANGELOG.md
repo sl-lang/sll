@@ -2,6 +2,10 @@
 
 ## [0.7.6] - Ongoing
 
+### Added
+
+- Semaphores: `sll_semaphore_counter_t`, `sll_semaphore_index_t`, `sll_create_semaphore`, `sll_delete_semaphore`, `sll_release_semaphore`, `thread$semaphore_type`, `thread$STATE_WAITING_SEMAPHORE`, `thread$acquire_semaphore`, `thread$create_semaphore` and `thread$release_semaphore` ([#237])
+
 ### Changed
 
 - *\[Darwin only\]* Fixed `sll_platform_get_executable_file_path`

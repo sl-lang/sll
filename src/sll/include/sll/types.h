@@ -24,6 +24,7 @@
 #define SLL_MAX_PAGE_SIZE __SLL_U64_MAX
 #define SLL_MAX_REF_COUNT __SLL_U32_MAX
 #define SLL_MAX_SCOPE __SLL_U32_MAX
+#define SLL_MAX_SEMAPHORE_INDEX __SLL_U32_MAX
 #define SLL_MAX_SIZE __SLL_U64_MAX
 #define SLL_MAX_STACK_OFFSET __SLL_U32_MAX
 #define SLL_MAX_STRING_INDEX __SLL_U32_MAX
@@ -184,6 +185,14 @@ typedef __SLL_U32 sll_ref_count_t;
 
 
 typedef __SLL_U32 sll_scope_t;
+
+
+
+typedef __SLL_U32 sll_semaphore_counter_t;
+
+
+
+typedef __SLL_U32 sll_semaphore_index_t;
 
 
 

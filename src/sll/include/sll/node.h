@@ -844,25 +844,25 @@
 
 /**
  * \flags macro var
- * \name SLL_NODE_TYPE_THREAD_WAIT
- * \group node
- * \subgroup node-type
- * \desc Docs!
- * \type sll_node_type_t
- */
-#define SLL_NODE_TYPE_THREAD_WAIT 68
-
-
-
-/**
- * \flags macro var
  * \name SLL_NODE_TYPE_THREAD_ID
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_THREAD_ID 69
+#define SLL_NODE_TYPE_THREAD_ID 68
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_THREAD_WAIT
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_THREAD_WAIT 69
 
 
 
@@ -880,13 +880,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_NODE_TYPE_THREAD_SEMAPHORE
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_THREAD_SEMAPHORE 71
+
+
+
+/**
+ * \flags macro var
  * \name SLL_NODE_TYPE_DBG
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_DBG 71
+#define SLL_NODE_TYPE_DBG 72
 
 
 
@@ -898,7 +910,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_CHANGE_STACK 72
+#define SLL_NODE_TYPE_CHANGE_STACK 73
 
 
 

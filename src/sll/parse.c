@@ -467,6 +467,9 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				else if (*str=='!'&&*(str+1)=='<'&&*(str+2)=='*'){
 					o->t=SLL_NODE_TYPE_THREAD_LOCK;
 				}
+				else if (*str=='!'&&*(str+1)=='<'&&*(str+2)=='+'){
+					o->t=SLL_NODE_TYPE_THREAD_SEMAPHORE;
+				}
 			}
 			if ((o->t>=SLL_NODE_TYPE_IF&&o->t<=SLL_NODE_TYPE_LOOP)||o->t==SLL_NODE_TYPE_FUNC||o->t==SLL_NODE_TYPE_INLINE_FUNC||(o->t>=SLL_NODE_TYPE_FOR_ARRAY&&o->t<=SLL_NODE_TYPE_WHILE_MAP)){
 				n_l_sc.l_sc=sf->_n_sc_id;

@@ -284,14 +284,19 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define THREAD_LOCK_UNUSED 0xfffffffe
 #define THREAD_LOCK_GET_NEXT_ID(l) ((sll_lock_index_t)ADDR((l)->last))
-#define THREAD_LOCK_SET_NEXT_ID(l,v) ((l)->last=PTR((sll_lock_index_t)v))
+#define THREAD_LOCK_SET_NEXT_ID(l,v) ((l)->last=PTR((sll_lock_index_t)(v)))
+
+#define THREAD_SEMAPHORE_UNUSED 0xffffffff
+#define THREAD_SEMAPHORE_GET_NEXT_ID(s) ((sll_semaphore_index_t)ADDR((s)->last))
+#define THREAD_SEMAPHORE_SET_NEXT_ID(s,v) ((s)->last=PTR((sll_semaphore_index_t)(v)))
 
 #define THREAD_STATE_INITIALIZED 0
 #define THREAD_STATE_RUNNING 1
 #define THREAD_STATE_QUEUED 2
-#define THREAD_STATE_WAIT_THREAD 3
-#define THREAD_STATE_WAIT_LOCK 4
-#define THREAD_STATE_TERMINATED 5
+#define THREAD_STATE_WAIT_LOCK 3
+#define THREAD_STATE_WAIT_SEMAPHORE 4
+#define THREAD_STATE_WAIT_THREAD 5
+#define THREAD_STATE_TERMINATED 6
 #define THREAD_STATE_UNDEFINED 255
 
 #define ADDR(x) ((addr_t)(x))
@@ -324,6 +329,10 @@ typedef __SLL_U32 queue_length_t;
 
 
 typedef __SLL_U32 return_table_size_t;
+
+
+
+typedef __SLL_U32 semaphore_list_length_t;
 
 
 
@@ -637,6 +646,14 @@ typedef struct __LOCK{
 
 
 
+typedef struct __SEMAPHORE{
+	sll_semaphore_counter_t count;
+	sll_thread_index_t first;
+	thread_data_t* last;
+} semaphore_t;
+
+
+
 #ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
@@ -766,6 +783,10 @@ void _scheduler_terminate_thread(sll_object_t* ret);
 
 
 sll_bool_t _scheduler_wait_lock(sll_integer_t w);
+
+
+
+sll_bool_t _scheduler_wait_semaphore(sll_integer_t w);
 
 
 

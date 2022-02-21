@@ -18,6 +18,9 @@ static queue_length_t _scheduler_queue_len;
 static lock_t* _scheduler_lock;
 static sll_lock_index_t _scheduler_lock_next;
 static lock_list_length_t _scheduler_lock_len;
+static semaphore_t* _scheduler_semaphore;
+static sll_semaphore_index_t _scheduler_semaphore_next;
+static semaphore_list_length_t _scheduler_semaphore_len;
 static void* _scheduler_allocator_cache_pool[THREAD_ALLOCATOR_CACHE_POOL_SIZE];
 static sll_array_length_t _scheduler_allocator_cache_pool_len;
 
@@ -50,6 +53,7 @@ void _scheduler_deinit(void){
 	sll_deallocate(_scheduler_thread);
 	sll_deallocate(_scheduler_queue);
 	sll_deallocate(_scheduler_lock);
+	sll_deallocate(_scheduler_semaphore);
 }
 
 
@@ -70,6 +74,9 @@ void _scheduler_init(void){
 	_scheduler_lock=NULL;
 	_scheduler_lock_next=THREAD_LOCK_UNUSED;
 	_scheduler_lock_len=0;
+	_scheduler_semaphore=NULL;
+	_scheduler_semaphore_next=THREAD_SEMAPHORE_UNUSED;
+	_scheduler_semaphore_len=0;
 	_scheduler_allocator_cache_pool_len=0;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 }
@@ -238,6 +245,30 @@ sll_bool_t _scheduler_wait_lock(sll_integer_t w){
 
 
 
+sll_bool_t _scheduler_wait_semaphore(sll_integer_t w){
+	if (w<0||w>=_scheduler_semaphore_len||(_scheduler_semaphore+w)->count==THREAD_SEMAPHORE_UNUSED){
+		return 0;
+	}
+	if ((_scheduler_semaphore+w)->count){
+		(_scheduler_semaphore+w)->count--;
+		(_scheduler_semaphore+w)->first=SLL_UNKNOWN_THREAD_INDEX;
+		return 0;
+	}
+	if ((_scheduler_semaphore+w)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_scheduler_semaphore+w)->first=sll_current_thread_index;
+	}
+	else{
+		(_scheduler_semaphore+w)->last->nxt=sll_current_thread_index;
+	}
+	(_scheduler_semaphore+w)->last=_scheduler_current_thread;
+	_scheduler_current_thread->nxt=SLL_UNKNOWN_THREAD_INDEX;
+	_scheduler_current_thread->st=THREAD_STATE_WAIT_SEMAPHORE;
+	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+	return 1;
+}
+
+
+
 sll_bool_t _scheduler_wait_thread(sll_integer_t w){
 	if (w<0||w>=_scheduler_thread_len||!*(_scheduler_thread+w)||w==sll_current_thread_index||(*(_scheduler_thread+w))->ret){
 		return 0;
@@ -264,6 +295,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_create_lock(void){
 		_scheduler_lock_next=THREAD_LOCK_GET_NEXT_ID(_scheduler_lock+o);
 	}
 	(_scheduler_lock+o)->lock=SLL_UNKNOWN_THREAD_INDEX;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_create_semaphore(sll_semaphore_counter_t c){
+	sll_semaphore_index_t o=_scheduler_semaphore_next;
+	if (o==THREAD_SEMAPHORE_UNUSED){
+		o=_scheduler_semaphore_len;
+		_scheduler_semaphore_len++;
+		_scheduler_semaphore=sll_reallocate(_scheduler_semaphore,_scheduler_semaphore_len*sizeof(semaphore_t));
+	}
+	else{
+		_scheduler_semaphore_next=THREAD_SEMAPHORE_GET_NEXT_ID(_scheduler_semaphore+o);
+	}
+	(_scheduler_semaphore+o)->count=c;
 	return o;
 }
 
@@ -296,6 +343,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_lock(sll_lock_index_t l)
 	(_scheduler_lock+l)->lock=THREAD_LOCK_UNUSED;
 	THREAD_LOCK_SET_NEXT_ID(_scheduler_lock+l,_scheduler_lock_next);
 	_scheduler_lock_next=l;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_semaphore(sll_semaphore_index_t s){
+	if (s>=_scheduler_semaphore_len||(_scheduler_semaphore+s)->count==THREAD_SEMAPHORE_UNUSED){
+		return 0;
+	}
+	(_scheduler_semaphore+s)->count=THREAD_SEMAPHORE_UNUSED;
+	THREAD_SEMAPHORE_SET_NEXT_ID(_scheduler_semaphore+s,_scheduler_semaphore_next);
+	_scheduler_semaphore_next=s;
 	return 1;
 }
 
@@ -337,6 +396,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_release_lock(sll_lock_index_t l
 	(_scheduler_lock+l)->first=thr->nxt;
 	thr->st=THREAD_STATE_QUEUED;
 	_scheduler_queue_thread((_scheduler_lock+l)->lock);
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_release_semaphore(sll_semaphore_index_t l){
+	if (l>=_scheduler_semaphore_len||(_scheduler_semaphore+l)->count==THREAD_SEMAPHORE_UNUSED){
+		return 0;
+	}
+	if ((_scheduler_semaphore+l)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_scheduler_semaphore+l)->count++;
+		return 1;
+	}
+	thread_data_t* thr=*(_scheduler_thread+(_scheduler_semaphore+l)->first);
+	thr->st=THREAD_STATE_QUEUED;
+	_scheduler_queue_thread((_scheduler_semaphore+l)->first);
+	(_scheduler_semaphore+l)->first=thr->nxt;
 	return 1;
 }
 

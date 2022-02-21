@@ -46,6 +46,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_create_lock(void);
 
 /**
  * \flags check_output func
+ * \name sll_create_semaphore
+ * \group scheduler
+ * \desc Docs!
+ * \arg sll_semaphore_counter_t c
+ * \ret sll_semaphore_index_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_create_semaphore(sll_semaphore_counter_t c);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_create_thread
  * \group scheduler
  * \desc Docs!
@@ -72,6 +84,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_lock(sll_lock_index_t l)
 
 /**
  * \flags check_output func
+ * \name sll_delete_semaphore
+ * \group scheduler
+ * \desc Docs!
+ * \arg sll_semaphore_index_t s
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_semaphore(sll_semaphore_index_t s);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_delete_thread
  * \group scheduler
  * \desc Docs!
@@ -91,6 +115,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_thread(sll_thread_index_
  * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_release_lock(sll_lock_index_t l);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_release_semaphore
+ * \group scheduler
+ * \desc Docs!
+ * \arg sll_semaphore_index_t l
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_release_semaphore(sll_semaphore_index_t l);
 
 
 

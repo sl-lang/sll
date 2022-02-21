@@ -919,6 +919,7 @@ _return:;
 				_scheduler_current_thread->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_SEMAPHORE:
 				{
 					sll_object_t* lck_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					_scheduler_current_thread->si--;
@@ -926,7 +927,7 @@ _return:;
 					sll_integer_t lck=lck_o->dt.i;
 					SLL_RELEASE(lck_o);
 					thread_data_t* c_thr=_scheduler_current_thread;
-					if (_scheduler_wait_lock(lck)){
+					if ((ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK?_scheduler_wait_lock:_scheduler_wait_semaphore)(lck)){
 						c_thr->ii++;
 						sll_thread_index_t n_tid=_scheduler_queue_pop();
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
