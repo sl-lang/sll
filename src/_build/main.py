@@ -5,7 +5,6 @@ import docs
 import hashlist
 import header
 import os
-import subprocess
 import sys
 import util
 import website

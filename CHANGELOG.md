@@ -9,6 +9,7 @@
 ### Changed
 
 - *\[Darwin only\]* Fixed `sll_platform_get_executable_file_path`
+- Fixed `sll_platform_path_copy`
 
 ## [0.7.5] - 2022-02-20
 

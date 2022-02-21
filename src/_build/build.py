@@ -1,6 +1,5 @@
 import hashlist
 import os
-import subprocess
 import sys
 import util
 

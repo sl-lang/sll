@@ -215,10 +215,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_ch
 	sll_bool_t o=1;
 	while (sz){
 #ifdef __SLL_BUILD_DARWIN
-		off_t sz=st.st_size;
-		int v=sendfile(d_fd,s_fd,0,&sz,NULL,0);
+		off_t c_sz=sz;
+		int v=sendfile(d_fd,s_fd,0,&c_sz,NULL,0);
 #else
-		int v=sendfile(d_fd,s_fd,NULL,st.st_size);
+		int v=sendfile(d_fd,s_fd,NULL,sz);
 #endif
 		if (v==-1){
 			o=1;
