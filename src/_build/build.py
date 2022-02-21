@@ -119,7 +119,7 @@ def build_sll_cli():
 	else:
 		util.log("  Compiling Files...")
 		out_fp=util.output_file_path("src/cli/linux.c")
-		if (hashlist.update("src/cli/linux.c","build") and subprocess.run(["gcc","-fno-exceptions","-fdiagnostics-color=always","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","build","-o",out_fp,"src/cli/linux.c"]).returncode!=0):
+		if (hashlist.update("src/cli/linux.c","build") and subprocess.run(["gcc","-fno-exceptions","-fdiagnostics-color=always","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-D","__SLL_BUILD_"+util.system.upper(),"-I","build","-o",out_fp,"src/cli/linux.c"]).returncode!=0):
 			hashlist.fail("src/cli/linux.c")
 			sys.exit(1)
 		util.log("  Linking Files...")

@@ -18,7 +18,7 @@ int main(int argc,const char*const* argv){
 	}
 	char bf[4096+STRLEN(LIBRARY_NAME)];
 #ifdef __SLL_BUILD_DARWIN
-	ssize_t bfl=4096;
+	uint32_t bfl=4096;
 	if (!_NSGetExecutablePath(bf,&bfl)){
 		bfl=0;
 		while (bf[bfl]){
