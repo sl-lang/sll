@@ -15,7 +15,6 @@
 #include <unistd.h>
 #ifdef __SLL_BUILD_DARWIN
 #include <sys/socket.h>
-#include <sys/syslimits.h>
 #else
 #include <sys/sendfile.h>
 #endif
@@ -85,6 +84,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
+#ifdef __SLL_BUILD_DARWIN
+	sll_string_length_t l=ol;
+	if (_NSGetExecutablePath(o,&l)==-1){
+		*o=0;
+		return 0;
+	}
+	*(o+ol)=0;
+	return l;
+#else
 	ssize_t i=readlink("/proc/self/exe",(char*)o,ol-1);
 	if (i!=-1){
 		*(o+i)=0;
@@ -92,6 +100,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executabl
 	}
 	*o=0;
 	return 0;
+#endif
 }
 
 

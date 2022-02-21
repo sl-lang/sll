@@ -17,8 +17,13 @@ int main(int argc,const char*const* argv){
 		return 0;
 	}
 	char bf[4096+STRLEN(LIBRARY_NAME)];
+#ifdef __SLL_BUILD_DARWIN
+	ssize_t bfl=4096;
+	if (_NSGetExecutablePath(bf,&bfl)==-1){
+#else
 	ssize_t bfl=readlink("/proc/self/exe",bf,4096);
 	if (bfl==-1){
+#endif
 		bf[0]='/';
 		bfl=0;
 	}
