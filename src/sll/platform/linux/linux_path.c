@@ -91,7 +91,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executabl
 		*o=0;
 		return 0;
 	}
-	*(o+ol)=0;
+	l=sll_string_length_unaligned(o);
+	*(o+l)=0;
 	return l;
 #else
 	ssize_t i=readlink("/proc/self/exe",(char*)o,ol-1);

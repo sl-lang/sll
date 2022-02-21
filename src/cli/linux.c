@@ -19,21 +19,25 @@ int main(int argc,const char*const* argv){
 	char bf[4096+STRLEN(LIBRARY_NAME)];
 #ifdef __SLL_BUILD_DARWIN
 	ssize_t bfl=4096;
-	if (_NSGetExecutablePath(bf,&bfl)==-1){
+	if (!_NSGetExecutablePath(bf,&bfl)){
+		bfl=0;
+		while (bf[bfl]){
+			bfl++;
+		}
 #else
 	ssize_t bfl=readlink("/proc/self/exe",bf,4096);
-	if (bfl==-1){
+	if (bfl!=-1){
 #endif
-		bf[0]='/';
-		bfl=0;
-	}
-	else{
 		while (bfl&&bf[bfl]!='/'){
 			bfl--;
 		}
 		if (!bfl){
 			bf[0]='/';
 		}
+	}
+	else{
+		bf[0]='/';
+		bfl=0;
 	}
 	bfl++;
 	if (bfl>=STRLEN(APT_INSTALL_PATH)){
