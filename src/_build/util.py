@@ -55,6 +55,12 @@ def create_output_dir():
 
 
 
+def execute(args):
+	sys.__stdout__.flush()
+	return (subprocess.run(args).returncode!=0)
+
+
+
 def unique_file_path(fp):
 	return system+":"+("release" if "--release" in sys.argv else "debug")+":"+fp.replace("\\","/")
 

@@ -4,10 +4,8 @@ import util
 
 
 
-global hash_list,source_file_path,update_list
-hash_list=None
-source_file_path=None
-update_list=None
+hash_list={}
+update_list=set()
 
 
 
@@ -40,11 +38,10 @@ def fail(fp):
 
 
 def load_hash_list(fp):
-	global hash_list,source_file_path,update_list
 	util.log(f"Loading file hashes from '{fp}'...")
-	source_file_path=fp
-	hash_list={}
-	update_list=set()
+	load_hash_list.source_file_path=fp
+	hash_list.clear()
+	update_list.clear()
 	if (os.path.exists(fp)):
 		with open(fp,"r") as f:
 			for k in f.read().split("\n"):
@@ -64,7 +61,7 @@ def update(fp,*inc):
 				if (f[-2:]==".h"):
 					o|=_check(os.path.join(r,f))
 	if (o):
-		with open(source_file_path,"w") as f:
+		with open(load_hash_list.source_file_path,"w") as f:
 			for k,v in hash_list.items():
 				f.write(f"{k}{v}\n")
 		return True

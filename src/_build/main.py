@@ -48,7 +48,7 @@ for f in os.listdir("src/sll/lib"):
 		wf.write(rf.read())
 	fl.append("build/lib/"+f)
 util.log("Compiling Modules...")
-if (subprocess.run(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+if (util.execute(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else []))):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
@@ -72,7 +72,7 @@ for nm in util.get_ext_list():
 			wf.write(rf.read())
 		fl.append(f"build/lib/{nm}/"+f)
 	util.log("Compiling Extension Modules...")
-	if (subprocess.run(["build/sll","-c","-R","-I","build/lib/"+nm]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else [])).returncode!=0):
+	if (util.execute(["build/sll","-c","-R","-I","build/lib/"+nm]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else []))):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:
@@ -88,12 +88,12 @@ for nm in util.get_ext_list():
 		wf.write(rf.read())
 if ("--test" in sys.argv):
 	util.log("Running tests...")
-	subprocess.run(["build/sll","tests/_runner.sll"])
+	util.execute(["build/sll","tests/_runner.sll"])
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",util.system+".zip")
 if ("--run" in sys.argv):
 	a=(["examples/_internal_test_ext_debug/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	util.log(f"Running '{a[0]}...")
-	subprocess.run(["build/sll","-h"])
-	if (subprocess.run(["build/sll","-c","-v","-o","build/raw","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","-v","-c","-o","build/test","-e","-R","-F"]+a).returncode!=0 or subprocess.run(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]).returncode!=0 or subprocess.run(["build/sll","build/test2.sla","-v","-P"]).returncode!=0):
+	util.execute(["build/sll","-h"])
+	if (util.execute(["build/sll","-c","-v","-o","build/raw","-e","-R","-F"]+a) or util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","-F"]+a) or util.execute(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]) or util.execute(["build/sll","build/test2.sla","-v","-P"])):
 		sys.exit(1)
