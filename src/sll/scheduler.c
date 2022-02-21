@@ -54,6 +54,8 @@ void _scheduler_deinit(void){
 	sll_deallocate(_scheduler_queue);
 	sll_deallocate(_scheduler_lock);
 	sll_deallocate(_scheduler_semaphore);
+	_scheduler_current_thread=NULL;
+	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 }
 
 
@@ -78,6 +80,7 @@ void _scheduler_init(void){
 	_scheduler_semaphore_next=THREAD_SEMAPHORE_UNUSED;
 	_scheduler_semaphore_len=0;
 	_scheduler_allocator_cache_pool_len=0;
+	_scheduler_current_thread=NULL;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 }
 

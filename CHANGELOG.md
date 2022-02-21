@@ -11,6 +11,7 @@
 
 - *\[Darwin only\]* Fixed `sll_platform_get_executable_file_path`
 - Fixed `sll_platform_path_copy`
+- Program crashes now print the Sll backtrace (if available)
 
 ## [0.7.5] - 2022-02-20
 
