@@ -1,4 +1,4 @@
-(--- "types.sll" "sys.sll" "string.sll" "array.sll")
+(--- "types.sll" "sys.sll" "string.sll" "array.sll" "file.sll")
 
 
 
@@ -81,7 +81,11 @@
 
 (= split (... "sll:process_split"))
 
-(= start (,,, args cfg stdin
+(= start (,,, args cfg stdin no_flush_io
+	(? (! no_flush_io) {
+		(<- file$flush file$stdout)
+		(<- file$flush file$stderr)
+	})
 	(@@ (:: (<- (... "sll:process_start")
 		(?: (=== (:? args) string_type) [args] (:: args array_type))
 		(?: cfg (:: cfg process_config_type) DEFAULT_PROCESS_CONFIG)

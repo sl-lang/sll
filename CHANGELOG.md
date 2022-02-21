@@ -4,6 +4,7 @@
 
 ### Added
 
+- Argument `no_flush_io` in `process$start` to prevent flushing of `file$stdout` and `file$stderr` before the creation of a process
 - Semaphores: `sll_semaphore_counter_t`, `sll_semaphore_index_t`, `sll_create_semaphore`, `sll_delete_semaphore`, `sll_release_semaphore`, `thread$semaphore_type`, `thread$STATE_WAITING_SEMAPHORE`, `thread$acquire_semaphore`, `thread$create_semaphore` and `thread$release_semaphore` ([#237])
 
 ### Changed
