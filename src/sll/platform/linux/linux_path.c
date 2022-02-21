@@ -15,6 +15,7 @@
 #include <unistd.h>
 #ifdef __SLL_BUILD_DARWIN
 #include <sys/socket.h>
+#include <sys/syslimits.h>
 #else
 #include <sys/sendfile.h>
 #endif
