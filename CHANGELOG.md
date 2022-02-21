@@ -2,7 +2,9 @@
 
 ## [0.7.6] - Ongoing
 
-*Nothing*
+### Changed
+
+- *\[Darwin only\]* Fixed `sll_platform_get_executable_file_path`
 
 ## [0.7.5] - 2022-02-20
 
