@@ -77,7 +77,13 @@
 
 (= join (... "sll:process_join"))
 
-(= shell (... "sll:process_execute_shell"))
+(= shell (,,, cmd no_flush_io
+	(? (! no_flush_io) {
+		(<- file$flush file$stdout)
+		(<- file$flush file$stderr)
+	})
+	(@@ (<- (... "sll:process_execute_shell")))
+)
 
 (= split (... "sll:process_split"))
 
