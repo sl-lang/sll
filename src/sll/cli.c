@@ -137,13 +137,15 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 	i_fp=sll_allocate(sizeof(sll_char_t));
 	*i_fp=0;
 	i_fpl=1;
-	l_fpl=sll_platform_get_library_file_path(l_fp,SLL_API_MAX_FILE_PATH_LENGTH);
-	while (l_fp[l_fpl]!='/'&&l_fp[l_fpl]!='\\'){
+	SLL_ASSERT(sll_library_file_path->l<SLL_API_MAX_FILE_PATH_LENGTH+5);
+	l_fpl=sll_library_file_path->l;
+	while (sll_library_file_path->v[l_fpl]!='/'&&sll_library_file_path->v[l_fpl]!='\\'){
 		if (!l_fpl){
 			break;
 		}
 		l_fpl--;
 	}
+	sll_copy_data(sll_library_file_path->v,l_fpl+1,l_fp);
 	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl+1);
 	l_fpl+=5;
 	sll_array_length_t* fp=NULL;

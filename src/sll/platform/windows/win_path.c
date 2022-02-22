@@ -1,11 +1,28 @@
 #include <windows.h>
 #include <winioctl.h>
 #include <sll/_sll_internal.h>
+#include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
+
+
+
+static __STATIC_STRING_CODE(_win_executable_fp,{
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(bf,GetModuleFileNameA(NULL,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+});
+static __STATIC_STRING_CODE(_win_library_fp,{
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(bf,GetModuleFileNameA((HMODULE)_win_dll_handle,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+});
+
+
+
+__SLL_EXTERNAL const sll_string_t* sll_executable_file_path=&_win_executable_fp;
+__SLL_EXTERNAL const sll_string_t* sll_library_file_path=&_win_library_fp;
 
 
 
@@ -53,18 +70,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 		return 0;
 	}
 	return sll_string_length_unaligned(o);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
-	return GetModuleFileNameA(NULL,(char*)o,ol);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_char_t* o,sll_string_length_t ol){
-	return GetModuleFileNameA((HMODULE)_win_dll_handle,(char*)o,ol);
 }
 
 

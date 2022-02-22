@@ -152,6 +152,28 @@ __SLL_EXTERNAL extern const sll_environment_t* sll_environment;
 
 /**
  * \flags var
+ * \name sll_executable_file_path
+ * \group platform
+ * \desc Docs!
+ * \type const sll_string_t*
+ */
+__SLL_EXTERNAL extern const sll_string_t* sll_executable_file_path;
+
+
+
+/**
+ * \flags var
+ * \name sll_library_file_path
+ * \group platform
+ * \desc Docs!
+ * \type const sll_string_t*
+ */
+__SLL_EXTERNAL extern const sll_string_t* sll_library_file_path;
+
+
+
+/**
+ * \flags var
  * \name sll_platform_string
  * \group platform
  * \desc Docs!
@@ -406,34 +428,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
  * \ret sll_file_descriptor_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t);
-
-
-
-/**
- * \flags check_output func
- * \name sll_platform_get_executable_file_path
- * \group platform
- * \subgroup platform-path
- * \desc Docs!
- * \arg sll_char_t* o
- * \arg sll_string_length_t ol
- * \ret sll_string_length_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol);
-
-
-
-/**
- * \flags check_output func
- * \name sll_platform_get_library_file_path
- * \group platform
- * \subgroup platform-path
- * \desc Docs!
- * \arg sll_char_t* o
- * \arg sll_string_length_t ol
- * \ret sll_string_length_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_char_t* o,sll_string_length_t ol);
 
 
 

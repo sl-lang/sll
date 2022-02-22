@@ -4,6 +4,7 @@
 #include <sll/data.h>
 #include <sll/env.h>
 #include <sll/memory.h>
+#include <sll/platform.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <dirent.h>
@@ -19,6 +20,42 @@
 #else
 #include <sys/sendfile.h>
 #endif
+
+
+
+static __STATIC_STRING_CODE(_linux_executable_fp,{
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+#ifdef __SLL_BUILD_DARWIN
+	sll_string_length_t l=SLL_API_MAX_FILE_PATH_LENGTH;
+	if (_NSGetExecutablePath(o,&l)==-1){
+		SLL_INIT_STRING(out);
+		return;
+	}
+#else
+	ssize_t i=readlink("/proc/self/exe",(char*)bf,SLL_API_MAX_FILE_PATH_LENGTH-1);
+	if (i==-1){
+		SLL_INIT_STRING(out);
+		return;
+	}
+	*(bf+i)=0;
+#endif
+	sll_char_t abs_bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(abs_bf,sll_platform_absolute_path(bf,abs_bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+});
+static __STATIC_STRING_CODE(_linux_library_fp,{
+	Dl_info dt;
+	if (!dladdr(&_linux_library_fp,&dt)){
+		SLL_INIT_STRING(out);
+		return;
+	}
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(bf,sll_platform_absolute_path((const sll_char_t*)(dt.dli_fname),bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+});
+
+
+
+__SLL_EXTERNAL const sll_string_t* sll_executable_file_path=&_linux_executable_fp;
+__SLL_EXTERNAL const sll_string_t* sll_library_file_path=&_linux_library_fp;
 
 
 
@@ -80,39 +117,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 		return 0;
 	}
 	return sll_string_length_unaligned(o);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_executable_file_path(sll_char_t* o,sll_string_length_t ol){
-#ifdef __SLL_BUILD_DARWIN
-	sll_string_length_t l=ol;
-	if (_NSGetExecutablePath(o,&l)==-1){
-		*o=0;
-		return 0;
-	}
-	l=sll_string_length_unaligned(o);
-	*(o+l)=0;
-	return l;
-#else
-	ssize_t i=readlink("/proc/self/exe",(char*)o,ol-1);
-	if (i!=-1){
-		*(o+i)=0;
-		return (sll_string_length_t)i;
-	}
-	*o=0;
-	return 0;
-#endif
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_char_t* o,sll_string_length_t ol){
-	Dl_info dt;
-	if (!dladdr(sll_platform_get_library_file_path,&dt)){
-		return 0;
-	}
-	return sll_platform_absolute_path((const sll_char_t*)(dt.dli_fname),o,ol);
 }
 
 

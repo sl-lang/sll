@@ -21,14 +21,6 @@
 
 
 
-static __STATIC_STRING_CODE(_sys_executable,{
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_get_executable_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
-});
-static __STATIC_STRING_CODE(_sys_library,{
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_get_library_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
-});
 #if SLL_VERSION_HAS_SHA
 static __STATIC_STRING(_sys_full_commit,SLL_VERSION_FULL_SHA);
 #endif
@@ -139,13 +131,13 @@ __API_FUNC(sys_get_env){
 
 
 __API_FUNC(sys_get_executable){
-	sll_string_clone(&_sys_executable,out);
+	sll_string_clone(sll_executable_file_path,out);
 }
 
 
 
 __API_FUNC(sys_get_library){
-	sll_string_clone(&_sys_library,out);
+	sll_string_clone(sll_library_file_path,out);
 }
 
 

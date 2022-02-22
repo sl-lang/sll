@@ -5,14 +5,18 @@
 ### Added
 
 - Argument `no_flush_io` in `process$shell` and `process$start` to prevent flushing of `file$stdout` and `file$stderr` before the creation of a process
+- Constant string representing the current executable (`sll_executable_file_path`) and the Sll library (`sll_library_file_path`) file paths
 - Full MacOS support
 - Semaphores: `sll_semaphore_counter_t`, `sll_semaphore_index_t`, `sll_create_semaphore`, `sll_delete_semaphore`, `sll_release_semaphore`, `thread$semaphore_type`, `thread$STATE_WAITING_SEMAPHORE`, `thread$acquire_semaphore`, `thread$create_semaphore` and `thread$release_semaphore` ([#237])
 
 ### Changed
 
-- *\[Darwin only\]* Fixed `sll_platform_get_executable_file_path`
 - Fixed `sll_platform_path_copy`
 - Program crashes now print the Sll backtrace (if available)
+
+### Removed
+
+- Deprecated function: `sll_platform_get_executable_file_path` and `sll_platform_get_library_file_path`
 
 ## [0.7.5] - 2022-02-20
 
