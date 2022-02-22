@@ -132,11 +132,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 __SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
 	while (l){
 #ifdef __SLL_BUILD_DARWIN
-		ssize_t n=getentropy(bf,(l>256?256:l));
+		sll_size_t n=(l>256?256:l);
+		if (getentropy(bf,n)<0){
 #else
 		ssize_t n=getrandom(bf,l,0);
-#endif
 		if (n==-1){
+#endif
 			if (errno==EINTR){
 				continue;
 			}

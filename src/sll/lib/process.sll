@@ -82,7 +82,7 @@
 		(<- file$flush file$stdout)
 		(<- file$flush file$stderr)
 	})
-	(@@ (<- (... "sll:process_execute_shell")))
+	(@@ (<- (... "sll:process_execute_shell") (:: cmd string_type)))
 )
 
 (= split (... "sll:process_split"))
