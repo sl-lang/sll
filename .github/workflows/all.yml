@@ -82,7 +82,7 @@ jobs:
     needs:
       - darwin
       - darwin-release
-    if: failure()&&github.event_name!='workflow_dispatch'
+    if: github.event_name!='workflow_dispatch'
     runs-on: macos-latest
     steps:
       - name: Checkout
