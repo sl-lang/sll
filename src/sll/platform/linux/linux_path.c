@@ -27,7 +27,7 @@ static __STATIC_STRING_CODE(_linux_executable_fp,{
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 #ifdef __SLL_BUILD_DARWIN
 	sll_string_length_t l=SLL_API_MAX_FILE_PATH_LENGTH;
-	if (_NSGetExecutablePath(o,&l)==-1){
+	if (_NSGetExecutablePath((char*)bf,&l)==-1){
 		SLL_INIT_STRING(out);
 		return;
 	}
