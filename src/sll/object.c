@@ -196,23 +196,26 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		sll_string_t str=v->dt.s;
 		SLL_RELEASE(v);
 		if (str.l>4&&str.v[0]=='@'&&str.v[1]=='@'&&str.v[str.l-2]=='@'&&str.v[str.l-1]=='@'){
+			if (fl){
+				vv=~vv;
+			}
 			if (sll_string_equal(&str,&_object_copy_str)){
-				n->fn.copy=(fl?~vv:vv);
+				n->fn.copy=vv;
 				l--;
 				continue;
 			}
 			else if (sll_string_equal(&str,&_object_delete_str)){
-				n->fn.del=(fl?~vv:vv);
+				n->fn.del=vv;
 				l--;
 				continue;
 			}
 			else if (sll_string_equal(&str,&_object_init_str)){
-				n->fn.init=(fl?~vv:vv);
+				n->fn.init=vv;
 				l--;
 				continue;
 			}
 			else if (sll_string_equal(&str,&_object_string_str)){
-				n->fn.str=(fl?~vv:vv);
+				n->fn.str=vv;
 				l--;
 				continue;
 			}
