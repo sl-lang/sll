@@ -942,6 +942,9 @@ _return:;
 					}
 					break;
 				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ:
+				SLL_UNIMPLEMENTED();
 			default:
 				SLL_UNREACHABLE();
 		}

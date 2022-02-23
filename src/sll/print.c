@@ -477,6 +477,12 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
 			PRINT_STATIC_STRING("!<+",wf);
 			break;
+		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
+			PRINT_STATIC_STRING("!<=",wf);
+			break;
+		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
+			PRINT_STATIC_STRING("!<>",wf);
+			break;
 		default:
 			SLL_UNREACHABLE();
 	}

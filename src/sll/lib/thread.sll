@@ -2,9 +2,17 @@
 
 
 
-(# STATE_RUNNING STATE_WAITING_THREAD STATE_WAITING_LOCK STATE_WAITING_SEMAPHORE STATE_TERMINATED thread_map)
+(# STATE_RUNNING STATE_WAITING_THREAD STATE_WAITING_LOCK STATE_WAITING_SEMAPHORE STATE_WAITING_BARRIER STATE_TERMINATED thread_map)
 
 
+
+(= barrier_type (&:
+	(,,, dt
+		(@@ (<- string$format "<barrier-%u counter=%u>" dt$id dt$counter))
+	) @@string@@
+	(~ int_type) id
+	int_type counter
+))
 
 (= lock_type (&:
 	(,,, dt
@@ -12,7 +20,7 @@
 			"unlocked"
 			(+ "locked blocking_thread=" (<- string$str (: thread_map dt$blocking_thread)))
 		))
-		(@@ (<- string$format "<id=%u state=%s>" dt$id state))
+		(@@ (<- string$format "<lock-%u state=%s>" dt$id state))
 	) @@string@@
 	(~ int_type) id
 	int_type blocking_thread
@@ -20,7 +28,7 @@
 
 (= semaphore_type (&:
 	(,,, dt
-		(@@ (<- string$format "<id=%u counter=%u/%u>" dt$id dt$counter dt$max))
+		(@@ (<- string$format "<semaphore-%u counter=%u/%u>" dt$id dt$counter dt$max))
 	) @@string@@
 	(~ int_type) id
 	(~ int_type) max
@@ -35,9 +43,10 @@
 			STATE_WAITING_THREAD (= state (+ "waiting blocking=" (<- string$str (: thread_map dt$blocking))))
 			STATE_WAITING_LOCK (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
 			STATE_WAITING_SEMAPHORE (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
+			STATE_WAITING_BARRIER (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
 			(= state (+ "terminated return_value=" (<- string$str dt$return_value)))
 		)
-		(@@ (<- string$format "<id=%u state=%s>" dt$id state))
+		(@@ (<- string$format "<thread-%u state=%s>" dt$id state))
 	) @@string@@
 	(~ int_type) id
 	int_type state
@@ -46,23 +55,29 @@
 ))
 
 (= thread_module_type (&:
+	(~ type_type) barrier_type
 	(~ type_type) lock_type
 	(~ type_type) semaphore_type
 	(~ type_type) thread_type
 	(~ int_type) STATE_RUNNING
 	(~ int_type) STATE_TERMINATED
+	(~ int_type) STATE_WAITING_BARRIER
 	(~ int_type) STATE_WAITING_LOCK
 	(~ int_type) STATE_WAITING_SEMAPHORE
 	(~ int_type) STATE_WAITING_THREAD
 	(~ func_type) acquire_lock
 	(~ func_type) acquire_semaphore
+	(~ func_type) create_barrier
 	(~ func_type) create_lock
 	(~ func_type) create_semaphore
 	(~ func_type) currenct
 	(~ func_type) get
+	(~ func_type) if_equal
+	(~ func_type) if_greater_equal
 	(~ func_type) join
 	(~ func_type) release_lock
 	(~ func_type) release_semaphore
+	(~ func_type) reset_barrier
 	(~ func_type) start
 ))
 
@@ -72,7 +87,8 @@
 (= STATE_WAITING_THREAD 1)
 (= STATE_WAITING_LOCK 2)
 (= STATE_WAITING_SEMAPHORE 3)
-(= STATE_TERMINATED 4)
+(= STATE_WAITING_BARRIER 4)
+(= STATE_TERMINATED 5)
 
 
 
@@ -192,23 +208,29 @@
 
 
 (= thread (. thread_module_type
+	barrier_type
 	lock_type
 	semaphore_type
 	thread_type
 	STATE_RUNNING
 	STATE_TERMINATED
+	STATE_WAITING_BARRIER
 	STATE_WAITING_LOCK
 	STATE_WAITING_SEMAPHORE
 	STATE_WAITING_THREAD
 	acquire_lock
 	acquire_semaphore
+	create_barrier
 	create_lock
 	create_semaphore
 	current
 	get
+	if_equal
+	if_greater_equal
 	join
 	release_lock
 	release_semaphore
+	reset_barrier
 	start
 ))
 (## thread)

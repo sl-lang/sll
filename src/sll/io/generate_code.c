@@ -722,6 +722,12 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
 			PRINT_STATIC_STRING("!<+",wf);
 			break;
+		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
+			PRINT_STATIC_STRING("!<=",wf);
+			break;
+		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
+			PRINT_STATIC_STRING("!<>",wf);
+			break;
 		default:
 			SLL_UNREACHABLE();
 	}

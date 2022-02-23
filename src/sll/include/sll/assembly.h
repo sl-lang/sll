@@ -1268,13 +1268,37 @@
 
 /**
  * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ 104
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ 105
+
+
+
+/**
+ * \flags macro var
  * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK
  * \group assembly
  * \subgroup assembly-instruction
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 104
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 106
 
 
 
