@@ -66,7 +66,7 @@ __API_FUNC(array_remove){
 
 
 __API_FUNC(array_replace){
-	sll_array_replace(a,b,(sll_object_t*)c,out);
+	sll_array_replace(a,b,c,out);
 }
 
 
