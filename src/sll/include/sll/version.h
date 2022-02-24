@@ -76,9 +76,9 @@
  * \desc Docs!
  * \type sll_bool_t
  */
-#ifdef __SHA__
-#define SLL_VERSION_SHA __SHA__
-#define SLL_VERSION_FULL_SHA __FULL_SHA__
+#ifdef __SLL_SHA__
+#define SLL_VERSION_SHA __SLL_SHA__
+#define SLL_VERSION_FULL_SHA __SLL_FULL_SHA__
 #define SLL_VERSION_TAG "sll-v"SLL_VERSION_STRING
 #define SLL_VERSION_HAS_SHA 1
 #else
@@ -97,7 +97,7 @@
  * \desc Docs!
  * \type sll_time_t
  */
-#define SLL_VERSION_BUILD_TIME __TIME_RAW__
+#define SLL_VERSION_BUILD_TIME __SLL_TIME_RAW__
 
 
 

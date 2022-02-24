@@ -202,10 +202,10 @@ def parse_headers(fp):
 def generate_header(h_dt):
 	l=[]
 	st=[True]
-	dm={b"__TIME_RAW__":bytes(str(util.BUILD_TIME),"utf-8")}
+	dm={b"__SLL_TIME_RAW__":bytes(str(util.BUILD_TIME),"utf-8")}
 	if (os.getenv("GITHUB_SHA") is not None):
-		dm[b"__SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")[:7]+"\"","utf-8")
-		dm[b"__FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")
+		dm[b"__SLL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")[:7]+"\"","utf-8")
+		dm[b"__SLL_FULL_SHA__"]=bytes("\""+os.getenv("GITHUB_SHA")+"\"","utf-8")
 	if ("--release" not in sys.argv):
 		dm[b"DEBUG_BUILD"]=b"1"
 	if (util.system=="windows"):

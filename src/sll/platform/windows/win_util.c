@@ -1,6 +1,6 @@
+#include <windows.h>
 #include <bcrypt.h>
 #include <immintrin.h>
-#include <windows.h>
 #include <sll/_size_types.h>
 #include <sll/_sll_internal.h>
 #include <sll/api/date.h>

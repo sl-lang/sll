@@ -7,10 +7,10 @@ import util
 
 def build_sll(fl,v,r):
 	lib_nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
-	def_l=["__SLL_COMPILATION__",f"__TIME_RAW__={util.BUILD_TIME}"]
+	def_l=["__SLL_COMPILATION__",f"__SLL_TIME_RAW__={util.BUILD_TIME}"]
 	if (len(os.getenv("GITHUB_SHA",""))>0):
-		def_l.append(f"__SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"")
-		def_l.append(f"__FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\"")
+		def_l.append(f"__SLL_SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"")
+		def_l.append(f"__SLL_FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\"")
 	if (len(os.getenv("USE_STACK_ALLOCATOR",""))>0):
 		def_l.append("USE_STACK_ALLOCATOR=1")
 	if (not r):
