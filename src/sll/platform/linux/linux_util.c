@@ -8,6 +8,7 @@
 #include <sll/types.h>
 #include <dlfcn.h>
 #include <errno.h>
+#include <immintrin.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/random.h>
@@ -26,6 +27,7 @@ static __STATIC_STRING(_linux_platform_str,
 #endif
 );
 static sll_time_zone_t _linux_platform_time_zone={"GMT",0};
+static unsigned int _linux_csr;
 
 
 
@@ -53,11 +55,14 @@ static void _cleanup_env_data(void){
 	_linux_env.dt=NULL;
 	sll_deallocate(PTR(_linux_env.dt));
 	_linux_platform_time_zone=*sll_utc_time_zone;
+	_mm_setcsr(_linux_csr);
 }
 
 
 
 void _init_platform(void){
+	_linux_csr=_mm_getcsr();
+	_mm_setcsr(_linux_csr|CSR_REGISTER_FLAGS);
 	Dl_info fn_dt;
 	SLL_ASSERT(dladdr(_init_platform,&fn_dt));
 	dlclose(dlopen(fn_dt.dli_fname,RTLD_NOW|RTLD_GLOBAL|RTLD_NOLOAD));

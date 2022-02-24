@@ -299,6 +299,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define THREAD_STATE_TERMINATED 6
 #define THREAD_STATE_UNDEFINED 255
 
+#define CSR_REGISTER_FLAGS 0x8040
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 

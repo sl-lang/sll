@@ -1,5 +1,6 @@
-#include <windows.h>
 #include <bcrypt.h>
+#include <immintrin.h>
+#include <windows.h>
 #include <sll/_size_types.h>
 #include <sll/_sll_internal.h>
 #include <sll/api/date.h>
@@ -17,6 +18,7 @@ static HANDLE _win_wh=INVALID_HANDLE_VALUE;
 static sll_environment_t _win_env={NULL,0};
 static __STATIC_STRING(_win_platform_str,"windows");
 static sll_time_zone_t _win_platform_time_zone={"GMT",0};
+static unsigned int _win_csr=0;
 
 
 
@@ -45,18 +47,14 @@ static void _cleanup_data(void){
 	sll_deallocate(PTR(_win_env.dt));
 	_win_env.dt=NULL;
 	_win_platform_time_zone=*sll_utc_time_zone;
-}
-
-
-
-static void _release_handle(void){
-	CloseHandle(_win_wh);
-	_win_wh=INVALID_HANDLE_VALUE;
+	_mm_setcsr(_win_csr);
 }
 
 
 
 void _init_platform(void){
+	_win_csr=_mm_getcsr();
+	_mm_setcsr(_win_csr|CSR_REGISTER_FLAGS);
 	LPCH dt=GetEnvironmentStrings();
 	sll_array_length_t l=0;
 	sll_environment_variable_t** kv=sll_allocate_stack(1);

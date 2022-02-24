@@ -13,6 +13,7 @@
 
 ### Changed
 
+- Control/Status Register has the `DAZ` and `FTZ` flags set
 - Fixed `sll_platform_path_copy`
 - Program crashes now print the Sll backtrace (if available)
 
