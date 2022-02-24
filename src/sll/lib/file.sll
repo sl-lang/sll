@@ -16,10 +16,10 @@
 	}) @@delete@@
 	(,,, dt {
 		(= m "")
-		(? (& dt$flags FLAG_APPEND) (= m (+ m "A")))
-		(? (& dt$flags FLAG_NO_BUFFER) (= m (+ m "B")))
-		(? (& dt$flags FLAG_READ) (= m (+ m "R")))
-		(? (& dt$flags FLAG_WRITE) (= m (+ m "W")))
+		(? (& dt$flags FLAG_APPEND) (= m (+ m 'A')))
+		(? (& dt$flags FLAG_NO_BUFFER) (= m (+ m 'B')))
+		(? (& dt$flags FLAG_READ) (= m (+ m 'R')))
+		(? (& dt$flags FLAG_WRITE) (= m (+ m 'W')))
 		(@@ (<- string$format "<path=%s, mode=%s>" dt$name m))
 	}) @@string@@
 	(~ string_type) name

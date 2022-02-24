@@ -14,6 +14,12 @@ __API_FUNC(thread_create){
 
 
 
+__API_FUNC(thread_create_barrier){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __API_FUNC(thread_create_lock){
 	return sll_create_lock();
 }
@@ -40,4 +46,10 @@ __API_FUNC(thread_release_semaphore){
 		return 0;
 	}
 	return sll_release_semaphore((sll_semaphore_index_t)a);
+}
+
+
+
+__API_FUNC(thread_reset_barrier){
+	SLL_UNIMPLEMENTED();
 }

@@ -134,6 +134,13 @@
 	(= thr$state STATE_RUNNING)
 ))
 
+(= create_barrier (,,,
+	(@@ (. lock_type
+		(<- (... "sll:thread_create_barrier"))
+		0
+	))
+))
+
 (= create_lock (,,,
 	(@@ (. lock_type
 		(<- (... "sll:thread_create_lock"))
@@ -157,6 +164,26 @@
 
 (= get (,,, id
 	(@@ (: thread_map id))
+))
+
+(= if_equal (,,, bar v
+	(? (=== bar nil) (@@))
+	(= bar (:: bar barrier_type))
+	(= thr (: thread_map (!.)))
+	(= thr$blocking bar)
+	(= thr$state STATE_WAITING_BARRIER)
+	(!<= bar$id (:: v int_type))
+	(= thr$state STATE_RUNNING)
+))
+
+(= if_greater_equal (,,, bar v
+	(? (=== bar nil) (@@))
+	(= bar (:: bar barrier_type))
+	(= thr (: thread_map (!.)))
+	(= thr$blocking bar)
+	(= thr$state STATE_WAITING_BARRIER)
+	(!<> bar$id (:: v int_type))
+	(= thr$state STATE_RUNNING)
 ))
 
 (= join (,,, thr
@@ -185,6 +212,13 @@
 	(? (=== sem$counter sem$max) (@@))
 	(= sem$counter (+ sem$counter 1))
 	(@@ (<- (... "sll:thread_release_semaphore") sem$id))
+))
+
+(= reset_barrier (,,, bar
+	(? (=== bar nil) (@@))
+	(= bar (:: bar barrier_type))
+	(= bar$counter 0)
+	(<- (... "sll:thread_reset_barrier") bar$id)
 ))
 
 (= start (,,, fn @@args@@

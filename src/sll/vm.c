@@ -927,7 +927,18 @@ _return:;
 					sll_integer_t lck=lck_o->dt.i;
 					SLL_RELEASE(lck_o);
 					thread_data_t* c_thr=_scheduler_current_thread;
-					if ((ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK?_scheduler_wait_lock:_scheduler_wait_semaphore)(lck)){
+					sll_bool_t (*fn)(sll_integer_t)=NULL;
+					switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
+						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK:
+							fn=_scheduler_wait_lock;
+							break;
+						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_SEMAPHORE:
+							fn=_scheduler_wait_semaphore;
+							break;
+						default:
+							SLL_UNREACHABLE();
+					}
+					if (fn(lck)){
 						c_thr->ii++;
 						sll_thread_index_t n_tid=_scheduler_queue_pop();
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
