@@ -52,22 +52,17 @@
 		(@@ (+ o '>'))
 	}) @@string@@
 	(~ int_type) size
+	(~ int_type) data_size
 	(~ array_type) _format
 ))
 
 (= struct_module_type (&:
-	(~ type_type) ERROR_OUT_OF_RANGE
-	(~ type_type) ERROR_UNKNOWN_TYPE
 	(~ func_type) create
 	(~ func_type) decode
 	(~ func_type) encode
 ))
 
 
-
-(= ERROR_OUT_OF_RANGE (&:))
-
-(= ERROR_UNKNOWN_TYPE (&:))
 
 (= STRUCT_ELEM_TYPE_INT 0b00)
 (= STRUCT_ELEM_TYPE_FLOAT 0b01)
@@ -91,16 +86,17 @@
 
 
 (= _check_range (,,, v min max
-	(? (|| (< v min) (> v max)) {
-		(@@ (<- error$create ERROR_OUT_OF_RANGE [v min max] (<- string$format "Value '%lld' is not between %lld and %lld" v min max)))
-	})
-	(@@ nil)
+	(@@ (?: (|| (< v min) (> v max))
+		(<- error$create error$ERROR_OUT_OF_RANGE v min max)
+		nil
+	))
 ))
 
 (= create (,,, dt ignore_padding
 	(? (=== dt nil) (@@ nil))
 	(= dt (:: dt string_type))
 	(= max_size 0)
+	(= padding_total 0)
 	(= total_size 0)
 	(= o [])
 	(-> (= i 0) (< i ($ dt)) {
@@ -156,13 +152,14 @@
 				(= size 8)
 				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD))
 			}
-			(@@ (<- error$create ERROR_UNKNOWN_TYPE type (<- string$format "Unknown type: '%c'" type)))
+			(@@ (<- error$create error$ERROR_UNKNOWN_TYPE type))
 		)
 		(? (> size max_size) (= max_size size))
 		(? (&& (! ignore_padding) (> size 1)) {
 			(= pad (& total_size (- size 1)))
 			(? pad {
 				(= pad (- size pad))
+				(= padding_total (+ padding_total pad))
 				(<- array$push o (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
 				(= total_size (+ total_size pad))
 			})
@@ -175,12 +172,14 @@
 		(= pad (& total_size (- max_size 1)))
 		(? pad {
 			(= pad (- max_size pad))
+			(= padding_total (+ padding_total pad))
 			(<- array$push o (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
 			(= total_size (+ total_size pad))
 		})
 	})
 	(@@ (. struct_type
 		total_size
+		(- total_size padding_total)
 		o
 	))
 ))
@@ -389,8 +388,6 @@
 
 
 (= struct (. struct_module_type
-	ERROR_OUT_OF_RANGE
-	ERROR_UNKNOWN_TYPE
 	create
 	decode
 	encode

@@ -35,7 +35,7 @@
 (? true nil 2 (:> "Dead Code") (@@ 128 "False Exit"))
 (= fp (+ "build" path$SEPARATOR "hello.txt"))
 (= f (<- file$open fp "wb"))
-(? (=== f$error_type nil) {
+(? (=== f$error_data nil) {
 	(<- file$write f "Hello!\n")
 	(:> "ABC\n")
 	(:> f "\n")
@@ -421,7 +421,7 @@
 (<- path$mkdir "build/test")
 
 (= f (<- file$open "this/file/does/not/exist.txt"))
-(:> f$error_type "\n" f "\n")
+(:> f$error_data "\n" f "\n")
 
 (= arr [[1 2] [3 4]])
 (= n_arr (:! arr))
@@ -430,7 +430,7 @@
 
 (= s (<- struct$create "HIhd"))
 (= enc (<- struct$encode s 0x1234 0xff77ff77 -0x5678 123.456e7))
-(:> s ", " [enc] ", " (<- struct$decode s enc) "\n")
+(:> s ", " s$size ", " s$data_size ", " [enc] ", " (<- struct$decode s enc) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

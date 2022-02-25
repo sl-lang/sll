@@ -61,6 +61,18 @@ __API_FUNC_DECL(thread_create_semaphore);
 
 /**
  * \flags api func
+ * \name sll_api_thread_increase_barrier
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ * \ret I
+ */
+__API_FUNC_DECL(thread_increase_barrier);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_thread_release_lock
  * \group thread-api
  * \desc Docs!
@@ -90,6 +102,7 @@ __API_FUNC_DECL(thread_release_semaphore);
  * \group thread-api
  * \desc Docs!
  * \arg I
+ * \ret I
  */
 __API_FUNC_DECL(thread_reset_barrier);
 

@@ -282,6 +282,10 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define THREAD_ALLOCATOR_CACHE_POOL_SIZE 16
 
+#define THREAD_BARRIER_UNUSED 0xffffffff
+#define THREAD_BARRIER_GET_NEXT_ID(s) ((sll_barrier_index_t)ADDR((s)->last))
+#define THREAD_BARRIER_SET_NEXT_ID(s,v) ((s)->last=PTR((sll_barrier_index_t)(v)))
+
 #define THREAD_LOCK_UNUSED 0xfffffffe
 #define THREAD_LOCK_GET_NEXT_ID(l) ((sll_lock_index_t)ADDR((l)->last))
 #define THREAD_LOCK_SET_NEXT_ID(l,v) ((l)->last=PTR((sll_lock_index_t)(v)))
@@ -293,10 +297,11 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define THREAD_STATE_INITIALIZED 0
 #define THREAD_STATE_RUNNING 1
 #define THREAD_STATE_QUEUED 2
-#define THREAD_STATE_WAIT_LOCK 3
-#define THREAD_STATE_WAIT_SEMAPHORE 4
-#define THREAD_STATE_WAIT_THREAD 5
-#define THREAD_STATE_TERMINATED 6
+#define THREAD_STATE_WAIT_BARRIER 3
+#define THREAD_STATE_WAIT_LOCK 4
+#define THREAD_STATE_WAIT_SEMAPHORE 5
+#define THREAD_STATE_WAIT_THREAD 6
+#define THREAD_STATE_TERMINATED 7
 #define THREAD_STATE_UNDEFINED 255
 
 #define CSR_REGISTER_FLAGS 0x8040
@@ -315,6 +320,10 @@ typedef __SLL_U8 thread_state_t;
 
 
 typedef sll_instruction_index_t assembly_instruction_label_t;
+
+
+
+typedef __SLL_U32 barrier_list_length_t;
 
 
 
@@ -656,6 +665,14 @@ typedef struct __SEMAPHORE{
 
 
 
+typedef struct __BARRIER{
+	sll_barrier_counter_t count;
+	sll_thread_index_t first;
+	thread_data_t* last;
+} barrier_t;
+
+
+
 #ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
@@ -781,6 +798,10 @@ void _scheduler_set_thread(sll_thread_index_t t);
 
 
 void _scheduler_terminate_thread(sll_object_t* ret);
+
+
+
+sll_bool_t _scheduler_wait_barrier(sll_integer_t w,sll_integer_t v,sll_bool_t g);
 
 
 

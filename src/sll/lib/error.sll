@@ -10,7 +10,7 @@
 
 (= error_type (&:
 	(,,, err
-		(= o (<- string$format "Error: %s" err$str))
+		(= o (<- string$format "%s" err$error_data))
 		(-> (= i ($ err$backtrace)) i {
 			(-- i)
 			(= frame (: err$backtrace i))
@@ -22,25 +22,51 @@
 		})
 		(@@ o)
 	) @@string@@
-	(~ int_type) error_type
 	(~ object_type) error_data
-	(~ string_type) str
 	(~ array_type) backtrace
 ))
 
 (= error_module_type (&:
 	(~ type_type) error_type
+	(~ type_type) ERROR_FILE_NOT_FOUND
+	(~ type_type) ERROR_OUT_OF_RANGE
+	(~ type_type) ERROR_UNKNOWN_TYPE
 	(~ func_type) create
 ))
 
 
 
-(= create (,,, type data str
+(= ERROR_FILE_NOT_FOUND (&:
+	(,,, dt
+		(@@ (<- string$format "Unable to open file '%s': File not found" dt$fp))
+	) @@string@@
+	(~ string_type) fp
+))
+
+(= ERROR_OUT_OF_RANGE (&:
+	(,,, dt
+		(@@ (<- string$format "Value '%lld' is not between %lld and %lld" dt$v dt$min dt$max))
+	) @@string@@
+	(~ int_type) v
+	(~ int_type) min
+	(~ int_type) max
+))
+
+(= ERROR_UNKNOWN_TYPE (&:
+	(,,, dt
+		(@@ (<- string$format "Unknown type: '%c'" dt$type))
+	) @@string@@
+	(~ char_type) type
+))
+
+
+
+(= create (,,, type @@data@@
 	(= backtrace (<- (... "sll:error_get_backtrace")))
+	(? (=== type nil) (@@ nil))
+	(= type (:: type type_type))
 	(@@ (. error_type
-		(:: type type_type)
-		data
-		(:: str string_type)
+		(:: @@data@@ type)
 		([> (= i 0) (< i ($ backtrace))
 			(= k (: backtrace i))
 			(++ i)
@@ -53,6 +79,9 @@
 
 (= error (. error_module_type
 	error_type
+	ERROR_FILE_NOT_FOUND
+	ERROR_OUT_OF_RANGE
+	ERROR_UNKNOWN_TYPE
 	create
 ))
 (## error)

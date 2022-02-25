@@ -927,18 +927,7 @@ _return:;
 					sll_integer_t lck=lck_o->dt.i;
 					SLL_RELEASE(lck_o);
 					thread_data_t* c_thr=_scheduler_current_thread;
-					sll_bool_t (*fn)(sll_integer_t)=NULL;
-					switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
-						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK:
-							fn=_scheduler_wait_lock;
-							break;
-						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_SEMAPHORE:
-							fn=_scheduler_wait_semaphore;
-							break;
-						default:
-							SLL_UNREACHABLE();
-					}
-					if (fn(lck)){
+					if ((SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK?_scheduler_wait_lock:_scheduler_wait_semaphore)(lck)){
 						c_thr->ii++;
 						sll_thread_index_t n_tid=_scheduler_queue_pop();
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
@@ -955,7 +944,33 @@ _return:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ:
-				SLL_UNIMPLEMENTED();
+				{
+					sll_object_t* lck_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					_scheduler_current_thread->si--;
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
+					sll_integer_t lck=lck_o->dt.i;
+					SLL_RELEASE(lck_o);
+					sll_object_t* v_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					_scheduler_current_thread->si--;
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
+					sll_integer_t v=v_o->dt.i;
+					SLL_RELEASE(v_o);
+					thread_data_t* c_thr=_scheduler_current_thread;
+					if (_scheduler_wait_barrier(lck,v,ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ)){
+						c_thr->ii++;
+						sll_thread_index_t n_tid=_scheduler_queue_pop();
+						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
+							if (tid_dt->ret){
+								goto _cleanup;
+							}
+							SLL_UNIMPLEMENTED();
+						}
+						_scheduler_set_thread(n_tid);
+						RELOAD_THREAD_DATA;
+						continue;
+					}
+					break;
+				}
 			default:
 				SLL_UNREACHABLE();
 		}

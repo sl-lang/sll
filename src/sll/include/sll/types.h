@@ -128,6 +128,14 @@ typedef __SLL_U32 sll_array_length_t;
 
 
 
+typedef __SLL_U32 sll_barrier_counter_t;
+
+
+
+typedef __SLL_U32 sll_barrier_index_t;
+
+
+
 typedef __SLL_U32 sll_export_table_length_t;
 
 

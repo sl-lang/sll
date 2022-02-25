@@ -5,21 +5,24 @@
 ### Added
 
 - Argument `no_flush_io` in `process$shell` and `process$start` to prevent flushing of `file$stdout` and `file$stderr` before the creation of a process
-- Barriers: `thread$barrier_type`, `thread$STATE_WAITING_BARRIER`, `thread$create_barrier`, `thread$if_equal`, `thread$if_greater_equal` and `thread$release_barrier` ([#237])
+- Barriers: `sll_create_barrier`, `sll_delete_barrier`, `sll_increase_barrier`, `sll_reset_barrier`, `thread$barrier_type`, `thread$STATE_WAITING_BARRIER`, `thread$create_barrier`, `thread$if_equal`, `thread$if_greater_equal`, `thread$increase_barrier` and `thread$release_barrier` ([#237])
 - Constant string representing the current executable (`sll_executable_file_path`) and the Sll library (`sll_library_file_path`) file paths
+- Field for structure data size without padding: `struct_type$data_size`
 - Full MacOS support
 - More tests ([#8])
 - Semaphores: `sll_semaphore_counter_t`, `sll_semaphore_index_t`, `sll_create_semaphore`, `sll_delete_semaphore`, `sll_release_semaphore`, `thread$semaphore_type`, `thread$STATE_WAITING_SEMAPHORE`, `thread$acquire_semaphore`, `thread$create_semaphore` and `thread$release_semaphore` ([#237])
 
 ### Changed
 
-- Control/Status Register has the `DAZ` and `FTZ` flags set
+- Control/Status Register has the `DAZ` and `FTZ` flags automatically set
 - Fixed `sll_platform_path_copy`
+- Moved all `ERROR_xxx` constants to `error.sll`
 - Program crashes now print the Sll backtrace (if available)
+- Reworked the error API
 
 ### Removed
 
-- Deprecated function: `sll_platform_get_executable_file_path` and `sll_platform_get_library_file_path`
+- Executable and library getter function: `sll_platform_get_executable_file_path` and `sll_platform_get_library_file_path` (in favor of global strings)
 
 ## [0.7.5] - 2022-02-20
 

@@ -3916,6 +3916,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_thread_increase_barrier __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_thread_increase_barrier sll_integer_t a
+/**
+ * \flags check_output func
+ * \name sll_api_thread_increase_barrier
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_increase_barrier_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_increase_barrier:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_thread_release_lock __SLL_CHECK_OUTPUT sll_bool_t
 #define __SLL_API_ARGS_sll_api_thread_release_lock sll_integer_t a
 /**
@@ -3962,7 +3985,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_thread_reset_barrier void
+#define __SLL_API_TYPE_sll_api_thread_reset_barrier __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_thread_reset_barrier sll_integer_t a
 /**
  * \flags check_output func
@@ -3970,6 +3993,7 @@
  * \group thread-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func

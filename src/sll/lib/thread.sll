@@ -74,6 +74,7 @@
 	(~ func_type) get
 	(~ func_type) if_equal
 	(~ func_type) if_greater_equal
+	(~ func_type) increase_barrier
 	(~ func_type) join
 	(~ func_type) release_lock
 	(~ func_type) release_semaphore
@@ -186,6 +187,12 @@
 	(= thr$state STATE_RUNNING)
 ))
 
+(= increase_barrier (,,, bar
+	(? (=== bar nil) (@@))
+	(= bar (:: bar barrier_type))
+	(= bar$counter (<- (... "sll:thread_increase_barrier") bar$id))
+))
+
 (= join (,,, thr
 	(? (=== thr nil) (@@))
 	(= thr (:: thr thread_type))
@@ -218,7 +225,7 @@
 	(? (=== bar nil) (@@))
 	(= bar (:: bar barrier_type))
 	(= bar$counter 0)
-	(<- (... "sll:thread_reset_barrier") bar$id)
+	(@@ (<- (... "sll:thread_reset_barrier") bar$id))
 ))
 
 (= start (,,, fn @@args@@
@@ -261,6 +268,7 @@
 	get
 	if_equal
 	if_greater_equal
+	increase_barrier
 	join
 	release_lock
 	release_semaphore

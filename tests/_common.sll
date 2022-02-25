@@ -54,7 +54,7 @@
 	})
 	(= _test_results <>)
 	(= f (<- file$open "build/test_results.json" "r"))
-	(? (=== f$error_type nil) {
+	(? (=== f$error_data nil) {
 		(= bf "")
 		(>- (= chunk "") chunk
 			(= chunk (<- file$read f 1024))
