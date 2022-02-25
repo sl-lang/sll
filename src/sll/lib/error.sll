@@ -78,9 +78,9 @@
 
 
 (= create (,,, type @@data@@
-	(= backtrace (<- (... "sll:error_get_backtrace")))
 	(? (=== type nil) (@@ nil))
 	(= type (:: type type_type))
+	(= backtrace (<- (... "sll:error_get_backtrace")))
 	(@@ (. error_type
 		(:: @@data@@ type)
 		([> (= i 0) (< i ($ backtrace))

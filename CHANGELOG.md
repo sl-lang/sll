@@ -5,12 +5,12 @@
 ### Added
 
 - Argument `no_flush_io` in `process$shell` and `process$start` to prevent flushing of `file$stdout` and `file$stderr` before the creation of a process
-- New error types: `error$ERROR_INVALID_BASE64_CHARACTER` and `error$ERROR_INVALID_BASE64_PADDING`
 - Barriers: `sll_create_barrier`, `sll_delete_barrier`, `sll_increase_barrier`, `sll_reset_barrier`, `thread$barrier_type`, `thread$STATE_WAITING_BARRIER`, `thread$create_barrier`, `thread$if_equal`, `thread$if_greater_equal`, `thread$increase_barrier` and `thread$release_barrier` ([#237])
 - Constant string representing the current executable (`sll_executable_file_path`) and the Sll library (`sll_library_file_path`) file paths
 - Field for structure data size without padding: `struct_type$data_size`
 - Full MacOS support
 - More tests ([#8])
+- New error types: `error$ERROR_INVALID_BASE64_CHARACTER` and `error$ERROR_INVALID_BASE64_PADDING`
 - Semaphores: `sll_semaphore_counter_t`, `sll_semaphore_index_t`, `sll_create_semaphore`, `sll_delete_semaphore`, `sll_release_semaphore`, `thread$semaphore_type`, `thread$STATE_WAITING_SEMAPHORE`, `thread$acquire_semaphore`, `thread$create_semaphore` and `thread$release_semaphore` ([#237])
 
 ### Changed
