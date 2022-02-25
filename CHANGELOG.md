@@ -5,6 +5,7 @@
 ### Added
 
 - Argument `no_flush_io` in `process$shell` and `process$start` to prevent flushing of `file$stdout` and `file$stderr` before the creation of a process
+- New error types: `error$ERROR_INVALID_BASE64_CHARACTER` and `error$ERROR_INVALID_BASE64_PADDING`
 - Barriers: `sll_create_barrier`, `sll_delete_barrier`, `sll_increase_barrier`, `sll_reset_barrier`, `thread$barrier_type`, `thread$STATE_WAITING_BARRIER`, `thread$create_barrier`, `thread$if_equal`, `thread$if_greater_equal`, `thread$increase_barrier` and `thread$release_barrier` ([#237])
 - Constant string representing the current executable (`sll_executable_file_path`) and the Sll library (`sll_library_file_path`) file paths
 - Field for structure data size without padding: `struct_type$data_size`
@@ -82,7 +83,7 @@
 - Fixed `sll_process_join_args`
 - Fixed incorrect results returned by `sll_string_compare_pointer`
 - Fixed memory leaks related to unreleased objects (invalidated [#25])
-- Fixed mulitple inconsistencies with different operators
+- Fixed multiple inconsistencies with different operators
 - Fixed reference counting and double-free in `file.sll`
 - Fixed variable names related to compilation data and source files
 - Function `time$time_function` now accepts arguments passed to the timed function
@@ -96,9 +97,9 @@
 ### Removed
 
 - Console creation function (`sll_platform_create_console`) and CLI option to suppress window creation
-- Console initalization functions: `sll_platform_setup_console` and `sll_platform_reset_console`
+- Console initialization functions: `sll_platform_setup_console` and `sll_platform_reset_console`
 - Memory fail text is no longer present in the exported header file
-- Recursvie calls to `sll_execute_assembly` are no longer allowed
+- Recursive calls to `sll_execute_assembly` are no longer allowed
 
 ## [0.7.3] - 2022-02-09
 
@@ -117,7 +118,7 @@
 
 - Compiled modules no longer contain full file paths from the host file system
 - Creating a file from an invalid file descriptor (`SLL_UNKNOWN_FILE_DESCRIPTOR`) with `sll_file_open_descriptor` now creates a null file
-- Date functions (`date$current`, `date$from_time` and `date$from_time_ns`) now defualt to the local time zone (`date$LOCAL_TIME_ZONE`) instead of UTC (`date$UTC_TIME_ZONE`)
+- Date functions (`date$current`, `date$from_time` and `date$from_time_ns`) now default to the local time zone (`date$LOCAL_TIME_ZONE`) instead of UTC (`date$UTC_TIME_ZONE`)
 - Date functions (`sll_date_from_time` and `sll_date_from_time_ns`) now expect a time zone argument
 - File creation functions (`sll_file_from_data`, `sll_file_open` and `sll_file_open_descriptor`) now remove invalid file flags
 - File path table now stores file hashes and lengths (`sll_file_path_t` instead `sll_string_length_t`) ([#55])
@@ -154,7 +155,7 @@
 ### Removed
 
 - Call to an internal initializer function in `process.sll`
-- Internal sanbdox flag values: `FLAG_DISABLE_FILE_IO`, `FLAG_ENABLE_STDIN_IO`, `FLAG_ENABLE_STDOUT_IO`, `FLAG_DISABLE_PATH_API` and `FLAG_DISABLE_PROCESS_API`
+- Internal sandbox flag values: `FLAG_DISABLE_FILE_IO`, `FLAG_ENABLE_STDIN_IO`, `FLAG_ENABLE_STDOUT_IO`, `FLAG_DISABLE_PATH_API` and `FLAG_DISABLE_PROCESS_API`
 - Unused `sort$default_sort_func`
 
 ## [0.7.1] - 2022-01-29

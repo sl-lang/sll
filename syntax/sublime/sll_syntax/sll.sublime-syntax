@@ -5,12 +5,13 @@ file_extensions:
 scope: source.sll
 version: 2
 variables:
-  not_identifier_chars: '\s$\(\);<>\[\]\{\}'
+  float_exponent: '(?:[eE][\+\-]?[0-9][0-9_]*)'
+  full_identifier: '{{not_identifier_start}}{{identifier_access}}{{not_identifier_end}}'
   identifier: '[^{{not_identifier_chars}}]+'
   identifier_access: '(?:{{identifier}}\$)*{{identifier}}'
-  not_identifier_start: '(?<=[{{not_identifier_chars}}])'
+  not_identifier_chars: '\s$\(\);<>\[\]\{\}'
   not_identifier_end: '(?=[{{not_identifier_chars}}])'
-  full_identifier: '{{not_identifier_start}}{{identifier_access}}{{not_identifier_end}}'
+  not_identifier_start: '(?<=[{{not_identifier_chars}}])'
 contexts:
   main:
     - include: comments
@@ -105,7 +106,7 @@ contexts:
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           pop: true
         - include: main
-    - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2}||\|:)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%]|\+\+|\-\-)|(>=|<=|==|!=|>|<|===|!==)|(=)|(---)|(,,,)|(:>)|(<-\*?)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.)|([\[\{][<>])|(!\.)|(!<[<\*\+\=>])|(:!))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2}||\|:)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%]|\+\+|\-\-)|(>=|<=|==|!=|>|<|===|!==)|(=)|(---)|(,,,)|(:>)|(<-\*?)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.)|([\[\{][<>])|(!\.)|(!<<)|(!<\*)|(:!))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.control.conditional.sll
@@ -135,8 +136,9 @@ contexts:
         26: keyword.control.new.sll
         27: keyword.control.conditional.generator.sll
         28: support.function.builtin.thread.id.sll
-        29: support.function.builtin.thread.function.sll
-        30: support.function.builtin.deep-copy.sll
+        29: support.function.builtin.thread.wait.sll
+        30: support.function.builtin.thread.lock.sll
+        31: support.function.builtin.deep-copy.sll
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - match: '\)'
@@ -187,7 +189,7 @@ contexts:
       scope: constant.numeric.integer.octal.sll
     - match: '{{not_identifier_start}}[\+-]?0[xX][0-9a-fA-F][0-9a-fA-F_]*{{not_identifier_end}}'
       scope: constant.numeric.integer.hexadecimal.sll
-    - match: '{{not_identifier_start}}[\+-]?(?:[0-9][0-9_]*\.[0-9_]*|\.[0-9_]+)(?:[eE][\+\-]?[0-9][0-9_]*)?{{not_identifier_end}}'
+    - match: '{{not_identifier_start}}[\+-]?(?:(?:[0-9][0-9_]*)?\.[0-9_]*{{float_exponent}}?|[0-9][0-9_]*{{float_exponent}}){{not_identifier_end}}'
       scope: constant.numeric.float.sll
     - match: '{{not_identifier_start}}[\+-]?[0-9][0-9_]*{{not_identifier_end}}'
       scope: constant.numeric.integer.decimal.sll

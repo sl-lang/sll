@@ -432,6 +432,9 @@
 (= enc (<- struct$encode s 0x1234 0xff77ff77 -0x5678 123.456e7))
 (:> s ", " s$size ", " s$data_size ", " [enc] ", " (<- struct$decode s enc) "\n")
 
+(:> (<- base64$decode "A") "\n")
+(:> (<- base64$decode "MT!z") "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

@@ -36,10 +36,11 @@ __API_FUNC(base64_decode){
 		SLL_INIT_STRING(&(o->dt.s));
 		return o;
 	}
+	sll_integer_t oi=-1;
 	if (a->l&3){
 _error:
 		o->t=SLL_OBJECT_TYPE_INT;
-		o->dt.i=0;
+		o->dt.i=oi;
 		return o;
 	}
 	sll_string_length_t p=sll_string_count_right(a,'=');
@@ -56,7 +57,19 @@ _error:
 		sll_char_t v1=_base64_index_map[a->v[i+1]];
 		sll_char_t v2=_base64_index_map[a->v[i+2]];
 		sll_char_t v3=_base64_index_map[a->v[i+3]];
-		if (v0==64||v1==64||v2==64||v3==64){
+		if ((v0|v1|v2|v3)>>6){
+			if (v0==64){
+				oi=i;
+			}
+			else if (v1==64){
+				oi=i+1;
+			}
+			else if (v2==64){
+				oi=i+2;
+			}
+			else{
+				oi=i+3;
+			}
 _string_error:
 			sll_free_string(s);
 			goto _error;
@@ -71,7 +84,16 @@ _string_error:
 		sll_char_t v0=_base64_index_map[a->v[i]];
 		sll_char_t v1=_base64_index_map[a->v[i+1]];
 		sll_char_t v2=_base64_index_map[a->v[i+2]];
-		if (v0==64||v1==64||v2==64){
+		if ((v0|v1)>>6){
+			if (v0==64){
+				oi=i;
+			}
+			else if (v1==64){
+				oi=i+1;
+			}
+			else{
+				oi=i+2;
+			}
 			goto _string_error;
 		}
 		s->v[j]=(v0<<2)|(v1>>4);
@@ -80,7 +102,13 @@ _string_error:
 	else if (p==2){
 		sll_char_t v0=_base64_index_map[a->v[i]];
 		sll_char_t v1=_base64_index_map[a->v[i+1]];
-		if (v0==64||v1==64){
+		if ((v0|v1)>>6){
+			if (v0==64){
+				oi=i;
+			}
+			else{
+				oi=i+1;
+			}
 			goto _string_error;
 		}
 		s->v[j]=(v0<<2)|(v1>>4);

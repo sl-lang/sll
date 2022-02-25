@@ -29,6 +29,8 @@
 (= error_module_type (&:
 	(~ type_type) error_type
 	(~ type_type) ERROR_FILE_NOT_FOUND
+	(~ type_type) ERROR_INVALID_BASE64_CHARACTER
+	(~ type_type) ERROR_INVALID_BASE64_PADDING
 	(~ type_type) ERROR_OUT_OF_RANGE
 	(~ type_type) ERROR_UNKNOWN_TYPE
 	(~ func_type) create
@@ -41,6 +43,20 @@
 		(@@ (<- string$format "Unable to open file '%s': File not found" dt$fp))
 	) @@string@@
 	(~ string_type) fp
+))
+
+(= ERROR_INVALID_BASE64_CHARACTER (&:
+	(,,, dt
+		(@@ (<- string$format "Invalid Base64 character at offset %llu: '%c'" dt$offset dt$character))
+	) @@string@@
+	(~ int_type) offset
+	(~ char_type) character
+))
+
+(= ERROR_INVALID_BASE64_PADDING (&:
+	(,,, dt
+		(@@ "Invalid Base64 padding")
+	) @@string@@
 ))
 
 (= ERROR_OUT_OF_RANGE (&:
@@ -80,6 +96,8 @@
 (= error (. error_module_type
 	error_type
 	ERROR_FILE_NOT_FOUND
+	ERROR_INVALID_BASE64_CHARACTER
+	ERROR_INVALID_BASE64_PADDING
 	ERROR_OUT_OF_RANGE
 	ERROR_UNKNOWN_TYPE
 	create
