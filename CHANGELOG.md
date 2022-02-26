@@ -5,10 +5,11 @@
 ### Added
 
 - New error types: `error$ERROR_ANY` and `error$ERROR_INTERNAL_ERROR`
-- System error codes: `sll_error_t`, `error.h`, `SLL_ERROR_FLAG_WINAPI`, `SLL_ERROR_FLAG_LIBC`, `SLL_NO_ERROR`, `error$from_internal`, `error_codes.sll`, `error_codes$ERROR_INTERNAL_ERROR`, `error_codes$LINUX_ERROR_CODES`, `error_codes$WINDOWS_ERROR_CODES` ([#238])
+- System error codes: `sll_error_t`, `error.h`, `SLL_ERROR_NO_FILE_PATH`, `SLL_ERROR_UNKNOWN_FD`, `SLL_ERROR_FLAG_WINAPI`, `SLL_ERROR_FLAG_LIBC`, `SLL_ERROR_GET_TYPE`, `SLL_NO_ERROR`, `error$from_internal`, `error_codes.sll`, `error_codes$ERROR_INTERNAL_ERROR`, `error_codes$LIBC_ERROR_CODES`, `error_codes$WINDOWS_ERROR_CODES` ([#238])
 
 ### Changed
 
+- Adjusted platform and file function to allow for error return values ([#238])
 - Fixed bit-shifting logic in `sll_load_assembly` and `sll_write_assembly`
 
 ## [0.7.6] - 2022-02-25

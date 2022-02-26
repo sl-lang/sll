@@ -182,11 +182,14 @@ __API_FUNC(file_inc_handle){
 
 
 __API_FUNC(file_open){
-	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||((b&SLL_FILE_FLAG_READ)&&!sll_platform_path_exists(a->v))){
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return -1;
 	}
 	sll_file_t f;
-	sll_file_open(a->v,(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
+	sll_error_t err=sll_file_open(a->v,(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
+	if (err!=SLL_NO_ERROR){
+		return ~err;
+	}
 	sll_integer_t h=_alloc_file();
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+h))->dt.f));
 	(*(_file_fl+h))->p=0;

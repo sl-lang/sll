@@ -377,7 +377,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 			f->_h.bfl++;
 		}
 	}
-	return ZERO_IF_ERROR_PTR(o);
+	return DATA_IF_ERROR_PTR(o,SLL_END_OF_DATA);
 }
 
 

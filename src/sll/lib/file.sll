@@ -141,8 +141,8 @@
 		path
 		flags
 	))
-	(? (=== handle -1) {
-		(@@ (<- error$create error$ERROR_FILE_NOT_FOUND path))
+	(? (< handle 0) {
+		(@@ (<- error$from_internal (~ handle) <"fp" path>))
 	})
 	(@@ (. file_type
 		path
@@ -164,7 +164,11 @@
 	(? (< c 0) {
 		(@@ "")
 	})
-	(@@ (<- (... "sll:file_read") f$_handle c))
+	(= o (<- (... "sll:file_read") f$_handle c))
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o)
+		o
+	))
 ))
 
 (= rename (,,, s d
@@ -179,10 +183,14 @@
 	(= f (:: f file_type))
 	(= o 0)
 	(-> (= i 0) (< i ($ @@dt@@))
-		(= o (+ o (<- (... "sll:file_write")
+		(= v (<- (... "sll:file_write")
 			f$_handle
 			(:: (: @@dt@@ i) string_type)
-		)))
+		))
+		(? (< v 0)
+			(@@ (<- error$from_internal (~ v)))
+		)
+		(= o (+ o v))
 		(++ i)
 	)
 	(@@ o)

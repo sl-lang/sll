@@ -56,6 +56,18 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_ERROR_GET_TYPE
+ * \group error
+ * \desc Docs!
+ * \arg sll_error_t e
+ * \ret sll_error_t
+ */
+#define SLL_ERROR_GET_TYPE(e) ((e)&0x300000000)
+
+
+
+/**
  * \flags macro var
  * \name SLL_NO_ERROR
  * \group error
