@@ -1,8 +1,9 @@
-(--- "types.sll")
+(--- "types.sll" "_internal.sll")
 
 
 
 (= path_module_type (&:
+	(~ int_type) MAX_PATH_SIZE
 	(~ char_type) SEPARATOR
 	(~ func_type) absolute
 	(~ func_type) exists
@@ -56,6 +57,7 @@
 
 
 (= path (. path_module_type
+	_MAX_PATH_SIZE
 	SEPARATOR
 	absolute
 	exists

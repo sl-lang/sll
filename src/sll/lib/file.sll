@@ -59,20 +59,33 @@
 
 (= TEMP_FILE_PATH (<- (... "sll:file_get_temp_path")))
 
-(= stdin (. file_type
+
+(= _create_std_file (,,, id nm fl
+	(= h (<- (... "sll:file_std_handle") id))
+	(@@ (?: (< h 0)
+		nil
+		(. file_type
+			nm
+			fl
+			h
+		)
+	))
+))
+
+(= stdin (<- _create_std_file
+	0
 	"@stdin"
 	(| FLAG_READ FLAG_NO_BUFFER)
-	(<- (... "sll:file_std_handle") 0)
 ))
-(= stdout (. file_type
+(= stdout (<- _create_std_file
+	1
 	"@stdout"
 	FLAG_WRITE
-	(<- (... "sll:file_std_handle") 1)
 ))
-(= stderr (. file_type
+(= stderr (<- _create_std_file
+	2
 	"@stderr"
 	FLAG_WRITE
-	(<- (... "sll:file_std_handle") 2)
 ))
 
 

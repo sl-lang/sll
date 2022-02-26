@@ -8,6 +8,13 @@
  * \group error
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Types
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ */
 
 
 
@@ -15,6 +22,7 @@
  * \flags macro var
  * \name SLL_ERROR_NO_FILE_PATH
  * \group error
+ * \subgroup error-type
  * \desc Docs!
  * \type sll_error_t
  */
@@ -26,10 +34,35 @@
  * \flags macro var
  * \name SLL_ERROR_UNKNOWN_FD
  * \group error
+ * \subgroup error-type
  * \desc Docs!
  * \type sll_error_t
  */
 #define SLL_ERROR_UNKNOWN_FD 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ERROR_SANDBOX
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_SANDBOX 3
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ERROR_TOO_LONG
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_TOO_LONG 4
 
 
 

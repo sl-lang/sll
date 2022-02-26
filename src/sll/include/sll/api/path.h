@@ -31,7 +31,11 @@
 #define SLL_API_MAX_FILE_PATH_LENGTH 261
 #else
 #define SLL_API_FILE_PATH_SEPARATOR '/'
+#ifdef __SLL_BUILD_DARWIN
+#define SLL_API_MAX_FILE_PATH_LENGTH 1024
+#else
 #define SLL_API_MAX_FILE_PATH_LENGTH 4096
+#endif
 #endif
 
 

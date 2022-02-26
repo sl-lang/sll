@@ -142,7 +142,7 @@ __API_FUNC(file_flush){
 
 __API_FUNC(file_from_data){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES)){
-		return -1;
+		return ~SLL_ERROR_SANDBOX;
 	}
 	sll_file_t f;
 	sll_file_from_data(a->v,a->l,(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
@@ -182,8 +182,11 @@ __API_FUNC(file_inc_handle){
 
 
 __API_FUNC(file_open){
-	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
-		return -1;
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
+		return ~SLL_ERROR_TOO_LONG;
+	}
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
+		return ~SLL_ERROR_SANDBOX;
 	}
 	sll_file_t f;
 	sll_error_t err=sll_file_open(a->v,(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
@@ -255,19 +258,19 @@ __API_FUNC(file_std_handle){
 	sll_file_t* p=NULL;
 	if (!a){
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDIN_IO)){
-			return -1;
+			return ~SLL_ERROR_SANDBOX;
 		}
 		p=sll_current_vm_config->in;
 	}
 	else if (a==1){
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
-			return -1;
+			return ~SLL_ERROR_SANDBOX;
 		}
 		p=sll_current_vm_config->out;
 	}
 	else{
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
-			return -1;
+			return ~SLL_ERROR_SANDBOX;
 		}
 		p=sll_current_vm_config->err;
 	}

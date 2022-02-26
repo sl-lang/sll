@@ -1,0 +1,10 @@
+(= sys (<- (... "sll:sys_get_platform")))
+(= _MAX_PATH_SIZE (?:
+	(=== sys "windows") 256
+	(=== sys "darwin") 1024
+	4096
+))
+
+
+
+(## _MAX_PATH_SIZE)
