@@ -164,7 +164,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 		CHECK_ERROR(rf,(a_dt->dbg.dt+i)->ii,sll_instruction_index_t);
 		sll_file_offset_t ln;
 		CHECK_ERROR(rf,ln,sll_file_offset_t);
-		(a_dt->dbg.dt+i)->ln=ROTATE_BITS64(ln,63);
+		(a_dt->dbg.dt+i)->ln=ROTATE_BITS_RIGHT64(ln,2);
 	}
 	_init_assembly_stack(a_dt);
 	a_dt->h=a_dt->_s.p;

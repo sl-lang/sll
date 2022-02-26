@@ -150,7 +150,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	sll_encode_integer(wf,a_dt->dbg.l);
 	for (sll_instruction_index_t i=0;i<a_dt->dbg.l;i++){
 		sll_encode_integer(wf,(a_dt->dbg.dt+i)->ii);
-		sll_encode_integer(wf,ROTATE_BITS64((a_dt->dbg.dt+i)->ln,1));
+		sll_encode_integer(wf,ROTATE_BITS64((a_dt->dbg.dt+i)->ln,2));
 	}
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){

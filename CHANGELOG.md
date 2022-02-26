@@ -2,7 +2,9 @@
 
 ## [0.7.7] - Ongoing
 
-*Nothing*
+### Changed
+
+- Fixed bit-shifting logic in `sll_load_assembly` and `sll_write_assembly`
 
 ## [0.7.6] - 2022-02-25
 
