@@ -33,6 +33,7 @@
 	(~ type_type) ERROR_INTERNAL_ERROR
 	(~ type_type) ERROR_INVALID_BASE64_CHARACTER
 	(~ type_type) ERROR_INVALID_BASE64_PADDING
+	(~ type_type) ERROR_INVALID_FILE_DESCRIPTOR
 	(~ type_type) ERROR_OUT_OF_RANGE
 	(~ type_type) ERROR_PATH_TOO_LONG
 	(~ type_type) ERROR_SANDBOX
@@ -71,6 +72,12 @@
 	) @@string@@
 ))
 
+(= ERROR_INVALID_FILE_DESCRIPTOR (&:
+	(,,,
+		(@@ "Invalid file descriptor")
+	) @@string@@
+))
+
 (= ERROR_OUT_OF_RANGE (&:
 	(,,, dt
 		(@@ (<- string$format "Value '%lld' is not between %lld and %lld" dt$v dt$min dt$max))
@@ -82,7 +89,7 @@
 
 (= ERROR_PATH_TOO_LONG (&:
 	(,,,
-		(@@ (<- string$format "Path exceeded %u characters" _MAX_PATH_SIZE))
+		(@@ (<- string$format "Path exceedes %u characters" _MAX_PATH_SIZE))
 	) @@string@@
 ))
 
@@ -130,8 +137,9 @@
 			1 (= v (. ERROR_FILE_NOT_FOUND
 				(: data "fp")
 			))
-			2 (= v (. ERROR_ANY "Invalid file descriptor"))
+			2 (= v (. ERROR_INVALID_FILE_DESCRIPTOR))
 			3 (= v (. ERROR_SANDBOX))
+			4 (= v (. ERROR_PATH_TOO_LONG))
 		)
 	)
 	(? (=== v nil)
@@ -152,6 +160,7 @@
 	error_codes$ERROR_INTERNAL_ERROR
 	ERROR_INVALID_BASE64_CHARACTER
 	ERROR_INVALID_BASE64_PADDING
+	ERROR_INVALID_FILE_DESCRIPTOR
 	ERROR_OUT_OF_RANGE
 	ERROR_PATH_TOO_LONG
 	ERROR_SANDBOX
