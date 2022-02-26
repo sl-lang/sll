@@ -176,7 +176,8 @@ static sll_object_t* _wait_for_result(sll_thread_index_t tid){
 	sll_bool_t io=!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO);
 	while (1){
 		if (_scheduler_current_thread->ii>=sll_current_runtime_data->a_dt->ic||_scheduler_current_thread->si>=sll_current_vm_config->s_sz){
-			return SLL_ACQUIRE_STATIC_INT(0);
+			_scheduler_terminate_thread( SLL_ACQUIRE_STATIC_INT(0));
+			goto _cleanup;
 		}
 		if (!_scheduler_current_thread->tm){
 			_scheduler_queue_next();

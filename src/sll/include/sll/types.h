@@ -244,6 +244,10 @@ typedef __SLL_S64 sll_integer_t;
 
 
 
+typedef __SLL_U64 sll_error_t;
+
+
+
 typedef __SLL_U64 sll_file_offset_t;
 
 

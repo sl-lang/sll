@@ -52,6 +52,12 @@ static void _cleanup_data(void){
 
 
 
+__SLL_NO_RETURN void _force_exit_platform(void){
+	TerminateProcess(GetCurrentProcess(),SIGABRT);
+}
+
+
+
 void _init_platform(void){
 	_win_csr=_mm_getcsr();
 	_mm_setcsr(_win_csr|CSR_REGISTER_FLAGS);
@@ -107,12 +113,6 @@ void _init_platform(void){
 		i++;
 	} while (*(nm+i-1));
 	WideCharToMultiByte(CP_UTF8,0,nm,i,_win_platform_time_zone.nm,32,NULL,NULL);
-}
-
-
-
-__SLL_NO_RETURN void _force_exit_platform(void){
-	TerminateProcess(GetCurrentProcess(),SIGABRT);
 }
 
 

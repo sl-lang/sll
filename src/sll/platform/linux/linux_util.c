@@ -60,6 +60,12 @@ static void _cleanup_env_data(void){
 
 
 
+__SLL_NO_RETURN void _force_exit_platform(void){
+	_exit(SIGABRT);
+}
+
+
+
 void _init_platform(void){
 	_linux_csr=_mm_getcsr();
 	_mm_setcsr(_linux_csr|CSR_REGISTER_FLAGS);
@@ -110,12 +116,6 @@ void _init_platform(void){
 	sll_copy_data(nm,sz,_linux_platform_time_zone.nm);
 	_linux_platform_time_zone.nm[sz]=0;
 	_linux_platform_time_zone.off=-timezone/60;
-}
-
-
-
-__SLL_NO_RETURN void _force_exit_platform(void){
-	_exit(SIGABRT);
 }
 
 

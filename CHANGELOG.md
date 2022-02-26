@@ -2,6 +2,11 @@
 
 ## [0.7.7] - Ongoing
 
+### Added
+
+- New error types: `error$ERROR_ANY` and `error$ERROR_INTERNAL_ERROR`
+- System error codes: `sll_error_t`, `SLL_PLATFORM_FLAG_WINAPI_ERROR`, `SLL_PLATFORM_NO_ERROR`, `error$from_internal`, `error_codes.sll`, `error_codes$ERROR_INTERNAL_ERROR`, `error_codes$LINUX_ERROR_CODES`, `error_codes$WINDOWS_ERROR_CODES` ([#238])
+
 ### Changed
 
 - Fixed bit-shifting logic in `sll_load_assembly` and `sll_write_assembly`
@@ -1675,6 +1680,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#238]: https://github.com/sl-lang/sll/issues/238
 [#237]: https://github.com/sl-lang/sll/issues/237
 [#235]: https://github.com/sl-lang/sll/issues/235
 [#233]: https://github.com/sl-lang/sll/issues/233

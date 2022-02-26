@@ -55,6 +55,28 @@
 
 /**
  * \flags macro var
+ * \name SLL_PLATFORM_FLAG_WINAPI_ERROR
+ * \group platform
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_PLATFORM_FLAG_WINAPI_ERROR 0x100000000
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_PLATFORM_NO_ERROR
+ * \group platform
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_PLATFORM_NO_ERROR 0xffffffffffffffff
+
+
+
+/**
+ * \flags macro var
  * \name SLL_PLATFORM_STREAM_INPUT
  * \group platform
  * \subgroup platform-file

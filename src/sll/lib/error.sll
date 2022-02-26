@@ -1,4 +1,4 @@
-(--- "types.sll" "string.sll" "array.sll")
+(--- "types.sll" "string.sll" "array.sll" "error_codes.sll")
 
 
 
@@ -28,15 +28,25 @@
 
 (= error_module_type (&:
 	(~ type_type) error_type
+	(~ type_type) ERROR_ANY
 	(~ type_type) ERROR_FILE_NOT_FOUND
+	(~ type_type) ERROR_INTERNAL_ERROR
 	(~ type_type) ERROR_INVALID_BASE64_CHARACTER
 	(~ type_type) ERROR_INVALID_BASE64_PADDING
 	(~ type_type) ERROR_OUT_OF_RANGE
 	(~ type_type) ERROR_UNKNOWN_TYPE
 	(~ func_type) create
+	(~ func_type) from_internal
 ))
 
 
+
+(= ERROR_ANY (&:
+	(,,, dt
+		(@@ dt$str)
+	) @@string@@
+	(~ string_type) str
+))
 
 (= ERROR_FILE_NOT_FOUND (&:
 	(,,, dt
@@ -77,17 +87,31 @@
 
 
 
+(= _get_backtrace (,,,
+	(= backtrace (<- (... "sll:error_get_backtrace")))
+	(@@ ([> (= i 0) (< i ($ backtrace))
+		(= k (: backtrace i))
+		(++ i)
+		(:: k call_frame_type)
+	))
+))
+
 (= create (,,, type @@data@@
 	(? (=== type nil) (@@ nil))
 	(= type (:: type type_type))
-	(= backtrace (<- (... "sll:error_get_backtrace")))
 	(@@ (. error_type
 		(:: @@data@@ type)
-		([> (= i 0) (< i ($ backtrace))
-			(= k (: backtrace i))
-			(++ i)
-			(:: k call_frame_type)
-		)
+		(<- _get_backtrace)
+	))
+))
+
+(= from_internal (,,, err
+	(? (|| (!== (:? err) int_type) (=== err 0xffffffffffffffff)) (@@ nil))
+	(= v (: (?: (>> err 32) error_code$WINDOWS_ERROR_CODES error_code$LINUX_ERROR_CODES) (& err 0xffffffff)))
+	(? (=== v nil) (= v (. ERROR_ANY (:: err string_type))))
+	(@@ (. error_type
+		v
+		(<- _get_backtrace)
 	))
 ))
 
@@ -95,11 +119,14 @@
 
 (= error (. error_module_type
 	error_type
+	ERROR_ANY
 	ERROR_FILE_NOT_FOUND
+	error_codes$ERROR_INTERNAL_ERROR
 	ERROR_INVALID_BASE64_CHARACTER
 	ERROR_INVALID_BASE64_PADDING
 	ERROR_OUT_OF_RANGE
 	ERROR_UNKNOWN_TYPE
 	create
+	from_internal
 ))
 (## error)
