@@ -15,6 +15,10 @@
 - *\[Darwin only\]* Fixed `SLL_API_MAX_FILE_PATH_LENGTH`
 - Fixed bit-shifting logic in `sll_load_assembly` and `sll_write_assembly`
 
+### Removed
+
+- Final call stack frame from `error$create` and `error$from_internal`
+
 ## [0.7.6] - 2022-02-25
 
 ### Added

@@ -14,8 +14,8 @@
 
 __API_FUNC(error_get_backtrace){
 	const sll_call_stack_t* c_st=sll_get_call_stack();
-	sll_array_create(c_st->l-1,out);
-	for (sll_call_stack_size_t i=0;i<c_st->l-1;i++){
+	sll_array_create(c_st->l,out);
+	for (sll_call_stack_size_t i=0;i<c_st->l;i++){
 		const sll_call_stack_frame_t* k=c_st->dt+i;
 		sll_string_index_t fp_i;
 		sll_string_index_t fn_i;
