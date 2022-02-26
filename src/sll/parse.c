@@ -141,7 +141,7 @@ _check_new_var:;
 
 
 static unsigned int _read_single_char(sll_file_t* rf,sll_char_t* o){
-	sll_read_char_t c=sll_file_read_char(rf);
+	sll_read_char_t c=sll_file_read_char(rf,NULL);
 	if (c==SLL_END_OF_DATA){
 		return 1;
 	}
@@ -149,7 +149,7 @@ static unsigned int _read_single_char(sll_file_t* rf,sll_char_t* o){
 		*o=(sll_char_t)c;
 		return 0;
 	}
-	c=sll_file_read_char(rf);
+	c=sll_file_read_char(rf,NULL);
 	if (c==SLL_END_OF_DATA){
 		return 1;
 	}
@@ -158,7 +158,7 @@ static unsigned int _read_single_char(sll_file_t* rf,sll_char_t* o){
 		return 2;
 	}
 	else if (c=='x'){
-		c=sll_file_read_char(rf);
+		c=sll_file_read_char(rf,NULL);
 		if (c==SLL_END_OF_DATA){
 			return 1;
 		}
@@ -169,7 +169,7 @@ static unsigned int _read_single_char(sll_file_t* rf,sll_char_t* o){
 			SLL_UNIMPLEMENTED();
 		}
 		sll_char_t v=(c>64?c-55:c-48);
-		c=sll_file_read_char(rf);
+		c=sll_file_read_char(rf,NULL);
 		if (c==SLL_END_OF_DATA){
 			return 1;
 		}
@@ -211,7 +211,7 @@ static sll_read_char_t _read_identifier(sll_string_t* str,sll_string_length_t sz
 			str->v[sz]=(sll_char_t)c;
 			sz++;
 		}
-		c=sll_file_read_char(rf);
+		c=sll_file_read_char(rf,NULL);
 		if (c==SLL_END_OF_DATA){
 			break;
 		}
@@ -242,12 +242,12 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					dbg->t=SLL_NODE_TYPE_DBG;
 					dbg->dt.s=SLL_MAX_STRING_INDEX;
 				}
-				c=sll_file_read_char(rf);
+				c=sll_file_read_char(rf,NULL);
 			} while ((c>8&&c<14)||c==' ');
 		}
 		else if (c==';'){
 			do{
-				c=sll_file_read_char(rf);
+				c=sll_file_read_char(rf,NULL);
 			} while (c!='\n'&&c!=SLL_END_OF_DATA);
 		}
 		else if (o&&o->t==NODE_TYPE_UNKNOWN){
@@ -258,7 +258,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					*(str+sz)=(sll_char_t)c;
 					sz++;
 				}
-				c=sll_file_read_char(rf);
+				c=sll_file_read_char(rf,NULL);
 			} while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='{'&&c!='}'&&c!=SLL_END_OF_DATA));
 			o->t=SLL_NODE_TYPE_OPERATION_LIST;
 			const scope_data_t* src=l_sc;
@@ -550,20 +550,20 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					ac++;
 				}
 			}
-			c=sll_file_read_char(rf);
+			c=sll_file_read_char(rf,NULL);
 		}
 		else if (c==')'||c=='}'||c==']'||c=='>'){
 			break;
 		}
-		else if (c=='|'&&sll_file_peek_char(rf)=='#'){
-			c=sll_file_read_char(rf);
+		else if (c=='|'&&sll_file_peek_char(rf,NULL)=='#'){
+			c=sll_file_read_char(rf,NULL);
 			SLL_ASSERT(c=='#');
 			sll_read_char_t lc=c;
 			do{
 				lc=c;
-				c=sll_file_read_char(rf);
+				c=sll_file_read_char(rf,NULL);
 			} while (c!=SLL_END_OF_DATA&&(c!='|'||lc!='#'));
-			c=sll_file_read_char(rf);
+			c=sll_file_read_char(rf,NULL);
 		}
 		else{
 			UPDATE_IF_SCOPE;
@@ -585,7 +585,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 							}
 						} while (err||tmp!='\'');
 					}
-					c=sll_file_read_char(rf);
+					c=sll_file_read_char(rf,NULL);
 				}
 			}
 			else if (c=='"'){
@@ -605,27 +605,27 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(sf->st),&s,1);
-				c=sll_file_read_char(rf);
+				c=sll_file_read_char(rf,NULL);
 			}
 			else if ((c>47&&c<58)||c=='-'){
 				sll_bool_t neg=0;
 				if (c=='-'){
 					PUSH_REWIND_CHAR('-');
 					neg=1;
-					c=sll_file_read_char(rf);
+					c=sll_file_read_char(rf,NULL);
 				}
 				sll_integer_t v=0;
 				unsigned int vc=0;
 				sll_integer_t v2=0;
 				if (c=='0'){
 					PUSH_REWIND_CHAR('0');
-					c=sll_file_read_char(rf);
+					c=sll_file_read_char(rf,NULL);
 					if (c==SLL_END_OF_DATA){
 						goto _create_int;
 					}
 					PUSH_REWIND_CHAR(c);
 					if (c=='x'||c=='X'){
-						c=sll_file_read_char(rf);
+						c=sll_file_read_char(rf,NULL);
 						while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!=SLL_END_OF_DATA)){
 							PUSH_REWIND_CHAR(c);
 							if (c>96){
@@ -638,11 +638,11 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 							if (c!='_'){
 								ADD_DIGIT(16,(c>64?c-55:c-48));
 							}
-							c=sll_file_read_char(rf);
+							c=sll_file_read_char(rf,NULL);
 						};
 					}
 					else if (c=='o'||c=='O'){
-						c=sll_file_read_char(rf);
+						c=sll_file_read_char(rf,NULL);
 						while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!=SLL_END_OF_DATA)){
 							if (c<48||(c>55&&c!='_')){
 								goto _parse_identifier;
@@ -651,11 +651,11 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 							if (c!='_'){
 								ADD_DIGIT(8,c-48);
 							}
-							c=sll_file_read_char(rf);
+							c=sll_file_read_char(rf,NULL);
 						};
 					}
 					else if (c=='b'||c=='B'){
-						c=sll_file_read_char(rf);
+						c=sll_file_read_char(rf,NULL);
 						while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!=SLL_END_OF_DATA)){
 							if (c!='0'&&c!='1'&&c!='_'){
 								goto _parse_identifier;
@@ -664,7 +664,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 							if (c!='_'){
 								ADD_DIGIT(2,c-48);
 							}
-							c=sll_file_read_char(rf);
+							c=sll_file_read_char(rf,NULL);
 						};
 					}
 					if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!='.'&&c!='e'&&c!='E'&&(c<48||c>57))){
@@ -677,7 +677,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 						if (c!='_'){
 							ADD_DIGIT(10,c-48);
 						}
-						c=sll_file_read_char(rf);
+						c=sll_file_read_char(rf,NULL);
 						if ((c>8&&c<14)||c==' '||c=='('||c==')'||c==';'||c=='<'||c=='>'||c=='['||c==']'||c=='{'||c=='}'||c=='.'||c=='e'||c=='E'||c==SLL_END_OF_DATA){
 							break;
 						}
@@ -691,7 +691,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					if (c=='.'){
 						while (1){
 							PUSH_REWIND_CHAR(c);
-							c=sll_file_read_char(rf);
+							c=sll_file_read_char(rf,NULL);
 							if ((c>8&&c<14)||c==' '||c=='('||c==')'||c==';'||c=='<'||c=='>'||c=='['||c==']'||c=='{'||c=='}'||c=='e'||c=='E'||c==SLL_END_OF_DATA){
 								break;
 							}
@@ -708,15 +708,15 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 						PUSH_REWIND_CHAR(c);
 						sll_bool_t neg_e=0;
 						sll_integer_t ev=0;
-						c=sll_file_read_char(rf);
+						c=sll_file_read_char(rf,NULL);
 						if (c=='-'){
 							PUSH_REWIND_CHAR(c);
 							neg_e=1;
-							c=sll_file_read_char(rf);
+							c=sll_file_read_char(rf,NULL);
 						}
 						else if (c=='+'){
 							PUSH_REWIND_CHAR(c);
-							c=sll_file_read_char(rf);
+							c=sll_file_read_char(rf,NULL);
 						}
 						while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!=SLL_END_OF_DATA)){
 							if (c<48||(c>57&&c!='_')){
@@ -729,7 +729,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 									ev=308;
 								}
 							}
-							c=sll_file_read_char(rf);
+							c=sll_file_read_char(rf,NULL);
 						}
 						ex+=(neg_e?-ev:ev);
 					}
@@ -778,7 +778,7 @@ _create_int:
 _parse_identifier:
 				if (!rewind_bf_l){
 					while (c=='$'){
-						c=sll_file_read_char(rf);
+						c=sll_file_read_char(rf,NULL);
 						if (c==SLL_END_OF_DATA){
 							goto _return_node;
 						}
@@ -792,7 +792,7 @@ _parse_identifier:
 				c=_read_identifier(&str,rewind_bf_l,rf,c);
 				if (o&&(o->t!=SLL_NODE_TYPE_DECL||!(ac&1))&&c=='$'){
 					do{
-						c=sll_file_read_char(rf);
+						c=sll_file_read_char(rf,NULL);
 						if (c==SLL_END_OF_DATA){
 							sll_free_string(&str);
 							break;
@@ -804,7 +804,7 @@ _parse_identifier:
 							arg->t=SLL_NODE_TYPE_INT;
 							arg->dt.i=0;
 							while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
-								c=sll_file_read_char(rf);
+								c=sll_file_read_char(rf,NULL);
 								if (c==SLL_END_OF_DATA){
 									break;
 								}
@@ -826,7 +826,7 @@ _parse_identifier:
 								if (c!='$'){
 									break;
 								}
-								c=sll_file_read_char(rf);
+								c=sll_file_read_char(rf,NULL);
 							}
 						}
 						goto _identifier_end;
@@ -1115,11 +1115,11 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 	e_c_dt.not_fn_sc=&(e_c_dt.sc);
 	e_c_dt.sc.m[0]=1;
 	_file_start_hash(rf);
-	sll_read_char_t c=sll_file_read_char(rf);
+	sll_read_char_t c=sll_file_read_char(rf,NULL);
 	while (c!=SLL_END_OF_DATA){
 		_read_object_internal(rf,sf,c,&e_c_dt);
 		sf->dt->dt.ac++;
-		c=sll_file_read_char(rf);
+		c=sll_file_read_char(rf,NULL);
 	}
 	_file_end_hash(rf);
 	sf->sz=SLL_FILE_GET_OFFSET(rf);

@@ -83,9 +83,9 @@ static __SLL_NO_RETURN void _raise_error(sll_char_t t,void* p,sll_size_t sz){
 	bf[i]=')';
 	bf[i+1]=0;
 	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
-	sll_platform_file_write(fd,MEMORY_FAIL_START,MEMORY_FAIL_START_SIZE);
-	sll_platform_file_write(fd,bf,i+2);
-	sll_platform_file_write(fd,MEMORY_FAIL_END,MEMORY_FAIL_END_SIZE);
+	sll_platform_file_write(fd,MEMORY_FAIL_START,MEMORY_FAIL_START_SIZE,NULL);
+	sll_platform_file_write(fd,bf,i+2,NULL);
+	sll_platform_file_write(fd,MEMORY_FAIL_END,MEMORY_FAIL_END_SIZE,NULL);
 	_force_exit_platform();
 }
 

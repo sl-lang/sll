@@ -164,7 +164,7 @@ __API_FUNC_DECL(file_peek);
  * \desc Docs!
  * \arg I
  * \arg I
- * \ret S
+ * \ret O
  */
 __API_FUNC_DECL(file_read);
 

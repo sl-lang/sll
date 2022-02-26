@@ -52,16 +52,16 @@ static void _print_gc_data(sll_object_t* o){
 	object_debug_data_t* dt=(object_debug_data_t*)(o->_dbg);
 	sll_string_t str;
 	sll_api_string_convert(&o,1,&str);
-	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),_get_type_string(o),o->rc,str.v,dt->all);
+	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),NULL,_get_type_string(o),o->rc,str.v,dt->all);
 	sll_free_string(&str);
 	for (sll_array_length_t m=0;m<dt->all;m++){
 		object_debug_data_trace_data_t* t_dt=*(dt->al+m);
-		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),t_dt->fp,t_dt->ln,t_dt->fn);
+		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),NULL,t_dt->fp,t_dt->ln,t_dt->fn);
 	}
-	sll_file_write_format(sll_stderr,SLL_CHAR("  Release (%u):\n"),dt->rll);
+	sll_file_write_format(sll_stderr,SLL_CHAR("  Release (%u):\n"),NULL,dt->rll);
 	for (sll_array_length_t m=0;m<dt->rll;m++){
 		object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
-		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),t_dt->fp,t_dt->ln,t_dt->fn);
+		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),NULL,t_dt->fp,t_dt->ln,t_dt->fn);
 	}
 }
 
@@ -237,22 +237,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 			if (c->rc){
 				if (!err){
 					err=1;
-					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"));
+					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"),NULL);
 				}
 				if (c->_dbg){
 					object_debug_data_t* dt=c->_dbg;
 					if (dt->c.fp[0]){
-						sll_file_write_format(sll_stderr,SLL_CHAR("%s:%u (%s): "),dt->c.fp,dt->c.ln,dt->c.fn);
+						sll_file_write_format(sll_stderr,SLL_CHAR("%s:%u (%s): "),NULL,dt->c.fp,dt->c.ln,dt->c.fn);
 					}
 					else{
-						sll_file_write_string(sll_stderr,SLL_CHAR("<unknown>: "));
+						sll_file_write_string(sll_stderr,SLL_CHAR("<unknown>: "),NULL);
 					}
 					_print_gc_data(c);
 				}
 				else{
 					sll_string_t str;
 					sll_api_string_convert(&c,1,&str);
-					sll_file_write_format(sll_stderr,SLL_CHAR("<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n"),_get_type_string(c),c->rc,str.v);
+					sll_file_write_format(sll_stderr,SLL_CHAR("<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n"),NULL,_get_type_string(c),c->rc,str.v);
 					sll_free_string(&str);
 				}
 			}
@@ -268,10 +268,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(voi
 			if (k->dt->rc>1){
 				if (!err){
 					err=1;
-					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"));
+					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"),NULL);
 				}
 				SLL_ASSERT(k->dt->_dbg);
-				sll_file_write_format(sll_stderr,SLL_CHAR("%s: %u (<static>): "),k->fp,k->ln);
+				sll_file_write_format(sll_stderr,SLL_CHAR("%s: %u (<static>): "),NULL,k->fp,k->ln);
 				_print_gc_data(k->dt);
 			}
 			else{

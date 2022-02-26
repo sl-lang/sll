@@ -5,7 +5,7 @@
 ### Added
 
 - New error types: `error$ERROR_ANY` and `error$ERROR_INTERNAL_ERROR`
-- System error codes: `sll_error_t`, `SLL_PLATFORM_FLAG_WINAPI_ERROR`, `SLL_PLATFORM_NO_ERROR`, `error$from_internal`, `error_codes.sll`, `error_codes$ERROR_INTERNAL_ERROR`, `error_codes$LINUX_ERROR_CODES`, `error_codes$WINDOWS_ERROR_CODES` ([#238])
+- System error codes: `sll_error_t`, `error.h`, `SLL_ERROR_FLAG_WINAPI`, `SLL_ERROR_FLAG_LIBC`, `SLL_NO_ERROR`, `error$from_internal`, `error_codes.sll`, `error_codes$ERROR_INTERNAL_ERROR`, `error_codes$LINUX_ERROR_CODES`, `error_codes$WINDOWS_ERROR_CODES` ([#238])
 
 ### Changed
 

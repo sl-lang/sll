@@ -69,9 +69,9 @@ static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char
 
 
 static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file_offset_t ln,sll_file_t* wf){
-	sll_file_write_char(sll_stdout,'[');
-	sll_file_write(sll_stdout,fp->v,fp->l);
-	sll_file_write_char(sll_stdout,':');
+	sll_file_write_char(sll_stdout,'[',NULL);
+	sll_file_write(sll_stdout,fp->v,fp->l,NULL);
+	sll_file_write_char(sll_stdout,':',NULL);
 	SLL_ASSERT(ln);
 	sll_char_t bf[20];
 	sll_string_length_t i=0;
@@ -82,10 +82,10 @@ static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file
 	}
 	while (i){
 		i--;
-		sll_file_write_char(wf,bf[i]+48);
+		sll_file_write_char(wf,bf[i]+48,NULL);
 	}
-	sll_file_write_char(sll_stdout,'(');
-	sll_file_write(sll_stdout,fn->v,fn->l);
+	sll_file_write_char(sll_stdout,'(',NULL);
+	sll_file_write(sll_stdout,fn->v,fn->l,NULL);
 	PRINT_STATIC_STRING(")] ",sll_stdout);
 }
 
@@ -130,8 +130,8 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_o
 	if (!(fn_dt->fl&SLL_LOG_FLAG_NO_HEADER)){
 		_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
 	}
-	sll_file_write(sll_stdout,s.v,s.l);
-	sll_file_write_char(sll_stdout,'\n');
+	sll_file_write(sll_stdout,s.v,s.l,NULL);
+	sll_file_write_char(sll_stdout,'\n',NULL);
 	sll_free_string(&s);
 }
 
@@ -149,8 +149,8 @@ __SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_fi
 	if (!(fn_dt->fl&SLL_LOG_FLAG_NO_HEADER)){
 		_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
 	}
-	sll_file_write(sll_stdout,s->v,s->l);
-	sll_file_write_char(sll_stdout,'\n');
+	sll_file_write(sll_stdout,s->v,s->l,NULL);
+	sll_file_write_char(sll_stdout,'\n',NULL);
 }
 
 

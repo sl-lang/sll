@@ -4,6 +4,7 @@
 #include <sll/api/string.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/init.h>
@@ -196,28 +197,40 @@ __API_FUNC(file_open){
 
 __API_FUNC(file_peek){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
-		return SLL_ACQUIRE_STATIC_INT(0);
+		return SLL_FROM_INT(~SLL_ERROR_UNKNOWN_FD);
 	}
 	extended_file_t* ef=*(_file_fl+a);
-	sll_read_char_t o=sll_file_peek_char((ef->p?ef->dt.p:&(ef->dt.f)));
-	return (o==SLL_END_OF_DATA?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_CHAR(o));
+	sll_error_t err;
+	sll_read_char_t o=sll_file_peek_char((ef->p?ef->dt.p:&(ef->dt.f)),&err);
+	return (o==SLL_END_OF_DATA?SLL_FROM_INT(~err):SLL_FROM_CHAR(o));
 }
 
 
 
 __API_FUNC(file_read){
-	SLL_INIT_STRING(out);
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
-		return;
+		return SLL_FROM_INT(SLL_ERROR_UNKNOWN_FD);
 	}
 	if (!b){
 		SLL_UNIMPLEMENTED();
 	}
-	sll_string_length_t l=(sll_string_length_t)b;
-	sll_string_create(l,out);
 	extended_file_t* ef=*(_file_fl+a);
-	sll_string_decrease(out,(sll_string_length_t)sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),out->v,l));
-	sll_string_calculate_checksum(out);
+	sll_object_t* o=SLL_CREATE();
+	o->t=SLL_OBJECT_TYPE_STRING;
+	sll_string_length_t l=(sll_string_length_t)b;
+	sll_string_create(l,&(o->dt.s));
+	sll_error_t err;
+	sll_size_t sz=sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),o->dt.s.v,l,&err);
+	sll_string_decrease(&(o->dt.s),(sll_string_length_t)sz);
+	if (!sz&&err!=SLL_NO_ERROR){
+		sll_free_string(&(o->dt.s));
+		o->t=SLL_OBJECT_TYPE_INT;
+		o->dt.i=err;
+	}
+	else{
+		sll_string_calculate_checksum(&(o->dt.s));
+	}
+	return o;
 }
 
 
@@ -265,9 +278,10 @@ __API_FUNC(file_std_handle){
 
 __API_FUNC(file_write){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
-		return 0;
+		return ~SLL_ERROR_UNKNOWN_FD;
 	}
 	extended_file_t* ef=*(_file_fl+a);
-	sll_size_t o=sll_file_write((ef->p?ef->dt.p:&(ef->dt.f)),b->v,b->l*sizeof(sll_char_t));
-	return o*sizeof(sll_char_t);
+	sll_error_t err;
+	sll_size_t o=sll_file_write((ef->p?ef->dt.p:&(ef->dt.f)),b->v,b->l*sizeof(sll_char_t),&err);
+	return (!o&&err!=SLL_NO_ERROR?~err:o*sizeof(sll_char_t));
 }

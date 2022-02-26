@@ -683,8 +683,8 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_file_read void
-#define __SLL_API_ARGS_sll_api_file_read sll_integer_t a,sll_integer_t b,sll_string_t* out
+#define __SLL_API_TYPE_sll_api_file_read __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_file_read sll_integer_t a,sll_integer_t b
 /**
  * \flags func
  * \name sll_api_file_read
@@ -692,6 +692,7 @@
  * \desc Docs!
  * \arg sll_integer_t a -> 
  * \arg sll_integer_t b -> 
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func

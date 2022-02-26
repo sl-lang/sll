@@ -22,7 +22,7 @@ static sll_bool_t _util_init=0;
 
 static void _write_number(sll_file_descriptor_t fd,sll_file_offset_t n){
 	if (!n){
-		sll_platform_file_write(fd,"0",1);
+		sll_platform_file_write(fd,"0",1,NULL);
 		return;
 	}
 	sll_char_t bf[20];
@@ -32,28 +32,28 @@ static void _write_number(sll_file_descriptor_t fd,sll_file_offset_t n){
 		bf[i]=(n%10)+48;
 		n/=10;
 	}
-	sll_platform_file_write(fd,bf+i,20-i);
+	sll_platform_file_write(fd,bf+i,20-i,NULL);
 }
 
 
 
 static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t ii){
-	sll_platform_file_write(fd,"at ",3);
+	sll_platform_file_write(fd,"at ",3,NULL);
 	sll_string_index_t fp_i;
 	sll_string_index_t fn_i;
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,ii,&fp_i,&fn_i);
 	const sll_string_t* str=sll_current_runtime_data->a_dt->st.dt+fp_i;
-	sll_platform_file_write(fd,str->v,str->l);
-	sll_platform_file_write(fd,":",1);
+	sll_platform_file_write(fd,str->v,str->l,NULL);
+	sll_platform_file_write(fd,":",1,NULL);
 	_write_number(fd,ln);
-	sll_platform_file_write(fd," (",2);
+	sll_platform_file_write(fd," (",2,NULL);
 	if (fn_i==SLL_MAX_STRING_INDEX){
-		sll_platform_file_write(fd,"@code)\n",7);
+		sll_platform_file_write(fd,"@code)\n",7,NULL);
 		return;
 	}
 	str=sll_current_runtime_data->a_dt->st.dt+fn_i;
-	sll_platform_file_write(fd,str->v,str->l);
-	sll_platform_file_write(fd,")\n",2);
+	sll_platform_file_write(fd,str->v,str->l,NULL);
+	sll_platform_file_write(fd,")\n",2,NULL);
 }
 
 
@@ -62,9 +62,9 @@ __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const s
 	sll_file_flush(sll_stdout);
 	sll_file_flush(sll_stderr);
 	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
-	sll_platform_file_write(fd,a,sll_string_length_unaligned(a));
-	sll_platform_file_write(fd,b,sll_string_length_unaligned(b));
-	sll_platform_file_write(fd,c,sll_string_length_unaligned(c));
+	sll_platform_file_write(fd,a,sll_string_length_unaligned(a),NULL);
+	sll_platform_file_write(fd,b,sll_string_length_unaligned(b),NULL);
+	sll_platform_file_write(fd,c,sll_string_length_unaligned(c),NULL);
 	if (sll_current_runtime_data&&sll_current_runtime_data->a_dt){
 		const sll_call_stack_t* c_st=sll_get_call_stack();
 		if (c_st){
@@ -72,9 +72,9 @@ __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const s
 			for (sll_call_stack_size_t i=0;i<c_st->l;i++){
 				_write_stack_frame(fd,(c_st->dt+i)->_ii);
 			}
-			sll_platform_file_write(fd,"at <thread-",11);
+			sll_platform_file_write(fd,"at <thread-",11,NULL);
 			_write_number(fd,sll_current_thread_index);
-			sll_platform_file_write(fd,">\n",2);
+			sll_platform_file_write(fd,">\n",2,NULL);
 		}
 	}
 	_force_exit_platform();

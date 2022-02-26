@@ -306,11 +306,11 @@ _read_file_argument:
 	if (fl&CLI_FLAG_VERSION){
 		sll_date_t d;
 		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
-		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),d.y,d.m+1,d.d+1,d.h,d.mn,sll_api_math_floor(d.s));
+		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.y,d.m+1,d.d+1,d.h,d.mn,sll_api_math_floor(d.s));
 		goto _cleanup;
 	}
 	if (fl&CLI_FLAG_HELP){
-		sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE);
+		sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE,NULL);
 		goto _cleanup;
 	}
 	if (fl&CLI_FLAG_VERBOSE){
@@ -391,7 +391,7 @@ _read_file_argument:
 			sll_optimize_metadata(&c_dt);
 			if (fl&CLI_FLAG_PRINT_NODES){
 				sll_print_node(*(c_dt.dt),&i_ft,NULL,sll_stdout);
-				sll_file_write_char(sll_stdout,'\n');
+				sll_file_write_char(sll_stdout,'\n',NULL);
 			}
 			if ((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN)){
 				CLI_LOG_IF_VERBOSE("Generating assembly...");
@@ -400,7 +400,7 @@ _read_file_argument:
 		}
 		if (fl&CLI_FLAG_PRINT_ASSEMBLY){
 			sll_print_assembly(&a_dt,sll_stdout);
-			sll_file_write_char(sll_stdout,'\n');
+			sll_file_write_char(sll_stdout,'\n',NULL);
 		}
 		if (j<fpl&&(fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_GENERATE_COMPILED_OBJECT|CLI_FLAG_GENERATE_SLL))){
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];

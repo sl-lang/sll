@@ -11,7 +11,7 @@
 
 
 
-#define WRITE_FIELD(f,wf) sll_file_write((wf),&(f),sizeof((f)))
+#define WRITE_FIELD(f,wf) sll_file_write((wf),&(f),sizeof((f)),NULL)
 
 
 
@@ -131,9 +131,9 @@ static const sll_node_t* _write_node(sll_file_t* wf,const sll_node_t* o){
 
 __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t* a_dt){
 	magic_number_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
-	sll_file_write(wf,&n,sizeof(magic_number_t));
+	sll_file_write(wf,&n,sizeof(magic_number_t),NULL);
 	sll_version_t v=SLL_VERSION;
-	sll_file_write(wf,&v,sizeof(sll_version_t));
+	sll_file_write(wf,&v,sizeof(sll_version_t),NULL);
 	sll_encode_integer(wf,a_dt->tm);
 	sll_encode_integer(wf,a_dt->ic);
 	sll_encode_integer(wf,a_dt->vc);
@@ -154,7 +154,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	}
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
-		sll_file_write_char(wf,ai->t);
+		sll_file_write_char(wf,ai->t,NULL);
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
@@ -164,12 +164,12 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				sll_file_write(wf,&(ai->dt.f),sizeof(sll_float_t));
+				sll_file_write(wf,&(ai->dt.f),sizeof(sll_float_t),NULL);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
-				sll_file_write_char(wf,ai->dt.c);
+				sll_file_write_char(wf,ai->dt.c,NULL);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
@@ -249,7 +249,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 				sll_encode_integer(wf,ai->dt.va.l);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
-				sll_file_write_char(wf,ai->dt.t);
+				sll_encode_integer(wf,ai->dt.t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
@@ -269,15 +269,15 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 
 __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* c_dt){
 	magic_number_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
-	sll_file_write(wf,&n,sizeof(magic_number_t));
+	sll_file_write(wf,&n,sizeof(magic_number_t),NULL);
 	sll_version_t v=SLL_VERSION;
-	sll_file_write(wf,&v,sizeof(sll_version_t));
+	sll_file_write(wf,&v,sizeof(sll_version_t),NULL);
 	sll_encode_integer(wf,c_dt->l);
 	for (sll_source_file_index_t idx=0;idx<c_dt->l;idx++){
 		const sll_source_file_t* sf=*(c_dt->dt+idx);
 		sll_encode_integer(wf,sf->tm);
 		sll_encode_integer(wf,sf->sz);
-		sll_file_write(wf,&(sf->h),sizeof(sll_sha256_data_t));
+		sll_file_write(wf,&(sf->h),sizeof(sll_sha256_data_t),NULL);
 		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 			const sll_identifier_list_t* l=sf->idt.s+i;
 			sll_encode_integer(wf,l->l);

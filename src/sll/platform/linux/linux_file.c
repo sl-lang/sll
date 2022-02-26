@@ -1,5 +1,6 @@
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/platform.h>
 #include <sll/types.h>
@@ -20,7 +21,8 @@ __SLL_EXTERNAL void sll_platform_file_close(sll_file_descriptor_t fd){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff,sll_error_t* err){
+	RESET_ERROR_PTR;
 	int fl=O_RDONLY;
 	if ((ff&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE))==(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE)){
 		fl=O_RDWR;
@@ -35,37 +37,50 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(c
 		fl|=O_CREAT|O_TRUNC;
 	}
 	int o=open((char*)fp,fl,S_IRWXU|S_IRWXG|S_IRWXO);
+	SET_ERROR_IF_LIBC_FAIL_PTR(o);
 	return (o==-1?SLL_UNKNOWN_FILE_DESCRIPTOR:TO_HANDLE(o));
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* p,sll_size_t sz){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* p,sll_size_t sz,sll_error_t* err){
+	RESET_ERROR_PTR;
 	ssize_t o=read(FROM_HANDLE(fd),p,sz);
-	return (o==-1?0:o);
+	if (o==-1){
+		LIBC_ERROR_PTR;
+		return 0;
+	}
+	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_descriptor_t fd){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_descriptor_t fd,sll_error_t* err){
+	RESET_ERROR_PTR;
 	struct stat st;
 	if (!fstat(FROM_HANDLE(fd),&st)){
 		return st.st_size;
 	}
+	LIBC_ERROR_PTR;
 	return 0;
 }
 
 
 
-__SLL_EXTERNAL void sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t off){
-	lseek(FROM_HANDLE(fd),off,SEEK_SET);
+__SLL_EXTERNAL sll_error_t sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t off){
+	return (lseek(FROM_HANDLE(fd),off,SEEK_SET)==-1?LIBC_ERROR:SLL_NO_ERROR);
 }
 
 
 
-__SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* p,sll_size_t sz){
+__SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* p,sll_size_t sz,sll_error_t* err){
+	RESET_ERROR_PTR;
 	ssize_t o=write(FROM_HANDLE(fd),p,sz);
-	return (o==-1?0:o);
+	if (o==-1){
+		LIBC_ERROR_PTR;
+		return 0;
+	}
+	return o;
 }
 
 

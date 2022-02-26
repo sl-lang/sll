@@ -23,7 +23,7 @@
 	} while (0)
 #define READ_FIELD(f,rf) \
 	do{ \
-		if (sll_file_read((rf),&(f),sizeof(f))==SLL_END_OF_DATA){ \
+		if (sll_file_read((rf),&(f),sizeof(f),NULL)!=sizeof(f)){ \
 			return 0; \
 		} \
 	} while(0)
@@ -138,7 +138,7 @@ static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* a_dt){
 	magic_number_t n;
 	sll_version_t v;
-	if (sll_file_read(rf,&n,sizeof(magic_number_t))==SLL_END_OF_DATA||n!=ASSEMBLY_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
+	if (sll_file_read(rf,&n,sizeof(magic_number_t),NULL)!=sizeof(magic_number_t)||n!=ASSEMBLY_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t),NULL)!=sizeof(sll_version_t)||v!=SLL_VERSION){
 		return 0;
 	}
 	CHECK_ERROR(rf,a_dt->tm,sll_time_t);
@@ -173,7 +173,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 	while (i){
 		i--;
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(a_dt);
-		sll_read_char_t c=sll_file_read_char(rf);
+		sll_read_char_t c=sll_file_read_char(rf,NULL);
 		if (c==SLL_END_OF_DATA){
 			return 0;
 		}
@@ -193,14 +193,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				if (sll_file_read(rf,PTR(&(ai->dt.f)),sizeof(sll_float_t))==SLL_END_OF_DATA){
+				if (sll_file_read(rf,PTR(&(ai->dt.f)),sizeof(sll_float_t),NULL)==SLL_END_OF_DATA){
 					return 0;
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
-				c=sll_file_read_char(rf);
+				c=sll_file_read_char(rf,NULL);
 				if (c==SLL_END_OF_DATA){
 					return 0;
 				}
@@ -288,11 +288,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 				CHECK_ERROR(rf,ai->dt.va.l,sll_arg_count_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
-				c=sll_file_read_char(rf);
-				if (c==SLL_END_OF_DATA){
-					return 0;
-				}
-				ai->dt.t=(sll_object_type_t)c;
+				CHECK_ERROR(rf,ai->dt.t,sll_object_type_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
@@ -308,9 +304,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* rf,sll_compilation_data_t* c_dt){
-	magic_number_t n;
-	sll_version_t v;
-	if (sll_file_read(rf,&n,sizeof(magic_number_t))==SLL_END_OF_DATA||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t))==SLL_END_OF_DATA||v!=SLL_VERSION){
+	magic_number_t n=0;
+	sll_version_t v=0;
+	if (sll_file_read(rf,&n,sizeof(magic_number_t),NULL)!=sizeof(magic_number_t)||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t),NULL)!=sizeof(sll_version_t)||v!=SLL_VERSION){
 		return 0;
 	}
 	CHECK_ERROR(rf,c_dt->l,sll_source_file_index_t);
@@ -320,7 +316,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 		*(c_dt->dt+idx)=sf;
 		CHECK_ERROR(rf,sf->tm,sll_time_t);
 		CHECK_ERROR(rf,sf->sz,sll_file_offset_t);
-		if (sll_file_read(rf,&(sf->h),sizeof(sll_sha256_data_t))==SLL_END_OF_DATA){
+		if (sll_file_read(rf,&(sf->h),sizeof(sll_sha256_data_t),NULL)!=sizeof(sll_sha256_data_t)){
 			return 0;
 		}
 		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){

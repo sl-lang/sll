@@ -30,10 +30,18 @@ def _check(fp):
 
 
 
+def _flush_data():
+	with open(load_hash_list.source_file_path,"w") as f:
+		for k,v in hash_list.items():
+			f.write(f"{k}{v}\n")
+
+
+
 def fail(fp):
 	fp=util.unique_file_path(fp)
 	if (fp in hash_list):
 		del hash_list[fp]
+		_flush_data()
 
 
 
@@ -61,8 +69,6 @@ def update(fp,*inc):
 				if (f[-2:]==".h"):
 					o|=_check(os.path.join(r,f))
 	if (o):
-		with open(load_hash_list.source_file_path,"w") as f:
-			for k,v in hash_list.items():
-				f.write(f"{k}{v}\n")
+		_flush_data()
 		return True
 	return False

@@ -666,12 +666,12 @@ _cleanup_jump_table:;
 					sll_object_t* tos=*(_scheduler_current_thread->stack+_scheduler_current_thread->si);
 					if (io){
 						if (SLL_OBJECT_GET_TYPE(tos)==SLL_OBJECT_TYPE_STRING){
-							sll_file_write(sll_current_vm_config->out,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t));
+							sll_file_write(sll_current_vm_config->out,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t),NULL);
 						}
 						else{
 							sll_string_t str;
 							sll_api_string_convert(&tos,1,&str);
-							sll_file_write(sll_current_vm_config->out,str.v,str.l*sizeof(sll_char_t));
+							sll_file_write(sll_current_vm_config->out,str.v,str.l*sizeof(sll_char_t),NULL);
 							sll_free_string(&str);
 						}
 					}
@@ -680,12 +680,12 @@ _cleanup_jump_table:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 				if (io){
-					sll_file_write_char(sll_current_vm_config->out,ai->dt.c);
+					sll_file_write_char(sll_current_vm_config->out,ai->dt.c,NULL);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				if (io){
-					sll_file_write(sll_current_vm_config->out,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->v,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->l*sizeof(sll_char_t));
+					sll_file_write(sll_current_vm_config->out,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->v,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->l*sizeof(sll_char_t),NULL);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
