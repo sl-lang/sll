@@ -14,6 +14,7 @@
 	(~ type_type) ERROR_INTERNAL_ERROR
 	(~ map_type) LIBC_ERROR_CODES
 	(~ map_type) WINDOWS_ERROR_CODES
+	(~ func_type) get_by_name
 ))
 
 
@@ -499,9 +500,30 @@
 
 
 
+(= _name_to_error <>)
+(= _add_codes (,,, cm
+	(= dt (:: cm map_value_type))
+	(-> (= i 0) (< i ($ dt))
+		(= e (: dt i))
+		(= (: _name_to_error e$name) e)
+		(++ i)
+	)
+))
+(<- _add_codes LIBC_ERROR_CODES)
+(<- _add_codes WINDOWS_ERROR_CODES)
+
+
+
+(= get_by_name (,,, dt
+	(@@ (: _name_to_error (:: dt string_type)))
+))
+
+
+
 (= error_codes (. error_codes_type
 	ERROR_INTERNAL_ERROR
 	LIBC_ERROR_CODES
 	WINDOWS_ERROR_CODES
+	get_by_name
 ))
 (## error_codes)
