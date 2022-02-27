@@ -61,8 +61,9 @@ for nm in util.get_ext_list():
 		os.mkdir("build/lib/"+nm)
 	util.log(f"Listing Source Code Files ({nm})...")
 	fl=util.get_ext_files(nm)
+	mh=header.generate_module_hash(nm)
 	util.log(f"Compiling Sll Extension ({nm})...")
-	build.build_sll_extension(nm,fl,ver,("--release" in sys.argv))
+	build.build_sll_extension(nm,fl,ver,("--release" in sys.argv),mh)
 	util.log(f"Copying Extension Modules ({nm})...")
 	fl=[]
 	for f in os.listdir(f"src/ext/{nm}/lib"):

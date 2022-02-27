@@ -1,4 +1,3 @@
-import hashlib
 import os
 import util
 
@@ -13,14 +12,7 @@ def _check(fp):
 	nm=util.unique_file_path(fp)
 	if (nm in update_list or fp[-2:]==".c" and not os.path.exists(util.output_file_path(fp))):
 		return 1
-	sha256=hashlib.sha256()
-	with open(fp,"rb") as rf:
-		while (True):
-			c=rf.read(4096)
-			if (len(c)==0):
-				break
-			sha256.update(c)
-	hash_str=sha256.hexdigest()
+	hash_str=util.hash_file(fp)[1]
 	old=(None if nm not in hash_list else hash_list[nm])
 	hash_list[nm]=hash_str
 	if (old!=hash_str):

@@ -1,3 +1,4 @@
+import hashlib
 import os
 import platform
 import subprocess
@@ -150,3 +151,17 @@ def encode(dt):
 	if (i==len(dt)-1):
 		return o+BASE64_ALPHABET[dt[i]>>2]+BASE64_ALPHABET[(dt[i]<<4)&0x3f]+"=="
 	return o
+
+
+
+def hash_file(fp):
+	sz=0
+	o=hashlib.sha256()
+	with open(fp,"rb") as rf:
+		while (True):
+			c=rf.read(4096)
+			if (len(c)==0):
+				break
+			sz+=len(c)
+			o.update(c)
+	return (sz,o.hexdigest())

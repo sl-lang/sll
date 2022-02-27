@@ -131,7 +131,7 @@ def build_sll_cli():
 
 
 
-def build_sll_extension(nm,fl,v,r):
+def build_sll_extension(nm,fl,v,r,mh):
 	b_nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
 	lib_nm=f"sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}"
 	if (util.system=="windows"):
@@ -142,7 +142,7 @@ def build_sll_extension(nm,fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"build",f"src/ext/{nm}/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_BUILD_WINDOWS","/D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I",f"src/ext/{nm}/include","/I","build","/Fo"+out_fp,k])):
+				if (hashlist.update(k,"build",f"src/ext/{nm}/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_BUILD_WINDOWS","/D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","/D","__SLL_EXT_MODULE_DATA="+mh,"/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I",f"src/ext/{nm}/include","/I","build","/Fo"+out_fp,k])):
 					hashlist.fail(k)
 					err=True
 			if (err):
@@ -157,7 +157,7 @@ def build_sll_extension(nm,fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"build",f"src/ext/{nm}/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_BUILD_WINDOWS","/D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",f"src/ext/{nm}/include","/I","build",f"/Fdbuild/sll_ext_{nm}.pdb","/Fo"+out_fp,k])):
+				if (hashlist.update(k,"build",f"src/ext/{nm}/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/D","_WINDOWS","/D","WINDLL","/D","USERDLL","/D","WIN32_LEAN_AND_MEAN","/D","_CRT_SECURE_NO_WARNINGS","/D","__SLL_BUILD_WINDOWS","/D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","/D","__SLL_EXT_MODULE_DATA="+mh,"/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I",f"src/ext/{nm}/include","/I","build",f"/Fdbuild/sll_ext_{nm}.pdb","/Fo"+out_fp,k])):
 					hashlist.fail(k)
 					err=True
 			if (err):
@@ -173,7 +173,7 @@ def build_sll_extension(nm,fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"build",f"src/ext/{nm}/include") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-D","__SLL_BUILD_LINUX","-D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","-I",f"src/ext/{nm}/include","-I","build","-o",out_fp,k])):
+				if (hashlist.update(k,"build",f"src/ext/{nm}/include") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-D","__SLL_BUILD_LINUX","-D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","-D","__SLL_EXT_MODULE_DATA="+mh,"-I",f"src/ext/{nm}/include","-I","build","-o",out_fp,k])):
 					hashlist.fail(k)
 					err=True
 			if (err):
@@ -192,7 +192,7 @@ def build_sll_extension(nm,fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"build",f"src/ext/{nm}/include") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-D","__SLL_BUILD_LINUX","-D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","-I",f"src/ext/{nm}/include","-I","build","-o",out_fp,k])):
+				if (hashlist.update(k,"build",f"src/ext/{nm}/include") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-D","__SLL_BUILD_LINUX","-D",f"__SLL_EXT_{nm.upper()}_COMPILATION__","-D","__SLL_EXT_MODULE_DATA="+mh,"-I",f"src/ext/{nm}/include","-I","build","-o",out_fp,k])):
 					hashlist.fail(k)
 					err=True
 			if (err):

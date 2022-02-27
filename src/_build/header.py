@@ -401,3 +401,12 @@ def generate_header(h_dt):
 		o+=b");"
 	o=d_s+b"\n"+o.strip()
 	return il+o
+
+
+
+def generate_module_hash(nm):
+	with open(f"src/ext/{nm}/.module_root","r") as f:
+		m_fp=f"src/ext/{nm}/lib/{f.read().strip()}"
+	util.log(f"Generating Module Hash for '{m_fp}'...")
+	sz,h=util.hash_file(m_fp)
+	return f"{{{sz},{{"+",".join(["0x"+h[i:i+8] for i in range(0,64,8)])+"}}"

@@ -15,6 +15,10 @@
 
 
 
+EXPORT sll_module_loader_data_t __sll_module=__SLL_EXT_MODULE_DATA;
+
+
+
 EXPORT sll_bool_t __sll_load(sll_version_t v){
 	if (v!=SLL_VERSION){
 		SLL_LOG("Version mismatch!");

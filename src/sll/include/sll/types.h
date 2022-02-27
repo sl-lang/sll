@@ -128,6 +128,10 @@ typedef __SLL_U32 sll_array_length_t;
 
 
 
+typedef __SLL_U32 sll_assembly_file_table_length_t;
+
+
+
 typedef __SLL_U32 sll_barrier_counter_t;
 
 
@@ -669,7 +673,7 @@ typedef struct __SLL_MAP{
 
 
 
-typedef struct __SLL_OBJECT_FIELD{
+typedef union __SLL_OBJECT_FIELD{
 	sll_integer_t i;
 	sll_float_t f;
 	sll_char_t c;
@@ -905,6 +909,13 @@ typedef struct __SLL_ENVIRONMENT{
 	const sll_environment_variable_t*const* dt;
 	const sll_array_length_t l;
 } sll_environment_t;
+
+
+
+typedef struct __SLL_MODULE_LOADER_DATA{
+	sll_file_offset_t sz;
+	sll_sha256_data_t h;
+} sll_module_loader_data_t;
 
 
 
