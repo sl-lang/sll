@@ -180,7 +180,7 @@ __API_FUNC(sys_load_library){
 	}
 	sll_string_length_t lib_fp=sll_path_split(sll_library_file_path);
 	sll_string_length_t src_nm_off=sll_path_split(a);
-	sll_string_length_t fpl=lib_fp+STATIC_STR_LEN(LIBRARY_DIRECTORY)+a->l-src_nm_off+STATIC_STR_LEN(LIBRARY_EXTENSION);
+	sll_string_length_t fpl=lib_fp+STATIC_STRING_LEN(LIBRARY_DIRECTORY)+a->l-src_nm_off+STATIC_STRING_LEN(LIBRARY_EXTENSION);
 	if (fpl>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
@@ -188,11 +188,11 @@ __API_FUNC(sys_load_library){
 	sll_string_create(fpl,&fp);
 	sll_string_length_t fp_off=lib_fp;
 	sll_copy_data(sll_library_file_path->v,fp_off,fp.v);
-	sll_copy_data(LIBRARY_DIRECTORY,STATIC_STR_LEN(LIBRARY_DIRECTORY),fp.v+fp_off);
-	fp_off+=STATIC_STR_LEN(LIBRARY_DIRECTORY);
+	sll_copy_data(LIBRARY_DIRECTORY,STATIC_STRING_LEN(LIBRARY_DIRECTORY),fp.v+fp_off);
+	fp_off+=STATIC_STRING_LEN(LIBRARY_DIRECTORY);
 	sll_copy_data(a->v+src_nm_off,a->l-src_nm_off,fp.v+fp_off);
 	fp_off+=a->l-src_nm_off;
-	sll_copy_data(LIBRARY_EXTENSION,STATIC_STR_LEN(LIBRARY_EXTENSION),fp.v+fp_off);
+	sll_copy_data(LIBRARY_EXTENSION,STATIC_STRING_LEN(LIBRARY_EXTENSION),fp.v+fp_off);
 	sll_string_calculate_checksum(&fp);
 	if (!sll_platform_path_exists(fp.v)){
 		sll_free_string(&fp);

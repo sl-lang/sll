@@ -271,8 +271,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define SERIAL_OBJECT_TYPE (SLL_MAX_OBJECT_TYPE+1)
 
-#define STATIC_STR_LEN(s) (sizeof(s)/sizeof(char)-1)
-#define PRINT_STATIC_STRING(s,wf) sll_file_write((wf),(s),STATIC_STR_LEN(s),NULL)
+#define STATIC_STRING_LEN(s) (sizeof(s)/sizeof(char)-1)
+#define PRINT_STATIC_STRING(s,wf) sll_file_write((wf),(s),STATIC_STRING_LEN(s),NULL)
 
 #define JSON_NUMBER_INT 0
 #define JSON_NUMBER_FLOAT 1
