@@ -40,6 +40,6 @@
 
 (<- proxy
 	(,,,
-		(:> (<- debug$backtrace))
+		(:> (<- debug$backtrace) "\n")
 	)
 )

@@ -20,7 +20,6 @@ EXPORT sll_bool_t __sll_load(sll_version_t v){
 		SLL_LOG("Version mismatch!");
 		return 0;
 	}
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:_init"),debug_init);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_call_stack"),debug_get_call_stack);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_instruction_count"),debug_get_instruction_count);
 	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_instruction_index"),debug_get_instruction_index);

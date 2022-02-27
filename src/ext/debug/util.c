@@ -2,17 +2,7 @@
 
 
 
-sll_object_type_t debug_cs_type=0;
-sll_object_type_t debug_cs_raw_type=0;
-sll_object_type_t debug_loc_type=0;
-sll_object_type_t debug_vm_cfg_type=0;
-
-
-
 sll_object_t* ii_to_loc(sll_instruction_index_t ii){
-	if (!debug_loc_type){
-		return SLL_ACQUIRE_STATIC_INT(0);
-	}
 	sll_string_index_t fp_i;
 	sll_string_index_t fn_i;
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,ii,&fp_i,&fn_i);
@@ -27,41 +17,13 @@ sll_object_t* ii_to_loc(sll_instruction_index_t ii){
 	else{
 		sll_string_clone(sll_current_runtime_data->a_dt->st.dt+fn_i,&(fn->dt.s));
 	}
-	sll_object_t* dt[3]={
-		fp,
-		fn,
-		SLL_FROM_INT(ln)
-	};
-	sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,debug_loc_type,dt,3);
-	SLL_RELEASE(fp);
-	SLL_RELEASE(fn);
-	SLL_RELEASE(dt[2]);
+	sll_object_t* o=SLL_CREATE();
+	o->t=SLL_OBJECT_TYPE_ARRAY;
+	sll_array_create(3,&(o->dt.a));
+	o->dt.a.v[0]=fp;
+	o->dt.a.v[1]=fn;
+	o->dt.a.v[2]=SLL_FROM_INT(ln);
 	return o;
-}
-
-
-
-
-sll_object_t* debug_init(sll_object_t*const* al,sll_arg_count_t all){
-	if (all>3){
-		const sll_object_t* a=*al;
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-			debug_cs_type=(sll_object_type_t)(a->dt.i);
-		}
-		a=*(al+1);
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-			debug_cs_raw_type=(sll_object_type_t)(a->dt.i);
-		}
-		a=*(al+2);
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-			debug_loc_type=(sll_object_type_t)(a->dt.i);
-		}
-		a=*(al+3);
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
-			debug_vm_cfg_type=(sll_object_type_t)(a->dt.i);
-		}
-	}
-	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 

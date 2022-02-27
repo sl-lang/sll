@@ -52,34 +52,47 @@
 	(@@ 1)
 })
 
-(<- (... "sll_ext_debug:_init") call_stack_type call_stack_raw_type location_type vm_config_type)
-
 
 
 (= backtrace (,,,
 	(= o "")
-	(= c_st (<- get_call_stack))
-	(-> (= i 0) (< i ($ c_st)) {
+	(= c_st (<- get_call_stack 0))
+	(-> (= i ($ c_st)) i {
+		(-- i)
 		(= k (: c_st i))
-		(= o (+ o (<- string$format "%s:%u (%s)\n" k$return$file k$return$line k$return$function)))
-		(++ i)
+		(= o (+ o (<- string$format "at %s:%u (%s)" k$return$file k$return$line k$return$function)))
+		(? i (= o (+ o '\n')))
 	})
 	(@@ o)
 ))
 
-(= get_call_stack (... "sll_ext_debug:get_call_stack"))
+(= get_call_stack (,,, pop
+	(= pop (:: pop int_type))
+	(? (< pop 0) (= pop 0))
+	(++ pop)
+	(= call_stack (<- (... "sll_ext_debug:get_call_stack") pop))
+	(@@ ([> (= i 0) (< i ($ call_stack))
+		(= k (: call_stack i))
+		(++ i)
+		(:: k call_stack_type)
+	))
+))
 
 (= get_instruction_count (... "sll_ext_debug:get_instruction_count"))
 
 (= get_instruction_index (... "sll_ext_debug:get_instruction_index"))
 
-(= get_location (... "sll_ext_debug:get_location"))
+(= get_location (,,,
+	(@@ (:: (<- (... "sll_ext_debug:get_location")) location_type))
+))
 
 (= get_name (... "sll_ext_debug:get_name"))
 
 (= get_ref_count (... "sll_ext_debug:get_ref_count"))
 
-(= get_vm_config (... "sll_ext_debug:get_vm_config"))
+(= get_vm_config  (,,,
+	(@@ (:: (<- (... "sll_ext_debug:get_vm_config")) vm_config_type))
+))
 
 
 

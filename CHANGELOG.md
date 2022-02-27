@@ -19,6 +19,7 @@
 ### Removed
 
 - Final call stack frame from `error$create` and `error$from_internal`
+- Sll type exporting to C code in extensions
 
 ## [0.7.6] - 2022-02-25
 
