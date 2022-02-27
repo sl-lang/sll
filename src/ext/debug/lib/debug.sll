@@ -56,7 +56,7 @@
 
 (= backtrace (,,,
 	(= o "")
-	(= c_st (<- get_call_stack 0))
+	(= c_st (<- get_call_stack 1))
 	(-> (= i ($ c_st)) i {
 		(-- i)
 		(= k (: c_st i))
@@ -69,7 +69,6 @@
 (= get_call_stack (,,, pop
 	(= pop (:: pop int_type))
 	(? (< pop 0) (= pop 0))
-	(++ pop)
 	(= call_stack (<- (... "sll_ext_debug:get_call_stack") pop))
 	(@@ ([> (= i 0) (< i ($ call_stack))
 		(= k (: call_stack i))
