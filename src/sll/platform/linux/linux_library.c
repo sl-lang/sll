@@ -13,7 +13,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_lookup_function(sll_library_handle_t h,const sll_char_t* nm){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_lookup_symbol(sll_library_handle_t h,const sll_char_t* nm){
 	return dlsym(h,(char*)nm);
 }
 

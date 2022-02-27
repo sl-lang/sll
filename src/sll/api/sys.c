@@ -46,7 +46,7 @@ static void _sys_free_data(void){
 			_sys_lhl--;
 			library_t* l=*(_sys_lh+_sys_lhl);
 			sll_free_string((sll_string_t*)&(l->nm));
-			void* fn=sll_platform_lookup_function(l->h,SLL_CHAR("__sll_unload"));
+			void* fn=sll_platform_lookup_symbol(l->h,SLL_CHAR("__sll_unload"));
 			if (fn){
 				((void(*)(void))fn)();
 			}
@@ -208,7 +208,7 @@ __API_FUNC(sys_load_library){
 		sll_free_string(&fp);
 		return 0;
 	}
-	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_load"));
+	void* fn=sll_platform_lookup_symbol(h,SLL_CHAR("__sll_load"));
 	if (!fn||!((sll_bool_t (*)(sll_version_t))fn)(SLL_VERSION)){
 		sll_platform_unload_library(h);
 		sll_free_string(&fp);
