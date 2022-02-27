@@ -186,13 +186,13 @@ __API_FUNC(sys_load_library){
 	}
 	sll_string_t fp;
 	sll_string_create(fpl,&fp);
-	sll_string_length_t off=lib_fp;
-	sll_copy_data(sll_library_file_path->v,off,fp.v);
-	sll_copy_data(LIBRARY_DIRECTORY,STATIC_STR_LEN(LIBRARY_DIRECTORY),fp.v+off);
-	off+=STATIC_STR_LEN(LIBRARY_DIRECTORY);
-	sll_copy_data(a->v+src_nm_off,a->l-src_nm_off,fp.v+off);
-	off+=a->l-src_nm_off;
-	sll_copy_data(LIBRARY_EXTENSION,STATIC_STR_LEN(LIBRARY_EXTENSION),fp.v+off);
+	sll_string_length_t fp_off=lib_fp;
+	sll_copy_data(sll_library_file_path->v,fp_off,fp.v);
+	sll_copy_data(LIBRARY_DIRECTORY,STATIC_STR_LEN(LIBRARY_DIRECTORY),fp.v+fp_off);
+	fp_off+=STATIC_STR_LEN(LIBRARY_DIRECTORY);
+	sll_copy_data(a->v+src_nm_off,a->l-src_nm_off,fp.v+fp_off);
+	fp_off+=a->l-src_nm_off;
+	sll_copy_data(LIBRARY_EXTENSION,STATIC_STR_LEN(LIBRARY_EXTENSION),fp.v+fp_off);
 	sll_string_calculate_checksum(&fp);
 	if (!sll_platform_path_exists(fp.v)){
 		sll_free_string(&fp);
