@@ -18,11 +18,16 @@ static __STATIC_STRING_CODE(_win_library_fp,{
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_from_pointer_length(bf,GetModuleFileNameA((HMODULE)_win_dll_handle,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 });
+static __STATIC_STRING_CODE(_win_temporary_fp,{
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(bf,GetTempPathA(SLL_API_MAX_FILE_PATH_LENGTH,bf),out);
+});
 
 
 
 __SLL_EXTERNAL const sll_string_t* sll_executable_file_path=&_win_executable_fp;
 __SLL_EXTERNAL const sll_string_t* sll_library_file_path=&_win_library_fp;
+__SLL_EXTERNAL const sll_string_t* sll_temporary_file_path=&_win_temporary_fp;
 
 
 
@@ -70,12 +75,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 		return 0;
 	}
 	return sll_string_length_unaligned(o);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_temporary_file_path(sll_char_t* o,sll_string_length_t ol){
-	return GetTempPathA(ol,(char*)o);
 }
 
 

@@ -166,8 +166,7 @@ __API_FUNC(file_get_buffer){
 
 
 __API_FUNC(file_get_temp_path){
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_get_temporary_file_path(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_string_clone(sll_temporary_file_path,out);
 }
 
 

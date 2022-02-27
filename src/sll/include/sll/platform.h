@@ -195,6 +195,17 @@ __SLL_EXTERNAL extern const sll_time_zone_t* sll_platform_time_zone;
 
 
 /**
+ * \flags var
+ * \name sll_temporary_file_path
+ * \group platform
+ * \desc Docs!
+ * \type const sll_string_t*
+ */
+__SLL_EXTERNAL extern const sll_string_t* sll_temporary_file_path;
+
+
+
+/**
  * \flags func
  * \name sll_platform_absolute_path
  * \group platform
@@ -445,20 +456,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default
  * \ret sll_pid_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_get_pid(void);
-
-
-
-/**
- * \flags check_output func
- * \name sll_platform_get_temporary_file_path
- * \group platform
- * \subgroup platform-path
- * \desc Docs!
- * \arg sll_char_t* o
- * \arg sll_string_length_t ol
- * \ret sll_string_length_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_temporary_file_path(sll_char_t* o,sll_string_length_t ol);
 
 
 

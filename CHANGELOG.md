@@ -14,6 +14,7 @@
 - Adjusted platform and file function to allow for error return values ([#238])
 - *\[Darwin only\]* Fixed `SLL_API_MAX_FILE_PATH_LENGTH`
 - Fixed bit-shifting logic in `sll_load_assembly` and `sll_write_assembly`
+- Replaced `sll_platform_get_temporary_file_path` by `sll_temporary_file_path`
 - Renamed API source files from `xxx_api.c` to `xxx.c`
 
 ### Removed

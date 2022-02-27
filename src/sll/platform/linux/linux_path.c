@@ -51,11 +51,21 @@ static __STATIC_STRING_CODE(_linux_library_fp,{
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_from_pointer_length(bf,sll_platform_absolute_path((const sll_char_t*)(dt.dli_fname),bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 });
+static __STATIC_STRING_CODE(_linux_temporary_fp,{
+	sll_string_t k;
+	sll_string_from_pointer(SLL_CHAR("TMPDIR"),&k);
+	sll_bool_t st=sll_get_environment_variable(&k,out);
+	sll_free_string(&k);
+	if (!st){
+		sll_string_from_pointer(SLL_CHAR("/tmp"),out);
+	}
+});
 
 
 
 __SLL_EXTERNAL const sll_string_t* sll_executable_file_path=&_linux_executable_fp;
 __SLL_EXTERNAL const sll_string_t* sll_library_file_path=&_linux_library_fp;
+__SLL_EXTERNAL const sll_string_t* sll_temporary_file_path=&_linux_temporary_fp;
 
 
 
@@ -117,25 +127,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 		return 0;
 	}
 	return sll_string_length_unaligned(o);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_temporary_file_path(sll_char_t* o,sll_string_length_t ol){
-	sll_string_t k;
-	sll_string_from_pointer(SLL_CHAR("TMPDIR"),&k);
-	sll_string_t v;
-	sll_bool_t st=sll_get_environment_variable(&k,&v);
-	sll_free_string(&k);
-	if (st){
-		sll_string_length_t l=(v.l>ol?ol:v.l);
-		sll_copy_data(v.v,l,o);
-		sll_free_string(&v);
-		return l;
-	}
-	sll_string_length_t l=(ol<4?ol:4);
-	sll_copy_data("/tmp",l,o);
-	return l;
 }
 
 
