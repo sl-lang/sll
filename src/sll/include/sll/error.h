@@ -107,7 +107,7 @@
  * \desc Docs!
  * \type sll_error_t
  */
-#define SLL_NO_ERROR 0xffffffffffffffff
+#define SLL_NO_ERROR 0xffffffffffffffffull
 
 
 

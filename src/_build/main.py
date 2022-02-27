@@ -61,9 +61,8 @@ for nm in util.get_ext_list():
 		os.mkdir("build/lib/"+nm)
 	util.log(f"Listing Source Code Files ({nm})...")
 	fl=util.get_ext_files(nm)
-	mh=header.generate_module_hash(nm)
 	util.log(f"Compiling Sll Extension ({nm})...")
-	build.build_sll_extension(nm,fl,ver,("--release" in sys.argv),mh)
+	build.build_sll_extension(nm,fl,ver,("--release" in sys.argv))
 	util.log(f"Copying Extension Modules ({nm})...")
 	fl=[]
 	for f in os.listdir(f"src/ext/{nm}/lib"):
@@ -71,8 +70,9 @@ for nm in util.get_ext_list():
 		with open(f"src/ext/{nm}/lib/{f}","rb") as rf,open(f"build/lib/{nm}/{f}","wb") as wf:
 			wf.write(rf.read())
 		fl.append(f"build/lib/{nm}/"+f)
+	header.generate_library_hash(nm,ver)
 	util.log("Compiling Extension Modules...")
-	if (util.execute(["build/sll","-c","-R","-I","build/lib/"+nm]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else []))):
+	if (util.execute(["build/sll","-c","-R","-I","build/lib/"+nm,"-I","build"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else []))):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:
@@ -92,7 +92,7 @@ if ("--test" in sys.argv):
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",util.system+".zip")
 if ("--run" in sys.argv):
-	a=(["examples/_internal_test_ext_debug/test.sll","-I","build/lib_ext"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
+	a=(["examples/_internal_test_ext_debug/test.sll"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
 	util.log(f"Running '{a[0]}...")
 	util.execute(["build/sll","-h"])
 	if (util.execute(["build/sll","-c","-v","-o","build/raw","-e","-R","-F"]+a) or util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","-F"]+a) or util.execute(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]) or util.execute(["build/sll","build/test2.sla","-v","-P"])):

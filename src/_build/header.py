@@ -404,9 +404,12 @@ def generate_header(h_dt):
 
 
 
-def generate_module_hash(nm):
-	with open(f"src/ext/{nm}/.module_root","r") as f:
-		m_fp=f"src/ext/{nm}/lib/{f.read().strip()}"
-	util.log(f"Generating Module Hash for '{m_fp}'...")
-	sz,h=util.hash_file(m_fp)
-	return f"{{{sz},{{"+",".join(["0x"+h[i:i+8] for i in range(0,64,8)])+"}}"
+def generate_library_hash(nm,v):
+	fp=f"build/sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}"+util.LIBRARY_EXTENSION[util.system]
+	util.log(f"Generating Library Hash for '{fp}'...")
+	sz,h=util.hash_file(fp)
+	util.log(f"  File size: {sz}, Hash: {h}")
+	o_fp=f"build/__generated_sll_ext_{nm}.sll"
+	util.log(f"  Writing output to '{o_fp}'...")
+	with open(o_fp,"w") as f:
+		f.write(f"(= __SLL_EXT_{nm.upper()}_LIBRARY [{sz} "+" ".join(["0x"+h[i:i+16] for i in range(0,64,16)])+f"])\n(## __SLL_EXT_{nm.upper()}_LIBRARY)\n")

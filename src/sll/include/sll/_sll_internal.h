@@ -158,7 +158,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define EXTRA_COMPILATION_DATA_EXPORT 2
 #define EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION 4
 
-#define VARIABLE_OFFSET_NEVER_DELETE ((void*)0xffffffffffffffff)
+#define VARIABLE_OFFSET_NEVER_DELETE ((void*)0xffffffffffffffffull)
 
 #define ERROR_DISPLAY_TAB_WIDTH 4
 
@@ -204,7 +204,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define STRING_COMPRESSION_OFFSET_BIT_COUNT 9
 #define STRING_COMPRESSION_LENGTH_BIT_COUNT 4
 
-#define OPTIMIZER_ASSIGN_VARIABLE_REMOVE ((void*)0xffffffffffffffff)
+#define OPTIMIZER_ASSIGN_VARIABLE_REMOVE ((void*)0xffffffffffffffffull)
 
 #define OPTIMIZER_NEW_OBJECT 1
 #define OPTIMIZER_NO_VARIABLES 2
@@ -347,6 +347,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define LIBC_ERROR (errno|SLL_ERROR_FLAG_LIBC)
 
 #define LIBRARY_DIRECTORY "/sys_lib/"
+#define LIBRARY_HASH_BUFFER_SIZE 4096
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))

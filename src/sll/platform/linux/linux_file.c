@@ -48,7 +48,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_des
 	ssize_t o=read(FROM_HANDLE(fd),p,sz);
 	if (o==-1){
 		LIBC_ERROR_PTR;
-		return 0;
+		return SLL_NO_FILE_SIZE;
 	}
 	return o;
 }
@@ -62,7 +62,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_des
 		return st.st_size;
 	}
 	LIBC_ERROR_PTR;
-	return 0;
+	return SLL_NO_FILE_SIZE;
 }
 
 
@@ -78,7 +78,7 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
 	ssize_t o=write(FROM_HANDLE(fd),p,sz);
 	if (o==-1){
 		LIBC_ERROR_PTR;
-		return 0;
+		return SLL_NO_FILE_SIZE;
 	}
 	return o;
 }

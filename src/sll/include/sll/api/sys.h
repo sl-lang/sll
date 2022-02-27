@@ -140,6 +140,11 @@ __API_FUNC_DECL(sys_get_version);
  * \group sys-api
  * \desc Docs!
  * \arg S
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
+ * \arg I
  * \ret B
  */
 __API_FUNC_DECL(sys_load_library);

@@ -1,11 +1,13 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/api/hash.h>
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/env.h>
+#include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/init.h>
 #include <sll/map.h>
@@ -200,6 +202,47 @@ __API_FUNC(sys_load_library){
 		if (sll_string_equal(&((*(_sys_lh+i))->nm),&fp)){
 			sll_free_string(&fp);
 			return 1;
+		}
+	}
+	if (b){
+		sll_file_descriptor_t fd=sll_platform_file_open(fp.v,SLL_FILE_FLAG_READ,NULL);
+		if (fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
+			return 0;
+		}
+		sll_size_t sz=sll_platform_file_size(fd,NULL);
+		if (sz==SLL_NO_FILE_SIZE||sz!=(sll_size_t)b){
+			sll_platform_file_close(fd);
+			return 0;
+		}
+		sll_sha256_data_t sha=SLL_INIT_SHA256_STRUCT;
+		sll_char_t bf[LIBRARY_HASH_BUFFER_SIZE];
+		sll_size_t off;
+		do{
+			off=sll_platform_file_read(fd,bf,LIBRARY_HASH_BUFFER_SIZE,NULL);
+			if (off==SLL_NO_FILE_SIZE){
+				sll_platform_file_close(fd);
+				return 0;
+			}
+			sll_hash_sha256(&sha,bf,off&0xffffffffffffffc0ll);
+		} while (off==LIBRARY_HASH_BUFFER_SIZE);
+		sll_platform_file_close(fd);
+		sll_char_t tmp[128];
+		sll_set_memory(tmp,128,0);
+		sll_copy_data(bf+(off&0xffffffffffffffc0ull),off&0x3f,tmp);
+		off&=0x3f;
+		sll_char_t tmp_off=(off<56?56:120);
+		tmp[off]=128;
+		tmp[tmp_off]=(sz>>53)&0xff;
+		tmp[tmp_off+1]=(sz>>45)&0xff;
+		tmp[tmp_off+2]=(sz>>37)&0xff;
+		tmp[tmp_off+3]=(sz>>29)&0xff;
+		tmp[tmp_off+4]=(sz>>21)&0xff;
+		tmp[tmp_off+5]=(sz>>13)&0xff;
+		tmp[tmp_off+6]=(sz>>5)&0xff;
+		tmp[tmp_off+7]=(sz<<3)&0xff;
+		sll_hash_sha256(&sha,tmp,(off<56?64:128));
+		if (((((__SLL_U64)sha.a)<<32)|sha.b)!=((__SLL_U64)c)||((((__SLL_U64)sha.c)<<32)|sha.d)!=((__SLL_U64)d)||((((__SLL_U64)sha.e)<<32)|sha.f)!=((__SLL_U64)e)||((((__SLL_U64)sha.g)<<32)|sha.h)!=((__SLL_U64)f)){
+			return 0;
 		}
 	}
 	sll_library_handle_t h=sll_platform_load_library(fp.v);

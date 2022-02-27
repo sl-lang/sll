@@ -140,6 +140,18 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_NO_FILE_SIZE
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ * \type sll_size_t
+ */
+#define SLL_NO_FILE_SIZE 0xffffffffffffffffull
+
+
+
+/**
  * \flags var
  * \name sll_environment
  * \group platform

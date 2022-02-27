@@ -47,7 +47,7 @@ void _file_end_hash(sll_file_t* f){
 	tmp[offset+2]=(f->_off>>37)&0xff;
 	tmp[offset+3]=(f->_off>>29)&0xff;
 	tmp[offset+4]=(f->_off>>21)&0xff;
-	tmp[offset+5]=(f->_off>>12)&0xff;
+	tmp[offset+5]=(f->_off>>13)&0xff;
 	tmp[offset+6]=(f->_off>>5)&0xff;
 	tmp[offset+7]=(f->_off<<3)&0xff;
 	sll_hash_sha256(&(f->_h.h),tmp,(f->_h.bfl<56?64:128));

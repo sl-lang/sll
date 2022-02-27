@@ -1,4 +1,4 @@
-(--- "sys.sll" "types.sll" "string.sll")
+(--- "sys.sll" "types.sll" "string.sll" "__generated_sll_ext_debug.sll")
 
 
 (# get_call_stack)
@@ -47,7 +47,7 @@
 
 
 (= ext_fp (+ "sll-ext-debug-" sys$VERSION$major "." sys$VERSION$minor "." sys$VERSION$patch))
-(? (! (<- sys$load_library ext_fp)) {
+(? (! (<- sys$load_library ext_fp __SLL_EXT_DEBUG_LIBRARY)) {
 	(:> "Failed to load extension library: " ext_fp "\n")
 	(@@ 1)
 })

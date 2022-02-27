@@ -18,10 +18,10 @@
 
 
 static const bitmap_t _process_quote_chars[4]={
-	0xd80087dfffffffff,// %+,-.0123456789:=
-	0xf800000178000000,// @ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
-	0xffffffffffffffff,
-	0xffffffffffffffff
+	0xd80087dfffffffffull,// %+,-.0123456789:=
+	0xf800000178000000ull,// @ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+	0xffffffffffffffffull,
+	0xffffffffffffffffull
 };
 
 

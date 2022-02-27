@@ -3752,13 +3752,18 @@
 
 
 #define __SLL_API_TYPE_sll_api_sys_load_library __SLL_CHECK_OUTPUT sll_bool_t
-#define __SLL_API_ARGS_sll_api_sys_load_library sll_string_t* a
+#define __SLL_API_ARGS_sll_api_sys_load_library sll_string_t* a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f
 /**
  * \flags check_output func
  * \name sll_api_sys_load_library
  * \group sys-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
+ * \arg sll_integer_t b -> 
+ * \arg sll_integer_t c -> 
+ * \arg sll_integer_t d -> 
+ * \arg sll_integer_t e -> 
+ * \arg sll_integer_t f -> 
  * \ret sll_bool_t
  */
 /**

@@ -45,7 +45,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_des
 	DWORD o;
 	if (!ReadFile((HANDLE)fd,p,(DWORD)sz,&o,NULL)){
 		WINAPI_ERROR_PTR;
-		return 0;
+		return SLL_NO_FILE_SIZE;
 	}
 	return o;
 }
@@ -65,7 +65,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_des
 	LARGE_INTEGER sz;
 	if (!GetFileSizeEx((HANDLE)fd,&sz)){
 		WINAPI_ERROR_PTR;
-		return 0;
+		return SLL_NO_FILE_SIZE;
 	}
 	return sz.QuadPart;
 }
@@ -77,7 +77,7 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
 	DWORD o;
 	if (!WriteFile((HANDLE)fd,p,(DWORD)sz,&o,NULL)){
 		WINAPI_ERROR_PTR;
-		return 0;
+		return SLL_NO_FILE_SIZE;
 	}
 	return o;
 }

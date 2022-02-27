@@ -79,7 +79,23 @@
 
 (= get_sandbox_flags (... "sll:sys_get_sandbox_flags"))
 
-(= load_library (... "sll:sys_load_library"))
+(= load_library (,,, fp chk
+	(= fp (:: fp string_type))
+	(= sz 0)
+	(= h [0 0 0 0])
+	(? (&& (=== (:? chk) array_type) (=== ($ chk) 5)) {
+		(= sz (: chk 0))
+		(= h (>> chk 1))
+	})
+	(@@ (<- (... "sll:sys_load_library")
+		fp
+		sz
+		(: h 0)
+		(: h 1)
+		(: h 2)
+		(: h 3)
+	))
+)
 
 (= remove_env (,,, k
 	(= k (<- string$replace (:: k string_type) '=' ""))

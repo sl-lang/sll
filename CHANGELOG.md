@@ -5,6 +5,7 @@
 ### Added
 
 - C error API: `sll_error_t`, `SLL_ERROR_NO_FILE_PATH`, `SLL_ERROR_UNKNOWN_FD`, `SLL_ERROR_SANDBOX`, `SLL_ERROR_TOO_LONG`, `SLL_ERROR_FLAG_WINAPI`, `SLL_ERROR_FLAG_LIBC`, `SLL_ERROR_GET_TYPE`, `SLL_NO_ERROR` ([#238])
+- Library verification parameter can be passed to `sys$load_library` to verify the SHA-256 of the loaded file
 - New error types: `error$ERROR_ANY`, `error$ERROR_INTERNAL_ERROR`, `error$ERROR_INVALID_FILE_DESCRIPTOR`, `error$ERROR_PATH_TOO_LONG` and `error$ERROR_SANDBOX` ([#238])
 - Path size limit: `path$MAX_PATH_SIZE`
 - System error codes: `error$from_internal`, `error_codes.sll`, `error_codes$ERROR_INTERNAL_ERROR`, `error_codes$LIBC_ERROR_CODES`, `error_codes$WINDOWS_ERROR_CODES` and `error_codes$get_by_name` ([#238])
@@ -12,9 +13,11 @@
 ### Changed
 
 - Adjusted platform and file function to allow for error return values ([#238])
-- *\[Darwin only\]* Fixed `SLL_API_MAX_FILE_PATH_LENGTH`
 - Fixed bit-shifting logic in `sll_load_assembly` and `sll_write_assembly`
+- Fixed critical error in file hash calcultion
+- *\[Darwin only\]* Fixed `SLL_API_MAX_FILE_PATH_LENGTH`
 - Fixed `sll_object_field_t` to be a union instead of a structure
+- Getting the file size via `sll_platform_file_size` now returns `SLL_NO_FILE_SIZE` instead of `0` on error
 - Libraries loaded via `sys$load_library` can only be located in the `sys_lib` directory
 - Renamed `sll_platform_lookup_function` to `sll_platform_lookup_symbol`
 - Renamed API source files from `xxx_api.c` to `xxx.c`
