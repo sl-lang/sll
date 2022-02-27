@@ -56,6 +56,7 @@ static __SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 #define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(.##nm##$b)
 #define STATIC_OBJECT_SETUP static const __declspec(allocate(".sobject$a")) static_object_t* __static_object_start=0;static const __declspec(allocate(".sobject$z")) static_object_t* __static_object_end=0
 #define INIT_STRING_SETUP static const __declspec(allocate(".initstr$a")) init_string_t* __init_string_start=0;static const __declspec(allocate(".initstr$z")) init_string_t* __init_string_end=0
+#define LIBRARY_EXTENSION ".dll"
 #else
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __builtin_unreachable()
@@ -100,6 +101,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define __static_object_end __stop_sobject
 #define __init_string_start __start_initstr
 #define __init_string_end __stop_initstr
+#define LIBRARY_EXTENSION ".so"
 #endif
 #ifdef DEBUG_BUILD
 #define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"));
@@ -269,7 +271,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define SERIAL_OBJECT_TYPE (SLL_MAX_OBJECT_TYPE+1)
 
-#define PRINT_STATIC_STRING(s,wf) sll_file_write((wf),(s),sizeof(s)/sizeof(char)-1,NULL)
+#define STATIC_STR_LEN(s) (sizeof(s)/sizeof(char)-1)
+#define PRINT_STATIC_STRING(s,wf) sll_file_write((wf),(s),STATIC_STR_LEN(s),NULL)
 
 #define JSON_NUMBER_INT 0
 #define JSON_NUMBER_FLOAT 1
@@ -342,6 +345,8 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define ZERO_IF_ERROR_PTR(x) DATA_IF_ERROR_PTR((x),0)
 #define WINAPI_ERROR (GetLastError()|SLL_ERROR_FLAG_WINAPI)
 #define LIBC_ERROR (errno|SLL_ERROR_FLAG_LIBC)
+
+#define LIBRARY_DIRECTORY "/sys_lib/"
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))

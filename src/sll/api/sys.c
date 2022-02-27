@@ -18,6 +18,7 @@
 #include <sll/types.h>
 #include <sll/version.h>
 #include <sll/vm.h>
+#include <sll/file.h>//////////////////
 
 
 
@@ -176,33 +177,47 @@ __API_FUNC(sys_load_library){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||a->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
-	sll_char_t fp[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_length_t fpl=sll_platform_absolute_path(a->v,fp,SLL_API_MAX_FILE_PATH_LENGTH);
-	if (!sll_platform_path_exists(fp)){
+	sll_string_length_t lib_fp=sll_path_split(sll_library_file_path);
+	sll_string_length_t src_nm_off=sll_path_split(a);
+	sll_string_length_t fpl=lib_fp+STATIC_STR_LEN(LIBRARY_DIRECTORY)+a->l-src_nm_off+STATIC_STR_LEN(LIBRARY_EXTENSION);
+	if (fpl>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
-	sll_string_t s;
-	sll_string_from_pointer_length(fp,fpl,&s);
+	sll_string_t fp;
+	sll_string_create(fpl,&fp);
+	sll_string_length_t off=lib_fp;
+	sll_copy_data(sll_library_file_path->v,off,fp.v);
+	sll_copy_data(LIBRARY_DIRECTORY,STATIC_STR_LEN(LIBRARY_DIRECTORY),fp.v+off);
+	off+=STATIC_STR_LEN(LIBRARY_DIRECTORY);
+	sll_copy_data(a->v+src_nm_off,a->l-src_nm_off,fp.v+off);
+	off+=a->l-src_nm_off;
+	sll_copy_data(LIBRARY_EXTENSION,STATIC_STR_LEN(LIBRARY_EXTENSION),fp.v+off);
+	sll_string_calculate_checksum(&fp);
+	if (!sll_platform_path_exists(fp.v)){
+		sll_free_string(&fp);
+		return 0;
+	}
 	for (sll_array_length_t i=0;i<_sys_lhl;i++){
-		if (sll_string_equal(&((*(_sys_lh+i))->nm),&s)){
+		if (sll_string_equal(&((*(_sys_lh+i))->nm),&fp)){
+			sll_free_string(&fp);
 			return 1;
 		}
 	}
-	sll_library_handle_t h=sll_platform_load_library(fp);
+	sll_library_handle_t h=sll_platform_load_library(fp.v);
 	if (h==SLL_UNKNOWN_LIBRARY_HANDLE){
-		sll_free_string(&s);
+		sll_free_string(&fp);
 		return 0;
 	}
 	void* fn=sll_platform_lookup_function(h,SLL_CHAR("__sll_load"));
 	if (!fn||!((sll_bool_t (*)(sll_version_t))fn)(SLL_VERSION)){
 		sll_platform_unload_library(h);
-		sll_free_string(&s);
+		sll_free_string(&fp);
 		return 0;
 	}
 	_sys_lhl++;
 	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(library_t*));
 	library_t* n=sll_allocate(sizeof(library_t));
-	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
+	sll_copy_data(&fp,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
 	n->h=h;
 	*(_sys_lh+_sys_lhl-1)=n;
 	if (!_sys_end){
