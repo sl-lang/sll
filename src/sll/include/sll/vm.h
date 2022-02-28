@@ -93,4 +93,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_get_call_stack(voi
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_wait_thread
+ * \group vm
+ * \desc Docs!
+ * \arg sll_thread_index_t tid
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index_t tid);
+
+
+
 #endif
