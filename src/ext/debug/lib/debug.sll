@@ -39,7 +39,6 @@
 	(~ func_type) get_instruction_count
 	(~ func_type) get_instruction_index
 	(~ func_type) get_location
-	(~ func_type) get_name
 	(~ func_type) get_ref_count
 	(~ func_type) get_vm_config
 ))
@@ -85,8 +84,6 @@
 	(@@ (:: (<- (... "sll_ext_debug:get_location")) location_type))
 ))
 
-(= get_name (... "sll_ext_debug:get_name"))
-
 (= get_ref_count (... "sll_ext_debug:get_ref_count"))
 
 (= get_vm_config  (,,,
@@ -104,7 +101,6 @@
 	get_instruction_count
 	get_instruction_index
 	get_location
-	get_name
 	get_ref_count
 	get_vm_config
 ))

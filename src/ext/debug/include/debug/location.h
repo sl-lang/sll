@@ -8,8 +8,4 @@ sll_object_t* debug_get_location(sll_object_t*const* al,sll_arg_count_t all);
 
 
 
-sll_object_t* debug_get_name(sll_object_t*const* al,sll_arg_count_t all);
-
-
-
 #endif
