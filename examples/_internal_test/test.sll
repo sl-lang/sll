@@ -437,6 +437,8 @@
 
 (:> (<- hash$hexdigest (<- hmac$hmac hash$sha1 "VERY-SECRET-KEY" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")) "\na6b10d9db5f817a532f3065892ecf309d7660d7a\n")
 
+(:> "File: " @@file@@ ", Line: " @@line@@ "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

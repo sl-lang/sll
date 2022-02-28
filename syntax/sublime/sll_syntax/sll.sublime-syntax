@@ -223,6 +223,8 @@ contexts:
       scope: storage.type.builtin.sll
     - match: '{{not_identifier_start}}@@(copy|delete|init|string)@@{{not_identifier_end}}'
       scope: support.function.special.sll
+    - match: '{{not_identifier_start}}@@(file|line)@@{{not_identifier_end}}'
+      scope: support.type.special.sll
     - match: '{{full_identifier}}'
       scope: variable.other.sll
   comments:

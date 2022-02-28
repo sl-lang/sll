@@ -47,6 +47,14 @@
 
 
 
+static __STATIC_STRING(_parse_file_str,"@@file@@");
+static __STATIC_STRING(_parse_line_str,"@@line@@");
+static __STATIC_STRING(_parse_nil_str,"nil");
+static __STATIC_STRING(_parse_true_str,"true");
+static __STATIC_STRING(_parse_false_str,"false");
+
+
+
 static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_compilation_data_t* e_c_dt,const scope_data_t* l_sc,sll_string_t* str,void* arg,unsigned int fl){
 	SLL_ASSERT(str->l);
 	sll_identifier_index_t o=SLL_MAX_VARIABLE_INDEX;
@@ -241,6 +249,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					sll_node_t* dbg=_acquire_next_node(sf);
 					dbg->t=SLL_NODE_TYPE_DBG;
 					dbg->dt.s=SLL_MAX_STRING_INDEX;
+					(*(e_c_dt->ln))++;
 				}
 				c=sll_file_read_char(rf,NULL);
 			} while ((c>8&&c<14)||c==' ');
@@ -527,7 +536,8 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					e_c_dt->nv_dt,
 					NULL,
 					SLL_MAX_STRING_INDEX,
-					(o->t==SLL_NODE_TYPE_FUNC||e_c_dt->fn)
+					(o->t==SLL_NODE_TYPE_FUNC||e_c_dt->fn),
+					e_c_dt->ln
 				};
 				n_e_c_dt.not_fn_sc=(n_e_c_dt.fn?e_c_dt->not_fn_sc:l_sc);
 				if (o->t==SLL_NODE_TYPE_ASSIGN&&ac==1){
@@ -790,7 +800,35 @@ _parse_identifier:
 					sll_copy_data(rewind_bf,rewind_bf_l,str.v);
 				}
 				c=_read_identifier(&str,rewind_bf_l,rf,c);
-				if (o&&(o->t!=SLL_NODE_TYPE_DECL||!(ac&1))&&c=='$'){
+				if (o&&o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
+					arg->t=SLL_NODE_TYPE_FIELD;
+					arg->dt.s=sll_add_string(&(sf->st),&str,1);
+				}
+				else if (sll_string_equal(&str,&_parse_file_str)){
+					sll_free_string(&str);
+					arg->t=SLL_NODE_TYPE_STRING;
+					arg->dt.s=0;
+				}
+				else if (sll_string_equal(&str,&_parse_line_str)){
+					sll_free_string(&str);
+					arg->t=SLL_NODE_TYPE_INT;
+					arg->dt.i=*(e_c_dt->ln);
+				}
+				else if (sll_string_equal(&str,&_parse_nil_str)||sll_string_equal(&str,&_parse_false_str)){
+					sll_free_string(&str);
+					arg->t=SLL_NODE_TYPE_INT;
+					arg->dt.i=0;
+				}
+				else if (sll_string_equal(&str,&_parse_true_str)){
+					sll_free_string(&str);
+					arg->t=SLL_NODE_TYPE_INT;
+					arg->dt.i=1;
+				}
+				else if (o&&o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
+					arg->t=SLL_NODE_TYPE_FIELD;
+					arg->dt.s=sll_add_string(&(sf->st),&str,1);
+				}
+				else if (c=='$'){
 					do{
 						c=sll_file_read_char(rf,NULL);
 						if (c==SLL_END_OF_DATA){
@@ -798,57 +836,42 @@ _parse_identifier:
 							break;
 						}
 					} while (c=='$');
-					if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
-						sll_identifier_index_t ii=_get_var_index(sf,e_c_dt,l_sc,&str,arg,GET_VAR_INDEX_FLAG_UNKNOWN);
-						if (ii==SLL_MAX_VARIABLE_INDEX){
-							arg->t=SLL_NODE_TYPE_INT;
-							arg->dt.i=0;
-							while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
-								c=sll_file_read_char(rf,NULL);
-								if (c==SLL_END_OF_DATA){
-									break;
-								}
+					if (c>8&&(c<14||c==' '||c=='('||c==')'||c==';'||c=='<'||c=='>'||c=='['||c==']'||c=='{'||c=='}')){
+						goto _normal_identifier;
+					}
+					sll_identifier_index_t ii=_get_var_index(sf,e_c_dt,l_sc,&str,arg,GET_VAR_INDEX_FLAG_UNKNOWN);
+					if (ii==SLL_MAX_VARIABLE_INDEX){
+						arg->t=SLL_NODE_TYPE_INT;
+						arg->dt.i=0;
+						while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
+							c=sll_file_read_char(rf,NULL);
+							if (c==SLL_END_OF_DATA){
+								break;
 							}
 						}
-						else{
-							arg->t=SLL_NODE_TYPE_VAR_ACCESS;
-							arg->dt.ac=1;
-							sll_node_t* v=_acquire_next_node(sf);
-							v->t=SLL_NODE_TYPE_IDENTIFIER;
-							v->dt.id=ii;
-							while (c!=SLL_END_OF_DATA){
-								sll_string_create(255,&str);
-								c=_read_identifier(&str,0,rf,c);
-								arg->dt.ac++;
-								v=_acquire_next_node(sf);
-								v->t=SLL_NODE_TYPE_FIELD;
-								v->dt.s=sll_add_string(&(sf->st),&str,1);
-								if (c!='$'){
-									break;
-								}
-								c=sll_file_read_char(rf,NULL);
+					}
+					else{
+						arg->t=SLL_NODE_TYPE_VAR_ACCESS;
+						arg->dt.ac=1;
+						sll_node_t* v=_acquire_next_node(sf);
+						v->t=SLL_NODE_TYPE_IDENTIFIER;
+						v->dt.id=ii;
+						while (c!=SLL_END_OF_DATA){
+							sll_string_create(255,&str);
+							c=_read_identifier(&str,0,rf,c);
+							arg->dt.ac++;
+							v=_acquire_next_node(sf);
+							v->t=SLL_NODE_TYPE_FIELD;
+							v->dt.s=sll_add_string(&(sf->st),&str,1);
+							if (c!='$'){
+								break;
 							}
+							c=sll_file_read_char(rf,NULL);
 						}
-						goto _identifier_end;
 					}
 				}
-				if (o&&o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
-					sll_string_calculate_checksum(&str);
-					arg->t=SLL_NODE_TYPE_FIELD;
-					arg->dt.s=sll_add_string(&(sf->st),&str,1);
-				}
-				else if ((str.l==3&&sll_compare_data(str.v,"nil",3)==SLL_COMPARE_RESULT_EQUAL)||(str.l==5&&sll_compare_data(str.v,"false",5)==SLL_COMPARE_RESULT_EQUAL)){
-					sll_free_string(&str);
-					arg->t=SLL_NODE_TYPE_INT;
-					arg->dt.i=0;
-				}
-				else if (str.l==4&&sll_compare_data(str.v,"true",4)==SLL_COMPARE_RESULT_EQUAL){
-					sll_free_string(&str);
-					arg->t=SLL_NODE_TYPE_INT;
-					arg->dt.i=1;
-				}
 				else{
-					sll_string_calculate_checksum(&str);
+_normal_identifier:
 					arg->t=SLL_NODE_TYPE_IDENTIFIER;
 					arg->dt.id=_get_var_index(sf,e_c_dt,l_sc,&str,arg,((!o||o->t!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->t==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->t==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0)));
 					if (arg->dt.i==SLL_MAX_VARIABLE_INDEX){
@@ -856,7 +879,6 @@ _parse_identifier:
 						arg->dt.i=0;
 					}
 				}
-_identifier_end:;
 			}
 			if (arg->t==SLL_NODE_TYPE_NOP){
 				continue;
@@ -1098,6 +1120,7 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 		NULL,
 		0
 	};
+	sll_file_offset_t ln=1;
 	extra_compilation_data_t e_c_dt={
 		{
 			sll_allocate(sizeof(bitmap_t)),
@@ -1110,7 +1133,8 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 		&nv_dt,
 		NULL,
 		SLL_MAX_STRING_INDEX,
-		0
+		0,
+		&ln
 	};
 	e_c_dt.not_fn_sc=&(e_c_dt.sc);
 	e_c_dt.sc.m[0]=1;

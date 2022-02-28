@@ -438,6 +438,7 @@ typedef struct __EXTRA_COMPILATION_DATA{
 	const scope_data_t* not_fn_sc;
 	sll_string_index_t a_nm;
 	sll_bool_t fn;
+	sll_file_offset_t* ln;
 } extra_compilation_data_t;
 
 
