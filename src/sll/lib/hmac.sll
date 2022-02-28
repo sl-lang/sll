@@ -30,13 +30,13 @@
 			(* "\x00" (- hash_func$BLOCK_SIZE ($ key)))
 		))
 	})
-	(= in_hash (<- hash_func$init))
-	(= in_hash (<- hash_func$update in_hash (^ key HMAC_IPAD)))
-	(= in_hash (<- hash_func$update in_hash data))
-	(= out_hash (<- hash_func$init))
-	(= out_hash (<- hash_func$update out_hash (^ key HMAC_OPAD)))
-	(= out_hash (<- hash_func$update out_hash (<- hash_func$digest in_hash)))
-	(@@ (<- hash_func$digest out_hash))
+	(@@ (<- hash_func$digest (<- hash_func$update (<- hash_func$update (<- hash_func$init)
+		(^ key HMAC_OPAD))
+		(<- hash_func$digest (<- hash_func$update (<- hash_func$update (<- hash_func$init)
+			(^ key HMAC_IPAD))
+			data
+		)))
+	))
 ))
 
 
