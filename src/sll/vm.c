@@ -7,6 +7,7 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
+#include <sll/location.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -583,6 +584,26 @@ _cleanup_jump_table:;
 					sll_object_t* n=SLL_FROM_INT(SLL_OBJECT_GET_TYPE(*tos));
 					SLL_RELEASE(*tos);
 					*tos=n;
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF:
+				{
+					sll_object_t* tos=SLL_CREATE();
+					tos->t=SLL_OBJECT_TYPE_STRING;
+					sll_get_name(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),&(tos->dt.s));
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
+					*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=tos;
+					break;
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF_TYPE:
+				{
+					sll_object_t* t=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
+					sll_object_t* tos=SLL_CREATE();
+					tos->t=SLL_OBJECT_TYPE_STRING;
+					sll_get_type_name(sll_current_runtime_data->tt,(t->dt.i<0||t->dt.i>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.i)),&(tos->dt.s));
+					SLL_RELEASE(t);
+					*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=tos;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:

@@ -12,10 +12,16 @@
 
 
 
+static __STATIC_STRING(_object_array_type_str,"array_type");
+static __STATIC_STRING(_object_char_type_str,"char_type");
 static __STATIC_STRING(_object_copy_str,"@@copy@@");
 static __STATIC_STRING(_object_delete_str,"@@delete@@");
+static __STATIC_STRING(_object_float_type_str,"float_type");
 static __STATIC_STRING(_object_init_str,"@@init@@");
+static __STATIC_STRING(_object_int_type_str,"int_type");
+static __STATIC_STRING(_object_map_type_str,"map_type");
 static __STATIC_STRING(_object_string_str,"@@string@@");
+static __STATIC_STRING(_object_string_type_str,"string_type");
 
 
 
@@ -303,8 +309,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 					}
 					return o;
 				}
-			case SLL_OBJECT_TYPE_OBJECT:
-				SLL_UNIMPLEMENTED();
 			default:
 				SLL_UNREACHABLE();
 		}
@@ -336,6 +340,43 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt){
 		tt->dt=NULL;
 		tt->l=0;
 	}
+}
+
+
+
+__SLL_EXTERNAL void sll_get_type_name(sll_object_type_table_t* tt,sll_object_type_t t,sll_string_t* o){
+	t=SLL_OBJECT_GET_TYPE_MASK(t);
+	if (t<=SLL_MAX_OBJECT_TYPE){
+		switch (t){
+			case SLL_OBJECT_TYPE_INT:
+				sll_string_clone(&_object_int_type_str,o);
+				return;
+			case SLL_OBJECT_TYPE_FLOAT:
+				sll_string_clone(&_object_float_type_str,o);
+				return;
+			case SLL_OBJECT_TYPE_CHAR:
+				sll_string_clone(&_object_char_type_str,o);
+				return;
+			case SLL_OBJECT_TYPE_STRING:
+				sll_string_clone(&_object_string_type_str,o);
+				return;
+			case SLL_OBJECT_TYPE_ARRAY:
+			case SLL_OBJECT_TYPE_MAP_KEYS:
+			case SLL_OBJECT_TYPE_MAP_VALUES:
+				sll_string_clone(&_object_array_type_str,o);
+				return;
+			case SLL_OBJECT_TYPE_MAP:
+				sll_string_clone(&_object_map_type_str,o);
+				return;
+			default:
+				SLL_UNREACHABLE();
+		}
+	}
+	if (!tt||t-SLL_MAX_OBJECT_TYPE-1>=tt->l){
+		SLL_INIT_STRING(o);
+		return;
+	}
+	sll_string_clone(&((*(tt->dt+t-SLL_MAX_OBJECT_TYPE-1))->nm),o);
 }
 
 

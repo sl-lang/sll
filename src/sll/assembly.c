@@ -1340,11 +1340,14 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				return o;
 			}
 		case SLL_NODE_TYPE_TYPEOF:
+		case SLL_NODE_TYPE_NAMEOF:
+		case SLL_NODE_TYPE_NAMEOF_TYPE:
 			{
+				sll_assembly_instruction_type_t ai_t=o->t-SLL_NODE_TYPE_TYPEOF+SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF;
 				sll_arg_count_t l=o->dt.ac;
 				SLL_ASSERT(l);
 				o=_generate_on_stack(o+1,g_dt);
-				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF);
+				GENERATE_OPCODE(g_dt,ai_t);
 				l--;
 				while (l){
 					l--;

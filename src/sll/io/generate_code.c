@@ -612,6 +612,12 @@ static const sll_node_t* _generate_code_internal(const code_generation_data_t* c
 		case SLL_NODE_TYPE_TYPEOF:
 			PRINT_STATIC_STRING(":?",wf);
 			break;
+		case SLL_NODE_TYPE_NAMEOF:
+			PRINT_STATIC_STRING(".?",wf);
+			break;
+		case SLL_NODE_TYPE_NAMEOF_TYPE:
+			PRINT_STATIC_STRING("&:?",wf);
+			break;
 		case SLL_NODE_TYPE_DECL:
 			{
 				PRINT_STATIC_STRING("&:",wf);

@@ -8,9 +8,11 @@
 - Exposed the `hash_type` type from `hash.sll`
 - Implemented `hmac.sll` and `hmac$hmac` ([#230])
 - Library verification parameter can be passed to `sys$load_library` to verify the SHA-256 of the loaded file
+- Nameof operator (`(.?)`): `sll_get_name`
 - New error types: `error$ERROR_ANY`, `error$ERROR_INTERNAL_ERROR`, `error$ERROR_INVALID_FILE_DESCRIPTOR`, `error$ERROR_PATH_TOO_LONG` and `error$ERROR_SANDBOX` ([#238])
 - Path size limit: `path$MAX_PATH_SIZE`
 - System error codes: `error$from_internal`, `error_codes.sll`, `error_codes$ERROR_INTERNAL_ERROR`, `error_codes$LIBC_ERROR_CODES`, `error_codes$WINDOWS_ERROR_CODES` and `error_codes$get_by_name` ([#238])
+- Type nameof operator (`(&:?)`): `sll_get_type_name`
 - Variables evaluating to the current file (`@@file@@`) and line number (`@@line@@`)
 
 ### Changed

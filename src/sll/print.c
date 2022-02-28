@@ -395,6 +395,12 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		case SLL_NODE_TYPE_TYPEOF:
 			PRINT_STATIC_STRING(":?",wf);
 			break;
+		case SLL_NODE_TYPE_NAMEOF:
+			PRINT_STATIC_STRING(".?",wf);
+			break;
+		case SLL_NODE_TYPE_NAMEOF_TYPE:
+			PRINT_STATIC_STRING("&:?",wf);
+			break;
 		case SLL_NODE_TYPE_DECL:
 			{
 				PRINT_STATIC_STRING("&:",wf);
@@ -1027,6 +1033,12 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF:
 				PRINT_STATIC_STRING("TYPEOF",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF:
+				PRINT_STATIC_STRING("NAMEOF",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF_TYPE:
+				PRINT_STATIC_STRING("NAMEOF_TYPE",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 				PRINT_STATIC_STRING("DECL ",wf);

@@ -944,13 +944,37 @@
 
 /**
  * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF 77
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF_TYPE
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF_TYPE 78
+
+
+
+/**
+ * \flags macro var
  * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL
  * \group assembly
  * \subgroup assembly-instruction
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL 77
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL 79
 
 
 
@@ -962,7 +986,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO 78
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO 80
 
 
 
@@ -974,7 +998,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW 79
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW 81
 
 
 
@@ -986,7 +1010,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL 80
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL 82
 
 
 
@@ -998,7 +1022,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT 81
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT 83
 
 
 
@@ -1010,7 +1034,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR 82
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR 84
 
 
 
@@ -1022,7 +1046,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR 83
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR 85
 
 
 
@@ -1034,7 +1058,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR 84
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR 86
 
 
 
@@ -1046,7 +1070,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL 85
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL 87
 
 
 
@@ -1058,7 +1082,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP 86
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP 88
 
 
 
@@ -1070,7 +1094,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO 87
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO 89
 
 
 
@@ -1082,7 +1106,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE 88
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE 90
 
 
 
@@ -1094,7 +1118,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ARRAY 89
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ARRAY 91
 
 
 
@@ -1106,7 +1130,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_REF 90
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_REF 92
 
 
 
@@ -1118,7 +1142,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET 91
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET 93
 
 
 
@@ -1130,7 +1154,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT 92
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT 94
 
 
 
@@ -1142,7 +1166,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO 93
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO 95
 
 
 
@@ -1154,7 +1178,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT 94
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT 96
 
 
 
@@ -1166,7 +1190,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR 95
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR 97
 
 
 
@@ -1178,7 +1202,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR 96
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR 98
 
 
 
@@ -1190,7 +1214,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR 97
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR 99
 
 
 
@@ -1202,7 +1226,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL 98
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL 100
 
 
 
@@ -1214,7 +1238,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL 99
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL 101
 
 
 
@@ -1226,7 +1250,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID 100
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID 102
 
 
 
@@ -1238,7 +1262,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT 101
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT 103
 
 
 
@@ -1250,7 +1274,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK 102
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK 104
 
 
 
@@ -1262,7 +1286,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_SEMAPHORE 103
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_SEMAPHORE 105
 
 
 
@@ -1274,7 +1298,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ 104
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ 106
 
 
 
@@ -1286,7 +1310,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ 105
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ 107
 
 
 
@@ -1298,7 +1322,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 106
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 108
 
 
 

@@ -439,6 +439,8 @@
 
 (:> "File: " @@file@@ ", Line: " @@line@@ "\n")
 
+(:> (.? hash$hexdigest) ", " (.? hash) ", " (&:? hash$hash_type) ", " (&:? array_type) "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)
