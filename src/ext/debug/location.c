@@ -12,7 +12,7 @@ sll_object_t* debug_get_location(sll_object_t*const* al,sll_arg_count_t all){
 	}
 	else{
 		const sll_call_stack_t* c_st=sll_get_call_stack();
-		ii=(c_st->l>1?(c_st->dt+c_st->l-2)->_ii:sll_current_instruction_index);
+		ii=(c_st->l?(c_st->dt+c_st->l-1)->_ii:sll_current_instruction_index);
 	}
 	return ii_to_loc(ii);
 }

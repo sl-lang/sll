@@ -4,11 +4,7 @@
 
 
 sll_object_t* debug_get_call_stack(sll_object_t*const* al,sll_arg_count_t all){
-	sll_call_stack_size_t off=0;
-	if (all&&SLL_OBJECT_GET_TYPE(*al)==SLL_OBJECT_TYPE_INT&&(*al)->dt.i>0){
-		off=(sll_call_stack_size_t)((*al)->dt.i);
-	}
-	off++;
+	sll_call_stack_size_t off=(all&&SLL_OBJECT_GET_TYPE(*al)==SLL_OBJECT_TYPE_INT&&(*al)->dt.i>0?(sll_call_stack_size_t)((*al)->dt.i):0);
 	sll_object_t* o=SLL_CREATE();
 	o->t=SLL_OBJECT_TYPE_ARRAY;
 	const sll_call_stack_t* c_st=sll_get_call_stack();

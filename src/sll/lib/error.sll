@@ -110,7 +110,7 @@
 
 (= _get_backtrace (,,,
 	(= backtrace (<- (... "sll:error_get_backtrace")))
-	(@@ ([> (= i 0) (< i (- ($ backtrace) 2))
+	(@@ ([> (= i 0) (< i (- ($ backtrace) 1))
 		(= k (: backtrace i))
 		(++ i)
 		(:: k call_frame_type)

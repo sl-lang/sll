@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -138,12 +138,12 @@
 (:> "Type: " (:? arr) "\n" (<- string$format "%s - %c - %.2x\n" "string" 'C' 15.46))
 (:> (<- path$list_dir ".") "\n")
 
-(= format_bytes (,,, sz (?
-	(< sz (<< 1 10)) (@@ (+ sz " b"))
-	(< sz (<< 1 20)) (@@ (+ (>> sz 10) " kb"))
-	(< sz (<< 1 30)) (@@ (+ (>> sz 20) " Mb"))
-	(@@ (+ (>> sz 30) " Gb"))
-)))
+(= format_bytes (,,, sz (@@ (?:
+	(< sz (<< 1 10)) (+ sz " b")
+	(< sz (<< 1 20)) (+ (>> sz 10) " kb")
+	(< sz (<< 1 30)) (+ (>> sz 20) " Mb")
+	(+ (>> sz 30) " Gb")
+))))
 (= file_and_size_type (&:
 	(~ string_type) fp
 	(~ int_type) sz
@@ -434,6 +434,8 @@
 
 (:> (<- base64$decode "A") "\n")
 (:> (<- base64$decode "MT!z") "\n")
+
+(:> (<- hash$hexdigest (<- hmac$hmac hash$sha1 "VERY-SECRET-KEY" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")) "\na6b10d9db5f817a532f3065892ecf309d7660d7a\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

@@ -153,15 +153,6 @@ static void _pop_call_stack(void){
 
 
 
-static sll_object_t* _call_internal_function(sll_function_index_t i,sll_object_t*const* a,sll_arg_count_t ac){
-	_push_call_stack(_scheduler_current_thread,(*(sll_current_runtime_data->ift->dt+i))->nm.v,_scheduler_current_thread->si);
-	sll_object_t* o=(*(sll_current_runtime_data->ift->dt+i))->p(a,ac);
-	_pop_call_stack();
-	return o;
-}
-
-
-
 static sll_object_t* _wait_for_result(sll_thread_index_t tid){
 	sll_thread_index_t s_tid=sll_current_thread_index;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -245,14 +236,9 @@ static sll_object_t* _wait_for_result(sll_thread_index_t tid){
 				_scheduler_current_thread->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
-				{
-					sll_object_t* tos=SLL_CREATE();
-					tos->t=SLL_OBJECT_TYPE_FLOAT;
-					tos->dt.f=ai->dt.f;
-					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
-					_scheduler_current_thread->si++;
-					break;
-				}
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_FROM_FLOAT(ai->dt.f);
+				_scheduler_current_thread->si++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_ACQUIRE_STATIC_CHAR(ai->dt.c);
 				_scheduler_current_thread->si++;
@@ -543,13 +529,11 @@ _cleanup_jump_table:;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN:
-				{
-					sll_operator_assign((SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)?*VAR_REF(ai->dt.v):*(_scheduler_current_thread->stack+_scheduler_current_thread->si-3)),*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2),*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
-					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2));
-					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
-					_scheduler_current_thread->si-=2;
-					break;
-				}
+				sll_operator_assign((SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)?*VAR_REF(ai->dt.v):*(_scheduler_current_thread->stack+_scheduler_current_thread->si-3)),*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2),*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
+				SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-2));
+				SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
+				_scheduler_current_thread->si-=2;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO:
 				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE:
@@ -699,7 +683,7 @@ _cleanup_jump_table:;
 						if (i<0){
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
-								sll_object_t* n=_call_internal_function(j,_scheduler_current_thread->stack+_scheduler_current_thread->si-ai->dt.ac,ai->dt.ac);
+								sll_object_t* n=(*(sll_current_runtime_data->ift->dt+j))->p(_scheduler_current_thread->stack+_scheduler_current_thread->si-ai->dt.ac,ai->dt.ac);
 								for (sll_arg_count_t k=0;k<ai->dt.ac;k++){
 									_scheduler_current_thread->si--;
 									SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
@@ -737,7 +721,7 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						sll_object_t* n=_call_internal_function(i,NULL,0);
+						sll_object_t* n=(*(sll_current_runtime_data->ift->dt+i))->p(NULL,0);
 						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=n;
 						_scheduler_current_thread->si++;
 						break;
@@ -755,7 +739,7 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						sll_object_t* n=_call_internal_function(i,_scheduler_current_thread->stack+_scheduler_current_thread->si-1,1);
+						sll_object_t* n=(*(sll_current_runtime_data->ift->dt+i))->p(_scheduler_current_thread->stack+_scheduler_current_thread->si-1,1);
 						SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
 						*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=n;
 						break;
@@ -781,7 +765,7 @@ _cleanup_jump_table:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
 								SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
-								sll_object_t* n=_call_internal_function(j,tos->dt.a.v,tos->dt.a.l);
+								sll_object_t* n=(*(sll_current_runtime_data->ift->dt+j))->p(tos->dt.a.v,tos->dt.a.l);
 								SLL_RELEASE(tos);
 								*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=n;
 								break;
@@ -860,14 +844,9 @@ _return:;
 					goto _return;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				{
-					sll_object_t* tos=SLL_CREATE();
-					tos->t=SLL_OBJECT_TYPE_FLOAT;
-					tos->dt.f=ai->dt.f;
-					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
-					_scheduler_current_thread->si++;
-					goto _return;
-				}
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_FROM_FLOAT(ai->dt.f);
+				_scheduler_current_thread->si++;
+				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
 				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_ACQUIRE_STATIC_CHAR(ai->dt.c);
 				_scheduler_current_thread->si++;

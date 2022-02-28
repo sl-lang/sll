@@ -1,0 +1,47 @@
+(--- "types.sll" "hash.sll")
+
+
+
+(= hmac_module_type (&:
+	(~ func_type) hmac
+))
+
+
+
+(= HMAC_IPAD 0x36)
+(= HMAC_OPAD 0x5c)
+
+
+
+(= hmac_f (,,, hash_func key data
+	(= hash_func (:: hash_func hash$hash_type))
+	(= key (:: key string_type))
+	(= data (:: data string_type))
+	(? (> ($ key) hash_func$BLOCK_SIZE) {
+		(= key_hash (<- hash_func$init))
+		(= key_hash (<- hash_func$update key_hash key))
+		(= key (+
+			(<- hash_func$digest key_hash)
+			(* "\x00" (- hash_func$BLOCK_SIZE hash_func$DIGEST_SIZE))
+		))
+	} (< ($ key) hash_func$BLOCK_SIZE) {
+		(= key (+
+			key
+			(* "\x00" (- hash_func$BLOCK_SIZE ($ key)))
+		))
+	})
+	(= in_hash (<- hash_func$init))
+	(= in_hash (<- hash_func$update in_hash (^ key HMAC_IPAD)))
+	(= in_hash (<- hash_func$update in_hash data))
+	(= out_hash (<- hash_func$init))
+	(= out_hash (<- hash_func$update out_hash (^ key HMAC_OPAD)))
+	(= out_hash (<- hash_func$update out_hash (<- hash_func$digest in_hash)))
+	(@@ (<- hash_func$digest out_hash))
+))
+
+
+
+(= hmac (. hmac_module_type
+	hmac_f
+))
+(## hmac)

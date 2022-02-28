@@ -5,6 +5,8 @@
 ### Added
 
 - C error API: `sll_error_t`, `SLL_ERROR_NO_FILE_PATH`, `SLL_ERROR_UNKNOWN_FD`, `SLL_ERROR_SANDBOX`, `SLL_ERROR_TOO_LONG`, `SLL_ERROR_FLAG_WINAPI`, `SLL_ERROR_FLAG_LIBC`, `SLL_ERROR_GET_TYPE`, `SLL_NO_ERROR` ([#238])
+- Exposed the `hash_type` type from `hash.sll`
+- Implemented `hmac.sll` and `hmac$hmac` ([#230])
 - Library verification parameter can be passed to `sys$load_library` to verify the SHA-256 of the loaded file
 - New error types: `error$ERROR_ANY`, `error$ERROR_INTERNAL_ERROR`, `error$ERROR_INVALID_FILE_DESCRIPTOR`, `error$ERROR_PATH_TOO_LONG` and `error$ERROR_SANDBOX` ([#238])
 - Path size limit: `path$MAX_PATH_SIZE`
@@ -14,6 +16,7 @@
 
 - Adjusted platform and file function to allow for error return values ([#238])
 - Fixed bit-shifting logic in `sll_load_assembly` and `sll_write_assembly`
+- Fixed bugs in `hash$xxx$update` and `hash$xxx$digest` functions
 - Fixed critical error in file hash calcultion
 - *\[Darwin only\]* Fixed `SLL_API_MAX_FILE_PATH_LENGTH`
 - Fixed `sll_object_field_t` to be a union instead of a structure
@@ -1702,6 +1705,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#235]: https://github.com/sl-lang/sll/issues/235
 [#233]: https://github.com/sl-lang/sll/issues/233
 [#232]: https://github.com/sl-lang/sll/issues/232
+[#230]: https://github.com/sl-lang/sll/issues/230
 [#229]: https://github.com/sl-lang/sll/issues/229
 [#228]: https://github.com/sl-lang/sll/issues/228
 [#227]: https://github.com/sl-lang/sll/issues/227

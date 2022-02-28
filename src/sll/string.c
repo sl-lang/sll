@@ -237,6 +237,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 
 
 __SLL_EXTERNAL void sll_string_concat(const sll_string_t* a,const sll_string_t* b,sll_string_t* o){
+	if (!a->l){
+		if (!b->l){
+			SLL_INIT_STRING(o);
+		}
+		else{
+			sll_string_clone(b,o);
+		}
+		return;
+	}
+	if (!b->l){
+		sll_string_clone(a,o);
+		return;
+	}
 	o->l=a->l+b->l;
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
 	INIT_PADDING(o->v,o->l);

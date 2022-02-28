@@ -57,6 +57,7 @@
 ))
 
 (= hash_module_type (&:
+	(~ type_type) hash_type
 	(~ hash_type) md5
 	(~ hash_type) sha1
 	(~ hash_type) sha224
@@ -127,7 +128,7 @@
 		(: dt 0 i)
 	))
 	(@@ (. md5_type
-		(: dt i len)
+		(>> dt i)
 		n_sz
 		(: new_data 0)
 		(: new_data 1)
@@ -223,7 +224,7 @@
 		(: dt 0 i)
 	))
 	(@@ (. sha1_type
-		(: dt i len)
+		(>> dt i)
 		n_sz
 		(: new_data 0)
 		(: new_data 1)
@@ -327,7 +328,7 @@
 		(: dt 0 i)
 	))
 	(@@ (. sha256_type
-		(: dt i len)
+		(>> dt i)
 		n_sz
 		(: new_data 0)
 		(: new_data 1)
@@ -464,7 +465,7 @@
 		(: dt 0 i)
 	))
 	(@@ (. sha512_type
-		(: dt i len)
+		(>> dt i)
 		n_sz
 		(: new_data 0)
 		(: new_data 1)
@@ -575,6 +576,7 @@
 
 
 (= hash (. hash_module_type
+	hash_type
 	[
 		MD5_BLOCK_SIZE
 		MD5_DIGEST_SIZE

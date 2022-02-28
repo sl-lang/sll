@@ -1,4 +1,4 @@
-(--- "types.sll" "path.sll" "string.sll" "map.sll" "date.sll")
+(--- "types.sll" "path.sll" "string.sll" "map.sll" "date.sll" "_internal.sll")
 
 
 
@@ -42,11 +42,9 @@
 
 (= EXECUTABLE (<- (... "sll:sys_get_executable")))
 
-(= PLATFORM (<- (... "sll:sys_get_platform")))
-
 (= LIBRARY (<- (... "sll:sys_get_library")))
 (= LIBRARY_PATH (+ (<- path$absolute (+ (: (<- path$split LIBRARY) 0) path$SEPARATOR "sys_lib")) path$SEPARATOR))
-(= LIBRARY_EXTENSION (?: (=== PLATFORM "windows") "dll" "so"))
+(= LIBRARY_EXTENSION (?: (=== _PLATFORM "windows") "dll" "so"))
 
 (= v_dt (<- (... "sll:sys_get_version")))
 (= commit (: v_dt 3))
@@ -120,7 +118,7 @@
 	LIBRARY
 	LIBRARY_EXTENSION
 	LIBRARY_PATH
-	PLATFORM
+	_PLATFORM
 	VERSION
 	get_env
 	get_sandbox_flags

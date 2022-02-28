@@ -21,7 +21,7 @@
 
 
 
-(= SEPARATOR (?: (=== (<- (... "sll:sys_get_platform")) "windows") '\\' '/'))
+(= SEPARATOR (?: (=== _PLATFORM "windows") '\\' '/'))
 
 
 
