@@ -830,10 +830,6 @@ _parse_identifier:
 					arg->t=SLL_NODE_TYPE_INT;
 					arg->dt.i=1;
 				}
-				else if (o&&o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
-					arg->t=SLL_NODE_TYPE_FIELD;
-					arg->dt.s=sll_add_string(&(sf->st),&str,1);
-				}
 				else if (c=='$'){
 					do{
 						c=sll_file_read_char(rf,NULL);
