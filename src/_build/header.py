@@ -8,7 +8,6 @@ import util
 COMMENT_REGEX=re.compile(br"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
 DEFINE_LINE_CONTINUE_REGEX=re.compile(br"\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
-HEADER_INCLUDE_GUARD_REGEX=re.compile(br"^\s*#ifndef\s+(?P<h_nm>[a-zA-Z0-9_]+)\s+#define\s+(?P=h_nm)\s+(?:1\s+)?(.*)#endif\s*$",re.DOTALL)
 HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
@@ -187,12 +186,7 @@ def parse_headers(fp):
 			if (f[-2:]==".h" and f not in INTERNAL_SLL_HEADERS):
 				with open(os.path.join(r,f),"rb") as rf:
 					il.append(bytes(os.path.join(r,f)[len(fp):].replace("\\","/"),"utf-8"))
-					dt=rf.read()
-					m=HEADER_INCLUDE_GUARD_REGEX.fullmatch(dt)
-					if (m is not None):
-						o+=m.group(2)+b"\n"
-					else:
-						o+=dt+b"\n"
+					o+=rf.read()+b"\n"
 	util.log(f"  Combined {len(il)} Files\nPreprocessing Combined Library Header File...")
 	o=INCLUDE_REGEX.sub(lambda m:(b"" if m.group(1)[1:-1] in il else b"#include <"+(il.append(m.group(1)[1:-1]),m.group(1)[1:-1])[1]+b">"),DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+b" "+DEFINE_LINE_CONTINUE_REGEX.sub(br"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(br"\n",COMMENT_REGEX.sub(br"",o).strip().replace(b"\r\n",b"\n")))).split(b"\n")
 	return o
