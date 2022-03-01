@@ -169,7 +169,7 @@ def generate_memory_fail(i_fp,o_fp):
 	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
 	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
 		dt=rf.read().replace(b"\r\n",b"\n").split(b"$$$")
-		wf.write(b"#ifndef __SLL_GENERATED_MEMORY_FAIL_H__\n#define __SLL_GENERATED_MEMORY_FAIL_H__ 1\n#include <sll/types.h>\n\n\n\n#define MEMORY_FAIL_START_SIZE "+bytes(str(len(dt[0])),"utf-8")+b"\n#define MEMORY_FAIL_END_SIZE "+bytes(str(len(dt[1])),"utf-8")+b"\n\n\nstatic const sll_char_t MEMORY_FAIL_START[]={\n\t")
+		wf.write(b"#ifndef __SLL_GENERATED_MEMORY_FAIL_H__\n#define __SLL_GENERATED_MEMORY_FAIL_H__ 1\n#include <sll/types.h>\n\n\n\n#define MEMORY_FAIL_START_SIZE "+bytes(str(len(dt[0])),"utf-8")+b"\n#define MEMORY_FAIL_END_SIZE "+bytes(str(len(dt[1])),"utf-8")+b"\n\n\n\nstatic const sll_char_t MEMORY_FAIL_START[]={\n\t")
 		_write_byte_array(wf,dt[0])
 		wf.write(b"\n};\n\n\n\nstatic const sll_char_t MEMORY_FAIL_END[]={\n\t")
 		_write_byte_array(wf,dt[1])
