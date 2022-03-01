@@ -47,7 +47,7 @@ for f in os.listdir("src/sll/lib"):
 		wf.write(rf.read())
 	fl.append("build/lib/"+f)
 util.log("Compiling Modules...")
-if (util.execute(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else []))):
+if (util.execute(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
@@ -72,7 +72,7 @@ for nm in util.get_ext_list():
 		fl.append(f"build/lib/{nm}/"+f)
 	header.generate_library_hash(nm,ver)
 	util.log("Compiling Extension Modules...")
-	if (util.execute(["build/sll","-c","-R","-I","build/lib/"+nm,"-I","build"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-D"] if "--release" in sys.argv else []))):
+	if (util.execute(["build/sll","-c","-R","-I","build/lib/"+nm,"-I","build"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
 		sys.exit(1)
 	util.log("Removing Extension Module Source Files...")
 	for k in fl:

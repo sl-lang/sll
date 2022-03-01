@@ -964,14 +964,9 @@ _return:;
 				_scheduler_current_thread->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
-				{
-					sll_object_t* tos=SLL_CREATE();
-					tos->t=SLL_OBJECT_TYPE_INT;
-					tos->dt.i=ai->dt.i;
-					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
-					_scheduler_current_thread->si++;
-					goto _return;
-				}
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_FROM_INT(ai->dt.i);
+				_scheduler_current_thread->si++;
+				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
 				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_FROM_FLOAT(ai->dt.f);
 				_scheduler_current_thread->si++;
@@ -981,11 +976,14 @@ _return:;
 				_scheduler_current_thread->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_CREATE();
-				(*(_scheduler_current_thread->stack+_scheduler_current_thread->si))->t=SLL_OBJECT_TYPE_STRING;
-				sll_string_clone(sll_current_runtime_data->a_dt->st.dt+ai->dt.s,&((*(_scheduler_current_thread->stack+_scheduler_current_thread->si))->dt.s));
-				_scheduler_current_thread->si++;
-				goto _return;
+				{
+					sll_object_t* tos=SLL_CREATE();
+					tos->t=SLL_OBJECT_TYPE_STRING;
+					sll_string_clone(sll_current_runtime_data->a_dt->st.dt+ai->dt.s,&(tos->dt.s));
+					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
+					_scheduler_current_thread->si++;
+					goto _return;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=*VAR_REF(ai->dt.v);
 				SLL_ACQUIRE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));

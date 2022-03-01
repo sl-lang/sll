@@ -270,7 +270,7 @@
 
 (= str (<- string$upper_case "The quick brown fox jumps over the dog"))
 (-> (= i 0) (< i 26) {
-	(= ch (:: (+ i 65) 2))
+	(= ch (:: (+ i 'A') 2))
 	(? (|: str ch) {
 		(:> "Contains letter '" ch "'\n")
 	} {
@@ -437,7 +437,7 @@
 
 (:> (<- hash$hexdigest (<- hmac$hmac hash$sha1 "VERY-SECRET-KEY" "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")) "\na6b10d9db5f817a532f3065892ecf309d7660d7a\n")
 
-(:> "File: " @@file@@ ", Line: " @@line@@ "\n")
+(:> "File: " @@file@@ ", Line: " @@line@@  "\n")
 
 (:> (.? hash$hexdigest) ", " (.? hash) ", " (&:? hash$hash_type) ", " (&:? array_type) "\n")
 

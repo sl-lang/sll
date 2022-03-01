@@ -7,6 +7,7 @@
 - C error API: `sll_error_t`, `SLL_ERROR_NO_FILE_PATH`, `SLL_ERROR_UNKNOWN_FD`, `SLL_ERROR_SANDBOX`, `SLL_ERROR_TOO_LONG`, `SLL_ERROR_FLAG_WINAPI`, `SLL_ERROR_FLAG_LIBC`, `SLL_ERROR_GET_TYPE`, `SLL_NO_ERROR` ([#238])
 - Exposed the `hash_type` type from `hash.sll`
 - Implemented `hmac.sll` and `hmac$hmac` ([#230])
+- Implemented `sll_remove_debug_names` and CLI flag to remove debug names (`-d`)
 - Library verification parameter can be passed to `sys$load_library` to verify the SHA-256 of the loaded file
 - Nameof operator (`(.?)`): `sll_get_name`
 - New error types: `error$ERROR_ANY`, `error$ERROR_INTERNAL_ERROR`, `error$ERROR_INVALID_FILE_DESCRIPTOR`, `error$ERROR_PATH_TOO_LONG` and `error$ERROR_SANDBOX` ([#238])

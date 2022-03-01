@@ -172,7 +172,10 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-compiled-object"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_GENERATE_COMPILED_OBJECT;
 		}
-		else if ((*e=='-'&&*(e+1)=='D'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--string-debug"))==SLL_COMPARE_RESULT_EQUAL){
+		else if ((*e=='-'&&*(e+1)=='d'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--strip-names"))==SLL_COMPARE_RESULT_EQUAL){
+			fl|=CLI_FLAG_STRIP_NAMES;
+		}
+		else if ((*e=='-'&&*(e+1)=='D'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--strip-debug"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_STRIP_DEBUG;
 		}
 		else if ((*e=='-'&&*(e+1)=='e'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--expand-file-paths"))==SLL_COMPARE_RESULT_EQUAL){
@@ -339,6 +342,9 @@ _read_file_argument:
 		if (fl&CLI_FLAG_STRIP_DEBUG){
 			SLL_LOG("  Debug data stripping");
 		}
+		if (fl&CLI_FLAG_STRIP_NAMES){
+			SLL_LOG("  Function name stripping");
+		}
 		SLL_LOG("Include path:");
 		sll_string_length_t j=0;
 		while (j<i_fpl){
@@ -384,6 +390,10 @@ _read_file_argument:
 			if (fl&CLI_FLAG_STRIP_DEBUG){
 				CLI_LOG_IF_VERBOSE("Removing debugging data...");
 				sll_remove_debug_data(&c_dt);
+			}
+			if (fl&CLI_FLAG_STRIP_NAMES){
+				CLI_LOG_IF_VERBOSE("Removing name data...");
+				sll_remove_debug_names(&c_dt);
 			}
 			CLI_LOG_IF_VERBOSE("Removing node padding...");
 			sll_remove_node_padding(&c_dt);

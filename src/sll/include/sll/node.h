@@ -1157,6 +1157,17 @@ __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt);
 
 /**
  * \flags func
+ * \name sll_remove_debug_names
+ * \group node
+ * \desc Docs!
+ * \arg sll_compilation_data_t* c_dt
+ */
+__SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* c_dt);
+
+
+
+/**
+ * \flags func
  * \name sll_remove_node_padding
  * \group node
  * \desc Docs!

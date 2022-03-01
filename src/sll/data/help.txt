@@ -4,7 +4,8 @@ Options:
   -a, --generate-assembly -> Generate assembly (.sla)
   -A <arg1> <arg2> <arg3>, --args <arg1> <arg2> <arg3> -> Pass argumnets to the VM
   -c, --generate-compiled-object -> Generate compiled objects (.slc)
-  -D, --string-debug -> Remove name source code line number data
+  -d, --strip-names -> Remove function and type names
+  -D, --strip-debug -> Remove source code line number data
   -e, --expand-file-paths -> Expand file paths
   -f <file>, --file <file> -> Treat <file> as input file (Usefull for files starting with a dash ('-'))
   -F, --generate-sll -> Output Sll code to file (Not avaible when loading assembly ('.sla') files)
