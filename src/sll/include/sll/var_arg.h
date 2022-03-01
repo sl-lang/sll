@@ -47,13 +47,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const void* sll_var_arg_get(sll_var_arg_list_t
 
 /**
  * \flags check_output func
- * \name sll_var_arg_get_int
+ * \name sll_var_arg_get_char
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \ret sll_integer_t
+ * \ret sll_char_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_list_t* va);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_list_t* va);
 
 
 
@@ -71,13 +71,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_var_arg_get_float(sll_var_arg_
 
 /**
  * \flags check_output func
- * \name sll_var_arg_get_char
+ * \name sll_var_arg_get_int
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \ret sll_char_t
+ * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_list_t* va);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_list_t* va);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_var_arg_get_object
+ * \group var-arg
+ * \desc Docs!
+ * \arg sll_var_arg_list_t* va
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_var_arg_get_object(sll_var_arg_list_t* va);
 
 
 

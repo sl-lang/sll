@@ -25,15 +25,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const void* sll_var_arg_get(sll_var_arg_list_t
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_list_t* va){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_list_t* va){
 	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		return va_arg(*(va->dt.c),sll_integer_t);
+		return (sll_char_t)va_arg(*(va->dt.c),int);
 	}
 	if (!va->dt.sll.l){
 		return 0;
 	}
-	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_INT]);
-	sll_integer_t o=n->dt.i;
+	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
+	sll_char_t o=n->dt.c;
 	SLL_RELEASE(n);
 	va->dt.sll.p++;
 	va->dt.sll.l--;
@@ -59,16 +59,34 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_var_arg_get_float(sll_var_arg_
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_list_t* va){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_list_t* va){
 	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		return (sll_char_t)va_arg(*(va->dt.c),int);
+		return va_arg(*(va->dt.c),sll_integer_t);
 	}
 	if (!va->dt.sll.l){
 		return 0;
 	}
-	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
-	sll_char_t o=n->dt.c;
+	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_INT]);
+	sll_integer_t o=n->dt.i;
 	SLL_RELEASE(n);
+	va->dt.sll.p++;
+	va->dt.sll.l--;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_var_arg_get_object(sll_var_arg_list_t* va){
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+		sll_object_t* o=va_arg(*(va->dt.c),sll_object_t*);
+		SLL_ACQUIRE(o);
+		return o;
+	}
+	if (!va->dt.sll.l){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* o=*(va->dt.sll.p);
+	SLL_ACQUIRE(o);
 	va->dt.sll.p++;
 	va->dt.sll.l--;
 	return o;
