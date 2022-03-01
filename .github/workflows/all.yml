@@ -31,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Initialize codeql@1
@@ -51,7 +51,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Build
@@ -65,7 +65,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Build
@@ -108,7 +108,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Set-up requests
@@ -125,7 +125,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Build
@@ -139,7 +139,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Build
@@ -186,7 +186,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Set-up requests
@@ -213,7 +213,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Build
@@ -233,7 +233,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Set-up requests
@@ -249,7 +249,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Set-up requests
@@ -269,7 +269,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Build
@@ -283,7 +283,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup python@3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Build
