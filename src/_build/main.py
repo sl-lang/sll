@@ -53,6 +53,9 @@ util.log("Removing Module Source Files...")
 for k in fl:
 	util.log(f"  Removing '{k}'...")
 	os.remove(k)
+	if (k.split("/")[-1][0]=="_"):
+		util.log(f"  Removing '{k}.slc'...")
+		os.remove(k+".slc")
 if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
@@ -78,6 +81,9 @@ for nm in util.get_ext_list():
 	for k in fl:
 		util.log(f"  Removing '{k}'...")
 		os.remove(k)
+		if (k.split("/")[-1][0]=="_"):
+			util.log(f"  Removing '{k}.slc'...")
+			os.remove(k+".slc")
 	if ("--bundle" in sys.argv or "--upload" in sys.argv):
 		util.log("Compressing extension files...")
 		util.bundle_ext(nm,ver)

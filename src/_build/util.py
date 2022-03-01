@@ -123,6 +123,7 @@ def bundle(v):
 			zf.write(k,arcname=k[6:])
 		if (system=="windows"):
 			zf.write("build/sllw.exe",arcname="sllw.exe")
+		zf.write("build/sll.h",arcname="include/sll.h")
 		for k in os.listdir("build/lib"):
 			if (os.path.isfile("build/lib/"+k)):
 				zf.write("build/lib/"+k,arcname="lib/"+k)
