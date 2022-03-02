@@ -790,7 +790,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 	if (b->l==1){
 		return sll_string_index_char(a,b->v[0],0);
 	}
-	SLL_UNIMPLEMENTED();
+	if (a->l==b->l){
+		return (sll_string_equal(a,b)?0:SLL_MAX_STRING_LENGTH);
+	}
+	for (sll_string_length_t i=0;i<a->l-b->l;i++){
+		if (sll_compare_data(a->v+i,b->v,b->l)==SLL_COMPARE_RESULT_EQUAL){
+			return i;
+		}
+	}
 	return SLL_MAX_STRING_LENGTH;
 }
 

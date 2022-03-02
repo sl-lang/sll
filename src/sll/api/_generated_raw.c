@@ -5306,15 +5306,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_ns_raw(sll_ob
 	sll_object_t* a=NULL;
 	if (all>0){
 		a=*(al+0);
-		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT||SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT||SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_FLOAT||SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
 			SLL_ACQUIRE(a);
 		}
 		else{
-			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
 		}
 	}
 	else{
-		a=SLL_ACQUIRE_STATIC_INT(0);
+		a=SLL_ACQUIRE_STATIC(float_zero);
 	}
 	sll_integer_t out=sll_api_time_sleep_ns(a);
 	SLL_RELEASE(a);
