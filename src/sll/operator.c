@@ -80,6 +80,9 @@ __SLL_EXTERNAL sll_float_t sll_float_compare_error=1e-6;
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b){
 	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			if (!a->dt.s.l){
+				return SLL_ACQUIRE_STATIC_INT(0);
+			}
 			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.s.l*a->dt.s.l;
 			if (idx<0){
 				idx+=a->dt.s.l;
@@ -89,6 +92,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 	}
 	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			if (!a->dt.a.l){
+				return SLL_ACQUIRE_STATIC_INT(0);
+			}
 			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.a.l*a->dt.a.l;
 			if (idx<0){
 				idx+=a->dt.a.l;

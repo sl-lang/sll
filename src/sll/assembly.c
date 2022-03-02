@@ -846,16 +846,22 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 
 
 
+static void _init_loop_data(assembly_generator_data_t* g_dt,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,sll_assembly_instruction_type_t brk){
+	lg_dt->p_l_dt=g_dt->l_dt;
+	g_dt->l_dt.cnt=cnt;
+	g_dt->l_dt.brk=brk;
+	lg_dt->v_st=sll_zero_allocate(((g_dt->a_dt->vc>>6)+1)*sizeof(bitmap_t));
+}
+
+
+
 static const sll_node_t* _generate_loop_start(assembly_generator_data_t* g_dt,const sll_node_t* o,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,sll_assembly_instruction_type_t brk){
+	_init_loop_data(g_dt,lg_dt,cnt,brk);
 	SLL_ASSERT(o->dt.l.ac);
 	sll_arg_count_t l=o->dt.l.ac-1;
 	sll_scope_t sc=o->dt.l.sc;
 	o=_generate(o+1,g_dt);
 	const sll_node_t* cnd=o;
-	lg_dt->p_l_dt=g_dt->l_dt;
-	g_dt->l_dt.cnt=cnt;
-	g_dt->l_dt.brk=brk;
-	lg_dt->v_st=sll_zero_allocate(((g_dt->a_dt->vc>>6)+1)*sizeof(bitmap_t));
 	for (sll_arg_count_t i=0;i<l;i++){
 		o=_mark_loop_delete(o,g_dt,lg_dt->v_st,sc);
 	}
@@ -1806,7 +1812,23 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				return o;
 			}
 		case SLL_NODE_TYPE_LOOP:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->dt.l.ac;
+				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
+				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
+				assembly_loop_generator_data_t lg_dt;
+				_init_loop_data(g_dt,&lg_dt,s,e);
+				DEFINE_LABEL(g_dt,s);
+				o++;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,s);
+				DEFINE_LABEL(g_dt,e);
+				_generate_loop_end(g_dt,&lg_dt);
+				return o;
+			}
 		case SLL_NODE_TYPE_INC:
 		case SLL_NODE_TYPE_DEC:
 			{
