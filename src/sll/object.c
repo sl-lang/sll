@@ -93,12 +93,7 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 
 static void _set_field(const sll_object_type_table_t* tt,sll_object_field_t* o,sll_object_type_t t,sll_object_t* v){
 	t=SLL_OBJECT_GET_TYPE_MASK(t);
-	if (t>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(v)==t){
-		SLL_ACQUIRE(v);
-		o->o=v;
-		return;
-	}
-	if (t==SLL_OBJECT_TYPE_OBJECT){
+	if ((t>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(v)==t)||t==SLL_OBJECT_TYPE_OBJECT){
 		SLL_ACQUIRE(v);
 		o->o=v;
 		return;
@@ -171,7 +166,7 @@ static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_st
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* tt,const sll_object_t*const* p,sll_arg_count_t l,const sll_string_t* nm){
 	tt->l++;
-	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
+	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_OBJECT);
 	tt->dt=sll_reallocate(PTR(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
 	if (nm){
@@ -239,7 +234,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_object_type_table_t* tt){
 	tt->l++;
-	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_RESERVED0);
+	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_OBJECT);
 	tt->dt=sll_reallocate(PTR(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t));
 	SLL_INIT_STRING((sll_string_t*)(&(n->nm)));

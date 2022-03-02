@@ -117,25 +117,13 @@
 
 /**
  * \flags macro var
- * \name SLL_OBJECT_TYPE_RESERVED0
- * \group object
- * \subgroup object-type
- * \desc Internally used as `OBJECT_TYPE_FUNCTION_ID`
- * \type sll_object_type_t
- */
-#define SLL_OBJECT_TYPE_RESERVED0 0x1ffffffe
-
-
-
-/**
- * \flags macro var
  * \name SLL_OBJECT_TYPE_OBJECT
  * \group object
  * \subgroup object-type
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_TYPE_OBJECT 0x1fffffff
+#define SLL_OBJECT_TYPE_OBJECT 0x7fffffff
 
 
 
@@ -157,12 +145,7 @@
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_FLAG_CONSTANT 0x20000000
-
-
-
-#define SLL_OBJECT_FLAG_RESERVED0 0x40000000
-#define SLL_OBJECT_FLAG_RESERVED1 0x80000000
+#define SLL_OBJECT_FLAG_CONSTANT 0x80000000
 
 
 
@@ -174,7 +157,7 @@
  * \arg const sll_object_t* r
  * \ret sll_object_type_t
  */
-#define SLL_OBJECT_GET_TYPE(r) ((r)->t&0x1fffffff)
+#define SLL_OBJECT_GET_TYPE(r) ((r)->t&0x7fffffff)
 
 
 
@@ -186,7 +169,7 @@
  * \arg sll_object_type_t t
  * \ret sll_object_type_t
  */
-#define SLL_OBJECT_GET_TYPE_MASK(t) ((t)&0x1fffffff)
+#define SLL_OBJECT_GET_TYPE_MASK(t) ((t)&0x7fffffff)
 
 
 

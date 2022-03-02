@@ -35,6 +35,9 @@
 
 - Final call stack frame from `error$create` and `error$from_internal`
 - Sll type exporting to C code in extensions
+- Unused function `sll_add_string_object`
+- Unused object flags: `SLL_OBJECT_FLAG_RESERVED0` (`OBJECT_CHANGE_IN_LOOP`) and `SLL_OBJECT_FLAG_RESERVED1` (`OBJECT_EXTERNAL_STRING`)
+- Unused object type: `SLL_OBJECT_TYPE_RESERVED0` (`OBJECT_TYPE_FUNCTION_ID`)
 
 ## [0.7.6] - 2022-02-25
 

@@ -27,19 +27,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_t
 
 /**
  * \flags check_output func
- * \name sll_add_string_object
- * \group string-table
- * \desc Docs!
- * \arg sll_string_table_t* st
- * \arg sll_object_t* v
- * \ret sll_string_index_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string_object(sll_string_table_t* st,sll_object_t* v);
-
-
-
-/**
- * \flags check_output func
  * \name sll_create_string
  * \group string-table
  * \desc Docs!

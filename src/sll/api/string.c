@@ -169,12 +169,6 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			o->v[o->l]='>';
 			o->l++;
 			return;
-		case OBJECT_TYPE_FUNCTION_ID:
-			sll_string_increase(o,1);
-			o->v[o->l]='#';
-			o->l++;
-			_write_int(a->dt.i,o);
-			return;
 		default:
 			{
 				if (!sll_current_runtime_data||SLL_OBJECT_GET_TYPE(a)>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){

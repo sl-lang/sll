@@ -40,8 +40,6 @@ static const sll_char_t* _get_type_string(sll_object_t* o){
 			return SLL_CHAR("array");
 		case SLL_OBJECT_TYPE_MAP:
 			return SLL_CHAR("map");
-		case OBJECT_TYPE_FUNCTION_ID:
-			return SLL_CHAR("<function-id>");
 	}
 	return SLL_CHAR("<custom-type>");
 }
@@ -166,9 +164,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 	o->rc--;
 	if (!o->rc){
 		if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_STRING){
-			if (!(o->t&OBJECT_EXTERNAL_STRING)){
-				sll_free_string(&(o->dt.s));
-			}
+			sll_free_string(&(o->dt.s));
 		}
 		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_ARRAY||SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP_KEYS||SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP_VALUES){
 			sll_free_array(&(o->dt.a));
@@ -176,7 +172,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 		else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP){
 			sll_free_map(&(o->dt.m));
 		}
-		else if (SLL_OBJECT_GET_TYPE(o)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(o)<SLL_OBJECT_TYPE_RESERVED0){
+		else if (SLL_OBJECT_GET_TYPE(o)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(o)<SLL_OBJECT_TYPE_OBJECT){
 			if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(o)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->fn.del){
