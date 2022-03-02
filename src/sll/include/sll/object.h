@@ -9,18 +9,132 @@
  * \group object
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Types
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ */
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_INT
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_INT 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_FLOAT
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_FLOAT 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_CHAR
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_CHAR 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_STRING
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_STRING 3
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_ARRAY
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_ARRAY 4
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_MAP
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_MAP 5
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_MAP_KEYS
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_MAP_KEYS 6
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_MAP_VALUES
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_MAP_VALUES 7
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_RESERVED0
+ * \group object
+ * \subgroup object-type
+ * \desc Internally used as `OBJECT_TYPE_FUNCTION_ID`
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_RESERVED0 0x1ffffffe
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_TYPE_OBJECT
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
 #define SLL_OBJECT_TYPE_OBJECT 0x1fffffff
 
 
