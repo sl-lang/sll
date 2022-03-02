@@ -463,6 +463,7 @@
 - Error handling related to memory allocation array functions ([#83])
 - File to object API: `sll_file_to_object` and `SLL_FROM_FILE`
 - Implemented `date$current` ([#56] and [#156])
+- Implemented `date$date_type` ([#56] and [#152])
 - Implemented `date$DAYS` ([#56] and [#155])
 - Implemented `date$MONTHS` ([#56] and [#154])
 - Implemented `date$time_zone_type` ([#56] and [#153])
@@ -725,7 +726,7 @@
 - Unused headers ([#91])
 - Unused types: `sll_allocated_block_length_t`, `sll_cleanup_type_t`, `sll_file_path_index_t`, `sll_return_t`, `sll_column_number_t` and `sll_input_buffer_t`
 
-## [0.6.26] - 2021-11-7
+## [0.6.26] - 2021-11-07
 
 ### Added
 
@@ -864,7 +865,7 @@
 - `sll_statement_count_t` and `SLL_MAX_STATEMENT_COUNT` (replaced by `sll_arg_count_t` and `SLL_MAX_ARG_COUNT`)
 - [`src/include/sll/core.h`][0.6.21/src/include/sll/core.h] and [`src/include/sll/constants.h`][0.6.21/src/include/sll/constants.h]
 
-## [0.6.21] - 2021-10-4
+## [0.6.21] - 2021-10-04
 
 ### Added
 
@@ -880,7 +881,7 @@
 - Bug fixes in the optimizer
 - `sll_operator_add` now correctly combines objects with strings and arrays
 
-## [0.6.20] - 2021-9-26
+## [0.6.20] - 2021-09-26
 
 ### Added
 
@@ -911,7 +912,7 @@
 - Runtime object stack API: `sll_get_runtime_object_stack_data`, `sll_runtime_object_stack_data_t`, `sll_free_runtime_object_stack_data` etc.
 - `SLL_SAME_ARRAY`, `SLL_SAME_MAP` and `SLL_SAME_STRING` macros
 
-## [0.6.19] - 2021-9-21
+## [0.6.19] - 2021-09-21
 
 ### Added
 
@@ -945,7 +946,7 @@
 - Stack types & stack API ([#50])
 - Unused constant `SLL_COMPARE_RESULT_ERROR`
 
-## [0.6.18] - 2021-9-13
+## [0.6.18] - 2021-09-13
 
 ### Added
 
@@ -972,7 +973,7 @@
 
 - `sll_static_minus_one`, `sll_static_zero`, `sll_static_one`, `sll_static_two`, `sll_static_three`, `sll_static_four` and `sll_static_float_third` (in favor of `sll_static_int` and `sll_static_negative_int`)
 
-## [0.6.17] - 2021-9-9
+## [0.6.17] - 2021-09-09
 
 ### Added
 
@@ -1010,7 +1011,7 @@ Each API function is now split into two parts: `sll_api_XXX` and `sll_api_XXX_ra
 - `sll_init` function has been replaced by platform-dependent code to automatically set-up the console
 - `__SLL_RETURN_xxx` macros from [`src/include/sll/common.h`][0.6.17/src/include/sll/common.h]
 
-## [0.6.16] - 2021-8-30
+## [0.6.16] - 2021-08-30
 
 ### Added
 
@@ -1056,7 +1057,7 @@ If a handles does not have a type (`SLL_UNKNOWN_HANDLE_TYPE`) it has a boolean v
 - `SLL_UNIMPLEMENTED()` statements in [`src/sll/operator.c`][0.6.16/src/sll/operator.c]
 - Unused constant `INVALID_FILE_HANDLE` and unused macro `SLL_API_INVALID_FILE_HANDLE`
 
-## [0.6.15] - 2021-8-26
+## [0.6.15] - 2021-08-26
 
 ### Added
 
@@ -1105,7 +1106,7 @@ The `SLL_RELEASE` macro automatically deallocates the object when its last refer
 - `sll_sys_arg_count_t` has been replaced by `sll_integer_t` (it was easy to confuse with `sll_arg_count_t`)
 - The `restrict` keyword (Reverting [#18])
 
-## [0.6.14] - 2021-8-24
+## [0.6.14] - 2021-08-24
 
 ### Added
 
@@ -1122,9 +1123,9 @@ The `SLL_RELEASE` macro automatically deallocates the object when its last refer
 ### Removed
 
 - CLI no-logo (`-L`) option
-- Useless clean-up code in [`src/sll/parse.c`][0.6.14/src/sll/parse.c] \([#20]\)
+- Useless clean-up code in [`src/sll/parse.c`][0.6.14/src/sll/parse.c] ([#20])
 
-## [0.6.13] - 2021-8-20
+## [0.6.13] - 2021-08-20
 
 ### Added
 
@@ -1152,7 +1153,7 @@ The `SLL_RELEASE` macro automatically deallocates the object when its last refer
 - ANSI escape sequences in error printing (Thus invalidating [#2])
 - `sll_platform_setup_console` function
 
-## [0.6.12] - 2021-8-19
+## [0.6.12] - 2021-08-19
 
 ### Added
 
@@ -1182,7 +1183,7 @@ The `SLL_RELEASE` macro automatically deallocates the object when its last refer
 - The `sll_api_string_ref_count` internal function
 - Unused heap-related macros
 
-## [0.6.11] - 2021-8-18
+## [0.6.11] - 2021-08-18
 
 ### Added
 
@@ -1200,7 +1201,7 @@ The `SLL_RELEASE` macro automatically deallocates the object when its last refer
 
 - Coverage data is now an experimental feature and has been moved to a [different branch][test-coverage]
 
-## [0.6.10] - 2021-8-14
+## [0.6.10] - 2021-08-14
 
 ### Added
 
@@ -1225,9 +1226,9 @@ Literally, just arrays.
 - [`src/sll/string_heap.c`][0.6.9/src/sll/string_heap.c] was split into [`src/sll/allocator.c`][0.6.10/src/sll/allocator.c] and [`src/sll/string.c`][0.6.10/src/sll/string.c]
 - String heap functions were renamed to generic allocator functions and are now used by both arrays and strings
 
-## [0.6.9] - 2021-8-12
+## [0.6.9] - 2021-08-12
 
-**Name Change: From *Lisp Like Language* to *Sl Lang* !!!**
+**Name Change: From *Lisp Like Language* to *Sl Lang***
 
 ### Added
 
@@ -1248,13 +1249,13 @@ Literally, just arrays.
 
 - Unused file: [`build.py`][0.6.8/build.py]
 
-## [0.6.8] - 2021-8-7
+## [0.6.8] - 2021-08-07
 
 ### Changed
 
 - Moved [`build.py`][0.6.7/build.py] to [`src/_build/main.py`][0.6.8/src/_build/main.py]
 
-## [0.6.7] - 2021-8-7
+## [0.6.7] - 2021-08-07
 
 ### Added
 
@@ -1266,7 +1267,7 @@ Literally, just arrays.
 
 - Minor fixes to the build script
 
-## [0.6.6] - 2021-8-7
+## [0.6.6] - 2021-08-07
 
 ### Added
 
@@ -1289,7 +1290,7 @@ Literally, just arrays.
 - String comparison and conversion functions
 - Unused file constants: `LLL_API_FILE_APPEND`, `LLL_API_FILE_READ` and `LLL_API_FILE_WRITE`
 
-## [0.6.5] - 2021-8-3
+## [0.6.5] - 2021-08-03
 
 ### Added
 
@@ -1300,7 +1301,7 @@ Literally, just arrays.
 
 - Rewritten [`build.py`][0.6.5/build.py]
 
-## [0.6.4] - 2021-8-3
+## [0.6.4] - 2021-08-03
 
 ### Added
 
@@ -1316,7 +1317,7 @@ Literally, just arrays.
 - Renamed `time_current` and `time_current_nanos` into `time` and `time_nanos`
 - Split [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h] into [`src/include/lll/io.h`][0.6.4/src/include/lll/io.h], [`src/include/lll/stream.h`][0.6.4/src/include/lll/stream.h] and [`src/include/lll/string.h`][0.6.4/src/include/lll/string.h]
 
-## [0.6.3] - 2021-8-2
+## [0.6.3] - 2021-08-02
 
 ### Added
 
@@ -1333,7 +1334,7 @@ Literally, just arrays.
 - `__SLL_IMPORT_EXPORT` has been renamed to `__SLL_FUNC`
 - Split [`src/include/lll_lib.h`][0.6.2/src/include/lll_lib.h] to [`src/include/lll/common.h`][0.6.3/src/include/lll/common.h], [`src/include/lll/constants.h`][0.6.3/src/include/lll/constants.h], [`src/include/lll/core.h`][0.6.3/src/include/lll/core.h], [`src/include/lll/platform.h`][0.6.3/src/include/lll/platform.h] and [`src/include/lll/types.h`][0.6.3/src/include/lll/types.h]
 
-## [0.6.2] - 2021-8-1
+## [0.6.2] - 2021-08-01
 
 ### Added
 
@@ -1352,7 +1353,7 @@ Literally, just arrays.
 - Option to merge modules (`-m`). Modules are now merged automatically
 - Types and functions related to import tables
 
-## [0.6.1] - 2021-8-1
+## [0.6.1] - 2021-08-01
 
 ### Added
 
@@ -1363,7 +1364,7 @@ Literally, just arrays.
 
 - Changed some structure and type definitions
 
-## [0.6.0] - 2021-7-31
+## [0.6.0] - 2021-07-31
 
 ### Added
 
@@ -1377,7 +1378,7 @@ Literally, just arrays.
 
 - Fixed the builder script
 
-## [0.5.2] - 2021-7-31
+## [0.5.2] - 2021-07-31
 
 ### Changed
 
@@ -1386,7 +1387,7 @@ Literally, just arrays.
 - VM now uses a call stack instead of the `LLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_II` instruction
 - VM now uses a stack index instead of a moving pointer
 
-## [0.5.1] - 2021-7-30
+## [0.5.1] - 2021-07-30
 
 ### Changed
 
@@ -1394,7 +1395,7 @@ Literally, just arrays.
 - `lll_compare_runtime_object`, `lll_create_string`, `lll_runtime_object_size` and `lll_runtime_object_nonzero` functions are now public
 - Runtime object functions (`lll_compare_runtime_object` and `lll_runtime_object_nonzero`) have been moved to [`src/lll_lib/object.c`][0.5.1/src/lll_lib/object.c]
 
-## [0.5.0] - 2021-7-30
+## [0.5.0] - 2021-07-30
 
 ### Added
 
@@ -1412,7 +1413,7 @@ Literally, just arrays.
 
 - `LLL_OBJECT_TYPE_NIL`: `nil` values get compiled directly into zeros
 
-## [0.4.1] - 2021-7-29
+## [0.4.1] - 2021-07-29
 
 ### Added
 
@@ -1433,7 +1434,7 @@ Literally, just arrays.
 - `lll_optimize_object` function
 - `LLL_RUNTIME_OBJECT_TYPE_TRUE` and `LLL_RUNTIME_OBJECT_TYPE_FALSE` runtime object types
 
-## [0.4.0] - 2021-7-28
+## [0.4.0] - 2021-07-28
 
 ### Added
 
@@ -1449,7 +1450,7 @@ Literally, just arrays.
 
 - Unimplemented language-generation functions and CLI arguments
 
-## [0.3.5] - 2021-7-28
+## [0.3.5] - 2021-07-28
 
 ### Added
 
@@ -1457,7 +1458,7 @@ Literally, just arrays.
 - Assembly generator and related structures, types, functions and macros
 - Option for printing assembly (`-P`)
 
-## [0.3.4] - 2021-7-27
+## [0.3.4] - 2021-07-27
 
 ### Added
 
@@ -1465,7 +1466,7 @@ Literally, just arrays.
 - Option for language generation (`-g`)
 - Option for saving the compiled object (`-c`)
 
-## [0.3.3] - 2021-7-26
+## [0.3.3] - 2021-07-26
 
 ### Added
 
@@ -1475,7 +1476,7 @@ Literally, just arrays.
 
 - Moved `_create_string` and `_object_size` functions to [`src/lll_lib/util.c`][0.3.3/src/lll_lib/util.c]
 
-## [0.3.2] - 2021-7-25
+## [0.3.2] - 2021-07-25
 
 ### Added
 
@@ -1486,20 +1487,20 @@ Literally, just arrays.
 
 - Renamed `uintXX_t` to custom types
 
-## [0.3.1] - 2021-7-25
+## [0.3.1] - 2021-07-25
 
 ### Changed
 
 - Fixed bugs related to bit shifting of narrow types in variable-length integer encoding
 - Fixed other bugs
 
-## [0.3.0] - 2021-7-25
+## [0.3.0] - 2021-07-25
 
 ### Changed
 
 - Integers are now encoded differently
 
-## [0.2.3] - 2021-7-25
+## [0.2.3] - 2021-07-25
 
 ### Changed
 
@@ -1510,7 +1511,7 @@ Literally, just arrays.
 - Object modifiers
 - Unused macros related to assembly generation
 
-## [0.2.2] - 2021-7-23
+## [0.2.2] - 2021-07-23
 
 ### Changed
 
@@ -1518,7 +1519,7 @@ Literally, just arrays.
 - Identifier list compassion has been sped up
 - Renamed some options
 
-## [0.2.1] - 2021-7-3
+## [0.2.1] - 2021-07-03
 
 ### Added
 
@@ -1528,7 +1529,7 @@ Literally, just arrays.
 
 - All integer are now stored as 64-bit value
 
-## [0.2.0] - 2021-7-3
+## [0.2.0] - 2021-07-03
 
 ### Added
 
@@ -1538,36 +1539,36 @@ Literally, just arrays.
 
 - Object conversion functions
 
-## [0.1.13] - 2021-7-2
+## [0.1.13] - 2021-07-02
 
 *Nothing*
 
-## [0.1.12] - 2021-7-2
+## [0.1.12] - 2021-07-02
 
 ### Changed
 
 - Added builder script option for code generation (`--generate-code`)
 
-## [0.1.11] - 2021-7-2
+## [0.1.11] - 2021-07-02
 
 ### Changed
 
 - CLI now executes the code by default
 - Rewritten help documentation
 
-## [0.1.10] - 2021-7-1
+## [0.1.10] - 2021-07-01
 
 ### Changed
 
 - Replaced `printf()` call in the CLI now print data using `print_str`, `print_str_const` and `print_int`
 
-## [0.1.9] - 2021-7-1
+## [0.1.9] - 2021-07-01
 
 ### Changed
 
 - Fixed bugs in the builder script
 
-## [0.1.8] - 2021-7-1
+## [0.1.8] - 2021-07-01
 
 ### Added
 
@@ -1579,14 +1580,14 @@ Literally, just arrays.
 - Moved the example file to the [`example/`][0.1.8/example] directory
 - The help string has been moved to a separate file ([`rsrc/help.txt`][0.1.8/rsrc/help.txt])
 
-## [0.1.7] - 2021-7-1
+## [0.1.7] - 2021-07-01
 
 ### Changed
 
 - Changed from the MIT License to the BSD 3-Clause License
 - Implemented code generation for functions
 
-## [0.1.6] - 2021-6-18
+## [0.1.6] - 2021-06-18
 
 ### Added
 
@@ -1601,7 +1602,7 @@ Literally, just arrays.
 
 - Declarations of unused private functions
 
-## [0.1.5] - 2021-6-17
+## [0.1.5] - 2021-06-17
 
 ### Added
 
@@ -1611,7 +1612,7 @@ Literally, just arrays.
 
 - Functions and loops have inner scopes
 
-## [0.1.4] - 2021-6-16
+## [0.1.4] - 2021-06-16
 
 ### Added
 
@@ -1621,16 +1622,16 @@ Literally, just arrays.
 
 - Rewritten the syntax highlight
 
-## [0.1.3] - 2021-6-16
+## [0.1.3] - 2021-06-16
 
 ### Added
 
 - Options for printing the help message
 - Versions!
 
-## [0.1.2] - 2021-6-15
+## [0.1.2] - 2021-06-15
 
-Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
+Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
 [0.7.7]: https://github.com/sl-lang/sll/compare/sll-v0.7.6...main
 [0.7.6]: https://github.com/sl-lang/sll/compare/sll-v0.7.5...sll-v0.7.6
@@ -1781,6 +1782,7 @@ Unfortunately, no versions were assigned before 2021-6-15 (:disappointed:), so t
 [#155]: https://github.com/sl-lang/sll/issues/155
 [#154]: https://github.com/sl-lang/sll/issues/154
 [#153]: https://github.com/sl-lang/sll/issues/153
+[#152]: https://github.com/sl-lang/sll/issues/152
 [#151]: https://github.com/sl-lang/sll/issues/151
 [#150]: https://github.com/sl-lang/sll/issues/150
 [#149]: https://github.com/sl-lang/sll/issues/149
