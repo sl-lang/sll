@@ -2,21 +2,51 @@
 
 
 
+(= float_data_type (&:
+	int_type sign
+	int_type mantissa
+	int_type exponent
+))
+
 (= float_module_type (&:
+	(~ type_type) float_data_type
 	(~ func_type) get_compare_error
+	(~ func_type) get_data
 	(~ func_type) set_compare_error
+	(~ func_type) set_data
 ))
 
 
 
 (= get_compare_error (... "sll:float_get_compare_error"))
 
+(= get_data (,,, f
+	(= bits (<- (... "sll:struct_double_to_bits") (:: f float_type)))
+	(@@ (. float_data_type
+		(+ (* (>> bits) 2) 1)
+		(| (& bits 0xfffffffffffff) 0x10000000000000)
+		(- (& (>> bits 52) 0x7ff) 1023)
+	))
+))
+
 (= set_compare_error (... "sll:float_set_compare_error"))
+
+(= set_data (,,, f
+	(= f (:: f float_data_type))
+	(@@ (<- (... "sll:struct_double_from_bits") (|
+		(& f$mantissa 0xfffffffffffff)
+		(<< (& (+ f$exponent 1023) 0x7ff) 52)
+		(<< (!! (- f$sign 1)) 63)
+	)))
+))
 
 
 
 (= float (. float_module_type
+	float_data_type
 	get_compare_error
+	get_data
 	set_compare_error
+	set_data
 ))
 (## float)

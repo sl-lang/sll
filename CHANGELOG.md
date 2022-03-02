@@ -6,6 +6,7 @@
 
 - C error API: `sll_error_t`, `SLL_ERROR_NO_FILE_PATH`, `SLL_ERROR_UNKNOWN_FD`, `SLL_ERROR_SANDBOX`, `SLL_ERROR_TOO_LONG`, `SLL_ERROR_FLAG_WINAPI`, `SLL_ERROR_FLAG_LIBC`, `SLL_ERROR_GET_TYPE`, `SLL_NO_ERROR` ([#238])
 - Exposed the `hash_type` type from `hash.sll`
+- Implemented `float$float_data_type`, `float$get_data` and `float$set_data`
 - Implemented `hmac.sll` and `hmac$hmac` ([#230])
 - Implemented `sll_remove_debug_names` and CLI flag to remove debug names (`-d`)
 - Implemented `sll_var_arg_get_object`
