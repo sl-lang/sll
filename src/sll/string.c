@@ -784,7 +784,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 	if (!b->l){
 		return 0;
 	}
-	if (!a->l){
+	if (!a->l||b->l>a->l){
 		return SLL_MAX_STRING_LENGTH;
 	}
 	if (b->l==1){
