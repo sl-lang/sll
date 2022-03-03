@@ -170,4 +170,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_version_t sll_version(void);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_version_string
+ * \group version
+ * \desc Docs!
+ * \ret const sll_char_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_char_t* sll_version_string(void);
+
+
+
 #endif

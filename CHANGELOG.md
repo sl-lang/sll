@@ -10,6 +10,7 @@
 - Implemented `hmac.sll` and `hmac$hmac` ([#230])
 - Implemented `sll_remove_debug_names` and CLI flag to remove debug names (`-d`)
 - Implemented `sll_var_arg_get_object`
+- Implemented `sll_version_string`
 - Library verification parameter can be passed to `sys$load_library` to verify the SHA-256 of the loaded file
 - Nameof operator (`(.?)`): `sll_get_name`
 - New error types: `error$ERROR_ANY`, `error$ERROR_INTERNAL_ERROR`, `error$ERROR_INVALID_FILE_DESCRIPTOR`, `error$ERROR_PATH_TOO_LONG` and `error$ERROR_SANDBOX` ([#238])
