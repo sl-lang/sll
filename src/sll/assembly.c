@@ -886,6 +886,22 @@ static void _generate_loop_end(assembly_generator_data_t* g_dt,assembly_loop_gen
 
 
 
+static const sll_node_t* _generate_loop_tail(assembly_generator_data_t* g_dt,sll_arg_count_t l,const sll_node_t* o,const sll_node_t* cnd,assembly_instruction_label_t s,assembly_instruction_label_t c,assembly_instruction_label_t e,assembly_loop_generator_data_t* lg_dt){
+	DEFINE_LABEL(g_dt,s);
+	l-=2;
+	while (l){
+		l--;
+		o=_generate(o,g_dt);
+	}
+	DEFINE_LABEL(g_dt,c);
+	_generate_jump(cnd,g_dt,s,0);
+	DEFINE_LABEL(g_dt,e);
+	_generate_loop_end(g_dt,lg_dt);
+	return o;
+}
+
+
+
 static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generator_data_t* g_dt){
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
 		GENERATE_DEBUG_DATA(g_dt,o);
@@ -1756,32 +1772,6 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_FOR_ARRAY:
 		case SLL_NODE_TYPE_FOR_MAP:
-			{
-				sll_arg_count_t l=o->dt.l.ac;
-				if (!l){
-					return o+1;
-				}
-				if (l==1){
-					return _generate(o+1,g_dt);
-				}
-				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
-				assembly_instruction_label_t c=NEXT_LABEL(g_dt);
-				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
-				assembly_loop_generator_data_t lg_dt;
-				const sll_node_t* cnd=_generate_loop_start(g_dt,o,&lg_dt,c,e);
-				o=_generate_jump(cnd,g_dt,e,1);
-				DEFINE_LABEL(g_dt,s);
-				l-=2;
-				while (l){
-					l--;
-					o=_generate(o,g_dt);
-				}
-				DEFINE_LABEL(g_dt,c);
-				_generate_jump(cnd,g_dt,s,0);
-				DEFINE_LABEL(g_dt,e);
-				_generate_loop_end(g_dt,&lg_dt);
-				return o;
-			}
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_WHILE_ARRAY:
 		case SLL_NODE_TYPE_WHILE_MAP:
@@ -1798,18 +1788,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				assembly_loop_generator_data_t lg_dt;
 				const sll_node_t* cnd=_generate_loop_start(g_dt,o,&lg_dt,c,e);
-				o=sll_skip_node_const(cnd);
-				DEFINE_LABEL(g_dt,s);
-				l-=2;
-				while (l){
-					l--;
-					o=_generate(o,g_dt);
-				}
-				DEFINE_LABEL(g_dt,c);
-				_generate_jump(cnd,g_dt,s,0);
-				DEFINE_LABEL(g_dt,e);
-				_generate_loop_end(g_dt,&lg_dt);
-				return o;
+				return _generate_loop_tail(g_dt,l,(o->t>=SLL_NODE_TYPE_WHILE?sll_skip_node_const(cnd):_generate_jump(cnd,g_dt,e,1)),cnd,s,c,e,&lg_dt);
 			}
 		case SLL_NODE_TYPE_LOOP:
 			{
