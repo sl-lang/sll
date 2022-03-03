@@ -3,6 +3,8 @@
 
 
 (= log_module_type (&:
+	(~ int_type) FLAG_DO_NOT_HIDE
+	(~ int_type) FLAG_NO_HEADER
 	(~ func_type) log
 	(~ func_type) set_file
 	(~ func_type) set_function
@@ -27,6 +29,8 @@
 
 
 (= log (. log_module_type
+	FLAG_DO_NOT_HIDE
+	FLAG_NO_HEADER
 	log_log
 	set_file
 	set_function
