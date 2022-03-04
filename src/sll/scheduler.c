@@ -511,7 +511,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_reset_barrier(sll_barrier_index
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_start_thread(sll_thread_index_t t){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_start_thread(sll_thread_index_t t){
 	if (t>=_scheduler_thread_len){
 		return 0;
 	}

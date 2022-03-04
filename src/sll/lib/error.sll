@@ -1,23 +1,32 @@
-(--- "types.sll" "string.sll" "array.sll" "error_codes.sll" "_internal.sll")
+(--- "types.sll" "string.sll" "array.sll" "error_codes.sll" "_internal.sll" "vm.sll")
 
 
 
-(= call_frame_type (&:
-	(~ string_type) file
-	(~ int_type) line
-	(~ string_type) func
+(= call_stack_raw_type (&:
+	(~ int_type) return_address
+	(~ int_type) stack_offset
+))
+
+(= call_stack_type (&:
+	(~ string_type) name
+	(~ vm$location_type) return
+	(~ call_stack_raw_type) raw
 ))
 
 (= error_type (&:
 	(,,, err
-		(= o (<- string$format "%s" err$error_data))
+		(= nm (.? err$error_data))
+		(= o (+
+			(?: nm (+ nm ": ") "")
+			(:: err$error_data string_type)
+		))
 		(-> (= i ($ err$backtrace)) i {
 			(-- i)
 			(= frame (: err$backtrace i))
 			(= o (+ o (<- string$format "\nat %s:%u (%s)"
 				frame$file
 				frame$line
-				frame$func
+				frame$function
 			)))
 		})
 		(@@ o)
@@ -27,6 +36,7 @@
 ))
 
 (= error_module_type (&:
+	(~ type_type) call_stack_type
 	(~ type_type) error_type
 	(~ type_type) ERROR_ANY
 	(~ type_type) ERROR_FILE_NOT_FOUND
@@ -40,6 +50,7 @@
 	(~ type_type) ERROR_UNKNOWN_TYPE
 	(~ func_type) create
 	(~ func_type) from_internal
+	(~ func_type) get_call_stack
 ))
 
 
@@ -89,7 +100,7 @@
 
 (= ERROR_PATH_TOO_LONG (&:
 	(,,,
-		(@@ (<- string$format "Path exceedes %u characters" _MAX_PATH_SIZE))
+		(@@ (<- string$format "Path exceeds %u characters" _MAX_PATH_SIZE))
 	) @@string@@
 ))
 
@@ -108,12 +119,12 @@
 
 
 
-(= _get_backtrace (,,,
-	(= backtrace (<- (... "sll:error_get_backtrace")))
-	(@@ ([> (= i 0) (< i (- ($ backtrace) 1))
-		(= k (: backtrace i))
+(= _get_error_backtrace (,,,
+	(= call_stack (<- (... "sll:error_get_call_stack") 1))
+	(@@ ([> (= i 0) (< i ($ call_stack))
+		(= k (: call_stack i))
 		(++ i)
-		(:: k call_frame_type)
+		(:: (: k 1) vm$location_type)
 	))
 ))
 
@@ -122,7 +133,7 @@
 	(= type (:: type type_type))
 	(@@ (. error_type
 		(:: @@data@@ type)
-		(<- _get_backtrace)
+		(<- _get_error_backtrace)
 	))
 ))
 
@@ -147,13 +158,24 @@
 	)
 	(@@ (. error_type
 		v
-		(<- _get_backtrace)
+		(<- _get_error_backtrace)
+	))
+))
+
+(= get_call_stack (,,, pop
+	(= pop (:: pop int_type))
+	(= call_stack (<- (... "sll:error_get_call_stack") (?: (< pop 0) 1 (+ pop 1))))
+	(@@ ([> (= i 0) (< i ($ call_stack))
+		(= k (: call_stack i))
+		(++ i)
+		(:: k call_stack_type)
 	))
 ))
 
 
 
 (= error (. error_module_type
+	call_stack_type
 	error_type
 	ERROR_ANY
 	ERROR_FILE_NOT_FOUND
@@ -167,5 +189,6 @@
 	ERROR_UNKNOWN_TYPE
 	create
 	from_internal
+	get_call_stack
 ))
 (## error)

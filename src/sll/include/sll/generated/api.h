@@ -419,20 +419,21 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_error_get_backtrace void
-#define __SLL_API_ARGS_sll_api_error_get_backtrace sll_array_t* out
+#define __SLL_API_TYPE_sll_api_error_get_call_stack void
+#define __SLL_API_ARGS_sll_api_error_get_call_stack sll_integer_t a,sll_array_t* out
 /**
  * \flags func
- * \name sll_api_error_get_backtrace
+ * \name sll_api_error_get_call_stack
  * \group error-api
  * \desc Docs!
+ * \arg sll_integer_t a -> 
  */
 /**
  * \flags check_output func
- * \name sll_api_error_get_backtrace_raw
+ * \name sll_api_error_get_call_stack_raw
  * \group raw-api
  * \subgroup raw-api-error-api
- * \desc Wrapper function for :sll_api_error_get_backtrace:
+ * \desc Wrapper function for :sll_api_error_get_call_stack:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
@@ -4104,6 +4105,124 @@
  * \group raw-api
  * \subgroup raw-api-time-api
  * \desc Wrapper function for :sll_api_time_sleep_ns:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_vm_get_config void
+#define __SLL_API_ARGS_sll_api_vm_get_config sll_array_t* out
+/**
+ * \flags func
+ * \name sll_api_vm_get_config
+ * \group vm-api
+ * \desc Docs!
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_vm_get_config_raw
+ * \group raw-api
+ * \subgroup raw-api-vm-api
+ * \desc Wrapper function for :sll_api_vm_get_config:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name VM
+ * \group raw-api
+ * \subgroup raw-api-vm-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_vm_get_instruction_count __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_vm_get_instruction_count void
+/**
+ * \flags check_output func
+ * \name sll_api_vm_get_instruction_count
+ * \group vm-api
+ * \desc Docs!
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_vm_get_instruction_count_raw
+ * \group raw-api
+ * \subgroup raw-api-vm-api
+ * \desc Wrapper function for :sll_api_vm_get_instruction_count:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_vm_get_instruction_index __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_vm_get_instruction_index void
+/**
+ * \flags check_output func
+ * \name sll_api_vm_get_instruction_index
+ * \group vm-api
+ * \desc Docs!
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_vm_get_instruction_index_raw
+ * \group raw-api
+ * \subgroup raw-api-vm-api
+ * \desc Wrapper function for :sll_api_vm_get_instruction_index:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_vm_get_location __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_vm_get_location sll_integer_t a
+/**
+ * \flags func
+ * \name sll_api_vm_get_location
+ * \group vm-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_vm_get_location_raw
+ * \group raw-api
+ * \subgroup raw-api-vm-api
+ * \desc Wrapper function for :sll_api_vm_get_location:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_vm_get_ref_count __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_vm_get_ref_count sll_object_t* a
+/**
+ * \flags check_output func
+ * \name sll_api_vm_get_ref_count
+ * \group vm-api
+ * \desc Docs!
+ * \arg sll_object_t* a -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_vm_get_ref_count_raw
+ * \group raw-api
+ * \subgroup raw-api-vm-api
+ * \desc Wrapper function for :sll_api_vm_get_ref_count:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

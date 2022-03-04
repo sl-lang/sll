@@ -8,6 +8,7 @@
 - Exposed the `hash_type` type from `hash.sll`
 - Implemented `float$float_data_type`, `float$get_data` and `float$set_data`
 - Implemented `hmac.sll` and `hmac$hmac` ([#230])
+- Implemented `sll_instruction_to_location`
 - Implemented `sll_remove_debug_names` and CLI flag to remove debug names (`-d`)
 - Implemented `sll_var_arg_get_object`
 - Implemented `sll_version_string`
@@ -29,6 +30,8 @@
 - Fixed `sll_object_field_t` to be a union instead of a structure
 - Getting the file size via `sll_platform_file_size` now returns `SLL_NO_FILE_SIZE` instead of `0` on error
 - Libraries loaded via `sys$load_library` can only be located in the `sys_lib` directory
+- Moved call stack types and functions (`call_stack_type` and `get_call_stack`) from the extension to the `error.sll` module
+- Moved VM-related types and functions (`location_type`, `vm_config_type`, `get_config`, `get_instruction_count`, `get_instruction_index`, `get_location` and `get_ref_count`) from the extension to the `vm.sll` module
 - Renamed `sll_platform_lookup_function` to `sll_platform_lookup_symbol`
 - Renamed API source files from `xxx_api.c` to `xxx.c`
 - Replaced `sll_platform_get_temporary_file_path` by `sll_temporary_file_path`
@@ -37,7 +40,7 @@
 
 - Final call stack frame from `error$create` and `error$from_internal`
 - Sll type exporting to C code in extensions
-- Unused function `sll_add_string_object`
+- Unused functions `sll_add_string_object` and `sll_api_error_get_backtrace`
 - Unused object flags: `SLL_OBJECT_FLAG_RESERVED0` (`OBJECT_CHANGE_IN_LOOP`) and `SLL_OBJECT_FLAG_RESERVED1` (`OBJECT_EXTERNAL_STRING`)
 - Unused object type: `SLL_OBJECT_TYPE_RESERVED0` (`OBJECT_TYPE_FUNCTION_ID`)
 

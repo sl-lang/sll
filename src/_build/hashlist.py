@@ -10,7 +10,7 @@ update_list=set()
 
 def _check(fp):
 	nm=util.unique_file_path(fp)
-	if (nm in update_list or fp[-2:]==".c" and not os.path.exists(util.output_file_path(fp))):
+	if (nm in update_list or (fp[-2:]==".c" and not os.path.exists(util.output_file_path(fp)))):
 		return 1
 	hash_str=util.hash_file(fp)[1]
 	old=(None if nm not in hash_list else hash_list[nm])
@@ -25,7 +25,7 @@ def _check(fp):
 def _flush_data():
 	with open(load_hash_list.source_file_path,"w") as f:
 		for k,v in hash_list.items():
-			f.write(f"{k}{v}\n")
+			f.write(k+v+"\n")
 
 
 

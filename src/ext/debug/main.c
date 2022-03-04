@@ -1,9 +1,4 @@
-#include <debug/call_stack.h>
-#include <debug/location.h>
-#include <debug/util.h>
-#include <debug/vm.h>
 #include <sll.h>
-
 
 
 
@@ -20,16 +15,12 @@ EXPORT sll_bool_t __sll_load(sll_version_t v){
 		SLL_LOG("Version mismatch!");
 		return 0;
 	}
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_call_stack"),debug_get_call_stack);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_instruction_count"),debug_get_instruction_count);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_instruction_index"),debug_get_instruction_index);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_location"),debug_get_location);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_ref_count"),debug_get_ref_count);
-	sll_register_internal_function(sll_current_runtime_data->ift,SLL_CHAR("sll_ext_debug:get_vm_config"),debug_get_vm_config);
+	SLL_LOG("Extension loaded!");
 	return 1;
 }
 
 
 
 EXPORT void __sll_unload(void){
+	SLL_LOG("Extension unloaded!");
 }

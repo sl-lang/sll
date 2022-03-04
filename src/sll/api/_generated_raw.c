@@ -590,10 +590,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_split_raw(sll_objec
 
 
 
-__SLL_API_TYPE_sll_api_error_get_backtrace sll_api_error_get_backtrace(__SLL_API_ARGS_sll_api_error_get_backtrace);
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_backtrace_raw(sll_object_t*const* al,sll_arg_count_t all){
+__SLL_API_TYPE_sll_api_error_get_call_stack sll_api_error_get_call_stack(__SLL_API_ARGS_sll_api_error_get_call_stack);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
 	sll_array_t out;
-	sll_api_error_get_backtrace(&out);
+	sll_api_error_get_call_stack(a->dt.i,&out);
+	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_OBJECT_TYPE_ARRAY;
 	out_o->dt.a=out;
@@ -5323,6 +5337,73 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_ns_raw(sll_ob
 
 
 
+__SLL_API_TYPE_sll_api_vm_get_config sll_api_vm_get_config(__SLL_API_ARGS_sll_api_vm_get_config);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_config_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_array_t out;
+	sll_api_vm_get_config(&out);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
+__SLL_API_TYPE_sll_api_vm_get_instruction_count sll_api_vm_get_instruction_count(__SLL_API_ARGS_sll_api_vm_get_instruction_count);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_instruction_count_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t out=sll_api_vm_get_instruction_count();
+	return SLL_FROM_INT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_vm_get_instruction_index sll_api_vm_get_instruction_index(__SLL_API_ARGS_sll_api_vm_get_instruction_index);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_instruction_index_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t out=sll_api_vm_get_instruction_index();
+	return SLL_FROM_INT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_vm_get_location sll_api_vm_get_location(__SLL_API_ARGS_sll_api_vm_get_location);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_location_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* out=sll_api_vm_get_location(a->dt.i);
+	SLL_RELEASE(a);
+	return out;
+}
+
+
+
+__SLL_API_TYPE_sll_api_vm_get_ref_count sll_api_vm_get_ref_count(__SLL_API_ARGS_sll_api_vm_get_ref_count);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_ref_count_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		SLL_ACQUIRE(a);
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_integer_t out=sll_api_vm_get_ref_count(a);
+	SLL_RELEASE(a);
+	return SLL_FROM_INT(out);
+}
+
+
+
 static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_count"),
@@ -5393,8 +5474,8 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_date_split_raw
 	},
 	{
-		SLL_CHAR("sll:error_get_backtrace"),
-		sll_api_error_get_backtrace_raw
+		SLL_CHAR("sll:error_get_call_stack"),
+		sll_api_error_get_call_stack_raw
 	},
 	{
 		SLL_CHAR("sll:file_close"),
@@ -6003,10 +6084,30 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:time_sleep_ns"),
 		sll_api_time_sleep_ns_raw
+	},
+	{
+		SLL_CHAR("sll:vm_get_config"),
+		sll_api_vm_get_config_raw
+	},
+	{
+		SLL_CHAR("sll:vm_get_instruction_count"),
+		sll_api_vm_get_instruction_count_raw
+	},
+	{
+		SLL_CHAR("sll:vm_get_instruction_index"),
+		sll_api_vm_get_instruction_index_raw
+	},
+	{
+		SLL_CHAR("sll:vm_get_location"),
+		sll_api_vm_get_location_raw
+	},
+	{
+		SLL_CHAR("sll:vm_get_ref_count"),
+		sll_api_vm_get_ref_count_raw
 	}
 };
 
 
 
-const sll_function_index_t _ifunc_size=170;
+const sll_function_index_t _ifunc_size=175;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

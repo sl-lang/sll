@@ -108,20 +108,18 @@
 ))
 
 (= replace (,,, dt k v
-	(? (=== k nil) {
-		(= k "")
-	} (!== (:? k char_type)) {
-		(= k (:: k string_type))
-	})
-	(? (=== v nil) {
-		(= v "")
-	} (!== (:? v char_type)) {
-		(= v (:: v string_type))
-	})
 	(@@ (<- (... "sll:string_replace")
 		(:: dt string_type)
-		k
-		v
+		(?:
+			(=== k nil) ""
+			(!== (:? k) char_type) (:: k string_type)
+			k
+		)
+		(?:
+			(=== v nil) ""
+			(!== (:? v) char_type) (:: v string_type)
+			v
+		)
 	))
 ))
 

@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -440,6 +440,37 @@
 (:> "File: " @@file@@ ", Line: " @@line@@  "\n")
 
 (:> (.? hash$hexdigest) ", " (.? hash) ", " (&:? hash$hash_type) ", " (&:? array_type) "\n")
+
+(= str (+ "prefix_" (<- (,,, (@@ "test_string")))) (:> (<- vm$get_ref_count str) "\n"))
+(:> "String: " str " (RC: " (<- vm$get_ref_count str) ")\n")
+(:> "String: " str "\n")
+(:> (<- vm$get_ref_count str) "\n")
+(= x [5 10])
+(= y x)
+(:> "Array: " x " (RC: " (<- vm$get_ref_count x) ")\n")
+(:> (<- vm$get_ref_count x) ", " (<- vm$get_ref_count y) "\n")
+
+(= start (<- vm$get_instruction_count))
+(-> (= ii 0) (< ii 100) {
+	(++ ii)
+	(? (== ii 5) (<<<))
+	(:> "II=" ii "\n")
+	(? (=== ii 10) (@))
+})
+(= end (<- vm$get_instruction_count))
+(:> "Loop executed " (- end start) " instruction(s).\n")
+
+(:> (<- vm$get_config) "\n")
+
+(:> (<- vm$get_location) "\n")
+(<- (,,, (:> (<- vm$get_location) "\n")))
+(:> (<- vm$get_location (- (<- vm$get_instruction_index) 50)) "\n")
+
+(:> (<- error$get_call_stack) "\n")
+(= test_func (,,, (:> (<- error$get_call_stack) "\n")))
+(<- test_func)
+(<- (,,, (:> (<- error$get_call_stack) "\n")))
+(<- (,,, (<- test_func)))
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

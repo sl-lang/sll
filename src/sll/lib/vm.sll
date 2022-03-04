@@ -1,0 +1,61 @@
+(--- "types.sll")
+
+
+
+(= location_type (&:
+	(~ string_type) file
+	(~ int_type) line
+	(~ string_type) function
+))
+
+(= vm_config_type (&:
+	(~ int_type) stack_size
+	(~ int_type) call_stack_size
+	(~ int_type) in
+	(~ int_type) out
+	(~ int_type) err
+))
+
+(= vm_module_type (&:
+	(~ type_type) location_type
+	(~ type_type) vm_config_type
+	(~ func_type) get_config
+	(~ func_type) get_instruction_count
+	(~ func_type) get_instruction_index
+	(~ func_type) get_location
+	(~ func_type) get_ref_count
+))
+
+
+
+(= get_config  (,,,
+	(@@ (:: (<- (... "sll:vm_get_config")) vm_config_type))
+))
+
+(= get_instruction_count (... "sll:vm_get_instruction_count"))
+
+(= get_instruction_index (... "sll:vm_get_instruction_index"))
+
+(= get_location (,,, @@loc@@
+	(@@ (:: (<- (... "sll:vm_get_location")
+		(?: @@loc@@ (,
+			(= off (:: (: @@loc@@ 0) int_type))
+			(?: (< off -1) 0 off)
+		) -1)
+	) location_type))
+))
+
+(= get_ref_count (... "sll:vm_get_ref_count"))
+
+
+
+(= vm (. vm_module_type
+	location_type
+	vm_config_type
+	get_config
+	get_instruction_count
+	get_instruction_index
+	get_location
+	get_ref_count
+))
+(## vm)

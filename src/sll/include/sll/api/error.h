@@ -14,12 +14,13 @@
 
 /**
  * \flags api func
- * \name sll_api_error_get_backtrace
+ * \name sll_api_error_get_call_stack
  * \group error-api
  * \desc Docs!
+ * \arg I
  * \ret A
  */
-__API_FUNC_DECL(error_get_backtrace);
+__API_FUNC_DECL(error_get_call_stack);
 
 
 

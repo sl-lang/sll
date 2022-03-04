@@ -1,4 +1,4 @@
-(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "debug/debug.sll" "array.sll" "serial.sll" "base64.sll")
+(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "error.sll" "array.sll" "serial.sll" "base64.sll")
 
 
 
@@ -29,7 +29,7 @@
 	} {
 		(:> "- " name "\n")
 		(= err (+ "Expected " (<- string$str value) ", got " (<- string$str result)))
-		(= loc (: (: (<- debug$get_call_stack) -1) "return"))
+		(= loc (: (: (<- error$get_call_stack) -1) "return"))
 		(<- array$push _test_data$error <
 			"name" name
 			"file" loc$file
