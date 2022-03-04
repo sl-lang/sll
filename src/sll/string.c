@@ -25,6 +25,36 @@ static const sll_string_length_t _string_whitespace_count=sizeof(_string_whitesp
 
 
 
+static sll_bool_t _compare_data(const sll_char_t* a,const sll_char_t* b,sll_string_length_t l,sll_bool_t align){
+	const wide_data_t* ap64=(const wide_data_t*)a;
+	const wide_data_t* bp64=(const wide_data_t*)b;
+	if (align){
+		STRING_DATA_PTR(ap64);
+	}
+	STRING_DATA_PTR(bp64);
+	while (l>7){
+		if (*ap64!=*bp64){
+			return 0;
+		}
+		ap64++;
+		bp64++;
+		l-=8;
+	}
+	const sll_char_t* ap=(const sll_char_t*)ap64;
+	const sll_char_t* bp=(const sll_char_t*)bp64;
+	while (l){
+		if (*ap!=*bp){
+			return 0;
+		}
+		ap++;
+		bp++;
+		l--;
+	}
+	return 1;
+}
+
+
+
 __SLL_EXTERNAL void sll_free_string(sll_string_t* s){
 	s->l=0;
 	s->c=0;
@@ -535,29 +565,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_ends(const sll_string_t*
 	if (a->l==b->l){
 		return sll_string_equal(a,b);
 	}
-	const wide_data_t* ap64=(const wide_data_t*)(a->v+a->l-b->l);
-	const wide_data_t* bp64=(const wide_data_t*)(b->v);
-	STRING_DATA_PTR(bp64);
-	sll_string_length_t l=b->l;
-	while (l>7){
-		if (*ap64!=*bp64){
-			return 0;
-		}
-		ap64++;
-		bp64++;
-		l-=8;
-	}
-	const sll_char_t* ap=(const sll_char_t*)ap64;
-	const sll_char_t* bp=(const sll_char_t*)bp64;
-	while (l){
-		if (*ap!=*bp){
-			return 0;
-		}
-		ap++;
-		bp++;
-		l--;
-	}
-	return 1;
+	return _compare_data(a->v+a->l-b->l,b->v,b->l,0);
 }
 
 
@@ -1772,30 +1780,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_starts(const sll_string_
 	if (a->l==b->l){
 		return sll_string_equal(a,b);
 	}
-	const wide_data_t* ap64=(const wide_data_t*)(a->v);
-	const wide_data_t* bp64=(const wide_data_t*)(b->v);
-	STRING_DATA_PTR(ap64);
-	STRING_DATA_PTR(bp64);
-	sll_string_length_t l=b->l;
-	while (l>7){
-		if (*ap64!=*bp64){
-			return 0;
-		}
-		ap64++;
-		bp64++;
-		l-=8;
-	}
-	const sll_char_t* ap=(const sll_char_t*)ap64;
-	const sll_char_t* bp=(const sll_char_t*)bp64;
-	while (l){
-		if (*ap!=*bp){
-			return 0;
-		}
-		ap++;
-		bp++;
-		l--;
-	}
-	return 1;
+	return _compare_data(a->v,b->v,b->l,1);
 }
 
 
