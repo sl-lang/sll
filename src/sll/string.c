@@ -91,12 +91,27 @@ __SLL_EXTERNAL void sll_string_and(const sll_string_t* a,const sll_string_t* b,s
 
 
 __SLL_EXTERNAL void sll_string_and_char(const sll_string_t* s,sll_char_t v,sll_string_t* o){
+	if (!s->l){
+		SLL_INIT_STRING(o);
+		return;
+	}
+	if (v==255){
+		sll_string_clone(s,o);
+		return;
+	}
 	o->l=s->l;
 	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
-	const wide_data_t* a=(const wide_data_t*)(s->v);
 	wide_data_t* b=(wide_data_t*)(o->v);
-	STRING_DATA_PTR(a);
 	STRING_DATA_PTR(b);
+	if (!v){
+		for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+			*b=0;
+			b++;
+		}
+		return;
+	}
+	const wide_data_t* a=(const wide_data_t*)(s->v);
+	STRING_DATA_PTR(a);
 	wide_data_t v64=0x101010101010101ull*v;
 	wide_data_t c=0;
 	sll_string_length_t l=s->l;
