@@ -9,6 +9,19 @@
 
 
 
+#define SETUP_AND_JUSTIFT_RIGHT \
+	if (p<sz){ \
+		p=sz; \
+	} \
+	sll_string_increase(o,p); \
+	p-=sz; \
+	if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){ \
+		sll_set_memory(o->v+o->l,p,'0'); \
+		o->l+=p; \
+	}
+
+
+
 static const sll_size_t _string_pow_of_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
 
 
@@ -236,7 +249,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				}
 				if ((f&(STRING_FORMAT_FLAG_SIGN|STRING_FORMAT_FLAG_SPACE_SIGN))||sn<0){
 					sll_string_increase(o,1);
-					o->v[o->l]=(sn<0?'-':'+');
+					o->v[o->l]=43+((sn<0)<<1);
 					o->l++;
 				}
 				n=(sll_size_t)(sn<0?-sn:sn);
@@ -308,15 +321,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				}
 				else if (*t=='o'){
 					sll_string_length_t sz=FIND_LAST_SET_BIT(n)/3+1;
-					if (p<sz){
-						p=sz;
-					}
-					sll_string_increase(o,p);
-					p-=sz;
-					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-						sll_set_memory(o->v+o->l,p,'0');
-						o->l+=p;
-					}
+					SETUP_AND_JUSTIFT_RIGHT;
 					sll_string_length_t j=o->l+sz;
 					do{
 						j--;
@@ -334,15 +339,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					if (n>=_string_pow_of_10[sz]){
 						sz++;
 					}
-					if (p<sz){
-						p=sz;
-					}
-					sll_string_increase(o,p);
-					p-=sz;
-					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-						sll_set_memory(o->v+o->l,p,'0');
-						o->l+=p;
-					}
+					SETUP_AND_JUSTIFT_RIGHT;
 					sll_string_length_t j=o->l+sz;
 					do{
 						j--;
@@ -357,17 +354,9 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				}
 				else{
 					sll_string_length_t sz=(FIND_LAST_SET_BIT(n)>>2)+1;
-					if (p<sz){
-						p=sz;
-					}
-					sll_string_increase(o,p);
-					p-=sz;
-					if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-						sll_set_memory(o->v+o->l,p,'0');
-						o->l+=p;
-					}
-					sll_char_t e=((f&STRING_FORMAT_FLAG_UPPERCASE)?55:87);
+					SETUP_AND_JUSTIFT_RIGHT;
 					sll_string_length_t j=o->l+sz;
+					sll_char_t e=((f&STRING_FORMAT_FLAG_UPPERCASE)?55:87);
 					do{
 						j--;
 						o->v[j]=(n&15)+((n&15)>9?e:48);
