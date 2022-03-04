@@ -34,11 +34,12 @@
 - Moved VM-related types and functions (`location_type`, `vm_config_type`, `get_config`, `get_instruction_count`, `get_instruction_index`, `get_location` and `get_ref_count`) from the extension to the `vm.sll` module
 - Renamed `sll_platform_lookup_function` to `sll_platform_lookup_symbol`
 - Renamed API source files from `xxx_api.c` to `xxx.c`
+- Replaced `sll_operator_deep_copy` with an extra argument in `sll_operator_copy`
 - Replaced `sll_platform_get_temporary_file_path` by `sll_temporary_file_path`
 
 ### Removed
 
-- Ability to generate sll code: `sll_write_sll_code`, `--generate-sll` and `-F`
+- Ability to generate Sll code: `sll_write_sll_code`, `--generate-sll` and `-F`
 - Final call stack frame from `error$create` and `error$from_internal`
 - Sll type exporting to C code in extensions
 - Unused functions `sll_add_string_object` and `sll_api_error_get_backtrace`

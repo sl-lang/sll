@@ -601,9 +601,14 @@ _cleanup_jump_table:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH:
 				OPERATOR_INSTRUCTION_UNARY(sll_operator_len);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY:
-				OPERATOR_INSTRUCTION_UNARY(sll_operator_copy);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEEP_COPY:
-				OPERATOR_INSTRUCTION_UNARY(sll_operator_deep_copy);
+				{
+					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?VAR_REF(ai->dt.v):_scheduler_current_thread->stack+_scheduler_current_thread->si-1);
+					sll_object_t* n=sll_operator_copy(*tos,SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_DEEP_COPY);
+					SLL_RELEASE(*tos);
+					*tos=n;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS:
 				OPERATOR_INSTRUCTION_BINARY(sll_operator_access);
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_TWO:

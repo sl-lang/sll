@@ -201,21 +201,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
  * \group operator
  * \desc Docs!
  * \arg sll_object_t* a
+ * \arg sll_bool_t d
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* a);
-
-
-
-/**
- * \flags check_output func
- * \name sll_operator_deep_copy
- * \group operator
- * \desc Docs!
- * \arg sll_object_t* a
- * \ret sll_object_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_deep_copy(sll_object_t* a);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* a,sll_bool_t d);
 
 
 

@@ -393,7 +393,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 				dst->f=src->f;
 				break;
 			default:
-				dst->o=(d?sll_operator_deep_copy:sll_operator_copy)(src->o);
+				dst->o=sll_operator_copy(src->o,d);
 				break;
 		}
 		src++;
