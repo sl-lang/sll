@@ -8,6 +8,7 @@
 - Exposed the `hash_type` type from `hash.sll`
 - Implemented `float$float_data_type`, `float$get_data` and `float$set_data`
 - Implemented `hmac.sll` and `hmac$hmac` ([#230])
+- Implemented `random$shuffle`
 - Implemented `sll_instruction_to_location`
 - Implemented `sll_remove_debug_names` and CLI flag to remove debug names (`-d`)
 - Implemented `sll_var_arg_get_object`
@@ -29,7 +30,7 @@
 - *\[Darwin only\]* Fixed `SLL_API_MAX_FILE_PATH_LENGTH`
 - Fixed `sll_object_field_t` to be a union instead of a structure
 - Getting the file size via `sll_platform_file_size` now returns `SLL_NO_FILE_SIZE` instead of `0` on error
-- Libraries loaded via `sys$load_library` can only be located in the `sys_lib` directory
+- Libraries loaded via `sys$load_library` can no longer be located outside of the `sys_lib` directory
 - Moved call stack types and functions (`call_stack_type` and `get_call_stack`) from the extension to the `error.sll` module
 - Moved VM-related types and functions (`location_type`, `vm_config_type`, `get_config`, `get_instruction_count`, `get_instruction_index`, `get_location` and `get_ref_count`) from the extension to the `vm.sll` module
 - Renamed `sll_platform_lookup_function` to `sll_platform_lookup_symbol`
