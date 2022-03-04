@@ -61,18 +61,4 @@ __SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation
 
 
 
-/**
- * \flags func
- * \name sll_write_sll_code
- * \group io
- * \desc Docs!
- * \arg const sll_source_file_t* sf
- * \arg const sll_internal_function_table_t* i_ft
- * \arg sll_bool_t p
- * \arg sll_file_t* wf
- */
-__SLL_EXTERNAL void sll_write_sll_code(const sll_source_file_t* sf,const sll_internal_function_table_t* i_ft,sll_bool_t p,sll_file_t* wf);
-
-
-
 #endif

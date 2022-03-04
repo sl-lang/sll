@@ -188,9 +188,6 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 			}
 			goto _read_file_argument;
 		}
-		else if ((*e=='-'&&*(e+1)=='F'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-sll"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_GENERATE_SLL;
-		}
 		else if ((*e=='-'&&*(e+1)=='h'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--help"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_HELP;
 		}
@@ -327,9 +324,6 @@ _read_file_argument:
 		if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
 			SLL_LOG("  Compiled program generation");
 		}
-		if (fl&CLI_FLAG_GENERATE_SLL){
-			SLL_LOG("  Sll code generation mode");
-		}
 		if (!(fl&CLI_FLAG_NO_RUN)){
 			SLL_LOG("  Execution");
 		}
@@ -412,7 +406,7 @@ _read_file_argument:
 			sll_print_assembly(&a_dt,sll_stdout);
 			sll_file_write_char(sll_stdout,'\n',NULL);
 		}
-		if (j<fpl&&(fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_GENERATE_COMPILED_OBJECT|CLI_FLAG_GENERATE_SLL))){
+		if (j<fpl&&(fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_GENERATE_COMPILED_OBJECT))){
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 			sll_string_length_t k=0;
 			sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
@@ -464,19 +458,6 @@ _read_file_argument:
 				sll_file_t of;
 				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
 				sll_write_compiled_node(&of,&c_dt);
-				CLI_LOG_IF_VERBOSE("File written successfully.");
-				sll_file_close(&of);
-			}
-			if (fl&CLI_FLAG_GENERATE_SLL){
-				bf[k]='l';
-				CLI_LOG_IF_VERBOSE("Writing sll code to file '%s'...",bf);
-				sll_file_t of;
-				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
-				sll_source_file_index_t l=c_dt.l;
-				while (l){
-					l--;
-					sll_write_sll_code(*(c_dt.dt+l),&i_ft,1,&of);
-				}
 				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);
 			}

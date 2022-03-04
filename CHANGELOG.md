@@ -38,6 +38,7 @@
 
 ### Removed
 
+- Ability to generate sll code: `sll_write_sll_code`, `--generate-sll` and `-F`
 - Final call stack frame from `error$create` and `error$from_internal`
 - Sll type exporting to C code in extensions
 - Unused functions `sll_add_string_object` and `sll_api_error_get_backtrace`
