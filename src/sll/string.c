@@ -18,6 +18,35 @@
 
 #define STRING_DATA_PTR(x) ASSUME_ALIGNED(x,4,8)
 
+#define EXECUTE_BINARY_OPERATOR_CHAR(operator) \
+	if (!s->l){ \
+		SLL_INIT_STRING(o); \
+		return; \
+	} \
+	if (!v){ \
+		sll_string_clone(s,o); \
+		return; \
+	} \
+	o->l=s->l; \
+	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t)); \
+	const wide_data_t* a=(const wide_data_t*)(s->v); \
+	wide_data_t* b=(wide_data_t*)(o->v); \
+	STRING_DATA_PTR(a); \
+	STRING_DATA_PTR(b); \
+	wide_data_t v64=0x101010101010101ull*v; \
+	wide_data_t c=0; \
+	sll_string_length_t l=s->l; \
+	while (l>7){ \
+		*b=(*a) operator v64; \
+		c^=*b; \
+		a++; \
+		b++; \
+		l-=8; \
+	} \
+	*b=((*a) operator v64)&((1ull<<(l<<3))-1); \
+	c^=*b; \
+	o->c=(sll_string_length_t)(c^(c>>32));
+
 
 
 static const sll_char_t _string_whitespace[]={'\t','\n','\v','\x0c','\r',' '};
@@ -1266,33 +1295,7 @@ __SLL_EXTERNAL void sll_string_or(const sll_string_t* a,const sll_string_t* b,sl
 
 
 __SLL_EXTERNAL void sll_string_or_char(const sll_string_t* s,sll_char_t v,sll_string_t* o){
-	if (!s->l){
-		SLL_INIT_STRING(o);
-		return;
-	}
-	if (!v){
-		sll_string_clone(s,o);
-		return;
-	}
-	o->l=s->l;
-	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
-	const wide_data_t* a=(const wide_data_t*)(s->v);
-	wide_data_t* b=(wide_data_t*)(o->v);
-	STRING_DATA_PTR(a);
-	STRING_DATA_PTR(b);
-	wide_data_t v64=0x101010101010101ull*v;
-	wide_data_t c=0;
-	sll_string_length_t l=s->l;
-	while (l>7){
-		*b=(*a)|v64;
-		c^=*b;
-		a++;
-		b++;
-		l-=8;
-	}
-	*b=((*a)|v64)&((1ull<<(l<<3))-1);
-	c^=*b;
-	o->c=(sll_string_length_t)(c^(c>>32));
+	EXECUTE_BINARY_OPERATOR_CHAR(|);
 }
 
 
@@ -1997,31 +2000,5 @@ __SLL_EXTERNAL void sll_string_xor(const sll_string_t* a,const sll_string_t* b,s
 
 
 __SLL_EXTERNAL void sll_string_xor_char(const sll_string_t* s,sll_char_t v,sll_string_t* o){
-	if (!s->l){
-		SLL_INIT_STRING(o);
-		return;
-	}
-	if (!v){
-		sll_string_clone(s,o);
-		return;
-	}
-	o->l=s->l;
-	o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
-	const wide_data_t* a=(const wide_data_t*)(s->v);
-	wide_data_t* b=(wide_data_t*)(o->v);
-	STRING_DATA_PTR(a);
-	STRING_DATA_PTR(b);
-	wide_data_t v64=0x101010101010101ull*v;
-	wide_data_t c=0;
-	sll_string_length_t l=s->l;
-	while (l>7){
-		*b=(*a)^v64;
-		c^=*b;
-		a++;
-		b++;
-		l-=8;
-	}
-	*b=((*a)^v64)&((1ull<<(l<<3))-1);
-	c^=*b;
-	o->c=(sll_string_length_t)(c^(c>>32));
+	EXECUTE_BINARY_OPERATOR_CHAR(^);
 }
