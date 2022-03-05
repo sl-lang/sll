@@ -685,6 +685,7 @@ typedef struct __THREAD_DATA{
 	sll_call_stack_t c_st;
 	sll_char_t tm;
 	thread_state_t st;
+	sll_bool_t suspended;
 } thread_data_t;
 
 
@@ -729,7 +730,7 @@ sll_node_t* _acquire_next_node(sll_source_file_t* sf);
 
 
 
-void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac);
+void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac,sll_bool_t fr);
 
 
 

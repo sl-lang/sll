@@ -1,4 +1,4 @@
-(--- "types.sll" "string.sll" "array.sll" "error_codes.sll" "_internal.sll" "vm.sll")
+(--- "types.sll" "string.sll" "array.sll" "error_codes.sll" "_internal.sll" "vm.sll" "thread.sll")
 
 
 
@@ -162,9 +162,12 @@
 	))
 ))
 
-(= get_call_stack (,,, pop
+(= get_call_stack (,,, pop thr
 	(= pop (:: pop int_type))
-	(= call_stack (<- (... "sll:error_get_call_stack") (?: (< pop 0) 1 (+ pop 1))))
+	(= call_stack (<- (... "sll:error_get_call_stack")
+		(?: (< pop 0) 1 (+ pop 1))
+		(?: (=== (:? thr) thread$thread_type) thr$id -1)
+	))
 	(@@ ([> (= i 0) (< i ($ call_stack))
 		(= k (: call_stack i))
 		(++ i)

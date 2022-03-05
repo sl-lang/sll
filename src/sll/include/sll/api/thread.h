@@ -61,6 +61,18 @@ __API_FUNC_DECL(thread_create_semaphore);
 
 /**
  * \flags api func
+ * \name sll_api_thread_get_internal_data
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ * \ret A
+ */
+__API_FUNC_DECL(thread_get_internal_data);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_thread_increase_barrier
  * \group thread-api
  * \desc Docs!
@@ -95,7 +107,6 @@ __API_FUNC_DECL(thread_release_semaphore);
 
 
 
-
 /**
  * \flags api func
  * \name sll_api_thread_reset_barrier
@@ -105,6 +116,30 @@ __API_FUNC_DECL(thread_release_semaphore);
  * \ret I
  */
 __API_FUNC_DECL(thread_reset_barrier);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_thread_restart
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ * \ret B
+ */
+__API_FUNC_DECL(thread_restart);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_thread_suspend
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ * \ret B
+ */
+__API_FUNC_DECL(thread_suspend);
 
 
 

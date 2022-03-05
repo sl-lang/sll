@@ -1,7 +1,9 @@
 #include <sll/_sll_internal.h>
 #include <sll/api.h>
+#include <sll/array.h>
 #include <sll/common.h>
 #include <sll/scheduler.h>
+#include <sll/static_object.h>
 #include <sll/types.h>
 
 
@@ -27,6 +29,21 @@ __API_FUNC(thread_create_lock){
 
 __API_FUNC(thread_create_semaphore){
 	return sll_create_semaphore((a<0?0:(sll_semaphore_counter_t)a));
+}
+
+
+
+__API_FUNC(thread_get_internal_data){
+	thread_data_t* thr=_scheduler_get_thread((a<0?0:(sll_thread_index_t)a));
+	sll_array_create(2,out);
+	if (thr){
+		out->v[0]=SLL_FROM_INT(thr->ii);
+		out->v[1]=SLL_FROM_INT(thr->si);
+	}
+	else{
+		out->v[0]=SLL_ACQUIRE_STATIC_INT(0);
+		out->v[1]=SLL_ACQUIRE_STATIC_INT(0);
+	}
 }
 
 
@@ -57,4 +74,16 @@ __API_FUNC(thread_release_semaphore){
 
 __API_FUNC(thread_reset_barrier){
 	return sll_reset_barrier((a<0?0:(sll_barrier_index_t)a));
+}
+
+
+
+__API_FUNC(thread_restart){
+	return sll_restart_thread((a<0?0:(sll_thread_index_t)a));
+}
+
+
+
+__API_FUNC(thread_suspend){
+	return sll_suspend_thread((a<0?0:(sll_thread_index_t)a));
 }

@@ -605,8 +605,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack_raw
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	sll_object_t* b=NULL;
+	if (all>1){
+		b=*(al+1);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		b=SLL_ACQUIRE_STATIC_INT(0);
+	}
 	sll_array_t out;
-	sll_api_error_get_call_stack(a->dt.i,&out);
+	sll_api_error_get_call_stack(a->dt.i,b->dt.i,&out);
+	SLL_RELEASE(b);
 	SLL_RELEASE(a);
 	sll_object_t* out_o=SLL_CREATE();
 	out_o->t=SLL_OBJECT_TYPE_ARRAY;
@@ -5187,6 +5201,32 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_create_semaphore_
 
 
 
+__SLL_API_TYPE_sll_api_thread_get_internal_data sll_api_thread_get_internal_data(__SLL_API_ARGS_sll_api_thread_get_internal_data);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_get_internal_data_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_array_t out;
+	sll_api_thread_get_internal_data(a->dt.i,&out);
+	SLL_RELEASE(a);
+	sll_object_t* out_o=SLL_CREATE();
+	out_o->t=SLL_OBJECT_TYPE_ARRAY;
+	out_o->dt.a=out;
+	return out_o;
+}
+
+
+
 __SLL_API_TYPE_sll_api_thread_increase_barrier sll_api_thread_increase_barrier(__SLL_API_ARGS_sll_api_thread_increase_barrier);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_increase_barrier_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -5273,6 +5313,52 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_reset_barrier_raw
 	sll_integer_t out=sll_api_thread_reset_barrier(a->dt.i);
 	SLL_RELEASE(a);
 	return SLL_FROM_INT(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_thread_restart sll_api_thread_restart(__SLL_API_ARGS_sll_api_thread_restart);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_restart_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_bool_t out=sll_api_thread_restart(a->dt.i);
+	SLL_RELEASE(a);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
+}
+
+
+
+__SLL_API_TYPE_sll_api_thread_suspend sll_api_thread_suspend(__SLL_API_ARGS_sll_api_thread_suspend);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_suspend_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_INT){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_INT]);
+		}
+	}
+	else{
+		a=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_bool_t out=sll_api_thread_suspend(a->dt.i);
+	SLL_RELEASE(a);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
 }
 
 
@@ -6054,6 +6140,10 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_thread_create_semaphore_raw
 	},
 	{
+		SLL_CHAR("sll:thread_get_internal_data"),
+		sll_api_thread_get_internal_data_raw
+	},
+	{
 		SLL_CHAR("sll:thread_increase_barrier"),
 		sll_api_thread_increase_barrier_raw
 	},
@@ -6068,6 +6158,14 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:thread_reset_barrier"),
 		sll_api_thread_reset_barrier_raw
+	},
+	{
+		SLL_CHAR("sll:thread_restart"),
+		sll_api_thread_restart_raw
+	},
+	{
+		SLL_CHAR("sll:thread_suspend"),
+		sll_api_thread_suspend_raw
 	},
 	{
 		SLL_CHAR("sll:time_current"),
@@ -6109,5 +6207,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=175;
+const sll_function_index_t _ifunc_size=178;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

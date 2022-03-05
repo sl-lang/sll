@@ -477,8 +477,22 @@
 (:> arr ", " (<- random$choice arr) "\n")
 
 (<- thread$start (,,,
-	(:> "Other thread!\n")
+	(-> (= tmp-idx 0) (< tmp-idx 2000) (++ tmp-idx))
+	(= b_thr (<- thread$get 0))
+	(<- thread$suspend b_thr)
+	(:> "Call stack of main thread: " (<- error$get_call_stack 0 b_thr) "\nInternal data of main thread: " (<- thread$get_internal_data b_thr) '\n')
+	(<- thread$start b_thr)
 ))
+(-> (= idx 0) (< idx 100)
+	(? (! (% idx 10)) (:> idx "%...\n"))
+	(<- (,,, proxy_func
+		(@@ (<- proxy_func))
+	) (,,,
+		(-> (= tmp-idx 0) (< tmp-idx 100) (++ tmp-idx))
+		(@@ -1)
+	))
+	(++ idx)
+)
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

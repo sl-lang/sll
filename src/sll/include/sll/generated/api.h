@@ -420,13 +420,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_error_get_call_stack void
-#define __SLL_API_ARGS_sll_api_error_get_call_stack sll_integer_t a,sll_array_t* out
+#define __SLL_API_ARGS_sll_api_error_get_call_stack sll_integer_t a,sll_integer_t b,sll_array_t* out
 /**
  * \flags func
  * \name sll_api_error_get_call_stack
  * \group error-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
+ * \arg sll_integer_t b -> 
  */
 /**
  * \flags check_output func
@@ -3923,6 +3924,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_thread_get_internal_data void
+#define __SLL_API_ARGS_sll_api_thread_get_internal_data sll_integer_t a,sll_array_t* out
+/**
+ * \flags func
+ * \name sll_api_thread_get_internal_data
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_get_internal_data_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_get_internal_data:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_thread_increase_barrier __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_thread_increase_barrier sll_integer_t a
 /**
@@ -4008,6 +4031,52 @@
  * \group raw-api
  * \subgroup raw-api-thread-api
  * \desc Wrapper function for :sll_api_thread_reset_barrier:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_thread_restart __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_thread_restart sll_integer_t a
+/**
+ * \flags check_output func
+ * \name sll_api_thread_restart
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_restart_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_restart:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_thread_suspend __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_thread_suspend sll_integer_t a
+/**
+ * \flags check_output func
+ * \name sll_api_thread_suspend
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_suspend_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_suspend:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

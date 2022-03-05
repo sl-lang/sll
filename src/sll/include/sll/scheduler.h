@@ -131,6 +131,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_thread(sll_thread_index_
 
 /**
  * \flags check_output func
+ * \name sll_get_call_stack
+ * \group scheduler
+ * \desc Docs!
+ * \arg sll_thread_index_t t
+ * \ret const sll_call_stack_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_get_call_stack(sll_thread_index_t t);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_increase_barrier
  * \group scheduler
  * \desc Docs!
@@ -179,6 +191,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_reset_barrier(sll_barrier_index
 
 /**
  * \flags check_output func
+ * \name sll_restart_thread
+ * \group scheduler
+ * \desc Docs!
+ * \arg sll_thread_index_t t
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_restart_thread(sll_thread_index_t t);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_start_thread
  * \group scheduler
  * \desc Docs!
@@ -186,6 +210,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_reset_barrier(sll_barrier_index
  * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_start_thread(sll_thread_index_t t);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_suspend_thread
+ * \group scheduler
+ * \desc Docs!
+ * \arg sll_thread_index_t t
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_suspend_thread(sll_thread_index_t t);
 
 
 

@@ -18,6 +18,7 @@
  * \group error-api
  * \desc Docs!
  * \arg I
+ * \arg I
  * \ret A
  */
 __API_FUNC_DECL(error_get_call_stack);

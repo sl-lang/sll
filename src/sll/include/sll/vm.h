@@ -84,17 +84,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 
 /**
  * \flags check_output func
- * \name sll_get_call_stack
- * \group vm
- * \desc Docs!
- * \ret const sll_call_stack_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_get_call_stack(void);
-
-
-
-/**
- * \flags check_output func
  * \name sll_wait_thread
  * \group vm
  * \desc Docs!
