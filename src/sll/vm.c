@@ -1036,7 +1036,7 @@ _return:;
 					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
 					sll_integer_t lck=lck_o->dt.i;
 					SLL_RELEASE(lck_o);
-					sll_integer_t v;
+					sll_integer_t v=0;
 					if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_SEMAPHORE){
 						sll_object_t* v_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 						_scheduler_current_thread->si--;

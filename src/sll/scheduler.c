@@ -200,7 +200,6 @@ void _scheduler_set_thread(sll_thread_index_t t){
 	}
 	if (sll_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
 		_scheduler_queue_thread(sll_current_thread_index);
-		sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	}
 	if ((*(_scheduler_thread+t))->st==THREAD_STATE_TERMINATED){
 		sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
