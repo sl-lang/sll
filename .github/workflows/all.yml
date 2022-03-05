@@ -74,8 +74,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-darwin
-          path: |
-            *.zip
+          path: darwin.zip
           retention-days: 1
   darwin-test:
     name: Test darwin release
@@ -93,10 +92,7 @@ jobs:
           name: release-darwin
           path: build
       - name: Unpack release
-        run: |
-          unzip -o build/darwin.zip -d build
-          unzip -o build/darwin_ext_debug.zip -d build/_debug_ext
-          cp -r build/_debug_ext/* build
+        run: unzip -o build/darwin.zip -d build
       - name: Test
         run: build/sll tests/_runner.sll
   diff:
@@ -115,7 +111,7 @@ jobs:
         run: pip install requests
       - name: Calculate
         id: calc_diff
-        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,src/ext,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,src/ext,tests web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,tests web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
   linux:
     name: Build linux
     needs: diff
@@ -148,8 +144,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-linux
-          path: |
-            *.zip
+          path: linux.zip
           retention-days: 1
   linux-test:
     name: Test linux release
@@ -167,10 +162,7 @@ jobs:
           name: release-linux
           path: build
       - name: Unpack release
-        run: |
-          unzip -o build/linux.zip -d build
-          unzip -o build/linux_ext_debug.zip -d build/_debug_ext
-          cp -r build/_debug_ext/* build
+        run: unzip -o build/linux.zip -d build
       - name: Test
         run: build/sll tests/_runner.sll
   release:
@@ -292,8 +284,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-win
-          path: |
-            *.zip
+          path: windows.zip
           retention-days: 1
   windows-test:
     name: Test windows release
@@ -313,8 +304,6 @@ jobs:
       - name: Unpack release
         run: |
           Expand-Archive -Force build\windows.zip build\
-          Expand-Archive -Force build\windows_ext_debug.zip build\_debug_ext\
-          robocopy /s build\_debug_ext build
           exit 0
         shell: powershell
       - name: Test

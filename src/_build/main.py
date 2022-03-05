@@ -59,47 +59,13 @@ for k in fl:
 if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
-for nm in util.get_ext_list():
-	if (not os.path.exists("build/lib/"+nm)):
-		os.mkdir("build/lib/"+nm)
-	util.log(f"Listing Source Code Files ({nm})...")
-	fl=util.get_ext_files(nm)
-	util.log(f"Compiling Sll Extension ({nm})...")
-	build.build_sll_extension(nm,fl,ver,("--release" in sys.argv))
-	util.log(f"Copying Extension Modules ({nm})...")
-	fl=[]
-	for f in os.listdir(f"src/ext/{nm}/lib"):
-		util.log(f"  Copying Extension Module 'src/ext/{nm}/lib/{f}'...")
-		with open(f"src/ext/{nm}/lib/{f}","rb") as rf,open(f"build/lib/{nm}/{f}","wb") as wf:
-			wf.write(rf.read())
-		fl.append(f"build/lib/{nm}/"+f)
-	header.generate_library_hash(nm,ver)
-	util.log("Compiling Extension Modules...")
-	if (util.execute(["build/sll","-c","-R","-I","build/lib/"+nm,"-I","build"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
-		sys.exit(1)
-	util.log("Removing Extension Module Source Files...")
-	for k in fl:
-		util.log(f"  Removing '{k}'...")
-		os.remove(k)
-		if (k.split("/")[-1][0]=="_"):
-			util.log(f"  Removing '{k}.slc'...")
-			os.remove(k+".slc")
-	if ("--bundle" in sys.argv or "--upload" in sys.argv):
-		util.log("Compressing extension files...")
-		util.bundle_ext(nm,ver)
-		if ("--upload" in sys.argv):
-			os.rename(f"build/sll_ext_{nm}.zip",util.system+f"_ext_{nm}.zip")
-	util.log("Installing extension library...")
-	with open(f"build/sll-ext-{nm}-{ver[0]}.{ver[1]}.{ver[2]}"+util.LIBRARY_EXTENSION[util.system],"rb") as rf,open(f"build/sys_lib/sll-ext-{nm}-{ver[0]}.{ver[1]}.{ver[2]}"+util.LIBRARY_EXTENSION[util.system],"wb") as wf:
-		wf.write(rf.read())
 if ("--test" in sys.argv):
 	util.log("Running tests...")
 	util.execute(["build/sll","tests/_runner.sll"])
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",util.system+".zip")
 if ("--run" in sys.argv):
-	a=(["examples/_internal_test_ext_debug/test.sll"] if "--extension" in sys.argv else ["examples/_internal_test/test.sll","-I","examples/_internal_test"])
-	util.log(f"Running '{a[0]}...")
+	util.log(f"Running 'examples/_internal_test/test.sll'...")
 	util.execute(["build/sll","-h"])
-	if (util.execute(["build/sll","-c","-v","-o","build/raw","-e","-R","-F"]+a) or util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","-F"]+a) or util.execute(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]) or util.execute(["build/sll","build/test2.sla","-v","-P"])):
+	if (util.execute(["build/sll","-c","-v","-o","build/raw","-e","-R","-F"]+a) or util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","-F","examples/_internal_test/test.sll","-I","examples/_internal_test"]) or util.execute(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]) or util.execute(["build/sll","build/test2.sla","-v","-P"])):
 		sys.exit(1)

@@ -99,24 +99,6 @@ def get_sll_files():
 
 
 
-def get_ext_files(nm):
-	o=[]
-	for r,_,fl in os.walk("src/ext/"+nm):
-		r=r.replace("\\","/").rstrip("/")+"/"
-		if ("data" in r):
-			continue
-		for f in fl:
-			if (f[-2:]==".c"):
-				o.append(r+f)
-	return o
-
-
-
-def get_ext_list():
-	return list(os.listdir("src/ext"))
-
-
-
 def bundle(v):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
 		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],f"build/sll-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system]]:
@@ -127,15 +109,6 @@ def bundle(v):
 		for k in os.listdir("build/lib"):
 			if (os.path.isfile("build/lib/"+k)):
 				zf.write("build/lib/"+k,arcname="lib/"+k)
-
-
-
-def bundle_ext(nm,v):
-	with zipfile.ZipFile(f"build/sll_ext_{nm}.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		fp=f"build/sll-ext-{nm}-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system]
-		zf.write(fp,arcname="sys_lib/"+fp[6:])
-		for k in os.listdir("build/lib/"+nm):
-			zf.write(f"build/lib/{nm}/{k}",arcname=f"lib/{nm}/{k}")
 
 
 

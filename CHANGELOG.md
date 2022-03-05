@@ -2,7 +2,9 @@
 
 ## [0.7.8] - Ongoing
 
-*Nothing*
+### Removed
+
+- Unused debug extension
 
 ## [0.7.7] - 2022-03-05
 
