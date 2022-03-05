@@ -476,6 +476,10 @@
 (<- random$shuffle arr)
 (:> arr ", " (<- random$choice arr) "\n")
 
+(<- thread$start (,,,
+	(:> "Other thread!\n")
+))
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)
