@@ -2,6 +2,10 @@
 
 ## [0.7.8] - Ongoing
 
+### Added
+
+- Implemented `random$choice`
+
 ### Removed
 
 - Unused debug extension

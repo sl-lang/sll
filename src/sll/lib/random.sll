@@ -3,6 +3,7 @@
 
 
 (= random_module_type (&:
+	(~ func_type) choice
 	(~ func_type) get_int
 	(~ func_type) get_float
 	(~ func_type) get_char
@@ -11,6 +12,20 @@
 ))
 
 
+
+(= choice (,,, data
+	(?? (:? data)
+		int_type (@@ (<- (... "sll:random_get_int") 0 (- data 1)))
+		float_type (@@ (<- (... "sll:get_float") 0 data))
+		char_type (@@ (: data (<- (... "sll:random_get_int") 0 (- data 1))))
+		string_type (@@ (: data (<- (... "sll:random_get_int") 0 (- ($ data) 1))))
+		map_type (@@ (: (:: data map_key_type) (<- (... "sll:random_get_int") 0 (- ($ data) 1))))
+		{
+			(= data (:: data array_type))
+			(@@ (: data (<- (... "sll:random_get_int") 0 (- ($ data) 1))))
+		}
+	)
+))
 
 (= get_int (,,, mn mx {
 	(= mn (:: mn int_type))
@@ -80,6 +95,7 @@
 
 
 (= random (. random_module_type
+	choice
 	get_int
 	get_float
 	get_char
