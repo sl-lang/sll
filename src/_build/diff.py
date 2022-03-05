@@ -59,34 +59,39 @@ def _diff(sha):
 
 
 
+def get_table():
+	o=""
+	if (_force_all()):
+		for k in sys.argv[1:-1]:
+			k=k.split("=")[0]
+			print(f"Changes found for '{k}'")
+			if (len(o)!=0):
+				o+=","
+			o+=f"\"{k}\":1"
+	else:
+		t=_diff(os.environ["GITHUB_SHA"])
+		o=""
+		for k in sys.argv[1:-1]:
+			k=k.split("=")
+			if (".github/workflows/all.yml" in t or "src/_build" in t):
+				v="1"
+			else:
+				v="0"
+				for e in k[1].split(","):
+					if (e in t):
+						v="1"
+						break
+			if (v=="0"):
+				print(f"No changes found for '{k[0]}'")
+			else:
+				print(f"Changes found for '{k[0]}'")
+			if (len(o)!=0):
+				o+=","
+			o+=f"\"{k[0]}\":{v}"
+	return o
+
+
+
 if (os.getenv("GITHUB_EVENT_NAME","")=="workflow_dispatch" and os.getenv("GITHUB_ACTOR","").lower()!=GITHUB_OWNER_NAME):
 	sys.exit(1)
-o=""
-if (_force_all()):
-	for k in sys.argv[1:-1]:
-		k=k.split("=")[0]
-		print(f"Changes found for '{k}'")
-		if (len(o)!=0):
-			o+=","
-		o+=f"\"{k}\":1"
-else:
-	t=_diff(os.environ["GITHUB_SHA"])
-	o=""
-	for k in sys.argv[1:-1]:
-		k=k.split("=")
-		if (".github/workflows/all.yml" in t or "src/_build" in t):
-			v="1"
-		else:
-			v="0"
-			for e in k[1].split(","):
-				if (e in t):
-					v="1"
-					break
-		if (v=="0"):
-			print(f"No changes found for '{k[0]}'")
-		else:
-			print(f"Changes found for '{k[0]}'")
-		if (len(o)!=0):
-			o+=","
-		o+=f"\"{k[0]}\":{v}"
-sys.stdout.write(f"::set-output name=table::{{{o}}}")
+sys.stdout.write(f"::set-output name=table::{{{get_table()}}}")

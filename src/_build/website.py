@@ -154,7 +154,7 @@ def generate():
 
 
 
-if (__name__=="__main__"):
+def upload():
 	import requests
 	if ("--server" in sys.argv):
 		util.log("Uploading Server Code...")
@@ -198,3 +198,8 @@ if (__name__=="__main__"):
 			requests.delete(url+"bulk",headers=h,data="["+",".join([f"\"{e}\"" for e in rm_l])+"]")
 		util.log("Uploading Data...")
 		requests.put(url+"bulk",headers=h,data=json.dumps(o))
+
+
+
+if (__name__=="__main__"):
+	upload()

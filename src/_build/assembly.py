@@ -39,7 +39,7 @@ def _parse_value(v):
 
 
 def _generate_cond(f,dt,lvl,sl):
-	if (type(dt)==str):
+	if (isinstance(dt,str)):
 		for k in dt.split(","):
 			f.write("\t"*lvl)
 			k=k.split("=")
