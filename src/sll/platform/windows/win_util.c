@@ -1,6 +1,8 @@
 #include <windows.h>
 #include <bcrypt.h>
 #include <immintrin.h>
+#include <io.h>
+#include <signal.h>
 #include <sll/_size_types.h>
 #include <sll/_sll_internal.h>
 #include <sll/api/date.h>
@@ -10,7 +12,6 @@
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <signal.h>
 
 
 
@@ -19,6 +20,8 @@ static sll_environment_t _win_env={NULL,0};
 static __STATIC_STRING(_win_platform_str,"windows");
 static sll_time_zone_t _win_platform_time_zone={"GMT",0};
 static unsigned int _win_csr=0;
+static DWORD _win_stdout_cm=0xffffffff;
+static DWORD _win_stderr_cm=0xffffffff;
 
 
 
@@ -48,6 +51,14 @@ static void _cleanup_data(void){
 	_win_env.dt=NULL;
 	_win_platform_time_zone=*sll_utc_time_zone;
 	_mm_setcsr(_win_csr);
+	if (_win_stdout_cm!=0xffffffff){
+		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm);
+		_win_stdout_cm=0xffffffff;
+	}
+	if (_win_stderr_cm!=0xffffffff){
+		SetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),_win_stderr_cm);
+		_win_stderr_cm=0xffffffff;
+	}
 }
 
 
@@ -59,6 +70,14 @@ __SLL_NO_RETURN void _force_exit_platform(void){
 
 
 void _init_platform(void){
+	if (_isatty(1)){
+		GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),&_win_stdout_cm);
+		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+	}
+	if (_isatty(2)){
+		GetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),&_win_stderr_cm);
+		SetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),_win_stderr_cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+	}
 	_win_csr=_mm_getcsr();
 	_mm_setcsr(_win_csr|CSR_REGISTER_FLAGS);
 	LPCH dt=GetEnvironmentStrings();

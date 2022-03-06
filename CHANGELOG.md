@@ -15,6 +15,7 @@
 ### Removed
 
 - Unused debug extension
+- Unused function `sll_platform_enable_console_color` (Executed internally by `sll_init`)
 
 ## [0.7.7] - 2022-03-05
 

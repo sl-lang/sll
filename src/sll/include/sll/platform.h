@@ -261,17 +261,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_create_directory(const
 
 
 /**
- * \flags func
- * \name sll_platform_enable_console_color
- * \group platform
- * \subgroup platform-console
- * \desc Docs!
- */
-__SLL_EXTERNAL void sll_platform_enable_console_color(void);
-
-
-
-/**
  * \flags check_output func
  * \name sll_platform_execute_shell
  * \group platform
