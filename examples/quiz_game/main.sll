@@ -20,29 +20,29 @@
 	(@@ (<- json$parse bf))
 ))
 
-(= read_number (,,,
-	(<- file$flush file$stdout)
-	(= out -1)
-	(><
-		(= char (: (<- file$read file$stdin 1) 1))
-		(?
-			(=== char '\n') (@@ out)
-			(|: string$WHITESPACE_CHARACTERS char) (<<<)
-			(! (|: string$DIGITS char)) (@@ -1)
-		)
-		(= out (+
-			(?: (=== out -1) 0 (* out 10))
-			(- char 48)
-		))
-	)
-))
-
 (= read_number_below (,,, txt max
+	(:> txt)
+	(<- file$flush file$stdout)
 	(= out nil)
 	(>- nil (|| (< out 0) (>= out max))
-		(:> txt)
-		(= out (<- read_number))
+		(= out -1)
+		(><
+			(= char (<- file$read_char file$stdin))
+			(?
+				(|| (=== char '\n') (=== char '\r')) (@)
+				(|: string$WHITESPACE_CHARACTERS char) (<<<)
+				(! (|: string$DIGITS char)) {
+					(= out -1)
+					(@)
+				}
+			)
+			(= out (+
+				(?: (=== out -1) 0 (* out 10))
+				(- char 48)
+			))
+		)
 	)
+	(:> '\n')
 	(@@ out)
 ))
 

@@ -171,7 +171,7 @@ __SLL_EXTERNAL void sll_string_calculate_checksum(sll_string_t* s){
 
 
 __SLL_EXTERNAL void sll_string_clone(const sll_string_t* s,sll_string_t* d){
-	if (!s->v){
+	if (!s->l){
 		SLL_INIT_STRING(d);
 		return;
 	}

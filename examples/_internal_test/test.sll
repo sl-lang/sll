@@ -494,7 +494,7 @@
 	(++ idx)
 )
 
-(:> "CHAR: " (<- file$read file$stdin 4096) "\n")
+(:> "CHAR: " (<- file$read_char file$stdin) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
