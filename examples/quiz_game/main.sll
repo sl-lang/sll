@@ -1,0 +1,112 @@
+; Sll Quiz Game Example
+; @krzem5, 2022-03-06
+(--- "json.sll" "file.sll" "array.sll" "string.sll" "random.sll")
+
+
+
+(= DATA_FILE_PATH "data.json")
+
+
+
+(= load_json (,,, fp
+	(= fh (<- file$open fp "r"))
+	(? (!== f$error_data nil) (@@ <>))
+	(= bf "")
+	(>- (= chunk "") chunk
+		(= chunk (<- file$read fh 4096))
+		(= bf (+ bf chunk))
+	)
+	(<- file$close fh)
+	(@@ (<- json$parse bf))
+))
+
+(= read_number (,,,
+	(<- file$flush file$stdout)
+	(= out -1)
+	(><
+		(= char (: (<- file$read file$stdin 1) 1))
+		(?
+			(=== char '\n') (@@ out)
+			(|: string$WHITESPACE_CHARACTERS char) (<<<)
+			(! (|: string$DIGITS char)) (@@ -1)
+		)
+		(= out (+
+			(?: (=== out -1) 0 (* out 10))
+			(- char 48)
+		))
+	)
+))
+
+(= read_number_below (,,, txt max
+	(= out nil)
+	(>- nil (|| (< out 0) (>= out max))
+		(:> txt)
+		(= out (<- read_number))
+	)
+	(@@ out)
+))
+
+(= shuffle_with_index (,,, arr idx
+	(-> (= i ($ arr)) (> i 1)
+		(-- i)
+		(= j (<- random$get_int 0 i))
+		(?
+			(=== i idx) (= idx j)
+			(=== j idx) (= idx i)
+		)
+		(= tmp (: arr i))
+		(= (: arr i) (: arr j))
+		(= (: arr j) tmp)
+	)
+	(@@ idx)
+))
+
+
+
+(= data (<- load_json DATA_FILE_PATH))
+(:> "List of quizzes:\n")
+(-> (= i 0) (< i ($ data))
+	(:> (<- string$format "[%u]: %s\n"
+		i
+		(: (: data i) "name")
+	))
+	(++ i)
+)
+(= data (: data (<- read_number_below
+	"Select a quiz: "
+	($ data)
+)))
+(:> (<- string$pad (+ "> " data$name " <") 50 '=') "\n")
+(<- random$shuffle data$questions)
+(= score 0)
+(-> (= q-idx 0) (< q-idx ($ data$questions))
+	(= q (: data$questions q-idx))
+	(++ q-idx)
+	(:> (<- string$format "Question %u: %s\n"
+		q-idx
+		q$text
+	))
+	(= correct (<- shuffle_with_index q$answers q$correct))
+	(-> (= i 0) (< i ($ q$answers))
+		(:> (<- string$format "[%u]: %s\n"
+			i
+			(: q$answers i)
+		))
+		(++ i)
+	)
+	(? (=== (<- read_number_below
+		"Type an answer: "
+		($ q$answers)
+	) correct) (++ score))
+)
+(= ratio (/ score ($ data$questions)))
+(:> (<- string$format "Your score: %u/%u\n%s\n"
+	score
+	($ data$questions)
+	(?:
+		(>= ratio 0.75) "Excellent!"
+		(>= ratio 0.5) "Good"
+		(>= ratio 0.25) "OK"
+		"Better luck next time!"
+	)
+))

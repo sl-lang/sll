@@ -1,0 +1,60 @@
+[
+	{
+		"name": "Computer Component Trivia",
+		"questions": [
+			{
+				"text": "What does 'PCI' stand for?",
+				"answers": [
+					"Preconnetion Checksum Insertion",
+					"Port Connection Interface",
+					"Peripheral Component Interconnect",
+					"Packet Counter Injection"
+				],
+				"correct": 2
+			},
+			{
+				"text": "What does the Southbridge connect?",
+				"answers": [
+					"PSU to the CPU",
+					"USB to the Northbridge",
+					"Northbridge to the CPU",
+					"RAM to the BIOS"
+				],
+				"correct": 1
+			}
+		]
+	},
+	{
+		"name": "Computer History Trivia",
+		"questions": [
+			{
+				"text": "When was the first computer invented?",
+				"answers": [
+					"1941",
+					"1943",
+					"1945"
+				],
+				"correct": 1
+			},
+			{
+				"text": "What was the first computer to use a color display?",
+				"answers": [
+					"Apple I",
+					"ENIAC",
+					"Windows 95"
+				],
+				"correct": 0
+			},
+			{
+				"text": "When was the Touch Screen invented?",
+				"answers": [
+					"1973",
+					"2001",
+					"1948",
+					"1965"
+				],
+				"correct": 3
+			}
+		]
+	}
+]
