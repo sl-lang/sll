@@ -1073,6 +1073,8 @@ _return:;
 					}
 					break;
 				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING:
+				SLL_UNIMPLEMENTED();
 			default:
 				SLL_UNREACHABLE();
 		}

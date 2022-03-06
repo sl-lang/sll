@@ -106,7 +106,7 @@ contexts:
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           pop: true
         - include: main
-    - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2}||\|:)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%]|\+\+|\-\-)|(>=|<=|==|!=|>|<|===|!==)|(=)|(---)|(,,,)|(:>)|(<-\*?)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.)|([\[\{][<>])|(!\.)|(!<[<>\*\+=])|(:!)|(\.\?)|(&:\?))(?=\s|\))'
+    - match: '(\()\s*(?:(\?|->|>-|><|\?:|\?\?)|(&&|\|\||\!{1,2}||\|:)|([&\|\^\~]|<<|>>)|([\*_]\/\/|\/[\/%]|\*[\*\/]|_\/|[\+\-\*\/%]|\+\+|\-\-)|(>=|<=|==|!=|>|<|===|!==)|(=)|(---)|(,,,)|(:>)|(<-\*?)|(@)|(@@)|(\.\.\.)|(##)|(#)|(\$)|(:)|(::)|(:\?)|(,)|(<<<)|(%%)|(\*\*\*)|(&:)|(\.)|([\[\{][<>])|(!\.)|(!<[<>\*\+=])|(:!)|(\.\?)|(&:\?)|(!<-))(?=\s|\))'
       captures:
         1: punctuation.section.group.begin.sll punctuation.section.parens.begin.sll
         2: keyword.control.conditional.sll
@@ -136,10 +136,11 @@ contexts:
         26: keyword.control.new.sll
         27: keyword.control.conditional.generator.sll
         28: support.function.builtin.thread.id.sll
-        29: support.function.builtin.thread.wait.sll
+        29: support.function.builtin.thread.sll
         30: support.function.builtin.deep-copy.sll
         31: keyword.operator.nameof.sll
         32: keyword.operator.nameof.struct.sll
+        33: support.function.builtin.read-blocking.sll
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - match: '\)'

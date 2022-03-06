@@ -544,6 +544,7 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
 		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
 		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
+		case SLL_NODE_TYPE_READ_BLOCKING:
 			SLL_UNIMPLEMENTED();
 	}
 	o=_generate_on_stack(o,g_dt);
@@ -1529,6 +1530,18 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
 		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
 			SLL_UNIMPLEMENTED();
+		case SLL_NODE_TYPE_READ_BLOCKING:
+			{
+				if (!o->dt.ac){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					PUSH;
+					return o+1;
+				}
+				o=_generate_two_on_stack(o+1,g_dt,o->dt.ac);
+				GENERATE_OPCODE(g_dt,SLL_NODE_TYPE_READ_BLOCKING);
+				POP;
+				return o;
+			}
 	}
 	sll_arg_count_t l=o->dt.ac;
 	sll_assembly_instruction_type_t t=o->t+(SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD-SLL_NODE_TYPE_ADD);
@@ -1929,8 +1942,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 			}
 		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
 		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
+		case SLL_NODE_TYPE_READ_BLOCKING:
 			{
-				sll_assembly_instruction_type_t ai_t=(o->t==SLL_NODE_TYPE_THREAD_BARRIER_EQ?SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ:SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ);
+				sll_assembly_instruction_type_t ai_t=o->t-SLL_NODE_TYPE_THREAD_BARRIER_EQ+SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ;
 				sll_arg_count_t l=o->dt.ac;
 				o++;
 				if (l<2){

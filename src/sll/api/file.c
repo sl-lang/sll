@@ -240,6 +240,21 @@ __API_FUNC(file_read){
 
 
 
+__API_FUNC(file_read_char){
+	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
+		return SLL_FROM_INT(SLL_ERROR_UNKNOWN_FD);
+	}
+	extended_file_t* ef=*(_file_fl+a);
+	sll_error_t err;
+	sll_read_char_t c=sll_file_read_char((ef->p?ef->dt.p:&(ef->dt.f)),&err);
+	if (c==SLL_END_OF_DATA&&err!=SLL_NO_ERROR){
+		return SLL_FROM_INT(err);
+	}
+	return (c==SLL_END_OF_DATA?SLL_ACQUIRE_STATIC_NEG_INT(1):SLL_FROM_CHAR(c));
+}
+
+
+
 __API_FUNC(file_rename){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH||(sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME))){
 		return 0;

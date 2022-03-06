@@ -4,6 +4,8 @@
 
 ### Added
 
+- Extra parameter in `file$read` to allow nonblocking I/O reading operaions
+- Implemented `file$read_char`
 - Implemented `random$choice`
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
 - Implemented `thread$STATE_SUSPENDED` and `thread$suspend`
@@ -11,6 +13,8 @@
 ### Changed
 
 - Cross-requesting call stacks is now enabled by an extra argument in `error$get_call_stack`
+- Fixed internal initialization and deinitialization order
+- Standard input is now opened in non-blocking mode
 
 ### Removed
 

@@ -734,6 +734,10 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 
 
 
+void _deinit_platform(void);
+
+
+
 void _file_end_hash(sll_file_t* f);
 
 

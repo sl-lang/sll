@@ -172,6 +172,18 @@ __API_FUNC_DECL(file_read);
 
 /**
  * \flags api func
+ * \name sll_api_file_read_char
+ * \group file-api
+ * \desc Docs!
+ * \arg I
+ * \ret O
+ */
+__API_FUNC_DECL(file_read_char);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_file_rename
  * \group file-api
  * \desc Docs!

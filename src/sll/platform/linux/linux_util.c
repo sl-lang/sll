@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <sys/random.h>
 #include <sys/types.h>
+#include <termios.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -28,6 +29,7 @@ static __STATIC_STRING(_linux_platform_str,
 );
 static sll_time_zone_t _linux_platform_time_zone={"GMT",0};
 static unsigned int _linux_csr;
+static struct termios _linux_stdin_cfg;
 
 
 
@@ -44,7 +46,7 @@ extern char* tzname[2];
 
 
 
-static void _cleanup_env_data(void){
+void _deinit_platform(void){
 	for (sll_array_length_t i=0;i<_linux_env.l;i++){
 		const sll_environment_variable_t* kv=*(_linux_env.dt+i);
 		sll_free_string((sll_string_t*)(&(kv->k)));
@@ -56,6 +58,7 @@ static void _cleanup_env_data(void){
 	sll_deallocate(PTR(_linux_env.dt));
 	_linux_platform_time_zone=*sll_utc_time_zone;
 	_mm_setcsr(_linux_csr);
+	tcsetattr(STDIN_FILENO,TCSANOW,&_linux_stdin_cfg);
 }
 
 
@@ -67,11 +70,16 @@ __SLL_NO_RETURN void _force_exit_platform(void){
 
 
 void _init_platform(void){
-	_linux_csr=_mm_getcsr();
-	_mm_setcsr(_linux_csr|CSR_REGISTER_FLAGS);
 	Dl_info fn_dt;
 	SLL_ASSERT(dladdr(_init_platform,&fn_dt));
 	dlclose(dlopen(fn_dt.dli_fname,RTLD_NOW|RTLD_GLOBAL|RTLD_NOLOAD));
+	_linux_csr=_mm_getcsr();
+	_mm_setcsr(_linux_csr|CSR_REGISTER_FLAGS);
+	if (!tcgetattr(STDIN_FILENO,&_linux_stdin_cfg)){
+		struct termios bf=_linux_stdin_cfg;
+		bf.c_lflag=(bf.c_lflag&(~(ICANON|ICRNL)))|ISIG;
+		tcsetattr(STDIN_FILENO,TCSANOW,&bf);
+	}
 	sll_array_length_t l=0;
 	char** dt=environ;
 	while (*dt){
@@ -106,7 +114,6 @@ void _init_platform(void){
 		_linux_env.dt=sll_reallocate((const sll_environment_variable_t**)(_linux_env.dt),l*sizeof(sll_environment_variable_t*));
 	}
 	*((sll_array_length_t*)(&(_linux_env.l)))=l;
-	sll_register_cleanup(_cleanup_env_data);
 	tzset();
 	const sll_char_t* nm=SLL_CHAR(tzname[!!daylight]);
 	sll_string_length_t sz=sll_string_length_unaligned(nm);

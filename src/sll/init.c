@@ -103,6 +103,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 	_gc_release_data();
 	_log_release_data();
 	_file_release_std_streams();
+	_deinit_platform();
 	_memory_release_data();
 	_reset_sandbox();
 	_util_init=0;

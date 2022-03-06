@@ -709,6 +709,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_file_read_char __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_file_read_char sll_integer_t a
+/**
+ * \flags func
+ * \name sll_api_file_read_char
+ * \group file-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_file_read_char_raw
+ * \group raw-api
+ * \subgroup raw-api-file-api
+ * \desc Wrapper function for :sll_api_file_read_char:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_file_rename __SLL_CHECK_OUTPUT sll_bool_t
 #define __SLL_API_ARGS_sll_api_file_rename sll_string_t* a,sll_string_t* b
 /**

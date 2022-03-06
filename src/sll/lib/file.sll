@@ -46,6 +46,7 @@
 	(~ func_type) open
 	(~ func_type) peek
 	(~ func_type) read
+	(~ func_type) read_char
 	(~ func_type) rename
 	(~ func_type) write
 ))
@@ -170,16 +171,30 @@
 	(@@ (<- (... "sll:file_peek") f$_handle))
 ))
 
-(= read (,,, f c
+(= read (,,, f cnt nonblocking
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
-	(= c (:: c int_type))
-	(? (< c 0) {
+	(= cnt (:: cnt int_type))
+	(? (< cnt 0) {
 		(@@ "")
 	})
-	(= o (<- (... "sll:file_read") f$_handle c))
+	(= o (?: (|| nonblocking 1)
+		(<- (... "sll:file_read") f$_handle cnt)
+		(!<- f$_handle cnt)
+	)
 	(@@ (?: (=== (:? o) int_type)
 		(<- error$from_internal o)
+		o
+	))
+))
+
+(= read_char (,,, f
+	(? (=== f nil) (@@ nil))
+	(= f (:: f file_type))
+	(= o (<- (... "sll:file_read_char") f$_handle))
+	(@@ (?:
+		(=== o -1) nil
+		(=== (:? o) int_type) (<- error$from_internal o)
 		o
 	))
 ))
@@ -230,6 +245,7 @@
 	open
 	peek
 	read
+	read_char
 	rename
 	write
 ))

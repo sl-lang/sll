@@ -940,13 +940,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_NODE_TYPE_READ_BLOCKING
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_READ_BLOCKING 76
+
+
+
+/**
+ * \flags macro var
  * \name SLL_NODE_TYPE_DBG
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_DBG 76
+#define SLL_NODE_TYPE_DBG 77
 
 
 
@@ -958,7 +970,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_CHANGE_STACK 77
+#define SLL_NODE_TYPE_CHANGE_STACK 78
 
 
 
