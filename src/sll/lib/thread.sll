@@ -56,8 +56,8 @@
 ))
 
 (= internal_thread_data_type (&:
-	int_type ii
-	int_type si
+	int_type instruction_index
+	int_type stack_index
 ))
 
 (= thread_module_type (&:
