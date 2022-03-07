@@ -226,13 +226,13 @@ __API_FUNC(file_read){
 	sll_string_create(l,&(o->dt.s));
 	sll_error_t err;
 	sll_size_t sz=sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),o->dt.s.v,l,&err);
-	sll_string_decrease(&(o->dt.s),(sll_string_length_t)sz);
 	if (!sz&&err!=SLL_NO_ERROR){
 		sll_free_string(&(o->dt.s));
 		o->t=SLL_OBJECT_TYPE_INT;
 		o->dt.i=err;
 	}
 	else{
+		sll_string_decrease(&(o->dt.s),(sll_string_length_t)sz);
 		sll_string_calculate_checksum(&(o->dt.s));
 	}
 	return o;

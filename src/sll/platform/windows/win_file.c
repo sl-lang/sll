@@ -9,8 +9,30 @@
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_async_read(sll_file_descriptor_t fd){
+	DWORD d=GetFileType((HANDLE)fd);
+	return (d!=FILE_TYPE_UNKNOWN&&d!=FILE_TYPE_DISK);
+}
+
+
+
 __SLL_EXTERNAL void sll_platform_file_close(sll_file_descriptor_t fd){
 	CloseHandle((HANDLE)fd);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sll_file_descriptor_t fd){
+	switch (GetFileType((HANDLE)fd)){
+		case FILE_TYPE_CHAR:
+			{
+				DWORD sz;
+				return (!GetNumberOfConsoleInputEvents((HANDLE)fd,&sz)?1:!!sz);
+			}
+		case FILE_TYPE_PIPE:
+			SLL_UNIMPLEMENTED();
+	}
+	return 1;
 }
 
 

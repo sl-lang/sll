@@ -74,9 +74,21 @@
 
 
 
-#define SLL_FILE_FLAG_RESERVED0 64
-#define SLL_FILE_FLAG_RESERVED1 128
-#define SLL_FILE_FLAG_RESERVED2 256
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_ASYNC
+ * \group file
+ * \subgroup file-flag
+ * \desc Docs!
+ * \type sll_file_flags_t
+ */
+#define SLL_FILE_FLAG_ASYNC 16
+
+
+
+#define SLL_FILE_FLAG_RESERVED0 32
+#define SLL_FILE_FLAG_RESERVED1 64
+#define SLL_FILE_FLAG_RESERVED2 128
 
 
 
@@ -159,13 +171,25 @@ __SLL_EXTERNAL extern sll_file_t* sll_stderr;
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_file_close
  * \group file
  * \desc Docs!
  * \arg sll_file_t* f
  */
 __SLL_EXTERNAL void sll_file_close(sll_file_t* f);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_file_data_available
+ * \group file
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t* f);
 
 
 

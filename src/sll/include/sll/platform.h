@@ -274,6 +274,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sl
 
 
 /**
+ * \flags check_output func
+ * \name sll_platform_file_async_read
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ * \arg sll_file_descriptor_t fd
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_async_read(sll_file_descriptor_t fd);
+
+
+
+/**
  * \flags func
  * \name sll_platform_file_close
  * \group platform
@@ -282,6 +295,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sl
  * \arg sll_file_descriptor_t fd
  */
 __SLL_EXTERNAL void sll_platform_file_close(sll_file_descriptor_t fd);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_platform_file_data_available
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ * \arg sll_file_descriptor_t fd
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sll_file_descriptor_t fd);
 
 
 

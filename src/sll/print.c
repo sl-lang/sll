@@ -492,6 +492,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		case SLL_NODE_TYPE_READ_BLOCKING:
 			PRINT_STATIC_STRING("!<-",wf);
 			break;
+		case SLL_NODE_TYPE_READ_BLOCKING_CHAR:
+			PRINT_STATIC_STRING("!<.",wf);
+			break;
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -1158,6 +1161,9 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING:
 				PRINT_STATIC_STRING("READ_BLOCKING",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR:
+				PRINT_STATIC_STRING("READ_BLOCKING_CHAR",wf);
 				break;
 			default:
 				SLL_UNREACHABLE();

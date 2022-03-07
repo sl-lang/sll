@@ -5,6 +5,7 @@
 #include <sll/platform.h>
 #include <sll/types.h>
 #include <fcntl.h>
+#include <poll.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -15,8 +16,29 @@
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_async_read(sll_file_descriptor_t fd){
+	struct stat bf;
+	if (fstat(FROM_HANDLE(fd),&bf)==-1){
+		return 0;
+	}
+	mode_t m=bf.st_mode&S_IFMT;
+	return (m!=S_IFDIR&&m!=S_IFREG);
+}
+
+
+
 __SLL_EXTERNAL void sll_platform_file_close(sll_file_descriptor_t fd){
 	close(FROM_HANDLE(fd));
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sll_file_descriptor_t fd){
+	struct pollfd bf={
+		FROM_HANDLE(fd),
+		POLLIN
+	};
+	return !!poll(&bf,1,0);
 }
 
 

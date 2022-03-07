@@ -1,9 +1,11 @@
 #include <sll/_sll_internal.h>
+#include <sll/api/file.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
@@ -1031,11 +1033,6 @@ _return:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ:
 				{
-					sll_object_t* lck_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
-					_scheduler_current_thread->si--;
-					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
-					sll_integer_t lck=lck_o->dt.i;
-					SLL_RELEASE(lck_o);
 					sll_integer_t v=0;
 					if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_SEMAPHORE){
 						sll_object_t* v_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
@@ -1044,6 +1041,11 @@ _return:;
 						v=v_o->dt.i;
 						SLL_RELEASE(v_o);
 					}
+					sll_object_t* lck_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					_scheduler_current_thread->si--;
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
+					sll_integer_t lck=lck_o->dt.i;
+					SLL_RELEASE(lck_o);
 					thread_data_t* c_thr=_scheduler_current_thread;
 					sll_bool_t wait=0;
 					switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
@@ -1074,7 +1076,68 @@ _return:;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING:
-				SLL_UNIMPLEMENTED();
+				{
+					sll_object_t* sz_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					_scheduler_current_thread->si--;
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
+					sll_integer_t sz=sz_o->dt.i;
+					SLL_RELEASE(sz_o);
+					sll_object_t* fh_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					_scheduler_current_thread->si--;
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
+					sll_file_t* f=sll_file_from_handle(fh_o->dt.i);
+					SLL_RELEASE(fh_o);
+					if (!f||sz<=0){
+						sll_object_t* tos=SLL_CREATE();
+						tos->t=SLL_OBJECT_TYPE_STRING;
+						SLL_INIT_STRING(&(tos->dt.s));
+						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
+						_scheduler_current_thread->si++;
+						break;
+					}
+					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)||1){
+						sll_object_t* tos=SLL_CREATE();
+						tos->t=SLL_OBJECT_TYPE_STRING;
+						sll_string_length_t l=(sll_string_length_t)sz;
+						sll_string_create(l,&(tos->dt.s));
+						sll_error_t err;
+						sll_size_t sz=sll_file_read(f,tos->dt.s.v,l,&err);
+						if (!sz&&err!=SLL_NO_ERROR){
+							sll_free_string(&(tos->dt.s));
+							tos->t=SLL_OBJECT_TYPE_INT;
+							tos->dt.i=err;
+						}
+						else{
+							sll_string_decrease(&(tos->dt.s),(sll_string_length_t)sz);
+							sll_string_calculate_checksum(&(tos->dt.s));
+						}
+						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
+						_scheduler_current_thread->si++;
+						break;
+					}
+					SLL_UNIMPLEMENTED();
+				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR:
+				{
+					sll_object_t* fh_o=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
+					_scheduler_current_thread->si--;
+					SLL_RELEASE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
+					sll_file_t* f=sll_file_from_handle(fh_o->dt.i);
+					SLL_RELEASE(fh_o);
+					if (!f){
+						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=SLL_FROM_CHAR(0);
+						_scheduler_current_thread->si++;
+						break;
+					}
+					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)||1){
+						sll_error_t err;
+						sll_read_char_t chr=sll_file_read_char(f,&err);
+						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(~err)):SLL_FROM_CHAR(chr));
+						_scheduler_current_thread->si++;
+						break;
+					}
+					SLL_UNIMPLEMENTED();
+				}
 			default:
 				SLL_UNREACHABLE();
 		}

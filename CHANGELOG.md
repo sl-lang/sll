@@ -4,7 +4,9 @@
 
 ### Added
 
-- Extra parameter in `file$read` to allow nonblocking I/O reading operaions
+- Asynchronous reading operations flag: `SLL_FILE_FLAG_ASYNC`
+- Extra parameter in `file$read` to allow nonblocking I/O reading operations
+- Functions related to asynchronous file reading I/O: `sll_platform_file_async_read`, `sll_platform_file_data_available` and `sll_file_data_available`
 - Implemented `file$read_char`
 - Implemented `random$choice`
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
@@ -35,11 +37,11 @@
 - Implemented `sll_var_arg_get_object`
 - Implemented `sll_version_string`
 - Library verification parameter can be passed to `sys$load_library` to verify the SHA-256 of the loaded file
-- Nameof operator (`(.?)`): `sll_get_name`
+- Name-of operator (`(.?)`): `sll_get_name`
 - New error types: `error$ERROR_ANY`, `error$ERROR_INTERNAL_ERROR`, `error$ERROR_INVALID_FILE_DESCRIPTOR`, `error$ERROR_PATH_TOO_LONG` and `error$ERROR_SANDBOX` ([#238])
 - Path size limit: `path$MAX_PATH_SIZE`
 - System error codes: `error$from_internal`, `error_codes.sll`, `error_codes$ERROR_INTERNAL_ERROR`, `error_codes$LIBC_ERROR_CODES`, `error_codes$WINDOWS_ERROR_CODES` and `error_codes$get_by_name` ([#238])
-- Type nameof operator (`(&:?)`): `sll_get_type_name`
+- Type name-of operator (`(&:?)`): `sll_get_type_name`
 - Variables evaluating to the current file (`@@file@@`) and line number (`@@line@@`)
 
 ### Changed

@@ -61,7 +61,7 @@
 			(= bf (+ bf chunk))
 		)
 		(<- file$close f)
-		(= _test_results (<- json$parse bf))
+		(? bf (= _test_results (<- json$parse bf)))
 	})
 	(= id (: (<- string$split (: (<- path$split (: sys$ARGV 0)) 1) ".") 0))
 	(= _test_data <

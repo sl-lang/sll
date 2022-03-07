@@ -178,7 +178,7 @@
 	(? (< cnt 0) {
 		(@@ "")
 	})
-	(= o (?: (|| nonblocking 1)
+	(= o (?: nonblocking
 		(<- (... "sll:file_read") f$_handle cnt)
 		(!<- f$_handle cnt)
 	)
@@ -188,10 +188,13 @@
 	))
 ))
 
-(= read_char (,,, f
+(= read_char (,,, f nonblocking
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
-	(= o (<- (... "sll:file_read_char") f$_handle))
+	(= o (?: nonblocking
+		(<- (... "sll:file_read_char") f$_handle)
+		(!<. f$_handle)
+	)
 	(@@ (?:
 		(=== o -1) nil
 		(=== (:? o) int_type) (<- error$from_internal o)

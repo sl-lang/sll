@@ -1328,13 +1328,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR 109
+
+
+
+/**
+ * \flags macro var
  * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK
  * \group assembly
  * \subgroup assembly-instruction
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 109
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 110
 
 
 
