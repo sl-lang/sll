@@ -206,6 +206,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	};
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
 	_scheduler_init();
+	_io_dispatcher_init();
 	sll_thread_index_t tid=_scheduler_new_thread();
 	sll_object_t* o=sll_wait_thread(tid);
 	sll_object_t* rc_o=sll_operator_cast(o,sll_static_int[SLL_OBJECT_TYPE_INT]);
@@ -231,6 +232,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_platform_free_page(_vm_var_data,SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)));
 	_vm_var_data=NULL;
 	sll_current_runtime_data=NULL;
+	_io_dispatcher_deinit();
 	_scheduler_deinit();
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
@@ -1062,6 +1064,7 @@ _return:;
 					}
 					if (wait){
 						c_thr->ii++;
+_load_new_thread:;
 						sll_thread_index_t n_tid=_scheduler_queue_pop();
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
 							if (tid_dt->ret){
@@ -1095,7 +1098,7 @@ _return:;
 						_scheduler_current_thread->si++;
 						break;
 					}
-					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)||1){
+					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)){
 						sll_object_t* tos=SLL_CREATE();
 						tos->t=SLL_OBJECT_TYPE_STRING;
 						sll_string_length_t l=(sll_string_length_t)sz;
@@ -1115,7 +1118,8 @@ _return:;
 						_scheduler_current_thread->si++;
 						break;
 					}
-					SLL_UNIMPLEMENTED();
+					_io_dispatcher_queue(f,(sll_string_length_t)sz);
+					goto _load_new_thread;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR:
 				{
@@ -1129,14 +1133,15 @@ _return:;
 						_scheduler_current_thread->si++;
 						break;
 					}
-					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)||1){
+					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)){
 						sll_error_t err;
 						sll_read_char_t chr=sll_file_read_char(f,&err);
 						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(~err)):SLL_FROM_CHAR(chr));
 						_scheduler_current_thread->si++;
 						break;
 					}
-					SLL_UNIMPLEMENTED();
+					_io_dispatcher_queue(f,0);
+					goto _load_new_thread;
 				}
 			default:
 				SLL_UNREACHABLE();

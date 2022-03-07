@@ -163,7 +163,7 @@ void _scheduler_queue_next(void){
 
 sll_thread_index_t _scheduler_queue_pop(void){
 	if (!_scheduler_queue_len){
-		return SLL_UNKNOWN_THREAD_INDEX;
+		return _io_dispatcher_wait();
 	}
 	sll_thread_index_t o=*(_scheduler_queue+_scheduler_queue_idx);
 	for (queue_length_t i=_scheduler_queue_idx+1;i<_scheduler_queue_len;i++){
@@ -207,7 +207,7 @@ void _scheduler_set_thread(sll_thread_index_t t){
 	}
 	sll_current_thread_index=t;
 	_scheduler_current_thread=*(_scheduler_thread+t);
-	if ((_scheduler_current_thread->st!=THREAD_STATE_INITIALIZED&&_scheduler_current_thread->st!=THREAD_STATE_RUNNING&&_scheduler_current_thread->st!=THREAD_STATE_UNDEFINED)||_scheduler_current_thread->suspended){
+	if ((_scheduler_current_thread->st!=THREAD_STATE_INITIALIZED&&_scheduler_current_thread->st!=THREAD_STATE_RUNNING&&_scheduler_current_thread->st!=THREAD_STATE_UNDEFINED&&_scheduler_current_thread->st!=THREAD_STATE_WAIT_IO)||_scheduler_current_thread->suspended){
 		SLL_UNIMPLEMENTED();
 	}
 	_scheduler_current_thread->st=THREAD_STATE_RUNNING;

@@ -299,10 +299,11 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define THREAD_STATE_RUNNING 1
 #define THREAD_STATE_QUEUED 2
 #define THREAD_STATE_WAIT_BARRIER 3
-#define THREAD_STATE_WAIT_LOCK 4
-#define THREAD_STATE_WAIT_SEMAPHORE 5
-#define THREAD_STATE_WAIT_THREAD 6
-#define THREAD_STATE_TERMINATED 7
+#define THREAD_STATE_WAIT_IO 4
+#define THREAD_STATE_WAIT_LOCK 5
+#define THREAD_STATE_WAIT_SEMAPHORE 6
+#define THREAD_STATE_WAIT_THREAD 7
+#define THREAD_STATE_TERMINATED 8
 #define THREAD_STATE_UNDEFINED 255
 
 #define CSR_REGISTER_FLAGS 0x8040
@@ -345,6 +346,10 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define LIBRARY_DIRECTORY "/sys_lib/"
 #define LIBRARY_HASH_BUFFER_SIZE 4096
 
+#define EVENT_UNUSED 0xffffffff
+#define EVENT_GET_NEXT_ID(e) ((event_list_length_t)((e)->tid))
+#define EVENT_SET_NEXT_ID(e,v) ((e)->tid=((event_list_length_t)(v)))
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
@@ -363,6 +368,10 @@ typedef sll_instruction_index_t assembly_instruction_label_t;
 
 
 typedef __SLL_U32 barrier_list_length_t;
+
+
+
+typedef __SLL_U32 event_list_length_t;
 
 
 
@@ -714,6 +723,14 @@ typedef struct __BARRIER{
 
 
 
+typedef struct __EVENT_DATA{
+	sll_file_t* f;
+	sll_thread_index_t tid;
+	sll_string_length_t sz;
+} event_data_t;
+
+
+
 #ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
@@ -783,6 +800,22 @@ void _init_node_stack(sll_source_file_t* sf);
 
 
 void _init_platform(void);
+
+
+
+void _io_dispatcher_deinit(void);
+
+
+
+void _io_dispatcher_init(void);
+
+
+
+void _io_dispatcher_queue(sll_file_t* f,sll_string_length_t sz);
+
+
+
+sll_thread_index_t _io_dispatcher_wait(void);
 
 
 

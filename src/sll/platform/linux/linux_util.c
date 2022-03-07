@@ -77,7 +77,8 @@ void _init_platform(void){
 	_mm_setcsr(_linux_csr|CSR_REGISTER_FLAGS);
 	if (!tcgetattr(STDIN_FILENO,&_linux_stdin_cfg)){
 		struct termios bf=_linux_stdin_cfg;
-		bf.c_lflag=(bf.c_lflag&(~(ICANON|ICRNL)))|ISIG;
+		bf.c_iflag=(bf.c_iflag&(~INLCR))|ICRNL;
+		bf.c_lflag=(bf.c_lflag&(~(ICANON|ICRNL|ECHO|ECHOCTL|ECHOPRT)))|ISIG;
 		tcsetattr(STDIN_FILENO,TCSANOW,&bf);
 	}
 	sll_array_length_t l=0;

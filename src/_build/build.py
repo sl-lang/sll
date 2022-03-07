@@ -70,7 +70,7 @@ def build_sll(fl,v,r):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking Files (Release Mode)...")
-			if (util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl"])):
+			if (util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"])):
 				sys.exit(1)
 			if (util.system!="darwin"):
 				util.log("  Stripping Executable...")
@@ -89,7 +89,7 @@ def build_sll(fl,v,r):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking Files...")
-			if (util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl"])):
+			if (util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"])):
 				sys.exit(1)
 
 

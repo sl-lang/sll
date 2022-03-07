@@ -4,7 +4,7 @@
 
 ### Added
 
-- Asynchronous reading operations flag: `SLL_FILE_FLAG_ASYNC`
+- Asynchronous reading operations flag (read-only): `SLL_FILE_FLAG_ASYNC`
 - Extra parameter in `file$read` to allow nonblocking I/O reading operations
 - Functions related to asynchronous file reading I/O: `sll_platform_file_async_read`, `sll_platform_file_data_available` and `sll_file_data_available`
 - Implemented `file$read_char`
