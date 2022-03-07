@@ -1098,27 +1098,27 @@ _load_new_thread:;
 						_scheduler_current_thread->si++;
 						break;
 					}
+					sll_string_length_t l=(sz>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)sz);
 					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)){
 						sll_object_t* tos=SLL_CREATE();
 						tos->t=SLL_OBJECT_TYPE_STRING;
-						sll_string_length_t l=(sll_string_length_t)sz;
 						sll_string_create(l,&(tos->dt.s));
 						sll_error_t err;
-						sll_size_t sz=sll_file_read(f,tos->dt.s.v,l,&err);
-						if (!sz&&err!=SLL_NO_ERROR){
+						sll_size_t r_sz=sll_file_read(f,tos->dt.s.v,l,&err);
+						if (!r_sz&&err!=SLL_NO_ERROR){
 							sll_free_string(&(tos->dt.s));
 							tos->t=SLL_OBJECT_TYPE_INT;
 							tos->dt.i=err;
 						}
 						else{
-							sll_string_decrease(&(tos->dt.s),(sll_string_length_t)sz);
+							sll_string_decrease(&(tos->dt.s),(sll_string_length_t)r_sz);
 							sll_string_calculate_checksum(&(tos->dt.s));
 						}
 						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
 						_scheduler_current_thread->si++;
 						break;
 					}
-					_io_dispatcher_queue(f,(sll_string_length_t)sz);
+					_io_dispatcher_queue(f,l);
 					goto _load_new_thread;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR:
