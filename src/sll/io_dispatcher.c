@@ -100,7 +100,7 @@ sll_thread_index_t _io_dispatcher_wait(void){
 	event_list_length_t i=0;
 	while (1){
 		event_data_t* evt=_io_dispatcher_event+i;
-		if (evt->f&&sll_file_data_available(evt->f)){
+		if (evt->f&&sll_platform_file_data_available(evt->f->dt.fl.fd)){
 			return _restart_thread(i);
 		}
 		i++;
