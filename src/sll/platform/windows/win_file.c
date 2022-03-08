@@ -4,8 +4,90 @@
 #include <sll/error.h>
 #include <sll/file.h>
 #include <sll/platform/file.h>
+#include <sll/scheduler.h>
 #include <sll/string.h>
 #include <sll/types.h>
+
+
+
+void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile dispatched_thread_t* dt){
+	CloseHandle(*r_dt);
+	CloseHandle(wait);
+	CloseHandle(dt->lck);
+}
+
+
+
+void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile dispatched_thread_t* dt){
+	*r_dt=CreateEventA(NULL,TRUE,FALSE,NULL);
+	*wait=CreateEventA(NULL,TRUE,FALSE,NULL);
+	dt->tid=0;
+	dt->lck=CreateEventA(NULL,TRUE,FALSE,NULL);
+}
+
+
+
+void _platform_notify_dispatch(volatile dispatched_thread_t* dt){
+	SetEvent(dt->lck);
+}
+
+
+
+event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t cnt){
+	if (cnt>MAXIMUM_WAIT_OBJECTS){
+		SLL_UNIMPLEMENTED();
+	}
+	DWORD o=WaitForMultipleObjects(cnt,dt,FALSE,INFINITE);
+	if (o==WAIT_FAILED){
+		return cnt;
+	}
+	o-=WAIT_OBJECT_0;
+	SLL_ASSERT(o<cnt);
+	if (!o){
+		ResetEvent(*dt);
+		SetEvent(wait);
+		return 0;
+	}
+	return (sll_platform_file_data_available(*(dt+o))?o:cnt);
+}
+
+
+
+void _platform_poll_start(raw_event_data_t* dt){
+	SetEvent(*dt);
+}
+
+
+
+void _platform_poll_stop(raw_event_data_t* dt,void** wait){
+	SetEvent(*dt);
+	if (!wait){
+		return;
+	}
+	if (WaitForSingleObject(*wait,INFINITE)!=WAIT_OBJECT_0){
+		SLL_UNIMPLEMENTED();
+	}
+	ResetEvent(*wait);
+}
+
+
+
+void _platform_wait_for_dispatch(raw_event_data_t* dt){
+	if (WaitForSingleObject(*dt,INFINITE)!=WAIT_OBJECT_0){
+		SLL_UNIMPLEMENTED();
+	}
+	ResetEvent(*dt);
+}
+
+
+
+sll_thread_index_t _platform_wait_notify_dispatch(volatile dispatched_thread_t* dt){
+	dt->tid=SLL_UNKNOWN_THREAD_INDEX;
+	if (WaitForSingleObject(dt->lck,INFINITE)!=WAIT_OBJECT_0){
+		SLL_UNIMPLEMENTED();
+	}
+	return dt->tid;
+}
 
 
 
@@ -27,7 +109,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sl
 		case FILE_TYPE_CHAR:
 			{
 				DWORD sz;
-				return (!GetNumberOfConsoleInputEvents((HANDLE)fd,&sz)?1:!!sz);
+				while (GetNumberOfConsoleInputEvents((HANDLE)fd,&sz)&&sz){
+					INPUT_RECORD ir;
+					DWORD cnt;
+					if (!PeekConsoleInput((HANDLE)fd,&ir,1,&cnt)||!cnt){
+						return 0;
+					}
+					if (ir.EventType==KEY_EVENT){
+						WORD key=ir.Event.KeyEvent.wVirtualKeyCode;
+						if (key!=VK_SHIFT&&key!=VK_CONTROL&&key!=VK_MENU&&key!=VK_PAUSE&&key!=VK_CAPITAL){
+							return 1;
+						}
+					}
+					if (!ReadConsoleInput((HANDLE)fd,&ir,1,&cnt)){
+						return 0;
+					}
+
+				}
+				return 0;
 			}
 		case FILE_TYPE_PIPE:
 			SLL_UNIMPLEMENTED();

@@ -4,6 +4,7 @@
 #include <intrin.h>
 #else
 #include <errno.h>
+#include <poll.h>
 #endif
 #include <sll/_size_types.h>
 #include <sll/api.h>
@@ -345,10 +346,6 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 
 #define LIBRARY_DIRECTORY "/sys_lib/"
 #define LIBRARY_HASH_BUFFER_SIZE 4096
-
-#define EVENT_UNUSED 0xffffffff
-#define EVENT_GET_NEXT_ID(e) ((event_list_length_t)((e)->tid))
-#define EVENT_SET_NEXT_ID(e,v) ((e)->tid=((event_list_length_t)(v)))
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
@@ -740,6 +737,21 @@ typedef struct __EXECUTE_WRAPPER_DATA{
 
 
 #ifdef __SLL_BUILD_WINDOWS
+typedef void* raw_event_data_t;
+#else
+typedef struct pollfd raw_event_data_t;
+#endif
+
+
+
+typedef struct __DISPATCHED_THREAD{
+	sll_thread_index_t tid;
+	void* lck;
+} dispatched_thread_t;
+
+
+
+#ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
 extern thread_data_t* _scheduler_current_thread;
@@ -832,6 +844,38 @@ void _log_release_data(void);
 
 
 void _memory_release_data(void);
+
+
+
+void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile dispatched_thread_t* dt);
+
+
+
+void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile dispatched_thread_t* dt);
+
+
+
+void _platform_notify_dispatch(volatile dispatched_thread_t* dt);
+
+
+
+event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t cnt);
+
+
+
+void _platform_poll_start(raw_event_data_t* dt);
+
+
+
+void _platform_poll_stop(raw_event_data_t* dt,void** wait);
+
+
+
+void _platform_wait_for_dispatch(raw_event_data_t* dt);
+
+
+
+sll_thread_index_t _platform_wait_notify_dispatch(volatile dispatched_thread_t* dt);
 
 
 

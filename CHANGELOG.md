@@ -11,6 +11,7 @@
 - Implemented `random$choice`
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
 - Implemented `thread$STATE_SUSPENDED` and `thread$suspend`
+- Internal I/O operation dispatcher thread
 - System thread API: `sll_internal_thread_index_t`, `SLL_UNKNOWN_INTERNAL_THREAD_INDEX`, `sll_platform_join_thread` and `sll_platform_start_thread` ([#243])
 
 ### Changed

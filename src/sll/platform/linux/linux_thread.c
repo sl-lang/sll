@@ -19,7 +19,7 @@ static void* _execute_wrapper(void* p){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_internal_thread_index_t tid){
-	return !!pthread_join((pthread_t)tid,NULL);
+	return !pthread_join((pthread_t)tid,NULL);
 }
 
 
