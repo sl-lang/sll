@@ -63,15 +63,15 @@ _not_apt:
 		return 0;
 	}
 	sll_return_code_t o=0;
-	void* ver=dlsym(lh,"sll_version");
-	if (!ver||((sll_version_t(*)(void))ver)()!=SLL_VERSION){
+	sll_version_t (*ver)(void)=dlsym(lh,"sll_version");
+	if (!ver||ver()!=SLL_VERSION){
 		goto _end;
 	}
-	void* cli=dlsym(lh,"sll_cli_main");
+	sll_return_code_t (*cli)(sll_array_length_t,const sll_char_t*const*)=dlsym(lh,"sll_cli_main");
 	if (!cli){
 		goto _end;
 	}
-	o=((sll_return_code_t(*)(sll_array_length_t,const sll_char_t*const*))cli)(argc-1,(const sll_char_t*const*)(argv+1));
+	o=cli(argc-1,(const sll_char_t*const*)(argv+1));
 _end:
 	dlclose(lh);
 	return o;

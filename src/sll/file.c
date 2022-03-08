@@ -5,7 +5,9 @@
 #include <sll/error.h>
 #include <sll/file.h>
 #include <sll/memory.h>
-#include <sll/platform.h>
+#include <sll/platform/file.h>
+#include <sll/platform/memory.h>
+#include <sll/platform/path.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/var_arg.h>

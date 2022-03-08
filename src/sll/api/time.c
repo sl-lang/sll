@@ -2,7 +2,7 @@
 #include <sll/api.h>
 #include <sll/api/math.h>
 #include <sll/common.h>
-#include <sll/platform.h>
+#include <sll/platform/util.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>

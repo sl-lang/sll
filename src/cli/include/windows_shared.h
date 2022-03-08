@@ -29,8 +29,8 @@ static __inline __forceinline HMODULE _load_library(void){
 	if (!lh){
 		return 0;
 	}
-	void* ver=GetProcAddress(lh,"sll_version");
-	if (!ver||((sll_version_t(*)(void))ver)()!=SLL_VERSION){
+	sll_version_t (*ver)(void)=(void*)GetProcAddress(lh,"sll_version");
+	if (!ver||ver()!=SLL_VERSION){
 		FreeLibrary(lh);
 		return 0;
 	}

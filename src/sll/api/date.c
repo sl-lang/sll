@@ -5,7 +5,7 @@
 #include <sll/common.h>
 #include <sll/object.h>
 #include <sll/operator.h>
-#include <sll/platform.h>
+#include <sll/platform/util.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>

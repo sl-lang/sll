@@ -4,7 +4,7 @@
 #include <sll/data.h>
 #include <sll/env.h>
 #include <sll/memory.h>
-#include <sll/platform.h>
+#include <sll/platform/path.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <dirent.h>

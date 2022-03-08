@@ -2,7 +2,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/node.h>
-#include <sll/platform.h>
+#include <sll/platform/memory.h>
 #include <sll/types.h>
 
 

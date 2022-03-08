@@ -280,6 +280,10 @@ typedef void* sll_file_descriptor_t;
 
 
 
+typedef void* sll_internal_thread_index_t;
+
+
+
 typedef void* sll_library_handle_t;
 
 
@@ -917,6 +921,10 @@ typedef struct __SLL_MODULE_LOADER_DATA{
 	sll_file_offset_t sz;
 	sll_sha256_data_t h;
 } sll_module_loader_data_t;
+
+
+
+typedef void (*sll_internal_thread_function_t)(void* arg);
 
 
 

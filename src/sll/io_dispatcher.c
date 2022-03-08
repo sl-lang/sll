@@ -4,7 +4,8 @@
 #include <sll/file.h>
 #include <sll/memory.h>
 #include <sll/object.h>
-#include <sll/platform.h>
+#include <sll/platform/file.h>
+#include <sll/platform/thread.h>
 #include <sll/scheduler.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
@@ -12,10 +13,12 @@
 
 
 
+static volatile sll_bool_t _io_dispatcher_end;
 static event_data_t* _io_dispatcher_event;
 static event_list_length_t _io_dispatcher_event_next;
 static event_list_length_t _io_dispatcher_event_cnt;
 static event_list_length_t _io_dispatcher_event_len;
+static sll_internal_thread_index_t _io_dispatcher_thread;
 
 
 
@@ -57,17 +60,32 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 
 
 
+static void _poll_thread(void* arg){
+	while (!_io_dispatcher_end){
+		//
+	}
+}
+
+
+
 void _io_dispatcher_deinit(void){
+	_io_dispatcher_end=1;
+	if (!sll_platform_join_thread(_io_dispatcher_thread)){
+		SLL_UNREACHABLE();
+	}
 	sll_deallocate(_io_dispatcher_event);
 }
 
 
 
 void _io_dispatcher_init(void){
+	_io_dispatcher_end=0;
 	_io_dispatcher_event=NULL;
 	_io_dispatcher_event_next=EVENT_UNUSED;
 	_io_dispatcher_event_cnt=0;
 	_io_dispatcher_event_len=0;
+	_io_dispatcher_thread=sll_platform_start_thread(_poll_thread,NULL);
+	SLL_ASSERT(_io_dispatcher_thread!=SLL_UNKNOWN_INTERNAL_THREAD_INDEX);
 }
 
 

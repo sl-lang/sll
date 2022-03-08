@@ -2,7 +2,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
-#include <sll/platform.h>
+#include <sll/platform/memory.h>
 #include <sll/scheduler.h>
 #include <sll/types.h>
 #include <sll/vm.h>
@@ -163,7 +163,12 @@ void _scheduler_queue_next(void){
 
 sll_thread_index_t _scheduler_queue_pop(void){
 	if (!_scheduler_queue_len){
-		return _io_dispatcher_wait();
+		sll_thread_index_t tid=_io_dispatcher_wait();
+		if (tid==SLL_UNKNOWN_THREAD_INDEX){
+			return SLL_UNKNOWN_THREAD_INDEX;
+		}
+		(*(_scheduler_thread+tid))->st=THREAD_STATE_UNDEFINED;
+		return tid;
 	}
 	sll_thread_index_t o=*(_scheduler_queue+_scheduler_queue_idx);
 	for (queue_length_t i=_scheduler_queue_idx+1;i<_scheduler_queue_len;i++){

@@ -9,7 +9,8 @@
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/object.h>
-#include <sll/platform.h>
+#include <sll/platform/file.h>
+#include <sll/platform/path.h>
 #include <sll/sandbox.h>
 #include <sll/static_object.h>
 #include <sll/string.h>

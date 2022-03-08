@@ -731,6 +731,14 @@ typedef struct __EVENT_DATA{
 
 
 
+typedef struct __EXECUTE_WRAPPER_DATA{
+	sll_internal_thread_function_t fn;
+	void* arg;
+	void* sem;
+} execute_wrapper_data_t;
+
+
+
 #ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif

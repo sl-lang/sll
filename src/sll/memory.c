@@ -4,7 +4,8 @@
 #include <sll/file.h>
 #include <sll/generated/memory_fail.h>
 #include <sll/memory.h>
-#include <sll/platform.h>
+#include <sll/platform/file.h>
+#include <sll/platform/memory.h>
 #include <sll/types.h>
 #include <stdlib.h>
 

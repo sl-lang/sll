@@ -8,9 +8,9 @@ int main(int argc,const char*const* argv){
 	HMODULE lh=_load_library();
 	sll_return_code_t o=0;
 	if (lh){
-		void* cli=GetProcAddress(lh,"sll_cli_main");
+		sll_return_code_t (*cli)(sll_array_length_t argc,const sll_char_t*const* argv)=(void*)GetProcAddress(lh,"sll_cli_main");
 		if (cli){
-			o=((sll_return_code_t(*)(sll_array_length_t argc,const sll_char_t*const* argv))cli)(argc-1,argv+1);
+			o=cli(argc-1,argv+1);
 		}
 	}
 	FreeLibrary(lh);

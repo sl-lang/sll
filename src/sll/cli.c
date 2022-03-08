@@ -13,7 +13,8 @@
 #include <sll/log.h>
 #include <sll/memory.h>
 #include <sll/node.h>
-#include <sll/platform.h>
+#include <sll/platform/path.h>
+#include <sll/platform/util.h>
 #include <sll/sandbox.h>
 #include <sll/string.h>
 #include <sll/types.h>

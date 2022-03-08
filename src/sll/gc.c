@@ -8,7 +8,7 @@
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
-#include <sll/platform.h>
+#include <sll/platform/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>

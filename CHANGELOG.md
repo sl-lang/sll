@@ -11,11 +11,13 @@
 - Implemented `random$choice`
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
 - Implemented `thread$STATE_SUSPENDED` and `thread$suspend`
+- System thread API: `sll_internal_thread_index_t`, `SLL_UNKNOWN_INTERNAL_THREAD_INDEX`, `sll_platform_join_thread` and `sll_platform_start_thread` ([#243])
 
 ### Changed
 
 - Cross-requesting call stacks is now enabled by an extra argument in `error$get_call_stack`
 - Fixed internal initialization and deinitialization order
+- Split the [`src/sll/include/sll/platform.h`][0.7.8/src/sll/include/sll/platform.h] header into multiple headers located in [`src/sll/include/sll/platform`][0.7.8/src/sll/include/sll/platform]
 - Standard input is now opened in non-blocking mode
 
 ### Removed
@@ -1741,6 +1743,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#243]: https://github.com/sl-lang/sll/issues/243
 [#238]: https://github.com/sl-lang/sll/issues/238
 [#237]: https://github.com/sl-lang/sll/issues/237
 [#235]: https://github.com/sl-lang/sll/issues/235
@@ -1943,6 +1946,8 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[0.7.8/src/sll/include/sll/platform]: https:/github.com/sl-lang/sll/tree/main/src/sll/include/sll/platform
+[0.7.8/src/sll/include/sll/platform.h]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/platform.h
 [0.7.0/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/api/_generated_raw.c
 [0.7.0/src/sll/compilation_data.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/compilation_data.c
 [0.7.0/src/sll/data.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/data.c
