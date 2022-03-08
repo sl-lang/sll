@@ -7,7 +7,9 @@
 #include <sll/types.h>
 #include <fcntl.h>
 #include <poll.h>
+#ifdef __SLL_BUILD_LINUX
 #include <sys/eventfd.h>
+#endif
 #include <sys/stat.h>
 #include <unistd.h>
 
