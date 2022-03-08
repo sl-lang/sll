@@ -2,8 +2,10 @@
 #include <sll/common.h>
 #include <sll/platform/thread.h>
 #include <sll/types.h>
+#include <fcntl.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/stat.h>
 
 
 
@@ -26,17 +28,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start
 	pthread_t o;
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
-	sem_t sem;
-	sem_init(&sem,0,0);
 	execute_wrapper_data_t dt={
 		fn,
 		arg,
-		&sem
+		sem_open("__sll_execute_wrapper_sync",O_CREAT,S_IRUSR|S_IWUSR,0)
 	};
 	if (pthread_create(&o,&attr,_execute_wrapper,&dt)){
 		return SLL_UNKNOWN_INTERNAL_THREAD_INDEX;
 	}
-	sem_wait(&sem);
-	sem_destroy(&sem);
+	sem_wait(dt.sem);
+	sem_close(dt.sem);
+	sem_unlink("__sll_execute_wrapper_sync");
 	return (sll_internal_thread_index_t)o;
 }
