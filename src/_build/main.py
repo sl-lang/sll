@@ -50,15 +50,14 @@ util.log("Compiling Modules...")
 if (util.execute(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
 	sys.exit(1)
 util.log("Generating Bundle...")
-if (util.execute(["build/sll","-b","-n","-N","/","-R","-O","build/bundle.slb"]+[e+".slc" for e in fl if e.split("/")[-1][0]!="_"]+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
+if (util.execute(["build/sll","-b","-n","-N","/","-R","-O",f"build/lib/stdlib{('' if '--release' in sys.argv else '-debug')}.slb"]+[e+".slc" for e in fl if e.split("/")[-1][0]!="_"]+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
 	util.log(f"  Removing '{k}'...")
 	os.remove(k)
-	if (k.split("/")[-1][0]=="_"):
-		util.log(f"  Removing '{k}.slc'...")
-		os.remove(k+".slc")
+	util.log(f"  Removing '{k}.slc'...")
+	os.remove(k+".slc")
 if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)
@@ -70,5 +69,5 @@ if ("--upload" in sys.argv):
 if ("--run" in sys.argv):
 	util.log(f"Running 'examples/_internal_test/test.sll'...")
 	util.execute(["build/sll","-h"])
-	if (util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]) or util.execute(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]) or util.execute(["build/sll","build/test2.sla","-v","-P"])):
+	if (util.execute(["build/sll","-I",f"build/lib/stdlib{('' if '--release' in sys.argv else '-debug')}.slb","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]) or util.execute(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]) or util.execute(["build/sll","build/test2.sla","-v","-P"])):
 		sys.exit(1)

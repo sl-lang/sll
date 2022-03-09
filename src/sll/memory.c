@@ -309,7 +309,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_fail(sll_size_t sz){
 	return sll_allocate(sz);
 }
 
-;
+
 
 __SLL_EXTERNAL void sll_deallocate(void* p){
 	if (!p){

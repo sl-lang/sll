@@ -767,6 +767,27 @@ typedef struct __DISPATCHED_THREAD{
 
 
 
+typedef struct __CLI_BUNDLE_SOURCE{
+	const sll_char_t* nm;
+	sll_bundle_t b;
+} cli_bundle_source_t;
+
+
+
+typedef struct __SOURCE_FILE_WITH_INDEX{
+	sll_source_file_t* dt;
+	sll_source_file_index_t idx;
+} source_file_with_index_t;
+
+
+
+typedef struct __SOURCE_FILE_LIST{
+	source_file_with_index_t* dt;
+	sll_source_file_index_t l;
+} source_file_list_t;
+
+
+
 #ifdef __SLL_BUILD_WINDOWS
 extern void* _win_dll_handle;
 #endif
@@ -780,6 +801,10 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 sll_node_t* _acquire_next_node(sll_source_file_t* sf);
+
+
+
+void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf);
 
 
 

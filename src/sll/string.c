@@ -1521,6 +1521,10 @@ __SLL_EXTERNAL void sll_string_replace_char(const sll_string_t* s,sll_char_t k,s
 
 
 __SLL_EXTERNAL void sll_string_resize(const sll_string_t* s,sll_integer_t v,sll_string_t* o){
+	if (!v){
+		sll_string_clone(s,o);
+		return;
+	}
 	if (v<0){
 		v=-v;
 		if (v>=s->l){

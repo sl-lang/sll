@@ -6,6 +6,7 @@
 #include <sll/assembly.h>
 #include <sll/bundle.h>
 #include <sll/data.h>
+#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/generated/help_text.h>
 #include <sll/ift.h>
@@ -23,10 +24,12 @@
 
 
 
-static unsigned int fl;
 static __STATIC_STRING(slc_end,".slc");
+static unsigned int fl;
 static sll_char_t* i_fp;
 static sll_string_length_t i_fpl;
+static cli_bundle_source_t** i_b;
+static sll_array_length_t i_bl;
 static sll_char_t l_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 static sll_string_length_t l_fpl;
 static sll_internal_function_table_t i_ft;
@@ -54,6 +57,19 @@ static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o)
 static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_char_t* f_fp){
 	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	if (i_bl){
+		sll_string_t f_nm_str;
+		sll_string_from_pointer_length(f_nm,f_nm_l,&f_nm_str);
+		for (sll_array_length_t i=0;i<i_bl;i++){
+			cli_bundle_source_t* b_dt=*(i_b+i);
+			CLI_LOG_IF_VERBOSE("Trying to open file '%s/%s'...",b_dt->nm,f_nm);
+			if (sll_bundle_fetch(&(b_dt->b),&f_nm_str,c_dt)){
+				CLI_LOG_IF_VERBOSE("File successfully read.");
+				return;
+			}
+		}
+		sll_free_string(&f_nm_str);
+	}
 	sll_string_length_t i=0;
 	while (i<i_fpl){
 		sll_string_length_t j=sll_string_length_unaligned(i_fp+i);
@@ -131,12 +147,29 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 
 
 
+static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
+	sll_bundle_t b_dt;
+	if (!sll_load_bundle(rf,&b_dt)){
+		return;
+	}
+	i_bl++;
+	i_b=sll_reallocate(i_b,i_bl*sizeof(cli_bundle_source_t*));
+	cli_bundle_source_t* b=sll_allocate(sizeof(cli_bundle_source_t));
+	b->nm=nm;
+	b->b=b_dt;
+	*(i_b+i_bl-1)=b;
+}
+
+
+
 static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*const* argv){
 	if (!argc){
 		return 0;
 	}
 	sll_return_code_t ec=0;
 	fl=0;
+	i_b=NULL;
+	i_bl=0;
 	i_fp=sll_allocate(sizeof(sll_char_t));
 	*i_fp=0;
 	i_fpl=1;
@@ -163,14 +196,14 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 	sll_set_argument_count(1);
 	sll_array_length_t i=0;
 	do{
-		const sll_char_t* e=SLL_CHAR(argv[i]);
+		const sll_char_t* e=argv[i];
 		if ((*e=='-'&&*(e+1)=='a'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-assembly"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_GENERATE_ASSEMBLY;
 		}
 		else if ((*e=='-'&&*(e+1)=='A'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			sll_set_argument_count(argc-i);
 			for (sll_array_length_t j=0;j<argc-i-1;j++){
-				sll_set_argument(j+1,SLL_CHAR(*(argv+i+j+1)));
+				sll_set_argument(j+1,argv[i+j+1]);
 			}
 			break;
 		}
@@ -204,19 +237,28 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 			if (i==argc){
 				break;
 			}
-			e=SLL_CHAR(argv[i]);
+			e=argv[i];
 			sll_string_length_t sz=sll_string_length_unaligned(e);
 			if (sz){
-				sll_string_length_t j=i_fpl;
-				i_fpl+=sz+(*(e+sz-1)!='\\'&&*(e+sz-1)!='/'?2:1);
-				i_fp=sll_reallocate(i_fp,i_fpl*sizeof(sll_char_t));
-				sll_copy_data(e,sz,i_fp+j);
-				j+=sz;
-				if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
-					*(i_fp+j)='/';
-					j++;
+				if (sll_platform_path_is_directory(e)){
+					sll_string_length_t j=i_fpl;
+					i_fpl+=sz+(*(e+sz-1)!='\\'&&*(e+sz-1)!='/'?2:1);
+					i_fp=sll_reallocate(i_fp,i_fpl*sizeof(sll_char_t));
+					sll_copy_data(e,sz,i_fp+j);
+					j+=sz;
+					if (*(e+sz-1)!='\\'&&*(e+sz-1)!='/'){
+						*(i_fp+j)='/';
+						j++;
+					}
+					*(i_fp+j)=0;
 				}
-				*(i_fp+j)=0;
+				else{
+					sll_file_t b_f;
+					if (sll_file_open(e,SLL_FILE_FLAG_READ,&b_f)==SLL_NO_ERROR){
+						_load_bundle(e,&b_f);
+						sll_file_close(&b_f);
+					}
+				}
 			}
 		}
 		else if ((*e=='-'&&*(e+1)=='n'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--names-only"))==SLL_COMPARE_RESULT_EQUAL){
@@ -227,21 +269,21 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 			if (i==argc){
 				break;
 			}
-			b_nm=(const sll_char_t*)(argv[i]);
+			b_nm=argv[i];
 		}
 		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
 			if (i==argc){
 				break;
 			}
-			o_fp=(const sll_char_t*)(argv[i]);
+			o_fp=argv[i];
 		}
 		else if ((*e=='-'&&*(e+1)=='O'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
 			if (i==argc){
 				break;
 			}
-			b_o_fp=(const sll_char_t*)(argv[i]);
+			b_o_fp=argv[i];
 		}
 		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--print-objects"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_PRINT_NODES;
@@ -266,7 +308,7 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 			if (i==argc){
 				break;
 			}
-			e=SLL_CHAR(argv[i]);
+			e=argv[i];
 			if (sll_string_compare_pointer(e,SLL_CHAR("no-file-io"))==SLL_COMPARE_RESULT_EQUAL){
 				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 			}
@@ -371,6 +413,9 @@ _read_file_argument:
 			SLL_LOG("  Function name stripping");
 		}
 		SLL_LOG("Include path:");
+		for (sll_array_length_t j=0;j<i_bl;j++){
+			SLL_LOG("  '%s' (bundle)",(*(i_b+j))->nm);
+		}
 		sll_string_length_t j=0;
 		while (j<i_fpl){
 			SLL_LOG("  '%s'",i_fp+j);
@@ -391,16 +436,16 @@ _read_file_argument:
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_source_file_t* a_dt_sf=NULL;
 		if (j<fpl){
-			_load_file(SLL_CHAR(argv[*(fp+j)]),&a_dt,&c_dt,f_fp);
+			_load_file(argv[*(fp+j)],&a_dt,&c_dt,f_fp);
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-			CLI_EXPAND_PATH(SLL_CHAR(argv[*(fp+j)]),bf);
+			CLI_EXPAND_PATH(argv[*(fp+j)],bf);
 			sll_set_argument(0,bf);
 		}
 		else{
 			CLI_LOG_IF_VERBOSE("Compiling console input...");
 			sll_init_compilation_data(SLL_CHAR("@console"),&c_dt);
 			sll_file_t f;
-			sll_file_from_data(SLL_CHAR(argv[*(sl+j-fpl)]),sll_string_length_unaligned(SLL_CHAR(argv[*(sl+j-fpl)])),SLL_FILE_FLAG_READ,&f);
+			sll_file_from_data(PTR(argv[*(sl+j-fpl)]),sll_string_length_unaligned(argv[*(sl+j-fpl)]),SLL_FILE_FLAG_READ,&f);
 			sll_parse_nodes(&f,&c_dt,&i_ft,_import_file);
 			sll_file_close(&f);
 			CLI_LOG_IF_VERBOSE("Input successfully read.");
@@ -515,7 +560,7 @@ _read_file_argument:
 		sll_free_assembly_data(&a_dt);
 		if (j<fpl&&(fl&(CLI_FLAG_ASSEMBLY_GENERATED|CLI_FLAG_GENERATE_BUNDLE))==CLI_FLAG_GENERATE_BUNDLE){
 			sll_string_t b_f_nm;
-			sll_string_from_pointer(SLL_CHAR(argv[*(fp+j)]),&b_f_nm);
+			sll_string_from_pointer(argv[*(fp+j)],&b_f_nm);
 			sll_string_length_t off=(fl&CLI_FLAG_NO_PATHS?sll_path_split(&b_f_nm):0);
 			if (sll_string_ends(&b_f_nm,&slc_end)){
 				sll_string_set_char(0,b_f_nm.l-slc_end.l,&b_f_nm);
@@ -562,6 +607,13 @@ _read_file_argument:
 	}
 _cleanup:
 	sll_deallocate(i_fp);
+	while (i_bl){
+		i_bl--;
+		cli_bundle_source_t* b=*(i_b+i_bl);
+		sll_free_bundle(&(b->b));
+		sll_deallocate(b);
+	}
+	sll_deallocate(i_b);
 	sll_deallocate(fp);
 	sll_deallocate(sl);
 	sll_free_internal_function_table(&i_ft);

@@ -5,6 +5,7 @@
 ### Added
 
 - Asynchronous reading operations flag (read-only): `SLL_FILE_FLAG_ASYNC`
+- Bundles can be added to the search path via the include (`-I` or `--include`) CLI option ([#245])
 - CLI option to exclude full file paths from bundles: `-n` or `--names-only` ([#245])
 - CLI option to generate bundles: `-b` or `--bundle` ([#245])
 - CLI option to set bundile output file path: `-O` or `--bundle-output` ([#245])
@@ -13,7 +14,7 @@
 - Functions related to asynchronous file reading I/O: `sll_platform_file_async_read`, `sll_platform_file_data_available` and `sll_file_data_available`
 - Implemented `file$read_char`
 - Implemented `random$choice`
-- Implemented `sll_bundle_add_file`, `sll_bundle_create`, `sll_free_bundle`, `sll_load_bundle` and `sll_write_bundle` ([#245])
+- Implemented `sll_bundle_add_file`, `sll_bundle_create`, `sll_bundle_fetch`, `sll_free_bundle`, `sll_load_bundle` and `sll_write_bundle` ([#245])
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
 - Implemented `thread$STATE_SUSPENDED` and `thread$suspend`
 - Internal I/O operation dispatcher thread ([#243])

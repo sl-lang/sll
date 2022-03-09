@@ -230,14 +230,12 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_d
 			else{
 				sf_m_dt.idx_off[SLL_MAX_SHORT_IDENTIFIER_LENGTH]=NULL;
 			}
-			if (sf->it.l){
-				for (sll_import_index_t i=0;i<sf->it.l;i++){
-					sll_import_file_t* k=*(sf->it.dt+i);
-					SLL_ASSERT(k->sfi);
-					sll_identifier_index_t* ex_dt=*(export_dt+k->sfi-1);
-					for (sll_identifier_list_length_t j=0;j<k->l;j++){
-						*(sf_m_dt.idx_off[SLL_IDENTIFIER_GET_ARRAY_ID(k->dt[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(k->dt[j]))=*(ex_dt+j);
-					}
+			for (sll_import_index_t i=0;i<sf->it.l;i++){
+				sll_import_file_t* k=*(sf->it.dt+i);
+				SLL_ASSERT(k->sfi);
+				sll_identifier_index_t* ex_dt=*(export_dt+k->sfi-1);
+				for (sll_identifier_list_length_t j=0;j<k->l;j++){
+					*(sf_m_dt.idx_off[SLL_IDENTIFIER_GET_ARRAY_ID(k->dt[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(k->dt[j]))=*(ex_dt+j);
 				}
 			}
 			if (idx){

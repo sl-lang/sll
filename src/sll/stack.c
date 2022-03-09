@@ -1,9 +1,29 @@
 #include <sll/_sll_internal.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/node.h>
 #include <sll/platform/memory.h>
 #include <sll/types.h>
+
+
+
+static void _request_new_node_page(sll_source_file_t* sf){
+	void* n=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0);
+	*((void**)(sf->_s.e))=n;
+	*((void**)n)=NULL;
+	sll_node_t* s=(sll_node_t*)((char*)n+sizeof(void*));
+	s->t=SLL_NODE_TYPE_CHANGE_STACK;
+	s->dt._p=sf->_s.p-1;
+	SLL_ASSERT(sf->_s.p->t==SLL_NODE_TYPE_CHANGE_STACK);
+	sf->_s.p->dt._p=s+1;
+	sf->_s.c=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
+	sf->_s.p=s+1;
+	s+=sf->_s.c+1;
+	s->t=SLL_NODE_TYPE_CHANGE_STACK;
+	s->dt._p=NULL;
+	sf->_s.e=n;
+}
 
 
 
@@ -39,22 +59,36 @@ sll_node_t* _acquire_next_node(sll_source_file_t* sf){
 	sf->_s.c--;
 	sf->_s.p++;
 	if (!sf->_s.c){
-		void* n=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0);
-		*((void**)(sf->_s.e))=n;
-		*((void**)n)=NULL;
-		sll_node_t* s=(sll_node_t*)((char*)n+sizeof(void*));
-		s->t=SLL_NODE_TYPE_CHANGE_STACK;
-		s->dt._p=sf->_s.p-1;
-		SLL_ASSERT(sf->_s.p->t==SLL_NODE_TYPE_CHANGE_STACK);
-		sf->_s.p->dt._p=s+1;
-		sf->_s.c=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
-		sf->_s.p=s+1;
-		s+=sf->_s.c+1;
-		s->t=SLL_NODE_TYPE_CHANGE_STACK;
-		s->dt._p=NULL;
-		sf->_s.e=n;
+		_request_new_node_page(sf);
 	}
 	return o;
+}
+
+
+
+void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf){
+	_init_node_stack(dst_sf);
+	dst_sf->dt=dst_sf->_s.p;
+	sll_node_offset_t cnt=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
+	void* src=src_sf->_s.s;
+	void* dst=dst_sf->_s.s;
+	sll_node_offset_t src_cnt=src_sf->_s.off;
+	while (1){
+		void* n=*((void**)src);
+		if (!n){
+			cnt=src_cnt;
+		}
+		sll_copy_data(PTR(ADDR(src)+sizeof(void*)+sizeof(sll_node_t)),cnt*sizeof(sll_node_t),PTR(ADDR(dst)+sizeof(void*)+sizeof(sll_node_t)));
+		dst_sf->_s.off+=cnt;
+		dst_sf->_s.p+=cnt;
+		src_cnt-=cnt;
+		if (!n){
+			return;
+		}
+		_request_new_node_page(dst_sf);
+		src=n;
+		dst=*((void**)dst);
+	}
 }
 
 
