@@ -6,7 +6,7 @@
 
 
 
-(= args [(?: (=== sys$PLATFORM "windows") "build\\sll.exe" "build/sll") "-I" "build/lib/stdlib.slb" "-I" "tests" "-I" "build/lib_ext"])
+(= args [(?: (=== sys$PLATFORM "windows") "build\\sll.exe" "build/sll") "-I" "build/lib/stdlib.slb" "-I" "tests"])
 (= list (<- path$list_dir "tests"))
 (-> (= i 0) (< i ($ list))
 	(= name (: list i))
