@@ -11,13 +11,14 @@
 - Implemented `random$choice`
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
 - Implemented `thread$STATE_SUSPENDED` and `thread$suspend`
-- Internal I/O operation dispatcher thread
+- Internal I/O operation dispatcher thread ([#243])
 - System thread API: `sll_internal_thread_index_t`, `SLL_UNKNOWN_INTERNAL_THREAD_INDEX`, `sll_platform_join_thread` and `sll_platform_start_thread` ([#243])
 
 ### Changed
 
 - Cross-requesting call stacks is now enabled by an extra argument in `error$get_call_stack`
 - Fixed internal initialization and deinitialization order
+- Renamed platform source files from `linux_xxx.c` and `windows_xxx.c` to `xxx.c`
 - Split the [`src/sll/include/sll/platform.h`][0.7.8/src/sll/include/sll/platform.h] header into multiple headers located in [`src/sll/include/sll/platform`][0.7.8/src/sll/include/sll/platform]
 - Standard input is now opened in non-blocking mode
 

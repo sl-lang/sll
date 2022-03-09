@@ -10,9 +10,6 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#ifndef __SLL_BUILD_WINDOWS
-#include <poll.h>
-#endif
 
 
 
@@ -86,7 +83,7 @@ static void _poll_thread(void* arg){
 			_platform_notify_dispatch(&_io_dispatcher_restarted_thread);
 		}
 		else{
-			SLL_UNIMPLEMENTED();
+			_scheduler_queue_thread(tid);
 		}
 	}
 }
@@ -94,8 +91,8 @@ static void _poll_thread(void* arg){
 
 
 void _io_dispatcher_deinit(void){
-	_platform_poll_stop(_io_dispatcher_raw_event,NULL);
 	_io_dispatcher_end=1;
+	_platform_poll_stop(_io_dispatcher_raw_event,NULL);
 	if (!sll_platform_join_thread(_io_dispatcher_thread)){
 		SLL_UNREACHABLE();
 	}
@@ -127,12 +124,7 @@ void _io_dispatcher_queue(sll_file_t* f,sll_string_length_t sz){
 	(_io_dispatcher_event+i)->f=f;
 	(_io_dispatcher_event+i)->tid=sll_current_thread_index;
 	(_io_dispatcher_event+i)->sz=sz;
-#ifdef __SLL_BUILD_WINDOWS
-	*(_io_dispatcher_raw_event+i+1)=f->dt.fl.fd;
-#else
-	(_io_dispatcher_raw_event+i+1)->fd=(int)ADDR(f->dt.fl.fd);
-	(_io_dispatcher_raw_event+i+1)->events=POLLIN;
-#endif
+	INIT_RAW_EVENT(_io_dispatcher_raw_event+i+1,f->dt.fl.fd);
 	_platform_poll_start(_io_dispatcher_raw_event);
 	_scheduler_current_thread->ii++;
 	_scheduler_current_thread->st=THREAD_STATE_WAIT_IO;

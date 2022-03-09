@@ -21,28 +21,25 @@
 ))
 
 (= read_number_below (,,, txt max
-	(:> txt)
-	(<- file$flush file$stdout)
 	(= out nil)
 	(>- nil (|| (< out 0) (>= out max))
+		(:> txt)
+		(<- file$flush file$stdout)
 		(= out -1)
 		(><
 			(= char (<- file$read_char file$stdin))
 			(?
 				(|| (=== char '\n') (=== char '\r')) (@)
-				(|: string$WHITESPACE_CHARACTERS char) (<<<)
-				(! (|: string$DIGITS char)) {
-					(= out -1)
-					(@)
-				}
+				(! (|: string$DIGITS char)) (<<<)
 			)
+			(:> char) (<- file$flush file$stdout)
 			(= out (+
 				(?: (=== out -1) 0 (* out 10))
 				(- char 48)
 			))
 		)
+		(:> '\n')
 	)
-	(:> '\n')
 	(@@ out)
 ))
 

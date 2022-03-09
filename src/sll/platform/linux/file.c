@@ -7,9 +7,6 @@
 #include <sll/types.h>
 #include <fcntl.h>
 #include <poll.h>
-#ifdef __SLL_BUILD_LINUX
-#include <sys/eventfd.h>
-#endif
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -17,107 +14,6 @@
 
 #define FROM_HANDLE(fd) ((int)ADDR(fd))
 #define TO_HANDLE(fd) ((sll_file_descriptor_t)PTR(fd))
-
-
-
-void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile dispatched_thread_t* dt){
-	close(r_dt->fd);
-	close(FROM_HANDLE(wait));
-	close(FROM_HANDLE(dt->lck));
-}
-
-
-
-void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile dispatched_thread_t* dt){
-	r_dt->fd=eventfd(0,0);
-	r_dt->events=POLLIN;
-	*wait=TO_HANDLE(eventfd(0,0));
-	dt->lck=TO_HANDLE(eventfd(0,0));
-}
-
-
-
-void _platform_notify_dispatch(volatile dispatched_thread_t* dt){
-	__SLL_U64 val=1;
-	if (write(FROM_HANDLE(dt->lck),&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
-		SLL_UNIMPLEMENTED();
-	}
-}
-
-
-
-event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t cnt){
-	int o=poll(dt,cnt,-1);
-	if (o<1){
-		return cnt;
-	}
-	o=0;
-	while (o<cnt){
-		if ((dt+o)->revents&POLLIN){
-			break;
-		}
-		o++;
-	}
-	if (o==cnt){
-		return cnt;
-	}
-	if (!o){
-		__SLL_U64 val;
-		if (read(dt->fd,&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
-			SLL_UNIMPLEMENTED();
-		}
-		val=1;
-		if (write(FROM_HANDLE(wait),&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
-			SLL_UNIMPLEMENTED();
-		}
-		return 0;
-	}
-	return (sll_platform_file_data_available(TO_HANDLE((dt+o)->fd))?o:cnt);
-}
-
-
-
-void _platform_poll_start(raw_event_data_t* dt){
-	__SLL_U64 val=1;
-	if (write(dt->fd,&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
-		SLL_UNIMPLEMENTED();
-	}
-}
-
-
-
-void _platform_poll_stop(raw_event_data_t* dt,void** wait){
-	__SLL_U64 val=1;
-	if (write(dt->fd,&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
-		SLL_UNIMPLEMENTED();
-	}
-	if (!wait){
-		return;
-	}
-	if (read(FROM_HANDLE(*wait),&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
-		SLL_UNIMPLEMENTED();
-	}
-}
-
-
-
-void _platform_wait_for_dispatch(raw_event_data_t* dt){
-	__SLL_U64 val;
-	if (read(dt->fd,&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
-		SLL_UNIMPLEMENTED();
-	}
-}
-
-
-
-sll_thread_index_t _platform_wait_notify_dispatch(volatile dispatched_thread_t* dt){
-	dt->tid=SLL_UNKNOWN_THREAD_INDEX;
-	__SLL_U64 val;
-	if (read(FROM_HANDLE(dt->lck),&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
-		SLL_UNIMPLEMENTED();
-	}
-	return dt->tid;
-}
 
 
 

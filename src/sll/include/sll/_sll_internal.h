@@ -347,6 +347,16 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define LIBRARY_DIRECTORY "/sys_lib/"
 #define LIBRARY_HASH_BUFFER_SIZE 4096
 
+#ifdef __SLL_BUILD_WINDOWS
+#define INIT_RAW_EVENT(r,f) (*(r)=(f))
+#else
+#define INIT_RAW_EVENT(r,f) \
+	do{ \
+		(r)->fd=(int)ADDR((f)); \
+		(r)->events=POLLIN; \
+	} while (0)
+#endif
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
@@ -731,7 +741,7 @@ typedef struct __EVENT_DATA{
 typedef struct __EXECUTE_WRAPPER_DATA{
 	sll_internal_thread_function_t fn;
 	void* arg;
-	void* sem;
+	void* lck;
 } execute_wrapper_data_t;
 
 

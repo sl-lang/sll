@@ -1,41 +1,43 @@
-#include <windows.h>
 #include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/platform/thread.h>
 #include <sll/types.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <sys/stat.h>
 
 
 
-static DWORD __stdcall _execute_wrapper(void* p){
+static void* _execute_wrapper(void* p){
 	execute_wrapper_data_t dt=*((execute_wrapper_data_t*)p);
-	if (!ReleaseSemaphore((HANDLE)dt.sem,1,NULL)){
-		SLL_UNIMPLEMENTED();
-	}
+	sem_post((sem_t*)dt.lck);
 	dt.fn(dt.arg);
-	return 0;
+	return NULL;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_internal_thread_index_t tid){
-	return (WaitForSingleObject((HANDLE)tid,INFINITE)==WAIT_OBJECT_0);
+	return !pthread_join((pthread_t)tid,NULL);
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start_thread(sll_internal_thread_function_t fn,void* arg){
+	pthread_t o;
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
 	execute_wrapper_data_t dt={
 		fn,
 		arg,
-		CreateSemaphoreA(NULL,0,1,NULL)
+		sem_open("/__sll_execute_wrapper_sync",O_CREAT,S_IRUSR|S_IWUSR,0)
 	};
-	HANDLE o=CreateThread(NULL,0,_execute_wrapper,&dt,0,NULL);
-	if (!o){
+	if (pthread_create(&o,&attr,_execute_wrapper,&dt)){
 		return SLL_UNKNOWN_INTERNAL_THREAD_INDEX;
 	}
-	if (WaitForSingleObject(dt.sem,INFINITE)!=WAIT_OBJECT_0){
-		SLL_UNIMPLEMENTED();
-	}
-	CloseHandle(dt.sem);
+	sem_wait(dt.lck);
+	sem_close(dt.lck);
+	sem_unlink("/__sll_execute_wrapper_sync");
 	return (sll_internal_thread_index_t)o;
 }
