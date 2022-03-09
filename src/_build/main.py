@@ -63,7 +63,7 @@ if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.bundle(ver)
 if ("--test" in sys.argv):
 	util.log("Running tests...")
-	util.execute(["build/sll","tests/_runner.sll"])
+	util.execute(["build/sll","-I","build/lib/stdlib.slb","tests/_runner.sll"])
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",util.system+".zip")
 if ("--run" in sys.argv):
