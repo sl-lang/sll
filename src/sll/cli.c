@@ -561,7 +561,7 @@ _read_file_argument:
 		if (j<fpl&&(fl&(CLI_FLAG_ASSEMBLY_GENERATED|CLI_FLAG_GENERATE_BUNDLE))==CLI_FLAG_GENERATE_BUNDLE){
 			sll_string_t b_f_nm;
 			sll_string_from_pointer(argv[*(fp+j)],&b_f_nm);
-			sll_string_length_t off=(fl&CLI_FLAG_NO_PATHS?sll_path_split(&b_f_nm):0);
+			sll_string_length_t off=((fl&CLI_FLAG_NO_PATHS)?sll_path_split(&b_f_nm):0);
 			if (sll_string_ends(&b_f_nm,&slc_end)){
 				sll_string_set_char(0,b_f_nm.l-slc_end.l,&b_f_nm);
 			}
