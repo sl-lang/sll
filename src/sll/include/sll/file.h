@@ -86,8 +86,38 @@
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_RESERVED0
+ * \group file
+ * \subgroup file-flag
+ * \desc Internally used as `FILE_FLAG_MEMORY`
+ * \type sll_file_flags_t
+ */
 #define SLL_FILE_FLAG_RESERVED0 32
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_RESERVED1
+ * \group file
+ * \subgroup file-flag
+ * \desc Internally used as `FILE_FLAG_NO_RELEASE`
+ * \type sll_file_flags_t
+ */
 #define SLL_FILE_FLAG_RESERVED1 64
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_RESERVED2
+ * \group file
+ * \subgroup file-flag
+ * \desc Internally used as `FILE_FLAG_DYNAMIC_BUFFERS`
+ * \type sll_file_flags_t
+ */
 #define SLL_FILE_FLAG_RESERVED2 128
 
 
