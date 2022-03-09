@@ -49,6 +49,9 @@ for f in os.listdir("src/sll/lib"):
 util.log("Compiling Modules...")
 if (util.execute(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
 	sys.exit(1)
+util.log("Generating Bundle...")
+if (util.execute(["build/sll","-b","-n","-N","/","-R","-O","build/bundle.slb"]+[e+".slc" for e in fl if e.split("/")[-1][0]!="_"]+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
+	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
 	util.log(f"  Removing '{k}'...")

@@ -153,6 +153,7 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define CONSTRUCT_DWORD(a,b,c,d) ((((magic_number_t)(d))<<24)|(((magic_number_t)(c))<<16)|(((magic_number_t)(b))<<8)|(a))
 
 #define ASSEMBLY_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','A',0)
+#define BUNDLE_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','B',0)
 #define COMPLIED_OBJECT_FILE_MAGIC_NUMBER CONSTRUCT_DWORD('S','L','C',0)
 
 #define EXTRA_COMPILATION_DATA_IMPORT 1
@@ -237,16 +238,18 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define CLI_FLAG_ASSEMBLY_GENERATED 1
 #define CLI_FLAG_EXPAND_PATH 2
 #define CLI_FLAG_GENERATE_ASSEMBLY 4
-#define CLI_FLAG_GENERATE_COMPILED_OBJECT 8
-#define CLI_FLAG_HELP 16
-#define CLI_FLAG_NO_RUN 32
-#define CLI_FLAG_PRINT_ASSEMBLY 64
-#define CLI_FLAG_PRINT_NODES 128
-#define CLI_FLAG_SINGLE_OUTPUT 256
-#define CLI_FLAG_STRIP_DEBUG 512
-#define CLI_FLAG_STRIP_NAMES 1024
-#define CLI_FLAG_VERBOSE 2048
-#define CLI_FLAG_VERSION 4096
+#define CLI_FLAG_GENERATE_BUNDLE 8
+#define CLI_FLAG_GENERATE_COMPILED_OBJECT 16
+#define CLI_FLAG_HELP 32
+#define CLI_FLAG_NO_PATHS 64
+#define CLI_FLAG_NO_RUN 128
+#define CLI_FLAG_PRINT_ASSEMBLY 256
+#define CLI_FLAG_PRINT_NODES 512
+#define CLI_FLAG_SINGLE_OUTPUT 1024
+#define CLI_FLAG_STRIP_DEBUG 2048
+#define CLI_FLAG_STRIP_NAMES 4096
+#define CLI_FLAG_VERBOSE 8192
+#define CLI_FLAG_VERSION 16384
 
 #define CLI_LOG_IF_VERBOSE(t,...) \
 	if (fl&CLI_FLAG_VERBOSE){ \
@@ -356,6 +359,9 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 		(r)->events=POLLIN; \
 	} while (0)
 #endif
+
+#define BUNDLE_DO_NOT_REMAP_IMPORT 0x80000000
+#define BUNDLE_GET_INDEX(x) ((*(x))&0x7fffffff)
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))

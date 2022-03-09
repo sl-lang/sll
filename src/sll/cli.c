@@ -4,6 +4,7 @@
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/assembly.h>
+#include <sll/bundle.h>
 #include <sll/data.h>
 #include <sll/file.h>
 #include <sll/generated/help_text.h>
@@ -23,6 +24,7 @@
 
 
 static unsigned int fl;
+static __STATIC_STRING(slc_end,".slc");
 static sll_char_t* i_fp;
 static sll_string_length_t i_fpl;
 static sll_char_t l_fp[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -155,6 +157,8 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 	sll_string_length_t sll=0;
 	sll_create_internal_function_table(&i_ft);
 	sll_register_builtin_internal_functions(&i_ft);
+	const sll_char_t* b_nm=NULL;
+	const sll_char_t* b_o_fp=NULL;
 	const sll_char_t* o_fp=NULL;
 	sll_set_argument_count(1);
 	sll_array_length_t i=0;
@@ -169,6 +173,9 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 				sll_set_argument(j+1,SLL_CHAR(*(argv+i+j+1)));
 			}
 			break;
+		}
+		else if ((*e=='-'&&*(e+1)=='b'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--bundle"))==SLL_COMPARE_RESULT_EQUAL){
+			fl|=CLI_FLAG_GENERATE_BUNDLE;
 		}
 		else if ((*e=='-'&&*(e+1)=='c'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--generate-compiled-object"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_GENERATE_COMPILED_OBJECT;
@@ -212,12 +219,29 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 				*(i_fp+j)=0;
 			}
 		}
+		else if ((*e=='-'&&*(e+1)=='n'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--names-only"))==SLL_COMPARE_RESULT_EQUAL){
+			fl|=CLI_FLAG_NO_PATHS;
+		}
+		else if ((*e=='-'&&*(e+1)=='N'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL){
+			i++;
+			if (i==argc){
+				break;
+			}
+			b_nm=(const sll_char_t*)(argv[i]);
+		}
 		else if ((*e=='-'&&*(e+1)=='o'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
 			if (i==argc){
 				break;
 			}
 			o_fp=(const sll_char_t*)(argv[i]);
+		}
+		else if ((*e=='-'&&*(e+1)=='O'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL){
+			i++;
+			if (i==argc){
+				break;
+			}
+			b_o_fp=(const sll_char_t*)(argv[i]);
 		}
 		else if ((*e=='-'&&*(e+1)=='p'&&*(e+2)==0)||sll_string_compare_pointer(e,SLL_CHAR("--print-objects"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=CLI_FLAG_PRINT_NODES;
@@ -322,8 +346,14 @@ _read_file_argument:
 		if (fl&CLI_FLAG_GENERATE_ASSEMBLY){
 			SLL_LOG("  Assembly generation");
 		}
+		if (fl&CLI_FLAG_GENERATE_BUNDLE){
+			SLL_LOG("  Bundle generation");
+		}
 		if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
 			SLL_LOG("  Compiled program generation");
+		}
+		if (fl&CLI_FLAG_NO_PATHS){
+			SLL_LOG("  No bundle file paths");
 		}
 		if (!(fl&CLI_FLAG_NO_RUN)){
 			SLL_LOG("  Execution");
@@ -350,6 +380,10 @@ _read_file_argument:
 	}
 	if (fpl+sll==1){
 		fl|=CLI_FLAG_SINGLE_OUTPUT;
+	}
+	sll_bundle_t bundle;
+	if (fl&CLI_FLAG_GENERATE_BUNDLE){
+		sll_bundle_create((!b_nm||((b_nm[0]=='\\'||b_nm[0]=='/')&&!b_nm[1])?NULL:b_nm),&bundle);
 	}
 	for (sll_string_length_t j=0;j<fpl+sll;j++){
 		sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
@@ -479,8 +513,52 @@ _read_file_argument:
 			sll_file_flush(sll_stderr);
 		}
 		sll_free_assembly_data(&a_dt);
-		sll_free_compilation_data(&c_dt);
+		if (j<fpl&&(fl&(CLI_FLAG_ASSEMBLY_GENERATED|CLI_FLAG_GENERATE_BUNDLE))==CLI_FLAG_GENERATE_BUNDLE){
+			sll_string_t b_f_nm;
+			sll_string_from_pointer(SLL_CHAR(argv[*(fp+j)]),&b_f_nm);
+			sll_string_length_t off=(fl&CLI_FLAG_NO_PATHS?sll_path_split(&b_f_nm):0);
+			if (sll_string_ends(&b_f_nm,&slc_end)){
+				sll_string_set_char(0,b_f_nm.l-slc_end.l,&b_f_nm);
+			}
+			CLI_LOG_IF_VERBOSE("Adding file '%s' as '%s' to bundle...",f_fp,b_f_nm.v+off);
+			sll_bundle_add_file(b_f_nm.v+off,&c_dt,&bundle);
+			sll_free_string(&b_f_nm);
+		}
+		else{
+			sll_free_compilation_data(&c_dt);
+		}
 		fl&=~CLI_FLAG_ASSEMBLY_GENERATED;
+	}
+	if (fl&CLI_FLAG_GENERATE_BUNDLE){
+		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+		if (b_o_fp){
+			sll_string_length_t l=sll_string_length_unaligned(b_o_fp);
+			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
+				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
+			}
+			sll_copy_data(b_o_fp,l,bf);
+			bf[l]=0;
+		}
+		else{
+			sll_string_length_t l=bundle.nm.l;
+			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
+				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
+			}
+			sll_copy_data(bundle.nm.v,l,bf);
+			bf[l]=0;
+		}
+		if (!bf[0]){
+			SLL_WARN(SLL_CHAR("No bundle output path supplied"));
+			sll_free_bundle(&bundle);
+			goto _cleanup;
+		}
+		CLI_LOG_IF_VERBOSE("Writing bundle to '%s'...",bf);
+		sll_file_t of;
+		sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+		sll_write_bundle(&of,&bundle);
+		CLI_LOG_IF_VERBOSE("File written successfully.");
+		sll_file_close(&of);
+		sll_free_bundle(&bundle);
 	}
 _cleanup:
 	sll_deallocate(i_fp);

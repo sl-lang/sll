@@ -928,4 +928,20 @@ typedef void (*sll_internal_thread_function_t)(void* arg);
 
 
 
+typedef struct __SLL_BUNDLE_SOURCE_FILE{
+	sll_string_t nm;
+	sll_source_file_t dt;
+} sll_bundle_source_file_t;
+
+
+
+typedef struct __SLL_BUNDLE{
+	sll_time_t tm;
+	sll_string_t nm;
+	sll_bundle_source_file_t** dt;
+	sll_source_file_index_t l;
+} sll_bundle_t;
+
+
+
 #endif

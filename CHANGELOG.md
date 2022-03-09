@@ -5,10 +5,15 @@
 ### Added
 
 - Asynchronous reading operations flag (read-only): `SLL_FILE_FLAG_ASYNC`
+- CLI option to exclude full file paths from bundles: `-n` or `--names-only` ([#245])
+- CLI option to generate bundles: `-b` or `--bundle` ([#245])
+- CLI option to set bundile output file path: `-O` or `--bundle-output` ([#245])
+- CLI option to specify a bundle name: `-N` or `--name-bundle` ([#245])
 - Extra parameter in `file$read` to allow nonblocking I/O reading operations
 - Functions related to asynchronous file reading I/O: `sll_platform_file_async_read`, `sll_platform_file_data_available` and `sll_file_data_available`
 - Implemented `file$read_char`
 - Implemented `random$choice`
+- Implemented `sll_bundle_add_file`, `sll_bundle_create`, `sll_free_bundle`, `sll_load_bundle` and `sll_write_bundle` ([#245])
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
 - Implemented `thread$STATE_SUSPENDED` and `thread$suspend`
 - Internal I/O operation dispatcher thread ([#243])
@@ -1745,6 +1750,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#245]: https://github.com/sl-lang/sll/issues/245
 [#243]: https://github.com/sl-lang/sll/issues/243
 [#238]: https://github.com/sl-lang/sll/issues/238
 [#237]: https://github.com/sl-lang/sll/issues/237
