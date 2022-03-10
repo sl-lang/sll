@@ -65,6 +65,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 			CLI_LOG_IF_VERBOSE("Trying to open file '%s/%s'...",b_dt->nm,f_nm);
 			if (sll_bundle_fetch(&(b_dt->b),&f_nm_str,c_dt)){
 				CLI_LOG_IF_VERBOSE("File successfully read.");
+				sll_free_string(&f_nm_str);
 				return;
 			}
 		}
