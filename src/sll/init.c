@@ -66,7 +66,7 @@ __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const s
 	sll_platform_file_write(fd,b,sll_string_length_unaligned(b),NULL);
 	sll_platform_file_write(fd,c,sll_string_length_unaligned(c),NULL);
 	if (sll_current_runtime_data&&sll_current_runtime_data->a_dt){
-		const sll_call_stack_t* c_st=sll_get_call_stack(sll_current_thread_index);
+		const sll_call_stack_t* c_st=sll_thread_get_call_stack(sll_current_thread_index);
 		if (c_st){
 			_write_stack_frame(fd,sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
 			sll_call_stack_size_t i=c_st->l;

@@ -65,7 +65,7 @@ __API_FUNC_DECL(vm_get_instruction_index){
 __API_FUNC_DECL(vm_get_location){
 	sll_instruction_index_t ii;
 	if (a<0){
-		const sll_call_stack_t* c_st=sll_get_call_stack(sll_current_thread_index);
+		const sll_call_stack_t* c_st=sll_thread_get_call_stack(sll_current_thread_index);
 		ii=(c_st->l?(c_st->dt+c_st->l-1)->_ii:sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
 	}
 	else{

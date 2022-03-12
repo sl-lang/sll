@@ -332,7 +332,7 @@ sll_bool_t _scheduler_wait_thread(sll_integer_t w){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_create_barrier(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_barrier_create(void){
 	sll_barrier_index_t o=_scheduler_barrier_next;
 	if (o==THREAD_BARRIER_UNUSED){
 		o=_scheduler_barrier_len;
@@ -348,7 +348,44 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_create_barrier(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_create_lock(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_index_t b){
+	if (b>=_scheduler_barrier_len||(_scheduler_barrier+b)->count==THREAD_BARRIER_UNUSED){
+		return 0;
+	}
+	(_scheduler_barrier+b)->count=THREAD_BARRIER_UNUSED;
+	THREAD_BARRIER_SET_NEXT_ID(_scheduler_barrier+b,_scheduler_barrier_next);
+	_scheduler_barrier_next=b;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_barrier_increase(sll_barrier_index_t b){
+	if (b>=_scheduler_barrier_len||(_scheduler_barrier+b)->count==THREAD_BARRIER_UNUSED){
+		return 0;
+	}
+	(_scheduler_barrier+b)->count++;
+	_queue_barrier(_scheduler_barrier+b);
+	return (_scheduler_barrier+b)->count;
+}
+
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_reset(sll_barrier_index_t b){
+	if (b>=_scheduler_barrier_len||(_scheduler_barrier+b)->count==THREAD_BARRIER_UNUSED){
+		return 0;
+	}
+	if ((_scheduler_barrier+b)->count){
+		(_scheduler_barrier+b)->count=0;
+		_queue_barrier(_scheduler_barrier+b);
+	}
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_lock_create(void){
 	sll_lock_index_t o=_scheduler_lock_next;
 	if (o==THREAD_LOCK_UNUSED){
 		o=_scheduler_lock_len;
@@ -364,7 +401,37 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_create_lock(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_create_semaphore(sll_semaphore_counter_t c){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_delete(sll_lock_index_t l){
+	if (l>=_scheduler_lock_len||(_scheduler_lock+l)->lock==THREAD_LOCK_UNUSED){
+		return 0;
+	}
+	SLL_ASSERT((_scheduler_lock+l)->lock==SLL_UNKNOWN_THREAD_INDEX);
+	(_scheduler_lock+l)->lock=THREAD_LOCK_UNUSED;
+	THREAD_LOCK_SET_NEXT_ID(_scheduler_lock+l,_scheduler_lock_next);
+	_scheduler_lock_next=l;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_release(sll_lock_index_t l){
+	if (l>=_scheduler_lock_len||(_scheduler_lock+l)->lock==THREAD_LOCK_UNUSED||(_scheduler_lock+l)->lock==SLL_UNKNOWN_THREAD_INDEX){
+		return 0;
+	}
+	(_scheduler_lock+l)->lock=(_scheduler_lock+l)->first;
+	if ((_scheduler_lock+l)->first==SLL_UNKNOWN_THREAD_INDEX){
+		return 1;
+	}
+	thread_data_t* thr=*(_scheduler_thread+(_scheduler_lock+l)->lock);
+	(_scheduler_lock+l)->first=thr->nxt;
+	thr->st=THREAD_STATE_QUEUED;
+	_scheduler_queue_thread((_scheduler_lock+l)->lock);
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t c){
 	sll_semaphore_index_t o=_scheduler_semaphore_next;
 	if (o==THREAD_SEMAPHORE_UNUSED){
 		o=_scheduler_semaphore_len;
@@ -380,7 +447,36 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_create_semaphore(sll
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_create_thread(sll_integer_t fn,sll_object_t*const* al,sll_arg_count_t all){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_index_t s){
+	if (s>=_scheduler_semaphore_len||(_scheduler_semaphore+s)->count==THREAD_SEMAPHORE_UNUSED){
+		return 0;
+	}
+	(_scheduler_semaphore+s)->count=THREAD_SEMAPHORE_UNUSED;
+	THREAD_SEMAPHORE_SET_NEXT_ID(_scheduler_semaphore+s,_scheduler_semaphore_next);
+	_scheduler_semaphore_next=s;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_release(sll_semaphore_index_t l){
+	if (l>=_scheduler_semaphore_len||(_scheduler_semaphore+l)->count==THREAD_SEMAPHORE_UNUSED){
+		return 0;
+	}
+	if ((_scheduler_semaphore+l)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_scheduler_semaphore+l)->count++;
+		return 1;
+	}
+	thread_data_t* thr=*(_scheduler_thread+(_scheduler_semaphore+l)->first);
+	thr->st=THREAD_STATE_QUEUED;
+	_scheduler_queue_thread((_scheduler_semaphore+l)->first);
+	(_scheduler_semaphore+l)->first=thr->nxt;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integer_t fn,sll_object_t*const* al,sll_arg_count_t all){
 	if (fn<0){
 		SLL_UNIMPLEMENTED();
 	}
@@ -399,44 +495,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_create_thread(sll_integ
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_barrier(sll_barrier_index_t b){
-	if (b>=_scheduler_barrier_len||(_scheduler_barrier+b)->count==THREAD_BARRIER_UNUSED){
-		return 0;
-	}
-	(_scheduler_barrier+b)->count=THREAD_BARRIER_UNUSED;
-	THREAD_BARRIER_SET_NEXT_ID(_scheduler_barrier+b,_scheduler_barrier_next);
-	_scheduler_barrier_next=b;
-	return 1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_lock(sll_lock_index_t l){
-	if (l>=_scheduler_lock_len||(_scheduler_lock+l)->lock==THREAD_LOCK_UNUSED){
-		return 0;
-	}
-	SLL_ASSERT((_scheduler_lock+l)->lock==SLL_UNKNOWN_THREAD_INDEX);
-	(_scheduler_lock+l)->lock=THREAD_LOCK_UNUSED;
-	THREAD_LOCK_SET_NEXT_ID(_scheduler_lock+l,_scheduler_lock_next);
-	_scheduler_lock_next=l;
-	return 1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_semaphore(sll_semaphore_index_t s){
-	if (s>=_scheduler_semaphore_len||(_scheduler_semaphore+s)->count==THREAD_SEMAPHORE_UNUSED){
-		return 0;
-	}
-	(_scheduler_semaphore+s)->count=THREAD_SEMAPHORE_UNUSED;
-	THREAD_SEMAPHORE_SET_NEXT_ID(_scheduler_semaphore+s,_scheduler_semaphore_next);
-	_scheduler_semaphore_next=s;
-	return 1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_thread(sll_thread_index_t t){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_t t){
 	if (t>=_scheduler_thread_len){
 		return 0;
 	}
@@ -460,7 +519,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_thread(sll_thread_index_
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_get_call_stack(sll_thread_index_t t){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_thread_get_call_stack(sll_thread_index_t t){
 	if (t>=_scheduler_thread_len){
 		return NULL;
 	}
@@ -473,52 +532,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_get_call_stack(sll
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_increase_barrier(sll_barrier_index_t b){
-	if (b>=_scheduler_barrier_len||(_scheduler_barrier+b)->count==THREAD_BARRIER_UNUSED){
-		return 0;
-	}
-	(_scheduler_barrier+b)->count++;
-	_queue_barrier(_scheduler_barrier+b);
-	return (_scheduler_barrier+b)->count;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_thread_get_instruction_index(sll_thread_index_t t){
+	thread_data_t* thr=(t==SLL_UNKNOWN_THREAD_INDEX?_scheduler_current_thread:_scheduler_get_thread(t));
+	return (thr?thr->ii:0);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_release_lock(sll_lock_index_t l){
-	if (l>=_scheduler_lock_len||(_scheduler_lock+l)->lock==THREAD_LOCK_UNUSED||(_scheduler_lock+l)->lock==SLL_UNKNOWN_THREAD_INDEX){
-		return 0;
-	}
-	(_scheduler_lock+l)->lock=(_scheduler_lock+l)->first;
-	if ((_scheduler_lock+l)->first==SLL_UNKNOWN_THREAD_INDEX){
-		return 1;
-	}
-	thread_data_t* thr=*(_scheduler_thread+(_scheduler_lock+l)->lock);
-	(_scheduler_lock+l)->first=thr->nxt;
-	thr->st=THREAD_STATE_QUEUED;
-	_scheduler_queue_thread((_scheduler_lock+l)->lock);
-	return 1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_release_semaphore(sll_semaphore_index_t l){
-	if (l>=_scheduler_semaphore_len||(_scheduler_semaphore+l)->count==THREAD_SEMAPHORE_UNUSED){
-		return 0;
-	}
-	if ((_scheduler_semaphore+l)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_scheduler_semaphore+l)->count++;
-		return 1;
-	}
-	thread_data_t* thr=*(_scheduler_thread+(_scheduler_semaphore+l)->first);
-	thr->st=THREAD_STATE_QUEUED;
-	_scheduler_queue_thread((_scheduler_semaphore+l)->first);
-	(_scheduler_semaphore+l)->first=thr->nxt;
-	return 1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_restart_thread(sll_thread_index_t t){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_restart(sll_thread_index_t t){
 	if (t>=_scheduler_thread_len){
 		return 0;
 	}
@@ -535,21 +556,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_restart_thread(sll_thread_index
 
 
 
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_reset_barrier(sll_barrier_index_t b){
-	if (b>=_scheduler_barrier_len||(_scheduler_barrier+b)->count==THREAD_BARRIER_UNUSED){
-		return 0;
-	}
-	if ((_scheduler_barrier+b)->count){
-		(_scheduler_barrier+b)->count=0;
-		_queue_barrier(_scheduler_barrier+b);
-	}
-	return 1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_start_thread(sll_thread_index_t t){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_start(sll_thread_index_t t){
 	if (t>=_scheduler_thread_len){
 		return 0;
 	}
@@ -564,7 +571,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_start_thread(sll_thread_index_t
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_suspend_thread(sll_thread_index_t t){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_suspend(sll_thread_index_t t){
 	if (t>=_scheduler_thread_len){
 		return 0;
 	}
@@ -591,11 +598,4 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_suspend_thread(sll_thread_index
 	}
 	thr->suspended=1;
 	return 1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_thread_get_instruction_index(sll_thread_index_t t){
-	thread_data_t* thr=(t==SLL_UNKNOWN_THREAD_INDEX?_scheduler_current_thread:_scheduler_get_thread(t));
-	return (thr?thr->ii:0);
 }

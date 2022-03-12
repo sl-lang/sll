@@ -218,14 +218,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 			break;
 		}
 		sll_release_object(sll_wait_thread(n_tid));
-		if (!sll_delete_thread(n_tid)){
+		if (!sll_thread_delete(n_tid)){
 			SLL_UNREACHABLE();
 		}
 	}
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		sll_release_object(*(_vm_var_data+i));
 	}
-	if (!sll_delete_thread(tid)){
+	if (!sll_thread_delete(tid)){
 		SLL_UNREACHABLE();
 	}
 	sll_platform_free_page(_vm_var_data,SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)));
@@ -244,9 +244,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 	if (!sll_current_runtime_data||!sll_current_vm_config){
 		return NULL;
 	}
-	sll_thread_index_t tid=sll_create_thread(fn_idx,al,all);
+	sll_thread_index_t tid=sll_thread_create(fn_idx,al,all);
 	sll_object_t* o=sll_wait_thread(tid);
-	if (!sll_delete_thread(tid)){
+	if (!sll_thread_delete(tid)){
 		SLL_UNREACHABLE();
 	}
 	return o;

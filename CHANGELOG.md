@@ -27,6 +27,7 @@
 - Cross-requesting call stacks is now enabled by an extra argument in `error$get_call_stack`
 - Fixed internal initialization and deinitialization order
 - Fixed memory overflow bugs in `sll_array_join_arrays` and `sll_string_select`
+- Renamed barrier, lock, semaphore and thread functions
 - Renamed platform source files from `linux_xxx.c` and `windows_xxx.c` to `xxx.c`
 - Replaced VM global variables (`sll_current_instruction_count` and `sll_current_instruction_index`) with functions (`sll_vm_get_instruction_count` and `sll_thread_get_instruction_index`)
 - Reversed the bundle search order ([#246])
@@ -96,13 +97,13 @@
 ### Added
 
 - Argument `no_flush_io` in `process$shell` and `process$start` to prevent flushing of `file$stdout` and `file$stderr` before the creation of a process
-- Barriers: `sll_create_barrier`, `sll_delete_barrier`, `sll_increase_barrier`, `sll_reset_barrier`, `thread$barrier_type`, `thread$STATE_WAITING_BARRIER`, `thread$create_barrier`, `thread$if_equal`, `thread$if_greater_equal`, `thread$increase_barrier` and `thread$release_barrier` ([#237])
+- Barriers: `sll_barrier_create`, `sll_delete_barrier`, `sll_increase_barrier`, `sll_reset_barrier`, `thread$barrier_type`, `thread$STATE_WAITING_BARRIER`, `thread$create_barrier`, `thread$if_equal`, `thread$if_greater_equal`, `thread$increase_barrier` and `thread$release_barrier` ([#237])
 - Constant string representing the current executable (`sll_executable_file_path`) and the Sll library (`sll_library_file_path`) file paths
 - Field for structure data size without padding: `struct_type$data_size`
 - Full MacOS support
 - More tests ([#8])
 - New error types: `error$ERROR_INVALID_BASE64_CHARACTER` and `error$ERROR_INVALID_BASE64_PADDING`
-- Semaphores: `sll_semaphore_counter_t`, `sll_semaphore_index_t`, `sll_create_semaphore`, `sll_delete_semaphore`, `sll_release_semaphore`, `thread$semaphore_type`, `thread$STATE_WAITING_SEMAPHORE`, `thread$acquire_semaphore`, `thread$create_semaphore` and `thread$release_semaphore` ([#237])
+- Semaphores: `sll_semaphore_counter_t`, `sll_semaphore_index_t`, `sll_semaphore_create`, `sll_delete_semaphore`, `sll_release_semaphore`, `thread$semaphore_type`, `thread$STATE_WAITING_SEMAPHORE`, `thread$acquire_semaphore`, `thread$create_semaphore` and `thread$release_semaphore` ([#237])
 
 ### Changed
 
@@ -121,7 +122,7 @@
 ### Added
 
 - Deep copy operator: `(:!)` ([#233])
-- Exposed `sll_current_thread_index`, `sll_create_lock`, `sll_create_thread`, `sll_delete_lock`, `sll_delete_thread`, `sll_release_lock` and `sll_start_thread` ([#173] and [#177])
+- Exposed `sll_current_thread_index`, `sll_lock_create`, `sll_thread_create`, `sll_delete_lock`, `sll_delete_thread`, `sll_release_lock` and `sll_start_thread` ([#173] and [#177])
 - Extra parameter in `sll_object_clone` to enable deep value copy
 - *\[Windows only\]* Icons to CLI executables
 - Implemented `data_file.sll` ([#235])
