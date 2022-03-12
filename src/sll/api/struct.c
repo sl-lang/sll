@@ -1,5 +1,6 @@
 #include <sll/_size_types.h>
 #include <sll/_sll_internal.h>
+#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 

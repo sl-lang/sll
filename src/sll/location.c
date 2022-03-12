@@ -46,7 +46,7 @@ __SLL_EXTERNAL void sll_get_name(const sll_object_t* v,sll_string_t* o){
 		if (v->dt.i<0){
 			sll_function_index_t i=(sll_function_index_t)(~v->dt.i);
 			if (i<sll_current_runtime_data->ift->l){
-				sll_string_clone(&((*(sll_current_runtime_data->ift->dt+i))->nm),o);
+				sll_string_clone(&((sll_current_runtime_data->ift->dt+i)->nm),o);
 			}
 		}
 		else if (v->dt.i&&v->dt.i<=sll_current_runtime_data->a_dt->ft.l){

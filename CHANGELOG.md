@@ -29,6 +29,7 @@
 - Reversed the bundle search order ([#246])
 - Split the [`src/sll/include/sll/platform.h`][0.7.8/src/sll/include/sll/platform.h] header into multiple headers located in [`src/sll/include/sll/platform`][0.7.8/src/sll/include/sll/platform]
 - Standard input is now opened in non-blocking mode
+- Storage of functions in the internal function table
 
 ### Removed
 

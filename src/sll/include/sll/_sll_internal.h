@@ -7,11 +7,8 @@
 #include <poll.h>
 #endif
 #include <sll/_size_types.h>
-#include <sll/api.h>
-#include <sll/generated/api.h>
 #include <sll/string.h>
 #include <sll/types.h>
-#include <sll/version.h>
 
 
 
@@ -27,12 +24,12 @@
 #define SLL_UNREACHABLE() __assume(0)
 #endif
 #define __SLL_FORCE_INLINE __inline __forceinline
-static __SLL_FORCE_INLINE unsigned int FIND_FIRST_SET_BIT(unsigned __int64 m){
+static __SLL_FORCE_INLINE __SLL_U32 FIND_FIRST_SET_BIT(__SLL_U64 m){
 	unsigned long o;
 	_BitScanForward64(&o,m);
 	return o;
 }
-static __SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
+static __SLL_FORCE_INLINE __SLL_U32 FIND_LAST_SET_BIT(__SLL_U64 m){
 	unsigned long o;
 	_BitScanReverse64(&o,m);
 	return o;

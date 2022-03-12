@@ -712,14 +712,14 @@ typedef sll_object_t* (*sll_internal_function_pointer_t)(sll_object_t*const* al,
 
 
 typedef struct __SLL_INTERNAL_FUNCTION{
-	const sll_string_t nm;
-	const sll_internal_function_pointer_t p;
+	sll_string_t nm;
+	sll_internal_function_pointer_t p;
 } sll_internal_function_t;
 
 
 
 typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
-	const sll_internal_function_t*const* dt;
+	const sll_internal_function_t* dt;
 	sll_function_index_t l;
 } sll_internal_function_table_t;
 

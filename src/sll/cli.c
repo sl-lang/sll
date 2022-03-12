@@ -20,6 +20,7 @@
 #include <sll/sandbox.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/version.h>
 #include <sll/vm.h>
 
 

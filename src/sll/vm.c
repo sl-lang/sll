@@ -810,7 +810,7 @@ _cleanup_jump_table:;
 						if (i<0){
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
-								sll_object_t* n=(*(sll_current_runtime_data->ift->dt+j))->p(_scheduler_current_thread->stack+_scheduler_current_thread->si-ai->dt.ac,ai->dt.ac);
+								sll_object_t* n=(sll_current_runtime_data->ift->dt+j)->p(_scheduler_current_thread->stack+_scheduler_current_thread->si-ai->dt.ac,ai->dt.ac);
 								for (sll_arg_count_t k=0;k<ai->dt.ac;k++){
 									_scheduler_current_thread->si--;
 									sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
@@ -848,7 +848,7 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						sll_object_t* n=(*(sll_current_runtime_data->ift->dt+i))->p(NULL,0);
+						sll_object_t* n=(sll_current_runtime_data->ift->dt+i)->p(NULL,0);
 						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=n;
 						_scheduler_current_thread->si++;
 						break;
@@ -866,7 +866,7 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						sll_object_t* n=(*(sll_current_runtime_data->ift->dt+i))->p(_scheduler_current_thread->stack+_scheduler_current_thread->si-1,1);
+						sll_object_t* n=(sll_current_runtime_data->ift->dt+i)->p(_scheduler_current_thread->stack+_scheduler_current_thread->si-1,1);
 						sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
 						*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=n;
 						break;
@@ -892,7 +892,7 @@ _cleanup_jump_table:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
 								sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
-								sll_object_t* n=(*(sll_current_runtime_data->ift->dt+j))->p(tos->dt.a.v,tos->dt.a.l);
+								sll_object_t* n=(sll_current_runtime_data->ift->dt+j)->p(tos->dt.a.v,tos->dt.a.l);
 								sll_release_object(tos);
 								*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=n;
 								break;
