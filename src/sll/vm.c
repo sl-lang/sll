@@ -122,11 +122,10 @@
 
 
 static sll_object_t** _vm_var_data=NULL;
+static sll_size_t _vm_instruction_count=0;
 
 
 
-__SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_count=0;
-__SLL_EXTERNAL sll_instruction_index_t sll_current_instruction_index=0;
 __SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
 __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
@@ -189,7 +188,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	if (_vm_var_data){
 		SLL_UNIMPLEMENTED();
 	}
-	sll_current_instruction_count=0;
+	_vm_instruction_count=0;
 	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
 	_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)),0);
 	sll_static_int[0]->rc+=a_dt->vc;
@@ -255,6 +254,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_vm_get_instruction_count(void){
+	return _vm_instruction_count;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index_t tid){
 	sll_thread_index_t s_tid=sll_current_thread_index;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -280,8 +285,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 			}
 		}
 		_scheduler_current_thread->tm--;
-		sll_current_instruction_count++;
-		sll_current_instruction_index=_scheduler_current_thread->ii;
+		_vm_instruction_count++;
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_POP:
 				_scheduler_current_thread->si--;

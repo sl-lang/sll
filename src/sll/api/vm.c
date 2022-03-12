@@ -51,13 +51,13 @@ __API_FUNC_DECL(vm_get_config){
 
 
 __API_FUNC_DECL(vm_get_instruction_count){
-	return sll_current_instruction_count;
+	return sll_vm_get_instruction_count();
 }
 
 
 
 __API_FUNC_DECL(vm_get_instruction_index){
-	return sll_current_instruction_index;
+	return sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX);
 }
 
 
@@ -66,7 +66,7 @@ __API_FUNC_DECL(vm_get_location){
 	sll_instruction_index_t ii;
 	if (a<0){
 		const sll_call_stack_t* c_st=sll_get_call_stack(sll_current_thread_index);
-		ii=(c_st->l?(c_st->dt+c_st->l-1)->_ii:sll_current_instruction_index);
+		ii=(c_st->l?(c_st->dt+c_st->l-1)->_ii:sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
 	}
 	else{
 		ii=(a>SLL_MAX_INSTRUCTION_INDEX?SLL_MAX_INSTRUCTION_INDEX:(sll_instruction_index_t)a);

@@ -592,3 +592,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_suspend_thread(sll_thread_index
 	thr->suspended=1;
 	return 1;
 }
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_thread_get_instruction_index(sll_thread_index_t t){
+	thread_data_t* thr=(t==SLL_UNKNOWN_THREAD_INDEX?_scheduler_current_thread:_scheduler_get_thread(t));
+	return (thr?thr->ii:0);
+}

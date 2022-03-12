@@ -28,6 +28,7 @@
 - Fixed internal initialization and deinitialization order
 - Fixed memory overflow bugs in `sll_array_join_arrays` and `sll_string_select`
 - Renamed platform source files from `linux_xxx.c` and `windows_xxx.c` to `xxx.c`
+- Replaced VM global variables (`sll_current_instruction_count` and `sll_current_instruction_index`) with functions (`sll_vm_get_instruction_count` and `sll_thread_get_instruction_index`)
 - Reversed the bundle search order ([#246])
 - Split the [`src/sll/include/sll/platform.h`][0.7.8/src/sll/include/sll/platform.h] header into multiple headers located in [`src/sll/include/sll/platform`][0.7.8/src/sll/include/sll/platform]
 - Standard input is now opened in non-blocking mode

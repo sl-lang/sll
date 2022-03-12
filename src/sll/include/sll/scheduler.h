@@ -225,4 +225,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_suspend_thread(sll_thread_index
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_thread_get_instruction_index
+ * \group scheduler
+ * \desc Docs!
+ * \arg sll_thread_index_t t
+ * \ret sll_instruction_index_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_thread_get_instruction_index(sll_thread_index_t t);
+
+
+
 #endif

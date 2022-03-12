@@ -13,28 +13,6 @@
 
 /**
  * \flags var
- * \name sll_current_instruction_count
- * \group vm
- * \desc Docs!
- * \type sll_instruction_index_t
- */
-__SLL_EXTERNAL extern sll_instruction_index_t sll_current_instruction_count;
-
-
-
-/**
- * \flags var
- * \name sll_current_instruction_index
- * \group vm
- * \desc Docs!
- * \type sll_instruction_index_t
- */
-__SLL_EXTERNAL extern sll_instruction_index_t sll_current_instruction_index;
-
-
-
-/**
- * \flags var
  * \name sll_current_runtime_data
  * \group vm
  * \desc Docs!
@@ -79,6 +57,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_vm_get_instruction_count
+ * \group vm
+ * \desc Docs!
+ * \ret sll_size_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_vm_get_instruction_count(void);
 
 
 
