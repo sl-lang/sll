@@ -351,6 +351,25 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define BUNDLE_DO_NOT_REMAP_IMPORT 0x80000000
 #define BUNDLE_GET_INDEX(x) ((*(x))&0x7fffffff)
 
+#define WRAP_ARRAY_INDEX(idx,len,var) \
+	sll_integer_t var; \
+	do{ \
+		sll_integer_t __idx=(idx); \
+		sll_integer_t __len=(len); \
+		var=__idx-__idx/__len*__len; \
+		if (var<0){ \
+			var+=__len; \
+		} \
+	} while (0)
+#define WRAP_ARRAY_INDEX_VAR(idx,len) \
+	do{ \
+		sll_integer_t __len=(len); \
+		idx=idx-idx/__len*__len; \
+		if (idx<0){ \
+			idx+=__len; \
+		} \
+	} while (0)
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 

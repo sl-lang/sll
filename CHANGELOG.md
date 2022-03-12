@@ -26,6 +26,7 @@
 
 - Cross-requesting call stacks is now enabled by an extra argument in `error$get_call_stack`
 - Fixed internal initialization and deinitialization order
+- Fixed memory overflow bugs in `sll_string_select`
 - Renamed platform source files from `linux_xxx.c` and `windows_xxx.c` to `xxx.c`
 - Reversed the bundle search order ([#246])
 - Split the [`src/sll/include/sll/platform.h`][0.7.8/src/sll/include/sll/platform.h] header into multiple headers located in [`src/sll/include/sll/platform`][0.7.8/src/sll/include/sll/platform]

@@ -634,7 +634,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				sll_string_create(0,&s);
 				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 				while (1){
-					sll_read_char_t c=sll_file_read_char(rf,NULL);
+					c=sll_file_read_char(rf,NULL);
 					if (c=='`'||c==SLL_END_OF_DATA){
 						break;
 					}

@@ -1591,12 +1591,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_secure_equal(const sll_s
 
 
 __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_string_t* o){
-	while (a<0){
-		a+=s->l;
-	}
-	while (b<0){
-		b+=s->l;
-	}
+	WRAP_ARRAY_INDEX_VAR(a,s->l);
+	WRAP_ARRAY_INDEX_VAR(b,s->l);
 	if (!s->l||a==b||!c||(a<=b&&a>=s->l)||(b<=a&&b>=s->l)){
 		SLL_INIT_STRING(o);
 		return;
@@ -1613,7 +1609,7 @@ __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_
 			*((wide_data_t*)(o->v))=s->c;
 			return;
 		}
-		o->l=(sll_string_length_t)((b-a)/c);
+		o->l=(sll_string_length_t)((b-a-1)/c+1);
 		o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
 		INIT_PADDING(o->v,o->l);
 		sll_string_length_t i=0;
@@ -1637,7 +1633,7 @@ __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_
 			*((wide_data_t*)(o->v))=s->c;
 			return;
 		}
-		o->l=(sll_string_length_t)((a-b)/c);
+		o->l=(sll_string_length_t)((a-b-1)/c+1);
 		o->v=sll_allocate(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
 		INIT_PADDING(o->v,o->l);
 		sll_string_length_t i=0;
