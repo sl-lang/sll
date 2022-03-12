@@ -14,5 +14,5 @@ __API_FUNC(map_extend){
 
 
 __API_FUNC(map_remove){
-	SLL_RELEASE(sll_map_remove(NULL,b,a));
+	sll_release_object(sll_map_remove(NULL,b,a));
 }

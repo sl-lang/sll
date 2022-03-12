@@ -27,7 +27,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_t
 
 /**
  * \flags check_output func
- * \name sll_create_string
+ * \name sll_create_object_string
  * \group string-table
  * \desc Docs!
  * \arg sll_string_table_t* st
@@ -35,7 +35,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_t
  * \arg sll_string_length_t l
  * \ret sll_string_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_object_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l);
 
 
 

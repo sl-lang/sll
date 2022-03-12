@@ -23,17 +23,6 @@
 
 
 
-#ifdef DEBUG_BUILD
-#define __SLL_ADD_DEBUG_DATA(o,t) sll_add_debug_data((o),(sll_char_t*)(__FILE__),__LINE__,(sll_char_t*)(__func__),(t))
-#else
-#define __SLL_ADD_DEBUG_DATA(o,t) o
-#endif
-#define __SLL_DEBUG_TYPE_CREATE 0
-#define __SLL_DEBUG_TYPE_ACQUIRE 1
-#define __SLL_DEBUG_TYPE_RELEASE 2
-
-
-
 #ifndef NULL
 #define NULL ((void*)0)
 #endif

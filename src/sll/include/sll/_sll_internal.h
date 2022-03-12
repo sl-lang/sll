@@ -20,9 +20,6 @@
 #pragma intrinsic(__popcnt64)
 #pragma intrinsic(_rotl)
 #pragma intrinsic(_rotl64)
-#pragma section(".sobject$a",read)
-#pragma section(".sobject$b",read)
-#pragma section(".sobject$z",read)
 #pragma section(".initstr$a",read)
 #pragma section(".initstr$b",read)
 #pragma section(".initstr$z",read)
@@ -55,7 +52,6 @@ static __SLL_FORCE_INLINE unsigned int FIND_LAST_SET_BIT(unsigned __int64 m){
 	} while (0)
 #define _CUSTOM_SECTION_(nm) __declspec(allocate(#nm))
 #define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(.##nm##$b)
-#define STATIC_OBJECT_SETUP static const __declspec(allocate(".sobject$a")) static_object_t* __static_object_start=0;static const __declspec(allocate(".sobject$z")) static_object_t* __static_object_end=0
 #define INIT_STRING_SETUP static const __declspec(allocate(".initstr$a")) init_string_t* __init_string_start=0;static const __declspec(allocate(".initstr$z")) init_string_t* __init_string_end=0
 #define LIBRARY_EXTENSION ".dll"
 #else
@@ -91,15 +87,11 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define _CUSTOM_SECTION(nm) _CUSTOM_SECTION_(nm)
 #ifdef __SLL_BUILD_DARWIN
 #define _CUSTOM_SECTION_(nm) __attribute__((used,__section__("__DATA,"#nm)))
-#define STATIC_OBJECT_SETUP extern unsigned long long int __start_sobject __asm("section$start$__DATA$sobject");extern unsigned long long int __stop_sobject __asm("section$end$__DATA$sobject")
 #define INIT_STRING_SETUP extern unsigned long long int __start_initstr __asm("section$start$__DATA$initstr");extern unsigned long long int __stop_initstr __asm("section$end$__DATA$initstr")
 #else
 #define _CUSTOM_SECTION_(nm) __attribute__((used,section(#nm)))
-#define STATIC_OBJECT_SETUP extern const static_object_t* __start_sobject;extern const static_object_t* __stop_sobject
 #define INIT_STRING_SETUP extern const init_string_t* __start_initstr;extern const init_string_t* __stop_initstr
 #endif
-#define __static_object_start __start_sobject
-#define __static_object_end __stop_sobject
 #define __init_string_start __start_initstr
 #define __init_string_end __stop_initstr
 #define LIBRARY_EXTENSION ".so"
@@ -113,14 +105,13 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 #define __API_FUNC(nm) __SLL_EXTERNAL __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
 #define __STATIC_STRING(nm,dt) sll_string_t nm=SLL_INIT_STRING_STRUCT;static const init_string_t _UNIQUE_NAME(__init_string)={&(nm),{.s=SLL_CHAR(dt)},sizeof(dt)/sizeof(char)-1};static const _CUSTOM_SECTION(initstr) init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
 #define __STATIC_STRING_CODE(nm,c) sll_string_t nm=SLL_INIT_STRING_STRUCT;static void _UNIQUE_NAME(__init_string_fn)(sll_string_t* out){c};static const init_string_t _UNIQUE_NAME(__init_string)={&(nm),{.fn=_UNIQUE_NAME(__init_string_fn)},SLL_MAX_STRING_LENGTH};static const _CUSTOM_SECTION(initstr) init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
-#define __SLL_STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,NULL,.dt={.i=(v)}};_DECL_GC_OBJECT(&_int_##v##_static_data)
-#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,NULL,.dt={.i=-(v)}};_DECL_GC_OBJECT(&_int_neg_##v##_static_data)
-#define __SLL_STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,NULL,.dt={.c=(sll_char_t)(v)}};_DECL_GC_OBJECT(&_char_##v##_static_data)
-#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,NULL,.dt={.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
+#define __SLL_STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,.dt={.i=(v)}}
+#define __SLL_STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,.dt={.i=-(v)}}
+#define __SLL_STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,.dt={.c=(sll_char_t)(v)}}
+#define __SLL_STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,.dt={.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
 
 
 
-#define _DECL_GC_OBJECT(rt) static const static_object_t _UNIQUE_NAME(__static_object)={(rt),__FILE__,__LINE__};static const _CUSTOM_SECTION(sobject) static_object_t* _UNIQUE_NAME(__static_object_ptr)=&_UNIQUE_NAME(__static_object)
 #define _UNIQUE_NAME_JOIN2(a,b) a##_##b
 #define _UNIQUE_NAME_JOIN(a,b) _UNIQUE_NAME_JOIN2(a,b)
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
@@ -517,24 +508,6 @@ typedef struct __INTERNAL_FUNCTION{
 	const sll_char_t* nm;
 	const sll_internal_function_pointer_t f;
 } internal_function_t;
-
-
-
-typedef struct __OBJECT_DEBUG_DATA_TRACE_DATA{
-	sll_char_t fp[256];
-	sll_char_t fn[256];
-	unsigned int ln;
-} object_debug_data_trace_data_t;
-
-
-
-typedef struct __OBJECT_DEBUG_DATA{
-	object_debug_data_trace_data_t c;
-	object_debug_data_trace_data_t** al;
-	sll_array_length_t all;
-	object_debug_data_trace_data_t** rl;
-	sll_array_length_t rll;
-} object_debug_data_t;
 
 
 

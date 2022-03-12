@@ -32,8 +32,13 @@
 
 ### Removed
 
+- Debug functions: `sll_add_debug_data`, `sll_remove_object_debug_data` and `sll_verify_object_stack_cleanup`
+- Debugging data from objects
+- Object macros: `SLL_ACQUIRE_NO_DEBUG`, `SLL_CREATE` and `SLL_RELEASE`
+- Static object macros: `SLL_FROM_INT` and `SLL_FROM_FLOAT`
 - Unused debug extension
 - Unused function `sll_platform_enable_console_color` (Executed internally by `sll_init`)
+- Unused macro `SLL_ACQUIRE_STATIC_CHAR`
 
 ## [0.7.7] - 2022-03-05
 

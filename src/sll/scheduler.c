@@ -54,7 +54,7 @@ void _scheduler_deinit(void){
 			continue;
 		}
 		if (thr->st==THREAD_STATE_TERMINATED){
-			SLL_RELEASE(thr->ret);
+			sll_release_object(thr->ret);
 		}
 		sll_platform_free_page(thr,THREAD_SIZE);
 	}
@@ -447,7 +447,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_delete_thread(sll_thread_index_
 	SLL_ASSERT(thr->st==THREAD_STATE_TERMINATED);
 	*(_scheduler_thread+t)=THREAD_NEXT_UNUSED(_scheduler_thread_next);
 	_scheduler_thread_next=t;
-	SLL_RELEASE(thr->ret);
+	sll_release_object(thr->ret);
 	if (_scheduler_allocator_cache_pool_len<THREAD_ALLOCATOR_CACHE_POOL_SIZE){
 		_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len]=thr;
 		_scheduler_allocator_cache_pool_len++;

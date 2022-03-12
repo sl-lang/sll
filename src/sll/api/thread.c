@@ -37,8 +37,8 @@ __API_FUNC(thread_get_internal_data){
 	thread_data_t* thr=_scheduler_get_thread((a<0?0:(sll_thread_index_t)a));
 	sll_array_create(2,out);
 	if (thr){
-		out->v[0]=SLL_FROM_INT(thr->ii);
-		out->v[1]=SLL_FROM_INT(thr->si);
+		out->v[0]=sll_int_to_object(thr->ii);
+		out->v[1]=sll_int_to_object(thr->si);
 	}
 	else{
 		out->v[0]=SLL_ACQUIRE_STATIC_INT(0);

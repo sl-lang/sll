@@ -30,7 +30,7 @@ static const sll_char_t _base64_index_map[256]={
 
 
 __API_FUNC(base64_decode){
-	sll_object_t* o=SLL_CREATE();
+	sll_object_t* o=sll_create_object();
 	o->t=SLL_OBJECT_TYPE_STRING;
 	if (!a->l){
 		SLL_INIT_STRING(&(o->dt.s));

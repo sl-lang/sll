@@ -297,7 +297,7 @@ __API_FUNC(math_factors){
 	sll_factor_t* dt=sll_math_factors(a,&l);
 	sll_array_create(l+neg,out);
 	if (neg){
-		sll_object_t* n=SLL_CREATE();
+		sll_object_t* n=sll_create_object();
 		n->t=SLL_OBJECT_TYPE_ARRAY;
 		sll_array_create(2,&(n->dt.a));
 		n->dt.a.v[0]=SLL_ACQUIRE_STATIC_NEG_INT(1);
@@ -305,11 +305,11 @@ __API_FUNC(math_factors){
 		out->v[0]=n;
 	}
 	for (sll_array_length_t i=0;i<l;i++){
-		sll_object_t* n=SLL_CREATE();
+		sll_object_t* n=sll_create_object();
 		n->t=SLL_OBJECT_TYPE_ARRAY;
 		sll_array_create(2,&(n->dt.a));
-		n->dt.a.v[0]=SLL_FROM_INT((dt+i)->n);
-		n->dt.a.v[1]=SLL_FROM_INT((dt+i)->pw);
+		n->dt.a.v[0]=sll_int_to_object((dt+i)->n);
+		n->dt.a.v[1]=sll_int_to_object((dt+i)->pw);
 		out->v[i+neg]=n;
 	}
 	sll_deallocate(dt);

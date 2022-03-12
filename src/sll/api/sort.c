@@ -77,7 +77,7 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 	}
 	_quicksort_extra((const sll_object_t**)tmp,(const sll_object_t**)a,l-1,cmp);
 	for (sll_array_length_t i=0;i<l;i++){
-		SLL_RELEASE(*(tmp+i));
+		sll_release_object(*(tmp+i));
 	}
 	sll_deallocate(tmp);
 }
@@ -92,7 +92,7 @@ __API_FUNC(sort_quicksort){
 		out=a;
 	}
 	else{
-		o=SLL_CREATE();
+		o=sll_create_object();
 		o->t=SLL_OBJECT_TYPE_ARRAY;
 		out=&(o->dt.a);
 		sll_array_clone(a,out);

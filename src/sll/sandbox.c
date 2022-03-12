@@ -11,7 +11,7 @@
 #define FLAG(f,nm) __STATIC_STRING(__flag_str_##f,(nm))
 #define CHECK_FLAG(f) \
 	if (_util_sandbox_flags&(1ull<<SLL_SANDBOX_FLAG_##f)){ \
-		o->v[i]=SLL_CREATE(); \
+		o->v[i]=sll_create_object(); \
 		o->v[i]->t=SLL_OBJECT_TYPE_STRING; \
 		sll_string_clone(&__flag_str_##f,&(o->v[i]->dt.s)); \
 		i++; \

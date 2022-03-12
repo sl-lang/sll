@@ -29,7 +29,7 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	SLL_ASSERT(evt->f);
 	sll_object_t* o=NULL;
 	if (evt->sz){
-		o=SLL_CREATE();
+		o=sll_create_object();
 		o->t=SLL_OBJECT_TYPE_STRING;
 		sll_string_create(evt->sz,&(o->dt.s));
 		sll_error_t err;
@@ -47,7 +47,7 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	else{
 		sll_error_t err;
 		sll_read_char_t chr=sll_file_read_char(evt->f,&err);
-		o=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):SLL_FROM_INT(~err)):SLL_FROM_CHAR(chr));
+		o=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
 	}
 	sll_thread_index_t tid=evt->tid;
 	thread_data_t* thr=_scheduler_get_thread(tid);

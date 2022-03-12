@@ -455,10 +455,10 @@ __API_FUNC(hash_md5){
 	};
 	sll_hash_md5(&dt,e->v,e->l);
 	sll_array_create(4,out);
-	out->v[0]=SLL_FROM_INT(dt.a);
-	out->v[1]=SLL_FROM_INT(dt.b);
-	out->v[2]=SLL_FROM_INT(dt.c);
-	out->v[3]=SLL_FROM_INT(dt.d);
+	out->v[0]=sll_int_to_object(dt.a);
+	out->v[1]=sll_int_to_object(dt.b);
+	out->v[2]=sll_int_to_object(dt.c);
+	out->v[3]=sll_int_to_object(dt.d);
 }
 
 
@@ -473,11 +473,11 @@ __API_FUNC(hash_sha1){
 	};
 	sll_hash_sha1(&dt,f->v,f->l);
 	sll_array_create(5,out);
-	out->v[0]=SLL_FROM_INT(dt.a);
-	out->v[1]=SLL_FROM_INT(dt.b);
-	out->v[2]=SLL_FROM_INT(dt.c);
-	out->v[3]=SLL_FROM_INT(dt.d);
-	out->v[4]=SLL_FROM_INT(dt.e);
+	out->v[0]=sll_int_to_object(dt.a);
+	out->v[1]=sll_int_to_object(dt.b);
+	out->v[2]=sll_int_to_object(dt.c);
+	out->v[3]=sll_int_to_object(dt.d);
+	out->v[4]=sll_int_to_object(dt.e);
 }
 
 
@@ -495,14 +495,14 @@ __API_FUNC(hash_sha256){
 	};
 	sll_hash_sha256(&dt,i->v,i->l);
 	sll_array_create(8,out);
-	out->v[0]=SLL_FROM_INT(dt.a);
-	out->v[1]=SLL_FROM_INT(dt.b);
-	out->v[2]=SLL_FROM_INT(dt.c);
-	out->v[3]=SLL_FROM_INT(dt.d);
-	out->v[4]=SLL_FROM_INT(dt.e);
-	out->v[5]=SLL_FROM_INT(dt.f);
-	out->v[6]=SLL_FROM_INT(dt.g);
-	out->v[7]=SLL_FROM_INT(dt.h);
+	out->v[0]=sll_int_to_object(dt.a);
+	out->v[1]=sll_int_to_object(dt.b);
+	out->v[2]=sll_int_to_object(dt.c);
+	out->v[3]=sll_int_to_object(dt.d);
+	out->v[4]=sll_int_to_object(dt.e);
+	out->v[5]=sll_int_to_object(dt.f);
+	out->v[6]=sll_int_to_object(dt.g);
+	out->v[7]=sll_int_to_object(dt.h);
 }
 
 
@@ -520,12 +520,12 @@ __API_FUNC(hash_sha512){
 	};
 	sll_hash_sha512(&dt,i->v,i->l);
 	sll_array_create(8,out);
-	out->v[0]=SLL_FROM_INT(dt.a);
-	out->v[1]=SLL_FROM_INT(dt.b);
-	out->v[2]=SLL_FROM_INT(dt.c);
-	out->v[3]=SLL_FROM_INT(dt.d);
-	out->v[4]=SLL_FROM_INT(dt.e);
-	out->v[5]=SLL_FROM_INT(dt.f);
-	out->v[6]=SLL_FROM_INT(dt.g);
-	out->v[7]=SLL_FROM_INT(dt.h);
+	out->v[0]=sll_int_to_object(dt.a);
+	out->v[1]=sll_int_to_object(dt.b);
+	out->v[2]=sll_int_to_object(dt.c);
+	out->v[3]=sll_int_to_object(dt.d);
+	out->v[4]=sll_int_to_object(dt.e);
+	out->v[5]=sll_int_to_object(dt.f);
+	out->v[6]=sll_int_to_object(dt.g);
+	out->v[7]=sll_int_to_object(dt.h);
 }

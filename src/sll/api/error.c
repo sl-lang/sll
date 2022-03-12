@@ -23,15 +23,15 @@ __API_FUNC(error_get_call_stack){
 	sll_array_create(c_st->l-((sll_array_length_t)a),out);
 	for (sll_call_stack_size_t i=0;i<c_st->l-a;i++){
 		const sll_call_stack_frame_t* fr=c_st->dt+i;
-		sll_object_t* nm=SLL_CREATE();
+		sll_object_t* nm=sll_create_object();
 		nm->t=SLL_OBJECT_TYPE_STRING;
 		sll_string_from_pointer(fr->nm,&(nm->dt.s));
-		sll_object_t* r_dt=SLL_CREATE();
+		sll_object_t* r_dt=sll_create_object();
 		r_dt->t=SLL_OBJECT_TYPE_ARRAY;
 		sll_array_create(2,&(r_dt->dt.a));
-		r_dt->dt.a.v[0]=SLL_FROM_INT(fr->_ii);
-		r_dt->dt.a.v[1]=SLL_FROM_INT(fr->_s);
-		sll_object_t* fr_o=SLL_CREATE();
+		r_dt->dt.a.v[0]=sll_int_to_object(fr->_ii);
+		r_dt->dt.a.v[1]=sll_int_to_object(fr->_s);
+		sll_object_t* fr_o=sll_create_object();
 		fr_o->t=SLL_OBJECT_TYPE_ARRAY;
 		sll_array_create(3,&(fr_o->dt.a));
 		fr_o->dt.a.v[0]=nm;

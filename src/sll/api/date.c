@@ -91,8 +91,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* dt){
 
 __API_FUNC(date_get_time_zone){
 	sll_array_create(2,out);
-	out->v[0]=SLL_FROM_INT(sll_platform_time_zone->off);
-	out->v[1]=SLL_CREATE();
+	out->v[0]=sll_int_to_object(sll_platform_time_zone->off);
+	out->v[1]=sll_create_object();
 	out->v[1]->t=SLL_OBJECT_TYPE_STRING;
 	sll_string_from_pointer(sll_platform_time_zone->nm,&(out->v[1]->dt.s));
 }
@@ -125,11 +125,11 @@ __API_FUNC(date_split){
 	sll_date_t dt;
 	sll_date_from_time(a,NULL,&dt);
 	sll_array_create(7,out);
-	out->v[0]=SLL_FROM_INT(dt.y);
+	out->v[0]=sll_int_to_object(dt.y);
 	out->v[1]=SLL_ACQUIRE_STATIC_INT(dt.m);
 	out->v[2]=SLL_ACQUIRE_STATIC_INT(dt.d);
 	out->v[3]=SLL_ACQUIRE_STATIC_INT(dt.wd);
 	out->v[4]=SLL_ACQUIRE_STATIC_INT(dt.h);
 	out->v[5]=SLL_ACQUIRE_STATIC_INT(dt.mn);
-	out->v[6]=SLL_FROM_FLOAT(dt.s);
+	out->v[6]=sll_float_to_object(dt.s);
 }

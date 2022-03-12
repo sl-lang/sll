@@ -511,7 +511,7 @@ __SLL_EXTERNAL void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_
 		o->v=sll_allocate(o->l*sizeof(sll_object_t*));
 		sll_array_length_t i=0;
 		for (sll_integer_t j=s;j>e;j+=n){
-			o->v[i]=SLL_FROM_INT(j);
+			o->v[i]=sll_int_to_object(j);
 			i++;
 		}
 		return;
@@ -521,7 +521,7 @@ __SLL_EXTERNAL void sll_array_range(sll_integer_t s,sll_integer_t e,sll_integer_
 	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
 	sll_array_length_t i=0;
 	for (sll_integer_t j=s;j<e;j+=n){
-		o->v[i]=SLL_FROM_INT(j);
+		o->v[i]=sll_int_to_object(j);
 		i++;
 	}
 }
@@ -537,7 +537,7 @@ __SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_ar
 				i++;
 			}
 			else{
-				SLL_RELEASE(o->v[j]);
+				sll_release_object(o->v[j]);
 			}
 		}
 		o->l=i;
@@ -677,7 +677,7 @@ __SLL_EXTERNAL void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_in
 __SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_array_t* o){
 	o->l=1;
 	o->v=sll_allocate_stack(sizeof(sll_object_t*));
-	sll_object_t* oa=SLL_CREATE();
+	sll_object_t* oa=sll_create_object();
 	oa->t=SLL_OBJECT_TYPE_ARRAY;
 	oa->dt.a.l=0;
 	oa->dt.a.v=sll_allocate_stack(1);
@@ -685,7 +685,7 @@ __SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_arr
 	for (sll_array_length_t i=0;i<a->l;i++){
 		if (sll_operator_strict_equal(a->v[i],e)){
 			oa->dt.a.v=(oa->dt.a.l?sll_memory_move(oa->dt.a.v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK):NULL);
-			oa=SLL_CREATE();
+			oa=sll_create_object();
 			oa->t=SLL_OBJECT_TYPE_ARRAY;
 			oa->dt.a.l=0;
 			oa->dt.a.v=sll_allocate_stack(1);
@@ -709,7 +709,7 @@ __SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_arr
 __SLL_EXTERNAL void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_object_t* v){
 	if (i<a->l){
 		SLL_ACQUIRE(v);
-		SLL_RELEASE(a->v[i]);
+		sll_release_object(a->v[i]);
 		a->v[i]=v;
 	}
 }
@@ -763,7 +763,7 @@ __SLL_EXTERNAL void sll_array_to_map(const sll_array_t* a,sll_map_t* o){
 	o->v=sll_allocate(e*sizeof(sll_object_t*));
 	sll_array_length_t i=0;
 	for (sll_map_length_t j=0;j<e;j+=2){
-		o->v[j]=SLL_FROM_INT(i);
+		o->v[j]=sll_int_to_object(i);
 		o->v[j+1]=a->v[i];
 		SLL_ACQUIRE(a->v[i]);
 		i++;

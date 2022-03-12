@@ -202,25 +202,25 @@ __API_FUNC(file_open){
 
 __API_FUNC(file_peek){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
-		return SLL_FROM_INT(~SLL_ERROR_UNKNOWN_FD);
+		return sll_int_to_object(~SLL_ERROR_UNKNOWN_FD);
 	}
 	extended_file_t* ef=*(_file_fl+a);
 	sll_error_t err;
 	sll_read_char_t o=sll_file_peek_char((ef->p?ef->dt.p:&(ef->dt.f)),&err);
-	return (o==SLL_END_OF_DATA?SLL_FROM_INT(~err):SLL_FROM_CHAR(o));
+	return (o==SLL_END_OF_DATA?sll_int_to_object(~err):SLL_FROM_CHAR(o));
 }
 
 
 
 __API_FUNC(file_read){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
-		return SLL_FROM_INT(SLL_ERROR_UNKNOWN_FD);
+		return sll_int_to_object(SLL_ERROR_UNKNOWN_FD);
 	}
 	if (!b){
 		SLL_UNIMPLEMENTED();
 	}
 	extended_file_t* ef=*(_file_fl+a);
-	sll_object_t* o=SLL_CREATE();
+	sll_object_t* o=sll_create_object();
 	o->t=SLL_OBJECT_TYPE_STRING;
 	sll_string_length_t l=(sll_string_length_t)b;
 	sll_string_create(l,&(o->dt.s));
@@ -242,13 +242,13 @@ __API_FUNC(file_read){
 
 __API_FUNC(file_read_char){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
-		return SLL_FROM_INT(SLL_ERROR_UNKNOWN_FD);
+		return sll_int_to_object(SLL_ERROR_UNKNOWN_FD);
 	}
 	extended_file_t* ef=*(_file_fl+a);
 	sll_error_t err;
 	sll_read_char_t c=sll_file_read_char((ef->p?ef->dt.p:&(ef->dt.f)),&err);
 	if (c==SLL_END_OF_DATA&&err!=SLL_NO_ERROR){
-		return SLL_FROM_INT(err);
+		return sll_int_to_object(err);
 	}
 	return (c==SLL_END_OF_DATA?SLL_ACQUIRE_STATIC_NEG_INT(1):SLL_FROM_CHAR(c));
 }

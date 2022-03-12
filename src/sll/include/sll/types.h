@@ -702,7 +702,6 @@ typedef union __SLL_OBJECT_DATA{
 typedef struct __SLL_OBJECT{
 	sll_ref_count_t rc;
 	sll_object_type_t t;
-	void* _dbg;
 	sll_object_data_t dt;
 } sll_object_t;
 

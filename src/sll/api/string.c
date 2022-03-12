@@ -181,11 +181,11 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 				if (dt->fn.str){
 					sll_object_t* v=sll_execute_function(dt->fn.str,&a,1);
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
-					SLL_RELEASE(v);
+					sll_release_object(v);
 					sll_string_increase(o,str->dt.s.l);
 					sll_copy_data(str->dt.s.v,str->dt.s.l,o->v+o->l);
 					o->l+=str->dt.s.l;
-					SLL_RELEASE(str);
+					sll_release_object(str);
 					return;
 				}
 				sll_string_increase(o,3);
@@ -214,10 +214,10 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					sll_object_t* tmp;
 					switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
 						case SLL_OBJECT_TYPE_INT:
-							tmp=SLL_FROM_INT(p->i);
+							tmp=sll_int_to_object(p->i);
 							break;
 						case SLL_OBJECT_TYPE_FLOAT:
-							tmp=SLL_FROM_FLOAT(p->f);
+							tmp=sll_float_to_object(p->f);
 							break;
 						case SLL_OBJECT_TYPE_CHAR:
 							tmp=SLL_FROM_CHAR(p->c);
@@ -228,7 +228,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 							break;
 					}
 					_object_to_string(tmp,o);
-					SLL_RELEASE(tmp);
+					sll_release_object(tmp);
 					p++;
 				}
 				sll_string_increase(o,1);

@@ -26,26 +26,26 @@ static const bitmap_t _process_quote_chars[4]={
 
 
 static void _create_process_object(const sll_array_t* arg,sll_object_t* cfg,sll_return_code_t rc,const sll_string_t* in,const sll_string_t* out,const sll_string_t* err,sll_array_t* o){
-	sll_object_t* oa=SLL_CREATE();
+	sll_object_t* oa=sll_create_object();
 	oa->t=SLL_OBJECT_TYPE_ARRAY;
 	sll_array_clone(arg,&(oa->dt.a));
-	sll_object_t* std=SLL_CREATE();
+	sll_object_t* std=sll_create_object();
 	std->t=SLL_OBJECT_TYPE_ARRAY;
 	sll_array_create(3,&(std->dt.a));
-	std->dt.a.v[0]=SLL_CREATE();
+	std->dt.a.v[0]=sll_create_object();
 	std->dt.a.v[0]->t=SLL_OBJECT_TYPE_STRING;
 	sll_string_clone(in,&(std->dt.a.v[0]->dt.s));
-	std->dt.a.v[1]=SLL_CREATE();
+	std->dt.a.v[1]=sll_create_object();
 	std->dt.a.v[1]->t=SLL_OBJECT_TYPE_STRING;
 	sll_string_clone(out,&(std->dt.a.v[1]->dt.s));
-	std->dt.a.v[2]=SLL_CREATE();
+	std->dt.a.v[2]=sll_create_object();
 	std->dt.a.v[2]->t=SLL_OBJECT_TYPE_STRING;
 	sll_string_clone(err,&(std->dt.a.v[2]->dt.s));
 	sll_array_create(4,o);
 	SLL_ACQUIRE(cfg);
 	o->v[0]=oa;
 	o->v[1]=cfg;
-	o->v[2]=SLL_FROM_INT(rc);
+	o->v[2]=sll_int_to_object(rc);
 	o->v[3]=std;
 }
 
@@ -137,7 +137,7 @@ __API_FUNC(process_join){
 		sll_object_t* n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		sll_char_t* p=sll_allocate_stack(n->dt.s.l);
 		sll_copy_data(n->dt.s.v,n->dt.s.l,p);
-		SLL_RELEASE(n);
+		sll_release_object(n);
 		*(dt+i)=p;
 	}
 	sll_process_join_args((const sll_char_t*const*)dt,out);
@@ -166,7 +166,7 @@ __API_FUNC(process_start){
 		sll_object_t* n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		*(args+i)=sll_allocate((n->dt.s.l+1)*sizeof(sll_char_t));
 		sll_copy_data(n->dt.s.v,n->dt.s.l+1,*(args+i));
-		SLL_RELEASE(n);
+		sll_release_object(n);
 	}
 	*(args+a->l)=NULL;
 	sll_string_t nm;
@@ -184,7 +184,7 @@ __API_FUNC(process_start){
 	if (!(fl->dt.i&SLL_PROCESS_FLAG_WAIT)){
 		SLL_UNIMPLEMENTED();
 	}
-	SLL_RELEASE(fl);
+	sll_release_object(fl);
 	sll_return_code_t rc=sll_platform_wait_process(ph);
 	sll_platform_close_process_handle(ph);
 	for (sll_array_length_t i=0;i<a->l;i++){

@@ -56,49 +56,13 @@
 
 /**
  * \flags func macro
- * \name SLL_ACQUIRE_STATIC_CHAR
- * \group static-object
- * \desc Docs!
- * \arg sll_char_t c
- * \ret sll_object_t*
- */
-#define SLL_ACQUIRE_STATIC_CHAR(c) SLL_FROM_CHAR(c)
-
-
-
-/**
- * \flags func macro
- * \name SLL_FROM_INT
- * \group static-object
- * \desc Docs!
- * \arg sll_integer_t v
- * \ret sll_object_t*
- */
-#define SLL_FROM_INT(v) __SLL_ADD_DEBUG_DATA(sll_int_to_object(v),__SLL_DEBUG_TYPE_CREATE)
-
-
-
-/**
- * \flags func macro
- * \name SLL_FROM_FLOAT
- * \group static-object
- * \desc Docs!
- * \arg sll_float_t v
- * \ret sll_object_t*
- */
-#define SLL_FROM_FLOAT(v) __SLL_ADD_DEBUG_DATA(sll_float_to_object(v),__SLL_DEBUG_TYPE_CREATE)
-
-
-
-/**
- * \flags func macro
  * \name SLL_FROM_CHAR
  * \group static-object
  * \desc Docs!
  * \arg sll_char_t c
  * \ret sll_object_t*
  */
-#define SLL_FROM_CHAR(c) (__SLL_ADD_DEBUG_DATA(sll_static_char[(sll_char_t)(c)],__SLL_DEBUG_TYPE_CREATE)->rc++,sll_static_char[(sll_char_t)(c)])
+#define SLL_FROM_CHAR(c) (SLL_ACQUIRE(sll_static_char[(sll_char_t)(c)]),sll_static_char[(sll_char_t)(c)])
 
 
 

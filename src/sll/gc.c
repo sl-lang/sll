@@ -15,10 +15,6 @@
 
 
 
-STATIC_OBJECT_SETUP;
-
-
-
 static void* _gc_page_ptr=NULL;
 static sll_object_t* _gc_next_object=NULL;
 static sll_ref_count_t _gc_alloc=0;
@@ -26,51 +22,9 @@ static sll_ref_count_t _gc_dealloc=0;
 
 
 
-static const sll_char_t* _get_type_string(sll_object_t* o){
-	switch (SLL_OBJECT_GET_TYPE(o)){
-		case SLL_OBJECT_TYPE_INT:
-			return SLL_CHAR("int");
-		case SLL_OBJECT_TYPE_FLOAT:
-			return SLL_CHAR("float");
-		case SLL_OBJECT_TYPE_CHAR:
-			return SLL_CHAR("char");
-		case SLL_OBJECT_TYPE_STRING:
-			return SLL_CHAR("string");
-		case SLL_OBJECT_TYPE_ARRAY:
-			return SLL_CHAR("array");
-		case SLL_OBJECT_TYPE_MAP:
-			return SLL_CHAR("map");
-	}
-	return SLL_CHAR("<custom-type>");
-}
-
-
-
-static void _print_gc_data(sll_object_t* o){
-	object_debug_data_t* dt=(object_debug_data_t*)(o->_dbg);
-	sll_string_t str;
-	sll_api_string_convert(&o,1,&str);
-	sll_file_write_format(sll_stderr,SLL_CHAR("{type: %s, ref: %u, data: %s}\n  Acquire (%u):\n"),NULL,_get_type_string(o),o->rc,str.v,dt->all);
-	sll_free_string(&str);
-	for (sll_array_length_t m=0;m<dt->all;m++){
-		object_debug_data_trace_data_t* t_dt=*(dt->al+m);
-		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),NULL,t_dt->fp,t_dt->ln,t_dt->fn);
-	}
-	sll_file_write_format(sll_stderr,SLL_CHAR("  Release (%u):\n"),NULL,dt->rll);
-	for (sll_array_length_t m=0;m<dt->rll;m++){
-		object_debug_data_trace_data_t* t_dt=*(dt->rl+m);
-		sll_file_write_format(sll_stderr,SLL_CHAR("    %s:%u (%s)\n"),NULL,t_dt->fp,t_dt->ln,t_dt->fn);
-	}
-}
-
-
-
 void _gc_release_data(void){
 	if (!_gc_page_ptr){
 		return;
-	}
-	if (!sll_verify_object_stack_cleanup()){
-		SLL_UNIMPLEMENTED();
 	}
 	SLL_ASSERT(_gc_alloc==_gc_dealloc);
 	void* c=_gc_page_ptr;
@@ -80,49 +34,6 @@ void _gc_release_data(void){
 		c=n;
 	}
 	_gc_page_ptr=NULL;
-}
-
-
-
-__SLL_EXTERNAL sll_object_t* sll_add_debug_data(sll_object_t* o,const sll_char_t* fp,unsigned int ln,const sll_char_t* fn,unsigned int t){
-	if (!o->_dbg){
-		object_debug_data_t* dt=sll_allocate(sizeof(object_debug_data_t));
-		dt->c.fp[0]=0;
-		dt->al=NULL;
-		dt->all=0;
-		dt->rl=NULL;
-		dt->rll=0;
-		o->_dbg=dt;
-	}
-	object_debug_data_trace_data_t* n=sll_allocate(sizeof(object_debug_data_trace_data_t));
-	sll_string_length_t i=sll_string_length_unaligned(fp);
-	if (i>255){
-		i=255;
-	}
-	sll_copy_data(fp,i,n->fp);
-	n->fp[i]=0;
-	i=sll_string_length_unaligned(fn);
-	if (i>255){
-		i=255;
-	}
-	sll_copy_data(fn,i,n->fn);
-	n->fn[i]=0;
-	n->ln=ln;
-	object_debug_data_t* dt=o->_dbg;
-	if (t==__SLL_DEBUG_TYPE_CREATE&&!dt->c.fp[0]){
-		dt->c=*n;
-	}
-	if (t==__SLL_DEBUG_TYPE_RELEASE){
-		dt->rll++;
-		dt->rl=sll_reallocate(dt->rl,dt->rll*sizeof(object_debug_data_trace_data_t*));
-		*(dt->rl+dt->rll-1)=n;
-	}
-	else{
-		dt->all++;
-		dt->al=sll_reallocate(dt->al,dt->all*sizeof(object_debug_data_trace_data_t*));
-		*(dt->al+dt->all-1)=n;
-	}
-	return o;
 }
 
 
@@ -152,7 +63,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(void){
 	sll_object_t* o=_gc_next_object;
 	_gc_next_object=GC_GET_NEXT_OBJECT(o);
 	o->rc=1;
-	o->_dbg=NULL;
 	_gc_alloc++;
 	return o;
 }
@@ -177,7 +87,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->fn.del){
 					o->rc++;
-					SLL_RELEASE(sll_execute_function(dt->fn.del,&o,1));
+					sll_release_object(sll_execute_function(dt->fn.del,&o,1));
 					o->rc--;
 					if (o->rc){
 						return;
@@ -186,96 +96,17 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 				sll_object_field_t* p=o->dt.p;
 				for (sll_arg_count_t i=0;i<dt->l;i++){
 					if (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)>SLL_OBJECT_TYPE_CHAR){
-						SLL_RELEASE(p->o);
+						sll_release_object(p->o);
 					}
 					p++;
 				}
 			}
 			sll_deallocate(o->dt.p);
 		}
-		sll_remove_object_debug_data(o);
 		o->t=SLL_OBJECT_TYPE_INT;
 		o->dt.i=0;
 		GC_SET_NEXT_OBJECT(o,_gc_next_object);
 		_gc_next_object=o;
 		_gc_dealloc++;
 	}
-}
-
-
-
-__SLL_EXTERNAL void sll_remove_object_debug_data(sll_object_t* o){
-	if (o->_dbg){
-		object_debug_data_t* dt=o->_dbg;
-		o->_dbg=NULL;
-		for (sll_array_length_t j=0;j<dt->all;j++){
-			sll_deallocate(*(dt->al+j));
-		}
-		sll_deallocate(dt->al);
-		for (sll_array_length_t j=0;j<dt->rll;j++){
-			sll_deallocate(*(dt->rl+j));
-		}
-		sll_deallocate(dt->rl);
-		sll_deallocate(dt);
-	}
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_verify_object_stack_cleanup(void){
-	sll_file_flush(sll_stdout);
-	sll_bool_t err=0;
-	void* pg=_gc_page_ptr;
-	while (pg){
-		sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(void*));
-		void* e=PTR(ADDR(pg)+sizeof(void*)+(SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE)-sizeof(void*))/sizeof(sll_object_t)*sizeof(sll_object_t));
-		while (PTR(c)<e){
-			if (c->rc){
-				if (!err){
-					err=1;
-					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"),NULL);
-				}
-				if (c->_dbg){
-					object_debug_data_t* dt=c->_dbg;
-					if (dt->c.fp[0]){
-						sll_file_write_format(sll_stderr,SLL_CHAR("%s:%u (%s): "),NULL,dt->c.fp,dt->c.ln,dt->c.fn);
-					}
-					else{
-						sll_file_write_string(sll_stderr,SLL_CHAR("<unknown>: "),NULL);
-					}
-					_print_gc_data(c);
-				}
-				else{
-					sll_string_t str;
-					sll_api_string_convert(&c,1,&str);
-					sll_file_write_format(sll_stderr,SLL_CHAR("<unknown>: {type: %s, ref: %u, data: %s}\n  Acquire (0):\n  Release (0):\n"),NULL,_get_type_string(c),c->rc,str.v);
-					sll_free_string(&str);
-				}
-			}
-			c++;
-		}
-		pg=*((void**)pg);
-	}
-	const static_object_t*const* l=(const static_object_t*const*)(&__static_object_start);
-	while (l<(const static_object_t*const*)(&__static_object_end)){
-		const static_object_t* k=*l;
-		if (k){
-			SLL_ASSERT(k->dt->rc);
-			if (k->dt->rc>1){
-				if (!err){
-					err=1;
-					sll_file_write_string(sll_stderr,SLL_CHAR("\nUnreleased Objects:\n"),NULL);
-				}
-				SLL_ASSERT(k->dt->_dbg);
-				sll_file_write_format(sll_stderr,SLL_CHAR("%s: %u (<static>): "),NULL,k->fp,k->ln);
-				_print_gc_data(k->dt);
-			}
-			else{
-				sll_remove_object_debug_data(k->dt);
-			}
-		}
-		l++;
-	}
-	sll_file_flush(sll_stderr);
-	return (err?0:1);
 }

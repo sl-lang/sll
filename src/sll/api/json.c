@@ -26,9 +26,9 @@ static sll_object_t* _json_false=NULL;
 
 
 static void _release_data(void){
-	SLL_RELEASE(_json_null);
-	SLL_RELEASE(_json_true);
-	SLL_RELEASE(_json_false);
+	sll_release_object(_json_null);
+	sll_release_object(_json_true);
+	sll_release_object(_json_false);
 	_json_null=NULL;
 	_json_true=NULL;
 	_json_false=NULL;
@@ -164,7 +164,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	if (c=='{'){
-		sll_object_t* o=SLL_CREATE();
+		sll_object_t* o=sll_create_object();
 		o->t=SLL_OBJECT_TYPE_MAP;
 		sll_map_t* m=&(o->dt.m);
 		SLL_INIT_MAP(m);
@@ -176,7 +176,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 					return o;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					SLL_RELEASE(o);
+					sll_release_object(o);
 					return NULL;
 				}
 				c=**p;
@@ -184,7 +184,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			}
 			m->l++;
 			m->v=sll_reallocate(m->v,(m->l<<1)*sizeof(sll_object_t*));
-			sll_object_t* k=SLL_CREATE();
+			sll_object_t* k=sll_create_object();
 			m->v[(m->l-1)<<1]=k;
 			k->t=SLL_OBJECT_TYPE_STRING;
 			_parse_json_string(p,&(k->dt.s));
@@ -197,7 +197,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			sll_object_t* v=_parse_json_as_object(p);
 			if (!v){
 				m->v[m->l-1]=SLL_ACQUIRE_STATIC_INT(0);
-				SLL_RELEASE(o);
+				sll_release_object(o);
 				return NULL;
 			}
 			m->v[((m->l-1)<<1)+1]=v;
@@ -208,7 +208,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 					return o;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					SLL_RELEASE(o);
+					sll_release_object(o);
 					return NULL;
 				}
 				c=**p;
@@ -217,7 +217,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='['){
-		sll_object_t* o=SLL_CREATE();
+		sll_object_t* o=sll_create_object();
 		o->t=SLL_OBJECT_TYPE_ARRAY;
 		sll_array_t* a=&(o->dt.a);
 		SLL_INIT_ARRAY(a);
@@ -232,7 +232,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		while (1){
 			sll_object_t* k=_parse_json_as_object(p);
 			if (!k){
-				SLL_RELEASE(o);
+				sll_release_object(o);
 				return NULL;
 			}
 			a->l++;
@@ -245,7 +245,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 					return o;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					SLL_RELEASE(o);
+					sll_release_object(o);
 					return NULL;
 				}
 				c=**p;
@@ -254,7 +254,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='\"'){
-		sll_object_t* o=SLL_CREATE();
+		sll_object_t* o=sll_create_object();
 		o->t=SLL_OBJECT_TYPE_STRING;
 		_parse_json_string(p,&(o->dt.s));
 		return o;
@@ -278,7 +278,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		return NULL;
 	}
 	json_number_t n;
-	return (_parse_number(c,p,&n)==JSON_NUMBER_INT?SLL_FROM_INT(n.i):SLL_FROM_FLOAT(n.f));
+	return (_parse_number(c,p,&n)==JSON_NUMBER_INT?sll_int_to_object(n.i):sll_float_to_object(n.f));
 }
 
 
@@ -417,7 +417,7 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 				}
 				sll_object_t* k=sll_operator_cast(o->dt.m.v[i<<1],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 				_stringify_string(k->dt.s.v,k->dt.s.l,s);
-				SLL_RELEASE(k);
+				sll_release_object(k);
 				sll_string_increase(s,1);
 				s->v[s->l]=':';
 				s->l++;
