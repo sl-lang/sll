@@ -126,6 +126,7 @@
 ))
 
 (= triangular (,,, a b c
+	(? (=== a b) (@@ a))
 	(= u (<- (... "sll:random_get_float") 0 1))
 	(@@ (?: (< u (/ (- c a) (- b a)))
 		(+ a (<- math$sqrt (* u (- b a) (- c a))))
