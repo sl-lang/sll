@@ -1,15 +1,26 @@
-(--- "types.sll")
+(--- "types.sll" "math.sll")
+
+
+
+(## gauss2)
 
 
 
 (= random_module_type (&:
 	(~ func_type) choice
-	(~ func_type) get_int
-	(~ func_type) get_float
+	(~ func_type) gauss
+	(~ func_type) gauss2
 	(~ func_type) get_char
+	(~ func_type) get_float
+	(~ func_type) get_int
 	(~ func_type) get_string
 	(~ func_type) shuffle
+	(~ func_type) triangular
 ))
+
+
+
+(= _next_gauss nil)
 
 
 
@@ -27,23 +38,27 @@
 	)
 ))
 
-(= get_int (,,, mn mx {
-	(= mn (:: mn int_type))
-	(= mx (:: mx int_type))
-	(@@ (<- (... "sll:random_get_int")
-		mn
-		(?: (=== mn mx) (+ mx 1) mx)
-	))
-}))
+(= gauss (,,, mu sigma
+	(= o _next_gauss)
+	(? (!== o nil) {
+		(= _next_gauss nil)
+		(@@ o)
+	} {
+		(= dt (<- gauss2))
+		(= _next_gauss (: dt 0))
+		(= o (: dt 1))
+	})
+	(@@ (+ mu (* o sigma)))
+))
 
-(= get_float (,,, mn mx {
-	(= mn (:: mn float_type))
-	(= mx (:: mx float_type))
-	(@@ (<- (... "sll:random_get_float")
-		mn
-		(?: (=== mn mx) (+ mx 1) mx)
-	))
-}))
+(= gauss2 (,,,
+	(= u (<- math$sqrt (* -2 (<- math$log (<- (... "sll:random_get_float") 0 1)))))
+	(= v (* (<- (... "sll:random_get_float") 0 1) math$TAU))
+	(@@ [
+		(* u (<- math$sin v))
+		(* u (<- math$cos v))
+	])
+))
 
 (= get_char (,,, mn mx {
 	(= mn (:: mn char_type))
@@ -56,6 +71,24 @@
 		mn
 		mx
 	) char_type))
+}))
+
+(= get_float (,,, mn mx {
+	(= mn (:: mn float_type))
+	(= mx (:: mx float_type))
+	(@@ (<- (... "sll:random_get_float")
+		mn
+		(?: (=== mn mx) (+ mx 1) mx)
+	))
+}))
+
+(= get_int (,,, mn mx {
+	(= mn (:: mn int_type))
+	(= mx (:: mx int_type))
+	(@@ (<- (... "sll:random_get_int")
+		mn
+		(?: (=== mn mx) (+ mx 1) mx)
+	))
 }))
 
 (= get_string (,,, l mn mx {
@@ -92,14 +125,25 @@
 	)
 ))
 
+(= triangular (,,, a b c
+	(= u (<- (... "sll:random_get_float") 0 1))
+	(@@ (?: (< u (/ (- c a) (- b a)))
+		(+ a (<- math$sqrt (* u (- b a) (- c a))))
+		(- b (<- math$sqrt (* (- 1 u) (- b a) (- b c))))
+	))
+))
+
 
 
 (= random (. random_module_type
 	choice
-	get_int
-	get_float
+	gauss
+	gauss2
 	get_char
+	get_float
+	get_int
 	get_string
 	shuffle
+	triangular
 ))
 (## random)

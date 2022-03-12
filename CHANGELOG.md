@@ -14,7 +14,7 @@
 - Extra parameter in `file$read` to allow nonblocking I/O reading operations
 - Functions related to asynchronous file reading I/O: `sll_platform_file_async_read`, `sll_platform_file_data_available` and `sll_file_data_available`
 - Implemented `file$read_char`
-- Implemented `random$choice`
+- Implemented `random$choice`, `random$gauss`, `random$gauss2` and `random$triangular`
 - Implemented `sll_bundle_add_file`, `sll_bundle_create`, `sll_bundle_fetch`, `sll_free_bundle`, `sll_load_bundle` and `sll_write_bundle` ([#245])
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
 - Implemented `thread_type$suspended` and `thread$suspend`
