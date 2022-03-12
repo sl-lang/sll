@@ -25,7 +25,7 @@ static int _linux_pipe_write_end;
 
 
 
-void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile dispatched_thread_t* dt){
+static __SLL_FORCE_INLINE void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile dispatched_thread_t* dt){
 #ifdef __SLL_BUILD_DARWIN
 	close(_linux_pipe_write_end);
 #endif
@@ -38,7 +38,7 @@ void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile d
 
 
 
-void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile dispatched_thread_t* dt){
+static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile dispatched_thread_t* dt){
 #ifdef __SLL_BUILD_DARWIN
 	int pipe_fd[2];
 	if (pipe(pipe_fd)==-1){
@@ -56,13 +56,13 @@ void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile di
 
 
 
-void _platform_notify_dispatch(volatile dispatched_thread_t* dt){
+static __SLL_FORCE_INLINE void _platform_notify_dispatch(volatile dispatched_thread_t* dt){
 	sem_post(dt->lck);
 }
 
 
 
-event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t cnt){
+static __SLL_FORCE_INLINE event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t cnt){
 	int o=poll(dt,cnt,-1);
 	if (o<1){
 		return cnt;
@@ -95,7 +95,7 @@ event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_
 
 
 
-void _platform_poll_start(raw_event_data_t* dt){
+static __SLL_FORCE_INLINE void _platform_poll_start(raw_event_data_t* dt){
 #ifdef __SLL_BUILD_DARWIN
 	sll_char_t val=1;
 	if (write(_linux_pipe_write_end,&val,sizeof(sll_char_t))!=sizeof(sll_char_t)){
@@ -109,7 +109,7 @@ void _platform_poll_start(raw_event_data_t* dt){
 
 
 
-void _platform_poll_stop(raw_event_data_t* dt,void** wait){
+static __SLL_FORCE_INLINE void _platform_poll_stop(raw_event_data_t* dt,void** wait){
 #ifdef __SLL_BUILD_DARWIN
 	sll_char_t val=1;
 	if (write(_linux_pipe_write_end,&val,sizeof(sll_char_t))!=sizeof(sll_char_t)){
@@ -127,7 +127,7 @@ void _platform_poll_stop(raw_event_data_t* dt,void** wait){
 
 
 
-void _platform_wait_for_dispatch(raw_event_data_t* dt){
+static __SLL_FORCE_INLINE void _platform_wait_for_dispatch(raw_event_data_t* dt){
 #ifdef __SLL_BUILD_DARWIN
 	sll_char_t val;
 	if (read(dt->fd,&val,sizeof(sll_char_t))!=sizeof(sll_char_t)){
@@ -141,7 +141,7 @@ void _platform_wait_for_dispatch(raw_event_data_t* dt){
 
 
 
-sll_thread_index_t _platform_wait_notify_dispatch(volatile dispatched_thread_t* dt){
+static __SLL_FORCE_INLINE sll_thread_index_t _platform_wait_notify_dispatch(volatile dispatched_thread_t* dt){
 	dt->tid=SLL_UNKNOWN_THREAD_INDEX;
 	sem_wait(dt->lck);
 	return dt->tid;

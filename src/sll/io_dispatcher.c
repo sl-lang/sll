@@ -4,6 +4,7 @@
 #include <sll/file.h>
 #include <sll/memory.h>
 #include <sll/object.h>
+#include <sll/platform/_dispatcher.h>
 #include <sll/platform/file.h>
 #include <sll/platform/thread.h>
 #include <sll/scheduler.h>

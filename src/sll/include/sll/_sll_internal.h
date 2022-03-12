@@ -888,38 +888,6 @@ void _memory_release_data(void);
 
 
 
-void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile dispatched_thread_t* dt);
-
-
-
-void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile dispatched_thread_t* dt);
-
-
-
-void _platform_notify_dispatch(volatile dispatched_thread_t* dt);
-
-
-
-event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t cnt);
-
-
-
-void _platform_poll_start(raw_event_data_t* dt);
-
-
-
-void _platform_poll_stop(raw_event_data_t* dt,void** wait);
-
-
-
-void _platform_wait_for_dispatch(raw_event_data_t* dt);
-
-
-
-sll_thread_index_t _platform_wait_notify_dispatch(volatile dispatched_thread_t* dt);
-
-
-
 void _print_char(sll_char_t c,sll_file_t* wf);
 
 
