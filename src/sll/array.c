@@ -358,6 +358,10 @@ __SLL_EXTERNAL void sll_array_join(const sll_array_t* a,const sll_array_t* b,sll
 
 
 __SLL_EXTERNAL void sll_array_join_arrays(const sll_array_t*const* al,sll_array_length_t all,sll_object_t* e,sll_array_t* o){
+	if (!all){
+		SLL_INIT_ARRAY(o);
+		return;
+	}
 	o->l=all-1;
 	e->rc+=o->l;
 	for (sll_array_length_t i=0;i<all;i++){
