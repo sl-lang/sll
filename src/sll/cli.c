@@ -60,7 +60,9 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 	if (i_bl){
 		sll_string_t f_nm_str;
 		sll_string_from_pointer_length(f_nm,f_nm_l,&f_nm_str);
-		for (sll_array_length_t i=0;i<i_bl;i++){
+		sll_array_length_t i=i_bl;
+		do{
+			i--;
 			cli_bundle_source_t* b_dt=*(i_b+i);
 			CLI_LOG_IF_VERBOSE("Trying to open file '%s/%s'...",b_dt->nm,f_nm);
 			if (sll_bundle_fetch(&(b_dt->b),&f_nm_str,c_dt)){
@@ -68,7 +70,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 				sll_free_string(&f_nm_str);
 				return;
 			}
-		}
+		} while(i);
 		sll_free_string(&f_nm_str);
 	}
 	sll_string_length_t i=0;

@@ -25,6 +25,7 @@
 - Cross-requesting call stacks is now enabled by an extra argument in `error$get_call_stack`
 - Fixed internal initialization and deinitialization order
 - Renamed platform source files from `linux_xxx.c` and `windows_xxx.c` to `xxx.c`
+- Reversed the bundle search order ([#246])
 - Split the [`src/sll/include/sll/platform.h`][0.7.8/src/sll/include/sll/platform.h] header into multiple headers located in [`src/sll/include/sll/platform`][0.7.8/src/sll/include/sll/platform]
 - Standard input is now opened in non-blocking mode
 
@@ -1751,6 +1752,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#246]: https://github.com/sl-lang/sll/issues/246
 [#245]: https://github.com/sl-lang/sll/issues/245
 [#243]: https://github.com/sl-lang/sll/issues/243
 [#238]: https://github.com/sl-lang/sll/issues/238
