@@ -17,7 +17,7 @@
 - Implemented `random$choice`
 - Implemented `sll_bundle_add_file`, `sll_bundle_create`, `sll_bundle_fetch`, `sll_free_bundle`, `sll_load_bundle` and `sll_write_bundle` ([#245])
 - Implemented `thread$internal_thread_data_type` and `thread$get_internal_data`
-- Implemented `thread$STATE_SUSPENDED` and `thread$suspend`
+- Implemented `thread_type$suspended` and `thread$suspend`
 - Internal I/O operation dispatcher thread ([#243])
 - Raw strings (strings with no escapes)
 - System thread API: `sll_internal_thread_index_t`, `SLL_UNKNOWN_INTERNAL_THREAD_INDEX`, `sll_platform_join_thread` and `sll_platform_start_thread` ([#243])
