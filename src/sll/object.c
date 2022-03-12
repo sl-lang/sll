@@ -12,15 +12,15 @@
 
 
 
-static __STATIC_STRING(_object_array_type_str,"array_type");
-static __STATIC_STRING(_object_char_type_str,"char_type");
 static __STATIC_STRING(_object_copy_str,"@@copy@@");
 static __STATIC_STRING(_object_delete_str,"@@delete@@");
-static __STATIC_STRING(_object_float_type_str,"float_type");
 static __STATIC_STRING(_object_init_str,"@@init@@");
+static __STATIC_STRING(_object_string_str,"@@string@@");
+static __STATIC_STRING(_object_array_type_str,"array_type");
+static __STATIC_STRING(_object_char_type_str,"char_type");
+static __STATIC_STRING(_object_float_type_str,"float_type");
 static __STATIC_STRING(_object_int_type_str,"int_type");
 static __STATIC_STRING(_object_map_type_str,"map_type");
-static __STATIC_STRING(_object_string_str,"@@string@@");
 static __STATIC_STRING(_object_string_type_str,"string_type");
 
 
