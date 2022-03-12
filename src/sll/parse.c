@@ -628,6 +628,26 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				arg->dt.s=sll_add_string(&(sf->st),&s,1);
 				c=sll_file_read_char(rf,NULL);
 			}
+			else if (c=='`'){
+				arg->t=SLL_NODE_TYPE_STRING;
+				sll_string_t s;
+				sll_string_create(0,&s);
+				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+				while (1){
+					sll_read_char_t c=sll_file_read_char(rf,NULL);
+					if (c=='`'||c==SLL_END_OF_DATA){
+						break;
+					}
+					sll_string_increase(&s,1);
+					s.v[s.l]=(sll_char_t)c;
+					s.l++;
+				}
+				SLL_STRING_FORMAT_PADDING(s.v,s.l);
+				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+				sll_string_calculate_checksum(&s);
+				arg->dt.s=sll_add_string(&(sf->st),&s,1);
+				c=sll_file_read_char(rf,NULL);
+			}
 			else if ((c>47&&c<58)||c=='-'){
 				sll_bool_t neg=0;
 				if (c=='-'){

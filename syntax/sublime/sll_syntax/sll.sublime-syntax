@@ -219,6 +219,13 @@ contexts:
           pop: true
         - match: '\\.'
           scope: invalid.illegal.escape.sll
+    - match: '`'
+      scope: punctuation.definition.string.begin.sll
+      push:
+        - meta_scope: string.quoted.raw.sll
+        - match: '`'
+          scope: punctuation.definition.string.end.sll
+          pop: true
     - match: '{{not_identifier_start}}(nil|true|false){{not_identifier_end}}'
       scope: constant.language.sll
     - match: '{{not_identifier_start}}(int_type|func_type|type_type|float_type|char_type|string_type|array_type|map_type|map_key_type|map_value_type|object_type){{not_identifier_end}}'

@@ -496,6 +496,8 @@
 
 (:> "CHAR: " (<- file$read_char file$stdin) "\n")
 
+(:> `Raw String\\n` '\n')
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)
