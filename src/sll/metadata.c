@@ -160,6 +160,9 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	for (sll_source_file_index_t idx=0;idx<c_dt->l;idx++){
 		sll_source_file_t* sf=*(c_dt->dt+idx);
+		if (!sf->st.l){
+			continue;
+		}
 		sll_string_index_t ml=(sf->st.l>>6)+1;
 		bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
 		*(m+(sf->fp_nm>>6))|=1ull<<(sf->fp_nm&63);

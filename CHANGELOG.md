@@ -2,7 +2,9 @@
 
 ## [0.7.9] - Ongoing
 
-*Nothing*
+### Changed
+
+- Fixed invalid memory access bug in `sll_optimize_metadata`
 
 ## [0.7.8] - 2022-03-12
 

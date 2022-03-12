@@ -161,7 +161,7 @@ static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
 	cli_bundle_source_t* b=sll_allocate(sizeof(cli_bundle_source_t));
 	sll_string_length_t nml=sll_string_length_unaligned(nm)+1;
 	b->nm=sll_allocate(nml);
-	sll_copy_data(b->nm,nml,b->nm);
+	sll_copy_data(nm,nml,b->nm);
 	b->b=b_dt;
 	*(i_b+i_bl-1)=b;
 }
