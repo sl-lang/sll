@@ -158,7 +158,9 @@ static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
 	i_bl++;
 	i_b=sll_reallocate(i_b,i_bl*sizeof(cli_bundle_source_t*));
 	cli_bundle_source_t* b=sll_allocate(sizeof(cli_bundle_source_t));
-	b->nm=nm;
+	sll_string_length_t nml=sll_string_length_unaligned(nm)+1;
+	b->nm=sll_allocate(nml);
+	sll_copy_data(b->nm,nml,b->nm);
 	b->b=b_dt;
 	*(i_b+i_bl-1)=b;
 }
@@ -184,9 +186,27 @@ static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*
 		}
 		l_fpl--;
 	}
-	sll_copy_data(sll_library_file_path->v,l_fpl+1,l_fp);
-	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl+1);
-	l_fpl+=5;
+	l_fpl++;
+	sll_copy_data(sll_library_file_path->v,l_fpl,l_fp);
+	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl);
+	l_fpl+=4;
+	sll_string_t* b_fl=NULL;
+	sll_array_length_t b_fll=sll_platform_list_directory(l_fp,&b_fl);
+	while (b_fll){
+		b_fll--;
+		sll_string_t* str=b_fl+b_fll;
+		sll_copy_data(str->v,str->l+1,l_fp+l_fpl);
+		sll_free_string(str);
+		if (!sll_platform_path_is_directory(l_fp)){
+			sll_file_t b_f;
+			if (sll_file_open(l_fp,SLL_FILE_FLAG_READ,&b_f)==SLL_NO_ERROR){
+				_load_bundle(l_fp,&b_f);
+				sll_file_close(&b_f);
+			}
+		}
+	}
+	l_fp[l_fpl]=0;
+	sll_deallocate(b_fl);
 	sll_array_length_t* fp=NULL;
 	sll_string_length_t fpl=0;
 	sll_array_length_t* sl=NULL;
@@ -613,6 +633,7 @@ _cleanup:
 	while (i_bl){
 		i_bl--;
 		cli_bundle_source_t* b=*(i_b+i_bl);
+		sll_deallocate(b->nm);
 		sll_free_bundle(&(b->b));
 		sll_deallocate(b);
 	}

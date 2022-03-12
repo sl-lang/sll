@@ -63,11 +63,11 @@ if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.bundle(ver)
 if ("--test" in sys.argv):
 	util.log("Running tests...")
-	util.execute(["build/sll","-I","build/lib/stdlib.slb","tests/_runner.sll"])
+	util.execute(["build/sll","tests/_runner.sll"])
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",util.system+".zip")
 if ("--run" in sys.argv):
 	util.log(f"Running 'examples/_internal_test/test.sll'...")
 	util.execute(["build/sll","-h"])
-	if (util.execute(["build/sll","-I",f"build/lib/stdlib{('' if '--release' in sys.argv else '-debug')}.slb","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]) or util.execute(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]) or util.execute(["build/sll","build/test2.sla","-v","-P"])):
+	if (util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]) or util.execute(["build/sll","build/test.slc","-v","-p","-P","-e","-a","-c","-o","build/test2","-R"]) or util.execute(["build/sll","build/test2.sla","-v","-P"])):
 		sys.exit(1)

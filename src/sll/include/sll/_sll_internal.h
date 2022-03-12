@@ -768,7 +768,7 @@ typedef struct __DISPATCHED_THREAD{
 
 
 typedef struct __CLI_BUNDLE_SOURCE{
-	const sll_char_t* nm;
+	sll_char_t* nm;
 	sll_bundle_t b;
 } cli_bundle_source_t;
 

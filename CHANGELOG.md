@@ -4,6 +4,7 @@
 
 ### Added
 
+- All bundles from the `lib/` folder are automatically loaded ([#247])
 - Asynchronous reading operations flag (read-only): `SLL_FILE_FLAG_ASYNC`
 - Bundles can be added to the search path via the include (`-I` or `--include`) CLI option ([#245])
 - CLI option to exclude full file paths from bundles: `-n` or `--names-only` ([#245])
@@ -1752,6 +1753,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#247]: https://github.com/sl-lang/sll/issues/247
 [#246]: https://github.com/sl-lang/sll/issues/246
 [#245]: https://github.com/sl-lang/sll/issues/245
 [#243]: https://github.com/sl-lang/sll/issues/243
