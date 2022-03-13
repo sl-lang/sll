@@ -64,6 +64,9 @@ if ("--bundle" in sys.argv or "--upload" in sys.argv):
 if ("--test" in sys.argv):
 	util.log("Running tests...")
 	util.execute(["build/sll","tests/_runner.sll"])
+	if (len(os.getenv("GENERATE_COVERAGE",""))>0):
+		util.log("Generating coverage report...")
+		util.execute(["gcovr","-x","build/coverage.xml","build/objects/"])
 if ("--upload" in sys.argv):
 	os.rename("build/sll.zip",util.system+".zip")
 if ("--run" in sys.argv):

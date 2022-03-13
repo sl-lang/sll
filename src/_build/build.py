@@ -53,10 +53,10 @@ def build_sll(fl,v,r):
 				sys.exit(1)
 	else:
 		def_l.extend(["_GNU_SOURCE"])
-		linux_def=[]
+		linux_opt=[]
 		for k in def_l:
-			linux_def.append("-D")
-			linux_def.append(k)
+			linux_opt.append("-D")
+			linux_opt.append(k)
 		if (r):
 			util.log("  Compiling Files (Release Mode)...")
 			out_fl=[]
@@ -64,7 +64,7 @@ def build_sll(fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"src/sll/include") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_def)):
+				if (hashlist.update(k,"src/sll/include") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt)):
 					hashlist.fail(k)
 					err=True
 			if (err):
@@ -77,19 +77,23 @@ def build_sll(fl,v,r):
 				if (util.execute(["strip",f"build/{lib_nm}.so","-s","-R",".note.*","-R",".comment"])):
 					sys.exit(1)
 		else:
+			link_opt=[]
+			if (len(os.getenv("GENERATE_COVERAGE",""))>0):
+				linux_opt.append("--coverage")
+				link_opt.append("--coverage")
 			util.log("  Compiling Files...")
 			out_fl=[]
 			err=False
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"src/sll/include") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_def)):
+				if (hashlist.update(k,"src/sll/include") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt)):
 					hashlist.fail(k)
 					err=True
 			if (err):
 				sys.exit(1)
 			util.log("  Linking Files...")
-			if (util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"])):
+			if (util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"]+link_opt)):
 				sys.exit(1)
 
 

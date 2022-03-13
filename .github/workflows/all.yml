@@ -156,15 +156,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Download release build
-        uses: actions/download-artifact@v2
+      - name: Setup python@3.9
+        uses: actions/setup-python@v3
         with:
-          name: release-linux
-          path: build
-      - name: Unpack release
-        run: unzip -o build/linux.zip -d build
-      - name: Test
-        run: build/sll tests/_runner.sll
+          python-version: 3.9
+      - name: Setup Gcovr
+        run: sudo apt install -y gcovr
+      - name: Build & Test
+        run: ${{env.BUILD_COMMAND}} --test
+        env:
+          GENERATE_COVERAGE: 1
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
+        with:
+          files: build/coverage.xml
+          verbose: true
   release:
     name: Create release
     needs:
