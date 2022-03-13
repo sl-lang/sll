@@ -169,11 +169,11 @@ jobs:
       - name: Test
         run: build/sll tests/_runner.sll
       - name: Generate coverage report
-        run: gcovr --json build/coverage.json build/objects/
+        run: gcovr -x build/coverage.xml build/objects/
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
-          files: build/coverage.json
+          files: build/coverage.xml
           verbose: true
   release:
     name: Create release
