@@ -55,9 +55,6 @@ __SLL_EXTERNAL void sll_allocator_resize(void** a,sll_size_t sz){
 		return;
 	}
 	sll_size_t mem_sz=(!sz?0:sz+(sz>>3)+(sz>>6));
-	if (sz&&!mem_sz){
-		mem_sz=8;
-	}
 	ALLOCATOR_HEADER_INIT(h,mem_sz);
 	h=sll_reallocate(h,(mem_sz<<3)+sizeof(allocator_header_t));
 	*a=PTR(ADDR(h)+sizeof(allocator_header_t));
