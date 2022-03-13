@@ -168,10 +168,11 @@ static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
 
 
 
-static sll_return_code_t _process_args(sll_array_length_t argc,const sll_char_t*const* argv){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_length_t argc,const sll_char_t*const* argv){
 	if (!argc){
 		return 0;
 	}
+	sll_init();
 	sll_return_code_t ec=0;
 	fl=0;
 	i_b=NULL;
@@ -642,168 +643,6 @@ _cleanup:
 	sll_deallocate(fp);
 	sll_deallocate(sl);
 	sll_free_internal_function_table(&i_ft);
-	sll_file_flush(sll_stdout);
-	sll_file_flush(sll_stderr);
+	sll_deinit();
 	return ec;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_length_t argc,const sll_char_t*const* argv){
-	sll_init();
-	sll_return_code_t o=_process_args(argc,argv);
-	sll_deinit();
-	return o;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main_raw(const sll_char_t* cmd){
-	if (!(*cmd)){
-		return 0;
-	}
-	sll_init();
-	const sll_char_t* o_cmd=cmd;
-	sll_string_length_t argc=1;
-	if (*cmd=='"'){
-		do{
-			cmd++;
-		} while (*cmd!='"');
-	}
-	else{
-		while (*cmd&&*cmd!=' '&&*cmd!='\t'){
-			cmd++;
-		}
-	}
-	while (*cmd==' '||*cmd=='\t'){
-		cmd++;
-	}
-	if (*cmd){
-		sll_array_length_t q=0;
-		sll_array_length_t s=0;
-		argc++;
-		do{
-			if (!q&&(*cmd==' '||*cmd=='\t')){
-				while (*cmd==' '||*cmd=='\t'){
-					cmd++;
-				}
-				if (*cmd){
-					argc++;
-				}
-				s=0;
-			}
-			else if (*cmd=='\\'){
-				s++;
-				cmd++;
-			}
-			else if (*cmd=='"'){
-				if (!(s&1)){
-					q++;
-				}
-				cmd++;
-				s=0;
-				while (*cmd=='"'){
-					q++;
-					cmd++;
-				}
-				q=(q%3)&1;
-			}
-			else{
-				s=0;
-				cmd++;
-			}
-		} while (*cmd);
-	}
-	sll_char_t** argv=sll_allocate(argc*sizeof(sll_char_t*)+(cmd-o_cmd+1)*sizeof(sll_char_t));
-	sll_char_t* d=(sll_char_t*)(ADDR(argv)+argc*sizeof(sll_char_t*));
-	sll_copy_data(o_cmd,cmd-o_cmd,d);
-	argv[0]=d;
-	argc=1;
-	cmd=o_cmd;
-	if (*d=='"'){
-		cmd++;
-		while (*cmd){
-			if (*cmd=='"'){
-				cmd++;
-				break;
-			}
-			*d=*cmd;
-			cmd++;
-			d++;
-		}
-	}
-	else{
-		while (*d&&*d!=' '&&*d!='\t'){
-			cmd++;
-			d++;
-		}
-		if (*cmd){
-			cmd++;
-		}
-	}
-	*d=0;
-	d++;
-	while (*cmd==' '||*cmd=='\t'){
-		cmd++;
-	}
-	if (*cmd){
-		argv[argc]=d;
-		argc++;
-		sll_array_length_t q=0;
-		sll_array_length_t s=0;
-		do{
-			if (!q&&(*cmd==' '||*cmd=='\t')){
-				*d=0;
-				d++;
-				s=0;
-				do{
-					cmd++;
-				} while (*cmd==' '||*cmd=='\t');
-				if (*cmd){
-					argv[argc]=d;
-					argc++;
-				}
-			}
-			else if (*cmd=='\\'){
-				*d=*cmd;
-				cmd++;
-				d++;
-				s++;
-			}
-			else if (*cmd=='"'){
-				if (s&1){
-					d-=(s>>1)+1;
-					*d='"';
-					d++;
-				}
-				else{
-					d-=s>>1;
-					q++;
-				}
-				cmd++;
-				s=0;
-				while (*cmd=='"'){
-					q++;
-					if (q==3){
-						*d='"';
-						d++;
-						q=0;
-					}
-					cmd++;
-				}
-				q&=1;
-			}
-			else{
-				*d=*cmd;
-				cmd++;
-				d++;
-				s=0;
-			}
-		} while (*cmd);
-		*d=0;
-	}
-	sll_return_code_t o=_process_args(argc-1,(const sll_char_t*const*)(argv+1));
-	sll_deallocate(argv);
-	sll_deinit();
-	return o;
 }

@@ -99,18 +99,13 @@ def build_sll_cli():
 		util.log("  Compiling Resource Files...")
 		if (util.execute(["rc","/r","/fo","build/app.res","/nologo","src/cli/resources/app.rc"])):
 			sys.exit(1)
-		util.log("  Compiling Files (Release Console Mode)...")
-		out_fp=util.output_file_path("src/cli/windows_console.c")
-		if (hashlist.update("src/cli/windows_console.c","build","src/cli/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","build","/I","src/cli/include","/Fo"+out_fp,"src/cli/windows_console.c"])):
-			hashlist.fail("src/cli/windows_console.c")
+		util.log("  Compiling Files (Release Mode)...")
+		out_fp=util.output_file_path("src/cli/windows.c")
+		if (hashlist.update("src/cli/windows.c","build","src/cli/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","build","/Fo"+out_fp,"src/cli/windows.c"])):
+			hashlist.fail("src/cli/windows.c")
 			sys.exit(1)
 		util.log("  Linking Files (Release Console Mode)...")
 		if (util.execute(["link",out_fp,"build/app.res","/OUT:build/sll.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"])):
-			sys.exit(1)
-		util.log("  Compiling Files (Release Mode)...")
-		out_fp=util.output_file_path("src/cli/windows.c")
-		if (hashlist.update("src/cli/windows.c","build","src/cli/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","build","/I","src/cli/include","/Fo"+out_fp,"src/cli/windows.c"])):
-			hashlist.fail("src/cli/windows.c")
 			sys.exit(1)
 		util.log("  Linking Files (Release Mode)...")
 		if (util.execute(["link",out_fp,"build/app.res","/OUT:build/sllw.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"])):

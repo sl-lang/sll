@@ -9,7 +9,12 @@
 ### Changed
 
 - Arrays now use the allocator API ([#224])
+- *\[Windows Only\]* Combined code for CLI console and window targets in the same file
 - Fixed invalid memory access bug in `sll_optimize_metadata`
+
+### Removed
+
+- Unused function `sll_cli_main_raw`
 
 ## [0.7.8] - 2022-03-12
 
