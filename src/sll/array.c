@@ -802,7 +802,7 @@ __SLL_EXTERNAL void sll_array_to_map(const sll_array_t* a,sll_map_t* o){
 	}
 	o->l=a->l;
 	sll_map_length_t e=a->l<<1;
-	o->v=sll_allocator_init(e*sizeof(sll_object_t*));
+	o->v=sll_allocate(e*sizeof(sll_object_t*));
 	sll_array_length_t i=0;
 	for (sll_map_length_t j=0;j<e;j+=2){
 		o->v[j]=sll_int_to_object(i);
