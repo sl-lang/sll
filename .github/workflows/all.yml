@@ -162,10 +162,14 @@ jobs:
           python-version: 3.9
       - name: Setup Gcovr
         run: sudo apt install -y gcovr
-      - name: Build & Test
-        run: ${{env.BUILD_COMMAND}} --test
+      - name: Build
+        run: ${{env.BUILD_COMMAND}}
         env:
           GENERATE_COVERAGE: 1
+      - name: Test
+        run: build/sll tests/_runner.sll
+      - name: Generate coverage report
+        run: gcovr -x build/coverage.xml build/objects/
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
