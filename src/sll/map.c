@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/allocator.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -359,7 +360,7 @@ __SLL_EXTERNAL void sll_map_keys(const sll_map_t* m,sll_array_t* o){
 		return;
 	}
 	o->l=m->l;
-	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
+	o->v=sll_allocator_init(o->l*sizeof(sll_object_t*));
 	for (sll_array_length_t i=0;i<o->l;i++){
 		o->v[i]=m->v[i<<1];
 		SLL_ACQUIRE(o->v[i]);
@@ -484,7 +485,7 @@ __SLL_EXTERNAL void sll_map_to_array(const sll_map_t* m,sll_array_t* o){
 		return;
 	}
 	o->l=m->l<<1;
-	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
+	o->v=sll_allocator_init(o->l*sizeof(sll_object_t*));
 	for (sll_array_length_t i=0;i<o->l;i++){
 		o->v[i]=m->v[i];
 		SLL_ACQUIRE(o->v[i]);
@@ -499,7 +500,7 @@ __SLL_EXTERNAL void sll_map_values(const sll_map_t* m,sll_array_t* o){
 		return;
 	}
 	o->l=m->l;
-	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
+	o->v=sll_allocator_init(o->l*sizeof(sll_object_t*));
 	for (sll_array_length_t i=0;i<o->l;i++){
 		o->v[i]=m->v[(i<<1)+1];
 		SLL_ACQUIRE(o->v[i]);

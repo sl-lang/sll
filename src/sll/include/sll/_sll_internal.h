@@ -370,6 +370,12 @@ static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned lo
 		} \
 	} while (0)
 
+#define ALLOCATOR_HEADER_GET_SIZE(h) ((h)->dt)
+#define ALLOCATOR_HEADER_INIT(h,sz) \
+	do{ \
+		(h)->dt=(sz); \
+	} while (0)
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
@@ -774,6 +780,12 @@ typedef struct __SOURCE_FILE_LIST{
 	source_file_with_index_t* dt;
 	sll_source_file_index_t l;
 } source_file_list_t;
+
+
+
+typedef struct __ALLOCATOR_HEADER{
+	__SLL_U64 dt;
+} allocator_header_t;
 
 
 

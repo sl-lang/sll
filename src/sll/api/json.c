@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/allocator.h>
 #include <sll/api.h>
 #include <sll/api/json.h>
 #include <sll/api/math.h>
@@ -236,7 +237,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 				return NULL;
 			}
 			a->l++;
-			a->v=sll_reallocate(a->v,a->l*sizeof(sll_object_t*));
+			sll_allocator_resize((void**)(&(a->v)),a->l*sizeof(sll_object_t*));
 			a->v[a->l-1]=k;
 			c=**p;
 			(*p)++;

@@ -546,13 +546,7 @@ __SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_ar
 			}
 		}
 		o->l=i;
-		if (!o->l){
-			sll_deallocate(o->v);
-			o->v=NULL;
-		}
-		else{
-			sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
-		}
+		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
 		return;
 	}
 	if (!a->l){
@@ -570,13 +564,7 @@ __SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_ar
 		}
 	}
 	o->l=i;
-	if (!o->l){
-		sll_deallocate(o->v);
-		o->v=NULL;
-	}
-	else{
-		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
-	}
+	sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
 }
 
 
@@ -601,13 +589,7 @@ __SLL_EXTERNAL void sll_array_remove_multiple(const sll_array_t* a,sll_object_t*
 _skip_value:;
 	}
 	o->l=i;
-	if (!o->l){
-		sll_deallocate(o->v);
-		o->v=NULL;
-	}
-	else{
-		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
-	}
+	sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
 }
 
 
@@ -884,7 +866,7 @@ __SLL_EXTERNAL void sll_free_array(sll_array_t* a){
 	for (sll_array_length_t i=0;i<a->l;i++){
 		sll_release_object(a->v[i]);
 	}
-	sll_deallocate(a->v);
+	sll_allocator_release(a->v);
 	a->v=NULL;
 	a->l=0;
 }

@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/allocator.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -14,7 +15,6 @@
 
 
 #define INIT_PADDING(v,l) (*((wide_data_t*)((v)+((l)&0xfffffffffffffff8ull)))=0)
-#define SPLIT_CHAR_ALLOCATION_SIZE 16
 
 #define STRING_DATA_PTR(x) ASSUME_ALIGNED(x,4,8)
 
@@ -195,7 +195,7 @@ __SLL_EXTERNAL void sll_string_combinations(const sll_string_t* a,const sll_stri
 		return;
 	}
 	o->l=a->l*b->l;
-	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
+	o->v=sll_allocator_init(o->l*sizeof(sll_object_t*));
 	sll_array_length_t i=0;
 	for (sll_string_length_t j=0;j<a->l;j++){
 		for (sll_string_length_t k=0;k<b->l;k++){
@@ -1199,7 +1199,7 @@ __SLL_EXTERNAL void sll_string_op_array(const sll_string_t* s,const sll_array_t*
 		e=s->l;
 		o->l=a->l;
 	}
-	o->v=sll_allocate(o->l*sizeof(sll_object_t*));
+	o->v=sll_allocator_init(o->l*sizeof(sll_object_t*));
 	for (sll_array_length_t i=0;i<e;i++){
 		o->v[i]=(inv?f(a->v[i],sll_static_char[s->v[i]]):f(sll_static_char[s->v[i]],a->v[i]));
 	}
@@ -1711,7 +1711,7 @@ __SLL_EXTERNAL void sll_string_shift(const sll_string_t* s,sll_integer_t v,sll_s
 __SLL_EXTERNAL void sll_string_split(const sll_string_t* s,const sll_string_t* p,sll_array_t* o){
 	if (!s->l){
 		o->l=1;
-		o->v=sll_allocate(sizeof(sll_object_t*));
+		o->v=sll_allocator_init(sizeof(sll_object_t*));
 		o->v[0]=sll_create_object();
 		o->v[0]->t=SLL_OBJECT_TYPE_STRING;
 		sll_string_create(0,&(o->v[0]->dt.s));
@@ -1733,14 +1733,14 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* s,const sll_string_t* p
 __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll_array_t* o){
 	if (!s->l){
 		o->l=1;
-		o->v=sll_allocate(sizeof(sll_object_t*));
+		o->v=sll_allocator_init(sizeof(sll_object_t*));
 		o->v[0]=sll_create_object();
 		o->v[0]->t=SLL_OBJECT_TYPE_STRING;
 		sll_string_create(0,&(o->v[0]->dt.s));
 		return;
 	}
-	o->l=SPLIT_CHAR_ALLOCATION_SIZE;
-	o->v=sll_allocate(SPLIT_CHAR_ALLOCATION_SIZE*sizeof(sll_object_t*));
+	o->l=0;
+	o->v=NULL;
 	const wide_data_t* p=(const wide_data_t*)(s->v);
 	STRING_DATA_PTR(p);
 	wide_data_t m=0x101010101010101ull*c;
@@ -1759,10 +1759,8 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 			else{
 				sll_string_create(0,&(n->dt.s));
 			}
-			if (i==o->l){
-				o->l+=SPLIT_CHAR_ALLOCATION_SIZE;
-				o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
-			}
+			o->l++;
+			sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
 			o->v[i]=n;
 			i++;
 			j=l+1;
@@ -1777,16 +1775,9 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 	else{
 		sll_string_create(0,&(n->dt.s));
 	}
-	if (i==o->l){
-		o->l++;
-		o->v=sll_reallocate(o->v,o->l*sizeof(sll_object_t*));
-	}
+	o->l++;
+	sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
 	o->v[i]=n;
-	i++;
-	if (i!=o->l){
-		o->l=i;
-		o->v=sll_reallocate(o->v,i*sizeof(sll_object_t*));
-	}
 }
 
 
@@ -1810,7 +1801,7 @@ __SLL_EXTERNAL void sll_string_subtract_array(const sll_string_t* s,const sll_ar
 			return;
 		}
 		o->l=a->l;
-		o->v=sll_allocate(a->l*sizeof(sll_object_t*));
+		o->v=sll_allocator_init(a->l*sizeof(sll_object_t*));
 		sll_string_length_t i=0;
 		for (;i<s->l;i++){
 			o->v[i]=sll_operator_sub(sll_static_char[s->v[i]],a->v[i]);
@@ -1826,7 +1817,7 @@ __SLL_EXTERNAL void sll_string_subtract_array(const sll_string_t* s,const sll_ar
 		return;
 	}
 	o->l=s->l;
-	o->v=sll_allocate(s->l*sizeof(sll_object_t*));
+	o->v=sll_allocator_init(s->l*sizeof(sll_object_t*));
 	STRING_DATA_PTR(o->v);
 	sll_array_length_t i=0;
 	do{
@@ -1874,7 +1865,7 @@ __SLL_EXTERNAL void sll_string_title_case(const sll_string_t* s,sll_string_t* o)
 
 __SLL_EXTERNAL void sll_string_to_array(const sll_string_t* s,sll_array_t* o){
 	o->l=s->l;
-	o->v=sll_allocate(s->l*sizeof(sll_object_t*));
+	o->v=sll_allocator_init(s->l*sizeof(sll_object_t*));
 	for (sll_string_length_t i=0;i<s->l;i++){
 		o->v[i]=SLL_FROM_CHAR(s->v[i]);
 	}

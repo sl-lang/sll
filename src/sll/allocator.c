@@ -8,7 +8,6 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_from_memory(void* ptr,sll_size_t sz){
-	SLL_ASSERT(!(sz&7));
 	void* o=sll_allocator_init(sz);
 	sll_copy_data(ptr,sz,o);
 	return o;
@@ -18,18 +17,35 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_from_memory(void* ptr,sll_
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_init(sll_size_t sz){
 	SLL_ASSERT(!(sz&7));
-	return sll_allocate(sz);
+	allocator_header_t* o=sll_allocate(sz+sizeof(allocator_header_t));
+	ALLOCATOR_HEADER_INIT(o,sz>>3);
+	return PTR(ADDR(o)+sizeof(allocator_header_t));
 }
 
 
 
 __SLL_EXTERNAL void sll_allocator_release(void* a){
-	sll_deallocate(a);
+	if (!a){
+		return;
+	}
+	sll_deallocate(PTR(ADDR(a)-sizeof(allocator_header_t)));
 }
 
 
 
 __SLL_EXTERNAL void sll_allocator_resize(void** a,sll_size_t sz){
+	if (!*a){
+		*a=sll_allocator_init(sz);
+		return;
+	}
 	SLL_ASSERT(!(sz&7));
-	*a=sll_reallocate(*a,sz);
+	sz>>=3;
+	allocator_header_t* h=PTR(ADDR(*a)-sizeof(allocator_header_t));
+	if (ALLOCATOR_HEADER_GET_SIZE(h)>=sz&&sz>=(ALLOCATOR_HEADER_GET_SIZE(h)>>1)){
+		return;
+	}
+	sll_size_t mem_sz=(!sz?0:sz+(sz>>3)+(sz>>6)+4);
+	ALLOCATOR_HEADER_INIT(h,mem_sz);
+	h=sll_reallocate(h,(mem_sz<<3)+sizeof(allocator_header_t));
+	*a=PTR(ADDR(h)+sizeof(allocator_header_t));
 }
