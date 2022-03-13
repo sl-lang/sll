@@ -781,7 +781,6 @@ typedef struct __SOURCE_FILE_LIST{
 extern void* _win_dll_handle;
 #endif
 extern thread_data_t* _scheduler_current_thread;
-extern sll_thread_index_t _scheduler_thread_idx;
 
 
 
