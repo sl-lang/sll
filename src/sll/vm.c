@@ -243,12 +243,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_bool_t async){
 	if (!sll_current_runtime_data||!sll_current_vm_config){
 		return NULL;
 	}
 	sll_thread_index_t tid=sll_thread_create(fn_idx,al,all);
-	sll_object_t* o=sll_wait_thread(tid);
+	sll_object_t* o;
+	if (async){
+		o=sll_wait_thread(tid);
+	}
+	else{
+		sll_thread_index_t s_tid=sll_current_thread_index;
+		sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+		_scheduler_set_thread(tid);
+		o=sll_wait_thread(tid);
+		SLL_ASSERT(sll_current_thread_index==SLL_UNKNOWN_THREAD_INDEX);
+		if (s_tid!=SLL_UNKNOWN_THREAD_INDEX){
+			_scheduler_set_thread(s_tid);
+		}
+	}
 	if (!sll_thread_delete(tid)){
 		SLL_UNREACHABLE();
 	}
@@ -265,9 +278,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_vm_get_instruction_count(void){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index_t tid){
 	sll_thread_index_t s_tid=sll_current_thread_index;
-	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
-	_scheduler_set_thread(tid);
-	thread_data_t* tid_dt=_scheduler_current_thread;
+	if (s_tid==SLL_UNKNOWN_THREAD_INDEX){
+		_scheduler_set_thread(tid);
+	}
+	thread_data_t* tid_dt=_scheduler_get_thread(tid);
 	if (_scheduler_current_thread->ret){
 		goto _cleanup;
 	}
@@ -277,8 +291,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 	sll_bool_t io=!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO);
 	while (1){
 		if (_scheduler_current_thread->ii>=sll_current_runtime_data->a_dt->ic||_scheduler_current_thread->si>=sll_current_vm_config->s_sz){
-			_scheduler_terminate_thread( SLL_ACQUIRE_STATIC_INT(0));
-			goto _cleanup;
+			SLL_UNIMPLEMENTED();
 		}
 		if (!_scheduler_current_thread->tm){
 			_scheduler_queue_next();

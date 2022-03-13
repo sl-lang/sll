@@ -73,7 +73,7 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 	}
 	sll_object_t** tmp=sll_allocate_stack(l*sizeof(sll_object_t*));
 	for (sll_array_length_t i=0;i<l;i++){
-		*(tmp+i)=sll_execute_function(fn,a+i,1);
+		*(tmp+i)=sll_execute_function(fn,a+i,1,0);
 	}
 	_quicksort_extra((const sll_object_t**)tmp,(const sll_object_t**)a,l-1,cmp);
 	for (sll_array_length_t i=0;i<l;i++){

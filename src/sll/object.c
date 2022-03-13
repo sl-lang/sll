@@ -79,7 +79,7 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 					n->dt.p=sll_allocate(n_dt->l*sizeof(sll_object_field_t));
 					_zero_struct(tt,n_dt,n->dt.p,0);
 					if (n_dt->fn.init){
-						sll_release_object(sll_execute_function(n_dt->fn.init,&n,1));
+						sll_release_object(sll_execute_function(n_dt->fn.init,&n,1,0));
 					}
 					p->o=n;
 					break;
@@ -148,7 +148,7 @@ static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_o
 		d++;
 	}
 	if (dt->fn.init){
-		sll_release_object(sll_execute_function(dt->fn.init,&o,1));
+		sll_release_object(sll_execute_function(dt->fn.init,&o,1,0));
 	}
 }
 
@@ -401,7 +401,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 		dst++;
 	}
 	if (dt->fn.copy){
-		sll_release_object(sll_execute_function(dt->fn.copy,&n,1));
+		sll_release_object(sll_execute_function(dt->fn.copy,&n,1,0));
 	}
 	return n;
 }

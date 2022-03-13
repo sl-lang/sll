@@ -4,6 +4,7 @@
 
 ### Added
 
+- Ability to execute functions asynchronously via `sll_execute_function`
 - Allocator API: `sll_allocator_from_memory`, `sll_allocator_init`, `sll_allocator_move`, `sll_allocator_release` and `sll_allocator_resize` ([#224])
 
 ### Changed

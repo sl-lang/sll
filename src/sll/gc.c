@@ -24,17 +24,12 @@ static sll_ref_count_t _gc_dealloc=0;
 
 
 void _gc_release_data(void){
-	if (!_gc_page_ptr){
-		return;
-	}
 	SLL_ASSERT(_gc_alloc==_gc_dealloc);
-	void* c=_gc_page_ptr;
-	while (c){
-		void* n=*((void**)c);
-		sll_platform_free_page(c,SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE));
-		c=n;
+	while (_gc_page_ptr){
+		void* n=*((void**)_gc_page_ptr);
+		sll_platform_free_page(_gc_page_ptr,SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE));
+		_gc_page_ptr=n;
 	}
-	_gc_page_ptr=NULL;
 }
 
 
@@ -88,7 +83,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->fn.del){
 					o->rc++;
-					sll_release_object(sll_execute_function(dt->fn.del,&o,1));
+					sll_release_object(sll_execute_function(dt->fn.del,&o,1,0));
 					o->rc--;
 					if (o->rc){
 						return;

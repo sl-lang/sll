@@ -240,6 +240,9 @@ void _scheduler_terminate_thread(sll_object_t* ret){
 	_scheduler_current_thread=*(_scheduler_thread+sll_current_thread_index);
 	while (_scheduler_current_thread->nxt!=SLL_UNKNOWN_THREAD_INDEX){
 		_scheduler_current_thread->st=THREAD_STATE_QUEUED;
+		if (_scheduler_current_thread->suspended){
+			SLL_UNIMPLEMENTED();
+		}
 		_scheduler_queue_thread(sll_current_thread_index);
 		sll_current_thread_index=_scheduler_current_thread->nxt;
 		_scheduler_current_thread=*(_scheduler_thread+sll_current_thread_index);
