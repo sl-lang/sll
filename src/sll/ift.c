@@ -1,6 +1,8 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/ift.h>
+#include <sll/internal/api.h>
+#include <sll/internal/common.h>
+#include <sll/internal/platform.h>
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -65,7 +67,6 @@ __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_
 	i_ft->dt=sll_reallocate(PTR(i_ft->dt),i_ft->l*sizeof(const sll_internal_function_t));
 	sll_internal_function_t* nf=(sll_internal_function_t*)(i_ft->dt+i_ft->l-1);
 	sll_string_from_pointer(nm,&(nf->nm));
-	CHECK_INTERNAL_FUNCTION_NAME(&(nf->nm));
 	nf->p=f;
 	return i_ft->l-1;
 }
@@ -79,7 +80,6 @@ __SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_functio
 	sll_internal_function_t* p=(sll_internal_function_t*)(ift->dt+ift->l-_ifunc_size);
 	for (sll_function_index_t i=0;i<_ifunc_size;i++){
 		sll_string_from_pointer(f->nm,&(p->nm));
-		CHECK_INTERNAL_FUNCTION_NAME(&(p->nm));
 		p->p=f->f;
 		f++;
 		p++;

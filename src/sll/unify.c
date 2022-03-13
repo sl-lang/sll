@@ -1,9 +1,11 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/identifier.h>
 #include <sll/memory.h>
 #include <sll/node.h>
+#include <sll/internal/common.h>
+#include <sll/internal/stack.h>
+#include <sll/internal/unify.h>
 #include <sll/string_table.h>
 #include <sll/types.h>
 

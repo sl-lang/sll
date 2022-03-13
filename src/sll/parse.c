@@ -1,4 +1,3 @@
-#include <sll/_sll_internal.h>
 #include <sll/allocator.h>
 #include <sll/api/math.h>
 #include <sll/common.h>
@@ -6,6 +5,11 @@
 #include <sll/file.h>
 #include <sll/identifier.h>
 #include <sll/ift.h>
+#include <sll/internal/common.h>
+#include <sll/internal/file.h>
+#include <sll/internal/parse.h>
+#include <sll/internal/stack.h>
+#include <sll/internal/static_string.h>
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/string.h>

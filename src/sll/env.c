@@ -1,5 +1,5 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/internal/common.h>
 #include <sll/memory.h>
 #include <sll/platform/util.h>
 #include <sll/string.h>

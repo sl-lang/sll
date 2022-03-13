@@ -1,6 +1,7 @@
-#include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/common.h>
+#include <sll/internal/api.h>
+#include <sll/internal/intrinsics.h>
 #include <sll/types.h>
 
 

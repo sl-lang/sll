@@ -1,7 +1,8 @@
-#include <sll/_sll_internal.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/internal/intrinsics.h>
+#include <sll/internal/static_string.h>
 #include <sll/object.h>
 #include <sll/sandbox.h>
 #include <sll/types.h>

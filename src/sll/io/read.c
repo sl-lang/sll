@@ -1,9 +1,11 @@
-#include <sll/_sll_internal.h>
 #include <sll/api/serial.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
+#include <sll/internal/intrinsics.h>
+#include <sll/internal/magic_number.h>
+#include <sll/internal/stack.h>
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/object.h>

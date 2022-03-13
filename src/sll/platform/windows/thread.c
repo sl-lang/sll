@@ -1,6 +1,7 @@
 #include <windows.h>
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
+#include <sll/internal/common.h>
+#include <sll/internal/platform.h>
 #include <sll/platform/thread.h>
 #include <sll/types.h>
 

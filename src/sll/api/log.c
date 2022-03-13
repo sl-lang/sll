@@ -1,7 +1,7 @@
-#include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/string.h>
 #include <sll/common.h>
+#include <sll/internal/api.h>
 #include <sll/location.h>
 #include <sll/log.h>
 #include <sll/scheduler.h>

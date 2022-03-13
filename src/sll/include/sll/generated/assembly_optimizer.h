@@ -1,7 +1,7 @@
 #ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__
 #define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1
-#include <sll/_sll_internal.h>
 #include <sll/assembly.h>
+#include <sll/internal/assembly.h>
 #include <sll/types.h>
 
 

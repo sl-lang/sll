@@ -1,4 +1,3 @@
-#include <sll/_sll_internal.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
 #include <sll/api/json.h>
@@ -8,6 +7,9 @@
 #include <sll/data.h>
 #include <sll/file.h>
 #include <sll/init.h>
+#include <sll/internal/api.h>
+#include <sll/internal/common.h>
+#include <sll/internal/json.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>

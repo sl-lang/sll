@@ -1,8 +1,8 @@
-#include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/common.h>
-#include <sll/string.h>
+#include <sll/internal/api.h>
 #include <sll/object.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 

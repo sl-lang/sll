@@ -1,10 +1,13 @@
-#include <sll/_sll_internal.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/gc.h>
 #include <sll/generated/assembly_optimizer.h>
 #include <sll/identifier.h>
+#include <sll/internal/assembly.h>
+#include <sll/internal/common.h>
+#include <sll/internal/intrinsics.h>
+#include <sll/internal/stack.h>
 #include <sll/location.h>
 #include <sll/memory.h>
 #include <sll/node.h>
@@ -1720,7 +1723,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				sll_bool_t d=!(o->dt.ac&1);
 				o=_generate_on_stack(o+1,g_dt);
 				l=(l-1)>>1;
-				object_label_t* m=sll_allocate((l+1)*sizeof(object_label_t));
+				node_label_t* m=sll_allocate((l+1)*sizeof(node_label_t));
 				sll_arg_count_t i=0;
 				while (l){
 					l--;

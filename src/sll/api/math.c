@@ -1,13 +1,15 @@
-#include <sll/_sll_internal.h>
+#include <math.h>
 #include <sll/api.h>
 #include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/internal/api.h>
+#include <sll/internal/intrinsics.h>
+#include <sll/internal/util.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
-#include <math.h>
 
 
 

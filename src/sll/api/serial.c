@@ -1,4 +1,3 @@
-#include <sll/_sll_internal.h>
 #include <sll/api/file.h>
 #include <sll/api/serial.h>
 #include <sll/array.h>
@@ -6,6 +5,9 @@
 #include <sll/data.h>
 #include <sll/file.h>
 #include <sll/gc.h>
+#include <sll/internal/api.h>
+#include <sll/internal/common.h>
+#include <sll/internal/serial.h>
 #include <sll/map.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
@@ -120,8 +122,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 				}
 				return o;
 			}
-		case SERIAL_OBJECT_TYPE:
-			SLL_UNIMPLEMENTED();
 		case SLL_END_OF_DATA:
 			return SLL_ACQUIRE_STATIC_INT(0);
 		default:
@@ -236,7 +236,10 @@ __SLL_EXTERNAL void sll_encode_object(sll_file_t* f,sll_object_t*const* a,sll_ar
 		sll_object_t* k=*a;
 		a++;
 		ac--;
-		sll_file_write_char(f,(SLL_OBJECT_GET_TYPE(k)>SLL_MAX_OBJECT_TYPE?SERIAL_OBJECT_TYPE:SLL_OBJECT_GET_TYPE(k)),NULL);
+		if (SLL_OBJECT_GET_TYPE(k)>SLL_MAX_OBJECT_TYPE){
+			SLL_UNIMPLEMENTED();
+		}
+		sll_file_write_char(f,SLL_OBJECT_GET_TYPE(k),NULL);
 		switch (SLL_OBJECT_GET_TYPE(k)){
 			case SLL_OBJECT_TYPE_INT:
 				sll_encode_signed_integer(f,k->dt.i);

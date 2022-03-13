@@ -1,6 +1,7 @@
-#include <sll/_sll_internal.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/internal/common.h>
+#include <sll/internal/static_string.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>

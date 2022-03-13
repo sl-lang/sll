@@ -1,7 +1,9 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>
+#include <sll/internal/common.h>
+#include <sll/internal/dispatcher.h>
+#include <sll/internal/scheduler.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform/_dispatcher.h>

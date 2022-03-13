@@ -1,8 +1,8 @@
-#include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/file.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/internal/api.h>
 #include <sll/location.h>
 #include <sll/object.h>
 #include <sll/scheduler.h>
@@ -39,7 +39,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_
 
 
 
-__API_FUNC_DECL(vm_get_config){
+__API_FUNC(vm_get_config){
 	sll_array_create(5,out);
 	out->v[0]=sll_int_to_object(sll_current_vm_config->s_sz);
 	out->v[1]=sll_int_to_object(sll_current_vm_config->c_st_sz);
@@ -50,19 +50,19 @@ __API_FUNC_DECL(vm_get_config){
 
 
 
-__API_FUNC_DECL(vm_get_instruction_count){
+__API_FUNC(vm_get_instruction_count){
 	return sll_vm_get_instruction_count();
 }
 
 
 
-__API_FUNC_DECL(vm_get_instruction_index){
+__API_FUNC(vm_get_instruction_index){
 	return sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX);
 }
 
 
 
-__API_FUNC_DECL(vm_get_location){
+__API_FUNC(vm_get_location){
 	sll_instruction_index_t ii;
 	if (a<0){
 		const sll_call_stack_t* c_st=sll_thread_get_call_stack(sll_current_thread_index);
@@ -76,6 +76,6 @@ __API_FUNC_DECL(vm_get_location){
 
 
 
-__API_FUNC_DECL(vm_get_ref_count){
+__API_FUNC(vm_get_ref_count){
 	return a->rc;
 }

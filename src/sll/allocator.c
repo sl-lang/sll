@@ -1,7 +1,8 @@
-#include <sll/_sll_internal.h>
 #include <sll/allocator.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/internal/allocator.h>
+#include <sll/internal/common.h>
 #include <sll/memory.h>
 #include <sll/types.h>
 

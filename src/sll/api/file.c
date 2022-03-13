@@ -1,4 +1,3 @@
-#include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/api/string.h>
@@ -8,6 +7,8 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/init.h>
+#include <sll/internal/api.h>
+#include <sll/internal/file.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform/path.h>

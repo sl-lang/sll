@@ -12,7 +12,7 @@ HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^\"]*\")\s*$""",re.MULTILINE)
-INTERNAL_SLL_HEADERS=["assembly_optimizer.h","help_text.h","_sll_internal.h","_dispatcher.h","memory_fail.h"]
+INTERNAL_SLL_HEADERS=["assembly_optimizer.h","help_text.h","_dispatcher.h","_sll_internal.h","memory_fail.h"]
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
 NUMBERS=b"0123456789"
@@ -182,6 +182,8 @@ def parse_headers(fp):
 	il=[]
 	fp=fp.replace("\\","/").rstrip("/")+"/"
 	for r,_,fl in os.walk(fp):
+		if ("internal" in r):
+			continue
 		for f in fl:
 			if (f[-2:]==".h" and f not in INTERNAL_SLL_HEADERS):
 				with open(os.path.join(r,f),"rb") as rf:

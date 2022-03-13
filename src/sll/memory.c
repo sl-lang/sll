@@ -1,8 +1,10 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
 #include <sll/generated/memory_fail.h>
+#include <sll/internal/intrinsics.h>
+#include <sll/internal/memory.h>
+#include <sll/internal/platform.h>
 #include <sll/memory.h>
 #include <sll/platform/file.h>
 #include <sll/platform/memory.h>
@@ -39,7 +41,7 @@
 
 
 
-static small_bitmap_t _memory_data_mask=0;
+static bitmap_t _memory_data_mask=0;
 static mem_block_t* _memory_head_blocks[ALLOCATOR_MAX_SMALL_SIZE>>4];
 static page_header_t* _memory_page_head=NULL;
 #ifdef USE_STACK_ALLOCATOR
@@ -109,13 +111,13 @@ static void* _allocate_chunk(sll_size_t sz){
 	SLL_ASSERT(sz>=16&&sz<=ALLOCATOR_MAX_SMALL_SIZE&&!(sz&15));
 	bucket_index_t i=(bucket_index_t)((sz>>4)-1);
 _find_block:
-	if (_memory_data_mask&(1<<i)){
+	if (_memory_data_mask&(1ull<<i)){
 		mem_block_t* b=_memory_head_blocks[i];
 		if (b->n){
 			_memory_head_blocks[i]=b->n;
 		}
 		else{
-			_memory_data_mask&=~(1<<i);
+			_memory_data_mask&=~(1ull<<i);
 		}
 		user_mem_block_t* o=(user_mem_block_t*)b;
 		o->dt=USED_BLOCK_FLAG_USED|sz;
@@ -123,16 +125,16 @@ _find_block:
 	}
 	if (i<(ALLOCATOR_MAX_SMALL_SIZE>>5)){
 		bucket_index_t j=(i<<1)+1;
-		if (_memory_data_mask&(1<<j)){
+		if (_memory_data_mask&(1ull<<j)){
 			mem_block_t* a=_memory_head_blocks[j];
 			if (a->n){
 				_memory_head_blocks[j]=a->n;
 			}
 			else{
-				_memory_data_mask&=~(1<<j);
+				_memory_data_mask&=~(1ull<<j);
 			}
 			a->n=NULL;
-			_memory_data_mask|=1<<i;
+			_memory_data_mask|=1ull<<i;
 			_memory_head_blocks[i]=a;
 			user_mem_block_t* o=(user_mem_block_t*)(ADDR(a)+sz);
 			o->dt=USED_BLOCK_FLAG_USED|sz;
@@ -140,7 +142,7 @@ _find_block:
 		}
 	}
 	if (i+1<(ALLOCATOR_MAX_SMALL_SIZE>>4)){
-		small_bitmap_t v=_memory_data_mask>>(i+1);
+		bitmap_t v=_memory_data_mask>>(i+1);
 		if (v){
 			bucket_index_t j=FIND_FIRST_SET_BIT(v)+i+1;
 			SLL_ASSERT(j<(ALLOCATOR_MAX_SMALL_SIZE>>4));
@@ -149,15 +151,15 @@ _find_block:
 				_memory_head_blocks[j]=b->n;
 			}
 			else{
-				_memory_data_mask&=~(1<<j);
+				_memory_data_mask&=~(1ull<<j);
 			}
 			user_mem_block_t* o=(user_mem_block_t*)b;
 			o->dt=USED_BLOCK_FLAG_USED|sz;
 			i=j-i-1;
 			SLL_ASSERT(i<(ALLOCATOR_MAX_SMALL_SIZE>>4));
 			b=(mem_block_t*)(ADDR(b)+sz);
-			b->n=((_memory_data_mask&(1<<i))?_memory_head_blocks[i]:NULL);
-			_memory_data_mask|=1<<i;
+			b->n=((_memory_data_mask&(1ull<<i))?_memory_head_blocks[i]:NULL);
+			_memory_data_mask|=1ull<<i;
 			_memory_head_blocks[i]=b;
 			return PTR(ADDR(o)+sizeof(user_mem_block_t));
 		}
@@ -170,8 +172,8 @@ _find_block:
 	pg=(void*)((ADDR(pg)+sizeof(page_header_t)+15)&0xfffffffffffffff0ull);
 	while (pg_sz>=ALLOCATOR_MAX_SMALL_SIZE){
 		mem_block_t* b=pg;
-		b->n=((_memory_data_mask&(1<<((ALLOCATOR_MAX_SMALL_SIZE>>4)-1)))?_memory_head_blocks[(ALLOCATOR_MAX_SMALL_SIZE>>4)-1]:NULL);
-		_memory_data_mask|=1<<((ALLOCATOR_MAX_SMALL_SIZE>>4)-1);
+		b->n=((_memory_data_mask&(1ull<<((ALLOCATOR_MAX_SMALL_SIZE>>4)-1)))?_memory_head_blocks[(ALLOCATOR_MAX_SMALL_SIZE>>4)-1]:NULL);
+		_memory_data_mask|=1ull<<((ALLOCATOR_MAX_SMALL_SIZE>>4)-1);
 		_memory_head_blocks[(ALLOCATOR_MAX_SMALL_SIZE>>4)-1]=b;
 		pg_sz-=ALLOCATOR_MAX_SMALL_SIZE;
 		pg=PTR(ADDR(pg)+ALLOCATOR_MAX_SMALL_SIZE);
@@ -179,8 +181,8 @@ _find_block:
 	if (pg_sz>=16){
 		bucket_index_t j=(bucket_index_t)((pg_sz>>4)-1);
 		mem_block_t* b=pg;
-		b->n=((_memory_data_mask&(1<<j))?_memory_head_blocks[j]:NULL);
-		_memory_data_mask|=1<<j;
+		b->n=((_memory_data_mask&(1ull<<j))?_memory_head_blocks[j]:NULL);
+		_memory_data_mask|=1ull<<j;
 		_memory_head_blocks[j]=b;
 	}
 	goto _find_block;
@@ -224,8 +226,8 @@ static void _release_chunk(user_mem_block_t* b){
 	SLL_ASSERT(USED_BLOCK_GET_SIZE(b)<=ALLOCATOR_MAX_SMALL_SIZE);
 	bucket_index_t i=(bucket_index_t)((USED_BLOCK_GET_SIZE(b)>>4)-1);
 	mem_block_t* n=(mem_block_t*)b;
-	n->n=((_memory_data_mask&(1<<i))?_memory_head_blocks[i]:NULL);
-	_memory_data_mask|=1<<i;
+	n->n=((_memory_data_mask&(1ull<<i))?_memory_head_blocks[i]:NULL);
+	_memory_data_mask|=1ull<<i;
 	_memory_head_blocks[i]=n;
 }
 

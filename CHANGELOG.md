@@ -12,6 +12,7 @@
 - *\[Windows Only\]* Combined code for CLI console and window targets in the same file
 - Fixed declaration of raw API functions
 - Fixed invalid memory access bug in `sll_copy_data` and `sll_optimize_metadata`
+- Split the [`src/sll/include/sll/_sll_internal.h`][0.7.8/src/sll/include/sll/_sll_internal.h] header into multiple headers located in [`src/sll/include/sll/internal`][0.7.9/src/sll/include/sll/internal]
 
 ### Removed
 
@@ -48,7 +49,7 @@
 - Renamed platform source files from `linux_xxx.c` and `windows_xxx.c` to `xxx.c`
 - Replaced VM global variables (`sll_current_instruction_count` and `sll_current_instruction_index`) with functions (`sll_vm_get_instruction_count` and `sll_thread_get_instruction_index`)
 - Reversed the bundle search order ([#246])
-- Split the [`src/sll/include/sll/platform.h`][0.7.8/src/sll/include/sll/platform.h] header into multiple headers located in [`src/sll/include/sll/platform`][0.7.8/src/sll/include/sll/platform]
+- Split the [`src/sll/include/sll/platform.h`][0.7.7/src/sll/include/sll/platform.h] header into multiple headers located in [`src/sll/include/sll/platform`][0.7.8/src/sll/include/sll/platform]
 - Standard input is now opened in non-blocking mode
 - Storage of functions in the internal function table
 
@@ -1988,8 +1989,10 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[0.7.9/src/sll/include/sll/internal]: https:/github.com/sl-lang/sll/tree/sll-v0.7.8/src/sll/include/sll/internal
+[0.7.8/src/sll/include/sll/_sll_internal.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.7/src/sll/include/sll/_sll_internal.h
 [0.7.8/src/sll/include/sll/platform]: https:/github.com/sl-lang/sll/tree/sll-v0.7.8/src/sll/include/sll/platform
-[0.7.8/src/sll/include/sll/platform.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.8/src/sll/include/sll/platform.h
+[0.7.7/src/sll/include/sll/platform.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.7/src/sll/include/sll/platform.h
 [0.7.0/src/sll/api/_generated_raw.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/api/_generated_raw.c
 [0.7.0/src/sll/compilation_data.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/compilation_data.c
 [0.7.0/src/sll/data.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.0/src/sll/data.c

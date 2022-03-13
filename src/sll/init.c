@@ -1,6 +1,13 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/file.h>
+#include <sll/internal/common.h>
+#include <sll/internal/file.h>
+#include <sll/internal/gc.h>
+#include <sll/internal/log.h>
+#include <sll/internal/memory.h>
+#include <sll/internal/platform.h>
+#include <sll/internal/static_string.h>
+#include <sll/internal/util.h>
 #include <sll/location.h>
 #include <sll/platform/file.h>
 #include <sll/scheduler.h>

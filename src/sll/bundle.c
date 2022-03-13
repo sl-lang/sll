@@ -1,8 +1,10 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/data.h>
-#include <sll/node.h>
+#include <sll/internal/bundle.h>
+#include <sll/internal/common.h>
+#include <sll/internal/stack.h>
 #include <sll/memory.h>
+#include <sll/node.h>
 #include <sll/platform/memory.h>
 #include <sll/platform/util.h>
 #include <sll/string.h>

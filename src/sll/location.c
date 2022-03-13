@@ -1,7 +1,7 @@
-#include <sll/_sll_internal.h>
 #include <sll/common.h>
 #include <sll/location.h>
 #include <sll/object.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>
 

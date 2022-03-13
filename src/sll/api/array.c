@@ -1,7 +1,7 @@
-#include <sll/_sll_internal.h>
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/internal/api.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>

@@ -1,8 +1,9 @@
-#include <sll/_sll_internal.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/identifier.h>
+#include <sll/internal/common.h>
+#include <sll/internal/print.h>
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/object.h>
