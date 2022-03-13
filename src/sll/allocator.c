@@ -24,6 +24,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_init(sll_size_t sz){
 
 
 
+__SLL_EXTERNAL void sll_allocator_move(void** a,sll_bool_t d){
+	if (!*a){
+		return;
+	}
+	*a=PTR(ADDR(sll_memory_move(PTR(ADDR(*a)-sizeof(allocator_header_t)),d))+sizeof(allocator_header_t));
+}
+
+
+
 __SLL_EXTERNAL void sll_allocator_release(void* a){
 	if (!a){
 		return;

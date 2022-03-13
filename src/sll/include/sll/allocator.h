@@ -38,6 +38,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_init(sll_size_t sz);
 
 /**
  * \flags func
+ * \name sll_allocator_move
+ * \group allocator
+ * \desc Docs!
+ * \arg void** a
+ * \arg sll_bool_t d
+ */
+__SLL_EXTERNAL void sll_allocator_move(void** a,sll_bool_t d);
+
+
+
+/**
+ * \flags func
  * \name sll_allocator_release
  * \group allocator
  * \desc Docs!

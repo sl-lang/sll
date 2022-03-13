@@ -2301,7 +2301,7 @@ _remove_nop:
 				*(o->st.dt+n-l)=*(o->st.dt+n);
 				*(sm.im+n)=n-l;
 			}
-			sll_deallocate((o->st.dt+j)->v);
+			sll_free_string(o->st.dt+j);
 			k=j+1;
 			l++;
 			v&=v-1;

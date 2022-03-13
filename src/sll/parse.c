@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/allocator.h>
 #include <sll/api/math.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -613,7 +614,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				arg->t=SLL_NODE_TYPE_STRING;
 				sll_string_t s;
 				sll_string_create(0,&s);
-				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 				while (1){
 					sll_string_increase(&s,1);
 					unsigned int err=_read_single_char(rf,s.v+s.l);
@@ -623,7 +624,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					s.l++;
 				}
 				SLL_STRING_FORMAT_PADDING(s.v,s.l);
-				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(sf->st),&s,1);
 				c=sll_file_read_char(rf,NULL);
@@ -632,7 +633,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				arg->t=SLL_NODE_TYPE_STRING;
 				sll_string_t s;
 				sll_string_create(0,&s);
-				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 				while (1){
 					c=sll_file_read_char(rf,NULL);
 					if (c=='`'||c==SLL_END_OF_DATA){
@@ -643,7 +644,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					s.l++;
 				}
 				SLL_STRING_FORMAT_PADDING(s.v,s.l);
-				s.v=sll_memory_move(s.v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(sf->st),&s,1);
 				c=sll_file_read_char(rf,NULL);

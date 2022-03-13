@@ -1,4 +1,5 @@
 #include <sll/_sll_internal.h>
+#include <sll/allocator.h>
 #include <sll/common.h>
 #include <sll/memory.h>
 #include <sll/string.h>
@@ -46,7 +47,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 	if (!sl){
 		return;
 	}
-	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	sll_string_length_t i=sl;
 	while (i){
 		if (*t!='%'){
@@ -392,6 +393,6 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		i--;
 		t++;
 	}
-	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(o);
 }

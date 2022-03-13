@@ -4,11 +4,11 @@
 
 ### Added
 
-- Allocator API: `sll_allocator_from_memory`, `sll_allocator_init`, `sll_allocator_release` and `sll_allocator_resize` ([#224])
+- Allocator API: `sll_allocator_from_memory`, `sll_allocator_init`, `sll_allocator_move`, `sll_allocator_release` and `sll_allocator_resize` ([#224])
 
 ### Changed
 
-- Arrays now use the allocator API ([#224])
+- Arrays and strings now use the allocator API ([#224])
 - *\[Windows Only\]* Combined code for CLI console and window targets in the same file
 - Fixed declaration of raw API functions
 - Fixed invalid memory access bug in `sll_copy_data` and `sll_optimize_metadata`

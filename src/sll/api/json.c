@@ -39,7 +39,7 @@ static void _release_data(void){
 
 static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 	sll_string_create(0,o);
-	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	sll_char_t c=**p;
 	(*p)++;
 	while (c!='\"'){
@@ -87,7 +87,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 		c=**p;
 		(*p)++;
 	}
-	o->v=sll_memory_move(o->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(o);
 }
 
@@ -648,8 +648,8 @@ __API_FUNC(json_parse){
 
 __API_FUNC(json_stringify){
 	sll_string_create(0,out);
-	out->v=sll_memory_move(out->v,SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	_stringify_object(a,out);
-	out->v=sll_memory_move(out->v,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(out);
 }
