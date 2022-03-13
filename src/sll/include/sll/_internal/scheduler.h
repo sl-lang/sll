@@ -1,7 +1,7 @@
 #ifndef __SLL_INTERNAL_SCHEDULER_H__
 #define __SLL_INTERNAL_SCHEDULER_H__ 1
+#include <sll/_internal/common.h>
 #include <sll/_size_types.h>
-#include <sll/internal/common.h>
 #include <sll/types.h>
 
 

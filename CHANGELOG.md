@@ -12,7 +12,7 @@
 - *\[Windows Only\]* Combined code for CLI console and window targets in the same file
 - Fixed declaration of raw API functions
 - Fixed invalid memory access bug in `sll_copy_data` and `sll_optimize_metadata`
-- Split the [`src/sll/include/sll/_sll_internal.h`][0.7.8/src/sll/include/sll/_sll_internal.h] header into multiple headers located in [`src/sll/include/sll/internal`][0.7.9/src/sll/include/sll/internal]
+- Split the [`src/sll/include/sll/_sll_internal.h`][0.7.8/src/sll/include/sll/_sll_internal.h] header into multiple headers located in [`src/sll/include/sll/_internal`][0.7.9/src/sll/include/sll/_internal]
 
 ### Removed
 
@@ -1989,7 +1989,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[0.7.9/src/sll/include/sll/internal]: https:/github.com/sl-lang/sll/tree/sll-v0.7.8/src/sll/include/sll/internal
+[0.7.9/src/sll/include/sll/_internal]: https:/github.com/sl-lang/sll/tree/sll-v0.7.8/src/sll/include/sll/_internal
 [0.7.8/src/sll/include/sll/_sll_internal.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.7/src/sll/include/sll/_sll_internal.h
 [0.7.8/src/sll/include/sll/platform]: https:/github.com/sl-lang/sll/tree/sll-v0.7.8/src/sll/include/sll/platform
 [0.7.7/src/sll/include/sll/platform.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.7/src/sll/include/sll/platform.h

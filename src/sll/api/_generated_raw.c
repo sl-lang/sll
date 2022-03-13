@@ -1,11 +1,11 @@
 // WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!
+#include <sll/_internal/api.h>
+#include <sll/_internal/common.h>
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/generated/api.h>
 #include <sll/ift.h>
-#include <sll/internal/api.h>
-#include <sll/internal/common.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>

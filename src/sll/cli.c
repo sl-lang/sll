@@ -1,3 +1,6 @@
+#include <sll/_internal/cli.h>
+#include <sll/_internal/common.h>
+#include <sll/_internal/static_string.h>
 #include <sll/api/date.h>
 #include <sll/api/math.h>
 #include <sll/api/path.h>
@@ -10,9 +13,6 @@
 #include <sll/generated/help_text.h>
 #include <sll/ift.h>
 #include <sll/init.h>
-#include <sll/internal/cli.h>
-#include <sll/internal/common.h>
-#include <sll/internal/static_string.h>
 #include <sll/io.h>
 #include <sll/log.h>
 #include <sll/memory.h>

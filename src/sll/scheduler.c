@@ -1,9 +1,9 @@
+#include <sll/_internal/common.h>
+#include <sll/_internal/dispatcher.h>
+#include <sll/_internal/scheduler.h>
+#include <sll/_internal/vm.h>
 #include <sll/common.h>
 #include <sll/gc.h>
-#include <sll/internal/common.h>
-#include <sll/internal/dispatcher.h>
-#include <sll/internal/scheduler.h>
-#include <sll/internal/vm.h>
 #include <sll/memory.h>
 #include <sll/platform/memory.h>
 #include <sll/scheduler.h>

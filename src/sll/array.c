@@ -1,10 +1,10 @@
+#include <sll/_internal/common.h>
+#include <sll/_internal/util.h>
 #include <sll/allocator.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/gc.h>
-#include <sll/internal/common.h>
-#include <sll/internal/util.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>

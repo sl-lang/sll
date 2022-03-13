@@ -1,8 +1,8 @@
+#include <sll/_internal/api.h>
 #include <sll/api.h>
 #include <sll/api/file.h>
 #include <sll/array.h>
 #include <sll/common.h>
-#include <sll/internal/api.h>
 #include <sll/location.h>
 #include <sll/object.h>
 #include <sll/scheduler.h>

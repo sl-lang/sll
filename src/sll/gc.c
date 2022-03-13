@@ -1,11 +1,11 @@
+#include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
 #include <sll/gc.h>
-#include <sll/internal/common.h>
-#include <sll/internal/gc.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>

@@ -1,7 +1,7 @@
 #ifndef __SLL_INTERNAL_FILE_H__
 #define __SLL_INTERNAL_FILE_H__ 1
+#include <sll/_internal/common.h>
 #include <sll/file.h>
-#include <sll/internal/common.h>
 #include <sll/types.h>
 
 

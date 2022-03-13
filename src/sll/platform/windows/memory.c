@@ -1,7 +1,7 @@
 #include <windows.h>
-#include <sll/common.h>
-#include <sll/internal/common.h>
+#include <sll/_internal/common.h>
 #include <sll/platform/memory.h>
+#include <sll/common.h>
 #include <sll/types.h>
 
 

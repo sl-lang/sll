@@ -1,6 +1,6 @@
 #ifndef __SLL_INTERNAL_PLATFORM_H__
 #define __SLL_INTERNAL_PLATFORM_H__ 1
-#include <sll/internal/common.h>
+#include <sll/_internal/common.h>
 #include <sll/types.h>
 
 

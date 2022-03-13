@@ -1,8 +1,8 @@
+#include <sll/_internal/bundle.h>
+#include <sll/_internal/common.h>
+#include <sll/_internal/stack.h>
 #include <sll/common.h>
 #include <sll/data.h>
-#include <sll/internal/bundle.h>
-#include <sll/internal/common.h>
-#include <sll/internal/stack.h>
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/platform/memory.h>

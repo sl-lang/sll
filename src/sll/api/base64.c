@@ -1,6 +1,6 @@
+#include <sll/_internal/api.h>
 #include <sll/api.h>
 #include <sll/common.h>
-#include <sll/internal/api.h>
 #include <sll/object.h>
 #include <sll/string.h>
 #include <sll/types.h>

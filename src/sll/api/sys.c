@@ -1,3 +1,8 @@
+#include <sll/_internal/api.h>
+#include <sll/_internal/common.h>
+#include <sll/_internal/library.h>
+#include <sll/_internal/print.h>
+#include <sll/_internal/static_string.h>
 #include <sll/api.h>
 #include <sll/api/hash.h>
 #include <sll/api/path.h>
@@ -9,11 +14,6 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/init.h>
-#include <sll/internal/api.h>
-#include <sll/internal/common.h>
-#include <sll/internal/library.h>
-#include <sll/internal/print.h>
-#include <sll/internal/static_string.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>

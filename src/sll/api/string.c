@@ -1,11 +1,11 @@
+#include <sll/_internal/api.h>
+#include <sll/_internal/common.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
 #include <sll/api/string.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/gc.h>
-#include <sll/internal/api.h>
-#include <sll/internal/common.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>

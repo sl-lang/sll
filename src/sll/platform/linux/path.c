@@ -1,10 +1,10 @@
+#include <sll/_internal/common.h>
+#include <sll/_internal/platform.h>
+#include <sll/_internal/static_string.h>
 #include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/env.h>
-#include <sll/internal/common.h>
-#include <sll/internal/platform.h>
-#include <sll/internal/static_string.h>
 #include <sll/memory.h>
 #include <sll/platform/path.h>
 #include <sll/string.h>

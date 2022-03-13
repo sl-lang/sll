@@ -3,7 +3,7 @@
 #ifndef __SLL_BUILD_WINDOWS
 #include <poll.h>
 #endif
-#include <sll/internal/common.h>
+#include <sll/_internal/common.h>
 #include <sll/_size_types.h>
 #include <sll/types.h>
 

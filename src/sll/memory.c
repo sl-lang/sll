@@ -1,10 +1,10 @@
+#include <sll/_internal/intrinsics.h>
+#include <sll/_internal/memory.h>
+#include <sll/_internal/platform.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
 #include <sll/generated/memory_fail.h>
-#include <sll/internal/intrinsics.h>
-#include <sll/internal/memory.h>
-#include <sll/internal/platform.h>
 #include <sll/memory.h>
 #include <sll/platform/file.h>
 #include <sll/platform/memory.h>

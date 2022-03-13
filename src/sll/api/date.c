@@ -1,9 +1,9 @@
+#include <sll/_internal/api.h>
+#include <sll/_internal/common.h>
 #include <sll/api.h>
 #include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
-#include <sll/internal/api.h>
-#include <sll/internal/common.h>
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/platform/util.h>

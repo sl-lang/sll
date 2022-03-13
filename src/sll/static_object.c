@@ -1,6 +1,6 @@
+#include <sll/_internal/static_object.h>
 #include <sll/array.h>
 #include <sll/gc.h>
-#include <sll/internal/static_object.h>
 #include <sll/map.h>
 #include <sll/object.h>
 #include <sll/static_object.h>

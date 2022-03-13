@@ -1,13 +1,13 @@
+#include <sll/_internal/assembly.h>
+#include <sll/_internal/common.h>
+#include <sll/_internal/intrinsics.h>
+#include <sll/_internal/stack.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/gc.h>
 #include <sll/generated/assembly_optimizer.h>
 #include <sll/identifier.h>
-#include <sll/internal/assembly.h>
-#include <sll/internal/common.h>
-#include <sll/internal/intrinsics.h>
-#include <sll/internal/stack.h>
 #include <sll/location.h>
 #include <sll/memory.h>
 #include <sll/node.h>

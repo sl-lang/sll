@@ -1,5 +1,5 @@
+#include <sll/_internal/stack.h>
 #include <sll/common.h>
-#include <sll/internal/stack.h>
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/platform/memory.h>

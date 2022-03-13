@@ -1,3 +1,7 @@
+#include <sll/_internal/common.h>
+#include <sll/_internal/dispatcher.h>
+#include <sll/_internal/scheduler.h>
+#include <sll/_internal/stack.h>
 #include <sll/api/file.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
@@ -8,10 +12,6 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
-#include <sll/internal/common.h>
-#include <sll/internal/dispatcher.h>
-#include <sll/internal/scheduler.h>
-#include <sll/internal/stack.h>
 #include <sll/location.h>
 #include <sll/map.h>
 #include <sll/memory.h>

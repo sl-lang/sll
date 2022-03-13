@@ -1,8 +1,8 @@
+#include <sll/_internal/api.h>
+#include <sll/_internal/util.h>
 #include <sll/_size_types.h>
 #include <sll/api.h>
 #include <sll/common.h>
-#include <sll/internal/api.h>
-#include <sll/internal/util.h>
 #include <sll/types.h>
 
 

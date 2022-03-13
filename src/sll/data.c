@@ -1,6 +1,6 @@
+#include <sll/_internal/intrinsics.h>
 #include <sll/common.h>
 #include <sll/data.h>
-#include <sll/internal/intrinsics.h>
 #include <sll/types.h>
 
 
