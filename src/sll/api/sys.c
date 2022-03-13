@@ -13,6 +13,7 @@
 #include <sll/internal/common.h>
 #include <sll/internal/library.h>
 #include <sll/internal/print.h>
+#include <sll/internal/static_string.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
