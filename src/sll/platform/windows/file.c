@@ -34,10 +34,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sl
 						return 0;
 					}
 					if (ir.EventType==KEY_EVENT){
-						WORD key=ir.Event.KeyEvent.wVirtualKeyCode;
-						if (key!=VK_SHIFT&&key!=VK_CONTROL&&key!=VK_MENU&&key!=VK_PAUSE&&key!=VK_CAPITAL){
-							return 1;
-						}
+						return 1;
 					}
 					if (!ReadConsoleInput((HANDLE)fd,&ir,1,&cnt)){
 						return 0;
