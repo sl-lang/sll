@@ -2,8 +2,13 @@
 
 ## [0.7.9] - Ongoing
 
+### Added
+
+- Allocator API: `sll_allocator_from_memory`, `sll_allocator_init`, `sll_allocator_release` and `sll_allocator_resize` ([#224])
+
 ### Changed
 
+- Arrays now use the allocator API ([#224])
 - Fixed invalid memory access bug in `sll_optimize_metadata`
 
 ## [0.7.8] - 2022-03-12
@@ -1783,6 +1788,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#229]: https://github.com/sl-lang/sll/issues/229
 [#228]: https://github.com/sl-lang/sll/issues/228
 [#227]: https://github.com/sl-lang/sll/issues/227
+[#224]: https://github.com/sl-lang/sll/issues/224
 [#222]: https://github.com/sl-lang/sll/issues/222
 [#221]: https://github.com/sl-lang/sll/issues/221
 [#220]: https://github.com/sl-lang/sll/issues/220
