@@ -72,7 +72,7 @@
  * \arg sll_string_length_t l
  * \ret sll_string_length_t
  */
-#define SLL_STRING_ALIGN_LENGTH(l) (((l)+16)&0xfffffffffffffff0ull)
+#define SLL_STRING_ALIGN_LENGTH(l) (((l)+8)&0xfffffffffffffff8ull)
 
 
 
@@ -112,10 +112,7 @@
  */
 #define SLL_STRING_FORMAT_PADDING(v,l) \
 	do{ \
-		if (((l)&15)<8){ \
-			(*((__SLL_U64*)((v)+((l)&0xfffffffffffffff0ull))))&=(1ull<<(((l)&15)<<3))-1; \
-		} \
-		(*((__SLL_U64*)((v)+((l)&0xfffffffffffffff0ull)+8)))&=(1ull<<((((l)&15)-8)<<3))-1; \
+		(*((__SLL_U64*)((v)+((l)&0xfffffffffffffff8ull))))&=(1ull<<(((l)&7)<<3))-1; \
 	} while (0)
 
 

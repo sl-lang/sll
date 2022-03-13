@@ -7,7 +7,7 @@ import util
 
 def build_sll(fl,v,r):
 	lib_nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
-	def_l=["__SLL_COMPILATION__",f"__SLL_TIME_RAW__={util.BUILD_TIME}"]
+	def_l=["__SLL_COMPILATION__",f"__SLL_TIME_RAW__={util.BUILD_TIME}","__SLL_BUILD_"+util.system.upper()]
 	if (len(os.getenv("GITHUB_SHA",""))>0):
 		def_l.append(f"__SLL_SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"")
 		def_l.append(f"__SLL_FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\"")
@@ -16,7 +16,7 @@ def build_sll(fl,v,r):
 	if (not r):
 		def_l.append("DEBUG_BUILD")
 	if (util.system=="windows"):
-		def_l.extend(["_WINDOWS","WINDLL","USERDLL","WIN32_LEAN_AND_MEAN","_CRT_SECURE_NO_WARNINGS","__SLL_BUILD_WINDOWS"])
+		def_l.extend(["_WINDOWS","WINDLL","USERDLL","WIN32_LEAN_AND_MEAN","_CRT_SECURE_NO_WARNINGS"])
 		win_def=[]
 		for k in def_l:
 			win_def.append("/D")
@@ -52,7 +52,7 @@ def build_sll(fl,v,r):
 			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","/PDB:build/sll.pdb","bcrypt.lib","advapi32.lib"]+out_fl)):
 				sys.exit(1)
 	else:
-		def_l.extend(["_GNU_SOURCE","__SLL_BUILD_"+util.system.upper()])
+		def_l.extend(["_GNU_SOURCE"])
 		linux_def=[]
 		for k in def_l:
 			linux_def.append("-D")

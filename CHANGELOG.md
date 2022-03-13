@@ -11,7 +11,7 @@
 - Arrays now use the allocator API ([#224])
 - *\[Windows Only\]* Combined code for CLI console and window targets in the same file
 - Fixed declaration of raw API functions
-- Fixed invalid memory access bug in `sll_optimize_metadata`
+- Fixed invalid memory access bug in `sll_copy_data` and `sll_optimize_metadata`
 
 ### Removed
 

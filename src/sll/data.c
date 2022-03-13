@@ -91,13 +91,19 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 	const wide_data_t* ap=(const wide_data_t*)a;
 	wide_data_t* bp=(wide_data_t*)b;
 	ASSUME_ALIGNED(bp,3,0);
-	sll_size_t i=0;
-	for (;i<(l>>3);i++){
-		*(bp+i)=*(ap+i);
+	for (sll_size_t i=0;i<(l>>3);i++){
+		*bp=*ap;
+		ap++;
+		bp++;
 	}
-	if (l&7){
-		l=(l&7)<<3;
-		*(bp+i)=((*(bp+i))&(0xffffffffffffffffull<<l))|((*(ap+i))&((1ull<<l)-1));
+	a=(const sll_char_t*)ap;
+	b=(sll_char_t*)bp;
+	l&=7;
+	while (l){
+		*b=*a;
+		a++;
+		b++;
+		l--;
 	}
 }
 

@@ -404,7 +404,6 @@ typedef struct __SLL_FILE_HASH{
 typedef struct __SLL_FILE{
 	const sll_file_data_t dt;
 	const sll_file_flags_t f;
-	sll_bool_t async;
 	sll_file_offset_t _l_num;
 	sll_file_offset_t _off;
 	sll_char_t* _r_bf;
