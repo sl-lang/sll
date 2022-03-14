@@ -31,7 +31,7 @@
 - Bundles can be added to the search path via the include (`-I` or `--include`) CLI option ([#245])
 - CLI option to exclude full file paths from bundles: `-n` or `--names-only` ([#245])
 - CLI option to generate bundles: `-b` or `--bundle` ([#245])
-- CLI option to set bundile output file path: `-O` or `--bundle-output` ([#245])
+- CLI option to set bundle output file path: `-O` or `--bundle-output` ([#245])
 - CLI option to specify a bundle name: `-N` or `--name-bundle` ([#245])
 - Extra parameter in `file$read` to allow nonblocking I/O reading operations
 - Functions related to asynchronous file reading I/O: `sll_platform_file_async_read`, `sll_platform_file_data_available` and `sll_file_data_available`
