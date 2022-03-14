@@ -1,0 +1,64 @@
+(--- "types.sll" "file.sll" "string.sll")
+
+
+
+(= input_module_type (&:
+	(~ func_type) char
+	(~ func_type) int
+	(~ func_type) string
+))
+
+
+
+(= char (,,, min max
+	(= min (:: min char_type))
+	(= max (:: max char_type))
+	(? (=== min max '\x00') (= max '\xff'))
+	(><
+		(= o nil)
+		(><
+			(= c (<- file$read_char file$stdin))
+			(?
+				(|| (=== c '\n') (=== c '\r')) (@)
+				(=== o nil) (= o c)
+				(!== o nil) (= o -1)
+			)
+		)
+		(? (&& (=== (:? o) char_type) (>= o min) (<= o max)) (@@ o))
+	)
+))
+
+(= int (,,, min max
+	(= min (:: min int_type))
+	(= max (:: max int_type))
+	(><
+		(= o '\x00')
+		(><
+			(= c (<- file$read_char file$stdin))
+			(?
+				(|| (=== c '\n') (=== c '\r')) (@)
+				(! (|: string$DIGITS c)) (= o '\x01')
+				(!== c '\x01') (= o (+ (* 10 (:: o int_type)) (- c 48)))
+			)
+		)
+		(? (&& (=== (:? o) int_type) (|| (=== min max 0) (&& (>= o min) (<= o max)))) (@@ o))
+	)
+))
+
+(= string (,,,
+	(= o "")
+	(><
+		(= c (<- file$read_char file$stdin))
+		(? (|| (=== c '\n') (=== c '\r')) (@@ o))
+		(= o (+ o c))
+	)
+))
+
+
+
+(= input (. input_module_type
+	char
+	int
+	string
+))
+(## input)

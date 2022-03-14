@@ -6,6 +6,7 @@
 
 - Ability to execute functions asynchronously via `sll_execute_function`
 - Allocator API: `sll_allocator_from_memory`, `sll_allocator_init`, `sll_allocator_move`, `sll_allocator_release` and `sll_allocator_resize` ([#224])
+- Implemented `input.sll`, `input$char`, `input$int` and `input$string` ([#244])
 - Implemented `sll_set_sandbox_flag_string` and `sys$set_sandbox_flags`
 
 ### Changed
@@ -1789,6 +1790,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#247]: https://github.com/sl-lang/sll/issues/247
 [#246]: https://github.com/sl-lang/sll/issues/246
 [#245]: https://github.com/sl-lang/sll/issues/245
+[#244]: https://github.com/sl-lang/sll/issues/244
 [#243]: https://github.com/sl-lang/sll/issues/243
 [#238]: https://github.com/sl-lang/sll/issues/238
 [#237]: https://github.com/sl-lang/sll/issues/237
