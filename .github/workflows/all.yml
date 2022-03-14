@@ -169,7 +169,7 @@ jobs:
       - name: Test
         run: build/sll tests/_runner.sll
       - name: Generate coverage report
-        run: gcov -a -c -f -l -p $(find build/objects -type f -name *.gcno)
+        run: gcov -a -b -c -f -l -p $(find build/objects -type f -name *.gcno)
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
