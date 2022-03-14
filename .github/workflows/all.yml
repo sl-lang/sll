@@ -173,7 +173,7 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
-          files: build/coverage.xml
+          directory: ./
           verbose: true
   release:
     name: Create release
