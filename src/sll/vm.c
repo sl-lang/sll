@@ -288,7 +288,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 	const sll_assembly_instruction_t* ai=NULL;
 	addr_t func_var_off=0;
 	RELOAD_THREAD_DATA;
-	sll_bool_t io=!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO);
 	while (1){
 		if (_scheduler_current_thread->ii>=sll_current_runtime_data->a_dt->ic||_scheduler_current_thread->si>=sll_current_vm_config->s_sz){
 			SLL_UNIMPLEMENTED();
@@ -795,7 +794,7 @@ _cleanup_jump_table:;
 				{
 					_scheduler_current_thread->si--;
 					sll_object_t* tos=*(_scheduler_current_thread->stack+_scheduler_current_thread->si);
-					if (io){
+					if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
 						if (SLL_OBJECT_GET_TYPE(tos)==SLL_OBJECT_TYPE_STRING){
 							sll_file_write(sll_current_vm_config->out,tos->dt.s.v,tos->dt.s.l*sizeof(sll_char_t),NULL);
 						}
@@ -810,12 +809,12 @@ _cleanup_jump_table:;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
-				if (io){
+				if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
 					sll_file_write_char(sll_current_vm_config->out,ai->dt.c,NULL);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
-				if (io){
+				if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
 					sll_file_write(sll_current_vm_config->out,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->v,(sll_current_runtime_data->a_dt->st.dt+ai->dt.s)->l*sizeof(sll_char_t),NULL);
 				}
 				break;

@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
+#include <sll/_internal/sandbox.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/vm.h>
 #include <sll/common.h>
@@ -131,6 +132,7 @@ sll_thread_index_t _scheduler_new_thread(void){
 	n->ret=NULL;
 	n->c_st.dt=PTR(ADDR(ptr)+sizeof(thread_data_t));
 	n->c_st.l=0;
+	n->sandbox=(sll_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
 	n->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
 	n->st=THREAD_STATE_INITIALIZED;
 	n->suspended=0;

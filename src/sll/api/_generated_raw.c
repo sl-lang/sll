@@ -5149,6 +5149,31 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_set_env_raw(sll_obje
 
 
 
+__SLL_API_TYPE_sll_api_sys_set_sandbox_flag sll_api_sys_set_sandbox_flag(__SLL_API_ARGS_sll_api_sys_set_sandbox_flag);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_set_sandbox_flag_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=sll_create_object();
+		a->t=SLL_OBJECT_TYPE_STRING;
+		sll_string_create(0,&(a->dt.s));
+	}
+	sll_bool_t out=sll_api_sys_set_sandbox_flag(&(a->dt.s));
+	sll_release_object(a);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
+}
+
+
+
 __SLL_API_TYPE_sll_api_thread_create sll_api_thread_create(__SLL_API_ARGS_sll_api_thread_create);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_create_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -6152,6 +6177,10 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_sys_set_env_raw
 	},
 	{
+		SLL_CHAR("sll:sys_set_sandbox_flag"),
+		sll_api_sys_set_sandbox_flag_raw
+	},
+	{
 		SLL_CHAR("sll:thread_create"),
 		sll_api_thread_create_raw
 	},
@@ -6235,5 +6264,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=179;
+const sll_function_index_t _ifunc_size=180;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

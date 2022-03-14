@@ -164,6 +164,18 @@ __API_FUNC_DECL(sys_remove_env);
 
 /**
  * \flags api func
+ * \name sll_api_sys_set_sandbox_flag
+ * \group sys-api
+ * \desc Docs!
+ * \arg S
+ * \ret B
+ */
+__API_FUNC_DECL(sys_set_sandbox_flag);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_sys_set_env
  * \group sys-api
  * \desc Docs!

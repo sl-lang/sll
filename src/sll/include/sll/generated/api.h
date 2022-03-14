@@ -3849,6 +3849,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_sys_set_sandbox_flag __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_sys_set_sandbox_flag sll_string_t* a
+/**
+ * \flags check_output func
+ * \name sll_api_sys_set_sandbox_flag
+ * \group sys-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_sys_set_sandbox_flag_raw
+ * \group raw-api
+ * \subgroup raw-api-sys-api
+ * \desc Wrapper function for :sll_api_sys_set_sandbox_flag:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_thread_create __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_thread_create sll_integer_t a,sll_array_t* b
 /**

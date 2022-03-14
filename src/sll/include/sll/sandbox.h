@@ -197,4 +197,16 @@ __SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flag_t f);
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_set_sandbox_flag_string
+ * \group sandbox
+ * \desc Docs!
+ * \arg const sll_string_t* nm
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_sandbox_flag_string(const sll_string_t* nm);
+
+
+
 #endif

@@ -4,6 +4,7 @@
 #include <sll/_internal/log.h>
 #include <sll/_internal/memory.h>
 #include <sll/_internal/platform.h>
+#include <sll/_internal/sandbox.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/util.h>
 #include <sll/common.h>
@@ -24,9 +25,9 @@ INIT_STRING_SETUP;
 
 
 
-static sll_cleanup_function_t _util_exit_table[MAX_CLEANUP_TABLE_SIZE];
-static unsigned int _util_exit_table_size=0;
-static sll_bool_t _util_init=0;
+static sll_cleanup_function_t _init_exit_table[MAX_CLEANUP_TABLE_SIZE];
+static unsigned int _init_exit_table_size=0;
+static sll_bool_t _init_init=0;
 
 
 
@@ -98,12 +99,12 @@ __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const s
 
 
 __SLL_EXTERNAL void sll_deinit(void){
-	if (!_util_init){
+	if (!_init_init){
 		return;
 	}
-	while (_util_exit_table_size){
-		_util_exit_table_size--;
-		_util_exit_table[_util_exit_table_size]();
+	while (_init_exit_table_size){
+		_init_exit_table_size--;
+		_init_exit_table[_init_exit_table_size]();
 	}
 	const init_string_t*const* l=(const init_string_t*const*)(&__init_string_start);
 	while (l<(const init_string_t*const*)(&__init_string_end)){
@@ -118,17 +119,17 @@ __SLL_EXTERNAL void sll_deinit(void){
 	_file_release_std_streams();
 	_deinit_platform();
 	_memory_release_data();
-	_reset_sandbox();
-	_util_init=0;
+	_sandbox_flags=0;
+	_init_init=0;
 }
 
 
 
 __SLL_EXTERNAL void sll_init(void){
-	if (_util_init){
+	if (_init_init){
 		return;
 	}
-	_util_init=1;
+	_init_init=1;
 	_file_init_std_streams();
 	_init_platform();
 	const init_string_t*const* l=(const init_string_t*const*)(&__init_string_start);
@@ -149,9 +150,9 @@ __SLL_EXTERNAL void sll_init(void){
 
 
 __SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t f){
-	if (_util_exit_table_size>=MAX_CLEANUP_TABLE_SIZE){
+	if (_init_exit_table_size>=MAX_CLEANUP_TABLE_SIZE){
 		SLL_UNREACHABLE();
 	}
-	_util_exit_table[_util_exit_table_size]=f;
-	_util_exit_table_size++;
+	_init_exit_table[_init_exit_table_size]=f;
+	_init_exit_table_size++;
 }

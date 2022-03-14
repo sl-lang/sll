@@ -286,6 +286,12 @@ __API_FUNC(sys_remove_env){
 
 
 
+__API_FUNC(sys_set_sandbox_flag){
+	return sll_set_sandbox_flag_string(a);
+}
+
+
+
 __API_FUNC(sys_set_env){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
 		sll_set_environment_variable(a,b);

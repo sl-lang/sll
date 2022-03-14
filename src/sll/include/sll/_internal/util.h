@@ -42,8 +42,4 @@ typedef union __DOUBLE_DATA{
 
 
 
-void _reset_sandbox(void);
-
-
-
 #endif

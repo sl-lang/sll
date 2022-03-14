@@ -29,6 +29,7 @@
 	(~ func_type) get_sandbox_flags
 	(~ func_type) load_library
 	(~ func_type) remove_env
+	(~ func_type) set_sandbox_flags
 	(~ func_type) set_env
 ))
 
@@ -101,6 +102,18 @@
 	(<- (... "sll:sys_remove_env" k))
 ))
 
+(= set_sandbox_flags (,,, @@flags@@
+	(= o 1)
+	(-> (= i 0) (< i ($ @@flags@@))
+		(:> (: @@flags@@ i) "\n")
+		(= o (& o (<- (... "sll:sys_set_sandbox_flag")
+			(<- string$lower_case (:: (: @@flags@@ i) string_type))
+		)))
+		(++ i)
+	)
+	(@@ o)
+))
+
 (= set_env (,,, k v
 	(= k (<- string$replace (:: k string_type) '=' ""))
 	(= v (:: v string_type))
@@ -124,6 +137,7 @@
 	get_sandbox_flags
 	load_library
 	remove_env
+	set_sandbox_flags
 	set_env
 ))
 (## sys)

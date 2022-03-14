@@ -6,6 +6,7 @@
 
 - Ability to execute functions asynchronously via `sll_execute_function`
 - Allocator API: `sll_allocator_from_memory`, `sll_allocator_init`, `sll_allocator_move`, `sll_allocator_release` and `sll_allocator_resize` ([#224])
+- Implemented `sll_set_sandbox_flag_string` and `sys$set_sandbox_flags`
 
 ### Changed
 
@@ -14,6 +15,7 @@
 - Fixed declaration of raw API functions
 - Fixed invalid memory access bug in `sll_copy_data` and `sll_optimize_metadata`
 - Rename `sll_sandbox_flags_t` to `sll_sandbox_flag_t`
+- Sandbox flags are now thread-based and are inherited by child threads
 - Split the [`src/sll/include/sll/_sll_internal.h`][0.7.8/src/sll/include/sll/_sll_internal.h] header into multiple headers located in [`src/sll/include/sll/_internal`][0.7.9/src/sll/include/sll/_internal]
 
 ### Removed

@@ -1,6 +1,7 @@
 #ifndef __SLL_INTERNAL_SCHEDULER_H__
 #define __SLL_INTERNAL_SCHEDULER_H__ 1
 #include <sll/_internal/common.h>
+#include <sll/_internal/sandbox.h>
 #include <sll/_size_types.h>
 #include <sll/types.h>
 
@@ -75,6 +76,7 @@ typedef struct __THREAD_DATA{
 	sll_thread_index_t wait;
 	sll_object_t* ret;
 	sll_call_stack_t c_st;
+	sandbox_t sandbox;
 	sll_char_t tm;
 	thread_state_t st;
 	sll_bool_t suspended;
