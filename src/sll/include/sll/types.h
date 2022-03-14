@@ -92,7 +92,7 @@ typedef __SLL_U8 sll_node_type_t;
 
 
 
-typedef __SLL_U8 sll_sandbox_flags_t;
+typedef __SLL_U8 sll_sandbox_flag_t;
 
 
 

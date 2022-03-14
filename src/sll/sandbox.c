@@ -32,7 +32,7 @@ FLAG(ENABLE_FILE_RENAME,"file-rename");
 FLAG(ENABLE_FILE_COPY,"file-copy");
 FLAG(DISABLE_FLOAT_COMPARE_ERROR_CHANGE,"no-float-error-change");
 FLAG(ENABLE_FILE_DELETE,"file-delete");
-static wide_data_t _util_sandbox_flags=0;
+static bitmap_t _util_sandbox_flags=0;
 
 
 
@@ -42,7 +42,7 @@ void _reset_sandbox(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_flags_t f){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_flag_t f){
 	return !!(_util_sandbox_flags&(1ull<<f));
 }
 
@@ -69,6 +69,6 @@ __SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o){
 
 
 
-__SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flags_t f){
+__SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flag_t f){
 	_util_sandbox_flags|=1ull<<f;
 }

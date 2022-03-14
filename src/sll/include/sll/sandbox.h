@@ -24,7 +24,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_DISABLE_FILE_IO 0
 
@@ -36,7 +36,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_ENABLE_STDIN_IO 1
 
@@ -48,7 +48,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO 2
 
@@ -60,7 +60,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_DISABLE_PATH_API 3
 
@@ -72,7 +72,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_DISABLE_PROCESS_API 4
 
@@ -84,7 +84,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT 5
 
@@ -96,7 +96,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY 6
 
@@ -108,7 +108,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES 7
 
@@ -120,7 +120,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME 8
 
@@ -132,7 +132,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_ENABLE_FILE_COPY 9
 
@@ -144,7 +144,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_DISABLE_FLOAT_COMPARE_ERROR_CHANGE 10
 
@@ -156,7 +156,7 @@
  * \group sandbox
  * \subgroup sandbox-flag
  * \desc Docs!
- * \type sll_sandbox_flags_t
+ * \type sll_sandbox_flag_t
  */
 #define SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE 11
 
@@ -167,10 +167,10 @@
  * \name sll_get_sandbox_flag
  * \group sandbox
  * \desc Docs!
- * \arg sll_sandbox_flags_t f
+ * \arg sll_sandbox_flag_t f
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_flags_t f);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_flag_t f);
 
 
 
@@ -190,10 +190,10 @@ __SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o);
  * \name sll_set_sandbox_flag
  * \group sandbox
  * \desc Docs!
- * \arg sll_sandbox_flags_t f
+ * \arg sll_sandbox_flag_t f
  * \ret void
  */
-__SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flags_t f);
+__SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flag_t f);
 
 
 
