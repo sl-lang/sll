@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_
-#define __SLL_INTERNAL_ 1
+#ifndef __SLL_INTERNAL_DISPATCHER_H__
+#define __SLL_INTERNAL_DISPATCHER_H__ 1
 #ifndef __SLL_BUILD_WINDOWS
 #include <poll.h>
 #endif

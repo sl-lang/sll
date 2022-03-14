@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_
-#define __SLL_INTERNAL_ 1
+#ifndef __SLL_INTERNAL_ASSEMBLY_H__
+#define __SLL_INTERNAL_ASSEMBLY_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/assembly.h>
 #include <sll/types.h>
