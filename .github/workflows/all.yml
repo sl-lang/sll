@@ -166,6 +166,8 @@ jobs:
         run: ${{env.BUILD_COMMAND}}
         env:
           GENERATE_COVERAGE: 1
+      - name: Prepare test
+        run: rm -rf build/objects/*.gcda
       - name: Test
         run: build/sll tests/_runner.sll
       - name: Generate coverage report
