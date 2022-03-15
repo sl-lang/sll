@@ -104,6 +104,10 @@ typedef __SLL_U16 sll_call_stack_size_t;
 
 
 
+typedef __SLL_U16 sll_cpu_t;
+
+
+
 typedef __SLL_U16 sll_read_char_t;
 
 

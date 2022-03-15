@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 
 
@@ -18,8 +19,35 @@ static void* _execute_wrapper(void* p){
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_current_thread(void){
+	return (sll_internal_thread_index_t)pthread_self();
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_internal_thread_index_t tid){
 	return !pthread_join((pthread_t)tid,NULL);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_thread_index_t tid,sll_cpu_t cpu){
+	sll_cpu_t max=sysconf(_SC_NPROCESSORS_ONLN);
+	if (cpu!=SLL_CPU_ANY&&cpu>=max){
+		cpu=SLL_CPU_ANY;
+	}
+	cpu_set_t set;
+	CPU_ZERO(&set);
+	if (cpu!=SLL_CPU_ANY){
+		CPU_SET(cpu,&set);
+	}
+	else{
+		while (max){
+			max--;
+			CPU_SET(max,&set);
+		}
+	}
+	return !pthread_setaffinity_np((pthread_t)tid,sizeof(set),&set);
 }
 
 

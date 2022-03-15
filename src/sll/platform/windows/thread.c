@@ -18,8 +18,22 @@ static DWORD __stdcall _execute_wrapper(void* p){
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_current_thread(void){
+	return (sll_internal_thread_index_t)GetCurrentThread();
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_internal_thread_index_t tid){
 	return (WaitForSingleObject((HANDLE)tid,INFINITE)==WAIT_OBJECT_0);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_thread_index_t tid,sll_cpu_t cpu){
+	SYSTEM_INFO si;
+	GetSystemInfo(&si);
+	return !!SetThreadAffinityMask((HANDLE)tid,(cpu==SLL_CPU_ANY||cpu>=si.dwNumberOfProcessors?0xffffffffffffffffull:1ull<<cpu));
 }
 
 

@@ -14,6 +14,18 @@
 
 /**
  * \flags macro var
+ * \name SLL_CPU_ANY
+ * \group platform
+ * \subgroup platform-thread
+ * \desc Docs!
+ * \type sll_cpu_t
+ */
+#define SLL_CPU_ANY 0xffff
+
+
+
+/**
+ * \flags macro var
  * \name SLL_UNKNOWN_INTERNAL_THREAD_INDEX
  * \group platform
  * \subgroup platform-thread
@@ -21,6 +33,18 @@
  * \type sll_internal_thread_index_t
  */
 #define SLL_UNKNOWN_INTERNAL_THREAD_INDEX ((void*)0xffffffffffffffffull)
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_platform_current_thread
+ * \group platform
+ * \subgroup platform-thread
+ * \desc Docs!
+ * \ret sll_internal_thread_index_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_current_thread(void);
 
 
 
@@ -34,6 +58,20 @@
  * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_internal_thread_index_t tid);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_platform_set_cpu
+ * \group platform
+ * \subgroup platform-thread
+ * \desc Docs!
+ * \arg sll_internal_thread_index_t tid
+ * \arg sll_cpu_t cpu
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_thread_index_t tid,sll_cpu_t cpu);
 
 
 
