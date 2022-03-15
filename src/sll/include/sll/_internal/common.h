@@ -11,12 +11,14 @@
 #endif
 #define __SLL_FORCE_INLINE __inline __forceinline
 #define __SLL_NO_RETURN __declspec(noreturn)
+#define __SLL_TLS __declspec(thread)
 #else
 #ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __builtin_unreachable()
 #endif
 #define __SLL_FORCE_INLINE inline __attribute__((always_inline))
 #define __SLL_NO_RETURN __attribute__((noreturn))
+#define __SLL_TLS __thread
 #endif
 
 #ifdef DEBUG_BUILD

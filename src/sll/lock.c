@@ -33,22 +33,22 @@ sll_bool_t _lock_wait(sll_integer_t w){
 	if (w<0||w>=_lock_len||(_lock_data+w)->lock==LOCK_UNUSED){
 		return 0;
 	}
-	SLL_ASSERT((_lock_data+w)->lock!=sll_current_thread_index);
+	SLL_ASSERT((_lock_data+w)->lock!=_scheduler_current_thread_index);
 	if ((_lock_data+w)->lock==SLL_UNKNOWN_THREAD_INDEX){
-		(_lock_data+w)->lock=sll_current_thread_index;
+		(_lock_data+w)->lock=_scheduler_current_thread_index;
 		(_lock_data+w)->first=SLL_UNKNOWN_THREAD_INDEX;
 		return 0;
 	}
 	if ((_lock_data+w)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_lock_data+w)->first=sll_current_thread_index;
+		(_lock_data+w)->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_lock_data+w)->last->nxt=sll_current_thread_index;
+		(_lock_data+w)->last->nxt=_scheduler_current_thread_index;
 	}
 	(_lock_data+w)->last=_scheduler_current_thread;
 	_scheduler_current_thread->nxt=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread->st=THREAD_STATE_WAIT_LOCK;
-	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	return 1;
 }
 

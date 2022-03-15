@@ -5,13 +5,13 @@
 #include <sll/_internal/memory.h>
 #include <sll/_internal/platform.h>
 #include <sll/_internal/sandbox.h>
+#include <sll/_internal/scheduler.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/util.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/location.h>
 #include <sll/platform/file.h>
-#include <sll/scheduler.h>
 #include <sll/string.h>
 #include <sll/thread.h>
 #include <sll/types.h>
@@ -78,7 +78,7 @@ __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const s
 	sll_platform_file_write(fd,b,sll_string_length_unaligned(b),NULL);
 	sll_platform_file_write(fd,c,sll_string_length_unaligned(c),NULL);
 	if (sll_current_runtime_data&&sll_current_runtime_data->a_dt){
-		const sll_call_stack_t* c_st=sll_thread_get_call_stack(sll_current_thread_index);
+		const sll_call_stack_t* c_st=sll_thread_get_call_stack(_scheduler_current_thread_index);
 		if (c_st){
 			_write_stack_frame(fd,sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
 			sll_call_stack_size_t i=c_st->l;
@@ -87,7 +87,7 @@ __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const s
 				_write_stack_frame(fd,(c_st->dt+i)->_ii);
 			}
 			sll_platform_file_write(fd,"at <thread-",11,NULL);
-			_write_number(fd,sll_current_thread_index);
+			_write_number(fd,_scheduler_current_thread_index);
 			sll_platform_file_write(fd,">\n",2,NULL);
 		}
 	}

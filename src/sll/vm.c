@@ -212,43 +212,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 		&tt
 	};
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
-	_barrier_init();
-	_io_dispatcher_init();
-	_lock_init();
-	_scheduler_init();
-	_semaphore_init();
-	_thread_init();
-	sll_thread_index_t tid=_thread_new();
-	sll_object_t* o=sll_wait_thread(tid);
-	sll_object_t* rc_o=sll_operator_cast(o,sll_static_int[SLL_OBJECT_TYPE_INT]);
-	sll_release_object(o);
-	sll_return_code_t rc=(sll_return_code_t)(rc_o->dt.i);
-	sll_release_object(rc_o);
-	while (1){
-		sll_thread_index_t n_tid=_scheduler_queue_pop();
-		if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
-			break;
-		}
-		sll_release_object(sll_wait_thread(n_tid));
-		if (!sll_thread_delete(n_tid)){
-			SLL_UNREACHABLE();
-		}
-	}
+	sll_return_code_t rc=_scheduler_run();
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		sll_release_object(*(_vm_var_data+i));
-	}
-	if (!sll_thread_delete(tid)){
-		SLL_UNREACHABLE();
 	}
 	sll_platform_free_page(_vm_var_data,SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)));
 	_vm_var_data=NULL;
 	sll_current_runtime_data=NULL;
-	_thread_deinit();
-	_semaphore_deinit();
-	_scheduler_deinit();
-	_lock_deinit();
-	_io_dispatcher_deinit();
-	_barrier_deinit();
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
 	return rc;
@@ -266,11 +236,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 		o=sll_wait_thread(tid);
 	}
 	else{
-		sll_thread_index_t s_tid=sll_current_thread_index;
-		sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+		sll_thread_index_t s_tid=_scheduler_current_thread_index;
+		_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 		_scheduler_set_thread(tid);
 		o=sll_wait_thread(tid);
-		SLL_ASSERT(sll_current_thread_index==SLL_UNKNOWN_THREAD_INDEX);
+		SLL_ASSERT(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX);
 		if (s_tid!=SLL_UNKNOWN_THREAD_INDEX){
 			_scheduler_set_thread(s_tid);
 		}
@@ -290,7 +260,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_vm_get_instruction_count(void){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index_t tid){
-	sll_thread_index_t s_tid=sll_current_thread_index;
+	sll_thread_index_t s_tid=_scheduler_current_thread_index;
 	if (s_tid==SLL_UNKNOWN_THREAD_INDEX){
 		_scheduler_set_thread(tid);
 	}
@@ -308,7 +278,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 		if (!_scheduler_current_thread->tm){
 			_scheduler_queue_next();
 			RELOAD_THREAD_DATA;
-			if (sll_current_thread_index!=tid&&tid_dt->ret){
+			if (_scheduler_current_thread_index!=tid&&tid_dt->ret){
 				goto _cleanup;
 			}
 		}
@@ -969,7 +939,7 @@ _return:;
 							_scheduler_current_thread->si--;
 							sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
 						}
-						sll_thread_index_t idx=sll_current_thread_index;
+						sll_thread_index_t idx=_scheduler_current_thread_index;
 						_thread_terminate(tmp);
 						sll_release_object(tmp);
 						if (idx==tid){
@@ -1059,7 +1029,7 @@ _return:;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID:
-				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_int_to_object(sll_current_thread_index);
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_int_to_object(_scheduler_current_thread_index);
 				_scheduler_current_thread->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK:

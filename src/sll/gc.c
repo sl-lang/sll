@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/scheduler.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -11,6 +12,7 @@
 #include <sll/object.h>
 #include <sll/platform/memory.h>
 #include <sll/string.h>
+#include <sll/thread.h>
 #include <sll/types.h>
 #include <sll/vm.h>
 
@@ -81,7 +83,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 		else if (SLL_OBJECT_GET_TYPE(o)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(o)<SLL_OBJECT_TYPE_OBJECT){
 			if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(o)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
-				if (dt->fn.del){
+				if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->fn.del){
 					o->rc++;
 					sll_release_object(sll_execute_function(dt->fn.del,&o,1,0));
 					o->rc--;

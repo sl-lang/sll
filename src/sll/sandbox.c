@@ -49,13 +49,13 @@ sandbox_t _sandbox_flags=0;
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_flag_t f){
-	return !!((sll_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox)&(1ull<<f));
+	return !!((_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox)&(1ull<<f));
 }
 
 
 
 __SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o){
-	sandbox_t fl=(sll_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
+	sandbox_t fl=(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
 	sll_array_length_t l=(sll_array_length_t)POPULATION_COUNT(fl);
 	sll_array_create(l,o);
 	sll_array_length_t i=0;
@@ -77,7 +77,7 @@ __SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o){
 
 
 __SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flag_t f){
-	if (sll_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){
+	if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){
 		_sandbox_flags|=1ull<<f;
 	}
 	else{

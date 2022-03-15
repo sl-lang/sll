@@ -1,11 +1,11 @@
 #include <sll/_internal/api.h>
+#include <sll/_internal/scheduler.h>
 #include <sll/api.h>
 #include <sll/api/file.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/location.h>
 #include <sll/object.h>
-#include <sll/scheduler.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/thread.h>
@@ -66,7 +66,7 @@ __API_FUNC(vm_get_instruction_index){
 __API_FUNC(vm_get_location){
 	sll_instruction_index_t ii;
 	if (a<0){
-		const sll_call_stack_t* c_st=sll_thread_get_call_stack(sll_current_thread_index);
+		const sll_call_stack_t* c_st=sll_thread_get_call_stack(_scheduler_current_thread_index);
 		ii=(c_st->l?(c_st->dt+c_st->l-1)->_ii:sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
 	}
 	else{

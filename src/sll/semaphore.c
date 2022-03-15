@@ -38,15 +38,15 @@ sll_bool_t _semaphore_wait(sll_integer_t w){
 		return 0;
 	}
 	if ((_semaphore_data+w)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_semaphore_data+w)->first=sll_current_thread_index;
+		(_semaphore_data+w)->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_semaphore_data+w)->last->nxt=sll_current_thread_index;
+		(_semaphore_data+w)->last->nxt=_scheduler_current_thread_index;
 	}
 	(_semaphore_data+w)->last=_scheduler_current_thread;
 	_scheduler_current_thread->nxt=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread->st=THREAD_STATE_WAIT_SEMAPHORE;
-	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	return 1;
 }
 

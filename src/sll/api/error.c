@@ -1,10 +1,10 @@
 #include <sll/_internal/api.h>
+#include <sll/_internal/scheduler.h>
 #include <sll/api.h>
 #include <sll/api/vm.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/object.h>
-#include <sll/scheduler.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/thread.h>
@@ -17,7 +17,7 @@ __API_FUNC(error_get_call_stack){
 	if (a<0){
 		a=0;
 	}
-	const sll_call_stack_t* c_st=sll_thread_get_call_stack((b<0?sll_current_thread_index:(sll_thread_index_t)b));
+	const sll_call_stack_t* c_st=sll_thread_get_call_stack((b<0?_scheduler_current_thread_index:(sll_thread_index_t)b));
 	if (!c_st||a>c_st->l){
 		SLL_INIT_ARRAY(out);
 		return;

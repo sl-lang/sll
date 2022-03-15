@@ -45,15 +45,15 @@ sll_bool_t _barrier_wait(sll_integer_t w,sll_integer_t v,sll_bool_t g){
 		return 0;
 	}
 	if ((_barrier_data+w)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_barrier_data+w)->first=sll_current_thread_index;
+		(_barrier_data+w)->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_barrier_data+w)->last->nxt=sll_current_thread_index;
+		(_barrier_data+w)->last->nxt=_scheduler_current_thread_index;
 	}
 	(_barrier_data+w)->last=_scheduler_current_thread;
 	_scheduler_current_thread->nxt=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread->st=THREAD_STATE_WAIT_BARRIER;
-	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	return 1;
 }
 

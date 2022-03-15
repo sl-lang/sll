@@ -22,15 +22,4 @@
 
 
 
-/**
- * \flags var
- * \name sll_current_thread_index
- * \group scheduler
- * \desc Docs!
- * \type sll_thread_index_t
- */
-__SLL_EXTERNAL extern sll_thread_index_t sll_current_thread_index;
-
-
-
 #endif

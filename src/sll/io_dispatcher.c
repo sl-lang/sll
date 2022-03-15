@@ -126,13 +126,13 @@ void _io_dispatcher_queue(sll_file_t* f,sll_string_length_t sz){
 	_io_dispatcher_event=sll_reallocate(_io_dispatcher_event,_io_dispatcher_event_len*sizeof(event_data_t));
 	_io_dispatcher_raw_event=sll_reallocate(_io_dispatcher_raw_event,(_io_dispatcher_event_len+1)*sizeof(raw_event_data_t));
 	(_io_dispatcher_event+i)->f=f;
-	(_io_dispatcher_event+i)->tid=sll_current_thread_index;
+	(_io_dispatcher_event+i)->tid=_scheduler_current_thread_index;
 	(_io_dispatcher_event+i)->sz=sz;
 	INIT_RAW_EVENT(_io_dispatcher_raw_event+i+1,f->dt.fl.fd);
 	_platform_poll_start(_io_dispatcher_raw_event);
 	_scheduler_current_thread->ii++;
 	_scheduler_current_thread->st=THREAD_STATE_WAIT_IO;
-	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 }
 
 
