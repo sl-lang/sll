@@ -85,6 +85,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
 			WRAP_ARRAY_INDEX(b->dt.i,a->dt.a.l,idx);
+			if (idx<0||idx>=a->dt.a.l){
+				return SLL_ACQUIRE_STATIC_INT(0);
+			}
 			return SLL_FROM_CHAR(a->dt.s.v[idx]);
 		}
 	}
@@ -94,6 +97,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
 			WRAP_ARRAY_INDEX(b->dt.i,a->dt.a.l,idx);
+			if (idx<0||idx>=a->dt.a.l){
+				return SLL_ACQUIRE_STATIC_INT(0);
+			}
 			sll_object_t* o=a->dt.a.v[idx];
 			SLL_ACQUIRE(o);
 			return o;

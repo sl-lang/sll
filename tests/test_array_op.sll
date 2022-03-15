@@ -4,8 +4,8 @@
 	; Access
 	(<- expect (: [1 2 3 4] 0) 1 "Access")
 	(<- expect (: [1 2 3 4] -1) 4 "Access from end")
-	(<- expect (: [1 2 3 4] 4) 1 "Access out-of-bounds")
-	(<- expect (: [1 2 3 4] -5) 4 "Access from end, out-of-bounds")
+	(<- expect (: [1 2 3 4] 4) nil "Access out-of-bounds")
+	(<- expect (: [1 2 3 4] -5) nil "Access from end, out-of-bounds")
 	; ; Access Range
 	(<- expect (: [1 2 3 4] 1 3) [2 3] "Access range")
 	(<- expect (: [1 2 3 4] 1 -1) [2 3] "Access range, index from end")
