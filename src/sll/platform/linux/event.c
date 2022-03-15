@@ -23,7 +23,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_event_handle_t sll_platform_event_create(v
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_event_delete(sll_event_handle_t e){
 #ifdef __SLL_BUILD_DARWIN
-	dispatch_release((dispatch_object_t)e);
+	dispatch_release(*((dispatch_object_t*)(&e)));
 	return 1;
 #else
 	return !close((int)ADDR(e));
