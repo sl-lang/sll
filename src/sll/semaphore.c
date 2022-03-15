@@ -1,7 +1,8 @@
-#include <sll/_internal/semaphore.h>
 #include <sll/_internal/scheduler.h>
+#include <sll/_internal/semaphore.h>
 #include <sll/common.h>
 #include <sll/memory.h>
+#include <sll/scheduler.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 

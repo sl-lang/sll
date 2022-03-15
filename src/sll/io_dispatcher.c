@@ -9,9 +9,10 @@
 #include <sll/platform/_dispatcher.h>
 #include <sll/platform/file.h>
 #include <sll/platform/thread.h>
-#include <sll/thread.h>
+#include <sll/scheduler.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
+#include <sll/thread.h>
 #include <sll/types.h>
 
 

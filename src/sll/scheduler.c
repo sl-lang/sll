@@ -6,6 +6,7 @@
 #include <sll/platform/memory.h>
 #include <sll/platform/thread.h>
 #include <sll/platform/util.h>
+#include <sll/scheduler.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 
@@ -43,7 +44,7 @@ void _scheduler_deinit(void){
 			SLL_UNIMPLEMENTED();
 		}
 	}
-	sll_platform_free_page(_scheduler_data,SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)+SCHEDULER_MAX_THREADS*sizeof(sll_thread_index_t)));
+	sll_platform_free_page(_scheduler_data,SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)+SLL_SCHEDULER_MAX_THREADS*sizeof(sll_thread_index_t)));
 }
 
 
@@ -51,9 +52,9 @@ void _scheduler_deinit(void){
 void _scheduler_init(void){
 	_scheduler_current_thread=NULL;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
-	_scheduler_data=sll_platform_allocate_page(SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)+SCHEDULER_MAX_THREADS*sizeof(sll_thread_index_t)),0);
+	_scheduler_data=sll_platform_allocate_page(SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)+SLL_SCHEDULER_MAX_THREADS*sizeof(sll_thread_index_t)),0);
 	sll_thread_index_t* q_dt=PTR(ADDR(_scheduler_data)+(*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t));
-	queue_length_t off=SCHEDULER_MAX_THREADS/(*sll_platform_cpu_count);
+	queue_length_t off=SLL_SCHEDULER_MAX_THREADS/(*sll_platform_cpu_count);
 	for (sll_cpu_t i=0;i<*sll_platform_cpu_count;i++){
 		(_scheduler_data+i)->queue=q_dt;
 		(_scheduler_data+i)->queue_idx=0;

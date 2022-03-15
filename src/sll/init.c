@@ -11,8 +11,9 @@
 #include <sll/file.h>
 #include <sll/location.h>
 #include <sll/platform/file.h>
-#include <sll/thread.h>
+#include <sll/scheduler.h>
 #include <sll/string.h>
+#include <sll/thread.h>
 #include <sll/types.h>
 #include <sll/vm.h>
 #ifdef DEBUG_BUILD

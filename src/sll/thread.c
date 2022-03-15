@@ -5,6 +5,7 @@
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/platform/memory.h>
+#include <sll/scheduler.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 #include <sll/vm.h>

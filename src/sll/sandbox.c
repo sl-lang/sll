@@ -7,6 +7,7 @@
 #include <sll/gc.h>
 #include <sll/object.h>
 #include <sll/sandbox.h>
+#include <sll/scheduler.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 
