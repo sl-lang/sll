@@ -218,7 +218,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	_scheduler_init();
 	_semaphore_init();
 	_thread_init();
-	sll_thread_index_t tid=_scheduler_new_thread();
+	sll_thread_index_t tid=_thread_new();
 	sll_object_t* o=sll_wait_thread(tid);
 	sll_object_t* rc_o=sll_operator_cast(o,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_release_object(o);
@@ -294,7 +294,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 	if (s_tid==SLL_UNKNOWN_THREAD_INDEX){
 		_scheduler_set_thread(tid);
 	}
-	thread_data_t* tid_dt=_scheduler_get_thread(tid);
+	thread_data_t* tid_dt=_thread_get(tid);
 	if (_scheduler_current_thread->ret){
 		goto _cleanup;
 	}
@@ -970,7 +970,7 @@ _return:;
 							sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
 						}
 						sll_thread_index_t idx=sll_current_thread_index;
-						_scheduler_terminate_thread(tmp);
+						_thread_terminate(tmp);
 						sll_release_object(tmp);
 						if (idx==tid){
 							goto _cleanup;
@@ -1043,7 +1043,7 @@ _return:;
 					sll_integer_t n_tid=n_tid_o->dt.i;
 					sll_release_object(n_tid_o);
 					thread_data_t* c_thr=_scheduler_current_thread;
-					if (_scheduler_wait_thread(n_tid)){
+					if (_thread_wait(n_tid)){
 						c_thr->ii++;
 						n_tid=_scheduler_queue_pop();
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){

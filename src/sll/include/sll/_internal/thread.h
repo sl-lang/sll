@@ -56,19 +56,19 @@ extern thread_data_t** _thread_data;
 
 
 
-thread_data_t* _scheduler_get_thread(sll_thread_index_t t);
+thread_data_t* _thread_get(sll_thread_index_t t);
 
 
 
-sll_thread_index_t _scheduler_new_thread(void);
+sll_thread_index_t _thread_new(void);
 
 
 
-void _scheduler_terminate_thread(sll_object_t* ret);
+void _thread_terminate(sll_object_t* ret);
 
 
 
-sll_bool_t _scheduler_wait_thread(sll_integer_t w);
+sll_bool_t _thread_wait(sll_integer_t w);
 
 
 

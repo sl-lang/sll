@@ -53,7 +53,7 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 		o=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
 	}
 	sll_thread_index_t tid=evt->tid;
-	thread_data_t* thr=_scheduler_get_thread(tid);
+	thread_data_t* thr=_thread_get(tid);
 	*(thr->stack+thr->si)=o;
 	thr->si++;
 	for (event_list_length_t i=idx+1;i<_io_dispatcher_event_len;i++){

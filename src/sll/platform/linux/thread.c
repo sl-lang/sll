@@ -56,7 +56,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu)
 			CPU_SET(i,&set);
 		}
 	}
-	return !pthread_setaffinity_np(pthread_self(),sizeof(set),&set);
+	return !pthread_setaffinity_np(pthread_self(),sizeof(cpu_set_t),&set);
 #endif
 }
 

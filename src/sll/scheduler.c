@@ -13,6 +13,7 @@
 
 
 static scheduler_cpu_data_t* _scheduler_data;
+static volatile sll_bool_t _scheduler_ended;
 
 
 
@@ -29,11 +30,14 @@ static void _cpu_core_worker(void* dt){
 	if (!sll_platform_set_cpu(id)){
 		SLL_UNIMPLEMENTED();
 	}
+	while (!_scheduler_ended){
+	}
 }
 
 
 
 void _scheduler_deinit(void){
+	_scheduler_ended=1;
 	_scheduler_current_thread=NULL;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	if (!sll_platform_set_cpu(SLL_CPU_ANY)){
@@ -50,6 +54,7 @@ void _scheduler_deinit(void){
 
 
 void _scheduler_init(void){
+	_scheduler_ended=0;
 	_scheduler_current_thread=NULL;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_data=sll_platform_allocate_page(SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)+SLL_SCHEDULER_MAX_THREADS*sizeof(sll_thread_index_t)),0);

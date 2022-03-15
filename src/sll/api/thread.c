@@ -38,7 +38,7 @@ __API_FUNC(thread_create_semaphore){
 
 
 __API_FUNC(thread_get_internal_data){
-	thread_data_t* thr=_scheduler_get_thread((a<0?0:(sll_thread_index_t)a));
+	thread_data_t* thr=_thread_get((a<0?0:(sll_thread_index_t)a));
 	sll_array_create(2,out);
 	if (thr){
 		out->v[0]=sll_int_to_object(thr->ii);

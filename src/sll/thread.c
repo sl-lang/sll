@@ -44,7 +44,7 @@ void _thread_deinit(void){
 
 
 
-thread_data_t* _scheduler_get_thread(sll_thread_index_t t){
+thread_data_t* _thread_get(sll_thread_index_t t){
 	return (t>=_thread_len||THREAD_IS_UNUSED(*(_thread_data+t))?NULL:*(_thread_data+t));
 }
 
@@ -59,7 +59,7 @@ void _thread_init(void){
 
 
 
-sll_thread_index_t _scheduler_new_thread(void){
+sll_thread_index_t _thread_new(void){
 	sll_thread_index_t o=_thread_next;
 	if (o==SLL_UNKNOWN_THREAD_INDEX){
 		o=_thread_len;
@@ -100,7 +100,7 @@ sll_thread_index_t _scheduler_new_thread(void){
 
 
 
-void _scheduler_terminate_thread(sll_object_t* ret){
+void _thread_terminate(sll_object_t* ret){
 	SLL_ASSERT(_scheduler_current_thread->st==THREAD_STATE_RUNNING&&!_scheduler_current_thread->suspended);
 	SLL_ACQUIRE(ret);
 	_scheduler_current_thread->ret=ret;
@@ -129,7 +129,7 @@ void _scheduler_terminate_thread(sll_object_t* ret){
 
 
 
-sll_bool_t _scheduler_wait_thread(sll_integer_t w){
+sll_bool_t _thread_wait(sll_integer_t w){
 	if (w<0||w>=_thread_len||!*(_thread_data+w)||w==sll_current_thread_index||(*(_thread_data+w))->ret){
 		return 0;
 	}
@@ -149,8 +149,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integ
 		SLL_UNIMPLEMENTED();
 	}
 	if (fn&&fn<=sll_current_runtime_data->a_dt->ft.l){
-		sll_thread_index_t o=_scheduler_new_thread();
-		thread_data_t* thr=_scheduler_get_thread(o);
+		sll_thread_index_t o=_thread_new();
+		thread_data_t* thr=_thread_get(o);
 		for (;thr->si<all;thr->si++){
 			*(thr->stack+thr->si)=*(al+thr->si);
 			SLL_ACQUIRE(*(al+thr->si));
@@ -201,7 +201,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_thread_get_call_st
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_thread_get_instruction_index(sll_thread_index_t t){
-	thread_data_t* thr=(t==SLL_UNKNOWN_THREAD_INDEX?_scheduler_current_thread:_scheduler_get_thread(t));
+	thread_data_t* thr=(t==SLL_UNKNOWN_THREAD_INDEX?_scheduler_current_thread:_thread_get(t));
 	return (thr?thr->ii:0);
 }
 
