@@ -47,7 +47,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_event_set(sll_event_ha
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_event_wait(sll_event_handle_t e){
 #ifdef __SLL_BUILD_DARWIN
-	return !dispatch_semaphore_wait(*((dispatch_object_t*)(&e)),DISPATCH_TIME_FOREVER);
+	return !dispatch_semaphore_wait(*((dispatch_semaphore_t*)(&e)),DISPATCH_TIME_FOREVER);
 #else
 	__SLL_U64 val;
 	return (read((int)ADDR(e),&val,sizeof(__SLL_U64))==sizeof(__SLL_U64));
