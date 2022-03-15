@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #ifdef __SLL_BUILD_DARWIN
+#include <mach/thread_act.h>
 #include <mach/thread_policy.h>
 #endif
 
