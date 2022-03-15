@@ -1,6 +1,7 @@
 #include <sll/_internal/platform.h>
 #include <sll/common.h>
 #include <sll/platform/thread.h>
+#include <sll/platform/util.h>
 #include <sll/types.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -36,19 +37,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_intern
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_thread_index_t tid,sll_cpu_t cpu){
-	sll_cpu_t max=sysconf(_SC_NPROCESSORS_ONLN);
-	if (cpu!=SLL_CPU_ANY&&cpu>=max){
+	if (cpu!=SLL_CPU_ANY&&cpu>=*sll_platform_cpu_count){
 		cpu=SLL_CPU_ANY;
 	}
 #ifdef __SLL_BUILD_DARWIN
-	thread_port_t sys_tid=pthread_mach_thread_np(tid);
-	if (cpu==SLL_CPU_ANY){
-		SLL_UNIMPLEMENTED();
-	}
 	thread_affinity_policy_data_t dt={
-		cpu
+		(cpu==SLL_CPU_ANY?0xffffffff:1<<cpu)
 	};
-	return thread_policy_set(sys_tid,THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),1)==KERN_SUCCESS;
+	return thread_policy_set(pthread_mach_thread_np(tid),THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),1)==KERN_SUCCESS;
 #else
 	cpu_set_t set;
 	CPU_ZERO(&set);
@@ -56,9 +52,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_t
 		CPU_SET(cpu,&set);
 	}
 	else{
-		while (max){
-			max--;
-			CPU_SET(max,&set);
+		for (sll_cpu_t i=0;i<*sll_platform_cpu_count;i++){
+			CPU_SET(i,&set);
 		}
 	}
 	return !pthread_setaffinity_np((pthread_t)tid,sizeof(set),&set);

@@ -21,6 +21,7 @@
 
 
 
+static sll_cpu_t _linux_cpu=0;
 static sll_environment_t _linux_env={NULL,0};
 static __STATIC_STRING(_linux_platform_str,
 #ifdef __SLL_BUILD_DARWIN
@@ -35,6 +36,7 @@ static struct termios _linux_stdin_cfg;
 
 
 
+__SLL_EXTERNAL const sll_cpu_t* sll_platform_cpu_count=&_linux_cpu;
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_linux_env;
 __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_linux_platform_str;
 __SLL_EXTERNAL const sll_time_zone_t* sll_platform_time_zone=&_linux_platform_time_zone;
@@ -126,12 +128,7 @@ void _init_platform(void){
 	sll_copy_data(nm,sz,_linux_platform_time_zone.nm);
 	_linux_platform_time_zone.nm[sz]=0;
 	_linux_platform_time_zone.off=-timezone/60;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void){
-	return sysconf(_SC_NPROCESSORS_ONLN);
+	_linux_cpu=sysconf(_SC_NPROCESSORS_ONLN);
 }
 
 

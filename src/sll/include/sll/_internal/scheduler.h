@@ -10,6 +10,15 @@ typedef __SLL_U32 queue_length_t;
 
 
 
+typedef struct __SCHEDULER_CPU_DATA{
+	sll_thread_index_t* queue;
+	queue_length_t queue_idx;
+	queue_length_t queue_len;
+	sll_internal_thread_index_t tid;
+} scheduler_cpu_data_t;
+
+
+
 extern thread_data_t* _scheduler_current_thread;
 
 

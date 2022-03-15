@@ -23,6 +23,7 @@
 
 ### Removed
 
+- CPU count getter function `sll_platform_get_cpu_count` (in favor of global constant `sll_platform_cpu_count`)
 - Unused function `sll_cli_main_raw`
 
 ## [0.7.8] - 2022-03-12

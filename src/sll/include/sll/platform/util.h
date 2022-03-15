@@ -13,6 +13,17 @@
 
 /**
  * \flags var
+ * \name sll_platform_cpu_count
+ * \group platform
+ * \desc Docs!
+ * \type const sll_cpu_t*
+ */
+__SLL_EXTERNAL extern const sll_cpu_t* sll_platform_cpu_count;
+
+
+
+/**
+ * \flags var
  * \name sll_environment
  * \group platform
  * \desc Docs!
@@ -41,17 +52,6 @@ __SLL_EXTERNAL extern const sll_string_t* sll_platform_string;
  * \type const sll_time_zone_t*
  */
 __SLL_EXTERNAL extern const sll_time_zone_t* sll_platform_time_zone;
-
-
-
-/**
- * \flags check_output func
- * \name sll_platform_get_cpu_count
- * \group platform
- * \desc Docs!
- * \ret sll_size_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void);
 
 
 

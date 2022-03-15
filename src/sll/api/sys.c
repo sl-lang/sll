@@ -113,7 +113,7 @@ __API_FUNC(sys_get_args){
 
 
 __API_FUNC(sys_get_cpu_count){
-	return sll_platform_get_cpu_count();
+	return *sll_platform_cpu_count;
 }
 
 

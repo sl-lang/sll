@@ -17,6 +17,7 @@
 
 
 
+static sll_cpu_t _win_cpu=0;
 static HANDLE _win_wh=INVALID_HANDLE_VALUE;
 static sll_environment_t _win_env={NULL,0};
 static __STATIC_STRING(_win_platform_str,"windows");
@@ -32,6 +33,7 @@ void* _win_dll_handle=NULL;
 
 
 
+__SLL_EXTERNAL const sll_cpu_t* sll_platform_cpu_count=&_win_cpu;
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_win_env;
 __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_win_platform_str;
 __SLL_EXTERNAL const sll_time_zone_t* sll_platform_time_zone=&_win_platform_time_zone;
@@ -130,6 +132,9 @@ void _init_platform(void){
 		i++;
 	} while (*(nm+i-1));
 	WideCharToMultiByte(CP_UTF8,0,nm,i,_win_platform_time_zone.nm,32,NULL,NULL);
+	SYSTEM_INFO si;
+	GetSystemInfo(&si);
+	_win_cpu=(sll_cpu_t)si.dwNumberOfProcessors;
 }
 
 
@@ -138,14 +143,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 	FILETIME ft;
 	GetSystemTimeAsFileTime(&ft);
 	return ((((sll_time_t)ft.dwHighDateTime)<<32)|ft.dwLowDateTime)*100-11644473600000000000;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_get_cpu_count(void){
-	SYSTEM_INFO si;
-	GetSystemInfo(&si);
-	return si.dwNumberOfProcessors;
 }
 
 
