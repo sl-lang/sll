@@ -8,6 +8,7 @@
 - Allocator API: `sll_allocator_from_memory`, `sll_allocator_init`, `sll_allocator_move`, `sll_allocator_release` and `sll_allocator_resize` ([#224])
 - Implemented `input.sll`, `input$char`, `input$int` and `input$string` ([#244])
 - Implemented `sll_cpu_t`, `SLL_CPU_ANY`, `sll_platform_current_thread` and `sll_platform_set_cpu` ([#243])
+- Implemented `sll_event_handle_t`, `sll_platform_event_create`, `sll_platform_event_delete`, `sll_platform_event_set` and `sll_platform_event_wait`
 - Implemented `sll_set_sandbox_flag_string` and `sys$set_sandbox_flags`
 - Thread count limit: `SLL_SCHEDULER_MAX_THREADS`
 

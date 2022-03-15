@@ -280,6 +280,10 @@ typedef sll_float_t sll_second_t;
 
 
 
+typedef void* sll_event_handle_t;
+
+
+
 typedef void* sll_file_descriptor_t;
 
 

@@ -52,6 +52,7 @@ typedef struct __THREAD_DATA{
 
 
 
+extern volatile thread_list_length_t _thread_active_count;
 extern thread_data_t** _thread_data;
 
 

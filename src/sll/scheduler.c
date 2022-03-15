@@ -39,12 +39,11 @@ static void _cpu_core_worker(void* dt){
 	}
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread=NULL;
-	while (1){
+	while (_thread_active_count){
 		sll_thread_index_t n_tid=_scheduler_queue_pop();
-		if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
-			break;
+		if (n_tid!=SLL_UNKNOWN_THREAD_INDEX){
+			sll_release_object(sll_wait_thread(n_tid));
 		}
-		sll_release_object(sll_wait_thread(n_tid));
 	}
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread=NULL;

@@ -8,21 +8,19 @@
 #define MAX_CLEANUP_TABLE_SIZE 512
 
 #define WRAP_ARRAY_INDEX(idx,len,var) \
-	sll_integer_t var; \
-	do{ \
-		sll_integer_t __idx=(idx); \
-		sll_integer_t __len=(len); \
-		var=__idx-__idx/__len*__len; \
-		if (var<0){ \
-			var+=__len; \
-		} \
-	} while (0)
+	sll_integer_t var=(idx); \
+	WRAP_ARRAY_INDEX_VAR(var,(len));
 #define WRAP_ARRAY_INDEX_VAR(idx,len) \
 	do{ \
 		sll_integer_t __len=(len); \
-		idx=idx-idx/__len*__len; \
 		if (idx<0){ \
 			idx+=__len; \
+			if (idx<0){ \
+				idx=0; \
+			} \
+		} \
+		else if (idx>=__len){ \
+			idx=__len; \
 		} \
 	} while (0)
 

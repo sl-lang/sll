@@ -19,6 +19,7 @@ static sll_array_length_t _scheduler_allocator_cache_pool_len;
 
 
 
+volatile thread_list_length_t _thread_active_count;
 thread_data_t** _thread_data;
 
 
@@ -52,6 +53,7 @@ thread_data_t* _thread_get(sll_thread_index_t t){
 
 void _thread_init(void){
 	_thread_data=NULL;
+	_thread_active_count=0;
 	_thread_next=SLL_UNKNOWN_THREAD_INDEX;
 	_thread_len=0;
 	_scheduler_allocator_cache_pool_len=0;
@@ -90,6 +92,7 @@ sll_thread_index_t _thread_new(void){
 	n->st=THREAD_STATE_INITIALIZED;
 	n->suspended=0;
 	*(_thread_data+o)=n;
+	_thread_active_count++;
 	return o;
 }
 
@@ -101,6 +104,7 @@ void _thread_terminate(sll_object_t* ret){
 	_scheduler_current_thread->ret=ret;
 	_scheduler_current_thread->st=THREAD_STATE_TERMINATED;
 	_scheduler_current_thread_index=_scheduler_current_thread->wait;
+	_thread_active_count--;
 	if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){
 		_scheduler_current_thread_index=_scheduler_queue_pop();
 		if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
