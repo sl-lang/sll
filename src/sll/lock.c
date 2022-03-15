@@ -94,6 +94,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_release(sll_lock_index_t l
 	thread_data_t* thr=*(_thread_data+(_lock_data+l)->lock);
 	(_lock_data+l)->first=thr->nxt;
 	thr->st=THREAD_STATE_QUEUED;
-	_scheduler_queue_thread((_lock_data+l)->lock);
+	_scheduler_queue_thread(0,(_lock_data+l)->lock);
 	return 1;
 }

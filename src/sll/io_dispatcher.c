@@ -23,7 +23,6 @@ static event_data_t* _io_dispatcher_event;
 static event_list_length_t _io_dispatcher_event_len;
 static sll_internal_thread_index_t _io_dispatcher_thread;
 static raw_event_data_t* _io_dispatcher_raw_event;
-static volatile dispatched_thread_t _io_dispatcher_restarted_thread;
 
 
 
@@ -82,13 +81,7 @@ static void _poll_thread(void* arg){
 			continue;
 		}
 		sll_thread_index_t tid=_restart_thread(i-1);
-		if (_io_dispatcher_restarted_thread.tid==SLL_UNKNOWN_THREAD_INDEX){
-			_io_dispatcher_restarted_thread.tid=tid;
-			_platform_notify_dispatch(&_io_dispatcher_restarted_thread);
-		}
-		else{
-			_scheduler_queue_thread(tid);
-		}
+		_scheduler_queue_thread(1,tid);
 	}
 }
 
@@ -100,7 +93,7 @@ void _io_dispatcher_deinit(void){
 	if (!sll_platform_join_thread(_io_dispatcher_thread)){
 		SLL_UNREACHABLE();
 	}
-	_platform_deinit_io_dispatcher(_io_dispatcher_raw_event,_io_dispatcher_wait_handle,&_io_dispatcher_restarted_thread);
+	_platform_deinit_io_dispatcher(_io_dispatcher_raw_event,_io_dispatcher_wait_handle);
 	sll_deallocate(_io_dispatcher_event);
 	sll_deallocate(_io_dispatcher_raw_event);
 }
@@ -112,7 +105,7 @@ void _io_dispatcher_init(void){
 	_io_dispatcher_event=NULL;
 	_io_dispatcher_event_len=0;
 	_io_dispatcher_raw_event=sll_allocate(sizeof(raw_event_data_t));
-	_platform_init_io_dispatcher(_io_dispatcher_raw_event,&_io_dispatcher_wait_handle,&_io_dispatcher_restarted_thread);
+	_platform_init_io_dispatcher(_io_dispatcher_raw_event,&_io_dispatcher_wait_handle);
 	_io_dispatcher_thread=sll_platform_start_thread(_poll_thread,NULL);
 	SLL_ASSERT(_io_dispatcher_thread!=SLL_UNKNOWN_INTERNAL_THREAD_INDEX);
 }
@@ -133,13 +126,4 @@ void _io_dispatcher_queue(sll_file_t* f,sll_string_length_t sz){
 	_scheduler_current_thread->ii++;
 	_scheduler_current_thread->st=THREAD_STATE_WAIT_IO;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
-}
-
-
-
-sll_thread_index_t _io_dispatcher_wait(void){
-	if (!_io_dispatcher_event_len){
-		return SLL_UNKNOWN_THREAD_INDEX;
-	}
-	return _platform_wait_notify_dispatch(&_io_dispatcher_restarted_thread);
 }

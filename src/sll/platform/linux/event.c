@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 #ifdef __SLL_BUILD_DARWIN
@@ -33,11 +34,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_event_delete(sll_event
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_event_set(sll_event_handle_t e){
-	SLL_UNIMPLEMENTED();
+#ifdef __SLL_BUILD_DARWIN
+	dispatch_semaphore_signal(*((dispatch_object_t*)(&e)));
+	return 1;
+#else
+	__SLL_U64 val=1;
+	return (write((int)ADDR(e),&val,sizeof(__SLL_U64))==sizeof(__SLL_U64));
+#endif
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_event_wait(sll_event_handle_t e){
-	SLL_UNIMPLEMENTED();
+#ifdef __SLL_BUILD_DARWIN
+	return !dispatch_semaphore_wait(*((dispatch_object_t*)(&e)),DISPATCH_TIME_FOREVER);
+#else
+	__SLL_U64 val;
+	return (read((int)ADDR(e),&val,sizeof(__SLL_U64))==sizeof(__SLL_U64));
+#endif
 }

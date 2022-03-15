@@ -26,20 +26,19 @@ static int _linux_pipe_write_end;
 
 
 
-static __SLL_FORCE_INLINE void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile dispatched_thread_t* dt){
+static __SLL_FORCE_INLINE void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait){
 #ifdef __SLL_BUILD_DARWIN
 	close(_linux_pipe_write_end);
 #endif
 	close(r_dt->fd);
 	sem_close(wait);
-	sem_close(dt->lck);
 	sem_unlink("/__sll_dispatcher_wait");
 	sem_unlink("/__sll_dispatcher_notify");
 }
 
 
 
-static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile dispatched_thread_t* dt){
+static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait){
 #ifdef __SLL_BUILD_DARWIN
 	int pipe_fd[2];
 	if (pipe(pipe_fd)==-1){
@@ -52,13 +51,6 @@ static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_
 #endif
 	r_dt->events=POLLIN;
 	*wait=sem_open("/__sll_dispatcher_wait",O_CREAT,S_IRUSR|S_IWUSR,0);
-	dt->lck=sem_open("/__sll_dispatcher_notify",O_CREAT,S_IRUSR|S_IWUSR,0);
-}
-
-
-
-static __SLL_FORCE_INLINE void _platform_notify_dispatch(volatile dispatched_thread_t* dt){
-	sem_post(dt->lck);
 }
 
 
@@ -138,12 +130,4 @@ static __SLL_FORCE_INLINE void _platform_wait_for_dispatch(raw_event_data_t* dt)
 #endif
 		SLL_UNIMPLEMENTED();
 	}
-}
-
-
-
-static __SLL_FORCE_INLINE sll_thread_index_t _platform_wait_notify_dispatch(volatile dispatched_thread_t* dt){
-	dt->tid=SLL_UNKNOWN_THREAD_INDEX;
-	sem_wait(dt->lck);
-	return dt->tid;
 }

@@ -117,6 +117,10 @@
 
 #define RELOAD_THREAD_DATA \
 	do{ \
+		if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){ \
+			_scheduler_current_thread_index=_scheduler_queue_pop(); \
+			_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index); \
+		} \
 		if (_scheduler_current_thread->c_st.l){ \
 			func_var_off=ADDR((_scheduler_current_thread->c_st.dt+_scheduler_current_thread->c_st.l-1)->_var_mem_off); \
 		} \

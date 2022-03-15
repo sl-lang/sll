@@ -42,13 +42,6 @@ typedef struct pollfd raw_event_data_t;
 
 
 
-typedef struct __DISPATCHED_THREAD{
-	sll_thread_index_t tid;
-	void* lck;
-} dispatched_thread_t;
-
-
-
 void _io_dispatcher_deinit(void);
 
 
@@ -58,10 +51,6 @@ void _io_dispatcher_init(void);
 
 
 void _io_dispatcher_queue(sll_file_t* f,sll_string_length_t sz);
-
-
-
-sll_thread_index_t _io_dispatcher_wait(void);
 
 
 

@@ -17,6 +17,7 @@ typedef struct __SCHEDULER_CPU_DATA{
 	sll_internal_thread_index_t tid;
 	sll_event_handle_t sig;
 	sll_cpu_t id;
+	sll_bool_t wait;
 	sll_thread_index_t queue[];
 } scheduler_cpu_data_t;
 
@@ -39,7 +40,7 @@ sll_return_code_t _scheduler_run(void);
 
 
 
-void _scheduler_queue_thread(sll_thread_index_t t);
+void _scheduler_queue_thread(sll_bool_t any,sll_thread_index_t t);
 
 
 

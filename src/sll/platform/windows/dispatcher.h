@@ -8,25 +8,16 @@
 
 
 
-static __SLL_FORCE_INLINE void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait,volatile dispatched_thread_t* dt){
+static __SLL_FORCE_INLINE void _platform_deinit_io_dispatcher(raw_event_data_t* r_dt,void* wait){
 	CloseHandle(*r_dt);
 	CloseHandle(wait);
-	CloseHandle(dt->lck);
 }
 
 
 
-static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait,volatile dispatched_thread_t* dt){
+static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait){
 	*r_dt=CreateEventA(NULL,TRUE,FALSE,NULL);
 	*wait=CreateEventA(NULL,TRUE,FALSE,NULL);
-	dt->tid=0;
-	dt->lck=CreateEventA(NULL,TRUE,FALSE,NULL);
-}
-
-
-
-static __SLL_FORCE_INLINE void _platform_notify_dispatch(volatile dispatched_thread_t* dt){
-	SetEvent(dt->lck);
 }
 
 
@@ -75,14 +66,4 @@ static __SLL_FORCE_INLINE void _platform_wait_for_dispatch(raw_event_data_t* dt)
 		SLL_UNIMPLEMENTED();
 	}
 	ResetEvent(*dt);
-}
-
-
-
-static __SLL_FORCE_INLINE sll_thread_index_t _platform_wait_notify_dispatch(volatile dispatched_thread_t* dt){
-	dt->tid=SLL_UNKNOWN_THREAD_INDEX;
-	if (WaitForSingleObject(dt->lck,INFINITE)!=WAIT_OBJECT_0){
-		SLL_UNIMPLEMENTED();
-	}
-	return dt->tid;
 }
