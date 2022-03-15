@@ -1,0 +1,83 @@
+#ifndef __SLL_INTERNAL_THREAD_H__
+#define __SLL_INTERNAL_THREAD_H__ 1
+#include <sll/_internal/common.h>
+#include <sll/_internal/sandbox.h>
+#include <sll/_size_types.h>
+#include <sll/types.h>
+
+
+
+#define THREAD_SCHEDULER_INSTRUCTION_COUNT 10
+#define THREAD_IS_UNUSED(t) (ADDR(t)>>63)
+#define THREAD_NEXT_UNUSED(id) (PTR((id)|0x8000000000000000ull))
+#define THREAD_GET_NEXT_UNUSED(t) ((sll_thread_index_t)(ADDR((t))&0x7fffffffffffffffull))
+#define THREAD_SIZE SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz*sizeof(sll_object_t*))
+
+#define THREAD_ALLOCATOR_CACHE_POOL_SIZE 16
+
+#define THREAD_STATE_INITIALIZED 0
+#define THREAD_STATE_RUNNING 1
+#define THREAD_STATE_QUEUED 2
+#define THREAD_STATE_WAIT_BARRIER 3
+#define THREAD_STATE_WAIT_IO 4
+#define THREAD_STATE_WAIT_LOCK 5
+#define THREAD_STATE_WAIT_SEMAPHORE 6
+#define THREAD_STATE_WAIT_THREAD 7
+#define THREAD_STATE_TERMINATED 8
+#define THREAD_STATE_UNDEFINED 255
+
+
+
+typedef __SLL_U8 thread_state_t;
+
+
+
+typedef __SLL_U32 thread_list_length_t;
+
+
+
+typedef struct __THREAD_DATA{
+	sll_object_t** stack;
+	sll_instruction_index_t ii;
+	sll_stack_offset_t si;
+	sll_thread_index_t nxt;
+	sll_thread_index_t wait;
+	sll_object_t* ret;
+	sll_call_stack_t c_st;
+	sandbox_t sandbox;
+	sll_char_t tm;
+	thread_state_t st;
+	sll_bool_t suspended;
+} thread_data_t;
+
+
+
+extern thread_data_t** _thread_data;
+
+
+
+thread_data_t* _scheduler_get_thread(sll_thread_index_t t);
+
+
+
+sll_thread_index_t _scheduler_new_thread(void);
+
+
+
+void _scheduler_terminate_thread(sll_object_t* ret);
+
+
+
+sll_bool_t _scheduler_wait_thread(sll_integer_t w);
+
+
+
+void _thread_deinit(void);
+
+
+
+void _thread_init(void);
+
+
+
+#endif

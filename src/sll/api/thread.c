@@ -1,10 +1,13 @@
 #include <sll/_internal/api.h>
-#include <sll/_internal/scheduler.h>
+#include <sll/_internal/thread.h>
 #include <sll/api.h>
 #include <sll/array.h>
+#include <sll/barrier.h>
 #include <sll/common.h>
-#include <sll/scheduler.h>
+#include <sll/lock.h>
+#include <sll/semaphore.h>
 #include <sll/static_object.h>
+#include <sll/thread.h>
 #include <sll/types.h>
 
 

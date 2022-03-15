@@ -5,7 +5,7 @@
 #include <sll/common.h>
 #include <sll/location.h>
 #include <sll/object.h>
-#include <sll/scheduler.h>
+#include <sll/thread.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>

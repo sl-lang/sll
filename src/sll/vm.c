@@ -1,7 +1,11 @@
+#include <sll/_internal/barrier.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
+#include <sll/_internal/lock.h>
 #include <sll/_internal/scheduler.h>
+#include <sll/_internal/semaphore.h>
 #include <sll/_internal/stack.h>
+#include <sll/_internal/thread.h>
 #include <sll/api/file.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
@@ -19,7 +23,7 @@
 #include <sll/operator.h>
 #include <sll/platform/memory.h>
 #include <sll/sandbox.h>
-#include <sll/scheduler.h>
+#include <sll/thread.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/vm.h>
@@ -207,8 +211,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 		&tt
 	};
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
-	_scheduler_init();
+	_barrier_init();
 	_io_dispatcher_init();
+	_lock_init();
+	_scheduler_init();
+	_semaphore_init();
+	_thread_init();
 	sll_thread_index_t tid=_scheduler_new_thread();
 	sll_object_t* o=sll_wait_thread(tid);
 	sll_object_t* rc_o=sll_operator_cast(o,sll_static_int[SLL_OBJECT_TYPE_INT]);
@@ -234,8 +242,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_platform_free_page(_vm_var_data,SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)));
 	_vm_var_data=NULL;
 	sll_current_runtime_data=NULL;
-	_io_dispatcher_deinit();
+	_thread_deinit();
+	_semaphore_deinit();
 	_scheduler_deinit();
+	_lock_deinit();
+	_io_dispatcher_deinit();
+	_barrier_deinit();
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
 	return rc;
@@ -1071,14 +1083,14 @@ _return:;
 					sll_bool_t wait=0;
 					switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK:
-							wait=_scheduler_wait_lock(lck);
+							wait=_lock_wait(lck);
 							break;
 						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_SEMAPHORE:
-							wait=_scheduler_wait_semaphore(lck);
+							wait=_semaphore_wait(lck);
 							break;
 						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ:
 						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ:
-							wait=_scheduler_wait_barrier(lck,v,SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ);
+							wait=_barrier_wait(lck,v,SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ);
 							break;
 					}
 					if (wait){

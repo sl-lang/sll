@@ -4,7 +4,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/object.h>
-#include <sll/scheduler.h>
+#include <sll/thread.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>

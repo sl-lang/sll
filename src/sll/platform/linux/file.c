@@ -4,7 +4,7 @@
 #include <sll/error.h>
 #include <sll/file.h>
 #include <sll/platform/file.h>
-#include <sll/scheduler.h>
+#include <sll/thread.h>
 #include <sll/types.h>
 #include <fcntl.h>
 #include <poll.h>

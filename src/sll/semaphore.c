@@ -1,0 +1,95 @@
+#include <sll/_internal/semaphore.h>
+#include <sll/_internal/scheduler.h>
+#include <sll/common.h>
+#include <sll/memory.h>
+#include <sll/thread.h>
+#include <sll/types.h>
+
+
+
+static semaphore_t* _semaphore_data;
+static sll_semaphore_index_t _semaphore_next;
+static semaphore_list_length_t _semaphore_len;
+
+
+
+void _semaphore_deinit(void){
+	sll_deallocate(_semaphore_data);
+}
+
+
+
+void _semaphore_init(void){
+	_semaphore_data=NULL;
+	_semaphore_next=SEMAPHORE_UNUSED;
+	_semaphore_len=0;
+}
+
+
+
+sll_bool_t _semaphore_wait(sll_integer_t w){
+	if (w<0||w>=_semaphore_len||(_semaphore_data+w)->count==SEMAPHORE_UNUSED){
+		return 0;
+	}
+	if ((_semaphore_data+w)->count){
+		(_semaphore_data+w)->count--;
+		(_semaphore_data+w)->first=SLL_UNKNOWN_THREAD_INDEX;
+		return 0;
+	}
+	if ((_semaphore_data+w)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_semaphore_data+w)->first=sll_current_thread_index;
+	}
+	else{
+		(_semaphore_data+w)->last->nxt=sll_current_thread_index;
+	}
+	(_semaphore_data+w)->last=_scheduler_current_thread;
+	_scheduler_current_thread->nxt=SLL_UNKNOWN_THREAD_INDEX;
+	_scheduler_current_thread->st=THREAD_STATE_WAIT_SEMAPHORE;
+	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t c){
+	sll_semaphore_index_t o=_semaphore_next;
+	if (o==SEMAPHORE_UNUSED){
+		o=_semaphore_len;
+		_semaphore_len++;
+		_semaphore_data=sll_reallocate(_semaphore_data,_semaphore_len*sizeof(semaphore_t));
+	}
+	else{
+		_semaphore_next=SEMAPHORE_GET_NEXT_ID(_semaphore_data+o);
+	}
+	(_semaphore_data+o)->count=c;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_index_t s){
+	if (s>=_semaphore_len||(_semaphore_data+s)->count==SEMAPHORE_UNUSED){
+		return 0;
+	}
+	(_semaphore_data+s)->count=SEMAPHORE_UNUSED;
+	SEMAPHORE_SET_NEXT_ID(_semaphore_data+s,_semaphore_next);
+	_semaphore_next=s;
+	return 1;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_release(sll_semaphore_index_t l){
+	if (l>=_semaphore_len||(_semaphore_data+l)->count==SEMAPHORE_UNUSED){
+		return 0;
+	}
+	if ((_semaphore_data+l)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_semaphore_data+l)->count++;
+		return 1;
+	}
+	thread_data_t* thr=*(_thread_data+(_semaphore_data+l)->first);
+	thr->st=THREAD_STATE_QUEUED;
+	_scheduler_queue_thread((_semaphore_data+l)->first);
+	(_semaphore_data+l)->first=thr->nxt;
+	return 1;
+}
