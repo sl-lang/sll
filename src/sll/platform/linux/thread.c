@@ -7,6 +7,9 @@
 #include <semaphore.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef __SLL_BUILD_DARWIN
+#include <mach/thread_policy.h>
+#endif
 
 
 
@@ -36,6 +39,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_t
 	if (cpu!=SLL_CPU_ANY&&cpu>=max){
 		cpu=SLL_CPU_ANY;
 	}
+#ifdef __SLL_BUILD_DARWIN
+	thread_port_t sys_tid=pthread_mach_thread_np(tid);
+	if (cpu==SLL_CPU_ANY){
+		SLL_UNIMPLEMENTED();
+	}
+	thread_affinity_policy_data_t dt={
+		cpu
+	};
+	return (thread_policy_set(sys_tid,THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),1)==KERN_SUCCESS);
+#else
 	cpu_set_t set;
 	CPU_ZERO(&set);
 	if (cpu!=SLL_CPU_ANY){
@@ -48,6 +61,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_t
 		}
 	}
 	return !pthread_setaffinity_np((pthread_t)tid,sizeof(set),&set);
+#endif
 }
 
 
