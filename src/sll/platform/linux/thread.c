@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #ifdef __SLL_BUILD_DARWIN
+#include <mach/mach.h>
 #include <mach/thread_policy.h>
 #endif
 
@@ -47,7 +48,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_t
 	thread_affinity_policy_data_t dt={
 		cpu
 	};
-	return (thread_policy_set(sys_tid,THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),1)==KERN_SUCCESS);
+	return thread_policy_set(sys_tid,THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),1)==KERN_SUCCESS;
 #else
 	cpu_set_t set;
 	CPU_ZERO(&set);
