@@ -12,7 +12,7 @@
 	WRAP_ARRAY_INDEX_VAR(var,(len));
 #define WRAP_ARRAY_INDEX_VAR(idx,len) \
 	do{ \
-		sll_size_t __len=(len); \
+		sll_integer_t __len=(len); \
 		if (idx<0){ \
 			idx+=__len; \
 			if (idx<0){ \
