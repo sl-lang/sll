@@ -15,6 +15,7 @@ typedef struct __SCHEDULER_CPU_DATA{
 	queue_length_t queue_idx;
 	queue_length_t queue_len;
 	sll_internal_thread_index_t tid;
+	sll_event_handle_t sig;
 	sll_cpu_t id;
 	sll_thread_index_t queue[];
 } scheduler_cpu_data_t;

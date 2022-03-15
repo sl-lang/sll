@@ -9,6 +9,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/object.h>
+#include <sll/platform/event.h>
 #include <sll/platform/memory.h>
 #include <sll/platform/thread.h>
 #include <sll/platform/util.h>
@@ -128,6 +129,7 @@ sll_return_code_t _scheduler_run(void){
 		scheduler_cpu_data_t* cpu_dt=ptr;
 		cpu_dt->queue_idx=0;
 		cpu_dt->queue_len=!i;
+		cpu_dt->sig=sll_platform_event_create();
 		cpu_dt->id=i;
 		if (!i){
 			cpu_dt->tid=sll_platform_current_thread();
@@ -143,11 +145,15 @@ sll_return_code_t _scheduler_run(void){
 		SLL_UNIMPLEMENTED();
 	}
 	ptr=b_ptr;
-	for (sll_cpu_t i=1;i<*sll_platform_cpu_count;i++){
-		ptr=PTR(ADDR(ptr)+sz);
-		if (!sll_platform_join_thread(((scheduler_cpu_data_t*)ptr)->tid)){
+	for (sll_cpu_t i=0;i<*sll_platform_cpu_count;i++){
+		scheduler_cpu_data_t* cpu_dt=ptr;
+		if (i&&!sll_platform_join_thread(cpu_dt->tid)){
 			SLL_UNIMPLEMENTED();
 		}
+		if (!sll_platform_event_delete(cpu_dt->sig)){
+			SLL_UNIMPLEMENTED();
+		}
+		ptr=PTR(ADDR(ptr)+sz);
 	}
 	sll_platform_free_page(b_ptr,SLL_ROUND_PAGE((*sll_platform_cpu_count)*sz));
 	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->ret,sll_static_int[SLL_OBJECT_TYPE_INT]);
