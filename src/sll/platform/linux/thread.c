@@ -9,7 +9,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #ifdef __SLL_BUILD_DARWIN
-#include <mach/mach.h>
 #include <mach/thread_policy.h>
 #endif
 
@@ -42,7 +41,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu)
 	}
 #ifdef __SLL_BUILD_DARWIN
 	thread_affinity_policy_data_t dt={
-		(cpu==SLL_CPU_ANY?THREAD_AFFINITY_NULL:cpu+1)
+		(cpu==SLL_CPU_ANY?0:cpu+1)
 	};
 	return thread_policy_set(pthread_mach_thread_np(pthread_self()),THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),THREAD_AFFINITY_POLICY_COUNT)==KERN_SUCCESS;
 #else
