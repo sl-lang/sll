@@ -6,6 +6,10 @@
 
 
 
+#define SCHEDULER_MAX_THREADS 16384
+
+
+
 typedef __SLL_U32 queue_length_t;
 
 

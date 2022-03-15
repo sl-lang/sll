@@ -3,7 +3,6 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/thread.h>
 #include <sll/common.h>
-#include <sll/memory.h>
 #include <sll/platform/memory.h>
 #include <sll/platform/thread.h>
 #include <sll/platform/util.h>
@@ -36,16 +35,15 @@ static void _cpu_core_worker(void* dt){
 void _scheduler_deinit(void){
 	_scheduler_current_thread=NULL;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
+	if (!sll_platform_set_cpu(SLL_CPU_ANY)){
+		SLL_UNIMPLEMENTED();
+	}
 	for (sll_cpu_t i=0;i<*sll_platform_cpu_count;i++){
 		if (i&&!sll_platform_join_thread((_scheduler_data+i)->tid)){
 			SLL_UNIMPLEMENTED();
 		}
-		sll_deallocate((_scheduler_data+i)->queue);
 	}
-	sll_platform_free_page(_scheduler_data,SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)));
-	if (!sll_platform_set_cpu(SLL_CPU_ANY)){
-		SLL_UNIMPLEMENTED();
-	}
+	sll_platform_free_page(_scheduler_data,SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)+SCHEDULER_MAX_THREADS*sizeof(sll_thread_index_t)));
 }
 
 
@@ -53,12 +51,15 @@ void _scheduler_deinit(void){
 void _scheduler_init(void){
 	_scheduler_current_thread=NULL;
 	sll_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
-	_scheduler_data=sll_platform_allocate_page(SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)),0);
+	_scheduler_data=sll_platform_allocate_page(SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)+SCHEDULER_MAX_THREADS*sizeof(sll_thread_index_t)),0);
+	sll_thread_index_t* q_dt=PTR(ADDR(_scheduler_data)+(*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t));
+	queue_length_t off=SCHEDULER_MAX_THREADS/(*sll_platform_cpu_count);
 	for (sll_cpu_t i=0;i<*sll_platform_cpu_count;i++){
-		(_scheduler_data+i)->queue=NULL;
+		(_scheduler_data+i)->queue=q_dt;
 		(_scheduler_data+i)->queue_idx=0;
 		(_scheduler_data+i)->queue_len=0;
 		(_scheduler_data+i)->tid=(!i?sll_platform_current_thread():sll_platform_start_thread(_cpu_core_worker,PTR(i)));
+		q_dt+=off;
 	}
 	if (!sll_platform_set_cpu(0)){
 		SLL_UNIMPLEMENTED();
@@ -107,7 +108,6 @@ sll_thread_index_t _scheduler_queue_pop(void){
 		*(_scheduler_data->queue+i-1)=*(_scheduler_data->queue+i);
 	}
 	_scheduler_data->queue_len--;
-	_scheduler_data->queue=sll_reallocate(_scheduler_data->queue,_scheduler_data->queue_len*sizeof(sll_thread_index_t));
 	if (!_scheduler_data->queue_len){
 		_scheduler_data->queue_idx=0;
 	}
@@ -125,7 +125,6 @@ sll_thread_index_t _scheduler_queue_pop(void){
 
 void _scheduler_queue_thread(sll_thread_index_t t){
 	_scheduler_data->queue_len++;
-	_scheduler_data->queue=sll_reallocate(_scheduler_data->queue,_scheduler_data->queue_len*sizeof(sll_thread_index_t));
 	*(_scheduler_data->queue+_scheduler_data->queue_len-1)=t;
 }
 
