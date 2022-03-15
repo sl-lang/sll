@@ -36,15 +36,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_intern
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_thread_index_t tid,sll_cpu_t cpu){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu){
 	if (cpu!=SLL_CPU_ANY&&cpu>=*sll_platform_cpu_count){
 		cpu=SLL_CPU_ANY;
 	}
 #ifdef __SLL_BUILD_DARWIN
 	thread_affinity_policy_data_t dt={
-		(cpu==SLL_CPU_ANY?0xffffffff:1<<cpu)
+		(cpu==SLL_CPU_ANY?THREAD_AFFINITY_NULL:cpu+1)
 	};
-	return thread_policy_set(pthread_mach_thread_np(tid),THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),1)==KERN_SUCCESS;
+	return thread_policy_set(pthread_mach_thread_np(pthread_self()),THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),THREAD_AFFINITY_POLICY_COUNT)==KERN_SUCCESS;
 #else
 	cpu_set_t set;
 	CPU_ZERO(&set);
@@ -56,7 +56,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_t
 			CPU_SET(i,&set);
 		}
 	}
-	return !pthread_setaffinity_np((pthread_t)tid,sizeof(set),&set);
+	return !pthread_setaffinity_np(pthread_self(),sizeof(set),&set);
 #endif
 }
 

@@ -67,11 +67,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_intern
  * \group platform
  * \subgroup platform-thread
  * \desc Docs!
- * \arg sll_internal_thread_index_t tid
  * \arg sll_cpu_t cpu
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_thread_index_t tid,sll_cpu_t cpu);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu);
 
 
 

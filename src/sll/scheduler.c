@@ -26,7 +26,9 @@ __SLL_EXTERNAL sll_thread_index_t sll_current_thread_index=0;
 
 static void _cpu_core_worker(void* dt){
 	sll_cpu_t id=(sll_cpu_t)ADDR(dt);
-	(void)id;
+	if (!sll_platform_set_cpu(id)){
+		SLL_UNIMPLEMENTED();
+	}
 }
 
 
@@ -41,7 +43,7 @@ void _scheduler_deinit(void){
 		sll_deallocate((_scheduler_data+i)->queue);
 	}
 	sll_platform_free_page(_scheduler_data,SLL_ROUND_PAGE((*sll_platform_cpu_count)*sizeof(scheduler_cpu_data_t)));
-	if (!sll_platform_set_cpu(sll_platform_current_thread(),SLL_CPU_ANY)){
+	if (!sll_platform_set_cpu(SLL_CPU_ANY)){
 		SLL_UNIMPLEMENTED();
 	}
 }
@@ -57,9 +59,9 @@ void _scheduler_init(void){
 		(_scheduler_data+i)->queue_idx=0;
 		(_scheduler_data+i)->queue_len=0;
 		(_scheduler_data+i)->tid=(!i?sll_platform_current_thread():sll_platform_start_thread(_cpu_core_worker,PTR(i)));
-		if (!sll_platform_set_cpu((_scheduler_data+i)->tid,i)){
-			SLL_UNIMPLEMENTED();
-		}
+	}
+	if (!sll_platform_set_cpu(0)){
+		SLL_UNIMPLEMENTED();
 	}
 }
 

@@ -31,8 +31,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_intern
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_internal_thread_index_t tid,sll_cpu_t cpu){
-	return !!SetThreadAffinityMask((HANDLE)tid,(cpu==SLL_CPU_ANY||cpu>=*sll_platform_cpu_count?0xffffffffffffffffull:1ull<<cpu));
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu){
+	return !!SetThreadAffinityMask(GetCurrentThread(),(cpu==SLL_CPU_ANY||cpu>=*sll_platform_cpu_count?0xffffffffffffffffull:1ull<<cpu));
 }
 
 
