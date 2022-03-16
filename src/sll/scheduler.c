@@ -86,6 +86,9 @@ sll_thread_index_t _scheduler_queue_pop(void){
 			SLL_UNIMPLEMENTED();
 		}
 		_scheduler_data->wait=0;
+		if (!_scheduler_data->queue_len){
+			return SLL_UNKNOWN_THREAD_INDEX;
+		}
 	}
 	sll_thread_index_t o=*(_scheduler_data->queue+_scheduler_data->queue_idx);
 	if ((*(_thread_data+o))->suspended){
