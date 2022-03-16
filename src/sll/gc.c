@@ -42,7 +42,7 @@ __SLL_EXTERNAL void sll_acquire_object(sll_object_t* o){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(void){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_type_t t){
 	if (!_gc_next_object){
 		void* pg=sll_platform_allocate_page(SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE),0);
 		*((void**)pg)=_gc_page_ptr;
@@ -61,6 +61,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(void){
 	sll_object_t* o=_gc_next_object;
 	_gc_next_object=GC_GET_NEXT_OBJECT(o);
 	o->rc=1;
+	o->t=t;
 	_gc_alloc++;
 	return o;
 }

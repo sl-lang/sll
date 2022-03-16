@@ -92,8 +92,7 @@ __API_FUNC(sort_quicksort){
 		out=a;
 	}
 	else{
-		o=sll_create_object();
-		o->t=SLL_OBJECT_TYPE_ARRAY;
+		o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 		out=&(o->dt.a);
 		sll_array_clone(a,out);
 	}

@@ -167,8 +167,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	if (c=='{'){
-		sll_object_t* o=sll_create_object();
-		o->t=SLL_OBJECT_TYPE_MAP;
+		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 		sll_map_t* m=&(o->dt.m);
 		SLL_INIT_MAP(m);
 		while (1){
@@ -187,9 +186,8 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			}
 			m->l++;
 			m->v=sll_reallocate(m->v,(m->l<<1)*sizeof(sll_object_t*));
-			sll_object_t* k=sll_create_object();
+			sll_object_t* k=sll_create_object(SLL_OBJECT_TYPE_STRING);
 			m->v[(m->l-1)<<1]=k;
-			k->t=SLL_OBJECT_TYPE_STRING;
 			_parse_json_string(p,&(k->dt.s));
 			c=**p;
 			(*p)++;
@@ -220,8 +218,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='['){
-		sll_object_t* o=sll_create_object();
-		o->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 		sll_array_t* a=&(o->dt.a);
 		SLL_INIT_ARRAY(a);
 		while (c==' '||c=='\t'||c=='\n'||c=='\r'){
@@ -257,8 +254,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='\"'){
-		sll_object_t* o=sll_create_object();
-		o->t=SLL_OBJECT_TYPE_STRING;
+		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 		_parse_json_string(p,&(o->dt.s));
 		return o;
 	}

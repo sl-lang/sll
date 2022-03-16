@@ -146,8 +146,7 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac,sll_bool_t fr){
 	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+fn;
 	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
-		sll_object_t* tos=sll_create_object();
-		tos->t=SLL_OBJECT_TYPE_ARRAY;
+		sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 		if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
 			sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;
 			for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;i++){
@@ -369,8 +368,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 				{
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_STRING;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
 					sll_string_clone(sll_current_runtime_data->a_dt->st.dt+ai->dt.s,&(tos->dt.s));
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
 					_scheduler_current_thread->si++;
@@ -378,8 +376,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				{
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_ARRAY;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 					sll_array_t* a=&(tos->dt.a);
 					sll_array_create(ai->dt.al,a);
 					_scheduler_current_thread->si-=ai->dt.al;
@@ -390,8 +387,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO:
 				{
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_ARRAY;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 					sll_array_create(0,&(tos->dt.a));
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
 					_scheduler_current_thread->si++;
@@ -399,8 +395,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE:
 				{
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_ARRAY;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 					sll_array_create(1,&(tos->dt.a));
 					tos->dt.a.v[0]=*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1);
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=tos;
@@ -408,8 +403,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
 				{
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_MAP;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_MAP);
 					sll_map_t* m=&(tos->dt.m);
 					sll_map_create((ai->dt.ml+1)>>1,m);
 					_scheduler_current_thread->si-=ai->dt.ml;
@@ -425,8 +419,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO:
 				{
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_MAP;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_MAP);
 					sll_map_create(0,&(tos->dt.m));
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
 					_scheduler_current_thread->si++;
@@ -681,9 +674,7 @@ _cleanup_jump_table:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				{
 					sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?VAR_REF(ai->dt.v):_scheduler_current_thread->stack+_scheduler_current_thread->si-1);
-					sll_object_t* t=sll_create_object();
-					t->t=SLL_OBJECT_TYPE_INT;
-					t->dt.i=ai->dt.t;
+					sll_object_t* t=sll_int_to_object(ai->dt.t);
 					sll_object_t* n=sll_operator_cast(*tos,t);
 					sll_release_object(*tos);
 					sll_release_object(t);
@@ -700,8 +691,7 @@ _cleanup_jump_table:;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF:
 				{
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_STRING;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
 					sll_get_name(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),&(tos->dt.s));
 					sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=tos;
@@ -711,8 +701,7 @@ _cleanup_jump_table:;
 				{
 					sll_object_t* t=sll_operator_cast(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1));
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_STRING;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
 					sll_get_type_name(sll_current_runtime_data->tt,(t->dt.i<0||t->dt.i>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.i)),&(tos->dt.s));
 					sll_release_object(t);
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=tos;
@@ -988,8 +977,7 @@ _return:;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				{
-					sll_object_t* tos=sll_create_object();
-					tos->t=SLL_OBJECT_TYPE_STRING;
+					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
 					sll_string_clone(sll_current_runtime_data->a_dt->st.dt+ai->dt.s,&(tos->dt.s));
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
 					_scheduler_current_thread->si++;
@@ -1097,8 +1085,7 @@ _load_new_thread:;
 					sll_file_t* f=sll_file_from_handle(fh_o->dt.i);
 					sll_release_object(fh_o);
 					if (!f||sz<=0){
-						sll_object_t* tos=sll_create_object();
-						tos->t=SLL_OBJECT_TYPE_STRING;
+						sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
 						SLL_INIT_STRING(&(tos->dt.s));
 						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
 						_scheduler_current_thread->si++;
@@ -1106,8 +1093,7 @@ _load_new_thread:;
 					}
 					sll_string_length_t l=(sz>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)sz);
 					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)){
-						sll_object_t* tos=sll_create_object();
-						tos->t=SLL_OBJECT_TYPE_STRING;
+						sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
 						sll_string_create(l,&(tos->dt.s));
 						sll_error_t err;
 						sll_size_t r_sz=sll_file_read(f,tos->dt.s.v,l,&err);

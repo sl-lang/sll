@@ -221,8 +221,7 @@ __API_FUNC(file_read){
 		SLL_UNIMPLEMENTED();
 	}
 	extended_file_t* ef=*(_file_fl+a);
-	sll_object_t* o=sll_create_object();
-	o->t=SLL_OBJECT_TYPE_STRING;
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	sll_string_length_t l=(sll_string_length_t)b;
 	sll_string_create(l,&(o->dt.s));
 	sll_error_t err;

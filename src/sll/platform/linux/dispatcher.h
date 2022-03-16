@@ -41,9 +41,7 @@ static __SLL_FORCE_INLINE void _platform_deinit_io_dispatcher(raw_event_data_t* 
 static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_dt,void** wait){
 #ifdef __SLL_BUILD_DARWIN
 	int pipe_fd[2];
-	if (pipe(pipe_fd)==-1){
-		SLL_UNIMPLEMENTED();
-	}
+	SLL_CRITICAL(!pipe(pipe_fd));
 	r_dt->fd=pipe_fd[0];
 	_linux_pipe_write_end=pipe_fd[1];
 #else

@@ -672,8 +672,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
 		SLL_ACQUIRE(sll_static_negative_int[-v-1]);
 		return sll_static_negative_int[-v-1];
 	}
-	sll_object_t* o=sll_create_object();
-	o->t=SLL_OBJECT_TYPE_INT;
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_INT);
 	o->dt.i=v;
 	return o;
 }
@@ -693,8 +692,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t 
 		SLL_ACQUIRE(sll_static_float_half);
 		return sll_static_float_half;
 	}
-	sll_object_t* o=sll_create_object();
-	o->t=SLL_OBJECT_TYPE_FLOAT;
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_FLOAT);
 	o->dt.f=v;
 	return o;
 }

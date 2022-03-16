@@ -171,9 +171,7 @@ sll_return_code_t _scheduler_run(void){
 		ptr=PTR(ADDR(ptr)+sz);
 	}
 	_cpu_core_worker(b_ptr);
-	if (!sll_platform_set_cpu(SLL_CPU_ANY)){
-		SLL_UNIMPLEMENTED();
-	}
+	SLL_CRITICAL(sll_platform_set_cpu(SLL_CPU_ANY));
 	ptr=b_ptr;
 	for (sll_cpu_t i=0;i<*sll_platform_cpu_count;i++){
 		scheduler_cpu_data_t* cpu_dt=ptr;

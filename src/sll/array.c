@@ -718,8 +718,7 @@ __SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_arr
 	o->l=1;
 	sll_object_t** ptr=sll_allocate_stack(sizeof(sll_object_t*));
 	sll_object_t** arr_ptr=sll_allocate_stack(1);
-	sll_object_t* oa=sll_create_object();
-	oa->t=SLL_OBJECT_TYPE_ARRAY;
+	sll_object_t* oa=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 	oa->dt.a.l=0;
 	*ptr=oa;
 	for (sll_array_length_t i=0;i<a->l;i++){
@@ -727,8 +726,7 @@ __SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_arr
 			oa->dt.a.v=(oa->dt.a.l?sll_allocator_from_memory(arr_ptr,oa->dt.a.l*sizeof(sll_object_t*)):NULL);
 			sll_deallocate(arr_ptr);
 			arr_ptr=sll_allocate_stack(1);
-			oa=sll_create_object();
-			oa->t=SLL_OBJECT_TYPE_ARRAY;
+			oa=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 			oa->dt.a.l=0;
 			o->l++;
 			ptr=sll_reallocate(ptr,o->l*sizeof(sll_object_t*));

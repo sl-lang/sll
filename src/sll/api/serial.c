@@ -74,8 +74,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 			}
 		case SLL_OBJECT_TYPE_STRING:
 			{
-				sll_object_t* o=sll_create_object();
-				o->t=SLL_OBJECT_TYPE_STRING;
+				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 				sll_string_t str;
 				if (!sll_decode_string(f,&str)){
 					sll_string_create(0,&(o->dt.s));
@@ -89,8 +88,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 		case SLL_OBJECT_TYPE_MAP_KEYS:
 		case SLL_OBJECT_TYPE_MAP_VALUES:
 			{
-				sll_object_t* o=sll_create_object();
-				o->t=SLL_OBJECT_TYPE_ARRAY;
+				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_bool_t err=0;
 				sll_array_length_t l=(sll_array_length_t)sll_decode_integer(f,&err);
 				if (err){
@@ -106,8 +104,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
-				sll_object_t* o=sll_create_object();
-				o->t=SLL_OBJECT_TYPE_MAP;
+				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 				sll_bool_t err=0;
 				sll_map_length_t l=(sll_map_length_t)sll_decode_integer(f,&err);
 				if (err){
@@ -393,8 +390,7 @@ __API_FUNC(serial_decode_string){
 	if (!sll_decode_string(sll_file_from_handle(a),&str)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_object_t* o=sll_create_object();
-	o->t=SLL_OBJECT_TYPE_STRING;
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	o->dt.s=str;
 	return o;
 }

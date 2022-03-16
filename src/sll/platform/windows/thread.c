@@ -10,9 +10,7 @@
 
 static DWORD __stdcall _execute_wrapper(void* p){
 	execute_wrapper_data_t dt=*((execute_wrapper_data_t*)p);
-	if (!ReleaseSemaphore(dt.lck,1,NULL)){
-		SLL_UNIMPLEMENTED();
-	}
+	SLL_CRITICAL(ReleaseSemaphore(dt.lck,1,NULL));
 	dt.fn(dt.arg);
 	return 0;
 }

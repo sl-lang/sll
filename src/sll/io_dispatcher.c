@@ -31,8 +31,7 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	SLL_ASSERT(evt->f);
 	sll_object_t* o=NULL;
 	if (evt->sz){
-		o=sll_create_object();
-		o->t=SLL_OBJECT_TYPE_STRING;
+		o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 		sll_string_create(evt->sz,&(o->dt.s));
 		sll_error_t err;
 		sll_size_t sz=sll_file_read(evt->f,o->dt.s.v,evt->sz,&err);

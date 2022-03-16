@@ -93,8 +93,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* dt){
 __API_FUNC(date_get_time_zone){
 	sll_array_create(2,out);
 	out->v[0]=sll_int_to_object(sll_platform_time_zone->off);
-	out->v[1]=sll_create_object();
-	out->v[1]->t=SLL_OBJECT_TYPE_STRING;
+	out->v[1]=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	sll_string_from_pointer(sll_platform_time_zone->nm,&(out->v[1]->dt.s));
 }
 
