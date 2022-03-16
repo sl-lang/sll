@@ -120,8 +120,13 @@ _end:
 
 
 void _scheduler_queue_thread(sll_thread_index_t t){
+	SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_load_balancer.lck));
 	scheduler_cpu_data_t* cpu_dt=_scheduler_load_balancer.dt[0];
+	_scheduler_load_balancer.len=1;
+	_scheduler_load_balancer.brk=(!_scheduler_load_balancer.brk?_scheduler_load_balancer.len:_scheduler_load_balancer.brk)-1;
+	cpu_dt=_scheduler_load_balancer.dt[_scheduler_load_balancer.brk];
 	SLL_CRITICAL(sll_platform_lock_acquire(cpu_dt->lck));
+	SLL_CRITICAL(sll_platform_lock_release(_scheduler_load_balancer.lck));
 	cpu_dt->queue_len++;
 	*(cpu_dt->queue+cpu_dt->queue_len-1)=t;
 	if (cpu_dt->wait&&cpu_dt->queue_len==1){
