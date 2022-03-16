@@ -296,6 +296,10 @@ typedef void* sll_library_handle_t;
 
 
 
+typedef void* sll_lock_handle_t;
+
+
+
 typedef void* sll_process_handle_t;
 
 

@@ -47,6 +47,14 @@
 	} while (0)
 #endif
 
+#define SLL_CRITICAL(x) SLL_CRITICAL_COND(1,(x))
+#define SLL_CRITICAL_COND(cnd,x) \
+	do{ \
+		if ((cnd)&&!(x)){ \
+			SLL_UNIMPLEMENTED(); \
+		} \
+	} while (0)
+
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 

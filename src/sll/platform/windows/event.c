@@ -1,5 +1,4 @@
 #include <windows.h>
-#include <sll/_internal/common.h>
 #include <sll/common.h>
 #include <sll/types.h>
 

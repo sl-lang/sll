@@ -81,7 +81,7 @@ static void _poll_thread(void* arg){
 			continue;
 		}
 		sll_thread_index_t tid=_restart_thread(i-1);
-		_scheduler_queue_thread(1,tid);
+		_scheduler_queue_thread(tid);
 	}
 }
 

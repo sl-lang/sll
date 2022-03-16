@@ -118,7 +118,7 @@
 #define RELOAD_THREAD_DATA \
 	do{ \
 		if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){ \
-			_scheduler_current_thread_index=_scheduler_queue_pop(); \
+			_scheduler_current_thread_index=_scheduler_queue_pop(1); \
 			_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index); \
 		} \
 		if (_scheduler_current_thread->c_st.l){ \
@@ -1019,7 +1019,7 @@ _return:;
 					thread_data_t* c_thr=_scheduler_current_thread;
 					if (_thread_wait(n_tid)){
 						c_thr->ii++;
-						n_tid=_scheduler_queue_pop();
+						n_tid=_scheduler_queue_pop(1);
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
 							if (tid_dt->ret){
 								goto _cleanup;
@@ -1071,7 +1071,7 @@ _return:;
 					if (wait){
 						c_thr->ii++;
 _load_new_thread:;
-						sll_thread_index_t n_tid=_scheduler_queue_pop();
+						sll_thread_index_t n_tid=_scheduler_queue_pop(1);
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
 							if (tid_dt->ret){
 								goto _cleanup;

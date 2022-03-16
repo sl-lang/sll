@@ -114,7 +114,7 @@ void _thread_terminate(sll_object_t* ret){
 		if (_scheduler_current_thread->suspended){
 			SLL_UNIMPLEMENTED();
 		}
-		_scheduler_queue_thread(0,_scheduler_current_thread_index);
+		_scheduler_queue_thread(_scheduler_current_thread_index);
 		_scheduler_current_thread_index=_scheduler_current_thread->nxt;
 		_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
 	}
@@ -210,7 +210,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_restart(sll_thread_index
 		return 0;
 	}
 	if (thr->suspended&&thr->st==THREAD_STATE_QUEUED){
-		_scheduler_queue_thread(0,t);
+		_scheduler_queue_thread(t);
 	}
 	thr->suspended=0;
 	return 1;
@@ -227,7 +227,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_start(sll_thread_index_t
 		return 0;
 	}
 	thr->st=THREAD_STATE_QUEUED;
-	_scheduler_queue_thread(0,t);
+	_scheduler_queue_thread(t);
 	return 1;
 }
 
