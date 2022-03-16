@@ -11,7 +11,7 @@
 - Implemented `sll_event_handle_t`, `sll_platform_event_create`, `sll_platform_event_delete`, `sll_platform_event_set` and `sll_platform_event_wait`
 - Implemented `sll_lock_handle_t`, `sll_platform_lock_acquire`, `sll_platform_lock_create`, `sll_platform_lock_delete` and `sll_platform_lock_release`
 - Implemented `sll_set_sandbox_flag_string` and `sys$set_sandbox_flags`
-- Implemented `sll_string_to_object`
+- Implemented `sll_string_to_object`, `sll_string_to_object_nocopy` and `sll_string_to_object_pointer`
 - Thread count limit: `SLL_SCHEDULER_MAX_THREADS`
 
 ### Changed

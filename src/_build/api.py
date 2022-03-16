@@ -7,7 +7,7 @@ TYPE_CHECK_MAP={"I":"SLL_OBJECT_GET_TYPE($)==SLL_OBJECT_TYPE_INT","B":"SLL_OBJEC
 TYPE_COPY_MAP={"I":"#=$->dt.i","B":"#=$->dt.i","F":"#=$->dt.f","C":"#=$->dt.c","S":"sll_string_clone(&($->dt.s),#)","A":"sll_array_clone(&($->dt.a),#)","M":"sll_map_clone(&($->dt.m),#)"}
 TYPE_FULL_NAME_MAP={"I":"INT","B":"INT","F":"FLOAT","C":"CHAR","S":"STRING","A":"ARRAY","M":"MAP"}
 TYPE_MAP={"I":"sll_integer_t","B":"sll_bool_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t*","A":"sll_array_t*","M":"sll_map_t*","O":"sll_object_t*","V":"void"}
-TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","S":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);out_o->dt.s=out;return out_o","A":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);out_o->dt.a=out;return out_o","M":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_MAP);out_o->dt.m=out;return out_o"}
+TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","S":"return sll_string_to_object_nocopy(&out)","A":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);out_o->dt.a=out;return out_o","M":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_MAP);out_o->dt.m=out;return out_o"}
 
 
 

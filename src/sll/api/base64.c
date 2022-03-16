@@ -34,20 +34,15 @@ __API_FUNC(base64_decode){
 	if (!a->l){
 		return sll_string_to_object(NULL);
 	}
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_integer_t oi=-1;
 	if (a->l&3){
-_error:
-		o->t=SLL_OBJECT_TYPE_INT;
-		o->dt.i=oi;
-		return o;
+		return SLL_ACQUIRE_STATIC_NEG_INT(1);
 	}
 	sll_string_length_t p=sll_string_count_right(a,'=');
 	if (p>2){
-		goto _error;
+		return SLL_ACQUIRE_STATIC_NEG_INT(1);
 	}
-	sll_string_t* s=&(o->dt.s);
-	sll_string_create(a->l*3/4-p,s);
+	sll_string_t o;
+	sll_string_create(a->l*3/4-p,&o);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
 	sll_string_length_t l=(a->l-p)&0xfffffffc;
@@ -57,25 +52,22 @@ _error:
 		sll_char_t v2=_base64_index_map[a->v[i+2]];
 		sll_char_t v3=_base64_index_map[a->v[i+3]];
 		if ((v0|v1|v2|v3)>>6){
-			if (v0==64){
-				oi=i;
-			}
-			else if (v1==64){
-				oi=i+1;
+			sll_string_length_t idx=i;
+			if (v1==64){
+				idx++;
 			}
 			else if (v2==64){
-				oi=i+2;
+				idx+=2;
 			}
-			else{
-				oi=i+3;
+			else if (v3==64){
+				idx+=3;
 			}
-_string_error:
-			sll_free_string(s);
-			goto _error;
+			sll_free_string(&o);
+			return sll_int_to_object(idx);
 		}
-		s->v[j]=(v0<<2)|(v1>>4);
-		s->v[j+1]=(v1<<4)|(v2>>2);
-		s->v[j+2]=(v2<<6)|v3;
+		o.v[j]=(v0<<2)|(v1>>4);
+		o.v[j+1]=(v1<<4)|(v2>>2);
+		o.v[j+2]=(v2<<6)|v3;
 		i+=4;
 		j+=3;
 	}
@@ -84,36 +76,30 @@ _string_error:
 		sll_char_t v1=_base64_index_map[a->v[i+1]];
 		sll_char_t v2=_base64_index_map[a->v[i+2]];
 		if ((v0|v1)>>6){
-			if (v0==64){
-				oi=i;
+			sll_string_length_t idx=i;
+			if (v1==64){
+				idx++;
 			}
-			else if (v1==64){
-				oi=i+1;
+			else if (v2==64){
+				idx+=2;
 			}
-			else{
-				oi=i+2;
-			}
-			goto _string_error;
+			sll_free_string(&o);
+			return sll_int_to_object(idx);
 		}
-		s->v[j]=(v0<<2)|(v1>>4);
-		s->v[j+1]=(v1<<4)|(v2>>2);
+		o.v[j]=(v0<<2)|(v1>>4);
+		o.v[j+1]=(v1<<4)|(v2>>2);
 	}
 	else if (p==2){
 		sll_char_t v0=_base64_index_map[a->v[i]];
 		sll_char_t v1=_base64_index_map[a->v[i+1]];
 		if ((v0|v1)>>6){
-			if (v0==64){
-				oi=i;
-			}
-			else{
-				oi=i+1;
-			}
-			goto _string_error;
+			sll_free_string(&o);
+			return sll_int_to_object(i+(v0!=64));
 		}
-		s->v[j]=(v0<<2)|(v1>>4);
+		o.v[j]=(v0<<2)|(v1>>4);
 	}
-	sll_string_calculate_checksum(s);
-	return o;
+	sll_string_calculate_checksum(&o);
+	return sll_string_to_object_nocopy(&o);
 }
 
 

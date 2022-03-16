@@ -172,9 +172,7 @@ __API_FUNC(path_list_dir){
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);
 	sll_array_create(l,out);
 	for (sll_array_length_t i=0;i<l;i++){
-		sll_object_t* n=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		n->dt.s=*(dt+i);
-		out->v[i]=n;
+		out->v[i]=sll_string_to_object_nocopy(dt+i);
 	}
 	sll_deallocate(dt);
 }
@@ -199,9 +197,7 @@ __API_FUNC(path_recursive_list_dir){
 	sll_array_length_t l=sll_platform_list_directory_recursive(a->v,&dt);
 	sll_array_create(l,out);
 	for (sll_array_length_t i=0;i<l;i++){
-		sll_object_t* n=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		n->dt.s=*(dt+i);
-		out->v[i]=n;
+		out->v[i]=sll_string_to_object_nocopy(dt+i);
 	}
 	sll_deallocate(dt);
 }
@@ -245,10 +241,8 @@ __API_FUNC(path_size){
 __API_FUNC(path_split){
 	sll_string_length_t i=sll_path_split(a);
 	sll_array_create(2,out);
-	out->v[0]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_from_pointer_length(a->v,i,&(out->v[0]->dt.s));
-	out->v[1]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_from_pointer_length(a->v+i,a->l-i,&(out->v[1]->dt.s));
+	out->v[0]=sll_string_to_object_pointer(a->v,i);
+	out->v[1]=sll_string_to_object_pointer(a->v+i,a->l-i);
 }
 
 
@@ -256,8 +250,6 @@ __API_FUNC(path_split){
 __API_FUNC(path_split_drive){
 	sll_string_length_t i=sll_path_split_drive(a);
 	sll_array_create(2,out);
-	out->v[0]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_from_pointer_length(a->v,i,&(out->v[0]->dt.s));
-	out->v[1]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_from_pointer_length(a->v+i,a->l-i,&(out->v[1]->dt.s));
+	out->v[0]=sll_string_to_object_pointer(a->v,i);
+	out->v[1]=sll_string_to_object_pointer(a->v+i,a->l-i);
 }

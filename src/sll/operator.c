@@ -742,11 +742,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 			SLL_ACQUIRE(a);
 			return a;
 		case SLL_OBJECT_TYPE_STRING:
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_clone(&(a->dt.s),&(o->dt.s));
-				return o;
-			}
+			return sll_string_to_object(&(a->dt.s));
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);

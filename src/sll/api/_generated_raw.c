@@ -433,9 +433,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_encode_raw(sll_ob
 	sll_string_t out;
 	sll_api_base64_encode(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -767,9 +765,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_get_buffer_raw(sll_
 	sll_string_t out;
 	sll_api_file_get_buffer(a->dt.i,&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -778,9 +774,7 @@ __SLL_API_TYPE_sll_api_file_get_temp_path sll_api_file_get_temp_path(__SLL_API_A
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_get_temp_path_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t out;
 	sll_api_file_get_temp_path(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -1516,9 +1510,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_int_to_bin_raw(sll_objec
 	sll_string_t out;
 	sll_api_int_to_bin(a->dt.i,&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -1541,9 +1533,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_int_to_dec_raw(sll_objec
 	sll_string_t out;
 	sll_api_int_to_dec(a->dt.i,&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -1566,9 +1556,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_int_to_hex_raw(sll_objec
 	sll_string_t out;
 	sll_api_int_to_hex(a->dt.i,&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -1591,9 +1579,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_int_to_oct_raw(sll_objec
 	sll_string_t out;
 	sll_api_int_to_oct(a->dt.i,&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -1668,9 +1654,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_stringify_raw(sll_o
 	sll_string_t out;
 	sll_api_json_stringify(a,&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -2750,9 +2734,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_absolute_raw(sll_ob
 	sll_string_t out;
 	sll_api_path_absolute(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -2783,9 +2765,7 @@ __SLL_API_TYPE_sll_api_path_get_cwd sll_api_path_get_cwd(__SLL_API_ARGS_sll_api_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_cwd_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t out;
 	sll_api_path_get_cwd(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -2830,9 +2810,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(sll_object
 	sll_string_t out;
 	sll_api_path_join(a,ac,&out);
 	sll_deallocate(PTR(a));
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -2956,9 +2934,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_relative_raw(sll_ob
 	sll_api_path_relative(&(a->dt.s),&(b->dt.s),&out);
 	sll_release_object(b);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -3107,9 +3083,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_join_raw(sll_obj
 	sll_string_t out;
 	sll_api_process_join(&(a->dt.a),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -3306,9 +3280,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_random_get_string_raw(sl
 	sll_release_object(c);
 	sll_release_object(b);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -3684,9 +3656,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_convert_raw(sll_o
 	sll_arg_count_t ac=all;
 	sll_string_t out;
 	sll_api_string_convert(a,ac,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -3854,9 +3824,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_flip_case_raw(sll
 	sll_string_t out;
 	sll_api_string_flip_case(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -3881,9 +3849,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_format_raw(sll_ob
 	sll_string_t out;
 	sll_api_string_format(&(a->dt.s),b,bc,&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4093,9 +4059,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_join_raw(sll_obje
 	sll_api_string_join(a,&(b->dt.a),&out);
 	sll_release_object(b);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4146,9 +4110,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_raw(sll_objec
 	sll_release_object(c);
 	sll_release_object(b);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4199,9 +4161,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_left_raw(sll_
 	sll_release_object(c);
 	sll_release_object(b);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4252,9 +4212,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_right_raw(sll
 	sll_release_object(c);
 	sll_release_object(b);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4305,9 +4263,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_replace_raw(sll_o
 	sll_release_object(c);
 	sll_release_object(b);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4330,9 +4286,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_reverse_raw(sll_o
 	sll_string_t out;
 	sll_api_string_reverse(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4468,9 +4422,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_lower_case_raw
 	sll_string_t out;
 	sll_api_string_to_lower_case(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4493,9 +4445,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_title_case_raw
 	sll_string_t out;
 	sll_api_string_to_title_case(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4518,9 +4468,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_upper_case_raw
 	sll_string_t out;
 	sll_api_string_to_upper_case(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4543,9 +4491,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_trim_raw(sll_obje
 	sll_string_t out;
 	sll_api_string_trim(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4568,9 +4514,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_trim_left_raw(sll
 	sll_string_t out;
 	sll_api_string_trim_left(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4593,9 +4537,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_trim_right_raw(sl
 	sll_string_t out;
 	sll_api_string_trim_right(&(a->dt.s),&out);
 	sll_release_object(a);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4722,9 +4664,7 @@ __SLL_API_TYPE_sll_api_sys_get_executable sll_api_sys_get_executable(__SLL_API_A
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_executable_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t out;
 	sll_api_sys_get_executable(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4733,9 +4673,7 @@ __SLL_API_TYPE_sll_api_sys_get_library sll_api_sys_get_library(__SLL_API_ARGS_sl
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_library_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t out;
 	sll_api_sys_get_library(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 
@@ -4744,9 +4682,7 @@ __SLL_API_TYPE_sll_api_sys_get_platform sll_api_sys_get_platform(__SLL_API_ARGS_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_platform_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t out;
 	sll_api_sys_get_platform(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	out_o->dt.s=out;
-	return out_o;
+	return sll_string_to_object_nocopy(&out);
 }
 
 

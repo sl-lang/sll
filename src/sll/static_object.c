@@ -1,3 +1,4 @@
+#include <sll/_internal/common.h>
 #include <sll/_internal/static_object.h>
 #include <sll/array.h>
 #include <sll/gc.h>
@@ -713,6 +714,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_s
 	}
 	else{
 		sll_string_clone(v,&(o->dt.s));
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_nocopy(sll_string_t* v){
+	SLL_ASSERT(v);
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	o->dt.s=*v;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_pointer(const sll_char_t* p,sll_string_length_t l){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	if (l==SLL_MAX_STRING_LENGTH){
+		sll_string_from_pointer(p,&(o->dt.s));
+	}
+	else{
+		sll_string_from_pointer_length(p,l,&(o->dt.s));
 	}
 	return o;
 }

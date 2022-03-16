@@ -177,10 +177,37 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_string_to_object v
+ * \arg const sll_string_t* v
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* v);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_to_object_nocopy
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg sll_string_t* v
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_nocopy(sll_string_t* v);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_to_object_pointer
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg const sll_char_t* p
+ * \arg sll_string_length_t l
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_pointer(const sll_char_t* p,sll_string_length_t l);
 
 
 
