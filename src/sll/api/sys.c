@@ -103,8 +103,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 __API_FUNC(sys_get_args){
 	sll_array_create(_sys_argc,out);
 	for (sll_array_length_t i=0;i<_sys_argc;i++){
-		sll_object_t* n=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		sll_string_clone(_sys_argv+i,&(n->dt.s));
+		sll_object_t* n=sll_string_to_object(_sys_argv+i);
 		out->v[i]=n;
 	}
 }
@@ -125,12 +124,8 @@ __API_FUNC(sys_get_env){
 	sll_map_create(sll_environment->l,out);
 	for (sll_array_length_t i=0;i<sll_environment->l;i++){
 		const sll_environment_variable_t* kv=*(sll_environment->dt+i);
-		sll_object_t* k=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		sll_string_clone(&(kv->k),&(k->dt.s));
-		out->v[i<<1]=k;
-		sll_object_t* v=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		sll_string_clone(&(kv->v),&(v->dt.s));
-		out->v[(i<<1)+1]=v;
+		out->v[i<<1]=sll_string_to_object(&(kv->k));
+		out->v[(i<<1)+1]=sll_string_to_object(&(kv->v));
 	}
 }
 
@@ -165,13 +160,11 @@ __API_FUNC(sys_get_version){
 	out->v[0]=sll_int_to_object(SLL_VERSION_MAJOR);
 	out->v[1]=sll_int_to_object(SLL_VERSION_MINOR);
 	out->v[2]=sll_int_to_object(SLL_VERSION_PATCH);
-	sll_object_t* cmt=sll_create_object(SLL_OBJECT_TYPE_STRING);
 #if SLL_VERSION_HAS_SHA
-	sll_string_clone(&_sys_full_commit,&(cmt->dt.s));
+	out->v[3]=sll_string_to_object(&_sys_full_commit);
 #else
-	SLL_INIT_STRING(&(cmt->dt.s));
+	out->v[3]=sll_string_to_object(NULL);
 #endif
-	out->v[3]=cmt;
 	out->v[4]=sll_int_to_object(SLL_VERSION_BUILD_TIME);
 }
 

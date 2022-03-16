@@ -1712,8 +1712,7 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* s,const sll_string_t* p
 	if (!s->l){
 		o->l=1;
 		o->v=sll_allocator_init(sizeof(sll_object_t*));
-		o->v[0]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		sll_string_create(0,&(o->v[0]->dt.s));
+		o->v[0]=sll_string_to_object(NULL);
 		return;
 	}
 	if (!p->l){
@@ -1733,8 +1732,7 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 	if (!s->l){
 		o->l=1;
 		o->v=sll_allocator_init(sizeof(sll_object_t*));
-		o->v[0]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		sll_string_create(0,&(o->v[0]->dt.s));
+		o->v[0]=sll_string_to_object(NULL);
 		return;
 	}
 	o->l=0;

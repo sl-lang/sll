@@ -171,4 +171,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_string_to_object
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg sll_string_to_object v
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* v);
+
+
+
 #endif

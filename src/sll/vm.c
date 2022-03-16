@@ -367,13 +367,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				_scheduler_current_thread->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
-				{
-					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
-					sll_string_clone(sll_current_runtime_data->a_dt->st.dt+ai->dt.s,&(tos->dt.s));
-					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
-					_scheduler_current_thread->si++;
-					break;
-				}
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_string_to_object(sll_current_runtime_data->a_dt->st.dt+ai->dt.s);
+				_scheduler_current_thread->si++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				{
 					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
@@ -976,13 +972,9 @@ _return:;
 				_scheduler_current_thread->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				{
-					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
-					sll_string_clone(sll_current_runtime_data->a_dt->st.dt+ai->dt.s,&(tos->dt.s));
-					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
-					_scheduler_current_thread->si++;
-					goto _return;
-				}
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_string_to_object(sll_current_runtime_data->a_dt->st.dt+ai->dt.s);
+				_scheduler_current_thread->si++;
+				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=*VAR_REF(ai->dt.v);
 				SLL_ACQUIRE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
@@ -1085,9 +1077,7 @@ _load_new_thread:;
 					sll_file_t* f=sll_file_from_handle(fh_o->dt.i);
 					sll_release_object(fh_o);
 					if (!f||sz<=0){
-						sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
-						SLL_INIT_STRING(&(tos->dt.s));
-						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
+						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_string_to_object(NULL);
 						_scheduler_current_thread->si++;
 						break;
 					}

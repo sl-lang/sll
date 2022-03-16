@@ -58,7 +58,7 @@ def generate_c_api(d_dt,api_dt):
 						elif (e["type"][0]=="C"):
 							cf.write(ALPHABET[i]+"=SLL_FROM_CHAR(0);")
 						elif (e["type"][0]=="S"):
-							cf.write(f"{ALPHABET[i]}=sll_create_object(SLL_OBJECT_TYPE_STRING);\n\t\tsll_string_create(0,&({ALPHABET[i]}->dt.s));")
+							cf.write(f"{ALPHABET[i]}=sll_string_to_object(NULL);")
 						elif (e["type"][0]=="A"):
 							cf.write(f"{ALPHABET[i]}=sll_create_object(SLL_OBJECT_TYPE_ARRAY);\n\t\tsll_array_create(0,&({ALPHABET[i]}->dt.a));")
 						else:

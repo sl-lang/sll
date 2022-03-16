@@ -43,12 +43,8 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 				p->c=0;
 				break;
 			case SLL_OBJECT_TYPE_STRING:
-				{
-					sll_object_t* n=sll_create_object(SLL_OBJECT_TYPE_STRING);
-					SLL_INIT_STRING(&(n->dt.s));
-					p->o=n;
-					break;
-				}
+				p->o=sll_string_to_object(NULL);
+				break;
 			case SLL_OBJECT_TYPE_ARRAY:
 			case SLL_OBJECT_TYPE_MAP_KEYS:
 			case SLL_OBJECT_TYPE_MAP_VALUES:

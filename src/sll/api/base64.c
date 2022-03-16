@@ -2,6 +2,7 @@
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/object.h>
+#include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
@@ -30,11 +31,10 @@ static const sll_char_t _base64_index_map[256]={
 
 
 __API_FUNC(base64_decode){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	if (!a->l){
-		SLL_INIT_STRING(&(o->dt.s));
-		return o;
+		return sll_string_to_object(NULL);
 	}
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	sll_integer_t oi=-1;
 	if (a->l&3){
 _error:

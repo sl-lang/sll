@@ -32,12 +32,9 @@ static void _create_process_object(const sll_array_t* arg,sll_object_t* cfg,sll_
 	sll_array_clone(arg,&(oa->dt.a));
 	sll_object_t* std=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 	sll_array_create(3,&(std->dt.a));
-	std->dt.a.v[0]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_clone(in,&(std->dt.a.v[0]->dt.s));
-	std->dt.a.v[1]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_clone(out,&(std->dt.a.v[1]->dt.s));
-	std->dt.a.v[2]=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_clone(err,&(std->dt.a.v[2]->dt.s));
+	std->dt.a.v[0]=sll_string_to_object(in);
+	std->dt.a.v[1]=sll_string_to_object(out);
+	std->dt.a.v[2]=sll_string_to_object(err);
 	sll_array_create(4,o);
 	SLL_ACQUIRE(cfg);
 	o->v[0]=oa;

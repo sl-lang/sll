@@ -663,18 +663,9 @@ __SLL_EXTERNAL sll_object_t* sll_static_char[256]={
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v){
-	if (v>-1&&v<256){
-		SLL_ACQUIRE(sll_static_int[v]);
-		return sll_static_int[v];
-	}
-	if (v>-17&&v<0){
-		SLL_ACQUIRE(sll_static_negative_int[-v-1]);
-		return sll_static_negative_int[-v-1];
-	}
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_INT);
-	o->dt.i=v;
-	return o;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v){
+	SLL_ACQUIRE(sll_static_char[v]);
+	return sll_static_char[v];
 }
 
 
@@ -699,7 +690,29 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t 
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v){
-	SLL_ACQUIRE(sll_static_char[v]);
-	return sll_static_char[v];
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v){
+	if (v>-1&&v<256){
+		SLL_ACQUIRE(sll_static_int[v]);
+		return sll_static_int[v];
+	}
+	if (v>-17&&v<0){
+		SLL_ACQUIRE(sll_static_negative_int[-v-1]);
+		return sll_static_negative_int[-v-1];
+	}
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_INT);
+	o->dt.i=v;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* v){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	if (!v){
+		SLL_INIT_STRING(&(o->dt.s));
+	}
+	else{
+		sll_string_clone(v,&(o->dt.s));
+	}
+	return o;
 }
