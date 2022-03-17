@@ -402,7 +402,6 @@ __API_FUNC(string_replace){
 			sll_string_remove(a,&(b->dt.s),out);
 		}
 		else{
-			SLL_UNIMPLEMENTED();
 			sll_string_t s;
 			sll_string_from_char(b->dt.c,&s);
 			sll_string_remove(a,&s,out);

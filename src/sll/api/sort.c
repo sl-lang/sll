@@ -12,17 +12,17 @@
 
 
 
-static void _quicksort_raw(const sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
+static void _quicksort_raw(sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp){
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<l;j++){
 		if (sll_operator_compare(*(a+j),*(a+l))==cmp){
-			const sll_object_t* t=*(a+i);
+			sll_object_t* t=*(a+i);
 			*(a+i)=*(a+j);
 			*(a+j)=t;
 			i++;
 		}
 	}
-	const sll_object_t* t=*(a+i);
+	sll_object_t* t=*(a+i);
 	*(a+i)=*(a+l);
 	*(a+l)=t;
 	if (i>1){
@@ -36,11 +36,11 @@ static void _quicksort_raw(const sll_object_t** a,sll_array_length_t l,sll_compa
 
 
 
-static void _quicksort_extra(const sll_object_t** a,const sll_object_t** b,sll_array_length_t l,sll_compare_result_t cmp){
+static void _quicksort_extra(sll_object_t** a,sll_object_t** b,sll_array_length_t l,sll_compare_result_t cmp){
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<l;j++){
 		if (sll_operator_compare(*(a+j),*(a+l))==cmp){
-			const sll_object_t* t=*(a+i);
+			sll_object_t* t=*(a+i);
 			*(a+i)=*(a+j);
 			*(a+j)=t;
 			t=*(b+i);
@@ -49,7 +49,7 @@ static void _quicksort_extra(const sll_object_t** a,const sll_object_t** b,sll_a
 			i++;
 		}
 	}
-	const sll_object_t* t=*(a+i);
+	sll_object_t* t=*(a+i);
 	*(a+i)=*(a+l);
 	*(a+l)=t;
 	t=*(b+i);
@@ -68,14 +68,14 @@ static void _quicksort_extra(const sll_object_t** a,const sll_object_t** b,sll_a
 
 __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp,sll_integer_t fn){
 	if (!fn){
-		_quicksort_raw((const sll_object_t**)a,l-1,cmp);
+		_quicksort_raw(a,l-1,cmp);
 		return;
 	}
 	sll_object_t** tmp=sll_allocate_stack(l*sizeof(sll_object_t*));
 	for (sll_array_length_t i=0;i<l;i++){
 		*(tmp+i)=sll_execute_function(fn,a+i,1,0);
 	}
-	_quicksort_extra((const sll_object_t**)tmp,(const sll_object_t**)a,l-1,cmp);
+	_quicksort_extra(tmp,a,l-1,cmp);
 	for (sll_array_length_t i=0;i<l;i++){
 		sll_release_object(*(tmp+i));
 	}

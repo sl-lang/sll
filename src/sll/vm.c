@@ -708,7 +708,7 @@ _cleanup_jump_table:;
 					sll_stack_offset_t off=ai->dt.ac<<1;
 					sll_object_type_t nt;
 					if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
-						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(_scheduler_current_thread->stack+_scheduler_current_thread->si-off),ai->dt.ac,NULL);
+						nt=sll_add_type(sll_current_runtime_data->tt,_scheduler_current_thread->stack+_scheduler_current_thread->si-off,ai->dt.ac,NULL);
 						for (sll_arg_count_t i=0;i<off;i++){
 							_scheduler_current_thread->si--;
 							sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));
@@ -717,7 +717,7 @@ _cleanup_jump_table:;
 					}
 					else{
 						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*(_scheduler_current_thread->stack+_scheduler_current_thread->si-off-1))==SLL_OBJECT_TYPE_STRING);
-						nt=sll_add_type(sll_current_runtime_data->tt,(const sll_object_t*const*)(_scheduler_current_thread->stack+_scheduler_current_thread->si-off),ai->dt.ac,&((*(_scheduler_current_thread->stack+_scheduler_current_thread->si-off-1))->dt.s));
+						nt=sll_add_type(sll_current_runtime_data->tt,_scheduler_current_thread->stack+_scheduler_current_thread->si-off,ai->dt.ac,&((*(_scheduler_current_thread->stack+_scheduler_current_thread->si-off-1))->dt.s));
 						for (sll_arg_count_t i=0;i<off;i++){
 							_scheduler_current_thread->si--;
 							sll_release_object(*(_scheduler_current_thread->stack+_scheduler_current_thread->si));

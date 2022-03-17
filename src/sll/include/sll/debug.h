@@ -39,9 +39,9 @@ __SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* o,const sll_source_fi
  * \name sll_debug_print_object
  * \group debug
  * \desc Docs!
- * \arg const sll_object_t* v
+ * \arg sll_object_t* v
  */
-__SLL_EXTERNAL void sll_debug_print_object(const sll_object_t* v);
+__SLL_EXTERNAL void sll_debug_print_object(sll_object_t* v);
 
 
 

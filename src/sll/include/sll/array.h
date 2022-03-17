@@ -84,10 +84,10 @@ __SLL_EXTERNAL void sll_array_clone(const sll_array_t* a,sll_array_t* o);
  * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* a
- * \arg const sll_object_t* v
+ * \arg sll_object_t* v
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,const sll_object_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,sll_object_t* v);
 
 
 
@@ -273,10 +273,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_get(const sll_array_t*
  * \group array
  * \desc Docs!
  * \arg const sll_array_t* a
- * \arg const sll_object_t* e
+ * \arg sll_object_t* e
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_includes(const sll_array_t* a,const sll_object_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_includes(const sll_array_t* a,sll_object_t* e);
 
 
 

@@ -45,9 +45,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start
 	if (!o){
 		return SLL_UNKNOWN_INTERNAL_THREAD_INDEX;
 	}
-	if (WaitForSingleObject(dt.lck,INFINITE)!=WAIT_OBJECT_0){
-		SLL_UNIMPLEMENTED();
-	}
+	SLL_CRITICAL(WaitForSingleObject(dt.lck,INFINITE)==WAIT_OBJECT_0);
 	CloseHandle(dt.lck);
 	return (sll_internal_thread_index_t)o;
 }

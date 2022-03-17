@@ -236,7 +236,6 @@ __SLL_EXTERNAL void sll_map_clone(const sll_map_t* m,sll_map_t* o){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_map_compare(const sll_map_t* a,const sll_map_t* b){
 	SLL_UNIMPLEMENTED();
-	return SLL_COMPARE_RESULT_EQUAL;
 }
 
 
@@ -274,7 +273,7 @@ _next_key:;
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,const sll_object_t* k){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,sll_object_t* k){
 	for (sll_map_length_t i=0;i<m->l;i++){
 		if (sll_operator_strict_equal(m->v[i<<1],k)){
 			SLL_ACQUIRE(m->v[(i<<1)+1]);
@@ -306,7 +305,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m,const sll_object_t* e){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m,sll_object_t* e){
 	for (sll_map_length_t i=0;i<m->l;i++){
 		if (sll_operator_strict_equal(m->v[i<<1],e)){
 			return 1;

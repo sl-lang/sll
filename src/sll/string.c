@@ -251,7 +251,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_array(
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_map(const sll_string_t* s,const sll_map_t* m,sll_bool_t inv){
 	SLL_UNIMPLEMENTED();
-	return SLL_COMPARE_RESULT_EQUAL;
 }
 
 
@@ -924,7 +923,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse(c
 		return sll_string_index_reverse_char(a,b->v[0],0);
 	}
 	SLL_UNIMPLEMENTED();
-	return SLL_MAX_STRING_LENGTH;
 }
 
 
@@ -1346,21 +1344,18 @@ __SLL_EXTERNAL void sll_string_pad_right(const sll_string_t* s,sll_string_length
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_string_parse_char(const sll_string_t* s){
 	SLL_UNIMPLEMENTED();
-	return 0;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_string_parse_float(const sll_string_t* s){
 	SLL_UNIMPLEMENTED();
-	return 0;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_string_parse_int(const sll_string_t* s){
 	SLL_UNIMPLEMENTED();
-	return 0;
 }
 
 

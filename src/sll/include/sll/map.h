@@ -206,10 +206,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_equal(const sll_map_t* a,co
  * \subgroup map-data
  * \desc Docs!
  * \arg const sll_map_t* m
- * \arg const sll_object_t* k
+ * \arg sll_object_t* k
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,const sll_object_t* k);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,sll_object_t* k);
 
 
 
@@ -247,10 +247,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_
  * \group map
  * \desc Docs!
  * \arg const sll_map_t* m
- * \arg const sll_object_t* e
+ * \arg sll_object_t* e
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m,const sll_object_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m,sll_object_t* e);
 
 
 

@@ -459,7 +459,7 @@ __SLL_EXTERNAL void sll_operator_assign_range_step(sll_object_t* a,sll_object_t*
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(sll_object_t* a){
 	switch (SLL_OBJECT_GET_TYPE(a)){
 		case SLL_OBJECT_TYPE_INT:
 			return !!a->dt.i;
@@ -479,7 +479,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(const sll_object_
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(const sll_object_t* a,const sll_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_object_t* a,sll_object_t* b){
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return COMPARE_RESULT(a->dt.i,b->dt.i);
@@ -784,7 +784,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(const sll_object_t* a,const sll_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,sll_object_t* b){
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return a->dt.i==b->dt.i;
@@ -1837,7 +1837,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(const sll_object_t* a,const sll_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_object_t* a,sll_object_t* b){
 	if (SLL_OBJECT_GET_TYPE(a)!=SLL_OBJECT_GET_TYPE(b)){
 		return 0;
 	}

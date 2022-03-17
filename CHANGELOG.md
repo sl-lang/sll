@@ -29,6 +29,7 @@
 
 ### Removed
 
+- All constants references to objects (`const sll_object_t*`)
 - CPU count getter function `sll_platform_get_cpu_count` (in favor of global constant `sll_platform_cpu_count`)
 - Current thread index (`sll_current_thread_index`) from the public interface
 - Unused function `sll_cli_main_raw`

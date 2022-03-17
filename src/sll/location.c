@@ -40,7 +40,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
 
 
 
-__SLL_EXTERNAL void sll_get_name(const sll_object_t* v,sll_string_t* o){
+__SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o){
 	SLL_INIT_STRING(o);
 	if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_INT){
 		if (v->dt.i<0){

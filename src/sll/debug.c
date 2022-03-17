@@ -23,13 +23,13 @@ __SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* o,const sll_source_fi
 
 
 
-__SLL_EXTERNAL void sll_debug_print_object(const sll_object_t* v){
+__SLL_EXTERNAL void sll_debug_print_object(sll_object_t* v){
 	if (v->t==SLL_OBJECT_TYPE_STRING){
 		sll_file_write(sll_stdout,v->dt.s.v,v->dt.s.l*sizeof(sll_char_t),NULL);
 	}
 	else{
 		sll_string_t str;
-		sll_api_string_convert((sll_object_t*const*)&v,1,&str);
+		sll_api_string_convert(&v,1,&str);
 		sll_file_write(sll_stdout,str.v,str.l*sizeof(sll_char_t),NULL);
 		sll_free_string(&str);
 	}

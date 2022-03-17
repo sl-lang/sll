@@ -76,7 +76,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
 			switch (b->dt.i){
 				case SLL_OBJECT_TYPE_INT:
-					SLL_UNIMPLEMENTED();
+					return sll_int_to_object(dt->l);
 				case SLL_OBJECT_TYPE_FLOAT:
 					SLL_UNIMPLEMENTED();
 				case SLL_OBJECT_TYPE_CHAR:
