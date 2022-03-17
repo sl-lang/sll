@@ -18,6 +18,7 @@
 
 - Arrays and strings now use the allocator API ([#224])
 - *\[Windows Only\]* Combined code for CLI console and window targets in the same file
+- Files are now protected by locks to prevent racing conditions
 - Fixed declaration of raw API functions
 - Fixed invalid memory access bug in `sll_copy_data` and `sll_optimize_metadata`
 - Objects are now created with a specified type to remove the need to always assign types after calls to `sll_create_object`

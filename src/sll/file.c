@@ -8,6 +8,7 @@
 #include <sll/file.h>
 #include <sll/memory.h>
 #include <sll/platform/file.h>
+#include <sll/platform/lock.h>
 #include <sll/platform/memory.h>
 #include <sll/platform/path.h>
 #include <sll/string.h>
@@ -22,6 +23,11 @@
 #else
 #define EXTRA_FLAGS 0
 #endif
+
+
+
+#define LOCK SLL_CRITICAL(sll_platform_lock_acquire(f->_lck))
+#define UNLOCK SLL_CRITICAL(sll_platform_lock_release(f->_lck))
 
 
 
@@ -171,6 +177,7 @@ __SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,
 	o->_l_num=0;
 	o->_off=0;
 	o->_h.bfl=DISABLE_FILE_HASH;
+	o->_lck=sll_platform_lock_create();
 }
 
 
@@ -235,6 +242,7 @@ __SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* nm,sll_file_descr
 		}
 	}
 	o->_h.bfl=DISABLE_FILE_HASH;
+	o->_lck=sll_platform_lock_create();
 }
 
 
@@ -245,10 +253,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 		return SLL_END_OF_DATA;
 	}
 	if (f->f&FILE_FLAG_MEMORY){
+		LOCK;
 		if (f->_off==f->dt.mm.sz){
 			return SLL_END_OF_DATA;
 		}
-		return *((sll_char_t*)(PTR(ADDR(f->dt.mm.p)+f->_off)));
+		sll_char_t o=*((sll_char_t*)(PTR(ADDR(f->dt.mm.p)+f->_off)));
+		UNLOCK;
+		return o;
 	}
 	if (f->dt.fl.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
@@ -257,13 +268,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		SLL_UNIMPLEMENTED();
 	}
+	LOCK;
 	if (!f->_r_bf_off&&!f->_r_bf_sz){
 		f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE,err);
 		if (!f->_r_bf_sz){
 			return SLL_END_OF_DATA;
 		}
 	}
-	return f->_r_bf[f->_r_bf_off];
+	sll_bool_t o=f->_r_bf[f->_r_bf_off];
+	UNLOCK;
+	return o;
 }
 
 
@@ -275,6 +289,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 	}
 	sll_size_t o;
 	if (f->f&FILE_FLAG_MEMORY){
+		LOCK;
 		if (f->_off+sz>=f->dt.mm.sz){
 			sz=f->dt.mm.sz-f->_off;
 		}
@@ -287,6 +302,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
 		return 0;
 	}
+	LOCK;
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		sz=sll_platform_file_read(f->dt.fl.fd,p,sz,err);
 		f->_off+=sz;
@@ -296,6 +312,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 	if (!f->_r_bf_off&&!f->_r_bf_sz){
 		f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE,err);
 		if (!f->_r_bf_sz){
+			UNLOCK;
 			return 0;
 		}
 	}
@@ -340,6 +357,7 @@ _hash_data:
 	if (f->_h.bfl!=DISABLE_FILE_HASH){
 		SLL_UNIMPLEMENTED();
 	}
+	UNLOCK;
 	return ZERO_IF_ERROR_PTR(o);
 }
 
@@ -350,6 +368,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 	if (!(f->f&SLL_FILE_FLAG_READ)){
 		return SLL_END_OF_DATA;
 	}
+	LOCK;
 	sll_char_t o;
 	if (f->f&FILE_FLAG_MEMORY){
 		if (f->_off==f->dt.mm.sz){
@@ -363,6 +382,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 	}
 	else if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		if (!sll_platform_file_read(f->dt.fl.fd,&o,sizeof(sll_char_t),err)){
+			UNLOCK;
 			return SLL_END_OF_DATA;
 		}
 	}
@@ -370,6 +390,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 		if (!f->_r_bf_off&&!f->_r_bf_sz){
 			f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE,err);
 			if (!f->_r_bf_sz){
+				UNLOCK;
 				return SLL_END_OF_DATA;
 			}
 		}
@@ -394,6 +415,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 			f->_h.bfl++;
 		}
 	}
+	UNLOCK;
 	return DATA_IF_ERROR_PTR(o,SLL_END_OF_DATA);
 }
 
@@ -401,12 +423,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t*
 
 __SLL_EXTERNAL sll_error_t sll_file_reset(sll_file_t* f){
 	sll_error_t err=SLL_NO_ERROR;
+	LOCK;
 	if (!(f->f&FILE_FLAG_MEMORY)){
 		if (f->dt.fl.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
+			UNLOCK;
 			return SLL_ERROR_UNKNOWN_FD;
 		}
 		err=sll_platform_file_seek(f->dt.fl.fd,0);
 		if (err!=SLL_NO_ERROR){
+			UNLOCK;
 			return err;
 		}
 		f->_r_bf_off=0;
@@ -417,6 +442,7 @@ __SLL_EXTERNAL sll_error_t sll_file_reset(sll_file_t* f){
 	if (f->_h.bfl!=DISABLE_FILE_HASH){
 		_file_start_hash(f);
 	}
+	UNLOCK;
 	return err;
 }
 
@@ -428,15 +454,18 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 		return 0;
 	}
 	if (f->f&FILE_FLAG_MEMORY){
+		LOCK;
 		if (f->f&FILE_FLAG_DYNAMIC_BUFFERS){
 			dynamic_buffer_chunk_t* c=f->_w.d.t;
 			if (c->sz-f->_w.d.off>=sz){
 				sll_copy_data(p,sz,c->dt+f->_w.d.off);
 				f->_w.d.sz+=sz;
 				f->_w.d.off+=sz;
+				UNLOCK;
 				return sz;
 			}
 			SLL_UNIMPLEMENTED();
+			UNLOCK;
 			return sz;
 		}
 		if (f->_off+sz>=f->dt.mm.sz){
@@ -444,14 +473,18 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 		}
 		sll_copy_data(p,sz,((sll_char_t*)(f->dt.mm.p))+f->_off);
 		f->_off+=sz;
+		UNLOCK;
 		return sz;
 	}
 	if (f->dt.fl.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
 		return 0;
 	}
+	LOCK;
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
-		return sll_platform_file_write(f->dt.fl.fd,p,sz,err);
+		sll_size_t o=sll_platform_file_write(f->dt.fl.fd,p,sz,err);
+		UNLOCK;
+		return o;
 	}
 	if (sz+f->_w.bf.off<=FILE_BUFFER_SIZE){
 		sll_copy_data(p,sz,f->_w.bf.p+f->_w.bf.off);
@@ -460,6 +493,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 			sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
 			f->_w.bf.off=0;
 		}
+		UNLOCK;
 		return ZERO_IF_ERROR_PTR(sz);
 	}
 	sll_size_t i=FILE_BUFFER_SIZE-f->_w.bf.off;
@@ -478,6 +512,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 		sll_copy_data(v,i,f->_w.bf.p);
 	}
 	f->_w.bf.off=i;
+	UNLOCK;
 	return ZERO_IF_ERROR_PTR(o);
 }
 
@@ -489,30 +524,38 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
 		return 0;
 	}
 	if (f->f&FILE_FLAG_MEMORY){
+		LOCK;
 		if (f->f&FILE_FLAG_DYNAMIC_BUFFERS){
 			dynamic_buffer_chunk_t* k=f->_w.d.t;
 			if (k->sz>f->_w.d.off){
 				k->dt[f->_w.d.off]=c;
 				f->_w.d.sz++;
 				f->_w.d.off++;
+				UNLOCK;
 				return 1;
 			}
 			SLL_UNIMPLEMENTED();
+			UNLOCK;
 			return 1;
 		}
 		if (f->_off+1>=f->dt.mm.sz){
+			UNLOCK;
 			return 0;
 		}
 		*(((sll_char_t*)(f->dt.mm.p))+f->_off)=c;
 		f->_off++;
+		UNLOCK;
 		return 1;
 	}
 	if (f->dt.fl.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
 		return 0;
 	}
+	LOCK;
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
-		return sll_platform_file_write(f->dt.fl.fd,&c,sizeof(sll_char_t),err);
+		sll_bool_t o=sll_platform_file_write(f->dt.fl.fd,&c,sizeof(sll_char_t),err);
+		UNLOCK;
+		return o;
 	}
 	SLL_ASSERT(f->_w.bf.off+1<=FILE_BUFFER_SIZE);
 	f->_w.bf.p[f->_w.bf.off]=c;
@@ -521,6 +564,7 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
 		sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
 		f->_w.bf.off=0;
 	}
+	UNLOCK;
 	return ZERO_IF_ERROR_PTR(1);
 }
 
@@ -534,23 +578,27 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 		if (f->f&FILE_FLAG_DYNAMIC_BUFFERS){
 			SLL_UNIMPLEMENTED();
 		}
+		LOCK;
 		if (f->_off+n>=f->dt.mm.sz){
 			n=f->dt.mm.sz-f->_off;
 		}
 		sll_set_memory(((sll_char_t*)(f->dt.mm.p))+f->_off,n,c);
 		f->_off+=n;
+		UNLOCK;
 		return n;
 	}
 	if (f->dt.fl.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
 		return 0;
 	}
+	LOCK;
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		sll_size_t o=0;
 		while (n){
 			o+=sll_platform_file_write(f->dt.fl.fd,&c,sizeof(sll_char_t),err);
 			n--;
 		}
+		UNLOCK;
 		return ZERO_IF_ERROR_PTR(o);
 	}
 	if (n+f->_w.bf.off<=FILE_BUFFER_SIZE){
@@ -560,6 +608,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 			sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
 			f->_w.bf.off=0;
 		}
+		UNLOCK;
 		return ZERO_IF_ERROR_PTR(n);
 	}
 	sll_size_t i=FILE_BUFFER_SIZE-f->_w.bf.off;
@@ -580,6 +629,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 		sll_set_memory(f->_w.bf.p,i,c);
 	}
 	f->_w.bf.off=i;
+	UNLOCK;
 	return ZERO_IF_ERROR_PTR(o);
 }
 

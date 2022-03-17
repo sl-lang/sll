@@ -423,6 +423,7 @@ typedef struct __SLL_FILE{
 	sll_file_offset_t _r_bf_sz;
 	sll_file_write_data_t _w;
 	sll_file_hash_t _h;
+	sll_lock_handle_t _lck;
 } sll_file_t;
 
 
