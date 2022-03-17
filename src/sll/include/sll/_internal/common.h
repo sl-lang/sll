@@ -21,20 +21,22 @@
 #define __SLL_TLS __thread
 #endif
 
+#define _FORCE_EXIT(err) _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "err"\n"));
+
 #ifdef DEBUG_BUILD
-#define SLL_UNREACHABLE() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unreachable Code\n"));
+#define SLL_UNREACHABLE() _FORCE_EXIT("Unreachable Code");
 #endif
 
 #define _SLL_STRINGIFY_(x) #x
 #define _SLL_STRINGIFY(x) _SLL_STRINGIFY_(x)
 
-#define SLL_UNIMPLEMENTED() _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): Unimplemented\n"));
+#define SLL_UNIMPLEMENTED() _FORCE_EXIT("Unimplemented");
 #ifdef DEBUG_BUILD
 #define ASSUME_ALIGNED(p,n,x) SLL_ASSERT(!((ADDR(p)-(x))&((1ull<<(n))-1)))
 #define SLL_ASSERT(x) \
 	do{ \
 		if (!(x)){ \
-			_force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "_SLL_STRINGIFY(x)": Assertion Failed\n")); \
+			_FORCE_EXIT("Assertion Failed"); \
 		} \
 	} while (0)
 #else
