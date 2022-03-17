@@ -1,0 +1,5 @@
+The following critical function call returned an error:
+$$$
+If you belive that this is not an issue with your system and/or
+code, create a new issue at https://github.com/sl-lang/sll/issues
+with the label 'bug' and any other that may apply.

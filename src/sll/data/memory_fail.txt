@@ -2,5 +2,5 @@ Due to the lack of system memory or an ambitious allocation size,
 the following function call failed to process the requested data:
 $$$
 If you belive that this is not an issue with your system and/or
-code, create a new issue in https://github.com/sl-lang/sll/issues
+code, create a new issue at https://github.com/sl-lang/sll/issues
 with the labels 'bug', 'memory-fail' and any other that may apply.

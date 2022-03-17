@@ -47,13 +47,14 @@
 	} while (0)
 #endif
 
-#define SLL_CRITICAL(x) SLL_CRITICAL_COND(1,(x))
-#define SLL_CRITICAL_COND(cnd,x) \
+#define _SLL_CRITICAL_COND(cnd,x,str) \
 	do{ \
 		if ((cnd)&&!(x)){ \
-			SLL_UNIMPLEMENTED(); \
+			_critical_failure(SLL_CHAR("["__FILE__":"_SLL_STRINGIFY(__LINE__)"] "str)); \
 		} \
 	} while (0)
+#define SLL_CRITICAL(x) _SLL_CRITICAL_COND(1,(x),#x)
+#define SLL_CRITICAL_COND(cnd,x) _SLL_CRITICAL_COND(cnd,(x),#x)
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
@@ -69,6 +70,10 @@ typedef __SLL_U64 bitmap_t;
 
 
 typedef __SLL_U64 wide_data_t;
+
+
+
+__SLL_NO_RETURN void _critical_failure(const sll_char_t* nm);
 
 
 

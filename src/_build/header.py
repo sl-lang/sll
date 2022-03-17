@@ -12,7 +12,7 @@ HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^\"]*\")\s*$""",re.MULTILINE)
-INTERNAL_SLL_HEADERS=["assembly_optimizer.h","help_text.h","_dispatcher.h","_sll_internal.h","memory_fail.h"]
+INTERNAL_SLL_HEADERS=["assembly_optimizer.h","help_text.h","_dispatcher.h","_sll_internal.h","critical_error.h","memory_fail.h"]
 LETTERS=b"abcdefghijklmnopqrstuvwxyz"
 MULTIPLE_NEWLINE_REGEX=re.compile(br"\n+")
 NUMBERS=b"0123456789"
@@ -164,13 +164,14 @@ def generate_help(i_fp,o_fp):
 
 
 
-def generate_memory_fail(i_fp,o_fp):
+def generate_error_header(i_fp,o_fp,nm):
+	nm=bytes(nm,"utf-8")
 	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
 	with open(i_fp,"rb") as rf,open(o_fp,"wb") as wf:
 		dt=rf.read().replace(b"\r\n",b"\n").split(b"$$$")
-		wf.write(b"#ifndef __SLL_GENERATED_MEMORY_FAIL_H__\n#define __SLL_GENERATED_MEMORY_FAIL_H__ 1\n#include <sll/types.h>\n\n\n\n#define MEMORY_FAIL_START_SIZE "+bytes(str(len(dt[0])),"utf-8")+b"\n#define MEMORY_FAIL_END_SIZE "+bytes(str(len(dt[1])),"utf-8")+b"\n\n\n\nstatic const sll_char_t MEMORY_FAIL_START[]={\n\t")
+		wf.write(b"#ifndef __SLL_GENERATED_"+nm+b"_H__\n#define __SLL_GENERATED_"+nm+b"_H__ 1\n#include <sll/types.h>\n\n\n\n#define "+nm+b"_START_SIZE "+bytes(str(len(dt[0])),"utf-8")+b"\n#define "+nm+b"_END_SIZE "+bytes(str(len(dt[1])),"utf-8")+b"\n\n\n\nstatic const sll_char_t "+nm+b"_START[]={\n\t")
 		_write_byte_array(wf,dt[0])
-		wf.write(b"\n};\n\n\n\nstatic const sll_char_t MEMORY_FAIL_END[]={\n\t")
+		wf.write(b"\n};\n\n\n\nstatic const sll_char_t "+nm+b"_END[]={\n\t")
 		_write_byte_array(wf,dt[1])
 		wf.write(b"\n};\n\n\n\n#endif\n")
 
