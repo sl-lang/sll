@@ -42,7 +42,7 @@ __API_FUNC(base64_decode){
 		return SLL_ACQUIRE_STATIC_NEG_INT(1);
 	}
 	sll_string_t o;
-	sll_string_create(a->l*3/4-p,&o);
+	sll_string_create(((a->l*3)>>2)-p,&o);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
 	sll_string_length_t l=(a->l-p)&0xfffffffc;
@@ -110,8 +110,7 @@ __API_FUNC(base64_encode){
 		return;
 	}
 	sll_string_length_t p=(3-(a->l%3))%3;
-	sll_string_length_t l=(a->l+p)*4/3;
-	sll_string_create(l,out);
+	sll_string_create(((a->l+p)<<2)/3,out);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
 	while (i<a->l-2){
