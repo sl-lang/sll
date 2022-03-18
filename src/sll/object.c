@@ -432,14 +432,7 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 
 __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* tt,sll_object_t* o,sll_array_t* out){
 	sll_object_type_t t=SLL_OBJECT_GET_TYPE(o);
-	if (t<=SLL_MAX_OBJECT_TYPE){
-		sll_object_t* arr=sll_operator_cast(o,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
-		*out=arr->dt.a;
-		arr->t=SLL_OBJECT_TYPE_INT;
-		sll_release_object(arr);
-		return;
-	}
-	SLL_ASSERT(t-SLL_MAX_OBJECT_TYPE-1<tt->l);
+	SLL_ASSERT(t>SLL_MAX_OBJECT_TYPE&&t-SLL_MAX_OBJECT_TYPE-1<tt->l);
 	const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
 	sll_array_create(dt->l,out);
 	sll_object_field_t* v=o->dt.p;

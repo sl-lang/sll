@@ -221,21 +221,18 @@ __API_FUNC(file_read){
 		SLL_UNIMPLEMENTED();
 	}
 	extended_file_t* ef=*(_file_fl+a);
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	sll_string_length_t l=(sll_string_length_t)b;
-	sll_string_create(l,&(o->dt.s));
+	sll_string_t o;
+	sll_string_create(l,&o);
 	sll_error_t err;
-	sll_size_t sz=sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),o->dt.s.v,l,&err);
+	sll_size_t sz=sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),o.v,l,&err);
 	if (!sz&&err!=SLL_NO_ERROR){
-		sll_free_string(&(o->dt.s));
-		o->t=SLL_OBJECT_TYPE_INT;
-		o->dt.i=err;
+		sll_free_string(&o);
+		return sll_int_to_object(err);
 	}
-	else{
-		sll_string_decrease(&(o->dt.s),(sll_string_length_t)sz);
-		sll_string_calculate_checksum(&(o->dt.s));
-	}
-	return o;
+	sll_string_decrease(&o,(sll_string_length_t)sz);
+	sll_string_calculate_checksum(&o);
+	return sll_string_to_object_nocopy(&o);
 }
 
 

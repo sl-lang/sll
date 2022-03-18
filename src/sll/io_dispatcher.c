@@ -31,18 +31,18 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	SLL_ASSERT(evt->f);
 	sll_object_t* o=NULL;
 	if (evt->sz){
-		o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		sll_string_create(evt->sz,&(o->dt.s));
+		sll_string_t bf;
+		sll_string_create(evt->sz,&bf);
 		sll_error_t err;
-		sll_size_t sz=sll_file_read(evt->f,o->dt.s.v,evt->sz,&err);
+		sll_size_t sz=sll_file_read(evt->f,bf.v,evt->sz,&err);
 		if (!sz&&err!=SLL_NO_ERROR){
-			sll_free_string(&(o->dt.s));
-			o->t=SLL_OBJECT_TYPE_INT;
-			o->dt.i=err;
+			sll_free_string(&bf);
+			o=sll_int_to_object(err);
 		}
 		else{
-			sll_string_decrease(&(o->dt.s),(sll_string_length_t)sz);
-			sll_string_calculate_checksum(&(o->dt.s));
+			sll_string_decrease(&bf,(sll_string_length_t)sz);
+			sll_string_calculate_checksum(&bf);
+			o=sll_string_to_object_nocopy(&bf);
 		}
 	}
 	else{

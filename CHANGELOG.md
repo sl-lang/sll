@@ -21,7 +21,7 @@
 - Files are now protected by locks to prevent racing conditions
 - Fixed declaration of raw API functions
 - Fixed invalid memory access bug in `sll_copy_data` and `sll_optimize_metadata`
-- Objects are now created with a specified type to remove the need to always assign types after calls to `sll_create_object`
+- Objects types can no longer be changed and can only by initialized by a call to `sll_create_object`
 - Rename `sll_sandbox_flags_t` to `sll_sandbox_flag_t`
 - Reworked the thread and scheduler APIs ([#243])
 - Sandbox flags are now thread-based and are inherited by child threads

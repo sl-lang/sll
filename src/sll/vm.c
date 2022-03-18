@@ -1083,20 +1083,19 @@ _load_new_thread:;
 					}
 					sll_string_length_t l=(sz>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)sz);
 					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)){
-						sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
-						sll_string_create(l,&(tos->dt.s));
+						sll_string_t bf;
+						sll_string_create(l,&bf);
 						sll_error_t err;
-						sll_size_t r_sz=sll_file_read(f,tos->dt.s.v,l,&err);
+						sll_size_t r_sz=sll_file_read(f,bf.v,l,&err);
 						if (!r_sz&&err!=SLL_NO_ERROR){
-							sll_free_string(&(tos->dt.s));
-							tos->t=SLL_OBJECT_TYPE_INT;
-							tos->dt.i=err;
+							sll_free_string(&bf);
+							*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_int_to_object(err);
 						}
 						else{
-							sll_string_decrease(&(tos->dt.s),(sll_string_length_t)r_sz);
-							sll_string_calculate_checksum(&(tos->dt.s));
+							sll_string_decrease(&bf,(sll_string_length_t)r_sz);
+							sll_string_calculate_checksum(&bf);
+							*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_string_to_object_nocopy(&bf);
 						}
-						*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
 						_scheduler_current_thread->si++;
 						break;
 					}

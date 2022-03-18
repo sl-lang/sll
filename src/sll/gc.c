@@ -61,7 +61,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 	sll_object_t* o=_gc_next_object;
 	_gc_next_object=GC_GET_NEXT_OBJECT(o);
 	o->rc=1;
-	o->t=t;
+	*((sll_object_type_t*)(&(o->t)))=t;
 	_gc_alloc++;
 	return o;
 }
@@ -102,7 +102,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 			}
 			sll_deallocate(o->dt.p);
 		}
-		o->t=SLL_OBJECT_TYPE_INT;
+		*((sll_object_type_t*)(&(o->t)))=SLL_OBJECT_TYPE_INT;
 		o->dt.i=0;
 		GC_SET_NEXT_OBJECT(o,_gc_next_object);
 		_gc_next_object=o;
