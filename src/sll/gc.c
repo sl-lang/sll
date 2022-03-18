@@ -15,13 +15,14 @@
 #include <sll/thread.h>
 #include <sll/types.h>
 #include <sll/vm.h>
+#include <stdio.h>
 
 
 
 static void* _gc_page_ptr=NULL;
 static sll_object_t* _gc_next_object=NULL;
-static sll_ref_count_t _gc_alloc=0;
-static sll_ref_count_t _gc_dealloc=0;
+static __SLL_U64 _gc_alloc=0;
+static __SLL_U64 _gc_dealloc=0;
 
 
 
@@ -75,11 +76,9 @@ __SLL_EXTERNAL void sll_lock_object(sll_object_t* o){
 
 
 __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
-	GC_LOCK(o);
 	SLL_ASSERT(o->rc);
 	o->rc--;
 	if (o->rc){
-		GC_UNLOCK(o);
 		return;
 	}
 	if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_STRING){
@@ -96,12 +95,9 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->fn.del){
 				o->rc++;
-				GC_UNLOCK(o);
 				sll_release_object(sll_execute_function(dt->fn.del,&o,1,0));
-				GC_LOCK(o);
 				o->rc--;
 				if (o->rc){
-					GC_UNLOCK(o);
 					return;
 				}
 			}

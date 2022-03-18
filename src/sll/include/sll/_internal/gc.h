@@ -33,11 +33,13 @@
 		sll_object_t* __o=(o); \
 		sll_object_type_t __t=SLL_OBJECT_GET_TYPE(__o); \
 		sll_object_type_t __v=__t|GC_FLAG_LOCK; \
+		int __x=0; \
 		while (1){ \
 			sll_object_type_t __tmp=__t; \
 			if (_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->t)),&__tmp,__v)){ \
 				break; \
 			} \
+			if (++__x>10){*((char*)0)=0;}	 \
 			_mm_pause(); \
 		} \
 	} while (0)

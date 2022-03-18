@@ -276,7 +276,7 @@ __API_FUNC(string_convert){
 
 
 __API_FUNC_DECL(string_count){
-	return (b->t==SLL_OBJECT_TYPE_CHAR?sll_string_count_char(a,b->dt.c):sll_string_count(a,&(b->dt.s)));
+	return (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR?sll_string_count_char(a,b->dt.c):sll_string_count(a,&(b->dt.s)));
 }
 
 
@@ -294,7 +294,7 @@ __API_FUNC_DECL(string_count_right){
 
 
 __API_FUNC(string_ends){
-	if (b->t==SLL_OBJECT_TYPE_CHAR){
+	if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR){
 		return (a->l&&a->v[a->l-1]==b->dt.c);
 	}
 	return sll_string_ends(a,&(b->dt.s));
@@ -324,35 +324,35 @@ __API_FUNC(string_flip_case){
 
 
 __API_FUNC(string_index){
-	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c,0):sll_string_index(a,&(b->dt.s)));
+	sll_string_length_t o=(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c,0):sll_string_index(a,&(b->dt.s)));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
 __API_FUNC(string_index_list){
-	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c,c):sll_string_index_multiple(a,b->dt.s.v,b->dt.s.l,c));
+	sll_string_length_t o=(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR?sll_string_index_char(a,b->dt.c,c):sll_string_index_multiple(a,b->dt.s.v,b->dt.s.l,c));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
 __API_FUNC(string_index_reverse){
-	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,0):sll_string_index_reverse(a,&(b->dt.s)));
+	sll_string_length_t o=(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,0):sll_string_index_reverse(a,&(b->dt.s)));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
 __API_FUNC(string_index_reverse_list){
-	sll_string_length_t o=(b->t==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,c):sll_string_index_reverse_multiple(a,b->dt.s.v,b->dt.s.l,c));
+	sll_string_length_t o=(SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,c):sll_string_index_reverse_multiple(a,b->dt.s.v,b->dt.s.l,c));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
 __API_FUNC_DECL(string_join){
-	if (a->t==SLL_OBJECT_TYPE_CHAR){
+	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_CHAR){
 		sll_string_join_char(a->dt.c,b->v,b->l,out);
 	}
 	else{
@@ -445,7 +445,7 @@ __API_FUNC(string_secure_equal){
 
 
 __API_FUNC(string_split){
-	if (b->t==SLL_OBJECT_TYPE_CHAR){
+	if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR){
 		sll_string_split_char(a,b->dt.c,out);
 	}
 	else{
@@ -456,7 +456,7 @@ __API_FUNC(string_split){
 
 
 __API_FUNC(string_starts){
-	if (b->t==SLL_OBJECT_TYPE_CHAR){
+	if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR){
 		return (a->l&&a->v[0]==b->dt.c);
 	}
 	return sll_string_starts(a,&(b->dt.s));

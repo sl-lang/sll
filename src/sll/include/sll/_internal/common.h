@@ -36,7 +36,7 @@
 #define SLL_ASSERT(x) \
 	do{ \
 		if (!(x)){ \
-			_FORCE_EXIT("Assertion Failed"); \
+			_FORCE_EXIT(#x": Assertion Failed"); \
 		} \
 	} while (0)
 #else

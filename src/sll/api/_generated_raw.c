@@ -1,6 +1,7 @@
 // WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -40,7 +41,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_count_raw(sll_obje
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(b);
 	sll_integer_t out=sll_api_array_count(&(a->dt.a),b);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	return sll_int_to_object(out);
@@ -135,8 +138,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_join_raw(sll_objec
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(b);
 	sll_array_t out;
 	sll_api_array_join(&(a->dt.a),b,&out);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
@@ -193,7 +198,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_push_raw(sll_objec
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(b);
 	sll_api_array_push(&(a->dt.a),b);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
@@ -225,7 +232,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_remove_raw(sll_obj
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(b);
 	sll_api_array_remove(&(a->dt.a),b);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
@@ -265,9 +274,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_replace_raw(sll_ob
 	else{
 		c=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(b);
+	GC_LOCK(c);
 	sll_array_t out;
 	sll_api_array_replace(&(a->dt.a),b,c,&out);
+	GC_UNLOCK(c);
 	sll_release_object(c);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
@@ -350,8 +363,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_split_raw(sll_obje
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(b);
 	sll_array_t out;
 	sll_api_array_split(&(a->dt.a),b,&out);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
@@ -385,7 +400,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_unshift_raw(sll_ob
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(b);
 	sll_api_array_unshift(&(a->dt.a),b);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
@@ -1610,9 +1627,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json__init_raw(sll_objec
 	else{
 		c=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(a);
+	GC_LOCK(b);
+	GC_LOCK(c);
 	sll_api_json__init(a,b,c);
+	GC_UNLOCK(c);
 	sll_release_object(c);
+	GC_UNLOCK(b);
 	sll_release_object(b);
+	GC_UNLOCK(a);
 	sll_release_object(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -1651,8 +1674,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_stringify_raw(sll_o
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(a);
 	sll_string_t out;
 	sll_api_json_stringify(a,&out);
+	GC_UNLOCK(a);
 	sll_release_object(a);
 	return sll_string_to_object_nocopy(&out);
 }
@@ -1661,8 +1686,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_stringify_raw(sll_o
 
 __SLL_API_TYPE_sll_api_log_log sll_api_log_log(__SLL_API_ARGS_sll_api_log_log);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_log_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_object_t*const* a=al+0;
 	sll_arg_count_t ac=all;
+	sll_object_t*const* a=al+0;
 	sll_api_log_log(a,ac);
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -1881,7 +1906,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_map_remove_raw(sll_objec
 	else{
 		b=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(b);
 	sll_api_map_remove(&(a->dt.m),b);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
@@ -2795,7 +2822,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_is_dir_raw(sll_obje
 __SLL_API_TYPE_sll_api_path_join sll_api_path_join(__SLL_API_ARGS_sll_api_path_join);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_arg_count_t ac=all;
-	sll_string_t** a=sll_allocate(ac*sizeof(sll_string_t*));
+	sll_string_t** a=sll_allocate_stack(ac*sizeof(sll_string_t*));
 	for (sll_arg_count_t idx=0;idx<ac;idx++){
 		sll_object_t* tmp=*(al+idx+0);
 		if (!(SLL_OBJECT_GET_TYPE(tmp)==SLL_OBJECT_TYPE_STRING)){
@@ -2807,8 +2834,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(sll_object
 			*(a+idx)=&(tmp->dt.s);
 		}
 	}
+	for (sll_arg_count_t idx=0;idx<ac;idx++){
+		GC_LOCK(*(al+0+idx));
+	}
 	sll_string_t out;
 	sll_api_path_join(a,ac,&out);
+	while(ac){
+		ac--;
+		GC_UNLOCK(*(al+0+ac));
+	}
 	sll_deallocate(PTR(a));
 	return sll_string_to_object_nocopy(&out);
 }
@@ -3150,9 +3184,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_start_raw(sll_ob
 	else{
 		c=sll_string_to_object(NULL);
 	}
+	GC_LOCK(b);
 	sll_array_t out;
 	sll_api_process_start(&(a->dt.a),b,&(c->dt.s),&out);
 	sll_release_object(c);
+	GC_UNLOCK(b);
 	sll_release_object(b);
 	sll_release_object(a);
 	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
@@ -3482,8 +3518,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_encode_object_raw
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_object_t*const* b=al+1;
 	sll_arg_count_t bc=(all>1?all-1:0);
+	sll_object_t*const* b=al+1;
 	sll_api_serial_encode_object(a->dt.i,b,bc);
 	sll_release_object(a);
 	return SLL_ACQUIRE_STATIC_INT(0);
@@ -3652,8 +3688,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_checksum_raw(sll_
 
 __SLL_API_TYPE_sll_api_string_convert sll_api_string_convert(__SLL_API_ARGS_sll_api_string_convert);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_convert_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_object_t*const* a=al+0;
 	sll_arg_count_t ac=all;
+	sll_object_t*const* a=al+0;
 	sll_string_t out;
 	sll_api_string_convert(a,ac,&out);
 	return sll_string_to_object_nocopy(&out);
@@ -3844,8 +3880,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_format_raw(sll_ob
 	else{
 		a=sll_string_to_object(NULL);
 	}
-	sll_object_t*const* b=al+1;
 	sll_arg_count_t bc=(all>1?all-1:0);
+	sll_object_t*const* b=al+1;
 	sll_string_t out;
 	sll_api_string_format(&(a->dt.s),b,bc,&out);
 	sll_release_object(a);
@@ -5238,7 +5274,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_ref_count_raw(sll
 	else{
 		a=SLL_ACQUIRE_STATIC_INT(0);
 	}
+	GC_LOCK(a);
 	sll_integer_t out=sll_api_vm_get_ref_count(a);
+	GC_UNLOCK(a);
 	sll_release_object(a);
 	return sll_int_to_object(out);
 }

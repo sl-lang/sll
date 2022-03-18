@@ -618,7 +618,7 @@ _cleanup_jump_table:;
 					sll_arg_count_t l=ai->dt.va.l;
 					sll_object_t*const* p=_scheduler_current_thread->stack+_scheduler_current_thread->si-off-1;
 					do{
-						SLL_ASSERT((*p)->t==SLL_OBJECT_TYPE_STRING);
+						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*p)==SLL_OBJECT_TYPE_STRING);
 						sll_object_t* nd=sll_operator_access(d,*p);
 						sll_release_object(d);
 						sll_release_object(*p);
@@ -649,7 +649,7 @@ _cleanup_jump_table:;
 					sll_arg_count_t l=ai->dt.va.l-1;
 					sll_object_t*const* p=_scheduler_current_thread->stack+_scheduler_current_thread->si-off;
 					while (l){
-						SLL_ASSERT((*p)->t==SLL_OBJECT_TYPE_STRING);
+						SLL_ASSERT(SLL_OBJECT_GET_TYPE(*p)==SLL_OBJECT_TYPE_STRING);
 						sll_object_t* nd=sll_operator_access(d,*p);
 						sll_release_object(d);
 						sll_release_object(*p);
@@ -657,7 +657,7 @@ _cleanup_jump_table:;
 						p++;
 						l--;
 					}
-					SLL_ASSERT((*p)->t==SLL_OBJECT_TYPE_STRING);
+					SLL_ASSERT(SLL_OBJECT_GET_TYPE(*p)==SLL_OBJECT_TYPE_STRING);
 					sll_operator_assign(d,*p,nv);
 					sll_release_object(d);
 					sll_release_object(*p);

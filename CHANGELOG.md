@@ -23,7 +23,7 @@
 - Fixed declaration of raw API functions
 - Fixed invalid memory access bug in `sll_copy_data` and `sll_optimize_metadata`
 - Objects types can no longer be changed and can only by initialized by a call to `sll_create_object`
-- *\[Windows Only\]* Reduced the number of Windows headers loaded during compilation
+- *\[Windows Only\]* Reduced the number of Windows headers included during compilation
 - Rename `sll_sandbox_flags_t` to `sll_sandbox_flag_t`
 - Reworked the thread and scheduler APIs ([#243])
 - Sandbox flags are now thread-based and are inherited by child threads
