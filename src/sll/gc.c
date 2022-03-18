@@ -15,7 +15,6 @@
 #include <sll/thread.h>
 #include <sll/types.h>
 #include <sll/vm.h>
-#include <stdio.h>
 
 
 
