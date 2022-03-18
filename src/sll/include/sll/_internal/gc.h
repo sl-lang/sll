@@ -3,6 +3,7 @@
 #ifdef __SLL_BUILD_WINDOWS
 #include <windows.h>
 #endif
+#include <immintrin.h>
 #include <sll/object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -10,8 +11,8 @@
 
 
 #ifdef __SLL_BUILD_WINDOWS
-#define _ATOMIC_STORE(ptr,val) InterlockedExchange((LONG volatile*)(ptr),(LONG)(val))
-#define _ATOMIC_COMPARE_EXCHANGE(ptr,cmp,new) (InterlockedCompareExchange((LONG volatile*)(ptr),(LONG)(new),(LONG)(*(cmp)))==*(cmp))
+#define _ATOMIC_STORE(ptr,val) InterlockedExchange((LONG volatile*)(ptr),val)
+#define _ATOMIC_COMPARE_EXCHANGE(ptr,cmp,new) (InterlockedCompareExchange((LONG volatile*)(ptr),new,*(cmp))==*(cmp))
 #else
 #define _ATOMIC_STORE(ptr,val) __atomic_store_n((ptr),(val),__ATOMIC_SEQ_CST)
 #define _ATOMIC_COMPARE_EXCHANGE(ptr,cmp,new) __atomic_compare_exchange_n((ptr),(cmp),(new),0,__ATOMIC_SEQ_CST,__ATOMIC_RELAXED)
@@ -30,10 +31,15 @@
 #define GC_LOCK(o) \
 	do{ \
 		sll_object_t* __o=(o); \
-		sll_object_type_t __t=-1; \
-		do{ \
-			__t=SLL_OBJECT_GET_TYPE(__o); \
-		} while (!_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->t)),&__t,__t|GC_FLAG_LOCK)); \
+		sll_object_type_t __t=SLL_OBJECT_GET_TYPE(__o); \
+		sll_object_type_t __v=__t|GC_FLAG_LOCK; \
+		while (1){ \
+			sll_object_type_t __tmp=__t; \
+			if (_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->t)),&__tmp,__v)){ \
+				break; \
+			} \
+			_mm_pause(); \
+		} \
 	} while (0)
 #define GC_UNLOCK(o) \
 	do{ \
@@ -44,7 +50,6 @@
 
 
 void _gc_release_data(void);
-
 
 
 
