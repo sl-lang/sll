@@ -12,6 +12,7 @@
 - Implemented `sll_lock_handle_t`, `sll_platform_lock_acquire`, `sll_platform_lock_create`, `sll_platform_lock_delete` and `sll_platform_lock_release`
 - Implemented `sll_set_sandbox_flag_string` and `sys$set_sandbox_flags`
 - Implemented `sll_string_to_object`, `sll_string_to_object_nocopy` and `sll_string_to_object_pointer`
+- Object modification blocks should be enclosed by calls to `sll_lock_object` and `sll_unlock_object` to prevent race conditions
 - Thread count limit: `SLL_SCHEDULER_MAX_THREADS`
 
 ### Changed

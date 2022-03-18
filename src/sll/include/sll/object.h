@@ -131,6 +131,7 @@
  * \flags macro var
  * \name SLL_MAX_OBJECT_TYPE
  * \group object
+ * \subgroup object-type
  * \desc Docs!
  * \type sll_object_type_t
  */
@@ -146,6 +147,17 @@
  * \type sll_object_type_t
  */
 #define SLL_OBJECT_FLAG_CONSTANT 0x80000000
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_OBJECT_FLAG_RESERVED0
+ * \group object
+ * \desc Internally used as `GC_FLAG_LOCK`
+ * \type sll_object_type_t
+ */
+#define SLL_OBJECT_FLAG_RESERVED0 0x80000000
 
 
 
