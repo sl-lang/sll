@@ -20,7 +20,6 @@
 
 
 
-#define GC_INIT_PAGE_COUNT 4
 #define GC_GET_NEXT_OBJECT(o) ((sll_object_t*)((o)->dt.s.v))
 #define GC_SET_NEXT_OBJECT(o,n) ((o)->dt.s.v=SLL_CHAR((n)))
 
