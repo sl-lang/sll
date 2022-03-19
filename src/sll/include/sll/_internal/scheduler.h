@@ -33,6 +33,7 @@ typedef struct __LOAD_BALANCER{
 
 
 
+extern __SLL_TLS sll_cpu_t _scheduler_internal_thread_index;
 extern __SLL_TLS sll_thread_index_t _scheduler_current_thread_index;
 extern __SLL_TLS thread_data_t* _scheduler_current_thread;
 

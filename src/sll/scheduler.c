@@ -27,6 +27,7 @@ static __SLL_TLS scheduler_cpu_data_t* _scheduler_data;
 
 
 
+__SLL_TLS sll_cpu_t _scheduler_internal_thread_index;
 __SLL_TLS sll_thread_index_t _scheduler_current_thread_index;
 __SLL_TLS thread_data_t* _scheduler_current_thread;
 
@@ -35,6 +36,7 @@ __SLL_TLS thread_data_t* _scheduler_current_thread;
 static void _cpu_core_worker(void* dt){
 	_scheduler_data=dt;
 	SLL_CRITICAL(sll_platform_set_cpu(_scheduler_data->id));
+	_scheduler_internal_thread_index=_scheduler_data->id;
 	if (_scheduler_data->id){
 		return;
 	}

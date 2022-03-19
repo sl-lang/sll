@@ -4,6 +4,7 @@
 #include <windows.h>
 #endif
 #include <immintrin.h>
+#include <sll/_internal/scheduler.h>
 #include <sll/object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -25,19 +26,20 @@
 
 #define GC_OBJECT_POOL_ALLOC_SIZE 65536
 
-#define GC_FLAG_LOCK SLL_OBJECT_FLAG_RESERVED0
-
 #define GC_LOCK(o) \
 	do{ \
 		sll_object_t* __o=(o); \
 		sll_object_type_t __t=SLL_OBJECT_GET_TYPE(__o); \
-		sll_object_type_t __v=__t|GC_FLAG_LOCK; \
-		while (1){ \
-			sll_object_type_t __tmp=__t; \
-			if (_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->t)),&__tmp,__v)){ \
-				break; \
+		sll_object_type_t __v=__t|((_scheduler_internal_thread_index+1)<<24); \
+		sll_object_type_t __tmp=__v; \
+		if (!_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->t)),&__tmp,__v)){ \
+			while (1){ \
+				__tmp=__t; \
+				if (_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->t)),&__tmp,__v)){ \
+					break; \
+				} \
+				_mm_pause(); \
 			} \
-			_mm_pause(); \
 		} \
 	} while (0)
 #define GC_UNLOCK(o) \

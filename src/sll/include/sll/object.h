@@ -151,17 +151,6 @@
 
 
 /**
- * \flags macro var
- * \name SLL_OBJECT_FLAG_RESERVED0
- * \group object
- * \desc Internally used as `GC_FLAG_LOCK`
- * \type sll_object_type_t
- */
-#define SLL_OBJECT_FLAG_RESERVED0 0x80000000
-
-
-
-/**
  * \flags func macro
  * \name SLL_OBJECT_GET_TYPE
  * \group object
