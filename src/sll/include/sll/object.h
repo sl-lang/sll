@@ -123,7 +123,7 @@
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_TYPE_OBJECT 0x7fffffff
+#define SLL_OBJECT_TYPE_OBJECT 0xffffff
 
 
 
@@ -169,7 +169,7 @@
  * \arg sll_object_t* r
  * \ret sll_object_type_t
  */
-#define SLL_OBJECT_GET_TYPE(r) ((r)->t&0x7fffffff)
+#define SLL_OBJECT_GET_TYPE(r) ((r)->t&0xffffff)
 
 
 
@@ -181,7 +181,7 @@
  * \arg sll_object_type_t t
  * \ret sll_object_type_t
  */
-#define SLL_OBJECT_GET_TYPE_MASK(t) ((t)&0x7fffffff)
+#define SLL_OBJECT_GET_TYPE_MASK(t) ((t)&0xffffff)
 
 
 

@@ -28,6 +28,7 @@
 - Reworked the thread and scheduler APIs ([#243])
 - Sandbox flags are now thread-based and are inherited by child threads
 - Split the [`src/sll/include/sll/_sll_internal.h`][0.7.8/src/sll/include/sll/_sll_internal.h] header into multiple headers located in [`src/sll/include/sll/_internal`][0.7.9/src/sll/include/sll/_internal]
+- The maximum number of objects is now `2^24-1`
 
 ### Removed
 
