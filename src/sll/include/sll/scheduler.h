@@ -22,4 +22,15 @@
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_get_thread_index
+ * \group scheduler
+ * \desc Docs!
+ * \ret sll_thread_index_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_get_thread_index(void);
+
+
+
 #endif

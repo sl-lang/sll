@@ -217,3 +217,9 @@ void _scheduler_set_thread(sll_thread_index_t t){
 _end:
 	SLL_CRITICAL(sll_platform_lock_release(_scheduler_data->lck));
 }
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_get_thread_index(void){
+	return _scheduler_current_thread_index;
+}

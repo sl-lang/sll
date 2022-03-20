@@ -2,7 +2,9 @@
 
 ## [0.7.10] - Ongoing
 
-*Nothing*
+### Added
+
+- Implemented `sll_get_thread_index`
 
 ## [0.7.9] - 2022-03-19
 
