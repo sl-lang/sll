@@ -4,7 +4,7 @@
 
 ### Added
 
-- Implemented `sll_get_thread_index`
+- Implemented `sll_get_cpu_index` and `sll_get_thread_index`
 
 ## [0.7.9] - 2022-03-19
 

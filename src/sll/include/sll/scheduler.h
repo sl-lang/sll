@@ -24,6 +24,17 @@
 
 /**
  * \flags check_output func
+ * \name sll_get_cpu_index
+ * \group scheduler
+ * \desc Docs!
+ * \ret sll_cpu_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cpu_t sll_get_cpu_index(void);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_get_thread_index
  * \group scheduler
  * \desc Docs!
