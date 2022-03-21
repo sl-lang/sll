@@ -274,15 +274,15 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 			c=sll_file_read_char(rf,NULL);
 		}
 		else if (o&&o->t==NODE_TYPE_UNKNOWN){
-			sll_char_t str[256];
+			sll_char_t str[4];
 			sll_string_length_t sz=0;
 			do{
-				if (sz<255){
+				if (sz<4){
 					*(str+sz)=(sll_char_t)c;
 					sz++;
 				}
 				c=sll_file_read_char(rf,NULL);
-			} while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='{'&&c!='}'&&c!=SLL_END_OF_DATA));
+			} while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!=SLL_END_OF_DATA));
 			o->t=SLL_NODE_TYPE_OPERATION_LIST;
 			const scope_data_t* src=l_sc;
 			if (sz==1){

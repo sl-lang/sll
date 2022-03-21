@@ -505,7 +505,6 @@
 	(:> "Thread flags: " (<- sys$get_sandbox_flags) "\n")
 )))
 (:> (<- sys$get_sandbox_flags) "\n")
-
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

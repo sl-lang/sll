@@ -73,7 +73,7 @@ def generate_c_api(d_dt,api_dt):
 			hf.write(f"\n#define __SLL_API_TYPE_{k['name']} ")
 			if (i):
 				cf.write(f"\tsll_arg_count_t idx=0;\n\tfor (;idx<{('all' if i==-1 else f'(all<{i}?all:{i})')};idx++){{\n\t\tGC_LOCK(*(al+idx));\n\t}}\n")
-				end="\twhile(idx){\n\t\tidx--;\n\t\tGC_UNLOCK(*(al+idx));\n\t}\n"+end
+				end="\twhile (idx){\n\t\tidx--;\n\t\tGC_UNLOCK(*(al+idx));\n\t}\n"+end
 			if (k["ret"]["type"]=="O"):
 				d_str+=f"\n * \\ret sll_object_t*"
 				hf.write("__SLL_CHECK_OUTPUT sll_object_t*")

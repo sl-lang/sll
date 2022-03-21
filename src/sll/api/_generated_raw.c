@@ -46,7 +46,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_count_raw(sll_obje
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_array_count(&(a->dt.a),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -78,7 +78,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_create_raw(sll_obj
 	}
 	sll_array_t out;
 	sll_api_array_create(a->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -125,7 +125,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_extend_raw(sll_obj
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_array_extend(&(a->dt.a),&(b->dt.a));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -166,7 +166,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_join_raw(sll_objec
 	}
 	sll_array_t out;
 	sll_api_array_join(&(a->dt.a),b,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -200,7 +200,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_pop_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_array_pop(&(a->dt.a));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -239,7 +239,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_push_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_array_push(&(a->dt.a),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -279,7 +279,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_remove_raw(sll_obj
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_array_remove(&(a->dt.a),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -328,7 +328,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_replace_raw(sll_ob
 	}
 	sll_array_t out;
 	sll_api_array_replace(&(a->dt.a),b,c,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -364,7 +364,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(sll_ob
 	}
 	sll_array_t out;
 	sll_api_array_reverse(&(a->dt.a),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -397,7 +397,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_shift_raw(sll_obje
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_array_shift(&(a->dt.a));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -437,7 +437,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_split_raw(sll_obje
 	}
 	sll_array_t out;
 	sll_api_array_split(&(a->dt.a),b,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -479,7 +479,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_unshift_raw(sll_ob
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_array_unshift(&(a->dt.a),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -510,7 +510,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode_raw(sll_ob
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_base64_decode(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -541,7 +541,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_encode_raw(sll_ob
 	}
 	sll_string_t out;
 	sll_api_base64_encode(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -647,7 +647,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_merge_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_date_merge(a->dt.i,b->dt.i,c->dt.i,d->dt.i,e->dt.i,f->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -683,7 +683,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_split_raw(sll_objec
 	}
 	sll_array_t out;
 	sll_api_date_split(a->dt.f,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -729,7 +729,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack_raw
 	}
 	sll_array_t out;
 	sll_api_error_get_call_stack(a->dt.i,b->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -762,7 +762,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_close_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_file_close(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -806,7 +806,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_copy_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_file_copy(&(a->dt.s),&(b->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -838,7 +838,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_delete_raw(sll_obje
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_file_delete(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -869,7 +869,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_flush_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_file_flush(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -913,7 +913,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_from_data_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_file_from_data(&(a->dt.s),b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -945,7 +945,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_get_buffer_raw(sll_
 	}
 	sll_string_t out;
 	sll_api_file_get_buffer(a->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -984,7 +984,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_inc_handle_raw(sll_
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_file_inc_handle(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1027,7 +1027,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_open_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_file_open(&(a->dt.s),b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1058,7 +1058,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_peek_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_file_peek(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1101,7 +1101,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_file_read(a->dt.i,b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1132,7 +1132,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read_char_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_file_read_char(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1175,7 +1175,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_rename_raw(sll_obje
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_file_rename(&(a->dt.s),&(b->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1207,7 +1207,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_std_handle_raw(sll_
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_file_std_handle(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1250,7 +1250,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_write_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_file_write(a->dt.i,&(b->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1289,7 +1289,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_float_set_compare_error_
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_float_set_compare_error(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1372,7 +1372,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_md5_raw(sll_object_
 	}
 	sll_array_t out;
 	sll_api_hash_md5(a->dt.i,b->dt.i,c->dt.i,d->dt.i,&(e->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1474,7 +1474,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_sha1_raw(sll_object
 	}
 	sll_array_t out;
 	sll_api_hash_sha1(a->dt.i,b->dt.i,c->dt.i,d->dt.i,e->dt.i,&(f->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1616,7 +1616,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_sha256_raw(sll_obje
 	}
 	sll_array_t out;
 	sll_api_hash_sha256(a->dt.i,b->dt.i,c->dt.i,d->dt.i,e->dt.i,f->dt.i,g->dt.i,h->dt.i,&(i->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1761,7 +1761,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_sha512_raw(sll_obje
 	}
 	sll_array_t out;
 	sll_api_hash_sha512(a->dt.i,b->dt.i,c->dt.i,d->dt.i,e->dt.i,f->dt.i,g->dt.i,h->dt.i,&(i->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1802,7 +1802,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_int_to_bin_raw(sll_objec
 	}
 	sll_string_t out;
 	sll_api_int_to_bin(a->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1833,7 +1833,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_int_to_dec_raw(sll_objec
 	}
 	sll_string_t out;
 	sll_api_int_to_dec(a->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1864,7 +1864,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_int_to_hex_raw(sll_objec
 	}
 	sll_string_t out;
 	sll_api_int_to_hex(a->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1895,7 +1895,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_int_to_oct_raw(sll_objec
 	}
 	sll_string_t out;
 	sll_api_int_to_oct(a->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1936,7 +1936,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json__init_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_json__init(a,b,c);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1968,7 +1968,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_json_parse(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -1994,7 +1994,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_stringify_raw(sll_o
 	}
 	sll_string_t out;
 	sll_api_json_stringify(a,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2013,7 +2013,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_log_raw(sll_object_t
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_log_log(a,ac);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2055,7 +2055,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_default_raw(sll_
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_log_set_default(a->dt.i,!!(b->dt.i));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2112,7 +2112,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_file_raw(sll_obj
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_log_set_file(&(a->dt.s),b->dt.i,!!(c->dt.i));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2183,7 +2183,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_log_set_function_raw(sll
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_log_set_function(&(a->dt.s),&(b->dt.s),c->dt.i,!!(d->dt.i));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2231,7 +2231,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_map_extend_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_map_extend(&(a->dt.m),&(b->dt.m));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2271,7 +2271,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_map_remove_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_map_remove(&(a->dt.m),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2302,7 +2302,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_abs_raw(sll_object_
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_abs(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2332,7 +2332,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_acos_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_acos(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2362,7 +2362,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_acosh_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_acosh(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2392,7 +2392,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_asin_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_asin(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2422,7 +2422,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_asinh_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_asinh(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2452,7 +2452,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_atan_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_atan(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2495,7 +2495,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_atan2_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_atan2(a->dt.f,b->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2526,7 +2526,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_atanh_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_atanh(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2556,7 +2556,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_cbrt_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_cbrt(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2586,7 +2586,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_ceil_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_ceil(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2629,7 +2629,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_combinations_raw(sl
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_combinations(a->dt.i,b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2673,7 +2673,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_copy_sign_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_copy_sign(a->dt.f,b->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2704,7 +2704,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_cos_raw(sll_object_
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_cos(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2734,7 +2734,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_cosh_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_cosh(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2764,7 +2764,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_euler_phi_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_euler_phi(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2794,7 +2794,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factorial_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_factorial(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2825,7 +2825,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factors_raw(sll_obj
 	}
 	sll_array_t out;
 	sll_api_math_factors(a->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2857,7 +2857,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_floor_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_floor(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2900,7 +2900,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_gcd_raw(sll_object_
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_gcd(a->dt.i,b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2931,7 +2931,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_int_log2_raw(sll_ob
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_int_log2(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -2974,7 +2974,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_int_pow_raw(sll_obj
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_int_pow(a->dt.i,b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3005,7 +3005,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_int_sqrt_raw(sll_ob
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_int_sqrt(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3035,7 +3035,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_log_raw(sll_object_
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_log(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3065,7 +3065,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_log10_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_log10(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3095,7 +3095,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_log2_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_log2(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3138,7 +3138,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_permutations_raw(sl
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_permutations(a->dt.i,b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3182,7 +3182,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_pow_raw(sll_object_
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_pow(a->dt.f,b->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3213,7 +3213,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_round_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_math_round(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3243,7 +3243,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_sin_raw(sll_object_
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_sin(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3273,7 +3273,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_sinh_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_sinh(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3303,7 +3303,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_sqrt_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_sqrt(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3333,7 +3333,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_tan_raw(sll_object_
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_tan(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3363,7 +3363,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_tanh_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_math_tanh(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3394,7 +3394,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_absolute_raw(sll_ob
 	}
 	sll_string_t out;
 	sll_api_path_absolute(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3424,7 +3424,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_exists_raw(sll_obje
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_path_exists(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3463,7 +3463,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_is_dir_raw(sll_obje
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_path_is_dir(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3494,7 +3494,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(sll_object
 	}
 	sll_string_t out;
 	sll_api_path_join(a,ac,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3525,7 +3525,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir_raw(sll_ob
 	}
 	sll_array_t out;
 	sll_api_path_list_dir(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3570,7 +3570,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_mkdir_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_path_mkdir(&(a->dt.s),!!(b->dt.i));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3603,7 +3603,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir_
 	}
 	sll_array_t out;
 	sll_api_path_recursive_list_dir(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3649,7 +3649,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_relative_raw(sll_ob
 	}
 	sll_string_t out;
 	sll_api_path_relative(&(a->dt.s),&(b->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3680,7 +3680,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_set_cwd_raw(sll_obj
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_path_set_cwd(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3710,7 +3710,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_size_raw(sll_object
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_path_size(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3741,7 +3741,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_raw(sll_objec
 	}
 	sll_array_t out;
 	sll_api_path_split(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3774,7 +3774,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_drive_raw(sll
 	}
 	sll_array_t out;
 	sll_api_path_split_drive(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3806,7 +3806,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_execute_shell_ra
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_process_execute_shell(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3847,7 +3847,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_join_raw(sll_obj
 	}
 	sll_string_t out;
 	sll_api_process_join(&(a->dt.a),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3878,7 +3878,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_split_raw(sll_ob
 	}
 	sll_array_t out;
 	sll_api_process_split(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3933,7 +3933,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_start_raw(sll_ob
 	}
 	sll_array_t out;
 	sll_api_process_start(&(a->dt.a),b,&(c->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -3980,7 +3980,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_random_get_float_raw(sll
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_random_get_float(a->dt.f,b->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4024,7 +4024,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_random_get_int_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_random_get_int(a->dt.i,b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4082,7 +4082,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_random_get_string_raw(sl
 	}
 	sll_string_t out;
 	sll_api_random_get_string(a->dt.i,b->dt.c,c->dt.c,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4114,7 +4114,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_float_raw(
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_serial_decode_float(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4144,7 +4144,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_integer_ra
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_serial_decode_integer(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4174,7 +4174,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object_raw
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_serial_decode_object(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4204,7 +4204,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_signed_int
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_serial_decode_signed_integer(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4234,7 +4234,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string_raw
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_serial_decode_string(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4277,7 +4277,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_encode_float_raw(
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_serial_encode_float(a->dt.i,b->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4321,7 +4321,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_encode_integer_ra
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_serial_encode_integer(a->dt.i,b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4354,7 +4354,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_encode_object_raw
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_serial_encode_object(a->dt.i,b,bc);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4397,7 +4397,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_encode_signed_int
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_serial_encode_signed_integer(a->dt.i,b->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4441,7 +4441,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_encode_string_raw
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_serial_encode_string(a->dt.i,&(b->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4512,7 +4512,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_sort_quicksort(&(a->dt.a),!!(b->dt.i),!!(c->dt.i),d->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4545,7 +4545,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_checksum_raw(sll_
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_string_checksum(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4565,7 +4565,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_convert_raw(sll_o
 	}
 	sll_string_t out;
 	sll_api_string_convert(a,ac,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4607,7 +4607,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_count_raw(sll_obj
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_string_count(&(a->dt.s),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4651,7 +4651,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_count_left_raw(sl
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_string_count_left(&(a->dt.s),b->dt.c);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4695,7 +4695,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_count_right_raw(s
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_string_count_right(&(a->dt.s),b->dt.c);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4739,7 +4739,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_ends_raw(sll_obje
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_string_ends(&(a->dt.s),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4772,7 +4772,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_flip_case_raw(sll
 	}
 	sll_string_t out;
 	sll_api_string_flip_case(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4805,7 +4805,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_format_raw(sll_ob
 	}
 	sll_string_t out;
 	sll_api_string_format(&(a->dt.s),b,bc,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4848,7 +4848,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_index_raw(sll_obj
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_string_index(&(a->dt.s),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4905,7 +4905,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_index_list_raw(sl
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_string_index_list(&(a->dt.s),b,!!(c->dt.i));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -4950,7 +4950,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_index_reverse_raw
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_string_index_reverse(&(a->dt.s),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5007,7 +5007,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_index_reverse_lis
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_string_index_reverse_list(&(a->dt.s),b,!!(c->dt.i));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5054,7 +5054,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_join_raw(sll_obje
 	}
 	sll_string_t out;
 	sll_api_string_join(a,&(b->dt.a),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5112,7 +5112,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_raw(sll_objec
 	}
 	sll_string_t out;
 	sll_api_string_pad(&(a->dt.s),b->dt.i,c->dt.c,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5171,7 +5171,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_left_raw(sll_
 	}
 	sll_string_t out;
 	sll_api_string_pad_left(&(a->dt.s),b->dt.i,c->dt.c,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5230,7 +5230,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_pad_right_raw(sll
 	}
 	sll_string_t out;
 	sll_api_string_pad_right(&(a->dt.s),b->dt.i,c->dt.c,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5289,7 +5289,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_replace_raw(sll_o
 	}
 	sll_string_t out;
 	sll_api_string_replace(&(a->dt.s),b,c,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5322,7 +5322,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_reverse_raw(sll_o
 	}
 	sll_string_t out;
 	sll_api_string_reverse(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5365,7 +5365,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_secure_equal_raw(
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_string_secure_equal(&(a->dt.s),&(b->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5411,7 +5411,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_split_raw(sll_obj
 	}
 	sll_array_t out;
 	sll_api_string_split(&(a->dt.s),b,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5457,7 +5457,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_starts_raw(sll_ob
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_string_starts(&(a->dt.s),b);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5490,7 +5490,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_lower_case_raw
 	}
 	sll_string_t out;
 	sll_api_string_to_lower_case(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5521,7 +5521,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_title_case_raw
 	}
 	sll_string_t out;
 	sll_api_string_to_title_case(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5552,7 +5552,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_to_upper_case_raw
 	}
 	sll_string_t out;
 	sll_api_string_to_upper_case(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5583,7 +5583,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_trim_raw(sll_obje
 	}
 	sll_string_t out;
 	sll_api_string_trim(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5614,7 +5614,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_trim_left_raw(sll
 	}
 	sll_string_t out;
 	sll_api_string_trim_left(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5645,7 +5645,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_trim_right_raw(sl
 	}
 	sll_string_t out;
 	sll_api_string_trim_right(&(a->dt.s),&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5675,7 +5675,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_struct_double_from_bits_
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_struct_double_from_bits(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5705,7 +5705,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_struct_double_to_bits_ra
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_struct_double_to_bits(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5735,7 +5735,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_struct_float_from_bits_r
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_struct_float_from_bits(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5765,7 +5765,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_struct_float_to_bits_raw
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_struct_float_to_bits(a->dt.f);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5939,7 +5939,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_load_library_raw(sll
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_sys_load_library(&(a->dt.s),b->dt.i,c->dt.i,d->dt.i,e->dt.i,f->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -5975,7 +5975,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_remove_env_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_sys_remove_env(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6018,7 +6018,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_set_env_raw(sll_obje
 		GC_LOCK(*(al+idx));
 	}
 	sll_api_sys_set_env(&(a->dt.s),&(b->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6049,7 +6049,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_set_sandbox_flag_raw
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_sys_set_sandbox_flag(&(a->dt.s));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6094,7 +6094,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_create_raw(sll_ob
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_thread_create(a->dt.i,&(b->dt.a));
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6141,7 +6141,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_create_semaphore_
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_thread_create_semaphore(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6172,7 +6172,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_get_internal_data
 	}
 	sll_array_t out;
 	sll_api_thread_get_internal_data(a->dt.i,&out);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6204,7 +6204,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_increase_barrier_
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_thread_increase_barrier(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6234,7 +6234,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_release_lock_raw(
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_thread_release_lock(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6265,7 +6265,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_release_semaphore
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_thread_release_semaphore(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6296,7 +6296,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_reset_barrier_raw
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_thread_reset_barrier(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6326,7 +6326,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_restart_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_thread_restart(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6357,7 +6357,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_suspend_raw(sll_o
 		GC_LOCK(*(al+idx));
 	}
 	sll_bool_t out=sll_api_thread_suspend(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6404,7 +6404,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_raw(sll_objec
 		GC_LOCK(*(al+idx));
 	}
 	sll_float_t out=sll_api_time_sleep(a);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6434,7 +6434,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_time_sleep_ns_raw(sll_ob
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_time_sleep_ns(a);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6491,7 +6491,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_location_raw(sll_
 		GC_LOCK(*(al+idx));
 	}
 	sll_object_t* out=sll_api_vm_get_location(a->dt.i);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
@@ -6516,7 +6516,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_ref_count_raw(sll
 		GC_LOCK(*(al+idx));
 	}
 	sll_integer_t out=sll_api_vm_get_ref_count(a);
-	while(idx){
+	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
