@@ -5,6 +5,7 @@
 ### Added
 
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
+- Threads, semaphores, locks and barriers are now multithreading-compatible ([#243])
 
 ### Changed
 

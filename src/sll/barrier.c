@@ -2,12 +2,14 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/common.h>
 #include <sll/memory.h>
+#include <sll/platform/lock.h>
 #include <sll/scheduler.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 
 
 
+static sll_lock_handle_t _barrier_lock;
 static barrier_t* _barrier_data;
 static sll_barrier_index_t _barrier_next;
 static barrier_list_length_t _barrier_len;
@@ -25,11 +27,13 @@ static void _queue_barrier(barrier_t* b){
 
 void _barrier_deinit(void){
 	sll_deallocate(_barrier_data);
+	SLL_CRITICAL(sll_platform_lock_delete(_barrier_lock));
 }
 
 
 
 void _barrier_init(void){
+	_barrier_lock=sll_platform_lock_create();
 	_barrier_data=NULL;
 	_barrier_next=BARRIER_UNUSED;
 	_barrier_len=0;
@@ -60,6 +64,7 @@ sll_bool_t _barrier_wait(sll_integer_t w,sll_integer_t v,sll_bool_t g){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_barrier_create(void){
+	SLL_CRITICAL(sll_platform_lock_acquire(_barrier_lock));
 	sll_barrier_index_t o=_barrier_next;
 	if (o==BARRIER_UNUSED){
 		o=_barrier_len;
@@ -70,6 +75,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_barrier_create(void){
 		_barrier_next=BARRIER_GET_NEXT_ID(_barrier_data+o);
 	}
 	(_barrier_data+o)->count=0;
+	SLL_CRITICAL(sll_platform_lock_release(_barrier_lock));
 	return o;
 }
 
@@ -79,9 +85,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_inde
 	if (b>=_barrier_len||(_barrier_data+b)->count==BARRIER_UNUSED){
 		return 0;
 	}
+	SLL_CRITICAL(sll_platform_lock_acquire(_barrier_lock));
 	(_barrier_data+b)->count=BARRIER_UNUSED;
 	BARRIER_SET_NEXT_ID(_barrier_data+b,_barrier_next);
 	_barrier_next=b;
+	SLL_CRITICAL(sll_platform_lock_release(_barrier_lock));
 	return 1;
 }
 

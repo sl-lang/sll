@@ -2,12 +2,14 @@
 #include <sll/_internal/semaphore.h>
 #include <sll/common.h>
 #include <sll/memory.h>
+#include <sll/platform/lock.h>
 #include <sll/scheduler.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 
 
 
+static sll_lock_handle_t _semaphore_lock;
 static semaphore_t* _semaphore_data;
 static sll_semaphore_index_t _semaphore_next;
 static semaphore_list_length_t _semaphore_len;
@@ -16,11 +18,13 @@ static semaphore_list_length_t _semaphore_len;
 
 void _semaphore_deinit(void){
 	sll_deallocate(_semaphore_data);
+	SLL_CRITICAL(sll_platform_lock_delete(_semaphore_lock));
 }
 
 
 
 void _semaphore_init(void){
+	_semaphore_lock=sll_platform_lock_create();
 	_semaphore_data=NULL;
 	_semaphore_next=SEMAPHORE_UNUSED;
 	_semaphore_len=0;
@@ -53,6 +57,7 @@ sll_bool_t _semaphore_wait(sll_integer_t w){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t c){
+	SLL_CRITICAL(sll_platform_lock_acquire(_semaphore_lock));
 	sll_semaphore_index_t o=_semaphore_next;
 	if (o==SEMAPHORE_UNUSED){
 		o=_semaphore_len;
@@ -63,6 +68,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll
 		_semaphore_next=SEMAPHORE_GET_NEXT_ID(_semaphore_data+o);
 	}
 	(_semaphore_data+o)->count=c;
+	SLL_CRITICAL(sll_platform_lock_release(_semaphore_lock));
 	return o;
 }
 
@@ -72,9 +78,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_
 	if (s>=_semaphore_len||(_semaphore_data+s)->count==SEMAPHORE_UNUSED){
 		return 0;
 	}
+	SLL_CRITICAL(sll_platform_lock_acquire(_semaphore_lock));
 	(_semaphore_data+s)->count=SEMAPHORE_UNUSED;
 	SEMAPHORE_SET_NEXT_ID(_semaphore_data+s,_semaphore_next);
 	_semaphore_next=s;
+	SLL_CRITICAL(sll_platform_lock_release(_semaphore_lock));
 	return 1;
 }
 

@@ -3,12 +3,14 @@
 #include <sll/_internal/thread.h>
 #include <sll/common.h>
 #include <sll/memory.h>
+#include <sll/platform/lock.h>
 #include <sll/scheduler.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 
 
 
+static sll_lock_handle_t _lock_lock;
 static lock_t* _lock_data;
 static sll_lock_index_t _lock_next;
 static lock_list_length_t _lock_len;
@@ -17,11 +19,13 @@ static lock_list_length_t _lock_len;
 
 void _lock_deinit(void){
 	sll_deallocate(_lock_data);
+	SLL_CRITICAL(sll_platform_lock_delete(_lock_lock));
 }
 
 
 
 void _lock_init(void){
+	_lock_lock=sll_platform_lock_create();
 	_lock_data=NULL;
 	_lock_next=LOCK_UNUSED;
 	_lock_len=0;
@@ -55,6 +59,7 @@ sll_bool_t _lock_wait(sll_integer_t w){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_lock_create(void){
+	SLL_CRITICAL(sll_platform_lock_acquire(_lock_lock));
 	sll_lock_index_t o=_lock_next;
 	if (o==LOCK_UNUSED){
 		o=_lock_len;
@@ -65,6 +70,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_lock_create(void){
 		_lock_next=LOCK_GET_NEXT_ID(_lock_data+o);
 	}
 	(_lock_data+o)->lock=SLL_UNKNOWN_THREAD_INDEX;
+	SLL_CRITICAL(sll_platform_lock_release(_lock_lock));
 	return o;
 }
 
@@ -74,10 +80,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_delete(sll_lock_index_t l)
 	if (l>=_lock_len||(_lock_data+l)->lock==LOCK_UNUSED){
 		return 0;
 	}
+	SLL_CRITICAL(sll_platform_lock_acquire(_lock_lock));
 	SLL_ASSERT((_lock_data+l)->lock==SLL_UNKNOWN_THREAD_INDEX);
 	(_lock_data+l)->lock=LOCK_UNUSED;
 	LOCK_SET_NEXT_ID(_lock_data+l,_lock_next);
 	_lock_next=l;
+	SLL_CRITICAL(sll_platform_lock_release(_lock_lock));
 	return 1;
 }
 
