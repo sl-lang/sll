@@ -9,6 +9,7 @@
 ### Changed
 
 - Fixed `sll_file_peek_char`
+- *\[Windows Only\]* Fixed `sll_platform_set_cpu`
 
 ## [0.7.9] - 2022-03-19
 

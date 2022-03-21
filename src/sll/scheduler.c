@@ -178,8 +178,10 @@ sll_return_code_t _scheduler_run(void){
 	ptr=b_ptr;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){
 		scheduler_cpu_data_t* cpu_dt=ptr;
-		SLL_CRITICAL(sll_platform_event_set(cpu_dt->evt));
-		SLL_CRITICAL_COND(i,sll_platform_join_thread(cpu_dt->tid));
+		if (i){
+			SLL_CRITICAL(sll_platform_event_set(cpu_dt->evt));
+			SLL_CRITICAL_COND(i,sll_platform_join_thread(cpu_dt->tid));
+		}
 		SLL_CRITICAL(sll_platform_event_delete(cpu_dt->evt));
 		SLL_CRITICAL(sll_platform_lock_delete(cpu_dt->lck));
 		ptr=PTR(ADDR(ptr)+sz);

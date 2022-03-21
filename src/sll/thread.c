@@ -4,6 +4,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
+#include <sll/platform/lock.h>
 #include <sll/platform/memory.h>
 #include <sll/scheduler.h>
 #include <sll/thread.h>
@@ -12,6 +13,7 @@
 
 
 
+static sll_lock_handle_t _thread_lock;
 static sll_thread_index_t _thread_next;
 static thread_list_length_t _thread_len;
 static void* _scheduler_allocator_cache_pool[THREAD_ALLOCATOR_CACHE_POOL_SIZE];
@@ -41,6 +43,7 @@ void _thread_deinit(void){
 		sll_platform_free_page(_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len],THREAD_SIZE);
 	}
 	sll_deallocate(_thread_data);
+	SLL_CRITICAL(sll_platform_lock_delete(_thread_lock));
 }
 
 
@@ -52,6 +55,7 @@ thread_data_t* _thread_get(sll_thread_index_t t){
 
 
 void _thread_init(void){
+	_thread_lock=sll_platform_lock_create();
 	_thread_data=NULL;
 	_thread_active_count=0;
 	_thread_next=SLL_UNKNOWN_THREAD_INDEX;
@@ -62,6 +66,7 @@ void _thread_init(void){
 
 
 sll_thread_index_t _thread_new(void){
+	SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
 	sll_thread_index_t o=_thread_next;
 	if (o==SLL_UNKNOWN_THREAD_INDEX){
 		o=_thread_len;
@@ -93,6 +98,7 @@ sll_thread_index_t _thread_new(void){
 	n->suspended=0;
 	*(_thread_data+o)=n;
 	_thread_active_count++;
+	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 	return o;
 }
 
@@ -104,7 +110,9 @@ void _thread_terminate(sll_object_t* ret){
 	_scheduler_current_thread->ret=ret;
 	_scheduler_current_thread->st=THREAD_STATE_TERMINATED;
 	_scheduler_current_thread_index=_scheduler_current_thread->wait;
+	SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
 	_thread_active_count--;
+	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 	if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){
 		return;
 	}
@@ -144,7 +152,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integ
 	}
 	if (fn&&fn<=sll_current_runtime_data->a_dt->ft.l){
 		sll_thread_index_t o=_thread_new();
-		thread_data_t* thr=_thread_get(o);
+		thread_data_t* thr=*(_thread_data+o);
 		for (;thr->si<all;thr->si++){
 			*(thr->stack+thr->si)=*(al+thr->si);
 			SLL_ACQUIRE(*(al+thr->si));
@@ -165,6 +173,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 	if (THREAD_IS_UNUSED(thr)){
 		return 0;
 	}
+	SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
 	SLL_ASSERT(thr->st==THREAD_STATE_TERMINATED);
 	*(_thread_data+t)=THREAD_NEXT_UNUSED(_thread_next);
 	_thread_next=t;
@@ -176,6 +185,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 	else{
 		sll_platform_free_page(thr,THREAD_SIZE);
 	}
+	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 	return 1;
 }
 
