@@ -497,7 +497,7 @@
 (:> "CHAR: " (<- file$read_char file$stdin) "\n")
 
 (:> `Raw String\\n` '\n')
-
+|#|
 (<- sys$set_sandbox_flags "file-delete")
 (:> (<- sys$get_sandbox_flags) "\n")
 (<- thread$join (<- thread$start (,,,
