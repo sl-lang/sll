@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_ALLOCATOR_H__
-#define __SLL_INTERNAL_ALLOCATOR_H__ 1
+#ifndef __SLL__INTERNAL_ALLOCATOR_H__
+#define __SLL__INTERNAL_ALLOCATOR_H__ 1
 #include <sll/_size_types.h>
 
 

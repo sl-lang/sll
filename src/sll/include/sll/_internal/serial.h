@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_SERIAL_H__
-#define __SLL_INTERNAL_SERIAL_H__ 1
+#ifndef __SLL__INTERNAL_SERIAL_H__
+#define __SLL__INTERNAL_SERIAL_H__ 1
 
 
 

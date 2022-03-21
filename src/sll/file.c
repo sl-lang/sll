@@ -275,7 +275,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 			return SLL_END_OF_DATA;
 		}
 	}
-	sll_bool_t o=f->_r_bf[f->_r_bf_off];
+	sll_char_t o=f->_r_bf[f->_r_bf_off];
 	UNLOCK;
 	return o;
 }

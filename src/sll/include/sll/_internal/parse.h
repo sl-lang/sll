@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_PARSE_H__
-#define __SLL_INTERNAL_PARSE_H__ 1
+#ifndef __SLL__INTERNAL_PARSE_H__
+#define __SLL__INTERNAL_PARSE_H__ 1
 #include <sll/node.h>
 #include <sll/types.h>
 

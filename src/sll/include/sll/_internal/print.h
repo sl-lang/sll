@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_PRINT_H__
-#define __SLL_INTERNAL_PRINT_H__ 1
+#ifndef __SLL__INTERNAL_PRINT_H__
+#define __SLL__INTERNAL_PRINT_H__ 1
 #include <sll/file.h>
 #include <sll/types.h>
 

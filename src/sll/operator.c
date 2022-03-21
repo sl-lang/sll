@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/util.h>
 #include <sll/_size_types.h>
 #include <sll/api/math.h>
@@ -72,6 +73,11 @@
 
 #define TO_FLOAT_BITS(n) ((n)->dt.i)
 
+#define INIT2 GC_LOCK(a);GC_LOCK(b);sll_object_t* __op_ret=NULL
+
+#define RETURN(o) __op_ret=(o);goto __op_ret_lbl
+#define RETURN_CODE __op_ret_lbl:GC_UNLOCK(a);GC_UNLOCK(b);SLL_ASSERT(__op_ret);return __op_ret
+
 
 
 __SLL_EXTERNAL sll_float_t sll_float_compare_error=1e-6;
@@ -79,40 +85,42 @@ __SLL_EXTERNAL sll_float_t sll_float_compare_error=1e-6;
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b){
+	INIT2;
 	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
 			if (!a->dt.s.l){
-				return SLL_ACQUIRE_STATIC_INT(0);
+				RETURN(SLL_ACQUIRE_STATIC_INT(0));
 			}
 			WRAP_ARRAY_INDEX(b->dt.i,a->dt.a.l,idx);
 			if (idx<0||idx>=a->dt.a.l){
-				return SLL_ACQUIRE_STATIC_INT(0);
+				RETURN(SLL_ACQUIRE_STATIC_INT(0));
 			}
-			return SLL_FROM_CHAR(a->dt.s.v[idx]);
+			RETURN(SLL_FROM_CHAR(a->dt.s.v[idx]));
 		}
 	}
 	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
 		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
 			if (!a->dt.a.l){
-				return SLL_ACQUIRE_STATIC_INT(0);
+				RETURN(SLL_ACQUIRE_STATIC_INT(0));
 			}
 			WRAP_ARRAY_INDEX(b->dt.i,a->dt.a.l,idx);
 			if (idx<0||idx>=a->dt.a.l){
-				return SLL_ACQUIRE_STATIC_INT(0);
+				RETURN(SLL_ACQUIRE_STATIC_INT(0));
 			}
 			sll_object_t* o=a->dt.a.v[idx];
 			SLL_ACQUIRE(o);
-			return o;
+			RETURN(o);
 		}
 	}
 	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
-		return sll_map_get(&(a->dt.m),b);
+		RETURN(sll_map_get(&(a->dt.m),b));
 	}
 	else if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-		return sll_object_get_field(sll_current_runtime_data->tt,a,&(b->dt.s));
+		RETURN(sll_object_get_field(sll_current_runtime_data->tt,a,&(b->dt.s)));
 	}
 	SLL_ACQUIRE(a);
-	return a;
+	RETURN(a);
+	RETURN_CODE;
 }
 
 

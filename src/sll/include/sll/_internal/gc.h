@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_GC_H__
-#define __SLL_INTERNAL_GC_H__ 1
+#ifndef __SLL__INTERNAL_GC_H__
+#define __SLL__INTERNAL_GC_H__ 1
 #ifdef __SLL_BUILD_WINDOWS
 #include <windows.h>
 #endif
@@ -12,8 +12,8 @@
 
 
 #ifdef __SLL_BUILD_WINDOWS
-#define _ATOMIC_STORE(ptr,val) InterlockedExchange((LONG volatile*)(ptr),val)
-#define _ATOMIC_COMPARE_EXCHANGE(ptr,cmp,new) (InterlockedCompareExchange((LONG volatile*)(ptr),new,*(cmp))==*(cmp))
+#define _ATOMIC_STORE(ptr,val) InterlockedExchange((LONG volatile*)(ptr),(val))
+#define _ATOMIC_COMPARE_EXCHANGE(ptr,cmp,new) (InterlockedCompareExchange((LONG volatile*)(ptr),(new),*(cmp))==*(cmp))
 #else
 #define _ATOMIC_STORE(ptr,val) __atomic_store_n((ptr),(val),__ATOMIC_SEQ_CST)
 #define _ATOMIC_COMPARE_EXCHANGE(ptr,cmp,new) __atomic_compare_exchange_n((ptr),(cmp),(new),0,__ATOMIC_SEQ_CST,__ATOMIC_RELAXED)

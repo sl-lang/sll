@@ -263,6 +263,16 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				c=sll_file_read_char(rf,NULL);
 			} while (c!='\n'&&c!=SLL_END_OF_DATA);
 		}
+		else if (c=='|'&&sll_file_peek_char(rf,NULL)=='#'){
+			c=sll_file_read_char(rf,NULL);
+			SLL_ASSERT(c=='#');
+			sll_read_char_t lc=c;
+			do{
+				lc=c;
+				c=sll_file_read_char(rf,NULL);
+			} while (c!=SLL_END_OF_DATA&&(c!='|'||lc!='#'));
+			c=sll_file_read_char(rf,NULL);
+		}
 		else if (o&&o->t==NODE_TYPE_UNKNOWN){
 			sll_char_t str[256];
 			sll_string_length_t sz=0;
@@ -580,16 +590,6 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 		}
 		else if (c==')'||c=='}'||c==']'||c=='>'){
 			break;
-		}
-		else if (c=='|'&&sll_file_peek_char(rf,NULL)=='#'){
-			c=sll_file_read_char(rf,NULL);
-			SLL_ASSERT(c=='#');
-			sll_read_char_t lc=c;
-			do{
-				lc=c;
-				c=sll_file_read_char(rf,NULL);
-			} while (c!=SLL_END_OF_DATA&&(c!='|'||lc!='#'));
-			c=sll_file_read_char(rf,NULL);
 		}
 		else{
 			UPDATE_IF_SCOPE;

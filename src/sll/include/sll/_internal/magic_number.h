@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_MAGIC_NUMBER_H__
-#define __SLL_INTERNAL_MAGIC_NUMBER_H__ 1
+#ifndef __SLL__INTERNAL_MAGIC_NUMBER_H__
+#define __SLL__INTERNAL_MAGIC_NUMBER_H__ 1
 #include <sll/_size_types.h>
 
 

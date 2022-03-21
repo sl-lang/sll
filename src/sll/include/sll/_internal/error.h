@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_ERROR_H__
-#define __SLL_INTERNAL_ERROR_H__ 1
+#ifndef __SLL__INTERNAL_ERROR_H__
+#define __SLL__INTERNAL_ERROR_H__ 1
 #ifndef __SLL_BUILD_WINDOWS
 #include <errno.h>
 #endif

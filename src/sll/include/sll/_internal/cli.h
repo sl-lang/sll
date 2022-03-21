@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_CLI_H__
-#define __SLL_INTERNAL_CLI_H__ 1
+#ifndef __SLL__INTERNAL_CLI_H__
+#define __SLL__INTERNAL_CLI_H__ 1
 #include <sll/_size_types.h>
 #include <sll/log.h>
 #include <sll/platform/path.h>

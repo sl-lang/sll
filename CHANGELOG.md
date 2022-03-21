@@ -6,6 +6,10 @@
 
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
 
+### Changed
+
+- Fixed `sll_file_peek_char`
+
 ## [0.7.9] - 2022-03-19
 
 ### Added

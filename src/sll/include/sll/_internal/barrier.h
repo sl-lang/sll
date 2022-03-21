@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_BARRIER_H__
-#define __SLL_INTERNAL_BARRIER_H__ 1
+#ifndef __SLL__INTERNAL_BARRIER_H__
+#define __SLL__INTERNAL_BARRIER_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_internal/thread.h>
 #include <sll/_size_types.h>

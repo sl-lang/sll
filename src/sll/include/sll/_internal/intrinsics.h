@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_INTRINSIC_H__
-#define __SLL_INTERNAL_INTRINSIC_H__ 1
+#ifndef __SLL__INTERNAL_INTRINSIC_H__
+#define __SLL__INTERNAL_INTRINSIC_H__ 1
 #ifdef __SLL_BUILD_WINDOWS
 #include <intrin.h>
 #endif

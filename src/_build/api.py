@@ -22,10 +22,10 @@ def generate_c_api(d_dt,api_dt):
 			a=""
 			d_str=""
 			pc=""
-			start=""
 			end=""
+			i=0
 			if (len(k["args"])>0):
-				for i,e in enumerate(k["args"]):
+				for e in k["args"]:
 					if (i):
 						a+=","
 						pc+=","
@@ -39,9 +39,9 @@ def generate_c_api(d_dt,api_dt):
 							cf.write(f"\tsll_object_t*const* {ALPHABET[i]}=al+{i};\n")
 						else:
 							cf.write(f"\t{at}* {ALPHABET[i]}=sll_allocate_stack({ALPHABET[i]}c*sizeof({at}));\n\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tsll_object_t* tmp=*(al+idx+{i});\n\t\tif (!({TYPE_CHECK_MAP[e['type']].replace('$','tmp')})){{\n\t\t\ttmp=sll_operator_cast(tmp,sll_static_int[SLL_OBJECT_TYPE_{TYPE_FULL_NAME_MAP[e['type']]}]);\n\t\t\t{TYPE_COPY_MAP[e['type']].replace('#','*('+ALPHABET[i]+'+idx)').replace('$','tmp')};\n\t\t\tsll_release_object(tmp);\n\t\t}}\n\t\telse{{\n\t\t\t*({ALPHABET[i]}+idx)={TYPE_ACCESS_MAP[e['type']].replace('$','tmp')};\n\t\t}}\n\t}}\n")
-							start+=f"\tfor (sll_arg_count_t idx=0;idx<{ALPHABET[i]}c;idx++){{\n\t\tGC_LOCK(*(al+{i}+idx));\n\t}}\n"
-							end=f"\twhile({ALPHABET[i]}c){{\n\t\t{ALPHABET[i]}c--;\n\t\tGC_UNLOCK(*(al+{i}+{ALPHABET[i]}c));\n\t}}\n\tsll_deallocate(PTR({ALPHABET[i]}));\n"+end
+							end=f"\tsll_deallocate(PTR({ALPHABET[i]}));\n"+end
 						pc+=ALPHABET[i]+","+ALPHABET[i]+"c"
+						i=-1
 					else:
 						t=f"{at} {ALPHABET[i]}"
 						a+=t
@@ -51,8 +51,6 @@ def generate_c_api(d_dt,api_dt):
 						if ("O" not in e["type"]):
 							cf.write("\t\tif ("+"||".join([TYPE_CHECK_MAP[se].replace('$',ALPHABET[i]) for se in e["type"]])+f"){{\n\t\t\tSLL_ACQUIRE({ALPHABET[i]});\n\t\t}}\n\t\telse{{\n\t\t\t{ALPHABET[i]}=sll_operator_cast({ALPHABET[i]},sll_static_int[SLL_OBJECT_TYPE_{TYPE_FULL_NAME_MAP[e['type'][0]]}]);\n\t\t}}\n")
 						else:
-							start+=f"\tGC_LOCK({ALPHABET[i]});\n"
-							end=f"\tGC_UNLOCK({ALPHABET[i]});\n"+end
 							cf.write(f"\t\tSLL_ACQUIRE({ALPHABET[i]});\n")
 						cf.write(f"\t}}\n\telse{{\n\t\t{ALPHABET[i]}=")
 						if (e["type"][0] in ["I","B","O"]):
@@ -70,12 +68,12 @@ def generate_c_api(d_dt,api_dt):
 								raise RuntimeError
 							cf.write(f"sll_create_object(SLL_OBJECT_TYPE_MAP);\n\t\tsll_map_create(0,&({ALPHABET[i]}->dt.m));")
 						cf.write("\n\t}\n")
-						if (len(e["type"])==1):
-							pc+=TYPE_ACCESS_MAP[e["type"]].replace("$",ALPHABET[i])
-						else:
-							pc+=ALPHABET[i]
+						pc+=(TYPE_ACCESS_MAP[e["type"]].replace("$",ALPHABET[i]) if len(e["type"])==1 else ALPHABET[i])
+						i+=1
 			hf.write(f"\n#define __SLL_API_TYPE_{k['name']} ")
-			cf.write(start)
+			if (i):
+				cf.write(f"\tsll_arg_count_t idx=0;\n\tfor (;idx<{('all' if i==-1 else f'(all<{i}?all:{i})')};idx++){{\n\t\tGC_LOCK(*(al+idx));\n\t}}\n")
+				end="\twhile(idx){\n\t\tidx--;\n\t\tGC_UNLOCK(*(al+idx));\n\t}\n"+end
 			if (k["ret"]["type"]=="O"):
 				d_str+=f"\n * \\ret sll_object_t*"
 				hf.write("__SLL_CHECK_OUTPUT sll_object_t*")

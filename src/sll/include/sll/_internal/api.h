@@ -1,5 +1,5 @@
-#ifndef __SLL_INTERNAL_API_H__
-#define __SLL_INTERNAL_API_H__ 1
+#ifndef __SLL__INTERNAL_API_H__
+#define __SLL__INTERNAL_API_H__ 1
 #include <sll/generated/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
