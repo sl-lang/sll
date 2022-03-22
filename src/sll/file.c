@@ -363,7 +363,7 @@ _hash_data:
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t* f,sll_error_t* err){
+__SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* f,sll_error_t* err){
 	RESET_ERROR_PTR;
 	if (!(f->f&SLL_FILE_FLAG_READ)){
 		return SLL_END_OF_DATA;

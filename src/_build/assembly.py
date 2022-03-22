@@ -116,11 +116,13 @@ def generate_assembly_optimizer(cfg_fp,o_fp):
 		_generate_cond(f,data,1,sl)
 		for k in sl:
 			f.write(f"\treturn;\n_shift_{k}:\n")
+			for i in range(0,k):
+				f.write(f"\tst[{i}]->t=ASSEMBLY_INSTRUCTION_TYPE_NOP;\n")
 			i=0
 			while (i<OPTIMIZER_STACK_SIZE-1):
 				if (i+k>=OPTIMIZER_STACK_SIZE):
-					f.write("\t"+f"st[{i}]=nop;\n")
+					f.write(f"\tst[{i}]=nop;\n")
 				else:
-					f.write("\t"+f"st[{i}]=st[{i+k}];\n")
+					f.write(f"\tst[{i}]=st[{i+k}];\n")
 				i+=1
 		f.write("}\n\n\n\n#endif\n")

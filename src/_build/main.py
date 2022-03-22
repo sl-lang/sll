@@ -4,6 +4,7 @@ import build
 import docs
 import hashlist
 import header
+import operator_parser
 import os
 import sys
 import util
@@ -21,6 +22,7 @@ d_dt,api_dt=docs.create_docs(d_fl)
 util.log(f"Generating Code & Signatures for {len(api_dt)} API functions...")
 api.generate_c_api(d_dt,api_dt)
 assembly.generate_assembly_optimizer("src/sll/data/assembly_optimizer.txt","src/sll/include/sll/generated/assembly_optimizer.h")
+operator_parser.generate_operator_parser("src/sll/data/operator_parser.txt","src/sll/include/sll/generated/operator_parser.h")
 header.generate_help("src/sll/data/help.txt","src/sll/include/sll/generated/help_text.h")
 header.generate_error_header("src/sll/data/memory_fail.txt","src/sll/include/sll/generated/memory_fail.h","MEMORY_FAIL")
 header.generate_error_header("src/sll/data/critical_error.txt","src/sll/include/sll/generated/critical_error.h","CRITICAL_ERROR")

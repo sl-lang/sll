@@ -5,12 +5,15 @@
 ### Added
 
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
+- Implemented proper parsing of unknown escape sequences
+- Operator parser is now generated from [`src/sll/data/operator_parser.txt`][0.7.10/src/sll/data/operator_parser.txt]
 - Threads, semaphores, locks and barriers are now multithreading-compatible ([#243])
 
 ### Changed
 
 - Fixed `sll_file_peek_char`
 - *\[Windows Only\]* Fixed `sll_platform_set_cpu`
+- Reworked the assembly optimizer
 
 ## [0.7.9] - 2022-03-19
 
@@ -1814,6 +1817,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#254]: https://github.com/sl-lang/sll/issues/254
 [#247]: https://github.com/sl-lang/sll/issues/247
 [#246]: https://github.com/sl-lang/sll/issues/246
 [#245]: https://github.com/sl-lang/sll/issues/245
@@ -2022,6 +2026,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[0.7.10/src/sll/data/operator_parser.txt]: https://github.com/sl-lang/sll/main/src/sll/data/operator_parser.txt
 [0.7.9/src/sll/include/sll/_internal]: https:/github.com/sl-lang/sll/tree/sll-v0.7.9/src/sll/include/sll/_internal
 [0.7.8/src/sll/include/sll/_sll_internal.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.8/src/sll/include/sll/_sll_internal.h
 [0.7.8/src/sll/include/sll/platform]: https:/github.com/sl-lang/sll/tree/sll-v0.7.8/src/sll/include/sll/platform

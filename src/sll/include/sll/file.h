@@ -322,7 +322,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_file_read_char
  * \group file
  * \subgroup file-io
@@ -331,7 +331,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
  * \arg sll_error_t* err
  * \ret sll_read_char_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_read_char(sll_file_t* f,sll_error_t* err);
+__SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* f,sll_error_t* err);
 
 
 

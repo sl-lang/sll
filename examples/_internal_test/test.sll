@@ -496,13 +496,14 @@
 
 (:> "CHAR: " (<- file$read_char file$stdin) "\n")
 
-(:> `Raw String\\n` '\n')
+(:> `Raw String\\n ` "\a\n")
 |#|
 (<- sys$set_sandbox_flags "file-delete")
 (:> (<- sys$get_sandbox_flags) "\n")
 (<- thread$join (<- thread$start (,,,
 	(<- sys$set_sandbox_flags "no-environment")
 	(:> "Thread flags: " (<- sys$get_sandbox_flags) "\n")
+	(:> "Thread env: " sys$ENVIRONMENT "\n")
 )))
 (:> (<- sys$get_sandbox_flags) "\n")
 (? (! (!! FACTORIAL)) nil {

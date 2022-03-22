@@ -193,8 +193,6 @@ contexts:
         - match: '\'''
           scope: punctuation.definition.string.end.sll
           pop: true
-        - match: '\\.'
-          scope: invalid.illegal.escape.sll
     - match: '"'
       scope: punctuation.definition.string.begin.sll
       push:
@@ -206,8 +204,6 @@ contexts:
         - match: '"'
           scope: punctuation.definition.string.end.sll
           pop: true
-        - match: '\\.'
-          scope: invalid.illegal.escape.sll
     - match: '`'
       scope: punctuation.definition.string.begin.sll
       push:

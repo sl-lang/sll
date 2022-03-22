@@ -1,0 +1,69 @@
+! not
+!! bool
+!. thread_id
+!<* thread_lock
+!<+ thread_semaphore
+!<- read_blocking
+!<. read_blocking_char
+!<< thread_wait
+!<= thread_barrier_eq
+!<> thread_barrier_geq
+!= not_equal
+!== strict_not_equal
+# operation_list variable_definition
+## operation_list export
+$ length
+% mod
+%% ref
+& bit_and
+&& and
+&: decl
+&:? nameof_type
+* mult
+*** inline_func $fn
++ add
+++ inc
+, comma
+,,, func $fn
+- sub
+-- dec
+--- operation_list import
+-> for $l
+. new
+... internal_func
+.? nameof
+/ div
+// floor_div
+: access
+:! deep_copy
+:: cast
+:> print
+:? typeof
+< less
+<- call
+<-* call_array
+<< bit_lshift
+<<< continue
+<= less_equal
+= assign
+== equal
+=== strict_equal
+> more
+>- while $l
+>< loop
+>= more_equal
+>> bit_rshift
+? if
+?: inline_if
+?? switch
+@ break
+@@ return
+[< while_array $l
+[> for_array $l
+^ bit_xor
+{< while_map $l
+{> for_map $l
+| bit_or
+|: has
+|| or
+~ bit_not
