@@ -219,6 +219,10 @@ contexts:
       scope: support.function.special.sll
     - match: '{{not_identifier_start}}@@(file|line)@@{{not_identifier_end}}'
       scope: support.type.special.sll
+    - match: '{{not_identifier_start}}(!)?({{identifier}}){{not_identifier_end}}'
+      captures:
+        1: storage.modifier.tls.sll
+        2: variable.other.sll
     - match: '{{full_identifier}}'
       scope: variable.other.sll
   comments:

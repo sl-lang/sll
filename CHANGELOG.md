@@ -8,6 +8,7 @@
 - Implemented `SLL_IDENTIFIER_GET_STRING_INDEX`, `SLL_IDENTIFIER_IS_TLS`, `SLL_IDENTIFIER_UPDATE_STRING_INDEX`, `SLL_IDENTIFIER_SET_STRING_INDEX` ([#254])
 - Implemented proper parsing of unknown escape sequences
 - Operator parser is now generated from [`src/sll/data/operator_parser.txt`][0.7.10/src/sll/data/operator_parser.txt]
+- Thread-local variables can be marked with an exclemation mark (`!`) ([#254])
 - Threads, semaphores, locks and barriers are now multithreading-compatible ([#243])
 
 ### Changed

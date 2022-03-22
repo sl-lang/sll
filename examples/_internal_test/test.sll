@@ -506,6 +506,10 @@
 	(:> "Thread env: " sys$ENVIRONMENT "\n")
 )))
 (:> (<- sys$get_sandbox_flags) "\n")
+
+(= !tls_var 8)
+(:> tls_var "\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

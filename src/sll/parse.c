@@ -95,7 +95,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 		k->dt=sll_reallocate(k->dt,k->l*sizeof(sll_identifier_t));
 		(k->dt+k->l-1)->sc=l_sc->l_sc;
 		o=SLL_CREATE_IDENTIFIER(k->l-1,str->l-1);
-		SLL_IDENTIFIER_SET_STRING_INDEX(k->dt+k->l-1,sll_add_string(&(sf->st),str,1),0);
+		SLL_IDENTIFIER_SET_STRING_INDEX(k->dt+k->l-1,sll_add_string(&(sf->st),str,1),fl&GET_VAR_INDEX_FLAG_TLS);
 		if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 			e_c_dt->nv_dt->sz++;
 			e_c_dt->nv_dt->dt=sll_reallocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_node_t*));
@@ -133,7 +133,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 	sf->idt.il=sll_reallocate(sf->idt.il,sf->idt.ill*sizeof(sll_identifier_t));
 	o=SLL_CREATE_IDENTIFIER(sf->idt.ill-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 	(sf->idt.il+sf->idt.ill-1)->sc=l_sc->l_sc;
-	SLL_IDENTIFIER_SET_STRING_INDEX(sf->idt.il+sf->idt.ill-1,sll_add_string(&(sf->st),str,1),0);
+	SLL_IDENTIFIER_SET_STRING_INDEX(sf->idt.il+sf->idt.ill-1,sll_add_string(&(sf->st),str,1),fl&GET_VAR_INDEX_FLAG_TLS);
 	if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 		e_c_dt->nv_dt->sz++;
 		e_c_dt->nv_dt->dt=sll_reallocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_node_t*));
@@ -679,9 +679,18 @@ _parse_identifier:
 					}
 				}
 				else{
-_normal_identifier:
+_normal_identifier:;
+					unsigned int var_fl=((!o||o->t!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->t==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->t==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0));
+					if (str.l&&str.v[0]=='!'){
+						var_fl|=GET_VAR_INDEX_FLAG_TLS*e_c_dt->fn;
+						for (sll_string_length_t i=0;i<str.l-1;i++){
+							str.v[i]=str.v[i+1];
+						}
+						sll_string_decrease(&str,str.l-1);
+						sll_string_calculate_checksum(&str);
+					}
 					arg->t=SLL_NODE_TYPE_IDENTIFIER;
-					arg->dt.id=_get_var_index(sf,e_c_dt,l_sc,&str,arg,((!o||o->t!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->t==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->t==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0)));
+					arg->dt.id=_get_var_index(sf,e_c_dt,l_sc,&str,arg,var_fl);
 					if (arg->dt.i==SLL_MAX_VARIABLE_INDEX){
 						arg->t=SLL_NODE_TYPE_INT;
 						arg->dt.i=0;
