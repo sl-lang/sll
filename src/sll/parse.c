@@ -689,9 +689,15 @@ _normal_identifier:;
 						sll_string_decrease(&str,str.l-1);
 						sll_string_calculate_checksum(&str);
 					}
-					arg->t=SLL_NODE_TYPE_IDENTIFIER;
-					arg->dt.id=_get_var_index(sf,e_c_dt,l_sc,&str,arg,var_fl);
-					if (arg->dt.i==SLL_MAX_VARIABLE_INDEX){
+					if (str.l){
+						arg->t=SLL_NODE_TYPE_IDENTIFIER;
+						arg->dt.id=_get_var_index(sf,e_c_dt,l_sc,&str,arg,var_fl);
+						if (arg->dt.i==SLL_MAX_VARIABLE_INDEX){
+							arg->t=SLL_NODE_TYPE_INT;
+							arg->dt.i=0;
+						}
+					}
+					else{
 						arg->t=SLL_NODE_TYPE_INT;
 						arg->dt.i=0;
 					}
