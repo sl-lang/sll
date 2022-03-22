@@ -105,7 +105,7 @@ def build_sll_cli():
 			sys.exit(1)
 		util.log("  Compiling Files (Release Mode)...")
 		out_fp=util.output_file_path("src/cli/windows.c")
-		if (hashlist.update("src/cli/windows.c","build","src/cli/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","build","/Fo"+out_fp,"src/cli/windows.c"])):
+		if (hashlist.update("src/cli/windows.c","build") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","build","/Fo"+out_fp,"src/cli/windows.c"])):
 			hashlist.fail("src/cli/windows.c")
 			sys.exit(1)
 		util.log("  Linking Files (Release Console Mode)...")

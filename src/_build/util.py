@@ -101,14 +101,11 @@ def get_sll_files():
 
 def bundle(v):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],f"build/sll-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system]]:
+		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],f"build/sll-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system],"build/lib/stdlib.slb"]:
 			zf.write(k,arcname=k[6:])
 		if (system=="windows"):
 			zf.write("build/sllw.exe",arcname="sllw.exe")
 		zf.write("build/sll.h",arcname="include/sll.h")
-		for k in os.listdir("build/lib"):
-			if (os.path.isfile("build/lib/"+k)):
-				zf.write("build/lib/"+k,arcname="lib/"+k)
 
 
 
