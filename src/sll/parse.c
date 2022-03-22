@@ -70,7 +70,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 		if (!(fl&GET_VAR_INDEX_FLAG_FUNC)){
 			for (sll_identifier_list_length_t i=0;i<k->l;i++){
 				sll_identifier_t* si=k->dt+i;
-				if (si->sc==SLL_MAX_SCOPE||l_sc->l_sc<si->sc||!sll_string_equal(sf->st.dt+si->i,str)){
+				if (si->sc==SLL_MAX_SCOPE||l_sc->l_sc<si->sc||!sll_string_equal(sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(si),str)){
 					continue;
 				}
 				if (si->sc==l_sc->l_sc){
@@ -95,7 +95,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 		k->dt=sll_reallocate(k->dt,k->l*sizeof(sll_identifier_t));
 		(k->dt+k->l-1)->sc=l_sc->l_sc;
 		o=SLL_CREATE_IDENTIFIER(k->l-1,str->l-1);
-		(k->dt+k->l-1)->i=sll_add_string(&(sf->st),str,1);
+		SLL_IDENTIFIER_SET_STRING_INDEX(k->dt+k->l-1,sll_add_string(&(sf->st),str,1),0);
 		if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 			e_c_dt->nv_dt->sz++;
 			e_c_dt->nv_dt->dt=sll_reallocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_node_t*));
@@ -108,8 +108,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 	if (!(fl&GET_VAR_INDEX_FLAG_FUNC)){
 		for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
 			sll_identifier_t* k=sf->idt.il+i;
-			sll_string_t* s=sf->st.dt+k->i;
-			if (k->sc==SLL_MAX_SCOPE||l_sc->l_sc<k->sc||!sll_string_equal(s,str)){
+			if (k->sc==SLL_MAX_SCOPE||l_sc->l_sc<k->sc||!sll_string_equal(sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(k),str)){
 				continue;
 			}
 			if (k->sc==l_sc->l_sc){
@@ -134,7 +133,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 	sf->idt.il=sll_reallocate(sf->idt.il,sf->idt.ill*sizeof(sll_identifier_t));
 	o=SLL_CREATE_IDENTIFIER(sf->idt.ill-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 	(sf->idt.il+sf->idt.ill-1)->sc=l_sc->l_sc;
-	(sf->idt.il+sf->idt.ill-1)->i=sll_add_string(&(sf->st),str,1);
+	SLL_IDENTIFIER_SET_STRING_INDEX(sf->idt.il+sf->idt.ill-1,sll_add_string(&(sf->st),str,1),0);
 	if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 		e_c_dt->nv_dt->sz++;
 		e_c_dt->nv_dt->dt=sll_reallocate(e_c_dt->nv_dt->dt,e_c_dt->nv_dt->sz*sizeof(sll_node_t*));
@@ -349,7 +348,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 						a=(a->t==SLL_NODE_TYPE_CHANGE_STACK?a->dt._p:a+1);
 					}
 					if (a->t==SLL_NODE_TYPE_IDENTIFIER){
-						n_e_c_dt.a_nm=(SLL_IDENTIFIER_GET_ARRAY_ID(a->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?sf->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(a->dt.id):sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(a->dt.id)].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(a->dt.id))->i;
+						n_e_c_dt.a_nm=SLL_IDENTIFIER_GET_STRING_INDEX(SLL_IDENTIFIER_GET_ARRAY_ID(a->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?sf->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(a->dt.id):sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(a->dt.id)].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(a->dt.id));
 					}
 				}
 				_read_object_internal(rf,sf,c,&n_e_c_dt);
@@ -782,7 +781,7 @@ _normal_identifier:
 					for (sll_export_table_length_t j=0;j<im_sf->et.l;j++){
 						sll_identifier_index_t ii=*(im_sf->et.dt+j);
 						sll_string_t tmp;
-						sll_string_clone(im_sf->st.dt+((SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?im_sf->idt.il:im_sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(ii)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->i,&tmp);
+						sll_string_clone(im_sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX((SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?im_sf->idt.il:im_sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(ii)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii)),&tmp);
 						if_->dt[j]=_get_var_index(sf,e_c_dt,l_sc,&tmp,NULL,GET_VAR_INDEX_FLAG_ASSIGN);
 					}
 					sll_deallocate(im.dt);
@@ -845,7 +844,7 @@ _return_node:;
 				break;
 			}
 			if (SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)>3){
-				sll_string_t* nm=sf->st.dt+((SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?sf->idt.il:sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(arg->dt.id))->i;
+				sll_string_t* nm=sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX((SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?sf->idt.il:sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(arg->dt.id));
 				SLL_ASSERT(nm->l>4);
 				if (nm->v[0]=='@'&&nm->v[1]=='@'&&nm->v[nm->l-2]=='@'&&nm->v[nm->l-1]=='@'){
 					i++;

@@ -27,14 +27,14 @@
 static void _print_identifier(sll_identifier_index_t ii,const sll_source_file_t* sf,sll_file_t* wf){
 	sll_identifier_list_length_t j=SLL_IDENTIFIER_GET_ARRAY_ID(ii);
 	if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-		sll_string_t* s=sf->st.dt+(sf->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->i;
+		sll_string_t* s=sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(sf->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii));
 		sll_file_write(wf,s->v,s->l,NULL);
 		PRINT_STATIC_STRING("|#",wf);
 		_print_int((sf->idt.il+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->sc,wf);
 		PRINT_STATIC_STRING("#|",wf);
 	}
 	else{
-		sll_char_t* s=(sf->st.dt+(sf->idt.s[j].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->i)->v;
+		sll_char_t* s=(sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(sf->idt.s[j].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii)))->v;
 		sll_file_write(wf,s,j+1,NULL);
 		PRINT_STATIC_STRING("|#",wf);
 		_print_int((sf->idt.s[j].dt+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->sc,wf);

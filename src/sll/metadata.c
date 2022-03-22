@@ -1,6 +1,7 @@
 #include <sll/_internal/intrinsics.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/identifier.h>
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/types.h>
@@ -169,11 +170,11 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 			sll_identifier_list_t* l=sf->idt.s+i;
 			for (sll_identifier_list_length_t j=0;j<l->l;j++){
-				*(m+((l->dt+j)->i>>6))|=1ull<<((l->dt+j)->i&63);
+				*(m+(SLL_IDENTIFIER_GET_STRING_INDEX(l->dt+j)>>6))|=1ull<<(SLL_IDENTIFIER_GET_STRING_INDEX(l->dt+j)&63);
 			}
 		}
 		for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
-			*(m+((sf->idt.il+i)->i>>6))|=1ull<<((sf->idt.il+i)->i&63);
+			*(m+(SLL_IDENTIFIER_GET_STRING_INDEX(sf->idt.il+i)>>6))|=1ull<<(SLL_IDENTIFIER_GET_STRING_INDEX(sf->idt.il+i)&63);
 		}
 		for (sll_function_index_t i=0;i<sf->ft.l;i++){
 			sll_string_index_t j=(*(sf->ft.dt+i))->nm;
@@ -213,11 +214,11 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 			for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 				sll_identifier_list_t* e=sf->idt.s+i;
 				for (sll_identifier_list_length_t j=0;j<e->l;j++){
-					(e->dt+j)->i=*(sm+(e->dt+j)->i);
+					SLL_IDENTIFIER_UPDATE_STRING_INDEX(e->dt+j,*(sm+SLL_IDENTIFIER_GET_STRING_INDEX(e->dt+j)));
 				}
 			}
 			for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
-				(sf->idt.il+i)->i=*(sm+(sf->idt.il+i)->i);
+				SLL_IDENTIFIER_UPDATE_STRING_INDEX(sf->idt.il+i,*(sm+SLL_IDENTIFIER_GET_STRING_INDEX(sf->idt.il+i)));
 			}
 			for (sll_function_index_t i=0;i<sf->ft.l;i++){
 				if ((*(sf->ft.dt+i))->nm!=SLL_MAX_STRING_INDEX){

@@ -215,7 +215,7 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_d
 				for (sll_identifier_list_length_t j=0;j<il->l;j++){
 					*(sf_m_dt.idx_off[i]+j)=SLL_CREATE_IDENTIFIER(off+j,i);
 					(oil->dt+off+j)->sc=(il->dt+j)->sc+o->_n_sc_id;
-					(oil->dt+off+j)->i=*(sf_m_dt.sm+(il->dt+j)->i);
+					SLL_IDENTIFIER_SET_STRING_INDEX(oil->dt+off+j,*(sf_m_dt.sm+SLL_IDENTIFIER_GET_STRING_INDEX(il->dt+j)),SLL_IDENTIFIER_IS_TLS(il->dt+j));
 				}
 			}
 			if (sf->idt.ill){
@@ -226,7 +226,7 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_d
 				for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
 					*(sf_m_dt.idx_off[SLL_MAX_SHORT_IDENTIFIER_LENGTH]+i)=SLL_CREATE_IDENTIFIER(off+i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 					(o->idt.il+off+i)->sc=(sf->idt.il+i)->sc+o->_n_sc_id;
-					(o->idt.il+off+i)->i=*(sf_m_dt.sm+(sf->idt.il+i)->i);
+					SLL_IDENTIFIER_SET_STRING_INDEX(o->idt.il+off+i,*(sf_m_dt.sm+SLL_IDENTIFIER_GET_STRING_INDEX(sf->idt.il+i)),SLL_IDENTIFIER_IS_TLS(sf->idt.il+i));
 				}
 			}
 			else{

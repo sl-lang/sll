@@ -62,6 +62,55 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_IDENTIFIER_GET_STRING_INDEX
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_t* v
+ * \ret sll_string_index_t
+ */
+#define SLL_IDENTIFIER_GET_STRING_INDEX(v) ((v)->i>>1)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_IDENTIFIER_IS_TLS
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_t* v
+ * \ret sll_bool_t
+ */
+#define SLL_IDENTIFIER_IS_TLS(v) ((v)->i&1)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_IDENTIFIER_UPDATE_STRING_INDEX
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_t* v
+ * \arg sll_string_index_t si
+ */
+#define SLL_IDENTIFIER_UPDATE_STRING_INDEX(v,si) ((v)->i=((si)<<1)|((v)->i&1))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_IDENTIFIER_SET_STRING_INDEX
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_t* v
+ * \arg sll_string_index_t si
+ * \arg sll_bool_t tls
+ */
+#define SLL_IDENTIFIER_SET_STRING_INDEX(v,si,tls) ((v)->i=((si)<<1)|(!!(tls)))
+
+
+
+/**
  * \flags func
  * \name sll_identifier_add_index
  * \group identifier

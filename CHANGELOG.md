@@ -5,6 +5,7 @@
 ### Added
 
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
+- Implemented `SLL_IDENTIFIER_GET_STRING_INDEX`, `SLL_IDENTIFIER_IS_TLS`, `SLL_IDENTIFIER_UPDATE_STRING_INDEX`, `SLL_IDENTIFIER_SET_STRING_INDEX` ([#254])
 - Implemented proper parsing of unknown escape sequences
 - Operator parser is now generated from [`src/sll/data/operator_parser.txt`][0.7.10/src/sll/data/operator_parser.txt]
 - Threads, semaphores, locks and barriers are now multithreading-compatible ([#243])
@@ -2026,7 +2027,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[0.7.10/src/sll/data/operator_parser.txt]: https://github.com/sl-lang/sll/main/src/sll/data/operator_parser.txt
+[0.7.10/src/sll/data/operator_parser.txt]: https://github.com/sl-lang/sll/blob/main/src/sll/data/operator_parser.txt
 [0.7.9/src/sll/include/sll/_internal]: https:/github.com/sl-lang/sll/tree/sll-v0.7.9/src/sll/include/sll/_internal
 [0.7.8/src/sll/include/sll/_sll_internal.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.8/src/sll/include/sll/_sll_internal.h
 [0.7.8/src/sll/include/sll/platform]: https:/github.com/sl-lang/sll/tree/sll-v0.7.8/src/sll/include/sll/platform
