@@ -15,9 +15,9 @@
 			_env_lock=sll_platform_lock_create(); \
 			sll_register_cleanup(_cleanup_env); \
 		} \
-		sll_platform_lock_acquire(_env_lock); \
+		SLL_CRITICAL(sll_platform_lock_acquire(_env_lock)); \
 	} while (0)
-#define UNLOCK_ENV sll_platform_lock_release(_env_lock)
+#define UNLOCK_ENV SLL_CRITICAL(sll_platform_lock_release(_env_lock))
 
 
 
@@ -26,7 +26,7 @@ static sll_lock_handle_t _env_lock=NULL;
 
 
 static void _cleanup_env(void){
-	sll_platform_lock_delete(_env_lock);
+	SLL_CRITICAL(sll_platform_lock_delete(_env_lock));
 	_env_lock=NULL;
 }
 
