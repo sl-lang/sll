@@ -5,7 +5,7 @@
 ### Added
 
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
-- Implemented `SLL_IDENTIFIER_GET_STRING_INDEX`, `SLL_IDENTIFIER_IS_TLS`, `SLL_IDENTIFIER_UPDATE_STRING_INDEX`, `SLL_IDENTIFIER_SET_STRING_INDEX` ([#254])
+- Implemented `SLL_IDENTIFIER_GET_STRING_INDEX`, `SLL_IDENTIFIER_IS_TLS`, `SLL_IDENTIFIER_UPDATE_STRING_INDEX`, `SLL_IDENTIFIER_SET_STRING_INDEX`, `sll_identifier_get_string_index`, `sll_identifier_is_tls`, `sll_identifier_set_string_index` and `sll_identifier_update_string_index` ([#254])
 - Implemented proper parsing of unknown escape sequences
 - Operator parser is now generated from [`src/sll/data/operator_parser.txt`][0.7.10/src/sll/data/operator_parser.txt]
 - Thread-local variables can be marked with an exclemation mark (`!`) ([#254])
@@ -15,6 +15,7 @@
 
 - Fixed `sll_file_peek_char`
 - *\[Windows Only\]* Fixed `sll_platform_set_cpu`
+- Renamed `sll_identifier_create_identifier` to `sll_identifier_create`
 - Reworked the assembly optimizer
 
 ## [0.7.9] - 2022-03-19
