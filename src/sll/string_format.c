@@ -1,6 +1,7 @@
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/string_format.h>
 #include <sll/allocator.h>
+#include <sll/api/string.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/memory.h>
@@ -183,6 +184,28 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		else if (*t=='s'){
 			sll_string_t s;
 			sll_var_arg_get_string(va,&s);
+			sll_string_length_t l=s.l;
+			if (f&STRING_FORMAT_FLAG_PERCISION){
+				l=p;
+			}
+			sll_string_increase(o,(l>w?l:w));
+			w=(w<l?0:w-l);
+			if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+				sll_set_memory(o->v+o->l,w,' ');
+				o->l+=w;
+			}
+			sll_copy_data(s.v,l,o->v+o->l);
+			sll_free_string(&s);
+			o->l+=l;
+			if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+				sll_set_memory(o->v+o->l,w,' ');
+				o->l+=w;
+			}
+		}
+		else if (*t=='S'){
+			sll_object_t* obj=(sll_object_t*)sll_var_arg_get(va);
+			sll_string_t s;
+			sll_api_string_convert(&obj,1,&s);
 			sll_string_length_t l=s.l;
 			if (f&STRING_FORMAT_FLAG_PERCISION){
 				l=p;
