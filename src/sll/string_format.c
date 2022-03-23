@@ -25,7 +25,7 @@
 
 
 
-static const sll_size_t _string_pow_of_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
+static const sll_size_t _string_pow_10[]={1ull,10ull,100ull,1000ull,10000ull,100000ull,1000000ull,10000000ull,100000000ull,1000000000ull,10000000000ull,100000000000ull,1000000000000ull,10000000000000ull,100000000000000ull,1000000000000000ull,10000000000000000ull,100000000000000000ull,1000000000000000000ull,10000000000000000000ull};
 
 
 
@@ -356,7 +356,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				}
 				else if (*t!='x'&&*t!='X'){
 					sll_string_length_t sz=((FIND_LAST_SET_BIT(n)+2)*1233)>>12;
-					if (n>=_string_pow_of_10[sz]){
+					if (n>=_string_pow_10[sz]){
 						sz++;
 					}
 					SETUP_AND_JUSTIFT_RIGHT;

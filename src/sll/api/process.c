@@ -165,5 +165,5 @@ __API_FUNC(process_start){
 		sll_deallocate(*(args+i));
 	}
 	sll_deallocate(args);
-	sll_new_object_array(SLL_CHAR("aRh[sZZ]"),out,a,b,rc,c);
+	sll_new_object_array(SLL_CHAR("aOh[sZZ]"),out,a,b,rc,c);
 }
