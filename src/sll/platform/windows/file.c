@@ -40,7 +40,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sl
 					if (!ReadConsoleInput((HANDLE)fd,&ir,1,&cnt)){
 						return 0;
 					}
-
 				}
 				return 0;
 			}

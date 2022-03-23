@@ -276,7 +276,6 @@ __SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t
  * \arg const sll_map_t* m
  * \arg sll_array_t* o
  */
-
 __SLL_EXTERNAL void sll_map_keys(const sll_map_t* m,sll_array_t* o);
 
 
@@ -377,7 +376,6 @@ __SLL_EXTERNAL void sll_map_set(sll_map_t* m,sll_object_t* k,sll_object_t* v);
  * \arg sll_map_length_t i
  * \arg sll_object_t* v
  */
-
 __SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_object_t* v);
 
 

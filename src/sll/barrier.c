@@ -106,7 +106,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_barrier_increase(sll
 
 
 
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_reset(sll_barrier_index_t b){
 	if (b>=_barrier_len||(_barrier_data+b)->count==BARRIER_UNUSED){
 		return 0;

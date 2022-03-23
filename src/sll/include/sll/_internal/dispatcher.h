@@ -33,7 +33,6 @@ typedef struct __EVENT_DATA{
 
 
 
-
 #ifdef __SLL_BUILD_WINDOWS
 typedef void* raw_event_data_t;
 #else

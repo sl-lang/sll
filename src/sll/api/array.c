@@ -45,11 +45,9 @@ __API_FUNC(array_join){
 
 
 
-
 __API_FUNC(array_pop){
 	return sll_array_pop(NULL,a);
 }
-
 
 
 

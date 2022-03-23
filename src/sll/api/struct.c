@@ -7,14 +7,12 @@
 
 
 
-
 __API_FUNC(struct_float_from_bits){
 	float_data_t dt={
 		.dt=(__SLL_U32)a
 	};
 	return dt.v;
 }
-
 
 
 
@@ -27,14 +25,12 @@ __API_FUNC(struct_double_from_bits){
 
 
 
-
 __API_FUNC(struct_float_to_bits){
 	float_data_t dt={
 		.v=(float)a
 	};
 	return dt.dt;
 }
-
 
 
 
