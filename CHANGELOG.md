@@ -6,7 +6,7 @@
 
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
 - Implemented `SLL_IDENTIFIER_GET_STRING_INDEX`, `SLL_IDENTIFIER_IS_TLS`, `SLL_IDENTIFIER_UPDATE_STRING_INDEX`, `SLL_IDENTIFIER_SET_STRING_INDEX`, `sll_identifier_get_string_index`, `sll_identifier_is_tls`, `sll_identifier_set_string_index` and `sll_identifier_update_string_index` ([#254])
-- Implemented `sll_new_object` and `sll_new_object_list` ([#255])
+- Implemented `sll_new_object`, `sll_new_object_array` and `sll_new_object_list` ([#255])
 - Implemented proper parsing of unknown escape sequences
 - Operator parser is now generated from [`src/sll/data/operator_parser.txt`][0.7.10/src/sll/data/operator_parser.txt]
 - String format that converts objects to string: `S`

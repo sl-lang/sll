@@ -5,6 +5,7 @@
 #include <sll/barrier.h>
 #include <sll/common.h>
 #include <sll/lock.h>
+#include <sll/object.h>
 #include <sll/semaphore.h>
 #include <sll/static_object.h>
 #include <sll/thread.h>
@@ -39,15 +40,7 @@ __API_FUNC(thread_create_semaphore){
 
 __API_FUNC(thread_get_internal_data){
 	thread_data_t* thr=_thread_get((a<0?0:(sll_thread_index_t)a));
-	sll_array_create(2,out);
-	if (thr){
-		out->v[0]=sll_int_to_object(thr->ii);
-		out->v[1]=sll_int_to_object(thr->si);
-	}
-	else{
-		out->v[0]=SLL_ACQUIRE_STATIC_INT(0);
-		out->v[1]=SLL_ACQUIRE_STATIC_INT(0);
-	}
+	sll_new_object_array(SLL_CHAR("hh"),out,(thr?thr->ii:0),(thr?thr->si:0));
 }
 
 

@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_size_types.h>
 #include <sll/allocator.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -23,6 +24,8 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 	switch (st){
 		case '1':
 			return SLL_ACQUIRE_STATIC_INT(1);
+		case 'h':
+			return sll_int_to_object((__SLL_S32)sll_var_arg_get_int(va));
 		case 'i':
 			return sll_int_to_object(sll_var_arg_get_int(va));
 		case 'f':
@@ -41,6 +44,44 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				const sll_char_t* ptr=sll_var_arg_get(va);
 				sll_string_length_t len=(sll_string_length_t)sll_var_arg_get_int(va);
 				return (ptr&&len?sll_string_to_object_pointer(ptr,len):sll_string_to_object(NULL));
+			}
+		case 'Z':
+			return sll_string_to_object(NULL);
+		case 'a':
+			{
+				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+				const sll_array_t* ptr=sll_var_arg_get(va);
+				if (!ptr){
+					sll_array_create(0,&(o->dt.a));
+				}
+				else{
+					sll_array_clone(ptr,&(o->dt.a));
+				}
+				return o;
+			}
+		case 'A':
+			{
+				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+				sll_array_create(0,&(o->dt.a));
+				return o;
+			}
+		case 'm':
+			{
+				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+				const sll_map_t* ptr=sll_var_arg_get(va);
+				if (!ptr){
+					sll_map_create(0,&(o->dt.m));
+				}
+				else{
+					sll_map_clone(ptr,&(o->dt.m));
+				}
+				return o;
+			}
+		case 'M':
+			{
+				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+				sll_map_create(0,&(o->dt.m));
+				return o;
 			}
 		case '[':
 			{
@@ -109,6 +150,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object(const sll_char_t*
 	sll_object_t* o=sll_new_object_list(t,sll_string_length_unaligned(t),&dt);
 	va_end(va);
 	return o;
+}
+
+
+
+__SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...){
+	va_list va;
+	va_start(va,o);
+	sll_var_arg_list_t dt={
+		SLL_VAR_ARG_LIST_TYPE_C,
+		{
+			.c=&va
+		}
+	};
+	sll_array_create(0,o);
+	sll_string_length_t tl=sll_string_length_unaligned(t);
+	while (tl){
+		o->l++;
+		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
+		o->v[o->l-1]=_build_single(&t,&tl,&dt);
+	}
+	va_end(va);
 }
 
 

@@ -4,13 +4,8 @@
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
-#include <sll/static_object.h>
+#include <sll/object.h>
 #include <sll/types.h>
-
-
-
-#define u32 __SLL_U32
-#define u64 __SLL_U64
 
 
 
@@ -48,12 +43,12 @@
 
 __SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* bf,sll_file_offset_t bfl){
 	SLL_ASSERT(!(bfl&63));
-	const u32* ptr=(const u32*)bf;
+	const __SLL_U32* ptr=(const __SLL_U32*)bf;
 	for (sll_file_offset_t i=0;i<(bfl>>6);i++){
-		u32 a=dt->a;
-		u32 b=dt->b;
-		u32 c=dt->c;
-		u32 d=dt->d;
+		__SLL_U32 a=dt->a;
+		__SLL_U32 b=dt->b;
+		__SLL_U32 c=dt->c;
+		__SLL_U32 d=dt->d;
 		MD5_STEP(a,b,c,d,0,7,(*ptr)+0xd76aa478);
 		MD5_STEP(d,a,b,c,0,12,(*(ptr+1))+0xe8c7b756);
 		MD5_STEP(c,d,a,b,0,17,(*(ptr+2))+0x242070db);
@@ -130,8 +125,8 @@ __SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* bf,sll_file_offset_t b
 
 __SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_file_offset_t bfl){
 	SLL_ASSERT(!(bfl&63));
-	u32 w[80];
-	const u32* ptr=(const u32*)bf;
+	__SLL_U32 w[80];
+	const __SLL_U32* ptr=(const __SLL_U32*)bf;
 	for (sll_file_offset_t i=0;i<(bfl>>6);i++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
@@ -140,11 +135,11 @@ __SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_file_offset_t
 		for (unsigned int j=16;j<80;j++){
 			w[j]=ROTATE_BITS(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);
 		}
-		u32 a=dt->a;
-		u32 b=dt->b;
-		u32 c=dt->c;
-		u32 d=dt->d;
-		u32 e=dt->e;
+		__SLL_U32 a=dt->a;
+		__SLL_U32 b=dt->b;
+		__SLL_U32 c=dt->c;
+		__SLL_U32 d=dt->d;
+		__SLL_U32 e=dt->e;
 		SHA1_STEP(a,b,c,d,e,0,w[0]);
 		SHA1_STEP(e,a,b,c,d,0,w[1]);
 		SHA1_STEP(d,e,a,b,c,0,w[2]);
@@ -237,8 +232,8 @@ __SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_file_offset_t
 
 __SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_file_offset_t bfl){
 	SLL_ASSERT(!(bfl&63));
-	u32 w[64];
-	const u32* ptr=(const u32*)bf;
+	__SLL_U32 w[64];
+	const __SLL_U32* ptr=(const __SLL_U32*)bf;
 	for (sll_file_offset_t idx=0;idx<(bfl>>6);idx++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
@@ -247,15 +242,15 @@ __SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_file_offs
 		for (unsigned int j=16;j<64;j++){
 			w[j]=(ROTATE_BITS_RIGHT(w[j-2],17)^ROTATE_BITS_RIGHT(w[j-2],19)^(w[j-2]>>10))+w[j-7]+(ROTATE_BITS_RIGHT(w[j-15],7)^ROTATE_BITS_RIGHT(w[j-15],18)^(w[j-15]>>3))+w[j-16];
 		}
-		u32 a=dt->a;
-		u32 b=dt->b;
-		u32 c=dt->c;
-		u32 d=dt->d;
-		u32 e=dt->e;
-		u32 f=dt->f;
-		u32 g=dt->g;
-		u32 h=dt->h;
-		u32 t;
+		__SLL_U32 a=dt->a;
+		__SLL_U32 b=dt->b;
+		__SLL_U32 c=dt->c;
+		__SLL_U32 d=dt->d;
+		__SLL_U32 e=dt->e;
+		__SLL_U32 f=dt->f;
+		__SLL_U32 g=dt->g;
+		__SLL_U32 h=dt->h;
+		__SLL_U32 t;
 		SHA256_STEP(a,b,c,d,e,f,g,h,w[0]+0x428a2f98);
 		SHA256_STEP(h,a,b,c,d,e,f,g,w[1]+0x71374491);
 		SHA256_STEP(g,h,a,b,c,d,e,f,w[2]+0xb5c0fbcf);
@@ -335,8 +330,8 @@ __SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_file_offs
 
 __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offset_t bfl){
 	SLL_ASSERT(!(bfl&127));
-	u64 w[80];
-	const u64* ptr=(const u64*)bf;
+	__SLL_U64 w[80];
+	const __SLL_U64* ptr=(const __SLL_U64*)bf;
 	for (sll_file_offset_t idx=0;idx<(bfl>>7);idx++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES64(*ptr);
@@ -345,15 +340,15 @@ __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offs
 		for (unsigned int j=16;j<80;j++){
 			w[j]=(ROTATE_BITS_RIGHT64(w[j-2],19)^ROTATE_BITS_RIGHT64(w[j-2],61)^(w[j-2]>>6))+w[j-7]+(ROTATE_BITS_RIGHT64(w[j-15],1)^ROTATE_BITS_RIGHT64(w[j-15],8)^(w[j-15]>>7))+w[j-16];
 		}
-		u64 a=dt->a;
-		u64 b=dt->b;
-		u64 c=dt->c;
-		u64 d=dt->d;
-		u64 e=dt->e;
-		u64 f=dt->f;
-		u64 g=dt->g;
-		u64 h=dt->h;
-		u64 t;
+		__SLL_U64 a=dt->a;
+		__SLL_U64 b=dt->b;
+		__SLL_U64 c=dt->c;
+		__SLL_U64 d=dt->d;
+		__SLL_U64 e=dt->e;
+		__SLL_U64 f=dt->f;
+		__SLL_U64 g=dt->g;
+		__SLL_U64 h=dt->h;
+		__SLL_U64 t;
 		SHA512_STEP(a,b,c,d,e,f,g,h,w[0]+0x428a2f98d728ae22ull);
 		SHA512_STEP(h,a,b,c,d,e,f,g,w[1]+0x7137449123ef65cdull);
 		SHA512_STEP(g,h,a,b,c,d,e,f,w[2]+0xb5c0fbcfec4d3b2full);
@@ -449,84 +444,59 @@ __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offs
 
 __API_FUNC(hash_md5){
 	sll_md5_data_t dt={
-		(u32)a,
-		(u32)b,
-		(u32)c,
-		(u32)d
+		(__SLL_U32)a,
+		(__SLL_U32)b,
+		(__SLL_U32)c,
+		(__SLL_U32)d
 	};
 	sll_hash_md5(&dt,e->v,e->l);
-	sll_array_create(4,out);
-	out->v[0]=sll_int_to_object(dt.a);
-	out->v[1]=sll_int_to_object(dt.b);
-	out->v[2]=sll_int_to_object(dt.c);
-	out->v[3]=sll_int_to_object(dt.d);
+	sll_new_object_array(SLL_CHAR("hhhh"),out,dt.a,dt.b,dt.c,dt.d);
 }
 
 
 
 __API_FUNC(hash_sha1){
 	sll_sha1_data_t dt={
-		(u32)a,
-		(u32)b,
-		(u32)c,
-		(u32)d,
-		(u32)e
+		(__SLL_U32)a,
+		(__SLL_U32)b,
+		(__SLL_U32)c,
+		(__SLL_U32)d,
+		(__SLL_U32)e
 	};
 	sll_hash_sha1(&dt,f->v,f->l);
-	sll_array_create(5,out);
-	out->v[0]=sll_int_to_object(dt.a);
-	out->v[1]=sll_int_to_object(dt.b);
-	out->v[2]=sll_int_to_object(dt.c);
-	out->v[3]=sll_int_to_object(dt.d);
-	out->v[4]=sll_int_to_object(dt.e);
+	sll_new_object_array(SLL_CHAR("hhhhh"),out,dt.a,dt.b,dt.c,dt.d,dt.e);
 }
 
 
 
 __API_FUNC(hash_sha256){
 	sll_sha256_data_t dt={
-		(u32)a,
-		(u32)b,
-		(u32)c,
-		(u32)d,
-		(u32)e,
-		(u32)f,
-		(u32)g,
-		(u32)h
+		(__SLL_U32)a,
+		(__SLL_U32)b,
+		(__SLL_U32)c,
+		(__SLL_U32)d,
+		(__SLL_U32)e,
+		(__SLL_U32)f,
+		(__SLL_U32)g,
+		(__SLL_U32)h
 	};
 	sll_hash_sha256(&dt,i->v,i->l);
-	sll_array_create(8,out);
-	out->v[0]=sll_int_to_object(dt.a);
-	out->v[1]=sll_int_to_object(dt.b);
-	out->v[2]=sll_int_to_object(dt.c);
-	out->v[3]=sll_int_to_object(dt.d);
-	out->v[4]=sll_int_to_object(dt.e);
-	out->v[5]=sll_int_to_object(dt.f);
-	out->v[6]=sll_int_to_object(dt.g);
-	out->v[7]=sll_int_to_object(dt.h);
+	sll_new_object_array(SLL_CHAR("hhhhhhhh"),out,dt.a,dt.b,dt.c,dt.d,dt.e,dt.f,dt.g,dt.h);
 }
 
 
 
 __API_FUNC(hash_sha512){
 	sll_sha512_data_t dt={
-		(u64)a,
-		(u64)b,
-		(u64)c,
-		(u64)d,
-		(u64)e,
-		(u64)f,
-		(u64)g,
-		(u64)h
+		(__SLL_U64)a,
+		(__SLL_U64)b,
+		(__SLL_U64)c,
+		(__SLL_U64)d,
+		(__SLL_U64)e,
+		(__SLL_U64)f,
+		(__SLL_U64)g,
+		(__SLL_U64)h
 	};
 	sll_hash_sha512(&dt,i->v,i->l);
-	sll_array_create(8,out);
-	out->v[0]=sll_int_to_object(dt.a);
-	out->v[1]=sll_int_to_object(dt.b);
-	out->v[2]=sll_int_to_object(dt.c);
-	out->v[3]=sll_int_to_object(dt.d);
-	out->v[4]=sll_int_to_object(dt.e);
-	out->v[5]=sll_int_to_object(dt.f);
-	out->v[6]=sll_int_to_object(dt.g);
-	out->v[7]=sll_int_to_object(dt.h);
+	sll_new_object_array(SLL_CHAR("iiiiiiii"),out,dt.a,dt.b,dt.c,dt.d,dt.e,dt.f,dt.g,dt.h);
 }

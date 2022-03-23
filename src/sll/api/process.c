@@ -27,24 +27,6 @@ static const bitmap_t _process_quote_chars[4]={
 
 
 
-static void _create_process_object(const sll_array_t* arg,sll_object_t* cfg,sll_return_code_t rc,const sll_string_t* in,const sll_string_t* out,const sll_string_t* err,sll_array_t* o){
-	sll_object_t* oa=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	sll_array_clone(arg,&(oa->dt.a));
-	sll_object_t* std=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	sll_array_create(3,&(std->dt.a));
-	std->dt.a.v[0]=sll_string_to_object(in);
-	std->dt.a.v[1]=sll_string_to_object(out);
-	std->dt.a.v[2]=sll_string_to_object(err);
-	sll_array_create(4,o);
-	SLL_ACQUIRE(cfg);
-	o->v[0]=oa;
-	o->v[1]=cfg;
-	o->v[2]=sll_int_to_object(rc);
-	o->v[3]=std;
-}
-
-
-
 __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t* o){
 	sll_string_create(0,o);
 	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
@@ -151,8 +133,7 @@ __API_FUNC(process_split){
 
 __API_FUNC(process_start){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!a->l){
-		sll_string_t empty=SLL_INIT_STRING_STRUCT;
-		_create_process_object(a,b,0,c,&empty,&empty,out);
+		sll_new_object_array(SLL_CHAR("aR0[sZZ]"),out,a,b,c);
 		return;
 	}
 	sll_char_t** args=sll_allocate((a->l+1)*sizeof(sll_char_t*));
@@ -185,6 +166,5 @@ __API_FUNC(process_start){
 		sll_deallocate(*(args+i));
 	}
 	sll_deallocate(args);
-	sll_string_t empty=SLL_INIT_STRING_STRUCT;
-	_create_process_object(a,b,rc,c,&empty,&empty,out);
+	sll_new_object_array(SLL_CHAR("aRh[sZZ]"),out,a,b,rc,c);
 }

@@ -103,8 +103,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 __API_FUNC(sys_get_args){
 	sll_array_create(_sys_argc,out);
 	for (sll_array_length_t i=0;i<_sys_argc;i++){
-		sll_object_t* n=sll_string_to_object(_sys_argv+i);
-		out->v[i]=n;
+		out->v[i]=sll_string_to_object(_sys_argv+i);
 	}
 }
 
@@ -156,16 +155,11 @@ __API_FUNC(sys_get_sandbox_flags){
 
 
 __API_FUNC(sys_get_version){
-	sll_array_create(5,out);
-	out->v[0]=sll_int_to_object(SLL_VERSION_MAJOR);
-	out->v[1]=sll_int_to_object(SLL_VERSION_MINOR);
-	out->v[2]=sll_int_to_object(SLL_VERSION_PATCH);
 #if SLL_VERSION_HAS_SHA
-	out->v[3]=sll_string_to_object(&_sys_full_commit);
+	sll_new_object_array(SLL_CHAR("hhhsi"),out,SLL_VERSION_MAJOR,SLL_VERSION_MINOR,SLL_VERSION_PATCH,&_sys_full_commit,SLL_VERSION_BUILD_TIME);
 #else
-	out->v[3]=sll_string_to_object(NULL);
+	sll_new_object_array(SLL_CHAR("hhhZi"),out,SLL_VERSION_MAJOR,SLL_VERSION_MINOR,SLL_VERSION_PATCH,SLL_VERSION_BUILD_TIME);
 #endif
-	out->v[4]=sll_int_to_object(SLL_VERSION_BUILD_TIME);
 }
 
 

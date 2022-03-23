@@ -291,6 +291,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object(const sll_char_t*
 
 
 /**
+ * \flags func var_arg
+ * \name sll_new_object_array
+ * \group object
+ * \desc Docs!
+ * \arg const sll_char_t* t
+ * \arg sll_array_t* o
+ */
+__SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...);
+
+
+
+/**
  * \flags check_output func
  * \name sll_new_object_list
  * \group object

@@ -29,12 +29,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_
 
 
 __API_FUNC(vm_get_config){
-	sll_array_create(5,out);
-	out->v[0]=sll_int_to_object(sll_current_vm_config->s_sz);
-	out->v[1]=sll_int_to_object(sll_current_vm_config->c_st_sz);
-	out->v[2]=sll_int_to_object(sll_file_to_handle(sll_current_vm_config->in));
-	out->v[3]=sll_int_to_object(sll_file_to_handle(sll_current_vm_config->out));
-	out->v[4]=sll_int_to_object(sll_file_to_handle(sll_current_vm_config->err));
+	sll_new_object_array(SLL_CHAR("iiiii"),out,sll_current_vm_config->s_sz,sll_current_vm_config->c_st_sz,sll_file_to_handle(sll_current_vm_config->in),sll_file_to_handle(sll_current_vm_config->out),sll_file_to_handle(sll_current_vm_config->err));
 }
 
 

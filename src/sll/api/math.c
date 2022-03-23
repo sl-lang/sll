@@ -299,18 +299,10 @@ __API_FUNC(math_factors){
 	sll_factor_t* dt=sll_math_factors(a,&l);
 	sll_array_create(l+neg,out);
 	if (neg){
-		sll_object_t* n=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-		sll_array_create(2,&(n->dt.a));
-		n->dt.a.v[0]=SLL_ACQUIRE_STATIC_NEG_INT(1);
-		n->dt.a.v[1]=SLL_ACQUIRE_STATIC_INT(1);
-		out->v[0]=n;
+		out->v[0]=sll_new_object(SLL_CHAR("[hh]"),-1,1);
 	}
 	for (sll_array_length_t i=0;i<l;i++){
-		sll_object_t* n=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-		sll_array_create(2,&(n->dt.a));
-		n->dt.a.v[0]=sll_int_to_object((dt+i)->n);
-		n->dt.a.v[1]=sll_int_to_object((dt+i)->pw);
-		out->v[i+neg]=n;
+		out->v[i+neg]=sll_new_object(SLL_CHAR("[ii]"),(dt+i)->n,(dt+i)->pw);
 	}
 	sll_deallocate(dt);
 }
