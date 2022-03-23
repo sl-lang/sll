@@ -124,12 +124,9 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case 'O':
 		case 'N':
 			{
-				sll_object_t* o=(sll_object_t*)sll_var_arg_get(va);
-				if (!o){
-					return SLL_ACQUIRE_STATIC_INT(0);
-				}
-				if (st=='O'){
-					SLL_ACQUIRE(o);
+				sll_object_t* o=sll_var_arg_get_object(va);
+				if (st=='N'){
+					sll_release_object(o);
 				}
 				return o;
 			}
@@ -182,6 +179,9 @@ __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...)
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_char_t* t,sll_string_length_t tl,sll_var_arg_list_t* va){
 	if (!tl){
 		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_SLL){
+		SLL_UNIMPLEMENTED();
 	}
 	sll_object_t* e=_build_single(&t,&tl,va);
 	if (!tl){
