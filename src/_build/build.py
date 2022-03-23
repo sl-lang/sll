@@ -34,7 +34,7 @@ def build_sll(fl,v,r):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking Files (Release Mode)...")
-			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE","bcrypt.lib","advapi32.lib"]+out_fl)):
+			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE","advapi32.lib","bcrypt.lib"]+out_fl)):
 				sys.exit(1)
 		else:
 			util.log("  Compiling Files...")
@@ -49,7 +49,7 @@ def build_sll(fl,v,r):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking Files...")
-			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","/PDB:build/sll.pdb","bcrypt.lib","advapi32.lib"]+out_fl)):
+			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","/PDB:build/sll.pdb","advapi32.lib","bcrypt.lib"]+out_fl)):
 				sys.exit(1)
 	else:
 		def_l.extend(["_GNU_SOURCE"])

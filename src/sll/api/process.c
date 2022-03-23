@@ -135,7 +135,7 @@ __API_FUNC(process_split){
 
 __API_FUNC(process_start){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!a->l){
-		sll_new_object_array(SLL_CHAR("aR0[sZZ]"),out,a,b,c);
+		sll_new_object_array(SLL_CHAR("aO0[sZZ]"),out,a,b,c);
 		return;
 	}
 	sll_char_t** args=sll_allocate((a->l+1)*sizeof(sll_char_t*));

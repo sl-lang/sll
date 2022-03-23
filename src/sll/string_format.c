@@ -29,6 +29,28 @@ static const sll_size_t _string_pow_of_10[]={1ull,10ull,100ull,1000ull,10000ull,
 
 
 
+static void _format_string(unsigned int f,unsigned int w,unsigned int p,sll_string_t* s,sll_string_t* o){
+	sll_string_length_t l=s->l;
+	if (f&STRING_FORMAT_FLAG_PERCISION){
+		l=p;
+	}
+	sll_string_increase(o,(l>w?l:w));
+	w=(w<l?0:w-l);
+	if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+		sll_set_memory(o->v+o->l,w,' ');
+		o->l+=w;
+	}
+	sll_copy_data(s->v,l,o->v+o->l);
+	sll_free_string(s);
+	o->l+=l;
+	if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
+		sll_set_memory(o->v+o->l,w,' ');
+		o->l+=w;
+	}
+}
+
+
+
 __SLL_EXTERNAL void sll_string_format(const sll_char_t* t,sll_string_t* o,...){
 	va_list va;
 	va_start(va,o);
@@ -184,23 +206,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		else if (*t=='s'){
 			sll_string_t s;
 			sll_var_arg_get_string(va,&s);
-			sll_string_length_t l=s.l;
-			if (f&STRING_FORMAT_FLAG_PERCISION){
-				l=p;
-			}
-			sll_string_increase(o,(l>w?l:w));
-			w=(w<l?0:w-l);
-			if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-				sll_set_memory(o->v+o->l,w,' ');
-				o->l+=w;
-			}
-			sll_copy_data(s.v,l,o->v+o->l);
-			sll_free_string(&s);
-			o->l+=l;
-			if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-				sll_set_memory(o->v+o->l,w,' ');
-				o->l+=w;
-			}
+			_format_string(f,w,p,&s,o);
 		}
 		else if (*t=='S'){
 			sll_object_t* obj=(sll_object_t*)sll_var_arg_get(va);
@@ -211,23 +217,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			else{
 				sll_string_create(0,&s);
 			}
-			sll_string_length_t l=s.l;
-			if (f&STRING_FORMAT_FLAG_PERCISION){
-				l=p;
-			}
-			sll_string_increase(o,(l>w?l:w));
-			w=(w<l?0:w-l);
-			if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-				sll_set_memory(o->v+o->l,w,' ');
-				o->l+=w;
-			}
-			sll_copy_data(s.v,l,o->v+o->l);
-			sll_free_string(&s);
-			o->l+=l;
-			if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-				sll_set_memory(o->v+o->l,w,' ');
-				o->l+=w;
-			}
+			_format_string(f,w,p,&s,o);
 		}
 		else if (*t=='d'||*t=='o'||*t=='u'||*t=='x'||*t=='X'){
 			if (*t=='X'){

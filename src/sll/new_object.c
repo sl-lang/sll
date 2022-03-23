@@ -121,13 +121,13 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				return o;
 			}
 		case 'O':
-		case 'R':
+		case 'N':
 			{
 				sll_object_t* o=(sll_object_t*)sll_var_arg_get(va);
 				if (!o){
 					return SLL_ACQUIRE_STATIC_INT(0);
 				}
-				if (st=='R'){
+				if (st=='O'){
 					SLL_ACQUIRE(o);
 				}
 				return o;
