@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/static_string.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
 #include <sll/api/process.h>
@@ -18,6 +19,7 @@
 
 
 
+static __STATIC_STRING(_process_flags_field,"flags");
 static const bitmap_t _process_quote_chars[4]={
 	0xd80087dfffffffffull,// %+,-.0123456789:=
 	0xf800000178000000ull,// @ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
@@ -144,10 +146,7 @@ __API_FUNC(process_start){
 		sll_release_object(n);
 	}
 	*(args+a->l)=NULL;
-	sll_string_t nm;
-	sll_string_from_pointer(SLL_CHAR("flags"),&nm);
-	sll_object_t* fl=sll_object_get_field(sll_current_runtime_data->tt,b,&nm);
-	sll_free_string(&nm);
+	sll_object_t* fl=sll_object_get_field(sll_current_runtime_data->tt,b,&_process_flags_field);
 	SLL_ASSERT(SLL_OBJECT_GET_TYPE(fl)==SLL_OBJECT_TYPE_INT);
 	if (fl->dt.i&(SLL_PROCESS_FLAG_PASS_STDIN|SLL_PROCESS_FLAG_CAPTURE_STDOUT|SLL_PROCESS_FLAG_CAPTURE_STDERR)){
 		SLL_UNIMPLEMENTED();
