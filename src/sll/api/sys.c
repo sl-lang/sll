@@ -16,7 +16,7 @@
 #include <sll/init.h>
 #include <sll/map.h>
 #include <sll/memory.h>
-#include <sll/object.h>
+#include <sll/new_object.h>
 #include <sll/platform/file.h>
 #include <sll/platform/library.h>
 #include <sll/platform/path.h>

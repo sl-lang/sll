@@ -4,7 +4,7 @@
 #include <sll/api/vm.h>
 #include <sll/array.h>
 #include <sll/common.h>
-#include <sll/object.h>
+#include <sll/new_object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/thread.h>

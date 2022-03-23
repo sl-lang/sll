@@ -1,4 +1,3 @@
-#include <math.h>
 #include <sll/_internal/api.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/util.h>
@@ -7,9 +6,10 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/memory.h>
-#include <sll/object.h>
+#include <sll/new_object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>
+#include <math.h>
 
 
 

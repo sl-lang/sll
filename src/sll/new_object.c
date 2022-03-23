@@ -5,6 +5,7 @@
 #include <sll/common.h>
 #include <sll/map.h>
 #include <sll/memory.h>
+#include <sll/new_object.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
@@ -33,7 +34,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case 'c':
 			return sll_char_to_object(sll_var_arg_get_char(va));
 		case 's':
-			return sll_string_to_object((const sll_string_t*)sll_var_arg_get(va));
+			return sll_string_to_object(sll_var_arg_get(va));
 		case 'S':
 			{
 				const sll_char_t* ptr=sll_var_arg_get(va);
@@ -155,6 +156,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object(const sll_char_t*
 
 
 __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...){
+	sll_string_length_t tl=sll_string_length_unaligned(t);
+	sll_array_create(0,o);
+	if (!tl){
+		return;
+	}
 	va_list va;
 	va_start(va,o);
 	sll_var_arg_list_t dt={
@@ -163,8 +169,6 @@ __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...)
 			.c=&va
 		}
 	};
-	sll_array_create(0,o);
-	sll_string_length_t tl=sll_string_length_unaligned(t);
 	while (tl){
 		o->l++;
 		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));

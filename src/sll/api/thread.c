@@ -5,7 +5,7 @@
 #include <sll/barrier.h>
 #include <sll/common.h>
 #include <sll/lock.h>
-#include <sll/object.h>
+#include <sll/new_object.h>
 #include <sll/semaphore.h>
 #include <sll/static_object.h>
 #include <sll/thread.h>
