@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/scheduler.h>
+#include <sll/_internal/static_string.h>
 #include <sll/api.h>
 #include <sll/api/file.h>
 #include <sll/array.h>
@@ -14,16 +15,15 @@
 
 
 
+static __STATIC_STRING(_vm_code_name,"@code");
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_instruction_index_t ii){
 	sll_string_index_t fp_i;
 	sll_string_index_t fn_i;
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,ii,&fp_i,&fn_i);
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	sll_array_create(3,&(o->dt.a));
-	o->dt.a.v[0]=sll_string_to_object(sll_current_runtime_data->a_dt->st.dt+fp_i);
-	o->dt.a.v[1]=sll_int_to_object(ln);
-	o->dt.a.v[2]=(fn_i==SLL_MAX_STRING_INDEX?sll_string_to_object_pointer(SLL_CHAR("@code"),SLL_MAX_STRING_LENGTH):sll_string_to_object(sll_current_runtime_data->a_dt->st.dt+fn_i));
-	return o;
+	return sll_new_object(SLL_CHAR("[sis]"),sll_current_runtime_data->a_dt->st.dt+fp_i,ln,(fn_i==SLL_MAX_STRING_INDEX?&_vm_code_name:sll_current_runtime_data->a_dt->st.dt+fn_i));
 }
 
 

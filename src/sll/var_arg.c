@@ -12,10 +12,10 @@
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT const void* sll_var_arg_get(sll_var_arg_list_t* va){
 	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		return va_arg(*(va->dt.c),void*);
+		return va_arg(*(va->dt.c),const void*);
 	}
 	if (!va->dt.sll.l){
-		return 0;
+		return NULL;
 	}
 	const void* o=*(va->dt.sll.p);
 	va->dt.sll.p++;

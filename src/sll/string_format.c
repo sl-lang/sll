@@ -205,7 +205,12 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		else if (*t=='S'){
 			sll_object_t* obj=(sll_object_t*)sll_var_arg_get(va);
 			sll_string_t s;
-			sll_api_string_convert(&obj,1,&s);
+			if (obj){
+				sll_api_string_convert(&obj,1,&s);
+			}
+			else{
+				sll_string_create(0,&s);
+			}
 			sll_string_length_t l=s.l;
 			if (f&STRING_FORMAT_FLAG_PERCISION){
 				l=p;

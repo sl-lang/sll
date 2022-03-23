@@ -279,6 +279,32 @@ __SLL_EXTERNAL void sll_get_type_name(sll_object_type_table_t* tt,sll_object_typ
 
 
 /**
+ * \flags check_output func var_arg
+ * \name sll_new_object
+ * \group object
+ * \desc Docs!
+ * \arg const sll_char_t* t
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object(const sll_char_t* t,...);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_new_object_list
+ * \group object
+ * \desc Docs!
+ * \arg const sll_char_t* t
+ * \arg sll_string_length_t tl
+ * \arg sll_var_arg_list_t* va
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_char_t* t,sll_string_length_t tl,sll_var_arg_list_t* va);
+
+
+
+/**
  * \flags check_output func
  * \name sll_object_clone
  * \group object
