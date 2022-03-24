@@ -59,9 +59,9 @@
 
 
 
-__SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,sll_bool_t var_arg,...){
+__SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_bool_t var_arg,sll_object_t*const* al,sll_arg_count_t all,...){
 	va_list va;
-	va_start(va,var_arg);
+	va_start(va,all);
 	SKIP_WHITESPACE;
 	while (*t){
 		void* ptr=va_arg(va,void*);

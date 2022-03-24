@@ -61,11 +61,11 @@
  * \group parse-args
  * \desc Docs!
  * \arg const sll_char_t* t
+ * \arg sll_bool_t var_arg
  * \arg sll_object_t*const* al
  * \arg sll_arg_count_t all
- * \arg sll_bool_t var_arg
  */
-__SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,sll_bool_t var_arg,...);
+__SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_bool_t var_arg,sll_object_t*const* al,sll_arg_count_t all,...);
 
 
 
