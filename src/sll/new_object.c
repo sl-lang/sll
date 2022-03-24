@@ -52,6 +52,12 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			return sll_float_to_object(sll_var_arg_get_float(va));
 		case 'c':
 			return sll_char_to_object(sll_var_arg_get_char(va));
+		case 'C':
+			{
+				sll_char_t c=sll_var_arg_get_char(va);
+				sll_object_t* o=sll_string_to_object_pointer(&c,1);
+				return o;
+			}
 		case 's':
 			return sll_string_to_object(sll_var_arg_get(va));
 		case 'S':
@@ -103,16 +109,21 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				sll_map_create(0,&(o->dt.m));
 				return o;
 			}
+		case '(':
 		case '[':
 			{
+				sll_char_t ec=(st=='('?')':']');
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_array_create(0,&(o->dt.a));
 				SKIP_WHITESPACE;
-				while (tl&&**t!=']'){
+				while (tl&&**t!=ec){
 					o->dt.a.l++;
 					sll_allocator_resize((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 					o->dt.a.v[o->dt.a.l-1]=_build_single(t,tl,va);
 					SKIP_WHITESPACE;
+				}
+				if (st=='('){
+					sll_allocator_collapse((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 				}
 				if (tl){
 					(*tl)--;
@@ -177,6 +188,12 @@ static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t*
 			return sll_float_to_object(sll_var_arg_get_float(va));
 		case 'c':
 			return sll_char_to_object(sll_var_arg_get_char(va));
+		case 'C':
+			{
+				sll_char_t c=sll_var_arg_get_char(va);
+				sll_object_t* o=sll_string_to_object_pointer(&c,1);
+				return o;
+			}
 		case 's':
 			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_STRING);
 		case 'Z':
@@ -197,16 +214,21 @@ static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t*
 				sll_map_create(0,&(o->dt.m));
 				return o;
 			}
+		case '(':
 		case '[':
 			{
+				sll_char_t ec=(st=='('?')':']');
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_array_create(0,&(o->dt.a));
 				SKIP_WHITESPACE;
-				while (tl&&**t!=']'){
+				while (tl&&**t!=ec){
 					o->dt.a.l++;
 					sll_allocator_resize((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 					o->dt.a.v[o->dt.a.l-1]=_build_single_sll(t,tl,va);
 					SKIP_WHITESPACE;
+				}
+				if (st=='('){
+					sll_allocator_collapse((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 				}
 				if (tl){
 					(*tl)--;
@@ -281,6 +303,7 @@ __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...)
 		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
 		o->v[o->l-1]=_build_single(&t,&tl,&dt);
 	}
+	sll_allocator_collapse((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
 	va_end(va);
 }
 
@@ -303,5 +326,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_ch
 		sll_allocator_resize((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 		o->dt.a.v[o->dt.a.l-1]=fn(&t,&tl,va);
 	} while (tl);
+	sll_allocator_collapse((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 	return o;
 }

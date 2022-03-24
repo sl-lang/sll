@@ -135,7 +135,7 @@ __API_FUNC(process_split){
 
 __API_FUNC(process_start){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!a->l){
-		sll_new_object_array(SLL_CHAR("a[si]0[sZZ]"),out,a,b,c,d);
+		sll_new_object_array(SLL_CHAR("a(si)0(sZZ)"),out,a,b,c,d);
 		return;
 	}
 	sll_char_t** args=sll_allocate((a->l+1)*sizeof(sll_char_t*));
@@ -159,5 +159,5 @@ __API_FUNC(process_start){
 		sll_deallocate(*(args+i));
 	}
 	sll_deallocate(args);
-	sll_new_object_array(SLL_CHAR("a[si]h[sZZ]"),out,a,b,c,rc,d);
+	sll_new_object_array(SLL_CHAR("a(si)h(sZZ)"),out,a,b,c,rc,d);
 }

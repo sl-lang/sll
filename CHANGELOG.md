@@ -5,6 +5,7 @@
 ### Added
 
 - Implemented `object.sll` and `object$new` ([#255])
+- Implemented `sll_allocator_collapse`
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
 - Implemented `SLL_IDENTIFIER_GET_STRING_INDEX`, `SLL_IDENTIFIER_IS_TLS`, `SLL_IDENTIFIER_UPDATE_STRING_INDEX`, `SLL_IDENTIFIER_SET_STRING_INDEX`, `sll_identifier_get_string_index`, `sll_identifier_is_tls`, `sll_identifier_set_string_index` and `sll_identifier_update_string_index` ([#254])
 - Implemented `sll_new_object`, `sll_new_object_array` and `sll_new_object_list` ([#255])

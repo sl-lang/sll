@@ -25,6 +25,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_from_memory(void* ptr,sll_
 
 
 /**
+ * \flags func
+ * \name sll_allocator_collapse
+ * \group allocator
+ * \desc Docs!
+ * \arg void** a
+ * \arg sll_size_t sz
+ */
+__SLL_EXTERNAL void sll_allocator_collapse(void** a,sll_size_t sz);
+
+
+
+/**
  * \flags check_output func
  * \name sll_allocator_init
  * \group allocator
