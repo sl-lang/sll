@@ -1,0 +1,18 @@
+(--- "types.sll")
+
+
+
+(= object_module_type (&:
+	(~ func_type) new
+))
+
+
+
+(= new (... "sll:object_new"))
+
+
+
+(= object (. object_module_type
+	new
+))
+(## object)

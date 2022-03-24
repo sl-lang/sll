@@ -2094,6 +2094,38 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_object_new __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_object_new sll_string_t* a,sll_object_t*const* b,sll_arg_count_t bc
+/**
+ * \flags func
+ * \name sll_api_object_new
+ * \group object-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \arg sll_object_t*const* b -> 
+ * \arg sll_arg_count_t bc
+ * \ret sll_object_t*
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_object_new_raw
+ * \group raw-api
+ * \subgroup raw-api-object-api
+ * \desc Wrapper function for :sll_api_object_new:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Object
+ * \group raw-api
+ * \subgroup raw-api-object-api
+ * \desc Docs!
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_path_absolute void
 #define __SLL_API_ARGS_sll_api_path_absolute sll_string_t* a,sll_string_t* out
 /**

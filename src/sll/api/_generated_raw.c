@@ -3373,6 +3373,38 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_tanh_raw(sll_object
 
 
 
+__SLL_API_TYPE_sll_api_object_new sll_api_object_new(__SLL_API_ARGS_sll_api_object_new);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_object_new_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a=NULL;
+	if (all>0){
+		a=*(al+0);
+		if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(a);
+		}
+		else{
+			a=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		a=sll_string_to_object(NULL);
+	}
+	sll_arg_count_t bc=(all>1?all-1:0);
+	sll_object_t*const* b=al+1;
+	sll_arg_count_t idx=0;
+	for (;idx<all;idx++){
+		GC_LOCK(*(al+idx));
+	}
+	sll_object_t* out=sll_api_object_new(&(a->dt.s),b,bc);
+	while (idx){
+		idx--;
+		GC_UNLOCK(*(al+idx));
+	}
+	sll_release_object(a);
+	return out;
+}
+
+
+
 __SLL_API_TYPE_sll_api_path_absolute sll_api_path_absolute(__SLL_API_ARGS_sll_api_path_absolute);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_absolute_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a=NULL;
@@ -6868,6 +6900,10 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_math_tanh_raw
 	},
 	{
+		SLL_CHAR("sll:object_new"),
+		sll_api_object_new_raw
+	},
+	{
 		SLL_CHAR("sll:path_absolute"),
 		sll_api_path_absolute_raw
 	},
@@ -7251,5 +7287,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=180;
+const sll_function_index_t _ifunc_size=181;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);
