@@ -101,7 +101,7 @@ void _init_platform(void){
 	}
 	struct sigaction sa={
 		.sa_sigaction=_exception_handler,
-		.sa_flags=SA_SIGINFO
+		.sa_flags=SA_SIGINFO|SA_NODEFER|SA_RESTART
 	};
 	sigaction(SIGSEGV,&sa,NULL);
 	sll_array_length_t l=0;

@@ -50,7 +50,7 @@ def create_docs(fl):
 						se=e[4:i].strip()
 						e=e[i+2:].strip()
 						if ("api" in dt["flag"]):
-							dt["args"].append({"type":se.replace("?",""),"desc":e})
+							dt["args"].append({"type":se,"desc":e})
 						else:
 							i=se.rindex(" ")
 							dt["args"].append({"type":se[:i],"name":se[i+1:],"desc":e})
