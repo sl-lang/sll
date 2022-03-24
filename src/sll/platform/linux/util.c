@@ -50,6 +50,20 @@ extern char* tzname[2];
 
 
 
+static void _reset_critical(void){
+	_mm_setcsr(_linux_csr);
+	tcsetattr(STDIN_FILENO,TCSANOW,&_linux_stdin_cfg);
+}
+
+
+
+static void _exception_handler(int sig,siginfo_t* si,void* arg){
+	_reset_critical();
+	_exit(SIGSEGV);
+}
+
+
+
 void _deinit_platform(void){
 	for (sll_array_length_t i=0;i<_linux_env.l;i++){
 		const sll_environment_variable_t* kv=*(_linux_env.dt+i);
@@ -61,13 +75,13 @@ void _deinit_platform(void){
 	_linux_env.dt=NULL;
 	sll_deallocate(PTR(_linux_env.dt));
 	_linux_platform_time_zone=*sll_utc_time_zone;
-	_mm_setcsr(_linux_csr);
-	tcsetattr(STDIN_FILENO,TCSANOW,&_linux_stdin_cfg);
+	_reset_critical();
 }
 
 
 
 __SLL_NO_RETURN void _force_exit_platform(void){
+	_reset_critical();
 	_exit(SIGABRT);
 }
 
@@ -85,6 +99,11 @@ void _init_platform(void){
 		bf.c_lflag=(bf.c_lflag&(~(ICANON|ICRNL|ECHO|ECHOCTL|ECHOPRT)))|ISIG;
 		tcsetattr(STDIN_FILENO,TCSANOW,&bf);
 	}
+	struct sigaction sa={
+		.sa_sigaction=_exception_handler,
+		.sa_flags=SA_SIGINFO
+	};
+	sigaction(SIGSEGV,&sa,NULL);
 	sll_array_length_t l=0;
 	char** dt=environ;
 	while (*dt){
