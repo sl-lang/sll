@@ -1,7 +1,6 @@
 #ifndef __SLL_NEW_OBJECT_H__
 #define __SLL_NEW_OBJECT_H__ 1
 #include <sll/common.h>
-#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group

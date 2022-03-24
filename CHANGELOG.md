@@ -8,6 +8,7 @@
 - Implemented `sll_allocator_collapse`
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
 - Implemented `SLL_IDENTIFIER_GET_STRING_INDEX`, `SLL_IDENTIFIER_IS_TLS`, `SLL_IDENTIFIER_UPDATE_STRING_INDEX`, `SLL_IDENTIFIER_SET_STRING_INDEX`, `sll_identifier_get_string_index`, `sll_identifier_is_tls`, `sll_identifier_set_string_index` and `sll_identifier_update_string_index` ([#254])
+- Implemented `sll_int_float_t`, `sll_char_string_t` and `sll_parse_args` ([#256])
 - Implemented `sll_new_object`, `sll_new_object_array` and `sll_new_object_list` ([#255])
 - Implemented proper parsing of unknown escape sequences
 - Operator parser is now generated from [`src/sll/data/operator_parser.txt`][0.7.10/src/sll/data/operator_parser.txt]
@@ -1825,6 +1826,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#256]: https://github.com/sl-lang/sll/issues/256
 [#255]: https://github.com/sl-lang/sll/issues/255
 [#254]: https://github.com/sl-lang/sll/issues/254
 [#247]: https://github.com/sl-lang/sll/issues/247

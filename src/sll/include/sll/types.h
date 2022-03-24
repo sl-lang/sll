@@ -955,4 +955,32 @@ typedef struct __SLL_BUNDLE{
 
 
 
+typedef union __SLL_INT_FLOAT_DATA{
+	sll_integer_t i;
+	sll_float_t f;
+} sll_int_float_data_t;
+
+
+
+typedef struct __SLL_INT_FLOAT{
+	sll_bool_t t;
+	sll_int_float_data_t dt;
+} sll_int_float_t;
+
+
+
+typedef union __SLL_CHAR_STRING_DATA{
+	sll_char_t c;
+	sll_string_t s;
+} sll_char_string_data_t;
+
+
+
+typedef struct __SLL_CHAR_STRING{
+	sll_bool_t t;
+	sll_char_string_data_t dt;
+} sll_char_string_t;
+
+
+
 #endif
