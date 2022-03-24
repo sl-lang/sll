@@ -18,7 +18,7 @@
  * \group object-api
  * \desc Docs!
  * \arg S
- * \arg O?
+ * \arg O
  * \ret O
  */
 __API_FUNC_DECL(object_new);

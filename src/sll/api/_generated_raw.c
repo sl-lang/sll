@@ -3941,34 +3941,53 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_start_raw(sll_ob
 	sll_object_t* b=NULL;
 	if (all>1){
 		b=*(al+1);
-		SLL_ACQUIRE(b);
+		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(b);
+		}
+		else{
+			b=sll_operator_cast(b,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
 	}
 	else{
-		b=SLL_ACQUIRE_STATIC_INT(0);
+		b=sll_string_to_object(NULL);
 	}
 	sll_object_t* c=NULL;
 	if (all>2){
 		c=*(al+2);
-		if (SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_STRING){
+		if (SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
 			SLL_ACQUIRE(c);
 		}
 		else{
-			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+			c=sll_operator_cast(c,sll_static_int[SLL_OBJECT_TYPE_INT]);
 		}
 	}
 	else{
-		c=sll_string_to_object(NULL);
+		c=SLL_ACQUIRE_STATIC_INT(0);
+	}
+	sll_object_t* d=NULL;
+	if (all>3){
+		d=*(al+3);
+		if (SLL_OBJECT_GET_TYPE(d)==SLL_OBJECT_TYPE_STRING){
+			SLL_ACQUIRE(d);
+		}
+		else{
+			d=sll_operator_cast(d,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		}
+	}
+	else{
+		d=sll_string_to_object(NULL);
 	}
 	sll_arg_count_t idx=0;
-	for (;idx<(all<3?all:3);idx++){
+	for (;idx<(all<4?all:4);idx++){
 		GC_LOCK(*(al+idx));
 	}
 	sll_array_t out;
-	sll_api_process_start(&(a->dt.a),b,&(c->dt.s),&out);
+	sll_api_process_start(&(a->dt.a),&(b->dt.s),c->dt.i,&(d->dt.s),&out);
 	while (idx){
 		idx--;
 		GC_UNLOCK(*(al+idx));
 	}
+	sll_release_object(d);
 	sll_release_object(c);
 	sll_release_object(b);
 	sll_release_object(a);

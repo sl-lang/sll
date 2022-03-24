@@ -120,7 +120,8 @@ __API_FUNC_DECL(process_get_pid);
  * \group process-api
  * \desc Docs!
  * \arg A
- * \arg O
+ * \arg S
+ * \arg I
  * \arg S
  * \ret A
  */

@@ -92,9 +92,11 @@
 		(<- file$flush file$stdout)
 		(<- file$flush file$stderr)
 	})
+	(= cfg (?: cfg (:: cfg process_config_type) DEFAULT_PROCESS_CONFIG))
 	(@@ (:: (<- (... "sll:process_start")
 		(?: (=== (:? args) string_type) [args] (:: args array_type))
-		(?: cfg (:: cfg process_config_type) DEFAULT_PROCESS_CONFIG)
+		cfg$cwd
+		cfg$flags
 		(?: stdin (:: stdin string_type) "")
 	) process_type))
 ))

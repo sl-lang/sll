@@ -20,7 +20,6 @@
 
 
 
-static __STATIC_STRING(_process_flags_field,"flags");
 static const bitmap_t _process_quote_chars[4]={
 	0xd80087dfffffffffull,// %+,-.0123456789:=
 	0xf800000178000000ull,// @ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
@@ -136,7 +135,7 @@ __API_FUNC(process_split){
 
 __API_FUNC(process_start){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!a->l){
-		sll_new_object_array(SLL_CHAR("aO0[sZZ]"),out,a,b,c);
+		sll_new_object_array(SLL_CHAR("a[si]0[sZZ]"),out,a,b,c,d);
 		return;
 	}
 	sll_char_t** args=sll_allocate((a->l+1)*sizeof(sll_char_t*));
@@ -147,24 +146,18 @@ __API_FUNC(process_start){
 		sll_release_object(n);
 	}
 	*(args+a->l)=NULL;
-	sll_object_t* fl=sll_object_get_field(sll_current_runtime_data->tt,b,&_process_flags_field);
-	SLL_ASSERT(SLL_OBJECT_GET_TYPE(fl)==SLL_OBJECT_TYPE_INT);
-	if (fl->dt.i&(SLL_PROCESS_FLAG_PASS_STDIN|SLL_PROCESS_FLAG_CAPTURE_STDOUT|SLL_PROCESS_FLAG_CAPTURE_STDERR)){
-		SLL_UNIMPLEMENTED();
-	}
 	sll_process_handle_t ph=sll_platform_start_process((const sll_char_t*const*)args,NULL);
 	if (!ph){
 		SLL_UNIMPLEMENTED();
 	}
-	if (!(fl->dt.i&SLL_PROCESS_FLAG_WAIT)){
+	if (!(c&SLL_PROCESS_FLAG_WAIT)){
 		SLL_UNIMPLEMENTED();
 	}
-	sll_release_object(fl);
 	sll_return_code_t rc=sll_platform_wait_process(ph);
 	sll_platform_close_process_handle(ph);
 	for (sll_array_length_t i=0;i<a->l;i++){
 		sll_deallocate(*(args+i));
 	}
 	sll_deallocate(args);
-	sll_new_object_array(SLL_CHAR("aOh[sZZ]"),out,a,b,rc,c);
+	sll_new_object_array(SLL_CHAR("a[si]h[sZZ]"),out,a,b,c,rc,d);
 }

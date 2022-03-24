@@ -2523,15 +2523,16 @@
 
 
 #define __SLL_API_TYPE_sll_api_process_start void
-#define __SLL_API_ARGS_sll_api_process_start sll_array_t* a,sll_object_t* b,sll_string_t* c,sll_array_t* out
+#define __SLL_API_ARGS_sll_api_process_start sll_array_t* a,sll_string_t* b,sll_integer_t c,sll_string_t* d,sll_array_t* out
 /**
  * \flags func
  * \name sll_api_process_start
  * \group process-api
  * \desc Docs!
  * \arg sll_array_t* a -> 
- * \arg sll_object_t* b -> 
- * \arg sll_string_t* c -> 
+ * \arg sll_string_t* b -> 
+ * \arg sll_integer_t c -> 
+ * \arg sll_string_t* d -> 
  */
 /**
  * \flags check_output func
