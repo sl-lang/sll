@@ -17,7 +17,10 @@
 		t++; \
 	}
 
-#define INIT_ZERO(x) (*(x)=0)
+#define INIT_ZERO(x) \
+	do{ \
+		*(x)=0; \
+	} while (0)
 
 #define PARSE_TYPE(type,field,name,init) \
 	{ \
