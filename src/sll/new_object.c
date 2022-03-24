@@ -6,6 +6,7 @@
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/new_object.h>
+#include <sll/operator.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
@@ -15,8 +16,25 @@
 
 
 
+#define BUILD_CLONE_TYPE(type) \
+	do{ \
+		sll_object_t* obj=sll_var_arg_get_object(va); \
+		sll_object_t* o=(SLL_OBJECT_GET_TYPE(obj)==(type)?sll_operator_copy(obj,0):sll_operator_cast(obj,sll_static_int[(type)])); \
+		sll_release_object(obj); \
+		return o; \
+	} while (0)
+
+#define SKIP_WHITESPACE \
+	while (*tl&&(**t==' '||(**t>8&&**t<14))){ \
+		(*tl)--; \
+		(*t)++; \
+	}
+
+
+
 static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va){
 	SLL_ASSERT(va->t==SLL_VAR_ARG_LIST_TYPE_C);
+	SKIP_WHITESPACE;
 	if (!(*tl)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
@@ -89,10 +107,12 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_array_create(0,&(o->dt.a));
+				SKIP_WHITESPACE;
 				while (tl&&**t!=']'){
 					o->dt.a.l++;
 					sll_allocator_resize((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 					o->dt.a.v[o->dt.a.l-1]=_build_single(t,tl,va);
+					SKIP_WHITESPACE;
 				}
 				if (tl){
 					(*tl)--;
@@ -105,6 +125,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 				sll_map_create(0,&(o->dt.m));
 				sll_bool_t val=0;
+				SKIP_WHITESPACE;
 				while (tl&&**t!='>'){
 					if (!val){
 						o->dt.m.l++;
@@ -112,6 +133,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					}
 					o->dt.m.v[((o->dt.m.l-1)<<1)+val]=_build_single(t,tl,va);
 					val=!val;
+					SKIP_WHITESPACE;
 				}
 				if (val){
 					o->dt.m.v[(o->dt.m.l<<1)-1]=SLL_ACQUIRE_STATIC_INT(0);
@@ -139,6 +161,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 
 static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va){
 	SLL_ASSERT(va->t==SLL_VAR_ARG_LIST_TYPE_SLL);
+	SKIP_WHITESPACE;
 	if (!(*tl)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
@@ -155,11 +178,11 @@ static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t*
 		case 'c':
 			return sll_char_to_object(sll_var_arg_get_char(va));
 		case 's':
-			SLL_UNIMPLEMENTED();
+			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_STRING);
 		case 'Z':
 			return sll_string_to_object(NULL);
 		case 'a':
-			SLL_UNIMPLEMENTED();
+			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_ARRAY);
 		case 'A':
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
@@ -167,7 +190,7 @@ static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t*
 				return o;
 			}
 		case 'm':
-			SLL_UNIMPLEMENTED();
+			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_MAP);
 		case 'M':
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
@@ -178,10 +201,12 @@ static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t*
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_array_create(0,&(o->dt.a));
+				SKIP_WHITESPACE;
 				while (tl&&**t!=']'){
 					o->dt.a.l++;
 					sll_allocator_resize((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 					o->dt.a.v[o->dt.a.l-1]=_build_single_sll(t,tl,va);
+					SKIP_WHITESPACE;
 				}
 				if (tl){
 					(*tl)--;
@@ -194,6 +219,7 @@ static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t*
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 				sll_map_create(0,&(o->dt.m));
 				sll_bool_t val=0;
+				SKIP_WHITESPACE;
 				while (tl&&**t!='>'){
 					if (!val){
 						o->dt.m.l++;
@@ -201,6 +227,7 @@ static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t*
 					}
 					o->dt.m.v[((o->dt.m.l-1)<<1)+val]=_build_single_sll(t,tl,va);
 					val=!val;
+					SKIP_WHITESPACE;
 				}
 				if (val){
 					o->dt.m.v[(o->dt.m.l<<1)-1]=SLL_ACQUIRE_STATIC_INT(0);
