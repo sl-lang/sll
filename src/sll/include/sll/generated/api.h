@@ -40,7 +40,7 @@
 #define __SLL_API_TYPE_sll_api_array_create void
 #define __SLL_API_ARGS_sll_api_array_create sll_integer_t a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_create
  * \group array-api
  * \desc Docs!
@@ -85,7 +85,7 @@
 #define __SLL_API_TYPE_sll_api_array_join void
 #define __SLL_API_ARGS_sll_api_array_join sll_array_t* a,sll_object_t* b,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_join
  * \group array-api
  * \desc Docs!
@@ -177,7 +177,7 @@
 #define __SLL_API_TYPE_sll_api_array_replace void
 #define __SLL_API_ARGS_sll_api_array_replace sll_array_t* a,sll_object_t* b,sll_object_t* c,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_replace
  * \group array-api
  * \desc Docs!
@@ -201,7 +201,7 @@
 #define __SLL_API_TYPE_sll_api_array_reverse void
 #define __SLL_API_ARGS_sll_api_array_reverse sll_array_t* a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_reverse
  * \group array-api
  * \desc Docs!
@@ -246,7 +246,7 @@
 #define __SLL_API_TYPE_sll_api_array_split void
 #define __SLL_API_ARGS_sll_api_array_split sll_array_t* a,sll_object_t* b,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_split
  * \group array-api
  * \desc Docs!
@@ -322,7 +322,7 @@
 #define __SLL_API_TYPE_sll_api_base64_encode void
 #define __SLL_API_ARGS_sll_api_base64_encode sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_base64_encode
  * \group base64-api
  * \desc Docs!
@@ -344,7 +344,7 @@
 #define __SLL_API_TYPE_sll_api_date_get_time_zone void
 #define __SLL_API_ARGS_sll_api_date_get_time_zone sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_date_get_time_zone
  * \group date-api
  * \desc Docs!
@@ -400,7 +400,7 @@
 #define __SLL_API_TYPE_sll_api_date_split void
 #define __SLL_API_ARGS_sll_api_date_split sll_float_t a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_date_split
  * \group date-api
  * \desc Docs!
@@ -422,7 +422,7 @@
 #define __SLL_API_TYPE_sll_api_error_get_call_stack void
 #define __SLL_API_ARGS_sll_api_error_get_call_stack sll_integer_t a,sll_integer_t b,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_error_get_call_stack
  * \group error-api
  * \desc Docs!
@@ -576,7 +576,7 @@
 #define __SLL_API_TYPE_sll_api_file_get_buffer void
 #define __SLL_API_ARGS_sll_api_file_get_buffer sll_integer_t a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_get_buffer
  * \group file-api
  * \desc Docs!
@@ -598,7 +598,7 @@
 #define __SLL_API_TYPE_sll_api_file_get_temp_path void
 #define __SLL_API_ARGS_sll_api_file_get_temp_path sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_get_temp_path
  * \group file-api
  * \desc Docs!
@@ -804,7 +804,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_float_get_compare_error __SLL_CHECK_OUTPUT sll_float_t
-#define __SLL_API_ARGS_sll_api_float_get_compare_error void
+#define __SLL_API_ARGS_sll_api_float_get_compare_error 
 /**
  * \flags check_output func
  * \name sll_api_float_get_compare_error
@@ -857,7 +857,7 @@
 #define __SLL_API_TYPE_sll_api_hash_md5 void
 #define __SLL_API_ARGS_sll_api_hash_md5 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_string_t* e,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_hash_md5
  * \group hash-api
  * \desc Docs!
@@ -890,7 +890,7 @@
 #define __SLL_API_TYPE_sll_api_hash_sha1 void
 #define __SLL_API_ARGS_sll_api_hash_sha1 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_string_t* f,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_hash_sha1
  * \group hash-api
  * \desc Docs!
@@ -917,7 +917,7 @@
 #define __SLL_API_TYPE_sll_api_hash_sha256 void
 #define __SLL_API_ARGS_sll_api_hash_sha256 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_hash_sha256
  * \group hash-api
  * \desc Docs!
@@ -947,7 +947,7 @@
 #define __SLL_API_TYPE_sll_api_hash_sha512 void
 #define __SLL_API_ARGS_sll_api_hash_sha512 sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_hash_sha512
  * \group hash-api
  * \desc Docs!
@@ -977,7 +977,7 @@
 #define __SLL_API_TYPE_sll_api_int_to_bin void
 #define __SLL_API_ARGS_sll_api_int_to_bin sll_integer_t a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_int_to_bin
  * \group int-api
  * \desc Docs!
@@ -1006,7 +1006,7 @@
 #define __SLL_API_TYPE_sll_api_int_to_dec void
 #define __SLL_API_ARGS_sll_api_int_to_dec sll_integer_t a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_int_to_dec
  * \group int-api
  * \desc Docs!
@@ -1028,7 +1028,7 @@
 #define __SLL_API_TYPE_sll_api_int_to_hex void
 #define __SLL_API_ARGS_sll_api_int_to_hex sll_integer_t a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_int_to_hex
  * \group int-api
  * \desc Docs!
@@ -1050,7 +1050,7 @@
 #define __SLL_API_TYPE_sll_api_int_to_oct void
 #define __SLL_API_ARGS_sll_api_int_to_oct sll_integer_t a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_int_to_oct
  * \group int-api
  * \desc Docs!
@@ -1126,7 +1126,7 @@
 #define __SLL_API_TYPE_sll_api_json_stringify void
 #define __SLL_API_ARGS_sll_api_json_stringify sll_object_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_json_stringify
  * \group json-api
  * \desc Docs!
@@ -1146,13 +1146,13 @@
 
 
 #define __SLL_API_TYPE_sll_api_log_log void
-#define __SLL_API_ARGS_sll_api_log_log sll_object_t*const* a,sll_arg_count_t ac
+#define __SLL_API_ARGS_sll_api_log_log sll_object_t** a,sll_arg_count_t ac
 /**
  * \flags check_output func
  * \name sll_api_log_log
  * \group log-api
  * \desc Docs!
- * \arg sll_object_t*const* a -> 
+ * \arg sll_object_t** a -> 
  * \arg sll_arg_count_t ac
  */
 /**
@@ -1691,7 +1691,7 @@
 #define __SLL_API_TYPE_sll_api_math_factors void
 #define __SLL_API_ARGS_sll_api_math_factors sll_integer_t a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_factors
  * \group math-api
  * \desc Docs!
@@ -2095,14 +2095,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_object_new __SLL_CHECK_OUTPUT sll_object_t*
-#define __SLL_API_ARGS_sll_api_object_new sll_string_t* a,sll_object_t*const* b,sll_arg_count_t bc
+#define __SLL_API_ARGS_sll_api_object_new sll_string_t* a,sll_object_t** b,sll_arg_count_t bc
 /**
  * \flags func
  * \name sll_api_object_new
  * \group object-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t*const* b -> 
+ * \arg sll_object_t** b -> 
  * \arg sll_arg_count_t bc
  * \ret sll_object_t*
  */
@@ -2129,7 +2129,7 @@
 #define __SLL_API_TYPE_sll_api_path_absolute void
 #define __SLL_API_ARGS_sll_api_path_absolute sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_absolute
  * \group path-api
  * \desc Docs!
@@ -2181,7 +2181,7 @@
 #define __SLL_API_TYPE_sll_api_path_get_cwd void
 #define __SLL_API_ARGS_sll_api_path_get_cwd sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_get_cwd
  * \group path-api
  * \desc Docs!
@@ -2225,7 +2225,7 @@
 #define __SLL_API_TYPE_sll_api_path_join void
 #define __SLL_API_ARGS_sll_api_path_join sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_join
  * \group path-api
  * \desc Docs!
@@ -2248,7 +2248,7 @@
 #define __SLL_API_TYPE_sll_api_path_list_dir void
 #define __SLL_API_ARGS_sll_api_path_list_dir sll_string_t* a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_list_dir
  * \group path-api
  * \desc Docs!
@@ -2294,7 +2294,7 @@
 #define __SLL_API_TYPE_sll_api_path_recursive_list_dir void
 #define __SLL_API_ARGS_sll_api_path_recursive_list_dir sll_string_t* a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_recursive_list_dir
  * \group path-api
  * \desc Docs!
@@ -2316,7 +2316,7 @@
 #define __SLL_API_TYPE_sll_api_path_relative void
 #define __SLL_API_ARGS_sll_api_path_relative sll_string_t* a,sll_string_t* b,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_relative
  * \group path-api
  * \desc Docs!
@@ -2385,7 +2385,7 @@
 #define __SLL_API_TYPE_sll_api_path_split void
 #define __SLL_API_ARGS_sll_api_path_split sll_string_t* a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_split
  * \group path-api
  * \desc Docs!
@@ -2407,7 +2407,7 @@
 #define __SLL_API_TYPE_sll_api_path_split_drive void
 #define __SLL_API_ARGS_sll_api_path_split_drive sll_string_t* a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_split_drive
  * \group path-api
  * \desc Docs!
@@ -2457,7 +2457,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_process_get_pid __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_process_get_pid void
+#define __SLL_API_ARGS_sll_api_process_get_pid 
 /**
  * \flags check_output func
  * \name sll_api_process_get_pid
@@ -2481,7 +2481,7 @@
 #define __SLL_API_TYPE_sll_api_process_join void
 #define __SLL_API_ARGS_sll_api_process_join sll_array_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_process_join
  * \group process-api
  * \desc Docs!
@@ -2503,7 +2503,7 @@
 #define __SLL_API_TYPE_sll_api_process_split void
 #define __SLL_API_ARGS_sll_api_process_split sll_string_t* a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_process_split
  * \group process-api
  * \desc Docs!
@@ -2525,7 +2525,7 @@
 #define __SLL_API_TYPE_sll_api_process_start void
 #define __SLL_API_ARGS_sll_api_process_start sll_array_t* a,sll_string_t* b,sll_integer_t c,sll_string_t* d,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_process_start
  * \group process-api
  * \desc Docs!
@@ -2605,7 +2605,7 @@
 #define __SLL_API_TYPE_sll_api_random_get_string void
 #define __SLL_API_ARGS_sll_api_random_get_string sll_integer_t a,sll_char_t b,sll_char_t c,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_random_get_string
  * \group random-api
  * \desc Docs!
@@ -2795,14 +2795,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_serial_encode_object void
-#define __SLL_API_ARGS_sll_api_serial_encode_object sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc
+#define __SLL_API_ARGS_sll_api_serial_encode_object sll_integer_t a,sll_object_t** b,sll_arg_count_t bc
 /**
  * \flags check_output func
  * \name sll_api_serial_encode_object
  * \group serial-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
- * \arg sll_object_t*const* b -> 
+ * \arg sll_object_t** b -> 
  * \arg sll_arg_count_t bc
  */
 /**
@@ -2928,13 +2928,13 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_convert void
-#define __SLL_API_ARGS_sll_api_string_convert sll_object_t*const* a,sll_arg_count_t ac,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_string_convert sll_object_t** a,sll_arg_count_t ac,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_convert
  * \group string-api
  * \desc Docs!
- * \arg sll_object_t*const* a -> 
+ * \arg sll_object_t** a -> 
  * \arg sll_arg_count_t ac
  */
 /**
@@ -2951,14 +2951,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_count __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_string_count sll_string_t* a,sll_object_t* b
+#define __SLL_API_ARGS_sll_api_string_count sll_string_t* a,sll_char_string_t* b
 /**
  * \flags check_output func
  * \name sll_api_string_count
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
+ * \arg sll_char_string_t* b -> 
  * \ret sll_integer_t
  */
 /**
@@ -3023,14 +3023,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_ends __SLL_CHECK_OUTPUT sll_bool_t
-#define __SLL_API_ARGS_sll_api_string_ends sll_string_t* a,sll_object_t* b
+#define __SLL_API_ARGS_sll_api_string_ends sll_string_t* a,sll_char_string_t* b
 /**
  * \flags check_output func
  * \name sll_api_string_ends
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
+ * \arg sll_char_string_t* b -> 
  * \ret sll_bool_t
  */
 /**
@@ -3049,7 +3049,7 @@
 #define __SLL_API_TYPE_sll_api_string_flip_case void
 #define __SLL_API_ARGS_sll_api_string_flip_case sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_flip_case
  * \group string-api
  * \desc Docs!
@@ -3069,14 +3069,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_format void
-#define __SLL_API_ARGS_sll_api_string_format sll_string_t* a,sll_object_t*const* b,sll_arg_count_t bc,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_string_format sll_string_t* a,sll_object_t** b,sll_arg_count_t bc,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_format
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t*const* b -> 
+ * \arg sll_object_t** b -> 
  * \arg sll_arg_count_t bc
  */
 /**
@@ -3093,14 +3093,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_index __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_string_index sll_string_t* a,sll_object_t* b
+#define __SLL_API_ARGS_sll_api_string_index sll_string_t* a,sll_char_string_t* b
 /**
  * \flags check_output func
  * \name sll_api_string_index
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
+ * \arg sll_char_string_t* b -> 
  * \ret sll_integer_t
  */
 /**
@@ -3117,14 +3117,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_index_list __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_string_index_list sll_string_t* a,sll_object_t* b,sll_bool_t c
+#define __SLL_API_ARGS_sll_api_string_index_list sll_string_t* a,sll_char_string_t* b,sll_bool_t c
 /**
  * \flags check_output func
  * \name sll_api_string_index_list
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
+ * \arg sll_char_string_t* b -> 
  * \arg sll_bool_t c -> 
  * \ret sll_integer_t
  */
@@ -3142,14 +3142,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_index_reverse __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_string_index_reverse sll_string_t* a,sll_object_t* b
+#define __SLL_API_ARGS_sll_api_string_index_reverse sll_string_t* a,sll_char_string_t* b
 /**
  * \flags check_output func
  * \name sll_api_string_index_reverse
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
+ * \arg sll_char_string_t* b -> 
  * \ret sll_integer_t
  */
 /**
@@ -3166,14 +3166,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_index_reverse_list __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_string_index_reverse_list sll_string_t* a,sll_object_t* b,sll_bool_t c
+#define __SLL_API_ARGS_sll_api_string_index_reverse_list sll_string_t* a,sll_char_string_t* b,sll_bool_t c
 /**
  * \flags check_output func
  * \name sll_api_string_index_reverse_list
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
+ * \arg sll_char_string_t* b -> 
  * \arg sll_bool_t c -> 
  * \ret sll_integer_t
  */
@@ -3191,13 +3191,13 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_join void
-#define __SLL_API_ARGS_sll_api_string_join sll_object_t* a,sll_array_t* b,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_string_join sll_char_string_t* a,sll_array_t* b,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_join
  * \group string-api
  * \desc Docs!
- * \arg sll_object_t* a -> 
+ * \arg sll_char_string_t* a -> 
  * \arg sll_array_t* b -> 
  */
 /**
@@ -3216,7 +3216,7 @@
 #define __SLL_API_TYPE_sll_api_string_pad void
 #define __SLL_API_ARGS_sll_api_string_pad sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_pad
  * \group string-api
  * \desc Docs!
@@ -3240,7 +3240,7 @@
 #define __SLL_API_TYPE_sll_api_string_pad_left void
 #define __SLL_API_ARGS_sll_api_string_pad_left sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_pad_left
  * \group string-api
  * \desc Docs!
@@ -3264,7 +3264,7 @@
 #define __SLL_API_TYPE_sll_api_string_pad_right void
 #define __SLL_API_ARGS_sll_api_string_pad_right sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_pad_right
  * \group string-api
  * \desc Docs!
@@ -3286,15 +3286,15 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_replace void
-#define __SLL_API_ARGS_sll_api_string_replace sll_string_t* a,sll_object_t* b,sll_object_t* c,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_string_replace sll_string_t* a,sll_char_string_t* b,sll_char_string_t* c,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_replace
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
- * \arg sll_object_t* c -> 
+ * \arg sll_char_string_t* b -> 
+ * \arg sll_char_string_t* c -> 
  */
 /**
  * \flags check_output func
@@ -3312,7 +3312,7 @@
 #define __SLL_API_TYPE_sll_api_string_reverse void
 #define __SLL_API_ARGS_sll_api_string_reverse sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_reverse
  * \group string-api
  * \desc Docs!
@@ -3356,14 +3356,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_split void
-#define __SLL_API_ARGS_sll_api_string_split sll_string_t* a,sll_object_t* b,sll_array_t* out
+#define __SLL_API_ARGS_sll_api_string_split sll_string_t* a,sll_char_string_t* b,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_split
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
+ * \arg sll_char_string_t* b -> 
  */
 /**
  * \flags check_output func
@@ -3379,14 +3379,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_starts __SLL_CHECK_OUTPUT sll_bool_t
-#define __SLL_API_ARGS_sll_api_string_starts sll_string_t* a,sll_object_t* b
+#define __SLL_API_ARGS_sll_api_string_starts sll_string_t* a,sll_char_string_t* b
 /**
  * \flags check_output func
  * \name sll_api_string_starts
  * \group string-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \arg sll_object_t* b -> 
+ * \arg sll_char_string_t* b -> 
  * \ret sll_bool_t
  */
 /**
@@ -3405,7 +3405,7 @@
 #define __SLL_API_TYPE_sll_api_string_to_lower_case void
 #define __SLL_API_ARGS_sll_api_string_to_lower_case sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_to_lower_case
  * \group string-api
  * \desc Docs!
@@ -3427,7 +3427,7 @@
 #define __SLL_API_TYPE_sll_api_string_to_title_case void
 #define __SLL_API_ARGS_sll_api_string_to_title_case sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_to_title_case
  * \group string-api
  * \desc Docs!
@@ -3449,7 +3449,7 @@
 #define __SLL_API_TYPE_sll_api_string_to_upper_case void
 #define __SLL_API_ARGS_sll_api_string_to_upper_case sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_to_upper_case
  * \group string-api
  * \desc Docs!
@@ -3471,7 +3471,7 @@
 #define __SLL_API_TYPE_sll_api_string_trim void
 #define __SLL_API_ARGS_sll_api_string_trim sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_trim
  * \group string-api
  * \desc Docs!
@@ -3493,7 +3493,7 @@
 #define __SLL_API_TYPE_sll_api_string_trim_left void
 #define __SLL_API_ARGS_sll_api_string_trim_left sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_trim_left
  * \group string-api
  * \desc Docs!
@@ -3515,7 +3515,7 @@
 #define __SLL_API_TYPE_sll_api_string_trim_right void
 #define __SLL_API_ARGS_sll_api_string_trim_right sll_string_t* a,sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_trim_right
  * \group string-api
  * \desc Docs!
@@ -3636,7 +3636,7 @@
 #define __SLL_API_TYPE_sll_api_sys_get_args void
 #define __SLL_API_ARGS_sll_api_sys_get_args sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
@@ -3662,7 +3662,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_sys_get_cpu_count __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_sys_get_cpu_count void
+#define __SLL_API_ARGS_sll_api_sys_get_cpu_count 
 /**
  * \flags check_output func
  * \name sll_api_sys_get_cpu_count
@@ -3686,7 +3686,7 @@
 #define __SLL_API_TYPE_sll_api_sys_get_env void
 #define __SLL_API_ARGS_sll_api_sys_get_env sll_map_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_env
  * \group sys-api
  * \desc Docs!
@@ -3707,7 +3707,7 @@
 #define __SLL_API_TYPE_sll_api_sys_get_executable void
 #define __SLL_API_ARGS_sll_api_sys_get_executable sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_executable
  * \group sys-api
  * \desc Docs!
@@ -3728,7 +3728,7 @@
 #define __SLL_API_TYPE_sll_api_sys_get_library void
 #define __SLL_API_ARGS_sll_api_sys_get_library sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_library
  * \group sys-api
  * \desc Docs!
@@ -3749,7 +3749,7 @@
 #define __SLL_API_TYPE_sll_api_sys_get_platform void
 #define __SLL_API_ARGS_sll_api_sys_get_platform sll_string_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_platform
  * \group sys-api
  * \desc Docs!
@@ -3770,7 +3770,7 @@
 #define __SLL_API_TYPE_sll_api_sys_get_sandbox_flags void
 #define __SLL_API_ARGS_sll_api_sys_get_sandbox_flags sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
@@ -3791,7 +3791,7 @@
 #define __SLL_API_TYPE_sll_api_sys_get_version void
 #define __SLL_API_ARGS_sll_api_sys_get_version sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_version
  * \group sys-api
  * \desc Docs!
@@ -3937,7 +3937,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_thread_create_barrier __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_thread_create_barrier void
+#define __SLL_API_ARGS_sll_api_thread_create_barrier 
 /**
  * \flags check_output func
  * \name sll_api_thread_create_barrier
@@ -3959,7 +3959,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_thread_create_lock __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_thread_create_lock void
+#define __SLL_API_ARGS_sll_api_thread_create_lock 
 /**
  * \flags check_output func
  * \name sll_api_thread_create_lock
@@ -4006,7 +4006,7 @@
 #define __SLL_API_TYPE_sll_api_thread_get_internal_data void
 #define __SLL_API_ARGS_sll_api_thread_get_internal_data sll_integer_t a,sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_get_internal_data
  * \group thread-api
  * \desc Docs!
@@ -4164,7 +4164,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_time_current __SLL_CHECK_OUTPUT sll_float_t
-#define __SLL_API_ARGS_sll_api_time_current void
+#define __SLL_API_ARGS_sll_api_time_current 
 /**
  * \flags check_output func
  * \name sll_api_time_current
@@ -4193,7 +4193,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_time_current_ns __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_time_current_ns void
+#define __SLL_API_ARGS_sll_api_time_current_ns 
 /**
  * \flags check_output func
  * \name sll_api_time_current_ns
@@ -4215,13 +4215,13 @@
 
 
 #define __SLL_API_TYPE_sll_api_time_sleep __SLL_CHECK_OUTPUT sll_float_t
-#define __SLL_API_ARGS_sll_api_time_sleep sll_object_t* a
+#define __SLL_API_ARGS_sll_api_time_sleep sll_int_float_t* a
 /**
  * \flags check_output func
  * \name sll_api_time_sleep
  * \group time-api
  * \desc Docs!
- * \arg sll_object_t* a -> 
+ * \arg sll_int_float_t* a -> 
  * \ret sll_float_t
  */
 /**
@@ -4238,13 +4238,13 @@
 
 
 #define __SLL_API_TYPE_sll_api_time_sleep_ns __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_time_sleep_ns sll_object_t* a
+#define __SLL_API_ARGS_sll_api_time_sleep_ns sll_int_float_t* a
 /**
  * \flags check_output func
  * \name sll_api_time_sleep_ns
  * \group time-api
  * \desc Docs!
- * \arg sll_object_t* a -> 
+ * \arg sll_int_float_t* a -> 
  * \ret sll_integer_t
  */
 /**
@@ -4263,7 +4263,7 @@
 #define __SLL_API_TYPE_sll_api_vm_get_config void
 #define __SLL_API_ARGS_sll_api_vm_get_config sll_array_t* out
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_vm_get_config
  * \group vm-api
  * \desc Docs!
@@ -4289,7 +4289,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_vm_get_instruction_count __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_vm_get_instruction_count void
+#define __SLL_API_ARGS_sll_api_vm_get_instruction_count 
 /**
  * \flags check_output func
  * \name sll_api_vm_get_instruction_count
@@ -4311,7 +4311,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_vm_get_instruction_index __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_vm_get_instruction_index void
+#define __SLL_API_ARGS_sll_api_vm_get_instruction_index 
 /**
  * \flags check_output func
  * \name sll_api_vm_get_instruction_index

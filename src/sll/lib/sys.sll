@@ -99,7 +99,7 @@
 (= remove_env (,,, k
 	(= k (<- string$replace (:: k string_type) '=' ""))
 	(<- map$remove ENVIRONMENT k)
-	(<- (... "sll:sys_remove_env" k))
+	(<- (... "sll:sys_remove_env") k)
 ))
 
 (= set_sandbox_flags (,,, @@flags@@
@@ -117,7 +117,7 @@
 	(= k (<- string$replace (:: k string_type) '=' ""))
 	(= v (:: v string_type))
 	(= (: ENVIRONMENT k) v)
-	(<- (... "sll:sys_set_env" k v))
+	(<- (... "sll:sys_set_env") k v)
 ))
 
 

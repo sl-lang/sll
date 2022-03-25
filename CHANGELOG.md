@@ -18,9 +18,11 @@
 
 ### Changed
 
+- API functions now use the `sll_parse_args` function
 - *\[Linux Only\]* CSR register and terminal are now properly reset on `SIGSEGV`
 - Fixed `sll_file_peek_char`
 - *\[Windows Only\]* Fixed `sll_platform_set_cpu`
+- Fixed `sys$remove_env` and `sys$set_env`
 - Renamed `sll_identifier_create_identifier` to `sll_identifier_create`
 - Reworked the assembly optimizer
 
