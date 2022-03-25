@@ -83,17 +83,17 @@ __SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sl
 	if (!(*t)){
 		return;
 	}
-	const sll_char_t* ptr=t;
+	const sll_char_t* tmp=t;
 	sll_bool_t var_arg=0;
 	sll_string_length_t var_arg_idx=0;
-	while (*ptr){
-		if (*ptr=='+'){
+	while (*tmp){
+		if (*tmp=='+'){
 			var_arg=1;
 		}
-		else if (*ptr=='b'||*ptr=='i'||*ptr=='f'||*ptr=='x'||*ptr=='c'||*ptr=='s'||*ptr=='y'||*ptr=='a'||*ptr=='m'||*ptr=='o'){
+		else if (*tmp=='b'||*tmp=='i'||*tmp=='f'||*tmp=='x'||*tmp=='c'||*tmp=='s'||*tmp=='y'||*tmp=='a'||*tmp=='m'||*tmp=='o'){
 			var_arg_idx++;
 		}
-		ptr++;
+		tmp++;
 	}
 	if (!var_arg){
 		var_arg_idx=SLL_MAX_STRING_INDEX;

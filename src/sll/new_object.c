@@ -132,7 +132,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_array_create(0,&(o->dt.a));
 				SKIP_WHITESPACE;
-				while (tl&&**t!=ec){
+				while (*tl&&**t!=ec){
 					o->dt.a.l++;
 					sll_allocator_resize((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 					o->dt.a.v[o->dt.a.l-1]=_build_single(t,tl,va);

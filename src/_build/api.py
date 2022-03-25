@@ -76,7 +76,7 @@ def generate_c_api(d_dt,api_dt):
 					cf.write("\t"+TYPE_MAP[k["ret"]["type"]]+f" out={k['name']}({call_args});")
 				cf.write(f"\n\t"+TYPE_RETURN_MAP[k["ret"]["type"]].replace(";",";\n\t")+";\n")
 			if (len(args)==0):
-				a="void"
+				args="void"
 			sg=("" if k["subgroup"] is None else f"\n\\subgroup {k['subgroup']}")
 			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {args}\n/**\n * \\flags {('check_output ' if TYPE_MAP[k['ret']['type']][-1]!='*' else '')}func\n * \\name {k['name']}\n * \\group {k['group']}{sg}\n * \\desc {k['desc']}{docs}\n */\n/**\n * \\flags check_output func\n * \\name {k['name']}_raw\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */")
 			if (k["group"] not in d_gl):

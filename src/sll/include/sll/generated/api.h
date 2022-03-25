@@ -804,7 +804,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_float_get_compare_error __SLL_CHECK_OUTPUT sll_float_t
-#define __SLL_API_ARGS_sll_api_float_get_compare_error 
+#define __SLL_API_ARGS_sll_api_float_get_compare_error void
 /**
  * \flags check_output func
  * \name sll_api_float_get_compare_error
@@ -2457,7 +2457,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_process_get_pid __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_process_get_pid 
+#define __SLL_API_ARGS_sll_api_process_get_pid void
 /**
  * \flags check_output func
  * \name sll_api_process_get_pid
@@ -3662,7 +3662,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_sys_get_cpu_count __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_sys_get_cpu_count 
+#define __SLL_API_ARGS_sll_api_sys_get_cpu_count void
 /**
  * \flags check_output func
  * \name sll_api_sys_get_cpu_count
@@ -3937,7 +3937,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_thread_create_barrier __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_thread_create_barrier 
+#define __SLL_API_ARGS_sll_api_thread_create_barrier void
 /**
  * \flags check_output func
  * \name sll_api_thread_create_barrier
@@ -3959,7 +3959,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_thread_create_lock __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_thread_create_lock 
+#define __SLL_API_ARGS_sll_api_thread_create_lock void
 /**
  * \flags check_output func
  * \name sll_api_thread_create_lock
@@ -4164,7 +4164,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_time_current __SLL_CHECK_OUTPUT sll_float_t
-#define __SLL_API_ARGS_sll_api_time_current 
+#define __SLL_API_ARGS_sll_api_time_current void
 /**
  * \flags check_output func
  * \name sll_api_time_current
@@ -4193,7 +4193,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_time_current_ns __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_time_current_ns 
+#define __SLL_API_ARGS_sll_api_time_current_ns void
 /**
  * \flags check_output func
  * \name sll_api_time_current_ns
@@ -4289,7 +4289,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_vm_get_instruction_count __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_vm_get_instruction_count 
+#define __SLL_API_ARGS_sll_api_vm_get_instruction_count void
 /**
  * \flags check_output func
  * \name sll_api_vm_get_instruction_count
@@ -4311,7 +4311,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_vm_get_instruction_index __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_vm_get_instruction_index 
+#define __SLL_API_ARGS_sll_api_vm_get_instruction_index void
 /**
  * \flags check_output func
  * \name sll_api_vm_get_instruction_index
