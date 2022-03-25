@@ -141,7 +141,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				if (st=='('){
 					sll_allocator_collapse((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 				}
-				if (tl){
+				if (*tl){
 					(*tl)--;
 					(*t)++;
 				}
@@ -153,7 +153,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				sll_map_create(0,&(o->dt.m));
 				sll_bool_t val=0;
 				SKIP_WHITESPACE;
-				while (tl&&**t!='>'){
+				while (*tl&&**t!='>'){
 					if (!val){
 						o->dt.m.l++;
 						o->dt.m.v=sll_reallocate(o->dt.m.v,(o->dt.m.l<<1)*sizeof(sll_object_t*));
@@ -165,7 +165,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				if (val){
 					o->dt.m.v[(o->dt.m.l<<1)-1]=SLL_ACQUIRE_STATIC_INT(0);
 				}
-				if (tl){
+				if (*tl){
 					(*tl)--;
 					(*t)++;
 				}
