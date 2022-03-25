@@ -1144,6 +1144,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length_unaligne
 
 
 __SLL_EXTERNAL void sll_string_lower_case(const sll_string_t* s,sll_string_t* o){
+	if (!s->l){
+		SLL_INIT_STRING(o);
+		return;
+	}
 	o->l=s->l;
 	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	INIT_PADDING(o->v,o->l);
@@ -1918,6 +1922,10 @@ __SLL_EXTERNAL void sll_string_trim_right(const sll_string_t* s,sll_string_t* o)
 
 
 __SLL_EXTERNAL void sll_string_upper_case(const sll_string_t* s,sll_string_t* o){
+	if (!s->l){
+		SLL_INIT_STRING(o);
+		return;
+	}
 	o->l=s->l;
 	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	INIT_PADDING(o->v,o->l);
