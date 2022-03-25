@@ -1032,7 +1032,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_is_dir_raw(sll_obje
 
 __SLL_API_TYPE_sll_api_path_join sll_api_path_join(__SLL_API_ARGS_sll_api_path_join);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_join_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_string_t*const* a;
+	sll_string_t** a;
 	sll_arg_count_t ac;
 	sll_parse_args(SLL_CHAR("s+"),al,all,&a,&ac);
 	sll_string_t out;

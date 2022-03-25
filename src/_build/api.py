@@ -39,7 +39,7 @@ def generate_c_api(d_dt,api_dt):
 						call_args+=ALPHABET[i]+","+ALPHABET[i]+"c"
 						fmt+="+"
 						fmt_args+=f",&{ALPHABET[i]}c"
-						cf.write(f"\t{t};\n\tsll_arg_count_t {ALPHABET[i]}c;\n")
+						cf.write(f"\t{at+ptr}* {ALPHABET[i]};\n\tsll_arg_count_t {ALPHABET[i]}c;\n")
 					elif (e["type"] in TYPE_PTR_NO_FMT):
 						t=f"{at+ptr} {ALPHABET[i]}"
 						args+=t

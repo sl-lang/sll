@@ -33,7 +33,6 @@
 
 
 static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va){
-	SLL_ASSERT(va->t==SLL_VAR_ARG_LIST_TYPE_C);
 	SKIP_WHITESPACE;
 	if (!(*tl)){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -41,11 +40,58 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 	(*tl)--;
 	sll_char_t st=**t;
 	(*t)++;
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+		switch (st){
+			case 'h':
+				return sll_int_to_object((__SLL_S32)sll_var_arg_get_int(va));
+			case 's':
+				return sll_string_to_object(sll_var_arg_get(va));
+			case 'S':
+				{
+					const sll_char_t* ptr=sll_var_arg_get(va);
+					return (ptr?sll_string_to_object_pointer(ptr,SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
+				}
+			case 'L':
+				{
+					const sll_char_t* ptr=sll_var_arg_get(va);
+					sll_string_length_t len=(sll_string_length_t)sll_var_arg_get_int(va);
+					return (ptr&&len?sll_string_to_object_pointer(ptr,len):sll_string_to_object(NULL));
+				}
+			case 'a':
+				{
+					sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+					const sll_array_t* ptr=sll_var_arg_get(va);
+					if (!ptr){
+						sll_array_create(0,&(o->dt.a));
+					}
+					else{
+						sll_array_clone(ptr,&(o->dt.a));
+					}
+					return o;
+				}
+			case 'm':
+				{
+					sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+					const sll_map_t* ptr=sll_var_arg_get(va);
+					if (!ptr){
+						sll_map_create(0,&(o->dt.m));
+					}
+					else{
+						sll_map_clone(ptr,&(o->dt.m));
+					}
+					return o;
+				}
+			case 'N':
+				{
+					sll_object_t* o=sll_var_arg_get_object(va);
+					sll_release_object(o);
+					return o;
+				}
+		}
+	}
 	switch (st){
 		case '1':
 			return SLL_ACQUIRE_STATIC_INT(1);
-		case 'h':
-			return sll_int_to_object((__SLL_S32)sll_var_arg_get_int(va));
 		case 'i':
 			return sll_int_to_object(sll_var_arg_get_int(va));
 		case 'f':
@@ -55,38 +101,16 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case 'C':
 			{
 				sll_char_t c=sll_var_arg_get_char(va);
-				sll_object_t* o=sll_string_to_object_pointer(&c,1);
-				return o;
+				return sll_string_to_object_pointer(&c,1);
 			}
+		case 's':
+			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_STRING);
 		case 'z':
 			return SLL_FROM_CHAR(0);
-		case 's':
-			return sll_string_to_object(sll_var_arg_get(va));
-		case 'S':
-			{
-				const sll_char_t* ptr=sll_var_arg_get(va);
-				return (ptr?sll_string_to_object_pointer(ptr,SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
-			}
-		case 'L':
-			{
-				const sll_char_t* ptr=sll_var_arg_get(va);
-				sll_string_length_t len=(sll_string_length_t)sll_var_arg_get_int(va);
-				return (ptr&&len?sll_string_to_object_pointer(ptr,len):sll_string_to_object(NULL));
-			}
 		case 'Z':
 			return sll_string_to_object(NULL);
 		case 'a':
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				const sll_array_t* ptr=sll_var_arg_get(va);
-				if (!ptr){
-					sll_array_create(0,&(o->dt.a));
-				}
-				else{
-					sll_array_clone(ptr,&(o->dt.a));
-				}
-				return o;
-			}
+			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_ARRAY);
 		case 'A':
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
@@ -94,17 +118,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				return o;
 			}
 		case 'm':
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				const sll_map_t* ptr=sll_var_arg_get(va);
-				if (!ptr){
-					sll_map_create(0,&(o->dt.m));
-				}
-				else{
-					sll_map_clone(ptr,&(o->dt.m));
-				}
-				return o;
-			}
+			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_MAP);
 		case 'M':
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
@@ -145,113 +159,6 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 						o->dt.m.v=sll_reallocate(o->dt.m.v,(o->dt.m.l<<1)*sizeof(sll_object_t*));
 					}
 					o->dt.m.v[((o->dt.m.l-1)<<1)+val]=_build_single(t,tl,va);
-					val=!val;
-					SKIP_WHITESPACE;
-				}
-				if (val){
-					o->dt.m.v[(o->dt.m.l<<1)-1]=SLL_ACQUIRE_STATIC_INT(0);
-				}
-				if (tl){
-					(*tl)--;
-					(*t)++;
-				}
-				return o;
-			}
-		case 'O':
-		case 'N':
-			{
-				sll_object_t* o=sll_var_arg_get_object(va);
-				if (st=='N'){
-					sll_release_object(o);
-				}
-				return o;
-			}
-	}
-	return SLL_ACQUIRE_STATIC_INT(0);
-}
-
-
-
-static sll_object_t* _build_single_sll(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va){
-	SLL_ASSERT(va->t==SLL_VAR_ARG_LIST_TYPE_SLL);
-	SKIP_WHITESPACE;
-	if (!(*tl)){
-		return SLL_ACQUIRE_STATIC_INT(0);
-	}
-	(*tl)--;
-	sll_char_t st=**t;
-	(*t)++;
-	switch (st){
-		case '1':
-			return SLL_ACQUIRE_STATIC_INT(1);
-		case 'i':
-			return sll_int_to_object(sll_var_arg_get_int(va));
-		case 'f':
-			return sll_float_to_object(sll_var_arg_get_float(va));
-		case 'c':
-			return sll_char_to_object(sll_var_arg_get_char(va));
-		case 'C':
-			{
-				sll_char_t c=sll_var_arg_get_char(va);
-				sll_object_t* o=sll_string_to_object_pointer(&c,1);
-				return o;
-			}
-		case 'z':
-			return SLL_FROM_CHAR(0);
-		case 's':
-			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_STRING);
-		case 'Z':
-			return sll_string_to_object(NULL);
-		case 'a':
-			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_ARRAY);
-		case 'A':
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_create(0,&(o->dt.a));
-				return o;
-			}
-		case 'm':
-			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_MAP);
-		case 'M':
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				sll_map_create(0,&(o->dt.m));
-				return o;
-			}
-		case '(':
-		case '[':
-			{
-				sll_char_t ec=(st=='('?')':']');
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_create(0,&(o->dt.a));
-				SKIP_WHITESPACE;
-				while (tl&&**t!=ec){
-					o->dt.a.l++;
-					sll_allocator_resize((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
-					o->dt.a.v[o->dt.a.l-1]=_build_single_sll(t,tl,va);
-					SKIP_WHITESPACE;
-				}
-				if (st=='('){
-					sll_allocator_collapse((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
-				}
-				if (tl){
-					(*tl)--;
-					(*t)++;
-				}
-				return o;
-			}
-		case '<':
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				sll_map_create(0,&(o->dt.m));
-				sll_bool_t val=0;
-				SKIP_WHITESPACE;
-				while (tl&&**t!='>'){
-					if (!val){
-						o->dt.m.l++;
-						o->dt.m.v=sll_reallocate(o->dt.m.v,(o->dt.m.l<<1)*sizeof(sll_object_t*));
-					}
-					o->dt.m.v[((o->dt.m.l-1)<<1)+val]=_build_single_sll(t,tl,va);
 					val=!val;
 					SKIP_WHITESPACE;
 				}
@@ -317,8 +224,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_ch
 	if (!tl){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_object_t* (*fn)(const sll_char_t**,sll_string_length_t*,sll_var_arg_list_t*)=(va->t==SLL_VAR_ARG_LIST_TYPE_C?_build_single:_build_single_sll);
-	sll_object_t* e=fn(&t,&tl,va);
+	sll_object_t* e=_build_single(&t,&tl,va);
 	if (!tl){
 		return e;
 	}
@@ -328,7 +234,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_ch
 	do{
 		o->dt.a.l++;
 		sll_allocator_resize((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
-		o->dt.a.v[o->dt.a.l-1]=fn(&t,&tl,va);
+		o->dt.a.v[o->dt.a.l-1]=_build_single(&t,&tl,va);
 	} while (tl);
 	sll_allocator_collapse((void**)(&(o->dt.a.v)),o->dt.a.l*sizeof(sll_object_t*));
 	return o;
