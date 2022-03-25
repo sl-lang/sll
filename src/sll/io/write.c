@@ -189,6 +189,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	sll_encode_integer(wf,a_dt->tm);
 	sll_encode_integer(wf,a_dt->ic);
 	sll_encode_integer(wf,a_dt->vc);
+	sll_encode_integer(wf,a_dt->tls_vc);
 	sll_encode_integer(wf,a_dt->ft.l);
 	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
 		sll_encode_integer(wf,(a_dt->ft.dt+i)->i);

@@ -219,6 +219,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 	CHECK_ERROR(rf,a_dt->tm,sll_time_t);
 	CHECK_ERROR(rf,a_dt->ic,sll_instruction_index_t);
 	CHECK_ERROR(rf,a_dt->vc,sll_variable_index_t);
+	CHECK_ERROR(rf,a_dt->tls_vc,sll_variable_index_t);
 	CHECK_ERROR(rf,a_dt->ft.l,sll_function_index_t);
 	a_dt->ft.dt=sll_allocate(a_dt->ft.l*sizeof(sll_assembly_function_t));
 	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){

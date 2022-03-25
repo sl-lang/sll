@@ -2032,6 +2032,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 	o->h=o->_s.p;
 	o->ic=0;
 	o->vc=0;
+	o->tls_vc=0;
 	o->st.l=sf->st.l;
 	o->st.dt=sll_allocate(o->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<o->st.l;i++){

@@ -1501,7 +1501,7 @@
  * \desc Docs!
  * \type sll_assembly_data_t
  */
-#define SLL_INIT_ASSEMBLY_DATA_STRUCT {0,NULL,0,0,{0,NULL},{NULL,0},{NULL,0},{NULL,NULL,NULL,0}}
+#define SLL_INIT_ASSEMBLY_DATA_STRUCT {0,NULL,0,0,0,{0,NULL},{NULL,0},{NULL,0},{NULL,NULL,NULL,0}}
 
 
 

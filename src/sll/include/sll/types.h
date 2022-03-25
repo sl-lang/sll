@@ -668,6 +668,7 @@ typedef struct __SLL_ASSEMBLY_DATA{
 	sll_assembly_instruction_t* h;
 	sll_instruction_index_t ic;
 	sll_variable_index_t vc;
+	sll_variable_index_t tls_vc;
 	sll_assembly_function_table_t ft;
 	sll_string_table_t st;
 	sll_debug_data_t dbg;
