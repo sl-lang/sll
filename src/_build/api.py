@@ -53,7 +53,7 @@ def generate_c_api(d_dt,api_dt):
 						docs+=f"\n * \\arg {t} -> {e['desc']}"
 						cf.write(f"\t{t};\n")
 			hf.write(f"\n#define __SLL_API_TYPE_{k['name']} ")
-			if (len(fmt)):
+			if (fmt):
 				cf.write(f"\tsll_parse_args(SLL_CHAR(\"{fmt}\"),al,all{fmt_args});\n")
 			if (k["ret"]["type"]=="O"):
 				docs+=f"\n * \\ret sll_object_t*"

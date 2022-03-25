@@ -19,6 +19,24 @@
 
 #define STRING_DATA_PTR(x) ASSUME_ALIGNED(x,4,0)
 
+#define EXECUTE_CASE_SWITCH(x1,x2) \
+	if (!s->l){ \
+		SLL_INIT_STRING(o); \
+		return; \
+	} \
+	o->l=s->l; \
+	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t)); \
+	INIT_PADDING(o->v,o->l); \
+	const wide_data_t* a=(const wide_data_t*)(s->v); \
+	wide_data_t* b=(wide_data_t*)(o->v); \
+	STRING_DATA_PTR(a); \
+	STRING_DATA_PTR(b); \
+	wide_data_t c=0; \
+	for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){ \
+		*(b+i)=(*(a+i))-((((x1-((*(a+i))&0x7f7f7f7f7f7f7f7full))&(~(*(a+i)))&(((*(a+i))&0x7f7f7f7f7f7f7f7full)+x2))&0x8080808080808080ull)>>2); \
+		c^=*(b+i); \
+	} \
+	o->c=(sll_string_length_t)(c^(c>>32));
 #define EXECUTE_BINARY_OPERATOR_CHAR(operator) \
 	if (!s->l){ \
 		SLL_INIT_STRING(o); \
@@ -1144,23 +1162,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length_unaligne
 
 
 __SLL_EXTERNAL void sll_string_lower_case(const sll_string_t* s,sll_string_t* o){
-	if (!s->l){
-		SLL_INIT_STRING(o);
-		return;
-	}
-	o->l=s->l;
-	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
-	INIT_PADDING(o->v,o->l);
-	const wide_data_t* a=(const wide_data_t*)(s->v);
-	wide_data_t* b=(wide_data_t*)(o->v);
-	STRING_DATA_PTR(a);
-	STRING_DATA_PTR(b);
-	wide_data_t c=0;
-	for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){
-		*(b+i)=(*(a+i))+((((0xdadadadadadadadaull-((*(a+i))&0x7f7f7f7f7f7f7f7full))&(~(*(a+i)))&(((*(a+i))&0x7f7f7f7f7f7f7f7full)+0x3f3f3f3f3f3f3f3full))&0x8080808080808080ull)>>2);
-		c^=*(b+i);
-	}
-	o->c=(sll_string_length_t)(c^(c>>32));
+	EXECUTE_CASE_SWITCH(0xdadadadadadadadaull,0x3f3f3f3f3f3f3f3full);
 }
 
 
@@ -1922,23 +1924,7 @@ __SLL_EXTERNAL void sll_string_trim_right(const sll_string_t* s,sll_string_t* o)
 
 
 __SLL_EXTERNAL void sll_string_upper_case(const sll_string_t* s,sll_string_t* o){
-	if (!s->l){
-		SLL_INIT_STRING(o);
-		return;
-	}
-	o->l=s->l;
-	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
-	INIT_PADDING(o->v,o->l);
-	const wide_data_t* a=(const wide_data_t*)(s->v);
-	wide_data_t* b=(wide_data_t*)(o->v);
-	STRING_DATA_PTR(a);
-	STRING_DATA_PTR(b);
-	wide_data_t c=0;
-	for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){
-		*(b+i)=(*(a+i))-((((0xfafafafafafafafaull-((*(a+i))&0x7f7f7f7f7f7f7f7full))&(~(*(a+i)))&(((*(a+i))&0x7f7f7f7f7f7f7f7full)+0x1f1f1f1f1f1f1f1full))&0x8080808080808080ull)>>2);
-		c^=*(b+i);
-	}
-	o->c=(sll_string_length_t)(c^(c>>32));
+	EXECUTE_CASE_SWITCH(0xfafafafafafafafaull,0x1f1f1f1f1f1f1f1full);
 }
 
 
