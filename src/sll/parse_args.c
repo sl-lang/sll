@@ -62,7 +62,7 @@
 
 
 
-__SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_bool_t var_arg,sll_object_t*const* al,sll_arg_count_t all,...){
+__SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,...){
 	va_list va;
 	va_start(va,all);
 	SKIP_WHITESPACE;
@@ -71,7 +71,7 @@ __SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_bool_t var_arg,sll_ob
 		sll_char_t st=*t;
 		t++;
 		SKIP_WHITESPACE;
-		if (!(*t)&&var_arg){
+		if (*t=='+'){
 			SLL_UNIMPLEMENTED();
 		}
 		switch (st){
