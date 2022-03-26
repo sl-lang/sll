@@ -134,6 +134,19 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_char[256];
 
 /**
  * \flags check_output func
+ * \name sll_array_length_to_object
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg sll_array_length_t l
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_length_to_object(sll_array_length_t l);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_array_to_object
  * \group static-object
  * \subgroup static-object-create
@@ -142,19 +155,6 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_char[256];
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_array_t* v);
-
-
-
-/**
- * \flags check_output func
- * \name sll_array_to_object_length
- * \group static-object
- * \subgroup static-object-create
- * \desc Docs!
- * \arg sll_array_length_t l
- * \ret sll_object_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_length(sll_array_length_t l);
 
 
 
@@ -212,6 +212,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
 
 /**
  * \flags check_output func
+ * \name sll_map_length_to_object
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg sll_map_length_t l
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_length_to_object(sll_map_length_t l);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_map_to_object
  * \group static-object
  * \subgroup static-object-create
@@ -225,19 +238,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_
 
 /**
  * \flags check_output func
- * \name sll_map_to_object_length
- * \group static-object
- * \subgroup static-object-create
- * \desc Docs!
- * \arg sll_map_length_t l
- * \ret sll_object_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_length(sll_map_length_t l);
-
-
-
-/**
- * \flags check_output func
  * \name sll_map_to_object_nocopy
  * \group static-object
  * \subgroup static-object-create
@@ -246,6 +246,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_length(sll_map
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map_t* v);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_pointer_to_object
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg const sll_char_t* p
+ * \arg sll_string_length_t l
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(const sll_char_t* p,sll_string_length_t l);
 
 
 
@@ -272,20 +286,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_s
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_nocopy(sll_string_t* v);
-
-
-
-/**
- * \flags check_output func
- * \name sll_string_to_object_pointer
- * \group static-object
- * \subgroup static-object-create
- * \desc Docs!
- * \arg const sll_char_t* p
- * \arg sll_string_length_t l
- * \ret sll_object_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_pointer(const sll_char_t* p,sll_string_length_t l);
 
 
 

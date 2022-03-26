@@ -86,7 +86,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 				if (err){
 					return sll_array_to_object(NULL);
 				}
-				sll_object_t* o=sll_array_to_object_length(l);
+				sll_object_t* o=sll_array_length_to_object(l);
 				for (sll_array_length_t i=0;i<l;i++){
 					o->dt.a.v[i]=sll_decode_object(f);
 				}
@@ -99,7 +99,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 				if (err){
 					return sll_map_to_object(NULL);
 				}
-				sll_object_t* o=sll_map_to_object_length(l);
+				sll_object_t* o=sll_map_length_to_object(l);
 				l<<=1;
 				for (sll_map_length_t i=0;i<l;i++){
 					o->dt.m.v[i]=sll_decode_object(f);

@@ -49,13 +49,13 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			case 'S':
 				{
 					const sll_char_t* ptr=sll_var_arg_get(va);
-					return (ptr?sll_string_to_object_pointer(ptr,SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
+					return (ptr?sll_string_pointer_to_object(ptr,SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
 				}
 			case 'L':
 				{
 					const sll_char_t* ptr=sll_var_arg_get(va);
 					sll_string_length_t len=(sll_string_length_t)sll_var_arg_get_int(va);
-					return (ptr&&len?sll_string_to_object_pointer(ptr,len):sll_string_to_object(NULL));
+					return (ptr&&len?sll_string_pointer_to_object(ptr,len):sll_string_to_object(NULL));
 				}
 			case 'a':
 				return sll_array_to_object(sll_var_arg_get(va));
@@ -81,7 +81,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case 'C':
 			{
 				sll_char_t c=sll_var_arg_get_char(va);
-				return sll_string_to_object_pointer(&c,1);
+				return sll_string_pointer_to_object(&c,1);
 			}
 		case 's':
 			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_STRING);
@@ -198,7 +198,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_ch
 	if (!tl){
 		return e;
 	}
-	sll_object_t* o=sll_array_to_object_length(1);
+	sll_object_t* o=sll_array_length_to_object(1);
 	o->dt.a.v[0]=e;
 	do{
 		o->dt.a.l++;
