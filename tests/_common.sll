@@ -45,6 +45,7 @@
 			"group" func_group
 			"file" loc$file
 			"line" loc$line
+			"function" loc$function
 			"output" (<- _encode_object result)
 			"target" (<- _encode_object value)
 		>)
