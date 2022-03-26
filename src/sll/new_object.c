@@ -101,8 +101,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case '[':
 			{
 				sll_char_t ec=(st=='('?')':']');
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_create(0,&(o->dt.a));
+				sll_object_t* o=sll_array_to_object(NULL);
 				SKIP_WHITESPACE;
 				while (*tl&&**t!=ec){
 					o->dt.a.l++;
@@ -121,8 +120,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			}
 		case '<':
 			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				sll_map_create(0,&(o->dt.m));
+				sll_object_t* o=sll_map_to_object(NULL);
 				sll_bool_t val=0;
 				SKIP_WHITESPACE;
 				while (*tl&&**t!='>'){
@@ -200,8 +198,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_ch
 	if (!tl){
 		return e;
 	}
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	sll_array_create(1,&(o->dt.a));
+	sll_object_t* o=sll_array_to_object_length(1);
 	o->dt.a.v[0]=e;
 	do{
 		o->dt.a.l++;

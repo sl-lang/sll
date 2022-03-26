@@ -1,18 +1,19 @@
 ALPHABET="abcdefghijklmnopqrstuvwxyz"
 API_CODE_FILE_PATH="src/sll/api/_generated_raw.c"
 API_HEADER_FILE_PATH="src/sll/include/sll/generated/api.h"
-FORMAT_MAP={"I":"i","B":"b","F":"f","C":"c","S":"s","A":"a","M":"m","O":"o","SC":"y","FI":"x"}
-TYPE_MAP={"I":"sll_integer_t","B":"sll_bool_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t","A":"sll_array_t","M":"sll_map_t","O":"sll_object_t*","V":"void","SC":"sll_char_string_t","FI":"sll_int_float_t"}
-TYPE_PTR=["S","A","M","SC","FI"]
-TYPE_PTR_NO_FMT=["SC","FI"]
-TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","S":"return sll_string_to_object_nocopy(&out)","A":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);out_o->dt.a=out;return out_o","M":"return sll_map_to_object_nocopy(&out)"}
+FORMAT_MAP={"B":"b","I":"i","F":"f","IF":"x","C":"c","S":"s","CS":"y","A":"a","M":"m","O":"o"}
+TYPE_MAP={"B":"sll_bool_t","I":"sll_integer_t","F":"sll_float_t","IF":"sll_int_float_t","C":"sll_char_t","S":"sll_string_t","CS":"sll_char_string_t","A":"sll_array_t","M":"sll_map_t","O":"sll_object_t*"}
+TYPE_PTR=["IF","S","CS","A","M"]
+TYPE_CHECK_OUTPUT=["S","A","M","O"]
+TYPE_PTR_NO_FMT=["IF","CS"]
+TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","S":"return sll_string_to_object_nocopy(&out)","A":"return sll_array_to_object_nocopy(&out)","M":"return sll_map_to_object_nocopy(&out)"}
 
 
 
 def generate_c_api(d_dt,api_dt):
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_GENERATED_API__\n#define __SLL_GENERATED_API__\n#include <sll/common.h>\n#include <sll/types.h>\n\n\n")
-		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_internal/api.h>\n#include <sll/_internal/common.h>\n#include <sll/_internal/gc.h>\n#include <sll/api.h>\n#include <sll/array.h>\n#include <sll/common.h>\n#include <sll/generated/api.h>\n#include <sll/ift.h>\n#include <sll/map.h>\n#include <sll/memory.h>\n#include <sll/object.h>\n#include <sll/operator.h>\n#include <sll/parse_args.h>\n#include <sll/static_object.h>\n#include <sll/string.h>\n#include <sll/types.h>\n")
+		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_internal/api.h>\n#include <sll/_internal/common.h>\n#include <sll/_internal/gc.h>\n#include <sll/api.h>\n#include <sll/common.h>\n#include <sll/generated/api.h>\n#include <sll/parse_args.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		fn_l=[]
 		d_gl=[]
 		for k in api_dt:
@@ -78,7 +79,7 @@ def generate_c_api(d_dt,api_dt):
 			if (len(args)==0):
 				args="void"
 			sg=("" if k["subgroup"] is None else f"\n\\subgroup {k['subgroup']}")
-			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {args}\n/**\n * \\flags {('check_output ' if TYPE_MAP[k['ret']['type']][-1]!='*' else '')}func\n * \\name {k['name']}\n * \\group {k['group']}{sg}\n * \\desc {k['desc']}{docs}\n */\n/**\n * \\flags check_output func\n * \\name {k['name']}_raw\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */")
+			hf.write(f"\n#define __SLL_API_ARGS_{k['name']} {args}\n/**\n * \\flags {('check_output ' if k['ret']['type'] in TYPE_CHECK_OUTPUT else '')}func\n * \\name {k['name']}\n * \\group {k['group']}{sg}\n * \\desc {k['desc']}{docs}\n */\n/**\n * \\flags check_output func\n * \\name {k['name']}_raw\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Wrapper function for :{k['name']}:\n * \\arg sll_object_t*const* al -> Arguments\n * \\arg sll_arg_count_t all -> Argument count\n * \\ret sll_object_t* -> The return value of the function\n */")
 			if (k["group"] not in d_gl):
 				d_gl.append(k["group"])
 				hf.write(f"\n/**\n * \\flags subgroup\n * \\name {d_dt['groups'][k['group']]['name'][:-3].strip()}\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Docs!\n */")

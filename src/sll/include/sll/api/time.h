@@ -39,7 +39,7 @@ __API_FUNC_DECL(time_current_ns);
  * \name sll_api_time_sleep
  * \group time-api
  * \desc Docs!
- * \arg FI
+ * \arg IF
  * \ret F
  */
 __API_FUNC_DECL(time_sleep);
@@ -51,7 +51,7 @@ __API_FUNC_DECL(time_sleep);
  * \name sll_api_time_sleep_ns
  * \group time-api
  * \desc Docs!
- * \arg FI
+ * \arg IF
  * \ret I
  */
 __API_FUNC_DECL(time_sleep_ns);

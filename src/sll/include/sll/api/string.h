@@ -42,7 +42,7 @@ __API_FUNC_DECL(string_convert);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
+ * \arg CS
  * \ret I
  */
 __API_FUNC_DECL(string_count);
@@ -81,7 +81,7 @@ __API_FUNC_DECL(string_count_right);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
+ * \arg CS
  * \ret B
  */
 __API_FUNC_DECL(string_ends);
@@ -119,7 +119,7 @@ __API_FUNC_DECL(string_flip_case);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
+ * \arg CS
  * \ret I
  */
 __API_FUNC_DECL(string_index);
@@ -132,7 +132,7 @@ __API_FUNC_DECL(string_index);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
+ * \arg CS
  * \arg B
  * \ret I
  */
@@ -146,7 +146,7 @@ __API_FUNC_DECL(string_index_list);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
+ * \arg CS
  * \ret I
  */
 __API_FUNC_DECL(string_index_reverse);
@@ -159,7 +159,7 @@ __API_FUNC_DECL(string_index_reverse);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
+ * \arg CS
  * \arg B
  * \ret I
  */
@@ -172,7 +172,7 @@ __API_FUNC_DECL(string_index_reverse_list);
  * \name sll_api_string_join
  * \group string-api
  * \desc Docs!
- * \arg SC
+ * \arg CS
  * \arg A
  * \ret S
  */
@@ -228,8 +228,8 @@ __API_FUNC_DECL(string_pad_right);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
- * \arg SC
+ * \arg CS
+ * \arg CS
  * \ret S
  */
 __API_FUNC_DECL(string_replace);
@@ -267,7 +267,7 @@ __API_FUNC_DECL(string_secure_equal);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
+ * \arg CS
  * \ret A
  */
 __API_FUNC_DECL(string_split);
@@ -280,7 +280,7 @@ __API_FUNC_DECL(string_split);
  * \group string-api
  * \desc Docs!
  * \arg S
- * \arg SC
+ * \arg CS
  * \ret B
  */
 __API_FUNC_DECL(string_starts);

@@ -217,9 +217,8 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='['){
-		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+		sll_object_t* o=sll_array_to_object(NULL);
 		sll_array_t* a=&(o->dt.a);
-		SLL_INIT_ARRAY(a);
 		while (c==' '||c=='\t'||c=='\n'||c=='\r'){
 			c=**p;
 			(*p)++;

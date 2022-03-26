@@ -3,17 +3,10 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/api.h>
-#include <sll/array.h>
 #include <sll/common.h>
 #include <sll/generated/api.h>
-#include <sll/ift.h>
-#include <sll/map.h>
-#include <sll/memory.h>
-#include <sll/object.h>
-#include <sll/operator.h>
 #include <sll/parse_args.h>
 #include <sll/static_object.h>
-#include <sll/string.h>
 #include <sll/types.h>
 
 
@@ -35,9 +28,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_create_raw(sll_obj
 	sll_parse_args(SLL_CHAR("i"),al,all,&a);
 	sll_array_t out;
 	sll_api_array_create(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -60,9 +51,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_join_raw(sll_objec
 	sll_parse_args(SLL_CHAR("ao"),al,all,&a,&b);
 	sll_array_t out;
 	sll_api_array_join(a,b,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -107,9 +96,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_replace_raw(sll_ob
 	sll_parse_args(SLL_CHAR("aoo"),al,all,&a,&b,&c);
 	sll_array_t out;
 	sll_api_array_replace(a,b,c,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -120,9 +107,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_reverse_raw(sll_ob
 	sll_parse_args(SLL_CHAR("a"),al,all,&a);
 	sll_array_t out;
 	sll_api_array_reverse(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -144,9 +129,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_split_raw(sll_obje
 	sll_parse_args(SLL_CHAR("ao"),al,all,&a,&b);
 	sll_array_t out;
 	sll_api_array_split(a,b,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -187,9 +170,7 @@ __SLL_API_TYPE_sll_api_date_get_time_zone sll_api_date_get_time_zone(__SLL_API_A
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_get_time_zone_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_array_t out;
 	sll_api_date_get_time_zone(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -215,9 +196,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_date_split_raw(sll_objec
 	sll_parse_args(SLL_CHAR("f"),al,all,&a);
 	sll_array_t out;
 	sll_api_date_split(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -229,9 +208,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack_raw
 	sll_parse_args(SLL_CHAR("ii"),al,all,&a,&b);
 	sll_array_t out;
 	sll_api_error_get_call_stack(a,b,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -425,9 +402,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_md5_raw(sll_object_
 	sll_parse_args(SLL_CHAR("iiiis"),al,all,&a,&b,&c,&d,&e);
 	sll_array_t out;
 	sll_api_hash_md5(a,b,c,d,e,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -443,9 +418,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_sha1_raw(sll_object
 	sll_parse_args(SLL_CHAR("iiiiis"),al,all,&a,&b,&c,&d,&e,&f);
 	sll_array_t out;
 	sll_api_hash_sha1(a,b,c,d,e,f,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -464,9 +437,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_sha256_raw(sll_obje
 	sll_parse_args(SLL_CHAR("iiiiiiiis"),al,all,&a,&b,&c,&d,&e,&f,&g,&h,&i);
 	sll_array_t out;
 	sll_api_hash_sha256(a,b,c,d,e,f,g,h,i,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -485,9 +456,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_hash_sha512_raw(sll_obje
 	sll_parse_args(SLL_CHAR("iiiiiiiis"),al,all,&a,&b,&c,&d,&e,&f,&g,&h,&i);
 	sll_array_t out;
 	sll_api_hash_sha512(a,b,c,d,e,f,g,h,i,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -807,9 +776,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factors_raw(sll_obj
 	sll_parse_args(SLL_CHAR("i"),al,all,&a);
 	sll_array_t out;
 	sll_api_math_factors(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1048,9 +1015,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir_raw(sll_ob
 	sll_parse_args(SLL_CHAR("s"),al,all,&a);
 	sll_array_t out;
 	sll_api_path_list_dir(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1073,9 +1038,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir_
 	sll_parse_args(SLL_CHAR("s"),al,all,&a);
 	sll_array_t out;
 	sll_api_path_recursive_list_dir(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1118,9 +1081,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_raw(sll_objec
 	sll_parse_args(SLL_CHAR("s"),al,all,&a);
 	sll_array_t out;
 	sll_api_path_split(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1131,9 +1092,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_split_drive_raw(sll
 	sll_parse_args(SLL_CHAR("s"),al,all,&a);
 	sll_array_t out;
 	sll_api_path_split_drive(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1174,9 +1133,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_split_raw(sll_ob
 	sll_parse_args(SLL_CHAR("s"),al,all,&a);
 	sll_array_t out;
 	sll_api_process_split(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1190,9 +1147,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_start_raw(sll_ob
 	sll_parse_args(SLL_CHAR("asis"),al,all,&a,&b,&c,&d);
 	sll_array_t out;
 	sll_api_process_start(a,b,c,d,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1582,9 +1537,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_split_raw(sll_obj
 	sll_parse_args(SLL_CHAR("sy"),al,all,&a,&b);
 	sll_array_t out;
 	sll_api_string_split(a,&b,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1711,9 +1664,7 @@ __SLL_API_TYPE_sll_api_sys_get_args sll_api_sys_get_args(__SLL_API_ARGS_sll_api_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_args_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_array_t out;
 	sll_api_sys_get_args(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1766,9 +1717,7 @@ __SLL_API_TYPE_sll_api_sys_get_sandbox_flags sll_api_sys_get_sandbox_flags(__SLL
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_sandbox_flags_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_array_t out;
 	sll_api_sys_get_sandbox_flags(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1777,9 +1726,7 @@ __SLL_API_TYPE_sll_api_sys_get_version sll_api_sys_get_version(__SLL_API_ARGS_sl
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_version_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_array_t out;
 	sll_api_sys_get_version(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1875,9 +1822,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_get_internal_data
 	sll_parse_args(SLL_CHAR("i"),al,all,&a);
 	sll_array_t out;
 	sll_api_thread_get_internal_data(a,&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 
@@ -1986,9 +1931,7 @@ __SLL_API_TYPE_sll_api_vm_get_config sll_api_vm_get_config(__SLL_API_ARGS_sll_ap
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_config_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_array_t out;
 	sll_api_vm_get_config(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	out_o->dt.a=out;
-	return out_o;
+	return sll_array_to_object_nocopy(&out);
 }
 
 

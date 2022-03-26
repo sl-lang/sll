@@ -146,17 +146,17 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac,sll_bool_t fr){
 	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+fn;
 	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
-		sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+		sll_object_t* tos;
 		if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
 			sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;
 			for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;i++){
 				*(thr->stack+thr->si)=sll_static_int[0];
 				thr->si++;
 			}
-			SLL_INIT_ARRAY(&(tos->dt.a));
+			tos=sll_array_to_object(NULL);
 		}
 		else{
-			sll_array_create(ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)+1,&(tos->dt.a));
+			tos=sll_array_to_object_length(ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)+1);
 			thr->si-=tos->dt.a.l;
 			for (sll_array_length_t i=0;i<tos->dt.a.l;i++){
 				tos->dt.a.v[i]=*(thr->stack+thr->si+i);
@@ -372,27 +372,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				{
-					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-					sll_array_t* a=&(tos->dt.a);
-					sll_array_create(ai->dt.al,a);
+					sll_object_t* tos=sll_array_to_object_length(ai->dt.al);
 					_scheduler_current_thread->si-=ai->dt.al;
-					sll_copy_data(_scheduler_current_thread->stack+_scheduler_current_thread->si,ai->dt.al*sizeof(sll_object_t*),a->v);
+					sll_copy_data(_scheduler_current_thread->stack+_scheduler_current_thread->si,ai->dt.al*sizeof(sll_object_t*),tos->dt.a.v);
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
 					_scheduler_current_thread->si++;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO:
-				{
-					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-					sll_array_create(0,&(tos->dt.a));
-					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
-					_scheduler_current_thread->si++;
-					break;
-				}
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_array_to_object(NULL);
+				_scheduler_current_thread->si++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE:
 				{
-					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-					sll_array_create(1,&(tos->dt.a));
+					sll_object_t* tos=sll_array_to_object_length(1);
 					tos->dt.a.v[0]=*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1);
 					*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1)=tos;
 					break;

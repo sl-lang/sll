@@ -92,9 +92,8 @@ __API_FUNC(sort_quicksort){
 		out=a;
 	}
 	else{
-		o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+		o=sll_array_to_object(a);
 		out=&(o->dt.a);
-		sll_array_clone(a,out);
 	}
 	if (a->l>1){
 		sll_quicksort(out->v,out->l,(b?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),d);
