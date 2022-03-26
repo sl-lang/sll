@@ -7,6 +7,7 @@
 #include <sll/platform/lock.h>
 #include <sll/platform/memory.h>
 #include <sll/scheduler.h>
+#include <sll/static_object.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 #include <sll/vm.h>
@@ -85,7 +86,12 @@ sll_thread_index_t _thread_new(void){
 		ptr=sll_platform_allocate_page(THREAD_SIZE,0);
 	}
 	thread_data_t* n=ptr;
-	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t));
+	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->a_dt->tls_vc*sizeof(sll_object_t*));
+	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t));
+	sll_static_int[0]->rc+=sll_current_runtime_data->a_dt->tls_vc;
+	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->tls_vc;i++){
+		*(n->tls+i)=sll_static_int[0];
+	}
 	n->ii=0;
 	n->si=0;
 	n->wait=SLL_UNKNOWN_THREAD_INDEX;
@@ -178,6 +184,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 	*(_thread_data+t)=THREAD_NEXT_UNUSED(_thread_next);
 	_thread_next=t;
 	sll_release_object(thr->ret);
+	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->tls_vc;i++){
+		sll_release_object(*(thr->tls+i));
+	}
 	if (_scheduler_allocator_cache_pool_len<THREAD_ALLOCATOR_CACHE_POOL_SIZE){
 		_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len]=thr;
 		_scheduler_allocator_cache_pool_len++;

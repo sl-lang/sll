@@ -11,7 +11,7 @@
 #define THREAD_IS_UNUSED(t) (ADDR(t)>>63)
 #define THREAD_NEXT_UNUSED(id) (PTR((id)|0x8000000000000000ull))
 #define THREAD_GET_NEXT_UNUSED(t) ((sll_thread_index_t)(ADDR((t))&0x7fffffffffffffffull))
-#define THREAD_SIZE SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_vm_config->s_sz*sizeof(sll_object_t*))
+#define THREAD_SIZE SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+(sll_current_vm_config->s_sz+sll_current_runtime_data->a_dt->tls_vc)*sizeof(sll_object_t*))
 
 #define THREAD_ALLOCATOR_CACHE_POOL_SIZE 16
 
@@ -38,6 +38,7 @@ typedef __SLL_U32 thread_list_length_t;
 
 typedef struct __THREAD_DATA{
 	sll_object_t** stack;
+	sll_object_t** tls;
 	sll_instruction_index_t ii;
 	sll_stack_offset_t si;
 	sll_thread_index_t nxt;
