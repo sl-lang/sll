@@ -1530,6 +1530,30 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_ASSEMBLY_VARIABLE_GET_INDEX
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_variable_index_t v
+ * \ret sll_variable_index_t
+ */
+#define SLL_ASSEMBLY_VARIABLE_GET_INDEX(v) ((v)>>1)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ASSEMBLY_VARIABLE_IS_TLS
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_variable_index_t v
+ * \ret sll_bool_t
+ */
+#define SLL_ASSEMBLY_VARIABLE_IS_TLS(v) ((v)&1)
+
+
+
+/**
  * \flags func
  * \name sll_free_assembly_data
  * \group assembly

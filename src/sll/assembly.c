@@ -86,7 +86,7 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_source_f
 				if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 					sll_identifier_t* id=sf->idt.il+i;
 					if ((g_dt->it.l_im+i)->v==SLL_MAX_VARIABLE_INDEX){
-						(g_dt->it.l_im+i)->v=g_dt->it.vc;
+						(g_dt->it.l_im+i)->v=g_dt->it.vc<<1;
 						g_dt->it.vc++;
 					}
 					if (*(g_dt->rm.l+i)!=VARIABLE_OFFSET_NEVER_DELETE){
@@ -101,7 +101,7 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_source_f
 				else{
 					sll_identifier_t* id=sf->idt.s[j].dt+i;
 					if ((g_dt->it.s_im[j]+i)->v==SLL_MAX_VARIABLE_INDEX){
-						(g_dt->it.s_im[j]+i)->v=g_dt->it.vc;
+						(g_dt->it.s_im[j]+i)->v=g_dt->it.vc<<1;
 						g_dt->it.vc++;
 					}
 					if (*(g_dt->rm.s[j]+i)!=VARIABLE_OFFSET_NEVER_DELETE){
@@ -808,7 +808,7 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 					if (id->sc<=sc&&*(g_dt->rm.l+i)==o){
 						*(g_dt->rm.l+i)=VARIABLE_OFFSET_NEVER_DELETE;
 						sll_variable_index_t k=(g_dt->it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id))->v;
-						*(v_st+(k>>6))|=1ull<<(k&63);
+						*(v_st+(SLL_ASSEMBLY_VARIABLE_GET_INDEX(k)>>6))|=1ull<<(SLL_ASSEMBLY_VARIABLE_GET_INDEX(k)&63);
 					}
 				}
 				else{
@@ -816,7 +816,7 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 					if (id->sc<=sc&&*(g_dt->rm.s[SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]+i)==o){
 						*(g_dt->rm.s[SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]+i)=VARIABLE_OFFSET_NEVER_DELETE;
 						sll_variable_index_t k=(g_dt->it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID(o->dt.id)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->dt.id))->v;
-						*(v_st+(k>>6))|=1ull<<(k&63);
+						*(v_st+(SLL_ASSEMBLY_VARIABLE_GET_INDEX(k)>>6))|=1ull<<(SLL_ASSEMBLY_VARIABLE_GET_INDEX(k)&63);
 					}
 				}
 				return o+1;
@@ -2014,25 +2014,20 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 
 
 __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assembly_data_t* o){
-	if (!sf->dt){
-		_init_assembly_stack(o);
-		o->tm=sll_platform_get_current_time();
-		o->h=o->_s.p;
-		_acquire_next_instruction(o)->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO;
-		o->ic=0;
-		o->vc=0;
-		o->ft.l=0;
-		o->ft.dt=NULL;
-		o->st.l=0;
-		o->st.dt=NULL;
-		return;
-	}
 	_init_assembly_stack(o);
 	o->tm=sll_platform_get_current_time();
 	o->h=o->_s.p;
 	o->ic=0;
 	o->vc=0;
 	o->tls_vc=0;
+	if (!sf->dt){
+		_acquire_next_instruction(o)->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO;
+		o->ft.l=0;
+		o->ft.dt=NULL;
+		o->st.l=0;
+		o->st.dt=NULL;
+		return;
+	}
 	o->st.l=sf->st.l;
 	o->st.dt=sll_allocate(o->st.l*sizeof(sll_string_t));
 	for (sll_string_index_t i=0;i<o->st.l;i++){
@@ -2082,10 +2077,10 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(k);j++){
 			sll_identifier_index_t ii=k->a[j];
 			if (SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-				(g_dt.it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->v=g_dt.it.vc;
+				(g_dt.it.l_im+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->v=g_dt.it.vc<<1;
 			}
 			else{
-				(g_dt.it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID(ii)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->v=g_dt.it.vc;
+				(g_dt.it.s_im[SLL_IDENTIFIER_GET_ARRAY_ID(ii)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->v=g_dt.it.vc<<1;
 			}
 			g_dt.it.vc++;
 		}

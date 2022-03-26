@@ -984,4 +984,18 @@ typedef struct __SLL_CHAR_STRING{
 
 
 
+typedef struct __SLL_TLS_OBJECT_LINKED_LIST{
+	sll_array_length_t l;
+	sll_object_t** dt;
+} sll_tls_object_list_t;
+
+
+
+typedef struct __SLL_TLS_OBJECT{
+	sll_array_length_t sz;
+	sll_tls_object_list_t* dt;
+} sll_tls_object_t;
+
+
+
 #endif
