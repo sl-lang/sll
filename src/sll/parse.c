@@ -682,7 +682,7 @@ _parse_identifier:
 _normal_identifier:;
 					unsigned int var_fl=((!o||o->t!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->t==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->t==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0));
 					if (str.l&&str.v[0]=='!'){
-						var_fl|=GET_VAR_INDEX_FLAG_TLS*e_c_dt->fn;
+						var_fl|=GET_VAR_INDEX_FLAG_TLS*(!e_c_dt->fn);
 						for (sll_string_length_t i=0;i<str.l-1;i++){
 							str.v[i]=str.v[i+1];
 						}

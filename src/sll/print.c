@@ -27,6 +27,9 @@
 static void _print_identifier(sll_identifier_index_t ii,const sll_source_file_t* sf,sll_file_t* wf){
 	sll_identifier_t* id=(SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?sf->idt.il:sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(ii)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii);
 	sll_string_t* s=sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(id);
+	if (SLL_IDENTIFIER_IS_TLS(id)){
+		sll_file_write_char(wf,'!',NULL);
+	}
 	sll_file_write(wf,s->v,s->l,NULL);
 	PRINT_STATIC_STRING("|#",wf);
 	_print_int(id->sc,wf);
@@ -46,6 +49,15 @@ static void _print_line(sll_string_index_t s,const sll_source_file_t* sf,sll_fil
 	PRINT_STATIC_STRING("|# :",wf);
 	_print_int(*ln,wf);
 	PRINT_STATIC_STRING(" #|",wf);
+}
+
+
+
+static void _print_assembly_identifier(sll_variable_index_t v,sll_file_t* wf){
+	if (SLL_ASSEMBLY_VARIABLE_IS_TLS(v)){
+		sll_file_write_char(wf,'!',NULL);
+	}
+	_print_int(SLL_ASSEMBLY_VARIABLE_GET_INDEX(v),wf);
 }
 
 
@@ -627,7 +639,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				PRINT_STATIC_STRING("LOAD $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 				PRINT_STATIC_STRING("LOADS #",wf);
@@ -652,36 +664,36 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				PRINT_STATIC_STRING("STORE $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
 				PRINT_STATIC_STRING("STORE $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				PRINT_STATIC_STRING(" & POP",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE:
 				PRINT_STATIC_STRING("PUSH -1 & STORE $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO:
 				PRINT_STATIC_STRING("PUSH 0 & STORE $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE:
 				PRINT_STATIC_STRING("PUSH 1 & STORE $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
 				PRINT_STATIC_STRING("PUSH 2 & STORE $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
 				PRINT_STATIC_STRING("PUSH 3 & STORE $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
 				PRINT_STATIC_STRING("PUSH 4 & STORE $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP:
 				PRINT_STATIC_STRING("LOOKUP",wf);
@@ -814,7 +826,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("NOT $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("NOT",wf);
@@ -823,7 +835,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("BOOL $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("BOOL",wf);
@@ -832,7 +844,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("INC $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("INC",wf);
@@ -841,7 +853,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("DEC $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("DEC",wf);
@@ -850,7 +862,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("ADD $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("ADD",wf);
@@ -859,7 +871,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("SUB $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("SUB",wf);
@@ -868,7 +880,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("MULT $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("MULT",wf);
@@ -877,7 +889,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DIV:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("DIV $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("DIV",wf);
@@ -886,7 +898,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("FDIV $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("FDIV",wf);
@@ -895,7 +907,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MOD:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("MOD $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("MOD",wf);
@@ -904,7 +916,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_AND:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("AND $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("AND",wf);
@@ -913,7 +925,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("OR $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("OR",wf);
@@ -922,7 +934,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("XOR $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("XOR",wf);
@@ -931,7 +943,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("INV $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("INV",wf);
@@ -940,7 +952,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHR:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("SHR $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("SHR",wf);
@@ -949,7 +961,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHL:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("SHL $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("SHL",wf);
@@ -977,12 +989,12 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("PUSH ",wf);
 				_print_int(ai->dt.va.l,wf);
 				PRINT_STATIC_STRING(" & ACCESS_VAR $",wf);
-				_print_int(ai->dt.va.v,wf);
+				_print_assembly_identifier(ai->dt.va.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("ASSIGN $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("ASSIGN",wf);
@@ -991,7 +1003,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("ASSIGN_RANGE $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("ASSIGN_RANGE",wf);
@@ -1000,7 +1012,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING("ASSIGN_RANGE_STEP $",wf);
-					_print_int(ai->dt.v,wf);
+					_print_assembly_identifier(ai->dt.v,wf);
 				}
 				else{
 					PRINT_STATIC_STRING("ASSIGN_RANGE_STEP",wf);
@@ -1010,7 +1022,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("PUSH ",wf);
 				_print_int(ai->dt.va.l,wf);
 				PRINT_STATIC_STRING(" & ASSIGN_VAR_ACCESS $",wf);
-				_print_int(ai->dt.va.v,wf);
+				_print_assembly_identifier(ai->dt.va.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
 				PRINT_STATIC_STRING("CAST",wf);
@@ -1061,7 +1073,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 				PRINT_STATIC_STRING("PRINT $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 				PRINT_STATIC_STRING("CALL ",wf);
@@ -1112,15 +1124,15 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 				PRINT_STATIC_STRING("RET $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 				PRINT_STATIC_STRING("DEL $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
 				PRINT_STATIC_STRING("LOAD $",wf);
-				_print_int(ai->dt.v,wf);
+				_print_assembly_identifier(ai->dt.v,wf);
 				PRINT_STATIC_STRING(" & DEL",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT:

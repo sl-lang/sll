@@ -26,6 +26,7 @@
 #include <sll/scheduler.h>
 #include <sll/static_object.h>
 #include <sll/thread.h>
+#include <sll/tls.h>
 #include <sll/types.h>
 #include <sll/vm.h>
 
@@ -118,8 +119,7 @@
 #define RELOAD_THREAD_DATA \
 	do{ \
 		if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){ \
-			_scheduler_current_thread_index=_scheduler_queue_pop(1); \
-			_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index); \
+			_scheduler_set_thread(_scheduler_queue_pop(1)); \
 		} \
 		if (_scheduler_current_thread->c_st.l){ \
 			func_var_off=ADDR((_scheduler_current_thread->c_st.dt+_scheduler_current_thread->c_st.l-1)->_var_mem_off); \
@@ -129,11 +129,12 @@
 		} \
 		ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,_scheduler_current_thread->ii); \
 	} while (0)
-#define VAR_REF(v) ((sll_object_t**)PTR(ADDR(_vm_var_data+SLL_ASSEMBLY_VARIABLE_GET_INDEX(v))+(SLL_ASSEMBLY_VARIABLE_GET_INDEX(v)>=sll_current_runtime_data->a_dt->vc)*func_var_off))
+#define VAR_REF(v) (SLL_ASSEMBLY_VARIABLE_IS_TLS(v)?sll_tls_get(_vm_tls_var_data+SLL_ASSEMBLY_VARIABLE_GET_INDEX(v)):(sll_object_t**)PTR(ADDR(_vm_var_data+SLL_ASSEMBLY_VARIABLE_GET_INDEX(v))+(SLL_ASSEMBLY_VARIABLE_GET_INDEX(v)>=sll_current_runtime_data->a_dt->vc)*func_var_off))
 
 
 
 static sll_object_t** _vm_var_data=NULL;
+static sll_tls_object_t* _vm_tls_var_data=NULL;
 static sll_size_t _vm_instruction_count=0;
 
 
@@ -202,12 +203,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	_vm_instruction_count=0;
 	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
 	_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)+a_dt->tls_vc*sizeof(sll_tls_object_t)),0);
+	_vm_tls_var_data=PTR(ADDR(_vm_var_data)+a_dt->vc*sizeof(sll_object_t*));
 	sll_static_int[0]->rc+=a_dt->vc;
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		*(_vm_var_data+i)=sll_static_int[0];
 	}
 	for (sll_variable_index_t i=0;i<a_dt->tls_vc;i++){
-		SLL_UNIMPLEMENTED();
+		SLL_INIT_TLS(_vm_tls_var_data+i);
 	}
 	sll_internal_function_table_t ift;
 	sll_clone_internal_function_table(cfg->ift,&ift);
@@ -222,8 +224,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		sll_release_object(*(_vm_var_data+i));
 	}
+	for (sll_variable_index_t i=0;i<a_dt->tls_vc;i++){
+		sll_free_tls(_vm_tls_var_data+i);
+	}
 	sll_platform_free_page(_vm_var_data,SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)+a_dt->tls_vc*sizeof(sll_tls_object_t)));
 	_vm_var_data=NULL;
+	_vm_tls_var_data=NULL;
 	sll_current_runtime_data=NULL;
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);

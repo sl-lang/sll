@@ -58,8 +58,7 @@ static void _reset_critical(void){
 
 
 static void _exception_handler(int sig,siginfo_t* si,void* arg){
-	_reset_critical();
-	_exit(SIGSEGV);
+	_force_exit_platform();
 }
 
 
@@ -82,6 +81,9 @@ void _deinit_platform(void){
 
 __SLL_NO_RETURN void _force_exit_platform(void){
 	_reset_critical();
+#ifdef DEBUG_BUILD
+	raise(SIGABRT);
+#endif
 	_exit(SIGABRT);
 }
 

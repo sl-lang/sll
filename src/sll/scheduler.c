@@ -128,6 +128,7 @@ void _scheduler_queue_thread(sll_thread_index_t t){
 	SLL_CRITICAL(sll_platform_lock_acquire(cpu_dt->lck));
 	cpu_dt->queue_len++;
 	*(cpu_dt->queue+cpu_dt->queue_len-1)=t;
+	(*(_thread_data+t))->st=THREAD_STATE_QUEUED;
 	if (cpu_dt->wait&&cpu_dt->queue_len==1){
 		SLL_CRITICAL(sll_platform_event_set(cpu_dt->evt));
 	}

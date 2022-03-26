@@ -507,6 +507,9 @@
 (:> (<- sys$get_sandbox_flags) "\n")
 
 (= !tls_var 8)
+(<- thread$join (<- thread$start (,,,
+	(:> "TLS value: " tls_var "\n")
+)))
 (:> tls_var "\n")
 
 (:> (<- object$new "[][1]cM<>[Zf <i A> s]0 a m O" 'x' 0.5 45 "abcdefg" [0 1 2 3 4 5 6 7 8 9] <1 2 3 4 5 6> log) "\n")

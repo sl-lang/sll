@@ -41,6 +41,7 @@ typedef struct __IDENTIFIER_MAP_DATA{
 	sll_scope_t l_sc;
 	sll_variable_index_t* sc_vi;
 	sll_variable_index_t vc;
+	sll_variable_index_t tls_vc;
 } identifier_map_data_t;
 
 
@@ -68,6 +69,7 @@ typedef struct __ASSEMBLY_GENERATOR_DATA{
 	loop_t l_dt;
 	assembly_instruction_label_t rt;
 	sll_stack_offset_t s_off;
+	sll_variable_index_t l_dt_vc;
 } assembly_generator_data_t;
 
 
