@@ -701,6 +701,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v)
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_char_t v){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	sll_string_from_char(v,&(o->dt.s));
+	return o;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t v){
 	if (!v){
 		SLL_ACQUIRE(sll_static_float_zero);

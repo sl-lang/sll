@@ -174,11 +174,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		case COMBINED_TYPE_CF:
 			return sll_float_to_object(a->dt.c);
 		case COMBINED_TYPE_CS:
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_from_char(a->dt.c,&(o->dt.s));
-				return o;
-			}
+			return sll_char_to_string_object(a->dt.c);
 		case COMBINED_TYPE_SI:
 			return sll_int_to_object(sll_string_parse_int(&(a->dt.s)));
 		case COMBINED_TYPE_SF:

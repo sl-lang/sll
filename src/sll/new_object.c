@@ -79,10 +79,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case 'c':
 			return sll_char_to_object(sll_var_arg_get_char(va));
 		case 'C':
-			{
-				sll_char_t c=sll_var_arg_get_char(va);
-				return sll_string_pointer_to_object(&c,1);
-			}
+			return sll_char_to_string_object(sll_var_arg_get_char(va));
 		case 's':
 			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_STRING);
 		case 'z':
