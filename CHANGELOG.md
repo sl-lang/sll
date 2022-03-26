@@ -15,7 +15,7 @@
 - Implemented `sll_new_object`, `sll_new_object_array` and `sll_new_object_list` ([#255])
 - Implemented proper parsing of unknown escape sequences
 - Operator parser is now generated from [`src/sll/data/operator_parser.txt`][0.7.10/src/sll/data/operator_parser.txt]
-- String format that converts objects to string: `S`
+- String format that converts objects to string: `%S`
 - Thread-local variables can be marked with an exclamation mark (`!`) ([#254])
 - Threads, semaphores, locks, barriers and environmental variables are now multithreading-compatible ([#243])
 

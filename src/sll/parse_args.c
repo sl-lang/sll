@@ -33,6 +33,34 @@
 		break; \
 	}
 
+#define PARSE_TYPE_RANGE(type,base_type,field,name) \
+	{ \
+		type* var=ptr; \
+		type mn=(type)va_arg(va,base_type); \
+		type mx=(type)va_arg(va,base_type); \
+		if (mx<mn){ \
+			type tmp=mn; \
+			mn=mx; \
+			mx=tmp; \
+		} \
+		if (!all){ \
+			*var=mn; \
+			break; \
+		} \
+		sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
+		*var=obj->dt.field; \
+		sll_release_object(obj);\
+		if (*var<mn){ \
+			*var=mn; \
+		} \
+		else if (*var>mx){ \
+			*var=mx; \
+		} \
+		al++; \
+		all--; \
+		break; \
+	}
+
 #define INIT_ZERO(x) \
 	do{ \
 		*(x)=0; \
@@ -112,11 +140,17 @@ __SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sl
 					SLL_UNIMPLEMENTED();
 				case 'i':
 					SLL_UNIMPLEMENTED();
+				case 'I':
+					SLL_UNIMPLEMENTED();
 				case 'f':
+					SLL_UNIMPLEMENTED();
+				case 'F':
 					SLL_UNIMPLEMENTED();
 				case 'x':
 					SLL_UNIMPLEMENTED();
 				case 'c':
+					SLL_UNIMPLEMENTED();
+				case 'C':
 					SLL_UNIMPLEMENTED();
 				case 's':
 					SLL_UNIMPLEMENTED();
@@ -154,12 +188,18 @@ __SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sl
 				break;
 			case 'i':
 				PARSE_TYPE(sll_integer_t,i,INT);
+			case 'I':
+				PARSE_TYPE_RANGE(sll_integer_t,sll_integer_t,i,INT);
 			case 'f':
 				PARSE_TYPE(sll_float_t,f,FLOAT);
+			case 'F':
+				PARSE_TYPE_RANGE(sll_integer_t,sll_integer_t,i,INT);
 			case 'x':
 				PARSE_TYPES(sll_int_float_t,INT,i,FLOAT,f,INIT_ZERO);
 			case 'c':
 				PARSE_TYPE(sll_char_t,c,CHAR);
+			case 'C':
+				PARSE_TYPE_RANGE(sll_char_t,__SLL_U32,c,CHAR);
 			case 's':
 				PARSE_TYPE_PTR(sll_string_t,s,STRING,SLL_INIT_STRING);
 			case 'y':
