@@ -7,6 +7,7 @@
 - Implemented `object.sll` and `object$new` ([#255])
 - Implemented `sll_allocator_collapse`
 - Implemented `sll_array_length_to_object`, `sll_array_to_object`, `sll_array_to_object_nocopy`, `sll_char_to_string_object`, `sll_map_length_to_object`, `sll_map_to_object` and `sll_map_to_object_nocopy`
+- Implemented `SLL_ASSEMBLY_VARIABLE_GET_INDEX` and `SLL_ASSEMBLY_VARIABLE_IS_TLS` ([#254])
 - Implemented `sll_get_cpu_index` and `sll_get_thread_index`
 - Implemented `SLL_IDENTIFIER_GET_STRING_INDEX`, `SLL_IDENTIFIER_IS_TLS`, `SLL_IDENTIFIER_UPDATE_STRING_INDEX`, `SLL_IDENTIFIER_SET_STRING_INDEX`, `sll_identifier_get_string_index`, `sll_identifier_is_tls`, `sll_identifier_set_string_index` and `sll_identifier_update_string_index` ([#254])
 - Implemented `sll_int_float_t`, `sll_char_string_t` and `sll_parse_args` ([#256])
