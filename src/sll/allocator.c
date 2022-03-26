@@ -8,14 +8,6 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_from_memory(void* ptr,sll_size_t sz){
-	void* o=sll_allocator_init(sz);
-	sll_copy_data(ptr,sz,o);
-	return o;
-}
-
-
-
 __SLL_EXTERNAL void sll_allocator_collapse(void** a,sll_size_t sz){
 	if (!*a){
 		*a=sll_allocator_init(sz);
@@ -30,6 +22,14 @@ __SLL_EXTERNAL void sll_allocator_collapse(void** a,sll_size_t sz){
 	ALLOCATOR_HEADER_INIT(h,sz);
 	h=sll_reallocate(h,(sz<<3)+sizeof(allocator_header_t));
 	*a=PTR(ADDR(h)+sizeof(allocator_header_t));
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_from_memory(void* ptr,sll_size_t sz){
+	void* o=sll_allocator_init(sz);
+	sll_copy_data(ptr,sz,o);
+	return o;
 }
 
 

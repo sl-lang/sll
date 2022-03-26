@@ -101,6 +101,18 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_ERROR_GET_VALUE
+ * \group error
+ * \desc Docs!
+ * \arg sll_error_t e
+ * \ret sll_error_t
+ */
+#define SLL_ERROR_GET_VALUE(e) ((e)&0xffffffff)
+
+
+
+/**
  * \flags macro var
  * \name SLL_NO_ERROR
  * \group error

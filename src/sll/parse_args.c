@@ -18,6 +18,11 @@
 		t++; \
 	}
 
+#define INIT_ZERO(x) \
+	do{ \
+		*(x)=0; \
+	} while (0)
+
 #define PARSE_TYPE(type,field,name) \
 	{ \
 		type* var=ptr; \
@@ -32,7 +37,6 @@
 		all--; \
 		break; \
 	}
-
 #define PARSE_TYPE_RANGE(type,base_type,field,name) \
 	{ \
 		type* var=ptr; \
@@ -60,12 +64,6 @@
 		all--; \
 		break; \
 	}
-
-#define INIT_ZERO(x) \
-	do{ \
-		*(x)=0; \
-	} while (0)
-
 #define PARSE_TYPE_PTR(type,field,name,init) \
 	{ \
 		type** var=ptr; \

@@ -1,6 +1,12 @@
 # The Sl Programing Language Change Log
 
-## [0.7.10] - Ongoing
+## [0.7.11] - Ongoing
+
+### Added
+
+- Implemented `SLL_ERROR_GET_VALUE`
+
+## [0.7.10] - 2022-03-26
 
 ### Added
 
@@ -1756,7 +1762,8 @@ Literally, just arrays.
 
 Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so the change log for version 0.1.2 (and below) consists of everything added up to that point.
 
-[0.7.10]: https://github.com/sl-lang/sll/compare/sll-v0.7.9...main
+[0.7.11]: https://github.com/sl-lang/sll/compare/sll-v0.7.10...main
+[0.7.10]: https://github.com/sl-lang/sll/compare/sll-v0.7.9...sll-v0.7.10
 [0.7.9]: https://github.com/sl-lang/sll/compare/sll-v0.7.8...sll-v0.7.9
 [0.7.8]: https://github.com/sl-lang/sll/compare/sll-v0.7.7...sll-v0.7.8
 [0.7.7]: https://github.com/sl-lang/sll/compare/sll-v0.7.6...sll-v0.7.7
@@ -2043,7 +2050,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
-[0.7.10/src/sll/data/operator_parser.txt]: https://github.com/sl-lang/sll/blob/main/src/sll/data/operator_parser.txt
+[0.7.10/src/sll/data/operator_parser.txt]: https://github.com/sl-lang/sll/blob/sll-v0.7.10/src/sll/data/operator_parser.txt
 [0.7.9/src/sll/include/sll/_internal]: https:/github.com/sl-lang/sll/tree/sll-v0.7.9/src/sll/include/sll/_internal
 [0.7.8/src/sll/include/sll/_sll_internal.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.8/src/sll/include/sll/_sll_internal.h
 [0.7.8/src/sll/include/sll/platform]: https:/github.com/sl-lang/sll/tree/sll-v0.7.8/src/sll/include/sll/platform
