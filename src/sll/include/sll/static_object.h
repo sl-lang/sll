@@ -134,6 +134,45 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_char[256];
 
 /**
  * \flags check_output func
+ * \name sll_array_to_object
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg const sll_array_t* v
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_array_t* v);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_array_to_object_length
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg sll_array_length_t l
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_length(sll_array_length_t l);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_array_to_object_nocopy
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg sll_array_t* v
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_nocopy(sll_array_t* v);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_char_to_object
  * \group static-object
  * \subgroup static-object-create
@@ -168,6 +207,45 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t 
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_map_to_object
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg const sll_map_t* v
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_t* v);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_map_to_object_length
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg sll_map_length_t l
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_length(sll_map_length_t l);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_map_to_object_nocopy
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg sll_map_t* v
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map_t* v);
 
 
 

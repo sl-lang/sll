@@ -167,9 +167,8 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	if (c=='{'){
-		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+		sll_object_t* o=sll_map_to_object(NULL);
 		sll_map_t* m=&(o->dt.m);
-		SLL_INIT_MAP(m);
 		while (1){
 			c=**p;
 			(*p)++;

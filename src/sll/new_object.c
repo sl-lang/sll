@@ -58,29 +58,9 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					return (ptr&&len?sll_string_to_object_pointer(ptr,len):sll_string_to_object(NULL));
 				}
 			case 'a':
-				{
-					sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-					const sll_array_t* ptr=sll_var_arg_get(va);
-					if (!ptr){
-						sll_array_create(0,&(o->dt.a));
-					}
-					else{
-						sll_array_clone(ptr,&(o->dt.a));
-					}
-					return o;
-				}
+				return sll_array_to_object(sll_var_arg_get(va));
 			case 'm':
-				{
-					sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-					const sll_map_t* ptr=sll_var_arg_get(va);
-					if (!ptr){
-						sll_map_create(0,&(o->dt.m));
-					}
-					else{
-						sll_map_clone(ptr,&(o->dt.m));
-					}
-					return o;
-				}
+				return sll_map_to_object(sll_var_arg_get(va));
 			case 'N':
 				{
 					sll_object_t* o=sll_var_arg_get_object(va);
@@ -112,19 +92,11 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case 'a':
 			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_ARRAY);
 		case 'A':
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_create(0,&(o->dt.a));
-				return o;
-			}
+			return sll_array_to_object(NULL);
 		case 'm':
 			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_MAP);
 		case 'M':
-			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				sll_map_create(0,&(o->dt.m));
-				return o;
-			}
+			return sll_map_to_object(NULL);
 		case '(':
 		case '[':
 			{

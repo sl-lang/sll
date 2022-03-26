@@ -145,8 +145,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
 			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				sll_map_create(1,&(o->dt.m));
+				sll_object_t* o=sll_map_to_object_length(1);
 				o->dt.m.v[0]=SLL_ACQUIRE_STATIC_INT(0);
 				o->dt.m.v[1]=a;
 				SLL_ACQUIRE(a);

@@ -5,7 +5,7 @@ FORMAT_MAP={"I":"i","B":"b","F":"f","C":"c","S":"s","A":"a","M":"m","O":"o","SC"
 TYPE_MAP={"I":"sll_integer_t","B":"sll_bool_t","F":"sll_float_t","C":"sll_char_t","S":"sll_string_t","A":"sll_array_t","M":"sll_map_t","O":"sll_object_t*","V":"void","SC":"sll_char_string_t","FI":"sll_int_float_t"}
 TYPE_PTR=["S","A","M","SC","FI"]
 TYPE_PTR_NO_FMT=["SC","FI"]
-TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","S":"return sll_string_to_object_nocopy(&out)","A":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);out_o->dt.a=out;return out_o","M":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_MAP);out_o->dt.m=out;return out_o"}
+TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","S":"return sll_string_to_object_nocopy(&out)","A":"sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);out_o->dt.a=out;return out_o","M":"return sll_map_to_object_nocopy(&out)"}
 
 
 

@@ -16,9 +16,6 @@
 #include <sll/thread.h>
 #include <sll/types.h>
 #include <sll/vm.h>
-#ifdef DEBUG_BUILD
-#include <signal.h>
-#endif
 
 
 
@@ -91,9 +88,6 @@ __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const s
 			sll_platform_file_write(fd,">\n",2,NULL);
 		}
 	}
-#ifdef DEBUG_BUILD
-	raise(SIGABRT);
-#endif
 	_force_exit_platform();
 }
 

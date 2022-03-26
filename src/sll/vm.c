@@ -399,9 +399,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
 				{
-					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_MAP);
+					sll_object_t* tos=sll_map_to_object_length((ai->dt.ml+1)>>1);
 					sll_map_t* m=&(tos->dt.m);
-					sll_map_create((ai->dt.ml+1)>>1,m);
 					_scheduler_current_thread->si-=ai->dt.ml;
 					for (sll_map_length_t i=0;i<ai->dt.ml;i++){
 						m->v[i]=*(_scheduler_current_thread->stack+_scheduler_current_thread->si+i);
@@ -414,13 +413,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO:
-				{
-					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_MAP);
-					sll_map_create(0,&(tos->dt.m));
-					*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=tos;
-					_scheduler_current_thread->si++;
-					break;
-				}
+				*(_scheduler_current_thread->stack+_scheduler_current_thread->si)=sll_map_to_object(NULL);
+				_scheduler_current_thread->si++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				sll_release_object(*VAR_REF(ai->dt.v));
 				*VAR_REF(ai->dt.v)=*(_scheduler_current_thread->stack+_scheduler_current_thread->si-1);

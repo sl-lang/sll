@@ -1730,9 +1730,7 @@ __SLL_API_TYPE_sll_api_sys_get_env sll_api_sys_get_env(__SLL_API_ARGS_sll_api_sy
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_env_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_map_t out;
 	sll_api_sys_get_env(&out);
-	sll_object_t* out_o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-	out_o->dt.m=out;
-	return out_o;
+	return sll_map_to_object_nocopy(&out);
 }
 
 

@@ -664,6 +664,36 @@ __SLL_EXTERNAL sll_object_t* sll_static_char[256]={
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_array_t* v){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+	if (v){
+		sll_array_clone(v,&(o->dt.a));
+	}
+	else{
+		SLL_INIT_MAP(&(o->dt.a));
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_length(sll_array_length_t l){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+	sll_array_create(l,&(o->dt.a));
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_nocopy(sll_array_t* v){
+	SLL_ASSERT(v);
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+	o->dt.a=*v;
+	return o;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v){
 	SLL_ACQUIRE(sll_static_char[v]);
 	return sll_static_char[v];
@@ -707,13 +737,43 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* v){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	if (!v){
-		SLL_INIT_STRING(&(o->dt.s));
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_t* v){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+	if (v){
+		sll_map_clone(v,&(o->dt.m));
 	}
 	else{
+		SLL_INIT_MAP(&(o->dt.m));
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_length(sll_map_length_t l){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+	sll_map_create(l,&(o->dt.m));
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map_t* v){
+	SLL_ASSERT(v);
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+	o->dt.m=*v;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* v){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	if (v){
 		sll_string_clone(v,&(o->dt.s));
+	}
+	else{
+		SLL_INIT_STRING(&(o->dt.s));
 	}
 	return o;
 }

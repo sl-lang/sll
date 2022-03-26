@@ -81,34 +81,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 		case SLL_OBJECT_TYPE_MAP_KEYS:
 		case SLL_OBJECT_TYPE_MAP_VALUES:
 			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_bool_t err=0;
 				sll_array_length_t l=(sll_array_length_t)sll_decode_integer(f,&err);
 				if (err){
-					SLL_INIT_ARRAY(&(o->dt.a));
+					return sll_array_to_object(NULL);
 				}
-				else{
-					sll_array_create(l,&(o->dt.a));
-					for (sll_array_length_t i=0;i<l;i++){
-						o->dt.a.v[i]=sll_decode_object(f);
-					}
+				sll_object_t* o=sll_array_to_object_length(l);
+				for (sll_array_length_t i=0;i<l;i++){
+					o->dt.a.v[i]=sll_decode_object(f);
 				}
 				return o;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
-				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 				sll_bool_t err=0;
 				sll_map_length_t l=(sll_map_length_t)sll_decode_integer(f,&err);
 				if (err){
-					SLL_INIT_MAP(&(o->dt.m));
+					return sll_map_to_object(NULL);
 				}
-				else{
-					sll_map_create(l,&(o->dt.m));
-					l<<=1;
-					for (sll_map_length_t i=0;i<l;i++){
-						o->dt.m.v[i]=sll_decode_object(f);
-					}
+				sll_object_t* o=sll_map_to_object_length(l);
+				l<<=1;
+				for (sll_map_length_t i=0;i<l;i++){
+					o->dt.m.v[i]=sll_decode_object(f);
 				}
 				return o;
 			}
