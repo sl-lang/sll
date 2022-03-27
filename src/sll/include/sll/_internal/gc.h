@@ -50,6 +50,14 @@
 
 
 
+typedef struct __GC_PAGE_HEADER{
+	struct __GC_PAGE_HEADER* p;
+	struct __GC_PAGE_HEADER* n;
+	sll_size_t cnt;
+} gc_page_header_t;
+
+
+
 void _gc_release_data(void);
 
 

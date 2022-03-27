@@ -17,7 +17,7 @@
 
 
 
-static void* _gc_page_ptr=NULL;
+static gc_page_header_t* _gc_page_ptr=NULL;
 static sll_object_t* _gc_next_object=NULL;
 static sll_size_t _gc_alloc=0;
 static sll_size_t _gc_dealloc=0;
@@ -27,10 +27,13 @@ static sll_size_t _gc_dealloc=0;
 void _gc_release_data(void){
 	SLL_ASSERT(_gc_alloc==_gc_dealloc);
 	while (_gc_page_ptr){
-		void* n=*((void**)_gc_page_ptr);
+		gc_page_header_t* n=_gc_page_ptr->n;
 		sll_platform_free_page(_gc_page_ptr,SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE));
 		_gc_page_ptr=n;
 	}
+	_gc_next_object=NULL;
+	_gc_alloc=0;
+	_gc_dealloc=0;
 }
 
 
@@ -45,12 +48,17 @@ __SLL_EXTERNAL void sll_acquire_object(sll_object_t* o){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_type_t t){
 	if (!_gc_next_object){
-		void* pg=sll_platform_allocate_page(SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE),0);
-		*((void**)pg)=_gc_page_ptr;
+		gc_page_header_t* pg=sll_platform_allocate_page(SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE),0);
+		if (_gc_page_ptr){
+			_gc_page_ptr->p=pg;
+		}
+		pg->p=NULL;
+		pg->n=_gc_page_ptr;
+		pg->cnt=0;
 		_gc_page_ptr=pg;
-		sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(void*));
+		sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(gc_page_header_t));
 		_gc_next_object=c;
-		void* e=PTR(ADDR(pg)+sizeof(void*)+((SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE)-sizeof(void*))/sizeof(sll_object_t)-1)*sizeof(sll_object_t));
+		void* e=PTR(ADDR(pg)+sizeof(gc_page_header_t)+((SLL_ROUND_PAGE(GC_OBJECT_POOL_ALLOC_SIZE)-sizeof(gc_page_header_t))/sizeof(sll_object_t)-1)*sizeof(sll_object_t));
 		while (PTR(c)<e){
 			GC_SET_NEXT_OBJECT(c,c+1);
 			c->rc=0;
