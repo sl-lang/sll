@@ -38,6 +38,39 @@ __API_FUNC(thread_create_semaphore){
 
 
 
+__API_FUNC(thread_delete){
+	return sll_thread_delete((a<0?0:(sll_thread_index_t)a));
+}
+
+
+
+__API_FUNC(thread_delete_barrier){
+	if (a<0||a>SLL_MAX_BARRIER_INDEX){
+		return 0;
+	}
+	return sll_barrier_delete((sll_barrier_index_t)a);
+}
+
+
+
+__API_FUNC(thread_delete_lock){
+	if (a<0||a>SLL_MAX_LOCK_INDEX){
+		return 0;
+	}
+	return sll_lock_delete((sll_lock_index_t)a);
+}
+
+
+
+__API_FUNC(thread_delete_semaphore){
+	if (a<0||a>SLL_MAX_SEMAPHORE_INDEX){
+		return 0;
+	}
+	return sll_semaphore_delete((sll_semaphore_index_t)a);
+}
+
+
+
 __API_FUNC(thread_get_internal_data){
 	thread_data_t* thr=_thread_get((a<0?0:(sll_thread_index_t)a));
 	sll_new_object_array(SLL_CHAR("hh"),out,(thr?thr->ii:0),(thr?thr->si:0));

@@ -68,6 +68,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll
 		_semaphore_next=SEMAPHORE_GET_NEXT_ID(_semaphore_data+o);
 	}
 	(_semaphore_data+o)->count=c;
+	(_semaphore_data+o)->first=SLL_UNKNOWN_THREAD_INDEX;
 	SLL_CRITICAL(sll_platform_lock_release(_semaphore_lock));
 	return o;
 }

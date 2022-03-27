@@ -1,12 +1,15 @@
-(--- "types.sll" "string.sll")
+(--- "types.sll" "string.sll" "weakref.sll" "map.sll")
 
 
 
-(# STATE_RUNNING STATE_WAITING_THREAD STATE_WAITING_LOCK STATE_WAITING_SEMAPHORE STATE_WAITING_BARRIER STATE_TERMINATED _thread_map)
+(# STATE_RUNNING STATE_WAITING_THREAD STATE_WAITING_LOCK STATE_WAITING_SEMAPHORE STATE_WAITING_BARRIER STATE_TERMINATED _thread_map get)
 
 
 
 (= barrier_type (&:
+	(,,, dt
+		(<- (... "sll:thread_delete_barrier") dt$id)
+	) @@delete@@
 	(,,, dt
 		(@@ (<- string$format "<barrier-%u counter=%u>" dt$id dt$counter))
 	) @@string@@
@@ -16,9 +19,12 @@
 
 (= lock_type (&:
 	(,,, dt
+		(<- (... "sll:thread_delete_lock") dt$id)
+	) @@delete@@
+	(,,, dt
 		(= state (?: (=== dt$blocking_thread -1)
 			"unlocked"
-			(+ "locked blocking_thread=" (<- string$str (: _thread_map dt$blocking_thread)))
+			(+ "locked blocking_thread=" (<- string$str (<- get dt$blocking_thread)))
 		))
 		(@@ (<- string$format "<lock-%u state=%s>" dt$id state))
 	) @@string@@
@@ -27,6 +33,9 @@
 ))
 
 (= semaphore_type (&:
+	(,,, dt
+		(<- (... "sll:thread_delete_semaphore") dt$id)
+	) @@delete@@
 	(,,, dt
 		(@@ (<- string$format "<semaphore-%u counter=%u/%u>" dt$id dt$counter dt$max))
 	) @@string@@
@@ -37,10 +46,14 @@
 
 (= thread_type (&:
 	(,,, dt
+		(<- map$remove _thread_map dt$id)
+		(<- (... "sll:thread_delete") dt$id)
+	) @@delete@@
+	(,,, dt
 		(= state nil)
 		(?? dt$state
 			STATE_RUNNING (= state "running")
-			STATE_WAITING_THREAD (= state (+ "waiting blocking=" (<- string$str (: _thread_map dt$blocking))))
+			STATE_WAITING_THREAD (= state (+ "waiting blocking=" (<- string$str (<- get dt$blocking))))
 			STATE_WAITING_LOCK (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
 			STATE_WAITING_SEMAPHORE (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
 			STATE_WAITING_BARRIER (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
@@ -49,7 +62,7 @@
 		(? (!== dt$suspended -1) (= state (+
 			state
 			" suspended="
-			(<- string$str (: _thread_map dt$suspended))
+			(<- string$str (<- get dt$suspended))
 		)))
 		(@@ (<- string$format "<thread-%u state=%s>" dt$id state))
 	) @@string@@
@@ -108,22 +121,25 @@
 
 
 
-(= _thread_map <0 (. thread_type
+(= _main_thread (. thread_type
 	0
 	STATE_RUNNING
 	-1
 	nil
 	nil
-)>)
+))
+
+(= _thread_map <>)
 
 
 
-(= _thread_runner (,,, fn args
-	(= o (<-* fn args))
+(= _thread_runner (,,, fn args sem
 	(= thr nil)
 	(>- (= id (!.)) (=== thr nil)
-		(= thr (: _thread_map id))
+		(= thr (<- get id))
 	)
+	(<- (... "sll:thread_release_semaphore") sem)
+	(= o (<-* fn args))
 	(= thr$return_value o)
 	(= thr$state STATE_TERMINATED)
 	(@@ o)
@@ -132,7 +148,7 @@
 (= acquire_lock (,,, lck
 	(? (=== lck nil) (@@))
 	(= lck (:: lck lock_type))
-	(= thr (: _thread_map (!.)))
+	(= thr (<- get (!.)))
 	(= thr$blocking lck)
 	(= thr$state STATE_WAITING_LOCK)
 	(!<* lck$id)
@@ -143,7 +159,7 @@
 (= acquire_semaphore (,,, sem
 	(? (=== sem nil) (@@))
 	(= sem (:: sem semaphore_type))
-	(= thr (: _thread_map (!.)))
+	(= thr (<- get (!.)))
 	(= thr$blocking sem)
 	(= thr$state STATE_WAITING_SEMAPHORE)
 	(!<+ sem$id)
@@ -176,11 +192,16 @@
 ))
 
 (= current (,,,
-	(@@ (: _thread_map (!.)))
+	(@@ (<- get (!.)))
 ))
 
 (= get (,,, id
-	(@@ (: _thread_map id))
+	(? (! id) (@@ _main_thread))
+	(= dt (: _thread_map id))
+	(@@ (?: dt
+		(<- weakref$get dt)
+		nil
+	))
 ))
 
 (= get_internal_data (,,, thr
@@ -193,7 +214,7 @@
 (= if_equal (,,, bar v
 	(? (=== bar nil) (@@))
 	(= bar (:: bar barrier_type))
-	(= thr (: _thread_map (!.)))
+	(= thr (<- get (!.)))
 	(= thr$blocking bar)
 	(= thr$state STATE_WAITING_BARRIER)
 	(!<= bar$id (:: v int_type))
@@ -203,7 +224,7 @@
 (= if_greater_equal (,,, bar v
 	(? (=== bar nil) (@@))
 	(= bar (:: bar barrier_type))
-	(= thr (: _thread_map (!.)))
+	(= thr (<- get (!.)))
 	(= thr$blocking bar)
 	(= thr$state STATE_WAITING_BARRIER)
 	(!<> bar$id (:: v int_type))
@@ -220,7 +241,7 @@
 	(? (=== thr nil) (@@))
 	(= thr (:: thr thread_type))
 	(? (=== thr$state STATE_TERMINATED) (@@))
-	(= c_thr (: _thread_map (!.)))
+	(= c_thr (<- get (!.)))
 	(= c_thr$blocking thr$id)
 	(= c_thr$state STATE_WAITING_THREAD)
 	(!<< thr$id)
@@ -260,11 +281,13 @@
 			(@@ 1)
 		}
 	)
+	(= sem (<- (... "sll:thread_create_semaphore") 0))
 	(= tid (<- (... "sll:thread_create")
 		_thread_runner
 		[
 			(:: fn func_type)
 			@@args@@
+			sem
 		]
 	))
 	(= o (. thread_type
@@ -274,7 +297,9 @@
 		nil
 		nil
 	))
-	(= (: _thread_map tid) o)
+	(= (: _thread_map tid) (<- weakref$ref o))
+	(!<+ sem)
+	(<- (... "sll:thread_delete_semaphore") sem)
 	(@@ o)
 ))
 

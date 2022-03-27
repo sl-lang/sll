@@ -4003,6 +4003,98 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_thread_delete __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_thread_delete sll_integer_t a
+/**
+ * \flags func
+ * \name sll_api_thread_delete
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_delete_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_delete:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_thread_delete_barrier __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_thread_delete_barrier sll_integer_t a
+/**
+ * \flags func
+ * \name sll_api_thread_delete_barrier
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_delete_barrier_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_delete_barrier:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_thread_delete_lock __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_thread_delete_lock sll_integer_t a
+/**
+ * \flags func
+ * \name sll_api_thread_delete_lock
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_delete_lock_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_delete_lock:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_thread_delete_semaphore __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_thread_delete_semaphore sll_integer_t a
+/**
+ * \flags func
+ * \name sll_api_thread_delete_semaphore
+ * \group thread-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_thread_delete_semaphore_raw
+ * \group raw-api
+ * \subgroup raw-api-thread-api
+ * \desc Wrapper function for :sll_api_thread_delete_semaphore:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_thread_get_internal_data void
 #define __SLL_API_ARGS_sll_api_thread_get_internal_data sll_integer_t a,sll_array_t* out
 /**

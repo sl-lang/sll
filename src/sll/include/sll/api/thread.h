@@ -61,6 +61,54 @@ __API_FUNC_DECL(thread_create_semaphore);
 
 /**
  * \flags api func
+ * \name sll_api_thread_delete
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ * \ret B
+ */
+__API_FUNC_DECL(thread_delete);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_thread_delete_barrier
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ * \ret B
+ */
+__API_FUNC_DECL(thread_delete_barrier);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_thread_delete_lock
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ * \ret B
+ */
+__API_FUNC_DECL(thread_delete_lock);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_thread_delete_semaphore
+ * \group thread-api
+ * \desc Docs!
+ * \arg I
+ * \ret B
+ */
+__API_FUNC_DECL(thread_delete_semaphore);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_thread_get_internal_data
  * \group thread-api
  * \desc Docs!

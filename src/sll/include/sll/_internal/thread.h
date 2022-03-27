@@ -49,6 +49,7 @@ typedef struct __THREAD_DATA{
 	sll_char_t tm;
 	thread_state_t st;
 	sll_bool_t suspended;
+	sll_bool_t delete;
 } thread_data_t;
 
 

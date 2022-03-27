@@ -4,7 +4,9 @@
 
 ### Added
 
+- Barriers, locks, semaphores and threads are now automatically deleted when their handles go out of scope
 - Implemented `SLL_ERROR_GET_VALUE`
+- Implemented `SLL_MAX_BARRIER_INDEX`
 - Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
 - Implemented `sll_weakref_create`, `sll_weakref_delete`, `sll_weakref_get` and `sll_weakref_register_callback` ([#257])
 - Implemented `weakref.sll`, `weakref$weakref_type`, `weakref$NO_OBJECT`, `weakref$get` and `weakref$ref` ([#257])

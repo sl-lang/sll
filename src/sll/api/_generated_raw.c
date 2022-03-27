@@ -1816,6 +1816,50 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_create_semaphore_
 
 
 
+__SLL_API_TYPE_sll_api_thread_delete sll_api_thread_delete(__SLL_API_ARGS_sll_api_thread_delete);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_delete_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t a;
+	sll_parse_args(SLL_CHAR("i"),al,all,&a);
+	sll_bool_t out=sll_api_thread_delete(a);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
+}
+
+
+
+__SLL_API_TYPE_sll_api_thread_delete_barrier sll_api_thread_delete_barrier(__SLL_API_ARGS_sll_api_thread_delete_barrier);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_delete_barrier_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t a;
+	sll_parse_args(SLL_CHAR("i"),al,all,&a);
+	sll_bool_t out=sll_api_thread_delete_barrier(a);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
+}
+
+
+
+__SLL_API_TYPE_sll_api_thread_delete_lock sll_api_thread_delete_lock(__SLL_API_ARGS_sll_api_thread_delete_lock);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_delete_lock_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t a;
+	sll_parse_args(SLL_CHAR("i"),al,all,&a);
+	sll_bool_t out=sll_api_thread_delete_lock(a);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
+}
+
+
+
+__SLL_API_TYPE_sll_api_thread_delete_semaphore sll_api_thread_delete_semaphore(__SLL_API_ARGS_sll_api_thread_delete_semaphore);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_delete_semaphore_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t a;
+	sll_parse_args(SLL_CHAR("i"),al,all,&a);
+	sll_bool_t out=sll_api_thread_delete_semaphore(a);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
+}
+
+
+
 __SLL_API_TYPE_sll_api_thread_get_internal_data sll_api_thread_get_internal_data(__SLL_API_ARGS_sll_api_thread_get_internal_data);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_thread_get_internal_data_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_integer_t a;
@@ -2675,6 +2719,22 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_thread_create_semaphore_raw
 	},
 	{
+		SLL_CHAR("sll:thread_delete"),
+		sll_api_thread_delete_raw
+	},
+	{
+		SLL_CHAR("sll:thread_delete_barrier"),
+		sll_api_thread_delete_barrier_raw
+	},
+	{
+		SLL_CHAR("sll:thread_delete_lock"),
+		sll_api_thread_delete_lock_raw
+	},
+	{
+		SLL_CHAR("sll:thread_delete_semaphore"),
+		sll_api_thread_delete_semaphore_raw
+	},
+	{
 		SLL_CHAR("sll:thread_get_internal_data"),
 		sll_api_thread_get_internal_data_raw
 	},
@@ -2758,5 +2818,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=185;
+const sll_function_index_t _ifunc_size=189;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);
