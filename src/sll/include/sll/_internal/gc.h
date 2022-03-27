@@ -23,10 +23,12 @@
 
 #define GC_PAGE_POOL_SIZE 32
 
+#define GC_GET_FLAGS(o) ((o)->_f&0xffffff)
+
 #define GC_LOCK(o) \
 	do{ \
 		sll_object_t* __o=(o); \
-		sll_object_type_t __b=__o->_f&0xffffff; \
+		sll_object_type_t __b=GC_GET_FLAGS(__o); \
 		sll_object_type_t __v=__b|((_scheduler_internal_thread_index+1)<<24); \
 		sll_object_type_t __tmp=__v; \
 		if (!_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->_f)),&__tmp,__v)){ \
@@ -42,7 +44,7 @@
 #define GC_UNLOCK(o) \
 	do{ \
 		sll_object_t* __o=(o); \
-		_ATOMIC_STORE((sll_object_type_t*)(&(__o->_f)),__o->_f&0xffffff); \
+		_ATOMIC_STORE((sll_object_type_t*)(&(__o->_f)),GC_GET_FLAGS(__o)); \
 	} while (0)
 
 

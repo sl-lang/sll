@@ -234,45 +234,41 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll_object_type_table_t* tt,sll_object_type_t t,sll_object_t*const* p,sll_arg_count_t l){
-	if (t<=SLL_MAX_OBJECT_TYPE){
-		switch (t){
-			case SLL_OBJECT_TYPE_INT:
-				return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_INT]):SLL_ACQUIRE_STATIC_INT(0));
-			case SLL_OBJECT_TYPE_FLOAT:
-				return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_FLOAT]):SLL_ACQUIRE_STATIC(float_zero));
-			case SLL_OBJECT_TYPE_CHAR:
-				return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_CHAR]):SLL_FROM_CHAR(0));
-			case SLL_OBJECT_TYPE_STRING:
-				return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_STRING]):sll_string_to_object(NULL));
-			case SLL_OBJECT_TYPE_ARRAY:
-			case SLL_OBJECT_TYPE_MAP_KEYS:
-			case SLL_OBJECT_TYPE_MAP_VALUES:
-				{
-					sll_object_t* o=sll_array_length_to_object(l);
-					for (sll_arg_count_t i=0;i<l;i++){
-						o->dt.a.v[i]=*(p+i);
-						SLL_ACQUIRE(*(p+i));
-					}
-					return o;
+	switch (t){
+		case SLL_OBJECT_TYPE_INT:
+			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_INT]):SLL_ACQUIRE_STATIC_INT(0));
+		case SLL_OBJECT_TYPE_FLOAT:
+			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_FLOAT]):SLL_ACQUIRE_STATIC(float_zero));
+		case SLL_OBJECT_TYPE_CHAR:
+			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_CHAR]):SLL_FROM_CHAR(0));
+		case SLL_OBJECT_TYPE_STRING:
+			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_STRING]):sll_string_to_object(NULL));
+		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_OBJECT_TYPE_MAP_KEYS:
+		case SLL_OBJECT_TYPE_MAP_VALUES:
+			{
+				sll_object_t* o=sll_array_length_to_object(l);
+				for (sll_arg_count_t i=0;i<l;i++){
+					o->dt.a.v[i]=*(p+i);
+					SLL_ACQUIRE(*(p+i));
 				}
-			case SLL_OBJECT_TYPE_MAP:
-				{
-					if (!l){
-						return sll_map_to_object(NULL);
-					}
-					sll_object_t* o=sll_map_length_to_object((l+1)>>1);
-					for (sll_arg_count_t i=0;i<l;i++){
-						o->dt.m.v[i]=*(p+i);
-						SLL_ACQUIRE(*(p+i));
-					}
-					if (l&1){
-						o->dt.m.v[l]=SLL_ACQUIRE_STATIC_INT(0);
-					}
-					return o;
+				return o;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				if (!l){
+					return sll_map_to_object(NULL);
 				}
-			default:
-				SLL_UNREACHABLE();
-		}
+				sll_object_t* o=sll_map_length_to_object((l+1)>>1);
+				for (sll_arg_count_t i=0;i<l;i++){
+					o->dt.m.v[i]=*(p+i);
+					SLL_ACQUIRE(*(p+i));
+				}
+				if (l&1){
+					o->dt.m.v[l]=SLL_ACQUIRE_STATIC_INT(0);
+				}
+				return o;
+			}
 	}
 	if (!tt){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -305,31 +301,27 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt){
 
 
 __SLL_EXTERNAL void sll_get_type_name(sll_object_type_table_t* tt,sll_object_type_t t,sll_string_t* o){
-	if (t<=SLL_MAX_OBJECT_TYPE){
-		switch (t){
-			case SLL_OBJECT_TYPE_INT:
-				sll_string_clone(&_object_int_type_str,o);
-				return;
-			case SLL_OBJECT_TYPE_FLOAT:
-				sll_string_clone(&_object_float_type_str,o);
-				return;
-			case SLL_OBJECT_TYPE_CHAR:
-				sll_string_clone(&_object_char_type_str,o);
-				return;
-			case SLL_OBJECT_TYPE_STRING:
-				sll_string_clone(&_object_string_type_str,o);
-				return;
-			case SLL_OBJECT_TYPE_ARRAY:
-			case SLL_OBJECT_TYPE_MAP_KEYS:
-			case SLL_OBJECT_TYPE_MAP_VALUES:
-				sll_string_clone(&_object_array_type_str,o);
-				return;
-			case SLL_OBJECT_TYPE_MAP:
-				sll_string_clone(&_object_map_type_str,o);
-				return;
-			default:
-				SLL_UNREACHABLE();
-		}
+	switch (t){
+		case SLL_OBJECT_TYPE_INT:
+			sll_string_clone(&_object_int_type_str,o);
+			return;
+		case SLL_OBJECT_TYPE_FLOAT:
+			sll_string_clone(&_object_float_type_str,o);
+			return;
+		case SLL_OBJECT_TYPE_CHAR:
+			sll_string_clone(&_object_char_type_str,o);
+			return;
+		case SLL_OBJECT_TYPE_STRING:
+			sll_string_clone(&_object_string_type_str,o);
+			return;
+		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_OBJECT_TYPE_MAP_KEYS:
+		case SLL_OBJECT_TYPE_MAP_VALUES:
+			sll_string_clone(&_object_array_type_str,o);
+			return;
+		case SLL_OBJECT_TYPE_MAP:
+			sll_string_clone(&_object_map_type_str,o);
+			return;
 	}
 	if (!tt||t-SLL_MAX_OBJECT_TYPE-1>=tt->l){
 		SLL_INIT_STRING(o);
