@@ -1,0 +1,22 @@
+(--- "types.sll")
+
+
+
+(= atexit_module_type (&:
+	(~ func_type) register
+	(~ func_type) unregister
+))
+
+
+
+(= register (... "sll:atexit_register"))
+
+(= unregister (... "sll:atexit_unregister"))
+
+
+
+(= atexit (. atexit_module_type
+	register
+	unregister
+))
+(## atexit)

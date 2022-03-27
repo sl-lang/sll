@@ -289,6 +289,60 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_atexit_register void
+#define __SLL_API_ARGS_sll_api_atexit_register sll_integer_t a,sll_object_t** b,sll_arg_count_t bc
+/**
+ * \flags func
+ * \name sll_api_atexit_register
+ * \group atexit-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_object_t** b -> 
+ * \arg sll_arg_count_t bc
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_atexit_register_raw
+ * \group raw-api
+ * \subgroup raw-api-atexit-api
+ * \desc Wrapper function for :sll_api_atexit_register:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+/**
+ * \flags subgroup
+ * \name Atexit
+ * \group raw-api
+ * \subgroup raw-api-atexit-api
+ * \desc Docs!
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_atexit_unregister __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_atexit_unregister sll_integer_t a
+/**
+ * \flags func
+ * \name sll_api_atexit_unregister
+ * \group atexit-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_atexit_unregister_raw
+ * \group raw-api
+ * \subgroup raw-api-atexit-api
+ * \desc Wrapper function for :sll_api_atexit_unregister:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_base64_decode __SLL_CHECK_OUTPUT sll_object_t*
 #define __SLL_API_ARGS_sll_api_base64_decode sll_string_t* a
 /**

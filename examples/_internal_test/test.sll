@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll" "weakref.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll" "weakref.sll" "atexit.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -519,6 +519,16 @@
 (:> "Weakref: " wr "\n")
 (:> "Delete: " obj "\n")
 (:> "Weakref: " wr "\n")
+
+(<- atexit$register (,,, a b
+	(:> "End: " a ", " b "\n")
+) 3 ['a' 'b' 'c'])
+
+(= tmp_fn (,,, (:> "Not a real function!\n")))
+
+(<- atexit$register tmp_fn)
+(:> (<- atexit$unregister tmp_fn) "\n")
+(:> (<- atexit$unregister tmp_fn) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

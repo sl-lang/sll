@@ -1,3 +1,4 @@
+#include <sll/_internal/atexit.h>
 #include <sll/_internal/sandbox.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/vm.h>
@@ -119,6 +120,11 @@ void _thread_terminate(sll_object_t* ret){
 	_scheduler_current_thread->st=THREAD_STATE_TERMINATED;
 	_scheduler_current_thread_index=_scheduler_current_thread->wait;
 	SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
+	if (_thread_active_count==1){
+		SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
+		_atexit_execute();
+		SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
+	}
 	_thread_active_count--;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 	if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
