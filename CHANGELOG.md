@@ -7,6 +7,7 @@
 - Barriers, locks, semaphores and threads are now automatically deleted when their handles go out of scope
 - Implemented `atexit.sll`, `atexit$register` and `atexit$unregister` ([#258])
 - Implemented `audit.sll`, `audit$audit`, `audit$register_callback` and `audit$unregister_callback` ([#259])
+- Implemented `sll_audit` ([#259])
 - Implemented `SLL_ERROR_GET_VALUE`
 - Implemented `SLL_MAX_BARRIER_INDEX`
 - Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
