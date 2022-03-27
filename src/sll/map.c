@@ -64,7 +64,7 @@ __SLL_EXTERNAL void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sl
 		SLL_ACQUIRE(e);
 		o->v[j]=e;
 		sll_integer_t n=e->dt.i;
-		if (SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT&&n>=0&&n<a->l){
+		if (e->t==SLL_OBJECT_TYPE_INT&&n>=0&&n<a->l){
 			o->v[j+1]=a->v[n];
 			SLL_ACQUIRE(o->v[j+1]);
 			(*(sm+(n>>6)))|=1ull<<(n&63);
@@ -106,7 +106,7 @@ __SLL_EXTERNAL void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,
 		SLL_ACQUIRE(e);
 		o->v[j]=e;
 		sll_integer_t n=e->dt.i;
-		if (SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT&&n>=0&&n<s->l){
+		if (e->t==SLL_OBJECT_TYPE_INT&&n>=0&&n<s->l){
 			o->v[j+1]=SLL_FROM_CHAR(s->v[n]);
 			(*(sm+(n>>6)))|=1ull<<(n&63);
 			continue;
@@ -179,7 +179,7 @@ __SLL_EXTERNAL void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sl
 	sll_map_length_t i=0;
 	for (sll_map_length_t j=0;j<(m->l<<1);j+=2){
 		sll_object_t* e=m->v[j];
-		if (SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT&&e->dt.i>=0&&e->dt.i<a->l){
+		if (e->t==SLL_OBJECT_TYPE_INT&&e->dt.i>=0&&e->dt.i<a->l){
 			o->v[i]=e;
 			SLL_ACQUIRE(e);
 			o->v[i+1]=sll_operator_add(m->v[j+1],a->v[e->dt.i]);
@@ -204,7 +204,7 @@ __SLL_EXTERNAL void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,
 	sll_map_length_t i=0;
 	for (sll_map_length_t j=0;j<(m->l<<1);j+=2){
 		sll_object_t* e=m->v[j];
-		if (SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT&&e->dt.i>=0&&e->dt.i<s->l){
+		if (e->t==SLL_OBJECT_TYPE_INT&&e->dt.i>=0&&e->dt.i<s->l){
 			o->v[i]=e;
 			SLL_ACQUIRE(e);
 			o->v[i+1]=sll_operator_add(m->v[i+1],sll_static_char[s->v[e->dt.i]]);

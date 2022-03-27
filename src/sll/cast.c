@@ -66,13 +66,13 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* a,sll_object_t* b){
-	if (SLL_OBJECT_GET_TYPE(b)!=SLL_OBJECT_TYPE_INT||b->dt.i<0||b->dt.i==SLL_OBJECT_GET_TYPE(a)||b->dt.i==SLL_OBJECT_TYPE_OBJECT){
+	if (b->t!=SLL_OBJECT_TYPE_INT||b->dt.i<0||b->dt.i==a->t||b->dt.i==SLL_OBJECT_TYPE_OBJECT){
 		SLL_ACQUIRE(a);
 		return a;
 	}
-	if (SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE){
-		if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
+	if (a->t>SLL_MAX_OBJECT_TYPE){
+		if (sll_current_runtime_data&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->t-SLL_MAX_OBJECT_TYPE-1);
 			switch (b->dt.i){
 				case SLL_OBJECT_TYPE_INT:
 					return sll_int_to_object(dt->l);
@@ -117,7 +117,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		SLL_ACQUIRE(a);
 		return a;
 	}
-	switch (COMBINE_TYPES(SLL_OBJECT_GET_TYPE(a),b->dt.i)){
+	switch (COMBINE_TYPES(a->t,b->dt.i)){
 		case COMBINED_TYPE_IF:
 			return sll_float_to_object((sll_float_t)(a->dt.i));
 		case COMBINED_TYPE_IC:

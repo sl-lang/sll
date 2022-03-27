@@ -20,7 +20,7 @@
 
 
 #define COMBINE_TYPES(a,b) (((unsigned int)(a)<<8)|(b))
-#define COMBINED_ARGS COMBINE_TYPES(SLL_OBJECT_GET_TYPE(a),SLL_OBJECT_GET_TYPE(b))
+#define COMBINED_ARGS COMBINE_TYPES(a->t,b->t)
 #define COMBINED_TYPE_II COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_INT)
 #define COMBINED_TYPE_IF COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_FLOAT)
 #define COMBINED_TYPE_IC COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_CHAR)
@@ -64,7 +64,7 @@
 
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
-	if (SLL_OBJECT_GET_TYPE(a)>SLL_OBJECT_GET_TYPE(b)){ \
+	if (a->t>b->t){ \
 		sll_object_t* __tmp=a; \
 		a=b; \
 		b=__tmp; \
@@ -86,8 +86,8 @@ __SLL_EXTERNAL sll_float_t sll_float_compare_error=1e-6;
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b){
 	INIT2;
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+	if (a->t==SLL_OBJECT_TYPE_STRING){
+		if (b->t==SLL_OBJECT_TYPE_INT){
 			if (!a->dt.s.l){
 				RETURN(SLL_ACQUIRE_STATIC_INT(0));
 			}
@@ -98,8 +98,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 			RETURN(SLL_FROM_CHAR(a->dt.s.v[idx]));
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
+		if (b->t==SLL_OBJECT_TYPE_INT){
 			if (!a->dt.a.l){
 				RETURN(SLL_ACQUIRE_STATIC_INT(0));
 			}
@@ -112,10 +112,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 			RETURN(o);
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
+	else if (a->t==SLL_OBJECT_TYPE_MAP){
 		RETURN(sll_map_get(&(a->dt.m),b));
 	}
-	else if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+	else if (sll_current_runtime_data&&b->t==SLL_OBJECT_TYPE_STRING&&a->t>SLL_MAX_OBJECT_TYPE&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 		RETURN(sll_object_get_field(sll_current_runtime_data->tt,a,&(b->dt.s)));
 	}
 	SLL_ACQUIRE(a);
@@ -126,21 +126,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_object_t* a,sll_object_t* b,sll_object_t* c){
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
+	if (a->t==SLL_OBJECT_TYPE_STRING){
+		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 			sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,1,&(o->dt.s));
 			return o;
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT){
+	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
+		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 			sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,1,&(o->dt.a));
 			return o;
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
+	else if (a->t==SLL_OBJECT_TYPE_MAP){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 		sll_object_t* l[2]={b,c};
 		sll_array_t arr={
@@ -157,21 +157,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_ob
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d){
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(d)==SLL_OBJECT_TYPE_INT){
+	if (a->t==SLL_OBJECT_TYPE_STRING){
+		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT&&d->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 			sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,d->dt.i,&(o->dt.s));
 			return o;
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_INT&&SLL_OBJECT_GET_TYPE(d)==SLL_OBJECT_TYPE_INT){
+	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
+		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT&&d->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 			sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,d->dt.i,&(o->dt.a));
 			return o;
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
+	else if (a->t==SLL_OBJECT_TYPE_MAP){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 		sll_object_t* l[3]={b,c,d};
 		sll_array_t arr={
@@ -204,7 +204,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_add(sll_object_t* a
 				a=b;
 				b=tmp;
 _add_to_string:
-				SLL_ASSERT(SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING);
+				SLL_ASSERT(a->t==SLL_OBJECT_TYPE_STRING);
 				sll_string_t sa=a->dt.s;
 				sll_string_t sb;
 				sll_api_string_convert(&b,1,&sb);
@@ -422,10 +422,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 
 
 __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_object_t* v){
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+	if (a->t==SLL_OBJECT_TYPE_STRING){
+		if (b->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* tmp=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
-			SLL_ASSERT(SLL_OBJECT_GET_TYPE(tmp)==SLL_OBJECT_TYPE_CHAR);
+			SLL_ASSERT(tmp->t==SLL_OBJECT_TYPE_CHAR);
 			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.s.l*a->dt.s.l;
 			if (idx<0){
 				idx+=a->dt.s.l;
@@ -434,8 +434,8 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 			sll_release_object(tmp);
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_INT){
+	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
+		if (b->t==SLL_OBJECT_TYPE_INT){
 			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.a.l*a->dt.a.l;
 			if (idx<0){
 				idx+=a->dt.a.l;
@@ -443,10 +443,10 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 			sll_array_set(&(a->dt.a),(sll_array_length_t)idx,v);
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
+	else if (a->t==SLL_OBJECT_TYPE_MAP){
 		sll_map_set(&(a->dt.m),b,v);
 	}
-	else if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+	else if (sll_current_runtime_data&&b->t==SLL_OBJECT_TYPE_STRING&&a->t>SLL_MAX_OBJECT_TYPE&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 		sll_object_set_field(sll_current_runtime_data->tt,a,&(b->dt.s),v);
 	}
 }
@@ -466,7 +466,7 @@ __SLL_EXTERNAL void sll_operator_assign_range_step(sll_object_t* a,sll_object_t*
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(sll_object_t* a){
-	switch (SLL_OBJECT_GET_TYPE(a)){
+	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 			return !!a->dt.i;
 		case SLL_OBJECT_TYPE_FLOAT:
@@ -580,7 +580,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a){
-	switch (SLL_OBJECT_GET_TYPE(a)){
+	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 			return sll_int_to_object(a->dt.i-1);
 		case SLL_OBJECT_TYPE_FLOAT:
@@ -617,8 +617,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a,sll_object_t* b){
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
-		return sll_int_to_object((SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_ARRAY?sll_array_count_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l):sll_array_count(&(a->dt.a),b)));
+	if (a->t==SLL_OBJECT_TYPE_ARRAY){
+		return sll_int_to_object((b->t==SLL_OBJECT_TYPE_ARRAY?sll_array_count_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l):sll_array_count(&(a->dt.a),b)));
 	}
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
@@ -736,7 +736,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* a,sll_bool_t d){
-	switch (SLL_OBJECT_GET_TYPE(a)){
+	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_CHAR:
@@ -773,8 +773,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 				return o;
 			}
 	}
-	SLL_ASSERT(SLL_OBJECT_GET_TYPE(a)>SLL_MAX_OBJECT_TYPE);
-	if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(a)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+	SLL_ASSERT(a->t>SLL_MAX_OBJECT_TYPE);
+	if (sll_current_runtime_data&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 		return sll_object_clone(sll_current_runtime_data->tt,a,d);
 	}
 	SLL_ACQUIRE(a);
@@ -866,8 +866,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_object_t* a,sll_object_t* b){
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
-		return sll_int_to_object((SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_ARRAY?sll_array_count_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l):sll_array_count(&(a->dt.a),b)));
+	if (a->t==SLL_OBJECT_TYPE_ARRAY){
+		return sll_int_to_object((b->t==SLL_OBJECT_TYPE_ARRAY?sll_array_count_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l):sll_array_count(&(a->dt.a),b)));
 	}
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
@@ -985,7 +985,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a){
-	switch (SLL_OBJECT_GET_TYPE(a)){
+	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 			return sll_int_to_object(a->dt.i+1);
 		case SLL_OBJECT_TYPE_FLOAT:
@@ -1019,18 +1019,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_includes(sll_object_t* a,sll_object_t* b){
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_STRING){
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_CHAR){
+	if (a->t==SLL_OBJECT_TYPE_STRING){
+		if (b->t==SLL_OBJECT_TYPE_CHAR){
 			return sll_string_includes_char(&(a->dt.s),b->dt.c);
 		}
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_STRING){
+		if (b->t==SLL_OBJECT_TYPE_STRING){
 			return sll_string_includes(&(a->dt.s),&(b->dt.s));
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
 		return sll_array_includes(&(a->dt.a),b);
 	}
-	else if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
+	else if (a->t==SLL_OBJECT_TYPE_MAP){
 		return sll_map_includes(&(a->dt.m),b);
 	}
 	return 0;
@@ -1039,7 +1039,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_includes(sll_object_t*
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a){
-	switch (SLL_OBJECT_GET_TYPE(a)){
+	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 			return sll_int_to_object(~a->dt.i);
 		case SLL_OBJECT_TYPE_FLOAT:
@@ -1079,7 +1079,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a){
-	switch (SLL_OBJECT_GET_TYPE(a)){
+	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_CHAR:
@@ -1798,10 +1798,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_object_t* a,sll_object_t* b){
-	if (SLL_OBJECT_GET_TYPE(a)!=SLL_OBJECT_GET_TYPE(b)){
+	if (a->t!=b->t){
 		return 0;
 	}
-	switch (SLL_OBJECT_GET_TYPE(a)){
+	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 			return a->dt.i==b->dt.i;
 		case SLL_OBJECT_TYPE_FLOAT:
@@ -1823,9 +1823,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_objec
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a,sll_object_t* b){
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_ARRAY){
+	if (a->t==SLL_OBJECT_TYPE_ARRAY){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-		if (SLL_OBJECT_GET_TYPE(b)==SLL_OBJECT_TYPE_ARRAY){
+		if (b->t==SLL_OBJECT_TYPE_ARRAY){
 			sll_array_remove_multiple(&(a->dt.a),b->dt.a.v,b->dt.a.l,&(o->dt.a));
 		}
 		else{
@@ -1833,7 +1833,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 		}
 		return o;
 	}
-	if (SLL_OBJECT_GET_TYPE(a)==SLL_OBJECT_TYPE_MAP){
+	if (a->t==SLL_OBJECT_TYPE_MAP){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 		sll_release_object(sll_map_remove(&(a->dt.m),b,&(o->dt.m)));
 		return o;

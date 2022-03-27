@@ -10,6 +10,14 @@
 
 - Fixed `sll_tls_get`
 - GC now cleans-up unused memory pages
+- Object references counter (`sll_ref_count_t`) is now 64-bit instead of 32-bit
+- Object type (`sll_object_type_t`) is now 32-bit instead of 24-bit
+
+### Removed
+
+- Deprecated macros: `SLL_OBJECT_GET_TYPE`, `SLL_OBJECT_GET_TYPE_MASK` and `SLL_OBJECT_IS_STORAGE`
+- Unneeded flag: `SLL_OBJECT_FLAG_CONSTANT`
+- Unused function: `sll_object_get_type`
 
 ## [0.7.10] - 2022-03-26
 

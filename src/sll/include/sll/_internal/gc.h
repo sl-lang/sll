@@ -26,13 +26,13 @@
 #define GC_LOCK(o) \
 	do{ \
 		sll_object_t* __o=(o); \
-		sll_object_type_t __t=SLL_OBJECT_GET_TYPE(__o); \
-		sll_object_type_t __v=__t|((_scheduler_internal_thread_index+1)<<24); \
+		sll_object_type_t __b=__o->_f&0xffffff; \
+		sll_object_type_t __v=__b|((_scheduler_internal_thread_index+1)<<24); \
 		sll_object_type_t __tmp=__v; \
-		if (!_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->t)),&__tmp,__v)){ \
+		if (!_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->_f)),&__tmp,__v)){ \
 			while (1){ \
-				__tmp=__t; \
-				if (_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->t)),&__tmp,__v)){ \
+				__tmp=__b; \
+				if (_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->_f)),&__tmp,__v)){ \
 					break; \
 				} \
 				_mm_pause(); \
@@ -42,7 +42,7 @@
 #define GC_UNLOCK(o) \
 	do{ \
 		sll_object_t* __o=(o); \
-		_ATOMIC_STORE((sll_object_type_t*)(&(__o->t)),SLL_OBJECT_GET_TYPE(__o)); \
+		_ATOMIC_STORE((sll_object_type_t*)(&(__o->_f)),__o->_f&0xffffff); \
 	} while (0)
 
 

@@ -19,7 +19,7 @@
 #define BUILD_CLONE_TYPE(type) \
 	do{ \
 		sll_object_t* obj=sll_var_arg_get_object(va); \
-		sll_object_t* o=(SLL_OBJECT_GET_TYPE(obj)==(type)?sll_operator_copy(obj,0):sll_operator_cast(obj,sll_static_int[(type)])); \
+		sll_object_t* o=(obj->t==(type)?sll_operator_copy(obj,0):sll_operator_cast(obj,sll_static_int[(type)])); \
 		sll_release_object(obj); \
 		return o; \
 	} while (0)

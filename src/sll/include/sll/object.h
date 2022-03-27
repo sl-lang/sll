@@ -123,7 +123,7 @@
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_TYPE_OBJECT 0xffffff
+#define SLL_OBJECT_TYPE_OBJECT 0xffffffff
 
 
 
@@ -136,53 +136,6 @@
  * \type sll_object_type_t
  */
 #define SLL_MAX_OBJECT_TYPE SLL_OBJECT_TYPE_MAP_VALUES
-
-
-
-/**
- * \flags macro var
- * \name SLL_OBJECT_FLAG_CONSTANT
- * \group object
- * \desc Docs!
- * \type sll_object_type_t
- */
-#define SLL_OBJECT_FLAG_CONSTANT 0x80000000
-
-
-
-/**
- * \flags func macro
- * \name SLL_OBJECT_GET_TYPE
- * \group object
- * \desc Docs!
- * \arg sll_object_t* r
- * \ret sll_object_type_t
- */
-#define SLL_OBJECT_GET_TYPE(r) ((r)->t&0xffffff)
-
-
-
-/**
- * \flags func macro
- * \name SLL_OBJECT_GET_TYPE_MASK
- * \group object
- * \desc Docs!
- * \arg sll_object_type_t t
- * \ret sll_object_type_t
- */
-#define SLL_OBJECT_GET_TYPE_MASK(t) ((t)&0xffffff)
-
-
-
-/**
- * \flags func macro
- * \name SLL_OBJECT_IS_STORAGE
- * \group object
- * \desc Docs!
- * \arg sll_object_t* r
- * \ret sll_bool_t
- */
-#define SLL_OBJECT_IS_STORAGE(r) (SLL_OBJECT_GET_TYPE((r))>=SLL_OBJECT_TYPE_STRING&&SLL_OBJECT_GET_TYPE((r))<=SLL_OBJECT_TYPE_MAP_VALUES)
 
 
 
@@ -303,18 +256,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_type_table_t* tt,sll_object_t* o,const sll_string_t* f);
-
-
-
-/**
- * \flags check_output func
- * \name sll_object_get_type
- * \group object
- * \desc Docs!
- * \arg sll_object_t* o
- * \ret sll_object_type_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_object_get_type(sll_object_t* o);
 
 
 

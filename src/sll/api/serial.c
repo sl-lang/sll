@@ -220,11 +220,11 @@ __SLL_EXTERNAL void sll_encode_object(sll_file_t* f,sll_object_t*const* a,sll_ar
 		sll_object_t* k=*a;
 		a++;
 		ac--;
-		if (SLL_OBJECT_GET_TYPE(k)>SLL_MAX_OBJECT_TYPE){
+		if (k->t>SLL_MAX_OBJECT_TYPE){
 			SLL_UNIMPLEMENTED();
 		}
-		sll_file_write_char(f,SLL_OBJECT_GET_TYPE(k),NULL);
-		switch (SLL_OBJECT_GET_TYPE(k)){
+		sll_file_write_char(f,k->t,NULL);
+		switch (k->t){
 			case SLL_OBJECT_TYPE_INT:
 				sll_encode_signed_integer(f,k->dt.i);
 				break;

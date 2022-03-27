@@ -89,7 +89,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 	}
 	((gc_page_header_t*)PTR(ADDR(o)&0xfffffffffffff000ull))->cnt++;
 	o->rc=1;
-	_ATOMIC_STORE((sll_object_type_t*)(&(o->t)),SLL_OBJECT_GET_TYPE_MASK(t));
+	*((sll_object_type_t*)(&(o->t)))=t;
+	_ATOMIC_STORE((sll_object_type_t*)(&(o->_f)),0);
 	_gc_alloc++;
 	return o;
 }
@@ -110,18 +111,18 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 		GC_UNLOCK(o);
 		return;
 	}
-	if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_STRING){
+	if (o->t==SLL_OBJECT_TYPE_STRING){
 		sll_free_string(&(o->dt.s));
 	}
-	else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_ARRAY||SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP_KEYS||SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP_VALUES){
+	else if (o->t==SLL_OBJECT_TYPE_ARRAY||o->t==SLL_OBJECT_TYPE_MAP_KEYS||o->t==SLL_OBJECT_TYPE_MAP_VALUES){
 		sll_free_array(&(o->dt.a));
 	}
-	else if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_TYPE_MAP){
+	else if (o->t==SLL_OBJECT_TYPE_MAP){
 		sll_free_map(&(o->dt.m));
 	}
-	else if (SLL_OBJECT_GET_TYPE(o)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(o)<SLL_OBJECT_TYPE_OBJECT){
-		if (sll_current_runtime_data&&SLL_OBJECT_GET_TYPE(o)<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(o)-SLL_MAX_OBJECT_TYPE-1);
+	else if (o->t>SLL_MAX_OBJECT_TYPE&&o->t<SLL_OBJECT_TYPE_OBJECT){
+		if (sll_current_runtime_data&&o->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+o->t-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->fn.del){
 				o->rc++;
 				GC_UNLOCK(o);
@@ -135,7 +136,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 			}
 			sll_object_field_t* p=o->dt.p;
 			for (sll_arg_count_t i=0;i<dt->l;i++){
-				if (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)>SLL_OBJECT_TYPE_CHAR){
+				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
 					sll_release_object(p->o);
 				}
 				p++;
@@ -143,8 +144,9 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 		}
 		sll_deallocate(o->dt.p);
 	}
+	*((sll_object_type_t*)(&(o->t)))=SLL_OBJECT_TYPE_INT;
 	o->dt.i=0;
-	_ATOMIC_STORE((sll_object_type_t*)(&(o->t)),SLL_OBJECT_TYPE_INT);
+	_ATOMIC_STORE((sll_object_type_t*)(&(o->_f)),0);
 	o->dt._ptr.n=_gc_next_object;
 	o->dt._ptr.p=NULL;
 	if (_gc_next_object){

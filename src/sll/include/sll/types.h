@@ -196,10 +196,6 @@ typedef __SLL_U32 sll_pid_t;
 
 
 
-typedef __SLL_U32 sll_ref_count_t;
-
-
-
 typedef __SLL_U32 sll_scope_t;
 
 
@@ -257,6 +253,10 @@ typedef __SLL_U64 sll_error_t;
 
 
 typedef __SLL_U64 sll_file_offset_t;
+
+
+
+typedef __SLL_U64 sll_ref_count_t;
 
 
 
@@ -723,6 +723,7 @@ typedef union __SLL_OBJECT_DATA{
 typedef struct __SLL_OBJECT{
 	sll_ref_count_t rc;
 	const sll_object_type_t t;
+	__SLL_U32 _f;
 	sll_object_data_t dt;
 } sll_object_t;
 
@@ -757,6 +758,7 @@ typedef struct __SLL_OBJECT_TYPE_DATA_FUNCTIONS{
 
 typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
 	sll_object_type_t t;
+	sll_bool_t c;
 	sll_string_t nm;
 } sll_object_type_data_entry_t;
 

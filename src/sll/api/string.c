@@ -98,7 +98,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 		o->l+=17;
 		return;
 	}
-	switch (SLL_OBJECT_GET_TYPE(a)){
+	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 			{
 				sll_integer_t v=a->dt.i;
@@ -174,13 +174,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			return;
 		default:
 			{
-				if (!sll_current_runtime_data||SLL_OBJECT_GET_TYPE(a)>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+				if (!sll_current_runtime_data||a->t>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 					sll_string_increase(o,13);
 					sll_copy_string(SLL_CHAR("<custom-type>"),o->v+o->l);
 					o->l+=13;
 					return;
 				}
-				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(a)-SLL_MAX_OBJECT_TYPE-1);
+				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->t-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->fn.str){
 					sll_object_t* v=sll_execute_function(dt->fn.str,&a,1,0);
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
@@ -195,7 +195,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 				sll_copy_string(SLL_CHAR("<&:"),o->v+o->l);
 				o->l+=3;
 				if (!dt->nm.l){
-					_write_int(SLL_OBJECT_GET_TYPE(a),o);
+					_write_int(a->t,o);
 				}
 				else{
 					sll_string_increase(o,dt->nm.l);
@@ -215,7 +215,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					o->v[o->l]=' ';
 					o->l++;
 					sll_object_t* tmp;
-					switch (SLL_OBJECT_GET_TYPE_MASK(dt->dt[i].t)){
+					switch (dt->dt[i].t){
 						case SLL_OBJECT_TYPE_INT:
 							tmp=sll_int_to_object(p->i);
 							break;
@@ -256,12 +256,12 @@ __API_FUNC(string_convert){
 	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 	for (sll_array_length_t i=0;i<ac;i++){
 		sll_object_t* v=*(a+i);
-		if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_CHAR){
+		if (v->t==SLL_OBJECT_TYPE_CHAR){
 			sll_string_increase(out,1);
 			out->v[out->l]=v->dt.c;
 			out->l++;
 		}
-		else if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_STRING){
+		else if (v->t==SLL_OBJECT_TYPE_STRING){
 			sll_string_increase(out,v->dt.s.l);
 			sll_copy_data(v->dt.s.v,v->dt.s.l,out->v+out->l);
 			out->l+=v->dt.s.l;

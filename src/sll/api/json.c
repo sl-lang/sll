@@ -346,7 +346,7 @@ static void _stringify_string(const sll_char_t* c,sll_string_length_t l,sll_stri
 
 
 static void _stringify_object(sll_object_t* o,sll_string_t* s){
-	switch (SLL_OBJECT_GET_TYPE(o)){
+	switch (o->t){
 		case SLL_OBJECT_TYPE_INT:
 			{
 				sll_integer_t v=o->dt.i;
@@ -425,8 +425,8 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 			s->l++;
 			return;
 	}
-	SLL_ASSERT(SLL_OBJECT_GET_TYPE(o)!=SLL_OBJECT_TYPE_MAP_KEYS&&SLL_OBJECT_GET_TYPE(o)!=SLL_OBJECT_TYPE_MAP_VALUES);
-	if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_GET_TYPE(_json_null)){
+	SLL_ASSERT(o->t!=SLL_OBJECT_TYPE_MAP_KEYS&&o->t!=SLL_OBJECT_TYPE_MAP_VALUES);
+	if (o->t==_json_null->t){
 		sll_string_increase(s,4);
 		s->v[s->l]='n';
 		s->v[s->l+1]='u';
@@ -435,7 +435,7 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 		s->l+=4;
 		return;
 	}
-	if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_GET_TYPE(_json_true)){
+	if (o->t==_json_true->t){
 		sll_string_increase(s,4);
 		s->v[s->l]='t';
 		s->v[s->l+1]='r';
@@ -444,7 +444,7 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 		s->l+=4;
 		return;
 	}
-	if (SLL_OBJECT_GET_TYPE(o)==SLL_OBJECT_GET_TYPE(_json_false)){
+	if (o->t==_json_false->t){
 		sll_string_increase(s,5);
 		s->v[s->l]='f';
 		s->v[s->l+1]='a';

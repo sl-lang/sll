@@ -86,11 +86,11 @@
 			init(&(var->dt.field2)); \
 			break; \
 		} \
-		if (SLL_OBJECT_GET_TYPE(*al)==SLL_OBJECT_TYPE_##name1){ \
+		if ((*al)->t==SLL_OBJECT_TYPE_##name1){ \
 			var->t=SLL_PARSE_ARGS_TYPE_##name1; \
 			var->dt.field1=(*al)->dt.field1; \
 		} \
-		else if (SLL_OBJECT_GET_TYPE(*al)==SLL_OBJECT_TYPE_##name2){ \
+		else if ((*al)->t==SLL_OBJECT_TYPE_##name2){ \
 			var->t=SLL_PARSE_ARGS_TYPE_##name2; \
 			var->dt.field2=(*al)->dt.field2; \
 		} \

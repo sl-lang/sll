@@ -42,7 +42,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
 
 __SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o){
 	SLL_INIT_STRING(o);
-	if (SLL_OBJECT_GET_TYPE(v)==SLL_OBJECT_TYPE_INT){
+	if (v->t==SLL_OBJECT_TYPE_INT){
 		if (v->dt.i<0){
 			sll_function_index_t i=(sll_function_index_t)(~v->dt.i);
 			if (i<sll_current_runtime_data->ift->l){
@@ -53,7 +53,7 @@ __SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o){
 			sll_string_clone(sll_current_runtime_data->a_dt->st.dt+(sll_current_runtime_data->a_dt->ft.dt+v->dt.i-1)->nm,o);
 		}
 	}
-	else if (SLL_OBJECT_GET_TYPE(v)>SLL_MAX_OBJECT_TYPE&&SLL_OBJECT_GET_TYPE(v)-SLL_MAX_OBJECT_TYPE-1<sll_current_runtime_data->tt->l){
-		sll_string_clone(&((*(sll_current_runtime_data->tt->dt+SLL_OBJECT_GET_TYPE(v)-SLL_MAX_OBJECT_TYPE-1))->nm),o);
+	else if (v->t>SLL_MAX_OBJECT_TYPE&&v->t-SLL_MAX_OBJECT_TYPE-1<sll_current_runtime_data->tt->l){
+		sll_string_clone(&((*(sll_current_runtime_data->tt->dt+v->t-SLL_MAX_OBJECT_TYPE-1))->nm),o);
 	}
 }

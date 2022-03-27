@@ -257,7 +257,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal_map(const sll_array
 	for (sll_map_length_t i=0;i<(m->l<<1);i+=2){
 		sll_object_t* e=m->v[i];
 		GC_LOCK(e);
-		sll_bool_t st=(SLL_OBJECT_GET_TYPE(e)!=SLL_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=a->l||!sll_operator_strict_equal(m->v[i+1],a->v[e->dt.i]));
+		sll_bool_t st=(e->t!=SLL_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=a->l||!sll_operator_strict_equal(m->v[i+1],a->v[e->dt.i]));
 		GC_UNLOCK(e);
 		if (st){
 			return 0;

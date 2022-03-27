@@ -656,7 +656,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_array(const sll_st
 	}
 	for (sll_string_length_t i=0;i<s->l;i++){
 		sll_object_t* e=a->v[i];
-		if ((SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_CHAR&&e->dt.c==s->v[i])||(SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT&&e->dt.i==s->v[i])||(SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==s->v[i])){
+		if ((e->t==SLL_OBJECT_TYPE_CHAR&&e->dt.c==s->v[i])||(e->t==SLL_OBJECT_TYPE_INT&&e->dt.i==s->v[i])||(e->t==SLL_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==s->v[i])){
 			continue;
 		}
 		return 0;
@@ -672,12 +672,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_stri
 	}
 	for (sll_map_length_t i=0;i<(m->l<<1);i+=2){
 		sll_object_t* e=m->v[i];
-		if (SLL_OBJECT_GET_TYPE(e)!=SLL_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=s->l){
+		if (e->t!=SLL_OBJECT_TYPE_INT||e->dt.i<0||e->dt.i>=s->l){
 			return 0;
 		}
 		sll_char_t c=s->v[e->dt.i];
 		e=m->v[i+1];
-		if ((SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_CHAR&&e->dt.c==c)||(SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_INT&&e->dt.i==c)||(SLL_OBJECT_GET_TYPE(e)==SLL_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==c)){
+		if ((e->t==SLL_OBJECT_TYPE_CHAR&&e->dt.c==c)||(e->t==SLL_OBJECT_TYPE_INT&&e->dt.i==c)||(e->t==SLL_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==c)){
 			continue;
 		}
 		return 0;
@@ -722,7 +722,7 @@ __SLL_EXTERNAL void sll_string_from_data(sll_object_t** v,sll_string_length_t vl
 	INIT_PADDING(o->v,vl);
 	for (sll_string_length_t i=0;i<vl;i++){
 		sll_object_t* n=sll_operator_cast(*(v+i),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
-		SLL_ASSERT(SLL_OBJECT_GET_TYPE(n)==SLL_OBJECT_TYPE_CHAR);
+		SLL_ASSERT(n->t==SLL_OBJECT_TYPE_CHAR);
 		o->v[i]=n->dt.c;
 		o->c^=ROTATE_BITS(n->dt.c,(i&3)<<3);
 		sll_release_object(n);
@@ -1178,7 +1178,7 @@ __SLL_EXTERNAL void sll_string_op(const sll_string_t* a,const sll_string_t* b,sl
 		sll_object_t* v=f(sll_static_char[a->v[i]],sll_static_char[b->v[i]]);
 		sll_object_t* c=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 		sll_release_object(v);
-		SLL_ASSERT(SLL_OBJECT_GET_TYPE(c)==SLL_OBJECT_TYPE_CHAR);
+		SLL_ASSERT(c->t==SLL_OBJECT_TYPE_CHAR);
 		o->v[i]=c->dt.c;
 		sll_release_object(c);
 	}
@@ -1235,7 +1235,7 @@ __SLL_EXTERNAL void sll_string_op_map(const sll_string_t* s,const sll_map_t* m,s
 		SLL_ACQUIRE(m->v[j<<1]);
 		o->v[i]=m->v[j<<1];
 		sll_integer_t idx=m->v[j<<1]->dt.i;
-		if (SLL_OBJECT_GET_TYPE(m->v[j<<1])==SLL_OBJECT_TYPE_INT&&idx>=0&&idx<s->l){
+		if (m->v[j<<1]->t==SLL_OBJECT_TYPE_INT&&idx>=0&&idx<s->l){
 			*(sm+(idx>>6))|=1ull<<(idx&63);
 			o->v[i+1]=(inv?f(m->v[(j<<1)+1],sll_static_char[s->v[idx]]):f(sll_static_char[s->v[idx]],m->v[(j<<1)+1]));
 		}
