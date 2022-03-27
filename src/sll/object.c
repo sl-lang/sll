@@ -77,7 +77,6 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 
 
 static void _set_field(const sll_object_type_table_t* tt,sll_object_field_t* o,sll_object_type_t t,sll_object_t* v){
-	t=t;
 	if ((t>SLL_MAX_OBJECT_TYPE&&v->t==t)||t==SLL_OBJECT_TYPE_OBJECT){
 		SLL_ACQUIRE(v);
 		o->o=v;
@@ -235,7 +234,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll_object_type_table_t* tt,sll_object_type_t t,sll_object_t*const* p,sll_arg_count_t l){
-	t=t;
 	if (t<=SLL_MAX_OBJECT_TYPE){
 		switch (t){
 			case SLL_OBJECT_TYPE_INT:
@@ -307,7 +305,6 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt){
 
 
 __SLL_EXTERNAL void sll_get_type_name(sll_object_type_table_t* tt,sll_object_type_t t,sll_string_t* o){
-	t=t;
 	if (t<=SLL_MAX_OBJECT_TYPE){
 		switch (t){
 			case SLL_OBJECT_TYPE_INT:
