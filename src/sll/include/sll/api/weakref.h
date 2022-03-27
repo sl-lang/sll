@@ -18,6 +18,7 @@
  * \group weakref-api
  * \desc Docs!
  * \arg O
+ * \arg I
  */
 __API_FUNC_DECL(weakref__init);
 
@@ -56,6 +57,18 @@ __API_FUNC_DECL(weakref_delete);
  * \ret O
  */
 __API_FUNC_DECL(weakref_get);
+
+
+
+/**
+ * \flags api func
+ * \name sll_api_weakref_set_callback_data
+ * \group weakref-api
+ * \desc Docs!
+ * \arg I
+ * \arg O
+ */
+__API_FUNC_DECL(weakref_set_callback_data);
 
 
 

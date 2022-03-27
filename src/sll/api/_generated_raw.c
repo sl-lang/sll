@@ -2042,8 +2042,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_ref_count_raw(sll
 __SLL_API_TYPE_sll_api_weakref__init sll_api_weakref__init(__SLL_API_ARGS_sll_api_weakref__init);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref__init_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_object_t* a;
-	sll_parse_args(SLL_CHAR("o"),al,all,&a);
-	sll_api_weakref__init(a);
+	sll_integer_t b;
+	sll_parse_args(SLL_CHAR("oi"),al,all,&a,&b);
+	sll_api_weakref__init(a,b);
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
@@ -2076,6 +2077,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_get_raw(sll_obje
 	sll_parse_args(SLL_CHAR("i"),al,all,&a);
 	sll_object_t* out=sll_api_weakref_get(a);
 	return out;
+}
+
+
+
+__SLL_API_TYPE_sll_api_weakref_set_callback_data sll_api_weakref_set_callback_data(__SLL_API_ARGS_sll_api_weakref_set_callback_data);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_set_callback_data_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t a;
+	sll_object_t* b;
+	sll_parse_args(SLL_CHAR("io"),al,all,&a,&b);
+	sll_api_weakref_set_callback_data(a,b);
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -2844,10 +2856,14 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:weakref_get"),
 		sll_api_weakref_get_raw
+	},
+	{
+		SLL_CHAR("sll:weakref_set_callback_data"),
+		sll_api_weakref_set_callback_data_raw
 	}
 };
 
 
 
-const sll_function_index_t _ifunc_size=191;
+const sll_function_index_t _ifunc_size=192;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

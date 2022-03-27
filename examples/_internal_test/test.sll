@@ -512,11 +512,14 @@
 )))
 (:> tls_var "\n")
 
-(:> (<- object$new "[][1]cM<>[Zf <i A> s]0 a m O" 'x' 0.5 45 "abcdefg" [0 1 2 3 4 5 6 7 8 9] <1 2 3 4 5 6> log) "\n")
+(:> (<- object$new "[][1]cM<>[Zf <i A> s]0 a mO" 'x' 0.5 45 "abcdefg" [0 1 2 3 4 5 6 7 8 9] <1 2 3 4 5 6> log) "\n")
 
 (= obj [1 2 3])
 (= wr (<- weakref$ref obj))
-(:> "Weakref: " wr "\n")
+(<- array$push wr$callbacks (,,, obj wr
+	(:> (<- string$format "<<< object '%S' (from weak reference '%p') has been deleted >>>" obj wr))
+))
+(:> "Weakref: " (<- weakref$get wr) "\n")
 (:> "Delete: " obj "\n")
 (:> "Weakref: " wr "\n")
 

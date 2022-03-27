@@ -14,6 +14,7 @@
 		(@@ (<- string$str (<- get dt)))
 	) @@string@@
 	(~ int_type) _id
+	(~ array_type) callbacks
 ))
 
 (= no_object (&:
@@ -31,9 +32,14 @@
 
 (= NO_OBJECT (. no_object))
 
-(<- (... "sll:weakref__init") NO_OBJECT)
 
 
+(= _execute_callbacks (,,, wr obj
+	(-> (= i 0) (< i ($ wr$callbacks))
+		(<- (: wr$callbacks i) obj wr)
+		(++ i)
+	)
+))
 
 (= get (,,, wr
 	(? (=== wr nil) (@@ NO_OBJECT))
@@ -45,10 +51,17 @@
 ))
 
 (= ref (,,, obj
-	(@@ (. weakref_type
+	(= o (. weakref_type
 		(<- (... "sll:weakref_create") obj)
+		[]
 	))
+	(<- (... "sll:weakref_set_callback_data") o$_id o)
+	(@@ o)
 ))
+
+
+
+(<- (... "sll:weakref__init") NO_OBJECT _execute_callbacks)
 
 
 

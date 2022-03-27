@@ -4525,13 +4525,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_weakref__init void
-#define __SLL_API_ARGS_sll_api_weakref__init sll_object_t* a
+#define __SLL_API_ARGS_sll_api_weakref__init sll_object_t* a,sll_integer_t b
 /**
  * \flags func
  * \name sll_api_weakref__init
  * \group weakref-api
  * \desc Docs!
  * \arg sll_object_t* a -> 
+ * \arg sll_integer_t b -> 
  */
 /**
  * \flags check_output func
@@ -4615,6 +4616,29 @@
  * \group raw-api
  * \subgroup raw-api-weakref-api
  * \desc Wrapper function for :sll_api_weakref_get:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_weakref_set_callback_data void
+#define __SLL_API_ARGS_sll_api_weakref_set_callback_data sll_integer_t a,sll_object_t* b
+/**
+ * \flags func
+ * \name sll_api_weakref_set_callback_data
+ * \group weakref-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ * \arg sll_object_t* b -> 
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_weakref_set_callback_data_raw
+ * \group raw-api
+ * \subgroup raw-api-weakref-api
+ * \desc Wrapper function for :sll_api_weakref_set_callback_data:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
