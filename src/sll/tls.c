@@ -50,7 +50,9 @@ _retry:;
 	sll_tls_value_t* n_dt=sll_zero_allocate(tls->sz*sizeof(sll_tls_value_t));
 	for (i=0;i<tls->sz-1;i++){
 		sll_tls_value_t* v=tls->dt+i;
-		*(n_dt+(v->t%tls->sz))=*v;
+		if (v->v){
+			*(n_dt+(v->t%tls->sz))=*v;
+		}
 	}
 	sll_deallocate(tls->dt);
 	tls->dt=n_dt;

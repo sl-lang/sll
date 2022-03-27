@@ -6,6 +6,10 @@
 
 - Implemented `SLL_ERROR_GET_VALUE`
 
+### Changed
+
+- Fixed `sll_tls_get`
+
 ## [0.7.10] - 2022-03-26
 
 ### Added
