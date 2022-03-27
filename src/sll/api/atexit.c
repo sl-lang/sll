@@ -19,7 +19,9 @@ static sll_lock_handle_t _atexit_lock=NULL;
 
 
 static void _cleanup_data(void){
-	SLL_CRITICAL(sll_platform_lock_delete(_atexit_lock));
+	if (_atexit_lock){
+		SLL_CRITICAL(sll_platform_lock_delete(_atexit_lock));
+	}
 }
 
 
@@ -35,6 +37,9 @@ static void _delete_atexit_function(atexit_function_t* af){
 
 
 void _atexit_execute(void){
+	if (!_atexit_lock){
+		return;
+	}
 	SLL_CRITICAL(sll_platform_lock_acquire(_atexit_lock));
 	while (_atexit_data_len){
 		_atexit_data_len--;
