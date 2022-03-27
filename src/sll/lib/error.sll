@@ -1,4 +1,4 @@
-(--- "types.sll" "string.sll" "array.sll" "error_codes.sll" "_internal.sll" "vm.sll" "thread.sll")
+(--- "types.sll" "string.sll" "array.sll" "error_codes.sll" "_internal.sll" "vm.sll" "thread.sll" "audit.sll")
 
 
 
@@ -131,14 +131,17 @@
 (= create (,,, type @@data@@
 	(? (=== type nil) (@@ nil))
 	(= type (:: type type_type))
+	(= bt (<- _get_error_backtrace))
+	(<- audit$audit "sll.error.create" type @@data@@ bt)
 	(@@ (. error_type
 		(:: @@data@@ type)
-		(<- _get_error_backtrace)
+		bt
 	))
 ))
 
 (= from_internal (,,, err data
 	(? (|| (!== (:? err) int_type) (=== err 0xffffffffffffffff)) (@@ nil))
+	(<- audit$audit "sll.error.from_internal" err data)
 	(= id (& err 0xffffffff))
 	(= v nil)
 	(?? (>> err 32)

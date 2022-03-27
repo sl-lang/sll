@@ -1,0 +1,26 @@
+(--- "types.sll")
+
+
+
+(= audit_module_type (&:
+	(~ func_type) audit
+	(~ func_type) register_callback
+	(~ func_type) unregister_callback
+))
+
+
+
+(= audit (... "sll:audit_audit"))
+
+(= register_callback (... "sll:audit_register_callback"))
+
+(= unregister_callback (... "sll:audit_unregister_callback"))
+
+
+
+(= audit (. audit_module_type
+	audit
+	register_callback
+	unregister_callback
+))
+(## audit)

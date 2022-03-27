@@ -343,6 +343,78 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_audit_audit void
+#define __SLL_API_ARGS_sll_api_audit_audit sll_string_t* a,sll_string_t* b,sll_object_t** c,sll_arg_count_t cc
+/**
+ * \flags func
+ * \name sll_api_audit_audit
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_string_t* a -> 
+ * \arg sll_string_t* b -> 
+ * \arg sll_object_t** c -> 
+ * \arg sll_arg_count_t cc
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_audit_audit_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_audit_audit:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_audit_register_callback void
+#define __SLL_API_ARGS_sll_api_audit_register_callback sll_integer_t* a,sll_arg_count_t ac
+/**
+ * \flags func
+ * \name sll_api_audit_register_callback
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_integer_t* a -> 
+ * \arg sll_arg_count_t ac
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_audit_register_callback_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_audit_register_callback:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
+#define __SLL_API_TYPE_sll_api_audit_unregister_callback __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_audit_unregister_callback sll_integer_t* a,sll_arg_count_t ac
+/**
+ * \flags func
+ * \name sll_api_audit_unregister_callback
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_integer_t* a -> 
+ * \arg sll_arg_count_t ac
+ * \ret sll_bool_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_audit_unregister_callback_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_audit_unregister_callback:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_base64_decode __SLL_CHECK_OUTPUT sll_object_t*
 #define __SLL_API_ARGS_sll_api_base64_decode sll_string_t* a
 /**

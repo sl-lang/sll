@@ -8,6 +8,7 @@
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/array.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/env.h>
@@ -168,6 +169,7 @@ __API_FUNC(sys_load_library){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||a->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
+	sll_audit(SLL_CHAR("sll.sys.load_library"),SLL_CHAR("s"),a);
 	sll_string_length_t lib_fp=sll_path_split(sll_library_file_path);
 	sll_string_length_t src_nm_off=sll_path_split(a);
 	sll_string_length_t fpl=lib_fp+STATIC_STRING_LEN(LIBRARY_DIRECTORY)+a->l-src_nm_off+STATIC_STRING_LEN(LIBRARY_EXTENSION);
@@ -263,6 +265,7 @@ __API_FUNC(sys_load_library){
 
 __API_FUNC(sys_remove_env){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
+		sll_audit(SLL_CHAR("sll.sys.remove_env"),SLL_CHAR("s"),a);
 		sll_remove_environment_variable(a);
 	}
 }
@@ -277,6 +280,7 @@ __API_FUNC(sys_set_sandbox_flag){
 
 __API_FUNC(sys_set_env){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
+		sll_audit(SLL_CHAR("sll.sys.set_env"),SLL_CHAR("ss"),a,b);
 		sll_set_environment_variable(a,b);
 	}
 }

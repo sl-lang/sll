@@ -3,6 +3,7 @@
 #include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/api/string.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/error.h>
@@ -116,6 +117,7 @@ __API_FUNC(file_copy){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH||(sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_COPY))){
 		return 0;
 	}
+	sll_audit(SLL_CHAR("sll.file.copy"),SLL_CHAR("ss"),a,b);
 	return sll_platform_path_copy(a->v,b->v);
 }
 
@@ -125,6 +127,7 @@ __API_FUNC(file_delete){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||(sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE))){
 		return 0;
 	}
+	sll_audit(SLL_CHAR("sll.file.delete"),SLL_CHAR("s"),a);
 	return sll_platform_path_delete(a->v);
 }
 
@@ -188,8 +191,10 @@ __API_FUNC(file_open){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
 		return ~SLL_ERROR_SANDBOX;
 	}
+	sll_file_flags_t ff=(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER));
+	sll_audit(SLL_CHAR("sll.file.open"),SLL_CHAR("sh"),a,ff);
 	sll_file_t f;
-	sll_error_t err=sll_file_open(a->v,(sll_file_flags_t)(b&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
+	sll_error_t err=sll_file_open(a->v,ff,&f);
 	if (err!=SLL_NO_ERROR){
 		return ~err;
 	}
@@ -256,6 +261,7 @@ __API_FUNC(file_rename){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH||(sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME))){
 		return 0;
 	}
+	sll_audit(SLL_CHAR("sll.file.rename"),SLL_CHAR("ss"),a,b);
 	return sll_platform_path_rename(a->v,b->v);
 }
 

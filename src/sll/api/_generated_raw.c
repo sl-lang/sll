@@ -168,6 +168,42 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_atexit_unregister_raw(sl
 
 
 
+__SLL_API_TYPE_sll_api_audit_audit sll_api_audit_audit(__SLL_API_ARGS_sll_api_audit_audit);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_audit_audit_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_string_t* a;
+	sll_string_t* b;
+	sll_object_t** c;
+	sll_arg_count_t cc;
+	sll_parse_args(SLL_CHAR("sso+"),al,all,&a,&b,&c,&cc);
+	sll_api_audit_audit(a,b,c,cc);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_audit_register_callback sll_api_audit_register_callback(__SLL_API_ARGS_sll_api_audit_register_callback);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_audit_register_callback_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t* a;
+	sll_arg_count_t ac;
+	sll_parse_args(SLL_CHAR("i+"),al,all,&a,&ac);
+	sll_api_audit_register_callback(a,ac);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_audit_unregister_callback sll_api_audit_unregister_callback(__SLL_API_ARGS_sll_api_audit_unregister_callback);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_audit_unregister_callback_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t* a;
+	sll_arg_count_t ac;
+	sll_parse_args(SLL_CHAR("i+"),al,all,&a,&ac);
+	sll_bool_t out=sll_api_audit_unregister_callback(a,ac);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
+}
+
+
+
 __SLL_API_TYPE_sll_api_base64_decode sll_api_base64_decode(__SLL_API_ARGS_sll_api_base64_decode);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t* a;
@@ -2150,6 +2186,18 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_atexit_unregister_raw
 	},
 	{
+		SLL_CHAR("sll:audit_audit"),
+		sll_api_audit_audit_raw
+	},
+	{
+		SLL_CHAR("sll:audit_register_callback"),
+		sll_api_audit_register_callback_raw
+	},
+	{
+		SLL_CHAR("sll:audit_unregister_callback"),
+		sll_api_audit_unregister_callback_raw
+	},
+	{
 		SLL_CHAR("sll:base64_decode"),
 		sll_api_base64_decode_raw
 	},
@@ -2865,5 +2913,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=192;
+const sll_function_index_t _ifunc_size=195;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

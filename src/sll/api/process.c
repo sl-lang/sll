@@ -5,6 +5,7 @@
 #include <sll/api.h>
 #include <sll/api/process.h>
 #include <sll/array.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/memory.h>
@@ -91,6 +92,7 @@ __API_FUNC(process_execute_shell){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		return 0;
 	}
+	sll_audit(SLL_CHAR("sll.process.shell"),SLL_CHAR("s"),a);
 	return sll_platform_execute_shell(a->v);
 }
 
@@ -138,6 +140,7 @@ __API_FUNC(process_start){
 		sll_new_object_array(SLL_CHAR("a(si)0(sZZ)"),out,a,b,c,d);
 		return;
 	}
+	sll_audit(SLL_CHAR("sll.process.start"),SLL_CHAR("sss"),a,b,d);
 	sll_char_t** args=sll_allocate((a->l+1)*sizeof(sll_char_t*));
 	for (sll_array_length_t i=0;i<a->l;i++){
 		sll_object_t* n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);

@@ -3,6 +3,7 @@
 #include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/array.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/error.h>
@@ -183,6 +184,7 @@ __API_FUNC(path_mkdir){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
+	sll_audit(SLL_CHAR("sll.path.mkdir"),SLL_CHAR("sh"),a,b);
 	return sll_platform_create_directory(a->v,b);
 }
 
@@ -215,7 +217,11 @@ __API_FUNC(path_relative){
 
 
 __API_FUNC(path_set_cwd){
-	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)?0:sll_platform_set_current_working_directory(a->v));
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
+		return 0;
+	}
+	sll_audit(SLL_CHAR("sll.path.set_cwd"),SLL_CHAR("s"),a);
+	return sll_platform_set_current_working_directory(a->v);
 }
 
 

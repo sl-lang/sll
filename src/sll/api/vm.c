@@ -4,6 +4,7 @@
 #include <sll/api.h>
 #include <sll/api/file.h>
 #include <sll/array.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/location.h>
 #include <sll/new_object.h>
@@ -55,11 +56,13 @@ __API_FUNC(vm_get_location){
 	else{
 		ii=(a>SLL_MAX_INSTRUCTION_INDEX?SLL_MAX_INSTRUCTION_INDEX:(sll_instruction_index_t)a);
 	}
+	sll_audit(SLL_CHAR("sll.vm.get_location"),SLL_CHAR("h"),ii);
 	return sll_instruction_to_location(ii);
 }
 
 
 
 __API_FUNC(vm_get_ref_count){
+	sll_audit(SLL_CHAR("sll.vm.get_ref_count"),SLL_CHAR("O"),a);
 	return a->rc;
 }

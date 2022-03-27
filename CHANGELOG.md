@@ -6,6 +6,7 @@
 
 - Barriers, locks, semaphores and threads are now automatically deleted when their handles go out of scope
 - Implemented `atexit.sll`, `atexit$register` and `atexit$unregister` ([#258])
+- Implemented `audit.sll`, `audit$audit`, `audit$register_callback` and `audit$unregister_callback` ([#259])
 - Implemented `SLL_ERROR_GET_VALUE`
 - Implemented `SLL_MAX_BARRIER_INDEX`
 - Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
@@ -1858,6 +1859,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#259]: https://github.com/sl-lang/sll/issues/259
 [#258]: https://github.com/sl-lang/sll/issues/258
 [#257]: https://github.com/sl-lang/sll/issues/257
 [#256]: https://github.com/sl-lang/sll/issues/256
