@@ -1814,8 +1814,38 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_objec
 			return sll_array_equal(&(a->dt.a),&(b->dt.a));
 		case SLL_OBJECT_TYPE_MAP:
 			return sll_map_equal(&(a->dt.m),&(b->dt.m));
-		default:
-			SLL_UNREACHABLE();
+	}
+	if (sll_current_runtime_data&&a->t>SLL_MAX_OBJECT_TYPE&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->t-SLL_MAX_OBJECT_TYPE-1);
+		sll_object_field_t* pa=a->dt.p;
+		sll_object_field_t* pb=b->dt.p;
+		for (sll_arg_count_t i=0;i<dt->l;i++){
+			switch (dt->dt[i].t){
+				case SLL_OBJECT_TYPE_INT:
+					if (pa->i!=pb->i){
+						return 0;
+					}
+					break;
+				case SLL_OBJECT_TYPE_FLOAT:
+					if (pa->f!=pb->f){
+						return 0;
+					}
+					break;
+				case SLL_OBJECT_TYPE_CHAR:
+					if (pa->c!=pb->c){
+						return 0;
+					}
+					break;
+				default:
+					if (!sll_operator_strict_equal(pa->o,pb->o)){
+						return 0;
+					}
+					break;
+			}
+			pa++;
+			pb++;
+		}
+		return 1;
 	}
 	return 0;
 }

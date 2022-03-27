@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/scheduler.h>
+#include <sll/_internal/weakref.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -110,6 +111,17 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 	if (o->rc){
 		GC_UNLOCK(o);
 		return;
+	}
+	if (o->_f&GC_FLAG_HAS_WEAKREF){
+		o->rc++;
+		GC_UNLOCK(o);
+		_weakref_delete(o);
+		GC_LOCK(o);
+		o->rc--;
+		if (o->rc){
+			GC_UNLOCK(o);
+			return;
+		}
 	}
 	if (o->t==SLL_OBJECT_TYPE_STRING){
 		sll_free_string(&(o->dt.s));

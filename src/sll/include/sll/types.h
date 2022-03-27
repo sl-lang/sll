@@ -304,6 +304,10 @@ typedef void* sll_process_handle_t;
 
 
 
+typedef void* sll_weak_ref_t;
+
+
+
 typedef const sll_char_t* sll_json_parser_state_t;
 
 
@@ -729,7 +733,7 @@ typedef struct __SLL_OBJECT{
 
 
 
-typedef sll_object_t* (*sll_internal_function_pointer_t)(sll_object_t*const* al,sll_arg_count_t all);
+typedef sll_object_t* (*sll_internal_function_pointer_t)(sll_object_t*const*,sll_arg_count_t);
 
 
 
@@ -815,7 +819,7 @@ typedef struct __SLL_VM_CONFIG{
 
 
 
-typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* s,sll_compilation_data_t* o);
+typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t*,sll_compilation_data_t*);
 
 
 
@@ -861,19 +865,19 @@ typedef void (*sll_cleanup_function_t)(void);
 
 
 
-typedef sll_object_t* (*sll_unary_operator_t)(sll_object_t* a);
+typedef sll_object_t* (*sll_unary_operator_t)(sll_object_t*);
 
 
 
-typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t* a,sll_object_t* b);
+typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t*,sll_object_t*);
 
 
 
-typedef sll_object_t* (*sll_ternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c);
+typedef sll_object_t* (*sll_ternary_operator_t)(sll_object_t*,sll_object_t*,sll_object_t*);
 
 
 
-typedef sll_object_t* (*sll_quaternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d);
+typedef sll_object_t* (*sll_quaternary_operator_t)(sll_object_t*,sll_object_t*,sll_object_t*,sll_object_t*);
 
 
 
@@ -946,7 +950,7 @@ typedef struct __SLL_MODULE_LOADER_DATA{
 
 
 
-typedef void (*sll_internal_thread_function_t)(void* arg);
+typedef void (*sll_internal_thread_function_t)(void*);
 
 
 
@@ -1005,6 +1009,10 @@ typedef struct __SLL_TLS_OBJECT{
 	sll_array_length_t sz;
 	sll_tls_value_t* dt;
 } sll_tls_object_t;
+
+
+
+typedef void (*sll_weak_ref_destructor_t)(sll_weak_ref_t,sll_object_t*,void*);
 
 
 

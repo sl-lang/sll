@@ -1,0 +1,61 @@
+(--- "types.sll" "string.sll")
+
+
+
+(# get)
+
+
+
+(= weakref_type (&:
+	(,,, dt
+		(<- (... "sll:weakref_delete") dt$id)
+	) @@delete@@
+	(,,, dt
+		(@@ (<- string$str (<- get dt)))
+	) @@string@@
+	(~ int_type) _id
+))
+
+(= no_object (&:
+	(,,, (@@ "<WEAKREF_NO_OBJECT>")) @@string@@
+))
+
+(= weakref_module_type (&:
+	(~ type_type) weakref_type
+	(~ no_object) NO_OBJECT
+	(~ func_type) get
+	(~ func_type) ref
+))
+
+
+
+(= NO_OBJECT (. no_object))
+
+(<- (... "sll:weakref__init") NO_OBJECT)
+
+
+
+(= get (,,, wr
+	(? (=== wr nil) (@@ NO_OBJECT))
+	(= wr (:: wr weakref_type))
+	(? (! wr$_id) (@@ NO_OBJECT))
+	(= o (<- (... "sll:weakref_get") wr$_id))
+	(? (=== o NO_OBJECT) (= wr$_id nil))
+	(@@ o)
+))
+
+(= ref (,,, obj
+	(@@ (. weakref_type
+		(<- (... "sll:weakref_create") obj)
+	))
+))
+
+
+
+(= weakref (. weakref_module_type
+	weakref_type
+	NO_OBJECT
+	get
+	ref
+))
+(## weakref)

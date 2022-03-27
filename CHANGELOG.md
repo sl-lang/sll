@@ -5,6 +5,9 @@
 ### Added
 
 - Implemented `SLL_ERROR_GET_VALUE`
+- Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
+- Implemented `sll_weakref_create`, `sll_weakref_delete`, `sll_weakref_get` and `sll_weakref_register_callback` ([#257])
+- Implemented `weakref.sll`, `weakref$weakref_type`, `weakref$NO_OBJECT`, `weakref$get` and `weakref$ref` ([#257])
 
 ### Changed
 
@@ -1852,6 +1855,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#257]: https://github.com/sl-lang/sll/issues/257
 [#256]: https://github.com/sl-lang/sll/issues/256
 [#255]: https://github.com/sl-lang/sll/issues/255
 [#254]: https://github.com/sl-lang/sll/issues/254

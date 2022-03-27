@@ -23,6 +23,8 @@
 
 #define GC_PAGE_POOL_SIZE 32
 
+#define GC_FLAG_HAS_WEAKREF 1
+
 #define GC_GET_FLAGS(o) ((o)->_f&0xffffff)
 
 #define GC_LOCK(o) \

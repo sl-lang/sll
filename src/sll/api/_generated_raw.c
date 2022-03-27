@@ -1972,6 +1972,47 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_ref_count_raw(sll
 
 
 
+__SLL_API_TYPE_sll_api_weakref__init sll_api_weakref__init(__SLL_API_ARGS_sll_api_weakref__init);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref__init_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a;
+	sll_parse_args(SLL_CHAR("o"),al,all,&a);
+	sll_api_weakref__init(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_API_TYPE_sll_api_weakref_create sll_api_weakref_create(__SLL_API_ARGS_sll_api_weakref_create);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_create_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_object_t* a;
+	sll_parse_args(SLL_CHAR("o"),al,all,&a);
+	sll_integer_t out=sll_api_weakref_create(a);
+	return sll_int_to_object(out);
+}
+
+
+
+__SLL_API_TYPE_sll_api_weakref_delete sll_api_weakref_delete(__SLL_API_ARGS_sll_api_weakref_delete);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_delete_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t a;
+	sll_parse_args(SLL_CHAR("i"),al,all,&a);
+	sll_bool_t out=sll_api_weakref_delete(a);
+	SLL_ACQUIRE(sll_static_int[out]);
+	return sll_static_int[out];
+}
+
+
+
+__SLL_API_TYPE_sll_api_weakref_get sll_api_weakref_get(__SLL_API_ARGS_sll_api_weakref_get);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_get_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_integer_t a;
+	sll_parse_args(SLL_CHAR("i"),al,all,&a);
+	sll_object_t* out=sll_api_weakref_get(a);
+	return out;
+}
+
+
+
 static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_count"),
@@ -2696,10 +2737,26 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:vm_get_ref_count"),
 		sll_api_vm_get_ref_count_raw
+	},
+	{
+		SLL_CHAR("sll:weakref__init"),
+		sll_api_weakref__init_raw
+	},
+	{
+		SLL_CHAR("sll:weakref_create"),
+		sll_api_weakref_create_raw
+	},
+	{
+		SLL_CHAR("sll:weakref_delete"),
+		sll_api_weakref_delete_raw
+	},
+	{
+		SLL_CHAR("sll:weakref_get"),
+		sll_api_weakref_get_raw
 	}
 };
 
 
 
-const sll_function_index_t _ifunc_size=181;
+const sll_function_index_t _ifunc_size=185;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

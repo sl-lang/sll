@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll" "weakref.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -513,6 +513,12 @@
 (:> tls_var "\n")
 
 (:> (<- object$new "[][1]cM<>[Zf <i A> s]0 a m O" 'x' 0.5 45 "abcdefg" [0 1 2 3 4 5 6 7 8 9] <1 2 3 4 5 6> log) "\n")
+
+(= obj [1 2 3])
+(= wr (<- weakref$ref obj))
+(:> "Weakref: " wr "\n")
+(:> "Delete: " obj "\n")
+(:> "Weakref: " wr "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
