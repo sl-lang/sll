@@ -14,12 +14,19 @@ static sll_object_t* _weakref_no_object_ret=NULL;
 
 
 static void _cleanup_data(void){
+	if (!_weakref_no_object_ret){
+		return;
+	}
 	sll_release_object(_weakref_no_object_ret);
+	_weakref_no_object_ret=NULL;
 }
 
 
 
 __API_FUNC(weakref__init){
+	if (_weakref_no_object_ret){
+		return;
+	}
 	_weakref_no_object_ret=a;
 	SLL_ACQUIRE(a);
 	sll_register_cleanup(_cleanup_data);
