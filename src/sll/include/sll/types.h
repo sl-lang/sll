@@ -700,6 +700,13 @@ typedef union __SLL_OBJECT_FIELD{
 
 
 
+typedef struct __SLL_OBJECT_PTR{
+	struct __SLL_OBJECT* p;
+	struct __SLL_OBJECT* n;
+} sll_object_ptr_t;
+
+
+
 typedef union __SLL_OBJECT_DATA{
 	sll_integer_t i;
 	sll_float_t f;
@@ -708,6 +715,7 @@ typedef union __SLL_OBJECT_DATA{
 	sll_array_t a;
 	sll_map_t m;
 	sll_object_field_t* p;
+	sll_object_ptr_t _ptr;
 } sll_object_data_t;
 
 

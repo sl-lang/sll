@@ -21,10 +21,7 @@
 
 
 
-#define GC_GET_NEXT_OBJECT(o) ((sll_object_t*)((o)->dt.s.v))
-#define GC_SET_NEXT_OBJECT(o,n) ((o)->dt.s.v=SLL_CHAR((n)))
-
-#define GC_OBJECT_POOL_ALLOC_SIZE 65536
+#define GC_PAGE_POOL_SIZE 32
 
 #define GC_LOCK(o) \
 	do{ \

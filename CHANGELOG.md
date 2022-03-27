@@ -9,6 +9,7 @@
 ### Changed
 
 - Fixed `sll_tls_get`
+- GC now cleans-up unused memory pages
 
 ## [0.7.10] - 2022-03-26
 
