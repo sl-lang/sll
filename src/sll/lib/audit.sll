@@ -11,30 +11,30 @@
 
 
 
-(= BUILTIN_EVENTS [
-	"sll.error.create"
-	"sll.error.from_internal"
-	"sll.file.copy"
-	"sll.file.delete"
-	"sll.file.open"
-	"sll.file.rename"
-	"sll.object.new"
-	"sll.path.list_dir"
-	"sll.path.list_dir.recursive"
-	"sll.path.mkdir"
-	"sll.path.set_cwd"
-	"sll.process.shell"
-	"sll.process.start"
-	"sll.sys.env.delete"
-	"sll.sys.env.set"
-	"sll.sys.load_library"
-	"sll.sys.set_sandbox_flag"
-	"sll.thread.create"
-	"sll.thread.return"
-	"sll.vm.get_location"
-	"sll.vm.get_ref_count"
-	"sll.vm.shutdown"
-])
+(= BUILTIN_EVENTS <
+	"sll.error.create" ["type" "data" "backtrace"]
+	"sll.error.from_internal" ["error_code" "data"]
+	"sll.file.copy" ["src" "dst"]
+	"sll.file.delete" ["path"]
+	"sll.file.open" ["path" "mode"]
+	"sll.file.rename" ["src" "dst"]
+	"sll.object.new" ["template" "data"]
+	"sll.path.list_dir" ["path"]
+	"sll.path.list_dir.recursive" ["path"]
+	"sll.path.mkdir" ["path"]
+	"sll.path.set_cwd" ["path"]
+	"sll.process.shell" ["command"]
+	"sll.process.start" ["arguments" "cwd" "stdin"]
+	"sll.sys.env.delete" ["key"]
+	"sll.sys.env.set" ["key" "value"]
+	"sll.sys.load_library" ["name"]
+	"sll.sys.set_sandbox_flag" ["flag"]
+	"sll.thread.create" ["func" "args" "thread"]
+	"sll.thread.return" ["thread"]
+	"sll.vm.get_location" ["location"]
+	"sll.vm.get_ref_count" ["object"]
+	"sll.vm.shutdown" []
+>)
 
 
 
