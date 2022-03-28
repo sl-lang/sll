@@ -3,10 +3,36 @@
 
 
 (= audit_module_type (&:
+	(~ array_type) BUILTIN_EVENTS
 	(~ func_type) audit
 	(~ func_type) register
 	(~ func_type) unregister
 ))
+
+
+
+(= BUILTIN_EVENTS [
+	"sll.error.create"
+	"sll.error.from_internal"
+	"sll.file.copy"
+	"sll.file.delete"
+	"sll.file.open"
+	"sll.file.rename"
+	"sll.object.new"
+	"sll.path.mkdir"
+	"sll.path.set_cwd"
+	"sll.process.shell"
+	"sll.process.start"
+	"sll.sys.load_library"
+	"sll.sys.remove_env"
+	"sll.sys.set_env"
+	"sll.sys.set_sandbox_flag"
+	"sll.thread.create"
+	"sll.thread.return"
+	"sll.vm.get_location"
+	"sll.vm.get_ref_count"
+	"sll.vm.shutdown"
+])
 
 
 
@@ -19,6 +45,7 @@
 
 
 (= audit (. audit_module_type
+	BUILTIN_EVENTS
 	audit
 	register
 	unregister

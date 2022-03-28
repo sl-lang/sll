@@ -3,11 +3,27 @@
 
 
 (= logger_file (<- file$open "build/audit_log.txt" "w"))
+(= max_len 0)
+(-> (= i 0) (< i ($ audit$BUILTIN_EVENTS))
+	(= len ($ (: audit$BUILTIN_EVENTS i)))
+	(? (> len max_len)
+		(= max_len len)
+	)
+	(++ i)
+)
+(= max_len (+ max_len 1))
 
 
 
 (<- audit$register (,,, nm args
-	(<- file$write logger_file (<- string$format "%s: %S\n" nm args))
+	(<- file$write logger_file (+
+		(<- string$pad_left (+
+			nm
+			':'
+		) max_len)
+		(<- string$str args)
+		'\n'
+	))
 	(<- file$flush logger_file)
 ))
 (<- atexit$register (,,,
