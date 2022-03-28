@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/vm.h>
 #include <sll/api.h>
 #include <sll/audit.h>
 #include <sll/common.h>
@@ -31,7 +32,7 @@ static void _call_user_cb(const sll_string_t* nm,const sll_array_t* arg){
 		sll_array_to_object(arg)
 	};
 	for (sll_array_length_t i=0;i<_audit_cb_len;i++){
-		sll_release_object(sll_execute_function(*(_audit_cb+i),dt,2,0));
+		sll_release_object(sll_execute_function(*(_audit_cb+i),dt,2,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
 	}
 	sll_release_object(dt[0]);
 	sll_release_object(dt[1]);

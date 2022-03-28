@@ -1,6 +1,11 @@
 #ifndef __SLL__INTERNAL_VM_H__
 #define __SLL__INTERNAL_VM_H__ 1
+#include <sll/_internal/thread.h>
 #include <sll/types.h>
+
+
+
+#define EXECUTE_FUNCTION_NO_AUDIT_TERMINATE SLL_EXECUTE_FUNCTION_RESERVED0
 
 
 

@@ -1,4 +1,4 @@
-(--- "types.sll" "string.sll" "weakref.sll" "map.sll")
+(--- "types.sll" "string.sll" "weakref.sll" "map.sll" "audit.sll")
 
 
 
@@ -281,11 +281,12 @@
 			(@@ 1)
 		}
 	)
+	(= fn (:: fn func_type))
 	(= sem (<- (... "sll:thread_create_semaphore") 0))
 	(= tid (<- (... "sll:thread_create")
 		_thread_runner
 		[
-			(:: fn func_type)
+			fn
 			@@args@@
 			sem
 		]
@@ -299,6 +300,7 @@
 	))
 	(= (: _thread_map tid) (<- weakref$ref o))
 	(!<+ sem)
+	(<- audit$audit "sll.thread.create" "iai" fn @@args@@ tid)
 	(<- (... "sll:thread_delete_semaphore") sem)
 	(@@ o)
 ))

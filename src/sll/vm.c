@@ -6,10 +6,12 @@
 #include <sll/_internal/semaphore.h>
 #include <sll/_internal/stack.h>
 #include <sll/_internal/thread.h>
+#include <sll/_internal/vm.h>
 #include <sll/api/file.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/assembly.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/error.h>
@@ -229,13 +231,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_bool_t async){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_flags_t fl){
 	if (!sll_current_runtime_data||!sll_current_vm_config){
 		return NULL;
 	}
 	sll_thread_index_t tid=sll_thread_create(fn_idx,al,all);
+	if ((_scheduler_current_thread->flags&THREAD_FLAG_NO_AUDIT_TERMINATE)||(fl&EXECUTE_FUNCTION_NO_AUDIT_TERMINATE)){
+		_thread_get(tid)->flags|=THREAD_FLAG_NO_AUDIT_TERMINATE;
+	}
+	else{
+		sll_audit(SLL_CHAR("sll.thread.create"),SLL_CHAR("iLu"),fn_idx,al,all,tid);
+	}
 	sll_object_t* o;
-	if (async){
+	if (fl&SLL_EXECUTE_FUNCTION_ASYNC){
 		o=sll_wait_thread(tid);
 	}
 	else{

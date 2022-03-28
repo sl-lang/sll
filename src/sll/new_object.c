@@ -44,6 +44,8 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		switch (st){
 			case 'h':
 				return sll_int_to_object((__SLL_S32)sll_var_arg_get_int(va));
+			case 'u':
+				return sll_int_to_object((__SLL_U32)sll_var_arg_get_int(va));
 			case 's':
 				return sll_string_to_object(sll_var_arg_get(va));
 			case 'S':

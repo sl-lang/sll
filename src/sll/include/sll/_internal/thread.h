@@ -26,6 +26,10 @@
 #define THREAD_STATE_TERMINATED 8
 #define THREAD_STATE_UNDEFINED 255
 
+#define THREAD_FLAG_SUSPENDED 1
+#define THREAD_FLAG_DELETE 2
+#define THREAD_FLAG_NO_AUDIT_TERMINATE 4
+
 
 
 typedef __SLL_U8 thread_state_t;
@@ -48,8 +52,7 @@ typedef struct __THREAD_DATA{
 	sandbox_t sandbox;
 	sll_char_t tm;
 	thread_state_t st;
-	sll_bool_t suspended;
-	sll_bool_t delete;
+	sll_flags_t flags;
 } thread_data_t;
 
 

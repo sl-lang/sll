@@ -12,6 +12,28 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_EXECUTE_FUNCTION_ASYNC
+ * \group vm
+ * \desc Docs!
+ * \type sll_flags_t
+ */
+#define SLL_EXECUTE_FUNCTION_ASYNC 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_EXECUTE_FUNCTION_RESERVED0
+ * \group vm
+ * \desc Docs!
+ * \type sll_flags_t
+ */
+#define SLL_EXECUTE_FUNCTION_RESERVED0 2
+
+
+
+/**
  * \flags var
  * \name sll_current_runtime_data
  * \group vm
@@ -54,10 +76,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
  * \arg sll_integer_t fn_idx
  * \arg sll_object_t*const* al
  * \arg sll_arg_count_t all
- * \arg sll_bool_t async
+ * \arg sll_flags_t fl
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_bool_t async);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_flags_t fl);
 
 
 

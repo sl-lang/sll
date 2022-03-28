@@ -103,8 +103,7 @@ sll_thread_index_t _thread_new(void){
 	n->sandbox=(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
 	n->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
 	n->st=THREAD_STATE_INITIALIZED;
-	n->suspended=0;
-	n->delete=0;
+	n->flags=0;
 	*(_thread_data+o)=n;
 	_thread_active_count++;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
@@ -114,12 +113,29 @@ sll_thread_index_t _thread_new(void){
 
 
 void _thread_terminate(sll_object_t* ret){
-	SLL_ASSERT(_scheduler_current_thread->st==THREAD_STATE_RUNNING&&!_scheduler_current_thread->suspended);
+	SLL_ASSERT(_scheduler_current_thread->st==THREAD_STATE_RUNNING&&!(_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED));
 	SLL_ACQUIRE(ret);
-	sll_thread_index_t del_thr=(_scheduler_current_thread->delete?_scheduler_current_thread_index:SLL_UNKNOWN_THREAD_INDEX);
+	sll_thread_index_t tid=_scheduler_current_thread_index;
+	sll_bool_t del=!!(_scheduler_current_thread->flags&THREAD_FLAG_DELETE);
 	_scheduler_current_thread->ret=ret;
 	_scheduler_current_thread->st=THREAD_STATE_TERMINATED;
 	_scheduler_current_thread_index=_scheduler_current_thread->wait;
+	if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
+		_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
+		while (_scheduler_current_thread->nxt!=SLL_UNKNOWN_THREAD_INDEX){
+			_scheduler_current_thread->st=THREAD_STATE_QUEUED;
+			if (_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED){
+				SLL_UNIMPLEMENTED();
+			}
+			_scheduler_queue_thread(_scheduler_current_thread_index);
+			_scheduler_current_thread_index=_scheduler_current_thread->nxt;
+			_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
+		}
+		_scheduler_current_thread->st=THREAD_STATE_RUNNING;
+	}
+	if (!(_scheduler_current_thread->flags&THREAD_FLAG_NO_AUDIT_TERMINATE)){
+		sll_audit(SLL_CHAR("sll.thread.return"),SLL_CHAR("u"),tid);
+	}
 	SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
 	if (_thread_active_count==1){
 		SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
@@ -129,21 +145,8 @@ void _thread_terminate(sll_object_t* ret){
 	}
 	_thread_active_count--;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
-	if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
-		_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
-		while (_scheduler_current_thread->nxt!=SLL_UNKNOWN_THREAD_INDEX){
-			_scheduler_current_thread->st=THREAD_STATE_QUEUED;
-			if (_scheduler_current_thread->suspended){
-				SLL_UNIMPLEMENTED();
-			}
-			_scheduler_queue_thread(_scheduler_current_thread_index);
-			_scheduler_current_thread_index=_scheduler_current_thread->nxt;
-			_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
-		}
-		_scheduler_current_thread->st=THREAD_STATE_RUNNING;
-	}
-	if (del_thr!=SLL_UNKNOWN_THREAD_INDEX){
-		SLL_CRITICAL(sll_thread_delete(del_thr));
+	if (del){
+		SLL_CRITICAL(sll_thread_delete(tid));
 	}
 }
 
@@ -193,7 +196,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 	}
 	SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
 	if (thr->st!=THREAD_STATE_TERMINATED){
-		thr->delete=1;
+		thr->flags|=THREAD_FLAG_DELETE;
 		SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 		return 1;
 	}
@@ -244,10 +247,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_restart(sll_thread_index
 	if (THREAD_IS_UNUSED(thr)||t==_scheduler_current_thread_index){
 		return 0;
 	}
-	if (thr->suspended&&thr->st==THREAD_STATE_QUEUED){
+	if ((thr->flags&THREAD_FLAG_SUSPENDED)&&thr->st==THREAD_STATE_QUEUED){
 		_scheduler_queue_thread(t);
 	}
-	thr->suspended=0;
+	thr->flags&=~THREAD_FLAG_SUSPENDED;
 	return 1;
 }
 
@@ -276,6 +279,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_suspend(sll_thread_index
 	if (THREAD_IS_UNUSED(thr)||t==_scheduler_current_thread_index){
 		return 0;
 	}
-	thr->suspended=1;
+	thr->flags|=THREAD_FLAG_SUSPENDED;
 	return 1;
 }
