@@ -36,4 +36,27 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* nm,const sll_char_t* t,sll_
 
 
 
+/**
+ * \flags func
+ * \name sll_audit_register_callback
+ * \group audit
+ * \desc Docs!
+ * \arg sll_audit_callback_t fn
+ */
+__SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t fn);
+
+
+
+/**
+ * \flags func
+ * \name sll_audit_unregister_callback
+ * \group audit
+ * \desc Docs!
+ * \arg sll_audit_callback_t fn
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL sll_bool_t sll_audit_unregister_callback(sll_audit_callback_t fn);
+
+
+
 #endif

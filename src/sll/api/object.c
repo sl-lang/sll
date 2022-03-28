@@ -1,6 +1,7 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/api.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/new_object.h>
 #include <sll/types.h>
@@ -18,5 +19,6 @@ __API_FUNC(object_new){
 			}
 		}
 	};
+	sll_audit(SLL_CHAR("sll.object.new"),SLL_CHAR("sL"),a,b,bc);
 	return sll_new_object_list(a->v,a->l,&dt);
 }

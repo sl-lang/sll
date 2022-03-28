@@ -4,23 +4,23 @@
 
 (= audit_module_type (&:
 	(~ func_type) audit
-	(~ func_type) register_callback
-	(~ func_type) unregister_callback
+	(~ func_type) register
+	(~ func_type) unregister
 ))
 
 
 
 (= audit (... "sll:audit_audit"))
 
-(= register_callback (... "sll:audit_register_callback"))
+(= register (... "sll:audit_register"))
 
-(= unregister_callback (... "sll:audit_unregister_callback"))
+(= unregister (... "sll:audit_unregister"))
 
 
 
 (= audit (. audit_module_type
 	audit
-	register_callback
-	unregister_callback
+	register
+	unregister
 ))
 (## audit)

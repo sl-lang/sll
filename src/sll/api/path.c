@@ -246,12 +246,12 @@ __API_FUNC(path_size){
 
 __API_FUNC(path_split){
 	sll_string_length_t i=sll_path_split(a);
-	sll_new_object_array(SLL_CHAR("LL"),out,a->v,i,a->v+i,a->l-i);
+	sll_new_object_array(SLL_CHAR("ll"),out,a->v,i,a->v+i,a->l-i);
 }
 
 
 
 __API_FUNC(path_split_drive){
 	sll_string_length_t i=sll_path_split_drive(a);
-	sll_new_object_array(SLL_CHAR("LL"),out,a->v,i,a->v+i,a->l-i);
+	sll_new_object_array(SLL_CHAR("ll"),out,a->v,i,a->v+i,a->l-i);
 }

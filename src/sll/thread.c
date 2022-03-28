@@ -2,6 +2,7 @@
 #include <sll/_internal/sandbox.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/vm.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
@@ -122,6 +123,7 @@ void _thread_terminate(sll_object_t* ret){
 	SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
 	if (_thread_active_count==1){
 		SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
+		sll_audit(SLL_CHAR("sll.vm.shutdown"),SLL_CHAR(""));
 		_atexit_execute();
 		SLL_CRITICAL(sll_platform_lock_acquire(_thread_lock));
 	}

@@ -368,22 +368,21 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_audit_register_callback void
-#define __SLL_API_ARGS_sll_api_audit_register_callback sll_integer_t* a,sll_arg_count_t ac
+#define __SLL_API_TYPE_sll_api_audit_register void
+#define __SLL_API_ARGS_sll_api_audit_register sll_integer_t a
 /**
  * \flags func
- * \name sll_api_audit_register_callback
+ * \name sll_api_audit_register
  * \group array-api
  * \desc Docs!
- * \arg sll_integer_t* a -> 
- * \arg sll_arg_count_t ac
+ * \arg sll_integer_t a -> 
  */
 /**
  * \flags check_output func
- * \name sll_api_audit_register_callback_raw
+ * \name sll_api_audit_register_raw
  * \group raw-api
  * \subgroup raw-api-array-api
- * \desc Wrapper function for :sll_api_audit_register_callback:
+ * \desc Wrapper function for :sll_api_audit_register:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function
@@ -391,23 +390,22 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_audit_unregister_callback __SLL_CHECK_OUTPUT sll_bool_t
-#define __SLL_API_ARGS_sll_api_audit_unregister_callback sll_integer_t* a,sll_arg_count_t ac
+#define __SLL_API_TYPE_sll_api_audit_unregister __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_ARGS_sll_api_audit_unregister sll_integer_t a
 /**
  * \flags func
- * \name sll_api_audit_unregister_callback
+ * \name sll_api_audit_unregister
  * \group array-api
  * \desc Docs!
- * \arg sll_integer_t* a -> 
- * \arg sll_arg_count_t ac
+ * \arg sll_integer_t a -> 
  * \ret sll_bool_t
  */
 /**
  * \flags check_output func
- * \name sll_api_audit_unregister_callback_raw
+ * \name sll_api_audit_unregister_raw
  * \group raw-api
  * \subgroup raw-api-array-api
- * \desc Wrapper function for :sll_api_audit_unregister_callback:
+ * \desc Wrapper function for :sll_api_audit_unregister:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

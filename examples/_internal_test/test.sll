@@ -7,6 +7,9 @@
 	})
 	(++ i)
 })
+(<- audit$register (,,, nm args
+	(:> (<- string$format "{{{ %s, %S }}}\n" nm args))
+))
 (= func (,,, x y {
 	(:> "(Function Args: {x, y} = {" x ", " y "}) ")
 	(@@ (* x y))
@@ -532,6 +535,10 @@
 (<- atexit$register tmp_fn)
 (:> (<- atexit$unregister tmp_fn) "\n")
 (:> (<- atexit$unregister tmp_fn) "\n")
+
+(<- audit$register tmp_fn)
+(:> (<- audit$unregister tmp_fn) "\n")
+(:> (<- audit$unregister tmp_fn) "\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

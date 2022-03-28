@@ -132,7 +132,7 @@
 	(? (=== type nil) (@@ nil))
 	(= type (:: type type_type))
 	(= bt (<- _get_error_backtrace))
-	(<- audit$audit "sll.error.create" type @@data@@ bt)
+	(<- audit$audit "sll.error.create" "iaa" type @@data@@ bt)
 	(@@ (. error_type
 		(:: @@data@@ type)
 		bt
@@ -141,7 +141,7 @@
 
 (= from_internal (,,, err data
 	(? (|| (!== (:? err) int_type) (=== err 0xffffffffffffffff)) (@@ nil))
-	(<- audit$audit "sll.error.from_internal" err data)
+	(<- audit$audit "sll.error.from_internal" "im" err data)
 	(= id (& err 0xffffffff))
 	(= v nil)
 	(?? (>> err 32)

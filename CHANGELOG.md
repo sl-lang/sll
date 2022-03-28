@@ -7,12 +7,14 @@
 - Barriers, locks, semaphores and threads are now automatically deleted when their handles go out of scope
 - Implemented `atexit.sll`, `atexit$register` and `atexit$unregister` ([#258])
 - Implemented `audit.sll`, `audit$audit`, `audit$register_callback` and `audit$unregister_callback` ([#259])
-- Implemented `sll_audit` ([#259])
+- Implemented `sll_audit`, `sll_audit_list`, `sll_audit_register_callback` and `sll_audit_unregister_callback` ([#259])
 - Implemented `SLL_ERROR_GET_VALUE`
 - Implemented `SLL_MAX_BARRIER_INDEX`
+- Implemented `sll_new_object_array_list`
 - Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
 - Implemented `sll_weakref_create`, `sll_weakref_delete`, `sll_weakref_get` and `sll_weakref_register_callback` ([#257])
 - Implemented `weakref.sll`, `weakref$weakref_type`, `weakref$NO_OBJECT`, `weakref$get` and `weakref$ref` ([#257])
+- Object creation code to build an array from a pointer and a length
 
 ### Changed
 
@@ -20,6 +22,7 @@
 - GC now cleans-up unused memory pages
 - Object references counter (`sll_ref_count_t`) is now 64-bit instead of 32-bit
 - Object type (`sll_object_type_t`) is now 32-bit instead of 24-bit
+- Renamed string object creation code from length and pointer from `L` to `l`
 
 ### Removed
 

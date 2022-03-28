@@ -1017,4 +1017,8 @@ typedef void (*sll_weak_ref_destructor_t)(sll_weak_ref_t,sll_object_t*,void*);
 
 
 
+typedef void (*sll_audit_callback_t)(const sll_string_t*,const sll_array_t*);
+
+
+
 #endif

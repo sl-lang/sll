@@ -26,25 +26,25 @@ __API_FUNC_DECL(audit_audit);
 
 
 /**
- * \flags api func var_arg
- * \name sll_api_audit_register_callback
+ * \flags api func
+ * \name sll_api_audit_register
  * \group array-api
  * \desc Docs!
  * \arg I
  */
-__API_FUNC_DECL(audit_register_callback);
+__API_FUNC_DECL(audit_register);
 
 
 
 /**
- * \flags api func var_arg
- * \name sll_api_audit_unregister_callback
+ * \flags api func
+ * \name sll_api_audit_unregister
  * \group array-api
  * \desc Docs!
  * \arg I
  * \ret B
  */
-__API_FUNC_DECL(audit_unregister_callback);
+__API_FUNC_DECL(audit_unregister);
 
 
 

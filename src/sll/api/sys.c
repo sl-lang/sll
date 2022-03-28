@@ -273,6 +273,7 @@ __API_FUNC(sys_remove_env){
 
 
 __API_FUNC(sys_set_sandbox_flag){
+	sll_audit(SLL_CHAR("sll.sys.set_sandbox_flag"),SLL_CHAR("s"),a);
 	return sll_set_sandbox_flag_string(a);
 }
 

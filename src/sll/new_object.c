@@ -51,7 +51,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					const sll_char_t* ptr=sll_var_arg_get(va);
 					return (ptr?sll_string_pointer_to_object(ptr,SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
 				}
-			case 'L':
+			case 'l':
 				{
 					const sll_char_t* ptr=sll_var_arg_get(va);
 					sll_string_length_t len=(sll_string_length_t)sll_var_arg_get_int(va);
@@ -59,6 +59,21 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				}
 			case 'a':
 				return sll_array_to_object(sll_var_arg_get(va));
+			case 'L':
+				{
+					sll_object_t*const* ptr=(sll_object_t*const*)sll_var_arg_get(va);
+					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
+					if (!ptr||!len){
+						return sll_array_to_object(NULL);
+					}
+					sll_object_t* o=sll_array_length_to_object(len);
+					while (len){
+						len--;
+						SLL_ACQUIRE(*(ptr+len));
+						o->dt.a.v[len]=*(ptr+len);
+					}
+					return o;
+				}
 			case 'm':
 				return sll_map_to_object(sll_var_arg_get(va));
 			case 'N':
@@ -163,11 +178,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object(const sll_char_t*
 
 
 __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...){
-	sll_string_length_t tl=sll_string_length_unaligned(t);
-	sll_array_create(0,o);
-	if (!tl){
-		return;
-	}
 	va_list va;
 	va_start(va,o);
 	sll_var_arg_list_t dt={
@@ -176,13 +186,23 @@ __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...)
 			.c=&va
 		}
 	};
+	sll_new_object_array_list(t,sll_string_length_unaligned(t),&dt,o);
+	va_end(va);
+}
+
+
+
+__SLL_EXTERNAL void sll_new_object_array_list(const sll_char_t* t,sll_string_length_t tl,sll_var_arg_list_t* va,sll_array_t* o){
+	sll_array_create(0,o);
+	if (!tl){
+		return;
+	}
 	while (tl){
 		o->l++;
 		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
-		o->v[o->l-1]=_build_single(&t,&tl,&dt);
+		o->v[o->l-1]=_build_single(&t,&tl,va);
 	}
 	sll_allocator_collapse((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
-	va_end(va);
 }
 
 

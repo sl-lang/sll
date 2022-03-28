@@ -1,3 +1,4 @@
+#include <sll/_internal/audit.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/file.h>
 #include <sll/_internal/gc.h>
@@ -112,6 +113,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 	_gc_release_data();
 	_log_release_data();
 	_file_release_std_streams();
+	_audit_cleanup();
 	_deinit_platform();
 	_memory_release_data();
 	_sandbox_flags=0;
