@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <sll.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 
 
@@ -25,10 +26,23 @@ int main(void){
 	}
 	bf[bfl+STRLEN(LIBRARY_NAME)]=0;
 	sll_return_code_t o=-1;
-	HMODULE lh=LoadLibraryExA(bf,NULL,0);
+	HANDLE lib_fh=CreateFileA(bf,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+	HMODULE lh=NULL;
+	if (lib_fh==INVALID_HANDLE_VALUE){
+		return -1;
+	}
+	LARGE_INTEGER lib_sz;
+	if (!GetFileSizeEx(lib_fh,&lib_sz)){
+		goto _cleanup;
+	}
+	LockFile(lib_fh,0,0,lib_sz.QuadPart&0xffffffff,lib_sz.QuadPart>>32);
+	lh=LoadLibraryExA(bf,NULL,0);
 	if (!lh){
 		goto _cleanup;
 	}
+	UnlockFile(lib_fh,0,0,lib_sz.QuadPart&0xffffffff,lib_sz.QuadPart>>32);
+	CloseHandle(lib_fh);
+	lib_fh=INVALID_HANDLE_VALUE;
 	sll_version_t (*ver)(void)=(void*)GetProcAddress(lh,"sll_version");
 	if (!ver||ver()!=SLL_VERSION){
 		goto _cleanup;
@@ -38,6 +52,9 @@ int main(void){
 		o=cli(__argc-1,__argv+1);
 	}
 _cleanup:
+	if (lib_fh!=INVALID_HANDLE_VALUE){
+		CloseHandle(lib_fh);
+	}
 	if (lh){
 		FreeLibrary(lh);
 	}
