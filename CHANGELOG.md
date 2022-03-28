@@ -18,6 +18,33 @@
 - Object creation code to build an array from a pointer and a length: `L`
 - Object creation code to build an unsigned 32-bit integer: `u`
 
+#### Built-in Audit Events
+
+| Name | Format | Arguments |
+|--|--|--|
+| `sll.error.create` | `iaa` | `type, data, backtrace` |
+| `sll.error.from_internal` | `im` | `error_code, data` |
+| `sll.file.copy` | `ss` | `src, dst` |
+| `sll.file.delete` | `s` | `path` |
+| `sll.file.open` | `ss` | `path, mode` |
+| `sll.file.rename` | `ss` | `src, dst` |
+| `sll.object.new` | `sa` | `template, data` |
+| `sll.path.list_dir` | `s` | `path` |
+| `sll.path.list_dir.recursive` | `s` | `path` |
+| `sll.path.mkdir` | `s` | `path` |
+| `sll.path.set_cwd` | `s` | `path` |
+| `sll.process.shell` | `s` | `command` |
+| `sll.process.start` | `ass` | `arguments, cwd, stdin` |
+| `sll.sys.env.delete` | `s` | `key` |
+| `sll.sys.env.set` | `ss` | `key, value` |
+| `sll.sys.load_library` | `s` | `name` |
+| `sll.sys.set_sandbox_flag` | `s` | `flag` |
+| `sll.thread.create` | `iai` | `func, args, thread` |
+| `sll.thread.return` | `i` | `thread` |
+| `sll.vm.get_location` | `i` | `location` |
+| `sll.vm.get_ref_count` | `O` | `object` |
+| `sll.vm.shutdown` | N/A | N/A |
+
 ### Changed
 
 - Fixed `sll_tls_get`

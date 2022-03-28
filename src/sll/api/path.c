@@ -169,6 +169,7 @@ __API_FUNC(path_list_dir){
 		SLL_INIT_ARRAY(out);
 		return;
 	}
+	sll_audit(SLL_CHAR("sll.path.list_dir"),SLL_CHAR("s"),a);
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);
 	sll_array_create(l,out);
@@ -195,6 +196,7 @@ __API_FUNC(path_recursive_list_dir){
 		SLL_INIT_ARRAY(out);
 		return;
 	}
+	sll_audit(SLL_CHAR("sll.path.list_dir.recursive"),SLL_CHAR("s"),a);
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory_recursive(a->v,&dt);
 	sll_array_create(l,out);

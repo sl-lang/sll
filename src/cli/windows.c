@@ -11,6 +11,9 @@
 
 
 int main(void){
+	if (!__argc){
+		return 0;
+	}
 	char bf[256+STRLEN(LIBRARY_NAME)];
 	DWORD bfl=GetModuleFileNameA(NULL,bf,256);
 	while (bfl&&bf[bfl]!='\\'&&bf[bfl]!='/'){

@@ -265,7 +265,7 @@ __API_FUNC(sys_load_library){
 
 __API_FUNC(sys_remove_env){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
-		sll_audit(SLL_CHAR("sll.sys.remove_env"),SLL_CHAR("s"),a);
+		sll_audit(SLL_CHAR("sll.sys.env.delete"),SLL_CHAR("s"),a);
 		sll_remove_environment_variable(a);
 	}
 }
@@ -281,7 +281,7 @@ __API_FUNC(sys_set_sandbox_flag){
 
 __API_FUNC(sys_set_env){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
-		sll_audit(SLL_CHAR("sll.sys.set_env"),SLL_CHAR("ss"),a,b);
+		sll_audit(SLL_CHAR("sll.sys.env.set"),SLL_CHAR("ss"),a,b);
 		sll_set_environment_variable(a,b);
 	}
 }
