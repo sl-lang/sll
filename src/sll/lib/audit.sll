@@ -33,6 +33,7 @@
 	"sll.thread.return" ["thread"]
 	"sll.vm.get_location" ["location"]
 	"sll.vm.get_ref_count" ["object"]
+	"sll.vm.init" []
 	"sll.vm.shutdown" []
 >)
 

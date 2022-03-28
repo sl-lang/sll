@@ -220,6 +220,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 		&tt
 	};
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
+	sll_audit(SLL_CHAR("sll.vm.init"),SLL_CHAR(""));
 	sll_return_code_t rc=_scheduler_run();
 	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
 		sll_release_object(*(_vm_var_data+i));
