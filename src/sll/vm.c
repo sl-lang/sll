@@ -120,6 +120,9 @@
 #define RELOAD_THREAD_DATA \
 	do{ \
 		if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){ \
+			if (tid_dt->ret){ \
+				goto _cleanup; \
+			} \
 			_scheduler_set_thread(_scheduler_queue_pop(1)); \
 		} \
 		if (_scheduler_current_thread->c_st.l){ \

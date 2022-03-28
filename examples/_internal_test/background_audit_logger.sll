@@ -1,0 +1,15 @@
+(--- "audit.sll" "file.sll" "atexit.sll" "string.sll")
+
+
+
+(= logger_file (<- file$open "build/audit_log.txt" "w"))
+
+
+
+(<- audit$register (,,, nm args
+	(<- file$write logger_file (<- string$format "%s: %S\n" nm args))
+	(<- file$flush logger_file)
+))
+(<- atexit$register (,,,
+	(<- file$close logger_file)
+))

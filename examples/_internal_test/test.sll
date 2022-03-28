@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll" "weakref.sll" "atexit.sll" "audit.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll" "weakref.sll" "atexit.sll" "audit.sll" "background_audit_logger.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -7,9 +7,6 @@
 	})
 	(++ i)
 })
-(<- audit$register (,,, nm args
-	(:> (<- string$format "{{{ %s, %S }}}\n" nm args))
-))
 (= func (,,, x y {
 	(:> "(Function Args: {x, y} = {" x ", " y "}) ")
 	(@@ (* x y))

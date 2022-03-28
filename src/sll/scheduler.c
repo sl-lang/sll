@@ -71,7 +71,9 @@ void _scheduler_queue_next(void){
 	_scheduler_current_thread_index=tmp;
 	_scheduler_current_thread=*(_thread_data+tmp);
 	if (_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED){
+		SLL_CRITICAL(sll_platform_lock_release(_scheduler_data->lck));
 		_scheduler_current_thread_index=_scheduler_queue_pop(0);
+		SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_data->lck));
 		_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
 	}
 	_scheduler_current_thread->st=THREAD_STATE_RUNNING;
@@ -210,7 +212,9 @@ void _scheduler_set_thread(sll_thread_index_t t){
 		goto _end;
 	}
 	if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
+		SLL_CRITICAL(sll_platform_lock_release(_scheduler_data->lck));
 		_scheduler_queue_thread(_scheduler_current_thread_index);
+		SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_data->lck));
 	}
 	if ((*(_thread_data+t))->st==THREAD_STATE_TERMINATED){
 		_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
