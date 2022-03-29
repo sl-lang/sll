@@ -36,5 +36,6 @@ Sandbox Flags:
   file-copy -> Enable file copying
   no-float-error-change -> Disable floating-point error modification
   file-delete -> Enable file deleting
-  no-thread -> Disable the thread creation
-  no-random -> Disable the random creation
+  no-thread -> Disable the thread API
+  no-random -> Disable the random API
+  no-serial -> Disable the object serialization and deserialization APIs

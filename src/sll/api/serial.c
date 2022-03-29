@@ -11,6 +11,7 @@
 #include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/object.h>
+#include <sll/sandbox.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -341,6 +342,9 @@ __SLL_EXTERNAL void sll_encode_string(sll_file_t* f,const sll_string_t* s){
 
 
 __API_FUNC(serial_decode_float){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		return 0;
+	}
 	sll_file_t* f=sll_file_from_handle(a);
 	if (!f){
 		return 0;
@@ -352,6 +356,9 @@ __API_FUNC(serial_decode_float){
 
 
 __API_FUNC(serial_decode_integer){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		return 0;
+	}
 	sll_bool_t err=0;
 	sll_size_t o=sll_decode_integer(sll_file_from_handle(a),&err);
 	return (err?0:(sll_integer_t)o);
@@ -360,6 +367,9 @@ __API_FUNC(serial_decode_integer){
 
 
 __API_FUNC(serial_decode_signed_integer){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		return 0;
+	}
 	sll_bool_t err=0;
 	sll_integer_t o=sll_decode_signed_integer(sll_file_from_handle(a),&err);
 	return (err?0:o);
@@ -368,6 +378,9 @@ __API_FUNC(serial_decode_signed_integer){
 
 
 __API_FUNC(serial_decode_object){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
 	sll_audit(SLL_CHAR("sll.serial.object.decode"),SLL_CHAR("i"),a);
 	return sll_decode_object(sll_file_from_handle(a));
 }
@@ -375,6 +388,9 @@ __API_FUNC(serial_decode_object){
 
 
 __API_FUNC(serial_decode_string){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
 	sll_string_t str;
 	if (!sll_decode_string(sll_file_from_handle(a),&str)){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -385,30 +401,40 @@ __API_FUNC(serial_decode_string){
 
 
 __API_FUNC(serial_encode_float){
-	sll_file_write(sll_file_from_handle(a),&b,sizeof(sll_float_t),NULL);
+	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		sll_file_write(sll_file_from_handle(a),&b,sizeof(sll_float_t),NULL);
+	}
 }
 
 
 
 __API_FUNC(serial_encode_integer){
-	sll_encode_integer(sll_file_from_handle(a),(sll_size_t)b);
+	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		sll_encode_integer(sll_file_from_handle(a),(sll_size_t)b);
+	}
 }
 
 
 
 __API_FUNC(serial_encode_signed_integer){
-	sll_encode_signed_integer(sll_file_from_handle(a),b);
+	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		sll_encode_signed_integer(sll_file_from_handle(a),b);
+	}
 }
 
 
 
 __API_FUNC(serial_encode_object){
-	sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iL"),a,b,bc);
-	sll_encode_object(sll_file_from_handle(a),b,bc);
+	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iL"),a,b,bc);
+		sll_encode_object(sll_file_from_handle(a),b,bc);
+	}
 }
 
 
 
 __API_FUNC(serial_encode_string){
-	sll_encode_string(sll_file_from_handle(a),b);
+	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
+		sll_encode_string(sll_file_from_handle(a),b);
+	}
 }

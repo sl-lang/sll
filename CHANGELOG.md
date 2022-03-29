@@ -20,6 +20,7 @@
 - Implemented `weakref.sll`, `weakref$weakref_type`, `weakref$NO_OBJECT`, `weakref$get` and `weakref$ref` ([#257])
 - Object creation code to build an array from a pointer and a length: `L`
 - Object creation code to build an unsigned 32-bit integer: `u`
+- Sandbox flag for disabling the object serialization and deserialization APIs: `no-serial`
 - Sandbox flag for disabling the random API: `no-random`
 - Sandbox flag for disabling the thread API: `no-thread`
 - String format that converts floating-point values to strings: `%f`
