@@ -534,8 +534,7 @@
 (:> (<- atexit$unregister tmp_fn) "\n")
 
 (<- audit$register tmp_fn)
-(:> (<- audit$unregister tmp_fn) "\n")
-(:> (<- audit$unregister tmp_fn) "\n")
+(<- audit$unregister tmp_fn)
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

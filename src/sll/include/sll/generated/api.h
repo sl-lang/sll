@@ -343,6 +343,28 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_audit__init void
+#define __SLL_API_ARGS_sll_api_audit__init sll_integer_t a
+/**
+ * \flags func
+ * \name sll_api_audit__init
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_integer_t a -> 
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_audit__init_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_audit__init:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_audit_audit void
 #define __SLL_API_ARGS_sll_api_audit_audit sll_string_t* a,sll_string_t* b,sll_object_t** c,sll_arg_count_t cc
 /**
@@ -361,51 +383,6 @@
  * \group raw-api
  * \subgroup raw-api-array-api
  * \desc Wrapper function for :sll_api_audit_audit:
- * \arg sll_object_t*const* al -> Arguments
- * \arg sll_arg_count_t all -> Argument count
- * \ret sll_object_t* -> The return value of the function
- */
-
-
-
-#define __SLL_API_TYPE_sll_api_audit_register void
-#define __SLL_API_ARGS_sll_api_audit_register sll_integer_t a
-/**
- * \flags func
- * \name sll_api_audit_register
- * \group array-api
- * \desc Docs!
- * \arg sll_integer_t a -> 
- */
-/**
- * \flags check_output func
- * \name sll_api_audit_register_raw
- * \group raw-api
- * \subgroup raw-api-array-api
- * \desc Wrapper function for :sll_api_audit_register:
- * \arg sll_object_t*const* al -> Arguments
- * \arg sll_arg_count_t all -> Argument count
- * \ret sll_object_t* -> The return value of the function
- */
-
-
-
-#define __SLL_API_TYPE_sll_api_audit_unregister __SLL_CHECK_OUTPUT sll_bool_t
-#define __SLL_API_ARGS_sll_api_audit_unregister sll_integer_t a
-/**
- * \flags func
- * \name sll_api_audit_unregister
- * \group array-api
- * \desc Docs!
- * \arg sll_integer_t a -> 
- * \ret sll_bool_t
- */
-/**
- * \flags check_output func
- * \name sll_api_audit_unregister_raw
- * \group raw-api
- * \subgroup raw-api-array-api
- * \desc Wrapper function for :sll_api_audit_unregister:
  * \arg sll_object_t*const* al -> Arguments
  * \arg sll_arg_count_t all -> Argument count
  * \ret sll_object_t* -> The return value of the function

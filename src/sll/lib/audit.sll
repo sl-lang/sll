@@ -1,9 +1,9 @@
-(--- "types.sll")
+(--- "types.sll" "array.sll")
 
 
 
 (= audit_module_type (&:
-	(~ array_type) BUILTIN_EVENTS
+	(~ map_type) BUILTIN_EVENTS
 	(~ func_type) audit
 	(~ func_type) register
 	(~ func_type) unregister
@@ -39,11 +39,35 @@
 
 
 
+(= _cb_list [])
+
+
+
+(<- (... "sll:audit__init") (,,, name raw
+	(= keys (: BUILTIN_EVENTS name))
+	(= data ({> (= i 0) (< i ($ keys))
+		(= k (: keys i))
+		(= v (: raw i))
+		(++ i)
+		k v
+	))
+	(-> (= i 0) (< i ($ _cb_list))
+		(<- (: _cb_list i) name data raw)
+		(++ i)
+	)
+))
+
+
+
 (= audit (... "sll:audit_audit"))
 
-(= register (... "sll:audit_register"))
+(= register (,,, fn
+	(<- array$push _cb_list (:: fn func_type))
+))
 
-(= unregister (... "sll:audit_unregister"))
+(= unregister (,,, fn
+	(<- array$remove _cb_list (:: fn func_type))
+))
 
 
 

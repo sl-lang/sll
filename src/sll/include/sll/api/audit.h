@@ -13,6 +13,17 @@
 
 
 /**
+ * \flags api func
+ * \name sll_api_audit__init
+ * \group array-api
+ * \desc Docs!
+ * \arg I
+ */
+__API_FUNC_DECL(audit__init);
+
+
+
+/**
  * \flags api func var_arg
  * \name sll_api_audit_audit
  * \group array-api
@@ -22,29 +33,6 @@
  * \arg O
  */
 __API_FUNC_DECL(audit_audit);
-
-
-
-/**
- * \flags api func
- * \name sll_api_audit_register
- * \group array-api
- * \desc Docs!
- * \arg I
- */
-__API_FUNC_DECL(audit_register);
-
-
-
-/**
- * \flags api func
- * \name sll_api_audit_unregister
- * \group array-api
- * \desc Docs!
- * \arg I
- * \ret B
- */
-__API_FUNC_DECL(audit_unregister);
 
 
 
