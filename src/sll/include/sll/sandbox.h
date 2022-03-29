@@ -175,6 +175,18 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_SANDBOX_FLAG_DISABLE_RANDOM
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flag_t
+ */
+#define SLL_SANDBOX_FLAG_DISABLE_RANDOM 13
+
+
+
+/**
  * \flags check_output func
  * \name sll_get_sandbox_flag
  * \group sandbox

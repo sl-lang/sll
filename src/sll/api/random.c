@@ -4,12 +4,16 @@
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/platform/util.h>
+#include <sll/sandbox.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
 
 
 __API_FUNC(random_get_float){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM)){
+		return 0;
+	}
 	sll_size_t v;
 	sll_platform_random(&v,sizeof(sll_size_t));
 	v&=0xfffffffffffffull;
@@ -23,6 +27,9 @@ __API_FUNC(random_get_float){
 
 
 __API_FUNC(random_get_int){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM)){
+		return 0;
+	}
 	SLL_ASSERT(a<b);
 	sll_size_t v=(sll_size_t)(b-a);
 	sll_size_t m=0xffffffffffffffffull>>(63-FIND_LAST_SET_BIT(v));
@@ -37,6 +44,10 @@ __API_FUNC(random_get_int){
 
 
 __API_FUNC(random_get_string){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM)){
+		SLL_INIT_STRING(out);
+		return;
+	}
 	SLL_ASSERT(b<c);
 	sll_string_length_t l=(sll_string_length_t)a;
 	sll_string_create(l,out);

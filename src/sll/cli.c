@@ -375,6 +375,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			else if (sll_string_compare_pointer(e,SLL_CHAR("no-thread"))==SLL_COMPARE_RESULT_EQUAL){
 				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS);
 			}
+			else if (sll_string_compare_pointer(e,SLL_CHAR("no-random"))==SLL_COMPARE_RESULT_EQUAL){
+				sll_set_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM);
+			}
 			else{
 				SLL_WARN(SLL_CHAR("Ignoring unknown Sandbox Flag '%s'"),e);
 			}
