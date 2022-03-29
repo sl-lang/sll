@@ -108,7 +108,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_weakref_get(sll_weak_ref_t w
 
 
 
-__SLL_EXTERNAL void sll_weakref_register_callback(sll_weak_ref_t wr,sll_weak_ref_destructor_t cb,void* arg){
+__SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_ref_t wr,sll_weak_ref_destructor_t cb,void* arg){
 	weakref_key_pair_t** kp=_weakref_data;
 	for (sll_array_length_t i=0;i<_weakref_data_len;i++){
 		weakref_key_pair_t* v=*kp;

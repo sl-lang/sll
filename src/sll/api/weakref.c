@@ -78,5 +78,5 @@ __API_FUNC(weakref_get){
 
 
 __API_FUNC(weakref_set_callback_data){
-	sll_weakref_register_callback((sll_weak_ref_t)a,_call_user_array,sll_weakref_create(b));
+	sll_weakref_set_callback((sll_weak_ref_t)a,_call_user_array,sll_weakref_create(b));
 }

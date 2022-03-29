@@ -49,14 +49,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_weakref_get(sll_weak_ref_t w
 
 /**
  * \flags func
- * \name sll_weakref_register_callback
+ * \name sll_weakref_set_callback
  * \group weakref
  * \desc Docs!
  * \arg sll_weak_ref_t wr
  * \arg sll_weak_ref_destructor_t cb
  * \arg void* arg
  */
-__SLL_EXTERNAL void sll_weakref_register_callback(sll_weak_ref_t wr,sll_weak_ref_destructor_t cb,void* arg);
+__SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_ref_t wr,sll_weak_ref_destructor_t cb,void* arg);
 
 
 
