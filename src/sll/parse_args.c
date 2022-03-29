@@ -27,12 +27,16 @@
 	{ \
 		type* var=ptr; \
 		if (!all){ \
-			*var=0; \
+			if (var){ \
+				*var=0; \
+			} \
 			break; \
 		} \
-		sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-		*var=obj->dt.field; \
-		sll_release_object(obj);\
+		if (var){ \
+			sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
+			*var=obj->dt.field; \
+			sll_release_object(obj);\
+		} \
 		al++; \
 		all--; \
 		break; \
@@ -48,17 +52,21 @@
 			mx=tmp; \
 		} \
 		if (!all){ \
-			*var=mn; \
+			if (var){ \
+				*var=0; \
+			} \
 			break; \
 		} \
-		sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-		*var=obj->dt.field; \
-		sll_release_object(obj);\
-		if (*var<mn){ \
-			*var=mn; \
-		} \
-		else if (*var>mx){ \
-			*var=mx; \
+		if (var){ \
+			sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
+			*var=obj->dt.field; \
+			sll_release_object(obj);\
+			if (*var<mn){ \
+				*var=mn; \
+			} \
+			else if (*var>mx){ \
+				*var=mx; \
+			} \
 		} \
 		al++; \
 		all--; \
@@ -68,12 +76,16 @@
 	{ \
 		type** var=ptr; \
 		if (!all){ \
-			*var=NULL; \
+			if (var){ \
+				*var=NULL; \
+			} \
 			break; \
 		} \
-		sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-		*var=&(obj->dt.field); \
-		sll_release_object(obj);\
+		if (var){ \
+			sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
+			*var=&(obj->dt.field); \
+			sll_release_object(obj);\
+		} \
 		al++; \
 		all--; \
 		break; \
@@ -82,20 +94,24 @@
 	{ \
 		type* var=ptr; \
 		if (!all){ \
-			var->t=SLL_PARSE_ARGS_TYPE_##name2; \
-			init(&(var->dt.field2)); \
+			if (var){ \
+				var->t=SLL_PARSE_ARGS_TYPE_##name2; \
+				init(&(var->dt.field2)); \
+			} \
 			break; \
 		} \
-		if ((*al)->t==SLL_OBJECT_TYPE_##name1){ \
-			var->t=SLL_PARSE_ARGS_TYPE_##name1; \
-			var->dt.field1=(*al)->dt.field1; \
-		} \
-		else if ((*al)->t==SLL_OBJECT_TYPE_##name2){ \
-			var->t=SLL_PARSE_ARGS_TYPE_##name2; \
-			var->dt.field2=(*al)->dt.field2; \
-		} \
-		else{ \
-			SLL_UNIMPLEMENTED(); \
+		if (var){ \
+			if ((*al)->t==SLL_OBJECT_TYPE_##name1){ \
+				var->t=SLL_PARSE_ARGS_TYPE_##name1; \
+				var->dt.field1=(*al)->dt.field1; \
+			} \
+			else if ((*al)->t==SLL_OBJECT_TYPE_##name2){ \
+				var->t=SLL_PARSE_ARGS_TYPE_##name2; \
+				var->dt.field2=(*al)->dt.field2; \
+			} \
+			else{ \
+				SLL_UNIMPLEMENTED(); \
+			} \
 		} \
 		al++; \
 		all--; \
@@ -177,10 +193,14 @@ __SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sl
 		switch (st){
 			case 'b':
 				if (!all){
-					*((sll_bool_t*)ptr)=0;
+					if (ptr){
+						*((sll_bool_t*)ptr)=0;
+					}
 					break;
 				}
-				*((sll_bool_t*)ptr)=sll_operator_bool(*al);
+				if (ptr){
+					*((sll_bool_t*)ptr)=sll_operator_bool(*al);
+				}
 				al++;
 				all--;
 				break;
@@ -208,10 +228,14 @@ __SLL_EXTERNAL void sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sl
 				PARSE_TYPE_PTR(sll_map_t,m,MAP,SLL_INIT_MAP);
 			case 'o':
 				if (!all){
-					*((sll_object_t**)ptr)=SLL_ACQUIRE_STATIC_INT(0);
+					if (ptr){
+						*((sll_object_t**)ptr)=SLL_ACQUIRE_STATIC_INT(0);
+					}
 					break;
 				}
-				*((sll_object_t**)ptr)=*al;
+				if (ptr){
+					*((sll_object_t**)ptr)=*al;
+				}
 				al++;
 				all--;
 				break;

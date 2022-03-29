@@ -57,6 +57,7 @@
 
 ### Changed
 
+- Arguments can now be skipped in `sll_parse_args` by passing `NULL` pointers
 - Fixed `sll_tls_get`
 - GC now cleans-up unused memory pages
 - Modular exponentiation is now possible by passing a third argument to `math$int_pow`
