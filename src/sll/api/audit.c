@@ -19,6 +19,9 @@ static sll_integer_t _audit_cb=0;
 
 
 static void _call_user_cb(const sll_string_t* nm,const sll_array_t* arg){
+	if (!_audit_cb){
+		return;
+	}
 	sll_object_t* dt[]={
 		sll_string_to_object(nm),
 		sll_array_to_object(arg)
