@@ -25,34 +25,34 @@ __API_FUNC(thread_create){
 
 
 __API_FUNC(thread_create_barrier){
-	return sll_barrier_create();
+	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)?-1:sll_barrier_create());
 }
 
 
 
 __API_FUNC(thread_create_lock){
-	return sll_lock_create();
+	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)?-1:sll_lock_create());
 }
 
 
 
 __API_FUNC(thread_create_semaphore){
-	return sll_semaphore_create((a<0?0:(sll_semaphore_counter_t)a));
+	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)?-1:sll_semaphore_create((a<0?0:(sll_semaphore_counter_t)a)));
 }
 
 
 
 __API_FUNC(thread_delete){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_THREAD_INDEX){
 		return 0;
 	}
-	return sll_thread_delete((a<0?0:(sll_thread_index_t)a));
+	return sll_thread_delete((sll_thread_index_t)a);
 }
 
 
 
 __API_FUNC(thread_delete_barrier){
-	if (a<0||a>SLL_MAX_BARRIER_INDEX){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_BARRIER_INDEX){
 		return 0;
 	}
 	return sll_barrier_delete((sll_barrier_index_t)a);
@@ -61,7 +61,7 @@ __API_FUNC(thread_delete_barrier){
 
 
 __API_FUNC(thread_delete_lock){
-	if (a<0||a>SLL_MAX_LOCK_INDEX){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_LOCK_INDEX){
 		return 0;
 	}
 	return sll_lock_delete((sll_lock_index_t)a);
@@ -70,7 +70,7 @@ __API_FUNC(thread_delete_lock){
 
 
 __API_FUNC(thread_delete_semaphore){
-	if (a<0||a>SLL_MAX_SEMAPHORE_INDEX){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_SEMAPHORE_INDEX){
 		return 0;
 	}
 	return sll_semaphore_delete((sll_semaphore_index_t)a);
@@ -79,29 +79,31 @@ __API_FUNC(thread_delete_semaphore){
 
 
 __API_FUNC(thread_get_internal_data){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
-		SLL_INIT_ARRAY(out);
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_THREAD_INDEX){
+		goto _error;
+	}
+	thread_data_t* thr=_thread_get((sll_thread_index_t)a);
+	if (thr){
+		sll_new_object_array(SLL_CHAR("hh"),out,thr->ii,thr->si);
 		return;
 	}
-	thread_data_t* thr=_thread_get((a<0?0:(sll_thread_index_t)a));
-	if (!thr){
-		sll_new_object_array(SLL_CHAR("00"),out);
-	}
-	else{
-		sll_new_object_array(SLL_CHAR("hh"),out,thr->ii,thr->si);
-	}
+_error:
+	sll_new_object_array(SLL_CHAR("00"),out);
 }
 
 
 
 __API_FUNC(thread_increase_barrier){
-	return sll_barrier_increase((a<0?0:(sll_barrier_index_t)a));
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_BARRIER_INDEX){
+		return 0;
+	}
+	return sll_barrier_increase((sll_barrier_index_t)a);
 }
 
 
 
 __API_FUNC(thread_release_lock){
-	if (a<0||a>SLL_MAX_LOCK_INDEX){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_LOCK_INDEX){
 		return 0;
 	}
 	return sll_lock_release((sll_lock_index_t)a);
@@ -110,7 +112,7 @@ __API_FUNC(thread_release_lock){
 
 
 __API_FUNC(thread_release_semaphore){
-	if (a<0||a>SLL_MAX_SEMAPHORE_INDEX){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_SEMAPHORE_INDEX){
 		return 0;
 	}
 	return sll_semaphore_release((sll_semaphore_index_t)a);
@@ -119,23 +121,26 @@ __API_FUNC(thread_release_semaphore){
 
 
 __API_FUNC(thread_reset_barrier){
-	return sll_barrier_reset((a<0?0:(sll_barrier_index_t)a));
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_BARRIER_INDEX){
+		return 0;
+	}
+	return sll_barrier_reset((sll_barrier_index_t)a);
 }
 
 
 
 __API_FUNC(thread_restart){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_THREAD_INDEX){
 		return 0;
 	}
-	return sll_thread_restart((a<0?0:(sll_thread_index_t)a));
+	return sll_thread_restart((sll_thread_index_t)a);
 }
 
 
 
 __API_FUNC(thread_suspend){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)||a<0||a>SLL_MAX_THREAD_INDEX){
 		return 0;
 	}
-	return sll_thread_suspend((a<0?0:(sll_thread_index_t)a));
+	return sll_thread_suspend((sll_thread_index_t)a);
 }

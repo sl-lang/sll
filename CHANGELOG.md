@@ -10,7 +10,7 @@
 - Implemented `sll_audit`, `sll_audit_list`, `sll_audit_register_callback` and `sll_audit_unregister_callback` ([#259])
 - Implemented `SLL_ERROR_GET_VALUE`
 - Implemented `SLL_EXECUTE_FUNCTION_ASYNC`
-- Implemented `SLL_MAX_BARRIER_INDEX`
+- Implemented `SLL_MAX_BARRIER_INDEX` and `SLL_MAX_THREAD_INDEX`
 - Implemented `sll_new_object_array_list`
 - Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
 - Implemented `sll_weakref_create`, `sll_weakref_delete`, `sll_weakref_get` and `sll_weakref_register_callback` ([#257])
