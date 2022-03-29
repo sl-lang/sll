@@ -3,6 +3,7 @@
 #include <sll/api.h>
 #include <sll/api/vm.h>
 #include <sll/array.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/new_object.h>
 #include <sll/static_object.h>
@@ -17,7 +18,9 @@ __API_FUNC(error_get_call_stack){
 	if (a<0){
 		a=0;
 	}
-	const sll_call_stack_t* c_st=sll_thread_get_call_stack((b<0?_scheduler_current_thread_index:(sll_thread_index_t)b));
+	sll_thread_index_t tid=(b<0||b>SLL_MAX_THREAD_INDEX?_scheduler_current_thread_index:(sll_thread_index_t)b);
+	sll_audit(SLL_CHAR("sll.error.backtrace"),SLL_CHAR("ii"),tid,a);
+	const sll_call_stack_t* c_st=sll_thread_get_call_stack(tid);
 	if (!c_st||a>c_st->l){
 		SLL_INIT_ARRAY(out);
 		return;

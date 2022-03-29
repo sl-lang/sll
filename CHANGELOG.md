@@ -23,18 +23,22 @@
 
 | Name | Format | Arguments |
 |--|--|--|
+| `sll.error.backtrace` | `ii` | `thread`, `offset` |
 | `sll.error.create.internal` | `im` | `error_code`, `data` |
 | `sll.error.create` | `iaa` | `type`, `data`, `backtrace` |
 | `sll.file.copy` | `ss` | `src`, `dst` |
 | `sll.file.delete` | `s` | `path` |
 | `sll.file.open` | `ss` | `path`, `mode` |
 | `sll.file.rename` | `ss` | `src`, `dst` |
+| `sll.float.error.set` | `f` | `error` |
 | `sll.object.new` | `sa` | `template`, `data` |
 | `sll.path.cwd.set` | `s` | `path` |
 | `sll.path.dir.create` | `si` | `path`, `recursive` |
 | `sll.path.dir.list` | `si` | `path`, `recursive` |
 | `sll.process.shell` | `s` | `command` |
 | `sll.process.start` | `ass` | `arguments`, `cwd`, `stdin` |
+| `sll.serial.object.decode` | `i` | `file` |
+| `sll.serial.object.encode` | `ia` | `file`, `objects` |
 | `sll.sys.env.delete` | `s` | `key` |
 | `sll.sys.env.set` | `ss` | `key`, `value` |
 | `sll.sys.library.load` | `s` | `name` |

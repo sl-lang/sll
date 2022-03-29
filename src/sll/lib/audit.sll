@@ -12,18 +12,22 @@
 
 
 (= BUILTIN_EVENTS <
+	"sll.error.backtrace" ["thread" "offset"]
 	"sll.error.create" ["type" "data" "backtrace"]
 	"sll.error.create.internal" ["error_code" "data"]
 	"sll.file.copy" ["src" "dst"]
 	"sll.file.delete" ["path"]
 	"sll.file.open" ["path" "mode"]
 	"sll.file.rename" ["src" "dst"]
+	"sll.float.error.set" ["error"]
 	"sll.object.new" ["template" "data"]
 	"sll.path.cwd.set" ["path"]
 	"sll.path.dir.create" ["path" "recursive"]
 	"sll.path.dir.list" ["path" "recursive"]
 	"sll.process.shell" ["command"]
 	"sll.process.start" ["arguments" "cwd" "stdin"]
+	"sll.serial.object.decode" ["file"]
+	"sll.serial.object.encode" ["file" "objects"]
 	"sll.sys.env.delete" ["key"]
 	"sll.sys.env.set" ["key" "value"]
 	"sll.sys.library.load" ["name"]

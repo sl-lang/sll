@@ -4,6 +4,7 @@
 #include <sll/api/file.h>
 #include <sll/api/serial.h>
 #include <sll/array.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
@@ -367,6 +368,7 @@ __API_FUNC(serial_decode_signed_integer){
 
 
 __API_FUNC(serial_decode_object){
+	sll_audit(SLL_CHAR("sll.serial.object.decode"),SLL_CHAR("i"),a);
 	return sll_decode_object(sll_file_from_handle(a));
 }
 
@@ -401,6 +403,7 @@ __API_FUNC(serial_encode_signed_integer){
 
 
 __API_FUNC(serial_encode_object){
+	sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iL"),a,b,bc);
 	sll_encode_object(sll_file_from_handle(a),b,bc);
 }
 
