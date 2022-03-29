@@ -169,7 +169,7 @@ __API_FUNC(path_list_dir){
 		SLL_INIT_ARRAY(out);
 		return;
 	}
-	sll_audit(SLL_CHAR("sll.path.list_dir"),SLL_CHAR("s0"),a);
+	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s0"),a);
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);
 	sll_array_create(l,out);
@@ -185,7 +185,7 @@ __API_FUNC(path_mkdir){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
-	sll_audit(SLL_CHAR("sll.path.mkdir"),SLL_CHAR("sh"),a,b);
+	sll_audit(SLL_CHAR("sll.path.dir.create"),SLL_CHAR("sh"),a,b);
 	return sll_platform_create_directory(a->v,b);
 }
 
@@ -196,7 +196,7 @@ __API_FUNC(path_recursive_list_dir){
 		SLL_INIT_ARRAY(out);
 		return;
 	}
-	sll_audit(SLL_CHAR("sll.path.list_dir"),SLL_CHAR("s1"),a);
+	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s1"),a);
 	sll_string_t* dt=NULL;
 	sll_array_length_t l=sll_platform_list_directory_recursive(a->v,&dt);
 	sll_array_create(l,out);
@@ -222,7 +222,7 @@ __API_FUNC(path_set_cwd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
-	sll_audit(SLL_CHAR("sll.path.set_cwd"),SLL_CHAR("s"),a);
+	sll_audit(SLL_CHAR("sll.path.cwd.set"),SLL_CHAR("s"),a);
 	return sll_platform_set_current_working_directory(a->v);
 }
 

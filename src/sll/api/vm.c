@@ -56,13 +56,13 @@ __API_FUNC(vm_get_location){
 	else{
 		ii=(a>SLL_MAX_INSTRUCTION_INDEX?SLL_MAX_INSTRUCTION_INDEX:(sll_instruction_index_t)a);
 	}
-	sll_audit(SLL_CHAR("sll.vm.get_location"),SLL_CHAR("h"),ii);
+	sll_audit(SLL_CHAR("sll.vm.location"),SLL_CHAR("h"),ii);
 	return sll_instruction_to_location(ii);
 }
 
 
 
 __API_FUNC(vm_get_ref_count){
-	sll_audit(SLL_CHAR("sll.vm.get_ref_count"),SLL_CHAR("O"),a);
+	sll_audit(SLL_CHAR("sll.vm.ref"),SLL_CHAR("O"),a);
 	return a->rc;
 }

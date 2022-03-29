@@ -141,7 +141,7 @@
 
 (= from_internal (,,, err data
 	(? (|| (!== (:? err) int_type) (=== err 0xffffffffffffffff)) (@@ nil))
-	(<- audit$audit "sll.error.from_internal" "im" err data)
+	(<- audit$audit "sll.error.create.internal" "im" err data)
 	(= id (& err 0xffffffff))
 	(= v nil)
 	(?? (>> err 32)
