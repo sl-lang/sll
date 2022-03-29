@@ -29,8 +29,7 @@
 | `sll.file.open` | `ss` | `path`, `mode` |
 | `sll.file.rename` | `ss` | `src`, `dst` |
 | `sll.object.new` | `sa` | `template`, `data` |
-| `sll.path.list_dir` | `s` | `path` |
-| `sll.path.list_dir.recursive` | `s` | `path` |
+| `sll.path.list_dir` | `si` | `path`, `recursive` |
 | `sll.path.mkdir` | `s` | `path` |
 | `sll.path.set_cwd` | `s` | `path` |
 | `sll.process.shell` | `s` | `command` |
