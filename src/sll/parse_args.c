@@ -53,7 +53,7 @@
 		} \
 		if (!all){ \
 			if (var){ \
-				*var=0; \
+				*var=mn; \
 			} \
 			break; \
 		} \
