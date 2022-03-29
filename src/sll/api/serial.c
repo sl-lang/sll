@@ -133,7 +133,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_decode_string(sll_file_t* f,sll
 	}
 	else{
 		sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
-		sll_set_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1),0xff);
+		sll_zero_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
 		wide_data_t v;
 		if (sll_file_read(f,&v,sizeof(wide_data_t),NULL)!=sizeof(wide_data_t)){
 			goto _error_free;
@@ -268,7 +268,7 @@ __SLL_EXTERNAL void sll_encode_string(sll_file_t* f,const sll_string_t* s){
 	wide_data_t v=0;
 	unsigned int bc=64;
 	sll_char_t bf[1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)];
-	sll_set_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1),0xff);
+	sll_zero_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
 	sll_string_length_t si=0;
 	unsigned int i=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{

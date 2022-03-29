@@ -1,4 +1,4 @@
-(--- "types.sll" "sort.sll" "math.sll" "string.sll")
+(--- "types.sll" "sort.sll" "math.sll" "string.sll" "error.sll")
 
 
 
@@ -31,7 +31,7 @@
 (= _median_calc (,,, data
 	(= data (:: data array_type))
 	(= len ($ data))
-	(? (! len) (@@ [0 0]))
+	(? (! len) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA 0 1)))
 	(<- sort$sort data false true)
 	(= odd (& len 1))
 	(= len (>> len 1))
@@ -43,6 +43,7 @@
 
 (= geometric_mean (,,, data
 	(= data (:: data array_type))
+	(? (! ($ data)) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA 0 1)))
 	(@@ (<- math$exp
 		(<- mean ([> (= i 0) (< i ($ data))
 			(= k (: data i))
@@ -54,6 +55,7 @@
 
 (= harmonic_mean (,,, data
 	(= data (:: data array_type))
+	(? (! ($ data)) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA 0 1)))
 	(= out 0)
 	(-> (= i 0) (< i ($ data))
 		(= out (+
@@ -69,7 +71,8 @@
 	(= x (:: x array_type))
 	(= y (:: y array_type))
 	(= len ($ x))
-	(? (!== len ($ y)) (@@ nil))
+	(? (!== len ($ y)) (@@ (<- error$create ERROR_LENGTH_MISMATCH len ($ y))))
+	(? (< len 2) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA len 2)))
 	(= x_mean (<- mean x))
 	(= y_mean (<- mean y))
 	(= sum_xx 0)
@@ -97,7 +100,7 @@
 
 (= mean (,,, data
 	(= data (:: data array_type))
-	(? (! ($ data)) (@@ 0))
+	(? (! ($ data)) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA 0 1)))
 	(= out 0)
 	(-> (= i 0) (< i ($ data))
 		(= out (+
@@ -111,20 +114,31 @@
 
 (= median (,,, data
 	(= out (<- _median_calc data))
-	(@@ (/ (+ (: out 0) (: out 1)) 2))
+	(@@ (?: (=== (:? out) array_type)
+		(/ (+ (: out 0) (: out 1)) 2)
+		out
+	))
 ))
 
 (= median_high (,,, data
-	(@@ (: (<- _median_calc data) 1))
+	(= out (<- _median_calc data))
+	(@@ (?: (=== (:? out) array_type)
+		(: out 1)
+		out
+	))
 ))
 
 (= median_low (,,, data
-	(@@ (: (<- _median_calc data) 0))
+	(= out (<- _median_calc data))
+	(@@ (?: (=== (:? out) array_type)
+		(: out 0)
+		out
+	))
 ))
 
 (= mode (,,, data
 	(= data (:: data array_type))
-	(? (! ($ data)) (@@ nil))
+	(? (! ($ data)) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA 0 1)))
 	(= out <>)
 	(= max 0)
 	(= max_v nil)

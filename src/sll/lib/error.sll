@@ -44,6 +44,8 @@
 	(~ type_type) ERROR_INVALID_BASE64_CHARACTER
 	(~ type_type) ERROR_INVALID_BASE64_PADDING
 	(~ type_type) ERROR_INVALID_FILE_DESCRIPTOR
+	(~ type_type) ERROR_LENGTH_MISMATCH
+	(~ type_type) ERROR_NOT_ENOUGH_DATA
 	(~ type_type) ERROR_OUT_OF_RANGE
 	(~ type_type) ERROR_PATH_TOO_LONG
 	(~ type_type) ERROR_SANDBOX
@@ -87,6 +89,22 @@
 	(,,,
 		(@@ "Invalid file descriptor")
 	) @@string@@
+))
+
+(= ERROR_LENGTH_MISMATCH (&:
+	(,,, dt
+		(@@ (<- string$format "Expected equal lengths, got %llu and %llu" dt$len_a dt$len_b))
+	) @@string@@
+	(~ int_type) len_a
+	(~ int_type) len_b
+))
+
+(= ERROR_NOT_ENOUGH_DATA (&:
+	(,,, dt
+		(@@ (<- string$format "Expected at minimum %llu elements, got %llu" dt$min dt$len))
+	) @@string@@
+	(~ int_type) len
+	(~ int_type) min
 ))
 
 (= ERROR_OUT_OF_RANGE (&:
@@ -189,6 +207,8 @@
 	ERROR_INVALID_BASE64_CHARACTER
 	ERROR_INVALID_BASE64_PADDING
 	ERROR_INVALID_FILE_DESCRIPTOR
+	ERROR_LENGTH_MISMATCH
+	ERROR_NOT_ENOUGH_DATA
 	ERROR_OUT_OF_RANGE
 	ERROR_PATH_TOO_LONG
 	ERROR_SANDBOX
