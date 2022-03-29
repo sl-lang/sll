@@ -353,6 +353,7 @@ __API_FUNC_DECL(math_int_log2);
  * \desc Docs!
  * \arg I
  * \arg I
+ * \arg I
  * \ret I
  */
 __API_FUNC_DECL(math_int_pow);

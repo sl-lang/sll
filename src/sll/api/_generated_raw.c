@@ -872,8 +872,9 @@ __SLL_API_TYPE_sll_api_math_int_pow sll_api_math_int_pow(__SLL_API_ARGS_sll_api_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_int_pow_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_integer_t a;
 	sll_integer_t b;
-	sll_parse_args(SLL_CHAR("ii"),al,all,&a,&b);
-	sll_integer_t out=sll_api_math_int_pow(a,b);
+	sll_integer_t c;
+	sll_parse_args(SLL_CHAR("iii"),al,all,&a,&b,&c);
+	sll_integer_t out=sll_api_math_int_pow(a,b,c);
 	return sll_int_to_object(out);
 }
 

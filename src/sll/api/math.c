@@ -342,11 +342,15 @@ __API_FUNC(math_int_log2){
 
 
 __API_FUNC(math_int_pow){
-	if (b<0){
+	if (b<0||c<0){
 		SLL_UNIMPLEMENTED();
 	}
 	if (!b){
 		return 1;
+	}
+	__SLL_U64 mod=(c?c:__SLL_U64_MAX);
+	if (mod==1){
+		return 0;
 	}
 	__SLL_U64 o=1;
 	if (a<0){
@@ -355,17 +359,17 @@ __API_FUNC(math_int_pow){
 			o=-1;
 		}
 	}
-	__SLL_U64 v=(__SLL_U64)a;
+	__SLL_U64 v=((__SLL_U64)a)%mod;
 	__SLL_U64 e=(__SLL_U64)b;
 	while (1){
 		if (e&1){
-			o*=v;
+			o=(o*v)%mod;
 		}
 		e>>=1;
 		if (!e){
 			break;
 		}
-		v*=v;
+		v=(v*v)%mod;
 	}
 	return (sll_integer_t)o;
 }

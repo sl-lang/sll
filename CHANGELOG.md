@@ -59,6 +59,7 @@
 
 - Fixed `sll_tls_get`
 - GC now cleans-up unused memory pages
+- Modular exponentiation is now possible by passing a third argument to `math$int_pow`
 - Object references counter (`sll_ref_count_t`) is now 64-bit instead of 32-bit
 - Object type (`sll_object_type_t`) is now 32-bit instead of 24-bit
 - Renamed string object creation code from length and pointer from `L` to `l`
