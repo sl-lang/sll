@@ -45,6 +45,7 @@
 	(~ func_type) ceil
 	(~ func_type) copy_sign
 	(~ func_type) euler_phi
+	(~ func_type) exp
 	(~ func_type) factorial
 	(~ func_type) factors
 	(~ func_type) floor
@@ -115,6 +116,8 @@
 (= copy_sign (... "sll:math_copy_sign"))
 
 (= euler_phi (... "sll:math_euler_phi"))
+
+(= exp (... "sll:math_exp"))
 
 (= factorial (... "sll:math_factorial"))
 
@@ -214,6 +217,7 @@
 	ceil
 	copy_sign
 	euler_phi
+	exp
 	factorial
 	factors
 	floor

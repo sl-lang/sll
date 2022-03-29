@@ -1766,6 +1766,29 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_math_exp __SLL_CHECK_OUTPUT sll_float_t
+#define __SLL_API_ARGS_sll_api_math_exp sll_float_t a
+/**
+ * \flags func
+ * \name sll_api_math_exp
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a -> 
+ * \ret sll_float_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_math_exp_raw
+ * \group raw-api
+ * \subgroup raw-api-math-api
+ * \desc Wrapper function for :sll_api_math_exp:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_math_factorial __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_math_factorial sll_integer_t a
 /**

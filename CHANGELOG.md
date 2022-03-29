@@ -7,6 +7,7 @@
 - Barriers, locks, semaphores and threads are now automatically deleted when their handles go out of scope
 - Implemented `atexit.sll`, `atexit$register` and `atexit$unregister` ([#258])
 - Implemented `audit.sll`, `audit$BUILTIN_EVENTS`, `audit$audit`, `audit$register_callback` and `audit$unregister_callback` ([#259])
+- Implemented `math$exp`
 - Implemented `sll_audit`, `sll_audit_list`, `sll_audit_register_callback` and `sll_audit_unregister_callback` ([#259])
 - Implemented `SLL_ERROR_GET_VALUE`
 - Implemented `SLL_EXECUTE_FUNCTION_ASYNC`
@@ -14,6 +15,7 @@
 - Implemented `sll_new_object_array_list`
 - Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
 - Implemented `sll_weakref_create`, `sll_weakref_delete`, `sll_weakref_get` and `sll_weakref_register_callback` ([#257])
+- Implemented `statistics.sll`, `statistics$geometric_mean`, `statistics$harmonic_mean`, `statistics$mean`, `statistics$median`, `statistics$median_high`, `statistics$median_low` and `statistics$mode` ([#260])
 - Implemented `weakref.sll`, `weakref$weakref_type`, `weakref$NO_OBJECT`, `weakref$get` and `weakref$ref` ([#257])
 - Object creation code to build an array from a pointer and a length: `L`
 - Object creation code to build an unsigned 32-bit integer: `u`
@@ -1897,6 +1899,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#260]: https://github.com/sl-lang/sll/issues/260
 [#259]: https://github.com/sl-lang/sll/issues/259
 [#258]: https://github.com/sl-lang/sll/issues/258
 [#257]: https://github.com/sl-lang/sll/issues/257

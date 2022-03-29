@@ -806,6 +806,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_euler_phi_raw(sll_o
 
 
 
+__SLL_API_TYPE_sll_api_math_exp sll_api_math_exp(__SLL_API_ARGS_sll_api_math_exp);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_exp_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_float_t a;
+	sll_parse_args(SLL_CHAR("f"),al,all,&a);
+	sll_float_t out=sll_api_math_exp(a);
+	return sll_float_to_object(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_math_factorial sll_api_math_factorial(__SLL_API_ARGS_sll_api_math_factorial);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factorial_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_integer_t a;
@@ -2401,6 +2411,10 @@ static const internal_function_t _ifunc_data_ptr[]={
 		sll_api_math_euler_phi_raw
 	},
 	{
+		SLL_CHAR("sll:math_exp"),
+		sll_api_math_exp_raw
+	},
+	{
 		SLL_CHAR("sll:math_factorial"),
 		sll_api_math_factorial_raw
 	},
@@ -2896,5 +2910,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=194;
+const sll_function_index_t _ifunc_size=195;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

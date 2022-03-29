@@ -273,6 +273,18 @@ __API_FUNC_DECL(math_euler_phi);
 
 /**
  * \flags api func
+ * \name sll_api_math_exp
+ * \group math-api
+ * \desc Docs!
+ * \arg F
+ * \ret F
+ */
+__API_FUNC_DECL(math_exp);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_math_factorial
  * \group math-api
  * \desc Docs!

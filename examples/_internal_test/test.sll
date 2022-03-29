@@ -1,4 +1,4 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll" "weakref.sll" "atexit.sll" "audit.sll" "background_audit_logger.sll")
+(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll" "weakref.sll" "atexit.sll" "audit.sll" "background_audit_logger.sll" "statistics.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -535,6 +535,17 @@
 
 (<- audit$register tmp_fn)
 (<- audit$unregister tmp_fn)
+
+(:> (<- statistics$mean [1 2 3 4 4]) ", 2.8\n")
+(:> (<- statistics$mode [1 1 2 3 3 3 3 4]) ", 3\n")
+(:> (<- statistics$median [1 3 5]) ", 3\n")
+(:> (<- statistics$median_low [1 3 5]) ", 3\n")
+(:> (<- statistics$median_high [1 3 5]) ", 3\n")
+(:> (<- statistics$median [1 3 5 7]) ", 4\n")
+(:> (<- statistics$median_low [1 3 5 7]) ", 3\n")
+(:> (<- statistics$median_high [1 3 5 7]) ", 5\n")
+(:> (<- statistics$geometric_mean [54 24 36]) ", 36\n")
+(:> (<- statistics$harmonic_mean [40 60]) ", 48\n")
 
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")

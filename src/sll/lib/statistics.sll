@@ -1,0 +1,114 @@
+(--- "types.sll" "sort.sll" "math.sll")
+
+
+
+(# mean)
+
+
+
+(= statistics_module_type (&:
+	(~ func_type) geometric_mean
+	(~ func_type) harmonic_mean
+	(~ func_type) mean
+	(~ func_type) median
+	(~ func_type) median_high
+	(~ func_type) median_low
+	(~ func_type) mode
+))
+
+
+
+(= _median_calc (,,, data
+	(= data (:: data array_type))
+	(= len ($ data))
+	(? (! len) (@@ [0 0]))
+	(<- sort$sort data false true)
+	(= odd (& len 1))
+	(= len (>> len 1))
+	(@@ [
+		(: data (- len (! odd)))
+		(: data len)
+	])
+))
+
+(= geometric_mean (,,, data
+	(= data (:: data array_type))
+	(@@ (<- math$exp
+		(<- mean ([> (= i 0) (< i ($ data))
+			(= k (: data i))
+			(++ i)
+			(<- math$log k)
+		))
+	))
+))
+
+(= harmonic_mean (,,, data
+	(= data (:: data array_type))
+	(= out 0)
+	(-> (= i 0) (< i ($ data))
+		(= out (+
+			out
+			(/ 1 (: data i))
+		))
+		(++ i)
+	)
+	(@@ (/ ($ data) out)
+))
+
+(= mean (,,, data
+	(= data (:: data array_type))
+	(? (! ($ data)) (@@ 0))
+	(= out 0)
+	(-> (= i 0) (< i ($ data))
+		(= out (+
+			out
+			(:: (: data i) float_type)
+		))
+		(++ i)
+	)
+	(@@ (/ out ($ data)))
+))
+
+(= median (,,, data
+	(= out (<- _median_calc data))
+	(@@ (/ (+ (: out 0) (: out 1)) 2))
+))
+
+(= median_high (,,, data
+	(@@ (: (<- _median_calc data) 1))
+))
+
+(= median_low (,,, data
+	(@@ (: (<- _median_calc data) 0))
+))
+
+(= mode (,,, data
+	(= data (:: data array_type))
+	(? (! ($ data)) (@@ nil))
+	(= out <>)
+	(= max 0)
+	(= max_v nil)
+	(-> (= i 0) (< i ($ data))
+		(= k  (: data i))
+		(= (: out k) (+ (: out k) 1))
+		(? (> (: out k) max) {
+			(= max (: out k))
+			(= max_v k)
+		})
+		(++ i)
+	)
+	(@@ max_v)
+))
+
+
+
+(= statistics (. statistics_module_type
+	geometric_mean
+	harmonic_mean
+	mean
+	median
+	median_high
+	median_low
+	mode
+))
+(## statistics)

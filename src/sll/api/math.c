@@ -275,6 +275,12 @@ __API_FUNC(math_euler_phi){
 
 
 
+__API_FUNC(math_exp){
+	return exp(a);
+}
+
+
+
 __API_FUNC(math_factorial){
 	if (a<0){
 		SLL_UNIMPLEMENTED();
