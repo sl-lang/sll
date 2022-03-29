@@ -15,11 +15,12 @@
 - Implemented `sll_new_object_array_list`
 - Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
 - Implemented `sll_weakref_create`, `sll_weakref_delete`, `sll_weakref_get` and `sll_weakref_register_callback` ([#257])
-- Implemented `statistics.sll`, `statistics$geometric_mean`, `statistics$harmonic_mean`, `statistics$mean`, `statistics$median`, `statistics$median_high`, `statistics$median_low` and `statistics$mode` ([#260])
+- Implemented `statistics.sll`, `statistics$linear_regression_type`, `statistics$geometric_mean`, `statistics$harmonic_mean`, `statistics$linear_regression`, `statistics$mean`, `statistics$median`, `statistics$median_high`, `statistics$median_low` and `statistics$mode` ([#260])
 - Implemented `weakref.sll`, `weakref$weakref_type`, `weakref$NO_OBJECT`, `weakref$get` and `weakref$ref` ([#257])
 - Object creation code to build an array from a pointer and a length: `L`
 - Object creation code to build an unsigned 32-bit integer: `u`
 - Sandbox flag for disabling thread API: `no-thread`
+- String format that converts floating-point values to strings: `%f`
 
 #### Built-in Audit Events
 

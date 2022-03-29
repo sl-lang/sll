@@ -547,6 +547,20 @@
 (:> (<- statistics$geometric_mean [54 24 36]) ", 36\n")
 (:> (<- statistics$harmonic_mean [40 60]) ", 48\n")
 
+(:> (<- statistics$linear_regression [
+	1
+	2
+	3
+	4
+	5
+] [
+	4.8559
+	7.8271
+	10.8887
+	14.702
+	16.8724
+]) ", y=x*3.0908+1.7569\n")
+
 (? (! (!! FACTORIAL)) nil {
 	(:> "Early Exit\n")
 	(@@ false)

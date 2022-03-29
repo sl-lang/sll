@@ -1,4 +1,4 @@
-(--- "types.sll" "sort.sll" "math.sll")
+(--- "types.sll" "sort.sll" "math.sll" "string.sll")
 
 
 
@@ -6,9 +6,19 @@
 
 
 
+(= linear_regression_type (&:
+	(,,, dt
+		(@@ (<- string$format "y=x*%f+%f" dt$slope dt$intercept))
+	) @@string@@
+	float_type slope
+	float_type intercept
+))
+
 (= statistics_module_type (&:
+	(~ type_type) linear_regression_type
 	(~ func_type) geometric_mean
 	(~ func_type) harmonic_mean
+	(~ func_type) linear_regression
 	(~ func_type) mean
 	(~ func_type) median
 	(~ func_type) median_high
@@ -53,6 +63,36 @@
 		(++ i)
 	)
 	(@@ (/ ($ data) out)
+))
+
+(= linear_regression (,,, x y
+	(= x (:: x array_type))
+	(= y (:: y array_type))
+	(= len ($ x))
+	(? (!== len ($ y)) (@@ nil))
+	(= x_mean (<- mean x))
+	(= y_mean (<- mean y))
+	(= sum_xx 0)
+	(= sum_xy 0)
+	(>- (= i 0) (< i len)
+		(= a (- (: x i) x_mean))
+		(= b (- (: y i) y_mean))
+		(= sum_xx (+
+			sum_xx
+			(* a a)
+		))
+		(= sum_xy (+
+			sum_xy
+			(* a b)
+		))
+		(++ i)
+	)
+	(? (! sum_xx) (@@ nil))
+	(= slope (/ sum_xy sum_xx))
+	(@@ (. linear_regression_type
+		slope
+		(- y_mean (* slope x_mean))
+	))
 ))
 
 (= mean (,,, data
@@ -103,8 +143,10 @@
 
 
 (= statistics (. statistics_module_type
+	linear_regression_type
 	geometric_mean
 	harmonic_mean
+	linear_regression
 	mean
 	median
 	median_high
