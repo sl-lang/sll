@@ -13,26 +13,26 @@
 
 (= BUILTIN_EVENTS <
 	"sll.error.create" ["type" "data" "backtrace"]
-	"sll.error.from_internal" ["error_code" "data"]
+	"sll.error.create.internal" ["error_code" "data"]
 	"sll.file.copy" ["src" "dst"]
 	"sll.file.delete" ["path"]
 	"sll.file.open" ["path" "mode"]
 	"sll.file.rename" ["src" "dst"]
 	"sll.object.new" ["template" "data"]
-	"sll.path.list_dir" ["path" "recursive"]
-	"sll.path.mkdir" ["path"]
-	"sll.path.set_cwd" ["path"]
+	"sll.path.cwd.set" ["path"]
+	"sll.path.dir.create" ["path" "recursive"]
+	"sll.path.dir.list" ["path" "recursive"]
 	"sll.process.shell" ["command"]
 	"sll.process.start" ["arguments" "cwd" "stdin"]
 	"sll.sys.env.delete" ["key"]
 	"sll.sys.env.set" ["key" "value"]
-	"sll.sys.load_library" ["name"]
-	"sll.sys.set_sandbox_flag" ["flag"]
+	"sll.sys.library.load" ["name"]
+	"sll.sys.sandbox.set" ["flag"]
 	"sll.thread.create" ["func" "args" "thread"]
 	"sll.thread.return" ["thread"]
-	"sll.vm.get_location" ["location"]
-	"sll.vm.get_ref_count" ["object"]
 	"sll.vm.init" []
+	"sll.vm.location" ["location"]
+	"sll.vm.ref" ["object"]
 	"sll.vm.shutdown" []
 >)
 
@@ -42,7 +42,7 @@
 
 
 
-(<- (... "sll:audit__init") (,,, name raw
+(= _call_user_cb (,,, name raw
 	(= keys (: BUILTIN_EVENTS name))
 	(= data ({> (= i 0) (< i ($ keys))
 		(= k (: keys i))
@@ -56,8 +56,6 @@
 	)
 ))
 
-
-
 (= audit (... "sll:audit_audit"))
 
 (= register (,,, fn
@@ -67,6 +65,10 @@
 (= unregister (,,, fn
 	(<- array$remove _cb_list (:: fn func_type))
 ))
+
+
+
+(<- (... "sll:audit__init") _call_user_cb)
 
 
 
