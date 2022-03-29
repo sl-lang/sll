@@ -6,6 +6,7 @@
 #include <sll/common.h>
 #include <sll/lock.h>
 #include <sll/new_object.h>
+#include <sll/sandbox.h>
 #include <sll/semaphore.h>
 #include <sll/static_object.h>
 #include <sll/thread.h>
@@ -14,6 +15,9 @@
 
 
 __API_FUNC(thread_create){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+		return -1;
+	}
 	sll_thread_index_t o=sll_thread_create(a,b->v,b->l);
 	return (!sll_thread_start(o)?-1:o);
 }
@@ -39,6 +43,9 @@ __API_FUNC(thread_create_semaphore){
 
 
 __API_FUNC(thread_delete){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+		return 0;
+	}
 	return sll_thread_delete((a<0?0:(sll_thread_index_t)a));
 }
 
@@ -72,8 +79,17 @@ __API_FUNC(thread_delete_semaphore){
 
 
 __API_FUNC(thread_get_internal_data){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+		SLL_INIT_ARRAY(out);
+		return;
+	}
 	thread_data_t* thr=_thread_get((a<0?0:(sll_thread_index_t)a));
-	sll_new_object_array(SLL_CHAR("hh"),out,(thr?thr->ii:0),(thr?thr->si:0));
+	if (!thr){
+		sll_new_object_array(SLL_CHAR("00"),out);
+	}
+	else{
+		sll_new_object_array(SLL_CHAR("hh"),out,thr->ii,thr->si);
+	}
 }
 
 
@@ -109,11 +125,17 @@ __API_FUNC(thread_reset_barrier){
 
 
 __API_FUNC(thread_restart){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+		return 0;
+	}
 	return sll_thread_restart((a<0?0:(sll_thread_index_t)a));
 }
 
 
 
 __API_FUNC(thread_suspend){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+		return 0;
+	}
 	return sll_thread_suspend((a<0?0:(sll_thread_index_t)a));
 }
