@@ -51,6 +51,19 @@ __API_FUNC_DECL(array_extend);
 
 /**
  * \flags api func
+ * \name sll_api_array_index
+ * \group array-api
+ * \desc Docs!
+ * \arg A
+ * \arg O
+ * \ret I
+ */
+__API_FUNC_DECL(array_index);
+
+
+
+/**
+ * \flags api func
  * \name sll_api_array_join
  * \group array-api
  * \desc Docs!

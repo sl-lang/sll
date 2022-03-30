@@ -1,4 +1,4 @@
-(--- "types.sll" "path.sll" "string.sll" "map.sll" "date.sll" "_internal.sll")
+(--- "types.sll" "path.sll" "string.sll" "map.sll" "date.sll" "_internal.sll" "array.sll")
 
 
 
@@ -24,6 +24,7 @@
 	(~ string_type) LIBRARY_EXTENSION
 	(~ string_type) LIBRARY_PATH
 	(~ string_type) PLATFORM
+	(~ array_type) SANDBOX_FLAGS
 	(~ version_type) VERSION
 	(~ func_type) get_env
 	(~ func_type) get_sandbox_flags
@@ -46,6 +47,24 @@
 (= LIBRARY (<- (... "sll:sys_get_library")))
 (= LIBRARY_PATH (+ (<- path$absolute (+ (: (<- path$split LIBRARY) 0) path$SEPARATOR "sys_lib")) path$SEPARATOR))
 (= LIBRARY_EXTENSION (?: (=== _PLATFORM "windows") "dll" "so"))
+
+(= SANDBOX_FLAGS [
+	"no-file-io"
+	"stdin-io"
+	"stdout-io"
+	"no-path-api"
+	"no-process-api"
+	"no-environment"
+	"no-load-library"
+	"buffer-files"
+	"file-rename"
+	"file-copy"
+	"no-float-error-change"
+	"file-delete"
+	"no-thread"
+	"no-random"
+	"no-serial"
+])
 
 (= v_dt (<- (... "sll:sys_get_version")))
 (= commit (: v_dt 3))
@@ -71,12 +90,23 @@
 
 
 
-(= get_env (,,, k v
-	(= k (:: k string_type))
-	(@@ (|| (: ENVIRONMENT k) v))
+(= get_env (,,, k default
+	(@@ (|| (: ENVIRONMENT (<- string$replace (:: k string_type) '=' "")) default))
 ))
 
-(= get_sandbox_flags (... "sll:sys_get_sandbox_flags"))
+(= get_sandbox_flags (,,,
+	(= fl (<- (... "sll:sys_get_sandbox_flags")))
+	(= i 0)
+	(= out [])
+	(-> nil fl
+		(? (& fl 1)
+			(<- array$push out (: SANDBOX_FLAGS i))
+		)
+		(= fl (>> fl 1))
+		(++ i)
+	)
+	(@@ out)
+))
 
 (= load_library (,,, fp chk
 	(= fp (:: fp string_type))
@@ -105,9 +135,11 @@
 (= set_sandbox_flags (,,, @@flags@@
 	(= o 1)
 	(-> (= i 0) (< i ($ @@flags@@))
-		(= o (& o (<- (... "sll:sys_set_sandbox_flag")
-			(<- string$lower_case (:: (: @@flags@@ i) string_type))
-		)))
+		(= j (<- array$index SANDBOX_FLAGS (:: (: @@flags@@ i) string_type)))
+		(? (=== j -1)
+			(= o 0)
+			(<- (... "sll:sys_set_sandbox_flag") j)
+		)
 		(++ i)
 	)
 	(@@ o)
@@ -131,6 +163,7 @@
 	LIBRARY_EXTENSION
 	LIBRARY_PATH
 	_PLATFORM
+	SANDBOX_FLAGS
 	VERSION
 	get_env
 	get_sandbox_flags

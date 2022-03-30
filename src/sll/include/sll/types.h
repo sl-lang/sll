@@ -262,7 +262,7 @@ typedef __SLL_U64 sll_ref_count_t;
 
 
 
-typedef __SLL_U64 sll_size_t;
+typedef __SLL_U64 sll_sandbox_flags_t;
 
 
 

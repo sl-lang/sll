@@ -5,6 +5,7 @@
 ### Added
 
 - Barriers, locks, semaphores and threads are now automatically deleted when their handles go out of scope
+- Implemented `array$index`
 - Implemented `atexit.sll`, `atexit$register` and `atexit$unregister` ([#258])
 - Implemented `audit.sll`, `audit$BUILTIN_EVENTS`, `audit$audit`, `audit$register_callback` and `audit$unregister_callback` ([#259])
 - Implemented `error$ERROR_LENGTH_MISMATCH` and `error$ERROR_NOT_ENOUGH_DATA`
@@ -13,6 +14,7 @@
 - Implemented `SLL_ERROR_GET_VALUE`
 - Implemented `SLL_EXECUTE_FUNCTION_ASYNC`
 - Implemented `SLL_MAX_BARRIER_INDEX` and `SLL_MAX_THREAD_INDEX`
+- Implemented `SLL_MAX_SANDBOX_FLAG`
 - Implemented `sll_new_object_array_list`
 - Implemented `sll_weak_ref_t` and `sll_weak_ref_destructor_t` ([#257])
 - Implemented `sll_weakref_create`, `sll_weakref_delete`, `sll_weakref_get` and `sll_weakref_set_callback` ([#257])
@@ -48,7 +50,7 @@
 | `sll.sys.env.delete` | `s` | `key` |
 | `sll.sys.env.set` | `ss` | `key`, `value` |
 | `sll.sys.library.load` | `s` | `name` |
-| `sll.sys.sandbox.set` | `s` | `flag` |
+| `sll.sys.sandbox.set` | `i` | `flag` |
 | `sll.thread.create` | `iai` | `func`, `args`, `thread` |
 | `sll.thread.return` | `i` | `thread` |
 | `sll.vm.init` | | |
@@ -60,6 +62,7 @@
 
 - Arguments can now be skipped in `sll_parse_args` by passing `NULL` pointers
 - Fixed `sll_tls_get`
+- Fixed multiple memory corruption bugs
 - GC now cleans-up unused memory pages
 - Modular exponentiation is now possible by passing a third argument to `math$int_pow`
 - Object references counter (`sll_ref_count_t`) is now 64-bit instead of 32-bit
@@ -70,7 +73,7 @@
 
 - Deprecated macros: `SLL_OBJECT_GET_TYPE`, `SLL_OBJECT_GET_TYPE_MASK` and `SLL_OBJECT_IS_STORAGE`
 - Unneeded flag: `SLL_OBJECT_FLAG_CONSTANT`
-- Unused function: `sll_object_get_type`
+- Unused functions: `sll_object_get_type` and `sll_set_sandbox_flag_string`
 
 ## [0.7.10] - 2022-03-26
 

@@ -199,6 +199,17 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_MAX_SANDBOX_FLAG
+ * \group sandbox
+ * \desc Docs!
+ * \type sll_sandbox_flag_t
+ */
+#define SLL_MAX_SANDBOX_FLAG SLL_SANDBOX_FLAG_DISABLE_SERIAL
+
+
+
+/**
  * \flags check_output func
  * \name sll_get_sandbox_flag
  * \group sandbox
@@ -215,9 +226,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_fl
  * \name sll_get_sandbox_flags
  * \group sandbox
  * \desc Docs!
- * \arg sll_array_t* o
+ * \ret sll_sandbox_flags_t
  */
-__SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_sandbox_flags_t sll_get_sandbox_flags(void);
 
 
 
@@ -230,18 +241,6 @@ __SLL_EXTERNAL void sll_get_sandbox_flags(sll_array_t* o);
  * \ret void
  */
 __SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flag_t f);
-
-
-
-/**
- * \flags check_output func
- * \name sll_set_sandbox_flag_string
- * \group sandbox
- * \desc Docs!
- * \arg const sll_string_t* nm
- * \ret sll_bool_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_sandbox_flag_string(const sll_string_t* nm);
 
 
 

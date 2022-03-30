@@ -82,6 +82,30 @@
 
 
 
+#define __SLL_API_TYPE_sll_api_array_index __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_array_index sll_array_t* a,sll_object_t* b
+/**
+ * \flags func
+ * \name sll_api_array_index
+ * \group array-api
+ * \desc Docs!
+ * \arg sll_array_t* a -> 
+ * \arg sll_object_t* b -> 
+ * \ret sll_integer_t
+ */
+/**
+ * \flags check_output func
+ * \name sll_api_array_index_raw
+ * \group raw-api
+ * \subgroup raw-api-array-api
+ * \desc Wrapper function for :sll_api_array_index:
+ * \arg sll_object_t*const* al -> Arguments
+ * \arg sll_arg_count_t all -> Argument count
+ * \ret sll_object_t* -> The return value of the function
+ */
+
+
+
 #define __SLL_API_TYPE_sll_api_array_join void
 #define __SLL_API_ARGS_sll_api_array_join sll_array_t* a,sll_object_t* b,sll_array_t* out
 /**
@@ -3892,13 +3916,14 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_sys_get_sandbox_flags void
-#define __SLL_API_ARGS_sll_api_sys_get_sandbox_flags sll_array_t* out
+#define __SLL_API_TYPE_sll_api_sys_get_sandbox_flags __SLL_CHECK_OUTPUT sll_integer_t
+#define __SLL_API_ARGS_sll_api_sys_get_sandbox_flags void
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func
@@ -4007,15 +4032,14 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_sys_set_sandbox_flag __SLL_CHECK_OUTPUT sll_bool_t
-#define __SLL_API_ARGS_sll_api_sys_set_sandbox_flag sll_string_t* a
+#define __SLL_API_TYPE_sll_api_sys_set_sandbox_flag void
+#define __SLL_API_ARGS_sll_api_sys_set_sandbox_flag sll_integer_t a
 /**
  * \flags func
  * \name sll_api_sys_set_sandbox_flag
  * \group sys-api
  * \desc Docs!
- * \arg sll_string_t* a -> 
- * \ret sll_bool_t
+ * \arg sll_integer_t a -> 
  */
 /**
  * \flags check_output func

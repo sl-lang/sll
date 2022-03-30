@@ -49,7 +49,7 @@ typedef struct __THREAD_DATA{
 	sll_thread_index_t wait;
 	sll_object_t* ret;
 	sll_call_stack_t c_st;
-	sandbox_t sandbox;
+	sll_sandbox_flags_t sandbox;
 	sll_char_t tm;
 	thread_state_t st;
 	sll_flags_t flags;

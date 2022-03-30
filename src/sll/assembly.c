@@ -876,7 +876,7 @@ static void _init_loop_data(assembly_generator_data_t* g_dt,assembly_loop_genera
 	lg_dt->p_l_dt=g_dt->l_dt;
 	g_dt->l_dt.cnt=cnt;
 	g_dt->l_dt.brk=brk;
-	lg_dt->v_st=sll_zero_allocate(((g_dt->l_dt_vc>>6)+1)*sizeof(bitmap_t));
+	lg_dt->v_st=sll_zero_allocate(g_dt->l_dt_vc*sizeof(bitmap_t));
 }
 
 
@@ -898,7 +898,7 @@ static const sll_node_t* _generate_loop_start(assembly_generator_data_t* g_dt,co
 
 static void _generate_loop_end(assembly_generator_data_t* g_dt,assembly_loop_generator_data_t* lg_dt){
 	g_dt->l_dt=lg_dt->p_l_dt;
-	for (sll_variable_index_t i=0;i<(g_dt->l_dt_vc>>6)+1;i++){
+	for (sll_variable_index_t i=0;i<g_dt->l_dt_vc;i++){
 		bitmap_t v=*(lg_dt->v_st+i);
 		while (v){
 			sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
@@ -2083,6 +2083,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 	}
 	_map_identifiers(sf->dt,sf,&g_dt,SLL_MAX_SCOPE);
 	sll_variable_index_t g_vc=g_dt.it.vc;
+	sll_variable_index_t mx_vc=g_vc;
 	sll_variable_index_t* fn_vc=sll_allocate_stack(sf->ft.l*sizeof(sll_variable_index_t));
 	for (sll_function_index_t i=0;i<sf->ft.l;i++){
 		g_dt.it.vc=g_vc;
@@ -2109,14 +2110,18 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 			fo=_map_identifiers(fo,sf,&g_dt,sc);
 		}
 		*(fn_vc+i)=g_dt.it.vc-g_vc-SLL_FUNCTION_GET_ARGUMENT_COUNT(k);
+		if (g_dt.it.vc>mx_vc){
+			mx_vc=g_dt.it.vc;
+		}
 	}
 	sll_deallocate(g_dt.it.sc_vi);
 	o->vc=g_vc;
 	o->tls_vc=g_dt.it.tls_vc;
 	g_dt.l_dt_vc=(o->tls_vc<<1)+1;
-	if (g_dt.l_dt_vc<(o->vc<<1)){
-		g_dt.l_dt_vc=o->vc<<1;
+	if (g_dt.l_dt_vc<(mx_vc<<1)){
+		g_dt.l_dt_vc=mx_vc<<1;
 	}
+	g_dt.l_dt_vc=(g_dt.l_dt_vc+63)>>6;
 	g_dt.s_off=0;
 	_generate(sf->dt,&g_dt);
 	SLL_ASSERT(g_dt.rt==MAX_ASSEMBLY_INSTRUCTION_LABEL);
@@ -2305,7 +2310,7 @@ _remove_nop:
 	sll_deallocate(fn_ln);
 	o->dbg.dt=sll_reallocate(o->dbg.dt,dbg_i*sizeof(sll_debug_line_data_t));
 	o->dbg.l=dbg_i;
-	sm.im=sll_allocate(o->st.l*sizeof(sll_string_t*));
+	sm.im=sll_allocate(o->st.l*sizeof(sll_string_index_t));
 	sll_string_index_t k=0;
 	sll_string_index_t l=0;
 	for (sll_string_index_t i=0;i<sm.ml;i++){

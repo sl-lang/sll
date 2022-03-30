@@ -44,6 +44,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_extend_raw(sll_obj
 
 
 
+__SLL_API_TYPE_sll_api_array_index sll_api_array_index(__SLL_API_ARGS_sll_api_array_index);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_index_raw(sll_object_t*const* al,sll_arg_count_t all){
+	sll_array_t* a;
+	sll_object_t* b;
+	sll_parse_args(SLL_CHAR("ao"),al,all,&a,&b);
+	sll_integer_t out=sll_api_array_index(a,b);
+	return sll_int_to_object(out);
+}
+
+
+
 __SLL_API_TYPE_sll_api_array_join sll_api_array_join(__SLL_API_ARGS_sll_api_array_join);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_join_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_array_t* a;
@@ -1772,9 +1783,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_platform_raw(sll
 
 __SLL_API_TYPE_sll_api_sys_get_sandbox_flags sll_api_sys_get_sandbox_flags(__SLL_API_ARGS_sll_api_sys_get_sandbox_flags);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_sandbox_flags_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_array_t out;
-	sll_api_sys_get_sandbox_flags(&out);
-	return sll_array_to_object_nocopy(&out);
+	sll_integer_t out=sll_api_sys_get_sandbox_flags();
+	return sll_int_to_object(out);
 }
 
 
@@ -1827,11 +1837,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_set_env_raw(sll_obje
 
 __SLL_API_TYPE_sll_api_sys_set_sandbox_flag sll_api_sys_set_sandbox_flag(__SLL_API_ARGS_sll_api_sys_set_sandbox_flag);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_set_sandbox_flag_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_string_t* a;
-	sll_parse_args(SLL_CHAR("s"),al,all,&a);
-	sll_bool_t out=sll_api_sys_set_sandbox_flag(a);
-	SLL_ACQUIRE(sll_static_int[out]);
-	return sll_static_int[out];
+	sll_integer_t a;
+	sll_parse_args(SLL_CHAR("i"),al,all,&a);
+	sll_api_sys_set_sandbox_flag(a);
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
@@ -2138,6 +2147,10 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_extend"),
 		sll_api_array_extend_raw
+	},
+	{
+		SLL_CHAR("sll:array_index"),
+		sll_api_array_index_raw
 	},
 	{
 		SLL_CHAR("sll:array_join"),
@@ -2911,5 +2924,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=195;
+const sll_function_index_t _ifunc_size=196;
 const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);

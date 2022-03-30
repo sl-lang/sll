@@ -117,7 +117,7 @@ __API_FUNC_DECL(sys_get_platform);
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
- * \ret A
+ * \ret I
  */
 __API_FUNC_DECL(sys_get_sandbox_flags);
 
@@ -167,8 +167,7 @@ __API_FUNC_DECL(sys_remove_env);
  * \name sll_api_sys_set_sandbox_flag
  * \group sys-api
  * \desc Docs!
- * \arg S
- * \ret B
+ * \arg I
  */
 __API_FUNC_DECL(sys_set_sandbox_flag);
 

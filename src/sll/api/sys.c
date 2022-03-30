@@ -150,7 +150,7 @@ __API_FUNC(sys_get_platform){
 
 
 __API_FUNC(sys_get_sandbox_flags){
-	sll_get_sandbox_flags(out);
+	return sll_get_sandbox_flags();
 }
 
 
@@ -273,8 +273,8 @@ __API_FUNC(sys_remove_env){
 
 
 __API_FUNC(sys_set_sandbox_flag){
-	sll_audit(SLL_CHAR("sll.sys.sandbox.set"),SLL_CHAR("s"),a);
-	return sll_set_sandbox_flag_string(a);
+	sll_audit(SLL_CHAR("sll.sys.sandbox.set"),SLL_CHAR("u"),(sll_sandbox_flag_t)a);
+	sll_set_sandbox_flag((sll_sandbox_flag_t)a);
 }
 
 

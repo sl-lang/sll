@@ -28,6 +28,17 @@ __API_FUNC(array_extend){
 
 
 
+__API_FUNC(array_index){
+	for (sll_array_length_t i=0;i<a->l;i++){
+		if (sll_operator_strict_equal(a->v[i],b)){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+
 __API_FUNC(array_join){
 	sll_array_t** al=sll_allocate_stack(a->l*sizeof(sll_array_t*));
 	sll_object_t** obj=sll_allocate_stack(a->l*sizeof(sll_object_t*));

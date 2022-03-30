@@ -4,11 +4,7 @@
 
 
 
-typedef bitmap_t sandbox_t;
-
-
-
-extern sandbox_t _sandbox_flags;
+extern sll_sandbox_flags_t _sandbox_flags;
 
 
 
