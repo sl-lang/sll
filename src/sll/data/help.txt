@@ -27,8 +27,8 @@ Sandbox Flags:
   no-file-io -> Disable all file IO (does not include the C sll_file_xxx and sll_platform_file_xxx APIs)
   enable-stdin-io -> Enable reading from standard input (overrides 'no-file-io' flag)
   enable-stdout-io -> Enable writing to standard output (overrides 'no-file-io' flag)
-  no-path-api -> Disable the path API
-  no-process-api -> Disable the process creation API
+  no-path -> Disable the path API
+  no-process -> Disable the process creation API
   no-environment -> Disable environment access and modification
   no-load-library -> Disable external library loading
   buffer-files -> Enable creating in-memory files (overrides 'no-file-io' flag)

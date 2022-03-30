@@ -1,3 +1,4 @@
+import header
 import os
 import util
 
@@ -55,11 +56,17 @@ def load_hash_list(fp):
 
 def update(fp,*inc):
 	o=_check(fp)
-	for k in inc:
-		for r,_,fl in os.walk(k):
-			for f in fl:
-				if (f[-2:]==".h"):
-					o|=_check(os.path.join(r,f))
+	if (not o):
+		with open(fp,"rb") as rf:
+			for e in header.INCLUDE_REGEX.findall(rf.read()):
+				e=str(e[1:-1],"utf-8")
+				for k in inc:
+					nm=os.path.join(k,e)
+					if (os.path.exists(nm) and _check(nm)):
+						o=1
+						break
+				if (o):
+					break
 	if (o):
 		_flush_data()
 		return True
