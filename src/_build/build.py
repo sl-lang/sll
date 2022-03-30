@@ -105,7 +105,7 @@ def build_sll_cli():
 			sys.exit(1)
 		util.log("  Compiling Files (Release Mode)...")
 		out_fp=util.output_file_path("src/cli/windows.c")
-		if (hashlist.update("src/cli/windows.c","build") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","build","/Fo"+out_fp,"src/cli/windows.c"])):
+		if (util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","build","/Fo"+out_fp,"src/cli/windows.c"])):
 			hashlist.fail("src/cli/windows.c")
 			sys.exit(1)
 		util.log("  Linking Files (Release Console Mode)...")
@@ -117,7 +117,7 @@ def build_sll_cli():
 	else:
 		util.log("  Compiling Files...")
 		out_fp=util.output_file_path("src/cli/linux.c")
-		if (hashlist.update("src/cli/linux.c","build") and util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-D","__SLL_BUILD_"+util.system.upper(),"-I","build","-o",out_fp,"src/cli/linux.c"])):
+		if (util.execute(["gcc","-fno-exceptions","-fdiagnostics-color=always","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-D","__SLL_BUILD_"+util.system.upper(),"-I","build","-o",out_fp,"src/cli/linux.c"])):
 			hashlist.fail("src/cli/linux.c")
 			sys.exit(1)
 		util.log("  Linking Files...")
