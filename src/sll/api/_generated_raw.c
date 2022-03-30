@@ -1469,8 +1469,9 @@ __SLL_API_TYPE_sll_api_string_index sll_api_string_index(__SLL_API_ARGS_sll_api_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_string_index_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t* a;
 	sll_char_string_t b;
-	sll_parse_args(SLL_CHAR("sy"),al,all,&a,&b);
-	sll_integer_t out=sll_api_string_index(a,&b);
+	sll_integer_t c;
+	sll_parse_args(SLL_CHAR("syi"),al,all,&a,&b,&c);
+	sll_integer_t out=sll_api_string_index(a,&b,c);
 	return sll_int_to_object(out);
 }
 

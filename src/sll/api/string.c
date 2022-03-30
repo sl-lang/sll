@@ -325,14 +325,14 @@ __API_FUNC(string_flip_case){
 
 
 __API_FUNC(string_index){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,0):sll_string_index(a,&(b->dt.s)));
+	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,0,(sll_string_length_t)c):sll_string_index(a,&(b->dt.s),(sll_string_length_t)c));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
 __API_FUNC(string_index_list){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,c):sll_string_index_multiple(a,b->dt.s.v,b->dt.s.l,c));
+	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,c,0):sll_string_index_multiple(a,b->dt.s.v,b->dt.s.l,c));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 

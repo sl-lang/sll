@@ -120,6 +120,7 @@ __API_FUNC_DECL(string_flip_case);
  * \desc Docs!
  * \arg S
  * \arg CS
+ * \arg I
  * \ret I
  */
 __API_FUNC_DECL(string_index);

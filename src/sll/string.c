@@ -847,7 +847,7 @@ __SLL_EXTERNAL void sll_string_increase(sll_string_t* s,sll_string_length_t l){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll_string_t* a,const sll_string_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll_string_t* a,const sll_string_t* b,sll_string_length_t si){
 	if (!b->l){
 		return 0;
 	}
@@ -855,14 +855,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 		return SLL_MAX_STRING_LENGTH;
 	}
 	if (b->l==1){
-		return sll_string_index_char(a,b->v[0],0);
+		return sll_string_index_char(a,b->v[0],0,si);
 	}
 	if (a->l==b->l){
 		return (sll_string_equal(a,b)?0:SLL_MAX_STRING_LENGTH);
 	}
-	for (sll_string_length_t i=0;i<a->l-b->l;i++){
-		if (sll_compare_data(a->v+i,b->v,b->l)==SLL_COMPARE_RESULT_EQUAL){
-			return i;
+	for (;si<a->l-b->l;si++){
+		if (sll_compare_data(a->v+si,b->v,b->l)==SLL_COMPARE_RESULT_EQUAL){
+			return si;
 		}
 	}
 	return SLL_MAX_STRING_LENGTH;
@@ -870,9 +870,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv,sll_string_length_t si){
 	if (!s->l){
 		return SLL_MAX_STRING_LENGTH;
+	}
+	if (si){
+		SLL_UNIMPLEMENTED();
 	}
 	const wide_data_t* p=(const wide_data_t*)(s->v);
 	STRING_DATA_PTR(p);

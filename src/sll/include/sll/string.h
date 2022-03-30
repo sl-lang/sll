@@ -656,9 +656,10 @@ __SLL_EXTERNAL void sll_string_increase(sll_string_t* s,sll_string_length_t l);
  * \desc Docs!
  * \arg const sll_string_t* a
  * \arg const sll_string_t* b
+ * \arg sll_string_length_t si
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll_string_t* a,const sll_string_t* b);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll_string_t* a,const sll_string_t* b,sll_string_length_t si);
 
 
 
@@ -671,9 +672,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
  * \arg const sll_string_t* s
  * \arg sll_char_t c
  * \arg sll_bool_t inv
+ * \arg sll_string_length_t si
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv,sll_string_length_t si);
 
 
 

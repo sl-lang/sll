@@ -3242,7 +3242,7 @@
 
 
 #define __SLL_API_TYPE_sll_api_string_index __SLL_CHECK_OUTPUT sll_integer_t
-#define __SLL_API_ARGS_sll_api_string_index sll_string_t* a,sll_char_string_t* b
+#define __SLL_API_ARGS_sll_api_string_index sll_string_t* a,sll_char_string_t* b,sll_integer_t c
 /**
  * \flags func
  * \name sll_api_string_index
@@ -3250,6 +3250,7 @@
  * \desc Docs!
  * \arg sll_string_t* a -> 
  * \arg sll_char_string_t* b -> 
+ * \arg sll_integer_t c -> 
  * \ret sll_integer_t
  */
 /**
