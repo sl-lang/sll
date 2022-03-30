@@ -33,7 +33,6 @@ static __SLL_FORCE_INLINE void _platform_deinit_io_dispatcher(raw_event_data_t* 
 	close(r_dt->fd);
 	sem_close(wait);
 	sem_unlink("/__sll_dispatcher_wait");
-	sem_unlink("/__sll_dispatcher_notify");
 }
 
 
