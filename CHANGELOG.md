@@ -72,6 +72,7 @@
 
 ### Removed
 
+- Custom memory allocator
 - Deprecated macros: `SLL_OBJECT_GET_TYPE`, `SLL_OBJECT_GET_TYPE_MASK` and `SLL_OBJECT_IS_STORAGE`
 - Unneeded flag: `SLL_OBJECT_FLAG_CONSTANT`
 - Unused functions: `sll_object_get_type` and `sll_set_sandbox_flag_string`
