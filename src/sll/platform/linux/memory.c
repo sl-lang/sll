@@ -9,21 +9,21 @@
 
 
 #ifndef __SLL_BUILD_DARWIN
-static sll_bool_t _linux_has_huge_tlb=1;
+static sll_bool_t _linux_huge_tlb=1;
 #endif
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l){
 #ifndef __SLL_BUILD_DARWIN
-	if (_linux_has_huge_tlb&&l){
+	if (_linux_huge_tlb&&l){
 		SLL_ASSERT(SLL_ROUND_LARGE_PAGE(sz)==sz);
 		void* o=mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_HUGETLB,-1,0);
 		if (o!=MAP_FAILED){
 			return o;
 		}
 		if (errno==EOPNOTSUPP){
-			_linux_has_huge_tlb=0;
+			_linux_huge_tlb=0;
 		}
 	}
 #endif

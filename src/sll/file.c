@@ -34,12 +34,35 @@
 static sll_file_t _file_stdin;
 static sll_file_t _file_stdout;
 static sll_file_t _file_stderr;
+static void* _file_buffer_pool[FILE_BUFFER_POOL_SIZE];
+static sll_array_length_t _file_buffer_pool_len=0;
 
 
 
 __SLL_EXTERNAL sll_file_t* sll_stdin=&_file_stdin;
 __SLL_EXTERNAL sll_file_t* sll_stdout=&_file_stdout;
 __SLL_EXTERNAL sll_file_t* sll_stderr=&_file_stderr;
+
+
+
+static void _free_buffer(void* pg){
+	if (_file_buffer_pool_len==FILE_BUFFER_POOL_SIZE){
+		sll_platform_free_page(pg,SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE));
+		return;
+	}
+	_file_buffer_pool[_file_buffer_pool_len]=pg;
+	_file_buffer_pool_len++;
+}
+
+
+
+static void* _get_buffer(void){
+	if (!_file_buffer_pool_len){
+		return sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE),1);
+	}
+	_file_buffer_pool_len--;
+	return _file_buffer_pool[_file_buffer_pool_len];
+}
 
 
 
@@ -83,6 +106,10 @@ void _file_release_std_streams(void){
 	sll_file_close(sll_stdin);
 	sll_file_close(sll_stdout);
 	sll_file_close(sll_stderr);
+	while (_file_buffer_pool_len){
+		_file_buffer_pool_len--;
+		sll_platform_free_page(_file_buffer_pool[_file_buffer_pool_len],SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE));
+	}
 }
 
 
@@ -108,10 +135,10 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 			sll_platform_file_close(f->dt.fl.fd);
 			if (!(f->f&SLL_FILE_FLAG_NO_BUFFER)){
 				if (f->f&SLL_FILE_FLAG_READ){
-					sll_platform_free_page(f->_r_bf,SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE));
+					_free_buffer(f->_r_bf);
 				}
 				if (f->f&SLL_FILE_FLAG_WRITE){
-					sll_platform_free_page(f->_w.bf.p,SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE));
+					_free_buffer(f->_w.bf.p);
 				}
 			}
 		}
@@ -232,12 +259,12 @@ __SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* nm,sll_file_descr
 	o->_off=0;
 	if (!(f&SLL_FILE_FLAG_NO_BUFFER)){
 		if (f&SLL_FILE_FLAG_READ){
-			o->_r_bf=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE),1);
+			o->_r_bf=_get_buffer();
 			o->_r_bf_off=0;
 			o->_r_bf_sz=0;
 		}
 		if (f&SLL_FILE_FLAG_WRITE){
-			o->_w.bf.p=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE),1);
+			o->_w.bf.p=_get_buffer();
 			o->_w.bf.off=0;
 		}
 	}
