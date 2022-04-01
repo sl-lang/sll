@@ -1,6 +1,10 @@
 #ifndef __SLL__INTERNAL_STRING_H__
 #define __SLL__INTERNAL_STRING_H__ 1
+#include <sll/_internal/attributes.h>
 #include <sll/_internal/common.h>
+#include <sll/allocator.h>
+#include <sll/memory.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 
@@ -26,6 +30,15 @@ static __SLL_FORCE_INLINE sll_bool_t STRING_EQUAL(const sll_string_t* a,const sl
 		}
 	}
 	return 1;
+}
+
+
+
+static __SLL_FORCE_INLINE void STRING_INIT_STACK(sll_string_t* o){
+	o->l=0;
+	o->c=0;
+	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
+	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 }
 
 

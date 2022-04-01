@@ -236,7 +236,7 @@ static sll_read_char_t _read_identifier(sll_string_t* str,sll_string_length_t sz
 			break;
 		}
 	} while (c<9||(c>13&&c!='$'&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'));
-	str->l=sz;
+	sll_string_decrease(str,sz);
 	sll_string_calculate_checksum(str);
 	return c;
 }
@@ -394,8 +394,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 			else if (c=='"'){
 				arg->t=SLL_NODE_TYPE_STRING;
 				sll_string_t s;
-				sll_string_create(0,&s);
-				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+				STRING_INIT_STACK(&s);
 				while (1){
 					sll_string_increase(&s,1);
 					unsigned int err=_read_single_char(rf,s.v+s.l);
@@ -413,8 +412,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 			else if (c=='`'){
 				arg->t=SLL_NODE_TYPE_STRING;
 				sll_string_t s;
-				sll_string_create(0,&s);
-				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+				STRING_INIT_STACK(&s);
 				while (1){
 					c=sll_file_read_char(rf,NULL);
 					if (c=='`'||c==SLL_END_OF_DATA){

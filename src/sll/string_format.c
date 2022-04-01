@@ -1,5 +1,6 @@
 #include <sll/_internal/gc.h>
 #include <sll/_internal/intrinsics.h>
+#include <sll/_internal/string.h>
 #include <sll/_internal/string_format.h>
 #include <sll/allocator.h>
 #include <sll/api/string.h>
@@ -70,11 +71,11 @@ __SLL_EXTERNAL void sll_string_format(const sll_char_t* t,sll_string_t* o,...){
 
 
 __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length_t sl,sll_var_arg_list_t* va,sll_string_t* o){
-	sll_string_create(0,o);
 	if (!sl){
+		SLL_INIT_STRING(o);
 		return;
 	}
-	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	STRING_INIT_STACK(o);
 	sll_string_length_t i=sl;
 	while (i){
 		if (*t!='%'){

@@ -103,7 +103,7 @@ __SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* 
 		sll_string_from_pointer(va_arg(*(va->dt.c),const sll_char_t*),o);
 	}
 	else if (!va->dt.sll.l){
-		sll_string_create(0,o);
+		SLL_INIT_STRING(o);
 	}
 	else{
 		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_STRING]);

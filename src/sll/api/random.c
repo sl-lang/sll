@@ -60,4 +60,5 @@ __API_FUNC(random_get_string){
 			sll_platform_random(out->v+i,sizeof(sll_char_t));
 		}
 	}
+	sll_string_calculate_checksum(out);
 }

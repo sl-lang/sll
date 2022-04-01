@@ -1,6 +1,7 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/string.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
 #include <sll/api/string.h>
@@ -253,8 +254,7 @@ __API_FUNC(string_checksum){
 
 
 __API_FUNC(string_convert){
-	sll_string_create(0,out);
-	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	STRING_INIT_STACK(out);
 	for (sll_array_length_t i=0;i<ac;i++){
 		sll_object_t* v=*(a+i);
 		if (v->t==SLL_OBJECT_TYPE_CHAR){

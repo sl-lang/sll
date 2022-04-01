@@ -2,6 +2,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/static_string.h>
+#include <sll/_internal/string.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
 #include <sll/api/process.h>
@@ -32,8 +33,7 @@ static const bitmap_t _process_quote_chars[4]={
 
 
 __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t* o){
-	sll_string_create(0,o);
-	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	STRING_INIT_STACK(o);
 	SLL_ASSERT(*a);
 	do{
 		if (o->l){

@@ -110,7 +110,7 @@ __API_FUNC(path_exists){
 
 __API_FUNC(path_get_cwd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		sll_string_create(0,out);
+		SLL_INIT_STRING(out);
 		return;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
@@ -130,14 +130,14 @@ __API_FUNC(path_is_dir){
 
 __API_FUNC(path_join){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		sll_string_create(0,out);
+		SLL_INIT_STRING(out);
 		return;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
 	if (ac){
 		if ((*a)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
-			sll_string_create(0,out);
+			SLL_INIT_STRING(out);
 			return;
 		}
 		i=(*a)->l;
@@ -150,7 +150,7 @@ __API_FUNC(path_join){
 				i++;
 			}
 			if ((*a)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
-				sll_string_create(0,out);
+				SLL_INIT_STRING(out);
 				return;
 			}
 			sll_copy_data((*a)->v,(*a)->l,bf+i);

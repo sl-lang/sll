@@ -498,11 +498,7 @@ __SLL_EXTERNAL void sll_string_create(sll_string_length_t l,sll_string_t* o){
 	o->l=l;
 	o->c=0;
 	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(l)*sizeof(sll_char_t));
-	wide_data_t* p=(wide_data_t*)(o->v);
-	STRING_DATA_PTR(p);
-	for (sll_string_length_t i=0;i<SLL_STRING_ALIGN_LENGTH(l)>>3;i++){
-		*(p+i)=0;
-	}
+	INIT_PADDING(o->v,l);
 }
 
 
@@ -1079,8 +1075,7 @@ __SLL_EXTERNAL void sll_string_inv(const sll_string_t* s,sll_string_t* o){
 
 
 __SLL_EXTERNAL void sll_string_join(const sll_string_t* s,sll_object_t*const* a,sll_array_length_t al,sll_string_t* o){
-	sll_string_create(0,o);
-	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	STRING_INIT_STACK(o);
 	for (sll_array_length_t i=0;i<al;i++){
 		if (i){
 			sll_string_increase(o,s->l);
@@ -1100,8 +1095,7 @@ __SLL_EXTERNAL void sll_string_join(const sll_string_t* s,sll_object_t*const* a,
 
 
 __SLL_EXTERNAL void sll_string_join_char(sll_char_t c,sll_object_t*const* a,sll_array_length_t al,sll_string_t* o){
-	sll_string_create(0,o);
-	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	STRING_INIT_STACK(o);
 	for (sll_array_length_t i=0;i<al;i++){
 		if (i){
 			sll_string_increase(o,1);
@@ -1869,9 +1863,7 @@ __SLL_EXTERNAL void sll_string_trim(const sll_string_t* s,sll_string_t* o){
 		return;
 	}
 	j++;
-	sll_string_create(j-i,o);
-	sll_copy_data(s->v+i,j-i,o->v);
-	sll_string_calculate_checksum(o);
+	sll_string_from_pointer_length(s->v+i,j-i,o);
 }
 
 
@@ -1885,9 +1877,7 @@ __SLL_EXTERNAL void sll_string_trim_left(const sll_string_t* s,sll_string_t* o){
 	if (i==SLL_MAX_STRING_LENGTH){
 		return;
 	}
-	sll_string_create(s->l-i,o);
-	sll_copy_data(s->v+i,o->l,o->v);
-	sll_string_calculate_checksum(o);
+	sll_string_from_pointer_length(s->v+i,s->l-i,o);
 }
 
 
@@ -1902,9 +1892,7 @@ __SLL_EXTERNAL void sll_string_trim_right(const sll_string_t* s,sll_string_t* o)
 		return;
 	}
 	i++;
-	sll_string_create(i,o);
-	sll_copy_data(s->v,i,o->v);
-	sll_string_calculate_checksum(o);
+	sll_string_from_pointer_length(s->v,i,o);
 }
 
 
