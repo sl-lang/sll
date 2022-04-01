@@ -560,10 +560,3 @@
 	14.702
 	16.8724
 ]) ", y=x*3.0908+1.7569\n")
-
-(? (! (!! FACTORIAL)) nil {
-	(:> "Early Exit\n")
-	(@@ false)
-})
-(:> "Useless Code\n")
-(@@ 1)
