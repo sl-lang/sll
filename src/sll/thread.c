@@ -105,6 +105,7 @@ sll_thread_index_t _thread_new(void){
 	n->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
 	n->st=THREAD_STATE_INITIALIZED;
 	n->flags=0;
+	n->_last_ai=NULL;
 	*(_thread_data+o)=n;
 	_thread_active_count++;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));

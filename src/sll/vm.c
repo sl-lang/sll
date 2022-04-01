@@ -118,6 +118,13 @@
 		break; \
 	}
 
+#define NEXT_INSTRUCTION \
+	do{ \
+		ai++; \
+		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){ \
+			ai=ai->dt._p; \
+		} \
+	} while (0)
 #define RELOAD_THREAD_DATA \
 	do{ \
 		if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){ \
@@ -134,7 +141,14 @@
 			func_var_off=ADDR(thr->stack)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->vc); \
 		} \
 		tls_var_off=ADDR(thr->tls)-ADDR(_vm_var_data); \
-		ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,thr->ii); \
+		if (thr->_last_ai){ \
+			ai=thr->_last_ai; \
+			thr->_last_ai=NULL; \
+			SLL_ASSERT(ai==_get_instruction_at_offset(sll_current_runtime_data->a_dt,thr->ii)); \
+		} \
+		else{ \
+			ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,thr->ii); \
+		} \
 	} while (0)
 #define VAR_REF(v) ((sll_object_t**)PTR(ADDR(_vm_var_data+SLL_ASSEMBLY_VARIABLE_GET_INDEX(v))+(SLL_ASSEMBLY_VARIABLE_GET_INDEX(v)>=sll_current_runtime_data->a_dt->vc)*func_var_off+SLL_ASSEMBLY_VARIABLE_IS_TLS(v)*tls_var_off))
 
@@ -296,6 +310,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 			SLL_UNIMPLEMENTED();
 		}
 		if (!thr->tm){
+			thr->_last_ai=ai;
 			_scheduler_queue_next();
 			RELOAD_THREAD_DATA;
 			if (_scheduler_current_thread_index!=tid&&tid_dt->ret){
@@ -822,7 +837,7 @@ _cleanup_jump_table:;
 							}
 						}
 						else if (i&&i<=sll_current_runtime_data->a_dt->ft.l){
-							_call_function(_scheduler_current_thread,(sll_function_index_t)(i-1),ai->dt.ac,1);
+							_call_function(thr,(sll_function_index_t)(i-1),ai->dt.ac,1);
 							RELOAD_THREAD_DATA;
 							continue;
 						}
@@ -851,7 +866,7 @@ _cleanup_jump_table:;
 					}
 				}
 				else if (ai->dt.i&&ai->dt.i<=sll_current_runtime_data->a_dt->ft.l){
-					_call_function(_scheduler_current_thread,(sll_function_index_t)(ai->dt.i-1),0,1);
+					_call_function(thr,(sll_function_index_t)(ai->dt.i-1),0,1);
 					RELOAD_THREAD_DATA;
 					continue;
 				}
@@ -869,7 +884,7 @@ _cleanup_jump_table:;
 					}
 				}
 				else if (ai->dt.i&&ai->dt.i<=sll_current_runtime_data->a_dt->ft.l){
-					_call_function(_scheduler_current_thread,(sll_function_index_t)(ai->dt.i-1),1,1);
+					_call_function(thr,(sll_function_index_t)(ai->dt.i-1),1,1);
 					RELOAD_THREAD_DATA;
 					continue;
 				}
@@ -903,7 +918,7 @@ _cleanup_jump_table:;
 								SLL_ACQUIRE(tos->dt.a.v[j]);
 							}
 							GC_RELEASE(tos);
-							_call_function(_scheduler_current_thread,(sll_function_index_t)(i-1),ai->dt.ac,1);
+							_call_function(thr,(sll_function_index_t)(i-1),ai->dt.ac,1);
 							RELOAD_THREAD_DATA;
 							continue;
 						}
@@ -999,19 +1014,21 @@ _return:;
 					sll_object_t* n_tid_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					thr->si--;
 					GC_RELEASE(*(thr->stack+thr->si));
-					sll_integer_t n_tid=n_tid_o->dt.i;
+					sll_integer_t w_tid=n_tid_o->dt.i;
 					GC_RELEASE(n_tid_o);
-					thread_data_t* c_thr=_scheduler_current_thread;
-					if (_thread_wait(n_tid)){
+					thread_data_t* c_thr=thr;
+					if (_thread_wait(w_tid)){
 						c_thr->ii++;
-						n_tid=_scheduler_queue_pop(1);
+						NEXT_INSTRUCTION;
+						c_thr->_last_ai=ai;
+						sll_thread_index_t n_tid=_scheduler_queue_pop(1);
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
 							if (tid_dt->ret){
 								goto _cleanup;
 							}
 							SLL_UNIMPLEMENTED();
 						}
-						_scheduler_set_thread((sll_thread_index_t)n_tid);
+						_scheduler_set_thread(n_tid);
 						RELOAD_THREAD_DATA;
 						continue;
 					}
@@ -1039,7 +1056,7 @@ _return:;
 					GC_RELEASE(*(thr->stack+thr->si));
 					sll_integer_t lck=lck_o->dt.i;
 					GC_RELEASE(lck_o);
-					thread_data_t* c_thr=_scheduler_current_thread;
+					thread_data_t* c_thr=thr;
 					sll_bool_t wait=0;
 					switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 						case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_LOCK:
@@ -1055,6 +1072,8 @@ _return:;
 					}
 					if (wait){
 						c_thr->ii++;
+						NEXT_INSTRUCTION;
+						c_thr->_last_ai=ai;
 _load_new_thread:;
 						sll_thread_index_t n_tid=_scheduler_queue_pop(1);
 						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
@@ -1067,6 +1086,7 @@ _load_new_thread:;
 						RELOAD_THREAD_DATA;
 						continue;
 					}
+					thr->_last_ai=NULL;
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING:
@@ -1104,6 +1124,7 @@ _load_new_thread:;
 						thr->si++;
 						break;
 					}
+					thr->_last_ai=ai;
 					_io_dispatcher_queue(f,l);
 					goto _load_new_thread;
 				}
@@ -1126,16 +1147,14 @@ _load_new_thread:;
 						thr->si++;
 						break;
 					}
+					thr->_last_ai=ai;
 					_io_dispatcher_queue(f,0);
 					goto _load_new_thread;
 				}
 			default:
 				SLL_UNREACHABLE();
 		}
-		ai++;
-		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-			ai=ai->dt._p;
-		}
+		NEXT_INSTRUCTION;
 		thr->ii++;
 	}
 _cleanup:

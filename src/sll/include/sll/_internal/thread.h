@@ -53,6 +53,7 @@ typedef struct __THREAD_DATA{
 	sll_char_t tm;
 	thread_state_t st;
 	sll_flags_t flags;
+	const sll_assembly_instruction_t* _last_ai;
 } thread_data_t;
 
 

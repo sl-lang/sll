@@ -62,11 +62,12 @@
 
 - Arguments can now be skipped in `sll_parse_args` by passing `NULL` pointers
 - Fixed `sll_tls_get`
-- Reduced the number of calls to `sll_platform_allocate_page` and `sll_platform_free_page`
 - Fixed multiple memory corruption bugs
 - GC now cleans-up unused memory pages
+- Improved performance in time-critical functions
 - Modular exponentiation is now possible by passing a third argument to `math$int_pow`
 - Object references counter (`sll_ref_count_t`) is now 64-bit instead of 32-bit- Object type (`sll_object_type_t`) is now 32-bit instead of 24-bit
+- Reduced the number of calls to `sll_platform_allocate_page` and `sll_platform_free_page`
 - Renamed sandbox flags from `no-path-api` and `no-process-api` to `no-path` and `no-process`
 - Renamed string object creation code from length and pointer from `L` to `l`
 
