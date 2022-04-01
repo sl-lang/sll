@@ -17,7 +17,7 @@
 		SLL_ASSERT(__o->rc); \
 		__o->rc--; \
 		if (!__o->rc){ \
-			sll_release_object(__o); \
+			_gc_release_object(__o); \
 		} \
 	} while (0)
 
@@ -32,6 +32,10 @@ typedef struct __GC_PAGE_HEADER{
 
 
 void _gc_release_data(void);
+
+
+
+void _gc_release_object(sll_object_t* o);
 
 
 
