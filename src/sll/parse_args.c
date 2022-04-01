@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -35,7 +36,7 @@
 		if (var){ \
 			sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 			*var=obj->dt.field; \
-			sll_release_object(obj);\
+			GC_RELEASE(obj);\
 		} \
 		al++; \
 		all--; \
@@ -60,7 +61,7 @@
 		if (var){ \
 			sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 			*var=obj->dt.field; \
-			sll_release_object(obj);\
+			GC_RELEASE(obj);\
 			if (*var<mn){ \
 				*var=mn; \
 			} \
@@ -84,7 +85,7 @@
 		if (var){ \
 			sll_object_t* obj=sll_operator_cast(*al,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 			*var=&(obj->dt.field); \
-			sll_release_object(obj);\
+			GC_RELEASE(obj);\
 		} \
 		al++; \
 		all--; \

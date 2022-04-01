@@ -1,6 +1,7 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/atexit.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/vm.h>
 #include <sll/api.h>
 #include <sll/common.h>
@@ -30,7 +31,7 @@ static void _cleanup_data(void){
 static void _delete_atexit_function(atexit_function_t* af){
 	while (af->all){
 		af->all--;
-		sll_release_object(af->al[af->all]);
+		GC_RELEASE(af->al[af->all]);
 	}
 	sll_deallocate(af);
 }
@@ -45,7 +46,7 @@ void _atexit_execute(void){
 	while (_atexit_data_len){
 		_atexit_data_len--;
 		atexit_function_t* af=*(_atexit_data+_atexit_data_len);
-		sll_release_object(sll_execute_function(af->fn,af->al,af->all,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
+		GC_RELEASE(sll_execute_function(af->fn,af->al,af->all,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
 		_delete_atexit_function(af);
 	}
 	sll_deallocate(_atexit_data);

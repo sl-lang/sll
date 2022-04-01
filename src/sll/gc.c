@@ -46,9 +46,7 @@ void _gc_release_data(void){
 
 
 __SLL_EXTERNAL void sll_acquire_object(sll_object_t* o){
-	GC_LOCK(o);
 	o->rc++;
-	GC_UNLOCK(o);
 }
 
 
@@ -94,35 +92,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 	((gc_page_header_t*)PTR(ADDR(o)&0xfffffffffffff000ull))->cnt++;
 	o->rc=1;
 	*((sll_object_type_t*)(&(o->t)))=t;
-	_ATOMIC_STORE((sll_object_type_t*)(&(o->_f)),0);
+	o->_f=0;
 	_gc_alloc++;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL void sll_lock_object(sll_object_t* o){
-	GC_LOCK(o);
-}
-
-
-
 __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
-	GC_LOCK(o);
-	SLL_ASSERT(o->rc);
-	o->rc--;
-	if (o->rc){
-		GC_UNLOCK(o);
-		return;
-	}
+	SLL_ASSERT(!o->rc);
 	if (o->_f&GC_FLAG_HAS_WEAKREF){
 		o->rc++;
-		GC_UNLOCK(o);
 		_weakref_delete(o);
-		GC_LOCK(o);
 		o->rc--;
 		if (o->rc){
-			GC_UNLOCK(o);
 			return;
 		}
 	}
@@ -140,19 +123,16 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+o->t-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->fn.del){
 				o->rc++;
-				GC_UNLOCK(o);
-				sll_release_object(sll_execute_function(dt->fn.del,&o,1,0));
-				GC_LOCK(o);
+				GC_RELEASE(sll_execute_function(dt->fn.del,&o,1,0));
 				o->rc--;
 				if (o->rc){
-					GC_UNLOCK(o);
 					return;
 				}
 			}
 			sll_object_field_t* p=o->dt.p;
 			for (sll_arg_count_t i=0;i<dt->l;i++){
 				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
-					sll_release_object(p->o);
+					GC_RELEASE(p->o);
 				}
 				p++;
 			}
@@ -160,8 +140,7 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 		sll_deallocate(o->dt.p);
 	}
 	*((sll_object_type_t*)(&(o->t)))=SLL_OBJECT_TYPE_INT;
-	o->dt.i=0;
-	_ATOMIC_STORE((sll_object_type_t*)(&(o->_f)),0);
+	o->_f=0;
 	o->dt._ptr.n=_gc_next_object;
 	o->dt._ptr.p=NULL;
 	if (_gc_next_object){
@@ -211,10 +190,4 @@ __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 	else{
 		sll_platform_free_page(pg,SLL_PAGE_SIZE);
 	}
-}
-
-
-
-__SLL_EXTERNAL void sll_unlock_object(sll_object_t* o){
-	GC_UNLOCK(o);
 }

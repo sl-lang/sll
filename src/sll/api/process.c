@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/static_string.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
@@ -117,7 +118,7 @@ __API_FUNC(process_join){
 		sll_object_t* n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		sll_char_t* p=sll_allocate_stack(n->dt.s.l);
 		sll_copy_data(n->dt.s.v,n->dt.s.l,p);
-		sll_release_object(n);
+		GC_RELEASE(n);
 		*(dt+i)=p;
 	}
 	sll_process_join_args((const sll_char_t*const*)dt,out);
@@ -146,7 +147,7 @@ __API_FUNC(process_start){
 		sll_object_t* n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		*(args+i)=sll_allocate((n->dt.s.l+1)*sizeof(sll_char_t));
 		sll_copy_data(n->dt.s.v,n->dt.s.l+1,*(args+i));
-		sll_release_object(n);
+		GC_RELEASE(n);
 	}
 	*(args+a->l)=NULL;
 	sll_process_handle_t ph=sll_platform_start_process((const sll_char_t*const*)args,NULL);

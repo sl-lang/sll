@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -15,5 +16,5 @@ __API_FUNC(map_extend){
 
 
 __API_FUNC(map_remove){
-	sll_release_object(sll_map_remove(NULL,b,a));
+	GC_RELEASE(sll_map_remove(NULL,b,a));
 }

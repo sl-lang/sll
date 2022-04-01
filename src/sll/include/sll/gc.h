@@ -47,34 +47,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 
 /**
  * \flags func
- * \name sll_lock_object
- * \group gc
- * \desc Docs!
- * \arg sll_object_t* o
- */
-__SLL_EXTERNAL void sll_lock_object(sll_object_t* o);
-
-
-
-/**
- * \flags func
  * \name sll_release_object
  * \group gc
  * \desc Docs!
  * \arg sll_object_t* o
  */
 __SLL_EXTERNAL void sll_release_object(sll_object_t* o);
-
-
-
-/**
- * \flags func
- * \name sll_unlock_object
- * \group gc
- * \desc Docs!
- * \arg sll_object_t* o
- */
-__SLL_EXTERNAL void sll_unlock_object(sll_object_t* o);
 
 
 

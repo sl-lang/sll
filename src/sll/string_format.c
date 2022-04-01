@@ -1,3 +1,4 @@
+#include <sll/_internal/gc.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/string_format.h>
 #include <sll/allocator.h>
@@ -220,7 +221,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			sll_object_t* obj=sll_var_arg_get_object(va);
 			sll_string_t s;
 			sll_api_string_convert(&obj,1,&s);
-			sll_release_object(obj);
+			GC_RELEASE(obj);
 			_format_string(f,w,p,&s,o);
 		}
 		else if (*t=='d'||*t=='o'||*t=='u'||*t=='x'||*t=='X'){

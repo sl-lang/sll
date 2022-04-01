@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/json.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
@@ -29,9 +30,9 @@ static sll_object_t* _json_false=NULL;
 
 
 static void _release_data(void){
-	sll_release_object(_json_null);
-	sll_release_object(_json_true);
-	sll_release_object(_json_false);
+	GC_RELEASE(_json_null);
+	GC_RELEASE(_json_true);
+	GC_RELEASE(_json_false);
 	_json_null=NULL;
 	_json_true=NULL;
 	_json_false=NULL;
@@ -177,7 +178,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 					return o;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					sll_release_object(o);
+					GC_RELEASE(o);
 					return NULL;
 				}
 				c=**p;
@@ -197,7 +198,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			sll_object_t* v=_parse_json_as_object(p);
 			if (!v){
 				m->v[m->l-1]=SLL_ACQUIRE_STATIC_INT(0);
-				sll_release_object(o);
+				GC_RELEASE(o);
 				return NULL;
 			}
 			m->v[((m->l-1)<<1)+1]=v;
@@ -208,7 +209,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 					return o;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					sll_release_object(o);
+					GC_RELEASE(o);
 					return NULL;
 				}
 				c=**p;
@@ -230,7 +231,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		while (1){
 			sll_object_t* k=_parse_json_as_object(p);
 			if (!k){
-				sll_release_object(o);
+				GC_RELEASE(o);
 				return NULL;
 			}
 			a->l++;
@@ -243,7 +244,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 					return o;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					sll_release_object(o);
+					GC_RELEASE(o);
 					return NULL;
 				}
 				c=**p;
@@ -414,7 +415,7 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 				}
 				sll_object_t* k=sll_operator_cast(o->dt.m.v[i<<1],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 				_stringify_string(k->dt.s.v,k->dt.s.l,s);
-				sll_release_object(k);
+				GC_RELEASE(k);
 				sll_string_increase(s,1);
 				s->v[s->l]=':';
 				s->l++;

@@ -1,4 +1,5 @@
 #include <sll/_internal/atexit.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/sandbox.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/vm.h>
@@ -37,7 +38,7 @@ void _thread_deinit(void){
 			continue;
 		}
 		if (thr->st==THREAD_STATE_TERMINATED){
-			sll_release_object(thr->ret);
+			GC_RELEASE(thr->ret);
 		}
 		sll_platform_free_page(thr,THREAD_SIZE);
 	}
@@ -202,9 +203,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 	}
 	*(_thread_data+t)=THREAD_NEXT_UNUSED(_thread_next);
 	_thread_next=t;
-	sll_release_object(thr->ret);
+	GC_RELEASE(thr->ret);
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->tls_vc;i++){
-		sll_release_object(*(thr->tls+i));
+		GC_RELEASE(*(thr->tls+i));
 	}
 	if (_scheduler_allocator_cache_pool_len<THREAD_ALLOCATOR_CACHE_POOL_SIZE){
 		_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len]=thr;

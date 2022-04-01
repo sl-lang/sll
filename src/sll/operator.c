@@ -73,11 +73,6 @@
 
 #define TO_FLOAT_BITS(n) ((n)->dt.i)
 
-#define INIT2 GC_LOCK(a);GC_LOCK(b);sll_object_t* __op_ret=NULL
-
-#define RETURN(o) __op_ret=(o);goto __op_ret_lbl
-#define RETURN_CODE __op_ret_lbl:GC_UNLOCK(a);GC_UNLOCK(b);SLL_ASSERT(__op_ret);return __op_ret
-
 
 
 __SLL_EXTERNAL sll_float_t sll_float_compare_error=1e-6;
@@ -85,42 +80,40 @@ __SLL_EXTERNAL sll_float_t sll_float_compare_error=1e-6;
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b){
-	INIT2;
 	if (a->t==SLL_OBJECT_TYPE_STRING){
 		if (b->t==SLL_OBJECT_TYPE_INT){
 			if (!a->dt.s.l){
-				RETURN(SLL_ACQUIRE_STATIC_INT(0));
+				return SLL_ACQUIRE_STATIC_INT(0);
 			}
 			WRAP_ARRAY_INDEX(b->dt.i,a->dt.a.l,idx);
 			if (idx<0||idx>=a->dt.a.l){
-				RETURN(SLL_ACQUIRE_STATIC_INT(0));
+				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			RETURN(SLL_FROM_CHAR(a->dt.s.v[idx]));
+			return SLL_FROM_CHAR(a->dt.s.v[idx]);
 		}
 	}
 	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
 		if (b->t==SLL_OBJECT_TYPE_INT){
 			if (!a->dt.a.l){
-				RETURN(SLL_ACQUIRE_STATIC_INT(0));
+				return SLL_ACQUIRE_STATIC_INT(0);
 			}
 			WRAP_ARRAY_INDEX(b->dt.i,a->dt.a.l,idx);
 			if (idx<0||idx>=a->dt.a.l){
-				RETURN(SLL_ACQUIRE_STATIC_INT(0));
+				return SLL_ACQUIRE_STATIC_INT(0);
 			}
 			sll_object_t* o=a->dt.a.v[idx];
 			SLL_ACQUIRE(o);
-			RETURN(o);
+			return o;
 		}
 	}
 	else if (a->t==SLL_OBJECT_TYPE_MAP){
-		RETURN(sll_map_get(&(a->dt.m),b));
+		return sll_map_get(&(a->dt.m),b);
 	}
 	else if (sll_current_runtime_data&&b->t==SLL_OBJECT_TYPE_STRING&&a->t>SLL_MAX_OBJECT_TYPE&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-		RETURN(sll_object_get_field(sll_current_runtime_data->tt,a,&(b->dt.s)));
+		return sll_object_get_field(sll_current_runtime_data->tt,a,&(b->dt.s));
 	}
 	SLL_ACQUIRE(a);
-	RETURN(a);
-	RETURN_CODE;
+	return a;
 }
 
 
@@ -251,15 +244,8 @@ _add_to_string:
 			return SLL_FROM_CHAR(a->dt.c+b->dt.c);
 		case COMBINED_TYPE_SS:
 			{
-				sll_string_t sa=a->dt.s;
-				sll_string_t sb=b->dt.s;
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				if (!sa.l&&!sb.l){
-					sll_string_create(0,&(o->dt.s));
-				}
-				else{
-					sll_string_concat(&sa,&sb,&(o->dt.s));
-				}
+				sll_string_concat(&(a->dt.s),&(b->dt.s),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
@@ -431,7 +417,7 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 				idx+=a->dt.s.l;
 			}
 			sll_string_set_char(tmp->dt.c,(sll_string_length_t)idx,&(a->dt.s));
-			sll_release_object(tmp);
+			GC_RELEASE(tmp);
 		}
 	}
 	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
@@ -605,7 +591,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				sll_release_object(sll_map_remove(&(a->dt.m),sll_static_int[1],&(o->dt.m)));
+				GC_RELEASE(sll_map_remove(&(a->dt.m),sll_static_int[1],&(o->dt.m)));
 				return o;
 			}
 		default:
@@ -1865,7 +1851,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 	}
 	if (a->t==SLL_OBJECT_TYPE_MAP){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-		sll_release_object(sll_map_remove(&(a->dt.m),b,&(o->dt.m)));
+		GC_RELEASE(sll_map_remove(&(a->dt.m),b,&(o->dt.m)));
 		return o;
 	}
 	switch (COMBINED_ARGS){

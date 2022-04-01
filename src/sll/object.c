@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/static_string.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -63,7 +64,7 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 					n->dt.p=sll_allocate(n_dt->l*sizeof(sll_object_field_t));
 					_zero_struct(tt,n_dt,n->dt.p,0);
 					if (n_dt->fn.init){
-						sll_release_object(sll_execute_function(n_dt->fn.init,&n,1,0));
+						GC_RELEASE(sll_execute_function(n_dt->fn.init,&n,1,0));
 					}
 					p->o=n;
 					break;
@@ -110,7 +111,7 @@ static void _set_field(const sll_object_type_table_t* tt,sll_object_field_t* o,s
 				break;
 			}
 	}
-	sll_release_object(v);
+	GC_RELEASE(v);
 }
 
 
@@ -130,7 +131,7 @@ static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_o
 		d++;
 	}
 	if (dt->fn.init){
-		sll_release_object(sll_execute_function(dt->fn.init,&o,1,0));
+		GC_RELEASE(sll_execute_function(dt->fn.init,&o,1,0));
 	}
 }
 
@@ -166,7 +167,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 	while (i<l){
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
 		sll_integer_t vv=v->dt.i;
-		sll_release_object(v);
+		GC_RELEASE(v);
 		n->dt[i].c=0;
 		if (vv<0){
 			n->dt[i].c=1;
@@ -178,7 +179,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		p++;
 		sll_string_t str=v->dt.s;
-		sll_release_object(v);
+		GC_RELEASE(v);
 		if (str.l>4&&str.v[0]=='@'&&str.v[1]=='@'&&str.v[str.l-2]=='@'&&str.v[str.l-1]=='@'){
 			if (n->dt[i].c){
 				vv=~vv;
@@ -355,7 +356,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 		dst++;
 	}
 	if (dt->fn.copy){
-		sll_release_object(sll_execute_function(dt->fn.copy,&n,1,0));
+		GC_RELEASE(sll_execute_function(dt->fn.copy,&n,1,0));
 	}
 	return n;
 }
@@ -394,7 +395,7 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 		return;
 	}
 	if (t>SLL_OBJECT_TYPE_CHAR){
-		sll_release_object((o->dt.p+off)->o);
+		GC_RELEASE((o->dt.p+off)->o);
 	}
 	_set_field(tt,o->dt.p+off,t,v);
 }

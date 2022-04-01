@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/_size_types.h>
 #include <sll/allocator.h>
 #include <sll/array.h>
@@ -20,7 +21,7 @@
 	do{ \
 		sll_object_t* obj=sll_var_arg_get_object(va); \
 		sll_object_t* o=(obj->t==(type)?sll_operator_copy(obj,0):sll_operator_cast(obj,sll_static_int[(type)])); \
-		sll_release_object(obj); \
+		GC_RELEASE(obj); \
 		return o; \
 	} while (0)
 
@@ -81,7 +82,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			case 'N':
 				{
 					sll_object_t* o=sll_var_arg_get_object(va);
-					sll_release_object(o);
+					GC_RELEASE(o);
 					return o;
 				}
 		}

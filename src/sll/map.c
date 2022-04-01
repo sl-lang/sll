@@ -1,3 +1,4 @@
+#include <sll/_internal/gc.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/allocator.h>
 #include <sll/array.h>
@@ -15,7 +16,7 @@
 
 __SLL_EXTERNAL void sll_free_map(sll_map_t* m){
 	for (sll_map_length_t j=0;j<(m->l<<1);j++){
-		sll_release_object(*(m->v+j));
+		GC_RELEASE(*(m->v+j));
 	}
 	sll_deallocate(m->v);
 	m->v=NULL;
@@ -379,7 +380,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* 
 		sll_map_length_t i=0;
 		while (i<o->l){
 			if (sll_operator_strict_equal(o->v[i<<1],k)){
-				sll_release_object(o->v[i<<1]);
+				GC_RELEASE(o->v[i<<1]);
 				sll_object_t* v=o->v[(i<<1)+1];
 				i++;
 				while (i<o->l){
@@ -444,7 +445,7 @@ __SLL_EXTERNAL void sll_map_set(sll_map_t* m,sll_object_t* k,sll_object_t* v){
 	SLL_ACQUIRE(v);
 	for (sll_map_length_t i=0;i<m->l;i++){
 		if (sll_operator_strict_equal(m->v[i<<1],k)){
-			sll_release_object(m->v[(i<<1)+1]);
+			GC_RELEASE(m->v[(i<<1)+1]);
 			m->v[(i<<1)+1]=v;
 			return;
 		}
@@ -461,7 +462,7 @@ __SLL_EXTERNAL void sll_map_set(sll_map_t* m,sll_object_t* k,sll_object_t* v){
 __SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_object_t* v){
 	if (i<m->l){
 		SLL_ACQUIRE(v);
-		sll_release_object(m->v[i<<1]);
+		GC_RELEASE(m->v[i<<1]);
 		m->v[i<<1]=v;
 	}
 }
@@ -471,7 +472,7 @@ __SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_ob
 __SLL_EXTERNAL void sll_map_set_value(const sll_map_t* m,sll_map_length_t i,sll_object_t* v){
 	if (i<m->l){
 		SLL_ACQUIRE(v);
-		sll_release_object(m->v[(i<<1)+1]);
+		GC_RELEASE(m->v[(i<<1)+1]);
 		m->v[(i<<1)+1]=v;
 	}
 }

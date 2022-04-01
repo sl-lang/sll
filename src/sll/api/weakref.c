@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -20,7 +21,7 @@ static void _cleanup_data(void){
 	if (!_weakref_no_object_ret){
 		return;
 	}
-	sll_release_object(_weakref_no_object_ret);
+	GC_RELEASE(_weakref_no_object_ret);
 	_weakref_no_object_ret=NULL;
 }
 
@@ -36,7 +37,7 @@ static void _call_user_array(sll_weak_ref_t wr,sll_object_t* obj,void* arg){
 		dt,
 		obj
 	};
-	sll_release_object(sll_execute_function(_weakref_cb_func,al,2,0));
+	GC_RELEASE(sll_execute_function(_weakref_cb_func,al,2,0));
 }
 
 

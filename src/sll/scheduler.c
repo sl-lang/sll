@@ -2,6 +2,7 @@
 #include <sll/_internal/barrier.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/lock.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/semaphore.h>
@@ -46,7 +47,7 @@ static void _cpu_core_worker(void* dt){
 	while (_thread_active_count){
 		sll_thread_index_t n_tid=_scheduler_queue_pop(1);
 		if (n_tid!=SLL_UNKNOWN_THREAD_INDEX){
-			sll_release_object(sll_wait_thread(n_tid));
+			GC_RELEASE(sll_wait_thread(n_tid));
 		}
 	}
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -195,7 +196,7 @@ sll_return_code_t _scheduler_run(void){
 	sll_platform_free_page(b_ptr,SLL_ROUND_PAGE(_scheduler_load_balancer.len*(sz+sizeof(scheduler_cpu_data_t*))));
 	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->ret,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_return_code_t o=(sll_return_code_t)(rc_o->dt.i);
-	sll_release_object(rc_o);
+	GC_RELEASE(rc_o);
 	_barrier_deinit();
 	_lock_deinit();
 	_semaphore_deinit();

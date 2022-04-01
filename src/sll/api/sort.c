@@ -1,4 +1,5 @@
 #include <sll/_internal/api.h>
+#include <sll/_internal/gc.h>
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -77,7 +78,7 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 	}
 	_quicksort_extra(tmp,a,l-1,cmp);
 	for (sll_array_length_t i=0;i<l;i++){
-		sll_release_object(*(tmp+i));
+		GC_RELEASE(*(tmp+i));
 	}
 	sll_deallocate(tmp);
 }

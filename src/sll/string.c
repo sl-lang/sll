@@ -1,3 +1,4 @@
+#include <sll/_internal/gc.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/util.h>
 #include <sll/allocator.h>
@@ -725,7 +726,7 @@ __SLL_EXTERNAL void sll_string_from_data(sll_object_t** v,sll_string_length_t vl
 		SLL_ASSERT(n->t==SLL_OBJECT_TYPE_CHAR);
 		o->v[i]=n->dt.c;
 		o->c^=ROTATE_BITS(n->dt.c,(i&3)<<3);
-		sll_release_object(n);
+		GC_RELEASE(n);
 	}
 }
 
@@ -768,7 +769,7 @@ __SLL_EXTERNAL void sll_string_from_int(sll_integer_t v,sll_string_t* o){
 
 __SLL_EXTERNAL void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
 	if (!s){
-		sll_string_create(0,o);
+		SLL_INIT_STRING(o);
 	}
 	else{
 		sll_string_from_pointer_length(s,sll_string_length_unaligned(s),o);
@@ -779,7 +780,7 @@ __SLL_EXTERNAL void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o)
 
 __SLL_EXTERNAL void sll_string_from_pointer_length(const sll_char_t* s,sll_string_length_t l,sll_string_t* o){
 	if (!l){
-		sll_string_create(0,o);
+		SLL_INIT_STRING(o);
 		return;
 	}
 	o->l=l;
@@ -1106,7 +1107,7 @@ __SLL_EXTERNAL void sll_string_join(const sll_string_t* s,sll_object_t*const* a,
 		sll_string_increase(o,n->dt.s.l);
 		sll_copy_data(n->dt.s.v,n->dt.s.l,o->v+o->l);
 		o->l+=n->dt.s.l;
-		sll_release_object(n);
+		GC_RELEASE(n);
 	}
 	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(o);
@@ -1127,7 +1128,7 @@ __SLL_EXTERNAL void sll_string_join_char(sll_char_t c,sll_object_t*const* a,sll_
 		sll_string_increase(o,n->dt.s.l);
 		sll_copy_data(n->dt.s.v,n->dt.s.l,o->v+o->l);
 		o->l+=n->dt.s.l;
-		sll_release_object(n);
+		GC_RELEASE(n);
 	}
 	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(o);
@@ -1180,10 +1181,10 @@ __SLL_EXTERNAL void sll_string_op(const sll_string_t* a,const sll_string_t* b,sl
 	for (sll_string_length_t i=0;i<e;i++){
 		sll_object_t* v=f(sll_static_char[a->v[i]],sll_static_char[b->v[i]]);
 		sll_object_t* c=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
-		sll_release_object(v);
+		GC_RELEASE(v);
 		SLL_ASSERT(c->t==SLL_OBJECT_TYPE_CHAR);
 		o->v[i]=c->dt.c;
-		sll_release_object(c);
+		GC_RELEASE(c);
 	}
 	if (a->l==b->l){
 		return;

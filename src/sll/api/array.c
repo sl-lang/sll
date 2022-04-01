@@ -1,4 +1,5 @@
 #include <sll/_internal/api.h>
+#include <sll/_internal/gc.h>
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -48,7 +49,7 @@ __API_FUNC(array_join){
 	}
 	sll_array_join_arrays((const sll_array_t*const*)al,a->l,b,out);
 	for (sll_array_length_t i=0;i<a->l;i++){
-		sll_release_object(*(obj+i));
+		GC_RELEASE(*(obj+i));
 	}
 	sll_deallocate(obj);
 	sll_deallocate(al);

@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -11,7 +12,7 @@
 __SLL_EXTERNAL void sll_free_tls(sll_tls_object_t* tls){
 	while (tls->sz){
 		tls->sz--;
-		sll_release_object((tls->dt+tls->sz)->v);
+		GC_RELEASE((tls->dt+tls->sz)->v);
 	}
 	sll_deallocate(tls->dt);
 	tls->dt=NULL;

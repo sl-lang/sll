@@ -1,23 +1,7 @@
 #ifndef __SLL__INTERNAL_GC_H__
 #define __SLL__INTERNAL_GC_H__ 1
-#ifdef __SLL_BUILD_WINDOWS
-#include <windows.h>
-#endif
-#include <immintrin.h>
-#include <sll/_internal/scheduler.h>
-#include <sll/object.h>
-#include <sll/string.h>
+#include <sll/_internal/common.h>
 #include <sll/types.h>
-
-
-
-#ifdef __SLL_BUILD_WINDOWS
-#define _ATOMIC_STORE(ptr,val) InterlockedExchange((LONG volatile*)(ptr),(val))
-#define _ATOMIC_COMPARE_EXCHANGE(ptr,cmp,new) (InterlockedCompareExchange((LONG volatile*)(ptr),(new),*(cmp))==*(cmp))
-#else
-#define _ATOMIC_STORE(ptr,val) __atomic_store_n((ptr),(val),__ATOMIC_SEQ_CST)
-#define _ATOMIC_COMPARE_EXCHANGE(ptr,cmp,new) __atomic_compare_exchange_n((ptr),(cmp),(new),0,__ATOMIC_SEQ_CST,__ATOMIC_RELAXED)
-#endif
 
 
 
@@ -27,28 +11,14 @@
 
 #define GC_FLAG_HAS_WEAKREF 1
 
-#define GC_GET_FLAGS(o) ((o)->_f&0xffffff)
-
-#define GC_LOCK(o) \
+#define GC_RELEASE(o) \
 	do{ \
 		sll_object_t* __o=(o); \
-		sll_object_type_t __b=GC_GET_FLAGS(__o); \
-		sll_object_type_t __v=__b|((_scheduler_internal_thread_index+1)<<24); \
-		sll_object_type_t __tmp=__v; \
-		if (!_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->_f)),&__tmp,__v)){ \
-			while (1){ \
-				__tmp=__b; \
-				if (_ATOMIC_COMPARE_EXCHANGE((sll_object_type_t*)(&(__o->_f)),&__tmp,__v)){ \
-					break; \
-				} \
-				_mm_pause(); \
-			} \
+		SLL_ASSERT(__o->rc); \
+		__o->rc--; \
+		if (!__o->rc){ \
+			sll_release_object(__o); \
 		} \
-	} while (0)
-#define GC_UNLOCK(o) \
-	do{ \
-		sll_object_t* __o=(o); \
-		_ATOMIC_STORE((sll_object_type_t*)(&(__o->_f)),GC_GET_FLAGS(__o)); \
 	} while (0)
 
 

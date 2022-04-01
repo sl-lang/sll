@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
 #include <sll/api/string.h>
@@ -184,11 +185,11 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 				if (dt->fn.str){
 					sll_object_t* v=sll_execute_function(dt->fn.str,&a,1,0);
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
-					sll_release_object(v);
+					GC_RELEASE(v);
 					sll_string_increase(o,str->dt.s.l);
 					sll_copy_data(str->dt.s.v,str->dt.s.l,o->v+o->l);
 					o->l+=str->dt.s.l;
-					sll_release_object(str);
+					GC_RELEASE(str);
 					return;
 				}
 				sll_string_increase(o,3);
@@ -231,7 +232,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 							break;
 					}
 					_object_to_string(tmp,o);
-					sll_release_object(tmp);
+					GC_RELEASE(tmp);
 					p++;
 				}
 				sll_string_increase(o,1);
