@@ -3,6 +3,7 @@
 #include <sll/_internal/parse.h>
 #include <sll/_internal/stack.h>
 #include <sll/_internal/static_string.h>
+#include <sll/_internal/string.h>
 #include <sll/allocator.h>
 #include <sll/api/math.h>
 #include <sll/common.h>
@@ -70,7 +71,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 		if (!(fl&GET_VAR_INDEX_FLAG_FUNC)){
 			for (sll_identifier_list_length_t i=0;i<k->l;i++){
 				sll_identifier_t* si=k->dt+i;
-				if (si->sc==SLL_MAX_SCOPE||l_sc->l_sc<si->sc||!sll_string_equal(sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(si),str)){
+				if (si->sc==SLL_MAX_SCOPE||l_sc->l_sc<si->sc||!STRING_EQUAL(sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(si),str)){
 					continue;
 				}
 				if (si->sc==l_sc->l_sc){
@@ -108,7 +109,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 	if (!(fl&GET_VAR_INDEX_FLAG_FUNC)){
 		for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
 			sll_identifier_t* k=sf->idt.il+i;
-			if (k->sc==SLL_MAX_SCOPE||l_sc->l_sc<k->sc||!sll_string_equal(sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(k),str)){
+			if (k->sc==SLL_MAX_SCOPE||l_sc->l_sc<k->sc||!STRING_EQUAL(sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(k),str)){
 				continue;
 			}
 			if (k->sc==l_sc->l_sc){
@@ -616,22 +617,22 @@ _parse_identifier:
 					arg->t=SLL_NODE_TYPE_FIELD;
 					arg->dt.s=sll_add_string(&(sf->st),&str,1);
 				}
-				else if (sll_string_equal(&str,&_parse_file_str)){
+				else if (STRING_EQUAL(&str,&_parse_file_str)){
 					sll_free_string(&str);
 					arg->t=SLL_NODE_TYPE_STRING;
 					arg->dt.s=0;
 				}
-				else if (sll_string_equal(&str,&_parse_line_str)){
+				else if (STRING_EQUAL(&str,&_parse_line_str)){
 					sll_free_string(&str);
 					arg->t=SLL_NODE_TYPE_INT;
 					arg->dt.i=*(e_c_dt->ln);
 				}
-				else if (sll_string_equal(&str,&_parse_nil_str)||sll_string_equal(&str,&_parse_false_str)){
+				else if (STRING_EQUAL(&str,&_parse_nil_str)||STRING_EQUAL(&str,&_parse_false_str)){
 					sll_free_string(&str);
 					arg->t=SLL_NODE_TYPE_INT;
 					arg->dt.i=0;
 				}
-				else if (sll_string_equal(&str,&_parse_true_str)){
+				else if (STRING_EQUAL(&str,&_parse_true_str)){
 					sll_free_string(&str);
 					arg->t=SLL_NODE_TYPE_INT;
 					arg->dt.i=1;

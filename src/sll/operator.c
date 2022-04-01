@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/string.h>
 #include <sll/_internal/util.h>
 #include <sll/_size_types.h>
 #include <sll/api/math.h>
@@ -814,7 +815,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_SC:
 			return (a->dt.s.l==1&&a->dt.s.v[0]==b->dt.c);
 		case COMBINED_TYPE_SS:
-			return sll_string_equal(&(a->dt.s),&(b->dt.s));
+			return STRING_EQUAL(&(a->dt.s),&(b->dt.s));
 		case COMBINED_TYPE_SA:
 			return sll_string_equal_array(&(a->dt.s),&(b->dt.a));
 		case COMBINED_TYPE_SM:
@@ -1795,7 +1796,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_objec
 		case SLL_OBJECT_TYPE_CHAR:
 			return a->dt.c==b->dt.c;
 		case SLL_OBJECT_TYPE_STRING:
-			return sll_string_equal(&(a->dt.s),&(b->dt.s));
+			return STRING_EQUAL(&(a->dt.s),&(b->dt.s));
 		case SLL_OBJECT_TYPE_ARRAY:
 			return sll_array_equal(&(a->dt.a),&(b->dt.a));
 		case SLL_OBJECT_TYPE_MAP:

@@ -1,5 +1,6 @@
 #include <sll/_internal/gc.h>
 #include <sll/_internal/intrinsics.h>
+#include <sll/_internal/string.h>
 #include <sll/_internal/util.h>
 #include <sll/allocator.h>
 #include <sll/array.h>
@@ -17,8 +18,6 @@
 
 
 #define INIT_PADDING(v,l) (*((wide_data_t*)((v)+((l)&0xfffffffffffffff8ull)))=0)
-
-#define STRING_DATA_PTR(x) ASSUME_ALIGNED(x,4,0)
 
 #define EXECUTE_CASE_SWITCH(x1,x2) \
 	if (!s->l){ \
@@ -631,22 +630,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_ends(const sll_string_t*
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal(const sll_string_t* a,const sll_string_t* b){
-	if (a->l!=b->l||a->c!=b->c){
-		return 0;
-	}
-	if (!a->l){
-		return 1;
-	}
-	const wide_data_t* ap=(const wide_data_t*)(a->v);
-	const wide_data_t* bp=(const wide_data_t*)(b->v);
-	STRING_DATA_PTR(ap);
-	STRING_DATA_PTR(bp);
-	for (sll_string_length_t i=0;i<((a->l+7)>>3);i++){
-		if (*(ap+i)!=*(bp+i)){
-			return 0;
-		}
-	}
-	return 1;
+	return STRING_EQUAL(a,b);
 }
 
 

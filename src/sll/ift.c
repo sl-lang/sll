@@ -1,6 +1,7 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/platform.h>
+#include <sll/_internal/string.h>
 #include <sll/common.h>
 #include <sll/ift.h>
 #include <sll/memory.h>
@@ -51,7 +52,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_funct
 	sll_string_t tmp;
 	sll_string_from_pointer(nm,&tmp);
 	for (sll_function_index_t i=0;i<i_ft->l;i++){
-		if (sll_string_equal(&((i_ft->dt+i)->nm),&tmp)){
+		if (STRING_EQUAL(&((i_ft->dt+i)->nm),&tmp)){
 			sll_free_string(&tmp);
 			return i;
 		}

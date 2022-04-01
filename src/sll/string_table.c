@@ -1,3 +1,4 @@
+#include <sll/_internal/string.h>
 #include <sll/common.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -8,7 +9,7 @@
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s,sll_bool_t d){
 	for (sll_string_index_t i=0;i<st->l;i++){
-		if (sll_string_equal(st->dt+i,s)){
+		if (STRING_EQUAL(st->dt+i,s)){
 			if (d){
 				sll_free_string(s);
 			}
@@ -27,7 +28,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_strin
 	sll_string_t n;
 	sll_string_from_pointer_length(dt,l,&n);
 	for (sll_string_index_t i=0;i<st->l;i++){
-		if (sll_string_equal(st->dt+i,&n)){
+		if (STRING_EQUAL(st->dt+i,&n)){
 			sll_free_string(&n);
 			return i;
 		}

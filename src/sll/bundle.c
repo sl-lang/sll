@@ -1,6 +1,7 @@
 #include <sll/_internal/bundle.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/stack.h>
+#include <sll/_internal/string.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/memory.h>
@@ -143,7 +144,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t
 	const sll_bundle_source_file_t* bsf=NULL;
 	for (sll_source_file_index_t i=0;i<b->l;i++){
 		bsf=*(b->dt+i);
-		if (sll_string_equal(&(bsf->nm),&f_nm_str)){
+		if (STRING_EQUAL(&(bsf->nm),&f_nm_str)){
 			break;
 		}
 		bsf=NULL;

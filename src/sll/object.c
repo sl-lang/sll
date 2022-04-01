@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/static_string.h>
+#include <sll/_internal/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/map.h>
@@ -139,7 +140,7 @@ static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_o
 
 static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_string_t* f){
 	for (sll_arg_count_t i=0;i<dt->l;i++){
-		if (sll_string_equal(f,&(dt->dt[i].nm))){
+		if (STRING_EQUAL(f,&(dt->dt[i].nm))){
 			return i;
 		}
 	}
@@ -184,22 +185,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 			if (n->dt[i].c){
 				vv=~vv;
 			}
-			if (sll_string_equal(&str,&_object_copy_str)){
+			if (STRING_EQUAL(&str,&_object_copy_str)){
 				n->fn.copy=vv;
 				l--;
 				continue;
 			}
-			else if (sll_string_equal(&str,&_object_delete_str)){
+			else if (STRING_EQUAL(&str,&_object_delete_str)){
 				n->fn.del=vv;
 				l--;
 				continue;
 			}
-			else if (sll_string_equal(&str,&_object_init_str)){
+			else if (STRING_EQUAL(&str,&_object_init_str)){
 				n->fn.init=vv;
 				l--;
 				continue;
 			}
-			else if (sll_string_equal(&str,&_object_string_str)){
+			else if (STRING_EQUAL(&str,&_object_string_str)){
 				n->fn.str=vv;
 				l--;
 				continue;

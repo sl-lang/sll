@@ -99,9 +99,9 @@ void _gc_release_object(sll_object_t* o){
 	if (pg->cnt){
 		return;
 	}
-	while ((ADDR(_gc_next_object)&0xfffffffffffff000ull)==ADDR(pg)){
+	do{
 		_gc_next_object=_gc_next_object->dt._ptr.n;
-	}
+	} while ((ADDR(_gc_next_object)&0xfffffffffffff000ull)==ADDR(pg));
 	if (pg->p){
 		pg->p->n=pg->n;
 		if (_gc_page_ptr==pg){

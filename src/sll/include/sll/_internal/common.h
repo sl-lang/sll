@@ -1,24 +1,18 @@
 #ifndef __SLL__INTERNAL_COMMON_H__
 #define __SLL__INTERNAL_COMMON_H__ 1
+#include <sll/_internal/attributes.h>
+#include <sll/_internal/intrinsics.h>
 #include <sll/_size_types.h>
 #include <sll/string.h>
 
 
 
+#ifndef DEBUG_BUILD
 #ifdef __SLL_BUILD_WINDOWS
-#ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __assume(0)
-#endif
-#define __SLL_FORCE_INLINE __inline __forceinline
-#define __SLL_NO_RETURN __declspec(noreturn)
-#define __SLL_TLS __declspec(thread)
 #else
-#ifndef DEBUG_BUILD
 #define SLL_UNREACHABLE() __builtin_unreachable()
 #endif
-#define __SLL_FORCE_INLINE inline __attribute__((always_inline))
-#define __SLL_NO_RETURN __attribute__((noreturn))
-#define __SLL_TLS __thread
 #endif
 
 #define _FORCE_EXIT(err) _force_exit(SLL_CHAR("File \""__FILE__"\", Line "_SLL_STRINGIFY(__LINE__)" ("),SLL_CHAR(__func__),SLL_CHAR("): "err"\n"));

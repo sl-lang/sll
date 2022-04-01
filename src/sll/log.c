@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/log.h>
 #include <sll/_internal/print.h>
+#include <sll/_internal/string.h>
 #include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -30,7 +31,7 @@ static file_log_data_t* _get_file_index(const sll_char_t* fp){
 	sll_array_length_t j=0;
 	for (;j<_log_f_dtl;j++){
 		file_log_data_t* k=*(_log_f_dt+j);
-		if (sll_string_equal(&s,&(k->nm))){
+		if (STRING_EQUAL(&s,&(k->nm))){
 			sll_free_string(&s);
 			return k;
 		}
@@ -54,7 +55,7 @@ static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char
 	sll_array_length_t i=0;
 	for (;i<f_dt->dtl;i++){
 		function_log_data_t* k=*(f_dt->dt+i);
-		if (sll_string_equal(&s,&(k->nm))){
+		if (STRING_EQUAL(&s,&(k->nm))){
 			sll_free_string(&s);
 			return k;
 		}

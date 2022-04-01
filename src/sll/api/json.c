@@ -2,6 +2,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/json.h>
+#include <sll/_internal/string.h>
 #include <sll/allocator.h>
 #include <sll/api.h>
 #include <sll/api/json.h>
@@ -486,7 +487,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_jso
 	SLL_ASSERT(json->t==SLL_JSON_OBJECT_TYPE_MAP);
 	for (sll_json_map_length_t i=0;i<json->dt.m.l;i++){
 		sll_json_map_keypair_t* e=json->dt.m.dt+i;
-		if (sll_string_equal(&(e->k),k)){
+		if (STRING_EQUAL(&(e->k),k)){
 			return &(e->v);
 		}
 	}

@@ -3,6 +3,7 @@
 #include <sll/_internal/library.h>
 #include <sll/_internal/print.h>
 #include <sll/_internal/static_string.h>
+#include <sll/_internal/string.h>
 #include <sll/api.h>
 #include <sll/api/hash.h>
 #include <sll/api/path.h>
@@ -191,7 +192,7 @@ __API_FUNC(sys_load_library){
 		return 0;
 	}
 	for (sll_array_length_t i=0;i<_sys_lhl;i++){
-		if (sll_string_equal(&((*(_sys_lh+i))->nm),&fp)){
+		if (STRING_EQUAL(&((*(_sys_lh+i))->nm),&fp)){
 			sll_free_string(&fp);
 			return 1;
 		}
