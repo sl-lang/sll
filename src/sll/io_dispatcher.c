@@ -122,7 +122,6 @@ void _io_dispatcher_queue(sll_file_t* f,sll_string_length_t sz){
 	(_io_dispatcher_event+i)->sz=sz;
 	INIT_RAW_EVENT(_io_dispatcher_raw_event+i+1,f->dt.fl.fd);
 	_platform_poll_start(_io_dispatcher_raw_event);
-	_scheduler_current_thread->ii++;
 	_scheduler_current_thread->st=THREAD_STATE_WAIT_IO;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 }

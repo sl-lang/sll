@@ -1017,22 +1017,23 @@ _return:;
 					sll_integer_t w_tid=n_tid_o->dt.i;
 					GC_RELEASE(n_tid_o);
 					thread_data_t* c_thr=thr;
-					if (_thread_wait(w_tid)){
-						c_thr->ii++;
-						NEXT_INSTRUCTION;
-						c_thr->_last_ai=ai;
-						sll_thread_index_t n_tid=_scheduler_queue_pop(1);
-						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
-							if (tid_dt->ret){
-								goto _cleanup;
-							}
-							SLL_UNIMPLEMENTED();
-						}
-						_scheduler_set_thread(n_tid);
-						RELOAD_THREAD_DATA;
-						continue;
+					if (!_thread_wait(w_tid)){
+						break;
 					}
-					break;
+					c_thr->ii++;
+					NEXT_INSTRUCTION;
+					c_thr->_last_ai=ai;
+_load_new_thread:;
+					sll_thread_index_t n_tid=_scheduler_queue_pop(1);
+					if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
+						if (tid_dt->ret){
+							goto _cleanup;
+						}
+						SLL_UNIMPLEMENTED();
+					}
+					_scheduler_set_thread(n_tid);
+					RELOAD_THREAD_DATA;
+					continue;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID:
 				*(thr->stack+thr->si)=sll_int_to_object(_scheduler_current_thread_index);
@@ -1070,24 +1071,13 @@ _return:;
 							wait=_barrier_wait(lck,v,SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ);
 							break;
 					}
-					if (wait){
-						c_thr->ii++;
-						NEXT_INSTRUCTION;
-						c_thr->_last_ai=ai;
-_load_new_thread:;
-						sll_thread_index_t n_tid=_scheduler_queue_pop(1);
-						if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
-							if (tid_dt->ret){
-								goto _cleanup;
-							}
-							SLL_UNIMPLEMENTED();
-						}
-						_scheduler_set_thread(n_tid);
-						RELOAD_THREAD_DATA;
-						continue;
+					if (!wait){
+						break;
 					}
-					thr->_last_ai=NULL;
-					break;
+					c_thr->ii++;
+					NEXT_INSTRUCTION;
+					c_thr->_last_ai=ai;
+					goto _load_new_thread;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING:
 				{
@@ -1107,26 +1097,28 @@ _load_new_thread:;
 						break;
 					}
 					sll_string_length_t l=(sz>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)sz);
-					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)){
-						sll_string_t bf;
-						sll_string_create(l,&bf);
-						sll_error_t err;
-						sll_size_t r_sz=sll_file_read(f,bf.v,l,&err);
-						if (!r_sz&&err!=SLL_NO_ERROR){
-							sll_free_string(&bf);
-							*(thr->stack+thr->si)=sll_int_to_object(err);
-						}
-						else{
-							sll_string_decrease(&bf,(sll_string_length_t)r_sz);
-							sll_string_calculate_checksum(&bf);
-							*(thr->stack+thr->si)=sll_string_to_object_nocopy(&bf);
-						}
-						thr->si++;
-						break;
+					if ((f->f&SLL_FILE_FLAG_ASYNC)&&!sll_file_data_available(f)){
+						thr->ii++;
+						NEXT_INSTRUCTION;
+						thr->_last_ai=ai;
+						_io_dispatcher_queue(f,l);
+						goto _load_new_thread;
 					}
-					thr->_last_ai=ai;
-					_io_dispatcher_queue(f,l);
-					goto _load_new_thread;
+					sll_string_t bf;
+					sll_string_create(l,&bf);
+					sll_error_t err;
+					sll_size_t r_sz=sll_file_read(f,bf.v,l,&err);
+					if (!r_sz&&err!=SLL_NO_ERROR){
+						sll_free_string(&bf);
+						*(thr->stack+thr->si)=sll_int_to_object(err);
+					}
+					else{
+						sll_string_decrease(&bf,(sll_string_length_t)r_sz);
+						sll_string_calculate_checksum(&bf);
+						*(thr->stack+thr->si)=sll_string_to_object_nocopy(&bf);
+					}
+					thr->si++;
+					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR:
 				{
@@ -1140,16 +1132,18 @@ _load_new_thread:;
 						thr->si++;
 						break;
 					}
-					if (!(f->f&SLL_FILE_FLAG_ASYNC)||sll_file_data_available(f)){
-						sll_error_t err;
-						sll_read_char_t chr=sll_file_read_char(f,&err);
-						*(thr->stack+thr->si)=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
-						thr->si++;
-						break;
+					if ((f->f&SLL_FILE_FLAG_ASYNC)&&!sll_file_data_available(f)){
+						thr->ii++;
+						NEXT_INSTRUCTION;
+						thr->_last_ai=ai;
+						_io_dispatcher_queue(f,0);
+						goto _load_new_thread;
 					}
-					thr->_last_ai=ai;
-					_io_dispatcher_queue(f,0);
-					goto _load_new_thread;
+					sll_error_t err;
+					sll_read_char_t chr=sll_file_read_char(f,&err);
+					*(thr->stack+thr->si)=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
+					thr->si++;
+					break;
 				}
 			default:
 				SLL_UNREACHABLE();
