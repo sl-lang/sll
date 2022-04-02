@@ -1,3 +1,4 @@
+#include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/magic_number.h>
 #include <sll/_internal/stack.h>

@@ -9,7 +9,7 @@ update_list=set()
 
 
 
-def _check(fp):
+def _check(fp,inc):
 	nm=util.unique_file_path(fp)
 	if (nm in update_list or (fp[-2:]==".c" and not os.path.exists(util.output_file_path(fp)))):
 		return 1
@@ -19,6 +19,13 @@ def _check(fp):
 	if (old!=hash_str):
 		update_list.add(nm)
 		return 1
+	with open(fp,"rb") as rf:
+		for e in header.INCLUDE_REGEX.findall(rf.read()):
+			e=str(e[1:-1],"utf-8")
+			for k in inc:
+				f_fp=os.path.join(k,e)
+				if (os.path.exists(f_fp) and _check(f_fp,inc)):
+					return 1
 	return 0
 
 
@@ -55,19 +62,7 @@ def load_hash_list(fp):
 
 
 def update(fp,*inc):
-	o=_check(fp)
-	if (not o):
-		with open(fp,"rb") as rf:
-			for e in header.INCLUDE_REGEX.findall(rf.read()):
-				e=str(e[1:-1],"utf-8")
-				for k in inc:
-					nm=os.path.join(k,e)
-					if (os.path.exists(nm) and _check(nm)):
-						o=1
-						break
-				if (o):
-					break
-	if (o):
+	if (_check(fp,inc)):
 		_flush_data()
 		return True
 	return False

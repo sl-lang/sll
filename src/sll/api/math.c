@@ -1,4 +1,5 @@
 #include <sll/_internal/api.h>
+#include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/util.h>
 #include <sll/api.h>

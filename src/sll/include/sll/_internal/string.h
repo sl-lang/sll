@@ -1,6 +1,6 @@
 #ifndef __SLL__INTERNAL_STRING_H__
 #define __SLL__INTERNAL_STRING_H__ 1
-#include <sll/_internal/attributes.h>
+#include <sll/_internal/attribute.h>
 #include <sll/_internal/common.h>
 #include <sll/allocator.h>
 #include <sll/memory.h>

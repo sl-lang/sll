@@ -1,5 +1,5 @@
-#ifndef __SLL__INTERNAL_ATTRIBUTES_H__
-#define __SLL__INTERNAL_ATTRIBUTES_H__ 1
+#ifndef __SLL__INTERNAL_ATTRIBUTE_H__
+#define __SLL__INTERNAL_ATTRIBUTE_H__ 1
 
 
 

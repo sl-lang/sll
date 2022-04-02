@@ -1,6 +1,6 @@
 #ifndef __SLL__INTERNAL_COMMON_H__
 #define __SLL__INTERNAL_COMMON_H__ 1
-#include <sll/_internal/attributes.h>
+#include <sll/_internal/attribute.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_size_types.h>
 #include <sll/string.h>

@@ -2,6 +2,7 @@
 #include <sll/_internal/intrinsics.h>
 #include <sll/api.h>
 #include <sll/common.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 

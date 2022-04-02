@@ -1,9 +1,11 @@
+#include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/identifier.h>
 #include <sll/memory.h>
 #include <sll/node.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 

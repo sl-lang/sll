@@ -3,8 +3,7 @@
 #ifdef __SLL_BUILD_WINDOWS
 #include <intrin.h>
 #endif
-#include <sll/_internal/attributes.h>
-#include <sll/_internal/common.h>
+#include <sll/_internal/attribute.h>
 #include <sll/_size_types.h>
 
 

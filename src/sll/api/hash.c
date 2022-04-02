@@ -1,10 +1,12 @@
 #include <sll/_internal/api.h>
+#include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_size_types.h>
 #include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/new_object.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 
