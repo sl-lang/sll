@@ -16,6 +16,7 @@
 
 (= statistics_module_type (&:
 	(~ type_type) linear_regression_type
+	(~ func_type) correlation
 	(~ func_type) geometric_mean
 	(~ func_type) harmonic_mean
 	(~ func_type) linear_regression
@@ -39,6 +40,39 @@
 		(: data (- len (! odd)))
 		(: data len)
 	])
+))
+
+(= correlation (,,, x y
+	(= x (:: x array_type))
+	(= y (:: y array_type))
+	(= len ($ x))
+	(? (!== len ($ y)) (@@ (<- error$create ERROR_LENGTH_MISMATCH len ($ y))))
+	(? (< len 2) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA len 2)))
+	(= x_mean (<- mean x))
+	(= y_mean (<- mean y))
+	(= sum_xx 0)
+	(= sum_xy 0)
+	(= sum_yy 0)
+	(>- (= i 0) (< i len)
+		(= a (- (: x i) x_mean))
+		(= b (- (: y i) y_mean))
+		(= sum_xx (+
+			sum_xx
+			(* a a)
+		))
+		(= sum_xy (+
+			sum_xy
+			(* a b)
+		))
+		(= sum_yy (+
+			sum_yy
+			(* b b)
+		))
+		(++ i)
+	)
+	(= den (<- math$sqrt (* sum_xx sum_yy)))
+	(? (! den) (@@ nil))
+	(@@ (/ sum_xy den))
 ))
 
 (= geometric_mean (,,, data
@@ -158,6 +192,7 @@
 
 (= statistics (. statistics_module_type
 	linear_regression_type
+	correlation
 	geometric_mean
 	harmonic_mean
 	linear_regression

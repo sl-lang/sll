@@ -2,7 +2,9 @@
 
 ## [0.7.12] - Ongoing
 
-*Ongoing*
+### Added
+
+- Implemented `statistics$correlation` ([#260])
 
 ## [0.7.11] - 2022-04-02
 
