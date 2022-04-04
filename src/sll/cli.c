@@ -300,15 +300,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			}
 			e=argv[i];
 			sll_library_handle_t* lh=sll_platform_load_library(e);
-			sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_CHAR("__sll_audit"));
-			if (!cb){
-				sll_platform_unload_library(lh);
-			}
-			else{
-				lll++;
-				ll=sll_reallocate(ll,lll*sizeof(sll_library_handle_t));
-				*(ll+lll-1)=lh;
-				sll_audit_register_callback(cb);
+			if (lh!=SLL_UNKNOWN_LIBRARY_HANDLE){
+				sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_CHAR("__sll_audit"));
+				if (!cb){
+					sll_platform_unload_library(lh);
+				}
+				else{
+					lll++;
+					ll=sll_reallocate(ll,lll*sizeof(sll_library_handle_t));
+					*(ll+lll-1)=lh;
+					sll_audit_register_callback(cb);
+				}
 			}
 		}
 		else if (nm=='n'||sll_string_compare_pointer(e,SLL_CHAR("--names-only"))==SLL_COMPARE_RESULT_EQUAL){
