@@ -5,6 +5,13 @@
 ### Added
 
 - Implemented `statistics$correlation` ([#260])
+- Object creation code to build an array of string pointers: `x`
+
+#### New Built-in Audit Events
+
+| Name | Format | Arguments |
+|--|--|--|
+| `sll.cli.start` | `a` | `arguments` |
 
 ## [0.7.11] - 2022-04-02
 

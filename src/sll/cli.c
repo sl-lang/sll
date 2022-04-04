@@ -6,6 +6,7 @@
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/assembly.h>
+#include <sll/audit.h>
 #include <sll/bundle.h>
 #include <sll/data.h>
 #include <sll/error.h>
@@ -175,6 +176,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		return 0;
 	}
 	sll_init();
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("x"),argv,argc);
 	sll_return_code_t ec=0;
 	fl=0;
 	i_b=NULL;

@@ -77,6 +77,20 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					}
 					return o;
 				}
+			case 'x':
+				{
+					const sll_char_t*const* ptr=(const sll_char_t*const*)sll_var_arg_get(va);
+					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
+					if (!ptr||!len){
+						return sll_array_to_object(NULL);
+					}
+					sll_object_t* o=sll_array_length_to_object(len);
+					while (len){
+						len--;
+						o->dt.a.v[len]=sll_string_pointer_to_object(*(ptr+len),SLL_MAX_STRING_LENGTH);
+					}
+					return o;
+				}
 			case 'm':
 				return sll_map_to_object(sll_var_arg_get(va));
 			case 'N':
