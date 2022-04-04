@@ -11,12 +11,13 @@ Options:
   -f <file>, --file <file> -> Treat <file> as input file (Useful for files starting with a dash ('-'))
   -h, --help -> Print this message
   -I <directory>, --include <directory> -> Add <directory> to file include path
-  -n, --names-only -> Do not store full file paths in the bundle
+  -L <audit_library>, --audit-library <audit_library> -> Load the audit library <audit_library>
   -N <name>, --bundle-name <name> -> Name of the bundle. All backslashes are replaced by forward slashes. A name consisting of one slash ('/') will be treated as an empty name.
-  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.sla | .slc | .sll]. If no <output_file> is supplied, then each <file> output is written to <file>[.sla | .slc | .sll]
+  -n, --names-only -> Do not store full file paths in the bundle
   -O <bundle_output_file>, --bundle-output <bundle_output_file> -> Save the bundle to <bundle_output_file>
-  -p, --print-objects -> Print objects
+  -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.sla | .slc | .sll]. If no <output_file> is supplied, then each <file> output is written to <file>[.sla | .slc | .sll]
   -P, --print-assembly -> Print assembly
+  -p, --print-objects -> Print objects
   -R, --no-run -> Disable program execution mode
   -s <code>, --source <code> -> Treat <code> as an input file
   -S <flag>, --sandbox <flag> -> enable the sandbox <flag> (see Sandbox Flags)

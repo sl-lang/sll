@@ -4,6 +4,7 @@
 
 ### Added
 
+- CLI option to load an audit library: `-L` or `--audit-library`
 - Implemented `statistics$correlation` ([#260])
 - Object creation code to build an array of string pointers: `x`
 
