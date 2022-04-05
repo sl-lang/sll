@@ -2,7 +2,7 @@
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/common.h>
-#include <sll/env.h>
+#include <sll/environment.h>
 #include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/platform/lock.h>
@@ -43,13 +43,25 @@ static void _cleanup_env(void){
 
 
 
-static void _expand_all(sll_string_t* o,const sll_string_t* key){
-	if (!sll_get_environment_variable(key,o)){
-		SLL_INIT_STRING(o);
-		return;
+void _init_environment(void){
+	for (sll_array_length_t i=0;i<sll_environment->l;i++){
+		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->dt+i));
+		sll_string_lower_case(NULL,(sll_string_t*)(&(kv->k)));
+	}
+	sll_string_t tmp;
+	sll_string_from_pointer(SLL_CHAR("path"),&tmp);
+	sll_search_path_from_environment(&tmp,&_env_path);
+	sll_free_string(&tmp);
+}
+
+
+
+__SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* k,sll_string_t* o){
+	if (!sll_get_environment_variable(k,o)){
+		return 0;
 	}
 	if (!o->l){
-		return;
+		return 1;
 	}
 	sll_string_length_t i=0;
 	while (1){
@@ -63,30 +75,12 @@ static void _expand_all(sll_string_t* o,const sll_string_t* key){
 		}
 		SLL_UNIMPLEMENTED();
 	}
+	return 1;
 }
 
 
 
-static void _rebuild_global_search_path(void){
-	sll_string_t tmp;
-	_expand_all(&tmp,&_env_path_var_name);
-	sll_search_path_create(&tmp,&_env_path);
-	sll_free_string(&tmp);
-}
-
-
-
-void _init_env(void){
-	for (sll_array_length_t i=0;i<sll_environment->l;i++){
-		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->dt+i));
-		sll_string_lower_case(NULL,(sll_string_t*)(&(kv->k)));
-	}
-	_rebuild_global_search_path();
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll_string_t* o){
+__SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll_string_t* o){
 	sll_string_t k_low;
 	sll_string_lower_case(k,&k_low);
 	LOCK_ENV;
@@ -133,7 +127,8 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k){
 	}
 _cleanup:
 	if (sll_string_equal(&k_low,&_env_path_var_name)){
-		_rebuild_global_search_path();
+		sll_free_search_path(&_env_path);
+		sll_search_path_from_environment(&_env_path_var_name,&_env_path);
 	}
 	UNLOCK_ENV;
 	sll_free_string(&k_low);
@@ -163,7 +158,8 @@ __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* k,const sll
 _end:
 	UNLOCK_ENV;
 	if (sll_string_equal(&k_low,&_env_path_var_name)){
-		_rebuild_global_search_path();
+		sll_free_search_path(&_env_path);
+		sll_search_path_from_environment(&_env_path_var_name,&_env_path);
 	}
 	sll_free_string(&k_low);
 }

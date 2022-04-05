@@ -85,4 +85,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_sear
 
 
 
+/**
+ * \flags func
+ * \name sll_search_path_from_environment
+ * \group search-path
+ * \desc Docs!
+ * \arg const sll_string_t* key
+ * \arg sll_search_path_t* o
+ */
+__SLL_EXTERNAL void sll_search_path_from_environment(const sll_string_t* key,sll_search_path_t* o);
+
+
+
 #endif

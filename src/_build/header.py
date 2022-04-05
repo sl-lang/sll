@@ -21,6 +21,11 @@ SPACE_CHARACTERS_REGEX=re.compile(" \t\n\v\f\r")
 
 
 
+def _public_name(nm):
+	return (nm[(1 if nm[0]=="_" else 0):].startswith("SLL_"))
+
+
+
 def _expand_macros(k,dm,dfm,j_exp):
 	i=0
 	while (i<len(k)):
@@ -250,7 +255,7 @@ def generate_header(h_dt):
 					else:
 						al=tuple(al)
 					k=" ".join(f[2:])
-					if (f[1][:4]=="SLL_" or f[1][:5]=="_SLL_"):
+					if (_public_name(f[1])):
 						d_f.append((f[1],k))
 					sl=[""]
 					sli=0
@@ -284,7 +289,7 @@ def generate_header(h_dt):
 					dfm[f[1].split("(")[0]]=(al,va,tuple(sl))
 				else:
 					dm[f[1]]=" ".join(f[2:])
-					if (f[1][:4]=="SLL_" or f[1][:5]=="_SLL_"):
+					if (_public_name(f[1])):
 						d_v.append((f[1]," ".join(f[2:])))
 				continue
 		if (False not in st):

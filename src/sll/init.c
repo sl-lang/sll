@@ -1,6 +1,6 @@
 #include <sll/_internal/audit.h>
 #include <sll/_internal/common.h>
-#include <sll/_internal/env.h>
+#include <sll/_internal/environment.h>
 #include <sll/_internal/file.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/log.h>
@@ -129,6 +129,7 @@ __SLL_EXTERNAL void sll_init(void){
 	_init_init=1;
 	_file_init_std_streams();
 	_init_platform();
+	_init_environment();
 	const init_string_t*const* l=(const init_string_t*const*)(&__init_string_start);
 	while (l<(const init_string_t*const*)(&__init_string_end)){
 		const init_string_t* k=*l;
@@ -142,7 +143,6 @@ __SLL_EXTERNAL void sll_init(void){
 		}
 		l++;
 	}
-	_init_env();
 }
 
 

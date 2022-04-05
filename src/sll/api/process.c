@@ -10,7 +10,7 @@
 #include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
-#include <sll/env.h>
+#include <sll/environment.h>
 #include <sll/memory.h>
 #include <sll/new_object.h>
 #include <sll/object.h>

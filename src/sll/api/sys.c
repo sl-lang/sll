@@ -13,7 +13,7 @@
 #include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
-#include <sll/env.h>
+#include <sll/environment.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/init.h>

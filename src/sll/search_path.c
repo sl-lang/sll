@@ -1,6 +1,7 @@
 #include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/environment.h>
 #include <sll/memory.h>
 #include <sll/platform/path.h>
 #include <sll/search_path.h>
@@ -78,4 +79,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_sear
 		return 1;
 	}
 	return 0;
+}
+
+
+
+__SLL_EXTERNAL void sll_search_path_from_environment(const sll_string_t* key,sll_search_path_t* o){
+	sll_string_t tmp;
+	sll_expand_environment_variable(key,&tmp);
+	sll_search_path_create(&tmp,o);
+	sll_free_string(&tmp);
 }
