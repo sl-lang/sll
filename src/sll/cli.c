@@ -306,6 +306,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					sll_platform_unload_library(lh);
 				}
 				else{
+					void (*init)(void)=sll_platform_lookup_symbol(lh,SLL_CHAR("__sll_audit_init"));
+					if (init){
+						init();
+					}
 					lll++;
 					ll=sll_reallocate(ll,lll*sizeof(sll_library_handle_t));
 					*(ll+lll-1)=lh;
