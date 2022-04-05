@@ -136,16 +136,21 @@ __API_FUNC(path_join){
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
 	if (ac){
-		if ((*a)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
-			SLL_INIT_STRING(out);
-			return;
-		}
-		i=(*a)->l;
-		sll_copy_data((*a)->v,i,bf);
-		ac--;
-		a++;
+		do{
+			if ((*a)->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+				SLL_INIT_STRING(out);
+				return;
+			}
+			i=(*a)->l;
+			sll_copy_data((*a)->v,i,bf);
+			ac--;
+			a++;
+		} while (!i);
 		while (ac){
-			if (!i||(bf[i-1]!='/'&&bf[i-1]!='\\')){
+			if (!(*a)->l){
+				continue;
+			}
+			if (i&&bf[i-1]!='/'&&bf[i-1]!='\\'){
 				bf[i]=SLL_API_FILE_PATH_SEPARATOR;
 				i++;
 			}

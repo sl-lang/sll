@@ -10,12 +10,14 @@
 #include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/env.h>
 #include <sll/memory.h>
 #include <sll/new_object.h>
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/platform/process.h>
 #include <sll/sandbox.h>
+#include <sll/search_path.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -142,9 +144,18 @@ __API_FUNC(process_start){
 		return;
 	}
 	sll_audit(SLL_CHAR("sll.process.start"),SLL_CHAR("sss"),a,b,d);
+	sll_object_t* n=sll_operator_cast(a->v[0],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+	sll_string_t exe_fp;
+	if (!sll_search_path_find(sll_env_path,&(n->dt.s),SLL_SEARCH_PATH_FLAG_AFTER,&exe_fp)){
+		SLL_UNIMPLEMENTED();
+	}
+	GC_RELEASE(n);
 	sll_char_t** args=sll_allocate((a->l+1)*sizeof(sll_char_t*));
-	for (sll_array_length_t i=0;i<a->l;i++){
-		sll_object_t* n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+	*args=sll_allocate((exe_fp.l+1)*sizeof(sll_char_t));
+	sll_copy_data(exe_fp.v,exe_fp.l+1,*args);
+	sll_free_string(&exe_fp);
+	for (sll_array_length_t i=1;i<a->l;i++){
+		n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		*(args+i)=sll_allocate((n->dt.s.l+1)*sizeof(sll_char_t));
 		sll_copy_data(n->dt.s.v,n->dt.s.l+1,*(args+i));
 		GC_RELEASE(n);

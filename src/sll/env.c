@@ -70,7 +70,7 @@ static void _expand_all(sll_string_t* o,const sll_string_t* key){
 static void _rebuild_global_search_path(void){
 	sll_string_t tmp;
 	_expand_all(&tmp,&_env_path_var_name);
-	sll_create_search_path(&tmp,&_env_path);
+	sll_search_path_create(&tmp,&_env_path);
 	sll_free_string(&tmp);
 }
 

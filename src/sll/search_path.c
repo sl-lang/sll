@@ -1,12 +1,26 @@
+#include <sll/api/path.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/memory.h>
+#include <sll/platform/path.h>
 #include <sll/search_path.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
 
 
-__SLL_EXTERNAL void sll_create_search_path(const sll_string_t* src,sll_search_path_t* o){
+__SLL_EXTERNAL void sll_free_search_path(sll_search_path_t* sp){
+	while (sp->l){
+		sp->l--;
+		sll_free_string(sp->dt+sp->l);
+	}
+	sll_deallocate(sp->dt);
+	sp->dt=NULL;
+}
+
+
+
+__SLL_EXTERNAL void sll_search_path_create(const sll_string_t* src,sll_search_path_t* o){
 	o->l=0;
 	o->dt=NULL;
 	sll_string_length_t i=0;
@@ -27,11 +41,41 @@ __SLL_EXTERNAL void sll_create_search_path(const sll_string_t* src,sll_search_pa
 
 
 
-__SLL_EXTERNAL void sll_free_search_path(sll_search_path_t* sp){
-	while (sp->l){
-		sp->l--;
-		sll_free_string(sp->dt+sp->l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_search_path_t* sp,const sll_string_t* nm,sll_flags_t fl,sll_string_t* o){
+	SLL_INIT_STRING(o);
+	if (nm->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+		return 0;
 	}
-	sll_deallocate(sp->dt);
-	sp->dt=NULL;
+	if ((fl&SLL_SEARCH_PATH_FLAG_BEFORE)&&sll_platform_path_exists(nm->v)){
+		sll_string_clone(nm,o);
+		return 1;
+	}
+	if (nm->l==SLL_API_MAX_FILE_PATH_LENGTH-1){
+		return 0;
+	}
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_copy_data(nm->v,nm->l+1,bf+SLL_API_MAX_FILE_PATH_LENGTH-nm->l-1);
+	sll_string_length_t sz=SLL_API_MAX_FILE_PATH_LENGTH-nm->l-2;
+	if (!sz){
+		return 0;
+	}
+	bf[sz]=SLL_API_FILE_PATH_SEPARATOR;
+	for (sll_array_length_t i=0;i<sp->l;i++){
+		if ((sp->dt+i)->l<=sz){
+			sll_copy_data((sp->dt+i)->v,(sp->dt+i)->l,bf+sz-(sp->dt+i)->l);
+			if (sll_platform_path_exists(bf+sz-(sp->dt+i)->l)){
+				const sll_string_t* dt[2]={
+					sp->dt+i,
+					nm
+				};
+				sll_api_path_join((sll_string_t*const*)dt,2,o);
+				return 1;
+			}
+		}
+	}
+	if ((fl&SLL_SEARCH_PATH_FLAG_AFTER)&&sll_platform_path_exists(nm->v)){
+		sll_string_clone(nm,o);
+		return 1;
+	}
+	return 0;
 }
