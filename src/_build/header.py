@@ -8,7 +8,7 @@ import util
 COMMENT_REGEX=re.compile(br"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
 DEFINE_LINE_CONTINUE_REGEX=re.compile(br"\s*\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(br"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
-HEX_NUMBER_REGEX=re.compile(br"\b0x[0-9a-f]+\b")
+HEX_NUMBER_REGEX=re.compile(br"\b(0x[0-9a-f]+)(ul{0,2})?\b")
 IDENTIFIER_CHARACTERS=b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(br"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(br"""^\s*#\s*include\s*(<[^>]*>|\"[^\"]*\")\s*$""",re.MULTILINE)
@@ -28,64 +28,65 @@ def _expand_macros(k,dm,dfm,j_exp):
 			j=i
 			while (i<len(k) and k[i:i+1] in IDENTIFIER_CHARACTERS):
 				i+=1
-			for e,v in dm.items():
-				if (e==k[j:i]):
-					k=k[:j]+v+k[i:]
-					i=j-1
-					break
-			if (i!=j):
-				for e,v in dfm.items():
+			if (k[j:j+1]!=b"_" or k[j+1:j+2]==b"_"):
+				for e,v in dm.items():
 					if (e==k[j:i]):
-						if (k[i:i+1]!=b"("):
-							continue
-						i+=1
-						b=1
-						a=[b""]
-						ai=0
-						while (True):
-							si=i
-							if (k[i:i+1]==b"\'"):
-								i+=1
-								while (k[i:i+1]!=b"\'"):
-									if (k[i:i+1]==b"\\"):
-										i+=1
-									i+=1
-							elif (k[i:i+1]==b"\""):
-								i+=1
-								while (k[i:i+1]!=b"\""):
-									if (k[i:i+1]==b"\\"):
-										i+=1
-									i+=1
-							elif (k[i:i+1]==b"("):
-								b+=1
-							elif (k[i:i+1]==b")"):
-								b-=1
-								if (b==0):
-									break
-							elif (b==1 and k[i:i+1]==b","):
-								a.append(b"")
-								ai+=1
-								i+=1
-								continue
-							i+=1
-							a[ai]+=k[si:i]
-						if (ai==0 and len(a[0])==0):
-							a=[]
-						va=b""
-						if (len(a)!=len(v[0])):
-							if (len(a)>len(v[0]) and not v[1]):
-								raise RuntimeError("Invalid Macro Argument Count")
-							va=b",".join(a[len(v[0]):])
-						tmp=k[i+1:]
-						k=k[:j]
-						for m,n in enumerate(v[2]):
-							if (m&1):
-								k+=(va if n==-1 else a[n])
-							else:
-								k+=n
-						k+=tmp
+						k=k[:j]+v+k[i:]
 						i=j-1
 						break
+				if (i!=j-1):
+					for e,v in dfm.items():
+						if (e==k[j:i]):
+							if (k[i:i+1]!=b"("):
+								continue
+							i+=1
+							b=1
+							a=[b""]
+							ai=0
+							while (True):
+								si=i
+								if (k[i:i+1]==b"\'"):
+									i+=1
+									while (k[i:i+1]!=b"\'"):
+										if (k[i:i+1]==b"\\"):
+											i+=1
+										i+=1
+								elif (k[i:i+1]==b"\""):
+									i+=1
+									while (k[i:i+1]!=b"\""):
+										if (k[i:i+1]==b"\\"):
+											i+=1
+										i+=1
+								elif (k[i:i+1]==b"("):
+									b+=1
+								elif (k[i:i+1]==b")"):
+									b-=1
+									if (b==0):
+										break
+								elif (b==1 and k[i:i+1]==b","):
+									a.append(b"")
+									ai+=1
+									i+=1
+									continue
+								i+=1
+								a[ai]+=k[si:i]
+							if (ai==0 and len(a[0])==0):
+								a=[]
+							va=b""
+							if (len(a)!=len(v[0])):
+								if (len(a)>len(v[0]) and not v[1]):
+									raise RuntimeError("Invalid Macro Argument Count")
+								va=b",".join(a[len(v[0]):])
+							tmp=k[i+1:]
+							k=k[:j]
+							for m,n in enumerate(v[2]):
+								if (m&1):
+									k+=(va if n==-1 else a[n])
+								else:
+									k+=n
+							k+=tmp
+							i=j-1
+							break
 		i+=1
 	if (j_exp and b"##" in k):
 		return _expand_macros(k.replace(b"##",b""),dm,dfm,j_exp)
@@ -255,7 +256,7 @@ def generate_header(h_dt):
 					else:
 						al=tuple(al)
 					k=b" ".join(f[2:])
-					if (f[1][:4]==b"SLL_"):
+					if (f[1][:4]==b"SLL_" or f[1][:5]==b"_SLL_"):
 						d_f.append((f[1],k))
 					sl=[b""]
 					sli=0
@@ -289,7 +290,7 @@ def generate_header(h_dt):
 					dfm[f[1].split(b"(")[0]]=(al,va,tuple(sl))
 				else:
 					dm[f[1]]=b" ".join(f[2:])
-					if (f[1][:4]==b"SLL_"):
+					if (f[1][:4]==b"SLL_" or f[1][:5]==b"_SLL_"):
 						d_v.append((f[1],b" ".join(f[2:])))
 				continue
 		if (False not in st):
@@ -297,7 +298,7 @@ def generate_header(h_dt):
 	d_s=b""
 	o=b""
 	for i,(k,v) in enumerate(sorted(d_v,key=lambda e:e[0])):
-		v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm,True))
+		v=HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(1),16)),"utf-8")+(m.group(2) or b""),_expand_macros(v,dm,dfm,True))
 		d_v[i]=(k,v)
 		d_s+=b"\n#define "+k+b" "+_merge_strings(v).strip()
 	for i,(k,v) in enumerate(sorted(d_f,key=lambda e:e[0])):
@@ -326,7 +327,7 @@ def generate_header(h_dt):
 					else:
 						break
 		nk+=b")"
-		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(0),16)),"utf-8"),_expand_macros(v,dm,dfm,False))).strip()
+		v=IDENTIFIER_REGEX.sub(lambda m:(a[m.group(0)] if m.group(0) in a else m.group(0)),HEX_NUMBER_REGEX.sub(lambda m:bytes(str(int(m.group(1),16)),"utf-8")+(m.group(2) or b""),_expand_macros(v,dm,dfm,False))).strip()
 		d_f[i]=(nk,v)
 		d_s+=b"\n#define "+nk+b" "+_merge_strings(v).strip()
 	fl=[]
