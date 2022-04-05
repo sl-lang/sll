@@ -12,21 +12,6 @@
 
 
 /**
- * \flags macro var
- * \name SLL_PATH_SPLIT_CHAR
- * \group env
- * \desc Docs!
- * \type sll_char_t
- */
-#ifdef __SLL_BUILD_WINDOWS
-#define SLL_PATH_SPLIT_CHAR ';'
-#else
-#define SLL_PATH_SPLIT_CHAR ':'
-#endif
-
-
-
-/**
  * \flags var
  * \name sll_env_path
  * \group env
