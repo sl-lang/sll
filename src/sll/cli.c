@@ -682,6 +682,10 @@ _cleanup:
 	}
 	while (lll){
 		lll--;
+		void (*deinit)(void)=sll_platform_lookup_symbol(*(ll+lll),SLL_CHAR("__sll_audit_deinit"));
+		if (deinit){
+			deinit();
+		}
 		sll_platform_unload_library(*(ll+lll));
 	}
 	sll_deallocate(i_b);
