@@ -12,6 +12,32 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_PATH_SPLIT_CHAR
+ * \group env
+ * \desc Docs!
+ * \type sll_char_t
+ */
+#ifdef __SLL_BUILD_WINDOWS
+#define SLL_PATH_SPLIT_CHAR ';'
+#else
+#define SLL_PATH_SPLIT_CHAR ':'
+#endif
+
+
+
+/**
+ * \flags var
+ * \name sll_env_path
+ * \group env
+ * \desc Docs!
+ * \type const sll_search_path_t*
+ */
+__SLL_EXTERNAL extern const sll_search_path_t* sll_env_path;
+
+
+
+/**
  * \flags check_output func
  * \name sll_get_environment_variable
  * \group env

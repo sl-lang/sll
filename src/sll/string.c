@@ -19,7 +19,24 @@
 
 #define INIT_PADDING(v,l) (*((wide_data_t*)((v)+((l)&0xfffffffffffffff8ull)))=0)
 
-#define EXECUTE_CASE_SWITCH(x1,x2) \
+#define ADD(a,b) ((a)+(b))
+#define SUB(a,b) ((a)-(b))
+
+#define EXECUTE_CASE_SWITCH(x1,x2,sgn) \
+	if (!s){ \
+		if (!o->l){ \
+			return; \
+		} \
+		wide_data_t* p=(wide_data_t*)(o->v); \
+		STRING_DATA_PTR(p); \
+		wide_data_t c=0; \
+		for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){ \
+			*(p+i)=sgn(*(p+i),(((x1-((*(p+i))&0x7f7f7f7f7f7f7f7full))&(~(*(p+i)))&(((*(p+i))&0x7f7f7f7f7f7f7f7full)+x2))&0x8080808080808080ull)>>2); \
+			c^=*(p+i); \
+		} \
+		o->c=(sll_string_length_t)(c^(c>>32)); \
+		return; \
+	} \
 	if (!s->l){ \
 		SLL_INIT_STRING(o); \
 		return; \
@@ -33,7 +50,7 @@
 	STRING_DATA_PTR(b); \
 	wide_data_t c=0; \
 	for (sll_string_length_t i=0;i<((o->l+7)>>3);i++){ \
-		*(b+i)=(*(a+i))-((((x1-((*(a+i))&0x7f7f7f7f7f7f7f7full))&(~(*(a+i)))&(((*(a+i))&0x7f7f7f7f7f7f7f7full)+x2))&0x8080808080808080ull)>>2); \
+		*(b+i)=sgn(*(a+i),(((x1-((*(a+i))&0x7f7f7f7f7f7f7f7full))&(~(*(a+i)))&(((*(a+i))&0x7f7f7f7f7f7f7f7full)+x2))&0x8080808080808080ull)>>2); \
 		c^=*(b+i); \
 	} \
 	o->c=(sll_string_length_t)(c^(c>>32));
@@ -852,27 +869,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(const sll_string_t* s,sll_char_t c,sll_bool_t inv,sll_string_length_t si){
-	if (!s->l){
+	if (si>=s->l){
 		return SLL_MAX_STRING_LENGTH;
-	}
-	if (si){
-		SLL_UNIMPLEMENTED();
 	}
 	const wide_data_t* p=(const wide_data_t*)(s->v);
 	STRING_DATA_PTR(p);
 	wide_data_t m=0x101010101010101ull*c;
-	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+	wide_data_t n=0x8080808080808080ull<<((si&7)<<3);
+	sll_string_length_t i=si>>3;
+	p+=i;
+	for (;i<((s->l+7)>>3);i++){
 		wide_data_t v=(*p)^m;
 		v=(v-0x101010101010101ull)&(~v);
 		if (inv){
 			v=~v;
 		}
-		v&=0x8080808080808080ull;
+		v&=n;
 		if (v){
 			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
 			return (!c&&o>=s->l?SLL_MAX_STRING_LENGTH:o);
 		}
 		p++;
+		n=0x8080808080808080ull;
 	}
 	return SLL_MAX_STRING_LENGTH;
 }
@@ -1142,7 +1160,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length_unaligne
 
 
 __SLL_EXTERNAL void sll_string_lower_case(const sll_string_t* s,sll_string_t* o){
-	EXECUTE_CASE_SWITCH(0xdadadadadadadadaull,0x3f3f3f3f3f3f3f3full);
+	EXECUTE_CASE_SWITCH(0xdadadadadadadadaull,0x3f3f3f3f3f3f3f3full,ADD);
 }
 
 
@@ -1898,7 +1916,7 @@ __SLL_EXTERNAL void sll_string_trim_right(const sll_string_t* s,sll_string_t* o)
 
 
 __SLL_EXTERNAL void sll_string_upper_case(const sll_string_t* s,sll_string_t* o){
-	EXECUTE_CASE_SWITCH(0xfafafafafafafafaull,0x1f1f1f1f1f1f1f1full);
+	EXECUTE_CASE_SWITCH(0xfafafafafafafafaull,0x1f1f1f1f1f1f1f1full,SUB);
 }
 
 

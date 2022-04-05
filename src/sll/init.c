@@ -1,5 +1,6 @@
 #include <sll/_internal/audit.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/env.h>
 #include <sll/_internal/file.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/log.h>
@@ -141,6 +142,7 @@ __SLL_EXTERNAL void sll_init(void){
 		}
 		l++;
 	}
+	_init_env();
 }
 
 

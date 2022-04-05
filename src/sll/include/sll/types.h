@@ -1022,4 +1022,11 @@ typedef void (*sll_audit_callback_t)(const sll_string_t*,const sll_array_t*);
 
 
 
+typedef struct __SLL_SEARCH_PATH{
+	sll_string_t* dt;
+	sll_array_length_t l;
+} sll_search_path_t;
+
+
+
 #endif

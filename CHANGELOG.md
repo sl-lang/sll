@@ -6,6 +6,7 @@
 
 - CLI option to load an audit library: `-L` or `--audit-library`
 - Implemented `SLL_ABI_AUDIT_CALL`, `SLL_ABI_AUDIT_DEINIT`, `SLL_ABI_AUDIT_INIT`, `SLL_ABI_DEINIT`, `SLL_ABI_INIT` and `SLL_ABI_NAME`
+- Implemented `sll_search_path_t`, `SLL_PATH_SPLIT_CHAR` and `sll_env_path`
 - Implemented `statistics$correlation` ([#260])
 - Object creation code to build an array of string pointers: `x`
 

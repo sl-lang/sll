@@ -1,3 +1,5 @@
 __pycache__
 build
+*.dll
+*.so
 *.zip
