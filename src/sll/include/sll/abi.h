@@ -73,7 +73,8 @@
  * \arg <identifier> x
  * \ret const sll_char_t*
  */
-#define SLL_ABI_NAME(x) SLL_CHAR(#x)
+#define _SLL_ABI_NAME(x) #x
+#define SLL_ABI_NAME(x) SLL_CHAR(_SLL_ABI_NAME(x))
 
 
 

@@ -1,0 +1,41 @@
+; Sll Audit Library Example
+; @krzem5, 2022-04-05
+
+
+
+(--- "process.sll" "sys.sll" "string.sll")
+
+
+
+(<- process$start (?: (=== sys$PLATFORM "windows")
+	[
+		"cl.exe"
+		"/nologo"
+		"/I" "build"
+		"/D_USRDLL"
+		"/D_WINDLL"
+		"examples/audit_library/lib.c"
+		(<- string$format "build/sll-%u.%u.%u.lib" sys$VERSION$major sys$VERSION$minor sys$VERSION$patch)
+		"/Fobuild/lib.obj"
+		"/link"
+		"/DLL"
+		"/OUT:build/lib.dll"
+	]
+	[
+		"gcc"
+		"-shared"
+		"-fvisibility=hidden"
+		"-fPIC"
+		"-I" "build"
+		(<- string$format "build/sll-%u.%u.%u.so" sys$VERSION$major sys$VERSION$minor sys$VERSION$patch)
+		"examples/audit_library/lib.c"
+		"-o" "build/lib.so"
+	]
+))
+
+(<- process$start [
+	(?: (=== sys$PLATFORM "windows") "build/sll.exe" "build/sll")
+	"-L" (+ "build/lib." sys$LIBRARY_EXTENSION)
+	"-v"
+	"examples/audit_library/main.sll"
+])

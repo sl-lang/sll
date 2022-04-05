@@ -1,0 +1,10 @@
+; Sll Audit Library Example
+; @krzem5, 2022-04-05
+
+
+
+(--- "path.sll")
+
+
+
+(:> (<- path$list_dir ".") '\n')

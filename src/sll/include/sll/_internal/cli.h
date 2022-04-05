@@ -54,4 +54,11 @@ typedef struct __CLI_BUNDLE_SOURCE{
 
 
 
+typedef struct __CLI_AUDIT_LIBRARY{
+	const sll_char_t* nm;
+	sll_library_handle_t lh;
+} cli_audit_library_t;
+
+
+
 #endif

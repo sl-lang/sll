@@ -218,7 +218,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	sll_string_length_t fpl=0;
 	sll_array_length_t* sl=NULL;
 	sll_string_length_t sll=0;
-	sll_library_handle_t* ll=NULL;
+	cli_audit_library_t* ll=NULL;
 	sll_array_length_t lll=0;
 	sll_create_internal_function_table(&i_ft);
 	sll_register_builtin_internal_functions(&i_ft);
@@ -300,7 +300,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 				break;
 			}
 			e=argv[i];
-			sll_library_handle_t* lh=sll_platform_load_library(e);
+			sll_library_handle_t lh=sll_platform_load_library(e);
 			if (lh!=SLL_UNKNOWN_LIBRARY_HANDLE){
 				sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_AUDIT_CALL));
 				if (!cb){
@@ -312,8 +312,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 						init();
 					}
 					lll++;
-					ll=sll_reallocate(ll,lll*sizeof(sll_library_handle_t));
-					*(ll+lll-1)=lh;
+					ll=sll_reallocate(ll,lll*sizeof(cli_audit_library_t));
+					(ll+lll-1)->nm=e;
+					(ll+lll-1)->lh=lh;
 					sll_audit_register_callback(cb);
 				}
 			}
@@ -489,6 +490,10 @@ _read_file_argument:
 			j+=sll_string_length_unaligned(i_fp+j)+1;
 		}
 		SLL_LOG("Library path: '%s'",l_fp);
+		SLL_LOG("Audit libraries:");
+		for (sll_array_length_t k=0;k<lll;k++){
+			SLL_LOG("  '%s'",(ll+k)->nm);
+		}
 	}
 	if (fpl+sll==1){
 		fl|=CLI_FLAG_SINGLE_OUTPUT;
@@ -683,11 +688,11 @@ _cleanup:
 	}
 	while (lll){
 		lll--;
-		void (*deinit)(void)=sll_platform_lookup_symbol(*(ll+lll),SLL_ABI_NAME(SLL_ABI_AUDIT_DEINIT));
+		void (*deinit)(void)=sll_platform_lookup_symbol((ll+lll)->lh,SLL_ABI_NAME(SLL_ABI_AUDIT_DEINIT));
 		if (deinit){
 			deinit();
 		}
-		sll_platform_unload_library(*(ll+lll));
+		sll_platform_unload_library((ll+lll)->lh);
 	}
 	sll_deallocate(i_b);
 	sll_deallocate(fp);

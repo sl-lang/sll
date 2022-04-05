@@ -754,7 +754,7 @@
 ### Added
 
 - Constant macro for unsupplied `sll_char_t` argument: `SLL_NO_CHAR`
-- Constant string containing the extension of a library on the current platform: `sys$library_extension` ([#123])
+- Constant string containing the extension of a library on the current platform: `sys$LIBRARY_EXTENSION` ([#123])
 - External internal function declaration API: `SLL_NODE_TYPE_INTERNAL_FUNC_LOAD`, `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR`
 - Implemented `sll:array_count` and `sll_api_array_count` ([#117])
 - Implemented `sll_array_replace`, `sll_api_array_replace` and `sll:array_replace` ([#120])
