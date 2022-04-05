@@ -19,9 +19,9 @@ def _check(fp,inc):
 	if (old!=hash_str):
 		update_list.add(nm)
 		return 1
-	with open(fp,"rb") as rf:
+	with open(fp,"r") as rf:
 		for e in header.INCLUDE_REGEX.findall(rf.read()):
-			e=str(e[1:-1],"utf-8")
+			e=e[1:-1]
 			for k in inc:
 				f_fp=os.path.join(k,e)
 				if (os.path.exists(f_fp) and _check(f_fp,inc)):
