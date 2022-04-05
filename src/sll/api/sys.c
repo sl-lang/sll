@@ -4,6 +4,7 @@
 #include <sll/_internal/print.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
+#include <sll/abi.h>
 #include <sll/api.h>
 #include <sll/api/hash.h>
 #include <sll/api/path.h>
@@ -56,7 +57,7 @@ static void _sys_free_data(void){
 			_sys_lhl--;
 			library_t* l=*(_sys_lh+_sys_lhl);
 			sll_free_string((sll_string_t*)&(l->nm));
-			void (*fn)(void)=sll_platform_lookup_symbol(l->h,SLL_CHAR("__sll_unload"));
+			void (*fn)(void)=sll_platform_lookup_symbol(l->h,SLL_ABI_NAME(SLL_ABI_DEINIT));
 			if (fn){
 				fn();
 			}
@@ -243,7 +244,7 @@ __API_FUNC(sys_load_library){
 		sll_free_string(&fp);
 		return 0;
 	}
-	sll_bool_t (*fn)(sll_version_t)=sll_platform_lookup_symbol(h,SLL_CHAR("__sll_load"));
+	sll_bool_t (*fn)(sll_version_t)=sll_platform_lookup_symbol(h,SLL_ABI_NAME(SLL_ABI_INIT));
 	if (!fn||!fn(SLL_VERSION)){
 		sll_platform_unload_library(h);
 		sll_free_string(&fp);

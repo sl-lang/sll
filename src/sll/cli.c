@@ -1,6 +1,7 @@
 #include <sll/_internal/cli.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/static_string.h>
+#include <sll/abi.h>
 #include <sll/api/date.h>
 #include <sll/api/math.h>
 #include <sll/api/path.h>
@@ -301,12 +302,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			e=argv[i];
 			sll_library_handle_t* lh=sll_platform_load_library(e);
 			if (lh!=SLL_UNKNOWN_LIBRARY_HANDLE){
-				sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_CHAR("__sll_audit"));
+				sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_AUDIT_CALL));
 				if (!cb){
 					sll_platform_unload_library(lh);
 				}
 				else{
-					void (*init)(void)=sll_platform_lookup_symbol(lh,SLL_CHAR("__sll_audit_init"));
+					void (*init)(void)=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_AUDIT_INIT));
 					if (init){
 						init();
 					}
@@ -682,7 +683,7 @@ _cleanup:
 	}
 	while (lll){
 		lll--;
-		void (*deinit)(void)=sll_platform_lookup_symbol(*(ll+lll),SLL_CHAR("__sll_audit_deinit"));
+		void (*deinit)(void)=sll_platform_lookup_symbol(*(ll+lll),SLL_ABI_NAME(SLL_ABI_AUDIT_DEINIT));
 		if (deinit){
 			deinit();
 		}
