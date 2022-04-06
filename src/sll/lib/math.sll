@@ -133,7 +133,7 @@
 		([> (= i 0) (< i ($ l))
 			(= k (: l i))
 			(++ i)
-			(. factor_type (: k 0) (: k 1))
+			(:: k factor_type)
 		)
 	))
 }))
