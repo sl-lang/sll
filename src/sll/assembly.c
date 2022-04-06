@@ -2216,7 +2216,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 	}
 	ai=o->h;
 	o->dbg.dt=sll_allocate(o->dbg.l*sizeof(sll_debug_line_data_t));
-	sll_instruction_index_t dbg_i=0;
+	sll_debug_data_length_t dbg_i=0;
 	sll_file_offset_t f_off=0;
 	sll_string_index_t f_idx=0;
 	sll_instruction_index_t l_dbg_ii=0;
@@ -2342,7 +2342,7 @@ _remove_nop:
 	for (sll_function_index_t i=0;i<o->ft.l;i++){
 		(o->ft.dt+i)->nm=*(sm.im+(o->ft.dt+i)->nm);
 	}
-	for (sll_instruction_index_t i=0;i<o->dbg.l;i++){
+	for (sll_debug_data_length_t i=0;i<o->dbg.l;i++){
 		if ((o->dbg.dt+i)->ln&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC)){
 			(o->dbg.dt+i)->ln=(*(sm.im+SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+i)))|((o->dbg.dt+i)->ln&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC));
 		}

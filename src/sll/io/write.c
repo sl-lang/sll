@@ -201,7 +201,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 		sll_encode_string(wf,a_dt->st.dt+i);
 	}
 	sll_encode_integer(wf,a_dt->dbg.l);
-	for (sll_instruction_index_t i=0;i<a_dt->dbg.l;i++){
+	for (sll_debug_data_length_t i=0;i<a_dt->dbg.l;i++){
 		sll_encode_integer(wf,(a_dt->dbg.dt+i)->ii);
 		sll_encode_integer(wf,ROTATE_BITS64((a_dt->dbg.dt+i)->ln,2));
 	}

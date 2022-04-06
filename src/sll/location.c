@@ -17,7 +17,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
 	sll_file_offset_t o_ln=0;
 	sll_string_index_t o_fn=SLL_MAX_STRING_INDEX;
 	sll_string_index_t o_fp=0;
-	for (sll_instruction_index_t i=0;i<a_dt->dbg.l;i++){
+	for (sll_debug_data_length_t i=0;i<a_dt->dbg.l;i++){
 		c+=(a_dt->dbg.dt+i)->ii;
 		if (c>ii){
 			break;

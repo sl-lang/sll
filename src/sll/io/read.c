@@ -237,7 +237,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 	}
 	CHECK_ERROR(rf,a_dt->dbg.l,sll_instruction_index_t);
 	a_dt->dbg.dt=sll_allocate(a_dt->dbg.l*sizeof(sll_debug_line_data_t));
-	for (sll_instruction_index_t i=0;i<a_dt->dbg.l;i++){
+	for (sll_debug_data_length_t i=0;i<a_dt->dbg.l;i++){
 		CHECK_ERROR(rf,(a_dt->dbg.dt+i)->ii,sll_instruction_index_t);
 		sll_file_offset_t ln;
 		CHECK_ERROR(rf,ln,sll_file_offset_t);

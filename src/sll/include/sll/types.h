@@ -151,6 +151,10 @@ typedef __SLL_U32 sll_barrier_index_t;
 
 
 
+typedef __SLL_U32 sll_debug_data_length_t;
+
+
+
 typedef __SLL_U32 sll_environment_length_t;
 
 
@@ -676,7 +680,7 @@ typedef struct __SLL_DEBUG_LINE_DATA{
 
 typedef struct __SLL_DEBUG_DATA{
 	sll_debug_line_data_t* dt;
-	sll_instruction_index_t l;
+	sll_debug_data_length_t l;
 } sll_debug_data_t;
 
 
