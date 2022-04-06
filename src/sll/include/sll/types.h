@@ -203,6 +203,10 @@ typedef __SLL_U32 sll_object_type_t;
 
 
 
+typedef __SLL_U32 sll_object_type_table_length_t;
+
+
+
 typedef __SLL_U32 sll_pid_t;
 
 
@@ -756,14 +760,14 @@ typedef sll_object_t* (*sll_internal_function_pointer_t)(sll_object_t*const*,sll
 
 
 
-typedef struct __SLL__INTERNAL_FUNCTION{
+typedef struct __SLL_INTERNAL_FUNCTION{
 	sll_string_t nm;
 	sll_internal_function_pointer_t p;
 } sll_internal_function_t;
 
 
 
-typedef struct __SLL__INTERNAL_FUNCTION_TABLE{
+typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
 	const sll_internal_function_t* dt;
 	sll_function_index_t l;
 } sll_internal_function_table_t;
@@ -789,7 +793,7 @@ typedef struct __SLL_OBJECT_TYPE_DATA{
 
 typedef struct __SLL_OBJECT_TYPE_TABLE{
 	const sll_object_type_data_t** dt;
-	sll_object_type_t l;
+	sll_object_type_table_length_t l;
 } sll_object_type_table_t;
 
 

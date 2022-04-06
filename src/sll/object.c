@@ -272,7 +272,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 
 __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* tt){
 	if (tt->l){
-		for (sll_object_type_t i=0;i<tt->l;i++){
+		for (sll_object_type_table_length_t i=0;i<tt->l;i++){
 			const sll_object_type_data_t* k=*(tt->dt+i);
 			sll_free_string((sll_string_t*)(&(k->nm)));
 			for (sll_arg_count_t j=0;j<k->l;j++){
