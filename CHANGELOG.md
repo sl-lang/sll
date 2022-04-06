@@ -9,6 +9,7 @@
 - Implemented `sll_expand_environment_variable`
 - Implemented `sll_search_path_t`, `SLL_SEARCH_PATH_SPLIT_CHAR`, `SLL_SEARCH_PATH_FLAG_BEFORE`, `SLL_SEARCH_PATH_FLAG_AFTER`, `sll_env_path`, `sll_free_search_path`, `sll_search_path_create`, `sll_search_path_find` and `sll_search_path_from_environment`
 - Implemented `statistics$correlation` ([#260])
+- More examples ([#8])
 - Object creation code to build an array of string pointers: `x`
 
 #### New Built-in Audit Events
