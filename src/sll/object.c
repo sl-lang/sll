@@ -4,6 +4,7 @@
 #include <sll/_internal/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -25,6 +26,12 @@ static __STATIC_STRING(_object_float_type_str,"float_type");
 static __STATIC_STRING(_object_int_type_str,"int_type");
 static __STATIC_STRING(_object_map_type_str,"map_type");
 static __STATIC_STRING(_object_string_type_str,"string_type");
+static const sll_string_t* _object_fn_list[SLL_MAX_OBJECT_FUNC+1]={
+	&_object_init_str,
+	&_object_delete_str,
+	&_object_copy_str,
+	&_object_string_str
+};
 
 
 
@@ -64,8 +71,8 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 					const sll_object_type_data_t* n_dt=*(tt->dt+n->t-SLL_MAX_OBJECT_TYPE-1);
 					n->dt.p=sll_allocate(n_dt->l*sizeof(sll_object_field_t));
 					_zero_struct(tt,n_dt,n->dt.p,0);
-					if (n_dt->fn.init){
-						GC_RELEASE(sll_execute_function(n_dt->fn.init,&n,1,0));
+					if (n_dt->fn[SLL_OBJECT_FUNC_INIT]){
+						GC_RELEASE(sll_execute_function(n_dt->fn[SLL_OBJECT_FUNC_INIT],&n,1,0));
 					}
 					p->o=n;
 					break;
@@ -131,8 +138,8 @@ static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_o
 		s++;
 		d++;
 	}
-	if (dt->fn.init){
-		GC_RELEASE(sll_execute_function(dt->fn.init,&o,1,0));
+	if (dt->fn[SLL_OBJECT_FUNC_INIT]){
+		GC_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_INIT],&o,1,0));
 	}
 }
 
@@ -160,10 +167,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 	else{
 		SLL_INIT_STRING((sll_string_t*)(&(n->nm)));
 	}
-	n->fn.copy=0;
-	n->fn.del=0;
-	n->fn.init=0;
-	n->fn.str=0;
+	sll_zero_memory(n->fn,(SLL_MAX_OBJECT_FUNC+1)*sizeof(sll_integer_t));
 	sll_arg_count_t i=0;
 	while (i<l){
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
@@ -182,32 +186,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		sll_string_t str=v->dt.s;
 		GC_RELEASE(v);
 		if (str.l>4&&str.v[0]=='@'&&str.v[1]=='@'&&str.v[str.l-2]=='@'&&str.v[str.l-1]=='@'){
-			if (n->dt[i].c){
-				vv=~vv;
-			}
-			if (STRING_EQUAL(&str,&_object_copy_str)){
-				n->fn.copy=vv;
-				l--;
-				continue;
-			}
-			else if (STRING_EQUAL(&str,&_object_delete_str)){
-				n->fn.del=vv;
-				l--;
-				continue;
-			}
-			else if (STRING_EQUAL(&str,&_object_init_str)){
-				n->fn.init=vv;
-				l--;
-				continue;
-			}
-			else if (STRING_EQUAL(&str,&_object_string_str)){
-				n->fn.str=vv;
-				l--;
-				continue;
+			for (sll_object_function_index_t j=0;j<=SLL_MAX_OBJECT_FUNC;j++){
+				if (STRING_EQUAL(&str,_object_fn_list[j])){
+					n->fn[j]=(n->dt[i].c?~vv:vv);
+					l--;
+					goto _skip_next;
+				}
 			}
 		}
 		sll_string_clone(&str,&(n->dt[i].nm));
 		i++;
+_skip_next:;
 	}
 	n->l=l;
 	*(tt->dt+tt->l-1)=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
@@ -223,10 +212,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t));
 	SLL_INIT_STRING((sll_string_t*)(&(n->nm)));
 	n->l=0;
-	n->fn.copy=0;
-	n->fn.del=0;
-	n->fn.init=0;
-	n->fn.str=0;
+	sll_zero_memory(n->fn,(SLL_MAX_OBJECT_FUNC+1)*sizeof(sll_integer_t));
 	*(tt->dt+tt->l-1)=n;
 	sll_object_t* o=sll_create_object(tt->l+SLL_MAX_OBJECT_TYPE);
 	o->dt.p=NULL;
@@ -356,8 +342,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 		src++;
 		dst++;
 	}
-	if (dt->fn.copy){
-		GC_RELEASE(sll_execute_function(dt->fn.copy,&n,1,0));
+	if (dt->fn[SLL_OBJECT_FUNC_COPY]){
+		GC_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_COPY],&n,1,0));
 	}
 	return n;
 }

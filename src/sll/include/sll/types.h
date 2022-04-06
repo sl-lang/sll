@@ -1,5 +1,6 @@
 #ifndef __SLL_TYPES_H__
 #define __SLL_TYPES_H__ 1
+#include <sll/_object_func.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
 #include <stdarg.h>
@@ -62,6 +63,10 @@ typedef __SLL_U8 sll_compare_result_t;
 
 
 
+typedef __SLL_U8 sll_day_t;
+
+
+
 typedef __SLL_U8 sll_file_flags_t;
 
 
@@ -94,11 +99,11 @@ typedef __SLL_U8 sll_node_type_t;
 
 
 
+typedef __SLL_U8 sll_object_function_index_t;
+
+
+
 typedef __SLL_U8 sll_sandbox_flag_t;
-
-
-
-typedef __SLL_U8 sll_day_t;
 
 
 
@@ -753,15 +758,6 @@ typedef struct __SLL__INTERNAL_FUNCTION_TABLE{
 
 
 
-typedef struct __SLL_OBJECT_TYPE_DATA_FUNCTIONS{
-	sll_integer_t copy;
-	sll_integer_t del;
-	sll_integer_t init;
-	sll_integer_t str;
-} sll_object_type_data_functions_t;
-
-
-
 typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
 	sll_object_type_t t;
 	sll_bool_t c;
@@ -773,7 +769,7 @@ typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
 typedef struct __SLL_OBJECT_TYPE_DATA{
 	const sll_string_t nm;
 	sll_arg_count_t l;
-	sll_object_type_data_functions_t fn;
+	sll_integer_t fn[SLL_MAX_OBJECT_FUNC+1];
 	sll_object_type_data_entry_t dt[];
 } sll_object_type_data_t;
 

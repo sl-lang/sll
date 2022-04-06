@@ -82,8 +82,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				case SLL_OBJECT_TYPE_CHAR:
 					SLL_UNIMPLEMENTED();
 				case SLL_OBJECT_TYPE_STRING:
-					if (dt->fn.str){
-						sll_object_t* v=sll_execute_function(dt->fn.str,&a,1,0);
+					if (dt->fn[SLL_OBJECT_FUNC_STRING]){
+						sll_object_t* v=sll_execute_function(dt->fn[SLL_OBJECT_FUNC_STRING],&a,1,0);
 						sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 						GC_RELEASE(v);
 						return str;

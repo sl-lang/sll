@@ -1,5 +1,6 @@
 #ifndef __SLL_OBJECT_H__
 #define __SLL_OBJECT_H__ 1
+#include <sll/_object_func.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/types.h>

@@ -9,6 +9,7 @@
 - Implemented `sll_expand_environment_variable`
 - Implemented `sll_search_path_t`, `SLL_SEARCH_PATH_SPLIT_CHAR`, `SLL_SEARCH_PATH_FLAG_BEFORE`, `SLL_SEARCH_PATH_FLAG_AFTER`, `sll_env_path`, `sll_free_search_path`, `sll_search_path_create`, `sll_search_path_find` and `sll_search_path_from_environment`
 - Implemented `sll_weakref_clone`
+- Implemented `sll_object_function_index_t`, `SLL_OBJECT_FUNC_INIT`, SLL_OBJECT_FUNC_DELETE`, SLL_OBJECT_FUNC_COPY` and `SLL_OBJECT_FUNC_STRING`
 - Implemented `statistics$correlation` ([#260])
 - More examples ([#8])
 - Object creation code to build an array of string pointers: `x`
@@ -24,6 +25,10 @@
 - Fixed empty string arguments in `sll_api_path_join`
 - Fixed executable path expansion in `sll_api_process_start`
 - Renamed `sll_ref_count_t` and `sll_weak_ref_t` to `sll_reference_count_t` and `sll_weak_reference_t`
+
+### Removed
+
+- Unused `sll_object_type_data_functions_t`
 
 ## [0.7.11] - 2022-04-02
 
