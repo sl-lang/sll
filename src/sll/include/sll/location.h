@@ -12,25 +12,13 @@
 
 
 /**
- * \flags func macro
- * \name SLL_DEBUG_LINE_DATA_GET_DATA
- * \group location
- * \desc Docs!
- * \arg const sll_debug_line_data_t* dbg
- * \ret sll_file_offset_t
- */
-#define SLL_DEBUG_LINE_DATA_GET_DATA(dbg) ((dbg)->ln&0x3fffffffffffffffull)
-
-
-
-/**
  * \flags macro var
  * \name SLL_DEBUG_LINE_DATA_FLAG_FILE
  * \group location
  * \desc Docs!
  * \type sll_file_offset_t
  */
-#define SLL_DEBUG_LINE_DATA_FLAG_FILE 0x4000000000000000ull
+#define SLL_DEBUG_LINE_DATA_FLAG_FILE 1ull
 
 
 
@@ -41,7 +29,32 @@
  * \desc Docs!
  * \type sll_file_offset_t
  */
-#define SLL_DEBUG_LINE_DATA_FLAG_FUNC 0x8000000000000000ull
+#define SLL_DEBUG_LINE_DATA_FLAG_FUNC 2ull
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_DEBUG_LINE_DATA_GET_DATA
+ * \group location
+ * \desc Docs!
+ * \arg const sll_debug_line_data_t* dbg
+ * \ret sll_file_offset_t
+ */
+#define SLL_DEBUG_LINE_DATA_GET_DATA(dbg) ((dbg)->ln>>2)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_DEBUG_LINE_DATA_SET_DATA
+ * \group location
+ * \desc Docs!
+ * \arg const sll_debug_line_data_t* dbg
+ * \arg sll_file_offset_t idx
+ * \arg sll_file_offset_t fl
+ */
+#define SLL_DEBUG_LINE_DATA_SET_DATA(dbg,idx,fl) (dbg)->ln=((idx)<<2)|(fl)
 
 
 

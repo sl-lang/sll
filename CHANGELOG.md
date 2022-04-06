@@ -6,10 +6,11 @@
 
 - CLI option to load an audit library: `-L` or `--audit-library`
 - Implemented `SLL_ABI_AUDIT_CALL`, `SLL_ABI_AUDIT_DEINIT`, `SLL_ABI_AUDIT_INIT`, `SLL_ABI_DEINIT`, `SLL_ABI_INIT` and `SLL_ABI_NAME`
+- Implemented `sll_debug_data_length_t`, `sll_environment_length_t`, `sll_object_type_table_t` and `sll_tls_object_length_t`
+- Implemented `SLL_DEBUG_LINE_DATA_SET_DATA`
 - Implemented `sll_expand_environment_variable`
 - Implemented `sll_object_function_index_t`, `SLL_OBJECT_FUNC_INIT`, SLL_OBJECT_FUNC_DELETE`, SLL_OBJECT_FUNC_COPY` and `SLL_OBJECT_FUNC_STRING`
 - Implemented `sll_search_path_length_t`, `sll_search_path_t`, `SLL_SEARCH_PATH_SPLIT_CHAR`, `SLL_SEARCH_PATH_FLAG_BEFORE`, `SLL_SEARCH_PATH_FLAG_AFTER`, `sll_env_path`, `sll_free_search_path`, `sll_search_path_create`, `sll_search_path_find` and `sll_search_path_from_environment`
-- Implemented `sll_debug_data_length_t`, `sll_environment_length_t`, `sll_object_type_table_t` and `sll_tls_object_length_t`
 - Implemented `sll_weakref_clone`
 - Implemented `statistics$correlation` ([#260])
 - More examples ([#8])

@@ -2244,13 +2244,13 @@ _remove_nop:
 					f_off++;
 					if (i!=l_dbg_ii||(dbg_i&&((o->dbg.dt+dbg_i-1)->ln&SLL_DEBUG_LINE_DATA_FLAG_FILE))){
 						(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-						(o->dbg.dt+dbg_i)->ln=f_off;
+						SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,f_off,0);
 						dbg_i++;
 					}
 				}
 				else if (f_idx!=ai->dt.s){
 					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-					(o->dbg.dt+dbg_i)->ln=ai->dt.s|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+					SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,ai->dt.s,SLL_DEBUG_LINE_DATA_FLAG_FILE);
 					*(sm.m+(ai->dt.s>>6))|=1ull<<(ai->dt.s&63);
 					f_off=0;
 					f_idx=ai->dt.s;
@@ -2269,16 +2269,16 @@ _remove_nop:
 				if (f_idx!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp){
 					f_idx=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp;
 					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-					(o->dbg.dt+dbg_i)->ln=f_idx|SLL_DEBUG_LINE_DATA_FLAG_FILE;
+					SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,f_idx,SLL_DEBUG_LINE_DATA_FLAG_FILE);
 					dbg_i++;
 					l_dbg_ii=i;
 				}
 				(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-				(o->dbg.dt+dbg_i)->ln=(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->nm|SLL_DEBUG_LINE_DATA_FLAG_FUNC;
+				SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->nm,SLL_DEBUG_LINE_DATA_FLAG_FUNC);
 				dbg_i++;
 				f_off=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln;
 				(o->dbg.dt+dbg_i)->ii=0;
-				(o->dbg.dt+dbg_i)->ln=f_off;
+				SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,f_off,0);
 				dbg_i++;
 				l_dbg_ii=i;
 				goto _remove_nop;
@@ -2344,7 +2344,7 @@ _remove_nop:
 	}
 	for (sll_debug_data_length_t i=0;i<o->dbg.l;i++){
 		if ((o->dbg.dt+i)->ln&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC)){
-			(o->dbg.dt+i)->ln=(*(sm.im+SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+i)))|((o->dbg.dt+i)->ln&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC));
+			SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+i,*(sm.im+SLL_DEBUG_LINE_DATA_GET_DATA(o->dbg.dt+i)),(o->dbg.dt+i)->ln&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC));
 		}
 	}
 	ai=o->h;
