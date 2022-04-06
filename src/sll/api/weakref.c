@@ -27,9 +27,9 @@ static void _cleanup_data(void){
 
 
 
-static void _call_user_array(sll_weak_ref_t wr,sll_object_t* obj,void* arg){
-	sll_object_t* dt=sll_weakref_get((sll_weak_ref_t)arg);
-	SLL_CRITICAL(sll_weakref_delete((sll_weak_ref_t)arg));
+static void _call_user_array(sll_weak_reference_t wr,sll_object_t* obj,void* arg){
+	sll_object_t* dt=sll_weakref_get((sll_weak_reference_t)arg);
+	SLL_CRITICAL(sll_weakref_delete((sll_weak_reference_t)arg));
 	if (!dt){
 		return;
 	}
@@ -61,13 +61,13 @@ __API_FUNC(weakref_create){
 
 
 __API_FUNC(weakref_delete){
-	return sll_weakref_delete((sll_weak_ref_t)a);
+	return sll_weakref_delete((sll_weak_reference_t)a);
 }
 
 
 
 __API_FUNC(weakref_get){
-	sll_object_t* o=sll_weakref_get((sll_weak_ref_t)a);
+	sll_object_t* o=sll_weakref_get((sll_weak_reference_t)a);
 	if (o){
 		SLL_ACQUIRE(o);
 		return o;
@@ -79,5 +79,5 @@ __API_FUNC(weakref_get){
 
 
 __API_FUNC(weakref_set_callback_data){
-	sll_weakref_set_callback((sll_weak_ref_t)a,_call_user_array,sll_weakref_create(b));
+	sll_weakref_set_callback((sll_weak_reference_t)a,_call_user_array,sll_weakref_create(b));
 }

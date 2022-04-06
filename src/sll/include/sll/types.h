@@ -258,7 +258,7 @@ typedef __SLL_U64 sll_file_offset_t;
 
 
 
-typedef __SLL_U64 sll_ref_count_t;
+typedef __SLL_U64 sll_reference_count_t;
 
 
 
@@ -306,7 +306,7 @@ typedef void* sll_process_handle_t;
 
 
 
-typedef void* sll_weak_ref_t;
+typedef void* sll_weak_reference_t;
 
 
 
@@ -727,7 +727,7 @@ typedef union __SLL_OBJECT_DATA{
 
 
 typedef struct __SLL_OBJECT{
-	sll_ref_count_t rc;
+	sll_reference_count_t rc;
 	const sll_object_type_t t;
 	__SLL_U32 _f;
 	sll_object_data_t dt;
@@ -1014,7 +1014,7 @@ typedef struct __SLL_TLS_OBJECT{
 
 
 
-typedef void (*sll_weak_ref_destructor_t)(sll_weak_ref_t,sll_object_t*,void*);
+typedef void (*sll_weak_ref_destructor_t)(sll_weak_reference_t,sll_object_t*,void*);
 
 
 

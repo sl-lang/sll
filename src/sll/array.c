@@ -182,7 +182,7 @@ __SLL_EXTERNAL void sll_array_duplicate(const sll_array_t* a,sll_integer_t n,sll
 		n=-n;
 		r=1;
 	}
-	sll_ref_count_t m=(sll_ref_count_t)n;
+	sll_reference_count_t m=(sll_reference_count_t)n;
 	if (!n){
 		if (!e||!a->l){
 			SLL_INIT_ARRAY(o);
