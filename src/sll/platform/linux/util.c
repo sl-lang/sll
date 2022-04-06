@@ -64,13 +64,13 @@ static void _exception_handler(int sig,siginfo_t* si,void* arg){
 
 
 void _deinit_platform(void){
-	for (sll_array_length_t i=0;i<_linux_env.l;i++){
+	for (sll_environment_length_t i=0;i<_linux_env.l;i++){
 		const sll_environment_variable_t* kv=*(_linux_env.dt+i);
 		sll_free_string((sll_string_t*)(&(kv->k)));
 		sll_free_string((sll_string_t*)(&(kv->v)));
 		sll_deallocate(PTR(kv));
 	}
-	*((sll_array_length_t*)(&(_linux_env.l)))=0;
+	*((sll_environment_length_t*)(&(_linux_env.l)))=0;
 	_linux_env.dt=NULL;
 	sll_deallocate(PTR(_linux_env.dt));
 	_linux_platform_time_zone=*sll_utc_time_zone;
@@ -106,14 +106,14 @@ void _init_platform(void){
 		.sa_flags=SA_SIGINFO|SA_NODEFER|SA_RESTART
 	};
 	sigaction(SIGSEGV,&sa,NULL);
-	sll_array_length_t l=0;
+	sll_environment_length_t l=0;
 	char** dt=environ;
 	while (*dt){
 		l++;
 		dt++;
 	}
 	_linux_env.dt=sll_allocate(l*sizeof(sll_environment_variable_t*));
-	sll_array_length_t i=0;
+	sll_environment_length_t i=0;
 	dt=environ;
 	while (*dt){
 		sll_char_t* e=SLL_CHAR(*dt);
@@ -139,7 +139,7 @@ void _init_platform(void){
 		l=i;
 		_linux_env.dt=sll_reallocate((const sll_environment_variable_t**)(_linux_env.dt),l*sizeof(sll_environment_variable_t*));
 	}
-	*((sll_array_length_t*)(&(_linux_env.l)))=l;
+	*((sll_environment_length_t*)(&(_linux_env.l)))=l;
 	tzset();
 	const sll_char_t* nm=SLL_CHAR(tzname[!!daylight]);
 	sll_string_length_t sz=sll_string_length_unaligned(nm);

@@ -45,13 +45,13 @@ void _deinit_platform(void){
 		CloseHandle(_win_wh);
 		_win_wh=INVALID_HANDLE_VALUE;
 	}
-	for (sll_array_length_t i=0;i<_win_env.l;i++){
+	for (sll_environment_length_t i=0;i<_win_env.l;i++){
 		const sll_environment_variable_t* kv=*(_win_env.dt+i);
 		sll_free_string((sll_string_t*)(&(kv->k)));
 		sll_free_string((sll_string_t*)(&(kv->v)));
 		sll_deallocate(PTR(kv));
 	}
-	*((sll_array_length_t*)(&(_win_env.l)))=0;
+	*((sll_environment_length_t*)(&(_win_env.l)))=0;
 	sll_deallocate(PTR(_win_env.dt));
 	_win_env.dt=NULL;
 	_win_platform_time_zone=*sll_utc_time_zone;
@@ -82,7 +82,7 @@ void _init_platform(void){
 	_win_csr=_mm_getcsr();
 	_mm_setcsr(_win_csr|CSR_REGISTER_FLAGS);
 	LPCH dt=GetEnvironmentStrings();
-	sll_array_length_t l=0;
+	sll_environment_length_t l=0;
 	sll_environment_variable_t** kv=sll_allocate_stack(1);
 	LPCH p=dt;
 	while (*p){
@@ -114,7 +114,7 @@ void _init_platform(void){
 	else{
 		_win_env.dt=sll_memory_move(kv,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	}
-	*((sll_array_length_t*)(&(_win_env.l)))=l;
+	*((sll_environment_length_t*)(&(_win_env.l)))=l;
 	TIME_ZONE_INFORMATION tz;
 	DWORD tz_st=GetTimeZoneInformation(&tz);
 	WCHAR* nm;

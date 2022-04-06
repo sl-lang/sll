@@ -29,8 +29,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t** sll_tls_get(sll_tls_object_t* t
 		return &(tls->dt->v);
 	}
 _retry:;
-	sll_array_length_t i=_scheduler_current_thread_index%tls->sz;
-	sll_array_length_t c=tls->sz;
+	sll_tls_object_length_t i=_scheduler_current_thread_index%tls->sz;
+	sll_tls_object_length_t c=tls->sz;
 	while (c){
 		sll_tls_value_t* v=tls->dt+i;
 		if (!v->v){

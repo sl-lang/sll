@@ -61,7 +61,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_sear
 		return 0;
 	}
 	bf[sz]=SLL_API_FILE_PATH_SEPARATOR;
-	for (sll_array_length_t i=0;i<sp->l;i++){
+	for (sll_search_path_length_t i=0;i<sp->l;i++){
 		if ((sp->dt+i)->l<=sz){
 			sll_copy_data((sp->dt+i)->v,(sp->dt+i)->l,bf+sz-(sp->dt+i)->l);
 			if (sll_platform_path_exists(bf+sz-(sp->dt+i)->l)){

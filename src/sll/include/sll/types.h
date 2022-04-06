@@ -151,6 +151,10 @@ typedef __SLL_U32 sll_barrier_index_t;
 
 
 
+typedef __SLL_U32 sll_environment_length_t;
+
+
+
 typedef __SLL_U32 sll_export_table_length_t;
 
 
@@ -207,6 +211,10 @@ typedef __SLL_U32 sll_scope_t;
 
 
 
+typedef __SLL_U32 sll_search_path_length_t;
+
+
+
 typedef __SLL_U32 sll_semaphore_counter_t;
 
 
@@ -236,6 +244,10 @@ typedef __SLL_U32 sll_string_length_t;
 
 
 typedef __SLL_U32 sll_thread_index_t;
+
+
+
+typedef __SLL_U32 sll_tls_object_length_t;
 
 
 
@@ -936,7 +948,7 @@ typedef struct __SLL_ENVIRONMENT_VARIABLE{
 
 typedef struct __SLL_ENVIRONMENT{
 	const sll_environment_variable_t*const* dt;
-	const sll_array_length_t l;
+	const sll_environment_length_t l;
 } sll_environment_t;
 
 
@@ -1004,7 +1016,7 @@ typedef struct __SLL_TLS_VALUE{
 
 
 typedef struct __SLL_TLS_OBJECT{
-	sll_array_length_t sz;
+	sll_tls_object_length_t sz;
 	sll_tls_value_t* dt;
 } sll_tls_object_t;
 
@@ -1020,7 +1032,7 @@ typedef void (*sll_audit_callback_t)(const sll_string_t*,const sll_array_t*);
 
 typedef struct __SLL_SEARCH_PATH{
 	sll_string_t* dt;
-	sll_array_length_t l;
+	sll_search_path_length_t l;
 } sll_search_path_t;
 
 
