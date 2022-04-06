@@ -3,6 +3,8 @@
 
 
 
+#define __SLL_S1 signed char
+#define __SLL_U1 _Bool
 #define __SLL_S8 signed char
 #define __SLL_U8 unsigned char
 #define __SLL_S16 signed short int
@@ -19,6 +21,7 @@
 
 
 
+#define __SLL_U1_MAX 1
 #define __SLL_U8_MAX 255
 #define __SLL_U16_MAX 65535
 #define __SLL_U32_MAX 4294967295u

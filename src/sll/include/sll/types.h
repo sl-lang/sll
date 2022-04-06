@@ -43,7 +43,7 @@ struct __SLL_JSON_MAP_KEYPAIR;
 
 
 
-typedef _Bool sll_bool_t;
+typedef __SLL_U1 sll_bool_t;
 
 
 
