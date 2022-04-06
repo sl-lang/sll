@@ -1,8 +1,8 @@
 #ifndef __SLL_TYPES_H__
 #define __SLL_TYPES_H__ 1
+#include <sll/_identifier.h>
 #include <sll/_object_func.h>
 #include <sll/_size_types.h>
-#include <sll/common.h>
 #include <stdarg.h>
 
 
