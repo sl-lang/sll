@@ -23,7 +23,7 @@
 
 - Fixed empty string arguments in `sll_api_path_join`
 - Fixed executable path expansion in `sll_api_process_start`
-- Renamed `sll_ref_count_t` `sll_weak_ref_t` to `sll_reference_count_t` and `sll_weak_reference_t`
+- Renamed `sll_ref_count_t` and `sll_weak_ref_t` to `sll_reference_count_t` and `sll_weak_reference_t`
 
 ## [0.7.11] - 2022-04-02
 
