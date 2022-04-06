@@ -52,6 +52,29 @@ void _weakref_delete(sll_object_t* o){
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_ref_t sll_weakref_clone(sll_weak_ref_t wr){
+	weakref_key_pair_t** kp=_weakref_data;
+	for (sll_array_length_t i=0;i<_weakref_data_len;i++){
+		weakref_key_pair_t* k=*kp;
+		if (k->wr==wr){
+			_weakref_data_len++;
+			_weakref_data=sll_reallocate(_weakref_data,_weakref_data_len*sizeof(weakref_key_pair_t*));
+			_weakref_next=PTR(ADDR(_weakref_next)+1);
+			weakref_key_pair_t* kp=sll_allocate(sizeof(weakref_key_pair_t));
+			kp->obj=k->obj;
+			kp->wr=_weakref_next;
+			kp->cb=NULL;
+			kp->arg=NULL;
+			*(_weakref_data+_weakref_data_len-1)=kp;
+			return _weakref_next;
+		}
+		kp++;
+	}
+	return NULL;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_ref_t sll_weakref_create(sll_object_t* o){
 	if (!_weakref_cb){
 		sll_register_cleanup(_cleanup_data);

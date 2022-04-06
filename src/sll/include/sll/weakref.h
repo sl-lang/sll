@@ -13,6 +13,18 @@
 
 /**
  * \flags check_output func
+ * \name sll_weakref_clone
+ * \group weakref
+ * \desc Docs!
+ * \arg sll_weak_ref_t wr
+ * \ret sll_weak_ref_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_ref_t sll_weakref_clone(sll_weak_ref_t wr);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_weakref_create
  * \group weakref
  * \desc Docs!
