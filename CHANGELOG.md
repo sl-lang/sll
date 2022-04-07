@@ -20,10 +20,13 @@
 
 | Name | Format | Arguments |
 |--|--|--|
+| `sll.cli.deinit` | | |
 | `sll.cli.find` | `s` | `path` |
-| `sll.cli.load` | `s` | `path` |
-| `sll.cli.load.source` | `s` | `source` |
 | `sll.cli.init` | `a` | `arguments` |
+| `sll.cli.load.source` | `s` | `source` |
+| `sll.cli.load` | `s` | `path` |
+| `sll.cli.save.assembly` | `s` | `path` |
+| `sll.cli.save.compiled` | `s` | `path` |
 
 ### Changed
 

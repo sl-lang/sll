@@ -600,6 +600,7 @@ _read_file_argument:
 			k+=4;
 			if (fl&CLI_FLAG_GENERATE_ASSEMBLY){
 				bf[k]='a';
+				sll_audit(SLL_CHAR("sll.cli.save.assembly"),SLL_CHAR("S"),bf);
 				CLI_LOG_IF_VERBOSE("Writing assembly to file '%s'...",bf);
 				sll_file_t of;
 				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
@@ -609,6 +610,7 @@ _read_file_argument:
 			}
 			if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
 				bf[k]='c';
+				sll_audit(SLL_CHAR("sll.cli.save.compiled"),SLL_CHAR("S"),bf);
 				CLI_LOG_IF_VERBOSE("Writing compiled program to file '%s'...",bf);
 				sll_file_t of;
 				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
@@ -682,6 +684,7 @@ _read_file_argument:
 	}
 _cleanup:
 	sll_deallocate(i_fp);
+	sll_audit(SLL_CHAR("sll.cli.deinit"),SLL_CHAR(""));
 	while (i_bl){
 		i_bl--;
 		cli_bundle_source_t* b=*(i_b+i_bl);
