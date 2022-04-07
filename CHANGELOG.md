@@ -20,7 +20,10 @@
 
 | Name | Format | Arguments |
 |--|--|--|
-| `sll.cli.start` | `a` | `arguments` |
+| `sll.cli.find` | `s` | `path` |
+| `sll.cli.load` | `s` | `path` |
+| `sll.cli.load.source` | `s` | `source` |
+| `sll.cli.init` | `a` | `arguments` |
 
 ### Changed
 

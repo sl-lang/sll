@@ -61,6 +61,7 @@ static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o)
 
 
 static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_char_t* f_fp){
+	sll_audit(SLL_CHAR("sll.cli.find"),SLL_CHAR("S"),f_nm);
 	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	if (i_bl){
@@ -508,12 +509,14 @@ _read_file_argument:
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_source_file_t* a_dt_sf=NULL;
 		if (j<fpl){
+			sll_audit(SLL_CHAR("sll.cli.load"),SLL_CHAR("S"),argv[*(fp+j)]);
 			_load_file(argv[*(fp+j)],&a_dt,&c_dt,f_fp);
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 			CLI_EXPAND_PATH(argv[*(fp+j)],bf);
 			sll_set_argument(0,bf);
 		}
 		else{
+			sll_audit(SLL_CHAR("sll.cli.load.source"),SLL_CHAR("S"),argv[*(sl+j-fpl)]);
 			CLI_LOG_IF_VERBOSE("Compiling console input...");
 			sll_init_compilation_data(SLL_CHAR("@console"),&c_dt);
 			sll_file_t f;
