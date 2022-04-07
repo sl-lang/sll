@@ -7,10 +7,11 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/semaphore.h>
 #include <sll/_internal/thread.h>
-#include <sll/operator.h>
+#include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/object.h>
+#include <sll/operator.h>
 #include <sll/platform/event.h>
 #include <sll/platform/lock.h>
 #include <sll/platform/memory.h>
@@ -172,6 +173,7 @@ sll_return_code_t _scheduler_run(void){
 		if (!i){
 			cpu_dt->tid=sll_platform_current_thread();
 			*(cpu_dt->queue)=_thread_new();
+			sll_audit(SLL_CHAR("sll.thread.create"),SLL_CHAR("0Ai"),*(cpu_dt->queue));
 		}
 		else{
 			cpu_dt->tid=sll_platform_start_thread(_cpu_core_worker,cpu_dt);
