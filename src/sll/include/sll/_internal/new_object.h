@@ -1,0 +1,11 @@
+#ifndef __SLL__INTERNAL_NEW_OBJECT_H__
+#define __SLL__INTERNAL_NEW_OBJECT_H__ 1
+
+
+
+#define NEW_OBJECT_FLAG_NO_ACQUIRE 1
+#define NEW_OBJECT_FLAG_ARRAY 2
+
+
+
+#endif
