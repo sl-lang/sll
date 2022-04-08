@@ -217,7 +217,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 						sll_object_t* o=sll_array_length_to_object(len);
 						while (len){
 							len--;
-							o->dt.a.v[len]=(ptr?sll_string_pointer_to_object(*(ptr+len),SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
+							o->dt.a.v[len]=(*(ptr+len)?sll_string_pointer_to_object(*(ptr+len),SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
 						}
 						return o;
 					}
