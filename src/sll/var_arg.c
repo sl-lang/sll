@@ -107,24 +107,31 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_var_arg_get_object(sll_var_arg_list_t* va){
-	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		sll_object_t* o=va_arg(*(va->dt.c),sll_object_t*);
-		if (!o){
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_SLL){
+		if (!va->dt.sll.l){
 			return SLL_ACQUIRE_STATIC_INT(0);
 		}
+		sll_object_t* o=*(va->dt.sll.p);
 		SLL_ACQUIRE(o);
+		va->dt.sll.p++;
+		va->dt.sll.l--;
 		return o;
 	}
-	if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
-		SLL_UNIMPLEMENTED();
+	sll_object_t* o;
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+		o=va_arg(*(va->dt.c),sll_object_t*);
 	}
-	if (!va->dt.sll.l){
+	else{
+		SLL_ASSERT(va->dt.s.l);
+		sll_size_t off=*(va->dt.s.off);
+		va->dt.s.off++;
+		va->dt.s.l--;
+		o=*((sll_object_t**)PTR(ADDR(va->dt.s.ptr)+off));
+	}
+	if (!o){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_object_t* o=*(va->dt.sll.p);
 	SLL_ACQUIRE(o);
-	va->dt.sll.p++;
-	va->dt.sll.l--;
 	return o;
 }
 
@@ -135,7 +142,7 @@ __SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* 
 		sll_string_from_pointer(va_arg(*(va->dt.c),const sll_char_t*),o);
 	}
 	else if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
-		SLL_UNIMPLEMENTED();
+		SLL_UNREACHABLE();
 	}
 	else if (!va->dt.sll.l){
 		SLL_INIT_STRING(o);
