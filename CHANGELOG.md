@@ -23,6 +23,7 @@
 |--|--|--|
 | `sll.cli.deinit` | | |
 | `sll.cli.find` | `s` | `path` |
+| `sll.cli.init` | `aa` | `include_directories`, `audit_libraries` |
 | `sll.cli.init.raw` | `a` | `arguments` |
 | `sll.cli.load.source` | `s` | `source` |
 | `sll.cli.load` | `s` | `path` |

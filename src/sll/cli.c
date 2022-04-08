@@ -18,6 +18,7 @@
 #include <sll/io.h>
 #include <sll/log.h>
 #include <sll/memory.h>
+#include <sll/new_object.h>
 #include <sll/node.h>
 #include <sll/platform/library.h>
 #include <sll/platform/path.h>
@@ -170,6 +171,27 @@ static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
 	sll_copy_data(nm,nml,b->nm);
 	b->b=b_dt;
 	*(i_b+i_bl-1)=b;
+}
+
+
+
+static void _init_audit_event(cli_audit_library_t* ll,sll_array_length_t lll){
+	const sll_char_t** inc_bf=sll_allocate_stack(1);
+	sll_string_length_t inc_bfl=0;
+	sll_string_length_t i=0;
+	while (i<i_fpl){
+		inc_bfl++;
+		inc_bf=sll_reallocate((void*)inc_bf,inc_bfl*sizeof(const sll_char_t*));
+		*(inc_bf+inc_bfl-1)=i_fp+i;
+		i+=sll_string_length_unaligned(i_fp+i)+1;
+	}
+	sll_object_t** ll_obj=sll_allocate_stack(lll*sizeof(sll_object_t*));
+	for (sll_array_length_t j=0;j<lll;j++){
+		*(ll_obj+j)=sll_new_object(SLL_CHAR("Si"),(ll+j)->nm,(ll+j)->lh);
+	}
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("xL"),inc_bf,inc_bfl,ll_obj,lll);
+	sll_deallocate(ll_obj);
+	sll_deallocate((void*)inc_bf);
 }
 
 
@@ -439,6 +461,7 @@ _read_file_argument:
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
 	}
 	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("x"),argv,argc);
+	_init_audit_event(ll,lll);
 	if (fl&CLI_FLAG_VERSION){
 		sll_date_t d;
 		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
