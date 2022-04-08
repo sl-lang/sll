@@ -9,6 +9,7 @@
 #include <sll/assembly.h>
 #include <sll/audit.h>
 #include <sll/bundle.h>
+#include <sll/cli.h>
 #include <sll/data.h>
 #include <sll/error.h>
 #include <sll/file.h>
@@ -194,7 +195,7 @@ static void _init_audit_event(const sll_char_t* o_fp,cli_audit_library_t* ll,sll
 		cli_bundle_source_t* dt=*(i_b+j);
 		*(i_b_obj+j)=sll_new_object(SLL_CHAR("Si"),dt->nm,&(dt->b));
 	}
-	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("SxnnS"),o_fp,inc_bf,inc_bfl,ll_obj,lll,i_b_obj,i_bl,b_nm);
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uSxnnS"),fl,o_fp,inc_bf,inc_bfl,ll_obj,lll,i_b_obj,i_bl,b_nm);
 	sll_deallocate(i_b_obj);
 	sll_deallocate(ll_obj);
 	sll_deallocate((void*)inc_bf);
@@ -260,7 +261,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		const sll_char_t* e=argv[i];
 		sll_char_t nm=(*e=='-'&&*(e+1)&&!*(e+2)?*(e+1):0);
 		if (nm=='a'||sll_string_compare_pointer(e,SLL_CHAR("--generate-assembly"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_GENERATE_ASSEMBLY;
+			fl|=SLL_CLI_FLAG_GENERATE_ASSEMBLY;
 		}
 		else if (nm=='A'||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			sll_set_argument_count(argc-i);
@@ -270,19 +271,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			break;
 		}
 		else if (nm=='b'||sll_string_compare_pointer(e,SLL_CHAR("--bundle"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_GENERATE_BUNDLE;
+			fl|=SLL_CLI_FLAG_GENERATE_BUNDLE;
 		}
 		else if (nm=='c'||sll_string_compare_pointer(e,SLL_CHAR("--generate-compiled-object"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_GENERATE_COMPILED_OBJECT;
+			fl|=SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT;
 		}
 		else if (nm=='d'||sll_string_compare_pointer(e,SLL_CHAR("--strip-names"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_STRIP_NAMES;
+			fl|=SLL_CLI_FLAG_STRIP_NAMES;
 		}
 		else if (nm=='D'||sll_string_compare_pointer(e,SLL_CHAR("--strip-debug"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_STRIP_DEBUG;
+			fl|=SLL_CLI_FLAG_STRIP_DEBUG;
 		}
 		else if (nm=='e'||sll_string_compare_pointer(e,SLL_CHAR("--expand-file-paths"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_EXPAND_PATH;
+			fl|=SLL_CLI_FLAG_EXPAND_PATH;
 		}
 		else if (nm=='f'||sll_string_compare_pointer(e,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
@@ -292,7 +293,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			goto _read_file_argument;
 		}
 		else if (nm=='h'||sll_string_compare_pointer(e,SLL_CHAR("--help"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_HELP;
+			fl|=SLL_CLI_FLAG_HELP;
 		}
 		else if (nm=='I'||sll_string_compare_pointer(e,SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
@@ -349,7 +350,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			}
 		}
 		else if (nm=='n'||sll_string_compare_pointer(e,SLL_CHAR("--names-only"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_NO_PATHS;
+			fl|=SLL_CLI_FLAG_NO_PATHS;
 		}
 		else if (nm=='N'||sll_string_compare_pointer(e,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
@@ -373,13 +374,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			b_o_fp=argv[i];
 		}
 		else if (nm=='p'||sll_string_compare_pointer(e,SLL_CHAR("--print-objects"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_PRINT_NODES;
+			fl|=SLL_CLI_FLAG_PRINT_NODES;
 		}
 		else if (nm=='P'||sll_string_compare_pointer(e,SLL_CHAR("--print-assembly"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_PRINT_ASSEMBLY;
+			fl|=SLL_CLI_FLAG_PRINT_ASSEMBLY;
 		}
 		else if (nm=='R'||sll_string_compare_pointer(e,SLL_CHAR("--no-run"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_NO_RUN;
+			fl|=SLL_CLI_FLAG_NO_RUN;
 		}
 		else if (nm=='s'||sll_string_compare_pointer(e,SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
@@ -446,10 +447,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			}
 		}
 		else if (nm=='v'||sll_string_compare_pointer(e,SLL_CHAR("--verbose"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_VERBOSE;
+			fl|=SLL_CLI_FLAG_VERBOSE;
 		}
 		else if (nm=='V'||sll_string_compare_pointer(e,SLL_CHAR("--version"))==SLL_COMPARE_RESULT_EQUAL){
-			fl|=CLI_FLAG_VERSION;
+			fl|=SLL_CLI_FLAG_VERSION;
 		}
 		else if (*e=='-'){
 			SLL_WARN(SLL_CHAR("Ignroing unknown Switch '%s'"),e);
@@ -462,52 +463,52 @@ _read_file_argument:
 		}
 		i++;
 	} while (i<argc);
-	if (fl&CLI_FLAG_VERBOSE){
+	if (fl&SLL_CLI_FLAG_VERBOSE){
 		sll_set_log_default(SLL_LOG_FLAG_SHOW,1);
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
 	}
 	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("x"),argv,argc);
 	_init_audit_event(o_fp,ll,lll,b_nm);
-	if (fl&CLI_FLAG_VERSION){
+	if (fl&SLL_CLI_FLAG_VERSION){
 		sll_date_t d;
 		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
 		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.y,d.m+1,d.d+1,d.h,d.mn,sll_api_math_floor(d.s));
 		goto _cleanup;
 	}
-	if (fl&CLI_FLAG_HELP){
+	if (fl&SLL_CLI_FLAG_HELP){
 		sll_file_write(sll_stdout,HELP_TEXT,HELP_TEXT_SIZE,NULL);
 		goto _cleanup;
 	}
-	if (fl&CLI_FLAG_VERBOSE){
+	if (fl&SLL_CLI_FLAG_VERBOSE){
 		SLL_LOG("Configuration:");
-		if (fl&CLI_FLAG_EXPAND_PATH){
+		if (fl&SLL_CLI_FLAG_EXPAND_PATH){
 			SLL_LOG("  Path expansion");
 		}
-		if (fl&CLI_FLAG_GENERATE_ASSEMBLY){
+		if (fl&SLL_CLI_FLAG_GENERATE_ASSEMBLY){
 			SLL_LOG("  Assembly generation");
 		}
-		if (fl&CLI_FLAG_GENERATE_BUNDLE){
+		if (fl&SLL_CLI_FLAG_GENERATE_BUNDLE){
 			SLL_LOG("  Bundle generation");
 		}
-		if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
+		if (fl&SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT){
 			SLL_LOG("  Compiled program generation");
 		}
-		if (fl&CLI_FLAG_NO_PATHS){
+		if (fl&SLL_CLI_FLAG_NO_PATHS){
 			SLL_LOG("  No bundle file paths");
 		}
-		if (!(fl&CLI_FLAG_NO_RUN)){
+		if (!(fl&SLL_CLI_FLAG_NO_RUN)){
 			SLL_LOG("  Execution");
 		}
-		if (fl&CLI_FLAG_PRINT_ASSEMBLY){
+		if (fl&SLL_CLI_FLAG_PRINT_ASSEMBLY){
 			SLL_LOG("  Assembly printing");
 		}
-		if (fl&CLI_FLAG_PRINT_NODES){
+		if (fl&SLL_CLI_FLAG_PRINT_NODES){
 			SLL_LOG("  Compiled program printing");
 		}
-		if (fl&CLI_FLAG_STRIP_DEBUG){
+		if (fl&SLL_CLI_FLAG_STRIP_DEBUG){
 			SLL_LOG("  Debug data stripping");
 		}
-		if (fl&CLI_FLAG_STRIP_NAMES){
+		if (fl&SLL_CLI_FLAG_STRIP_NAMES){
 			SLL_LOG("  Function name stripping");
 		}
 		SLL_LOG("Include path:");
@@ -529,7 +530,7 @@ _read_file_argument:
 		fl|=CLI_FLAG_SINGLE_OUTPUT;
 	}
 	sll_bundle_t bundle;
-	if (fl&CLI_FLAG_GENERATE_BUNDLE){
+	if (fl&SLL_CLI_FLAG_GENERATE_BUNDLE){
 		sll_bundle_create((!b_nm||((b_nm[0]=='\\'||b_nm[0]=='/')&&!b_nm[1])?NULL:b_nm),&bundle);
 	}
 	for (sll_string_length_t j=0;j<fpl+sll;j++){
@@ -556,7 +557,7 @@ _read_file_argument:
 			sll_set_argument(0,SLL_CHAR("@console"));
 		}
 		if (!(fl&CLI_FLAG_ASSEMBLY_GENERATED)){
-			if ((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN)){
+			if ((fl&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_PRINT_ASSEMBLY))||!(fl&SLL_CLI_FLAG_NO_RUN)){
 				CLI_LOG_IF_VERBOSE("Combining source files...");
 				a_dt_sf=sll_allocate(sizeof(sll_source_file_t));
 				sll_unify_compilation_data(&c_dt,a_dt_sf);
@@ -565,11 +566,11 @@ _read_file_argument:
 				*(c_dt.dt)=a_dt_sf;
 				c_dt.l=1;
 			}
-			if (fl&CLI_FLAG_STRIP_DEBUG){
+			if (fl&SLL_CLI_FLAG_STRIP_DEBUG){
 				CLI_LOG_IF_VERBOSE("Removing debugging data...");
 				sll_remove_debug_data(&c_dt);
 			}
-			if (fl&CLI_FLAG_STRIP_NAMES){
+			if (fl&SLL_CLI_FLAG_STRIP_NAMES){
 				CLI_LOG_IF_VERBOSE("Removing name data...");
 				sll_remove_debug_names(&c_dt);
 			}
@@ -577,20 +578,20 @@ _read_file_argument:
 			sll_remove_node_padding(&c_dt);
 			CLI_LOG_IF_VERBOSE("Optimizing node metadata...");
 			sll_optimize_metadata(&c_dt);
-			if (fl&CLI_FLAG_PRINT_NODES){
+			if (fl&SLL_CLI_FLAG_PRINT_NODES){
 				sll_print_node(*(c_dt.dt),&i_ft,NULL,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n',NULL);
 			}
-			if ((fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_PRINT_ASSEMBLY))||!(fl&CLI_FLAG_NO_RUN)){
+			if ((fl&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_PRINT_ASSEMBLY))||!(fl&SLL_CLI_FLAG_NO_RUN)){
 				CLI_LOG_IF_VERBOSE("Generating assembly...");
 				sll_generate_assembly(a_dt_sf,&a_dt);
 			}
 		}
-		if (fl&CLI_FLAG_PRINT_ASSEMBLY){
+		if (fl&SLL_CLI_FLAG_PRINT_ASSEMBLY){
 			sll_print_assembly(&a_dt,sll_stdout);
 			sll_file_write_char(sll_stdout,'\n',NULL);
 		}
-		if (j<fpl&&(fl&(CLI_FLAG_GENERATE_ASSEMBLY|CLI_FLAG_GENERATE_COMPILED_OBJECT))){
+		if (j<fpl&&(fl&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT))){
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 			sll_string_length_t k=0;
 			sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
@@ -627,7 +628,7 @@ _read_file_argument:
 			bf[k+3]='l';
 			bf[k+5]=0;
 			k+=4;
-			if (fl&CLI_FLAG_GENERATE_ASSEMBLY){
+			if (fl&SLL_CLI_FLAG_GENERATE_ASSEMBLY){
 				bf[k]='a';
 				sll_audit(SLL_CHAR("sll.cli.save.assembly"),SLL_CHAR("S"),bf);
 				CLI_LOG_IF_VERBOSE("Writing assembly to file '%s'...",bf);
@@ -637,7 +638,7 @@ _read_file_argument:
 				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);
 			}
-			if (fl&CLI_FLAG_GENERATE_COMPILED_OBJECT){
+			if (fl&SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT){
 				bf[k]='c';
 				sll_audit(SLL_CHAR("sll.cli.save.compiled"),SLL_CHAR("S"),bf);
 				CLI_LOG_IF_VERBOSE("Writing compiled program to file '%s'...",bf);
@@ -648,7 +649,7 @@ _read_file_argument:
 				sll_file_close(&of);
 			}
 		}
-		if (!(fl&CLI_FLAG_NO_RUN)){
+		if (!(fl&SLL_CLI_FLAG_NO_RUN)){
 			sll_vm_config_t cfg={
 				CLI_VM_STACK_SIZE,
 				CLI_VM_CALL_STACK_SIZE,
@@ -664,10 +665,10 @@ _read_file_argument:
 			sll_file_flush(sll_stderr);
 		}
 		sll_free_assembly_data(&a_dt);
-		if (j<fpl&&(fl&(CLI_FLAG_ASSEMBLY_GENERATED|CLI_FLAG_GENERATE_BUNDLE))==CLI_FLAG_GENERATE_BUNDLE){
+		if (j<fpl&&(fl&(CLI_FLAG_ASSEMBLY_GENERATED|SLL_CLI_FLAG_GENERATE_BUNDLE))==SLL_CLI_FLAG_GENERATE_BUNDLE){
 			sll_string_t b_f_nm;
 			sll_string_from_pointer(argv[*(fp+j)],&b_f_nm);
-			sll_string_length_t off=((fl&CLI_FLAG_NO_PATHS)?sll_path_split(&b_f_nm):0);
+			sll_string_length_t off=((fl&SLL_CLI_FLAG_NO_PATHS)?sll_path_split(&b_f_nm):0);
 			if (sll_string_ends(&b_f_nm,&slc_end)){
 				sll_string_set_char(0,b_f_nm.l-slc_end.l,&b_f_nm);
 			}
@@ -680,7 +681,7 @@ _read_file_argument:
 		}
 		fl&=~CLI_FLAG_ASSEMBLY_GENERATED;
 	}
-	if (fl&CLI_FLAG_GENERATE_BUNDLE){
+	if (fl&SLL_CLI_FLAG_GENERATE_BUNDLE){
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		if (b_o_fp){
 			sll_string_length_t l=sll_string_length_unaligned(b_o_fp);

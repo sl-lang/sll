@@ -5,6 +5,7 @@
 ### Added
 
 - CLI option to load an audit library: `-L` or `--audit-library`
+- Exported `SLL_CLI_FLAG_EXPAND_PATH`, `SLL_CLI_FLAG_GENERATE_ASSEMBLY`, `SLL_CLI_FLAG_GENERATE_BUNDLE`, `SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT`, `SLL_CLI_FLAG_HELP`, `SLL_CLI_FLAG_NO_PATHS`, `SLL_CLI_FLAG_NO_RUN`, `SLL_CLI_FLAG_PRINT_ASSEMBLY`, `SLL_CLI_FLAG_PRINT_NODES`, `SLL_CLI_FLAG_STRIP_DEBUG`, `SLL_CLI_FLAG_STRIP_NAMES`, `SLL_CLI_FLAG_VERBOSE`, `SLL_CLI_FLAG_VERSION`, `SLL_CLI_FLAG_RESERVED0` and `SLL_CLI_FLAG_RESERVED1`
 - Implemented `SLL_ABI_AUDIT_CALL`, `SLL_ABI_AUDIT_DEINIT`, `SLL_ABI_AUDIT_INIT`, `SLL_ABI_DEINIT`, `SLL_ABI_INIT` and `SLL_ABI_NAME`
 - Implemented `sll_debug_data_length_t`, `sll_environment_length_t`, `sll_object_type_table_t` and `sll_tls_object_length_t`
 - Implemented `SLL_DEBUG_LINE_DATA_SET_DATA`
@@ -24,7 +25,7 @@
 |--|--|--|
 | `sll.cli.deinit` | | |
 | `sll.cli.find` | `s` | `path` |
-| `sll.cli.init` | `saaas` | `output_path`, `include_directories`, `audit_libraries`, `include_bundles`, `bundle_path` |
+| `sll.cli.init` | `isaaas` | `flags`, `output_path`, `include_directories`, `audit_libraries`, `include_bundles`, `bundle_path` |
 | `sll.cli.init.raw` | `a` | `arguments` |
 | `sll.cli.load.source` | `s` | `source` |
 | `sll.cli.load` | `s` | `path` |
