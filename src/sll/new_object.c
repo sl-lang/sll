@@ -25,6 +25,11 @@
 		return o; \
 	} while (0)
 
+#define SKIP_MODIFIERS \
+	while (tl&&(*t==' '||(*t>8&&*t<14)||*t=='!')){ \
+		tl--; \
+		t++; \
+	}
 #define SKIP_WHITESPACE \
 	while (*tl&&(**t==' '||(**t>8&&**t<14))){ \
 		(*tl)--; \
@@ -41,6 +46,13 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 	(*tl)--;
 	sll_char_t st=**t;
 	(*t)++;
+	SKIP_WHITESPACE;
+	sll_bool_t acq=1;
+	if (**t=='!'){
+		acq=0;
+		(*t)++;
+		(*tl)--;
+	}
 	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
 		switch (st){
 			case 'h':
@@ -63,7 +75,6 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			case 'a':
 				return sll_array_to_object(sll_var_arg_get(va));
 			case 'L':
-			case 'n':
 				{
 					sll_object_t*const* ptr=(sll_object_t*const*)sll_var_arg_get(va);
 					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
@@ -73,7 +84,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					sll_object_t* o=sll_array_length_to_object(len);
 					while (len){
 						len--;
-						if (st=='L'){
+						if (acq){
 							SLL_ACQUIRE(*(ptr+len));
 						}
 						o->dt.a.v[len]=*(ptr+len);
@@ -96,13 +107,10 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				}
 			case 'm':
 				return sll_map_to_object(sll_var_arg_get(va));
-			case 'N':
-				{
-					sll_object_t* o=sll_var_arg_get_object(va);
-					GC_RELEASE(o);
-					return o;
-				}
 		}
+	}
+	else{
+		acq=1;
 	}
 	switch (st){
 		case '1':
@@ -174,7 +182,13 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				return o;
 			}
 		case 'O':
-			return sll_var_arg_get_object(va);
+			{
+				sll_object_t* o=sll_var_arg_get_object(va);
+				if (!acq){
+					GC_RELEASE(o);
+				}
+				return o;
+			}
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
@@ -217,6 +231,7 @@ __SLL_EXTERNAL void sll_new_object_array_list(const sll_char_t* t,sll_string_len
 	if (!tl){
 		return;
 	}
+	SKIP_MODIFIERS;
 	while (tl){
 		o->l++;
 		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
@@ -231,6 +246,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_ch
 	if (!tl){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
+	SKIP_MODIFIERS;
 	sll_object_t* e=_build_single(&t,&tl,va);
 	if (!tl){
 		return e;

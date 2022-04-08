@@ -195,7 +195,7 @@ static void _init_audit_event(const sll_char_t* o_fp,cli_audit_library_t* ll,sll
 		cli_bundle_source_t* dt=*(i_b+j);
 		*(i_b_obj+j)=sll_new_object(SLL_CHAR("Si"),dt->nm,&(dt->b));
 	}
-	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uSxnnSi"),fl,o_fp,inc_bf,inc_bfl,ll_obj,lll,i_b_obj,i_bl,b_nm,sll_get_sandbox_flags());
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uSxL!L!Si"),fl,o_fp,inc_bf,inc_bfl,ll_obj,lll,i_b_obj,i_bl,b_nm,sll_get_sandbox_flags());
 	sll_deallocate(i_b_obj);
 	sll_deallocate(ll_obj);
 	sll_deallocate((void*)inc_bf);

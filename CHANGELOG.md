@@ -16,7 +16,7 @@
 - Implemented `statistics$correlation` ([#260])
 - More audit events
 - More examples ([#8])
-- Object creation code to build an array of shared objects references: `n`
+- Object creation modifier to prevent reference acquisition: `!`
 - Object creation code to build an array of string pointers: `x`
 
 #### New Built-in Audit Events
@@ -40,6 +40,7 @@
 
 ### Removed
 
+- Unneeded object creation code: `N`
 - Unused `sll_object_type_data_functions_t`
 
 ## [0.7.11] - 2022-04-02
