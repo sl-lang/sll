@@ -15,6 +15,7 @@
 - Implemented `statistics$correlation` ([#260])
 - More audit events
 - More examples ([#8])
+- Object creation code to build an array of shared objects references: `n`
 - Object creation code to build an array of string pointers: `x`
 
 #### New Built-in Audit Events
@@ -23,7 +24,7 @@
 |--|--|--|
 | `sll.cli.deinit` | | |
 | `sll.cli.find` | `s` | `path` |
-| `sll.cli.init` | `aa` | `include_directories`, `audit_libraries` |
+| `sll.cli.init` | `aa` | `include_directories`, `audit_libraries`, `include_bundles` |
 | `sll.cli.init.raw` | `a` | `arguments` |
 | `sll.cli.load.source` | `s` | `source` |
 | `sll.cli.load` | `s` | `path` |

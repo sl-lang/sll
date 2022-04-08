@@ -63,6 +63,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			case 'a':
 				return sll_array_to_object(sll_var_arg_get(va));
 			case 'L':
+			case 'n':
 				{
 					sll_object_t*const* ptr=(sll_object_t*const*)sll_var_arg_get(va);
 					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
@@ -72,7 +73,9 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					sll_object_t* o=sll_array_length_to_object(len);
 					while (len){
 						len--;
-						SLL_ACQUIRE(*(ptr+len));
+						if (st=='L'){
+							SLL_ACQUIRE(*(ptr+len));
+						}
 						o->dt.a.v[len]=*(ptr+len);
 					}
 					return o;

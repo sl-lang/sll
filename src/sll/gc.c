@@ -6,6 +6,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/memory.h>
@@ -28,7 +29,26 @@ static sll_array_length_t _gc_page_pool_len=0;
 
 
 void _gc_release_data(void){
-	SLL_ASSERT(_gc_alloc==_gc_dealloc);
+	if (_gc_alloc!=_gc_dealloc){
+		gc_page_header_t* pg=_gc_page_ptr;
+		do{
+			sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(gc_page_header_t));
+			void* e=PTR(ADDR(pg)+sizeof(gc_page_header_t)+(SLL_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
+			while (PTR(c)<e){
+				if (c->rc){
+					sll_file_write_format(sll_stderr,SLL_CHAR("[%p]: "),NULL,c);
+					sll_string_t str;
+					sll_api_string_convert(&c,1,&str);
+					sll_file_write(sll_stderr,str.v,str.l*sizeof(sll_char_t),NULL);
+					sll_free_string(&str);
+					sll_file_write_char(sll_stderr,'\n',NULL);
+				}
+				c++;
+			}
+			pg=pg->n;
+		} while (pg);
+		SLL_UNIMPLEMENTED();
+	}
 	while (_gc_page_ptr){
 		gc_page_header_t* n=_gc_page_ptr->n;
 		sll_platform_free_page(_gc_page_ptr,SLL_PAGE_SIZE);
@@ -38,7 +58,6 @@ void _gc_release_data(void){
 		_gc_page_pool_len--;
 		sll_platform_free_page(_gc_page_pool[_gc_page_pool_len],SLL_PAGE_SIZE);
 	}
-	_gc_next_object=NULL;
 	_gc_alloc=0;
 	_gc_dealloc=0;
 }

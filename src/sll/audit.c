@@ -27,9 +27,6 @@ void _audit_cleanup(void){
 
 
 __SLL_EXTERNAL void sll_audit(const sll_char_t* nm,const sll_char_t* t,...){
-	if (!_audit_cb_len){
-		return;
-	}
 	va_list va;
 	va_start(va,t);
 	sll_var_arg_list_t dt={
@@ -45,9 +42,6 @@ __SLL_EXTERNAL void sll_audit(const sll_char_t* nm,const sll_char_t* t,...){
 
 
 __SLL_EXTERNAL void sll_audit_list(const sll_char_t* nm,const sll_char_t* t,sll_var_arg_list_t* va){
-	if (!_audit_cb_len){
-		return;
-	}
 	sll_string_t nm_s;
 	sll_string_from_pointer(nm,&nm_s);
 	sll_array_t arr;

@@ -189,7 +189,13 @@ static void _init_audit_event(cli_audit_library_t* ll,sll_array_length_t lll){
 	for (sll_array_length_t j=0;j<lll;j++){
 		*(ll_obj+j)=sll_new_object(SLL_CHAR("Si"),(ll+j)->nm,(ll+j)->lh);
 	}
-	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("xL"),inc_bf,inc_bfl,ll_obj,lll);
+	sll_object_t** i_b_obj=sll_allocate_stack(i_bl*sizeof(sll_object_t*));
+	for (sll_array_length_t j=0;j<i_bl;j++){
+		cli_bundle_source_t* dt=*(i_b+j);
+		*(i_b_obj+j)=sll_new_object(SLL_CHAR("Si"),dt->nm,&(dt->b));
+	}
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("xnn"),inc_bf,inc_bfl,ll_obj,lll,i_b_obj,i_bl);
+	sll_deallocate(i_b_obj);
 	sll_deallocate(ll_obj);
 	sll_deallocate((void*)inc_bf);
 }
