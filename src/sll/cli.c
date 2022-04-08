@@ -186,18 +186,7 @@ static void _init_audit_event(const sll_char_t* o_fp,cli_audit_library_t* ll,sll
 		*(inc_bf+inc_bfl-1)=i_fp+i;
 		i+=sll_string_length_unaligned(i_fp+i)+1;
 	}
-	sll_object_t** ll_obj=sll_allocate_stack(lll*sizeof(sll_object_t*));
-	for (sll_array_length_t j=0;j<lll;j++){
-		*(ll_obj+j)=sll_new_object(SLL_CHAR("Si"),(ll+j)->nm,(ll+j)->lh);
-	}
-	sll_object_t** i_b_obj=sll_allocate_stack(i_bl*sizeof(sll_object_t*));
-	for (sll_array_length_t j=0;j<i_bl;j++){
-		cli_bundle_source_t* dt=*(i_b+j);
-		*(i_b_obj+j)=sll_new_object(SLL_CHAR("Si"),dt->nm,&(dt->b));
-	}
-	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uSS*O!*O!*Si"),fl,o_fp,inc_bf,inc_bfl,ll_obj,lll,i_b_obj,i_bl,b_nm,sll_get_sandbox_flags());
-	sll_deallocate(i_b_obj);
-	sll_deallocate(ll_obj);
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uSS+{Si}{Sp}Si"),fl,o_fp,inc_bf,inc_bfl,ll,lll,sizeof(cli_audit_library_t),SLL_OFFSETOF(cli_audit_library_t,nm),SLL_OFFSETOF(cli_audit_library_t,lh),i_b,i_bl,0,SLL_OFFSETOF(cli_bundle_source_t,nm),SLL_OFFSETOF(cli_bundle_source_t,b),b_nm,sll_get_sandbox_flags());
 	sll_deallocate((void*)inc_bf);
 }
 
@@ -467,7 +456,7 @@ _read_file_argument:
 		sll_set_log_default(SLL_LOG_FLAG_SHOW,1);
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
 	}
-	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("S*"),argv,argc);
+	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("S+"),argv,argc);
 	_init_audit_event(o_fp,ll,lll,b_nm);
 	if (fl&SLL_CLI_FLAG_VERSION){
 		sll_date_t d;

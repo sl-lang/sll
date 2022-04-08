@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/new_object.h>
+#include <sll/_internal/var_arg.h>
 #include <sll/_size_types.h>
 #include <sll/allocator.h>
 #include <sll/array.h>
@@ -30,15 +31,136 @@
 	} while (0)
 
 #define SKIP_MODIFIERS \
-	while (tl&&(*t==' '||(*t>8&&*t<14)||*t=='!'||*t=='*')){ \
+	while (tl&&(*t==' '||(*t>8&&*t<14)||*t=='!'||*t=='+')){ \
 		tl--; \
 		t++; \
 	}
-#define SKIP_WHITESPACE \
-	while (*tl&&(**t==' '||(**t>8&&**t<14))){ \
-		(*tl)--; \
-		(*t)++; \
+#define SKIP_WHITESPACE_VAR(t,tl) \
+	while ((tl)&&((*t)==' '||((*t)>8&&(*t)<14))){ \
+		(tl)--; \
+		(t)++; \
 	}
+#define SKIP_WHITESPACE SKIP_WHITESPACE_VAR(*t,*tl)
+
+
+
+static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va);
+
+
+
+static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va,struct_offset_builder_t* o){
+	SKIP_WHITESPACE;
+	if (!(*tl)){
+		return;
+	}
+	(*tl)--;
+	sll_char_t st=**t;
+	(*t)++;
+	sll_arg_count_t cnt=1;
+	while (*tl&&(**t==' '||(**t>8&&**t<14)||**t=='!'||**t=='+')){
+		if (**t=='+'){
+			cnt=2;
+		}
+		(*tl)--;
+		(*t)++;
+	}
+	switch (st){
+		case 'p':
+			cnt=1;
+		case 'h':
+		case 'u':
+		case 'i':
+		case 'f':
+		case 'c':
+		case 'C':
+		case 's':
+		case 'S':
+		case 'l':
+		case 'a':
+		case 'm':
+		case 'O':
+			o->l+=cnt;
+			o->off=sll_reallocate(o->off,o->l*sizeof(sll_size_t));
+			*(o->off+o->l-1)=sll_var_arg_get_int(va);
+			if (cnt==2){
+				*(o->off+o->l-2)=sll_var_arg_get_int(va);
+			}
+			return;
+		case '(':
+		case '[':
+		case '<':
+			{
+				sll_char_t ec=(st=='('?')':(st=='['?']':'>'));
+				SKIP_WHITESPACE;
+				while (*tl&&**t!=ec){
+					_build_struct_offsets(t,tl,va,o);
+					SKIP_WHITESPACE;
+				}
+				if (*tl){
+					(*tl)--;
+					(*t)++;
+				}
+				return;
+			}
+	}
+}
+
+
+
+static sll_object_t* _build_struct(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va,sll_flags_t fl){
+	addr_t ptr=sll_var_arg_get_int(va);
+	sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
+	sll_array_length_t sz=(sll_array_length_t)sll_var_arg_get_int(va);
+	SKIP_WHITESPACE;
+	const sll_char_t* base_t=*t;
+	sll_string_length_t base_tl=*tl;
+	struct_offset_builder_t off_dt={
+		NULL,
+		0
+	};
+	while (*tl&&**t!='}'){
+		_build_struct_offsets(t,tl,va,&off_dt);
+		SKIP_WHITESPACE;
+	}
+	if (*tl){
+		(*tl)--;
+		(*t)++;
+	}
+	sll_object_t* o=sll_array_length_to_object(len);
+	sll_bool_t deref=0;
+	if (!sz){
+		sz=sizeof(const void*);
+		deref=1;
+	}
+	ptr+=len*sz;
+	while (len){
+		len--;
+		ptr-=sz;
+		const sll_char_t* arg_t=base_t;
+		sll_string_length_t arg_tl=base_tl;
+		sll_var_arg_list_t arg_va={
+			VAR_ARG_LIST_TYPE_STRUCT,
+			{
+				.s={
+					(deref?*((const void**)ptr):(const void*)ptr),
+					off_dt.off,
+					off_dt.l
+				}
+			}
+		};
+		sll_object_t* arg=sll_array_to_object(NULL);
+		o->dt.a.v[len]=arg;
+		while (arg_tl&&*arg_t!='}'){
+			arg->dt.a.l++;
+			sll_allocator_resize((void**)(&(arg->dt.a.v)),arg->dt.a.l*sizeof(sll_object_t*));
+			arg->dt.a.v[arg->dt.a.l-1]=_build_single(&arg_t,&arg_tl,&arg_va);
+			SKIP_WHITESPACE_VAR(arg_t,arg_tl);
+		}
+		sll_allocator_collapse((void**)(&(arg->dt.a.v)),arg->dt.a.l*sizeof(sll_object_t*));
+	}
+	sll_deallocate(off_dt.off);
+	return o;
+}
 
 
 
@@ -56,7 +178,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		if (**t=='!'){
 			fl|=NEW_OBJECT_FLAG_NO_ACQUIRE;
 		}
-		else if (**t=='*'){
+		else if (**t=='+'){
 			fl|=NEW_OBJECT_FLAG_ARRAY;
 		}
 		else{
@@ -65,7 +187,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		(*t)++;
 		(*tl)--;
 	}
-	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+	if (va->t!=SLL_VAR_ARG_LIST_TYPE_SLL){
 		switch (st){
 			case 'h':
 				if (fl&NEW_OBJECT_FLAG_ARRAY){
@@ -77,6 +199,8 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					SLL_UNIMPLEMENTED();
 				}
 				return sll_int_to_object((__SLL_U32)sll_var_arg_get_int(va));
+			case 'p':
+				return sll_int_to_object(_var_arg_get_pointer(va));
 			case 's':
 				if (fl&NEW_OBJECT_FLAG_ARRAY){
 					SLL_UNIMPLEMENTED();
@@ -119,6 +243,8 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					SLL_UNIMPLEMENTED();
 				}
 				return sll_map_to_object(sll_var_arg_get(va));
+			case '{':
+				return _build_struct(t,tl,va,fl);
 		}
 	}
 	else{
@@ -161,6 +287,30 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_MAP);
 		case 'M':
 			return sll_map_to_object(NULL);
+		case 'O':
+			{
+				if (fl&NEW_OBJECT_FLAG_ARRAY){
+					sll_object_t*const* ptr=(sll_object_t*const*)sll_var_arg_get(va);
+					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
+					if (!ptr||!len){
+						return sll_array_to_object(NULL);
+					}
+					sll_object_t* o=sll_array_length_to_object(len);
+					while (len){
+						len--;
+						if (!(fl&NEW_OBJECT_FLAG_NO_ACQUIRE)){
+							SLL_ACQUIRE(*(ptr+len));
+						}
+						o->dt.a.v[len]=*(ptr+len);
+					}
+					return o;
+				}
+				sll_object_t* o=sll_var_arg_get_object(va);
+				if (fl&NEW_OBJECT_FLAG_NO_ACQUIRE){
+					GC_RELEASE(o);
+				}
+				return o;
+			}
 		case '(':
 		case '[':
 			{
@@ -202,30 +352,6 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				if (*tl){
 					(*tl)--;
 					(*t)++;
-				}
-				return o;
-			}
-		case 'O':
-			{
-				if (fl&NEW_OBJECT_FLAG_ARRAY){
-					sll_object_t*const* ptr=(sll_object_t*const*)sll_var_arg_get(va);
-					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
-					if (!ptr||!len){
-						return sll_array_to_object(NULL);
-					}
-					sll_object_t* o=sll_array_length_to_object(len);
-					while (len){
-						len--;
-						if (!(fl&NEW_OBJECT_FLAG_NO_ACQUIRE)){
-							SLL_ACQUIRE(*(ptr+len));
-						}
-						o->dt.a.v[len]=*(ptr+len);
-					}
-					return o;
-				}
-				sll_object_t* o=sll_var_arg_get_object(va);
-				if (fl&NEW_OBJECT_FLAG_NO_ACQUIRE){
-					GC_RELEASE(o);
 				}
 				return o;
 			}

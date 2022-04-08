@@ -260,7 +260,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 		_thread_get(tid)->flags|=THREAD_FLAG_NO_AUDIT_TERMINATE;
 	}
 	else{
-		sll_audit(SLL_CHAR("sll.thread.create"),SLL_CHAR("iO*u"),fn_idx,al,all,tid);
+		sll_audit(SLL_CHAR("sll.thread.create"),SLL_CHAR("iO+u"),fn_idx,al,all,tid);
 	}
 	sll_object_t* o;
 	if (fl&SLL_EXECUTE_FUNCTION_ASYNC){

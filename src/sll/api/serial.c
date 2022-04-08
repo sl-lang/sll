@@ -426,7 +426,7 @@ __API_FUNC(serial_encode_signed_integer){
 
 __API_FUNC(serial_encode_object){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iO*"),a,b,bc);
+		sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iO+"),a,b,bc);
 		sll_encode_object(sll_file_from_handle(a),b,bc);
 	}
 }

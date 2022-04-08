@@ -16,7 +16,7 @@
  * \name SLL_VAR_ARG_LIST_TYPE_C
  * \group var-arg
  * \desc Docs!
- * \type sll_bool_t
+ * \type sll_var_arg_type_t
  */
 #define SLL_VAR_ARG_LIST_TYPE_C 0
 
@@ -27,9 +27,20 @@
  * \name SLL_VAR_ARG_LIST_TYPE_SLL
  * \group var-arg
  * \desc Docs!
- * \type sll_bool_t
+ * \type sll_var_arg_type_t
  */
 #define SLL_VAR_ARG_LIST_TYPE_SLL 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_VAR_ARG_LIST_TYPE_RESERVED0
+ * \group var-arg
+ * \desc Internally used as `VAR_ARG_LIST_TYPE_STRUCT`
+ * \type sll_var_arg_type_t
+ */
+#define SLL_VAR_ARG_LIST_TYPE_RESERVED0 2
 
 
 

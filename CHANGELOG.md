@@ -5,18 +5,22 @@
 ### Added
 
 - CLI option to load an audit library: `-L` or `--audit-library`
-- Exported `SLL_CLI_FLAG_EXPAND_PATH`, `SLL_CLI_FLAG_GENERATE_ASSEMBLY`, `SLL_CLI_FLAG_GENERATE_BUNDLE`, `SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT`, `SLL_CLI_FLAG_HELP`, `SLL_CLI_FLAG_NO_PATHS`, `SLL_CLI_FLAG_NO_RUN`, `SLL_CLI_FLAG_PRINT_ASSEMBLY`, `SLL_CLI_FLAG_PRINT_NODES`, `SLL_CLI_FLAG_STRIP_DEBUG`, `SLL_CLI_FLAG_STRIP_NAMES`, `SLL_CLI_FLAG_VERBOSE`, `SLL_CLI_FLAG_VERSION`, `SLL_CLI_FLAG_RESERVED0` and `SLL_CLI_FLAG_RESERVED1`
+- Exported `SLL_CLI_FLAG_EXPAND_PATH`, `SLL_CLI_FLAG_GENERATE_ASSEMBLY`, `SLL_CLI_FLAG_GENERATE_BUNDLE`, `SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT`, `SLL_CLI_FLAG_HELP`, `SLL_CLI_FLAG_NO_PATHS`, `SLL_CLI_FLAG_NO_RUN`, `SLL_CLI_FLAG_PRINT_ASSEMBLY`, `SLL_CLI_FLAG_PRINT_NODES`, `SLL_CLI_FLAG_STRIP_DEBUG`, `SLL_CLI_FLAG_STRIP_NAMES`, `SLL_CLI_FLAG_VERBOSE` and `SLL_CLI_FLAG_VERSION`
 - Implemented `SLL_ABI_AUDIT_CALL`, `SLL_ABI_AUDIT_DEINIT`, `SLL_ABI_AUDIT_INIT`, `SLL_ABI_DEINIT`, `SLL_ABI_INIT` and `SLL_ABI_NAME`
 - Implemented `sll_debug_data_length_t`, `sll_environment_length_t`, `sll_object_type_table_t` and `sll_tls_object_length_t`
 - Implemented `SLL_DEBUG_LINE_DATA_SET_DATA`
 - Implemented `sll_expand_environment_variable`
 - Implemented `sll_object_function_index_t`, `SLL_OBJECT_FUNC_INIT`, SLL_OBJECT_FUNC_DELETE`, SLL_OBJECT_FUNC_COPY` and `SLL_OBJECT_FUNC_STRING`
+- Implemented `SLL_OFFSETOF`
 - Implemented `sll_search_path_length_t`, `sll_search_path_t`, `SLL_SEARCH_PATH_SPLIT_CHAR`, `SLL_SEARCH_PATH_FLAG_BEFORE`, `SLL_SEARCH_PATH_FLAG_AFTER`, `sll_env_path`, `sll_free_search_path`, `sll_search_path_create`, `sll_search_path_find` and `sll_search_path_from_environment`
+- Implemented `sll_var_arg_type_t`
 - Implemented `sll_weakref_clone`
 - Implemented `statistics$correlation` ([#260])
 - More audit events
 - More examples ([#8])
-- Object creation modifier to construct an array of a given type: `*`
+- Object creation code to construct C structure arrays: `{}`
+- Object creation code to generate the address of a C structure member: `p`
+- Object creation modifier to construct an array of a given type: `+`
 - Object creation modifier to prevent reference acquisition: `!`
 
 #### New Built-in Audit Events

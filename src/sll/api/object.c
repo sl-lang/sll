@@ -19,6 +19,6 @@ __API_FUNC(object_new){
 			}
 		}
 	};
-	sll_audit(SLL_CHAR("sll.object.new"),SLL_CHAR("sO*"),a,b,bc);
+	sll_audit(SLL_CHAR("sll.object.new"),SLL_CHAR("sO+"),a,b,bc);
 	return sll_new_object_list(a->v,a->l,&dt);
 }

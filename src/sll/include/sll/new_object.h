@@ -12,6 +12,19 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_OFFSETOF
+ * \group new-object
+ * \desc Docs!
+ * \arg <type> t
+ * \arg <field> f
+ * \ret sll_size_t
+ */
+#define SLL_OFFSETOF(t,f) ((sll_size_t)(&(((t*)NULL)->f)))
+
+
+
+/**
  * \flags check_output func var_arg
  * \name sll_new_object
  * \group new-object

@@ -8,4 +8,11 @@
 
 
 
+typedef struct __STRUCT_OFFSET_BUILDER{
+	sll_size_t* off;
+	sll_arg_count_t l;
+} struct_offset_builder_t;
+
+
+
 #endif

@@ -107,6 +107,10 @@ typedef __SLL_U8 sll_sandbox_flag_t;
 
 
 
+typedef __SLL_U8 sll_var_arg_type_t;
+
+
+
 typedef __SLL_U16 sll_call_stack_size_t;
 
 
@@ -906,15 +910,24 @@ typedef struct __SLL_VAR_ARG_LIST_DATA_SLL{
 
 
 
+typedef struct __SLL_VAR_ARG_LIST_DATA_STRUCT{
+	const void* ptr;
+	sll_size_t* off;
+	sll_arg_count_t l;
+} sll_var_arg_list_data_struct_t;
+
+
+
 typedef union __SLL_VAR_ARG_LIST_DATA{
 	va_list* c;
 	sll_var_arg_list_data_sll_t sll;
+	sll_var_arg_list_data_struct_t s;
 } sll_var_arg_list_data_t;
 
 
 
 typedef struct __SLL_VAR_ARG_LIST{
-	sll_bool_t t;
+	sll_var_arg_type_t t;
 	sll_var_arg_list_data_t dt;
 } sll_var_arg_list_t;
 
