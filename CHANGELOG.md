@@ -25,7 +25,7 @@
 |--|--|--|
 | `sll.cli.deinit` | | |
 | `sll.cli.find` | `s` | `path` |
-| `sll.cli.init` | `isaaas` | `flags`, `output_path`, `include_directories`, `audit_libraries`, `include_bundles`, `bundle_path` |
+| `sll.cli.init` | `isaaasi` | `flags`, `output_path`, `include_directories`, `audit_libraries`, `include_bundles`, `bundle_path`, `sandbox_flags` |
 | `sll.cli.init.raw` | `a` | `arguments` |
 | `sll.cli.load.source` | `s` | `source` |
 | `sll.cli.load` | `s` | `path` |

@@ -31,7 +31,7 @@ static __SLL_TLS scheduler_cpu_data_t* _scheduler_data;
 
 
 __SLL_TLS sll_cpu_t _scheduler_internal_thread_index;
-__SLL_TLS sll_thread_index_t _scheduler_current_thread_index;
+__SLL_TLS sll_thread_index_t _scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 __SLL_TLS thread_data_t* _scheduler_current_thread;
 
 
@@ -204,6 +204,7 @@ sll_return_code_t _scheduler_run(void){
 	_semaphore_deinit();
 	_io_dispatcher_deinit();
 	_thread_deinit();
+	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	return o;
 }
 
