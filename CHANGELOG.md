@@ -23,7 +23,7 @@
 |--|--|--|
 | `sll.cli.deinit` | | |
 | `sll.cli.find` | `s` | `path` |
-| `sll.cli.init` | `a` | `arguments` |
+| `sll.cli.init.raw` | `a` | `arguments` |
 | `sll.cli.load.source` | `s` | `source` |
 | `sll.cli.load` | `s` | `path` |
 | `sll.cli.save.assembly` | `s` | `path` |

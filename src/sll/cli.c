@@ -438,7 +438,7 @@ _read_file_argument:
 		sll_set_log_default(SLL_LOG_FLAG_SHOW,1);
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
 	}
-	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("x"),argv,argc);
+	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("x"),argv,argc);
 	if (fl&CLI_FLAG_VERSION){
 		sll_date_t d;
 		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
