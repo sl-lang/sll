@@ -175,7 +175,7 @@ static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
 
 
 
-static void _init_audit_event(cli_audit_library_t* ll,sll_array_length_t lll){
+static void _init_audit_event(const sll_char_t* o_fp,cli_audit_library_t* ll,sll_array_length_t lll,const sll_char_t* b_nm){
 	const sll_char_t** inc_bf=sll_allocate_stack(1);
 	sll_string_length_t inc_bfl=0;
 	sll_string_length_t i=0;
@@ -194,7 +194,7 @@ static void _init_audit_event(cli_audit_library_t* ll,sll_array_length_t lll){
 		cli_bundle_source_t* dt=*(i_b+j);
 		*(i_b_obj+j)=sll_new_object(SLL_CHAR("Si"),dt->nm,&(dt->b));
 	}
-	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("xnn"),inc_bf,inc_bfl,ll_obj,lll,i_b_obj,i_bl);
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("SxnnS"),o_fp,inc_bf,inc_bfl,ll_obj,lll,i_b_obj,i_bl,b_nm);
 	sll_deallocate(i_b_obj);
 	sll_deallocate(ll_obj);
 	sll_deallocate((void*)inc_bf);
@@ -467,7 +467,7 @@ _read_file_argument:
 		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
 	}
 	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("x"),argv,argc);
-	_init_audit_event(ll,lll);
+	_init_audit_event(o_fp,ll,lll,b_nm);
 	if (fl&CLI_FLAG_VERSION){
 		sll_date_t d;
 		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
