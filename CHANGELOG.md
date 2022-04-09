@@ -9,7 +9,7 @@
 
 ### Changed
 
-- Renamed argument parsing modifier symbolizing variadic functions to `!`
+- Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
 
 ## [0.7.12] - 2022-04-09
 
