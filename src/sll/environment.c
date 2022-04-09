@@ -26,7 +26,7 @@
 
 
 static sll_lock_handle_t _env_lock=NULL;
-static __STATIC_STRING(_env_path_var_name,"path");
+static __STATIC_STRING(_env_path_var_name,"PATH");
 static sll_search_path_t _env_path;
 
 
@@ -46,7 +46,7 @@ static void _cleanup_env(void){
 void _init_environment(void){
 	for (sll_environment_length_t i=0;i<sll_environment->l;i++){
 		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->dt+i));
-		sll_string_lower_case(NULL,(sll_string_t*)(&(kv->k)));
+		sll_string_upper_case(NULL,(sll_string_t*)(&(kv->k)));
 	}
 	sll_string_t tmp;
 	sll_string_from_pointer(SLL_CHAR("path"),&tmp);
@@ -82,7 +82,7 @@ __SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* k,
 
 __SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll_string_t* o){
 	sll_string_t k_low;
-	sll_string_lower_case(k,&k_low);
+	sll_string_upper_case(k,&k_low);
 	LOCK_ENV;
 	for (sll_environment_length_t i=0;i<sll_environment->l;i++){
 		const sll_environment_variable_t* kv=*(sll_environment->dt+i);
@@ -105,7 +105,7 @@ __SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll
 
 __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k){
 	sll_string_t k_low;
-	sll_string_lower_case(k,&k_low);
+	sll_string_upper_case(k,&k_low);
 	LOCK_ENV;
 	sll_environment_length_t i=0;
 	while (i<sll_environment->l){
@@ -138,7 +138,7 @@ _cleanup:
 
 __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* k,const sll_string_t* v){
 	sll_string_t k_low;
-	sll_string_lower_case(k,&k_low);
+	sll_string_upper_case(k,&k_low);
 	LOCK_ENV;
 	sll_platform_set_environment_variable(k->v,v->v);
 	for (sll_environment_length_t i=0;i<sll_environment->l;i++){

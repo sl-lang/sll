@@ -28,7 +28,6 @@ static __SLL_FORCE_INLINE __SLL_U32 FIND_LAST_SET_BIT(__SLL_U64 m){
 #define SWAP_BYTES64(m) _byteswap_uint64((m))
 #define ROTATE_BITS(a,b) _rotl((a),(b))
 #define ROTATE_BITS_RIGHT(a,b) _rotr((a),(b))
-#define ROTATE_BITS64(a,b) _rotl64((a),(b))
 #define ROTATE_BITS_RIGHT64(a,b) _rotr64((a),(b))
 #define _ASSUME_ALIGNED(p,n,x) \
 	do{ \
@@ -48,10 +47,6 @@ static __SLL_FORCE_INLINE unsigned int ROTATE_BITS(unsigned int a,unsigned char 
 }
 static __SLL_FORCE_INLINE unsigned int ROTATE_BITS_RIGHT(unsigned int a,unsigned char b){
 	__asm__("ror %1,%0":"+r"(a):"c"(b));
-	return a;
-}
-static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS64(unsigned long long int a,unsigned char b){
-	__asm__("rolq %1,%0":"+r"(a):"c"(b));
 	return a;
 }
 static __SLL_FORCE_INLINE unsigned long long int ROTATE_BITS_RIGHT64(unsigned long long int a,unsigned char b){
