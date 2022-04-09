@@ -17,8 +17,6 @@
 
 
 
-#define INIT_PADDING(v,l) (*((wide_data_t*)((v)+((l)&0xfffffffffffffff8ull)))=0)
-
 #define ADD(a,b) ((a)+(b))
 #define SUB(a,b) ((a)-(b))
 

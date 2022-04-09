@@ -11,6 +11,8 @@
 
 #define STRING_DATA_PTR(x) ASSUME_ALIGNED(x,4,0)
 
+#define INIT_PADDING(v,l) (*((wide_data_t*)((v)+((l)&0xfffffffffffffff8ull)))=0)
+
 
 
 static __SLL_FORCE_INLINE sll_bool_t STRING_EQUAL(const sll_string_t* a,const sll_string_t* b){
@@ -38,6 +40,7 @@ static __SLL_FORCE_INLINE void STRING_INIT_STACK(sll_string_t* o){
 	o->l=0;
 	o->c=0;
 	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
+	INIT_PADDING(o->v,0);
 	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 }
 

@@ -3,17 +3,17 @@
 
 
 (= test_item_count (,,,
-	(<- expect (<- array$count [] -1) 0 "Empty array")
+	(<- expect (<- array$count [] -1) 0)
 	(= arr [1 2 4 1 2 1 2])
-	(<- expect (<- array$count arr 0) 0 "Non-existent element")
-	(<- expect (<- array$count arr 4) 1 "Normal element (Single)")
-	(<- expect (<- array$count arr 2) 3 "Normal element (Multiple)")
+	(<- expect (<- array$count arr 0) 0)
+	(<- expect (<- array$count arr 4) 1)
+	(<- expect (<- array$count arr 2) 3)
 ))
 
 (= test_create (,,,
-	(<- expect (<- array$create 0) [] "Zero length")
-	(<- expect (<- array$create -2) [] "Negative length")
-	(<- expect (<- array$create 12) [0 0 0 0 0 0 0 0 0 0 0 0] "Positive length")
+	(<- expect (<- array$create 0) [])
+	(<- expect (<- array$create -2) [])
+	(<- expect (<- array$create 12) [0 0 0 0 0 0 0 0 0 0 0 0])
 ))
 
 (= test_extend (,,,
@@ -21,36 +21,43 @@
 		(= src [])
 		(<- array$extend src [])
 		src
-	) [] "Empty source and target")
+	) [])
 	(<- expect (,
 		(= src [])
 		(<- array$extend src [4 5 6])
 		src
-	) [4 5 6] "Empty source, normal target")
+	) [4 5 6])
 	(<- expect (,
 		(= src [1 2 3])
 		(<- array$extend src [])
 		src
-	) [1 2 3] "Normal source, empty target")
+	) [1 2 3])
 	(<- expect (,
 		(= src [1 2 3])
 		(<- array$extend src [4 5 6])
 		src
-	) [1 2 3 4 5 6] "Normal source and target")
+	) [1 2 3 4 5 6])
+))
+
+(= test_index (,,,
+	(<- expect (<- array$index [] 123) -1)
+	(<- expect (<- array$index ['a' 'b' 'c'] 'a') 0)
+	(<- expect (<- array$index ['a' 'b' 'c' 'b'] 'b') 1)
+	(<- expect (<- array$index ['a' 'b' 'c' 'b'] 123456.789) -1)
 ))
 
 (= test_join (,,,
-	(<- expect (<- array$join [] 1.2) [] "Empty source")
-	(<- expect (<- array$join [[1] [2] [3]] "STRING") [1 "STRING" 2 "STRING" 3] "One-length elements")
-	(<- expect (<- array$join [[1] [2 3] [4 5 6]] ["Array"]) [1 ["Array"] 2 3 ["Array"] 4 5 6] "Normal elements")
+	(<- expect (<- array$join [] 1.2) [])
+	(<- expect (<- array$join [[1] [2] [3]] "STRING") [1 "STRING" 2 "STRING" 3])
+	(<- expect (<- array$join [[1] [2 3] [4 5 6]] ["Array"]) [1 ["Array"] 2 3 ["Array"] 4 5 6])
 ))
 
 (= test_pop (,,,
 	(= arr [1 2])
-	(<- expect (<- array$pop arr) 2 "Last element")
-	(<- expect (<- array$pop arr) 1 "First element")
-	(<- expect (<- array$pop arr) nil "Empty array")
-	(<- expect arr [] "Cleared array")
+	(<- expect (<- array$pop arr) 2)
+	(<- expect (<- array$pop arr) 1)
+	(<- expect (<- array$pop arr) nil)
+	(<- expect arr [])
 ))
 
 (= test_push (,,,
@@ -58,42 +65,42 @@
 		(= arr [])
 		(<- array$push arr 1)
 		arr
-	) [1] "Empty array")
+	) [1])
 	(<- expect (,
 		(= arr [1])
 		(<- array$push arr 2)
 		(<- array$push arr 3)
 		arr
-	) [1 2 3] "Normal array")
+	) [1 2 3])
 ))
 
 (= test_remove (,,,
 	(= arr [1 2 3 3 4])
 	(<- array$remove arr -1)
-	(<- expect arr [1 2 3 3 4] "Non-existent element")
+	(<- expect arr [1 2 3 3 4])
 	(<- array$remove arr 2)
-	(<- expect arr [1 3 3 4] "Single element")
+	(<- expect arr [1 3 3 4])
 	(<- array$remove arr 3)
-	(<- expect arr [1 4] "Multiple elements")
+	(<- expect arr [1 4])
 ))
 
 (= test_replace (,,,
-	(<- expect (<- array$replace [] 1 2) [] "Empty array")
-	(<- expect (<- array$replace [1 2 3] "key" "value") [1 2 3] "Non-existent key")
-	(<- expect (<- array$replace [1 2 3] 2 "value") [1 "value" 3] "Normal key")
+	(<- expect (<- array$replace [] 1 2) [])
+	(<- expect (<- array$replace [1 2 3] "key" "value") [1 2 3])
+	(<- expect (<- array$replace [1 2 3] 2 "value") [1 "value" 3])
 ))
 
 (= test_reverse (,,,
-	(<- expect (<- array$reverse []) [] "Empty array")
-	(<- expect (<- array$reverse [1 2 3]) [3 2 1] "Normal array")
+	(<- expect (<- array$reverse []) [])
+	(<- expect (<- array$reverse [1 2 3]) [3 2 1])
 ))
 
 (= test_shift (,,,
 	(= arr [1 2])
-	(<- expect (<- array$shift arr) 1 "First element")
-	(<- expect (<- array$shift arr) 2 "Last element")
-	(<- expect (<- array$shift arr) nil "Empty array")
-	(<- expect arr [] "Cleared array")
+	(<- expect (<- array$shift arr) 1)
+	(<- expect (<- array$shift arr) 2)
+	(<- expect (<- array$shift arr) nil)
+	(<- expect arr [])
 ))
 
 (= test_unshift (,,,
@@ -101,13 +108,13 @@
 		(= arr [])
 		(<- array$unshift arr 1)
 		arr
-	) [1] "Empty array")
+	) [1])
 	(<- expect (,
 		(= arr [3])
 		(<- array$unshift arr 2)
 		(<- array$unshift arr 1)
 		arr
-	) [1 2 3] "Normal array")
+	) [1 2 3])
 ))
 
 
@@ -116,6 +123,7 @@
 	(<- test_item_count)
 	(<- test_create)
 	(<- test_extend)
+	(<- test_index)
 	(<- test_join)
 	(<- test_pop)
 	(<- test_push)

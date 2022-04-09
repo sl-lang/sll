@@ -5,6 +5,8 @@
 (= _gh_actions (!! (: sys$ENVIRONMENT "GITHUB_ACTIONS")))
 (= _test_data nil)
 (= _test_results nil)
+(= _last_group nil)
+(= _err_output "")
 
 
 
@@ -16,32 +18,41 @@
 	(@@ (<- base64$encode out))
 ))
 
-(= expect (,,, result value name
-	(= name (:: name string_type))
+(= _flush_group (,,,
+	(? _last_group (:> '\n' _err_output))
+	(= _last_group nil)
+	(= _err_output "")
+))
+
+(= expect (,,, result value
 	(? (=== _test_results nil) {
 		(:> "Function 'expect' executed outside of function 'run'!\n")
 		(@@)
 	})
 	(= func_group (: (: (: (<- error$get_call_stack) -1) "return") "function"))
-	(= func_group (?: (=== (: func_group 0) '@')
-		nil
-		(<- string$lower_case (<- string$replace
-			(?: (<- string$starts func_group "test_") (>> func_group 5) func_group)
-			'_'
-			' '
-		))
-	))
+	(? (=== (: func_group 0) '@') {
+		(:> "Function 'expect' executed outside of function prefixed with 'test_'!\n")
+		(@@)
+	})
+	(= func_group (<- string$lower_case (<- string$replace
+		(?: (<- string$starts func_group "test_") (>> func_group 5) func_group)
+		'_'
+		' '
+	)))
 	(= (: func_group 0) (: (<- string$upper_case (: func_group 0 1)) 0))
-	(= name_str (?: (=== func_group nil) name (+ func_group ": " name))
+	(? (!== _last_group func_group) {
+		(<- _flush_group)
+		(= _last_group func_group)
+		(:> func_group ": ")
+	})
 	(? (=== result value) {
 		(= _test_data$success (+ _test_data$success 1))
-		(:> "+ " name_str "\n")
+		(:> "+")
 	} {
-		(:> "- " name_str "\n")
+		(:> "-")
 		(= err (+ "Expected " (<- string$str value) ", got " (<- string$str result)))
 		(= loc (: (: (<- error$get_call_stack) -1) "return"))
 		(<- array$push _test_data$error <
-			"name" name
 			"group" func_group
 			"file" loc$file
 			"line" loc$line
@@ -49,11 +60,10 @@
 			"output" (<- _encode_object result)
 			"target" (<- _encode_object value)
 		>)
-		(? _gh_actions {
-			(:> (<- string$format "::warning file=%s,line=%u,title=%s%3A %s%3A %s::%s\n" loc$file loc$line (<- string$title_case sys$PLATFORM) _test_data$name (<- string$replace (<- string$replace name_str "," "%2C") ":" "%3A") err))
-		} {
-			(:> "  " err "\n")
-		})
+		(= _err_output (+ _err_output (?: _gh_actions
+			(<- string$format "::warning file=%s,line=%u,title=%s%3A %s%3A %s::%s\n" loc$file loc$line (<- string$title_case sys$PLATFORM) _test_data$name (<- string$replace (<- string$replace func_group "," "%2C") ":" "%3A") err)
+			(+ "  " err '\n')
+		)))
 	})
 ))
 
@@ -90,6 +100,7 @@
 	})
 	(= start_time (<- time$time))
 	(<- fn)
+	(<- _flush_group)
 	(? _gh_actions {
 		(:> "::endgroup::\n")
 	})

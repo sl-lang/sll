@@ -1,31 +1,40 @@
 (--- "_common.sll")
 
-(<- run "Array operators" (,,,
-	; Access
+(= test_access (,,,
 	(<- expect (: [1 2 3 4] 0) 1 "Access")
 	(<- expect (: [1 2 3 4] -1) 4 "Access from end")
 	(<- expect (: [1 2 3 4] 4) nil "Access out-of-bounds")
 	(<- expect (: [1 2 3 4] -5) nil "Access from end, out-of-bounds")
-	; ; Access Range
+))
+
+(= test_access_range (,,,
 	(<- expect (: [1 2 3 4] 1 3) [2 3] "Access range")
 	(<- expect (: [1 2 3 4] 1 -1) [2 3] "Access range, index from end")
-	; Access Range + Step
+))
+
+(= test_access_range_step (,,,
 	(<- expect (: [1 2 3 4] 0 3 2) [1 3] "Access range and step")
-	; Add
+))
+
+(= test_add (,,,
 	(<- expect (+ [1 2 3] 4) [1 2 3 4] "Add integer")
 	(<- expect (+ [1 2 3] 4.1) [1 2 3 4.1] "Add float")
 	(<- expect (+ [1 2 3] '4') [1 2 3 '4'] "Add char")
 	(<- expect (+ [1 2 3] "4") [1 2 3 "4"] "Add string")
 	(<- expect (+ [1 2 3] [4 5]) [1 2 3 4 5] "Add array")
 	(<- expect (+ [1 2 3] <4 5>) [1 2 3 <4 5>] "Add map")
-	; Bitwise AND / Intersection
+))
+
+(= test_bitwise_and (,,,
 	(<- expect (& [1 2 3] 2) [0 2 2] "Bitwise AND with integer")
 	(<- expect (& [1 2.0 3] 2.0) [0.0 2.0 0.0] "Bitwise AND with float")
 	(<- expect (& [1 2 3] '2') [0 2 2] "Bitwise AND with char")
 	(<- expect (& [1 2 3] "\x01\x02\x00") [1 2 0] "Bitwise AND with string")
 	(<- expect (& [1 2 3] [2 4 5]) [2] "Bitwise AND with array")
 	(<- expect (& [1 2 3] <4 5 2 3>) <2 6> "Bitwise AND with map")
-	; Assign
+))
+
+(= test_assign (,,,
 	(<- expect (,
 		(= arr [1 2 3])
 		(= (: arr 1) 'b')
@@ -41,22 +50,28 @@
 		(= (: arr 11) 'c')
 		arr
 	) [1 2 'c'] "Assign value out-of-bounds")
-	; Assign Range
-	|# TODO #|
-	; Assign Range + Step
-	|# TODO #|
-	; Boolean / Truth value
+))
+
+(= test_assign_range (,,,
+))
+
+(= test_assign_range_step (,,,
+))
+
+(= test_bool (,,,
 	(<- expect (!! []) 0 "Truth value of empty array")
 	(<- expect (!! [1]) 1 "Truth value of non-empty array")
-	; Compare
-	|# TODO #|
-	; Decrement
+))
+
+(= test_decrement (,,,
 	(<- expect (,
 		(= arr [1 2 3])
 		(-- arr)
 		arr
 	) [2 3] "Decrement array")
-	; Element counting
+))
+
+(= test_division (,,,
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) 2 "Count integer (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) 0 "Count float (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') 1 "Count char (division)")
@@ -64,7 +79,9 @@
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [1 2.0 'a']) 4 "Count multiple (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) 1 "Count array (division)")
 	(<- expect (/ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Count map (division)")
-	; Copy
+))
+
+(= test_copy (,,,
 	(<- expect (,
 		(= arr [1 2 3])
 		(= new (: arr))
@@ -78,21 +95,27 @@
 		(= (: new 1) [5 6])
 		arr
 	) [['A' 2] [3 4]] "Copy with deep access")
-	; Deep copy
+))
+
+(= test_deep_copy (,,,
 	(<- expect (,
 		(= arr [[1 2] [3 4]])
 		(= new (:! arr))
 		(= (: (: new 0) 0) 'A')
 		arr
 	) [[1 2] [3 4]] "Deep copy")
-	; Equality
+))
+
+(= test_equality (,,,
 	(<- expect (== [1 2 3 4] 4) 1 "Equal to integer")
 	(<- expect (== [1 2 3 4] 4.0) 1 "Equal to float")
 	(<- expect (== [1 2 3 4] '\x04') 1 "Equal to char")
 	(<- expect (== [1 2 3 4] "\x01\x02\x03\x04") 1 "Equal to string")
 	(<- expect (== [1 2 3 4] [1 2 3 4]) 1 "Equal to array")
 	(<- expect (== [1 2 3 4] <0 1 1 2 2 3 3 4>) 1 "Equal to map")
-	; Element counting
+))
+
+(= test_floored_division (,,,
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) 2 "Count integer (floored division)")
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) 0 "Count float (floored division)")
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') 1 "Count char (floored division)")
@@ -100,33 +123,45 @@
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [1 2.0 'a']) 4 "Count multiple (floored division)")
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) 1 "Count array (floored division)")
 	(<- expect (// [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Count map (floored division)")
-	; Increment
+))
+
+(= test_increment (,,,
 	(<- expect (,
 		(= arr [1 2 3])
 		(++ arr)
 		arr
 	) [1 2 3 1] "Increment array")
-	; Membership test
+))
+
+(= test_membership (,,,
 	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) 1 "Inclusion of integer")
 	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 2.0) 1 "Inclusion of float")
 	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') 1 "Inclusion of char")
 	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3") 1 "Inclusion of string")
 	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [3 1 4]) 1 "Inclusion of array")
 	(<- expect (|: [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) 1 "Inclusion of map")
-	; Element inversion
+))
+
+(= test_inversion (,,,
 	(<- expect (~ [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>]) [-2 -3.0 "\xcc" -2 '\x9e' "\xcc" [-4 -2 -5] <"A" '\x9e'>] "Element inversion")
-	; Length
+))
+
+(= test_length (,,,
 	(<- expect ($ []) 0 "Length of empty array")
 	(<- expect ($ [1 2 3 4 5]) 5 "Length of array")
 	(<- expect ($ [[1 2 3]]) 1 "Length of nested array")
-	; Element modulo
+))
+
+(= test_modulo (,,,
 	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] 3) [1 2.0 ['\x02'] 1 '\x01' ['\x02'] [0 1 1] <"A" '\x01'>] "Modulo integer")
 	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] 2.5) [0.0 2.0 [0.5] 1.0 2.0 [0.5] [0.5 1.0 1.5] <"A" 2.0>] "Modulo float")
 	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] 'a') [3 2.0 ["5"] 1 '\x00' ["5"] [3 1 4] <"A" '\x00'>] "Modulo char")
 	(<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] "3") [49 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] "Modulo string")
 	; (<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] [3 1 4]) nil "Modulo array")
 	; (<- expect (% [100 2.0 "5" 1 'a' "5" [3 1 4] <"A" 'a'>] <"A" 'a'>) nil "Modulo map")
-	; Multiplication / Combinations
+))
+
+(= test_multiplication (,,,
 	(<- expect (* [1 2 3 4] 1) [1 2 3 4] "Multiplication by integer")
 	(<- expect (* [1 2 3 4] -2) [4 3 2 1 4 3 2 1] "Multiplication by negative integer")
 	(<- expect (* [1 2 3 4] 2.5) [1 2 3 4 1 2 3 4 1 2] "Multiplication by float")
@@ -135,14 +170,18 @@
 	(<- expect (* [1 2 3 4] "ABC") [66 67 68 67 68 69 68 69 70 69 70 71] "Combinations with string")
 	(<- expect (* [1 2 3 4] [3 1 4]) [4 2 5 5 3 6 6 4 7 7 5 8] "Combinations with array")
 	(<- expect (* [1 2 3 4] <"A" 3.75>) <"A" [1 2 3 4 1 2 3 4 1 2 3 4 1 2 3]> "Multiplication by map")
-	; Bitwise OR
+))
+
+(= test_bitwise_or (,,,
 	(<- expect (| [1 2 3 4] 1) [1 3 3 5] "Bitwise OR with integer")
 	(<- expect (| [1 2 3 4] 256.0) [256.0000000000000568 256.0000000000001137 256.0000000000001705 256.0000000000002274] "Bitwise OR with float")
 	(<- expect (| [1 2 3 4] '\x05') [5 7 7 5] "Bitwise OR with char")
 	(<- expect (| [1 2 3 4] "3Ab") [51 67 99 4] "Bitwise OR with string")
 	(<- expect (| [1 2 3 4] [0 3 1 4 5]) [1 2 3 4 0 5] "Bitwise OR with array")
 	(<- expect (| [1 2 3 4] <"A" 3.75 3 10>) <"A" 3.75 3 4 0 1 1 2 2 3> "Bitwise OR with map")
-	; Left shift / Resize
+))
+
+(= test_left_shift (,,,
 	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 5) [0 0 0 0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by integer")
 	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] -5) ["3" [3 1 4] <"A" 'a'>] "Left shift by negative integer")
 	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 2.0) [0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by float")
@@ -151,7 +190,9 @@
 	(<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3\x02\x01") [0x8000000000000 8.0 "\x003" 1 'a' "3" [3 1 4] <"A" 'a'>] "Left shift by string")
 	; (<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [3 1 4]) nil "Left shift by array")
 	; (<- expect (<< [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) nil "Left shift by map")
-	; Right shift / Resize
+))
+
+(= test_right_shift (,,,
 	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 5) ["3" [3 1 4] <"A" 'a'>] "Right shift by integer")
 	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] -5) [0 0 0 0 0 1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by negative integer")
 	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 2.0) ["3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by float")
@@ -160,7 +201,9 @@
 	(<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "3\x02\x01") [0 0.5 "" 1 'a' "3" [3 1 4] <"A" 'a'>] "Right shift by string")
 	; (<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [3 1 4]) nil "Right shift by array")
 	; (<- expect (>> [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) nil "Right shift by map")
-	; Strict equality
+))
+
+(= test_strict_equality (,,,
 	(<- expect (=== [1 2 3 4] 4) 0 "Strict equal to integer")
 	(<- expect (!== [1 2 3 4] 4) 1 "Strict not equal to integer")
 	(<- expect (=== [1 2 3 4] 4.0) 0 "Strict equal to float")
@@ -173,7 +216,9 @@
 	(<- expect (!== [1 2 3 4] [1 2 3 4]) 0 "Strict not equal to array")
 	(<- expect (=== [1 2 3 4] <0 1 1 2 2 3 3 4>) 0 "Strict equal to map")
 	(<- expect (!== [1 2 3 4] <0 1 1 2 2 3 3 4>) 1 "Strict not equal to map")
-	; Subtraction / Element removing
+))
+
+(= test_subtraction (,,,
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1) [2.0 "3" 'a' "3" [3 1 4] <"A" 'a'>] "Remove integer")
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 1.0) [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] "Remove float")
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] 'a') [1 2.0 "3" 1 "3" [3 1 4] <"A" 'a'>] "Remove char")
@@ -181,11 +226,43 @@
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [1 2.0 'a']) ["3" "3" [3 1 4] <"A" 'a'>] "Remove multiple")
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] [[3 1 4]]) [1 2.0 "3" 1 'a' "3" <"A" 'a'>] "Remove array")
 	(<- expect (- [1 2.0 "3" 1 'a' "3" [3 1 4] <"A" 'a'>] <"A" 'a'>) [1 2.0 "3" 1 'a' "3" [3 1 4]] "Remove map")
-	; Bitwise Exclusive OR
+))
+
+(= test_bitwise_exclusive_or (,,,
 	(<- expect (^ [1 2 3 4] 1) [0 3 2 5] "Bitwise OR with integer")
 	(<- expect (^ [1 2 3 4] 0.5) [0.5000000000000001 0.5000000000000002 0.5000000000000003 0.5000000000000004] "Bitwise OR with float")
 	(<- expect (^ [1 2 3 4] '\x05') [4 7 6 1] "Bitwise OR with char")
 	(<- expect (^ [1 2 3 4] "3Ab") [50 67 97 4] "Bitwise OR with string")
 	(<- expect (^ [1 2 3 4] [0 3 1 4 5]) [1 1 2 0 5] "Bitwise OR with array")
 	(<- expect (^ [1 2 3 4] <"A" 3.75 3 10>) <"A" 3.75 3 4 0 1 1 2 2 3> "Bitwise OR with map")
+))
+
+(<- run "Array operators" (,,,
+	(<- test_access)
+	(<- test_access_range)
+	(<- test_access_range_step)
+	(<- test_add)
+	(<- test_bitwise_and)
+	(<- test_assign)
+	(<- test_assign_range)
+	(<- test_assign_range_step)
+	(<- test_bool)
+	(<- test_decrement)
+	(<- test_division)
+	(<- test_copy)
+	(<- test_deep_copy)
+	(<- test_equality)
+	(<- test_floored_division)
+	(<- test_increment)
+	(<- test_membership)
+	(<- test_inversion)
+	(<- test_length)
+	(<- test_modulo)
+	(<- test_multiplication)
+	(<- test_bitwise_or)
+	(<- test_left_shift)
+	(<- test_right_shift)
+	(<- test_strict_equality)
+	(<- test_subtraction)
+	(<- test_bitwise_exclusive_or)
 ))
