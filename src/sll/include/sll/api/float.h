@@ -13,6 +13,17 @@
 
 
 /**
+ * \flags var
+ * \name sll_float_compare_error
+ * \group float-api
+ * \desc Docs!
+ * \type sll_float_t
+ */
+__SLL_EXTERNAL extern sll_float_t sll_float_compare_error;
+
+
+
+/**
  * \flags api func
  * \name sll_api_float_get_compare_error
  * \group float-api

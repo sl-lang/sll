@@ -12,17 +12,6 @@
 
 
 /**
- * \flags var
- * \name sll_float_compare_error
- * \group operator
- * \desc Docs!
- * \type sll_float_t
- */
-__SLL_EXTERNAL extern sll_float_t sll_float_compare_error;
-
-
-
-/**
  * \flags check_output func
  * \name sll_operator_access
  * \group operator
