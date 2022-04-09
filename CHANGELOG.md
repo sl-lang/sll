@@ -52,7 +52,7 @@
 ### Removed
 
 - Unneeded object creation codes: `N` and `L`
-- Unused `sll_object_type_data_functions_t`
+- Unused type: `sll_object_type_data_functions_t`
 
 ## [0.7.11] - 2022-04-02
 
