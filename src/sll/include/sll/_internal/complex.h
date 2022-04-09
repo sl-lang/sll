@@ -1,81 +1,88 @@
 #ifndef __SLL__INTERNAL_COMPLEX_H__
 #define __SLL__INTERNAL_COMPLEX_H__ 1
 #include <sll/_internal/common.h>
+#include <sll/api/math.h>
 #include <sll/types.h>
 
 
 
-#define COMPLEX_ADD(a,b,o) \
-	do{ \
-		sll_complex_t __a=(a); \
-		sll_complex_t __b=(b); \
-		(o).real=__a.real+__b.real; \
-		(o).imag=__a.imag+__b.imag; \
-	} while (0)
+static __SLL_FORCE_INLINE sll_float_t COMPLEX_ABS(sll_complex_t a){
+	return sll_api_math_sqrt(a.real*a.real+a.imag*a.imag);
+}
 
 
 
-#define COMPLEX_CONJUGATE(a,o) \
-	do{ \
-		sll_complex_t __a=(a); \
-		(o).real=__a.real; \
-		(o).imag=-__a.imag; \
-	} while (0)
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_ADD(sll_complex_t a,sll_complex_t b){
+	sll_complex_t o={
+		a.real+b.real,
+		a.imag+b.imag
+	};
+	return o;
+}
 
 
 
-#define COMPLEX_DIV(a,b,o) \
-	do{ \
-		sll_complex_t __a=(a); \
-		sll_complex_t __b=(b); \
-		sll_float_t __d=__b.real*__b.real+__b.imag*__b.imag; \
-		if (!__d){ \
-			(o).real=0; \
-			(o).imag=0; \
-		} \
-		else{ \
-			__d=1/__d; \
-			(o).real=__d*(__a.real*__b.real+__a.imag*__b.imag); \
-			(o).imag=__d*(__a.imag*__b.real-__a.real*__b.imag); \
-		} \
-	} while (0)
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_CONJUGATE(sll_complex_t a){
+	sll_complex_t o={
+		a.real,
+		-a.imag
+	};
+	return o;
+}
 
 
 
-#define COMPLEX_MULT(a,b,o) \
-	do{ \
-		sll_complex_t __a=(a); \
-		sll_complex_t __b=(b); \
-		(o).real=__a.real*__b.real-__a.imag*__b.imag; \
-		(o).imag=__a.real*__b.imag+__a.imag*__b.real; \
-	} while (0)
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_DIV(sll_complex_t a,sll_complex_t b){
+	sll_complex_t o;
+	sll_float_t d=b.real*b.real+b.imag*b.imag;
+	if (!d){
+		o.real=0;
+		o.imag=0;
+	}
+	else{
+		d=1/d;
+		o.real=d*(a.real*b.real+a.imag*b.imag);
+		o.imag=d*(a.imag*b.real-a.real*b.imag);
+	}
+	return o;
+}
 
 
 
-#define COMPLEX_RECIPROCAL(a,o) \
-	do{ \
-		sll_complex_t __a=(a); \
-		sll_float_t __d=__a.real*__a.real+__a.imag*__a.imag; \
-		if (!__d){ \
-			(o).real=0; \
-			(o).imag=0; \
-		} \
-		else{ \
-			__d=1/__d; \
-			(o).real=__d*__a.real; \
-			(o).imag=-__d*__a.imag; \
-		} \
-	} while (0)
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_MULT(sll_complex_t a,sll_complex_t b){
+	sll_complex_t o={
+		a.real*b.real-a.imag*b.imag,
+		a.real*b.imag+a.imag*b.real
+	};
+	return o;
+}
 
 
 
-#define COMPLEX_SUB(a,b,o) \
-	do{ \
-		sll_complex_t __a=(a); \
-		sll_complex_t __b=(b); \
-		(o).real=__a.real-__b.real; \
-		(o).imag=__a.imag-__b.imag; \
-	} while (0)
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_RECIPROCAL(sll_complex_t a){
+	sll_complex_t o;
+	sll_float_t d=a.real*a.real+a.imag*a.imag;
+	if (!d){
+		o.real=0;
+		o.imag=0;
+	}
+	else{
+		d=1/d;
+		o.real=d*a.real;
+		o.imag=-d*a.imag;
+	}
+	return o;
+}
+
+
+
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_SUB(sll_complex_t a,sll_complex_t b){
+	sll_complex_t o={
+		a.real-b.real,
+		a.imag-b.imag
+	};
+	return o;
+}
 
 
 
