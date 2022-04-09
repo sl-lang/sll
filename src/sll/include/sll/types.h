@@ -914,6 +914,8 @@ typedef struct __SLL_VAR_ARG_LIST_DATA_STRUCT{
 	const void* ptr;
 	sll_size_t* off;
 	sll_arg_count_t l;
+	void** fn;
+	sll_arg_count_t fnl;
 } sll_var_arg_list_data_struct_t;
 
 

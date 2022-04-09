@@ -19,7 +19,7 @@
  * \desc Docs!
  * \arg I
  * \arg I
- * \ret A
+ * \ret O
  */
 __API_FUNC_DECL(error_get_call_stack);
 

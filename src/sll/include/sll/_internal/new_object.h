@@ -11,6 +11,8 @@
 typedef struct __STRUCT_OFFSET_BUILDER{
 	sll_size_t* off;
 	sll_arg_count_t l;
+	void** fn;
+	sll_arg_count_t fnl;
 } struct_offset_builder_t;
 
 

@@ -22,12 +22,7 @@ __API_FUNC(error_get_call_stack){
 	sll_audit(SLL_CHAR("sll.error.backtrace"),SLL_CHAR("ii"),tid,a);
 	const sll_call_stack_t* c_st=sll_thread_get_call_stack(tid);
 	if (!c_st||a>c_st->l){
-		SLL_INIT_ARRAY(out);
-		return;
+		return sll_array_to_object(NULL);
 	}
-	sll_array_create(c_st->l-((sll_array_length_t)a),out);
-	for (sll_call_stack_size_t i=0;i<c_st->l-a;i++){
-		const sll_call_stack_frame_t* fr=c_st->dt+i;
-		out->v[i]=sll_new_object(SLL_CHAR("(SO!(hh))"),fr->nm,sll_instruction_to_location(fr->_ii),fr->_ii,fr->_s);
-	}
+	return sll_new_object(SLL_CHAR("{S#(hh)}"),c_st->dt,c_st->l-a,sizeof(const sll_call_stack_frame_t),SLL_OFFSETOF(sll_call_stack_frame_t,nm),sll_instruction_to_location,SLL_OFFSETOF(sll_call_stack_frame_t,_ii),SLL_OFFSETOF(sll_call_stack_frame_t,_ii),SLL_OFFSETOF(sll_call_stack_frame_t,_s));
 }

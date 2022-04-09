@@ -544,8 +544,8 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_error_get_call_stack void
-#define __SLL_API_ARGS_sll_api_error_get_call_stack sll_integer_t a,sll_integer_t b,sll_array_t* out
+#define __SLL_API_TYPE_sll_api_error_get_call_stack __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_error_get_call_stack sll_integer_t a,sll_integer_t b
 /**
  * \flags check_output func
  * \name sll_api_error_get_call_stack
@@ -553,6 +553,7 @@
  * \desc Docs!
  * \arg sll_integer_t a -> 
  * \arg sll_integer_t b -> 
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func

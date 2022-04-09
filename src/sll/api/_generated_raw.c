@@ -263,9 +263,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack_raw
 	sll_integer_t a;
 	sll_integer_t b;
 	sll_parse_args(SLL_CHAR("ii"),al,all,&a,&b);
-	sll_array_t out;
-	sll_api_error_get_call_stack(a,b,&out);
-	return sll_array_to_object_nocopy(&out);
+	sll_object_t* out=sll_api_error_get_call_stack(a,b);
+	return out;
 }
 
 

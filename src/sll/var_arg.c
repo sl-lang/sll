@@ -23,6 +23,40 @@
 
 
 
+sll_object_t* _var_arg_converter(sll_var_arg_list_t* va){
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+		return va_arg(*(va->dt.c),converter_t)(va_arg(*(va->dt.c),void*));
+	}
+	if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
+		SLL_ASSERT(va->dt.s.fnl&&va->dt.s.l);
+		sll_object_t* o=((converter_t)(*(va->dt.s.fn)))(*((void**)PTR(ADDR(va->dt.s.ptr)+(*(va->dt.s.off)))));
+		va->dt.s.fn++;
+		va->dt.s.fnl--;
+		va->dt.s.off++;
+		va->dt.s.l--;
+		return o;
+	}
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+void* _var_arg_get_converter(sll_var_arg_list_t* va){
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+		return va_arg(*(va->dt.c),void*);
+	}
+	if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
+		SLL_ASSERT(va->dt.s.fnl);
+		void* o=*(va->dt.s.fn);
+		va->dt.s.fn++;
+		va->dt.s.fnl--;
+		return o;
+	}
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 addr_t _var_arg_get_pointer(sll_var_arg_list_t* va){
 	if (va->t!=VAR_ARG_LIST_TYPE_STRUCT){
 		SLL_UNREACHABLE();
