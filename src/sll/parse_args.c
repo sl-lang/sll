@@ -216,6 +216,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
 	if (!(*t)){
 		return NULL;
 	}
+	va_list va;
+	va_start(va,all);
+	sll_arg_state_t o=sll_parse_args_list(t,al,all,&va);
+	va_end(va);
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,va_list* va){
+	SKIP_WHITESPACE;
+	if (!(*t)){
+		return NULL;
+	}
 	arg_state_t* o=sll_allocate_stack(sizeof(arg_state_t));
 	o->sz=0;
 	const sll_char_t* tmp=t;
@@ -233,8 +247,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
 	if (!var_arg){
 		var_arg_idx=SLL_MAX_STRING_INDEX;
 	}
-	va_list va;
-	va_start(va,all);
 	while (*t){
 		sll_char_t st=*t;
 		t++;
@@ -282,8 +294,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
 				case 'o':
 					{
 						sll_object_t** dt=sll_allocate(all*sizeof(sll_object_t*));
-						*va_arg(va,sll_object_t***)=dt;
-						*va_arg(va,sll_arg_count_t*)=all;
+						*va_arg(*va,sll_object_t***)=dt;
+						*va_arg(*va,sll_arg_count_t*)=all;
 						while (all){
 							all--;
 							*(dt+all)=*(al+all);
@@ -344,10 +356,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
 				break;
 		}
 		if (fn){
-			fn(arg,arr,&o,&va);
+			fn(arg,arr,&o,va);
 		}
 	}
-	va_end(va);
 	if (o->sz){
 		o=sll_memory_move(o,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 		return o;

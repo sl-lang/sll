@@ -80,4 +80,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_parse_args_list
+ * \group parse-args
+ * \desc Docs!
+ * \arg const sll_char_t* t
+ * \arg sll_object_t*const* al
+ * \arg sll_arg_count_t all
+ * \arg va_list* va
+ * \ret sll_arg_state_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,va_list* va);
+
+
+
 #endif
