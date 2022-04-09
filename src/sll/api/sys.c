@@ -104,10 +104,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 
 
 __API_FUNC(sys_get_args){
-	sll_array_create(_sys_argc,out);
-	for (sll_array_length_t i=0;i<_sys_argc;i++){
-		out->v[i]=sll_string_to_object(_sys_argv+i);
-	}
+	return sll_new_object(SLL_CHAR("s+"),_sys_argv,_sys_argc);
 }
 
 

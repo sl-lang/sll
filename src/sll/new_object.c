@@ -31,7 +31,7 @@
 	} while (0)
 
 #define SKIP_MODIFIERS \
-	while (tl&&(*t==' '||(*t>8&&*t<14)||*t=='!'||*t=='+')){ \
+	while (tl&&(*t==' '||(*t>8&&*t<14)||*t=='!'||*t=='+'||*t=='*')){ \
 		tl--; \
 		t++; \
 	}
@@ -57,7 +57,7 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 	sll_char_t st=**t;
 	(*t)++;
 	sll_arg_count_t cnt=1;
-	while (*tl&&(**t==' '||(**t>8&&**t<14)||**t=='!'||**t=='+')){
+	while (*tl&&(**t==' '||(**t>8&&**t<14)||**t=='!'||**t=='+'||**t=='*')){
 		if (**t=='+'){
 			cnt=2;
 		}
@@ -190,6 +190,9 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		else if (**t=='+'){
 			fl|=NEW_OBJECT_FLAG_ARRAY;
 		}
+		else if (**t=='*'){
+			fl|=NEW_OBJECT_FLAG_DEREF;
+		}
 		else{
 			break;
 		}
@@ -211,27 +214,39 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			case 'p':
 				return sll_int_to_object(_var_arg_get_pointer(va));
 			case 's':
-				if (fl&NEW_OBJECT_FLAG_ARRAY){
-					SLL_UNIMPLEMENTED();
+				{
+					if (!(fl&NEW_OBJECT_FLAG_ARRAY)){
+						return sll_string_to_object(sll_var_arg_get(va));
+					}
+					const void* ptr=sll_var_arg_get(va);
+					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
+					if (!ptr||!len){
+						return sll_array_to_object(NULL);
+					}
+					sll_object_t* o=sll_array_length_to_object(len);
+					while (len){
+						len--;
+						o->dt.a.v[len]=sll_string_to_object((fl&NEW_OBJECT_FLAG_DEREF?*(((const sll_string_t*const*)ptr)+len):((const sll_string_t*)ptr)+len));
+					}
+					return o;
 				}
-				return sll_string_to_object(sll_var_arg_get(va));
 			case 'S':
 				{
-					if (fl&NEW_OBJECT_FLAG_ARRAY){
-						const sll_char_t*const* ptr=(const sll_char_t*const*)sll_var_arg_get(va);
-						sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
-						if (!ptr||!len){
-							return sll_array_to_object(NULL);
-						}
-						sll_object_t* o=sll_array_length_to_object(len);
-						while (len){
-							len--;
-							o->dt.a.v[len]=(*(ptr+len)?sll_string_pointer_to_object(*(ptr+len),SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
-						}
-						return o;
+					if (!(fl&NEW_OBJECT_FLAG_ARRAY)){
+						const sll_char_t* ptr=sll_var_arg_get(va);
+						return (ptr?sll_string_pointer_to_object(ptr,SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
 					}
-					const sll_char_t* ptr=sll_var_arg_get(va);
-					return (ptr?sll_string_pointer_to_object(ptr,SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
+					const sll_char_t*const* ptr=(const sll_char_t*const*)sll_var_arg_get(va);
+					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
+					if (!ptr||!len){
+						return sll_array_to_object(NULL);
+					}
+					sll_object_t* o=sll_array_length_to_object(len);
+					while (len){
+						len--;
+						o->dt.a.v[len]=(*(ptr+len)?sll_string_pointer_to_object(*(ptr+len),SLL_MAX_STRING_LENGTH):sll_string_to_object(NULL));
+					}
+					return o;
 				}
 			case 'l':
 				{

@@ -3787,13 +3787,14 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_sys_get_args void
-#define __SLL_API_ARGS_sll_api_sys_get_args sll_array_t* out
+#define __SLL_API_TYPE_sll_api_sys_get_args __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_sys_get_args void
 /**
  * \flags check_output func
  * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func

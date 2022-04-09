@@ -51,7 +51,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
  * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
- * \ret A
+ * \ret O
  */
 __API_FUNC_DECL(sys_get_args);
 

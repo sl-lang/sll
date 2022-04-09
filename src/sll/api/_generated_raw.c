@@ -1881,9 +1881,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_struct_float_to_bits_raw
 
 __SLL_API_TYPE_sll_api_sys_get_args sll_api_sys_get_args(__SLL_API_ARGS_sll_api_sys_get_args);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_args_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_array_t out;
-	sll_api_sys_get_args(&out);
-	return sll_array_to_object_nocopy(&out);
+	sll_object_t* out=sll_api_sys_get_args();
+	return out;
 }
 
 
