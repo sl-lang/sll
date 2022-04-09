@@ -84,7 +84,7 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
  * \name sll_api_process_join
  * \group process-api
  * \desc Docs!
- * \arg A
+ * \arg S+
  * \ret S
  */
 __API_FUNC_DECL(process_join);

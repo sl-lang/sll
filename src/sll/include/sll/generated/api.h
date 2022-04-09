@@ -107,13 +107,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_array_join void
-#define __SLL_API_ARGS_sll_api_array_join sll_array_t* a,sll_object_t* b,sll_array_t* out
+#define __SLL_API_ARGS_sll_api_array_join sll_array_t*const* a,sll_arg_count_t ac,sll_object_t* b,sll_array_t* out
 /**
  * \flags check_output func
  * \name sll_api_array_join
  * \group array-api
  * \desc Docs!
- * \arg sll_array_t* a -> 
+ * \arg sll_array_t*const* a -> 
+ * \arg sll_arg_count_t ac
  * \arg sll_object_t* b -> 
  */
 /**
@@ -2630,13 +2631,14 @@
 
 
 #define __SLL_API_TYPE_sll_api_process_join void
-#define __SLL_API_ARGS_sll_api_process_join sll_array_t* a,sll_string_t* out
+#define __SLL_API_ARGS_sll_api_process_join sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out
 /**
  * \flags check_output func
  * \name sll_api_process_join
  * \group process-api
  * \desc Docs!
- * \arg sll_array_t* a -> 
+ * \arg sll_string_t*const* a -> 
+ * \arg sll_arg_count_t ac
  */
 /**
  * \flags check_output func

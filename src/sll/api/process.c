@@ -115,16 +115,15 @@ __API_FUNC(process_join){
 		SLL_INIT_STRING(out);
 		return;
 	}
-	sll_char_t** dt=sll_allocate_stack(a->l*sizeof(sll_char_t*));
-	for (sll_array_length_t i=0;i<a->l;i++){
-		sll_object_t* n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		sll_char_t* p=sll_allocate_stack(n->dt.s.l);
-		sll_copy_data(n->dt.s.v,n->dt.s.l,p);
-		GC_RELEASE(n);
+	sll_char_t** dt=sll_allocate_stack(ac*sizeof(sll_char_t*));
+	for (sll_array_length_t i=0;i<ac;i++){
+		sll_string_t* str=*(a+i);
+		sll_char_t* p=sll_allocate_stack(str->l);
+		sll_copy_data(str->v,str->l,p);
 		*(dt+i)=p;
 	}
 	sll_process_join_args((const sll_char_t*const*)dt,out);
-	for (sll_array_length_t i=0;i<a->l;i++){
+	for (sll_array_length_t i=0;i<ac;i++){
 		sll_deallocate(*(dt+i));
 	}
 	sll_deallocate(dt);

@@ -25,6 +25,14 @@
 		*(x)=0; \
 	} while (0)
 
+#define ENSURE_TYPE(var,name) \
+	if (var->t!=SLL_OBJECT_TYPE_##name){ \
+		var=sll_operator_cast(var,sll_static_int[SLL_OBJECT_TYPE_##name]); \
+		(*st)->sz++; \
+		*st=sll_reallocate(*st,sizeof(arg_state_t)+(*st)->sz*sizeof(sll_object_t*)); \
+		(*st)->dt[(*st)->sz-1]=var; \
+	} \
+
 #define PARSE_TYPE(type,name,field) \
 	if (arr){ \
 		SLL_UNIMPLEMENTED(); \
@@ -64,16 +72,25 @@
 	}
 #define PARSE_TYPE_PTR(type,name,field,init) \
 	if (arr){ \
-		SLL_UNIMPLEMENTED(); \
+		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
+		type** dt=sll_allocate(obj->dt.a.l*sizeof(type*)); \
+		*va_arg(*va,type***)=dt; \
+		*va_arg(*va,sll_arg_count_t*)=obj->dt.a.l; \
+		for (sll_arg_count_t i=0;i<obj->dt.a.l;i++){ \
+			sll_object_t* k=obj->dt.a.v[i]; \
+			ENSURE_TYPE(k,name); \
+			*(dt+i)=&(k->dt.field); \
+		} \
+		GC_RELEASE(obj); \
+		return; \
 	} \
 	type** var=va_arg(*va,type**); \
 	if (!arg){ \
 		*var=NULL; \
 		return; \
 	} \
-	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-	*var=&(obj->dt.field); \
-	GC_RELEASE(obj);
+	ENSURE_TYPE(arg,name); \
+	*var=&(arg->dt.field);
 #define PARSE_TYPES(type,name1,field1,name2,field2,init) \
 	if (arr){ \
 		SLL_UNIMPLEMENTED(); \
@@ -97,7 +114,7 @@
 
 
 
-static void _parse_bool(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_bool(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	if (arr){
 		SLL_UNIMPLEMENTED();
 	}
@@ -106,73 +123,73 @@ static void _parse_bool(sll_object_t* arg,sll_bool_t arr,va_list* va){
 
 
 
-static void _parse_int(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_int(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE(sll_integer_t,INT,i);
 }
 
 
 
-static void _parse_int_range(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_int_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE_RANGE(sll_integer_t,sll_integer_t,INT,i);
 }
 
 
 
-static void _parse_float(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE(sll_float_t,FLOAT,f);
 }
 
 
 
-static void _parse_float_range(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_float_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE_RANGE(sll_float_t,sll_float_t,FLOAT,f);
 }
 
 
 
-static void _parse_char(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_char(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE(sll_char_t,CHAR,c);
 }
 
 
 
-static void _parse_char_range(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_char_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE_RANGE(sll_char_t,__SLL_U32,CHAR,c);
 }
 
 
 
-static void _parse_string(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_string(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE_PTR(sll_string_t,STRING,s,SLL_INIT_STRING);
 }
 
 
 
-static void _parse_char_or_string(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_char_or_string(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPES(sll_char_string_t,CHAR,c,STRING,s,SLL_INIT_STRING);
 }
 
 
 
-static void _parse_array(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_array(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE_PTR(sll_array_t,ARRAY,a,SLL_INIT_ARRAY);
 }
 
 
 
-static void _parse_map(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_map(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE_PTR(sll_map_t,MAP,m,SLL_INIT_MAP);
 }
 
 
 
-static void _parse_int_or_float(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_int_or_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPES(sll_int_float_t,INT,i,FLOAT,f,INIT_ZERO);
 }
 
 
 
-static void _parse_object(sll_object_t* arg,sll_bool_t arr,va_list* va){
+static void _parse_object(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	if (arr){
 		SLL_UNIMPLEMENTED();
 	}
@@ -284,7 +301,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
 			al++;
 			all--;
 		}
-		void (*fn)(sll_object_t*,sll_bool_t,va_list*)=NULL;
+		void (*fn)(sll_object_t*,sll_bool_t,arg_state_t**,va_list*)=NULL;
 		switch (st){
 			case 'b':
 				fn=_parse_bool;
@@ -327,11 +344,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
 				break;
 		}
 		if (fn){
-			fn(arg,arr,&va);
+			fn(arg,arr,&o,&va);
 		}
 	}
 	va_end(va);
 	if (o->sz){
+		o=sll_memory_move(o,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 		return o;
 	}
 	sll_deallocate(o);

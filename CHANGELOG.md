@@ -5,6 +5,11 @@
 ### Added
 
 - Implemented `sll_arg_state_t` and `sll_free_args`
+- Argument parsing modifier to parse an array of a given type: `+`
+
+### Changed
+
+- Renamed argument parsing modifier symbolizing variadic functions to `!`
 
 ## [0.7.12] - 2022-04-09
 

@@ -61,11 +61,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_index_raw(sll_obje
 
 __SLL_API_TYPE_sll_api_array_join sll_api_array_join(__SLL_API_ARGS_sll_api_array_join);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_join_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_array_t* a;
+	sll_array_t** a;
+	sll_arg_count_t ac;
 	sll_object_t* b;
-	sll_arg_state_t st=sll_parse_args(SLL_CHAR("ao"),al,all,&a,&b);
+	sll_arg_state_t st=sll_parse_args(SLL_CHAR("a+o"),al,all,&a,&ac,&b);
 	sll_array_t out;
-	sll_api_array_join(a,b,&out);
+	sll_api_array_join(a,ac,b,&out);
 	sll_free_args(st);
 	return sll_array_to_object_nocopy(&out);
 }
@@ -1286,10 +1287,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_get_pid_raw(sll_
 
 __SLL_API_TYPE_sll_api_process_join sll_api_process_join(__SLL_API_ARGS_sll_api_process_join);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_join_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_array_t* a;
-	sll_arg_state_t st=sll_parse_args(SLL_CHAR("a"),al,all,&a);
+	sll_string_t** a;
+	sll_arg_count_t ac;
+	sll_arg_state_t st=sll_parse_args(SLL_CHAR("s+"),al,all,&a,&ac);
 	sll_string_t out;
-	sll_api_process_join(a,&out);
+	sll_api_process_join(a,ac,&out);
 	sll_free_args(st);
 	return sll_string_to_object_nocopy(&out);
 }

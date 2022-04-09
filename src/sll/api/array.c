@@ -41,18 +41,7 @@ __API_FUNC(array_index){
 
 
 __API_FUNC(array_join){
-	sll_array_t** al=sll_allocate_stack(a->l*sizeof(sll_array_t*));
-	sll_object_t** obj=sll_allocate_stack(a->l*sizeof(sll_object_t*));
-	for (sll_array_length_t i=0;i<a->l;i++){
-		*(obj+i)=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
-		*(al+i)=&((*(obj+i))->dt.a);
-	}
-	sll_array_join_arrays((const sll_array_t*const*)al,a->l,b,out);
-	for (sll_array_length_t i=0;i<a->l;i++){
-		GC_RELEASE(*(obj+i));
-	}
-	sll_deallocate(obj);
-	sll_deallocate(al);
+	sll_array_join_arrays((const sll_array_t*const*)a,ac,b,out);
 }
 
 
