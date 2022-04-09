@@ -103,6 +103,13 @@
 	(<- expect arr [])
 ))
 
+(= test_split (,,,
+	(<- expect (<- array$split [] "abc") [[]])
+	(<- expect (<- array$split [1 2 "abc" 3 4] "abc") [[1 2] [3 4]])
+	(<- expect (<- array$split [1 2 -0.5 3 4 -0.5 5 6] -0.5) [[1 2] [3 4] [5 6]])
+	(<- expect (<- array$split [1 2 3 4 5] "abc") [[1 2 3 4 5]])
+))
+
 (= test_unshift (,,,
 	(<- expect (,
 		(= arr [])
@@ -131,5 +138,6 @@
 	(<- test_replace)
 	(<- test_reverse)
 	(<- test_shift)
+	(<- test_split)
 	(<- test_unshift)
 ))
