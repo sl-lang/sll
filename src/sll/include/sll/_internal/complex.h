@@ -59,6 +59,16 @@ static __SLL_FORCE_INLINE sll_complex_t COMPLEX_MULT(sll_complex_t a,sll_complex
 
 
 
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_NEG(sll_complex_t a){
+	sll_complex_t o={
+		-a.real,
+		-a.imag
+	};
+	return o;
+}
+
+
+
 static __SLL_FORCE_INLINE sll_complex_t COMPLEX_RECIPROCAL(sll_complex_t a){
 	sll_complex_t o;
 	sll_float_t d=a.real*a.real+a.imag*a.imag;
@@ -83,7 +93,6 @@ static __SLL_FORCE_INLINE sll_complex_t COMPLEX_SUB(sll_complex_t a,sll_complex_
 	};
 	return o;
 }
-
 
 
 

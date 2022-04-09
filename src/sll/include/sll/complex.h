@@ -76,6 +76,57 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult(sll_complex_t a
 
 /**
  * \flags check_output func
+ * \name sll_complex_neg
+ * \group complex
+ * \desc Docs!
+ * \arg sll_complex_t a
+ * \ret sll_complex_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_neg(sll_complex_t a);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_complex_pow
+ * \group complex
+ * \desc Docs!
+ * \arg sll_complex_t a
+ * \arg sll_complex_t b
+ * \ret sll_complex_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow(sll_complex_t a,sll_complex_t b);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_complex_pow_float
+ * \group complex
+ * \desc Docs!
+ * \arg sll_complex_t a
+ * \arg sll_float_t b
+ * \ret sll_complex_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow_float(sll_complex_t a,sll_float_t b);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_complex_pow_int
+ * \group complex
+ * \desc Docs!
+ * \arg sll_complex_t a
+ * \arg sll_integer_t b
+ * \ret sll_complex_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow_int(sll_complex_t a,sll_integer_t b);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_complex_reciprocal
  * \group complex
  * \desc Docs!
