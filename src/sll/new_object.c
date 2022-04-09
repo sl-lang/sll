@@ -226,7 +226,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					sll_object_t* o=sll_array_length_to_object(len);
 					while (len){
 						len--;
-						o->dt.a.v[len]=sll_string_to_object((fl&NEW_OBJECT_FLAG_DEREF?*(((const sll_string_t*const*)ptr)+len):((const sll_string_t*)ptr)+len));
+						o->dt.a.v[len]=sll_string_to_object(((fl&NEW_OBJECT_FLAG_DEREF)?*(((const sll_string_t*const*)ptr)+len):((const sll_string_t*)ptr)+len));
 					}
 					return o;
 				}
