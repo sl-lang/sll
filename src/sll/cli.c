@@ -10,6 +10,7 @@
 #include <sll/audit.h>
 #include <sll/bundle.h>
 #include <sll/cli.h>
+#include <sll/common.h>
 #include <sll/data.h>
 #include <sll/error.h>
 #include <sll/file.h>

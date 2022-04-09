@@ -467,6 +467,13 @@ typedef struct __SLL_FILE{
 
 
 
+typedef struct __SLL_COMPLEX{
+	sll_float_t real;
+	sll_float_t imag;
+} sll_complex_t;
+
+
+
 typedef struct __SLL_FUNCTION_NODE_DATA{
 	sll_arg_count_t ac;
 	sll_function_index_t id;

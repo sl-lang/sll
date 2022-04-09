@@ -6,6 +6,8 @@
 
 - Argument parsing modifier to parse an array of a given type: `+`
 - Implemented `sll_arg_state_t`, `sll_free_args` and `sll_parse_args_list`
+- Implemented `sll_complex_add`, `sll_complex_conjugate`, `sll_complex_div`, `sll_complex_mult`, `sll_complex_reciprocal` and `sll_complex_sub` ([#262])
+- Implemented `sll_complex_t` ([#262])
 - Object creation modifier to dereference array elements: `*`
 
 ### Changed
@@ -1977,6 +1979,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#262]: https://github.com/sl-lang/sll/issues/262
 [#260]: https://github.com/sl-lang/sll/issues/260
 [#259]: https://github.com/sl-lang/sll/issues/259
 [#258]: https://github.com/sl-lang/sll/issues/258
