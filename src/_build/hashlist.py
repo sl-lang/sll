@@ -4,6 +4,10 @@ import util
 
 
 
+HASHLIST_EXTENSIONS=[".c",".h"]
+
+
+
 hash_list={}
 update_list=set()
 
@@ -12,12 +16,6 @@ update_list=set()
 def _check(fp,inc):
 	nm=util.unique_file_path(fp)
 	if (nm in update_list or (fp[-2:]==".c" and not os.path.exists(util.output_file_path(fp)))):
-		return 1
-	hash_str=util.hash_file(fp)[1]
-	old=(None if nm not in hash_list else hash_list[nm])
-	hash_list[nm]=hash_str
-	if (old!=hash_str):
-		update_list.add(nm)
 		return 1
 	with open(fp,"r") as rf:
 		for e in header.INCLUDE_REGEX.findall(rf.read()):
@@ -58,6 +56,18 @@ def load_hash_list(fp):
 					continue
 				hash_list[k[:-64]]=k[-64:]
 	util.log(f"  Loaded {len(hash_list)} hashes")
+	util.log("Checking hashes...")
+	for r,_,fl in os.walk("src"):
+		for f in fl:
+			if (f[-2:] in HASHLIST_EXTENSIONS):
+				fp=os.path.join(r,f)
+				h=util.hash_file(fp)[1]
+				nm=util.unique_file_path(fp)
+				if (nm not in hash_list or hash_list[nm]!=h):
+					hash_list[nm]=h
+					update_list.add(nm)
+	_flush_data()
+
 
 
 

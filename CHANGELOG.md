@@ -42,6 +42,7 @@
 - Fixed empty string arguments in `sll_api_path_join`
 - Fixed executable path expansion in `sll_api_process_start`
 - Fixed internal string checksum corruption
+- Improved file update logic in the builder script
 - Renamed `sll_ref_count_t` and `sll_weak_ref_t` to `sll_reference_count_t` and `sll_weak_reference_t`
 
 ### Removed
