@@ -28,8 +28,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div(sll_complex_t a,
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div_float(sll_complex_t a,sll_float_t b){
+	return COMPLEX_DIV_FLOAT(a,b);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult(sll_complex_t a,sll_complex_t b){
 	return COMPLEX_MULT(a,b);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult_float(sll_complex_t a,sll_float_t b){
+	return COMPLEX_MULT_FLOAT(a,b);
 }
 
 

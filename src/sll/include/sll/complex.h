@@ -63,6 +63,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div(sll_complex_t a,
 
 /**
  * \flags check_output func
+ * \name sll_complex_div_float
+ * \group complex
+ * \desc Docs!
+ * \arg sll_complex_t a
+ * \arg sll_float_t b
+ * \ret sll_complex_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div_float(sll_complex_t a,sll_float_t b);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_complex_mult
  * \group complex
  * \desc Docs!
@@ -71,6 +84,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div(sll_complex_t a,
  * \ret sll_complex_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult(sll_complex_t a,sll_complex_t b);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_complex_mult_float
+ * \group complex
+ * \desc Docs!
+ * \arg sll_complex_t a
+ * \arg sll_float_t b
+ * \ret sll_complex_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult_float(sll_complex_t a,sll_float_t b);
 
 
 

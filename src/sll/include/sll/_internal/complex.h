@@ -49,10 +49,31 @@ static __SLL_FORCE_INLINE sll_complex_t COMPLEX_DIV(sll_complex_t a,sll_complex_
 
 
 
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_DIV_FLOAT(sll_complex_t a,sll_float_t b){
+	b=1/b;
+	sll_complex_t o={
+		a.real*b,
+		a.imag*b
+	};
+	return o;
+}
+
+
+
 static __SLL_FORCE_INLINE sll_complex_t COMPLEX_MULT(sll_complex_t a,sll_complex_t b){
 	sll_complex_t o={
 		a.real*b.real-a.imag*b.imag,
 		a.real*b.imag+a.imag*b.real
+	};
+	return o;
+}
+
+
+
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_MULT_FLOAT(sll_complex_t a,sll_float_t b){
+	sll_complex_t o={
+		a.real*b,
+		a.imag*b
 	};
 	return o;
 }
