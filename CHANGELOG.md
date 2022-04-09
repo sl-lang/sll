@@ -11,6 +11,7 @@
 ### Changed
 
 - Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
+- Split the operators from [`src/sll/operator.c`][0.7.12/src/sll/operator.c] to [`src/sll/operator`][0.7.13/src/sll/operator]
 
 ## [0.7.12] - 2022-04-09
 
@@ -2191,6 +2192,8 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#3]: https://github.com/sl-lang/sll/issues/3
 [#2]: https://github.com/sl-lang/sll/issues/2
 [test-coverage]: https://github.com/sl-lang/sll/tree/test-coverage
+[0.7.13/src/sll/operator]: https:/github.com/sl-lang/sll/tree/main/src/sll/operator
+[0.7.12/src/sll/operator.c]: https://github.com/sl-lang/sll/blob/sll-v0.7.12/src/sll/operator.c
 [0.7.10/src/sll/data/operator_parser.txt]: https://github.com/sl-lang/sll/blob/sll-v0.7.10/src/sll/data/operator_parser.txt
 [0.7.9/src/sll/include/sll/_internal]: https:/github.com/sl-lang/sll/tree/sll-v0.7.9/src/sll/include/sll/_internal
 [0.7.8/src/sll/include/sll/_sll_internal.h]: https://github.com/sl-lang/sll/blob/sll-v0.7.8/src/sll/include/sll/_sll_internal.h

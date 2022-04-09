@@ -1,7 +1,10 @@
 #ifndef __SLL__INTERNAL_OPERATOR_H__
 #define __SLL__INTERNAL_OPERATOR_H__ 1
+#include <sll/_size_types.h>
 #include <sll/api/float.h>
+#include <sll/data.h>
 #include <sll/api/math.h>
+#include <sll/object.h>
 
 
 
@@ -44,8 +47,6 @@
 #define COMBINED_TYPE_MA COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_ARRAY)
 #define COMBINED_TYPE_MM COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_MAP)
 
-#define COMPARE_RESULT(a,b) ((a)<(b)?SLL_COMPARE_RESULT_BELOW:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_EQUAL))
-#define COMPARE_RESULT_FLOAT(a,b) (EQUAL_FLOAT((a),(b))?SLL_COMPARE_RESULT_EQUAL:((a)>(b)?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW))
 #define EQUAL_FLOAT(a,b) (sll_api_math_abs((a)-(b))<sll_float_compare_error)
 
 #define COMMUTATIVE_OPERATOR \
