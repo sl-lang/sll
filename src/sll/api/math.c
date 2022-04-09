@@ -16,19 +16,19 @@
 
 #define PUSH_FACTOR(v,c) \
 	do{ \
-		j++; \
-		o=sll_reallocate(o,j*sizeof(sll_factor_t)); \
-		(o+j-1)->n=v; \
-		(o+j-1)->pw=c; \
+		i++; \
+		o=sll_reallocate(o,i*sizeof(sll_factor_t)); \
+		(o+i-1)->n=v; \
+		(o+i-1)->pw=c; \
 	} while (0)
 #define WHEEL_STEP(x) \
 	if (!(n%f)){ \
-		i=0; \
+		j=0; \
 		do{ \
-			i++; \
+			j++; \
 			n/=f; \
 		} while (!(n%f)); \
-		PUSH_FACTOR(f,i); \
+		PUSH_FACTOR(f,j); \
 	} \
 	f+=x; \
 	if (f*f>n){ \
@@ -91,33 +91,44 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t n,sll_array_length_t* ol){
+	sll_factor_t* o=sll_allocate_stack(1);
+	sll_array_length_t i=0;
+	if (n<0){
+		n=-n;
+		i=1;
+		o=sll_reallocate(o,sizeof(sll_factor_t));
+		o->n=-1;
+		o->pw=1;
+	}
 	if (n<2){
-		*ol=0;
+		*ol=i;
+		if (i){
+			return o;
+		}
+		sll_deallocate(o);
 		return NULL;
 	}
-	sll_size_t i=FIND_FIRST_SET_BIT(n);
-	sll_factor_t* o=sll_allocate_stack(1);
-	sll_array_length_t j=0;
-	if (i){
-		n>>=i;
-		PUSH_FACTOR(2,i);
+	sll_size_t j=FIND_FIRST_SET_BIT(n);
+	if (j){
+		n>>=j;
+		PUSH_FACTOR(2,j);
 	}
 	if (!(n%3)){
-		i=0;
+		j=0;
 		do{
-			i++;
+			j++;
 			n/=3;
 		} while (!(n%3));
-		PUSH_FACTOR(3,i);
+		PUSH_FACTOR(3,j);
 	}
 	if (!(n%5)){
-		i=0;
+		j=0;
 		do{
-			i++;
+			j++;
 			n/=5;
 		} while (!(n%5));
-		PUSH_FACTOR(5,i);
+		PUSH_FACTOR(5,j);
 	}
 	__SLL_U64 f=7;
 	if (n>48){
@@ -135,7 +146,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sl
 	if (n!=1){
 		PUSH_FACTOR(n,1);
 	}
-	*ol=j;
+	*ol=i;
 	return o;
 }
 
@@ -297,21 +308,11 @@ __API_FUNC(math_factorial){
 
 
 __API_FUNC(math_factors){
-	sll_bool_t neg=0;
-	if (a<0){
-		neg=1;
-		a=-a;
-	}
 	sll_array_length_t l;
 	sll_factor_t* dt=sll_math_factors(a,&l);
-	sll_array_create(l+neg,out);
-	if (neg){
-		out->v[0]=sll_new_object(SLL_CHAR("(hh)"),-1,1);
-	}
-	for (sll_array_length_t i=0;i<l;i++){
-		out->v[i+neg]=sll_new_object(SLL_CHAR("(ii)"),(dt+i)->n,(dt+i)->pw);
-	}
+	sll_object_t* o=sll_new_object(SLL_CHAR("{ii}"),dt,l,sizeof(sll_factor_t),SLL_OFFSETOF(sll_factor_t,n),SLL_OFFSETOF(sll_factor_t,pw));
 	sll_deallocate(dt);
+	return o;
 }
 
 

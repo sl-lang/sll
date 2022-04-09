@@ -1837,14 +1837,15 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_math_factors void
-#define __SLL_API_ARGS_sll_api_math_factors sll_integer_t a,sll_array_t* out
+#define __SLL_API_TYPE_sll_api_math_factors __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_math_factors sll_integer_t a
 /**
  * \flags check_output func
  * \name sll_api_math_factors
  * \group math-api
  * \desc Docs!
  * \arg sll_integer_t a -> 
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func

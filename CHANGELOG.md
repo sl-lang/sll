@@ -20,7 +20,7 @@
 - More examples ([#8])
 - Object creation code to construct C structure arrays: `{}`
 - Object creation code to generate the address of a C structure member: `p`
-- Object creation code to use a converter function: `#`
+- Object creation code to utilize a converter function: `#`
 - Object creation modifier to construct an array of a given type: `+`
 - Object creation modifier to prevent reference acquisition: `!`
 

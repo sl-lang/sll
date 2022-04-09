@@ -840,9 +840,8 @@ __SLL_API_TYPE_sll_api_math_factors sll_api_math_factors(__SLL_API_ARGS_sll_api_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factors_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_integer_t a;
 	sll_parse_args(SLL_CHAR("i"),al,all,&a);
-	sll_array_t out;
-	sll_api_math_factors(a,&out);
-	return sll_array_to_object_nocopy(&out);
+	sll_object_t* out=sll_api_math_factors(a);
+	return out;
 }
 
 

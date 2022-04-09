@@ -57,11 +57,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n);
  * \name sll_math_factors
  * \group math-api
  * \desc Docs!
- * \arg sll_size_t n
+ * \arg sll_integer_t n
  * \arg sll_array_length_t* ol
  * \ret sll_factor_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t n,sll_array_length_t* ol);
 
 
 
@@ -301,7 +301,7 @@ __API_FUNC_DECL(math_factorial);
  * \group math-api
  * \desc Docs!
  * \arg I
- * \ret A
+ * \ret O
  */
 __API_FUNC_DECL(math_factors);
 
