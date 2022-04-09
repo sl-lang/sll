@@ -311,6 +311,10 @@ typedef sll_float_t sll_second_t;
 
 
 
+typedef void* sll_arg_state_t;
+
+
+
 typedef void* sll_event_handle_t;
 
 

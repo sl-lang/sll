@@ -28,20 +28,25 @@ def generate_c_api(d_dt,api_dt):
 					if (i):
 						args+=","
 						call_args+=","
+					e_type=e["type"]
+					arr=False
+					if ("+" in e_type):
+						e_type=e_type.replace("+","")
+						arr=True
 					fmt_args+=","
-					at=TYPE_MAP[e["type"]]
-					ptr=("*" if e["type"] in TYPE_PTR else "")
-					fmt+=FORMAT_MAP[e["type"]]
+					at=TYPE_MAP[e_type]
+					ptr=("*" if e_type in TYPE_PTR else "")
+					fmt+=FORMAT_MAP[e_type]
 					fmt_args+="&"+ALPHABET[i]
-					if (i==len(k["args"])-1 and "var_arg" in k["flag"]):
+					if ((i==len(k["args"])-1 and "var_arg" in k["flag"]) or arr):
 						t=f"{at+('*const' if ptr else '')}* {ALPHABET[i]}"
 						args+=f"{t},sll_arg_count_t {ALPHABET[i]}c"
 						docs+=f"\n * \\arg {t} -> {e['desc']}\n * \\arg sll_arg_count_t {ALPHABET[i]}c"
 						call_args+=ALPHABET[i]+","+ALPHABET[i]+"c"
-						fmt+="+"
+						fmt+=("+" if arr else "!")
 						fmt_args+=f",&{ALPHABET[i]}c"
 						cf.write(f"\t{at+ptr}* {ALPHABET[i]};\n\tsll_arg_count_t {ALPHABET[i]}c;\n")
-					elif (e["type"] in TYPE_PTR_NO_FMT):
+					elif (e_type in TYPE_PTR_NO_FMT):
 						t=f"{at+ptr} {ALPHABET[i]}"
 						args+=t
 						call_args+="&"+ALPHABET[i]
@@ -54,15 +59,17 @@ def generate_c_api(d_dt,api_dt):
 						docs+=f"\n * \\arg {t} -> {e['desc']}"
 						cf.write(f"\t{t};\n")
 			hf.write(f"\n#define __SLL_API_TYPE_{k['name']} ")
+			end=""
 			if (fmt):
-				cf.write(f"\tsll_parse_args(SLL_CHAR(\"{fmt}\"),al,all{fmt_args});\n")
+				cf.write(f"\tsll_arg_state_t st=sll_parse_args(SLL_CHAR(\"{fmt}\"),al,all{fmt_args});\n")
+				end="\tsll_free_args(st);\n"
 			if (k["ret"]["type"]=="O"):
 				docs+=f"\n * \\ret sll_object_t*"
 				hf.write("__SLL_CHECK_OUTPUT sll_object_t*")
-				cf.write(f"\tsll_object_t* out={k['name']}({call_args});\n\treturn out;\n")
+				cf.write(f"\tsll_object_t* out={k['name']}({call_args});\n{end}\treturn out;\n")
 			elif (k["ret"]["type"]=="V"):
 				hf.write("void")
-				cf.write(f"\t{k['name']}({call_args});\n\treturn SLL_ACQUIRE_STATIC_INT(0);\n")
+				cf.write(f"\t{k['name']}({call_args});\n{end}\treturn SLL_ACQUIRE_STATIC_INT(0);\n")
 			else:
 				if (k["ret"]["type"] in TYPE_PTR):
 					if (len(call_args)>0):
@@ -75,7 +82,7 @@ def generate_c_api(d_dt,api_dt):
 					docs+=f"\n * \\ret {TYPE_MAP[k['ret']['type']]}"
 					hf.write("__SLL_CHECK_OUTPUT "+TYPE_MAP[k["ret"]["type"]])
 					cf.write("\t"+TYPE_MAP[k["ret"]["type"]]+f" out={k['name']}({call_args});")
-				cf.write(f"\n\t"+TYPE_RETURN_MAP[k["ret"]["type"]].replace(";",";\n\t")+";\n")
+				cf.write(f"\n{end}\t"+TYPE_RETURN_MAP[k["ret"]["type"]].replace(";",";\n\t")+";\n")
 			if (len(args)==0):
 				args="void"
 			sg=("" if k["subgroup"] is None else f"\n\\subgroup {k['subgroup']}")

@@ -2,7 +2,9 @@
 
 ## [0.7.13] - Ongoing
 
-*Nothing*
+### Added
+
+- Implemented `sll_arg_state_t` and `sll_free_args`
 
 ## [0.7.12] - 2022-04-09
 
