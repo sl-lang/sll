@@ -65,6 +65,10 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 		(*t)++;
 	}
 	switch (st){
+		case '#':
+			o->fnl++;
+			o->fn=sll_reallocate(o->fn,o->fnl*sizeof(void*));
+			*(o->fn+o->fnl-1)=(void*)sll_var_arg_get(va);
 		case 'p':
 			cnt=1;
 		case 'h':
@@ -85,14 +89,6 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 			if (cnt==2){
 				*(o->off+o->l-2)=sll_var_arg_get_int(va);
 			}
-			return;
-		case '#':
-			o->fnl++;
-			o->fn=sll_reallocate(o->fn,o->fnl*sizeof(void*));
-			*(o->fn+o->fnl-1)=(void*)sll_var_arg_get(va);
-			o->l++;
-			o->off=sll_reallocate(o->off,o->l*sizeof(sll_size_t));
-			*(o->off+o->l-1)=sll_var_arg_get_int(va);
 			return;
 		case '(':
 		case '[':
@@ -118,7 +114,7 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 static sll_object_t* _build_struct(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va,sll_flags_t fl){
 	addr_t ptr=sll_var_arg_get_int(va);
 	sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
-	sll_array_length_t sz=(sll_array_length_t)sll_var_arg_get_int(va);
+	sll_size_t sz=sll_var_arg_get_int(va);
 	SKIP_WHITESPACE;
 	const sll_char_t* base_t=*t;
 	sll_string_length_t base_tl=*tl;
