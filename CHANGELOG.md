@@ -4,8 +4,9 @@
 
 ### Added
 
-- Implemented `sll_arg_state_t` and `sll_free_args`
 - Argument parsing modifier to parse an array of a given type: `+`
+- Implemented `sll_arg_state_t` and `sll_free_args`
+- Object creation modifier to dereference array elements: `*`
 
 ### Changed
 
