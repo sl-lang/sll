@@ -14,7 +14,7 @@
 - Implemented `sll_debug_data_length_t`, `sll_environment_length_t`, `sll_object_type_table_t` and `sll_tls_object_length_t`
 - Implemented `SLL_DEBUG_LINE_DATA_SET_DATA`
 - Implemented `sll_expand_environment_variable`
-- Implemented `sll_object_function_index_t`, `SLL_OBJECT_FUNC_INIT`, SLL_OBJECT_FUNC_DELETE`, SLL_OBJECT_FUNC_COPY` and `SLL_OBJECT_FUNC_STRING`
+- Implemented `sll_object_function_index_t`, `SLL_OBJECT_FUNC_INIT`, `SLL_OBJECT_FUNC_DELETE`, `SLL_OBJECT_FUNC_COPY` and `SLL_OBJECT_FUNC_STRING`
 - Implemented `SLL_OFFSETOF`
 - Implemented `sll_search_path_length_t`, `sll_search_path_t`, `SLL_SEARCH_PATH_SPLIT_CHAR`, `SLL_SEARCH_PATH_FLAG_BEFORE`, `SLL_SEARCH_PATH_FLAG_AFTER`, `sll_env_path`, `sll_free_search_path`, `sll_search_path_create`, `sll_search_path_find` and `sll_search_path_from_environment`
 - Implemented `sll_var_arg_type_t`
@@ -34,8 +34,8 @@
 |--|--|--|
 | `sll.cli.deinit` | | |
 | `sll.cli.find` | `s` | `path` |
-| `sll.cli.init` | `isaaasi` | `flags`, `output_path`, `include_directories`, `audit_libraries`, `include_bundles`, `bundle_path`, `sandbox_flags` |
 | `sll.cli.init.raw` | `a` | `arguments` |
+| `sll.cli.init` | `isaaasi` | `flags`, `output_path`, `include_directories`, `audit_libraries`, `include_bundles`, `bundle_path`, `sandbox_flags` |
 | `sll.cli.load.source` | `s` | `source` |
 | `sll.cli.load` | `s` | `path` |
 | `sll.cli.save.assembly` | `s` | `path` |
@@ -51,7 +51,7 @@
 
 ### Removed
 
-- Unneeded object creation code: `N` and `L`
+- Unneeded object creation codes: `N` and `L`
 - Unused `sll_object_type_data_functions_t`
 
 ## [0.7.11] - 2022-04-02
