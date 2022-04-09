@@ -91,17 +91,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t n,sll_array_length_t* ol){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t v,sll_array_length_t* ol){
 	sll_factor_t* o=sll_allocate_stack(1);
 	sll_array_length_t i=0;
-	if (n<0){
-		n=-n;
+	if (v<0){
+		v=-v;
 		i=1;
 		o=sll_reallocate(o,sizeof(sll_factor_t));
 		o->n=-1;
 		o->pw=1;
 	}
-	if (n<2){
+	if (v<2){
 		*ol=i;
 		if (i){
 			return o;
@@ -109,6 +109,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t n
 		sll_deallocate(o);
 		return NULL;
 	}
+	sll_size_t n=v;
 	sll_size_t j=FIND_FIRST_SET_BIT(n);
 	if (j){
 		n>>=j;
@@ -130,7 +131,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t n
 		} while (!(n%5));
 		PUSH_FACTOR(5,j);
 	}
-	__SLL_U64 f=7;
+	sll_size_t f=7;
 	if (n>48){
 		while (1){
 			WHEEL_STEP(4);
