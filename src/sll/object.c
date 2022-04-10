@@ -4,6 +4,7 @@
 #include <sll/_internal/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/complex.h>
 #include <sll/data.h>
 #include <sll/map.h>
 #include <sll/memory.h>
@@ -20,12 +21,13 @@ static __STATIC_STRING(_object_copy_str,"@@copy@@");
 static __STATIC_STRING(_object_delete_str,"@@delete@@");
 static __STATIC_STRING(_object_init_str,"@@init@@");
 static __STATIC_STRING(_object_string_str,"@@string@@");
-static __STATIC_STRING(_object_array_type_str,"array_type");
-static __STATIC_STRING(_object_char_type_str,"char_type");
-static __STATIC_STRING(_object_float_type_str,"float_type");
 static __STATIC_STRING(_object_int_type_str,"int_type");
-static __STATIC_STRING(_object_map_type_str,"map_type");
+static __STATIC_STRING(_object_float_type_str,"float_type");
+static __STATIC_STRING(_object_char_type_str,"char_type");
+static __STATIC_STRING(_object_complex_type_str,"complex_type");
 static __STATIC_STRING(_object_string_type_str,"string_type");
+static __STATIC_STRING(_object_array_type_str,"array_type");
+static __STATIC_STRING(_object_map_type_str,"map_type");
 static const sll_string_t* _object_fn_list[SLL_MAX_OBJECT_FUNC+1]={
 	&_object_init_str,
 	&_object_delete_str,
@@ -50,6 +52,9 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 				break;
 			case SLL_OBJECT_TYPE_CHAR:
 				p->c=0;
+				break;
+			case SLL_OBJECT_TYPE_COMPLEX:
+				SLL_INIT_COMPLEX(&(p->d));
 				break;
 			case SLL_OBJECT_TYPE_STRING:
 				p->o=sll_string_to_object(NULL);
@@ -101,6 +106,9 @@ static void _set_field(const sll_object_type_table_t* tt,sll_object_field_t* o,s
 			break;
 		case SLL_OBJECT_TYPE_CHAR:
 			o->c=v->dt.c;
+			break;
+		case SLL_OBJECT_TYPE_COMPLEX:
+			o->d=v->dt.d;
 			break;
 		case SLL_OBJECT_TYPE_STRING:
 		case SLL_OBJECT_TYPE_ARRAY:
@@ -229,6 +237,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_FLOAT]):SLL_ACQUIRE_STATIC(float_zero));
 		case SLL_OBJECT_TYPE_CHAR:
 			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_CHAR]):SLL_FROM_CHAR(0));
+		case SLL_OBJECT_TYPE_COMPLEX:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_STRING:
 			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_STRING]):sll_string_to_object(NULL));
 		case SLL_OBJECT_TYPE_ARRAY:
@@ -299,6 +309,9 @@ __SLL_EXTERNAL void sll_get_type_name(sll_object_type_table_t* tt,sll_object_typ
 		case SLL_OBJECT_TYPE_CHAR:
 			sll_string_clone(&_object_char_type_str,o);
 			return;
+		case SLL_OBJECT_TYPE_COMPLEX:
+			sll_string_clone(&_object_complex_type_str,o);
+			break;
 		case SLL_OBJECT_TYPE_STRING:
 			sll_string_clone(&_object_string_type_str,o);
 			return;
@@ -335,6 +348,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 			case SLL_OBJECT_TYPE_FLOAT:
 				dst->f=src->f;
 				break;
+			case SLL_OBJECT_TYPE_COMPLEX:
+				dst->d=src->d;
+				break;
 			default:
 				dst->o=sll_operator_copy(src->o,d);
 				break;
@@ -364,6 +380,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 			return sll_float_to_object(v->f);
 		case SLL_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(v->c);
+		case SLL_OBJECT_TYPE_COMPLEX:
+			return sll_complex_to_object(v->d);
 	}
 	SLL_ACQUIRE(v->o);
 	return v->o;
@@ -381,7 +399,7 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 	if (dt->dt[off].c){
 		return;
 	}
-	if (t>SLL_OBJECT_TYPE_CHAR){
+	if (t>SLL_OBJECT_TYPE_COMPLEX){
 		GC_RELEASE((o->dt.p+off)->o);
 	}
 	_set_field(tt,o->dt.p+off,t,v);
@@ -405,6 +423,9 @@ __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* tt,sll_ob
 				break;
 			case SLL_OBJECT_TYPE_CHAR:
 				out->v[i]=SLL_FROM_CHAR(v->c);
+				break;
+			case SLL_OBJECT_TYPE_COMPLEX:
+				out->v[i]=sll_complex_to_object(v->d);
 				break;
 			default:
 				SLL_ACQUIRE(v->o);

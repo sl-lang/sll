@@ -12,6 +12,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_CHAR:
 			return SLL_ACQUIRE_STATIC_INT(0);
+		case SLL_OBJECT_TYPE_COMPLEX:
+			SLL_UNREACHABLE();
 		case SLL_OBJECT_TYPE_STRING:
 			return sll_int_to_object(a->dt.s.l);
 		case SLL_OBJECT_TYPE_ARRAY:

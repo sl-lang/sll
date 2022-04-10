@@ -74,6 +74,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 				}
 				return SLL_FROM_CHAR(v);
 			}
+		case SLL_OBJECT_TYPE_COMPLEX:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				sll_string_t str;
@@ -236,6 +238,8 @@ __SLL_EXTERNAL void sll_encode_object(sll_file_t* f,sll_object_t*const* a,sll_ar
 			case SLL_OBJECT_TYPE_CHAR:
 				sll_file_write_char(f,k->dt.c,NULL);
 				break;
+			case SLL_OBJECT_TYPE_COMPLEX:
+				SLL_UNIMPLEMENTED();
 			case SLL_OBJECT_TYPE_STRING:
 				sll_encode_string(f,&(k->dt.s));
 				break;

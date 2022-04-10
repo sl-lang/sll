@@ -741,6 +741,7 @@ typedef union __SLL_OBJECT_FIELD{
 	sll_integer_t i;
 	sll_float_t f;
 	sll_char_t c;
+	sll_complex_t d;
 	struct __SLL_OBJECT* o;
 } sll_object_field_t;
 
@@ -757,6 +758,7 @@ typedef union __SLL_OBJECT_DATA{
 	sll_integer_t i;
 	sll_float_t f;
 	sll_char_t c;
+	sll_complex_t d;
 	sll_string_t s;
 	sll_array_t a;
 	sll_map_t m;

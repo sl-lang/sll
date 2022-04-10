@@ -12,6 +12,21 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_INIT_COMPLEX
+ * \group complex
+ * \desc Docs!
+ * \arg sll_complex_t* c
+ */
+#define SLL_INIT_COMPLEX(c) \
+    do{ \
+        (c)->real=0; \
+        (c)->imag=0; \
+    } while (0)
+
+
+
+/**
  * \flags check_output func
  * \name sll_complex_abs
  * \group complex

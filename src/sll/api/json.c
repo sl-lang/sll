@@ -384,6 +384,8 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 		case SLL_OBJECT_TYPE_CHAR:
 			_stringify_string(&(o->dt.c),1,s);
 			return;
+		case SLL_OBJECT_TYPE_COMPLEX:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_STRING:
 			_stringify_string(o->dt.s.v,o->dt.s.l,s);
 			return;

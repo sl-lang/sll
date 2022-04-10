@@ -131,6 +131,8 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			o->v[o->l]='\'';
 			o->l++;
 			return;
+		case SLL_OBJECT_TYPE_COMPLEX:
+			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_STRING:
 			sll_string_increase(o,1);
 			o->v[o->l]='\"';
@@ -226,6 +228,9 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 							break;
 						case SLL_OBJECT_TYPE_CHAR:
 							tmp=SLL_FROM_CHAR(p->c);
+							break;
+						case SLL_OBJECT_TYPE_COMPLEX:
+							tmp=sll_complex_to_object(p->d);
 							break;
 						default:
 							tmp=p->o;
