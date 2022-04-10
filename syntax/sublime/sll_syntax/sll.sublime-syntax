@@ -12,6 +12,8 @@ variables:
   not_identifier_chars: '\s$\(\);<>\[\]\{\}'
   not_identifier_end: '(?=[{{not_identifier_chars}}])'
   not_identifier_start: '(?<=[{{not_identifier_chars}}])'
+  float: '(?:(?:[0-9][0-9_]*)?\.[0-9_]*{{float_exponent}}?|[0-9][0-9_]*{{float_exponent}})'
+  float_or_decimal: '(?:{{float}}|[0-9][0-9_]*)'
 contexts:
   main:
     - include: comments
@@ -174,13 +176,17 @@ contexts:
         - include: main
     - match: '[\)\}\]>]'
       scope: invalid.illegal.stray-bracket-end.sll
+    - match: '{{not_identifier_start}}[\+-]?(?:0[bB][01][01_]*|0[oO][0-7][0-7_]*|[xX][0-9a-fA-F][0-9a-fA-F_]*|[0-9][0-9_]*|{{float_or_decimal}}(?:[+-]{{float_or_decimal}})?)(i){{not_identifier_end}}'
+      scope: constant.numeric.complex.sll
+      captures:
+        1: storage.type.complex.sll
     - match: '{{not_identifier_start}}[\+-]?0[bB][01][01_]*{{not_identifier_end}}'
       scope: constant.numeric.integer.binary.sll
     - match: '{{not_identifier_start}}[\+-]?0[oO][0-7][0-7_]*{{not_identifier_end}}'
       scope: constant.numeric.integer.octal.sll
     - match: '{{not_identifier_start}}[\+-]?0[xX][0-9a-fA-F][0-9a-fA-F_]*{{not_identifier_end}}'
       scope: constant.numeric.integer.hexadecimal.sll
-    - match: '{{not_identifier_start}}[\+-]?(?:(?:[0-9][0-9_]*)?\.[0-9_]*{{float_exponent}}?|[0-9][0-9_]*{{float_exponent}}){{not_identifier_end}}'
+    - match: '{{not_identifier_start}}[\+-]?{{float}}{{not_identifier_end}}'
       scope: constant.numeric.float.sll
     - match: '{{not_identifier_start}}[\+-]?[0-9][0-9_]*{{not_identifier_end}}'
       scope: constant.numeric.integer.decimal.sll
@@ -213,7 +219,7 @@ contexts:
           pop: true
     - match: '{{not_identifier_start}}(nil|true|false){{not_identifier_end}}'
       scope: constant.language.sll
-    - match: '{{not_identifier_start}}(int_type|func_type|type_type|float_type|char_type|string_type|array_type|map_type|map_key_type|map_value_type|object_type){{not_identifier_end}}'
+    - match: '{{not_identifier_start}}(int|func|type|float|char|complex|string|array|map|map_key|map_value|object)_type{{not_identifier_end}}'
       scope: storage.type.builtin.sll
     - match: '{{not_identifier_start}}@@(copy|delete|init|string)@@{{not_identifier_end}}'
       scope: support.function.special.sll

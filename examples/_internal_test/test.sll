@@ -565,3 +565,6 @@
 (= y [9 8 7 6 5 4 3 2 1])
 (:> (<- statistics$correlation x x) ", 1\n")
 (:> (<- statistics$correlation x y) ", -1\n")
+
+
+(:> [0.0i 0b111i 1e4-3e4i] "\n")
