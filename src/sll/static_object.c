@@ -1,6 +1,8 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/static_object.h>
 #include <sll/array.h>
+#include <sll/common.h>
+#include <sll/complex.h>
 #include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/object.h>
@@ -664,6 +666,10 @@ __SLL_EXTERNAL sll_object_t* sll_static_char[256]={
 
 
 
+__SLL_STATIC_OBJECT(complex_zero,SLL_OBJECT_TYPE_COMPLEX,d,SLL_INIT_COMPLEX_STRUCT);
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_length_to_object(sll_array_length_t l){
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 	sll_array_create(l,&(o->dt.a));
@@ -701,17 +707,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v)
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(sll_complex_t v){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_COMPLEX);
-	o->dt.d=v;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_char_t v){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	sll_string_from_char(v,&(o->dt.s));
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_char_t v){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_from_char(v,&(o->dt.s));
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(sll_complex_t v){
+	if (!v.real&&!v.imag){
+		SLL_ACQUIRE(sll_static_complex_zero);
+		return sll_static_complex_zero;
+	}
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_COMPLEX);
+	o->dt.d=v;
 	return o;
 }
 

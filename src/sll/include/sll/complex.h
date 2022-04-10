@@ -27,6 +27,17 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_INIT_COMPLEX_STRUCT
+ * \group complex
+ * \desc Docs!
+ * \type sll_complex_t
+ */
+#define SLL_INIT_COMPLEX_STRUCT {0,0}
+
+
+
+/**
  * \flags check_output func
  * \name sll_complex_abs
  * \group complex
