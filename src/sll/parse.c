@@ -513,7 +513,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 						while (1){
 							PUSH_REWIND_CHAR(c);
 							c=sll_file_read_char(rf,NULL);
-							if ((c>8&&c<14)||c==' '||c=='('||c==')'||c==';'||c=='<'||c=='>'||c=='['||c==']'||c=='{'||c=='}'||c=='e'||c=='E'||c==SLL_END_OF_DATA){
+							if ((c>8&&c<14)||c==' '||c=='('||c==')'||c==';'||c=='<'||c=='>'||c=='['||c==']'||c=='{'||c=='}'||c=='e'||c=='E'||c=='+'||c=='-'||c==SLL_END_OF_DATA){
 								break;
 							}
 							if (c<48||(c>57&&c!='_')){
@@ -539,7 +539,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 							PUSH_REWIND_CHAR(c);
 							c=sll_file_read_char(rf,NULL);
 						}
-						while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!=SLL_END_OF_DATA)){
+						while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!='+'&&c!='-'&&c!=SLL_END_OF_DATA)){
 							if (c<48||(c>57&&c!='_')){
 								goto _parse_identifier;
 							}
@@ -554,21 +554,27 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 						}
 						ex+=(neg_e?-ev:ev);
 					}
-					if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}')){
+					if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!='+'&&c!='-')){
 						goto _parse_identifier;
 					}
-					arg->t=SLL_NODE_TYPE_FLOAT;
-					if (vc<19){
-						arg->dt.f=(sll_float_t)v;
-					}
-					else{
+					sll_float_t real=(sll_float_t)v;
+					if (vc>=19){
 						SLL_ASSERT(vc<=38);
-						arg->dt.f=((sll_float_t)v)*sll_api_math_pow(10,vc-19)+v2;
+						real=real*sll_api_math_pow(10,vc-19)+v2;
 					}
-					arg->dt.f*=sll_api_math_pow(10,(sll_float_t)ex);
+					real*=sll_api_math_pow(10,(sll_float_t)ex);
 					if (neg){
-						arg->dt.f=-arg->dt.f;
+						real=-real;
 					}
+					if (c=='+'||c=='-'){
+						PUSH_REWIND_CHAR(c);
+						goto _parse_identifier;
+						arg->t=SLL_NODE_TYPE_COMPLEX;
+						arg->dt.d.real=real;
+						SLL_UNIMPLEMENTED();
+					}
+					arg->t=SLL_NODE_TYPE_FLOAT;
+					arg->dt.f=real;
 				}
 				else{
 _create_int:
@@ -919,8 +925,8 @@ _return_node:;
 		o->dt.l.ac=ac;
 	}
 	else if (o->t==SLL_NODE_TYPE_DECL){
-		o->dt.d.ac=ac;
-		o->dt.d.nm=e_c_dt->a_nm;
+		o->dt.dc.ac=ac;
+		o->dt.dc.nm=e_c_dt->a_nm;
 	}
 	else{
 		o->dt.ac=ac;

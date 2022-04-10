@@ -72,9 +72,10 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_source_f
 		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
@@ -193,9 +194,10 @@ static const sll_node_t* _skip_with_dbg(const sll_node_t* o,assembly_generator_d
 		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
@@ -369,11 +371,6 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 	}
 	NOT_FIELD(o);
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
-			if ((!!(o->dt.c))^inv){
-				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
-			}
-			return o+1;
 		case SLL_NODE_TYPE_INT:
 			if ((!!(o->dt.i))^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
@@ -381,6 +378,16 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			return o+1;
 		case SLL_NODE_TYPE_FLOAT:
 			if ((!!(o->dt.f))^inv){
+				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+			}
+			return o+1;
+		case SLL_NODE_TYPE_CHAR:
+			if ((!!(o->dt.c))^inv){
+				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+			}
+			return o+1;
+		case SLL_NODE_TYPE_COMPLEX:
+			if (((!!(o->dt.d.real))|!!(o->dt.d.imag))^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o+1;
@@ -785,9 +792,10 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
@@ -919,14 +927,6 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 	}
 	NOT_FIELD(o);
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
-			{
-				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
-				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR;
-				ai->dt.c=o->dt.c;
-				PUSH;
-				return o+1;
-			}
 		case SLL_NODE_TYPE_INT:
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
@@ -940,6 +940,22 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT;
 				ai->dt.f=o->dt.f;
+				PUSH;
+				return o+1;
+			}
+		case SLL_NODE_TYPE_CHAR:
+			{
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR;
+				ai->dt.c=o->dt.c;
+				PUSH;
+				return o+1;
+			}
+		case SLL_NODE_TYPE_COMPLEX:
+			{
+				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
+				ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX;
+				ai->dt.d=o->dt.d;
 				PUSH;
 				return o+1;
 			}
@@ -1375,12 +1391,12 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			}
 		case SLL_NODE_TYPE_DECL:
 			{
-				sll_arg_count_t l=o->dt.d.ac;
+				sll_arg_count_t l=o->dt.dc.ac;
 				sll_assembly_instruction_type_t fl=SLL_ASSEMBLY_INSTRUCTION_FLAG_ANONYMOUS;
-				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
+				if (o->dt.dc.nm!=SLL_MAX_STRING_INDEX){
 					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS;
-					ai->dt.t=o->dt.d.nm;
+					ai->dt.t=o->dt.dc.nm;
 					PUSH;
 					fl=0;
 				}
@@ -1588,9 +1604,10 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:

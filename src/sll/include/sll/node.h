@@ -28,25 +28,13 @@
 
 /**
  * \flags macro var
- * \name SLL_NODE_TYPE_CHAR
- * \group node
- * \subgroup node-type
- * \desc Docs!
- * \type sll_node_type_t
- */
-#define SLL_NODE_TYPE_CHAR 0
-
-
-
-/**
- * \flags macro var
  * \name SLL_NODE_TYPE_INT
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_INT 1
+#define SLL_NODE_TYPE_INT 0
 
 
 
@@ -58,7 +46,31 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FLOAT 2
+#define SLL_NODE_TYPE_FLOAT 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_CHAR
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_CHAR 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_COMPLEX
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_COMPLEX 3
 
 
 
@@ -70,7 +82,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_STRING 3
+#define SLL_NODE_TYPE_STRING 4
 
 
 
@@ -82,7 +94,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_ARRAY 4
+#define SLL_NODE_TYPE_ARRAY 5
 
 
 
@@ -94,7 +106,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_MAP 5
+#define SLL_NODE_TYPE_MAP 6
 
 
 
@@ -106,7 +118,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_IDENTIFIER 6
+#define SLL_NODE_TYPE_IDENTIFIER 7
 
 
 
@@ -118,7 +130,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FIELD 7
+#define SLL_NODE_TYPE_FIELD 8
 
 
 
@@ -130,7 +142,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FUNCTION_ID 8
+#define SLL_NODE_TYPE_FUNCTION_ID 9
 
 
 
@@ -142,7 +154,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_PRINT 9
+#define SLL_NODE_TYPE_PRINT 10
 
 
 
@@ -154,7 +166,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_AND 10
+#define SLL_NODE_TYPE_AND 11
 
 
 
@@ -166,7 +178,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_OR 11
+#define SLL_NODE_TYPE_OR 12
 
 
 
@@ -178,7 +190,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_NOT 12
+#define SLL_NODE_TYPE_NOT 13
 
 
 
@@ -190,7 +202,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BOOL 13
+#define SLL_NODE_TYPE_BOOL 14
 
 
 
@@ -202,7 +214,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_ASSIGN 14
+#define SLL_NODE_TYPE_ASSIGN 15
 
 
 
@@ -214,7 +226,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FUNC 15
+#define SLL_NODE_TYPE_FUNC 16
 
 
 
@@ -226,7 +238,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_INTERNAL_FUNC 16
+#define SLL_NODE_TYPE_INTERNAL_FUNC 17
 
 
 
@@ -238,7 +250,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_INTERNAL_FUNC_LOAD 17
+#define SLL_NODE_TYPE_INTERNAL_FUNC_LOAD 18
 
 
 
@@ -250,7 +262,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_INLINE_FUNC 18
+#define SLL_NODE_TYPE_INLINE_FUNC 19
 
 
 
@@ -262,7 +274,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_CALL 19
+#define SLL_NODE_TYPE_CALL 20
 
 
 
@@ -274,7 +286,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_CALL_ARRAY 20
+#define SLL_NODE_TYPE_CALL_ARRAY 21
 
 
 
@@ -286,7 +298,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_IF 21
+#define SLL_NODE_TYPE_IF 22
 
 
 
@@ -298,7 +310,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_INLINE_IF 22
+#define SLL_NODE_TYPE_INLINE_IF 23
 
 
 
@@ -310,7 +322,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_SWITCH 23
+#define SLL_NODE_TYPE_SWITCH 24
 
 
 
@@ -322,7 +334,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FOR 24
+#define SLL_NODE_TYPE_FOR 25
 
 
 
@@ -334,7 +346,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_WHILE 25
+#define SLL_NODE_TYPE_WHILE 26
 
 
 
@@ -346,7 +358,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_LOOP 26
+#define SLL_NODE_TYPE_LOOP 27
 
 
 
@@ -358,7 +370,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_INC 27
+#define SLL_NODE_TYPE_INC 28
 
 
 
@@ -370,7 +382,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_DEC 28
+#define SLL_NODE_TYPE_DEC 29
 
 
 
@@ -382,7 +394,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_ADD 29
+#define SLL_NODE_TYPE_ADD 30
 
 
 
@@ -394,7 +406,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_SUB 30
+#define SLL_NODE_TYPE_SUB 31
 
 
 
@@ -406,7 +418,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_MULT 31
+#define SLL_NODE_TYPE_MULT 32
 
 
 
@@ -418,7 +430,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_DIV 32
+#define SLL_NODE_TYPE_DIV 33
 
 
 
@@ -430,7 +442,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FLOOR_DIV 33
+#define SLL_NODE_TYPE_FLOOR_DIV 34
 
 
 
@@ -442,7 +454,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_MOD 34
+#define SLL_NODE_TYPE_MOD 35
 
 
 
@@ -454,7 +466,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BIT_AND 35
+#define SLL_NODE_TYPE_BIT_AND 36
 
 
 
@@ -466,7 +478,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BIT_OR 36
+#define SLL_NODE_TYPE_BIT_OR 37
 
 
 
@@ -478,7 +490,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BIT_XOR 37
+#define SLL_NODE_TYPE_BIT_XOR 38
 
 
 
@@ -490,7 +502,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BIT_NOT 38
+#define SLL_NODE_TYPE_BIT_NOT 39
 
 
 
@@ -502,7 +514,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BIT_RSHIFT 39
+#define SLL_NODE_TYPE_BIT_RSHIFT 40
 
 
 
@@ -514,7 +526,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BIT_LSHIFT 40
+#define SLL_NODE_TYPE_BIT_LSHIFT 41
 
 
 
@@ -526,7 +538,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_LESS 41
+#define SLL_NODE_TYPE_LESS 42
 
 
 
@@ -538,7 +550,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_LESS_EQUAL 42
+#define SLL_NODE_TYPE_LESS_EQUAL 43
 
 
 
@@ -550,7 +562,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_EQUAL 43
+#define SLL_NODE_TYPE_EQUAL 44
 
 
 
@@ -562,7 +574,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_NOT_EQUAL 44
+#define SLL_NODE_TYPE_NOT_EQUAL 45
 
 
 
@@ -574,7 +586,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_MORE 45
+#define SLL_NODE_TYPE_MORE 46
 
 
 
@@ -586,7 +598,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_MORE_EQUAL 46
+#define SLL_NODE_TYPE_MORE_EQUAL 47
 
 
 
@@ -598,7 +610,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_STRICT_EQUAL 47
+#define SLL_NODE_TYPE_STRICT_EQUAL 48
 
 
 
@@ -610,7 +622,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_STRICT_NOT_EQUAL 48
+#define SLL_NODE_TYPE_STRICT_NOT_EQUAL 49
 
 
 
@@ -622,7 +634,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_LENGTH 49
+#define SLL_NODE_TYPE_LENGTH 50
 
 
 
@@ -634,7 +646,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_ACCESS 50
+#define SLL_NODE_TYPE_ACCESS 51
 
 
 
@@ -646,7 +658,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_DEEP_COPY 51
+#define SLL_NODE_TYPE_DEEP_COPY 52
 
 
 
@@ -658,7 +670,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_VAR_ACCESS 52
+#define SLL_NODE_TYPE_VAR_ACCESS 53
 
 
 
@@ -670,7 +682,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_HAS 53
+#define SLL_NODE_TYPE_HAS 54
 
 
 
@@ -682,7 +694,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_CAST 54
+#define SLL_NODE_TYPE_CAST 55
 
 
 
@@ -694,7 +706,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_TYPEOF 55
+#define SLL_NODE_TYPE_TYPEOF 56
 
 
 
@@ -706,7 +718,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_NAMEOF 56
+#define SLL_NODE_TYPE_NAMEOF 57
 
 
 
@@ -718,7 +730,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_NAMEOF_TYPE 57
+#define SLL_NODE_TYPE_NAMEOF_TYPE 58
 
 
 
@@ -730,7 +742,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_DECL 58
+#define SLL_NODE_TYPE_DECL 59
 
 
 
@@ -742,7 +754,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_NEW 59
+#define SLL_NODE_TYPE_NEW 60
 
 
 
@@ -754,7 +766,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FOR_ARRAY 60
+#define SLL_NODE_TYPE_FOR_ARRAY 61
 
 
 
@@ -766,7 +778,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_WHILE_ARRAY 61
+#define SLL_NODE_TYPE_WHILE_ARRAY 62
 
 
 
@@ -778,7 +790,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FOR_MAP 62
+#define SLL_NODE_TYPE_FOR_MAP 63
 
 
 
@@ -790,7 +802,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_WHILE_MAP 63
+#define SLL_NODE_TYPE_WHILE_MAP 64
 
 
 
@@ -802,7 +814,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BREAK 64
+#define SLL_NODE_TYPE_BREAK 65
 
 
 
@@ -814,7 +826,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_CONTINUE 65
+#define SLL_NODE_TYPE_CONTINUE 66
 
 
 
@@ -826,7 +838,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_REF 66
+#define SLL_NODE_TYPE_REF 67
 
 
 
@@ -838,7 +850,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_RETURN 67
+#define SLL_NODE_TYPE_RETURN 68
 
 
 
@@ -850,7 +862,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_COMMA 68
+#define SLL_NODE_TYPE_COMMA 69
 
 
 
@@ -862,7 +874,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_OPERATION_LIST 69
+#define SLL_NODE_TYPE_OPERATION_LIST 70
 
 
 
@@ -874,7 +886,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_THREAD_ID 70
+#define SLL_NODE_TYPE_THREAD_ID 71
 
 
 
@@ -886,7 +898,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_THREAD_WAIT 71
+#define SLL_NODE_TYPE_THREAD_WAIT 72
 
 
 
@@ -898,7 +910,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_THREAD_LOCK 72
+#define SLL_NODE_TYPE_THREAD_LOCK 73
 
 
 
@@ -910,7 +922,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_THREAD_SEMAPHORE 73
+#define SLL_NODE_TYPE_THREAD_SEMAPHORE 74
 
 
 
@@ -922,7 +934,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_THREAD_BARRIER_EQ 74
+#define SLL_NODE_TYPE_THREAD_BARRIER_EQ 75
 
 
 
@@ -934,7 +946,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_THREAD_BARRIER_GEQ 75
+#define SLL_NODE_TYPE_THREAD_BARRIER_GEQ 76
 
 
 
@@ -946,7 +958,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_READ_BLOCKING 76
+#define SLL_NODE_TYPE_READ_BLOCKING 77
 
 
 
@@ -958,7 +970,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_READ_BLOCKING_CHAR 77
+#define SLL_NODE_TYPE_READ_BLOCKING_CHAR 78
 
 
 
@@ -970,7 +982,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_DBG 78
+#define SLL_NODE_TYPE_DBG 79
 
 
 
@@ -982,7 +994,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_CHANGE_STACK 79
+#define SLL_NODE_TYPE_CHANGE_STACK 80
 
 
 

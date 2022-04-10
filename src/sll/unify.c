@@ -28,9 +28,10 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* o,
 	sll_node_t* dst=_acquire_next_node(o);
 	*dst=*src;
 	switch (src->t){
-		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return src+1;
 		case SLL_NODE_TYPE_STRING:
@@ -100,10 +101,10 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* o,
 			}
 		case SLL_NODE_TYPE_DECL:
 			{
-				if (sf_m_dt&&dst->dt.d.nm!=SLL_MAX_STRING_INDEX){
-					dst->dt.d.nm=*(sf_m_dt->sm+dst->dt.d.nm);
+				if (sf_m_dt&&dst->dt.dc.nm!=SLL_MAX_STRING_INDEX){
+					dst->dt.dc.nm=*(sf_m_dt->sm+dst->dt.dc.nm);
 				}
-				sll_arg_count_t l=src->dt.d.ac;
+				sll_arg_count_t l=src->dt.dc.ac;
 				src++;
 				while (l){
 					l--;

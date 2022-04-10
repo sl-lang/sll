@@ -20,9 +20,10 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* sf,
 		(*d)=(*d)->dt._p;
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
@@ -78,7 +79,7 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* sf,
 			}
 		case SLL_NODE_TYPE_DECL:
 			{
-				sll_arg_count_t l=o->dt.d.ac;
+				sll_arg_count_t l=o->dt.dc.ac;
 				o++;
 				while (l){
 					l--;

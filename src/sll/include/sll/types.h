@@ -496,25 +496,18 @@ typedef struct __SLL_DECL_NODE_DATA{
 
 
 
-typedef struct __SLL_DECL_COPY_NODE_DATA{
-	sll_object_type_t t;
-	sll_string_index_t nm;
-} sll_decl_copy_node_data_t;
-
-
-
 typedef union __SLL_NODE_DATA{
-	sll_char_t c;
 	sll_integer_t i;
 	sll_float_t f;
+	sll_char_t c;
+	sll_complex_t d;
 	sll_string_index_t s;
 	sll_array_length_t al;
 	sll_map_length_t ml;
 	sll_identifier_index_t id;
 	sll_function_node_data_t fn;
 	sll_loop_node_data_t l;
-	sll_decl_node_data_t d;
-	sll_decl_copy_node_data_t dc;
+	sll_decl_node_data_t dc;
 	sll_arg_count_t ac;
 	sll_function_index_t fn_id;
 	sll_object_type_t ot;
@@ -646,9 +639,10 @@ typedef struct __SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
 
 
 typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
-	sll_char_t c;
 	sll_integer_t i;
 	sll_float_t f;
+	sll_complex_t d;
+	sll_char_t c;
 	sll_string_index_t s;
 	sll_variable_index_t v;
 	sll_instruction_index_t j;

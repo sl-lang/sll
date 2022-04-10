@@ -73,17 +73,19 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		sll_file_write_char(wf,'(',NULL);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
-			sll_file_write_char(wf,'\'',NULL);
-			_print_char(o->dt.c,wf);
-			sll_file_write_char(wf,'\'',NULL);
-			return o+1;
 		case SLL_NODE_TYPE_INT:
 			_print_int(o->dt.i,wf);
 			return o+1;
 		case SLL_NODE_TYPE_FLOAT:
 			_print_float(o->dt.f,wf);
 			return o+1;
+		case SLL_NODE_TYPE_CHAR:
+			sll_file_write_char(wf,'\'',NULL);
+			_print_char(o->dt.c,wf);
+			sll_file_write_char(wf,'\'',NULL);
+			return o+1;
+		case SLL_NODE_TYPE_COMPLEX:
+			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_STRING:
 			{
 				sll_file_write_char(wf,'"',NULL);
@@ -398,12 +400,12 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		case SLL_NODE_TYPE_DECL:
 			{
 				PRINT_STATIC_STRING("&:",wf);
-				if (o->dt.d.nm!=SLL_MAX_STRING_INDEX){
+				if (o->dt.dc.nm!=SLL_MAX_STRING_INDEX){
 					PRINT_STATIC_STRING("|#",wf);
-					sll_file_write(wf,(sf->st.dt+o->dt.d.nm)->v,(sf->st.dt+o->dt.d.nm)->l,NULL);
+					sll_file_write(wf,(sf->st.dt+o->dt.dc.nm)->v,(sf->st.dt+o->dt.dc.nm)->l,NULL);
 					PRINT_STATIC_STRING("#|",wf);
 				}
-				sll_arg_count_t ac=o->dt.d.ac;
+				sll_arg_count_t ac=o->dt.dc.ac;
 				o++;
 				for (sll_arg_count_t i=0;i<ac;i++){
 					sll_file_write_char(wf,' ',NULL);
@@ -620,6 +622,8 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("PUSH ",wf);
 				_print_float(ai->dt.f,wf);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
+				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				PRINT_STATIC_STRING("PUSH c",wf);
 				_print_int(ai->dt.c,wf);

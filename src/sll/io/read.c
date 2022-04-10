@@ -45,9 +45,6 @@ static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 		READ_FIELD(o->t,rf);
 	}
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
-			READ_FIELD(o->dt.c,rf);
-			return 1;
 		case SLL_NODE_TYPE_INT:
 			{
 				sll_bool_t e=0;
@@ -59,6 +56,12 @@ static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 			}
 		case SLL_NODE_TYPE_FLOAT:
 			READ_FIELD(o->dt.f,rf);
+			return 1;
+		case SLL_NODE_TYPE_CHAR:
+			READ_FIELD(o->dt.c,rf);
+			return 1;
+		case SLL_NODE_TYPE_COMPLEX:
+			READ_FIELD(o->dt.d,rf);
 			return 1;
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
@@ -117,10 +120,10 @@ static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 			}
 			return 1;
 		case SLL_NODE_TYPE_DECL:
-			CHECK_ERROR(rf,o->dt.d.ac,sll_arg_count_t);
-			CHECK_ERROR(rf,o->dt.d.nm,sll_string_index_t);
-			o->dt.d.nm--;
-			for (sll_arg_count_t i=0;i<o->dt.d.ac;i++){
+			CHECK_ERROR(rf,o->dt.dc.ac,sll_arg_count_t);
+			CHECK_ERROR(rf,o->dt.dc.nm,sll_string_index_t);
+			o->dt.dc.nm--;
+			for (sll_arg_count_t i=0;i<o->dt.dc.ac;i++){
 				if (!_read_node(sf,rf)){
 					return 0;
 				}
@@ -269,6 +272,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
 				if (sll_file_read(rf,PTR(&(ai->dt.f)),sizeof(sll_float_t),NULL)==SLL_END_OF_DATA){
+					return 0;
+				}
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
+				if (sll_file_read(rf,PTR(&(ai->dt.d)),sizeof(sll_complex_t),NULL)==SLL_END_OF_DATA){
 					return 0;
 				}
 				break;

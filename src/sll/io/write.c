@@ -30,14 +30,17 @@ static const sll_node_t* _write_node(sll_file_t* wf,const sll_node_t* o){
 	}
 	WRITE_FIELD(o->t,wf);
 	switch (o->t){
-		case SLL_NODE_TYPE_CHAR:
-			WRITE_FIELD(o->dt.c,wf);
-			return o+1;
 		case SLL_NODE_TYPE_INT:
 			sll_encode_signed_integer(wf,o->dt.i);
 			return o+1;
 		case SLL_NODE_TYPE_FLOAT:
 			WRITE_FIELD(o->dt.f,wf);
+			return o+1;
+		case SLL_NODE_TYPE_CHAR:
+			WRITE_FIELD(o->dt.c,wf);
+			return o+1;
+		case SLL_NODE_TYPE_COMPLEX:
+			WRITE_FIELD(o->dt.d,wf);
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
@@ -107,9 +110,9 @@ static const sll_node_t* _write_node(sll_file_t* wf,const sll_node_t* o){
 			}
 		case SLL_NODE_TYPE_DECL:
 			{
-				sll_encode_integer(wf,o->dt.d.ac);
-				sll_encode_integer(wf,o->dt.d.nm+1);
-				sll_arg_count_t l=o->dt.d.ac;
+				sll_encode_integer(wf,o->dt.dc.ac);
+				sll_encode_integer(wf,o->dt.dc.nm+1);
+				sll_arg_count_t l=o->dt.dc.ac;
 				o++;
 				while (l){
 					l--;
@@ -218,6 +221,9 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
 				sll_file_write(wf,&(ai->dt.f),sizeof(sll_float_t),NULL);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
+				sll_file_write(wf,&(ai->dt.d),sizeof(sll_complex_t),NULL);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:

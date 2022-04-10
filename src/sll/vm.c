@@ -378,6 +378,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				*(thr->stack+thr->si)=sll_float_to_object(ai->dt.f);
 				thr->si++;
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
+				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				*(thr->stack+thr->si)=SLL_FROM_CHAR(ai->dt.c);
 				thr->si++;
