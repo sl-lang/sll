@@ -428,11 +428,11 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				arg->dt.s=sll_add_string(&(sf->st),&s,1);
 				c=sll_file_read_char(rf,NULL);
 			}
-			else if ((c>47&&c<58)||c=='-'){
+			else if ((c>47&&c<58)||c=='-'||c=='+'){
 				sll_bool_t neg=0;
-				if (c=='-'){
-					PUSH_REWIND_CHAR('-');
-					neg=1;
+				if (c=='-'||c=='+'){
+					PUSH_REWIND_CHAR(c);
+					neg=(c=='-');
 					c=sll_file_read_char(rf,NULL);
 				}
 				sll_integer_t v=0;

@@ -9,6 +9,7 @@
 - Implemented `sll_complex_abs`, `sll_complex_add`, `sll_complex_conjugate`, `sll_complex_div`, `sll_complex_div_float`, `sll_complex_mult`, `sll_complex_mult_float`, `sll_complex_neg`, `sll_complex_pow`, `sll_complex_pow_float`, `sll_complex_pow_int`, `sll_complex_reciprocal` and `sll_complex_sub` ([#262])
 - Implemented `sll_complex_t` ([#262])
 - Implemented `SLL_OBJECT_TYPE_COMPLEX`, `SLL_INIT_COMPLEX`, `SLL_INIT_COMPLEX_STRUCT`, `sll_static_complex_zero`, `sll_complex_to_object` and `complex_type` ([#262])
+- Integer and floats can now be prefixed with the `+` sign for consistency
 - Object creation modifier to dereference array elements: `*`
 
 ### Changed
