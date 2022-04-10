@@ -58,13 +58,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_OBJECT_TYPE_COMPLEX
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
+#define SLL_OBJECT_TYPE_COMPLEX 3
+
+
+
+/**
+ * \flags macro var
  * \name SLL_OBJECT_TYPE_STRING
  * \group object
  * \subgroup object-type
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_TYPE_STRING 3
+#define SLL_OBJECT_TYPE_STRING 4
 
 
 
@@ -76,7 +88,7 @@
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_TYPE_ARRAY 4
+#define SLL_OBJECT_TYPE_ARRAY 5
 
 
 
@@ -88,7 +100,7 @@
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_TYPE_MAP 5
+#define SLL_OBJECT_TYPE_MAP 6
 
 
 
@@ -100,7 +112,7 @@
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_TYPE_MAP_KEYS 6
+#define SLL_OBJECT_TYPE_MAP_KEYS 7
 
 
 
@@ -112,7 +124,7 @@
  * \desc Docs!
  * \type sll_object_type_t
  */
-#define SLL_OBJECT_TYPE_MAP_VALUES 7
+#define SLL_OBJECT_TYPE_MAP_VALUES 8
 
 
 
