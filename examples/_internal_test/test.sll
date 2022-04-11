@@ -568,4 +568,6 @@
 
 (:> [0.0i 0b111i 1e4-3e4i +5.4] "\n")
 
+(<- sys$set_sandbox_flags "no-path")
+
 (:> (<- path$mkdir "abc/abc/abc") "\n")

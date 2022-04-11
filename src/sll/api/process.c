@@ -94,7 +94,7 @@ _continue:
 
 __API_FUNC(process_execute_shell){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
-		return SLL_ERROR_SANDBOX;
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API);
 	}
 	sll_audit(SLL_CHAR("sll.process.shell"),SLL_CHAR("s"),a);
 	sll_error_t err;

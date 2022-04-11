@@ -48,24 +48,6 @@
 (= LIBRARY_PATH (+ (<- path$absolute (+ (: (<- path$split LIBRARY) 0) path$SEPARATOR "sys_lib")) path$SEPARATOR))
 (= LIBRARY_EXTENSION (?: (=== _PLATFORM "windows") "dll" "so"))
 
-(= SANDBOX_FLAGS [
-	"no-file-io"
-	"stdin-io"
-	"stdout-io"
-	"no-path-api"
-	"no-process-api"
-	"no-environment"
-	"no-load-library"
-	"buffer-files"
-	"file-rename"
-	"file-copy"
-	"no-float-error-change"
-	"file-delete"
-	"no-thread"
-	"no-random"
-	"no-serial"
-])
-
 (= v_dt (<- (... "sll:sys_get_version")))
 (= commit (: v_dt 3))
 (= short_commit "")
@@ -100,7 +82,7 @@
 	(= out [])
 	(-> nil fl
 		(? (& fl 1)
-			(<- array$push out (: SANDBOX_FLAGS i))
+			(<- array$push out (: _SANDBOX_FLAGS i))
 		)
 		(= fl (>> fl 1))
 		(++ i)
@@ -135,7 +117,7 @@
 (= set_sandbox_flags (,,, @@flags@@
 	(= o 1)
 	(-> (= i 0) (< i ($ @@flags@@))
-		(= j (<- array$index SANDBOX_FLAGS (:: (: @@flags@@ i) string_type)))
+		(= j (<- array$index _SANDBOX_FLAGS (:: (: @@flags@@ i) string_type)))
 		(? (=== j -1)
 			(= o 0)
 			(<- (... "sll:sys_set_sandbox_flag") j)
@@ -163,7 +145,7 @@
 	LIBRARY_EXTENSION
 	LIBRARY_PATH
 	_PLATFORM
-	SANDBOX_FLAGS
+	_SANDBOX_FLAGS
 	VERSION
 	get_env
 	get_sandbox_flags

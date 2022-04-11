@@ -110,7 +110,7 @@ __API_FUNC(path_exists){
 
 __API_FUNC(path_get_cwd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return sll_int_to_object(SLL_ERROR_SANDBOX);
+		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_error_t err;
@@ -171,7 +171,7 @@ __API_FUNC(path_join){
 
 __API_FUNC(path_list_dir){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return sll_int_to_object(SLL_ERROR_SANDBOX);
+		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
 	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s0"),a);
 	sll_string_t* dt=NULL;
@@ -192,7 +192,7 @@ __API_FUNC(path_list_dir){
 
 __API_FUNC(path_mkdir){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return SLL_ERROR_SANDBOX;
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
 	sll_audit(SLL_CHAR("sll.path.dir.create"),SLL_CHAR("sh"),a,b);
 	return sll_platform_create_directory(a->v,b);
@@ -202,7 +202,7 @@ __API_FUNC(path_mkdir){
 
 __API_FUNC(path_recursive_list_dir){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return sll_int_to_object(SLL_ERROR_SANDBOX);
+		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
 	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s1"),a);
 	sll_string_t* dt=NULL;
@@ -233,7 +233,7 @@ __API_FUNC(path_relative){
 
 __API_FUNC(path_set_cwd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return SLL_ERROR_SANDBOX;
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
 	sll_audit(SLL_CHAR("sll.path.cwd.set"),SLL_CHAR("s"),a);
 	return sll_platform_set_current_working_directory(a->v);

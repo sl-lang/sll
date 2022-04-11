@@ -137,13 +137,25 @@
 
 /**
  * \flags func macro
- * \name SLL_ERROR_GET_RAW_VALUE
+ * \name SLL_ERROR_GET_EXTRA
  * \group error
  * \desc Docs!
  * \arg sll_error_t e
  * \ret sll_error_t
  */
-#define SLL_ERROR_GET_RAW_VALUE(e) ((e)>>9)
+#define SLL_ERROR_GET_EXTRA(e) ((e)>>9)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ERROR_FROM_SANDBOX
+ * \group error
+ * \desc Docs!
+ * \arg sll_error_t e
+ * \ret sll_error_t
+ */
+#define SLL_ERROR_FROM_SANDBOX(f) (((f)<<9)|SLL_ERROR_SANDBOX)
 
 
 
