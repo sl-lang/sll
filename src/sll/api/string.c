@@ -132,7 +132,43 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			o->l++;
 			return;
 		case SLL_OBJECT_TYPE_COMPLEX:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_char_t bf[256];
+				if (a->dt.d.real){
+					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.d.real);
+					sll_string_increase(o,bfl);
+					sll_copy_data(bf,bfl,o->v+o->l);
+					o->l+=bfl;
+					if (a->dt.d.imag){
+						sll_float_t v=a->dt.d.imag;
+						sll_string_increase(o,1);
+						if (v<0){
+							o->v[o->l]='-';
+							v=-v;
+						}
+						else{
+							o->v[o->l]='+';
+						}
+						o->l++;
+						bfl=snprintf((char*)bf,256,"%.16lfi",v);
+						sll_string_increase(o,bfl);
+						sll_copy_data(bf,bfl,o->v+o->l);
+						o->l+=bfl;
+					}
+				}
+				else if (a->dt.d.imag){
+					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lfi",a->dt.d.imag);
+					sll_string_increase(o,bfl);
+					sll_copy_data(bf,bfl,o->v+o->l);
+					o->l+=bfl;
+				}
+				else{
+					sll_string_increase(o,1);
+					o->v[o->l]='0';
+					o->l++;
+				}
+				return;
+			}
 		case SLL_OBJECT_TYPE_STRING:
 			sll_string_increase(o,1);
 			o->v[o->l]='\"';

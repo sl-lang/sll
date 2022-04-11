@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/print.h>
+#include <sll/api/math.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>
@@ -85,7 +86,8 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 			sll_file_write_char(wf,'\'',NULL);
 			return o+1;
 		case SLL_NODE_TYPE_COMPLEX:
-			SLL_UNIMPLEMENTED();
+			_print_complex(o->dt.d,wf);
+			return o+1;
 		case SLL_NODE_TYPE_STRING:
 			{
 				sll_file_write_char(wf,'"',NULL);
@@ -542,6 +544,26 @@ void _print_char(sll_char_t c,sll_file_t* wf){
 
 
 
+void _print_complex(sll_complex_t c,sll_file_t* wf){
+	if (c.real){
+		_print_float(c.real,wf);
+		if (c.imag){
+			sll_file_write_char(wf,(c.imag<0?'-':'+'),NULL);
+			_print_float(sll_api_math_abs(c.imag),wf);
+			sll_file_write_char(wf,'i',NULL);
+		}
+	}
+	else if (c.imag){
+		_print_float(c.imag,wf);
+		sll_file_write_char(wf,'i',NULL);
+	}
+	else{
+		sll_file_write_char(wf,'0',NULL);
+	}
+}
+
+
+
 void _print_float(sll_float_t v,sll_file_t* wf){
 	char bf[128];
 	int sz=snprintf(bf,128,"%.16lg",v);
@@ -623,7 +645,9 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				_print_float(ai->dt.f,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
-				SLL_UNIMPLEMENTED();
+				PRINT_STATIC_STRING("PUSH ",wf);
+				_print_complex(ai->dt.d,wf);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				PRINT_STATIC_STRING("PUSH c",wf);
 				_print_int(ai->dt.c,wf);
