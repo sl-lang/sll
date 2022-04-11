@@ -24,7 +24,7 @@
 - Renamed `SLL_ERROR_FLAG_LIBC` and `error_codes$LIBC_ERROR_CODES` to `SLL_ERROR_FLAG_SYSTEM` and `error_codes$SYSTEM_ERROR_CODES`
 - Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
 - Split the operators from [`src/sll/operator.c`][0.7.12/src/sll/operator.c] to [`src/sll/operator`][0.7.13/src/sll/operator]
-- Windows error codes are now remapped to LibC error codes
+- *\[Windows Only\]* Windows error codes are now remapped to POSIX `errno` values
 
 ### Removed
 

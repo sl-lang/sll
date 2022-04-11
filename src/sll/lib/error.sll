@@ -39,6 +39,7 @@
 	(~ type_type) call_stack_type
 	(~ type_type) error_type
 	(~ type_type) ERROR_ANY
+	(~ type_type) ERROR_EOF
 	(~ type_type) ERROR_FILE_NOT_FOUND
 	(~ type_type) ERROR_INTERNAL_ERROR
 	(~ type_type) ERROR_INVALID_BASE64_CHARACTER
@@ -62,6 +63,12 @@
 		(@@ dt$str)
 	) @@string@@
 	(~ string_type) str
+))
+
+(= ERROR_EOF (&:
+	(,,, dt
+		(@@ "End of file")
+	) @@string@@
 ))
 
 (= ERROR_FILE_NOT_FOUND (&:
@@ -174,6 +181,7 @@
 			2 (= v (. ERROR_INVALID_FILE_DESCRIPTOR))
 			3 (= v (. ERROR_SANDBOX))
 			4 (= v (. ERROR_PATH_TOO_LONG))
+			5 (= v (. ERROR_EOF))
 		)
 	)
 	(? (=== v nil)
@@ -204,6 +212,7 @@
 	call_stack_type
 	error_type
 	ERROR_ANY
+	ERROR_EOF
 	ERROR_FILE_NOT_FOUND
 	error_codes$ERROR_INTERNAL_ERROR
 	ERROR_INVALID_BASE64_CHARACTER
