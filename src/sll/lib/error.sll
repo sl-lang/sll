@@ -164,7 +164,7 @@
 	(= v nil)
 	(? (& err 0x100)
 		{
-			(= v (: (: error_codes$LIBC_ERROR_CODES id)))
+			(= v (: (: error_codes$SYSTEM_ERROR_CODES id)))
 			(= v$win_error (>> err 9))
 		}
 		(?? id

@@ -21,7 +21,7 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	sll_read_char_t c=sll_file_read_char(f,err);
 	if (err&&*err!=SLL_NO_ERROR){
 		return 0;

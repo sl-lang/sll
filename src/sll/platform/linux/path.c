@@ -8,6 +8,7 @@
 #include <sll/environment.h>
 #include <sll/memory.h>
 #include <sll/platform/path.h>
+#include <sll/platform/util.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <dirent.h>
@@ -76,7 +77,7 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 	bf[i]=0;
 	DIR* d=opendir((char*)bf);
 	if (!d){
-		return LIBC_ERROR;
+		return sll_platform_get_error();
 	}
 	struct dirent* dt;
 	while ((dt=readdir(d))){
@@ -134,17 +135,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_create_directory(cons
 	if (all){
 		SLL_UNIMPLEMENTED();
 	}
-	return (mkdir((char*)fp,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)?LIBC_ERROR:SLL_NO_ERROR);
+	return (mkdir((char*)fp,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (getcwd((char*)o,ol)){
 		return sll_string_length_unaligned(o);
 	}
-	LIBC_ERROR_PTR;
+	ERROR_PTR_SYSTEM;
 	*o=0;
 	return 0;
 }
@@ -152,10 +153,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	DIR* d=opendir((char*)fp);
 	if (!d){
-		LIBC_ERROR_PTR;
+		ERROR_PTR_SYSTEM;
 		*o=NULL;
 		return 0;
 	}
@@ -187,7 +188,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	sll_char_t bf[PATH_MAX+1];
 	sll_string_length_t l=sll_string_length_unaligned(fp);
 	sll_copy_data(fp,l,bf);
@@ -219,14 +220,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d){
 	int s_fd=open((const char*)s,O_RDONLY);
 	if (s_fd==-1){
-		return LIBC_ERROR;
+		return sll_platform_get_error();
 	}
 	struct stat st;
 	fstat(s_fd,&st);
 	int d_fd=creat((const char*)d,st.st_mode&(S_IRWXU|S_IRWXG|S_IRWXO));
 	if (d_fd==-1){
 		close(s_fd);
-		return LIBC_ERROR;
+		return sll_platform_get_error();
 	}
 	size_t sz=st.st_size;
 	sll_error_t o=SLL_NO_ERROR;
@@ -238,7 +239,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_copy(const sll_c
 		int v=sendfile(d_fd,s_fd,NULL,sz);
 #endif
 		if (v==-1){
-			o=LIBC_ERROR;
+			o=sll_platform_get_error();
 			break;
 		}
 		sz-=v;
@@ -251,7 +252,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_copy(const sll_c
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_delete(const sll_char_t* fp){
-	return (remove((char*)fp)?LIBC_ERROR:SLL_NO_ERROR);
+	return (remove((char*)fp)?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 
@@ -270,11 +271,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(cons
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_rename(const sll_char_t* s,const sll_char_t* d){
-	return (rename((const char*)s,(const char*)d)?LIBC_ERROR:SLL_NO_ERROR);
+	return (rename((const char*)s,(const char*)d)?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_current_working_directory(const sll_char_t* p){
-	return (chdir((char*)p)?LIBC_ERROR:SLL_NO_ERROR);
+	return (chdir((char*)p)?sll_platform_get_error():SLL_NO_ERROR);
 }

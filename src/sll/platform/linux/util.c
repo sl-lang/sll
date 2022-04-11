@@ -4,6 +4,7 @@
 #include <sll/api/date.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/error.h>
 #include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/string.h>
@@ -158,6 +159,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 	struct timespec tm;
 	clock_gettime(CLOCK_REALTIME,&tm);
 	return tm.tv_sec*1000000000+tm.tv_nsec;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_get_error(void){
+	return errno|SLL_ERROR_FLAG_SYSTEM;
 }
 
 

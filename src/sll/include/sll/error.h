@@ -80,24 +80,12 @@
 
 /**
  * \flags macro var
- * \name SLL_ERROR_INVALID_MAGIC_NUMBER
- * \group error
- * \subgroup error-type
- * \desc Docs!
- * \type sll_error_t
- */
-#define SLL_ERROR_INVALID_MAGIC_NUMBER 6
-
-
-
-/**
- * \flags macro var
- * \name SLL_LIBC_UNMAPPED_WIN_ERROR
+ * \name SLL_UNMAPPED_WINDOWS_ERROR
  * \group error
  * \desc Docs!
  * \type sll_error_t
  */
-#define SLL_LIBC_UNMAPPED_WIN_ERROR 255
+#define SLL_UNMAPPED_WINDOWS_ERROR 255
 
 
 
@@ -114,12 +102,12 @@
 
 /**
  * \flags macro var
- * \name SLL_ERROR_FLAG_LIBC
+ * \name SLL_ERROR_FLAG_SYSTEM
  * \group error
  * \desc Docs!
  * \type sll_error_t
  */
-#define SLL_ERROR_FLAG_LIBC 0x100
+#define SLL_ERROR_FLAG_SYSTEM 0x100
 
 
 

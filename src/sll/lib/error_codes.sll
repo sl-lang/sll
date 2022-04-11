@@ -8,7 +8,7 @@
 			dt$name
 			(?: dt$win_error
 				(+
-					" [windows-error: "
+					" [winerror "
 					dt$win_error
 					']'
 				)
@@ -25,13 +25,13 @@
 
 (= error_codes_type (&:
 	(~ type_type) ERROR_INTERNAL_ERROR
-	(~ map_type) LIBC_ERROR_CODES
+	(~ map_type) SYSTEM_ERROR_CODES
 	(~ func_type) get_by_name
 ))
 
 
 
-(= LIBC_ERROR_CODES <
+(= SYSTEM_ERROR_CODES <
 	1 (. ERROR_INTERNAL_ERROR "EPERM" "Operation not permitted")
 	2 (. ERROR_INTERNAL_ERROR "ENOENT" "No such file or directory")
 	3 (. ERROR_INTERNAL_ERROR "ESRCH" "No such process")
@@ -170,7 +170,7 @@
 
 
 
-(= dt (:: LIBC_ERROR_CODES map_value_type))
+(= dt (:: SYSTEM_ERROR_CODES map_value_type))
 (= _name_to_error ({> (= i 0) (< i ($ dt))
 	(= e (: dt i))
 	(++ i)
@@ -187,7 +187,7 @@
 
 (= error_codes (. error_codes_type
 	ERROR_INTERNAL_ERROR
-	LIBC_ERROR_CODES
+	SYSTEM_ERROR_CODES
 	get_by_name
 ))
 (## error_codes)

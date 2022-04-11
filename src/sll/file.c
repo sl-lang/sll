@@ -275,7 +275,7 @@ __SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* nm,sll_file_descr
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t* f,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_READ)){
 		return SLL_END_OF_DATA;
 	}
@@ -310,7 +310,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p,sll_size_t sz,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_READ)||!sz){
 		return 0;
 	}
@@ -391,7 +391,7 @@ _hash_data:
 
 
 __SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* f,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_READ)){
 		return SLL_END_OF_DATA;
 	}
@@ -476,7 +476,7 @@ __SLL_EXTERNAL sll_error_t sll_file_reset(sll_file_t* f){
 
 
 __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t sz,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)||!sz){
 		return 0;
 	}
@@ -546,7 +546,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 
 
 __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)){
 		return 0;
 	}
@@ -598,7 +598,7 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
 
 
 __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,sll_size_t n,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)||!n){
 		return 0;
 	}
@@ -664,7 +664,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 
 
 __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* t,sll_error_t* err,...){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)){
 		return 0;
 	}
@@ -691,7 +691,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 
 
 __SLL_EXTERNAL sll_size_t sll_file_write_string(sll_file_t* f,const sll_char_t* p,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)){
 		return 0;
 	}

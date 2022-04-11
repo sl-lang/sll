@@ -46,7 +46,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sl
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	int fl=O_RDONLY;
 	if ((ff&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE))==(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE)){
 		fl=O_RDWR;
@@ -62,7 +62,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(c
 	}
 	int o=open((char*)fp,fl,S_IRWXU|S_IRWXG|S_IRWXO);
 	if (o==-1){
-		LIBC_ERROR_PTR;
+		ERROR_PTR_SYSTEM;
 		return SLL_UNKNOWN_FILE_DESCRIPTOR;
 	}
 	return TO_HANDLE(o);
@@ -71,10 +71,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(c
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* p,sll_size_t sz,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	ssize_t o=read(FROM_HANDLE(fd),p,sz);
 	if (o==-1){
-		LIBC_ERROR_PTR;
+		ERROR_PTR_SYSTEM;
 		return SLL_NO_FILE_SIZE;
 	}
 	return o;
@@ -83,28 +83,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_des
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_descriptor_t fd,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	struct stat st;
 	if (!fstat(FROM_HANDLE(fd),&st)){
 		return st.st_size;
 	}
-	LIBC_ERROR_PTR;
+	ERROR_PTR_SYSTEM;
 	return SLL_NO_FILE_SIZE;
 }
 
 
 
 __SLL_EXTERNAL sll_error_t sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t off){
-	return (lseek(FROM_HANDLE(fd),off,SEEK_SET)==-1?LIBC_ERROR:SLL_NO_ERROR);
+	return (lseek(FROM_HANDLE(fd),off,SEEK_SET)==-1?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 
 
 __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* p,sll_size_t sz,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	ssize_t o=write(FROM_HANDLE(fd),p,sz);
 	if (o==-1){
-		LIBC_ERROR_PTR;
+		ERROR_PTR_SYSTEM;
 		return SLL_NO_FILE_SIZE;
 	}
 	return o;

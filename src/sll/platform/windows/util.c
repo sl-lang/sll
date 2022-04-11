@@ -10,6 +10,7 @@
 #include <sll/api/date.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/error.h>
 #include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/string.h>
@@ -143,6 +144,108 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 	FILETIME ft;
 	GetSystemTimeAsFileTime(&ft);
 	return ((((sll_time_t)ft.dwHighDateTime)<<32)|ft.dwLowDateTime)*100-11644473600000000000;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_get_error(void){
+	sll_error_t err=(GetLastError()<<9)|SLL_ERROR_FLAG_SYSTEM;
+	switch (GetLastError()){
+		case ERROR_FILE_NOT_FOUND:
+		case ERROR_PATH_NOT_FOUND:
+		case ERROR_INVALID_DRIVE:
+		case ERROR_NO_MORE_FILES:
+		case ERROR_BAD_NETPATH:
+		case ERROR_BAD_NET_NAME:
+		case ERROR_BAD_PATHNAME:
+		case ERROR_FILENAME_EXCED_RANGE:
+			return ENOENT|err;
+		case ERROR_BAD_ENVIRONMENT:
+			return E2BIG|err;
+		case ERROR_BAD_FORMAT:
+		case ERROR_INVALID_STARTING_CODESEG:
+		case ERROR_INVALID_STACKSEG:
+		case ERROR_INVALID_MODULETYPE:
+		case ERROR_INVALID_EXE_SIGNATURE:
+		case ERROR_EXE_MARKED_INVALID:
+		case ERROR_BAD_EXE_FORMAT:
+		case ERROR_ITERATED_DATA_EXCEEDS_64k:
+		case ERROR_INVALID_MINALLOCSIZE:
+		case ERROR_DYNLINK_FROM_INVALID_RING:
+		case ERROR_IOPL_NOT_ENABLED:
+		case ERROR_INVALID_SEGDPL:
+		case ERROR_AUTODATASEG_EXCEEDS_64k:
+		case ERROR_RING2SEG_MUST_BE_MOVABLE:
+		case ERROR_RELOC_CHAIN_XEEDS_SEGLIM:
+		case ERROR_INFLOOP_IN_RELOC_CHAIN:
+			return ENOEXEC|err;
+		case ERROR_INVALID_HANDLE:
+		case ERROR_INVALID_TARGET_HANDLE:
+		case ERROR_DIRECT_ACCESS_HANDLE:
+			return EBADF|err;
+		case ERROR_WAIT_NO_CHILDREN:
+		case ERROR_CHILD_NOT_COMPLETE:
+			return ECHILD|err;
+		case ERROR_NO_PROC_SLOTS:
+		case ERROR_MAX_THRDS_REACHED:
+		case ERROR_NESTING_NOT_ALLOWED:
+			return EAGAIN|err;
+		case ERROR_ARENA_TRASHED:
+		case ERROR_NOT_ENOUGH_MEMORY:
+		case ERROR_INVALID_BLOCK:
+			return ENOMEM|err;
+		case ERROR_ACCESS_DENIED:
+		case ERROR_CURRENT_DIRECTORY:
+		case ERROR_WRITE_PROTECT:
+		case ERROR_BAD_UNIT:
+		case ERROR_NOT_READY:
+		case ERROR_BAD_COMMAND:
+		case ERROR_CRC:
+		case ERROR_BAD_LENGTH:
+		case ERROR_SEEK:
+		case ERROR_NOT_DOS_DISK:
+		case ERROR_SECTOR_NOT_FOUND:
+		case ERROR_OUT_OF_PAPER:
+		case ERROR_WRITE_FAULT:
+		case ERROR_READ_FAULT:
+		case ERROR_GEN_FAILURE:
+		case ERROR_SHARING_VIOLATION:
+		case ERROR_LOCK_VIOLATION:
+		case ERROR_WRONG_DISK:
+		case ERROR_SHARING_BUFFER_EXCEEDED:
+		case ERROR_NETWORK_ACCESS_DENIED:
+		case ERROR_CANNOT_MAKE:
+		case ERROR_FAIL_I24:
+		case ERROR_DRIVE_LOCKED:
+		case ERROR_SEEK_ON_DEVICE:
+		case ERROR_NOT_LOCKED:
+		case ERROR_LOCK_FAILED:
+			return EACCES|err;
+		case ERROR_FILE_EXISTS:
+		case ERROR_ALREADY_EXISTS:
+			return EEXIST|err;
+		case ERROR_NOT_SAME_DEVICE:
+			return EXDEV|err;
+		case ERROR_DIRECTORY:
+			return ENOTDIR|err;
+		case ERROR_TOO_MANY_OPEN_FILES:
+			return EMFILE|err;
+		case ERROR_DISK_FULL:
+			return ENOSPC|err;
+		case ERROR_BROKEN_PIPE:
+		case ERROR_NO_DATA:
+			return EPIPE|err;
+		case ERROR_DIR_NOT_EMPTY:
+			return ENOTEMPTY|err;
+		case ERROR_INVALID_FUNCTION:
+		case ERROR_INVALID_ACCESS:
+		case ERROR_INVALID_DATA:
+		case ERROR_INVALID_PARAMETER:
+		case ERROR_NEGATIVE_SEEK:
+			return EINVAL|err;
+		default:
+			return SLL_UNMAPPED_WINDOWS_ERROR|err;
+	}
 }
 
 

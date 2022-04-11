@@ -67,6 +67,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void)
 
 
 /**
+ * \flags check_output func
+ * \name sll_platform_get_error
+ * \group platform
+ * \desc Docs!
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_get_error(void);
+
+
+
+/**
  * \flags func
  * \name sll_platform_random
  * \group platform

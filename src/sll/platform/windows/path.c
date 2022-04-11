@@ -40,7 +40,7 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 	bf[i+1]=0;
 	HANDLE fh=FindFirstFileA(bf,&dt);
 	if (fh==INVALID_HANDLE_VALUE){
-		return WINAPI_ERROR;
+		return sll_platform_get_error();
 	}
 	do{
 		if (dt.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY){
@@ -82,17 +82,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_create_directory(cons
 	if (all){
 		SLL_UNIMPLEMENTED();
 	}
-	return (CreateDirectoryA(fp,NULL)?SLL_NO_ERROR:WINAPI_ERROR);
+	return (CreateDirectoryA(fp,NULL)?SLL_NO_ERROR:sll_platform_get_error());
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	if (GetCurrentDirectoryA(ol,(char*)o)){
 		return sll_string_length_unaligned(o);
 	}
-	WINAPI_ERROR_PTR;
+	ERROR_PTR_SYSTEM;
 	*o=0;
 	return 0;
 }
@@ -100,7 +100,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	char bf[MAX_PATH+1];
 	sll_string_length_t fpl=sll_string_length_unaligned(fp);
 	sll_copy_data(fp,fpl,bf);
@@ -113,7 +113,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 	WIN32_FIND_DATAA dt;
 	HANDLE fh=FindFirstFileA(bf,&dt);
 	if (fh==INVALID_HANDLE_VALUE){
-		WINAPI_ERROR_PTR;
+		ERROR_PTR_SYSTEM;
 		*o=NULL;
 		return 0;
 	}
@@ -144,7 +144,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
-	RESET_ERROR_PTR;
+	ERROR_PTR_RESET;
 	sll_char_t bf[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length_unaligned(fp);
 	sll_copy_data(fp,i,bf);
@@ -174,7 +174,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d){
-	return (CopyFileA((const char*)s,(const char*)d,FALSE)?SLL_NO_ERROR:WINAPI_ERROR);
+	return (CopyFileA((const char*)s,(const char*)d,FALSE)?SLL_NO_ERROR:sll_platform_get_error());
 }
 
 
@@ -184,7 +184,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_delete(const sll
 	if (a==INVALID_FILE_ATTRIBUTES){
 		return SLL_ERROR_NO_FILE_PATH;
 	}
-	return (((a&FILE_ATTRIBUTE_DIRECTORY)?!RemoveDirectoryA(fp):DeleteFileA(fp))?WINAPI_ERROR:SLL_NO_ERROR);
+	return (((a&FILE_ATTRIBUTE_DIRECTORY)?!RemoveDirectoryA(fp):DeleteFileA(fp))?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 
@@ -203,11 +203,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(cons
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_rename(const sll_char_t* s,const sll_char_t* d){
-	return (MoveFileA((const char*)s,(const char*)d)?SLL_NO_ERROR:WINAPI_ERROR);
+	return (MoveFileA((const char*)s,(const char*)d)?SLL_NO_ERROR:sll_platform_get_error());
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_current_working_directory(const sll_char_t* p){
-	return (SetCurrentDirectoryA((const char*)p)?SLL_NO_ERROR:WINAPI_ERROR);
+	return (SetCurrentDirectoryA((const char*)p)?SLL_NO_ERROR:sll_platform_get_error());
 }
