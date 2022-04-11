@@ -4,7 +4,7 @@
 0=!call|print|ret, 1=push_int, 1.i=+2 -> 1=push_two
 0=!call|print|ret, 1=push_int, 1.i=+3 -> 1=push_three
 0=!call|print|ret, 1=push_int, 1.i=+4 -> 1=push_four
-0=!call|print|ret, 1=push_int -> 1=#_assembly_optimize_int_power
+0=!call|print|ret, 1=push_int -> 1=#_assembly_optimize_int
 
 0=pop, 1=rot -> 1=rot_pop, $1
 0=pop, 1=call -> 1=call_pop, $1

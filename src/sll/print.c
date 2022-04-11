@@ -1,4 +1,4 @@
-#include <sll/_internal/assembly_int_power.h>
+#include <sll/_internal/assembly_compress_integer.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/print.h>
 #include <sll/api/math.h>

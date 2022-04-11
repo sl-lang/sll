@@ -1,5 +1,5 @@
-#ifndef __SLL__INTERNAL_ASSEMBLY_INT_POWER_H__
-#define __SLL__INTERNAL_ASSEMBLY_INT_POWER_H__ 1
+#ifndef __SLL__INTERNAL_ASSEMBLY_COMPRESS_INTEGER_H__
+#define __SLL__INTERNAL_ASSEMBLY_COMPRESS_INTEGER_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_size_types.h>
@@ -22,7 +22,7 @@ static __SLL_FORCE_INLINE sll_integer_t _assembly_decode_compressed_int(sll_comp
 
 
 
-static __SLL_FORCE_INLINE void _assembly_optimize_int_power(sll_assembly_instruction_t* ai){
+static __SLL_FORCE_INLINE void _assembly_optimize_int(sll_assembly_instruction_t* ai){
 	SLL_ASSERT(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT);
 	sll_integer_t v=ai->dt.i;
 	__SLL_U32 sgn=0;
