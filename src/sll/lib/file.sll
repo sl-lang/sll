@@ -99,17 +99,19 @@
 	(= f$_handle -1)
 ))
 
-(= copy (,,, s d
-	(? (|| (! s) (! d)) (@@ nil))
-	(= s (:: s string_type))
-	(= d (:: d string_type))
-	(@@ (<- (... "sll:file_copy") s d))
+(= copy (,,, src dst
+	(? (|| (! src) (! dst)) (@@ nil))
+	(@@ (<- error$from_internal (<- (... "sll:file_copy")
+		(:: src string_type)
+		(:: dst string_type)
+	)))
 ))
 
-(= delete (,,, fp
-	(? (! fp) (@@ nil))
-	(= fp (:: fp string_type))
-	(@@ (<- (... "sll:file_delete") fp))
+(= delete (,,, path
+	(? (! path) (@@ nil))
+	(@@ (<- error$from_internal (<- (... "sll:file_delete")
+		(:: path string_type)
+	)))
 ))
 
 (= flush (,,, f
@@ -203,11 +205,12 @@
 	))
 ))
 
-(= rename (,,, s d
-	(? (|| (! s) (! d)) (@@ nil))
-	(= s (:: s string_type))
-	(= d (:: d string_type))
-	(@@ (<- (... "sll:file_rename") s d))
+(= rename (,,, src dst
+	(? (|| (! src) (! dst)) (@@ nil))
+	(@@ (<- error$from_internal (<- (... "sll:file_rename")
+		(:: src string_type)
+		(:: dst string_type)
+	)))
 ))
 
 (= write (,,, f @@dt@@

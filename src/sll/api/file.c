@@ -114,8 +114,11 @@ __API_FUNC(file_close){
 
 
 __API_FUNC(file_copy){
-	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH||(sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_COPY))){
-		return 0;
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH){
+		return SLL_ERROR_TOO_LONG;
+	}
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_COPY)){
+		return SLL_ERROR_SANDBOX;
 	}
 	sll_audit(SLL_CHAR("sll.file.copy"),SLL_CHAR("ss"),a,b);
 	return sll_platform_path_copy(a->v,b->v);
@@ -124,8 +127,11 @@ __API_FUNC(file_copy){
 
 
 __API_FUNC(file_delete){
-	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||(sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE))){
-		return 0;
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
+		return SLL_ERROR_TOO_LONG;
+	}
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE)){
+		return SLL_ERROR_SANDBOX;
 	}
 	sll_audit(SLL_CHAR("sll.file.delete"),SLL_CHAR("s"),a);
 	return sll_platform_path_delete(a->v);
@@ -258,8 +264,11 @@ __API_FUNC(file_read_char){
 
 
 __API_FUNC(file_rename){
-	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH||(sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME))){
-		return 0;
+	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH){
+		return SLL_ERROR_TOO_LONG;
+	}
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME)){
+		return SLL_ERROR_SANDBOX;
 	}
 	sll_audit(SLL_CHAR("sll.file.rename"),SLL_CHAR("ss"),a,b);
 	return sll_platform_path_rename(a->v,b->v);

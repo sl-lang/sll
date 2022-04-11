@@ -61,8 +61,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(c
 		fl|=O_CREAT|O_TRUNC;
 	}
 	int o=open((char*)fp,fl,S_IRWXU|S_IRWXG|S_IRWXO);
-	SET_ERROR_IF_LIBC_FAIL_PTR(o);
-	return (o==-1?SLL_UNKNOWN_FILE_DESCRIPTOR:TO_HANDLE(o));
+	if (o==-1){
+		LIBC_ERROR_PTR;
+		return SLL_UNKNOWN_FILE_DESCRIPTOR;
+	}
+	return TO_HANDLE(o);
 }
 
 

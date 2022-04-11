@@ -309,10 +309,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_copy_raw(sll_object
 	sll_string_t* a;
 	sll_string_t* b;
 	sll_arg_state_t st=sll_parse_args(SLL_CHAR("ss"),al,all,&a,&b);
-	sll_bool_t out=sll_api_file_copy(a,b);
+	sll_integer_t out=sll_api_file_copy(a,b);
 	sll_free_args(st);
-	SLL_ACQUIRE(sll_static_int[out]);
-	return sll_static_int[out];
+	return sll_int_to_object(out);
 }
 
 
@@ -321,10 +320,9 @@ __SLL_API_TYPE_sll_api_file_delete sll_api_file_delete(__SLL_API_ARGS_sll_api_fi
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_delete_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t* a;
 	sll_arg_state_t st=sll_parse_args(SLL_CHAR("s"),al,all,&a);
-	sll_bool_t out=sll_api_file_delete(a);
+	sll_integer_t out=sll_api_file_delete(a);
 	sll_free_args(st);
-	SLL_ACQUIRE(sll_static_int[out]);
-	return sll_static_int[out];
+	return sll_int_to_object(out);
 }
 
 
@@ -436,10 +434,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_rename_raw(sll_obje
 	sll_string_t* a;
 	sll_string_t* b;
 	sll_arg_state_t st=sll_parse_args(SLL_CHAR("ss"),al,all,&a,&b);
-	sll_bool_t out=sll_api_file_rename(a,b);
+	sll_integer_t out=sll_api_file_rename(a,b);
 	sll_free_args(st);
-	SLL_ACQUIRE(sll_static_int[out]);
-	return sll_static_int[out];
+	return sll_int_to_object(out);
 }
 
 
@@ -1138,9 +1135,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_exists_raw(sll_obje
 
 __SLL_API_TYPE_sll_api_path_get_cwd sll_api_path_get_cwd(__SLL_API_ARGS_sll_api_path_get_cwd);
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_cwd_raw(sll_object_t*const* al,sll_arg_count_t all){
-	sll_string_t out;
-	sll_api_path_get_cwd(&out);
-	return sll_string_to_object_nocopy(&out);
+	sll_object_t* out=sll_api_path_get_cwd();
+	return out;
 }
 
 
@@ -1173,10 +1169,9 @@ __SLL_API_TYPE_sll_api_path_list_dir sll_api_path_list_dir(__SLL_API_ARGS_sll_ap
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t* a;
 	sll_arg_state_t st=sll_parse_args(SLL_CHAR("s"),al,all,&a);
-	sll_array_t out;
-	sll_api_path_list_dir(a,&out);
+	sll_object_t* out=sll_api_path_list_dir(a);
 	sll_free_args(st);
-	return sll_array_to_object_nocopy(&out);
+	return out;
 }
 
 
@@ -1197,10 +1192,9 @@ __SLL_API_TYPE_sll_api_path_recursive_list_dir sll_api_path_recursive_list_dir(_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t* a;
 	sll_arg_state_t st=sll_parse_args(SLL_CHAR("s"),al,all,&a);
-	sll_array_t out;
-	sll_api_path_recursive_list_dir(a,&out);
+	sll_object_t* out=sll_api_path_recursive_list_dir(a);
 	sll_free_args(st);
-	return sll_array_to_object_nocopy(&out);
+	return out;
 }
 
 

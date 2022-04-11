@@ -55,7 +55,7 @@ __API_FUNC_DECL(file_close);
  * \desc Docs!
  * \arg S
  * \arg S
- * \ret B
+ * \ret I
  */
 __API_FUNC_DECL(file_copy);
 
@@ -67,7 +67,7 @@ __API_FUNC_DECL(file_copy);
  * \group file-api
  * \desc Docs!
  * \arg S
- * \ret B
+ * \ret I
  */
 __API_FUNC_DECL(file_delete);
 
@@ -189,7 +189,7 @@ __API_FUNC_DECL(file_read_char);
  * \desc Docs!
  * \arg S
  * \arg S
- * \ret B
+ * \ret I
  */
 __API_FUNC_DECL(file_rename);
 

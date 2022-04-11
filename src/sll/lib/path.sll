@@ -29,17 +29,42 @@
 
 (= exists (... "sll:path_exists"))
 
-(= get_cwd (... "sll:path_get_cwd"))
+(= get_cwd (,,,
+	(= out (<- (... "sll:path_get_cwd")))
+	(@@ (?: (=== (:? out string_type))
+		out
+		(<- error$from_internal out)
+	))
+))
 
 (= is_dir (... "sll:path_is_dir"))
 
-(= list_dir (... "sll:path_list_dir"))
-
-(= mkdir (,,, path all
-	(@@ (<- error$from_internal (<- (... "sll:path_mkdir") path all)))
+(= list_dir (,,, path
+	(= out (<- (... "sll:path_list_dir")
+		(:: path string_type)
+	))
+	(@@ (?: (=== (:? out array_type))
+		out
+		(<- error$from_internal out)
+	))
 ))
 
-(= recursive_list_dir (... "sll:path_recursive_list_dir"))
+(= mkdir (,,, path all
+	(@@ (<- error$from_internal (<- (... "sll:path_mkdir")
+		(:: path string_type)
+		(!! all)
+	)))
+))
+
+(= recursive_list_dir (,,, path
+	(= out (<- (... "sll:path_recursive_list_dir")
+		(:: path string_type)
+	))
+	(@@ (?: (=== (:? out array_type))
+		out
+		(<- error$from_internal out)
+	))
+))
 
 (= relative (,,, path base
 	(@@ (<- (... "sll:path_relative")
@@ -48,7 +73,9 @@
 	))
 ))
 
-(= set_cwd (... "sll:path_set_cwd"))
+(= set_cwd (,,,
+	(@@ (<- error$from_internal (<- (... "sll:path_set_cwd"))))
+))
 
 (= size (... "sll:path_size"))
 

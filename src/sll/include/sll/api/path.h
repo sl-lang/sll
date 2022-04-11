@@ -106,7 +106,7 @@ __API_FUNC_DECL(path_exists);
  * \name sll_api_path_get_cwd
  * \group path-api
  * \desc Docs!
- * \ret S
+ * \ret O
  */
 __API_FUNC_DECL(path_get_cwd);
 
@@ -142,7 +142,7 @@ __API_FUNC_DECL(path_join);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret A
+ * \ret O
  */
 __API_FUNC_DECL(path_list_dir);
 
@@ -167,7 +167,7 @@ __API_FUNC_DECL(path_mkdir);
  * \group path-api
  * \desc Docs!
  * \arg S
- * \ret A
+ * \ret O
  */
 __API_FUNC_DECL(path_recursive_list_dir);
 

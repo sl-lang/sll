@@ -110,11 +110,15 @@ __API_FUNC(path_exists){
 
 __API_FUNC(path_get_cwd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		SLL_INIT_STRING(out);
-		return;
+		return sll_int_to_object(SLL_ERROR_SANDBOX);
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_get_current_working_directory(bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_error_t err;
+	sll_string_length_t len=sll_platform_get_current_working_directory(bf,SLL_API_MAX_FILE_PATH_LENGTH,&err);
+	if (err!=SLL_NO_ERROR){
+		return sll_int_to_object(err);
+	}
+	return (err==SLL_NO_ERROR?sll_string_pointer_to_object(bf,len):sll_int_to_object(err));
 }
 
 
@@ -129,10 +133,6 @@ __API_FUNC(path_is_dir){
 
 
 __API_FUNC(path_join){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		SLL_INIT_STRING(out);
-		return;
-	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
 	if (ac){
@@ -171,17 +171,21 @@ __API_FUNC(path_join){
 
 __API_FUNC(path_list_dir){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		SLL_INIT_ARRAY(out);
-		return;
+		return sll_int_to_object(SLL_ERROR_SANDBOX);
 	}
 	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s0"),a);
 	sll_string_t* dt=NULL;
-	sll_array_length_t l=sll_platform_list_directory(a->v,&dt);
-	sll_array_create(l,out);
-	for (sll_array_length_t i=0;i<l;i++){
-		out->v[i]=sll_string_to_object_nocopy(dt+i);
+	sll_error_t err;
+	sll_array_length_t len=sll_platform_list_directory(a->v,&dt,&err);
+	if (err!=SLL_NO_ERROR){
+		return sll_int_to_object(err);
+	}
+	sll_object_t* o=sll_array_length_to_object(len);
+	for (sll_array_length_t i=0;i<len;i++){
+		o->dt.a.v[i]=sll_string_to_object_nocopy(dt+i);
 	}
 	sll_deallocate(dt);
+	return o;
 }
 
 
@@ -198,17 +202,21 @@ __API_FUNC(path_mkdir){
 
 __API_FUNC(path_recursive_list_dir){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		SLL_INIT_ARRAY(out);
-		return;
+		return sll_int_to_object(SLL_ERROR_SANDBOX);
 	}
 	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s1"),a);
 	sll_string_t* dt=NULL;
-	sll_array_length_t l=sll_platform_list_directory_recursive(a->v,&dt);
-	sll_array_create(l,out);
-	for (sll_array_length_t i=0;i<l;i++){
-		out->v[i]=sll_string_to_object_nocopy(dt+i);
+	sll_error_t err;
+	sll_array_length_t len=sll_platform_list_directory_recursive(a->v,&dt,&err);
+	if (err!=SLL_NO_ERROR){
+		return sll_int_to_object(err);
+	}
+	sll_object_t* o=sll_array_length_to_object(len);
+	for (sll_array_length_t i=0;i<len;i++){
+		o->dt.a.v[i]=sll_string_to_object_nocopy(dt+i);
 	}
 	sll_deallocate(dt);
+	return o;
 }
 
 
@@ -225,7 +233,7 @@ __API_FUNC(path_relative){
 
 __API_FUNC(path_set_cwd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return 0;
+		return SLL_ERROR_SANDBOX;
 	}
 	sll_audit(SLL_CHAR("sll.path.cwd.set"),SLL_CHAR("s"),a);
 	return sll_platform_set_current_working_directory(a->v);

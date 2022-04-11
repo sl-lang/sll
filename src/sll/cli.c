@@ -218,7 +218,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl);
 	l_fpl+=4;
 	sll_string_t* b_fl=NULL;
-	sll_array_length_t b_fll=sll_platform_list_directory(l_fp,&b_fl);
+	sll_array_length_t b_fll=sll_platform_list_directory(l_fp,&b_fl,NULL);
 	while (b_fll){
 		b_fll--;
 		sll_string_t* str=b_fl+b_fll;

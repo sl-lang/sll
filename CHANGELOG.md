@@ -17,6 +17,7 @@
 
 ### Changed
 
+- More platform-dependent function return error codes
 - Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
 - Split the operators from [`src/sll/operator.c`][0.7.12/src/sll/operator.c] to [`src/sll/operator`][0.7.13/src/sll/operator]
 - Windows error codes are now remapped to LibC error codes

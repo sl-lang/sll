@@ -606,7 +606,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_file_copy __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_TYPE_sll_api_file_copy __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_file_copy sll_string_t* a,sll_string_t* b
 /**
  * \flags func
@@ -615,7 +615,7 @@
  * \desc Docs!
  * \arg sll_string_t* a -> 
  * \arg sll_string_t* b -> 
- * \ret sll_bool_t
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func
@@ -630,7 +630,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_file_delete __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_TYPE_sll_api_file_delete __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_file_delete sll_string_t* a
 /**
  * \flags func
@@ -638,7 +638,7 @@
  * \group file-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \ret sll_bool_t
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func
@@ -859,7 +859,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_file_rename __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_TYPE_sll_api_file_rename __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_file_rename sll_string_t* a,sll_string_t* b
 /**
  * \flags func
@@ -868,7 +868,7 @@
  * \desc Docs!
  * \arg sll_string_t* a -> 
  * \arg sll_string_t* b -> 
- * \ret sll_bool_t
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func
@@ -2330,13 +2330,14 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_path_get_cwd void
-#define __SLL_API_ARGS_sll_api_path_get_cwd sll_string_t* out
+#define __SLL_API_TYPE_sll_api_path_get_cwd __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_path_get_cwd void
 /**
  * \flags check_output func
  * \name sll_api_path_get_cwd
  * \group path-api
  * \desc Docs!
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func
@@ -2397,14 +2398,15 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_path_list_dir void
-#define __SLL_API_ARGS_sll_api_path_list_dir sll_string_t* a,sll_array_t* out
+#define __SLL_API_TYPE_sll_api_path_list_dir __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_path_list_dir sll_string_t* a
 /**
  * \flags check_output func
  * \name sll_api_path_list_dir
  * \group path-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func
@@ -2443,14 +2445,15 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_path_recursive_list_dir void
-#define __SLL_API_ARGS_sll_api_path_recursive_list_dir sll_string_t* a,sll_array_t* out
+#define __SLL_API_TYPE_sll_api_path_recursive_list_dir __SLL_CHECK_OUTPUT sll_object_t*
+#define __SLL_API_ARGS_sll_api_path_recursive_list_dir sll_string_t* a
 /**
  * \flags check_output func
  * \name sll_api_path_recursive_list_dir
  * \group path-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
+ * \ret sll_object_t*
  */
 /**
  * \flags check_output func

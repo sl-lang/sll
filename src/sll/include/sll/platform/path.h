@@ -82,9 +82,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_create_directory(cons
  * \desc Docs!
  * \arg sll_char_t* o
  * \arg sll_string_length_t ol
+ * \arg sll_error_t* err
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol,sll_error_t* err);
 
 
 
@@ -96,9 +97,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg sll_string_t** o
+ * \arg sll_error_t* err
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o,sll_error_t* err);
 
 
 
@@ -110,9 +112,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg sll_string_t** o
+ * \arg sll_error_t* err
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o,sll_error_t* err);
 
 
 
@@ -124,9 +127,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
  * \desc Docs!
  * \arg const sll_char_t* s
  * \arg const sll_char_t* d
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_copy(const sll_char_t* s,const sll_char_t* d);
 
 
 
@@ -137,9 +140,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_copy(const sll_ch
  * \subgroup platform-path
  * \desc Docs!
  * \arg const sll_char_t* fp
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_delete(const sll_char_t* fp);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_delete(const sll_char_t* fp);
 
 
 
@@ -177,9 +180,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_is_directory(cons
  * \desc Docs!
  * \arg const sll_char_t* s
  * \arg const sll_char_t* d
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_rename(const sll_char_t* s,const sll_char_t* d);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_path_rename(const sll_char_t* s,const sll_char_t* d);
 
 
 
@@ -190,22 +193,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_path_rename(const sll_
  * \subgroup platform-path
  * \desc Docs!
  * \arg const sll_char_t* p
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_current_working_directory(const sll_char_t* p);
-
-
-
-/**
- * \flags func
- * \name sll_platform_set_environment_variable
- * \group platform
- * \subgroup platform-path
- * \desc Docs!
- * \arg const sll_char_t* k
- * \arg const sll_char_t* v
- */
-__SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,const sll_char_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_current_working_directory(const sll_char_t* p);
 
 
 
