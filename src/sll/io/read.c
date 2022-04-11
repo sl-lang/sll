@@ -6,6 +6,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/memory.h>
 #include <sll/node.h>
@@ -18,9 +19,9 @@
 
 #define CHECK_ERROR(rf,o,ot) \
 	do{ \
-		sll_bool_t __e=0; \
+		sll_error_t __e=0; \
 		(o)=(ot)sll_decode_integer((rf),&__e); \
-		if (__e){ \
+		if (__e!=SLL_NO_ERROR){ \
 			return 0; \
 		} \
 	} while (0)
@@ -47,9 +48,9 @@ static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 	switch (o->t){
 		case SLL_NODE_TYPE_INT:
 			{
-				sll_bool_t e=0;
-				o->dt.i=sll_decode_signed_integer(rf,&e);
-				if (e){
+				sll_error_t err;
+				o->dt.i=sll_decode_signed_integer(rf,&err);
+				if (err!=SLL_NO_ERROR){
 					return 0;
 				}
 				return 1;
@@ -91,19 +92,17 @@ static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 			return 1;
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			{
-				CHECK_ERROR(rf,o->dt.fn.ac,sll_arg_count_t);
-				CHECK_ERROR(rf,o->dt.fn.id,sll_function_index_t);
-				if (o->t==SLL_NODE_TYPE_FUNC){
-					CHECK_ERROR(rf,o->dt.fn.sc,sll_scope_t);
-				}
-				for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
-					if (!_read_node(sf,rf)){
-						return 0;
-					}
-				}
-				return 1;
+			CHECK_ERROR(rf,o->dt.fn.ac,sll_arg_count_t);
+			CHECK_ERROR(rf,o->dt.fn.id,sll_function_index_t);
+			if (o->t==SLL_NODE_TYPE_FUNC){
+				CHECK_ERROR(rf,o->dt.fn.sc,sll_scope_t);
 			}
+			for (sll_arg_count_t i=0;i<o->dt.fn.ac;i++){
+				if (!_read_node(sf,rf)){
+					return 0;
+				}
+			}
+			return 1;
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:
@@ -144,9 +143,7 @@ static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 static sll_bool_t _read_source_file(sll_file_t* rf,sll_source_file_t* sf){
 	CHECK_ERROR(rf,sf->tm,sll_time_t);
 	CHECK_ERROR(rf,sf->sz,sll_file_offset_t);
-	if (sll_file_read(rf,&(sf->h),sizeof(sll_sha256_data_t),NULL)!=sizeof(sll_sha256_data_t)){
-		return 0;
-	}
+	READ_FIELD(sf->h,rf);
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		CHECK_ERROR(rf,sf->idt.s[i].l,sll_identifier_list_length_t);
 		sf->idt.s[i].dt=sll_allocate(sf->idt.s[i].l*sizeof(sll_identifier_t));
@@ -262,23 +259,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
 				{
-					sll_bool_t re=0;
-					ai->dt.i=sll_decode_signed_integer(rf,&re);
-					if (re){
+					sll_error_t err=0;
+					ai->dt.i=sll_decode_signed_integer(rf,&err);
+					if (err!=SLL_NO_ERROR){
 						return 0;
 					}
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				if (sll_file_read(rf,PTR(&(ai->dt.f)),sizeof(sll_float_t),NULL)==SLL_END_OF_DATA){
-					return 0;
-				}
+				READ_FIELD(ai->dt.f,rf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
-				if (sll_file_read(rf,PTR(&(ai->dt.d)),sizeof(sll_complex_t),NULL)==SLL_END_OF_DATA){
-					return 0;
-				}
+				READ_FIELD(ai->dt.d,rf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
@@ -304,9 +297,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					sll_bool_t re=0;
-					ai->dt.i=(sll_relative_instruction_index_t)sll_decode_signed_integer(rf,&re);
-					if (re){
+					sll_error_t err=0;
+					ai->dt.i=(sll_relative_instruction_index_t)sll_decode_signed_integer(rf,&err);
+					if (err!=SLL_NO_ERROR){
 						return 0;
 					}
 				}

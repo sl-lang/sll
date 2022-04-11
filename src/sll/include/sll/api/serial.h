@@ -26,10 +26,10 @@
  * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
- * \arg sll_bool_t* err
+ * \arg sll_error_t* err
  * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sll_bool_t* err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sll_error_t* err);
 
 
 
@@ -40,10 +40,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sl
  * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
- * \arg sll_bool_t* err
+ * \arg sll_error_t* err
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_file_t* f,sll_bool_t* err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_file_t* f,sll_error_t* err);
 
 
 

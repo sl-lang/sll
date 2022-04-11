@@ -68,6 +68,30 @@
 
 /**
  * \flags macro var
+ * \name SLL_ERROR_EOF
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_EOF 5
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ERROR_INVALID_MAGIC_NUMBER
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_INVALID_MAGIC_NUMBER 6
+
+
+
+/**
+ * \flags macro var
  * \name SLL_LIBC_UNMAPPED_WIN_ERROR
  * \group error
  * \desc Docs!
