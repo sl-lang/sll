@@ -41,22 +41,6 @@ sll_object_t* _var_arg_converter(sll_var_arg_list_t* va){
 
 
 
-void* _var_arg_get_converter(sll_var_arg_list_t* va){
-	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		return va_arg(*(va->dt.c),void*);
-	}
-	if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
-		SLL_ASSERT(va->dt.s.fnl);
-		void* o=*(va->dt.s.fn);
-		va->dt.s.fn++;
-		va->dt.s.fnl--;
-		return o;
-	}
-	SLL_UNIMPLEMENTED();
-}
-
-
-
 addr_t _var_arg_get_pointer(sll_var_arg_list_t* va){
 	if (va->t!=VAR_ARG_LIST_TYPE_STRUCT){
 		SLL_UNREACHABLE();
@@ -96,6 +80,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 	}
 	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 	sll_char_t o=n->dt.c;
+	GC_RELEASE(n);
+	va->dt.sll.p++;
+	va->dt.sll.l--;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_var_arg_get_complex(sll_var_arg_list_t* va){
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+		return *va_arg(*(va->dt.c),sll_complex_t*);
+	}
+	GET_TYPE_IF_STRUCT(sll_complex_t);
+	if (!va->dt.sll.l){
+		sll_complex_t o={
+			0,
+			0
+		};
+		return o;
+	}
+	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_COMPLEX]);
+	sll_complex_t o=n->dt.d;
 	GC_RELEASE(n);
 	va->dt.sll.p++;
 	va->dt.sll.l--;

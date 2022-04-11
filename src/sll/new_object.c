@@ -77,6 +77,7 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 		case 'f':
 		case 'c':
 		case 'C':
+		case 'd':
 		case 's':
 		case 'S':
 		case 'l':
@@ -299,6 +300,11 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				SLL_UNIMPLEMENTED();
 			}
 			return sll_char_to_string_object(sll_var_arg_get_char(va));
+		case 'd':
+			if (fl&NEW_OBJECT_FLAG_ARRAY){
+				SLL_UNIMPLEMENTED();
+			}
+			return sll_complex_to_object(sll_var_arg_get_complex(va));
 		case 's':
 			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_STRING);
 		case 'z':

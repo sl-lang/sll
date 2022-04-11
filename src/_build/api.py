@@ -1,12 +1,12 @@
 ALPHABET="abcdefghijklmnopqrstuvwxyz"
 API_CODE_FILE_PATH="src/sll/api/_generated_raw.c"
 API_HEADER_FILE_PATH="src/sll/include/sll/generated/api.h"
-FORMAT_MAP={"B":"b","I":"i","F":"f","IF":"x","C":"c","S":"s","CS":"y","A":"a","M":"m","O":"o"}
-TYPE_MAP={"B":"sll_bool_t","I":"sll_integer_t","F":"sll_float_t","IF":"sll_int_float_t","C":"sll_char_t","S":"sll_string_t","CS":"sll_char_string_t","A":"sll_array_t","M":"sll_map_t","O":"sll_object_t*"}
+FORMAT_MAP={"B":"b","I":"i","F":"f","IF":"x","C":"c","D":"d","S":"s","CS":"y","A":"a","M":"m","O":"o"}
+TYPE_MAP={"B":"sll_bool_t","I":"sll_integer_t","F":"sll_float_t","IF":"sll_int_float_t","C":"sll_char_t","D":"sll_complex_t","S":"sll_string_t","CS":"sll_char_string_t","A":"sll_array_t","M":"sll_map_t","O":"sll_object_t*"}
 TYPE_PTR=["IF","S","CS","A","M"]
 TYPE_CHECK_OUTPUT=["S","A","M","O"]
 TYPE_PTR_NO_FMT=["IF","CS"]
-TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","S":"return sll_string_to_object_nocopy(&out)","A":"return sll_array_to_object_nocopy(&out)","M":"return sll_map_to_object_nocopy(&out)"}
+TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","C":"return SLL_FROM_CHAR(out)","D":"return sll_complex_to_object(out)","S":"return sll_string_to_object_nocopy(&out)","A":"return sll_array_to_object_nocopy(&out)","M":"return sll_map_to_object_nocopy(&out)"}
 
 
 

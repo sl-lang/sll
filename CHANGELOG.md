@@ -4,6 +4,7 @@
 
 ### Added
 
+- Argument parsing code to parse a complex number: `d`
 - Argument parsing modifier to parse an array of a given type: `+`
 - Imaginary numbers can be created by adding the `i` suffix to a number ([#262])
 - Implemented `sll_arg_state_t`, `sll_free_args` and `sll_parse_args_list`
@@ -12,7 +13,9 @@
 - Implemented `SLL_ERROR_FLAG_SLL`, `SLL_LIBC_UNMAPPED_WIN_ERROR`, `SLL_ERROR_EOF` and `SLL_ERROR_INVALID_MAGIC_NUMBER`
 - Implemented `SLL_NODE_TYPE_COMPLEX` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX` ([#262])
 - Implemented `SLL_OBJECT_TYPE_COMPLEX`, `SLL_INIT_COMPLEX`, `SLL_INIT_COMPLEX_STRUCT`, `sll_static_complex_zero`, `sll_complex_to_object` and `complex_type` ([#262])
+- Implemented `sll_var_arg_get_complex`
 - Integer and floats can now be prefixed with the `+` sign for consistency
+- Object creation code to generate complex numbers: `d`
 - Object creation modifier to dereference array elements: `*`
 
 ### Changed

@@ -70,6 +70,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 
 /**
  * \flags check_output func
+ * \name sll_var_arg_get_complex
+ * \group var-arg
+ * \desc Docs!
+ * \arg sll_var_arg_list_t* va
+ * \ret sll_complex_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_var_arg_get_complex(sll_var_arg_list_t* va);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_var_arg_get_float
  * \group var-arg
  * \desc Docs!

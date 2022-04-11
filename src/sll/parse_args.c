@@ -3,6 +3,7 @@
 #include <sll/_internal/parse_args.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/complex.h>
 #include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/memory.h>
@@ -33,13 +34,13 @@
 		(*st)->dt[(*st)->sz-1]=var; \
 	} \
 
-#define PARSE_TYPE(type,name,field) \
+#define PARSE_TYPE(type,name,field,init) \
 	if (arr){ \
 		SLL_UNIMPLEMENTED(); \
 	} \
 	type* var=va_arg(*va,type*); \
 	if (!arg){ \
-		*var=0; \
+		init(var); \
 		return; \
 	} \
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
@@ -124,7 +125,7 @@ static void _parse_bool(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_lis
 
 
 static void _parse_int(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
-	PARSE_TYPE(sll_integer_t,INT,i);
+	PARSE_TYPE(sll_integer_t,INT,i,INIT_ZERO);
 }
 
 
@@ -136,7 +137,7 @@ static void _parse_int_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,v
 
 
 static void _parse_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
-	PARSE_TYPE(sll_float_t,FLOAT,f);
+	PARSE_TYPE(sll_float_t,FLOAT,f,INIT_ZERO);
 }
 
 
@@ -148,13 +149,19 @@ static void _parse_float_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st
 
 
 static void _parse_char(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
-	PARSE_TYPE(sll_char_t,CHAR,c);
+	PARSE_TYPE(sll_char_t,CHAR,c,INIT_ZERO);
 }
 
 
 
 static void _parse_char_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
 	PARSE_TYPE_RANGE(sll_char_t,__SLL_U32,CHAR,c);
+}
+
+
+
+static void _parse_complex(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,va_list* va){
+	PARSE_TYPE(sll_complex_t,COMPLEX,d,SLL_INIT_COMPLEX);
 }
 
 
@@ -283,6 +290,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_
 					SLL_UNIMPLEMENTED();
 				case 'C':
 					SLL_UNIMPLEMENTED();
+				case 'd':
+					SLL_UNIMPLEMENTED();
 				case 's':
 					SLL_UNIMPLEMENTED();
 				case 'y':
@@ -338,6 +347,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_
 				break;
 			case 'C':
 				fn=_parse_char_range;
+				break;
+			case 'd':
+				fn=_parse_complex;
 				break;
 			case 's':
 				fn=_parse_string;
