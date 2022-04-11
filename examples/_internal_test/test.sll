@@ -567,3 +567,5 @@
 (:> (<- statistics$correlation x y) ", -1\n")
 
 (:> [0.0i 0b111i 1e4-3e4i +5.4] "\n")
+
+(:> (<- path$mkdir "abc/abc/abc") "\n")

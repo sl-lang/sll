@@ -188,7 +188,7 @@ __API_FUNC(path_list_dir){
 
 __API_FUNC(path_mkdir){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return 0;
+		return SLL_ERROR_SANDBOX;
 	}
 	sll_audit(SLL_CHAR("sll.path.dir.create"),SLL_CHAR("sh"),a,b);
 	return sll_platform_create_directory(a->v,b);

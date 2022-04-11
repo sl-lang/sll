@@ -160,11 +160,13 @@
 (= from_internal (,,, err data
 	(? (|| (!== (:? err) int_type) (=== err 0xffffffffffffffff)) (@@ nil))
 	(<- audit$audit "sll.error.create.internal" "im" err data)
-	(= id (& err 0xffffffff))
+	(= id (& err 0xff))
 	(= v nil)
-	(?? (>> err 32)
-		1 (= v (: error_code$WINDOWS_ERROR_CODES id))
-		2 (= v (: error_code$LIBC_ERROR_CODES id))
+	(? (& err 0x100)
+		{
+			(= v (: (: error_codes$LIBC_ERROR_CODES id)))
+			(= v$win_error (>> err 9))
+		}
 		(?? id
 			1 (= v (. ERROR_FILE_NOT_FOUND
 				(: data "fp")

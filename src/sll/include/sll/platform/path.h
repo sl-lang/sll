@@ -68,9 +68,9 @@ __SLL_EXTERNAL sll_string_length_t sll_platform_absolute_path(const sll_char_t* 
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg sll_bool_t all
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_create_directory(const sll_char_t* fp,sll_bool_t all);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_create_directory(const sll_char_t* fp,sll_bool_t all);
 
 
 

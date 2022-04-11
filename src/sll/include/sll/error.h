@@ -68,12 +68,23 @@
 
 /**
  * \flags macro var
- * \name SLL_ERROR_FLAG_WINAPI
+ * \name SLL_LIBC_UNMAPPED_WIN_ERROR
  * \group error
  * \desc Docs!
  * \type sll_error_t
  */
-#define SLL_ERROR_FLAG_WINAPI 0x100000000
+#define SLL_LIBC_UNMAPPED_WIN_ERROR 255
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ERROR_FLAG_SLL
+ * \group error
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_FLAG_SLL 0
 
 
 
@@ -84,7 +95,7 @@
  * \desc Docs!
  * \type sll_error_t
  */
-#define SLL_ERROR_FLAG_LIBC 0x200000000
+#define SLL_ERROR_FLAG_LIBC 0x100
 
 
 
@@ -96,7 +107,7 @@
  * \arg sll_error_t e
  * \ret sll_error_t
  */
-#define SLL_ERROR_GET_TYPE(e) ((e)&0x300000000)
+#define SLL_ERROR_GET_TYPE(e) ((e)&0x100)
 
 
 
@@ -108,7 +119,19 @@
  * \arg sll_error_t e
  * \ret sll_error_t
  */
-#define SLL_ERROR_GET_VALUE(e) ((e)&0xffffffff)
+#define SLL_ERROR_GET_VALUE(e) ((e)&0xff)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ERROR_GET_RAW_VALUE
+ * \group error
+ * \desc Docs!
+ * \arg sll_error_t e
+ * \ret sll_error_t
+ */
+#define SLL_ERROR_GET_RAW_VALUE(e) ((e)>>9)
 
 
 

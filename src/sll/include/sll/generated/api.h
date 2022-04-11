@@ -2419,7 +2419,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_path_mkdir __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_TYPE_sll_api_path_mkdir __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_path_mkdir sll_string_t* a,sll_bool_t b
 /**
  * \flags func
@@ -2428,7 +2428,7 @@
  * \desc Docs!
  * \arg sll_string_t* a -> 
  * \arg sll_bool_t b -> 
- * \ret sll_bool_t
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func

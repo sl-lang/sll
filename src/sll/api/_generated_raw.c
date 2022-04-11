@@ -1186,10 +1186,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_mkdir_raw(sll_objec
 	sll_string_t* a;
 	sll_bool_t b;
 	sll_arg_state_t st=sll_parse_args(SLL_CHAR("sb"),al,all,&a,&b);
-	sll_bool_t out=sll_api_path_mkdir(a,b);
+	sll_integer_t out=sll_api_path_mkdir(a,b);
 	sll_free_args(st);
-	SLL_ACQUIRE(sll_static_int[out]);
-	return sll_static_int[out];
+	return sll_int_to_object(out);
 }
 
 

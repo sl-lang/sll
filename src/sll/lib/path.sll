@@ -1,4 +1,4 @@
-(--- "types.sll" "_internal.sll")
+(--- "types.sll" "_internal.sll" "error.sll")
 
 
 
@@ -35,7 +35,9 @@
 
 (= list_dir (... "sll:path_list_dir"))
 
-(= mkdir (... "sll:path_mkdir"))
+(= mkdir (,,, path all
+	(@@ (<- error$from_internal (<- (... "sll:path_mkdir") path all)))
+))
 
 (= recursive_list_dir (... "sll:path_recursive_list_dir"))
 

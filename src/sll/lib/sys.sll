@@ -91,7 +91,7 @@
 
 
 (= get_env (,,, k default
-	(@@ (|| (: ENVIRONMENT (<- string$replace (:: k string_type) '=' "")) default))
+	(@@ (|| (: ENVIRONMENT (<- string$upper_case (<- string$replace (:: k string_type) '=' ""))) default))
 ))
 
 (= get_sandbox_flags (,,,

@@ -155,7 +155,7 @@ __API_FUNC_DECL(path_list_dir);
  * \desc Docs!
  * \arg S
  * \arg B
- * \ret B
+ * \ret I
  */
 __API_FUNC_DECL(path_mkdir);
 

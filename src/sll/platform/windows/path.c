@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <winioctl.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/error.h>
 #include <sll/_internal/platform.h>
 #include <sll/_internal/static_string.h>
 #include <sll/api/path.h>
@@ -121,11 +122,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_create_directory(const sll_char_t* fp,sll_bool_t all){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_create_directory(const sll_char_t* fp,sll_bool_t all){
 	if (all){
 		SLL_UNIMPLEMENTED();
 	}
-	return !!CreateDirectoryA(fp,NULL);
+	return (CreateDirectoryA(fp,NULL)?SLL_NO_ERROR:WINAPI_ERROR);
 }
 
 
