@@ -623,7 +623,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("PUSH ",wf);
 				_print_int(ai->dt.i,wf);
 				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
 				PRINT_STATIC_STRING("PUSH ",wf);
 				_print_int(_assembly_decode_compressed_int(ai->dt.ci),wf);
 				break;

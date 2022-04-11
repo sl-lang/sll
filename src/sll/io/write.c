@@ -218,7 +218,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
 				sll_encode_signed_integer(wf,ai->dt.i);
 				break;
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW:
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
 				sll_encode_integer(wf,ai->dt.ci);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:

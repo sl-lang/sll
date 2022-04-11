@@ -92,13 +92,13 @@
 
 /**
  * \flags macro var
- * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED
  * \group assembly
  * \subgroup assembly-instruction
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW 6
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED 6
 
 
 

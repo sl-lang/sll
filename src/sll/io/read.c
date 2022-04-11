@@ -266,8 +266,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 					}
 					break;
 				}
-			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW:
-				CHECK_ERROR(rf,ai->dt.ci,sll_compressed_int_t);
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
+				CHECK_ERROR(rf,ai->dt.ci,sll_compressed_integer_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:

@@ -8,7 +8,7 @@
 
 
 
-static __SLL_FORCE_INLINE sll_integer_t _assembly_decode_compressed_int(sll_compressed_int_t v){
+static __SLL_FORCE_INLINE sll_integer_t _assembly_decode_compressed_int(sll_compressed_integer_t v){
 	sll_integer_t off=v>>8;
 	if (v&128){
 		off=-off;
@@ -34,19 +34,23 @@ static __SLL_FORCE_INLINE void _assembly_optimize_int_power(sll_assembly_instruc
 	__SLL_U32 s=FIND_LAST_SET_BIT((__SLL_U64)v);
 	if (v&(v-1)){
 		sll_size_t pw=1ull<<s;
-		sll_size_t n_pw=(pw<<1)-v;
-		pw=v-pw;
-		off=(pw<n_pw?pw:n_pw);
-		if (off>>24){
-			return;
-		}
-		if (off==n_pw){
+		__SLL_S32 n_pw=(__SLL_S32)((pw<<1)-v);
+		off=(__SLL_S32)(v-pw);
+		if (n_pw<off){
+			off=n_pw;
 			sgn|=2;
 			s++;
 		}
+		if (off>>24){
+			return;
+		}
 	}
-	ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW;
-	ai->dt.ci=s|(sgn<<6)|(off<<8);
+	sll_compressed_integer_t ci=s|(sgn<<6)|(off<<8);
+	if (ci>v){
+		return;
+	}
+	ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED;
+	ai->dt.ci=ci;
 }
 
 
