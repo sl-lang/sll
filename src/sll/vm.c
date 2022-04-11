@@ -1,3 +1,4 @@
+#include <sll/_internal/assembly_int_power.h>
 #include <sll/_internal/barrier.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
@@ -348,6 +349,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 				*(thr->stack+thr->si)=sll_int_to_object(ai->dt.i);
+				thr->si++;
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW:
+				*(thr->stack+thr->si)=sll_int_to_object(_assembly_decode_compressed_int(ai->dt.ci));
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE:

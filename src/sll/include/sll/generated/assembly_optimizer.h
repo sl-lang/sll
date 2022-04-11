@@ -1,6 +1,7 @@
 #ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__
 #define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1
 #include <sll/_internal/assembly.h>
+#include <sll/_internal/assembly_int_power.h>
 #include <sll/assembly.h>
 #include <sll/types.h>
 
@@ -26,6 +27,9 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 			}
 			else if (st[1]->dt.i==4){
 				st[1]->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FOUR;
+			}
+			else{
+				_assembly_optimize_int_power(st[1]);
 			}
 		}
 	}

@@ -155,6 +155,10 @@ typedef __SLL_U32 sll_barrier_index_t;
 
 
 
+typedef __SLL_U32 sll_compressed_int_t;
+
+
+
 typedef __SLL_U32 sll_debug_data_length_t;
 
 
@@ -640,6 +644,7 @@ typedef struct __SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
 
 typedef union __SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_integer_t i;
+	sll_compressed_int_t ci;
 	sll_float_t f;
 	sll_complex_t d;
 	sll_char_t c;

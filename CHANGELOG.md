@@ -8,6 +8,7 @@
 - Argument parsing modifier to parse an array of a given type: `+`
 - Imaginary numbers can be created by adding the `i` suffix to a number ([#262])
 - Implemented `sll_arg_state_t`, `sll_free_args` and `sll_parse_args_list`
+- Implemented `sll_compressed_int_t` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW`
 - Implemented `sll_complex_abs`, `sll_complex_add`, `sll_complex_conjugate`, `sll_complex_div`, `sll_complex_div_float`, `sll_complex_mult`, `sll_complex_mult_float`, `sll_complex_neg`, `sll_complex_pow`, `sll_complex_pow_float`, `sll_complex_pow_int`, `sll_complex_reciprocal` and `sll_complex_sub` ([#262])
 - Implemented `sll_complex_t` ([#262])
 - Implemented `SLL_ERROR_FLAG_SLL`, `SLL_UNMAPPED_WINDOWS_ERROR`, `SLL_ERROR_EOF`, `SLL_ERROR_GET_EXTRA` and `sll_platform_get_error`

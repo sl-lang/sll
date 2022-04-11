@@ -38,23 +38,31 @@ def _parse_value(v):
 
 
 
+def _generate_fix(f,dt,lvl,sl):
+	for k in dt.split(","):
+		f.write("\t"*lvl)
+		k=k.split("=")
+		if (len(k)>1 and k[1][0]=="#"):
+			f.write(f"{k[1][1:]}(st[{int(k[0])}]);\n")
+			continue
+		k[0]=k[0].strip()
+		if (k[0][0]=="$"):
+			n=int(k[0][1:])
+			sl.add(n)
+			f.write(f"goto _shift_{n};\n")
+		else:
+			e=k[0].split(".")
+			if (len(e)==1):
+				f.write(f"st[{int(e[0])}]->t=")
+			else:
+				f.write(f"st[{int(e[0])}]->dt.{e[1].strip()}=")
+			f.write(_parse_value(k[1])+";\n")
+
+
+
 def _generate_cond(f,dt,lvl,sl):
 	if (isinstance(dt,str)):
-		for k in dt.split(","):
-			f.write("\t"*lvl)
-			k=k.split("=")
-			k[0]=k[0].strip()
-			if (k[0][0]=="$"):
-				n=int(k[0][1:])
-				sl.add(n)
-				f.write(f"goto _shift_{n};\n")
-			else:
-				e=k[0].split(".")
-				if (len(e)==1):
-					f.write(f"st[{int(e[0])}]->t=")
-				else:
-					f.write(f"st[{int(e[0])}]->dt.{e[1].strip()}=")
-				f.write(_parse_value(k[1])+";\n")
+		_generate_fix(f,dt,lvl,sl)
 		return
 	pfx=""
 	for i in range(0,len(dt[0])):
@@ -79,6 +87,10 @@ def _generate_cond(f,dt,lvl,sl):
 		f.write("){\n")
 		_generate_cond(f,dt[1][i],lvl+1,sl)
 		f.write("\t"*lvl+"}\n")
+	if (dt[2] is not None):
+		f.write("\t"*lvl+"else{\n")
+		_generate_fix(f,dt[2],lvl+1,sl)
+		f.write("\t"*lvl+"}\n")
 
 
 
@@ -87,7 +99,7 @@ def generate_assembly_optimizer(cfg_fp,o_fp):
 	with open(cfg_fp,"r") as f:
 		dt=f.read().split("\n")
 	util.log("  Parsing Data...")
-	data=([],[])
+	data=[[],[],None]
 	for k in dt:
 		k=k.lstrip()
 		if (len(k)==0 or k[0]==";"):
@@ -102,16 +114,20 @@ def generate_assembly_optimizer(cfg_fp,o_fp):
 			e=cond[i].replace(" ","")
 			if (e not in c[0]):
 				c[0].append(e)
-				c[1].append(([],[]))
+				c[1].append([[],[],None])
 			c=c[1][c[0].index(e)]
 		e=cond[-1].replace(" ","")
 		if (e in c[0]):
-			raise RuntimeError(f"Duplicated condition: {','.join(cond)}")
-		c[0].append(e)
-		c[1].append(res)
+			c=c[1][c[0].index(e)]
+			if (c[2] is not None):
+				raise RuntimeError(f"Duplicated condition: {','.join(cond)}")
+			c[2]=res
+		else:
+			c[0].append(e)
+			c[1].append(res)
 	util.log(f"  Generating Code to '{o_fp}'...")
 	with open(o_fp,"w") as f:
-		f.write("#ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__\n#define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1\n#include <sll/_internal/assembly.h>\n#include <sll/assembly.h>\n#include <sll/types.h>\n\n\n\nstatic __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){\n")
+		f.write("#ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__\n#define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1\n#include <sll/_internal/assembly.h>\n#include <sll/_internal/assembly_int_power.h>\n#include <sll/assembly.h>\n#include <sll/types.h>\n\n\n\nstatic __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){\n")
 		sl=set()
 		_generate_cond(f,data,1,sl)
 		for k in sl:

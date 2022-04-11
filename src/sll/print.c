@@ -1,3 +1,4 @@
+#include <sll/_internal/assembly_int_power.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/print.h>
 #include <sll/api/math.h>
@@ -621,6 +622,10 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 				PRINT_STATIC_STRING("PUSH ",wf);
 				_print_int(ai->dt.i,wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_POW:
+				PRINT_STATIC_STRING("PUSH ",wf);
+				_print_int(_assembly_decode_compressed_int(ai->dt.ci),wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE:
 				PRINT_STATIC_STRING("PUSH -1",wf);
