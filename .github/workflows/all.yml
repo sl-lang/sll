@@ -23,7 +23,7 @@ jobs:
       - web-server
       - windows
       - windows-release
-    if: always()&&!contains(needs.*.result,'failure')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).windows)&&github.event_name!='workflow_dispatch'
+    if: always()&&!contains(needs.*.result,'failure')&&!contains(needs.*.result,'cancelled')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).windows)&&github.event_name!='workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -207,7 +207,7 @@ jobs:
       - linux-release
       - windows
       - windows-release
-    if: always()&&!contains(needs.*.result,'failure')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
+    if: always()&&!contains(needs.*.result,'failure')&&!contains(needs.*.result,'cancelled')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
     runs-on: ubuntu-latest
     env:
       ANALYTICS: ${{secrets.ANALYTICS_CODE}}
