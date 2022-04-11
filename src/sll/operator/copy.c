@@ -12,6 +12,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
 		case SLL_OBJECT_TYPE_CHAR:
+		case SLL_OBJECT_TYPE_COMPLEX:
 			SLL_ACQUIRE(a);
 			return a;
 		case SLL_OBJECT_TYPE_STRING:

@@ -17,6 +17,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
 			return sll_float_to_object(a->dt.f-1);
 		case SLL_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(a->dt.c-1);
+		case SLL_OBJECT_TYPE_COMPLEX:
+			{
+				sll_complex_t n={
+					a->dt.d.real-1,
+					a->dt.d.imag
+				};
+				return sll_complex_to_object(n);
+			}
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
@@ -54,6 +62,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a
 			return sll_float_to_object(a->dt.f+1);
 		case SLL_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(a->dt.c+1);
+		case SLL_OBJECT_TYPE_COMPLEX:
+			{
+				sll_complex_t n={
+					a->dt.d.real+1,
+					a->dt.d.imag
+				};
+				return sll_complex_to_object(n);
+			}
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);

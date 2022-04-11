@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/complex.h>
 #include <sll/_internal/operator.h>
 #include <sll/api/math.h>
 #include <sll/array.h>
@@ -24,6 +25,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 			return COMPARE_RESULT_FLOAT(a->dt.i,b->dt.f);
 		case COMBINED_TYPE_IC:
 			return COMPARE_RESULT(a->dt.i,b->dt.c);
+		case COMBINED_TYPE_ID:
+			return COMPARE_RESULT_FLOAT(a->dt.i,COMPLEX_ABS(b->dt.d));
 		case COMBINED_TYPE_IS:
 			return COMPARE_RESULT(a->dt.i,b->dt.s.l);
 		case COMBINED_TYPE_IA:
@@ -36,6 +39,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 			return COMPARE_RESULT_FLOAT(a->dt.f,b->dt.f);
 		case COMBINED_TYPE_FC:
 			return COMPARE_RESULT_FLOAT(a->dt.f,b->dt.c);
+		case COMBINED_TYPE_FD:
+			return COMPARE_RESULT_FLOAT(a->dt.f,COMPLEX_ABS(b->dt.d));
 		case COMBINED_TYPE_FS:
 			return COMPARE_RESULT_FLOAT(a->dt.f,b->dt.s.l);
 		case COMBINED_TYPE_FA:
@@ -48,6 +53,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 			return COMPARE_RESULT(a->dt.c,b->dt.f);
 		case COMBINED_TYPE_CC:
 			return COMPARE_RESULT(a->dt.c,b->dt.c);
+		case COMBINED_TYPE_CD:
+			return COMPARE_RESULT_FLOAT(a->dt.c,COMPLEX_ABS(b->dt.d));
 		case COMBINED_TYPE_CS:
 			if (!b->dt.s.l){
 				return SLL_COMPARE_RESULT_ABOVE;
@@ -56,6 +63,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 				return COMPARE_RESULT(a->dt.c,b->dt.s.v[0]);
 			}
 			return (b->dt.s.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_BELOW);
+		case COMBINED_TYPE_DI:
+			return COMPARE_RESULT_FLOAT(COMPLEX_ABS(a->dt.d),b->dt.i);
+		case COMBINED_TYPE_DF:
+			return COMPARE_RESULT_FLOAT(COMPLEX_ABS(a->dt.d),b->dt.f);
+		case COMBINED_TYPE_DC:
+			return COMPARE_RESULT_FLOAT(COMPLEX_ABS(a->dt.d),b->dt.c);
+		case COMBINED_TYPE_DD:
+			return COMPARE_RESULT_FLOAT(COMPLEX_ABS(a->dt.d),COMPLEX_ABS(b->dt.d));
+		case COMBINED_TYPE_DS:
+			return COMPARE_RESULT_FLOAT(COMPLEX_ABS(a->dt.d),b->dt.s.l);
+		case COMBINED_TYPE_DA:
+			return COMPARE_RESULT_FLOAT(COMPLEX_ABS(a->dt.d),b->dt.a.l);
+		case COMBINED_TYPE_DM:
+			return COMPARE_RESULT_FLOAT(COMPLEX_ABS(a->dt.d),b->dt.m.l);
 		case COMBINED_TYPE_CA:
 			return COMPARE_RESULT(a->dt.c,b->dt.a.l);
 		case COMBINED_TYPE_CM:
@@ -72,6 +93,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 				return COMPARE_RESULT(b->dt.c,a->dt.s.v[0]);
 			}
 			return (a->dt.s.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_ABOVE);
+		case COMBINED_TYPE_SD:
+			return COMPARE_RESULT_FLOAT(a->dt.s.l,COMPLEX_ABS(b->dt.d));
 		case COMBINED_TYPE_SS:
 			return sll_string_compare(&(a->dt.s),&(b->dt.s));
 		case COMBINED_TYPE_SA:
@@ -84,6 +107,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 			return COMPARE_RESULT_FLOAT(a->dt.a.l,b->dt.f);
 		case COMBINED_TYPE_AC:
 			return COMPARE_RESULT(a->dt.a.l,b->dt.c);
+		case COMBINED_TYPE_AD:
+			return COMPARE_RESULT_FLOAT(a->dt.a.l,COMPLEX_ABS(b->dt.d));
 		case COMBINED_TYPE_AS:
 			return sll_string_compare_array(&(b->dt.s),&(a->dt.a),1);
 		case COMBINED_TYPE_AA:
@@ -96,6 +121,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 			return COMPARE_RESULT_FLOAT(a->dt.m.l,b->dt.f);
 		case COMBINED_TYPE_MC:
 			return COMPARE_RESULT(a->dt.m.l,b->dt.c);
+		case COMBINED_TYPE_MD:
+			return COMPARE_RESULT_FLOAT(a->dt.m.l,COMPLEX_ABS(b->dt.d));
 		case COMBINED_TYPE_MS:
 			return sll_string_compare_map(&(b->dt.s),&(a->dt.m),1);
 		case COMBINED_TYPE_MA:

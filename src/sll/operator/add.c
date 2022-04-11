@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/complex.h>
 #include <sll/_internal/operator.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
@@ -19,9 +20,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_add(sll_object_t* a
 			return sll_float_to_object(a->dt.i+b->dt.f);
 		case COMBINED_TYPE_IC:
 			return sll_int_to_object(a->dt.i+b->dt.c);
+		case COMBINED_TYPE_ID:
+			{
+				sll_complex_t n={
+					a->dt.i+b->dt.d.real,
+					b->dt.d.imag
+				};
+				return sll_complex_to_object(n);
+			}
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_CS:
+		case COMBINED_TYPE_DS:
 			{
 				sll_object_t* tmp=a;
 				a=b;
@@ -48,6 +58,7 @@ _add_to_string:
 		case COMBINED_TYPE_IA:
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
+		case COMBINED_TYPE_DA:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				if (inv){
@@ -61,6 +72,7 @@ _add_to_string:
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
+		case COMBINED_TYPE_DM:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 				sll_map_add(&(b->dt.m),a,sll_static_int[0],&(o->dt.m));
@@ -70,8 +82,20 @@ _add_to_string:
 			return sll_float_to_object(a->dt.f+b->dt.f);
 		case COMBINED_TYPE_FC:
 			return sll_float_to_object(a->dt.f+b->dt.c);
+		case COMBINED_TYPE_FD:
+			return sll_float_to_object(a->dt.f+b->dt.c);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c+b->dt.c);
+		case COMBINED_TYPE_CD:
+			{
+				sll_complex_t n={
+					a->dt.c+b->dt.d.real,
+					b->dt.d.imag
+				};
+				return sll_complex_to_object(n);
+			}
+		case COMBINED_TYPE_DD:
+			return sll_complex_to_object(COMPLEX_ADD(a->dt.d,b->dt.d));
 		case COMBINED_TYPE_SS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
