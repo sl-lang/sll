@@ -97,7 +97,7 @@ __API_FUNC_DECL(process_join);
  * \group process-api
  * \desc Docs!
  * \arg S
- * \ret B
+ * \ret I
  */
 __API_FUNC_DECL(process_execute_shell);
 

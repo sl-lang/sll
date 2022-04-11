@@ -1,20 +1,23 @@
 #include <windows.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/error.h>
 #include <sll/api/process.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/memory.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
 
 
-__SLL_EXTERNAL void sll_platform_close_process_handle(sll_process_handle_t ph){
-	CloseHandle(ph);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_close_process_handle(sll_process_handle_t ph){
+	return (CloseHandle(ph)?SLL_NO_ERROR:WINAPI_ERROR);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sll_char_t* cmd){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sll_char_t* cmd,sll_error_t* err){
+	RESET_ERROR_PTR;
 	sll_string_t s;
 	sll_string_format(SLL_CHAR("C:\\Windows\\System32\\cmd.exe /q /c %s"),&s,cmd);
 	STARTUPINFOA si={0};
@@ -22,13 +25,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sl
 	si.dwFlags=0;
 	PROCESS_INFORMATION pi;
 	if (!CreateProcessA("C:\\Windows\\System32\\cmd.exe",s.v,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,NULL,NULL,&si,&pi)){
+		WINAPI_ERROR_PTR;
 		sll_free_string(&s);
-		return -1;
+		return 0;
 	}
 	sll_free_string(&s);
 	CloseHandle(pi.hThread);
 	DWORD ec;
 	if (WaitForSingleObject(pi.hProcess,INFINITE)!=WAIT_OBJECT_0||!GetExitCodeProcess(pi.hProcess,&ec)){
+		WINAPI_ERROR_PTR;
 		return 0;
 	}
 	CloseHandle(pi.hProcess);
@@ -43,7 +48,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_get_pid(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env,sll_error_t* err){
+	RESET_ERROR_PTR;
 	if (!a||!(*a)){
 		return 0;
 	}
@@ -54,6 +60,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_proces
 	si.dwFlags=0;
 	PROCESS_INFORMATION pi;
 	if (!CreateProcessA((char*)(*a),s.v,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,PTR(env),NULL,&si,&pi)){
+		WINAPI_ERROR_PTR;
 		sll_free_string(&s);
 		return 0;
 	}
@@ -64,9 +71,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_proces
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_process_handle_t ph){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_process_handle_t ph,sll_error_t* err){
+	RESET_ERROR_PTR;
 	DWORD ec;
 	if (WaitForSingleObject(ph,INFINITE)!=WAIT_OBJECT_0||!GetExitCodeProcess(ph,&ec)){
+		WINAPI_ERROR_PTR;
 		return -1;
 	}
 	return ec;

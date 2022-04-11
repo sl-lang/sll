@@ -2581,7 +2581,7 @@
 
 
 
-#define __SLL_API_TYPE_sll_api_process_execute_shell __SLL_CHECK_OUTPUT sll_bool_t
+#define __SLL_API_TYPE_sll_api_process_execute_shell __SLL_CHECK_OUTPUT sll_integer_t
 #define __SLL_API_ARGS_sll_api_process_execute_shell sll_string_t* a
 /**
  * \flags func
@@ -2589,7 +2589,7 @@
  * \group process-api
  * \desc Docs!
  * \arg sll_string_t* a -> 
- * \ret sll_bool_t
+ * \ret sll_integer_t
  */
 /**
  * \flags check_output func

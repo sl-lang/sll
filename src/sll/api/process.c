@@ -11,6 +11,7 @@
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/environment.h>
+#include <sll/error.h>
 #include <sll/memory.h>
 #include <sll/new_object.h>
 #include <sll/object.h>
@@ -93,10 +94,11 @@ _continue:
 
 __API_FUNC(process_execute_shell){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
-		return 0;
+		return SLL_ERROR_SANDBOX;
 	}
 	sll_audit(SLL_CHAR("sll.process.shell"),SLL_CHAR("s"),a);
-	return sll_platform_execute_shell(a->v);
+	sll_error_t err;
+	return (sll_platform_execute_shell(a->v,&err)?SLL_NO_ERROR:err);
 }
 
 
@@ -160,15 +162,19 @@ __API_FUNC(process_start){
 		GC_RELEASE(n);
 	}
 	*(args+a->l)=NULL;
-	sll_process_handle_t ph=sll_platform_start_process((const sll_char_t*const*)args,NULL);
+	sll_error_t err;
+	sll_process_handle_t ph=sll_platform_start_process((const sll_char_t*const*)args,NULL,&err);
 	if (!ph){
 		SLL_UNIMPLEMENTED();
 	}
 	if (!(c&SLL_PROCESS_FLAG_WAIT)){
 		SLL_UNIMPLEMENTED();
 	}
-	sll_return_code_t rc=sll_platform_wait_process(ph);
-	sll_platform_close_process_handle(ph);
+	sll_return_code_t rc=sll_platform_wait_process(ph,&err);
+	if (err!=SLL_NO_ERROR){
+		SLL_UNIMPLEMENTED();
+	}
+	SLL_CRITICAL(sll_platform_close_process_handle(ph)==SLL_NO_ERROR);
 	for (sll_array_length_t i=0;i<a->l;i++){
 		sll_deallocate(*(args+i));
 	}

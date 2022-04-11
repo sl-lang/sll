@@ -1262,10 +1262,9 @@ __SLL_API_TYPE_sll_api_process_execute_shell sll_api_process_execute_shell(__SLL
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_api_process_execute_shell_raw(sll_object_t*const* al,sll_arg_count_t all){
 	sll_string_t* a;
 	sll_arg_state_t st=sll_parse_args(SLL_CHAR("s"),al,all,&a);
-	sll_bool_t out=sll_api_process_execute_shell(a);
+	sll_integer_t out=sll_api_process_execute_shell(a);
 	sll_free_args(st);
-	SLL_ACQUIRE(sll_static_int[out]);
-	return sll_static_int[out];
+	return sll_int_to_object(out);
 }
 
 

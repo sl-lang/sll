@@ -13,14 +13,15 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_platform_close_process_handle
  * \group platform
  * \subgroup platform-process
  * \desc Docs!
  * \arg sll_process_handle_t ph
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL void sll_platform_close_process_handle(sll_process_handle_t ph);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_close_process_handle(sll_process_handle_t ph);
 
 
 
@@ -31,9 +32,10 @@ __SLL_EXTERNAL void sll_platform_close_process_handle(sll_process_handle_t ph);
  * \subgroup platform-process
  * \desc Docs!
  * \arg const sll_char_t* cmd
+ * \arg sll_error_t* err
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sll_char_t* cmd);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sll_char_t* cmd,sll_error_t* err);
 
 
 
@@ -57,9 +59,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_get_pid(void);
  * \desc Docs!
  * \arg const sll_char_t*const* a
  * \arg const sll_char_t*const* env
+ * \arg sll_error_t* err
  * \ret sll_process_handle_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env,sll_error_t* err);
 
 
 
@@ -70,9 +73,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_proces
  * \subgroup platform-process
  * \desc Docs!
  * \arg sll_process_handle_t ph
+ * \arg sll_error_t* err
  * \ret sll_return_code_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_process_handle_t ph);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_process_handle_t ph,sll_error_t* err);
 
 
 

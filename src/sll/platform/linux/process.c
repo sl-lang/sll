@@ -1,5 +1,7 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/error.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -10,29 +12,27 @@ extern char** environ;
 
 
 
-static __SLL_NO_RETURN void _start_child(const char*const* a,const char*const* env){
-	execve(*a,(char*const*)a,(char*const*)env);
-	_exit(1);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_close_process_handle(sll_process_handle_t ph){
+	return SLL_NO_ERROR;
 }
 
 
 
-__SLL_EXTERNAL void sll_platform_close_process_handle(sll_process_handle_t ph){
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sll_char_t* cmd){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sll_char_t* cmd,sll_error_t* err){
+	RESET_ERROR_PTR;
 	pid_t f=fork();
 	if (f==-1){
+		LIBC_ERROR_PTR;
 		return 0;
 	}
 	if (!f){
 		execl("/bin/sh","sh","-c",cmd,NULL);
+		LIBC_ERROR_PTR;
 		_exit(1);
 	}
 	int st;
 	if (waitpid(f,&st,0)==-1){
+		LIBC_ERROR_PTR;
 		return 0;
 	}
 	return (WIFEXITED(st)&&!WEXITSTATUS(st));
@@ -46,7 +46,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_get_pid(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env,sll_error_t* err){
+	RESET_ERROR_PTR;
 	if (!a||!(*a)){
 		return 0;
 	}
@@ -55,19 +56,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_start_process(const sll
 	}
 	pid_t f=fork();
 	if (f==-1){
+		LIBC_ERROR_PTR;
 		return 0;
 	}
 	if (!f){
-		_start_child((const char*const*)a,(const char*const*)env);
+		execve((char*)(*a),(char*const*)a,(char*const*)env);
+		LIBC_ERROR_PTR;
+		_exit(1);
 	}
 	return f;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_pid_t pid){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_pid_t pid,sll_error_t* err){
+	RESET_ERROR_PTR;
 	int st;
 	if (waitpid(pid,&st,0)==-1){
+		LIBC_ERROR_PTR;
 		return 0;
 	}
 	return (WIFEXITED(st)?WEXITSTATUS(st):1);
