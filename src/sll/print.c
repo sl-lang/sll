@@ -3,7 +3,7 @@
 #include <sll/api/math.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
-#include <sll/compressed_integer.h>
+#include <sll/compression.h>
 #include <sll/file.h>
 #include <sll/identifier.h>
 #include <sll/memory.h>

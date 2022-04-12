@@ -14,7 +14,7 @@
 #include <sll/assembly.h>
 #include <sll/audit.h>
 #include <sll/common.h>
-#include <sll/compressed_integer.h>
+#include <sll/compression.h>
 #include <sll/data.h>
 #include <sll/error.h>
 #include <sll/file.h>

@@ -1,4 +1,4 @@
-(--- "types.sll")
+(--- "types.sll" "map.sll")
 
 
 
@@ -174,13 +174,14 @@
 (= _name_to_error ({> (= i 0) (< i ($ dt))
 	(= e (: dt i))
 	(++ i)
-	(: _name_to_error e$name) e
+	e$name e
 ))
+(<- map$remove _name_to_error "EWIN")
 
 
 
-(= get_by_name (,,, dt
-	(@@ (: _name_to_error (:: dt string_type)))
+(= get_by_name (,,, name
+	(@@ (: _name_to_error (:: name string_type)))
 ))
 
 

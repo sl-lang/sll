@@ -127,7 +127,7 @@ def generate_assembly_optimizer(cfg_fp,o_fp):
 			c[1].append(res)
 	util.log(f"  Generating Code to '{o_fp}'...")
 	with open(o_fp,"w") as f:
-		f.write("#ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__\n#define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1\n#include <sll/_internal/assembly.h>\n#include <sll/_internal/assembly_compress_integer.h>\n#include <sll/assembly.h>\n#include <sll/types.h>\n\n\n\nstatic __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){\n")
+		f.write("#ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__\n#define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1\n#include <sll/_internal/assembly.h>\n#include <sll/assembly.h>\n#include <sll/types.h>\n\n\n\nstatic __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){\n")
 		sl=set()
 		_generate_cond(f,data,1,sl)
 		for k in sl:

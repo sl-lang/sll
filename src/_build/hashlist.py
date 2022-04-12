@@ -20,9 +20,11 @@ def _check(fp,inc):
 	with open(fp,"r") as rf:
 		for e in header.INCLUDE_REGEX.findall(rf.read()):
 			e=e[1:-1]
+			if (e[:4]!="sll/"):
+				continue
 			for k in inc:
 				f_fp=os.path.join(k,e)
-				if (os.path.exists(f_fp) and _check(f_fp,inc)):
+				if (not os.path.exists(f_fp) or _check(f_fp,inc)):
 					return 1
 	return 0
 
