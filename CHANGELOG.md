@@ -26,7 +26,7 @@
 - More platform-dependent function return error codes
 - Renamed `SLL_ERROR_FLAG_LIBC` and `error_codes$LIBC_ERROR_CODES` to `SLL_ERROR_FLAG_SYSTEM` and `error_codes$SYSTEM_ERROR_CODES`
 - Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
-- Rewritten the CLI executable loader code
+- Rewritten the CLI executable loader codes
 - Split the operators from [`src/sll/operator.c`][0.7.12/src/sll/operator.c] to [`src/sll/operator`][0.7.13/src/sll/operator]
 - *\[Windows Only\]* Windows error codes are now remapped to POSIX `errno` values
 

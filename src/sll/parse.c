@@ -22,13 +22,13 @@
 
 #define ADD_DIGIT(n,d) \
 	do{ \
-		if (vc<19){ \
-			v=v*n+d; \
+		if (n_st.cnt<19){ \
+			n_st.hi=n_st.hi*n+d; \
 		} \
-		else if (vc<38){ \
-			v2=v2*n+d; \
+		else if (n_st.cnt<38){ \
+			n_st.lo=n_st.lo*n+d; \
 		} \
-		vc++; \
+		n_st.cnt++; \
 	} while (0)
 #define PUSH_REWIND_CHAR(c) \
 	do{ \
@@ -243,6 +243,12 @@ static sll_read_char_t _read_identifier(sll_string_t* str,sll_string_length_t sz
 
 
 
+static sll_float_t _read_float(sll_file_t* rf,sll_read_char_t c){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_char_t c,const extra_compilation_data_t* e_c_dt){
 	unsigned int fl=0;
 	const scope_data_t* l_sc=&(e_c_dt->sc);
@@ -435,9 +441,12 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					neg=(c=='-');
 					c=sll_file_read_char(rf,NULL);
 				}
-				sll_integer_t v=0;
-				unsigned int vc=0;
-				sll_integer_t v2=0;
+				number_parser_state_t n_st={
+					0,
+					0,
+					0,
+					0
+				};
 				if (c=='0'){
 					PUSH_REWIND_CHAR('0');
 					c=sll_file_read_char(rf,NULL);
@@ -508,7 +517,6 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					}
 				}
 				if (c=='.'||c=='e'||c=='E'||c=='i'){
-					sll_integer_t ex=0;
 					if (c=='.'){
 						while (1){
 							PUSH_REWIND_CHAR(c);
@@ -519,7 +527,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 							if (c<48||(c>57&&c!='_')){
 								goto _parse_identifier;
 							}
-							ex--;
+							n_st.exp--;
 							if (c!='_'){
 								ADD_DIGIT(10,c-48);
 							}
@@ -552,17 +560,17 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 							}
 							c=sll_file_read_char(rf,NULL);
 						}
-						ex+=(neg_e?-ev:ev);
+						n_st.exp+=(neg_e?-ev:ev);
 					}
 					if (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!='<'&&c!='>'&&c!='['&&c!=']'&&c!='{'&&c!='}'&&c!='+'&&c!='-'&&c!='i')){
 						goto _parse_identifier;
 					}
-					sll_float_t real=(sll_float_t)v;
-					if (vc>=19){
-						SLL_ASSERT(vc<=38);
-						real=real*sll_api_math_pow(10,vc-19)+v2;
+					sll_float_t real=(sll_float_t)n_st.hi;
+					if (n_st.cnt>=19){
+						SLL_ASSERT(n_st.cnt<=38);
+						real=real*sll_api_math_pow(10,n_st.cnt-19)+n_st.lo;
 					}
-					real*=sll_api_math_pow(10,(sll_float_t)ex);
+					real*=sll_api_math_pow(10,(sll_float_t)n_st.exp);
 					if (neg){
 						real=-real;
 					}
@@ -573,10 +581,10 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 						if (c<48||c>57){
 							goto _parse_identifier;
 						}
-						v=0;
-						vc=0;
-						v2=0;
-						ex=0;
+						n_st.hi=0;
+						n_st.lo=0;
+						n_st.exp=0;
+						n_st.cnt=0;
 						while (1){
 							PUSH_REWIND_CHAR(c);
 							if (c!='_'){
@@ -600,7 +608,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 								if (c<48||(c>57&&c!='_')){
 									goto _parse_identifier;
 								}
-								ex--;
+								n_st.exp--;
 								if (c!='_'){
 									ADD_DIGIT(10,c-48);
 								}
@@ -633,7 +641,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 								}
 								c=sll_file_read_char(rf,NULL);
 							}
-							ex+=(neg_e?-ev:ev);
+							n_st.exp+=(neg_e?-ev:ev);
 						}
 						if (c!='i'){
 							goto _parse_identifier;
@@ -644,13 +652,13 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 							goto _parse_identifier;
 						}
 						arg->t=SLL_NODE_TYPE_COMPLEX;
-						sll_float_t imag=(sll_float_t)v;
-						if (vc>=19){
-							SLL_ASSERT(vc<=38);
-							imag=imag*sll_api_math_pow(10,vc-19)+v2;
+						sll_float_t imag=(sll_float_t)n_st.hi;
+						if (n_st.cnt>=19){
+							SLL_ASSERT(n_st.cnt<=38);
+							imag=imag*sll_api_math_pow(10,n_st.cnt-19)+n_st.lo;
 						}
 						arg->dt.d.real=real;
-						arg->dt.d.imag=(neg?-imag:imag)*sll_api_math_pow(10,(sll_float_t)ex);
+						arg->dt.d.imag=(neg?-imag:imag)*sll_api_math_pow(10,(sll_float_t)n_st.exp);
 					}
 					else if (c=='i'){
 						PUSH_REWIND_CHAR('i');
@@ -670,22 +678,22 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				else{
 _create_int:
 					arg->t=SLL_NODE_TYPE_INT;
-					if (vc<19){
-						arg->dt.i=v;
+					if (n_st.cnt<19){
+						arg->dt.i=n_st.hi;
 					}
 					else{
-						SLL_ASSERT(vc<=38);
-						vc-=19;
-						arg->dt.i=v;
+						SLL_ASSERT(n_st.cnt<=38);
+						n_st.cnt-=19;
+						arg->dt.i=n_st.hi;
 						sll_size_t b=10;
 						do{
-							if (vc&1){
+							if (n_st.cnt&1){
 								arg->dt.i*=b;
 							}
-							vc>>=1;
+							n_st.cnt>>=1;
 							b*=b;
-						} while (vc);
-						arg->dt.i+=v2;
+						} while (n_st.cnt);
+						arg->dt.i+=n_st.lo;
 					}
 					if (neg){
 						arg->dt.i=-arg->dt.i;

@@ -47,4 +47,13 @@ typedef struct __EXTRA_COMPILATION_DATA{
 
 
 
+typedef struct __NUMBER_PARSER_STATE{
+	sll_integer_t hi;
+	sll_integer_t lo;
+	sll_integer_t exp;
+	__SLL_U32 cnt;
+} number_parser_state_t;
+
+
+
 #endif

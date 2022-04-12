@@ -90,7 +90,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		i+=j+1;
 		sll_copy_data(f_nm,f_nm_l,bf+j);
 		j+=f_nm_l;
-		sll_copy_data(slc_suffix.v,slc_suffix.l,bf+j);
+		sll_copy_data(slc_suffix.v,slc_suffix.l+1,bf+j);
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",bf);
 		sll_file_t f;
 		if (sll_platform_path_exists(bf)){
@@ -137,7 +137,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 	}
 	if (l_fpl){
 		sll_copy_data(f_nm,f_nm_l,l_fp+l_fpl);
-		sll_copy_data(slc_suffix.v,slc_suffix.l,l_fp+l_fpl+f_nm_l);
+		sll_copy_data(slc_suffix.v,slc_suffix.l+1,l_fp+l_fpl+f_nm_l);
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",l_fp);
 		sll_file_t f;
 		if (sll_platform_path_exists(l_fp)){
