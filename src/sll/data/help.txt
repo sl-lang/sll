@@ -11,6 +11,7 @@ Options:
   -f <file>, --file <file> -> Treat <file> as input file (Useful for files starting with a dash ('-'))
   -h, --help -> Print this message
   -I <directory>, --include <directory> -> Add <directory> to file include path
+  -i <installed_object>, --install-path <installed_object> -> Output the absolute path of the installed object <installed_object> and exit
   -L <audit_library>, --audit-library <audit_library> -> Load the audit library <audit_library>
   -N <name>, --bundle-name <name> -> Name of the bundle. All backslashes are replaced by forward slashes. A name consisting of one slash ('/') will be treated as an empty name.
   -n, --names-only -> Do not store full file paths in the bundle
@@ -22,7 +23,14 @@ Options:
   -s <code>, --source <code> -> Treat <code> as an input file
   -S <flag>, --sandbox <flag> -> enable the sandbox <flag> (see Sandbox Flags)
   -v, --verbose -> Enable verbose mode
-  -V, --version -> Print SLL version and exit
+  -V, --version -> Print the Sll version and exit
+
+Installed Objects:
+  executable -> Main executable
+  extension-library-path -> Folder containing extension libraries
+  install-path -> Folder containing all installed files
+  library -> Core dynamic library
+  source-path -> Folder containing bundles, compiled objects and source code included by default in the search path
 
 Sandbox Flags:
   no-file-io -> Disable all file IO (does not include the C sll_file_xxx and sll_platform_file_xxx APIs)

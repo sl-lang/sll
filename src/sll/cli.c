@@ -314,6 +314,54 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 				}
 			}
 		}
+		else if (nm=='i'||sll_string_compare_pointer(e,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL){
+			i++;
+			sll_char_t fp[SLL_API_MAX_FILE_PATH_LENGTH]={'/',0};
+			const sll_string_t* src=NULL;
+			if (i<argc){
+				e=argv[i];
+				if (sll_string_compare_pointer(e,SLL_CHAR("executable"))==SLL_COMPARE_RESULT_EQUAL){
+					src=sll_executable_file_path;
+				}
+				else if (sll_string_compare_pointer(e,SLL_CHAR("extension-library-path"))==SLL_COMPARE_RESULT_EQUAL){
+					SLL_COPY_STRING_NULL(SLL_CHAR("/sys_lib/"),fp);
+				}
+				else if (sll_string_compare_pointer(e,SLL_CHAR("install-path"))==SLL_COMPARE_RESULT_EQUAL){
+					SLL_COPY_STRING_NULL(SLL_CHAR("/"),fp);
+				}
+				else if (sll_string_compare_pointer(e,SLL_CHAR("library"))==SLL_COMPARE_RESULT_EQUAL){
+					src=sll_library_file_path;
+				}
+				else if (sll_string_compare_pointer(e,SLL_CHAR("source-path"))==SLL_COMPARE_RESULT_EQUAL){
+					SLL_COPY_STRING_NULL(SLL_CHAR("/lib/"),fp);
+				}
+			}
+			if (src){
+				sll_string_length_t sz=(src->l>=SLL_API_MAX_FILE_PATH_LENGTH?SLL_API_MAX_FILE_PATH_LENGTH-1:src->l);
+				sll_copy_data(src->v,sz,fp);
+				fp[sz]=0;
+			}
+			else{
+				sll_string_length_t pfx_sz=sll_library_file_path->l;
+				while (pfx_sz&&sll_library_file_path->v[pfx_sz]!='/'&&sll_library_file_path->v[pfx_sz]!='\\'){
+					pfx_sz--;
+				}
+				pfx_sz++;
+				sll_string_length_t sz=sll_string_length_unaligned(fp);
+				SLL_ASSERT(sz+pfx_sz<SLL_API_MAX_FILE_PATH_LENGTH);
+				sll_char_t tmp[SLL_API_MAX_FILE_PATH_LENGTH];
+				sll_copy_data(sll_library_file_path->v,pfx_sz,tmp);
+				sll_copy_data(fp,sz,tmp+pfx_sz);
+				tmp[pfx_sz+sz]=0;
+				sz=sll_platform_absolute_path(tmp,fp,SLL_API_MAX_FILE_PATH_LENGTH);
+				if (sz<SLL_API_MAX_FILE_PATH_LENGTH-1&&(!sz||fp[sz-1]!=SLL_API_FILE_PATH_SEPARATOR)){
+					fp[sz]=SLL_API_FILE_PATH_SEPARATOR;
+					fp[sz+1]=0;
+				}
+			}
+			sll_file_write_format(sll_stdout,SLL_CHAR("%s\n"),NULL,fp);
+			goto _cleanup;
+		}
 		else if (nm=='L'||sll_string_compare_pointer(e,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
 			if (i==argc){
@@ -443,7 +491,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			fl|=SLL_CLI_FLAG_VERSION;
 		}
 		else if (*e=='-'){
-			SLL_WARN(SLL_CHAR("Ignroing unknown Switch '%s'"),e);
+			SLL_WARN(SLL_CHAR("Ignroing unknown switch '%s'"),e);
 		}
 		else{
 _read_file_argument:
