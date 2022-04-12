@@ -243,12 +243,6 @@ static sll_read_char_t _read_identifier(sll_string_t* str,sll_string_length_t sz
 
 
 
-static sll_float_t _read_float(sll_file_t* rf,sll_read_char_t c){
-	SLL_UNIMPLEMENTED();
-}
-
-
-
 static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_char_t c,const extra_compilation_data_t* e_c_dt){
 	unsigned int fl=0;
 	const scope_data_t* l_sc=&(e_c_dt->sc);
