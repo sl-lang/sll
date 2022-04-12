@@ -20,6 +20,32 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_DECODE_SIGNED_INTEGER
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_size_t v
+ * \ret sll_integer_t
+ */
+#define SLL_DECODE_SIGNED_INTEGER(v) (((v)>>1)^(-((sll_integer_t)((v)&1))))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ENCODE_SIGNED_INTEGER
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_integer_t v
+ * \ret sll_size_t
+ */
+#define SLL_ENCODE_SIGNED_INTEGER(v) ((((v)<0?~(v):(v))<<1)|((v)<0))
+
+
+
+/**
  * \flags check_output func
  * \name sll_decode_integer
  * \group serial-api

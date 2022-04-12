@@ -155,10 +155,6 @@ typedef __SLL_U32 sll_barrier_index_t;
 
 
 
-typedef __SLL_U32 sll_compressed_integer_t;
-
-
-
 typedef __SLL_U32 sll_debug_data_length_t;
 
 
@@ -280,6 +276,10 @@ typedef __SLL_U32 sll_wide_char_t;
 
 
 typedef __SLL_S64 sll_integer_t;
+
+
+
+typedef __SLL_U64 sll_compressed_integer_t;
 
 
 

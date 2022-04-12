@@ -16,10 +16,10 @@
  * \name sll_compress_integer
  * \group compression
  * \desc Docs!
- * \arg sll_integer_t n
- * \ret sll_integer_t
+ * \arg sll_size_t v
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_compress_integer(sll_integer_t n);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_compress_integer(sll_size_t v);
 
 
 
@@ -28,10 +28,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_compress_integer(sll_integer
  * \name sll_decompress_integer
  * \group compression
  * \desc Docs!
- * \arg sll_compressed_integer_t n
- * \ret sll_integer_t
+ * \arg sll_compressed_integer_t v
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decompress_integer(sll_compressed_integer_t n);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decompress_integer(sll_compressed_integer_t v);
 
 
 

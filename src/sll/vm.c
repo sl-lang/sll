@@ -9,6 +9,7 @@
 #include <sll/_internal/thread.h>
 #include <sll/_internal/vm.h>
 #include <sll/api/file.h>
+#include <sll/api/serial.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/assembly.h>
@@ -352,9 +353,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
-				*(thr->stack+thr->si)=sll_int_to_object(sll_decompress_integer(ai->dt.ci));
-				thr->si++;
-				break;
+				{
+					sll_size_t dec=sll_decompress_integer(ai->dt.ci);
+					*(thr->stack+thr->si)=sll_int_to_object(SLL_DECODE_SIGNED_INTEGER(dec));
+					thr->si++;
+					break;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE:
 				*(thr->stack+thr->si)=SLL_ACQUIRE_STATIC_NEG_INT(1);
 				thr->si++;

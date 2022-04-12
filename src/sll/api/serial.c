@@ -55,7 +55,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sl
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_file_t* f,sll_error_t* err){
 	sll_size_t v=sll_decode_integer(f,err);
-	return (v>>1)^(-((sll_integer_t)(v&1)));
+	return SLL_DECODE_SIGNED_INTEGER(v);
 }
 
 
@@ -224,7 +224,7 @@ __SLL_EXTERNAL void sll_encode_integer(sll_file_t* f,sll_size_t v){
 
 
 __SLL_EXTERNAL void sll_encode_signed_integer(sll_file_t* f,sll_integer_t v){
-	sll_encode_integer(f,((v<0?~v:v)<<1)|(v<0));
+	sll_encode_integer(f,SLL_ENCODE_SIGNED_INTEGER(v));
 }
 
 
