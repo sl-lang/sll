@@ -33,7 +33,7 @@
 
 
 
-static __STATIC_STRING(slc_end,".slc");
+static __STATIC_STRING(slc_suffix,".slc");
 static unsigned int fl;
 static sll_char_t* i_fp;
 static sll_string_length_t i_fpl;
@@ -90,7 +90,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		i+=j+1;
 		sll_copy_data(f_nm,f_nm_l,bf+j);
 		j+=f_nm_l;
-		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),bf+j);
+		sll_copy_data(slc_suffix.v,slc_suffix.l,bf+j);
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",bf);
 		sll_file_t f;
 		if (sll_platform_path_exists(bf)){
@@ -137,7 +137,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 	}
 	if (l_fpl){
 		sll_copy_data(f_nm,f_nm_l,l_fp+l_fpl);
-		SLL_COPY_STRING_NULL(SLL_CHAR(".slc"),l_fp+l_fpl+f_nm_l);
+		sll_copy_data(slc_suffix.v,slc_suffix.l,l_fp+l_fpl+f_nm_l);
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",l_fp);
 		sll_file_t f;
 		if (sll_platform_path_exists(l_fp)){
@@ -316,7 +316,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		}
 		else if (nm=='i'||sll_string_compare_pointer(e,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
-			sll_char_t fp[SLL_API_MAX_FILE_PATH_LENGTH]={'/',0};
+			sll_char_t out[SLL_API_MAX_FILE_PATH_LENGTH]={'/',0};
 			const sll_string_t* src=NULL;
 			if (i<argc){
 				e=argv[i];
@@ -324,22 +324,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					src=sll_executable_file_path;
 				}
 				else if (sll_string_compare_pointer(e,SLL_CHAR("extension-library-path"))==SLL_COMPARE_RESULT_EQUAL){
-					SLL_COPY_STRING_NULL(SLL_CHAR("/sys_lib/"),fp);
+					SLL_COPY_STRING_NULL(SLL_CHAR("/sys_lib/"),out);
 				}
 				else if (sll_string_compare_pointer(e,SLL_CHAR("install-path"))==SLL_COMPARE_RESULT_EQUAL){
-					SLL_COPY_STRING_NULL(SLL_CHAR("/"),fp);
+					SLL_COPY_STRING_NULL(SLL_CHAR("/"),out);
 				}
 				else if (sll_string_compare_pointer(e,SLL_CHAR("library"))==SLL_COMPARE_RESULT_EQUAL){
 					src=sll_library_file_path;
 				}
 				else if (sll_string_compare_pointer(e,SLL_CHAR("source-path"))==SLL_COMPARE_RESULT_EQUAL){
-					SLL_COPY_STRING_NULL(SLL_CHAR("/lib/"),fp);
+					SLL_COPY_STRING_NULL(SLL_CHAR("/lib/"),out);
 				}
 			}
 			if (src){
 				sll_string_length_t sz=(src->l>=SLL_API_MAX_FILE_PATH_LENGTH?SLL_API_MAX_FILE_PATH_LENGTH-1:src->l);
-				sll_copy_data(src->v,sz,fp);
-				fp[sz]=0;
+				sll_copy_data(src->v,sz,out);
+				out[sz]=0;
 			}
 			else{
 				sll_string_length_t pfx_sz=sll_library_file_path->l;
@@ -347,19 +347,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					pfx_sz--;
 				}
 				pfx_sz++;
-				sll_string_length_t sz=sll_string_length_unaligned(fp);
+				sll_string_length_t sz=sll_string_length_unaligned(out);
 				SLL_ASSERT(sz+pfx_sz<SLL_API_MAX_FILE_PATH_LENGTH);
 				sll_char_t tmp[SLL_API_MAX_FILE_PATH_LENGTH];
 				sll_copy_data(sll_library_file_path->v,pfx_sz,tmp);
-				sll_copy_data(fp,sz,tmp+pfx_sz);
+				sll_copy_data(out,sz,tmp+pfx_sz);
 				tmp[pfx_sz+sz]=0;
-				sz=sll_platform_absolute_path(tmp,fp,SLL_API_MAX_FILE_PATH_LENGTH);
-				if (sz<SLL_API_MAX_FILE_PATH_LENGTH-1&&(!sz||fp[sz-1]!=SLL_API_FILE_PATH_SEPARATOR)){
-					fp[sz]=SLL_API_FILE_PATH_SEPARATOR;
-					fp[sz+1]=0;
+				sz=sll_platform_absolute_path(tmp,out,SLL_API_MAX_FILE_PATH_LENGTH);
+				if (sz<SLL_API_MAX_FILE_PATH_LENGTH-1&&(!sz||out[sz-1]!=SLL_API_FILE_PATH_SEPARATOR)){
+					out[sz]=SLL_API_FILE_PATH_SEPARATOR;
+					out[sz+1]=0;
 				}
 			}
-			sll_file_write_format(sll_stdout,SLL_CHAR("%s\n"),NULL,fp);
+			sll_file_write_format(sll_stdout,SLL_CHAR("%s\n"),NULL,out);
 			goto _cleanup;
 		}
 		else if (nm=='L'||sll_string_compare_pointer(e,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL){
@@ -707,8 +707,8 @@ _read_file_argument:
 			sll_string_t b_f_nm;
 			sll_string_from_pointer(argv[*(fp+j)],&b_f_nm);
 			sll_string_length_t off=((fl&SLL_CLI_FLAG_NO_PATHS)?sll_path_split(&b_f_nm):0);
-			if (sll_string_ends(&b_f_nm,&slc_end)){
-				sll_string_set_char(0,b_f_nm.l-slc_end.l,&b_f_nm);
+			if (sll_string_ends(&b_f_nm,&slc_suffix)){
+				sll_string_set_char(0,b_f_nm.l-slc_suffix.l,&b_f_nm);
 			}
 			CLI_LOG_IF_VERBOSE("Adding file '%s' as '%s' to bundle...",f_fp,b_f_nm.v+off);
 			sll_bundle_add_file(b_f_nm.v+off,&c_dt,&bundle);
