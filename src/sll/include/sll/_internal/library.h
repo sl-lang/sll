@@ -11,7 +11,7 @@
 #endif
 
 #define LIBRARY_DIRECTORY "/sys_lib/"
-#define LIBRARY_HASH_BUFFER_SIZE 4096
+#define LIBRARY_HASH_BUFFER_SIZE 65536
 
 
 
