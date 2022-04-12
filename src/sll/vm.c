@@ -1,4 +1,3 @@
-#include <sll/_internal/assembly_compress_integer.h>
 #include <sll/_internal/barrier.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
@@ -15,6 +14,7 @@
 #include <sll/assembly.h>
 #include <sll/audit.h>
 #include <sll/common.h>
+#include <sll/compressed_integer.h>
 #include <sll/data.h>
 #include <sll/error.h>
 #include <sll/file.h>
@@ -352,7 +352,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
-				*(thr->stack+thr->si)=sll_int_to_object(_assembly_decode_compressed_int(ai->dt.ci));
+				*(thr->stack+thr->si)=sll_int_to_object(sll_decompress_integer(ai->dt.ci));
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE:

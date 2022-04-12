@@ -1,9 +1,9 @@
-#include <sll/_internal/assembly_compress_integer.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/print.h>
 #include <sll/api/math.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/compressed_integer.h>
 #include <sll/file.h>
 #include <sll/identifier.h>
 #include <sll/memory.h>
@@ -625,7 +625,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_int(_assembly_decode_compressed_int(ai->dt.ci),wf);
+				_print_int(sll_decompress_integer(ai->dt.ci),wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE:
 				PRINT_STATIC_STRING("PUSH -1",wf);
