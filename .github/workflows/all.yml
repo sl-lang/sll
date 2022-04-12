@@ -71,7 +71,7 @@ jobs:
       - name: Build
         run: ${{env.BUILD_COMMAND}} --release --bundle --upload
       - name: Store assets
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release-darwin
           path: darwin.zip
@@ -141,7 +141,7 @@ jobs:
       - name: Build
         run: ${{env.BUILD_COMMAND}} --release --bundle --upload
       - name: Store assets
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release-linux
           path: linux.zip
@@ -221,7 +221,7 @@ jobs:
       - name: Build
         run: python src/_build/main.py --verbose --web
       - name: Store generated website
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: web-bundle
           path: web-bundle.dt
@@ -291,7 +291,7 @@ jobs:
       - name: Build
         run: ${{env.BUILD_COMMAND}} --release --bundle --upload
       - name: Store assets
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release-win
           path: windows.zip
