@@ -95,13 +95,17 @@ static void _fill_zero(void* o,sll_size_t sz){
 static void _pool_add(user_mem_block_t* b){
 	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
 	sll_size_t sz=USER_MEM_BLOCK_GET_SIZE(b)-1;
-	if (sz>=MEMORY_POOL_SIZE){
-		free(b);
-		return;
+	if (sz<MEMORY_POOL_SIZE){
+		_memory_small_pool[sz].dealloc++;
+		if (_memory_small_pool[sz].sz<MEMORY_POOL_MAX_BLOCKS){
+			empty_pool_pointer_t* ptr=(empty_pool_pointer_t*)b;
+			ptr->next=_memory_small_pool[sz].ptr;
+			_memory_small_pool[sz].ptr=ptr;
+			_memory_small_pool[sz].sz++;
+			return;
+		}
 	}
-	empty_pool_pointer_t* ptr=(empty_pool_pointer_t*)b;
-	ptr->next=_memory_small_pool[sz].ptr;
-	_memory_small_pool[sz].ptr=ptr;
+	free(b);
 }
 
 
@@ -110,7 +114,7 @@ static void* _pool_get(sll_size_t sz){
 	if (sz>=MEMORY_POOL_SIZE){
 		return NULL;
 	}
-	_memory_small_pool[sz].cnt++;
+	_memory_small_pool[sz].alloc++;
 	empty_pool_pointer_t* ptr=_memory_small_pool[sz].ptr;
 	if (!ptr){
 		return NULL;
@@ -136,7 +140,9 @@ void _memory_deinit(void){
 
 void _memory_init(void){
 	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
-		_memory_small_pool[i].cnt=0;
+		_memory_small_pool[i].alloc=0;
+		_memory_small_pool[i].dealloc=0;
+		_memory_small_pool[i].sz=MEMORY_POOL_MAX_BLOCKS;
 		_memory_small_pool[i].ptr=NULL;
 	}
 }
