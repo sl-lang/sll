@@ -11,6 +11,7 @@
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
+#include <sll/platform/util.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -157,7 +158,7 @@ static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_o
 
 static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_string_t* f){
 	sll_arg_count_t l=dt->l;
-	sll_arg_count_t i=f->c%l;
+	sll_arg_count_t i=(f->c*dt->_rng)%l;
 	while (l){
 		sll_arg_count_t j=OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(dt->dt+i);
 		if (STRING_EQUAL(f,&(dt->dt[j].nm))){
@@ -219,9 +220,11 @@ _skip_next:;
 	n->l=l;
 	n=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
 	if (l){
+		sll_platform_random(&(n->_rng),sizeof(__SLL_U32));
+		n->_rng%=l;
 		sll_bool_t extra=0;
 		for (i=0;i<l;i++){
-			sll_arg_count_t j=n->dt[i].nm.c%l;
+			sll_arg_count_t j=(n->dt[i].nm.c*n->_rng)%l;
 			if (OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)==OBJECT_TYPE_DATA_ENTRY_OFFSET_EMPTY){
 				OBJECT_TYPE_DATA_ENTRY_SET_OFFSET(n->dt+j,i);
 			}
@@ -231,7 +234,7 @@ _skip_next:;
 		}
 		if (extra){
 			for (i=0;i<l;i++){
-				sll_arg_count_t j=n->dt[i].nm.c%l;
+				sll_arg_count_t j=(n->dt[i].nm.c*n->_rng)%l;
 				if (OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)==i){
 					continue;
 				}

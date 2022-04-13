@@ -804,6 +804,7 @@ typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
 typedef struct __SLL_OBJECT_TYPE_DATA{
 	const sll_string_t nm;
 	sll_arg_count_t l;
+	__SLL_U32 _rng;
 	sll_integer_t fn[SLL_MAX_OBJECT_FUNC+1];
 	sll_object_type_data_entry_t dt[];
 } sll_object_type_data_t;
