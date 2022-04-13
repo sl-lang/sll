@@ -19,6 +19,7 @@
 - Implemented `sll_var_arg_get_complex`
 - Implemented `statistics$quantiles` ([#260])
 - Integer and floats can now be prefixed with the `+` sign for consistency
+- Memory allocations are now served from a pool from small allocations ([#267])
 - Object creation code to generate complex numbers: `d`
 - Object creation modifier to dereference array elements: `*`
 
@@ -2002,6 +2003,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#267]: https://github.com/sl-lang/sll/issues/267
 [#262]: https://github.com/sl-lang/sll/issues/262
 [#260]: https://github.com/sl-lang/sll/issues/260
 [#259]: https://github.com/sl-lang/sll/issues/259

@@ -116,6 +116,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 	_file_release_std_streams();
 	_audit_cleanup();
 	_deinit_platform();
+	_memory_deinit();
 	_sandbox_flags=0;
 	_init_init=0;
 }
@@ -127,6 +128,7 @@ __SLL_EXTERNAL void sll_init(void){
 		return;
 	}
 	_init_init=1;
+	_memory_init();
 	_file_init_std_streams();
 	_init_platform();
 	_init_environment();

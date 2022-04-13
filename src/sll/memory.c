@@ -13,10 +13,10 @@
 
 
 
-#define USED_BLOCK_FLAG_USED 0x8000000000000000ull
-#define USED_BLOCK_FLAG_STACK 0x4000000000000000ull
+#define USER_MEM_BLOCK_FLAG_USED 1
 
-#define USED_BLOCK_GET_SIZE(b) ((b)->dt&0x3fffffffffffffffull)
+#define USER_MEM_BLOCK_GET_SIZE(b) ((b)->dt>>1)
+#define USER_MEM_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_USED|((sz)<<1))
 
 #define POINTER_TO_STRING(p) \
 	do{ \
@@ -29,6 +29,10 @@
 			i++; \
 		} while (j); \
 	} while (0)
+
+
+
+static pool_data_t _memory_small_pool[MEMORY_POOL_SIZE];
 
 
 
@@ -88,6 +92,57 @@ static void _fill_zero(void* o,sll_size_t sz){
 
 
 
+static void _pool_add(user_mem_block_t* b){
+	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
+	sll_size_t sz=USER_MEM_BLOCK_GET_SIZE(b)-1;
+	if (sz>=MEMORY_POOL_SIZE){
+		free(b);
+		return;
+	}
+	empty_pool_pointer_t* ptr=(empty_pool_pointer_t*)b;
+	ptr->next=_memory_small_pool[sz].ptr;
+	_memory_small_pool[sz].ptr=ptr;
+}
+
+
+
+static void* _pool_get(sll_size_t sz){
+	if (sz>=MEMORY_POOL_SIZE){
+		return NULL;
+	}
+	_memory_small_pool[sz].cnt++;
+	empty_pool_pointer_t* ptr=_memory_small_pool[sz].ptr;
+	if (!ptr){
+		return NULL;
+	}
+	_memory_small_pool[sz].ptr=ptr->next;
+	return ptr;
+}
+
+
+
+void _memory_deinit(void){
+	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
+		empty_pool_pointer_t* ptr=_memory_small_pool[i].ptr;
+		while (ptr){
+			empty_pool_pointer_t* nxt=ptr->next;
+			free(ptr);
+			ptr=nxt;
+		}
+	}
+}
+
+
+
+void _memory_init(void){
+	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
+		_memory_small_pool[i].cnt=0;
+		_memory_small_pool[i].ptr=NULL;
+	}
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz){
 	if (!sz){
 		return NULL;
@@ -105,11 +160,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_fail(sll_size_t sz){
 	if (!sz){
 		return NULL;
 	}
-	user_mem_block_t* b=malloc((sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull);
+	sz=(sz+sizeof(user_mem_block_t)+15)>>4;
+	user_mem_block_t* b=_pool_get(sz-1);
 	if (!b){
-		return NULL;
+		b=malloc(sz<<4);
+		if (!b){
+			return NULL;
+		}
 	}
-	b->dt=USED_BLOCK_FLAG_USED|sz;
+	b->dt=USER_MEM_BLOCK_INIT(sz);
 	return PTR(ADDR(b)+sizeof(user_mem_block_t));
 }
 
@@ -138,9 +197,7 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 	if (!p){
 		return;
 	}
-	user_mem_block_t* b=(user_mem_block_t*)(ADDR(p)-sizeof(user_mem_block_t));
-	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
-	free(b);
+	_pool_add((user_mem_block_t*)(ADDR(p)-sizeof(user_mem_block_t)));
 }
 
 
@@ -170,16 +227,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_fail(void* p,sll_size_t s
 		return NULL;
 	}
 	user_mem_block_t* b=(user_mem_block_t*)(ADDR(p)-sizeof(user_mem_block_t));
-	SLL_ASSERT(b->dt&USED_BLOCK_FLAG_USED);
-	sz=(sz+sizeof(user_mem_block_t)+15)&0xfffffffffffffff0ull;
-	if (USED_BLOCK_GET_SIZE(b)==sz){
+	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
+	sz=(sz+sizeof(user_mem_block_t)+15)>>4;
+	sll_size_t prev_sz=USER_MEM_BLOCK_GET_SIZE(b);
+	if (prev_sz==sz){
 		return p;
 	}
-	b=realloc(b,sz);
-	if (!b){
-		return NULL;
+	void* n_ptr=_pool_get(sz-1);
+	if (n_ptr){
+		sll_copy_data(p,((prev_sz<sz?prev_sz:sz)<<4)-sizeof(user_mem_block_t),PTR(ADDR(n_ptr)+sizeof(user_mem_block_t)));
+		_pool_add(b);
+		b=n_ptr;
 	}
-	b->dt=USED_BLOCK_FLAG_USED|sz;
+	else{
+		b=realloc(b,sz<<4);
+		if (!b){
+			return NULL;
+		}
+	}
+	b->dt=USER_MEM_BLOCK_INIT(sz);
 	return PTR(ADDR(b)+sizeof(user_mem_block_t));
 }
 
