@@ -72,8 +72,8 @@ void _deinit_platform(void){
 		sll_deallocate(PTR(kv));
 	}
 	*((sll_environment_length_t*)(&(_linux_env.l)))=0;
-	_linux_env.dt=NULL;
 	sll_deallocate(PTR(_linux_env.dt));
+	_linux_env.dt=NULL;
 	_linux_platform_time_zone=*sll_utc_time_zone;
 	_reset_critical();
 }

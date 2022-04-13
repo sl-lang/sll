@@ -7,6 +7,7 @@
 
 #define MEMORY_POOL_SIZE 256
 #define MEMORY_POOL_MAX_BLOCKS 4096
+#define MEMORY_POOL_UPDATE_TIMER 256
 
 
 
@@ -23,9 +24,12 @@ typedef struct __EMPTY_POOL_POINTER{
 
 
 typedef struct __POOL_DATA{
-	sll_size_t alloc;
-	sll_size_t dealloc;
-	sll_size_t sz;
+	__SLL_U32 alloc;
+	__SLL_U32 dealloc;
+	__SLL_U32 miss;
+	__SLL_U32 last_miss;
+	__SLL_U32 sz;
+	__SLL_U32 upd_cnt;
 	empty_pool_pointer_t* ptr;
 } pool_data_t;
 

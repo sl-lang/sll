@@ -70,8 +70,6 @@ static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t 
 
 
 __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const sll_char_t* c){
-	sll_file_flush(sll_stdout);
-	sll_file_flush(sll_stderr);
 	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
 	sll_platform_file_write(fd,a,sll_string_length_unaligned(a),NULL);
 	sll_platform_file_write(fd,b,sll_string_length_unaligned(b),NULL);

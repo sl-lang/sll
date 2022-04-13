@@ -129,6 +129,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 	if (f->f&FILE_FLAG_NO_RELEASE){
 		return;
 	}
+	SLL_CRITICAL(sll_platform_lock_delete(f->_lck));
 	if (!(f->f&FILE_FLAG_MEMORY)){
 		sll_free_string((sll_string_t*)(&(f->dt.fl.nm)));
 		if (f->dt.fl.fd!=SLL_UNKNOWN_FILE_DESCRIPTOR){

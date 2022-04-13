@@ -918,6 +918,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 		v&=0x8080808080808080ull;
 		if (v){
 			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
+			sll_deallocate(ml);
 			return (o>=s->l?SLL_MAX_STRING_LENGTH:o);
 		}
 		p++;
@@ -1005,6 +1006,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 				}
 			}
 			sll_string_length_t o=((l-i-1)<<3)+(FIND_LAST_SET_BIT(v)>>3);
+			sll_deallocate(ml);
 			return (o>=s->l?SLL_MAX_STRING_LENGTH:o);
 		}
 	}
