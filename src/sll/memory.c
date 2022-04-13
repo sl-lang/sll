@@ -79,7 +79,7 @@ static __SLL_NO_RETURN void _raise_error(sll_char_t t,void* p,sll_size_t sz){
 
 
 
-static void _fill_zero(void* o,sll_size_t sz){
+static __SLL_FORCE_INLINE void _fill_zero(void* o,sll_size_t sz){
 	wide_data_t* p=o;
 	ASSUME_ALIGNED(p,4,8);
 	sz=(sz+7)>>3;
@@ -92,7 +92,7 @@ static void _fill_zero(void* o,sll_size_t sz){
 
 
 
-static void _pool_add(user_mem_block_t* b){
+static __SLL_FORCE_INLINE void _pool_add(user_mem_block_t* b){
 	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
 	sll_size_t sz=USER_MEM_BLOCK_GET_SIZE(b)-1;
 	if (sz<MEMORY_POOL_SIZE){
@@ -110,16 +110,17 @@ static void _pool_add(user_mem_block_t* b){
 
 
 
-static void* _pool_get(sll_size_t sz){
+static __SLL_FORCE_INLINE void* _pool_get(sll_size_t sz){
 	if (sz>=MEMORY_POOL_SIZE){
 		return NULL;
 	}
 	_memory_small_pool[sz].alloc++;
-	empty_pool_pointer_t* ptr=_memory_small_pool[sz].ptr;
-	if (!ptr){
+	if (!_memory_small_pool[sz].sz){
 		return NULL;
 	}
+	empty_pool_pointer_t* ptr=_memory_small_pool[sz].ptr;
 	_memory_small_pool[sz].ptr=ptr->next;
+	_memory_small_pool[sz].sz--;
 	return ptr;
 }
 
