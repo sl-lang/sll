@@ -66,6 +66,20 @@
 
 
 
+static sll_object_t* _array_from_length(sll_integer_t len){
+	if (len<=0){
+		return sll_array_to_object(NULL);
+	}
+	sll_object_t* o=sll_array_length_to_object((sll_array_length_t)len);
+	sll_static_int[0]->rc+=o->dt.a.l;
+	for (sll_array_length_t i=0;i<o->dt.a.l;i++){
+		o->dt.a.v[i]=sll_static_int[0];
+	}
+	return o;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* a,sll_object_t* b){
 	if (b->t!=SLL_OBJECT_TYPE_INT||b->dt.i<0||b->dt.i==a->t||b->dt.i==SLL_OBJECT_TYPE_OBJECT){
 		SLL_ACQUIRE(a);
@@ -132,7 +146,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				return o;
 			}
 		case COMBINED_TYPE_IA:
-			return sll_array_length_to_object((a->dt.i<1?0:(sll_array_length_t)(a->dt.i)));
+			return _array_from_length(a->dt.i);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
@@ -166,10 +180,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_CHAR((sll_char_t)(a->dt.f));
 		case COMBINED_TYPE_FA:
-			{
-				sll_integer_t n=sll_api_math_round(a->dt.f);
-				return sll_array_length_to_object((n<1?0:(sll_array_length_t)n));
-			}
+			return _array_from_length(sll_api_math_round(a->dt.f));
 		case COMBINED_TYPE_CI:
 			return sll_int_to_object(a->dt.c);
 		case COMBINED_TYPE_CF:

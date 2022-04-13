@@ -17,16 +17,18 @@
 - Implemented `SLL_NODE_TYPE_COMPLEX` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX` ([#262])
 - Implemented `SLL_OBJECT_TYPE_COMPLEX`, `SLL_INIT_COMPLEX`, `SLL_INIT_COMPLEX_STRUCT`, `sll_static_complex_zero`, `sll_complex_to_object` and `complex_type` ([#262])
 - Implemented `sll_var_arg_get_complex`
+- Implemented `statistics$quantiles` ([#260])
 - Integer and floats can now be prefixed with the `+` sign for consistency
 - Object creation code to generate complex numbers: `d`
 - Object creation modifier to dereference array elements: `*`
 
 ### Changed
 
+- Fixed lock of memory initialization in array creation
 - More platform-dependent function return error codes
 - Renamed `SLL_ERROR_FLAG_LIBC` and `error_codes$LIBC_ERROR_CODES` to `SLL_ERROR_FLAG_SYSTEM` and `error_codes$SYSTEM_ERROR_CODES`
 - Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
-- Rewritten the CLI executable loader codes
+- Rewritten the CLI executable loader code
 - Split the operators from [`src/sll/operator.c`][0.7.12/src/sll/operator.c] to [`src/sll/operator`][0.7.13/src/sll/operator]
 - *\[Windows Only\]* Windows error codes are now remapped to POSIX `errno` values
 

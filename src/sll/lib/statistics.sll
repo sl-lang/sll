@@ -1,4 +1,4 @@
-(--- "types.sll" "sort.sll" "math.sll" "string.sll" "error.sll")
+(--- "types.sll" "sort.sll" "math.sll" "string.sll" "error.sll" "array.sll")
 
 
 
@@ -25,6 +25,7 @@
 	(~ func_type) median_high
 	(~ func_type) median_low
 	(~ func_type) mode
+	(~ func_type) quantiles
 ))
 
 
@@ -33,7 +34,7 @@
 	(= data (:: data array_type))
 	(= len ($ data))
 	(? (! len) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA 0 1)))
-	(<- sort$sort data false true)
+	(= data (<- sort$sort data false false))
 	(= odd (& len 1))
 	(= len (>> len 1))
 	(@@ [
@@ -188,6 +189,35 @@
 	(@@ max_v)
 ))
 
+(= quantiles (,,, data count
+	(= data (:: data array_type))
+	(= count (?: count (:: count int_type) 4))
+	(= len ($ data))
+	(? (! len) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA 0 1)))
+	(= data (<- sort$sort data false false))
+	(= out [])
+	(-> (= i 1) (< i count)
+		(= j (// (* i (+ len 1)) count))
+		(?
+			(< j 1) (= j 1)
+			(> j (- len 1)) (= j (- len 1))
+		)
+		(= k (-
+			(* i (+ len 1))
+			(* j count)
+		))
+		(<- array$push out (/
+			(+
+				(* (: data (- j 1)) (- count k))
+				(* (: data j) k)
+			)
+			count
+		))
+		(++ i)
+	)
+	(@@ out)
+))
+
 
 
 (= statistics (. statistics_module_type
@@ -201,5 +231,6 @@
 	median_high
 	median_low
 	mode
+	quantiles
 ))
 (## statistics)
