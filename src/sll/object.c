@@ -54,8 +54,11 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 				p->c=0;
 				break;
 			case SLL_OBJECT_TYPE_COMPLEX:
-				SLL_INIT_COMPLEX(&(p->d));
-				break;
+				{
+					sll_complex_t zero={0,0};
+					p->o=sll_complex_to_object(zero);
+					break;
+				}
 			case SLL_OBJECT_TYPE_STRING:
 				p->o=sll_string_to_object(NULL);
 				break;
@@ -108,8 +111,6 @@ static void _set_field(const sll_object_type_table_t* tt,sll_object_field_t* o,s
 			o->c=v->dt.c;
 			break;
 		case SLL_OBJECT_TYPE_COMPLEX:
-			o->d=v->dt.d;
-			break;
 		case SLL_OBJECT_TYPE_STRING:
 		case SLL_OBJECT_TYPE_ARRAY:
 		case SLL_OBJECT_TYPE_MAP:
@@ -349,7 +350,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 				dst->f=src->f;
 				break;
 			case SLL_OBJECT_TYPE_COMPLEX:
-				dst->d=src->d;
+				SLL_ACQUIRE(src->o);
+				dst->o=src->o;
 				break;
 			default:
 				dst->o=sll_operator_copy(src->o,d);
@@ -380,8 +382,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 			return sll_float_to_object(v->f);
 		case SLL_OBJECT_TYPE_CHAR:
 			return SLL_FROM_CHAR(v->c);
-		case SLL_OBJECT_TYPE_COMPLEX:
-			return sll_complex_to_object(v->d);
 	}
 	SLL_ACQUIRE(v->o);
 	return v->o;
@@ -423,9 +423,6 @@ __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* tt,sll_ob
 				break;
 			case SLL_OBJECT_TYPE_CHAR:
 				out->v[i]=SLL_FROM_CHAR(v->c);
-				break;
-			case SLL_OBJECT_TYPE_COMPLEX:
-				out->v[i]=sll_complex_to_object(v->d);
 				break;
 			default:
 				SLL_ACQUIRE(v->o);

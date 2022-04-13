@@ -265,9 +265,6 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 						case SLL_OBJECT_TYPE_CHAR:
 							tmp=SLL_FROM_CHAR(p->c);
 							break;
-						case SLL_OBJECT_TYPE_COMPLEX:
-							tmp=sll_complex_to_object(p->d);
-							break;
 						default:
 							tmp=p->o;
 							SLL_ACQUIRE(tmp);

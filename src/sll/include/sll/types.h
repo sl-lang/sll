@@ -740,7 +740,6 @@ typedef union __SLL_OBJECT_FIELD{
 	sll_integer_t i;
 	sll_float_t f;
 	sll_char_t c;
-	sll_complex_t d;
 	struct __SLL_OBJECT* o;
 } sll_object_field_t;
 
