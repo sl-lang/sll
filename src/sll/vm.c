@@ -133,7 +133,7 @@
 			if (tid_dt->ret){ \
 				goto _cleanup; \
 			} \
-			_scheduler_set_thread(_scheduler_queue_pop(1)); \
+			_scheduler_set_thread(_scheduler_queue_pop()); \
 		} \
 		thr=_scheduler_current_thread; \
 		if (thr->c_st.l){ \
@@ -1037,7 +1037,7 @@ _return:;
 					NEXT_INSTRUCTION;
 					c_thr->_last_ai=ai;
 _load_new_thread:;
-					sll_thread_index_t n_tid=_scheduler_queue_pop(1);
+					sll_thread_index_t n_tid=_scheduler_queue_pop();
 					if (n_tid==SLL_UNKNOWN_THREAD_INDEX){
 						if (tid_dt->ret){
 							goto _cleanup;

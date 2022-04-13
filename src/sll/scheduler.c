@@ -46,7 +46,7 @@ static void _cpu_core_worker(void* dt){
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread=NULL;
 	while (_thread_active_count){
-		sll_thread_index_t n_tid=_scheduler_queue_pop(1);
+		sll_thread_index_t n_tid=_scheduler_queue_pop();
 		if (n_tid!=SLL_UNKNOWN_THREAD_INDEX){
 			GC_RELEASE(sll_wait_thread(n_tid));
 		}
@@ -59,9 +59,8 @@ static void _cpu_core_worker(void* dt){
 
 void _scheduler_queue_next(void){
 	_scheduler_current_thread->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
-	SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_data->lck));
 	if (!_scheduler_data->queue_len){
-		goto _end;
+		return;
 	}
 	_scheduler_current_thread->st=THREAD_STATE_QUEUED;
 	sll_thread_index_t tmp=*(_scheduler_data->queue+_scheduler_data->queue_idx);
@@ -73,35 +72,27 @@ void _scheduler_queue_next(void){
 	_scheduler_current_thread_index=tmp;
 	_scheduler_current_thread=*(_thread_data+tmp);
 	if (_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED){
-		SLL_CRITICAL(sll_platform_lock_release(_scheduler_data->lck));
-		_scheduler_current_thread_index=_scheduler_queue_pop(0);
-		SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_data->lck));
+		_scheduler_current_thread_index=_scheduler_queue_pop();
 		_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
 	}
 	_scheduler_current_thread->st=THREAD_STATE_RUNNING;
-_end:
-	SLL_CRITICAL(sll_platform_lock_release(_scheduler_data->lck));
 }
 
 
 
-sll_thread_index_t _scheduler_queue_pop(sll_bool_t lck){
-	SLL_CRITICAL_COND(lck,sll_platform_lock_acquire(_scheduler_data->lck));
-	sll_thread_index_t o=SLL_UNKNOWN_THREAD_INDEX;
+sll_thread_index_t _scheduler_queue_pop(void){
 	if (!_scheduler_data->queue_len){
 		if (!_thread_active_count){
-			goto _end;
+			return SLL_UNKNOWN_THREAD_INDEX;
 		}
 		_scheduler_data->wait=1;
-		SLL_CRITICAL(sll_platform_lock_release(_scheduler_data->lck));
 		SLL_CRITICAL(sll_platform_event_wait(_scheduler_data->evt));
-		SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_data->lck));
 		_scheduler_data->wait=0;
 		if (!_scheduler_data->queue_len){
-			goto _end;
+			return SLL_UNKNOWN_THREAD_INDEX;
 		}
 	}
-	o=*(_scheduler_data->queue+_scheduler_data->queue_idx);
+	sll_thread_index_t o=*(_scheduler_data->queue+_scheduler_data->queue_idx);
 	if ((*(_thread_data+o))->flags&THREAD_FLAG_SUSPENDED){
 		SLL_UNIMPLEMENTED();
 	}
@@ -119,8 +110,6 @@ sll_thread_index_t _scheduler_queue_pop(sll_bool_t lck){
 		_scheduler_data->queue_idx--;
 	}
 	(*(_thread_data+o))->st=THREAD_STATE_UNDEFINED;
-_end:
-	SLL_CRITICAL_COND(lck,sll_platform_lock_release(_scheduler_data->lck));
 	return o;
 }
 
@@ -211,18 +200,15 @@ sll_return_code_t _scheduler_run(void){
 
 
 void _scheduler_set_thread(sll_thread_index_t t){
-	SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_data->lck));
 	if (_scheduler_current_thread_index==t){
-		goto _end;
+		return;
 	}
 	if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
-		SLL_CRITICAL(sll_platform_lock_release(_scheduler_data->lck));
 		_scheduler_queue_thread(_scheduler_current_thread_index);
-		SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_data->lck));
 	}
 	if ((*(_thread_data+t))->st==THREAD_STATE_TERMINATED){
 		_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
-		goto _end;
+		return;
 	}
 	_scheduler_current_thread_index=t;
 	_scheduler_current_thread=*(_thread_data+t);
@@ -230,8 +216,6 @@ void _scheduler_set_thread(sll_thread_index_t t){
 		SLL_UNIMPLEMENTED();
 	}
 	_scheduler_current_thread->st=THREAD_STATE_RUNNING;
-_end:
-	SLL_CRITICAL(sll_platform_lock_release(_scheduler_data->lck));
 }
 
 

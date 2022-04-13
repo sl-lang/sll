@@ -43,7 +43,7 @@ void _scheduler_queue_next(void);
 
 
 
-sll_thread_index_t _scheduler_queue_pop(sll_bool_t lck);
+sll_thread_index_t _scheduler_queue_pop(void);
 
 
 
