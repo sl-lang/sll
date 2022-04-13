@@ -97,11 +97,11 @@ static __SLL_FORCE_INLINE void _pool_add(user_mem_block_t* b){
 	sll_size_t sz=USER_MEM_BLOCK_GET_SIZE(b)-1;
 	if (sz<MEMORY_POOL_SIZE){
 		_memory_small_pool[sz].dealloc++;
-		if (_memory_small_pool[sz].sz<MEMORY_POOL_MAX_BLOCKS){
+		if (_memory_small_pool[sz].sz){
 			empty_pool_pointer_t* ptr=(empty_pool_pointer_t*)b;
 			ptr->next=_memory_small_pool[sz].ptr;
 			_memory_small_pool[sz].ptr=ptr;
-			_memory_small_pool[sz].sz++;
+			_memory_small_pool[sz].sz--;
 			return;
 		}
 	}
@@ -115,12 +115,12 @@ static __SLL_FORCE_INLINE void* _pool_get(sll_size_t sz){
 		return NULL;
 	}
 	_memory_small_pool[sz].alloc++;
-	if (!_memory_small_pool[sz].sz){
+	empty_pool_pointer_t* ptr=_memory_small_pool[sz].ptr;
+	if (!ptr){
 		return NULL;
 	}
-	empty_pool_pointer_t* ptr=_memory_small_pool[sz].ptr;
+	_memory_small_pool[sz].sz++;
 	_memory_small_pool[sz].ptr=ptr->next;
-	_memory_small_pool[sz].sz--;
 	return ptr;
 }
 
