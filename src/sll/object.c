@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/object.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/array.h>
@@ -155,10 +156,18 @@ static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_o
 
 
 static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_string_t* f){
-	for (sll_arg_count_t i=0;i<dt->l;i++){
-		if (STRING_EQUAL(f,&(dt->dt[i].nm))){
-			return i;
+	sll_arg_count_t l=dt->l;
+	sll_arg_count_t i=f->c%l;
+	while (l){
+		sll_arg_count_t j=OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(dt->dt+i);
+		if (STRING_EQUAL(f,&(dt->dt[j].nm))){
+			return j;
 		}
+		l--;
+		if (!i){
+			i=dt->l;
+		}
+		i--;
 	}
 	return SLL_MAX_ARG_COUNT;
 }
@@ -182,9 +191,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
 		sll_integer_t vv=v->dt.i;
 		GC_RELEASE(v);
-		n->dt[i].c=0;
+		n->dt[i]._off=OBJECT_TYPE_DATA_ENTRY_INIT;
 		if (vv<0){
-			n->dt[i].c=1;
+			n->dt[i]._off|=OBJECT_TYPE_DATA_ENTRY_FLAG_CONST;
 			vv=~vv;
 		}
 		SLL_ASSERT(vv>=0);
@@ -197,7 +206,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		if (str.l>4&&str.v[0]=='@'&&str.v[1]=='@'&&str.v[str.l-2]=='@'&&str.v[str.l-1]=='@'){
 			for (sll_object_function_index_t j=0;j<=SLL_MAX_OBJECT_FUNC;j++){
 				if (STRING_EQUAL(&str,_object_fn_list[j])){
-					n->fn[j]=(n->dt[i].c?~vv:vv);
+					n->fn[j]=(SLL_OBJECT_TYPE_DATA_ENTRY_IS_CONST(n->dt+i)?~vv:vv);
 					l--;
 					goto _skip_next;
 				}
@@ -208,7 +217,36 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 _skip_next:;
 	}
 	n->l=l;
-	*(tt->dt+tt->l-1)=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
+	n=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
+	if (l){
+		sll_bool_t extra=0;
+		for (i=0;i<l;i++){
+			sll_arg_count_t j=n->dt[i].nm.c%l;
+			if (OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)==OBJECT_TYPE_DATA_ENTRY_OFFSET_EMPTY){
+				OBJECT_TYPE_DATA_ENTRY_SET_OFFSET(n->dt+j,i);
+			}
+			else{
+				extra=1;
+			}
+		}
+		if (extra){
+			for (i=0;i<l;i++){
+				sll_arg_count_t j=n->dt[i].nm.c%l;
+				if (OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)==i){
+					continue;
+				}
+				SLL_ASSERT(OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)!=OBJECT_TYPE_DATA_ENTRY_OFFSET_EMPTY);
+				do{
+					if (!j){
+						j=l;
+					}
+					j--;
+				} while (OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)!=OBJECT_TYPE_DATA_ENTRY_OFFSET_EMPTY);
+				OBJECT_TYPE_DATA_ENTRY_SET_OFFSET(n->dt+j,i);
+			}
+		}
+	}
+	*(tt->dt+tt->l-1)=n;
 	return tt->l+SLL_MAX_OBJECT_TYPE;
 }
 
@@ -396,10 +434,10 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 		return;
 	}
 	sll_object_type_t t=dt->dt[off].t;
-	if (dt->dt[off].c){
+	if (SLL_OBJECT_TYPE_DATA_ENTRY_IS_CONST(dt->dt+off)){
 		return;
 	}
-	if (t>SLL_OBJECT_TYPE_COMPLEX){
+	if (t>SLL_OBJECT_TYPE_CHAR){
 		GC_RELEASE((o->dt.p+off)->o);
 	}
 	_set_field(tt,o->dt.p+off,t,v);

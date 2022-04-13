@@ -794,8 +794,8 @@ typedef struct __SLL_INTERNAL_FUNCTION_TABLE{
 
 
 typedef struct __SLL_OBJECT_TYPE_DATA_ENTRY{
+	sll_arg_count_t _off;
 	sll_object_type_t t;
-	sll_bool_t c;
 	sll_string_t nm;
 } sll_object_type_data_entry_t;
 

@@ -96,7 +96,7 @@ void _gc_release_object(sll_object_t* o){
 			}
 			sll_object_field_t* p=o->dt.p;
 			for (sll_arg_count_t i=0;i<dt->l;i++){
-				if (dt->dt[i].t>SLL_OBJECT_TYPE_COMPLEX){
+				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
 					GC_RELEASE(p->o);
 				}
 				p++;

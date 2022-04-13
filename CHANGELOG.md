@@ -16,8 +16,10 @@
 - Implemented `SLL_ERROR_FLAG_SLL`, `SLL_UNMAPPED_WINDOWS_ERROR`, `SLL_ERROR_EOF`, `SLL_ERROR_GET_EXTRA` and `sll_platform_get_error`
 - Implemented `SLL_NODE_TYPE_COMPLEX` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX` ([#262])
 - Implemented `SLL_OBJECT_TYPE_COMPLEX`, `SLL_INIT_COMPLEX`, `SLL_INIT_COMPLEX_STRUCT`, `sll_static_complex_zero`, `sll_complex_to_object` and `complex_type` ([#262])
+- Implemented `SLL_OBJECT_TYPE_DATA_ENTRY_IS_CONST` ([#268])
 - Implemented `sll_var_arg_get_complex`
 - Implemented `statistics$quantiles` ([#260])
+- Improved the performance of `sll_object_get_field` and `sll_object_set_field` ([#268])
 - Integer and floats can now be prefixed with the `+` sign for consistency
 - Memory allocations are now served from a pool from small allocations ([#267])
 - Object creation code to generate complex numbers: `d`
@@ -2004,6 +2006,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [0.1.4]: https://github.com/sl-lang/sll/compare/lll-v0.1.3...lll-v0.1.4
 [0.1.3]: https://github.com/sl-lang/sll/compare/lll-v0.1.2...lll-v0.1.3
 [0.1.2]: https://github.com/sl-lang/sll/tree/v0.1.2
+[#268]: https://github.com/sl-lang/sll/issues/268
 [#267]: https://github.com/sl-lang/sll/issues/267
 [#262]: https://github.com/sl-lang/sll/issues/262
 [#260]: https://github.com/sl-lang/sll/issues/260

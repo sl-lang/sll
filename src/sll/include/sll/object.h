@@ -179,6 +179,18 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_OBJECT_TYPE_DATA_ENTRY_IS_CONST
+ * \group object
+ * \desc Docs!
+ * \arg sll_object_type_data_entry_t* e
+ * \ret sll_bool_t
+ */
+#define SLL_OBJECT_TYPE_DATA_ENTRY_IS_CONST(e) ((e)->_off&1)
+
+
+
+/**
  * \flags check_output func
  * \name sll_add_type
  * \group object
