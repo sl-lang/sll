@@ -1657,7 +1657,7 @@ __SLL_EXTERNAL void sll_string_resize(const sll_string_t* s,sll_integer_t v,sll_
 			SLL_INIT_STRING(o);
 		}
 		else{
-			sll_string_from_pointer_length(s->v+v,s->l-v,o);
+			sll_string_from_pointer_length(s->v+v,(sll_string_length_t)(s->l-v),o);
 		}
 		return;
 	}
