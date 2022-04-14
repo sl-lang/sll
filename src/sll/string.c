@@ -793,10 +793,9 @@ __SLL_EXTERNAL void sll_string_from_int(sll_integer_t v,sll_string_t* o){
 __SLL_EXTERNAL void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o){
 	if (!s){
 		SLL_INIT_STRING(o);
+		return;
 	}
-	else{
-		sll_string_from_pointer_length(s,sll_string_length(s),o);
-	}
+	sll_string_from_pointer_length(s,sll_string_length(s),o);
 }
 
 
@@ -812,6 +811,19 @@ __SLL_EXTERNAL void sll_string_from_pointer_length(const sll_char_t* s,sll_strin
 	wide_data_t* b=(wide_data_t*)(o->v);
 	STRING_DATA_PTR(b);
 	wide_data_t c=0;
+#ifndef __SLL_BUILD_DARWIN
+	__m256i c256=_mm256_setzero_si256();
+	while (l>31){
+		__m256i k=_mm256_lddqu_si256((const __m256i*)a);
+		c256=_mm256_xor_si256(c256,k);
+		_mm256_storeu_si256((__m256i*)b,k);
+		l-=32;
+		a+=4;
+		b+=4;
+	}
+	c256=_mm256_xor_si256(c256,_mm256_permute2f128_si256(c256,c256,1));
+	c=_mm256_extract_epi64(_mm256_xor_si256(c256,_mm256_shuffle_epi32(c256,0x4e)),0);
+#endif
 	while (l>7){
 		*b=*a;
 		c^=*b;
