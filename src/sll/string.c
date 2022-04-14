@@ -196,9 +196,22 @@ __SLL_EXTERNAL void sll_string_and_char(const sll_string_t* s,sll_char_t v,sll_s
 __SLL_EXTERNAL void sll_string_calculate_checksum(sll_string_t* s){
 	const wide_data_t* p=(const wide_data_t*)(s->v);
 	STRING_DATA_PTR(p);
+	sll_string_length_t l=((s->l+7)>>3);
 	wide_data_t c=0;
-	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
-		c^=*(p+i);
+	if (l>3){
+		__m256i c256=_mm256_setzero_si256();
+		do{
+			c256=_mm256_xor_si256(c256,_mm256_lddqu_si256((const __m256i*)p));
+			l-=4;
+			p+=4;
+		} while (l>3);
+		c256=_mm256_xor_si256(c256,_mm256_permute2f128_si256(c256,c256,1));
+		c=_mm256_extract_epi64(_mm256_xor_si256(c256,_mm256_shuffle_epi32(c256,0x4e)),0);
+	}
+	while (l){
+		c^=*p;
+		l--;
+		p++;
 	}
 	s->c=(sll_string_length_t)(c^(c>>32));
 }
@@ -217,9 +230,6 @@ __SLL_EXTERNAL void sll_string_clone(const sll_string_t* s,sll_string_t* d){
 	wide_data_t* b=(wide_data_t*)(d->v);
 	STRING_DATA_PTR(a);
 	STRING_DATA_PTR(b);
-	// for (sll_string_length_t i=0;i<=(s->l>>3);i++){
-	// 	*(b+i)=*(a+i);
-	// }
 	sll_string_length_t l=(s->l>>3)+1;
 	while (l>3){
 		_mm256_storeu_si256((__m256i*)b,_mm256_lddqu_si256((const __m256i*)a));
