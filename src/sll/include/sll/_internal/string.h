@@ -2,6 +2,7 @@
 #define __SLL__INTERNAL_STRING_H__ 1
 #include <sll/_internal/attribute.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/intrinsics.h>
 #include <sll/allocator.h>
 #include <sll/memory.h>
 #include <sll/string.h>
@@ -26,10 +27,24 @@ static __SLL_FORCE_INLINE sll_bool_t STRING_EQUAL(const sll_string_t* a,const sl
 	const wide_data_t* bp=(const wide_data_t*)(b->v);
 	STRING_DATA_PTR(ap);
 	STRING_DATA_PTR(bp);
-	for (sll_string_length_t i=0;i<((a->l+7)>>3);i++){
-		if (*(ap+i)!=*(bp+i)){
+	sll_string_length_t l=(a->l+7)>>3;
+#ifndef __SLL_BUILD_DARWIN
+	while (l>3){
+		if (_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_lddqu_si256((const __m256i*)ap),_mm256_lddqu_si256((const __m256i*)bp)))!=0xffffffff){
 			return 0;
 		}
+		l-=4;
+		ap+=4;
+		bp+=4;
+	}
+#endif
+	while (l){
+		if (*ap!=*bp){
+			return 0;
+		}
+		l--;
+		ap++;
+		bp++;
 	}
 	return 1;
 }
