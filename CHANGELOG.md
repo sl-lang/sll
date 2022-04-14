@@ -16,7 +16,6 @@
 - Implemented `SLL_ERROR_FLAG_SLL`, `SLL_UNMAPPED_WINDOWS_ERROR`, `SLL_ERROR_EOF`, `SLL_ERROR_GET_EXTRA` and `sll_platform_get_error`
 - Implemented `SLL_NODE_TYPE_COMPLEX` and `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX` ([#262])
 - Implemented `SLL_OBJECT_TYPE_COMPLEX`, `SLL_INIT_COMPLEX`, `SLL_INIT_COMPLEX_STRUCT`, `sll_static_complex_zero`, `sll_complex_to_object` and `complex_type` ([#262])
-- Implemented `SLL_OBJECT_TYPE_DATA_ENTRY_IS_CONST` ([#268])
 - Implemented `sll_var_arg_get_complex`
 - Implemented `statistics$quantiles` ([#260])
 - Improved the performance of `sll_object_get_field` and `sll_object_set_field` ([#268])

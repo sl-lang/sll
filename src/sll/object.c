@@ -1,6 +1,5 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
-#include <sll/_internal/object.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/array.h>
@@ -16,6 +15,10 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>
+
+
+
+#define GET_HASH_TABLE_OFFSET(dt,str) (ROTATE_BITS_RIGHT64((str)->c*((dt)->_rng>>6),(dt)->_rng&63)&(dt)->_hash_table_len)
 
 
 
@@ -157,18 +160,26 @@ static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_o
 
 
 static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_string_t* f){
-	sll_arg_count_t l=dt->l;
-	sll_arg_count_t i=(f->c*dt->_rng)%l;
+	if (!dt->l){
+		return SLL_MAX_ARG_COUNT;
+	}
+	if (dt->l==1){
+		return (STRING_EQUAL(f,&(dt->dt->nm))?0:SLL_MAX_ARG_COUNT);
+	}
+	sll_arg_count_t i=GET_HASH_TABLE_OFFSET(dt,f);
+	sll_arg_count_t l=dt->_hash_table_len+1;
 	while (l){
-		sll_arg_count_t j=OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(dt->dt+i);
-		if (STRING_EQUAL(f,&(dt->dt[j].nm))){
+		sll_arg_count_t j=dt->_hash_table[i];
+		if (j!=SLL_MAX_ARG_COUNT&&STRING_EQUAL(f,&(dt->dt[j].nm))){
 			return j;
 		}
 		l--;
 		if (!i){
-			i=dt->l;
+			i=dt->_hash_table_len;
 		}
-		i--;
+		else{
+			i--;
+		}
 	}
 	return SLL_MAX_ARG_COUNT;
 }
@@ -176,9 +187,6 @@ static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_st
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* tt,sll_object_t*const* p,sll_arg_count_t l,const sll_string_t* nm){
-	tt->l++;
-	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_OBJECT);
-	tt->dt=sll_reallocate(PTR(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
 	if (nm){
 		sll_string_clone(nm,(sll_string_t*)(&(n->nm)));
@@ -192,13 +200,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
 		sll_integer_t vv=v->dt.i;
 		GC_RELEASE(v);
-		n->dt[i]._off=OBJECT_TYPE_DATA_ENTRY_INIT;
+		n->dt[i].c=0;
 		if (vv<0){
-			n->dt[i]._off|=OBJECT_TYPE_DATA_ENTRY_FLAG_CONST;
+			n->dt[i].c=1;
 			vv=~vv;
 		}
 		SLL_ASSERT(vv>=0);
-		n->dt[i].t=(vv!=SLL_OBJECT_TYPE_OBJECT&&vv>tt->l+SLL_MAX_OBJECT_TYPE-1?SLL_OBJECT_TYPE_INT:(sll_object_type_t)vv);
+		n->dt[i].t=(vv!=SLL_OBJECT_TYPE_OBJECT&&vv>tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)vv);
 		p++;
 		v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		p++;
@@ -207,7 +215,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		if (str.l>4&&str.v[0]=='@'&&str.v[1]=='@'&&str.v[str.l-2]=='@'&&str.v[str.l-1]=='@'){
 			for (sll_object_function_index_t j=0;j<=SLL_MAX_OBJECT_FUNC;j++){
 				if (STRING_EQUAL(&str,_object_fn_list[j])){
-					n->fn[j]=(SLL_OBJECT_TYPE_DATA_ENTRY_IS_CONST(n->dt+i)?~vv:vv);
+					n->fn[j]=(n->dt[i].c?~vv:vv);
 					l--;
 					goto _skip_next;
 				}
@@ -218,15 +226,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 _skip_next:;
 	}
 	n->l=l;
-	n=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
-	if (l){
-		sll_platform_random(&(n->_rng),sizeof(__SLL_U32));
-		n->_rng%=l;
+	n->_hash_table_len=(l<2?0:1<<(FIND_LAST_SET_BIT(l)+(!!(l&(l-1)))));
+	n=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t)+n->_hash_table_len*sizeof(sll_arg_count_t));
+	if (n->_hash_table_len){
+		n->_hash_table=PTR(ADDR(n)+sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
+		sll_set_memory(n->_hash_table,n->_hash_table_len*sizeof(sll_arg_count_t),0xff);
+		n->_hash_table_len--;
+		sll_platform_random(&(n->_rng),sizeof(__SLL_U64));
+		if (!(n->_rng>>6)){
+			n->_rng|=64;
+		}
 		sll_bool_t extra=0;
 		for (i=0;i<l;i++){
-			sll_arg_count_t j=(n->dt[i].nm.c*n->_rng)%l;
-			if (OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)==OBJECT_TYPE_DATA_ENTRY_OFFSET_EMPTY){
-				OBJECT_TYPE_DATA_ENTRY_SET_OFFSET(n->dt+j,i);
+			sll_arg_count_t j=GET_HASH_TABLE_OFFSET(n,&(n->dt[i].nm));
+			if (n->_hash_table[j]==SLL_MAX_ARG_COUNT){
+				n->_hash_table[j]=i;
 			}
 			else{
 				extra=1;
@@ -234,21 +248,21 @@ _skip_next:;
 		}
 		if (extra){
 			for (i=0;i<l;i++){
-				sll_arg_count_t j=(n->dt[i].nm.c*n->_rng)%l;
-				if (OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)==i){
+				sll_arg_count_t j=GET_HASH_TABLE_OFFSET(n,&(n->dt[i].nm));
+				if (n->_hash_table[j]==i){
 					continue;
 				}
-				SLL_ASSERT(OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)!=OBJECT_TYPE_DATA_ENTRY_OFFSET_EMPTY);
+				SLL_ASSERT(n->_hash_table[j]!=SLL_MAX_ARG_COUNT);
 				do{
-					if (!j){
-						j=l;
-					}
-					j--;
-				} while (OBJECT_TYPE_DATA_ENTRY_GET_OFFSET(n->dt+j)!=OBJECT_TYPE_DATA_ENTRY_OFFSET_EMPTY);
-				OBJECT_TYPE_DATA_ENTRY_SET_OFFSET(n->dt+j,i);
+					j=(j?j-1:n->_hash_table_len);
+				} while (n->_hash_table[j]!=SLL_MAX_ARG_COUNT);
+				n->_hash_table[j]=i;
 			}
 		}
 	}
+	tt->l++;
+	SLL_ASSERT(tt->l+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_OBJECT);
+	tt->dt=sll_reallocate(PTR(tt->dt),tt->l*sizeof(const sll_object_type_data_t*));
 	*(tt->dt+tt->l-1)=n;
 	return tt->l+SLL_MAX_OBJECT_TYPE;
 }
@@ -436,14 +450,13 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 	if (off==SLL_MAX_ARG_COUNT){
 		return;
 	}
-	sll_object_type_t t=dt->dt[off].t;
-	if (SLL_OBJECT_TYPE_DATA_ENTRY_IS_CONST(dt->dt+off)){
+	if (dt->dt[off].c){
 		return;
 	}
-	if (t>SLL_OBJECT_TYPE_CHAR){
+	if (dt->dt[off].t>SLL_OBJECT_TYPE_CHAR){
 		GC_RELEASE((o->dt.p+off)->o);
 	}
-	_set_field(tt,o->dt.p+off,t,v);
+	_set_field(tt,o->dt.p+off,dt->dt[off].t,v);
 }
 
 
