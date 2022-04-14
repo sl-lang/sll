@@ -2,6 +2,8 @@
 #define __SLL__INTERNAL_INTRINSIC_H__ 1
 #ifdef __SLL_BUILD_WINDOWS
 #include <intrin.h>
+#else
+#include <immintrin.h>
 #endif
 #include <sll/_internal/attribute.h>
 #include <sll/_size_types.h>

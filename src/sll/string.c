@@ -217,8 +217,21 @@ __SLL_EXTERNAL void sll_string_clone(const sll_string_t* s,sll_string_t* d){
 	wide_data_t* b=(wide_data_t*)(d->v);
 	STRING_DATA_PTR(a);
 	STRING_DATA_PTR(b);
-	for (sll_string_length_t i=0;i<=(s->l>>3);i++){
-		*(b+i)=*(a+i);
+	// for (sll_string_length_t i=0;i<=(s->l>>3);i++){
+	// 	*(b+i)=*(a+i);
+	// }
+	sll_string_length_t l=(s->l>>3)+1;
+	while (l>3){
+		_mm256_storeu_si256((__m256i*)b,_mm256_lddqu_si256((const __m256i*)a));
+		l-=4;
+		a+=4;
+		b+=4;
+	}
+	while (l){
+		*b=*a;
+		l--;
+		a++;
+		b++;
 	}
 }
 
