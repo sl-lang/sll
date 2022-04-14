@@ -29,8 +29,14 @@
 #define ENSURE_TYPE(var,name) \
 	if (var->t!=SLL_OBJECT_TYPE_##name){ \
 		var=sll_operator_cast(var,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-		(*st)->sz++; \
-		*st=sll_reallocate(*st,sizeof(arg_state_t)+(*st)->sz*sizeof(sll_object_t*)); \
+		if (!*st){ \
+			*st=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
+			(*st)->sz++; \
+		} \
+		else{ \
+			(*st)->sz++; \
+			*st=sll_reallocate(*st,sizeof(arg_state_t)+(*st)->sz*sizeof(sll_object_t*)); \
+		} \
 		(*st)->dt[(*st)->sz-1]=var; \
 	} \
 
@@ -237,8 +243,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_
 	if (!(*t)){
 		return NULL;
 	}
-	arg_state_t* o=sll_allocate_stack(sizeof(arg_state_t));
-	o->sz=0;
+	arg_state_t* o=NULL;
 	const sll_char_t* tmp=t;
 	sll_bool_t var_arg=0;
 	sll_string_length_t var_arg_idx=0;
@@ -371,9 +376,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_
 			fn(arg,arr,&o,va);
 		}
 	}
-	if (o->sz){
-		o=sll_memory_move(o,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
-		return o;
+	if (o){
+		return sll_memory_move(o,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	}
 	sll_deallocate(o);
 	return NULL;
