@@ -29,6 +29,22 @@ static __SLL_FORCE_INLINE sll_object_t* STRING_TO_OBJECT(const sll_string_t* v){
 
 
 
+static __SLL_FORCE_INLINE sll_object_t* STRING_POINTER_TO_OBJECT(const sll_char_t* p){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	sll_string_from_pointer(p,&(o->dt.s));
+	return o;
+}
+
+
+
+static __SLL_FORCE_INLINE sll_object_t* STRING_POINTER_LENGTH_TO_OBJECT(const sll_char_t* p,sll_string_length_t l){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	sll_string_from_pointer_length(p,l,&(o->dt.s));
+	return o;
+}
+
+
+
 static __SLL_FORCE_INLINE sll_object_t* STRING_TO_OBJECT_NOCOPY(sll_string_t* v){
 	SLL_ASSERT(v);
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);

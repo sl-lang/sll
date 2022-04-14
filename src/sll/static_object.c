@@ -793,15 +793,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(const sll_char_t* p,sll_string_length_t l){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	if (l==SLL_MAX_STRING_LENGTH){
-		sll_string_from_pointer(p,&(o->dt.s));
-	}
-	else{
-		sll_string_from_pointer_length(p,l,&(o->dt.s));
-	}
-	return o;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(const sll_char_t* p){
+	return STRING_POINTER_TO_OBJECT(p);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_length_to_object(const sll_char_t* p,sll_string_length_t l){
+	return STRING_POINTER_LENGTH_TO_OBJECT(p,l);
 }
 
 

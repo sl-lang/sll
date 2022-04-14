@@ -119,7 +119,7 @@ __API_FUNC(path_get_cwd){
 	if (err!=SLL_NO_ERROR){
 		return sll_int_to_object(err);
 	}
-	return (err==SLL_NO_ERROR?sll_string_pointer_to_object(bf,len):sll_int_to_object(err));
+	return (err==SLL_NO_ERROR?STRING_POINTER_LENGTH_TO_OBJECT(bf,len):sll_int_to_object(err));
 }
 
 

@@ -38,6 +38,7 @@
 - Renamed `XXX_fail` function to `XXX_raw`
 - Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
 - Rewritten the CLI executable loader code
+- Split `sll_string_pointer_to_object` to `sll_string_pointer_to_object` and `sll_string_pointer_length_to_object`
 - Split the operators from [`src/sll/operator.c`][0.7.12/src/sll/operator.c] to [`src/sll/operator`][0.7.13/src/sll/operator]
 - *\[Windows Only\]* Windows error codes are now remapped to POSIX `errno` values
 

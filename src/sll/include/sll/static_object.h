@@ -293,10 +293,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map
  * \subgroup static-object-create
  * \desc Docs!
  * \arg const sll_char_t* p
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(const sll_char_t* p);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_string_pointer_length_to_object
+ * \group static-object
+ * \subgroup static-object-create
+ * \desc Docs!
+ * \arg const sll_char_t* p
  * \arg sll_string_length_t l
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(const sll_char_t* p,sll_string_length_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_length_to_object(const sll_char_t* p,sll_string_length_t l);
 
 
 
