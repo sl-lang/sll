@@ -20,6 +20,7 @@
 - Implemented `sll_var_arg_get_complex`
 - Implemented `statistics$quantiles` ([#260])
 - Improved the performance of `sll_object_get_field` and `sll_object_set_field` ([#268])
+- Improved the string matching performance ([#59] and [#268])
 - Integer and floats can now be prefixed with the `+` sign for consistency
 - Memory allocations are now served from a pool from small allocations ([#267])
 - Object creation code to generate complex numbers: `d`
@@ -2182,6 +2183,7 @@ Unfortunately, no versions were assigned before 2021-06-15 (:disappointed:), so 
 [#69]: https://github.com/sl-lang/sll/issues/69
 [#67]: https://github.com/sl-lang/sll/issues/67
 [#66]: https://github.com/sl-lang/sll/issues/66
+[#59]: https://github.com/sl-lang/sll/issues/59
 [#58]: https://github.com/sl-lang/sll/issues/58
 [#56]: https://github.com/sl-lang/sll/issues/56
 [#55]: https://github.com/sl-lang/sll/issues/55

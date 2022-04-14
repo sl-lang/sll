@@ -856,10 +856,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 	if (a->l==b->l){
 		return (sll_string_equal(a,b)?0:SLL_MAX_STRING_LENGTH);
 	}
+	sll_string_checksum_t c=0;
+	for (sll_string_length_t i=0;i<b->l;i++){
+		c^=a->v[i+si]<<((i&3)<<3);
+	}
+	unsigned int shift=(b->l&3)<<3;
+	const sll_char_t* ptr=a->v+si;
 	for (;si<a->l-b->l;si++){
-		if (sll_compare_data(a->v+si,b->v,b->l)==SLL_COMPARE_RESULT_EQUAL){
+		if (c==b->c&&sll_compare_data(ptr,b->v,b->l)==SLL_COMPARE_RESULT_EQUAL){
 			return si;
 		}
+		c=ROTATE_BITS_RIGHT(c^(*ptr)^((*(ptr+b->l))<<shift),8);
+		ptr++;
 	}
 	return SLL_MAX_STRING_LENGTH;
 }
