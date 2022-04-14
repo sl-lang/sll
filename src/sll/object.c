@@ -169,7 +169,7 @@ static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_st
 	}
 	sll_arg_count_t i=GET_HASH_TABLE_OFFSET(dt,f);
 	sll_arg_count_t l=dt->_hash_table_len+1;
-	while (l){
+	do{
 		sll_arg_count_t j=dt->_hash_table[i];
 		if (j!=SLL_MAX_ARG_COUNT&&STRING_EQUAL(f,&(dt->dt[j].nm))){
 			return j;
@@ -181,7 +181,7 @@ static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_st
 		else{
 			i--;
 		}
-	}
+	} while (l);
 	return SLL_MAX_ARG_COUNT;
 }
 

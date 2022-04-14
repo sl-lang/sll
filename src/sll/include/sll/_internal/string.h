@@ -28,16 +28,7 @@ static __SLL_FORCE_INLINE sll_bool_t STRING_EQUAL(const sll_string_t* a,const sl
 	STRING_DATA_PTR(ap);
 	STRING_DATA_PTR(bp);
 	sll_string_length_t l=(a->l+7)>>3;
-#ifndef __SLL_BUILD_DARWIN
-	while (l>3){
-		if (_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_lddqu_si256((const __m256i*)ap),_mm256_lddqu_si256((const __m256i*)bp)))!=0xffffffff){
-			return 0;
-		}
-		l-=4;
-		ap+=4;
-		bp+=4;
-	}
-#endif
+#ifdef __SLL_BUILD_DARWIN
 	while (l){
 		if (*ap!=*bp){
 			return 0;
@@ -47,6 +38,25 @@ static __SLL_FORCE_INLINE sll_bool_t STRING_EQUAL(const sll_string_t* a,const sl
 		bp++;
 	}
 	return 1;
+#else
+	while (l>3){
+		if (_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_lddqu_si256((const __m256i*)ap),_mm256_lddqu_si256((const __m256i*)bp)))!=0xffffffff){
+			return 0;
+		}
+		l-=4;
+		ap+=4;
+		bp+=4;
+	}
+	if (l>1){
+		if (_mm_movemask_epi8(_mm_cmpeq_epi8(_mm_lddqu_si128((const __m128i*)ap),_mm_lddqu_si128((const __m128i*)bp)))!=0xffff){
+			return 0;
+		}
+		l-=2;
+		ap+=2;
+		bp+=2;
+	}
+	return (l?*ap==*bp:1);
+#endif
 }
 
 
