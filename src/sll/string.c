@@ -207,7 +207,7 @@ __SLL_EXTERNAL void sll_string_calculate_checksum(sll_string_t* s){
 			p+=4;
 		} while (l>3);
 		c256=_mm256_xor_si256(c256,_mm256_permute2f128_si256(c256,c256,1));
-		c=_mm256_extract_epi64(_mm256_xor_si256(c256,_mm256_shuffle_epi32(c256,0x4e)),0);
+		c=_mm256_extract_epi64(_mm256_xor_si256(c256,_mm256_shuffle_epi32(c256,0x40)),0);
 	}
 #endif
 	while (l){
