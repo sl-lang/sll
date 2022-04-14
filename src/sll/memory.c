@@ -80,6 +80,32 @@ static __SLL_NO_RETURN void _raise_error(sll_char_t t,void* p,sll_size_t sz){
 
 
 
+static void _update_pool_extra(void){
+	_memory_update=MEMORY_POOL_UPDATE_TIMER;
+	for (sll_arg_count_t i=0;i<MEMORY_POOL_SIZE;i++){
+		sll_bool_t expand=(_memory_pool[i].miss>=MEMORY_POOL_EXTEND_THRESHOLD);
+		_memory_pool[i].last_miss=(_memory_pool[i].last_miss<<1)|expand;
+		if (expand&&POPULATION_COUNT(_memory_pool[i].last_miss)>=MEMORY_POOL_MIN_EXTEND_COUNT){
+			sll_size_t new=(POPULATION_COUNT(_memory_pool[i].last_miss)-1)*MEMORY_POOL_EXTEND_FACTOR_COUNT+_memory_pool[i].miss*MEMORY_POOL_EXTEND_FACTOR_MISS;
+			sll_size_t b_sz=(i+1)<<4;
+			if (new*b_sz>=MEMORY_POOL_MAX_NEW_SIZE){
+				new=MEMORY_POOL_MAX_NEW_SIZE/b_sz;
+			}
+			while (new){
+				new--;
+				empty_pool_pointer_t* ptr=malloc(b_sz);
+				ptr->next=_memory_pool[i].ptr;
+				_memory_pool[i].ptr=ptr;
+			}
+		}
+		_memory_pool[i].alloc=0;
+		_memory_pool[i].dealloc=0;
+		_memory_pool[i].miss=0;
+	}
+}
+
+
+
 static __SLL_FORCE_INLINE void _fill_zero(void* o,sll_size_t sz){
 	wide_data_t* p=o;
 	ASSUME_ALIGNED(p,4,8);
@@ -93,7 +119,7 @@ static __SLL_FORCE_INLINE void _fill_zero(void* o,sll_size_t sz){
 
 
 
-static void _pool_add(user_mem_block_t* b){
+static __SLL_FORCE_INLINE void _pool_add(user_mem_block_t* b){
 	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
 	sll_size_t sz=USER_MEM_BLOCK_GET_SIZE(b)-1;
 	if (sz<MEMORY_POOL_SIZE){
@@ -111,33 +137,13 @@ static void _pool_add(user_mem_block_t* b){
 
 
 
-static void* _pool_get(sll_size_t sz){
+static __SLL_FORCE_INLINE void* _pool_get(sll_size_t sz){
 	if (sz>=MEMORY_POOL_SIZE){
 		return NULL;
 	}
 	_memory_update--;
 	if (!_memory_update){
-		_memory_update=MEMORY_POOL_UPDATE_TIMER;
-		for (sll_arg_count_t i=0;i<MEMORY_POOL_SIZE;i++){
-			sll_bool_t expand=(_memory_pool[i].miss>=MEMORY_POOL_EXTEND_THRESHOLD);
-			_memory_pool[i].last_miss=(_memory_pool[i].last_miss<<1)|expand;
-			if (expand&&POPULATION_COUNT(_memory_pool[i].last_miss)>=MEMORY_POOL_MIN_EXTEND_COUNT){
-				sll_size_t new=(POPULATION_COUNT(_memory_pool[i].last_miss)-1)*MEMORY_POOL_EXTEND_FACTOR_COUNT+_memory_pool[i].miss*MEMORY_POOL_EXTEND_FACTOR_MISS;
-				sll_size_t b_sz=(i+1)<<4;
-				if (new*b_sz>=MEMORY_POOL_MAX_NEW_SIZE){
-					new=MEMORY_POOL_MAX_NEW_SIZE/b_sz;
-				}
-				while (new){
-					new--;
-					empty_pool_pointer_t* ptr=malloc(b_sz);
-					ptr->next=_memory_pool[i].ptr;
-					_memory_pool[i].ptr=ptr;
-				}
-			}
-			_memory_pool[i].alloc=0;
-			_memory_pool[i].dealloc=0;
-			_memory_pool[i].miss=0;
-		}
+		_update_pool_extra();
 	}
 	_memory_pool[sz].alloc++;
 	empty_pool_pointer_t* ptr=_memory_pool[sz].ptr;
