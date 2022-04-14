@@ -207,7 +207,7 @@ __SLL_EXTERNAL void sll_string_calculate_checksum(sll_string_t* s){
 			p+=4;
 		} while (l>3);
 		c256=_mm256_xor_si256(c256,_mm256_permute2f128_si256(c256,c256,1));
-		c=_mm256_extract_epi64(_mm256_xor_si256(c256,_mm256_shuffle_epi32(c256,0x40)),0);
+		c=_mm256_extract_epi64(_mm256_xor_si256(c256,_mm256_shuffle_epi32(c256,0x4e)),0);
 	}
 #endif
 	while (l){
@@ -968,17 +968,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 	sll_string_length_t ln=(cll+3)&0xfffffffc;
 	wide_data_t* ml=sll_allocate_stack(ln*sizeof(wide_data_t));
 	sll_string_length_t i=0;
-	for (;i<cll;i++){
+	for (;i<cll-1;i++){
 		*(ml+i)=0x101010101010101ull*(*(cl+i));
 	}
+	wide_data_t any=0x101010101010101ull*(*(cl+i));
 	for (;i<ln;i++){
-		*(ml+i)=*(ml+i-1);
+		*(ml+i)=any;
 	}
 	ln>>=2;
+	__m256i sub=_mm256_set1_epi8(1);
 	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
 		__m256i k=_mm256_set1_epi64x(*p);
 		__m256i v256=_mm256_setzero_si256();
-		__m256i sub=_mm256_set1_epi8(1);
 		const __m256i* m=(const __m256i*)ml;
 		for (sll_string_length_t j=0;j<ln;j++){
 			__m256i e=_mm256_xor_si256(k,_mm256_lddqu_si256(m));
@@ -986,7 +987,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 			v256=_mm256_or_si256(v256,_mm256_andnot_si256(e,_mm256_sub_epi64(e,sub)));
 		}
 		v256=_mm256_or_si256(v256,_mm256_permute2f128_si256(v256,v256,1));
-		wide_data_t v=_mm256_extract_epi64(_mm256_or_si256(v256,_mm256_shuffle_epi32(v256,0x40)),0);
+		wide_data_t v=_mm256_extract_epi64(_mm256_or_si256(v256,_mm256_shuffle_epi32(v256,0x4e)),0);
 		if (inv){
 			v=~v;
 		}
