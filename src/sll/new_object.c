@@ -403,7 +403,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object(const sll_char_t*
 			.c=&va
 		}
 	};
-	sll_object_t* o=sll_new_object_list(t,sll_string_length_unaligned(t),&dt);
+	sll_object_t* o=sll_new_object_list(t,sll_string_length(t),&dt);
 	va_end(va);
 	return o;
 }
@@ -419,7 +419,7 @@ __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...)
 			.c=&va
 		}
 	};
-	sll_new_object_array_list(t,sll_string_length_unaligned(t),&dt,o);
+	sll_new_object_array_list(t,sll_string_length(t),&dt,o);
 	va_end(va);
 }
 

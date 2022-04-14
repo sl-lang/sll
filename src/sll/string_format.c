@@ -64,7 +64,7 @@ __SLL_EXTERNAL void sll_string_format(const sll_char_t* t,sll_string_t* o,...){
 			.c=&va
 		}
 	};
-	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,o);
+	sll_string_format_list(t,sll_string_length(t),&dt,o);
 	va_end(va);
 }
 

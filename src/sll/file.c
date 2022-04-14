@@ -684,7 +684,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 		}
 	};
 	sll_string_t str;
-	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,&str);
+	sll_string_format_list(t,sll_string_length(t),&dt,&str);
 	va_end(va);
 	sll_size_t o=sll_file_write(f,str.v,str.l,err);
 	sll_free_string(&str);
@@ -702,5 +702,5 @@ __SLL_EXTERNAL sll_size_t sll_file_write_string(sll_file_t* f,const sll_char_t* 
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
 		return 0;
 	}
-	return sll_file_write(f,p,sll_string_length_unaligned(p),err);
+	return sll_file_write(f,p,sll_string_length(p),err);
 }

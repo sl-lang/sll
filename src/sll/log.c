@@ -128,7 +128,7 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_o
 		}
 	};
 	sll_string_t s;
-	sll_string_format_list(t,sll_string_length_unaligned(t),&dt,&s);
+	sll_string_format_list(t,sll_string_length(t),&dt,&s);
 	va_end(va);
 	if (!(fn_dt->fl&SLL_LOG_FLAG_NO_HEADER)){
 		_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);

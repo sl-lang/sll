@@ -53,7 +53,7 @@ static __SLL_NO_RETURN void _raise_error(sll_char_t t,void* p,sll_size_t sz){
 			break;
 	}
 	sll_char_t bf[64];
-	sll_string_length_t i=sll_string_length_unaligned(nm);
+	sll_string_length_t i=sll_string_length(nm);
 	sll_copy_data(nm,i,bf);
 	bf[i]='(';
 	i++;

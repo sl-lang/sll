@@ -143,7 +143,7 @@ void _init_platform(void){
 	*((sll_environment_length_t*)(&(_linux_env.l)))=l;
 	tzset();
 	const sll_char_t* nm=SLL_CHAR(tzname[!!daylight]);
-	sll_string_length_t sz=sll_string_length_unaligned(nm);
+	sll_string_length_t sz=sll_string_length(nm);
 	if (sz>31){
 		sz=31;
 	}

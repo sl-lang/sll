@@ -45,7 +45,7 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* nm,const sll_char_t* t,sll_
 	sll_string_t nm_s;
 	sll_string_from_pointer(nm,&nm_s);
 	sll_array_t arr;
-	sll_new_object_array_list(t,sll_string_length_unaligned(t),va,&arr);
+	sll_new_object_array_list(t,sll_string_length(t),va,&arr);
 	for (sll_array_length_t i=0;i<_audit_cb_len;i++){
 		(*(_audit_cb+i))(&nm_s,&arr);
 	}

@@ -827,18 +827,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length(const sl
 
 
 /**
- * \flags check_output func
- * \name sll_string_length_unaligned
- * \group string
- * \desc Docs!
- * \arg const sll_char_t* s
- * \ret sll_string_length_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length_unaligned(const sll_char_t* s);
-
-
-
-/**
  * \flags func
  * \name sll_string_lower_case
  * \group string

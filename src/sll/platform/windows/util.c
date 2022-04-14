@@ -89,7 +89,7 @@ void _init_platform(void){
 	while (*p){
 		LPCH e=p;
 		if (*p=='='){
-			p+=sll_string_length_unaligned(p)+1;
+			p+=sll_string_length(p)+1;
 			continue;
 		}
 		while (*p&&*p!='='){
@@ -103,7 +103,7 @@ void _init_platform(void){
 		sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
 		sll_string_from_pointer_length(e,(sll_string_length_t)(p-e),(sll_string_t*)(&(n->k)));
 		p++;
-		sll_string_length_t i=sll_string_length_unaligned(p);
+		sll_string_length_t i=sll_string_length(p);
 		sll_string_from_pointer_length(p,i,(sll_string_t*)(&(n->v)));
 		p+=i+1;
 		*(kv+l-1)=n;

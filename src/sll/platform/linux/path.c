@@ -82,7 +82,7 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 	struct dirent* dt;
 	while ((dt=readdir(d))){
 		if (dt->d_type==DT_REG){
-			sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
+			sll_string_length_t j=sll_string_length(SLL_CHAR(dt->d_name));
 			o->l++;
 			o->dt=sll_reallocate(o->dt,o->l*sizeof(sll_string_t));
 			sll_string_t* s=o->dt+o->l-1;
@@ -94,7 +94,7 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 			if (*(dt->d_name)=='.'&&(*(dt->d_name+1)==0||(*(dt->d_name+1)=='.'&&*(dt->d_name+2)==0))){
 				continue;
 			}
-			sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
+			sll_string_length_t j=sll_string_length(SLL_CHAR(dt->d_name));
 			sll_copy_data(dt->d_name,j,bf+i);
 			bf[i+j]='/';
 			sll_error_t err=_list_dir_files(bf,i+j+1,o);
@@ -115,13 +115,13 @@ __SLL_EXTERNAL sll_string_length_t sll_platform_absolute_path(const sll_char_t* 
 		if (!realpath((const char*)lnk,(char*)o)){
 			return 0;
 		}
-		return sll_string_length_unaligned(o);
+		return sll_string_length(o);
 	}
 	sll_char_t bf[PATH_MAX];
 	if (!realpath((const char*)lnk,(char*)bf)){
 		return 0;
 	}
-	sll_string_length_t l=sll_string_length_unaligned(bf)+1;
+	sll_string_length_t l=sll_string_length(bf)+1;
 	if (l>ol){
 		l=ol;
 	}
@@ -143,7 +143,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_create_directory(cons
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (getcwd((char*)o,ol)){
-		return sll_string_length_unaligned(o);
+		return sll_string_length(o);
 	}
 	ERROR_PTR_SYSTEM;
 	*o=0;
@@ -176,7 +176,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 			}
 			op=tmp;
 		}
-		sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt->d_name));
+		sll_string_length_t l=sll_string_length(SLL_CHAR(dt->d_name));
 		sll_string_from_pointer_length(SLL_CHAR(dt->d_name),l,op+ol);
 		ol++;
 	}
@@ -190,7 +190,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
 	ERROR_PTR_RESET;
 	sll_char_t bf[PATH_MAX+1];
-	sll_string_length_t l=sll_string_length_unaligned(fp);
+	sll_string_length_t l=sll_string_length(fp);
 	sll_copy_data(fp,l,bf);
 	if (bf[l-1]!='/'&&bf[l-1]!='\\'){
 		bf[l]='/';

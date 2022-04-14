@@ -47,7 +47,7 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 			if (*(dt.cFileName)=='.'&&(*(dt.cFileName+1)==0||(*(dt.cFileName+1)=='.'&&*(dt.cFileName+2)==0))){
 				continue;
 			}
-			sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
+			sll_string_length_t j=sll_string_length(SLL_CHAR(dt.cFileName));
 			sll_copy_data(dt.cFileName,j,bf+i);
 			bf[i+j]='\\';
 			sll_error_t err=_list_dir_files(bf,i+j+1,o);
@@ -57,7 +57,7 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 			}
 		}
 		else{
-			sll_string_length_t j=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
+			sll_string_length_t j=sll_string_length(SLL_CHAR(dt.cFileName));
 			o->l++;
 			o->dt=sll_reallocate(o->dt,o->l*sizeof(sll_string_t));
 			sll_string_t* s=o->dt+o->l-1;
@@ -90,7 +90,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_create_directory(cons
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_working_directory(sll_char_t* o,sll_string_length_t ol,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (GetCurrentDirectoryA(ol,(char*)o)){
-		return sll_string_length_unaligned(o);
+		return sll_string_length(o);
 	}
 	ERROR_PTR_SYSTEM;
 	*o=0;
@@ -102,7 +102,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
 	ERROR_PTR_RESET;
 	char bf[MAX_PATH+1];
-	sll_string_length_t fpl=sll_string_length_unaligned(fp);
+	sll_string_length_t fpl=sll_string_length(fp);
 	sll_copy_data(fp,fpl,bf);
 	if (bf[fpl-1]!='/'&&bf[fpl-1]!='\\'){
 		bf[fpl]='\\';
@@ -132,7 +132,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 			}
 			op=tmp;
 		}
-		sll_string_length_t l=sll_string_length_unaligned(SLL_CHAR(dt.cFileName));
+		sll_string_length_t l=sll_string_length(SLL_CHAR(dt.cFileName));
 		sll_string_from_pointer_length(dt.cFileName,l,op+ol);
 		ol++;
 	} while (FindNextFileA(fh,&dt));
@@ -146,7 +146,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
 	ERROR_PTR_RESET;
 	sll_char_t bf[MAX_PATH+1];
-	sll_string_length_t i=sll_string_length_unaligned(fp);
+	sll_string_length_t i=sll_string_length(fp);
 	sll_copy_data(fp,i,bf);
 	if (bf[i-1]!='/'&&bf[i-1]!='\\'){
 		bf[i]='\\';

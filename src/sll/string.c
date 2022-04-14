@@ -795,7 +795,7 @@ __SLL_EXTERNAL void sll_string_from_pointer(const sll_char_t* s,sll_string_t* o)
 		SLL_INIT_STRING(o);
 	}
 	else{
-		sll_string_from_pointer_length(s,sll_string_length_unaligned(s),o);
+		sll_string_from_pointer_length(s,sll_string_length(s),o);
 	}
 }
 
@@ -1138,7 +1138,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 
 
 __SLL_EXTERNAL sll_string_length_t sll_string_insert_pointer(const sll_char_t* s,sll_string_length_t i,sll_string_t* o){
-	return sll_string_insert_pointer_length(s,sll_string_length_unaligned(s),i,o);
+	return sll_string_insert_pointer_length(s,sll_string_length(s),i,o);
 }
 
 
@@ -1254,20 +1254,6 @@ __SLL_EXTERNAL void sll_string_join_char(sll_char_t c,sll_object_t*const* a,sll_
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length(const sll_char_t* s){
-	const wide_data_t* p=(const wide_data_t*)s;
-	ASSUME_ALIGNED(p,3,0);
-	while (1){
-		wide_data_t v=((*p)-0x101010101010101ull)&0x8080808080808080ull&(~(*p));
-		if (v){
-			return (sll_string_length_t)(ADDR(p)-ADDR(s)+(FIND_FIRST_SET_BIT(v)>>3));
-		}
-		p++;
-	}
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length_unaligned(const sll_char_t* s){
 	addr_t o=ADDR(s);
 	while (ADDR(s)&7){
 		if (!(*s)){
@@ -1275,7 +1261,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length_unaligne
 		}
 		s++;
 	}
-	return sll_string_length(s)+(sll_string_length_t)(ADDR(s)-o);
+	const wide_data_t* p=(const wide_data_t*)s;
+	ASSUME_ALIGNED(p,3,0);
+	while (1){
+		wide_data_t v=((*p)-0x101010101010101ull)&0x8080808080808080ull&(~(*p));
+		if (v){
+			return (sll_string_length_t)(ADDR(p)+(FIND_FIRST_SET_BIT(v)>>3)-o);
+		}
+		p++;
+	}
 }
 
 

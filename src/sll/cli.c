@@ -65,7 +65,7 @@ static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o)
 
 static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_char_t* f_fp){
 	sll_audit(SLL_CHAR("sll.cli.find"),SLL_CHAR("S"),f_nm);
-	sll_string_length_t f_nm_l=sll_string_length_unaligned(f_nm);
+	sll_string_length_t f_nm_l=sll_string_length(f_nm);
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	if (i_bl){
 		sll_string_t f_nm_str;
@@ -85,7 +85,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 	}
 	sll_string_length_t i=0;
 	while (i<i_fpl){
-		sll_string_length_t j=sll_string_length_unaligned(i_fp+i);
+		sll_string_length_t j=sll_string_length(i_fp+i);
 		sll_copy_data(i_fp+i,j,bf);
 		i+=j+1;
 		sll_copy_data(f_nm,f_nm_l,bf+j);
@@ -168,7 +168,7 @@ static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
 	i_bl++;
 	i_b=sll_reallocate(i_b,i_bl*sizeof(cli_bundle_source_t*));
 	cli_bundle_source_t* b=sll_allocate(sizeof(cli_bundle_source_t));
-	sll_string_length_t nml=sll_string_length_unaligned(nm)+1;
+	sll_string_length_t nml=sll_string_length(nm)+1;
 	b->nm=sll_allocate(nml);
 	sll_copy_data(nm,nml,b->nm);
 	b->b=b_dt;
@@ -185,7 +185,7 @@ static void _init_audit_event(const sll_char_t* o_fp,cli_audit_library_t* ll,sll
 		inc_bfl++;
 		inc_bf=sll_reallocate((void*)inc_bf,inc_bfl*sizeof(const sll_char_t*));
 		*(inc_bf+inc_bfl-1)=i_fp+i;
-		i+=sll_string_length_unaligned(i_fp+i)+1;
+		i+=sll_string_length(i_fp+i)+1;
 	}
 	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uSS+{Si}{Sp}Si"),fl,o_fp,inc_bf,inc_bfl,ll,lll,sizeof(cli_audit_library_t),SLL_OFFSETOF(cli_audit_library_t,nm),SLL_OFFSETOF(cli_audit_library_t,lh),i_b,i_bl,0,SLL_OFFSETOF(cli_bundle_source_t,nm),SLL_OFFSETOF(cli_bundle_source_t,b),b_nm,sll_get_sandbox_flags());
 	sll_deallocate((void*)inc_bf);
@@ -291,7 +291,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 				break;
 			}
 			e=argv[i];
-			sll_string_length_t sz=sll_string_length_unaligned(e);
+			sll_string_length_t sz=sll_string_length(e);
 			if (sz){
 				if (sll_platform_path_is_directory(e)){
 					sll_string_length_t j=i_fpl;
@@ -347,7 +347,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					pfx_sz--;
 				}
 				pfx_sz++;
-				sll_string_length_t sz=sll_string_length_unaligned(out);
+				sll_string_length_t sz=sll_string_length(out);
 				SLL_ASSERT(sz+pfx_sz<SLL_API_MAX_FILE_PATH_LENGTH);
 				sll_char_t tmp[SLL_API_MAX_FILE_PATH_LENGTH];
 				sll_copy_data(sll_library_file_path->v,pfx_sz,tmp);
@@ -556,7 +556,7 @@ _read_file_argument:
 		sll_string_length_t j=0;
 		while (j<i_fpl){
 			SLL_LOG("  '%s'",i_fp+j);
-			j+=sll_string_length_unaligned(i_fp+j)+1;
+			j+=sll_string_length(i_fp+j)+1;
 		}
 		SLL_LOG("Library path: '%s'",l_fp);
 		SLL_LOG("Audit libraries:");
@@ -588,7 +588,7 @@ _read_file_argument:
 			CLI_LOG_IF_VERBOSE("Compiling console input...");
 			sll_init_compilation_data(SLL_CHAR("@console"),&c_dt);
 			sll_file_t f;
-			sll_file_from_data(PTR(argv[*(sl+j-fpl)]),sll_string_length_unaligned(argv[*(sl+j-fpl)]),SLL_FILE_FLAG_READ,&f);
+			sll_file_from_data(PTR(argv[*(sl+j-fpl)]),sll_string_length(argv[*(sl+j-fpl)]),SLL_FILE_FLAG_READ,&f);
 			sll_parse_nodes(&f,&c_dt,&i_ft,_import_file);
 			sll_file_close(&f);
 			CLI_LOG_IF_VERBOSE("Input successfully read.");
@@ -632,19 +632,19 @@ _read_file_argument:
 		if (j<fpl&&(fl&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT))){
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 			sll_string_length_t k=0;
-			sll_string_length_t f_fp_l=sll_string_length_unaligned(f_fp);
+			sll_string_length_t f_fp_l=sll_string_length(f_fp);
 			if (!o_fp){
 				sll_copy_data(f_fp,f_fp_l,bf);
 				k=f_fp_l-1;
 			}
 			else{
 				if (fl&CLI_FLAG_SINGLE_OUTPUT){
-					k=sll_string_length_unaligned(o_fp);
+					k=sll_string_length(o_fp);
 					sll_copy_data(o_fp,k,bf);
 					k-=1;
 				}
 				else{
-					k=sll_string_length_unaligned(o_fp);
+					k=sll_string_length(o_fp);
 					while (*(o_fp+k)!='\\'&&*(o_fp+k)!='/'){
 						if (!k){
 							k--;
@@ -722,7 +722,7 @@ _read_file_argument:
 	if (fl&SLL_CLI_FLAG_GENERATE_BUNDLE){
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		if (b_o_fp){
-			sll_string_length_t l=sll_string_length_unaligned(b_o_fp);
+			sll_string_length_t l=sll_string_length(b_o_fp);
 			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
 				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
 			}
