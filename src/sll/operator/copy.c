@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/static_object.h>
 #include <sll/common.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
@@ -16,7 +17,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 			SLL_ACQUIRE(a);
 			return a;
 		case SLL_OBJECT_TYPE_STRING:
-			return sll_string_to_object(&(a->dt.s));
+			return STRING_TO_OBJECT(&(a->dt.s));
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
 				sll_object_t* o=sll_array_length_to_object(a->dt.a.l);

@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/static_object.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/array.h>
@@ -65,7 +66,7 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 					break;
 				}
 			case SLL_OBJECT_TYPE_STRING:
-				p->o=sll_string_to_object(NULL);
+				p->o=STRING_TO_OBJECT(NULL);
 				break;
 			case SLL_OBJECT_TYPE_ARRAY:
 			case SLL_OBJECT_TYPE_MAP_KEYS:
@@ -296,7 +297,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 		case SLL_OBJECT_TYPE_COMPLEX:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_STRING:
-			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_STRING]):sll_string_to_object(NULL));
+			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_STRING]):STRING_TO_OBJECT(NULL));
 		case SLL_OBJECT_TYPE_ARRAY:
 		case SLL_OBJECT_TYPE_MAP_KEYS:
 		case SLL_OBJECT_TYPE_MAP_VALUES:

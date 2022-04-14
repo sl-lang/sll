@@ -2,6 +2,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/library.h>
 #include <sll/_internal/print.h>
+#include <sll/_internal/static_object.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/abi.h>
@@ -123,8 +124,8 @@ __API_FUNC(sys_get_env){
 	sll_map_create(sll_environment->l,out);
 	for (sll_environment_length_t i=0;i<sll_environment->l;i++){
 		const sll_environment_variable_t* kv=*(sll_environment->dt+i);
-		out->v[i<<1]=sll_string_to_object(&(kv->k));
-		out->v[(i<<1)+1]=sll_string_to_object(&(kv->v));
+		out->v[i<<1]=STRING_TO_OBJECT(&(kv->k));
+		out->v[(i<<1)+1]=STRING_TO_OBJECT(&(kv->v));
 	}
 }
 

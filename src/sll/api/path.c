@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/static_object.h>
 #include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/array.h>
@@ -182,7 +183,7 @@ __API_FUNC(path_list_dir){
 	}
 	sll_object_t* o=sll_array_length_to_object(len);
 	for (sll_array_length_t i=0;i<len;i++){
-		o->dt.a.v[i]=sll_string_to_object_nocopy(dt+i);
+		o->dt.a.v[i]=STRING_TO_OBJECT_NOCOPY(dt+i);
 	}
 	sll_deallocate(dt);
 	return o;
@@ -213,7 +214,7 @@ __API_FUNC(path_recursive_list_dir){
 	}
 	sll_object_t* o=sll_array_length_to_object(len);
 	for (sll_array_length_t i=0;i<len;i++){
-		o->dt.a.v[i]=sll_string_to_object_nocopy(dt+i);
+		o->dt.a.v[i]=STRING_TO_OBJECT_NOCOPY(dt+i);
 	}
 	sll_deallocate(dt);
 	return o;

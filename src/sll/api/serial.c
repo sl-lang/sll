@@ -2,6 +2,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
 #include <sll/_internal/serial.h>
+#include <sll/_internal/static_object.h>
 #include <sll/api/file.h>
 #include <sll/api/serial.h>
 #include <sll/array.h>
@@ -92,7 +93,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				sll_string_t str;
-				return (sll_decode_string(f,&str)?sll_string_to_object_nocopy(&str):sll_string_to_object(NULL));
+				return (sll_decode_string(f,&str)?STRING_TO_OBJECT_NOCOPY(&str):STRING_TO_OBJECT(NULL));
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
 		case SLL_OBJECT_TYPE_MAP_KEYS:
@@ -412,7 +413,7 @@ __API_FUNC(serial_decode_string){
 	if (!sll_decode_string(sll_file_from_handle(a),&str)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	return sll_string_to_object_nocopy(&str);
+	return STRING_TO_OBJECT_NOCOPY(&str);
 }
 
 

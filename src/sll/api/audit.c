@@ -1,6 +1,7 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/static_object.h>
 #include <sll/_internal/vm.h>
 #include <sll/api.h>
 #include <sll/audit.h>
@@ -24,7 +25,7 @@ static void _call_user_cb(const sll_string_t* nm,const sll_array_t* arg){
 		return;
 	}
 	sll_object_t* dt[]={
-		sll_string_to_object(nm),
+		STRING_TO_OBJECT(nm),
 		sll_array_to_object(arg)
 	};
 	GC_RELEASE(sll_execute_function(_audit_cb,dt,2,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));

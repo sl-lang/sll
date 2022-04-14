@@ -1,4 +1,5 @@
 #include <sll/_internal/api.h>
+#include <sll/_internal/static_object.h>
 #include <sll/api.h>
 #include <sll/common.h>
 #include <sll/object.h>
@@ -32,7 +33,7 @@ static const sll_char_t _base64_index_map[256]={
 
 __API_FUNC(base64_decode){
 	if (!a->l){
-		return sll_string_to_object(NULL);
+		return STRING_TO_OBJECT(NULL);
 	}
 	if (a->l&3){
 		return SLL_ACQUIRE_STATIC_NEG_INT(1);
@@ -99,7 +100,7 @@ __API_FUNC(base64_decode){
 		o.v[j]=(v0<<2)|(v1>>4);
 	}
 	sll_string_calculate_checksum(&o);
-	return sll_string_to_object_nocopy(&o);
+	return STRING_TO_OBJECT_NOCOPY(&o);
 }
 
 

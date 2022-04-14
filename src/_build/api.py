@@ -6,14 +6,14 @@ TYPE_MAP={"B":"sll_bool_t","I":"sll_integer_t","F":"sll_float_t","IF":"sll_int_f
 TYPE_PTR=["IF","S","CS","A","M"]
 TYPE_CHECK_OUTPUT=["S","A","M","O"]
 TYPE_PTR_NO_FMT=["IF","CS"]
-TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","C":"return SLL_FROM_CHAR(out)","D":"return sll_complex_to_object(out)","S":"return sll_string_to_object_nocopy(&out)","A":"return sll_array_to_object_nocopy(&out)","M":"return sll_map_to_object_nocopy(&out)"}
+TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","C":"return SLL_FROM_CHAR(out)","D":"return sll_complex_to_object(out)","S":"return STRING_TO_OBJECT_NOCOPY(&out)","A":"return sll_array_to_object_nocopy(&out)","M":"return sll_map_to_object_nocopy(&out)"}
 
 
 
 def generate_c_api(d_dt,api_dt):
 	with open(API_HEADER_FILE_PATH,"w") as hf,open(API_CODE_FILE_PATH,"w") as cf:
 		hf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#ifndef __SLL_GENERATED_API__\n#define __SLL_GENERATED_API__\n#include <sll/common.h>\n#include <sll/types.h>\n\n\n")
-		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_internal/api.h>\n#include <sll/_internal/common.h>\n#include <sll/_internal/gc.h>\n#include <sll/api.h>\n#include <sll/common.h>\n#include <sll/generated/api.h>\n#include <sll/parse_args.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
+		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_internal/api.h>\n#include <sll/_internal/common.h>\n#include <sll/_internal/gc.h>\n#include <sll/_internal/static_object.h>\n#include <sll/api.h>\n#include <sll/common.h>\n#include <sll/generated/api.h>\n#include <sll/parse_args.h>\n#include <sll/static_object.h>\n#include <sll/types.h>\n")
 		fn_l=[]
 		d_gl=[]
 		for k in api_dt:

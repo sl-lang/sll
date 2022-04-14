@@ -1,5 +1,6 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/file.h>
+#include <sll/_internal/static_object.h>
 #include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/api/string.h>
@@ -243,7 +244,7 @@ __API_FUNC(file_read){
 	}
 	sll_string_decrease(&o,(sll_string_length_t)sz);
 	sll_string_calculate_checksum(&o);
-	return sll_string_to_object_nocopy(&o);
+	return STRING_TO_OBJECT_NOCOPY(&o);
 }
 
 

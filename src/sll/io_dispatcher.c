@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
 #include <sll/_internal/scheduler.h>
+#include <sll/_internal/static_object.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>
@@ -42,7 +43,7 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 		else{
 			sll_string_decrease(&bf,(sll_string_length_t)sz);
 			sll_string_calculate_checksum(&bf);
-			o=sll_string_to_object_nocopy(&bf);
+			o=STRING_TO_OBJECT_NOCOPY(&bf);
 		}
 	}
 	else{

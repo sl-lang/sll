@@ -6,6 +6,7 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/semaphore.h>
 #include <sll/_internal/stack.h>
+#include <sll/_internal/static_object.h>
 #include <sll/_internal/thread.h>
 #include <sll/_internal/vm.h>
 #include <sll/api/file.h>
@@ -412,7 +413,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
-				*(thr->stack+thr->si)=sll_string_to_object(sll_current_runtime_data->a_dt->st.dt+ai->dt.s);
+				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->st.dt+ai->dt.s);
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
@@ -1005,7 +1006,7 @@ _return:;
 				thr->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				*(thr->stack+thr->si)=sll_string_to_object(sll_current_runtime_data->a_dt->st.dt+ai->dt.s);
+				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->st.dt+ai->dt.s);
 				thr->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
@@ -1105,7 +1106,7 @@ _load_new_thread:;
 					sll_file_t* f=sll_file_from_handle(fh_o->dt.i);
 					GC_RELEASE(fh_o);
 					if (!f||sz<=0){
-						*(thr->stack+thr->si)=sll_string_to_object(NULL);
+						*(thr->stack+thr->si)=STRING_TO_OBJECT(NULL);
 						thr->si++;
 						break;
 					}
@@ -1128,7 +1129,7 @@ _load_new_thread:;
 					else{
 						sll_string_decrease(&bf,(sll_string_length_t)r_sz);
 						sll_string_calculate_checksum(&bf);
-						*(thr->stack+thr->si)=sll_string_to_object_nocopy(&bf);
+						*(thr->stack+thr->si)=STRING_TO_OBJECT_NOCOPY(&bf);
 					}
 					thr->si++;
 					break;
