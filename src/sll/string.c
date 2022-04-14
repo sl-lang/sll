@@ -922,15 +922,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_char(cons
 	STRING_DATA_PTR(p);
 	wide_data_t m=0x101010101010101ull*c;
 	wide_data_t n=0x8080808080808080ull<<((si&7)<<3);
+	wide_data_t q=0x8080808080808080ull*inv;
 	sll_string_length_t i=si>>3;
 	p+=i;
 	for (;i<((s->l+7)>>3);i++){
 		wide_data_t v=(*p)^m;
-		v=(v-0x101010101010101ull)&(~v);
-		if (inv){
-			v=~v;
-		}
-		v&=n;
+		v=((v-0x101010101010101ull)&(~v)&n)^q;
 		if (v){
 			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
 			return (!c&&o>=s->l?SLL_MAX_STRING_LENGTH:o);
@@ -957,6 +954,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 	for (sll_string_length_t i=0;i<cll;i++){
 		*(ml+i)=0x101010101010101ull*(*(cl+i));
 	}
+	wide_data_t n=0x8080808080808080ull*inv;
 	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
 		wide_data_t k=*p;
 		wide_data_t v=0;
@@ -964,10 +962,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 			wide_data_t e=k^(*(ml+j));
 			v|=(e-0x101010101010101ull)&(~e);
 		}
-		if (inv){
-			v=~v;
-		}
-		v&=0x8080808080808080ull;
+		v=(v&0x8080808080808080ull)^n;
 		if (v){
 			sll_deallocate(ml);
 			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
@@ -989,7 +984,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 	}
 	ln>>=2;
 	__m256i sub=_mm256_set1_epi8(1);
-	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+	wide_data_t n=0x8080808080808080ull*inv;
+	for (i=0;i<((s->l+7)>>3);i++){
 		__m256i k=_mm256_set1_epi64x(*p);
 		__m256i v256=_mm256_setzero_si256();
 		const __m256i* m=(const __m256i*)ml;
@@ -999,11 +995,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 			v256=_mm256_or_si256(v256,_mm256_andnot_si256(e,_mm256_sub_epi64(e,sub)));
 		}
 		v256=_mm256_or_si256(v256,_mm256_permute2f128_si256(v256,v256,1));
-		wide_data_t v=_mm256_extract_epi64(_mm256_or_si256(v256,_mm256_shuffle_epi32(v256,0x4e)),0);
-		if (inv){
-			v=~v;
-		}
-		v&=0x8080808080808080ull;
+		wide_data_t v=(_mm256_extract_epi64(_mm256_or_si256(v256,_mm256_shuffle_epi32(v256,0x4e)),0)&0x8080808080808080ull)^n;
 		if (v){
 			sll_deallocate(ml);
 			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
@@ -1040,14 +1032,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_c
 	sll_string_length_t l=(s->l+7)>>3;
 	const wide_data_t* p=((const wide_data_t*)(s->v))+l;
 	wide_data_t m=0x101010101010101ull*c;
+	wide_data_t n=0x8080808080808080ull*inv;
 	for (sll_string_length_t i=0;i<l;i++){
 		p--;
 		wide_data_t v=(*p)^m;
-		v=(v-0x101010101010101ull)&(~v);
-		if (inv){
-			v=~v;
-		}
-		v&=0x8080808080808080ull;
+		v=((v-0x101010101010101ull)&(~v)&0x8080808080808080ull)^n;
 		if (v){
 			if (!i&&(s->l&7)){
 				v&=0xffffffffffffffffull>>((8-s->l)<<3);
@@ -1076,6 +1065,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 	for (sll_string_length_t i=0;i<cll;i++){
 		*(ml+i)=0x101010101010101ull*(*(cl+i));
 	}
+	wide_data_t n=0x8080808080808080ull*inv;
 	for (sll_string_length_t i=0;i<l;i++){
 		p--;
 		wide_data_t k=*p;
@@ -1084,10 +1074,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 			wide_data_t e=k^(*(ml+j));
 			v|=(e-0x101010101010101ull)&(~e);
 		}
-		if (inv){
-			v=~v;
-		}
-		v&=0x8080808080808080ull;
+		v=(v&0x8080808080808080ull)^n;
 		if (v){
 			if (!i&&(s->l&7)){
 				v&=0xffffffffffffffffull>>((8-s->l)<<3);
@@ -1113,8 +1100,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 		*(ml+i)=any;
 	}
 	ln>>=2;
+	wide_data_t n=0x8080808080808080ull*inv;
 	__m256i sub=_mm256_set1_epi8(1);
-	for (sll_string_length_t i=0;i<l;i++){
+	for (i=0;i<l;i++){
 		p--;
 		__m256i k=_mm256_set1_epi64x(*p);
 		__m256i v256=_mm256_setzero_si256();
@@ -1125,11 +1113,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 			v256=_mm256_or_si256(v256,_mm256_andnot_si256(e,_mm256_sub_epi64(e,sub)));
 		}
 		v256=_mm256_or_si256(v256,_mm256_permute2f128_si256(v256,v256,1));
-		wide_data_t v=_mm256_extract_epi64(_mm256_or_si256(v256,_mm256_shuffle_epi32(v256,0x4e)),0);
-		if (inv){
-			v=~v;
-		}
-		v&=0x8080808080808080ull;
+		wide_data_t v=(_mm256_extract_epi64(_mm256_or_si256(v256,_mm256_shuffle_epi32(v256,0x4e)),0)&0x8080808080808080ull)^n;
 		if (v){
 			if (!i&&(s->l&7)){
 				v&=0xffffffffffffffffull>>((8-s->l)<<3);
