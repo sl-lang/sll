@@ -47,13 +47,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz);
 
 /**
  * \flags check_output func
- * \name sll_allocate_fail
+ * \name sll_allocate_raw
  * \group memory
  * \desc Docs!
  * \arg sll_size_t sz
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_fail(sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_raw(sll_size_t sz,sll_bool_t err);
 
 
 
@@ -71,13 +71,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz);
 
 /**
  * \flags check_output func
- * \name sll_allocate_stack_fail
+ * \name sll_allocate_stack_raw
  * \group memory
  * \desc Docs!
  * \arg sll_size_t sz
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_fail(sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_raw(sll_size_t sz,sll_bool_t err);
 
 
 
@@ -120,14 +120,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz);
 
 /**
  * \flags check_output func
- * \name sll_reallocate_fail
+ * \name sll_reallocate_raw
  * \group memory
  * \desc Docs!
  * \arg void* p
  * \arg sll_size_t sz
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_fail(void* p,sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* p,sll_size_t sz,sll_bool_t err);
 
 
 
@@ -145,13 +145,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz);
 
 /**
  * \flags check_output func
- * \name sll_zero_allocate_fail
+ * \name sll_zero_allocate_raw
  * \group memory
  * \desc Docs!
  * \arg sll_size_t sz
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_fail(sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_raw(sll_size_t sz,sll_bool_t err);
 
 
 
@@ -169,13 +169,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack(sll_size_t sz);
 
 /**
  * \flags check_output func
- * \name sll_zero_allocate_stack_fail
+ * \name sll_zero_allocate_stack_raw
  * \group memory
  * \desc Docs!
  * \arg sll_size_t sz
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack_fail(sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack_raw(sll_size_t sz,sll_bool_t err);
 
 
 

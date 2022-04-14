@@ -35,6 +35,7 @@
 - Reduced the number of calls to `sll_platform_lock_acquire` and `sll_platform_lock_release`
 - Reduced the number of thread-local variables
 - Renamed `SLL_ERROR_FLAG_LIBC` and `error_codes$LIBC_ERROR_CODES` to `SLL_ERROR_FLAG_SYSTEM` and `error_codes$SYSTEM_ERROR_CODES`
+- Renamed `XXX_fail` function to `XXX_raw`
 - Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
 - Rewritten the CLI executable loader code
 - Split the operators from [`src/sll/operator.c`][0.7.12/src/sll/operator.c] to [`src/sll/operator`][0.7.13/src/sll/operator]
