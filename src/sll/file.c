@@ -283,6 +283,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 	if (f->f&FILE_FLAG_MEMORY){
 		LOCK;
 		if (f->_off==f->dt.mm.sz){
+			UNLOCK;
 			return SLL_END_OF_DATA;
 		}
 		sll_char_t o=*((sll_char_t*)(PTR(ADDR(f->dt.mm.p)+f->_off)));
@@ -300,6 +301,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 	if (!f->_r_bf_off&&!f->_r_bf_sz){
 		f->_r_bf_sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE,err);
 		if (!f->_r_bf_sz){
+			UNLOCK;
 			return SLL_END_OF_DATA;
 		}
 	}

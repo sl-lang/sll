@@ -8,6 +8,11 @@
 #define MEMORY_POOL_SIZE 256
 #define MEMORY_POOL_MAX_BLOCKS 4096
 #define MEMORY_POOL_UPDATE_TIMER 256
+#define MEMORY_POOL_MIN_EXTEND_COUNT 3
+#define MEMORY_POOL_EXTEND_THRESHOLD 10
+#define MEMORY_POOL_EXTEND_FACTOR_COUNT 15
+#define MEMORY_POOL_EXTEND_FACTOR_MISS 3
+#define MEMORY_POOL_MAX_NEW_SIZE 32768
 
 
 
@@ -29,7 +34,6 @@ typedef struct __POOL_DATA{
 	__SLL_U32 miss;
 	__SLL_U32 last_miss;
 	__SLL_U32 sz;
-	__SLL_U32 upd_cnt;
 	empty_pool_pointer_t* ptr;
 } pool_data_t;
 

@@ -27,7 +27,8 @@
 
 ### Changed
 
-- Fixed lock of memory initialization in array creation
+- Fixed file lock acquisition
+- Fixed lack of memory initialization in array creation
 - Fixed multiple memory leaks
 - More platform-dependent function return error codes
 - Reduced the number of calls to `sll_platform_lock_acquire` and `sll_platform_lock_release`
