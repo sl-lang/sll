@@ -935,9 +935,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 	if (!s->l||!cll){
 		return SLL_MAX_STRING_LENGTH;
 	}
+	if (cll==1){
+		return sll_string_index_char(s,*cl,inv,0);
+	}
 	const wide_data_t* p=(const wide_data_t*)(s->v);
-	wide_data_t* ml=sll_allocate_stack(cll*sizeof(wide_data_t));
 	STRING_DATA_PTR(p);
+#ifdef __SLL_BUILD_DARWIN
+	wide_data_t* ml=sll_allocate_stack(cll*sizeof(wide_data_t));
 	for (sll_string_length_t i=0;i<cll;i++){
 		*(ml+i)=0x101010101010101ull*(*(cl+i));
 	}
@@ -960,6 +964,42 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 		p++;
 	}
 	sll_deallocate(ml);
+#else
+	sll_string_length_t ln=(cll+3)&0xfffffffc;
+	wide_data_t* ml=sll_allocate_stack(ln*sizeof(wide_data_t));
+	sll_string_length_t i=0;
+	for (;i<cll;i++){
+		*(ml+i)=0x101010101010101ull*(*(cl+i));
+	}
+	for (;i<ln;i++){
+		*(ml+i)=*(ml+i-1);
+	}
+	ln>>=2;
+	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+		__m256i k=_mm256_set1_epi64x(*p);
+		__m256i v256=_mm256_setzero_si256();
+		__m256i sub=_mm256_set1_epi8(1);
+		const __m256i* m=(const __m256i*)ml;
+		for (sll_string_length_t j=0;j<ln;j++){
+			__m256i e=_mm256_xor_si256(k,_mm256_lddqu_si256(m));
+			m++;
+			v256=_mm256_or_si256(v256,_mm256_andnot_si256(e,_mm256_sub_epi64(e,sub)));
+		}
+		v256=_mm256_or_si256(v256,_mm256_permute2f128_si256(v256,v256,1));
+		wide_data_t v=_mm256_extract_epi64(_mm256_or_si256(v256,_mm256_shuffle_epi32(v256,0x40)),0);
+		if (inv){
+			v=~v;
+		}
+		v&=0x8080808080808080ull;
+		if (v){
+			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
+			sll_deallocate(ml);
+			return (o>=s->l?SLL_MAX_STRING_LENGTH:o);
+		}
+		p++;
+	}
+	sll_deallocate(ml);
+#endif
 	return SLL_MAX_STRING_LENGTH;
 }
 
