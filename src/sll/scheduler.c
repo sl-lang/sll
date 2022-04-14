@@ -26,7 +26,7 @@
 
 
 static load_balancer_t _scheduler_load_balancer;
-static __SLL_TLS scheduler_cpu_data_t* _scheduler_data;
+static scheduler_cpu_data_t* _scheduler_data_base;
 
 
 
@@ -37,10 +37,9 @@ __SLL_TLS thread_data_t* _scheduler_current_thread;
 
 
 static void _cpu_core_worker(void* dt){
-	_scheduler_data=dt;
-	SLL_CRITICAL(sll_platform_set_cpu(_scheduler_data->id));
-	_scheduler_internal_thread_index=_scheduler_data->id;
-	if (_scheduler_data->id){
+	_scheduler_internal_thread_index=(sll_cpu_t)ADDR(dt);
+	SLL_CRITICAL(sll_platform_set_cpu(_scheduler_internal_thread_index));
+	if (_scheduler_internal_thread_index){
 		return;
 	}
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -58,17 +57,18 @@ static void _cpu_core_worker(void* dt){
 
 
 void _scheduler_queue_next(void){
+	scheduler_cpu_data_t* cpu_dt=_scheduler_data_base+_scheduler_internal_thread_index;
 	_scheduler_current_thread->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
-	if (!_scheduler_data->queue_len){
+	if (!cpu_dt->queue_len){
 		return;
 	}
 	_scheduler_current_thread->st=THREAD_STATE_QUEUED;
-	sll_thread_index_t tmp=*(_scheduler_data->queue+_scheduler_data->queue_idx);
-	*(_scheduler_data->queue+_scheduler_data->queue_idx)=_scheduler_current_thread_index;
-	if (!_scheduler_data->queue_idx){
-		_scheduler_data->queue_idx=_scheduler_data->queue_len;
+	sll_thread_index_t tmp=*(cpu_dt->queue+cpu_dt->queue_idx);
+	*(cpu_dt->queue+cpu_dt->queue_idx)=_scheduler_current_thread_index;
+	if (!cpu_dt->queue_idx){
+		cpu_dt->queue_idx=cpu_dt->queue_len;
 	}
-	_scheduler_data->queue_idx--;
+	cpu_dt->queue_idx--;
 	_scheduler_current_thread_index=tmp;
 	_scheduler_current_thread=*(_thread_data+tmp);
 	if (_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED){
@@ -81,33 +81,34 @@ void _scheduler_queue_next(void){
 
 
 sll_thread_index_t _scheduler_queue_pop(void){
-	if (!_scheduler_data->queue_len){
+	scheduler_cpu_data_t* cpu_dt=_scheduler_data_base+_scheduler_internal_thread_index;
+	if (!cpu_dt->queue_len){
 		if (!_thread_active_count){
 			return SLL_UNKNOWN_THREAD_INDEX;
 		}
-		_scheduler_data->wait=1;
-		SLL_CRITICAL(sll_platform_event_wait(_scheduler_data->evt));
-		_scheduler_data->wait=0;
-		if (!_scheduler_data->queue_len){
+		cpu_dt->wait=1;
+		SLL_CRITICAL(sll_platform_event_wait(cpu_dt->evt));
+		cpu_dt->wait=0;
+		if (!cpu_dt->queue_len){
 			return SLL_UNKNOWN_THREAD_INDEX;
 		}
 	}
-	sll_thread_index_t o=*(_scheduler_data->queue+_scheduler_data->queue_idx);
+	sll_thread_index_t o=*(cpu_dt->queue+cpu_dt->queue_idx);
 	if ((*(_thread_data+o))->flags&THREAD_FLAG_SUSPENDED){
 		SLL_UNIMPLEMENTED();
 	}
-	for (queue_length_t i=_scheduler_data->queue_idx+1;i<_scheduler_data->queue_len;i++){
-		*(_scheduler_data->queue+i-1)=*(_scheduler_data->queue+i);
+	for (queue_length_t i=cpu_dt->queue_idx+1;i<cpu_dt->queue_len;i++){
+		*(cpu_dt->queue+i-1)=*(cpu_dt->queue+i);
 	}
-	_scheduler_data->queue_len--;
-	if (!_scheduler_data->queue_len){
-		_scheduler_data->queue_idx=0;
+	cpu_dt->queue_len--;
+	if (!cpu_dt->queue_len){
+		cpu_dt->queue_idx=0;
 	}
 	else{
-		if (!_scheduler_data->queue_idx){
-			_scheduler_data->queue_idx=_scheduler_data->queue_len;
+		if (!cpu_dt->queue_idx){
+			cpu_dt->queue_idx=cpu_dt->queue_len;
 		}
-		_scheduler_data->queue_idx--;
+		cpu_dt->queue_idx--;
 	}
 	(*(_thread_data+o))->st=THREAD_STATE_UNDEFINED;
 	return o;
@@ -118,7 +119,7 @@ sll_thread_index_t _scheduler_queue_pop(void){
 void _scheduler_queue_thread(sll_thread_index_t t){
 	SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_load_balancer.lck));
 	_scheduler_load_balancer.brk=0/*(!_scheduler_load_balancer.brk?_scheduler_load_balancer.len:_scheduler_load_balancer.brk)-1*/;
-	scheduler_cpu_data_t* cpu_dt=_scheduler_load_balancer.dt[_scheduler_load_balancer.brk];
+	scheduler_cpu_data_t* cpu_dt=_scheduler_data_base+_scheduler_load_balancer.brk;
 	SLL_CRITICAL(sll_platform_lock_acquire(cpu_dt->lck));
 	cpu_dt->queue_len++;
 	*(cpu_dt->queue+cpu_dt->queue_len-1)=t;
@@ -144,15 +145,11 @@ sll_return_code_t _scheduler_run(void){
 	if (_scheduler_load_balancer.len>255){
 		_scheduler_load_balancer.len=255;
 	}
-	sll_size_t sz=(sizeof(sll_thread_index_t)+SLL_SCHEDULER_MAX_THREADS/_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t)+7)&0xfffffffffffffff8ull;
-	void* b_ptr=sll_platform_allocate_page(SLL_ROUND_PAGE(_scheduler_load_balancer.len*(sz+sizeof(scheduler_cpu_data_t*))),0);
-	_scheduler_load_balancer.dt=PTR(ADDR(b_ptr)+_scheduler_load_balancer.len*sz);
+	_scheduler_data_base=sll_platform_allocate_page(SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t)),0);
 	_scheduler_load_balancer.lck=sll_platform_lock_create();
 	_scheduler_load_balancer.brk=0;
-	void* ptr=b_ptr;
+	scheduler_cpu_data_t* cpu_dt=_scheduler_data_base;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){
-		scheduler_cpu_data_t* cpu_dt=ptr;
-		*(_scheduler_load_balancer.dt+i)=cpu_dt;
 		cpu_dt->queue_idx=0;
 		cpu_dt->queue_len=!i;
 		cpu_dt->evt=sll_platform_event_create();
@@ -165,26 +162,25 @@ sll_return_code_t _scheduler_run(void){
 			sll_audit(SLL_CHAR("sll.thread.create"),SLL_CHAR("0Ai"),*(cpu_dt->queue));
 		}
 		else{
-			cpu_dt->tid=sll_platform_start_thread(_cpu_core_worker,cpu_dt);
+			cpu_dt->tid=sll_platform_start_thread(_cpu_core_worker,PTR(i));
 		}
-		ptr=PTR(ADDR(ptr)+sz);
+		cpu_dt++;
 	}
-	_cpu_core_worker(b_ptr);
+	_cpu_core_worker(NULL);
 	_audit_cleanup_api();
 	SLL_CRITICAL(sll_platform_set_cpu(SLL_CPU_ANY));
-	ptr=b_ptr;
+	cpu_dt=_scheduler_data_base;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){
-		scheduler_cpu_data_t* cpu_dt=ptr;
 		if (i){
 			SLL_CRITICAL(sll_platform_event_set(cpu_dt->evt));
 			SLL_CRITICAL_COND(i,sll_platform_join_thread(cpu_dt->tid));
 		}
 		SLL_CRITICAL(sll_platform_event_delete(cpu_dt->evt));
 		SLL_CRITICAL(sll_platform_lock_delete(cpu_dt->lck));
-		ptr=PTR(ADDR(ptr)+sz);
+		cpu_dt++;
 	}
 	SLL_CRITICAL(sll_platform_lock_delete(_scheduler_load_balancer.lck));
-	sll_platform_free_page(b_ptr,SLL_ROUND_PAGE(_scheduler_load_balancer.len*(sz+sizeof(scheduler_cpu_data_t*))));
+	sll_platform_free_page(_scheduler_data_base,SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t)));
 	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->ret,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_return_code_t o=(sll_return_code_t)(rc_o->dt.i);
 	GC_RELEASE(rc_o);

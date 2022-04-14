@@ -32,6 +32,7 @@
 - Fixed multiple memory leaks
 - More platform-dependent function return error codes
 - Reduced the number of calls to `sll_platform_lock_acquire` and `sll_platform_lock_release`
+- Reduced the number of thread-local variables
 - Renamed `SLL_ERROR_FLAG_LIBC` and `error_codes$LIBC_ERROR_CODES` to `SLL_ERROR_FLAG_SYSTEM` and `error_codes$SYSTEM_ERROR_CODES`
 - Renamed argument parsing modifier symbolizing variadic functions from `+` to `!`
 - Rewritten the CLI executable loader code
@@ -40,6 +41,7 @@
 
 ### Removed
 
+- Thread number limit macro: `SLL_SCHEDULER_MAX_THREADS`
 - Unused define: `SLL_ERROR_FLAG_WINAPI`
 - Unused map: `error$WINDOWS_ERROR_CODES`
 - Unused type: `sll_decl_copy_node_data_t`

@@ -7,6 +7,10 @@
 
 
 
+#define SCHEDULER_MAX_CPU_CORE_THREADS 8192
+
+
+
 typedef __SLL_U32 queue_length_t;
 
 
@@ -19,13 +23,12 @@ typedef struct __SCHEDULER_CPU_DATA{
 	sll_lock_handle_t lck;
 	sll_cpu_t id;
 	sll_bool_t wait;
-	sll_thread_index_t queue[];
+	sll_thread_index_t queue[SCHEDULER_MAX_CPU_CORE_THREADS];
 } scheduler_cpu_data_t;
 
 
 
 typedef struct __LOAD_BALANCER{
-	scheduler_cpu_data_t** dt;
 	sll_lock_handle_t lck;
 	sll_cpu_t len;
 	sll_cpu_t brk;

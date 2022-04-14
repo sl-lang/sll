@@ -12,17 +12,6 @@
 
 
 /**
- * \flags macro var
- * \name SLL_SCHEDULER_MAX_THREADS
- * \group scheduler
- * \desc Docs!
- * \type sll_thread_index_t
- */
-#define SLL_SCHEDULER_MAX_THREADS 16384
-
-
-
-/**
  * \flags check_output func
  * \name sll_get_cpu_index
  * \group scheduler
