@@ -99,7 +99,6 @@ static void _update_pool_extra(void){
 			}
 		}
 		_memory_pool[i].alloc=0;
-		_memory_pool[i].dealloc=0;
 		_memory_pool[i].miss=0;
 	}
 }
@@ -122,17 +121,14 @@ static __SLL_FORCE_INLINE void _fill_zero(void* o,sll_size_t sz){
 static __SLL_FORCE_INLINE void _pool_add(user_mem_block_t* b){
 	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
 	sll_size_t sz=USER_MEM_BLOCK_GET_SIZE(b)-1;
-	if (sz<MEMORY_POOL_SIZE){
-		_memory_pool[sz].dealloc++;
-		if (_memory_pool[sz].sz){
-			empty_pool_pointer_t* ptr=(empty_pool_pointer_t*)b;
-			ptr->next=_memory_pool[sz].ptr;
-			_memory_pool[sz].ptr=ptr;
-			_memory_pool[sz].sz--;
-			return;
-		}
+	if (sz>=MEMORY_POOL_SIZE||!_memory_pool[sz].sz){
+		free(b);
+		return;
 	}
-	free(b);
+	empty_pool_pointer_t* ptr=(empty_pool_pointer_t*)b;
+	ptr->next=_memory_pool[sz].ptr;
+	_memory_pool[sz].ptr=ptr;
+	_memory_pool[sz].sz--;
 }
 
 
@@ -175,7 +171,6 @@ void _memory_init(void){
 	_memory_update=MEMORY_POOL_UPDATE_TIMER;
 	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
 		_memory_pool[i].alloc=0;
-		_memory_pool[i].dealloc=0;
 		_memory_pool[i].miss=0;
 		_memory_pool[i].last_miss=0;
 		_memory_pool[i].sz=MEMORY_POOL_MAX_BLOCKS;
@@ -282,9 +277,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_fail(void* p,sll_size_t s
 		b=n_ptr;
 	}
 	else{
-		if (prev_sz<=MEMORY_POOL_SIZE){
-			_memory_pool[prev_sz-1].dealloc++;
-		}
 		b=realloc(b,sz<<4);
 		if (!b){
 			return NULL;

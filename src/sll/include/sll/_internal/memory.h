@@ -30,7 +30,6 @@ typedef struct __EMPTY_POOL_POINTER{
 
 typedef struct __POOL_DATA{
 	__SLL_U32 alloc;
-	__SLL_U32 dealloc;
 	__SLL_U32 miss;
 	__SLL_U32 last_miss;
 	__SLL_U32 sz;
