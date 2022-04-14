@@ -1655,13 +1655,10 @@ __SLL_EXTERNAL void sll_string_resize(const sll_string_t* s,sll_integer_t v,sll_
 		v=-v;
 		if (v>=s->l){
 			SLL_INIT_STRING(o);
-			return;
 		}
-		o->l=(sll_string_length_t)(s->l-v);
-		o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
-		INIT_PADDING(o->v,o->l);
-		sll_copy_data(s->v+v,o->l,o->v);
-		sll_string_calculate_checksum(o);
+		else{
+			sll_string_from_pointer_length(s->v+v,s->l-v,o);
+		}
 		return;
 	}
 	SLL_ASSERT(s->l+v<=SLL_MAX_STRING_LENGTH);
