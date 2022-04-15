@@ -9,7 +9,7 @@ import zipfile
 
 
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-BUILD_PATHS=["build/lib","build/sys_lib","build/objects","build/web"]
+BUILD_PATHS=["build/lib","build/sys_lib","build/objects"]
 BUILD_TIME=time.time_ns()
 CLEAR_PATHS=["build/lib","build/sys_lib"]
 EXECUTABLE_EXTENSION={"darwin":"","linux":"","windows":".exe"}
@@ -33,23 +33,12 @@ def fix_env():
 
 
 def create_output_dir():
-	if (os.path.exists("build")):
-		dl=[]
-		for base in CLEAR_PATHS:
-			if (not os.path.exists(base)):
-				os.mkdir(base)
-				continue
-			for r,ndl,fl in os.walk(base):
-				r=r.replace("\\","/").rstrip("/")+"/"
-				for d in ndl:
-					dl.insert(0,r+d)
-				for f in fl:
-					os.remove(r+f)
-		for k in dl:
-			if (k not in CLEAR_PATHS):
-				os.rmdir(k)
-	else:
-		os.mkdir("build")
+	for base in CLEAR_PATHS:
+		if (not os.path.exists(base)):
+			os.mkdir(base)
+			continue
+		for f in os.listdir(base):
+			os.remove(os.path.join(base,f))
 	for k in BUILD_PATHS:
 		if (not os.path.exists(k)):
 			os.mkdir(k)

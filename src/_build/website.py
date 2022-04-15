@@ -139,6 +139,8 @@ def generate():
 			f.write(o)
 	else:
 		util.log("Generating Local Website...")
+		if (not os.path.exists("build/web")):
+			os.mkdir("build/web")
 		i=0
 		while (i<len(o)):
 			l=o[i]

@@ -9,14 +9,14 @@ on:
   workflow_dispatch:
 permissions: read-all
 env:
-  BUILD_COMMAND: python src/_build/main.py --verbose
+  BUILD_COMMAND: chmod +x build.sh&&./build.sh --verbose
 jobs:
   codeql:
     name: Analyze code
     needs:
-      - diff
       - darwin
       - darwin-release
+      - diff
       - linux
       - linux-release
       - web
