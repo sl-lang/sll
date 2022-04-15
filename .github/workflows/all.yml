@@ -9,7 +9,8 @@ on:
   workflow_dispatch:
 permissions: read-all
 env:
-  BUILD_COMMAND: chmod +x build.sh&&./build.sh --verbose
+  BUILD_COMMAND_LINUX: chmod +x build.sh&&./build.sh --verbose
+  BUILD_COMMAND_WINDOWS: build.bat --verbose
 jobs:
   codeql:
     name: Analyze code
@@ -39,7 +40,7 @@ jobs:
         with:
           languages: cpp, javascript
       - name: Build
-        run: ${{env.BUILD_COMMAND}}
+        run: ${{env.BUILD_COMMAND_LINUX}}
       - name: Analyze
         uses: github/codeql-action/analyze@v1
   darwin:
@@ -55,7 +56,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}}
+        run: ${{env.BUILD_COMMAND_LINUX}}
   darwin-release:
     name: Build darwin release
     needs: diff
@@ -69,7 +70,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --release --bundle --upload
+        run: ${{env.BUILD_COMMAND_LINUX}} --release --bundle --upload
       - name: Store assets
         uses: actions/upload-artifact@v3
         with:
@@ -125,7 +126,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}}
+        run: ${{env.BUILD_COMMAND_LINUX}}
   linux-release:
     name: Build linux release
     needs: diff
@@ -139,7 +140,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --release --bundle --upload
+        run: ${{env.BUILD_COMMAND_LINUX}} --release --bundle --upload
       - name: Store assets
         uses: actions/upload-artifact@v3
         with:
@@ -161,7 +162,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}}
+        run: ${{env.BUILD_COMMAND_LINUX}}
         env:
           GENERATE_COVERAGE: 1
       - name: Prepare test
@@ -275,7 +276,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}}
+        run: ${{env.BUILD_COMMAND_WINDOWS}}
   windows-release:
     name: Build windows release
     needs: diff
@@ -289,7 +290,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: ${{env.BUILD_COMMAND}} --release --bundle --upload
+        run: ${{env.BUILD_COMMAND_WINDOWS}} --release --bundle --upload
       - name: Store assets
         uses: actions/upload-artifact@v3
         with:
