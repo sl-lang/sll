@@ -831,8 +831,16 @@ __SLL_EXTERNAL void sll_string_from_pointer_length(const sll_char_t* s,sll_strin
 		a+=4;
 		b+=4;
 	}
-	c256=_mm256_xor_si256(c256,_mm256_permute2f128_si256(c256,c256,1));
-	c=_mm256_extract_epi64(_mm256_xor_si256(c256,_mm256_shuffle_epi32(c256,0x4e)),0);
+	__m128i c128=_mm_xor_si128(_mm256_castsi256_si128(c256),_mm256_extractf128_si256(c256,1));
+	if (l>15){
+		__m128i k=_mm_lddqu_si128((const __m128i*)a);
+		c128=_mm_xor_si128(c128,k);
+		_mm_storeu_si128((__m128i*)b,k);
+		l-=16;
+		a+=2;
+		b+=2;
+	}
+	c=_mm_cvtsi128_si64(_mm_xor_si128(c128,_mm_shuffle_epi32(c128,0xb0)));
 #endif
 	while (l>7){
 		*b=*a;
