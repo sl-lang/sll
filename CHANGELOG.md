@@ -27,7 +27,7 @@
 
 ### Changed
 
-- AVX instructions are now used in multiple functions
+- AVX, MMX and SSE instructions are now used in multiple functions
 - Fixed file lock acquisition
 - Fixed lack of memory initialization in array creation
 - Fixed multiple memory leaks
