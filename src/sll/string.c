@@ -1734,6 +1734,10 @@ __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_
 			*((wide_data_t*)(o->v))=s->c;
 			return;
 		}
+		if (c==1){
+			sll_string_from_pointer_length(s->v+a,(sll_string_length_t)(b-a),o);
+			return;
+		}
 		o->l=(sll_string_length_t)((b-a-1)/c+1);
 		o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(o->l)*sizeof(sll_char_t));
 		INIT_PADDING(o->v,o->l);
