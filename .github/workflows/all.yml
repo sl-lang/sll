@@ -10,7 +10,7 @@ on:
 permissions: read-all
 env:
   BUILD_COMMAND_LINUX: chmod +x build.sh&&./build.sh --verbose
-  BUILD_COMMAND_WINDOWS: build.bat --verbose
+  BUILD_COMMAND_WINDOWS: .\build.bat --verbose
 jobs:
   codeql:
     name: Analyze code
@@ -277,6 +277,7 @@ jobs:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND_WINDOWS}}
+        shell: cmd
   windows-release:
     name: Build windows release
     needs: diff
@@ -291,6 +292,7 @@ jobs:
           python-version: 3.9
       - name: Build
         run: ${{env.BUILD_COMMAND_WINDOWS}} --release --bundle --upload
+        shell: cmd
       - name: Store assets
         uses: actions/upload-artifact@v3
         with:
