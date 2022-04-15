@@ -233,20 +233,30 @@ __SLL_EXTERNAL void sll_string_clone(const sll_string_t* s,sll_string_t* d){
 	STRING_DATA_PTR(a);
 	STRING_DATA_PTR(b);
 	sll_string_length_t l=(s->l>>3)+1;
-#ifndef __SLL_BUILD_DARWIN
-	while (l>3){
-		_mm256_storeu_si256((__m256i*)b,_mm256_lddqu_si256((const __m256i*)a));
-		l-=4;
-		a+=4;
-		b+=4;
-	}
-#endif
+#ifdef __SLL_BUILD_DARWIN
 	while (l){
 		*b=*a;
 		l--;
 		a++;
 		b++;
 	}
+#else
+	while (l>3){
+		_mm256_storeu_si256((__m256i*)b,_mm256_lddqu_si256((const __m256i*)a));
+		l-=4;
+		a+=4;
+		b+=4;
+	}
+	if (l>1){
+		_mm_storeu_si128((__m128i*)b,_mm_lddqu_si128((const __m128i*)a));
+		l-=2;
+		a+=2;
+		b+=2;
+	}
+	if (l){
+		*b=*a;
+	}
+#endif
 }
 
 
