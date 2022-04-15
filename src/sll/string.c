@@ -914,10 +914,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 	if (a->l==b->l){
 		return (sll_string_equal(a,b)?0:SLL_MAX_STRING_LENGTH);
 	}
-	sll_string_checksum_t c=0;
-	for (sll_string_length_t i=0;i<b->l;i++){
-		c^=a->v[i+si]<<((i&3)<<3);
+	wide_data_t c64=0;
+	const wide_data_t* p=(const wide_data_t*)(a->v+si);
+	for (sll_string_length_t i=0;i<((b->l+7)>>3);i++){
+		c64^=*p;
+		p++;
 	}
+	if (b->l&7){
+		c64^=(*(p-1))&(0xffffffffffffffffull<<((b->l&7)<<3));
+	}
+	sll_string_checksum_t c=(sll_string_checksum_t)(c64^(c64>>32));
 	unsigned int shift=(b->l&3)<<3;
 	const sll_char_t* ptr=a->v+si;
 	for (;si<a->l-b->l;si++){
