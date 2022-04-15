@@ -220,7 +220,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Build
-        run: python src/_build/main.py --verbose --web
+        run: ${{env.BUILD_COMMAND_LINUX}} --web
       - name: Store generated website
         uses: actions/upload-artifact@v3
         with:

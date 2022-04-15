@@ -33,8 +33,6 @@ def fix_env():
 
 
 def create_output_dir():
-	if (not os.path.exists("build")):
-		os.mkdir("build")
 	for base in CLEAR_PATHS:
 		if (not os.path.exists(base)):
 			os.mkdir(base)
