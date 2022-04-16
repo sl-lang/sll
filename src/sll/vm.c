@@ -167,6 +167,12 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 
+static sll_object_t* _call_internal(sll_function_index_t fn,sll_object_t*const* al,sll_arg_count_t all){
+	return (sll_current_runtime_data->ift->dt+fn)->p(al,all);
+}
+
+
+
 void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac,sll_bool_t fr){
 	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+fn;
 	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
@@ -835,7 +841,7 @@ _cleanup_jump_table:;
 						if (i<0){
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
-								sll_object_t* n=(sll_current_runtime_data->ift->dt+j)->p(thr->stack+thr->si-ai->dt.ac,ai->dt.ac);
+								sll_object_t* n=_call_internal(j,thr->stack+thr->si-ai->dt.ac,ai->dt.ac);
 								for (sll_arg_count_t k=0;k<ai->dt.ac;k++){
 									thr->si--;
 									GC_RELEASE(*(thr->stack+thr->si));
@@ -873,7 +879,7 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						sll_object_t* n=(sll_current_runtime_data->ift->dt+i)->p(NULL,0);
+						sll_object_t* n=_call_internal(i,NULL,0);
 						*(thr->stack+thr->si)=n;
 						thr->si++;
 						break;
@@ -891,7 +897,7 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						sll_object_t* n=(sll_current_runtime_data->ift->dt+i)->p(thr->stack+thr->si-1,1);
+						sll_object_t* n=_call_internal(i,thr->stack+thr->si-1,1);
 						GC_RELEASE(*(thr->stack+thr->si-1));
 						*(thr->stack+thr->si-1)=n;
 						break;
@@ -917,7 +923,7 @@ _cleanup_jump_table:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
 								GC_RELEASE(*(thr->stack+thr->si-1));
-								sll_object_t* n=(sll_current_runtime_data->ift->dt+j)->p(tos->dt.a.v,tos->dt.a.l);
+								sll_object_t* n=_call_internal(j,tos->dt.a.v,tos->dt.a.l);
 								GC_RELEASE(tos);
 								*(thr->stack+thr->si-1)=n;
 								break;

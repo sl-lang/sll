@@ -69,7 +69,7 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 		case '#':
 			o->fnl++;
 			o->fn=sll_reallocate(o->fn,o->fnl*sizeof(void*));
-			*(o->fn+o->fnl-1)=(void*)sll_var_arg_get(va);
+			*(o->fn+o->fnl-1)=sll_var_arg_get(va);
 		case 'p':
 			cnt=1;
 		case 'h':
@@ -238,7 +238,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 						const sll_char_t* ptr=sll_var_arg_get(va);
 						return (ptr?STRING_POINTER_TO_OBJECT(ptr):STRING_TO_OBJECT(NULL));
 					}
-					const sll_char_t*const* ptr=(const sll_char_t*const*)sll_var_arg_get(va);
+					const sll_char_t*const* ptr=sll_var_arg_get(va);
 					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
 					if (!ptr||!len){
 						return sll_array_to_object(NULL);
@@ -323,7 +323,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case 'O':
 			{
 				if (fl&NEW_OBJECT_FLAG_ARRAY){
-					sll_object_t*const* ptr=(sll_object_t*const*)sll_var_arg_get(va);
+					sll_object_t*const* ptr=sll_var_arg_get(va);
 					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
 					if (!ptr||!len){
 						return sll_array_to_object(NULL);

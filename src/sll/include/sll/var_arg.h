@@ -45,14 +45,25 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_VAR_ARG_LIST_TYPE_RESERVED1
+ * \group var-arg
+ * \desc Internally used as `VAR_ARG_LIST_TYPE_ARRAY`
+ * \type sll_var_arg_type_t
+ */
+#define SLL_VAR_ARG_LIST_TYPE_RESERVED1 3
+
+
+
+/**
  * \flags check_output func
  * \name sll_var_arg_get
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \ret const void*
+ * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const void* sll_var_arg_get(sll_var_arg_list_t* va);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_var_arg_get(sll_var_arg_list_t* va);
 
 
 

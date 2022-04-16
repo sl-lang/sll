@@ -35,6 +35,7 @@
 - Fixed lack of memory initialization in array creation
 - Fixed multiple memory leaks
 - More platform-dependent function return error codes
+- Pointers returned by `sll_var_arg_get` are no longer marked as `const`
 - Reduced the number of calls to `sll_platform_lock_acquire` and `sll_platform_lock_release`
 - Reduced the number of thread-local variables
 - Renamed `SLL_ERROR_FLAG_LIBC` and `error_codes$LIBC_ERROR_CODES` to `SLL_ERROR_FLAG_SYSTEM` and `error_codes$SYSTEM_ERROR_CODES`
