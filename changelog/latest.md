@@ -55,12 +55,7 @@
 
 [0.7.13]: https://github.com/sl-lang/sll/compare/sll-v0.7.12...sll-v0.7.13
 [#268]: https://github.com/sl-lang/sll/issues/268
-[#268]: https://github.com/sl-lang/sll/issues/268
 [#267]: https://github.com/sl-lang/sll/issues/267
-[#262]: https://github.com/sl-lang/sll/issues/262
-[#262]: https://github.com/sl-lang/sll/issues/262
-[#262]: https://github.com/sl-lang/sll/issues/262
-[#262]: https://github.com/sl-lang/sll/issues/262
 [#262]: https://github.com/sl-lang/sll/issues/262
 [#260]: https://github.com/sl-lang/sll/issues/260
 [#59]: https://github.com/sl-lang/sll/issues/59

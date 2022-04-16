@@ -259,7 +259,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_parse_arg_count(const sll_char_
 		sz+=8;
 	}
 	*o=ac;
-	return ac;
+	return sz;
 }
 
 
