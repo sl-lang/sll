@@ -7,6 +7,14 @@
 #define ARG_OUTPUT_TYPE_C 0
 #define ARG_OUTPUT_TYPE_ARRAY 1
 
+#define ARG_BITMAP_NORMAL 0
+#define ARG_BITMAP_REF 1
+#define ARG_BITMAP_WIDE 2
+
+#define ARG_BITMAP_RETURN_NORMAL 0
+#define ARG_BITMAP_RETURN_XMM 1
+#define ARG_BITMAP_RETURN_REF 2
+
 
 
 typedef struct _ARG_STATE{
@@ -37,7 +45,7 @@ typedef struct _ARG_OUTPUT{
 
 
 
-sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_size_t* o);
+sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitmap_t** regs,sll_size_t* o);
 
 
 

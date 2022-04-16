@@ -37,6 +37,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_from_memory(void* ptr,sll_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_init(sll_size_t sz){
 	SLL_ASSERT(!(sz&7));
 	allocator_header_t* o=sll_allocate(sz+sizeof(allocator_header_t));
+	SLL_ASSERT(!(ADDR(o)&7));
 	ALLOCATOR_HEADER_INIT(o,sz>>3);
 	return PTR(ADDR(o)+sizeof(allocator_header_t));
 }

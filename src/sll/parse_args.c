@@ -5,6 +5,7 @@
 #include <sll/common.h>
 #include <sll/complex.h>
 #include <sll/gc.h>
+#include <sll/ift.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -105,6 +106,16 @@
 	} \
 	ENSURE_TYPE(arg,name); \
 	*var=&(arg->dt.field);
+
+#define PUSH_REGISTER(type) \
+	do{ \
+		if (!(ac&31)){ \
+			reg_sz++; \
+			*regs=sll_reallocate(*regs,reg_sz*sizeof(bitmap_t)); \
+			*(*regs+reg_sz-1)=0; \
+		} \
+		*(*regs+reg_sz-1)|=(type)<<((ac&31)<<1); \
+	} while (0)
 
 
 
@@ -245,8 +256,12 @@ static void _parse_object(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_
 
 
 
-sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_size_t* o){
+sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitmap_t** regs,sll_size_t* o){
 	SKIP_WHITESPACE_KEEP_VA;
+	sll_size_t reg_sz=0;
+	if (regs){
+		*regs=NULL;
+	}
 	sll_arg_count_t ac=0;
 	sll_size_t sz=0;
 	sll_bool_t va=0;
@@ -259,6 +274,9 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_size_t* o){
 			if (!arr){
 				if (ac){
 					sz+=8;
+					if (regs){
+						PUSH_REGISTER(ARG_BITMAP_NORMAL);
+					}
 					ac++;
 				}
 				arr=1;
@@ -268,18 +286,67 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_size_t* o){
 			SLL_UNIMPLEMENTED();
 		}
 		else if (*t=='b'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
-			ac++;
-			sz+=(*t=='x'||*t=='d'||*t=='y'?16:8);
+			sz+=8;
 			arr=0;
+			if (regs){
+				bitmap_t type=ARG_BITMAP_NORMAL;
+				switch (*t){
+					case 'x':
+					case 'y':
+						sz+=8;
+						type=ARG_BITMAP_REF|ARG_BITMAP_WIDE;
+						break;
+					case 'd':
+						sz+=8;
+						type=ARG_BITMAP_WIDE;
+						break;
+					case 's':
+					case 'a':
+					case 'm':
+						type=ARG_BITMAP_REF;
+						break;
+				}
+				PUSH_REGISTER(type);
+			}
+			else if (*t=='x'||*t=='d'||*t=='y'){
+				sz++;
+			}
+			ac++;
 		}
 		t++;
 		SKIP_WHITESPACE_KEEP_VA;
 	}
 	if (ac&&va){
-		ac++;
 		sz+=8;
+		PUSH_REGISTER(ARG_BITMAP_NORMAL);
+		ac++;
 	}
-	*o=sz;
+	if (regs){
+		bitmap_t type=ARG_BITMAP_RETURN_NORMAL;
+		switch (ret){
+			case SLL_RETURN_TYPE_BOOL:
+			case SLL_RETURN_TYPE_INT:
+			case SLL_RETURN_TYPE_CHAR:
+			case SLL_RETURN_TYPE_OBJECT:
+			case SLL_RETURN_TYPE_VOID:
+				type=ARG_BITMAP_RETURN_NORMAL;
+				break;
+			case SLL_RETURN_TYPE_FLOAT:
+				type=ARG_BITMAP_RETURN_XMM;
+				break;
+			case SLL_RETURN_TYPE_COMPLEX:
+			case SLL_RETURN_TYPE_STRING:
+			case SLL_RETURN_TYPE_ARRAY:
+			case SLL_RETURN_TYPE_MAP:
+				type=ARG_BITMAP_RETURN_REF;
+				break;
+		}
+		PUSH_REGISTER(type);
+		SLL_ASSERT(reg_sz==((ac<<1)+65)>>6);
+	}
+	if (o){
+		*o=sz;
+	}
 	return ac;
 }
 
@@ -446,8 +513,7 @@ __SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* t){
-	sll_size_t sz;
-	return _parse_arg_count(t,&sz);
+	return _parse_arg_count(t,0,NULL,NULL);
 }
 
 

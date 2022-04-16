@@ -22,45 +22,43 @@ static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t
 	o->fmt=sll_allocate(off+1);
 	sll_copy_data(fmt,off,o->fmt);
 	o->fmt[off]=0;
-	o->_arg_cnt=_parse_arg_count(o->fmt,&(o->_arg_sz));
 	o->ret=SLL_RETURN_TYPE_VOID;
 	while (*(fmt+off)){
 		switch (*(fmt+off)){
 			case 'b':
 				o->ret=SLL_RETURN_TYPE_BOOL;
-				return;
+				goto _ret_found;
 			case 'i':
 				o->ret=SLL_RETURN_TYPE_INT;
-				return;
+				goto _ret_found;
 			case 'f':
 				o->ret=SLL_RETURN_TYPE_FLOAT;
-				return;
+				goto _ret_found;
 			case 'c':
 				o->ret=SLL_RETURN_TYPE_CHAR;
-				return;
+				goto _ret_found;
 			case 'd':
 				o->ret=SLL_RETURN_TYPE_COMPLEX;
-				return;
+				goto _ret_found;
 			case 's':
 				o->ret=SLL_RETURN_TYPE_STRING;
-				o->_arg_cnt++;
-				return;
+				goto _ret_found;
 			case 'a':
 				o->ret=SLL_RETURN_TYPE_ARRAY;
-				o->_arg_cnt++;
-				return;
+				goto _ret_found;
 			case 'm':
 				o->ret=SLL_RETURN_TYPE_MAP;
-				o->_arg_cnt++;
-				return;
+				goto _ret_found;
 			case 'o':
 				o->ret=SLL_RETURN_TYPE_OBJECT;
-				return;
+				goto _ret_found;
 			case 'v':
-				return;
+				goto _ret_found;
 		}
 		off++;
 	}
+_ret_found:
+	o->_arg_cnt=_parse_arg_count(o->fmt,o->ret,&(o->_regs),&(o->_arg_sz));
 }
 
 
@@ -75,9 +73,12 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
 		sll_string_length_t sz=sll_string_length((ift->dt+i)->fmt)+1;
 		p->fmt=sll_allocate(sz);
 		sll_copy_data((ift->dt+i)->fmt,sz,p->fmt);
-		p->_arg_sz=(ift->dt+i)->_arg_sz;
-		p->_arg_cnt=(ift->dt+i)->_arg_cnt;
 		p->ret=(ift->dt+i)->ret;
+		p->_arg_cnt=(ift->dt+i)->_arg_cnt;
+		p->_arg_sz=(ift->dt+i)->_arg_sz;
+		sz=(((p->_arg_cnt<<1)+65)>>6)*sizeof(bitmap_t);
+		p->_regs=sll_allocate(sz);
+		sll_copy_data((ift->dt+i)->_regs,sz,p->_regs);
 		p++;
 	}
 }
@@ -96,6 +97,7 @@ __SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table
 	for (sll_function_index_t i=0;i<ift->l;i++){
 		sll_free_string(&(f->nm));
 		sll_deallocate(f->fmt);
+		sll_deallocate(f->_regs);
 		f++;
 	}
 	sll_deallocate(PTR(ift->dt));
