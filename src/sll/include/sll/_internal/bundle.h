@@ -9,14 +9,14 @@
 
 
 
-typedef struct __SOURCE_FILE_WITH_INDEX{
+typedef struct _SOURCE_FILE_WITH_INDEX{
 	sll_source_file_t* dt;
 	sll_source_file_index_t idx;
 } source_file_with_index_t;
 
 
 
-typedef struct __SOURCE_FILE_LIST{
+typedef struct _SOURCE_FILE_LIST{
 	source_file_with_index_t* dt;
 	sll_source_file_index_t l;
 } source_file_list_t;

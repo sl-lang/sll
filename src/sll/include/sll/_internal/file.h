@@ -19,14 +19,14 @@
 
 
 
-typedef union __EXTENDED_FILE_DATA{
+typedef union _EXTENDED_FILE_DATA{
 	sll_file_t f;
 	sll_file_t* p;
 } extended_file_data_t;
 
 
 
-typedef struct __EXTENDED_FILE{
+typedef struct _EXTENDED_FILE{
 	extended_file_data_t dt;
 	sll_reference_count_t rc;
 	sll_bool_t p;
@@ -34,9 +34,9 @@ typedef struct __EXTENDED_FILE{
 
 
 
-typedef struct __DYNAMIC_BUFFER_CHUNK{
+typedef struct _DYNAMIC_BUFFER_CHUNK{
 	sll_size_t sz;
-	struct __DYNAMIC_BUFFER_CHUNK* n;
+	struct _DYNAMIC_BUFFER_CHUNK* n;
 	sll_char_t dt[];
 } dynamic_buffer_chunk_t;
 

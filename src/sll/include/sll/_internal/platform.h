@@ -9,7 +9,7 @@
 
 
 
-typedef struct __EXECUTE_WRAPPER_DATA{
+typedef struct _EXECUTE_WRAPPER_DATA{
 	sll_internal_thread_function_t fn;
 	void* arg;
 	void* lck;
@@ -17,7 +17,7 @@ typedef struct __EXECUTE_WRAPPER_DATA{
 
 
 
-typedef struct __FILE_LIST_DATA{
+typedef struct _FILE_LIST_DATA{
 	sll_string_t* dt;
 	sll_array_length_t l;
 } file_list_data_t;

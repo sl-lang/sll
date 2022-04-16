@@ -12,7 +12,7 @@
 
 
 
-typedef struct __ALLOCATOR_HEADER{
+typedef struct _ALLOCATOR_HEADER{
 	__SLL_U64 dt;
 } allocator_header_t;
 

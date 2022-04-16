@@ -15,7 +15,7 @@ typedef __SLL_U32 queue_length_t;
 
 
 
-typedef struct __SCHEDULER_CPU_DATA{
+typedef struct _SCHEDULER_CPU_DATA{
 	queue_length_t queue_idx;
 	queue_length_t queue_len;
 	sll_internal_thread_index_t tid;
@@ -28,7 +28,7 @@ typedef struct __SCHEDULER_CPU_DATA{
 
 
 
-typedef struct __LOAD_BALANCER{
+typedef struct _LOAD_BALANCER{
 	sll_lock_handle_t lck;
 	sll_cpu_t len;
 	sll_cpu_t brk;

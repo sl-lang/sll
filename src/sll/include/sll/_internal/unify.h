@@ -4,7 +4,7 @@
 
 
 
-typedef struct __SOURCE_FILE_MAPPING_DATA{
+typedef struct _SOURCE_FILE_MAPPING_DATA{
 	sll_string_index_t* sm;
 	sll_function_index_t f_id_off;
 	sll_scope_t sc_off;

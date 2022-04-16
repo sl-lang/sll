@@ -18,7 +18,7 @@
 
 
 
-typedef struct __SCOPE_DATA{
+typedef struct _SCOPE_DATA{
 	bitmap_t* m;
 	sll_scope_t l_sc;
 	sll_scope_t ml;
@@ -26,14 +26,14 @@ typedef struct __SCOPE_DATA{
 
 
 
-typedef struct __NEW_VARIABLE_DATA{
+typedef struct _NEW_VARIABLE_DATA{
 	sll_node_t** dt;
 	sll_arg_count_t sz;
 } new_variable_data_t;
 
 
 
-typedef struct __EXTRA_COMPILATION_DATA{
+typedef struct _EXTRA_COMPILATION_DATA{
 	scope_data_t sc;
 	sll_compilation_data_t* c_dt;
 	sll_internal_function_table_t* i_ft;
@@ -47,7 +47,7 @@ typedef struct __EXTRA_COMPILATION_DATA{
 
 
 
-typedef struct __NUMBER_PARSER_STATE{
+typedef struct _NUMBER_PARSER_STATE{
 	sll_integer_t hi;
 	sll_integer_t lo;
 	sll_integer_t exp;

@@ -40,7 +40,7 @@ typedef __SLL_U32 thread_list_length_t;
 
 
 
-typedef struct __THREAD_DATA{
+typedef struct _THREAD_DATA{
 	sll_object_t** stack;
 	sll_object_t** tls;
 	sll_instruction_index_t ii;

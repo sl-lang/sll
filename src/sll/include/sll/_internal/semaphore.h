@@ -17,7 +17,7 @@ typedef __SLL_U32 semaphore_list_length_t;
 
 
 
-typedef struct __SEMAPHORE{
+typedef struct _SEMAPHORE{
 	sll_semaphore_counter_t count;
 	sll_thread_index_t first;
 	thread_data_t* last;

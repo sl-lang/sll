@@ -17,7 +17,7 @@ typedef __SLL_U32 lock_list_length_t;
 
 
 
-typedef struct __LOCK{
+typedef struct _LOCK{
 	sll_thread_index_t lock;
 	sll_thread_index_t first;
 	thread_data_t* last;

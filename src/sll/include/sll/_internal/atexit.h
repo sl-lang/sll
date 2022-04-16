@@ -4,7 +4,7 @@
 
 
 
-typedef struct __ATEXIT_FUNCTION{
+typedef struct _ATEXIT_FUNCTION{
 	sll_integer_t fn;
 	sll_arg_count_t all;
 	sll_object_t* al[];

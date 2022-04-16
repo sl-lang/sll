@@ -31,14 +31,14 @@
 
 
 
-typedef union __STATIC_STRING_SOURCE{
+typedef union _STATIC_STRING_SOURCE{
 	const sll_char_t* s;
 	void (*fn)(sll_string_t*);
 } static_string_source_t;
 
 
 
-typedef struct __INIT_STRING{
+typedef struct _INIT_STRING{
 	sll_string_t* p;
 	static_string_source_t dt;
 	sll_string_length_t dtl;

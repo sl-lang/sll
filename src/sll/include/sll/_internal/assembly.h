@@ -30,14 +30,14 @@ typedef sll_instruction_index_t assembly_instruction_label_t;
 
 
 
-typedef struct __IDENTIFIER_DATA{
+typedef struct _IDENTIFIER_DATA{
 	sll_variable_index_t v;
 	sll_bool_t rm;
 } identifier_data_t;
 
 
 
-typedef struct __IDENTIFIER_MAP_DATA{
+typedef struct _IDENTIFIER_MAP_DATA{
 	identifier_data_t* s_im[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
 	identifier_data_t* l_im;
 	sll_scope_t l_sc;
@@ -48,21 +48,21 @@ typedef struct __IDENTIFIER_MAP_DATA{
 
 
 
-typedef struct __IDENTIFIER_REMOVE_DATA{
+typedef struct _IDENTIFIER_REMOVE_DATA{
 	void** s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
 	void** l;
 } identifier_remove_data_t;
 
 
 
-typedef struct __LOOP{
+typedef struct _LOOP{
 	assembly_instruction_label_t cnt;
 	assembly_instruction_label_t brk;
 } loop_t;
 
 
 
-typedef struct __ASSEMBLY_GENERATOR_DATA{
+typedef struct _ASSEMBLY_GENERATOR_DATA{
 	sll_assembly_data_t* a_dt;
 	const sll_source_file_t* sf;
 	identifier_map_data_t it;
@@ -76,14 +76,14 @@ typedef struct __ASSEMBLY_GENERATOR_DATA{
 
 
 
-typedef struct __ASSEMBLY_LOOP_GENERATOR_DATA{
+typedef struct _ASSEMBLY_LOOP_GENERATOR_DATA{
 	loop_t p_l_dt;
 	bitmap_t* v_st;
 } assembly_loop_generator_data_t;
 
 
 
-typedef struct __STRING_MAP_DATA{
+typedef struct _STRING_MAP_DATA{
 	sll_string_index_t ml;
 	bitmap_t* m;
 	sll_string_index_t* im;
@@ -91,14 +91,14 @@ typedef struct __STRING_MAP_DATA{
 
 
 
-typedef struct __NODE_LABEL{
+typedef struct _NODE_LABEL{
 	const sll_node_t* o;
 	assembly_instruction_label_t l;
 } node_label_t;
 
 
 
-typedef struct __FILE_LINE{
+typedef struct _FILE_LINE{
 	sll_file_offset_t ln;
 	sll_string_index_t fp;
 } file_line_t;

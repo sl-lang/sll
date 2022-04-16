@@ -35,14 +35,14 @@
 
 
 
-typedef struct __CLI_BUNDLE_SOURCE{
+typedef struct _CLI_BUNDLE_SOURCE{
 	sll_char_t* nm;
 	sll_bundle_t b;
 } cli_bundle_source_t;
 
 
 
-typedef struct __CLI_AUDIT_LIBRARY{
+typedef struct _CLI_AUDIT_LIBRARY{
 	const sll_char_t* nm;
 	sll_library_handle_t lh;
 } cli_audit_library_t;

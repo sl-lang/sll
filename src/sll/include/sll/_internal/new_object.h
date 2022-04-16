@@ -9,7 +9,7 @@
 
 
 
-typedef struct __STRUCT_OFFSET_BUILDER{
+typedef struct _STRUCT_OFFSET_BUILDER{
 	sll_size_t* off;
 	sll_arg_count_t l;
 	void** fn;

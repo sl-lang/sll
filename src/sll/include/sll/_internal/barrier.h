@@ -17,7 +17,7 @@ typedef __SLL_U32 barrier_list_length_t;
 
 
 
-typedef struct __BARRIER{
+typedef struct _BARRIER{
 	sll_barrier_counter_t count;
 	sll_thread_index_t first;
 	thread_data_t* last;

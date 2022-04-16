@@ -16,19 +16,19 @@
 
 
 
-typedef struct __USER_MEM_BLOCK{
+typedef struct _USER_MEM_BLOCK{
 	__SLL_U64 dt;
 } user_mem_block_t;
 
 
 
-typedef struct __EMPTY_POOL_POINTER{
-	struct __EMPTY_POOL_POINTER* next;
+typedef struct _EMPTY_POOL_POINTER{
+	struct _EMPTY_POOL_POINTER* next;
 } empty_pool_pointer_t;
 
 
 
-typedef struct __POOL_DATA{
+typedef struct _POOL_DATA{
 	__SLL_U32 alloc;
 	__SLL_U32 miss;
 	__SLL_U32 last_miss;

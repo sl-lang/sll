@@ -9,7 +9,7 @@
 
 
 
-typedef union __JSON_NUMBER{
+typedef union _JSON_NUMBER{
 	sll_integer_t i;
 	sll_float_t f;
 } json_number_t;
