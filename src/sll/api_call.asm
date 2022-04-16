@@ -3,8 +3,16 @@ section .text
 
 
 
-global _call_api_func
-_call_api_func:
+%ifdef __SLL_BUILD_DARWIN
+%define FUNC(nm) _ %+ nm
+%else
+%define FUNC(nm) nm
+%endif
+
+
+
+global FUNC(_call_api_func)
+FUNC(_call_api_func):
 	push rbp
 	mov rbp, rsp
 	sub rsp, 32
