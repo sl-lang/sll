@@ -16,6 +16,15 @@ extern const internal_function_t* _ifunc_data;
 
 
 
+static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_t* o){
+	sll_string_from_pointer(nm,&(o->nm));
+	o->p=fn;
+	o->fmt=fmt;
+	o->_arg_cnt=sll_parse_arg_count(fmt);
+}
+
+
+
 __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_table_t* ift,sll_internal_function_table_t* o){
 	o->l=ift->l;
 	o->dt=sll_allocate(o->l*sizeof(const sll_internal_function_t));
@@ -68,11 +77,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_funct
 __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_pointer_t f){
 	i_ft->l++;
 	i_ft->dt=sll_reallocate(PTR(i_ft->dt),i_ft->l*sizeof(const sll_internal_function_t));
-	sll_internal_function_t* nf=(sll_internal_function_t*)(i_ft->dt+i_ft->l-1);
-	sll_string_from_pointer(nm,&(nf->nm));
-	nf->p=f;
-	nf->fmt=fmt;
-	nf->_fmt_len=sll_parse_arg_count(fmt);
+	_create_function(f,nm,fmt,(sll_internal_function_t*)(i_ft->dt+i_ft->l-1));
 	return i_ft->l-1;
 }
 
@@ -84,10 +89,7 @@ __SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_functio
 	const internal_function_t* f=_ifunc_data;
 	sll_internal_function_t* p=(sll_internal_function_t*)(ift->dt+ift->l-_ifunc_size);
 	for (sll_function_index_t i=0;i<_ifunc_size;i++){
-		sll_string_from_pointer(f->nm,&(p->nm));
-		p->p=f->f;
-		p->fmt=f->fmt;
-		p->_fmt_len=sll_parse_arg_count(f->fmt);
+		_create_function(f->f,f->nm,f->fmt,p);
 		f++;
 		p++;
 	}

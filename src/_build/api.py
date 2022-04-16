@@ -7,6 +7,7 @@ TYPE_PTR=["IF","S","CS","A","M"]
 TYPE_CHECK_OUTPUT=["S","A","M","O"]
 TYPE_PTR_NO_FMT=["IF","CS"]
 TYPE_RETURN_MAP={"I":"return sll_int_to_object(out)","B":"SLL_ACQUIRE(sll_static_int[out]);return sll_static_int[out]","F":"return sll_float_to_object(out)","C":"return SLL_FROM_CHAR(out)","D":"return sll_complex_to_object(out)","S":"return STRING_TO_OBJECT_NOCOPY(&out)","A":"return sll_array_to_object_nocopy(&out)","M":"return sll_map_to_object_nocopy(&out)"}
+RET_FORMAP_MAP={"B":"b","I":"i","F":"f","C":"c","D":"d","S":"s","A":"a","M":"m","O":"o","V":"v"}
 
 
 
@@ -92,6 +93,6 @@ def generate_c_api(d_dt,api_dt):
 				hf.write(f"\n/**\n * \\flags subgroup\n * \\name {d_dt['groups'][k['group']]['name'][:-3].strip()}\n * \\group raw-api\n * \\subgroup raw-api-{k['group']}\n * \\desc Docs!\n */")
 			hf.write("\n\n\n")
 			cf.write("}\n")
-			fn_l.append(f"{{\n\t\tSLL_CHAR(\"sll:{k['name'][8:]}\"),\n\t\t{k['name']}_raw,\n\t\tSLL_CHAR(\"{fmt}\")\n\t}}")
+			fn_l.append(f"{{\n\t\tSLL_CHAR(\"sll:{k['name'][8:]}\"),\n\t\t{k['name']}_raw,\n\t\tSLL_CHAR(\"{fmt}|{RET_FORMAP_MAP[k['ret']['type']]}\")\n\t}}")
 		hf.write("\n#endif\n")
 		cf.write(f"\n\n\nstatic const internal_function_t _ifunc_data_ptr[]={{\n\t"+",\n\t".join(fn_l)+f"\n}};\n\n\n\nconst sll_function_index_t _ifunc_size={len(fn_l)};\nconst internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);\n")

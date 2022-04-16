@@ -2308,982 +2308,982 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_count"),
 		sll_api_array_count_raw,
-		SLL_CHAR("ao")
+		SLL_CHAR("ao|i")
 	},
 	{
 		SLL_CHAR("sll:array_create"),
 		sll_api_array_create_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|a")
 	},
 	{
 		SLL_CHAR("sll:array_extend"),
 		sll_api_array_extend_raw,
-		SLL_CHAR("aa")
+		SLL_CHAR("aa|v")
 	},
 	{
 		SLL_CHAR("sll:array_index"),
 		sll_api_array_index_raw,
-		SLL_CHAR("ao")
+		SLL_CHAR("ao|i")
 	},
 	{
 		SLL_CHAR("sll:array_join"),
 		sll_api_array_join_raw,
-		SLL_CHAR("a+o")
+		SLL_CHAR("a+o|a")
 	},
 	{
 		SLL_CHAR("sll:array_pop"),
 		sll_api_array_pop_raw,
-		SLL_CHAR("a")
+		SLL_CHAR("a|o")
 	},
 	{
 		SLL_CHAR("sll:array_push"),
 		sll_api_array_push_raw,
-		SLL_CHAR("ao")
+		SLL_CHAR("ao|v")
 	},
 	{
 		SLL_CHAR("sll:array_remove"),
 		sll_api_array_remove_raw,
-		SLL_CHAR("ao")
+		SLL_CHAR("ao|v")
 	},
 	{
 		SLL_CHAR("sll:array_replace"),
 		sll_api_array_replace_raw,
-		SLL_CHAR("aoo")
+		SLL_CHAR("aoo|a")
 	},
 	{
 		SLL_CHAR("sll:array_reverse"),
 		sll_api_array_reverse_raw,
-		SLL_CHAR("a")
+		SLL_CHAR("a|a")
 	},
 	{
 		SLL_CHAR("sll:array_shift"),
 		sll_api_array_shift_raw,
-		SLL_CHAR("a")
+		SLL_CHAR("a|o")
 	},
 	{
 		SLL_CHAR("sll:array_split"),
 		sll_api_array_split_raw,
-		SLL_CHAR("ao")
+		SLL_CHAR("ao|a")
 	},
 	{
 		SLL_CHAR("sll:array_unshift"),
 		sll_api_array_unshift_raw,
-		SLL_CHAR("ao")
+		SLL_CHAR("ao|v")
 	},
 	{
 		SLL_CHAR("sll:atexit_register"),
 		sll_api_atexit_register_raw,
-		SLL_CHAR("io!")
+		SLL_CHAR("io!|v")
 	},
 	{
 		SLL_CHAR("sll:atexit_unregister"),
 		sll_api_atexit_unregister_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:audit__init"),
 		sll_api_audit__init_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|v")
 	},
 	{
 		SLL_CHAR("sll:audit_audit"),
 		sll_api_audit_audit_raw,
-		SLL_CHAR("sso!")
+		SLL_CHAR("sso!|v")
 	},
 	{
 		SLL_CHAR("sll:base64_decode"),
 		sll_api_base64_decode_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|o")
 	},
 	{
 		SLL_CHAR("sll:base64_encode"),
 		sll_api_base64_encode_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:date_get_time_zone"),
 		sll_api_date_get_time_zone_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|a")
 	},
 	{
 		SLL_CHAR("sll:date_merge"),
 		sll_api_date_merge_raw,
-		SLL_CHAR("iiiiif")
+		SLL_CHAR("iiiiif|f")
 	},
 	{
 		SLL_CHAR("sll:date_split"),
 		sll_api_date_split_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|a")
 	},
 	{
 		SLL_CHAR("sll:error_get_call_stack"),
 		sll_api_error_get_call_stack_raw,
-		SLL_CHAR("ii")
+		SLL_CHAR("ii|o")
 	},
 	{
 		SLL_CHAR("sll:file_close"),
 		sll_api_file_close_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:file_copy"),
 		sll_api_file_copy_raw,
-		SLL_CHAR("ss")
+		SLL_CHAR("ss|i")
 	},
 	{
 		SLL_CHAR("sll:file_delete"),
 		sll_api_file_delete_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|i")
 	},
 	{
 		SLL_CHAR("sll:file_flush"),
 		sll_api_file_flush_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:file_from_data"),
 		sll_api_file_from_data_raw,
-		SLL_CHAR("si")
+		SLL_CHAR("si|i")
 	},
 	{
 		SLL_CHAR("sll:file_get_buffer"),
 		sll_api_file_get_buffer_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|s")
 	},
 	{
 		SLL_CHAR("sll:file_get_temp_path"),
 		sll_api_file_get_temp_path_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|s")
 	},
 	{
 		SLL_CHAR("sll:file_inc_handle"),
 		sll_api_file_inc_handle_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|v")
 	},
 	{
 		SLL_CHAR("sll:file_open"),
 		sll_api_file_open_raw,
-		SLL_CHAR("si")
+		SLL_CHAR("si|i")
 	},
 	{
 		SLL_CHAR("sll:file_peek"),
 		sll_api_file_peek_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|o")
 	},
 	{
 		SLL_CHAR("sll:file_read"),
 		sll_api_file_read_raw,
-		SLL_CHAR("ii")
+		SLL_CHAR("ii|o")
 	},
 	{
 		SLL_CHAR("sll:file_read_char"),
 		sll_api_file_read_char_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|o")
 	},
 	{
 		SLL_CHAR("sll:file_rename"),
 		sll_api_file_rename_raw,
-		SLL_CHAR("ss")
+		SLL_CHAR("ss|i")
 	},
 	{
 		SLL_CHAR("sll:file_std_handle"),
 		sll_api_file_std_handle_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:file_write"),
 		sll_api_file_write_raw,
-		SLL_CHAR("is")
+		SLL_CHAR("is|i")
 	},
 	{
 		SLL_CHAR("sll:float_get_compare_error"),
 		sll_api_float_get_compare_error_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|f")
 	},
 	{
 		SLL_CHAR("sll:float_set_compare_error"),
 		sll_api_float_set_compare_error_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|v")
 	},
 	{
 		SLL_CHAR("sll:hash_md5"),
 		sll_api_hash_md5_raw,
-		SLL_CHAR("iiiis")
+		SLL_CHAR("iiiis|a")
 	},
 	{
 		SLL_CHAR("sll:hash_sha1"),
 		sll_api_hash_sha1_raw,
-		SLL_CHAR("iiiiis")
+		SLL_CHAR("iiiiis|a")
 	},
 	{
 		SLL_CHAR("sll:hash_sha256"),
 		sll_api_hash_sha256_raw,
-		SLL_CHAR("iiiiiiiis")
+		SLL_CHAR("iiiiiiiis|a")
 	},
 	{
 		SLL_CHAR("sll:hash_sha512"),
 		sll_api_hash_sha512_raw,
-		SLL_CHAR("iiiiiiiis")
+		SLL_CHAR("iiiiiiiis|a")
 	},
 	{
 		SLL_CHAR("sll:int_to_bin"),
 		sll_api_int_to_bin_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|s")
 	},
 	{
 		SLL_CHAR("sll:int_to_dec"),
 		sll_api_int_to_dec_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|s")
 	},
 	{
 		SLL_CHAR("sll:int_to_hex"),
 		sll_api_int_to_hex_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|s")
 	},
 	{
 		SLL_CHAR("sll:int_to_oct"),
 		sll_api_int_to_oct_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|s")
 	},
 	{
 		SLL_CHAR("sll:json__init"),
 		sll_api_json__init_raw,
-		SLL_CHAR("ooo")
+		SLL_CHAR("ooo|v")
 	},
 	{
 		SLL_CHAR("sll:json_parse"),
 		sll_api_json_parse_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|o")
 	},
 	{
 		SLL_CHAR("sll:json_stringify"),
 		sll_api_json_stringify_raw,
-		SLL_CHAR("o")
+		SLL_CHAR("o|s")
 	},
 	{
 		SLL_CHAR("sll:log_log"),
 		sll_api_log_log_raw,
-		SLL_CHAR("o!")
+		SLL_CHAR("o!|v")
 	},
 	{
 		SLL_CHAR("sll:log_set_default"),
 		sll_api_log_set_default_raw,
-		SLL_CHAR("ib")
+		SLL_CHAR("ib|v")
 	},
 	{
 		SLL_CHAR("sll:log_set_file"),
 		sll_api_log_set_file_raw,
-		SLL_CHAR("sib")
+		SLL_CHAR("sib|v")
 	},
 	{
 		SLL_CHAR("sll:log_set_function"),
 		sll_api_log_set_function_raw,
-		SLL_CHAR("ssib")
+		SLL_CHAR("ssib|v")
 	},
 	{
 		SLL_CHAR("sll:map_extend"),
 		sll_api_map_extend_raw,
-		SLL_CHAR("mm")
+		SLL_CHAR("mm|v")
 	},
 	{
 		SLL_CHAR("sll:map_remove"),
 		sll_api_map_remove_raw,
-		SLL_CHAR("mo")
+		SLL_CHAR("mo|v")
 	},
 	{
 		SLL_CHAR("sll:math_abs"),
 		sll_api_math_abs_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_acos"),
 		sll_api_math_acos_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_acosh"),
 		sll_api_math_acosh_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_asin"),
 		sll_api_math_asin_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_asinh"),
 		sll_api_math_asinh_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_atan"),
 		sll_api_math_atan_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_atan2"),
 		sll_api_math_atan2_raw,
-		SLL_CHAR("ff")
+		SLL_CHAR("ff|f")
 	},
 	{
 		SLL_CHAR("sll:math_atanh"),
 		sll_api_math_atanh_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_cbrt"),
 		sll_api_math_cbrt_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_ceil"),
 		sll_api_math_ceil_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|i")
 	},
 	{
 		SLL_CHAR("sll:math_combinations"),
 		sll_api_math_combinations_raw,
-		SLL_CHAR("ii")
+		SLL_CHAR("ii|i")
 	},
 	{
 		SLL_CHAR("sll:math_copy_sign"),
 		sll_api_math_copy_sign_raw,
-		SLL_CHAR("ff")
+		SLL_CHAR("ff|f")
 	},
 	{
 		SLL_CHAR("sll:math_cos"),
 		sll_api_math_cos_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_cosh"),
 		sll_api_math_cosh_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_euler_phi"),
 		sll_api_math_euler_phi_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:math_exp"),
 		sll_api_math_exp_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_factorial"),
 		sll_api_math_factorial_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:math_factors"),
 		sll_api_math_factors_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|o")
 	},
 	{
 		SLL_CHAR("sll:math_floor"),
 		sll_api_math_floor_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|i")
 	},
 	{
 		SLL_CHAR("sll:math_gcd"),
 		sll_api_math_gcd_raw,
-		SLL_CHAR("ii")
+		SLL_CHAR("ii|i")
 	},
 	{
 		SLL_CHAR("sll:math_int_log2"),
 		sll_api_math_int_log2_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:math_int_pow"),
 		sll_api_math_int_pow_raw,
-		SLL_CHAR("iii")
+		SLL_CHAR("iii|i")
 	},
 	{
 		SLL_CHAR("sll:math_int_sqrt"),
 		sll_api_math_int_sqrt_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:math_log"),
 		sll_api_math_log_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_log10"),
 		sll_api_math_log10_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_log2"),
 		sll_api_math_log2_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_permutations"),
 		sll_api_math_permutations_raw,
-		SLL_CHAR("ii")
+		SLL_CHAR("ii|i")
 	},
 	{
 		SLL_CHAR("sll:math_pow"),
 		sll_api_math_pow_raw,
-		SLL_CHAR("ff")
+		SLL_CHAR("ff|f")
 	},
 	{
 		SLL_CHAR("sll:math_round"),
 		sll_api_math_round_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|i")
 	},
 	{
 		SLL_CHAR("sll:math_sin"),
 		sll_api_math_sin_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_sinh"),
 		sll_api_math_sinh_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_sqrt"),
 		sll_api_math_sqrt_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_tan"),
 		sll_api_math_tan_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:math_tanh"),
 		sll_api_math_tanh_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:object_new"),
 		sll_api_object_new_raw,
-		SLL_CHAR("so!")
+		SLL_CHAR("so!|o")
 	},
 	{
 		SLL_CHAR("sll:path_absolute"),
 		sll_api_path_absolute_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:path_exists"),
 		sll_api_path_exists_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|i")
 	},
 	{
 		SLL_CHAR("sll:path_get_cwd"),
 		sll_api_path_get_cwd_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|o")
 	},
 	{
 		SLL_CHAR("sll:path_is_dir"),
 		sll_api_path_is_dir_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|i")
 	},
 	{
 		SLL_CHAR("sll:path_join"),
 		sll_api_path_join_raw,
-		SLL_CHAR("s!")
+		SLL_CHAR("s!|s")
 	},
 	{
 		SLL_CHAR("sll:path_list_dir"),
 		sll_api_path_list_dir_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|o")
 	},
 	{
 		SLL_CHAR("sll:path_mkdir"),
 		sll_api_path_mkdir_raw,
-		SLL_CHAR("sb")
+		SLL_CHAR("sb|i")
 	},
 	{
 		SLL_CHAR("sll:path_recursive_list_dir"),
 		sll_api_path_recursive_list_dir_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|o")
 	},
 	{
 		SLL_CHAR("sll:path_relative"),
 		sll_api_path_relative_raw,
-		SLL_CHAR("ss")
+		SLL_CHAR("ss|s")
 	},
 	{
 		SLL_CHAR("sll:path_set_cwd"),
 		sll_api_path_set_cwd_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|i")
 	},
 	{
 		SLL_CHAR("sll:path_size"),
 		sll_api_path_size_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|i")
 	},
 	{
 		SLL_CHAR("sll:path_split"),
 		sll_api_path_split_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|a")
 	},
 	{
 		SLL_CHAR("sll:path_split_drive"),
 		sll_api_path_split_drive_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|a")
 	},
 	{
 		SLL_CHAR("sll:process_execute_shell"),
 		sll_api_process_execute_shell_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|i")
 	},
 	{
 		SLL_CHAR("sll:process_get_pid"),
 		sll_api_process_get_pid_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|i")
 	},
 	{
 		SLL_CHAR("sll:process_join"),
 		sll_api_process_join_raw,
-		SLL_CHAR("s+")
+		SLL_CHAR("s+|s")
 	},
 	{
 		SLL_CHAR("sll:process_split"),
 		sll_api_process_split_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|a")
 	},
 	{
 		SLL_CHAR("sll:process_start"),
 		sll_api_process_start_raw,
-		SLL_CHAR("asis")
+		SLL_CHAR("asis|a")
 	},
 	{
 		SLL_CHAR("sll:random_get_float"),
 		sll_api_random_get_float_raw,
-		SLL_CHAR("ff")
+		SLL_CHAR("ff|f")
 	},
 	{
 		SLL_CHAR("sll:random_get_int"),
 		sll_api_random_get_int_raw,
-		SLL_CHAR("ii")
+		SLL_CHAR("ii|i")
 	},
 	{
 		SLL_CHAR("sll:random_get_string"),
 		sll_api_random_get_string_raw,
-		SLL_CHAR("icc")
+		SLL_CHAR("icc|s")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_float"),
 		sll_api_serial_decode_float_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|f")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_integer"),
 		sll_api_serial_decode_integer_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_object"),
 		sll_api_serial_decode_object_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|o")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_signed_integer"),
 		sll_api_serial_decode_signed_integer_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_string"),
 		sll_api_serial_decode_string_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|o")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_float"),
 		sll_api_serial_encode_float_raw,
-		SLL_CHAR("if")
+		SLL_CHAR("if|v")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_integer"),
 		sll_api_serial_encode_integer_raw,
-		SLL_CHAR("ii")
+		SLL_CHAR("ii|v")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_object"),
 		sll_api_serial_encode_object_raw,
-		SLL_CHAR("io!")
+		SLL_CHAR("io!|v")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_signed_integer"),
 		sll_api_serial_encode_signed_integer_raw,
-		SLL_CHAR("ii")
+		SLL_CHAR("ii|v")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_string"),
 		sll_api_serial_encode_string_raw,
-		SLL_CHAR("is")
+		SLL_CHAR("is|v")
 	},
 	{
 		SLL_CHAR("sll:sort_quicksort"),
 		sll_api_sort_quicksort_raw,
-		SLL_CHAR("abbi")
+		SLL_CHAR("abbi|o")
 	},
 	{
 		SLL_CHAR("sll:string_checksum"),
 		sll_api_string_checksum_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|i")
 	},
 	{
 		SLL_CHAR("sll:string_convert"),
 		sll_api_string_convert_raw,
-		SLL_CHAR("o!")
+		SLL_CHAR("o!|s")
 	},
 	{
 		SLL_CHAR("sll:string_count"),
 		sll_api_string_count_raw,
-		SLL_CHAR("sy")
+		SLL_CHAR("sy|i")
 	},
 	{
 		SLL_CHAR("sll:string_count_left"),
 		sll_api_string_count_left_raw,
-		SLL_CHAR("sc")
+		SLL_CHAR("sc|i")
 	},
 	{
 		SLL_CHAR("sll:string_count_right"),
 		sll_api_string_count_right_raw,
-		SLL_CHAR("sc")
+		SLL_CHAR("sc|i")
 	},
 	{
 		SLL_CHAR("sll:string_ends"),
 		sll_api_string_ends_raw,
-		SLL_CHAR("sy")
+		SLL_CHAR("sy|b")
 	},
 	{
 		SLL_CHAR("sll:string_flip_case"),
 		sll_api_string_flip_case_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:string_format"),
 		sll_api_string_format_raw,
-		SLL_CHAR("so!")
+		SLL_CHAR("so!|s")
 	},
 	{
 		SLL_CHAR("sll:string_index"),
 		sll_api_string_index_raw,
-		SLL_CHAR("syi")
+		SLL_CHAR("syi|i")
 	},
 	{
 		SLL_CHAR("sll:string_index_list"),
 		sll_api_string_index_list_raw,
-		SLL_CHAR("syb")
+		SLL_CHAR("syb|i")
 	},
 	{
 		SLL_CHAR("sll:string_index_reverse"),
 		sll_api_string_index_reverse_raw,
-		SLL_CHAR("sy")
+		SLL_CHAR("sy|i")
 	},
 	{
 		SLL_CHAR("sll:string_index_reverse_list"),
 		sll_api_string_index_reverse_list_raw,
-		SLL_CHAR("syb")
+		SLL_CHAR("syb|i")
 	},
 	{
 		SLL_CHAR("sll:string_join"),
 		sll_api_string_join_raw,
-		SLL_CHAR("ya")
+		SLL_CHAR("ya|s")
 	},
 	{
 		SLL_CHAR("sll:string_pad"),
 		sll_api_string_pad_raw,
-		SLL_CHAR("sic")
+		SLL_CHAR("sic|s")
 	},
 	{
 		SLL_CHAR("sll:string_pad_left"),
 		sll_api_string_pad_left_raw,
-		SLL_CHAR("sic")
+		SLL_CHAR("sic|s")
 	},
 	{
 		SLL_CHAR("sll:string_pad_right"),
 		sll_api_string_pad_right_raw,
-		SLL_CHAR("sic")
+		SLL_CHAR("sic|s")
 	},
 	{
 		SLL_CHAR("sll:string_replace"),
 		sll_api_string_replace_raw,
-		SLL_CHAR("syy")
+		SLL_CHAR("syy|s")
 	},
 	{
 		SLL_CHAR("sll:string_reverse"),
 		sll_api_string_reverse_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:string_secure_equal"),
 		sll_api_string_secure_equal_raw,
-		SLL_CHAR("ss")
+		SLL_CHAR("ss|b")
 	},
 	{
 		SLL_CHAR("sll:string_split"),
 		sll_api_string_split_raw,
-		SLL_CHAR("sy")
+		SLL_CHAR("sy|a")
 	},
 	{
 		SLL_CHAR("sll:string_starts"),
 		sll_api_string_starts_raw,
-		SLL_CHAR("sy")
+		SLL_CHAR("sy|b")
 	},
 	{
 		SLL_CHAR("sll:string_to_lower_case"),
 		sll_api_string_to_lower_case_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:string_to_title_case"),
 		sll_api_string_to_title_case_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:string_to_upper_case"),
 		sll_api_string_to_upper_case_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:string_trim"),
 		sll_api_string_trim_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:string_trim_left"),
 		sll_api_string_trim_left_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:string_trim_right"),
 		sll_api_string_trim_right_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|s")
 	},
 	{
 		SLL_CHAR("sll:struct_double_from_bits"),
 		sll_api_struct_double_from_bits_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|f")
 	},
 	{
 		SLL_CHAR("sll:struct_double_to_bits"),
 		sll_api_struct_double_to_bits_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|i")
 	},
 	{
 		SLL_CHAR("sll:struct_float_from_bits"),
 		sll_api_struct_float_from_bits_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|f")
 	},
 	{
 		SLL_CHAR("sll:struct_float_to_bits"),
 		sll_api_struct_float_to_bits_raw,
-		SLL_CHAR("f")
+		SLL_CHAR("f|i")
 	},
 	{
 		SLL_CHAR("sll:sys_get_args"),
 		sll_api_sys_get_args_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|o")
 	},
 	{
 		SLL_CHAR("sll:sys_get_cpu_count"),
 		sll_api_sys_get_cpu_count_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|i")
 	},
 	{
 		SLL_CHAR("sll:sys_get_env"),
 		sll_api_sys_get_env_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|m")
 	},
 	{
 		SLL_CHAR("sll:sys_get_executable"),
 		sll_api_sys_get_executable_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|s")
 	},
 	{
 		SLL_CHAR("sll:sys_get_library"),
 		sll_api_sys_get_library_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|s")
 	},
 	{
 		SLL_CHAR("sll:sys_get_platform"),
 		sll_api_sys_get_platform_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|s")
 	},
 	{
 		SLL_CHAR("sll:sys_get_sandbox_flags"),
 		sll_api_sys_get_sandbox_flags_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|i")
 	},
 	{
 		SLL_CHAR("sll:sys_get_version"),
 		sll_api_sys_get_version_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|a")
 	},
 	{
 		SLL_CHAR("sll:sys_load_library"),
 		sll_api_sys_load_library_raw,
-		SLL_CHAR("siiiii")
+		SLL_CHAR("siiiii|b")
 	},
 	{
 		SLL_CHAR("sll:sys_remove_env"),
 		sll_api_sys_remove_env_raw,
-		SLL_CHAR("s")
+		SLL_CHAR("s|v")
 	},
 	{
 		SLL_CHAR("sll:sys_set_env"),
 		sll_api_sys_set_env_raw,
-		SLL_CHAR("ss")
+		SLL_CHAR("ss|v")
 	},
 	{
 		SLL_CHAR("sll:sys_set_sandbox_flag"),
 		sll_api_sys_set_sandbox_flag_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|v")
 	},
 	{
 		SLL_CHAR("sll:thread_create"),
 		sll_api_thread_create_raw,
-		SLL_CHAR("ia")
+		SLL_CHAR("ia|i")
 	},
 	{
 		SLL_CHAR("sll:thread_create_barrier"),
 		sll_api_thread_create_barrier_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|i")
 	},
 	{
 		SLL_CHAR("sll:thread_create_lock"),
 		sll_api_thread_create_lock_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|i")
 	},
 	{
 		SLL_CHAR("sll:thread_create_semaphore"),
 		sll_api_thread_create_semaphore_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:thread_delete"),
 		sll_api_thread_delete_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:thread_delete_barrier"),
 		sll_api_thread_delete_barrier_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:thread_delete_lock"),
 		sll_api_thread_delete_lock_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:thread_delete_semaphore"),
 		sll_api_thread_delete_semaphore_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:thread_get_internal_data"),
 		sll_api_thread_get_internal_data_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|a")
 	},
 	{
 		SLL_CHAR("sll:thread_increase_barrier"),
 		sll_api_thread_increase_barrier_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:thread_release_lock"),
 		sll_api_thread_release_lock_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:thread_release_semaphore"),
 		sll_api_thread_release_semaphore_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:thread_reset_barrier"),
 		sll_api_thread_reset_barrier_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|i")
 	},
 	{
 		SLL_CHAR("sll:thread_restart"),
 		sll_api_thread_restart_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:thread_suspend"),
 		sll_api_thread_suspend_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:time_current"),
 		sll_api_time_current_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|f")
 	},
 	{
 		SLL_CHAR("sll:time_current_ns"),
 		sll_api_time_current_ns_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|i")
 	},
 	{
 		SLL_CHAR("sll:time_sleep"),
 		sll_api_time_sleep_raw,
-		SLL_CHAR("x")
+		SLL_CHAR("x|f")
 	},
 	{
 		SLL_CHAR("sll:time_sleep_ns"),
 		sll_api_time_sleep_ns_raw,
-		SLL_CHAR("x")
+		SLL_CHAR("x|i")
 	},
 	{
 		SLL_CHAR("sll:vm_get_config"),
 		sll_api_vm_get_config_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|a")
 	},
 	{
 		SLL_CHAR("sll:vm_get_instruction_count"),
 		sll_api_vm_get_instruction_count_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|i")
 	},
 	{
 		SLL_CHAR("sll:vm_get_instruction_index"),
 		sll_api_vm_get_instruction_index_raw,
-		SLL_CHAR("")
+		SLL_CHAR("|i")
 	},
 	{
 		SLL_CHAR("sll:vm_get_location"),
 		sll_api_vm_get_location_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|o")
 	},
 	{
 		SLL_CHAR("sll:vm_get_ref_count"),
 		sll_api_vm_get_ref_count_raw,
-		SLL_CHAR("o")
+		SLL_CHAR("o|i")
 	},
 	{
 		SLL_CHAR("sll:weakref__init"),
 		sll_api_weakref__init_raw,
-		SLL_CHAR("oi")
+		SLL_CHAR("oi|v")
 	},
 	{
 		SLL_CHAR("sll:weakref_create"),
 		sll_api_weakref_create_raw,
-		SLL_CHAR("o")
+		SLL_CHAR("o|i")
 	},
 	{
 		SLL_CHAR("sll:weakref_delete"),
 		sll_api_weakref_delete_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|b")
 	},
 	{
 		SLL_CHAR("sll:weakref_get"),
 		sll_api_weakref_get_raw,
-		SLL_CHAR("i")
+		SLL_CHAR("i|o")
 	},
 	{
 		SLL_CHAR("sll:weakref_set_callback_data"),
 		sll_api_weakref_set_callback_data_raw,
-		SLL_CHAR("io")
+		SLL_CHAR("io|v")
 	}
 };
 
