@@ -5,6 +5,7 @@
 #include <sll/platform/path.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/version.h>
 
 
 
