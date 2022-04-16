@@ -6,7 +6,7 @@
 
 
 
-#define __API_FUNC(nm) __SLL_EXTERNAL __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
+#define __API_FUNC(nm) __SLL_EXTERNAL __SLL_API_CALL __SLL_API_TYPE_sll_api_##nm sll_api_##nm(__SLL_API_ARGS_sll_api_##nm)
 
 
 

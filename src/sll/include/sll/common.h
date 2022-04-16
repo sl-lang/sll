@@ -10,6 +10,7 @@
 #define __SLL_EXTERNAL __declspec(dllimport)
 #endif
 #define __SLL_CHECK_OUTPUT _Check_return_
+#define __SLL_API_CALL
 #else
 #ifdef __SLL_COMPILATION__
 #define __SLL_EXTERNAL __attribute__((visibility("default")))
@@ -17,6 +18,7 @@
 #define __SLL_EXTERNAL
 #endif
 #define __SLL_CHECK_OUTPUT __attribute__((warn_unused_result))
+#define __SLL_API_CALL __attribute__((ms_abi))
 #endif
 
 

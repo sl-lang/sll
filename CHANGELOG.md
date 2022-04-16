@@ -29,6 +29,7 @@
 
 ### Changed
 
+- All Sll API functions now use the Microsoft x64 calling convention
 - AVX, MMX and SSE instructions are now used in multiple functions
 - Fixed file lock acquisition
 - Fixed lack of memory initialization in array creation
