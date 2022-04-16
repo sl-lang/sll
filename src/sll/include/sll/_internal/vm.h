@@ -9,7 +9,7 @@
 
 
 
-__SLL_API_CALL sll_object_t* _call_api_func(sll_internal_function_pointer_t fn,void* regs,void* data,sll_object_t*const* al,sll_arg_count_t all);
+__SLL_API_CALL void _call_api_func(sll_internal_function_pointer_t fn,bitmap_t* regs,const void* data,void* ret,sll_object_t*const* al,sll_arg_count_t all);
 
 
 

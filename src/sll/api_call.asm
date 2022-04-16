@@ -23,16 +23,14 @@ section .text
 
 global __C_FUNC(_call_api_func)
 __C_FUNC(_call_api_func):
-	push rbp
-	mov rbp, rsp
+	push rbx
 	sub rsp, 32
-	mov QWORD [rbp+16], rcx
-	mov QWORD [rbp+24], rdx
-	mov QWORD [rbp+32], r8
-	mov QWORD [rbp+40], r9
-	mov rax, QWORD [rbp+16]
-	mov rcx, QWORD [rbp+40]
-	mov edx, DWORD [rbp+48]
+	mov rax, rcx
+	mov rcx, QWORD [rsp+80]
+	mov edx, DWORD [rsp+88]
+	mov rbx, r9
 	call rax
-	leave
+	mov QWORD [rbx], rax
+	add rsp, 32
+	pop rbx
 	ret
