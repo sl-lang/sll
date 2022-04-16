@@ -23,15 +23,6 @@ system=platform.system().lower()
 
 
 
-def fix_env():
-	if (system=="windows" and len(os.getenv("GITHUB_ACTIONS",""))!=0):
-		for k in str(subprocess.run([str(subprocess.run([os.environ["ProgramFiles(x86)"]+"/Microsoft Visual Studio/Installer/vswhere.exe","-nologo","-latest","-products","*","-requires","Microsoft.VisualStudio.Component.VC.Tools.x86.x64","-property","installationPath"],stdout=subprocess.PIPE).stdout.strip(),"utf-8")+"/VC/Auxiliary/Build/vcvarsall.bat","x64","&&","cls","&&","set"],shell=True,stdout=subprocess.PIPE).stdout.split(b"\x0c")[1],"utf-8").split("\r\n"):
-			k=[e.strip() for e in k.split("=")]
-			if (k[0].lower() in ["path","include","lib","libpath"]):
-				os.environ[k[0].upper()]=k[1]
-
-
-
 def create_output_dir():
 	for base in CLEAR_PATHS:
 		if (not os.path.exists(base)):

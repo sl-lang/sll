@@ -275,6 +275,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_WINDOWS}}
         shell: cmd
@@ -290,6 +292,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_WINDOWS}} --release --bundle --upload
         shell: cmd
