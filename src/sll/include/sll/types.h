@@ -782,6 +782,8 @@ typedef sll_object_t* (*sll_internal_function_pointer_t)(sll_object_t*const*,sll
 typedef struct __SLL_INTERNAL_FUNCTION{
 	sll_string_t nm;
 	sll_internal_function_pointer_t p;
+	const sll_char_t* fmt;
+	sll_arg_count_t _fmt_len;
 } sll_internal_function_t;
 
 

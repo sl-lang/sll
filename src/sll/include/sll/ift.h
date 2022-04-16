@@ -98,10 +98,11 @@ __SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_functio
  * \desc Docs!
  * \arg sll_internal_function_table_t* i_ft
  * \arg const sll_char_t* nm
+ * \arg const sll_char_t* fmt
  * \arg sll_internal_function_pointer_t f
  * \ret sll_function_index_t
  */
-__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f);
+__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_pointer_t f);
 
 
 

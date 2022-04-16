@@ -13,6 +13,7 @@
 typedef struct __INTERNAL_FUNCTION{
 	const sll_char_t* nm;
 	const sll_internal_function_pointer_t f;
+	const sll_char_t* fmt;
 } internal_function_t;
 
 

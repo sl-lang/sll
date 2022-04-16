@@ -5,6 +5,7 @@
 #include <sll/common.h>
 #include <sll/ift.h>
 #include <sll/memory.h>
+#include <sll/parse_args.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
@@ -22,6 +23,7 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
 	for (sll_function_index_t i=0;i<ift->l;i++){
 		sll_string_clone(&((ift->dt+i)->nm),&(p->nm));
 		p->p=(ift->dt+i)->p;
+		p->fmt=(ift->dt+i)->fmt;
 		p++;
 	}
 }
@@ -63,12 +65,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_funct
 
 
 
-__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,sll_internal_function_pointer_t f){
+__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_pointer_t f){
 	i_ft->l++;
 	i_ft->dt=sll_reallocate(PTR(i_ft->dt),i_ft->l*sizeof(const sll_internal_function_t));
 	sll_internal_function_t* nf=(sll_internal_function_t*)(i_ft->dt+i_ft->l-1);
 	sll_string_from_pointer(nm,&(nf->nm));
 	nf->p=f;
+	nf->fmt=fmt;
+	nf->_fmt_len=sll_parse_arg_count(fmt);
 	return i_ft->l-1;
 }
 
@@ -82,6 +86,8 @@ __SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_functio
 	for (sll_function_index_t i=0;i<_ifunc_size;i++){
 		sll_string_from_pointer(f->nm,&(p->nm));
 		p->p=f->f;
+		p->fmt=f->fmt;
+		p->_fmt_len=sll_parse_arg_count(f->fmt);
 		f++;
 		p++;
 	}
