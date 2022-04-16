@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 permissions: read-all
 env:
-  BUILD_COMMAND_LINUX: chmod +x build.sh&&./build.sh --verbose
+  BUILD_COMMAND_LINUX: ./build.sh --verbose
   BUILD_COMMAND_WINDOWS: .\build.bat --verbose
 jobs:
   codeql:
