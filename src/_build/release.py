@@ -19,27 +19,9 @@ ISSUE_REGEX=re.compile(r"\[#([0-9]+)\]")
 if (__name__=="__main__"):
 	util.create_output_dir()
 	v=header.read_version("src/sll/include/sll/version.h")
-	util.log("Generating Release Changelog...")
-	with open("CHANGELOG.md","r") as f:
-		dt=f.read().replace("\r\n","\n")
-		s=dt.index("\n",dt.index("\n## ")+1)+1
-		dt=FILE_PATH_MAIN_REGEX.sub(fr"[\1][{v[0]}.{v[1]}.{v[2]}\2]",dt[s:dt.index("\n## ",s+1)])
-		now=datetime.datetime.now()
-		desc=f"# Sll [{v[0]}.{v[1]}.{v[2]}] - {now.year}-{now.month:02}-{now.day:02}\n\n"+HEADING_REGEX.sub(r"\n\1 ",dt).strip()+f"\n\n[{v[0]}.{v[1]}.{v[2]}]: https://github.com/sl-lang/sll/compare/sll-v{v[0]}.{v[1]}.{v[2]-1}...sll-v{v[0]}.{v[1]}.{v[2]}\n"
-		util.log("  Generating Links...")
-		for e in sorted(map(int,ISSUE_REGEX.findall(dt)),reverse=True):
-			desc+=f"[#{e}]: https://github.com/sl-lang/sll/issues/{e}\n"
-		l={}
-		for t,p in FILE_PATH_REGEX.findall(dt):
-			t=tuple(map(int,t.split(".")))
-			if (t not in l):
-				l[t]=[p]
-			else:
-				l[t].append(p)
-		for t,pl in sorted(l.items(),key=lambda e:e[0],reverse=True):
-			ts=".".join(map(str,t))
-			for p in sorted(pl):
-				desc+=f"[{ts}{p}]: https://github.com/sl-lang/sll/blob/sll-v{ts}{p}\n"
+	util.log("Reading Release Changelog...")
+	with open("changelog/latest.md","r") as f:
+		desc=f.read().replace("\r\n","\n")
 	headers={"Accept":"application/vnd.github.v3+json","Authorization":"token "+sys.argv[-1],"Content-Type":"application/json"}
 	util.log("Creating Release...")
 	sha=requests.get("https://api.github.com/repos/sl-lang/sll/git/ref/heads/main",headers=headers).json()["object"]["sha"]
