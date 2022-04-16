@@ -20,6 +20,10 @@
 	while (*t==' '||(*t>8&&*t<14)||*t=='!'){ \
 		t++; \
 	}
+#define SKIP_WHITESPACE_KEEP_VA \
+	while (*t==' '||(*t>8&&*t<14)){ \
+		t++; \
+	}
 
 #define INIT_ZERO(x) \
 	do{ \
@@ -101,26 +105,6 @@
 	} \
 	ENSURE_TYPE(arg,name); \
 	*var=&(arg->dt.field);
-#define PARSE_TYPES(type,name1,field1,name2,field2,init) \
-	if (arr){ \
-		SLL_UNIMPLEMENTED(); \
-	} \
-	type* var=GET_PTR(type); \
-	if (!arg){ \
-		var->t=SLL_PARSE_ARGS_TYPE_##name2; \
-		init(&(var->dt.field2)); \
-	} \
-	else if (arg->t==SLL_OBJECT_TYPE_##name1){ \
-		var->t=SLL_PARSE_ARGS_TYPE_##name1; \
-		var->dt.field1=arg->dt.field1; \
-	} \
-	else if (arg->t==SLL_OBJECT_TYPE_##name2){ \
-		var->t=SLL_PARSE_ARGS_TYPE_##name2; \
-		var->dt.field2=arg->dt.field2; \
-	} \
-	else{ \
-		SLL_UNIMPLEMENTED(); \
-	}
 
 
 
@@ -169,6 +153,30 @@ static void _parse_float_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st
 
 
 
+static void _parse_int_or_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+	if (arr){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_int_float_t* var=GET_PTR(sll_int_float_t);
+	if (!arg){
+		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+		var->dt.f=0;
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_INT){
+		var->t=SLL_PARSE_ARGS_TYPE_INT;
+		var->dt.i=arg->dt.i;
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_FLOAT){
+		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+		var->dt.f=arg->dt.f;
+	}
+	else{
+		SLL_UNIMPLEMENTED();
+	}
+}
+
+
+
 static void _parse_char(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_char_t,CHAR,c,INIT_ZERO);
 }
@@ -194,7 +202,24 @@ static void _parse_string(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_
 
 
 static void _parse_char_or_string(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPES(sll_char_string_t,CHAR,c,STRING,s,SLL_INIT_STRING);
+	if (arr){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_char_string_t* var=GET_PTR(sll_char_string_t);
+	if (!arg){
+		SLL_UNIMPLEMENTED();
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_CHAR){
+		var->t=SLL_PARSE_ARGS_TYPE_CHAR;
+		var->dt.c=arg->dt.c;
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_STRING){
+		var->t=SLL_PARSE_ARGS_TYPE_STRING;
+		var->dt.s=&(arg->dt.s);
+	}
+	else{
+		SLL_UNIMPLEMENTED();
+	}
 }
 
 
@@ -211,17 +236,51 @@ static void _parse_map(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_out
 
 
 
-static void _parse_int_or_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPES(sll_int_float_t,INT,i,FLOAT,f,INIT_ZERO);
-}
-
-
-
 static void _parse_object(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
 	if (arr){
 		SLL_UNIMPLEMENTED();
 	}
 	*GET_PTR(sll_object_t*)=(arg?arg:SLL_ACQUIRE_STATIC_INT(0));
+}
+
+
+
+sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_size_t* o){
+	SKIP_WHITESPACE_KEEP_VA;
+	sll_arg_count_t ac=0;
+	sll_size_t sz=0;
+	sll_bool_t va=0;
+	sll_bool_t arr=0;
+	while (*t){
+		if (*t=='!'){
+			va=1;
+		}
+		else if (*t=='+'){
+			if (!arr){
+				if (ac){
+					sz+=8;
+					ac++;
+				}
+				arr=1;
+			}
+		}
+		else if (*t=='I'||*t=='F'||*t=='C'){
+			SLL_UNIMPLEMENTED();
+		}
+		else if (*t=='b'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
+			ac++;
+			sz+=(*t=='x'||*t=='d'||*t=='y'?16:8);
+			arr=0;
+		}
+		t++;
+		SKIP_WHITESPACE_KEEP_VA;
+	}
+	if (ac&&va){
+		ac++;
+		sz+=8;
+	}
+	*o=sz;
+	return ac;
 }
 
 
@@ -386,42 +445,9 @@ __SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_parse_arg_count(const sll_char_t* t,sll_arg_count_t* o){
-	SKIP_WHITESPACE;
-	sll_arg_count_t ac=0;
-	sll_size_t sz=0;
-	sll_bool_t va=0;
-	sll_bool_t arr=0;
-	while (*t){
-		if (*t=='!'){
-			va=1;
-		}
-		else if (*t=='+'){
-			if (!arr){
-				if (ac){
-					sz+=8;
-					ac++;
-				}
-				arr=1;
-			}
-		}
-		else if (*t=='I'||*t=='F'||*t=='C'){
-			SLL_UNIMPLEMENTED();
-		}
-		else if (*t=='b'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
-			ac++;
-			sz+=(*t=='x'||*t=='d'||*t=='y'?16:8);
-			arr=0;
-		}
-		t++;
-		SKIP_WHITESPACE;
-	}
-	if (ac){
-		ac+=va;
-		sz+=8;
-	}
-	*o=ac;
-	return sz;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* t){
+	sll_size_t sz;
+	return _parse_arg_count(t,&sz);
 }
 
 

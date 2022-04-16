@@ -72,10 +72,9 @@ __SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt);
  * \group parse-args
  * \desc Docs!
  * \arg const sll_char_t* t
- * \arg sll_arg_count_t* o
- * \ret sll_size_t
+ * \ret sll_arg_count_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_parse_arg_count(const sll_char_t* t,sll_arg_count_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* t);
 
 
 

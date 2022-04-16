@@ -1,19 +1,14 @@
 #include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/parse_args.h>
 #include <sll/_internal/platform.h>
 #include <sll/_internal/string.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/ift.h>
 #include <sll/memory.h>
-#include <sll/parse_args.h>
 #include <sll/string.h>
 #include <sll/types.h>
-
-
-
-extern const sll_function_index_t _ifunc_size;
-extern const internal_function_t* _ifunc_data;
 
 
 
@@ -27,7 +22,7 @@ static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t
 	o->fmt=sll_allocate(off+1);
 	sll_copy_data(fmt,off,o->fmt);
 	o->fmt[off]=0;
-	o->_arg_sz=sll_parse_arg_count(o->fmt,&(o->_arg_cnt));
+	o->_arg_cnt=_parse_arg_count(o->fmt,&(o->_arg_sz));
 	o->ret=SLL_RETURN_TYPE_VOID;
 	while (*(fmt+off)){
 		switch (*(fmt+off)){
@@ -80,6 +75,7 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
 		sll_string_length_t sz=sll_string_length((ift->dt+i)->fmt)+1;
 		p->fmt=sll_allocate(sz);
 		sll_copy_data((ift->dt+i)->fmt,sz,p->fmt);
+		p->_arg_sz=(ift->dt+i)->_arg_sz;
 		p->_arg_cnt=(ift->dt+i)->_arg_cnt;
 		p->ret=(ift->dt+i)->ret;
 		p++;

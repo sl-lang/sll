@@ -316,7 +316,7 @@ __API_FUNC(string_convert){
 
 
 __API_FUNC(string_count){
-	return (b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_count_char(a,b->dt.c):sll_string_count(a,&(b->dt.s)));
+	return (b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_count_char(a,b->dt.c):sll_string_count(a,b->dt.s));
 }
 
 
@@ -337,7 +337,7 @@ __API_FUNC(string_ends){
 	if (b->t==SLL_PARSE_ARGS_TYPE_CHAR){
 		return (a->l&&a->v[a->l-1]==b->dt.c);
 	}
-	return sll_string_ends(a,&(b->dt.s));
+	return sll_string_ends(a,b->dt.s);
 }
 
 
@@ -364,28 +364,28 @@ __API_FUNC(string_flip_case){
 
 
 __API_FUNC(string_index){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,0,(sll_string_length_t)c):sll_string_index(a,&(b->dt.s),(sll_string_length_t)c));
+	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,0,(sll_string_length_t)c):sll_string_index(a,b->dt.s,(sll_string_length_t)c));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
 __API_FUNC(string_index_list){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,c,0):sll_string_index_multiple(a,b->dt.s.v,b->dt.s.l,c));
+	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,c,0):sll_string_index_multiple(a,b->dt.s->v,b->dt.s->l,c));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
 __API_FUNC(string_index_reverse){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,0):sll_string_index_reverse(a,&(b->dt.s)));
+	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,0):sll_string_index_reverse(a,b->dt.s));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
 __API_FUNC(string_index_reverse_list){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,c):sll_string_index_reverse_multiple(a,b->dt.s.v,b->dt.s.l,c));
+	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,c):sll_string_index_reverse_multiple(a,b->dt.s->v,b->dt.s->l,c));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
@@ -396,7 +396,7 @@ __API_FUNC_DECL(string_join){
 		sll_string_join_char(a->dt.c,b->v,b->l,out);
 	}
 	else{
-		sll_string_join(&(a->dt.s),b->v,b->l,out);
+		sll_string_join(a->dt.s,b->v,b->l,out);
 	}
 }
 
@@ -439,7 +439,7 @@ __API_FUNC(string_replace){
 	}
 	else if (!c){
 		if (b->t==SLL_PARSE_ARGS_TYPE_STRING){
-			sll_string_remove(a,&(b->dt.s),out);
+			sll_string_remove(a,b->dt.s,out);
 		}
 		else{
 			sll_string_t s;
@@ -455,17 +455,17 @@ __API_FUNC(string_replace){
 		else if (b->t==SLL_PARSE_ARGS_TYPE_CHAR){
 			sll_string_t s;
 			sll_string_from_char(b->dt.c,&s);
-			sll_string_replace(a,&s,&(c->dt.s),out);
+			sll_string_replace(a,&s,c->dt.s,out);
 			sll_free_string(&s);
 		}
 		else if (c->t==SLL_PARSE_ARGS_TYPE_CHAR){
 			sll_string_t s;
 			sll_string_from_char(c->dt.c,&s);
-			sll_string_replace(a,&(b->dt.s),&s,out);
+			sll_string_replace(a,b->dt.s,&s,out);
 			sll_free_string(&s);
 		}
 		else{
-			sll_string_replace(a,&(b->dt.s),&(c->dt.s),out);
+			sll_string_replace(a,b->dt.s,c->dt.s,out);
 		}
 	}
 }
@@ -489,7 +489,7 @@ __API_FUNC(string_split){
 		sll_string_split_char(a,b->dt.c,out);
 	}
 	else{
-		sll_string_split(a,&(b->dt.s),out);
+		sll_string_split(a,b->dt.s,out);
 	}
 }
 
@@ -499,7 +499,7 @@ __API_FUNC(string_starts){
 	if (b->t==SLL_PARSE_ARGS_TYPE_CHAR){
 		return (a->l&&a->v[0]==b->dt.c);
 	}
-	return sll_string_starts(a,&(b->dt.s));
+	return sll_string_starts(a,b->dt.s);
 }
 
 

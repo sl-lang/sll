@@ -3,6 +3,7 @@
 #include <sll/_internal/dispatcher.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/lock.h>
+#include <sll/_internal/parse_args.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/semaphore.h>
 #include <sll/_internal/stack.h>
@@ -27,6 +28,7 @@
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
+#include <sll/parse_args.h>
 #include <sll/platform/memory.h>
 #include <sll/sandbox.h>
 #include <sll/scheduler.h>
@@ -168,7 +170,22 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 static sll_object_t* _call_internal(sll_function_index_t fn,sll_object_t*const* al,sll_arg_count_t all){
-	return (sll_current_runtime_data->ift->dt+fn)->p(al,all);
+	const sll_internal_function_t* dt=sll_current_runtime_data->ift->dt+fn;
+	void* bf=sll_allocate_stack(dt->_arg_sz);
+	arg_output_t ao={
+		ARG_OUTPUT_TYPE_ARRAY,
+		{
+			.arr={
+				bf,
+				dt->_arg_sz
+			}
+		}
+	};
+	sll_arg_state_t st=_parse_args_raw(dt->fmt,al,all,&ao);
+	sll_object_t* o=dt->p(al,all);
+	sll_free_args(st);
+	sll_deallocate(bf);
+	return o;
 }
 
 

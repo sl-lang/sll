@@ -18,4 +18,9 @@ typedef struct _INTERNAL_FUNCTION{
 
 
 
+extern const sll_function_index_t _ifunc_size;
+extern const internal_function_t* _ifunc_data;
+
+
+
 #endif
