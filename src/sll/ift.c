@@ -77,8 +77,11 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
 	for (sll_function_index_t i=0;i<ift->l;i++){
 		sll_string_clone(&((ift->dt+i)->nm),&(p->nm));
 		p->p=(ift->dt+i)->p;
-		p->fmt=(ift->dt+i)->fmt;
+		sll_string_length_t sz=sll_string_length((ift->dt+i)->fmt)+1;
+		p->fmt=sll_allocate(sz);
+		sll_copy_data((ift->dt+i)->fmt,sz,p->fmt);
 		p->_arg_cnt=(ift->dt+i)->_arg_cnt;
+		p->ret=(ift->dt+i)->ret;
 		p++;
 	}
 }
@@ -96,6 +99,7 @@ __SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table
 	sll_internal_function_t* f=(sll_internal_function_t*)(ift->dt);
 	for (sll_function_index_t i=0;i<ift->l;i++){
 		sll_free_string(&(f->nm));
+		sll_deallocate(f->fmt);
 		f++;
 	}
 	sll_deallocate(PTR(ift->dt));
