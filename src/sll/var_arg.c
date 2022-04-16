@@ -59,13 +59,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_var_arg_get(sll_var_arg_list_t* va){
 		return va_arg(*(va->dt.c),void*);
 	}
 	GET_TYPE_IF_STRUCT(void*);
-	if (va->t==VAR_ARG_LIST_TYPE_ARRAY){
-		SLL_ASSERT(va->dt.a.l);
-		void* o=*(va->dt.a.p);
-		va->dt.a.p++;
-		va->dt.a.l--;
-		return o;
-	}
 	if (!va->dt.sll.l){
 		return NULL;
 	}
@@ -82,9 +75,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 		return (sll_char_t)va_arg(*(va->dt.c),int);
 	}
 	GET_TYPE_IF_STRUCT(sll_char_t);
-	if (va->t==VAR_ARG_LIST_TYPE_ARRAY){
-		SLL_UNIMPLEMENTED();
-	}
 	if (!va->dt.sll.l){
 		return 0;
 	}
@@ -103,9 +93,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_var_arg_get_complex(sll_var_
 		return *va_arg(*(va->dt.c),sll_complex_t*);
 	}
 	GET_TYPE_IF_STRUCT(sll_complex_t);
-	if (va->t==VAR_ARG_LIST_TYPE_ARRAY){
-		SLL_UNIMPLEMENTED();
-	}
 	if (!va->dt.sll.l){
 		sll_complex_t o={
 			0,
@@ -128,9 +115,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_var_arg_get_float(sll_var_arg_
 		return va_arg(*(va->dt.c),sll_float_t);
 	}
 	GET_TYPE_IF_STRUCT(sll_float_t);
-	if (va->t==VAR_ARG_LIST_TYPE_ARRAY){
-		SLL_UNIMPLEMENTED();
-	}
 	if (!va->dt.sll.l){
 		return 0;
 	}
@@ -149,9 +133,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_
 		return va_arg(*(va->dt.c),sll_integer_t);
 	}
 	GET_TYPE_IF_STRUCT(sll_integer_t);
-	if (va->t==VAR_ARG_LIST_TYPE_ARRAY){
-		SLL_UNIMPLEMENTED();
-	}
 	if (!va->dt.sll.l){
 		return 0;
 	}
@@ -175,9 +156,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_var_arg_get_object(sll_var_a
 		va->dt.sll.p++;
 		va->dt.sll.l--;
 		return o;
-	}
-	if (va->t==VAR_ARG_LIST_TYPE_ARRAY){
-		SLL_UNIMPLEMENTED();
 	}
 	sll_object_t* o;
 	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
@@ -205,9 +183,6 @@ __SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* 
 	}
 	else if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
 		SLL_UNREACHABLE();
-	}
-	else if (va->t==VAR_ARG_LIST_TYPE_ARRAY){
-		SLL_UNIMPLEMENTED();
 	}
 	else if (!va->dt.sll.l){
 		SLL_INIT_STRING(o);

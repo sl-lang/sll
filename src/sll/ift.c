@@ -27,7 +27,7 @@ static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t
 	o->fmt=sll_allocate(off+1);
 	sll_copy_data(fmt,off,o->fmt);
 	o->fmt[off]=0;
-	o->_arg_cnt=sll_parse_arg_count(o->fmt);
+	o->_arg_sz=sll_parse_arg_count(o->fmt,&(o->_arg_cnt));
 	o->ret=SLL_RETURN_TYPE_VOID;
 	while (*(fmt+off)){
 		switch (*(fmt+off)){

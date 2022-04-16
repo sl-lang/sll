@@ -787,6 +787,7 @@ typedef struct __SLL_INTERNAL_FUNCTION{
 	sll_string_t nm;
 	sll_internal_function_pointer_t p;
 	sll_char_t* fmt;
+	sll_size_t _arg_sz;
 	sll_arg_count_t _arg_cnt;
 	sll_return_type_t ret;
 } sll_internal_function_t;
@@ -941,18 +942,10 @@ typedef struct __SLL_VAR_ARG_LIST_DATA_STRUCT{
 
 
 
-typedef struct __SLL_VAR_ARG_LIST_DATA_ARRAY{
-	void*const* p;
-	sll_arg_count_t l;
-} sll_var_arg_list_data_array_t;
-
-
-
 typedef union __SLL_VAR_ARG_LIST_DATA{
 	va_list* c;
 	sll_var_arg_list_data_sll_t sll;
 	sll_var_arg_list_data_struct_t s;
-	sll_var_arg_list_data_array_t a;
 } sll_var_arg_list_data_t;
 
 

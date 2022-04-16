@@ -224,9 +224,10 @@ __SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* t){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_parse_arg_count(const sll_char_t* t,sll_arg_count_t* o){
 	SKIP_WHITESPACE;
-	sll_arg_count_t o=0;
+	sll_arg_count_t ac=0;
+	sll_size_t sz=0;
 	sll_bool_t va=0;
 	sll_bool_t arr=0;
 	while (*t){
@@ -235,23 +236,30 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_
 		}
 		else if (*t=='+'){
 			if (!arr){
-				if (o){
-					o++;
+				if (ac){
+					sz+=8;
+					ac++;
 				}
 				arr=1;
 			}
 		}
-		else if (*t=='b'||*t=='i'||*t=='I'||*t=='f'||*t=='F'||*t=='x'||*t=='c'||*t=='C'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
-			o++;
+		else if (*t=='I'||*t=='F'||*t=='C'){
+			SLL_UNIMPLEMENTED();
+		}
+		else if (*t=='b'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
+			ac++;
+			sz+=(*t=='x'||*t=='d'||*t=='y'?16:8);
 			arr=0;
 		}
 		t++;
 		SKIP_WHITESPACE;
 	}
-	if (o){
-		o+=va;
+	if (ac){
+		ac+=va;
+		sz+=8;
 	}
-	return o;
+	*o=ac;
+	return ac;
 }
 
 
