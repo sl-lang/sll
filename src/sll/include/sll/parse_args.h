@@ -67,6 +67,18 @@ __SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt);
 
 
 /**
+ * \flags check_output func
+ * \name sll_parse_arg_count
+ * \group parse-args
+ * \desc Docs!
+ * \arg const sll_char_t* t
+ * \ret sll_arg_count_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* t);
+
+
+
+/**
  * \flags check_output func var_arg
  * \name sll_parse_args
  * \group parse-args
