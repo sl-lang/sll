@@ -4,7 +4,7 @@ import util
 
 
 
-HASHLIST_EXTENSIONS=[".c",".h"]
+HASHLIST_EXTENSIONS=[".c",".h",".asm"]
 
 
 
@@ -15,7 +15,7 @@ update_list=set()
 
 def _check(fp,inc):
 	nm=util.unique_file_path(fp)
-	if (nm in update_list or (fp[-2:]==".c" and not os.path.exists(util.output_file_path(fp)))):
+	if (nm in update_list or (fp[-2:]!=".h" and not os.path.exists(util.output_file_path(fp)))):
 		return 1
 	with open(fp,"r") as rf:
 		for e in header.INCLUDE_REGEX.findall(rf.read()):
@@ -61,7 +61,7 @@ def load_hash_list(fp):
 	util.log("Checking hashes...")
 	for r,_,fl in os.walk("src"):
 		for f in fl:
-			if (f[-2:] in HASHLIST_EXTENSIONS):
+			if (f[f.rindex("."):] in HASHLIST_EXTENSIONS):
 				fp=os.path.join(r,f)
 				h=util.hash_file(fp)[1]
 				nm=util.unique_file_path(fp)

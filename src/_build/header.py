@@ -5,6 +5,7 @@ import util
 
 
 
+ATTRIBUTE_REGEX=re.compile(r"__declspec\(dllexport\)|__attribute__\(\((ms_abi|warn_unused_result)\)\)")
 COMMENT_REGEX=re.compile(r"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
 DEFINE_LINE_CONTINUE_REGEX=re.compile(r"\s*\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(r"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
@@ -338,7 +339,7 @@ def generate_header(h_dt):
 		if ("extern" in k):
 			e_v.append((k.replace("\t"," ").split(" ")[-1].split(";")[0],k))
 			continue
-		if ("(" in k and "(*" not in SPACE_CHARACTERS_REGEX.sub("",k) and k.count("(")==k.count(")") and k.count("{")==k.count("}") and "inline" not in k):
+		if ("(" in k and "(*" not in SPACE_CHARACTERS_REGEX.sub("",ATTRIBUTE_REGEX.sub("",k)) and k.count("(")==k.count(")") and k.count("{")==k.count("}") and "inline" not in k):
 			k=k.split(";")
 			fl.append((k[0][:-len(k[0].split("(")[-1])-1].split(" ")[-1],k[0].strip()))
 			for e in k[1:]:

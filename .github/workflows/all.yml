@@ -35,6 +35,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
       - name: Initialize codeql@1
         uses: github/codeql-action/init@v1
         with:
@@ -55,6 +57,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}}
   darwin-release:
@@ -69,6 +73,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}} --release --bundle --upload
       - name: Store assets
@@ -125,6 +131,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}}
   linux-release:
@@ -139,6 +147,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}} --release --bundle --upload
       - name: Store assets
@@ -161,6 +171,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}}
         env:
@@ -275,6 +287,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
@@ -292,6 +306,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build

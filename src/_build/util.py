@@ -66,14 +66,14 @@ def get_sll_files():
 	for r,_,fl in os.walk(PLATFORM_SOURCE_CODE[system]):
 		r=r.replace("\\","/").rstrip("/")+"/"
 		for f in fl:
-			if (f[-2:]==".c"):
+			if (f[-2:]==".c" or f[-4:]==".asm"):
 				o.append(r+f)
 	for r,_,fl in os.walk("src/sll"):
 		r=r.replace("\\","/").rstrip("/")+"/"
 		if ("/platform/" in r.lower()):
 			continue
 		for f in fl:
-			if (f[-2:]==".c"):
+			if (f[-2:]==".c" or f[-4:]==".asm"):
 				o.append(r+f)
 	return o
 

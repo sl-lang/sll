@@ -9,6 +9,10 @@
 
 
 
+__SLL_API_CALL sll_object_t* _call_api_func(sll_internal_function_pointer_t fn,sll_object_t*const* al,sll_arg_count_t all);
+
+
+
 void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac,sll_bool_t fr);
 
 

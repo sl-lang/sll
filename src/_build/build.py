@@ -28,7 +28,7 @@ def build_sll(fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"src/sll/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","src/sll/include","/Fo"+out_fp,k]+win_def)):
+				if (hashlist.update(k,"src/sll/include") and util.execute((["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","src/sll/include","/Fo"+out_fp,k]+win_def if k[-2:]==".c" else ["nasm","-o",out_fp,"-Ox","-Wall","-f","win64",k]))):
 					hashlist.fail(k)
 					err=True
 			if (err):
@@ -43,7 +43,7 @@ def build_sll(fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"src/sll/include") and util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","src/sll/include","/Fdbuild/sll.pdb","/Fo"+out_fp,k]+win_def)):
+				if (hashlist.update(k,"src/sll/include") and util.execute((["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","src/sll/include","/Fdbuild/sll.pdb","/Fo"+out_fp,k]+win_def if k[-2:]==".c" else ["nasm","-o",out_fp,"-O0","-Wall","-gcv8","-f","win64",k]))):
 					hashlist.fail(k)
 					err=True
 			if (err):
@@ -60,6 +60,7 @@ def build_sll(fl,v,r):
 		if (util.system!="darwin"):
 			linux_opt.append("-mavx")
 			linux_opt.append("-mavx2")
+		nasm_fmt=("macho64" if util.system=="darwin" else "elf64")
 		if (r):
 			util.log("  Compiling Files (Release Mode)...")
 			out_fl=[]
@@ -67,7 +68,7 @@ def build_sll(fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"src/sll/include") and util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt)):
+				if (hashlist.update(k,"src/sll/include") and util.execute((["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt if k[-2:]==".c" else ["nasm","-o",out_fp,"-O3","-Wall","-gdwarf","-f",nasm_fmt,k]))):
 					hashlist.fail(k)
 					err=True
 			if (err):
@@ -90,7 +91,7 @@ def build_sll(fl,v,r):
 			for k in fl:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
-				if (hashlist.update(k,"src/sll/include") and util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt)):
+				if (hashlist.update(k,"src/sll/include") and util.execute((["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt if k[-2:]==".c" else ["nasm","-o",out_fp,"-O0","-Wall","-gdwarf","-f",nasm_fmt,k]))):
 					hashlist.fail(k)
 					err=True
 			if (err):

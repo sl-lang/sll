@@ -18,7 +18,7 @@ def generate_c_api(d_dt,api_dt):
 		fn_l=[]
 		d_gl=[]
 		for k in api_dt:
-			cf.write(f"\n\n\n__SLL_API_CALL __SLL_API_TYPE_{k['name']} {k['name']}(__SLL_API_ARGS_{k['name']});\n__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* {k['name']}_raw(sll_object_t*const* al,sll_arg_count_t all){{\n")
+			cf.write(f"\n\n\n__SLL_API_CALL __SLL_API_TYPE_{k['name']} {k['name']}(__SLL_API_ARGS_{k['name']});\n__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* {k['name']}_raw(sll_object_t*const* al,sll_arg_count_t all){{\n")
 			args=""
 			docs=""
 			call_args=""

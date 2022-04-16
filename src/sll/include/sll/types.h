@@ -3,6 +3,7 @@
 #include <sll/_identifier.h>
 #include <sll/_object_func.h>
 #include <sll/_size_types.h>
+#include <sll/common.h>
 #include <stdarg.h>
 
 
@@ -779,7 +780,7 @@ typedef struct _SLL_OBJECT{
 
 
 
-typedef sll_object_t* (*sll_internal_function_pointer_t)(sll_object_t*const*,sll_arg_count_t);
+typedef sll_object_t* (__SLL_API_CALL*sll_internal_function_pointer_t)(sll_object_t*const*,sll_arg_count_t);
 
 
 
