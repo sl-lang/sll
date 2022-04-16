@@ -3,6 +3,7 @@
 #include <sll/_internal/platform.h>
 #include <sll/_internal/string.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/ift.h>
 #include <sll/memory.h>
 #include <sll/parse_args.h>
@@ -19,8 +20,52 @@ extern const internal_function_t* _ifunc_data;
 static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_t* o){
 	sll_string_from_pointer(nm,&(o->nm));
 	o->p=fn;
-	o->fmt=fmt;
-	o->_arg_cnt=sll_parse_arg_count(fmt);
+	sll_string_length_t off=0;
+	while (*(fmt+off)&&*(fmt+off)!='|'){
+		off++;
+	}
+	o->fmt=sll_allocate(off+1);
+	sll_copy_data(fmt,off,o->fmt);
+	o->fmt[off]=0;
+	o->_arg_cnt=sll_parse_arg_count(o->fmt);
+	o->ret=SLL_RETURN_TYPE_VOID;
+	while (*(fmt+off)){
+		switch (*(fmt+off)){
+			case 'b':
+				o->ret=SLL_RETURN_TYPE_BOOL;
+				return;
+			case 'i':
+				o->ret=SLL_RETURN_TYPE_INT;
+				return;
+			case 'f':
+				o->ret=SLL_RETURN_TYPE_FLOAT;
+				return;
+			case 'c':
+				o->ret=SLL_RETURN_TYPE_CHAR;
+				return;
+			case 'd':
+				o->ret=SLL_RETURN_TYPE_COMPLEX;
+				return;
+			case 's':
+				o->ret=SLL_RETURN_TYPE_STRING;
+				o->_arg_cnt++;
+				return;
+			case 'a':
+				o->ret=SLL_RETURN_TYPE_ARRAY;
+				o->_arg_cnt++;
+				return;
+			case 'm':
+				o->ret=SLL_RETURN_TYPE_MAP;
+				o->_arg_cnt++;
+				return;
+			case 'o':
+				o->ret=SLL_RETURN_TYPE_OBJECT;
+				return;
+			case 'v':
+				return;
+		}
+		off++;
+	}
 }
 
 
@@ -33,6 +78,7 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
 		sll_string_clone(&((ift->dt+i)->nm),&(p->nm));
 		p->p=(ift->dt+i)->p;
 		p->fmt=(ift->dt+i)->fmt;
+		p->_arg_cnt=(ift->dt+i)->_arg_cnt;
 		p++;
 	}
 }
