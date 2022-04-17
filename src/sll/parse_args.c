@@ -59,32 +59,6 @@
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 	*var=obj->dt.field; \
 	GC_RELEASE(obj);
-#define PARSE_TYPE_RANGE(type,base_type,name,field) \
-	if (arr){ \
-		SLL_UNIMPLEMENTED(); \
-	} \
-	SLL_ASSERT(o->t==ARG_OUTPUT_TYPE_C); \
-	type* var=va_arg(*(o->dt.c),type*); \
-	type mn=(type)va_arg(*(o->dt.c),base_type); \
-	type mx=(type)va_arg(*(o->dt.c),base_type); \
-	if (mx<mn){ \
-		type tmp=mn; \
-		mn=mx; \
-		mx=tmp; \
-	} \
-	if (!arg){ \
-		*var=mn; \
-		return; \
-	} \
-	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-	*var=obj->dt.field; \
-	GC_RELEASE(obj);\
-	if (*var<mn){ \
-		*var=mn; \
-	} \
-	else if (*var>mx){ \
-		*var=mx; \
-	}
 #define PARSE_TYPE_PTR(type,name,field,init) \
 	if (arr){ \
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
@@ -109,12 +83,14 @@
 
 #define PUSH_REGISTER(wide) \
 	do{ \
-		if (!(ac&63)){ \
-			reg_sz++; \
-			*regs=sll_reallocate(*regs,reg_sz*sizeof(bitmap_t)); \
-			*(*regs+reg_sz-1)=0; \
+		if (regs){ \
+			if (!(ac&63)){ \
+				reg_sz++; \
+				*regs=sll_reallocate(*regs,reg_sz*sizeof(bitmap_t)); \
+				*(*regs+reg_sz-1)=0; \
+			} \
+			*(*regs+reg_sz-1)|=(wide)<<(ac&63); \
 		} \
-		*(*regs+reg_sz-1)|=(wide)<<(ac&63); \
 	} while (0)
 
 
@@ -146,20 +122,8 @@ static void _parse_int(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_out
 
 
 
-static void _parse_int_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE_RANGE(sll_integer_t,sll_integer_t,INT,i);
-}
-
-
-
 static void _parse_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_float_t,FLOAT,f,INIT_ZERO);
-}
-
-
-
-static void _parse_float_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE_RANGE(sll_float_t,sll_float_t,FLOAT,f);
 }
 
 
@@ -190,12 +154,6 @@ static void _parse_int_or_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** s
 
 static void _parse_char(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_char_t,CHAR,c,INIT_ZERO);
-}
-
-
-
-static void _parse_char_range(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE_RANGE(sll_char_t,__SLL_U32,CHAR,c);
 }
 
 
@@ -274,35 +232,21 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitma
 			if (!arr){
 				if (ac){
 					sz+=8;
-					if (regs){
-						PUSH_REGISTER(0);
-					}
+					PUSH_REGISTER(0);
 					ac++;
 				}
 				arr=1;
 			}
 		}
-		else if (*t=='I'||*t=='F'||*t=='C'){
-			SLL_UNIMPLEMENTED();
-		}
 		else if (*t=='b'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
 			sz+=8;
 			arr=0;
-			if (regs){
-				sll_bool_t wide=0;
-				switch (*t){
-					case 'x':
-					case 'd':
-					case 'y':
-						sz+=8;
-						wide=1;
-						break;
-				}
-				PUSH_REGISTER(wide);
+			sll_bool_t wide=0;
+			if (*t=='x'||*t=='d'||*t=='y'){
+				sz+=8;
+				wide=1;
 			}
-			else if (*t=='x'||*t=='d'||*t=='y'){
-				sz++;
-			}
+			PUSH_REGISTER(wide);
 			ac++;
 		}
 		t++;
@@ -313,10 +257,8 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitma
 		PUSH_REGISTER(0);
 		ac++;
 	}
-	if (regs){
-		PUSH_REGISTER((ret==SLL_RETURN_TYPE_COMPLEX||ret==SLL_RETURN_TYPE_STRING||ret==SLL_RETURN_TYPE_ARRAY||ret==SLL_RETURN_TYPE_MAP));
-		SLL_ASSERT(reg_sz==(ac+64)>>6);
-	}
+	PUSH_REGISTER((ret==SLL_RETURN_TYPE_COMPLEX||ret==SLL_RETURN_TYPE_STRING||ret==SLL_RETURN_TYPE_ARRAY||ret==SLL_RETURN_TYPE_MAP));
+	SLL_ASSERT(!regs||(regs&&reg_sz==(ac+64)>>6));
 	if (o){
 		*o=sz;
 	}
@@ -338,7 +280,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		if (*tmp=='!'){
 			var_arg=1;
 		}
-		else if (*tmp=='b'||*tmp=='i'||*tmp=='I'||*tmp=='f'||*tmp=='F'||*tmp=='x'||*tmp=='c'||*tmp=='C'||*tmp=='d'||*tmp=='s'||*tmp=='y'||*tmp=='a'||*tmp=='m'||*tmp=='o'){
+		else if (*tmp=='b'||*tmp=='i'||*tmp=='f'||*tmp=='x'||*tmp=='c'||*tmp=='d'||*tmp=='s'||*tmp=='y'||*tmp=='a'||*tmp=='m'||*tmp=='o'){
 			var_arg_idx++;
 		}
 		tmp++;
@@ -370,17 +312,11 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 					SLL_UNIMPLEMENTED();
 				case 'i':
 					SLL_UNIMPLEMENTED();
-				case 'I':
-					SLL_UNIMPLEMENTED();
 				case 'f':
-					SLL_UNIMPLEMENTED();
-				case 'F':
 					SLL_UNIMPLEMENTED();
 				case 'x':
 					SLL_UNIMPLEMENTED();
 				case 'c':
-					SLL_UNIMPLEMENTED();
-				case 'C':
 					SLL_UNIMPLEMENTED();
 				case 'd':
 					SLL_UNIMPLEMENTED();
@@ -422,23 +358,14 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			case 'i':
 				fn=_parse_int;
 				break;
-			case 'I':
-				fn=_parse_int_range;
-				break;
 			case 'f':
 				fn=_parse_float;
-				break;
-			case 'F':
-				fn=_parse_float_range;
 				break;
 			case 'x':
 				fn=_parse_int_or_float;
 				break;
 			case 'c':
 				fn=_parse_char;
-				break;
-			case 'C':
-				fn=_parse_char_range;
 				break;
 			case 'd':
 				fn=_parse_complex;
