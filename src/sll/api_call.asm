@@ -11,15 +11,15 @@ section .text
 
 
 
-; eax - Counter of arguments left in current bitmap
+; eax - Number of arguments left in current bitmap
 ; rbx - Return value pointer
 ; rcx - Temporary register
 ; rdx - Argument bitmap pointer
 ; rsi - Current bitmap
 ; r8 - Argument data pointer
 ; r9d - Argument count
-; r10 - Function pointer
-; r11 - Stack pointer for arguments
+; r10 - Stack pointer for arguments
+; r11 - Function pointer
 global __C_FUNC(_call_api_func)
 __C_FUNC(_call_api_func):
 	push rbx
@@ -28,7 +28,7 @@ __C_FUNC(_call_api_func):
 	mov rbp, rsp
 
 	mov rbx, rcx
-	mov r10, QWORD [rsp+64]
+	mov r11, QWORD [rsp+64]
 
 	mov rax, r9
 	add rax, 2
@@ -42,7 +42,7 @@ __C_FUNC(_call_api_func):
 
 	mov al, 64
 	mov rsi, QWORD [rdx]
-	mov r11, rsp
+	mov r10, rsp
 	test r9d, r9d
 	jz ._no_args
 ._next_arg:
@@ -50,16 +50,16 @@ __C_FUNC(_call_api_func):
 	bt si, 0
 	jc ._push_wide_arg
 	mov rcx, QWORD [r8]
-	mov QWORD [r11], rcx
+	mov QWORD [r10], rcx
 	jmp ._consume_arg
 ._push_wide_arg:
-	mov QWORD [r11], r8
+	mov QWORD [r10], r8
 	add r8, 8
 
 ._consume_arg:
 	shr rsi, 1
 	add r8, 8
-	add r11, 8
+	add r10, 8
 	sub al, 1
 	jnz ._check_end
 	add rdx, 8
@@ -72,7 +72,7 @@ __C_FUNC(_call_api_func):
 
 	and sil, 1
 	jz ._no_return_arg
-	mov QWORD [r11], rbx
+	mov QWORD [r10], rbx
 ._no_return_arg:
 
 	mov rcx, QWORD [rsp]
@@ -83,7 +83,7 @@ __C_FUNC(_call_api_func):
 	movq xmm1, rdx
 	movq xmm2, r8
 	movq xmm3, r9
-	call r10
+	call r11
 
 	test sil, sil
 	jnz ._no_return_value
