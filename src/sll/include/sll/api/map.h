@@ -1,6 +1,5 @@
 #ifndef __SLL_API_MAP_H__
 #define __SLL_API_MAP_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,26 +12,28 @@
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_map_extend
  * \group map-api
  * \desc Docs!
- * \arg M
- * \arg M
+ * \api mm|v
+ * \arg sll_map_t* a
+ * \arg sll_map_t* b
  */
-__API_FUNC_DECL(map_extend);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* a,sll_map_t* b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_map_remove
  * \group map-api
  * \desc Docs!
- * \arg M
- * \arg O
+ * \api mo|v
+ * \arg sll_map_t* a
+ * \arg sll_object_t* b
  */
-__API_FUNC_DECL(map_remove);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_remove(sll_map_t* a,sll_object_t* b);
 
 
 

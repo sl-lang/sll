@@ -1,6 +1,4 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/scheduler.h>
-#include <sll/api.h>
 #include <sll/api/vm.h>
 #include <sll/array.h>
 #include <sll/audit.h>
@@ -14,7 +12,7 @@
 
 
 
-__API_FUNC(error_get_call_stack){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack(sll_integer_t a,sll_integer_t b){
 	if (a<0){
 		a=0;
 	}

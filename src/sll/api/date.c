@@ -1,6 +1,4 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
-#include <sll/api.h>
 #include <sll/api/float.h>
 #include <sll/api/math.h>
 #include <sll/array.h>
@@ -90,13 +88,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* dt){
 
 
 
-__API_FUNC(date_get_time_zone){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_get_time_zone(sll_array_t* out){
 	sll_new_object_array(SLL_CHAR("iS"),out,sll_platform_time_zone->off,sll_platform_time_zone->nm);
 }
 
 
 
-__API_FUNC(date_merge){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_float_t f){
 	sll_day_t n[12]={31,28,31,30,31,30,30,31,30,31,30,31};
 	a=(a<0?0:(a>65535?65535:a));
 	b=(b<0?0:(b>11?11:b));
@@ -118,7 +116,7 @@ __API_FUNC(date_merge){
 
 
 
-__API_FUNC(date_split){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t a,sll_array_t* out){
 	sll_date_t dt;
 	sll_date_from_time(a,NULL,&dt);
 	sll_new_object_array(SLL_CHAR("hhhhhhf"),out,dt.y,dt.m,dt.d,dt.wd,dt.h,dt.mn,dt.s);

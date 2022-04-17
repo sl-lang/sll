@@ -1,6 +1,5 @@
 #ifndef __SLL_API_PROCESS_H__
 #define __SLL_API_PROCESS_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -80,64 +79,70 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_process_join
  * \group process-api
  * \desc Docs!
- * \arg S+
- * \ret S
+ * \api s+|s
+ * \arg sll_string_t*const* a
+ * \arg sll_arg_count_t ac
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(process_join);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_process_execute_shell
  * \group process-api
  * \desc Docs!
- * \arg S
- * \ret I
+ * \api s|i
+ * \arg sll_string_t* a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(process_execute_shell);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(sll_string_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_process_get_pid
  * \group process-api
  * \desc Docs!
- * \ret I
+ * \api |i
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(process_get_pid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_get_pid(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_process_start
  * \group process-api
  * \desc Docs!
- * \arg A
- * \arg S
- * \arg I
- * \arg S
- * \ret A
+ * \api asis|a
+ * \arg sll_array_t* a
+ * \arg sll_string_t* b
+ * \arg sll_integer_t c
+ * \arg sll_string_t* d
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(process_start);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* a,sll_string_t* b,sll_integer_t c,sll_string_t* d,sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_process_split
  * \group process-api
  * \desc Docs!
- * \arg S
- * \ret A
+ * \api s|a
+ * \arg sll_string_t* a
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(process_split);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(sll_string_t* a,sll_array_t* out);
 
 
 

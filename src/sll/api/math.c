@@ -1,8 +1,6 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/util.h>
-#include <sll/api.h>
 #include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -159,7 +157,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_flo
 
 
 
-__API_FUNC(math_abs){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(sll_float_t a){
 	double_data_t dt={
 		.v=a
 	};
@@ -169,55 +167,55 @@ __API_FUNC(math_abs){
 
 
 
-__API_FUNC(math_acos){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_acos(sll_float_t a){
 	return acos(a);
 }
 
 
 
-__API_FUNC(math_acosh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_acosh(sll_float_t a){
 	return acosh(a);
 }
 
 
 
-__API_FUNC(math_asin){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_asin(sll_float_t a){
 	return asin(a);
 }
 
 
 
-__API_FUNC(math_asinh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_asinh(sll_float_t a){
 	return asinh(a);
 }
 
 
 
-__API_FUNC(math_atan){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan(sll_float_t a){
 	return atan(a);
 }
 
 
 
-__API_FUNC(math_atan2){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan2(sll_float_t a,sll_float_t b){
 	return atan2(a,b);
 }
 
 
 
-__API_FUNC(math_atanh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atanh(sll_float_t a){
 	return atanh(a);
 }
 
 
 
-__API_FUNC(math_cbrt){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cbrt(sll_float_t a){
 	return cbrt(a);
 }
 
 
 
-__API_FUNC(math_combinations){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_combinations(sll_integer_t a,sll_integer_t b){
 	if (b>a||b<=0){
 		return 0;
 	}
@@ -251,25 +249,25 @@ __API_FUNC(math_combinations){
 
 
 
-__API_FUNC(math_cos){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cos(sll_float_t a){
 	return cos(a);
 }
 
 
 
-__API_FUNC(math_cosh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cosh(sll_float_t a){
 	return cosh(a);
 }
 
 
 
-__API_FUNC(math_ceil){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_ceil(sll_float_t a){
 	return (sll_integer_t)ceil(a);
 }
 
 
 
-__API_FUNC(math_copy_sign){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_copy_sign(sll_float_t a,sll_float_t b){
 	double_data_t dt_a={
 		.v=a
 	};
@@ -282,19 +280,19 @@ __API_FUNC(math_copy_sign){
 
 
 
-__API_FUNC(math_euler_phi){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_euler_phi(sll_integer_t a){
 	return (a<0?0:sll_math_euler_phi((sll_size_t)a));
 }
 
 
 
-__API_FUNC(math_exp){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_exp(sll_float_t a){
 	return exp(a);
 }
 
 
 
-__API_FUNC(math_factorial){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_factorial(sll_integer_t a){
 	if (a<0){
 		SLL_UNIMPLEMENTED();
 	}
@@ -308,7 +306,7 @@ __API_FUNC(math_factorial){
 
 
 
-__API_FUNC(math_factors){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factors(sll_integer_t a){
 	sll_array_length_t l;
 	sll_factor_t* dt=sll_math_factors(a,&l);
 	sll_object_t* o=sll_new_object(SLL_CHAR("{ii}"),dt,l,sizeof(sll_factor_t),SLL_OFFSETOF(sll_factor_t,n),SLL_OFFSETOF(sll_factor_t,pw));
@@ -318,13 +316,13 @@ __API_FUNC(math_factors){
 
 
 
-__API_FUNC(math_floor){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_floor(sll_float_t a){
 	return (sll_integer_t)floor(a);
 }
 
 
 
-__API_FUNC(math_gcd){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_gcd(sll_integer_t a,sll_integer_t b){
 	while (b){
 		sll_integer_t t=a%b;
 		a=b;
@@ -335,7 +333,7 @@ __API_FUNC(math_gcd){
 
 
 
-__API_FUNC(math_int_log2){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_log2(sll_integer_t a){
 	if (a<0){
 		SLL_UNIMPLEMENTED();
 	}
@@ -344,7 +342,7 @@ __API_FUNC(math_int_log2){
 
 
 
-__API_FUNC(math_int_pow){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_pow(sll_integer_t a,sll_integer_t b,sll_integer_t c){
 	if (b<0||c<0){
 		SLL_UNIMPLEMENTED();
 	}
@@ -379,7 +377,7 @@ __API_FUNC(math_int_pow){
 
 
 
-__API_FUNC(math_int_sqrt){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_sqrt(sll_integer_t a){
 	if (a<0){
 		SLL_UNIMPLEMENTED();
 	}
@@ -398,25 +396,25 @@ __API_FUNC(math_int_sqrt){
 
 
 
-__API_FUNC(math_log){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log(sll_float_t a){
 	return log(a);
 }
 
 
 
-__API_FUNC(math_log2){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log2(sll_float_t a){
 	return log2(a);
 }
 
 
 
-__API_FUNC(math_log10){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log10(sll_float_t a){
 	return log10(a);
 }
 
 
 
-__API_FUNC(math_permutations){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_permutations(sll_integer_t a,sll_integer_t b){
 	if (b>a||b<=0){
 		return 0;
 	}
@@ -438,42 +436,42 @@ __API_FUNC(math_permutations){
 
 
 
-__API_FUNC(math_pow){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_pow(sll_float_t a,sll_float_t b){
 	return pow(a,b);
 }
 
 
 
-__API_FUNC(math_round){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_round(sll_float_t a){
 	return (sll_integer_t)round(a);
 }
 
 
 
-__API_FUNC(math_sin){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sin(sll_float_t a){
 	return sin(a);
 }
 
 
 
-__API_FUNC(math_sinh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sinh(sll_float_t a){
 	return sinh(a);
 }
 
 
 
-__API_FUNC(math_sqrt){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sqrt(sll_float_t a){
 	return sqrt(a);
 }
 
 
 
-__API_FUNC(math_tan){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tan(sll_float_t a){
 	return tan(a);
 }
 
 
 
-__API_FUNC(math_tanh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tanh(sll_float_t a){
 	return tanh(a);
 }

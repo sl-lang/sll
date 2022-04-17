@@ -1,6 +1,5 @@
 #ifndef __SLL_API_ATEXIT_H__
 #define __SLL_API_ATEXIT_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,26 +12,29 @@
 
 
 /**
- * \flags api func var_arg
+ * \flags func
  * \name sll_api_atexit_register
  * \group atexit-api
  * \desc Docs!
- * \arg I
- * \arg O
+ * \api io!|v
+ * \arg sll_integer_t a
+ * \arg sll_object_t*const* b
+ * \arg sll_arg_count_t bc
  */
-__API_FUNC_DECL(atexit_register);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_atexit_unregister
+ * \api i|b
  * \group atexit-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(atexit_unregister);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unregister(sll_integer_t a);
 
 
 

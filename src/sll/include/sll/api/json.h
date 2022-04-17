@@ -1,6 +1,5 @@
 #ifndef __SLL_API_JSON_H__
 #define __SLL_API_JSON_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -153,39 +152,42 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_json__init
  * \group json-api
  * \desc Docs!
- * \arg O
- * \arg O
- * \arg O
+ * \api ooo|v
+ * \arg sll_object_t* a
+ * \arg sll_object_t* b
+ * \arg sll_object_t* c
  */
-__API_FUNC_DECL(json__init);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* a,sll_object_t* b,sll_object_t* c);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_json_parse
  * \group json-api
  * \desc Docs!
- * \arg S
- * \ret O
+ * \api s|o
+ * \arg sll_string_t* a
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(json_parse);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(sll_string_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_json_stringify
  * \group json-api
  * \desc Docs!
- * \arg O
- * \ret S
+ * \api o|s
+ * \arg sll_object_t* a
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(json_stringify);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json_stringify(sll_object_t* a,sll_string_t* out);
 
 
 

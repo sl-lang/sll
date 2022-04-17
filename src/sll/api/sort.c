@@ -1,6 +1,4 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/gc.h>
-#include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -85,7 +83,7 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 
 
 
-__API_FUNC(sort_quicksort){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort(sll_array_t* a,sll_bool_t b,sll_bool_t c,sll_integer_t d){
 	sll_object_t* o;
 	sll_array_t* out;
 	if (c){

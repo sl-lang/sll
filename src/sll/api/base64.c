@@ -1,6 +1,4 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/static_object.h>
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
@@ -31,7 +29,7 @@ static const sll_char_t _base64_index_map[256]={
 
 
 
-__API_FUNC(base64_decode){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode(sll_string_t* a){
 	if (!a->l){
 		return STRING_TO_OBJECT(NULL);
 	}
@@ -105,7 +103,7 @@ __API_FUNC(base64_decode){
 
 
 
-__API_FUNC(base64_encode){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_base64_encode(sll_string_t* a,sll_string_t* out){
 	if (!a->l){
 		SLL_INIT_STRING(out);
 		return;

@@ -1,6 +1,5 @@
 #ifndef __SLL_API_ERROR_H__
 #define __SLL_API_ERROR_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,15 +12,16 @@
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_error_get_call_stack
  * \group error-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \ret O
+ * \api ii|o
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(error_get_call_stack);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack(sll_integer_t a,sll_integer_t b);
 
 
 

@@ -1,13 +1,11 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/util.h>
 #include <sll/_size_types.h>
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 
 
 
-__API_FUNC(struct_float_from_bits){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_float_from_bits(sll_integer_t a){
 	float_data_t dt={
 		.dt=(__SLL_U32)a
 	};
@@ -16,7 +14,7 @@ __API_FUNC(struct_float_from_bits){
 
 
 
-__API_FUNC(struct_double_from_bits){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_double_from_bits(sll_integer_t a){
 	double_data_t dt={
 		.dt=a
 	};
@@ -25,7 +23,7 @@ __API_FUNC(struct_double_from_bits){
 
 
 
-__API_FUNC(struct_float_to_bits){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_struct_float_to_bits(sll_float_t a){
 	float_data_t dt={
 		.v=(float)a
 	};
@@ -34,7 +32,7 @@ __API_FUNC(struct_float_to_bits){
 
 
 
-__API_FUNC(struct_double_to_bits){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_struct_double_to_bits(sll_float_t a){
 	double_data_t dt={
 		.v=a
 	};

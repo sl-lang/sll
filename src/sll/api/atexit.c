@@ -1,9 +1,7 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/atexit.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/vm.h>
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/init.h>
@@ -56,7 +54,7 @@ void _atexit_execute(void){
 
 
 
-__API_FUNC(atexit_register){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc){
 	if (!a){
 		return;
 	}
@@ -80,7 +78,7 @@ __API_FUNC(atexit_register){
 
 
 
-__API_FUNC(atexit_unregister){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unregister(sll_integer_t a){
 	if (!a||!_atexit_lock){
 		return 0;
 	}

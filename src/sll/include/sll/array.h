@@ -261,7 +261,7 @@ __SLL_EXTERNAL void sll_array_from_length(sll_array_length_t l,sll_array_t* o);
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_array_length_t i
- * \ret sll_object_t*
+ * \arg sll_object_t* out
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_get(const sll_array_t* a,sll_array_length_t i);
 
@@ -398,7 +398,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_array_parse_int(const sll_ar
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_array_t* o
- * \ret sll_object_t*
+ * \arg sll_object_t* out
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_pop(const sll_array_t* a,sll_array_t* o);
 
@@ -556,7 +556,7 @@ __SLL_EXTERNAL void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg sll_array_t* o
- * \ret sll_object_t*
+ * \arg sll_object_t* out
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o);
 

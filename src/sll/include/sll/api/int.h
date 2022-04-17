@@ -1,6 +1,5 @@
 #ifndef __SLL_API_INT_H__
 #define __SLL_API_INT_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,50 +12,54 @@
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_int_to_bin
  * \group int-api
  * \desc Docs!
- * \arg I
- * \ret S
+ * \api i|s
+ * \arg sll_integer_t a
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(int_to_bin);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_bin(sll_integer_t a,sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_int_to_dec
  * \group int-api
  * \desc Docs!
- * \arg I
- * \ret S
+ * \api i|s
+ * \arg sll_integer_t a
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(int_to_dec)
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_dec(sll_integer_t a,sll_string_t* out)
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_int_to_hex
  * \group int-api
  * \desc Docs!
- * \arg I
- * \ret S
+ * \api i|s
+ * \arg sll_integer_t a
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(int_to_hex);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_hex(sll_integer_t a,sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_int_to_oct
  * \group int-api
  * \desc Docs!
- * \arg I
- * \ret S
+ * \api i|s
+ * \arg sll_integer_t a
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(int_to_oct);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_oct(sll_integer_t a,sll_string_t* out);
 
 
 

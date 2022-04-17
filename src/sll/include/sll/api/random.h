@@ -1,6 +1,5 @@
 #ifndef __SLL_API_RANDOM_H__
 #define __SLL_API_RANDOM_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,42 +12,45 @@
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_random_get_float
  * \group random-api
  * \desc Docs!
- * \arg F
- * \arg F
- * \ret F
+ * \api ff|f
+ * \arg sll_float_t a
+ * \arg sll_float_t b
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(random_get_float);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_float(sll_float_t a,sll_float_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_random_get_int
  * \group random-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \ret I
+ * \api ii|i
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(random_get_int);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_get_int(sll_integer_t a,sll_integer_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_random_get_string
  * \group random-api
  * \desc Docs!
- * \arg I
- * \arg C
- * \arg C
- * \ret S
+ * \api icc|s
+ * \arg sll_integer_t a
+ * \arg sll_char_t b
+ * \arg sll_char_t c
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(random_get_string);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_random_get_string(sll_integer_t a,sll_char_t b,sll_char_t c,sll_string_t* out);
 
 
 

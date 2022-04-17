@@ -1,7 +1,5 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/init.h>
@@ -42,7 +40,7 @@ static void _call_user_array(sll_weak_reference_t wr,sll_object_t* obj,void* arg
 
 
 
-__API_FUNC(weakref__init){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* a,sll_integer_t b){
 	if (_weakref_no_object_ret){
 		return;
 	}
@@ -54,19 +52,19 @@ __API_FUNC(weakref__init){
 
 
 
-__API_FUNC(weakref_create){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_weakref_create(sll_object_t* a){
 	return (sll_integer_t)sll_weakref_create(a);
 }
 
 
 
-__API_FUNC(weakref_delete){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_delete(sll_integer_t a){
 	return sll_weakref_delete((sll_weak_reference_t)a);
 }
 
 
 
-__API_FUNC(weakref_get){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_get(sll_integer_t a){
 	sll_object_t* o=sll_weakref_get((sll_weak_reference_t)a);
 	if (o){
 		SLL_ACQUIRE(o);
@@ -78,6 +76,6 @@ __API_FUNC(weakref_get){
 
 
 
-__API_FUNC(weakref_set_callback_data){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_integer_t a,sll_object_t* b){
 	sll_weakref_set_callback((sll_weak_reference_t)a,_call_user_array,sll_weakref_create(b));
 }

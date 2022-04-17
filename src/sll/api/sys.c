@@ -1,4 +1,3 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/library.h>
 #include <sll/_internal/print.h>
@@ -6,7 +5,6 @@
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/abi.h>
-#include <sll/api.h>
 #include <sll/api/hash.h>
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
@@ -104,19 +102,19 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 
 
 
-__API_FUNC(sys_get_args){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_args(void){
 	return sll_new_object(SLL_CHAR("s+"),_sys_argv,_sys_argc);
 }
 
 
 
-__API_FUNC(sys_get_cpu_count){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_sys_get_cpu_count(void){
 	return *sll_platform_cpu_count;
 }
 
 
 
-__API_FUNC(sys_get_env){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_env(sll_map_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
 		SLL_INIT_MAP(out);
 		return;
@@ -131,31 +129,31 @@ __API_FUNC(sys_get_env){
 
 
 
-__API_FUNC(sys_get_executable){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_executable(sll_string_t* out){
 	sll_string_clone(sll_executable_file_path,out);
 }
 
 
 
-__API_FUNC(sys_get_library){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_library(sll_string_t* out){
 	sll_string_clone(sll_library_file_path,out);
 }
 
 
 
-__API_FUNC(sys_get_platform){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_platform(sll_string_t* out){
 	sll_string_clone(sll_platform_string,out);
 }
 
 
 
-__API_FUNC(sys_get_sandbox_flags){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_sys_get_sandbox_flags(void){
 	return sll_get_sandbox_flags();
 }
 
 
 
-__API_FUNC(sys_get_version){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out){
 #if SLL_VERSION_HAS_SHA
 	sll_new_object_array(SLL_CHAR("hhhsi"),out,SLL_VERSION_MAJOR,SLL_VERSION_MINOR,SLL_VERSION_PATCH,&_sys_full_commit,SLL_VERSION_BUILD_TIME);
 #else
@@ -165,7 +163,7 @@ __API_FUNC(sys_get_version){
 
 
 
-__API_FUNC(sys_load_library){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(sll_string_t* a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||a->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
@@ -263,7 +261,7 @@ __API_FUNC(sys_load_library){
 
 
 
-__API_FUNC(sys_remove_env){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(sll_string_t* a){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
 		sll_audit(SLL_CHAR("sll.sys.env.delete"),SLL_CHAR("s"),a);
 		sll_remove_environment_variable(a);
@@ -272,14 +270,14 @@ __API_FUNC(sys_remove_env){
 
 
 
-__API_FUNC(sys_set_sandbox_flag){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_integer_t a){
 	sll_audit(SLL_CHAR("sll.sys.sandbox.set"),SLL_CHAR("u"),(sll_sandbox_flag_t)a);
 	sll_set_sandbox_flag((sll_sandbox_flag_t)a);
 }
 
 
 
-__API_FUNC(sys_set_env){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(sll_string_t* a,sll_string_t* b){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
 		sll_audit(SLL_CHAR("sll.sys.env.set"),SLL_CHAR("ss"),a,b);
 		sll_set_environment_variable(a,b);

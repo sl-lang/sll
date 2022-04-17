@@ -207,7 +207,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_equal(const sll_map_t* a,co
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_object_t* k
- * \ret sll_object_t*
+ * \arg sll_object_t* out
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,sll_object_t* k);
 
@@ -221,7 +221,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,s
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_map_length_t i
- * \ret sll_object_t*
+ * \arg sll_object_t* out
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i);
 
@@ -235,7 +235,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t*
  * \desc Docs!
  * \arg const sll_map_t* m
  * \arg sll_map_length_t i
- * \ret sll_object_t*
+ * \arg sll_object_t* out
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i);
 
@@ -304,7 +304,7 @@ __SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_
  * \arg const sll_map_t* m
  * \arg sll_object_t* k
  * \arg sll_map_t* o
- * \ret sll_object_t*
+ * \arg sll_object_t* out
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* m,sll_object_t* k,sll_map_t* o);
 

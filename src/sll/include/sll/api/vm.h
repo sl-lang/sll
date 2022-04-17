@@ -1,6 +1,5 @@
 #ifndef __SLL_API_VM_H__
 #define __SLL_API_VM_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -25,59 +24,64 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_vm_get_config
  * \group vm-api
  * \desc Docs!
- * \ret A
+ * \api |a
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(vm_get_config);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_config(sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_vm_get_instruction_count
  * \group vm-api
  * \desc Docs!
- * \ret I
+ * \api |i
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(vm_get_instruction_count);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_instruction_count(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_vm_get_instruction_index
  * \group vm-api
  * \desc Docs!
- * \ret I
+ * \api |i
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(vm_get_instruction_index);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_instruction_index(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_vm_get_location
  * \group vm-api
  * \desc Docs!
- * \arg I
- * \ret O
+ * \api i|o
+ * \arg sll_integer_t a
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(vm_get_location);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_location(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_vm_get_ref_count
  * \group vm-api
  * \desc Docs!
- * \arg O
- * \ret I
+ * \api o|i
+ * \arg sll_object_t* a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(vm_get_ref_count);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_ref_count(sll_object_t* a);
 
 
 

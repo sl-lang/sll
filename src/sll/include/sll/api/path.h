@@ -1,6 +1,5 @@
 #ifndef __SLL_API_PATH_H__
 #define __SLL_API_PATH_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -78,159 +77,173 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_absolute
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret S
+ * \api s|s
+ * \arg sll_string_t* a
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(path_absolute);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(sll_string_t* a,sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_exists
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret I
+ * \api s|i
+ * \arg sll_string_t* a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(path_exists);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_exists(sll_string_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_get_cwd
  * \group path-api
  * \desc Docs!
- * \ret O
+ * \api |o
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(path_get_cwd);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_cwd(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_is_dir
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret I
+ * \api s|i
+ * \arg sll_string_t* a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(path_is_dir);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_is_dir(sll_string_t* a);
 
 
 
 /**
- * \flags api func var_arg
+ * \flags func
  * \name sll_api_path_join
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret S
+ * \api s!|s
+ * \arg sll_string_t*const* a
+ * \arg sll_arg_count_t ac
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(path_join);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_list_dir
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret O
+ * \api s|o
+ * \arg sll_string_t* a
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(path_list_dir);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(sll_string_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_mkdir
  * \group path-api
  * \desc Docs!
- * \arg S
- * \arg B
- * \ret I
+ * \api sb|i
+ * \arg sll_string_t* a
+ * \arg sll_bool_t b
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(path_mkdir);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdir(sll_string_t* a,sll_bool_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_recursive_list_dir
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret O
+ * \api s|o
+ * \arg sll_string_t* a
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(path_recursive_list_dir);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir(sll_string_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_relative
  * \group path-api
  * \desc Docs!
- * \arg S
- * \arg S
- * \ret S
+ * \api ss|s
+ * \arg sll_string_t* a
+ * \arg sll_string_t* b
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(path_relative);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(sll_string_t* a,sll_string_t* b,sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_set_cwd
  * \group json-api
  * \desc Docs!
- * \arg S
- * \ret I
+ * \api s|i
+ * \arg sll_string_t* a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(path_set_cwd);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_cwd(sll_string_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_size
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret I
+ * \api s|i
+ * \arg sll_string_t* a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(path_size);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size(sll_string_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_split
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret A
+ * \api s|a
+ * \arg sll_string_t* a
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(path_split);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split(sll_string_t* a,sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_path_split_drive
  * \group path-api
  * \desc Docs!
- * \arg S
- * \ret A
+ * \api s|a
+ * \arg sll_string_t* a
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(path_split_drive);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split_drive(sll_string_t* a,sll_array_t* out);
 
 
 

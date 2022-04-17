@@ -1,6 +1,5 @@
 #ifndef __SLL_API_AUDIT_H__
 #define __SLL_API_AUDIT_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,26 +12,29 @@
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_audit__init
  * \group array-api
  * \desc Docs!
- * \arg I
+ * \api i|v
+ * \arg sll_integer_t a
  */
-__API_FUNC_DECL(audit__init);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t a);
 
 
 
 /**
- * \flags api func var_arg
+ * \flags func
  * \name sll_api_audit_audit
  * \group array-api
  * \desc Docs!
- * \arg S
- * \arg S
- * \arg O
+ * \api sso!|v
+ * \arg sll_string_t* a
+ * \arg sll_string_t* b
+ * \arg sll_object_t*const* c
+ * \arg sll_arg_count_t cc
  */
-__API_FUNC_DECL(audit_audit);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(sll_string_t* a,sll_string_t* b,sll_object_t*const* c,sll_arg_count_t cc);
 
 
 

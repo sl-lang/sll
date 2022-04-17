@@ -1,4 +1,3 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
 #include <sll/_internal/serial.h>
@@ -359,7 +358,7 @@ __SLL_EXTERNAL void sll_encode_string(sll_file_t* f,const sll_string_t* s){
 
 
 
-__API_FUNC(serial_decode_float){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_decode_float(sll_integer_t a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return 0;
 	}
@@ -373,7 +372,7 @@ __API_FUNC(serial_decode_float){
 
 
 
-__API_FUNC(serial_decode_integer){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_integer(sll_integer_t a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return 0;
 	}
@@ -384,7 +383,7 @@ __API_FUNC(serial_decode_integer){
 
 
 
-__API_FUNC(serial_decode_signed_integer){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_signed_integer(sll_integer_t a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return 0;
 	}
@@ -395,7 +394,7 @@ __API_FUNC(serial_decode_signed_integer){
 
 
 
-__API_FUNC(serial_decode_object){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object(sll_integer_t a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
@@ -405,7 +404,7 @@ __API_FUNC(serial_decode_object){
 
 
 
-__API_FUNC(serial_decode_string){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string(sll_integer_t a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
@@ -418,7 +417,7 @@ __API_FUNC(serial_decode_string){
 
 
 
-__API_FUNC(serial_encode_float){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t a,sll_float_t b){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		sll_file_write(sll_file_from_handle(a),&b,sizeof(sll_float_t),NULL);
 	}
@@ -426,7 +425,7 @@ __API_FUNC(serial_encode_float){
 
 
 
-__API_FUNC(serial_encode_integer){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_integer(sll_integer_t a,sll_integer_t b){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		sll_encode_integer(sll_file_from_handle(a),(sll_size_t)b);
 	}
@@ -434,7 +433,7 @@ __API_FUNC(serial_encode_integer){
 
 
 
-__API_FUNC(serial_encode_signed_integer){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_signed_integer(sll_integer_t a,sll_integer_t b){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		sll_encode_signed_integer(sll_file_from_handle(a),b);
 	}
@@ -442,7 +441,7 @@ __API_FUNC(serial_encode_signed_integer){
 
 
 
-__API_FUNC(serial_encode_object){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iO+"),a,b,bc);
 		sll_encode_object(sll_file_from_handle(a),b,bc);
@@ -451,7 +450,7 @@ __API_FUNC(serial_encode_object){
 
 
 
-__API_FUNC(serial_encode_string){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_string(sll_integer_t a,sll_string_t* b){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		sll_encode_string(sll_file_from_handle(a),b);
 	}

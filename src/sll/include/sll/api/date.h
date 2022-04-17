@@ -1,6 +1,5 @@
 #ifndef __SLL_API_DATE_H__
 #define __SLL_API_DATE_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -62,42 +61,45 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* dt);
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_date_get_time_zone
  * \group date-api
  * \desc Docs!
- * \ret A
+ * \api |a
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(date_get_time_zone);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_get_time_zone(sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_date_merge
  * \group date-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg F
- * \ret F
+ * \api iiiiif|f
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \arg sll_integer_t c
+ * \arg sll_integer_t d
+ * \arg sll_integer_t e
+ * \arg sll_float_t f
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(date_merge);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_float_t f);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_date_split
  * \group date-api
  * \desc Docs!
- * \arg F
- * \ret A
+ * \api f|a
+ * \arg sll_float_t a
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(date_split);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t a,sll_array_t* out);
 
 
 

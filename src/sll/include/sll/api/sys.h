@@ -1,6 +1,5 @@
 #ifndef __SLL_API_SYS_H__
 #define __SLL_API_SYS_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -47,141 +46,153 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
- * \ret O
+ * \api |o
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(sys_get_args);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_args(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_get_cpu_count
  * \group sys-api
  * \desc Docs!
- * \ret I
+ * \api |i
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(sys_get_cpu_count);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_sys_get_cpu_count(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_get_env
  * \group sys-api
  * \desc Docs!
- * \ret M
+ * \api |m
+ * \arg sll_map_t* out
  */
-__API_FUNC_DECL(sys_get_env);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_env(sll_map_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_get_executable
  * \group sys-api
  * \desc Docs!
- * \ret S
+ * \api |s
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(sys_get_executable);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_executable(sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_get_library
  * \group sys-api
  * \desc Docs!
- * \ret S
+ * \api |s
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(sys_get_library);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_library(sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_get_platform
  * \group sys-api
  * \desc Docs!
- * \ret S
+ * \api |s
+ * \arg sll_string_t* out
  */
-__API_FUNC_DECL(sys_get_platform);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_platform(sll_string_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
- * \ret I
+ * \api |i
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(sys_get_sandbox_flags);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_sys_get_sandbox_flags(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_get_version
  * \group sys-api
  * \desc Docs!
- * \ret A
+ * \api |a
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(sys_get_version);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_load_library
  * \group sys-api
  * \desc Docs!
- * \arg S
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \ret B
+ * \api siiiii|b
+ * \arg sll_string_t* a
+ * \arg sll_integer_t b
+ * \arg sll_integer_t c
+ * \arg sll_integer_t d
+ * \arg sll_integer_t e
+ * \arg sll_integer_t f
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(sys_load_library);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(sll_string_t* a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_remove_env
  * \group sys-api
  * \desc Docs!
- * \arg S
+ * \api s|v
+ * \arg sll_string_t* a
  */
-__API_FUNC_DECL(sys_remove_env);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(sll_string_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_set_sandbox_flag
  * \group sys-api
  * \desc Docs!
- * \arg I
+ * \api i|v
+ * \arg sll_integer_t a
  */
-__API_FUNC_DECL(sys_set_sandbox_flag);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_sys_set_env
  * \group sys-api
  * \desc Docs!
- * \arg S
- * \arg S
+ * \api ss|v
+ * \arg sll_string_t* a
+ * \arg sll_string_t* b
  */
-__API_FUNC_DECL(sys_set_env);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(sll_string_t* a,sll_string_t* b);
 
 
 

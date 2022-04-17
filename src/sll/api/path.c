@@ -1,7 +1,5 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/static_object.h>
-#include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/array.h>
 #include <sll/audit.h>
@@ -89,7 +87,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const
 
 
 
-__API_FUNC(path_absolute){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(sll_string_t* a,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		sll_string_clone(a,out);
 		return;
@@ -100,7 +98,7 @@ __API_FUNC(path_absolute){
 
 
 
-__API_FUNC(path_exists){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_exists(sll_string_t* a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
@@ -109,7 +107,7 @@ __API_FUNC(path_exists){
 
 
 
-__API_FUNC(path_get_cwd){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_cwd(void){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
@@ -124,7 +122,7 @@ __API_FUNC(path_get_cwd){
 
 
 
-__API_FUNC(path_is_dir){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_is_dir(sll_string_t* a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
@@ -133,7 +131,7 @@ __API_FUNC(path_is_dir){
 
 
 
-__API_FUNC(path_join){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out){
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
 	if (ac){
@@ -170,7 +168,7 @@ __API_FUNC(path_join){
 
 
 
-__API_FUNC(path_list_dir){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(sll_string_t* a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
@@ -191,7 +189,7 @@ __API_FUNC(path_list_dir){
 
 
 
-__API_FUNC(path_mkdir){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdir(sll_string_t* a,sll_bool_t b){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
@@ -201,7 +199,7 @@ __API_FUNC(path_mkdir){
 
 
 
-__API_FUNC(path_recursive_list_dir){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir(sll_string_t* a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
@@ -222,7 +220,7 @@ __API_FUNC(path_recursive_list_dir){
 
 
 
-__API_FUNC(path_relative){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(sll_string_t* a,sll_string_t* b,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		sll_string_clone(a,out);
 		return;
@@ -232,7 +230,7 @@ __API_FUNC(path_relative){
 
 
 
-__API_FUNC(path_set_cwd){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_cwd(sll_string_t* a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
@@ -242,7 +240,7 @@ __API_FUNC(path_set_cwd){
 
 
 
-__API_FUNC(path_size){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size(sll_string_t* a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
@@ -260,14 +258,14 @@ __API_FUNC(path_size){
 
 
 
-__API_FUNC(path_split){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split(sll_string_t* a,sll_array_t* out){
 	sll_string_length_t i=sll_path_split(a);
 	sll_new_object_array(SLL_CHAR("ll"),out,a->v,i,a->v+i,a->l-i);
 }
 
 
 
-__API_FUNC(path_split_drive){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split_drive(sll_string_t* a,sll_array_t* out){
 	sll_string_length_t i=sll_path_split_drive(a);
 	sll_new_object_array(SLL_CHAR("ll"),out,a->v,i,a->v+i,a->l-i);
 }

@@ -1,7 +1,5 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/file.h>
 #include <sll/_internal/static_object.h>
-#include <sll/api.h>
 #include <sll/api/path.h>
 #include <sll/api/string.h>
 #include <sll/audit.h>
@@ -87,7 +85,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_file_to_handle(sll_file_t* f
 
 
 
-__API_FUNC(file_close){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(sll_integer_t a){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return 0;
 	}
@@ -114,7 +112,7 @@ __API_FUNC(file_close){
 
 
 
-__API_FUNC(file_copy){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_copy(sll_string_t* a,sll_string_t* b){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH){
 		return SLL_ERROR_TOO_LONG;
 	}
@@ -127,7 +125,7 @@ __API_FUNC(file_copy){
 
 
 
-__API_FUNC(file_delete){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_delete(sll_string_t* a){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
 		return SLL_ERROR_TOO_LONG;
 	}
@@ -140,7 +138,7 @@ __API_FUNC(file_delete){
 
 
 
-__API_FUNC(file_flush){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_flush(sll_integer_t a){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return 0;
 	}
@@ -151,7 +149,7 @@ __API_FUNC(file_flush){
 
 
 
-__API_FUNC(file_from_data){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_from_data(sll_string_t* a,sll_integer_t b){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES)){
 		return ~SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 	}
@@ -165,7 +163,7 @@ __API_FUNC(file_from_data){
 
 
 
-__API_FUNC(file_get_buffer){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_file_get_buffer(sll_integer_t a,sll_string_t* out){
 	SLL_INIT_STRING(out);
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return;
@@ -176,13 +174,13 @@ __API_FUNC(file_get_buffer){
 
 
 
-__API_FUNC(file_get_temp_path){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_file_get_temp_path(sll_string_t* out){
 	sll_string_clone(sll_temporary_file_path,out);
 }
 
 
 
-__API_FUNC(file_inc_handle){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_integer_t a){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return;
 	}
@@ -191,7 +189,7 @@ __API_FUNC(file_inc_handle){
 
 
 
-__API_FUNC(file_open){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open(sll_string_t* a,sll_integer_t b){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH){
 		return ~SLL_ERROR_TOO_LONG;
 	}
@@ -213,7 +211,7 @@ __API_FUNC(file_open){
 
 
 
-__API_FUNC(file_peek){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_peek(sll_integer_t a){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return sll_int_to_object(~SLL_ERROR_UNKNOWN_FD);
 	}
@@ -225,7 +223,7 @@ __API_FUNC(file_peek){
 
 
 
-__API_FUNC(file_read){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read(sll_integer_t a,sll_integer_t b){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return sll_int_to_object(SLL_ERROR_UNKNOWN_FD);
 	}
@@ -249,7 +247,7 @@ __API_FUNC(file_read){
 
 
 
-__API_FUNC(file_read_char){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read_char(sll_integer_t a){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return sll_int_to_object(SLL_ERROR_UNKNOWN_FD);
 	}
@@ -264,7 +262,7 @@ __API_FUNC(file_read_char){
 
 
 
-__API_FUNC(file_rename){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rename(sll_string_t* a,sll_string_t* b){
 	if (a->l>SLL_API_MAX_FILE_PATH_LENGTH||b->l>SLL_API_MAX_FILE_PATH_LENGTH){
 		return SLL_ERROR_TOO_LONG;
 	}
@@ -277,7 +275,7 @@ __API_FUNC(file_rename){
 
 
 
-__API_FUNC(file_std_handle){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_std_handle(sll_integer_t a){
 	if (!_file_cleanup){
 		sll_register_cleanup(_release_data);
 		_file_cleanup=1;
@@ -309,7 +307,7 @@ __API_FUNC(file_std_handle){
 
 
 
-__API_FUNC(file_write){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_write(sll_integer_t a,sll_string_t* b){
 	if (a<0||a>=_file_fll||!(*(_file_fl+a))){
 		return ~SLL_ERROR_UNKNOWN_FD;
 	}

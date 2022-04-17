@@ -1,6 +1,5 @@
 #ifndef __SLL_API_MATH_H__
 #define __SLL_API_MATH_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -79,440 +78,474 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_flo
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_abs
  * \group math-api
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_abs);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_acos
  * \group math-api
  * \subgroup math-api-inv-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_acos);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_acos(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_acosh
  * \group math-api
  * \subgroup math-api-inv-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_acosh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_acosh(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_asin
  * \group math-api
  * \subgroup math-api-inv-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_asin);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_asin(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_asinh
  * \group math-api
  * \subgroup math-api-inv-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_asinh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_asinh(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_atan
  * \group math-api
  * \subgroup math-api-inv-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_atan);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_atan2
  * \group math-api
  * \subgroup math-api-inv-trig
  * \desc Docs!
- * \arg F
- * \arg F
- * \ret F
+ * \api ff|f
+ * \arg sll_float_t a
+ * \arg sll_float_t b
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_atan2);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan2(sll_float_t a,sll_float_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_atanh
  * \group math-api
  * \subgroup math-api-inv-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_atanh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atanh(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_cbrt
  * \group math-api
  * \subgroup math-api-exp
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_cbrt);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cbrt(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_combinations
  * \group math-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \ret I
+ * \api ii|i
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_combinations);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_combinations(sll_integer_t a,sll_integer_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_cos
  * \group math-api
  * \subgroup math-api-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_cos);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cos(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_cosh
  * \group math-api
  * \subgroup math-api-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_cosh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cosh(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_ceil
  * \group math-api
  * \desc Docs!
- * \arg F
- * \ret I
+ * \api f|i
+ * \arg sll_float_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_ceil);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_ceil(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_copy_sign
  * \group math-api
  * \desc Docs!
- * \arg F
- * \arg F
- * \ret F
+ * \api ff|f
+ * \arg sll_float_t a
+ * \arg sll_float_t b
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_copy_sign);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_copy_sign(sll_float_t a,sll_float_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_euler_phi
  * \group math-api
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_euler_phi);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_euler_phi(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_exp
  * \group math-api
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_exp);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_exp(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_factorial
  * \group math-api
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_factorial);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_factorial(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_factors
  * \group math-api
  * \desc Docs!
- * \arg I
- * \ret O
+ * \api i|o
+ * \arg sll_integer_t a
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(math_factors);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factors(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_gcd
  * \group math-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \ret I
+ * \api ii|i
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_gcd);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_gcd(sll_integer_t a,sll_integer_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_floor
  * \group math-api
  * \desc Docs!
- * \arg F
- * \ret I
+ * \api f|i
+ * \arg sll_float_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_floor);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_floor(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_int_log2
  * \group math-api
  * \subgroup math-api-log
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_int_log2);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_log2(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_int_pow
  * \group math-api
  * \subgroup math-api-exp
  * \desc Docs!
- * \arg I
- * \arg I
- * \arg I
- * \ret I
+ * \api iii|i
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \arg sll_integer_t c
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_int_pow);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_pow(sll_integer_t a,sll_integer_t b,sll_integer_t c);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_int_sqrt
  * \group math-api
  * \subgroup math-api-exp
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_int_sqrt);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_sqrt(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_log
  * \group math-api
  * \subgroup math-api-log
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_log);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_log2
  * \group math-api
  * \subgroup math-api-log
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_log2);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log2(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_log10
  * \group math-api
  * \subgroup math-api-log
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_log10);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log10(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_permutations
  * \group math-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \ret I
+ * \api ii|i
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_permutations);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_permutations(sll_integer_t a,sll_integer_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_pow
  * \group math-api
  * \subgroup math-api-exp
  * \desc Docs!
- * \arg F
- * \arg F
- * \ret F
+ * \api ff|f
+ * \arg sll_float_t a
+ * \arg sll_float_t b
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_pow);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_pow(sll_float_t a,sll_float_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_round
  * \group math-api
  * \desc Docs!
- * \arg F
- * \ret I
+ * \api f|i
+ * \arg sll_float_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(math_round);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_round(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_sin
  * \group math-api
  * \subgroup math-api-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_sin);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sin(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_sinh
  * \group math-api
  * \subgroup math-api-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_sinh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sinh(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_sqrt
  * \group math-api
  * \subgroup math-api-exp
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_sqrt);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sqrt(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_tan
  * \group math-api
  * \subgroup math-api-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_tan);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tan(sll_float_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_math_tanh
  * \group math-api
  * \subgroup math-api-trig
  * \desc Docs!
- * \arg F
- * \ret F
+ * \api f|f
+ * \arg sll_float_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(math_tanh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tanh(sll_float_t a);
 
 
 

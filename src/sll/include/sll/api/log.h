@@ -1,6 +1,5 @@
 #ifndef __SLL_API_LOG_H__
 #define __SLL_API_LOG_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,52 +12,57 @@
 
 
 /**
- * \flags api func var_arg
+ * \flags func
  * \name sll_api_log_log
  * \group log-api
  * \desc Docs!
- * \arg O
+ * \api o!|v
+ * \arg sll_object_t*const* a
+ * \arg sll_arg_count_t ac
  */
-__API_FUNC_DECL(log_log);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_log(sll_object_t*const* a,sll_arg_count_t ac);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_log_set_default
  * \group log-api
  * \desc Docs!
- * \arg I
- * \arg B
+ * \api ib|v
+ * \arg sll_integer_t a
+ * \arg sll_bool_t b
  */
-__API_FUNC_DECL(log_set_default);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_default(sll_integer_t a,sll_bool_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_log_set_file
  * \group log-api
  * \desc Docs!
- * \arg S
- * \arg I
- * \arg B
+ * \api sib|v
+ * \arg sll_string_t* a
+ * \arg sll_integer_t b
+ * \arg sll_bool_t c
  */
-__API_FUNC_DECL(log_set_file);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_file(sll_string_t* a,sll_integer_t b,sll_bool_t c);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_log_set_function
  * \group log-api
  * \desc Docs!
- * \arg S
- * \arg S
- * \arg I
- * \arg B
+ * \api ssib|v
+ * \arg sll_string_t* a
+ * \arg sll_string_t* b
+ * \arg sll_integer_t c
+ * \arg sll_bool_t d
  */
-__API_FUNC_DECL(log_set_function);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_function(sll_string_t* a,sll_string_t* b,sll_integer_t c,sll_bool_t d);
 
 
 

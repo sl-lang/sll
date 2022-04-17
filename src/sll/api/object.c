@@ -1,6 +1,4 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
-#include <sll/api.h>
 #include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/new_object.h>
@@ -9,7 +7,7 @@
 
 
 
-__API_FUNC(object_new){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_object_new(sll_string_t* a,sll_object_t** b,sll_arg_count_t bc){
 	sll_var_arg_list_t dt={
 		SLL_VAR_ARG_LIST_TYPE_SLL,
 		{

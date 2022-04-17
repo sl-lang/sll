@@ -1,9 +1,7 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/static_object.h>
 #include <sll/_internal/vm.h>
-#include <sll/api.h>
 #include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -41,7 +39,7 @@ void _audit_cleanup_api(void){
 
 
 
-__API_FUNC(audit__init){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t a){
 	if (!a){
 		return;
 	}
@@ -53,7 +51,7 @@ __API_FUNC(audit__init){
 
 
 
-__API_FUNC(audit_audit){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(sll_string_t* a,sll_string_t* b,sll_object_t** c,sll_arg_count_t cc){
 	sll_var_arg_list_t dt={
 		SLL_VAR_ARG_LIST_TYPE_SLL,
 		{

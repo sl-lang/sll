@@ -39,7 +39,7 @@ __SLL_EXTERNAL void sll_acquire_object(sll_object_t* o);
  * \group gc
  * \desc Docs!
  * \arg sll_object_type_t t
- * \ret sll_object_t*
+ * \arg sll_object_t* out
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_type_t t);
 

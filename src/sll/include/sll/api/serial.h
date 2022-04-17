@@ -1,6 +1,5 @@
 #ifndef __SLL_API_SERIAL_H__
 #define __SLL_API_SERIAL_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -154,122 +153,133 @@ __SLL_EXTERNAL void sll_encode_string(sll_file_t* f,const sll_string_t* s);
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_decode_float
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \ret F
+ * \api i|f
+ * \arg sll_integer_t a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(serial_decode_float);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_decode_float(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_decode_integer
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(serial_decode_integer);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_integer(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_decode_signed_integer
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(serial_decode_signed_integer);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_signed_integer(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_decode_object
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \ret O
+ * \api i|o
+ * \arg sll_integer_t a
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(serial_decode_object);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_decode_string
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \ret O
+ * \api i|o
+ * \arg sll_integer_t a
+ * \ret sll_object_t*
  */
-__API_FUNC_DECL(serial_decode_string);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_encode_float
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \arg F
+ * \api if|v
+ * \arg sll_integer_t a
+ * \arg sll_float_t b
  */
-__API_FUNC_DECL(serial_encode_float);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t a,sll_float_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_encode_integer
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \arg I
+ * \api ii|v
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
  */
-__API_FUNC_DECL(serial_encode_integer);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_integer(sll_integer_t a,sll_integer_t b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_encode_signed_integer
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \arg I
+ * \api ii|v
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
  */
-__API_FUNC_DECL(serial_encode_signed_integer);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_signed_integer(sll_integer_t a,sll_integer_t b);
 
 
 
 /**
- * \flags api func var_arg
+ * \flags func
  * \name sll_api_serial_encode_object
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \arg O
+ * \api io!|v
+ * \arg sll_integer_t a
+ * \arg sll_object_t*const* b
+ * \arg sll_arg_count_t bc
  */
-__API_FUNC_DECL(serial_encode_object);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_serial_encode_string
  * \group serial-api
  * \desc Docs!
- * \arg I
- * \arg S
+ * \api is|v
+ * \arg sll_integer_t a
+ * \arg sll_string_t* b
  */
-__API_FUNC_DECL(serial_encode_string);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_string(sll_integer_t a,sll_string_t* b);
 
 
 

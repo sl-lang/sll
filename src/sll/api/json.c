@@ -1,10 +1,8 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/json.h>
 #include <sll/_internal/string.h>
 #include <sll/allocator.h>
-#include <sll/api.h>
 #include <sll/api/json.h>
 #include <sll/api/math.h>
 #include <sll/array.h>
@@ -617,7 +615,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 
 
 
-__API_FUNC(json__init){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* a,sll_object_t* b,sll_object_t* c){
 	if (!_json_null){
 		sll_register_cleanup(_release_data);
 	}
@@ -634,7 +632,7 @@ __API_FUNC(json__init){
 
 
 
-__API_FUNC(json_parse){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(sll_string_t* a){
 	sll_json_parser_state_t p=a->v;
 	sll_object_t* o=_parse_json_as_object(&p);
 	if (o){
@@ -645,7 +643,7 @@ __API_FUNC(json_parse){
 
 
 
-__API_FUNC(json_stringify){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json_stringify(sll_object_t* a,sll_string_t* out){
 	STRING_INIT_STACK(out);
 	_stringify_object(a,out);
 	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);

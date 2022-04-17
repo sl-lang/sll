@@ -1,7 +1,5 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/static_string.h>
-#include <sll/api.h>
 #include <sll/api/file.h>
 #include <sll/array.h>
 #include <sll/audit.h>
@@ -29,25 +27,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_
 
 
 
-__API_FUNC(vm_get_config){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_config(sll_array_t* out){
 	sll_new_object_array(SLL_CHAR("iiiii"),out,sll_current_vm_config->s_sz,sll_current_vm_config->c_st_sz,sll_file_to_handle(sll_current_vm_config->in),sll_file_to_handle(sll_current_vm_config->out),sll_file_to_handle(sll_current_vm_config->err));
 }
 
 
 
-__API_FUNC(vm_get_instruction_count){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_instruction_count(void){
 	return sll_vm_get_instruction_count();
 }
 
 
 
-__API_FUNC(vm_get_instruction_index){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_instruction_index(void){
 	return sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX);
 }
 
 
 
-__API_FUNC(vm_get_location){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_location(sll_integer_t a){
 	sll_instruction_index_t ii;
 	if (a<0){
 		const sll_call_stack_t* c_st=sll_thread_get_call_stack(_scheduler_current_thread_index);
@@ -62,7 +60,7 @@ __API_FUNC(vm_get_location){
 
 
 
-__API_FUNC(vm_get_ref_count){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_ref_count(sll_object_t* a){
 	sll_audit(SLL_CHAR("sll.vm.ref"),SLL_CHAR("O"),a);
 	return a->rc;
 }

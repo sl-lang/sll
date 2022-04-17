@@ -1,10 +1,8 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/allocator.h>
-#include <sll/api.h>
 #include <sll/api/process.h>
 #include <sll/array.h>
 #include <sll/audit.h>
@@ -92,7 +90,7 @@ _continue:
 
 
 
-__API_FUNC(process_execute_shell){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(sll_string_t* a){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API);
 	}
@@ -103,7 +101,7 @@ __API_FUNC(process_execute_shell){
 
 
 
-__API_FUNC(process_get_pid){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_get_pid(void){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		return -1;
 	}
@@ -112,7 +110,7 @@ __API_FUNC(process_get_pid){
 
 
 
-__API_FUNC(process_join){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		SLL_INIT_STRING(out);
 		return;
@@ -133,13 +131,13 @@ __API_FUNC(process_join){
 
 
 
-__API_FUNC(process_split){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(sll_string_t* a,sll_array_t* out){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__API_FUNC(process_start){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* a,sll_string_t* b,sll_integer_t c,sll_string_t* d,sll_array_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!a->l){
 		sll_new_object_array(SLL_CHAR("a(si)0(sZZ)"),out,a,b,c,d);
 		return;

@@ -1,6 +1,5 @@
 #ifndef __SLL_API_TIME_H__
 #define __SLL_API_TIME_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,48 +12,52 @@
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_time_current
  * \group time-api
  * \desc Docs!
- * \ret F
+ * \api |f
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(time_current);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_current(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_time_current_ns
  * \group time-api
  * \desc Docs!
- * \ret I
+ * \api |i
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(time_current_ns);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_time_current_ns(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_time_sleep
  * \group time-api
  * \desc Docs!
- * \arg IF
- * \ret F
+ * \api x|f
+ * \arg sll_int_float_t* a
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(time_sleep);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_sleep(sll_int_float_t* a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_time_sleep_ns
  * \group time-api
  * \desc Docs!
- * \arg IF
- * \ret I
+ * \api x|i
+ * \arg sll_int_float_t* a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(time_sleep_ns);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_time_sleep_ns(sll_int_float_t* a);
 
 
 

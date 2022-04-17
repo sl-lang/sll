@@ -1,6 +1,5 @@
 #ifndef __SLL_API_HASH_H__
 #define __SLL_API_HASH_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -186,75 +185,79 @@ __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offs
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_hash_md5
  * \group hash-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg S
- * \ret A
+ * \api iiiis|a
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \arg sll_integer_t c
+ * \arg sll_integer_t d
+ * \arg sll_string_t* e
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(hash_md5);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_md5(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_string_t* e,sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_hash_sha1
  * \group hash-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg S
- * \ret A
+ * \api iiiiis|a
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \arg sll_integer_t c
+ * \arg sll_integer_t d
+ * \arg sll_integer_t e
+ * \arg sll_string_t* f
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(hash_sha1);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha1(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_string_t* f,sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_hash_sha256
  * \group hash-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg S
- * \ret A
+ * \api iiiiiiiis|a
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \arg sll_integer_t c
+ * \arg sll_integer_t d
+ * \arg sll_integer_t e
+ * \arg sll_integer_t f
+ * \arg sll_integer_t g
+ * \arg sll_integer_t h
+ * \arg sll_string_t* i
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(hash_sha256);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_hash_sha512
  * \group hash-api
  * \desc Docs!
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg I
- * \arg S
- * \ret A
+ * \api iiiiiiiis|a
+ * \arg sll_integer_t a
+ * \arg sll_integer_t b
+ * \arg sll_integer_t c
+ * \arg sll_integer_t d
+ * \arg sll_integer_t e
+ * \arg sll_integer_t f
+ * \arg sll_integer_t g
+ * \arg sll_integer_t h
+ * \arg sll_string_t* i
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(hash_sha512);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out);
 
 
 

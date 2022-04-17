@@ -1,6 +1,5 @@
 #ifndef __SLL_API_FLOAT_H__
 #define __SLL_API_FLOAT_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -24,24 +23,26 @@ __SLL_EXTERNAL extern sll_float_t sll_float_compare_error;
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_float_get_compare_error
  * \group float-api
  * \desc Docs!
- * \ret F
+ * \api |f
+ * \ret sll_float_t
  */
-__API_FUNC_DECL(float_get_compare_error);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_float_get_compare_error(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_float_set_compare_error
  * \group float-api
  * \desc Docs!
- * \arg F
+ * \api f|v
+ * \arg sll_float_t a
  */
-__API_FUNC_DECL(float_set_compare_error);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_float_set_compare_error(sll_float_t a);
 
 
 

@@ -1,6 +1,5 @@
 #ifndef __SLL_API_THREAD_H__
 #define __SLL_API_THREAD_H__ 1
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -13,181 +12,196 @@
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_create
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \arg A
- * \ret I
+ * \api ia|i
+ * \arg sll_integer_t a
+ * \arg sll_array_t* out
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(thread_create);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create(sll_integer_t a,sll_array_t* b);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_create_barrier
  * \group thread-api
  * \desc Docs!
- * \ret I
+ * \api |i
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(thread_create_barrier);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_barrier(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_create_lock
  * \group thread-api
  * \desc Docs!
- * \ret I
+ * \api |i
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(thread_create_lock);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_lock(void);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_create_semaphore
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(thread_create_semaphore);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_semaphore(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_delete
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \api i|b
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(thread_delete);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_delete_barrier
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \api i|b
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(thread_delete_barrier);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_barrier(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_delete_lock
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \api i|b
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(thread_delete_lock);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_lock(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_delete_semaphore
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \api i|b
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(thread_delete_semaphore);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_semaphore(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_get_internal_data
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret A
+ * \api i|a
+ * \arg sll_integer_t a
+ * \arg sll_array_t* out
  */
-__API_FUNC_DECL(thread_get_internal_data);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_integer_t a,sll_array_t* out);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_increase_barrier
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(thread_increase_barrier);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_increase_barrier(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_release_lock
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \api i|b
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(thread_release_lock);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_lock(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_release_semaphore
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \api i|b
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(thread_release_semaphore);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_semaphore(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_reset_barrier
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret I
+ * \api i|i
+ * \arg sll_integer_t a
+ * \ret sll_integer_t
  */
-__API_FUNC_DECL(thread_reset_barrier);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_reset_barrier(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_restart
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \api i|b
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(thread_restart);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_restart(sll_integer_t a);
 
 
 
 /**
- * \flags api func
+ * \flags func
  * \name sll_api_thread_suspend
  * \group thread-api
  * \desc Docs!
- * \arg I
- * \ret B
+ * \api i|b
+ * \arg sll_integer_t a
+ * \ret sll_bool_t
  */
-__API_FUNC_DECL(thread_suspend);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_suspend(sll_integer_t a);
 
 
 

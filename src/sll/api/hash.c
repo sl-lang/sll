@@ -1,8 +1,6 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_size_types.h>
-#include <sll/api.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/new_object.h>
@@ -444,7 +442,7 @@ __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offs
 
 
 
-__API_FUNC(hash_md5){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_md5(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_string_t* e,sll_array_t* out){
 	sll_md5_data_t dt={
 		(__SLL_U32)a,
 		(__SLL_U32)b,
@@ -457,7 +455,7 @@ __API_FUNC(hash_md5){
 
 
 
-__API_FUNC(hash_sha1){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha1(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_string_t* f,sll_array_t* out){
 	sll_sha1_data_t dt={
 		(__SLL_U32)a,
 		(__SLL_U32)b,
@@ -471,7 +469,7 @@ __API_FUNC(hash_sha1){
 
 
 
-__API_FUNC(hash_sha256){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out){
 	sll_sha256_data_t dt={
 		(__SLL_U32)a,
 		(__SLL_U32)b,
@@ -488,7 +486,7 @@ __API_FUNC(hash_sha256){
 
 
 
-__API_FUNC(hash_sha512){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out){
 	sll_sha512_data_t dt={
 		(__SLL_U64)a,
 		(__SLL_U64)b,

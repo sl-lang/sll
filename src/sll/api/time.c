@@ -1,5 +1,3 @@
-#include <sll/_internal/api.h>
-#include <sll/api.h>
 #include <sll/api/math.h>
 #include <sll/common.h>
 #include <sll/object.h>
@@ -10,19 +8,19 @@
 
 
 
-__API_FUNC(time_current){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_current(void){
 	return sll_platform_get_current_time()*1e-9;
 }
 
 
 
-__API_FUNC(time_current_ns){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_time_current_ns(void){
 	return sll_platform_get_current_time();
 }
 
 
 
-__API_FUNC(time_sleep){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_sleep(sll_int_float_t* a){
 	sll_time_t st=sll_platform_get_current_time();
 	sll_platform_sleep((a->t==SLL_PARSE_ARGS_TYPE_INT?a->dt.i*1000000000:sll_api_math_round(a->dt.f*1e9)));
 	return (sll_platform_get_current_time()-st)*1e-9;
@@ -30,7 +28,7 @@ __API_FUNC(time_sleep){
 
 
 
-__API_FUNC(time_sleep_ns){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_time_sleep_ns(sll_int_float_t* a){
 	sll_time_t st=sll_platform_get_current_time();
 	sll_platform_sleep((a->t==SLL_PARSE_ARGS_TYPE_INT?a->dt.i:sll_api_math_round(a->dt.f)));
 	return sll_platform_get_current_time()-st;

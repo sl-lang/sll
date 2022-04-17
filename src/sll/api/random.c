@@ -1,8 +1,6 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/util.h>
-#include <sll/api.h>
 #include <sll/common.h>
 #include <sll/platform/util.h>
 #include <sll/sandbox.h>
@@ -11,7 +9,7 @@
 
 
 
-__API_FUNC(random_get_float){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_float(sll_float_t a,sll_float_t b){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM)){
 		return 0;
 	}
@@ -27,7 +25,7 @@ __API_FUNC(random_get_float){
 
 
 
-__API_FUNC(random_get_int){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_get_int(sll_integer_t a,sll_integer_t b){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM)){
 		return 0;
 	}
@@ -44,7 +42,7 @@ __API_FUNC(random_get_int){
 
 
 
-__API_FUNC(random_get_string){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_random_get_string(sll_integer_t a,sll_char_t b,sll_char_t c,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM)){
 		SLL_INIT_STRING(out);
 		return;
