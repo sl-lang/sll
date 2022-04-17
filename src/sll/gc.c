@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/platform.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/weakref.h>
 #include <sll/api/string.h>
@@ -47,7 +48,7 @@ void _gc_release_data(void){
 			}
 			pg=pg->n;
 		} while (pg);
-		SLL_UNIMPLEMENTED();
+		_force_exit_platform();
 	}
 	while (_gc_page_ptr){
 		gc_page_header_t* n=_gc_page_ptr->n;

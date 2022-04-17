@@ -12,6 +12,14 @@ import website
 
 
 
+DEBUGGER={
+	"darwin": ["lldb","--"],
+	"linux": ["gdb","-ex","r","-iex","set pagination off","--args"],
+	"windows": ["windbg"]
+}
+
+
+
 util.log("Generating Build Directory...")
 util.create_output_dir()
 ver=header.read_version("src/sll/include/sll/version.h")
@@ -70,5 +78,5 @@ if ("--upload" in sys.argv):
 if ("--run" in sys.argv):
 	util.log(f"Running 'examples/_internal_test/test.sll'...")
 	util.execute(["build/sll","-h"])
-	if (util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]) or util.execute(["build/sll","build/test.slc","-v","-e","-a","-c","-o","build/test2","-R"]) or util.execute((["gdb","-ex","r","-iex","set pagination off","--args"] if len(os.getenv("SLL_GDB","")) else [])+["build/sll","build/test2.sla","-v","-P"])):
+	if (util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]) or util.execute(["build/sll","build/test.slc","-v","-e","-a","-c","-o","build/test2","-R"]) or util.execute((DEBUGGER[util.system] if len(os.getenv("SLL_DEBUGGER","")) else [])+["build/sll","build/test2.sla","-v","-P"])):
 		sys.exit(1)
