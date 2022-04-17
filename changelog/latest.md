@@ -14,5 +14,7 @@
 ## Removed
 
 - API-related header files
+- Unneeded `SLL_RETURN_TYPE_xxx` constants
+- Unneeded type: `sll_return_type_t`
 
 [0.7.14]: https://github.com/sl-lang/sll/compare/sll-v0.7.13...main

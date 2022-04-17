@@ -186,33 +186,33 @@ static sll_object_t* _call_internal(sll_function_index_t fn,sll_object_t*const* 
 	sll_float_t ret_f=_call_api_func(&ret,dt->_regs,bf,dt->_arg_cnt,dt->p);
 	sll_object_t* o;
 	switch (dt->ret){
-		case SLL_RETURN_TYPE_BOOL:
+		case 'b':
 			o=SLL_ACQUIRE_STATIC_INT(ret.b);
 			break;
-		case SLL_RETURN_TYPE_INT:
+		case 'i':
 			o=sll_int_to_object(ret.i);
 			break;
-		case SLL_RETURN_TYPE_FLOAT:
+		case 'f':
 			o=sll_float_to_object(ret_f);
 			break;
-		case SLL_RETURN_TYPE_CHAR:
+		case 'c':
 			o=SLL_FROM_CHAR(ret.c);
 			break;
-		case SLL_RETURN_TYPE_COMPLEX:
+		case 'd':
 			SLL_UNIMPLEMENTED();
-		case SLL_RETURN_TYPE_STRING:
+		case 's':
 			o=STRING_TO_OBJECT_NOCOPY(&(ret.s));
 			break;
-		case SLL_RETURN_TYPE_ARRAY:
+		case 'a':
 			o=sll_array_to_object_nocopy(&(ret.a));
 			break;
-		case SLL_RETURN_TYPE_MAP:
+		case 'm':
 			o=sll_map_to_object_nocopy(&(ret.m));
 			break;
-		case SLL_RETURN_TYPE_OBJECT:
+		case 'o':
 			o=ret.o;
 			break;
-		case SLL_RETURN_TYPE_VOID:
+		case 'v':
 			o=SLL_ACQUIRE_STATIC_INT(0);
 			break;
 		default:

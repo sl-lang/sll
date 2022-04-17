@@ -39,10 +39,9 @@ __C_FUNC(_call_api_func):
 	mov eax, r9d
 	add eax, 2
 	and eax, 0xfffffffe
-	cmp eax, 4
-	jae ._skip_stack_padding
-	mov eax, 4
-._skip_stack_padding:
+	mov ecx, 4
+	cmp eax, ecx
+	cmovb eax, ecx
 	shl rax, 3
 %ifdef __SLL_BUILD_WINDOWS
 	cmp rax, 4096
@@ -63,12 +62,12 @@ __C_FUNC(_call_api_func):
 	jc ._push_wide_arg
 	mov rcx, QWORD [r8]
 	mov QWORD [r10], rcx
-	jmp ._consume_arg
+	jmp ._load_next_arg
 ._push_wide_arg:
 	mov QWORD [r10], r8
 	add r8, 8
 
-._consume_arg:
+._load_next_arg:
 	shr rsi, 1
 	add r8, 8
 	add r10, 8
@@ -82,10 +81,7 @@ __C_FUNC(_call_api_func):
 	jnz ._next_arg
 ._no_args:
 
-	and sil, 1
-	jz ._no_return_arg
 	mov QWORD [r10], rbx
-._no_return_arg:
 
 	mov rcx, QWORD [rsp]
 	mov rdx, QWORD [rsp+8]

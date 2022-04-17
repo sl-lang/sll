@@ -214,7 +214,7 @@ static void _parse_object(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_
 
 
 
-sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitmap_t** regs,sll_size_t* o){
+sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** regs,sll_size_t* o){
 	SKIP_WHITESPACE_KEEP_VA;
 	sll_size_t reg_sz=0;
 	if (regs){
@@ -257,7 +257,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitma
 		PUSH_REGISTER(0);
 		ac++;
 	}
-	PUSH_REGISTER((ret==SLL_RETURN_TYPE_COMPLEX||ret==SLL_RETURN_TYPE_STRING||ret==SLL_RETURN_TYPE_ARRAY||ret==SLL_RETURN_TYPE_MAP));
+	PUSH_REGISTER((ret=='d'||ret=='s'||ret=='a'||ret=='m'));
 	SLL_ASSERT(!regs||(regs&&reg_sz==(ac+64)>>6));
 	if (o){
 		*o=sz;

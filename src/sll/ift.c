@@ -22,42 +22,15 @@ static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t
 	o->fmt=sll_allocate(off+1);
 	sll_copy_data(fmt,off,o->fmt);
 	o->fmt[off]=0;
-	o->ret=SLL_RETURN_TYPE_VOID;
-	while (*(fmt+off)){
-		switch (*(fmt+off)){
-			case 'b':
-				o->ret=SLL_RETURN_TYPE_BOOL;
-				goto _ret_found;
-			case 'i':
-				o->ret=SLL_RETURN_TYPE_INT;
-				goto _ret_found;
-			case 'f':
-				o->ret=SLL_RETURN_TYPE_FLOAT;
-				goto _ret_found;
-			case 'c':
-				o->ret=SLL_RETURN_TYPE_CHAR;
-				goto _ret_found;
-			case 'd':
-				o->ret=SLL_RETURN_TYPE_COMPLEX;
-				goto _ret_found;
-			case 's':
-				o->ret=SLL_RETURN_TYPE_STRING;
-				goto _ret_found;
-			case 'a':
-				o->ret=SLL_RETURN_TYPE_ARRAY;
-				goto _ret_found;
-			case 'm':
-				o->ret=SLL_RETURN_TYPE_MAP;
-				goto _ret_found;
-			case 'o':
-				o->ret=SLL_RETURN_TYPE_OBJECT;
-				goto _ret_found;
-			case 'v':
-				goto _ret_found;
+	o->ret='v';
+	fmt+=off;
+	while (*fmt){
+		if (*fmt=='b'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
+			o->ret=*fmt;
+			break;
 		}
-		off++;
+		fmt++;
 	}
-_ret_found:
 	o->_arg_cnt=_parse_arg_count(o->fmt,o->ret,&(o->_regs),&(o->_arg_sz));
 }
 

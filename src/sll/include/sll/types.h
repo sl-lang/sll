@@ -104,10 +104,6 @@ typedef __SLL_U8 sll_object_function_index_t;
 
 
 
-typedef __SLL_U8 sll_return_type_t;
-
-
-
 typedef __SLL_U8 sll_sandbox_flag_t;
 
 
@@ -788,7 +784,7 @@ typedef struct _SLL_INTERNAL_FUNCTION{
 	sll_string_t nm;
 	sll_internal_function_pointer_t p;
 	sll_char_t* fmt;
-	sll_return_type_t ret;
+	sll_char_t ret;
 	sll_arg_count_t _arg_cnt;
 	sll_size_t _arg_sz;
 	__SLL_U64* _regs;
