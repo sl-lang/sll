@@ -258,7 +258,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** r
 		ac++;
 	}
 	PUSH_REGISTER((ret=='d'||ret=='s'||ret=='a'||ret=='m'));
-	SLL_ASSERT(!regs||(regs&&reg_sz==(ac+64)>>6));
+	SLL_ASSERT(!regs||reg_sz==(ac+64)>>6);
 	if (o){
 		*o=sz;
 	}
