@@ -33,7 +33,7 @@
 	(,,, dt {
 		(= h (// dt$time_zone$offset 60))
 		(= min (- dt$time_zone$offset (* h 60)))
-		(@@ (<- string$format "%.4u/%.2u/%.2u %.2u:%.2u:%.2u %+.2u:%.2u (%s)"
+		(@@ (<- string$format "%.4u/%.2u/%.2u %.2u:%.2u:%.2u %+.2d:%.2u (%s)"
 			dt$year
 			(+ dt$month 1)
 			(+ dt$day 1)
