@@ -7,14 +7,6 @@
 #define ARG_OUTPUT_TYPE_C 0
 #define ARG_OUTPUT_TYPE_ARRAY 1
 
-#define ARG_BITMAP_NORMAL 0
-#define ARG_BITMAP_REF 1
-#define ARG_BITMAP_WIDE 2
-
-#define ARG_BITMAP_RETURN_NORMAL 0
-#define ARG_BITMAP_RETURN_XMM 1
-#define ARG_BITMAP_RETURN_REF 2
-
 
 
 typedef struct _ARG_STATE{

@@ -107,14 +107,14 @@
 	ENSURE_TYPE(arg,name); \
 	*var=&(arg->dt.field);
 
-#define PUSH_REGISTER(type) \
+#define PUSH_REGISTER(wide) \
 	do{ \
-		if (!(ac&31)){ \
+		if (!(ac&63)){ \
 			reg_sz++; \
 			*regs=sll_reallocate(*regs,reg_sz*sizeof(bitmap_t)); \
 			*(*regs+reg_sz-1)=0; \
 		} \
-		*(*regs+reg_sz-1)|=(type)<<((ac&31)<<1); \
+		*(*regs+reg_sz-1)|=(wide)<<(ac&63); \
 	} while (0)
 
 
@@ -275,7 +275,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitma
 				if (ac){
 					sz+=8;
 					if (regs){
-						PUSH_REGISTER(ARG_BITMAP_NORMAL);
+						PUSH_REGISTER(0);
 					}
 					ac++;
 				}
@@ -289,21 +289,16 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitma
 			sz+=8;
 			arr=0;
 			if (regs){
-				bitmap_t type=ARG_BITMAP_NORMAL;
+				sll_bool_t wide=0;
 				switch (*t){
 					case 'x':
 					case 'd':
 					case 'y':
 						sz+=8;
-						type=ARG_BITMAP_WIDE;
-						break;
-					case 's':
-					case 'a':
-					case 'm':
-						type=ARG_BITMAP_REF;
+						wide=1;
 						break;
 				}
-				PUSH_REGISTER(type);
+				PUSH_REGISTER(wide);
 			}
 			else if (*t=='x'||*t=='d'||*t=='y'){
 				sz++;
@@ -315,31 +310,12 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitma
 	}
 	if (ac&&va){
 		sz+=8;
-		PUSH_REGISTER(ARG_BITMAP_NORMAL);
+		PUSH_REGISTER(0);
 		ac++;
 	}
 	if (regs){
-		bitmap_t type=ARG_BITMAP_RETURN_NORMAL;
-		switch (ret){
-			case SLL_RETURN_TYPE_BOOL:
-			case SLL_RETURN_TYPE_INT:
-			case SLL_RETURN_TYPE_CHAR:
-			case SLL_RETURN_TYPE_OBJECT:
-			case SLL_RETURN_TYPE_VOID:
-				type=ARG_BITMAP_RETURN_NORMAL;
-				break;
-			case SLL_RETURN_TYPE_FLOAT:
-				type=ARG_BITMAP_RETURN_XMM;
-				break;
-			case SLL_RETURN_TYPE_COMPLEX:
-			case SLL_RETURN_TYPE_STRING:
-			case SLL_RETURN_TYPE_ARRAY:
-			case SLL_RETURN_TYPE_MAP:
-				type=ARG_BITMAP_RETURN_REF;
-				break;
-		}
-		PUSH_REGISTER(type);
-		SLL_ASSERT(reg_sz==((ac<<1)+65)>>6);
+		PUSH_REGISTER((ret==SLL_RETURN_TYPE_COMPLEX||ret==SLL_RETURN_TYPE_STRING||ret==SLL_RETURN_TYPE_ARRAY||ret==SLL_RETURN_TYPE_MAP));
+		SLL_ASSERT(reg_sz==(ac+64)>>6);
 	}
 	if (o){
 		*o=sz;

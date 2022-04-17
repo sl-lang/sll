@@ -11,20 +11,11 @@ section .text
 
 
 
-%define ARG_BITMAP_NORMAL 0
-%define ARG_BITMAP_REF 1
-%define ARG_BITMAP_WIDE 2
-
-%define ARG_BITMAP_RETURN_NORMAL 0
-%define ARG_BITMAP_RETURN_XMM 1
-%define ARG_BITMAP_RETURN_REF 2
-
-
-
 ; eax - Counter of arguments left in current bitmap
 ; rbx - Return value pointer
 ; rcx - Current bitmap
 ; rdx - Argument bitmap pointer
+; rsi - Temporary register
 ; r8 - Argument data pointer
 ; r9d - Argument count
 ; r10 - Function pointer
@@ -32,49 +23,58 @@ section .text
 global __C_FUNC(_call_api_func)
 __C_FUNC(_call_api_func):
 	push rbx
+	push rsi
 	push rbp
 	mov rbp, rsp
 
 	mov rbx, rcx
-	mov r10, QWORD [rsp+56]
+	mov r10, QWORD [rsp+64]
 
 	mov rax, r9
 	add rax, 2
 	and rax, ~1
-	lea rax, [rax*8+8]
+	cmp rax, 4
+	jae ._skip_stack_padding
+	mov rax, 4
+._skip_stack_padding:
+	shl rax, 3
 	sub rsp, rax
 
-	mov rcx, QWORD [rsp+rax+64]
-	mov QWORD [rsp], rcx
-	mov ecx, DWORD [rsp+rax+72]
-	mov DWORD [rsp+8], ecx
-
-	mov eax, 32
+	mov eax, 64
 	mov rcx, QWORD [rdx]
 	mov r11, rsp
 	test r9d, r9d
 	jz ._no_args
 ._next_arg:
 
-	;;;
+	bt cx, 0
+	jc ._push_wide_arg
+	mov rsi, QWORD [r8]
+	mov QWORD [r11], rsi
+	jmp ._consume_arg
+._push_wide_arg:
+	mov QWORD [r11], r8
+	add r8, 8
 
-	shr rcx, 2
+._consume_arg:
+	shr rcx, 1
+	add r8, 8
 	add r11, 8
 	sub eax, 1
 	jnz ._check_end
 	add rdx, 8
 	mov rcx, QWORD [rdx]
-	mov eax, 32
+	mov eax, 64
 ._check_end:
 	sub r9d, 1
 	jnz ._next_arg
 ._no_args:
 
-	mov BYTE [rbx], cl
-	and ecx, ARG_BITMAP_RETURN_REF
-	jz ._no_return_ref
+	mov sil, cl
+	and sil, 1
+	jz ._no_return_arg
 	mov QWORD [r11], rbx
-._no_return_ref:
+._no_return_arg:
 
 	mov rcx, QWORD [rsp]
 	mov rdx, QWORD [rsp+8]
@@ -86,17 +86,12 @@ __C_FUNC(_call_api_func):
 	movq xmm3, r9
 	call r10
 
-	mov cl, BYTE [rbx]
-	; test cl,cl
-	; jnz ._check_xmm_return
+	test sil, sil
+	jnz ._no_return_value
 	mov QWORD [rbx], rax
-; 	jmp ._return
-; ._check_xmm_return:
-; 	and cl, ARG_BITMAP_RETURN_XMM
-; 	jz ._return
-; 	movq QWORD [rbx], xmm0
-; ._return:
+._no_return_value:
 
 	leave
+	pop rsi
 	pop rbx
 	ret

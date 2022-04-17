@@ -183,15 +183,44 @@ static sll_object_t* _call_internal(sll_function_index_t fn,sll_object_t*const* 
 	};
 	sll_arg_state_t st=_parse_args_raw(dt->fmt,al,all,&ao);
 	api_return_value_t ret;
-	_call_api_func(&ret,dt->_regs,bf,dt->_arg_cnt,dt->p,al,all);
-	// sll_object_t* o;
-	// switch (dt->ret){
-	// 	default:
-	// 		SLL_UNREACHABLE();
-	// }
+	sll_float_t ret_f=_call_api_func(&ret,dt->_regs,bf,dt->_arg_cnt,dt->p);
+	sll_object_t* o;
+	switch (dt->ret){
+		case SLL_RETURN_TYPE_BOOL:
+			o=SLL_ACQUIRE_STATIC_INT(ret.b);
+			break;
+		case SLL_RETURN_TYPE_INT:
+			o=sll_int_to_object(ret.i);
+			break;
+		case SLL_RETURN_TYPE_FLOAT:
+			o=sll_float_to_object(ret_f);
+			break;
+		case SLL_RETURN_TYPE_CHAR:
+			o=SLL_FROM_CHAR(ret.c);
+			break;
+		case SLL_RETURN_TYPE_COMPLEX:
+			SLL_UNIMPLEMENTED();
+		case SLL_RETURN_TYPE_STRING:
+			o=STRING_TO_OBJECT_NOCOPY(&(ret.s));
+			break;
+		case SLL_RETURN_TYPE_ARRAY:
+			o=sll_array_to_object_nocopy(&(ret.a));
+			break;
+		case SLL_RETURN_TYPE_MAP:
+			o=sll_map_to_object_nocopy(&(ret.m));
+			break;
+		case SLL_RETURN_TYPE_OBJECT:
+			o=ret.o;
+			break;
+		case SLL_RETURN_TYPE_VOID:
+			o=SLL_ACQUIRE_STATIC_INT(0);
+			break;
+		default:
+			SLL_UNREACHABLE();
+	}
 	sll_free_args(st);
 	sll_deallocate(bf);
-	return ret.o;
+	return o;
 }
 
 
