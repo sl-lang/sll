@@ -170,7 +170,10 @@ __API_FUNC(process_start){
 	if (!(c&SLL_PROCESS_FLAG_WAIT)){
 		SLL_UNIMPLEMENTED();
 	}
-	sll_return_code_t rc=sll_platform_wait_process(ph,&err);
+	sll_return_code_t rc;
+	do{
+		rc=sll_platform_wait_process(ph,&err);
+	} while (rc!=SLL_NO_ERROR&&SLL_ERROR_GET_TYPE(err)==SLL_ERROR_FLAG_SYSTEM&&SLL_ERROR_GET_VALUE(err)==4);
 	if (err!=SLL_NO_ERROR){
 		SLL_UNIMPLEMENTED();
 	}
