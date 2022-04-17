@@ -21,11 +21,14 @@ section .text
 
 
 
+; eax - Counter of arguments left in current bitmap
 ; rbx - Return value pointer
+; rcx - Current bitmap
 ; rdx - Argument bitmap pointer
 ; r8 - Argument data pointer
-; r9 - Argument count
+; r9d - Argument count
 ; r10 - Function pointer
+; r11 - Stack pointer for arguments
 global __C_FUNC(_call_api_func)
 __C_FUNC(_call_api_func):
 	push rbx
@@ -35,8 +38,8 @@ __C_FUNC(_call_api_func):
 	mov rbx, rcx
 	mov r10, QWORD [rsp+56]
 
-	mov rcx, QWORD [rsp+64]
-	mov edx, DWORD [rsp+72]
+	mov rsi, QWORD [rsp+64]
+	mov edi, DWORD [rsp+72]
 
 	mov rax, r9
 	add rax, 2
@@ -44,8 +47,37 @@ __C_FUNC(_call_api_func):
 	lea rax, [rax*8+8]
 	sub rsp, rax
 
-	mov QWORD[rsp], rcx
-	mov QWORD[rsp+8], rdx
+	mov rcx, QWORD [rsp+rax+64]
+	mov QWORD [rsp], rcx
+	mov ecx, DWORD [rsp+rax+72]
+	mov DWORD [rsp+8], ecx
+
+	mov eax, 32
+	mov rcx, QWORD [rdx]
+	mov r11, rsp
+	test r9d, r9d
+	jz ._no_args
+._next_arg:
+
+	;;;
+
+	shr rcx, 2
+	add r11, 8
+	sub eax, 1
+	jnz ._check_end
+	add rdx, 8
+	mov rcx, QWORD [rdx]
+	mov eax, 32
+._check_end:
+	sub r9d, 1
+	jnz ._next_arg
+._no_args:
+
+	mov BYTE [rbx], cl
+	and ecx, ARG_BITMAP_RETURN_REF
+	jz ._no_return_ref
+	mov QWORD [r11], rbx
+._no_return_ref:
 
 	mov rcx, QWORD [rsp]
 	mov rdx, QWORD [rsp+8]
@@ -57,6 +89,7 @@ __C_FUNC(_call_api_func):
 	movq xmm3, r9
 	call r10
 
+	mov cl, BYTE [rbx]
 	mov QWORD [rbx], rax
 
 	leave
