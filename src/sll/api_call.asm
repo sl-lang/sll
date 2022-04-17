@@ -11,6 +11,12 @@ section .text
 
 
 
+%ifdef __SLL_BUILD_WINDOWS
+extern __chkstk
+%endif
+
+
+
 ; eax - Number of arguments left in current bitmap
 ; rbx - Return value pointer
 ; rcx - Temporary register
@@ -30,14 +36,20 @@ __C_FUNC(_call_api_func):
 	mov rbx, rcx
 	mov r11, QWORD [rsp+64]
 
-	mov rax, r9
-	add rax, 2
-	and rax, ~1
-	cmp rax, 4
+	mov eax, r9d
+	add eax, 2
+	and eax, 0xfffffffe
+	cmp eax, 4
 	jae ._skip_stack_padding
-	mov rax, 4
+	mov eax, 4
 ._skip_stack_padding:
 	shl rax, 3
+%ifdef __SLL_BUILD_WINDOWS
+	cmp rax, 4096
+	jb ._skip_stack_check
+	call __chkstk
+._skip_stack_check:
+%endif
 	sub rsp, rax
 
 	mov al, 64
