@@ -332,6 +332,10 @@ typedef void* sll_file_descriptor_t;
 
 
 
+typedef void* sll_internal_function_pointer_t;
+
+
+
 typedef void* sll_internal_thread_index_t;
 
 
@@ -777,10 +781,6 @@ typedef struct _SLL_OBJECT{
 	__SLL_U32 _f;
 	sll_object_data_t dt;
 } sll_object_t;
-
-
-
-typedef sll_object_t* (__SLL_API_CALL*sll_internal_function_pointer_t)(sll_object_t*const*,sll_arg_count_t);
 
 
 

@@ -182,11 +182,11 @@ static sll_object_t* _call_internal(sll_function_index_t fn,sll_object_t*const* 
 		}
 	};
 	sll_arg_state_t st=_parse_args_raw(dt->fmt,al,all,&ao);
-	sll_object_t* o;
-	_call_api_func(dt->p,dt->_regs,bf,&o,al,all);
+	api_return_value_t o;
+	_call_api_func(&o,dt->_regs,bf,dt->_arg_cnt,dt->p,al,all);
 	sll_free_args(st);
 	sll_deallocate(bf);
-	return o;
+	return o.o;
 }
 
 
