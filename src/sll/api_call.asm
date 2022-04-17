@@ -87,7 +87,15 @@ __C_FUNC(_call_api_func):
 	call r10
 
 	mov cl, BYTE [rbx]
+	; test cl,cl
+	; jnz ._check_xmm_return
 	mov QWORD [rbx], rax
+; 	jmp ._return
+; ._check_xmm_return:
+; 	and cl, ARG_BITMAP_RETURN_XMM
+; 	jz ._return
+; 	movq QWORD [rbx], xmm0
+; ._return:
 
 	leave
 	pop rbx

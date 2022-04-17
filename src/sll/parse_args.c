@@ -292,11 +292,8 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_return_type_t ret,bitma
 				bitmap_t type=ARG_BITMAP_NORMAL;
 				switch (*t){
 					case 'x':
-					case 'y':
-						sz+=8;
-						type=ARG_BITMAP_REF|ARG_BITMAP_WIDE;
-						break;
 					case 'd':
+					case 'y':
 						sz+=8;
 						type=ARG_BITMAP_WIDE;
 						break;
