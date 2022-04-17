@@ -51,7 +51,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t a){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(sll_string_t* a,sll_string_t* b,sll_object_t** c,sll_arg_count_t cc){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(sll_string_t* a,sll_string_t* b,sll_object_t*const* c,sll_arg_count_t cc){
 	sll_var_arg_list_t dt={
 		SLL_VAR_ARG_LIST_TYPE_SLL,
 		{

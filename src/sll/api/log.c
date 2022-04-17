@@ -8,7 +8,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_log(sll_object_t** a,sll_arg_count_t ac){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_log(sll_object_t*const* a,sll_arg_count_t ac){
 	sll_string_index_t fp;
 	sll_string_index_t fn;
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX),&fp,&fn);
