@@ -2,6 +2,7 @@
 
 ## Added
 
+- Common assembly code is now located in [`src/sll/include/sll/_internal/common.inc`][0.7.14/src/sll/include/sll/_internal/common.inc]
 - Implemented `sll_version_sha` and `sll_version_tag`
 - NASM is now used in the compilation process
 
@@ -18,3 +19,4 @@
 - Unneeded type: `sll_return_type_t`
 
 [0.7.14]: https://github.com/sl-lang/sll/compare/sll-v0.7.13...main
+[0.7.14/src/sll/include/sll/_internal/common.inc]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/_internal/common.inc

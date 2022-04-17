@@ -1,19 +1,6 @@
 [BITS 64]
 section .text
-
-
-
-%ifdef __SLL_BUILD_DARWIN
-%define __C_FUNC(nm) _ %+ nm
-%else
-%define __C_FUNC(nm) nm
-%endif
-
-
-
-%ifdef __SLL_BUILD_WINDOWS
-extern __chkstk
-%endif
+%include "sll/_internal/common.inc"
 
 
 
@@ -26,8 +13,7 @@ extern __chkstk
 ; r9d - Argument count
 ; r10 - Stack pointer for arguments
 ; r11 - Function pointer
-global __C_FUNC(_call_api_func)
-__C_FUNC(_call_api_func):
+__SLL_EXPORT _call_api_func
 	push rbx
 	push rsi
 	push rbp
