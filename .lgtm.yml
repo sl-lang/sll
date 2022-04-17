@@ -15,6 +15,7 @@ extraction:
     prepare:
       packages:
         - python3.8
+        - nasm
     index:
       build_command:
         - python3.8 src/_build/main.py --verbose

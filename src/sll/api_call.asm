@@ -19,10 +19,13 @@ section .text
 %define ARG_BITMAP_RETURN_XMM 1
 %define ARG_BITMAP_RETURN_REF 2
 
-%define MAX_ARGUMENTS_POW 24
 
 
-
+; rbx - Return value pointer
+; rdx - Argument bitmap pointer
+; r8 - Argument data pointer
+; r9 - Argument count
+; r10 - Function pointer
 global __C_FUNC(_call_api_func)
 __C_FUNC(_call_api_func):
 	push rbx
@@ -37,7 +40,7 @@ __C_FUNC(_call_api_func):
 
 	mov rax, r9
 	add rax, 2
-	and rax, ((1<<MAX_ARGUMENTS_POW)-2)
+	and rax, ~1
 	lea rax, [rax*8+8]
 	sub rsp, rax
 
@@ -45,12 +48,12 @@ __C_FUNC(_call_api_func):
 	mov QWORD[rsp+8], rdx
 
 	mov rcx, QWORD [rsp]
-	movq xmm0, rcx
 	mov rdx, QWORD [rsp+8]
-	movq xmm1, rdx
 	mov r8, QWORD [rsp+16]
-	movq xmm2, r8
 	mov r9, QWORD [rsp+24]
+	movq xmm0, rcx
+	movq xmm1, rdx
+	movq xmm2, r8
 	movq xmm3, r9
 	call r10
 
