@@ -118,7 +118,7 @@ def generate():
 	util.log("Collecting Documentation Files...")
 	d_fl=util.get_docs_files()
 	util.log(f"  Found {len(d_fl)} Files\nGenerating Documentation...")
-	d_dt=docs.create_docs(d_fl)[0]
+	d_dt=docs.create_docs(d_fl)
 	util.log("Reading 'src/web/client/page.html'...")
 	with open("src/web/client/page.html","rb") as rf:
 		pg_src=rf.read()
