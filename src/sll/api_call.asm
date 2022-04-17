@@ -38,9 +38,6 @@ __C_FUNC(_call_api_func):
 	mov rbx, rcx
 	mov r10, QWORD [rsp+56]
 
-	mov rsi, QWORD [rsp+64]
-	mov edi, DWORD [rsp+72]
-
 	mov rax, r9
 	add rax, 2
 	and rax, ~1
