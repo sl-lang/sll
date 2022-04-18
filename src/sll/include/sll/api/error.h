@@ -17,11 +17,11 @@
  * \group error-api
  * \desc Docs!
  * \api ii|o
- * \arg sll_integer_t a
- * \arg sll_integer_t b
+ * \arg sll_call_stack_size_t pop
+ * \arg sll_integer_t thread
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack(sll_integer_t a,sll_integer_t b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_error_get_call_stack(sll_call_stack_size_t pop,sll_integer_t thread);
 
 
 

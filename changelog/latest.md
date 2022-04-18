@@ -9,6 +9,7 @@
 ## Changed
 
 - API functions are now called directly, without the wrapper functions (named `XXX_raw`)
+- Audit event `sll.error.backtrace` no longer contains the amount of stack frames skipped
 - Fixed crashes related to signals recived at unexpected times
 - Negative time zone offsets are now correctly printed in `date$date_type`
 
