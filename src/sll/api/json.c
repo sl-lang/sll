@@ -615,25 +615,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* a,sll_object_t* b,sll_object_t* c){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll_object_t* true_obj,sll_object_t* false_obj){
 	if (!_json_null){
 		sll_register_cleanup(_release_data);
 	}
 	else{
 		_release_data();
 	}
-	SLL_ACQUIRE(a);
-	SLL_ACQUIRE(b);
-	SLL_ACQUIRE(c);
-	_json_null=a;
-	_json_true=b;
-	_json_false=c;
+	SLL_ACQUIRE(null_obj);
+	SLL_ACQUIRE(true_obj);
+	SLL_ACQUIRE(false_obj);
+	_json_null=null_obj;
+	_json_true=true_obj;
+	_json_false=false_obj;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(sll_string_t* a){
-	sll_json_parser_state_t p=a->v;
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(sll_string_t* str){
+	sll_json_parser_state_t p=str->v;
 	sll_object_t* o=_parse_json_as_object(&p);
 	if (o){
 		return o;
@@ -643,9 +643,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_pars
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_json_stringify(sll_object_t* a,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json_stringify(sll_object_t* json,sll_string_t* out){
 	STRING_INIT_STACK(out);
-	_stringify_object(a,out);
+	_stringify_object(json,out);
 	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(out);
 }
