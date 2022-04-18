@@ -16,7 +16,7 @@
  * \name sll_api_struct_float_from_bits
  * \group struct-api
  * \desc Docs!
- * \api i|f
+ * \api D|f
  * \arg __SLL_U32 v
  * \ret sll_float_t
  */
@@ -29,7 +29,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_floa
  * \name sll_api_struct_double_from_bits
  * \group struct-api
  * \desc Docs!
- * \api i|f
+ * \api Q|f
  * \arg __SLL_U64 v
  * \ret sll_float_t
  */

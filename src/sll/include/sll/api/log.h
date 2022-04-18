@@ -29,7 +29,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_log(sll_object_t*const* data,sll_
  * \name sll_api_log_set_default
  * \group log-api
  * \desc Docs!
- * \api ib|v
+ * \api Bb|v
  * \arg sll_flags_t flag
  * \arg sll_bool_t state
  */
@@ -42,7 +42,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_default(sll_flags_t flag,sll_
  * \name sll_api_log_set_file
  * \group log-api
  * \desc Docs!
- * \api sib|v
+ * \api sBb|v
  * \arg sll_string_t* file
  * \arg sll_flags_t flags
  * \arg sll_bool_t state
@@ -56,7 +56,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_file(const sll_string_t* file
  * \name sll_api_log_set_function
  * \group log-api
  * \desc Docs!
- * \api ssib|v
+ * \api ssBb|v
  * \arg sll_string_t* file
  * \arg sll_string_t* func
  * \arg sll_flags_t flags

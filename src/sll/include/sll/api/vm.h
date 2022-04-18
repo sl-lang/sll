@@ -64,7 +64,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_in
  * \name sll_api_vm_get_location
  * \group vm-api
  * \desc Docs!
- * \api i|o
+ * \api D|o
  * \arg sll_instruction_index_t ii
  * \ret sll_object_t*
  */

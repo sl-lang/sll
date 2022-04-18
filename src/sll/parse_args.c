@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/parse_args.h>
+#include <sll/_size_types.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/complex.h>
@@ -59,6 +60,18 @@
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 	*var=obj->dt.field; \
 	GC_RELEASE(obj);
+#define PARSE_INT(sz) \
+	if (arr){ \
+		SLL_UNIMPLEMENTED(); \
+	} \
+	__SLL_U##sz* var=GET_PTR(__SLL_U##sz); \
+	if (!arg){ \
+		*var=0; \
+		return; \
+	} \
+	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_INT]); \
+	*var=(obj->dt.i<0?0:(obj->dt.i>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:obj->dt.i)); \
+	GC_RELEASE(obj);
 #define PARSE_TYPE_PTR(type,name,field,init) \
 	if (arr){ \
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
@@ -112,6 +125,24 @@ static void _parse_bool(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_ou
 		SLL_UNIMPLEMENTED();
 	}
 	*GET_PTR(sll_bool_t)=(arg?sll_operator_bool(arg):0);
+}
+
+
+
+static void _parse_int8(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+	PARSE_INT(8);
+}
+
+
+
+static void _parse_int16(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+	PARSE_INT(16);
+}
+
+
+
+static void _parse_int32(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+	PARSE_INT(32);
 }
 
 
@@ -238,7 +269,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** r
 				arr=1;
 			}
 		}
-		else if (*t=='b'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
+		else if (*t=='b'||*t=='B'||*t=='W'||*t=='D'||*t=='Q'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
 			sz+=8;
 			arr=0;
 			sll_bool_t wide=0;
@@ -280,7 +311,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		if (*tmp=='!'){
 			var_arg=1;
 		}
-		else if (*tmp=='b'||*tmp=='i'||*tmp=='f'||*tmp=='x'||*tmp=='c'||*tmp=='d'||*tmp=='s'||*tmp=='y'||*tmp=='a'||*tmp=='m'||*tmp=='o'){
+		else if (*tmp=='b'||*tmp=='B'||*tmp=='W'||*tmp=='D'||*tmp=='Q'||*tmp=='i'||*tmp=='f'||*tmp=='x'||*tmp=='c'||*tmp=='d'||*tmp=='s'||*tmp=='y'||*tmp=='a'||*tmp=='m'||*tmp=='o'){
 			var_arg_idx++;
 		}
 		tmp++;
@@ -310,6 +341,13 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			switch (type){
 				case 'b':
 					SLL_UNIMPLEMENTED();
+				case 'B':
+					SLL_UNIMPLEMENTED();
+				case 'W':
+					SLL_UNIMPLEMENTED();
+				case 'D':
+					SLL_UNIMPLEMENTED();
+				case 'Q':
 				case 'i':
 					SLL_UNIMPLEMENTED();
 				case 'f':
@@ -355,6 +393,16 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			case 'b':
 				fn=_parse_bool;
 				break;
+			case 'B':
+				fn=_parse_int8;
+				break;
+			case 'W':
+				fn=_parse_int16;
+				break;
+			case 'D':
+				fn=_parse_int32;
+				break;
+			case 'Q':
 			case 'i':
 				fn=_parse_int;
 				break;

@@ -77,7 +77,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_date_get_time_zone(sll_array_t* out);
  * \name sll_api_date_merge
  * \group date-api
  * \desc Docs!
- * \api iiiiif|f
+ * \api WBBBBf|f
  * \arg sll_year_t year
  * \arg sll_month_t month
  * \arg sll_day_t day

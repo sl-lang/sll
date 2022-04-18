@@ -235,7 +235,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t fh,
  * \name sll_api_serial_encode_integer
  * \group serial-api
  * \desc Docs!
- * \api ii|v
+ * \api iQ|v
  * \arg sll_integer_t fh
  * \arg sll_size_t v
  */

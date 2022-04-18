@@ -30,11 +30,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_array_length_t sll_api_arra
  * \name sll_api_array_create
  * \group array-api
  * \desc Docs!
- * \api i|a
- * \arg sll_integer_t arr
+ * \api D|a
+ * \arg sll_array_length_t len
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_integer_t arr,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_array_length_t len,sll_array_t* out);
 
 
 

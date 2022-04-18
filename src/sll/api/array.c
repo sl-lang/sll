@@ -15,8 +15,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_array_length_t sll_api_arra
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_integer_t arr,sll_array_t* out){
-	sll_array_create_zero((arr<0?0:(arr>SLL_MAX_ARRAY_LENGTH?SLL_MAX_ARRAY_LENGTH:(sll_array_length_t)arr)),out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_array_length_t len,sll_array_t* out){
+	sll_array_create_zero(len,out);
 }
 
 

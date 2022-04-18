@@ -16,7 +16,7 @@
  * \name sll_api_error_get_call_stack
  * \group error-api
  * \desc Docs!
- * \api ii|o
+ * \api Di|o
  * \arg sll_call_stack_size_t pop
  * \arg sll_integer_t thread
  * \ret sll_object_t*

@@ -127,7 +127,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* 
  * \name sll_api_string_index
  * \group string-api
  * \desc Docs!
- * \api syi|i
+ * \api syD|i
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* substr
  * \arg sll_string_length_t start
@@ -200,7 +200,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(const sll_char_string_t* 
  * \name sll_api_string_pad
  * \group string-api
  * \desc Docs!
- * \api sic|s
+ * \api sDc|s
  * \arg const sll_string_t* str
  * \arg sll_string_length_t len
  * \arg sll_char_t chr
@@ -215,7 +215,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(const sll_string_t* str,sl
  * \name sll_api_string_pad_left
  * \group string-api
  * \desc Docs!
- * \api sic|s
+ * \api sDc|s
  * \arg const sll_string_t* str
  * \arg sll_string_length_t len
  * \arg sll_char_t chr
@@ -230,7 +230,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(const sll_string_t* s
  * \name sll_api_string_pad_right
  * \group string-api
  * \desc Docs!
- * \api sic|s
+ * \api sDc|s
  * \arg const sll_string_t* str
  * \arg sll_string_length_t len
  * \arg sll_char_t chr

@@ -214,7 +214,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_create"),
 		sll_api_array_create,
-		SLL_CHAR("i|a")
+		SLL_CHAR("D|a")
 	},
 	{
 		SLL_CHAR("sll:array_extend"),
@@ -309,7 +309,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:date_merge"),
 		sll_api_date_merge,
-		SLL_CHAR("iiiiif|f")
+		SLL_CHAR("WBBBBf|f")
 	},
 	{
 		SLL_CHAR("sll:date_split"),
@@ -319,7 +319,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:error_get_call_stack"),
 		sll_api_error_get_call_stack,
-		SLL_CHAR("ii|o")
+		SLL_CHAR("Di|o")
 	},
 	{
 		SLL_CHAR("sll:file_close"),
@@ -344,7 +344,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_from_data"),
 		sll_api_file_from_data,
-		SLL_CHAR("si|i")
+		SLL_CHAR("sB|i")
 	},
 	{
 		SLL_CHAR("sll:file_get_buffer"),
@@ -364,7 +364,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_open"),
 		sll_api_file_open,
-		SLL_CHAR("si|i")
+		SLL_CHAR("sB|i")
 	},
 	{
 		SLL_CHAR("sll:file_peek"),
@@ -374,7 +374,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_read"),
 		sll_api_file_read,
-		SLL_CHAR("ii|o")
+		SLL_CHAR("iD|o")
 	},
 	{
 		SLL_CHAR("sll:file_read_char"),
@@ -389,7 +389,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_std_handle"),
 		sll_api_file_std_handle,
-		SLL_CHAR("i|i")
+		SLL_CHAR("c|i")
 	},
 	{
 		SLL_CHAR("sll:file_write"),
@@ -409,22 +409,22 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:hash_md5"),
 		sll_api_hash_md5,
-		SLL_CHAR("iiiis|a")
+		SLL_CHAR("DDDDs|a")
 	},
 	{
 		SLL_CHAR("sll:hash_sha1"),
 		sll_api_hash_sha1,
-		SLL_CHAR("iiiiis|a")
+		SLL_CHAR("DDDDDs|a")
 	},
 	{
 		SLL_CHAR("sll:hash_sha256"),
 		sll_api_hash_sha256,
-		SLL_CHAR("iiiiiiiis|a")
+		SLL_CHAR("DDDDDDDDs|a")
 	},
 	{
 		SLL_CHAR("sll:hash_sha512"),
 		sll_api_hash_sha512,
-		SLL_CHAR("iiiiiiiis|a")
+		SLL_CHAR("QQQQQQQQs|a")
 	},
 	{
 		SLL_CHAR("sll:int_to_bin"),
@@ -469,17 +469,17 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:log_set_default"),
 		sll_api_log_set_default,
-		SLL_CHAR("ib|v")
+		SLL_CHAR("Bb|v")
 	},
 	{
 		SLL_CHAR("sll:log_set_file"),
 		sll_api_log_set_file,
-		SLL_CHAR("sib|v")
+		SLL_CHAR("sBb|v")
 	},
 	{
 		SLL_CHAR("sll:log_set_function"),
 		sll_api_log_set_function,
-		SLL_CHAR("ssib|v")
+		SLL_CHAR("ssBb|v")
 	},
 	{
 		SLL_CHAR("sll:map_extend"),
@@ -754,7 +754,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:process_start"),
 		sll_api_process_start,
-		SLL_CHAR("asis|a")
+		SLL_CHAR("asBs|a")
 	},
 	{
 		SLL_CHAR("sll:random_get_float"),
@@ -769,7 +769,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:random_get_string"),
 		sll_api_random_get_string,
-		SLL_CHAR("icc|s")
+		SLL_CHAR("Dcc|s")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_float"),
@@ -804,7 +804,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:serial_encode_integer"),
 		sll_api_serial_encode_integer,
-		SLL_CHAR("ii|v")
+		SLL_CHAR("iQ|v")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_object"),
@@ -869,7 +869,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_index"),
 		sll_api_string_index,
-		SLL_CHAR("syi|i")
+		SLL_CHAR("syD|i")
 	},
 	{
 		SLL_CHAR("sll:string_index_list"),
@@ -894,17 +894,17 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_pad"),
 		sll_api_string_pad,
-		SLL_CHAR("sic|s")
+		SLL_CHAR("sDc|s")
 	},
 	{
 		SLL_CHAR("sll:string_pad_left"),
 		sll_api_string_pad_left,
-		SLL_CHAR("sic|s")
+		SLL_CHAR("sDc|s")
 	},
 	{
 		SLL_CHAR("sll:string_pad_right"),
 		sll_api_string_pad_right,
-		SLL_CHAR("sic|s")
+		SLL_CHAR("sDc|s")
 	},
 	{
 		SLL_CHAR("sll:string_replace"),
@@ -964,7 +964,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:struct_double_from_bits"),
 		sll_api_struct_double_from_bits,
-		SLL_CHAR("i|f")
+		SLL_CHAR("Q|f")
 	},
 	{
 		SLL_CHAR("sll:struct_double_to_bits"),
@@ -974,7 +974,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:struct_float_from_bits"),
 		sll_api_struct_float_from_bits,
-		SLL_CHAR("i|f")
+		SLL_CHAR("D|f")
 	},
 	{
 		SLL_CHAR("sll:struct_float_to_bits"),
@@ -1024,7 +1024,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:sys_load_library"),
 		sll_api_sys_load_library,
-		SLL_CHAR("siiiii|b")
+		SLL_CHAR("sQQQQQ|b")
 	},
 	{
 		SLL_CHAR("sll:sys_remove_env"),
@@ -1039,7 +1039,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:sys_set_sandbox_flag"),
 		sll_api_sys_set_sandbox_flag,
-		SLL_CHAR("i|v")
+		SLL_CHAR("B|v")
 	},
 	{
 		SLL_CHAR("sll:thread_create"),
@@ -1059,62 +1059,62 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:thread_create_semaphore"),
 		sll_api_thread_create_semaphore,
-		SLL_CHAR("i|i")
+		SLL_CHAR("D|i")
 	},
 	{
 		SLL_CHAR("sll:thread_delete"),
 		sll_api_thread_delete,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:thread_delete_barrier"),
 		sll_api_thread_delete_barrier,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:thread_delete_lock"),
 		sll_api_thread_delete_lock,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:thread_delete_semaphore"),
 		sll_api_thread_delete_semaphore,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:thread_get_internal_data"),
 		sll_api_thread_get_internal_data,
-		SLL_CHAR("i|a")
+		SLL_CHAR("D|a")
 	},
 	{
 		SLL_CHAR("sll:thread_increase_barrier"),
 		sll_api_thread_increase_barrier,
-		SLL_CHAR("i|i")
+		SLL_CHAR("D|i")
 	},
 	{
 		SLL_CHAR("sll:thread_release_lock"),
 		sll_api_thread_release_lock,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:thread_release_semaphore"),
 		sll_api_thread_release_semaphore,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:thread_reset_barrier"),
 		sll_api_thread_reset_barrier,
-		SLL_CHAR("i|i")
+		SLL_CHAR("D|i")
 	},
 	{
 		SLL_CHAR("sll:thread_restart"),
 		sll_api_thread_restart,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:thread_suspend"),
 		sll_api_thread_suspend,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:time_current"),
@@ -1154,7 +1154,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:vm_get_location"),
 		sll_api_vm_get_location,
-		SLL_CHAR("i|o")
+		SLL_CHAR("D|o")
 	},
 	{
 		SLL_CHAR("sll:vm_get_ref_count"),
@@ -1174,17 +1174,17 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:weakref_delete"),
 		sll_api_weakref_delete,
-		SLL_CHAR("i|b")
+		SLL_CHAR("Q|b")
 	},
 	{
 		SLL_CHAR("sll:weakref_get"),
 		sll_api_weakref_get,
-		SLL_CHAR("i|o")
+		SLL_CHAR("Q|o")
 	},
 	{
 		SLL_CHAR("sll:weakref_set_callback_data"),
 		sll_api_weakref_set_callback_data,
-		SLL_CHAR("io|v")
+		SLL_CHAR("Qo|v")
 	}
 };
 

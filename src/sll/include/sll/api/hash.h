@@ -189,7 +189,7 @@ __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offs
  * \name sll_api_hash_md5
  * \group hash-api
  * \desc Docs!
- * \api iiiis|a
+ * \api DDDDs|a
  * \arg __SLL_U32 a
  * \arg __SLL_U32 b
  * \arg __SLL_U32 c
@@ -206,7 +206,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_md5(__SLL_U32 a,__SLL_U32 b,__SL
  * \name sll_api_hash_sha1
  * \group hash-api
  * \desc Docs!
- * \api iiiiis|a
+ * \api DDDDDs|a
  * \arg __SLL_U32 a
  * \arg __SLL_U32 b
  * \arg __SLL_U32 c
@@ -224,7 +224,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha1(__SLL_U32 a,__SLL_U32 b,__S
  * \name sll_api_hash_sha256
  * \group hash-api
  * \desc Docs!
- * \api iiiiiiiis|a
+ * \api DDDDDDDDs|a
  * \arg __SLL_U32 a
  * \arg __SLL_U32 b
  * \arg __SLL_U32 c
@@ -245,7 +245,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(__SLL_U32 a,__SLL_U32 b,_
  * \name sll_api_hash_sha512
  * \group hash-api
  * \desc Docs!
- * \api iiiiiiiis|a
+ * \api QQQQQQQQs|a
  * \arg __SLL_U64 a
  * \arg __SLL_U64 b
  * \arg __SLL_U64 c

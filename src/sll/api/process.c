@@ -137,9 +137,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(const sll_string_t* arg
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_integer_t flags,const sll_string_t* stdin,sll_array_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_flags_t flags,const sll_string_t* stdin,sll_array_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!args->l){
-		sll_new_object_array(SLL_CHAR("a(si)0(sZZ)"),out,args,cwd,flags,stdin);
+		sll_new_object_array(SLL_CHAR("a(sh)0(sZZ)"),out,args,cwd,flags,stdin);
 		return;
 	}
 	sll_audit(SLL_CHAR("sll.process.start"),SLL_CHAR("sss"),args,cwd,stdin);
@@ -180,5 +180,5 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 		sll_deallocate(*(raw_args+i));
 	}
 	sll_deallocate(raw_args);
-	sll_new_object_array(SLL_CHAR("a(si)h(sZZ)"),out,args,cwd,flags,rc,stdin);
+	sll_new_object_array(SLL_CHAR("a(sh)h(sZZ)"),out,args,cwd,flags,rc,stdin);
 }

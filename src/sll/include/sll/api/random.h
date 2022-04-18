@@ -44,7 +44,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_ge
  * \name sll_api_random_get_string
  * \group random-api
  * \desc Docs!
- * \api icc|s
+ * \api Dcc|s
  * \arg sll_string_length_t len
  * \arg sll_char_t min
  * \arg sll_char_t max

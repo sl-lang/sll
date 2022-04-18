@@ -135,14 +135,14 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(const sll_string_t* arg
  * \name sll_api_process_start
  * \group process-api
  * \desc Docs!
- * \api asis|a
+ * \api asBs|a
  * \arg const sll_array_t* args
  * \arg const sll_string_t* cwd
- * \arg sll_integer_t flags
+ * \arg sll_flags_t flags
  * \arg const sll_string_t* stdin
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_integer_t flags,const sll_string_t* stdin,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_flags_t flags,const sll_string_t* stdin,sll_array_t* out);
 
 
 
