@@ -143,12 +143,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
  * \group string-api
  * \desc Docs!
  * \api syb|i
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
- * \arg sll_bool_t c
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* substr
+ * \arg sll_bool_t inv
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_list(sll_string_t* a,sll_char_string_t* b,sll_bool_t c);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_list(sll_string_t* str,sll_char_string_t* substr,sll_bool_t inv);
 
 
 
@@ -158,11 +158,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
  * \group string-api
  * \desc Docs!
  * \api sy|i
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* substr
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse(sll_string_t* a,sll_char_string_t* b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse(sll_string_t* str,sll_char_string_t* substr);
 
 
 
@@ -172,12 +172,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
  * \group string-api
  * \desc Docs!
  * \api syb|i
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
- * \arg sll_bool_t c
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* substr
+ * \arg sll_bool_t inv
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse_list(sll_string_t* a,sll_char_string_t* b,sll_bool_t c);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse_list(sll_string_t* str,sll_char_string_t* substr,sll_bool_t inv);
 
 
 
@@ -187,11 +187,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
  * \group string-api
  * \desc Docs!
  * \api ya|s
- * \arg sll_char_string_t* a
- * \arg sll_array_t* b
+ * \arg sll_char_string_t* infix
+ * \arg sll_array_t* arr
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(sll_char_string_t* a,sll_array_t* b,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(sll_char_string_t* infix,sll_array_t* arr,sll_string_t* out);
 
 
 

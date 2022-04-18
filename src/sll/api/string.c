@@ -368,33 +368,33 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_list(sll_string_t* a,sll_char_string_t* b,sll_bool_t c){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,c,0):sll_string_index_multiple(a,b->dt.s->v,b->dt.s->l,c));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_list(sll_string_t* str,sll_char_string_t* substr,sll_bool_t inv){
+	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->dt.c,inv,0):sll_string_index_multiple(str,substr->dt.s->v,substr->dt.s->l,inv));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse(sll_string_t* a,sll_char_string_t* b){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,0):sll_string_index_reverse(a,b->dt.s));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse(sll_string_t* str,sll_char_string_t* substr){
+	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->dt.c,0):sll_string_index_reverse(str,substr->dt.s));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse_list(sll_string_t* a,sll_char_string_t* b,sll_bool_t c){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(a,b->dt.c,c):sll_string_index_reverse_multiple(a,b->dt.s->v,b->dt.s->l,c));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse_list(sll_string_t* str,sll_char_string_t* substr,sll_bool_t inv){
+	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->dt.c,inv):sll_string_index_reverse_multiple(str,substr->dt.s->v,substr->dt.s->l,inv));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(sll_char_string_t* a,sll_array_t* b,sll_string_t* out){
-	if (a->t==SLL_PARSE_ARGS_TYPE_CHAR){
-		sll_string_join_char(a->dt.c,b->v,b->l,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(sll_char_string_t* infix,sll_array_t* arr,sll_string_t* out){
+	if (infix->t==SLL_PARSE_ARGS_TYPE_CHAR){
+		sll_string_join_char(infix->dt.c,arr->v,arr->l,out);
 	}
 	else{
-		sll_string_join(a->dt.s,b->v,b->l,out);
+		sll_string_join(infix->dt.s,arr->v,arr->l,out);
 	}
 }
 
