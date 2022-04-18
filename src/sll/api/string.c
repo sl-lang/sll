@@ -418,47 +418,47 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(sll_string_t* str,sl
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(sll_string_t* a,sll_char_string_t* b,sll_char_string_t* c,sll_string_t* out){
-	if (!b){
-		sll_string_clone(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(sll_string_t* str,sll_char_string_t* old,sll_char_string_t* new,sll_string_t* out){
+	if (old->t==SLL_PARSE_ARGS_TYPE_STRING&&!old->dt.s->l){
+		sll_string_clone(str,out);
 	}
-	else if (!c){
-		if (b->t==SLL_PARSE_ARGS_TYPE_STRING){
-			sll_string_remove(a,b->dt.s,out);
+	else if (new->t==SLL_PARSE_ARGS_TYPE_STRING&&!new->dt.s->l){
+		if (old->t==SLL_PARSE_ARGS_TYPE_STRING){
+			sll_string_remove(str,old->dt.s,out);
 		}
 		else{
 			sll_string_t s;
-			sll_string_from_char(b->dt.c,&s);
-			sll_string_remove(a,&s,out);
+			sll_string_from_char(old->dt.c,&s);
+			sll_string_remove(str,&s,out);
 			sll_free_string(&s);
 		}
 	}
 	else{
-		if (b->t==SLL_PARSE_ARGS_TYPE_CHAR&&c->t==SLL_PARSE_ARGS_TYPE_CHAR){
-			sll_string_replace_char(a,b->dt.c,c->dt.c,out);
+		if (old->t==SLL_PARSE_ARGS_TYPE_CHAR&&new->t==SLL_PARSE_ARGS_TYPE_CHAR){
+			sll_string_replace_char(str,old->dt.c,new->dt.c,out);
 		}
-		else if (b->t==SLL_PARSE_ARGS_TYPE_CHAR){
+		else if (old->t==SLL_PARSE_ARGS_TYPE_CHAR){
 			sll_string_t s;
-			sll_string_from_char(b->dt.c,&s);
-			sll_string_replace(a,&s,c->dt.s,out);
+			sll_string_from_char(old->dt.c,&s);
+			sll_string_replace(str,&s,new->dt.s,out);
 			sll_free_string(&s);
 		}
-		else if (c->t==SLL_PARSE_ARGS_TYPE_CHAR){
+		else if (new->t==SLL_PARSE_ARGS_TYPE_CHAR){
 			sll_string_t s;
-			sll_string_from_char(c->dt.c,&s);
-			sll_string_replace(a,b->dt.s,&s,out);
+			sll_string_from_char(new->dt.c,&s);
+			sll_string_replace(str,old->dt.s,&s,out);
 			sll_free_string(&s);
 		}
 		else{
-			sll_string_replace(a,b->dt.s,c->dt.s,out);
+			sll_string_replace(str,old->dt.s,new->dt.s,out);
 		}
 	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_reverse(sll_string_t* a,sll_string_t* out){
-	sll_string_reverse(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_reverse(sll_string_t* str,sll_string_t* out){
+	sll_string_reverse(str,out);
 }
 
 
@@ -469,28 +469,28 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_secur
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(sll_string_t* a,sll_char_string_t* b,sll_array_t* out){
-	if (b->t==SLL_PARSE_ARGS_TYPE_CHAR){
-		sll_string_split_char(a,b->dt.c,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(sll_string_t* str,sll_char_string_t* infix,sll_array_t* out){
+	if (infix->t==SLL_PARSE_ARGS_TYPE_CHAR){
+		sll_string_split_char(str,infix->dt.c,out);
 	}
 	else{
-		sll_string_split(a,b->dt.s,out);
+		sll_string_split(str,infix->dt.s,out);
 	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_starts(sll_string_t* a,sll_char_string_t* b){
-	if (b->t==SLL_PARSE_ARGS_TYPE_CHAR){
-		return (a->l&&a->v[0]==b->dt.c);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_starts(sll_string_t* str,sll_char_string_t* start){
+	if (start->t==SLL_PARSE_ARGS_TYPE_CHAR){
+		return (str->l&&str->v[0]==start->dt.c);
 	}
-	return sll_string_starts(a,b->dt.s);
+	return sll_string_starts(str,start->dt.s);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(sll_string_t* a,sll_string_t* out){
-	sll_string_lower_case(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(sll_string_t* str,sll_string_t* out){
+	sll_string_lower_case(str,out);
 }
 
 

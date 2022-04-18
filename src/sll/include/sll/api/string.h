@@ -246,12 +246,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(sll_string_t* str,sl
  * \group string-api
  * \desc Docs!
  * \api syy|s
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
- * \arg sll_char_string_t* c
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* old
+ * \arg sll_char_string_t* new
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(sll_string_t* a,sll_char_string_t* b,sll_char_string_t* c,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(sll_string_t* str,sll_char_string_t* old,sll_char_string_t* new,sll_string_t* out);
 
 
 
@@ -261,10 +261,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(sll_string_t* a,sll_ch
  * \group string-api
  * \desc Docs!
  * \api s|s
- * \arg sll_string_t* a
+ * \arg sll_string_t* str
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_reverse(sll_string_t* a,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_reverse(sll_string_t* str,sll_string_t* out);
 
 
 
@@ -288,11 +288,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_secur
  * \group string-api
  * \desc Docs!
  * \api sy|a
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* infix
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(sll_string_t* a,sll_char_string_t* b,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(sll_string_t* str,sll_char_string_t* infix,sll_array_t* out);
 
 
 
@@ -302,11 +302,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(sll_string_t* a,sll_char
  * \group string-api
  * \desc Docs!
  * \api sy|b
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* start
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_starts(sll_string_t* a,sll_char_string_t* b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_starts(sll_string_t* str,sll_char_string_t* start);
 
 
 
@@ -316,10 +316,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_start
  * \group string-api
  * \desc Docs!
  * \api s|s
- * \arg sll_string_t* a
+ * \arg sll_string_t* str
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(sll_string_t* a,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(sll_string_t* str,sll_string_t* out);
 
 
 
