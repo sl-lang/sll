@@ -29,27 +29,27 @@ static const sll_char_t _base64_index_map[256]={
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode(sll_string_t* a){
-	if (!a->l){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode(sll_string_t* str){
+	if (!str->l){
 		return STRING_TO_OBJECT(NULL);
 	}
-	if (a->l&3){
+	if (str->l&3){
 		return SLL_ACQUIRE_STATIC_NEG_INT(1);
 	}
-	sll_string_length_t p=sll_string_count_right(a,'=');
+	sll_string_length_t p=sll_string_count_right(str,'=');
 	if (p>2){
 		return SLL_ACQUIRE_STATIC_NEG_INT(1);
 	}
 	sll_string_t o;
-	sll_string_create(((a->l*3)>>2)-p,&o);
+	sll_string_create(((str->l*3)>>2)-p,&o);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
-	sll_string_length_t l=(a->l-p)&0xfffffffc;
+	sll_string_length_t l=(str->l-p)&0xfffffffc;
 	while (i<l){
-		sll_char_t v0=_base64_index_map[a->v[i]];
-		sll_char_t v1=_base64_index_map[a->v[i+1]];
-		sll_char_t v2=_base64_index_map[a->v[i+2]];
-		sll_char_t v3=_base64_index_map[a->v[i+3]];
+		sll_char_t v0=_base64_index_map[str->v[i]];
+		sll_char_t v1=_base64_index_map[str->v[i+1]];
+		sll_char_t v2=_base64_index_map[str->v[i+2]];
+		sll_char_t v3=_base64_index_map[str->v[i+3]];
 		if ((v0|v1|v2|v3)>>6){
 			sll_string_length_t idx=i;
 			if (v1==64){
@@ -71,9 +71,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_de
 		j+=3;
 	}
 	if (p==1){
-		sll_char_t v0=_base64_index_map[a->v[i]];
-		sll_char_t v1=_base64_index_map[a->v[i+1]];
-		sll_char_t v2=_base64_index_map[a->v[i+2]];
+		sll_char_t v0=_base64_index_map[str->v[i]];
+		sll_char_t v1=_base64_index_map[str->v[i+1]];
+		sll_char_t v2=_base64_index_map[str->v[i+2]];
 		if ((v0|v1)>>6){
 			sll_string_length_t idx=i;
 			if (v1==64){
@@ -89,8 +89,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_de
 		o.v[j+1]=(v1<<4)|(v2>>2);
 	}
 	else if (p==2){
-		sll_char_t v0=_base64_index_map[a->v[i]];
-		sll_char_t v1=_base64_index_map[a->v[i+1]];
+		sll_char_t v0=_base64_index_map[str->v[i]];
+		sll_char_t v1=_base64_index_map[str->v[i+1]];
 		if ((v0|v1)>>6){
 			sll_free_string(&o);
 			return sll_int_to_object(i+(v0!=64));
@@ -103,32 +103,32 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_de
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_base64_encode(sll_string_t* a,sll_string_t* out){
-	if (!a->l){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_base64_encode(sll_string_t* str,sll_string_t* out){
+	if (!str->l){
 		SLL_INIT_STRING(out);
 		return;
 	}
-	sll_string_length_t p=(3-(a->l%3))%3;
-	sll_string_create(((a->l+p)<<2)/3,out);
+	sll_string_length_t p=(3-(str->l%3))%3;
+	sll_string_create(((str->l+p)<<2)/3,out);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
-	while (i<a->l-2){
-		out->v[j]=_base64_alphabet[a->v[i]>>2];
-		out->v[j+1]=_base64_alphabet[((a->v[i]<<4)&0x3f)|(a->v[i+1]>>4)];
-		out->v[j+2]=_base64_alphabet[((a->v[i+1]<<2)&0x3f)|(a->v[i+2]>>6)];
-		out->v[j+3]=_base64_alphabet[a->v[i+2]&0x3f];
+	while (i<str->l-2){
+		out->v[j]=_base64_alphabet[str->v[i]>>2];
+		out->v[j+1]=_base64_alphabet[((str->v[i]<<4)&0x3f)|(str->v[i+1]>>4)];
+		out->v[j+2]=_base64_alphabet[((str->v[i+1]<<2)&0x3f)|(str->v[i+2]>>6)];
+		out->v[j+3]=_base64_alphabet[str->v[i+2]&0x3f];
 		i+=3;
 		j+=4;
 	}
 	if (p==1){
-		out->v[j]=_base64_alphabet[a->v[i]>>2];
-		out->v[j+1]=_base64_alphabet[((a->v[i]<<4)&0x3f)|(a->v[i+1]>>4)];
-		out->v[j+2]=_base64_alphabet[(a->v[i+1]<<2)&0x3f];
+		out->v[j]=_base64_alphabet[str->v[i]>>2];
+		out->v[j+1]=_base64_alphabet[((str->v[i]<<4)&0x3f)|(str->v[i+1]>>4)];
+		out->v[j+2]=_base64_alphabet[(str->v[i+1]<<2)&0x3f];
 		out->v[j+3]='=';
 	}
 	else if (p==2){
-		out->v[j]=_base64_alphabet[a->v[i]>>2];
-		out->v[j+1]=_base64_alphabet[(a->v[i]<<4)&0x3f];
+		out->v[j]=_base64_alphabet[str->v[i]>>2];
+		out->v[j+1]=_base64_alphabet[(str->v[i]<<4)&0x3f];
 		out->v[j+2]='=';
 		out->v[j+3]='=';
 	}

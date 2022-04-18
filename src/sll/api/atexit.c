@@ -54,8 +54,8 @@ void _atexit_execute(void){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc){
-	if (!a){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_object_t*const* args,sll_arg_count_t len){
+	if (!fn){
 		return;
 	}
 	if (!_atexit_lock){
@@ -65,12 +65,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t a,sll_o
 	SLL_CRITICAL(sll_platform_lock_acquire(_atexit_lock));
 	_atexit_data_len++;
 	_atexit_data=sll_reallocate(_atexit_data,_atexit_data_len*sizeof(atexit_function_t*));
-	atexit_function_t* af=sll_allocate(sizeof(atexit_function_t)+bc*sizeof(sll_object_t*));
-	af->fn=a;
-	af->all=bc;
-	for (sll_arg_count_t i=0;i<bc;i++){
-		SLL_ACQUIRE(*(b+i));
-		af->al[i]=*(b+i);
+	atexit_function_t* af=sll_allocate(sizeof(atexit_function_t)+len*sizeof(sll_object_t*));
+	af->fn=fn;
+	af->all=len;
+	for (sll_arg_count_t i=0;i<len;i++){
+		SLL_ACQUIRE(*(args+i));
+		af->al[i]=*(args+i);
 	}
 	*(_atexit_data+_atexit_data_len-1)=af;
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
@@ -78,8 +78,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t a,sll_o
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unregister(sll_integer_t a){
-	if (!a||!_atexit_lock){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unregister(sll_integer_t fn){
+	if (!fn||!_atexit_lock){
 		return 0;
 	}
 	SLL_CRITICAL(sll_platform_lock_acquire(_atexit_lock));
@@ -87,7 +87,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unreg
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<_atexit_data_len;j++){
 		atexit_function_t* af=*(_atexit_data+j);
-		if (af->fn==a){
+		if (af->fn==fn){
 			o=1;
 			_delete_atexit_function(af);
 		}

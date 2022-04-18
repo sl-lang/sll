@@ -39,27 +39,27 @@ void _audit_cleanup_api(void){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t a){
-	if (!a){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t cb){
+	if (!cb){
 		return;
 	}
 	if (!_audit_cb){
 		sll_audit_register_callback(_call_user_cb);
 	}
-	_audit_cb=a;
+	_audit_cb=cb;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(sll_string_t* a,sll_string_t* b,sll_object_t*const* c,sll_arg_count_t cc){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(sll_string_t* name,sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len){
 	sll_var_arg_list_t dt={
 		SLL_VAR_ARG_LIST_TYPE_SLL,
 		{
 			.sll={
-				c,
-				cc
+				args,
+				len
 			}
 		}
 	};
-	sll_audit_list(a->v,b->v,&dt);
+	sll_audit_list(name->v,fmt->v,&dt);
 }
