@@ -87,22 +87,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(sll_string_t* a,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(sll_string_t* path,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		sll_string_clone(a,out);
+		sll_string_clone(path,out);
 		return;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_absolute_path(a->v,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_string_from_pointer_length(bf,sll_platform_absolute_path(path->v,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_exists(sll_string_t* a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_exists(sll_string_t* path){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
-	return sll_platform_path_exists(a->v);
+	return sll_platform_path_exists(path->v);
 }
 
 
@@ -122,45 +122,45 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_is_dir(sll_string_t* a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_is_dir(sll_string_t* path){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
-	return sll_platform_path_is_directory(a->v);
+	return sll_platform_path_is_directory(path->v);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(sll_string_t*const* parts,sll_arg_count_t len,sll_string_t* out){
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_length_t i=0;
-	if (ac){
+	if (len){
 		do{
-			if ((*a)->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+			if ((*parts)->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 				SLL_INIT_STRING(out);
 				return;
 			}
-			i=(*a)->l;
-			sll_copy_data((*a)->v,i,bf);
-			ac--;
-			a++;
+			i=(*parts)->l;
+			sll_copy_data((*parts)->v,i,bf);
+			len--;
+			parts++;
 		} while (!i);
-		while (ac){
-			if (!(*a)->l){
+		while (len){
+			if (!(*parts)->l){
 				continue;
 			}
 			if (i&&bf[i-1]!='/'&&bf[i-1]!='\\'){
 				bf[i]=SLL_API_FILE_PATH_SEPARATOR;
 				i++;
 			}
-			if ((*a)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
+			if ((*parts)->l+i>=SLL_API_MAX_FILE_PATH_LENGTH){
 				SLL_INIT_STRING(out);
 				return;
 			}
-			sll_copy_data((*a)->v,(*a)->l,bf+i);
-			i+=(*a)->l;
-			ac--;
-			a++;
+			sll_copy_data((*parts)->v,(*parts)->l,bf+i);
+			i+=(*parts)->l;
+			len--;
+			parts++;
 		}
 	}
 	sll_string_from_pointer_length(bf,i,out);
@@ -168,14 +168,14 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(sll_string_t*const* a,sll_a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(sll_string_t* a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(sll_string_t* path){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
-	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s0"),a);
+	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s0"),path);
 	sll_string_t* dt=NULL;
 	sll_error_t err;
-	sll_array_length_t len=sll_platform_list_directory(a->v,&dt,&err);
+	sll_array_length_t len=sll_platform_list_directory(path->v,&dt,&err);
 	if (err!=SLL_NO_ERROR){
 		return sll_int_to_object(err);
 	}
@@ -189,24 +189,24 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdir(sll_string_t* a,sll_bool_t b){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdir(sll_string_t* path,sll_bool_t all){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
-	sll_audit(SLL_CHAR("sll.path.dir.create"),SLL_CHAR("sh"),a,b);
-	return sll_platform_create_directory(a->v,b);
+	sll_audit(SLL_CHAR("sll.path.dir.create"),SLL_CHAR("sh"),path,all);
+	return sll_platform_create_directory(path->v,all);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir(sll_string_t* a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir(sll_string_t* path){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
-	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s1"),a);
+	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s1"),path);
 	sll_string_t* dt=NULL;
 	sll_error_t err;
-	sll_array_length_t len=sll_platform_list_directory_recursive(a->v,&dt,&err);
+	sll_array_length_t len=sll_platform_list_directory_recursive(path->v,&dt,&err);
 	if (err!=SLL_NO_ERROR){
 		return sll_int_to_object(err);
 	}
@@ -220,32 +220,32 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recu
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(sll_string_t* a,sll_string_t* b,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(sll_string_t* path,sll_string_t* base,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		sll_string_clone(a,out);
+		sll_string_clone(path,out);
 		return;
 	}
-	sll_path_relative(a->v,b->v,out);
+	sll_path_relative(path->v,base->v,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_cwd(sll_string_t* a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_cwd(sll_string_t* path){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
-	sll_audit(SLL_CHAR("sll.path.cwd.set"),SLL_CHAR("s"),a);
-	return sll_platform_set_current_working_directory(a->v);
+	sll_audit(SLL_CHAR("sll.path.cwd.set"),SLL_CHAR("s"),path);
+	return sll_platform_set_current_working_directory(path->v);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size(sll_string_t* a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size(sll_string_t* path){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return 0;
 	}
 	sll_error_t err;
-	sll_file_descriptor_t fd=sll_platform_file_open(a->v,SLL_FILE_FLAG_READ,&err);
+	sll_file_descriptor_t fd=sll_platform_file_open(path->v,SLL_FILE_FLAG_READ,&err);
 	if (fd!=SLL_UNKNOWN_FILE_DESCRIPTOR){
 		sll_size_t o=sll_platform_file_size(fd,&err);
 		sll_platform_file_close(fd);
@@ -258,14 +258,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split(sll_string_t* a,sll_array_t* out){
-	sll_string_length_t i=sll_path_split(a);
-	sll_new_object_array(SLL_CHAR("ll"),out,a->v,i,a->v+i,a->l-i);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split(sll_string_t* path,sll_array_t* out){
+	sll_string_length_t i=sll_path_split(path);
+	sll_new_object_array(SLL_CHAR("ll"),out,path->v,i,path->v+i,path->l-i);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split_drive(sll_string_t* a,sll_array_t* out){
-	sll_string_length_t i=sll_path_split_drive(a);
-	sll_new_object_array(SLL_CHAR("ll"),out,a->v,i,a->v+i,a->l-i);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split_drive(sll_string_t* path,sll_array_t* out){
+	sll_string_length_t i=sll_path_split_drive(path);
+	sll_new_object_array(SLL_CHAR("ll"),out,path->v,i,path->v+i,path->l-i);
 }

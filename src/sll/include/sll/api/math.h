@@ -167,11 +167,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan(s
  * \subgroup math-api-inv-trig
  * \desc Docs!
  * \api ff|f
- * \arg sll_float_t a
- * \arg sll_float_t b
+ * \arg sll_float_t y
+ * \arg sll_float_t x
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan2(sll_float_t a,sll_float_t b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan2(sll_float_t y,sll_float_t x);
 
 
 
