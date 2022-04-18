@@ -209,7 +209,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_count"),
 		sll_api_array_count,
-		SLL_CHAR("ao|i")
+		SLL_CHAR("ao|h")
 	},
 	{
 		SLL_CHAR("sll:array_create"),

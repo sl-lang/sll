@@ -189,6 +189,8 @@ static sll_object_t* _call_internal(sll_function_index_t fn,sll_object_t*const* 
 		case 'b':
 			o=SLL_ACQUIRE_STATIC_INT(ret.b);
 			break;
+		case 'h':
+			ret.i&=0xffffffff;
 		case 'i':
 			o=sll_int_to_object(ret.i);
 			break;

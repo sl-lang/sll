@@ -16,12 +16,12 @@
  * \name sll_api_array_count
  * \group array-api
  * \desc Docs!
- * \api ao|i
- * \arg sll_array_t* a
- * \arg sll_object_t* b
- * \ret sll_integer_t
+ * \api ao|h
+ * \arg sll_array_t* arr
+ * \arg sll_object_t* elem
+ * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_array_count(sll_array_t* a,sll_object_t* b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_array_length_t sll_api_array_count(sll_array_t* arr,sll_object_t* elem);
 
 
 
@@ -31,10 +31,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_array_cou
  * \group array-api
  * \desc Docs!
  * \api i|a
- * \arg sll_integer_t a
+ * \arg sll_integer_t arr
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_integer_t a,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_integer_t arr,sll_array_t* out);
 
 
 
@@ -44,10 +44,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_integer_t a,sll_arra
  * \group array-api
  * \desc Docs!
  * \api aa|v
- * \arg sll_array_t* a
- * \arg sll_array_t* b
+ * \arg sll_array_t* arr
+ * \arg sll_array_t* new
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_extend(sll_array_t* a,sll_array_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_extend(sll_array_t* arr,sll_array_t* new);
 
 
 
@@ -57,11 +57,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_extend(sll_array_t* a,sll_array
  * \group array-api
  * \desc Docs!
  * \api ao|i
- * \arg sll_array_t* a
- * \arg sll_object_t* b
+ * \arg sll_array_t* arr
+ * \arg sll_object_t* elem
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_array_index(sll_array_t* a,sll_object_t* b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_array_index(sll_array_t* arr,sll_object_t* elem);
 
 
 
@@ -71,12 +71,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_array_ind
  * \group array-api
  * \desc Docs!
  * \api a+o|a
- * \arg sll_array_t*const* a
- * \arg sll_arg_count_t ac
- * \arg sll_object_t* b
+ * \arg sll_array_t*const* arr
+ * \arg sll_arg_count_t len
+ * \arg sll_object_t* elem
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_join(sll_array_t*const* a,sll_arg_count_t ac,sll_object_t* b,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_join(sll_array_t*const* arr,sll_arg_count_t len,sll_object_t* elem,sll_array_t* out);
 
 
 
@@ -86,10 +86,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_join(sll_array_t*const* a,sll_a
  * \group array-api
  * \desc Docs!
  * \api a|o
- * \arg sll_array_t* a
+ * \arg sll_array_t* arr
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_pop(sll_array_t* a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_pop(sll_array_t* arr);
 
 
 
@@ -99,10 +99,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_pop
  * \group array-api
  * \desc Docs!
  * \api ao|v
- * \arg sll_array_t* a
- * \arg sll_object_t* b
+ * \arg sll_array_t* arr
+ * \arg sll_object_t* elem
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_push(sll_array_t* a,sll_object_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_push(sll_array_t* arr,sll_object_t* elem);
 
 
 
@@ -112,10 +112,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_push(sll_array_t* a,sll_object_
  * \group array-api
  * \desc Docs!
  * \api ao|v
- * \arg sll_array_t* a
- * \arg sll_object_t* b
+ * \arg sll_array_t* arr
+ * \arg sll_object_t* elem
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_remove(sll_array_t* a,sll_object_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_remove(sll_array_t* arr,sll_object_t* elem);
 
 
 
@@ -125,12 +125,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_remove(sll_array_t* a,sll_objec
  * \group array-api
  * \desc Docs!
  * \api aoo|a
- * \arg sll_array_t* a
- * \arg sll_object_t* b
- * \arg sll_object_t* c
+ * \arg sll_array_t* arr
+ * \arg sll_object_t* old
+ * \arg sll_object_t* new
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_replace(sll_array_t* a,sll_object_t* b,sll_object_t* c,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_replace(sll_array_t* arr,sll_object_t* old,sll_object_t* new,sll_array_t* out);
 
 
 
@@ -140,10 +140,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_replace(sll_array_t* a,sll_obje
  * \group array-api
  * \desc Docs!
  * \api a|a
- * \arg sll_array_t* a
+ * \arg sll_array_t* arr
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_reverse(sll_array_t* a,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_reverse(sll_array_t* arr,sll_array_t* out);
 
 
 
@@ -153,10 +153,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_reverse(sll_array_t* a,sll_arra
  * \group array-api
  * \desc Docs!
  * \api a|o
- * \arg sll_array_t* a
+ * \arg sll_array_t* arr
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_shift(sll_array_t* a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_shift(sll_array_t* arr);
 
 
 
@@ -166,11 +166,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_shi
  * \group array-api
  * \desc Docs!
  * \api ao|a
- * \arg sll_array_t* a
- * \arg sll_object_t* b
+ * \arg sll_array_t* arr
+ * \arg sll_object_t* key
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_split(sll_array_t* a,sll_object_t* b,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_split(sll_array_t* att,sll_object_t* key,sll_array_t* out);
 
 
 
@@ -180,10 +180,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_split(sll_array_t* a,sll_object
  * \group array-api
  * \desc Docs!
  * \api ao|v
- * \arg sll_array_t* a
- * \arg sll_object_t* b
+ * \arg sll_array_t* arr
+ * \arg sll_object_t* elem
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_unshift(sll_array_t* a,sll_object_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_unshift(sll_array_t* att,sll_object_t* elem);
 
 
 

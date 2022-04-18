@@ -25,7 +25,7 @@ static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t
 	o->ret='v';
 	fmt+=off;
 	while (*fmt){
-		if (*fmt=='b'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
+		if (*fmt=='b'||*fmt=='h'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
 			o->ret=*fmt;
 			break;
 		}
