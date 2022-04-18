@@ -40,8 +40,8 @@
 	(@@ (:: (<- (... "sll:vm_get_location")
 		(?: @@loc@@ (,
 			(= off (:: (: @@loc@@ 0) int_type))
-			(?: (< off -1) 0 off)
-		) -1)
+			(?: (< off -1) 0 (+ off 1))
+		) 0)
 	) location_type))
 ))
 

@@ -17,10 +17,10 @@
  * \group weakref-api
  * \desc Docs!
  * \api oi|v
- * \arg sll_object_t* a
- * \arg sll_integer_t b
+ * \arg sll_object_t* no_obj
+ * \arg sll_integer_t cb
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* a,sll_integer_t b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* no_obj,sll_integer_t cb);
 
 
 
@@ -30,10 +30,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* a,sll_int
  * \group weakref-api
  * \desc Docs!
  * \api o|i
- * \arg sll_object_t* a
- * \ret sll_integer_t
+ * \arg sll_object_t* obj
+ * \ret sll_weak_reference_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_weakref_create(sll_object_t* a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_api_weakref_create(sll_object_t* obj);
 
 
 
@@ -43,10 +43,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_weakref_c
  * \group weakref-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_weak_reference_t wr
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_delete(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_delete(sll_weak_reference_t wr);
 
 
 
@@ -56,10 +56,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_dele
  * \group weakref-api
  * \desc Docs!
  * \api i|o
- * \arg sll_integer_t a
+ * \arg sll_weak_reference_t wr
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_get(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_get(sll_weak_reference_t wr);
 
 
 
@@ -69,10 +69,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_g
  * \group weakref-api
  * \desc Docs!
  * \api io|v
- * \arg sll_integer_t a
- * \arg sll_object_t* b
+ * \arg sll_weak_reference_t wr
+ * \arg sll_object_t* cb
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_integer_t a,sll_object_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_weak_reference_t wr,sll_object_t* cb);
 
 
 

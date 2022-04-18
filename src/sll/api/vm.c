@@ -45,14 +45,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_in
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_location(sll_integer_t a){
-	sll_instruction_index_t ii;
-	if (a<0){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_location(sll_instruction_index_t ii){
+	if (!ii){
 		const sll_call_stack_t* c_st=sll_thread_get_call_stack(_scheduler_current_thread_index);
 		ii=(c_st->l?(c_st->dt+c_st->l-1)->_ii:sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
 	}
 	else{
-		ii=(a>SLL_MAX_INSTRUCTION_INDEX?SLL_MAX_INSTRUCTION_INDEX:(sll_instruction_index_t)a);
+		ii--;
 	}
 	sll_audit(SLL_CHAR("sll.vm.location"),SLL_CHAR("h"),ii);
 	return sll_instruction_to_location(ii);
@@ -60,7 +59,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_lo
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_ref_count(sll_object_t* a){
-	sll_audit(SLL_CHAR("sll.vm.ref"),SLL_CHAR("O"),a);
-	return a->rc;
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_ref_count(sll_object_t* obj){
+	sll_audit(SLL_CHAR("sll.vm.ref"),SLL_CHAR("O"),obj);
+	return obj->rc;
 }
