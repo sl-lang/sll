@@ -86,11 +86,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
  * \group string-api
  * \desc Docs!
  * \api sy|b
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* end
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(sll_string_t* a,sll_char_string_t* b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(sll_string_t* str,sll_char_string_t* end);
 
 
 
@@ -100,12 +100,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(
  * \group string-api
  * \desc Docs!
  * \api so!|s
- * \arg sll_string_t* a
- * \arg sll_object_t*const* b
- * \arg sll_arg_count_t bc
+ * \arg sll_string_t* fmt
+ * \arg sll_object_t*const* args
+ * \arg sll_arg_count_t len
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(sll_string_t* a,sll_object_t*const* b,sll_arg_count_t bc,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out);
 
 
 
@@ -115,10 +115,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(sll_string_t* a,sll_obj
  * \group string-api
  * \desc Docs!
  * \api s|s
- * \arg sll_string_t* a
+ * \arg sll_string_t* str
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(sll_string_t* a,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(sll_string_t* str,sll_string_t* out);
 
 
 

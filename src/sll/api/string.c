@@ -331,32 +331,32 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(sll_string_t* a,sll_char_string_t* b){
-	if (b->t==SLL_PARSE_ARGS_TYPE_CHAR){
-		return (a->l&&a->v[a->l-1]==b->dt.c);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(sll_string_t* str,sll_char_string_t* end){
+	if (end->t==SLL_PARSE_ARGS_TYPE_CHAR){
+		return (str->l&&str->v[str->l-1]==end->dt.c);
 	}
-	return sll_string_ends(a,b->dt.s);
+	return sll_string_ends(str,end->dt.s);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(sll_string_t* a,sll_object_t*const* b,sll_arg_count_t bc,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out){
 	sll_var_arg_list_t dt={
 		SLL_VAR_ARG_LIST_TYPE_SLL,
 		{
 			.sll={
-				b,
-				bc
+				args,
+				len
 			}
 		}
 	};
-	sll_string_format_list(a->v,a->l,&dt,out);
+	sll_string_format_list(fmt->v,fmt->l,&dt,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(sll_string_t* a,sll_string_t* out){
-	sll_string_flip_case(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(sll_string_t* str,sll_string_t* out){
+	sll_string_flip_case(str,out);
 }
 
 
