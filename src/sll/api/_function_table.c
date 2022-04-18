@@ -239,12 +239,12 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_push"),
 		sll_api_array_push,
-		SLL_CHAR("ao|v")
+		SLL_CHAR("ao|D")
 	},
 	{
 		SLL_CHAR("sll:array_remove"),
 		sll_api_array_remove,
-		SLL_CHAR("ao|v")
+		SLL_CHAR("ao|D")
 	},
 	{
 		SLL_CHAR("sll:array_replace"),
@@ -269,7 +269,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_unshift"),
 		sll_api_array_unshift,
-		SLL_CHAR("ao|v")
+		SLL_CHAR("ao|D")
 	},
 	{
 		SLL_CHAR("sll:atexit_register"),
