@@ -502,8 +502,8 @@ _read_file_argument:
 		i++;
 	} while (i<argc);
 	if (fl&SLL_CLI_FLAG_VERBOSE){
-		sll_set_log_default(SLL_LOG_FLAG_SHOW,1);
-		sll_set_log_file(SLL_CHAR(__FILE__),SLL_LOG_FLAG_NO_HEADER,1);
+		sll_set_log_flags(NULL,NULL,SLL_LOG_FLAG_SHOW,1);
+		sll_set_log_flags(SLL_CHAR(__FILE__),NULL,SLL_LOG_FLAG_NO_HEADER,1);
 	}
 	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("S+"),argv,argc);
 	_init_audit_event(o_fp,ll,lll,b_nm);

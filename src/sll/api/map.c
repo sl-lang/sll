@@ -7,12 +7,12 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* a,sll_map_t* b){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* map,sll_map_t* new){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_remove(sll_map_t* a,sll_object_t* b){
-	GC_RELEASE(sll_map_remove(NULL,b,a));
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_remove(sll_map_t* map,sll_object_t* key){
+	GC_RELEASE(sll_map_remove(NULL,key,map));
 }

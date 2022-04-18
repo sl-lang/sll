@@ -11,6 +11,7 @@
 - API functions are now called directly, without the wrapper functions (named `XXX_raw`)
 - Audit event `sll.error.backtrace` no longer contains the amount of stack frames skipped
 - Fixed crashes related to signals recived at unexpected times
+- Functions `sll_set_log_default`, `sll_set_log_file` and `sll_set_log_function` have been merged into `sll_set_log_flags`
 - Negative time zone offsets are now correctly printed in `date$date_type`
 
 ## Removed

@@ -15,6 +15,10 @@
 
 
 
+#define SET_OR_CLEAR(data,flags,set) ((data)^=((-((sll_flags_t)set))^(data))&(flags))
+
+
+
 static sll_flags_t _log_default=0;
 static file_log_data_t** _log_f_dt=NULL;
 static sll_array_length_t _log_f_dtl=0;
@@ -158,35 +162,18 @@ __SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_fi
 
 
 
-__SLL_EXTERNAL void sll_set_log_default(sll_flags_t fl,sll_bool_t st){
-	if (st){
-		_log_default|=fl;
+__SLL_EXTERNAL void sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st){
+	if (fp){
+		file_log_data_t* dt=_get_file_index(fp);
+		if (fn){
+			function_log_data_t* fn_dt=_get_func_index(dt,fn);
+			SET_OR_CLEAR(fn_dt->fl,fl,st);
+		}
+		else{
+			SET_OR_CLEAR(dt->fl,fl,st);
+		}
 	}
 	else{
-		_log_default&=fl;
-	}
-}
-
-
-
-__SLL_EXTERNAL void sll_set_log_file(const sll_char_t* fp,sll_flags_t fl,sll_bool_t st){
-	file_log_data_t* dt=_get_file_index(fp);
-	if (st){
-		dt->fl|=fl;
-	}
-	else{
-		dt->fl&=~fl;
-	}
-}
-
-
-
-__SLL_EXTERNAL void sll_set_log_function(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st){
-	function_log_data_t* dt=_get_func_index(_get_file_index(fp),fn);
-	if (st){
-		dt->fl|=fl;
-	}
-	else{
-		dt->fl&=~fl;
+		SET_OR_CLEAR(_log_default,fl,st);
 	}
 }

@@ -17,10 +17,10 @@
  * \group map-api
  * \desc Docs!
  * \api mm|v
- * \arg sll_map_t* a
- * \arg sll_map_t* b
+ * \arg sll_map_t* map
+ * \arg sll_map_t* new
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* a,sll_map_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* map,sll_map_t* new);
 
 
 
@@ -30,10 +30,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* a,sll_map_t* b)
  * \group map-api
  * \desc Docs!
  * \api mo|v
- * \arg sll_map_t* a
- * \arg sll_object_t* b
+ * \arg sll_map_t* map
+ * \arg sll_object_t* key
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_remove(sll_map_t* a,sll_object_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_remove(sll_map_t* map,sll_object_t* key);
 
 
 

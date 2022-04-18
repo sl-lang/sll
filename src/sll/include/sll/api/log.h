@@ -17,10 +17,10 @@
  * \group log-api
  * \desc Docs!
  * \api o!|v
- * \arg sll_object_t*const* a
- * \arg sll_arg_count_t ac
+ * \arg sll_object_t*const* data
+ * \arg sll_arg_count_t len
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_log(sll_object_t*const* a,sll_arg_count_t ac);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_log(sll_object_t*const* data,sll_arg_count_t len);
 
 
 
@@ -30,10 +30,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_log(sll_object_t*const* a,sll_arg
  * \group log-api
  * \desc Docs!
  * \api ib|v
- * \arg sll_integer_t a
- * \arg sll_bool_t b
+ * \arg sll_flags_t flag
+ * \arg sll_bool_t state
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_default(sll_integer_t a,sll_bool_t b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_default(sll_flags_t flag,sll_bool_t state);
 
 
 
@@ -43,11 +43,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_default(sll_integer_t a,sll_b
  * \group log-api
  * \desc Docs!
  * \api sib|v
- * \arg sll_string_t* a
- * \arg sll_integer_t b
- * \arg sll_bool_t c
+ * \arg sll_string_t* file
+ * \arg sll_flags_t flags
+ * \arg sll_bool_t state
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_file(sll_string_t* a,sll_integer_t b,sll_bool_t c);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_file(sll_string_t* file,sll_flags_t flags,sll_bool_t state);
 
 
 
@@ -57,12 +57,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_file(sll_string_t* a,sll_inte
  * \group log-api
  * \desc Docs!
  * \api ssib|v
- * \arg sll_string_t* a
- * \arg sll_string_t* b
- * \arg sll_integer_t c
- * \arg sll_bool_t d
+ * \arg sll_string_t* file
+ * \arg sll_string_t* func
+ * \arg sll_flags_t flags
+ * \arg sll_bool_t state
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_function(sll_string_t* a,sll_string_t* b,sll_integer_t c,sll_bool_t d);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_function(sll_string_t* file,sll_string_t* func,sll_flags_t flags,sll_bool_t state);
 
 
 

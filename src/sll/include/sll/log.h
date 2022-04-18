@@ -88,32 +88,7 @@ __SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_fi
 
 /**
  * \flags func
- * \name sll_set_log_default
- * \group log
- * \desc Docs!
- * \arg sll_flags_t fl
- * \arg sll_bool_t st
- */
-__SLL_EXTERNAL void sll_set_log_default(sll_flags_t fl,sll_bool_t st);
-
-
-
-/**
- * \flags func
- * \name sll_set_log_file
- * \group log
- * \desc Docs!
- * \arg const sll_char_t* fp
- * \arg sll_flags_t fl
- * \arg sll_bool_t st
- */
-__SLL_EXTERNAL void sll_set_log_file(const sll_char_t* fp,sll_flags_t fl,sll_bool_t st);
-
-
-
-/**
- * \flags func
- * \name sll_set_log_function
+ * \name sll_set_log_flags
  * \group log
  * \desc Docs!
  * \arg const sll_char_t* fp
@@ -121,7 +96,7 @@ __SLL_EXTERNAL void sll_set_log_file(const sll_char_t* fp,sll_flags_t fl,sll_boo
  * \arg sll_flags_t fl
  * \arg sll_bool_t st
  */
-__SLL_EXTERNAL void sll_set_log_function(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st);
+__SLL_EXTERNAL void sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st);
 
 
 
