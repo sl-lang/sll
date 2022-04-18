@@ -17,9 +17,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_float_get_c
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_float_set_compare_error(sll_float_t a){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_float_set_compare_error(sll_float_t err){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FLOAT_COMPARE_ERROR_CHANGE)){
-		sll_audit(SLL_CHAR("sll.float.error.set"),SLL_CHAR("f"),a);
-		sll_float_compare_error=a;
+		sll_audit(SLL_CHAR("sll.float.error.set"),SLL_CHAR("f"),err);
+		sll_float_compare_error=err;
 	}
 }
