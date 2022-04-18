@@ -27,11 +27,11 @@ __SLL_EXTERNAL extern const sll_time_zone_t* sll_utc_time_zone;
  * \name sll_date_from_time
  * \group date-api
  * \desc Docs!
- * \arg sll_float_t tm
+ * \arg sll_float_t time
  * \arg const sll_time_zone_t* tz
  * \arg sll_date_t* o
  */
-__SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,const sll_time_zone_t* tz,sll_date_t* o);
+__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* tz,sll_date_t* o);
 
 
 
@@ -40,11 +40,11 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t tm,const sll_time_zone_t* tz,
  * \name sll_date_from_time_ns
  * \group date-api
  * \desc Docs!
- * \arg sll_size_t tm
+ * \arg sll_size_t time
  * \arg const sll_time_zone_t* tz
  * \arg sll_date_t* o
  */
-__SLL_EXTERNAL void sll_date_from_time_ns(sll_size_t tm,const sll_time_zone_t* tz,sll_date_t* o);
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_size_t time,const sll_time_zone_t* tz,sll_date_t* o);
 
 
 
@@ -53,10 +53,10 @@ __SLL_EXTERNAL void sll_date_from_time_ns(sll_size_t tm,const sll_time_zone_t* t
  * \name sll_date_to_time
  * \group date-api
  * \desc Docs!
- * \arg sll_date_t* dt
+ * \arg sll_date_t* date
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* dt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* date);
 
 
 
@@ -78,15 +78,15 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_date_get_time_zone(sll_array_t* out);
  * \group date-api
  * \desc Docs!
  * \api iiiiif|f
- * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \arg sll_integer_t c
- * \arg sll_integer_t d
- * \arg sll_integer_t e
- * \arg sll_float_t f
+ * \arg sll_year_t year
+ * \arg sll_month_t month
+ * \arg sll_day_t day
+ * \arg sll_hour_t hour
+ * \arg sll_minute_t minute
+ * \arg sll_second_t second
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_float_t f);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(sll_year_t year,sll_month_t month,sll_day_t day,sll_hour_t hour,sll_minute_t minute,sll_second_t second);
 
 
 
@@ -96,10 +96,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(
  * \group date-api
  * \desc Docs!
  * \api f|a
- * \arg sll_float_t a
+ * \arg sll_float_t time
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t a,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t time,sll_array_t* out);
 
 
 
