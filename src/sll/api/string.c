@@ -283,16 +283,16 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_checksum(sll_string_t* a){
-	return a->c;
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_string_checksum_t sll_api_string_checksum(sll_string_t* str){
+	return str->c;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* a,sll_arg_count_t ac,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out){
 	STRING_INIT_STACK(out);
-	for (sll_array_length_t i=0;i<ac;i++){
-		sll_object_t* v=*(a+i);
+	for (sll_array_length_t i=0;i<len;i++){
+		sll_object_t* v=*(args+i);
 		if (v->t==SLL_OBJECT_TYPE_CHAR){
 			sll_string_increase(out,1);
 			out->v[out->l]=v->dt.c;
@@ -304,7 +304,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* a,
 			out->l+=v->dt.s.l;
 		}
 		else{
-			_object_to_string(*(a+i),out);
+			_object_to_string(*(args+i),out);
 		}
 	}
 	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
@@ -313,8 +313,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* a,
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count(sll_string_t* a,sll_char_string_t* b){
-	return (b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_count_char(a,b->dt.c):sll_string_count(a,b->dt.s));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count(sll_string_t* str,sll_char_string_t* elem){
+	return (elem->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_count_char(str,elem->dt.c):sll_string_count(str,elem->dt.s));
 }
 
 

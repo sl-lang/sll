@@ -829,7 +829,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_checksum"),
 		sll_api_string_checksum,
-		SLL_CHAR("s|i")
+		SLL_CHAR("s|I")
 	},
 	{
 		SLL_CHAR("sll:string_convert"),

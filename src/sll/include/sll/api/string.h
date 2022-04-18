@@ -16,11 +16,11 @@
  * \name sll_api_string_checksum
  * \group string-api
  * \desc Docs!
- * \api s|i
- * \arg sll_string_t* a
- * \ret sll_integer_t
+ * \api s|I
+ * \arg sll_string_t* str
+ * \ret sll_string_checksum_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_checksum(sll_string_t* a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_string_checksum_t sll_api_string_checksum(sll_string_t* str);
 
 
 
@@ -30,11 +30,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_ch
  * \group string-api
  * \desc Docs!
  * \api o!|s
- * \arg sll_object_t*const* a
- * \arg sll_arg_count_t ac
+ * \arg sll_object_t*const* args
+ * \arg sll_arg_count_t len
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* a,sll_arg_count_t ac,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out);
 
 
 
@@ -44,11 +44,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* a,
  * \group string-api
  * \desc Docs!
  * \api sy|i
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* elem
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count(sll_string_t* a,sll_char_string_t* b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count(sll_string_t* str,sll_char_string_t* elem);
 
 
 
