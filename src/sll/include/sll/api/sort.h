@@ -31,13 +31,13 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
  * \group sort-api
  * \desc Docs!
  * \api abbi|o
- * \arg sll_array_t* a
- * \arg sll_bool_t b
- * \arg sll_bool_t c
- * \arg sll_integer_t d
+ * \arg sll_array_t* arr
+ * \arg sll_bool_t reverse
+ * \arg sll_bool_t inplace
+ * \arg sll_integer_t key_fn
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort(sll_array_t* a,sll_bool_t b,sll_bool_t c,sll_integer_t d);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort(sll_array_t* arr,sll_bool_t reverse,sll_bool_t inplace,sll_integer_t key_fn);
 
 
 
