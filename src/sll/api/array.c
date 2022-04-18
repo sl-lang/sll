@@ -21,8 +21,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_array_length_t len,s
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_extend(sll_array_t* arr,const sll_array_t* new){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_array_length_t sll_api_array_extend(sll_array_t* arr,const sll_array_t* new){
 	sll_array_extend(NULL,new,arr);
+	return arr->l;
 }
 
 

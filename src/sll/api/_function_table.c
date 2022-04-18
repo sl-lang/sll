@@ -219,7 +219,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_extend"),
 		sll_api_array_extend,
-		SLL_CHAR("a#a|v")
+		SLL_CHAR("a#a|D")
 	},
 	{
 		SLL_CHAR("sll:array_index"),

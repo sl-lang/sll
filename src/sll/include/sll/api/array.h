@@ -39,15 +39,16 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_array_length_t len,s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_extend
  * \group array-api
  * \desc Docs!
- * \api a#a|v
+ * \api a#a|D
  * \arg sll_array_t* arr
  * \arg const sll_array_t* new
+ * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_array_extend(sll_array_t* arr,const sll_array_t* new);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_array_length_t sll_api_array_extend(sll_array_t* arr,const sll_array_t* new);
 
 
 
