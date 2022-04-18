@@ -201,12 +201,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(sll_char_string_t* infix,
  * \group string-api
  * \desc Docs!
  * \api sic|s
- * \arg sll_string_t* a
- * \arg sll_integer_t b
- * \arg sll_char_t c
+ * \arg sll_string_t* str
+ * \arg sll_string_length_t len
+ * \arg sll_char_t chr
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out);
 
 
 
@@ -216,12 +216,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(sll_string_t* a,sll_intege
  * \group string-api
  * \desc Docs!
  * \api sic|s
- * \arg sll_string_t* a
- * \arg sll_integer_t b
- * \arg sll_char_t c
+ * \arg sll_string_t* str
+ * \arg sll_string_length_t len
+ * \arg sll_char_t chr
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out);
 
 
 
@@ -231,12 +231,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(sll_string_t* a,sll_i
  * \group string-api
  * \desc Docs!
  * \api sic|s
- * \arg sll_string_t* a
- * \arg sll_integer_t b
- * \arg sll_char_t c
+ * \arg sll_string_t* str
+ * \arg sll_string_length_t len
+ * \arg sll_char_t chr
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out);
 
 
 

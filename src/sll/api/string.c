@@ -400,33 +400,20 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(sll_char_string_t* infix,
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out){
-	if (b<0){
-		b=-b;
-	}
-	sll_string_pad(a,(b>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)b),c,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
+	sll_string_pad(str,len,chr,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out){
-	if (b<0){
-		sll_string_pad_right(a,(b<-((sll_integer_t)SLL_MAX_STRING_LENGTH)?SLL_MAX_STRING_LENGTH:(sll_string_length_t)(-b)),c,out);
-	}
-	else{
-		sll_string_pad_left(a,(b>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)b),c,out);
-	}
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
+	sll_string_pad_left(str,len,chr,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(sll_string_t* a,sll_integer_t b,sll_char_t c,sll_string_t* out){
-	if (b<0){
-		sll_string_pad_right(a,(b<-((sll_integer_t)SLL_MAX_STRING_LENGTH)?SLL_MAX_STRING_LENGTH:(sll_string_length_t)(-b)),c,out);
-	}
-	else{
-		sll_string_pad_left(a,(b>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)b),c,out);
-	}
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
+	sll_string_pad_right(str,len,chr,out);
 }
 
 
