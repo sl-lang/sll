@@ -163,7 +163,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(sll_string_t* name,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(const sll_string_t* name,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||name->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
@@ -261,7 +261,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(sll_string_t* key){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(const sll_string_t* key){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
 		sll_audit(SLL_CHAR("sll.sys.env.delete"),SLL_CHAR("s"),key);
 		sll_remove_environment_variable(key);
@@ -277,7 +277,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(sll_string_t* key,sll_string_t* value){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(const sll_string_t* key,const sll_string_t* value){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
 		sll_audit(SLL_CHAR("sll.sys.env.set"),SLL_CHAR("ss"),key,value);
 		sll_set_environment_variable(key,value);

@@ -90,7 +90,7 @@ _continue:
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(sll_string_t* cmd){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(const sll_string_t* cmd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API);
 	}
@@ -110,14 +110,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_g
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* args,sll_arg_count_t len,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(const sll_string_t*const* args,sll_arg_count_t len,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		SLL_INIT_STRING(out);
 		return;
 	}
 	sll_char_t** dt=sll_allocate_stack(len*sizeof(sll_char_t*));
 	for (sll_array_length_t i=0;i<len;i++){
-		sll_string_t* str=*(args+i);
+		const sll_string_t* str=*(args+i);
 		sll_char_t* p=sll_allocate_stack(str->l);
 		sll_copy_data(str->v,str->l,p);
 		*(dt+i)=p;
@@ -131,13 +131,13 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* args
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(sll_string_t* args,sll_array_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(const sll_string_t* args,sll_array_t* out){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* args,sll_string_t* cwd,sll_integer_t flags,sll_string_t* stdin,sll_array_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_integer_t flags,const sll_string_t* stdin,sll_array_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!args->l){
 		sll_new_object_array(SLL_CHAR("a(si)0(sZZ)"),out,args,cwd,flags,stdin);
 		return;

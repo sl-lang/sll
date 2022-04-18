@@ -41,10 +41,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_time_curr
  * \group time-api
  * \desc Docs!
  * \api x|f
- * \arg sll_int_float_t* time
+ * \arg const sll_int_float_t* time
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_sleep(sll_int_float_t* time);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_sleep(const sll_int_float_t* time);
 
 
 
@@ -54,10 +54,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_sleep(
  * \group time-api
  * \desc Docs!
  * \api x|i
- * \arg sll_int_float_t* time
+ * \arg const sll_int_float_t* time
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_time_sleep_ns(sll_int_float_t* time);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_time_sleep_ns(const sll_int_float_t* time);
 
 
 

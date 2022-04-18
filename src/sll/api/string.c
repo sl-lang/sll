@@ -283,7 +283,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_string_checksum_t sll_api_string_checksum(sll_string_t* str){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_string_checksum_t sll_api_string_checksum(const sll_string_t* str){
 	return str->c;
 }
 
@@ -313,25 +313,25 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* ar
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count(sll_string_t* str,sll_char_string_t* elem){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count(const sll_string_t* str,const sll_char_string_t* elem){
 	return (elem->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_count_char(str,elem->dt.c):sll_string_count(str,elem->dt.s));
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_left(sll_string_t* str,sll_char_t chr){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_left(const sll_string_t* str,sll_char_t chr){
 	return sll_string_count_left(str,chr);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_right(sll_string_t* str,sll_char_t chr){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_right(const sll_string_t* str,sll_char_t chr){
 	return sll_string_count_right(str,chr);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(sll_string_t* str,sll_char_string_t* end){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(const sll_string_t* str,const sll_char_string_t* end){
 	if (end->t==SLL_PARSE_ARGS_TYPE_CHAR){
 		return (str->l&&str->v[str->l-1]==end->dt.c);
 	}
@@ -340,7 +340,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out){
 	sll_var_arg_list_t dt={
 		SLL_VAR_ARG_LIST_TYPE_SLL,
 		{
@@ -355,41 +355,41 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(sll_string_t* fmt,sll_o
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* str,sll_string_t* out){
 	sll_string_flip_case(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index(sll_string_t* str,sll_char_string_t* substr,sll_string_length_t start){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index(const sll_string_t* str,const sll_char_string_t* substr,sll_string_length_t start){
 	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->dt.c,0,start):sll_string_index(str,substr->dt.s,start));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_list(sll_string_t* str,sll_char_string_t* substr,sll_bool_t inv){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_list(const sll_string_t* str,const sll_char_string_t* substr,sll_bool_t inv){
 	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->dt.c,inv,0):sll_string_index_multiple(str,substr->dt.s->v,substr->dt.s->l,inv));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse(sll_string_t* str,sll_char_string_t* substr){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse(const sll_string_t* str,const sll_char_string_t* substr){
 	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->dt.c,0):sll_string_index_reverse(str,substr->dt.s));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse_list(sll_string_t* str,sll_char_string_t* substr,sll_bool_t inv){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse_list(const sll_string_t* str,const sll_char_string_t* substr,sll_bool_t inv){
 	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->dt.c,inv):sll_string_index_reverse_multiple(str,substr->dt.s->v,substr->dt.s->l,inv));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(sll_char_string_t* infix,sll_array_t* arr,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(const sll_char_string_t* infix,const sll_array_t* arr,sll_string_t* out){
 	if (infix->t==SLL_PARSE_ARGS_TYPE_CHAR){
 		sll_string_join_char(infix->dt.c,arr->v,arr->l,out);
 	}
@@ -400,25 +400,25 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(sll_char_string_t* infix,
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(const sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
 	sll_string_pad(str,len,chr,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(const sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
 	sll_string_pad_left(str,len,chr,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(const sll_string_t* str,sll_string_length_t len,sll_char_t chr,sll_string_t* out){
 	sll_string_pad_right(str,len,chr,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(sll_string_t* str,sll_char_string_t* old,sll_char_string_t* new,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(const sll_string_t* str,const sll_char_string_t* old,const sll_char_string_t* new,sll_string_t* out){
 	if (old->t==SLL_PARSE_ARGS_TYPE_STRING&&!old->dt.s->l){
 		sll_string_clone(str,out);
 	}
@@ -457,19 +457,19 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(sll_string_t* str,sll_
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_reverse(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_reverse(const sll_string_t* str,sll_string_t* out){
 	sll_string_reverse(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_secure_equal(sll_string_t* a,sll_string_t* b){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_secure_equal(const sll_string_t* a,const sll_string_t* b){
 	return sll_string_secure_equal(a,b);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(sll_string_t* str,sll_char_string_t* infix,sll_array_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(const sll_string_t* str,const sll_char_string_t* infix,sll_array_t* out){
 	if (infix->t==SLL_PARSE_ARGS_TYPE_CHAR){
 		sll_string_split_char(str,infix->dt.c,out);
 	}
@@ -480,7 +480,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(sll_string_t* str,sll_ch
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_starts(sll_string_t* str,sll_char_string_t* start){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_starts(const sll_string_t* str,const sll_char_string_t* start){
 	if (start->t==SLL_PARSE_ARGS_TYPE_CHAR){
 		return (str->l&&str->v[0]==start->dt.c);
 	}
@@ -489,36 +489,36 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_start
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(const sll_string_t* str,sll_string_t* out){
 	sll_string_lower_case(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(const sll_string_t* str,sll_string_t* out){
 	sll_string_title_case(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim(const sll_string_t* str,sll_string_t* out){
 	sll_string_trim(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(const sll_string_t* str,sll_string_t* out){
 	sll_string_trim_left(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(const sll_string_t* str,sll_string_t* out){
 	sll_string_trim_right(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_upper_case(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_upper_case(const sll_string_t* str,sll_string_t* out){
 	sll_string_upper_case(str,out);
 }

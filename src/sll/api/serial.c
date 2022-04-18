@@ -450,7 +450,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t fh
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_string(sll_integer_t fh,sll_string_t* str){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_string(sll_integer_t fh,const sll_string_t* str){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		sll_encode_string(sll_file_from_handle(fh),str);
 	}
