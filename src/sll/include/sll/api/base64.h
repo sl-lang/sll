@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_base64_decode
  * \group base64-api
  * \desc Docs!

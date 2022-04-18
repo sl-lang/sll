@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_struct_float_from_bits
  * \group struct-api
  * \desc Docs!
@@ -25,7 +25,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_floa
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_struct_double_from_bits
  * \group struct-api
  * \desc Docs!
@@ -38,7 +38,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_doub
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_struct_float_to_bits
  * \group struct-api
  * \desc Docs!
@@ -51,7 +51,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT __SLL_U32 sll_api_struct_float_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_struct_double_to_bits
  * \group struct-api
  * \desc Docs!

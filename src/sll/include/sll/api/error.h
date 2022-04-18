@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_error_get_call_stack
  * \group error-api
  * \desc Docs!

@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_object_new
  * \group object-api
  * \desc Docs!

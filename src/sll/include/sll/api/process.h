@@ -79,7 +79,7 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_process_execute_shell
  * \group process-api
  * \desc Docs!
@@ -92,7 +92,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_e
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_process_get_pid
  * \group process-api
  * \desc Docs!

@@ -90,7 +90,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(const sll_string_t* pat
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_exists
  * \group path-api
  * \desc Docs!
@@ -103,7 +103,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_path_exists(
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_get_cwd
  * \group path-api
  * \desc Docs!
@@ -115,7 +115,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_is_dir
  * \group path-api
  * \desc Docs!
@@ -142,7 +142,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(const sll_string_t*const* p
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_list_dir
  * \group path-api
  * \desc Docs!
@@ -155,7 +155,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_mkdir
  * \group path-api
  * \desc Docs!
@@ -169,7 +169,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdi
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_recursive_list_dir
  * \group path-api
  * \desc Docs!
@@ -196,7 +196,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(const sll_string_t* pat
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_set_cwd
  * \group json-api
  * \desc Docs!
@@ -209,7 +209,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_path_size
  * \group path-api
  * \desc Docs!

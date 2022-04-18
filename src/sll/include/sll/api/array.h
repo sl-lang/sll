@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_count
  * \group array-api
  * \desc Docs!
@@ -53,7 +53,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_array_length_t sll_api_arra
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_index
  * \group array-api
  * \desc Docs!
@@ -82,7 +82,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_join(const sll_array_t*const* a
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_pop
  * \group array-api
  * \desc Docs!
@@ -149,7 +149,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_reverse(const sll_array_t* arr,
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_array_shift
  * \group array-api
  * \desc Docs!

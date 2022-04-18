@@ -26,7 +26,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_atexit_unregister
  * \api i|b
  * \group atexit-api

@@ -36,7 +36,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_config(sll_array_t* out);
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_vm_get_instruction_count
  * \group vm-api
  * \desc Docs!
@@ -48,7 +48,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_vm_get_instruction_index
  * \group vm-api
  * \desc Docs!
@@ -60,7 +60,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_vm_get_location
  * \group vm-api
  * \desc Docs!
@@ -73,7 +73,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_lo
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_vm_get_ref_count
  * \group vm-api
  * \desc Docs!

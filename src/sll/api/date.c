@@ -70,7 +70,7 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* t
 
 
 
-__SLL_EXTERNAL void sll_date_from_time_ns(sll_size_t time,const sll_time_zone_t* tz,sll_date_t* o){
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* tz,sll_date_t* o){
 	sll_date_from_time(time*1e-9,tz,o);
 }
 

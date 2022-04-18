@@ -23,7 +23,7 @@ __SLL_EXTERNAL extern sll_float_t sll_float_compare_error;
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_float_get_compare_error
  * \group float-api
  * \desc Docs!

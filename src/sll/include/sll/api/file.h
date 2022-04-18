@@ -36,7 +36,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_file_to_handle(sll_file_t* f
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_close
  * \group file-api
  * \desc Docs!
@@ -49,7 +49,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_copy
  * \group file-api
  * \desc Docs!
@@ -63,7 +63,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_copy
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_delete
  * \group file-api
  * \desc Docs!
@@ -76,7 +76,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_dele
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_flush
  * \group file-api
  * \desc Docs!
@@ -89,7 +89,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_flush(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_from_data
  * \group file-api
  * \desc Docs!
@@ -140,7 +140,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_integer_t a);
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_open
  * \group file-api
  * \desc Docs!
@@ -154,7 +154,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_peek
  * \group file-api
  * \desc Docs!
@@ -167,7 +167,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_peek
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_read
  * \group file-api
  * \desc Docs!
@@ -181,7 +181,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_read_char
  * \group file-api
  * \desc Docs!
@@ -194,7 +194,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_rename
  * \group file-api
  * \desc Docs!
@@ -208,7 +208,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rena
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_std_handle
  * \group file-api
  * \desc Docs!
@@ -221,7 +221,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_std_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_file_write
  * \group file-api
  * \desc Docs!

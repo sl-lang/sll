@@ -78,7 +78,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_flo
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_abs
  * \group math-api
  * \desc Docs!
@@ -91,7 +91,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_acos
  * \group math-api
  * \subgroup math-api-inv-trig
@@ -105,7 +105,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_acos(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_acosh
  * \group math-api
  * \subgroup math-api-inv-trig
@@ -119,7 +119,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_acosh(
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_asin
  * \group math-api
  * \subgroup math-api-inv-trig
@@ -133,7 +133,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_asin(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_asinh
  * \group math-api
  * \subgroup math-api-inv-trig
@@ -147,7 +147,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_asinh(
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_atan
  * \group math-api
  * \subgroup math-api-inv-trig
@@ -161,7 +161,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_atan2
  * \group math-api
  * \subgroup math-api-inv-trig
@@ -176,7 +176,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atan2(
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_atanh
  * \group math-api
  * \subgroup math-api-inv-trig
@@ -190,7 +190,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_atanh(
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_cbrt
  * \group math-api
  * \subgroup math-api-exp
@@ -204,7 +204,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cbrt(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_combinations
  * \group math-api
  * \desc Docs!
@@ -218,7 +218,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_comb
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_cos
  * \group math-api
  * \subgroup math-api-trig
@@ -232,7 +232,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cos(sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_cosh
  * \group math-api
  * \subgroup math-api-trig
@@ -246,7 +246,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cosh(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_ceil
  * \group math-api
  * \desc Docs!
@@ -259,7 +259,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_ceil
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_copy_sign
  * \group math-api
  * \desc Docs!
@@ -273,7 +273,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_copy_s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_euler_phi
  * \group math-api
  * \desc Docs!
@@ -286,7 +286,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_eule
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_exp
  * \group math-api
  * \desc Docs!
@@ -299,7 +299,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_exp(sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_factorial
  * \group math-api
  * \desc Docs!
@@ -312,7 +312,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_fact
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_factors
  * \group math-api
  * \desc Docs!
@@ -325,7 +325,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_fact
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_gcd
  * \group math-api
  * \desc Docs!
@@ -339,7 +339,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_gcd(
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_floor
  * \group math-api
  * \desc Docs!
@@ -352,7 +352,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_floo
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_int_log2
  * \group math-api
  * \subgroup math-api-log
@@ -366,7 +366,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_int_pow
  * \group math-api
  * \subgroup math-api-exp
@@ -382,7 +382,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_int_sqrt
  * \group math-api
  * \subgroup math-api-exp
@@ -396,7 +396,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_log
  * \group math-api
  * \subgroup math-api-log
@@ -410,7 +410,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log(sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_log2
  * \group math-api
  * \subgroup math-api-log
@@ -424,7 +424,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log2(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_log10
  * \group math-api
  * \subgroup math-api-log
@@ -438,7 +438,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log10(
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_permutations
  * \group math-api
  * \desc Docs!
@@ -452,7 +452,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_perm
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_pow
  * \group math-api
  * \subgroup math-api-exp
@@ -467,7 +467,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_pow(sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_round
  * \group math-api
  * \desc Docs!
@@ -480,7 +480,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_roun
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_sin
  * \group math-api
  * \subgroup math-api-trig
@@ -494,7 +494,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sin(sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_sinh
  * \group math-api
  * \subgroup math-api-trig
@@ -508,7 +508,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sinh(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_sqrt
  * \group math-api
  * \subgroup math-api-exp
@@ -522,7 +522,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sqrt(s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_tan
  * \group math-api
  * \subgroup math-api-trig
@@ -536,7 +536,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tan(sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_math_tanh
  * \group math-api
  * \subgroup math-api-trig

@@ -153,7 +153,7 @@ __SLL_EXTERNAL void sll_encode_string(sll_file_t* f,const sll_string_t* s);
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_serial_decode_float
  * \group serial-api
  * \desc Docs!
@@ -166,7 +166,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_deco
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_serial_decode_integer
  * \group serial-api
  * \desc Docs!
@@ -179,7 +179,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_serial_decod
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_serial_decode_signed_integer
  * \group serial-api
  * \desc Docs!
@@ -192,7 +192,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_de
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_serial_decode_object
  * \group serial-api
  * \desc Docs!
@@ -205,7 +205,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_de
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_serial_decode_string
  * \group serial-api
  * \desc Docs!

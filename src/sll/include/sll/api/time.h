@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_time_current
  * \group time-api
  * \desc Docs!
@@ -24,7 +24,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_curren
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_time_current_ns
  * \group time-api
  * \desc Docs!
@@ -36,7 +36,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_time_t sll_api_time_current
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_time_sleep
  * \group time-api
  * \desc Docs!
@@ -49,7 +49,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_sleep(
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_time_sleep_ns
  * \group time-api
  * \desc Docs!

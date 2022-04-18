@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_checksum
  * \group string-api
  * \desc Docs!
@@ -39,7 +39,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* ar
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_count
  * \group string-api
  * \desc Docs!
@@ -53,7 +53,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_count_left
  * \group string-api
  * \desc Docs!
@@ -67,7 +67,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_count_right
  * \group string-api
  * \desc Docs!
@@ -81,7 +81,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_ends
  * \group string-api
  * \desc Docs!
@@ -123,7 +123,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* 
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_index
  * \group string-api
  * \desc Docs!
@@ -138,7 +138,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_index_list
  * \group string-api
  * \desc Docs!
@@ -153,7 +153,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_index_reverse
  * \group string-api
  * \desc Docs!
@@ -167,7 +167,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_index_reverse_list
  * \group string-api
  * \desc Docs!
@@ -269,7 +269,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_reverse(const sll_string_t* st
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_secure_equal
  * \group string-api
  * \desc Docs!
@@ -297,7 +297,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(const sll_string_t* str,
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_string_starts
  * \group string-api
  * \desc Docs!

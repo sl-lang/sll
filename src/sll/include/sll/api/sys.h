@@ -46,7 +46,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
@@ -58,7 +58,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_a
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_cpu_count
  * \group sys-api
  * \desc Docs!
@@ -118,7 +118,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_platform(sll_string_t* out);
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
@@ -142,7 +142,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out);
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_sys_load_library
  * \group sys-api
  * \desc Docs!

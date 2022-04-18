@@ -25,7 +25,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* no_obj,sl
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_weakref_create
  * \group weakref-api
  * \desc Docs!
@@ -38,7 +38,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_api_we
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_weakref_delete
  * \group weakref-api
  * \desc Docs!
@@ -51,7 +51,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_dele
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_weakref_get
  * \group weakref-api
  * \desc Docs!

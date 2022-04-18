@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_random_get_float
  * \group random-api
  * \desc Docs!
@@ -26,7 +26,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_random_get_int
  * \group random-api
  * \desc Docs!

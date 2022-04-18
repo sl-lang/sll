@@ -12,7 +12,7 @@
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_create
  * \group thread-api
  * \desc Docs!
@@ -26,7 +26,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_create_barrier
  * \group thread-api
  * \desc Docs!
@@ -38,7 +38,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_create_lock
  * \group thread-api
  * \desc Docs!
@@ -50,7 +50,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_create_semaphore
  * \group thread-api
  * \desc Docs!
@@ -63,7 +63,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_delete
  * \group thread-api
  * \desc Docs!
@@ -76,7 +76,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_delete_barrier
  * \group thread-api
  * \desc Docs!
@@ -89,7 +89,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_delete_lock
  * \group thread-api
  * \desc Docs!
@@ -102,7 +102,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_delete_semaphore
  * \group thread-api
  * \desc Docs!
@@ -128,7 +128,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_thread_i
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_increase_barrier
  * \group thread-api
  * \desc Docs!
@@ -141,7 +141,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_in
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_release_lock
  * \group thread-api
  * \desc Docs!
@@ -154,7 +154,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_relea
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_release_semaphore
  * \group thread-api
  * \desc Docs!
@@ -167,7 +167,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_relea
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_reset_barrier
  * \group thread-api
  * \desc Docs!
@@ -180,7 +180,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_re
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_restart
  * \group thread-api
  * \desc Docs!
@@ -193,7 +193,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_resta
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_thread_suspend
  * \group thread-api
  * \desc Docs!
