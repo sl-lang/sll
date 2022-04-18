@@ -58,11 +58,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
  * \group string-api
  * \desc Docs!
  * \api sc|i
- * \arg sll_string_t* a
- * \arg sll_char_t b
+ * \arg sll_string_t* str
+ * \arg sll_char_t chr
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_left(sll_string_t* a,sll_char_t b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_left(sll_string_t* str,sll_char_t chr);
 
 
 
@@ -72,11 +72,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
  * \group string-api
  * \desc Docs!
  * \api sc|i
- * \arg sll_string_t* a
- * \arg sll_char_t b
+ * \arg sll_string_t* str
+ * \arg sll_char_t chr
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_right(sll_string_t* a,sll_char_t b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_right(sll_string_t* str,sll_char_t chr);
 
 
 

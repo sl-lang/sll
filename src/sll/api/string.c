@@ -319,14 +319,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_left(sll_string_t* a,sll_char_t b){
-	return sll_string_count_left(a,b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_left(sll_string_t* str,sll_char_t chr){
+	return sll_string_count_left(str,chr);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_right(sll_string_t* a,sll_char_t b){
-	return sll_string_count_right(a,b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_count_right(sll_string_t* str,sll_char_t chr){
+	return sll_string_count_right(str,chr);
 }
 
 
