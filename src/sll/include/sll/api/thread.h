@@ -17,11 +17,11 @@
  * \group thread-api
  * \desc Docs!
  * \api ia|i
- * \arg sll_integer_t a
- * \arg sll_array_t* out
+ * \arg sll_integer_t fn
+ * \arg sll_array_t* args
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create(sll_integer_t a,sll_array_t* b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create(sll_integer_t fn,sll_array_t* args);
 
 
 
@@ -55,10 +55,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
  * \group thread-api
  * \desc Docs!
  * \api i|i
- * \arg sll_integer_t a
+ * \arg sll_semaphore_counter_t cnt
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_semaphore(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_semaphore(sll_semaphore_counter_t cnt);
 
 
 
@@ -68,10 +68,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
  * \group thread-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_thread_index_t tid
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete(sll_thread_index_t tid);
 
 
 
@@ -81,10 +81,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
  * \group thread-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_barrier_index_t bid
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_barrier(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_barrier(sll_barrier_index_t bid);
 
 
 
@@ -94,10 +94,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
  * \group thread-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_lock_index_t lid
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_lock(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_lock(sll_lock_index_t lid);
 
 
 
@@ -107,10 +107,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
  * \group thread-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_semaphore_index_t sid
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_semaphore(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_semaphore(sll_semaphore_index_t sid);
 
 
 
@@ -120,10 +120,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
  * \group thread-api
  * \desc Docs!
  * \api i|a
- * \arg sll_integer_t a
+ * \arg sll_thread_index_t tid
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_integer_t a,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_thread_index_t tid,sll_array_t* out);
 
 
 
@@ -133,10 +133,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_integer_
  * \group thread-api
  * \desc Docs!
  * \api i|i
- * \arg sll_integer_t a
+ * \arg sll_barrier_index_t bid
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_increase_barrier(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_increase_barrier(sll_barrier_index_t bid);
 
 
 
@@ -146,10 +146,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_in
  * \group thread-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_lock_index_t lid
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_lock(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_lock(sll_lock_index_t lid);
 
 
 
@@ -159,10 +159,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_relea
  * \group thread-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_semaphore_index_t sid
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_semaphore(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_semaphore(sll_semaphore_index_t sid);
 
 
 
@@ -172,10 +172,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_relea
  * \group thread-api
  * \desc Docs!
  * \api i|i
- * \arg sll_integer_t a
+ * \arg sll_barrier_index_t bid
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_reset_barrier(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_reset_barrier(sll_barrier_index_t bid);
 
 
 
@@ -185,10 +185,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_re
  * \group thread-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_thread_index_t tid
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_restart(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_restart(sll_thread_index_t tid);
 
 
 
@@ -198,10 +198,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_resta
  * \group thread-api
  * \desc Docs!
  * \api i|b
- * \arg sll_integer_t a
+ * \arg sll_thread_index_t tid
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_suspend(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_suspend(sll_thread_index_t tid);
 
 
 
