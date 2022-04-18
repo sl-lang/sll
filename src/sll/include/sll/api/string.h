@@ -128,12 +128,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(sll_string_t* str,sl
  * \group string-api
  * \desc Docs!
  * \api syi|i
- * \arg sll_string_t* a
- * \arg sll_char_string_t* b
- * \arg sll_integer_t c
+ * \arg sll_string_t* str
+ * \arg sll_char_string_t* substr
+ * \arg sll_string_length_t start
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index(sll_string_t* a,sll_char_string_t* b,sll_integer_t c);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index(sll_string_t* str,sll_char_string_t* substr,sll_string_length_t start);
 
 
 

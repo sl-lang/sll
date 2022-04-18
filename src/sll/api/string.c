@@ -361,8 +361,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(sll_string_t* str,sl
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index(sll_string_t* a,sll_char_string_t* b,sll_integer_t c){
-	sll_string_length_t o=(b->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(a,b->dt.c,0,(sll_string_length_t)c):sll_string_index(a,b->dt.s,(sll_string_length_t)c));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index(sll_string_t* str,sll_char_string_t* substr,sll_string_length_t start){
+	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->dt.c,0,start):sll_string_index(str,substr->dt.s,start));
 	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
 }
 
