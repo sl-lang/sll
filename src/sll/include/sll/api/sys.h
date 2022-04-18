@@ -62,10 +62,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_a
  * \name sll_api_sys_get_cpu_count
  * \group sys-api
  * \desc Docs!
- * \api |i
- * \ret sll_integer_t
+ * \api |W
+ * \ret sll_cpu_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_sys_get_cpu_count(void);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_cpu_t sll_api_sys_get_cpu_count(void);
 
 
 
@@ -122,7 +122,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_platform(sll_string_t* out);
  * \name sll_api_sys_get_sandbox_flags
  * \group sys-api
  * \desc Docs!
- * \api |i
+ * \api |Q
  * \ret sll_sandbox_flags_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_sandbox_flags_t sll_api_sys_get_sandbox_flags(void);

@@ -16,7 +16,7 @@
  * \name sll_api_string_checksum
  * \group string-api
  * \desc Docs!
- * \api s|I
+ * \api s|D
  * \arg const sll_string_t* str
  * \ret sll_string_checksum_t
  */

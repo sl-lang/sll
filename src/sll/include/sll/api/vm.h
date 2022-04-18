@@ -40,10 +40,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_config(sll_array_t* out);
  * \name sll_api_vm_get_instruction_count
  * \group vm-api
  * \desc Docs!
- * \api |i
- * \ret sll_integer_t
+ * \api |D
+ * \ret sll_instruction_index_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_instruction_count(void);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api_vm_get_instruction_count(void);
 
 
 
@@ -52,10 +52,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_in
  * \name sll_api_vm_get_instruction_index
  * \group vm-api
  * \desc Docs!
- * \api |i
- * \ret sll_integer_t
+ * \api |D
+ * \ret sll_instruction_index_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_instruction_index(void);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api_vm_get_instruction_index(void);
 
 
 
@@ -77,11 +77,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_lo
  * \name sll_api_vm_get_ref_count
  * \group vm-api
  * \desc Docs!
- * \api o|i
+ * \api o|D
  * \arg sll_object_t* obj
- * \ret sll_integer_t
+ * \ret sll_reference_count_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_ref_count(sll_object_t* obj);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_vm_get_ref_count(sll_object_t* obj);
 
 
 

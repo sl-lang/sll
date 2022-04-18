@@ -29,7 +29,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* no_obj,sl
  * \name sll_api_weakref_create
  * \group weakref-api
  * \desc Docs!
- * \api o|i
+ * \api o|Q
  * \arg sll_object_t* obj
  * \ret sll_weak_reference_t
  */

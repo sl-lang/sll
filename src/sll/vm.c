@@ -1,9 +1,9 @@
+#include <sll/_internal/api_call.h>
 #include <sll/_internal/barrier.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/lock.h>
-#include <sll/_internal/parse_args.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/semaphore.h>
 #include <sll/_internal/stack.h>
@@ -28,7 +28,6 @@
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
-#include <sll/parse_args.h>
 #include <sll/platform/memory.h>
 #include <sll/sandbox.h>
 #include <sll/scheduler.h>
@@ -166,64 +165,6 @@ static sll_size_t _vm_instruction_count=0;
 
 __SLL_EXTERNAL const sll_runtime_data_t* sll_current_runtime_data=NULL;
 __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
-
-
-
-static sll_object_t* _call_internal(sll_function_index_t fn,sll_object_t*const* al,sll_arg_count_t all){
-	const sll_internal_function_t* dt=sll_current_runtime_data->ift->dt+fn;
-	void* bf=sll_allocate_stack(dt->_arg_sz);
-	arg_output_t ao={
-		ARG_OUTPUT_TYPE_ARRAY,
-		{
-			.arr={
-				bf,
-				dt->_arg_sz
-			}
-		}
-	};
-	sll_arg_state_t st=_parse_args_raw(dt->fmt,al,all,&ao);
-	api_return_value_t ret;
-	sll_float_t ret_f=_call_api_func(&ret,dt->_regs,bf,dt->_arg_cnt,dt->p);
-	sll_object_t* o;
-	switch (dt->ret){
-		case 'b':
-			o=SLL_ACQUIRE_STATIC_INT(ret.b);
-			break;
-		case 'I':
-			ret.i&=0xffffffff;
-		case 'i':
-			o=sll_int_to_object(ret.i);
-			break;
-		case 'f':
-			o=sll_float_to_object(ret_f);
-			break;
-		case 'c':
-			o=SLL_FROM_CHAR(ret.c);
-			break;
-		case 'd':
-			SLL_UNIMPLEMENTED();
-		case 's':
-			o=STRING_TO_OBJECT_NOCOPY(&(ret.s));
-			break;
-		case 'a':
-			o=sll_array_to_object_nocopy(&(ret.a));
-			break;
-		case 'm':
-			o=sll_map_to_object_nocopy(&(ret.m));
-			break;
-		case 'o':
-			o=ret.o;
-			break;
-		case 'v':
-			o=SLL_ACQUIRE_STATIC_INT(0);
-			break;
-		default:
-			SLL_UNREACHABLE();
-	}
-	sll_free_args(st);
-	sll_deallocate(bf);
-	return o;
-}
 
 
 
@@ -895,7 +836,7 @@ _cleanup_jump_table:;
 						if (i<0){
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
-								sll_object_t* n=_call_internal(j,thr->stack+thr->si-ai->dt.ac,ai->dt.ac);
+								sll_object_t* n=_call_api_func(j,thr->stack+thr->si-ai->dt.ac,ai->dt.ac);
 								for (sll_arg_count_t k=0;k<ai->dt.ac;k++){
 									thr->si--;
 									GC_RELEASE(*(thr->stack+thr->si));
@@ -933,7 +874,7 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						sll_object_t* n=_call_internal(i,NULL,0);
+						sll_object_t* n=_call_api_func(i,NULL,0);
 						*(thr->stack+thr->si)=n;
 						thr->si++;
 						break;
@@ -951,7 +892,7 @@ _cleanup_jump_table:;
 				if (ai->dt.i<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->dt.i);
 					if (i<sll_current_runtime_data->ift->l){
-						sll_object_t* n=_call_internal(i,thr->stack+thr->si-1,1);
+						sll_object_t* n=_call_api_func(i,thr->stack+thr->si-1,1);
 						GC_RELEASE(*(thr->stack+thr->si-1));
 						*(thr->stack+thr->si-1)=n;
 						break;
@@ -977,7 +918,7 @@ _cleanup_jump_table:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
 								GC_RELEASE(*(thr->stack+thr->si-1));
-								sll_object_t* n=_call_internal(j,tos->dt.a.v,tos->dt.a.l);
+								sll_object_t* n=_call_api_func(j,tos->dt.a.v,tos->dt.a.l);
 								GC_RELEASE(tos);
 								*(thr->stack+thr->si-1)=n;
 								break;

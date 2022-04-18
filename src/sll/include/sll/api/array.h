@@ -16,7 +16,7 @@
  * \name sll_api_array_count
  * \group array-api
  * \desc Docs!
- * \api ao|I
+ * \api ao|D
  * \arg const sll_array_t* arr
  * \arg sll_object_t* elem
  * \ret sll_array_length_t

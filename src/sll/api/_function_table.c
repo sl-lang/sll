@@ -209,7 +209,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_count"),
 		sll_api_array_count,
-		SLL_CHAR("ao|I")
+		SLL_CHAR("ao|D")
 	},
 	{
 		SLL_CHAR("sll:array_create"),
@@ -674,7 +674,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:path_exists"),
 		sll_api_path_exists,
-		SLL_CHAR("s|i")
+		SLL_CHAR("s|b")
 	},
 	{
 		SLL_CHAR("sll:path_get_cwd"),
@@ -684,7 +684,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:path_is_dir"),
 		sll_api_path_is_dir,
-		SLL_CHAR("s|i")
+		SLL_CHAR("s|b")
 	},
 	{
 		SLL_CHAR("sll:path_join"),
@@ -779,7 +779,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:serial_decode_integer"),
 		sll_api_serial_decode_integer,
-		SLL_CHAR("i|i")
+		SLL_CHAR("i|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_object"),
@@ -829,7 +829,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_checksum"),
 		sll_api_string_checksum,
-		SLL_CHAR("s|I")
+		SLL_CHAR("s|D")
 	},
 	{
 		SLL_CHAR("sll:string_convert"),
@@ -969,7 +969,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:struct_double_to_bits"),
 		sll_api_struct_double_to_bits,
-		SLL_CHAR("f|i")
+		SLL_CHAR("f|Q")
 	},
 	{
 		SLL_CHAR("sll:struct_float_from_bits"),
@@ -979,7 +979,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:struct_float_to_bits"),
 		sll_api_struct_float_to_bits,
-		SLL_CHAR("f|i")
+		SLL_CHAR("f|D")
 	},
 	{
 		SLL_CHAR("sll:sys_get_args"),
@@ -989,7 +989,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:sys_get_cpu_count"),
 		sll_api_sys_get_cpu_count,
-		SLL_CHAR("|i")
+		SLL_CHAR("|W")
 	},
 	{
 		SLL_CHAR("sll:sys_get_env"),
@@ -1014,7 +1014,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:sys_get_sandbox_flags"),
 		sll_api_sys_get_sandbox_flags,
-		SLL_CHAR("|i")
+		SLL_CHAR("|Q")
 	},
 	{
 		SLL_CHAR("sll:sys_get_version"),
@@ -1124,7 +1124,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:time_current_ns"),
 		sll_api_time_current_ns,
-		SLL_CHAR("|i")
+		SLL_CHAR("|Q")
 	},
 	{
 		SLL_CHAR("sll:time_sleep"),
@@ -1134,7 +1134,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:time_sleep_ns"),
 		sll_api_time_sleep_ns,
-		SLL_CHAR("x|i")
+		SLL_CHAR("x|Q")
 	},
 	{
 		SLL_CHAR("sll:vm_get_config"),
@@ -1144,12 +1144,12 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:vm_get_instruction_count"),
 		sll_api_vm_get_instruction_count,
-		SLL_CHAR("|i")
+		SLL_CHAR("|D")
 	},
 	{
 		SLL_CHAR("sll:vm_get_instruction_index"),
 		sll_api_vm_get_instruction_index,
-		SLL_CHAR("|i")
+		SLL_CHAR("|D")
 	},
 	{
 		SLL_CHAR("sll:vm_get_location"),
@@ -1159,7 +1159,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:vm_get_ref_count"),
 		sll_api_vm_get_ref_count,
-		SLL_CHAR("o|i")
+		SLL_CHAR("o|D")
 	},
 	{
 		SLL_CHAR("sll:weakref__init"),
@@ -1169,7 +1169,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:weakref_create"),
 		sll_api_weakref_create,
-		SLL_CHAR("o|i")
+		SLL_CHAR("o|Q")
 	},
 	{
 		SLL_CHAR("sll:weakref_delete"),

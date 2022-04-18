@@ -94,11 +94,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(const sll_string_t* pat
  * \name sll_api_path_exists
  * \group path-api
  * \desc Docs!
- * \api s|i
+ * \api s|b
  * \arg const sll_string_t* path
- * \ret sll_integer_t
+ * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_exists(const sll_string_t* path);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_path_exists(const sll_string_t* path);
 
 
 
@@ -119,11 +119,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_
  * \name sll_api_path_is_dir
  * \group path-api
  * \desc Docs!
- * \api s|i
+ * \api s|b
  * \arg const sll_string_t* path
- * \ret sll_integer_t
+ * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_is_dir(const sll_string_t* path);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_path_is_dir(const sll_string_t* path);
 
 
 

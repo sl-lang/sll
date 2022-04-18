@@ -1,7 +1,6 @@
 #include <sll/_internal/api.h>
+#include <sll/_internal/api_call.h>
 #include <sll/_internal/common.h>
-#include <sll/_internal/parse_args.h>
-#include <sll/_internal/platform.h>
 #include <sll/_internal/string.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -15,23 +14,7 @@
 static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_t* o){
 	sll_string_from_pointer(nm,&(o->nm));
 	o->p=fn;
-	sll_string_length_t off=0;
-	while (*(fmt+off)&&*(fmt+off)!='|'){
-		off++;
-	}
-	o->fmt=sll_allocate(off+1);
-	sll_copy_data(fmt,off,o->fmt);
-	o->fmt[off]=0;
-	o->ret='v';
-	fmt+=off;
-	while (*fmt){
-		if (*fmt=='b'||*fmt=='I'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
-			o->ret=*fmt;
-			break;
-		}
-		fmt++;
-	}
-	o->_arg_cnt=_parse_arg_count(o->fmt,o->ret,&(o->_regs),&(o->_arg_sz));
+	_parse_api_call_format(fmt,o);
 }
 
 

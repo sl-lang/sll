@@ -372,13 +372,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_deco
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_integer(sll_integer_t fh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_serial_decode_integer(sll_integer_t fh){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return 0;
 	}
 	sll_error_t err;
 	sll_size_t o=sll_decode_integer(sll_file_from_handle(fh),&err);
-	return (err==SLL_NO_ERROR?0:(sll_integer_t)o);
+	return (err==SLL_NO_ERROR?o:0);
 }
 
 

@@ -13,7 +13,7 @@ section .text
 ; r9d - Argument count
 ; r10 - Stack pointer for arguments
 ; r11 - Function pointer
-__SLL_EXPORT _call_api_func
+__SLL_EXPORT _call_api_func_assembly
 	push rbx
 	push rsi
 	push rbp
