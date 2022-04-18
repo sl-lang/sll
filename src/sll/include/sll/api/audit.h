@@ -29,12 +29,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t cb);
  * \group array-api
  * \desc Docs!
  * \api sso!|v
- * \arg sll_string_t* name
- * \arg sll_string_t* fmt
+ * \arg const sll_string_t* name
+ * \arg const sll_string_t* fmt
  * \arg sll_object_t*const* args
  * \arg sll_arg_count_t len
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(sll_string_t* name,sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(const sll_string_t* name,const sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len);
 
 
 

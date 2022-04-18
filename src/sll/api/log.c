@@ -26,12 +26,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_default(sll_flags_t flags,sll
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_file(sll_string_t* file,sll_flags_t flags,sll_bool_t state){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_file(const sll_string_t* file,sll_flags_t flags,sll_bool_t state){
 	sll_set_log_flags(file->v,NULL,flags,state);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_function(sll_string_t* file,sll_string_t* func,sll_flags_t flags,sll_bool_t state){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_function(const sll_string_t* file,const sll_string_t* func,sll_flags_t flags,sll_bool_t state){
 	sll_set_log_flags(file->v,func->v,flags,state);
 }

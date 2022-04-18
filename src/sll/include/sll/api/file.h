@@ -54,11 +54,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(s
  * \group file-api
  * \desc Docs!
  * \api ss|i
- * \arg sll_string_t* src
- * \arg sll_string_t* dst
+ * \arg const sll_string_t* src
+ * \arg const sll_string_t* dst
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_copy(sll_string_t* src,sll_string_t* dst);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_copy(const sll_string_t* src,const sll_string_t* dst);
 
 
 
@@ -68,10 +68,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_copy
  * \group file-api
  * \desc Docs!
  * \api s|i
- * \arg sll_string_t* path
+ * \arg const sll_string_t* path
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_delete(sll_string_t* path);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_delete(const sll_string_t* path);
 
 
 
@@ -94,11 +94,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_flush(s
  * \group file-api
  * \desc Docs!
  * \api si|i
- * \arg sll_string_t* data
+ * \arg const sll_string_t* data
  * \arg sll_file_flags_t flags
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_from_data(sll_string_t* data,sll_file_flags_t flags);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_from_data(const sll_string_t* data,sll_file_flags_t flags);
 
 
 
@@ -145,11 +145,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_integer_t a);
  * \group file-api
  * \desc Docs!
  * \api si|i
- * \arg sll_string_t* path
+ * \arg const sll_string_t* path
  * \arg sll_file_flags_t flags
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open(sll_string_t* path,sll_file_flags_t flags);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open(const sll_string_t* path,sll_file_flags_t flags);
 
 
 
@@ -199,11 +199,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read
  * \group file-api
  * \desc Docs!
  * \api ss|i
- * \arg sll_string_t* src
- * \arg sll_string_t* dst
+ * \arg const sll_string_t* src
+ * \arg const sll_string_t* dst
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rename(sll_string_t* src,sll_string_t* dst);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rename(const sll_string_t* src,const sll_string_t* dst);
 
 
 
@@ -227,10 +227,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_std_
  * \desc Docs!
  * \api is|i
  * \arg sll_integer_t fh
- * \arg sll_string_t* data
+ * \arg const sll_string_t* data
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_write(sll_integer_t fh,sll_string_t* data);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_write(sll_integer_t fh,const sll_string_t* data);
 
 
 

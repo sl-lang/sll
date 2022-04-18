@@ -29,7 +29,7 @@ static const sll_char_t _base64_index_map[256]={
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode(sll_string_t* str){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode(const sll_string_t* str){
 	if (!str->l){
 		return STRING_TO_OBJECT(NULL);
 	}
@@ -103,7 +103,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_de
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_base64_encode(sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_base64_encode(const sll_string_t* str,sll_string_t* out){
 	if (!str->l){
 		SLL_INIT_STRING(out);
 		return;

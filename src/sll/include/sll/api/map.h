@@ -18,9 +18,9 @@
  * \desc Docs!
  * \api mm|v
  * \arg sll_map_t* map
- * \arg sll_map_t* new
+ * \arg const sll_map_t* new
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* map,sll_map_t* new);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* map,const sll_map_t* new);
 
 
 
