@@ -69,7 +69,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_sear
 					sp->dt+i,
 					nm
 				};
-				sll_api_path_join((sll_string_t*const*)dt,2,o);
+				sll_api_path_join(dt,2,o);
 				return 1;
 			}
 		}
