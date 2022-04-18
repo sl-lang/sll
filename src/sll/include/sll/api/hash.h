@@ -190,14 +190,14 @@ __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offs
  * \group hash-api
  * \desc Docs!
  * \api iiiis|a
- * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \arg sll_integer_t c
- * \arg sll_integer_t d
+ * \arg __SLL_U32 a
+ * \arg __SLL_U32 b
+ * \arg __SLL_U32 c
+ * \arg __SLL_U32 d
  * \arg sll_string_t* e
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_md5(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_string_t* e,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_md5(__SLL_U32 a,__SLL_U32 b,__SLL_U32 c,__SLL_U32 d,sll_string_t* e,sll_array_t* out);
 
 
 
@@ -207,15 +207,15 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_md5(sll_integer_t a,sll_integer_
  * \group hash-api
  * \desc Docs!
  * \api iiiiis|a
- * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \arg sll_integer_t c
- * \arg sll_integer_t d
- * \arg sll_integer_t e
+ * \arg __SLL_U32 a
+ * \arg __SLL_U32 b
+ * \arg __SLL_U32 c
+ * \arg __SLL_U32 d
+ * \arg __SLL_U32 e
  * \arg sll_string_t* f
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha1(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_string_t* f,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha1(__SLL_U32 a,__SLL_U32 b,__SLL_U32 c,__SLL_U32 d,__SLL_U32 e,sll_string_t* f,sll_array_t* out);
 
 
 
@@ -225,18 +225,18 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha1(sll_integer_t a,sll_integer
  * \group hash-api
  * \desc Docs!
  * \api iiiiiiiis|a
- * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \arg sll_integer_t c
- * \arg sll_integer_t d
- * \arg sll_integer_t e
- * \arg sll_integer_t f
- * \arg sll_integer_t g
- * \arg sll_integer_t h
+ * \arg __SLL_U32 a
+ * \arg __SLL_U32 b
+ * \arg __SLL_U32 c
+ * \arg __SLL_U32 d
+ * \arg __SLL_U32 e
+ * \arg __SLL_U32 f
+ * \arg __SLL_U32 g
+ * \arg __SLL_U32 h
  * \arg sll_string_t* i
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(__SLL_U32 a,__SLL_U32 b,__SLL_U32 c,__SLL_U32 d,__SLL_U32 e,__SLL_U32 f,__SLL_U32 g,__SLL_U32 h,sll_string_t* i,sll_array_t* out);
 
 
 
@@ -246,18 +246,18 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(sll_integer_t a,sll_integ
  * \group hash-api
  * \desc Docs!
  * \api iiiiiiiis|a
- * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \arg sll_integer_t c
- * \arg sll_integer_t d
- * \arg sll_integer_t e
- * \arg sll_integer_t f
- * \arg sll_integer_t g
- * \arg sll_integer_t h
+ * \arg __SLL_U64 a
+ * \arg __SLL_U64 b
+ * \arg __SLL_U64 c
+ * \arg __SLL_U64 d
+ * \arg __SLL_U64 e
+ * \arg __SLL_U64 f
+ * \arg __SLL_U64 g
+ * \arg __SLL_U64 h
  * \arg sll_string_t* i
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f,sll_integer_t g,sll_integer_t h,sll_string_t* i,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(__SLL_U64 a,__SLL_U64 b,__SLL_U64 c,__SLL_U64 d,__SLL_U64 e,__SLL_U64 f,__SLL_U64 g,__SLL_U64 h,sll_string_t* i,sll_array_t* out);
 
 
 
