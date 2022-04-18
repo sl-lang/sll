@@ -17,11 +17,11 @@
  * \group random-api
  * \desc Docs!
  * \api ff|f
- * \arg sll_float_t a
- * \arg sll_float_t b
+ * \arg sll_float_t min
+ * \arg sll_float_t max
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_float(sll_float_t a,sll_float_t b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_float(sll_float_t min,sll_float_t max);
 
 
 
@@ -31,11 +31,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_
  * \group random-api
  * \desc Docs!
  * \api ii|i
- * \arg sll_integer_t a
- * \arg sll_integer_t b
+ * \arg sll_integer_t min
+ * \arg sll_integer_t max
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_get_int(sll_integer_t a,sll_integer_t b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_get_int(sll_integer_t min,sll_integer_t max);
 
 
 
@@ -45,12 +45,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_ge
  * \group random-api
  * \desc Docs!
  * \api icc|s
- * \arg sll_integer_t a
- * \arg sll_char_t b
- * \arg sll_char_t c
+ * \arg sll_string_length_t len
+ * \arg sll_char_t min
+ * \arg sll_char_t max
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_random_get_string(sll_integer_t a,sll_char_t b,sll_char_t c,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_random_get_string(sll_string_length_t len,sll_char_t min,sll_char_t max,sll_string_t* out);
 
 
 
