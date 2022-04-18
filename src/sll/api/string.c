@@ -495,30 +495,30 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(sll_string_t* st
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(sll_string_t* a,sll_string_t* out){
-	sll_string_title_case(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(sll_string_t* str,sll_string_t* out){
+	sll_string_title_case(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim(sll_string_t* a,sll_string_t* out){
-	sll_string_trim(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim(sll_string_t* str,sll_string_t* out){
+	sll_string_trim(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(sll_string_t* a,sll_string_t* out){
-	sll_string_trim_left(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(sll_string_t* str,sll_string_t* out){
+	sll_string_trim_left(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(sll_string_t* a,sll_string_t* out){
-	sll_string_trim_right(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(sll_string_t* str,sll_string_t* out){
+	sll_string_trim_right(str,out);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_upper_case(sll_string_t* a,sll_string_t* out){
-	sll_string_upper_case(a,out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_upper_case(sll_string_t* str,sll_string_t* out){
+	sll_string_upper_case(str,out);
 }

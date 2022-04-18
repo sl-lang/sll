@@ -147,7 +147,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_platform(sll_string_t* out){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_sys_get_sandbox_flags(void){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_sandbox_flags_t sll_api_sys_get_sandbox_flags(void){
 	return sll_get_sandbox_flags();
 }
 
@@ -163,14 +163,14 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(sll_string_t* a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||a->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(sll_string_t* name,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||name->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
-	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("s"),a);
+	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("s"),name);
 	sll_string_length_t lib_fp=sll_path_split(sll_library_file_path);
-	sll_string_length_t src_nm_off=sll_path_split(a);
-	sll_string_length_t fpl=lib_fp+STATIC_STRING_LEN(LIBRARY_DIRECTORY)+a->l-src_nm_off+STATIC_STRING_LEN(LIBRARY_EXTENSION);
+	sll_string_length_t src_nm_off=sll_path_split(name);
+	sll_string_length_t fpl=lib_fp+STATIC_STRING_LEN(LIBRARY_DIRECTORY)+name->l-src_nm_off+STATIC_STRING_LEN(LIBRARY_EXTENSION);
 	if (fpl>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
@@ -180,8 +180,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 	sll_copy_data(sll_library_file_path->v,fp_off,fp.v);
 	sll_copy_data(LIBRARY_DIRECTORY,STATIC_STRING_LEN(LIBRARY_DIRECTORY),fp.v+fp_off);
 	fp_off+=STATIC_STRING_LEN(LIBRARY_DIRECTORY);
-	sll_copy_data(a->v+src_nm_off,a->l-src_nm_off,fp.v+fp_off);
-	fp_off+=a->l-src_nm_off;
+	sll_copy_data(name->v+src_nm_off,name->l-src_nm_off,fp.v+fp_off);
+	fp_off+=name->l-src_nm_off;
 	sll_copy_data(LIBRARY_EXTENSION,STATIC_STRING_LEN(LIBRARY_EXTENSION),fp.v+fp_off);
 	sll_string_calculate_checksum(&fp);
 	if (!sll_platform_path_exists(fp.v)){
@@ -194,13 +194,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 			return 1;
 		}
 	}
-	if (b){
+	if (sz){
 		sll_file_descriptor_t fd=sll_platform_file_open(fp.v,SLL_FILE_FLAG_READ,NULL);
 		if (fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 			return 0;
 		}
-		sll_size_t sz=sll_platform_file_size(fd,NULL);
-		if (sz==SLL_NO_FILE_SIZE||sz!=(sll_size_t)b){
+		sll_size_t f_sz=sll_platform_file_size(fd,NULL);
+		if (f_sz==SLL_NO_FILE_SIZE||f_sz!=sz){
 			sll_platform_file_close(fd);
 			return 0;
 		}
@@ -231,7 +231,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 		tmp[tmp_off+6]=(sz>>5)&0xff;
 		tmp[tmp_off+7]=(sz<<3)&0xff;
 		sll_hash_sha256(&sha,tmp,(off<56?64:128));
-		if (((((__SLL_U64)sha.a)<<32)|sha.b)!=((__SLL_U64)c)||((((__SLL_U64)sha.c)<<32)|sha.d)!=((__SLL_U64)d)||((((__SLL_U64)sha.e)<<32)|sha.f)!=((__SLL_U64)e)||((((__SLL_U64)sha.g)<<32)|sha.h)!=((__SLL_U64)f)){
+		if (((((__SLL_U64)sha.a)<<32)|sha.b)!=h0||((((__SLL_U64)sha.c)<<32)|sha.d)!=h1||((((__SLL_U64)sha.e)<<32)|sha.f)!=h2||((((__SLL_U64)sha.g)<<32)|sha.h)!=h3){
 			return 0;
 		}
 	}
@@ -261,25 +261,25 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(sll_string_t* a){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(sll_string_t* key){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
-		sll_audit(SLL_CHAR("sll.sys.env.delete"),SLL_CHAR("s"),a);
-		sll_remove_environment_variable(a);
+		sll_audit(SLL_CHAR("sll.sys.env.delete"),SLL_CHAR("s"),key);
+		sll_remove_environment_variable(key);
 	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_integer_t a){
-	sll_audit(SLL_CHAR("sll.sys.sandbox.set"),SLL_CHAR("u"),(sll_sandbox_flag_t)a);
-	sll_set_sandbox_flag((sll_sandbox_flag_t)a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag_t flag){
+	sll_audit(SLL_CHAR("sll.sys.sandbox.set"),SLL_CHAR("u"),flag);
+	sll_set_sandbox_flag(flag);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(sll_string_t* a,sll_string_t* b){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(sll_string_t* key,sll_string_t* value){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
-		sll_audit(SLL_CHAR("sll.sys.env.set"),SLL_CHAR("ss"),a,b);
-		sll_set_environment_variable(a,b);
+		sll_audit(SLL_CHAR("sll.sys.env.set"),SLL_CHAR("ss"),key,value);
+		sll_set_environment_variable(key,value);
 	}
 }

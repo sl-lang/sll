@@ -123,9 +123,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_platform(sll_string_t* out);
  * \group sys-api
  * \desc Docs!
  * \api |i
- * \ret sll_integer_t
+ * \ret sll_sandbox_flags_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_sys_get_sandbox_flags(void);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_sandbox_flags_t sll_api_sys_get_sandbox_flags(void);
 
 
 
@@ -147,15 +147,15 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out);
  * \group sys-api
  * \desc Docs!
  * \api siiiii|b
- * \arg sll_string_t* a
- * \arg sll_integer_t b
- * \arg sll_integer_t c
- * \arg sll_integer_t d
- * \arg sll_integer_t e
- * \arg sll_integer_t f
+ * \arg sll_string_t* name
+ * \arg sll_size_t sz
+ * \arg __SLL_U64 h0
+ * \arg __SLL_U64 h1
+ * \arg __SLL_U64 h2
+ * \arg __SLL_U64 h3
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(sll_string_t* a,sll_integer_t b,sll_integer_t c,sll_integer_t d,sll_integer_t e,sll_integer_t f);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(sll_string_t* name,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3);
 
 
 
@@ -165,9 +165,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
  * \group sys-api
  * \desc Docs!
  * \api s|v
- * \arg sll_string_t* a
+ * \arg sll_string_t* key
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(sll_string_t* a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(sll_string_t* key);
 
 
 
@@ -177,9 +177,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(sll_string_t* a);
  * \group sys-api
  * \desc Docs!
  * \api i|v
- * \arg sll_integer_t a
+ * \arg sll_sandbox_flag_t flag
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag_t flag);
 
 
 
@@ -189,10 +189,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_integer_t a)
  * \group sys-api
  * \desc Docs!
  * \api ss|v
- * \arg sll_string_t* a
- * \arg sll_string_t* b
+ * \arg sll_string_t* key
+ * \arg sll_string_t* value
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(sll_string_t* a,sll_string_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(sll_string_t* key,sll_string_t* value);
 
 
 

@@ -329,10 +329,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(sll_string_t* st
  * \group string-api
  * \desc Docs!
  * \api s|s
- * \arg sll_string_t* a
+ * \arg sll_string_t* str
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(sll_string_t* a,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(sll_string_t* str,sll_string_t* out);
 
 
 
@@ -342,10 +342,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(sll_string_t* a,
  * \group string-api
  * \desc Docs!
  * \api s|s
- * \arg sll_string_t* a
+ * \arg sll_string_t* str
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim(sll_string_t* a,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim(sll_string_t* str,sll_string_t* out);
 
 
 
@@ -355,10 +355,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim(sll_string_t* a,sll_strin
  * \group string-api
  * \desc Docs!
  * \api s|s
- * \arg sll_string_t* a
+ * \arg sll_string_t* str
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(sll_string_t* a,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(sll_string_t* str,sll_string_t* out);
 
 
 
@@ -368,10 +368,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(sll_string_t* a,sll_
  * \group string-api
  * \desc Docs!
  * \api s|s
- * \arg sll_string_t* a
+ * \arg sll_string_t* str
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(sll_string_t* a,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(sll_string_t* str,sll_string_t* out);
 
 
 
@@ -381,10 +381,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(sll_string_t* a,sll
  * \group string-api
  * \desc Docs!
  * \api s|s
- * \arg sll_string_t* a
+ * \arg sll_string_t* str
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_upper_case(sll_string_t* a,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_upper_case(sll_string_t* str,sll_string_t* out);
 
 
 
