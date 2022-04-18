@@ -358,11 +358,11 @@ __SLL_EXTERNAL void sll_encode_string(sll_file_t* f,const sll_string_t* s){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_decode_float(sll_integer_t a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_decode_float(sll_integer_t fh){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return 0;
 	}
-	sll_file_t* f=sll_file_from_handle(a);
+	sll_file_t* f=sll_file_from_handle(fh);
 	if (!f){
 		return 0;
 	}
@@ -372,44 +372,44 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_deco
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_integer(sll_integer_t a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_integer(sll_integer_t fh){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return 0;
 	}
 	sll_error_t err;
-	sll_size_t o=sll_decode_integer(sll_file_from_handle(a),&err);
+	sll_size_t o=sll_decode_integer(sll_file_from_handle(fh),&err);
 	return (err==SLL_NO_ERROR?0:(sll_integer_t)o);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_signed_integer(sll_integer_t a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_signed_integer(sll_integer_t fh){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return 0;
 	}
 	sll_error_t err;
-	sll_integer_t o=sll_decode_signed_integer(sll_file_from_handle(a),&err);
-	return (err==SLL_NO_ERROR?0:o);
+	sll_integer_t o=sll_decode_signed_integer(sll_file_from_handle(fh),&err);
+	return (err==SLL_NO_ERROR?o:0);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object(sll_integer_t a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object(sll_integer_t fh){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	sll_audit(SLL_CHAR("sll.serial.object.decode"),SLL_CHAR("i"),a);
-	return sll_decode_object(sll_file_from_handle(a));
+	sll_audit(SLL_CHAR("sll.serial.object.decode"),SLL_CHAR("i"),fh);
+	return sll_decode_object(sll_file_from_handle(fh));
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string(sll_integer_t a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string(sll_integer_t fh){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	sll_string_t str;
-	if (!sll_decode_string(sll_file_from_handle(a),&str)){
+	if (!sll_decode_string(sll_file_from_handle(fh),&str)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	return STRING_TO_OBJECT_NOCOPY(&str);
@@ -417,41 +417,41 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_de
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t a,sll_float_t b){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t fh,sll_float_t v){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		sll_file_write(sll_file_from_handle(a),&b,sizeof(sll_float_t),NULL);
+		sll_file_write(sll_file_from_handle(fh),&v,sizeof(sll_float_t),NULL);
 	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_integer(sll_integer_t a,sll_integer_t b){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_integer(sll_integer_t fh,sll_size_t v){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		sll_encode_integer(sll_file_from_handle(a),(sll_size_t)b);
+		sll_encode_integer(sll_file_from_handle(fh),v);
 	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_signed_integer(sll_integer_t a,sll_integer_t b){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_signed_integer(sll_integer_t fh,sll_integer_t v){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		sll_encode_signed_integer(sll_file_from_handle(a),b);
+		sll_encode_signed_integer(sll_file_from_handle(fh),v);
 	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t fh,sll_object_t*const* args,sll_arg_count_t len){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iO+"),a,b,bc);
-		sll_encode_object(sll_file_from_handle(a),b,bc);
+		sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iO+"),fh,args,len);
+		sll_encode_object(sll_file_from_handle(fh),args,len);
 	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_string(sll_integer_t a,sll_string_t* b){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_string(sll_integer_t fh,sll_string_t* str){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		sll_encode_string(sll_file_from_handle(a),b);
+		sll_encode_string(sll_file_from_handle(fh),str);
 	}
 }

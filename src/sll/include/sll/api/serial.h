@@ -158,10 +158,10 @@ __SLL_EXTERNAL void sll_encode_string(sll_file_t* f,const sll_string_t* s);
  * \group serial-api
  * \desc Docs!
  * \api i|f
- * \arg sll_integer_t a
+ * \arg sll_integer_t fh
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_decode_float(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_decode_float(sll_integer_t fh);
 
 
 
@@ -171,10 +171,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_deco
  * \group serial-api
  * \desc Docs!
  * \api i|i
- * \arg sll_integer_t a
+ * \arg sll_integer_t fh
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_integer(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_integer(sll_integer_t fh);
 
 
 
@@ -184,10 +184,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_de
  * \group serial-api
  * \desc Docs!
  * \api i|i
- * \arg sll_integer_t a
+ * \arg sll_integer_t fh
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_signed_integer(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_signed_integer(sll_integer_t fh);
 
 
 
@@ -197,10 +197,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_de
  * \group serial-api
  * \desc Docs!
  * \api i|o
- * \arg sll_integer_t a
+ * \arg sll_integer_t fh
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object(sll_integer_t fh);
 
 
 
@@ -210,10 +210,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_de
  * \group serial-api
  * \desc Docs!
  * \api i|o
- * \arg sll_integer_t a
+ * \arg sll_integer_t fh
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_string(sll_integer_t fh);
 
 
 
@@ -223,10 +223,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_de
  * \group serial-api
  * \desc Docs!
  * \api if|v
- * \arg sll_integer_t a
- * \arg sll_float_t b
+ * \arg sll_integer_t fh
+ * \arg sll_float_t v
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t a,sll_float_t b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t fh,sll_float_t v);
 
 
 
@@ -236,10 +236,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t a,s
  * \group serial-api
  * \desc Docs!
  * \api ii|v
- * \arg sll_integer_t a
- * \arg sll_integer_t b
+ * \arg sll_integer_t fh
+ * \arg sll_size_t v
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_integer(sll_integer_t a,sll_integer_t b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_integer(sll_integer_t fh,sll_size_t v);
 
 
 
@@ -249,10 +249,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_integer(sll_integer_t a
  * \group serial-api
  * \desc Docs!
  * \api ii|v
- * \arg sll_integer_t a
- * \arg sll_integer_t b
+ * \arg sll_integer_t fh
+ * \arg sll_integer_t v
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_signed_integer(sll_integer_t a,sll_integer_t b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_signed_integer(sll_integer_t fh,sll_integer_t v);
 
 
 
@@ -262,11 +262,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_signed_integer(sll_inte
  * \group serial-api
  * \desc Docs!
  * \api io!|v
- * \arg sll_integer_t a
- * \arg sll_object_t*const* b
- * \arg sll_arg_count_t bc
+ * \arg sll_integer_t fh
+ * \arg sll_object_t*const* args
+ * \arg sll_arg_count_t len
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t a,sll_object_t*const* b,sll_arg_count_t bc);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t fh,sll_object_t*const* args,sll_arg_count_t len);
 
 
 
@@ -276,10 +276,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t a,
  * \group serial-api
  * \desc Docs!
  * \api is|v
- * \arg sll_integer_t a
- * \arg sll_string_t* b
+ * \arg sll_integer_t fh
+ * \arg sll_string_t* str
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_string(sll_integer_t a,sll_string_t* b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_string(sll_integer_t fh,sll_string_t* str);
 
 
 
