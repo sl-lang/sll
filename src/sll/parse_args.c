@@ -19,11 +19,11 @@
 
 
 #define SKIP_WHITESPACE \
-	while (*t==' '||(*t>8&&*t<14)||*t=='!'){ \
+	while (*t==' '||(*t>8&&*t<14)||*t=='!'||*t=='#'){ \
 		t++; \
 	}
 #define SKIP_WHITESPACE_KEEP_VA \
-	while (*t==' '||(*t>8&&*t<14)){ \
+	while (*t==' '||(*t>8&&*t<14)||*t=='#'){ \
 		t++; \
 	}
 

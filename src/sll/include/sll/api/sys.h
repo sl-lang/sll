@@ -146,7 +146,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out);
  * \name sll_api_sys_load_library
  * \group sys-api
  * \desc Docs!
- * \api sQQQQQ|b
+ * \api #sQQQQQ|b
  * \arg const sll_string_t* name
  * \arg sll_size_t sz
  * \arg __SLL_U64 h0
@@ -164,7 +164,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
  * \name sll_api_sys_remove_env
  * \group sys-api
  * \desc Docs!
- * \api s|v
+ * \api #s|v
  * \arg const sll_string_t* key
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(const sll_string_t* key);
@@ -188,7 +188,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag
  * \name sll_api_sys_set_env
  * \group sys-api
  * \desc Docs!
- * \api ss|v
+ * \api #s#s|v
  * \arg const sll_string_t* key
  * \arg const sll_string_t* value
  */

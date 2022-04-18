@@ -16,7 +16,7 @@
  * \name sll_api_object_new
  * \group object-api
  * \desc Docs!
- * \api so!|o
+ * \api #so!|o
  * \arg const sll_string_t* fmt
  * \arg sll_object_t*const* args
  * \arg sll_arg_count_t len

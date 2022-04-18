@@ -16,7 +16,7 @@
  * \name sll_api_thread_create
  * \group thread-api
  * \desc Docs!
- * \api ia|i
+ * \api i#a|i
  * \arg sll_integer_t fn
  * \arg const sll_array_t* args
  * \ret sll_integer_t

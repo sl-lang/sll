@@ -83,7 +83,7 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
  * \name sll_api_process_execute_shell
  * \group process-api
  * \desc Docs!
- * \api s|i
+ * \api #s|i
  * \arg const sll_string_t* cmd
  * \ret sll_integer_t
  */
@@ -108,7 +108,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_g
  * \name sll_api_process_join
  * \group process-api
  * \desc Docs!
- * \api s+|s
+ * \api #s+|s
  * \arg const sll_string_t*const* args
  * \arg sll_arg_count_t len
  * \arg sll_string_t* out
@@ -122,7 +122,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(const sll_string_t*const
  * \name sll_api_process_split
  * \group process-api
  * \desc Docs!
- * \api s|a
+ * \api #s|a
  * \arg const sll_string_t* args
  * \arg sll_array_t* out
  */
@@ -135,7 +135,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(const sll_string_t* arg
  * \name sll_api_process_start
  * \group process-api
  * \desc Docs!
- * \api asBs|a
+ * \api #a#sB#s|a
  * \arg const sll_array_t* args
  * \arg const sll_string_t* cwd
  * \arg sll_flags_t flags

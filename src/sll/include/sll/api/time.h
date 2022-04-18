@@ -40,7 +40,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_time_t sll_api_time_current
  * \name sll_api_time_sleep
  * \group time-api
  * \desc Docs!
- * \api x|f
+ * \api #x|f
  * \arg const sll_int_float_t* time
  * \ret sll_float_t
  */
@@ -53,7 +53,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_sleep(
  * \name sll_api_time_sleep_ns
  * \group time-api
  * \desc Docs!
- * \api x|Q
+ * \api #x|Q
  * \arg const sll_int_float_t* time
  * \ret sll_time_t
  */

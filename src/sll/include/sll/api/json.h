@@ -170,7 +170,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll
  * \name sll_api_json_parse
  * \group json-api
  * \desc Docs!
- * \api s|o
+ * \api #s|o
  * \arg const sll_string_t* str
  * \ret sll_object_t*
  */

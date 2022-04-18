@@ -16,7 +16,7 @@
  * \name sll_api_string_checksum
  * \group string-api
  * \desc Docs!
- * \api s|D
+ * \api #s|D
  * \arg const sll_string_t* str
  * \ret sll_string_checksum_t
  */
@@ -43,7 +43,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* ar
  * \name sll_api_string_count
  * \group string-api
  * \desc Docs!
- * \api sy|i
+ * \api #s#y|i
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* elem
  * \ret sll_integer_t
@@ -57,7 +57,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
  * \name sll_api_string_count_left
  * \group string-api
  * \desc Docs!
- * \api sc|i
+ * \api #sc|i
  * \arg const sll_string_t* str
  * \arg sll_char_t chr
  * \ret sll_integer_t
@@ -71,7 +71,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
  * \name sll_api_string_count_right
  * \group string-api
  * \desc Docs!
- * \api sc|i
+ * \api #sc|i
  * \arg const sll_string_t* str
  * \arg sll_char_t chr
  * \ret sll_integer_t
@@ -85,7 +85,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_co
  * \name sll_api_string_ends
  * \group string-api
  * \desc Docs!
- * \api sy|b
+ * \api #s#y|b
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* end
  * \ret sll_bool_t
@@ -99,7 +99,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(
  * \name sll_api_string_format
  * \group string-api
  * \desc Docs!
- * \api so!|s
+ * \api #so!|s
  * \arg const sll_string_t* fmt
  * \arg sll_object_t*const* args
  * \arg sll_arg_count_t len
@@ -114,7 +114,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt
  * \name sll_api_string_flip_case
  * \group string-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */
@@ -127,7 +127,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* 
  * \name sll_api_string_index
  * \group string-api
  * \desc Docs!
- * \api syD|i
+ * \api #s#yD|i
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* substr
  * \arg sll_string_length_t start
@@ -142,7 +142,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
  * \name sll_api_string_index_list
  * \group string-api
  * \desc Docs!
- * \api syb|i
+ * \api #s#yb|i
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* substr
  * \arg sll_bool_t inv
@@ -157,7 +157,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
  * \name sll_api_string_index_reverse
  * \group string-api
  * \desc Docs!
- * \api sy|i
+ * \api #s#y|i
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* substr
  * \ret sll_integer_t
@@ -171,7 +171,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
  * \name sll_api_string_index_reverse_list
  * \group string-api
  * \desc Docs!
- * \api syb|i
+ * \api #s#yb|i
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* substr
  * \arg sll_bool_t inv
@@ -186,7 +186,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
  * \name sll_api_string_join
  * \group string-api
  * \desc Docs!
- * \api ya|s
+ * \api #y#a|s
  * \arg const sll_char_string_t* infix
  * \arg const sll_array_t* arr
  * \arg sll_string_t* out
@@ -200,7 +200,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(const sll_char_string_t* 
  * \name sll_api_string_pad
  * \group string-api
  * \desc Docs!
- * \api sDc|s
+ * \api #sDc|s
  * \arg const sll_string_t* str
  * \arg sll_string_length_t len
  * \arg sll_char_t chr
@@ -215,7 +215,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad(const sll_string_t* str,sl
  * \name sll_api_string_pad_left
  * \group string-api
  * \desc Docs!
- * \api sDc|s
+ * \api #sDc|s
  * \arg const sll_string_t* str
  * \arg sll_string_length_t len
  * \arg sll_char_t chr
@@ -230,7 +230,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_left(const sll_string_t* s
  * \name sll_api_string_pad_right
  * \group string-api
  * \desc Docs!
- * \api sDc|s
+ * \api #sDc|s
  * \arg const sll_string_t* str
  * \arg sll_string_length_t len
  * \arg sll_char_t chr
@@ -245,7 +245,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_pad_right(const sll_string_t* 
  * \name sll_api_string_replace
  * \group string-api
  * \desc Docs!
- * \api syy|s
+ * \api #s#y#y|s
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* old
  * \arg const sll_char_string_t* new
@@ -260,7 +260,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_replace(const sll_string_t* st
  * \name sll_api_string_reverse
  * \group string-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */
@@ -273,7 +273,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_reverse(const sll_string_t* st
  * \name sll_api_string_secure_equal
  * \group string-api
  * \desc Docs!
- * \api ss|b
+ * \api #s#s|b
  * \arg const sll_string_t* a
  * \arg const sll_string_t* b
  * \ret sll_bool_t
@@ -287,7 +287,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_secur
  * \name sll_api_string_split
  * \group string-api
  * \desc Docs!
- * \api sy|a
+ * \api #s#y|a
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* infix
  * \arg sll_array_t* out
@@ -301,7 +301,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_split(const sll_string_t* str,
  * \name sll_api_string_starts
  * \group string-api
  * \desc Docs!
- * \api sy|b
+ * \api #s#y|b
  * \arg const sll_string_t* str
  * \arg const sll_char_string_t* start
  * \ret sll_bool_t
@@ -315,7 +315,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_start
  * \name sll_api_string_to_lower_case
  * \group string-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */
@@ -328,7 +328,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_lower_case(const sll_string
  * \name sll_api_string_to_title_case
  * \group string-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */
@@ -341,7 +341,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(const sll_string
  * \name sll_api_string_trim
  * \group string-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */
@@ -354,7 +354,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim(const sll_string_t* str,s
  * \name sll_api_string_trim_left
  * \group string-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */
@@ -367,7 +367,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(const sll_string_t* 
  * \name sll_api_string_trim_right
  * \group string-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */
@@ -380,7 +380,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(const sll_string_t*
  * \name sll_api_string_to_upper_case
  * \group string-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */

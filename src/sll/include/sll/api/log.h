@@ -42,7 +42,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_default(sll_flags_t flag,sll_
  * \name sll_api_log_set_file
  * \group log-api
  * \desc Docs!
- * \api sBb|v
+ * \api #sBb|v
  * \arg sll_string_t* file
  * \arg sll_flags_t flags
  * \arg sll_bool_t state
@@ -56,7 +56,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_log_set_file(const sll_string_t* file
  * \name sll_api_log_set_function
  * \group log-api
  * \desc Docs!
- * \api ssBb|v
+ * \api #s#sBb|v
  * \arg sll_string_t* file
  * \arg sll_string_t* func
  * \arg sll_flags_t flags

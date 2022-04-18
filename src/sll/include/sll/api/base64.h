@@ -16,7 +16,7 @@
  * \name sll_api_base64_decode
  * \group base64-api
  * \desc Docs!
- * \api s|o
+ * \api #s|o
  * \arg const sll_string_t* str
  * \ret sll_object_t*
  */
@@ -29,7 +29,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_de
  * \name sll_api_base64_encode
  * \group base64-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* str
  * \arg sll_string_t* out
  */

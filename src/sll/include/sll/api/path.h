@@ -81,7 +81,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const
  * \name sll_api_path_absolute
  * \group path-api
  * \desc Docs!
- * \api s|s
+ * \api #s|s
  * \arg const sll_string_t* path
  * \arg sll_string_t* out
  */
@@ -94,7 +94,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(const sll_string_t* pat
  * \name sll_api_path_exists
  * \group path-api
  * \desc Docs!
- * \api s|b
+ * \api #s|b
  * \arg const sll_string_t* path
  * \ret sll_bool_t
  */
@@ -119,7 +119,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_
  * \name sll_api_path_is_dir
  * \group path-api
  * \desc Docs!
- * \api s|b
+ * \api #s|b
  * \arg const sll_string_t* path
  * \ret sll_bool_t
  */
@@ -132,7 +132,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_path_is_dir(
  * \name sll_api_path_join
  * \group path-api
  * \desc Docs!
- * \api s!|s
+ * \api #s!|s
  * \arg const sll_string_t*const* parts
  * \arg sll_arg_count_t len
  * \arg sll_string_t* out
@@ -146,7 +146,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(const sll_string_t*const* p
  * \name sll_api_path_list_dir
  * \group path-api
  * \desc Docs!
- * \api s|o
+ * \api #s|o
  * \arg const sll_string_t* path
  * \ret sll_object_t*
  */
@@ -159,7 +159,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list
  * \name sll_api_path_mkdir
  * \group path-api
  * \desc Docs!
- * \api sb|i
+ * \api #sb|i
  * \arg const sll_string_t* path
  * \arg sll_bool_t all
  * \ret sll_integer_t
@@ -173,7 +173,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdi
  * \name sll_api_path_recursive_list_dir
  * \group path-api
  * \desc Docs!
- * \api s|o
+ * \api #s|o
  * \arg const sll_string_t* path
  * \ret sll_object_t*
  */
@@ -186,7 +186,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recu
  * \name sll_api_path_relative
  * \group path-api
  * \desc Docs!
- * \api ss|s
+ * \api #s#s|s
  * \arg const sll_string_t* path
  * \arg const sll_string_t* base
  * \arg sll_string_t* out
@@ -200,7 +200,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(const sll_string_t* pat
  * \name sll_api_path_set_cwd
  * \group json-api
  * \desc Docs!
- * \api s|i
+ * \api #s|i
  * \arg const sll_string_t* path
  * \ret sll_integer_t
  */
@@ -213,7 +213,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_
  * \name sll_api_path_size
  * \group path-api
  * \desc Docs!
- * \api s|i
+ * \api #s|i
  * \arg const sll_string_t* path
  * \ret sll_integer_t
  */
@@ -226,7 +226,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size
  * \name sll_api_path_split
  * \group path-api
  * \desc Docs!
- * \api s|a
+ * \api #s|a
  * \arg const sll_string_t* path
  * \arg sll_array_t* out
  */
@@ -239,7 +239,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split(const sll_string_t* path,s
  * \name sll_api_path_split_drive
  * \group path-api
  * \desc Docs!
- * \api s|a
+ * \api #s|a
  * \arg const sll_string_t* path
  * \arg sll_array_t* out
  */

@@ -28,7 +28,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t cb);
  * \name sll_api_audit_audit
  * \group array-api
  * \desc Docs!
- * \api sso!|v
+ * \api #s#so!|v
  * \arg const sll_string_t* name
  * \arg const sll_string_t* fmt
  * \arg sll_object_t*const* args

@@ -275,7 +275,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t fh
  * \name sll_api_serial_encode_string
  * \group serial-api
  * \desc Docs!
- * \api is|v
+ * \api i#s|v
  * \arg sll_integer_t fh
  * \arg const sll_string_t* str
  */

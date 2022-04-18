@@ -16,7 +16,7 @@
  * \name sll_api_map_extend
  * \group map-api
  * \desc Docs!
- * \api mm|v
+ * \api m#m|v
  * \arg sll_map_t* map
  * \arg const sll_map_t* new
  */

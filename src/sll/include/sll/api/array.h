@@ -16,7 +16,7 @@
  * \name sll_api_array_count
  * \group array-api
  * \desc Docs!
- * \api ao|D
+ * \api #ao|D
  * \arg const sll_array_t* arr
  * \arg sll_object_t* elem
  * \ret sll_array_length_t
@@ -43,7 +43,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_create(sll_array_length_t len,s
  * \name sll_api_array_extend
  * \group array-api
  * \desc Docs!
- * \api aa|v
+ * \api a#a|v
  * \arg sll_array_t* arr
  * \arg const sll_array_t* new
  */
@@ -56,7 +56,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_extend(sll_array_t* arr,const s
  * \name sll_api_array_index
  * \group array-api
  * \desc Docs!
- * \api ao|i
+ * \api #ao|i
  * \arg const sll_array_t* arr
  * \arg sll_object_t* elem
  * \ret sll_integer_t
@@ -70,7 +70,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_array_ind
  * \name sll_api_array_join
  * \group array-api
  * \desc Docs!
- * \api a+o|a
+ * \api #a+o|a
  * \arg const sll_array_t*const* arr
  * \arg sll_arg_count_t len
  * \arg sll_object_t* elem
@@ -124,7 +124,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_remove(sll_array_t* arr,sll_obj
  * \name sll_api_array_replace
  * \group array-api
  * \desc Docs!
- * \api aoo|a
+ * \api #aoo|a
  * \arg const sll_array_t* arr
  * \arg sll_object_t* old
  * \arg sll_object_t* new
@@ -139,7 +139,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_array_replace(const sll_array_t* arr,
  * \name sll_api_array_reverse
  * \group array-api
  * \desc Docs!
- * \api a|a
+ * \api #a|a
  * \arg const sll_array_t* arr
  * \arg sll_array_t* out
  */
@@ -165,7 +165,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_array_shi
  * \name sll_api_array_split
  * \group array-api
  * \desc Docs!
- * \api ao|a
+ * \api #ao|a
  * \arg const sll_array_t* arr
  * \arg sll_object_t* key
  * \arg sll_array_t* out
