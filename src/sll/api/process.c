@@ -90,13 +90,13 @@ _continue:
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(sll_string_t* a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(sll_string_t* cmd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API);
 	}
-	sll_audit(SLL_CHAR("sll.process.shell"),SLL_CHAR("s"),a);
+	sll_audit(SLL_CHAR("sll.process.shell"),SLL_CHAR("s"),cmd);
 	sll_error_t err;
-	return (sll_platform_execute_shell(a->v,&err)?SLL_NO_ERROR:err);
+	return (sll_platform_execute_shell(cmd->v,&err)?SLL_NO_ERROR:err);
 }
 
 
@@ -110,20 +110,20 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_g
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* args,sll_arg_count_t len,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		SLL_INIT_STRING(out);
 		return;
 	}
-	sll_char_t** dt=sll_allocate_stack(ac*sizeof(sll_char_t*));
-	for (sll_array_length_t i=0;i<ac;i++){
-		sll_string_t* str=*(a+i);
+	sll_char_t** dt=sll_allocate_stack(len*sizeof(sll_char_t*));
+	for (sll_array_length_t i=0;i<len;i++){
+		sll_string_t* str=*(args+i);
 		sll_char_t* p=sll_allocate_stack(str->l);
 		sll_copy_data(str->v,str->l,p);
 		*(dt+i)=p;
 	}
 	sll_process_join_args((const sll_char_t*const*)dt,out);
-	for (sll_array_length_t i=0;i<ac;i++){
+	for (sll_array_length_t i=0;i<len;i++){
 		sll_deallocate(*(dt+i));
 	}
 	sll_deallocate(dt);
@@ -131,41 +131,41 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* a,sl
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(sll_string_t* a,sll_array_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(sll_string_t* args,sll_array_t* out){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* a,sll_string_t* b,sll_integer_t c,sll_string_t* d,sll_array_t* out){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!a->l){
-		sll_new_object_array(SLL_CHAR("a(si)0(sZZ)"),out,a,b,c,d);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* args,sll_string_t* cwd,sll_integer_t flags,sll_string_t* stdin,sll_array_t* out){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!args->l){
+		sll_new_object_array(SLL_CHAR("a(si)0(sZZ)"),out,args,cwd,flags,stdin);
 		return;
 	}
-	sll_audit(SLL_CHAR("sll.process.start"),SLL_CHAR("sss"),a,b,d);
-	sll_object_t* n=sll_operator_cast(a->v[0],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+	sll_audit(SLL_CHAR("sll.process.start"),SLL_CHAR("sss"),args,cwd,stdin);
+	sll_object_t* n=sll_operator_cast(args->v[0],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 	sll_string_t exe_fp;
 	if (!sll_search_path_find(sll_env_path,&(n->dt.s),SLL_SEARCH_PATH_FLAG_AFTER,&exe_fp)){
 		SLL_UNIMPLEMENTED();
 	}
 	GC_RELEASE(n);
-	sll_char_t** args=sll_allocate((a->l+1)*sizeof(sll_char_t*));
-	*args=sll_allocate((exe_fp.l+1)*sizeof(sll_char_t));
-	sll_copy_data(exe_fp.v,exe_fp.l+1,*args);
+	sll_char_t** raw_args=sll_allocate((args->l+1)*sizeof(sll_char_t*));
+	*raw_args=sll_allocate((exe_fp.l+1)*sizeof(sll_char_t));
+	sll_copy_data(exe_fp.v,exe_fp.l+1,*raw_args);
 	sll_free_string(&exe_fp);
-	for (sll_array_length_t i=1;i<a->l;i++){
-		n=sll_operator_cast(a->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		*(args+i)=sll_allocate((n->dt.s.l+1)*sizeof(sll_char_t));
-		sll_copy_data(n->dt.s.v,n->dt.s.l+1,*(args+i));
+	for (sll_array_length_t i=1;i<args->l;i++){
+		n=sll_operator_cast(args->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		*(raw_args+i)=sll_allocate((n->dt.s.l+1)*sizeof(sll_char_t));
+		sll_copy_data(n->dt.s.v,n->dt.s.l+1,*(raw_args+i));
 		GC_RELEASE(n);
 	}
-	*(args+a->l)=NULL;
+	*(raw_args+args->l)=NULL;
 	sll_error_t err;
-	sll_process_handle_t ph=sll_platform_start_process((const sll_char_t*const*)args,NULL,&err);
+	sll_process_handle_t ph=sll_platform_start_process((const sll_char_t*const*)raw_args,NULL,&err);
 	if (!ph){
 		SLL_UNIMPLEMENTED();
 	}
-	if (!(c&SLL_PROCESS_FLAG_WAIT)){
+	if (!(flags&SLL_PROCESS_FLAG_WAIT)){
 		SLL_UNIMPLEMENTED();
 	}
 	sll_return_code_t rc;
@@ -176,9 +176,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* a,sll_stri
 		SLL_UNIMPLEMENTED();
 	}
 	SLL_CRITICAL(sll_platform_close_process_handle(ph)==SLL_NO_ERROR);
-	for (sll_array_length_t i=0;i<a->l;i++){
-		sll_deallocate(*(args+i));
+	for (sll_array_length_t i=0;i<args->l;i++){
+		sll_deallocate(*(raw_args+i));
 	}
-	sll_deallocate(args);
-	sll_new_object_array(SLL_CHAR("a(si)h(sZZ)"),out,a,b,c,rc,d);
+	sll_deallocate(raw_args);
+	sll_new_object_array(SLL_CHAR("a(si)h(sZZ)"),out,args,cwd,flags,rc,stdin);
 }

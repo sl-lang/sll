@@ -80,28 +80,14 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
 
 /**
  * \flags func
- * \name sll_api_process_join
- * \group process-api
- * \desc Docs!
- * \api s+|s
- * \arg sll_string_t*const* a
- * \arg sll_arg_count_t ac
- * \arg sll_string_t* out
- */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* a,sll_arg_count_t ac,sll_string_t* out);
-
-
-
-/**
- * \flags func
  * \name sll_api_process_execute_shell
  * \group process-api
  * \desc Docs!
  * \api s|i
- * \arg sll_string_t* a
+ * \arg sll_string_t* cmd
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(sll_string_t* a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(sll_string_t* cmd);
 
 
 
@@ -119,17 +105,15 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_g
 
 /**
  * \flags func
- * \name sll_api_process_start
+ * \name sll_api_process_join
  * \group process-api
  * \desc Docs!
- * \api asis|a
- * \arg sll_array_t* a
- * \arg sll_string_t* b
- * \arg sll_integer_t c
- * \arg sll_string_t* d
- * \arg sll_array_t* out
+ * \api s+|s
+ * \arg sll_string_t*const* args
+ * \arg sll_arg_count_t len
+ * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* a,sll_string_t* b,sll_integer_t c,sll_string_t* d,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(sll_string_t*const* args,sll_arg_count_t len,sll_string_t* out);
 
 
 
@@ -139,10 +123,26 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* a,sll_stri
  * \group process-api
  * \desc Docs!
  * \api s|a
- * \arg sll_string_t* a
+ * \arg sll_string_t* args
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(sll_string_t* a,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(sll_string_t* args,sll_array_t* out);
+
+
+
+/**
+ * \flags func
+ * \name sll_api_process_start
+ * \group process-api
+ * \desc Docs!
+ * \api asis|a
+ * \arg sll_array_t* args
+ * \arg sll_string_t* cwd
+ * \arg sll_integer_t flags
+ * \arg sll_string_t* stdin
+ * \arg sll_array_t* out
+ */
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(sll_array_t* args,sll_string_t* cwd,sll_integer_t flags,sll_string_t* stdin,sll_array_t* out);
 
 
 
