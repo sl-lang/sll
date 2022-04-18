@@ -103,7 +103,6 @@ def _generate_data(dt,pg_src):
 
 
 def generate():
-	cf_a_dt=b"-->"+bytes(os.getenv("ANALYTICS",""),"utf-8")+b"<!--"
 	o=bytearray()
 	util.log("Reading CSS Files...")
 	for k in os.listdir("src/web/client/css"):
@@ -123,14 +122,14 @@ def generate():
 	with open("src/web/client/page.html","rb") as rf:
 		pg_src=rf.read()
 	util.log(f"Generating Table of Content & Pages for {len(d_dt['data'])} Symbols...")
-	toc,pg_dt=_generate_data(d_dt,pg_src.replace(b"{{ANALYTICS}}",cf_a_dt))
+	toc,pg_dt=_generate_data(d_dt,pg_src)
 	o+=pg_dt
 	util.log("Reading 'src/web/client/index.html'...")
 	with open("src/web/client/index.html","rb") as rf:
-		o+=_add_data("/index.html",rf.read().replace(b"{{DATA}}",toc).replace(b"{{ANALYTICS}}",cf_a_dt))
+		o+=_add_data("/index.html",rf.read().replace(b"{{DATA}}",toc))
 	util.log("Reading 'src/web/client/not_found.html'...")
 	with open("src/web/client/not_found.html","rb") as rf:
-		o+=_add_data("not_found.html",rf.read().replace(b"{{ANALYTICS}}",cf_a_dt))
+		o+=_add_data("not_found.html",rf.read())
 	util.log("Reading 'src/web/client/shell_install.sh'...")
 	with open("src/web/client/shell_install.sh","rb") as rf:
 		o+=_add_data("shell_install.sh",rf.read())
