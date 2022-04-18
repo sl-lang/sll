@@ -70,7 +70,7 @@
 		return; \
 	} \
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_INT]); \
-	*var=(obj->dt.i<0?0:(obj->dt.i>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:obj->dt.i)); \
+	*var=(obj->dt.i<0?0:(obj->dt.i>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:(__SLL_U##sz)(obj->dt.i))); \
 	GC_RELEASE(obj);
 #define PARSE_TYPE_PTR(type,name,field,init) \
 	if (arr){ \

@@ -3,7 +3,6 @@
 ## Added
 
 - Argument parsing code to parse a 16-bit unsigned integer: `W`
-- Argument parsing code to parse a 32-bit unsigned integer: `D`
 - Argument parsing code to parse a 64-bit unsigned integer: `Q`
 - Argument parsing code to parse an 8-bit unsigned integer: `B`
 - Common assembly code is now located in [`src/sll/include/sll/_internal/common.inc`][0.7.14/src/sll/include/sll/_internal/common.inc]
@@ -12,6 +11,7 @@
 
 ## Changed
 
+- Argument parsing code to parse a 32-bit unsigned integer has been renamed from `I` to `D`
 - API functions are now called directly, without the wrapper functions (named `XXX_raw`)
 - Audit event `sll.error.backtrace` no longer contains the amount of stack frames skipped
 - Fixed crashes related to signals recived at unexpected times
