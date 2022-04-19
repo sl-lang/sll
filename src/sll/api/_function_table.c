@@ -487,7 +487,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:map_remove"),
 		sll_api_map_remove,
-		SLL_CHAR("mo|")
+		SLL_CHAR("mo|D")
 	},
 	{
 		SLL_CHAR("sll:math_abs"),
