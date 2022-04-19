@@ -11,7 +11,6 @@
 	(~ func_type) is_dir
 	(~ func_type) list_dir
 	(~ func_type) mkdir
-	(~ func_type) recursive_list_dir
 	(~ func_type) relative
 	(~ func_type) set_cwd
 	(~ func_type) size
@@ -39,9 +38,10 @@
 
 (= is_dir (... "sll:path_is_dir"))
 
-(= list_dir (,,, path
+(= list_dir (,,, path recursive
 	(= out (<- (... "sll:path_list_dir")
 		(:: path string_type)
+		(!! recursive)
 	))
 	(@@ (?: (=== (:? out array_type))
 		out
@@ -54,16 +54,6 @@
 		(:: path string_type)
 		(!! all)
 	)))
-))
-
-(= recursive_list_dir (,,, path
-	(= out (<- (... "sll:path_recursive_list_dir")
-		(:: path string_type)
-	))
-	(@@ (?: (=== (:? out array_type))
-		out
-		(<- error$from_internal out)
-	))
 ))
 
 (= relative (,,, path base
@@ -94,7 +84,6 @@
 	is_dir
 	list_dir
 	mkdir
-	recursive_list_dir
 	relative
 	set_cwd
 	size

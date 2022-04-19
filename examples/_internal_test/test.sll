@@ -136,7 +136,7 @@
 (:> "\n")
 (:> (: "abcdefghijklmnopqrstuvwxyz" 5 2 -1) "\n" (<- string$flip_case "Hello, World!") "\n")
 (:> "Type: " (:? arr) "\n" (<- string$format "%s - %c - %.2x\n" "string" 'C' 15.46))
-(:> (<- path$list_dir ".") "\n")
+(:> (<- path$list_dir "." false) "\n")
 
 (= format_bytes (,,, sz (@@ (?:
 	(< sz (<< 1 10)) (+ sz " b")
@@ -148,7 +148,7 @@
 	(~ string_type) fp
 	(~ int_type) sz
 ))
-(= file_list (<- path$recursive_list_dir "src"))
+(= file_list (<- path$list_dir "src" true))
 (= arr ([> (= i 0) (< i ($ file_list))
 	(= k (: file_list i))
 	(++ i)

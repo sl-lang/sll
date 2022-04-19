@@ -7,4 +7,4 @@
 
 
 
-(:> (<- path$list_dir ".") '\n')
+(:> (<- path$list_dir "." false) '\n')

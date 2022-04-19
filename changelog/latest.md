@@ -23,6 +23,7 @@
 - Functions `sll_set_log_default`, `sll_set_log_file` and `sll_set_log_function` have been merged into `sll_set_log_flags`
 - logging functions now return a boolean success flag
 - Map function (`map$remove`) now returns the new length of the map after the operation
+- Merged `path$list_dir` and `path$recursive_list_dir` by adding an extra argument
 - Negative time zone offsets are now correctly printed in `date$date_type`
 
 ## Removed

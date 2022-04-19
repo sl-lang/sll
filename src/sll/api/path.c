@@ -168,14 +168,14 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(const sll_string_t*const* p
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(const sll_string_t* path){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(const sll_string_t* path,sll_bool_t recursive){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
 	}
-	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s0"),path);
+	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("sb"),path,recursive);
 	sll_string_t* dt=NULL;
 	sll_error_t err;
-	sll_array_length_t len=sll_platform_list_directory(path->v,&dt,&err);
+	sll_array_length_t len=(recursive?sll_platform_list_directory_recursive:sll_platform_list_directory)(path->v,&dt,&err);
 	if (err!=SLL_NO_ERROR){
 		return sll_int_to_object(err);
 	}
@@ -195,27 +195,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdi
 	}
 	sll_audit(SLL_CHAR("sll.path.dir.create"),SLL_CHAR("sh"),path,all);
 	return sll_platform_create_directory(path->v,all);
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir(const sll_string_t* path){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
-	}
-	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("s1"),path);
-	sll_string_t* dt=NULL;
-	sll_error_t err;
-	sll_array_length_t len=sll_platform_list_directory_recursive(path->v,&dt,&err);
-	if (err!=SLL_NO_ERROR){
-		return sll_int_to_object(err);
-	}
-	sll_object_t* o=sll_array_length_to_object(len);
-	for (sll_array_length_t i=0;i<len;i++){
-		o->dt.a.v[i]=STRING_TO_OBJECT_NOCOPY(dt+i);
-	}
-	sll_deallocate(dt);
-	return o;
 }
 
 

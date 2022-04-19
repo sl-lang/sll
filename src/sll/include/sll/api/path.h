@@ -146,11 +146,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(const sll_string_t*const* p
  * \name sll_api_path_list_dir
  * \group path-api
  * \desc Docs!
- * \api #s|o
+ * \api #sb|o
  * \arg const sll_string_t* path
+ * \arg sll_bool_t recursive
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(const sll_string_t* path);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(const sll_string_t* path,sll_bool_t recursive);
 
 
 
@@ -165,19 +166,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list
  * \ret sll_integer_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdir(const sll_string_t* path,sll_bool_t all);
-
-
-
-/**
- * \flags check_output func
- * \name sll_api_path_recursive_list_dir
- * \group path-api
- * \desc Docs!
- * \api #s|o
- * \arg const sll_string_t* path
- * \ret sll_object_t*
- */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_recursive_list_dir(const sll_string_t* path);
 
 
 

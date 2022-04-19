@@ -103,7 +103,6 @@ extern void sll_api_path_is_dir(void);
 extern void sll_api_path_join(void);
 extern void sll_api_path_list_dir(void);
 extern void sll_api_path_mkdir(void);
-extern void sll_api_path_recursive_list_dir(void);
 extern void sll_api_path_relative(void);
 extern void sll_api_path_set_cwd(void);
 extern void sll_api_path_size(void);
@@ -692,17 +691,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:path_list_dir"),
 		sll_api_path_list_dir,
-		SLL_CHAR("#s|o")
+		SLL_CHAR("#sb|o")
 	},
 	{
 		SLL_CHAR("sll:path_mkdir"),
 		sll_api_path_mkdir,
 		SLL_CHAR("#sb|i")
-	},
-	{
-		SLL_CHAR("sll:path_recursive_list_dir"),
-		sll_api_path_recursive_list_dir,
-		SLL_CHAR("#s|o")
 	},
 	{
 		SLL_CHAR("sll:path_relative"),
@@ -1189,4 +1183,4 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 
 
 __SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_ifunc_data_ptr);
-__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=196;
+__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=195;
