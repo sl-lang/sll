@@ -27,7 +27,7 @@
 
 
 
-(= file_list (<- path$recursive_list_dir FILE_DIRECTORY))
+(= file_list (<- path$list_dir FILE_DIRECTORY true))
 (= array ([> (= i 0) (< i ($ file_list))
 	(= k (: file_list i))
 	(++ i)

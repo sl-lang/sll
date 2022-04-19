@@ -67,6 +67,14 @@ __SLL_EXPORT _call_api_func_assembly
 	jnz ._next_arg
 ._no_args:
 
+	cmp al, 1
+	jg ._skip_extra_load
+	add rdx, 8
+	mov rcx, QWORD [rdx]
+	shr cl, 1
+	or sil, cl
+._skip_extra_load:
+
 	mov QWORD [r10], rbx
 
 	mov rcx, QWORD [rsp]
@@ -80,9 +88,18 @@ __SLL_EXPORT _call_api_func_assembly
 	call r11
 
 	test sil, sil
-	jnz ._no_return_value
+	jz ._register_return_value
+	sub sil, 1
+	jz ._cleanup
+	xor rcx,rcx
+	xorpd xmm0, xmm0
+	add rax, 1
+	setnz cl
+	cvtsi2sd xmm0, rax
+	jz ._cleanup
+._register_return_value:
 	mov QWORD [rbx], rax
-._no_return_value:
+._cleanup:
 
 	leave
 	pop rsi
