@@ -181,5 +181,5 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t*
 	else{
 		SET_OR_CLEAR(_log_default,fl,st);
 	}
-	return 1;
+	return o;
 }
