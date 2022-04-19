@@ -35,14 +35,15 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_float_get_c
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_api_float_set_compare_error
  * \group float-api
  * \desc Docs!
- * \api f|v
+ * \api f|f
  * \arg sll_float_t err
+ * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_float_set_compare_error(sll_float_t err);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_float_set_compare_error(sll_float_t err);
 
 
 

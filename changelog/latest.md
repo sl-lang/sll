@@ -13,6 +13,7 @@
 
 - API functions are now called directly, without the wrapper functions (named `XXX_raw`)
 - Argument parsing code to parse a 32-bit unsigned integer has been renamed from `I` to `D`
+- Changing the floating-point compare error via `float$set_compare_error` will now return the old one
 - Audit event `sll.error.backtrace` no longer contains the amount of stack frames skipped
 - Array functions (`array$extend`, `array$push`, `array$remove` and `array$unshift`) now returns the new length of the array after the operation
 - Fixed crashes related to signals recived at unexpected times

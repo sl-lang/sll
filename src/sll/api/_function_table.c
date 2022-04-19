@@ -404,7 +404,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:float_set_compare_error"),
 		sll_api_float_set_compare_error,
-		SLL_CHAR("f|v")
+		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:hash_md5"),
