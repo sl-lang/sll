@@ -1039,7 +1039,7 @@ typedef struct _SLL_INT_FLOAT{
 
 typedef union _SLL_CHAR_STRING_DATA{
 	sll_char_t c;
-	sll_string_t* s;
+	const sll_string_t* s;
 } sll_char_string_data_t;
 
 

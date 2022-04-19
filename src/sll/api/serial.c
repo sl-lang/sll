@@ -27,9 +27,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sl
 		return 0;
 	}
 	if (c==SLL_END_OF_DATA){
-		if (err){
-			*err=SLL_ERROR_EOF;
-		}
+		ERROR_PTR(SLL_ERROR_EOF);
 		return 0;
 	}
 	sll_size_t v=0;
@@ -42,9 +40,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sl
 			return 0;
 		}
 		if (c==SLL_END_OF_DATA){
-			if (err){
-				*err=SLL_ERROR_EOF;
-			}
+			ERROR_PTR(SLL_ERROR_EOF);
 			return 0;
 		}
 	}
