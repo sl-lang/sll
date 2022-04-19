@@ -65,9 +65,6 @@
 		init(var); \
 		return; \
 	} \
-	if (flags&PARSE_ARGS_REF){ \
-		SLL_UNIMPLEMENTED(); \
-	} \
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 	*var=obj->dt.field; \
 	GC_RELEASE(obj);
