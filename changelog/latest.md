@@ -13,11 +13,12 @@
 
 - API functions are now called directly, without the wrapper functions (named `XXX_raw`)
 - Argument parsing code to parse a 32-bit unsigned integer has been renamed from `I` to `D`
-- Changing the floating-point compare error via `float$set_compare_error` will now return the old one
-- Audit event `sll.error.backtrace` no longer contains the amount of stack frames skipped
 - Array functions (`array$extend`, `array$push`, `array$remove` and `array$unshift`) now returns the new length of the array after the operation
+- Audit event `sll.error.backtrace` no longer contains the amount of stack frames skipped
+- Changing the floating-point compare error via `float$set_compare_error` will now return the old one
 - Fixed crashes related to signals recived at unexpected times
 - Functions `sll_set_log_default`, `sll_set_log_file` and `sll_set_log_function` have been merged into `sll_set_log_flags`
+- logging functions now return a boolean success flag
 - Negative time zone offsets are now correctly printed in `date$date_type`
 
 ## Removed

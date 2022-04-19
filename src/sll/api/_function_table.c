@@ -464,22 +464,22 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:log_log"),
 		sll_api_log_log,
-		SLL_CHAR("o!|v")
+		SLL_CHAR("o!|b")
 	},
 	{
 		SLL_CHAR("sll:log_set_default"),
 		sll_api_log_set_default,
-		SLL_CHAR("Bb|v")
+		SLL_CHAR("Bb|b")
 	},
 	{
 		SLL_CHAR("sll:log_set_file"),
 		sll_api_log_set_file,
-		SLL_CHAR("#sBb|v")
+		SLL_CHAR("#sBb|b")
 	},
 	{
 		SLL_CHAR("sll:log_set_function"),
 		sll_api_log_set_function,
-		SLL_CHAR("#s#sBb|v")
+		SLL_CHAR("#s#sBb|b")
 	},
 	{
 		SLL_CHAR("sll:map_extend"),

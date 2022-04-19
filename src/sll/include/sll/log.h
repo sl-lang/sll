@@ -66,8 +66,9 @@
  * \arg sll_file_offset_t ln
  * \arg sll_bool_t w
  * \arg const sll_char_t* t
+ * \ret sll_bool_t
  */
-__SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_char_t* t,...);
+__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_char_t* t,...);
 
 
 
@@ -81,13 +82,14 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_o
  * \arg sll_file_offset_t ln
  * \arg sll_bool_t w
  * \arg const sll_string_t* s
+ * \ret sll_bool_t
  */
-__SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_string_t* s);
+__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_string_t* s);
 
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_set_log_flags
  * \group log
  * \desc Docs!
@@ -95,8 +97,9 @@ __SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_fi
  * \arg const sll_char_t* fn
  * \arg sll_flags_t fl
  * \arg sll_bool_t st
+ * \ret sll_bool_t
  */
-__SLL_EXTERNAL void sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st);
 
 
 

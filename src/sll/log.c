@@ -117,11 +117,11 @@ void _log_release_data(void){
 
 
 
-__SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_char_t* t,...){
+__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_char_t* t,...){
 	file_log_data_t* f_dt=_get_file_index(fp);
 	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
 	if (!w&&!(fn_dt->fl&SLL_LOG_FLAG_SHOW)){
-		return;
+		return 0;
 	}
 	va_list va;
 	va_start(va,t);
@@ -140,29 +140,34 @@ __SLL_EXTERNAL void sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_o
 	sll_file_write(sll_stdout,s.v,s.l,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
 	sll_free_string(&s);
+	return 1;
 }
 
 
 
-__SLL_EXTERNAL void sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_string_t* s){
+__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_string_t* s){
 	if (!_log_default&&!_log_f_dtl){
-		return;
+		return 0;
 	}
 	file_log_data_t* f_dt=_get_file_index(fp);
 	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
 	if (!w&&!(fn_dt->fl&SLL_LOG_FLAG_SHOW)){
-		return;
+		return 0;
 	}
 	if (!(fn_dt->fl&SLL_LOG_FLAG_NO_HEADER)){
 		_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
 	}
 	sll_file_write(sll_stdout,s->v,s->l,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
+	return 1;
 }
 
 
 
-__SLL_EXTERNAL void sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st){
+	sll_flags_t tmp=fl;
+	fl&=SLL_LOG_FLAG_SHOW|SLL_LOG_FLAG_NO_HEADER;
+	sll_bool_t o=(tmp==fl);
 	if (fp){
 		file_log_data_t* dt=_get_file_index(fp);
 		if (fn){
@@ -176,4 +181,5 @@ __SLL_EXTERNAL void sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,
 	else{
 		SET_OR_CLEAR(_log_default,fl,st);
 	}
+	return 1;
 }
