@@ -7,6 +7,9 @@
 #define ARG_OUTPUT_TYPE_C 0
 #define ARG_OUTPUT_TYPE_ARRAY 1
 
+#define PARSE_ARGS_ARRAY 1
+#define PARSE_ARGS_REF 2
+
 
 
 typedef struct _ARG_STATE{

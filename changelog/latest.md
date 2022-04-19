@@ -5,6 +5,7 @@
 - Argument parsing code to parse a 16-bit unsigned integer: `W`
 - Argument parsing code to parse a 64-bit unsigned integer: `Q`
 - Argument parsing code to parse an 8-bit unsigned integer: `B`
+- Argument parsing modifier to output the raw object: `&`
 - Common assembly code is now located in [`src/sll/include/sll/_internal/common.inc`][0.7.14/src/sll/include/sll/_internal/common.inc]
 - Implemented `sll_version_sha` and `sll_version_tag`
 - NASM is now used in the compilation process

@@ -822,7 +822,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:sort_quicksort"),
 		sll_api_sort_quicksort,
-		SLL_CHAR("abbi|o")
+		SLL_CHAR("&abbi|o")
 	},
 	{
 		SLL_CHAR("sll:string_checksum"),

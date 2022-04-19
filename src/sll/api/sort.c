@@ -83,19 +83,15 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort(sll_array_t* arr,sll_bool_t reverse,sll_bool_t inplace,sll_integer_t key_fn){
-	sll_object_t* o;
-	sll_array_t* out;
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort(sll_object_t* arr,sll_bool_t reverse,sll_bool_t inplace,sll_integer_t key_fn){
 	if (inplace){
-		o=SLL_ACQUIRE_STATIC_INT(0);
-		out=arr;
+		SLL_ACQUIRE(arr);
 	}
 	else{
-		o=sll_array_to_object(arr);
-		out=&(o->dt.a);
+		arr=sll_array_to_object(&(arr->dt.a));
 	}
-	if (out->l>1){
-		sll_quicksort(out->v,out->l,(reverse?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),key_fn);
+	if (arr->dt.a.l>1){
+		sll_quicksort(arr->dt.a.v,arr->dt.a.l,(reverse?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),key_fn);
 	}
-	return o;
+	return arr;
 }

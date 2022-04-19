@@ -48,20 +48,8 @@
 		(*st)->dt[(*st)->sz-1]=var; \
 	} \
 
-#define PARSE_TYPE(type,name,field,init) \
-	if (arr){ \
-		SLL_UNIMPLEMENTED(); \
-	} \
-	type* var=GET_PTR(type); \
-	if (!arg){ \
-		init(var); \
-		return; \
-	} \
-	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-	*var=obj->dt.field; \
-	GC_RELEASE(obj);
 #define PARSE_INT(sz) \
-	if (arr){ \
+	if (flags&PARSE_ARGS_ARRAY){ \
 		SLL_UNIMPLEMENTED(); \
 	} \
 	__SLL_U##sz* var=GET_PTR(__SLL_U##sz); \
@@ -72,8 +60,23 @@
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_INT]); \
 	*var=(obj->dt.i<0?0:(obj->dt.i>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:(__SLL_U##sz)(obj->dt.i))); \
 	GC_RELEASE(obj);
+#define PARSE_TYPE(type,name,field,init) \
+	if (flags&PARSE_ARGS_ARRAY){ \
+		SLL_UNIMPLEMENTED(); \
+	} \
+	type* var=GET_PTR(type); \
+	if (!arg){ \
+		init(var); \
+		return; \
+	} \
+	if (flags&PARSE_ARGS_REF){ \
+		SLL_UNIMPLEMENTED(); \
+	} \
+	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
+	*var=obj->dt.field; \
+	GC_RELEASE(obj);
 #define PARSE_TYPE_PTR(type,name,field,init) \
-	if (arr){ \
+	if (flags&PARSE_ARGS_ARRAY){ \
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
 		type** dt=sll_allocate(obj->dt.a.l*sizeof(type*)); \
 		*GET_PTR(type**)=dt; \
@@ -84,6 +87,17 @@
 			*(dt+i)=&(k->dt.field); \
 		} \
 		GC_RELEASE(obj); \
+		return; \
+	} \
+	if (flags&PARSE_ARGS_REF){ \
+		sll_object_t** var=GET_PTR(sll_object_t*); \
+		if (!arg){ \
+			*var=SLL_ACQUIRE_STATIC_INT(0); \
+		} \
+		else{ \
+			ENSURE_TYPE(arg,name); \
+			*var=arg; \
+		} \
 		return; \
 	} \
 	type** var=GET_PTR(type*); \
@@ -120,8 +134,8 @@ static __SLL_FORCE_INLINE void* _get_ptr_array(arg_output_t* o,sll_size_t sz){
 
 
 
-static void _parse_bool(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	if (arr){
+static void _parse_bool(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+	if (flags&PARSE_ARGS_ARRAY){
 		SLL_UNIMPLEMENTED();
 	}
 	*GET_PTR(sll_bool_t)=(arg?sll_operator_bool(arg):0);
@@ -129,38 +143,38 @@ static void _parse_bool(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_ou
 
 
 
-static void _parse_int8(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_int8(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(8);
 }
 
 
 
-static void _parse_int16(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_int16(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(16);
 }
 
 
 
-static void _parse_int32(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_int32(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(32);
 }
 
 
 
-static void _parse_int(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_int(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_integer_t,INT,i,INIT_ZERO);
 }
 
 
 
-static void _parse_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_float(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_float_t,FLOAT,f,INIT_ZERO);
 }
 
 
 
-static void _parse_int_or_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	if (arr){
+static void _parse_int_or_float(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+	if (flags&PARSE_ARGS_ARRAY){
 		SLL_UNIMPLEMENTED();
 	}
 	sll_int_float_t* var=GET_PTR(sll_int_float_t);
@@ -183,26 +197,29 @@ static void _parse_int_or_float(sll_object_t* arg,sll_bool_t arr,arg_state_t** s
 
 
 
-static void _parse_char(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_char(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_char_t,CHAR,c,INIT_ZERO);
 }
 
 
 
-static void _parse_complex(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_complex(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_complex_t,COMPLEX,d,SLL_INIT_COMPLEX);
 }
 
 
 
-static void _parse_string(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_string(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE_PTR(sll_string_t,STRING,s,SLL_INIT_STRING);
 }
 
 
 
-static void _parse_char_or_string(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	if (arr){
+static void _parse_char_or_string(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+	if (flags&PARSE_ARGS_ARRAY){
+		SLL_UNIMPLEMENTED();
+	}
+	if (flags&PARSE_ARGS_REF){
 		SLL_UNIMPLEMENTED();
 	}
 	sll_char_string_t* var=GET_PTR(sll_char_string_t);
@@ -224,20 +241,20 @@ static void _parse_char_or_string(sll_object_t* arg,sll_bool_t arr,arg_state_t**
 
 
 
-static void _parse_array(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_array(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE_PTR(sll_array_t,ARRAY,a,SLL_INIT_ARRAY);
 }
 
 
 
-static void _parse_map(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
+static void _parse_map(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE_PTR(sll_map_t,MAP,m,SLL_INIT_MAP);
 }
 
 
 
-static void _parse_object(sll_object_t* arg,sll_bool_t arr,arg_state_t** st,arg_output_t* o){
-	if (arr){
+static void _parse_object(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+	if (flags&PARSE_ARGS_ARRAY){
 		SLL_UNIMPLEMENTED();
 	}
 	*GET_PTR(sll_object_t*)=(arg?arg:SLL_ACQUIRE_STATIC_INT(0));
@@ -255,6 +272,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** r
 	sll_size_t sz=0;
 	sll_bool_t va=0;
 	sll_bool_t arr=0;
+	sll_bool_t ref=0;
 	while (*t){
 		if (*t=='!'){
 			va=1;
@@ -269,15 +287,19 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** r
 				arr=1;
 			}
 		}
+		else if (*t=='&'){
+			ref=1;
+		}
 		else if (*t=='b'||*t=='B'||*t=='W'||*t=='D'||*t=='Q'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
 			sz+=8;
 			arr=0;
 			sll_bool_t wide=0;
-			if (*t=='x'||*t=='d'||*t=='y'){
+			if (!ref&&(*t=='x'||*t=='d'||*t=='y')){
 				sz+=8;
 				wide=1;
 			}
 			PUSH_REGISTER(wide);
+			ref=0;
 			ac++;
 		}
 		t++;
@@ -303,7 +325,6 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 	if (!(*t)){
 		return NULL;
 	}
-	arg_state_t* st=NULL;
 	const sll_char_t* tmp=t;
 	sll_bool_t var_arg=0;
 	sll_string_length_t var_arg_idx=0;
@@ -319,14 +340,29 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 	if (!var_arg){
 		var_arg_idx=SLL_MAX_STRING_INDEX;
 	}
+	arg_state_t* st=NULL;
+	sll_flags_t flags=0;
+	while (1){
+		SKIP_WHITESPACE;
+		if (*t=='&'){
+			flags=PARSE_ARGS_REF;
+		}
+		else if (*t!='+'){
+			break;
+		}
+		t++;
+	}
 	while (*t){
 		sll_char_t type=*t;
 		t++;
-		sll_bool_t arr=0;
+		sll_flags_t n_flags=0;
 		while (1){
 			SKIP_WHITESPACE;
 			if (*t=='+'){
-				arr=1;
+				flags|=PARSE_ARGS_ARRAY;
+			}
+			else if (*t=='&'){
+				n_flags|=PARSE_ARGS_REF;
 			}
 			else{
 				break;
@@ -335,7 +371,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		}
 		var_arg_idx--;
 		if (!var_arg_idx){
-			if (arr){
+			if (flags&(PARSE_ARGS_ARRAY|PARSE_ARGS_REF)){
 				SLL_UNIMPLEMENTED();
 			}
 			switch (type){
@@ -388,7 +424,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			al++;
 			all--;
 		}
-		void (*fn)(sll_object_t*,sll_bool_t,arg_state_t**,arg_output_t*)=NULL;
+		void (*fn)(sll_object_t*,sll_flags_t,arg_state_t**,arg_output_t*)=NULL;
 		switch (type){
 			case 'b':
 				fn=_parse_bool;
@@ -435,7 +471,8 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 				break;
 		}
 		if (fn){
-			fn(arg,arr,&st,o);
+			fn(arg,flags,&st,o);
+			flags=n_flags;
 		}
 	}
 	if (st){
