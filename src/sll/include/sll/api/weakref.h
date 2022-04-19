@@ -16,7 +16,7 @@
  * \name sll_api_weakref__init
  * \group weakref-api
  * \desc Docs!
- * \api oi|v
+ * \api oi|
  * \arg sll_object_t* no_obj
  * \arg sll_integer_t cb
  */
@@ -68,7 +68,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_g
  * \name sll_api_weakref_set_callback_data
  * \group weakref-api
  * \desc Docs!
- * \api Qo|v
+ * \api Qo|
  * \arg sll_weak_reference_t wr
  * \arg sll_object_t* cb
  */

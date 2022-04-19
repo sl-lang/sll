@@ -222,7 +222,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_de
  * \name sll_api_serial_encode_float
  * \group serial-api
  * \desc Docs!
- * \api if|v
+ * \api if|
  * \arg sll_integer_t fh
  * \arg sll_float_t v
  */
@@ -235,7 +235,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_float(sll_integer_t fh,
  * \name sll_api_serial_encode_integer
  * \group serial-api
  * \desc Docs!
- * \api iQ|v
+ * \api iQ|
  * \arg sll_integer_t fh
  * \arg sll_size_t v
  */
@@ -248,7 +248,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_integer(sll_integer_t f
  * \name sll_api_serial_encode_signed_integer
  * \group serial-api
  * \desc Docs!
- * \api ii|v
+ * \api ii|
  * \arg sll_integer_t fh
  * \arg sll_integer_t v
  */
@@ -261,7 +261,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_signed_integer(sll_inte
  * \name sll_api_serial_encode_object
  * \group serial-api
  * \desc Docs!
- * \api io!|v
+ * \api io!|
  * \arg sll_integer_t fh
  * \arg sll_object_t*const* args
  * \arg sll_arg_count_t len
@@ -275,7 +275,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_serial_encode_object(sll_integer_t fh
  * \name sll_api_serial_encode_string
  * \group serial-api
  * \desc Docs!
- * \api i#s|v
+ * \api i#s|
  * \arg sll_integer_t fh
  * \arg const sll_string_t* str
  */

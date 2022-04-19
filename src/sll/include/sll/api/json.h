@@ -156,7 +156,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
  * \name sll_api_json__init
  * \group json-api
  * \desc Docs!
- * \api ooo|v
+ * \api ooo|
  * \arg sll_object_t* null_obj
  * \arg sll_object_t* true_obj
  * \arg sll_object_t* false_obj

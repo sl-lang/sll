@@ -16,7 +16,7 @@
  * \name sll_api_atexit_register
  * \group atexit-api
  * \desc Docs!
- * \api io!|v
+ * \api io!|
  * \arg sll_integer_t fn
  * \arg sll_object_t*const* args
  * \arg sll_arg_count_t len

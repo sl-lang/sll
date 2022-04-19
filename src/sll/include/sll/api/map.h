@@ -16,7 +16,7 @@
  * \name sll_api_map_extend
  * \group map-api
  * \desc Docs!
- * \api m#m|v
+ * \api m#m|
  * \arg sll_map_t* map
  * \arg const sll_map_t* new
  */
@@ -29,7 +29,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* map,const sll_m
  * \name sll_api_map_remove
  * \group map-api
  * \desc Docs!
- * \api mo|v
+ * \api mo|
  * \arg sll_map_t* map
  * \arg sll_object_t* key
  */

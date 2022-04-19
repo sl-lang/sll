@@ -132,7 +132,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_get_temp_path(sll_string_t* out)
  * \name sll_api_file_inc_handle
  * \group file-api
  * \desc Docs!
- * \api i|v
+ * \api i|
  * \arg sll_integer_t a
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_integer_t a);

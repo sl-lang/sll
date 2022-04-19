@@ -272,7 +272,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:atexit_register"),
 		sll_api_atexit_register,
-		SLL_CHAR("io!|v")
+		SLL_CHAR("io!|")
 	},
 	{
 		SLL_CHAR("sll:atexit_unregister"),
@@ -282,12 +282,12 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:audit__init"),
 		sll_api_audit__init,
-		SLL_CHAR("i|v")
+		SLL_CHAR("i|")
 	},
 	{
 		SLL_CHAR("sll:audit_audit"),
 		sll_api_audit_audit,
-		SLL_CHAR("#s#so!|v")
+		SLL_CHAR("#s#so!|")
 	},
 	{
 		SLL_CHAR("sll:base64_decode"),
@@ -357,7 +357,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_inc_handle"),
 		sll_api_file_inc_handle,
-		SLL_CHAR("i|v")
+		SLL_CHAR("i|")
 	},
 	{
 		SLL_CHAR("sll:file_open"),
@@ -447,7 +447,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:json__init"),
 		sll_api_json__init,
-		SLL_CHAR("ooo|v")
+		SLL_CHAR("ooo|")
 	},
 	{
 		SLL_CHAR("sll:json_parse"),
@@ -482,12 +482,12 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:map_extend"),
 		sll_api_map_extend,
-		SLL_CHAR("m#m|v")
+		SLL_CHAR("m#m|")
 	},
 	{
 		SLL_CHAR("sll:map_remove"),
 		sll_api_map_remove,
-		SLL_CHAR("mo|v")
+		SLL_CHAR("mo|")
 	},
 	{
 		SLL_CHAR("sll:math_abs"),
@@ -797,27 +797,27 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:serial_encode_float"),
 		sll_api_serial_encode_float,
-		SLL_CHAR("if|v")
+		SLL_CHAR("if|")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_integer"),
 		sll_api_serial_encode_integer,
-		SLL_CHAR("iQ|v")
+		SLL_CHAR("iQ|")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_object"),
 		sll_api_serial_encode_object,
-		SLL_CHAR("io!|v")
+		SLL_CHAR("io!|")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_signed_integer"),
 		sll_api_serial_encode_signed_integer,
-		SLL_CHAR("ii|v")
+		SLL_CHAR("ii|")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_string"),
 		sll_api_serial_encode_string,
-		SLL_CHAR("i#s|v")
+		SLL_CHAR("i#s|")
 	},
 	{
 		SLL_CHAR("sll:sort_quicksort"),
@@ -1027,17 +1027,17 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:sys_remove_env"),
 		sll_api_sys_remove_env,
-		SLL_CHAR("#s|v")
+		SLL_CHAR("#s|")
 	},
 	{
 		SLL_CHAR("sll:sys_set_env"),
 		sll_api_sys_set_env,
-		SLL_CHAR("#s#s|v")
+		SLL_CHAR("#s#s|")
 	},
 	{
 		SLL_CHAR("sll:sys_set_sandbox_flag"),
 		sll_api_sys_set_sandbox_flag,
-		SLL_CHAR("B|v")
+		SLL_CHAR("B|")
 	},
 	{
 		SLL_CHAR("sll:thread_create"),
@@ -1162,7 +1162,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:weakref__init"),
 		sll_api_weakref__init,
-		SLL_CHAR("oi|v")
+		SLL_CHAR("oi|")
 	},
 	{
 		SLL_CHAR("sll:weakref_create"),
@@ -1182,7 +1182,7 @@ static const internal_function_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:weakref_set_callback_data"),
 		sll_api_weakref_set_callback_data,
-		SLL_CHAR("Qo|v")
+		SLL_CHAR("Qo|")
 	}
 };
 

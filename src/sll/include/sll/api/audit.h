@@ -16,7 +16,7 @@
  * \name sll_api_audit__init
  * \group array-api
  * \desc Docs!
- * \api i|v
+ * \api i|
  * \arg sll_integer_t cb
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t cb);
@@ -28,7 +28,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t cb);
  * \name sll_api_audit_audit
  * \group array-api
  * \desc Docs!
- * \api #s#so!|v
+ * \api #s#so!|
  * \arg const sll_string_t* name
  * \arg const sll_string_t* fmt
  * \arg sll_object_t*const* args
