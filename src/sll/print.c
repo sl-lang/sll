@@ -168,6 +168,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 					sll_file_write_char(wf,' ',NULL);
 					_print_identifier(f->a[i],sf,wf);
 				}
+				if (f->desc!=SLL_MAX_STRING_INDEX){
+					SLL_UNIMPLEMENTED();
+				}
 			}
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{

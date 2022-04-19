@@ -254,6 +254,7 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 	sll_array_length_t al=0;
 	sll_map_length_t ml=0;
 	sll_node_offset_t f_off=0;
+	sll_string_index_t desc=SLL_MAX_STRING_INDEX;
 	while (c!=SLL_END_OF_DATA){
 		if ((c>8&&c<14)||c==' '){
 			do{
@@ -407,6 +408,9 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(sf->st),&s,1);
+				if (e_c_dt->fn){
+					desc=arg->dt.s;
+				}
 				c=sll_file_read_char(rf,NULL);
 			}
 			else if (c=='`'){
@@ -973,8 +977,9 @@ _return_node:;
 		sf->ft.dt=sll_reallocate(sf->ft.dt,sf->ft.l*sizeof(sll_function_t*));
 		sll_function_t* f=sll_allocate(sizeof(sll_function_t)+i*sizeof(sll_identifier_index_t));
 		f->off=f_off;
-		f->al=(i<<1)|va;
 		f->nm=e_c_dt->a_nm;
+		f->desc=desc;
+		f->al=(i<<1)|va;
 		arg=o+1;
 		for (sll_arg_count_t j=0;j<i;j++){
 			while (arg->t==SLL_NODE_TYPE_NOP||arg->t==SLL_NODE_TYPE_DBG||arg->t==SLL_NODE_TYPE_CHANGE_STACK){

@@ -257,6 +257,7 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_d
 					*(o->ft.dt+sf_m_dt.f_id_off+i)=d;
 					d->off=s->off+o->_s.off;
 					d->nm=(s->nm==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(sf_m_dt.sm+s->nm));
+					d->desc=(s->desc==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(sf_m_dt.sm+s->desc));
 					d->al=s->al;
 					for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(s);j++){
 						d->a[j]=*(sf_m_dt.idx_off[SLL_IDENTIFIER_GET_ARRAY_ID(s->a[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(s->a[j]));

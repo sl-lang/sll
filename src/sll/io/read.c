@@ -172,9 +172,11 @@ static sll_bool_t _read_source_file(sll_file_t* rf,sll_source_file_t* sf){
 		CHECK_ERROR(rf,al,sll_arg_count_t);
 		sll_function_t* k=sll_allocate(sizeof(sll_function_t)+SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al)*sizeof(sll_identifier_index_t));
 		k->off=off;
-		k->al=al;
 		CHECK_ERROR(rf,k->nm,sll_string_index_t);
 		k->nm--;
+		CHECK_ERROR(rf,k->desc,sll_string_index_t);
+		k->desc--;
+		k->al=al;
 		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al);j++){
 			CHECK_ERROR(rf,k->a[j],sll_identifier_index_t);
 		}

@@ -564,6 +564,7 @@ typedef struct _SLL_EXPORT_TABLE{
 typedef struct _SLL_FUNCTION{
 	sll_node_offset_t off;
 	sll_string_index_t nm;
+	sll_string_index_t desc;
 	sll_arg_count_t al;
 	sll_identifier_index_t a[];
 } sll_function_t;

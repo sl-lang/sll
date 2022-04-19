@@ -160,6 +160,7 @@ static void _write_source_file(sll_file_t* wf,const sll_source_file_t* sf){
 		sll_encode_integer(wf,k->off);
 		sll_encode_integer(wf,k->al);
 		sll_encode_integer(wf,k->nm+1);
+		sll_encode_integer(wf,k->desc+1);
 		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(k);j++){
 			sll_encode_integer(wf,k->a[j]);
 		}
