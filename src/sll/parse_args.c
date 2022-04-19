@@ -46,6 +46,9 @@
 
 #define PARSE_INT(sz) \
 	if (flags&PARSE_ARGS_ARRAY){ \
+		if (flags&PARSE_ARGS_REF){ \
+			SLL_UNIMPLEMENTED(); \
+		} \
 		SLL_UNIMPLEMENTED(); \
 	} \
 	__SLL_U##sz* var=GET_PTR(__SLL_U##sz); \
