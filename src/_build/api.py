@@ -5,6 +5,6 @@ def generate_c_api(d_dt,o_fp):
 		for k in d_dt["data"]:
 			if (k["api_fmt"] is None):
 				continue
-			cf.write(f"void {k['name']}(void);\n")
+			cf.write(f"extern void {k['name']}(void);\n")
 			fn_l.append((k["name"],f"{{\n\t\tSLL_CHAR(\"sll:{k['name'][8:]}\"),\n\t\t{k['name']},\n\t\tSLL_CHAR(\"{k['api_fmt']}\")\n\t}}"))
 		cf.write(f"\n\n\nstatic const internal_function_t _ifunc_data_ptr[]={{\n\t"+",\n\t".join([e[1] for e in sorted(fn_l,key=lambda e:e[0])])+f"\n}};\n\n\n\nconst sll_function_index_t _ifunc_size={len(fn_l)};\nconst internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);\n")

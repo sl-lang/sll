@@ -113,7 +113,7 @@ def build_sll(fl,v,r):
 def build_sll_cli():
 	if (util.system=="windows"):
 		util.log("  Compiling Resource Files...")
-		if (util.execute(["rc","/r","/fo","build/app.res","/nologo","src/cli/resources/app.rc"])):
+		if (util.execute(["rc","/r","/fo","build/app.res","/nologo","src/cli/rsrc/app.rc"])):
 			sys.exit(1)
 		util.log("  Compiling Files (Release Mode)...")
 		out_fp=util.output_file_path("src/cli/windows.c")

@@ -58,6 +58,9 @@
 	GC_RELEASE(obj);
 #define PARSE_TYPE(type,name,field,init) \
 	if (flags&PARSE_ARGS_ARRAY){ \
+		if (flags&PARSE_ARGS_REF){ \
+			SLL_UNIMPLEMENTED(); \
+		} \
 		SLL_UNIMPLEMENTED(); \
 	} \
 	type* var=GET_PTR(type); \
@@ -70,6 +73,9 @@
 	GC_RELEASE(obj);
 #define PARSE_TYPE_PTR(type,name,field,init) \
 	if (flags&PARSE_ARGS_ARRAY){ \
+		if (flags&PARSE_ARGS_REF){ \
+			SLL_UNIMPLEMENTED(); \
+		} \
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
 		type** dt=sll_allocate(obj->dt.a.l*sizeof(type*)); \
 		*GET_PTR(type**)=dt; \
@@ -129,6 +135,9 @@ static __SLL_FORCE_INLINE void* _get_ptr_array(arg_output_t* o,sll_size_t sz){
 
 static void _parse_bool(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	if (flags&PARSE_ARGS_ARRAY){
+		if (flags&PARSE_ARGS_REF){
+			SLL_UNIMPLEMENTED();
+		}
 		SLL_UNIMPLEMENTED();
 	}
 	*GET_PTR(sll_bool_t)=(arg?sll_operator_bool(arg):0);
@@ -168,6 +177,9 @@ static void _parse_float(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,ar
 
 static void _parse_int_or_float(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	if (flags&PARSE_ARGS_ARRAY){
+		if (flags&PARSE_ARGS_REF){
+			SLL_UNIMPLEMENTED();
+		}
 		SLL_UNIMPLEMENTED();
 	}
 	sll_int_float_t* var=GET_PTR(sll_int_float_t);
@@ -210,6 +222,9 @@ static void _parse_string(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,a
 
 static void _parse_char_or_string(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	if (flags&PARSE_ARGS_ARRAY){
+		if (flags&PARSE_ARGS_REF){
+			SLL_UNIMPLEMENTED();
+		}
 		SLL_UNIMPLEMENTED();
 	}
 	if (flags&PARSE_ARGS_REF){
@@ -248,6 +263,11 @@ static void _parse_map(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_
 
 static void _parse_object(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	if (flags&PARSE_ARGS_ARRAY){
+		if (flags&PARSE_ARGS_REF){
+			ENSURE_TYPE(arg,ARRAY);
+			*GET_PTR(sll_object_t*)=arg;
+			return;
+		}
 		SLL_UNIMPLEMENTED();
 	}
 	*GET_PTR(sll_object_t*)=(arg?arg:SLL_ACQUIRE_STATIC_INT(0));
