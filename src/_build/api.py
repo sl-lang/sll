@@ -1,6 +1,6 @@
 def generate_c_api(d_dt,o_fp):
 	with open(o_fp,"w") as cf:
-		cf.write("// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!\n#include <sll/_internal/api.h>\n#include <sll/common.h>\n#include <sll/string.h>\n#include <sll/types.h>\n\n\n\n")
+		cf.write("#include <sll/_internal/api.h>\n#include <sll/string.h>\n#include <sll/types.h>\n\n\n\n")
 		fn_l=[]
 		for k in d_dt["data"]:
 			if (k["api_fmt"] is None):

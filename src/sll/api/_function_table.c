@@ -1,6 +1,4 @@
-// WARNING: This is an auto-generated file. Any changes made to this file might be lost at any moment. Do Not Edit!
 #include <sll/_internal/api.h>
-#include <sll/common.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
