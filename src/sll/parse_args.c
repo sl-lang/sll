@@ -126,7 +126,7 @@
 #define WARN_IGNORED_CONST(nm) \
 	do{ \
 		if (flags&PARSE_ARGS_FLAG_CONST){ \
-			SLL_WARN("Ignoring 'const' modifier on type "##nm##": '%s'",tmp); \
+			SLL_WARN("Ignoring 'const' modifier on type "nm": '%s'",tmp); \
 		} \
 	} while (0)
 
@@ -156,19 +156,19 @@ static void _parse_bool(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg
 
 
 
-static void _parse_int8(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint8(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(8);
 }
 
 
 
-static void _parse_int16(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint16(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(16);
 }
 
 
 
-static void _parse_int32(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint32(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(32);
 }
 
@@ -458,48 +458,47 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		void (*fn)(sll_object_t*,sll_flags_t,arg_state_t**,arg_output_t*)=NULL;
 		switch (type){
 			case 'b':
-				WARN_IGNORED_CONST("bool (b)");
+				WARN_IGNORED_CONST("'sll_bool_t' (b)");
 				fn=_parse_bool;
 				break;
 			case 'B':
-				WARN_IGNORED_CONST("__SLL_U8 (B)");
-				fn=_parse_int8;
+				WARN_IGNORED_CONST("'__SLL_U8' (B)");
+				fn=_parse_uint8;
 				break;
 			case 'W':
-				WARN_IGNORED_CONST("__SLL_U16 (W)");
-				fn=_parse_int16;
+				WARN_IGNORED_CONST("'__SLL_U16' (W)");
+				fn=_parse_uint16;
 				break;
 			case 'D':
-				WARN_IGNORED_CONST("__SLL_U32 (D)");
-				fn=_parse_int32;
+				WARN_IGNORED_CONST("'__SLL_U32' (D)");
+				fn=_parse_uint32;
 				break;
 			case 'Q':
-				WARN_IGNORED_CONST("__SLL_U64 (Q)");
 			case 'i':
-				WARN_IGNORED_CONST("int (i)");
+				WARN_IGNORED_CONST("'sll_integer_t' or '__SLL_U64' (i or Q)");
 				fn=_parse_int;
 				break;
 			case 'f':
-				WARN_IGNORED_CONST("float (f)");
+				WARN_IGNORED_CONST("'sll_float_t' (f)");
 				fn=_parse_float;
 				break;
 			case 'x':
-				WARN_IGNORED_CONST("int|float (x)");
+				WARN_IGNORED_CONST("'const sll_int_float_t*' (x)");
 				fn=_parse_int_or_float;
 				break;
 			case 'c':
-				WARN_IGNORED_CONST("char (c)");
+				WARN_IGNORED_CONST("'sll_char_t' (c)");
 				fn=_parse_char;
 				break;
 			case 'd':
-				WARN_IGNORED_CONST("complex (d)");
+				WARN_IGNORED_CONST("'const sll_complex_t*' (d)");
 				fn=_parse_complex;
 				break;
 			case 's':
 				fn=_parse_string;
 				break;
 			case 'y':
-				WARN_IGNORED_CONST("char|string (y)");
+				WARN_IGNORED_CONST("'const sll_char_string_t*' (y)");
 				fn=_parse_char_or_string;
 				break;
 			case 'a':
