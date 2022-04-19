@@ -837,7 +837,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_count"),
 		sll_api_string_count,
-		SLL_CHAR("#s#y|i")
+		SLL_CHAR("#sy|i")
 	},
 	{
 		SLL_CHAR("sll:string_count_left"),
@@ -852,7 +852,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_ends"),
 		sll_api_string_ends,
-		SLL_CHAR("#s#y|b")
+		SLL_CHAR("#sy|b")
 	},
 	{
 		SLL_CHAR("sll:string_flip_case"),
@@ -867,27 +867,27 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_index"),
 		sll_api_string_index,
-		SLL_CHAR("#s#yD|i")
+		SLL_CHAR("#syD|i")
 	},
 	{
 		SLL_CHAR("sll:string_index_list"),
 		sll_api_string_index_list,
-		SLL_CHAR("#s#yb|i")
+		SLL_CHAR("#syb|i")
 	},
 	{
 		SLL_CHAR("sll:string_index_reverse"),
 		sll_api_string_index_reverse,
-		SLL_CHAR("#s#y|i")
+		SLL_CHAR("#sy|i")
 	},
 	{
 		SLL_CHAR("sll:string_index_reverse_list"),
 		sll_api_string_index_reverse_list,
-		SLL_CHAR("#s#yb|i")
+		SLL_CHAR("#syb|i")
 	},
 	{
 		SLL_CHAR("sll:string_join"),
 		sll_api_string_join,
-		SLL_CHAR("#y#a|s")
+		SLL_CHAR("y#a|s")
 	},
 	{
 		SLL_CHAR("sll:string_pad"),
@@ -907,7 +907,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_replace"),
 		sll_api_string_replace,
-		SLL_CHAR("#s#y#y|s")
+		SLL_CHAR("#syy|s")
 	},
 	{
 		SLL_CHAR("sll:string_reverse"),
@@ -922,12 +922,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:string_split"),
 		sll_api_string_split,
-		SLL_CHAR("#s#y|a")
+		SLL_CHAR("#sy|a")
 	},
 	{
 		SLL_CHAR("sll:string_starts"),
 		sll_api_string_starts,
-		SLL_CHAR("#s#y|b")
+		SLL_CHAR("#sy|b")
 	},
 	{
 		SLL_CHAR("sll:string_to_lower_case"),
@@ -1127,12 +1127,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:time_sleep"),
 		sll_api_time_sleep,
-		SLL_CHAR("#x|f")
+		SLL_CHAR("x|f")
 	},
 	{
 		SLL_CHAR("sll:time_sleep_ns"),
 		sll_api_time_sleep_ns,
-		SLL_CHAR("#x|Q")
+		SLL_CHAR("x|Q")
 	},
 	{
 		SLL_CHAR("sll:vm_get_config"),

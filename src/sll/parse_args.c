@@ -7,6 +7,7 @@
 #include <sll/complex.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
+#include <sll/log.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -19,7 +20,7 @@
 
 
 #define SKIP_WHITESPACE \
-	while (*t&&*t!='b'&&*t!='B'&&*t!='W'&&*t!='D'&&*t!='Q'&&*t!='i'&&*t!='f'&&*t!='x'&&*t!='c'&&*t!='d'&&*t!='s'&&*t!='y'&&*t!='a'&&*t!='m'&&*t!='o'&&*t!='!'&&*t!='+'&&*t!='&'){ \
+	while (*t&&*t!='b'&&*t!='B'&&*t!='W'&&*t!='D'&&*t!='Q'&&*t!='i'&&*t!='f'&&*t!='x'&&*t!='c'&&*t!='d'&&*t!='s'&&*t!='y'&&*t!='a'&&*t!='m'&&*t!='o'&&*t!='!'&&*t!='+'&&*t!='&'&&*t!='#'){ \
 		t++; \
 	}
 
@@ -45,8 +46,8 @@
 	} \
 
 #define PARSE_INT(sz) \
-	if (flags&PARSE_ARGS_ARRAY){ \
-		if (flags&PARSE_ARGS_REF){ \
+	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
+		if (flags&PARSE_ARGS_FLAG_REF){ \
 			SLL_UNIMPLEMENTED(); \
 		} \
 		SLL_UNIMPLEMENTED(); \
@@ -60,8 +61,8 @@
 	*var=(obj->dt.i<0?0:(obj->dt.i>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:(__SLL_U##sz)(obj->dt.i))); \
 	GC_RELEASE(obj);
 #define PARSE_TYPE(type,name,field,init) \
-	if (flags&PARSE_ARGS_ARRAY){ \
-		if (flags&PARSE_ARGS_REF){ \
+	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
+		if (flags&PARSE_ARGS_FLAG_REF){ \
 			SLL_UNIMPLEMENTED(); \
 		} \
 		SLL_UNIMPLEMENTED(); \
@@ -75,8 +76,8 @@
 	*var=obj->dt.field; \
 	GC_RELEASE(obj);
 #define PARSE_TYPE_PTR(type,name,field,init) \
-	if (flags&PARSE_ARGS_ARRAY){ \
-		if (flags&PARSE_ARGS_REF){ \
+	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
+		if (flags&PARSE_ARGS_FLAG_REF){ \
 			SLL_UNIMPLEMENTED(); \
 		} \
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
@@ -91,7 +92,7 @@
 		GC_RELEASE(obj); \
 		return; \
 	} \
-	if (flags&PARSE_ARGS_REF){ \
+	if (flags&PARSE_ARGS_FLAG_REF){ \
 		sll_object_t** var=GET_PTR(sll_object_t*); \
 		if (!arg){ \
 			*var=SLL_ACQUIRE_STATIC_INT(0); \
@@ -122,6 +123,13 @@
 		} \
 	} while (0)
 
+#define WARN_IGNORED_CONST(nm) \
+	do{ \
+		if (flags&PARSE_ARGS_FLAG_CONST){ \
+			SLL_WARN("Ignoring 'const' modifier on type "##nm##": '%s'",tmp); \
+		} \
+	} while (0)
+
 
 
 static __SLL_FORCE_INLINE void* _get_ptr_array(arg_output_t* o,sll_size_t sz){
@@ -137,8 +145,8 @@ static __SLL_FORCE_INLINE void* _get_ptr_array(arg_output_t* o,sll_size_t sz){
 
 
 static void _parse_bool(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
-	if (flags&PARSE_ARGS_ARRAY){
-		if (flags&PARSE_ARGS_REF){
+	if (flags&PARSE_ARGS_FLAG_ARRAY){
+		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
 		}
 		SLL_UNIMPLEMENTED();
@@ -179,8 +187,8 @@ static void _parse_float(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,ar
 
 
 static void _parse_int_or_float(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
-	if (flags&PARSE_ARGS_ARRAY){
-		if (flags&PARSE_ARGS_REF){
+	if (flags&PARSE_ARGS_FLAG_ARRAY){
+		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
 		}
 		SLL_UNIMPLEMENTED();
@@ -224,13 +232,13 @@ static void _parse_string(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,a
 
 
 static void _parse_char_or_string(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
-	if (flags&PARSE_ARGS_ARRAY){
-		if (flags&PARSE_ARGS_REF){
+	if (flags&PARSE_ARGS_FLAG_ARRAY){
+		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
 		}
 		SLL_UNIMPLEMENTED();
 	}
-	if (flags&PARSE_ARGS_REF){
+	if (flags&PARSE_ARGS_FLAG_REF){
 		SLL_UNIMPLEMENTED();
 	}
 	sll_char_string_t* var=GET_PTR(sll_char_string_t);
@@ -265,8 +273,8 @@ static void _parse_map(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_
 
 
 static void _parse_object(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
-	if (flags&PARSE_ARGS_ARRAY){
-		if (flags&PARSE_ARGS_REF){
+	if (flags&PARSE_ARGS_FLAG_ARRAY){
+		if (flags&PARSE_ARGS_FLAG_REF){
 			ENSURE_TYPE(arg,ARRAY);
 			*GET_PTR(sll_object_t*)=arg;
 			return;
@@ -356,12 +364,16 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 	if (!var_arg){
 		var_arg_idx=SLL_MAX_STRING_INDEX;
 	}
+	tmp=t;
 	arg_state_t* st=NULL;
 	sll_flags_t flags=0;
 	while (1){
 		SKIP_WHITESPACE;
 		if (*t=='&'){
-			flags=PARSE_ARGS_REF;
+			flags|=PARSE_ARGS_FLAG_REF;
+		}
+		else if (*t=='#'){
+			flags|=PARSE_ARGS_FLAG_CONST;
 		}
 		else if (*t!='+'&&*t!='!'){
 			break;
@@ -375,10 +387,13 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		while (1){
 			SKIP_WHITESPACE;
 			if (*t=='+'){
-				flags|=PARSE_ARGS_ARRAY;
+				flags|=PARSE_ARGS_FLAG_ARRAY;
 			}
 			else if (*t=='&'){
-				n_flags|=PARSE_ARGS_REF;
+				n_flags|=PARSE_ARGS_FLAG_REF;
+			}
+			else if (*t=='#'){
+				n_flags|=PARSE_ARGS_FLAG_CONST;
 			}
 			else if (*t!='!'){
 				break;
@@ -387,7 +402,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		}
 		var_arg_idx--;
 		if (!var_arg_idx){
-			if (flags&(PARSE_ARGS_ARRAY|PARSE_ARGS_REF)){
+			if (flags&(PARSE_ARGS_FLAG_ARRAY|PARSE_ARGS_FLAG_REF)){
 				SLL_UNIMPLEMENTED();
 			}
 			switch (type){
@@ -443,37 +458,48 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		void (*fn)(sll_object_t*,sll_flags_t,arg_state_t**,arg_output_t*)=NULL;
 		switch (type){
 			case 'b':
+				WARN_IGNORED_CONST("bool (b)");
 				fn=_parse_bool;
 				break;
 			case 'B':
+				WARN_IGNORED_CONST("__SLL_U8 (B)");
 				fn=_parse_int8;
 				break;
 			case 'W':
+				WARN_IGNORED_CONST("__SLL_U16 (W)");
 				fn=_parse_int16;
 				break;
 			case 'D':
+				WARN_IGNORED_CONST("__SLL_U32 (D)");
 				fn=_parse_int32;
 				break;
 			case 'Q':
+				WARN_IGNORED_CONST("__SLL_U64 (Q)");
 			case 'i':
+				WARN_IGNORED_CONST("int (i)");
 				fn=_parse_int;
 				break;
 			case 'f':
+				WARN_IGNORED_CONST("float (f)");
 				fn=_parse_float;
 				break;
 			case 'x':
+				WARN_IGNORED_CONST("int|float (x)");
 				fn=_parse_int_or_float;
 				break;
 			case 'c':
+				WARN_IGNORED_CONST("char (c)");
 				fn=_parse_char;
 				break;
 			case 'd':
+				WARN_IGNORED_CONST("complex (d)");
 				fn=_parse_complex;
 				break;
 			case 's':
 				fn=_parse_string;
 				break;
 			case 'y':
+				WARN_IGNORED_CONST("char|string (y)");
 				fn=_parse_char_or_string;
 				break;
 			case 'a':
