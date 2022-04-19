@@ -19,11 +19,7 @@
 
 
 #define SKIP_WHITESPACE \
-	while (*t==' '||(*t>8&&*t<14)||*t=='!'||*t=='#'){ \
-		t++; \
-	}
-#define SKIP_WHITESPACE_KEEP_VA \
-	while (*t==' '||(*t>8&&*t<14)||*t=='#'){ \
+	while (*t&&*t!='b'&&*t!='B'&&*t!='W'&&*t!='D'&&*t!='Q'&&*t!='i'&&*t!='f'&&*t!='x'&&*t!='c'&&*t!='d'&&*t!='s'&&*t!='y'&&*t!='a'&&*t!='m'&&*t!='o'&&*t!='!'&&*t!='+'&&*t!='&'){ \
 		t++; \
 	}
 
@@ -263,7 +259,7 @@ static void _parse_object(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,a
 
 
 sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** regs,sll_size_t* o){
-	SKIP_WHITESPACE_KEEP_VA;
+	SKIP_WHITESPACE;
 	sll_size_t reg_sz=0;
 	if (regs){
 		*regs=NULL;
@@ -303,7 +299,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** r
 			ac++;
 		}
 		t++;
-		SKIP_WHITESPACE_KEEP_VA;
+		SKIP_WHITESPACE;
 	}
 	if (ac&&va){
 		sz+=8;
@@ -347,7 +343,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		if (*t=='&'){
 			flags=PARSE_ARGS_REF;
 		}
-		else if (*t!='+'){
+		else if (*t!='+'&&*t!='!'){
 			break;
 		}
 		t++;
@@ -364,7 +360,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			else if (*t=='&'){
 				n_flags|=PARSE_ARGS_REF;
 			}
-			else{
+			else if (*t!='!'){
 				break;
 			}
 			t++;
