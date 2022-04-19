@@ -113,8 +113,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 					return sll_map_to_object(NULL);
 				}
 				sll_object_t* o=sll_map_length_to_object(l);
-				l<<=1;
-				for (sll_map_length_t i=0;i<l;i++){
+				for (sll_map_length_t i=0;i<(l<<1);i++){
 					o->dt.m.v[i]=sll_decode_object(f);
 				}
 				return o;
@@ -164,7 +163,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_decode_string(sll_file_t* f,sll
 			unsigned int e;
 			unsigned int el=((v&(1ull<<bc))?8:STRING_COMPRESSION_OFFSET_BIT_COUNT+STRING_COMPRESSION_LENGTH_BIT_COUNT);
 			if (bc<el){
-				e=(v&((1<<bc)-1))<<(el-bc);
+				e=(v&((1ull<<bc)-1))<<(el-bc);
 				if (sll_file_read(f,&v,sizeof(wide_data_t),NULL)!=sizeof(wide_data_t)){
 					goto _error_free;
 				}
@@ -173,7 +172,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_decode_string(sll_file_t* f,sll
 			}
 			else{
 				bc-=el;
-				e=(v>>bc)&((1<<el)-1);
+				e=(v>>bc)&((1ull<<el)-1);
 			}
 			if (el==8){
 				o->v[i]=(sll_char_t)e;

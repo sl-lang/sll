@@ -39,8 +39,7 @@ contexts:
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - include: comments
-        - match: '{{full_identifier}}'
-          scope: variable.parameter.sll
+        - include: function
         - match: '\)'
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           set:
@@ -74,8 +73,7 @@ contexts:
       push:
         - meta_scope: meta.group.sll meta.parens.sll
         - include: comments
-        - match: '{{full_identifier}}'
-          scope: variable.parameter.sll
+        - include: function
         - match: '\)'
           scope: punctuation.section.group.end.sll punctuation.section.parens.end.sll
           pop: true
@@ -176,6 +174,56 @@ contexts:
         - include: main
     - match: '[\)\}\]>]'
       scope: invalid.illegal.stray-bracket-end.sll
+    - include: types
+    - match: '{{not_identifier_start}}(int|func|type|float|char|complex|string|array|map|map_key|map_value|object)_type{{not_identifier_end}}'
+      scope: storage.type.builtin.sll
+    - match: '{{not_identifier_start}}@@(copy|delete|init|string)@@{{not_identifier_end}}'
+      scope: support.function.special.sll
+    - match: '{{not_identifier_start}}@@(file|line)@@{{not_identifier_end}}'
+      scope: support.type.special.sll
+    - match: '{{not_identifier_start}}(!)?({{identifier}}){{not_identifier_end}}'
+      captures:
+        1: storage.modifier.tls.sll
+        2: variable.other.sll
+    - match: '{{full_identifier}}'
+      scope: variable.other.sll
+  function:
+    - match: '"'
+      scope: punctuation.definition.comment.begin.sll
+      push:
+        - meta_scope: comment.block.function.sll
+        - match: '(?<!\\)"'
+          scope: punctuation.definition.comment.end.sll
+          pop: true
+    - match: '`'
+      scope: punctuation.definition.comment.begin.sll
+      push:
+        - meta_scope: comment.block.function.sll
+        - match: '`'
+          scope: punctuation.definition.comment.end.sll
+          pop: true
+    - include: types
+    - match: '{{full_identifier}}'
+      scope: variable.parameter.sll
+  comments:
+    - match: '(\|)(#)(\|)'
+      scope: comment.block.sll
+      captures:
+        1: punctuation.definition.comment.begin.sll
+        2: punctuation.definition.comment.begin.sll punctuation.definition.comment.end.sll
+        3: punctuation.definition.comment.end.sll
+    - match: '\|#'
+      scope: punctuation.definition.comment.begin.sll
+      push:
+        - meta_scope: comment.block.sll
+        - match: '#\|'
+          scope: punctuation.definition.comment.end.sll
+          pop: true
+    - match: '(;).*$'
+      scope: comment.line.sll
+      captures:
+        1: punctuation.definition.comment.sll
+  types:
     - match: '{{not_identifier_start}}[\+-]?(?:0[bB][01][01_]*|0[oO][0-7][0-7_]*|[xX][0-9a-fA-F][0-9a-fA-F_]*|[0-9][0-9_]*|{{float_or_decimal}}(?:[+-]{{float_or_decimal}})?)(i){{not_identifier_end}}'
       scope: constant.numeric.complex.sll
       captures:
@@ -219,33 +267,3 @@ contexts:
           pop: true
     - match: '{{not_identifier_start}}(nil|true|false){{not_identifier_end}}'
       scope: constant.language.sll
-    - match: '{{not_identifier_start}}(int|func|type|float|char|complex|string|array|map|map_key|map_value|object)_type{{not_identifier_end}}'
-      scope: storage.type.builtin.sll
-    - match: '{{not_identifier_start}}@@(copy|delete|init|string)@@{{not_identifier_end}}'
-      scope: support.function.special.sll
-    - match: '{{not_identifier_start}}@@(file|line)@@{{not_identifier_end}}'
-      scope: support.type.special.sll
-    - match: '{{not_identifier_start}}(!)?({{identifier}}){{not_identifier_end}}'
-      captures:
-        1: storage.modifier.tls.sll
-        2: variable.other.sll
-    - match: '{{full_identifier}}'
-      scope: variable.other.sll
-  comments:
-    - match: '(\|)(#)(\|)'
-      scope: comment.block.sll
-      captures:
-        1: punctuation.definition.comment.begin.sll
-        2: punctuation.definition.comment.begin.sll punctuation.definition.comment.end.sll
-        3: punctuation.definition.comment.end.sll
-    - match: '\|#'
-      scope: punctuation.definition.comment.begin.sll
-      push:
-        - meta_scope: comment.block.sll
-        - match: '#\|'
-          scope: punctuation.definition.comment.end.sll
-          pop: true
-    - match: '(;).*$'
-      scope: comment.line.sll
-      captures:
-        1: punctuation.definition.comment.sll

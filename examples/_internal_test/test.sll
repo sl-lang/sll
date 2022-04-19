@@ -576,3 +576,9 @@
 (<- sys$set_sandbox_flags "no-path")
 
 (:> (<- path$mkdir "abc/abc/abc") "\n")
+
+(= func (,,, a b
+	"Adds the numbers `a` and `b` and returns the result."
+	(@@ (+ a b))
+))
+(:> (<- func 1 2) "\n")

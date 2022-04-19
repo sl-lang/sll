@@ -7,6 +7,7 @@
 - Argument parsing code to parse an 8-bit unsigned integer: `B`
 - Argument parsing modifier to output the raw object: `&`
 - Common assembly code is now located in [`src/sll/include/sll/_internal/common.inc`][0.7.14/src/sll/include/sll/_internal/common.inc]
+- Functions can now be annotated with documentation by a top-level string
 - Implemented `sll_internal_function_descriptor_t`, `sll_builtin_internal_function_data`, `sll_builtin_internal_function_count` and `sll_register_internal_functions`
 - Implemented `sll_version_sha` and `sll_version_tag`
 - NASM is now used in the compilation process
@@ -30,6 +31,7 @@
 - Unneeded `SLL_RETURN_TYPE_xxx` constants
 - Unneeded function: `sll_register_builtin_internal_functions`
 - Unneeded type: `sll_return_type_t`
+- Unused module `args.sll`
 
 [0.7.14]: https://github.com/sl-lang/sll/compare/sll-v0.7.13...main
 [0.7.14/src/sll/include/sll/_internal/common.inc]: https://github.com/sl-lang/sll/blob/main/src/sll/include/sll/_internal/common.inc
