@@ -14,7 +14,7 @@
 /**
  * \flags macro var
  * \name SLL_MAX_FUNCTION_INDEX
- * \group identifier
+ * \group ift
  * \desc Docs!
  * \type sll_function_index_t
  */
@@ -25,11 +25,33 @@
 /**
  * \flags macro var
  * \name SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX
- * \group identifier
+ * \group ift
  * \desc Docs!
  * \type sll_function_index_t
  */
 #define SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX 0xffffffff
+
+
+
+/**
+ * \flags var
+ * \name sll_builtin_internal_function_data
+ * \group ift
+ * \desc Docs!
+ * \type const sll_internal_function_descriptor_t*
+ */
+__SLL_EXTERNAL extern const sll_internal_function_descriptor_t* sll_builtin_internal_function_data;
+
+
+
+/**
+ * \flags var
+ * \name sll_builtin_internal_function_count
+ * \group ift
+ * \desc Docs!
+ * \type const sll_function_index_t
+ */
+__SLL_EXTERNAL extern const sll_function_index_t sll_builtin_internal_function_count;
 
 
 
@@ -82,17 +104,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_funct
 
 /**
  * \flags func
- * \name sll_register_builtin_internal_functions
- * \group ift
- * \desc Docs!
- * \arg sll_internal_function_table_t* ift
- */
-__SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_function_table_t* ift);
-
-
-
-/**
- * \flags func
  * \name sll_register_internal_function
  * \group ift
  * \desc Docs!
@@ -103,6 +114,19 @@ __SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_functio
  * \ret sll_function_index_t
  */
 __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_pointer_t f);
+
+
+
+/**
+ * \flags func
+ * \name sll_register_internal_functionss
+ * \group ift
+ * \desc Docs!
+ * \arg sll_internal_function_table_t* i_ft
+ * \arg const sll_internal_function_descriptor_t* dt
+ * \arg sll_function_index_t len
+ */
+__SLL_EXTERNAL void sll_register_internal_functions(sll_internal_function_table_t* i_ft,const sll_internal_function_descriptor_t* dt,sll_function_index_t len);
 
 
 

@@ -9,6 +9,7 @@
 - Common assembly code is now located in [`src/sll/include/sll/_internal/common.inc`][0.7.14/src/sll/include/sll/_internal/common.inc]
 - Implemented `sll_version_sha` and `sll_version_tag`
 - NASM is now used in the compilation process
+- Implemented `sll_internal_function_descriptor_t`, `sll_builtin_internal_function_data`, `sll_builtin_internal_function_count` and `sll_register_internal_functions`
 
 ## Changed
 
@@ -27,6 +28,7 @@
 
 - API-related header files
 - Unneeded `SLL_RETURN_TYPE_xxx` constants
+- Unneeded function: `sll_register_builtin_internal_functions`
 - Unneeded type: `sll_return_type_t`
 
 [0.7.14]: https://github.com/sl-lang/sll/compare/sll-v0.7.13...main

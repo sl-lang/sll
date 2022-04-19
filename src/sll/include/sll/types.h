@@ -1080,4 +1080,12 @@ typedef struct _SLL_SEARCH_PATH{
 
 
 
+typedef struct _SLL_INTERNAL_FUNCTION_DESCRIPTOR{
+	const sll_char_t* nm;
+	const sll_internal_function_pointer_t f;
+	const sll_char_t* fmt;
+} sll_internal_function_descriptor_t;
+
+
+
 #endif

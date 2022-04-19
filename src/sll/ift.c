@@ -1,4 +1,3 @@
-#include <sll/_internal/api.h>
 #include <sll/_internal/api_call.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/string.h>
@@ -87,14 +86,13 @@ __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_
 
 
 
-__SLL_EXTERNAL void sll_register_builtin_internal_functions(sll_internal_function_table_t* ift){
-	ift->l+=_ifunc_size;
-	ift->dt=sll_reallocate(PTR(ift->dt),ift->l*sizeof(const sll_internal_function_t));
-	const internal_function_t* f=_ifunc_data;
-	sll_internal_function_t* p=(sll_internal_function_t*)(ift->dt+ift->l-_ifunc_size);
-	for (sll_function_index_t i=0;i<_ifunc_size;i++){
-		_create_function(f->f,f->nm,f->fmt,p);
-		f++;
+__SLL_EXTERNAL void sll_register_internal_functions(sll_internal_function_table_t* i_ft,const sll_internal_function_descriptor_t* dt,sll_function_index_t len){
+	i_ft->l+=len;
+	i_ft->dt=sll_reallocate(PTR(i_ft->dt),i_ft->l*sizeof(const sll_internal_function_t));
+	sll_internal_function_t* p=(sll_internal_function_t*)(i_ft->dt+i_ft->l-len);
+	for (sll_function_index_t i=0;i<len;i++){
+		_create_function(dt->f,dt->nm,dt->fmt,p);
+		dt++;
 		p++;
 	}
 }

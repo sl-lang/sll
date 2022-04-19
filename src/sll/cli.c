@@ -241,7 +241,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	cli_audit_library_t* ll=NULL;
 	sll_array_length_t lll=0;
 	sll_create_internal_function_table(&i_ft);
-	sll_register_builtin_internal_functions(&i_ft);
+	sll_register_internal_functions(&i_ft,sll_builtin_internal_function_data,sll_builtin_internal_function_count);
 	const sll_char_t* b_nm=NULL;
 	const sll_char_t* b_o_fp=NULL;
 	const sll_char_t* o_fp=NULL;

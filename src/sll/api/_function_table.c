@@ -1,4 +1,4 @@
-#include <sll/_internal/api.h>
+#include <sll/common.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
@@ -203,7 +203,7 @@ extern void sll_api_weakref_set_callback_data(void);
 
 
 
-static const internal_function_t _ifunc_data_ptr[]={
+static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:array_count"),
 		sll_api_array_count,
@@ -1188,5 +1188,5 @@ static const internal_function_t _ifunc_data_ptr[]={
 
 
 
-const sll_function_index_t _ifunc_size=196;
-const internal_function_t* _ifunc_data=(const internal_function_t*)(&_ifunc_data_ptr);
+__SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_ifunc_data_ptr);
+__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=196;
