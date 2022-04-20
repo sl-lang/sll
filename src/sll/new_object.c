@@ -7,6 +7,7 @@
 #include <sll/allocator.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/log.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/new_object.h>
@@ -180,6 +181,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 	if (!(*tl)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
+	const sll_char_t* src_t=*t;
 	(*tl)--;
 	sll_char_t st=**t;
 	(*t)++;
@@ -389,6 +391,9 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				return o;
 			}
 	}
+	if (st!='0'){
+		SLL_WARN("Ignoring unknown format code '%c': %s",st,src_t);
+	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
@@ -427,10 +432,10 @@ __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...)
 
 __SLL_EXTERNAL void sll_new_object_array_list(const sll_char_t* t,sll_string_length_t tl,sll_var_arg_list_t* va,sll_array_t* o){
 	sll_array_create(0,o);
+	SKIP_MODIFIERS;
 	if (!tl){
 		return;
 	}
-	SKIP_MODIFIERS;
 	while (tl){
 		o->l++;
 		sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));

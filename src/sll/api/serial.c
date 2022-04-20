@@ -61,6 +61,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_fi
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (!f){
+		if (err){
+			*err=SLL_ERROR_UNKNOWN_FD;
+			return NULL;
+		}
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	sll_read_char_t chr=sll_file_read_char(f,err);
@@ -163,8 +167,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,
 				}
 				return o;
 			}
-		case SLL_END_OF_DATA:
-			return SLL_ACQUIRE_STATIC_INT(0);
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -474,8 +476,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
 	sll_error_t err;
 	sll_object_t* o=sll_decode_object(f,&err);
 	if (err==SLL_NO_ERROR){
-		sll_new_object_array(SLL_CHAR("o"),out,o);
-		GC_RELEASE(o);
+		sll_new_object_array(SLL_CHAR("O!"),out,o);
 	}
 	return err;
 }

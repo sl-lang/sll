@@ -21,6 +21,7 @@
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file$file_type))
 	(= o (<- (... "sll:serial_decode_object") f$_handle))
+	(:> [[[[")" o "("]]]] "\n")
 	(@@ (?: (=== (:? o) int_type)
 		(<- error$from_internal o)
 		(: o 0)
