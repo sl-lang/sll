@@ -371,12 +371,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_read"),
 		sll_api_file_read,
-		SLL_CHAR("iD|o")
+		SLL_CHAR("iD|~s")
 	},
 	{
 		SLL_CHAR("sll:file_read_char"),
 		sll_api_file_read_char,
-		SLL_CHAR("i|o")
+		SLL_CHAR("i|~c")
 	},
 	{
 		SLL_CHAR("sll:file_rename"),

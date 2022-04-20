@@ -172,12 +172,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(s
  * \name sll_api_file_read
  * \group file-api
  * \desc Docs!
- * \api iD|o
+ * \api iD|~s
  * \arg sll_integer_t fh
  * \arg sll_string_length_t size
- * \ret sll_object_t*
+ * \arg sll_string_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read(sll_integer_t fh,sll_string_length_t size);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(sll_integer_t fh,sll_string_length_t size,sll_string_t* out);
 
 
 
@@ -186,11 +187,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read
  * \name sll_api_file_read_char
  * \group file-api
  * \desc Docs!
- * \api i|o
+ * \api i|~c
  * \arg sll_integer_t fh
- * \ret sll_object_t*
+ * \arg sll_char_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read_char(sll_integer_t fh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read_char(sll_integer_t fh,sll_char_t* out);
 
 
 

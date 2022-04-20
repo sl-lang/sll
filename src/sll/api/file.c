@@ -227,40 +227,40 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(s
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read(sll_integer_t fh,sll_string_length_t size){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(sll_integer_t fh,sll_string_length_t size,sll_string_t* out){
 	if (fh<0||fh>=_file_fll||!(*(_file_fl+fh))){
-		return sll_int_to_object(SLL_ERROR_UNKNOWN_FD);
+		return SLL_ERROR_UNKNOWN_FD;
 	}
 	if (!size){
 		SLL_UNIMPLEMENTED();
 	}
 	extended_file_t* ef=*(_file_fl+fh);
-	sll_string_t o;
-	sll_string_create(size,&o);
+	sll_string_create(size,out);
 	sll_error_t err;
-	sll_size_t sz=sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),o.v,size,&err);
+	sll_size_t sz=sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),out->v,size,&err);
 	if (!sz&&err!=SLL_NO_ERROR){
-		sll_free_string(&o);
-		return sll_int_to_object(err);
+		sll_free_string(out);
+		return err;
 	}
-	sll_string_decrease(&o,(sll_string_length_t)sz);
-	sll_string_calculate_checksum(&o);
-	return STRING_TO_OBJECT_NOCOPY(&o);
+	sll_string_decrease(out,(sll_string_length_t)sz);
+	sll_string_calculate_checksum(out);
+	return SLL_NO_ERROR;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_read_char(sll_integer_t fh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read_char(sll_integer_t fh,sll_char_t* out){
 	if (fh<0||fh>=_file_fll||!(*(_file_fl+fh))){
-		return sll_int_to_object(SLL_ERROR_UNKNOWN_FD);
+		return SLL_ERROR_UNKNOWN_FD;
 	}
 	extended_file_t* ef=*(_file_fl+fh);
 	sll_error_t err;
 	sll_read_char_t c=sll_file_read_char((ef->p?ef->dt.p:&(ef->dt.f)),&err);
-	if (c==SLL_END_OF_DATA&&err!=SLL_NO_ERROR){
-		return sll_int_to_object(err);
+	if (c==SLL_END_OF_DATA){
+		return (err==SLL_NO_ERROR?SLL_ERROR_EOF:err);
 	}
-	return (c==SLL_END_OF_DATA?SLL_ACQUIRE_STATIC_NEG_INT(1):SLL_FROM_CHAR(c));
+	*out=(sll_char_t)c;
+	return SLL_NO_ERROR;
 }
 
 

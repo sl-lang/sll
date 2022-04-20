@@ -62,6 +62,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_deco
 			else if (v3==64){
 				idx+=3;
 			}
+			sll_free_string(out);
 			return SLL_ERROR_FROM_EXTRA(SLL_ERROR_BASE64_CHARACTER,idx);
 		}
 		out->v[j]=(v0<<2)|(v1>>4);
@@ -82,6 +83,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_deco
 			else if (v2==64){
 				idx+=2;
 			}
+			sll_free_string(out);
 			return SLL_ERROR_FROM_EXTRA(SLL_ERROR_BASE64_CHARACTER,idx);
 		}
 		out->v[j]=(v0<<2)|(v1>>4);
@@ -91,6 +93,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_deco
 		sll_char_t v0=_base64_index_map[str->v[i]];
 		sll_char_t v1=_base64_index_map[str->v[i+1]];
 		if ((v0|v1)>>6){
+			sll_free_string(out);
 			return SLL_ERROR_FROM_EXTRA(SLL_ERROR_BASE64_CHARACTER,i+(v0!=64));
 		}
 		out->v[j]=(v0<<2)|(v1>>4);
