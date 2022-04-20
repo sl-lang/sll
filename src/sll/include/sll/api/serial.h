@@ -79,9 +79,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_fi
  * \subgroup serial-api-compression
  * \desc Docs!
  * \arg sll_file_t* f
+ * \arg sll_error_t* err
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,sll_error_t* err);
 
 
 
@@ -203,11 +204,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
  * \name sll_api_serial_decode_object
  * \group serial-api
  * \desc Docs!
- * \api i|o
+ * \api i|~a
  * \arg sll_integer_t fh
- * \ret sll_object_t*
+ * \arg sll_array_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object(sll_integer_t fh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_object(sll_integer_t fh,sll_array_t* out);
 
 
 

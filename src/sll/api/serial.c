@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
+#include <sll/_internal/gc.h>
 #include <sll/_internal/serial.h>
 #include <sll/_internal/static_object.h>
 #include <sll/api/file.h>
@@ -57,29 +58,50 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_fi
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,sll_error_t* err){
+	ERROR_PTR_RESET;
 	if (!f){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	switch (sll_file_read_char(f,NULL)){
+	sll_read_char_t chr=sll_file_read_char(f,err);
+	if (err&&*err!=SLL_NO_ERROR){
+		return NULL;
+	}
+	if (chr==SLL_END_OF_DATA){
+		if (err){
+			*err=SLL_ERROR_EOF;
+			return NULL;
+		}
+		return SLL_ACQUIRE_STATIC_INT(0);
+	}
+	switch (chr){
 		case SLL_OBJECT_TYPE_INT:
 			{
-				sll_error_t err;
-				sll_integer_t v=sll_decode_signed_integer(f,&err);
-				return (err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(v));
+				sll_integer_t v=sll_decode_signed_integer(f,err);
+				return (err&&*err!=SLL_NO_ERROR?NULL:sll_int_to_object(v));
 			}
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
-				sll_float_t v;
-				if (sll_file_read(f,&v,sizeof(sll_float_t),NULL)!=sizeof(sll_float_t)){
-					return SLL_ACQUIRE_STATIC(float_zero);
+				sll_float_t v=0;
+				if (sll_file_read(f,&v,sizeof(sll_float_t),err)!=sizeof(sll_float_t)){
+					if (err&&*err==SLL_NO_ERROR){
+						*err=SLL_ERROR_EOF;
+					}
+					return NULL;
 				}
-				return sll_float_to_object(v);
+				return (err&&*err!=SLL_NO_ERROR?NULL:sll_float_to_object(v));
 			}
 		case SLL_OBJECT_TYPE_CHAR:
 			{
-				sll_read_char_t v=sll_file_read_char(f,NULL);
+				sll_read_char_t v=sll_file_read_char(f,err);
+				if (err&&*err!=SLL_NO_ERROR){
+					return NULL;
+				}
 				if (v==SLL_END_OF_DATA){
+					if (err){
+						*err=SLL_ERROR_EOF;
+						return NULL;
+					}
 					v=0;
 				}
 				return SLL_FROM_CHAR(v);
@@ -89,33 +111,55 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f)
 		case SLL_OBJECT_TYPE_STRING:
 			{
 				sll_string_t str;
-				return (sll_decode_string(f,&str)==SLL_NO_ERROR?STRING_TO_OBJECT_NOCOPY(&str):STRING_TO_OBJECT(NULL));
+				sll_error_t str_err=sll_decode_string(f,&str);
+				if (str_err==SLL_NO_ERROR){
+					return STRING_TO_OBJECT_NOCOPY(&str);
+				}
+				if (err){
+					*err=str_err;
+					return NULL;
+				}
+				return STRING_TO_OBJECT(NULL);
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
 		case SLL_OBJECT_TYPE_MAP_KEYS:
 		case SLL_OBJECT_TYPE_MAP_VALUES:
 			{
-				sll_error_t err;
-				sll_array_length_t l=(sll_array_length_t)sll_decode_integer(f,&err);
-				if (err!=SLL_NO_ERROR){
+				sll_error_t len_err;
+				sll_array_length_t l=(sll_array_length_t)sll_decode_integer(f,&len_err);
+				if (len_err!=SLL_NO_ERROR){
+					if (err){
+						*err=len_err;
+						return NULL;
+					}
 					return sll_array_to_object(NULL);
 				}
 				sll_object_t* o=sll_array_length_to_object(l);
 				for (sll_array_length_t i=0;i<l;i++){
-					o->dt.a.v[i]=sll_decode_object(f);
+					o->dt.a.v[i]=sll_decode_object(f,err);
+					if (err&&*err!=SLL_NO_ERROR){
+						SLL_UNIMPLEMENTED();
+					}
 				}
 				return o;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
-				sll_error_t err;
-				sll_map_length_t l=(sll_map_length_t)sll_decode_integer(f,&err);
-				if (err!=SLL_NO_ERROR){
+				sll_error_t len_err;
+				sll_map_length_t l=(sll_map_length_t)sll_decode_integer(f,&len_err);
+				if (len_err!=SLL_NO_ERROR){
+					if (err){
+						*err=len_err;
+						return NULL;
+					}
 					return sll_map_to_object(NULL);
 				}
 				sll_object_t* o=sll_map_length_to_object(l);
 				for (sll_map_length_t i=0;i<(l<<1);i++){
-					o->dt.m.v[i]=sll_decode_object(f);
+					o->dt.m.v[i]=sll_decode_object(f,err);
+					if (err&&*err!=SLL_NO_ERROR){
+						SLL_UNIMPLEMENTED();
+					}
 				}
 				return o;
 			}
@@ -418,12 +462,22 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_serial_decode_object(sll_integer_t fh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_object(sll_integer_t fh,sll_array_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		return SLL_ACQUIRE_STATIC_INT(0);
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
 	sll_audit(SLL_CHAR("sll.serial.object.decode"),SLL_CHAR("i"),fh);
-	return sll_decode_object(sll_file_from_handle(fh));
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	sll_error_t err;
+	sll_object_t* o=sll_decode_object(f,&err);
+	if (err==SLL_NO_ERROR){
+		sll_new_object_array(SLL_CHAR("o"),out,o);
+		GC_RELEASE(o);
+	}
+	return err;
 }
 
 

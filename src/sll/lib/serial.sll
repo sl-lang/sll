@@ -20,7 +20,11 @@
 (= decode (,,, f
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file$file_type))
-	(@@ (<- (... "sll:serial_decode_object") f$_handle))
+	(= o (<- (... "sll:serial_decode_object") f$_handle))
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o)
+		(: o 0)
+	))
 ))
 
 (= decode_float (,,, f
@@ -37,7 +41,6 @@
 	(? (=== f nil) (@@ 0))
 	(= f (:: f file$file_type))
 	(= o (<- (... "sll:serial_decode_signed_int") f$_handle))
-	(= err (<- error$from_internal (: o 0)))
 	(@@ (?: (=== (:? o) int_type)
 		(<- error$from_internal o)
 		(: o 0)
@@ -58,7 +61,6 @@
 	(? (=== f nil) (@@ 0))
 	(= f (:: f file$file_type))
 	(= o (<- (... "sll:serial_decode_int") f$_handle))
-	(= err (<- error$from_internal (: o 0)))
 	(@@ (?: (=== (:? o) int_type)
 		(<- error$from_internal o)
 		(: o 0)
