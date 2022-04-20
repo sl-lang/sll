@@ -786,32 +786,32 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:serial_decode_string"),
 		sll_api_serial_decode_string,
-		SLL_CHAR("i|o")
+		SLL_CHAR("i|~s")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_float"),
 		sll_api_serial_encode_float,
-		SLL_CHAR("if|")
+		SLL_CHAR("if|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_integer"),
 		sll_api_serial_encode_integer,
-		SLL_CHAR("iQ|")
+		SLL_CHAR("iQ|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_object"),
 		sll_api_serial_encode_object,
-		SLL_CHAR("io!|")
+		SLL_CHAR("io!|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_signed_integer"),
 		sll_api_serial_encode_signed_integer,
-		SLL_CHAR("ii|")
+		SLL_CHAR("ii|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_string"),
 		sll_api_serial_encode_string,
-		SLL_CHAR("i#s|")
+		SLL_CHAR("i#s|Q")
 	},
 	{
 		SLL_CHAR("sll:sort_quicksort"),

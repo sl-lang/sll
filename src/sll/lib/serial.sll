@@ -1,4 +1,4 @@
-(--- "types.sll" "file.sll")
+(--- "types.sll" "file.sll" "error.sll")
 
 
 
@@ -38,7 +38,11 @@
 (= decode_string (,,, f
 	(? (=== f nil) (@@ ""))
 	(= f (:: f file$file_type))
-	(@@ (<- (... "sll:serial_decode_string") f$_handle))
+	(= o (<- (... "sll:serial_decode_string") f$_handle))
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o)
+		o
+	))
 ))
 
 (= decode_unsigned_int (,,, f
@@ -50,35 +54,45 @@
 (= encode (,,, f a
 	(? (=== f nil) (@@))
 	(= f (:: f file$file_type))
-	(<- (... "sll:serial_encode_object") f$_handle a)
+	(@@ (<- error$from_internal
+		(<- (... "sll:serial_encode_object") f$_handle a)
+	))
 ))
 
 (= encode_float (,,, f v
 	(? (=== f nil) (@@))
 	(= f (:: f file$file_type))
 	(= v (:: v float_type))
-	(<- (... "sll:serial_encode_float") f$_handle v)
+	(@@ (<- error$from_internal
+		(<- (... "sll:serial_encode_float") f$_handle v)
+	))
 ))
 
 (= encode_int (,,, f v
 	(? (=== f nil) (@@))
 	(= f (:: f file$file_type))
 	(= v (:: v int_type))
-	(<- (... "sll:serial_encode_signed_integer") f$_handle v)
+	(@@ (<- error$from_internal
+		(<- (... "sll:serial_encode_signed_integer") f$_handle v)
+	))
 ))
 
 (= encode_string (,,, f s
 	(? (=== f nil) (@@))
 	(= f (:: f file$file_type))
 	(= s (:: s string_type))
-	(<- (... "sll:serial_encode_string") f$_handle s)
+	(@@ (<- error$from_internal
+		(<- (... "sll:serial_encode_string") f$_handle s)
+	))
 ))
 
 (= encode_unsigned_int (,,, f v
 	(? (=== f nil) (@@))
 	(= f (:: f file$file_type))
 	(= v (:: v int_type))
-	(<- (... "sll:serial_encode_integer") f$_handle v)
+	(@@ (<- error$from_internal
+		(<- (... "sll:serial_encode_integer") f$_handle v)
+	))
 ))
 
 
