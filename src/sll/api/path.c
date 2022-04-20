@@ -107,17 +107,17 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_path_exists(
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_get_cwd(void){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_get_cwd(sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_error_t err;
 	sll_string_length_t len=sll_platform_get_current_working_directory(bf,SLL_API_MAX_FILE_PATH_LENGTH,&err);
-	if (err!=SLL_NO_ERROR){
-		return sll_int_to_object(err);
+	if (err==SLL_NO_ERROR){
+		sll_string_from_pointer_length(bf,len,out);
 	}
-	return (err==SLL_NO_ERROR?STRING_POINTER_LENGTH_TO_OBJECT(bf,len):sll_int_to_object(err));
+	return err;
 }
 
 
@@ -168,23 +168,23 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(const sll_string_t*const* p
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_path_list_dir(const sll_string_t* path,sll_bool_t recursive){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_list_dir(const sll_string_t* path,sll_bool_t recursive,sll_array_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return sll_int_to_object(SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API));
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
 	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("sb"),path,recursive);
 	sll_string_t* dt=NULL;
 	sll_error_t err;
 	sll_array_length_t len=(recursive?sll_platform_list_directory_recursive:sll_platform_list_directory)(path->v,&dt,&err);
 	if (err!=SLL_NO_ERROR){
-		return sll_int_to_object(err);
+		return err;
 	}
-	sll_object_t* o=sll_array_length_to_object(len);
+	sll_array_create(len,out);
 	for (sll_array_length_t i=0;i<len;i++){
-		o->dt.a.v[i]=STRING_TO_OBJECT_NOCOPY(dt+i);
+		out->v[i]=STRING_TO_OBJECT_NOCOPY(dt+i);
 	}
 	sll_deallocate(dt);
-	return o;
+	return SLL_NO_ERROR;
 }
 
 

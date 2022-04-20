@@ -202,9 +202,8 @@
 		(<- (... "sll:file_read_char") f$_handle)
 		(!<. f$_handle)
 	)
-	(@@ (?:
-		(=== o -1) nil
-		(=== (:? o) int_type) (<- error$from_internal o)
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o)
 		o
 	))
 ))

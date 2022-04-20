@@ -676,7 +676,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:path_get_cwd"),
 		sll_api_path_get_cwd,
-		SLL_CHAR("|o")
+		SLL_CHAR("|~s")
 	},
 	{
 		SLL_CHAR("sll:path_is_dir"),
@@ -691,7 +691,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:path_list_dir"),
 		sll_api_path_list_dir,
-		SLL_CHAR("#sb|o")
+		SLL_CHAR("#sb|~a")
 	},
 	{
 		SLL_CHAR("sll:path_mkdir"),
