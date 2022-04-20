@@ -41,7 +41,7 @@ typedef struct _ARG_OUTPUT{
 
 
 
-sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** regs,sll_size_t* o);
+sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** regs,sll_size_t* o);
 
 
 

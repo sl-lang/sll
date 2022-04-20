@@ -1,3 +1,4 @@
+#include <sll/_internal/api_call.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
 #include <sll/_internal/parse_args.h>
@@ -111,15 +112,17 @@
 	ENSURE_TYPE(arg,name); \
 	*var=&(arg->dt.field);
 
-#define PUSH_REGISTER(wide) \
+#define PUSH_REGISTER(flag) \
 	do{ \
 		if (regs){ \
-			if (!(ac&63)){ \
+			if (reg_bit_count==64){ \
 				reg_sz++; \
 				*regs=sll_reallocate(*regs,reg_sz*sizeof(bitmap_t)); \
 				*(*regs+reg_sz-1)=0; \
+				reg_bit_count=0; \
 			} \
-			*(*regs+reg_sz-1)|=(wide)<<(ac&63); \
+			*(*regs+reg_sz-1)|=(!!(flag))<<reg_bit_count; \
+			reg_bit_count++; \
 		} \
 	} while (0)
 
@@ -286,9 +289,10 @@ static void _parse_object(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,a
 
 
 
-sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** regs,sll_size_t* o){
+sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** regs,sll_size_t* o){
 	SKIP_WHITESPACE;
 	sll_size_t reg_sz=0;
+	__SLL_U8 reg_bit_count=64;
 	if (regs){
 		*regs=NULL;
 	}
@@ -334,8 +338,9 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,sll_char_t ret,bitmap_t** r
 		PUSH_REGISTER(0);
 		ac++;
 	}
-	PUSH_REGISTER((ret=='d'||ret=='s'||ret=='a'||ret=='m'));
-	SLL_ASSERT(!regs||reg_sz==(ac+64)>>6);
+	PUSH_REGISTER((RETURN_VALUE_GET_TYPE(ret)=='d'||RETURN_VALUE_GET_TYPE(ret)=='s'||RETURN_VALUE_GET_TYPE(ret)=='a'||RETURN_VALUE_GET_TYPE(ret)=='m'));
+	PUSH_REGISTER(ret&RETURN_VALUE_FLAG_ERROR);
+	SLL_ASSERT(!regs||reg_sz==(ac+65)>>6);
 	if (o){
 		*o=sz;
 	}

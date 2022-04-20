@@ -291,7 +291,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:base64_decode"),
 		sll_api_base64_decode,
-		SLL_CHAR("#s|o")
+		SLL_CHAR("#s|~s")
 	},
 	{
 		SLL_CHAR("sll:base64_encode"),

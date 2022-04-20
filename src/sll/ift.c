@@ -28,7 +28,7 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
 		sll_string_length_t sz=sll_string_length((ift->dt+i)->fmt)+1;
 		p->fmt=sll_allocate(sz);
 		sll_copy_data((ift->dt+i)->fmt,sz,p->fmt);
-		p->ret=(ift->dt+i)->ret;
+		p->_ret=(ift->dt+i)->_ret;
 		p->_arg_cnt=(ift->dt+i)->_arg_cnt;
 		p->_arg_sz=(ift->dt+i)->_arg_sz;
 		sz=(((p->_arg_cnt<<1)+65)>>6)*sizeof(bitmap_t);

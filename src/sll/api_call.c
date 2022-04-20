@@ -30,48 +30,53 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 	api_return_value_t ret;
 	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_regs,bf,dt->_arg_cnt,dt->p);
 	sll_object_t* o;
-	switch (dt->ret){
-		case 'b':
-			o=SLL_ACQUIRE_STATIC_INT(ret.b);
-			break;
-		case 'B':
-			o=sll_int_to_object(ret.i&0xff);
-			break;
-		case 'W':
-			o=sll_int_to_object(ret.i&0xffff);
-			break;
-		case 'D':
-			o=sll_int_to_object(ret.i&0xffffffff);
-			break;
-		case 'Q':
-		case 'i':
-			o=sll_int_to_object(ret.i);
-			break;
-		case 'f':
-			o=sll_float_to_object(ret_f);
-			break;
-		case 'c':
-			o=SLL_FROM_CHAR(ret.c);
-			break;
-		case 'd':
-			SLL_UNIMPLEMENTED();
-		case 's':
-			o=STRING_TO_OBJECT_NOCOPY(&(ret.s));
-			break;
-		case 'a':
-			o=sll_array_to_object_nocopy(&(ret.a));
-			break;
-		case 'm':
-			o=sll_map_to_object_nocopy(&(ret.m));
-			break;
-		case 'o':
-			o=ret.o;
-			break;
-		case 'v':
-			o=SLL_ACQUIRE_STATIC_INT(0);
-			break;
-		default:
-			SLL_UNREACHABLE();
+	if (!(dt->_ret&RETURN_VALUE_FLAG_ERROR)||!ret_f){
+		switch (RETURN_VALUE_GET_TYPE(dt->_ret)){
+			case 'b':
+				o=SLL_ACQUIRE_STATIC_INT(ret.b);
+				break;
+			case 'B':
+				o=sll_int_to_object(ret.i&0xff);
+				break;
+			case 'W':
+				o=sll_int_to_object(ret.i&0xffff);
+				break;
+			case 'D':
+				o=sll_int_to_object(ret.i&0xffffffff);
+				break;
+			case 'Q':
+			case 'i':
+				o=sll_int_to_object(ret.i);
+				break;
+			case 'f':
+				o=sll_float_to_object(ret_f);
+				break;
+			case 'c':
+				o=SLL_FROM_CHAR(ret.c);
+				break;
+			case 'd':
+				SLL_UNIMPLEMENTED();
+			case 's':
+				o=STRING_TO_OBJECT_NOCOPY(&(ret.s));
+				break;
+			case 'a':
+				o=sll_array_to_object_nocopy(&(ret.a));
+				break;
+			case 'm':
+				o=sll_map_to_object_nocopy(&(ret.m));
+				break;
+			case 'o':
+				o=ret.o;
+				break;
+			case 'v':
+				o=SLL_ACQUIRE_STATIC_INT(0);
+				break;
+			default:
+				SLL_UNREACHABLE();
+		}
+	}
+	else{
+		o=sll_int_to_object(ret.err);
 	}
 	sll_free_args(st);
 	sll_deallocate(bf);
@@ -88,14 +93,18 @@ void _parse_api_call_format(const sll_char_t* fmt,sll_internal_function_t* o){
 	o->fmt=sll_allocate(off+1);
 	sll_copy_data(fmt,off,o->fmt);
 	o->fmt[off]=0;
-	o->ret='v';
+	o->_ret='v';
+	__SLL_U16 flags=0;
 	fmt+=off;
 	while (*fmt){
 		if (*fmt=='b'||*fmt=='B'||*fmt=='W'||*fmt=='D'||*fmt=='Q'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
-			o->ret=*fmt;
-			break;
+			o->_ret=*fmt;
+		}
+		else if (*fmt=='~'){
+			flags|=RETURN_VALUE_FLAG_ERROR;
 		}
 		fmt++;
 	}
-	o->_arg_cnt=_parse_arg_count(o->fmt,o->ret,&(o->_regs),&(o->_arg_sz));
+	o->_ret|=flags;
+	o->_arg_cnt=_parse_arg_count(o->fmt,o->_ret,&(o->_regs),&(o->_arg_sz));
 }

@@ -16,11 +16,12 @@
  * \name sll_api_base64_decode
  * \group base64-api
  * \desc Docs!
- * \api #s|o
+ * \api #s|~s
  * \arg const sll_string_t* str
- * \ret sll_object_t*
+ * \arg sll_string_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode(const sll_string_t* str);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_decode(const sll_string_t* str,sll_string_t* out);
 
 
 

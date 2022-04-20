@@ -95,8 +95,9 @@ __SLL_EXPORT _call_api_func_assembly
 	xorpd xmm0, xmm0
 	add rax, 1
 	setnz cl
-	cvtsi2sd xmm0, rax
+	cvtsi2sd xmm0, rcx
 	jz ._cleanup
+	add rax, 1
 ._register_return_value:
 	mov QWORD [rbx], rax
 ._cleanup:

@@ -6,6 +6,11 @@
 
 
 
+#define RETURN_VALUE_GET_TYPE(r) ((r)&0xff)
+#define RETURN_VALUE_FLAG_ERROR 256
+
+
+
 typedef union _API_RETURN_VALUE{
 	sll_bool_t b;
 	sll_integer_t i;
@@ -15,6 +20,7 @@ typedef union _API_RETURN_VALUE{
 	sll_array_t a;
 	sll_map_t m;
 	sll_object_t* o;
+	sll_error_t err;
 } api_return_value_t;
 
 

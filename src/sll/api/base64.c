@@ -1,5 +1,6 @@
 #include <sll/_internal/static_object.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
@@ -29,19 +30,19 @@ static const sll_char_t _base64_index_map[256]={
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_decode(const sll_string_t* str){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_decode(const sll_string_t* str,sll_string_t* out){
+	SLL_INIT_STRING(out);
 	if (!str->l){
-		return STRING_TO_OBJECT(NULL);
+		return SLL_NO_ERROR;
 	}
 	if (str->l&3){
-		return SLL_ACQUIRE_STATIC_NEG_INT(1);
+		return 0;
 	}
 	sll_string_length_t p=sll_string_count_right(str,'=');
 	if (p>2){
-		return SLL_ACQUIRE_STATIC_NEG_INT(1);
+		return 0;
 	}
-	sll_string_t o;
-	sll_string_create(((str->l*3)>>2)-p,&o);
+	sll_string_create(((str->l*3)>>2)-p,out);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
 	sll_string_length_t l=(str->l-p)&0xfffffffc;
@@ -61,12 +62,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_de
 			else if (v3==64){
 				idx+=3;
 			}
-			sll_free_string(&o);
-			return sll_int_to_object(idx);
+			return idx;
 		}
-		o.v[j]=(v0<<2)|(v1>>4);
-		o.v[j+1]=(v1<<4)|(v2>>2);
-		o.v[j+2]=(v2<<6)|v3;
+		out->v[j]=(v0<<2)|(v1>>4);
+		out->v[j+1]=(v1<<4)|(v2>>2);
+		out->v[j+2]=(v2<<6)|v3;
 		i+=4;
 		j+=3;
 	}
@@ -82,23 +82,21 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_base64_de
 			else if (v2==64){
 				idx+=2;
 			}
-			sll_free_string(&o);
-			return sll_int_to_object(idx);
+			return idx;
 		}
-		o.v[j]=(v0<<2)|(v1>>4);
-		o.v[j+1]=(v1<<4)|(v2>>2);
+		out->v[j]=(v0<<2)|(v1>>4);
+		out->v[j+1]=(v1<<4)|(v2>>2);
 	}
 	else if (p==2){
 		sll_char_t v0=_base64_index_map[str->v[i]];
 		sll_char_t v1=_base64_index_map[str->v[i+1]];
 		if ((v0|v1)>>6){
-			sll_free_string(&o);
-			return sll_int_to_object(i+(v0!=64));
+			return i+(v0!=64);
 		}
-		o.v[j]=(v0<<2)|(v1>>4);
+		out->v[j]=(v0<<2)|(v1>>4);
 	}
-	sll_string_calculate_checksum(&o);
-	return STRING_TO_OBJECT_NOCOPY(&o);
+	sll_string_calculate_checksum(out);
+	return SLL_NO_ERROR;
 }
 
 
