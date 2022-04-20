@@ -46,14 +46,14 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
- * \api |o
- * \ret sll_object_t*
+ * \api |a
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_args(void);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_args(sll_array_t* out);
 
 
 

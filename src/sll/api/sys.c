@@ -102,8 +102,10 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sys_get_args(void){
-	return sll_new_object(SLL_CHAR("s+"),_sys_argv,_sys_argc);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_args(sll_array_t* out){
+	sll_object_t* obj=sll_new_object(SLL_CHAR("s+"),_sys_argv,_sys_argc);
+	*out=obj->dt.a;
+	SLL_CRITICAL(sll_destroy_object(obj));
 }
 
 

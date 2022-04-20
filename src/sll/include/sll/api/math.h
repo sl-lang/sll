@@ -316,11 +316,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_fact
  * \name sll_api_math_factors
  * \group math-api
  * \desc Docs!
- * \api i|o
+ * \api i|a
  * \arg sll_integer_t a
- * \ret sll_object_t*
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factors(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_integer_t a,sll_array_t* out);
 
 
 

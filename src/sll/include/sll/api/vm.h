@@ -64,11 +64,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api
  * \name sll_api_vm_get_location
  * \group vm-api
  * \desc Docs!
- * \api D|o
+ * \api D|a
  * \arg sll_instruction_index_t ii
- * \ret sll_object_t*
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_location(sll_instruction_index_t ii);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index_t ii,sll_array_t* out);
 
 
 

@@ -316,7 +316,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:error_get_call_stack"),
 		sll_api_error_get_call_stack,
-		SLL_CHAR("Di|o")
+		SLL_CHAR("Di|a")
 	},
 	{
 		SLL_CHAR("sll:file_close"),
@@ -576,7 +576,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_factors"),
 		sll_api_math_factors,
-		SLL_CHAR("i|o")
+		SLL_CHAR("i|a")
 	},
 	{
 		SLL_CHAR("sll:math_floor"),
@@ -976,7 +976,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:sys_get_args"),
 		sll_api_sys_get_args,
-		SLL_CHAR("|o")
+		SLL_CHAR("|a")
 	},
 	{
 		SLL_CHAR("sll:sys_get_cpu_count"),
@@ -1146,7 +1146,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:vm_get_location"),
 		sll_api_vm_get_location,
-		SLL_CHAR("D|o")
+		SLL_CHAR("D|a")
 	},
 	{
 		SLL_CHAR("sll:vm_get_ref_count"),

@@ -214,6 +214,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* o){
+	SLL_ASSERT(o->rc);
+	o->rc--;
+	if (o->rc){
+		return 0;
+	}
+	*((sll_object_type_t*)(&(o->t)))=SLL_OBJECT_TYPE_INT;
+	_gc_release_object(o);
+	 return 1;
+}
+
+
+
 __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
 	GC_RELEASE(o);
 }

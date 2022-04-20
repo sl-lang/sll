@@ -46,6 +46,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 
 
 /**
+ * \flags check_output func
+ * \name sll_destroy_object
+ * \group gc
+ * \desc Docs!
+ * \arg sll_object_t* o
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* o);
+
+
+
+/**
  * \flags func
  * \name sll_release_object
  * \group gc

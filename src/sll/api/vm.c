@@ -4,6 +4,7 @@
 #include <sll/array.h>
 #include <sll/audit.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/location.h>
 #include <sll/new_object.h>
 #include <sll/static_object.h>
@@ -45,7 +46,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_in
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_location(sll_instruction_index_t ii){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index_t ii,sll_array_t* out){
 	if (!ii){
 		const sll_call_stack_t* c_st=sll_thread_get_call_stack(_scheduler_current_thread_index);
 		ii=(c_st->l?(c_st->dt+c_st->l-1)->_ii:sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
@@ -54,7 +55,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_vm_get_lo
 		ii--;
 	}
 	sll_audit(SLL_CHAR("sll.vm.location"),SLL_CHAR("h"),ii);
-	return sll_instruction_to_location(ii);
+	sll_object_t* o=sll_instruction_to_location(ii);
+	*out=o->dt.a;
+	SLL_CRITICAL(sll_destroy_object(o));
 }
 
 

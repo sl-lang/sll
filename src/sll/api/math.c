@@ -306,12 +306,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_fact
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_math_factors(sll_integer_t a){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_integer_t a,sll_array_t* out){
 	sll_array_length_t l;
 	sll_factor_t* dt=sll_math_factors(a,&l);
 	sll_object_t* o=sll_new_object(SLL_CHAR("{ii}"),dt,l,sizeof(sll_factor_t),SLL_OFFSETOF(sll_factor_t,n),SLL_OFFSETOF(sll_factor_t,pw));
+	*out=o->dt.a;
+	SLL_CRITICAL(sll_destroy_object(o));
 	sll_deallocate(dt);
-	return o;
 }
 
 
