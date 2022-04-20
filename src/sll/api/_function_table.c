@@ -366,7 +366,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_peek"),
 		sll_api_file_peek,
-		SLL_CHAR("i|o")
+		SLL_CHAR("i|~c")
 	},
 	{
 		SLL_CHAR("sll:file_read"),

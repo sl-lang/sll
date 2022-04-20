@@ -211,14 +211,18 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_peek(sll_integer_t fh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(sll_integer_t fh,sll_char_t* out){
 	if (fh<0||fh>=_file_fll||!(*(_file_fl+fh))){
-		return sll_int_to_object(~SLL_ERROR_UNKNOWN_FD);
+		return SLL_ERROR_UNKNOWN_FD;
 	}
 	extended_file_t* ef=*(_file_fl+fh);
 	sll_error_t err;
 	sll_read_char_t o=sll_file_peek_char((ef->p?ef->dt.p:&(ef->dt.f)),&err);
-	return (o==SLL_END_OF_DATA?sll_int_to_object(~err):SLL_FROM_CHAR(o));
+	if (o==SLL_END_OF_DATA){
+		return (err==SLL_NO_ERROR?SLL_ERROR_EOF:err);
+	}
+	*out=(sll_char_t)o;
+	return SLL_NO_ERROR;
 }
 
 

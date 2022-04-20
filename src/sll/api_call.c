@@ -30,7 +30,10 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 	api_return_value_t ret;
 	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_regs,bf,dt->_arg_cnt,dt->p);
 	sll_object_t* o;
-	if (!(dt->_ret&RETURN_VALUE_FLAG_ERROR)||!ret_f){
+	if ((dt->_ret&RETURN_VALUE_FLAG_ERROR)&&ret_f){
+		o=sll_int_to_object(ret.err);
+	}
+	else{
 		switch (RETURN_VALUE_GET_TYPE(dt->_ret)){
 			case 'b':
 				o=SLL_ACQUIRE_STATIC_INT(ret.b);
@@ -74,9 +77,6 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 			default:
 				SLL_UNREACHABLE();
 		}
-	}
-	else{
-		o=sll_int_to_object(ret.err);
 	}
 	sll_free_args(st);
 	sll_deallocate(bf);

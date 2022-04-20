@@ -158,11 +158,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open
  * \name sll_api_file_peek
  * \group file-api
  * \desc Docs!
- * \api i|o
+ * \api i|~c
  * \arg sll_integer_t fh
- * \ret sll_object_t*
+ * \arg sll_char_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_file_peek(sll_integer_t fh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(sll_integer_t fh,sll_char_t* out);
 
 
 

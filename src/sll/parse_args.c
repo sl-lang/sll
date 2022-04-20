@@ -338,7 +338,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 		PUSH_REGISTER(0);
 		ac++;
 	}
-	PUSH_REGISTER((RETURN_VALUE_GET_TYPE(ret)=='d'||RETURN_VALUE_GET_TYPE(ret)=='s'||RETURN_VALUE_GET_TYPE(ret)=='a'||RETURN_VALUE_GET_TYPE(ret)=='m'));
+	PUSH_REGISTER(((ret&RETURN_VALUE_FLAG_ERROR)||RETURN_VALUE_GET_TYPE(ret)=='d'||RETURN_VALUE_GET_TYPE(ret)=='s'||RETURN_VALUE_GET_TYPE(ret)=='a'||RETURN_VALUE_GET_TYPE(ret)=='m'));
 	PUSH_REGISTER(ret&RETURN_VALUE_FLAG_ERROR);
 	SLL_ASSERT(!regs||reg_sz==(ac+65)>>6);
 	if (o){

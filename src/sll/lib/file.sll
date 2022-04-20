@@ -171,7 +171,11 @@
 (= peek (,,, f
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
-	(@@ (<- (... "sll:file_peek") f$_handle))
+	(= o (<- (... "sll:file_peek") f$_handle))
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o)
+		o
+	))
 ))
 
 (= read (,,, f cnt nonblocking
