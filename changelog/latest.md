@@ -8,6 +8,7 @@
 - Argument parsing modifier to output the raw object: `&`
 - Common assembly code is now located in [`src/sll/include/sll/_internal/common.inc`][0.7.14/src/sll/include/sll/_internal/common.inc]
 - Functions can now be annotated with documentation by a top-level string
+- Implemented `SLL_ERROR_FROM_EXTRA`, `SLL_ERROR_BASE64_PADDING` and `SLL_ERROR_BASE64_CHARACTER`
 - Implemented `sll_internal_function_descriptor_t`, `sll_builtin_internal_function_data`, `sll_builtin_internal_function_count` and `sll_register_internal_functions`
 - Implemented `sll_version_sha` and `sll_version_tag`
 - NASM is now used in the compilation process

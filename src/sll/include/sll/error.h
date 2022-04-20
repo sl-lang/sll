@@ -1,6 +1,5 @@
 #ifndef __SLL_ERROR_H__
 #define __SLL_ERROR_H__ 1
-#include <sll/common.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -75,6 +74,30 @@
  * \type sll_error_t
  */
 #define SLL_ERROR_EOF 5
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ERROR_BASE64_PADDING
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_BASE64_PADDING 6
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ERROR_BASE64_CHARACTER
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_BASE64_CHARACTER 7
 
 
 
@@ -155,7 +178,19 @@
  * \arg sll_error_t e
  * \ret sll_error_t
  */
-#define SLL_ERROR_FROM_SANDBOX(f) (((f)<<9)|SLL_ERROR_SANDBOX)
+#define SLL_ERROR_FROM_EXTRA(t,e) ((((sll_error_t)(e))<<9)|(t))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_ERROR_FROM_SANDBOX
+ * \group error
+ * \desc Docs!
+ * \arg sll_error_t e
+ * \ret sll_error_t
+ */
+#define SLL_ERROR_FROM_SANDBOX(f) SLL_ERROR_FROM_EXTRA(SLL_ERROR_SANDBOX,(f))
 
 
 

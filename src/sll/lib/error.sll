@@ -186,6 +186,11 @@
 			))
 			4 (= v (. ERROR_PATH_TOO_LONG))
 			5 (= v (. ERROR_EOF))
+			6 (= v (. ERROR_INVALID_BASE64_PADDING))
+			7 (= v (. ERROR_INVALID_BASE64_CHARACTER
+				extra
+				(: (: data "string") extra)
+			))
 		)
 	)
 	(? (=== v nil)

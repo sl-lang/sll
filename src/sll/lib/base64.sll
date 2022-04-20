@@ -18,9 +18,10 @@
 	(? (=== dt nil) (@@ nil))
 	(= dt (:: dt string_type))
 	(= o (<- (... "sll:base64_decode") dt))
-	(@@ (?:
-		(=== o -1) (<- error$create error$ERROR_INVALID_BASE64_PADDING)
-		(=== (:? o) int_type) (<- error$create error$ERROR_INVALID_BASE64_CHARACTER o (: dt o))
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o <
+			"string" dt
+		>)
 		o
 	))
 )
