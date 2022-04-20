@@ -12,6 +12,7 @@
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/map.h>
+#include <sll/new_object.h>
 #include <sll/object.h>
 #include <sll/sandbox.h>
 #include <sll/static_object.h>
@@ -400,13 +401,16 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_serial_decod
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_signed_integer(sll_integer_t fh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_signed_integer(sll_integer_t fh,sll_array_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		return 0;
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
 	sll_error_t err;
 	sll_integer_t o=sll_decode_signed_integer(sll_file_from_handle(fh),&err);
-	return (err==SLL_NO_ERROR?o:0);
+	if (err==SLL_NO_ERROR){
+		sll_new_object_array(SLL_CHAR("i"),out,o);
+	}
+	return err;
 }
 
 

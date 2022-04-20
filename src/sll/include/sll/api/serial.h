@@ -188,11 +188,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_serial_decod
  * \name sll_api_serial_decode_signed_integer
  * \group serial-api
  * \desc Docs!
- * \api i|i
+ * \api i|~a
  * \arg sll_integer_t fh
- * \ret sll_integer_t
+ * \arg sll_array_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_serial_decode_signed_integer(sll_integer_t fh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_signed_integer(sll_integer_t fh,sll_array_t* out);
 
 
 

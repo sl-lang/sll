@@ -781,7 +781,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:serial_decode_signed_integer"),
 		sll_api_serial_decode_signed_integer,
-		SLL_CHAR("i|i")
+		SLL_CHAR("i|~a")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_string"),
