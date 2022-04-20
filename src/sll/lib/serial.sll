@@ -38,7 +38,10 @@
 	(= f (:: f file$file_type))
 	(= o (<- (... "sll:serial_decode_signed_int") f$_handle))
 	(= err (<- error$from_internal (: o 0)))
-	(@@ (?: err err (: o 1)))
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o)
+		(: o 0)
+	))
 ))
 
 (= decode_string (,,, f
@@ -54,7 +57,12 @@
 (= decode_unsigned_int (,,, f
 	(? (=== f nil) (@@ 0))
 	(= f (:: f file$file_type))
-	(@@ (<- (... "sll:serial_decode_int") f$_handle))
+	(= o (<- (... "sll:serial_decode_int") f$_handle))
+	(= err (<- error$from_internal (: o 0)))
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o)
+		(: o 0)
+	))
 ))
 
 (= encode (,,, f a
