@@ -161,11 +161,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* f,co
  * \name sll_api_serial_decode_float
  * \group serial-api
  * \desc Docs!
- * \api i|f
+ * \api i|~f
  * \arg sll_integer_t fh
- * \ret sll_float_t
+ * \arg sll_float_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_decode_float(sll_integer_t fh);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_float(sll_integer_t fh,sll_float_t* out);
 
 
 

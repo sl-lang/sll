@@ -26,7 +26,11 @@
 (= decode_float (,,, f
 	(? (=== f nil) (@@ 0.0))
 	(= f (:: f file$file_type))
-	(@@ (<- (... "sll:serial_decode_float") f$_handle))
+	(= o (<- (... "sll:serial_decode_float") f$_handle))
+	(@@ (?: (=== (:? o) int_type)
+		(<- error$from_internal o)
+		o
+	))
 ))
 
 (= decode_int (,,, f

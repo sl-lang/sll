@@ -375,16 +375,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* f,co
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_serial_decode_float(sll_integer_t fh){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_float(sll_integer_t fh,sll_float_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
-		return 0;
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
 	sll_file_t* f=sll_file_from_handle(fh);
 	if (!f){
-		return 0;
+		return SLL_ERROR_UNKNOWN_FD;
 	}
-	sll_float_t v;
-	return (sll_file_read(f,&v,sizeof(sll_float_t),NULL)==sizeof(sll_float_t)?v:0);
+	sll_error_t err;
+	return (sll_file_read(f,out,sizeof(sll_float_t),&err)==sizeof(sll_float_t)?SLL_NO_ERROR:(err==SLL_NO_ERROR?SLL_ERROR_EOF:err));
 }
 
 
