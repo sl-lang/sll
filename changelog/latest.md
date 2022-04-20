@@ -6,8 +6,11 @@
 - Argument parsing code to parse a 64-bit unsigned integer: `Q`
 - Argument parsing code to parse an 8-bit unsigned integer: `B`
 - Argument parsing modifier to output the raw object: `&`
+- CLI option for enabling release mode: `-r` or `--release-mode`
 - Common assembly code is now located in [`src/sll/include/sll/_internal/common.inc`][0.7.14/src/sll/include/sll/_internal/common.inc]
+- Debug version of libraries and bundles are now located in `lib_debug/` folder
 - Functions can now be annotated with documentation by a top-level string
+- Implemented `SLL_CLI_FLAG_RELEASE_MODE`
 - Implemented `sll_destroy_object`
 - Implemented `SLL_ERROR_FROM_EXTRA`, `SLL_ERROR_BASE64_PADDING` and `SLL_ERROR_BASE64_CHARACTER`
 - Implemented `sll_internal_function_descriptor_t`, `sll_builtin_internal_function_data`, `sll_builtin_internal_function_count` and `sll_register_internal_functions`

@@ -169,6 +169,7 @@ __SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* c_dt){
 		sll_source_file_t* sf=*(c_dt->dt+i);
 		for (sll_function_index_t j=0;j<sf->ft.l;j++){
 			(*(sf->ft.dt+j))->nm=SLL_MAX_STRING_INDEX;
+			(*(sf->ft.dt+j))->desc=SLL_MAX_STRING_INDEX;
 		}
 		_remove_type_names(sf->dt);
 	}

@@ -19,6 +19,7 @@ Options:
   -o <output_file>, --output <output_file> -> Set output file to <output_file>. If there is only one <file>, the output is written to <output_file>. If there are multiple <file>s, each <file> output is written to <output_file_directory>/<base_file_name>[.sla | .slc | .sll]. If no <output_file> is supplied, then each <file> output is written to <file>[.sla | .slc | .sll]
   -P, --print-assembly -> Print assembly
   -p, --print-objects -> Print objects
+  -r, --release-mode -> Use the optimized versions of modules and bundles
   -R, --no-run -> Disable program execution mode
   -s <code>, --source <code> -> Treat <code> as an input file
   -S <flag>, --sandbox <flag> -> enable the sandbox <flag> (see Sandbox Flags)

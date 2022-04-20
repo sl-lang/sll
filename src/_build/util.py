@@ -9,9 +9,9 @@ import zipfile
 
 
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-BUILD_PATHS=["build/lib","build/sys_lib","build/objects"]
+BUILD_PATHS=["build/lib","build/lib_debug","build/sys_lib","build/objects"]
 BUILD_TIME=time.time_ns()
-CLEAR_PATHS=["build/lib","build/sys_lib"]
+CLEAR_PATHS=["build/lib","build/lib_debug","build/sys_lib"]
 EXECUTABLE_EXTENSION={"darwin":"","linux":"","windows":".exe"}
 LIBRARY_EXTENSION={"darwin":".so","linux":".so","windows":".dll"}
 PLATFORM_SOURCE_CODE={"darwin":"src/sll/platform/linux","linux":"src/sll/platform/linux","windows":"src/sll/platform/windows"}
@@ -81,7 +81,7 @@ def get_sll_files():
 
 def bundle(v):
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],f"build/sll-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system],"build/lib/stdlib.slb"]:
+		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],f"build/sll-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system],"build/lib/stdlib.slb","build/lib_debug/stdlib.slb"]:
 			zf.write(k,arcname=k[6:])
 		if (system=="windows"):
 			zf.write("build/sllw.exe",arcname="sllw.exe")

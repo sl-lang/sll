@@ -193,6 +193,27 @@ static void _init_audit_event(const sll_char_t* o_fp,cli_audit_library_t* ll,sll
 
 
 
+static void _check_release_mode(sll_array_length_t argc,const sll_char_t*const*argv){
+	do{
+		const sll_char_t* e=*argv;
+		argc--;
+		argv++;
+		sll_char_t nm=(*e=='-'&&*(e+1)&&!*(e+2)?*(e+1):0);
+		if (nm=='A'||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
+			break;
+		}
+		else if (nm=='f'||nm=='I'||nm=='i'||nm=='L'||nm=='N'||nm=='o'||nm=='O'||nm=='s'||nm=='S'||sll_string_compare_pointer(e,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
+			argv--;
+			argv++;
+		}
+		else if (nm=='r'||sll_string_compare_pointer(e,SLL_CHAR("--release-mode"))==SLL_COMPARE_RESULT_EQUAL){
+			fl|=SLL_CLI_FLAG_RELEASE_MODE;
+		}
+	} while (argc);
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_length_t argc,const sll_char_t*const* argv){
 	if (!argc){
 		return 0;
@@ -200,6 +221,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	sll_init();
 	sll_return_code_t ec=0;
 	fl=0;
+	_check_release_mode(argc,argv);
 	i_b=NULL;
 	i_bl=0;
 	i_fp=sll_allocate(sizeof(sll_char_t));
@@ -215,8 +237,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	}
 	l_fpl++;
 	sll_copy_data(sll_library_file_path->v,l_fpl,l_fp);
-	SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl);
-	l_fpl+=4;
+	if (fl&SLL_CLI_FLAG_RELEASE_MODE){
+		SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),l_fp+l_fpl);
+		l_fpl+=4;
+	}
+	else{
+		SLL_COPY_STRING_NULL(SLL_CHAR("lib_debug/"),l_fp+l_fpl);
+		l_fpl+=10;
+	}
 	sll_string_t* b_fl=NULL;
 	sll_array_length_t b_fll=sll_platform_list_directory(l_fp,&b_fl,NULL);
 	while (b_fll){
@@ -333,7 +361,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					src=sll_library_file_path;
 				}
 				else if (sll_string_compare_pointer(e,SLL_CHAR("source-path"))==SLL_COMPARE_RESULT_EQUAL){
-					SLL_COPY_STRING_NULL(SLL_CHAR("/lib/"),out);
+					SLL_COPY_STRING_NULL(((fl&SLL_CLI_FLAG_RELEASE_MODE)?SLL_CHAR("/lib/"):SLL_CHAR("/lib_debug/")),out);
 				}
 			}
 			if (src){
@@ -490,14 +518,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		else if (nm=='V'||sll_string_compare_pointer(e,SLL_CHAR("--version"))==SLL_COMPARE_RESULT_EQUAL){
 			fl|=SLL_CLI_FLAG_VERSION;
 		}
-		else if (*e=='-'){
-			SLL_WARN(SLL_CHAR("Ignroing unknown switch '%s'"),e);
-		}
-		else{
+		else if (nm!='r'&&sll_string_compare_pointer(e,SLL_CHAR("--release-mode"))!=SLL_COMPARE_RESULT_EQUAL){
+			if (*e=='-'){
+				SLL_WARN(SLL_CHAR("Ignroing unknown switch '%s'"),e);
+			}
+			else{
 _read_file_argument:
-			fpl++;
-			fp=sll_reallocate(fp,fpl*sizeof(sll_array_length_t));
-			*(fp+fpl-1)=i;
+				fpl++;
+				fp=sll_reallocate(fp,fpl*sizeof(sll_array_length_t));
+				*(fp+fpl-1)=i;
+			}
 		}
 		i++;
 	} while (i<argc);
@@ -542,6 +572,9 @@ _read_file_argument:
 		}
 		if (fl&SLL_CLI_FLAG_PRINT_NODES){
 			SLL_LOG("  Compiled program printing");
+		}
+		if (fl&SLL_CLI_FLAG_RELEASE_MODE){
+			SLL_LOG("  Release mode");
 		}
 		if (fl&SLL_CLI_FLAG_STRIP_DEBUG){
 			SLL_LOG("  Debug data stripping");

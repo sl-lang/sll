@@ -56,10 +56,10 @@ for f in os.listdir("src/sll/lib"):
 		wf.write(rf.read())
 	fl.append("build/lib/"+f)
 util.log("Compiling Modules...")
-if (util.execute(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
+if (util.execute(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else []))):
 	sys.exit(1)
 util.log("Generating Bundle...")
-if (util.execute(["build/sll","-b","-n","-N","/","-R","-O","build/lib/stdlib.slb"]+[e+".slc" for e in fl if e.split("/")[-1][0]!="_"]+(["-v"] if "--verbose" in sys.argv else [])+(["-d","-D"] if "--release" in sys.argv else []))):
+if (util.execute(["build/sll","-b","-n","-N","/","-R","-O","build/lib_debug/stdlib.slb"]+[e+".slc" for e in fl if e.split("/")[-1][0]!="_"]+(["-v"] if "--verbose" in sys.argv else [])) or util.execute(["build/sll","-b","-d","-D","-n","-N","/","-R","-O","build/lib/stdlib.slb"]+[e+".slc" for e in fl if e.split("/")[-1][0]!="_"]+(["-v"] if "--verbose" in sys.argv else []))):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
@@ -78,5 +78,5 @@ if ("--upload" in sys.argv):
 if ("--run" in sys.argv):
 	util.log(f"Running 'examples/_internal_test/test.sll'...")
 	util.execute(["build/sll","-h"])
-	if (util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]) or util.execute(["build/sll","build/test.slc","-v","-e","-a","-c","-o","build/test2","-R"]) or util.execute((DEBUGGER if len(os.getenv("SLL_DEBUGGER","")) else [])+["build/sll","build/test2.sla","-v","-P"])):
+	if (util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]+(["-r"] if "--release" in sys.argv else [])) or util.execute(["build/sll","build/test.slc","-v","-e","-a","-c","-o","build/test2","-R"]) or util.execute((DEBUGGER if len(os.getenv("SLL_DEBUGGER","")) else [])+["build/sll","build/test2.sla","-v","-P"])):
 		sys.exit(1)
