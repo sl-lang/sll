@@ -517,8 +517,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 		return SLL_ERROR_UNKNOWN_FD;
 	}
 	sll_error_t err;
-	sll_file_write(f,&v,sizeof(sll_float_t),&err);
-	return err;
+	return (sll_file_write(f,&v,sizeof(sll_float_t),&err)!=sizeof(sll_float_t)&&err==SLL_NO_ERROR?SLL_ERROR_EOF:err);
 }
 
 
