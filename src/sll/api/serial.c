@@ -499,11 +499,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
 	if (!f){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	sll_error_t err=sll_decode_string(f,out);
-	if (err!=SLL_NO_ERROR){
-		sll_free_string(out);
-	}
-	return err;
+	return sll_decode_string(f,out);
 }
 
 
