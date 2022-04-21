@@ -440,8 +440,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
 	sll_error_t err;
-	sll_integer_t o=sll_decode_integer(sll_file_from_handle(fh),&err);
+	sll_integer_t o=sll_decode_integer(f,&err);
 	if (err==SLL_NO_ERROR){
 		sll_new_object_array(SLL_CHAR("i"),out,o);
 	}
@@ -454,8 +458,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
 	sll_error_t err;
-	sll_integer_t o=sll_decode_signed_integer(sll_file_from_handle(fh),&err);
+	sll_integer_t o=sll_decode_signed_integer(f,&err);
 	if (err==SLL_NO_ERROR){
 		sll_new_object_array(SLL_CHAR("i"),out,o);
 	}
@@ -487,7 +495,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
-	sll_error_t err=sll_decode_string(sll_file_from_handle(fh),out);
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	sll_error_t err=sll_decode_string(f,out);
 	if (err!=SLL_NO_ERROR){
 		sll_free_string(out);
 	}
@@ -500,8 +512,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
 	sll_error_t err;
-	sll_file_write(sll_file_from_handle(fh),&v,sizeof(sll_float_t),&err);
+	sll_file_write(f,&v,sizeof(sll_float_t),&err);
 	return err;
 }
 
@@ -511,7 +527,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
-	return sll_encode_integer(sll_file_from_handle(fh),v);
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	return sll_encode_integer(f,v);
 }
 
 
@@ -520,7 +540,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
-	return sll_encode_signed_integer(sll_file_from_handle(fh),v);
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	return sll_encode_signed_integer(f,v);
 }
 
 
@@ -530,7 +554,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
 	sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iO+"),fh,args,len);
-	return sll_encode_object(sll_file_from_handle(fh),args,len);
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	return sll_encode_object(f,args,len);
 }
 
 
@@ -539,5 +567,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
-	return sll_encode_string(sll_file_from_handle(fh),str);
+	sll_file_t* f=sll_file_from_handle(fh);
+	if (!f){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	return sll_encode_string(f,str);
 }
