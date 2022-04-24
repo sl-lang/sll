@@ -25,7 +25,7 @@
 	"sll.path.cwd.set" ["path"]
 	"sll.path.dir.create" ["path" "recursive"]
 	"sll.path.dir.list" ["path" "recursive"]
-	"sll.process.shell" ["command"]
+	"sll.process.start.shell" ["command"]
 	"sll.process.start" ["arguments" "cwd" "stdin"]
 	"sll.serial.object.decode" ["file"]
 	"sll.serial.object.encode" ["file" "objects"]

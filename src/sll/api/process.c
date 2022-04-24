@@ -94,7 +94,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_e
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API);
 	}
-	sll_audit(SLL_CHAR("sll.process.shell"),SLL_CHAR("s"),cmd);
+	sll_audit(SLL_CHAR("sll.process.start.shell"),SLL_CHAR("s"),cmd);
 	sll_error_t err;
 	return (sll_platform_execute_shell(cmd->v,&err)?SLL_NO_ERROR:err);
 }
