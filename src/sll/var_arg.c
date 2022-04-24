@@ -26,11 +26,11 @@
 
 sll_object_t* _var_arg_converter(sll_var_arg_list_t* va){
 	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		return va_arg(*(va->dt.c),converter_t)(va_arg(*(va->dt.c),void*));
+		return va_arg(*(va->dt.c),converter_func_t)(va_arg(*(va->dt.c),void*));
 	}
 	if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
 		SLL_ASSERT(va->dt.s.fnl&&va->dt.s.l);
-		sll_object_t* o=((converter_t)(*(va->dt.s.fn)))(*((void**)PTR(ADDR(va->dt.s.ptr)+(*(va->dt.s.off)))));
+		sll_object_t* o=((converter_func_t)(*(va->dt.s.fn)))(*((void**)PTR(ADDR(va->dt.s.ptr)+(*(va->dt.s.off)))));
 		va->dt.s.fn++;
 		va->dt.s.fnl--;
 		va->dt.s.off++;

@@ -26,7 +26,7 @@
  * \flags macro var
  * \name SLL_EXECUTE_FUNCTION_RESERVED0
  * \group vm
- * \desc Docs!
+ * \desc Internally used as `EXECUTE_FUNCTION_NO_AUDIT_TERMINATE`
  * \type sll_flags_t
  */
 #define SLL_EXECUTE_FUNCTION_RESERVED0 2
