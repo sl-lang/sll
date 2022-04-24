@@ -76,7 +76,7 @@ def build_sll(fl,v,r):
 				out_fl.append(out_fp)
 				if (hashlist.update(k,"src/sll/include")):
 					util.log("    "+k)
-					if (util.execute((["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt if k[-2:]==".c" else ["nasm","-I","src/sll/include","-D__SLL_BUILD_"+util.system.upper(),"-o",out_fp,"-O3","-Wall","-Werror","-gdwarf","-f",nasm_fmt,k]))):
+					if (util.execute((["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt if k[-2:]==".c" else ["nasm","-I","src/sll/include","-D__SLL_BUILD_"+util.system.upper(),"-o",out_fp,"-O3","-Wall","-Werror","-f",nasm_fmt,k]))):
 						hashlist.fail(k)
 						err=True
 			if (err):

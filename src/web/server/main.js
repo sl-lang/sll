@@ -7,8 +7,7 @@ const MIME_TYPES={
 	".zip": "application/zip"
 };
 const REDIRECTS={
-	"/": "/index.html",
-	"/sh": "shell_install.sh"
+	"/": "/index.html"
 };
 
 
@@ -28,7 +27,7 @@ addEventListener("fetch",(e)=>e.respondWith((async (url)=>{
 	if (!(await SLL.get("__links")).split("\n").includes(url)){
 		opt.status=404;
 		opt.statusText="Not Found";
-		url="not_found.html";
+		url="404.html";
 	}
 	const bf=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(url)));
 	let id="";
