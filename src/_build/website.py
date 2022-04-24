@@ -132,7 +132,7 @@ def generate():
 		o+=_add_data("404.html",rf.read())
 	util.log("Reading 'src/web/client/apt.sh'...")
 	with open("src/web/client/apt.sh","rb") as rf:
-		o+=_add_data("apt",rf.read())
+		o+=_add_data("/apt",rf.read())
 	if (os.getenv("GITHUB_ACTIONS",None) is not None):
 		with open("web-bundle.dt","wb") as f:
 			f.write(o)
