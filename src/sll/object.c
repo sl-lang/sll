@@ -60,11 +60,8 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 				p->c=0;
 				break;
 			case SLL_OBJECT_TYPE_COMPLEX:
-				{
-					sll_complex_t zero={0,0};
-					p->o=sll_complex_to_object(zero);
-					break;
-				}
+				p->o=SLL_ACQUIRE_STATIC(complex_zero);
+				break;
 			case SLL_OBJECT_TYPE_STRING:
 				p->o=STRING_TO_OBJECT(NULL);
 				break;

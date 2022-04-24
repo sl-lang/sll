@@ -42,10 +42,10 @@
  * \name sll_complex_abs
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
+ * \arg const sll_complex_t* a
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_complex_abs(sll_complex_t a);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_complex_abs(const sll_complex_t* a);
 
 
 
@@ -54,11 +54,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_complex_abs(sll_complex_t a);
  * \name sll_complex_add
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
- * \arg sll_complex_t b
- * \ret sll_complex_t
+ * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* b
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_add(sll_complex_t a,sll_complex_t b);
+__SLL_EXTERNAL void sll_complex_add(const sll_complex_t* a,const sll_complex_t* b,sll_complex_t* out);
 
 
 
@@ -67,10 +67,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_add(sll_complex_t a,
  * \name sll_complex_conjugate
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
- * \ret sll_complex_t
+ * \arg const sll_complex_t* a
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_conjugate(sll_complex_t a);
+__SLL_EXTERNAL void sll_complex_conjugate(const sll_complex_t* a,sll_complex_t* out);
 
 
 
@@ -79,11 +79,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_conjugate(sll_comple
  * \name sll_complex_div
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
- * \arg sll_complex_t b
- * \ret sll_complex_t
+ * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* b
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div(sll_complex_t a,sll_complex_t b);
+__SLL_EXTERNAL void sll_complex_div(const sll_complex_t* a,const sll_complex_t* b,sll_complex_t* out);
 
 
 
@@ -92,11 +92,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div(sll_complex_t a,
  * \name sll_complex_div_float
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
+ * \arg const sll_complex_t* a
  * \arg sll_float_t b
- * \ret sll_complex_t
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div_float(sll_complex_t a,sll_float_t b);
+__SLL_EXTERNAL void sll_complex_div_float(const sll_complex_t* a,sll_float_t b,sll_complex_t* out);
 
 
 
@@ -105,11 +105,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_div_float(sll_comple
  * \name sll_complex_mult
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
- * \arg sll_complex_t b
- * \ret sll_complex_t
+ * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* b
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult(sll_complex_t a,sll_complex_t b);
+__SLL_EXTERNAL void sll_complex_mult(const sll_complex_t* a,const sll_complex_t* b,sll_complex_t* out);
 
 
 
@@ -118,11 +118,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult(sll_complex_t a
  * \name sll_complex_mult_float
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
+ * \arg const sll_complex_t* a
  * \arg sll_float_t b
- * \ret sll_complex_t
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult_float(sll_complex_t a,sll_float_t b);
+__SLL_EXTERNAL void sll_complex_mult_float(const sll_complex_t* a,sll_float_t b,sll_complex_t* out);
 
 
 
@@ -131,10 +131,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_mult_float(sll_compl
  * \name sll_complex_neg
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
- * \ret sll_complex_t
+ * \arg const sll_complex_t* a
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_neg(sll_complex_t a);
+__SLL_EXTERNAL void sll_complex_neg(const sll_complex_t* a,sll_complex_t* out);
 
 
 
@@ -143,11 +143,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_neg(sll_complex_t a)
  * \name sll_complex_pow
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
- * \arg sll_complex_t b
- * \ret sll_complex_t
+ * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* b
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow(sll_complex_t a,sll_complex_t b);
+__SLL_EXTERNAL void sll_complex_pow(const sll_complex_t* a,const sll_complex_t* b,sll_complex_t* out);
 
 
 
@@ -156,11 +156,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow(sll_complex_t a,
  * \name sll_complex_pow_float
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
+ * \arg const sll_complex_t* a
  * \arg sll_float_t b
- * \ret sll_complex_t
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow_float(sll_complex_t a,sll_float_t b);
+__SLL_EXTERNAL void sll_complex_pow_float(const sll_complex_t* a,sll_float_t b,sll_complex_t* out);
 
 
 
@@ -169,11 +169,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow_float(sll_comple
  * \name sll_complex_pow_int
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
+ * \arg const sll_complex_t* a
  * \arg sll_integer_t b
- * \ret sll_complex_t
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow_int(sll_complex_t a,sll_integer_t b);
+__SLL_EXTERNAL void sll_complex_pow_int(const sll_complex_t* a,sll_integer_t b,sll_complex_t* out);
 
 
 
@@ -182,10 +182,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_pow_int(sll_complex_
  * \name sll_complex_reciprocal
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
- * \ret sll_complex_t
+ * \arg const sll_complex_t* a
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_reciprocal(sll_complex_t a);
+__SLL_EXTERNAL void sll_complex_reciprocal(const sll_complex_t* a,sll_complex_t* out);
 
 
 
@@ -194,11 +194,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_reciprocal(sll_compl
  * \name sll_complex_sub
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t a
- * \arg sll_complex_t b
- * \ret sll_complex_t
+ * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* b
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_complex_sub(sll_complex_t a,sll_complex_t b);
+__SLL_EXTERNAL void sll_complex_sub(const sll_complex_t* a,const sll_complex_t* b,sll_complex_t* out);
 
 
 

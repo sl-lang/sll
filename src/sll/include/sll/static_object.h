@@ -214,10 +214,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_ch
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_char_t v
+ * \arg const sll_complex_t* v
  * \arg sll_object_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(sll_complex_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(const sll_complex_t* v);
 
 
 

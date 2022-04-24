@@ -141,7 +141,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
 					-a->dt.d.real-1,
 					-a->dt.d.imag-1
 				};
-				return sll_complex_to_object(n);
+				return sll_complex_to_object(&n);
 			}
 		case SLL_OBJECT_TYPE_STRING:
 			{

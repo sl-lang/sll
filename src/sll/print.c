@@ -27,6 +27,94 @@
 
 
 
+static void _print_char(sll_char_t c,sll_file_t* wf){
+	sll_char_t bf[4]={'\\'};
+	sll_string_length_t bfl=2;
+	if (c=='\''||c=='"'||c=='\\'){
+		bf[1]=c;
+	}
+	else if (c=='\t'){
+		bf[1]='t';
+	}
+	else if (c=='\n'){
+		bf[1]='n';
+	}
+	else if (c=='\v'){
+		bf[1]='v';
+	}
+	else if (c=='\f'){
+		bf[1]='f';
+	}
+	else if (c=='\r'){
+		bf[1]='r';
+	}
+	else if (c<32||c>126){
+		bf[1]='x';
+		bf[2]=(c>>4)+(c>159?87:48);
+		bf[3]=(c&0xf)+((c&0xf)>9?87:48);
+		bfl=4;
+	}
+	else{
+		sll_file_write_char(wf,c,NULL);
+		return;
+	}
+	sll_file_write(wf,bf,bfl,NULL);
+}
+
+
+
+static void _print_float(sll_float_t v,sll_file_t* wf){
+	char bf[128];
+	int sz=snprintf(bf,128,"%.16lg",v);
+	sll_file_write(wf,bf,sz*sizeof(char),NULL);
+}
+
+
+
+static void _print_complex(const sll_complex_t* c,sll_file_t* wf){
+	if (c->real){
+		_print_float(c->real,wf);
+		if (c->imag){
+			sll_file_write_char(wf,(c->imag<0?'-':'+'),NULL);
+			_print_float(sll_api_math_abs(c->imag),wf);
+			sll_file_write_char(wf,'i',NULL);
+		}
+	}
+	else if (c->imag){
+		_print_float(c->imag,wf);
+		sll_file_write_char(wf,'i',NULL);
+	}
+	else{
+		sll_file_write_char(wf,'0',NULL);
+	}
+}
+
+
+
+static void _print_int(sll_integer_t v,sll_file_t* wf){
+	if (!v){
+		sll_file_write_char(wf,'0',NULL);
+		return;
+	}
+	if (v<0){
+		v=-v;
+		sll_file_write_char(wf,'-',NULL);
+	}
+	sll_char_t bf[20];
+	sll_string_length_t i=0;
+	while (v){
+		bf[i]=v%10;
+		v/=10;
+		i++;
+	}
+	while (i){
+		i--;
+		sll_file_write_char(wf,bf[i]+48,NULL);
+	}
+}
+
+
+
 static void _print_identifier(sll_identifier_index_t ii,const sll_source_file_t* sf,sll_file_t* wf){
 	sll_identifier_t* id=(SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?sf->idt.il:sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(ii)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii);
 	sll_string_t* s=sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX(id);
@@ -88,7 +176,7 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 			sll_file_write_char(wf,'\'',NULL);
 			return o+1;
 		case SLL_NODE_TYPE_COMPLEX:
-			_print_complex(o->dt.d,wf);
+			_print_complex(&(o->dt.d),wf);
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
 			{
@@ -513,94 +601,6 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 
 
 
-void _print_char(sll_char_t c,sll_file_t* wf){
-	sll_char_t bf[4]={'\\'};
-	sll_string_length_t bfl=2;
-	if (c=='\''||c=='"'||c=='\\'){
-		bf[1]=c;
-	}
-	else if (c=='\t'){
-		bf[1]='t';
-	}
-	else if (c=='\n'){
-		bf[1]='n';
-	}
-	else if (c=='\v'){
-		bf[1]='v';
-	}
-	else if (c=='\f'){
-		bf[1]='f';
-	}
-	else if (c=='\r'){
-		bf[1]='r';
-	}
-	else if (c<32||c>126){
-		bf[1]='x';
-		bf[2]=(c>>4)+(c>159?87:48);
-		bf[3]=(c&0xf)+((c&0xf)>9?87:48);
-		bfl=4;
-	}
-	else{
-		sll_file_write_char(wf,c,NULL);
-		return;
-	}
-	sll_file_write(wf,bf,bfl,NULL);
-}
-
-
-
-void _print_complex(sll_complex_t c,sll_file_t* wf){
-	if (c.real){
-		_print_float(c.real,wf);
-		if (c.imag){
-			sll_file_write_char(wf,(c.imag<0?'-':'+'),NULL);
-			_print_float(sll_api_math_abs(c.imag),wf);
-			sll_file_write_char(wf,'i',NULL);
-		}
-	}
-	else if (c.imag){
-		_print_float(c.imag,wf);
-		sll_file_write_char(wf,'i',NULL);
-	}
-	else{
-		sll_file_write_char(wf,'0',NULL);
-	}
-}
-
-
-
-void _print_float(sll_float_t v,sll_file_t* wf){
-	char bf[128];
-	int sz=snprintf(bf,128,"%.16lg",v);
-	sll_file_write(wf,bf,sz*sizeof(char),NULL);
-}
-
-
-
-void _print_int(sll_integer_t v,sll_file_t* wf){
-	if (!v){
-		sll_file_write_char(wf,'0',NULL);
-		return;
-	}
-	if (v<0){
-		v=-v;
-		sll_file_write_char(wf,'-',NULL);
-	}
-	sll_char_t bf[20];
-	sll_string_length_t i=0;
-	while (v){
-		bf[i]=v%10;
-		v/=10;
-		i++;
-	}
-	while (i){
-		i--;
-		sll_file_write_char(wf,bf[i]+48,NULL);
-	}
-}
-
-
-
 __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_t* wf){
 	sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
@@ -658,7 +658,7 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_complex(ai->dt.d,wf);
+				_print_complex(&(ai->dt.d),wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				PRINT_STATIC_STRING("PUSH c",wf);

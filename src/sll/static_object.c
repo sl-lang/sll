@@ -715,13 +715,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_ch
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(sll_complex_t v){
-	if (!v.real&&!v.imag){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(const sll_complex_t* v){
+	if (!v->real&&!v->imag){
 		SLL_ACQUIRE(sll_static_complex_zero);
 		return sll_static_complex_zero;
 	}
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_COMPLEX);
-	o->dt.d=v;
+	o->dt.d=*v;
 	return o;
 }
 

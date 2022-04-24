@@ -7,6 +7,7 @@
 ## Changed
 
 - Assembly jump instructions now store a pointer to the target instruction ([#270])
+- Complex number arguments and return values are now passed by pointers
 - Fixed execution of an arbitrary memory location ([#272])
 - Renamed audit event `sll.process.shell` to `sll.process.start.shell` ([#271])
 - Renamed website page names

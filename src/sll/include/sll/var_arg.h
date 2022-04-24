@@ -74,9 +74,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \ret sll_complex_t
+ * \arg sll_complex_t* o
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_var_arg_get_complex(sll_var_arg_list_t* va);
+__SLL_EXTERNAL void sll_var_arg_get_complex(sll_var_arg_list_t* va,sll_complex_t* o);
 
 
 

@@ -1,6 +1,7 @@
 #include <sll/_internal/gc.h>
 #include <sll/_internal/var_arg.h>
 #include <sll/common.h>
+#include <sll/complex.h>
 #include <sll/gc.h>
 #include <sll/operator.h>
 #include <sll/object.h>
@@ -88,24 +89,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_complex_t sll_var_arg_get_complex(sll_var_arg_list_t* va){
+__SLL_EXTERNAL void sll_var_arg_get_complex(sll_var_arg_list_t* va,sll_complex_t* o){
 	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
-		return *va_arg(*(va->dt.c),sll_complex_t*);
+		*o=*va_arg(*(va->dt.c),sll_complex_t*);
 	}
-	GET_TYPE_IF_STRUCT(sll_complex_t);
-	if (!va->dt.sll.l){
-		sll_complex_t o={
-			0,
-			0
-		};
-		return o;
+	else if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
+		SLL_ASSERT(va->dt.s.l);
+		sll_size_t off=*(va->dt.s.off);
+		va->dt.s.off++;
+		va->dt.s.l--;
+		*o=*((sll_complex_t*)PTR(ADDR(va->dt.s.ptr)+off));
 	}
-	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_COMPLEX]);
-	sll_complex_t o=n->dt.d;
-	GC_RELEASE(n);
-	va->dt.sll.p++;
-	va->dt.sll.l--;
-	return o;
+	else if (!va->dt.sll.l){
+		SLL_INIT_COMPLEX(o);
+	}
+	else{
+		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_COMPLEX]);
+		*o=n->dt.d;
+		GC_RELEASE(n);
+		va->dt.sll.p++;
+		va->dt.sll.l--;
+	}
 }
 
 
