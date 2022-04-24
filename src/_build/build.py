@@ -56,7 +56,7 @@ def build_sll(fl,v,r):
 			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","/PDB:build/sll.pdb","advapi32.lib","bcrypt.lib"]+out_fl)):
 				sys.exit(1)
 	else:
-		def_l.extend(["_GNU_SOURCE"])
+		def_l.append("_GNU_SOURCE")
 		linux_opt=[]
 		for k in def_l:
 			linux_opt.append("-D")
@@ -66,6 +66,8 @@ def build_sll(fl,v,r):
 			linux_opt.append("-mavx2")
 		nasm_fmt=("macho64" if util.system=="darwin" else "elf64")
 		if (r):
+			if ("--debug" in sys.argv):
+				linux_opt.append("-g")
 			util.log("  Compiling Files (Release Mode)...")
 			out_fl=[]
 			err=False
@@ -82,7 +84,7 @@ def build_sll(fl,v,r):
 			util.log("  Linking Files (Release Mode)...")
 			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt)):
 				sys.exit(1)
-			if (util.system!="darwin"):
+			if (util.system!="darwin" and "--debug" not in sys.argv):
 				util.log("  Stripping Executable...")
 				if (util.execute(["strip",f"build/{lib_nm}.so","-s","-R",".note.*","-R",".comment"])):
 					sys.exit(1)
