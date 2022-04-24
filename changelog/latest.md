@@ -6,7 +6,9 @@
 
 ## Changed
 
+- Fixed execution of an arbitrary memory location ([#272])
 - Renamed audit event `sll.process.shell` to `sll.process.start.shell` ([#271])
 
 [0.7.15]: https://github.com/sl-lang/sll/compare/sll-v0.7.14...main
+[#272]: https://github.com/sl-lang/sll/issues/272
 [#271]: https://github.com/sl-lang/sll/issues/271

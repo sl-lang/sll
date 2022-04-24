@@ -4,24 +4,20 @@ section .text
 
 
 
-; eax - Number of arguments left in current bitmap
-; rbx - Return value pointer
-; rcx - Temporary register
-; rdx - Argument bitmap pointer
-; rsi - Current bitmap
-; r8 - Argument data pointer
-; r9d - Argument count
-; r10 - Stack pointer for arguments
-; r11 - Function pointer
 __SLL_EXPORT _call_api_func_assembly
 	push rbx
 	push rsi
 	push rbp
 	mov rbp, rsp
 
+	; rbx - Return value pointer
+	; r11 - Function pointer
 	mov rbx, rcx
 	mov r11, QWORD [rsp+64]
 
+	; rax - Stack offset
+	; rbx - Return value pointer
+	; r11 - Function pointer
 	mov eax, r9d
 	add eax, 2
 	and eax, 0xfffffffe
@@ -32,18 +28,27 @@ __SLL_EXPORT _call_api_func_assembly
 %ifdef __SLL_BUILD_WINDOWS
 	cmp rax, 4096
 	jb ._skip_stack_check
+	mov rsi, r11
 	call __chkstk
+	mov r11, rsi
 ._skip_stack_check:
 %endif
 	sub rsp, rax
 
+	; rax - Number of arguments left in current bitmap
+	; rbx - Return value pointer
+	; rdx - Argument bitmap pointer
+	; rsi - Current bitmap
+	; r8 - Argument data pointer
+	; r9d - Argument count
+	; r10 - Stack pointer for arguments
+	; r11 - Function pointer
 	mov al, 64
 	mov rsi, QWORD [rdx]
 	mov r10, rsp
 	test r9d, r9d
 	jz ._no_args
 ._next_arg:
-
 	bt si, 0
 	jc ._push_wide_arg
 	mov rcx, QWORD [r8]
@@ -52,7 +57,6 @@ __SLL_EXPORT _call_api_func_assembly
 ._push_wide_arg:
 	mov QWORD [r10], r8
 	add r8, 8
-
 ._load_next_arg:
 	shr rsi, 1
 	add r8, 8
@@ -67,6 +71,19 @@ __SLL_EXPORT _call_api_func_assembly
 	jnz ._next_arg
 ._no_args:
 
+	; rax - Number of arguments left in current bitmap
+	; rbx - Return value pointer
+	; rdx - Argument bitmap pointer
+	; rsi - Current bitmap
+	; r10 - Stack pointer for arguments
+	; r11 - Function pointer
+	mov QWORD [r10], rbx
+
+	; rax - Number of arguments left in current bitmap
+	; rbx - Return value pointer
+	; rdx - Argument bitmap pointer
+	; rsi - Current bitmap
+	; r11 - Function pointer
 	cmp al, 1
 	jg ._skip_extra_load
 	add rdx, 8
@@ -74,8 +91,6 @@ __SLL_EXPORT _call_api_func_assembly
 	shr cl, 1
 	or sil, cl
 ._skip_extra_load:
-
-	mov QWORD [r10], rbx
 
 	mov rcx, QWORD [rsp]
 	mov rdx, QWORD [rsp+8]
@@ -87,6 +102,10 @@ __SLL_EXPORT _call_api_func_assembly
 	movq xmm3, r9
 	call r11
 
+	; rax - Integer return value
+	; rbx - Return value pointer
+	; rsi - Current bitmap
+	; xmm0 - Floating-point return value
 	test sil, sil
 	jz ._register_return_value
 	sub sil, 1
