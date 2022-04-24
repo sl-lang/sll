@@ -172,7 +172,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_list_d
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
-	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("sb"),path,recursive);
+	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("su"),path,recursive);
 	sll_string_t* dt=NULL;
 	sll_error_t err;
 	sll_array_length_t len=(recursive?sll_platform_list_directory_recursive:sll_platform_list_directory)(path->v,&dt,&err);
