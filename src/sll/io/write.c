@@ -252,10 +252,10 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					CHECK_ERROR(sll_encode_signed_integer(wf,ai->dt.rj));
+					CHECK_ERROR(sll_encode_signed_integer(wf,ai->dt.j.t.rel));
 				}
 				else{
-					CHECK_ERROR(sll_encode_integer(wf,ai->dt.rj));
+					CHECK_ERROR(sll_encode_integer(wf,ai->dt.j.t.abs));
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:

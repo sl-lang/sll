@@ -667,10 +667,10 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 				PRINT_STATIC_STRING("PUSH .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
@@ -745,118 +745,118 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 				PRINT_STATIC_STRING("JMP .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JB:
 				PRINT_STATIC_STRING("JB .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JBE:
 				PRINT_STATIC_STRING("JBE .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JA:
 				PRINT_STATIC_STRING("JA .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JAE:
 				PRINT_STATIC_STRING("JAE .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JE:
 				PRINT_STATIC_STRING("JE .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNE:
 				PRINT_STATIC_STRING("JNE .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:
 				PRINT_STATIC_STRING("JZ .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ:
 				PRINT_STATIC_STRING("JNZ .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSE:
 				PRINT_STATIC_STRING("JSE .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JSNE:
 				PRINT_STATIC_STRING("JSNE .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
 				PRINT_STATIC_STRING("JI .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
 				PRINT_STATIC_STRING("JNI .",wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->dt.rj,wf);
+					PRINT_INT_SIGN(ai->dt.j.t.rel,wf);
 				}
 				else{
-					_print_int(ai->dt.j,wf);
+					_print_int(ai->dt.j.t.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:

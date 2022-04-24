@@ -641,6 +641,20 @@ typedef struct _SLL_COMPILATION_DATA{
 
 
 
+typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP_TARGET{
+	sll_instruction_index_t abs;
+	sll_relative_instruction_index_t rel;
+} sll_assembly_instruction_data_jump_target_t;
+
+
+
+typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP{
+	sll_assembly_instruction_data_jump_target_t t;
+	void* _p;
+} sll_assembly_instruction_data_jump_t;
+
+
+
 typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
 	sll_variable_index_t v;
 	sll_arg_count_t l;
@@ -656,8 +670,7 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_char_t c;
 	sll_string_index_t s;
 	sll_variable_index_t v;
-	sll_instruction_index_t j;
-	sll_relative_instruction_index_t rj;
+	sll_assembly_instruction_data_jump_t j;
 	sll_arg_count_t ac;
 	sll_array_length_t al;
 	sll_map_length_t ml;

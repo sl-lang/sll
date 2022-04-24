@@ -39,8 +39,8 @@
 
 
 #define JUMP_INSTRUCTION \
-	thr->ii=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?thr->ii+ai->dt.rj:ai->dt.j); \
-	ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,thr->ii); \
+	thr->ii=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?thr->ii+ai->dt.j.t.rel:ai->dt.j.t.abs); \
+	ai=ai->dt.j._p; \
 	continue;
 #define CMP_INSTRUCTION(eq,v) \
 	{ \
@@ -398,7 +398,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
-				*(thr->stack+thr->si)=sll_int_to_object((SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?thr->ii+ai->dt.rj:ai->dt.j));
+				*(thr->stack+thr->si)=sll_int_to_object((SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?thr->ii+ai->dt.j.t.rel:ai->dt.j.t.abs));
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:

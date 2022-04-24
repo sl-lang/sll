@@ -24,14 +24,14 @@
 	do{ \
 		sll_assembly_instruction_t* __ai=_acquire_next_instruction((g_dt)->a_dt); \
 		__ai->t=ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET; \
-		ASSEMBLY_INSTRUCTION_MISC_FIELD(__ai)=(id); \
+		ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(__ai,(id)); \
 	} while(0)
 #define GENERATE_OPCODE(g_dt,op) (_acquire_next_instruction((g_dt)->a_dt)->t=(op))
 #define GENERATE_OPCODE_WITH_LABEL(g_dt,op,lbl) \
 	do{ \
 		sll_assembly_instruction_t* __ai=_acquire_next_instruction((g_dt)->a_dt); \
 		__ai->t=(op)|ASSEMBLY_INSTRUCTION_FLAG_LABEL; \
-		ASSEMBLY_INSTRUCTION_MISC_FIELD(__ai)=(lbl); \
+		ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(__ai,(lbl)); \
 	} while(0)
 #define GENERATE_DEBUG_DATA(g_dt,o) \
 	do{ \
@@ -1101,7 +1101,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC;
-				ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=o->dt.fn.id;
+				ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(ai,o->dt.fn.id);
 			}
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
@@ -1672,7 +1672,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->t=ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC;
-				ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=o->dt.fn.id;
+				ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(ai,o->dt.fn.id);
 				return _skip_with_dbg(o,g_dt);
 			}
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
@@ -1952,7 +1952,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				}
 				else{
 					ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP|ASSEMBLY_INSTRUCTION_FLAG_LABEL;
-					ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=g_dt->rt;
+					ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(ai,g_dt->rt);
 				}
 				return o;
 			}
@@ -2150,7 +2150,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 		const sll_function_t* k=*(sf->ft.dt+i);
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(o);
 		ai->t=ASSEMBLY_INSTRUCTION_TYPE_FUNC_START;
-		ASSEMBLY_INSTRUCTION_MISC_FIELD(ai)=i;
+		ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(ai,i);
 		(o->ft.dt+i)->ac=k->al;
 		if (k->nm==SLL_MAX_STRING_INDEX){
 			sll_string_t str;
@@ -2277,23 +2277,23 @@ _remove_nop:
 				goto _remove_nop;
 			}
 			else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC){
-				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln=f_off;
-				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp=f_idx;
+				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->ln=f_off;
+				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->fp=f_idx;
 				goto _remove_nop;
 			}
 			else if (ai->t==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
-				(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->i=i;
-				if (f_idx!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp){
-					f_idx=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->fp;
+				(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->i=i;
+				if (f_idx!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->fp){
+					f_idx=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->fp;
 					(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
 					SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,f_idx,SLL_DEBUG_LINE_DATA_FLAG_FILE);
 					dbg_i++;
 					l_dbg_ii=i;
 				}
 				(o->dbg.dt+dbg_i)->ii=i-l_dbg_ii;
-				SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->nm,SLL_DEBUG_LINE_DATA_FLAG_FUNC);
+				SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,(o->ft.dt+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->nm,SLL_DEBUG_LINE_DATA_FLAG_FUNC);
 				dbg_i++;
-				f_off=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))->ln;
+				f_off=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->ln;
 				(o->dbg.dt+dbg_i)->ii=0;
 				SLL_DEBUG_LINE_DATA_SET_DATA(o->dbg.dt+dbg_i,f_off,0);
 				dbg_i++;
@@ -2306,10 +2306,10 @@ _remove_nop:
 					tmp=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?tmp->dt._p:tmp+1);
 				}
 				if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&(tmp->t&ASSEMBLY_INSTRUCTION_FLAG_LABEL)){
-					*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=ASSEMBLY_INSTRUCTION_MISC_FIELD(tmp)|ASSEMBLY_INSTRUCTION_FLAG_LABEL_REF;
+					*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))=(sll_instruction_index_t)(ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(tmp)|ASSEMBLY_INSTRUCTION_FLAG_LABEL_REF);
 				}
 				else{
-					*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD(ai))=i;
+					*(lbl+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))=i;
 				}
 				goto _remove_nop;
 			}
@@ -2368,7 +2368,7 @@ _remove_nop:
 	for (sll_instruction_index_t i=0;i<o->ic;i++){
 		if ((SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI))&&(ai->t&ASSEMBLY_INSTRUCTION_FLAG_LABEL)){
 			ai->t&=~ASSEMBLY_INSTRUCTION_FLAG_LABEL;
-			assembly_instruction_label_t lbl_i=ASSEMBLY_INSTRUCTION_MISC_FIELD(ai);
+			assembly_instruction_label_t lbl_i=(assembly_instruction_label_t)ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai);
 			sll_instruction_index_t j;
 			while (1){
 				j=*(lbl+lbl_i);
@@ -2380,17 +2380,18 @@ _remove_nop:
 				*(lbl+lbl_i)=j;
 				lbl_i=n;
 			}
+			ai->dt.j._p=_get_instruction_at_offset(o,j);
 			if (j<128){
-				ai->dt.j=j;
+				ai->dt.j.t.abs=j;
 			}
 			else{
 				sll_relative_instruction_index_t off=((sll_relative_instruction_index_t)j)-i;
 				if (GET_SIGN_ENCODED_INTEGER((sll_integer_t)off)<(sll_integer_t)j){
 					ai->t|=SLL_ASSEMBLY_INSTRUCTION_FLAG_RELATIVE;
-					ai->dt.rj=off;
+					ai->dt.j.t.rel=off;
 				}
 				else{
-					ai->dt.j=j;
+					ai->dt.j.t.abs=j;
 				}
 			}
 		}
