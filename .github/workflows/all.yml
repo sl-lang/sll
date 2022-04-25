@@ -21,7 +21,6 @@ jobs:
       - linux
       - linux-release
       - web
-      - web-server
       - windows
       - windows-release
     if: always()&&!contains(needs.*.result,'failure')&&!contains(needs.*.result,'cancelled')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).windows)&&github.event_name!='workflow_dispatch'
@@ -118,7 +117,7 @@ jobs:
         run: pip install requests
       - name: Calculate
         id: calc_diff
-        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,tests web-client=src/sll/include,src/web/client web-server=src/web/server ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,tests web=src/sll/include,src/web ${{secrets.GITHUB_TOKEN}}
   linux:
     name: Build linux
     needs: diff
@@ -220,7 +219,7 @@ jobs:
       - linux-release
       - windows
       - windows-release
-    if: always()&&!contains(needs.*.result,'failure')&&!contains(needs.*.result,'cancelled')&&fromJSON(needs.diff.outputs.data).web-client&&github.event_name=='push'
+    if: always()&&!contains(needs.*.result,'failure')&&!contains(needs.*.result,'cancelled')&&fromJSON(needs.diff.outputs.data).web&&github.event_name=='push'
     runs-on: ubuntu-latest
     env:
       ANALYTICS: ${{secrets.ANALYTICS_CODE}}
@@ -239,22 +238,6 @@ jobs:
           name: web-bundle
           path: web-bundle.dt
           retention-days: 1
-  web-server:
-    name: Upload website server
-    needs: diff
-    if: fromJSON(needs.diff.outputs.data).web-server&&github.event_name=='push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
-      - name: Set-up requests
-        run: pip install requests
-      - name: Upload
-        run: python src/_build/website.py --verbose --server ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_WORKER_NAME}} ${{secrets.CLOUDFLARE_TOKEN}}
   web-upload:
     name: Upload website
     needs: web

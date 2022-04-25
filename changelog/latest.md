@@ -13,11 +13,18 @@
 - File flags are now 16-bit
 - Fixed execution of an arbitrary memory location ([#272])
 - Increased per-core thread count limit from `8192` to `16384`
+- Moved website files from [`src/web/client`][0.7.14/src/web/client] to [`src/web`][0.7.15/src/web]
 - Registers are now stored in the register area in debug mode
 - Renamed audit event `sll.process.shell` to `sll.process.start.shell` ([#271])
 - Renamed website page names
+
+## Removed
+
+- Website server code
 
 [0.7.15]: https://github.com/sl-lang/sll/compare/sll-v0.7.14...main
 [#272]: https://github.com/sl-lang/sll/issues/272
 [#271]: https://github.com/sl-lang/sll/issues/271
 [#270]: https://github.com/sl-lang/sll/issues/270
+[0.7.15/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
+[0.7.14/src/web/client]: https://github.com/sl-lang/sll/tree/sll-v0.7.14/src/web/client
