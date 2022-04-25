@@ -209,7 +209,9 @@ jobs:
         with:
           path: assets
       - name: Create release
-        run: python src/_build/release.py --verbose ${{secrets.GITHUB_TOKEN}}
+        run: python3 src/_build/release.py --verbose ${{secrets.GITHUB_TOKEN}}
+      - name: Trigger package server update
+        run: ${{secrets.PACKAGE_SERVER_UPDATE_COMMAND}}
   windows:
     name: Build windows
     needs: diff
