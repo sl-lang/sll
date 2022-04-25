@@ -89,6 +89,75 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* p,sll_size_t sz,sll_char_t c){
+	if (!sz){
+		return 0;
+	}
+	const sll_char_t* ptr=p;
+	if (sz<16){
+		for (sll_size_t i=0;i<sz;i++){
+			if (*(ptr+i)==c){
+				return 1;
+			}
+		}
+		return 0;
+	}
+	if (ADDR(ptr)&7){
+		sll_size_t i=8-(ADDR(ptr)&7);
+		sz-=i;
+		do{
+			if (*ptr==c){
+				return 1;
+			}
+			ptr++;
+			i--;
+		} while (i);
+	}
+	const wide_data_t* ptr64=(const wide_data_t*)ptr;
+	ASSUME_ALIGNED(ptr64,3,0);
+#ifdef __SLL_BUILD_DARWIN
+	wide_data_t m=0x101010101010101ull*c;
+	while (sz>7){
+		wide_data_t v=(*ptr)^m;
+		if ((v-0x101010101010101ull)&(~v)&0x8080808080808080ull){
+			return 1;
+		}
+		ptr++;
+		sz-=8;
+	}
+#else
+	__m256i m=_mm256_set1_epi8(c);
+	__m256i n=_mm256_set1_epi64x(0x101010101010101ull);
+	while (sz>31){
+		__m256i v=_mm256_xor_si256(_mm256_lddqu_si256((const __m256i*)ptr),m);
+		if (~_mm256_movemask_epi8(_mm256_andnot_si256(v,_mm256_sub_epi64(v,n)))){
+			return 1;
+		}
+		sz-=32;
+		ptr+=4;
+	}
+	if (sz>15){
+		__m128i v=_mm_xor_si128(_mm_lddqu_si128((const __m128i*)ptr),_mm256_castsi256_si128(m));
+		if (_mm_movemask_epi8(_mm_andnot_si128(v,_mm_sub_epi64(v,_mm256_castsi256_si128(n))))^0xffff){
+			return 1;
+		}
+		sz-=16;
+		ptr+=2;
+	}
+#endif
+	ptr=(const sll_char_t*)ptr64;
+	while (sz){
+		sz--;
+		if (*ptr==c){
+			return 1;
+		}
+		ptr++;
+	}
+	return 0;
+}
+
+
+
 __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 	const sll_char_t* a=(const sll_char_t*)s;
 	sll_char_t* b=(sll_char_t*)d;

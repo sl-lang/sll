@@ -517,15 +517,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 		sll_size_t o=sll_platform_file_write(f->dt.fl.fd,p,sz,err);
 		return o;
 	}
-	sll_bool_t flush=0;
-	if (f->f&SLL_FILE_FLUSH_ON_NEWLINE){
-		for (sll_size_t i=0;i<sz;i++){
-			if (*(((sll_char_t*)p)+i)=='\n'){
-				flush=1;
-				break;
-			}
-		}
-	}
+	sll_bool_t flush=((f->f&SLL_FILE_FLUSH_ON_NEWLINE)?sll_contains_character(p,sz,'\n'):0);
 	LOCK;
 	if (sz+f->_w.bf.off<=FILE_BUFFER_SIZE){
 		sll_copy_data(p,sz,f->_w.bf.p+f->_w.bf.off);

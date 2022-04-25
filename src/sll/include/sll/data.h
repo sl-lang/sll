@@ -71,6 +71,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 
 
 /**
+ * \flags check_output func
+ * \name sll_contains_character
+ * \group data
+ * \desc Docs!
+ * \arg const void* p
+ * \arg sll_size_t sz
+ * \arg sll_char_t c
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* p,sll_size_t sz,sll_char_t c);
+
+
+
+/**
  * \flags func
  * \name sll_copy_data
  * \group data
