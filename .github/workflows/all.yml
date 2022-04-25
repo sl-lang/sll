@@ -20,7 +20,6 @@ jobs:
       - diff
       - linux
       - linux-release
-      - web
       - windows
       - windows-release
     if: always()&&!contains(needs.*.result,'failure')&&!contains(needs.*.result,'cancelled')&&(fromJSON(needs.diff.outputs.data).linux||fromJSON(needs.diff.outputs.data).windows)&&github.event_name!='workflow_dispatch'
@@ -117,7 +116,7 @@ jobs:
         run: pip install requests
       - name: Calculate
         id: calc_diff
-        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,tests web=src/sll/include,src/web ${{secrets.GITHUB_TOKEN}}
+        run: python src/_build/diff.py linux=src/sll/include,src/cli,src/sll,src/sll/platform/linux,tests windows=src/sll/include,src/cli,src/sll,src/sll/platform/windows,tests ${{secrets.GITHUB_TOKEN}}
   linux:
     name: Build linux
     needs: diff
@@ -211,53 +210,6 @@ jobs:
           path: assets
       - name: Create release
         run: python src/_build/release.py --verbose ${{secrets.GITHUB_TOKEN}}
-  web:
-    name: Build website
-    needs:
-      - diff
-      - linux
-      - linux-release
-      - windows
-      - windows-release
-    if: always()&&!contains(needs.*.result,'failure')&&!contains(needs.*.result,'cancelled')&&fromJSON(needs.diff.outputs.data).web&&github.event_name=='push'
-    runs-on: ubuntu-latest
-    env:
-      ANALYTICS: ${{secrets.ANALYTICS_CODE}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
-      - name: Build
-        run: ${{env.BUILD_COMMAND_LINUX}} --web
-      - name: Store generated website
-        uses: actions/upload-artifact@v3
-        with:
-          name: web-bundle
-          path: web-bundle.dt
-          retention-days: 1
-  web-upload:
-    name: Upload website
-    needs: web
-    if: github.event_name=='push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
-      - name: Set-up requests
-        run: pip install requests
-      - name: Load generated website
-        uses: actions/download-artifact@v3
-        with:
-          name: web-bundle
-      - name: Upload
-        run: python src/_build/website.py --verbose ${{secrets.CLOUDFLARE_ACCOUNT_ID}} ${{secrets.CLOUDFLARE_NAMESPACE_ID}} ${{secrets.CLOUDFLARE_TOKEN}}
   windows:
     name: Build windows
     needs: diff
