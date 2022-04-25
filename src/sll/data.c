@@ -95,9 +95,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* 
 	const sll_char_t* ptr=p;
 	if (sz<16){
 		for (sll_size_t i=0;i<sz;i++){
-			if (*(ptr+i)==c){
+			if (*ptr==c){
 				return 1;
 			}
+			ptr++;
 		}
 		return 0;
 	}
