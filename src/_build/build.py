@@ -47,7 +47,7 @@ def build_sll(fl,v,r):
 				out_fl.append(out_fp)
 				if (hashlist.update(k,"src/sll/include")):
 					util.log("    "+k)
-					if (util.execute((["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","src/sll/include","/Fdbuild/sll.pdb","/Fo"+out_fp,k]+win_def if k[-2:]==".c" else ["nasm","-I","src/sll/include","-D__SLL_BUILD_"+util.system.upper(),"-o",out_fp,"-O0","-Wall","-Werror","-gcv8","-f","win64",k]))):
+					if (util.execute((["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","_DEBUG","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/Zi","/Od","/RTC1","/MDd","/I","src/sll/include","/Fdbuild/sll.pdb","/Fo"+out_fp,k]+win_def if k[-2:]==".c" else ["nasm","-I","src/sll/include","-D__SLL_BUILD_"+util.system.upper(),"-DDEBUG_BUILD","-o",out_fp,"-O0","-Wall","-Werror","-gcv8","-f","win64",k]))):
 						hashlist.fail(k)
 						err=True
 			if (err):
@@ -101,7 +101,7 @@ def build_sll(fl,v,r):
 				out_fl.append(out_fp)
 				if (hashlist.update(k,"src/sll/include")):
 					util.log("    "+k)
-					if (util.execute((["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt if k[-2:]==".c" else ["nasm","-I","src/sll/include","-D__SLL_BUILD_"+util.system.upper(),"-o",out_fp,"-O0","-Wall","-Werror","-gdwarf","-f",nasm_fmt,k]))):
+					if (util.execute((["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-g","-O0","-Werror","-I","src/sll/include","-o",out_fp,k]+linux_opt if k[-2:]==".c" else ["nasm","-I","src/sll/include","-D__SLL_BUILD_"+util.system.upper(),"-DDEBUG_BUILD","-o",out_fp,"-O0","-Wall","-Werror","-gdwarf","-f",nasm_fmt,k]))):
 						hashlist.fail(k)
 						err=True
 			if (err):

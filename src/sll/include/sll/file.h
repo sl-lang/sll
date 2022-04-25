@@ -88,13 +88,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_FILE_FLUSH_ON_NEWLINE
+ * \group file
+ * \subgroup file-flag
+ * \desc Docs!
+ * \type sll_file_flags_t
+ */
+#define SLL_FILE_FLUSH_ON_NEWLINE 32
+
+
+
+/**
+ * \flags macro var
  * \name SLL_FILE_FLAG_RESERVED0
  * \group file
  * \subgroup file-flag
  * \desc Internally used as `FILE_FLAG_MEMORY`
  * \type sll_file_flags_t
  */
-#define SLL_FILE_FLAG_RESERVED0 32
+#define SLL_FILE_FLAG_RESERVED0 64
 
 
 
@@ -106,7 +118,7 @@
  * \desc Internally used as `FILE_FLAG_NO_RELEASE`
  * \type sll_file_flags_t
  */
-#define SLL_FILE_FLAG_RESERVED1 64
+#define SLL_FILE_FLAG_RESERVED1 128
 
 
 
@@ -118,7 +130,7 @@
  * \desc Internally used as `FILE_FLAG_DYNAMIC_BUFFERS`
  * \type sll_file_flags_t
  */
-#define SLL_FILE_FLAG_RESERVED2 128
+#define SLL_FILE_FLAG_RESERVED2 256
 
 
 

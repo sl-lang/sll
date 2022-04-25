@@ -68,10 +68,6 @@ typedef __SLL_U8 sll_day_t;
 
 
 
-typedef __SLL_U8 sll_file_flags_t;
-
-
-
 typedef __SLL_U8 sll_flags_t;
 
 
@@ -117,6 +113,10 @@ typedef __SLL_U16 sll_call_stack_size_t;
 
 
 typedef __SLL_U16 sll_cpu_t;
+
+
+
+typedef __SLL_U16 sll_file_flags_t;
 
 
 

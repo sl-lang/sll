@@ -5,16 +5,29 @@ section .text
 
 
 __SLL_EXPORT _call_api_func_assembly
+	; rcx - Return value pointer
+	; rdx - Argument bitmap pointer
+	; r8 - Argument data pointer
+	; r9 - Argument count
+	; [rsp+40] - Function pointer
 	push rbx
 	push rsi
 	push rbp
 	mov rbp, rsp
+
+%ifdef DEBUG_BUILD
+	mov QWORD [rsp+32], rcx
+	mov QWORD [rsp+40], rdx
+	mov QWORD [rsp+48], r8
+	mov QWORD [rsp+56], r9
+%endif
 
 	; rbx - Return value pointer
 	; rdx - Argument bitmap pointer
 	; r8 - Argument data pointer
 	; r9 - Argument count
 	; r11 - Function pointer
+	; [rsp+64] - Function pointer
 	mov rbx, rcx
 	mov r11, QWORD [rsp+64]
 
@@ -30,7 +43,9 @@ __SLL_EXPORT _call_api_func_assembly
 	and eax, 0xfffffffe
 	mov ecx, 4
 	cmp eax, ecx
-	cmovb eax, ecx
+	jae ._above_min_size
+	mov eax, ecx
+._above_min_size:
 	shl rax, 3
 %ifdef __SLL_BUILD_WINDOWS
 	cmp rax, 4096

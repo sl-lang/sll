@@ -494,7 +494,10 @@
 	(++ idx)
 )
 
-(:> "CHAR: " (<- file$read_char file$stdin) "\n")
+(:> "CHAR: " (,
+	(<- file$flush file$stdout)
+	(<- file$read_char file$stdin)
+) "\n")
 
 (:> `Raw String\\n ` "\a\n")
 |#|
