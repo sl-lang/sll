@@ -42,17 +42,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 	}
 	const wide_data_t* ap64=(const wide_data_t*)ap;
 	const wide_data_t* bp64=(const wide_data_t*)bp;
-	ASSUME_ALIGNED(ap64,3,0);
-#ifdef __SLL_BUILD_DARWIN
-	while (l>7){
-		if (*ap64!=*bp64){
-			return (SWAP_BYTES64(*ap64)<SWAP_BYTES64(*bp64)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
-		}
-		ap64++;
-		bp64++;
-		l-=8;
-	}
-#else
+#ifndef __SLL_BUILD_DARWIN
 	while (l>31){
 		unsigned int v=~_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_lddqu_si256((const __m256i*)ap64),_mm256_lddqu_si256((const __m256i*)bp64)));
 		if (v){
@@ -74,6 +64,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 		bp64+=2;
 	}
 #endif
+	ASSUME_ALIGNED(ap64,3,0);
+	while (l>7){
+		if (*ap64!=*bp64){
+			return (SWAP_BYTES64(*ap64)<SWAP_BYTES64(*bp64)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
+		}
+		ap64++;
+		bp64++;
+		l-=8;
+	}
 	ap=(const sll_char_t*)ap64;
 	bp=(const sll_char_t*)bp64;
 	while (l){
@@ -114,18 +113,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* 
 		} while (i);
 	}
 	const wide_data_t* ptr64=(const wide_data_t*)ptr;
-	ASSUME_ALIGNED(ptr64,3,0);
-#ifdef __SLL_BUILD_DARWIN
-	wide_data_t m=0x101010101010101ull*c;
-	while (sz>7){
-		wide_data_t v=(*ptr64)^m;
-		if ((v-0x101010101010101ull)&(~v)&0x8080808080808080ull){
-			return 1;
-		}
-		ptr64++;
-		sz-=8;
-	}
-#else
+#ifndef __SLL_BUILD_DARWIN
 	__m256i m=_mm256_set1_epi8(c);
 	__m256i n=_mm256_set1_epi64x(0x101010101010101ull);
 	while (sz>31){
@@ -145,6 +133,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* 
 		ptr64+=2;
 	}
 #endif
+	ASSUME_ALIGNED(ptr64,3,0);
+	if (sz>7){
+		wide_data_t m=0x101010101010101ull*c;
+		do{
+			wide_data_t v=(*ptr64)^m;
+			if ((v-0x101010101010101ull)&(~v)&0x8080808080808080ull){
+				return 1;
+			}
+			ptr64++;
+			sz-=8;
+		} while (sz>7);
+	}
 	ptr=(const sll_char_t*)ptr64;
 	while (sz){
 		sz--;
