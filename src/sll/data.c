@@ -136,9 +136,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* 
 #endif
 	ASSUME_ALIGNED(ptr64,3,0);
 	if (sz>7){
-		wide_data_t m=0x101010101010101ull*c;
+		wide_data_t m64=0x101010101010101ull*c;
 		do{
-			wide_data_t v=(*ptr64)^m;
+			wide_data_t v=(*ptr64)^m64;
 			if ((v-0x101010101010101ull)&(~v)&0x8080808080808080ull){
 				return 1;
 			}
