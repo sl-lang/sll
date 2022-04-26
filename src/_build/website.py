@@ -68,8 +68,8 @@ def _generate_pages(dt,pg_src):
 				continue
 			toc+="<div class=\"subgroup\">"
 			if (len(sk)!=0):
-				toc+=f"<a href=\"{{{{ROOT}}}}/docs.html#{sk}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
 				elem_id=_generate_id(k,sk,None,None)
+				toc+=f"<a href=\"{{{{ROOT}}}}/docs.html#{elem_id}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
 				data+=f"<a id=\"{elem_id}\" href=\"#{elem_id}\"><h2>{dt['subgroups'][sk]['name']}</h2></a><h3>{dt['subgroups'][sk]['desc']}</h3>"
 			toc+="<ul>"
 			for e in sorted(sv,key=lambda se:se["name"]):
