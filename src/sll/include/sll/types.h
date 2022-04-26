@@ -312,7 +312,7 @@ typedef __SLL_F64 sll_float_t;
 
 
 
-typedef sll_float_t sll_second_t;
+typedef __SLL_F64 sll_second_t;
 
 
 

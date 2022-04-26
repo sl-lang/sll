@@ -26,17 +26,17 @@
 
 
 
-typedef union _FLOAT_DATA{
-	float v;
+typedef union _F32_DATA{
+	__SLL_F32 v;
 	__SLL_U32 dt;
-} float_data_t;
+} f32_data_t;
 
 
 
-typedef union _DOUBLE_DATA{
-	double v;
+typedef union _F64_DATA{
+	__SLL_F64 v;
 	__SLL_U64 dt;
-} double_data_t;
+} f64_data_t;
 
 
 

@@ -158,7 +158,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_flo
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(sll_float_t a){
-	double_data_t dt={
+	f64_data_t dt={
 		.v=a
 	};
 	dt.dt&=0x7fffffffffffffffull;
@@ -268,10 +268,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_ceil
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_copy_sign(sll_float_t a,sll_float_t b){
-	double_data_t dt_a={
+	f64_data_t dt_a={
 		.v=a
 	};
-	double_data_t dt_b={
+	f64_data_t dt_b={
 		.v=b
 	};
 	dt_b.dt=(dt_b.dt&0x7fffffffffffffffull)|(dt_a.dt&0x8000000000000000ull);

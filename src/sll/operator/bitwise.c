@@ -20,7 +20,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			return sll_int_to_object(a->dt.i&b->dt.i);
 		case COMBINED_TYPE_IF:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=a->dt.i&TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
@@ -57,14 +57,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 			}
 		case COMBINED_TYPE_FF:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=TO_FLOAT_BITS(a)&TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_FC:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=TO_FLOAT_BITS(a)&b->dt.c
 				};
 				return sll_float_to_object(v.v);
@@ -182,7 +182,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			return sll_int_to_object(a->dt.i|b->dt.i);
 		case COMBINED_TYPE_IF:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=a->dt.i|TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
@@ -219,14 +219,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 			}
 		case COMBINED_TYPE_FF:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=TO_FLOAT_BITS(a)|TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_FC:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=TO_FLOAT_BITS(a)|b->dt.c
 				};
 				return sll_float_to_object(v.v);
@@ -296,7 +296,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			return sll_int_to_object(a->dt.i^b->dt.i);
 		case COMBINED_TYPE_IF:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=a->dt.i^TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
@@ -333,14 +333,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 			}
 		case COMBINED_TYPE_FF:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=TO_FLOAT_BITS(a)^TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_FC:
 			{
-				double_data_t v={
+				f64_data_t v={
 					.dt=TO_FLOAT_BITS(a)^b->dt.c
 				};
 				return sll_float_to_object(v.v);
