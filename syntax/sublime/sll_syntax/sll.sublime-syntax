@@ -262,6 +262,8 @@ contexts:
       scope: punctuation.definition.string.begin.sll
       push:
         - meta_scope: string.quoted.raw.sll
+        - match: '``'
+          scope: constant.character.escape.sll
         - match: '`'
           scope: punctuation.definition.string.end.sll
           pop: true

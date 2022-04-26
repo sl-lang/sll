@@ -5,6 +5,7 @@
 - Checks for unknown file descriptors in the serial API
 - Implemented `sll_contains_character`
 - Implemented `SLL_FILE_FLUSH_ON_NEWLINE`
+- Raw string quote escape sequence ([#274])
 
 ## Changed
 
@@ -23,6 +24,7 @@
 - Website server code
 
 [0.7.15]: https://github.com/sl-lang/sll/compare/sll-v0.7.14...main
+[#274]: https://github.com/sl-lang/sll/issues/274
 [#272]: https://github.com/sl-lang/sll/issues/272
 [#271]: https://github.com/sl-lang/sll/issues/271
 [#270]: https://github.com/sl-lang/sll/issues/270

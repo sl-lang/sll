@@ -419,8 +419,14 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				STRING_INIT_STACK(&s);
 				while (1){
 					c=sll_file_read_char(rf,NULL);
-					if (c=='`'||c==SLL_END_OF_DATA){
+					if (c==SLL_END_OF_DATA){
 						break;
+					}
+					if (c=='`'){
+						if (sll_file_peek_char(rf,NULL)!='`'){
+							break;
+						}
+						c=sll_file_read_char(rf,NULL);
 					}
 					sll_string_increase(&s,1);
 					s.v[s.l]=(sll_char_t)c;
