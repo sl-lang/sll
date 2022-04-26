@@ -166,7 +166,7 @@ jobs:
       - darwin-release
       - linux-release
       - windows-release
-    if: github.event_name=='workflow_dispatch'&&github.actor==secrets.RELEASE_USERNAME
+    if: github.event_name=='workflow_dispatch'&&github.actor=='krzem5'
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
