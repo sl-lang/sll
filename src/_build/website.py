@@ -39,7 +39,7 @@ def _generate_pages(dt,pg_src):
 			toc+="<div class=\"subgroup\">"
 			if (len(sk)!=0):
 				toc+=f"<a href=\"{{{{ROOT}}}}/{k}.html#{sk}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
-				pg+=f"<a id=\"{sk}\" href=\"#{sk}\" style=\"text-decoration: none;color: #3010ff\"><h2>{dt['subgroups'][sk]['name']}</h2></a><h4>{dt['subgroups'][sk]['desc']}</h4>"
+				pg+=f"<a id=\"{sk}\" href=\"#{sk}\" style=\"text-decoration: none;color: #3010ff\"><h2>{dt['subgroups'][sk]['name']}</h2></a><h3>{dt['subgroups'][sk]['desc']}</h3>"
 			toc+="<ul>"
 			for e in sorted(sv,key=lambda se:se["name"]):
 				toc+=f"<li><a href=\"{{{{ROOT}}}}/{e['group']}.html#{e['name']}\">{e['name']+('()' if 'func' in e['flag'] else '')}</a></li>"
