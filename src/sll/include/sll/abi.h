@@ -15,7 +15,7 @@
  * \name SLL_ABI_AUDIT_CALL
  * \group abi
  * \desc Docs!
- * \type <identifier>
+ * \type __identifier__
  */
 #define SLL_ABI_AUDIT_CALL __sll_audit
 
@@ -26,7 +26,7 @@
  * \name SLL_ABI_AUDIT_DEINIT
  * \group abi
  * \desc Docs!
- * \type <identifier>
+ * \type __identifier__
  */
 #define SLL_ABI_AUDIT_DEINIT __sll_audit_deinit
 
@@ -37,7 +37,7 @@
  * \name SLL_ABI_AUDIT_INIT
  * \group abi
  * \desc Docs!
- * \type <identifier>
+ * \type __identifier__
  */
 #define SLL_ABI_AUDIT_INIT __sll_audit_init
 
@@ -48,7 +48,7 @@
  * \name SLL_ABI_DEINIT
  * \group abi
  * \desc Docs!
- * \type <identifier>
+ * \type __identifier__
  */
 #define SLL_ABI_DEINIT __sll_deinit
 
@@ -59,7 +59,7 @@
  * \name SLL_ABI_INIT
  * \group abi
  * \desc Docs!
- * \type <identifier>
+ * \type __identifier__
  */
 #define SLL_ABI_INIT __sll_init
 
@@ -70,7 +70,7 @@
  * \name SLL_ABI_NAME
  * \group abi
  * \desc Docs!
- * \arg <identifier> x
+ * \arg __identifier__ x
  * \ret const sll_char_t*
  */
 #define _SLL_ABI_NAME(x) #x

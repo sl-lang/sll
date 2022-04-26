@@ -16,8 +16,8 @@
  * \name SLL_OFFSETOF
  * \group new-object
  * \desc Docs!
- * \arg <type> t
- * \arg <field> f
+ * \arg __type__ t
+ * \arg __field__ f
  * \ret sll_size_t
  */
 #define SLL_OFFSETOF(t,f) ((sll_size_t)(&(((t*)NULL)->f)))

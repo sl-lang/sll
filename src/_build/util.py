@@ -11,7 +11,7 @@ import zipfile
 BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 BUILD_PATHS=["build/lib","build/lib_debug","build/sys_lib","build/objects"]
 BUILD_TIME=time.time_ns()
-CLEAR_PATHS=["build/lib","build/lib_debug","build/sys_lib"]
+CLEAR_PATHS=["build/lib","build/lib_debug","build/sys_lib","build/web"]
 EXECUTABLE_EXTENSION={"darwin":"","linux":"","windows":".exe"}
 LIBRARY_EXTENSION={"darwin":".so","linux":".so","windows":".dll"}
 PLATFORM_SOURCE_CODE={"darwin":"src/sll/platform/linux","linux":"src/sll/platform/linux","windows":"src/sll/platform/windows"}
@@ -28,8 +28,14 @@ def create_output_dir():
 		if (not os.path.exists(base)):
 			os.mkdir(base)
 			continue
-		for f in os.listdir(base):
-			os.remove(os.path.join(base,f))
+		del_dl=[]
+		for r,dl,fl in os.walk(base):
+			for d in dl:
+				del_dl.append(os.path.join(r,d))
+			for f in fl:
+				os.remove(os.path.join(r,f))
+		for k in del_dl[::-1]:
+			os.rmdir(k)
 	for k in BUILD_PATHS:
 		if (not os.path.exists(k)):
 			os.mkdir(k)

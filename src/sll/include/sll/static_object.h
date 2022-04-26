@@ -23,7 +23,7 @@
  * \name SLL_ACQUIRE_STATIC
  * \group static-object
  * \desc Docs!
- * \arg <C identifier> nm
+ * \arg __identifier__ nm
  * \arg sll_object_t* out
  */
 #define SLL_ACQUIRE_STATIC(nm) (SLL_ACQUIRE(sll_static_##nm),sll_static_##nm)

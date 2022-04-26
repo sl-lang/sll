@@ -1,6 +1,13 @@
 import docs
 import os
+import re
 import util
+
+
+
+CONST_KEYWORD_REGEX=re.compile(r"\bconst\b")
+TYPE_POINTER_REGEX=re.compile(r"(\*+)")
+ROOT=(b"" if os.getenv("DOMAIN_ROOT",None) is not None else b".")
 
 
 
@@ -11,10 +18,31 @@ def _generate(nm,dt):
 	nm="build/web/"+nm
 	os.makedirs(nm[:nm.rindex("/")],exist_ok=True)
 	if (nm[-5:]==".html"):
-		dt=dt.replace(b"{{ROOT}}",(b"" if os.getenv("DOMAIN_ROOT",None) is not None else b"."))
+		dt=dt.replace(b"{{ROOT}}",ROOT)
 	util.log(f"  Generated '{nm}'")
 	with open(nm,"wb") as f:
 		f.write(dt)
+
+
+
+def _generate_id(g,sg,nm,t):
+	o=g
+	if (sg is not None):
+		o+="-"+sg
+		if (nm is not None):
+			o+="-"+nm+"-"
+			if ("func" in t):
+				o+="f"
+			if ("macro" in t):
+				o+="m"
+	return o.lower()
+
+
+
+def _add_code_type(t):
+	if (t[:2]=="__" and t[-2:]=="__"):
+		return "<span class=\"code-type-other\">__identifier__</span>"
+	return CONST_KEYWORD_REGEX.sub("<span class=\"code-keyword\">const</span>",TYPE_POINTER_REGEX.sub(r"""<span class="code-type-pointer">\1</span>""",f"<span class=\"code-type\">{t}</span>"))
 
 
 
@@ -30,76 +58,77 @@ def _generate_pages(dt,pg_src):
 		else:
 			m[k["group"]][k["subgroup"]].append(k)
 	toc=""
+	data=""
 	for k,v in sorted(m.items(),key=lambda e:dt["groups"][e[0]]["name"]):
-		toc+=f"<div class=\"group\" id=\"{k}\"><a href=\"{{{{ROOT}}}}/{k}.html\"><h2 class=\"title\">{dt['groups'][k]['name']}</h2></a><div class=\"group-box\">"
-		pg=f"<h1>{dt['groups'][k]['name']}</h1><h2>{dt['groups'][k]['desc']}</h2>"
+		elem_id=_generate_id(k,None,None,None)
+		toc+=f"<div class=\"group\" id=\"{k}\"><a href=\"{{{{ROOT}}}}/docs.html#{elem_id}\"><h2 class=\"title\">{dt['groups'][k]['name']}</h2></a><div class=\"group-box\">"
+		data+=f"<a id=\"{elem_id}\" href=\"#{elem_id}\"><h1>{dt['groups'][k]['name']}</h1></a><h2>{dt['groups'][k]['desc']}</h2>"
 		for sk,sv in sorted(v.items(),key=lambda e:("" if e[0]=="" else dt["subgroups"][e[0]]["name"])):
 			if (len(sv)==0):
 				continue
 			toc+="<div class=\"subgroup\">"
 			if (len(sk)!=0):
-				toc+=f"<a href=\"{{{{ROOT}}}}/{k}.html#{sk}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
-				pg+=f"<a id=\"{sk}\" href=\"#{sk}\" style=\"text-decoration: none;color: #3010ff\"><h2>{dt['subgroups'][sk]['name']}</h2></a><h3>{dt['subgroups'][sk]['desc']}</h3>"
+				toc+=f"<a href=\"{{{{ROOT}}}}/docs.html#{sk}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
+				elem_id=_generate_id(k,sk,None,None)
+				data+=f"<a id=\"{elem_id}\" href=\"#{elem_id}\"><h2>{dt['subgroups'][sk]['name']}</h2></a><h3>{dt['subgroups'][sk]['desc']}</h3>"
 			toc+="<ul>"
 			for e in sorted(sv,key=lambda se:se["name"]):
-				toc+=f"<li><a href=\"{{{{ROOT}}}}/{e['group']}.html#{e['name']}\">{e['name']+('()' if 'func' in e['flag'] else '')}</a></li>"
-				pg+=f"<div><a id=\"{e['name']}\" href=\"#{e['name']}\" style=\"text-decoration: none;color: #ff0000\"><pre>"
+				elem_id=_generate_id(k,sk,e["name"],e["flag"])
+				toc+=f"<li><a href=\"{{{{ROOT}}}}/docs.html#{elem_id}\">{e['name']+('()' if 'func' in e['flag'] else '')}</a></li>"
+				data+=f"<div><a id=\"{elem_id}\" href=\"#{elem_id}\"><pre class=\"code\">"
 				if ("func" in e["flag"]):
 					if ("macro" in e["flag"]):
-						pg+="#define "+e["name"]+"("
+						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span>("
 						st=True
 						for a in e["args"]:
 							if (st):
 								st=False
 							else:
-								pg+=","
-							pg+="<span style=\"color: #ceb187\">"+a["type"]+"</span> "+a["name"]
+								data+=","
+							data+=_add_code_type(a["type"])+" <span class=\"code-arg\">"+a["name"]+"</span>"
 						if ("var_arg" in e["flag"]):
 							if (not st):
-								pg+=","
-							pg+="..."
-						pg+=")"
+								data+=","
+							data+="<span class=\"code-keyword\">...</span>"
+						data+=")"
 						if (e["ret"] is not None):
-							pg+=" -> "+e["ret"]["type"]
+							data+=" <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["ret"]["type"])
 					else:
 						if ("check_output" in e["flag"]):
-							pg+="<span style=\"color: #cf89a2\">(check_output)</span> "
-						if (e["ret"] is not None):
-							pg+=e["ret"]["type"]
-						else:
-							pg+="void"
-						pg+=" "+e["name"]+"("
+							data+="<span class=\"code-annotation\">(check_output)</span> "
+						data+=_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")
+						data+=" <span class=\"code-name\">"+e["name"]+"</span>("
 						if (len(e["args"])==0):
-							pg+="void"
+							data+=_add_code_type("void")
 						else:
 							st=True
 							for a in e["args"]:
 								if (st):
 									st=False
 								else:
-									pg+=","
-								pg+=a["type"]+" "+a["name"]
+									data+=","
+								data+=_add_code_type(a["type"])+" <span class=\"code-arg\">"+a["name"]+"</span>"
 						if ("var_arg" in e["flag"]):
-							pg+=",..."
-						pg+=");"
+							data+=",<span class=\"code-keyword\">...</span>"
+						data+=");"
 				else:
 					if ("macro" in e["flag"]):
-						pg+="#define "+e["name"]+" -> "+e["type"]["type"]
+						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span> <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["type"]["type"])
 					else:
-						pg+=e["type"]["type"]+" "+e["name"]+";"
-				pg+=f"</pre></a><pre>Description: {e['desc']}"
+						data+="<span class=\"code-keyword\">extern</span> "+_add_code_type(e["type"]["type"])+" <span class=\"code-name\">"+e["name"]+"</span>;"
+				data+=f"</pre></a><pre>Description: {e['desc']}"
 				if (e["api_fmt"] is not None):
-					pg+=f"\nAPI Signature: <span style=\"color: #1b84e3\">{e['api_fmt']}</span>"
+					data+=f"\nAPI Signature: <span style=\"color: #1b84e3\">{e['api_fmt']}</span>"
 				if (e["args"]):
-					pg+="\nArguments:"
+					data+="\nArguments:"
 					for a in e["args"]:
-						pg+=f"\n  {a['name']} -> {a['desc']}"
+						data+=f"\n  {a['name']} -> {a['desc']}"
 				if (e["ret"] is not None):
-					pg+=f"\nReturn Value: {e['ret']['desc']}"
-				pg+="</pre></div>"
+					data+=f"\nReturn Value: {e['ret']['desc']}"
+				data+="</pre></div>"
 			toc+="</ul></div>"
 		toc+="</div></div>"
-		_generate(f"/{k}.html",pg_src.replace(b"{{DATA}}",bytes(pg,"utf-8")).replace(b"{{NAME}}",bytes(dt["groups"][k]["name"],"utf-8")))
+	_generate("/docs.html",pg_src.replace(b"{{DATA}}",bytes(data,"utf-8")))
 	return bytes(toc,"utf-8")
 
 
