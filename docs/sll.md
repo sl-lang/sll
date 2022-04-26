@@ -38,7 +38,7 @@ Sll has the ability to be installed in a folder. Here is a list of file names:
 On systems based on Debian (e.g. Ubuntu), Sll can be installed by running the following command in a shell (with administrator privileges):
 
 ```bash
-curl -s "https://sll.krzem.workers.dev/apt"|bash
+curl -s "https://sll.pages.dev/apt"|bash
 ```
 
 The script takes care of installing GPG keys and `apt` sources. If the script has already been previously executed on a given system, then the Sll installation can be managed by `apt`:
