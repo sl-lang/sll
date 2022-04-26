@@ -3,13 +3,13 @@
 #include <sll/_internal/environment.h>
 #include <sll/_internal/file.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/init.h>
 #include <sll/_internal/log.h>
 #include <sll/_internal/memory.h>
 #include <sll/_internal/platform.h>
 #include <sll/_internal/sandbox.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/static_string.h>
-#include <sll/_internal/util.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/location.h>
@@ -126,6 +126,10 @@ __SLL_EXTERNAL void sll_init(void){
 		return;
 	}
 	_init_init=1;
+	if (_check_cpuid_flags()){
+		sll_platform_file_write(sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR),"Required CPU flags to execute this library are not present on the current system.\n",82,NULL);
+		_force_exit_platform();
+	}
 	_memory_init();
 	_file_init_std_streams();
 	_init_platform();

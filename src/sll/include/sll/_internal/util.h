@@ -5,8 +5,6 @@
 
 
 
-#define MAX_CLEANUP_TABLE_SIZE 512
-
 #define WRAP_ARRAY_INDEX(idx,len,var) \
 	sll_integer_t var=(idx); \
 	WRAP_ARRAY_INDEX_VAR(var,(len));

@@ -3,6 +3,7 @@
 ## Added
 
 - Checks for unknown file descriptors in the serial API
+- CPU flags are now checked during the initialization process
 - Implemented `sll_contains_character`
 - Implemented `SLL_FILE_FLUSH_ON_NEWLINE`
 - Raw string quote escape sequence ([#274])
