@@ -1,4 +1,4 @@
-def generate_c_api(d_dt,o_fp):
+def generate(d_dt,o_fp):
 	with open(o_fp,"w") as cf:
 		cf.write("#include <sll/common.h>\n#include <sll/string.h>\n#include <sll/types.h>\n\n\n\n")
 		fn_l=[]

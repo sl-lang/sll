@@ -18,7 +18,7 @@ def _generate(nm,dt):
 
 
 
-def _generate_data(dt,pg_src):
+def _generate_pages(dt,pg_src):
 	m={}
 	for k in dt["groups"]:
 		m[k]={"":[]}
@@ -32,7 +32,7 @@ def _generate_data(dt,pg_src):
 	toc=""
 	for k,v in sorted(m.items(),key=lambda e:dt["groups"][e[0]]["name"]):
 		toc+=f"<div class=\"group\" id=\"{k}\"><a href=\"{{{{ROOT}}}}/{k}.html\"><h2 class=\"title\">{dt['groups'][k]['name']}</h2></a><div class=\"group-box\">"
-		pg=f"<h1>{dt['groups'][k]['name']}</h1><h3>{dt['groups'][k]['desc']}</h3>"
+		pg=f"<h1>{dt['groups'][k]['name']}</h1><h2>{dt['groups'][k]['desc']}</h2>"
 		for sk,sv in sorted(v.items(),key=lambda e:("" if e[0]=="" else dt["subgroups"][e[0]]["name"])):
 			if (len(sv)==0):
 				continue
@@ -88,7 +88,9 @@ def _generate_data(dt,pg_src):
 					else:
 						pg+=e["type"]["type"]+" "+e["name"]+";"
 				pg+=f"</pre></a><pre>Description: {e['desc']}"
-				if (len(e["args"])!=0):
+				if (e["api_fmt"] is not None):
+					pg+=f"\nAPI Signature: <span style=\"color: #1b84e3\">{e['api_fmt']}</span>"
+				if (e["args"]):
 					pg+="\nArguments:"
 					for a in e["args"]:
 						pg+=f"\n  {a['name']} -> {a['desc']}"
@@ -108,12 +110,10 @@ def generate():
 		os.mkdir("build/web")
 	util.log("Reading CSS Files...")
 	for k in os.listdir("src/web/css"):
-		util.log(f"  Found file 'src/web/css/{k}'")
 		with open("src/web/css/"+k,"rb") as rf:
 			_generate("/css/"+k,rf.read())
 	util.log("Reading JS Files...")
 	for k in os.listdir("src/web/js"):
-		util.log(f"  Found file 'src/web/js/{k}'")
 		with open("src/web/js/"+k,"rb") as rf:
 			_generate("/js/"+k,rf.read())
 	util.log("Collecting Documentation Files...")
@@ -124,13 +124,13 @@ def generate():
 	with open("src/web/page.html","rb") as rf:
 		pg_src=rf.read()
 	util.log(f"Generating Table of Content & Pages for {len(d_dt['data'])} Symbols...")
-	toc=_generate_data(d_dt,pg_src)
+	toc=_generate_pages(d_dt,pg_src)
 	util.log("Reading 'src/web/index.html'...")
 	with open("src/web/index.html","rb") as rf:
 		_generate("/index.html",rf.read().replace(b"{{DATA}}",toc))
 	util.log("Reading 'src/web/404.html'...")
 	with open("src/web/404.html","rb") as rf:
-		_generate("404.html",rf.read())
+		_generate("/404.html",rf.read())
 	util.log("Reading 'src/web/apt.sh'...")
 	with open("src/web/apt.sh","rb") as rf:
 		_generate("/apt",rf.read())
