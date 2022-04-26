@@ -161,24 +161,18 @@ def read_version(fp):
 
 
 
-def generate_help(i_fp,o_fp):
-	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
-	with open(i_fp,"rb") as rf,open(o_fp,"w") as wf:
-		dt=rf.read().replace(b"\r\n",b"\n")
-		wf.write(f"#ifndef __SLL_GENERATED_HELP_TEXT_H__\n#define __SLL_GENERATED_HELP_TEXT_H__ 1\n#include <sll/types.h>\n\n\n\n#define HELP_TEXT_SIZE {len(dt)}\n\n\n\nstatic const sll_char_t HELP_TEXT[]={{\n\t")
-		_write_byte_array(wf,dt)
-		wf.write("\n};\n\n\n\n#endif\n")
-
-
-
 def generate_error_header(i_fp,o_fp,nm):
 	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
 	with open(i_fp,"rb") as rf,open(o_fp,"w") as wf:
 		dt=rf.read().replace(b"\r\n",b"\n").split(b"$$$")
-		wf.write(f"#ifndef __SLL_GENERATED_{nm}_H__\n#define __SLL_GENERATED_{nm}_H__ 1\n#include <sll/types.h>\n\n\n\n#define {nm}_START_SIZE {len(dt[0])}\n#define {nm}_END_SIZE {len(dt[1])}\n\n\n\nstatic const sll_char_t {nm}_START[]={{\n\t")
-		_write_byte_array(wf,dt[0])
-		wf.write(f"\n}};\n\n\n\nstatic const sll_char_t {nm}_END[]={{\n\t")
-		_write_byte_array(wf,dt[1])
+		if (len(dt)==1):
+			wf.write(f"#ifndef __SLL_GENERATED_{nm}_H__\n#define __SLL_GENERATED_{nm}_H__ 1\n#include <sll/types.h>\n\n\n\n#define {nm}_SIZE {len(dt[0])}\n\n\n\nstatic const sll_char_t {nm}[]={{\n\t")
+			_write_byte_array(wf,dt[0])
+		else:
+			wf.write(f"#ifndef __SLL_GENERATED_{nm}_H__\n#define __SLL_GENERATED_{nm}_H__ 1\n#include <sll/types.h>\n\n\n\n#define {nm}_START_SIZE {len(dt[0])}\n#define {nm}_END_SIZE {len(dt[1])}\n\n\n\nstatic const sll_char_t {nm}_START[]={{\n\t")
+			_write_byte_array(wf,dt[0])
+			wf.write(f"\n}};\n\n\n\nstatic const sll_char_t {nm}_END[]={{\n\t")
+			_write_byte_array(wf,dt[1])
 		wf.write("\n};\n\n\n\n#endif\n")
 
 

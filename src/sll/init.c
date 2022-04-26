@@ -12,6 +12,7 @@
 #include <sll/_internal/static_string.h>
 #include <sll/common.h>
 #include <sll/file.h>
+#include <sll/generated/cpuid_error.h>
 #include <sll/location.h>
 #include <sll/platform/file.h>
 #include <sll/string.h>
@@ -127,7 +128,7 @@ __SLL_EXTERNAL void sll_init(void){
 	}
 	_init_init=1;
 	if (_check_cpuid_flags()){
-		sll_platform_file_write(sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR),"Required CPU flags to execute this library are not present on the current system.\n",82,NULL);
+		sll_platform_file_write(sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR),CPUID_ERROR,CPUID_ERROR_SIZE,NULL);
 		_force_exit_platform();
 	}
 	_memory_init();
