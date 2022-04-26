@@ -36,13 +36,13 @@ jobs:
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Initialize codeql@1
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2
         with:
           languages: cpp, javascript
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}}
       - name: Analyze
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2
   darwin:
     name: Build darwin
     needs: diff
