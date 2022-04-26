@@ -368,7 +368,9 @@ def generate_header(h_dt):
 							i+=1
 						if (i!=j):
 							o=o[:j]+("" if o[j-1] not in IDENTIFIER_CHARACTERS else " ")+o[i:]
-							i-=i-j+(0 if o[j-1] not in IDENTIFIER_CHARACTERS else -1)
+							i=j
+							if (o[j-1] in IDENTIFIER_CHARACTERS):
+								i+=1
 							continue
 					i+=1
 		i+=1
