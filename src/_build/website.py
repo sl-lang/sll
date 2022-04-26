@@ -41,7 +41,7 @@ def _generate_id(g,sg,nm,t):
 
 def _add_code_type(t):
 	if (t[:2]=="__" and t[-2:]=="__"):
-		return "<span class=\"code-type-other\">__identifier__</span>"
+		return f"<span class=\"code-type-other\">{t}</span>"
 	return CONST_KEYWORD_REGEX.sub("<span class=\"code-keyword\">const</span>",TYPE_POINTER_REGEX.sub(r"""<span class="code-type-pointer">\1</span>""",f"<span class=\"code-type\">{t}</span>"))
 
 
