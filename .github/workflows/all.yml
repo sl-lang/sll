@@ -168,23 +168,8 @@ jobs:
       - windows-release
     if: github.event_name=='workflow_dispatch'&&github.actor=='krzem5'
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
-      - name: Set-up requests
-        run: pip install requests
-      - name: Load assets
-        uses: actions/download-artifact@v3
-        with:
-          path: assets
-      - name: Create release
-        run: python3 src/_build/release.py --verbose ${{secrets.GITHUB_TOKEN}}
-      - name: Trigger package server update
+      - name: Trigger release
         run: ${{secrets.PACKAGE_SERVER_UPDATE_COMMAND}}
   windows:
     name: Build windows
