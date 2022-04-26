@@ -135,7 +135,7 @@ __SLL_EXPORT _call_api_func_assembly
 	jz ._register_return_value
 	sub sil, 1
 	jz ._cleanup
-	xor rcx,rcx
+	xor rcx, rcx
 	xorpd xmm0, xmm0
 	add rax, 1
 	setnz cl
