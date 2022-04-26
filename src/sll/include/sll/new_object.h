@@ -50,7 +50,7 @@ __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* t,sll_array_t* o,...)
 
 /**
  * \flags func
- * \name sll_new_object_list
+ * \name sll_new_object_array_list
  * \group new-object
  * \desc Docs!
  * \arg const sll_char_t* t

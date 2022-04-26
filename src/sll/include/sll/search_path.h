@@ -72,7 +72,7 @@ __SLL_EXTERNAL void sll_search_path_create(const sll_string_t* src,sll_search_pa
 
 /**
  * \flags check_output func
- * \name sll_search_path_create
+ * \name sll_search_path_find
  * \group search-path
  * \desc Docs!
  * \arg const sll_search_path_t* sp

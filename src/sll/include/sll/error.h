@@ -172,7 +172,7 @@
 
 /**
  * \flags func macro
- * \name SLL_ERROR_FROM_SANDBOX
+ * \name SLL_ERROR_FROM_EXTRA
  * \group error
  * \desc Docs!
  * \arg sll_error_t e
