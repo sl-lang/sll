@@ -1,5 +1,11 @@
+body {
+	margin: 8px;
+	background: #131110;
+	color: #edede2;
+}
 a {
-	text-decoration: none
+	text-decoration: none;
+	color: #edede2;
 }
 .code {
 	background: #272822;
