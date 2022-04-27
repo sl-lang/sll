@@ -15,19 +15,6 @@ static sll_weak_reference_t _weakref_next=NULL;
 
 
 
-static void _cleanup_data(void){
-	while (_weakref_data_len){
-		_weakref_data_len--;
-		sll_deallocate(*(_weakref_data+_weakref_data_len));
-	}
-	sll_deallocate(_weakref_data);
-	_weakref_data=NULL;
-	_weakref_cb=0;
-	_weakref_next=NULL;
-}
-
-
-
 static sll_weak_reference_t _create_new(addr_t obj){
 	_weakref_data_len++;
 	_weakref_data=sll_reallocate(_weakref_data,_weakref_data_len*sizeof(weakref_key_pair_t*));
@@ -39,6 +26,19 @@ static sll_weak_reference_t _create_new(addr_t obj){
 	kp->arg=NULL;
 	*(_weakref_data+_weakref_data_len-1)=kp;
 	return _weakref_next;
+}
+
+
+
+void _weakref_cleanup_data(void){
+	while (_weakref_data_len){
+		_weakref_data_len--;
+		sll_deallocate(*(_weakref_data+_weakref_data_len));
+	}
+	sll_deallocate(_weakref_data);
+	_weakref_data=NULL;
+	_weakref_cb=0;
+	_weakref_next=NULL;
 }
 
 
@@ -82,10 +82,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_wea
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_object_t* o){
-	if (!_weakref_cb){
-		sll_register_cleanup(_cleanup_data);
-		_weakref_cb=1;
-	}
 	o->_f|=GC_FLAG_HAS_WEAKREF;
 	return _create_new(ADDR(o));
 

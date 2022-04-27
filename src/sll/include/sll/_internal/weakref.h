@@ -13,6 +13,10 @@ typedef struct _WEAKREF_KEY_PAIR{
 
 
 
+void _weakref_cleanup_data(void);
+
+
+
 void _weakref_delete(sll_object_t* o);
 
 

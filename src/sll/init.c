@@ -10,6 +10,7 @@
 #include <sll/_internal/sandbox.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/static_string.h>
+#include <sll/_internal/weakref.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/generated/cpuid_error.h>
@@ -110,6 +111,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 		}
 		l++;
 	}
+	_weakref_cleanup_data();
 	_gc_release_data();
 	_log_release_data();
 	_file_release_std_streams();
