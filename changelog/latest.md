@@ -11,6 +11,7 @@
 ## Changed
 
 - Assembly jump instructions now store a pointer to the target instruction ([#270])
+- Changed the website layout
 - Complex number arguments and return values are now passed by pointers
 - File flags are now 16-bit
 - Fixed execution of an arbitrary memory location ([#272])

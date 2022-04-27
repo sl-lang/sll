@@ -94,6 +94,8 @@ def _generate_pages(dt,pg_src):
 						if (e["ret"] is not None):
 							data+=" <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["ret"]["type"])
 					else:
+						if (e["api_fmt"] is not None):
+							data+="<span class=\"code-annotation\">(api_call)</span> "
 						if ("check_output" in e["flag"]):
 							data+="<span class=\"code-annotation\">(check_output)</span> "
 						data+=_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")
@@ -115,7 +117,7 @@ def _generate_pages(dt,pg_src):
 					if ("macro" in e["flag"]):
 						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span> <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["type"]["type"])
 					else:
-						data+="<span class=\"code-keyword\">extern</span> "+_add_code_type(e["type"]["type"])+" <span class=\"code-name\">"+e["name"]+"</span>;"
+						data+=_add_code_type(e["type"]["type"])+" <span class=\"code-name\">"+e["name"]+"</span>;"
 				data+=f"</pre></a><pre>Description: {e['desc']}"
 				if (e["api_fmt"] is not None):
 					data+=f"\nAPI Signature: <span style=\"color: #1b84e3\">{e['api_fmt']}</span>"
