@@ -200,12 +200,24 @@
 
 /**
  * \flags macro var
+ * \name SLL_SANDBOX_FLAG_DISABLE_REFERENCE_COUNTER
+ * \group sandbox
+ * \subgroup sandbox-flag
+ * \desc Docs!
+ * \type sll_sandbox_flag_t
+ */
+#define SLL_SANDBOX_FLAG_DISABLE_REFERENCE_COUNTER 15
+
+
+
+/**
+ * \flags macro var
  * \name SLL_MAX_SANDBOX_FLAG
  * \group sandbox
  * \desc Docs!
  * \type sll_sandbox_flag_t
  */
-#define SLL_MAX_SANDBOX_FLAG SLL_SANDBOX_FLAG_DISABLE_SERIAL
+#define SLL_MAX_SANDBOX_FLAG SLL_SANDBOX_FLAG_DISABLE_REFERENCE_COUNTER
 
 
 

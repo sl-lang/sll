@@ -8,6 +8,7 @@
 #include <sll/gc.h>
 #include <sll/location.h>
 #include <sll/new_object.h>
+#include <sll/sandbox.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/thread.h>
@@ -55,6 +56,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_vm_get_ref_count(sll_object_t* obj){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_REFERENCE_COUNTER)){
+		return 0;
+	}
 	sll_audit(SLL_CHAR("sll.vm.ref"),SLL_CHAR("O"),obj);
 	return obj->rc;
 }

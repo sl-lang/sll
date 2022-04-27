@@ -49,3 +49,4 @@ Sandbox Flags:
   no-thread -> Disable the thread API
   no-random -> Disable the random API
   no-serial -> Disable the object serialization and deserialization APIs
+  no-ref -> Diable object reference counter queries

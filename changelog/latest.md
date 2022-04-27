@@ -7,6 +7,7 @@
 - Implemented `sll_contains_character`
 - Implemented `SLL_FILE_FLUSH_ON_NEWLINE`
 - Raw string quote escape sequence ([#274])
+- Sandbox flag to disable object reference counter queries: `no-ref`
 
 ## Changed
 
