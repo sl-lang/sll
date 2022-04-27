@@ -13,7 +13,7 @@ HEX_NUMBER_REGEX=re.compile(r"\b(0x[0-9a-f]+)(ul{0,2})?\b")
 IDENTIFIER_CHARACTERS="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 IDENTIFIER_REGEX=re.compile(r"\b[a-zA-Z_][a-zA-Z0-9_]*\b")
 INCLUDE_REGEX=re.compile(r"""^\s*#\s*include\s*(<[^>]*>|\"[^\"]*\")\s*$""",re.MULTILINE)
-INTERNAL_SLL_HEADERS=["assembly_optimizer.h","help_text.h","_dispatcher.h","_sll_internal.h","operator_parser.h","critical_error.h","memory_fail.h"]
+INTERNAL_SLL_HEADERS=["_dispatcher.h"]
 LETTERS="abcdefghijklmnopqrstuvwxyz"
 MULTIPLE_NEWLINE_REGEX=re.compile(r"\n+")
 NUMBERS="0123456789"
@@ -183,7 +183,7 @@ def parse_headers(fp):
 	il=[]
 	fp=fp.replace("\\","/").rstrip("/")+"/"
 	for r,_,fl in os.walk(fp):
-		if ("internal" in r):
+		if ("internal" in r or "generated" in r):
 			continue
 		for f in fl:
 			if (f[-2:]==".h" and f not in INTERNAL_SLL_HEADERS):

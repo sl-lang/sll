@@ -72,7 +72,6 @@ def load_hash_list(fp):
 
 
 
-
 def update(fp,*inc):
 	if (_check(fp,inc)):
 		_flush_data()
