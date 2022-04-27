@@ -92,16 +92,16 @@
 	))
 ))
 
-(= create (,,, dt ignore_padding
-	(? (=== dt nil) (@@ nil))
-	(= dt (:: dt string_type))
+(= create (,,, data ignore_padding
+	(? (=== data nil) (@@ nil))
+	(= data (:: data string_type))
 	(= max_size 0)
 	(= padding_total 0)
 	(= total_size 0)
 	(= o [])
-	(-> (= i 0) (< i ($ dt)) {
+	(-> (= i 0) (< i ($ data)) {
 		(= size 0)
-		(= type (: dt i))
+		(= type (: data i))
 		(= elem nil)
 		(?? type
 			'?' {
