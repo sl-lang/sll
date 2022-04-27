@@ -41,44 +41,6 @@
 
 /**
  * \flags check_output func
- * \name sll_math_euler_phi
- * \group math-api
- * \desc Docs!
- * \arg sll_size_t n
- * \ret sll_size_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n);
-
-
-
-/**
- * \flags check_output func
- * \name sll_math_factors
- * \group math-api
- * \desc Docs!
- * \arg sll_integer_t n
- * \arg sll_array_length_t* ol
- * \ret sll_factor_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t n,sll_array_length_t* ol);
-
-
-
-/**
- * \flags check_output func
- * \name sll_math_mod
- * \group math-api
- * \desc Docs!
- * \arg sll_float_t a
- * \arg sll_float_t b
- * \ret sll_float_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_float_t b);
-
-
-
-/**
- * \flags check_output func
  * \name sll_api_math_abs
  * \group math-api
  * \desc Docs!
@@ -546,6 +508,44 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tan(sl
  * \ret sll_float_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tanh(sll_float_t a);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_math_euler_phi
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_size_t n
+ * \ret sll_size_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_math_factors
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t n
+ * \arg sll_array_length_t* ol
+ * \ret sll_factor_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t n,sll_array_length_t* ol);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_math_mod
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a
+ * \arg sll_float_t b
+ * \ret sll_float_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_float_t b);
 
 
 

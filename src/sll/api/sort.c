@@ -1,4 +1,5 @@
 #include <sll/_internal/gc.h>
+#include <sll/api/sort.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -65,6 +66,21 @@ static void _quicksort_extra(sll_object_t** a,sll_object_t** b,sll_array_length_
 
 
 
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort(sll_object_t* arr,sll_bool_t reverse,sll_bool_t inplace,sll_integer_t key_fn){
+	if (inplace){
+		SLL_ACQUIRE(arr);
+	}
+	else{
+		arr=sll_array_to_object(&(arr->dt.a));
+	}
+	if (arr->dt.a.l>1){
+		sll_quicksort(arr->dt.a.v,arr->dt.a.l,(reverse?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),key_fn);
+	}
+	return arr;
+}
+
+
+
 __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp,sll_integer_t fn){
 	if (!fn){
 		_quicksort(a,l-1,cmp);
@@ -79,19 +95,4 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 		GC_RELEASE(*(tmp+i));
 	}
 	sll_deallocate(tmp);
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort(sll_object_t* arr,sll_bool_t reverse,sll_bool_t inplace,sll_integer_t key_fn){
-	if (inplace){
-		SLL_ACQUIRE(arr);
-	}
-	else{
-		arr=sll_array_to_object(&(arr->dt.a));
-	}
-	if (arr->dt.a.l>1){
-		sll_quicksort(arr->dt.a.v,arr->dt.a.l,(reverse?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),key_fn);
-	}
-	return arr;
 }

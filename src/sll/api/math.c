@@ -46,117 +46,6 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n){
-	if (n<2){
-		return 0;
-	}
-	sll_size_t o=n;
-	sll_size_t c=FIND_FIRST_SET_BIT(n);
-	if (c){
-		n>>=c;
-		o>>=1;
-	}
-	if (!(n%3)){
-		do{
-			n/=3;
-		} while (!(n%3));
-		o-=o/3;
-	}
-	if (!(n%5)){
-		do{
-			n/=5;
-		} while (!(n%5));
-		o-=o/5;
-	}
-	sll_size_t f=7;
-	if (n>48){
-		while (1){
-			WHEEL_STEP_EULER(4);
-			WHEEL_STEP_EULER(2);
-			WHEEL_STEP_EULER(4);
-			WHEEL_STEP_EULER(2);
-			WHEEL_STEP_EULER(4);
-			WHEEL_STEP_EULER(6);
-			WHEEL_STEP_EULER(2);
-			WHEEL_STEP_EULER(6);
-		}
-	}
-	if (n!=1){
-		o-=o/n;
-	}
-	return o;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t v,sll_array_length_t* ol){
-	sll_factor_t* o=sll_allocate_stack(1);
-	sll_array_length_t i=0;
-	if (v<0){
-		v=-v;
-		i=1;
-		o=sll_reallocate(o,sizeof(sll_factor_t));
-		o->n=-1;
-		o->pw=1;
-	}
-	if (v<2){
-		*ol=i;
-		if (i){
-			return o;
-		}
-		sll_deallocate(o);
-		return NULL;
-	}
-	sll_size_t n=v;
-	sll_size_t j=FIND_FIRST_SET_BIT(n);
-	if (j){
-		n>>=j;
-		PUSH_FACTOR(2,j);
-	}
-	if (!(n%3)){
-		j=0;
-		do{
-			j++;
-			n/=3;
-		} while (!(n%3));
-		PUSH_FACTOR(3,j);
-	}
-	if (!(n%5)){
-		j=0;
-		do{
-			j++;
-			n/=5;
-		} while (!(n%5));
-		PUSH_FACTOR(5,j);
-	}
-	sll_size_t f=7;
-	if (n>48){
-		while (1){
-			WHEEL_STEP(4);
-			WHEEL_STEP(2);
-			WHEEL_STEP(4);
-			WHEEL_STEP(2);
-			WHEEL_STEP(4);
-			WHEEL_STEP(6);
-			WHEEL_STEP(2);
-			WHEEL_STEP(6);
-		}
-	}
-	if (n!=1){
-		PUSH_FACTOR(n,1);
-	}
-	*ol=i;
-	return o;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_float_t b){
-	return fmod(a,b);
-}
-
-
-
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(sll_float_t a){
 	f64_data_t dt={
 		.v=a
@@ -475,4 +364,115 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tan(sl
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tanh(sll_float_t a){
 	return tanh(a);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n){
+	if (n<2){
+		return 0;
+	}
+	sll_size_t o=n;
+	sll_size_t c=FIND_FIRST_SET_BIT(n);
+	if (c){
+		n>>=c;
+		o>>=1;
+	}
+	if (!(n%3)){
+		do{
+			n/=3;
+		} while (!(n%3));
+		o-=o/3;
+	}
+	if (!(n%5)){
+		do{
+			n/=5;
+		} while (!(n%5));
+		o-=o/5;
+	}
+	sll_size_t f=7;
+	if (n>48){
+		while (1){
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(6);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(6);
+		}
+	}
+	if (n!=1){
+		o-=o/n;
+	}
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t v,sll_array_length_t* ol){
+	sll_factor_t* o=sll_allocate_stack(1);
+	sll_array_length_t i=0;
+	if (v<0){
+		v=-v;
+		i=1;
+		o=sll_reallocate(o,sizeof(sll_factor_t));
+		o->n=-1;
+		o->pw=1;
+	}
+	if (v<2){
+		*ol=i;
+		if (i){
+			return o;
+		}
+		sll_deallocate(o);
+		return NULL;
+	}
+	sll_size_t n=v;
+	sll_size_t j=FIND_FIRST_SET_BIT(n);
+	if (j){
+		n>>=j;
+		PUSH_FACTOR(2,j);
+	}
+	if (!(n%3)){
+		j=0;
+		do{
+			j++;
+			n/=3;
+		} while (!(n%3));
+		PUSH_FACTOR(3,j);
+	}
+	if (!(n%5)){
+		j=0;
+		do{
+			j++;
+			n/=5;
+		} while (!(n%5));
+		PUSH_FACTOR(5,j);
+	}
+	sll_size_t f=7;
+	if (n>48){
+		while (1){
+			WHEEL_STEP(4);
+			WHEEL_STEP(2);
+			WHEEL_STEP(4);
+			WHEEL_STEP(2);
+			WHEEL_STEP(4);
+			WHEEL_STEP(6);
+			WHEEL_STEP(2);
+			WHEEL_STEP(6);
+		}
+	}
+	if (n!=1){
+		PUSH_FACTOR(n,1);
+	}
+	*ol=i;
+	return o;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_math_mod(sll_float_t a,sll_float_t b){
+	return fmod(a,b);
 }

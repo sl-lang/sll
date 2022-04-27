@@ -24,44 +24,6 @@ __SLL_EXTERNAL extern const sll_time_zone_t* sll_utc_time_zone;
 
 /**
  * \flags func
- * \name sll_date_from_time
- * \group date-api
- * \desc Docs!
- * \arg sll_float_t time
- * \arg const sll_time_zone_t* tz
- * \arg sll_date_t* o
- */
-__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* tz,sll_date_t* o);
-
-
-
-/**
- * \flags func
- * \name sll_date_from_time_ns
- * \group date-api
- * \desc Docs!
- * \arg sll_time_t time
- * \arg const sll_time_zone_t* tz
- * \arg sll_date_t* o
- */
-__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* tz,sll_date_t* o);
-
-
-
-/**
- * \flags check_output func
- * \name sll_date_to_time
- * \group date-api
- * \desc Docs!
- * \arg sll_date_t* date
- * \ret sll_float_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* date);
-
-
-
-/**
- * \flags func
  * \name sll_api_date_get_time_zone
  * \group date-api
  * \desc Docs!
@@ -100,6 +62,44 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(
  * \arg sll_array_t* out
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t time,sll_array_t* out);
+
+
+
+/**
+ * \flags func
+ * \name sll_date_from_time
+ * \group date-api
+ * \desc Docs!
+ * \arg sll_float_t time
+ * \arg const sll_time_zone_t* tz
+ * \arg sll_date_t* o
+ */
+__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* tz,sll_date_t* o);
+
+
+
+/**
+ * \flags func
+ * \name sll_date_from_time_ns
+ * \group date-api
+ * \desc Docs!
+ * \arg sll_time_t time
+ * \arg const sll_time_zone_t* tz
+ * \arg sll_date_t* o
+ */
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* tz,sll_date_t* o);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_date_to_time
+ * \group date-api
+ * \desc Docs!
+ * \arg sll_date_t* date
+ * \ret sll_float_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* date);
 
 
 

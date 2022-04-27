@@ -41,43 +41,6 @@
 
 /**
  * \flags func
- * \name sll_path_relative
- * \group path-api
- * \desc Docs!
- * \arg const sll_char_t* s
- * \arg const sll_char_t* b
- * \arg sll_string_t* o
- */
-__SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sll_string_t* o);
-
-
-
-/**
- * \flags check_output func
- * \name sll_path_split
- * \group path-api
- * \desc Docs!
- * \arg const sll_string_t* s
- * \ret sll_string_length_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split(const sll_string_t* s);
-
-
-
-/**
- * \flags check_output func
- * \name sll_path_split_drive
- * \group path-api
- * \desc Docs!
- * \arg const sll_string_t* s
- * \ret sll_string_length_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const sll_string_t* s);
-
-
-
-/**
- * \flags func
  * \name sll_api_path_absolute
  * \group path-api
  * \desc Docs!
@@ -234,6 +197,43 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split(const sll_string_t* path,s
  * \arg sll_array_t* out
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split_drive(const sll_string_t* path,sll_array_t* out);
+
+
+
+/**
+ * \flags func
+ * \name sll_path_relative
+ * \group path-api
+ * \desc Docs!
+ * \arg const sll_char_t* s
+ * \arg const sll_char_t* b
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sll_string_t* o);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_path_split
+ * \group path-api
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split(const sll_string_t* s);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_path_split_drive
+ * \group path-api
+ * \desc Docs!
+ * \arg const sll_string_t* s
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const sll_string_t* s);
 
 
 

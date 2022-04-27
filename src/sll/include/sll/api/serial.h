@@ -46,119 +46,6 @@
 
 /**
  * \flags check_output func
- * \name sll_decode_integer
- * \group serial-api
- * \subgroup serial-api-compression
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg sll_error_t* err
- * \ret sll_size_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sll_error_t* err);
-
-
-
-/**
- * \flags check_output func
- * \name sll_decode_signed_integer
- * \group serial-api
- * \subgroup serial-api-compression
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg sll_error_t* err
- * \ret sll_integer_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_file_t* f,sll_error_t* err);
-
-
-
-/**
- * \flags check_output func
- * \name sll_decode_object
- * \group serial-api
- * \subgroup serial-api-compression
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg sll_error_t* err
- * \ret sll_object_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,sll_error_t* err);
-
-
-
-/**
- * \flags check_output func
- * \name sll_decode_string
- * \group serial-api
- * \subgroup serial-api-compression
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg sll_string_t* o
- * \ret sll_error_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_decode_string(sll_file_t* f,sll_string_t* o);
-
-
-
-/**
- * \flags check_output func
- * \name sll_encode_integer
- * \group serial-api
- * \subgroup serial-api-compression
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg sll_size_t v
- * \ret sll_error_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_integer(sll_file_t* f,sll_size_t v);
-
-
-
-/**
- * \flags check_output func
- * \name sll_encode_signed_integer
- * \group serial-api
- * \subgroup serial-api-compression
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg sll_integer_t v
- * \ret sll_error_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_signed_integer(sll_file_t* f,sll_integer_t v);
-
-
-
-/**
- * \flags check_output func
- * \name sll_encode_object
- * \group serial-api
- * \subgroup serial-api-compression
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg sll_object_t*const* a
- * \arg sll_arg_count_t ac
- * \ret sll_error_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sll_object_t*const* a,sll_arg_count_t ac);
-
-
-
-/**
- * \flags check_output func
- * \name sll_encode_string
- * \group serial-api
- * \subgroup serial-api-compression
- * \desc Docs!
- * \arg sll_file_t* f
- * \arg const sll_string_t* s
- * \ret sll_error_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* f,const sll_string_t* s);
-
-
-
-/**
- * \flags check_output func
  * \name sll_api_serial_decode_float
  * \group serial-api
  * \desc Docs!
@@ -294,6 +181,119 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
  * \ret sll_error_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_string(sll_integer_t fh,const sll_string_t* str);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_decode_integer
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_error_t* err
+ * \ret sll_size_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decode_integer(sll_file_t* f,sll_error_t* err);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_decode_signed_integer
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_error_t* err
+ * \ret sll_integer_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_file_t* f,sll_error_t* err);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_decode_object
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_error_t* err
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,sll_error_t* err);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_decode_string
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_string_t* o
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_decode_string(sll_file_t* f,sll_string_t* o);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_encode_integer
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_size_t v
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_integer(sll_file_t* f,sll_size_t v);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_encode_signed_integer
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_integer_t v
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_signed_integer(sll_file_t* f,sll_integer_t v);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_encode_object
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_object_t*const* a
+ * \arg sll_arg_count_t ac
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sll_object_t*const* a,sll_arg_count_t ac);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_encode_string
+ * \group serial-api
+ * \subgroup serial-api-compression
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg const sll_string_t* s
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* f,const sll_string_t* s);
 
 
 

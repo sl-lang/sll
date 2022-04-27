@@ -460,6 +460,43 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 
 
 
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll_object_t* true_obj,sll_object_t* false_obj){
+	if (!_json_null){
+		sll_register_cleanup(_release_data);
+	}
+	else{
+		_release_data();
+	}
+	SLL_ACQUIRE(null_obj);
+	SLL_ACQUIRE(true_obj);
+	SLL_ACQUIRE(false_obj);
+	_json_null=null_obj;
+	_json_true=true_obj;
+	_json_false=false_obj;
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(const sll_string_t* str){
+	sll_json_parser_state_t p=str->v;
+	sll_object_t* o=_parse_json_as_object(&p);
+	if (o){
+		return o;
+	}
+	return SLL_ACQUIRE_STATIC_INT(0);
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json_stringify(sll_object_t* json,sll_string_t* out){
+	STRING_INIT_STACK(out);
+	_stringify_object(json,out);
+	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_string_calculate_checksum(out);
+}
+
+
+
 __SLL_EXTERNAL void sll_free_json_object(sll_json_object_t* json){
 	if (json->t==SLL_JSON_OBJECT_TYPE_STRING){
 		sll_free_string(&(json->dt.s));
@@ -611,41 +648,4 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 		o->dt.f=n.f;
 	}
 	return 1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll_object_t* true_obj,sll_object_t* false_obj){
-	if (!_json_null){
-		sll_register_cleanup(_release_data);
-	}
-	else{
-		_release_data();
-	}
-	SLL_ACQUIRE(null_obj);
-	SLL_ACQUIRE(true_obj);
-	SLL_ACQUIRE(false_obj);
-	_json_null=null_obj;
-	_json_true=true_obj;
-	_json_false=false_obj;
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(const sll_string_t* str){
-	sll_json_parser_state_t p=str->v;
-	sll_object_t* o=_parse_json_as_object(&p);
-	if (o){
-		return o;
-	}
-	return SLL_ACQUIRE_STATIC_INT(0);
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_json_stringify(sll_object_t* json,sll_string_t* out){
-	STRING_INIT_STACK(out);
-	_stringify_object(json,out);
-	sll_allocator_move((void**)(&(out->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
-	sll_string_calculate_checksum(out);
 }

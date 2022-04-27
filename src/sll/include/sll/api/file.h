@@ -13,30 +13,6 @@
 
 /**
  * \flags check_output func
- * \name sll_file_from_handle
- * \group file-api
- * \desc Desc!
- * \arg sll_integer_t h
- * \ret sll_file_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_integer_t h);
-
-
-
-/**
- * \flags check_output func
- * \name sll_file_to_handle
- * \group file-api
- * \desc Desc!
- * \arg sll_file_t* f
- * \ret sll_integer_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_file_to_handle(sll_file_t* f);
-
-
-
-/**
- * \flags check_output func
  * \name sll_api_file_close
  * \group file-api
  * \desc Docs!
@@ -234,6 +210,30 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_std_
  * \ret sll_integer_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_write(sll_integer_t fh,const sll_string_t* data);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_file_from_handle
+ * \group file-api
+ * \desc Desc!
+ * \arg sll_integer_t h
+ * \ret sll_file_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_integer_t h);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_file_to_handle
+ * \group file-api
+ * \desc Desc!
+ * \arg sll_file_t* f
+ * \ret sll_integer_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_file_to_handle(sll_file_t* f);
 
 
 

@@ -12,18 +12,6 @@
 
 
 /**
- * \flags check_output func
- * \name sll_instruction_to_location
- * \group vm-api
- * \desc Docs!
- * \arg sll_instruction_index_t ii
- * \ret sll_object_t*
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_instruction_index_t ii);
-
-
-
-/**
  * \flags func
  * \name sll_api_vm_get_config
  * \group vm-api
@@ -82,6 +70,18 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index
  * \ret sll_reference_count_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_vm_get_ref_count(sll_object_t* obj);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_instruction_to_location
+ * \group vm-api
+ * \desc Docs!
+ * \arg sll_instruction_index_t ii
+ * \ret sll_object_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_instruction_index_t ii);
 
 
 

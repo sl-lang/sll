@@ -42,51 +42,6 @@ static const sll_char_t _path_norm_drive[256]={
 
 
 
-__SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sll_string_t* o){
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_t ns;
-	sll_string_t nb;
-	sll_string_from_pointer_length(bf,sll_platform_absolute_path(s,bf,SLL_API_MAX_FILE_PATH_LENGTH),&ns);
-	sll_string_from_pointer_length(bf,sll_platform_absolute_path(b,bf,SLL_API_MAX_FILE_PATH_LENGTH),&nb);
-#ifdef __SLL_BUILD_WINDOWS
-	sll_string_length_t s_drv=sll_path_split_drive(&ns);
-	sll_string_length_t b_drv=sll_path_split_drive(&nb);
-	if (s_drv!=b_drv||(s_drv==2&&_path_norm_drive[ns.v[0]]!=_path_norm_drive[nb.v[0]])||(s_drv>2&&sll_compare_data(ns.v,nb.v,s_drv)!=SLL_COMPARE_RESULT_EQUAL)){
-		*o=ns;
-		sll_free_string(&nb);
-		return;
-	}
-#endif
-	SLL_UNIMPLEMENTED();
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split(const sll_string_t* s){
-	sll_char_t dt[2]={
-		'/',
-		'\\'
-	};
-	sll_string_length_t o=sll_string_index_reverse_multiple(s,dt,2,0);
-	return (o==SLL_MAX_STRING_INDEX?0:o+1);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const sll_string_t* s){
-#ifdef __SLL_BUILD_WINDOWS
-	if (s->l>1&&s->v[1]==':'){
-		return 2;
-	}
-	if (s->l>2&&s->v[0]=='\\'&&s->v[1]=='\\'&&s->v[2]!='\\'){
-		SLL_UNIMPLEMENTED();
-	}
-#endif
-	return 0;
-}
-
-
-
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(const sll_string_t* path,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		sll_string_clone(path,out);
@@ -248,4 +203,49 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split(const sll_string_t* path,s
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split_drive(const sll_string_t* path,sll_array_t* out){
 	sll_string_length_t i=sll_path_split_drive(path);
 	sll_new_object_array(SLL_CHAR("ll"),out,path->v,i,path->v+i,path->l-i);
+}
+
+
+
+__SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sll_string_t* o){
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_t ns;
+	sll_string_t nb;
+	sll_string_from_pointer_length(bf,sll_platform_absolute_path(s,bf,SLL_API_MAX_FILE_PATH_LENGTH),&ns);
+	sll_string_from_pointer_length(bf,sll_platform_absolute_path(b,bf,SLL_API_MAX_FILE_PATH_LENGTH),&nb);
+#ifdef __SLL_BUILD_WINDOWS
+	sll_string_length_t s_drv=sll_path_split_drive(&ns);
+	sll_string_length_t b_drv=sll_path_split_drive(&nb);
+	if (s_drv!=b_drv||(s_drv==2&&_path_norm_drive[ns.v[0]]!=_path_norm_drive[nb.v[0]])||(s_drv>2&&sll_compare_data(ns.v,nb.v,s_drv)!=SLL_COMPARE_RESULT_EQUAL)){
+		*o=ns;
+		sll_free_string(&nb);
+		return;
+	}
+#endif
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split(const sll_string_t* s){
+	sll_char_t dt[2]={
+		'/',
+		'\\'
+	};
+	sll_string_length_t o=sll_string_index_reverse_multiple(s,dt,2,0);
+	return (o==SLL_MAX_STRING_INDEX?0:o+1);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split_drive(const sll_string_t* s){
+#ifdef __SLL_BUILD_WINDOWS
+	if (s->l>1&&s->v[1]==':'){
+		return 2;
+	}
+	if (s->l>2&&s->v[0]=='\\'&&s->v[1]=='\\'&&s->v[2]!='\\'){
+		SLL_UNIMPLEMENTED();
+	}
+#endif
+	return 0;
 }

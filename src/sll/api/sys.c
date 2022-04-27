@@ -71,37 +71,6 @@ static void _sys_free_data(void){
 
 
 
-__SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a){
-	if (i>=_sys_argc){
-		return;
-	}
-	sll_free_string(_sys_argv+i);
-	sll_string_from_pointer(a,_sys_argv+i);
-}
-
-
-
-__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
-	SLL_ASSERT(ac>0);
-	if (_sys_argv){
-		for (sll_array_length_t i=0;i<_sys_argc;i++){
-			sll_free_string(_sys_argv+i);
-		}
-		sll_deallocate(_sys_argv);
-	}
-	else if (!_sys_end){
-		sll_register_cleanup(_sys_free_data);
-		_sys_end=1;
-	}
-	_sys_argc=ac;
-	_sys_argv=sll_allocate(ac*sizeof(sll_string_t));
-	for (sll_array_length_t i=0;i<ac;i++){
-		SLL_INIT_STRING(_sys_argv+i);
-	}
-}
-
-
-
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_args(sll_array_t* out){
 	sll_object_t* obj=sll_new_object(SLL_CHAR("s+"),_sys_argv,_sys_argc);
 	*out=obj->dt.a;
@@ -283,5 +252,36 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(const sll_string_t* key,c
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
 		sll_audit(SLL_CHAR("sll.sys.env.set"),SLL_CHAR("ss"),key,value);
 		sll_set_environment_variable(key,value);
+	}
+}
+
+
+
+__SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a){
+	if (i>=_sys_argc){
+		return;
+	}
+	sll_free_string(_sys_argv+i);
+	sll_string_from_pointer(a,_sys_argv+i);
+}
+
+
+
+__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
+	SLL_ASSERT(ac>0);
+	if (_sys_argv){
+		for (sll_array_length_t i=0;i<_sys_argc;i++){
+			sll_free_string(_sys_argv+i);
+		}
+		sll_deallocate(_sys_argv);
+	}
+	else if (!_sys_end){
+		sll_register_cleanup(_sys_free_data);
+		_sys_end=1;
+	}
+	_sys_argc=ac;
+	_sys_argv=sll_allocate(ac*sizeof(sll_string_t));
+	for (sll_array_length_t i=0;i<ac;i++){
+		SLL_INIT_STRING(_sys_argv+i);
 	}
 }

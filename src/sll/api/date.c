@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/api/date.h>
 #include <sll/api/float.h>
 #include <sll/api/math.h>
 #include <sll/array.h>
@@ -17,6 +18,43 @@ static const sll_day_t _date_days[12]={31,28,31,30,31,30,30,31,30,31,30,31};
 
 
 __SLL_EXTERNAL const sll_time_zone_t* sll_utc_time_zone=&_date_utc_time_zone;
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_get_time_zone(sll_array_t* out){
+	sll_new_object_array(SLL_CHAR("iS"),out,sll_platform_time_zone->off,sll_platform_time_zone->nm);
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(sll_year_t year,sll_month_t month,sll_day_t day,sll_hour_t hour,sll_minute_t minute,sll_second_t second){
+	if (month>11){
+		month=11;
+	}
+	sll_day_t n=_date_days[month];
+	if (month==1&&!(year&3)&&(year%100||!(year%400))){
+		n++;
+	}
+	sll_date_t dt={
+		year,
+		month,
+		(day>n?n:day),
+		0,
+		(hour>23?23:hour),
+		(minute>59?59:minute),
+		(second<0?0:(second>60-sll_float_compare_error?60-sll_float_compare_error:second)),
+		_date_utc_time_zone
+	};
+	return sll_date_to_time(&dt);
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t time,sll_array_t* out){
+	sll_date_t dt;
+	sll_date_from_time(time,NULL,&dt);
+	sll_new_object_array(SLL_CHAR("hhhhhhf"),out,dt.y,dt.m,dt.d,dt.wd,dt.h,dt.mn,dt.s);
+}
 
 
 
@@ -85,41 +123,4 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* date)
 	sll_size_t e=y/400;
 	y-=e*400;
 	return (e*146097+y*365+y/4-y/100+(153*(date->m+1+(date->m+1>2?-3:9))+2)/5+date->d+1-1-719468)*86400+date->h*3600+date->mn*60+date->s-date->tz.off*60;
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_get_time_zone(sll_array_t* out){
-	sll_new_object_array(SLL_CHAR("iS"),out,sll_platform_time_zone->off,sll_platform_time_zone->nm);
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(sll_year_t year,sll_month_t month,sll_day_t day,sll_hour_t hour,sll_minute_t minute,sll_second_t second){
-	if (month>11){
-		month=11;
-	}
-	sll_day_t n=_date_days[month];
-	if (month==1&&!(year&3)&&(year%100||!(year%400))){
-		n++;
-	}
-	sll_date_t dt={
-		year,
-		month,
-		(day>n?n:day),
-		0,
-		(hour>23?23:hour),
-		(minute>59?59:minute),
-		(second<0?0:(second>60-sll_float_compare_error?60-sll_float_compare_error:second)),
-		_date_utc_time_zone
-	};
-	return sll_date_to_time(&dt);
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t time,sll_array_t* out){
-	sll_date_t dt;
-	sll_date_from_time(time,NULL,&dt);
-	sll_new_object_array(SLL_CHAR("hhhhhhf"),out,dt.y,dt.m,dt.d,dt.wd,dt.h,dt.mn,dt.s);
 }

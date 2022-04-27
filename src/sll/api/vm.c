@@ -1,6 +1,7 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/static_string.h>
 #include <sll/api/file.h>
+#include <sll/api/vm.h>
 #include <sll/array.h>
 #include <sll/audit.h>
 #include <sll/common.h>
@@ -19,28 +20,19 @@ static __STATIC_STRING(_vm_code_name,"@code");
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_instruction_index_t ii){
-	sll_string_index_t fp_i;
-	sll_string_index_t fn_i;
-	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,ii,&fp_i,&fn_i);
-	return sll_new_object(SLL_CHAR("(sis)"),sll_current_runtime_data->a_dt->st.dt+fp_i,ln,(fn_i==SLL_MAX_STRING_INDEX?&_vm_code_name:sll_current_runtime_data->a_dt->st.dt+fn_i));
-}
-
-
-
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_config(sll_array_t* out){
 	sll_new_object_array(SLL_CHAR("iiiii"),out,sll_current_vm_config->s_sz,sll_current_vm_config->c_st_sz,sll_file_to_handle(sll_current_vm_config->in),sll_file_to_handle(sll_current_vm_config->out),sll_file_to_handle(sll_current_vm_config->err));
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_instruction_count(void){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api_vm_get_instruction_count(void){
 	return sll_vm_get_instruction_count();
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_instruction_index(void){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api_vm_get_instruction_index(void){
 	return sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX);
 }
 
@@ -62,7 +54,16 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_vm_get_ref_count(sll_object_t* obj){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_vm_get_ref_count(sll_object_t* obj){
 	sll_audit(SLL_CHAR("sll.vm.ref"),SLL_CHAR("O"),obj);
 	return obj->rc;
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_instruction_index_t ii){
+	sll_string_index_t fp_i;
+	sll_string_index_t fn_i;
+	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,ii,&fp_i,&fn_i);
+	return sll_new_object(SLL_CHAR("(sis)"),sll_current_runtime_data->a_dt->st.dt+fp_i,ln,(fn_i==SLL_MAX_STRING_INDEX?&_vm_code_name:sll_current_runtime_data->a_dt->st.dt+fn_i));
 }

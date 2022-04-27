@@ -24,29 +24,6 @@
 
 /**
  * \flags func
- * \name sll_set_argument
- * \group sys-api
- * \desc Docs!
- * \arg sll_array_length_t i
- * \arg const sll_char_t* a
- */
-__SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a);
-
-
-
-/**
- * \flags func
- * \name sll_set_argument_count
- * \group sys-api
- * \desc Docs!
- * \arg sll_array_length_t ac
- */
-__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
-
-
-
-/**
- * \flags func
  * \name sll_api_sys_get_args
  * \group sys-api
  * \desc Docs!
@@ -193,6 +170,29 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag
  * \arg const sll_string_t* value
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(const sll_string_t* key,const sll_string_t* value);
+
+
+
+/**
+ * \flags func
+ * \name sll_set_argument
+ * \group sys-api
+ * \desc Docs!
+ * \arg sll_array_length_t i
+ * \arg const sll_char_t* a
+ */
+__SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a);
+
+
+
+/**
+ * \flags func
+ * \name sll_set_argument_count
+ * \group sys-api
+ * \desc Docs!
+ * \arg sll_array_length_t ac
+ */
+__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
 
 
 

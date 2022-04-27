@@ -66,25 +66,6 @@ static sll_integer_t _alloc_file(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_integer_t h){
-	if (h<0||h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+h))){
-		return NULL;
-	}
-	extended_file_t* ef=*(_file_fl+h);
-	return (ef->p?ef->dt.p:&(ef->dt.f));
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_file_to_handle(sll_file_t* f){
-	sll_integer_t o=_alloc_file();
-	(*(_file_fl+o))->dt.p=f;
-	(*(_file_fl+o))->p=1;
-	return o;
-}
-
-
-
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(sll_integer_t fh){
 	if (fh<0||fh>=_file_fll||!(*(_file_fl+fh))){
 		return 0;
@@ -318,4 +299,23 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_writ
 	sll_error_t err;
 	sll_size_t o=sll_file_write((ef->p?ef->dt.p:&(ef->dt.f)),data->v,data->l*sizeof(sll_char_t),&err);
 	return (!o&&err!=SLL_NO_ERROR?~err:o*sizeof(sll_char_t));
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_integer_t h){
+	if (h<0||h>=_file_fll||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||!(*(_file_fl+h))){
+		return NULL;
+	}
+	extended_file_t* ef=*(_file_fl+h);
+	return (ef->p?ef->dt.p:&(ef->dt.f));
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_file_to_handle(sll_file_t* f){
+	sll_integer_t o=_alloc_file();
+	(*(_file_fl+o))->dt.p=f;
+	(*(_file_fl+o))->p=1;
+	return o;
 }

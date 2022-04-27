@@ -67,18 +67,6 @@
 
 
 /**
- * \flags func
- * \name sll_process_join_args
- * \group process-api
- * \desc Docs!
- * \arg const sll_char_t*const* a
- * \arg sll_string_t* o
- */
-__SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t* o);
-
-
-
-/**
  * \flags check_output func
  * \name sll_api_process_execute_shell
  * \group process-api
@@ -143,6 +131,18 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(const sll_string_t* arg
  * \arg sll_array_t* out
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_flags_t flags,const sll_string_t* stdin,sll_array_t* out);
+
+
+
+/**
+ * \flags func
+ * \name sll_process_join_args
+ * \group process-api
+ * \desc Docs!
+ * \arg const sll_char_t*const* a
+ * \arg sll_string_t* o
+ */
+__SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t* o);
 
 
 
