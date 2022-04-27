@@ -7,7 +7,7 @@ import util
 
 TYPE_POINTER_REGEX=re.compile(r"(\*+)")
 TYPE_MAP={"__SLL_S1":"signed char","__SLL_U1":"_Bool","__SLL_S8":"signed char","__SLL_U8":"unsigned char","__SLL_S16":"signed short int","__SLL_U16":"unsigned short int","__SLL_S32":"signed int","__SLL_U32":"unsigned int","__SLL_S64":"signed long long int","__SLL_U64":"unsigned long long int","__SLL_F32":"float","__SLL_F64":"double"}
-ROOT=(b"" if os.getenv("DOMAIN_ROOT",None) is not None else b".")
+ROOT=("" if os.getenv("DOMAIN_ROOT",None) is not None else ".")
 
 
 
@@ -18,9 +18,9 @@ def _generate(nm,dt):
 	nm="build/web/"+nm
 	os.makedirs(nm[:nm.rindex("/")],exist_ok=True)
 	if (nm[-5:]==".html"):
-		dt=dt.replace(b"{{ROOT}}",ROOT)
+		dt=dt.replace("{{ROOT}}",ROOT)
 	util.log(f"  Generated '{nm}'")
-	with open(nm,"wb") as f:
+	with open(nm,"w") as f:
 		f.write(dt)
 
 
@@ -48,7 +48,7 @@ def _add_code_type(t):
 
 
 
-def _generate_pages(dt,pg_src):
+def _generate_docs(dt):
 	m={}
 	for k in dt["groups"]:
 		m[k]={"":[]}
@@ -59,24 +59,18 @@ def _generate_pages(dt,pg_src):
 			m[k["group"]][k["subgroup"]]=[k]
 		else:
 			m[k["group"]][k["subgroup"]].append(k)
-	toc=""
-	data=""
+	data="<div>"
 	for k,v in sorted(m.items(),key=lambda e:dt["groups"][e[0]]["name"]):
 		elem_id=_generate_id(k,None,None,None)
-		toc+=f"<div class=\"group\" id=\"{k}\"><a href=\"{{{{ROOT}}}}/docs.html#{elem_id}\"><h2 class=\"title\">{dt['groups'][k]['name']}</h2></a><div class=\"group-box\">"
-		data+=f"<a id=\"{elem_id}\" href=\"#{elem_id}\"><h1>{dt['groups'][k]['name']}</h1></a><h2>{dt['groups'][k]['desc']}</h2>"
+		data+=f"<div><div class=\"group-title\"><a id=\"{elem_id}\" href=\"#{elem_id}\">{dt['groups'][k]['name']}</a></div><h2>{dt['groups'][k]['desc']}</h2>"
 		for sk,sv in sorted(v.items(),key=lambda e:("" if e[0]=="" else dt["subgroups"][e[0]]["name"])):
 			if (len(sv)==0):
 				continue
-			toc+="<div class=\"subgroup\">"
 			if (len(sk)!=0):
 				elem_id=_generate_id(k,sk,None,None)
-				toc+=f"<a href=\"{{{{ROOT}}}}/docs.html#{elem_id}\"><h3 class=\"sg-title\">{dt['subgroups'][sk]['name']}</h3></a>"
-				data+=f"<a id=\"{elem_id}\" href=\"#{elem_id}\"><h2>{dt['subgroups'][sk]['name']}</h2></a><h3>{dt['subgroups'][sk]['desc']}</h3>"
-			toc+="<ul>"
+				data+=f"<div><div class=\"subgroup-title\"><a id=\"{elem_id}\" href=\"#{elem_id}\">{dt['subgroups'][sk]['name']}</a></div><h3>{dt['subgroups'][sk]['desc']}</h3>"
 			for e in sorted(sv,key=lambda se:se["name"]):
 				elem_id=_generate_id(k,sk,e["name"],e["flag"])
-				toc+=f"<li><a href=\"{{{{ROOT}}}}/docs.html#{elem_id}\">{e['name']+('()' if 'func' in e['flag'] else '')}</a></li>"
 				data+=f"<div><a id=\"{elem_id}\" href=\"#{elem_id}\"><pre class=\"code\">"
 				if ("func" in e["flag"]):
 					if ("macro" in e["flag"]):
@@ -130,10 +124,10 @@ def _generate_pages(dt,pg_src):
 				if (e["ret"] is not None):
 					data+=f"\nReturn Value: {e['ret']['desc']}"
 				data+="</pre></div>"
-			toc+="</ul></div>"
-		toc+="</div></div>"
-	_generate("/docs.html",pg_src.replace(b"{{DATA}}",bytes(data,"utf-8")))
-	return bytes(toc,"utf-8")
+			if (len(sk)!=0):
+				data+="</div>"
+		data+="</div>"
+	return data+"</div>"
 
 
 
@@ -143,27 +137,24 @@ def generate():
 		os.mkdir("build/web")
 	util.log("Reading CSS Files...")
 	for k in os.listdir("src/web/css"):
-		with open("src/web/css/"+k,"rb") as rf:
+		with open("src/web/css/"+k,"r") as rf:
 			_generate("/css/"+k,rf.read())
 	util.log("Reading JS Files...")
 	for k in os.listdir("src/web/js"):
-		with open("src/web/js/"+k,"rb") as rf:
+		with open("src/web/js/"+k,"r") as rf:
 			_generate("/js/"+k,rf.read())
 	util.log("Collecting Documentation Files...")
 	d_fl=util.get_docs_files()
 	util.log(f"  Found {len(d_fl)} Files\nGenerating Documentation...")
 	d_dt=docs.create_docs(d_fl)
-	util.log("Reading 'src/web/page.html'...")
-	with open("src/web/page.html","rb") as rf:
-		pg_src=rf.read()
 	util.log(f"Generating Table of Content & Pages for {len(d_dt['data'])} Symbols...")
-	toc=_generate_pages(d_dt,pg_src)
-	util.log("Reading 'src/web/index.html'...")
-	with open("src/web/index.html","rb") as rf:
-		_generate("/index.html",rf.read().replace(b"{{DATA}}",toc))
+	data=_generate_docs(d_dt)
+	util.log("Reading 'src/web/docs.html'...")
+	with open("src/web/docs.html","r") as rf:
+		_generate("/index.html",rf.read().replace("{{DATA}}",data))
 	util.log("Reading 'src/web/404.html'...")
-	with open("src/web/404.html","rb") as rf:
+	with open("src/web/404.html","r") as rf:
 		_generate("/404.html",rf.read())
 	util.log("Reading 'src/web/apt.sh'...")
-	with open("src/web/apt.sh","rb") as rf:
+	with open("src/web/apt.sh","r") as rf:
 		_generate("/apt",rf.read())
