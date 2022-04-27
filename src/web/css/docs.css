@@ -21,7 +21,7 @@ a {
 	position: sticky;
 	top: -1px;
 	height: 42px;
-	padding: 3px 6px 3px 6px;
+	padding: 3px 6px;
 	line-height: 42px;
 	border-bottom: 3px solid #131110;
 	background: #373433;
@@ -33,7 +33,7 @@ a {
 	position: sticky;
 	top: 47px;
 	height: 25px;
-	padding: 5px 6px 5px 6px;
+	padding: 5px 6px;
 	line-height: 25px;
 	border-bottom: 3px solid #131110;
 	background: #373433;
