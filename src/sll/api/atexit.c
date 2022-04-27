@@ -15,12 +15,14 @@
 static atexit_function_t** _atexit_data=NULL;
 static sll_array_length_t _atexit_data_len=0;
 static sll_lock_handle_t _atexit_lock=NULL;
+static sll_bool_t _atexit_enable=1;
 
 
 
 static void _cleanup_data(void){
 	if (_atexit_lock){
 		SLL_CRITICAL(sll_platform_lock_delete(_atexit_lock));
+		_atexit_lock=NULL;
 	}
 }
 
@@ -40,7 +42,7 @@ void _atexit_execute(void){
 	if (!_atexit_lock){
 		return;
 	}
-	SLL_CRITICAL(sll_platform_lock_acquire(_atexit_lock));
+	_atexit_enable=0;
 	while (_atexit_data_len){
 		_atexit_data_len--;
 		atexit_function_t* af=*(_atexit_data+_atexit_data_len);
@@ -49,13 +51,13 @@ void _atexit_execute(void){
 	}
 	sll_deallocate(_atexit_data);
 	_atexit_data=NULL;
-	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
+	_atexit_enable=1;
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_object_t*const* args,sll_arg_count_t len){
-	if (!fn){
+	if (!fn||!_atexit_enable){
 		return;
 	}
 	if (!_atexit_lock){
@@ -79,7 +81,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unregister(sll_integer_t fn){
-	if (!fn||!_atexit_lock){
+	if (!fn||!_atexit_lock||!_atexit_enable){
 		return 0;
 	}
 	SLL_CRITICAL(sll_platform_lock_acquire(_atexit_lock));
