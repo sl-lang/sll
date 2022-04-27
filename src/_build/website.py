@@ -41,7 +41,7 @@ def _generate_id(g,sg,nm,t):
 
 
 def _add_code_type(t):
-	for k,v in TYPE_MAP:
+	for k,v in TYPE_MAP.items():
 		t=t.replace(k,v)
 	if (t[:2]=="__" and t[-2:]=="__"):
 		return f"<span class=\"code-type-other\">{t}</span>"
