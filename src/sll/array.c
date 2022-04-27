@@ -545,7 +545,7 @@ __SLL_EXTERNAL void sll_array_remove(const sll_array_t* a,sll_object_t* v,sll_ar
 				i++;
 			}
 			else{
-				GC_RELEASE(o->v[j]);
+				SLL_RELEASE(o->v[j]);
 			}
 		}
 		o->l=i;
@@ -752,7 +752,7 @@ __SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_arr
 __SLL_EXTERNAL void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_object_t* v){
 	if (i<a->l){
 		SLL_ACQUIRE(v);
-		GC_RELEASE(a->v[i]);
+		SLL_RELEASE(a->v[i]);
 		a->v[i]=v;
 	}
 }
@@ -865,7 +865,7 @@ __SLL_EXTERNAL void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_
 
 __SLL_EXTERNAL void sll_free_array(sll_array_t* a){
 	for (sll_array_length_t i=0;i<a->l;i++){
-		GC_RELEASE(a->v[i]);
+		SLL_RELEASE(a->v[i]);
 	}
 	sll_allocator_release(a->v);
 	a->v=NULL;

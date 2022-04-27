@@ -16,9 +16,38 @@
  * \name SLL_ACQUIRE
  * \group gc
  * \desc Docs!
- * \arg sll_object_t* x
+ * \arg sll_object_t* o
  */
-#define SLL_ACQUIRE(x) ((x)->rc++)
+#define SLL_ACQUIRE(o) ((o)->rc++)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_RELEASE
+ * \group gc
+ * \desc Docs!
+ * \arg sll_object_t* o
+ */
+#define SLL_RELEASE(o) \
+	do{ \
+		sll_object_t* __o=(o); \
+		__o->rc--; \
+		if (!__o->rc){ \
+			sll__release_object_internal(__o); \
+		} \
+	} while (0)
+
+
+
+/**
+ * \flags func
+ * \name sll__release_object_internal
+ * \group gc
+ * \desc Docs!
+ * \arg sll_object_t* o
+ */
+__SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o);
 
 
 

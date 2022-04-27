@@ -3,6 +3,7 @@
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>
@@ -92,7 +93,7 @@ __SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_comp
 	}
 	_quicksort_extra(tmp,a,l-1,cmp);
 	for (sll_array_length_t i=0;i<l;i++){
-		GC_RELEASE(*(tmp+i));
+		SLL_RELEASE(*(tmp+i));
 	}
 	sll_deallocate(tmp);
 }

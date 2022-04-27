@@ -11,16 +11,6 @@
 
 #define GC_FLAG_HAS_WEAKREF 1
 
-#define GC_RELEASE(o) \
-	do{ \
-		sll_object_t* __o=(o); \
-		SLL_ASSERT(__o->rc); \
-		__o->rc--; \
-		if (!__o->rc){ \
-			_gc_release_object(__o); \
-		} \
-	} while (0)
-
 
 
 typedef struct _GC_PAGE_HEADER{
@@ -32,10 +22,6 @@ typedef struct _GC_PAGE_HEADER{
 
 
 void _gc_release_data(void);
-
-
-
-void _gc_release_object(sll_object_t* o);
 
 
 

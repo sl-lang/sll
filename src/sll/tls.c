@@ -12,7 +12,7 @@
 __SLL_EXTERNAL void sll_free_tls(sll_tls_object_t* tls){
 	while (tls->sz){
 		tls->sz--;
-		GC_RELEASE((tls->dt+tls->sz)->v);
+		SLL_RELEASE((tls->dt+tls->sz)->v);
 	}
 	sll_deallocate(tls->dt);
 	tls->dt=NULL;

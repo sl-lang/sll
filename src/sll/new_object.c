@@ -7,6 +7,7 @@
 #include <sll/allocator.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/log.h>
 #include <sll/map.h>
 #include <sll/memory.h>
@@ -28,7 +29,7 @@
 		} \
 		sll_object_t* obj=sll_var_arg_get_object(va); \
 		sll_object_t* o=(obj->t==(type)?sll_operator_copy(obj,0):sll_operator_cast(obj,sll_static_int[(type)])); \
-		GC_RELEASE(obj); \
+		SLL_RELEASE(obj); \
 		return o; \
 	} while (0)
 
@@ -346,7 +347,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				}
 				sll_object_t* o=sll_var_arg_get_object(va);
 				if (fl&NEW_OBJECT_FLAG_NO_ACQUIRE){
-					GC_RELEASE(o);
+					SLL_RELEASE(o);
 				}
 				return o;
 			}

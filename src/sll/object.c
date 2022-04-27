@@ -7,6 +7,7 @@
 #include <sll/common.h>
 #include <sll/complex.h>
 #include <sll/data.h>
+#include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
@@ -83,7 +84,7 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 					n->dt.p=sll_allocate(n_dt->l*sizeof(sll_object_field_t));
 					_zero_struct(tt,n_dt,n->dt.p,0);
 					if (n_dt->fn[SLL_OBJECT_FUNC_INIT]){
-						GC_RELEASE(sll_execute_function(n_dt->fn[SLL_OBJECT_FUNC_INIT],&n,1,0));
+						SLL_RELEASE(sll_execute_function(n_dt->fn[SLL_OBJECT_FUNC_INIT],&n,1,0));
 					}
 					p->o=n;
 					break;
@@ -131,7 +132,7 @@ static void _set_field(const sll_object_type_table_t* tt,sll_object_field_t* o,s
 				break;
 			}
 	}
-	GC_RELEASE(v);
+	SLL_RELEASE(v);
 }
 
 
@@ -151,7 +152,7 @@ static void _init_struct(const sll_object_type_table_t* tt,sll_object_t* o,sll_o
 		d++;
 	}
 	if (dt->fn[SLL_OBJECT_FUNC_INIT]){
-		GC_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_INIT],&o,1,0));
+		SLL_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_INIT],&o,1,0));
 	}
 }
 
@@ -197,7 +198,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 	while (i<l){
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
 		sll_integer_t vv=v->dt.i;
-		GC_RELEASE(v);
+		SLL_RELEASE(v);
 		n->dt[i].c=0;
 		if (vv<0){
 			n->dt[i].c=1;
@@ -209,7 +210,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		p++;
 		sll_string_t str=v->dt.s;
-		GC_RELEASE(v);
+		SLL_RELEASE(v);
 		if (str.l>4&&str.v[0]=='@'&&str.v[1]=='@'&&str.v[str.l-2]=='@'&&str.v[str.l-1]=='@'){
 			for (sll_object_function_index_t j=0;j<=SLL_MAX_OBJECT_FUNC;j++){
 				if (STRING_EQUAL(&str,_object_fn_list[j])){
@@ -414,7 +415,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 		dst++;
 	}
 	if (dt->fn[SLL_OBJECT_FUNC_COPY]){
-		GC_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_COPY],&n,1,0));
+		SLL_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_COPY],&n,1,0));
 	}
 	return n;
 }
@@ -452,7 +453,7 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* tt,sll_o
 		return;
 	}
 	if (dt->dt[off].t>SLL_OBJECT_TYPE_CHAR){
-		GC_RELEASE((o->dt.p+off)->o);
+		SLL_RELEASE((o->dt.p+off)->o);
 	}
 	_set_field(tt,o->dt.p+off,dt->dt[off].t,v);
 }

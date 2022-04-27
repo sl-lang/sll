@@ -47,7 +47,7 @@ static void _cpu_core_worker(void* dt){
 	while (_thread_active_count){
 		sll_thread_index_t n_tid=_scheduler_queue_pop();
 		if (n_tid!=SLL_UNKNOWN_THREAD_INDEX){
-			GC_RELEASE(sll_wait_thread(n_tid));
+			SLL_RELEASE(sll_wait_thread(n_tid));
 		}
 	}
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -183,7 +183,7 @@ sll_return_code_t _scheduler_run(void){
 	sll_platform_free_page(_scheduler_data_base,SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t)));
 	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->ret,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_return_code_t o=(sll_return_code_t)(rc_o->dt.i);
-	GC_RELEASE(rc_o);
+	SLL_RELEASE(rc_o);
 	_barrier_deinit();
 	_lock_deinit();
 	_semaphore_deinit();

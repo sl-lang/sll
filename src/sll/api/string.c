@@ -222,11 +222,11 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 				if (dt->fn[SLL_OBJECT_FUNC_STRING]){
 					sll_object_t* v=sll_execute_function(dt->fn[SLL_OBJECT_FUNC_STRING],&a,1,0);
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
-					GC_RELEASE(v);
+					SLL_RELEASE(v);
 					sll_string_increase(o,str->dt.s.l);
 					sll_copy_data(str->dt.s.v,str->dt.s.l,o->v+o->l);
 					o->l+=str->dt.s.l;
-					GC_RELEASE(str);
+					SLL_RELEASE(str);
 					return;
 				}
 				sll_string_increase(o,3);
@@ -269,7 +269,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 							break;
 					}
 					_object_to_string(tmp,o);
-					GC_RELEASE(tmp);
+					SLL_RELEASE(tmp);
 					p++;
 				}
 				sll_string_increase(o,1);

@@ -19,7 +19,7 @@ static void _cleanup_data(void){
 	if (!_weakref_no_object_ret){
 		return;
 	}
-	GC_RELEASE(_weakref_no_object_ret);
+	SLL_RELEASE(_weakref_no_object_ret);
 	_weakref_no_object_ret=NULL;
 }
 
@@ -35,7 +35,7 @@ static void _call_user_array(sll_weak_reference_t wr,sll_object_t* obj,void* arg
 		dt,
 		obj
 	};
-	GC_RELEASE(sll_execute_function(_weakref_cb_func,al,2,0));
+	SLL_RELEASE(sll_execute_function(_weakref_cb_func,al,2,0));
 }
 
 

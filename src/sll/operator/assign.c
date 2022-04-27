@@ -1,6 +1,7 @@
 #include <sll/_internal/gc.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/object.h>
 #include <sll/operator.h>
@@ -20,7 +21,7 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 				idx+=a->dt.s.l;
 			}
 			sll_string_set_char(tmp->dt.c,(sll_string_length_t)idx,&(a->dt.s));
-			GC_RELEASE(tmp);
+			SLL_RELEASE(tmp);
 		}
 	}
 	else if (a->t==SLL_OBJECT_TYPE_ARRAY){

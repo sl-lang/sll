@@ -81,7 +81,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 	}
 	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 	sll_char_t o=n->dt.c;
-	GC_RELEASE(n);
+	SLL_RELEASE(n);
 	va->dt.sll.p++;
 	va->dt.sll.l--;
 	return o;
@@ -106,7 +106,7 @@ __SLL_EXTERNAL void sll_var_arg_get_complex(sll_var_arg_list_t* va,sll_complex_t
 	else{
 		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_COMPLEX]);
 		*o=n->dt.d;
-		GC_RELEASE(n);
+		SLL_RELEASE(n);
 		va->dt.sll.p++;
 		va->dt.sll.l--;
 	}
@@ -124,7 +124,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_var_arg_get_float(sll_var_arg_
 	}
 	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
 	sll_float_t o=n->dt.f;
-	GC_RELEASE(n);
+	SLL_RELEASE(n);
 	va->dt.sll.p++;
 	va->dt.sll.l--;
 	return o;
@@ -142,7 +142,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_
 	}
 	sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_integer_t o=n->dt.i;
-	GC_RELEASE(n);
+	SLL_RELEASE(n);
 	va->dt.sll.p++;
 	va->dt.sll.l--;
 	return o;
@@ -194,7 +194,7 @@ __SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* 
 	else{
 		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		sll_string_clone(&(n->dt.s),o);
-		GC_RELEASE(n);
+		SLL_RELEASE(n);
 		va->dt.sll.p++;
 		va->dt.sll.l--;
 	}

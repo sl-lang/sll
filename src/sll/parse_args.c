@@ -60,7 +60,7 @@
 	} \
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_INT]); \
 	*var=(obj->dt.i<0?0:(obj->dt.i>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:(__SLL_U##sz)(obj->dt.i))); \
-	GC_RELEASE(obj);
+	SLL_RELEASE(obj);
 #define PARSE_TYPE(type,name,field,init) \
 	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
 		if (flags&PARSE_ARGS_FLAG_REF){ \
@@ -75,7 +75,7 @@
 	} \
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 	*var=obj->dt.field; \
-	GC_RELEASE(obj);
+	SLL_RELEASE(obj);
 #define PARSE_TYPE_PTR(type,name,field,init) \
 	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
 		if (flags&PARSE_ARGS_FLAG_REF){ \
@@ -90,7 +90,7 @@
 			ENSURE_TYPE(k,name); \
 			*(dt+i)=&(k->dt.field); \
 		} \
-		GC_RELEASE(obj); \
+		SLL_RELEASE(obj); \
 		return; \
 	} \
 	if (flags&PARSE_ARGS_FLAG_REF){ \
@@ -536,7 +536,7 @@ __SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt){
 	}
 	arg_state_t* st=dt;
 	for (sll_size_t i=0;i<st->sz;i++){
-		GC_RELEASE(st->dt[i]);
+		SLL_RELEASE(st->dt[i]);
 	}
 	sll_deallocate(dt);
 }

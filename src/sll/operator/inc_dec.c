@@ -1,6 +1,7 @@
 #include <sll/_internal/gc.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/map.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
@@ -43,7 +44,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				GC_RELEASE(sll_map_remove(&(a->dt.m),sll_static_int[1],&(o->dt.m)));
+				SLL_RELEASE(sll_map_remove(&(a->dt.m),sll_static_int[1],&(o->dt.m)));
 				return o;
 			}
 		default:

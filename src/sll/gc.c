@@ -65,7 +65,7 @@ void _gc_release_data(void){
 
 
 
-void _gc_release_object(sll_object_t* o){
+__SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 	SLL_ASSERT(!o->rc);
 	if (o->_f&GC_FLAG_HAS_WEAKREF){
 		o->rc++;
@@ -89,7 +89,7 @@ void _gc_release_object(sll_object_t* o){
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+o->t-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->fn[SLL_OBJECT_FUNC_DELETE]){
 				o->rc++;
-				GC_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_DELETE],&o,1,0));
+				SLL_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_DELETE],&o,1,0));
 				o->rc--;
 				if (o->rc){
 					return;
@@ -98,7 +98,7 @@ void _gc_release_object(sll_object_t* o){
 			sll_object_field_t* p=o->dt.p;
 			for (sll_arg_count_t i=0;i<dt->l;i++){
 				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
-					GC_RELEASE(p->o);
+					SLL_RELEASE(p->o);
 				}
 				p++;
 			}
@@ -221,12 +221,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* o)
 		return 0;
 	}
 	*((sll_object_type_t*)(&(o->t)))=SLL_OBJECT_TYPE_INT;
-	_gc_release_object(o);
+	sll__release_object_internal(o);
 	 return 1;
 }
 
 
 
 __SLL_EXTERNAL void sll_release_object(sll_object_t* o){
-	GC_RELEASE(o);
+	SLL_RELEASE(o);
 }

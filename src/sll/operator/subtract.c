@@ -24,7 +24,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 	}
 	if (a->t==SLL_OBJECT_TYPE_MAP){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-		GC_RELEASE(sll_map_remove(&(a->dt.m),b,&(o->dt.m)));
+		SLL_RELEASE(sll_map_remove(&(a->dt.m),b,&(o->dt.m)));
 		return o;
 	}
 	switch (COMBINED_ARGS){

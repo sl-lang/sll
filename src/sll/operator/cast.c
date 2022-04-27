@@ -99,7 +99,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 					if (dt->fn[SLL_OBJECT_FUNC_STRING]){
 						sll_object_t* v=sll_execute_function(dt->fn[SLL_OBJECT_FUNC_STRING],&a,1,0);
 						sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
-						GC_RELEASE(v);
+						SLL_RELEASE(v);
 						return str;
 					}
 					break;
@@ -126,7 +126,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		if (sll_current_runtime_data&&b->dt.i<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 			sll_object_t* src=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
 			sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,(sll_object_type_t)(b->dt.i),src->dt.a.v,src->dt.a.l);
-			GC_RELEASE(src);
+			SLL_RELEASE(src);
 			return o;
 		}
 		SLL_ACQUIRE(a);

@@ -10,6 +10,7 @@
 #include <sll/data.h>
 #include <sll/environment.h>
 #include <sll/error.h>
+#include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/new_object.h>
 #include <sll/object.h>
@@ -91,7 +92,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 	if (!sll_search_path_find(sll_env_path,&(n->dt.s),SLL_SEARCH_PATH_FLAG_AFTER,&exe_fp)){
 		SLL_UNIMPLEMENTED();
 	}
-	GC_RELEASE(n);
+	SLL_RELEASE(n);
 	sll_char_t** raw_args=sll_allocate((args->l+1)*sizeof(sll_char_t*));
 	*raw_args=sll_allocate((exe_fp.l+1)*sizeof(sll_char_t));
 	sll_copy_data(exe_fp.v,exe_fp.l+1,*raw_args);
@@ -100,7 +101,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 		n=sll_operator_cast(args->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		*(raw_args+i)=sll_allocate((n->dt.s.l+1)*sizeof(sll_char_t));
 		sll_copy_data(n->dt.s.v,n->dt.s.l+1,*(raw_args+i));
-		GC_RELEASE(n);
+		SLL_RELEASE(n);
 	}
 	*(raw_args+args->l)=NULL;
 	sll_error_t err;
