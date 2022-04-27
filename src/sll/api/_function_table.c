@@ -1136,7 +1136,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:vm_get_instruction_count"),
 		sll_api_vm_get_instruction_count,
-		SLL_CHAR("|D")
+		SLL_CHAR("|Q")
 	},
 	{
 		SLL_CHAR("sll:vm_get_instruction_index"),

@@ -28,10 +28,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_config(sll_array_t* out);
  * \name sll_api_vm_get_instruction_count
  * \group vm-api
  * \desc Docs!
- * \api |D
- * \ret sll_instruction_index_t
+ * \api |Q
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api_vm_get_instruction_count(void);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_vm_get_instruction_count(void);
 
 
 

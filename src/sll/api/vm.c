@@ -26,7 +26,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_config(sll_array_t* out){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api_vm_get_instruction_count(void){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_vm_get_instruction_count(void){
 	return sll_vm_get_instruction_count();
 }
 
