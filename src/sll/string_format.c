@@ -58,12 +58,8 @@ static void _format_string(unsigned int f,unsigned int w,unsigned int p,sll_stri
 __SLL_EXTERNAL void sll_string_format(const sll_char_t* t,sll_string_t* o,...){
 	va_list va;
 	va_start(va,o);
-	sll_var_arg_list_t dt={
-		SLL_VAR_ARG_LIST_TYPE_C,
-		{
-			.c=&va
-		}
-	};
+	sll_var_arg_list_t dt;
+	SLL_VAR_ARG_INIT_C(&dt,&va);
 	sll_string_format_list(t,sll_string_length(t),&dt,o);
 	va_end(va);
 }

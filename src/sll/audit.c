@@ -29,12 +29,8 @@ void _audit_cleanup(void){
 __SLL_EXTERNAL void sll_audit(const sll_char_t* nm,const sll_char_t* t,...){
 	va_list va;
 	va_start(va,t);
-	sll_var_arg_list_t dt={
-		SLL_VAR_ARG_LIST_TYPE_C,
-		{
-			.c=&va
-		}
-	};
+	sll_var_arg_list_t dt;
+	SLL_VAR_ARG_INIT_C(&dt,&va);
 	sll_audit_list(nm,t,&dt);
 	va_end(va);
 }

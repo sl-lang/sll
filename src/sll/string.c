@@ -840,7 +840,7 @@ __SLL_EXTERNAL void sll_string_from_pointer_length(const sll_char_t* s,sll_strin
 		a+=2;
 		b+=2;
 	}
-	c=_mm_cvtsi128_si64(_mm_xor_si128(c128,_mm_shuffle_epi32(c128,0xb0)));
+	c=_mm_cvtsi128_si64(_mm_xor_si128(c128,_mm_shuffle_epi32(c128,0x0e)));
 #endif
 	while (l>7){
 		*b=*a;

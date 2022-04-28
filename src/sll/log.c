@@ -125,12 +125,8 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_
 	}
 	va_list va;
 	va_start(va,t);
-	sll_var_arg_list_t dt={
-		SLL_VAR_ARG_LIST_TYPE_C,
-		{
-			.c=&va
-		}
-	};
+	sll_var_arg_list_t dt;
+	SLL_VAR_ARG_INIT_C(&dt,&va);
 	sll_string_t s;
 	sll_string_format_list(t,sll_string_length(t),&dt,&s);
 	va_end(va);

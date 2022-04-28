@@ -341,15 +341,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out){
-	sll_var_arg_list_t dt={
-		SLL_VAR_ARG_LIST_TYPE_SLL,
-		{
-			.sll={
-				args,
-				len
-			}
-		}
-	};
+	sll_var_arg_list_t dt;
+	SLL_VAR_ARG_INIT_SLL(&dt,args,len);
 	sll_string_format_list(fmt->v,fmt->l,&dt,out);
 }
 

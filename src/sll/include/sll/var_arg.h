@@ -45,6 +45,42 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_VAR_ARG_INIT_C
+ * \group var-arg
+ * \desc Docs!
+ * \arg sll_var_arg_list_t* va
+ * \arg va_list* va_ptr
+ */
+#define SLL_VAR_ARG_INIT_C(va,va_ptr) \
+    do{ \
+        sll_var_arg_list_t* __va=(va); \
+        __va->t=SLL_VAR_ARG_LIST_TYPE_C; \
+        __va->dt.c=(va_ptr); \
+    } while (0)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_VAR_ARG_INIT_SLL
+ * \group var-arg
+ * \desc Docs!
+ * \arg sll_var_arg_list_t* va
+ * \arg sll_object_t*const* ptr
+ * \arg sll_arg_count_t len
+ */
+#define SLL_VAR_ARG_INIT_SLL(va,ptr,len) \
+    do{ \
+        sll_var_arg_list_t* __va=(va); \
+        __va->t=SLL_VAR_ARG_LIST_TYPE_SLL; \
+        __va->dt.sll.p=(ptr); \
+        __va->dt.sll.l=(len); \
+    } while (0)
+
+
+
+/**
  * \flags check_output func
  * \name sll_var_arg_get
  * \group var-arg
