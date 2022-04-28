@@ -8,6 +8,7 @@
 
 (= struct_type (&:
 	(,,, dt {
+		(? dt$_fmt_str (@@ dt$_fmt_str))
 		(= o "<")
 		(-> (= i 0) (< i ($ dt$_format))
 			(= e (: dt$_format i))
@@ -49,11 +50,14 @@
 			)
 			(++ i)
 		)
-		(@@ (+ o '>'))
+		(= o (+ o '>'))
+		(= dt$_fmt_str o)
+		(@@ o)
 	}) @@string@@
 	(~ int_type) size
 	(~ int_type) data_size
 	(~ array_type) _format
+	string_type _fmt_str
 ))
 
 (= struct_module_type (&:
@@ -125,20 +129,18 @@
 		(= type (: data i))
 		(= fmt_code (: FORMAT_CODE_DATA type))
 		(? (=== fmt_code nil) (@@ (<- error$create error$ERROR_UNKNOWN_TYPE type)))
-		(= size fmt_code$size)
-		(= elem fmt_code$flags)
-		(? (> size max_size) (= max_size size))
-		(? (&& (! ignore_padding) (> size 1)) {
-			(= pad (& total_size (- size 1)))
+		(? (> fmt_code$size max_size) (= max_size fmt_code$size))
+		(? (&& (! ignore_padding) (> fmt_code$size 1)) {
+			(= pad (& total_size (- fmt_code$size 1)))
 			(? pad {
-				(= pad (- size pad))
+				(= pad (- fmt_code$size pad))
 				(= padding_total (+ padding_total pad))
 				(<- array$push o (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
 				(= total_size (+ total_size pad))
 			})
 		})
-		(<- array$push o elem)
-		(= total_size (+ total_size size))
+		(<- array$push o fmt_code$flags)
+		(= total_size (+ total_size fmt_code$size))
 		(++ i)
 	})
 	(? (&& (! ignore_padding) (> max_size 1)) {

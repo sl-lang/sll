@@ -24,6 +24,7 @@
 - Registers are now stored in the register area in debug mode
 - Renamed audit event `sll.process.shell` to `sll.process.start.shell` ([#271])
 - Renamed website page names
+- Reworked the `struct.sll` module
 
 ## Removed
 
