@@ -85,6 +85,28 @@
 
 
 
+(= format_code_data_type (&:
+	(~ int_type) size
+	(~ int_type) flags
+))
+
+(= FORMAT_CODE_DATA <
+	'?' (. format_code_data_type 1 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BIT))
+	'b' (. format_code_data_type 1 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BYTE STRUCT_ELEM_SIGNED))
+	'B' (. format_code_data_type 1 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BYTE))
+	'h' (. format_code_data_type 2 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_WORD STRUCT_ELEM_SIGNED))
+	'H' (. format_code_data_type 2 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_WORD))
+	'i' (. format_code_data_type 4 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_DWORD STRUCT_ELEM_SIGNED))
+	'I' (. format_code_data_type 4 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_DWORD))
+	'q' (. format_code_data_type 8 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD STRUCT_ELEM_SIGNED))
+	'Q' (. format_code_data_type 8 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD))
+	'f' (. format_code_data_type 4 (| STRUCT_ELEM_TYPE_FLOAT STRUCT_ELEM_SIZE_BINARY32))
+	'd' (. format_code_data_type 8 (| STRUCT_ELEM_TYPE_FLOAT STRUCT_ELEM_SIZE_BINARY64))
+	'P' (. format_code_data_type 8 (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD))
+>)
+
+
+
 (= _check_range (,,, v min max
 	(@@ (?: (|| (< v min) (> v max))
 		(<- error$create error$ERROR_OUT_OF_RANGE v min max)
@@ -100,60 +122,11 @@
 	(= total_size 0)
 	(= o [])
 	(-> (= i 0) (< i ($ data)) {
-		(= size 0)
 		(= type (: data i))
-		(= elem nil)
-		(?? type
-			'?' {
-				(= size 1)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BIT))
-			}
-			'b' {
-				(= size 1)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BYTE STRUCT_ELEM_SIGNED))
-			}
-			'B' {
-				(= size 1)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_BYTE))
-			}
-			'h' {
-				(= size 2)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_WORD STRUCT_ELEM_SIGNED))
-			}
-			'H' {
-				(= size 2)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_WORD))
-			}
-			'i' {
-				(= size 4)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_DWORD STRUCT_ELEM_SIGNED))
-			}
-			'I' {
-				(= size 4)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_DWORD))
-			}
-			'q' {
-				(= size 8)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD STRUCT_ELEM_SIGNED))
-			}
-			'Q' {
-				(= size 8)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD))
-			}
-			'f' {
-				(= size 4)
-				(= elem (| STRUCT_ELEM_TYPE_FLOAT STRUCT_ELEM_SIZE_BINARY32))
-			}
-			'd' {
-				(= size 8)
-				(= elem (| STRUCT_ELEM_TYPE_FLOAT STRUCT_ELEM_SIZE_BINARY64))
-			}
-			'P' {
-				(= size 8)
-				(= elem (| STRUCT_ELEM_TYPE_INT STRUCT_ELEM_SIZE_QWORD))
-			}
-			(@@ (<- error$create error$ERROR_UNKNOWN_TYPE type))
-		)
+		(= fmt_code (: FORMAT_CODE_DATA type))
+		(? (=== fmt_code nil) (@@ (<- error$create error$ERROR_UNKNOWN_TYPE type)))
+		(= size fmt_code$size)
+		(= elem fmt_code$flags)
 		(? (> size max_size) (= max_size size))
 		(? (&& (! ignore_padding) (> size 1)) {
 			(= pad (& total_size (- size 1)))
