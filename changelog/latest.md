@@ -7,7 +7,7 @@
 - Implemented `sll_contains_character`
 - Implemented `SLL_FILE_FLUSH_ON_NEWLINE`
 - Implemented `SLL_RELEASE`
-- Implemented `SLL_VAR_ARG_INIT_C`, `SLL_VAR_ARG_INIT_SLL`
+- Implemented `SLL_VAR_ARG_INIT_C` and `SLL_VAR_ARG_INIT_SLL`
 - Raw string quote escape sequence ([#274])
 - Sandbox flag to disable object reference counter queries: `no-ref`
 
