@@ -118,6 +118,14 @@
 	))
 ))
 
+(= _add_padding (,,, size total_size o
+	(= pad (& total_size (- size 1)))
+	(? (! pad) (@@ 0))
+	(= pad (- size pad))
+	(<- array$push o (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
+	(@@ pad)
+))
+
 (= create (,,, data ignore_padding
 	(? (=== data nil) (@@ nil))
 	(= data (:: data string_type))
@@ -130,27 +138,19 @@
 		(= fmt_code (: FORMAT_CODE_DATA type))
 		(? (=== fmt_code nil) (@@ (<- error$create error$ERROR_UNKNOWN_TYPE type)))
 		(? (> fmt_code$size max_size) (= max_size fmt_code$size))
-		(? (&& (! ignore_padding) (> fmt_code$size 1)) {
-			(= pad (& total_size (- fmt_code$size 1)))
-			(? pad {
-				(= pad (- fmt_code$size pad))
-				(= padding_total (+ padding_total pad))
-				(<- array$push o (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
-				(= total_size (+ total_size pad))
-			})
+		(? (! ignore_padding) {
+			(= pad (<- _add_padding fmt_code$size total_size o))
+			(= padding_total (+ padding_total pad))
+			(= total_size (+ total_size pad))
 		})
 		(<- array$push o fmt_code$flags)
 		(= total_size (+ total_size fmt_code$size))
 		(++ i)
 	})
-	(? (&& (! ignore_padding) (> max_size 1)) {
-		(= pad (& total_size (- max_size 1)))
-		(? pad {
-			(= pad (- max_size pad))
-			(= padding_total (+ padding_total pad))
-			(<- array$push o (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
-			(= total_size (+ total_size pad))
-		})
+	(? (! ignore_padding) {
+		(= pad (<- _add_padding max_size total_size o))
+		(= padding_total (+ padding_total pad))
+		(= total_size (+ total_size pad))
 	})
 	(@@ (. struct_type
 		total_size
