@@ -17,6 +17,7 @@
 - Changed the website layout
 - Complex number arguments and return values are now passed by pointers
 - File flags are now 16-bit
+- Fixed
 - Fixed error codes returned by `sll_api_base64_decode`
 - Fixed execution of an arbitrary memory location ([#272])
 - Fixed issues related to incorrect cleanup order
