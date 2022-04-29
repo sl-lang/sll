@@ -17,9 +17,9 @@
 - Changed the website layout
 - Complex number arguments and return values are now passed by pointers
 - File flags are now 16-bit
-- Fixed
 - Fixed error codes returned by `sll_api_base64_decode`
 - Fixed execution of an arbitrary memory location ([#272])
+- Fixed file lock ownership
 - Fixed issues related to incorrect cleanup order
 - Fixed issues related to the atexit API
 - Fixed string checksums returned by `sll_string_from_pointer_length`
