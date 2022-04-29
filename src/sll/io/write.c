@@ -25,13 +25,13 @@ static const sll_node_t* _write_node(sll_file_t* wf,const sll_node_t* o){
 			o=o->dt._p;
 			continue;
 		}
-		WRITE_FIELD(o->t,wf);
+		sll_file_write_char(wf,o->t,NULL);
 		if (o->t==SLL_NODE_TYPE_DBG){
 			CHECK_ERROR(sll_encode_integer(wf,o->dt.s+1));
 		}
 		o++;
 	}
-	WRITE_FIELD(o->t,wf);
+	sll_file_write_char(wf,o->t,NULL);
 	switch (o->t){
 		case SLL_NODE_TYPE_INT:
 			CHECK_ERROR(sll_encode_signed_integer(wf,o->dt.i));
@@ -40,7 +40,7 @@ static const sll_node_t* _write_node(sll_file_t* wf,const sll_node_t* o){
 			WRITE_FIELD(o->dt.f,wf);
 			return o+1;
 		case SLL_NODE_TYPE_CHAR:
-			WRITE_FIELD(o->dt.c,wf);
+			sll_file_write_char(wf,o->dt.c,NULL);
 			return o+1;
 		case SLL_NODE_TYPE_COMPLEX:
 			WRITE_FIELD(o->dt.d,wf);
@@ -185,6 +185,10 @@ static void _write_source_file(sll_file_t* wf,const sll_source_file_t* sf){
 	CHECK_ERROR(sll_encode_integer(wf,sf->_n_sc_id));
 	if (sf->dt){
 		_write_node(wf,sf->dt);
+	}
+	else{
+		sll_file_write_char(wf,SLL_NODE_TYPE_INT,NULL);
+		CHECK_ERROR(sll_encode_signed_integer(wf,0));
 	}
 }
 

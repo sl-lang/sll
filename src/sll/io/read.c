@@ -25,6 +25,14 @@
 			return 0; \
 		} \
 	} while (0)
+#define READ_CHAR(f,rf) \
+	do{ \
+		sll_read_char_t __c=sll_file_read_char((rf),NULL); \
+		if (__c==SLL_END_OF_DATA){ \
+			return 0; \
+		} \
+		f=__c; \
+	} while(0)
 #define READ_FIELD(f,rf) \
 	do{ \
 		if (sll_file_read((rf),&(f),sizeof(f),NULL)!=sizeof(f)){ \
@@ -36,14 +44,14 @@
 
 static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 	sll_node_t* o=_acquire_next_node(sf);
-	READ_FIELD(o->t,rf);
+	READ_CHAR(o->t,rf);
 	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG){
 		if (o->t==SLL_NODE_TYPE_DBG){
 			CHECK_ERROR(rf,o->dt.s,sll_string_index_t);
 			o->dt.s--;
 		}
 		o=_acquire_next_node(sf);
-		READ_FIELD(o->t,rf);
+		READ_CHAR(o->t,rf);
 	}
 	switch (o->t){
 		case SLL_NODE_TYPE_INT:
@@ -59,7 +67,7 @@ static sll_bool_t _read_node(sll_source_file_t* sf,sll_file_t* rf){
 			READ_FIELD(o->dt.f,rf);
 			return 1;
 		case SLL_NODE_TYPE_CHAR:
-			READ_FIELD(o->dt.c,rf);
+			READ_CHAR(o->dt.c,rf);
 			return 1;
 		case SLL_NODE_TYPE_COMPLEX:
 			READ_FIELD(o->dt.d,rf);
