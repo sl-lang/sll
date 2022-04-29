@@ -233,10 +233,10 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				sll_file_write(wf,&(ai->dt.f),sizeof(sll_float_t),NULL);
+				WRITE_FIELD(ai->dt.f,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
-				sll_file_write(wf,&(ai->dt.d),sizeof(sll_complex_t),NULL);
+				WRITE_FIELD(ai->dt.d,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
