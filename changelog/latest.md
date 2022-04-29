@@ -8,6 +8,7 @@
 - Implemented `SLL_FILE_FLUSH_ON_NEWLINE`
 - Implemented `SLL_RELEASE`
 - Implemented `SLL_VAR_ARG_INIT_C` and `SLL_VAR_ARG_INIT_SLL`
+- Implemented `statistics$stddev` and `statistics$variance` ([#260])
 - Raw string quote escape sequence ([#274])
 - Sandbox flag to disable object reference counter queries: `no-ref`
 
@@ -41,5 +42,6 @@
 [#272]: https://github.com/sl-lang/sll/issues/272
 [#271]: https://github.com/sl-lang/sll/issues/271
 [#270]: https://github.com/sl-lang/sll/issues/270
+[#260]: https://github.com/sl-lang/sll/issues/260
 [0.7.15/src/web]: https://github.com/sl-lang/sll/tree/main/src/web
 [0.7.14/src/web/client]: https://github.com/sl-lang/sll/tree/sll-v0.7.14/src/web/client

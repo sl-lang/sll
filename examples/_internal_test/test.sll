@@ -574,6 +574,9 @@
 	5
 ) ", [1.8 5.6 7.4 10.2]\n")
 
+(:> (<- statistics$variance [3 1 6 7 8 1]) ", 7.8888888888888893\n")
+(:> (<- statistics$stddev [3 1 6 7 8 1]) ", 2.8087165910587863\n")
+
 (:> [0.0i 0b111i 1e4-3e4i +5.4] "\n")
 
 (<- sys$set_sandbox_flags "no-path")

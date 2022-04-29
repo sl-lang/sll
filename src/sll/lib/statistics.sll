@@ -2,7 +2,7 @@
 
 
 
-(# mean)
+(# mean variance)
 
 
 
@@ -26,6 +26,8 @@
 	(~ func_type) median_low
 	(~ func_type) mode
 	(~ func_type) quantiles
+	(~ func_type) stddev
+	(~ func_type) variance
 ))
 
 
@@ -218,6 +220,32 @@
 	(@@ out)
 ))
 
+(= stddev (,,, data
+	(= out (<- variance data))
+	(@@ (?: (=== (:? out) float_type)
+		(<- math$sqrt out)
+		out
+	))
+))
+
+(= variance (,,, data
+	(= data (:: data array_type))
+	(= len ($ data))
+	(? (! len) (@@ (<- error$create ERROR_NOT_ENOUGH_DATA 0 1)))
+	(= m (<- mean data))
+	(? (!== (:? m) float_type) (@@ m))
+	(= out 0)
+	(-> (= i 0) (< i len)
+		(= n (- (: data i) m))
+		(= out (+
+			out
+			(* n n)
+		))
+		(++ i)
+	)
+	(@@ (/ out len))
+))
+
 
 
 (= statistics (. statistics_module_type
@@ -232,5 +260,7 @@
 	median_low
 	mode
 	quantiles
+	stddev
+	variance
 ))
 (## statistics)
