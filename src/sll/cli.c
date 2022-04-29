@@ -595,6 +595,9 @@ _read_file_argument:
 			j+=sll_string_length(i_fp+j)+1;
 		}
 		SLL_LOG("Library path: '%s'",l_fp);
+		if (o_fp){
+			SLL_LOG("Output path: '%s'",o_fp);
+		}
 		SLL_LOG("Audit libraries:");
 		for (sll_array_length_t k=0;k<lll;k++){
 			SLL_LOG("  '%s'",(ll+k)->nm);
@@ -674,13 +677,12 @@ _read_file_argument:
 				k=f_fp_l-1;
 			}
 			else{
+				k=sll_string_length(o_fp);
+				sll_copy_data(o_fp,k,bf);
 				if (fl&CLI_FLAG_SINGLE_OUTPUT){
-					k=sll_string_length(o_fp);
-					sll_copy_data(o_fp,k,bf);
 					k-=1;
 				}
 				else{
-					k=sll_string_length(o_fp);
 					while (*(o_fp+k)!='\\'&&*(o_fp+k)!='/'){
 						if (!k){
 							k--;

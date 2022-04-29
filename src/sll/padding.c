@@ -105,6 +105,9 @@ __SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt){
 	for (sll_source_file_index_t i=0;i<c_dt->l;i++){
 		sll_source_file_t* sf=*(c_dt->dt+i);
 		sll_node_t* d=sf->dt;
+		if (!d){
+			continue;
+		}
 		sll_node_offset_t rm=0;
 		_remove_padding_internal(d,sf,&d,&rm);
 	}

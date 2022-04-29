@@ -158,7 +158,10 @@ static sll_node_t* _remove_type_names(sll_node_t* o){
 
 __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt){
 	for (sll_source_file_index_t i=0;i<c_dt->l;i++){
-		_remove_debug_data((*(c_dt->dt+i))->dt);
+		sll_node_t* p=(*(c_dt->dt+i))->dt;
+		if (p){
+			_remove_debug_data(p);
+		}
 	}
 }
 
@@ -171,6 +174,8 @@ __SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* c_dt){
 			(*(sf->ft.dt+j))->nm=SLL_MAX_STRING_INDEX;
 			(*(sf->ft.dt+j))->desc=SLL_MAX_STRING_INDEX;
 		}
-		_remove_type_names(sf->dt);
+		if (sf->dt){
+			_remove_type_names(sf->dt);
+		}
 	}
 }

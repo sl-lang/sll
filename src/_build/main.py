@@ -49,25 +49,19 @@ util.log("Compiling Sll...")
 build.build_sll(fl,ver,("--release" in sys.argv))
 util.log("Compiling Sll CLI...")
 build.build_sll_cli()
-util.log("Copying Modules...")
-fl=[]
-for f in os.listdir("src/sll/lib"):
-	util.log(f"  Copying Module 'src/sll/lib/{f}'...")
-	with open(f"src/sll/lib/{f}","rb") as rf,open(f"build/lib/{f}","wb") as wf:
-		wf.write(rf.read())
-	fl.append("build/lib/"+f)
+util.log("Listing Modules...")
+fl=list(os.listdir("src/sll/lib"))
 util.log("Compiling Modules...")
-if (util.execute(["build/sll","-c","-R","-I","build/lib"]+fl+(["-v"] if "--verbose" in sys.argv else []))):
+if (util.execute(["build/sll","-c","-R","-I","build/lib","-I","src/sll/lib","-o","build/lib/"]+["src/sll/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else []))):
 	sys.exit(1)
 util.log("Generating Bundle...")
-if (util.execute(["build/sll","-b","-n","-N","/","-R","-O","build/lib_debug/stdlib.slb"]+[e+".slc" for e in fl if e.split("/")[-1][0]!="_"]+(["-v"] if "--verbose" in sys.argv else [])) or util.execute(["build/sll","-b","-d","-D","-n","-N","/","-R","-O","build/lib/stdlib.slb"]+[e+".slc" for e in fl if e.split("/")[-1][0]!="_"]+(["-v"] if "--verbose" in sys.argv else []))):
+if (util.execute(["build/sll","-b","-n","-N","/","-R","-O","build/lib_debug/stdlib.slb"]+["build/lib/"+e+".slc" for e in fl if e[0]!="_"]+(["-v"] if "--verbose" in sys.argv else [])) or util.execute(["build/sll","-b","-d","-D","-n","-N","/","-R","-O","build/lib/stdlib.slb"]+["build/lib/"+e+".slc" for e in fl if e[0]!="_"]+(["-v"] if "--verbose" in sys.argv else []))):
 	sys.exit(1)
 util.log("Removing Module Source Files...")
 for k in fl:
+	k="build/lib/"+k+".slc"
 	util.log(f"  Removing '{k}'...")
 	os.remove(k)
-	util.log(f"  Removing '{k}.slc'...")
-	os.remove(k+".slc")
 if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
 	util.bundle(ver)

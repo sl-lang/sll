@@ -17,11 +17,13 @@
 - Changed the website layout
 - Complex number arguments and return values are now passed by pointers
 - File flags are now 16-bit
+- Fixed CLI output path calculation
 - Fixed error codes returned by `sll_api_base64_decode`
 - Fixed execution of an arbitrary memory location ([#272])
 - Fixed file lock ownership
 - Fixed issues related to incorrect cleanup order
 - Fixed issues related to the atexit API
+- Fixed null pointer dereferences
 - Fixed string checksums returned by `sll_string_from_pointer_length`
 - Increased per-core thread count limit from `8192` to `16384`
 - Moved website files from [`src/web/client`][0.7.14/src/web/client] to [`src/web`][0.7.15/src/web]

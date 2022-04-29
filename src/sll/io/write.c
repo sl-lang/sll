@@ -183,7 +183,9 @@ static void _write_source_file(sll_file_t* wf,const sll_source_file_t* sf){
 	}
 	CHECK_ERROR(sll_encode_integer(wf,sf->fp_nm));
 	CHECK_ERROR(sll_encode_integer(wf,sf->_n_sc_id));
-	_write_node(wf,sf->dt);
+	if (sf->dt){
+		_write_node(wf,sf->dt);
+	}
 }
 
 
