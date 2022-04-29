@@ -31,7 +31,7 @@
 		if (__c==SLL_END_OF_DATA){ \
 			return 0; \
 		} \
-		f=__c; \
+		f=(sll_char_t)__c; \
 	} while(0)
 #define READ_FIELD(f,rf) \
 	do{ \
