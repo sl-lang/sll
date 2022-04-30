@@ -8,73 +8,73 @@
 
 
 
-__SLL_EXTERNAL void sll_allocator_collapse(void** a,sll_size_t sz){
-	if (!*a){
-		*a=sll_allocator_init(sz);
+__SLL_EXTERNAL void sll_allocator_collapse(void** ptr,sll_size_t size){
+	if (!*ptr){
+		*ptr=sll_allocator_init(size);
 		return;
 	}
-	SLL_ASSERT(!(sz&7));
-	sz>>=3;
-	allocator_header_t* h=PTR(ADDR(*a)-sizeof(allocator_header_t));
-	if (ALLOCATOR_HEADER_GET_SIZE(h)==sz){
+	SLL_ASSERT(!(size&7));
+	size>>=3;
+	allocator_header_t* h=PTR(ADDR(*ptr)-sizeof(allocator_header_t));
+	if (ALLOCATOR_HEADER_GET_SIZE(h)==size){
 		return;
 	}
-	ALLOCATOR_HEADER_INIT(h,sz);
-	h=sll_reallocate(h,(sz<<3)+sizeof(allocator_header_t));
-	*a=PTR(ADDR(h)+sizeof(allocator_header_t));
+	ALLOCATOR_HEADER_INIT(h,size);
+	h=sll_reallocate(h,(size<<3)+sizeof(allocator_header_t));
+	*ptr=PTR(ADDR(h)+sizeof(allocator_header_t));
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_from_memory(void* ptr,sll_size_t sz){
-	void* o=sll_allocator_init(sz);
-	sll_copy_data(ptr,sz,o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_from_memory(void* ptr,sll_size_t size){
+	void* o=sll_allocator_init(size);
+	sll_copy_data(ptr,size,o);
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_init(sll_size_t sz){
-	SLL_ASSERT(!(sz&7));
-	allocator_header_t* o=sll_allocate(sz+sizeof(allocator_header_t));
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_init(sll_size_t size){
+	SLL_ASSERT(!(size&7));
+	allocator_header_t* o=sll_allocate(size+sizeof(allocator_header_t));
 	SLL_ASSERT(!(ADDR(o)&7));
-	ALLOCATOR_HEADER_INIT(o,sz>>3);
+	ALLOCATOR_HEADER_INIT(o,size>>3);
 	return PTR(ADDR(o)+sizeof(allocator_header_t));
 }
 
 
 
-__SLL_EXTERNAL void sll_allocator_move(void** a,sll_bool_t d){
-	if (!*a){
+__SLL_EXTERNAL void sll_allocator_move(void** ptr,sll_bool_t direction){
+	if (!*ptr){
 		return;
 	}
-	*a=PTR(ADDR(sll_memory_move(PTR(ADDR(*a)-sizeof(allocator_header_t)),d))+sizeof(allocator_header_t));
+	*ptr=PTR(ADDR(sll_memory_move(PTR(ADDR(*ptr)-sizeof(allocator_header_t)),direction))+sizeof(allocator_header_t));
 }
 
 
 
-__SLL_EXTERNAL void sll_allocator_release(void* a){
-	if (!a){
+__SLL_EXTERNAL void sll_allocator_release(void* ptr){
+	if (!ptr){
 		return;
 	}
-	sll_deallocate(PTR(ADDR(a)-sizeof(allocator_header_t)));
+	sll_deallocate(PTR(ADDR(ptr)-sizeof(allocator_header_t)));
 }
 
 
 
-__SLL_EXTERNAL void sll_allocator_resize(void** a,sll_size_t sz){
-	if (!*a){
-		*a=sll_allocator_init(sz);
+__SLL_EXTERNAL void sll_allocator_resize(void** ptr,sll_size_t size){
+	if (!*ptr){
+		*ptr=sll_allocator_init(size);
 		return;
 	}
-	SLL_ASSERT(!(sz&7));
-	sz>>=3;
-	allocator_header_t* h=PTR(ADDR(*a)-sizeof(allocator_header_t));
-	if (ALLOCATOR_HEADER_GET_SIZE(h)>=sz&&sz>=(ALLOCATOR_HEADER_GET_SIZE(h)>>1)){
+	SLL_ASSERT(!(size&7));
+	size>>=3;
+	allocator_header_t* h=PTR(ADDR(*ptr)-sizeof(allocator_header_t));
+	if (ALLOCATOR_HEADER_GET_SIZE(h)>=size&&size>=(ALLOCATOR_HEADER_GET_SIZE(h)>>1)){
 		return;
 	}
-	sll_size_t mem_sz=(!sz?0:sz+(sz>>3)+(sz>>6));
-	ALLOCATOR_HEADER_INIT(h,mem_sz);
-	h=sll_reallocate(h,(mem_sz<<3)+sizeof(allocator_header_t));
-	*a=PTR(ADDR(h)+sizeof(allocator_header_t));
+	sll_size_t mem_size=(!size?0:size+(size>>3)+(size>>6));
+	ALLOCATOR_HEADER_INIT(h,mem_size);
+	h=sll_reallocate(h,(mem_size<<3)+sizeof(allocator_header_t));
+	*ptr=PTR(ADDR(h)+sizeof(allocator_header_t));
 }
