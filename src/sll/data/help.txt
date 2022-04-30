@@ -25,6 +25,7 @@ Options:
   -S <flag>, --sandbox <flag> -> enable the sandbox <flag> (see Sandbox Flags)
   -v, --verbose -> Enable verbose mode
   -V, --version -> Print the Sll version and exit
+  -X, --disable-audit -> Disable all audit events
 
 Installed Objects:
   executable -> Main executable

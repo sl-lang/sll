@@ -15,6 +15,7 @@
 
 static sll_audit_callback_t* _audit_cb=NULL;
 static sll_array_length_t _audit_cb_len=0;
+static sll_bool_t _audit_enable=1;
 
 
 
@@ -22,11 +23,15 @@ void _audit_cleanup(void){
 	sll_deallocate(_audit_cb);
 	_audit_cb=NULL;
 	_audit_cb_len=0;
+	_audit_enable=1;
 }
 
 
 
 __SLL_EXTERNAL void sll_audit(const sll_char_t* nm,const sll_char_t* t,...){
+	if (!_audit_enable){
+		return;
+	}
 	va_list va;
 	va_start(va,t);
 	sll_var_arg_list_t dt;
@@ -37,7 +42,18 @@ __SLL_EXTERNAL void sll_audit(const sll_char_t* nm,const sll_char_t* t,...){
 
 
 
+__SLL_EXTERNAL sll_bool_t sll_audit_enable(sll_bool_t enable){
+	sll_bool_t o=_audit_enable;
+	_audit_enable=enable;
+	return o;
+}
+
+
+
 __SLL_EXTERNAL void sll_audit_list(const sll_char_t* nm,const sll_char_t* t,sll_var_arg_list_t* va){
+	if (!_audit_enable){
+		return;
+	}
 	sll_string_t nm_s;
 	sll_string_from_pointer(nm,&nm_s);
 	sll_array_t arr;

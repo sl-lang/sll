@@ -25,6 +25,18 @@ __SLL_EXTERNAL void sll_audit(const sll_char_t* nm,const sll_char_t* t,...);
 
 /**
  * \flags func
+ * \name sll_audit_enable
+ * \group audit
+ * \desc Docs!
+ * \arg sll_bool_t enable
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL sll_bool_t sll_audit_enable(sll_bool_t enable);
+
+
+
+/**
+ * \flags func
  * \name sll_audit_list
  * \group audit
  * \desc Docs!
