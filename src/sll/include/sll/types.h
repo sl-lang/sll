@@ -1071,42 +1071,112 @@ typedef __SLL_F64 sll_second_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_arg_state_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_arg_state_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_event_handle_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_event_handle_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_file_descriptor_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_file_descriptor_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_internal_function_pointer_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_internal_function_pointer_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_internal_thread_index_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_internal_thread_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_library_handle_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_library_handle_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_lock_handle_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_lock_handle_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_process_handle_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_process_handle_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_weak_reference_t
+ * \group types
+ * \desc Docs!
+ * \type void*
+ */
 typedef void* sll_weak_reference_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_json_parser_state_t
+ * \group types
+ * \desc Docs!
+ * \type const sll_char_t*
+ */
 typedef const sll_char_t* sll_json_parser_state_t;
 
 
