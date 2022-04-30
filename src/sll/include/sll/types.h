@@ -11,6 +11,12 @@
  * \group limits
  * \desc Docs!
  */
+/**
+ * \flags group
+ * \name Types
+ * \group types
+ * \desc Docs!
+ */
 
 
 
@@ -317,274 +323,750 @@ struct _SLL_JSON_MAP_KEYPAIR;
 
 
 
+/**
+ * \flags type var
+ * \name sll_bool_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U1
+ */
 typedef __SLL_U1 sll_bool_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_assembly_instruction_type_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_assembly_instruction_type_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_char_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_char_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_checksum_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_checksum_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_compare_result_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_compare_result_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_day_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_day_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_flags_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_flags_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_hour_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_hour_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_json_object_type_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_json_object_type_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_minute_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_minute_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_month_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_month_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_name_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_name_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_node_type_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_node_type_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_object_function_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_object_function_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_sandbox_flag_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_sandbox_flag_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_var_arg_type_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U8
+ */
 typedef __SLL_U8 sll_var_arg_type_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_call_stack_size_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U16
+ */
 typedef __SLL_U16 sll_call_stack_size_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_cpu_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U16
+ */
 typedef __SLL_U16 sll_cpu_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_file_flags_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U16
+ */
 typedef __SLL_U16 sll_file_flags_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_read_char_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U16
+ */
 typedef __SLL_U16 sll_read_char_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_year_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U16
+ */
 typedef __SLL_U16 sll_year_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_relative_instruction_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_S32
+ */
 typedef __SLL_S32 sll_relative_instruction_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_return_code_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_S32
+ */
 typedef __SLL_S32 sll_return_code_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_arg_count_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_arg_count_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_array_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_array_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_assembly_file_table_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_assembly_file_table_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_barrier_counter_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_barrier_counter_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_barrier_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_barrier_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_debug_data_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_debug_data_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_environment_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_environment_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_export_table_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_export_table_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_function_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_function_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_identifier_list_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_identifier_list_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_identifier_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_identifier_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_import_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_import_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_instruction_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_instruction_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_json_array_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_json_array_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_json_map_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_json_map_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_lock_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_lock_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_map_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_map_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_node_offset_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_node_offset_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_object_type_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_object_type_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_object_type_table_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_object_type_table_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_pid_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_pid_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_scope_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_scope_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_search_path_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_search_path_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_semaphore_counter_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_semaphore_counter_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_semaphore_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_semaphore_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_source_file_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_source_file_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_stack_offset_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_stack_offset_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_string_checksum_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_string_checksum_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_string_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_string_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_string_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_string_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_thread_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_thread_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_tls_object_length_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_tls_object_length_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_variable_index_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_variable_index_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_version_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_version_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_wide_char_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U32
+ */
 typedef __SLL_U32 sll_wide_char_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_integer_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_S64
+ */
 typedef __SLL_S64 sll_integer_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_compressed_integer_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U64
+ */
 typedef __SLL_U64 sll_compressed_integer_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_error_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U64
+ */
 typedef __SLL_U64 sll_error_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_file_offset_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U64
+ */
 typedef __SLL_U64 sll_file_offset_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_reference_count_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U64
+ */
 typedef __SLL_U64 sll_reference_count_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_sandbox_flags_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U64
+ */
 typedef __SLL_U64 sll_sandbox_flags_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_size_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U64
+ */
 typedef __SLL_U64 sll_size_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_time_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_U64
+ */
 typedef __SLL_U64 sll_time_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_float_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_F64
+ */
 typedef __SLL_F64 sll_float_t;
 
 
 
+/**
+ * \flags type var
+ * \name sll_second_t
+ * \group types
+ * \desc Docs!
+ * \type __SLL_F64
+ */
 typedef __SLL_F64 sll_second_t;
 
 

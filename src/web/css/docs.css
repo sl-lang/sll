@@ -49,7 +49,7 @@ a {
 	border-radius: 5px;
 	white-space: pre-wrap;
 }
-.code-type {
+.code-type,.code-keyword-typedef {
 	color: #66d9ef;
 	font-style: italic;
 }

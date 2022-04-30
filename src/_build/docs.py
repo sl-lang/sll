@@ -3,7 +3,7 @@ import re
 
 
 DOCS_COMMENT_REGEX=re.compile(r"\/\*\*(.*?)\*\/",re.S)
-VALID_FLAGS=["api","check_output","func","group","macro","subgroup","var","var_arg"]
+VALID_FLAGS=["api","check_output","func","group","macro","type","subgroup","var","var_arg"]
 
 
 
@@ -75,10 +75,10 @@ def create_docs(fl):
 					raise RuntimeError(f"{nm} ({dt['name']}): A '\\name' tag is required")
 				if (dt["group"] is None):
 					raise RuntimeError(f"{nm} ({dt['name']}): A '\\group' tag is required")
+				if ("macro" in dt["flag"] and "type" in dt["flag"]):
+					raise RuntimeError(f"{nm} ({dt['name']}): 'macro' nd 'type' flags cannot be present together")
 				if ("var" not in dt["flag"]):
 					del dt["type"]
-				elif ("api" in dt["flag"]):
-					raise RuntimeError(f"{nm} ({dt['name']}): 'api' and 'var' flags cannot be both present")
 				if ("group" in dt["flag"]):
 					if (len(dt["flag"])>1):
 						raise RuntimeError(f"{nm} ({dt['name']}): 'group' flag has to be alone")

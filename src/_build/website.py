@@ -4,7 +4,8 @@ import util
 
 
 
-TYPE_MAP={"__SLL_S1":"signed char","__SLL_U1":"_Bool","__SLL_S8":"signed char","__SLL_U8":"unsigned char","__SLL_S16":"signed short int","__SLL_U16":"unsigned short int","__SLL_S32":"signed int","__SLL_U32":"unsigned int","__SLL_S64":"signed long long int","__SLL_U64":"unsigned long long int","__SLL_F32":"float","__SLL_F64":"double"}
+TYPE_MAP={"__SLL_S8":"signed char","__SLL_U8":"unsigned char","__SLL_S16":"signed short int","__SLL_U16":"unsigned short int","__SLL_S32":"signed int","__SLL_U32":"unsigned int","__SLL_S64":"signed long long int","__SLL_U64":"unsigned long long int","__SLL_F32":"float","__SLL_F64":"double"}
+TYPE_MAP2={"__SLL_S1":"signed char","__SLL_U1":"_Bool"}
 ROOT=("" if os.getenv("DOMAIN_ROOT",None) is not None else ".")
 
 
@@ -29,16 +30,20 @@ def _generate_id(g,sg,nm,t):
 		o+="-"+sg
 		if (nm is not None):
 			o+="-"+nm+"-"
-			if ("func" in t):
-				o+="f"
 			if ("macro" in t):
 				o+="m"
+			if ("type" in t):
+				o+="t"
+			if ("var" in t):
+				o+="v"
 	return o.lower()
 
 
 
 def _add_code_type(t):
 	for k,v in TYPE_MAP.items():
+		t=t.replace(k,v)
+	for k,v in TYPE_MAP2.items():
 		t=t.replace(k,v)
 	if (t[:2]=="__" and t[-2:]=="__"):
 		return f"<span class=\"code-type-other\">{t}</span>"
@@ -87,6 +92,8 @@ def _generate_docs(dt):
 						data+=")"
 						if (e["ret"] is not None):
 							data+=" <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["ret"]["type"])
+					elif ("type" in e["flag"]):
+						raise RuntimeError("Unimplemented")
 					else:
 						if (e["api_fmt"] is not None):
 							data+="<span class=\"code-annotation\">(api_call)</span> "
@@ -107,6 +114,11 @@ def _generate_docs(dt):
 						if ("var_arg" in e["flag"]):
 							data+=",<span class=\"code-keyword\">...</span>"
 						data+=");"
+				elif ("type" in e["flag"]):
+					if ("var" in e["flag"]):
+						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["type"]["type"])+" <span class=\"code-name\">"+e["name"]+"</span>;"
+					else:
+						raise RuntimeError("Unimplemented")
 				else:
 					if ("macro" in e["flag"]):
 						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span> <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["type"]["type"])
