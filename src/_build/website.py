@@ -36,8 +36,8 @@ def _generate_id(g,sg,nm):
 
 def _add_args(dt,void=True):
 	if (void and len(dt["args"])==0):
-		return _add_code_type("void")
-	o=""
+		return "("+_add_code_type("void")+")"
+	o="("
 	st=True
 	for k in dt["args"]:
 		if (st):
@@ -47,7 +47,7 @@ def _add_args(dt,void=True):
 		o+=_add_code_type(k["type"])+" <span class=\"code-arg\">"+k["name"]+"</span>"
 	if ("var_arg" in dt["flag"]):
 		o+=",<span class=\"code-keyword\">...</span>"
-	return o
+	return o+")"
 
 
 
@@ -89,17 +89,17 @@ def _generate_docs(dt):
 				arg_str="Arguments"
 				if ("func" in e["flag"]):
 					if ("macro" in e["flag"]):
-						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span>("+_add_args(e,False)+")"
+						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span>"+_add_args(e,False)
 						if (e["ret"] is not None):
 							data+=" <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["ret"]["type"])
 					elif ("type" in e["flag"]):
-						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" (*<span class=\"code-name\">"+e["name"]+"</span>)("+_add_args(e)+");"
+						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" (*<span class=\"code-name\">"+e["name"]+"</span>)"+_add_args(e)+";"
 					else:
 						if (e["api_fmt"] is not None):
 							data+="<span class=\"code-annotation\">(api_call)</span> "
 						if ("check_output" in e["flag"]):
 							data+="<span class=\"code-annotation\">(check_output)</span> "
-						data+=_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" <span class=\"code-name\">"+e["name"]+"</span>("+_add_args(e)+");"
+						data+=_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" <span class=\"code-name\">"+e["name"]+"</span>"+_add_args(e)+";"
 				elif ("type" in e["flag"]):
 					if ("var" in e["flag"]):
 						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["type"]["type"])+" <span class=\"code-name\">"+e["name"]+"</span>;"
@@ -116,7 +116,7 @@ def _generate_docs(dt):
 						data+=_add_code_type(e["type"]["type"])+" <span class=\"code-name\">"+e["name"]+"</span>;"
 				data+=f"</pre></a><pre>Description: {e['desc']}"
 				if (e["api_fmt"] is not None):
-					data+=f"\nAPI Signature: <span style=\"color: #1b84e3\">{e['api_fmt']}</span>"
+					data+=f"\nAPI Signature: <span class=\"api-format\">{e['api_fmt']}</span>"
 				if (e["args"]):
 					data+=f"\n{arg_str}:"
 					for a in e["args"]:
