@@ -5,35 +5,308 @@
 #include <sll/_size_types.h>
 #include <sll/common.h>
 #include <stdarg.h>
+/**
+ * \flags group
+ * \name Limits
+ * \group limits
+ * \desc Docs!
+ */
 
 
 
+/**
+ * \flags macro var
+ * \name SLL_MAX_ARG_COUNT
+ * \group limits
+ * \desc Docs!
+ * \type sll_arg_count_t
+ */
 #define SLL_MAX_ARG_COUNT __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_ARRAY_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_array_length_t
+ */
 #define SLL_MAX_ARRAY_LENGTH __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE
+ * \group limits
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
 #define SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE __SLL_U8_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_BARRIER_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_barrier_index_t
+ */
 #define SLL_MAX_BARRIER_INDEX __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_CHAR
+ * \group limits
+ * \desc Docs!
+ * \type sll_char_t
+ */
 #define SLL_MAX_CHAR __SLL_U8_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_EXPORT_TABLE_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_export_table_length_t
+ */
 #define SLL_MAX_EXPORT_TABLE_LENGTH __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_FILE_OFFSET
+ * \group limits
+ * \desc Docs!
+ * \type sll_file_offset_t
+ */
 #define SLL_MAX_FILE_OFFSET __SLL_U64_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_HANDLE_TYPE
+ * \group limits
+ * \desc Docs!
+ * \type sll_handle_type_t
+ */
 #define SLL_MAX_HANDLE_TYPE __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_IDENTIFIER_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_identifier_index_t
+ */
 #define SLL_MAX_IDENTIFIER_INDEX __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_IDENTIFIER_LIST_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_identifier_list_length_t
+ */
 #define SLL_MAX_IDENTIFIER_LIST_LENGTH __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_INSTRUCTION_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_instruction_index_t
+ */
 #define SLL_MAX_INSTRUCTION_INDEX __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_JSON_ARRAY_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_json_array_length_t
+ */
 #define SLL_MAX_JSON_ARRAY_LENGTH __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_JSON_MAP_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_json_map_length_t
+ */
 #define SLL_MAX_JSON_MAP_LENGTH __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_LOCK_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_lock_index_t
+ */
 #define SLL_MAX_LOCK_INDEX __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_MAP_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_map_length_t
+ */
 #define SLL_MAX_MAP_LENGTH __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_OBJECT_OFFSET
+ * \group limits
+ * \desc Docs!
+ * \type sll_object_offset_t
+ */
 #define SLL_MAX_OBJECT_OFFSET __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_PAGE_SIZE
+ * \group limits
+ * \desc Docs!
+ * \type sll_page_size_t
+ */
 #define SLL_MAX_PAGE_SIZE __SLL_U64_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_REF_COUNT
+ * \group limits
+ * \desc Docs!
+ * \type sll_ref_count_t
+ */
 #define SLL_MAX_REF_COUNT __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_SCOPE
+ * \group limits
+ * \desc Docs!
+ * \type sll_scope_t
+ */
 #define SLL_MAX_SCOPE __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_SEMAPHORE_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_semaphore_index_t
+ */
 #define SLL_MAX_SEMAPHORE_INDEX __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_SIZE
+ * \group limits
+ * \desc Docs!
+ * \type sll_size_t
+ */
 #define SLL_MAX_SIZE __SLL_U64_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_STACK_OFFSET
+ * \group limits
+ * \desc Docs!
+ * \type sll_stack_offset_t
+ */
 #define SLL_MAX_STACK_OFFSET __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_STRING_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_string_index_t
+ */
 #define SLL_MAX_STRING_INDEX __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_STRING_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_string_length_t
+ */
 #define SLL_MAX_STRING_LENGTH __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_THREAD_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_thread_index_t
+ */
 #define SLL_MAX_THREAD_INDEX 0xfffffffe
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_TIME
+ * \group limits
+ * \desc Docs!
+ * \type sll_time_t
+ */
 #define SLL_MAX_TIME __SLL_U64_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_VARIABLE_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_variable_index_t
+ */
 #define SLL_MAX_VARIABLE_INDEX __SLL_U32_MAX
 
 
