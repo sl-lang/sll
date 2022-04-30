@@ -4,7 +4,6 @@
 #include <sll/_object_func.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
-#include <stdarg.h>
 /**
  * \flags group
  * \name Limits
@@ -243,17 +242,6 @@ typedef __SLL_U8 sll_object_function_index_t;
  * \type __SLL_U8
  */
 typedef __SLL_U8 sll_sandbox_flag_t;
-
-
-
-/**
- * \flags type var
- * \name sll_var_arg_type_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_var_arg_type_t;
 
 
 
@@ -1865,6 +1853,60 @@ typedef struct _SLL_OBJECT{
 
 
 /**
+ * \flags func type
+ * \name sll_unary_operator_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_object_t* a
+ * \ret sll_object_t*
+ */
+typedef sll_object_t* (*sll_unary_operator_t)(sll_object_t* a);
+
+
+
+/**
+ * \flags func type
+ * \name sll_binary_operator_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_object_t* a
+ * \arg sll_object_t* b
+ * \ret sll_object_t*
+ */
+typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t* a,sll_object_t* b);
+
+
+
+/**
+ * \flags func type
+ * \name sll_ternary_operator_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_object_t* a
+ * \arg sll_object_t* b
+ * \arg sll_object_t* c
+ * \ret sll_object_t*
+ */
+typedef sll_object_t* (*sll_ternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c);
+
+
+
+/**
+ * \flags func type
+ * \name sll_quaternary_operator_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_object_t* a
+ * \arg sll_object_t* b
+ * \arg sll_object_t* c
+ * \arg sll_object_t* d
+ * \ret sll_object_t*
+ */
+typedef sll_object_t* (*sll_quaternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d);
+
+
+
+/**
  * \flags type
  * \name sll_internal_function_t
  * \group types
@@ -2136,128 +2178,6 @@ typedef struct _SLL_JSON_MAP_KEYPAIR{
  * \desc Docs!
  */
 typedef void (*sll_cleanup_function_t)(void);
-
-
-
-/**
- * \flags func type
- * \name sll_unary_operator_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* a
- * \ret sll_object_t*
- */
-typedef sll_object_t* (*sll_unary_operator_t)(sll_object_t* a);
-
-
-
-/**
- * \flags func type
- * \name sll_binary_operator_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* a
- * \arg sll_object_t* b
- * \ret sll_object_t*
- */
-typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t* a,sll_object_t* b);
-
-
-
-/**
- * \flags func type
- * \name sll_ternary_operator_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* a
- * \arg sll_object_t* b
- * \arg sll_object_t* c
- * \ret sll_object_t*
- */
-typedef sll_object_t* (*sll_ternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c);
-
-
-
-/**
- * \flags func type
- * \name sll_quaternary_operator_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* a
- * \arg sll_object_t* b
- * \arg sll_object_t* c
- * \arg sll_object_t* d
- * \ret sll_object_t*
- */
-typedef sll_object_t* (*sll_quaternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d);
-
-
-
-/**
- * \flags type
- * \name sll_var_arg_list_data_sll_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t*const* p
- * \arg sll_arg_count_t l
- */
-typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
-	sll_object_t*const* p;
-	sll_arg_count_t l;
-} sll_var_arg_list_data_sll_t;
-
-
-
-/**
- * \flags type
- * \name sll_var_arg_list_data_struct_t
- * \group types
- * \desc Docs!
- * \arg const void* ptr
- * \arg sll_size_t* off
- * \arg sll_arg_count_t l
- * \arg void** fn
- * \arg sll_arg_count_t fnl
- */
-typedef struct _SLL_VAR_ARG_LIST_DATA_STRUCT{
-	const void* ptr;
-	sll_size_t* off;
-	sll_arg_count_t l;
-	void** fn;
-	sll_arg_count_t fnl;
-} sll_var_arg_list_data_struct_t;
-
-
-
-/**
- * \flags type union
- * \name sll_var_arg_list_data_t
- * \group types
- * \desc Docs!
- * \arg va_list* c
- * \arg sll_var_arg_list_data_sll_t sll
- * \arg sll_var_arg_list_data_struct_t s
- */
-typedef union _SLL_VAR_ARG_LIST_DATA{
-	va_list* c;
-	sll_var_arg_list_data_sll_t sll;
-	sll_var_arg_list_data_struct_t s;
-} sll_var_arg_list_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_var_arg_list_t
- * \group types
- * \desc Docs!
- * \arg sll_var_arg_type_t t
- * \arg sll_var_arg_list_data_t dt
- */
-typedef struct _SLL_VAR_ARG_LIST{
-	sll_var_arg_type_t t;
-	sll_var_arg_list_data_t dt;
-} sll_var_arg_list_t;
 
 
 

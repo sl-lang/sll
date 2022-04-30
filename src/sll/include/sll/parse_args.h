@@ -2,6 +2,7 @@
 #define __SLL_PARSE_ARGS_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+#include <stdarg.h>
 /**
  * \flags group
  * \name Argument Parsing

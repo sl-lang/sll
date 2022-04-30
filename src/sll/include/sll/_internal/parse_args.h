@@ -1,6 +1,7 @@
 #ifndef __SLL__INTERNAL_PARSE_ARGS_H__
 #define __SLL__INTERNAL_PARSE_ARGS_H__ 1
 #include <sll/types.h>
+#include <stdarg.h>
 
 
 

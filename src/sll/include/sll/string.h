@@ -3,6 +3,7 @@
 #include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
+#include <sll/var_arg.h>
 /**
  * \flags group
  * \name String

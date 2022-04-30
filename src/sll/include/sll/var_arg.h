@@ -2,6 +2,7 @@
 #define __SLL_VAR_ARG_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+#include <stdarg.h>
 /**
  * \flags group
  * \name Variable Arguments
@@ -77,6 +78,85 @@
         __va->dt.sll.p=(ptr); \
         __va->dt.sll.l=(len); \
     } while (0)
+
+
+
+/**
+ * \flags type var
+ * \name sll_var_arg_type_t
+ * \group var-arg
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_var_arg_type_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_var_arg_list_data_sll_t
+ * \group var-arg
+ * \desc Docs!
+ * \arg sll_object_t*const* p
+ * \arg sll_arg_count_t l
+ */
+typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
+    sll_object_t*const* p;
+    sll_arg_count_t l;
+} sll_var_arg_list_data_sll_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_var_arg_list_data_struct_t
+ * \group var-arg
+ * \desc Docs!
+ * \arg const void* ptr
+ * \arg sll_size_t* off
+ * \arg sll_arg_count_t l
+ * \arg void** fn
+ * \arg sll_arg_count_t fnl
+ */
+typedef struct _SLL_VAR_ARG_LIST_DATA_STRUCT{
+    const void* ptr;
+    sll_size_t* off;
+    sll_arg_count_t l;
+    void** fn;
+    sll_arg_count_t fnl;
+} sll_var_arg_list_data_struct_t;
+
+
+
+/**
+ * \flags type union
+ * \name sll_var_arg_list_data_t
+ * \group var-arg
+ * \desc Docs!
+ * \arg va_list* c
+ * \arg sll_var_arg_list_data_sll_t sll
+ * \arg sll_var_arg_list_data_struct_t s
+ */
+typedef union _SLL_VAR_ARG_LIST_DATA{
+    va_list* c;
+    sll_var_arg_list_data_sll_t sll;
+    sll_var_arg_list_data_struct_t s;
+} sll_var_arg_list_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_var_arg_list_t
+ * \group var-arg
+ * \desc Docs!
+ * \arg sll_var_arg_type_t t
+ * \arg sll_var_arg_list_data_t dt
+ */
+typedef struct _SLL_VAR_ARG_LIST{
+    sll_var_arg_type_t t;
+    sll_var_arg_list_data_t dt;
+} sll_var_arg_list_t;
 
 
 
