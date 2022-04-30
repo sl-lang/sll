@@ -2290,6 +2290,14 @@ typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* path,sll_compila
 
 
 
+/**
+ * \flags type
+ * \name sll_json_array_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_json_array_length_t l
+ * \arg sll_json_object_t* dt
+ */
 typedef struct _SLL_JSON_ARRAY{
 	sll_json_array_length_t l;
 	struct _SLL_JSON_OBJECT* dt;
@@ -2297,6 +2305,14 @@ typedef struct _SLL_JSON_ARRAY{
 
 
 
+/**
+ * \flags type
+ * \name sll_json_map_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_json_map_length_t l
+ * \arg sll_json_map_keypair_t* dt
+ */
 typedef struct _SLL_JSON_MAP{
 	sll_json_map_length_t l;
 	struct _SLL_JSON_MAP_KEYPAIR* dt;
@@ -2304,6 +2320,17 @@ typedef struct _SLL_JSON_MAP{
 
 
 
+/**
+ * \flags type union
+ * \name sll_json_object_data_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_integer_t i
+ * \arg sll_float_t f
+ * \arg sll_string_t s
+ * \arg sll_json_array_t a
+ * \arg sll_json_map_t m
+ */
 typedef union _SLL_JSON_OBJECT_DATA{
 	sll_integer_t i;
 	sll_float_t f;
@@ -2314,6 +2341,14 @@ typedef union _SLL_JSON_OBJECT_DATA{
 
 
 
+/**
+ * \flags type
+ * \name sll_json_object_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_json_object_type_t t
+ * \arg sll_json_object_data_t dt
+ */
 typedef struct _SLL_JSON_OBJECT{
 	sll_json_object_type_t t;
 	sll_json_object_data_t dt;
@@ -2321,6 +2356,14 @@ typedef struct _SLL_JSON_OBJECT{
 
 
 
+/**
+ * \flags type
+ * \name sll_json_map_keypair_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_string_t k
+ * \arg sll_json_object_t v
+ */
 typedef struct _SLL_JSON_MAP_KEYPAIR{
 	sll_string_t k;
 	sll_json_object_t v;
@@ -2392,6 +2435,14 @@ typedef sll_object_t* (*sll_quaternary_operator_t)(sll_object_t* a,sll_object_t*
 
 
 
+/**
+ * \flags type
+ * \name sll_var_arg_list_data_sll_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_object_t*const* p
+ * \arg sll_arg_count_t l
+ */
 typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
 	sll_object_t*const* p;
 	sll_arg_count_t l;
@@ -2399,6 +2450,17 @@ typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
 
 
 
+/**
+ * \flags type
+ * \name sll_var_arg_list_data_struct_t
+ * \group types
+ * \desc Docs!
+ * \arg const void* ptr
+ * \arg sll_size_t* off
+ * \arg sll_arg_count_t l
+ * \arg void** fn
+ * \arg sll_arg_count_t fnl
+ */
 typedef struct _SLL_VAR_ARG_LIST_DATA_STRUCT{
 	const void* ptr;
 	sll_size_t* off;
@@ -2409,6 +2471,15 @@ typedef struct _SLL_VAR_ARG_LIST_DATA_STRUCT{
 
 
 
+/**
+ * \flags type union
+ * \name sll_var_arg_list_data_t
+ * \group types
+ * \desc Docs!
+ * \arg va_list* c
+ * \arg sll_var_arg_list_data_sll_t sll
+ * \arg sll_var_arg_list_data_struct_t s
+ */
 typedef union _SLL_VAR_ARG_LIST_DATA{
 	va_list* c;
 	sll_var_arg_list_data_sll_t sll;
@@ -2417,6 +2488,14 @@ typedef union _SLL_VAR_ARG_LIST_DATA{
 
 
 
+/**
+ * \flags type
+ * \name sll_var_arg_list_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_var_arg_type_t t
+ * \arg sll_var_arg_list_data_t dt
+ */
 typedef struct _SLL_VAR_ARG_LIST{
 	sll_var_arg_type_t t;
 	sll_var_arg_list_data_t dt;
@@ -2424,6 +2503,14 @@ typedef struct _SLL_VAR_ARG_LIST{
 
 
 
+/**
+ * \flags type
+ * \name sll_time_zone_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_char_t* nm
+ * \arg sll_time_t off
+ */
 typedef struct _SLL_TIME_ZONE{
 	sll_char_t nm[32];
 	sll_time_t off;
@@ -2431,6 +2518,20 @@ typedef struct _SLL_TIME_ZONE{
 
 
 
+/**
+ * \flags type
+ * \name sll_date_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_year_t y
+ * \arg sll_month_t m
+ * \arg sll_day_t d
+ * \arg sll_day_t wd
+ * \arg sll_hour_t h
+ * \arg sll_minute_t mn
+ * \arg sll_second_t s
+ * \arg sll_time_zone_t tz
+ */
 typedef struct _SLL_DATE{
 	sll_year_t y;
 	sll_month_t m;
@@ -2444,6 +2545,14 @@ typedef struct _SLL_DATE{
 
 
 
+/**
+ * \flags type
+ * \name sll_factor_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_integer_t n
+ * \arg sll_size_t pw
+ */
 typedef struct _SLL_FACTOR{
 	sll_integer_t n;
 	sll_size_t pw;
@@ -2451,6 +2560,14 @@ typedef struct _SLL_FACTOR{
 
 
 
+/**
+ * \flags type
+ * \name sll_environment_variable_t
+ * \group types
+ * \desc Docs!
+ * \arg const sll_string_t k
+ * \arg const sll_string_t v
+ */
 typedef struct _SLL_ENVIRONMENT_VARIABLE{
 	const sll_string_t k;
 	const sll_string_t v;
@@ -2458,6 +2575,14 @@ typedef struct _SLL_ENVIRONMENT_VARIABLE{
 
 
 
+/**
+ * \flags type
+ * \name sll_environment_t
+ * \group types
+ * \desc Docs!
+ * \arg const sll_environment_variable_t*const* dt
+ * \arg const sll_environment_length_t l
+ */
 typedef struct _SLL_ENVIRONMENT{
 	const sll_environment_variable_t*const* dt;
 	const sll_environment_length_t l;
@@ -2465,6 +2590,14 @@ typedef struct _SLL_ENVIRONMENT{
 
 
 
+/**
+ * \flags type
+ * \name sll_module_loader_data_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_file_offset_t sz
+ * \arg sll_sha256_data_t h
+ */
 typedef struct _SLL_MODULE_LOADER_DATA{
 	sll_file_offset_t sz;
 	sll_sha256_data_t h;
@@ -2483,6 +2616,14 @@ typedef void (*sll_internal_thread_function_t)(void* arg);
 
 
 
+/**
+ * \flags type
+ * \name sll_bundle_source_file_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_string_t nm
+ * \arg sll_source_file_t dt
+ */
 typedef struct _SLL_BUNDLE_SOURCE_FILE{
 	sll_string_t nm;
 	sll_source_file_t dt;
@@ -2490,6 +2631,16 @@ typedef struct _SLL_BUNDLE_SOURCE_FILE{
 
 
 
+/**
+ * \flags type
+ * \name sll_bundle_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_time_t tm
+ * \arg sll_string_t nm
+ * \arg sll_bundle_source_file_t** dt
+ * \arg sll_source_file_index_t l
+ */
 typedef struct _SLL_BUNDLE{
 	sll_time_t tm;
 	sll_string_t nm;
@@ -2499,6 +2650,14 @@ typedef struct _SLL_BUNDLE{
 
 
 
+/**
+ * \flags type union
+ * \name sll_int_float_data_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_integer_t i
+ * \arg sll_float_t f
+ */
 typedef union _SLL_INT_FLOAT_DATA{
 	sll_integer_t i;
 	sll_float_t f;
@@ -2506,6 +2665,14 @@ typedef union _SLL_INT_FLOAT_DATA{
 
 
 
+/**
+ * \flags type
+ * \name sll_int_float_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_bool_t t
+ * \arg sll_int_float_data_t dt
+ */
 typedef struct _SLL_INT_FLOAT{
 	sll_bool_t t;
 	sll_int_float_data_t dt;
@@ -2513,6 +2680,14 @@ typedef struct _SLL_INT_FLOAT{
 
 
 
+/**
+ * \flags type union
+ * \name sll_char_string_data_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_char_t c
+ * \arg const sll_string_t* s
+ */
 typedef union _SLL_CHAR_STRING_DATA{
 	sll_char_t c;
 	const sll_string_t* s;
@@ -2520,6 +2695,14 @@ typedef union _SLL_CHAR_STRING_DATA{
 
 
 
+/**
+ * \flags type
+ * \name sll_char_string_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_bool_t t
+ * \arg sll_char_string_data_t dt
+ */
 typedef struct _SLL_CHAR_STRING{
 	sll_bool_t t;
 	sll_char_string_data_t dt;
@@ -2527,6 +2710,14 @@ typedef struct _SLL_CHAR_STRING{
 
 
 
+/**
+ * \flags type
+ * \name sll_tls_value_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_thread_index_t t
+ * \arg sll_object_t* v
+ */
 typedef struct _SLL_TLS_VALUE{
 	sll_thread_index_t t;
 	sll_object_t* v;
@@ -2534,6 +2725,14 @@ typedef struct _SLL_TLS_VALUE{
 
 
 
+/**
+ * \flags type
+ * \name sll_tls_object_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_tls_object_length_t sz
+ * \arg sll_tls_value_t* dt
+ */
 typedef struct _SLL_TLS_OBJECT{
 	sll_tls_object_length_t sz;
 	sll_tls_value_t* dt;
@@ -2566,6 +2765,14 @@ typedef void (*sll_audit_callback_t)(const sll_string_t* name,const sll_array_t*
 
 
 
+/**
+ * \flags type
+ * \name sll_module_loader_data_t
+ * \group types
+ * \desc Docs!
+ * \arg sll_string_t* dt
+ * \arg sll_search_path_length_t l
+ */
 typedef struct _SLL_SEARCH_PATH{
 	sll_string_t* dt;
 	sll_search_path_length_t l;
@@ -2573,6 +2780,15 @@ typedef struct _SLL_SEARCH_PATH{
 
 
 
+/**
+ * \flags type
+ * \name sll_module_loader_data_t
+ * \group types
+ * \desc Docs!
+ * \arg const sll_char_t* nm
+ * \arg const sll_internal_function_pointer_t f
+ * \arg const sll_char_t* fmt
+ */
 typedef struct _SLL_INTERNAL_FUNCTION_DESCRIPTOR{
 	const sll_char_t* nm;
 	const sll_internal_function_pointer_t f;
