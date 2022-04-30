@@ -1,5 +1,6 @@
 #ifndef __SLL_ASSEMBLY_H__
 #define __SLL_ASSEMBLY_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -15,6 +16,39 @@
  * \subgroup assembly-instruction
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE
+ * \group assembly
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_MAX_ASSEMBLY_INSTRUCTION_TYPE __SLL_U8_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_INSTRUCTION_INDEX
+ * \group assembly
+ * \desc Docs!
+ * \type sll_instruction_index_t
+ */
+#define SLL_MAX_INSTRUCTION_INDEX __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_VARIABLE_INDEX
+ * \group assembly
+ * \desc Docs!
+ * \type sll_variable_index_t
+ */
+#define SLL_MAX_VARIABLE_INDEX __SLL_U32_MAX
 
 
 

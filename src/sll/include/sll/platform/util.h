@@ -12,6 +12,17 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_MAX_TIME
+ * \group platform
+ * \desc Docs!
+ * \type sll_time_t
+ */
+#define SLL_MAX_TIME __SLL_U64_MAX
+
+
+
+/**
  * \flags var
  * \name sll_platform_cpu_count
  * \group platform

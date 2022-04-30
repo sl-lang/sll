@@ -1,5 +1,6 @@
 #ifndef __SLL_STRING_TABLE_H__
 #define __SLL_STRING_TABLE_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -8,6 +9,17 @@
  * \group string-table
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_STRING_INDEX
+ * \group string-table
+ * \desc Docs!
+ * \type sll_string_index_t
+ */
+#define SLL_MAX_STRING_INDEX __SLL_U32_MAX
 
 
 

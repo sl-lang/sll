@@ -1,5 +1,6 @@
 #ifndef __SLL_ARRAY_H__
 #define __SLL_ARRAY_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -22,6 +23,17 @@
  * \subgroup array-op
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_ARRAY_LENGTH
+ * \group array
+ * \desc Docs!
+ * \type sll_array_length_t
+ */
+#define SLL_MAX_ARRAY_LENGTH __SLL_U32_MAX
 
 
 

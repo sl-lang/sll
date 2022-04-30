@@ -1,5 +1,6 @@
 #ifndef __SLL_BARRIER_H__
 #define __SLL_BARRIER_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -8,6 +9,17 @@
  * \group barrier
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_BARRIER_INDEX
+ * \group barrier
+ * \desc Docs!
+ * \type sll_barrier_index_t
+ */
+#define SLL_MAX_BARRIER_INDEX __SLL_U32_MAX
 
 
 

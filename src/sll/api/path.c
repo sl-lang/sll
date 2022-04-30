@@ -15,6 +15,7 @@
 #include <sll/sandbox.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 
 
@@ -233,7 +234,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split(const sll_s
 		'\\'
 	};
 	sll_string_length_t o=sll_string_index_reverse_multiple(s,dt,2,0);
-	return (o==SLL_MAX_STRING_INDEX?0:o+1);
+	return (o==SLL_MAX_STRING_LENGTH?0:o+1);
 }
 
 

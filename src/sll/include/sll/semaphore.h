@@ -1,5 +1,6 @@
 #ifndef __SLL_SEMAPHORE_H__
 #define __SLL_SEMAPHORE_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -8,6 +9,17 @@
  * \group semaphore
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_SEMAPHORE_INDEX
+ * \group semaphore
+ * \desc Docs!
+ * \type sll_semaphore_index_t
+ */
+#define SLL_MAX_SEMAPHORE_INDEX __SLL_U32_MAX
 
 
 

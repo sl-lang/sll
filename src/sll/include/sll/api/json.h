@@ -1,5 +1,6 @@
 #ifndef __SLL_API_JSON_H__
 #define __SLL_API_JSON_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -15,6 +16,28 @@
  * \subgroup json-api-type
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_JSON_ARRAY_LENGTH
+ * \group json-api
+ * \desc Docs!
+ * \type sll_json_array_length_t
+ */
+#define SLL_MAX_JSON_ARRAY_LENGTH __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_JSON_MAP_LENGTH
+ * \group json-api
+ * \desc Docs!
+ * \type sll_json_map_length_t
+ */
+#define SLL_MAX_JSON_MAP_LENGTH __SLL_U32_MAX
 
 
 

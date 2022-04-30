@@ -15,6 +15,7 @@
 #include <sll/operator.h>
 #include <sll/parse_args.h>
 #include <sll/static_object.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 #include <stdarg.h>
 

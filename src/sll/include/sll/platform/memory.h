@@ -1,5 +1,6 @@
 #ifndef __SLL_PLATFORM_H__
 #define __SLL_PLATFORM_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -9,6 +10,18 @@
  * \subgroup platform-memory
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_PAGE_SIZE
+ * \group platform
+ * \subgroup platform-memory
+ * \desc Docs!
+ * \type sll_page_size_t
+ */
+#define SLL_MAX_PAGE_SIZE __SLL_U64_MAX
 
 
 

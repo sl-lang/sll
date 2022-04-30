@@ -28,6 +28,17 @@
 
 /**
  * \flags macro var
+ * \name SLL_MAX_FILE_OFFSET
+ * \group file
+ * \desc Docs!
+ * \type sll_file_offset_t
+ */
+#define SLL_MAX_FILE_OFFSET __SLL_U64_MAX
+
+
+
+/**
+ * \flags macro var
  * \name SLL_FILE_FLAG_READ
  * \group file
  * \subgroup file-flag

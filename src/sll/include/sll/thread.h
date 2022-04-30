@@ -13,6 +13,17 @@
 
 /**
  * \flags macro var
+ * \name SLL_MAX_THREAD_INDEX
+ * \group thread
+ * \desc Docs!
+ * \type sll_thread_index_t
+ */
+#define SLL_MAX_THREAD_INDEX 0xfffffffe
+
+
+
+/**
+ * \flags macro var
  * \name SLL_UNKNOWN_THREAD_INDEX
  * \group thread
  * \desc Docs!

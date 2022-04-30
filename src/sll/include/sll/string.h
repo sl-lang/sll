@@ -1,5 +1,6 @@
 #ifndef __SLL_STRING_H__
 #define __SLL_STRING_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -22,6 +23,28 @@
  * \subgroup string-op
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_CHAR
+ * \group string
+ * \desc Docs!
+ * \type sll_char_t
+ */
+#define SLL_MAX_CHAR __SLL_U8_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_STRING_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_string_length_t
+ */
+#define SLL_MAX_STRING_LENGTH __SLL_U32_MAX
 
 
 

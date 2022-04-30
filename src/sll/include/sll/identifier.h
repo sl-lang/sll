@@ -1,6 +1,7 @@
 #ifndef __SLL_IDENTIFIER_H__
 #define __SLL_IDENTIFIER_H__ 1
 #include <sll/_identifier.h>
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -9,6 +10,28 @@
  * \group identifier
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_IDENTIFIER_INDEX
+ * \group limits
+ * \desc Docs!
+ * \type sll_identifier_index_t
+ */
+#define SLL_MAX_IDENTIFIER_INDEX __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_IDENTIFIER_LIST_LENGTH
+ * \group limits
+ * \desc Docs!
+ * \type sll_identifier_list_length_t
+ */
+#define SLL_MAX_IDENTIFIER_LIST_LENGTH __SLL_U32_MAX
 
 
 

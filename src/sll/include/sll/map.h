@@ -1,5 +1,6 @@
 #ifndef __SLL_MAP_H__
 #define __SLL_MAP_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -22,6 +23,17 @@
  * \subgroup map-op
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_MAX_MAP_LENGTH
+ * \group map
+ * \desc Docs!
+ * \type sll_map_length_t
+ */
+#define SLL_MAX_MAP_LENGTH __SLL_U32_MAX
 
 
 

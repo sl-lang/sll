@@ -12,6 +12,7 @@
 #include <sll/parse_args.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 #include <sll/var_arg.h>
 #include <sll/vm.h>
@@ -356,28 +357,28 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index(const sll_string_t* str,const sll_char_string_t* substr,sll_string_length_t start){
 	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->dt.c,0,start):sll_string_index(str,substr->dt.s,start));
-	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
+	return (o==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:o);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_list(const sll_string_t* str,const sll_char_string_t* substr,sll_bool_t inv){
 	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->dt.c,inv,0):sll_string_index_multiple(str,substr->dt.s->v,substr->dt.s->l,inv));
-	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
+	return (o==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:o);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse(const sll_string_t* str,const sll_char_string_t* substr){
 	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->dt.c,0):sll_string_index_reverse(str,substr->dt.s));
-	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
+	return (o==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:o);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse_list(const sll_string_t* str,const sll_char_string_t* substr,sll_bool_t inv){
 	sll_string_length_t o=(substr->t==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->dt.c,inv):sll_string_index_reverse_multiple(str,substr->dt.s->v,substr->dt.s->l,inv));
-	return (o==SLL_MAX_STRING_INDEX?(sll_integer_t)-1:o);
+	return (o==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:o);
 }
 
 
