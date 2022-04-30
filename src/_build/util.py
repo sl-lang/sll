@@ -26,7 +26,6 @@ system=platform.system().lower()
 def create_output_dir():
 	for base in CLEAR_PATHS:
 		if (not os.path.exists(base)):
-			os.mkdir(base)
 			continue
 		del_dl=[]
 		for r,dl,fl in os.walk(base):

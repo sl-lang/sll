@@ -1,11 +1,9 @@
 import docs
 import os
-import re
 import util
 
 
 
-TYPE_POINTER_REGEX=re.compile(r"(\*+)")
 TYPE_MAP={"__SLL_S1":"signed char","__SLL_U1":"_Bool","__SLL_S8":"signed char","__SLL_U8":"unsigned char","__SLL_S16":"signed short int","__SLL_U16":"unsigned short int","__SLL_S32":"signed int","__SLL_U32":"unsigned int","__SLL_S64":"signed long long int","__SLL_U64":"unsigned long long int","__SLL_F32":"float","__SLL_F64":"double"}
 ROOT=("" if os.getenv("DOMAIN_ROOT",None) is not None else ".")
 
@@ -44,7 +42,7 @@ def _add_code_type(t):
 		t=t.replace(k,v)
 	if (t[:2]=="__" and t[-2:]=="__"):
 		return f"<span class=\"code-type-other\">{t}</span>"
-	return TYPE_POINTER_REGEX.sub(r"""<span class="code-type-pointer">\1</span>""",f"<span class=\"code-type\">{t}</span>").replace("const","<span class=\"code-keyword\">const</span>")
+	return f"<span class=\"code-type\">{t}</span>".replace("const","<span class=\"code-keyword\">const</span>").replace("*","<span class=\"code-type-pointer\">*</span>")
 
 
 
