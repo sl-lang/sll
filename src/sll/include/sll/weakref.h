@@ -12,6 +12,30 @@
 
 
 /**
+ * \flags type var
+ * \name sll_weak_reference_t
+ * \group weakref
+ * \desc Docs!
+ * \type void*
+ */
+typedef void* sll_weak_reference_t;
+
+
+
+/**
+ * \flags func type
+ * \name sll_weak_ref_destructor_t
+ * \group weakref
+ * \desc Docs!
+ * \arg sll_weak_reference_t wr
+ * \arg sll_object_t* o
+ * \arg void* arg
+ */
+typedef void (*sll_weak_ref_destructor_t)(sll_weak_reference_t wr,sll_object_t* o,void* arg);
+
+
+
+/**
  * \flags check_output func
  * \name sll_weakref_clone
  * \group weakref

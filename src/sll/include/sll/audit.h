@@ -13,6 +13,18 @@
 
 
 /**
+ * \flags func type
+ * \name sll_audit_callback_t
+ * \group audit
+ * \desc Docs!
+ * \arg const sll_string_t* name
+ * \arg const sll_array_t* args
+ */
+typedef void (*sll_audit_callback_t)(const sll_string_t* name,const sll_array_t* args);
+
+
+
+/**
  * \flags func var_arg
  * \name sll_audit
  * \group audit

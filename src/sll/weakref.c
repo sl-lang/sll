@@ -5,6 +5,7 @@
 #include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/types.h>
+#include <sll/weakref.h>
 
 
 

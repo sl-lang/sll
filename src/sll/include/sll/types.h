@@ -907,17 +907,6 @@ typedef void* sll_process_handle_t;
 
 /**
  * \flags type var
- * \name sll_weak_reference_t
- * \group types
- * \desc Docs!
- * \type void*
- */
-typedef void* sll_weak_reference_t;
-
-
-
-/**
- * \flags type var
  * \name sll_json_parser_state_t
  * \group types
  * \desc Docs!
@@ -2415,31 +2404,6 @@ typedef struct _SLL_TLS_OBJECT{
 	sll_tls_object_length_t sz;
 	sll_tls_value_t* dt;
 } sll_tls_object_t;
-
-
-
-/**
- * \flags func type
- * \name sll_weak_ref_destructor_t
- * \group types
- * \desc Docs!
- * \arg sll_weak_reference_t wr
- * \arg sll_object_t* o
- * \arg void* arg
- */
-typedef void (*sll_weak_ref_destructor_t)(sll_weak_reference_t wr,sll_object_t* o,void* arg);
-
-
-
-/**
- * \flags func type
- * \name sll_audit_callback_t
- * \group types
- * \desc Docs!
- * \arg const sll_string_t* name
- * \arg const sll_array_t* args
- */
-typedef void (*sll_audit_callback_t)(const sll_string_t* name,const sll_array_t* args);
 
 
 

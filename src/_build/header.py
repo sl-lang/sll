@@ -143,6 +143,23 @@ def _write_byte_array(wf,dt):
 
 
 
+def _add_source_file(b_fp,fp,file_list,include_list):
+	if (fp in file_list or not os.path.exists(b_fp+fp)):
+		return ""
+	o=""
+	with open(b_fp+fp,"r") as rf:
+		dt=rf.read()+"\n"
+		n_incl=[]
+		for k in INCLUDE_REGEX.findall(dt):
+			n_incl.append(k[1:-1])
+			o+=_add_source_file(b_fp,k[1:-1],file_list,include_list)
+		o+=INCLUDE_REGEX.sub(lambda m:("" if os.path.exists(b_fp+m[1][1:-1]) or m[1][1:-1] in include_list else m[0]),dt)
+		include_list.extend(n_incl)
+	file_list.append(fp)
+	return o
+
+
+
 def read_version(fp):
 	o=[0,0,0]
 	with open(fp,"r") as f:
@@ -180,18 +197,18 @@ def generate_error_header(i_fp,o_fp,nm):
 def parse_headers(fp):
 	util.log("Combining Library Header Files...")
 	o=""
-	il=[]
+	file_list=[]
+	include_list=[]
 	fp=fp.replace("\\","/").rstrip("/")+"/"
 	for r,_,fl in os.walk(fp):
 		if ("internal" in r or "generated" in r):
 			continue
 		for f in fl:
 			if (f[-2:]==".h" and f not in INTERNAL_SLL_HEADERS):
-				with open(os.path.join(r,f),"r") as rf:
-					il.append(os.path.join(r,f)[len(fp):].replace("\\","/"))
-					o+=rf.read()+"\n"
-	util.log(f"  Combined {len(il)} Files\nPreprocessing Combined Library Header File...")
-	o=INCLUDE_REGEX.sub(lambda m:("" if m.group(1)[1:-1] in il else "#include <"+(il.append(m.group(1)[1:-1]),m.group(1)[1:-1])[1]+">"),DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+" "+DEFINE_LINE_CONTINUE_REGEX.sub(r"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(r"\n",COMMENT_REGEX.sub(r"",o).strip().replace("\r\n","\n")))).split("\n")
+				include_name=os.path.join(r,f)[len(fp):].replace("\\","/")
+				o+=_add_source_file(fp,include_name,file_list,include_list)
+	util.log(f"  Combined {len(file_list)} Files\nPreprocessing Combined Library Header File...")
+	o=DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+" "+DEFINE_LINE_CONTINUE_REGEX.sub(r"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(r"\n",COMMENT_REGEX.sub(r"",o).strip().replace("\r\n","\n"))).split("\n")
 	return o
 
 
