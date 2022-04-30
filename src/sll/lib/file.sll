@@ -17,7 +17,10 @@
 	(,,, dt {
 		(= m "")
 		(? (& dt$flags FLAG_APPEND) (= m (+ m 'A')))
-		(? (& dt$flags FLAG_NO_BUFFER) (= m (+ m 'B')))
+		(?
+			(& dt$flags FLAG_NO_BUFFER) (= m (+ m 'B'))
+			(& dt$flags FLAG_FLUSH_ON_NEWLINE) (= m (+ m 'N'))
+		)
 		(? (& dt$flags FLAG_READ) (= m (+ m 'R')))
 		(? (& dt$flags FLAG_WRITE) (= m (+ m 'W')))
 		(@@ (<- string$format "<path=%s, mode=%s>" dt$name m))
@@ -30,6 +33,7 @@
 (= file_module_type (&:
 	(~ type_type) file_type
 	(~ int_type) FLAG_APPEND
+	(~ int_type) FLAG_FLUSH_ON_NEWLINE
 	(~ int_type) FLAG_NO_BUFFER
 	(~ int_type) FLAG_READ
 	(~ int_type) FLAG_WRITE
@@ -57,6 +61,7 @@
 (= FLAG_WRITE 2)
 (= FLAG_APPEND 4)
 (= FLAG_NO_BUFFER 8)
+(= FLAG_FLUSH_ON_NEWLINE 16)
 
 (= TEMP_FILE_PATH (<- (... "sll:file_get_temp_path")))
 
@@ -82,12 +87,12 @@
 (= stdout (<- _create_std_file
 	1
 	"@stdout"
-	FLAG_WRITE
+	(| FLAG_WRITE FLAG_FLUSH_ON_NEWLINE)
 ))
 (= stderr (<- _create_std_file
 	2
 	"@stderr"
-	FLAG_WRITE
+	(| FLAG_WRITE FLAG_FLUSH_ON_NEWLINE)
 ))
 
 
@@ -149,7 +154,7 @@
 			(?? (: mode i)
 				'a' (= flags (| FLAG_WRITE FLAG_APPEND))
 				'r' (= flags FLAG_READ)
-				'w' (= flags FLAG_WRITE)
+				'w' (= flags (| FLAG_WRITE FLAG_FLUSH_ON_NEWLINE))
 			)
 			(++ i)
 		})
@@ -239,6 +244,7 @@
 (= file (. file_module_type
 	file_type
 	FLAG_APPEND
+	FLAG_FLUSH_ON_NEWLINE
 	FLAG_NO_BUFFER
 	FLAG_READ
 	FLAG_WRITE

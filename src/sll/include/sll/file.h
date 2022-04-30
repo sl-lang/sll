@@ -76,25 +76,25 @@
 
 /**
  * \flags macro var
- * \name SLL_FILE_FLAG_ASYNC
- * \group file
- * \subgroup file-flag
- * \desc Docs!
- * \type sll_file_flags_t
- */
-#define SLL_FILE_FLAG_ASYNC 16
-
-
-
-/**
- * \flags macro var
  * \name SLL_FILE_FLUSH_ON_NEWLINE
  * \group file
  * \subgroup file-flag
  * \desc Docs!
  * \type sll_file_flags_t
  */
-#define SLL_FILE_FLUSH_ON_NEWLINE 32
+#define SLL_FILE_FLUSH_ON_NEWLINE 16
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_ASYNC
+ * \group file
+ * \subgroup file-flag
+ * \desc Docs!
+ * \type sll_file_flags_t
+ */
+#define SLL_FILE_FLAG_ASYNC 32
 
 
 

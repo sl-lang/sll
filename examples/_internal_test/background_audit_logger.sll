@@ -25,7 +25,6 @@
 		(<- string$str args)
 		'\n'
 	))
-	(<- file$flush logger_file)
 ))
 (<- atexit$register (,,,
 	(<- file$close logger_file)
