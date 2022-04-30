@@ -9,7 +9,7 @@
 #else
 #define __SLL_EXTERNAL __declspec(dllimport)
 #endif
-#define __SLL_CHECK_OUTPUT
+#define __SLL_CHECK_OUTPUT _Must_inspect_result_
 #define __SLL_API_CALL
 #else
 #ifdef __SLL_COMPILATION__

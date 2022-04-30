@@ -29,7 +29,7 @@ typedef struct _ARG_OUTPUT_ARRAY_DATA{
 
 
 typedef union _ARG_OUTPUT_DATA{
-	va_list* c;
+va_list* c;
 	arg_output_array_data_t arr;
 } arg_output_data_t;
 
