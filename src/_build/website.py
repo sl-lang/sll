@@ -34,6 +34,23 @@ def _generate_id(g,sg,nm):
 
 
 
+def _add_args(dt,void=True):
+	if (void and len(dt["args"])==0):
+		return _add_code_type("void")
+	o=""
+	st=True
+	for k in dt["args"]:
+		if (st):
+			st=False
+		else:
+			o+=","
+		o+=_add_code_type(k["type"])+" <span class=\"code-arg\">"+k["name"]+"</span>"
+	if ("var_arg" in dt["flag"]):
+		o+=",<span class=\"code-keyword\">...</span>"
+	return o
+
+
+
 def _add_code_type(t):
 	for k,v in TYPE_MAP.items():
 		t=t.replace(k,v)
@@ -72,55 +89,17 @@ def _generate_docs(dt):
 				arg_str="Arguments"
 				if ("func" in e["flag"]):
 					if ("macro" in e["flag"]):
-						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span>("
-						st=True
-						for a in e["args"]:
-							if (st):
-								st=False
-							else:
-								data+=","
-							data+=_add_code_type(a["type"])+" <span class=\"code-arg\">"+a["name"]+"</span>"
-						if ("var_arg" in e["flag"]):
-							if (not st):
-								data+=","
-							data+="<span class=\"code-keyword\">...</span>"
-						data+=")"
+						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span>("+_add_args(e,False)+")"
 						if (e["ret"] is not None):
 							data+=" <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["ret"]["type"])
 					elif ("type" in e["flag"]):
-						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" (*<span class=\"code-name\">"+e["name"]+"</span>)("
-						if (len(e["args"])==0):
-							data+=_add_code_type("void")
-						else:
-							st=True
-							for a in e["args"]:
-								if (st):
-									st=False
-								else:
-									data+=","
-								data+=_add_code_type(a["type"])+" <span class=\"code-arg\">"+a["name"]+"</span>"
-						if ("var_arg" in e["flag"]):
-							data+=",<span class=\"code-keyword\">...</span>"
-						data+=");"
+						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" (*<span class=\"code-name\">"+e["name"]+"</span>)("+_add_args(e)+");"
 					else:
 						if (e["api_fmt"] is not None):
 							data+="<span class=\"code-annotation\">(api_call)</span> "
 						if ("check_output" in e["flag"]):
 							data+="<span class=\"code-annotation\">(check_output)</span> "
-						data+=_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" <span class=\"code-name\">"+e["name"]+"</span>("
-						if (len(e["args"])==0):
-							data+=_add_code_type("void")
-						else:
-							st=True
-							for a in e["args"]:
-								if (st):
-									st=False
-								else:
-									data+=","
-								data+=_add_code_type(a["type"])+" <span class=\"code-arg\">"+a["name"]+"</span>"
-						if ("var_arg" in e["flag"]):
-							data+=",<span class=\"code-keyword\">...</span>"
-						data+=");"
+						data+=_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" <span class=\"code-name\">"+e["name"]+"</span>("+_add_args(e)+");"
 				elif ("type" in e["flag"]):
 					if ("var" in e["flag"]):
 						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["type"]["type"])+" <span class=\"code-name\">"+e["name"]+"</span>;"
