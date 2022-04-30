@@ -208,7 +208,7 @@ jobs:
       - name: Store assets
         uses: actions/upload-artifact@v3
         with:
-          name: release-win
+          name: release-windows
           path: windows.zip
           retention-days: 1
   windows-test:
@@ -224,7 +224,7 @@ jobs:
       - name: Download release build
         uses: actions/download-artifact@v3
         with:
-          name: release-win
+          name: release-windows
           path: build
       - name: Unpack release
         run: |
