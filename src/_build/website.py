@@ -24,19 +24,13 @@ def _generate(nm,dt):
 
 
 
-def _generate_id(g,sg,nm,t):
+def _generate_id(g,sg,nm):
 	o=g
 	if (sg is not None):
 		o+="-"+sg
 		if (nm is not None):
-			o+="-"+nm+"-"
-			if ("macro" in t):
-				o+="m"
-			if ("type" in t):
-				o+="t"
-			if ("var" in t):
-				o+="v"
-	return o.lower()
+			o+="-"+nm
+	return o
 
 
 
@@ -64,17 +58,18 @@ def _generate_docs(dt):
 			m[k["group"]][k["subgroup"]].append(k)
 	data="<div>"
 	for k,v in sorted(m.items(),key=lambda e:dt["groups"][e[0]]["name"]):
-		elem_id=_generate_id(k,None,None,None)
+		elem_id=_generate_id(k,None,None)
 		data+=f"<div><div class=\"group-title\"><a id=\"{elem_id}\" href=\"#{elem_id}\">{dt['groups'][k]['name']}</a></div><h2>{dt['groups'][k]['desc']}</h2>"
 		for sk,sv in sorted(v.items(),key=lambda e:("" if e[0]=="" else dt["subgroups"][e[0]]["name"])):
 			if (len(sv)==0):
 				continue
 			if (len(sk)!=0):
-				elem_id=_generate_id(k,sk,None,None)
+				elem_id=_generate_id(k,sk,None)
 				data+=f"<div><div class=\"subgroup-title\"><a id=\"{elem_id}\" href=\"#{elem_id}\">{dt['subgroups'][sk]['name']}</a></div><h3>{dt['subgroups'][sk]['desc']}</h3>"
 			for e in sorted(sv,key=lambda se:se["name"]):
-				elem_id=_generate_id(k,sk,e["name"],e["flag"])
+				elem_id=_generate_id(k,sk,e["name"])
 				data+=f"<div><a id=\"{elem_id}\" href=\"#{elem_id}\"><pre class=\"code\">"
+				arg_str="Arguments"
 				if ("func" in e["flag"]):
 					if ("macro" in e["flag"]):
 						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span>("
@@ -93,14 +88,26 @@ def _generate_docs(dt):
 						if (e["ret"] is not None):
 							data+=" <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["ret"]["type"])
 					elif ("type" in e["flag"]):
-						raise RuntimeError("Unimplemented")
+						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" (*<span class=\"code-name\">"+e["name"]+"</span>)("
+						if (len(e["args"])==0):
+							data+=_add_code_type("void")
+						else:
+							st=True
+							for a in e["args"]:
+								if (st):
+									st=False
+								else:
+									data+=","
+								data+=_add_code_type(a["type"])+" <span class=\"code-arg\">"+a["name"]+"</span>"
+						if ("var_arg" in e["flag"]):
+							data+=",<span class=\"code-keyword\">...</span>"
+						data+=");"
 					else:
 						if (e["api_fmt"] is not None):
 							data+="<span class=\"code-annotation\">(api_call)</span> "
 						if ("check_output" in e["flag"]):
 							data+="<span class=\"code-annotation\">(check_output)</span> "
-						data+=_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")
-						data+=" <span class=\"code-name\">"+e["name"]+"</span>("
+						data+=_add_code_type(e["ret"]["type"] if e["ret"] is not None else "void")+" <span class=\"code-name\">"+e["name"]+"</span>("
 						if (len(e["args"])==0):
 							data+=_add_code_type("void")
 						else:
@@ -118,7 +125,11 @@ def _generate_docs(dt):
 					if ("var" in e["flag"]):
 						data+="<span class=\"code-keyword-typedef\">typedef</span> "+_add_code_type(e["type"]["type"])+" <span class=\"code-name\">"+e["name"]+"</span>;"
 					else:
-						raise RuntimeError("Unimplemented")
+						arg_str="Fields"
+						data+=f"<span class=\"code-keyword-typedef\">typedef {('union' if 'union' in e['flag'] else 'struct')}</span> <span class=\"code-name\">_{e['name'][:-2].upper()}</span>{{\n"
+						for a in e["args"]:
+							data+="    "+_add_code_type(a["type"])+" "+a["name"]+";\n"
+						data+="} <span class=\"code-name\">"+e["name"]+"</span>;"
 				else:
 					if ("macro" in e["flag"]):
 						data+="<span class=\"code-keyword\">#define</span> <span class=\"code-name\">"+e["name"]+"</span> <span class=\"code-comment\">-&gt;</span> "+_add_code_type(e["type"]["type"])
@@ -128,7 +139,7 @@ def _generate_docs(dt):
 				if (e["api_fmt"] is not None):
 					data+=f"\nAPI Signature: <span style=\"color: #1b84e3\">{e['api_fmt']}</span>"
 				if (e["args"]):
-					data+="\nArguments:"
+					data+=f"\n{arg_str}:"
 					for a in e["args"]:
 						data+=f"\n  {a['name']} -> {a['desc']}"
 				if (e["ret"] is not None):

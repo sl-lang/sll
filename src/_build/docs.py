@@ -3,7 +3,7 @@ import re
 
 
 DOCS_COMMENT_REGEX=re.compile(r"\/\*\*(.*?)\*\/",re.S)
-VALID_FLAGS=["api","check_output","func","group","macro","type","subgroup","var","var_arg"]
+VALID_FLAGS=["api","check_output","func","group","macro","subgroup","type","union","var","var_arg"]
 
 
 
@@ -76,7 +76,9 @@ def create_docs(fl):
 				if (dt["group"] is None):
 					raise RuntimeError(f"{nm} ({dt['name']}): A '\\group' tag is required")
 				if ("macro" in dt["flag"] and "type" in dt["flag"]):
-					raise RuntimeError(f"{nm} ({dt['name']}): 'macro' nd 'type' flags cannot be present together")
+					raise RuntimeError(f"{nm} ({dt['name']}): 'macro' and 'type' flags cannot be present together")
+				if ("union" in dt["flag"] and "type" not in dt["flag"]):
+					raise RuntimeError(f"{nm} ({dt['name']}): 'union' flag cannot be present without the 'type' flag")
 				if ("var" not in dt["flag"]):
 					del dt["type"]
 				if ("group" in dt["flag"]):
