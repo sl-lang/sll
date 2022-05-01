@@ -40,7 +40,15 @@ void _deinit_platform(void);
 
 
 
+void _deinit_platform_time(void);
+
+
+
 void _init_platform(void);
+
+
+
+void _init_platform_time(void);
 
 
 

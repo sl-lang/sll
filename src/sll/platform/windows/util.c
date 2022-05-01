@@ -7,25 +7,18 @@
 #include <sll/_internal/platform.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_size_types.h>
-#include <sll/api/date.h>
-#include <sll/api/time.h>
 #include <sll/common.h>
-#include <sll/data.h>
 #include <sll/environment.h>
 #include <sll/error.h>
-#include <sll/init.h>
 #include <sll/memory.h>
-#include <sll/platform/thread.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
 
 
 static sll_cpu_t _win_cpu=0;
-static HANDLE _win_wh=INVALID_HANDLE_VALUE;
 static sll_environment_t _win_env={NULL,0};
 static __STATIC_STRING(_win_platform_str,"windows");
-static sll_time_zone_t _win_platform_time_zone={"GMT",0};
 static unsigned int _win_csr=0;
 static DWORD _win_stdin_cm;
 static DWORD _win_stdout_cm;
@@ -40,15 +33,10 @@ void* _win_dll_handle=NULL;
 __SLL_EXTERNAL const sll_cpu_t* sll_platform_cpu_count=&_win_cpu;
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_win_env;
 __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_win_platform_str;
-__SLL_EXTERNAL const sll_time_zone_t* sll_platform_time_zone=&_win_platform_time_zone;
 
 
 
 void _deinit_platform(void){
-	if (_win_wh!=INVALID_HANDLE_VALUE){
-		CloseHandle(_win_wh);
-		_win_wh=INVALID_HANDLE_VALUE;
-	}
 	for (sll_environment_length_t i=0;i<_win_env.l;i++){
 		const sll_environment_variable_t* kv=*(_win_env.dt+i);
 		sll_free_string((sll_string_t*)(&(kv->k)));
@@ -58,7 +46,6 @@ void _deinit_platform(void){
 	*((sll_environment_length_t*)(&(_win_env.l)))=0;
 	sll_deallocate(PTR(_win_env.dt));
 	_win_env.dt=NULL;
-	_win_platform_time_zone=*sll_utc_time_zone;
 	_mm_setcsr(_win_csr);
 	SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE),_win_stdin_cm);
 	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm);
@@ -119,34 +106,9 @@ void _init_platform(void){
 		_win_env.dt=sll_memory_move(kv,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	}
 	*((sll_environment_length_t*)(&(_win_env.l)))=l;
-	TIME_ZONE_INFORMATION tz;
-	DWORD tz_st=GetTimeZoneInformation(&tz);
-	WCHAR* nm;
-	_win_platform_time_zone.off=-tz.Bias;
-	if (tz_st==TIME_ZONE_ID_DAYLIGHT){
-		nm=tz.DaylightName;
-		_win_platform_time_zone.off-=tz.DaylightBias;
-	}
-	else{
-		nm=tz.StandardName;
-		_win_platform_time_zone.off-=tz.StandardBias;
-	}
-	sll_string_length_t i=0;
-	do{
-		i++;
-	} while (*(nm+i-1));
-	WideCharToMultiByte(CP_UTF8,0,nm,i,_win_platform_time_zone.nm,32,NULL,NULL);
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
 	_win_cpu=(sll_cpu_t)si.dwNumberOfProcessors;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
-	FILETIME ft;
-	GetSystemTimeAsFileTime(&ft);
-	return ((((sll_time_t)ft.dwHighDateTime)<<32)|ft.dwLowDateTime)*100-11644473600000000000;
 }
 
 
@@ -274,26 +236,6 @@ __SLL_EXTERNAL void sll_platform_remove_environment_variable(const sll_char_t* k
 
 __SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,const sll_char_t* v){
 	SetEnvironmentVariable((char*)k,(char*)v);
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
-	if (_win_wh==INVALID_HANDLE_VALUE){
-		_win_wh=CreateEventA(NULL,TRUE,FALSE,FALSE);
-	}
-	sll_time_t e=GetTickCount64()*1000000+tm;
-	while (1){
-		ResetEvent(_win_wh);
-		if (WaitForSingleObjectEx(_win_wh,(DWORD)((tm+999999)/1000000),FALSE)!=WAIT_OBJECT_0){
-			return;
-		}
-		sll_time_t c=GetTickCount64()*1000000;
-		if (c>=e){
-			break;
-		}
-		tm=c-e;
-	}
 }
 
 

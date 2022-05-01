@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <sll/_internal/error.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/platform.h>
 #include <sll/common.h>
@@ -36,7 +37,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_cpu(sll_cpu_t cpu
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start_thread(sll_internal_thread_function_t fn,void* arg){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start_thread(sll_internal_thread_function_t fn,void* arg,sll_error_t* err){
+	ERROR_PTR_RESET;
 	execute_wrapper_data_t dt={
 		fn,
 		arg,
@@ -44,6 +46,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start
 	};
 	HANDLE o=CreateThread(NULL,0,_execute_wrapper,&dt,0,NULL);
 	if (!o){
+		ERROR_PTR_SYSTEM;
 		return SLL_UNKNOWN_INTERNAL_THREAD_INDEX;
 	}
 	SLL_CRITICAL(WaitForSingleObject(dt.lck,INFINITE)==WAIT_OBJECT_0);

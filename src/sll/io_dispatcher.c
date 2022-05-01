@@ -105,7 +105,7 @@ void _io_dispatcher_init(void){
 	_io_dispatcher_event_len=0;
 	_io_dispatcher_raw_event=sll_allocate(sizeof(raw_event_data_t));
 	_platform_init_io_dispatcher(_io_dispatcher_raw_event,&_io_dispatcher_wait_handle);
-	_io_dispatcher_thread=sll_platform_start_thread(_poll_thread,NULL);
+	_io_dispatcher_thread=sll_platform_start_thread(_poll_thread,NULL,NULL);
 	SLL_ASSERT(_io_dispatcher_thread!=SLL_UNKNOWN_INTERNAL_THREAD_INDEX);
 }
 

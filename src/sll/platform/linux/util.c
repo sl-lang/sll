@@ -1,15 +1,9 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/platform.h>
 #include <sll/_internal/static_string.h>
-#include <sll/api/date.h>
-#include <sll/api/time.h>
 #include <sll/common.h>
-#include <sll/data.h>
 #include <sll/environment.h>
-#include <sll/error.h>
-#include <sll/init.h>
 #include <sll/memory.h>
-#include <sll/platform/thread.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <dlfcn.h>
@@ -18,9 +12,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/random.h>
-#include <sys/types.h>
 #include <termios.h>
-#include <time.h>
 #include <unistd.h>
 
 
@@ -34,7 +26,6 @@ static __STATIC_STRING(_linux_platform_str,
 	"linux"
 #endif
 );
-static sll_time_zone_t _linux_platform_time_zone={"GMT",0};
 static unsigned int _linux_csr;
 static struct termios _linux_stdin_cfg;
 
@@ -43,14 +34,6 @@ static struct termios _linux_stdin_cfg;
 __SLL_EXTERNAL const sll_cpu_t* sll_platform_cpu_count=&_linux_cpu;
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_linux_env;
 __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_linux_platform_str;
-__SLL_EXTERNAL const sll_time_zone_t* sll_platform_time_zone=&_linux_platform_time_zone;
-
-
-
-extern char** environ;
-extern int daylight;
-extern long timezone;
-extern char* tzname[2];
 
 
 
@@ -77,7 +60,6 @@ void _deinit_platform(void){
 	*((sll_environment_length_t*)(&(_linux_env.l)))=0;
 	sll_deallocate(PTR(_linux_env.dt));
 	_linux_env.dt=NULL;
-	_linux_platform_time_zone=*sll_utc_time_zone;
 	_reset_critical();
 }
 
@@ -144,24 +126,7 @@ void _init_platform(void){
 		_linux_env.dt=sll_reallocate((const sll_environment_variable_t**)(_linux_env.dt),l*sizeof(sll_environment_variable_t*));
 	}
 	*((sll_environment_length_t*)(&(_linux_env.l)))=l;
-	tzset();
-	const sll_char_t* nm=SLL_CHAR(tzname[!!daylight]);
-	sll_string_length_t sz=sll_string_length(nm);
-	if (sz>31){
-		sz=31;
-	}
-	sll_copy_data(nm,sz,_linux_platform_time_zone.nm);
-	_linux_platform_time_zone.nm[sz]=0;
-	_linux_platform_time_zone.off=-timezone/60;
 	_linux_cpu=sysconf(_SC_NPROCESSORS_ONLN);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_time_t sll_platform_get_current_time(void){
-	struct timespec tm;
-	clock_gettime(CLOCK_REALTIME,&tm);
-	return tm.tv_sec*1000000000+tm.tv_nsec;
 }
 
 
@@ -202,26 +167,4 @@ __SLL_EXTERNAL void sll_platform_remove_environment_variable(const sll_char_t* k
 
 __SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,const sll_char_t* v){
 	setenv((char*)k,(char*)v,1);
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_sleep(sll_time_t tm){
-	struct timespec ts;
-	clock_gettime(CLOCK_REALTIME,&ts);
-	sll_time_t e=ts.tv_sec*1000000000+ts.tv_nsec+tm;
-	while (1){
-		struct timeval tv;
-		tv.tv_sec=tm/1000000000;
-		tv.tv_usec=(tm/1000)%1000000;
-		if (!select(0,NULL,NULL,NULL,&tv)){
-			return;
-		}
-		clock_gettime(CLOCK_REALTIME,&ts);
-		sll_time_t c=ts.tv_sec*1000000000+ts.tv_nsec;
-		if (c>=e){
-			break;
-		}
-		tm=c-e;
-	}
 }

@@ -1,3 +1,4 @@
+#include <sll/_internal/error.h>
 #include <sll/_internal/platform.h>
 #include <sll/common.h>
 #include <sll/error.h>
@@ -65,7 +66,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_cpu(sll_cpu_t cpu
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start_thread(sll_internal_thread_function_t fn,void* arg){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start_thread(sll_internal_thread_function_t fn,void* arg,sll_error_t* err){
+	ERROR_PTR_RESET;
 	pthread_t o;
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
@@ -74,7 +76,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start
 		arg,
 		sem_open("/__sll_execute_wrapper_sync",O_CREAT,S_IRUSR|S_IWUSR,0)
 	};
-	if (pthread_create(&o,&attr,_execute_wrapper,&dt)){
+	int pthread_err=pthread_create(&o,&attr,_execute_wrapper,&dt);
+	if (pthread_err){
+		ERROR_PTR(pthread_err|SLL_ERROR_FLAG_SYSTEM);
 		return SLL_UNKNOWN_INTERNAL_THREAD_INDEX;
 	}
 	sem_wait(dt.lck);

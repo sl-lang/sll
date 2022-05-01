@@ -9,7 +9,7 @@
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/platform/memory.h>
-#include <sll/platform/util.h>
+#include <sll/platform/time.h>
 #include <sll/string.h>
 #include <sll/string_table.h>
 #include <sll/types.h>

@@ -119,9 +119,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_cpu(sll_cpu_t cpu
  * \desc Docs!
  * \arg sll_internal_thread_function_t fn
  * \arg void* arg
+ * \arg sll_error_t* err
  * \ret sll_internal_thread_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start_thread(sll_internal_thread_function_t fn,void* arg);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start_thread(sll_internal_thread_function_t fn,void* arg,sll_error_t* err);
 
 
 

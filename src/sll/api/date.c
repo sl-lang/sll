@@ -7,7 +7,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/new_object.h>
-#include <sll/platform/util.h>
+#include <sll/platform/time.h>
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>

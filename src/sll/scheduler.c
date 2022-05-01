@@ -163,7 +163,7 @@ sll_return_code_t _scheduler_run(void){
 			sll_audit(SLL_CHAR("sll.thread.create"),SLL_CHAR("0Ai"),*(cpu_dt->queue));
 		}
 		else{
-			cpu_dt->tid=sll_platform_start_thread(_cpu_core_worker,PTR(i));
+			cpu_dt->tid=sll_platform_start_thread(_cpu_core_worker,PTR(i),NULL);
 		}
 		cpu_dt++;
 	}
