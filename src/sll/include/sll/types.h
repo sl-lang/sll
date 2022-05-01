@@ -42,17 +42,6 @@
 
 
 /**
- * \flags macro var
- * \name SLL_MAX_STACK_OFFSET
- * \group limits
- * \desc Docs!
- * \type sll_stack_offset_t
- */
-#define SLL_MAX_STACK_OFFSET __SLL_U32_MAX
-
-
-
-/**
  * \flags type var
  * \name sll_bool_t
  * \group types
