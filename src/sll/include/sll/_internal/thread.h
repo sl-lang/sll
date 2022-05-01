@@ -4,6 +4,7 @@
 #include <sll/_internal/sandbox.h>
 #include <sll/_size_types.h>
 #include <sll/types.h>
+#include <sll/vm.h>
 
 
 

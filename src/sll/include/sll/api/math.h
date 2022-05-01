@@ -40,6 +40,21 @@
 
 
 /**
+ * \flags type
+ * \name sll_factor_t
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_integer_t n
+ * \arg sll_size_t pw
+ */
+typedef struct _SLL_FACTOR{
+    sll_integer_t n;
+    sll_size_t pw;
+} sll_factor_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_api_math_abs
  * \group math-api

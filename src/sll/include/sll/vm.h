@@ -1,7 +1,9 @@
 #ifndef __SLL_VM_H__
 #define __SLL_VM_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/ift.h>
+#include <sll/object.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -31,6 +33,51 @@
  * \type sll_flags_t
  */
 #define SLL_EXECUTE_FUNCTION_RESERVED0 2
+
+
+
+/**
+ * \flags type var
+ * \name sll_call_stack_size_t
+ * \group vm
+ * \desc Docs!
+ * \type __SLL_U16
+ */
+typedef __SLL_U16 sll_call_stack_size_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_call_stack_frame_t
+ * \group vm
+ * \desc Docs!
+ * \arg const sll_char_t* nm
+ * \arg sll_instruction_index_t _ii
+ * \arg sll_stack_offset_t _s
+ * \arg void* _var_mem_off
+ */
+typedef struct _SLL_CALL_STACK_FRAME{
+    const sll_char_t* nm;
+    sll_instruction_index_t _ii;
+    sll_stack_offset_t _s;
+    void* _var_mem_off;
+} sll_call_stack_frame_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_call_stack_t
+ * \group vm
+ * \desc Docs!
+ * \arg sll_call_stack_frame_t* dt
+ * \arg sll_call_stack_size_t l
+ */
+typedef struct _SLL_CALL_STACK{
+    sll_call_stack_frame_t* dt;
+    sll_call_stack_size_t l;
+} sll_call_stack_t;
 
 
 

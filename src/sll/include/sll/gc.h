@@ -1,6 +1,7 @@
 #ifndef __SLL_GC_H__
 #define __SLL_GC_H__ 1
 #include <sll/common.h>
+#include <sll/object.h>
 #include <sll/types.h>
 /**
  * \flags group

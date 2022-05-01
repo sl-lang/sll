@@ -4,6 +4,7 @@
 #include <sll/api/date.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/environment.h>
 #include <sll/error.h>
 #include <sll/init.h>
 #include <sll/memory.h>

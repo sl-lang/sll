@@ -14,6 +14,7 @@
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/generated/cpuid_error.h>
+#include <sll/init.h>
 #include <sll/location.h>
 #include <sll/platform/file.h>
 #include <sll/string.h>

@@ -12,6 +12,16 @@
 
 
 /**
+ * \flags func type
+ * \name sll_cleanup_function_t
+ * \group init
+ * \desc Docs!
+ */
+typedef void (*sll_cleanup_function_t)(void);
+
+
+
+/**
  * \flags func
  * \name sll_deinit
  * \group init

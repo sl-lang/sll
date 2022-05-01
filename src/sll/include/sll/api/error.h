@@ -2,6 +2,7 @@
 #define __SLL_API_ERROR_H__ 1
 #include <sll/common.h>
 #include <sll/types.h>
+#include <sll/vm.h>
 /**
  * \flags group
  * \name Error API

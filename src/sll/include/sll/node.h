@@ -1095,6 +1095,19 @@
 
 
 /**
+ * \flags func type
+ * \name sll_import_resolver_t
+ * \group node
+ * \desc Docs!
+ * \arg const sll_string_t* path
+ * \arg sll_compilation_data_t* out
+ * \ret sll_bool_t
+ */
+typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* path,sll_compilation_data_t* out);
+
+
+
+/**
  * \flags func
  * \name sll_free_compilation_data
  * \group node

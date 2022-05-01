@@ -1,8 +1,8 @@
 #ifndef __SLL_OBJECT_H__
 #define __SLL_OBJECT_H__ 1
 #include <sll/_object_func.h>
+#include <sll/_size_types.h>
 #include <sll/common.h>
-#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -175,6 +175,74 @@
  * \type sll_object_type_table_t
  */
 #define SLL_INIT_OBJECT_TYPE_TABLE_STRUCT {NULL,0}
+
+
+
+/**
+ * \flags type var
+ * \name sll_object_type_table_length_t
+ * \group object
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_object_type_table_length_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_object_type_data_entry_t
+ * \group object
+ * \desc Docs!
+ * \arg sll_object_type_t t
+ * \arg sll_bool_t c
+ * \arg sll_string_t nm
+ */
+typedef struct _SLL_OBJECT_TYPE_DATA_ENTRY{
+    sll_object_type_t t;
+    sll_bool_t c;
+    sll_string_t nm;
+} sll_object_type_data_entry_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_object_type_data_t
+ * \group object
+ * \desc Docs!
+ * \arg const sll_string_t nm
+ * \arg sll_arg_count_t l
+ * \arg __SLL_U32 _hash_table_len
+ * \arg sll_arg_count_t* _hash_table
+ * \arg __SLL_U64 _rng
+ * \arg sll_integer_t* fn
+ * \arg sll_object_type_data_entry_t* dt
+ */
+typedef struct _SLL_OBJECT_TYPE_DATA{
+    const sll_string_t nm;
+    sll_arg_count_t l;
+    __SLL_U32 _hash_table_len;
+    sll_arg_count_t* _hash_table;
+    __SLL_U64 _rng;
+    sll_integer_t fn[SLL_MAX_OBJECT_FUNC+1];
+    sll_object_type_data_entry_t dt[];
+} sll_object_type_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_object_type_table_t
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_type_data_t** dt
+ * \arg sll_object_type_table_length_t l
+ */
+typedef struct _SLL_OBJECT_TYPE_TABLE{
+    const sll_object_type_data_t** dt;
+    sll_object_type_table_length_t l;
+} sll_object_type_table_t;
 
 
 

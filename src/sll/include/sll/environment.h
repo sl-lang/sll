@@ -1,5 +1,6 @@
 #ifndef __SLL_ENVIRONMENT_H__
 #define __SLL_ENVIRONMENT_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/search_path.h>
 #include <sll/types.h>
@@ -9,6 +10,47 @@
  * \group environment
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags type var
+ * \name sll_environment_length_t
+ * \group environment
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_environment_length_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_environment_variable_t
+ * \group environment
+ * \desc Docs!
+ * \arg const sll_string_t k
+ * \arg const sll_string_t v
+ */
+typedef struct _SLL_ENVIRONMENT_VARIABLE{
+    const sll_string_t k;
+    const sll_string_t v;
+} sll_environment_variable_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_environment_t
+ * \group environment
+ * \desc Docs!
+ * \arg const sll_environment_variable_t*const* dt
+ * \arg const sll_environment_length_t l
+ */
+typedef struct _SLL_ENVIRONMENT{
+    const sll_environment_variable_t*const* dt;
+    const sll_environment_length_t l;
+} sll_environment_t;
 
 
 

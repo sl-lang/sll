@@ -135,56 +135,12 @@ typedef __SLL_U8 sll_compare_result_t;
 
 /**
  * \flags type var
- * \name sll_day_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_day_t;
-
-
-
-/**
- * \flags type var
  * \name sll_flags_t
  * \group types
  * \desc Docs!
  * \type __SLL_U8
  */
 typedef __SLL_U8 sll_flags_t;
-
-
-
-/**
- * \flags type var
- * \name sll_hour_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_hour_t;
-
-
-
-/**
- * \flags type var
- * \name sll_minute_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_minute_t;
-
-
-
-/**
- * \flags type var
- * \name sll_month_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_month_t;
 
 
 
@@ -234,17 +190,6 @@ typedef __SLL_U8 sll_sandbox_flag_t;
 
 /**
  * \flags type var
- * \name sll_call_stack_size_t
- * \group types
- * \desc Docs!
- * \type __SLL_U16
- */
-typedef __SLL_U16 sll_call_stack_size_t;
-
-
-
-/**
- * \flags type var
  * \name sll_cpu_t
  * \group types
  * \desc Docs!
@@ -273,17 +218,6 @@ typedef __SLL_U16 sll_file_flags_t;
  * \type __SLL_U16
  */
 typedef __SLL_U16 sll_read_char_t;
-
-
-
-/**
- * \flags type var
- * \name sll_year_t
- * \group types
- * \desc Docs!
- * \type __SLL_U16
- */
-typedef __SLL_U16 sll_year_t;
 
 
 
@@ -372,17 +306,6 @@ typedef __SLL_U32 sll_barrier_index_t;
  * \type __SLL_U32
  */
 typedef __SLL_U32 sll_debug_data_length_t;
-
-
-
-/**
- * \flags type var
- * \name sll_environment_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_environment_length_t;
 
 
 
@@ -493,17 +416,6 @@ typedef __SLL_U32 sll_node_offset_t;
  * \type __SLL_U32
  */
 typedef __SLL_U32 sll_object_type_t;
-
-
-
-/**
- * \flags type var
- * \name sll_object_type_table_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_object_type_table_length_t;
 
 
 
@@ -1753,18 +1665,6 @@ typedef struct _SLL_OBJECT{
 
 /**
  * \flags func type
- * \name sll_unary_operator_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* a
- * \ret sll_object_t*
- */
-typedef sll_object_t* (*sll_unary_operator_t)(sll_object_t* a);
-
-
-
-/**
- * \flags func type
  * \name sll_binary_operator_t
  * \group types
  * \desc Docs!
@@ -1773,236 +1673,6 @@ typedef sll_object_t* (*sll_unary_operator_t)(sll_object_t* a);
  * \ret sll_object_t*
  */
 typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t* a,sll_object_t* b);
-
-
-
-/**
- * \flags func type
- * \name sll_ternary_operator_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* a
- * \arg sll_object_t* b
- * \arg sll_object_t* c
- * \ret sll_object_t*
- */
-typedef sll_object_t* (*sll_ternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c);
-
-
-
-/**
- * \flags func type
- * \name sll_quaternary_operator_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* a
- * \arg sll_object_t* b
- * \arg sll_object_t* c
- * \arg sll_object_t* d
- * \ret sll_object_t*
- */
-typedef sll_object_t* (*sll_quaternary_operator_t)(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d);
-
-
-
-/**
- * \flags type
- * \name sll_object_type_data_entry_t
- * \group types
- * \desc Docs!
- * \arg sll_object_type_t t
- * \arg sll_bool_t c
- * \arg sll_string_t nm
- */
-typedef struct _SLL_OBJECT_TYPE_DATA_ENTRY{
-	sll_object_type_t t;
-	sll_bool_t c;
-	sll_string_t nm;
-} sll_object_type_data_entry_t;
-
-
-
-/**
- * \flags type
- * \name sll_object_type_data_t
- * \group types
- * \desc Docs!
- * \arg const sll_string_t nm
- * \arg sll_arg_count_t l
- * \arg __SLL_U32 _hash_table_len
- * \arg sll_arg_count_t* _hash_table
- * \arg __SLL_U64 _rng
- * \arg sll_integer_t* fn
- * \arg sll_object_type_data_entry_t* dt
- */
-typedef struct _SLL_OBJECT_TYPE_DATA{
-	const sll_string_t nm;
-	sll_arg_count_t l;
-	__SLL_U32 _hash_table_len;
-	sll_arg_count_t* _hash_table;
-	__SLL_U64 _rng;
-	sll_integer_t fn[SLL_MAX_OBJECT_FUNC+1];
-	sll_object_type_data_entry_t dt[];
-} sll_object_type_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_object_type_table_t
- * \group types
- * \desc Docs!
- * \arg const sll_object_type_data_t** dt
- * \arg sll_object_type_table_length_t l
- */
-typedef struct _SLL_OBJECT_TYPE_TABLE{
-	const sll_object_type_data_t** dt;
-	sll_object_type_table_length_t l;
-} sll_object_type_table_t;
-
-
-
-/**
- * \flags type
- * \name sll_call_stack_frame_t
- * \group types
- * \desc Docs!
- * \arg const sll_char_t* nm
- * \arg sll_instruction_index_t _ii
- * \arg sll_stack_offset_t _s
- * \arg void* _var_mem_off
- */
-typedef struct _SLL_CALL_STACK_FRAME{
-	const sll_char_t* nm;
-	sll_instruction_index_t _ii;
-	sll_stack_offset_t _s;
-	void* _var_mem_off;
-} sll_call_stack_frame_t;
-
-
-
-/**
- * \flags type
- * \name sll_call_stack_t
- * \group types
- * \desc Docs!
- * \arg sll_call_stack_frame_t* dt
- * \arg sll_call_stack_size_t l
- */
-typedef struct _SLL_CALL_STACK{
-	sll_call_stack_frame_t* dt;
-	sll_call_stack_size_t l;
-} sll_call_stack_t;
-
-
-
-/**
- * \flags func type
- * \name sll_import_resolver_t
- * \group types
- * \desc Docs!
- * \arg const sll_string_t* path
- * \arg sll_compilation_data_t* out
- * \ret sll_bool_t
- */
-typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* path,sll_compilation_data_t* out);
-
-
-
-/**
- * \flags func type
- * \name sll_cleanup_function_t
- * \group types
- * \desc Docs!
- */
-typedef void (*sll_cleanup_function_t)(void);
-
-
-
-/**
- * \flags type
- * \name sll_time_zone_t
- * \group types
- * \desc Docs!
- * \arg sll_char_t* nm
- * \arg sll_time_t off
- */
-typedef struct _SLL_TIME_ZONE{
-	sll_char_t nm[32];
-	sll_time_t off;
-} sll_time_zone_t;
-
-
-
-/**
- * \flags type
- * \name sll_date_t
- * \group types
- * \desc Docs!
- * \arg sll_year_t y
- * \arg sll_month_t m
- * \arg sll_day_t d
- * \arg sll_day_t wd
- * \arg sll_hour_t h
- * \arg sll_minute_t mn
- * \arg sll_second_t s
- * \arg sll_time_zone_t tz
- */
-typedef struct _SLL_DATE{
-	sll_year_t y;
-	sll_month_t m;
-	sll_day_t d;
-	sll_day_t wd;
-	sll_hour_t h;
-	sll_minute_t mn;
-	sll_second_t s;
-	sll_time_zone_t tz;
-} sll_date_t;
-
-
-
-/**
- * \flags type
- * \name sll_factor_t
- * \group types
- * \desc Docs!
- * \arg sll_integer_t n
- * \arg sll_size_t pw
- */
-typedef struct _SLL_FACTOR{
-	sll_integer_t n;
-	sll_size_t pw;
-} sll_factor_t;
-
-
-
-/**
- * \flags type
- * \name sll_environment_variable_t
- * \group types
- * \desc Docs!
- * \arg const sll_string_t k
- * \arg const sll_string_t v
- */
-typedef struct _SLL_ENVIRONMENT_VARIABLE{
-	const sll_string_t k;
-	const sll_string_t v;
-} sll_environment_variable_t;
-
-
-
-/**
- * \flags type
- * \name sll_environment_t
- * \group types
- * \desc Docs!
- * \arg const sll_environment_variable_t*const* dt
- * \arg const sll_environment_length_t l
- */
-typedef struct _SLL_ENVIRONMENT{
-	const sll_environment_variable_t*const* dt;
-	const sll_environment_length_t l;
-} sll_environment_t;
 
 
 
