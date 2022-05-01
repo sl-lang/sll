@@ -7,7 +7,7 @@
 - Implemented `sll_audit_enable`
 - Implemented `sll_execution_flags_t`, `sll_process_creation_flags_t` and `sll_search_flags_t`
 - Implemented `sll_platform_allocate_page_aligned`
-- Nightly builds
+- Nightly builds (available via the `/apt/nightly/` channel)
 
 ## Changed
 
