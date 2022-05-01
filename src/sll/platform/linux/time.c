@@ -3,6 +3,7 @@
 #include <sll/common.h>
 #include <sll/types.h>
 #include <stdlib.h>
+#include <sys/select.h>
 #include <time.h>
 
 
@@ -15,7 +16,6 @@ __SLL_EXTERNAL const sll_time_zone_t* sll_platform_time_zone=&_linux_platform_ti
 
 
 
-extern char** environ;
 extern int daylight;
 extern long timezone;
 extern char* tzname[2];

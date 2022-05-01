@@ -37,6 +37,10 @@ __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_linux_platform_str;
 
 
 
+extern char** environ;
+
+
+
 static void _reset_critical(void){
 	_mm_setcsr(_linux_csr);
 	tcsetattr(STDIN_FILENO,TCSANOW,&_linux_stdin_cfg);
