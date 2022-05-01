@@ -57,9 +57,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_handle_t sll_platform_lock_create(voi
  * \subgroup platform-lock
  * \desc Docs!
  * \arg sll_lock_handle_t l
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_delete(sll_lock_handle_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_delete(sll_lock_handle_t l);
 
 
 
@@ -70,9 +70,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_delete(sll_lock_h
  * \subgroup platform-lock
  * \desc Docs!
  * \arg sll_lock_handle_t l
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_release(sll_lock_handle_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_release(sll_lock_handle_t l);
 
 
 

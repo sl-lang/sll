@@ -19,12 +19,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_handle_t sll_platform_lock_create(voi
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_delete(sll_lock_handle_t l){
-	return !!CloseHandle((HANDLE)l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_delete(sll_lock_handle_t l){
+	return (CloseHandle((HANDLE)l)?SLL_NO_ERROR:sll_platform_get_error());
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_release(sll_lock_handle_t l){
-	return !!ReleaseMutex((HANDLE)l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_release(sll_lock_handle_t l){
+	return (ReleaseMutex((HANDLE)l)?SLL_NO_ERROR:sll_platform_get_error());
 }

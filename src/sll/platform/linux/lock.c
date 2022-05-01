@@ -10,7 +10,7 @@
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_acquire(sll_lock_handle_t l){
 	int err=pthread_mutex_lock(l);
-	return (err?err|SLL_ERROR_FLAG_SYSTEM:0);
+	return (err?err|SLL_ERROR_FLAG_SYSTEM:SLL_NO_ERROR);
 }
 
 
@@ -27,16 +27,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_handle_t sll_platform_lock_create(voi
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_delete(sll_lock_handle_t l){
-	if (pthread_mutex_destroy(l)){
-		return 0;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_delete(sll_lock_handle_t l){
+	int err=pthread_mutex_destroy(l);
+	if (err){
+		return err|SLL_ERROR_FLAG_SYSTEM;
 	}
 	sll_deallocate(l);
-	return 1;
+	return SLL_NO_ERROR;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_release(sll_lock_handle_t l){
-	return !pthread_mutex_unlock(l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_release(sll_lock_handle_t l){
+	int err=pthread_mutex_unlock(l);
+	return (err?err|SLL_ERROR_FLAG_SYSTEM:SLL_NO_ERROR);
 }
