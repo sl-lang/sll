@@ -1,6 +1,7 @@
 #ifndef __SLL__INTERNAL_PLATFORM_H__
 #define __SLL__INTERNAL_PLATFORM_H__ 1
 #include <sll/_internal/common.h>
+#include <sll/platform/thread.h>
 #include <sll/types.h>
 
 

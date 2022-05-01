@@ -1,6 +1,6 @@
 def generate(d_dt,o_fp):
 	with open(o_fp,"w") as cf:
-		cf.write("#include <sll/common.h>\n#include <sll/string.h>\n#include <sll/types.h>\n\n\n\n")
+		cf.write("#include <sll/common.h>\n#include <sll/ift.h>\n#include <sll/string.h>\n#include <sll/types.h>\n\n\n\n")
 		fn_l=[]
 		for k in d_dt["data"]:
 			if (k["api_fmt"] is None):

@@ -37,6 +37,30 @@
 
 
 /**
+ * \flags type var
+ * \name sll_internal_thread_index_t
+ * \group platform
+ * \subgroup platform-thread
+ * \desc Docs!
+ * \type void*
+ */
+typedef void* sll_internal_thread_index_t;
+
+
+
+/**
+ * \flags func type
+ * \name sll_internal_thread_function_t
+ * \group platform
+ * \subgroup platform-thread
+ * \desc Docs!
+ * \arg void* arg
+ */
+typedef void (*sll_internal_thread_function_t)(void* arg);
+
+
+
+/**
  * \flags check_output func
  * \name sll_platform_current_thread
  * \group platform

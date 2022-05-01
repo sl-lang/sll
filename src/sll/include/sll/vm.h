@@ -1,6 +1,7 @@
 #ifndef __SLL_VM_H__
 #define __SLL_VM_H__ 1
 #include <sll/common.h>
+#include <sll/ift.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -30,6 +31,46 @@
  * \type sll_flags_t
  */
 #define SLL_EXECUTE_FUNCTION_RESERVED0 2
+
+
+
+/**
+ * \flags type
+ * \name sll_runtime_data_t
+ * \group vm
+ * \desc Docs!
+ * \arg const sll_assembly_data_t* a_dt
+ * \arg sll_internal_function_table_t* ift
+ * \arg sll_object_type_table_t* tt
+ */
+typedef struct _SLL_RUNTIME_DATA{
+    const sll_assembly_data_t* a_dt;
+    sll_internal_function_table_t* ift;
+    sll_object_type_table_t* tt;
+} sll_runtime_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_vm_config_t
+ * \group vm
+ * \desc Docs!
+ * \arg sll_size_t s_sz
+ * \arg sll_size_t c_st_sz
+ * \arg sll_internal_function_table_t* ift
+ * \arg sll_file_t* in
+ * \arg sll_file_t* out
+ * \arg sll_file_t* err
+ */
+typedef struct _SLL_VM_CONFIG{
+    sll_size_t s_sz;
+    sll_size_t c_st_sz;
+    sll_internal_function_table_t* ift;
+    sll_file_t* in;
+    sll_file_t* out;
+    sll_file_t* err;
+} sll_vm_config_t;
 
 
 

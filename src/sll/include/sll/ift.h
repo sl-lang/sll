@@ -1,5 +1,6 @@
 #ifndef __SLL_IFT_H__
 #define __SLL_IFT_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -30,6 +31,74 @@
  * \type sll_function_index_t
  */
 #define SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX 0xffffffff
+
+
+
+/**
+ * \flags type var
+ * \name sll_internal_function_pointer_t
+ * \group ift
+ * \desc Docs!
+ * \type void*
+ */
+typedef void* sll_internal_function_pointer_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_internal_function_t
+ * \group ift
+ * \desc Docs!
+ * \arg sll_string_t nm
+ * \arg sll_internal_function_pointer_t p
+ * \arg sll_char_t* fmt
+ * \arg __SLL_U16 _ret
+ * \arg sll_arg_count_t _arg_cnt
+ * \arg sll_size_t _arg_sz
+ * \arg __SLL_U64* _regs
+ */
+typedef struct _SLL_INTERNAL_FUNCTION{
+    sll_string_t nm;
+    sll_internal_function_pointer_t p;
+    sll_char_t* fmt;
+    __SLL_U16 _ret;
+    sll_arg_count_t _arg_cnt;
+    sll_size_t _arg_sz;
+    __SLL_U64* _regs;
+} sll_internal_function_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_internal_function_table_t
+ * \group ift
+ * \desc Docs!
+ * \arg const sll_internal_function_t* dt
+ * \arg sll_function_index_t l
+ */
+typedef struct _SLL_INTERNAL_FUNCTION_TABLE{
+    const sll_internal_function_t* dt;
+    sll_function_index_t l;
+} sll_internal_function_table_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_internal_function_descriptor_t
+ * \group ift
+ * \desc Docs!
+ * \arg const sll_char_t* nm
+ * \arg const sll_internal_function_pointer_t f
+ * \arg const sll_char_t* fmt
+ */
+typedef struct _SLL_INTERNAL_FUNCTION_DESCRIPTOR{
+    const sll_char_t* nm;
+    const sll_internal_function_pointer_t f;
+    const sll_char_t* fmt;
+} sll_internal_function_descriptor_t;
 
 
 

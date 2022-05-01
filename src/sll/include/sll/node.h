@@ -2,6 +2,7 @@
 #define __SLL_NODE_H__ 1
 #include <sll/api/hash.h>
 #include <sll/common.h>
+#include <sll/ift.h>
 #include <sll/types.h>
 /**
  * \flags group
