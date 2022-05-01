@@ -21,6 +21,17 @@ typedef __SLL_U32 sll_object_type_t;
 
 
 /**
+ * \flags type var
+ * \name sll_reference_count_t
+ * \group gc
+ * \desc Docs!
+ * \type __SLL_U64
+ */
+typedef __SLL_U64 sll_reference_count_t;
+
+
+
+/**
  * \flags type
  * \name sll_array_t
  * \group gc

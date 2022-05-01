@@ -2,6 +2,7 @@
 #define __SLL__INTERNAL_FILE_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/file.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 
 

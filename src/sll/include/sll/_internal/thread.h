@@ -5,6 +5,7 @@
 #include <sll/_size_types.h>
 #include <sll/assembly.h>
 #include <sll/gc.h>
+#include <sll/sandbox.h>
 #include <sll/types.h>
 #include <sll/vm.h>
 

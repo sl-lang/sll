@@ -312,9 +312,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(__SLL_U64 a,__SLL_U64 b,_
  * \desc Desc!
  * \arg sll_md5_data_t* dt
  * \arg void* bf
- * \arg sll_file_offset_t bfl
+ * \arg sll_size_t bfl
  */
-__SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* bf,sll_file_offset_t bfl);
+__SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* bf,sll_size_t bfl);
 
 
 
@@ -325,9 +325,9 @@ __SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* bf,sll_file_offset_t b
  * \desc Desc!
  * \arg sll_sha1_data_t* dt
  * \arg void* bf
- * \arg sll_file_offset_t bfl
+ * \arg sll_size_t bfl
  */
-__SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_file_offset_t bfl);
+__SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_size_t bfl);
 
 
 
@@ -338,9 +338,9 @@ __SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_file_offset_t
  * \desc Desc!
  * \arg sll_sha256_data_t* dt
  * \arg void* bf
- * \arg sll_file_offset_t bfl
+ * \arg sll_size_t bfl
  */
-__SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_file_offset_t bfl);
+__SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_size_t bfl);
 
 
 
@@ -351,9 +351,9 @@ __SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_file_offs
  * \desc Desc!
  * \arg sll_sha512_data_t* dt
  * \arg void* bf
- * \arg sll_file_offset_t bfl
+ * \arg sll_size_t bfl
  */
-__SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offset_t bfl);
+__SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_size_t bfl);
 
 
 

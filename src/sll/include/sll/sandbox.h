@@ -1,5 +1,6 @@
 #ifndef __SLL_SANDBOX_H__
 #define __SLL_SANDBOX_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -218,6 +219,28 @@
  * \type sll_sandbox_flag_t
  */
 #define SLL_MAX_SANDBOX_FLAG SLL_SANDBOX_FLAG_DISABLE_REFERENCE_COUNTER
+
+
+
+/**
+ * \flags type var
+ * \name sll_sandbox_flag_t
+ * \group sandbox
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_sandbox_flag_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_sandbox_flags_t
+ * \group sandbox
+ * \desc Docs!
+ * \type __SLL_U64
+ */
+typedef __SLL_U64 sll_sandbox_flags_t;
 
 
 

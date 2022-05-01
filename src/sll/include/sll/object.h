@@ -181,6 +181,17 @@
 
 /**
  * \flags type var
+ * \name sll_object_function_index_t
+ * \group object
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_object_function_index_t;
+
+
+
+/**
+ * \flags type var
  * \name sll_object_type_table_length_t
  * \group object
  * \desc Docs!

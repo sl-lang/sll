@@ -104,10 +104,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(__SLL_U64 a,__SLL_U64 b,_
 
 
 
-__SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* bf,sll_file_offset_t bfl){
+__SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* bf,sll_size_t bfl){
 	SLL_ASSERT(!(bfl&63));
 	const __SLL_U32* ptr=(const __SLL_U32*)bf;
-	for (sll_file_offset_t i=0;i<(bfl>>6);i++){
+	for (sll_size_t i=0;i<(bfl>>6);i++){
 		__SLL_U32 a=dt->a;
 		__SLL_U32 b=dt->b;
 		__SLL_U32 c=dt->c;
@@ -186,11 +186,11 @@ __SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* bf,sll_file_offset_t b
 
 
 
-__SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_file_offset_t bfl){
+__SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_size_t bfl){
 	SLL_ASSERT(!(bfl&63));
 	__SLL_U32 w[80];
 	const __SLL_U32* ptr=(const __SLL_U32*)bf;
-	for (sll_file_offset_t i=0;i<(bfl>>6);i++){
+	for (sll_size_t i=0;i<(bfl>>6);i++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
 			ptr++;
@@ -293,11 +293,11 @@ __SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* bf,sll_file_offset_t
 
 
 
-__SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_file_offset_t bfl){
+__SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_size_t bfl){
 	SLL_ASSERT(!(bfl&63));
 	__SLL_U32 w[64];
 	const __SLL_U32* ptr=(const __SLL_U32*)bf;
-	for (sll_file_offset_t idx=0;idx<(bfl>>6);idx++){
+	for (sll_size_t idx=0;idx<(bfl>>6);idx++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES(*ptr);
 			ptr++;
@@ -391,11 +391,11 @@ __SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* bf,sll_file_offs
 
 
 
-__SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_file_offset_t bfl){
+__SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* bf,sll_size_t bfl){
 	SLL_ASSERT(!(bfl&127));
 	__SLL_U64 w[80];
 	const __SLL_U64* ptr=(const __SLL_U64*)bf;
-	for (sll_file_offset_t idx=0;idx<(bfl>>7);idx++){
+	for (sll_size_t idx=0;idx<(bfl>>7);idx++){
 		for (unsigned int j=0;j<16;j++){
 			w[j]=SWAP_BYTES64(*ptr);
 			ptr++;

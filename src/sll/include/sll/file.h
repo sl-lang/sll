@@ -193,6 +193,39 @@
 
 
 /**
+ * \flags type var
+ * \name sll_file_flags_t
+ * \group file
+ * \desc Docs!
+ * \type __SLL_U16
+ */
+typedef __SLL_U16 sll_file_flags_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_read_char_t
+ * \group file
+ * \desc Docs!
+ * \type __SLL_U16
+ */
+typedef __SLL_U16 sll_read_char_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_file_offset_t
+ * \group file
+ * \desc Docs!
+ * \type __SLL_U64
+ */
+typedef __SLL_U64 sll_file_offset_t;
+
+
+
+/**
  * \flags type
  * \name sll_file_data_file_t
  * \group file

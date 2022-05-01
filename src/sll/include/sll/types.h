@@ -131,67 +131,12 @@ typedef __SLL_U8 sll_flags_t;
 
 /**
  * \flags type var
- * \name sll_name_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_name_length_t;
-
-
-
-/**
- * \flags type var
- * \name sll_object_function_index_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_object_function_index_t;
-
-
-
-/**
- * \flags type var
- * \name sll_sandbox_flag_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_sandbox_flag_t;
-
-
-
-/**
- * \flags type var
  * \name sll_cpu_t
  * \group types
  * \desc Docs!
  * \type __SLL_U16
  */
 typedef __SLL_U16 sll_cpu_t;
-
-
-
-/**
- * \flags type var
- * \name sll_file_flags_t
- * \group types
- * \desc Docs!
- * \type __SLL_U16
- */
-typedef __SLL_U16 sll_file_flags_t;
-
-
-
-/**
- * \flags type var
- * \name sll_read_char_t
- * \group types
- * \desc Docs!
- * \type __SLL_U16
- */
-typedef __SLL_U16 sll_read_char_t;
 
 
 
@@ -472,17 +417,6 @@ typedef __SLL_U32 sll_variable_index_t;
 
 /**
  * \flags type var
- * \name sll_version_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_version_t;
-
-
-
-/**
- * \flags type var
  * \name sll_wide_char_t
  * \group types
  * \desc Docs!
@@ -522,39 +456,6 @@ typedef __SLL_U64 sll_compressed_integer_t;
  * \type __SLL_U64
  */
 typedef __SLL_U64 sll_error_t;
-
-
-
-/**
- * \flags type var
- * \name sll_file_offset_t
- * \group types
- * \desc Docs!
- * \type __SLL_U64
- */
-typedef __SLL_U64 sll_file_offset_t;
-
-
-
-/**
- * \flags type var
- * \name sll_reference_count_t
- * \group types
- * \desc Docs!
- * \type __SLL_U64
- */
-typedef __SLL_U64 sll_reference_count_t;
-
-
-
-/**
- * \flags type var
- * \name sll_sandbox_flags_t
- * \group types
- * \desc Docs!
- * \type __SLL_U64
- */
-typedef __SLL_U64 sll_sandbox_flags_t;
 
 
 

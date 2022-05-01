@@ -160,6 +160,17 @@
 
 
 /**
+ * \flags type var
+ * \name sll_version_t
+ * \group version
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_version_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_version
  * \group version
