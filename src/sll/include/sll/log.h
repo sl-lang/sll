@@ -40,7 +40,7 @@
  * \name SLL_LOG_FLAG_SHOW
  * \group log
  * \desc Docs!
- * \type sll_flags_t
+ * \type sll_logger_flags_t
  */
 #define SLL_LOG_FLAG_SHOW 1
 
@@ -51,9 +51,20 @@
  * \name SLL_LOG_FLAG_NO_HEADER
  * \group log
  * \desc Docs!
- * \type sll_flags_t
+ * \type sll_logger_flags_t
  */
 #define SLL_LOG_FLAG_NO_HEADER 2
+
+
+
+/**
+ * \flags type var
+ * \name sll_logger_flags_t
+ * \group log
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_logger_flags_t;
 
 
 
@@ -96,11 +107,11 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,
  * \desc Docs!
  * \arg const sll_char_t* fp
  * \arg const sll_char_t* fn
- * \arg sll_flags_t fl
+ * \arg sll_logger_flags_t fl
  * \arg sll_bool_t st
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_logger_flags_t fl,sll_bool_t st);
 
 
 

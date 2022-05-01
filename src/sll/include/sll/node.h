@@ -1113,6 +1113,17 @@ typedef __SLL_U8 sll_node_type_t;
 
 /**
  * \flags type var
+ * \name sll_export_table_length_t
+ * \group node
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_export_table_length_t;
+
+
+
+/**
+ * \flags type var
  * \name sll_import_index_t
  * \group node
  * \desc Docs!

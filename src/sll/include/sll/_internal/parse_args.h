@@ -1,5 +1,6 @@
 #ifndef __SLL__INTERNAL_PARSE_ARGS_H__
 #define __SLL__INTERNAL_PARSE_ARGS_H__ 1
+#include <sll/_size_types.h>
 #include <sll/gc.h>
 #include <sll/parse_args.h>
 #include <sll/types.h>
@@ -13,6 +14,10 @@
 #define PARSE_ARGS_FLAG_ARRAY 1
 #define PARSE_ARGS_FLAG_REF 2
 #define PARSE_ARGS_FLAG_CONST 4
+
+
+
+typedef __SLL_U8 arg_parse_flags_t;
 
 
 

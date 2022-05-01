@@ -24,18 +24,18 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_log(sll_
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_default(sll_flags_t flags,sll_bool_t state){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_default(sll_logger_flags_t flags,sll_bool_t state){
 	return sll_set_log_flags(NULL,NULL,flags,state);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_file(const sll_string_t* file,sll_flags_t flags,sll_bool_t state){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_file(const sll_string_t* file,sll_logger_flags_t flags,sll_bool_t state){
 	return sll_set_log_flags(file->v,NULL,flags,state);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_function(const sll_string_t* file,const sll_string_t* func,sll_flags_t flags,sll_bool_t state){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_function(const sll_string_t* file,const sll_string_t* func,sll_logger_flags_t flags,sll_bool_t state){
 	return sll_set_log_flags(file->v,func->v,flags,state);
 }

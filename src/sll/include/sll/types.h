@@ -32,28 +32,6 @@
 
 /**
  * \flags macro var
- * \name SLL_MAX_EXPORT_TABLE_LENGTH
- * \group limits
- * \desc Docs!
- * \type sll_export_table_length_t
- */
-#define SLL_MAX_EXPORT_TABLE_LENGTH __SLL_U32_MAX
-
-
-
-/**
- * \flags macro var
- * \name SLL_MAX_SCOPE
- * \group limits
- * \desc Docs!
- * \type sll_scope_t
- */
-#define SLL_MAX_SCOPE __SLL_U32_MAX
-
-
-
-/**
- * \flags macro var
  * \name SLL_MAX_SIZE
  * \group limits
  * \desc Docs!
@@ -87,45 +65,12 @@ typedef __SLL_U1 sll_bool_t;
 
 /**
  * \flags type var
- * \name sll_char_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_char_t;
-
-
-
-/**
- * \flags type var
- * \name sll_flags_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_flags_t;
-
-
-
-/**
- * \flags type var
  * \name sll_arg_count_t
  * \group types
  * \desc Docs!
  * \type __SLL_U32
  */
 typedef __SLL_U32 sll_arg_count_t;
-
-
-
-/**
- * \flags type var
- * \name sll_export_table_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_export_table_length_t;
 
 
 

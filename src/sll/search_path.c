@@ -42,7 +42,7 @@ __SLL_EXTERNAL void sll_search_path_create(const sll_string_t* src,sll_search_pa
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_search_path_t* sp,const sll_string_t* nm,sll_flags_t fl,sll_string_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_search_path_t* sp,const sll_string_t* nm,sll_search_flags_t fl,sll_string_t* o){
 	SLL_INIT_STRING(o);
 	if (nm->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;

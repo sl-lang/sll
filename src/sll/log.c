@@ -15,11 +15,11 @@
 
 
 
-#define SET_OR_CLEAR(data,flags,set) ((data)^=((-((sll_flags_t)set))^(data))&(flags))
+#define SET_OR_CLEAR(data,flags,set) ((data)^=((-((sll_logger_flags_t)set))^(data))&(flags))
 
 
 
-static sll_flags_t _log_default=0;
+static sll_logger_flags_t _log_default=0;
 static file_log_data_t** _log_f_dt=NULL;
 static sll_array_length_t _log_f_dtl=0;
 
@@ -160,8 +160,8 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_flags_t fl,sll_bool_t st){
-	sll_flags_t tmp=fl;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_logger_flags_t fl,sll_bool_t st){
+	sll_logger_flags_t tmp=fl;
 	fl&=SLL_LOG_FLAG_SHOW|SLL_LOG_FLAG_NO_HEADER;
 	sll_bool_t o=(tmp==fl);
 	if (fp){

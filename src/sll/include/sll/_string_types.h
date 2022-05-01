@@ -7,6 +7,17 @@
 
 /**
  * \flags type var
+ * \name sll_char_t
+ * \group string
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_char_t;
+
+
+
+/**
+ * \flags type var
  * \name sll_string_checksum_t
  * \group string
  * \desc Docs!

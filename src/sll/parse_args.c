@@ -149,7 +149,7 @@ static __SLL_FORCE_INLINE void* _get_ptr_array(arg_output_t* o,sll_size_t sz){
 
 
 
-static void _parse_bool(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_bool(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
@@ -161,37 +161,37 @@ static void _parse_bool(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg
 
 
 
-static void _parse_uint8(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint8(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(8);
 }
 
 
 
-static void _parse_uint16(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint16(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(16);
 }
 
 
 
-static void _parse_uint32(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint32(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_INT(32);
 }
 
 
 
-static void _parse_int(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_int(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_integer_t,INT,i,INIT_ZERO);
 }
 
 
 
-static void _parse_float(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_float(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_float_t,FLOAT,f,INIT_ZERO);
 }
 
 
 
-static void _parse_int_or_float(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_int_or_float(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
@@ -218,25 +218,25 @@ static void _parse_int_or_float(sll_object_t* arg,sll_flags_t flags,arg_state_t*
 
 
 
-static void _parse_char(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_char(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_char_t,CHAR,c,INIT_ZERO);
 }
 
 
 
-static void _parse_complex(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_complex_t,COMPLEX,d,SLL_INIT_COMPLEX);
 }
 
 
 
-static void _parse_string(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE_PTR(sll_string_t,STRING,s,SLL_INIT_STRING);
 }
 
 
 
-static void _parse_char_or_string(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
@@ -265,19 +265,19 @@ static void _parse_char_or_string(sll_object_t* arg,sll_flags_t flags,arg_state_
 
 
 
-static void _parse_array(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_array(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE_PTR(sll_array_t,ARRAY,a,SLL_INIT_ARRAY);
 }
 
 
 
-static void _parse_map(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_map(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE_PTR(sll_map_t,MAP,m,SLL_INIT_MAP);
 }
 
 
 
-static void _parse_object(sll_object_t* arg,sll_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_object(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			ENSURE_TYPE(arg,ARRAY);
@@ -373,7 +373,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 	}
 	tmp=t;
 	arg_state_t* st=NULL;
-	sll_flags_t flags=0;
+	arg_parse_flags_t flags=0;
 	while (1){
 		SKIP_WHITESPACE;
 		if (*t=='&'){
@@ -390,7 +390,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 	while (*t){
 		sll_char_t type=*t;
 		t++;
-		sll_flags_t n_flags=0;
+		arg_parse_flags_t n_flags=0;
 		while (1){
 			SKIP_WHITESPACE;
 			if (*t=='+'){
@@ -462,7 +462,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			al++;
 			all--;
 		}
-		void (*fn)(sll_object_t*,sll_flags_t,arg_state_t**,arg_output_t*)=NULL;
+		void (*fn)(sll_object_t*,arg_parse_flags_t,arg_state_t**,arg_output_t*)=NULL;
 		switch (type){
 			case 'b':
 				WARN_IGNORED_CONST("'sll_bool_t' (b)");

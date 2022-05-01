@@ -36,6 +36,9 @@
 #define THREAD_FLAG_NO_AUDIT_TERMINATE 4
 
 
+typedef __SLL_U8 thread_flags_t;
+
+
 
 typedef __SLL_U8 thread_state_t;
 
@@ -57,7 +60,7 @@ typedef struct _THREAD_DATA{
 	sll_sandbox_flags_t sandbox;
 	sll_char_t tm;
 	thread_state_t st;
-	sll_flags_t flags;
+	thread_flags_t flags;
 	const sll_assembly_instruction_t* _last_ai;
 } thread_data_t;
 

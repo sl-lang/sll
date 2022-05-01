@@ -16,6 +16,17 @@
 
 /**
  * \flags macro var
+ * \name SLL_MAX_SCOPE
+ * \group identifier
+ * \desc Docs!
+ * \type sll_scope_t
+ */
+#define SLL_MAX_SCOPE __SLL_U32_MAX
+
+
+
+/**
+ * \flags macro var
  * \name SLL_MAX_IDENTIFIER_INDEX
  * \group limits
  * \desc Docs!

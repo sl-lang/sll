@@ -24,7 +24,7 @@
  * \name SLL_EXECUTE_FUNCTION_ASYNC
  * \group vm
  * \desc Docs!
- * \type sll_flags_t
+ * \type sll_execution_flags_t
  */
 #define SLL_EXECUTE_FUNCTION_ASYNC 1
 
@@ -35,9 +35,20 @@
  * \name SLL_EXECUTE_FUNCTION_RESERVED0
  * \group vm
  * \desc Internally used as `EXECUTE_FUNCTION_NO_AUDIT_TERMINATE`
- * \type sll_flags_t
+ * \type sll_execution_flags_t
  */
 #define SLL_EXECUTE_FUNCTION_RESERVED0 2
+
+
+
+/**
+ * \flags type var
+ * \name sll_execution_flags_t
+ * \group vm
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_execution_flags_t;
 
 
 
@@ -169,10 +180,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
  * \arg sll_integer_t fn_idx
  * \arg sll_object_t*const* al
  * \arg sll_arg_count_t all
- * \arg sll_flags_t fl
+ * \arg sll_execution_flags_t fl
  * \arg sll_object_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_flags_t fl);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_execution_flags_t fl);
 
 
 

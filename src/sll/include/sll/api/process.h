@@ -26,7 +26,7 @@
  * \group process-api
  * \subgroup process-api-flag
  * \desc Docs!
- * \type sll_flags_t
+ * \type sll_process_creation_flags_t
  */
 #define SLL_PROCESS_FLAG_PASS_STDIN 1
 
@@ -38,7 +38,7 @@
  * \group process-api
  * \subgroup process-api-flag
  * \desc Docs!
- * \type sll_flags_t
+ * \type sll_process_creation_flags_t
  */
 #define SLL_PROCESS_FLAG_CAPTURE_STDOUT 2
 
@@ -50,7 +50,7 @@
  * \group process-api
  * \subgroup process-api-flag
  * \desc Docs!
- * \type sll_flags_t
+ * \type sll_process_creation_flags_t
  */
 #define SLL_PROCESS_FLAG_CAPTURE_STDERR 4
 
@@ -62,9 +62,21 @@
  * \group process-api
  * \subgroup process-api-flag
  * \desc Docs!
- * \type sll_flags_t
+ * \type sll_process_creation_flags_t
  */
 #define SLL_PROCESS_FLAG_WAIT 8
+
+
+
+/**
+ * \flags type var
+ * \name sll_process_creation_flags_t
+ * \group process-api
+ * \subgroup process-api-flag
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_process_creation_flags_t;
 
 
 
@@ -128,11 +140,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(const sll_string_t* arg
  * \api #a#sB#s|a
  * \arg const sll_array_t* args
  * \arg const sll_string_t* cwd
- * \arg sll_flags_t flags
+ * \arg sll_process_creation_flags_t flags
  * \arg const sll_string_t* stdin
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_flags_t flags,const sll_string_t* stdin,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_process_creation_flags_t flags,const sll_string_t* stdin,sll_array_t* out);
 
 
 

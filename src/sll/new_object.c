@@ -115,7 +115,7 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 
 
 
-static sll_object_t* _build_struct(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va,sll_flags_t fl){
+static sll_object_t* _build_struct(const sll_char_t** t,sll_string_length_t* tl,sll_var_arg_list_t* va,object_creation_flags_t fl){
 	addr_t ptr=sll_var_arg_get_int(va);
 	sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
 	sll_size_t sz=sll_var_arg_get_int(va);
@@ -186,7 +186,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 	(*tl)--;
 	sll_char_t st=**t;
 	(*t)++;
-	sll_flags_t fl=0;
+	object_creation_flags_t fl=0;
 	while (1){
 		SKIP_WHITESPACE;
 		if (**t=='!'){
