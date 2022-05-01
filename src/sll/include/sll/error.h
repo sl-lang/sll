@@ -205,4 +205,15 @@
 
 
 
+/**
+ * \flags type var
+ * \name sll_error_t
+ * \group error
+ * \desc Docs!
+ * \type __SLL_U64
+ */
+typedef __SLL_U64 sll_error_t;
+
+
+
 #endif

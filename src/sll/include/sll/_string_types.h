@@ -8,7 +8,7 @@
 /**
  * \flags type var
  * \name sll_string_checksum_t
- * \group types
+ * \group string
  * \desc Docs!
  * \type __SLL_U32
  */
@@ -19,11 +19,22 @@ typedef __SLL_U32 sll_string_checksum_t;
 /**
  * \flags type var
  * \name sll_string_length_t
- * \group types
+ * \group string
  * \desc Docs!
  * \type __SLL_U32
  */
 typedef __SLL_U32 sll_string_length_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_wide_char_t
+ * \group string
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_wide_char_t;
 
 
 

@@ -2,6 +2,7 @@
 #include <sll/_internal/intrinsics.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/compression.h>
 #include <sll/types.h>
 
 

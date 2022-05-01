@@ -1,5 +1,6 @@
 #ifndef __SLL_DATA_H__
 #define __SLL_DATA_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -53,6 +54,17 @@
  * \arg void* d
  */
 #define SLL_COPY_STRING_NULL(s,d) (*((sll_char_t*)sll_copy_string((s),(d)))=0)
+
+
+
+/**
+ * \flags type var
+ * \name sll_compare_result_t
+ * \group data
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_compare_result_t;
 
 
 

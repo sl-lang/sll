@@ -1,6 +1,7 @@
 #ifndef __SLL_VM_H__
 #define __SLL_VM_H__ 1
 #include <sll/_size_types.h>
+#include <sll/_thread_type.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>

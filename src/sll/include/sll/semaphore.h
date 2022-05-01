@@ -24,6 +24,28 @@
 
 
 /**
+ * \flags type var
+ * \name sll_semaphore_counter_t
+ * \group semaphore
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_semaphore_counter_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_semaphore_index_t
+ * \group semaphore
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_semaphore_index_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_semaphore_create
  * \group semaphore

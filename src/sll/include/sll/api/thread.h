@@ -1,7 +1,11 @@
 #ifndef __SLL_API_THREAD_H__
 #define __SLL_API_THREAD_H__ 1
+#include <sll/barrier.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/lock.h>
+#include <sll/semaphore.h>
+#include <sll/thread.h>
 #include <sll/types.h>
 /**
  * \flags group

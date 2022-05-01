@@ -1,7 +1,9 @@
 #ifndef __SLL_ASSEMBLY_H__
 #define __SLL_ASSEMBLY_H__ 1
 #include <sll/_size_types.h>
+#include <sll/api/time.h>
 #include <sll/common.h>
+#include <sll/compression.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/node.h>
@@ -1623,6 +1625,50 @@
  * \type __SLL_U8
  */
 typedef __SLL_U8 sll_assembly_instruction_type_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_relative_instruction_index_t
+ * \group assembly
+ * \desc Docs!
+ * \type __SLL_S32
+ */
+typedef __SLL_S32 sll_relative_instruction_index_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_debug_data_length_t
+ * \group assembly
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_debug_data_length_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_instruction_index_t
+ * \group assembly
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_instruction_index_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_variable_index_t
+ * \group assembly
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_variable_index_t;
 
 
 

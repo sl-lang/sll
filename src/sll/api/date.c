@@ -2,6 +2,7 @@
 #include <sll/api/date.h>
 #include <sll/api/float.h>
 #include <sll/api/math.h>
+#include <sll/api/time.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>

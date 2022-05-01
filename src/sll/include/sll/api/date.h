@@ -1,6 +1,7 @@
 #ifndef __SLL_API_DATE_H__
 #define __SLL_API_DATE_H__ 1
 #include <sll/_size_types.h>
+#include <sll/api/time.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/types.h>

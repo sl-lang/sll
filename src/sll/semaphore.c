@@ -4,6 +4,7 @@
 #include <sll/memory.h>
 #include <sll/platform/lock.h>
 #include <sll/scheduler.h>
+#include <sll/semaphore.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 

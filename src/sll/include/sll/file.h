@@ -4,6 +4,7 @@
 #include <sll/_size_types.h>
 #include <sll/api/hash.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/platform/lock.h>
 #include <sll/string.h>
 #include <sll/types.h>

@@ -24,6 +24,17 @@
 
 
 /**
+ * \flags type var
+ * \name sll_lock_index_t
+ * \group lock
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_lock_index_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_lock_create
  * \group lock

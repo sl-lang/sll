@@ -1,6 +1,7 @@
 #ifndef __SLL_API_BASE64_H__
 #define __SLL_API_BASE64_H__ 1
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/string.h>
 #include <sll/types.h>
 /**

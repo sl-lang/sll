@@ -143,7 +143,9 @@ def _write_byte_array(wf,dt):
 
 
 
-def _add_source_file(b_fp,fp,file_list,include_list):
+def _add_source_file(b_fp,fp,file_list,include_list,cycle=[]):
+	if (fp in cycle):
+		raise RuntimeError("Cycle: "+" > ".join(cycle[cycle.index(fp):]+[fp]))
 	if (fp in file_list or not os.path.exists(b_fp+fp)):
 		return ""
 	o=""
@@ -152,7 +154,7 @@ def _add_source_file(b_fp,fp,file_list,include_list):
 		n_incl=[]
 		for k in INCLUDE_REGEX.findall(dt):
 			n_incl.append(k[1:-1])
-			o+=_add_source_file(b_fp,k[1:-1],file_list,include_list)
+			o+=_add_source_file(b_fp,k[1:-1],file_list,include_list,cycle+[fp])
 		o+=INCLUDE_REGEX.sub(lambda m:("" if os.path.exists(b_fp+m[1][1:-1]) or m[1][1:-1] in include_list else m[0]),dt)
 		include_list.extend(n_incl)
 	file_list.append(fp)

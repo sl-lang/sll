@@ -1,5 +1,7 @@
 #ifndef __SLL_THREAD_H__
 #define __SLL_THREAD_H__ 1
+#include <sll/_size_types.h>
+#include <sll/_thread_type.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/types.h>

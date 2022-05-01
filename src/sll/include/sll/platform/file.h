@@ -2,6 +2,7 @@
 #define __SLL_PLATFORM_FILE_H__ 1
 #include <sll/_file_descriptor.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/types.h>
 /**

@@ -2,8 +2,10 @@
 #define __SLL_PLATFORM_UTIL_H__ 1
 #include <sll/_size_types.h>
 #include <sll/api/date.h>
+#include <sll/api/time.h>
 #include <sll/common.h>
 #include <sll/environment.h>
+#include <sll/error.h>
 #include <sll/string.h>
 #include <sll/types.h>
 /**

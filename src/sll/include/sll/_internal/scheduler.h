@@ -6,6 +6,7 @@
 #include <sll/platform/event.h>
 #include <sll/platform/lock.h>
 #include <sll/platform/thread.h>
+#include <sll/thread.h>
 #include <sll/types.h>
 
 

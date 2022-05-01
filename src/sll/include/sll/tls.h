@@ -3,6 +3,7 @@
 #include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/thread.h>
 #include <sll/types.h>
 /**
  * \flags group

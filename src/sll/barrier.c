@@ -1,5 +1,6 @@
 #include <sll/_internal/barrier.h>
 #include <sll/_internal/scheduler.h>
+#include <sll/barrier.h>
 #include <sll/common.h>
 #include <sll/memory.h>
 #include <sll/platform/lock.h>

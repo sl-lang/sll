@@ -1,5 +1,6 @@
 #ifndef __SLL_COMPRESSION_H__
 #define __SLL_COMPRESSION_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -8,6 +9,17 @@
  * \group compression
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags type var
+ * \name sll_compressed_integer_t
+ * \group compression
+ * \desc Docs!
+ * \type __SLL_U64
+ */
+typedef __SLL_U64 sll_compressed_integer_t;
 
 
 

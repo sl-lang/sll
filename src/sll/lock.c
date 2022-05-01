@@ -2,6 +2,7 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/thread.h>
 #include <sll/common.h>
+#include <sll/lock.h>
 #include <sll/memory.h>
 #include <sll/platform/lock.h>
 #include <sll/scheduler.h>

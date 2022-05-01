@@ -3,6 +3,7 @@
 #include <sll/_string_types.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/gc.h>
 #include <sll/operator.h>
 #include <sll/types.h>

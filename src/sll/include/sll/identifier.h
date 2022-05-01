@@ -136,6 +136,39 @@
 
 
 /**
+ * \flags type var
+ * \name sll_identifier_index_t
+ * \group identifier
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_identifier_index_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_identifier_list_length_t
+ * \group identifier
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_identifier_list_length_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_scope_t
+ * \group identifier
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_scope_t;
+
+
+
+/**
  * \flags type
  * \name sll_identifier_t
  * \group identifier
@@ -147,6 +180,38 @@ typedef struct _SLL_IDENTIFIER{
     sll_scope_t sc;
     sll_string_index_t i;
 } sll_identifier_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_identifier_list_t
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_t* dt
+ * \arg sll_identifier_list_length_t l
+ */
+typedef struct _SLL_IDENTIFIER_LIST{
+    sll_identifier_t* dt;
+    sll_identifier_list_length_t l;
+} sll_identifier_list_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_identifier_table_t
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_identifier_list_t* s
+ * \arg sll_identifier_t* il
+ * \arg sll_identifier_list_length_t ill
+ */
+typedef struct _SLL_IDENTIFIER_TABLE{
+    sll_identifier_list_t s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+    sll_identifier_t* il;
+    sll_identifier_list_length_t ill;
+} sll_identifier_table_t;
 
 
 

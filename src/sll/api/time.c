@@ -1,4 +1,5 @@
 #include <sll/api/math.h>
+#include <sll/api/time.h>
 #include <sll/common.h>
 #include <sll/object.h>
 #include <sll/parse_args.h>

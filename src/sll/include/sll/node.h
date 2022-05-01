@@ -2,6 +2,7 @@
 #define __SLL_NODE_H__ 1
 #include <sll/_size_types.h>
 #include <sll/api/hash.h>
+#include <sll/api/time.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/identifier.h>
@@ -1112,6 +1113,28 @@ typedef __SLL_U8 sll_node_type_t;
 
 /**
  * \flags type var
+ * \name sll_import_index_t
+ * \group node
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_import_index_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_node_offset_t
+ * \group node
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_node_offset_t;
+
+
+
+/**
+ * \flags type var
  * \name sll_source_file_index_t
  * \group node
  * \desc Docs!
@@ -1219,38 +1242,6 @@ typedef struct _SLL_NODE{
 	sll_node_type_t t;
 	sll_node_data_t dt;
 } sll_node_t;
-
-
-
-/**
- * \flags type
- * \name sll_identifier_list_t
- * \group node
- * \desc Docs!
- * \arg sll_identifier_t* dt
- * \arg sll_identifier_list_length_t l
- */
-typedef struct _SLL_IDENTIFIER_LIST{
-	sll_identifier_t* dt;
-	sll_identifier_list_length_t l;
-} sll_identifier_list_t;
-
-
-
-/**
- * \flags type
- * \name sll_identifier_table_t
- * \group node
- * \desc Docs!
- * \arg sll_identifier_list_t* s
- * \arg sll_identifier_t* il
- * \arg sll_identifier_list_length_t ill
- */
-typedef struct _SLL_IDENTIFIER_TABLE{
-	sll_identifier_list_t s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	sll_identifier_t* il;
-	sll_identifier_list_length_t ill;
-} sll_identifier_table_t;
 
 
 

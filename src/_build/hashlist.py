@@ -9,13 +9,16 @@ HASHLIST_EXTENSIONS=[".c",".h",".asm"]
 
 
 hash_list={}
-update_list=set()
+update_map={}
 
 
 
 def _check(fp,inc):
 	nm=util.unique_file_path(fp)
-	if (nm in update_list or (fp[-2:]!=".h" and not os.path.exists(util.output_file_path(fp)))):
+	if (nm in update_map):
+		return update_map[nm]
+	if (fp[-2:]!=".h" and not os.path.exists(util.output_file_path(fp))):
+		update_map[nm]=1
 		return 1
 	with open(fp,"r") as rf:
 		for e in header.INCLUDE_REGEX.findall(rf.read()):
@@ -25,7 +28,9 @@ def _check(fp,inc):
 			for k in inc:
 				f_fp=os.path.join(k,e)
 				if (not os.path.exists(f_fp) or _check(f_fp,inc)):
+					update_map[nm]=1
 					return 1
+	update_map[nm]=0
 	return 0
 
 
@@ -49,7 +54,7 @@ def load_hash_list(fp):
 	util.log(f"Loading file hashes from '{fp}'...")
 	load_hash_list.source_file_path=fp
 	hash_list.clear()
-	update_list.clear()
+	update_map.clear()
 	if (os.path.exists(fp)):
 		with open(fp,"r") as f:
 			for k in f.read().split("\n"):
@@ -67,7 +72,7 @@ def load_hash_list(fp):
 				nm=util.unique_file_path(fp)
 				if (nm not in hash_list or hash_list[nm]!=h):
 					hash_list[nm]=h
-					update_list.add(nm)
+					update_map[nm]=1
 	_flush_data()
 
 

@@ -1,6 +1,7 @@
 #ifndef __SLL_PLATFORM_PROCESS_H__
 #define __SLL_PLATFORM_PROCESS_H__ 1
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/types.h>
 /**
  * \flags subgroup
@@ -9,6 +10,18 @@
  * \subgroup platform-process
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags type var
+ * \name sll_pid_t
+ * \group platform
+ * \subgroup platform-process
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_pid_t;
 
 
 

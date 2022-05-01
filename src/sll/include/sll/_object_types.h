@@ -12,6 +12,28 @@ struct _SLL_OBJECT;
 
 /**
  * \flags type var
+ * \name sll_array_length_t
+ * \group array
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_array_length_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_map_length_t
+ * \group map
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_map_length_t;
+
+
+
+/**
+ * \flags type var
  * \name sll_object_type_t
  * \group gc
  * \desc Docs!
@@ -35,7 +57,7 @@ typedef __SLL_U64 sll_reference_count_t;
 /**
  * \flags type
  * \name sll_array_t
- * \group gc
+ * \group array
  * \desc Docs!
  * \arg sll_array_length_t l
  * \arg sll_object_t** v
@@ -50,7 +72,7 @@ typedef struct _SLL_ARRAY{
 /**
  * \flags type
  * \name sll_map_t
- * \group gc
+ * \group map
  * \desc Docs!
  * \arg sll_map_length_t l
  * \arg sll_object_t** v

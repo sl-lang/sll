@@ -1,5 +1,6 @@
 #ifndef __SLL_API_TIME_H__
 #define __SLL_API_TIME_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/parse_args.h>
 #include <sll/types.h>
@@ -9,6 +10,17 @@
  * \group time-api
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags type var
+ * \name sll_time_t
+ * \group time-api
+ * \desc Docs!
+ * \type __SLL_U64
+ */
+typedef __SLL_U64 sll_time_t;
 
 
 

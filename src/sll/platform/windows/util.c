@@ -8,6 +8,7 @@
 #include <sll/_internal/static_string.h>
 #include <sll/_size_types.h>
 #include <sll/api/date.h>
+#include <sll/api/time.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/environment.h>

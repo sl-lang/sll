@@ -2,6 +2,7 @@
 #define __SLL__INTERNAL_API_CALL_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
 #include <sll/string.h>

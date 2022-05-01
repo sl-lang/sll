@@ -24,6 +24,28 @@
 
 
 /**
+ * \flags type var
+ * \name sll_barrier_counter_t
+ * \group barrier
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_barrier_counter_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_barrier_index_t
+ * \group barrier
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_barrier_index_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_barrier_create
  * \group barrier

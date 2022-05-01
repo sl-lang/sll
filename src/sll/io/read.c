@@ -3,9 +3,11 @@
 #include <sll/_internal/magic_number.h>
 #include <sll/_internal/stack.h>
 #include <sll/api/serial.h>
+#include <sll/api/time.h>
 #include <sll/assembly.h>
 #include <sll/bundle.h>
 #include <sll/common.h>
+#include <sll/compression.h>
 #include <sll/data.h>
 #include <sll/error.h>
 #include <sll/file.h>
