@@ -45,7 +45,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_s
 	sll_size_t off=align-(ADDR(o)&(align-1));
 	munmap(o,off);
 	o=PTR(ADDR(o)+off);
-	munmap(PTR(ADDR(o)+sz),mem_sz-sz-off);
+	munmap(PTR(ADDR(o)+sz),align-SLL_PAGE_SIZE-off);
 	return o;
 }
 
