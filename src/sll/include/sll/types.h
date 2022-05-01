@@ -4,7 +4,7 @@
 #include <sll/_object_func.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
-#include <stdarg.h>
+
 /**
  * \flags group
  * \name Limits
@@ -2439,5 +2439,5 @@ typedef struct _SLL_INTERNAL_FUNCTION_DESCRIPTOR{
 } sll_internal_function_descriptor_t;
 
 
-
+#include <stdarg.h>
 #endif
