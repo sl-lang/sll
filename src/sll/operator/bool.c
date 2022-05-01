@@ -1,4 +1,5 @@
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/object.h>
 #include <sll/types.h>
 

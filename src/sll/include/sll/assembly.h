@@ -2,6 +2,7 @@
 #define __SLL_ASSEMBLY_H__ 1
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -1608,6 +1609,228 @@
  * \ret sll_bool_t
  */
 #define SLL_ASSEMBLY_VARIABLE_IS_TLS(v) ((v)&1)
+
+
+
+/**
+ * \flags type var
+ * \name sll_assembly_instruction_type_t
+ * \group assembly
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_assembly_instruction_type_t;
+
+
+
+/**
+ * \flags type union
+ * \name sll_assembly_instruction_data_jump_target_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_instruction_index_t abs
+ * \arg sll_relative_instruction_index_t rel
+ */
+typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP_TARGET{
+    sll_instruction_index_t abs;
+    sll_relative_instruction_index_t rel;
+} sll_assembly_instruction_data_jump_target_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_assembly_instruction_data_jump_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_assembly_instruction_data_jump_target_t t
+ * \arg void* _p
+ */
+typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP{
+    sll_assembly_instruction_data_jump_target_t t;
+    void* _p;
+} sll_assembly_instruction_data_jump_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_assembly_instruction_data_var_access_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_variable_index_t v
+ * \arg sll_arg_count_t l
+ */
+typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
+    sll_variable_index_t v;
+    sll_arg_count_t l;
+} sll_assembly_instruction_data_var_access_t;
+
+
+
+/**
+ * \flags type union
+ * \name sll_assembly_instruction_data_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_integer_t i
+ * \arg sll_compressed_integer_t ci
+ * \arg sll_float_t f
+ * \arg sll_complex_t d
+ * \arg sll_char_t c
+ * \arg sll_string_index_t s
+ * \arg sll_variable_index_t v
+ * \arg sll_assembly_instruction_data_jump_t j
+ * \arg sll_arg_count_t ac
+ * \arg sll_array_length_t al
+ * \arg sll_map_length_t ml
+ * \arg sll_object_type_t t
+ * \arg sll_assembly_instruction_data_var_access_t va
+ * \arg sll_stack_offset_t so
+ * \arg void* _p
+ */
+typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
+    sll_integer_t i;
+    sll_compressed_integer_t ci;
+    sll_float_t f;
+    sll_complex_t d;
+    sll_char_t c;
+    sll_string_index_t s;
+    sll_variable_index_t v;
+    sll_assembly_instruction_data_jump_t j;
+    sll_arg_count_t ac;
+    sll_array_length_t al;
+    sll_map_length_t ml;
+    sll_object_type_t t;
+    sll_assembly_instruction_data_var_access_t va;
+    sll_stack_offset_t so;
+    void* _p;
+} sll_assembly_instruction_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_assembly_instruction_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_assembly_instruction_type_t t
+ * \arg sll_assembly_instruction_data_t dt
+ */
+typedef struct _SLL_ASSEMBLY_INSTRUCTION{
+    sll_assembly_instruction_type_t t;
+    sll_assembly_instruction_data_t dt;
+} sll_assembly_instruction_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_assembly_function_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_instruction_index_t i
+ * \arg sll_arg_count_t ac
+ * \arg sll_string_index_t nm
+ */
+typedef struct _SLL_ASSEMBLY_FUNCTION{
+    sll_instruction_index_t i;
+    sll_arg_count_t ac;
+    sll_string_index_t nm;
+} sll_assembly_function_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_assembly_function_table_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_function_index_t l
+ * \arg sll_assembly_function_t* dt
+ */
+typedef struct _SLL_ASSEMBLY_FUNCTION_TABLE{
+    sll_function_index_t l;
+    sll_assembly_function_t* dt;
+} sll_assembly_function_table_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_debug_line_data_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_instruction_index_t ii
+ * \arg sll_file_offset_t ln
+ */
+typedef struct _SLL_DEBUG_LINE_DATA{
+    sll_instruction_index_t ii;
+    sll_file_offset_t ln;
+} sll_debug_line_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_debug_data_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_debug_line_data_t* dt
+ * \arg sll_debug_data_length_t l
+ */
+typedef struct _SLL_DEBUG_DATA{
+    sll_debug_line_data_t* dt;
+    sll_debug_data_length_t l;
+} sll_debug_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_assembly_stack_data_t
+ * \group assembly
+ * \desc Docs!
+ * \arg void* s
+ * \arg void* e
+ * \arg sll_assembly_instruction_t* p
+ * \arg sll_size_t c
+ */
+typedef struct _SLL_ASSEMBLY_STACK_DATA{
+    void* s;
+    void* e;
+    sll_assembly_instruction_t* p;
+    sll_size_t c;
+} sll_assembly_stack_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_assembly_data_t
+ * \group assembly
+ * \desc Docs!
+ * \arg sll_time_t tm
+ * \arg sll_assembly_instruction_t* h
+ * \arg sll_instruction_index_t ic
+ * \arg sll_variable_index_t vc
+ * \arg sll_variable_index_t tls_vc
+ * \arg sll_assembly_function_table_t ft
+ * \arg sll_string_table_t st
+ * \arg sll_debug_data_t dbg
+ * \arg sll_assembly_stack_data_t _s
+ */
+typedef struct _SLL_ASSEMBLY_DATA{
+    sll_time_t tm;
+    sll_assembly_instruction_t* h;
+    sll_instruction_index_t ic;
+    sll_variable_index_t vc;
+    sll_variable_index_t tls_vc;
+    sll_assembly_function_table_t ft;
+    sll_string_table_t st;
+    sll_debug_data_t dbg;
+    sll_assembly_stack_data_t _s;
+} sll_assembly_data_t;
 
 
 

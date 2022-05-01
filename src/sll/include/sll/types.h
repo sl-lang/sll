@@ -74,10 +74,6 @@
 
 
 
-struct _SLL_OBJECT;
-
-
-
 /**
  * \flags type var
  * \name sll_bool_t
@@ -86,17 +82,6 @@ struct _SLL_OBJECT;
  * \type __SLL_U1
  */
 typedef __SLL_U1 sll_bool_t;
-
-
-
-/**
- * \flags type var
- * \name sll_assembly_instruction_type_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_assembly_instruction_type_t;
 
 
 
@@ -267,17 +252,6 @@ typedef __SLL_U32 sll_array_length_t;
 
 /**
  * \flags type var
- * \name sll_assembly_file_table_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_assembly_file_table_length_t;
-
-
-
-/**
- * \flags type var
  * \name sll_barrier_counter_t
  * \group types
  * \desc Docs!
@@ -405,17 +379,6 @@ typedef __SLL_U32 sll_map_length_t;
  * \type __SLL_U32
  */
 typedef __SLL_U32 sll_node_offset_t;
-
-
-
-/**
- * \flags type var
- * \name sll_object_type_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_object_type_t;
 
 
 
@@ -1071,7 +1034,6 @@ typedef struct _SLL_DECL_NODE_DATA{
  * \arg sll_decl_node_data_t dc
  * \arg sll_arg_count_t ac
  * \arg sll_function_index_t fn_id
- * \arg sll_object_type_t ot
  * \arg void* _p
  */
 typedef union _SLL_NODE_DATA{
@@ -1088,7 +1050,6 @@ typedef union _SLL_NODE_DATA{
 	sll_decl_node_data_t dc;
 	sll_arg_count_t ac;
 	sll_function_index_t fn_id;
-	sll_object_type_t ot;
 	void* _p;
 } sll_node_data_t;
 
@@ -1224,21 +1185,6 @@ typedef struct _SLL_STRING_TABLE{
 
 /**
  * \flags type
- * \name sll_object_type_field_t
- * \group types
- * \desc Docs!
- * \arg sll_object_type_t t
- * \arg sll_string_index_t f
- */
-typedef struct _SLL_OBJECT_TYPE_FIELD{
-	sll_object_type_t t;
-	sll_string_index_t f;
-} sll_object_type_field_t;
-
-
-
-/**
- * \flags type
  * \name sll_import_file_t
  * \group types
  * \desc Docs!
@@ -1337,342 +1283,6 @@ typedef struct _SLL_COMPILATION_DATA{
 	sll_source_file_t** dt;
 	sll_source_file_index_t l;
 } sll_compilation_data_t;
-
-
-
-/**
- * \flags type union
- * \name sll_assembly_instruction_data_jump_target_t
- * \group types
- * \desc Docs!
- * \arg sll_instruction_index_t abs
- * \arg sll_relative_instruction_index_t rel
- */
-typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP_TARGET{
-	sll_instruction_index_t abs;
-	sll_relative_instruction_index_t rel;
-} sll_assembly_instruction_data_jump_target_t;
-
-
-
-/**
- * \flags type
- * \name sll_assembly_instruction_data_jump_t
- * \group types
- * \desc Docs!
- * \arg sll_assembly_instruction_data_jump_target_t t
- * \arg void* _p
- */
-typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP{
-	sll_assembly_instruction_data_jump_target_t t;
-	void* _p;
-} sll_assembly_instruction_data_jump_t;
-
-
-
-/**
- * \flags type
- * \name sll_assembly_instruction_data_var_access_t
- * \group types
- * \desc Docs!
- * \arg sll_variable_index_t v
- * \arg sll_arg_count_t l
- */
-typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
-	sll_variable_index_t v;
-	sll_arg_count_t l;
-} sll_assembly_instruction_data_var_access_t;
-
-
-
-/**
- * \flags type union
- * \name sll_assembly_instruction_data_t
- * \group types
- * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_compressed_integer_t ci
- * \arg sll_float_t f
- * \arg sll_complex_t d
- * \arg sll_char_t c
- * \arg sll_string_index_t s
- * \arg sll_variable_index_t v
- * \arg sll_assembly_instruction_data_jump_t j
- * \arg sll_arg_count_t ac
- * \arg sll_array_length_t al
- * \arg sll_map_length_t ml
- * \arg sll_object_type_t t
- * \arg sll_assembly_instruction_data_var_access_t va
- * \arg sll_stack_offset_t so
- * \arg void* _p
- */
-typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
-	sll_integer_t i;
-	sll_compressed_integer_t ci;
-	sll_float_t f;
-	sll_complex_t d;
-	sll_char_t c;
-	sll_string_index_t s;
-	sll_variable_index_t v;
-	sll_assembly_instruction_data_jump_t j;
-	sll_arg_count_t ac;
-	sll_array_length_t al;
-	sll_map_length_t ml;
-	sll_object_type_t t;
-	sll_assembly_instruction_data_var_access_t va;
-	sll_stack_offset_t so;
-	void* _p;
-} sll_assembly_instruction_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_assembly_instruction_t
- * \group types
- * \desc Docs!
- * \arg sll_assembly_instruction_type_t t
- * \arg sll_assembly_instruction_data_t dt
- */
-typedef struct _SLL_ASSEMBLY_INSTRUCTION{
-	sll_assembly_instruction_type_t t;
-	sll_assembly_instruction_data_t dt;
-} sll_assembly_instruction_t;
-
-
-
-/**
- * \flags type
- * \name sll_assembly_function_t
- * \group types
- * \desc Docs!
- * \arg sll_instruction_index_t i
- * \arg sll_arg_count_t ac
- * \arg sll_string_index_t nm
- */
-typedef struct _SLL_ASSEMBLY_FUNCTION{
-	sll_instruction_index_t i;
-	sll_arg_count_t ac;
-	sll_string_index_t nm;
-} sll_assembly_function_t;
-
-
-
-/**
- * \flags type
- * \name sll_assembly_function_table_t
- * \group types
- * \desc Docs!
- * \arg sll_function_index_t l
- * \arg sll_assembly_function_t* dt
- */
-typedef struct _SLL_ASSEMBLY_FUNCTION_TABLE{
-	sll_function_index_t l;
-	sll_assembly_function_t* dt;
-} sll_assembly_function_table_t;
-
-
-
-/**
- * \flags type
- * \name sll_debug_line_data_t
- * \group types
- * \desc Docs!
- * \arg sll_instruction_index_t ii
- * \arg sll_file_offset_t ln
- */
-typedef struct _SLL_DEBUG_LINE_DATA{
-	sll_instruction_index_t ii;
-	sll_file_offset_t ln;
-} sll_debug_line_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_debug_data_t
- * \group types
- * \desc Docs!
- * \arg sll_debug_line_data_t* dt
- * \arg sll_debug_data_length_t l
- */
-typedef struct _SLL_DEBUG_DATA{
-	sll_debug_line_data_t* dt;
-	sll_debug_data_length_t l;
-} sll_debug_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_assembly_stack_data_t
- * \group types
- * \desc Docs!
- * \arg void* s
- * \arg void* e
- * \arg sll_assembly_instruction_t* p
- * \arg sll_size_t c
- */
-typedef struct _SLL_ASSEMBLY_STACK_DATA{
-	void* s;
-	void* e;
-	sll_assembly_instruction_t* p;
-	sll_size_t c;
-} sll_assembly_stack_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_assembly_data_t
- * \group types
- * \desc Docs!
- * \arg sll_time_t tm
- * \arg sll_assembly_instruction_t* h
- * \arg sll_instruction_index_t ic
- * \arg sll_variable_index_t vc
- * \arg sll_variable_index_t tls_vc
- * \arg sll_assembly_function_table_t ft
- * \arg sll_string_table_t st
- * \arg sll_debug_data_t dbg
- * \arg sll_assembly_stack_data_t _s
- */
-typedef struct _SLL_ASSEMBLY_DATA{
-	sll_time_t tm;
-	sll_assembly_instruction_t* h;
-	sll_instruction_index_t ic;
-	sll_variable_index_t vc;
-	sll_variable_index_t tls_vc;
-	sll_assembly_function_table_t ft;
-	sll_string_table_t st;
-	sll_debug_data_t dbg;
-	sll_assembly_stack_data_t _s;
-} sll_assembly_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_array_t
- * \group types
- * \desc Docs!
- * \arg sll_array_length_t l
- * \arg sll_object_t** v
- */
-typedef struct _SLL_ARRAY{
-	sll_array_length_t l;
-	struct _SLL_OBJECT** v;
-} sll_array_t;
-
-
-
-/**
- * \flags type
- * \name sll_map_t
- * \group types
- * \desc Docs!
- * \arg sll_map_length_t l
- * \arg sll_object_t** v
- */
-typedef struct _SLL_MAP{
-	sll_map_length_t l;
-	struct _SLL_OBJECT** v;
-} sll_map_t;
-
-
-
-/**
- * \flags type union
- * \name sll_object_field_t
- * \group types
- * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_float_t f
- * \arg sll_char_t c
- * \arg sll_object_t* o
- */
-typedef union _SLL_OBJECT_FIELD{
-	sll_integer_t i;
-	sll_float_t f;
-	sll_char_t c;
-	struct _SLL_OBJECT* o;
-} sll_object_field_t;
-
-
-
-/**
- * \flags type
- * \name sll_object_ptr_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* p
- * \arg sll_object_t* n
- */
-typedef struct _SLL_OBJECT_PTR{
-	struct _SLL_OBJECT* p;
-	struct _SLL_OBJECT* n;
-} sll_object_ptr_t;
-
-
-
-/**
- * \flags type union
- * \name sll_object_data_t
- * \group types
- * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_float_t f
- * \arg sll_char_t c
- * \arg sll_complex_t d
- * \arg sll_string_t s
- * \arg sll_array_t a
- * \arg sll_map_t m
- * \arg sll_object_field_t* p
- * \arg sll_object_ptr_t _ptr
- */
-typedef union _SLL_OBJECT_DATA{
-	sll_integer_t i;
-	sll_float_t f;
-	sll_char_t c;
-	sll_complex_t d;
-	sll_string_t s;
-	sll_array_t a;
-	sll_map_t m;
-	sll_object_field_t* p;
-	sll_object_ptr_t _ptr;
-} sll_object_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_object_t
- * \group types
- * \desc Docs!
- * \arg sll_reference_count_t rc
- * \arg const sll_object_type_t t
- * \arg __SLL_U32 _f
- * \arg sll_object_data_t dt
- */
-typedef struct _SLL_OBJECT{
-	sll_reference_count_t rc;
-	const sll_object_type_t t;
-	__SLL_U32 _f;
-	sll_object_data_t dt;
-} sll_object_t;
-
-
-
-/**
- * \flags func type
- * \name sll_binary_operator_t
- * \group types
- * \desc Docs!
- * \arg sll_object_t* a
- * \arg sll_object_t* b
- * \ret sll_object_t*
- */
-typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t* a,sll_object_t* b);
 
 
 

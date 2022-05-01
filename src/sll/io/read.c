@@ -9,6 +9,7 @@
 #include <sll/data.h>
 #include <sll/error.h>
 #include <sll/file.h>
+#include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/node.h>
 #include <sll/object.h>

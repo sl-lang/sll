@@ -1,6 +1,7 @@
 #ifndef __SLL_API_STRING_H__
 #define __SLL_API_STRING_H__ 1
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/parse_args.h>
 #include <sll/types.h>
 /**

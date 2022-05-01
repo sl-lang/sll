@@ -1,6 +1,7 @@
 #ifndef __SLL_OPERATOR_H__
 #define __SLL_OPERATOR_H__ 1
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -8,6 +9,19 @@
  * \group operator
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags func type
+ * \name sll_binary_operator_t
+ * \group operator
+ * \desc Docs!
+ * \arg sll_object_t* a
+ * \arg sll_object_t* b
+ * \ret sll_object_t*
+ */
+typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t* a,sll_object_t* b);
 
 
 

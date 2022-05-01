@@ -2,6 +2,7 @@
 #define __SLL_API_JSON_H__ 1
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group

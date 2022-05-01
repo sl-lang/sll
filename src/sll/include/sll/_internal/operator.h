@@ -2,8 +2,9 @@
 #define __SLL__INTERNAL_OPERATOR_H__ 1
 #include <sll/_size_types.h>
 #include <sll/api/float.h>
-#include <sll/data.h>
 #include <sll/api/math.h>
+#include <sll/data.h>
+#include <sll/gc.h>
 #include <sll/object.h>
 
 

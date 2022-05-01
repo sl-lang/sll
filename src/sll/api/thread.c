@@ -2,6 +2,7 @@
 #include <sll/array.h>
 #include <sll/barrier.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/lock.h>
 #include <sll/new_object.h>
 #include <sll/sandbox.h>

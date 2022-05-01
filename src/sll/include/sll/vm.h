@@ -1,7 +1,9 @@
 #ifndef __SLL_VM_H__
 #define __SLL_VM_H__ 1
 #include <sll/_size_types.h>
+#include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/ift.h>
 #include <sll/object.h>
 #include <sll/types.h>

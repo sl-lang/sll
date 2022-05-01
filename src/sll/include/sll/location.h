@@ -1,6 +1,8 @@
 #ifndef __SLL_LOCATION_H__
 #define __SLL_LOCATION_H__ 1
+#include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group

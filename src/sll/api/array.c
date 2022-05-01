@@ -1,6 +1,7 @@
 #include <sll/_internal/gc.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/operator.h>

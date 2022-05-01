@@ -2,6 +2,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/file.h>
+#include <sll/gc.h>
 #include <sll/node.h>
 #include <sll/object.h>
 #include <sll/string.h>

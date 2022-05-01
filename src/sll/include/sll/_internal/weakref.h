@@ -1,5 +1,6 @@
 #ifndef __SLL__INTERNAL_WEAKREF_H__
 #define __SLL__INTERNAL_WEAKREF_H__ 1
+#include <sll/gc.h>
 #include <sll/types.h>
 #include <sll/weakref.h>
 

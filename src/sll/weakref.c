@@ -2,6 +2,7 @@
 #include <sll/_internal/gc.h>
 #include <sll/_internal/weakref.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/types.h>

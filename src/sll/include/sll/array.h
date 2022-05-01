@@ -2,6 +2,8 @@
 #define __SLL_ARRAY_H__ 1
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/gc.h>
+#include <sll/operator.h>
 #include <sll/types.h>
 /**
  * \flags group

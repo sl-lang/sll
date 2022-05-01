@@ -8,6 +8,6 @@
 
 ## Removed
 
-- Unused types: `sll_unary_operator_t`, `sll_ternary_operator_t` and `sll_quaternary_operator_t`
+- Unused types: `sll_assembly_file_table_length_t`, `sll_object_type_field_t`, `sll_unary_operator_t`, `sll_ternary_operator_t` and `sll_quaternary_operator_t`
 
 [0.7.16]: https://github.com/sl-lang/sll/compare/sll-v0.7.15...main

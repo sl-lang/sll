@@ -5,6 +5,7 @@
 #include <sll/_internal/string.h>
 #include <sll/common.h>
 #include <sll/data.h>
+#include <sll/gc.h>
 #include <sll/ift.h>
 #include <sll/memory.h>
 #include <sll/parse_args.h>

@@ -1,5 +1,6 @@
 #ifndef __SLL__INTERNAL_VAR_ARG_H__
 #define __SLL__INTERNAL_VAR_ARG_H__ 1
+#include <sll/gc.h>
 #include <sll/types.h>
 #include <sll/var_arg.h>
 

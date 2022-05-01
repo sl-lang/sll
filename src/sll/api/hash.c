@@ -4,6 +4,7 @@
 #include <sll/api/hash.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/new_object.h>
 #include <sll/string.h>
 #include <sll/types.h>

@@ -1,4 +1,6 @@
+#include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/location.h>
 #include <sll/object.h>
 #include <sll/string.h>

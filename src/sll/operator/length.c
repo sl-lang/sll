@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/complex.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/object.h>
 #include <sll/static_object.h>
 #include <sll/types.h>

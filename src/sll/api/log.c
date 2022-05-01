@@ -1,5 +1,6 @@
 #include <sll/api/string.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/location.h>
 #include <sll/log.h>
 #include <sll/string_table.h>
