@@ -35,6 +35,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align){
+	SLL_ASSERT(!(align&(align-1)));
+	sll_size_t mem_sz=(sz+align-1)&(0-align);
+	void* o=mmap(NULL,mem_sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+	if (o==MAP_FAILED){
+		return NULL;
+	}
+	if (ADDR(o)&(align-1)){
+		SLL_UNIMPLEMENTED();
+	}
+	else{
+		munmap(PTR(ADDR(o)+sz),mem_sz-sz);
+	}
+	return o;
+}
+
+
+
 __SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_size_t sz){
 	munmap(pg,sz);
 }

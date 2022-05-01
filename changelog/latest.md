@@ -6,6 +6,7 @@
 - Implemented `file$FLAG_FLUSH_ON_NEWLINE`
 - Implemented `sll_audit_enable`
 - Implemented `sll_execution_flags_t`, `sll_process_creation_flags_t` and `sll_search_flags_t`
+- Implemented `sll_platform_allocate_page_aligned`
 - Nightly builds
 
 ## Changed

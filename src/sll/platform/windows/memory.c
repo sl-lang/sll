@@ -7,6 +7,7 @@
 
 
 static char _win_large_page=0;
+static sll_size_t _win_system_align=0;
 
 
 
@@ -35,6 +36,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 	}
 	SLL_ASSERT(SLL_ROUND_PAGE(sz)==sz);
 	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align){
+	if (!_win_system_align){
+		SYSTEM_INFO si;
+		GetSystemInfo(&si);
+		_win_system_align=si.dwAllocationGranularity;
+	}
+	SLL_ASSERT(!(align&(align-1)));
+	SLL_ASSERT(SLL_ROUND_PAGE(sz)==sz);
+	if (align<=_win_system_align){
+		return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+	}
+	SLL_UNIMPLEMENTED();
 }
 
 

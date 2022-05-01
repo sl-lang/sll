@@ -90,6 +90,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 
 
 /**
+ * \flags check_output func
+ * \name sll_platform_allocate_page_aligned
+ * \group platform
+ * \subgroup platform-memory
+ * \desc Docs!
+ * \arg sll_size_t sz
+ * \arg sll_size_t align
+ * \ret void*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align);
+
+
+
+/**
  * \flags func
  * \name sll_platform_free_page
  * \group platform

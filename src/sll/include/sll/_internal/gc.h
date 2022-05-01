@@ -5,11 +5,14 @@
 
 
 
-#define GC_PAGE_POOL_SIZE 256
-#define GC_PAGE_INIT_POOL_SIZE 128
-#define GC_PAGE_DYNAMIC_POOL_SIZE 32
+#define GC_PAGE_POOL_SIZE 4
+#define GC_PAGE_INIT_POOL_SIZE 4
+#define GC_PAGE_DYNAMIC_POOL_SIZE 2
 
 #define GC_FLAG_HAS_WEAKREF 1
+
+#define GC_MEMORY_PAGE_SIZE 32768
+#define GC_MEMORY_PAGE_HEADER_ADDR(o) ((gc_page_header_t*)PTR(ADDR(o)&(0-((sll_size_t)GC_MEMORY_PAGE_SIZE))))
 
 
 
