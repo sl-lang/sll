@@ -1,12 +1,14 @@
 #include <windows.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/platform/lock.h>
+#include <sll/platform/util.h>
 #include <sll/types.h>
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_acquire(sll_lock_handle_t l){
-	return (WaitForSingleObject((HANDLE)l,INFINITE)==WAIT_OBJECT_0);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_acquire(sll_lock_handle_t l){
+	return (WaitForSingleObject((HANDLE)l,INFINITE)==WAIT_OBJECT_0?SLL_NO_ERROR:sll_platform_get_error());
 }
 
 

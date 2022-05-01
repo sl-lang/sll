@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/memory.h>
 #include <sll/platform/lock.h>
 #include <sll/types.h>
@@ -7,8 +8,9 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_acquire(sll_lock_handle_t l){
-	return !pthread_mutex_lock(l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_acquire(sll_lock_handle_t l){
+	int err=pthread_mutex_lock(l);
+	return (err?err|SLL_ERROR_FLAG_SYSTEM:0);
 }
 
 

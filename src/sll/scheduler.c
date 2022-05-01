@@ -118,10 +118,10 @@ sll_thread_index_t _scheduler_queue_pop(void){
 
 
 void _scheduler_queue_thread(sll_thread_index_t t){
-	SLL_CRITICAL(sll_platform_lock_acquire(_scheduler_load_balancer.lck));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_scheduler_load_balancer.lck));
 	_scheduler_load_balancer.brk=0/*(!_scheduler_load_balancer.brk?_scheduler_load_balancer.len:_scheduler_load_balancer.brk)-1*/;
 	scheduler_cpu_data_t* cpu_dt=_scheduler_data_base+_scheduler_load_balancer.brk;
-	SLL_CRITICAL(sll_platform_lock_acquire(cpu_dt->lck));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(cpu_dt->lck));
 	cpu_dt->queue_len++;
 	*(cpu_dt->queue+cpu_dt->queue_len-1)=t;
 	(*(_thread_data+t))->st=THREAD_STATE_QUEUED;

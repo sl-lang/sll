@@ -1,6 +1,7 @@
 #ifndef __SLL_PLATFORM_LOCK_H__
 #define __SLL_PLATFORM_LOCK_H__ 1
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/types.h>
 /**
  * \flags subgroup
@@ -31,9 +32,9 @@ typedef void* sll_lock_handle_t;
  * \subgroup platform-lock
  * \desc Docs!
  * \arg sll_lock_handle_t l
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_lock_acquire(sll_lock_handle_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_acquire(sll_lock_handle_t l);
 
 
 

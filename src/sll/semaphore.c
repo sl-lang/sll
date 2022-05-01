@@ -58,7 +58,7 @@ sll_bool_t _semaphore_wait(sll_integer_t w){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t c){
-	SLL_CRITICAL(sll_platform_lock_acquire(_semaphore_lock));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_semaphore_lock));
 	sll_semaphore_index_t o=_semaphore_next;
 	if (o==SEMAPHORE_UNUSED){
 		o=_semaphore_len;
@@ -80,7 +80,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_
 	if (s>=_semaphore_len||(_semaphore_data+s)->count==SEMAPHORE_UNUSED){
 		return 0;
 	}
-	SLL_CRITICAL(sll_platform_lock_acquire(_semaphore_lock));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_semaphore_lock));
 	(_semaphore_data+s)->count=SEMAPHORE_UNUSED;
 	SEMAPHORE_SET_NEXT_ID(_semaphore_data+s,_semaphore_next);
 	_semaphore_next=s;

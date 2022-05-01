@@ -26,7 +26,7 @@
 
 
 
-#define LOCK SLL_CRITICAL(sll_platform_lock_acquire(f->_lck))
+#define LOCK SLL_CRITICAL_ERROR(sll_platform_lock_acquire(f->_lck))
 #define UNLOCK SLL_CRITICAL(sll_platform_lock_release(f->_lck))
 
 

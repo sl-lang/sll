@@ -65,7 +65,7 @@ sll_bool_t _barrier_wait(sll_integer_t w,sll_integer_t v,sll_bool_t g){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_barrier_create(void){
-	SLL_CRITICAL(sll_platform_lock_acquire(_barrier_lock));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_barrier_lock));
 	sll_barrier_index_t o=_barrier_next;
 	if (o==BARRIER_UNUSED){
 		o=_barrier_len;
@@ -86,7 +86,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_inde
 	if (b>=_barrier_len||(_barrier_data+b)->count==BARRIER_UNUSED){
 		return 0;
 	}
-	SLL_CRITICAL(sll_platform_lock_acquire(_barrier_lock));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_barrier_lock));
 	(_barrier_data+b)->count=BARRIER_UNUSED;
 	BARRIER_SET_NEXT_ID(_barrier_data+b,_barrier_next);
 	_barrier_next=b;

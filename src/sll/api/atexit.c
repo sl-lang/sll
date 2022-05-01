@@ -64,7 +64,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_
 		_atexit_lock=sll_platform_lock_create();
 		sll_register_cleanup(_cleanup_data);
 	}
-	SLL_CRITICAL(sll_platform_lock_acquire(_atexit_lock));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_atexit_lock));
 	_atexit_data_len++;
 	_atexit_data=sll_reallocate(_atexit_data,_atexit_data_len*sizeof(atexit_function_t*));
 	atexit_function_t* af=sll_allocate(sizeof(atexit_function_t)+len*sizeof(sll_object_t*));
@@ -84,7 +84,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unreg
 	if (!fn||!_atexit_lock||!_atexit_enable){
 		return 0;
 	}
-	SLL_CRITICAL(sll_platform_lock_acquire(_atexit_lock));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_atexit_lock));
 	sll_bool_t o=0;
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<_atexit_data_len;j++){

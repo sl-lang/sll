@@ -19,7 +19,7 @@
 			_env_lock=sll_platform_lock_create(); \
 			sll_register_cleanup(_cleanup_env); \
 		} \
-		SLL_CRITICAL(sll_platform_lock_acquire(_env_lock)); \
+		SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_env_lock)); \
 	} while (0)
 #define UNLOCK_ENV SLL_CRITICAL(sll_platform_lock_release(_env_lock))
 

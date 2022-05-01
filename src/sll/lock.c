@@ -60,7 +60,7 @@ sll_bool_t _lock_wait(sll_integer_t w){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_lock_create(void){
-	SLL_CRITICAL(sll_platform_lock_acquire(_lock_lock));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_lock_lock));
 	sll_lock_index_t o=_lock_next;
 	if (o==LOCK_UNUSED){
 		o=_lock_len;
@@ -81,7 +81,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_delete(sll_lock_index_t l)
 	if (l>=_lock_len||(_lock_data+l)->lock==LOCK_UNUSED){
 		return 0;
 	}
-	SLL_CRITICAL(sll_platform_lock_acquire(_lock_lock));
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_lock_lock));
 	SLL_ASSERT((_lock_data+l)->lock==SLL_UNKNOWN_THREAD_INDEX);
 	(_lock_data+l)->lock=LOCK_UNUSED;
 	LOCK_SET_NEXT_ID(_lock_data+l,_lock_next);
