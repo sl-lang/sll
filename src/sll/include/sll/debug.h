@@ -3,6 +3,7 @@
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/node.h>
 #include <sll/types.h>
 /**
  * \flags group

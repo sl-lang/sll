@@ -1095,6 +1095,109 @@
 
 
 /**
+ * \flags type
+ * \name sll_import_file_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_source_file_index_t sfi
+ * \arg sll_identifier_list_length_t l
+ * \arg sll_identifier_index_t* dt
+ */
+typedef struct _SLL_IMPORT_FILE{
+    sll_source_file_index_t sfi;
+    sll_identifier_list_length_t l;
+    sll_identifier_index_t dt[];
+} sll_import_file_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_import_table_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_import_file_t** dt
+ * \arg sll_import_index_t l
+ */
+typedef struct _SLL_IMPORT_TABLE{
+    sll_import_file_t** dt;
+    sll_import_index_t l;
+} sll_import_table_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_node_stack_t
+ * \group node
+ * \desc Docs!
+ * \arg void* s
+ * \arg void* e
+ * \arg sll_node_t* p
+ * \arg sll_node_offset_t off
+ * \arg sll_size_t c
+ */
+typedef struct _SLL_NODE_STACK{
+    void* s;
+    void* e;
+    sll_node_t* p;
+    sll_node_offset_t off;
+    sll_size_t c;
+} sll_node_stack_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_source_file_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_time_t tm
+ * \arg sll_file_offset_t sz
+ * \arg sll_sha256_data_t h
+ * \arg sll_node_t* dt
+ * \arg sll_identifier_table_t idt
+ * \arg sll_export_table_t et
+ * \arg sll_function_table_t ft
+ * \arg sll_string_table_t st
+ * \arg sll_import_table_t it
+ * \arg sll_string_index_t fp_nm
+ * \arg sll_node_stack_t _s
+ * \arg sll_scope_t _n_sc_id
+ */
+typedef struct _SLL_SOURCE_FILE{
+    sll_time_t tm;
+    sll_file_offset_t sz;
+    sll_sha256_data_t h;
+    sll_node_t* dt;
+    sll_identifier_table_t idt;
+    sll_export_table_t et;
+    sll_function_table_t ft;
+    sll_string_table_t st;
+    sll_import_table_t it;
+    sll_string_index_t fp_nm;
+    sll_node_stack_t _s;
+    sll_scope_t _n_sc_id;
+} sll_source_file_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_compilation_data_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_source_file_t** dt
+ * \arg sll_source_file_index_t l
+ */
+typedef struct _SLL_COMPILATION_DATA{
+    sll_source_file_t** dt;
+    sll_source_file_index_t l;
+} sll_compilation_data_t;
+
+
+
+/**
  * \flags func type
  * \name sll_import_resolver_t
  * \group node

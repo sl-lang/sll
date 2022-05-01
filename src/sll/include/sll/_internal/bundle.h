@@ -1,5 +1,6 @@
 #ifndef __SLL__INTERNAL_BUNDLE_H__
 #define __SLL__INTERNAL_BUNDLE_H__ 1
+#include <sll/node.h>
 #include <sll/types.h>
 
 

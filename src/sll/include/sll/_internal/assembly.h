@@ -4,6 +4,7 @@
 #include <sll/api/serial.h>
 #include <sll/assembly.h>
 #include <sll/compression.h>
+#include <sll/node.h>
 #include <sll/types.h>
 
 

@@ -1,6 +1,7 @@
 #ifndef __SLL_BUNDLE_H__
 #define __SLL_BUNDLE_H__ 1
 #include <sll/common.h>
+#include <sll/node.h>
 #include <sll/types.h>
 /**
  * \flags group

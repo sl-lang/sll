@@ -2,6 +2,7 @@
 #define __SLL_GENERATED_OPERATOR_PARSER_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_internal/parse.h>
+#include <sll/node.h>
 #include <sll/types.h>
 
 
