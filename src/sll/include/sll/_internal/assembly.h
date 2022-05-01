@@ -5,6 +5,7 @@
 #include <sll/assembly.h>
 #include <sll/compression.h>
 #include <sll/node.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 
 

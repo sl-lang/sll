@@ -4,6 +4,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/node.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 /**
  * \flags group

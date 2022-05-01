@@ -1,5 +1,6 @@
 #ifndef __SLL__INTERNAL_UNIFY_H__
 #define __SLL__INTERNAL_UNIFY_H__ 1
+#include <sll/string_table.h>
 #include <sll/types.h>
 
 

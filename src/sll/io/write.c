@@ -10,6 +10,7 @@
 #include <sll/file.h>
 #include <sll/node.h>
 #include <sll/object.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 #include <sll/version.h>
 

@@ -24,6 +24,32 @@
 
 
 /**
+ * \flags type var
+ * \name sll_string_index_t
+ * \group string-table
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_string_index_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_string_table_t
+ * \group string-table
+ * \desc Docs!
+ * \arg sll_string_t* dt
+ * \arg sll_string_index_t l
+ */
+typedef struct _SLL_STRING_TABLE{
+    sll_string_t* dt;
+    sll_string_index_t l;
+} sll_string_table_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_add_string
  * \group string-table

@@ -1,5 +1,6 @@
 #include <sll/common.h>
 #include <sll/identifier.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 
 

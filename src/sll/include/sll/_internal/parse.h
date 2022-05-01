@@ -2,6 +2,7 @@
 #define __SLL__INTERNAL_PARSE_H__ 1
 #include <sll/ift.h>
 #include <sll/node.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 
 

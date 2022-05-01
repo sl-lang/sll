@@ -10,6 +10,7 @@
 #include <sll/platform/memory.h>
 #include <sll/platform/util.h>
 #include <sll/string.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 
 

@@ -3,6 +3,7 @@
 #include <sll/_identifier.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -131,6 +132,21 @@
  * \arg sll_bool_t tls
  */
 #define SLL_IDENTIFIER_SET_STRING_INDEX(v,si,tls) ((v)->i=((si)<<1)|(!!(tls)))
+
+
+
+/**
+ * \flags type
+ * \name sll_identifier_t
+ * \group identifier
+ * \desc Docs!
+ * \arg sll_scope_t sc
+ * \arg sll_string_index_t i
+ */
+typedef struct _SLL_IDENTIFIER{
+    sll_scope_t sc;
+    sll_string_index_t i;
+} sll_identifier_t;
 
 
 

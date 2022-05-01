@@ -1,8 +1,11 @@
 #ifndef __SLL_NODE_H__
 #define __SLL_NODE_H__ 1
+#include <sll/_size_types.h>
 #include <sll/api/hash.h>
 #include <sll/common.h>
+#include <sll/identifier.h>
 #include <sll/ift.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -1095,6 +1098,212 @@
 
 
 /**
+ * \flags type var
+ * \name sll_node_type_t
+ * \group node
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_node_type_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_source_file_index_t
+ * \group node
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_source_file_index_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_function_node_data_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_arg_count_t ac
+ * \arg sll_function_index_t id
+ * \arg sll_scope_t sc
+ */
+typedef struct _SLL_FUNCTION_NODE_DATA{
+	sll_arg_count_t ac;
+	sll_function_index_t id;
+	sll_scope_t sc;
+} sll_function_node_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_loop_node_data_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_arg_count_t ac
+ * \arg sll_scope_t sc
+ */
+typedef struct _SLL_LOOP_NODE_DATA{
+	sll_arg_count_t ac;
+	sll_scope_t sc;
+} sll_loop_node_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_decl_node_data_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_arg_count_t ac
+ * \arg sll_string_index_t nm
+ */
+typedef struct _SLL_DECL_NODE_DATA{
+	sll_arg_count_t ac;
+	sll_string_index_t nm;
+} sll_decl_node_data_t;
+
+
+
+/**
+ * \flags type union
+ * \name sll_node_data_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_integer_t i
+ * \arg sll_float_t f
+ * \arg sll_char_t c
+ * \arg sll_complex_t d
+ * \arg sll_string_index_t s
+ * \arg sll_array_length_t al
+ * \arg sll_map_length_t ml
+ * \arg sll_identifier_index_t id
+ * \arg sll_function_node_data_t fn
+ * \arg sll_loop_node_data_t l
+ * \arg sll_decl_node_data_t dc
+ * \arg sll_arg_count_t ac
+ * \arg sll_function_index_t fn_id
+ * \arg void* _p
+ */
+typedef union _SLL_NODE_DATA{
+	sll_integer_t i;
+	sll_float_t f;
+	sll_char_t c;
+	sll_complex_t d;
+	sll_string_index_t s;
+	sll_array_length_t al;
+	sll_map_length_t ml;
+	sll_identifier_index_t id;
+	sll_function_node_data_t fn;
+	sll_loop_node_data_t l;
+	sll_decl_node_data_t dc;
+	sll_arg_count_t ac;
+	sll_function_index_t fn_id;
+	void* _p;
+} sll_node_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_node_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_node_type_t t
+ * \arg sll_node_data_t dt
+ */
+typedef struct _SLL_NODE{
+	sll_node_type_t t;
+	sll_node_data_t dt;
+} sll_node_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_identifier_list_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_identifier_t* dt
+ * \arg sll_identifier_list_length_t l
+ */
+typedef struct _SLL_IDENTIFIER_LIST{
+	sll_identifier_t* dt;
+	sll_identifier_list_length_t l;
+} sll_identifier_list_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_identifier_table_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_identifier_list_t* s
+ * \arg sll_identifier_t* il
+ * \arg sll_identifier_list_length_t ill
+ */
+typedef struct _SLL_IDENTIFIER_TABLE{
+	sll_identifier_list_t s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	sll_identifier_t* il;
+	sll_identifier_list_length_t ill;
+} sll_identifier_table_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_export_table_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_identifier_index_t* dt
+ * \arg sll_export_table_length_t l
+ */
+typedef struct _SLL_EXPORT_TABLE{
+	sll_identifier_index_t* dt;
+	sll_export_table_length_t l;
+} sll_export_table_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_function_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_node_offset_t off
+ * \arg sll_string_index_t nm
+ * \arg sll_string_index_t desc
+ * \arg sll_arg_count_t al
+ * \arg sll_identifier_index_t* a
+ */
+typedef struct _SLL_FUNCTION{
+	sll_node_offset_t off;
+	sll_string_index_t nm;
+	sll_string_index_t desc;
+	sll_arg_count_t al;
+	sll_identifier_index_t a[];
+} sll_function_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_function_table_t
+ * \group node
+ * \desc Docs!
+ * \arg sll_function_t** dt
+ * \arg sll_function_index_t l
+ */
+typedef struct _SLL_FUNCTION_TABLE{
+	sll_function_t** dt;
+	sll_function_index_t l;
+} sll_function_table_t;
+
+
+
+/**
  * \flags type
  * \name sll_import_file_t
  * \group node
@@ -1104,9 +1313,9 @@
  * \arg sll_identifier_index_t* dt
  */
 typedef struct _SLL_IMPORT_FILE{
-    sll_source_file_index_t sfi;
-    sll_identifier_list_length_t l;
-    sll_identifier_index_t dt[];
+	sll_source_file_index_t sfi;
+	sll_identifier_list_length_t l;
+	sll_identifier_index_t dt[];
 } sll_import_file_t;
 
 
@@ -1120,8 +1329,8 @@ typedef struct _SLL_IMPORT_FILE{
  * \arg sll_import_index_t l
  */
 typedef struct _SLL_IMPORT_TABLE{
-    sll_import_file_t** dt;
-    sll_import_index_t l;
+	sll_import_file_t** dt;
+	sll_import_index_t l;
 } sll_import_table_t;
 
 
@@ -1138,11 +1347,11 @@ typedef struct _SLL_IMPORT_TABLE{
  * \arg sll_size_t c
  */
 typedef struct _SLL_NODE_STACK{
-    void* s;
-    void* e;
-    sll_node_t* p;
-    sll_node_offset_t off;
-    sll_size_t c;
+	void* s;
+	void* e;
+	sll_node_t* p;
+	sll_node_offset_t off;
+	sll_size_t c;
 } sll_node_stack_t;
 
 
@@ -1166,18 +1375,18 @@ typedef struct _SLL_NODE_STACK{
  * \arg sll_scope_t _n_sc_id
  */
 typedef struct _SLL_SOURCE_FILE{
-    sll_time_t tm;
-    sll_file_offset_t sz;
-    sll_sha256_data_t h;
-    sll_node_t* dt;
-    sll_identifier_table_t idt;
-    sll_export_table_t et;
-    sll_function_table_t ft;
-    sll_string_table_t st;
-    sll_import_table_t it;
-    sll_string_index_t fp_nm;
-    sll_node_stack_t _s;
-    sll_scope_t _n_sc_id;
+	sll_time_t tm;
+	sll_file_offset_t sz;
+	sll_sha256_data_t h;
+	sll_node_t* dt;
+	sll_identifier_table_t idt;
+	sll_export_table_t et;
+	sll_function_table_t ft;
+	sll_string_table_t st;
+	sll_import_table_t it;
+	sll_string_index_t fp_nm;
+	sll_node_stack_t _s;
+	sll_scope_t _n_sc_id;
 } sll_source_file_t;
 
 
@@ -1191,8 +1400,8 @@ typedef struct _SLL_SOURCE_FILE{
  * \arg sll_source_file_index_t l
  */
 typedef struct _SLL_COMPILATION_DATA{
-    sll_source_file_t** dt;
-    sll_source_file_index_t l;
+	sll_source_file_t** dt;
+	sll_source_file_index_t l;
 } sll_compilation_data_t;
 
 

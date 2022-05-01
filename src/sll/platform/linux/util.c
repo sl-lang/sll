@@ -123,7 +123,7 @@ void _init_platform(void){
 		if (*e=='='){
 			continue;
 		}
-		sll_string_index_t j=0;
+		sll_string_length_t j=0;
 		while (*e&&*e!='='){
 			j++;
 			e++;

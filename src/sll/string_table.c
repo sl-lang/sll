@@ -3,6 +3,7 @@
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/string.h>
+#include <sll/string_table.h>
 #include <sll/types.h>
 
 
