@@ -5,6 +5,7 @@
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/allocator.h>
+#include <sll/api/hash.h>
 #include <sll/api/math.h>
 #include <sll/common.h>
 #include <sll/data.h>

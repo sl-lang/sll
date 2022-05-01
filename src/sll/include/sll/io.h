@@ -3,6 +3,7 @@
 #include <sll/assembly.h>
 #include <sll/bundle.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/node.h>
 #include <sll/types.h>
 /**

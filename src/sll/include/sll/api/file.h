@@ -1,6 +1,7 @@
 #ifndef __SLL_API_FILE_H__
 #define __SLL_API_FILE_H__ 1
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/types.h>
 /**
  * \flags group

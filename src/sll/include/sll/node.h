@@ -3,6 +3,7 @@
 #include <sll/_size_types.h>
 #include <sll/api/hash.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/identifier.h>
 #include <sll/ift.h>
 #include <sll/string_table.h>

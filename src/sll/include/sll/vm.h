@@ -3,6 +3,7 @@
 #include <sll/_size_types.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
 #include <sll/object.h>

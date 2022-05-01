@@ -1,5 +1,6 @@
 #ifndef __SLL_API_HASH_H__
 #define __SLL_API_HASH_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/types.h>
@@ -130,6 +131,100 @@
  * \type sll_sha512_data_t
  */
 #define SLL_INIT_SHA512_STRUCT {0x6a09e667f3bcc908ull,0xbb67ae8584caa73bull,0x3c6ef372fe94f82bull,0xa54ff53a5f1d36f1ull,0x510e527fade682d1ull,0x9b05688c2b3e6c1full,0x1f83d9abfb41bd6bull,0x5be0cd19137e2179ull}
+
+
+
+/**
+ * \flags type
+ * \name sll_md5_data_t
+ * \group hash-api
+ * \desc Docs!
+ * \arg __SLL_U32 a
+ * \arg __SLL_U32 b
+ * \arg __SLL_U32 c
+ * \arg __SLL_U32 d
+ */
+typedef struct _SLL_MD5_DATA{
+    __SLL_U32 a;
+    __SLL_U32 b;
+    __SLL_U32 c;
+    __SLL_U32 d;
+} sll_md5_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_sha1_data_t
+ * \group hash-api
+ * \desc Docs!
+ * \arg __SLL_U32 a
+ * \arg __SLL_U32 b
+ * \arg __SLL_U32 c
+ * \arg __SLL_U32 d
+ * \arg __SLL_U32 e
+ */
+typedef struct _SLL_SHA1_DATA{
+    __SLL_U32 a;
+    __SLL_U32 b;
+    __SLL_U32 c;
+    __SLL_U32 d;
+    __SLL_U32 e;
+} sll_sha1_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_sha256_data_t
+ * \group hash-api
+ * \desc Docs!
+ * \arg __SLL_U32 a
+ * \arg __SLL_U32 b
+ * \arg __SLL_U32 c
+ * \arg __SLL_U32 d
+ * \arg __SLL_U32 e
+ * \arg __SLL_U32 f
+ * \arg __SLL_U32 g
+ * \arg __SLL_U32 h
+ */
+typedef struct _SLL_SHA256_DATA{
+    __SLL_U32 a;
+    __SLL_U32 b;
+    __SLL_U32 c;
+    __SLL_U32 d;
+    __SLL_U32 e;
+    __SLL_U32 f;
+    __SLL_U32 g;
+    __SLL_U32 h;
+} sll_sha256_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_sha512_data_t
+ * \group hash-api
+ * \desc Docs!
+ * \arg __SLL_U64 a
+ * \arg __SLL_U64 b
+ * \arg __SLL_U64 c
+ * \arg __SLL_U64 d
+ * \arg __SLL_U64 e
+ * \arg __SLL_U64 f
+ * \arg __SLL_U64 g
+ * \arg __SLL_U64 h
+ */
+typedef struct _SLL_SHA512_DATA{
+    __SLL_U64 a;
+    __SLL_U64 b;
+    __SLL_U64 c;
+    __SLL_U64 d;
+    __SLL_U64 e;
+    __SLL_U64 f;
+    __SLL_U64 g;
+    __SLL_U64 h;
+} sll_sha512_data_t;
 
 
 

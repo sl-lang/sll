@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/magic_number.h>
+#include <sll/api/hash.h>
 #include <sll/api/serial.h>
 #include <sll/assembly.h>
 #include <sll/bundle.h>
