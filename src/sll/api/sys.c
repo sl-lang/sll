@@ -61,7 +61,7 @@ static void _sys_free_data(void){
 			if (fn){
 				fn();
 			}
-			sll_platform_unload_library(l->h);
+			SLL_CRITICAL_ERROR(sll_platform_unload_library(l->h));
 			sll_deallocate(l);
 		}
 		sll_deallocate(_sys_lh);
@@ -214,7 +214,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 	}
 	sll_bool_t (*fn)(sll_version_t)=sll_platform_lookup_symbol(h,SLL_ABI_NAME(SLL_ABI_INIT));
 	if (!fn||!fn(SLL_VERSION)){
-		sll_platform_unload_library(h);
+		SLL_CRITICAL_ERROR(sll_platform_unload_library(h));
 		sll_free_string(&fp);
 		return 0;
 	}

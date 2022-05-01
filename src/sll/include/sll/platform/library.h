@@ -54,14 +54,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_lookup_symbol(sll_library_h
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_platform_unload_library
  * \group platform
  * \subgroup platform-lib
  * \desc Docs!
  * \arg sll_library_handle_t h
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL void sll_platform_unload_library(sll_library_handle_t h);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_unload_library(sll_library_handle_t h);
 
 
 

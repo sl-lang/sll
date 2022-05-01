@@ -25,6 +25,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_lookup_symbol(sll_library_h
 
 
 
-__SLL_EXTERNAL void sll_platform_unload_library(sll_library_handle_t h){
-	FreeLibrary(h);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_unload_library(sll_library_handle_t h){
+	return (FreeLibrary(h)?SLL_NO_ERROR:sll_platform_get_error());
 }

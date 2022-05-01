@@ -401,7 +401,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			if (lh){
 				sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_AUDIT_CALL));
 				if (!cb){
-					sll_platform_unload_library(lh);
+					SLL_CRITICAL_ERROR(sll_platform_unload_library(lh));
 				}
 				else{
 					void (*init)(void)=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_AUDIT_INIT));
@@ -808,7 +808,7 @@ _cleanup:
 		if (deinit){
 			deinit();
 		}
-		sll_platform_unload_library((ll+lll)->lh);
+		SLL_CRITICAL_ERROR(sll_platform_unload_library((ll+lll)->lh));
 	}
 	sll_deallocate(i_b);
 	sll_deallocate(fp);
