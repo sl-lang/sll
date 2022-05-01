@@ -158,3 +158,6 @@ def generate():
 	util.log("Reading 'src/web/apt.sh'...")
 	with open("src/web/apt.sh","r") as rf:
 		_generate("/apt",rf.read())
+	util.log("Reading 'src/web/apt_nightly.sh'...")
+	with open("src/web/apt_nightly.sh","r") as rf:
+		_generate("/apt-nightly",rf.read())

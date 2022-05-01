@@ -162,7 +162,7 @@ jobs:
         with:
           directory: ./
           verbose: true
-  nightly-release:
+  nightly-build:
     name: Create nighly build
     needs:
       - darwin-release
