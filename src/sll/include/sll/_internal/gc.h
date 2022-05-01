@@ -17,9 +17,9 @@
 
 
 typedef struct _GC_PAGE_HEADER{
+	sll_size_t cnt;
 	struct _GC_PAGE_HEADER* p;
 	struct _GC_PAGE_HEADER* n;
-	sll_size_t cnt;
 } gc_page_header_t;
 
 
