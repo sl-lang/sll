@@ -493,39 +493,6 @@ typedef __SLL_F64 sll_float_t;
 
 
 /**
- * \flags type var
- * \name sll_second_t
- * \group types
- * \desc Docs!
- * \type __SLL_F64
- */
-typedef __SLL_F64 sll_second_t;
-
-
-
-/**
- * \flags type var
- * \name sll_arg_state_t
- * \group types
- * \desc Docs!
- * \type void*
- */
-typedef void* sll_arg_state_t;
-
-
-
-/**
- * \flags type var
- * \name sll_process_handle_t
- * \group types
- * \desc Docs!
- * \type void*
- */
-typedef void* sll_process_handle_t;
-
-
-
-/**
  * \flags type
  * \name sll_string_t
  * \group types

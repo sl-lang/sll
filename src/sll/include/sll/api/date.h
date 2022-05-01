@@ -69,6 +69,17 @@ typedef __SLL_U16 sll_year_t;
 
 
 /**
+ * \flags type var
+ * \name sll_second_t
+ * \group date-api
+ * \desc Docs!
+ * \type __SLL_F64
+ */
+typedef __SLL_F64 sll_second_t;
+
+
+
+/**
  * \flags type
  * \name sll_time_zone_t
  * \group date-api

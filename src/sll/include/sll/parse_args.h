@@ -58,6 +58,17 @@
 
 
 /**
+ * \flags type var
+ * \name sll_arg_state_t
+ * \group parse-args
+ * \desc Docs!
+ * \type void*
+ */
+typedef void* sll_arg_state_t;
+
+
+
+/**
  * \flags type union
  * \name sll_int_float_data_t
  * \group parse-args

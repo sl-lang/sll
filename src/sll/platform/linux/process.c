@@ -2,6 +2,7 @@
 #include <sll/_internal/error.h>
 #include <sll/common.h>
 #include <sll/error.h>
+#include <sll/platform/process.h>
 #include <sll/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -46,7 +47,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_get_pid(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env,sll_error_t* err){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_process(const sll_char_t*const* a,const sll_char_t*const* env,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (!a||!(*a)){
 		return 0;
@@ -64,15 +65,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_pid_t sll_platform_start_process(const sll
 		ERROR_PTR_SYSTEM;
 		_exit(1);
 	}
-	return f;
+	return PTR(f);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_pid_t pid,sll_error_t* err){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_platform_wait_process(sll_process_handle_t pid,sll_error_t* err){
 	ERROR_PTR_RESET;
 	int st;
-	if (waitpid(pid,&st,0)==-1){
+	if (waitpid((pid_t)ADDR(pid),&st,0)==-1){
 		ERROR_PTR_SYSTEM;
 		return 0;
 	}

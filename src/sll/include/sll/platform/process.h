@@ -13,6 +13,18 @@
 
 
 /**
+ * \flags type var
+ * \name sll_process_handle_t
+ * \group platform
+ * \subgroup platform-process
+ * \desc Docs!
+ * \type void*
+ */
+typedef void* sll_process_handle_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_platform_close_process_handle
  * \group platform

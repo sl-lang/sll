@@ -5,6 +5,7 @@
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/memory.h>
+#include <sll/platform/process.h>
 #include <sll/string.h>
 #include <sll/types.h>
 
