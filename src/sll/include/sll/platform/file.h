@@ -1,5 +1,6 @@
 #ifndef __SLL_PLATFORM_FILE_H__
 #define __SLL_PLATFORM_FILE_H__ 1
+#include <sll/_file_descriptor.h>
 #include <sll/common.h>
 #include <sll/file.h>
 #include <sll/types.h>
@@ -58,6 +59,18 @@
  * \type sll_size_t
  */
 #define SLL_NO_FILE_SIZE 0xffffffffffffffffull
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_UNKNOWN_FILE_DESCRIPTOR
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ * \type sll_file_descriptor_t
+ */
+#define SLL_UNKNOWN_FILE_DESCRIPTOR ((sll_file_descriptor_t)0xffffffffffffffffull)
 
 
 

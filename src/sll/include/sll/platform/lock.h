@@ -13,6 +13,18 @@
 
 
 /**
+ * \flags type var
+ * \name sll_lock_handle_t
+ * \group platform
+ * \subgroup platform-lock
+ * \desc Docs!
+ * \type void*
+ */
+typedef void* sll_lock_handle_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_platform_lock_acquire
  * \group platform

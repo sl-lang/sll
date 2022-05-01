@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/platform/event.h>
 #include <sll/types.h>
 #ifdef __SLL_BUILD_DARWIN
 #include <dispatch/dispatch.h>

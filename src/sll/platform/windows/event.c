@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <sll/common.h>
+#include <sll/platform/event.h>
 #include <sll/types.h>
 
 

@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/common.h>
 #include <sll/memory.h>
+#include <sll/platform/lock.h>
 #include <sll/types.h>
 #include <pthread.h>
 

@@ -516,50 +516,6 @@ typedef void* sll_arg_state_t;
 
 /**
  * \flags type var
- * \name sll_event_handle_t
- * \group types
- * \desc Docs!
- * \type void*
- */
-typedef void* sll_event_handle_t;
-
-
-
-/**
- * \flags type var
- * \name sll_file_descriptor_t
- * \group types
- * \desc Docs!
- * \type void*
- */
-typedef void* sll_file_descriptor_t;
-
-
-
-/**
- * \flags type var
- * \name sll_library_handle_t
- * \group types
- * \desc Docs!
- * \type void*
- */
-typedef void* sll_library_handle_t;
-
-
-
-/**
- * \flags type var
- * \name sll_lock_handle_t
- * \group types
- * \desc Docs!
- * \type void*
- */
-typedef void* sll_lock_handle_t;
-
-
-
-/**
- * \flags type var
  * \name sll_process_handle_t
  * \group types
  * \desc Docs!

@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <sll/common.h>
+#include <sll/platform/lock.h>
 #include <sll/types.h>
 
 

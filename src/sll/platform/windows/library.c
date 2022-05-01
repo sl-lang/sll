@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
+#include <sll/platform/library.h>
 #include <sll/types.h>
 
 

@@ -13,6 +13,30 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_UNKNOWN_LIBRARY_HANDLE
+ * \group platform
+ * \subgroup platform-lib
+ * \desc Docs!
+ * \type sll_library_handle_t
+ */
+#define SLL_UNKNOWN_LIBRARY_HANDLE ((sll_library_handle_t)0xffffffffffffffffull)
+
+
+
+/**
+ * \flags type var
+ * \name sll_library_handle_t
+ * \group platform
+ * \subgroup platform-lib
+ * \desc Docs!
+ * \type void*
+ */
+typedef void* sll_library_handle_t;
+
+
+
+/**
  * \flags check_output func
  * \name sll_platform_load_library
  * \group platform

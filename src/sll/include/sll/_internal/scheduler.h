@@ -3,6 +3,8 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/thread.h>
 #include <sll/_size_types.h>
+#include <sll/platform/event.h>
+#include <sll/platform/lock.h>
 #include <sll/platform/thread.h>
 #include <sll/types.h>
 

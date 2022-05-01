@@ -1,8 +1,10 @@
 #ifndef __SLL_FILE_H__
 #define __SLL_FILE_H__ 1
+#include <sll/_file_descriptor.h>
 #include <sll/_size_types.h>
 #include <sll/api/hash.h>
 #include <sll/common.h>
+#include <sll/platform/lock.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -167,17 +169,6 @@
  * \ret sll_file_offset_t
  */
 #define SLL_FILE_GET_OFFSET(f) ((f)->_off)
-
-
-
-/**
- * \flags macro var
- * \name SLL_UNKNOWN_FILE_DESCRIPTOR
- * \group file
- * \desc Docs!
- * \type sll_file_descriptor_t
- */
-#define SLL_UNKNOWN_FILE_DESCRIPTOR ((sll_file_descriptor_t)0xffffffffffffffffull)
 
 
 

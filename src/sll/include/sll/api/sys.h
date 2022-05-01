@@ -14,17 +14,6 @@
 
 
 /**
- * \flags macro var
- * \name SLL_UNKNOWN_LIBRARY_HANDLE
- * \group sys-api
- * \desc Docs!
- * \type sll_library_handle_t
- */
-#define SLL_UNKNOWN_LIBRARY_HANDLE ((sll_library_handle_t)0xffffffffffffffffull)
-
-
-
-/**
  * \flags func
  * \name sll_api_sys_get_args
  * \group sys-api
