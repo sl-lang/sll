@@ -5,6 +5,7 @@
 #include <sll/api/hash.h>
 #include <sll/common.h>
 #include <sll/platform/lock.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group

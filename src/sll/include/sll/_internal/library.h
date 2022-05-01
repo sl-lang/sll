@@ -1,6 +1,7 @@
 #ifndef __SLL__INTERNAL_LIBRARY_H__
 #define __SLL__INTERNAL_LIBRARY_H__ 1
 #include <sll/platform/library.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 

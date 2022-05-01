@@ -4,6 +4,7 @@
 #include <sll/api/date.h>
 #include <sll/common.h>
 #include <sll/environment.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group

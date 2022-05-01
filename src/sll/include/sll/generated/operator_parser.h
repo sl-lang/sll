@@ -4,6 +4,7 @@
 #include <sll/_internal/parse.h>
 #include <sll/file.h>
 #include <sll/node.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 

@@ -2,6 +2,7 @@
 #define __SLL_OBJECT_H__ 1
 #include <sll/_object_func.h>
 #include <sll/_object_types.h>
+#include <sll/_string_types.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>

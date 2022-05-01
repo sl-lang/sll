@@ -373,28 +373,6 @@ typedef __SLL_U32 sll_stack_offset_t;
 
 /**
  * \flags type var
- * \name sll_string_checksum_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_string_checksum_t;
-
-
-
-/**
- * \flags type var
- * \name sll_string_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_string_length_t;
-
-
-
-/**
- * \flags type var
  * \name sll_thread_index_t
  * \group types
  * \desc Docs!
@@ -489,23 +467,6 @@ typedef __SLL_U64 sll_time_t;
  * \type __SLL_F64
  */
 typedef __SLL_F64 sll_float_t;
-
-
-
-/**
- * \flags type
- * \name sll_string_t
- * \group types
- * \desc Docs!
- * \arg sll_string_length_t l
- * \arg sll_string_checksum_t c
- * \arg sll_char_t* v
- */
-typedef struct _SLL_STRING{
-	sll_string_length_t l;
-	sll_string_checksum_t c;
-	sll_char_t* v;
-} sll_string_t;
 
 
 

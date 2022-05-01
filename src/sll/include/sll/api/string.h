@@ -3,6 +3,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/parse_args.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group

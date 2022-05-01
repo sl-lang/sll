@@ -3,6 +3,7 @@
 #include <sll/gc.h>
 #include <sll/location.h>
 #include <sll/log.h>
+#include <sll/string.h>
 #include <sll/string_table.h>
 #include <sll/thread.h>
 #include <sll/types.h>

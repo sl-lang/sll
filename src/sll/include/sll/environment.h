@@ -3,6 +3,7 @@
 #include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/search_path.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group

@@ -32,6 +32,7 @@
 #include <sll/sandbox.h>
 #include <sll/scheduler.h>
 #include <sll/static_object.h>
+#include <sll/string.h>
 #include <sll/thread.h>
 #include <sll/types.h>
 #include <sll/vm.h>

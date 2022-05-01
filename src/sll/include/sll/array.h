@@ -4,6 +4,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/operator.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group

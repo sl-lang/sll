@@ -1,6 +1,7 @@
 #ifndef __SLL_STATIC_OBJECT_H__
 #define __SLL_STATIC_OBJECT_H__ 1
 #include <sll/gc.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group

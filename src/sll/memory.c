@@ -8,6 +8,7 @@
 #include <sll/memory.h>
 #include <sll/platform/file.h>
 #include <sll/platform/memory.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <stdlib.h>
 

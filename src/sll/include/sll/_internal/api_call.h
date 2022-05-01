@@ -4,6 +4,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/ift.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 

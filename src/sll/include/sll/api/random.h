@@ -1,6 +1,7 @@
 #ifndef __SLL_API_RANDOM_H__
 #define __SLL_API_RANDOM_H__ 1
 #include <sll/common.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group

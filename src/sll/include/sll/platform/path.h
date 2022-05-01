@@ -1,6 +1,7 @@
 #ifndef __SLL_PLATFORM_PATH_H__
 #define __SLL_PLATFORM_PATH_H__ 1
 #include <sll/common.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags subgroup

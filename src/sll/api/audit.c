@@ -6,8 +6,9 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/init.h>
-#include <sll/static_object.h>
 #include <sll/memory.h>
+#include <sll/static_object.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <sll/var_arg.h>
 #include <sll/vm.h>

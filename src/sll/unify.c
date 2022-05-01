@@ -6,6 +6,7 @@
 #include <sll/identifier.h>
 #include <sll/memory.h>
 #include <sll/node.h>
+#include <sll/string.h>
 #include <sll/string_table.h>
 #include <sll/types.h>
 

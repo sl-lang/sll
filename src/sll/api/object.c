@@ -3,6 +3,7 @@
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/new_object.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <sll/var_arg.h>
 

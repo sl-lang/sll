@@ -2,6 +2,7 @@
 #define __SLL_SEARCH_PATH_H__ 1
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group

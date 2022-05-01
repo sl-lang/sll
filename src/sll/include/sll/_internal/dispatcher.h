@@ -6,6 +6,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_size_types.h>
 #include <sll/file.h>
+#include <sll/string.h>
 #include <sll/types.h>
 
 

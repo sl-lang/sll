@@ -46,7 +46,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 	while (l>31){
 		unsigned int v=~_mm256_movemask_epi8(_mm256_cmpeq_epi8(_mm256_lddqu_si256((const __m256i*)ap64),_mm256_lddqu_si256((const __m256i*)bp64)));
 		if (v){
-			sll_string_length_t i=FIND_FIRST_SET_BIT(v);
+			sll_size_t i=FIND_FIRST_SET_BIT(v);
 			return (*(((const sll_char_t*)ap64)+i)<*(((const sll_char_t*)bp64)+i)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
 		}
 		l-=32;
@@ -56,7 +56,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
 	if (l>15){
 		unsigned int v=_mm_movemask_epi8(_mm_cmpeq_epi8(_mm_lddqu_si128((const __m128i*)ap64),_mm_lddqu_si128((const __m128i*)bp64)))^0xffff;
 		if (v){
-			sll_string_length_t i=FIND_FIRST_SET_BIT(v);
+			sll_size_t i=FIND_FIRST_SET_BIT(v);
 			return (*(((const sll_char_t*)ap64)+i)<*(((const sll_char_t*)bp64)+i)?SLL_COMPARE_RESULT_BELOW:SLL_COMPARE_RESULT_ABOVE);
 		}
 		l-=16;

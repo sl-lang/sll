@@ -2,6 +2,7 @@
 #define __SLL_AUDIT_H__ 1
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <sll/var_arg.h>
 /**
