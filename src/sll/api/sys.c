@@ -173,7 +173,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 		}
 		sll_size_t f_sz=sll_platform_file_size(fd,NULL);
 		if (f_sz==SLL_NO_FILE_SIZE||f_sz!=sz){
-			sll_platform_file_close(fd);
+			SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
 			return 0;
 		}
 		sll_sha256_data_t sha=SLL_INIT_SHA256_STRUCT;
@@ -182,12 +182,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 		do{
 			off=sll_platform_file_read(fd,bf,LIBRARY_HASH_BUFFER_SIZE,NULL);
 			if (off==SLL_NO_FILE_SIZE){
-				sll_platform_file_close(fd);
+				SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
 				return 0;
 			}
 			sll_hash_sha256(&sha,bf,off&0xffffffffffffffc0ll);
 		} while (off==LIBRARY_HASH_BUFFER_SIZE);
-		sll_platform_file_close(fd);
+		SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
 		sll_char_t tmp[128];
 		sll_set_memory(tmp,128,0);
 		sll_copy_data(bf+(off&0xffffffffffffffc0ull),off&0x3f,tmp);

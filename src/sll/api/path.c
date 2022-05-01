@@ -184,7 +184,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size
 	sll_file_descriptor_t fd=sll_platform_file_open(path->v,SLL_FILE_FLAG_READ,&err);
 	if (fd!=SLL_UNKNOWN_FILE_DESCRIPTOR){
 		sll_size_t o=sll_platform_file_size(fd,&err);
-		sll_platform_file_close(fd);
+		SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
 		if (o||err==SLL_NO_ERROR){
 			return o;
 		}

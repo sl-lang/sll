@@ -12,6 +12,7 @@
 ## Changed
 
 - Improved compilation speed
+- More system functions return error codes
 - Moved code between header files
 - Renamed `sll_flags_t` to `sll_logger_flags_t`
 

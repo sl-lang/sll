@@ -133,7 +133,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 	if (!(f->f&FILE_FLAG_MEMORY)){
 		sll_free_string((sll_string_t*)(&(f->dt.fl.nm)));
 		if (f->dt.fl.fd!=SLL_UNKNOWN_FILE_DESCRIPTOR){
-			sll_platform_file_close(f->dt.fl.fd);
+			SLL_CRITICAL_ERROR(sll_platform_file_close(f->dt.fl.fd));
 			if (!(f->f&SLL_FILE_FLAG_NO_BUFFER)){
 				if (f->f&SLL_FILE_FLAG_READ){
 					_free_buffer(f->_r_bf);

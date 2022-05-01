@@ -29,8 +29,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_async_read(sll_fi
 
 
 
-__SLL_EXTERNAL void sll_platform_file_close(sll_file_descriptor_t fd){
-	close(FROM_HANDLE(fd));
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_file_close(sll_file_descriptor_t fd){
+	return (close(FROM_HANDLE(fd))?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 
