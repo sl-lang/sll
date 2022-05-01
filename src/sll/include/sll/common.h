@@ -1,5 +1,8 @@
 #ifndef __SLL_COMMON_H__
 #define __SLL_COMMON_H__ 1
+#ifdef __SLL_BUILD_WINDOWS
+#include <sal.h>
+#endif
 
 
 
