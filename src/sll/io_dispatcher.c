@@ -91,9 +91,7 @@ static void _poll_thread(void* arg){
 void _io_dispatcher_deinit(void){
 	_io_dispatcher_end=1;
 	_platform_poll_stop(_io_dispatcher_raw_event,NULL);
-	if (!sll_platform_join_thread(_io_dispatcher_thread)){
-		SLL_UNREACHABLE();
-	}
+	SLL_CRITICAL_ERROR(sll_platform_join_thread(_io_dispatcher_thread));
 	_platform_deinit_io_dispatcher(_io_dispatcher_raw_event,_io_dispatcher_wait_handle);
 	sll_deallocate(_io_dispatcher_event);
 	sll_deallocate(_io_dispatcher_raw_event);

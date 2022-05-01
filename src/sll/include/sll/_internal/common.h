@@ -44,22 +44,25 @@
 	} while (0)
 #endif
 
-#define _SLL_CRITICAL_COND(cnd,x,str) \
+#define _SLL_CRITICAL(cnd,x,str) \
 	do{ \
 		if ((cnd)&&!(x)){ \
 			_critical_failure(SLL_CHAR("["__FILE__":"_SLL_STRINGIFY(__LINE__)"] "str),SLL_NO_ERROR); \
 		} \
 	} while (0)
-#define _SLL_CRITICAL_ERROR(x,str) \
+#define _SLL_CRITICAL_ERROR(cnd,x,str) \
 	do{ \
-		sll_error_t __err=(x); \
-		if (__err!=SLL_NO_ERROR){ \
-			_critical_failure(SLL_CHAR("["__FILE__":"_SLL_STRINGIFY(__LINE__)"] "str": "),__err); \
+		if ((cnd)){ \
+			sll_error_t __err=(x); \
+			if (__err!=SLL_NO_ERROR){ \
+				_critical_failure(SLL_CHAR("["__FILE__":"_SLL_STRINGIFY(__LINE__)"] "str": "),__err); \
+			} \
 		} \
 	} while (0)
-#define SLL_CRITICAL(x) _SLL_CRITICAL_COND(1,(x),#x)
-#define SLL_CRITICAL_COND(cnd,x) _SLL_CRITICAL_COND(cnd,(x),#x)
-#define SLL_CRITICAL_ERROR(x) _SLL_CRITICAL_ERROR((x),#x)
+#define SLL_CRITICAL(x) _SLL_CRITICAL(1,(x),#x)
+#define SLL_CRITICAL_COND(cnd,x) _SLL_CRITICAL(cnd,(x),#x)
+#define SLL_CRITICAL_ERROR(x) _SLL_CRITICAL_ERROR(1,(x),#x)
+#define SLL_CRITICAL_ERROR_COND(cnd,x) _SLL_CRITICAL_ERROR(cnd,(x),#x)
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))

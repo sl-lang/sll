@@ -1,6 +1,7 @@
 #ifndef __SLL_PLATFORM_THREAD_H__
 #define __SLL_PLATFORM_THREAD_H__ 1
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/types.h>
 /**
  * \flags subgroup
@@ -91,9 +92,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_curre
  * \subgroup platform-thread
  * \desc Docs!
  * \arg sll_internal_thread_index_t tid
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_internal_thread_index_t tid);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_join_thread(sll_internal_thread_index_t tid);
 
 
 
@@ -104,9 +105,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_intern
  * \subgroup platform-thread
  * \desc Docs!
  * \arg sll_cpu_t cpu
- * \ret sll_bool_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_cpu(sll_cpu_t cpu);
 
 
 

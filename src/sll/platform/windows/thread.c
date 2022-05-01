@@ -2,6 +2,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/platform.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/platform/thread.h>
 #include <sll/platform/util.h>
 #include <sll/types.h>
@@ -23,14 +24,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_curre
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_internal_thread_index_t tid){
-	return (WaitForSingleObject((HANDLE)tid,INFINITE)==WAIT_OBJECT_0);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_join_thread(sll_internal_thread_index_t tid){
+	return (WaitForSingleObject((HANDLE)tid,INFINITE)==WAIT_OBJECT_0?SLL_NO_ERROR:sll_platform_get_error());
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu){
-	return !!SetThreadIdealProcessor(GetCurrentThread(),(cpu==SLL_CPU_ANY||cpu>=*sll_platform_cpu_count?0xffffffffffffffffull:1ull<<cpu));
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_cpu(sll_cpu_t cpu){
+	return (SetThreadIdealProcessor(GetCurrentThread(),(cpu==SLL_CPU_ANY||cpu>=*sll_platform_cpu_count?0xffffffffffffffffull:1ull<<cpu))?SLL_NO_ERROR:sll_platform_get_error());
 }
 
 

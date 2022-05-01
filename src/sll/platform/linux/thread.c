@@ -1,5 +1,6 @@
 #include <sll/_internal/platform.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/platform/thread.h>
 #include <sll/platform/util.h>
 #include <sll/types.h>
@@ -30,13 +31,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_curre
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_join_thread(sll_internal_thread_index_t tid){
-	return !pthread_join((pthread_t)tid,NULL);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_join_thread(sll_internal_thread_index_t tid){
+	int err=pthread_join((pthread_t)tid,NULL);
+	return (err?err|SLL_ERROR_FLAG_SYSTEM:SLL_NO_ERROR);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_cpu(sll_cpu_t cpu){
 	if (cpu!=SLL_CPU_ANY&&cpu>=*sll_platform_cpu_count){
 		cpu=SLL_CPU_ANY;
 	}
@@ -44,7 +46,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu)
 	thread_affinity_policy_data_t dt={
 		(cpu==SLL_CPU_ANY?0:cpu+1)
 	};
-	return thread_policy_set(pthread_mach_thread_np(pthread_self()),THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),THREAD_AFFINITY_POLICY_COUNT)==KERN_SUCCESS;
+	return (thread_policy_set(pthread_mach_thread_np(pthread_self()),THREAD_AFFINITY_POLICY,(thread_policy_t)(&dt),THREAD_AFFINITY_POLICY_COUNT)==KERN_SUCCESS?SLL_NO_ERROR:SLL_ERROR_FLAG_SYSTEM);
 #else
 	cpu_set_t set;
 	CPU_ZERO(&set);
@@ -56,7 +58,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_set_cpu(sll_cpu_t cpu)
 			CPU_SET(i,&set);
 		}
 	}
-	return !pthread_setaffinity_np(pthread_self(),sizeof(cpu_set_t),&set);
+	int err=pthread_setaffinity_np(pthread_self(),sizeof(cpu_set_t),&set);
+	return (err?err|SLL_ERROR_FLAG_SYSTEM:SLL_NO_ERROR);
 #endif
 }
 

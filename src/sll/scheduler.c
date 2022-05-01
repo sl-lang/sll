@@ -39,7 +39,7 @@ __SLL_TLS thread_data_t* _scheduler_current_thread;
 
 static void _cpu_core_worker(void* dt){
 	_scheduler_internal_thread_index=(sll_cpu_t)ADDR(dt);
-	SLL_CRITICAL(sll_platform_set_cpu(_scheduler_internal_thread_index));
+	SLL_CRITICAL_ERROR(sll_platform_set_cpu(_scheduler_internal_thread_index));
 	if (_scheduler_internal_thread_index){
 		return;
 	}
@@ -169,12 +169,12 @@ sll_return_code_t _scheduler_run(void){
 	}
 	_cpu_core_worker(NULL);
 	_audit_cleanup_api();
-	SLL_CRITICAL(sll_platform_set_cpu(SLL_CPU_ANY));
+	SLL_CRITICAL_ERROR(sll_platform_set_cpu(SLL_CPU_ANY));
 	cpu_dt=_scheduler_data_base;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){
 		if (i){
 			SLL_CRITICAL_ERROR(sll_platform_event_set(cpu_dt->evt));
-			SLL_CRITICAL_COND(i,sll_platform_join_thread(cpu_dt->tid));
+			SLL_CRITICAL_ERROR_COND(i,sll_platform_join_thread(cpu_dt->tid));
 		}
 		SLL_CRITICAL_ERROR(sll_platform_event_delete(cpu_dt->evt));
 		SLL_CRITICAL(sll_platform_lock_delete(cpu_dt->lck));
