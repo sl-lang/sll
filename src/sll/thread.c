@@ -86,7 +86,7 @@ sll_thread_index_t _thread_new(void){
 		ptr=_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len];
 	}
 	else{
-		ptr=sll_platform_allocate_page(THREAD_SIZE,0);
+		ptr=sll_platform_allocate_page(THREAD_SIZE,0,NULL);
 	}
 	thread_data_t* n=ptr;
 	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->a_dt->tls_vc*sizeof(sll_object_t*));

@@ -1,8 +1,10 @@
 #include <windows.h>
 #include <sll/_internal/common.h>
+#include <sll/_internal/error.h>
 #include <sll/platform/memory.h>
 #include <sll/platform/util.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/types.h>
 
 
@@ -12,7 +14,8 @@ static sll_size_t _win_system_align=0;
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l,sll_error_t* err){
+	ERROR_PTR_RESET;
 	if (l&&_win_large_page!=2){
 		if (!_win_large_page){
 			_win_large_page=1;
@@ -36,12 +39,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 		}
 	}
 	SLL_ASSERT(SLL_ROUND_PAGE(sz)==sz);
-	return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+	void* o=VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+	if (!o){
+		ERROR_PTR_SYSTEM;
+	}
+	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align,sll_error_t* err){
+	ERROR_PTR_RESET;
 	if (!_win_system_align){
 		SYSTEM_INFO si;
 		GetSystemInfo(&si);
@@ -50,7 +58,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_s
 	SLL_ASSERT(!(align&(align-1)));
 	SLL_ASSERT(SLL_ROUND_PAGE(sz)==sz);
 	if (align<=_win_system_align){
-		return VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+		void* o=VirtualAlloc(NULL,sz,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+		if (!o){
+			ERROR_PTR_SYSTEM;
+		}
+		return o;
 	}
 	SLL_UNIMPLEMENTED();
 }

@@ -146,7 +146,7 @@ sll_return_code_t _scheduler_run(void){
 	if (_scheduler_load_balancer.len>255){
 		_scheduler_load_balancer.len=255;
 	}
-	_scheduler_data_base=sll_platform_allocate_page(SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t)),0);
+	_scheduler_data_base=sll_platform_allocate_page(SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t)),0,NULL);
 	_scheduler_load_balancer.lck=sll_platform_lock_create();
 	_scheduler_load_balancer.brk=0;
 	scheduler_cpu_data_t* cpu_dt=_scheduler_data_base;

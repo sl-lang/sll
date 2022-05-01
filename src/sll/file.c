@@ -58,7 +58,7 @@ static void _free_buffer(void* pg){
 
 static void* _get_buffer(void){
 	if (!_file_buffer_pool_len){
-		return sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE),1);
+		return sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE),1,NULL);
 	}
 	_file_buffer_pool_len--;
 	return _file_buffer_pool[_file_buffer_pool_len];
@@ -189,7 +189,7 @@ __SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,
 	}
 	if (f&SLL_FILE_FLAG_WRITE){
 		f|=FILE_FLAG_DYNAMIC_BUFFERS;
-		dynamic_buffer_chunk_t* bf=sll_platform_allocate_page(SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE),0);
+		dynamic_buffer_chunk_t* bf=sll_platform_allocate_page(SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE),0,NULL);
 		bf->sz=SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE);
 		bf->n=NULL;
 		o->_w.d.b=bf;

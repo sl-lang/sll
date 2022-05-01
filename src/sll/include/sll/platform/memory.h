@@ -2,6 +2,7 @@
 #define __SLL_PLATFORM_H__ 1
 #include <sll/_size_types.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/types.h>
 /**
  * \flags subgroup
@@ -83,9 +84,10 @@
  * \desc Docs!
  * \arg sll_size_t sz
  * \arg sll_bool_t l
+ * \arg sll_error_t* err
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l,sll_error_t* err);
 
 
 
@@ -97,9 +99,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
  * \desc Docs!
  * \arg sll_size_t sz
  * \arg sll_size_t align
+ * \arg sll_error_t* err
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align,sll_error_t* err);
 
 
 
