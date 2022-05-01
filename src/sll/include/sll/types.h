@@ -109,28 +109,6 @@ typedef __SLL_U8 sll_flags_t;
 
 /**
  * \flags type var
- * \name sll_cpu_t
- * \group types
- * \desc Docs!
- * \type __SLL_U16
- */
-typedef __SLL_U16 sll_cpu_t;
-
-
-
-/**
- * \flags type var
- * \name sll_return_code_t
- * \group types
- * \desc Docs!
- * \type __SLL_S32
- */
-typedef __SLL_S32 sll_return_code_t;
-
-
-
-/**
- * \flags type var
  * \name sll_arg_count_t
  * \group types
  * \desc Docs!

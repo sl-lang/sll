@@ -8,6 +8,7 @@
 #include <sll/gc.h>
 #include <sll/ift.h>
 #include <sll/object.h>
+#include <sll/platform/process.h>
 #include <sll/types.h>
 /**
  * \flags group

@@ -29,6 +29,7 @@
 #include <sll/object.h>
 #include <sll/operator.h>
 #include <sll/platform/memory.h>
+#include <sll/platform/process.h>
 #include <sll/sandbox.h>
 #include <sll/scheduler.h>
 #include <sll/static_object.h>

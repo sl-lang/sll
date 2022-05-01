@@ -6,6 +6,7 @@
 #include <sll/common.h>
 #include <sll/environment.h>
 #include <sll/error.h>
+#include <sll/platform/thread.h>
 #include <sll/string.h>
 #include <sll/types.h>
 /**

@@ -15,6 +15,7 @@
 #include <sll/error.h>
 #include <sll/init.h>
 #include <sll/memory.h>
+#include <sll/platform/thread.h>
 #include <sll/string.h>
 #include <sll/types.h>
 

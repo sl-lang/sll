@@ -38,6 +38,18 @@
 
 /**
  * \flags type var
+ * \name sll_cpu_t
+ * \group platform
+ * \subgroup platform-thread
+ * \desc Docs!
+ * \type __SLL_U16
+ */
+typedef __SLL_U16 sll_cpu_t;
+
+
+
+/**
+ * \flags type var
  * \name sll_internal_thread_index_t
  * \group platform
  * \subgroup platform-thread

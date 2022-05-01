@@ -15,6 +15,18 @@
 
 /**
  * \flags type var
+ * \name sll_return_code_t
+ * \group platform
+ * \subgroup platform-process
+ * \desc Docs!
+ * \type __SLL_S32
+ */
+typedef __SLL_S32 sll_return_code_t;
+
+
+
+/**
+ * \flags type var
  * \name sll_pid_t
  * \group platform
  * \subgroup platform-process

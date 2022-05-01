@@ -22,6 +22,7 @@
 #include <sll/platform/file.h>
 #include <sll/platform/library.h>
 #include <sll/platform/path.h>
+#include <sll/platform/thread.h>
 #include <sll/platform/util.h>
 #include <sll/sandbox.h>
 #include <sll/static_object.h>
