@@ -37,17 +37,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align){
 	SLL_ASSERT(!(align&(align-1)));
-	sll_size_t mem_sz=(sz+align-1)&(0-align);
+	sll_size_t mem_sz=sz+align-SLL_PAGE_SIZE;
 	void* o=mmap(NULL,mem_sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
 	if (o==MAP_FAILED){
 		return NULL;
 	}
-	if (ADDR(o)&(align-1)){
-		SLL_UNIMPLEMENTED();
-	}
-	else{
-		munmap(PTR(ADDR(o)+sz),mem_sz-sz);
-	}
+	sll_size_t off=align-(ADDR(o)&(align-1));
+	munmap(o,off);
+	o=PTR(ADDR(o)+off);
+	munmap(PTR(ADDR(o)+sz),mem_sz-sz-off);
 	return o;
 }
 
