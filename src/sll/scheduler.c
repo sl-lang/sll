@@ -147,14 +147,14 @@ sll_return_code_t _scheduler_run(void){
 		_scheduler_load_balancer.len=255;
 	}
 	_scheduler_data_base=sll_platform_allocate_page(SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t)),0,NULL);
-	_scheduler_load_balancer.lck=sll_platform_lock_create();
+	_scheduler_load_balancer.lck=sll_platform_lock_create(NULL);
 	_scheduler_load_balancer.brk=0;
 	scheduler_cpu_data_t* cpu_dt=_scheduler_data_base;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){
 		cpu_dt->queue_idx=0;
 		cpu_dt->queue_len=!i;
 		cpu_dt->evt=sll_platform_event_create(NULL);
-		cpu_dt->lck=sll_platform_lock_create();
+		cpu_dt->lck=sll_platform_lock_create(NULL);
 		cpu_dt->id=i;
 		cpu_dt->wait=0;
 		if (!i){

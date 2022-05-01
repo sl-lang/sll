@@ -34,7 +34,7 @@ void _barrier_deinit(void){
 
 
 void _barrier_init(void){
-	_barrier_lock=sll_platform_lock_create();
+	_barrier_lock=sll_platform_lock_create(NULL);
 	_barrier_data=NULL;
 	_barrier_next=BARRIER_UNUSED;
 	_barrier_len=0;

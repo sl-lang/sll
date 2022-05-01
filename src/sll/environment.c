@@ -16,7 +16,7 @@
 #define LOCK_ENV \
 	do{ \
 		if (!_env_lock){ \
-			_env_lock=sll_platform_lock_create(); \
+			_env_lock=sll_platform_lock_create(NULL); \
 			sll_register_cleanup(_cleanup_env); \
 		} \
 		SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_env_lock)); \

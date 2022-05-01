@@ -25,7 +25,7 @@ void _semaphore_deinit(void){
 
 
 void _semaphore_init(void){
-	_semaphore_lock=sll_platform_lock_create();
+	_semaphore_lock=sll_platform_lock_create(NULL);
 	_semaphore_data=NULL;
 	_semaphore_next=SEMAPHORE_UNUSED;
 	_semaphore_len=0;

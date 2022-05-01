@@ -205,7 +205,7 @@ __SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,
 	o->_l_num=0;
 	o->_off=0;
 	o->_h.bfl=DISABLE_FILE_HASH;
-	o->_lck=sll_platform_lock_create();
+	o->_lck=sll_platform_lock_create(NULL);
 }
 
 
@@ -273,7 +273,7 @@ __SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* nm,sll_file_descr
 		}
 	}
 	o->_h.bfl=DISABLE_FILE_HASH;
-	o->_lck=sll_platform_lock_create();
+	o->_lck=sll_platform_lock_create(NULL);
 }
 
 

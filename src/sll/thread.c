@@ -59,7 +59,7 @@ thread_data_t* _thread_get(sll_thread_index_t t){
 
 
 void _thread_init(void){
-	_thread_lock=sll_platform_lock_create();
+	_thread_lock=sll_platform_lock_create(NULL);
 	_thread_data=NULL;
 	_thread_active_count=0;
 	_thread_next=SLL_UNKNOWN_THREAD_INDEX;

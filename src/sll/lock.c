@@ -26,7 +26,7 @@ void _lock_deinit(void){
 
 
 void _lock_init(void){
-	_lock_lock=sll_platform_lock_create();
+	_lock_lock=sll_platform_lock_create(NULL);
 	_lock_data=NULL;
 	_lock_next=LOCK_UNUSED;
 	_lock_len=0;

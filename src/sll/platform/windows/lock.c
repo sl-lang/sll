@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <sll/_internal/error.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/platform/lock.h>
@@ -13,8 +14,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_acquire(sll_lock
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_handle_t sll_platform_lock_create(void){
-	return (sll_lock_handle_t)CreateMutexA(NULL,FALSE,NULL);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_handle_t sll_platform_lock_create(sll_error_t* err){
+	ERROR_PTR_RESET;
+	sll_lock_handle_t* o=(sll_lock_handle_t)CreateMutexA(NULL,FALSE,NULL);
+	if (!o){
+		ERROR_PTR_SYSTEM;
+	}
+	return o;
 }
 
 

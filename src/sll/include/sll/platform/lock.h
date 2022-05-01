@@ -44,9 +44,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_lock_acquire(sll_lock
  * \group platform
  * \subgroup platform-lock
  * \desc Docs!
+ * \arg sll_error_t* err
  * \ret sll_lock_handle_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_handle_t sll_platform_lock_create(void);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_handle_t sll_platform_lock_create(sll_error_t* err);
 
 
 
