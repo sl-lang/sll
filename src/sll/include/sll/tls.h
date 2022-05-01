@@ -1,5 +1,6 @@
 #ifndef __SLL_TLS_H__
 #define __SLL_TLS_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -34,6 +35,47 @@
  * \type sll_tls_object_t
  */
 #define SLL_INIT_ARRAY_STRUCT {0,NULL}
+
+
+
+/**
+ * \flags type var
+ * \name sll_tls_object_length_t
+ * \group tls
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_tls_object_length_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_tls_value_t
+ * \group tls
+ * \desc Docs!
+ * \arg sll_thread_index_t t
+ * \arg sll_object_t* v
+ */
+typedef struct _SLL_TLS_VALUE{
+    sll_thread_index_t t;
+    sll_object_t* v;
+} sll_tls_value_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_tls_object_t
+ * \group tls
+ * \desc Docs!
+ * \arg sll_tls_object_length_t sz
+ * \arg sll_tls_value_t* dt
+ */
+typedef struct _SLL_TLS_OBJECT{
+    sll_tls_object_length_t sz;
+    sll_tls_value_t* dt;
+} sll_tls_object_t;
 
 
 

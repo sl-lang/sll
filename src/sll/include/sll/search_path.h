@@ -1,5 +1,6 @@
 #ifndef __SLL_SEARCH_PATH_H__
 #define __SLL_SEARCH_PATH_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**
@@ -45,6 +46,32 @@
  * \type sll_flags_t
  */
 #define SLL_SEARCH_PATH_FLAG_AFTER 2
+
+
+
+/**
+ * \flags type var
+ * \name sll_search_path_length_t
+ * \group search-path
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_search_path_length_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_module_loader_data_t
+ * \group search-path
+ * \desc Docs!
+ * \arg sll_string_t* dt
+ * \arg sll_search_path_length_t l
+ */
+typedef struct _SLL_SEARCH_PATH{
+    sll_string_t* dt;
+    sll_search_path_length_t l;
+} sll_search_path_t;
 
 
 

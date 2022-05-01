@@ -566,17 +566,6 @@ typedef __SLL_U32 sll_scope_t;
 
 /**
  * \flags type var
- * \name sll_search_path_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_search_path_length_t;
-
-
-
-/**
- * \flags type var
  * \name sll_semaphore_counter_t
  * \group types
  * \desc Docs!
@@ -660,17 +649,6 @@ typedef __SLL_U32 sll_string_length_t;
  * \type __SLL_U32
  */
 typedef __SLL_U32 sll_thread_index_t;
-
-
-
-/**
- * \flags type var
- * \name sll_tls_object_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_tls_object_length_t;
 
 
 
@@ -2314,111 +2292,6 @@ typedef struct _SLL_BUNDLE{
 	sll_bundle_source_file_t** dt;
 	sll_source_file_index_t l;
 } sll_bundle_t;
-
-
-
-/**
- * \flags type union
- * \name sll_int_float_data_t
- * \group types
- * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_float_t f
- */
-typedef union _SLL_INT_FLOAT_DATA{
-	sll_integer_t i;
-	sll_float_t f;
-} sll_int_float_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_int_float_t
- * \group types
- * \desc Docs!
- * \arg sll_bool_t t
- * \arg sll_int_float_data_t dt
- */
-typedef struct _SLL_INT_FLOAT{
-	sll_bool_t t;
-	sll_int_float_data_t dt;
-} sll_int_float_t;
-
-
-
-/**
- * \flags type union
- * \name sll_char_string_data_t
- * \group types
- * \desc Docs!
- * \arg sll_char_t c
- * \arg const sll_string_t* s
- */
-typedef union _SLL_CHAR_STRING_DATA{
-	sll_char_t c;
-	const sll_string_t* s;
-} sll_char_string_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_char_string_t
- * \group types
- * \desc Docs!
- * \arg sll_bool_t t
- * \arg sll_char_string_data_t dt
- */
-typedef struct _SLL_CHAR_STRING{
-	sll_bool_t t;
-	sll_char_string_data_t dt;
-} sll_char_string_t;
-
-
-
-/**
- * \flags type
- * \name sll_tls_value_t
- * \group types
- * \desc Docs!
- * \arg sll_thread_index_t t
- * \arg sll_object_t* v
- */
-typedef struct _SLL_TLS_VALUE{
-	sll_thread_index_t t;
-	sll_object_t* v;
-} sll_tls_value_t;
-
-
-
-/**
- * \flags type
- * \name sll_tls_object_t
- * \group types
- * \desc Docs!
- * \arg sll_tls_object_length_t sz
- * \arg sll_tls_value_t* dt
- */
-typedef struct _SLL_TLS_OBJECT{
-	sll_tls_object_length_t sz;
-	sll_tls_value_t* dt;
-} sll_tls_object_t;
-
-
-
-/**
- * \flags type
- * \name sll_module_loader_data_t
- * \group types
- * \desc Docs!
- * \arg sll_string_t* dt
- * \arg sll_search_path_length_t l
- */
-typedef struct _SLL_SEARCH_PATH{
-	sll_string_t* dt;
-	sll_search_path_length_t l;
-} sll_search_path_t;
 
 
 

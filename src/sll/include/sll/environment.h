@@ -1,6 +1,7 @@
 #ifndef __SLL_ENVIRONMENT_H__
 #define __SLL_ENVIRONMENT_H__ 1
 #include <sll/common.h>
+#include <sll/search_path.h>
 #include <sll/types.h>
 /**
  * \flags group

@@ -5,6 +5,7 @@
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/static_object.h>
+#include <sll/tls.h>
 #include <sll/types.h>
 
 
