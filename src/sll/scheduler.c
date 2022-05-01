@@ -88,7 +88,7 @@ sll_thread_index_t _scheduler_queue_pop(void){
 			return SLL_UNKNOWN_THREAD_INDEX;
 		}
 		cpu_dt->wait=1;
-		SLL_CRITICAL(sll_platform_event_wait(cpu_dt->evt));
+		SLL_CRITICAL_ERROR(sll_platform_event_wait(cpu_dt->evt));
 		cpu_dt->wait=0;
 		if (!cpu_dt->queue_len){
 			return SLL_UNKNOWN_THREAD_INDEX;
@@ -126,7 +126,7 @@ void _scheduler_queue_thread(sll_thread_index_t t){
 	*(cpu_dt->queue+cpu_dt->queue_len-1)=t;
 	(*(_thread_data+t))->st=THREAD_STATE_QUEUED;
 	if (cpu_dt->wait&&cpu_dt->queue_len==1){
-		SLL_CRITICAL(sll_platform_event_set(cpu_dt->evt));
+		SLL_CRITICAL_ERROR(sll_platform_event_set(cpu_dt->evt));
 	}
 	SLL_CRITICAL(sll_platform_lock_release(cpu_dt->lck));
 	SLL_CRITICAL(sll_platform_lock_release(_scheduler_load_balancer.lck));
@@ -153,7 +153,7 @@ sll_return_code_t _scheduler_run(void){
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){
 		cpu_dt->queue_idx=0;
 		cpu_dt->queue_len=!i;
-		cpu_dt->evt=sll_platform_event_create();
+		cpu_dt->evt=sll_platform_event_create(NULL);
 		cpu_dt->lck=sll_platform_lock_create();
 		cpu_dt->id=i;
 		cpu_dt->wait=0;
@@ -173,10 +173,10 @@ sll_return_code_t _scheduler_run(void){
 	cpu_dt=_scheduler_data_base;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){
 		if (i){
-			SLL_CRITICAL(sll_platform_event_set(cpu_dt->evt));
+			SLL_CRITICAL_ERROR(sll_platform_event_set(cpu_dt->evt));
 			SLL_CRITICAL_COND(i,sll_platform_join_thread(cpu_dt->tid));
 		}
-		SLL_CRITICAL(sll_platform_event_delete(cpu_dt->evt));
+		SLL_CRITICAL_ERROR(sll_platform_event_delete(cpu_dt->evt));
 		SLL_CRITICAL(sll_platform_lock_delete(cpu_dt->lck));
 		cpu_dt++;
 	}
