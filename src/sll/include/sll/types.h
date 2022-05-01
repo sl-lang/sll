@@ -1,15 +1,6 @@
 #ifndef __SLL_TYPES_H__
 #define __SLL_TYPES_H__ 1
-#include <sll/_identifier.h>
-#include <sll/_object_func.h>
 #include <sll/_size_types.h>
-#include <sll/common.h>
-/**
- * \flags group
- * \name Limits
- * \group limits
- * \desc Docs!
- */
 /**
  * \flags group
  * \name Types
@@ -22,7 +13,7 @@
 /**
  * \flags macro var
  * \name SLL_MAX_ARG_COUNT
- * \group limits
+ * \group types
  * \desc Docs!
  * \type sll_arg_count_t
  */
@@ -33,7 +24,7 @@
 /**
  * \flags macro var
  * \name SLL_MAX_SIZE
- * \group limits
+ * \group types
  * \desc Docs!
  * \type sll_size_t
  */

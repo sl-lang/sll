@@ -45,7 +45,7 @@
 /**
  * \flags macro var
  * \name SLL_MAX_STRING_LENGTH
- * \group limits
+ * \group string
  * \desc Docs!
  * \type sll_string_length_t
  */

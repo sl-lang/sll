@@ -143,7 +143,7 @@ def _write_byte_array(wf,dt):
 
 
 
-def _add_source_file(b_fp,fp,file_list,include_list,cycle=[]):
+def _add_source_file(b_fp,fp,file_list,include_list,cycle):
 	if (fp in cycle):
 		raise RuntimeError("Cycle: "+" > ".join(cycle[cycle.index(fp):]+[fp]))
 	if (fp in file_list or not os.path.exists(b_fp+fp)):
@@ -208,7 +208,7 @@ def parse_headers(fp):
 		for f in fl:
 			if (f[-2:]==".h" and f not in INTERNAL_SLL_HEADERS):
 				include_name=os.path.join(r,f)[len(fp):].replace("\\","/")
-				o+=_add_source_file(fp,include_name,file_list,include_list)
+				o+=_add_source_file(fp,include_name,file_list,include_list,[])
 	util.log(f"  Combined {len(file_list)} Files\nPreprocessing Combined Library Header File...")
 	o=DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+" "+DEFINE_LINE_CONTINUE_REGEX.sub(r"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(r"\n",COMMENT_REGEX.sub(r"",o).strip().replace("\r\n","\n"))).split("\n")
 	return o

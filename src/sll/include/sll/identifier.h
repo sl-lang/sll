@@ -28,7 +28,7 @@
 /**
  * \flags macro var
  * \name SLL_MAX_IDENTIFIER_INDEX
- * \group limits
+ * \group identifier
  * \desc Docs!
  * \type sll_identifier_index_t
  */
@@ -39,7 +39,7 @@
 /**
  * \flags macro var
  * \name SLL_MAX_IDENTIFIER_LIST_LENGTH
- * \group limits
+ * \group identifier
  * \desc Docs!
  * \type sll_identifier_list_length_t
  */
