@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/common.h>
 #include <sll/platform/memory.h>
+#include <sll/platform/util.h>
 #include <sll/types.h>
 #include <errno.h>
 #include <sys/mman.h>
@@ -58,6 +59,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_s
 
 
 
-__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_size_t sz){
-	munmap(pg,sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* pg,sll_size_t sz){
+	return (munmap(pg,sz)?sll_platform_get_error():SLL_NO_ERROR);
 }

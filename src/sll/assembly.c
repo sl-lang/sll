@@ -2031,7 +2031,7 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt){
 	void* pg=a_dt->_s.s;
 	while (pg){
 		void* n=*((void**)pg);
-		sll_platform_free_page(pg,SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE));
+		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)));
 		pg=n;
 	}
 	a_dt->_s.s=NULL;

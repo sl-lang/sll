@@ -3,6 +3,7 @@
 #include <sll/_internal/attribute.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_size_types.h>
+#include <sll/error.h>
 #include <sll/string.h>
 
 
@@ -46,11 +47,19 @@
 #define _SLL_CRITICAL_COND(cnd,x,str) \
 	do{ \
 		if ((cnd)&&!(x)){ \
-			_critical_failure(SLL_CHAR("["__FILE__":"_SLL_STRINGIFY(__LINE__)"] "str)); \
+			_critical_failure(SLL_CHAR("["__FILE__":"_SLL_STRINGIFY(__LINE__)"] "str),SLL_NO_ERROR); \
+		} \
+	} while (0)
+#define _SLL_CRITICAL_ERROR(x,str) \
+	do{ \
+		sll_error_t __err=(x); \
+		if (__err!=SLL_NO_ERROR){ \
+			_critical_failure(SLL_CHAR("["__FILE__":"_SLL_STRINGIFY(__LINE__)"] "str": "),__err); \
 		} \
 	} while (0)
 #define SLL_CRITICAL(x) _SLL_CRITICAL_COND(1,(x),#x)
 #define SLL_CRITICAL_COND(cnd,x) _SLL_CRITICAL_COND(cnd,(x),#x)
+#define SLL_CRITICAL_ERROR(x) _SLL_CRITICAL_ERROR((x),#x)
 
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
@@ -69,7 +78,7 @@ typedef __SLL_U64 wide_data_t;
 
 
 
-__SLL_NO_RETURN void _critical_failure(const sll_char_t* nm);
+__SLL_NO_RETURN void _critical_failure(const sll_char_t* nm,sll_error_t err);
 
 
 

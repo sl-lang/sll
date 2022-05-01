@@ -1,3 +1,4 @@
+#include <sll/_internal/common.h>
 #include <sll/_internal/stack.h>
 #include <sll/common.h>
 #include <sll/memory.h>
@@ -54,7 +55,7 @@ __SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* sf){
 	void* pg=sf->_s.s;
 	while (pg){
 		void* n=*((void**)pg);
-		sll_platform_free_page(pg,SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE));
+		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)));
 		pg=n;
 	}
 	for (sll_import_index_t i=0;i<sf->it.l;i++){

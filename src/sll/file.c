@@ -47,7 +47,7 @@ __SLL_EXTERNAL sll_file_t* sll_stderr=&_file_stderr;
 
 static void _free_buffer(void* pg){
 	if (_file_buffer_pool_len==FILE_BUFFER_POOL_SIZE){
-		sll_platform_free_page(pg,SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE));
+		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE)));
 		return;
 	}
 	_file_buffer_pool[_file_buffer_pool_len]=pg;
@@ -108,7 +108,7 @@ void _file_release_std_streams(void){
 	sll_file_close(sll_stderr);
 	while (_file_buffer_pool_len){
 		_file_buffer_pool_len--;
-		sll_platform_free_page(_file_buffer_pool[_file_buffer_pool_len],SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE));
+		SLL_CRITICAL_ERROR(sll_platform_free_page(_file_buffer_pool[_file_buffer_pool_len],SLL_ROUND_LARGE_PAGE(FILE_BUFFER_SIZE)));
 	}
 }
 
@@ -150,7 +150,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 			dynamic_buffer_chunk_t* c=f->_w.d.b;
 			do{
 				dynamic_buffer_chunk_t* n=c->n;
-				sll_platform_free_page(c,c->sz);
+				SLL_CRITICAL_ERROR(sll_platform_free_page(c,c->sz));
 				c=n;
 			} while (c);
 		}

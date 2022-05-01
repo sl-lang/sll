@@ -40,11 +40,11 @@ void _thread_deinit(void){
 		if (thr->st==THREAD_STATE_TERMINATED){
 			SLL_RELEASE(thr->ret);
 		}
-		sll_platform_free_page(thr,THREAD_SIZE);
+		SLL_CRITICAL_ERROR(sll_platform_free_page(thr,THREAD_SIZE));
 	}
 	while (_scheduler_allocator_cache_pool_len){
 		_scheduler_allocator_cache_pool_len--;
-		sll_platform_free_page(_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len],THREAD_SIZE);
+		SLL_CRITICAL_ERROR(sll_platform_free_page(_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len],THREAD_SIZE));
 	}
 	sll_deallocate(_thread_data);
 	SLL_CRITICAL(sll_platform_lock_delete(_thread_lock));
@@ -213,7 +213,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 		_scheduler_allocator_cache_pool_len++;
 	}
 	else{
-		sll_platform_free_page(thr,THREAD_SIZE);
+		SLL_CRITICAL_ERROR(sll_platform_free_page(thr,THREAD_SIZE));
 	}
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 	return 1;

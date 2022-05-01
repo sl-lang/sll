@@ -181,7 +181,7 @@ sll_return_code_t _scheduler_run(void){
 		cpu_dt++;
 	}
 	SLL_CRITICAL(sll_platform_lock_delete(_scheduler_load_balancer.lck));
-	sll_platform_free_page(_scheduler_data_base,SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t)));
+	SLL_CRITICAL_ERROR(sll_platform_free_page(_scheduler_data_base,SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t))));
 	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->ret,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_return_code_t o=(sll_return_code_t)(rc_o->dt.i);
 	SLL_RELEASE(rc_o);

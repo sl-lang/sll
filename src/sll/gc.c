@@ -52,12 +52,12 @@ void _gc_release_data(void){
 	}
 	while (_gc_page_ptr){
 		gc_page_header_t* n=_gc_page_ptr->n;
-		sll_platform_free_page(_gc_page_ptr,GC_MEMORY_PAGE_SIZE);
+		SLL_CRITICAL_ERROR(sll_platform_free_page(_gc_page_ptr,GC_MEMORY_PAGE_SIZE));
 		_gc_page_ptr=n;
 	}
 	while (_gc_page_pool_len){
 		_gc_page_pool_len--;
-		sll_platform_free_page(_gc_page_pool[_gc_page_pool_len],GC_MEMORY_PAGE_SIZE);
+		SLL_CRITICAL_ERROR(sll_platform_free_page(_gc_page_pool[_gc_page_pool_len],GC_MEMORY_PAGE_SIZE));
 	}
 	_gc_alloc=0;
 	_gc_dealloc=0;
@@ -154,7 +154,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		_gc_page_pool_len++;
 	}
 	else{
-		sll_platform_free_page(pg,GC_MEMORY_PAGE_SIZE);
+		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,GC_MEMORY_PAGE_SIZE));
 	}
 }
 

@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <sll/_internal/common.h>
 #include <sll/platform/memory.h>
+#include <sll/platform/util.h>
 #include <sll/common.h>
 #include <sll/types.h>
 
@@ -17,7 +18,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 			_win_large_page=1;
 			HANDLE h;
 			TOKEN_PRIVILEGES tp;
-			if (!OpenProcessToken(GetCurrentProcess(),TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY,&h)||!LookupPrivilegeValueA(NULL,"SeLockMemoryPrivilege",&tp.Privileges[0].Luid)){
+			if (!OpenProcessToken(GetCurrentProcess(),TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY,&h)||!LookupPrivilegeValueA(NULL,"SeLockMemoryPrivilege",&(tp.Privileges[0].Luid))){
 				_win_large_page=2;
 			}
 			else{
@@ -56,6 +57,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_s
 
 
 
-__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_size_t sz){
-	VirtualFree(pg,0,MEM_RELEASE);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* pg,sll_size_t sz){
+	return (VirtualFree(pg,0,MEM_RELEASE)?SLL_NO_ERROR:sll_platform_get_error());
 }

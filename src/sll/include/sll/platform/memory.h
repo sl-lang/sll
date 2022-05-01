@@ -104,15 +104,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_s
 
 
 /**
- * \flags func
+ * \flags check_output func
  * \name sll_platform_free_page
  * \group platform
  * \subgroup platform-memory
  * \desc Docs!
  * \arg void* pg
  * \arg sll_size_t sz
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL void sll_platform_free_page(void* pg,sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* pg,sll_size_t sz);
 
 
 
