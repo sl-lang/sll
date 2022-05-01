@@ -1,5 +1,6 @@
 #ifndef __SLL_IO_H__
 #define __SLL_IO_H__ 1
+#include <sll/bundle.h>
 #include <sll/common.h>
 #include <sll/types.h>
 /**

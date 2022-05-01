@@ -12,6 +12,40 @@
 
 
 /**
+ * \flags type
+ * \name sll_bundle_source_file_t
+ * \group bundle
+ * \desc Docs!
+ * \arg sll_string_t nm
+ * \arg sll_source_file_t dt
+ */
+typedef struct _SLL_BUNDLE_SOURCE_FILE{
+    sll_string_t nm;
+    sll_source_file_t dt;
+} sll_bundle_source_file_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_bundle_t
+ * \group bundle
+ * \desc Docs!
+ * \arg sll_time_t tm
+ * \arg sll_string_t nm
+ * \arg sll_bundle_source_file_t** dt
+ * \arg sll_source_file_index_t l
+ */
+typedef struct _SLL_BUNDLE{
+    sll_time_t tm;
+    sll_string_t nm;
+    sll_bundle_source_file_t** dt;
+    sll_source_file_index_t l;
+} sll_bundle_t;
+
+
+
+/**
  * \flags func
  * \name sll_bundle_add_file
  * \group bundle

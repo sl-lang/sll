@@ -3,6 +3,7 @@
 #include <sll/_internal/magic_number.h>
 #include <sll/api/serial.h>
 #include <sll/assembly.h>
+#include <sll/bundle.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/error.h>

@@ -75,8 +75,6 @@
 
 
 struct _SLL_OBJECT;
-struct _SLL_JSON_OBJECT;
-struct _SLL_JSON_MAP_KEYPAIR;
 
 
 
@@ -165,17 +163,6 @@ typedef __SLL_U8 sll_flags_t;
  * \type __SLL_U8
  */
 typedef __SLL_U8 sll_hour_t;
-
-
-
-/**
- * \flags type var
- * \name sll_json_object_type_t
- * \group types
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_json_object_type_t;
 
 
 
@@ -462,28 +449,6 @@ typedef __SLL_U32 sll_import_index_t;
  * \type __SLL_U32
  */
 typedef __SLL_U32 sll_instruction_index_t;
-
-
-
-/**
- * \flags type var
- * \name sll_json_array_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_json_array_length_t;
-
-
-
-/**
- * \flags type var
- * \name sll_json_map_length_t
- * \group types
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_json_map_length_t;
 
 
 
@@ -880,17 +845,6 @@ typedef void* sll_lock_handle_t;
  * \type void*
  */
 typedef void* sll_process_handle_t;
-
-
-
-/**
- * \flags type var
- * \name sll_json_parser_state_t
- * \group types
- * \desc Docs!
- * \type const sll_char_t*
- */
-typedef const sll_char_t* sll_json_parser_state_t;
 
 
 
@@ -2058,87 +2012,6 @@ typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* path,sll_compila
 
 
 /**
- * \flags type
- * \name sll_json_array_t
- * \group types
- * \desc Docs!
- * \arg sll_json_array_length_t l
- * \arg sll_json_object_t* dt
- */
-typedef struct _SLL_JSON_ARRAY{
-	sll_json_array_length_t l;
-	struct _SLL_JSON_OBJECT* dt;
-} sll_json_array_t;
-
-
-
-/**
- * \flags type
- * \name sll_json_map_t
- * \group types
- * \desc Docs!
- * \arg sll_json_map_length_t l
- * \arg sll_json_map_keypair_t* dt
- */
-typedef struct _SLL_JSON_MAP{
-	sll_json_map_length_t l;
-	struct _SLL_JSON_MAP_KEYPAIR* dt;
-} sll_json_map_t;
-
-
-
-/**
- * \flags type union
- * \name sll_json_object_data_t
- * \group types
- * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_float_t f
- * \arg sll_string_t s
- * \arg sll_json_array_t a
- * \arg sll_json_map_t m
- */
-typedef union _SLL_JSON_OBJECT_DATA{
-	sll_integer_t i;
-	sll_float_t f;
-	sll_string_t s;
-	sll_json_array_t a;
-	sll_json_map_t m;
-} sll_json_object_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_json_object_t
- * \group types
- * \desc Docs!
- * \arg sll_json_object_type_t t
- * \arg sll_json_object_data_t dt
- */
-typedef struct _SLL_JSON_OBJECT{
-	sll_json_object_type_t t;
-	sll_json_object_data_t dt;
-} sll_json_object_t;
-
-
-
-/**
- * \flags type
- * \name sll_json_map_keypair_t
- * \group types
- * \desc Docs!
- * \arg sll_string_t k
- * \arg sll_json_object_t v
- */
-typedef struct _SLL_JSON_MAP_KEYPAIR{
-	sll_string_t k;
-	sll_json_object_t v;
-} sll_json_map_keypair_t;
-
-
-
-/**
  * \flags func type
  * \name sll_cleanup_function_t
  * \group types
@@ -2236,21 +2109,6 @@ typedef struct _SLL_ENVIRONMENT{
 
 
 /**
- * \flags type
- * \name sll_module_loader_data_t
- * \group types
- * \desc Docs!
- * \arg sll_file_offset_t sz
- * \arg sll_sha256_data_t h
- */
-typedef struct _SLL_MODULE_LOADER_DATA{
-	sll_file_offset_t sz;
-	sll_sha256_data_t h;
-} sll_module_loader_data_t;
-
-
-
-/**
  * \flags func type
  * \name sll_internal_thread_function_t
  * \group types
@@ -2263,41 +2121,7 @@ typedef void (*sll_internal_thread_function_t)(void* arg);
 
 /**
  * \flags type
- * \name sll_bundle_source_file_t
- * \group types
- * \desc Docs!
- * \arg sll_string_t nm
- * \arg sll_source_file_t dt
- */
-typedef struct _SLL_BUNDLE_SOURCE_FILE{
-	sll_string_t nm;
-	sll_source_file_t dt;
-} sll_bundle_source_file_t;
-
-
-
-/**
- * \flags type
- * \name sll_bundle_t
- * \group types
- * \desc Docs!
- * \arg sll_time_t tm
- * \arg sll_string_t nm
- * \arg sll_bundle_source_file_t** dt
- * \arg sll_source_file_index_t l
- */
-typedef struct _SLL_BUNDLE{
-	sll_time_t tm;
-	sll_string_t nm;
-	sll_bundle_source_file_t** dt;
-	sll_source_file_index_t l;
-} sll_bundle_t;
-
-
-
-/**
- * \flags type
- * \name sll_module_loader_data_t
+ * \name sll_internal_function_descriptor_t
  * \group types
  * \desc Docs!
  * \arg const sll_char_t* nm

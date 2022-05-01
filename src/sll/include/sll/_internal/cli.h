@@ -1,6 +1,7 @@
 #ifndef __SLL__INTERNAL_CLI_H__
 #define __SLL__INTERNAL_CLI_H__ 1
 #include <sll/_size_types.h>
+#include <sll/bundle.h>
 #include <sll/log.h>
 #include <sll/platform/path.h>
 #include <sll/string.h>

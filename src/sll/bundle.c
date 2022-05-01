@@ -2,6 +2,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/stack.h>
 #include <sll/_internal/string.h>
+#include <sll/bundle.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/memory.h>

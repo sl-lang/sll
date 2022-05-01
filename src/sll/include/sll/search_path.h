@@ -62,7 +62,7 @@ typedef __SLL_U32 sll_search_path_length_t;
 
 /**
  * \flags type
- * \name sll_module_loader_data_t
+ * \name sll_search_path_t
  * \group search-path
  * \desc Docs!
  * \arg sll_string_t* dt
