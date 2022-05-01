@@ -1,5 +1,7 @@
 name: All
 on:
+  schedule:
+    - cron: '0 0 2 ? * * *'
   push:
     branches:
       - main
@@ -160,6 +162,17 @@ jobs:
         with:
           directory: ./
           verbose: true
+  nightly-release:
+    name: Create nighly build
+    needs:
+      - darwin-release
+      - linux-release
+      - windows-release
+    if: github.event_name=='schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger nightly build
+        run: ${{secrets.PACKAGE_SERVER_NIGHTLY_UPDATE_COMMAND}}
   release:
     name: Create release
     needs:
