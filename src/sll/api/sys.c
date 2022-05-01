@@ -207,8 +207,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 			return 0;
 		}
 	}
-	sll_library_handle_t h=sll_platform_load_library(fp.v);
-	if (h==SLL_UNKNOWN_LIBRARY_HANDLE){
+	sll_library_handle_t h=sll_platform_load_library(fp.v,NULL);
+	if (!h){
 		sll_free_string(&fp);
 		return 0;
 	}

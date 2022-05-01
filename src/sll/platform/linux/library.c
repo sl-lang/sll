@@ -1,14 +1,20 @@
+#include <sll/_internal/error.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
 #include <sll/platform/library.h>
+#include <sll/error.h>
 #include <sll/types.h>
 #include <dlfcn.h>
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp,sll_error_t* err){
+	ERROR_PTR_RESET;
 	void* o=dlopen((char*)fp,RTLD_NOW);
-	return (!o?SLL_UNKNOWN_LIBRARY_HANDLE:o);
+	if (!o){
+		ERROR_PTR_SYSTEM;
+	}
+	return o;
 }
 
 

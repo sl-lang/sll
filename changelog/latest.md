@@ -17,6 +17,7 @@
 
 ## Removed
 
+- Unneeded macro: `SLL_UNKNOWN_LIBRARY_HANDLE`
 - Unused limit macros: `SLL_MAX_EXPORT_TABLE_LENGTH` and `SLL_MAX_STACK_OFFSET`
 - Unused types: `sll_assembly_file_table_length_t`, `sll_checksum_t`, `sll_name_length_t`, `sll_object_type_field_t`, `sll_unary_operator_t`, `sll_ternary_operator_t` and `sll_quaternary_operator_t`
 

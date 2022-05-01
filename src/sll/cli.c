@@ -397,8 +397,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 				break;
 			}
 			e=argv[i];
-			sll_library_handle_t lh=sll_platform_load_library(e);
-			if (lh!=SLL_UNKNOWN_LIBRARY_HANDLE){
+			sll_library_handle_t lh=sll_platform_load_library(e,NULL);
+			if (lh){
 				sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_AUDIT_CALL));
 				if (!cb){
 					sll_platform_unload_library(lh);

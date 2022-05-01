@@ -1,6 +1,7 @@
 #ifndef __SLL_PLATFORM_LIBRARY_H__
 #define __SLL_PLATFORM_LIBRARY_H__ 1
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/types.h>
 /**
  * \flags subgroup
@@ -9,18 +10,6 @@
  * \subgroup platform-lib
  * \desc Docs!
  */
-
-
-
-/**
- * \flags macro var
- * \name SLL_UNKNOWN_LIBRARY_HANDLE
- * \group platform
- * \subgroup platform-lib
- * \desc Docs!
- * \type sll_library_handle_t
- */
-#define SLL_UNKNOWN_LIBRARY_HANDLE ((sll_library_handle_t)0xffffffffffffffffull)
 
 
 
@@ -43,9 +32,10 @@ typedef void* sll_library_handle_t;
  * \subgroup platform-lib
  * \desc Docs!
  * \arg const sll_char_t* fp
+ * \arg sll_error_t* err
  * \ret sll_library_handle_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp,sll_error_t* err);
 
 
 

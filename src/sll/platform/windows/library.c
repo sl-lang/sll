@@ -1,14 +1,20 @@
 #include <windows.h>
+#include <sll/_internal/error.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
 #include <sll/platform/library.h>
+#include <sll/error.h>
 #include <sll/types.h>
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp,sll_error_t* err){
+	ERROR_PTR_RESET;
 	HMODULE o=LoadLibraryExA(fp,NULL,0);
-	return (!o?SLL_UNKNOWN_LIBRARY_HANDLE:o);
+	if (!o){
+		ERROR_PTR_SYSTEM;
+	}
+	return o;
 }
 
 
