@@ -1,6 +1,7 @@
 #include <sll.h>
-#include <unistd.h>
 #include <dlfcn.h>
+#include <linux/limits.h>
+#include <unistd.h>
 
 
 
@@ -16,16 +17,16 @@ int main(int argc,const char*const* argv){
 	if (!argc){
 		return 0;
 	}
-	char bf[4096+STATIC_STRLEN(LIBRARY_NAME)];
+	char bf[PATH_MAX+STATIC_STRLEN(LIBRARY_NAME)];
 #ifdef __SLL_BUILD_DARWIN
-	uint32_t bfl=4096;
+	uint32_t bfl=PATH_MAX;
 	if (!_NSGetExecutablePath(bf,&bfl)){
 		bfl=0;
 		while (bf[bfl]){
 			bfl++;
 		}
 #else
-	ssize_t bfl=readlink("/proc/self/exe",bf,4096);
+	ssize_t bfl=readlink("/proc/self/exe",bf,PATH_MAX);
 	if (bfl!=-1){
 #endif
 		while (bfl&&bf[bfl]!='/'){
