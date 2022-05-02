@@ -34,6 +34,12 @@ __SLL_EXTERNAL void sll_complex_div_float(const sll_complex_t* a,sll_float_t b,s
 
 
 
+__SLL_EXTERNAL void sll_complex_log(const sll_complex_t* a,sll_complex_t* out){
+	*out=COMPLEX_LOG(*a);
+}
+
+
+
 __SLL_EXTERNAL void sll_complex_mult(const sll_complex_t* a,const sll_complex_t* b,sll_complex_t* out){
 	*out=COMPLEX_MULT(*a,*b);
 }
