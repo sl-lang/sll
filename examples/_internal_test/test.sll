@@ -592,5 +592,5 @@
 (:> `Backick: `` Newline:
 abc` '\n')
 
-(:> (<- math$cos math$PI) ", -1.0\n")
-(:> (<- math$cos 2i) ", 3.6268604078470186i\n")
+(:> (<- math$sin math$PI) ", 0.0\n")
+(:> (<- math$sin 2i) ", 3.6268604078470186i\n")

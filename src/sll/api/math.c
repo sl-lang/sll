@@ -149,8 +149,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_float_complex_t* a
 		out->dt.f=cos(a->dt.f);
 	}
 	else{
-		out->dt.d.real=sin(a->dt.d.real)*cosh(a->dt.d.imag);
-		out->dt.d.imag=cos(a->dt.d.real)*sinh(a->dt.d.imag);
+		out->dt.d.real=cos(a->dt.d.real)*cosh(a->dt.d.imag);
+		out->dt.d.imag=sin(a->dt.d.real)*sinh(a->dt.d.imag);
 	}
 }
 
@@ -350,8 +350,15 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_roun
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sin(sll_float_t a){
-	return sin(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=sin(a->dt.f);
+	}
+	else{
+		out->dt.d.real=sin(a->dt.d.real)*cosh(a->dt.d.imag);
+		out->dt.d.imag=cos(a->dt.d.real)*sinh(a->dt.d.imag);
+	}
 }
 
 
