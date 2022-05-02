@@ -324,14 +324,30 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_float_complex_t* a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log2(sll_float_t a){
-	return log2(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=log2(a->dt.f);
+	}
+	else{
+		sll_complex_t tmp;
+		sll_complex_log(&(a->dt.d),&tmp);
+		out->dt.d=COMPLEX_DIV_FLOAT(tmp,0.6931471805599453);
+	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log10(sll_float_t a){
-	return log10(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=log10(a->dt.f);
+	}
+	else{
+		sll_complex_t tmp;
+		sll_complex_log(&(a->dt.d),&tmp);
+		out->dt.d=COMPLEX_DIV_FLOAT(tmp,2.302585092994046);
+	}
 }
 
 

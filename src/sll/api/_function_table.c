@@ -612,12 +612,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_log10"),
 		sll_api_math_log10,
-		SLL_CHAR("f|f")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_log2"),
 		sll_api_math_log2,
-		SLL_CHAR("f|f")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_permutations"),
