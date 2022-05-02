@@ -432,17 +432,17 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_perm
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_math_pow
  * \group math-api
  * \subgroup math-api-exp
  * \desc Docs!
- * \api ff|f
- * \arg sll_float_t a
- * \arg sll_float_t b
- * \ret sll_float_t
+ * \api XX|x
+ * \arg const sll_float_complex_t* a
+ * \arg const sll_float_complex_t* b
+ * \arg sll_float_complex_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_pow(sll_float_t a,sll_float_t b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_float_complex_t* a,const sll_float_complex_t* b,sll_float_complex_t* out);
 
 
 

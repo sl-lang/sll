@@ -374,8 +374,29 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_perm
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_pow(sll_float_t a,sll_float_t b){
-	return pow(a,b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_float_complex_t* a,const sll_float_complex_t* b,sll_float_complex_t* out){
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT&&b->t==SLL_OBJECT_TYPE_FLOAT){
+		out->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+		out->dt.f=pow(a->dt.f,b->dt.f);
+	}
+	else{
+		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		if (a->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
+			if (b->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
+				sll_complex_pow(&(a->dt.d),&(b->dt.d),&(out->dt.d));
+			}
+			else{
+				sll_complex_pow_float(&(a->dt.d),b->dt.f,&(out->dt.d));
+			}
+		}
+		else{
+			sll_complex_t tmp={
+				0,
+				a->dt.f
+			};
+			sll_complex_pow(&tmp,&(b->dt.d),&(out->dt.d));
+		}
+	}
 }
 
 
