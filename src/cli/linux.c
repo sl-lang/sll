@@ -1,6 +1,10 @@
 #include <sll.h>
 #include <dlfcn.h>
+#ifdef __SLL_BUILD_DARWIN
+#include <sys/syslimits.h>
+#else
 #include <linux/limits.h>
+#endif
 #include <unistd.h>
 
 
