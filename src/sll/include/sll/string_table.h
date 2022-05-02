@@ -44,8 +44,8 @@ typedef __SLL_U32 sll_string_index_t;
  * \arg sll_string_index_t l
  */
 typedef struct _SLL_STRING_TABLE{
-    sll_string_t* dt;
-    sll_string_index_t l;
+	sll_string_t* dt;
+	sll_string_index_t l;
 } sll_string_table_t;
 
 

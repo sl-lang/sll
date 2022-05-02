@@ -60,13 +60,13 @@ typedef void* sll_internal_function_pointer_t;
  * \arg __SLL_U64* _regs
  */
 typedef struct _SLL_INTERNAL_FUNCTION{
-    sll_string_t nm;
-    sll_internal_function_pointer_t p;
-    sll_char_t* fmt;
-    __SLL_U16 _ret;
-    sll_arg_count_t _arg_cnt;
-    sll_size_t _arg_sz;
-    __SLL_U64* _regs;
+	sll_string_t nm;
+	sll_internal_function_pointer_t p;
+	sll_char_t* fmt;
+	__SLL_U16 _ret;
+	sll_arg_count_t _arg_cnt;
+	sll_size_t _arg_sz;
+	__SLL_U64* _regs;
 } sll_internal_function_t;
 
 
@@ -80,8 +80,8 @@ typedef struct _SLL_INTERNAL_FUNCTION{
  * \arg sll_function_index_t l
  */
 typedef struct _SLL_INTERNAL_FUNCTION_TABLE{
-    const sll_internal_function_t* dt;
-    sll_function_index_t l;
+	const sll_internal_function_t* dt;
+	sll_function_index_t l;
 } sll_internal_function_table_t;
 
 
@@ -96,9 +96,9 @@ typedef struct _SLL_INTERNAL_FUNCTION_TABLE{
  * \arg const sll_char_t* fmt
  */
 typedef struct _SLL_INTERNAL_FUNCTION_DESCRIPTOR{
-    const sll_char_t* nm;
-    const sll_internal_function_pointer_t f;
-    const sll_char_t* fmt;
+	const sll_char_t* nm;
+	const sll_internal_function_pointer_t f;
+	const sll_char_t* fmt;
 } sll_internal_function_descriptor_t;
 
 

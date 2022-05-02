@@ -81,8 +81,8 @@ typedef __SLL_U32 sll_search_path_length_t;
  * \arg sll_search_path_length_t l
  */
 typedef struct _SLL_SEARCH_PATH{
-    sll_string_t* dt;
-    sll_search_path_length_t l;
+	sll_string_t* dt;
+	sll_search_path_length_t l;
 } sll_search_path_t;
 
 

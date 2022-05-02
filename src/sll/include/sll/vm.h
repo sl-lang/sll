@@ -74,10 +74,10 @@ typedef __SLL_U16 sll_call_stack_size_t;
  * \arg void* _var_mem_off
  */
 typedef struct _SLL_CALL_STACK_FRAME{
-    const sll_char_t* nm;
-    sll_instruction_index_t _ii;
-    sll_stack_offset_t _s;
-    void* _var_mem_off;
+	const sll_char_t* nm;
+	sll_instruction_index_t _ii;
+	sll_stack_offset_t _s;
+	void* _var_mem_off;
 } sll_call_stack_frame_t;
 
 
@@ -91,8 +91,8 @@ typedef struct _SLL_CALL_STACK_FRAME{
  * \arg sll_call_stack_size_t l
  */
 typedef struct _SLL_CALL_STACK{
-    sll_call_stack_frame_t* dt;
-    sll_call_stack_size_t l;
+	sll_call_stack_frame_t* dt;
+	sll_call_stack_size_t l;
 } sll_call_stack_t;
 
 
@@ -107,9 +107,9 @@ typedef struct _SLL_CALL_STACK{
  * \arg sll_object_type_table_t* tt
  */
 typedef struct _SLL_RUNTIME_DATA{
-    const sll_assembly_data_t* a_dt;
-    sll_internal_function_table_t* ift;
-    sll_object_type_table_t* tt;
+	const sll_assembly_data_t* a_dt;
+	sll_internal_function_table_t* ift;
+	sll_object_type_table_t* tt;
 } sll_runtime_data_t;
 
 
@@ -127,12 +127,12 @@ typedef struct _SLL_RUNTIME_DATA{
  * \arg sll_file_t* err
  */
 typedef struct _SLL_VM_CONFIG{
-    sll_size_t s_sz;
-    sll_size_t c_st_sz;
-    sll_internal_function_table_t* ift;
-    sll_file_t* in;
-    sll_file_t* out;
-    sll_file_t* err;
+	sll_size_t s_sz;
+	sll_size_t c_st_sz;
+	sll_internal_function_table_t* ift;
+	sll_file_t* in;
+	sll_file_t* out;
+	sll_file_t* err;
 } sll_vm_config_t;
 
 

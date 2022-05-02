@@ -59,9 +59,9 @@ typedef __SLL_U32 sll_wide_char_t;
  * \arg sll_char_t* v
  */
 typedef struct _SLL_STRING{
-    sll_string_length_t l;
-    sll_string_checksum_t c;
-    sll_char_t* v;
+	sll_string_length_t l;
+	sll_string_checksum_t c;
+	sll_char_t* v;
 } sll_string_t;
 
 

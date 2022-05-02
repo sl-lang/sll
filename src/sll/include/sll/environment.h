@@ -34,8 +34,8 @@ typedef __SLL_U32 sll_environment_length_t;
  * \arg const sll_string_t v
  */
 typedef struct _SLL_ENVIRONMENT_VARIABLE{
-    const sll_string_t k;
-    const sll_string_t v;
+	const sll_string_t k;
+	const sll_string_t v;
 } sll_environment_variable_t;
 
 
@@ -49,8 +49,8 @@ typedef struct _SLL_ENVIRONMENT_VARIABLE{
  * \arg const sll_environment_length_t l
  */
 typedef struct _SLL_ENVIRONMENT{
-    const sll_environment_variable_t*const* dt;
-    const sll_environment_length_t l;
+	const sll_environment_variable_t*const* dt;
+	const sll_environment_length_t l;
 } sll_environment_t;
 
 

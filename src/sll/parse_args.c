@@ -23,7 +23,7 @@
 
 
 #define SKIP_WHITESPACE \
-	while (*t&&*t!='b'&&*t!='B'&&*t!='W'&&*t!='D'&&*t!='Q'&&*t!='i'&&*t!='f'&&*t!='x'&&*t!='c'&&*t!='d'&&*t!='s'&&*t!='y'&&*t!='a'&&*t!='m'&&*t!='o'&&*t!='!'&&*t!='+'&&*t!='&'&&*t!='#'){ \
+	while (*t&&*t!='b'&&*t!='B'&&*t!='W'&&*t!='D'&&*t!='Q'&&*t!='i'&&*t!='f'&&*t!='x'&&*t!='c'&&*t!='d'&&*t!='X'&&*t!='s'&&*t!='y'&&*t!='a'&&*t!='m'&&*t!='o'&&*t!='!'&&*t!='+'&&*t!='&'&&*t!='#'){ \
 		t++; \
 	}
 
@@ -226,6 +226,33 @@ static void _parse_char(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** 
 
 static void _parse_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE(sll_complex_t,COMPLEX,d,SLL_INIT_COMPLEX);
+}
+
+
+
+static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+	if (flags&PARSE_ARGS_FLAG_ARRAY){
+		if (flags&PARSE_ARGS_FLAG_REF){
+			SLL_UNIMPLEMENTED();
+		}
+		SLL_UNIMPLEMENTED();
+	}
+	sll_float_complex_t* var=GET_PTR(sll_float_complex_t);
+	if (!arg){
+		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+		var->dt.f=0;
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_FLOAT){
+		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+		var->dt.f=arg->dt.f;
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_COMPLEX){
+		var->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		var->dt.d=arg->dt.d;
+	}
+	else{
+		SLL_UNIMPLEMENTED();
+	}
 }
 
 
@@ -500,6 +527,10 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			case 'd':
 				WARN_IGNORED_CONST("'const sll_complex_t*' (d)");
 				fn=_parse_complex;
+				break;
+			case 'X':
+				WARN_IGNORED_CONST("'const sll_float_complex_t*' (X)");
+				fn=_parse_float_or_complex;
 				break;
 			case 's':
 				fn=_parse_string;

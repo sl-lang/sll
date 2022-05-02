@@ -162,10 +162,10 @@
  * \arg sll_object_type_table_t* o
  */
 #define SLL_INIT_OBJECT_TYPE_TABLE(o) \
-    do{ \
-        (o)->dt=NULL; \
-        (o)->l=0; \
-    } while (0)
+	do{ \
+		(o)->dt=NULL; \
+		(o)->l=0; \
+	} while (0)
 
 
 
@@ -212,9 +212,9 @@ typedef __SLL_U32 sll_object_type_table_length_t;
  * \arg sll_string_t nm
  */
 typedef struct _SLL_OBJECT_TYPE_DATA_ENTRY{
-    sll_object_type_t t;
-    sll_bool_t c;
-    sll_string_t nm;
+	sll_object_type_t t;
+	sll_bool_t c;
+	sll_string_t nm;
 } sll_object_type_data_entry_t;
 
 
@@ -233,13 +233,13 @@ typedef struct _SLL_OBJECT_TYPE_DATA_ENTRY{
  * \arg sll_object_type_data_entry_t* dt
  */
 typedef struct _SLL_OBJECT_TYPE_DATA{
-    const sll_string_t nm;
-    sll_arg_count_t l;
-    __SLL_U32 _hash_table_len;
-    sll_arg_count_t* _hash_table;
-    __SLL_U64 _rng;
-    sll_integer_t fn[SLL_MAX_OBJECT_FUNC+1];
-    sll_object_type_data_entry_t dt[];
+	const sll_string_t nm;
+	sll_arg_count_t l;
+	__SLL_U32 _hash_table_len;
+	sll_arg_count_t* _hash_table;
+	__SLL_U64 _rng;
+	sll_integer_t fn[SLL_MAX_OBJECT_FUNC+1];
+	sll_object_type_data_entry_t dt[];
 } sll_object_type_data_t;
 
 
@@ -253,8 +253,8 @@ typedef struct _SLL_OBJECT_TYPE_DATA{
  * \arg sll_object_type_table_length_t l
  */
 typedef struct _SLL_OBJECT_TYPE_TABLE{
-    const sll_object_type_data_t** dt;
-    sll_object_type_table_length_t l;
+	const sll_object_type_data_t** dt;
+	sll_object_type_table_length_t l;
 } sll_object_type_table_t;
 
 

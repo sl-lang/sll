@@ -60,8 +60,8 @@ typedef __SLL_U32 sll_tls_object_length_t;
  * \arg sll_object_t* v
  */
 typedef struct _SLL_TLS_VALUE{
-    sll_thread_index_t t;
-    sll_object_t* v;
+	sll_thread_index_t t;
+	sll_object_t* v;
 } sll_tls_value_t;
 
 
@@ -75,8 +75,8 @@ typedef struct _SLL_TLS_VALUE{
  * \arg sll_tls_value_t* dt
  */
 typedef struct _SLL_TLS_OBJECT{
-    sll_tls_object_length_t sz;
-    sll_tls_value_t* dt;
+	sll_tls_object_length_t sz;
+	sll_tls_value_t* dt;
 } sll_tls_object_t;
 
 

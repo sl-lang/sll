@@ -188,8 +188,8 @@ typedef __SLL_U32 sll_scope_t;
  * \arg sll_string_index_t i
  */
 typedef struct _SLL_IDENTIFIER{
-    sll_scope_t sc;
-    sll_string_index_t i;
+	sll_scope_t sc;
+	sll_string_index_t i;
 } sll_identifier_t;
 
 
@@ -203,8 +203,8 @@ typedef struct _SLL_IDENTIFIER{
  * \arg sll_identifier_list_length_t l
  */
 typedef struct _SLL_IDENTIFIER_LIST{
-    sll_identifier_t* dt;
-    sll_identifier_list_length_t l;
+	sll_identifier_t* dt;
+	sll_identifier_list_length_t l;
 } sll_identifier_list_t;
 
 
@@ -219,9 +219,9 @@ typedef struct _SLL_IDENTIFIER_LIST{
  * \arg sll_identifier_list_length_t ill
  */
 typedef struct _SLL_IDENTIFIER_TABLE{
-    sll_identifier_list_t s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-    sll_identifier_t* il;
-    sll_identifier_list_length_t ill;
+	sll_identifier_list_t s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	sll_identifier_t* il;
+	sll_identifier_list_length_t ill;
 } sll_identifier_table_t;
 
 

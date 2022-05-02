@@ -1681,8 +1681,8 @@ typedef __SLL_U32 sll_variable_index_t;
  * \arg sll_relative_instruction_index_t rel
  */
 typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP_TARGET{
-    sll_instruction_index_t abs;
-    sll_relative_instruction_index_t rel;
+	sll_instruction_index_t abs;
+	sll_relative_instruction_index_t rel;
 } sll_assembly_instruction_data_jump_target_t;
 
 
@@ -1696,8 +1696,8 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP_TARGET{
  * \arg void* _p
  */
 typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP{
-    sll_assembly_instruction_data_jump_target_t t;
-    void* _p;
+	sll_assembly_instruction_data_jump_target_t t;
+	void* _p;
 } sll_assembly_instruction_data_jump_t;
 
 
@@ -1711,8 +1711,8 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP{
  * \arg sll_arg_count_t l
  */
 typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
-    sll_variable_index_t v;
-    sll_arg_count_t l;
+	sll_variable_index_t v;
+	sll_arg_count_t l;
 } sll_assembly_instruction_data_var_access_t;
 
 
@@ -1739,21 +1739,21 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
  * \arg void* _p
  */
 typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
-    sll_integer_t i;
-    sll_compressed_integer_t ci;
-    sll_float_t f;
-    sll_complex_t d;
-    sll_char_t c;
-    sll_string_index_t s;
-    sll_variable_index_t v;
-    sll_assembly_instruction_data_jump_t j;
-    sll_arg_count_t ac;
-    sll_array_length_t al;
-    sll_map_length_t ml;
-    sll_object_type_t t;
-    sll_assembly_instruction_data_var_access_t va;
-    sll_stack_offset_t so;
-    void* _p;
+	sll_integer_t i;
+	sll_compressed_integer_t ci;
+	sll_float_t f;
+	sll_complex_t d;
+	sll_char_t c;
+	sll_string_index_t s;
+	sll_variable_index_t v;
+	sll_assembly_instruction_data_jump_t j;
+	sll_arg_count_t ac;
+	sll_array_length_t al;
+	sll_map_length_t ml;
+	sll_object_type_t t;
+	sll_assembly_instruction_data_var_access_t va;
+	sll_stack_offset_t so;
+	void* _p;
 } sll_assembly_instruction_data_t;
 
 
@@ -1767,8 +1767,8 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
  * \arg sll_assembly_instruction_data_t dt
  */
 typedef struct _SLL_ASSEMBLY_INSTRUCTION{
-    sll_assembly_instruction_type_t t;
-    sll_assembly_instruction_data_t dt;
+	sll_assembly_instruction_type_t t;
+	sll_assembly_instruction_data_t dt;
 } sll_assembly_instruction_t;
 
 
@@ -1783,9 +1783,9 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION{
  * \arg sll_string_index_t nm
  */
 typedef struct _SLL_ASSEMBLY_FUNCTION{
-    sll_instruction_index_t i;
-    sll_arg_count_t ac;
-    sll_string_index_t nm;
+	sll_instruction_index_t i;
+	sll_arg_count_t ac;
+	sll_string_index_t nm;
 } sll_assembly_function_t;
 
 
@@ -1799,8 +1799,8 @@ typedef struct _SLL_ASSEMBLY_FUNCTION{
  * \arg sll_assembly_function_t* dt
  */
 typedef struct _SLL_ASSEMBLY_FUNCTION_TABLE{
-    sll_function_index_t l;
-    sll_assembly_function_t* dt;
+	sll_function_index_t l;
+	sll_assembly_function_t* dt;
 } sll_assembly_function_table_t;
 
 
@@ -1814,8 +1814,8 @@ typedef struct _SLL_ASSEMBLY_FUNCTION_TABLE{
  * \arg sll_file_offset_t ln
  */
 typedef struct _SLL_DEBUG_LINE_DATA{
-    sll_instruction_index_t ii;
-    sll_file_offset_t ln;
+	sll_instruction_index_t ii;
+	sll_file_offset_t ln;
 } sll_debug_line_data_t;
 
 
@@ -1829,8 +1829,8 @@ typedef struct _SLL_DEBUG_LINE_DATA{
  * \arg sll_debug_data_length_t l
  */
 typedef struct _SLL_DEBUG_DATA{
-    sll_debug_line_data_t* dt;
-    sll_debug_data_length_t l;
+	sll_debug_line_data_t* dt;
+	sll_debug_data_length_t l;
 } sll_debug_data_t;
 
 
@@ -1846,10 +1846,10 @@ typedef struct _SLL_DEBUG_DATA{
  * \arg sll_size_t c
  */
 typedef struct _SLL_ASSEMBLY_STACK_DATA{
-    void* s;
-    void* e;
-    sll_assembly_instruction_t* p;
-    sll_size_t c;
+	void* s;
+	void* e;
+	sll_assembly_instruction_t* p;
+	sll_size_t c;
 } sll_assembly_stack_data_t;
 
 
@@ -1870,15 +1870,15 @@ typedef struct _SLL_ASSEMBLY_STACK_DATA{
  * \arg sll_assembly_stack_data_t _s
  */
 typedef struct _SLL_ASSEMBLY_DATA{
-    sll_time_t tm;
-    sll_assembly_instruction_t* h;
-    sll_instruction_index_t ic;
-    sll_variable_index_t vc;
-    sll_variable_index_t tls_vc;
-    sll_assembly_function_table_t ft;
-    sll_string_table_t st;
-    sll_debug_data_t dbg;
-    sll_assembly_stack_data_t _s;
+	sll_time_t tm;
+	sll_assembly_instruction_t* h;
+	sll_instruction_index_t ic;
+	sll_variable_index_t vc;
+	sll_variable_index_t tls_vc;
+	sll_assembly_function_table_t ft;
+	sll_string_table_t st;
+	sll_debug_data_t dbg;
+	sll_assembly_stack_data_t _s;
 } sll_assembly_data_t;
 
 

@@ -197,8 +197,8 @@ typedef const sll_char_t* sll_json_parser_state_t;
  * \arg sll_json_object_t* dt
  */
 typedef struct _SLL_JSON_ARRAY{
-    sll_json_array_length_t l;
-    struct _SLL_JSON_OBJECT* dt;
+	sll_json_array_length_t l;
+	struct _SLL_JSON_OBJECT* dt;
 } sll_json_array_t;
 
 
@@ -212,8 +212,8 @@ typedef struct _SLL_JSON_ARRAY{
  * \arg sll_json_map_keypair_t* dt
  */
 typedef struct _SLL_JSON_MAP{
-    sll_json_map_length_t l;
-    struct _SLL_JSON_MAP_KEYPAIR* dt;
+	sll_json_map_length_t l;
+	struct _SLL_JSON_MAP_KEYPAIR* dt;
 } sll_json_map_t;
 
 
@@ -230,11 +230,11 @@ typedef struct _SLL_JSON_MAP{
  * \arg sll_json_map_t m
  */
 typedef union _SLL_JSON_OBJECT_DATA{
-    sll_integer_t i;
-    sll_float_t f;
-    sll_string_t s;
-    sll_json_array_t a;
-    sll_json_map_t m;
+	sll_integer_t i;
+	sll_float_t f;
+	sll_string_t s;
+	sll_json_array_t a;
+	sll_json_map_t m;
 } sll_json_object_data_t;
 
 
@@ -248,8 +248,8 @@ typedef union _SLL_JSON_OBJECT_DATA{
  * \arg sll_json_object_data_t dt
  */
 typedef struct _SLL_JSON_OBJECT{
-    sll_json_object_type_t t;
-    sll_json_object_data_t dt;
+	sll_json_object_type_t t;
+	sll_json_object_data_t dt;
 } sll_json_object_t;
 
 
@@ -263,8 +263,8 @@ typedef struct _SLL_JSON_OBJECT{
  * \arg sll_json_object_t v
  */
 typedef struct _SLL_JSON_MAP_KEYPAIR{
-    sll_string_t k;
-    sll_json_object_t v;
+	sll_string_t k;
+	sll_json_object_t v;
 } sll_json_map_keypair_t;
 
 

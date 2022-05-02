@@ -146,10 +146,10 @@
  * \arg __SLL_U32 d
  */
 typedef struct _SLL_MD5_DATA{
-    __SLL_U32 a;
-    __SLL_U32 b;
-    __SLL_U32 c;
-    __SLL_U32 d;
+	__SLL_U32 a;
+	__SLL_U32 b;
+	__SLL_U32 c;
+	__SLL_U32 d;
 } sll_md5_data_t;
 
 
@@ -166,11 +166,11 @@ typedef struct _SLL_MD5_DATA{
  * \arg __SLL_U32 e
  */
 typedef struct _SLL_SHA1_DATA{
-    __SLL_U32 a;
-    __SLL_U32 b;
-    __SLL_U32 c;
-    __SLL_U32 d;
-    __SLL_U32 e;
+	__SLL_U32 a;
+	__SLL_U32 b;
+	__SLL_U32 c;
+	__SLL_U32 d;
+	__SLL_U32 e;
 } sll_sha1_data_t;
 
 
@@ -190,14 +190,14 @@ typedef struct _SLL_SHA1_DATA{
  * \arg __SLL_U32 h
  */
 typedef struct _SLL_SHA256_DATA{
-    __SLL_U32 a;
-    __SLL_U32 b;
-    __SLL_U32 c;
-    __SLL_U32 d;
-    __SLL_U32 e;
-    __SLL_U32 f;
-    __SLL_U32 g;
-    __SLL_U32 h;
+	__SLL_U32 a;
+	__SLL_U32 b;
+	__SLL_U32 c;
+	__SLL_U32 d;
+	__SLL_U32 e;
+	__SLL_U32 f;
+	__SLL_U32 g;
+	__SLL_U32 h;
 } sll_sha256_data_t;
 
 
@@ -217,14 +217,14 @@ typedef struct _SLL_SHA256_DATA{
  * \arg __SLL_U64 h
  */
 typedef struct _SLL_SHA512_DATA{
-    __SLL_U64 a;
-    __SLL_U64 b;
-    __SLL_U64 c;
-    __SLL_U64 d;
-    __SLL_U64 e;
-    __SLL_U64 f;
-    __SLL_U64 g;
-    __SLL_U64 h;
+	__SLL_U64 a;
+	__SLL_U64 b;
+	__SLL_U64 c;
+	__SLL_U64 d;
+	__SLL_U64 e;
+	__SLL_U64 f;
+	__SLL_U64 g;
+	__SLL_U64 h;
 } sll_sha512_data_t;
 
 

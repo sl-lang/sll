@@ -56,11 +56,11 @@
  * \arg va_list* va_ptr
  */
 #define SLL_VAR_ARG_INIT_C(va,va_ptr) \
-    do{ \
-        sll_var_arg_list_t* __va=(va); \
-        __va->t=SLL_VAR_ARG_LIST_TYPE_C; \
-        __va->dt.c=(va_ptr); \
-    } while (0)
+	do{ \
+		sll_var_arg_list_t* __va=(va); \
+		__va->t=SLL_VAR_ARG_LIST_TYPE_C; \
+		__va->dt.c=(va_ptr); \
+	} while (0)
 
 
 
@@ -74,12 +74,12 @@
  * \arg sll_arg_count_t len
  */
 #define SLL_VAR_ARG_INIT_SLL(va,ptr,len) \
-    do{ \
-        sll_var_arg_list_t* __va=(va); \
-        __va->t=SLL_VAR_ARG_LIST_TYPE_SLL; \
-        __va->dt.sll.p=(ptr); \
-        __va->dt.sll.l=(len); \
-    } while (0)
+	do{ \
+		sll_var_arg_list_t* __va=(va); \
+		__va->t=SLL_VAR_ARG_LIST_TYPE_SLL; \
+		__va->dt.sll.p=(ptr); \
+		__va->dt.sll.l=(len); \
+	} while (0)
 
 
 
@@ -103,8 +103,8 @@ typedef __SLL_U8 sll_var_arg_type_t;
  * \arg sll_arg_count_t l
  */
 typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
-    sll_object_t*const* p;
-    sll_arg_count_t l;
+	sll_object_t*const* p;
+	sll_arg_count_t l;
 } sll_var_arg_list_data_sll_t;
 
 
@@ -121,11 +121,11 @@ typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
  * \arg sll_arg_count_t fnl
  */
 typedef struct _SLL_VAR_ARG_LIST_DATA_STRUCT{
-    const void* ptr;
-    sll_size_t* off;
-    sll_arg_count_t l;
-    void** fn;
-    sll_arg_count_t fnl;
+	const void* ptr;
+	sll_size_t* off;
+	sll_arg_count_t l;
+	void** fn;
+	sll_arg_count_t fnl;
 } sll_var_arg_list_data_struct_t;
 
 
@@ -140,9 +140,9 @@ typedef struct _SLL_VAR_ARG_LIST_DATA_STRUCT{
  * \arg sll_var_arg_list_data_struct_t s
  */
 typedef union _SLL_VAR_ARG_LIST_DATA{
-    va_list* c;
-    sll_var_arg_list_data_sll_t sll;
-    sll_var_arg_list_data_struct_t s;
+	va_list* c;
+	sll_var_arg_list_data_sll_t sll;
+	sll_var_arg_list_data_struct_t s;
 } sll_var_arg_list_data_t;
 
 
@@ -156,8 +156,8 @@ typedef union _SLL_VAR_ARG_LIST_DATA{
  * \arg sll_var_arg_list_data_t dt
  */
 typedef struct _SLL_VAR_ARG_LIST{
-    sll_var_arg_type_t t;
-    sll_var_arg_list_data_t dt;
+	sll_var_arg_type_t t;
+	sll_var_arg_list_data_t dt;
 } sll_var_arg_list_t;
 
 

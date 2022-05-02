@@ -49,8 +49,8 @@
  * \arg sll_size_t pw
  */
 typedef struct _SLL_FACTOR{
-    sll_integer_t n;
-    sll_size_t pw;
+	sll_integer_t n;
+	sll_size_t pw;
 } sll_factor_t;
 
 
