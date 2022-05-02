@@ -1,5 +1,5 @@
 #ifndef __SLL_PLATFORM_TIME_H__
-#define __SLL_PLATFORM_UTIL_H__ 1
+#define __SLL_PLATFORM_TIME_H__ 1
 #include <sll/_size_types.h>
 #include <sll/api/date.h>
 #include <sll/api/time.h>
