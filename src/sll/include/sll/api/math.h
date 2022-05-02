@@ -375,16 +375,16 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_math_log
  * \group math-api
  * \subgroup math-api-log
  * \desc Docs!
- * \api f|f
- * \arg sll_float_t a
- * \ret sll_float_t
+ * \api X|x
+ * \arg const sll_float_complex_t* a
+ * \arg sll_float_complex_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log(sll_float_t a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_float_complex_t* a,sll_float_complex_t* out);
 
 
 

@@ -607,7 +607,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_log"),
 		sll_api_math_log,
-		SLL_CHAR("f|f")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_log10"),

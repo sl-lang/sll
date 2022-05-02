@@ -5,6 +5,7 @@
 #include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
+#include <sll/complex.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/new_object.h>
@@ -305,8 +306,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_log(sll_float_t a){
-	return log(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=log(a->dt.f);
+	}
+	else{
+		sll_complex_log(&(a->dt.d),&(out->dt.d));
+	}
 }
 
 

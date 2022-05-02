@@ -238,12 +238,11 @@ static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,ar
 		SLL_UNIMPLEMENTED();
 	}
 	sll_float_complex_t* var=GET_PTR(sll_float_complex_t);
+	var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
 	if (!arg){
-		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
 		var->dt.f=0;
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_FLOAT){
-		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
 		var->dt.f=arg->dt.f;
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_COMPLEX){
@@ -251,7 +250,9 @@ static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,ar
 		var->dt.d=arg->dt.d;
 	}
 	else{
-		SLL_UNIMPLEMENTED();
+		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		var->dt.f=obj->dt.f;
+		SLL_RELEASE(obj);
 	}
 }
 
