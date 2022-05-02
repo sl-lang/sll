@@ -60,6 +60,17 @@ static __SLL_FORCE_INLINE sll_complex_t COMPLEX_DIV_FLOAT(sll_complex_t a,sll_fl
 
 
 
+static __SLL_FORCE_INLINE sll_complex_t COMPLEX_EXP(sll_complex_t a){
+	sll_float_t r=sll_api_math_exp(a.real);
+	sll_complex_t o={
+		r*sll_api_math_cos(a.imag),
+		r*sll_api_math_sin(a.imag)
+	};
+	return o;
+}
+
+
+
 static __SLL_FORCE_INLINE sll_complex_t COMPLEX_LOG(sll_complex_t a){
 	sll_complex_t o={
 		sll_api_math_log(sll_api_math_sqrt(a.real*a.real+a.imag*a.imag)),

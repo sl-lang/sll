@@ -102,6 +102,18 @@ __SLL_EXTERNAL void sll_complex_div_float(const sll_complex_t* a,sll_float_t b,s
 
 /**
  * \flags check_output func
+ * \name sll_complex_exp
+ * \group complex
+ * \desc Docs!
+ * \arg const sll_complex_t* a
+ * \arg sll_complex_t* out
+ */
+__SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* a,sll_complex_t* out);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_complex_log
  * \group complex
  * \desc Docs!
