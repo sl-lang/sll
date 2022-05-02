@@ -8,16 +8,12 @@
 #include <sll/_internal/static_string.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
-#include <sll/environment.h>
 #include <sll/error.h>
-#include <sll/memory.h>
-#include <sll/string.h>
 #include <sll/types.h>
 
 
 
 static sll_cpu_t _win_cpu=0;
-static sll_environment_t _win_env={NULL,0};
 static __STATIC_STRING(_win_platform_str,"windows");
 static unsigned int _win_csr=0;
 static DWORD _win_stdin_cm;
@@ -31,21 +27,11 @@ void* _win_dll_handle=NULL;
 
 
 __SLL_EXTERNAL const sll_cpu_t* sll_platform_cpu_count=&_win_cpu;
-__SLL_EXTERNAL const sll_environment_t* sll_environment=&_win_env;
 __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_win_platform_str;
 
 
 
 void _deinit_platform(void){
-	for (sll_environment_length_t i=0;i<_win_env.l;i++){
-		const sll_environment_variable_t* kv=*(_win_env.dt+i);
-		sll_free_string((sll_string_t*)(&(kv->k)));
-		sll_free_string((sll_string_t*)(&(kv->v)));
-		sll_deallocate(PTR(kv));
-	}
-	*((sll_environment_length_t*)(&(_win_env.l)))=0;
-	sll_deallocate(PTR(_win_env.dt));
-	_win_env.dt=NULL;
 	_mm_setcsr(_win_csr);
 	SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE),_win_stdin_cm);
 	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm);
@@ -72,40 +58,6 @@ void _init_platform(void){
 	SetConsoleMode(h,_win_stderr_cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 	_win_csr=_mm_getcsr();
 	_mm_setcsr(_win_csr|CSR_REGISTER_FLAGS);
-	LPCH dt=GetEnvironmentStrings();
-	sll_environment_length_t l=0;
-	sll_environment_variable_t** kv=sll_allocate_stack(1);
-	LPCH p=dt;
-	while (*p){
-		LPCH e=p;
-		if (*p=='='){
-			p+=sll_string_length(p)+1;
-			continue;
-		}
-		while (*p&&*p!='='){
-			p++;
-		}
-		if (!(*p)){
-			continue;
-		}
-		l++;
-		kv=sll_reallocate(kv,l*sizeof(sll_environment_variable_t*));
-		sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
-		sll_string_from_pointer_length(e,(sll_string_length_t)(p-e),(sll_string_t*)(&(n->k)));
-		p++;
-		sll_string_length_t i=sll_string_length(p);
-		sll_string_from_pointer_length(p,i,(sll_string_t*)(&(n->v)));
-		p+=i+1;
-		*(kv+l-1)=n;
-	}
-	FreeEnvironmentStringsA(dt);
-	if (!l){
-		_win_env.dt=NULL;
-	}
-	else{
-		_win_env.dt=sll_memory_move(kv,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
-	}
-	*((sll_environment_length_t*)(&(_win_env.l)))=l;
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
 	_win_cpu=(sll_cpu_t)si.dwNumberOfProcessors;
@@ -224,18 +176,6 @@ __SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
 		l-=n;
 		bf=PTR(ADDR(bf)+n);
 	}
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_remove_environment_variable(const sll_char_t* k){
-	SetEnvironmentVariable((char*)k,NULL);
-}
-
-
-
-__SLL_EXTERNAL void sll_platform_set_environment_variable(const sll_char_t* k,const sll_char_t* v){
-	SetEnvironmentVariable((char*)k,(char*)v);
 }
 
 

@@ -57,6 +57,17 @@ typedef struct _SLL_ENVIRONMENT{
 
 /**
  * \flags var
+ * \name sll_environment
+ * \group environment
+ * \desc Docs!
+ * \type const sll_environment_t*
+ */
+__SLL_EXTERNAL extern const sll_environment_t* sll_environment;
+
+
+
+/**
+ * \flags var
  * \name sll_env_path
  * \group environment
  * \desc Docs!

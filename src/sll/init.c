@@ -115,6 +115,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 	}
 	_weakref_cleanup_data();
 	_gc_release_data();
+	_deinit_environment();
 	_log_release_data();
 	_file_release_std_streams();
 	_audit_cleanup();

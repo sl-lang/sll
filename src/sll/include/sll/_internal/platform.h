@@ -48,6 +48,10 @@ void _init_platform(void);
 
 
 
+void _init_platform_env(void);
+
+
+
 void _init_platform_time(void);
 
 

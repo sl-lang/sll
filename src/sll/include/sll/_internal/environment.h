@@ -3,6 +3,10 @@
 
 
 
+void _deinit_environment(void);
+
+
+
 void _init_environment(void);
 
 

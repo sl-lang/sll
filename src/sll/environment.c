@@ -1,12 +1,13 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/platform.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/common.h>
 #include <sll/environment.h>
 #include <sll/init.h>
 #include <sll/memory.h>
+#include <sll/platform/environment.h>
 #include <sll/platform/lock.h>
-#include <sll/platform/util.h>
 #include <sll/search_path.h>
 #include <sll/string.h>
 #include <sll/types.h>
@@ -25,12 +26,14 @@
 
 
 
+static sll_environment_t _env_data={NULL,0};
 static sll_lock_handle_t _env_lock=NULL;
 static __STATIC_STRING(_env_path_var_name,"PATH");
 static sll_search_path_t _env_path;
 
 
 
+__SLL_EXTERNAL const sll_environment_t* sll_environment=&_env_data;
 __SLL_EXTERNAL const sll_search_path_t* sll_env_path=&_env_path;
 
 
@@ -43,7 +46,21 @@ static void _cleanup_env(void){
 
 
 
+void _deinit_environment(void){
+	for (sll_environment_length_t i=0;i<sll_environment->l;i++){
+		const sll_environment_variable_t* kv=*(sll_environment->dt+i);
+		sll_free_string((sll_string_t*)(&(kv->k)));
+		sll_free_string((sll_string_t*)(&(kv->v)));
+		sll_deallocate(PTR(kv));
+	}
+	*((sll_environment_length_t*)(&(sll_environment->l)))=0;
+	sll_deallocate(PTR(sll_environment->dt));
+}
+
+
+
 void _init_environment(void){
+	_init_platform_env();
 	for (sll_environment_length_t i=0;i<sll_environment->l;i++){
 		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->dt+i));
 		sll_string_upper_case(NULL,(sll_string_t*)(&(kv->k)));
