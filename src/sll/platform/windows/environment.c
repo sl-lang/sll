@@ -8,7 +8,7 @@
 
 
 
-void _init_platform(void){
+void _init_platform_env(void){
 	LPCH dt=GetEnvironmentStrings();
 	sll_environment_length_t l=0;
 	sll_environment_variable_t** kv=sll_allocate_stack(1);
