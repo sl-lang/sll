@@ -9,7 +9,7 @@ __SLL_EXPORT _call_api_func_assembly
 	; rdx - Argument bitmap pointer
 	; r8 - Argument data pointer
 	; r9 - Argument count
-	; [rsp+40] - Function pointer
+	; [rsp+48] - Function pointer
 	push rbx
 	push rsi
 	push rbp
@@ -66,29 +66,28 @@ __SLL_EXPORT _call_api_func_assembly
 	; r9 - Argument count
 	; r10 - Stack pointer for arguments
 	; r11 - Function pointer
-	mov al, 64
+	mov al, 32
 	mov rsi, QWORD [rdx]
 	mov r10, rsp
 	test r9d, r9d
 	jz ._no_args
 ._next_arg:
-	bt si, 0
-	jc ._push_wide_arg
-	mov rcx, QWORD [r8]
-	mov QWORD [r10], rcx
-	jmp ._load_next_arg
-._push_wide_arg:
 	mov QWORD [r10], r8
-	add r8, 8
-._load_next_arg:
-	shr rsi, 1
-	add r8, 8
+	mov rcx, rsi
+	and rcx, 3
+	lea r8, [r8+rcx*8+8]
+	jnz ._skip_dereference
+	mov rcx, QWORD [r10]
+	mov rcx, QWORD [rcx]
+	mov QWORD [r10], rcx
+._skip_dereference:
+	shr rsi, 2
 	add r10, 8
 	sub al, 1
 	jnz ._check_end
 	add rdx, 8
 	mov rsi, QWORD [rdx]
-	mov al, 64
+	mov al, 32
 ._check_end:
 	sub r9d, 1
 	jnz ._next_arg
@@ -101,20 +100,6 @@ __SLL_EXPORT _call_api_func_assembly
 	; r10 - Stack pointer for arguments
 	; r11 - Function pointer
 	mov QWORD [r10], rbx
-
-	; rax - Number of arguments left in current bitmap
-	; rbx - Return value pointer
-	; rcx - Temporary register
-	; rdx - Argument bitmap pointer
-	; rsi - Current bitmap
-	; r11 - Function pointer
-	cmp al, 1
-	jg ._skip_extra_load
-	add rdx, 8
-	mov rcx, QWORD [rdx]
-	shr cl, 1
-	or sil, cl
-._skip_extra_load:
 
 	mov rcx, QWORD [rsp]
 	mov rdx, QWORD [rsp+8]

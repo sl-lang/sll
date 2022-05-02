@@ -60,7 +60,15 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 				o=SLL_FROM_CHAR(ret.c);
 				break;
 			case 'd':
-				SLL_UNIMPLEMENTED();
+				o=sll_complex_to_object(&(ret.d));
+				break;
+			case 'x':
+				if (ret.x.t==SLL_PARSE_ARGS_TYPE_FLOAT){
+					o=sll_float_to_object(ret.x.dt.f);
+					break;
+				}
+				o=sll_complex_to_object(&(ret.x.dt.d));
+				break;
 			case 's':
 				o=STRING_TO_OBJECT_NOCOPY(&(ret.s));
 				break;
@@ -99,13 +107,16 @@ void _parse_api_call_format(const sll_char_t* fmt,sll_internal_function_t* o){
 	__SLL_U16 flags=0;
 	fmt+=off;
 	while (*fmt){
-		if (*fmt=='b'||*fmt=='B'||*fmt=='W'||*fmt=='D'||*fmt=='Q'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
+		if (*fmt=='b'||*fmt=='B'||*fmt=='W'||*fmt=='D'||*fmt=='Q'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='x'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
 			o->_ret=*fmt;
 		}
 		else if (*fmt=='~'){
 			flags|=RETURN_VALUE_FLAG_ERROR;
 		}
 		fmt++;
+	}
+	if (o->_ret=='x'&&(flags&RETURN_VALUE_FLAG_ERROR)){
+		SLL_UNIMPLEMENTED();
 	}
 	o->_ret|=flags;
 	o->_arg_cnt=_parse_arg_count(o->fmt,o->_ret,&(o->_regs),&(o->_arg_sz));
