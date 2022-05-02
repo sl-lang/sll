@@ -2,6 +2,7 @@
 #define __SLL_API_MATH_H__ 1
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/parse_args.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -60,11 +61,11 @@ typedef struct _SLL_FACTOR{
  * \name sll_api_math_abs
  * \group math-api
  * \desc Docs!
- * \api f|f
- * \arg sll_float_t a
+ * \api X|f
+ * \arg const sll_float_complex_t* a
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(sll_float_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(const sll_float_complex_t* a);
 
 
 
@@ -524,6 +525,18 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tan(sl
  * \ret sll_float_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tanh(sll_float_t a);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_math_abs
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a
+ * \ret sll_float_t
+ */
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_abs(sll_float_t a);
 
 
 

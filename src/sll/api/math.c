@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/complex.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/util.h>
 #include <sll/api/math.h>
@@ -47,9 +48,12 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(sll_float_t a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(const sll_float_complex_t* a){
+	if (a->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
+		return COMPLEX_ABS(a->dt.d);
+	}
 	f64_data_t dt={
-		.v=a
+		.v=a->dt.f
 	};
 	dt.dt&=0x7fffffffffffffffull;
 	return dt.v;
@@ -365,6 +369,16 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tan(sl
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tanh(sll_float_t a){
 	return tanh(a);
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_abs(sll_float_t a){
+	f64_data_t dt={
+		.v=a
+	};
+	dt.dt&=0x7fffffffffffffffull;
+	return dt.v;
 }
 
 

@@ -78,7 +78,7 @@ static void _print_complex(const sll_complex_t* c,sll_file_t* wf){
 		_print_float(c->real,wf);
 		if (c->imag){
 			sll_file_write_char(wf,(c->imag<0?'-':'+'),NULL);
-			_print_float(sll_api_math_abs(c->imag),wf);
+			_print_float(sll_math_abs(c->imag),wf);
 			sll_file_write_char(wf,'i',NULL);
 		}
 	}

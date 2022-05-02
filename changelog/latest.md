@@ -7,8 +7,9 @@
 - Implemented `file$FLAG_FLUSH_ON_NEWLINE`
 - Implemented `sll_audit_enable`
 - Implemented `sll_complex_exp` and `sll_complex_log`
-- Implemented `sll_float_complex_t` and `SLL_PARSE_ARGS_TYPE_COMPLEX`
 - Implemented `sll_execution_flags_t`, `sll_process_creation_flags_t` and `sll_search_flags_t`
+- Implemented `sll_float_complex_t` and `SLL_PARSE_ARGS_TYPE_COMPLEX`
+- Implemented `sll_math_abs`
 - Implemented `sll_platform_allocate_page_aligned`
 - Nightly builds (available via the `/apt/nightly/` channel)
 

@@ -61,7 +61,7 @@
 #define COMBINED_TYPE_MA COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_ARRAY)
 #define COMBINED_TYPE_MM COMBINE_TYPES(SLL_OBJECT_TYPE_MAP,SLL_OBJECT_TYPE_MAP)
 
-#define EQUAL_FLOAT(a,b) (sll_api_math_abs((a)-(b))<sll_float_compare_error)
+#define EQUAL_FLOAT(a,b) (sll_math_abs((a)-(b))<sll_float_compare_error)
 
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
