@@ -6,7 +6,6 @@
 #include <sll/_internal/string.h>
 #include <sll/allocator.h>
 #include <sll/api/hash.h>
-#include <sll/api/math.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
@@ -18,6 +17,7 @@
 #include <sll/string.h>
 #include <sll/string_table.h>
 #include <sll/types.h>
+#include <math.h>
 
 
 
@@ -573,9 +573,9 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 					sll_float_t real=(sll_float_t)n_st.hi;
 					if (n_st.cnt>=19){
 						SLL_ASSERT(n_st.cnt<=38);
-						real=real*sll_api_math_pow(10,n_st.cnt-19)+n_st.lo;
+						real=real*pow(10,n_st.cnt-19)+n_st.lo;
 					}
-					real*=sll_api_math_pow(10,(sll_float_t)n_st.exp);
+					real*=pow(10,(sll_float_t)n_st.exp);
 					if (neg){
 						real=-real;
 					}
@@ -660,10 +660,10 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 						sll_float_t imag=(sll_float_t)n_st.hi;
 						if (n_st.cnt>=19){
 							SLL_ASSERT(n_st.cnt<=38);
-							imag=imag*sll_api_math_pow(10,n_st.cnt-19)+n_st.lo;
+							imag=imag*pow(10,n_st.cnt-19)+n_st.lo;
 						}
 						arg->dt.d.real=real;
-						arg->dt.d.imag=(neg?-imag:imag)*sll_api_math_pow(10,(sll_float_t)n_st.exp);
+						arg->dt.d.imag=(neg?-imag:imag)*pow(10,(sll_float_t)n_st.exp);
 					}
 					else if (c=='i'){
 						PUSH_REWIND_CHAR('i');

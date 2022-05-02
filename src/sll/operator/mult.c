@@ -1,6 +1,5 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/operator.h>
-#include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -9,6 +8,7 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <math.h>
 
 
 
@@ -56,14 +56,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)sll_api_math_round(sll_math_abs(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
+				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)round(sll_math_abs(a->dt.f-n)*b->dt.s.l),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_FA:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)sll_api_math_round(sll_math_abs(a->dt.f-n)*b->dt.a.l),&(o->dt.a));
+				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)round(sll_math_abs(a->dt.f-n)*b->dt.a.l),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_CC:

@@ -1,7 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/operator.h>
 #include <sll/_internal/util.h>
-#include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -10,6 +9,7 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <math.h>
 
 
 
@@ -72,7 +72,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 		case COMBINED_TYPE_FS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_and_char(&(b->dt.s),(sll_char_t)sll_api_math_round(a->dt.f),&(o->dt.s));
+				sll_string_and_char(&(b->dt.s),(sll_char_t)round(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
@@ -234,7 +234,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 		case COMBINED_TYPE_FS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_or_char(&(b->dt.s),(sll_char_t)sll_api_math_round(a->dt.f),&(o->dt.s));
+				sll_string_or_char(&(b->dt.s),(sll_char_t)round(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
@@ -348,7 +348,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 		case COMBINED_TYPE_FS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_xor_char(&(b->dt.s),(sll_char_t)sll_api_math_round(a->dt.f),&(o->dt.s));
+				sll_string_xor_char(&(b->dt.s),(sll_char_t)round(a->dt.f),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:

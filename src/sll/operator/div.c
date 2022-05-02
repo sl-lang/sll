@@ -1,6 +1,5 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/operator.h>
-#include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -9,6 +8,7 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <math.h>
 
 
 
@@ -139,7 +139,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 		case COMBINED_TYPE_II:
 			return sll_int_to_object(a->dt.i/b->dt.i);
 		case COMBINED_TYPE_IF:
-			return sll_int_to_object(sll_api_math_round(a->dt.i/b->dt.f));
+			return sll_int_to_object((sll_integer_t)round(a->dt.i/b->dt.f));
 		case COMBINED_TYPE_IC:
 			return sll_int_to_object(a->dt.i/b->dt.c);
 		case COMBINED_TYPE_IS:
@@ -174,15 +174,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return sll_int_to_object(sll_api_math_round(a->dt.f/b->dt.i));
+			return sll_int_to_object((sll_integer_t)round(a->dt.f/b->dt.i));
 		case COMBINED_TYPE_FF:
-			return sll_int_to_object(sll_api_math_round(a->dt.f/b->dt.f));
+			return sll_int_to_object((sll_integer_t)round(a->dt.f/b->dt.f));
 		case COMBINED_TYPE_FC:
-			return sll_int_to_object(sll_api_math_round(a->dt.f/b->dt.c));
+			return sll_int_to_object((sll_integer_t)round(a->dt.f/b->dt.c));
 		case COMBINED_TYPE_CI:
 			return sll_int_to_object(a->dt.c/b->dt.i);
 		case COMBINED_TYPE_CF:
-			return sll_int_to_object(sll_api_math_round(a->dt.c/b->dt.f));
+			return sll_int_to_object((sll_integer_t)round(a->dt.c/b->dt.f));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->dt.c/b->dt.c);
 		case COMBINED_TYPE_CS:

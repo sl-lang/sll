@@ -1,6 +1,5 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/gc.h>
-#include <sll/api/math.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -11,6 +10,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>
+#include <math.h>
 
 
 
@@ -180,7 +180,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		case COMBINED_TYPE_FC:
 			return SLL_FROM_CHAR((sll_char_t)(a->dt.f));
 		case COMBINED_TYPE_FA:
-			return _array_from_length(sll_api_math_round(a->dt.f));
+			return _array_from_length((sll_integer_t)round(a->dt.f));
 		case COMBINED_TYPE_CI:
 			return sll_int_to_object(a->dt.c);
 		case COMBINED_TYPE_CF:

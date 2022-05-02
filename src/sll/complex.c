@@ -1,6 +1,7 @@
 #include <sll/_internal/complex.h>
 #include <sll/common.h>
 #include <sll/types.h>
+#include <math.h>
 
 
 
@@ -35,13 +36,16 @@ __SLL_EXTERNAL void sll_complex_div_float(const sll_complex_t* a,sll_float_t b,s
 
 
 __SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* a,sll_complex_t* out){
-	*out=COMPLEX_EXP(*a);
+	sll_float_t r=exp(a->real);
+	out->real=r*cos(a->imag);
+	out->imag=r*sin(a->imag);
 }
 
 
 
 __SLL_EXTERNAL void sll_complex_log(const sll_complex_t* a,sll_complex_t* out){
-	*out=COMPLEX_LOG(*a);
+	out->real=log(sqrt(a->real*a->real+a->imag*a->imag));
+	out->imag=atan2(a->imag,a->real);
 }
 
 
@@ -74,16 +78,16 @@ __SLL_EXTERNAL void sll_complex_pow(const sll_complex_t* a,const sll_complex_t* 
 		out->imag=0;
 	}
 	else{
-		sll_float_t abs=sll_api_math_sqrt(a->real*a->real+a->imag*a->imag);
-		sll_float_t len=sll_api_math_pow(abs,b->real);
-		sll_float_t rot=sll_api_math_atan2(a->imag,a->real);
+		sll_float_t abs=sqrt(a->real*a->real+a->imag*a->imag);
+		sll_float_t len=pow(abs,b->real);
+		sll_float_t rot=atan2(a->imag,a->real);
 		sll_float_t n_rot=rot*b->real;
 		if (b->imag){
-			len/=sll_api_math_exp(rot*b->imag);
-			n_rot+=sll_api_math_log(abs)*b->imag;
+			len/=exp(rot*b->imag);
+			n_rot+=log(abs)*b->imag;
 		}
-		out->real=len*sll_api_math_cos(n_rot);
-		out->imag=len*sll_api_math_sin(n_rot);
+		out->real=len*cos(n_rot);
+		out->imag=len*sin(n_rot);
 	}
 }
 
@@ -99,10 +103,10 @@ __SLL_EXTERNAL void sll_complex_pow_float(const sll_complex_t* a,sll_float_t b,s
 		out->imag=0;
 	}
 	else{
-		sll_float_t len=sll_api_math_pow(a->real*a->real+a->imag*a->imag,b/2);
-		sll_float_t rot=sll_api_math_atan2(a->imag,a->real)*b;
-		out->real=len*sll_api_math_cos(rot);
-		out->imag=len*sll_api_math_sin(rot);
+		sll_float_t len=pow(a->real*a->real+a->imag*a->imag,b/2);
+		sll_float_t rot=atan2(a->imag,a->real)*b;
+		out->real=len*cos(rot);
+		out->imag=len*sin(rot);
 	}
 }
 

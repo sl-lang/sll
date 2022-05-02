@@ -4,7 +4,6 @@
 #include <sll/_internal/string.h>
 #include <sll/allocator.h>
 #include <sll/api/json.h>
-#include <sll/api/math.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -19,6 +18,7 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/vm.h>
+#include <math.h>
 #include <stdio.h>
 
 
@@ -147,7 +147,7 @@ static sll_bool_t _parse_number(sll_char_t c,sll_json_parser_state_t* p,json_num
 			c=**p;
 			(*p)++;
 		}
-		v*=sll_api_math_pow(10,(sll_float_t)(neg_pw?-pw:pw));
+		v*=pow(10,(sll_float_t)(neg_pw?-pw:pw));
 	}
 	(*p)--;
 	o->f=(neg?-v:v);

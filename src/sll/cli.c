@@ -3,7 +3,6 @@
 #include <sll/_internal/static_string.h>
 #include <sll/abi.h>
 #include <sll/api/date.h>
-#include <sll/api/math.h>
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/assembly.h>
@@ -31,6 +30,7 @@
 #include <sll/types.h>
 #include <sll/version.h>
 #include <sll/vm.h>
+#include <math.h>
 
 
 
@@ -547,7 +547,7 @@ _read_file_argument:
 	if (fl&SLL_CLI_FLAG_VERSION){
 		sll_date_t d;
 		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
-		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.y,d.m+1,d.d+1,d.h,d.mn,sll_api_math_floor(d.s));
+		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.y,d.m+1,d.d+1,d.h,d.mn,floor(d.s));
 		goto _cleanup;
 	}
 	if (fl&SLL_CLI_FLAG_HELP){
