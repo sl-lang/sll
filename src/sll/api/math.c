@@ -156,8 +156,15 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_float_complex_t* a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cosh(sll_float_t a){
-	return cosh(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=cosh(a->dt.f);
+	}
+	else{
+		out->dt.d.real=cosh(a->dt.d.real)*cos(a->dt.d.imag);
+		out->dt.d.imag=sinh(a->dt.d.real)*sin(a->dt.d.imag);
+	}
 }
 
 
@@ -363,14 +370,29 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_float_complex_t* a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sinh(sll_float_t a){
-	return sinh(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sinh(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=sinh(a->dt.f);
+	}
+	else{
+		out->dt.d.real=sinh(a->dt.d.real)*cos(a->dt.d.imag);
+		out->dt.d.imag=cosh(a->dt.d.real)*sin(a->dt.d.imag);
+	}
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_sqrt(sll_float_t a){
-	return sqrt(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=sqrt(a->dt.f);
+	}
+	else{
+		sll_float_t x=(hypot(a->dt.d.real,a->dt.d.imag)+a->dt.d.real)/2;
+		out->dt.d.real=sqrt(x);
+		out->dt.d.imag=sll_api_math_copy_sign(sqrt(x-a->dt.d.real),a->dt.d.imag);
+	}
 }
 
 

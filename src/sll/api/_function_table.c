@@ -557,7 +557,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_cosh"),
 		sll_api_math_cosh,
-		SLL_CHAR("f|f")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_euler_phi"),
@@ -642,12 +642,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_sinh"),
 		sll_api_math_sinh,
-		SLL_CHAR("f|f")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_sqrt"),
 		sll_api_math_sqrt,
-		SLL_CHAR("f|f")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_tan"),
