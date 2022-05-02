@@ -195,8 +195,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_eule
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_exp(sll_float_t a){
-	return exp(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=exp(a->dt.f);
+	}
+	else{
+		sll_complex_exp(&(a->dt.d),&(out->dt.d));
+	}
 }
 
 
