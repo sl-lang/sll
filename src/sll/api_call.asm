@@ -72,16 +72,15 @@ __SLL_EXPORT _call_api_func_assembly
 	test r9d, r9d
 	jz ._no_args
 ._next_arg:
-	mov QWORD [r10], r8
 	mov rcx, rsi
 	and rcx, 3
-	lea r8, [r8+rcx*8+8]
+	lea rcx, [r8+rcx*8+8]
 	jnz ._skip_dereference
-	mov rcx, QWORD [r10]
-	mov rcx, QWORD [rcx]
-	mov QWORD [r10], rcx
+	mov r8, QWORD [r8]
 ._skip_dereference:
+	mov QWORD [r10], r8
 	shr rsi, 2
+	mov r8, rcx
 	add r10, 8
 	sub al, 1
 	jnz ._check_end
