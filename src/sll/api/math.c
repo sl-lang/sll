@@ -391,8 +391,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_float_complex_t* a
 		}
 		else{
 			sll_complex_t tmp={
-				0,
-				a->dt.f
+				a->dt.f,
+				0
 			};
 			sll_complex_pow(&tmp,&(b->dt.d),&(out->dt.d));
 		}
