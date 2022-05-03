@@ -258,6 +258,38 @@ static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,ar
 
 
 
+static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+	if (flags&PARSE_ARGS_FLAG_ARRAY){
+		if (flags&PARSE_ARGS_FLAG_REF){
+			SLL_UNIMPLEMENTED();
+		}
+		SLL_UNIMPLEMENTED();
+	}
+	sll_number_t* var=GET_PTR(sll_number_t);
+	var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+	if (!arg){
+		var->dt.f=0;
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_INT){
+		var->t=SLL_PARSE_ARGS_TYPE_INT;
+		var->dt.i=arg->dt.i;
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_FLOAT){
+		var->dt.f=arg->dt.f;
+	}
+	else if (arg->t==SLL_OBJECT_TYPE_COMPLEX){
+		var->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		var->dt.d=arg->dt.d;
+	}
+	else{
+		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		var->dt.f=obj->dt.f;
+		SLL_RELEASE(obj);
+	}
+}
+
+
+
 static void _parse_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
 	PARSE_TYPE_PTR(sll_string_t,STRING,s,SLL_INIT_STRING);
 }
@@ -348,7 +380,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 		else if (*t=='&'){
 			ref=1;
 		}
-		else if (*t=='b'||*t=='B'||*t=='W'||*t=='D'||*t=='Q'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='X'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
+		else if (*t=='b'||*t=='B'||*t=='W'||*t=='D'||*t=='Q'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='X'||*t=='z'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
 			sz+=8;
 			arr=0;
 			sll_bool_t wide=0;
@@ -357,7 +389,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 				sz+=8;
 				wide=1;
 			}
-			else if (!ref&&(*t=='x'||*t=='X')){
+			else if (!ref&&(*t=='x'||*t=='X'||*t=='z')){
 				sz+=16;
 				extra_wide=1;
 			}
@@ -373,7 +405,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 		PUSH_REGISTER(0,0);
 		ac++;
 	}
-	PUSH_REGISTER(((ret&RETURN_VALUE_FLAG_ERROR)||RETURN_VALUE_GET_TYPE(ret)=='d'||RETURN_VALUE_GET_TYPE(ret)=='x'||RETURN_VALUE_GET_TYPE(ret)=='s'||RETURN_VALUE_GET_TYPE(ret)=='a'||RETURN_VALUE_GET_TYPE(ret)=='m'),(ret&RETURN_VALUE_FLAG_ERROR));
+	PUSH_REGISTER(((ret&RETURN_VALUE_FLAG_ERROR)||RETURN_VALUE_GET_TYPE(ret)=='d'||RETURN_VALUE_GET_TYPE(ret)=='x'||RETURN_VALUE_GET_TYPE(ret)=='X'||RETURN_VALUE_GET_TYPE(ret)=='z'||RETURN_VALUE_GET_TYPE(ret)=='s'||RETURN_VALUE_GET_TYPE(ret)=='a'||RETURN_VALUE_GET_TYPE(ret)=='m'),(ret&RETURN_VALUE_FLAG_ERROR));
 	SLL_ASSERT(!regs||reg_sz==(ac>>5)+1);
 	if (o){
 		*o=sz;
@@ -395,7 +427,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		if (*tmp=='!'){
 			var_arg=1;
 		}
-		else if (*tmp=='b'||*tmp=='B'||*tmp=='W'||*tmp=='D'||*tmp=='Q'||*tmp=='i'||*tmp=='f'||*tmp=='x'||*tmp=='c'||*tmp=='d'||*tmp=='X'||*tmp=='s'||*tmp=='y'||*tmp=='a'||*tmp=='m'||*tmp=='o'){
+		else if (*tmp=='b'||*tmp=='B'||*tmp=='W'||*tmp=='D'||*tmp=='Q'||*tmp=='i'||*tmp=='f'||*tmp=='x'||*tmp=='c'||*tmp=='d'||*tmp=='X'||*tmp=='z'||*tmp=='s'||*tmp=='y'||*tmp=='a'||*tmp=='m'||*tmp=='o'){
 			var_arg_idx++;
 		}
 		tmp++;
@@ -465,6 +497,8 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 				case 'd':
 					SLL_UNIMPLEMENTED();
 				case 'X':
+					SLL_UNIMPLEMENTED();
+				case 'z':
 					SLL_UNIMPLEMENTED();
 				case 's':
 					SLL_UNIMPLEMENTED();
@@ -538,6 +572,10 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			case 'X':
 				WARN_IGNORED_CONST("'const sll_number_t*' (X)");
 				fn=_parse_float_or_complex;
+				break;
+			case 'z':
+				WARN_IGNORED_CONST("'const sll_number_t*' (z)");
+				fn=_parse_int_or_float_or_complex;
 				break;
 			case 's':
 				fn=_parse_string;

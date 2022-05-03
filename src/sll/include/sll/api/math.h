@@ -451,11 +451,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_number_t* a,const 
  * \name sll_api_math_round
  * \group math-api
  * \desc Docs!
- * \api f|i
+ * \api X|x
  * \arg sll_float_t a
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_round(sll_float_t a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_round(const sll_number_t* a,sll_number_t* out);
 
 
 

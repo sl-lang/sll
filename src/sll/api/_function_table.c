@@ -632,7 +632,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_round"),
 		sll_api_math_round,
-		SLL_CHAR("f|i")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_sin"),

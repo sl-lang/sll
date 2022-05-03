@@ -3,6 +3,7 @@
 ## Added
 
 - Argument parsing code to parse a float or a complex number: `X`
+- Argument parsing code to parse an integer, a float or a complex number: `z`
 - CLI flag to diable all audit events: `-X` or `--disable-audit`
 - Implemented `file$FLAG_FLUSH_ON_NEWLINE`
 - Implemented `sll_audit_enable`

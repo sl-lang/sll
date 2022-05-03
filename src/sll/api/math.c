@@ -401,8 +401,16 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_number_t* a,const 
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_round(sll_float_t a){
-	return (sll_integer_t)round(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_round(const sll_number_t* a,sll_number_t* out){
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->t=SLL_PARSE_ARGS_TYPE_INT;
+		out->dt.i=(sll_integer_t)round(a->dt.f);
+	}
+	else{
+		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		out->dt.d.real=round(a->dt.d.real);
+		out->dt.d.imag=round(a->dt.d.imag);
+	}
 }
 
 

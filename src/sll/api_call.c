@@ -63,11 +63,15 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 				o=sll_complex_to_object(&(ret.d));
 				break;
 			case 'x':
-				if (ret.x.t==SLL_PARSE_ARGS_TYPE_FLOAT){
-					o=sll_float_to_object(ret.x.dt.f);
-					break;
+				if (ret.x.t==SLL_PARSE_ARGS_TYPE_INT){
+					o=sll_int_to_object(ret.x.dt.i);
 				}
-				o=sll_complex_to_object(&(ret.x.dt.d));
+				else if (ret.x.t==SLL_PARSE_ARGS_TYPE_FLOAT){
+					o=sll_float_to_object(ret.x.dt.f);
+				}
+				else{
+					o=sll_complex_to_object(&(ret.x.dt.d));
+				}
 				break;
 			case 's':
 				o=STRING_TO_OBJECT_NOCOPY(&(ret.s));
