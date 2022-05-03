@@ -20,11 +20,32 @@
 
 (= log_log (... "sll:log_log"))
 
-(= set_file (... "sll:log_set_file"))
+(= set_file (,,, file flags state
+	(@@ (<- (... "sll:log_set")
+		(:: file string_type)
+		nil
+		(:: flags int_type)
+		(:: state int_type)
+	))
+)
 
-(= set_function (... "sll:log_set_function"))
+(= set_function (,,, file func flags state
+	(@@ (<- (... "sll:log_set")
+		(:: file string_type)
+		(:: func string_type)
+		(:: flags int_type)
+		(:: state int_type)
+	))
+)
 
-(= set_global (... "sll:log_set_default"))
+(= set_global (,,, flags state
+	(@@ (<- (... "sll:log_set")
+		nil
+		nil
+		(:: flags int_type)
+		(:: state int_type)
+	))
+)
 
 
 
