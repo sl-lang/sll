@@ -170,8 +170,16 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_number_t* a,sll_n
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_ceil(sll_float_t a){
-	return (sll_integer_t)ceil(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_ceil(const sll_number_t* a,sll_number_t* out){
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->t=SLL_PARSE_ARGS_TYPE_INT;
+		out->dt.i=(sll_integer_t)ceil(a->dt.f);
+	}
+	else{
+		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		out->dt.d.real=ceil(a->dt.d.real);
+		out->dt.d.imag=ceil(a->dt.d.imag);
+	}
 }
 
 
@@ -232,8 +240,16 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_integer_t a,sll_arra
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_floor(sll_float_t a){
-	return (sll_integer_t)floor(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_floor(const sll_number_t* a,sll_number_t* out){
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->t=SLL_PARSE_ARGS_TYPE_INT;
+		out->dt.i=(sll_integer_t)floor(a->dt.f);
+	}
+	else{
+		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		out->dt.d.real=floor(a->dt.d.real);
+		out->dt.d.imag=floor(a->dt.d.imag);
+	}
 }
 
 

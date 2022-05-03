@@ -537,7 +537,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_ceil"),
 		sll_api_math_ceil,
-		SLL_CHAR("f|i")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_combinations"),
@@ -582,7 +582,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_floor"),
 		sll_api_math_floor,
-		SLL_CHAR("f|i")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_gcd"),

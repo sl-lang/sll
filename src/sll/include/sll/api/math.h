@@ -229,11 +229,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_number_t* a,sll_n
  * \name sll_api_math_ceil
  * \group math-api
  * \desc Docs!
- * \api f|i
- * \arg sll_float_t a
- * \ret sll_integer_t
+ * \api X|x
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_ceil(sll_float_t a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_ceil(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -323,11 +323,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_gcd(
  * \name sll_api_math_floor
  * \group math-api
  * \desc Docs!
- * \api f|i
- * \arg sll_float_t a
- * \ret sll_integer_t
+ * \api X|x
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_floor(sll_float_t a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_floor(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -452,8 +452,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_number_t* a,const 
  * \group math-api
  * \desc Docs!
  * \api X|x
- * \arg sll_float_t a
- * \ret sll_integer_t
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_round(const sll_number_t* a,sll_number_t* out);
 
