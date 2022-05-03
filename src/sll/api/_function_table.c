@@ -542,7 +542,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_combinations"),
 		sll_api_math_combinations,
-		SLL_CHAR("ii|i")
+		SLL_CHAR("QQ|Q")
 	},
 	{
 		SLL_CHAR("sll:math_copy_sign"),

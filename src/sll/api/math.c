@@ -118,8 +118,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cbrt(s
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_combinations(sll_integer_t a,sll_integer_t b){
-	if (b>a||b<=0){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_combinations(sll_size_t a,sll_size_t b){
+	if (b>a){
 		return 0;
 	}
 	if (a==b){
@@ -128,11 +128,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_comb
 	if (b==1){
 		return 1;
 	}
-	__SLL_U64 av=(__SLL_U64)a;
-	__SLL_U64 bv=(__SLL_U64)b;
-	__SLL_U64 o=1;
-	__SLL_U64 i=a-b;
-	__SLL_U64 j=2;
+	sll_size_t o=1;
+	sll_size_t i=a-b;
+	sll_size_t j=2;
 	do{
 		i++;
 		o*=i;
@@ -140,9 +138,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_comb
 			o/=j;
 			j=(j==b?0:j+1);
 		}
-	} while (i<av);
+	} while (i<a);
 	if (j){
-		while (j<=bv){
+		while (j<=b){
 			o/=j;
 			j++;
 		}

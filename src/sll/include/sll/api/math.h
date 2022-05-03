@@ -187,12 +187,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cbrt(s
  * \name sll_api_math_combinations
  * \group math-api
  * \desc Docs!
- * \api ii|i
- * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \ret sll_integer_t
+ * \api QQ|Q
+ * \arg sll_size_t a
+ * \arg sll_size_t b
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_combinations(sll_integer_t a,sll_integer_t b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_combinations(sll_size_t a,sll_size_t b);
 
 
 
