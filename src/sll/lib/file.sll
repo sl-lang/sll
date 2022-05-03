@@ -11,7 +11,7 @@
 		(<- (... "sll:file_inc_handle") dt$_handle)
 	}) @@copy@@
 	(,,, dt {
-		(? (=== f$_handle -1) (@@))
+		(? (=== dt$_handle -1) (@@))
 		(<- (... "sll:file_close") dt$_handle)
 	}) @@delete@@
 	(,,, dt {
@@ -98,8 +98,9 @@
 
 
 (= close (,,, f
-	(? (=== f nil) (@@ nil))
+	(? (=== f nil) (@@))
 	(= f (:: f file_type))
+	(? (=== f$_handle -1) (@@))
 	(? (! (<- (... "sll:file_close") f$_handle)) (@@))
 	(= f$_handle -1)
 ))
