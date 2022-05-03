@@ -113,27 +113,28 @@ __SLL_EXTERNAL void sll_complex_pow_float(const sll_complex_t* a,sll_float_t b,s
 
 
 __SLL_EXTERNAL void sll_complex_pow_int(const sll_complex_t* a,sll_integer_t b,sll_complex_t* out){
+	out->real=1;
+	out->imag=0;
+	if (!b){
+		return;
+	}
 	sll_bool_t inv=0;
 	if (b<0){
 		b=-b;
 		inv=1;
 	}
-	out->real=1;
-	out->imag=0;
 	sll_complex_t n=*a;
-	sll_size_t v=b;
-	sll_size_t m=1;
-	while (m&&m<=v){
-		if (v&m){
+	do{
+		if (b&1){
 			sll_float_t tmp=out->real*n.real-out->imag*n.imag;
 			out->imag=out->real*n.imag+out->imag*n.real;
 			out->real=tmp;
 		}
-		m<<=1;
+		b>>=1;
 		sll_float_t tmp=n.real*n.real-n.imag*n.imag;
 		n.imag=n.real*n.imag+n.imag*n.real;
 		n.real=tmp;
-	}
+	} while (b);
 	if (inv){
 		sll_float_t d=1/(out->real*out->real+out->imag*out->imag);
 		out->real*=d;
