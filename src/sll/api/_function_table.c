@@ -322,7 +322,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_close"),
 		sll_api_file_close,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:file_copy"),
@@ -337,7 +337,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_flush"),
 		sll_api_file_flush,
-		SLL_CHAR("i|b")
+		SLL_CHAR("D|b")
 	},
 	{
 		SLL_CHAR("sll:file_from_data"),
@@ -347,7 +347,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_get_buffer"),
 		sll_api_file_get_buffer,
-		SLL_CHAR("i|s")
+		SLL_CHAR("D|s")
 	},
 	{
 		SLL_CHAR("sll:file_get_temp_path"),
@@ -357,7 +357,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_inc_handle"),
 		sll_api_file_inc_handle,
-		SLL_CHAR("i|")
+		SLL_CHAR("D|")
 	},
 	{
 		SLL_CHAR("sll:file_open"),
@@ -367,17 +367,17 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_peek"),
 		sll_api_file_peek,
-		SLL_CHAR("i|~c")
+		SLL_CHAR("D|~c")
 	},
 	{
 		SLL_CHAR("sll:file_read"),
 		sll_api_file_read,
-		SLL_CHAR("iD|~s")
+		SLL_CHAR("DD|~s")
 	},
 	{
 		SLL_CHAR("sll:file_read_char"),
 		sll_api_file_read_char,
-		SLL_CHAR("i|~c")
+		SLL_CHAR("D|~c")
 	},
 	{
 		SLL_CHAR("sll:file_rename"),
@@ -387,12 +387,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_std_handle"),
 		sll_api_file_std_handle,
-		SLL_CHAR("c|i")
+		SLL_CHAR("c|D")
 	},
 	{
 		SLL_CHAR("sll:file_write"),
 		sll_api_file_write,
-		SLL_CHAR("i#s|i")
+		SLL_CHAR("D#s|i")
 	},
 	{
 		SLL_CHAR("sll:float_get_compare_error"),
@@ -767,27 +767,27 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:serial_decode_float"),
 		sll_api_serial_decode_float,
-		SLL_CHAR("i|~f")
+		SLL_CHAR("D|~f")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_integer"),
 		sll_api_serial_decode_integer,
-		SLL_CHAR("i|~a")
+		SLL_CHAR("D|~a")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_object"),
 		sll_api_serial_decode_object,
-		SLL_CHAR("i|~a")
+		SLL_CHAR("D|~a")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_signed_integer"),
 		sll_api_serial_decode_signed_integer,
-		SLL_CHAR("i|~a")
+		SLL_CHAR("D|~a")
 	},
 	{
 		SLL_CHAR("sll:serial_decode_string"),
 		sll_api_serial_decode_string,
-		SLL_CHAR("i|~s")
+		SLL_CHAR("D|~s")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_float"),
@@ -797,22 +797,22 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:serial_encode_integer"),
 		sll_api_serial_encode_integer,
-		SLL_CHAR("iQ|Q")
+		SLL_CHAR("DQ|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_object"),
 		sll_api_serial_encode_object,
-		SLL_CHAR("io!|Q")
+		SLL_CHAR("Do!|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_signed_integer"),
 		sll_api_serial_encode_signed_integer,
-		SLL_CHAR("ii|Q")
+		SLL_CHAR("Di|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_string"),
 		sll_api_serial_encode_string,
-		SLL_CHAR("i#s|Q")
+		SLL_CHAR("D#s|Q")
 	},
 	{
 		SLL_CHAR("sll:sort_quicksort"),

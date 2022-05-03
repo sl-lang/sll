@@ -1106,7 +1106,7 @@ _load_new_thread:;
 					sll_object_t* fh_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					thr->si--;
 					SLL_RELEASE(*(thr->stack+thr->si));
-					sll_file_t* f=sll_file_from_handle(fh_o->dt.i);
+					sll_file_t* f=sll_file_from_handle((sll_file_handle_t)(fh_o->dt.i));
 					SLL_RELEASE(fh_o);
 					if (!f||sz<=0){
 						*(thr->stack+thr->si)=STRING_TO_OBJECT(NULL);
@@ -1142,7 +1142,7 @@ _load_new_thread:;
 					sll_object_t* fh_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					thr->si--;
 					SLL_RELEASE(*(thr->stack+thr->si));
-					sll_file_t* f=sll_file_from_handle(fh_o->dt.i);
+					sll_file_t* f=sll_file_from_handle((sll_file_handle_t)(fh_o->dt.i));
 					SLL_RELEASE(fh_o);
 					if (!f){
 						*(thr->stack+thr->si)=SLL_FROM_CHAR(0);

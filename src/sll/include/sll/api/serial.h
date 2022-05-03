@@ -1,5 +1,6 @@
 #ifndef __SLL_API_SERIAL_H__
 #define __SLL_API_SERIAL_H__ 1
+#include <sll/api/file.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>
@@ -53,12 +54,12 @@
  * \name sll_api_serial_decode_float
  * \group serial-api
  * \desc Docs!
- * \api i|~f
- * \arg sll_integer_t fh
+ * \api D|~f
+ * \arg sll_file_handle_t fh
  * \arg sll_float_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_float(sll_integer_t fh,sll_float_t* out);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_float(sll_file_handle_t fh,sll_float_t* out);
 
 
 
@@ -67,12 +68,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
  * \name sll_api_serial_decode_integer
  * \group serial-api
  * \desc Docs!
- * \api i|~a
- * \arg sll_integer_t fh
+ * \api D|~a
+ * \arg sll_file_handle_t fh
  * \arg sll_array_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_integer(sll_integer_t fh,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_integer(sll_file_handle_t fh,sll_array_t* out);
 
 
 
@@ -81,12 +82,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
  * \name sll_api_serial_decode_signed_integer
  * \group serial-api
  * \desc Docs!
- * \api i|~a
- * \arg sll_integer_t fh
+ * \api D|~a
+ * \arg sll_file_handle_t fh
  * \arg sll_array_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_signed_integer(sll_integer_t fh,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_signed_integer(sll_file_handle_t fh,sll_array_t* out);
 
 
 
@@ -95,12 +96,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
  * \name sll_api_serial_decode_object
  * \group serial-api
  * \desc Docs!
- * \api i|~a
- * \arg sll_integer_t fh
+ * \api D|~a
+ * \arg sll_file_handle_t fh
  * \arg sll_array_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_object(sll_integer_t fh,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_object(sll_file_handle_t fh,sll_array_t* out);
 
 
 
@@ -109,12 +110,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
  * \name sll_api_serial_decode_string
  * \group serial-api
  * \desc Docs!
- * \api i|~s
- * \arg sll_integer_t fh
+ * \api D|~s
+ * \arg sll_file_handle_t fh
  * \arg sll_string_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_string(sll_integer_t fh,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_string(sll_file_handle_t fh,sll_string_t* out);
 
 
 
@@ -124,10 +125,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
  * \group serial-api
  * \desc Docs!
  * \api if|Q
- * \arg sll_integer_t fh
+ * \arg sll_file_handle_t fh
  * \arg sll_float_t v
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_float(sll_integer_t fh,sll_float_t v);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_float(sll_file_handle_t fh,sll_float_t v);
 
 
 
@@ -136,12 +137,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
  * \name sll_api_serial_encode_integer
  * \group serial-api
  * \desc Docs!
- * \api iQ|Q
- * \arg sll_integer_t fh
+ * \api DQ|Q
+ * \arg sll_file_handle_t fh
  * \arg sll_size_t v
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_integer(sll_integer_t fh,sll_size_t v);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_integer(sll_file_handle_t fh,sll_size_t v);
 
 
 
@@ -150,12 +151,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
  * \name sll_api_serial_encode_signed_integer
  * \group serial-api
  * \desc Docs!
- * \api ii|Q
- * \arg sll_integer_t fh
+ * \api Di|Q
+ * \arg sll_file_handle_t fh
  * \arg sll_integer_t v
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_signed_integer(sll_integer_t fh,sll_integer_t v);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_signed_integer(sll_file_handle_t fh,sll_integer_t v);
 
 
 
@@ -164,13 +165,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
  * \name sll_api_serial_encode_object
  * \group serial-api
  * \desc Docs!
- * \api io!|Q
- * \arg sll_integer_t fh
+ * \api Do!|Q
+ * \arg sll_file_handle_t fh
  * \arg sll_object_t*const* args
  * \arg sll_arg_count_t len
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_object(sll_integer_t fh,sll_object_t*const* args,sll_arg_count_t len);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_object(sll_file_handle_t fh,sll_object_t*const* args,sll_arg_count_t len);
 
 
 
@@ -179,12 +180,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
  * \name sll_api_serial_encode_string
  * \group serial-api
  * \desc Docs!
- * \api i#s|Q
- * \arg sll_integer_t fh
+ * \api D#s|Q
+ * \arg sll_file_handle_t fh
  * \arg const sll_string_t* str
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_string(sll_integer_t fh,const sll_string_t* str);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_string(sll_file_handle_t fh,const sll_string_t* str);
 
 
 
