@@ -453,17 +453,15 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_float_complex_t* a
 		out->dt.f=tan(a->dt.f);
 	}
 	else{
-		sll_float_t s=sin(a->dt.d.real);
-		sll_float_t c=cos(a->dt.d.real);
-		sll_float_t sh=sinh(a->dt.d.imag);
-		sll_float_t ch=cosh(a->dt.d.imag);
+		sll_float_t t=tan(a->dt.d.real);
+		sll_float_t th=tanh(a->dt.d.imag);
 		sll_complex_t num={
-			s*ch,
-			c*sh
+			t,
+			th
 		};
 		sll_complex_t denom={
-			c*ch,
-			-s*sh
+			1,
+			-t*th
 		};
 		out->dt.d=COMPLEX_DIV(num,denom);
 	}
@@ -471,8 +469,24 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_float_complex_t* a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_tanh(sll_float_t a){
-	return tanh(a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_float_complex_t* a,sll_float_complex_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=tanh(a->dt.f);
+	}
+	else{
+		sll_float_t t=tan(a->dt.d.imag);
+		sll_float_t th=tanh(a->dt.d.real);
+		sll_complex_t num={
+			th,
+			t
+		};
+		sll_complex_t denom={
+			1,
+			t*th
+		};
+		out->dt.d=COMPLEX_DIV(num,denom);
+	}
 }
 
 

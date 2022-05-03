@@ -657,7 +657,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_tanh"),
 		sll_api_math_tanh,
-		SLL_CHAR("f|f")
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:object_new"),
