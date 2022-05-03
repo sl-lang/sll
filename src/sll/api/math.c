@@ -184,15 +184,36 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_ceil(const sll_number_t* a,sll_n
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_copy_sign(sll_float_t a,sll_float_t b){
-	f64_data_t dt_a={
-		.v=a
-	};
-	f64_data_t dt_b={
-		.v=b
-	};
-	dt_b.dt=(dt_b.dt&0x7fffffffffffffffull)|(dt_a.dt&0x8000000000000000ull);
-	return dt_b.v;
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,const sll_number_t* b,sll_number_t* out){
+	SLL_ASSERT(a->t==b->t);
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_INT){
+		out->dt.i=((a->dt.i^b->dt.i)<0?-a->dt.i:a->dt.i);
+	}
+	else if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		f64_data_t dt_a={
+			.v=a->dt.f
+		};
+		f64_data_t dt_b={
+			.v=b->dt.f
+		};
+		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
+		out->dt.f=dt_a.v;
+	}
+	else{
+		f64_data_t dt_a={
+			.v=a->dt.d.real
+		};
+		f64_data_t dt_b={
+			.v=b->dt.d.real
+		};
+		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
+		out->dt.d.real=dt_a.v;
+		dt_a.v=a->dt.d.imag;
+		dt_b.v=b->dt.d.imag;
+		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
+		out->dt.d.imag=dt_a.v;
+	}
 }
 
 
@@ -340,20 +361,6 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_number_t* a,sll_nu
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=log2(a->dt.f);
-	}
-	else{
-		sll_complex_t tmp;
-		sll_complex_log(&(a->dt.d),&tmp);
-		out->dt.d=COMPLEX_DIV_FLOAT(tmp,0.6931471805599453);
-	}
-}
-
-
-
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
@@ -363,6 +370,20 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_number_t* a,sll_
 		sll_complex_t tmp;
 		sll_complex_log(&(a->dt.d),&tmp);
 		out->dt.d=COMPLEX_DIV_FLOAT(tmp,2.302585092994046);
+	}
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_number_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=log2(a->dt.f);
+	}
+	else{
+		sll_complex_t tmp;
+		sll_complex_log(&(a->dt.d),&tmp);
+		out->dt.d=COMPLEX_DIV_FLOAT(tmp,0.6931471805599453);
 	}
 }
 
@@ -465,7 +486,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_number_t* a,sll_n
 	else{
 		sll_float_t x=(hypot(a->dt.d.real,a->dt.d.imag)+a->dt.d.real)/2;
 		out->dt.d.real=sqrt(x);
-		out->dt.d.imag=sll_api_math_copy_sign(sqrt(x-a->dt.d.real),a->dt.d.imag);
+		out->dt.d.imag=sll_math_copy_sign(sqrt(x-a->dt.d.real),a->dt.d.imag);
 	}
 }
 
@@ -521,6 +542,19 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_abs(sll_fl
 	};
 	dt.dt&=0x7fffffffffffffffull;
 	return dt.v;
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_copy_sign(sll_float_t a,sll_float_t b){
+	f64_data_t dt_a={
+		.v=a
+	};
+	f64_data_t dt_b={
+		.v=b
+	};
+	dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
+	return dt_a.v;
 }
 
 

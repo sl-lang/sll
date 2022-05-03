@@ -547,7 +547,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_copy_sign"),
 		sll_api_math_copy_sign,
-		SLL_CHAR("ff|f")
+		SLL_CHAR("zz|x")
 	},
 	{
 		SLL_CHAR("sll:math_cos"),

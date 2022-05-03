@@ -225,7 +225,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_number_t* a,sll_n
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_math_ceil
  * \group math-api
  * \desc Docs!
@@ -238,16 +238,16 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_ceil(const sll_number_t* a,sll_n
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_math_copy_sign
  * \group math-api
  * \desc Docs!
- * \api ff|f
- * \arg sll_float_t a
- * \arg sll_float_t b
- * \ret sll_float_t
+ * \api zz|x
+ * \arg const sll_number_t* a
+ * \arg const sll_number_t* b
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_copy_sign(sll_float_t a,sll_float_t b);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,const sll_number_t* b,sll_number_t* out);
 
 
 
@@ -319,7 +319,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_gcd(
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_math_floor
  * \group math-api
  * \desc Docs!
@@ -391,20 +391,6 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_number_t* a,sll_nu
 
 /**
  * \flags func
- * \name sll_api_math_log2
- * \group math-api
- * \subgroup math-api-log
- * \desc Docs!
- * \api X|x
- * \arg const sll_number_t* a
- * \arg sll_number_t* out
- */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_number_t* out);
-
-
-
-/**
- * \flags func
  * \name sll_api_math_log10
  * \group math-api
  * \subgroup math-api-log
@@ -414,6 +400,20 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_n
  * \arg sll_number_t* out
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_number_t* a,sll_number_t* out);
+
+
+
+/**
+ * \flags func
+ * \name sll_api_math_log2
+ * \group math-api
+ * \subgroup math-api-log
+ * \desc Docs!
+ * \api X|x
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
+ */
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -447,7 +447,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_number_t* a,const 
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_math_round
  * \group math-api
  * \desc Docs!
@@ -538,6 +538,19 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_number_t* a,sll_n
  * \ret sll_float_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_abs(sll_float_t a);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_math_copy_sign
+ * \group math-api
+ * \desc Docs!
+ * \arg sll_float_t a
+ * \arg sll_float_t b
+ * \ret sll_float_t
+ */
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_copy_sign(sll_float_t a,sll_float_t b);
 
 
 
