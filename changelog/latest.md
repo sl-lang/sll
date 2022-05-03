@@ -18,7 +18,7 @@
 
 ## Changed
 
-- Fixed file descriptor desynchronization
+- Fixed premature file descriptor deallocation
 - Improved compilation speed
 - More system functions return error codes
 - Moved code between header files
