@@ -43,8 +43,6 @@ extern void sll_api_file_read_char(void);
 extern void sll_api_file_rename(void);
 extern void sll_api_file_std_handle(void);
 extern void sll_api_file_write(void);
-extern void sll_api_float_get_compare_error(void);
-extern void sll_api_float_set_compare_error(void);
 extern void sll_api_hash_md5(void);
 extern void sll_api_hash_sha1(void);
 extern void sll_api_hash_sha256(void);
@@ -387,22 +385,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:file_std_handle"),
 		sll_api_file_std_handle,
-		SLL_CHAR("c|D")
+		SLL_CHAR("c|i")
 	},
 	{
 		SLL_CHAR("sll:file_write"),
 		sll_api_file_write,
 		SLL_CHAR("D#s|i")
-	},
-	{
-		SLL_CHAR("sll:float_get_compare_error"),
-		sll_api_float_get_compare_error,
-		SLL_CHAR("|f")
-	},
-	{
-		SLL_CHAR("sll:float_set_compare_error"),
-		sll_api_float_set_compare_error,
-		SLL_CHAR("f|f")
 	},
 	{
 		SLL_CHAR("sll:hash_md5"),
@@ -1184,4 +1172,4 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 
 
 __SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_ifunc_data_ptr);
-__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=195;
+__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=193;

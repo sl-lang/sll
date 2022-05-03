@@ -206,7 +206,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rena
  * \name sll_api_file_std_handle
  * \group file-api
  * \desc Docs!
- * \api c|D
+ * \api c|i
  * \arg sll_char_t id
  * \ret sll_integer_t
  */

@@ -1,6 +1,5 @@
 #include <sll/_internal/common.h>
 #include <sll/api/date.h>
-#include <sll/api/float.h>
 #include <sll/api/math.h>
 #include <sll/api/time.h>
 #include <sll/array.h>
@@ -44,7 +43,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(
 		0,
 		(hour>23?23:hour),
 		(minute>59?59:minute),
-		(second<0?0:(second>60-sll_float_compare_error?60-sll_float_compare_error:second)),
+		(second<0?0:(second>=60?59.999999:second)),
 		_date_utc_time_zone
 	};
 	return sll_date_to_time(&dt);
