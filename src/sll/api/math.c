@@ -49,7 +49,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(const sll_float_complex_t* a){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(const sll_number_t* a){
 	if (a->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
 		return COMPLEX_ABS(a->dt.d);
 	}
@@ -144,7 +144,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_comb
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=cos(a->dt.f);
@@ -157,7 +157,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_float_complex_t* a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=cosh(a->dt.f);
@@ -195,7 +195,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_eule
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=exp(a->dt.f);
@@ -312,7 +312,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=log(a->dt.f);
@@ -324,7 +324,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_float_complex_t* a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=log2(a->dt.f);
@@ -338,7 +338,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_float_complex_t* 
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=log10(a->dt.f);
@@ -374,7 +374,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_perm
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_float_complex_t* a,const sll_float_complex_t* b,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_number_t* a,const sll_number_t* b,sll_number_t* out){
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT&&b->t==SLL_OBJECT_TYPE_FLOAT){
 		out->t=SLL_PARSE_ARGS_TYPE_FLOAT;
 		out->dt.f=pow(a->dt.f,b->dt.f);
@@ -407,7 +407,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_roun
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=sin(a->dt.f);
@@ -420,7 +420,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_float_complex_t* a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sinh(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sinh(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=sinh(a->dt.f);
@@ -433,7 +433,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sinh(const sll_float_complex_t* 
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=sqrt(a->dt.f);
@@ -447,7 +447,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_float_complex_t* 
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=tan(a->dt.f);
@@ -469,7 +469,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_float_complex_t* a
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_float_complex_t* a,sll_float_complex_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_number_t* a,sll_number_t* out){
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		out->dt.f=tanh(a->dt.f);

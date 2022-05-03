@@ -62,10 +62,10 @@ typedef struct _SLL_FACTOR{
  * \group math-api
  * \desc Docs!
  * \api X|f
- * \arg const sll_float_complex_t* a
+ * \arg const sll_number_t* a
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(const sll_float_complex_t* a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(const sll_number_t* a);
 
 
 
@@ -203,10 +203,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_comb
  * \subgroup math-api-trig
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -217,10 +217,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_float_complex_t* a
  * \subgroup math-api-trig
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -271,10 +271,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_eule
  * \subgroup math-api-exp
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -382,10 +382,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
  * \subgroup math-api-log
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -396,10 +396,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_float_complex_t* a
  * \subgroup math-api-log
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -410,10 +410,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_float_complex_t* 
  * \subgroup math-api-log
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -438,11 +438,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_perm
  * \subgroup math-api-exp
  * \desc Docs!
  * \api XX|x
- * \arg const sll_float_complex_t* a
- * \arg const sll_float_complex_t* b
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg const sll_number_t* b
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_float_complex_t* a,const sll_float_complex_t* b,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_number_t* a,const sll_number_t* b,sll_number_t* out);
 
 
 
@@ -466,10 +466,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_roun
  * \subgroup math-api-trig
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -480,10 +480,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_float_complex_t* a
  * \subgroup math-api-trig
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sinh(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sinh(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -494,10 +494,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sinh(const sll_float_complex_t* 
  * \subgroup math-api-exp
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -508,10 +508,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_float_complex_t* 
  * \subgroup math-api-trig
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_number_t* a,sll_number_t* out);
 
 
 
@@ -522,10 +522,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_float_complex_t* a
  * \subgroup math-api-trig
  * \desc Docs!
  * \api X|x
- * \arg const sll_float_complex_t* a
- * \arg sll_float_complex_t* out
+ * \arg const sll_number_t* a
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_float_complex_t* a,sll_float_complex_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_number_t* a,sll_number_t* out);
 
 
 

@@ -1,5 +1,6 @@
 #ifndef __SLL_PARSE_ARGS_H__
 #define __SLL_PARSE_ARGS_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/string.h>
@@ -19,7 +20,7 @@
  * \name SLL_PARSE_ARGS_TYPE_INT
  * \group parse-args
  * \desc Docs!
- * \type sll_bool_t
+ * \type sll_number_type_t
  */
 #define SLL_PARSE_ARGS_TYPE_INT 0
 
@@ -30,9 +31,20 @@
  * \name SLL_PARSE_ARGS_TYPE_FLOAT
  * \group parse-args
  * \desc Docs!
- * \type sll_bool_t
+ * \type sll_number_type_t
  */
 #define SLL_PARSE_ARGS_TYPE_FLOAT 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_PARSE_ARGS_TYPE_COMPLEX
+ * \group parse-args
+ * \desc Docs!
+ * \type sll_number_type_t
+ */
+#define SLL_PARSE_ARGS_TYPE_COMPLEX 2
 
 
 
@@ -49,23 +61,23 @@
 
 /**
  * \flags macro var
- * \name SLL_PARSE_ARGS_TYPE_COMPLEX
- * \group parse-args
- * \desc Docs!
- * \type sll_bool_t
- */
-#define SLL_PARSE_ARGS_TYPE_COMPLEX 0
-
-
-
-/**
- * \flags macro var
  * \name SLL_PARSE_ARGS_TYPE_STRING
  * \group parse-args
  * \desc Docs!
  * \type sll_bool_t
  */
 #define SLL_PARSE_ARGS_TYPE_STRING 1
+
+
+
+/**
+ * \flags type var
+ * \name sll_number_type_t
+ * \group parse-args
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_number_type_t;
 
 
 
@@ -82,61 +94,33 @@ typedef void* sll_arg_state_t;
 
 /**
  * \flags type union
- * \name sll_int_float_data_t
+ * \name sll_number_data_t
  * \group parse-args
  * \desc Docs!
  * \arg sll_integer_t i
  * \arg sll_float_t f
+ * \arg sll_complex_t d
  */
-typedef union _SLL_INT_FLOAT_DATA{
-	sll_integer_t i;
-	sll_float_t f;
-} sll_int_float_data_t;
-
-
-
-/**
- * \flags type
- * \name sll_int_float_t
- * \group parse-args
- * \desc Docs!
- * \arg sll_bool_t t
- * \arg sll_int_float_data_t dt
- */
-typedef struct _SLL_INT_FLOAT{
-	sll_bool_t t;
-	sll_int_float_data_t dt;
-} sll_int_float_t;
-
-
-
-/**
- * \flags type union
- * \name sll_float_complex_data_t
- * \group parse-args
- * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_float_t f
- */
-typedef union _SLL_FLOAT_COMPLEX_DATA{
+typedef union _SLL_NUMBER_DATA{
+    sll_integer_t i;
 	sll_float_t f;
 	sll_complex_t d;
-} sll_float_complex_data_t;
+} sll_number_data_t;
 
 
 
 /**
  * \flags type
- * \name sll_float_complex_t
+ * \name sll_number_t
  * \group parse-args
  * \desc Docs!
- * \arg sll_bool_t t
- * \arg sll_float_complex_data_t dt
+ * \arg sll_number_type_t t
+ * \arg sll_number_data_t dt
  */
-typedef struct _SLL_FLOAT_COMPLEX{
-	sll_bool_t t;
-	sll_float_complex_data_t dt;
-} sll_float_complex_t;
+typedef struct _SLL_NUMBER{
+	sll_number_type_t t;
+	sll_number_data_t dt;
+} sll_number_t;
 
 
 

@@ -198,7 +198,7 @@ static void _parse_int_or_float(sll_object_t* arg,arg_parse_flags_t flags,arg_st
 		}
 		SLL_UNIMPLEMENTED();
 	}
-	sll_int_float_t* var=GET_PTR(sll_int_float_t);
+	sll_number_t* var=GET_PTR(sll_number_t);
 	if (!arg){
 		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
 		var->dt.f=0;
@@ -237,7 +237,7 @@ static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,ar
 		}
 		SLL_UNIMPLEMENTED();
 	}
-	sll_float_complex_t* var=GET_PTR(sll_float_complex_t);
+	sll_number_t* var=GET_PTR(sll_number_t);
 	var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
 	if (!arg){
 		var->dt.f=0;
@@ -353,11 +353,11 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 			arr=0;
 			sll_bool_t wide=0;
 			sll_bool_t extra_wide=0;
-			if (!ref&&(*t=='x'||*t=='d'||*t=='y')){
+			if (!ref&&(*t=='d'||*t=='y')){
 				sz+=8;
 				wide=1;
 			}
-			else if (!ref&&*t=='X'){
+			else if (!ref&&(*t=='x'||*t=='X')){
 				sz+=16;
 				extra_wide=1;
 			}
@@ -524,7 +524,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 				fn=_parse_float;
 				break;
 			case 'x':
-				WARN_IGNORED_CONST("'const sll_int_float_t*' (x)");
+				WARN_IGNORED_CONST("'const sll_number_t*' (x)");
 				fn=_parse_int_or_float;
 				break;
 			case 'c':
@@ -536,7 +536,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 				fn=_parse_complex;
 				break;
 			case 'X':
-				WARN_IGNORED_CONST("'const sll_float_complex_t*' (X)");
+				WARN_IGNORED_CONST("'const sll_number_t*' (X)");
 				fn=_parse_float_or_complex;
 				break;
 			case 's':
