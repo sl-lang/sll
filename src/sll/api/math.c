@@ -193,10 +193,13 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_ceil(const sll_number_t* a,sll_n
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,const sll_number_t* b,sll_number_t* out){
-	SLL_ASSERT(a->t==b->t);
+	if (a->t==b->t){
+		SLL_UNIMPLEMENTED();
+	}
 	out->t=a->t;
 	if (a->t==SLL_PARSE_ARGS_TYPE_INT){
-		out->dt.i=((a->dt.i^b->dt.i)<0?-a->dt.i:a->dt.i);
+		sll_integer_t neg=((a->dt.i^b->dt.i)<0);
+		out->dt.i=(a->dt.i^(-neg))+neg;
 	}
 	else if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
 		f64_data_t dt_a={
