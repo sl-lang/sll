@@ -23,7 +23,7 @@
 
 
 #define SKIP_WHITESPACE \
-	while (*t&&*t!='b'&&*t!='B'&&*t!='W'&&*t!='D'&&*t!='Q'&&*t!='i'&&*t!='f'&&*t!='x'&&*t!='c'&&*t!='d'&&*t!='X'&&*t!='s'&&*t!='y'&&*t!='a'&&*t!='m'&&*t!='o'&&*t!='!'&&*t!='+'&&*t!='&'&&*t!='#'){ \
+	while (*t&&*t!='b'&&*t!='B'&&*t!='W'&&*t!='D'&&*t!='Q'&&*t!='i'&&*t!='f'&&*t!='x'&&*t!='c'&&*t!='d'&&*t!='X'&&*t!='s'&&*t!='y'&&*t!='a'&&*t!='m'&&*t!='o'&&*t!='!'&&*t!='+'&&*t!='&'&&*t!='#'&&*t!='@'){ \
 		t++; \
 	}
 
@@ -107,12 +107,16 @@
 		return; \
 	} \
 	type** var=GET_PTR(type*); \
-	if (!arg){ \
+	if ((flags&PARSE_ARGS_FLAG_NULL)&&(!arg||(arg->t==SLL_OBJECT_TYPE_INT&&!arg->dt.i))){ \
 		*var=NULL; \
-		return; \
 	} \
-	ENSURE_TYPE(arg,name); \
-	*var=&(arg->dt.field);
+	else if (!arg){ \
+		init(*var); \
+	} \
+	else{ \
+		ENSURE_TYPE(arg,name); \
+		*var=&(arg->dt.field); \
+	}
 
 #define PUSH_REGISTER(a,b) \
 	do{ \
@@ -132,6 +136,12 @@
 	do{ \
 		if (flags&PARSE_ARGS_FLAG_CONST){ \
 			SLL_WARN("Ignoring 'const' modifier on type "nm": '%s'",tmp); \
+		} \
+	} while (0)
+#define WARN_IGNORED_NULL(nm) \
+	do{ \
+		if (flags&PARSE_ARGS_FLAG_NULL){ \
+			SLL_WARN("Ignoring 'null' modifier on type "nm": '%s'",tmp); \
 		} \
 	} while (0)
 
@@ -446,6 +456,9 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		else if (*t=='#'){
 			flags|=PARSE_ARGS_FLAG_CONST;
 		}
+		else if (*t=='@'){
+			flags|=PARSE_ARGS_FLAG_NULL;
+		}
 		else if (*t!='+'&&*t!='!'){
 			break;
 		}
@@ -465,6 +478,9 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			}
 			else if (*t=='#'){
 				n_flags|=PARSE_ARGS_FLAG_CONST;
+			}
+			else if (*t=='@'){
+				n_flags|=PARSE_ARGS_FLAG_NULL;
 			}
 			else if (*t!='!'){
 				break;
@@ -534,47 +550,58 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 		switch (type){
 			case 'b':
 				WARN_IGNORED_CONST("'sll_bool_t' (b)");
+				WARN_IGNORED_NULL("'sll_bool_t' (b)");
 				fn=_parse_bool;
 				break;
 			case 'B':
 				WARN_IGNORED_CONST("'__SLL_U8' (B)");
+				WARN_IGNORED_NULL("'__SLL_U8' (B)");
 				fn=_parse_uint8;
 				break;
 			case 'W':
 				WARN_IGNORED_CONST("'__SLL_U16' (W)");
+				WARN_IGNORED_NULL("'__SLL_U16' (W)");
 				fn=_parse_uint16;
 				break;
 			case 'D':
 				WARN_IGNORED_CONST("'__SLL_U32' (D)");
+				WARN_IGNORED_NULL("'__SLL_U32' (D)");
 				fn=_parse_uint32;
 				break;
 			case 'Q':
 			case 'i':
 				WARN_IGNORED_CONST("'sll_integer_t' or '__SLL_U64' (i or Q)");
+				WARN_IGNORED_NULL("'sll_integer_t' or '__SLL_U64' (i or Q)");
 				fn=_parse_int;
 				break;
 			case 'f':
 				WARN_IGNORED_CONST("'sll_float_t' (f)");
+				WARN_IGNORED_NULL("'sll_float_t' (f)");
 				fn=_parse_float;
 				break;
 			case 'x':
 				WARN_IGNORED_CONST("'const sll_number_t*' (x)");
+				WARN_IGNORED_NULL("'const sll_number_t*' (x)");
 				fn=_parse_int_or_float;
 				break;
 			case 'c':
 				WARN_IGNORED_CONST("'sll_char_t' (c)");
+				WARN_IGNORED_NULL("'sll_char_t' (c)");
 				fn=_parse_char;
 				break;
 			case 'd':
 				WARN_IGNORED_CONST("'const sll_complex_t*' (d)");
+				WARN_IGNORED_NULL("'const sll_complex_t*' (d)");
 				fn=_parse_complex;
 				break;
 			case 'X':
 				WARN_IGNORED_CONST("'const sll_number_t*' (X)");
+				WARN_IGNORED_NULL("'const sll_number_t*' (X)");
 				fn=_parse_float_or_complex;
 				break;
 			case 'z':
 				WARN_IGNORED_CONST("'const sll_number_t*' (z)");
+				WARN_IGNORED_NULL("'const sll_number_t*' (z)");
 				fn=_parse_int_or_float_or_complex;
 				break;
 			case 's':
@@ -591,10 +618,14 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 				fn=_parse_map;
 				break;
 			case 'o':
+				WARN_IGNORED_NULL("'sll_object_t*' (o)");
 				fn=_parse_object;
 				break;
 		}
 		if (fn){
+			if ((flags&PARSE_ARGS_FLAG_NULL)&&(flags&(PARSE_ARGS_FLAG_ARRAY|PARSE_ARGS_FLAG_NULL))){
+				SLL_UNIMPLEMENTED();
+			}
 			fn(arg,flags,&st,o);
 			flags=n_flags;
 		}

@@ -30,45 +30,16 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_log(sll_
 
 /**
  * \flags check_output func
- * \name sll_api_log_set_default
+ * \name sll_api_log_set
  * \group log-api
  * \desc Docs!
- * \api Bb|b
- * \arg sll_logger_flags_t flag
- * \arg sll_bool_t state
- * \ret sll_bool_t
- */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_default(sll_logger_flags_t flag,sll_bool_t state);
-
-
-
-/**
- * \flags check_output func
- * \name sll_api_log_set_file
- * \group log-api
- * \desc Docs!
- * \api #sBb|b
- * \arg sll_string_t* file
- * \arg sll_logger_flags_t flags
- * \arg sll_bool_t state
- * \ret sll_bool_t
- */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_file(const sll_string_t* file,sll_logger_flags_t flags,sll_bool_t state);
-
-
-
-/**
- * \flags check_output func
- * \name sll_api_log_set_function
- * \group log-api
- * \desc Docs!
- * \api #s#sBb|b
+ * \api #@s#@sBb|b
  * \arg sll_string_t* file
  * \arg sll_string_t* func
  * \arg sll_logger_flags_t flags
  * \arg sll_bool_t state
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set_function(const sll_string_t* file,const sll_string_t* func,sll_logger_flags_t flags,sll_bool_t state);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set(const sll_string_t* file,const sll_string_t* func,sll_logger_flags_t flags,sll_bool_t state);
 
 
 

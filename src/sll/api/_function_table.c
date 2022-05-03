@@ -55,9 +55,7 @@ extern void sll_api_json__init(void);
 extern void sll_api_json_parse(void);
 extern void sll_api_json_stringify(void);
 extern void sll_api_log_log(void);
-extern void sll_api_log_set_default(void);
-extern void sll_api_log_set_file(void);
-extern void sll_api_log_set_function(void);
+extern void sll_api_log_set(void);
 extern void sll_api_map_extend(void);
 extern void sll_api_map_remove(void);
 extern void sll_api_math_abs(void);
@@ -453,19 +451,9 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("o!|b")
 	},
 	{
-		SLL_CHAR("sll:log_set_default"),
-		sll_api_log_set_default,
-		SLL_CHAR("Bb|b")
-	},
-	{
-		SLL_CHAR("sll:log_set_file"),
-		sll_api_log_set_file,
-		SLL_CHAR("#sBb|b")
-	},
-	{
-		SLL_CHAR("sll:log_set_function"),
-		sll_api_log_set_function,
-		SLL_CHAR("#s#sBb|b")
+		SLL_CHAR("sll:log_set"),
+		sll_api_log_set,
+		SLL_CHAR("#@s#@sBb|b")
 	},
 	{
 		SLL_CHAR("sll:map_extend"),
@@ -1172,4 +1160,4 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 
 
 __SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_ifunc_data_ptr);
-__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=193;
+__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=191;
