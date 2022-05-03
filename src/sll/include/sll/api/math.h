@@ -46,11 +46,11 @@
  * \name sll_factor_t
  * \group math-api
  * \desc Docs!
- * \arg sll_integer_t n
+ * \arg sll_size_t n
  * \arg sll_size_t pw
  */
 typedef struct _SLL_FACTOR{
-	sll_integer_t n;
+	sll_size_t n;
 	sll_size_t pw;
 } sll_factor_t;
 
@@ -256,11 +256,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,
  * \name sll_api_math_euler_phi
  * \group math-api
  * \desc Docs!
- * \api i|i
- * \arg sll_integer_t a
- * \ret sll_integer_t
+ * \api Q|Q
+ * \arg sll_size_t n
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_euler_phi(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_euler_phi(sll_size_t n);
 
 
 
@@ -283,11 +283,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_number_t* a,sll_nu
  * \name sll_api_math_factorial
  * \group math-api
  * \desc Docs!
- * \api i|i
- * \arg sll_integer_t a
- * \ret sll_integer_t
+ * \api Q|Q
+ * \arg sll_size_t a
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_factorial(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_factorial(sll_size_t a);
 
 
 
@@ -296,11 +296,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_fact
  * \name sll_api_math_factors
  * \group math-api
  * \desc Docs!
- * \api i|a
- * \arg sll_integer_t a
+ * \api Q|a
+ * \arg sll_size_t a
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_integer_t a,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_size_t a,sll_array_t* out);
 
 
 
@@ -337,11 +337,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_floor(const sll_number_t* a,sll_
  * \group math-api
  * \subgroup math-api-log
  * \desc Docs!
- * \api i|i
- * \arg sll_integer_t a
- * \ret sll_integer_t
+ * \api Q|Q
+ * \arg sll_size_t a
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_log2(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_int_log2(sll_size_t a);
 
 
 
@@ -351,13 +351,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
  * \group math-api
  * \subgroup math-api-exp
  * \desc Docs!
- * \api iii|i
+ * \api iQQ|i
  * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \arg sll_integer_t c
+ * \arg sll_size_t b
+ * \arg sll_size_t c
  * \ret sll_integer_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_pow(sll_integer_t a,sll_integer_t b,sll_integer_t c);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_pow(sll_integer_t a,sll_size_t b,sll_size_t c);
 
 
 
@@ -367,11 +367,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
  * \group math-api
  * \subgroup math-api-exp
  * \desc Docs!
- * \api i|i
- * \arg sll_integer_t a
- * \ret sll_integer_t
+ * \api Q|Q
+ * \arg sll_size_t v
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_sqrt(sll_integer_t a);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_int_sqrt(sll_size_t v);
 
 
 
@@ -422,12 +422,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_n
  * \name sll_api_math_permutations
  * \group math-api
  * \desc Docs!
- * \api ii|i
- * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \ret sll_integer_t
+ * \api QQ|Q
+ * \arg sll_size_t a
+ * \arg sll_size_t b
+ * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_permutations(sll_integer_t a,sll_integer_t b);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_permutations(sll_size_t a,sll_size_t b);
 
 
 
@@ -556,26 +556,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_copy_sign(
 
 /**
  * \flags check_output func
- * \name sll_math_euler_phi
- * \group math-api
- * \desc Docs!
- * \arg sll_size_t n
- * \ret sll_size_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n);
-
-
-
-/**
- * \flags check_output func
  * \name sll_math_factors
  * \group math-api
  * \desc Docs!
- * \arg sll_integer_t n
+ * \arg sll_size_t n
  * \arg sll_array_length_t* ol
  * \ret sll_factor_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t n,sll_array_length_t* ol);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol);
 
 
 

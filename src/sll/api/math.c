@@ -227,8 +227,45 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_euler_phi(sll_integer_t a){
-	return (a<0?0:sll_math_euler_phi((sll_size_t)a));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_euler_phi(sll_size_t n){
+	if (n<2){
+		return 0;
+	}
+	sll_size_t o=n;
+	sll_size_t c=FIND_FIRST_SET_BIT(n);
+	if (c){
+		n>>=c;
+		o>>=1;
+	}
+	if (!(n%3)){
+		do{
+			n/=3;
+		} while (!(n%3));
+		o-=o/3;
+	}
+	if (!(n%5)){
+		do{
+			n/=5;
+		} while (!(n%5));
+		o-=o/5;
+	}
+	sll_size_t f=7;
+	if (n>48){
+		while (1){
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(4);
+			WHEEL_STEP_EULER(6);
+			WHEEL_STEP_EULER(2);
+			WHEEL_STEP_EULER(6);
+		}
+	}
+	if (n!=1){
+		o-=o/n;
+	}
+	return o;
 }
 
 
@@ -245,11 +282,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_number_t* a,sll_nu
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_factorial(sll_integer_t a){
-	if (a<0){
-		SLL_UNIMPLEMENTED();
-	}
-	__SLL_U64 o=1;
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_factorial(sll_size_t a){
+	sll_size_t o=1;
 	while (a>1){
 		o*=a;
 		a--;
@@ -259,7 +293,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_fact
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_integer_t a,sll_array_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_size_t a,sll_array_t* out){
 	sll_array_length_t l;
 	sll_factor_t* dt=sll_math_factors(a,&l);
 	sll_object_t* o=sll_new_object(SLL_CHAR("{ii}"),dt,l,sizeof(sll_factor_t),SLL_OFFSETOF(sll_factor_t,n),SLL_OFFSETOF(sll_factor_t,pw));
@@ -295,60 +329,62 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_gcd(
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_log2(sll_integer_t a){
-	if (a<0){
-		SLL_UNIMPLEMENTED();
-	}
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_int_log2(sll_size_t a){
 	return FIND_LAST_SET_BIT(a);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_pow(sll_integer_t a,sll_integer_t b,sll_integer_t c){
-	if (b<0||c<0){
-		SLL_UNIMPLEMENTED();
-	}
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_pow(sll_integer_t a,sll_size_t b,sll_size_t c){
 	if (!b){
 		return 1;
 	}
-	__SLL_U64 mod=(c?c:__SLL_U64_MAX);
-	if (mod==1){
+	if (c==1){
 		return 0;
 	}
-	__SLL_U64 o=1;
+	sll_integer_t o=1;
 	if (a<0){
 		a=-a;
 		if (b&1){
 			o=-1;
 		}
 	}
-	__SLL_U64 v=((__SLL_U64)a)%mod;
-	__SLL_U64 e=(__SLL_U64)b;
-	while (1){
-		if (e&1){
-			o=(o*v)%mod;
+	if (!c){
+		while (1){
+			if (b&1){
+				o*=a;
+			}
+			b>>=1;
+			if (!b){
+				break;
+			}
+			a*=a;
 		}
-		e>>=1;
-		if (!e){
-			break;
-		}
-		v=(v*v)%mod;
 	}
-	return (sll_integer_t)o;
+	else{
+		a%=c;
+		while (1){
+			if (b&1){
+				o=(o*a)%c;
+			}
+			b>>=1;
+			if (!b){
+				break;
+			}
+			a=(a*a)%c;
+		}
+	}
+	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_sqrt(sll_integer_t a){
-	if (a<0){
-		SLL_UNIMPLEMENTED();
-	}
-	__SLL_U64 v=(__SLL_U64)a;
-	__SLL_U64 i=v>>1;
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_int_sqrt(sll_size_t v){
+	sll_size_t i=v>>1;
 	if (!i){
 		return v;
 	}
-	__SLL_U64 j=i;
+	sll_size_t j=i;
 	do{
 		i=j;
 		j=(i+v/i)>>1;
@@ -398,8 +434,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_n
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_permutations(sll_integer_t a,sll_integer_t b){
-	if (b>a||b<=0){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_permutations(sll_size_t a,sll_size_t b){
+	if (b>a){
 		return 0;
 	}
 	if (a==b){
@@ -408,13 +444,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_perm
 	if (b==1){
 		return a;
 	}
-	__SLL_U64 v=(__SLL_U64)a;
-	__SLL_U64 o=1;
-	__SLL_U64 i=a-b;
+	sll_size_t o=1;
+	sll_size_t i=a-b;
 	do{
 		i++;
 		o*=i;
-	} while (i<v);
+	} while (i<a);
 	return o;
 }
 
@@ -568,67 +603,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_copy_sign(
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_math_euler_phi(sll_size_t n){
-	if (n<2){
-		return 0;
-	}
-	sll_size_t o=n;
-	sll_size_t c=FIND_FIRST_SET_BIT(n);
-	if (c){
-		n>>=c;
-		o>>=1;
-	}
-	if (!(n%3)){
-		do{
-			n/=3;
-		} while (!(n%3));
-		o-=o/3;
-	}
-	if (!(n%5)){
-		do{
-			n/=5;
-		} while (!(n%5));
-		o-=o/5;
-	}
-	sll_size_t f=7;
-	if (n>48){
-		while (1){
-			WHEEL_STEP_EULER(4);
-			WHEEL_STEP_EULER(2);
-			WHEEL_STEP_EULER(4);
-			WHEEL_STEP_EULER(2);
-			WHEEL_STEP_EULER(4);
-			WHEEL_STEP_EULER(6);
-			WHEEL_STEP_EULER(2);
-			WHEEL_STEP_EULER(6);
-		}
-	}
-	if (n!=1){
-		o-=o/n;
-	}
-	return o;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_integer_t v,sll_array_length_t* ol){
-	sll_factor_t* o=sll_allocate_stack(1);
-	sll_array_length_t i=0;
-	if (v<0){
-		v=-v;
-		i=1;
-		o=sll_reallocate(o,sizeof(sll_factor_t));
-		o->n=-1;
-		o->pw=1;
-	}
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t v,sll_array_length_t* ol){
 	if (v<2){
-		*ol=i;
-		if (i){
-			return o;
-		}
-		sll_deallocate(o);
+		*ol=0;
 		return NULL;
 	}
+	sll_factor_t* o=sll_allocate_stack(1);
+	sll_array_length_t i=0;
 	sll_size_t n=v;
 	sll_size_t j=FIND_FIRST_SET_BIT(n);
 	if (j){

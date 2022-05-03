@@ -562,7 +562,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_euler_phi"),
 		sll_api_math_euler_phi,
-		SLL_CHAR("i|i")
+		SLL_CHAR("Q|Q")
 	},
 	{
 		SLL_CHAR("sll:math_exp"),
@@ -572,12 +572,12 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_factorial"),
 		sll_api_math_factorial,
-		SLL_CHAR("i|i")
+		SLL_CHAR("Q|Q")
 	},
 	{
 		SLL_CHAR("sll:math_factors"),
 		sll_api_math_factors,
-		SLL_CHAR("i|a")
+		SLL_CHAR("Q|a")
 	},
 	{
 		SLL_CHAR("sll:math_floor"),
@@ -592,17 +592,17 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_int_log2"),
 		sll_api_math_int_log2,
-		SLL_CHAR("i|i")
+		SLL_CHAR("Q|Q")
 	},
 	{
 		SLL_CHAR("sll:math_int_pow"),
 		sll_api_math_int_pow,
-		SLL_CHAR("iii|i")
+		SLL_CHAR("iQQ|i")
 	},
 	{
 		SLL_CHAR("sll:math_int_sqrt"),
 		sll_api_math_int_sqrt,
-		SLL_CHAR("i|i")
+		SLL_CHAR("Q|Q")
 	},
 	{
 		SLL_CHAR("sll:math_log"),
@@ -622,7 +622,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_permutations"),
 		sll_api_math_permutations,
-		SLL_CHAR("ii|i")
+		SLL_CHAR("QQ|Q")
 	},
 	{
 		SLL_CHAR("sll:math_pow"),
