@@ -317,7 +317,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:error_get_call_stack"),
 		sll_api_error_get_call_stack,
-		SLL_CHAR("Di|a")
+		SLL_CHAR("DD|a")
 	},
 	{
 		SLL_CHAR("sll:file_close"),

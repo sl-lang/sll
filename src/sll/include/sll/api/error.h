@@ -18,12 +18,12 @@
  * \name sll_api_error_get_call_stack
  * \group error-api
  * \desc Docs!
- * \api Di|a
+ * \api DD|a
  * \arg sll_call_stack_size_t pop
- * \arg sll_integer_t thread
+ * \arg sll_thread_index_t tid
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_call_stack(sll_call_stack_size_t pop,sll_integer_t thread,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_call_stack(sll_call_stack_size_t pop,sll_thread_index_t tid,sll_array_t* out);
 
 
 
