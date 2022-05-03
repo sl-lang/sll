@@ -492,7 +492,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:math_abs"),
 		sll_api_math_abs,
-		SLL_CHAR("X|f")
+		SLL_CHAR("z|x")
 	},
 	{
 		SLL_CHAR("sll:math_acos"),

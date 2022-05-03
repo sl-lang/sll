@@ -57,15 +57,15 @@ typedef struct _SLL_FACTOR{
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_math_abs
  * \group math-api
  * \desc Docs!
- * \api X|f
+ * \api z|x
  * \arg const sll_number_t* a
- * \ret sll_float_t
+ * \arg sll_number_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(const sll_number_t* a);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_abs(const sll_number_t* a,sll_number_t* out);
 
 
 

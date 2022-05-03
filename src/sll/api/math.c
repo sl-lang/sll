@@ -49,15 +49,23 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_abs(const sll_number_t* a){
-	if (a->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
-		return COMPLEX_ABS(a->dt.d);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_abs(const sll_number_t* a,sll_number_t* out){
+	if (a->t==SLL_PARSE_ARGS_TYPE_INT){
+		out->t=SLL_PARSE_ARGS_TYPE_INT;
+		out->dt.i=(a->dt.i<0?-a->dt.i:a->dt.i);
+		return;
 	}
-	f64_data_t dt={
-		.v=a->dt.f
-	};
-	dt.dt&=0x7fffffffffffffffull;
-	return dt.v;
+	out->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+	if (a->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
+		out->dt.f=COMPLEX_ABS(a->dt.d);
+	}
+	else{
+		f64_data_t dt={
+			.v=a->dt.f
+		};
+		dt.dt&=0x7fffffffffffffffull;
+		out->dt.f=dt.v;
+	}
 }
 
 
