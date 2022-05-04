@@ -7,7 +7,7 @@
 
 
 static __SLL_FORCE_INLINE sll_float_t COMPLEX_ABS(sll_complex_t a){
-	return sqrt(a.real*a.real+a.imag*a.imag);
+	return hypot(a.real,a.imag);
 }
 
 
