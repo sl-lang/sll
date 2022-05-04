@@ -623,7 +623,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 				break;
 		}
 		if (fn){
-			if ((flags&PARSE_ARGS_FLAG_NULL)&&(flags&(PARSE_ARGS_FLAG_ARRAY|PARSE_ARGS_FLAG_NULL))){
+			if ((flags&(PARSE_ARGS_FLAG_NULL))&&(flags&(PARSE_ARGS_FLAG_ARRAY|PARSE_ARGS_FLAG_REF))){
 				SLL_UNIMPLEMENTED();
 			}
 			fn(arg,flags,&st,o);
