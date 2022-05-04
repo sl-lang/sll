@@ -93,10 +93,16 @@
 		"time" 0
 	>)
 	(= (: _test_results id) _test_data)
+	(= file_name (: (: (:
+		(<- error$get_call_stack)
+		-1)
+		"return")
+		"file"
+	))
 	(? _gh_actions {
-		(:> "::group::" name "\n")
+		(:> "::group::" name " (" file_name ")\n")
 	} {
-		(:> ">>> " name "\n")
+		(:> ">>> " name " (" file_name ")\n")
 	})
 	(= start_time (<- time$time))
 	(<- fn)
