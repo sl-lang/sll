@@ -129,6 +129,7 @@ __SLL_EXPORT _call_api_func_assembly
 	mov QWORD [rbx], rax
 ._cleanup:
 
+	; xmm0 - Floating-point return value
 	leave
 	pop rsi
 	pop rbx
