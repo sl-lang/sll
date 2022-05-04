@@ -4,6 +4,7 @@
 
 (= base64_module_type (&:
 	(~ string_type) ALPHABET
+	(~ string_type) ALPHABET_URL_SAFE
 	(~ func_type) decode
 	(~ func_type) encode
 ))
@@ -11,6 +12,7 @@
 
 
 (= ALPHABET "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+(= ALPHABET_URL_SAFE "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_")
 
 
 
@@ -32,6 +34,7 @@
 
 (= base64 (. base64_module_type
 	ALPHABET
+	ALPHABET_URL_SAFE
 	decode
 	encode
 ))
