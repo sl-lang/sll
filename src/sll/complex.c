@@ -44,7 +44,7 @@ __SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* a,sll_complex_t* out){
 
 
 __SLL_EXTERNAL void sll_complex_log(const sll_complex_t* a,sll_complex_t* out){
-	out->real=log(sqrt(a->real*a->real+a->imag*a->imag));
+	out->real=log(a->real*a->real+a->imag*a->imag)/2;
 	out->imag=atan2(a->imag,a->real);
 }
 
