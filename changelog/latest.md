@@ -20,6 +20,7 @@
 
 ## Changed
 
+- Fixed `sll_get_name`
 - Fixed `sll_string_count_right`
 - Fixed premature file descriptor deallocation
 - Improved compilation speed

@@ -56,7 +56,7 @@ __SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o){
 			sll_string_clone(sll_current_runtime_data->a_dt->st.dt+(sll_current_runtime_data->a_dt->ft.dt+v->dt.i-1)->nm,o);
 		}
 	}
-	else if (v->t>SLL_MAX_OBJECT_TYPE&&v->t-SLL_MAX_OBJECT_TYPE-1<sll_current_runtime_data->tt->l){
-		sll_string_clone(&((*(sll_current_runtime_data->tt->dt+v->t-SLL_MAX_OBJECT_TYPE-1))->nm),o);
+	else{
+		sll_get_type_name(sll_current_runtime_data->tt,v->t,o);
 	}
 }

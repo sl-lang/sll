@@ -1,4 +1,4 @@
-(--- "process.sll" "path.sll" "sys.sll" "array.sll" "json.sll" "file.sll" "types.sll" "string.sll")
+(--- "process.sll" "path.sll" "sys.sll" "array.sll" "json.sll" "file.sll" "types.sll" "string.sll" "math.sll")
 
 
 
@@ -54,12 +54,13 @@
 	(++ i)
 )
 (= total (+ success error))
+(= error_percent (<- math$ceil (/ (* error 100) total)))
 (:> (<- string$format "Total tests: %u\nPassed: %u (%u%%)\nFailed: %u (%u%%)\n"
 	total
 	success
-	(// (* success 100) total)
+	(- 100 error_percent)
 	error
-	(// (* error 100) total)
+	error_percent
 ))
 (? GH_ACTIONS {
 	(:> "::endgroup::\n")

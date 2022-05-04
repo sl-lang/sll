@@ -1,4 +1,4 @@
-(--- "_common.sll" "base64.sll")
+(--- "_common.sll" "base64.sll" "error.sll")
 
 
 
@@ -16,6 +16,9 @@
 	(<- expect (<- base64$decode "YWJjZA==") "abcd")
 	(<- expect (<- base64$decode "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMjM0NTY3ODkrLw==") "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
 	(<- expect (<- base64$decode "MDEyMzQ1Njc4OSFAIzBeJiooKTs6PD4sLiBbXXt9") "0123456789!@#0^&*();:<>,. []{}")
+	(<- expect_error (<- base64$decode "aaa") (. error$ERROR_INVALID_BASE64_PADDING))
+	(<- expect_error (<- base64$decode "aaa=====") (. error$ERROR_INVALID_BASE64_PADDING))
+	(<- expect_error (<- base64$decode "aaa@") (. error$ERROR_INVALID_BASE64_CHARACTER 3 '@'))
 ))
 
 (= test_encode (,,,

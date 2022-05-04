@@ -24,14 +24,14 @@
 	(= _err_output "")
 ))
 
-(= expect (,,, result value
+(= _expect_raw (,,, error_data error_string
 	(? (=== _test_results nil) {
-		(:> "Function 'expect' executed outside of function 'run'!\n")
+		(:> "Function 'expect_XXX' executed outside of function 'run'!\n")
 		(@@)
 	})
-	(= func_group (: (: (: (<- error$get_call_stack) -1) "return") "function"))
+	(= func_group (: (: (: (<- error$get_call_stack) -2) "return") "function"))
 	(? (=== (: func_group 0) '@') {
-		(:> "Function 'expect' executed outside of function prefixed with 'test_'!\n")
+		(:> "Function 'expect_XXX' executed outside of function prefixed with 'test_'!\n")
 		(@@)
 	})
 	(= func_group (<- string$lower_case (<- string$replace
@@ -45,26 +45,50 @@
 		(= _last_group func_group)
 		(:> func_group ": ")
 	})
-	(? (=== result value) {
+	(? (=== error_data nil) {
 		(= _test_data$success (+ _test_data$success 1))
 		(:> "+")
 	} {
 		(:> "-")
-		(= err (+ "Expected " (<- string$str value) ", got " (<- string$str result)))
 		(= loc (: (: (<- error$get_call_stack) -1) "return"))
-		(<- array$push _test_data$error <
-			"group" func_group
-			"file" loc$file
-			"line" loc$line
-			"function" loc$function
-			"output" (<- _encode_object result)
-			"target" (<- _encode_object value)
-		>)
+		(= error_data (:! error_data))
+		(= (: error_data "group") func_group)
+		(= (: error_data "file") loc$file)
+		(= (: error_data "line") loc$line)
+		(= (: error_data "function") loc$function)
+		(<- array$push _test_data$error error_data)
 		(= _err_output (+ _err_output (?: _gh_actions
-			(<- string$format "::warning file=%s,line=%u,title=%s%3A %s%3A %s::%s\n" loc$file loc$line (<- string$title_case sys$PLATFORM) _test_data$name (<- string$replace (<- string$replace func_group "," "%2C") ":" "%3A") err)
-			(+ "  " err '\n')
+			(<- string$format "::warning file=%s,line=%u,title=%s%3A %s%3A %s::%s\n" loc$file loc$line (<- string$title_case sys$PLATFORM) _test_data$name (<- string$replace (<- string$replace func_group "," "%2C") ":" "%3A") error_string)
+			(+ "  " error_string '\n')
 		)))
 	})
+))
+
+(= expect (,,, result value
+	(? (=== result value)
+		(<- _expect_raw nil nil)
+		(<- _expect_raw <
+			"output" (<- _encode_object result)
+			"target" (<- _encode_object value)
+		> (+ "Expected " (<- string$str value) ", got " (<- string$str result)))
+	)
+))
+
+(= expect_error (,,, result value
+	(?
+		(!== (:? result) error$error_type) (<- _expect_raw <
+			"output" (<- _encode_object result)
+		> (+ "Expected an error, got " (.? result)))
+		(!== (:? result$error_data) (:? value)) (<- _expect_raw <
+			"output" (<- _encode_object result)
+			"target_error" (<- _encode_object value)
+		> (+ "Expected error type " (.? value) ", got " (.? result$error_data)))
+		(!== result$error_data value) (<- _expect_raw <
+			"output" (<- _encode_object result)
+			"target_error" (<- _encode_object value)
+		> (+ "Expected " (:: value map_type string_type) ", got " (:: result$error_data map_type string_type)))
+		(<- _expect_raw nil nil)
+	)
 ))
 
 (= run (,,, name fn
@@ -118,4 +142,4 @@
 
 
 
-(## expect run)
+(## expect expect_error run)
