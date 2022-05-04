@@ -537,7 +537,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_object(f,k->dt.m.v,k->dt.m.l);
+				err=sll_encode_object(f,k->dt.m.v,k->dt.m.l<<1);
 				break;
 			default:
 				SLL_UNIMPLEMENTED();
