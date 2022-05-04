@@ -975,6 +975,9 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 					return o+1;
 				}
 				sll_array_length_t al=o->dt.al;
+				if (al>255){
+					SLL_UNIMPLEMENTED();
+				}
 				o++;
 				for (sll_array_length_t i=0;i<al;i++){
 					o=_generate_on_stack(o,g_dt);

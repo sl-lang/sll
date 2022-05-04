@@ -119,7 +119,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_join(const sll_string_t*const* p
  * \arg sll_array_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_list_dir(const sll_string_t* path,sll_bool_t recursiv,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_list_dir(const sll_string_t* path,sll_bool_t recursive,sll_array_t* out);
 
 
 
