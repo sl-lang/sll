@@ -23,6 +23,7 @@
 - Fixed `sll_get_name`
 - Fixed `sll_string_count_right`
 - Fixed premature file descriptor deallocation
+- Global output files (`sll_stdout` and `sll_stderr`) are no longer unbuffered in debug builds
 - Improved compilation speed
 - More system functions return error codes
 - Moved code between header files

@@ -18,14 +18,6 @@
 
 
 
-#ifdef DEBUG_BUILD
-#define EXTRA_FLAGS SLL_FILE_FLAG_NO_BUFFER
-#else
-#define EXTRA_FLAGS 0
-#endif
-
-
-
 #define LOCK SLL_CRITICAL_ERROR(sll_platform_lock_acquire(f->_lck))
 #define UNLOCK SLL_CRITICAL(sll_platform_lock_release(f->_lck))
 
@@ -90,8 +82,8 @@ void _file_end_hash(sll_file_t* f){
 
 void _file_init_std_streams(void){
 	sll_file_open_descriptor(SLL_CHAR("sll_stdin"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_INPUT),SLL_FILE_FLAG_READ|SLL_FILE_FLAG_NO_BUFFER,sll_stdin);
-	sll_file_open_descriptor(SLL_CHAR("sll_stdout"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_OUTPUT),SLL_FILE_FLAG_WRITE|SLL_FILE_FLUSH_ON_NEWLINE|EXTRA_FLAGS,sll_stdout);
-	sll_file_open_descriptor(SLL_CHAR("sll_stderr"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR),SLL_FILE_FLAG_WRITE|SLL_FILE_FLUSH_ON_NEWLINE|EXTRA_FLAGS,sll_stderr);
+	sll_file_open_descriptor(SLL_CHAR("sll_stdout"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_OUTPUT),SLL_FILE_FLAG_WRITE|SLL_FILE_FLUSH_ON_NEWLINE,sll_stdout);
+	sll_file_open_descriptor(SLL_CHAR("sll_stderr"),sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR),SLL_FILE_FLAG_WRITE|SLL_FILE_FLUSH_ON_NEWLINE,sll_stderr);
 	(*((sll_file_flags_t*)(&(sll_stdin->f))))|=FILE_FLAG_NO_RELEASE;
 	(*((sll_file_flags_t*)(&(sll_stdout->f))))|=FILE_FLAG_NO_RELEASE;
 	(*((sll_file_flags_t*)(&(sll_stderr->f))))|=FILE_FLAG_NO_RELEASE;
