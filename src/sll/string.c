@@ -536,9 +536,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count_right(con
 	for (sll_string_length_t i=0;i<l;i++){
 		p--;
 		wide_data_t v=((*p)|n)^m;
-		v=((~(v-0x101010101010101ull))|v)&0x8080808080808080ull;
+		v=(v|(~(v-0x101010101010101ull)))&0x8080808080808080ull;
 		if (v){
-			return (i<<3)+(s->l&7)-(FIND_LAST_SET_BIT(v)>>3)-1;
+			return (i<<3)+((s->l&7)?(s->l&7):8)-(FIND_LAST_SET_BIT(v)>>3)-1;
 		}
 		n=0;
 	}

@@ -1,0 +1,38 @@
+(--- "_common.sll" "base64.sll")
+
+
+
+(= test_alphabet (,,,
+	(<- expect base64$ALPHABET "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+	(<- expect base64$ALPHABET_URL_SAFE "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_")
+))
+
+(= test_decode (,,,
+	(<- expect (<- base64$decode "") "")
+	(<- expect (<- base64$decode "AA==") "\x00")
+	(<- expect (<- base64$decode "YQ==") "a")
+	(<- expect (<- base64$decode "YWI=") "ab")
+	(<- expect (<- base64$decode "YWJj") "abc")
+	(<- expect (<- base64$decode "YWJjZA==") "abcd")
+	(<- expect (<- base64$decode "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMjM0NTY3ODkrLw==") "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+	(<- expect (<- base64$decode "MDEyMzQ1Njc4OSFAIzBeJiooKTs6PD4sLiBbXXt9") "0123456789!@#0^&*();:<>,. []{}")
+))
+
+(= test_encode (,,,
+	(<- expect (<- base64$encode "") "")
+	(<- expect (<- base64$encode "\x00") "AA==")
+	(<- expect (<- base64$encode "a") "YQ==")
+	(<- expect (<- base64$encode "ab") "YWI=")
+	(<- expect (<- base64$encode "abc") "YWJj")
+	(<- expect (<- base64$encode "abcd") "YWJjZA==")
+	(<- expect (<- base64$encode "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/") "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMjM0NTY3ODkrLw==")
+	(<- expect (<- base64$encode "0123456789!@#0^&*();:<>,. []{}") "MDEyMzQ1Njc4OSFAIzBeJiooKTs6PD4sLiBbXXt9")
+))
+
+
+
+(<- run "Base64 module" (,,,
+	(<- test_alphabet)
+	(<- test_decode)
+	(<- test_encode)
+))

@@ -5,6 +5,7 @@
 - Argument parsing code to parse a float or a complex number: `X`
 - Argument parsing code to parse an integer, a float or a complex number: `z`
 - Argument parsing modifier to allow `nil` arguments: `@`
+- Base64 tests ([#8])
 - CLI flag to diable all audit events: `-X` or `--disable-audit`
 - Implemented `base64$ALPHABET_URL_SAFE`
 - Implemented `file$FLAG_FLUSH_ON_NEWLINE`
@@ -19,6 +20,7 @@
 
 ## Changed
 
+- Fixed `sll_string_count_right`
 - Fixed premature file descriptor deallocation
 - Improved compilation speed
 - More system functions return error codes
@@ -36,3 +38,4 @@
 - Unused types: `sll_assembly_file_table_length_t`, `sll_checksum_t`, `sll_name_length_t`, `sll_object_type_field_t`, `sll_unary_operator_t`, `sll_ternary_operator_t` and `sll_quaternary_operator_t`
 
 [0.7.16]: https://github.com/sl-lang/sll/compare/sll-v0.7.15...main
+[#8]: https://github.com/sl-lang/sll/issues/8

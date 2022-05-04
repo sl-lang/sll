@@ -117,13 +117,15 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_base64_encode(const sll_string_t* str
 	sll_string_create(((str->l+p)<<2)/3,out);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
-	while (i<str->l-2){
-		out->v[j]=_base64_alphabet[str->v[i]>>2];
-		out->v[j+1]=_base64_alphabet[((str->v[i]<<4)&0x3f)|(str->v[i+1]>>4)];
-		out->v[j+2]=_base64_alphabet[((str->v[i+1]<<2)&0x3f)|(str->v[i+2]>>6)];
-		out->v[j+3]=_base64_alphabet[str->v[i+2]&0x3f];
-		i+=3;
-		j+=4;
+	if (str->l>2){
+		do{
+			out->v[j]=_base64_alphabet[str->v[i]>>2];
+			out->v[j+1]=_base64_alphabet[((str->v[i]<<4)&0x3f)|(str->v[i+1]>>4)];
+			out->v[j+2]=_base64_alphabet[((str->v[i+1]<<2)&0x3f)|(str->v[i+2]>>6)];
+			out->v[j+3]=_base64_alphabet[str->v[i+2]&0x3f];
+			i+=3;
+			j+=4;
+		} while (i<str->l-2);
 	}
 	if (p==1){
 		out->v[j]=_base64_alphabet[str->v[i]>>2];

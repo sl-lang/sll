@@ -3,6 +3,7 @@
 #include <sll/_internal/gc.h>
 #include <sll/_internal/serial.h>
 #include <sll/_internal/static_object.h>
+#include <sll/_internal/static_string.h>
 #include <sll/api/file.h>
 #include <sll/api/serial.h>
 #include <sll/array.h>
@@ -19,6 +20,11 @@
 #include <sll/static_object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/vm.h>
+
+
+
+static __STATIC_STRING(_serial_object_type_key,"$type");
 
 
 
@@ -429,8 +435,73 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 		sll_object_t* k=*a;
 		a++;
 		ac--;
-		if (k->t>SLL_MAX_OBJECT_TYPE){
-			SLL_UNIMPLEMENTED();
+		if (k->t>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+			k=sll_static_int[0];
+		}
+		else if (k->t>SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+k->t-SLL_MAX_OBJECT_TYPE-1);
+			sll_error_t err;
+			sll_file_write_char(f,SLL_OBJECT_TYPE_MAP,&err);
+			if (err!=SLL_NO_ERROR){
+				return err;
+			}
+			err=sll_encode_integer(f,dt->l+1);
+			if (err!=SLL_NO_ERROR){
+				return err;
+			}
+			sll_file_write_char(f,SLL_OBJECT_TYPE_STRING,&err);
+			if (err!=SLL_NO_ERROR){
+				return err;
+			}
+			err=sll_encode_string(f,&_serial_object_type_key);
+			if (err!=SLL_NO_ERROR){
+				return err;
+			}
+			sll_file_write_char(f,SLL_OBJECT_TYPE_STRING,&err);
+			if (err!=SLL_NO_ERROR){
+				return err;
+			}
+			err=sll_encode_string(f,&(dt->nm));
+			if (err!=SLL_NO_ERROR){
+				return err;
+			}
+			sll_object_field_t* p=k->dt.p;
+			for (sll_arg_count_t i=0;i<dt->l;i++){
+				sll_file_write_char(f,SLL_OBJECT_TYPE_STRING,&err);
+				if (err!=SLL_NO_ERROR){
+					return err;
+				}
+				err=sll_encode_string(f,&(dt->dt[i].nm));
+				if (err!=SLL_NO_ERROR){
+					return err;
+				}
+				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
+					err=sll_encode_object(f,&(p->o),1);
+					if (err!=SLL_NO_ERROR){
+						return err;
+					}
+				}
+				else{
+					sll_file_write_char(f,dt->dt[i].t,&err);
+					if (err!=SLL_NO_ERROR){
+						return err;
+					}
+					if (dt->dt[i].t==SLL_OBJECT_TYPE_INT){
+						err=sll_encode_signed_integer(f,p->i);
+					}
+					else if (dt->dt[i].t==SLL_OBJECT_TYPE_FLOAT){
+						sll_file_write(f,&(p->f),sizeof(sll_float_t),&err);
+					}
+					else{
+						sll_file_write_char(f,p->c,&err);
+					}
+					if (err!=SLL_NO_ERROR){
+						return err;
+					}
+				}
+				p++;
+			}
+			continue;
 		}
 		sll_error_t err;
 		sll_file_write_char(f,k->t,&err);
@@ -466,7 +537,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_object(f,k->dt.m.v,k->dt.m.l<<1);
+				err=sll_encode_object(f,k->dt.m.v,k->dt.m.l);
 				break;
 			default:
 				SLL_UNIMPLEMENTED();
