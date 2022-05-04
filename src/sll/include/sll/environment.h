@@ -68,12 +68,12 @@ __SLL_EXTERNAL extern const sll_environment_t* sll_environment;
 
 /**
  * \flags var
- * \name sll_env_path
+ * \name sll_environment_path
  * \group environment
  * \desc Docs!
  * \type const sll_search_path_t*
  */
-__SLL_EXTERNAL extern const sll_search_path_t* sll_env_path;
+__SLL_EXTERNAL extern const sll_search_path_t* sll_environment_path;
 
 
 

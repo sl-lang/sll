@@ -89,7 +89,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 	sll_audit(SLL_CHAR("sll.process.start"),SLL_CHAR("sss"),args,cwd,stdin);
 	sll_object_t* n=sll_operator_cast(args->v[0],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 	sll_string_t exe_fp;
-	if (!sll_search_path_find(sll_env_path,&(n->dt.s),SLL_SEARCH_PATH_FLAG_AFTER,&exe_fp)){
+	if (!sll_search_path_find(sll_environment_path,&(n->dt.s),SLL_SEARCH_PATH_FLAG_AFTER,&exe_fp)){
 		SLL_UNIMPLEMENTED();
 	}
 	SLL_RELEASE(n);

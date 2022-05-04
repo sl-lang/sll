@@ -34,7 +34,7 @@ static sll_search_path_t _env_path;
 
 
 __SLL_EXTERNAL const sll_environment_t* sll_environment=&_env_data;
-__SLL_EXTERNAL const sll_search_path_t* sll_env_path=&_env_path;
+__SLL_EXTERNAL const sll_search_path_t* sll_environment_path=&_env_path;
 
 
 
