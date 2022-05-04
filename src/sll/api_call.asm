@@ -119,13 +119,12 @@ __SLL_EXPORT _call_api_func_assembly
 	jz ._register_return_value
 	sub sil, 1
 	jz ._cleanup
-	xor rcx, rcx
 	xorpd xmm0, xmm0
 	add rax, 1
-	setnz cl
-	cvtsi2sd xmm0, rcx
 	jz ._cleanup
 	sub rax, 1
+	mov rcx, 1
+	cvtsi2sd xmm0, rcx
 ._register_return_value:
 	mov QWORD [rbx], rax
 ._cleanup:
