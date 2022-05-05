@@ -28,6 +28,7 @@
 - More system functions return error codes
 - Moved code between header files
 - Renamed `sll_env_path` to `sll_environment_path`
+- Renamed `SLL_UNMAPPED_WINDOWS_ERROR` to `SLL_UNMAPPED_SYSTEM_ERROR`
 - Renamed `sll_flags_t` to `sll_logger_flags_t`
 - Renamed `sll_int_float_t` and `sll_int_float_data_t` to `sll_number_t` and `sll_number_data_t`
 

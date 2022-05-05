@@ -103,12 +103,12 @@
 
 /**
  * \flags macro var
- * \name SLL_UNMAPPED_WINDOWS_ERROR
+ * \name SLL_UNMAPPED_SYSTEM_ERROR
  * \group error
  * \desc Docs!
  * \type sll_error_t
  */
-#define SLL_UNMAPPED_WINDOWS_ERROR 255
+#define SLL_UNMAPPED_SYSTEM_ERROR 255
 
 
 

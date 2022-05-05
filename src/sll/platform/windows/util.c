@@ -161,7 +161,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_get_error(void){
 		case ERROR_NEGATIVE_SEEK:
 			return EINVAL|err;
 		default:
-			return SLL_UNMAPPED_WINDOWS_ERROR|err;
+			return SLL_UNMAPPED_SYSTEM_ERROR|err;
 	}
 }
 
