@@ -14,7 +14,7 @@
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_call_stack(sll_call_stack_size_t pop,sll_thread_index_t tid,sll_array_t* out){
-	sll_audit(SLL_CHAR("sll.error.backtrace"),SLL_CHAR("i"),tid);
+	sll_audit(SLL_CHAR("sll.error.backtrace"),SLL_CHAR("u"),tid);
 	const sll_call_stack_t* c_st=sll_thread_get_call_stack(tid);
 	if (!c_st||pop>c_st->l){
 		SLL_INIT_ARRAY(out);
