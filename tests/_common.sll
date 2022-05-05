@@ -1,4 +1,4 @@
-(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "error.sll" "array.sll" "serial.sll" "base64.sll" "types.sll")
+(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "error.sll" "array.sll" "serial.sll" "base64.sll" "types.sll" "audit.sll")
 
 
 
@@ -7,8 +7,14 @@
 (= _test_results nil)
 (= _last_group nil)
 (= _err_output "")
+(= _audit_event_data <>)
 
 
+
+(= _handle_audit_event (,,, name data
+	(= (: _audit_event_data name) data)
+	; (:> [[[[name data]]]] "\n")
+))
 
 (= _encode_object (,,, obj
 	(= f (<- file$from_data "" file$FLAG_WRITE))
@@ -74,6 +80,28 @@
 	)
 ))
 
+(= expect_audit_event (,,, name data
+	(= recv_data (: _audit_event_data name))
+	(= expected_evt_data (<- _encode_object <
+		"name" name
+		"data" data
+	>))
+	(= evt_data (?: recv_data (<- _encode_object <
+		"name" name
+		"data" recv_data
+	>) nil))
+	(?
+		(! recv_data) (<- _expect_raw <
+			"target_event" expected_evt_data
+		> (+ "Expected audit event " name))
+		(!== recv_data data) (<- _expect_raw <
+			"target_event" expected_evt_data
+		> (+ "Expected " (<- string$str data) ", got " (<- string$str recv_data)))
+		(<- _expect_raw nil nil)
+	)
+	(= (: _audit_event_data name) nil)
+))
+
 (= expect_error (,,, result value
 	(?
 		(!== (:? result) error$error_type) (<- _expect_raw <
@@ -129,12 +157,14 @@
 		(:> ">>> " name " (" file_name ")\n")
 	})
 	(= start_time (<- time$time))
+	(<- audit$register _handle_audit_event)
 	(<- fn)
+	(= _test_data$time (- (<- time$time) start_time))
+	(<- audit$unregister _handle_audit_event)
 	(<- _flush_group)
 	(? _gh_actions {
 		(:> "::endgroup::\n")
 	})
-	(= _test_data$time (- (<- time$time) start_time))
 	(= f (<- file$open "build/test_results.json" "w"))
 	(<- file$write f (<- json$stringify _test_results))
 	(<- file$close f)
@@ -142,4 +172,4 @@
 
 
 
-(## expect expect_error run)
+(## expect expect_audit_event expect_error run)

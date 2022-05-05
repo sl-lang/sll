@@ -13,7 +13,7 @@
 
 (= BUILTIN_EVENTS <
 	"sll.cli.start" ["arguments"]
-	"sll.error.backtrace" ["thread" "offset"]
+	"sll.error.backtrace" ["thread"]
 	"sll.error.create" ["type" "data" "backtrace"]
 	"sll.error.create.internal" ["error_code" "data"]
 	"sll.file.copy" ["src" "dst"]

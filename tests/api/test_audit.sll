@@ -1,0 +1,14 @@
+(--- "_common.sll" "audit.sll" "error.sll")
+
+
+
+(= test_audit_sll.error (,,,
+	(<- error$get_call_stack)
+	(<- expect_audit_event "sll.error.backtrace" <"thread" 0>)
+))
+
+
+
+(<- run "Audit module" (,,,
+	(<- test_audit_sll.error)
+))
