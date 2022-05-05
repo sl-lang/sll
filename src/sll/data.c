@@ -173,13 +173,10 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 	}
 	if (ADDR(b)&7){
 		sll_size_t i=8-(ADDR(b)&7);
+		*((wide_data_t*)b)=*((const wide_data_t*)a);
 		a+=i;
 		b+=i;
 		l-=i;
-		do{
-			*(b-i)=*(a-i);
-			i--;
-		} while (i);
 	}
 	SLL_ASSERT(!(ADDR(b)&7));
 #ifndef __SLL_BUILD_DARWIN
