@@ -171,8 +171,8 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 		}
 		return;
 	}
-	if (ADDR(d)&7){
-		sll_size_t i=8-(ADDR(d)&7);
+	if (ADDR(b)&7){
+		sll_size_t i=8-(ADDR(b)&7);
 		a+=i;
 		b+=i;
 		l-=i;
@@ -182,17 +182,31 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d){
 		} while (i);
 	}
 	SLL_ASSERT(!(ADDR(b)&7));
+#ifndef __SLL_BUILD_DARWIN
+	while (l>31){
+		_mm256_storeu_si256((__m256i*)b,_mm256_lddqu_si256((const __m256i*)a));
+		l-=32;
+		a+=32;
+		b+=32;
+	}
+	if (l>15){
+		_mm_storeu_si128((__m128i*)b,_mm_lddqu_si128((const __m128i*)a));
+		l-=16;
+		a+=16;
+		b+=16;
+	}
+#endif
 	const wide_data_t* ap=(const wide_data_t*)a;
 	wide_data_t* bp=(wide_data_t*)b;
 	ASSUME_ALIGNED(bp,3,0);
-	for (sll_size_t i=0;i<(l>>3);i++){
+	while (l>7){
 		*bp=*ap;
 		ap++;
 		bp++;
+		l-=8;
 	}
 	a=(const sll_char_t*)ap;
 	b=(sll_char_t*)bp;
-	l&=7;
 	while (l){
 		*b=*a;
 		a++;
