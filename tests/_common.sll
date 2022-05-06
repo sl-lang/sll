@@ -68,7 +68,7 @@
 	})
 ))
 
-(= abs (,,, x
+(= _abs (,,, x
 	(@@ (?: (< x 0) (- 0 x) x))
 ))
 
@@ -76,7 +76,7 @@
 	(? (||
 			(!== (:? result) (:? value))
 			(?: (=== (:? value) float_type)
-				(> (<- abs (- value result)) flt_err)
+				(> (<- _abs (- value result)) flt_err)
 				(!== result value)
 			)
 		)
