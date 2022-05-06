@@ -205,6 +205,25 @@
 	(<- expect_audit_event "sll.serial.object.encode" nil)
 ))
 
+(= test_event_sll.sys.env.delete (,,,
+	(<- sys$remove_env "ENV-VARIABLE")
+	(<- expect_audit_event "sll.sys.env.delete" <
+		"key" "ENV-VARIABLE"
+	>)
+	(<- sys$remove_env nil)
+	(<- expect_audit_event "sll.sys.env.delete" nil)
+))
+
+(= test_event_sll.sys.env.set (,,,
+	(<- sys$set_env "ENV-VARIABLE" "example-value")
+	(<- expect_audit_event "sll.sys.env.set" <
+		"key" "ENV-VARIABLE"
+		"value" "example-value"
+	>)
+	(<- sys$set_env nil "example-value")
+	(<- expect_audit_event "sll.sys.env.set" nil)
+))
+
 
 
 (<- run "Audit module" (,,,
@@ -223,4 +242,6 @@
 	(<- test_event_sll.process.start)
 	(<- test_event_sll.serial.object.decode)
 	(<- test_event_sll.serial.object.encode)
+	(<- test_event_sll.sys.env.delete)
+	(<- test_event_sll.sys.env.set)
 ))

@@ -135,6 +135,7 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k){
 			i++;
 			while (i<sll_environment->l){
 				*(((const sll_environment_variable_t**)(sll_environment->dt))+i-1)=*(sll_environment->dt+i);
+				i++;
 			}
 			(*((sll_environment_length_t*)(&(sll_environment->l))))--;
 			*((const sll_environment_variable_t*const**)(&(sll_environment->dt)))=sll_reallocate(PTR(sll_environment->dt),sll_environment->l*sizeof(sll_environment_variable_t*));
