@@ -23,7 +23,7 @@
 
 - Fixed `path$set_cwd`
 - Fixed `sll_get_name`
-- Fixed `datafile.sll`
+- Fixed `data_file.sll`
 - Fixed `sll_string_count_right`
 - Fixed audit event `sll.error.backtrace`
 - Fixed premature file descriptor deallocation
