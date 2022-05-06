@@ -80,8 +80,17 @@
 	)
 ))
 
-(= expect_audit_event (,,, name data
+(= expect_audit_event (,,, name data keys_to_check
 	(= recv_data (: _audit_event_data name))
+	(? (! data) {
+		(? recv_data
+			(<- _expect_raw <
+				"recived_event" recv_data
+			> (+ "Expected no event, got " (<- string$str recv_data)))
+			(<- _expect_raw nil nil)
+		)
+		(@@)
+	})
 	(= expected_evt_data (<- _encode_object <
 		"name" name
 		"data" data
@@ -90,11 +99,24 @@
 		"name" name
 		"data" recv_data
 	>) nil))
+	(? keys_to_check {
+		(= old_recv_data (: recv_data))
+		(= old_data (: data))
+		(= recv_data <>)
+		(= data <>)
+		(-> (= i 0) (< i ($ keys_to_check))
+			(= key (: keys_to_check i))
+			(= (: recv_data key) (: old_recv_data key))
+			(= (: data key) (: old_data key))
+			(++ i)
+		)
+		})
 	(?
 		(! recv_data) (<- _expect_raw <
 			"target_event" expected_evt_data
 		> (+ "Expected audit event " name))
 		(!== recv_data data) (<- _expect_raw <
+			"recived_event" evt_data
 			"target_event" expected_evt_data
 		> (+ "Expected " (<- string$str data) ", got " (<- string$str recv_data)))
 		(<- _expect_raw nil nil)

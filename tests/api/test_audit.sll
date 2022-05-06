@@ -1,14 +1,84 @@
-(--- "_common.sll" "audit.sll" "error.sll")
+(--- "_common.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll")
 
 
 
-(= test_audit_sll.error (,,,
+(= _dummy_thread (,,,
+	(-> (= i 0) (< i 1000) (++ i))
+))
+
+
+
+(= test_event_sll.error.backtrace (,,,
 	(<- error$get_call_stack)
-	(<- expect_audit_event "sll.error.backtrace" <"thread" 0>)
+	(<- expect_audit_event "sll.error.backtrace" <
+		"thread" 0
+	>)
+	(= thr (<- thread$start _dummy_thread))
+	(<- thread$suspend thr)
+	(<- error$get_call_stack 0 thr)
+	(<- thread$start thr)
+	(<- expect_audit_event "sll.error.backtrace" <
+		"thread" thr$id
+	>)
+	(<- thread$join thr)
+))
+
+(= test_event_sll.error.create (,,,
+	(<- error$create error$ERROR_OUT_OF_RANGE 10 0 5)
+	(<- expect_audit_event "sll.error.create" <
+		"type" error$ERROR_OUT_OF_RANGE
+		"data" [10 0 5]
+	> ["type" "data"])
+	(<- error$create nil)
+	(<- expect_audit_event "sll.error.create" nil)
+))
+
+(= test_event_sll.error.create.internal (,,,
+	(<- error$from_internal 0x0000000000000002 <>)
+	(<- expect_audit_event "sll.error.create.internal" <
+		"error_code" 0x0000000000000002
+		"data" <>
+	>)
+	(<- error$from_internal 0x0000000000000407 <"string" "abcdefg">)
+	(<- expect_audit_event "sll.error.create.internal" <
+		"error_code" 0x0000000000000407
+		"data" <"string" "abcdefg">
+	>)
+	(<- error$from_internal 0xffffffffffffffff <>)
+	(<- expect_audit_event "sll.error.create.internal" nil)
+	(<- error$from_internal "example/of/a/valid/output/path" <>)
+	(<- expect_audit_event "sll.error.create.internal" nil)
+))
+
+(= test_event_sll.file.copy (,,,
+	(<- file$copy "path/to/source" "path/to/destination")
+	(<- expect_audit_event "sll.file.copy" <
+		"src" "path/to/source"
+		"dst" "path/to/destination"
+	>)
+	(<- file$copy nil "path/to/destination")
+	(<- expect_audit_event "sll.file.copy" nil)
+	(<- file$copy "path/to/source" nil)
+	(<- expect_audit_event "sll.file.copy" nil)
+	(<- file$copy nil nil)
+	(<- expect_audit_event "sll.file.copy" nil)
+))
+
+(= test_event_sll.file.delete (,,,
+	(<- file$delete "path/to/delete")
+	(<- expect_audit_event "sll.file.delete" <
+		"path" "path/to/delete"
+	>)
+	(<- file$delete nil)
+	(<- expect_audit_event "sll.file.delete" nil)
 ))
 
 
 
 (<- run "Audit module" (,,,
-	(<- test_audit_sll.error)
+	(<- test_event_sll.error.backtrace)
+	(<- test_event_sll.error.create)
+	(<- test_event_sll.error.create.internal)
+	(<- test_event_sll.file.copy)
+	(<- test_event_sll.file.delete)
 ))
