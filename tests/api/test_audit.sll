@@ -119,6 +119,36 @@
 	(<- expect_audit_event "sll.path.cwd.set" nil)
 ))
 
+(= test_event_sll.path.dir.create (,,,
+	(<- path$mkdir "path/to/directory")
+	(<- expect_audit_event "sll.path.dir.create" <
+		"path" "path/to/directory"
+		"recursive" false
+	>)
+	; (<- path$mkdir "path/to/directory" true)
+	; (<- expect_audit_event "sll.path.dir.create" <
+	; 	"path" "path/to/directory"
+	; 	"recursive" true
+	; >)
+	(<- path$mkdir nil)
+	(<- expect_audit_event "sll.path.dir.create" nil)
+))
+
+(= test_event_sll.path.dir.list (,,,
+	(<- path$list_dir "path/to/directory")
+	(<- expect_audit_event "sll.path.dir.list" <
+		"path" "path/to/directory"
+		"recursive" false
+	>)
+	(<- path$list_dir "path/to/directory" true)
+	(<- expect_audit_event "sll.path.dir.list" <
+		"path" "path/to/directory"
+		"recursive" true
+	>)
+	(<- path$list_dir nil)
+	(<- expect_audit_event "sll.path.dir.list" nil)
+))
+
 
 
 (<- run "Audit module" (,,,
@@ -131,4 +161,6 @@
 	(<- test_event_sll.file.rename)
 	(<- test_event_sll.object.new)
 	(<- test_event_sll.path.cwd.set)
+	(<- test_event_sll.path.dir.create)
+	(<- test_event_sll.path.dir.list)
 ))

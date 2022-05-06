@@ -39,6 +39,7 @@
 (= is_dir (... "sll:path_is_dir"))
 
 (= list_dir (,,, path recursive
+	(? (! path) (@@ nil))
 	(= out (<- (... "sll:path_list_dir")
 		(:: path string_type)
 		(!! recursive)
@@ -50,6 +51,7 @@
 ))
 
 (= mkdir (,,, path all
+	(? (! path) (@@ nil))
 	(@@ (<- error$from_internal (<- (... "sll:path_mkdir")
 		(:: path string_type)
 		(!! all)
@@ -57,6 +59,7 @@
 ))
 
 (= relative (,,, path base
+	(? (|| (! path) (! base)) (@@ nil))
 	(@@ (<- (... "sll:path_relative")
 		(:: path string_type)
 		(?: (=== base nil) (<- get_cwd) (:: base string_type))
