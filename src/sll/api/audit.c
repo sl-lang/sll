@@ -35,6 +35,7 @@ static void _call_user_cb(const sll_string_t* nm,const sll_array_t* arg){
 
 
 static void _cleanup_data(void){
+	sll_audit_unregister_callback(_call_user_cb);
 	_audit_cb=0;
 }
 

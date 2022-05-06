@@ -258,6 +258,24 @@
 	>)
 ))
 
+(= _event_list [])
+
+(= _catch_events (,,, name data
+	(<- array$push _event_list name)
+))
+
+(= test_regiser_and_unregiser (,,,
+	(<- audit$register _catch_events)
+	(<- sys$remove_env "ENV-VARIABLE")
+	(<- vm$get_location)
+	(<- audit$unregister _catch_events)
+	(<- sys$remove_env "ENV-VARIABLE-NUMBER-2")
+	(<- expect _event_list [
+		"sll.sys.env.delete"
+		"sll.vm.location"
+	])
+))
+
 
 
 (<- run "Audit module" (,,,
@@ -283,4 +301,5 @@
 	; Skip 'sll.thread.create' and 'sll.thread.return' due to special execution properties
 	(<- test_event_sll.vm.location)
 	(<- test_event_sll.vm.ref)
+	(<- test_regiser_and_unregiser)
 ))

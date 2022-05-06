@@ -26,6 +26,7 @@
 - Fixed `sll_string_count_right`
 - Fixed audit event `sll.error.backtrace`
 - Fixed premature file descriptor deallocation
+- Fixed the audit API
 - Global output files (`sll_stdout` and `sll_stderr`) are no longer unbuffered in debug builds
 - Improved compilation speed
 - More system functions return error codes
