@@ -40,11 +40,12 @@ static sll_array_length_t _sys_argc=0;
 static sll_string_t* _sys_argv=NULL;
 static library_t** _sys_lh=NULL;
 static sll_array_length_t _sys_lhl=0;
-static char _sys_end=0;
+static sll_bool_t _sys_init=0;
+static sll_bool_t _sys_vm_init=0;
 
 
 
-static void _sys_free_data(void){
+static void _cleanup_data(void){
 	if (_sys_argv){
 		for (sll_array_length_t i=0;i<_sys_argc;i++){
 			sll_free_string(_sys_argv+i);
@@ -52,6 +53,12 @@ static void _sys_free_data(void){
 		sll_deallocate(_sys_argv);
 		_sys_argv=NULL;
 	}
+	_sys_init=0;
+}
+
+
+
+static void _cleanup_vm_data(void){
 	if (_sys_lhl){
 		while (_sys_lhl){
 			_sys_lhl--;
@@ -67,7 +74,7 @@ static void _sys_free_data(void){
 		sll_deallocate(_sys_lh);
 		_sys_lh=NULL;
 	}
-	_sys_end=0;
+	_sys_vm_init=0;
 }
 
 
@@ -224,9 +231,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 	sll_copy_data(&fp,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
 	n->h=h;
 	*(_sys_lh+_sys_lhl-1)=n;
-	if (!_sys_end){
-		sll_register_cleanup(_sys_free_data);
-		_sys_end=1;
+	if (!_sys_vm_init){
+		sll_register_cleanup(_cleanup_vm_data,SLL_CLEANUP_TYPE_VM);
+		_sys_vm_init=1;
 	}
 	return 1;
 }
@@ -276,9 +283,9 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 		}
 		sll_deallocate(_sys_argv);
 	}
-	else if (!_sys_end){
-		sll_register_cleanup(_sys_free_data);
-		_sys_end=1;
+	else if (!_sys_init){
+		sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_GLOBAL);
+		_sys_init=1;
 	}
 	_sys_argc=ac;
 	_sys_argv=sll_allocate(ac*sizeof(sll_string_t));

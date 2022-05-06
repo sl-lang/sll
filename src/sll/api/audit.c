@@ -34,7 +34,7 @@ static void _call_user_cb(const sll_string_t* nm,const sll_array_t* arg){
 
 
 
-void _audit_cleanup_api(void){
+static void _cleanup_data(void){
 	_audit_cb=0;
 }
 
@@ -46,6 +46,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t cb){
 	}
 	if (!_audit_cb){
 		sll_audit_register_callback(_call_user_cb);
+		sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_VM);
 	}
 	_audit_cb=cb;
 }

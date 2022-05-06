@@ -31,6 +31,8 @@ INIT_STRING_SETUP;
 
 static sll_cleanup_function_t _init_exit_table[MAX_CLEANUP_TABLE_SIZE];
 static unsigned int _init_exit_table_size=0;
+static sll_cleanup_function_t _init_vm_exit_table[MAX_CLEANUP_TABLE_SIZE];
+static unsigned int _init_vm_exit_table_size=0;
 static sll_bool_t _init_init=0;
 
 
@@ -69,6 +71,15 @@ static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t 
 	str=sll_current_runtime_data->a_dt->st.dt+fn_i;
 	sll_platform_file_write(fd,str->v,str->l,NULL);
 	sll_platform_file_write(fd,")\n",2,NULL);
+}
+
+
+
+void _cleanup_vm_exit_tables(void){
+	while (_init_vm_exit_table_size){
+		_init_vm_exit_table_size--;
+		_init_vm_exit_table[_init_vm_exit_table_size]();
+	}
 }
 
 
@@ -159,10 +170,19 @@ __SLL_EXTERNAL void sll_init(void){
 
 
 
-__SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t f){
-	if (_init_exit_table_size>=MAX_CLEANUP_TABLE_SIZE){
-		SLL_UNREACHABLE();
+__SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t fn,sll_bool_t type){
+	if (type==SLL_CLEANUP_TYPE_VM){
+		if (_init_vm_exit_table_size>=MAX_CLEANUP_TABLE_SIZE){
+			SLL_UNREACHABLE();
+		}
+		_init_vm_exit_table[_init_vm_exit_table_size]=fn;
+		_init_vm_exit_table_size++;
 	}
-	_init_exit_table[_init_exit_table_size]=f;
-	_init_exit_table_size++;
+	else{
+		if (_init_exit_table_size>=MAX_CLEANUP_TABLE_SIZE){
+			SLL_UNREACHABLE();
+		}
+		_init_exit_table[_init_exit_table_size]=fn;
+		_init_exit_table_size++;
+	}
 }

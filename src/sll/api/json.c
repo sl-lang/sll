@@ -463,7 +463,7 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll_object_t* true_obj,sll_object_t* false_obj){
 	if (!_json_null){
-		sll_register_cleanup(_release_data);
+		sll_register_cleanup(_release_data,SLL_CLEANUP_TYPE_VM);
 	}
 	else{
 		_release_data();

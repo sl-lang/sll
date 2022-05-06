@@ -13,7 +13,6 @@
 
 (= _handle_audit_event (,,, name data
 	(= (: _audit_event_data name) data)
-	; (:> [[[[name data]]]] "\n")
 ))
 
 (= _encode_object (,,, obj

@@ -20,7 +20,6 @@
 	"sll.file.delete" ["path"]
 	"sll.file.open" ["path" "mode"]
 	"sll.file.rename" ["src" "dst"]
-	"sll.float.error.set" ["error"]
 	"sll.object.new" ["template" "data"]
 	"sll.path.cwd.set" ["path"]
 	"sll.path.dir.create" ["path" "recursive"]

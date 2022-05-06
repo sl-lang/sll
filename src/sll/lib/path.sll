@@ -63,8 +63,11 @@
 	))
 ))
 
-(= set_cwd (,,,
-	(@@ (<- error$from_internal (<- (... "sll:path_set_cwd"))))
+(= set_cwd (,,, path
+	(? (! path) (@@ nil))
+	(@@ (<- error$from_internal (<- (... "sll:path_set_cwd")
+		(:: path string_type)
+	)))
 ))
 
 (= size (... "sll:path_size"))

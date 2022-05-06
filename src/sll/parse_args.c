@@ -39,7 +39,7 @@
 		var=sll_operator_cast(var,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 		if (!*st){ \
 			*st=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
-			(*st)->sz++; \
+			(*st)->sz=1; \
 		} \
 		else{ \
 			(*st)->sz++; \

@@ -1,4 +1,4 @@
-(--- "_common.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll")
+(--- "_common.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll" "object.sll" "path.sll")
 
 
 
@@ -73,6 +73,52 @@
 	(<- expect_audit_event "sll.file.delete" nil)
 ))
 
+(= test_event_sll.file.open (,,,
+	(<- file$open "path/to/open" "r")
+	(<- expect_audit_event "sll.file.open" <
+		"path" "path/to/open"
+		"mode" file$FLAG_READ
+	>)
+	(<- file$open "path/to/open2" "w")
+	(<- expect_audit_event "sll.file.open" <
+		"path" "path/to/open2"
+		"mode" (| file$FLAG_WRITE file$FLAG_FLUSH_ON_NEWLINE)
+	>)
+	(<- file$open nil)
+	(<- expect_audit_event "sll.file.open" nil)
+))
+
+(= test_event_sll.file.rename (,,,
+	(<- file$rename "path/to/source" "path/to/destination")
+	(<- expect_audit_event "sll.file.rename" <
+		"src" "path/to/source"
+		"dst" "path/to/destination"
+	>)
+	(<- file$rename nil "path/to/destination")
+	(<- expect_audit_event "sll.file.rename" nil)
+	(<- file$rename "path/to/source" nil)
+	(<- expect_audit_event "sll.file.rename" nil)
+	(<- file$rename nil nil)
+	(<- expect_audit_event "sll.file.rename" nil)
+))
+
+(= test_event_sll.object.new (,,,
+	(<- object$new "iac" -55 ["a" "b" "c"] '\x87')
+	(<- expect_audit_event "sll.object.new" <
+		"template" "iac"
+		"data" [-55 ["a" "b" "c"] '\x87']
+	>)
+))
+
+(= test_event_sll.path.cwd.set (,,,
+	(<- path$set_cwd "path/to/delete")
+	(<- expect_audit_event "sll.path.cwd.set" <
+		"path" "path/to/delete"
+	>)
+	(<- path$set_cwd nil)
+	(<- expect_audit_event "sll.path.cwd.set" nil)
+))
+
 
 
 (<- run "Audit module" (,,,
@@ -81,4 +127,8 @@
 	(<- test_event_sll.error.create.internal)
 	(<- test_event_sll.file.copy)
 	(<- test_event_sll.file.delete)
+	(<- test_event_sll.file.open)
+	(<- test_event_sll.file.rename)
+	(<- test_event_sll.object.new)
+	(<- test_event_sll.path.cwd.set)
 ))

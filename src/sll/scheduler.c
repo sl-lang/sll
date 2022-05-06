@@ -3,6 +3,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
 #include <sll/_internal/gc.h>
+#include <sll/_internal/init.h>
 #include <sll/_internal/lock.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/semaphore.h>
@@ -168,7 +169,7 @@ sll_return_code_t _scheduler_run(void){
 		cpu_dt++;
 	}
 	_cpu_core_worker(NULL);
-	_audit_cleanup_api();
+	_cleanup_vm_exit_tables();
 	SLL_CRITICAL_ERROR(sll_platform_set_cpu(SLL_CPU_ANY));
 	cpu_dt=_scheduler_data_base;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){

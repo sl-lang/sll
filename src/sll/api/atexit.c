@@ -62,7 +62,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_
 	}
 	if (!_atexit_lock){
 		_atexit_lock=sll_platform_lock_create(NULL);
-		sll_register_cleanup(_cleanup_data);
+		sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_GLOBAL);
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_atexit_lock));
 	_atexit_data_len++;

@@ -9,6 +9,10 @@
 
 
 
+void _cleanup_vm_exit_tables(void);
+
+
+
 sll_bool_t _check_cpuid_flags(void);
 
 

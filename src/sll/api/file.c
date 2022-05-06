@@ -262,7 +262,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rena
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_std_handle(sll_char_t id){
 	if (!_file_cleanup){
-		sll_register_cleanup(_release_data);
+		sll_register_cleanup(_release_data,SLL_CLEANUP_TYPE_VM);
 		_file_cleanup=1;
 	}
 	sll_file_t* p=NULL;
