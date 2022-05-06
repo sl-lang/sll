@@ -242,16 +242,6 @@
 	(<- expect_audit_event "sll.sys.sandbox.set" nil)
 ))
 
-(= test_event_sll.thread.create (,,,
-	(= thr (<- thread$start _dummy_thread 1 2 3 4))
-	; (<- expect_audit_event "sll.thread.create" <
-	; 	"func" _dummy_thread
-	; 	"args" [1 2 3 4]
-	; 	"thread" thr$id
-	; >)
-	(<- thread$join thr)
-))
-
 
 
 (<- run "Audit module" (,,,
@@ -274,5 +264,5 @@
 	(<- test_event_sll.sys.env.set)
 	(<- test_event_sll.sys.library.load)
 	(<- test_event_sll.sys.sandbox.set)
-	(<- test_event_sll.thread.create)
+	; Skip 'sll.thread.create' due to special execution properties
 ))

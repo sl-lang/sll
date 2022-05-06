@@ -19,7 +19,6 @@
 	(= f (<- file$from_data "" file$FLAG_WRITE))
 	(<- serial$encode f obj)
 	(= out (<- file$get_buffer f))
-	(<- file$close f)
 	(@@ (<- base64$encode out))
 ))
 
