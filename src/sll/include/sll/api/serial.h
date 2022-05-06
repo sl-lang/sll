@@ -165,13 +165,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
  * \name sll_api_serial_encode_object
  * \group serial-api
  * \desc Docs!
- * \api Do!|Q
+ * \api D#a|Q
  * \arg sll_file_handle_t fh
- * \arg sll_object_t*const* args
- * \arg sll_arg_count_t len
+ * \arg const sll_array_t* args
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_object(sll_file_handle_t fh,sll_object_t*const* args,sll_arg_count_t len);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_object(sll_file_handle_t fh,const sll_array_t* args);
 
 
 

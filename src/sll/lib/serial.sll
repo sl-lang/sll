@@ -67,11 +67,11 @@
 	))
 ))
 
-(= encode (,,, f a
+(= encode (,,, f @@args@@
 	(? (=== f nil) (@@))
 	(= f (:: f file$file_type))
 	(@@ (<- error$from_internal
-		(<- (... "sll:serial_encode_object") f$_handle a)
+		(<- (... "sll:serial_encode_object") f$_handle @@args@@)
 	))
 ))
 

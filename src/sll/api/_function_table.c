@@ -778,7 +778,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 	{
 		SLL_CHAR("sll:serial_encode_object"),
 		sll_api_serial_encode_object,
-		SLL_CHAR("Do!|Q")
+		SLL_CHAR("D#a|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_signed_integer"),

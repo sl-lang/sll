@@ -150,16 +150,16 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_object(sll_file_handle_t fh,sll_object_t*const* args,sll_arg_count_t len){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_object(sll_file_handle_t fh,const sll_array_t* args){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_SERIAL)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_SERIAL);
 	}
-	sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("iO+"),fh,args,len);
+	sll_audit(SLL_CHAR("sll.serial.object.encode"),SLL_CHAR("ia"),fh,args);
 	sll_file_t* f=sll_file_from_handle(fh);
 	if (!f){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	return sll_encode_object(f,args,len);
+	return sll_encode_object(f,args->v,args->l);
 }
 
 

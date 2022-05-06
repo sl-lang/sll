@@ -1,4 +1,4 @@
-(--- "_common.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll" "object.sll" "path.sll" "process.sll")
+(--- "_common.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll" "object.sll" "path.sll" "process.sll" "sys.sll" "serial.sll")
 
 
 
@@ -159,29 +159,50 @@
 ))
 
 (= test_event_sll.process.start (,,,
-	(<- process$start ["sll" "-V"])
+	(<- process$start [sys$EXECUTABLE])
 	(<- expect_audit_event "sll.process.start" <
-		"arguments" ["sll" "-V"]
+		"arguments" [sys$EXECUTABLE]
 		"cwd" "."
 		"stdin" ""
 	>)
-	(<- process$start ["sll" "-V"] (. process$process_config_type
+	(<- process$start [sys$EXECUTABLE] (. process$process_config_type
 		"root/directory/of/the/process"
 		process$FLAG_WAIT
 	))
 	(<- expect_audit_event "sll.process.start" <
-		"arguments" ["sll" "-V"]
+		"arguments" [sys$EXECUTABLE]
 		"cwd" "root/directory/of/the/process"
 		"stdin" ""
 	>)
-	(<- process$start ["sll" "-V"] nil "example STDIN input string")
+	(<- process$start [sys$EXECUTABLE] nil "example STDIN input string")
 	(<- expect_audit_event "sll.process.start" <
-		"arguments" ["sll" "-V"]
+		"arguments" [sys$EXECUTABLE]
 		"cwd" "."
 		"stdin" "example STDIN input string"
 	>)
 	(<- process$start nil)
 	(<- expect_audit_event "sll.process.start" nil)
+))
+
+(= test_event_sll.serial.object.decode (,,,
+	(= fh (<- file$from_data "" file$FLAG_READ))
+	(<- serial$decode fh)
+	(<- expect_audit_event "sll.serial.object.decode" <
+		"file" fh$_handle
+	>)
+	(<- process$shell nil)
+	(<- expect_audit_event "sll.serial.object.decode" nil)
+))
+
+(= test_event_sll.serial.object.encode (,,,
+	(= fh (<- file$from_data "" file$FLAG_WRITE))
+	(<- serial$encode fh ["1 2 3 4" <5 6 'a' 0>])
+	(<- expect_audit_event "sll.serial.object.encode" <
+		"file" fh$_handle
+		"objects" [["1 2 3 4" <5 6 'a' 0>]]
+	>)
+	(<- process$shell nil)
+	(<- expect_audit_event "sll.serial.object.encode" nil)
 ))
 
 
@@ -200,4 +221,6 @@
 	(<- test_event_sll.path.dir.list)
 	(<- test_event_sll.process.start.shell)
 	(<- test_event_sll.process.start)
+	(<- test_event_sll.serial.object.decode)
+	(<- test_event_sll.serial.object.encode)
 ))
