@@ -5,7 +5,7 @@
 - Argument parsing code to parse a float or a complex number: `X`
 - Argument parsing code to parse an integer, a float or a complex number: `z`
 - Argument parsing modifier to allow `nil` arguments: `@`
-- Audit and base64 tests ([#8])
+- Tests for `audit.sll`, `base64.sll` and `data_file.sll` ([#8])
 - CLI flag to diable all audit events: `-X` or `--disable-audit`
 - Implemented `base64$ALPHABET_URL_SAFE`
 - Implemented `file$FLAG_FLUSH_ON_NEWLINE`
@@ -23,6 +23,7 @@
 
 - Fixed `path$set_cwd`
 - Fixed `sll_get_name`
+- Fixed `datafile.sll`
 - Fixed `sll_string_count_right`
 - Fixed audit event `sll.error.backtrace`
 - Fixed premature file descriptor deallocation

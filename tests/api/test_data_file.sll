@@ -1,0 +1,372 @@
+(--- "_common.sll" "data_file.sll" "file.sll")
+
+
+
+(= test_read_byte (,,,
+	(= f (<- file$from_data "\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_byte f) 0x12)
+))
+
+(= test_read_word (,,,
+	(= f (<- file$from_data "\x34\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_word f) 0x1234)
+))
+
+(= test_read_dword (,,,
+	(= f (<- file$from_data "\x78\x56\x34\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_dword f) 0x12345678)
+))
+
+(= test_read_qword (,,,
+	(= f (<- file$from_data "\xef\xcd\xab\x90\x78\x56\x34\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_qword f) 0x1234567890abcdef)
+))
+
+(= test_read_sbyte (,,,
+	(= f (<- file$from_data "\xef" file$FLAG_READ))
+	(<- expect (<- data_file$read_sbyte f) -17)
+))
+
+(= test_read_sword (,,,
+	(= f (<- file$from_data "\xef\xcd" file$FLAG_READ))
+	(<- expect (<- data_file$read_sword f) -12817)
+))
+
+(= test_read_sdword (,,,
+	(= f (<- file$from_data "\xef\xcd\xab\x90" file$FLAG_READ))
+	(<- expect (<- data_file$read_sdword f) -4294914577)
+))
+
+(= test_read_sqword (,,,
+	(= f (<- file$from_data "\xef\xcd\xab\x90\x78\x56\x34\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_sqword f) 1311768467294899695)
+))
+
+(= test_read_byte_be (,,,
+	(= f (<- file$from_data "\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_byte_be f) 0x12)
+))
+
+(= test_read_word_be (,,,
+	(= f (<- file$from_data "\x12\x34" file$FLAG_READ))
+	(<- expect (<- data_file$read_word_be f) 0x1234)
+))
+
+(= test_read_dword_be (,,,
+	(= f (<- file$from_data "\x12\x34\x56\x78" file$FLAG_READ))
+	(<- expect (<- data_file$read_dword_be f) 0x12345678)
+))
+
+(= test_read_qword_be (,,,
+	(= f (<- file$from_data "\x12\x34\x56\x78\x90\xab\xcd\xef" file$FLAG_READ))
+	(<- expect (<- data_file$read_qword_be f) 0x1234567890abcdef)
+))
+
+(= test_read_sbyte_be (,,,
+	(= f (<- file$from_data "\xef" file$FLAG_READ))
+	(<- expect (<- data_file$read_sbyte_be f) -17)
+))
+
+(= test_read_sword_be (,,,
+	(= f (<- file$from_data "\xcd\xef" file$FLAG_READ))
+	(<- expect (<- data_file$read_sword_be f) -12817)
+))
+
+(= test_read_sdword_be (,,,
+	(= f (<- file$from_data "\x90\xab\xcd\xef" file$FLAG_READ))
+	(<- expect (<- data_file$read_sdword_be f) -4294930261)
+))
+
+(= test_read_sqword_be (,,,
+	(= f (<- file$from_data "\x12\x34\x56\x78\x90\xab\xcd\xef" file$FLAG_READ))
+	(<- expect (<- data_file$read_sqword_be f) 1311768467294899695)
+))
+
+(= test_read_byte_le (,,,
+	(= f (<- file$from_data "\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_byte_le f) 0x12)
+))
+
+(= test_read_word_le (,,,
+	(= f (<- file$from_data "\x34\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_word_le f) 0x1234)
+))
+
+(= test_read_dword_le (,,,
+	(= f (<- file$from_data "\x78\x56\x34\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_dword_le f) 0x12345678)
+))
+
+(= test_read_qword_le (,,,
+	(= f (<- file$from_data "\xef\xcd\xab\x90\x78\x56\x34\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_qword_le f) 0x1234567890abcdef)
+))
+
+(= test_read_sbyte_le (,,,
+	(= f (<- file$from_data "\xef" file$FLAG_READ))
+	(<- expect (<- data_file$read_sbyte_le f) -17)
+))
+
+(= test_read_sword_le (,,,
+	(= f (<- file$from_data "\xef\xcd" file$FLAG_READ))
+	(<- expect (<- data_file$read_sword_le f) -12817)
+))
+
+(= test_read_sdword_le (,,,
+	(= f (<- file$from_data "\xef\xcd\xab\x90" file$FLAG_READ))
+	(<- expect (<- data_file$read_sdword_le f) -4294914577)
+))
+
+(= test_read_sqword_le (,,,
+	(= f (<- file$from_data "\xef\xcd\xab\x90\x78\x56\x34\x12" file$FLAG_READ))
+	(<- expect (<- data_file$read_sqword_le f) 1311768467294899695)
+))
+
+(= test_read_float (,,,
+	(= f (<- file$from_data "\x79\xe9\xf6\x42" file$FLAG_READ))
+	(<- expect (<- data_file$read_float f) 123.456 0.0001)
+))
+
+(= test_read_double (,,,
+	(= f (<- file$from_data "\xa1\xf8\x31\xe6\xd6\x1c\xc8\x40" file$FLAG_READ))
+	(<- expect (<- data_file$read_double f) 12345.6789 0.00001)
+))
+
+(= test_write_byte (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_byte f 0x12) 1)
+	(<- expect (<- file$get_buffer f) "\x12")
+	(<- expect (<- data_file$write_byte nil) nil)
+))
+
+(= test_write_word (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_word f 0x1234) 2)
+	(<- expect (<- file$get_buffer f) "\x34\x12")
+	(<- expect (<- data_file$write_word nil) nil)
+))
+
+(= test_write_dword (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_dword f 0x12345678) 4)
+	(<- expect (<- file$get_buffer f) "\x78\x56\x34\x12")
+	(<- expect (<- data_file$write_dword nil) nil)
+))
+
+(= test_write_qword (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_qword f 0x1234567890abcdef) 8)
+	(<- expect (<- file$get_buffer f) "\xef\xcd\xab\x90\x78\x56\x34\x12")
+	(<- expect (<- data_file$write_qword nil) nil)
+))
+
+(= test_write_sbyte (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sbyte f -17) 1)
+	(<- expect (<- file$get_buffer f) "\xef")
+	(<- expect (<- data_file$write_sbyte nil) nil)
+))
+
+(= test_write_sword (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sword f -12817) 2)
+	(<- expect (<- file$get_buffer f) "\xef\xcd")
+	(<- expect (<- data_file$write_sword nil) nil)
+))
+
+(= test_write_sdword (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sdword f -1867788817) 4)
+	(<- expect [(<- file$get_buffer f)] ["\xef\xcd\xab\x90"])
+	(<- expect (<- data_file$write_sdword nil) nil)
+))
+
+(= test_write_sqword (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sqword f 1311768467294899695) 8)
+	(<- expect (<- file$get_buffer f) "\xef\xcd\xab\x90\x78\x56\x34\x12")
+	(<- expect (<- data_file$write_sqword nil) nil)
+))
+
+(= test_write_byte_be (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_byte_be f 0x12) 1)
+	(<- expect (<- file$get_buffer f) "\x12")
+	(<- expect (<- data_file$write_byte_be nil) nil)
+))
+
+(= test_write_word_be (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_word_be f 0x1234) 2)
+	(<- expect (<- file$get_buffer f) "\x12\x34")
+	(<- expect (<- data_file$write_word_be nil) nil)
+))
+
+(= test_write_dword_be (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_dword_be f 0x12345678) 4)
+	(<- expect (<- file$get_buffer f) "\x12\x34\x56\x78")
+	(<- expect (<- data_file$write_dword_be nil) nil)
+))
+
+(= test_write_qword_be (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_qword_be f 0x1234567890abcdef) 8)
+	(<- expect (<- file$get_buffer f) "\x12\x34\x56\x78\x90\xab\xcd\xef")
+	(<- expect (<- data_file$write_qword_be nil) nil)
+))
+
+(= test_write_sbyte_be (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sbyte_be f -17) 1)
+	(<- expect (<- file$get_buffer f) "\xef")
+	(<- expect (<- data_file$write_sbyte_be nil) nil)
+))
+
+(= test_write_sword_be (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sword_be f -12817) 2)
+	(<- expect (<- file$get_buffer f) "\xcd\xef")
+	(<- expect (<- data_file$write_sword_be nil) nil)
+))
+
+(= test_write_sdword_be (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sdword_be f -1867788817) 4)
+	(<- expect (<- file$get_buffer f) "\x90\xab\xcd\xef")
+	(<- expect (<- data_file$write_sdword_be nil) nil)
+))
+
+(= test_write_sqword_be (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sqword_be f 1311768467294899695) 8)
+	(<- expect (<- file$get_buffer f) "\x12\x34\x56\x78\x90\xab\xcd\xef")
+	(<- expect (<- data_file$write_sqword_be nil) nil)
+))
+
+(= test_write_byte_le (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_byte_le f 0x12) 1)
+	(<- expect (<- file$get_buffer f) "\x12")
+	(<- expect (<- data_file$write_byte_le nil) nil)
+))
+
+(= test_write_word_le (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_word_le f 0x1234) 2)
+	(<- expect (<- file$get_buffer f) "\x34\x12")
+	(<- expect (<- data_file$write_word_le nil) nil)
+))
+
+(= test_write_dword_le (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_dword_le f 0x12345678) 4)
+	(<- expect (<- file$get_buffer f) "\x78\x56\x34\x12")
+	(<- expect (<- data_file$write_dword_le nil) nil)
+))
+
+(= test_write_qword_le (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_qword_le f 0x1234567890abcdef) 8)
+	(<- expect (<- file$get_buffer f) "\xef\xcd\xab\x90\x78\x56\x34\x12")
+	(<- expect (<- data_file$write_qword_le nil) nil)
+))
+
+(= test_write_sbyte_le (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sbyte_le f -17) 1)
+	(<- expect (<- file$get_buffer f) "\xef")
+	(<- expect (<- data_file$write_sbyte_le nil) nil)
+))
+
+(= test_write_sword_le (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sword_le f -12817) 2)
+	(<- expect (<- file$get_buffer f) "\xef\xcd")
+	(<- expect (<- data_file$write_sword_le nil) nil)
+))
+
+(= test_write_sdword_le (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sdword_le f -1867788817) 4)
+	(<- expect (<- file$get_buffer f) "\xef\xcd\xab\x90")
+	(<- expect (<- data_file$write_sdword_le nil) nil)
+))
+
+(= test_write_sqword_le (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_sqword_le f 1311768467294899695) 8)
+	(<- expect (<- file$get_buffer f) "\xef\xcd\xab\x90\x78\x56\x34\x12")
+	(<- expect (<- data_file$write_sqword_le nil) nil)
+))
+
+(= test_write_float (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_float f 123.456) 4)
+	(<- expect (<- file$get_buffer f) "\x79\xe9\xf6\x42")
+	(<- expect (<- data_file$write_float nil) nil)
+))
+
+(= test_write_double (,,,
+	(= f (<- file$from_data "" file$FLAG_WRITE))
+	(<- expect (<- data_file$write_double f 12345.6789) 8)
+	(<- expect (<- file$get_buffer f) "\xa1\xf8\x31\xe6\xd6\x1c\xc8\x40")
+	(<- expect (<- data_file$write_double nil) nil)
+))
+
+
+
+(<- run "Data file module" (,,,
+	(<- test_read_byte)
+	(<- test_read_word)
+	(<- test_read_dword)
+	(<- test_read_qword)
+	(<- test_read_sbyte)
+	(<- test_read_sword)
+	(<- test_read_sdword)
+	(<- test_read_sqword)
+	(<- test_read_byte_be)
+	(<- test_read_word_be)
+	(<- test_read_dword_be)
+	(<- test_read_qword_be)
+	(<- test_read_sbyte_be)
+	(<- test_read_sword_be)
+	(<- test_read_sdword_be)
+	(<- test_read_sqword_be)
+	(<- test_read_byte_le)
+	(<- test_read_word_le)
+	(<- test_read_dword_le)
+	(<- test_read_qword_le)
+	(<- test_read_sbyte_le)
+	(<- test_read_sword_le)
+	(<- test_read_sdword_le)
+	(<- test_read_sqword_le)
+	(<- test_read_float)
+	(<- test_read_double)
+	(<- test_write_byte)
+	(<- test_write_word)
+	(<- test_write_dword)
+	(<- test_write_qword)
+	(<- test_write_sbyte)
+	(<- test_write_sword)
+	(<- test_write_sdword)
+	(<- test_write_sqword)
+	(<- test_write_byte_be)
+	(<- test_write_word_be)
+	(<- test_write_dword_be)
+	(<- test_write_qword_be)
+	(<- test_write_sbyte_be)
+	(<- test_write_sword_be)
+	(<- test_write_sdword_be)
+	(<- test_write_sqword_be)
+	(<- test_write_byte_le)
+	(<- test_write_word_le)
+	(<- test_write_dword_le)
+	(<- test_write_qword_le)
+	(<- test_write_sbyte_le)
+	(<- test_write_sword_le)
+	(<- test_write_sdword_le)
+	(<- test_write_sqword_le)
+	(<- test_write_float)
+	(<- test_write_double)
+))

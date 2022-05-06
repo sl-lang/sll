@@ -1,4 +1,4 @@
-(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "error.sll" "array.sll" "serial.sll" "base64.sll" "types.sll" "audit.sll")
+(--- "json.sll" "file.sll" "sys.sll" "path.sll" "string.sll" "time.sll" "error.sll" "array.sll" "serial.sll" "base64.sll" "types.sll" "audit.sll" "math.sll")
 
 
 
@@ -68,13 +68,23 @@
 	})
 ))
 
-(= expect (,,, result value
-	(? (=== result value)
-		(<- _expect_raw nil nil)
+(= abs (,,, x
+	(@@ (?: (< x 0) (- 0 x) x))
+))
+
+(= expect (,,, result value flt_err
+	(? (||
+			(!== (:? result) (:? value))
+			(?: (=== (:? value) float_type)
+				(> (<- abs (- value result)) flt_err)
+				(!== result value)
+			)
+		)
 		(<- _expect_raw <
 			"output" (<- _encode_object result)
 			"target" (<- _encode_object value)
 		> (+ "Expected " (<- string$str value) ", got " (<- string$str result)))
+		(<- _expect_raw nil nil)
 	)
 ))
 
