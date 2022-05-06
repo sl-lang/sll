@@ -242,6 +242,22 @@
 	(<- expect_audit_event "sll.sys.sandbox.set" nil)
 ))
 
+(= test_event_sll.vm.location (,,,
+	(<- vm$get_location)
+	(<- expect_audit_event "sll.vm.location" <> [])
+	(<- vm$get_location 123)
+	(<- expect_audit_event "sll.vm.location" <
+		"location" 123
+	>)
+))
+
+(= test_event_sll.vm.ref (,,,
+	(<- vm$get_ref_count 12345)
+	(<- expect_audit_event "sll.vm.ref" <
+		"object" 12345
+	>)
+))
+
 
 
 (<- run "Audit module" (,,,
@@ -264,5 +280,7 @@
 	(<- test_event_sll.sys.env.set)
 	(<- test_event_sll.sys.library.load)
 	(<- test_event_sll.sys.sandbox.set)
-	; Skip 'sll.thread.create' due to special execution properties
+	; Skip 'sll.thread.create' and 'sll.thread.return' due to special execution properties
+	(<- test_event_sll.vm.location)
+	(<- test_event_sll.vm.ref)
 ))

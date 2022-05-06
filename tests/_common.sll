@@ -97,7 +97,7 @@
 		"name" name
 		"data" recv_data
 	>) nil))
-	(? keys_to_check {
+	(? (!== keys_to_check nil) {
 		(= old_recv_data (: recv_data))
 		(= old_data (: data))
 		(= recv_data <>)
