@@ -78,6 +78,7 @@
 (= join (... "sll:process_join"))
 
 (= shell (,,, cmd no_flush_io
+	(? (! cmd) (@@ nil))
 	(? (! no_flush_io) {
 		(<- file$flush file$stdout)
 		(<- file$flush file$stderr)

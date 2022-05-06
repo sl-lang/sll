@@ -1,4 +1,4 @@
-(--- "_common.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll" "object.sll" "path.sll")
+(--- "_common.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll" "object.sll" "path.sll" "process.sll")
 
 
 
@@ -149,6 +149,41 @@
 	(<- expect_audit_event "sll.path.dir.list" nil)
 ))
 
+(= test_event_sll.process.start.shell (,,,
+	(<- process$shell "echo \"abc\"")
+	(<- expect_audit_event "sll.process.start.shell" <
+		"command" "echo \"abc\""
+	>)
+	(<- process$shell nil)
+	(<- expect_audit_event "sll.process.start.shell" nil)
+))
+
+(= test_event_sll.process.start (,,,
+	(<- process$start ["sll" "-V"])
+	(<- expect_audit_event "sll.process.start" <
+		"arguments" ["sll" "-V"]
+		"cwd" "."
+		"stdin" ""
+	>)
+	(<- process$start ["sll" "-V"] (. process$process_config_type
+		"root/directory/of/the/process"
+		process$FLAG_WAIT
+	))
+	(<- expect_audit_event "sll.process.start" <
+		"arguments" ["sll" "-V"]
+		"cwd" "root/directory/of/the/process"
+		"stdin" ""
+	>)
+	(<- process$start ["sll" "-V"] nil "example STDIN input string")
+	(<- expect_audit_event "sll.process.start" <
+		"arguments" ["sll" "-V"]
+		"cwd" "."
+		"stdin" "example STDIN input string"
+	>)
+	(<- process$start nil)
+	(<- expect_audit_event "sll.process.start" nil)
+))
+
 
 
 (<- run "Audit module" (,,,
@@ -163,4 +198,6 @@
 	(<- test_event_sll.path.cwd.set)
 	(<- test_event_sll.path.dir.create)
 	(<- test_event_sll.path.dir.list)
+	(<- test_event_sll.process.start.shell)
+	(<- test_event_sll.process.start)
 ))
