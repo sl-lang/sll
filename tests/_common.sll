@@ -81,7 +81,7 @@
 
 (= expect_audit_event (,,, name data keys_to_check
 	(= recv_data (: _audit_event_data name))
-	(? (! data) {
+	(? (=== data nil) {
 		(? recv_data
 			(<- _expect_raw <
 				"recived_event" recv_data
@@ -109,9 +109,9 @@
 			(= (: data key) (: old_data key))
 			(++ i)
 		)
-		})
+	})
 	(?
-		(! recv_data) (<- _expect_raw <
+		(=== recv_data nil) (<- _expect_raw <
 			"target_event" expected_evt_data
 		> (+ "Expected audit event " name))
 		(!== recv_data data) (<- _expect_raw <

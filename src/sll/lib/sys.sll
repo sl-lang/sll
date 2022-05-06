@@ -91,6 +91,7 @@
 ))
 
 (= load_library (,,, fp chk
+	(? (! fp) (@@ nil))
 	(= fp (:: fp string_type))
 	(= sz 0)
 	(= h [0 0 0 0])

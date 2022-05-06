@@ -208,6 +208,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->tls_vc;i++){
 		SLL_RELEASE(*(thr->tls+i));
 	}
+	SLL_ASSERT(!thr->si);
 	if (_scheduler_allocator_cache_pool_len<THREAD_ALLOCATOR_CACHE_POOL_SIZE){
 		_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len]=thr;
 		_scheduler_allocator_cache_pool_len++;

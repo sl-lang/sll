@@ -1,4 +1,4 @@
-(--- "_common.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll" "object.sll" "path.sll" "process.sll" "sys.sll" "serial.sll")
+(--- "_common.sll" "array.sll" "audit.sll" "error.sll" "thread.sll" "vm.sll" "file.sll" "object.sll" "path.sll" "process.sll" "sys.sll" "serial.sll")
 
 
 
@@ -224,6 +224,34 @@
 	(<- expect_audit_event "sll.sys.env.set" nil)
 ))
 
+(= test_event_sll.sys.library.load (,,,
+	(<- sys$load_library "library-name")
+	(<- expect_audit_event "sll.sys.library.load" <
+		"name" "library-name"
+	>)
+	(<- sys$load_library nil)
+	(<- expect_audit_event "sll.sys.library.load" nil)
+))
+
+(= test_event_sll.sys.sandbox.set (,,,
+	(<- sys$set_sandbox_flags "no-path")
+	(<- expect_audit_event "sll.sys.sandbox.set" <
+		"flag" (<- array$index sys$SANDBOX_FLAGS "no-path")
+	>)
+	(<- sys$set_sandbox_flags nil)
+	(<- expect_audit_event "sll.sys.sandbox.set" nil)
+))
+
+(= test_event_sll.thread.create (,,,
+	(= thr (<- thread$start _dummy_thread 1 2 3 4))
+	; (<- expect_audit_event "sll.thread.create" <
+	; 	"func" _dummy_thread
+	; 	"args" [1 2 3 4]
+	; 	"thread" thr$id
+	; >)
+	(<- thread$join thr)
+))
+
 
 
 (<- run "Audit module" (,,,
@@ -244,4 +272,7 @@
 	(<- test_event_sll.serial.object.encode)
 	(<- test_event_sll.sys.env.delete)
 	(<- test_event_sll.sys.env.set)
+	(<- test_event_sll.sys.library.load)
+	(<- test_event_sll.sys.sandbox.set)
+	(<- test_event_sll.thread.create)
 ))

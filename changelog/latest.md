@@ -5,7 +5,7 @@
 - Argument parsing code to parse a float or a complex number: `X`
 - Argument parsing code to parse an integer, a float or a complex number: `z`
 - Argument parsing modifier to allow `nil` arguments: `@`
-- Base64 tests ([#8])
+- Audit and base64 tests ([#8])
 - CLI flag to diable all audit events: `-X` or `--disable-audit`
 - Implemented `base64$ALPHABET_URL_SAFE`
 - Implemented `file$FLAG_FLUSH_ON_NEWLINE`
