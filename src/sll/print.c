@@ -789,149 +789,58 @@ _print_jump:
 				_print_int(ai->dt.i,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
+				PRINT_STATIC_STRING("NOT",wf);
+_print_inplace:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("NOT $",wf);
+					PRINT_STATIC_STRING(" $",wf);
 					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("NOT",wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("BOOL $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("BOOL",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("BOOL",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("INC $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("INC",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("INC",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("DEC $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("DEC",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("DEC",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("ADD $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("ADD",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("ADD",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SUB:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("SUB $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("SUB",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("SUB",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MULT:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("MULT $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("MULT",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("MULT",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DIV:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("DIV $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("DIV",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("DIV",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_FDIV:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("FDIV $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("FDIV",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("FDIV",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MOD:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("MOD $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("MOD",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("MOD",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_AND:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("AND $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("AND",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("AND",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_OR:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("OR $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("OR",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("OR",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_XOR:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("XOR $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("XOR",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("XOR",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INV:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("INV $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("INV",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("INV",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHR:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("SHR $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("SHR",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("SHR",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_SHL:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("SHL $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("SHL",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("SHL",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH:
 				PRINT_STATIC_STRING("LENGTH",wf);
 				break;
@@ -957,32 +866,14 @@ _print_jump:
 				_print_assembly_identifier(ai->dt.va.v,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("ASSIGN $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("ASSIGN",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("ASSIGN",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("ASSIGN_RANGE $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("ASSIGN_RANGE",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("ASSIGN_RANGE",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE:
-				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					PRINT_STATIC_STRING("ASSIGN_RANGE_STEP $",wf);
-					_print_assembly_identifier(ai->dt.v,wf);
-				}
-				else{
-					PRINT_STATIC_STRING("ASSIGN_RANGE_STEP",wf);
-				}
-				break;
+				PRINT_STATIC_STRING("ASSIGN_RANGE_STEP",wf);
+				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
 				PRINT_STATIC_STRING("PUSH ",wf);
 				_print_int(ai->dt.va.l,wf);
