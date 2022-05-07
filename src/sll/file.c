@@ -671,7 +671,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 
 
 
-__SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* t,sll_error_t* err,...){
+__SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* fmt,sll_error_t* err,...){
 	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)){
 		return 0;
@@ -685,7 +685,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_C(&dt,&va);
 	sll_string_t str;
-	sll_string_format_list(t,sll_string_length(t),&dt,&str);
+	sll_string_format_list(fmt,sll_string_length(fmt),&dt,&str);
 	va_end(va);
 	sll_size_t o=sll_file_write(f,str.v,str.l,err);
 	sll_free_string(&str);
@@ -694,7 +694,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 
 
 
-__SLL_EXTERNAL sll_size_t sll_file_write_string(sll_file_t* f,const sll_char_t* p,sll_error_t* err){
+__SLL_EXTERNAL sll_size_t sll_file_write_string(sll_file_t* f,const sll_char_t* str,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)){
 		return 0;
@@ -703,5 +703,5 @@ __SLL_EXTERNAL sll_size_t sll_file_write_string(sll_file_t* f,const sll_char_t* 
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
 		return 0;
 	}
-	return sll_file_write(f,p,sll_string_length(p),err);
+	return sll_file_write(f,str,sll_string_length(str),err);
 }

@@ -594,11 +594,11 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
  * \subgroup file-io
  * \desc Docs!
  * \arg sll_file_t* f
- * \arg const sll_char_t* t
+ * \arg const sll_char_t* fmt
  * \arg sll_error_t* err
  * \ret sll_size_t
  */
-__SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* t,sll_error_t* err,...);
+__SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* fmt,sll_error_t* err,...);
 
 
 
@@ -609,11 +609,11 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
  * \subgroup file-io
  * \desc Docs!
  * \arg sll_file_t* f
- * \arg const sll_char_t* p
+ * \arg const sll_char_t* str
  * \arg sll_error_t* err
  * \ret sll_size_t
  */
-__SLL_EXTERNAL sll_size_t sll_file_write_string(sll_file_t* f,const sll_char_t* p,sll_error_t* err);
+__SLL_EXTERNAL sll_size_t sll_file_write_string(sll_file_t* f,const sll_char_t* str,sll_error_t* err);
 
 
 
