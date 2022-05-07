@@ -104,7 +104,7 @@ def parse_headers(fp):
 
 
 def generate_header(h_dt):
-	defines={"__SLL_TIME_RAW__":str(util.BUILD_TIME),f"__SLL_BUILD_{util.system.upper()}":"1"}
+	defines={"__SLL_TIME_RAW__":str(util.BUILD_TIME),f"__SLL_BUILD_{util.system.upper()}":"1","NULL":"((void*)0)"}
 	if (os.getenv("GITHUB_SHA") is not None):
 		defines["__SLL_SHA__"]="\""+os.getenv("GITHUB_SHA")[:7]+"\""
 		defines["__SLL_FULL_SHA__"]="\""+os.getenv("GITHUB_SHA")+"\""
