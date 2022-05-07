@@ -68,15 +68,11 @@
 	})
 ))
 
-(= _abs (,,, x
-	(@@ (?: (< x 0) (- 0 x) x))
-))
-
 (= expect (,,, result value flt_err
 	(? (||
 			(!== (:? result) (:? value))
 			(?: (=== (:? value) float_type)
-				(> (<- _abs (- value result)) flt_err)
+				(> (<- math$abs (- value result)) flt_err)
 				(!== result value)
 			)
 		)
