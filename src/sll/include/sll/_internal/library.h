@@ -6,13 +6,6 @@
 
 
 
-#ifdef __SLL_BUILD_WINDOWS
-#define LIBRARY_EXTENSION ".dll"
-#else
-#define LIBRARY_EXTENSION ".so"
-#endif
-
-#define LIBRARY_DIRECTORY "/sys_lib/"
 #define LIBRARY_HASH_BUFFER_SIZE 65536
 
 

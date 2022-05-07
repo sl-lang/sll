@@ -29,7 +29,6 @@ Options:
 
 Installed Objects:
   executable -> Main executable
-  extension-library-path -> Folder containing extension libraries
   install-path -> Folder containing all installed files
   library -> Core dynamic library
   source-path -> Folder containing bundles, compiled objects and source code included by default in the search path

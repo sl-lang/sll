@@ -352,9 +352,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 				if (sll_string_compare_pointer(e,SLL_CHAR("executable"))==SLL_COMPARE_RESULT_EQUAL){
 					src=sll_executable_file_path;
 				}
-				else if (sll_string_compare_pointer(e,SLL_CHAR("extension-library-path"))==SLL_COMPARE_RESULT_EQUAL){
-					SLL_COPY_STRING_NULL(SLL_CHAR("/sys_lib/"),out);
-				}
 				else if (sll_string_compare_pointer(e,SLL_CHAR("install-path"))==SLL_COMPARE_RESULT_EQUAL){
 					SLL_COPY_STRING_NULL(SLL_CHAR("/"),out);
 				}
