@@ -17,7 +17,7 @@
 - Implemented `sll_number_type_t` and `SLL_PARSE_ARGS_TYPE_COMPLEX`
 - Implemented `sll_platform_allocate_page_aligned`
 - Nightly builds (available via the `/apt/nightly/` channel)
-- Tests for `audit.sll`, `base64.sll` and `data_file.sll` ([#8])
+- Tests for `audit.sll`, `base64.sll`, `data_file.sll` and `date.sll` ([#8])
 
 ## Changed
 

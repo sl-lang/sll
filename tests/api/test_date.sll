@@ -1,0 +1,59 @@
+(--- "_common.sll" "date.sll" "time.sll" "types.sll")
+
+
+
+(= test_current (,,,
+	(<- expect (<- date$to_time (<- date$current)) (<- time$time) 0.1)
+))
+
+(= test_from_time (,,,
+	(= tm (<- date$from_time 1651912005.555 date$UTC_TIME_ZONE))
+	(<- expect tm$year 2022)
+	(<- expect tm$month 4)
+	(<- expect tm$day 6)
+	(<- expect tm$week_day 6)
+	(<- expect tm$hour 8)
+	(<- expect tm$minute 26)
+	(<- expect tm$second 45.555 0.0001)
+	(<- expect tm$time_zone$name "UTC")
+	(<- expect tm$time_zone$offset 0)
+	(<- expect (:: tm string_type) "2022/05/07 08:26:45 +00:00 (UTC)")
+	(= tm (<- date$from_time 1651912005.555 (: date$TIME_ZONE_NAMES "Eastern Standard Time")))
+	(<- expect tm$year 2022)
+	(<- expect tm$month 4)
+	(<- expect tm$day 6)
+	(<- expect tm$week_day 6)
+	(<- expect tm$hour 3)
+	(<- expect tm$minute 26)
+	(<- expect tm$second 45.555 0.0001)
+	(<- expect tm$time_zone$name "EST")
+	(<- expect tm$time_zone$offset -300)
+	(<- expect (:: tm string_type) "2022/05/07 03:26:45 -05:00 (EST)")
+))
+
+(= test_from_time_ns (,,,
+	(<- expect (<- date$from_time_ns 1651912005555000064) (<- date$from_time 1651912005.555))
+	(<- expect (<- date$from_time_ns 1651912005555000064 date$UTC_TIME_ZONE) (<- date$from_time 1651912005.555 date$UTC_TIME_ZONE))
+))
+
+(= test_to_time (,,,
+	(<- expect (<- date$to_time (. date$date_type
+		2022
+		4
+		6
+		6
+		8
+		26
+		45.555
+		date$UTC_TIME_ZONE
+	)) 1651912005.555 0.0001)
+))
+
+
+
+(<- run "Date module" (,,,
+	(<- test_current)
+	(<- test_from_time)
+	(<- test_from_time_ns)
+	(<- test_to_time)
+))
