@@ -5,7 +5,6 @@
 - Argument parsing code to parse a float or a complex number: `X`
 - Argument parsing code to parse an integer, a float or a complex number: `z`
 - Argument parsing modifier to allow `nil` arguments: `@`
-- Tests for `audit.sll`, `base64.sll` and `data_file.sll` ([#8])
 - CLI flag to diable all audit events: `-X` or `--disable-audit`
 - Implemented `base64$ALPHABET_URL_SAFE`
 - Implemented `file$FLAG_FLUSH_ON_NEWLINE`
@@ -18,6 +17,7 @@
 - Implemented `sll_number_type_t` and `SLL_PARSE_ARGS_TYPE_COMPLEX`
 - Implemented `sll_platform_allocate_page_aligned`
 - Nightly builds (available via the `/apt/nightly/` channel)
+- Tests for `audit.sll`, `base64.sll` and `data_file.sll` ([#8])
 
 ## Changed
 
