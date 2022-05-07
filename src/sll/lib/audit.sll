@@ -30,7 +30,7 @@
 	"sll.serial.object.encode" ["file" "objects"]
 	"sll.sys.env.delete" ["key"]
 	"sll.sys.env.set" ["key" "value"]
-	"sll.sys.library.load" ["name"]
+	"sll.sys.library.load" ["path" "name"]
 	"sll.sys.sandbox.set" ["flag"]
 	"sll.thread.create" ["func" "args" "thread"]
 	"sll.thread.return" ["thread"]

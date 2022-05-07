@@ -142,45 +142,33 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(const sll_string_t* name,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||name->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(const sll_string_t* path,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||path->l>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
-	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("s"),name);
-	sll_string_length_t lib_fp=sll_path_split(sll_library_file_path);
-	sll_string_length_t src_nm_off=sll_path_split(name);
-	sll_string_length_t fpl=lib_fp+STATIC_STRING_LEN(LIBRARY_DIRECTORY)+name->l-src_nm_off+STATIC_STRING_LEN(LIBRARY_EXTENSION);
-	if (fpl>=SLL_API_MAX_FILE_PATH_LENGTH){
-		return 0;
-	}
-	sll_string_t fp;
-	sll_string_create(fpl,&fp);
-	sll_string_length_t fp_off=lib_fp;
-	sll_copy_data(sll_library_file_path->v,fp_off,fp.v);
-	sll_copy_data(LIBRARY_DIRECTORY,STATIC_STRING_LEN(LIBRARY_DIRECTORY),fp.v+fp_off);
-	fp_off+=STATIC_STRING_LEN(LIBRARY_DIRECTORY);
-	sll_copy_data(name->v+src_nm_off,name->l-src_nm_off,fp.v+fp_off);
-	fp_off+=name->l-src_nm_off;
-	sll_copy_data(LIBRARY_EXTENSION,STATIC_STRING_LEN(LIBRARY_EXTENSION),fp.v+fp_off);
-	sll_string_calculate_checksum(&fp);
-	if (!sll_platform_path_exists(fp.v)){
-		sll_free_string(&fp);
+	sll_string_t lib_name;
+	sll_string_from_pointer(path->v+sll_path_split(path),&lib_name);
+	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("ss"),path,&lib_name);
+	if (!sll_platform_path_exists(path->v)){
+		sll_free_string(&lib_name);
 		return 0;
 	}
 	for (sll_array_length_t i=0;i<_sys_lhl;i++){
-		if (STRING_EQUAL(&((*(_sys_lh+i))->nm),&fp)){
-			sll_free_string(&fp);
+		if (STRING_EQUAL(&((*(_sys_lh+i))->nm),&lib_name)){
+			sll_free_string(&lib_name);
 			return 1;
 		}
 	}
 	if (sz){
-		sll_file_descriptor_t fd=sll_platform_file_open(fp.v,SLL_FILE_FLAG_READ,NULL);
+		sll_file_descriptor_t fd=sll_platform_file_open(path->v,SLL_FILE_FLAG_READ,NULL);
 		if (fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
+			sll_free_string(&lib_name);
 			return 0;
 		}
 		sll_size_t f_sz=sll_platform_file_size(fd,NULL);
 		if (f_sz==SLL_NO_FILE_SIZE||f_sz!=sz){
 			SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
+			sll_free_string(&lib_name);
 			return 0;
 		}
 		sll_sha256_data_t sha=SLL_INIT_SHA256_STRUCT;
@@ -190,6 +178,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 			off=sll_platform_file_read(fd,bf,LIBRARY_HASH_BUFFER_SIZE,NULL);
 			if (off==SLL_NO_FILE_SIZE){
 				SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
+				sll_free_string(&lib_name);
 				return 0;
 			}
 			sll_hash_sha256(&sha,bf,off&0xffffffffffffffc0ll);
@@ -211,24 +200,25 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 		tmp[tmp_off+7]=(sz<<3)&0xff;
 		sll_hash_sha256(&sha,tmp,(off<56?64:128));
 		if (((((__SLL_U64)sha.a)<<32)|sha.b)!=h0||((((__SLL_U64)sha.c)<<32)|sha.d)!=h1||((((__SLL_U64)sha.e)<<32)|sha.f)!=h2||((((__SLL_U64)sha.g)<<32)|sha.h)!=h3){
+			sll_free_string(&lib_name);
 			return 0;
 		}
 	}
-	sll_library_handle_t h=sll_platform_load_library(fp.v,NULL);
+	sll_library_handle_t h=sll_platform_load_library(path->v,NULL);
 	if (!h){
-		sll_free_string(&fp);
+		sll_free_string(&lib_name);
 		return 0;
 	}
 	sll_bool_t (*fn)(sll_version_t)=sll_platform_lookup_symbol(h,SLL_ABI_NAME(SLL_ABI_INIT));
 	if (!fn||!fn(SLL_VERSION)){
 		SLL_CRITICAL_ERROR(sll_platform_unload_library(h));
-		sll_free_string(&fp);
+		sll_free_string(&lib_name);
 		return 0;
 	}
 	_sys_lhl++;
 	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(library_t*));
 	library_t* n=sll_allocate(sizeof(library_t));
-	sll_copy_data(&fp,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
+	sll_copy_data(&lib_name,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
 	n->h=h;
 	*(_sys_lh+_sys_lhl-1)=n;
 	if (!_sys_vm_init){

@@ -46,7 +46,7 @@
 
 (= LIBRARY (<- (... "sll:sys_get_library")))
 (= LIBRARY_PATH (+ (<- path$absolute (+ (: (<- path$split LIBRARY) 0) path$SEPARATOR "sys_lib")) path$SEPARATOR))
-(= LIBRARY_EXTENSION (?: (=== _PLATFORM "windows") "dll" "so"))
+(= LIBRARY_EXTENSION (?: (=== _PLATFORM "windows") ".dll" ".so"))
 
 (= v_dt (<- (... "sll:sys_get_version")))
 (= commit (: v_dt 3))
