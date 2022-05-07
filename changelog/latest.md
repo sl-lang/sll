@@ -1,5 +1,9 @@
 # Sll [0.7.17] - Ongoing
 
+## Added
+
+- Implemented `sys$ROOT_PATH`
+
 ## Changed
 
 - Audit event `sll.sys.library.load` now also contains the path to the library

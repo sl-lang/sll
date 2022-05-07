@@ -23,6 +23,7 @@
 	(~ string_type) LIBRARY
 	(~ string_type) LIBRARY_EXTENSION
 	(~ string_type) PLATFORM
+	(~ string_type) ROOT_PATH
 	(~ array_type) SANDBOX_FLAGS
 	(~ version_type) VERSION
 	(~ func_type) get_env
@@ -45,6 +46,8 @@
 
 (= LIBRARY (<- (... "sll:sys_get_library")))
 (= LIBRARY_EXTENSION (?: (=== _PLATFORM "windows") ".dll" ".so"))
+
+(= ROOT_PATH (+ (<- path$absolute (: (<- path$split LIBRARY) 0)) path$SEPARATOR))
 
 (= v_dt (<- (... "sll:sys_get_version")))
 (= commit (: v_dt 3))
@@ -148,6 +151,7 @@
 	LIBRARY
 	LIBRARY_EXTENSION
 	_PLATFORM
+	ROOT_PATH
 	_SANDBOX_FLAGS
 	VERSION
 	get_env
