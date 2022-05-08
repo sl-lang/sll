@@ -67,19 +67,19 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* fmt,
 
 
 
-__SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t fn){
+__SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t cb_fn){
 	_audit_cb_len++;
 	_audit_cb=sll_reallocate(_audit_cb,_audit_cb_len*sizeof(sll_audit_callback_t));
-	*(_audit_cb+_audit_cb_len-1)=fn;
+	*(_audit_cb+_audit_cb_len-1)=cb_fn;
 }
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_audit_unregister_callback(sll_audit_callback_t fn){
+__SLL_EXTERNAL sll_bool_t sll_audit_unregister_callback(sll_audit_callback_t cb_fn){
 	sll_array_length_t i=0;
 	sll_array_length_t j=0;
 	for (;j<_audit_cb_len;j++){
-		if (*(_audit_cb+j)!=fn){
+		if (*(_audit_cb+j)!=cb_fn){
 			*(_audit_cb+i)=*(_audit_cb+j);
 			i++;
 		}
