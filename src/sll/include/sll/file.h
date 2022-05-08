@@ -579,11 +579,11 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
  * \desc Docs!
  * \arg sll_file_t* f
  * \arg sll_char_t c
- * \arg sll_size_t n
+ * \arg sll_size_t cnt
  * \arg sll_error_t* err
  * \ret sll_size_t
  */
-__SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,sll_size_t n,sll_error_t* err);
+__SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,sll_size_t cnt,sll_error_t* err);
 
 
 

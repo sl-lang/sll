@@ -600,9 +600,9 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
 
 
 
-__SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,sll_size_t n,sll_error_t* err){
+__SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,sll_size_t cnt,sll_error_t* err){
 	ERROR_PTR_RESET;
-	if (!(f->f&SLL_FILE_FLAG_WRITE)||!n){
+	if (!(f->f&SLL_FILE_FLAG_WRITE)||!cnt){
 		return 0;
 	}
 	if (f->f&FILE_FLAG_MEMORY){
@@ -610,13 +610,13 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 			SLL_UNIMPLEMENTED();
 		}
 		LOCK;
-		if (f->_off+n>=f->dt.mm.sz){
-			n=f->dt.mm.sz-f->_off;
+		if (f->_off+cnt>=f->dt.mm.sz){
+			cnt=f->dt.mm.sz-f->_off;
 		}
-		sll_set_memory(((sll_char_t*)(f->dt.mm.p))+f->_off,n,c);
-		f->_off+=n;
+		sll_set_memory(((sll_char_t*)(f->dt.mm.p))+f->_off,cnt,c);
+		f->_off+=cnt;
 		UNLOCK;
-		return n;
+		return cnt;
 	}
 	if (f->dt.fl.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
@@ -624,16 +624,16 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 	}
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		sll_size_t o=0;
-		while (n){
+		while (cnt){
 			o+=sll_platform_file_write(f->dt.fl.fd,&c,sizeof(sll_char_t),err);
-			n--;
+			cnt--;
 		}
 		return ZERO_IF_ERROR_PTR(o);
 	}
 	LOCK;
-	if (n+f->_w.bf.off<=FILE_BUFFER_SIZE){
-		sll_set_memory(f->_w.bf.p+f->_w.bf.off,n,c);
-		f->_w.bf.off+=n;
+	if (cnt+f->_w.bf.off<=FILE_BUFFER_SIZE){
+		sll_set_memory(f->_w.bf.p+f->_w.bf.off,cnt,c);
+		f->_w.bf.off+=cnt;
 		if (f->_w.bf.off==FILE_BUFFER_SIZE){
 			sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
 			f->_w.bf.off=0;
@@ -642,20 +642,20 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 		if ((f->f&SLL_FILE_FLUSH_ON_NEWLINE)&&c=='\n'){
 			sll_file_flush(f);
 		}
-		return ZERO_IF_ERROR_PTR(n);
+		return ZERO_IF_ERROR_PTR(cnt);
 	}
 	sll_size_t i=FILE_BUFFER_SIZE-f->_w.bf.off;
 	sll_set_memory(f->_w.bf.p+f->_w.bf.off,i,c);
 	sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
-	sll_size_t o=n;
-	n-=i;
-	i=n&(FILE_BUFFER_SIZE-1);
-	n-=i;
-	if (n){
+	sll_size_t o=cnt;
+	cnt-=i;
+	i=cnt&(FILE_BUFFER_SIZE-1);
+	cnt-=i;
+	if (cnt){
 		sll_set_memory(f->_w.bf.p,FILE_BUFFER_SIZE,c);
-		while (n){
+		while (cnt){
 			sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
-			n-=FILE_BUFFER_SIZE;
+			cnt-=FILE_BUFFER_SIZE;
 		}
 	}
 	if (i){
