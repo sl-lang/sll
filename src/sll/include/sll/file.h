@@ -434,12 +434,12 @@ __SLL_EXTERNAL sll_error_t sll_file_flush(sll_file_t* f);
  * \name sll_file_from_data
  * \group file
  * \desc Docs!
- * \arg void* p
+ * \arg void* ptr
  * \arg sll_size_t sz
- * \arg sll_file_flags_t f
+ * \arg sll_file_flags_t flags
  * \arg sll_file_t* o
  */
-__SLL_EXTERNAL void sll_file_from_data(void* p,sll_size_t sz,sll_file_flags_t f,sll_file_t* o);
+__SLL_EXTERNAL void sll_file_from_data(void* ptr,sll_size_t sz,sll_file_flags_t flags,sll_file_t* o);
 
 
 
@@ -461,12 +461,12 @@ __SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* f,sll_string_t* o);
  * \name sll_file_open
  * \group file
  * \desc Docs!
- * \arg const sll_char_t* nm
- * \arg sll_file_flags_t f
+ * \arg const sll_char_t* name
+ * \arg sll_file_flags_t flags
  * \arg sll_file_t* o
  * \ret sll_error_t
  */
-__SLL_EXTERNAL sll_error_t sll_file_open(const sll_char_t* nm,sll_file_flags_t f,sll_file_t* o);
+__SLL_EXTERNAL sll_error_t sll_file_open(const sll_char_t* name,sll_file_flags_t flags,sll_file_t* o);
 
 
 
@@ -477,10 +477,10 @@ __SLL_EXTERNAL sll_error_t sll_file_open(const sll_char_t* nm,sll_file_flags_t f
  * \desc Docs!
  * \arg const sll_char_t* nm
  * \arg sll_file_descriptor_t fd
- * \arg sll_file_flags_t f
+ * \arg sll_file_flags_t flags
  * \arg sll_file_t* o
  */
-__SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* nm,sll_file_descriptor_t fd,sll_file_flags_t f,sll_file_t* o);
+__SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* nm,sll_file_descriptor_t fd,sll_file_flags_t flags,sll_file_t* o);
 
 
 
@@ -505,12 +505,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
  * \subgroup file-io
  * \desc Docs!
  * \arg sll_file_t* f
- * \arg void* p
+ * \arg void* ptr
  * \arg sll_size_t sz
  * \arg sll_error_t* err
  * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p,sll_size_t sz,sll_error_t* err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* ptr,sll_size_t sz,sll_error_t* err);
 
 
 
@@ -547,12 +547,12 @@ __SLL_EXTERNAL sll_error_t sll_file_reset(sll_file_t* f);
  * \subgroup file-io
  * \desc Docs!
  * \arg sll_file_t* f
- * \arg const void* p
+ * \arg const void* ptr
  * \arg sll_size_t sz
  * \arg sll_error_t* err
  * \ret sll_size_t
  */
-__SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t sz,sll_error_t* err);
+__SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* ptr,sll_size_t sz,sll_error_t* err);
 
 
 
