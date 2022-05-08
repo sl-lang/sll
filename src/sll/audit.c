@@ -28,15 +28,15 @@ void _audit_cleanup(void){
 
 
 
-__SLL_EXTERNAL void sll_audit(const sll_char_t* nm,const sll_char_t* t,...){
+__SLL_EXTERNAL void sll_audit(const sll_char_t* name,const sll_char_t* fmt,...){
 	if (!_audit_enable){
 		return;
 	}
 	va_list va;
-	va_start(va,t);
+	va_start(va,fmt);
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_C(&dt,&va);
-	sll_audit_list(nm,t,&dt);
+	sll_audit_list(name,fmt,&dt);
 	va_end(va);
 }
 
@@ -50,14 +50,14 @@ __SLL_EXTERNAL sll_bool_t sll_audit_enable(sll_bool_t enable){
 
 
 
-__SLL_EXTERNAL void sll_audit_list(const sll_char_t* nm,const sll_char_t* t,sll_var_arg_list_t* va){
+__SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* fmt,sll_var_arg_list_t* va){
 	if (!_audit_enable){
 		return;
 	}
 	sll_string_t nm_s;
-	sll_string_from_pointer(nm,&nm_s);
+	sll_string_from_pointer(name,&nm_s);
 	sll_array_t arr;
-	sll_new_object_array_list(t,sll_string_length(t),va,&arr);
+	sll_new_object_array_list(fmt,sll_string_length(fmt),va,&arr);
 	for (sll_array_length_t i=0;i<_audit_cb_len;i++){
 		(*(_audit_cb+i))(&nm_s,&arr);
 	}

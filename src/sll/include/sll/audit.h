@@ -31,10 +31,10 @@ typedef void (*sll_audit_callback_t)(const sll_string_t* name,const sll_array_t*
  * \name sll_audit
  * \group audit
  * \desc Docs!
- * \arg const sll_char_t* nm
- * \arg const sll_char_t* t
+ * \arg const sll_char_t* name
+ * \arg const sll_char_t* fmt
  */
-__SLL_EXTERNAL void sll_audit(const sll_char_t* nm,const sll_char_t* t,...);
+__SLL_EXTERNAL void sll_audit(const sll_char_t* name,const sll_char_t* fmt,...);
 
 
 
@@ -55,11 +55,11 @@ __SLL_EXTERNAL sll_bool_t sll_audit_enable(sll_bool_t enable);
  * \name sll_audit_list
  * \group audit
  * \desc Docs!
- * \arg const sll_char_t* nm
- * \arg const sll_char_t* t
+ * \arg const sll_char_t* name
+ * \arg const sll_char_t* fmt
  * \arg sll_var_arg_list_t* va
  */
-__SLL_EXTERNAL void sll_audit_list(const sll_char_t* nm,const sll_char_t* t,sll_var_arg_list_t* va);
+__SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* fmt,sll_var_arg_list_t* va);
 
 
 
