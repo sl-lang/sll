@@ -188,7 +188,7 @@ __SLL_EXTERNAL void sll_file_from_data(const void* ptr,sll_size_t sz,sll_file_fl
 		o->_w.d.sz=0;
 		o->_w.d.off=0;
 	}
-	*((void**)(&(o->dt.mm.p)))=ptr;
+	*((const void**)(&(o->dt.mm.p)))=ptr;
 	*((sll_size_t*)(&(o->dt.mm.sz)))=sz;
 	*((sll_file_flags_t*)(&(o->f)))=(flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|FILE_FLAG_DYNAMIC_BUFFERS))|SLL_FILE_FLAG_NO_BUFFER|FILE_FLAG_MEMORY;
 	o->_l_num=0;
