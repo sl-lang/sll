@@ -31,6 +31,7 @@ typedef struct _EXTENDED_FILE{
 	extended_file_data_t dt;
 	sll_reference_count_t rc;
 	sll_bool_t p;
+	void* data_ptr;
 } extended_file_t;
 
 

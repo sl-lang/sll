@@ -61,6 +61,8 @@ static sll_file_handle_t _alloc_file(void){
 	}
 	extended_file_t* n=sll_allocate(sizeof(extended_file_t));
 	n->rc=1;
+	n->p=0;
+	n->data_ptr=NULL;
 	*(_file_fl+o)=n;
 	return o;
 }
@@ -74,6 +76,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(s
 	(*(_file_fl+fh))->rc--;
 	if ((*(_file_fl+fh))->rc){
 		return 1;
+	}
+	if ((*(_file_fl+fh))->data_ptr){
+		sll_deallocate((*(_file_fl+fh))->data_ptr);
 	}
 	if ((*(_file_fl+fh))->p){
 		sll_file_close((*(_file_fl+fh))->dt.p);
@@ -135,11 +140,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_from
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES)){
 		return ~SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 	}
+	void* ptr=sll_allocate(data->l);
+	sll_copy_data(data->v,data->l,ptr);
 	sll_file_t f;
-	sll_file_from_data(data->v,data->l,(sll_file_flags_t)(flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
+	sll_file_from_data(ptr,data->l,(sll_file_flags_t)(flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
 	sll_integer_t h=_alloc_file();
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+h))->dt.f));
 	(*(_file_fl+h))->p=0;
+	(*(_file_fl+h))->data_ptr=ptr;
 	return h;
 }
 

@@ -434,12 +434,12 @@ __SLL_EXTERNAL sll_error_t sll_file_flush(sll_file_t* f);
  * \name sll_file_from_data
  * \group file
  * \desc Docs!
- * \arg void* ptr
+ * \arg const void* ptr
  * \arg sll_size_t sz
  * \arg sll_file_flags_t flags
  * \arg sll_file_t* o
  */
-__SLL_EXTERNAL void sll_file_from_data(void* ptr,sll_size_t sz,sll_file_flags_t flags,sll_file_t* o);
+__SLL_EXTERNAL void sll_file_from_data(const void* ptr,sll_size_t sz,sll_file_flags_t flags,sll_file_t* o);
 
 
 

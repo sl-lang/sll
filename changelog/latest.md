@@ -7,6 +7,7 @@
 ## Changed
 
 - Audit event `sll.sys.library.load` now also contains the path to the library
+- Buffer passed to `sll_file_from_data` is no longer internaly allocated
 - Libraries loaded via `load_library` are now longer constrained to the `sys_lib/` directory
 - Library extensions returned by `sys$LIBRARY_EXTENSION` now contain the separating dot
 

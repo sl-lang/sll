@@ -146,7 +146,6 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 				c=n;
 			} while (c);
 		}
-		sll_deallocate(PTR(f->dt.mm.p));
 	}
 	*((sll_file_flags_t*)(&(f->f)))=FILE_FLAG_NO_RELEASE;
 }
@@ -174,7 +173,7 @@ __SLL_EXTERNAL sll_error_t sll_file_flush(sll_file_t* f){
 
 
 
-__SLL_EXTERNAL void sll_file_from_data(void* ptr,sll_size_t sz,sll_file_flags_t flags,sll_file_t* o){
+__SLL_EXTERNAL void sll_file_from_data(const void* ptr,sll_size_t sz,sll_file_flags_t flags,sll_file_t* o){
 	flags&=~FILE_FLAG_DYNAMIC_BUFFERS;
 	if (flags&SLL_FILE_FLAG_APPEND){
 		SLL_UNIMPLEMENTED();
@@ -189,9 +188,7 @@ __SLL_EXTERNAL void sll_file_from_data(void* ptr,sll_size_t sz,sll_file_flags_t 
 		o->_w.d.sz=0;
 		o->_w.d.off=0;
 	}
-	void* n=sll_allocate(sz);
-	sll_copy_data(ptr,sz,n);
-	*((void**)(&(o->dt.mm.p)))=n;
+	*((void**)(&(o->dt.mm.p)))=ptr;
 	*((sll_size_t*)(&(o->dt.mm.sz)))=sz;
 	*((sll_file_flags_t*)(&(o->f)))=(flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|FILE_FLAG_DYNAMIC_BUFFERS))|SLL_FILE_FLAG_NO_BUFFER|FILE_FLAG_MEMORY;
 	o->_l_num=0;
