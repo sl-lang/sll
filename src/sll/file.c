@@ -546,7 +546,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* p,sll_size_t 
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_error_t* err){
+__SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t chr,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)){
 		return 0;
@@ -556,7 +556,7 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
 		if (f->f&FILE_FLAG_DYNAMIC_BUFFERS){
 			dynamic_buffer_chunk_t* k=f->_w.d.t;
 			if (k->sz>f->_w.d.off){
-				k->dt[f->_w.d.off]=c;
+				k->dt[f->_w.d.off]=chr;
 				f->_w.d.sz++;
 				f->_w.d.off++;
 				UNLOCK;
@@ -570,7 +570,7 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
 			UNLOCK;
 			return 0;
 		}
-		*(((sll_char_t*)(f->dt.mm.p))+f->_off)=c;
+		*(((sll_char_t*)(f->dt.mm.p))+f->_off)=chr;
 		f->_off++;
 		UNLOCK;
 		return 1;
@@ -580,19 +580,19 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
 		return 0;
 	}
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
-		sll_bool_t o=sll_platform_file_write(f->dt.fl.fd,&c,sizeof(sll_char_t),err);
+		sll_bool_t o=sll_platform_file_write(f->dt.fl.fd,&chr,sizeof(sll_char_t),err);
 		return o;
 	}
 	LOCK;
 	SLL_ASSERT(f->_w.bf.off+1<=FILE_BUFFER_SIZE);
-	f->_w.bf.p[f->_w.bf.off]=c;
+	f->_w.bf.p[f->_w.bf.off]=chr;
 	f->_w.bf.off++;
 	if (f->_w.bf.off==FILE_BUFFER_SIZE){
 		sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
 		f->_w.bf.off=0;
 	}
 	UNLOCK;
-	if ((f->f&SLL_FILE_FLUSH_ON_NEWLINE)&&c=='\n'){
+	if ((f->f&SLL_FILE_FLUSH_ON_NEWLINE)&&chr=='\n'){
 		sll_file_flush(f);
 	}
 	return ZERO_IF_ERROR_PTR(1);
@@ -600,7 +600,7 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t c,sll_err
 
 
 
-__SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,sll_size_t cnt,sll_error_t* err){
+__SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t chr,sll_size_t cnt,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_WRITE)||!cnt){
 		return 0;
@@ -613,7 +613,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 		if (f->_off+cnt>=f->dt.mm.sz){
 			cnt=f->dt.mm.sz-f->_off;
 		}
-		sll_set_memory(((sll_char_t*)(f->dt.mm.p))+f->_off,cnt,c);
+		sll_set_memory(((sll_char_t*)(f->dt.mm.p))+f->_off,cnt,chr);
 		f->_off+=cnt;
 		UNLOCK;
 		return cnt;
@@ -625,45 +625,45 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* f,sll_char_t c,s
 	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
 		sll_size_t o=0;
 		while (cnt){
-			o+=sll_platform_file_write(f->dt.fl.fd,&c,sizeof(sll_char_t),err);
+			o+=sll_platform_file_write(f->dt.fl.fd,&chr,sizeof(sll_char_t),err);
 			cnt--;
 		}
 		return ZERO_IF_ERROR_PTR(o);
 	}
 	LOCK;
 	if (cnt+f->_w.bf.off<=FILE_BUFFER_SIZE){
-		sll_set_memory(f->_w.bf.p+f->_w.bf.off,cnt,c);
+		sll_set_memory(f->_w.bf.p+f->_w.bf.off,cnt,chr);
 		f->_w.bf.off+=cnt;
 		if (f->_w.bf.off==FILE_BUFFER_SIZE){
 			sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
 			f->_w.bf.off=0;
 		}
 		UNLOCK;
-		if ((f->f&SLL_FILE_FLUSH_ON_NEWLINE)&&c=='\n'){
+		if ((f->f&SLL_FILE_FLUSH_ON_NEWLINE)&&chr=='\n'){
 			sll_file_flush(f);
 		}
 		return ZERO_IF_ERROR_PTR(cnt);
 	}
 	sll_size_t i=FILE_BUFFER_SIZE-f->_w.bf.off;
-	sll_set_memory(f->_w.bf.p+f->_w.bf.off,i,c);
+	sll_set_memory(f->_w.bf.p+f->_w.bf.off,i,chr);
 	sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
 	sll_size_t o=cnt;
 	cnt-=i;
 	i=cnt&(FILE_BUFFER_SIZE-1);
 	cnt-=i;
 	if (cnt){
-		sll_set_memory(f->_w.bf.p,FILE_BUFFER_SIZE,c);
+		sll_set_memory(f->_w.bf.p,FILE_BUFFER_SIZE,chr);
 		while (cnt){
 			sll_platform_file_write(f->dt.fl.fd,f->_w.bf.p,FILE_BUFFER_SIZE,err);
 			cnt-=FILE_BUFFER_SIZE;
 		}
 	}
 	if (i){
-		sll_set_memory(f->_w.bf.p,i,c);
+		sll_set_memory(f->_w.bf.p,i,chr);
 	}
 	f->_w.bf.off=i;
 	UNLOCK;
-	if ((f->f&SLL_FILE_FLUSH_ON_NEWLINE)&&c=='\n'){
+	if ((f->f&SLL_FILE_FLUSH_ON_NEWLINE)&&chr=='\n'){
 		sll_file_flush(f);
 	}
 	return ZERO_IF_ERROR_PTR(o);
