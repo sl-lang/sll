@@ -57,7 +57,13 @@ jobs:
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
-        run: ${{env.BUILD_COMMAND_LINUX}}
+        run: ${{env.BUILD_COMMAND_LINUX}} --bundle --upload
+      - name: Store assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-darwin
+          path: darwin.zip
+          retention-days: 1
   darwin-release:
     name: Build darwin release
     runs-on: macos-latest
@@ -88,12 +94,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Download release build
+      - name: Download debug build
         uses: actions/download-artifact@v3
         with:
-          name: release-darwin
+          name: debug-darwin
           path: build
-      - name: Unpack release
+      - name: Unpack build
         run: unzip -o build/darwin.zip -d build
       - name: Test
         run: build/sll tests/_runner.sll
@@ -110,15 +116,7 @@ jobs:
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
-        run: ${{env.BUILD_COMMAND_LINUX}} --bundle --upload
-        env:
-          GENERATE_COVERAGE: 1
-      - name: Store assets
-        uses: actions/upload-artifact@v3
-        with:
-          name: debug-linux
-          path: linux.zip
-          retention-days: 1
+        run: ${{env.BUILD_COMMAND_LINUX}}
   linux-release:
     name: Build linux release
     runs-on: ubuntu-latest
@@ -149,15 +147,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Download debug build
-        uses: actions/download-artifact@v3
+      - name: Setup Python
+        uses: actions/setup-python@v3
         with:
-          name: debug-linux
-          path: build
-      - name: Unpack release
-        run: unzip -o build/linux.zip -d build
+          python-version: 3.9
+      - name: Setup NASM
+        uses: ilammy/setup-nasm@v1
+      - name: Build
+        run: ${{env.BUILD_COMMAND_LINUX}}
+        env:
+          GENERATE_COVERAGE: 1
       - name: Prepare test
-        run: mkdir build/objects
+        run: rm -f build/objects/*.gcda
       - name: Test
         run: build/sll tests/_runner.sll
       - name: Generate coverage report
@@ -204,8 +205,14 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
-        run: ${{env.BUILD_COMMAND_WINDOWS}}
+        run: ${{env.BUILD_COMMAND_WINDOWS}} --bundle --upload
         shell: cmd
+      - name: Store assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-windows
+          path: windows.zip
+          retention-days: 1
   windows-release:
     name: Build windows release
     runs-on: windows-latest
@@ -239,12 +246,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Download release build
+      - name: Download debug build
         uses: actions/download-artifact@v3
         with:
-          name: release-windows
+          name: debug-windows
           path: build
-      - name: Unpack release
+      - name: Unpack build
         run: |
           Expand-Archive -Force build\windows.zip build\
           exit 0
