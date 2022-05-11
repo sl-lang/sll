@@ -152,10 +152,10 @@ jobs:
       - name: Download debug build
         uses: actions/download-artifact@v3
         with:
-          name: debug-darwin
+          name: debug-linux
           path: build
       - name: Unpack release
-        run: unzip -o build/darwin.zip -d build
+        run: unzip -o build/linux.zip -d build
       - name: Prepare test
         run: mkdir build/objects
       - name: Test
