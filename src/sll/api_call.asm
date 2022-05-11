@@ -100,6 +100,10 @@ __SLL_EXPORT _call_api_func_assembly
 	; r11 - Function pointer
 	mov QWORD [r10], rbx
 
+	xorpd xmm0, xmm0
+	xorpd xmm1, xmm1
+	xorpd xmm2, xmm2
+	xorpd xmm3, xmm3
 	mov rcx, QWORD [rsp]
 	mov rdx, QWORD [rsp+8]
 	mov r8, QWORD [rsp+16]
