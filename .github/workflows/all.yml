@@ -79,7 +79,7 @@ jobs:
           path: darwin.zip
           retention-days: 1
   darwin-test:
-    name: Test darwin release
+    name: Test darwin
     needs:
       - darwin
       - darwin-release
@@ -110,7 +110,15 @@ jobs:
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
-        run: ${{env.BUILD_COMMAND_LINUX}}
+        run: ${{env.BUILD_COMMAND_LINUX}} --bundle --upload
+        env:
+          GENERATE_COVERAGE: 1
+      - name: Store assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-linux
+          path: linux.zip
+          retention-days: 1
   linux-release:
     name: Build linux release
     runs-on: ubuntu-latest
@@ -132,7 +140,7 @@ jobs:
           path: linux.zip
           retention-days: 1
   linux-test:
-    name: Test linux release
+    name: Test linux
     needs:
       - linux
       - linux-release
@@ -141,18 +149,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
+      - name: Download debug build
+        uses: actions/download-artifact@v3
         with:
-          python-version: 3.9
-      - name: Setup NASM
-        uses: ilammy/setup-nasm@v1
-      - name: Build
-        run: ${{env.BUILD_COMMAND_LINUX}}
-        env:
-          GENERATE_COVERAGE: 1
+          name: debug-darwin
+          path: build
+      - name: Unpack release
+        run: unzip -o build/darwin.zip -d build
       - name: Prepare test
-        run: rm -f build/objects/*.gcda
+        run: mkdir build/objects
       - name: Test
         run: build/sll tests/_runner.sll
       - name: Generate coverage report
@@ -225,7 +230,7 @@ jobs:
           path: windows.zip
           retention-days: 1
   windows-test:
-    name: Test windows release
+    name: Test windows
     needs:
       - windows
       - windows-release
