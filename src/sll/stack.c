@@ -13,7 +13,7 @@ static void _request_new_node_page(sll_source_file_t* sf){
 	void* n=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
 	*((void**)(sf->_s.e))=n;
 	*((void**)n)=NULL;
-	sll_node_t* s=(sll_node_t*)((char*)n+sizeof(void*));
+	sll_node_t* s=PTR(ADDR(n)+sizeof(void*));
 	s->t=SLL_NODE_TYPE_CHANGE_STACK;
 	s->dt._p=sf->_s.p-1;
 	SLL_ASSERT(sf->_s.p->t==SLL_NODE_TYPE_CHANGE_STACK);
@@ -37,7 +37,7 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 		void* n=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
 		*((void**)(a_dt->_s.e))=n;
 		*((void**)n)=NULL;
-		sll_assembly_instruction_t* s=(sll_assembly_instruction_t*)((char*)n+sizeof(void*));
+		sll_assembly_instruction_t* s=PTR(ADDR(n)+sizeof(void*));
 		s->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 		s->dt._p=a_dt->_s.p-1;
 		SLL_ASSERT(a_dt->_s.p->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
@@ -101,7 +101,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 		pg=*((void**)pg);
 		off-=cnt;
 	}
-	return (sll_assembly_instruction_t*)((char*)pg+sizeof(void*)+sizeof(sll_assembly_instruction_t)*(off+1));
+	return PTR(ADDR(pg)+sizeof(void*)+sizeof(sll_assembly_instruction_t)*(off+1));
 }
 
 
@@ -113,7 +113,7 @@ sll_node_t* _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t of
 		pg=*((void**)pg);
 		off-=cnt;
 	}
-	return (sll_node_t*)((char*)pg+sizeof(void*)+sizeof(sll_node_t)*(off+1));
+	return PTR(ADDR(pg)+sizeof(void*)+sizeof(sll_node_t)*(off+1));
 }
 
 
@@ -122,7 +122,7 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt){
 	a_dt->_s.s=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
 	a_dt->_s.e=a_dt->_s.s;
 	*((void**)(a_dt->_s.s))=NULL;
-	sll_assembly_instruction_t* s=(sll_assembly_instruction_t*)((char*)(a_dt->_s.s)+sizeof(void*));
+	sll_assembly_instruction_t* s=PTR(ADDR(a_dt->_s.s)+sizeof(void*));
 	s->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 	s->dt._p=NULL;
 	a_dt->_s.c=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
@@ -138,7 +138,7 @@ void _init_node_stack(sll_source_file_t* sf){
 	sf->_s.s=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
 	sf->_s.e=sf->_s.s;
 	*((void**)(sf->_s.s))=NULL;
-	sll_node_t* s=(sll_node_t*)((char*)(sf->_s.s)+sizeof(void*));
+	sll_node_t* s=PTR(ADDR(sf->_s.s)+sizeof(void*));
 	s->t=SLL_NODE_TYPE_CHANGE_STACK;
 	s->dt._p=NULL;
 	sf->_s.c=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(void*)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
