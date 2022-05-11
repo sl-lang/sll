@@ -14,11 +14,6 @@
 
 
 
-#define USER_MEM_BLOCK_FLAG_USED 1
-
-#define USER_MEM_BLOCK_GET_SIZE(b) ((b)->dt>>1)
-#define USER_MEM_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_USED|((sz)<<1))
-
 #define POINTER_TO_STRING(p) \
 	do{ \
 		addr_t ptr=(addr_t)(p); \
@@ -35,6 +30,8 @@
 
 static pool_data_t _memory_pool[MEMORY_POOL_SIZE];
 static __SLL_U32 _memory_update;
+static stack_block_header_t* _memory_stack;
+static stack_block_header_t* _memory_stack_top;
 
 
 
@@ -157,6 +154,46 @@ static __SLL_FORCE_INLINE void* _pool_get(sll_size_t sz){
 
 
 
+static void _init_stack_node(stack_block_header_t* node,sll_size_t sz){
+	SLL_ASSERT(sz);
+	node->dt=STACK_BLOCK_INIT(sz);
+	STACK_BLOCK_GET_END(node)->head=node;
+}
+
+
+
+static __SLL_FORCE_INLINE void _stack_add(user_mem_block_t* b){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+static __SLL_FORCE_INLINE void* _stack_get(sll_size_t sz){
+	if (!_memory_stack_top||STACK_BLOCK_GET_SIZE(_memory_stack_top)<sz){
+		return NULL;
+	}
+	return NULL;
+}
+
+
+
+static __SLL_FORCE_INLINE void* _allocate_chunk(sll_size_t sz,sll_bool_t err){
+	user_mem_block_t* b=_pool_get(sz-1);
+	if (!b){
+		b=malloc(sz<<4);
+		if (!b){
+			if (err){
+				_raise_error(0,NULL,sz);
+			}
+			return NULL;
+		}
+	}
+	b->dt=USER_MEM_BLOCK_INIT(sz);
+	return b;
+}
+
+
+
 void _memory_deinit(void){
 	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
 		empty_pool_pointer_t* ptr=_memory_pool[i].ptr;
@@ -166,6 +203,7 @@ void _memory_deinit(void){
 			ptr=nxt;
 		}
 	}
+	SLL_CRITICAL_ERROR(sll_platform_free_page(_memory_stack,SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE)));
 }
 
 
@@ -179,6 +217,9 @@ void _memory_init(void){
 		_memory_pool[i].sz=MEMORY_POOL_MAX_BLOCKS;
 		_memory_pool[i].ptr=NULL;
 	}
+	_memory_stack=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE),1,NULL);
+	_memory_stack_top=_memory_stack;
+	_init_stack_node(_memory_stack_top,SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE)>>4);
 }
 
 
@@ -193,19 +234,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_raw(sll_size_t sz,sll_bool_
 	if (!sz){
 		return NULL;
 	}
-	sz=(sz+sizeof(user_mem_block_t)+15)>>4;
-	user_mem_block_t* b=_pool_get(sz-1);
-	if (!b){
-		b=malloc(sz<<4);
-		if (!b){
-			if (err){
-				_raise_error(0,NULL,sz);
-			}
-			return NULL;
-		}
-	}
-	b->dt=USER_MEM_BLOCK_INIT(sz);
-	return PTR(ADDR(b)+sizeof(user_mem_block_t));
+	return PTR(ADDR(_allocate_chunk((sz+sizeof(user_mem_block_t)+15)>>4,err))+sizeof(user_mem_block_t));
 }
 
 
@@ -217,7 +246,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_raw(sll_size_t sz,sll_bool_t err){
-	return sll_allocate_raw(sz,err);
+	if (!sz){
+		return NULL;
+	}
+	sz=(sz+sizeof(user_mem_block_t)+15)>>4;
+	user_mem_block_t* b=_stack_get(sz-1);
+	if (b){
+		b->dt=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
+		SLL_UNIMPLEMENTED();
+	}
+	else{
+		b=_allocate_chunk(sz,err);
+	}
+	return PTR(ADDR(b)+sizeof(user_mem_block_t));
 }
 
 
@@ -226,7 +267,13 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 	if (!p){
 		return;
 	}
-	_pool_add(PTR(ADDR(p)-sizeof(user_mem_block_t)));
+	user_mem_block_t* b=(user_mem_block_t*)(ADDR(p)-sizeof(user_mem_block_t));
+	if (b->dt&USER_MEM_BLOCK_FLAG_STACK){
+		_stack_add(b);
+	}
+	else{
+		_pool_add(b);
+	}
 }
 
 
@@ -258,22 +305,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* p,sll_size_t sz
 	if (prev_sz==sz){
 		return p;
 	}
-	void* n_ptr=_pool_get(sz-1);
-	if (n_ptr){
-		sll_copy_data(p,((prev_sz<sz?prev_sz:sz)<<4)-sizeof(user_mem_block_t),PTR(ADDR(n_ptr)+sizeof(user_mem_block_t)));
-		_pool_add(b);
-		b=n_ptr;
+	if (b->dt&USER_MEM_BLOCK_FLAG_STACK){
+		b->dt=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
+		SLL_UNIMPLEMENTED();
 	}
 	else{
-		b=realloc(b,sz<<4);
-		if (!b){
-			if (err){
-				_raise_error(2,p,sz<<4);
-			}
-			return NULL;
+		void* n_ptr=_pool_get(sz-1);
+		if (n_ptr){
+			sll_copy_data(p,((prev_sz<sz?prev_sz:sz)<<4)-sizeof(user_mem_block_t),PTR(ADDR(n_ptr)+sizeof(user_mem_block_t)));
+			_pool_add(b);
+			b=n_ptr;
 		}
+		else{
+			b=realloc(b,sz<<4);
+			if (!b){
+				if (err){
+					_raise_error(2,p,sz<<4);
+				}
+				return NULL;
+			}
+		}
+		b->dt=USER_MEM_BLOCK_INIT(sz);
 	}
-	b->dt=USER_MEM_BLOCK_INIT(sz);
 	return PTR(ADDR(b)+sizeof(user_mem_block_t));
 }
 

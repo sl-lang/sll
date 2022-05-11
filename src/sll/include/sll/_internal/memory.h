@@ -14,6 +14,18 @@
 #define MEMORY_POOL_EXTEND_FACTOR_MISS 3
 #define MEMORY_POOL_MAX_NEW_SIZE 32768
 
+#define MEMORY_STACK_SIZE 2097152
+
+#define USER_MEM_BLOCK_FLAG_USED 1
+#define USER_MEM_BLOCK_FLAG_STACK 2
+
+#define USER_MEM_BLOCK_GET_SIZE(b) ((b)->dt>>2)
+#define USER_MEM_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_USED|((sz)<<2))
+
+#define STACK_BLOCK_GET_END(b) ((stack_block_end_t*)PTR(ADDR(b)+(STACK_BLOCK_GET_SIZE(b)<<4)-sizeof(stack_block_end_t)))
+#define STACK_BLOCK_GET_SIZE(b) ((b)->dt>>2)
+#define STACK_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_STACK|((sz)<<2))
+
 
 
 typedef struct _USER_MEM_BLOCK{
@@ -35,6 +47,16 @@ typedef struct _POOL_DATA{
 	__SLL_U32 sz;
 	empty_pool_pointer_t* ptr;
 } pool_data_t;
+
+
+
+typedef user_mem_block_t stack_block_header_t;
+
+
+
+typedef struct _STACK_BLOCK_END{
+	stack_block_header_t* head;
+} stack_block_end_t;
 
 
 
