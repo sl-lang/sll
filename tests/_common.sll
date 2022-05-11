@@ -166,6 +166,7 @@
 	(= id (: (<- string$split (: (<- path$split (: sys$ARGV 0)) 1) ".") 0))
 	(= _test_data <
 		"name" name
+		"file" (<- string$replace (: (: (: (<- error$get_call_stack) -1) "return") "file") '\\' '/')
 		"success" 0
 		"error" []
 		"time" 0

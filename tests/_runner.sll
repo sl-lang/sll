@@ -6,62 +6,119 @@
 
 
 
-(= args [
-	(?: (=== sys$PLATFORM "windows") "build\\sll.exe" "build/sll")
-	"-I" "tests"
-])
-(= list (<- path$list_dir "tests" true))
-(-> (= i 0) (< i ($ list))
-	(= fp (: list i))
-	(++ i)
-	(? (=== (: (: (<- path$split fp) 1) 0) '_') (<<<))
-	(<- array$push args fp)
-)
-(? (: (<- process$start args) "return_code") {
+(= build_command (,,,
+	(= args [
+		(?: (=== sys$PLATFORM "windows") "build\\sll.exe" "build/sll")
+		"-I" "tests"
+	])
+	(= list (<- path$list_dir "tests" true))
+	(-> (= i 0) (< i ($ list))
+		(= fp (: list i))
+		(++ i)
+		(? (=== (: (: (<- path$split fp) 1) 0) '_') (<<<))
+		(<- array$push args fp)
+	)
+	(@@ args)
+))
+
+(= read_results (,,, path
+	(= f (<- file$open path "r"))
+	(? (=== f nil) {
+		(? GH_ACTIONS {
+			(:> "::error file=tests/_runner.sll,title=Test runner::Test result file missing\n")
+		})
+		(:> "No test result file found!\n")
+		(@@ 1)
+	})
+	(= bf "")
+	(>- (= chunk "") chunk
+		(= chunk (<- file$read f 1024))
+		(= bf (+ bf chunk))
+	)
+	(<- file$close f)
+	(@@ (<- json$parse bf))
+))
+
+(= print_stats (,,, results
+	(= success 0)
+	(= error 0)
+	(= data (:: results map_value_type))
+	(-> (= i 0) (< i ($ data))
+		(= k (: data i))
+		(= success (+ success k$success))
+		(= error (+ error ($ k$error)))
+		(++ i)
+	)
+	(= total (+ success error))
+	(= error_percent (<- math$ceil (/ (* error 100) total)))
+	(:> (<- string$format "Total tests: %u\nPassed: %u (%u%%)\nFailed: %u (%u%%)\n"
+		total
+		success
+		(- 100 error_percent)
+		error
+		error_percent
+	))
+))
+
+(= generate_summary (,,, results out_path
+	(= f (<- file$open out_path "w"))
+	(<- file$write f
+`<table>
+	<tr>
+		<th>Name</th>
+		<th>File</th>
+		<th>Passed</th>
+		<th>Failed</th>
+		<th>Total</th>
+	</tr>
+`)
+	(= data (:: results map_value_type))
+	(= passed 0)
+	(= failed 0)
+	(-> (= i 0) (< i ($ data))
+		(= v (: data i))
+		(= passed (+ passed v$success))
+		(= failed (+ failed ($ v$error)))
+		(<- file$write f
+`	<tr>
+		<td>` v$name `</td>
+		<td><code>` v$file `</code></td>
+		<td>` v$success `</td>
+		<td>` ($ v$error) `</td>
+		<td>` (+ v$success ($ v$error)) `</td>
+	</tr>
+`)
+		(++ i)
+	)
+	(<- file$write f
+`	<tr>
+		<td colspan="2"><strong>Total</strong></td>
+		<td>` passed `</td>
+		<td>` failed `</td>
+		<td>` (+ passed failed) `</td>
+	</tr>
+</table>
+`)
+	(<- file$close f)
+))
+
+
+
+(? (: (<- process$start (<- build_command)) "return_code") {
 	(? GH_ACTIONS {
 		(:> "::error file=tests/_runner.sll,title=Test runner::Child process crashed while executing test cases\n")
 	})
 	(:> "Child process crashed!\n")
 	(@@ 1)
 })
-(= f (<- file$open "build/test_results.json" "r"))
-(? (=== f nil) {
-	(? GH_ACTIONS {
-		(:> "::error file=tests/_runner.sll,title=Test runner::Test result file missing\n")
-	})w
-	(:> "No test result file found!\n")
-	(@@ 1)
-})
-(= bf "")
-(>- (= chunk "") chunk
-	(= chunk (<- file$read f 1024))
-	(= bf (+ bf chunk))
-)
-(<- file$close f)
-(= results (<- json$parse bf))
+(= results (<- read_results "build/test_results.json"))
 (? GH_ACTIONS {
 	(:> "::group::Results\n")
 } {
 	(:> "===> Results <===\n")
 })
-(= success 0)
-(= error 0)
-(= data (:: results map_value_type))
-(-> (= i 0) (< i ($ data))
-	(= k (: data i))
-	(= success (+ success k$success))
-	(= error (+ error ($ k$error)))
-	(++ i)
-)
-(= total (+ success error))
-(= error_percent (<- math$ceil (/ (* error 100) total)))
-(:> (<- string$format "Total tests: %u\nPassed: %u (%u%%)\nFailed: %u (%u%%)\n"
-	total
-	success
-	(- 100 error_percent)
-	error
-	error_percent
-))
+(<- print_stats results)
 (? GH_ACTIONS {
 	(:> "::endgroup::\n")
 })
+	(<- generate_summary results (: sys$ENVIRONMENT "GITHUB_STEP_SUMMARY"))
