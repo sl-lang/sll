@@ -11,6 +11,18 @@
 
 
 
+typedef struct _ASSEMBLY_STACK_PAGE{
+	struct _ASSEMBLY_STACK_PAGE* nxt;
+} assembly_stack_page_t;
+
+
+
+typedef struct _NODE_STACK_PAGE{
+	struct _NODE_STACK_PAGE* nxt;
+} node_stack_page_t;
+
+
+
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt);
 
 

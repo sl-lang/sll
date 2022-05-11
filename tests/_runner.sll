@@ -120,5 +120,5 @@
 (<- print_stats results)
 (? GH_ACTIONS {
 	(:> "::endgroup::\n")
-})
 	(<- generate_summary results (: sys$ENVIRONMENT "GITHUB_STEP_SUMMARY"))
+})
