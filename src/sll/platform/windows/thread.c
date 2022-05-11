@@ -32,7 +32,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_join_thread(sll_inter
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_cpu(sll_cpu_t cpu){
-	return (SetThreadIdealProcessor(GetCurrentThread(),(cpu==SLL_CPU_ANY||cpu>=*sll_platform_cpu_count?0xffffffffffffffffull:1ull<<cpu))?SLL_NO_ERROR:sll_platform_get_error());
+	return (SetThreadIdealProcessor(GetCurrentThread(),(cpu==SLL_CPU_ANY||cpu>=*sll_platform_cpu_count?0xffffffffffffffffull:1ull<<cpu))==0xffffffff?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 

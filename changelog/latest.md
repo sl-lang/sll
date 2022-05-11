@@ -8,6 +8,7 @@
 
 - Audit event `sll.sys.library.load` now also contains the path to the library
 - Buffer passed to `sll_file_from_data` is no longer internaly allocated
+- *\[Windows only\]* Fixed `sll_platform_set_cpu`
 - Libraries loaded via `load_library` are now longer constrained to the `sys_lib/` directory
 - Library extensions returned by `sys$LIBRARY_EXTENSION` now contain the separating dot
 - Newline file flushes are now enabled in append mode ([#276])
