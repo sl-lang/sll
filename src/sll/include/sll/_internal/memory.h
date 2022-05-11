@@ -22,7 +22,7 @@
 #define USER_MEM_BLOCK_GET_SIZE(b) ((b)->dt>>2)
 #define USER_MEM_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_USED|((sz)<<2))
 
-#define STACK_BLOCK_GET_END(b) ((stack_block_end_t*)PTR(ADDR(b)+(STACK_BLOCK_GET_SIZE(b)<<4)-sizeof(stack_block_end_t)))
+#define STACK_BLOCK_GET_END(b) ((stack_block_end_t*)PTR(ADDR(b)+(STACK_BLOCK_GET_SIZE(b)<<4)))
 #define STACK_BLOCK_GET_SIZE(b) ((b)->dt>>2)
 #define STACK_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_STACK|((sz)<<2))
 

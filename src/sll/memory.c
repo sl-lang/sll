@@ -154,7 +154,7 @@ static __SLL_FORCE_INLINE void* _pool_get(sll_size_t sz){
 
 
 
-static void _init_stack_node(stack_block_header_t* node,sll_size_t sz){
+static __SLL_FORCE_INLINE void _init_stack_node(stack_block_header_t* node,sll_size_t sz){
 	SLL_ASSERT(sz);
 	node->dt=STACK_BLOCK_INIT(sz);
 	STACK_BLOCK_GET_END(node)->head=node;
@@ -173,6 +173,19 @@ static __SLL_FORCE_INLINE void* _stack_get(sll_size_t sz){
 		return NULL;
 	}
 	return NULL;
+	stack_block_header_t* o=_memory_stack_top;
+	sll_size_t blk_sz=STACK_BLOCK_GET_SIZE(o);
+	if (blk_sz==sz){
+		_memory_stack_top=NULL;
+	}
+	else{
+		o->dt=STACK_BLOCK_INIT(sz);
+		stack_block_end_t* end=STACK_BLOCK_GET_END(o);
+		end->head=o;
+		_memory_stack_top=PTR(ADDR(end)+sizeof(stack_block_end_t));
+		_init_stack_node(_memory_stack_top,((blk_sz<<4)-(sz<<4)-sizeof(stack_block_end_t))>>4);
+	}
+	return o;
 }
 
 
@@ -219,7 +232,7 @@ void _memory_init(void){
 	}
 	_memory_stack=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE),1,NULL);
 	_memory_stack_top=_memory_stack;
-	_init_stack_node(_memory_stack_top,SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE)>>4);
+	_init_stack_node(_memory_stack_top,(SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE)-sizeof(stack_block_end_t))>>4);
 }
 
 
@@ -253,7 +266,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_raw(sll_size_t sz,sll
 	user_mem_block_t* b=_stack_get(sz-1);
 	if (b){
 		b->dt=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
-		SLL_UNIMPLEMENTED();
 	}
 	else{
 		b=_allocate_chunk(sz,err);
