@@ -19,6 +19,7 @@
 ## Removed
 
 - Extension directory (`sys_lib/`), `sys$LIBRARY_PATH` and `-i extension-library-path`
+- Unused constant macro: `SLL_MAX_PAGE_SIZE`
 
 [0.7.17]: https://github.com/sl-lang/sll/compare/sll-v0.7.16...main
 [#283]: https://github.com/sl-lang/sll/issues/283

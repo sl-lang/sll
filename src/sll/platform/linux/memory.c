@@ -17,12 +17,12 @@ static sll_bool_t _linux_huge_tlb=1;
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l,sll_error_t* err){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t size,sll_bool_t large,sll_error_t* err){
 	ERROR_PTR_RESET;
 #ifndef __SLL_BUILD_DARWIN
-	if (_linux_huge_tlb&&l){
-		SLL_ASSERT(SLL_ROUND_LARGE_PAGE(sz)==sz);
-		void* o=mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_HUGETLB,-1,0);
+	if (_linux_huge_tlb&&large){
+		SLL_ASSERT(SLL_ROUND_LARGE_PAGE(size)==size);
+		void* o=mmap(NULL,size,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_HUGETLB,-1,0);
 		if (o!=MAP_FAILED){
 			return o;
 		}
@@ -31,9 +31,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 		}
 	}
 #endif
-	SLL_ASSERT(SLL_ROUND_PAGE(sz)==sz);
+	SLL_ASSERT(SLL_ROUND_PAGE(size)==size);
 	SLL_ASSERT(sysconf(_SC_PAGESIZE)==SLL_PAGE_SIZE);
-	void* o=mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+	void* o=mmap(NULL,size,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
 	if (o!=MAP_FAILED){
 		return o;
 	}
@@ -43,19 +43,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align,sll_error_t* err){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t size,sll_size_t align,sll_error_t* err){
 	ERROR_PTR_RESET;
 	SLL_ASSERT(!(align&(align-1)));
 	if (align<=SLL_PAGE_SIZE){
-		void* o=mmap(NULL,sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+		void* o=mmap(NULL,size,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
 		if (o!=MAP_FAILED){
 			return o;
 		}
 		ERROR_PTR_SYSTEM;
 		return NULL;
 	}
-	sll_size_t mem_sz=sz+align-SLL_PAGE_SIZE;
-	void* o=mmap(NULL,mem_sz,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
+	sll_size_t mem_size=size+align-SLL_PAGE_SIZE;
+	void* o=mmap(NULL,mem_size,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);
 	if (o==MAP_FAILED){
 		ERROR_PTR_SYSTEM;
 		return NULL;
@@ -66,12 +66,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_s
 		munmap(o,off);
 		o=PTR(ADDR(o)+off);
 	}
-	munmap(PTR(ADDR(o)+sz),align-SLL_PAGE_SIZE-off);
+	munmap(PTR(ADDR(o)+size),align-SLL_PAGE_SIZE-off);
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* pg,sll_size_t sz){
-	return (munmap(pg,sz)?sll_platform_get_error():SLL_NO_ERROR);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* ptr,sll_size_t size){
+	return (munmap(ptr,size)?sll_platform_get_error():SLL_NO_ERROR);
 }

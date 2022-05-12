@@ -16,18 +16,6 @@
 
 /**
  * \flags macro var
- * \name SLL_MAX_PAGE_SIZE
- * \group platform
- * \subgroup platform-memory
- * \desc Docs!
- * \type sll_page_size_t
- */
-#define SLL_MAX_PAGE_SIZE __SLL_U64_MAX
-
-
-
-/**
- * \flags macro var
  * \name SLL_PAGE_SIZE
  * \group platform
  * \subgroup platform-memory
@@ -56,10 +44,10 @@
  * \group platform
  * \subgroup platform-memory
  * \desc Docs!
- * \arg sll_size_t x
+ * \arg sll_size_t size
  * \ret sll_size_t
  */
-#define SLL_ROUND_PAGE(x) (((x)+SLL_PAGE_SIZE-1)&(-SLL_PAGE_SIZE))
+#define SLL_ROUND_PAGE(size) (((size)+SLL_PAGE_SIZE-1)&(-SLL_PAGE_SIZE))
 
 
 
@@ -69,10 +57,10 @@
  * \group platform
  * \subgroup platform-memory
  * \desc Docs!
- * \arg sll_size_t x
+ * \arg sll_size_t size
  * \ret sll_size_t
  */
-#define SLL_ROUND_LARGE_PAGE(x) (((x)+SLL_LARGE_PAGE_SIZE-1)&(-SLL_LARGE_PAGE_SIZE))
+#define SLL_ROUND_LARGE_PAGE(size) (((size)+SLL_LARGE_PAGE_SIZE-1)&(-SLL_LARGE_PAGE_SIZE))
 
 
 
@@ -82,12 +70,12 @@
  * \group platform
  * \subgroup platform-memory
  * \desc Docs!
- * \arg sll_size_t sz
- * \arg sll_bool_t l
+ * \arg sll_size_t size
+ * \arg sll_bool_t large
  * \arg sll_error_t* err
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz,sll_bool_t l,sll_error_t* err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t size,sll_bool_t large,sll_error_t* err);
 
 
 
@@ -97,12 +85,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page(sll_size_t sz
  * \group platform
  * \subgroup platform-memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
  * \arg sll_size_t align
  * \arg sll_error_t* err
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t sz,sll_size_t align,sll_error_t* err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_size_t size,sll_size_t align,sll_error_t* err);
 
 
 
@@ -112,11 +100,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_s
  * \group platform
  * \subgroup platform-memory
  * \desc Docs!
- * \arg void* pg
- * \arg sll_size_t sz
+ * \arg void* ptr
+ * \arg sll_size_t size
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* pg,sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* ptr,sll_size_t size);
 
 
 
