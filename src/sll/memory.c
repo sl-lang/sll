@@ -117,7 +117,7 @@ static __SLL_FORCE_INLINE void _fill_zero(void* o,sll_size_t sz){
 
 
 
-static void _pool_add(user_mem_block_t* b){
+static __SLL_FORCE_INLINE void _pool_add(user_mem_block_t* b){
 	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
 	SLL_ASSERT(!(b->dt&USER_MEM_BLOCK_FLAG_STACK));
 	SLL_ASSERT(!(USER_MEM_BLOCK_GET_SIZE(b)&15));
@@ -134,7 +134,7 @@ static void _pool_add(user_mem_block_t* b){
 
 
 
-static void* _pool_get(sll_size_t sz){
+static __SLL_FORCE_INLINE void* _pool_get(sll_size_t sz){
 	if (sz>=MEMORY_POOL_SIZE){
 		return NULL;
 	}
@@ -155,7 +155,7 @@ static void* _pool_get(sll_size_t sz){
 
 
 
-static void _init_stack_node(stack_block_header_t* node,sll_size_t sz){
+static __SLL_FORCE_INLINE void _init_stack_node(stack_block_header_t* node,sll_size_t sz){
 	SLL_ASSERT(sz&&!(sz&7));
 	node->dt=STACK_BLOCK_INIT(sz);
 	STACK_BLOCK_SET_END(node);
@@ -163,7 +163,7 @@ static void _init_stack_node(stack_block_header_t* node,sll_size_t sz){
 
 
 
-static void _stack_add(user_mem_block_t* b){
+static __SLL_FORCE_INLINE void _stack_add(user_mem_block_t* b){
 	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
 	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_STACK);
 	stack_block_header_t* node;
@@ -192,7 +192,7 @@ static void _stack_add(user_mem_block_t* b){
 
 
 
-static void* _stack_get(sll_size_t sz){
+static __SLL_FORCE_INLINE void* _stack_get(sll_size_t sz){
 	sz=(sz+7)&0xfffffffffffffff8ull;
 	if (!_memory_stack_top||STACK_BLOCK_GET_SIZE(_memory_stack_top)<sz){
 		return NULL;
@@ -213,7 +213,7 @@ static void* _stack_get(sll_size_t sz){
 
 
 
-static void* _allocate_chunk(sll_size_t sz,sll_bool_t err){
+static __SLL_FORCE_INLINE void* _allocate_chunk(sll_size_t sz,sll_bool_t err){
 	sz=(sz+15)>>4;
 	user_mem_block_t* b=_pool_get(sz-1);
 	sz<<=4;
