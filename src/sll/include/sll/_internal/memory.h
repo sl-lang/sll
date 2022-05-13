@@ -22,8 +22,12 @@
 #define USER_MEM_BLOCK_GET_SIZE(b) ((b)->dt&0xfffffffffffffff8ull)
 #define USER_MEM_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_USED|(sz))
 
-#define STACK_BLOCK_GET_END(b) ((stack_block_end_t*)PTR(ADDR(b)+STACK_BLOCK_GET_SIZE(b)))
+#define STACK_BLOCK_SET_END(b) \
+	do{ \
+		((stack_block_end_t*)PTR(ADDR(b)+STACK_BLOCK_GET_SIZE(b)))->head=(b); \
+	} while (0)
 #define STACK_BLOCK_GET_NEXT(b) ((stack_block_header_t*)PTR(ADDR(b)+STACK_BLOCK_GET_SIZE(b)+sizeof(stack_block_end_t)))
+#define STACK_BLOCK_GET_PREV(b) ((stack_block_header_t*)(((stack_block_end_t*)PTR(ADDR(b)-sizeof(stack_block_end_t)))->head))
 #define STACK_BLOCK_GET_SIZE(b) ((b)->dt&0xfffffffffffffff8ull)
 #define STACK_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_STACK|(sz))
 #define STACK_BLOCK_END_OF_STACK(b) (b->dt==STACK_BLOCK_END_OF_STACK_MARKER)

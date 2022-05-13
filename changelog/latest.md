@@ -3,6 +3,7 @@
 ## Added
 
 - Implemented `sys$ROOT_PATH`
+- Implemented the stack memory allocator ([#281])
 
 ## Changed
 
@@ -24,5 +25,6 @@
 [0.7.17]: https://github.com/sl-lang/sll/compare/sll-v0.7.16...main
 [#283]: https://github.com/sl-lang/sll/issues/283
 [#282]: https://github.com/sl-lang/sll/issues/282
+[#281]: https://github.com/sl-lang/sll/issues/281
 [#278]: https://github.com/sl-lang/sll/issues/278
 [#276]: https://github.com/sl-lang/sll/issues/276
