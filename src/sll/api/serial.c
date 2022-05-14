@@ -278,7 +278,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,
 					*err=str_err;
 					return NULL;
 				}
-				return STRING_TO_OBJECT(NULL);
+				return EMPTY_STRING_TO_OBJECT();
 			}
 		case SLL_OBJECT_TYPE_ARRAY:
 		case SLL_OBJECT_TYPE_MAP_KEYS:

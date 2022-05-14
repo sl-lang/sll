@@ -806,7 +806,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_length_to_obj
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* v){
-	return STRING_TO_OBJECT(v);
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	if (v){
+		sll_string_clone(v,&(o->dt.s));
+	}
+	else{
+		SLL_INIT_STRING(&(o->dt.s));
+	}
+	return o;
 }
 
 

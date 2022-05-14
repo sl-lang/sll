@@ -17,19 +17,24 @@
 
 
 static __SLL_FORCE_INLINE sll_object_t* STRING_TO_OBJECT(const sll_string_t* v){
+	SLL_ASSERT(v);
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	if (v){
-		sll_string_clone(v,&(o->dt.s));
-	}
-	else{
-		SLL_INIT_STRING(&(o->dt.s));
-	}
+	sll_string_clone(v,&(o->dt.s));
+	return o;
+}
+
+
+
+static __SLL_FORCE_INLINE sll_object_t* EMPTY_STRING_TO_OBJECT(void){
+	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	SLL_INIT_STRING(&(o->dt.s));
 	return o;
 }
 
 
 
 static __SLL_FORCE_INLINE sll_object_t* STRING_POINTER_TO_OBJECT(const sll_char_t* p){
+	SLL_ASSERT(p);
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	sll_string_from_pointer(p,&(o->dt.s));
 	return o;

@@ -239,7 +239,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 				{
 					if (!(fl&NEW_OBJECT_FLAG_ARRAY)){
 						const sll_char_t* ptr=sll_var_arg_get(va);
-						return (ptr?STRING_POINTER_TO_OBJECT(ptr):STRING_TO_OBJECT(NULL));
+						return (ptr?STRING_POINTER_TO_OBJECT(ptr):EMPTY_STRING_TO_OBJECT());
 					}
 					const sll_char_t*const* ptr=sll_var_arg_get(va);
 					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
@@ -249,7 +249,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					sll_object_t* o=sll_array_length_to_object(len);
 					while (len){
 						len--;
-						o->dt.a.v[len]=(*(ptr+len)?STRING_POINTER_TO_OBJECT(*(ptr+len)):STRING_TO_OBJECT(NULL));
+						o->dt.a.v[len]=(*(ptr+len)?STRING_POINTER_TO_OBJECT(*(ptr+len)):EMPTY_STRING_TO_OBJECT());
 					}
 					return o;
 				}
@@ -260,7 +260,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 					}
 					const sll_char_t* ptr=sll_var_arg_get(va);
 					sll_string_length_t len=(sll_string_length_t)sll_var_arg_get_int(va);
-					return (ptr&&len?STRING_POINTER_LENGTH_TO_OBJECT(ptr,len):STRING_TO_OBJECT(NULL));
+					return (ptr&&len?STRING_POINTER_LENGTH_TO_OBJECT(ptr,len):EMPTY_STRING_TO_OBJECT());
 				}
 			case 'a':
 				if (fl&NEW_OBJECT_FLAG_ARRAY){
@@ -318,7 +318,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		case 'z':
 			return SLL_FROM_CHAR(0);
 		case 'Z':
-			return STRING_TO_OBJECT(NULL);
+			return EMPTY_STRING_TO_OBJECT();
 		case 'a':
 			BUILD_CLONE_TYPE(SLL_OBJECT_TYPE_ARRAY);
 		case 'A':

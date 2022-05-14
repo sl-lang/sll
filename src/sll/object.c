@@ -64,7 +64,7 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 				p->o=SLL_ACQUIRE_STATIC(complex_zero);
 				break;
 			case SLL_OBJECT_TYPE_STRING:
-				p->o=STRING_TO_OBJECT(NULL);
+				p->o=EMPTY_STRING_TO_OBJECT();
 				break;
 			case SLL_OBJECT_TYPE_ARRAY:
 			case SLL_OBJECT_TYPE_MAP_KEYS:
@@ -295,7 +295,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 		case SLL_OBJECT_TYPE_COMPLEX:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_STRING:
-			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_STRING]):STRING_TO_OBJECT(NULL));
+			return (l?sll_operator_cast(*p,sll_static_int[SLL_OBJECT_TYPE_STRING]):EMPTY_STRING_TO_OBJECT());
 		case SLL_OBJECT_TYPE_ARRAY:
 		case SLL_OBJECT_TYPE_MAP_KEYS:
 		case SLL_OBJECT_TYPE_MAP_VALUES:

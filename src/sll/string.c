@@ -1847,7 +1847,7 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* s,const sll_string_t* p
 	if (!s->l){
 		o->l=1;
 		o->v=sll_allocator_init(sizeof(sll_object_t*));
-		o->v[0]=STRING_TO_OBJECT(NULL);
+		o->v[0]=EMPTY_STRING_TO_OBJECT();
 		return;
 	}
 	if (!p->l){
@@ -1867,7 +1867,7 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 	if (!s->l){
 		o->l=1;
 		o->v=sll_allocator_init(sizeof(sll_object_t*));
-		o->v[0]=STRING_TO_OBJECT(NULL);
+		o->v[0]=EMPTY_STRING_TO_OBJECT();
 		return;
 	}
 	o->l=0;
@@ -1884,7 +1884,7 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 			sll_string_length_t l=(k<<3)|(FIND_FIRST_SET_BIT(v)>>3);
 			o->l++;
 			sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
-			o->v[i]=(j<l?STRING_POINTER_LENGTH_TO_OBJECT(s->v+j,l-j):STRING_TO_OBJECT(NULL));
+			o->v[i]=(j<l?STRING_POINTER_LENGTH_TO_OBJECT(s->v+j,l-j):EMPTY_STRING_TO_OBJECT());
 			i++;
 			j=l+1;
 			v&=v-1;
@@ -1892,7 +1892,7 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 	}
 	o->l++;
 	sll_allocator_resize((void**)(&(o->v)),o->l*sizeof(sll_object_t*));
-	o->v[i]=(j<s->l?STRING_POINTER_LENGTH_TO_OBJECT(s->v+j,s->l-j):STRING_TO_OBJECT(NULL));
+	o->v[i]=(j<s->l?STRING_POINTER_LENGTH_TO_OBJECT(s->v+j,s->l-j):EMPTY_STRING_TO_OBJECT());
 }
 
 

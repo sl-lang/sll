@@ -1109,7 +1109,7 @@ _load_new_thread:;
 					sll_file_t* f=sll_file_from_handle((sll_file_handle_t)(fh_o->dt.i));
 					SLL_RELEASE(fh_o);
 					if (!f||sz<=0){
-						*(thr->stack+thr->si)=STRING_TO_OBJECT(NULL);
+						*(thr->stack+thr->si)=EMPTY_STRING_TO_OBJECT();
 						thr->si++;
 						break;
 					}
