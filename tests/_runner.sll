@@ -30,13 +30,7 @@
 		(:> "No test result file found!\n")
 		(@@ 1)
 	})
-	(= bf "")
-	(>- (= chunk "") chunk
-		(= chunk (<- file$read f 1024))
-		(= bf (+ bf chunk))
-	)
-	(<- file$close f)
-	(@@ (<- json$parse bf))
+	(@@ (<- json$parse (<- file$read f)))
 ))
 
 (= print_stats (,,, results

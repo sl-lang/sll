@@ -221,13 +221,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(s
 	if (fh>=_file_fll||!(*(_file_fl+fh))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	if (!size){
-		SLL_UNIMPLEMENTED();
-	}
 	extended_file_t* ef=*(_file_fl+fh);
+	sll_file_t* f=(ef->p?ef->dt.p:&(ef->dt.f));
+	if (!size){
+		return sll_file_read_all(f,out);
+	}
 	sll_string_create(size,out);
 	sll_error_t err;
-	sll_size_t sz=sll_file_read((ef->p?ef->dt.p:&(ef->dt.f)),out->v,size,&err);
+	sll_size_t sz=sll_file_read(f,out->v,size,&err);
 	if (!sz&&err!=SLL_NO_ERROR){
 		sll_free_string(out);
 		return err;

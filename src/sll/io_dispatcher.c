@@ -32,7 +32,15 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	event_data_t* evt=_io_dispatcher_event+idx;
 	SLL_ASSERT(evt->f);
 	sll_object_t* o=NULL;
-	if (evt->sz){
+	if (evt->sz==SLL_MAX_STRING_LENGTH){
+		sll_error_t err;
+		sll_read_char_t chr=sll_file_read_char(evt->f,&err);
+		o=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
+	}
+	else if (!evt->sz){
+		SLL_UNIMPLEMENTED();
+	}
+	else{
 		sll_string_t bf;
 		sll_string_create(evt->sz,&bf);
 		sll_error_t err;
@@ -46,11 +54,6 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 			sll_string_calculate_checksum(&bf);
 			o=STRING_TO_OBJECT_NOCOPY(&bf);
 		}
-	}
-	else{
-		sll_error_t err;
-		sll_read_char_t chr=sll_file_read_char(evt->f,&err);
-		o=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
 	}
 	sll_thread_index_t tid=evt->tid;
 	thread_data_t* thr=_thread_get(tid);

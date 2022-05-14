@@ -381,6 +381,48 @@ _hash_data:
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_file_read_all(sll_file_t* f,sll_string_t* out){
+	SLL_INIT_STRING(out);
+	if (!(f->f&SLL_FILE_FLAG_READ)){
+		return SLL_NO_ERROR;
+	}
+	if (f->_h.bfl!=DISABLE_FILE_HASH){
+		SLL_UNIMPLEMENTED();
+	}
+	if (f->f&FILE_FLAG_MEMORY){
+		SLL_UNIMPLEMENTED();
+	}
+	if (f->dt.fl.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	LOCK;
+	if (f->f&SLL_FILE_FLAG_NO_BUFFER){
+		SLL_UNIMPLEMENTED();
+	}
+	if (f->_r_bf_sz){
+		SLL_UNIMPLEMENTED();
+	}
+	sll_error_t err;
+	sll_size_t sz;
+	do{
+		sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE,&err);
+		if (err!=SLL_NO_ERROR){
+			sll_free_string(out);
+			UNLOCK;
+			return err;
+		}
+		sll_string_increase(out,sz);
+		out->l+=sz;
+		sll_string_insert_pointer_length(f->_r_bf,sz,out->l-sz,out);
+	} while (sz==FILE_BUFFER_SIZE);
+	f->_r_bf_off=0;
+	f->_r_bf_sz=0;
+	UNLOCK;
+	return SLL_NO_ERROR;
+}
+
+
+
 __SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* f,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (!(f->f&SLL_FILE_FLAG_READ)){

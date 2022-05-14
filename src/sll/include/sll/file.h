@@ -515,6 +515,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* f,void* p
 
 
 /**
+ * \flags check_output func
+ * \name sll_file_read_all
+ * \group file
+ * \subgroup file-io
+ * \desc Docs!
+ * \arg sll_file_t* f
+ * \arg sll_string_t* out
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_file_read_all(sll_file_t* f,sll_string_t* out);
+
+
+
+/**
  * \flags func
  * \name sll_file_read_char
  * \group file

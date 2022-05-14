@@ -1107,7 +1107,7 @@ _load_new_thread:;
 					SLL_RELEASE(*(thr->stack+thr->si));
 					sll_file_t* f=sll_file_from_handle((sll_file_handle_t)(fh_o->dt.i));
 					SLL_RELEASE(fh_o);
-					if (!f||sz<=0){
+					if (!f||sz<0){
 						*(thr->stack+thr->si)=EMPTY_STRING_TO_OBJECT();
 						thr->si++;
 						break;
@@ -1121,16 +1121,23 @@ _load_new_thread:;
 						goto _load_new_thread;
 					}
 					sll_string_t bf;
-					sll_string_create(l,&bf);
 					sll_error_t err;
-					sll_size_t r_sz=sll_file_read(f,bf.v,l,&err);
-					if (!r_sz&&err!=SLL_NO_ERROR){
+					if (!sz){
+						err=sll_file_read_all(f,&bf);
+					}
+					else{
+						sll_string_create(l,&bf);
+						sll_size_t r_sz=sll_file_read(f,bf.v,l,&err);
+						if (err==SLL_NO_ERROR){
+							sll_string_decrease(&bf,(sll_string_length_t)r_sz);
+							sll_string_calculate_checksum(&bf);
+						}
+					}
+					if (err!=SLL_NO_ERROR){
 						sll_free_string(&bf);
 						*(thr->stack+thr->si)=sll_int_to_object(err);
 					}
 					else{
-						sll_string_decrease(&bf,(sll_string_length_t)r_sz);
-						sll_string_calculate_checksum(&bf);
 						*(thr->stack+thr->si)=STRING_TO_OBJECT_NOCOPY(&bf);
 					}
 					thr->si++;
@@ -1152,7 +1159,7 @@ _load_new_thread:;
 						thr->ii++;
 						NEXT_INSTRUCTION;
 						thr->_last_ai=ai;
-						_io_dispatcher_queue(f,0);
+						_io_dispatcher_queue(f,SLL_MAX_STRING_LENGTH);
 						goto _load_new_thread;
 					}
 					sll_error_t err;
