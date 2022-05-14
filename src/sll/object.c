@@ -20,7 +20,7 @@
 
 
 
-#define GET_HASH_TABLE_OFFSET(dt,str) (ROTATE_BITS_RIGHT64((str)->c*((dt)->_rng>>6),(dt)->_rng&63)&(dt)->_hash_table_len)
+#define GET_HASH_TABLE_OFFSET(dt,str) (ROTATE_BITS_RIGHT64((str)->c*((dt)->_rng),(dt)->_rng&63)&(dt)->_hash_table_len)
 
 
 
