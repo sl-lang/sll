@@ -26,40 +26,41 @@ __SLL_EXPORT _call_api_func_assembly
 	; rdx - Argument bitmap pointer
 	; r8 - Argument data pointer
 	; r9 - Argument count
-	; r11 - Function pointer
 	; [rsp+64] - Function pointer
 	mov rbx, rcx
-	mov r11, QWORD [rsp+64]
 
 	; rax - Stack offset
 	; rbx - Return value pointer
-	; rcx - Temporary register
 	; rdx - Argument bitmap pointer
 	; r8 - Argument data pointer
 	; r9 - Argument count
-	; r11 - Function pointer
+	; [rsp+64] - Function pointer
 	mov eax, r9d
 	add eax, 2
 	and eax, 0xfffffffe
 	mov ecx, 4
-	cmp eax, ecx
-	jae ._above_min_size
-	mov eax, ecx
-._above_min_size:
+	cmp eax, 4
+	cmovb eax, ecx
 	shl rax, 3
 %ifdef __SLL_BUILD_WINDOWS
 	cmp rax, 4096
-	jb ._skip_stack_check
-	mov rcx, r11
+	jb ._small_stack
 	call __chkstk
-	mov r11, rcx
-._skip_stack_check:
+._small_stack:
 %endif
+
+	; rax - Stack offset
+	; rbx - Return value pointer
+	; rdx - Argument bitmap pointer
+	; r8 - Argument data pointer
+	; r9 - Argument count
+	; r11 - Function pointer
+	; [rsp+64] - Function pointer
+	mov r11, QWORD [rsp+64]
 	sub rsp, rax
 
 	; rax - Number of arguments left in current bitmap
 	; rbx - Return value pointer
-	; rcx - Temporary register
 	; rdx - Argument bitmap pointer
 	; rsi - Current bitmap
 	; r8 - Argument data pointer
@@ -91,15 +92,9 @@ __SLL_EXPORT _call_api_func_assembly
 	sub r9d, 1
 	jnz ._next_arg
 ._no_args:
-
-	; rax - Number of arguments left in current bitmap
-	; rbx - Return value pointer
-	; rdx - Argument bitmap pointer
-	; rsi - Current bitmap
-	; r10 - Stack pointer for arguments
-	; r11 - Function pointer
 	mov QWORD [r10], rbx
 
+	; r11 - Function pointer
 	xorpd xmm0, xmm0
 	xorpd xmm1, xmm1
 	xorpd xmm2, xmm2
@@ -116,7 +111,6 @@ __SLL_EXPORT _call_api_func_assembly
 
 	; rax - Integer return value
 	; rbx - Return value pointer
-	; rcx - Temporary register
 	; rsi - Current bitmap
 	; xmm0 - Floating-point return value
 	test sil, sil
