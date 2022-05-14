@@ -39,10 +39,7 @@ if ("--web" in sys.argv):
 	website.generate()
 	sys.exit(0)
 hashlist.load_hash_list("build/.files")
-h_dt=header.parse_headers("src/sll/include")
-util.log("Generating Library Header File...")
-with open("build/sll.h","w") as wf:
-	wf.write(f"#ifndef __SLL_H__\n#define __SLL_H__ 1\n{header.generate_header(h_dt)}\n#endif\n")
+header.generate_header("src/sll/include","build/sll.h")
 util.log("Listing Source Code Files...")
 fl=util.get_sll_files()
 util.log("Compiling Sll...")

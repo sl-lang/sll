@@ -86,32 +86,29 @@ def generate_error_header(i_fp,o_fp,nm):
 
 
 
-def parse_headers(fp):
-	util.log("Combining Library Header Files...")
-	o=""
+def generate_header(src_fp,out_fp):
+	util.log(f"Combining header files from '{src_fp}' to '{out_fp}'...\n  Listing files...")
+	src=""
 	file_list=[]
 	include_list=[]
-	fp=fp.replace("\\","/").rstrip("/")+"/"
-	for r,_,fl in os.walk(fp):
+	src_fp=src_fp.replace("\\","/").rstrip("/")+"/"
+	for r,_,fl in os.walk(src_fp):
 		if ("internal" in r or "generated" in r):
 			continue
 		for f in fl:
 			if (f[-2:]==".h" and f not in INTERNAL_SLL_HEADERS):
-				include_name=os.path.join(r,f)[len(fp):].replace("\\","/")
-				o+=_add_source_file(fp,include_name,file_list,include_list,[])
-	util.log(f"  Combined {len(file_list)} Files\nPreprocessing Combined Library Header File...")
-	return DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+" "+DEFINE_LINE_CONTINUE_REGEX.sub(r"",g.group(2)),MULTIPLE_NEWLINE_REGEX.sub(r"\n",COMMENT_REGEX.sub(r"",o).strip().replace("\r\n","\n"))).split("\n")
-
-
-
-def generate_header(h_dt):
+				include_name=os.path.join(r,f)[len(src_fp):].replace("\\","/")
+				src+=_add_source_file(src_fp,include_name,file_list,include_list,[])
+	util.log(f"    Found {len(file_list)} files\n  Preprocessing combined header files...")
 	defines={"__SLL_TIME_RAW__":str(util.BUILD_TIME),f"__SLL_BUILD_{util.system.upper()}":"1","NULL":"((void*)0)"}
 	if (os.getenv("GITHUB_SHA") is not None):
 		defines["__SLL_SHA__"]="\""+os.getenv("GITHUB_SHA")[:7]+"\""
 		defines["__SLL_FULL_SHA__"]="\""+os.getenv("GITHUB_SHA")+"\""
 	stack=[STACK_ADD]
 	o=[]
-	for e in h_dt:
+	for e in DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+" "+DEFINE_LINE_CONTINUE_REGEX.sub(r"",g.group(2)),COMMENT_REGEX.sub(r"",src).strip().replace("\r\n","\n")).split("\n"):
+		if (not e):
+			continue
 		if (e[0]=="#"):
 			macro=e[1:].split(" ")
 			if (stack[-1] in [STACK_SKIP,STACK_SKIP_INNER]):
@@ -152,6 +149,7 @@ def generate_header(h_dt):
 				continue
 		if (stack[-1] not in [STACK_SKIP,STACK_SKIP_INNER]):
 			o.append(e)
+	util.log(f"  Writing header file to '{out_fp}...")
 	regex_defines=[]
 	for k,v in defines.items():
 		i=0
@@ -165,8 +163,10 @@ def generate_header(h_dt):
 					break
 			i+=1
 		regex_defines.append((re.compile(fr"\b{k}\b"),v))
-	for i,k in enumerate(o):
-		for nm,v in regex_defines:
-			k=nm.sub(v,k)
-		o[i]=k
-	return "\n".join(o)
+	with open(out_fp,"w") as wf:
+		wf.write("#ifndef __SLL_H__\n#define __SLL_H__ 1")
+		for k in o:
+			for nm,v in regex_defines:
+				k=nm.sub(v,k)
+			wf.write("\n"+k)
+		wf.write("\n#endif\n")
