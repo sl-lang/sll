@@ -710,7 +710,7 @@ _read_file_argument:
 				sll_audit(SLL_CHAR("sll.cli.save.assembly"),SLL_CHAR("S"),bf);
 				CLI_LOG_IF_VERBOSE("Writing assembly to file '%s'...",bf);
 				sll_file_t of;
-				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+				SLL_CRITICAL_ERROR(sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of));
 				sll_write_assembly(&of,&a_dt);
 				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);
@@ -720,7 +720,7 @@ _read_file_argument:
 				sll_audit(SLL_CHAR("sll.cli.save.compiled"),SLL_CHAR("S"),bf);
 				CLI_LOG_IF_VERBOSE("Writing compiled program to file '%s'...",bf);
 				sll_file_t of;
-				sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+				SLL_CRITICAL_ERROR(sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of));
 				sll_write_compiled_node(&of,&c_dt);
 				CLI_LOG_IF_VERBOSE("File written successfully.");
 				sll_file_close(&of);

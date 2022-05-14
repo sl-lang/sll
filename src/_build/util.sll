@@ -1,0 +1,45 @@
+(--- "path.sll" "config.sll" "log.sll" "types.sll" "array.sll" "sort.sll" "file.sll")
+
+
+
+(= util_module_type (&:
+	(~ func_type) create_output_dir
+))
+
+
+
+(= create_output_dir (,,,
+	(<- log$log "Generating build directory...")
+	(-> (= i 0) (< i config$BUILD_CLEAR_FOLDERS)
+		(= root (+ (<- path$absolute (: config$BUILD_CLEAR_FOLDERS i)) path$SEPARATOR))
+		(++ i)
+		(= files (<- path$list_dir root true))
+		(? (!== (:? files) array_type) (<<<))
+		(= directory_list [])
+		(-> (= j 0) (< j ($ files))
+			(= file_path (: files j))
+			(= dir (: (<- path$split file_path) 0))
+			(? (! (|: directory_list dir)) (<- array$push directory_list dir))
+			(<- file$delete file_path)
+			(++ j)
+		)
+		(<- sort$sort directory_list true true)
+		(-> (= j 0) (< j ($ directory_list))
+			(= dir (: directory_list j))
+			(++ j)
+			(? (=== dir root) (<<<))
+			(<- file$delete dir)
+		)
+	)
+	(-> (= i 0) (< i ($ config$BUILD_CREATE_FOLDERS))
+		(<- path$mkdir (: config$BUILD_CREATE_FOLDERS i))
+		(++ i)
+	)
+))
+
+
+
+(= util (. util_module_type
+	create_output_dir
+))
+(## util)

@@ -135,7 +135,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_create_directory(cons
 	if (all){
 		SLL_UNIMPLEMENTED();
 	}
-	return (mkdir((char*)fp,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)?sll_platform_get_error():SLL_NO_ERROR);
+	return (mkdir((char*)fp,S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IWGRP|S_IXGRP|S_IROTH|S_IWOTH|S_IXOTH)?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 

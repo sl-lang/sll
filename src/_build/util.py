@@ -54,24 +54,6 @@ _obj_file_pfx+="_"
 
 
 
-def create_output_dir():
-	for base in CLEAR_PATHS:
-		if (not os.path.exists(base)):
-			continue
-		del_dl=[]
-		for r,dl,fl in os.walk(base):
-			for d in dl:
-				del_dl.append(os.path.join(r,d))
-			for f in fl:
-				os.remove(os.path.join(r,f))
-		for k in del_dl[::-1]:
-			os.rmdir(k)
-	for k in BUILD_PATHS:
-		if (not os.path.exists(k)):
-			os.mkdir(k)
-
-
-
 def execute(args):
 	sys.__stdout__.flush()
 	return (subprocess.run(args).returncode!=0)

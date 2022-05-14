@@ -9,6 +9,10 @@
 	string_type extra_flag
 ))
 
+(= operator_parser_module_type (&:
+	(~ func_type) generate_operator_parser
+))
+
 
 
 (= generate_operator_parser (,,,
@@ -124,5 +128,7 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t* o,sll_rea
 
 
 
-(<- log$set_global (| log$FLAG_DO_NOT_HIDE log$FLAG_NO_HEADER) 1)
-(<- generate_operator_parser)
+(= operator_parser (. operator_parser_module_type
+	generate_operator_parser
+))
+(## operator_parser)

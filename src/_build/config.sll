@@ -1,16 +1,40 @@
-(--- "types.sll")
+(--- "types.sll" "log.sll" "sys.sll")
 
 
+
+(= cli_options_types (&:
+	int_type BUNDLE
+	int_type DEBUG
+	int_type RELEASE
+	int_type TEST
+	int_type UPLOAD
+))
 
 (= config_module_type (&:
-	string_type OPERATOR_PARSER_CONFIG_FILE_PATH
-	string_type OPERATOR_PARSER_OUTPUT_FILE_PATH
+	(~ array_type) BUILD_CLEAR_FOLDERS
+	(~ array_type) BUILD_CREATE_FOLDERS
+	(~ string_type) OPERATOR_PARSER_CONFIG_FILE_PATH
+	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
+	(~ cli_options_types) OPTIONS
 ))
 
 
 
+(? (|: sys$ARGV "--verbose") (<- log$set_global (| log$FLAG_DO_NOT_HIDE log$FLAG_NO_HEADER) 1))
+
+
+
 (= config (. config_module_type
+	["build/lib" "build/lib_debug" "build/web"]
+	["build/lib" "build/lib_debug" "build/objects"]
 	"src/sll/data/operator_parser.txt"
 	"src/sll/include/sll/generated/operator_parser.h"
+	[
+		(|: sys$ARGV "--bundle")
+		(|: sys$ARGV "--debug")
+		(|: sys$ARGV "--release")
+		(|: sys$ARGV "--test")
+		(|: sys$ARGV "--upload")
+	]
 ))
 (## config)
