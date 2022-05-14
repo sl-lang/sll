@@ -485,3 +485,30 @@ __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* tt,sll_ob
 		v++;
 	}
 }
+
+
+
+__SLL_EXTERNAL void sll_object_to_map(const sll_object_type_table_t* tt,sll_object_t* o,sll_map_t* out){
+	sll_object_type_t t=o->t;
+	SLL_ASSERT(t>SLL_MAX_OBJECT_TYPE&&t-SLL_MAX_OBJECT_TYPE-1<tt->l);
+	const sll_object_type_data_t* dt=*(tt->dt+o->t-SLL_MAX_OBJECT_TYPE-1);
+	sll_map_create(dt->l,out);
+	sll_object_field_t* p=o->dt.p;
+	for (sll_arg_count_t i=0;i<dt->l;i++){
+		out->v[i<<1]=sll_string_to_object(&(dt->dt[i].nm));
+		if (dt->dt[i].t==SLL_OBJECT_TYPE_INT){
+			out->v[(i<<1)+1]=sll_int_to_object(p->i);
+		}
+		else if (dt->dt[i].t==SLL_OBJECT_TYPE_FLOAT){
+			out->v[(i<<1)+1]=sll_float_to_object(p->f);
+		}
+		else if (dt->dt[i].t==SLL_OBJECT_TYPE_CHAR){
+			out->v[(i<<1)+1]=SLL_FROM_CHAR(p->c);
+		}
+		else{
+			SLL_ACQUIRE(p->o);
+			out->v[(i<<1)+1]=p->o;
+		}
+		p++;
+	}
+}

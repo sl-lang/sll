@@ -380,4 +380,17 @@ __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* tt,sll_ob
 
 
 
+/**
+ * \flags func
+ * \name sll_object_to_map
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_type_table_t* tt
+ * \arg sll_object_t* o
+ * \arg sll_map_t* out
+ */
+__SLL_EXTERNAL void sll_object_to_map(const sll_object_type_table_t* tt,sll_object_t* o,sll_map_t* out);
+
+
+
 #endif

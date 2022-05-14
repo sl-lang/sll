@@ -111,25 +111,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 					}
 				case SLL_OBJECT_TYPE_MAP:
 					{
-						sll_object_t* o=sll_map_length_to_object(dt->l);
-						sll_object_field_t* p=a->dt.p;
-						for (sll_arg_count_t i=0;i<dt->l;i++){
-							o->dt.m.v[i<<1]=sll_string_to_object(&(dt->dt[i].nm));
-							if (dt->dt[i].t==SLL_OBJECT_TYPE_INT){
-								o->dt.m.v[(i<<1)+1]=sll_int_to_object(p->i);
-							}
-							else if (dt->dt[i].t==SLL_OBJECT_TYPE_FLOAT){
-								o->dt.m.v[(i<<1)+1]=sll_float_to_object(p->f);
-							}
-							else if (dt->dt[i].t==SLL_OBJECT_TYPE_CHAR){
-								o->dt.m.v[(i<<1)+1]=SLL_FROM_CHAR(p->c);
-							}
-							else{
-								SLL_ACQUIRE(p->o);
-								o->dt.m.v[(i<<1)+1]=p->o;
-							}
-							p++;
-						}
+						sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+						sll_object_to_map(sll_current_runtime_data->tt,a,&(o->dt.m));
 						return o;
 					}
 				case SLL_OBJECT_TYPE_MAP_KEYS:

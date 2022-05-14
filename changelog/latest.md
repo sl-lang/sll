@@ -1,5 +1,9 @@
 # Sll [0.7.18] - Ongoing
 
+## Added
+
+- Implemeneted `sll_object_to_map`
+
 ## Changed
 
 - Fixed assembly stack frames
