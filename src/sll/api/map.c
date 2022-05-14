@@ -1,5 +1,4 @@
 #include <sll/_internal/common.h>
-#include <sll/_internal/gc.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/map.h>

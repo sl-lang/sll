@@ -1,6 +1,5 @@
 #include <sll/_internal/api_call.h>
 #include <sll/_internal/common.h>
-#include <sll/_internal/gc.h>
 #include <sll/_internal/parse_args.h>
 #include <sll/_size_types.h>
 #include <sll/array.h>

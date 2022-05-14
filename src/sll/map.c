@@ -1,4 +1,4 @@
-#include <sll/_internal/gc.h>
+#include <sll/_internal/common.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/allocator.h>
 #include <sll/array.h>

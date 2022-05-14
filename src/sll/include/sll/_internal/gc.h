@@ -10,9 +10,12 @@
 #define GC_PAGE_DYNAMIC_POOL_SIZE 2
 
 #define GC_FLAG_HAS_WEAKREF 1
+#define GC_FLAG_IN_FAST_POOL 2
 
 #define GC_MEMORY_PAGE_SIZE 32768
 #define GC_MEMORY_PAGE_HEADER_ADDR(o) ((gc_page_header_t*)PTR(ADDR(o)&(0-((sll_size_t)GC_MEMORY_PAGE_SIZE))))
+
+#define GC_OBJECT_POOL_SIZE 256
 
 
 

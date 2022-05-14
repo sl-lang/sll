@@ -1,5 +1,4 @@
 #include <sll/_internal/common.h>
-#include <sll/_internal/gc.h>
 #include <sll/api/string.h>
 #include <sll/array.h>
 #include <sll/common.h>

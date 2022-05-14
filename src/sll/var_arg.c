@@ -1,4 +1,4 @@
-#include <sll/_internal/gc.h>
+#include <sll/_internal/common.h>
 #include <sll/_internal/var_arg.h>
 #include <sll/common.h>
 #include <sll/complex.h>

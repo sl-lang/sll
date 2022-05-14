@@ -1,5 +1,4 @@
 #include <sll/_internal/atexit.h>
-#include <sll/_internal/gc.h>
 #include <sll/_internal/sandbox.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/vm.h>

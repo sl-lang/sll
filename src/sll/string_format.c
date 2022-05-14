@@ -1,4 +1,3 @@
-#include <sll/_internal/gc.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/_internal/string.h>
 #include <sll/_internal/string_format.h>

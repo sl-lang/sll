@@ -2,6 +2,7 @@
 
 ## Added
 
+- Fast object pool used in the GC
 - Implemeneted `sll_object_to_map`
 
 ## Changed

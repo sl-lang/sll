@@ -2,7 +2,6 @@
 #include <sll/_internal/barrier.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/dispatcher.h>
-#include <sll/_internal/gc.h>
 #include <sll/_internal/init.h>
 #include <sll/_internal/lock.h>
 #include <sll/_internal/scheduler.h>

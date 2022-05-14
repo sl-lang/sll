@@ -1,5 +1,4 @@
 #include <sll/_internal/common.h>
-#include <sll/_internal/gc.h>
 #include <sll/_internal/static_string.h>
 #include <sll/_internal/string.h>
 #include <sll/allocator.h>

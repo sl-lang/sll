@@ -1,4 +1,3 @@
-#include <sll/_internal/gc.h>
 #include <sll/api/sort.h>
 #include <sll/array.h>
 #include <sll/common.h>
