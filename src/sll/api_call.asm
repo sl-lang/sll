@@ -1,5 +1,6 @@
 [BITS 64]
-section .text
+[SECTION .text]
+[DEFAULT rel]
 %include "sll/_internal/common.inc"
 
 
@@ -88,11 +89,11 @@ __SLL_EXPORT _call_api_func_assembly
 	mov rdx, QWORD [rsp+8]
 	mov r8, QWORD [rsp+16]
 	mov r9, QWORD [rsp+24]
+	mov r10, QWORD [rbp+48]
 	movq xmm0, rcx
 	movq xmm1, rdx
 	movq xmm2, r8
 	movq xmm3, r9
-	mov r10, QWORD [rbp+48]
 	call r10
 
 	; rax - Integer return value
@@ -107,8 +108,7 @@ __SLL_EXPORT _call_api_func_assembly
 	add rax, 1
 	jz ._cleanup
 	sub rax, 1
-	mov rcx, 1
-	cvtsi2sd xmm0, rcx
+	movq xmm0, QWORD [._error_return_value]
 ._register_return_value:
 	mov rcx, QWORD [rbp+16]
 	mov QWORD [rcx], rax
@@ -118,3 +118,6 @@ __SLL_EXPORT _call_api_func_assembly
 	mov rsi, QWORD [rbp-8]
 	leave
 	ret
+
+._error_return_value:
+	dq 0x3ff0000000000000
