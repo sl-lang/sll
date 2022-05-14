@@ -13,35 +13,27 @@ __SLL_EXPORT _call_api_func_assembly
 	push rbp
 	mov rbp, rsp
 	push rsi
-	push rbx
 
-%ifdef DEBUG_BUILD
 	mov QWORD [rbp+16], rcx
+%ifdef DEBUG_BUILD
 	mov QWORD [rbp+24], rdx
 	mov QWORD [rbp+32], r8
 	mov QWORD [rbp+40], r9
 %endif
 
-	; rbx - Return value pointer
-	; rdx - Argument bitmap pointer
-	; r8 - Argument data pointer
-	; r9 - Argument count
-	; [rbp+48] - Function pointer
-	mov rbx, rcx
-
 	; rax - Stack offset
-	; rbx - Return value pointer
 	; rdx - Argument bitmap pointer
 	; r8 - Argument data pointer
 	; r9 - Argument count
+	; [rbp+16] - Return value structure pointer
 	; [rbp+48] - Function pointer
 	mov eax, r9d
-	add eax, 2
+	add eax, 1
 	and eax, 0xfffffffe
 	mov ecx, 4
 	cmp eax, 4
 	cmovb eax, ecx
-	shl rax, 3
+	lea rax, [rax*8+8]
 %ifdef __SLL_BUILD_WINDOWS
 	cmp rax, 4096
 	jb ._small_stack
@@ -51,12 +43,12 @@ __SLL_EXPORT _call_api_func_assembly
 	sub rsp, rax
 
 	; rax - Number of arguments left in current bitmap
-	; rbx - Return value pointer
 	; rdx - Argument bitmap pointer
 	; rsi - Current bitmap
 	; r8 - Argument data pointer
 	; r9 - Argument count
 	; r10 - Stack pointer for arguments
+	; [rbp+16] - Return value structure pointer
 	; [rbp+48] - Function pointer
 	mov al, 32
 	mov rsi, QWORD [rdx]
@@ -83,8 +75,10 @@ __SLL_EXPORT _call_api_func_assembly
 	sub r9d, 1
 	jnz ._next_arg
 ._no_args:
-	mov QWORD [r10], rbx
+	mov rcx, QWORD [rbp+16]
+	mov QWORD [r10], rcx
 
+	; [rbp+16] - Return value structure pointer
 	; [rbp+48] - Function pointer
 	xorpd xmm0, xmm0
 	xorpd xmm1, xmm1
@@ -102,9 +96,9 @@ __SLL_EXPORT _call_api_func_assembly
 	call r10
 
 	; rax - Integer return value
-	; rbx - Return value pointer
 	; rsi - Current bitmap
 	; xmm0 - Floating-point return value
+	; [rbp+16] - Return value structure pointer
 	test sil, sil
 	jz ._register_return_value
 	sub sil, 1
@@ -116,12 +110,11 @@ __SLL_EXPORT _call_api_func_assembly
 	mov rcx, 1
 	cvtsi2sd xmm0, rcx
 ._register_return_value:
-	mov QWORD [rbx], rax
+	mov rcx, QWORD [rbp+16]
+	mov QWORD [rcx], rax
 ._cleanup:
 
 	; xmm0 - Floating-point return value
-	lea rsp, QWORD [rbp-16]
-	pop rbx
-	pop rsi
-	pop rbp
+	mov rsi, QWORD [rbp-8]
+	leave
 	ret
