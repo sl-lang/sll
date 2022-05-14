@@ -9,5 +9,6 @@
 ## Changed
 
 - Fixed assembly stack frames
+- Fixed incorrect assembly label generation
 
 [0.7.18]: https://github.com/sl-lang/sll/compare/sll-v0.7.17...main

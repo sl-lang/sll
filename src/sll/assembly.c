@@ -880,7 +880,7 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 
 
 
-static void _init_loop_data(assembly_generator_data_t* g_dt,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,sll_assembly_instruction_type_t brk){
+static void _init_loop_data(assembly_generator_data_t* g_dt,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,assembly_instruction_label_t brk){
 	lg_dt->p_l_dt=g_dt->l_dt;
 	g_dt->l_dt.cnt=cnt;
 	g_dt->l_dt.brk=brk;
@@ -889,7 +889,7 @@ static void _init_loop_data(assembly_generator_data_t* g_dt,assembly_loop_genera
 
 
 
-static const sll_node_t* _generate_loop_start(assembly_generator_data_t* g_dt,const sll_node_t* o,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,sll_assembly_instruction_type_t brk){
+static const sll_node_t* _generate_loop_start(assembly_generator_data_t* g_dt,const sll_node_t* o,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,assembly_instruction_label_t brk){
 	_init_loop_data(g_dt,lg_dt,cnt,brk);
 	SLL_ASSERT(o->dt.l.ac);
 	sll_arg_count_t l=o->dt.l.ac-1;

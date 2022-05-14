@@ -403,9 +403,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_file_read_all(sll_file_t* f,sl
 		SLL_UNIMPLEMENTED();
 	}
 	sll_error_t err;
-	sll_size_t sz;
+	sll_string_length_t sz;
 	do{
-		sz=sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE,&err);
+		sz=(sll_string_length_t)sll_platform_file_read(f->dt.fl.fd,f->_r_bf,FILE_BUFFER_SIZE,&err);
 		if (err!=SLL_NO_ERROR){
 			sll_free_string(out);
 			UNLOCK;

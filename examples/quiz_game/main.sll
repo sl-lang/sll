@@ -1,6 +1,6 @@
 ; Sll Quiz Game Example
 ; @krzem5, 2022-03-06
-(--- "json.sll" "file.sll" "array.sll" "string.sll" "random.sll")
+(--- "json.sll" "file.sll" "array.sll" "string.sll" "random.sll" "error.sll")
 
 
 
@@ -10,14 +10,8 @@
 
 (= load_json (,,, fp
 	(= fh (<- file$open fp "r"))
-	(? (!== f$error_data nil) (@@ <>))
-	(= bf "")
-	(>- (= chunk "") chunk
-		(= chunk (<- file$read fh 4096))
-		(= bf (+ bf chunk))
-	)
-	(<- file$close fh)
-	(@@ (<- json$parse bf))
+	(? (=== (:? fh) error$error_type) (@@ <>))
+	(@@ (<- json$parse (<- file$read fh)))
 ))
 
 (= read_number_below (,,, txt max
@@ -29,10 +23,11 @@
 		(><
 			(= char (<- file$read_char file$stdin))
 			(?
-				(|| (=== char '\n') (=== char '\r')) (@)
+				(|| (=== char '\n') (=== char '\r')) [(:> "ABC") (@)]
 				(! (|: string$DIGITS char)) (<<<)
 			)
-			(:> char) (<- file$flush file$stdout)
+			(:> char)
+			(<- file$flush file$stdout)
 			(= out (+
 				(?: (=== out -1) 0 (* out 10))
 				(- char 48)
