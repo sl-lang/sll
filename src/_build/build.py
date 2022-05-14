@@ -5,8 +5,7 @@ import util
 
 
 
-def build_sll(fl,v,r):
-	lib_nm=f"sll-{v[0]}.{v[1]}.{v[2]}"
+def build_sll(fl,r):
 	def_l=["__SLL_COMPILATION__",f"__SLL_TIME_RAW__={util.BUILD_TIME}","__SLL_BUILD_"+util.system.upper()]
 	if (len(os.getenv("GITHUB_SHA",""))>0):
 		def_l.append(f"__SLL_SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"")
@@ -36,7 +35,7 @@ def build_sll(fl,v,r):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking files (Release mode)...")
-			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE","advapi32.lib","bcrypt.lib"]+out_fl)):
+			if (util.execute(["link",f"/OUT:build/sll-{util.version}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE","advapi32.lib","bcrypt.lib"]+out_fl)):
 				sys.exit(1)
 		else:
 			util.log("  Compiling files...")
@@ -53,7 +52,7 @@ def build_sll(fl,v,r):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking files...")
-			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","/PDB:build/sll.pdb","advapi32.lib","bcrypt.lib"]+out_fl)):
+			if (util.execute(["link",f"/OUT:build/sll-{util.version}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","/PDB:build/sll.pdb","advapi32.lib","bcrypt.lib"]+out_fl)):
 				sys.exit(1)
 	else:
 		def_l.append("_GNU_SOURCE")
@@ -82,11 +81,11 @@ def build_sll(fl,v,r):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking files (Release mode)...")
-			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt)):
+			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",f"build/sll-{util.version}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt)):
 				sys.exit(1)
 			if (util.system!="darwin" and "--debug" not in sys.argv):
 				util.log("  Stripping executable...")
-				if (util.execute(["strip",f"build/{lib_nm}.so","-s","-R",".note.*","-R",".comment"])):
+				if (util.execute(["strip",f"build/sll-{util.version}.so","-s","-R",".note.*","-R",".comment"])):
 					sys.exit(1)
 		else:
 			link_opt=[]
@@ -107,7 +106,7 @@ def build_sll(fl,v,r):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking files...")
-			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt+link_opt)):
+			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/sll-{util.version}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt+link_opt)):
 				sys.exit(1)
 
 

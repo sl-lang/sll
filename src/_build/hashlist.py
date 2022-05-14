@@ -14,7 +14,7 @@ update_map={}
 
 
 def _check(fp,inc):
-	nm=util.unique_file_path(fp)
+	nm=util.output_file_path(fp)
 	if (nm in update_map):
 		return update_map[nm]
 	if (fp[-2:]!=".h" and not os.path.exists(util.output_file_path(fp))):
@@ -43,7 +43,7 @@ def _flush_data():
 
 
 def fail(fp):
-	fp=util.unique_file_path(fp)
+	fp=util.output_file_path(fp)
 	if (fp in hash_list):
 		del hash_list[fp]
 		_flush_data()
@@ -69,7 +69,7 @@ def load_hash_list(fp):
 			if (f[f.rindex("."):] in HASHLIST_EXTENSIONS):
 				fp=os.path.join(r,f)
 				h=util.hash_file(fp)[1]
-				nm=util.unique_file_path(fp)
+				nm=util.output_file_path(fp)
 				if (nm not in hash_list or hash_list[nm]!=h):
 					hash_list[nm]=h
 					update_map[nm]=1

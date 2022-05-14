@@ -52,24 +52,6 @@ def _add_source_file(b_fp,fp,file_list,include_list,cycle):
 
 
 
-def read_version(fp):
-	o=[0,0,0]
-	with open(fp,"r") as f:
-		for k in f.read().replace("\r\n","\n").split("\n"):
-			k=k.strip()
-			if (k[:1]=="#"):
-				k=k[1:].lstrip().split(" ")
-				if (k[0]=="define"):
-					if (k[1]=="SLL_VERSION_MAJOR"):
-						o[0]=int(k[2])
-					elif (k[1]=="SLL_VERSION_MINOR"):
-						o[1]=int(k[2])
-					elif (k[1]=="SLL_VERSION_PATCH"):
-						o[2]=int(k[2])
-	return tuple(o)
-
-
-
 def generate_error_header(i_fp,o_fp,nm):
 	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
 	with open(i_fp,"rb") as rf,open(o_fp,"w") as wf:

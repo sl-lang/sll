@@ -8,7 +8,6 @@ import zipfile
 
 
 
-BASE64_ALPHABET="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 BUILD_PATHS=["build/lib","build/lib_debug","build/objects"]
 BUILD_TIME=time.time_ns()
 CLEAR_PATHS=["build/lib","build/lib_debug","build/web"]
@@ -18,8 +17,38 @@ PLATFORM_SOURCE_CODE={"darwin":"src/sll/platform/linux","linux":"src/sll/platfor
 
 
 
+def _read_version(fp):
+	o=[None,None,None]
+	with open(fp,"r") as f:
+		for k in f.read().replace("\r\n","\n").split("\n"):
+			k=k.strip()
+			if (k[:1]=="#"):
+				k=k[1:].lstrip().split(" ")
+				if (k[0]=="define"):
+					if (k[1]=="SLL_VERSION_MAJOR"):
+						o[0]=k[2]
+					elif (k[1]=="SLL_VERSION_MINOR"):
+						o[1]=k[2]
+					elif (k[1]=="SLL_VERSION_PATCH"):
+						o[2]=k[2]
+	return ".".join(o)
+
+
+
 log=(print if "--verbose" in sys.argv else lambda _:None)
+release=("--release" in sys.argv)
 system=platform.system().lower()
+verbose=("--verbose" in sys.argv)
+version=_read_version("src/sll/include/sll/version.h")
+
+
+
+_obj_file_pfx="build/objects/"+system
+if (release):
+	_obj_file_pfx+="_release"
+if (not release or "--debug" in sys.argv):
+	_obj_file_pfx+="_debug"
+_obj_file_pfx+="_"
 
 
 
@@ -47,13 +76,8 @@ def execute(args):
 
 
 
-def unique_file_path(fp):
-	return system+":"+("release" if "--release" in sys.argv else "debug")+":"+fp.replace("\\","/")
-
-
-
 def output_file_path(fp):
-	return "build/objects/"+system+"_"+("release" if "--release" in sys.argv else "debug")+"_"+fp.replace("\\","/").replace("/","$")+".o"
+	return _obj_file_pfx+fp.replace("\\","/").replace("/","$")+".o"
 
 
 
@@ -84,29 +108,13 @@ def get_sll_files():
 
 
 
-def bundle(v):
+def bundle():
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
-		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],f"build/sll-{v[0]}.{v[1]}.{v[2]}"+LIBRARY_EXTENSION[system],"build/lib/stdlib.slb","build/lib_debug/stdlib.slb"]:
+		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],"build/sll-"+version+LIBRARY_EXTENSION[system],"build/lib/stdlib.slb","build/lib_debug/stdlib.slb"]:
 			zf.write(k,arcname=k[6:])
 		if (system=="windows"):
 			zf.write("build/sllw.exe",arcname="sllw.exe")
 		zf.write("build/sll.h",arcname="include/sll.h")
-
-
-
-def encode(dt):
-	if (len(dt)==0):
-		return ""
-	o=""
-	i=0
-	while (i<len(dt)-2):
-		o+=BASE64_ALPHABET[dt[i]>>2]+BASE64_ALPHABET[((dt[i]<<4)&0x3f)|(dt[i+1]>>4)]+BASE64_ALPHABET[((dt[i+1]<<2)&0x3f)|(dt[i+2]>>6)]+BASE64_ALPHABET[dt[i+2]&0x3f]
-		i+=3
-	if (i==len(dt)-2):
-		return o+BASE64_ALPHABET[dt[i]>>2]+BASE64_ALPHABET[((dt[i]<<4)&0x3f)|(dt[i+1]>>4)]+BASE64_ALPHABET[(dt[i+1]<<2)&0x3f]+"="
-	if (i==len(dt)-1):
-		return o+BASE64_ALPHABET[dt[i]>>2]+BASE64_ALPHABET[(dt[i]<<4)&0x3f]+"=="
-	return o
 
 
 
@@ -115,7 +123,7 @@ def hash_file(fp):
 	o=hashlib.sha256()
 	with open(fp,"rb") as rf:
 		while (True):
-			c=rf.read(4096)
+			c=rf.read(16384)
 			if (len(c)==0):
 				break
 			sz+=len(c)

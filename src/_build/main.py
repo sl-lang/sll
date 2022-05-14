@@ -22,7 +22,6 @@ DEBUGGER={
 
 util.log("Generating build directory...")
 util.create_output_dir()
-ver=header.read_version("src/sll/include/sll/version.h")
 util.log("Collecting documentation files...")
 d_fl=util.get_docs_files()
 util.log(f"  Found {len(d_fl)} files\nGenerating documentation...")
@@ -43,7 +42,7 @@ header.generate_header("src/sll/include","build/sll.h")
 util.log("Listing source code files...")
 fl=util.get_sll_files()
 util.log("Compiling...")
-build.build_sll(fl,ver,("--release" in sys.argv))
+build.build_sll(fl,("--release" in sys.argv))
 util.log("Compiling CLI...")
 build.build_sll_cli()
 util.log("Listing modules...")
@@ -64,7 +63,7 @@ for k in fl:
 	os.remove(k)
 if ("--bundle" in sys.argv or "--upload" in sys.argv):
 	util.log("Compressing executable files...")
-	util.bundle(ver)
+	util.bundle()
 if ("--test" in sys.argv):
 	util.log("Running tests...")
 	util.execute(["build/sll","tests/_runner.sll"])
