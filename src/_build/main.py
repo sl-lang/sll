@@ -4,7 +4,6 @@ import build
 import docs
 import hashlist
 import header
-import operator_parser
 import os
 import sys
 import util
@@ -29,7 +28,8 @@ d_dt=docs.create_docs(d_fl)
 util.log(f"Generating table of API functions...")
 api.generate(d_dt,"src/sll/api/_function_table.c")
 assembly.generate_assembly_optimizer("src/sll/data/assembly_optimizer.txt","src/sll/include/sll/generated/assembly_optimizer.h")
-operator_parser.generate_operator_parser("src/sll/data/operator_parser.txt","src/sll/include/sll/generated/operator_parser.h")
+# if (util.execute([util.sll_runtime,"src/_build/operator_parser.sll","-I","src/_build"])):
+# 	sys.exit(0)
 header.generate_error_header("src/sll/data/cpuid_error.txt","src/sll/include/sll/generated/cpuid_error.h","CPUID_ERROR")
 header.generate_error_header("src/sll/data/critical_error.txt","src/sll/include/sll/generated/critical_error.h","CRITICAL_ERROR")
 header.generate_error_header("src/sll/data/help.txt","src/sll/include/sll/generated/help_text.h","HELP_TEXT")

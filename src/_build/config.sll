@@ -1,0 +1,16 @@
+(--- "types.sll")
+
+
+
+(= config_module_type (&:
+	string_type OPERATOR_PARSER_CONFIG_FILE_PATH
+	string_type OPERATOR_PARSER_OUTPUT_FILE_PATH
+))
+
+
+
+(= config (. config_module_type
+	"src/sll/data/operator_parser.txt"
+	"src/sll/include/sll/generated/operator_parser.h"
+))
+(## config)

@@ -39,6 +39,7 @@ log=(print if "--verbose" in sys.argv else lambda _:None)
 debug=("--debug" in sys.argv)
 release=("--release" in sys.argv)
 system=platform.system().lower()
+sll_runtime=f"build/_sll_runtime_{system}/sll"+EXECUTABLE_EXTENSION[system]
 verbose=("--verbose" in sys.argv)
 version=_read_version("src/sll/include/sll/version.h")
 
