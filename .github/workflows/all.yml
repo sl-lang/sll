@@ -168,8 +168,8 @@ jobs:
         with:
           directory: ./
           verbose: true
-  nightly-build:
-    name: Create nighly build
+  nightly-release:
+    name: Create nighly release
     needs:
       - darwin-release
       - linux-release
@@ -177,7 +177,7 @@ jobs:
     if: github.event_name=='schedule'
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger nightly build
+      - name: Trigger nightly release
         run: ${{secrets.PACKAGE_SERVER_NIGHTLY_UPDATE_COMMAND}}
   release:
     name: Create release
