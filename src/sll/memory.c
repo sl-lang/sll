@@ -28,6 +28,7 @@
 
 
 
+static void* _memory_pointer_list;
 static pool_data_t _memory_pool[MEMORY_POOL_SIZE];
 static __SLL_U32 _memory_update;
 static stack_block_header_t* _memory_stack;
@@ -83,11 +84,13 @@ static void _update_pool_extra(void){
 			if (new*b_sz>=MEMORY_POOL_MAX_NEW_SIZE){
 				new=MEMORY_POOL_MAX_NEW_SIZE/b_sz;
 			}
+			if (new>MEMORY_POOL_MAX_BLOCKS-_memory_pool[i].cnt){
+				new=MEMORY_POOL_MAX_BLOCKS-_memory_pool[i].cnt;
+			}
 			while (new){
 				new--;
-				empty_pool_pointer_t* ptr=malloc(b_sz);
-				ptr->next=_memory_pool[i].ptr;
-				_memory_pool[i].ptr=ptr;
+				_memory_pool[i].ptr[_memory_pool[i].cnt]=malloc(b_sz);
+				_memory_pool[i].cnt++;
 			}
 		}
 		_memory_pool[i].alloc=0;
@@ -122,14 +125,12 @@ static __SLL_FORCE_INLINE void _pool_add(user_mem_block_t* b){
 	SLL_ASSERT(!(b->dt&USER_MEM_BLOCK_FLAG_STACK));
 	SLL_ASSERT(!(USER_MEM_BLOCK_GET_SIZE(b)&15));
 	sll_size_t sz=(USER_MEM_BLOCK_GET_SIZE(b)>>4)-1;
-	if (sz>=MEMORY_POOL_SIZE||!_memory_pool[sz].sz){
+	if (sz>=MEMORY_POOL_SIZE||_memory_pool[sz].cnt==MEMORY_POOL_MAX_BLOCKS){
 		free(b);
 		return;
 	}
-	empty_pool_pointer_t* ptr=(empty_pool_pointer_t*)b;
-	ptr->next=_memory_pool[sz].ptr;
-	_memory_pool[sz].ptr=ptr;
-	_memory_pool[sz].sz--;
+	_memory_pool[sz].ptr[_memory_pool[sz].cnt]=b;
+	_memory_pool[sz].cnt++;
 }
 
 
@@ -143,14 +144,12 @@ static __SLL_FORCE_INLINE void* _pool_get(sll_size_t sz){
 		_update_pool_extra();
 	}
 	_memory_pool[sz].alloc++;
-	empty_pool_pointer_t* ptr=_memory_pool[sz].ptr;
-	if (!ptr){
+	if (!_memory_pool[sz].cnt){
 		_memory_pool[sz].miss++;
 		return NULL;
 	}
-	_memory_pool[sz].sz++;
-	_memory_pool[sz].ptr=ptr->next;
-	return ptr;
+	_memory_pool[sz].cnt--;
+	return _memory_pool[sz].ptr[_memory_pool[sz].cnt];
 }
 
 
@@ -234,26 +233,27 @@ static __SLL_FORCE_INLINE void* _allocate_chunk(sll_size_t sz,sll_bool_t err){
 
 void _memory_deinit(void){
 	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
-		empty_pool_pointer_t* ptr=_memory_pool[i].ptr;
-		while (ptr){
-			empty_pool_pointer_t* nxt=ptr->next;
-			free(ptr);
-			ptr=nxt;
+		for (__SLL_U32 j=0;j<_memory_pool[i].cnt;j++){
+			free(_memory_pool[i].ptr[j]);
 		}
 	}
 	SLL_CRITICAL_ERROR(sll_platform_free_page(_memory_stack,SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE)));
+	SLL_CRITICAL_ERROR(sll_platform_free_page(_memory_pointer_list,SLL_ROUND_LARGE_PAGE(MEMORY_POOL_SIZE*MEMORY_POOL_MAX_BLOCKS*sizeof(void*))));
 }
 
 
 
 void _memory_init(void){
+	_memory_pointer_list=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(MEMORY_POOL_SIZE*MEMORY_POOL_MAX_BLOCKS*sizeof(void*)),1,NULL);
 	_memory_update=MEMORY_POOL_UPDATE_TIMER;
+	addr_t ptr_list=ADDR(_memory_pointer_list);
 	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
 		_memory_pool[i].alloc=0;
 		_memory_pool[i].miss=0;
 		_memory_pool[i].last_miss=0;
-		_memory_pool[i].sz=MEMORY_POOL_MAX_BLOCKS;
-		_memory_pool[i].ptr=NULL;
+		_memory_pool[i].cnt=0;
+		_memory_pool[i].ptr=PTR(ptr_list);
+		ptr_list+=MEMORY_POOL_MAX_BLOCKS*sizeof(void*);
 	}
 	_memory_stack=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE),1,NULL);
 	_memory_stack_top=_memory_stack;

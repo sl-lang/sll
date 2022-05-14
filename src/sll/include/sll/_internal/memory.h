@@ -46,18 +46,12 @@ typedef struct _USER_MEM_BLOCK{
 
 
 
-typedef struct _EMPTY_POOL_POINTER{
-	struct _EMPTY_POOL_POINTER* next;
-} empty_pool_pointer_t;
-
-
-
 typedef struct _POOL_DATA{
 	__SLL_U32 alloc;
 	__SLL_U32 miss;
 	__SLL_U32 last_miss;
-	__SLL_U32 sz;
-	empty_pool_pointer_t* ptr;
+	__SLL_U32 cnt;
+	void** ptr;
 } pool_data_t;
 
 
