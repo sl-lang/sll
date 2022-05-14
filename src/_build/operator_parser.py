@@ -6,7 +6,7 @@ def generate_operator_parser(cfg_fp,o_fp):
 	util.log(f"Generating operator parser from '{cfg_fp}'...\n  Reading configuration file...")
 	with open(cfg_fp,"r") as f:
 		dt=f.read().split("\n")
-	util.log("  Parsing Data...")
+	util.log("  Parsing data...")
 	data={}
 	mx_len=0
 	for k in dt:
