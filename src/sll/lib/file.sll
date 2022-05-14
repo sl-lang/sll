@@ -96,7 +96,9 @@
 	(= bf (?: (=== bf nil) "" (:: bf string_type)))
 	(= fl (?: (=== fl nil) FLAG_READ (:: fl int_type)))
 	(= handle (<- (... "sll:file_from_data") bf fl))
-	(? (=== handle -1) (@@ nil))
+	(? (< handle 0) {
+		(@@ (<- error$from_internal (~ handle)))
+	})
 	(@@ (. file_type
 		"@data"
 		fl

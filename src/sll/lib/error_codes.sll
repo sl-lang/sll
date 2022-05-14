@@ -6,10 +6,10 @@
 	(,,, dt
 		(@@ (+
 			dt$name
-			(?: dt$win_error
+			(?: dt$raw_error
 				(+
-					" [winerror "
-					dt$win_error
+					" ["
+					dt$raw_error
 					']'
 				)
 				""
@@ -20,7 +20,7 @@
 	) @@string@@
 	(~ string_type) name
 	(~ string_type) str
-	int_type win_error
+	int_type raw_error
 ))
 
 (= error_codes_type (&:

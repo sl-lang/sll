@@ -175,7 +175,7 @@
 	(? (& err 0x100)
 		{
 			(= v (: (: error_codes$SYSTEM_ERROR_CODES id)))
-			(= v$win_error extra)
+			(= v$raw_error extra)
 		}
 		(?? id
 			1 (= v (. ERROR_FILE_NOT_FOUND
