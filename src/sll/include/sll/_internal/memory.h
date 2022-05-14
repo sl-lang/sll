@@ -51,7 +51,7 @@ typedef struct _POOL_DATA{
 	__SLL_U32 miss;
 	__SLL_U32 last_miss;
 	__SLL_U32 cnt;
-	void** ptr;
+	void* ptr[MEMORY_POOL_MAX_BLOCKS];
 } pool_data_t;
 
 

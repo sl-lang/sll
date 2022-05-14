@@ -28,7 +28,6 @@
 
 
 
-static void* _memory_pointer_list;
 static pool_data_t _memory_pool[MEMORY_POOL_SIZE];
 static __SLL_U32 _memory_update;
 static stack_block_header_t* _memory_stack;
@@ -239,22 +238,17 @@ void _memory_deinit(void){
 		}
 	}
 	SLL_CRITICAL_ERROR(sll_platform_free_page(_memory_stack,SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE)));
-	SLL_CRITICAL_ERROR(sll_platform_free_page(_memory_pointer_list,SLL_ROUND_LARGE_PAGE(MEMORY_POOL_SIZE*MEMORY_POOL_MAX_BLOCKS*sizeof(void*))));
 }
 
 
 
 void _memory_init(void){
-	_memory_pointer_list=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(MEMORY_POOL_SIZE*MEMORY_POOL_MAX_BLOCKS*sizeof(void*)),1,NULL);
 	_memory_update=MEMORY_POOL_UPDATE_TIMER;
-	addr_t ptr_list=ADDR(_memory_pointer_list);
 	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
 		_memory_pool[i].alloc=0;
 		_memory_pool[i].miss=0;
 		_memory_pool[i].last_miss=0;
 		_memory_pool[i].cnt=0;
-		_memory_pool[i].ptr=PTR(ptr_list);
-		ptr_list+=MEMORY_POOL_MAX_BLOCKS*sizeof(void*);
 	}
 	_memory_stack=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE),1,NULL);
 	_memory_stack_top=_memory_stack;
