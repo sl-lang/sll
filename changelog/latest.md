@@ -9,6 +9,7 @@
 
 - Audit event `sll.sys.library.load` now also contains the path to the library
 - Buffer passed to `sll_file_from_data` is no longer internaly allocated
+- EOF error (`error$ERROR_EOF`) now contains the file that raised the error ([#277])
 - *\[Windows only\]* Fixed `sll_platform_set_cpu`
 - Libraries loaded via `load_library` are now longer constrained to the `sys_lib/` directory
 - Library extensions returned by `sys$LIBRARY_EXTENSION` now contain the separating dot
@@ -27,4 +28,5 @@
 [#282]: https://github.com/sl-lang/sll/issues/282
 [#281]: https://github.com/sl-lang/sll/issues/281
 [#278]: https://github.com/sl-lang/sll/issues/278
+[#277]: https://github.com/sl-lang/sll/issues/277
 [#276]: https://github.com/sl-lang/sll/issues/276

@@ -1,0 +1,39 @@
+(--- "string.sll" "types.sll")
+
+
+
+(= FLAG_READ 1)
+(= FLAG_WRITE 2)
+(= FLAG_APPEND 4)
+(= FLAG_NO_BUFFER 8)
+(= FLAG_FLUSH_ON_NEWLINE 16)
+
+
+
+(= file_type (&:
+	(,,, dt {
+		(<- (... "sll:file_inc_handle") dt$_handle)
+	}) @@copy@@
+	(,,, dt {
+		(? (=== dt$_handle -1) (@@))
+		(<- (... "sll:file_close") dt$_handle)
+	}) @@delete@@
+	(,,, dt {
+		(= m "")
+		(? (& dt$flags FLAG_APPEND) (= m (+ m 'A')))
+		(?
+			(& dt$flags FLAG_NO_BUFFER) (= m (+ m 'B'))
+			(& dt$flags FLAG_FLUSH_ON_NEWLINE) (= m (+ m 'N'))
+		)
+		(? (& dt$flags FLAG_READ) (= m (+ m 'R')))
+		(? (& dt$flags FLAG_WRITE) (= m (+ m 'W')))
+		(@@ (<- string$format "<path=%s, mode=%s>" dt$name m))
+	}) @@string@@
+	(~ string_type) name
+	(~ int_type) flags
+	int_type _handle
+))
+
+
+
+(## FLAG_READ FLAG_WRITE FLAG_APPEND FLAG_NO_BUFFER FLAG_FLUSH_ON_NEWLINE file_type)

@@ -1,4 +1,4 @@
-(--- "types.sll" "string.sll" "array.sll" "error_codes.sll" "_internal.sll" "vm.sll" "thread.sll" "audit.sll")
+(--- "types.sll" "string.sll" "array.sll" "error_codes.sll" "_internal.sll" "vm.sll" "thread.sll" "audit.sll" "_file.sll")
 
 
 
@@ -69,6 +69,7 @@
 	(,,, dt
 		(@@ "End of file")
 	) @@string@@
+	(~ file_type) file
 ))
 
 (= ERROR_FILE_NOT_FOUND (&:
@@ -185,7 +186,9 @@
 				(: _SANDBOX_FLAGS extra)
 			))
 			4 (= v (. ERROR_PATH_TOO_LONG))
-			5 (= v (. ERROR_EOF))
+			5 (= v (. ERROR_EOF
+				(: data "file")
+			))
 			6 (= v (. ERROR_INVALID_BASE64_PADDING))
 			7 (= v (. ERROR_INVALID_BASE64_CHARACTER
 				extra

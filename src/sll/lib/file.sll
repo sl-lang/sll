@@ -1,34 +1,6 @@
-(--- "types.sll" "string.sll" "error.sll")
+(--- "types.sll" "string.sll" "error.sll" "_file.sll")
 
 
-
-(# FLAG_READ FLAG_WRITE FLAG_APPEND FLAG_NO_BUFFER FLAG_FLUSH_ON_NEWLINE)
-
-
-
-(= file_type (&:
-	(,,, dt {
-		(<- (... "sll:file_inc_handle") dt$_handle)
-	}) @@copy@@
-	(,,, dt {
-		(? (=== dt$_handle -1) (@@))
-		(<- (... "sll:file_close") dt$_handle)
-	}) @@delete@@
-	(,,, dt {
-		(= m "")
-		(? (& dt$flags FLAG_APPEND) (= m (+ m 'A')))
-		(?
-			(& dt$flags FLAG_NO_BUFFER) (= m (+ m 'B'))
-			(& dt$flags FLAG_FLUSH_ON_NEWLINE) (= m (+ m 'N'))
-		)
-		(? (& dt$flags FLAG_READ) (= m (+ m 'R')))
-		(? (& dt$flags FLAG_WRITE) (= m (+ m 'W')))
-		(@@ (<- string$format "<path=%s, mode=%s>" dt$name m))
-	}) @@string@@
-	(~ string_type) name
-	(~ int_type) flags
-	int_type _handle
-))
 
 (= file_module_type (&:
 	(~ type_type) file_type
@@ -56,12 +28,6 @@
 ))
 
 
-
-(= FLAG_READ 1)
-(= FLAG_WRITE 2)
-(= FLAG_APPEND 4)
-(= FLAG_NO_BUFFER 8)
-(= FLAG_FLUSH_ON_NEWLINE 16)
 
 (= TEMP_FILE_PATH (<- (... "sll:file_get_temp_path")))
 
@@ -179,7 +145,7 @@
 	(= f (:: f file_type))
 	(= o (<- (... "sll:file_peek") f$_handle))
 	(@@ (?: (=== (:? o) int_type)
-		(<- error$from_internal o)
+		(<- error$from_internal o <"file" f>)
 		o
 	))
 ))
@@ -196,7 +162,7 @@
 		(!<- f$_handle cnt)
 	)
 	(@@ (?: (=== (:? o) int_type)
-		(<- error$from_internal o)
+		(<- error$from_internal o <"file" f>)
 		o
 	))
 ))
@@ -209,7 +175,7 @@
 		(!<. f$_handle)
 	)
 	(@@ (?: (=== (:? o) int_type)
-		(<- error$from_internal o)
+		(<- error$from_internal o <"file" f>)
 		o
 	))
 ))
@@ -232,7 +198,7 @@
 			(:: (: @@dt@@ i) string_type)
 		))
 		(? (< v 0)
-			(@@ (<- error$from_internal (~ v)))
+			(@@ (<- error$from_internal (~ v) <"file" f>))
 		)
 		(= o (+ o v))
 		(++ i)
