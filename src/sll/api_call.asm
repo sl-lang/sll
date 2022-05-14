@@ -26,7 +26,7 @@ __SLL_EXPORT _call_api_func_assembly
 	; rdx - Argument bitmap pointer
 	; r8 - Argument data pointer
 	; r9 - Argument count
-	; [rsp+64] - Function pointer
+	; [rbp+48] - Function pointer
 	mov rbx, rcx
 
 	; rax - Stack offset
@@ -34,7 +34,7 @@ __SLL_EXPORT _call_api_func_assembly
 	; rdx - Argument bitmap pointer
 	; r8 - Argument data pointer
 	; r9 - Argument count
-	; [rsp+64] - Function pointer
+	; [rbp+48] - Function pointer
 	mov eax, r9d
 	add eax, 2
 	and eax, 0xfffffffe
@@ -48,15 +48,6 @@ __SLL_EXPORT _call_api_func_assembly
 	call __chkstk
 ._small_stack:
 %endif
-
-	; rax - Stack offset
-	; rbx - Return value pointer
-	; rdx - Argument bitmap pointer
-	; r8 - Argument data pointer
-	; r9 - Argument count
-	; r11 - Function pointer
-	; [rsp+64] - Function pointer
-	mov r11, QWORD [rsp+64]
 	sub rsp, rax
 
 	; rax - Number of arguments left in current bitmap
@@ -66,7 +57,7 @@ __SLL_EXPORT _call_api_func_assembly
 	; r8 - Argument data pointer
 	; r9 - Argument count
 	; r10 - Stack pointer for arguments
-	; r11 - Function pointer
+	; [rbp+48] - Function pointer
 	mov al, 32
 	mov rsi, QWORD [rdx]
 	mov r10, rsp
@@ -94,7 +85,7 @@ __SLL_EXPORT _call_api_func_assembly
 ._no_args:
 	mov QWORD [r10], rbx
 
-	; r11 - Function pointer
+	; [rbp+48] - Function pointer
 	xorpd xmm0, xmm0
 	xorpd xmm1, xmm1
 	xorpd xmm2, xmm2
@@ -107,7 +98,8 @@ __SLL_EXPORT _call_api_func_assembly
 	movq xmm1, rdx
 	movq xmm2, r8
 	movq xmm3, r9
-	call r11
+	mov r10, QWORD [rbp+48]
+	call r10
 
 	; rax - Integer return value
 	; rbx - Return value pointer

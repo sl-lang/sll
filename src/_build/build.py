@@ -76,7 +76,7 @@ def build_sll(fl):
 				if (hashlist.update(k,"src/sll/include")):
 					util.log("    "+k)
 					if (k[-2:]==".c"):
-						if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","src/sll/include","-o",out_fp,k])):
+						if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fPIC","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-I","src/sll/include","-o",out_fp,k]+link_opt)):
 							hashlist.fail(k)
 							err=True
 					elif (util.execute(["nasm","-I","src/sll/include","-D__SLL_BUILD_"+util.system.upper(),"-o",out_fp,"-O3","-Wall","-Werror","-f",nasm_fmt,k]) or (util.system!="darwin" and util.execute(["strip","-x","-o",out_fp,out_fp]))):
