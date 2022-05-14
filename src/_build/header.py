@@ -4,6 +4,7 @@ import util
 
 
 
+BYTE_ARRAY_WRAP_SIZE=16
 COMMENT_REGEX=re.compile(r"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
 DEFINE_LINE_CONTINUE_REGEX=re.compile(r"\s*\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(r"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
@@ -23,7 +24,7 @@ def _write_byte_array(wf,dt):
 	for c in dt:
 		if (st is False):
 			wf.write(",")
-			if (i==8):
+			if (i==BYTE_ARRAY_WRAP_SIZE):
 				wf.write("\n\t")
 				i=0
 		wf.write(f"0x{c:02x}")
