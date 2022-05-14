@@ -36,6 +36,7 @@ def _read_version(fp):
 
 
 log=(print if "--verbose" in sys.argv else lambda _:None)
+debug=("--debug" in sys.argv)
 release=("--release" in sys.argv)
 system=platform.system().lower()
 verbose=("--verbose" in sys.argv)
@@ -46,7 +47,7 @@ version=_read_version("src/sll/include/sll/version.h")
 _obj_file_pfx="build/objects/"+system
 if (release):
 	_obj_file_pfx+="_release"
-if (not release or "--debug" in sys.argv):
+if (debug or not release):
 	_obj_file_pfx+="_debug"
 _obj_file_pfx+="_"
 

@@ -42,7 +42,7 @@ header.generate_header("src/sll/include","build/sll.h")
 util.log("Listing source code files...")
 fl=util.get_sll_files()
 util.log("Compiling...")
-build.build_sll(fl,("--release" in sys.argv))
+build.build_sll(fl)
 util.log("Compiling CLI...")
 build.build_sll_cli()
 util.log("Listing modules...")
@@ -72,5 +72,5 @@ if ("--upload" in sys.argv):
 if ("--run" in sys.argv):
 	util.log(f"Running 'examples/_internal_test/test.sll'...")
 	util.execute(["build/sll","-h"])
-	if (util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]+(["-r"] if "--release" in sys.argv else [])) or util.execute(["build/sll","build/test.slc","-v","-e","-a","-c","-o","build/test2","-R"]) or util.execute((DEBUGGER if len(os.getenv("SLL_DEBUGGER","")) else [])+["build/sll","build/test2.sla","-v","-P"])):
+	if (util.execute(["build/sll","-v","-c","-o","build/test","-e","-R","examples/_internal_test/test.sll","-I","examples/_internal_test"]+(["-r"] if util.release else [])) or util.execute(["build/sll","build/test.slc","-v","-e","-a","-c","-o","build/test2","-R"]) or util.execute((DEBUGGER if len(os.getenv("SLL_DEBUGGER","")) else [])+["build/sll","build/test2.sla","-v","-P"])):
 		sys.exit(1)

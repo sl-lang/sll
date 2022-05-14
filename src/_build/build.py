@@ -5,14 +5,14 @@ import util
 
 
 
-def build_sll(fl,r):
+def build_sll(fl):
 	def_l=["__SLL_COMPILATION__",f"__SLL_TIME_RAW__={util.BUILD_TIME}","__SLL_BUILD_"+util.system.upper()]
 	if (len(os.getenv("GITHUB_SHA",""))>0):
 		def_l.append(f"__SLL_SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"")
 		def_l.append(f"__SLL_FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\"")
 	if (len(os.getenv("USE_STACK_ALLOCATOR",""))>0):
 		def_l.append("USE_STACK_ALLOCATOR=1")
-	if (not r):
+	if (not util.release):
 		def_l.append("DEBUG_BUILD")
 	if (util.system=="windows"):
 		def_l.extend(["_WINDOWS","WINDLL","USERDLL","WIN32_LEAN_AND_MEAN","_CRT_SECURE_NO_WARNINGS","NOGDICAPMASKS","NOVIRTUALKEYCODES","NOWINMESSAGES","NOWINSTYLES","NOSYSMETRICS","NOMENUS","NOICONS","NOKEYSTATES","NOSYSCOMMANDS","NORASTEROPS","NOSHOWWINDOW","OEMRESOURCE","NOATOM","NOCLIPBOARD","NOCOLOR","NOCTLMGR","NODRAWTEXT","NOGDI","NOKERNEL","NOUSER","NOMB","NOMEMMGR","NOMETAFILE","NOMINMAX","NOMSG","NOOPENFILE","NOSCROLL","NOSERVICE","NOSOUND","NOTEXTMETRIC","NOWH","NOWINOFFSETS","NOCOMM","NOKANJI","NOHELP","NOPROFILER","NODEFERWINDOWPOS","NOMCX"])
@@ -20,7 +20,7 @@ def build_sll(fl,r):
 		for k in def_l:
 			win_def.append("/D")
 			win_def.append(k)
-		if (r):
+		if (util.release):
 			util.log("  Compiling files (Release mode)...")
 			out_fl=[]
 			err=False
@@ -64,8 +64,8 @@ def build_sll(fl,r):
 			linux_opt.append("-mavx")
 			linux_opt.append("-mavx2")
 		nasm_fmt=("macho64" if util.system=="darwin" else "elf64")
-		if (r):
-			if ("--debug" in sys.argv):
+		if (util.release):
+			if (util.debug):
 				linux_opt.append("-g")
 			util.log("  Compiling files (Release mode)...")
 			out_fl=[]
