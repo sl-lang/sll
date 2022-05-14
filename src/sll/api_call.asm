@@ -10,16 +10,16 @@ __SLL_EXPORT _call_api_func_assembly
 	; r8 - Argument data pointer
 	; r9 - Argument count
 	; [rsp+48] - Function pointer
-	push rbx
-	push rsi
 	push rbp
 	mov rbp, rsp
+	push rsi
+	push rbx
 
 %ifdef DEBUG_BUILD
-	mov QWORD [rsp+32], rcx
-	mov QWORD [rsp+40], rdx
-	mov QWORD [rsp+48], r8
-	mov QWORD [rsp+56], r9
+	mov QWORD [rbp+16], rcx
+	mov QWORD [rbp+24], rdx
+	mov QWORD [rbp+32], r8
+	mov QWORD [rbp+40], r9
 %endif
 
 	; rbx - Return value pointer
@@ -128,7 +128,8 @@ __SLL_EXPORT _call_api_func_assembly
 ._cleanup:
 
 	; xmm0 - Floating-point return value
-	leave
-	pop rsi
+	lea rsp, QWORD [rbp-16]
 	pop rbx
+	pop rsi
+	pop rbp
 	ret
