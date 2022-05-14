@@ -95,10 +95,10 @@ def _generate_cond(f,dt,lvl,sl):
 
 
 def generate_assembly_optimizer(cfg_fp,o_fp):
-	util.log(f"Generating Assembly Optimizer from '{cfg_fp}'...\n  Reading Configuration file...")
+	util.log(f"Generating assembly optimizer from '{cfg_fp}'...\n  Reading configuration file...")
 	with open(cfg_fp,"r") as f:
 		dt=f.read().split("\n")
-	util.log("  Parsing Data...")
+	util.log("  Parsing data...")
 	data=[[],[],None]
 	for k in dt:
 		k=k.lstrip()
@@ -125,7 +125,7 @@ def generate_assembly_optimizer(cfg_fp,o_fp):
 		else:
 			c[0].append(e)
 			c[1].append(res)
-	util.log(f"  Generating Code to '{o_fp}'...")
+	util.log(f"  Generating code in '{o_fp}'...")
 	with open(o_fp,"w") as f:
 		f.write("#ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__\n#define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1\n#include <sll/_internal/assembly.h>\n#include <sll/assembly.h>\n#include <sll/types.h>\n\n\n\nstatic __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){\n")
 		sl=set()

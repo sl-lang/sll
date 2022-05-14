@@ -22,7 +22,7 @@ def build_sll(fl,v,r):
 			win_def.append("/D")
 			win_def.append(k)
 		if (r):
-			util.log("  Compiling Files (Release Mode)...")
+			util.log("  Compiling files (Release mode)...")
 			out_fl=[]
 			err=False
 			for k in fl:
@@ -35,11 +35,11 @@ def build_sll(fl,v,r):
 						err=True
 			if (err):
 				sys.exit(1)
-			util.log("  Linking Files (Release Mode)...")
+			util.log("  Linking files (Release mode)...")
 			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:NOREF","/INCREMENTAL:NO","/RELEASE","advapi32.lib","bcrypt.lib"]+out_fl)):
 				sys.exit(1)
 		else:
-			util.log("  Compiling Files...")
+			util.log("  Compiling files...")
 			out_fl=[]
 			err=False
 			for k in fl:
@@ -52,7 +52,7 @@ def build_sll(fl,v,r):
 						err=True
 			if (err):
 				sys.exit(1)
-			util.log("  Linking Files...")
+			util.log("  Linking files...")
 			if (util.execute(["link",f"/OUT:build/{lib_nm}.dll","/DLL","/DYNAMICBASE","/MACHINE:X64","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/DEBUG","/INCREMENTAL:NO","/RELEASE","/PDB:build/sll.pdb","advapi32.lib","bcrypt.lib"]+out_fl)):
 				sys.exit(1)
 	else:
@@ -68,7 +68,7 @@ def build_sll(fl,v,r):
 		if (r):
 			if ("--debug" in sys.argv):
 				linux_opt.append("-g")
-			util.log("  Compiling Files (Release Mode)...")
+			util.log("  Compiling files (Release mode)...")
 			out_fl=[]
 			err=False
 			for k in fl:
@@ -81,11 +81,11 @@ def build_sll(fl,v,r):
 						err=True
 			if (err):
 				sys.exit(1)
-			util.log("  Linking Files (Release Mode)...")
+			util.log("  Linking files (Release mode)...")
 			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt)):
 				sys.exit(1)
 			if (util.system!="darwin" and "--debug" not in sys.argv):
-				util.log("  Stripping Executable...")
+				util.log("  Stripping executable...")
 				if (util.execute(["strip",f"build/{lib_nm}.so","-s","-R",".note.*","-R",".comment"])):
 					sys.exit(1)
 		else:
@@ -93,7 +93,7 @@ def build_sll(fl,v,r):
 			if (len(os.getenv("GENERATE_COVERAGE",""))>0):
 				linux_opt.append("--coverage")
 				link_opt.append("--coverage")
-			util.log("  Compiling Files...")
+			util.log("  Compiling files...")
 			out_fl=[]
 			err=False
 			for k in fl:
@@ -106,7 +106,7 @@ def build_sll(fl,v,r):
 						err=True
 			if (err):
 				sys.exit(1)
-			util.log("  Linking Files...")
+			util.log("  Linking files...")
 			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/{lib_nm}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt+link_opt)):
 				sys.exit(1)
 
@@ -114,30 +114,30 @@ def build_sll(fl,v,r):
 
 def build_sll_cli():
 	if (util.system=="windows"):
-		util.log("  Compiling Resource Files...")
+		util.log("  Compiling resource files...")
 		if (util.execute(["rc","/r","/fo","build/app.res","/nologo","src/cli/rsrc/app.rc"])):
 			sys.exit(1)
-		util.log("  Compiling Files (Release Mode)...")
+		util.log("  Compiling files (Release mode)...")
 		out_fp=util.output_file_path("src/cli/windows.c")
 		if (util.execute(["cl","/c","/permissive-","/Zc:preprocessor","/std:c11","/Wv:18","/GS","/utf-8","/W3","/Zc:wchar_t","/Gm-","/sdl","/Zc:inline","/fp:precise","/D","NDEBUG","/D","_WINDOWS","/D","_CRT_SECURE_NO_WARNINGS","/D","WIN32_LEAN_AND_MEAN","/errorReport:none","/WX","/Zc:forScope","/Gd","/Oi","/EHsc","/nologo","/diagnostics:column","/GL","/Gy","/O2","/MD","/I","build","/Fo"+out_fp,"src/cli/windows.c"])):
 			hashlist.fail("src/cli/windows.c")
 			sys.exit(1)
-		util.log("  Linking Files (Release Console Mode)...")
+		util.log("  Linking files (Release console mode)...")
 		if (util.execute(["link",out_fp,"build/app.res","/OUT:build/sll.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:CONSOLE","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"])):
 			sys.exit(1)
-		util.log("  Linking Files (Release Mode)...")
+		util.log("  Linking files (Release mode)...")
 		if (util.execute(["link",out_fp,"build/app.res","/OUT:build/sllw.exe","/DYNAMICBASE","/MACHINE:X64","/SUBSYSTEM:WINDOWS","/ERRORREPORT:none","/NOLOGO","/TLBID:1","/WX","/LTCG","/OPT:REF","/INCREMENTAL:NO","/RELEASE"])):
 			sys.exit(1)
 	else:
-		util.log("  Compiling Files...")
+		util.log("  Compiling files...")
 		out_fp=util.output_file_path("src/cli/linux.c")
 		if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-c","-fvisibility=hidden","-Wall","-O3","-Werror","-D","__SLL_BUILD_"+util.system.upper(),"-I","build","-o",out_fp,"src/cli/linux.c"])):
 			hashlist.fail("src/cli/linux.c")
 			sys.exit(1)
-		util.log("  Linking Files...")
+		util.log("  Linking files...")
 		if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-fvisibility=hidden","-Wall","-O3","-Werror","-o","build/sll",out_fp,"-ldl"])):
 			sys.exit(1)
 		if (util.system!="darwin"):
-			util.log("  Stripping Executable...")
+			util.log("  Stripping executable...")
 			if (util.execute(["strip","build/sll","-s","-R",".note.*","-R",".comment"])):
 				sys.exit(1)

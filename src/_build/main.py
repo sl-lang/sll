@@ -20,14 +20,14 @@ DEBUGGER={
 
 
 
-util.log("Generating Build Directory...")
+util.log("Generating build directory...")
 util.create_output_dir()
 ver=header.read_version("src/sll/include/sll/version.h")
-util.log("Collecting Documentation Files...")
+util.log("Collecting documentation files...")
 d_fl=util.get_docs_files()
-util.log(f"  Found {len(d_fl)} Files\nGenerating Documentation...")
+util.log(f"  Found {len(d_fl)} files\nGenerating documentation...")
 d_dt=docs.create_docs(d_fl)
-util.log(f"Generating Table of API functions...")
+util.log(f"Generating table of API functions...")
 api.generate(d_dt,"src/sll/api/_function_table.c")
 assembly.generate_assembly_optimizer("src/sll/data/assembly_optimizer.txt","src/sll/include/sll/generated/assembly_optimizer.h")
 operator_parser.generate_operator_parser("src/sll/data/operator_parser.txt","src/sll/include/sll/generated/operator_parser.h")
@@ -40,21 +40,24 @@ if ("--web" in sys.argv):
 	sys.exit(0)
 hashlist.load_hash_list("build/.files")
 header.generate_header("src/sll/include","build/sll.h")
-util.log("Listing Source Code Files...")
+util.log("Listing source code files...")
 fl=util.get_sll_files()
-util.log("Compiling Sll...")
+util.log("Compiling...")
 build.build_sll(fl,ver,("--release" in sys.argv))
-util.log("Compiling Sll CLI...")
+util.log("Compiling CLI...")
 build.build_sll_cli()
-util.log("Listing Modules...")
+util.log("Listing modules...")
 fl=list(os.listdir("src/sll/lib"))
-util.log("Compiling Modules...")
+util.log("Compiling modules...")
 if (util.execute(["build/sll","-c","-R","-I","build/lib","-I","src/sll/lib","-o","build/lib/"]+["src/sll/lib/"+e for e in fl]+(["-v"] if "--verbose" in sys.argv else []))):
 	sys.exit(1)
-util.log("Generating Bundle...")
-if (util.execute(["build/sll","-b","-n","-N","/","-R","-O","build/lib_debug/stdlib.slb"]+["build/lib/"+e+".slc" for e in fl if e[0]!="_"]+(["-v"] if "--verbose" in sys.argv else [])) or util.execute(["build/sll","-b","-d","-D","-n","-N","/","-R","-O","build/lib/stdlib.slb"]+["build/lib/"+e+".slc" for e in fl if e[0]!="_"]+(["-v"] if "--verbose" in sys.argv else []))):
+util.log("Generating bundle...")
+if (util.execute(["build/sll","-b","-d","-D","-n","-N","/","-R","-O","build/lib/stdlib.slb"]+["build/lib/"+e+".slc" for e in fl if e[0]!="_"]+(["-v"] if "--verbose" in sys.argv else []))):
 	sys.exit(1)
-util.log("Removing Module Source Files...")
+util.log("Generating debug bundle...")
+if (util.execute(["build/sll","-b","-n","-N","/","-R","-O","build/lib_debug/stdlib.slb"]+["build/lib/"+e+".slc" for e in fl if e[0]!="_"]+(["-v"] if "--verbose" in sys.argv else []))):
+	sys.exit(1)
+util.log("Removing module compilation files...")
 for k in fl:
 	k="build/lib/"+k+".slc"
 	util.log(f"  Removing '{k}'...")

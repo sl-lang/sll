@@ -24,16 +24,6 @@ def _generate(nm,dt):
 
 
 
-def _generate_id(g,sg,nm):
-	o=g
-	if (sg is not None):
-		o+="-"+sg
-		if (nm is not None):
-			o+="-"+nm
-	return o
-
-
-
 def _add_args(dt,void=True):
 	if (void and len(dt["args"])==0):
 		return "("+_add_code_type("void")+")"
@@ -75,16 +65,16 @@ def _generate_docs(dt):
 			m[k["group"]][k["subgroup"]].append(k)
 	data="<div>"
 	for k,v in sorted(m.items(),key=lambda e:dt["groups"][e[0]]["name"]):
-		elem_id=_generate_id(k,None,None)
+		elem_id=k
 		data+=f"<div><div class=\"group-title\"><a id=\"{elem_id}\" href=\"#{elem_id}\">{dt['groups'][k]['name']}</a></div><h2>{dt['groups'][k]['desc']}</h2>"
 		for sk,sv in sorted(v.items(),key=lambda e:("" if e[0]=="" else dt["subgroups"][e[0]]["name"])):
 			if (len(sv)==0):
 				continue
 			if (len(sk)!=0):
-				elem_id=_generate_id(k,sk,None)
+				elem_id=f"{k}-{sk}"
 				data+=f"<div><div class=\"subgroup-title\"><a id=\"{elem_id}\" href=\"#{elem_id}\">{dt['subgroups'][sk]['name']}</a></div><h3>{dt['subgroups'][sk]['desc']}</h3>"
 			for e in sorted(sv,key=lambda se:se["name"]):
-				elem_id=_generate_id(k,sk,e["name"])
+				elem_id=f"{k}-{sk}-{e['name']}"
 				data+=f"<div><a id=\"{elem_id}\" href=\"#{elem_id}\"><pre class=\"code\">"
 				arg_str="Arguments"
 				if ("func" in e["flag"]):
@@ -132,22 +122,22 @@ def _generate_docs(dt):
 
 
 def generate():
-	util.log("Generating Build Directory...")
+	util.log("Generating build directory...")
 	if (not os.path.exists("build/web")):
 		os.mkdir("build/web")
-	util.log("Reading CSS Files...")
+	util.log("Reading CSS files...")
 	for k in os.listdir("src/web/css"):
 		with open("src/web/css/"+k,"r") as rf:
 			_generate("/css/"+k,rf.read())
-	util.log("Reading JS Files...")
+	util.log("Reading JS files...")
 	for k in os.listdir("src/web/js"):
 		with open("src/web/js/"+k,"r") as rf:
 			_generate("/js/"+k,rf.read())
-	util.log("Collecting Documentation Files...")
+	util.log("Collecting documentation files...")
 	d_fl=util.get_docs_files()
-	util.log(f"  Found {len(d_fl)} Files\nGenerating Documentation...")
+	util.log(f"  Found {len(d_fl)} files\nGenerating documentation...")
 	d_dt=docs.create_docs(d_fl)
-	util.log(f"Generating Table of Content & Pages for {len(d_dt['data'])} Symbols...")
+	util.log(f"Generating documentation for {len(d_dt['data'])} symbols...")
 	data=_generate_docs(d_dt)
 	util.log("Reading 'src/web/docs.html'...")
 	with open("src/web/docs.html","r") as rf:
