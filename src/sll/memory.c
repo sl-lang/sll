@@ -207,6 +207,7 @@ static __SLL_FORCE_INLINE void* _stack_get(sll_size_t sz){
 		_memory_stack_top=STACK_BLOCK_GET_NEXT(o);
 		_init_stack_node(_memory_stack_top,blk_sz-sz-sizeof(stack_block_end_t));
 	}
+	o->dt=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
 	return o;
 }
 
@@ -290,10 +291,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_raw(sll_size_t sz,sll
 	}
 	sz+=sizeof(user_mem_block_t);
 	user_mem_block_t* b=_stack_get(sz);
-	if (b){
-		b->dt=USER_MEM_BLOCK_INIT((sz+7)&0xfffffffffffffff8ull)|USER_MEM_BLOCK_FLAG_STACK;
-	}
-	else{
+	if (!b){
 		b=_allocate_chunk(sz,err);
 	}
 	return PTR(ADDR(b)+sizeof(user_mem_block_t));
@@ -332,9 +330,8 @@ __SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d){
 	else if (d==SLL_MEMORY_MOVE_DIRECTION_TO_STACK){
 		user_mem_block_t* n=_stack_get(sz);
 		if (n){
-			sll_copy_data(b,sz,n);
+			sll_copy_data(PTR(ADDR(b)+sizeof(user_mem_block_t)),sz-sizeof(user_mem_block_t),PTR(ADDR(n)+sizeof(user_mem_block_t)));
 			_pool_add(b);
-			n->dt|=USER_MEM_BLOCK_FLAG_STACK;
 			p=PTR(ADDR(n)+sizeof(user_mem_block_t));
 		}
 	}
@@ -373,10 +370,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* p,sll_size_t sz
 			}
 			else{
 				user_mem_block_t* n_blk=_stack_get(sz);
-				if (n_blk){
-					n_blk->dt=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
-				}
-				else{
+				if (!n_blk){
 					n_blk=_allocate_chunk(raw_sz,err);
 				}
 				sll_copy_data(PTR(ADDR(b)+sizeof(user_mem_block_t)),prev_sz-sizeof(user_mem_block_t),PTR(ADDR(n_blk)+sizeof(user_mem_block_t)));
