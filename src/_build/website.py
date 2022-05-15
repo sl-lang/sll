@@ -122,7 +122,7 @@ def _generate_docs(dt):
 
 
 def generate():
-	util.log("Generating build directory...")
+	util.log("Generating output directory...")
 	if (not os.path.exists("build/web")):
 		os.mkdir("build/web")
 	util.log("Reading CSS files...")
