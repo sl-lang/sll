@@ -8,6 +8,7 @@
 	(~ int_type) RELEASE
 	(~ int_type) TEST
 	(~ int_type) UPLOAD
+	(~ int_type) WEBSITE
 ))
 
 (= config_module_type (&:
@@ -52,6 +53,7 @@
 		(|: sys$ARGV "--release")
 		(|: sys$ARGV "--test")
 		(|: sys$ARGV "--upload")
+		(|: sys$ARGV "--web")
 	]
 ))
 (## config)

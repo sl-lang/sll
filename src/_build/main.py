@@ -1,6 +1,5 @@
 import assembly
 import build
-import docs
 import hashlist
 import header
 import os
