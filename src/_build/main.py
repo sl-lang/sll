@@ -20,10 +20,6 @@ DEBUGGER={
 
 if (util.execute([util.sll_runtime,"src/_build/main.sll","-I","src/_build","-A"]+sys.argv)):
 	sys.exit(0)
-util.log("Collecting documentation files...")
-d_fl=util.get_docs_files()
-util.log(f"  Found {len(d_fl)} files\nGenerating documentation...")
-d_dt=docs.create_docs(d_fl)
 assembly.generate_assembly_optimizer("src/sll/data/assembly_optimizer.txt","src/sll/include/sll/generated/assembly_optimizer.h")
 if ("--web" in sys.argv):
 	website.generate()
