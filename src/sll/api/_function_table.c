@@ -67,17 +67,17 @@ extern void sll_api_math_atan(void);
 extern void sll_api_math_atan2(void);
 extern void sll_api_math_atanh(void);
 extern void sll_api_math_cbrt(void);
-extern void sll_api_math_ceil(void);
 extern void sll_api_math_combinations(void);
-extern void sll_api_math_copy_sign(void);
 extern void sll_api_math_cos(void);
 extern void sll_api_math_cosh(void);
+extern void sll_api_math_ceil(void);
+extern void sll_api_math_copy_sign(void);
 extern void sll_api_math_euler_phi(void);
 extern void sll_api_math_exp(void);
 extern void sll_api_math_factorial(void);
 extern void sll_api_math_factors(void);
-extern void sll_api_math_floor(void);
 extern void sll_api_math_gcd(void);
+extern void sll_api_math_floor(void);
 extern void sll_api_math_int_log2(void);
 extern void sll_api_math_int_pow(void);
 extern void sll_api_math_int_sqrt(void);
@@ -115,13 +115,13 @@ extern void sll_api_random_get_int(void);
 extern void sll_api_random_get_string(void);
 extern void sll_api_serial_decode_float(void);
 extern void sll_api_serial_decode_integer(void);
-extern void sll_api_serial_decode_object(void);
 extern void sll_api_serial_decode_signed_integer(void);
+extern void sll_api_serial_decode_object(void);
 extern void sll_api_serial_decode_string(void);
 extern void sll_api_serial_encode_float(void);
 extern void sll_api_serial_encode_integer(void);
-extern void sll_api_serial_encode_object(void);
 extern void sll_api_serial_encode_signed_integer(void);
+extern void sll_api_serial_encode_object(void);
 extern void sll_api_serial_encode_string(void);
 extern void sll_api_sort_quicksort(void);
 extern void sll_api_string_checksum(void);
@@ -130,8 +130,8 @@ extern void sll_api_string_count(void);
 extern void sll_api_string_count_left(void);
 extern void sll_api_string_count_right(void);
 extern void sll_api_string_ends(void);
-extern void sll_api_string_flip_case(void);
 extern void sll_api_string_format(void);
+extern void sll_api_string_flip_case(void);
 extern void sll_api_string_index(void);
 extern void sll_api_string_index_list(void);
 extern void sll_api_string_index_reverse(void);
@@ -147,14 +147,14 @@ extern void sll_api_string_split(void);
 extern void sll_api_string_starts(void);
 extern void sll_api_string_to_lower_case(void);
 extern void sll_api_string_to_title_case(void);
-extern void sll_api_string_to_upper_case(void);
 extern void sll_api_string_trim(void);
 extern void sll_api_string_trim_left(void);
 extern void sll_api_string_trim_right(void);
-extern void sll_api_struct_double_from_bits(void);
-extern void sll_api_struct_double_to_bits(void);
+extern void sll_api_string_to_upper_case(void);
 extern void sll_api_struct_float_from_bits(void);
+extern void sll_api_struct_double_from_bits(void);
 extern void sll_api_struct_float_to_bits(void);
+extern void sll_api_struct_double_to_bits(void);
 extern void sll_api_sys_get_args(void);
 extern void sll_api_sys_get_cpu_count(void);
 extern void sll_api_sys_get_env(void);
@@ -165,8 +165,8 @@ extern void sll_api_sys_get_sandbox_flags(void);
 extern void sll_api_sys_get_version(void);
 extern void sll_api_sys_load_library(void);
 extern void sll_api_sys_remove_env(void);
-extern void sll_api_sys_set_env(void);
 extern void sll_api_sys_set_sandbox_flag(void);
+extern void sll_api_sys_set_env(void);
 extern void sll_api_thread_create(void);
 extern void sll_api_thread_create_barrier(void);
 extern void sll_api_thread_create_lock(void);
@@ -511,19 +511,9 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("f|f")
 	},
 	{
-		SLL_CHAR("sll:math_ceil"),
-		sll_api_math_ceil,
-		SLL_CHAR("X|x")
-	},
-	{
 		SLL_CHAR("sll:math_combinations"),
 		sll_api_math_combinations,
 		SLL_CHAR("QQ|Q")
-	},
-	{
-		SLL_CHAR("sll:math_copy_sign"),
-		sll_api_math_copy_sign,
-		SLL_CHAR("zz|x")
 	},
 	{
 		SLL_CHAR("sll:math_cos"),
@@ -534,6 +524,16 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("sll:math_cosh"),
 		sll_api_math_cosh,
 		SLL_CHAR("X|x")
+	},
+	{
+		SLL_CHAR("sll:math_ceil"),
+		sll_api_math_ceil,
+		SLL_CHAR("X|x")
+	},
+	{
+		SLL_CHAR("sll:math_copy_sign"),
+		sll_api_math_copy_sign,
+		SLL_CHAR("zz|x")
 	},
 	{
 		SLL_CHAR("sll:math_euler_phi"),
@@ -556,14 +556,14 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("Q|a")
 	},
 	{
-		SLL_CHAR("sll:math_floor"),
-		sll_api_math_floor,
-		SLL_CHAR("X|x")
-	},
-	{
 		SLL_CHAR("sll:math_gcd"),
 		sll_api_math_gcd,
 		SLL_CHAR("ii|i")
+	},
+	{
+		SLL_CHAR("sll:math_floor"),
+		sll_api_math_floor,
+		SLL_CHAR("X|x")
 	},
 	{
 		SLL_CHAR("sll:math_int_log2"),
@@ -751,13 +751,13 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("D|~a")
 	},
 	{
-		SLL_CHAR("sll:serial_decode_object"),
-		sll_api_serial_decode_object,
+		SLL_CHAR("sll:serial_decode_signed_integer"),
+		sll_api_serial_decode_signed_integer,
 		SLL_CHAR("D|~a")
 	},
 	{
-		SLL_CHAR("sll:serial_decode_signed_integer"),
-		sll_api_serial_decode_signed_integer,
+		SLL_CHAR("sll:serial_decode_object"),
+		sll_api_serial_decode_object,
 		SLL_CHAR("D|~a")
 	},
 	{
@@ -776,14 +776,14 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("DQ|Q")
 	},
 	{
-		SLL_CHAR("sll:serial_encode_object"),
-		sll_api_serial_encode_object,
-		SLL_CHAR("D#a|Q")
-	},
-	{
 		SLL_CHAR("sll:serial_encode_signed_integer"),
 		sll_api_serial_encode_signed_integer,
 		SLL_CHAR("Di|Q")
+	},
+	{
+		SLL_CHAR("sll:serial_encode_object"),
+		sll_api_serial_encode_object,
+		SLL_CHAR("D#a|Q")
 	},
 	{
 		SLL_CHAR("sll:serial_encode_string"),
@@ -826,14 +826,14 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("#sy|b")
 	},
 	{
-		SLL_CHAR("sll:string_flip_case"),
-		sll_api_string_flip_case,
-		SLL_CHAR("#s|s")
-	},
-	{
 		SLL_CHAR("sll:string_format"),
 		sll_api_string_format,
 		SLL_CHAR("#so!|s")
+	},
+	{
+		SLL_CHAR("sll:string_flip_case"),
+		sll_api_string_flip_case,
+		SLL_CHAR("#s|s")
 	},
 	{
 		SLL_CHAR("sll:string_index"),
@@ -911,11 +911,6 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("#s|s")
 	},
 	{
-		SLL_CHAR("sll:string_to_upper_case"),
-		sll_api_string_to_upper_case,
-		SLL_CHAR("#s|s")
-	},
-	{
 		SLL_CHAR("sll:string_trim"),
 		sll_api_string_trim,
 		SLL_CHAR("#s|s")
@@ -931,14 +926,9 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("#s|s")
 	},
 	{
-		SLL_CHAR("sll:struct_double_from_bits"),
-		sll_api_struct_double_from_bits,
-		SLL_CHAR("Q|f")
-	},
-	{
-		SLL_CHAR("sll:struct_double_to_bits"),
-		sll_api_struct_double_to_bits,
-		SLL_CHAR("f|Q")
+		SLL_CHAR("sll:string_to_upper_case"),
+		sll_api_string_to_upper_case,
+		SLL_CHAR("#s|s")
 	},
 	{
 		SLL_CHAR("sll:struct_float_from_bits"),
@@ -946,9 +936,19 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("D|f")
 	},
 	{
+		SLL_CHAR("sll:struct_double_from_bits"),
+		sll_api_struct_double_from_bits,
+		SLL_CHAR("Q|f")
+	},
+	{
 		SLL_CHAR("sll:struct_float_to_bits"),
 		sll_api_struct_float_to_bits,
 		SLL_CHAR("f|D")
+	},
+	{
+		SLL_CHAR("sll:struct_double_to_bits"),
+		sll_api_struct_double_to_bits,
+		SLL_CHAR("f|Q")
 	},
 	{
 		SLL_CHAR("sll:sys_get_args"),
@@ -1001,14 +1001,14 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("#s|")
 	},
 	{
-		SLL_CHAR("sll:sys_set_env"),
-		sll_api_sys_set_env,
-		SLL_CHAR("#s#s|")
-	},
-	{
 		SLL_CHAR("sll:sys_set_sandbox_flag"),
 		sll_api_sys_set_sandbox_flag,
 		SLL_CHAR("B|")
+	},
+	{
+		SLL_CHAR("sll:sys_set_env"),
+		sll_api_sys_set_env,
+		SLL_CHAR("#s#s|")
 	},
 	{
 		SLL_CHAR("sll:thread_create"),
@@ -1154,7 +1154,7 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("sll:weakref_set_callback_data"),
 		sll_api_weakref_set_callback_data,
 		SLL_CHAR("Qo|")
-	}
+	},
 };
 
 

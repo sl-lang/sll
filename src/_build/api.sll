@@ -1,0 +1,82 @@
+(--- "file.sll" "config.sll" "log.sll" "sort.sll" "types.sll")
+
+
+
+(= api_symbol_type (&:
+	(~ string_type) name
+	(~ string_type) fmt
+))
+
+(= api_module_type (&:
+	(~ func_type) generate_function_table
+))
+
+
+
+(= _api_sym_sort (,,, sym
+	(@@ sym$name)
+))
+
+(= generate_function_table (,,, docs
+	(<- log$log "Generating API function table...")
+	(<- log$log "  Listing symbols...")
+	(= symbols ([> (= i 0) (< i ($ docs$data))
+		(= sym (: docs$data i))
+		(++ i)
+		(? (! sym$api_fmt) (<<<))
+		(. api_symbol_type
+			sym$name
+			sym$api_fmt
+		)
+	))
+	(<- log$log "    Found " ($ symbols) " symbols...")
+	(<- sort$sort symbols true false _api_sym_sort)
+	(<- log$log "  Generating code in '" config$API_FUNCTION_TABLE_FILE_PATH "'...")
+	(= fh (<- file$open config$API_FUNCTION_TABLE_FILE_PATH "w"))
+	(<- file$write fh
+`#include <sll/common.h>
+#include <sll/ift.h>
+#include <sll/string.h>
+#include <sll/types.h>
+
+
+
+`)
+	(-> (= i 0) (< i ($ symbols))
+		(<- file$write fh "extern void " (: (: symbols i) "name") "(void);\n")
+		(++ i)
+	)
+	(<- file$write fh
+`
+
+
+static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={`)
+	(-> (= i 0) (< i ($ symbols))
+		(= sym (: symbols i))
+		(<- file$write fh
+`
+	{
+		SLL_CHAR("sll:` (>> sym$name 8) `"),
+		` sym$name `,
+		SLL_CHAR("` sym$fmt `")
+	},`)
+		(++ i)
+	)
+	(<- file$write fh
+`
+};
+
+
+
+__SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_ifunc_data_ptr);
+__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=` ($ symbols) `;
+`)
+	(<- file$close fh)
+))
+
+
+
+(= api (. api_module_type
+	generate_function_table
+))
+(## api)

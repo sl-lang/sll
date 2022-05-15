@@ -62,6 +62,7 @@
 	string_type subgroup
 	string_type name
 	string_type description
+	string_type api_fmt
 	array_type args
 	return_type return
 ))
@@ -226,6 +227,7 @@
 				state$subgroup
 				state$name
 				state$description
+				state$api_fmt
 				args
 				(,
 					(= arrow_idx (<- string$index state$return "->"))

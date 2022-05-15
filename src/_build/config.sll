@@ -11,6 +11,7 @@
 ))
 
 (= config_module_type (&:
+	(~ string_type) API_FUNCTION_TABLE_FILE_PATH
 	(~ array_type) BUILD_CLEAR_FOLDERS
 	(~ array_type) BUILD_CREATE_FOLDERS
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
@@ -30,6 +31,7 @@
 
 
 (= config (. config_module_type
+	"src/sll/api/_function_table.c"
 	["build/lib" "build/lib_debug" "build/web"]
 	["build/lib" "build/lib_debug" "build/objects"]
 	16
