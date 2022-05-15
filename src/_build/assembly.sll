@@ -1,0 +1,197 @@
+(--- "file.sll" "config.sll" "log.sll" "types.sll" "string.sll" "array.sll")
+
+
+
+(= optimizer_node_type (&:
+	(~ map_type) children
+	string_type code
+))
+
+(= assembly_module_type (&:
+	(~ func_type) generate_assembly_optimizer
+))
+
+
+
+
+(= _parse_object (,,, str
+	(= str (<- string$split (<- string$lower_case str) '.'))
+	(@@ (?: (=== ($ str) 1)
+		(+ "SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[" (: str 0) "])")
+		(+ "st[" (: str 0) "]->dt." (<- string$trim (: str 1)))
+	))
+))
+
+(= _parse_value (,,, str
+	(= out "")
+	(= str (<- string$split (<- string$lower_case str) '|'))
+	(-> (= i 0) (< i ($ str))
+		(= part (<- string$trim (: str i)))
+		(? i (= out (+ out '|')))
+		(= out (+ out (?:
+			(=== (: part 0) '+') (>> part 1)
+			(=== (: part 0) '-') part
+			(|: string$DIGITS (: part 0)) (<- _parse_object part)
+			(+ "SLL_ASSEMBLY_INSTRUCTION_" (?: (<- string$starts part "flag_") "" "TYPE_") (<- string$upper_case part))
+		)))
+		(++ i)
+	)
+	(@@ out)
+))
+
+(= _generate_code (,,, fh code indentation shifts
+	(= code (<- string$split code ','))
+	(-> (= i 0) (< i ($ code))
+		(<- file$write fh (* "\t" indentation))
+		(= expr (<- string$split (<- string$trim (: code i)) '='))
+		(++ i)
+		(? (&& (> ($ expr) 1) (=== (: (: expr 1) 0) '#')) {
+			(<- file$write fh (>> (: expr 1) 1) "(st[" (: expr 0) "]);\n")
+			(<<<)
+		})
+		(? (=== (: (: expr 0) 0) '$'){
+			(= shift (- (: (: expr 0) 1) 48))
+			(? (! (|: shifts shift)) (<- array$push shifts shift))
+			(<- file$write fh "goto _shift_" shift ";\n")
+		} {
+			(= obj (<- string$split (<- string$lower_case (: expr 0)) '.'))
+			(? (=== ($ obj) 1)
+				(<- file$write fh "st[" (: obj 0) "]->t=")
+				(<- file$write fh "st[" (: obj 0) "]->dt." (<- string$trim (: obj 1)) "=")
+			)
+			(<- file$write fh (<- _parse_value (: expr 1)) ";\n")
+		})
+	)
+))
+
+(= _generate_node (,,, fh node indentation shifts
+	(? (! node$children) {
+		(<- _generate_code fh node$code indentation shifts)
+		(@@)
+	})
+	(= pfx "")
+	(= conditions (:: node$children map_key_type))
+	(-> (= i 0) (< i ($ conditions))
+		(<- file$write fh (* "\t" indentation) pfx "if (")
+		(= pfx "else ")
+		(= cond (: conditions i))
+		(= child (: node$children cond))
+		(= cond (<- string$split cond '='))
+		(= obj (<- _parse_object (: cond 0)))
+		(= values (: cond 1))
+		(= cmp_sign "==")
+		(= cmp_infix "||")
+		(? (=== (: values 0) '!') {
+			(= cmp_sign "!=")
+			(= cmp_infix "&&")
+			(= values (>> values 1))
+			(= pfx "")
+		})
+		(= values (<- string$split values '|'))
+		(-> (= j 0) (< j ($ values))
+			(? j (<- file$write fh cmp_infix))
+			(<- file$write fh obj cmp_sign (<- _parse_value (: values j)))
+			(++ j)
+		)
+		(<- file$write fh "){\n")
+		(<- _generate_node fh child (+ indentation 1) shifts)
+		(<- file$write fh (* "\t" indentation) "}\n")
+		(++ i)
+	)
+	(? node$code {
+		(<- file$write fh (* "\t" indentation) "else{\n")
+		(<- _generate_code fh node$code (+ indentation 1) shifts)
+		(<- file$write fh (* "\t" indentation) "}\n")
+	})
+))
+
+(= generate_assembly_optimizer (,,,
+	(<- log$log "Generating assembly optimizer from '" config$ASSEMBLY_OPTIMIZER_CONFIG_FILE_PATH "'...")
+	(<- log$log "  Reading configuration file...")
+	(= data (<- string$split
+		(<- file$read
+			(<- file$open
+				config$ASSEMBLY_OPTIMIZER_CONFIG_FILE_PATH
+				"r"
+			)
+		)
+		'\n'
+	))
+	(<- log$log "  Parsing data...")
+	(= root (. optimizer_node_type))
+	(-> (= i 0) (< i ($ data))
+		(= line (<- string$trim (: data i)))
+		(++ i)
+		(? (|| (! line) (=== (: line 0) ';')) (<<<))
+		(= line (<- string$split line "->"))
+		(? (!== ($ line) 2) (<<<))
+		(= cond (<- string$split (: line 0) ','))
+		(= code (<- string$trim (: line 1)))
+		(= node root)
+		(-> (= j 0) (< j ($ cond))
+			(= cond_elem (<- string$trim (: cond j)))
+			(= child (: node$children cond_elem))
+			(? (! child) {
+				(= child (. optimizer_node_type))
+				(= (: node$children cond_elem) child)
+			})
+			(= node child)
+			(++ j)
+		)
+		(? node$code {
+			(:> "Duplicated condition: " (<- string$join ',' cond) "\n")
+			(@@)
+		})
+		(= node$code code)
+	)
+	(<- log$log "  Generating code in '" config$ASSEMBLY_OPTIMIZER_OUTPUT_FILE_PATH "'...")
+	(= fh (<- file$open config$ASSEMBLY_OPTIMIZER_OUTPUT_FILE_PATH "w"))
+	(<- file$write fh
+`#ifndef __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__
+#define __SLL_GENERATED_ASSEMBLY_OPTIMIZER_H__ 1
+#include <sll/_internal/assembly.h>
+#include <sll/assembly.h>
+#include <sll/types.h>
+
+
+
+static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){
+`)
+	(= shifts [])
+	(<- _generate_node fh root 1 shifts)
+	(-> (= i 0) (< i ($ shifts))
+		(= shift (: shifts i))
+		(<- file$write fh
+`	return;
+_shift_` shift `:
+`)
+		(-> (= j 0) (< j shift)
+			(<- file$write fh
+`	st[` j `]->t=ASSEMBLY_INSTRUCTION_TYPE_NOP;
+`)
+			(++ j)
+		)
+		(-> (= j 0) (< j (- config$ASSEMBLY_OPTIMIZER_STACK_SIZE 1))
+			(<- file$write fh
+`	st[` j `]=` (?: (< (+ j shift) config$ASSEMBLY_OPTIMIZER_STACK_SIZE) (+ "st[" (+ j shift) "]") "nop") `;
+`)
+			(++ j)
+		)
+		(++ i)
+	)
+	(<- file$write fh
+`}
+
+
+
+#endif
+`)
+	(<- file$close fh)
+))
+
+
+
+(= assembly (. assembly_module_type
+	generate_assembly_optimizer
+))
+(## assembly)

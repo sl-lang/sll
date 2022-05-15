@@ -1,7 +1,8 @@
-(--- "operator_parser.sll" "util.sll" "header.sll" "documentation.sll" "api.sll")
+(--- "operator_parser.sll" "util.sll" "header.sll" "documentation.sll" "api.sll" "assembly.sll")
 
 
 (<- util$create_output_dir)
+(<- assembly$generate_assembly_optimizer)
 (<- operator_parser$generate_operator_parser)
 ; (<- header$generate_error_headers)
 (= docs (<- documentation$parse_documentation_files))

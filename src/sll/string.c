@@ -1879,12 +1879,13 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* s,const sll_string_t* p
 			sll_array_push(NULL,x,o);
 			SLL_RELEASE(x);
 			j+=p->l;
+			i=j;
 		}
 		else{
 			j++;
 		}
 	}
-	sll_object_t* x=(i==j?EMPTY_STRING_TO_OBJECT():STRING_POINTER_LENGTH_TO_OBJECT(s->v+i,j-i));
+	sll_object_t* x=(i==s->l?EMPTY_STRING_TO_OBJECT():STRING_POINTER_LENGTH_TO_OBJECT(s->v+i,s->l-i));
 	sll_array_push(NULL,x,o);
 	SLL_RELEASE(x);
 }

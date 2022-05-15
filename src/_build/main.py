@@ -1,4 +1,3 @@
-import assembly
 import build
 import hashlist
 import header
@@ -17,9 +16,8 @@ DEBUGGER={
 
 
 
-if (util.execute([util.sll_runtime,"src/_build/main.sll","-I","src/_build","-A"]+sys.argv)):
+if (util.execute([util.sll_runtime,"src/_build/main.sll","-I","src/sll/lib","-I","src/_build","-A"]+sys.argv) or 0):
 	sys.exit(0)
-assembly.generate_assembly_optimizer("src/sll/data/assembly_optimizer.txt","src/sll/include/sll/generated/assembly_optimizer.h")
 if ("--web" in sys.argv):
 	website.generate()
 	sys.exit(0)

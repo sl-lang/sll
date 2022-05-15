@@ -13,6 +13,9 @@
 
 (= config_module_type (&:
 	(~ string_type) API_FUNCTION_TABLE_FILE_PATH
+	(~ string_type) ASSEMBLY_OPTIMIZER_CONFIG_FILE_PATH
+	(~ string_type) ASSEMBLY_OPTIMIZER_OUTPUT_FILE_PATH
+	(~ int_type) ASSEMBLY_OPTIMIZER_STACK_SIZE
 	(~ array_type) BUILD_CLEAR_FOLDERS
 	(~ array_type) BUILD_CREATE_FOLDERS
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
@@ -33,6 +36,9 @@
 
 (= config (. config_module_type
 	"src/sll/api/_function_table.c"
+	"src/sll/data/assembly_optimizer.txt"
+	"src/sll/include/sll/generated/assembly_optimizer.h"
+	5
 	["build/lib" "build/lib_debug" "build/web"]
 	["build/lib" "build/lib_debug" "build/objects"]
 	16
