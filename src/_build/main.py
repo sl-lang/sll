@@ -21,8 +21,6 @@ DEBUGGER={
 
 if (util.execute([util.sll_runtime,"src/_build/main.sll","-I","src/_build","-A"]+sys.argv)):
 	sys.exit(0)
-util.log("Generating build directory...")
-util.create_output_dir()
 util.log("Collecting documentation files...")
 d_fl=util.get_docs_files()
 util.log(f"  Found {len(d_fl)} files\nGenerating documentation...")
