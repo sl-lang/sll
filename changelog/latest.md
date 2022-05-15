@@ -3,6 +3,7 @@
 ## Added
 
 - Fast object pool used in the GC
+- Hash descriptor type `hash$hash_type` now contains a field `type` containing the type returned by functions from the given descriptor
 - Implemented `path$join`
 - Implemented `sll_file_read_all` and `file$read` with no arguments
 - Implemented `sll_object_to_map`

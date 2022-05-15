@@ -1,10 +1,16 @@
-(--- "path.sll" "config.sll" "log.sll" "types.sll" "array.sll" "sort.sll" "file.sll")
+(--- "path.sll" "config.sll" "log.sll" "types.sll" "array.sll" "sort.sll" "file.sll" "hash.sll")
 
 
+
+(= hash_and_size_type (&:
+	(~ hash$sha256$type) hash
+	(~ int_type) size
+))
 
 (= util_module_type (&:
 	(~ func_type) create_output_dir
 	(~ func_type) execute
+	(~ func_type) hash_file
 ))
 
 
@@ -38,10 +44,19 @@
 	)
 ))
 
-
-
 (= execute (,,, args
 	(@@ (! (: (<- process$start args) "return_code"))
+))
+
+(= hash_file (,,, path
+	(@@ (.
+		(<- hash$sha256$process
+			(<- file$read
+				(<- file$open path "r")
+			)
+		)
+		(<- path$size path)
+	))
 ))
 
 
@@ -49,5 +64,6 @@
 (= util (. util_module_type
 	create_output_dir
 	execute
+	hash_file
 ))
 (## util)

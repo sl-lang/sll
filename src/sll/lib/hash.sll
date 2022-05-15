@@ -48,6 +48,7 @@
 ))
 
 (= hash_type (&:
+	(~ type_type) type
 	(~ int_type) BLOCK_SIZE
 	(~ int_type) DIGEST_SIZE
 	(~ func_type) init
@@ -578,6 +579,7 @@
 (= hash (. hash_module_type
 	hash_type
 	[
+		md5_type
 		MD5_BLOCK_SIZE
 		MD5_DIGEST_SIZE
 		md5_init
@@ -586,6 +588,7 @@
 		md5_process
 	]
 	[
+		sha1_type
 		SHA1_BLOCK_SIZE
 		SHA1_DIGEST_SIZE
 		sha1_init
@@ -594,6 +597,7 @@
 		sha1_process
 	]
 	[
+		sha256_type
 		SHA224_BLOCK_SIZE
 		SHA224_DIGEST_SIZE
 		sha224_init
@@ -602,6 +606,7 @@
 		sha224_process
 	]
 	[
+		sha256_type
 		SHA256_BLOCK_SIZE
 		SHA256_DIGEST_SIZE
 		sha256_init
@@ -610,6 +615,7 @@
 		sha256_process
 	]
 	[
+		sha512_type
 		SHA384_BLOCK_SIZE
 		SHA384_DIGEST_SIZE
 		sha384_init
@@ -618,6 +624,7 @@
 		sha384_process
 	]
 	[
+		sha512_type
 		SHA512_BLOCK_SIZE
 		SHA512_DIGEST_SIZE
 		sha512_init
