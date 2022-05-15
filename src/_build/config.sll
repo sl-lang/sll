@@ -3,16 +3,20 @@
 
 
 (= cli_options_types (&:
-	int_type BUNDLE
-	int_type DEBUG
-	int_type RELEASE
-	int_type TEST
-	int_type UPLOAD
+	(~ int_type) BUNDLE
+	(~ int_type) DEBUG
+	(~ int_type) RELEASE
+	(~ int_type) TEST
+	(~ int_type) UPLOAD
 ))
 
 (= config_module_type (&:
 	(~ array_type) BUILD_CLEAR_FOLDERS
 	(~ array_type) BUILD_CREATE_FOLDERS
+	(~ int_type) BYTE_ARRAY_WRAP_SIZE
+	(~ string_type) ERROR_HEADER_OUTPUT_DIRECTORY_PATH
+	(~ string_type) ERROR_HEADER_SOURCE_DIRECTORY_PATH
+	(~ array_type) ERROR_HEADERS
 	(~ string_type) OPERATOR_PARSER_CONFIG_FILE_PATH
 	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
 	(~ cli_options_types) OPTIONS
@@ -27,6 +31,15 @@
 (= config (. config_module_type
 	["build/lib" "build/lib_debug" "build/web"]
 	["build/lib" "build/lib_debug" "build/objects"]
+	16
+	"src/sll/include/sll/generated/"
+	"src/sll/data/"
+	[
+		"cpuid_error.txt"
+		"critical_error.txt"
+		"help_text.txt"
+		"memory_fail.txt"
+	]
 	"src/sll/data/operator_parser.txt"
 	"src/sll/include/sll/generated/operator_parser.h"
 	[

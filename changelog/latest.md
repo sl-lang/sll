@@ -5,6 +5,7 @@
 - Fast object pool used in the GC
 - Implemented `sll_file_read_all` and `file$read` with no arguments
 - Implemented `sll_object_to_map`
+- Implemented `sll_string_split`
 
 ## Changed
 

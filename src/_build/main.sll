@@ -1,5 +1,6 @@
-(--- "log.sll" "config.sll" "sys.sll" "operator_parser.sll" "util.sll")
+(--- "log.sll" "config.sll" "sys.sll" "operator_parser.sll" "util.sll" "header.sll")
 
 
 (<- util$create_output_dir)
 (<- operator_parser$generate_operator_parser)
+; (<- header$generate_error_headers)

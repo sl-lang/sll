@@ -1,0 +1,108 @@
+(--- "file.sll" "log.sll" "string.sll" "array.sll" "types.sll" "config.sll")
+
+
+
+(= header_module_type (&:
+	(~ func_type) generate_error_headers
+))
+
+
+
+(= _write_byte_array (,,, fh data
+	(-> (= i 0) (< i ($ data))
+		(? i {
+			(<- file$write fh ',')
+			(? (! (% i config$BYTE_ARRAY_WRAP_SIZE)) (<- file$write fh "\n\t"))
+		})
+		(<- file$write fh (<- string$format "0x%.2x" (: data i)))
+		(++ i)
+	)
+))
+
+(= generate_error_headers (,,,
+	(<- log$log "Generating " ($ config$ERROR_HEADERS) " error header...")
+	(-> (= i 0) (< i ($ config$ERROR_HEADERS))
+		(= name (: config$ERROR_HEADERS i))
+		(= src (+ config$ERROR_HEADER_SOURCE_DIRECTORY_PATH name))
+		(= dst (+
+			config$ERROR_HEADER_OUTPUT_DIRECTORY_PATH
+			(: name 0 -4)
+			".h"
+		))
+		(<- log$log "  Convering '" src "' to '" dst "' ...")
+		(= data (<- string$split
+			(<- string$replace
+				(<- file$read
+					(<- file$open
+						src
+						"r"
+					)
+				)
+				"\r\n"
+				"\n"
+			)
+			"$$$"
+		)
+		(= fh (<- file$open dst "w"))
+		(= name (<- string$upper_case (: name 0 (<- string$index name '.'))))
+		(? (=== ($ data) 1) {
+			(<- file$write fh
+`#ifndef __SLL_GENERATED_` name `_H__
+#define __SLL_GENERATED_` name `_H__ 1
+#include <sll/types.h>
+
+
+
+#define ` name `_SIZE ` ($ (: data 0)) `
+
+
+
+static const sll_char_t ` name `[]={
+	`)
+			(<- _write_byte_array fh (: data 0))
+		} {
+			(<- file$write fh
+`#ifndef __SLL_GENERATED_` name `_H__
+#define __SLL_GENERATED_` name `_H__ 1
+#include <sll/types.h>
+
+
+
+#define ` name `_START_SIZE ` ($ (: data 0)) `
+#define ` name `_END_SIZE ` ($ (: data 1)) `
+
+
+
+static const sll_char_t ` name `_START[]={
+	`)
+			(<- _write_byte_array fh (: data 0))
+			(<- file$write fh
+`
+};
+
+
+
+
+static const sll_char_t ` name `_END[]={
+	`)
+			(<- _write_byte_array fh (: data 1))
+		})
+		(<- file$write fh
+`
+};
+
+
+
+#endif
+`)
+		(<- file$close fh)
+		(++ i)
+	)
+))
+
+
+
+(= header (. header_module_type
+	generate_error_headers
+))
+(## header)

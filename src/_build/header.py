@@ -4,7 +4,6 @@ import util
 
 
 
-BYTE_ARRAY_WRAP_SIZE=16
 COMMENT_REGEX=re.compile(r"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
 DEFINE_LINE_CONTINUE_REGEX=re.compile(r"\s*\\\n[ \t\r]*")
 DEFINE_REMOVE_REGEX=re.compile(r"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
@@ -15,21 +14,6 @@ STACK_ADD=0
 STACK_SKIP=1
 STACK_SKIP_INNER=2
 STACK_UNKNOWN=3
-
-
-
-def _write_byte_array(wf,dt):
-	st=True
-	i=0
-	for c in dt:
-		if (st is False):
-			wf.write(",")
-			if (i==BYTE_ARRAY_WRAP_SIZE):
-				wf.write("\n\t")
-				i=0
-		wf.write(f"0x{c:02x}")
-		i+=1
-		st=False
 
 
 
@@ -49,22 +33,6 @@ def _add_source_file(b_fp,fp,file_list,include_list,cycle):
 		include_list.extend(n_incl)
 	file_list.append(fp)
 	return o
-
-
-
-def generate_error_header(i_fp,o_fp,nm):
-	util.log(f"Convering '{i_fp}' to '{o_fp}' ...")
-	with open(i_fp,"rb") as rf,open(o_fp,"w") as wf:
-		dt=rf.read().replace(b"\r\n",b"\n").split(b"$$$")
-		if (len(dt)==1):
-			wf.write(f"#ifndef __SLL_GENERATED_{nm}_H__\n#define __SLL_GENERATED_{nm}_H__ 1\n#include <sll/types.h>\n\n\n\n#define {nm}_SIZE {len(dt[0])}\n\n\n\nstatic const sll_char_t {nm}[]={{\n\t")
-			_write_byte_array(wf,dt[0])
-		else:
-			wf.write(f"#ifndef __SLL_GENERATED_{nm}_H__\n#define __SLL_GENERATED_{nm}_H__ 1\n#include <sll/types.h>\n\n\n\n#define {nm}_START_SIZE {len(dt[0])}\n#define {nm}_END_SIZE {len(dt[1])}\n\n\n\nstatic const sll_char_t {nm}_START[]={{\n\t")
-			_write_byte_array(wf,dt[0])
-			wf.write(f"\n}};\n\n\n\nstatic const sll_char_t {nm}_END[]={{\n\t")
-			_write_byte_array(wf,dt[1])
-		wf.write("\n};\n\n\n\n#endif\n")
 
 
 

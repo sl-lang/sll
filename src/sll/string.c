@@ -1857,7 +1857,36 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* s,const sll_string_t* p
 		sll_string_split_char(s,p->v[0],o);
 		return;
 	}
-	SLL_UNIMPLEMENTED();
+	if (sll_string_equal(s,p)){
+		o->l=2;
+		o->v=sll_allocator_init(2*sizeof(sll_object_t*));
+		o->v[0]=EMPTY_STRING_TO_OBJECT();
+		o->v[1]=EMPTY_STRING_TO_OBJECT();
+		return;
+	}
+	if (p->l>=s->l){
+		o->l=1;
+		o->v=sll_allocator_init(sizeof(sll_object_t*));
+		o->v[0]=STRING_TO_OBJECT(s);
+		return;
+	}
+	SLL_INIT_ARRAY(o);
+	sll_string_length_t i=0;
+	sll_string_length_t j=0;
+	while (j<s->l-p->l){
+		if (sll_compare_data(s->v+j,p->v,p->l)==SLL_COMPARE_RESULT_EQUAL){
+			sll_object_t* x=(i==j?EMPTY_STRING_TO_OBJECT():STRING_POINTER_LENGTH_TO_OBJECT(s->v+i,j-i));
+			sll_array_push(NULL,x,o);
+			SLL_RELEASE(x);
+			j+=p->l;
+		}
+		else{
+			j++;
+		}
+	}
+	sll_object_t* x=(i==j?EMPTY_STRING_TO_OBJECT():STRING_POINTER_LENGTH_TO_OBJECT(s->v+i,j-i));
+	sll_array_push(NULL,x,o);
+	SLL_RELEASE(x);
 }
 
 
@@ -1869,8 +1898,7 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* s,sll_char_t c,sll
 		o->v[0]=EMPTY_STRING_TO_OBJECT();
 		return;
 	}
-	o->l=0;
-	o->v=NULL;
+	SLL_INIT_ARRAY(o);
 	const wide_data_t* p=(const wide_data_t*)(s->v);
 	STRING_DATA_PTR(p);
 	wide_data_t m=0x101010101010101ull*c;
