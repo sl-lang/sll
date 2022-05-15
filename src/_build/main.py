@@ -4,7 +4,6 @@ import header
 import os
 import sys
 import util
-import website
 
 
 
@@ -19,7 +18,6 @@ DEBUGGER={
 if (util.execute([util.sll_runtime,"src/_build/main.sll","-I","src/sll/lib","-I","src/_build","-A"]+sys.argv)):
 	sys.exit(0)
 if ("--web" in sys.argv):
-	website.generate()
 	sys.exit(0)
 hashlist.load_hash_list("build/.files")
 header.generate_header("src/sll/include","build/sll.h")

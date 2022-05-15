@@ -1,0 +1,251 @@
+(--- "log.sll" "config.sll" "documentation.sll" "types.sll" "path.sll" "file.sll" "string.sll" "array.sll" "sys.sll")
+
+
+
+(= website_module_type (&:
+	(~ func_type) generate_website
+))
+
+
+
+(= _format_type (,,, type
+	(= replace (:: config$WEBSITE_TYPE_REPLACEMENTS array_type))
+	(-> (= i 0) (< i ($ replace))
+		(= type (<- string$replace
+			type
+			(: replace i)
+			(: replace (+ i 1))
+		))
+		(= i (+ i 2))
+	)
+	(? (&& (<- string$starts type "__") (<- string$ends type "__")) (@@ (+ `<span class="code-type-other">` type `</span>`)))
+	(@@ (<- string$replace
+		(<- string$replace
+			(+ `<span class="code-type">` type `</span>`)
+			"*"
+			`<span class="code-type-pointer">*</span>`
+		)
+		"const"
+		`<span class="code-keyword">const</span>`
+	))
+))
+
+(= _format_args (,,, symbol no_void
+	(? (&& (! no_void) (! ($ symbol$args))) (@@ (+ "(" (<- _format_type "void") ")")))
+	(= out "(")
+	(-> (= i 0) (< i ($ symbol$args))
+		(= arg (: symbol$args i))
+		(? i (= out (+ out ',')))
+		(= out (+ out (<- _format_type arg$type) ` <span class="code-arg">` arg$name `</span>`))
+		(++ i)
+	)
+	(? (& symbol$flags documentation$FLAG_VAR_ARG) (= out (+ out `,<span class="code-keyword">...</span>`)))
+	(@@ (+ out ")"))
+))
+
+(= _generate_symbol (,,, symbol
+	(= out "")
+	(= symbol_id (+
+		symbol$group
+		'-'
+		symbol$subgroup
+		'-'
+		symbol$name
+	))
+	(= out (+ out `<div><a id="` symbol_id `" href="#` symbol_id `"><pre class="code">`))
+	(= arg_str "Arguments")
+	(? (& symbol$flags documentation$FLAG_FUNC) {
+		(? (& symbol$flags documentation$FLAG_MACRO) {
+			(= out (+ out `<span class="code-keyword">#define</span> <span class="code-name">` symbol$name `</span>` (<- _format_args symbol true)))
+			(? symbol$return (= out (+ out ` <span class="code-comment">-&gt;</span> ` (<- _format_type symbol$return$type))))
+		} (& symbol$flags documentation$FLAG_TYPE) {
+			(= out (+ out `<span class="code-keyword-typedef">typedef</span> ` (<- _format_type (|| symbol$return$type "void")) ` (*<span class="code-name">` symbol$name `</span>)` (<- _format_args symbol false) `;`))
+		} {
+			(? symbol$api_fmt (= out (+ out `<span class="code-annotation">(api_call)</span> `)))
+			(? (& symbol$flags documentation$FLAG_CHECK_OUTPUT) (= out (+ out `<span class="code-annotation">(check_output)</span> `)))
+			(= out (+ out (<- _format_type (|| symbol$return$type "void")) ` <span class="code-name">` symbol$name `</span>` (<- _format_args symbol false) `;`))
+		})
+	} (& symbol$flags documentation$FLAG_TYPE) {
+		(? (& symbol$flags documentation$FLAG_VAR) {
+			(= out (+ out `<span class="code-keyword-typedef">typedef</span> ` (<- _format_type symbol$type$type) ` <span class="code-name">` symbol$name `</span>;`))
+		} {
+			(= arg_str "Fields")
+			(= out (+ out `<span class="code-keyword-typedef">typedef ` (?: (& symbol$flags documentation$FLAG_UNION) "union" "structu") `</span> <span class="code-name">_` (<- string$upper_case (: symbol$name 0 -2)) `</span>{<br>`))
+			(-> (= i 0) (< i ($ symbol$args))
+				(= arg (: symbol$args i))
+				(= out (+ out "    " (<- _format_type arg$type) " " arg$name ";\n"))
+				(++ i)
+			)
+			(= out (+ out `} <span class="code-name">` symbol$name `</span>;`))
+		})
+	} {
+		(? (& symbol$flags documentation$FLAG_MACRO) {
+			(= out (+ out `<span class="code-keyword">#define</span> <span class="code-name">` symbol$name `</span> <span class="code-comment">-&gt;</span> ` (<- _format_type symbol$type$type)))
+		} {
+			(= out (+ out (<- _format_type symbol$type$type) ` <span class="code-name">` symbol$name `</span>;`))
+		})
+	})
+	(= out (+ out "</pre></a><pre>Description: " symbol$description))
+	(? symbol$api_fmt (= out (+ out `<br>API Signature: <span class="api-format">` symbol$api_fmt `</span>`)))
+	(? symbol$args {
+		(= out (+ out "<br>" arg_str ':'))
+		(-> (= i 0) (< i ($ symbol$args))
+			(= arg (: symbol$args i))
+			(= out (+ out "<br>  " arg$name " -&gt; " arg$description))
+			(++ i)
+		)
+	})
+	(? symbol$return (= out (+ out "<br>Return Value: " symbol$return$description)))
+	(@@ (+ out "</pre></div>"))
+))
+
+(= _symbol_name_getter (,,, sym
+	(@@ sym$name)
+))
+
+(= _sort_map (,,, map
+	(= map (:: map array_type))
+	(= map ([> (= i 0) (< i ($ map))
+		(= k (: map i))
+		(++ i)
+		(= v (: map i))
+		(++ i)
+		[k v]
+	))
+	(<- sort$sort map true)
+	(@@ map)
+))
+
+(= _generate_docs (,,, docs
+	(= group_map ({> (= i 0) (< i ($ docs$group))
+		(= group (: docs$group i))
+		(++ i)
+		group$id
+		group
+	))
+	(= subgroup_map ({> (= i 0) (< i ($ docs$subgroup))
+		(= subgroup (: docs$subgroup i))
+		(++ i)
+		subgroup$id
+		subgroup
+	))
+	(= groups <>)
+	(-> (= i 0) (< i ($ docs$data))
+		(= symbol (: docs$data i))
+		(= group (: groups symbol$group))
+		(? (! group) {
+			(= group <>)
+			(= (: groups symbol$group) group)
+		})
+		(= subgroup (: group symbol$subgroup))
+		(? (! subgroup) {
+			(= subgroup [])
+			(= (: group symbol$subgroup) subgroup)
+		})
+		(<- array$push subgroup symbol)
+		(++ i)
+	)
+	(= groups (<- _sort_map groups))
+	(= out "<div>")
+	(-> (= i 0) (< i ($ groups))
+		(= group (: group_map (: (: groups i) 0)))
+		(= subgroups (<- _sort_map (: (: groups i) 1)))
+		(= out (+ out `<div><div class="group-title"><a id="` group$id `" href="#` group$id `">` group$name `</a></div><h2>` group$description `</h2>`))
+		(-> (= j 0) (< j ($ subgroups))
+			(= subgroup (: subgroup_map (: (: subgroups j) 0)))
+			(= symbols (: (: subgroups j) 1))
+			(= subgroup_id (+
+				group$id
+				'-'
+				(|| subgroup$id "")
+			))
+			(? subgroup {
+				(= out (+ out `<div><div class="subgroup-title"><a id="` subgroup_id `" href="#` subgroup_id `">` subgroup$name `</a></div><h3>` subgroup$description `</h3>`))
+			})
+			(<- sort$sort symbols true false _symbol_name_getter)
+			(-> (= k 0) (< k ($ symbols))
+				(= symbol (: symbols k))
+				(= out (+ out (<- _generate_symbol symbol)))
+				(++ k)
+			)
+			(? subgroup
+				(= out (+ out "</div>"))
+			)
+			(++ j)
+		)
+		(= out (+ out "</div>"))
+		(++ i)
+	)
+	(@@ (+ out "</div>"))
+))
+
+(= _copy (,,, nm src dst pad
+	(? (! dst) {
+		(= dst src)
+		(= src nm)
+	} {
+		(= src (+ src path$SEPARATOR nm))
+		(= dst (+ dst path$SEPARATOR nm))
+	})
+	(<- log$log (* " " (|| pad 4)) "Copying '" src "' to '" dst "'...")
+	(<- path$mkdir (: (<- path$split dst) 0))
+	(? (=== (>> dst (<- string$index_reverse dst '.')) ".html") {
+		(<- file$write
+			(<- file$open dst "w")
+			(<- string$replace
+				(<- file$read
+					(<- file$open src "r")
+				)
+				"{{ROOT}}"
+				config$DOMAIN_ROOT
+			)
+		)
+	} {
+		(<- file$copy src dst)
+	})
+))
+
+(= generate_website (,,, docs
+	(<- log$log "Generating website...")
+	(<- log$log "  Creating output directory...")
+	(<- path$mkdir "build/web")
+	(<- log$log "  Copying CSS files...")
+	(= files (<- path$list_dir "src/web/css"))
+	(-> (= i 0) (< i ($ files))
+		(<- _copy (: files i) "src/web/css" "build/web/css")
+		(++ i)
+	)
+	(<- log$log "  Copying JS files...")
+	(= files (<- path$list_dir "src/web/js"))
+	(-> (= i 0) (< i ($ files))
+		(<- _copy (: files i) "src/web/js" "build/web/js")
+		(++ i)
+	)
+	(<- log$log "  Generating HTML code...")
+	(= docs_str (<- _generate_docs docs))
+	(<- log$log "  Copying 'src/web/docs.html' to 'build/web/index.html'...")
+	(<- file$write
+		(<- file$open "build/web/index.html" "w")
+		(<- string$replace
+			(<- string$replace
+				(<- file$read
+					(<- file$open "src/web/docs.html" "r")
+				)
+				"{{DATA}}"
+				docs_str
+			)
+			"{{ROOT}}"
+			config$DOMAIN_ROOT
+		)
+	)
+	(<- _copy "src/web/404.html" "build/web/404.html" nil 2)
+	(<- _copy "src/web/apt.sh" "build/web/apt" nil 2)
+	(<- _copy "src/web/apt_nightly.sh" "build/web/apt-nightly" nil 2)
+))
+
+
+
+(= website (. website_module_type
+	generate_website
+))
+(## website)

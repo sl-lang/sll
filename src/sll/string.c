@@ -1550,6 +1550,14 @@ __SLL_EXTERNAL void sll_string_remove(const sll_string_t* a,const sll_string_t* 
 
 
 __SLL_EXTERNAL void sll_string_replace(const sll_string_t* s,const sll_string_t* k,const sll_string_t* v,sll_string_t* o){
+	if (sll_string_equal(s,k)){
+		sll_string_clone(v,o);
+		return;
+	}
+	if (k->l>=s->l){
+		sll_string_clone(s,o);
+		return;
+	}
 	if (!v->l){
 		sll_string_remove(s,k,o);
 		return;
@@ -1561,8 +1569,8 @@ __SLL_EXTERNAL void sll_string_replace(const sll_string_t* s,const sll_string_t*
 	o->l=s->l;
 	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(s->l)*sizeof(sll_char_t));
 	sll_string_length_t i=0;
+	sll_string_length_t j=0;
 	if (v->l<=k->l){
-		sll_string_length_t j=0;
 		while (j<s->l-k->l+1){
 			if (sll_compare_data(s->v+j,k->v,k->l)!=SLL_COMPARE_RESULT_EQUAL){
 				o->v[i]=s->v[j];
@@ -1579,7 +1587,6 @@ __SLL_EXTERNAL void sll_string_replace(const sll_string_t* s,const sll_string_t*
 		}
 	}
 	else{
-		sll_string_length_t j=0;
 		while (j<s->l-k->l+1){
 			if (sll_compare_data(s->v+j,k->v,k->l)!=SLL_COMPARE_RESULT_EQUAL){
 				o->v[i]=s->v[j];
@@ -1597,11 +1604,11 @@ __SLL_EXTERNAL void sll_string_replace(const sll_string_t* s,const sll_string_t*
 			}
 		}
 	}
-	const sll_char_t* t=s->v+s->l-k->l+1;
-	for (sll_string_length_t j=0;j<k->l-1;j++){
-		o->v[i+j]=t[j];
+	while (j<s->l){
+		o->v[i]=s->v[j];
+		i++;
+		j++;
 	}
-	i+=k->l-1;
 	if (i!=o->l){
 		SLL_ASSERT(i<o->l);
 		o->l=i;

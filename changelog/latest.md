@@ -3,12 +3,13 @@
 ## Added
 
 - Fast object pool used in the GC
+- Implemented `path$join`
 - Implemented `sll_file_read_all` and `file$read` with no arguments
 - Implemented `sll_object_to_map`
-- Implemented `sll_string_split`
 
 ## Changed
 
+- Fixed `sll_string_split` and `sll_string_replace`
 - Fixed assembly stack frames
 - Fixed incorrect assembly jump generation
 - *\[Linux only\]* Fixed permission bits for directory creation in `sll_platform_create_directory`

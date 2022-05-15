@@ -9,6 +9,7 @@
 	(~ func_type) exists
 	(~ func_type) get_cwd
 	(~ func_type) is_dir
+	(~ func_type) join
 	(~ func_type) list_dir
 	(~ func_type) mkdir
 	(~ func_type) relative
@@ -37,6 +38,8 @@
 ))
 
 (= is_dir (... "sll:path_is_dir"))
+
+(= join (... "sll:path_join"))
 
 (= list_dir (,,, path recursive
 	(? (! path) (@@ nil))
@@ -88,6 +91,7 @@
 	exists
 	get_cwd
 	is_dir
+	join
 	list_dir
 	mkdir
 	relative

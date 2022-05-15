@@ -20,12 +20,14 @@
 	(~ array_type) BUILD_CREATE_FOLDERS
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
 	(~ string_type) DOCUMENTATION_ROOT_DIRECTORY_PATH
+	(~ string_type) DOMAIN_ROOT
 	(~ string_type) ERROR_HEADER_OUTPUT_DIRECTORY_PATH
 	(~ string_type) ERROR_HEADER_SOURCE_DIRECTORY_PATH
 	(~ array_type) ERROR_HEADERS
 	(~ string_type) OPERATOR_PARSER_CONFIG_FILE_PATH
 	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
 	(~ cli_options_types) OPTIONS
+	(~ map_type) WEBSITE_TYPE_REPLACEMENTS
 ))
 
 
@@ -43,6 +45,7 @@
 	["build/lib" "build/lib_debug" "build/objects"]
 	16
 	"src/sll/include"
+	(?: (: sys$ENVIRONMENT "DOMAIN_ROOT") "" ".")
 	"src/sll/include/sll/generated/"
 	"src/sll/data/"
 	[
@@ -61,5 +64,19 @@
 		(|: sys$ARGV "--upload")
 		(|: sys$ARGV "--web")
 	]
+	<
+		"__SLL_S8" "signed char"
+		"__SLL_U8" "unsigned char"
+		"__SLL_S16" "signed short int"
+		"__SLL_U16" "unsigned short int"
+		"__SLL_S32" "signed int"
+		"__SLL_U32" "unsigned int"
+		"__SLL_S64" "signed long long int"
+		"__SLL_U64" "unsigned long long int"
+		"__SLL_F32" "float"
+		"__SLL_F64" "double"
+		"__SLL_S1" "signed char"
+		"__SLL_U1" "_Bool"
+	>
 ))
 (## config)
