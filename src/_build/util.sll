@@ -4,6 +4,7 @@
 
 (= util_module_type (&:
 	(~ func_type) create_output_dir
+	(~ func_type) execute
 ))
 
 
@@ -39,7 +40,14 @@
 
 
 
+(= execute (,,, args
+	(@@ (! (: (<- process$start args) "return_code"))
+))
+
+
+
 (= util (. util_module_type
 	create_output_dir
+	execute
 ))
 (## util)

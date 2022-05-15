@@ -14,6 +14,7 @@
 	(~ array_type) BUILD_CLEAR_FOLDERS
 	(~ array_type) BUILD_CREATE_FOLDERS
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
+	(~ string_type) DOCUMENTATION_ROOT_DIRECTORY_PATH
 	(~ string_type) ERROR_HEADER_OUTPUT_DIRECTORY_PATH
 	(~ string_type) ERROR_HEADER_SOURCE_DIRECTORY_PATH
 	(~ array_type) ERROR_HEADERS
@@ -32,6 +33,7 @@
 	["build/lib" "build/lib_debug" "build/web"]
 	["build/lib" "build/lib_debug" "build/objects"]
 	16
+	"src/sll/include"
 	"src/sll/include/sll/generated/"
 	"src/sll/data/"
 	[

@@ -1,6 +1,7 @@
-(--- "log.sll" "config.sll" "sys.sll" "operator_parser.sll" "util.sll" "header.sll")
+(--- "operator_parser.sll" "util.sll" "header.sll" "documentation.sll")
 
 
 (<- util$create_output_dir)
 (<- operator_parser$generate_operator_parser)
 ; (<- header$generate_error_headers)
+(= docs (<- documentation$parse_documentation_files))

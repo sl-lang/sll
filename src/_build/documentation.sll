@@ -1,0 +1,268 @@
+(--- "types.sll" "file.sll" "string.sll" "array.sll" "log.sll" "config.sll" "path.sll")
+
+
+
+(= documentation_state_type (&:
+	int_type flags
+	string_type name
+	string_type group
+	string_type subgroup
+	string_type description
+	string_type api_fmt
+	string_type type
+	array_type args
+	string_type return
+))
+
+(= group_type (&:
+	string_type id
+	string_type name
+	string_type description
+))
+
+(= subgroup_type (&:
+	string_type group
+	string_type id
+	string_type name
+	string_type description
+))
+
+(= return_type (&:
+	string_type type
+	string_type description
+))
+
+(= var_type (&:
+	int_type flags
+	string_type group
+	string_type subgroup
+	string_type name
+	string_type description
+	return_type type
+))
+
+(= function_argument_type (&:
+	string_type type
+	string_type name
+	string_type description
+))
+
+(= structure_type (&:
+	int_type flags
+	string_type group
+	string_type subgroup
+	string_type name
+	string_type description
+	array_type args
+))
+
+(= function_type (&:
+	int_type flags
+	string_type group
+	string_type subgroup
+	string_type name
+	string_type description
+	array_type args
+	return_type return
+))
+
+(= documentation_type (&:
+	array_type group
+	array_type subgroup
+	array_type data
+))
+
+(= documentation_module_type (&:
+	(~ type_type) function_type
+	(~ type_type) structure_type
+	(~ type_type) var_type
+	(~ int_type) FLAG_CHECK_OUTPUT
+	(~ int_type) FLAG_FUNC
+	(~ int_type) FLAG_GROUP
+	(~ int_type) FLAG_MACRO
+	(~ int_type) FLAG_SUBGROUP
+	(~ int_type) FLAG_TYPE
+	(~ int_type) FLAG_UNION
+	(~ int_type) FLAG_VAR
+	(~ int_type) FLAG_VAR_ARG
+	(~ func_type) parse_documentation_files
+))
+
+
+
+(= FLAG_CHECK_OUTPUT 1)
+(= FLAG_FUNC 2)
+(= FLAG_GROUP 4)
+(= FLAG_MACRO 8)
+(= FLAG_SUBGROUP 16)
+(= FLAG_TYPE 32)
+(= FLAG_UNION 64)
+(= FLAG_VAR 128)
+(= FLAG_VAR_ARG 256)
+
+(= FLAGS <
+	"check_output" FLAG_CHECK_OUTPUT
+	"func" FLAG_FUNC
+	"group" FLAG_GROUP
+	"macro" FLAG_MACRO
+	"subgroup" FLAG_SUBGROUP
+	"type" FLAG_TYPE
+	"union" FLAG_UNION
+	"var" FLAG_VAR
+	"var_arg" FLAG_VAR_ARG
+>)
+
+
+
+(= parse_documentation_files (,,,
+	(<- log$log "Listing documentation files...")
+	(= header_files (<- path$list_dir config$DOCUMENTATION_ROOT_DIRECTORY_PATH true))
+	(<- log$log "  Found " ($ header_files) " files")
+	(<- log$log "Parsing header files...")
+	(= out (. documentation_type))
+	(-> (= i 0) (< i ($ header_files))
+		(= data (<- file$read (<- file$open (: header_files i) "r")))
+		(-> (= j 0) (< j ($ data))
+			(= j (<- string$index data "/*" j))
+			(? (=== j -1) (@))
+			(= j (+ j 2))
+			(= k (<- string$index data "*/" j))
+			(= lines (<- string$split (: data j k) '\n'))
+			(= j (+ k 2))
+			(= state (. documentation_state_type))
+			(-> (= k 0) (< k ($ lines))
+				(= line (<- string$trim (: lines k)))
+				(++ k)
+				(? (|| (! line) (!== (: line 0) '*')) (<<<))
+				(= line (<- string$trim_left (>> line 1)))
+				(? (|| (! line) (!== (: line 0) '\\')) (<<<))
+				(= type (: line 0 (<- string$index line ' ')))
+				(= extra (>> line (+ ($ type) 1)))
+				(? (=== type "\\arg") {
+					(<- array$push state$args extra)
+				} (=== type "\\api") {
+					(= state$api_fmt extra)
+				} (=== type "\\desc") {
+					(= state$description extra)
+				} (=== type "\\flags") {
+					(= flags (<- string$split (<- string$lower_case extra) ' '))
+					(-> (= idx 0) (< idx ($ flags))
+						(= flag (: FLAGS (: flags idx)))
+						(= state$flags (| state$flags flag))
+						(? (! flag) (:> "Unknwon flag '" (: flags idx) "'\n"))
+						(++ idx)
+					)
+				} (=== type "\\group") {
+					(= state$group extra)
+				} (=== type "\\name") {
+					(= state$name extra)
+				} (=== type "\\ret") {
+					(= state$return extra)
+				} (=== type "\\subgroup") {
+					(= state$subgroup extra)
+				} (=== type "\\type") {
+					(= state$type extra)
+				} {
+					(:> "Unknown type '" type "'\n")
+					(@@ nil)
+				})
+			)
+			(? (|| (! state$name) (! state$group)) {
+				(:> "'\\name' and '\\group' tags are required\n")
+				(@@ nil)
+			})
+			(= args ([> (= k 0) (< k ($ state$args))
+				(= e (: state$args k))
+				(++ k)
+				(= arrow_idx (<- string$index e "->"))
+				(= desc (?: (=== arrow_idx -1) "" (>> e (+ arrow_idx 2))))
+				(= e (?: (=== arrow_idx -1) e (: e 0 arrow_idx)))
+				(= nm (+ (<- string$index_reverse_list e " *") 1))
+				(. function_argument_type
+					(<- string$trim (: e 0 nm))
+					(>> e nm)
+					desc
+				)
+			))
+			(? (& state$flags FLAG_GROUP) (<- array$push out$group (. group_type
+				state$group
+				state$name
+				state$description
+			))
+			(& state$flags FLAG_SUBGROUP) (<- array$push out$subgroup (. subgroup_type
+				state$group
+				state$subgroup
+				state$name
+				state$description
+			))
+			(& state$flags FLAG_VAR) (<- array$push out$data (. var_type
+				state$flags
+				state$group
+				state$subgroup
+				state$name
+				state$description
+				(,
+					(= arrow_idx (<- string$index state$type "->"))
+					(. return_type
+						(<- string$trim (?: (=== arrow_idx -1) state$type (: state$type 0 arrow_idx)))
+						(?: (=== arrow_idx -1)
+							""
+							(<- string$trim (>> state$type (+ arrow_idx 2)))
+						)
+					)
+				)
+			))
+			(& state$flags FLAG_TYPE) (<- array$push out$data (. structure_type
+				state$flags
+				state$group
+				state$subgroup
+				state$name
+				state$description
+				args
+			))
+			(<- array$push out$data (. function_type
+				state$flags
+				state$group
+				state$subgroup
+				state$name
+				state$description
+				args
+				(,
+					(= arrow_idx (<- string$index state$return "->"))
+					(?: (! state$return) (. return_type
+						"void"
+						"No return value"
+					) (. return_type
+						(<- string$trim (?: (=== arrow_idx -1) state$return (: state$return 0 arrow_idx)))
+						(?: (=== arrow_idx -1)
+							""
+							(<- string$trim (>> state$return (+ arrow_idx 2)))
+						)
+					))
+				)
+			)))
+		)
+		(++ i)
+	)
+	(<- log$log "  Found " ($ out$group) " groups, " ($ out$subgroup) " subgroups and " ($ out$data) " symbols")
+	(@@ out)
+))
+
+
+
+(= documentation (. documentation_module_type
+	function_type
+	structure_type
+	var_type
+	FLAG_CHECK_OUTPUT
+	FLAG_FUNC
+	FLAG_GROUP
+	FLAG_MACRO
+	FLAG_SUBGROUP
+	FLAG_TYPE
+	FLAG_UNION
+	FLAG_VAR
+	FLAG_VAR_ARG
+	parse_documentation_files
+))
+(## documentation)
