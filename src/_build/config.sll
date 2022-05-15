@@ -28,6 +28,7 @@
 	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
 	(~ cli_options_types) OPTIONS
 	(~ map_type) WEBSITE_TYPE_REPLACEMENTS
+	(~ string_type) VERSION_FILE_PATH
 ))
 
 
@@ -78,5 +79,6 @@
 		"__SLL_S1" "signed char"
 		"__SLL_U1" "_Bool"
 	>
+	"src/sll/include/sll/version.h"
 ))
 (## config)

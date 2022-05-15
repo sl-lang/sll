@@ -117,6 +117,7 @@
 ))
 
 (= _generate_docs (,,, docs
+	(<- log$log "    Ordering documentation data...")
 	(= group_map ({> (= i 0) (< i ($ docs$group))
 		(= group (: docs$group i))
 		(++ i)
@@ -146,14 +147,17 @@
 		(++ i)
 	)
 	(= groups (<- _sort_map groups))
+	(<- log$log "    Generating HTML...")
 	(= out "<div>")
 	(-> (= i 0) (< i ($ groups))
 		(= group (: group_map (: (: groups i) 0)))
 		(= subgroups (<- _sort_map (: (: groups i) 1)))
+		(<- log$log "      Found group '" group$id "' (" ($ subgroups) " subgroup" (?: (=== ($ subgroups) 1) "" "s") ")...")
 		(= out (+ out `<div><div class="group-title"><a id="` group$id `" href="#` group$id `">` group$name `</a></div><h2>` group$description `</h2>`))
 		(-> (= j 0) (< j ($ subgroups))
 			(= subgroup (: subgroup_map (: (: subgroups j) 0)))
 			(= symbols (: (: subgroups j) 1))
+			(<- log$log "        Found subgroup '" (|| subgroup$id "<root>") "' (" ($ symbols) " symbol" (?: (=== ($ symbols) 1) "" "s") ")...")
 			(= subgroup_id (+
 				group$id
 				'-'

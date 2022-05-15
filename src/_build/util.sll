@@ -1,4 +1,4 @@
-(--- "path.sll" "config.sll" "log.sll" "types.sll" "array.sll" "sort.sll" "file.sll" "hash.sll")
+(--- "path.sll" "config.sll" "log.sll" "types.sll" "array.sll" "sort.sll" "file.sll" "hash.sll" "sys.sll" "string.sll")
 
 
 
@@ -8,9 +8,49 @@
 ))
 
 (= util_module_type (&:
+	(~ string_type) VERSION
 	(~ func_type) create_output_dir
 	(~ func_type) execute
+	(~ func_type) get_output_file_path
 	(~ func_type) hash_file
+))
+
+
+
+(= _obj_file_prefix (+
+	"build/objects/"
+	sys$PLATFORM
+	(?: config$options$RELEASE "_release" "")
+	(?: (|| config$options$DEBUG (! config$options$RELEASE)) "_debug" "")
+	'_'
+))
+
+(= VERSION (***
+	(= data (<- string$split
+		(<- string$replace
+			(<- file$read
+				(<- file$open config$VERSION_FILE_PATH "r")
+			)
+			"\r\n"
+			"\n"
+		)
+		"\n"
+	))
+	(= version ["0" "0" "0" nil])
+	(-> (= i 0) (< i ($ data))
+		(= line (<- string$trim (: data i)))
+		(? (<- string$starts line "#define SLL_VERSION_") {
+			(= line (<- string$split (>> line 20) ' '))
+			(= (: version (?:
+				(=== (: line 0) "MAJOR") 0
+				(=== (: line 0) "MINOR") 1
+				(=== (: line 0) "PATCH") 2
+				3
+			)) (: line 1))
+		})
+		(++ i)
+	)
+	(@@ (<- string$join "." (: version 0 3)))
 ))
 
 
@@ -45,10 +85,27 @@
 ))
 
 (= execute (,,, args
-	(@@ (! (: (<- process$start args) "return_code"))
+	(@@ (! (: (<- process$start (:: args array_type)) "return_code"))
+))
+
+(= get_output_file_path (,,, path
+	(@@ (+
+		_obj_file_prefix
+		(<- string$replace
+			(<- string$replace
+				(:: path string_type)
+				'\\'
+				'/'
+			)
+			'/'
+			'$'
+		)
+		".o"
+	))
 ))
 
 (= hash_file (,,, path
+	(= path (:: path string_type))
 	(@@ (.
 		(<- hash$sha256$process
 			(<- file$read
@@ -62,8 +119,10 @@
 
 
 (= util (. util_module_type
+	VERSION
 	create_output_dir
 	execute
+	get_output_file_path
 	hash_file
 ))
 (## util)
