@@ -12,6 +12,7 @@
 ))
 
 (= test_decode (,,,
+	(<- expect (<- base64$decode nil) nil)
 	(<- expect (<- base64$decode "") "")
 	(<- expect (<- base64$decode "AA==") "\x00")
 	(<- expect (<- base64$decode "YQ==") "a")
@@ -26,6 +27,7 @@
 ))
 
 (= test_encode (,,,
+	(<- expect (<- base64$encode nil) nil)
 	(<- expect (<- base64$encode "") "")
 	(<- expect (<- base64$encode "\x00") "AA==")
 	(<- expect (<- base64$encode "a") "YQ==")
