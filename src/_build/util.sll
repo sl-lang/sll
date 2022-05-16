@@ -2,11 +2,6 @@
 
 
 
-(= hash_and_size_type (&:
-	(~ hash$sha256$type) hash
-	(~ int_type) size
-))
-
 (= util_module_type (&:
 	(~ string_type) VERSION
 	(~ func_type) create_output_dir
@@ -88,12 +83,12 @@
 	(@@ (! (: (<- process$start (:: args array_type)) "return_code"))
 ))
 
-(= get_output_file_path (,,, path
+(= get_output_file_path (,,, file_path
 	(@@ (+
 		_obj_file_prefix
 		(<- string$replace
 			(<- string$replace
-				(:: path string_type)
+				(:: file_path string_type)
 				'\\'
 				'/'
 			)
@@ -104,15 +99,14 @@
 	))
 ))
 
-(= hash_file (,,, path
-	(= path (:: path string_type))
-	(@@ (.
+(= hash_file (,,, file_path
+	(= file_path (:: file_path string_type))
+	(@@ (<- hash$hexdigest
 		(<- hash$sha256$process
 			(<- file$read
-				(<- file$open path "r")
+				(<- file$open file_path "r")
 			)
 		)
-		(<- path$size path)
 	))
 ))
 

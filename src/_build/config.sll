@@ -44,6 +44,8 @@
 	(~ string_type) ERROR_HEADER_OUTPUT_DIRECTORY_PATH
 	(~ string_type) ERROR_HEADER_SOURCE_DIRECTORY_PATH
 	(~ array_type) ERROR_HEADERS
+	(~ array_type) HASHLIST_FILE_EXTENSIONS
+	(~ string_type) HASHLIST_FILE_PATH
 	(~ string_type) OPERATOR_PARSER_CONFIG_FILE_PATH
 	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
 	(~ cli_options_types) OPTIONS
@@ -172,6 +174,8 @@
 		"help_text.txt"
 		"memory_fail.txt"
 	]
+	[".asm" ".c" ".h"]
+	"build/.files"
 	"src/sll/data/operator_parser.txt"
 	"src/sll/include/sll/generated/operator_parser.h"
 	options

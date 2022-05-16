@@ -1,8 +1,9 @@
-(--- "operator_parser.sll" "util.sll" "header.sll" "documentation.sll" "api.sll" "assembly.sll" "config.sll" "website.sll" "build.sll")
+(--- "operator_parser.sll" "util.sll" "header.sll" "documentation.sll" "api.sll" "assembly.sll" "config.sll" "website.sll" "build.sll" "hashlist.sll")
 
 
 
 (<- util$create_output_dir)
+(<- hashlist$init)
 (<- assembly$generate_assembly_optimizer)
 (<- operator_parser$generate_operator_parser)
 (<- header$generate_error_headers)

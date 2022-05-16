@@ -1,0 +1,80 @@
+(--- "config.sll" "log.sll" "file.sll" "map.sll" "types.sll" "path.sll" "string.sll" "util.sll" "array.sll")
+
+
+
+(= hashlist_module_type (&:
+	(~ func_type) check
+	(~ func_type) fail
+	(~ func_type) init
+))
+
+
+
+(= _hash_map <>)
+(= _changed_file_list [])
+
+
+
+(= _write_hash_list (,,,
+	(= fh (<- file$open config$HASHLIST_FILE_PATH "w"))
+	(= keys (:: _hash_map map_key_type))
+	(-> (= i 0) (< i ($ keys))
+		(= key (: keys i))
+		(= value (: _hash_map key))
+		(<- file$write fh (+ key value '\n'))
+		(++ i)
+	)
+	(<- file$close fh)
+))
+
+(= check (,,, file_path
+	(@@ (|: _changed_file_list file_path))
+))
+
+(= fail (,,, file_path
+	(<- map$remove _hash_map file_path)
+	(<- _write_hash_list)
+))
+
+(= init (,,,
+	(? _hash_map {
+		(:> "Function 'hashlist$init` called twice!\n")
+		(@@ nil)
+	})
+	(<- log$log "Initializing hash list...")
+	(<- log$log "  Loading previous hash list...")
+	(= fh (<- file$open config$HASHLIST_FILE_PATH "r"))
+	(? (=== (:? fh) file$file_type) {
+		(= data (<- string$split (<- file$read fh) '\n'))
+		(-> (= i 0) (< i ($ data))
+			(= line (<- string$trim (: data i)))
+			(? line {
+				(= key (: line 0 -64))
+				(= (: _hash_map key) (>> line ($ key)))
+			})
+			(++ i)
+		)
+		(<- file$close fh)
+	})
+	(<- log$log "    Loaded " ($ _hash_map) " hashes")
+	(<- log$log "  Checking for file changes...")
+	(= files (<- path$list_dir config$ROOT_SOURCE_FILE_PATH true))
+	(-> (= i 0) (< i ($ files))
+		(= file_path (: files i))
+		(++ i)
+		(? (! (|: config$HASHLIST_FILE_EXTENSIONS (>> file_path (<- string$index_reverse file_path '.')))) (<<<))
+		(= new_hash (<- util$hash_file file_path))
+		(= file_path (<- util$get_output_file_path file_path))
+		(? (!== (: _hash_map file_path) new_hash) (<- array$push _changed_file_list file_path))
+		(= (: _hash_map file_path) new_hash)
+	)
+))
+
+
+
+(= hashlist (. hashlist_module_type
+	check
+	fail
+	init
+))
+(## hashlist)
