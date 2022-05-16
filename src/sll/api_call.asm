@@ -119,5 +119,6 @@ __SLL_EXPORT _call_api_func_assembly
 	leave
 	ret
 
+[SECTION .rodata]
 ._error_return_value:
 	dq 0x3ff0000000000000
