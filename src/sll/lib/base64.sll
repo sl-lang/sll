@@ -22,16 +22,21 @@
 (= decode (,,, dt
 	(? (=== dt nil) (@@ nil))
 	(= dt (:: dt string_type))
-	(= o (<- (... "sll:base64_decode") dt))
-	(@@ (?: (=== (:? o) int_type)
-		(<- error$from_internal o <
+	(= out (<- (... "sll:base64_decode") dt))
+	(@@ (?: (=== (:? out) int_type)
+		(<- error$from_internal out <
 			"string" dt
 		>)
-		o
+		out
 	))
 )
 
-(= encode (... "sll:base64_encode"))
+(= encode (,,, dt
+	(? (=== dt nil) (@@ nil))
+	(@@ (<- (... "sll:base64_encode")
+		(:: dt string_type)
+	))
+))
 
 
 
