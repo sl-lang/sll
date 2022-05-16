@@ -32,9 +32,9 @@
 				(<- file$open config$VERSION_FILE_PATH "r")
 			)
 			"\r\n"
-			"\n"
+			'\n'
 		)
-		"\n"
+		'\n'
 	))
 	(= version ["0" "0" "0" nil])
 	(-> (= i 0) (< i ($ data))
