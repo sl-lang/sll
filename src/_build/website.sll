@@ -2,6 +2,11 @@
 
 
 
+(= object_and_children_type (&:
+	(~ object_type) object
+	(~ object_type) children
+))
+
 (= website_module_type (&:
 	(~ func_type) generate_website
 ))
@@ -99,21 +104,18 @@
 	(@@ (+ out "</pre></div>"))
 ))
 
-(= _symbol_name_getter (,,, sym
-	(@@ sym$name)
+(= _object_and_children_name_getter (,,, obj
+	(@@ obj$object$name)
 ))
 
 (= _sort_map (,,, map
-	(= map (:: map array_type))
-	(= map ([> (= i 0) (< i ($ map))
-		(= k (: map i))
-		(++ i)
-		(= v (: map i))
-		(++ i)
-		[k v]
-	))
-	(<- sort$sort map true)
+	(= map (:: map map_value_type))
+	(<- sort$quicksort map false true _object_and_children_name_getter)
 	(@@ map)
+))
+
+(= _symbol_name_getter (,,, sym
+	(@@ sym$name)
 ))
 
 (= _generate_docs (,,, docs
@@ -135,28 +137,36 @@
 		(= symbol (: docs$data i))
 		(= group (: groups symbol$group))
 		(? (! group) {
-			(= group <>)
+			(= group (. object_and_children_type
+				(: group_map symbol$group)
+				<>
+			))
 			(= (: groups symbol$group) group)
 		})
-		(= subgroup (: group symbol$subgroup))
+		(= subgroup (: group$children symbol$subgroup))
 		(? (! subgroup) {
-			(= subgroup [])
-			(= (: group symbol$subgroup) subgroup)
+			(= subgroup (. object_and_children_type
+				(: subgroup_map symbol$subgroup)
+				[]
+			))
+			(= (: group$children symbol$subgroup) subgroup)
 		})
-		(<- array$push subgroup symbol)
+		(<- array$push subgroup$children symbol)
 		(++ i)
 	)
 	(= groups (<- _sort_map groups))
 	(<- log$log "    Generating HTML...")
 	(= out "<div>")
 	(-> (= i 0) (< i ($ groups))
-		(= group (: group_map (: (: groups i) 0)))
-		(= subgroups (<- _sort_map (: (: groups i) 1)))
+		(= group (: groups i))
+		(= subgroups (<- _sort_map group$children))
+		(= group group$object)
 		(<- log$log "      Found group '" group$id "' (" ($ subgroups) " subgroup" (?: (=== ($ subgroups) 1) "" "s") ")...")
 		(= out (+ out `<div><div class="group-title"><a id="` group$id `" href="#` group$id `">` group$name `</a></div><h2>` group$description `</h2>`))
 		(-> (= j 0) (< j ($ subgroups))
-			(= subgroup (: subgroup_map (: (: subgroups j) 0)))
-			(= symbols (: (: subgroups j) 1))
+			(= subgroup (: subgroups j) 0)
+			(= symbols subgroup$children)
+			(= subgroup subgroup$object)
 			(<- log$log "        Found subgroup '" (|| subgroup$id "<root>") "' (" ($ symbols) " symbol" (?: (=== ($ symbols) 1) "" "s") ")...")
 			(= subgroup_id (+
 				group$id
@@ -166,7 +176,7 @@
 			(? subgroup {
 				(= out (+ out `<div><div class="subgroup-title"><a id="` subgroup_id `" href="#` subgroup_id `">` subgroup$name `</a></div><h3>` subgroup$description `</h3>`))
 			})
-			(<- sort$sort symbols true false _symbol_name_getter)
+			(<- sort$quicksort symbols false true _symbol_name_getter)
 			(-> (= k 0) (< k ($ symbols))
 				(= symbol (: symbols k))
 				(= out (+ out (<- _generate_symbol symbol)))
