@@ -30,7 +30,7 @@
 		)
 	))
 	(<- log$log "    Found " ($ symbols) " symbols...")
-	(<- sort$sort symbols true false _api_sym_sort)
+	(<- sort$sort symbols false true _api_sym_sort)
 	(<- log$log "  Generating code in '" config$API_FUNCTION_TABLE_FILE_PATH "'...")
 	(= fh (<- file$open config$API_FUNCTION_TABLE_FILE_PATH "w"))
 	(<- file$write fh
