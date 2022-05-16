@@ -9,6 +9,7 @@
 
 
 (= _write_byte_array (,,, fh data
+	(= data (:: data string_type))
 	(-> (= i 0) (< i ($ data))
 		(? i {
 			(<- file$write fh ',')
