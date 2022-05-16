@@ -18,7 +18,7 @@
 
 ## Removed
 
-- Function `gauss2` is no longer exported from `math.sll`
+- Function `gauss2` is no longer directly exported from `math.sll`
 
 [0.7.18]: https://github.com/sl-lang/sll/compare/sll-v0.7.17...main
 [#75]: https://github.com/sl-lang/sll/issues/75
