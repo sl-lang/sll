@@ -2,9 +2,9 @@
 
 
 (<- util$create_output_dir)
-; (<- assembly$generate_assembly_optimizer)
+(<- assembly$generate_assembly_optimizer)
 (<- operator_parser$generate_operator_parser)
-; (<- header$generate_error_headers)
+(<- header$generate_error_headers)
 (= docs (<- documentation$parse_documentation_files))
 (<- api$generate_function_table docs)
 (? config$OPTIONS$WEBSITE {
