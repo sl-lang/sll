@@ -239,18 +239,18 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_remove_env(const sll_string_t* ke
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag_t flag){
-	sll_audit(SLL_CHAR("sll.sys.sandbox.set"),SLL_CHAR("u"),flag);
-	sll_set_sandbox_flag(flag);
-}
-
-
-
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(const sll_string_t* key,const sll_string_t* value){
 	if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_ENVIRONMENT)){
 		sll_audit(SLL_CHAR("sll.sys.env.set"),SLL_CHAR("ss"),key,value);
 		sll_set_environment_variable(key,value);
 	}
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag_t flag){
+	sll_audit(SLL_CHAR("sll.sys.sandbox.set"),SLL_CHAR("u"),flag);
+	sll_set_sandbox_flag(flag);
 }
 
 

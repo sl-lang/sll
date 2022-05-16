@@ -118,6 +118,20 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cbrt(s
 
 
 
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_ceil(const sll_number_t* a,sll_number_t* out){
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->t=SLL_PARSE_ARGS_TYPE_INT;
+		out->dt.i=(sll_integer_t)ceil(a->dt.f);
+	}
+	else{
+		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		out->dt.d.real=ceil(a->dt.d.real);
+		out->dt.d.imag=ceil(a->dt.d.imag);
+	}
+}
+
+
+
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_combinations(sll_size_t a,sll_size_t b){
 	if (b>a){
 		return 0;
@@ -146,46 +160,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_combina
 		}
 	}
 	return o;
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=cos(a->dt.f);
-	}
-	else{
-		out->dt.d.real=cos(a->dt.d.real)*cosh(a->dt.d.imag);
-		out->dt.d.imag=sin(a->dt.d.real)*sinh(a->dt.d.imag);
-	}
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=cosh(a->dt.f);
-	}
-	else{
-		out->dt.d.real=cosh(a->dt.d.real)*cos(a->dt.d.imag);
-		out->dt.d.imag=sinh(a->dt.d.real)*sin(a->dt.d.imag);
-	}
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_ceil(const sll_number_t* a,sll_number_t* out){
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->t=SLL_PARSE_ARGS_TYPE_INT;
-		out->dt.i=(sll_integer_t)ceil(a->dt.f);
-	}
-	else{
-		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		out->dt.d.real=ceil(a->dt.d.real);
-		out->dt.d.imag=ceil(a->dt.d.imag);
-	}
 }
 
 
@@ -222,6 +196,32 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,
 		dt_b.v=b->dt.d.imag;
 		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
 		out->dt.d.imag=dt_a.v;
+	}
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_number_t* a,sll_number_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=cos(a->dt.f);
+	}
+	else{
+		out->dt.d.real=cos(a->dt.d.real)*cosh(a->dt.d.imag);
+		out->dt.d.imag=sin(a->dt.d.real)*sinh(a->dt.d.imag);
+	}
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_number_t* a,sll_number_t* out){
+	out->t=a->t;
+	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->dt.f=cosh(a->dt.f);
+	}
+	else{
+		out->dt.d.real=cosh(a->dt.d.real)*cos(a->dt.d.imag);
+		out->dt.d.imag=sinh(a->dt.d.real)*sin(a->dt.d.imag);
 	}
 }
 

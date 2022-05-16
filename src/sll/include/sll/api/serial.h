@@ -79,20 +79,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
 
 /**
  * \flags check_output func
- * \name sll_api_serial_decode_signed_integer
- * \group serial-api
- * \desc Docs!
- * \api D|~a
- * \arg sll_file_handle_t fh
- * \arg sll_array_t* out
- * \ret sll_error_t
- */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_signed_integer(sll_file_handle_t fh,sll_array_t* out);
-
-
-
-/**
- * \flags check_output func
  * \name sll_api_serial_decode_object
  * \group serial-api
  * \desc Docs!
@@ -102,6 +88,20 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
  * \ret sll_error_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_object(sll_file_handle_t fh,sll_array_t* out);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_api_serial_decode_signed_integer
+ * \group serial-api
+ * \desc Docs!
+ * \api D|~a
+ * \arg sll_file_handle_t fh
+ * \arg sll_array_t* out
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_decode_signed_integer(sll_file_handle_t fh,sll_array_t* out);
 
 
 
@@ -148,20 +148,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 
 /**
  * \flags func
- * \name sll_api_serial_encode_signed_integer
- * \group serial-api
- * \desc Docs!
- * \api Di|Q
- * \arg sll_file_handle_t fh
- * \arg sll_integer_t v
- * \ret sll_error_t
- */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_signed_integer(sll_file_handle_t fh,sll_integer_t v);
-
-
-
-/**
- * \flags func
  * \name sll_api_serial_encode_object
  * \group serial-api
  * \desc Docs!
@@ -171,6 +157,20 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
  * \ret sll_error_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_object(sll_file_handle_t fh,const sll_array_t* args);
+
+
+
+/**
+ * \flags func
+ * \name sll_api_serial_encode_signed_integer
+ * \group serial-api
+ * \desc Docs!
+ * \api Di|Q
+ * \arg sll_file_handle_t fh
+ * \arg sll_integer_t v
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_encode_signed_integer(sll_file_handle_t fh,sll_integer_t v);
 
 
 

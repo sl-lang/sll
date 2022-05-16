@@ -99,6 +99,19 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(
 
 /**
  * \flags func
+ * \name sll_api_string_flip_case
+ * \group string-api
+ * \desc Docs!
+ * \api #s|s
+ * \arg const sll_string_t* str
+ * \arg sll_string_t* out
+ */
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* str,sll_string_t* out);
+
+
+
+/**
+ * \flags func
  * \name sll_api_string_format
  * \group string-api
  * \desc Docs!
@@ -109,19 +122,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_string_ends(
  * \arg sll_string_t* out
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out);
-
-
-
-/**
- * \flags func
- * \name sll_api_string_flip_case
- * \group string-api
- * \desc Docs!
- * \api #s|s
- * \arg const sll_string_t* str
- * \arg sll_string_t* out
- */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* str,sll_string_t* out);
 
 
 
@@ -341,6 +341,19 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_title_case(const sll_string
 
 /**
  * \flags func
+ * \name sll_api_string_to_upper_case
+ * \group string-api
+ * \desc Docs!
+ * \api #s|s
+ * \arg const sll_string_t* str
+ * \arg sll_string_t* out
+ */
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_upper_case(const sll_string_t* str,sll_string_t* out);
+
+
+
+/**
+ * \flags func
  * \name sll_api_string_trim
  * \group string-api
  * \desc Docs!
@@ -375,19 +388,6 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_left(const sll_string_t* 
  * \arg sll_string_t* out
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_trim_right(const sll_string_t* str,sll_string_t* out);
-
-
-
-/**
- * \flags func
- * \name sll_api_string_to_upper_case
- * \group string-api
- * \desc Docs!
- * \api #s|s
- * \arg const sll_string_t* str
- * \arg sll_string_t* out
- */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_to_upper_case(const sll_string_t* str,sll_string_t* out);
 
 
 
