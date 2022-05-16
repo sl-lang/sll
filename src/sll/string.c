@@ -293,7 +293,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare(const 
 	const wide_data_t* bp=(const wide_data_t*)(b->v);
 	STRING_DATA_PTR(ap);
 	STRING_DATA_PTR(bp);
-	for (sll_string_length_t i=0;i<(((a->l<b->l?a->l:b->l)+7)<<3);i++){
+	for (sll_string_length_t i=0;i<(((a->l<b->l?a->l:b->l)+7)>>3);i++){
 		wide_data_t av=*(ap+i);
 		wide_data_t bv=*(bp+i);
 		if (av!=bv){

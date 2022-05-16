@@ -1,4 +1,4 @@
-(--- "log.sll" "config.sll" "documentation.sll" "types.sll" "path.sll" "file.sll" "string.sll" "array.sll" "sys.sll")
+(--- "log.sll" "config.sll" "documentation.sll" "types.sll" "path.sll" "file.sll" "string.sll" "array.sll" "sys.sll" "sort.sll")
 
 
 
@@ -110,7 +110,7 @@
 
 (= _sort_map (,,, map
 	(= map (:: map map_value_type))
-	(<- sort$quicksort map false true _object_and_children_name_getter)
+	(<- sort$sort map false true _object_and_children_name_getter)
 	(@@ map)
 ))
 
