@@ -32,28 +32,10 @@
 	string_type description
 ))
 
-(= var_type (&:
-	int_type flags
-	string_type group
-	string_type subgroup
-	string_type name
-	string_type description
-	return_type type
-))
-
 (= function_argument_type (&:
 	string_type type
 	string_type name
 	string_type description
-))
-
-(= structure_type (&:
-	int_type flags
-	string_type group
-	string_type subgroup
-	string_type name
-	string_type description
-	array_type args
 ))
 
 (= function_type (&:
@@ -65,6 +47,24 @@
 	string_type api_fmt
 	array_type args
 	return_type return
+))
+
+(= structure_type (&:
+	int_type flags
+	string_type group
+	string_type subgroup
+	string_type name
+	string_type description
+	array_type args
+))
+
+(= var_type (&:
+	int_type flags
+	string_type group
+	string_type subgroup
+	string_type name
+	string_type description
+	return_type type
 ))
 
 (= documentation_type (&:
@@ -178,10 +178,10 @@
 				(= arrow_idx (<- string$index e "->"))
 				(= desc (?: (=== arrow_idx -1) "" (>> e (+ arrow_idx 2))))
 				(= e (?: (=== arrow_idx -1) e (: e 0 arrow_idx)))
-				(= nm (+ (<- string$index_reverse_list e " *") 1))
+				(= off (+ (<- string$index_reverse_list e " *") 1))
 				(. function_argument_type
-					(<- string$trim (: e 0 nm))
-					(>> e nm)
+					(<- string$trim (: e 0 off))
+					(>> e off)
 					desc
 				)
 			))
