@@ -1,0 +1,53 @@
+(--- "log.sll" "process.sll" "config.sll" "path.sll" "types.sll" "sys.sll" "array.sll" "string.sll")
+
+
+
+(= build_module_type (&:
+	(~ func_type) build_sll
+	(~ func_type) build_sll_cli
+))
+
+
+
+(= build_sll (,,,
+	(<- log$log "Compiling...")
+	(<- log$log "  Listing files...")
+	(= files (<- path$list_dir config$ROOT_SOURCE_FILE_PATH true))
+	(= files (+
+		([> (= i 0) (< i ($ files))
+			(= fp (: files i))
+			(++ i)
+			(? (|: fp "platform") (<<<))
+			fp
+		)
+		(<- path$list_dir (: config$ROOT_PLATFORM_SOURCE_FILE_PATH sys$PLATFORM) true)
+	))
+	(= files ([> (= i 0) (< i ($ files))
+		(= fp (: files i))
+		(++ i)
+		(? (! (|: config$SOURCE_FILE_EXTENSIONS (>> fp (<- string$index_reverse fp '.')))) (<<<))
+		fp
+	))
+	(<- log$log "    Found " ($ files) " files")
+	(<- log$log "  Aggregating preprocessor definitions...")
+	(= options [])
+	(-> (= i 0) (< i ($ config$PREPROCESSOR_DEFINITIONS))
+		(<- array$extend options [
+			(: config$PREPROCESSOR_DEFINITION_PREFIX sys$PLATFORM)
+			(: config$PREPROCESSOR_DEFINITIONS i)
+		])
+		(++ i)
+	)
+))
+
+(= build_sll_cli (,,,
+	(<- log$log "Compiling CLI...")
+))
+
+
+
+(= build (. build_module_type
+	build_sll
+	build_sll_cli
+))
+(## build)

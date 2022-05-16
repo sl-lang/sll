@@ -862,7 +862,39 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_string_get(const sll_string_t* 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_includes(const sll_string_t* a,const sll_string_t* b){
-	SLL_UNIMPLEMENTED();
+	if (!b->l){
+		return 1;
+	}
+	if (!a->l||b->l>a->l){
+		return 0;
+	}
+	if (b->l==1){
+		return sll_string_includes_char(a,b->v[0]);
+	}
+	if (a->l==b->l){
+		return sll_string_equal(a,b);
+	}
+	wide_data_t c64=0;
+	const wide_data_t* p=(const wide_data_t*)(a->v);
+	STRING_DATA_PTR(p);
+	for (sll_string_length_t i=0;i<((b->l+7)>>3);i++){
+		c64^=*p;
+		p++;
+	}
+	if (b->l&7){
+		c64^=(*(p-1))&(0xffffffffffffffffull<<((b->l&7)<<3));
+	}
+	sll_string_checksum_t c=(sll_string_checksum_t)(c64^(c64>>32));
+	unsigned int shift=(b->l&3)<<3;
+	const sll_char_t* ptr=a->v;
+	for (sll_string_length_t i=0;i<a->l-b->l;i++){
+		if (c==b->c&&sll_compare_data(ptr,b->v,b->l)==SLL_COMPARE_RESULT_EQUAL){
+			return 1;
+		}
+		c=ROTATE_BITS_RIGHT(c^(*ptr)^((*(ptr+b->l))<<shift),8);
+		ptr++;
+	}
+	return 0;
 }
 
 

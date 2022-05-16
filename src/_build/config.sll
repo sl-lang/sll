@@ -1,4 +1,4 @@
-(--- "types.sll" "log.sll" "sys.sll")
+(--- "types.sll" "log.sll" "sys.sll" "time.sll" "string.sll" "array.sll")
 
 
 
@@ -11,6 +11,22 @@
 	(~ int_type) WEBSITE
 ))
 
+(= platform_command_list_type (&:
+	(~ array_type) COMPILATION_COMMAND
+	(~ array_type) NASM_COMPILATION_COMMAND
+	(~ array_type) NASM_POST_COMPILATION_COMMAND
+	(~ array_type) LINK_COMMAND
+	(~ array_type) POST_LINK_COMMAND
+))
+
+(= platform_cli_command_list_type (&:
+	(~ array_type) PRE_COMPILATION_COMMAND
+	(~ array_type) COMPILATION_COMMAND
+	(~ array_type) LINK_COMMAND
+	(~ array_type) LINK_HEADLESS_COMMAND
+	(~ array_type) POST_LINK_COMMAND
+))
+
 (= config_module_type (&:
 	(~ string_type) API_FUNCTION_TABLE_FILE_PATH
 	(~ string_type) ASSEMBLY_OPTIMIZER_CONFIG_FILE_PATH
@@ -18,7 +34,11 @@
 	(~ int_type) ASSEMBLY_OPTIMIZER_STACK_SIZE
 	(~ array_type) BUILD_CLEAR_FOLDERS
 	(~ array_type) BUILD_CREATE_FOLDERS
+	(~ int_type) BUILD_TIME
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
+	(~ map_type) CLI_SOURCE_FILE_PATH
+	(~ map_type) CLI_COMMANDS
+	(~ map_type) COMMANDS
 	(~ string_type) DOCUMENTATION_ROOT_DIRECTORY_PATH
 	(~ string_type) DOMAIN_ROOT
 	(~ string_type) ERROR_HEADER_OUTPUT_DIRECTORY_PATH
@@ -27,6 +47,11 @@
 	(~ string_type) OPERATOR_PARSER_CONFIG_FILE_PATH
 	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
 	(~ cli_options_types) OPTIONS
+	(~ map_type) PREPROCESSOR_DEFINITION_PREFIX
+	(~ array_type) PREPROCESSOR_DEFINITIONS
+	(~ map_type) ROOT_PLATFORM_SOURCE_FILE_PATH
+	(~ string_type) ROOT_SOURCE_FILE_PATH
+	(~ array_type) SOURCE_FILE_EXTENSIONS
 	(~ map_type) WEBSITE_TYPE_REPLACEMENTS
 	(~ string_type) VERSION_FILE_PATH
 ))
@@ -35,6 +60,79 @@
 
 (? (|: sys$ARGV "--verbose") (<- log$set_global (| log$FLAG_DO_NOT_HIDE log$FLAG_NO_HEADER) 1))
 
+(= options (. cli_options_types
+	(|: sys$ARGV "--bundle")
+	(|: sys$ARGV "--debug")
+	(|: sys$ARGV "--release")
+	(|: sys$ARGV "--test")
+	(|: sys$ARGV "--upload")
+	(|: sys$ARGV "--web")
+))
+
+(= build_time (<- time$time_ns))
+
+(= defines [
+	"__SLL_COMPILATION__"
+	(+ "__SLL_TIME_RAW__=" build_time)
+	(+ "__SLL_BUILD_" (<- string$upper_case sys$PLATFORM))
+])
+(? (! options$RELEASE) (<- array$push defines "DEBUG_BUILD"))
+(= sha (: sys$ENVIRONMENT "GITHUB_SHA"))
+(? sha (<- array$extend defines [
+	(+ `__SLL_SHA__="` (: sha 0 7) `"`)
+	(+ `__SLL_FULL_SHA__="` sha `"`)
+]))
+(<- array$extend defines (?: (=== sys$PLATFORM "windows")
+	[
+		"_WINDOWS"
+		"WINDLL"
+		"USERDLL"
+		"WIN32_LEAN_AND_MEAN"
+		"_CRT_SECURE_NO_WARNINGS"
+		"NOGDICAPMASKS"
+		"NOVIRTUALKEYCODES"
+		"NOWINMESSAGES"
+		"NOWINSTYLES"
+		"NOSYSMETRICS"
+		"NOMENUS"
+		"NOICONS"
+		"NOKEYSTATES"
+		"NOSYSCOMMANDS"
+		"NORASTEROPS"
+		"NOSHOWWINDOW"
+		"OEMRESOURCE"
+		"NOATOM"
+		"NOCLIPBOARD"
+		"NOCOLOR"
+		"NOCTLMGR"
+		"NODRAWTEXT"
+		"NOGDI"
+		"NOKERNEL"
+		"NOUSER"
+		"NOMB"
+		"NOMEMMGR"
+		"NOMETAFILE"
+		"NOMINMAX"
+		"NOMSG"
+		"NOOPENFILE"
+		"NOSCROLL"
+		"NOSERVICE"
+		"NOSOUND"
+		"NOTEXTMETRIC"
+		"NOWH"
+		"NOWINOFFSETS"
+		"NOCOMM"
+		"NOKANJI"
+		"NOHELP"
+		"NOPROFILER"
+		"NODEFERWINDOWPOS"
+		"NOMCX"
+	]
+	[
+		"_GNU_SOURCE"
+	]
+))
+
 
 
 (= config (. config_module_type
@@ -42,10 +140,29 @@
 	"src/sll/data/assembly_optimizer.txt"
 	"src/sll/include/sll/generated/assembly_optimizer.h"
 	5
-	["build/lib" "build/lib_debug" "build/web"]
-	["build/lib" "build/lib_debug" "build/objects"]
+	["build/lib/" "build/lib_debug/" "build/web/"]
+	["build/lib/" "build/lib_debug/" "build/objects/"]
+	build_time
 	16
-	"src/sll/include"
+	<
+		"darwin" "src/cli/linux.c"
+		"linux" "src/cli/linux.c"
+		"windows" "src/cli/windows.c"
+	>
+	<
+		"darwin" (. platformc_cli_command_list_type)
+		"linux" (. platformc_cli_command_list_type)
+		"windows" (. platformc_cli_command_list_type)
+	>
+	<
+		"darwin" (. platform_command_list_type)
+		"darwin_release" (. platform_command_list_type)
+		"linux" (. platform_command_list_type)
+		"linux_release" (. platform_command_list_type)
+		"windows" (. platform_command_list_type)
+		"windows_release" (. platform_command_list_type)
+	>
+	"src/sll/include/"
 	(?: (: sys$ENVIRONMENT "DOMAIN_ROOT") "" ".")
 	"src/sll/include/sll/generated/"
 	"src/sll/data/"
@@ -57,14 +174,20 @@
 	]
 	"src/sll/data/operator_parser.txt"
 	"src/sll/include/sll/generated/operator_parser.h"
-	[
-		(|: sys$ARGV "--bundle")
-		(|: sys$ARGV "--debug")
-		(|: sys$ARGV "--release")
-		(|: sys$ARGV "--test")
-		(|: sys$ARGV "--upload")
-		(|: sys$ARGV "--web")
-	]
+	options
+	<
+		"darwin" "-D"
+		"linux" "-D"
+		"windows" "/D"
+	>
+	defines
+	<
+		"darwin" "src/sll/platform/linux/"
+		"linux" "src/sll/platform/linux/"
+		"windows" "src/sll/platform/windows/"
+	>
+	"src/sll/"
+	[".c" ".asm"]
 	<
 		"__SLL_S8" "signed char"
 		"__SLL_U8" "unsigned char"

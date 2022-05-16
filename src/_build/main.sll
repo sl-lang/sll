@@ -1,4 +1,4 @@
-(--- "operator_parser.sll" "util.sll" "header.sll" "documentation.sll" "api.sll" "assembly.sll" "config.sll" "website.sll")
+(--- "operator_parser.sll" "util.sll" "header.sll" "documentation.sll" "api.sll" "assembly.sll" "config.sll" "website.sll" "build.sll")
 
 
 
@@ -12,3 +12,5 @@
 	(<- website$generate_website docs)
 	(@@)
 })
+; (<- build$build_sll)
+; (<- build$build_sll_cli)

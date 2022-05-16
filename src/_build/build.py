@@ -10,8 +10,6 @@ def build_sll(fl):
 	if (len(os.getenv("GITHUB_SHA",""))>0):
 		def_l.append(f"__SLL_SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"")
 		def_l.append(f"__SLL_FULL_SHA__=\"{os.getenv('GITHUB_SHA')}\"")
-	if (len(os.getenv("USE_STACK_ALLOCATOR",""))>0):
-		def_l.append("USE_STACK_ALLOCATOR=1")
 	if (not util.release):
 		def_l.append("DEBUG_BUILD")
 	if (util.system=="windows"):
