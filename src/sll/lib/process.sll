@@ -14,7 +14,7 @@
 
 
 (= process_config_type (&:
-	(,,, dt {
+	(,,, dt
 		(= fl [])
 		(? (& dt$flags FLAG_PASS_STDIN) (<- array$push fl "FLAG_PASS_STDIN"))
 		(? (& dt$flags FLAG_PASS_STDOUT) (<- array$push fl "FLAG_PASS_STDOUT"))
@@ -24,19 +24,19 @@
 			dt$cwd
 			(<- string$join ", " fl)
 		))
-	}) @@string@@
+	) @@string@@
 	string_type cwd
 	int_type flags
 ))
 
 (= stream_data_type (&:
-	(,,, dt {
+	(,,, dt
 		(@@ (<- string$format "<in=\"%s\" out=\"%s\" err=\"%s\">"
 			dt$stdin
 			dt$stdout
 			dt$stderr
 		))
-	}) @@string@@
+	) @@string@@
 	(~ string_type) stdin
 	(~ string_type) stdout
 	(~ string_type) stderr

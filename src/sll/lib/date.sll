@@ -11,7 +11,7 @@
 
 
 (= time_zone_type (&:
-	(,,, dt {
+	(,,, dt
 		(= h (// dt$offset 60))
 		(= min (- dt$offset (* h 60)))
 		(= off_str "")
@@ -28,13 +28,13 @@
 			}
 		)
 		(@@ (<- string$format "<name=%s%s>" dt$name off_str))
-	}) @@string@@
+	) @@string@@
 	int_type offset
 	string_type name
 ))
 
 (= date_type (&:
-	(,,, dt {
+	(,,, dt
 		(= h (// dt$time_zone$offset 60))
 		(= min (- dt$time_zone$offset (* h 60)))
 		(@@ (<- string$format "%.4u/%.2u/%.2u %.2u:%.2u:%.2u %+.2d:%.2u (%s)"
@@ -48,7 +48,7 @@
 			min
 			dt$time_zone$name
 		))
-	}) @@string@@
+	) @@string@@
 	int_type year
 	int_type month
 	int_type day

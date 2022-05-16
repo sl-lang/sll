@@ -176,11 +176,12 @@
 
 (= write_byte (,,, f v
 	(? (=== f nil) (@@ nil))
-	(@@ (<- file$write (:: f file$file_type) (:: v char_type string_type)))
+	(@@ (<- file$write (:: f file$file_type) (:: v int_type char_type string_type)))
 ))
 
 (= write_word_le (,,, f v
 	(? (=== f nil) (@@ nil))
+	(= v (:: v int_type))
 	(@@ (<- file$write (:: f file$file_type) (+
 		(:: v char_type string_type)
 		(:: (>> v 8) char_type)
@@ -189,6 +190,7 @@
 
 (= write_dword_le (,,, f v
 	(? (=== f nil) (@@ nil))
+	(= v (:: v int_type))
 	(@@ (<- file$write (:: f file$file_type) (+
 		(:: v char_type string_type)
 		(:: (>> v 8) char_type)
@@ -199,6 +201,7 @@
 
 (= write_qword_le (,,, f v
 	(? (=== f nil) (@@ nil))
+	(= v (:: v int_type))
 	(@@ (<- file$write (:: f file$file_type) (+
 		(:: v char_type string_type)
 		(:: (>> v 8) char_type)
@@ -221,6 +224,7 @@
 
 (= write_word_be (,,, f v
 	(? (=== f nil) (@@ nil))
+	(= v (:: v int_type))
 	(@@ (<- file$write (:: f file$file_type) (+
 		(:: (>> v 8) char_type string_type)
 		(:: v char_type)
@@ -229,6 +233,7 @@
 
 (= write_dword_be (,,, f v
 	(? (=== f nil) (@@ nil))
+	(= v (:: v int_type))
 	(@@ (<- file$write (:: f file$file_type) (+
 		(:: (>> v 24) char_type string_type)
 		(:: (>> v 16) char_type)
@@ -239,6 +244,7 @@
 
 (= write_qword_be (,,, f v
 	(? (=== f nil) (@@ nil))
+	(= v (:: v int_type))
 	(@@ (<- file$write (:: f file$file_type) (+
 		(:: (>> v 56) char_type string_type)
 		(:: (>> v 48) char_type)
@@ -258,11 +264,19 @@
 (= write_sqword_be write_qword_be)
 
 (= write_float (,,, f v
-	(@@ (<- write_dword_le f (<- (... "sll:struct_float_to_bits") v)))
+	(? (=== f nil) (@@ nil))
+	(@@ (<- write_dword_le
+		f
+		(<- (... "sll:struct_float_to_bits") v)
+	))
 ))
 
 (= write_double (,,, f v
-	(@@ (<- write_qword_le f (<- (... "sll:struct_double_to_bits") v)))
+	(? (=== f nil) (@@ nil))
+	(@@ (<- write_qword_le
+		f
+		(<- (... "sll:struct_double_to_bits") v)
+	))
 ))
 
 

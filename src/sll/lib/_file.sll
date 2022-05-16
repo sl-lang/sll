@@ -14,14 +14,14 @@
 
 
 (= file_type (&:
-	(,,, dt {
+	(,,, dt
 		(<- (... "sll:file_inc_handle") dt$_handle)
-	}) @@copy@@
-	(,,, dt {
+	) @@copy@@
+	(,,, dt
 		(? (=== dt$_handle -1) (@@))
 		(<- (... "sll:file_close") dt$_handle)
-	}) @@delete@@
-	(,,, dt {
+	) @@delete@@
+	(,,, dt
 		(= m "")
 		(? (& dt$flags FLAG_APPEND) (= m (+ m 'A')))
 		(?
@@ -31,7 +31,7 @@
 		(? (& dt$flags FLAG_READ) (= m (+ m 'R')))
 		(? (& dt$flags FLAG_WRITE) (= m (+ m 'W')))
 		(@@ (<- string$format "<path=%s, mode=%s>" dt$name m))
-	}) @@string@@
+	) @@string@@
 	(~ string_type) name
 	(~ int_type) flags
 	int_type _handle

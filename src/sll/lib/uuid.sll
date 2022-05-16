@@ -8,7 +8,7 @@
 
 
 (= uuid_type (&:
-	(,,, dt {
+	(,,, dt
 		(@@ (<- string$format "%.8x-%.4x-%.4x-%.2x%.2x-%.12x"
 			dt$time_low
 			dt$time_mid
@@ -17,7 +17,7 @@
 			dt$clock_seq_low
 			dt$node
 		))
-	}) @@string@@
+	) @@string@@
 	int_type time_low
 	int_type time_mid
 	int_type time_hi_and_version
