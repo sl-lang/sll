@@ -1,6 +1,13 @@
 ; Sll Quiz Game Example
 ; @krzem5, 2022-03-06
-(--- "json.sll" "file.sll" "array.sll" "string.sll" "random.sll" "error.sll")
+(---
+	"array.sll"
+	"error.sll"
+	"file.sll"
+	"json.sll"
+	"random.sll"
+	"string.sll"
+)
 
 
 

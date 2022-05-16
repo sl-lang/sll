@@ -1,4 +1,15 @@
-(--- "operator_parser.sll" "util.sll" "header.sll" "documentation.sll" "api.sll" "assembly.sll" "config.sll" "website.sll" "build.sll" "hashlist.sll")
+(---
+	"api.sll"
+	"assembly.sll"
+	"build.sll"
+	"config.sll"
+	"documentation.sll"
+	"hashlist.sll"
+	"header.sll"
+	"operator_parser.sll"
+	"util.sll"
+	"website.sll"
+)
 
 
 

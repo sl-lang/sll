@@ -3,7 +3,11 @@
 
 
 
-(--- "process.sll" "sys.sll" "string.sll")
+(---
+	"process.sll"
+	"string.sll"
+	"sys.sll"
+)
 
 
 

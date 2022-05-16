@@ -1,4 +1,8 @@
-(--- "_common.sll" "data_file.sll" "file.sll")
+(---
+	"data_file.sll"
+	"file.sll"
+)
+(--- "_common.sll")
 
 
 

@@ -1,4 +1,36 @@
-(--- "time.sll" "file.sll" "sys.sll" "path.sll" "json.sll" "string.sll" "hash.sll" "types.sll" "sort.sll" "log.sll" "date.sll" "process.sll" "base64.sll" "math.sll" "int.sll" "mime.sll" "random.sll" "array.sll" "uuid.sll" "serial.sll" "thread.sll" "error.sll" "struct.sll" "hmac.sll" "vm.sll" "object.sll" "weakref.sll" "atexit.sll" "audit.sll" "background_audit_logger.sll" "statistics.sll")
+(---
+	"array.sll"
+	"atexit.sll"
+	"audit.sll"
+	"base64.sll"
+	"date.sll"
+	"error.sll"
+	"file.sll"
+	"hash.sll"
+	"hmac.sll"
+	"int.sll"
+	"json.sll"
+	"log.sll"
+	"math.sll"
+	"mime.sll"
+	"object.sll"
+	"path.sll"
+	"process.sll"
+	"random.sll"
+	"serial.sll"
+	"sort.sll"
+	"statistics.sll"
+	"string.sll"
+	"struct.sll"
+	"sys.sll"
+	"thread.sll"
+	"time.sll"
+	"types.sll"
+	"uuid.sll"
+	"vm.sll"
+	"weakref.sll"
+)
+(--- "background_audit_logger.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {

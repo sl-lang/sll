@@ -1,4 +1,9 @@
-(--- "types.sll" "string.sll" "random.sll" "hash.sll")
+(---
+	"hash.sll"
+	"random.sll"
+	"string.sll"
+	"types.sll"
+)
 
 
 

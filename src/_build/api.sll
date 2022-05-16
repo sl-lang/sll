@@ -1,4 +1,10 @@
-(--- "file.sll" "config.sll" "log.sll" "sort.sll" "types.sll")
+(---
+	"file.sll"
+	"log.sll"
+	"sort.sll"
+	"types.sll"
+)
+(--- "config.sll")
 
 
 

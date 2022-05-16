@@ -101,13 +101,11 @@ def bundle():
 
 
 def hash_file(fp):
-	sz=0
 	o=hashlib.sha256()
 	with open(fp,"rb") as rf:
 		while (True):
 			c=rf.read(16384)
 			if (len(c)==0):
 				break
-			sz+=len(c)
 			o.update(c)
-	return (sz,o.hexdigest())
+	return o.hexdigest()

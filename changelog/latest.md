@@ -16,5 +16,9 @@
 - *\[Linux only\]* Fixed permission bits for directory creation in `sll_platform_create_directory`
 - Translated part of the build script to Sll ([#75])
 
+## Removed
+
+- Function `gauss2` is no longer exported from `math.sll`
+
 [0.7.18]: https://github.com/sl-lang/sll/compare/sll-v0.7.17...main
 [#75]: https://github.com/sl-lang/sll/issues/75

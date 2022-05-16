@@ -1,4 +1,7 @@
-(--- "types.sll" "hash.sll")
+(---
+	"hash.sll"
+	"types.sll"
+)
 
 
 

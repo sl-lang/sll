@@ -68,7 +68,7 @@ def load_hash_list(fp):
 		for f in fl:
 			if (f[f.rindex("."):] in HASHLIST_EXTENSIONS):
 				fp=os.path.join(r,f)
-				h=util.hash_file(fp)[1]
+				h=util.hash_file(fp)
 				nm=util.output_file_path(fp)
 				if (nm not in hash_list or hash_list[nm]!=h):
 					hash_list[nm]=h

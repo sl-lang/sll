@@ -1,4 +1,17 @@
-(--- "log.sll" "config.sll" "documentation.sll" "types.sll" "path.sll" "file.sll" "string.sll" "array.sll" "sys.sll" "sort.sll")
+(---
+	"array.sll"
+	"file.sll"
+	"log.sll"
+	"path.sll"
+	"sort.sll"
+	"string.sll"
+	"sys.sll"
+	"types.sll"
+)
+(---
+	"config.sll"
+	"documentation.sll"
+)
 
 
 
