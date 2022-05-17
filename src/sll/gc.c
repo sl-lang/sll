@@ -28,12 +28,14 @@ static sll_array_length_t _gc_object_pool_len=0;
 static gc_page_header_t* _gc_page_header=NULL;
 static sll_array_length_t _gc_page_header_bit_mask=0;
 static sll_array_length_t _gc_page_header_count=0;
+static sll_array_length_t _gc_page_header_resize=0;
 
 
 
 static void _create_page_header(void* ptr){
-	if (!_gc_page_header_count||_gc_page_header_count>=(_gc_page_header_bit_mask+0)*3/4){
+	if (_gc_page_header_count>=_gc_page_header_resize){
 		_gc_page_header_bit_mask=(_gc_page_header_bit_mask<<1)|1;
+		_gc_page_header_resize=_gc_page_header_bit_mask>>1;
 		gc_page_header_t* old=_gc_page_header;
 		_gc_page_header=sll_zero_allocate((_gc_page_header_bit_mask+1)*sizeof(gc_page_header_t));
 		sll_array_length_t i=0xffffffff;
@@ -91,6 +93,7 @@ void _gc_release_data(void){
 	_gc_page_header=NULL;
 	_gc_page_header_bit_mask=0;
 	_gc_page_header_count=0;
+	_gc_page_header_resize=0;
 	_gc_page_pool_len=0;
 }
 
