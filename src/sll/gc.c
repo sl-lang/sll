@@ -50,11 +50,6 @@ void _gc_release_data(void){
 		} while (pg);
 		_force_exit_platform();
 	}
-	while (_gc_page_ptr){
-		gc_page_header_t* n=_gc_page_ptr->n;
-		SLL_CRITICAL_ERROR(sll_platform_free_page(_gc_page_ptr,GC_MEMORY_PAGE_SIZE));
-		_gc_page_ptr=n;
-	}
 	while (_gc_page_pool_len){
 		_gc_page_pool_len--;
 		SLL_CRITICAL_ERROR(sll_platform_free_page(_gc_page_pool[_gc_page_pool_len],GC_MEMORY_PAGE_SIZE));
