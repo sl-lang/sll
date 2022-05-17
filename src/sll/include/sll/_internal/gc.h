@@ -18,6 +18,21 @@
 
 #define GC_OBJECT_POOL_SIZE 512
 
+#define GC_PAGE_HEADER_CAN_DELETE(pg) ((pg)->cnt==1)
+#define GC_PAGE_HEADER_DEALLOCATION_THRESHOLD 128
+#define GC_PAGE_HEADER_INCREASE(pg) \
+	do{ \
+		gc_page_header_t* __pg=(pg); \
+		__pg->cnt+=2; \
+		if (__pg->cnt>=GC_PAGE_HEADER_DEALLOCATION_THRESHOLD){ \
+			__pg->cnt|=1; \
+		} \
+	} while (0)
+#define GC_PAGE_HEADER_DECREASE(pg) \
+	do{ \
+		(pg)->cnt-=2; \
+	} while (0)
+
 
 
 typedef struct _GC_PAGE_HEADER{

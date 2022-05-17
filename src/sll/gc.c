@@ -48,14 +48,16 @@ void _gc_release_data(void){
 				c++;
 			}
 		}
-		_gc_page_ptr=_gc_page_ptr->next;
+		gc_page_header_t* nxt=_gc_page_ptr->next;
+		SLL_CRITICAL_ERROR(sll_platform_free_page(_gc_page_ptr,GC_MEMORY_PAGE_SIZE));
+		_gc_page_ptr=nxt;
 	}
 	if (err){
 		_force_exit_platform();
 	}
-	SLL_ASSERT(!_gc_next_object);
-	SLL_ASSERT(!_gc_object_pool_len);
+	_gc_next_object=NULL;
 	_gc_page_pool_len=0;
+	_gc_object_pool_len=0;
 }
 
 
@@ -106,10 +108,10 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		}
 		sll_deallocate(o->dt.p);
 	}
-	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER(o);
-	pg->cnt--;
 	o->_f=0;
-	if (pg->cnt){
+	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER(o);
+	GC_PAGE_HEADER_DECREASE(pg);
+	if (!GC_PAGE_HEADER_CAN_DELETE(pg)){
 		if (_gc_object_pool_len<GC_OBJECT_POOL_SIZE){
 			o->_f=GC_FLAG_IN_FAST_POOL;
 			o->dt._idx=_gc_object_pool_len;
@@ -250,7 +252,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		c->_f=0;
 		c->dt._ptr.n=NULL;
 	}
-	GC_MEMORY_PAGE_HEADER(o)->cnt++;
+	GC_PAGE_HEADER_INCREASE(GC_MEMORY_PAGE_HEADER(o));
 	o->rc=1;
 	*((sll_object_type_t*)(&(o->t)))=t;
 	o->_f=0;
