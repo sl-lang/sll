@@ -228,29 +228,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		_gc_page_pool_len--;
 		gc_page_header_t* pg=_gc_page_pool[_gc_page_pool_len];
 		o=PTR(ADDR(pg)+sizeof(gc_page_header_t));
-		SLL_ASSERT((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)>GC_OBJECT_POOL_SIZE);
+		SLL_ASSERT((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(sll_object_t))/sizeof(sll_object_t)<=GC_OBJECT_POOL_SIZE);
 		sll_object_t* c=o+1;
-		for (sll_array_length_t i=0;i<GC_OBJECT_POOL_SIZE;i++){
+		while (_gc_object_pool_len<(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(sll_object_t))/sizeof(sll_object_t)){
 			c->rc=0;
 			c->_f=GC_FLAG_IN_FAST_POOL;
-			c->dt._idx=i;
-			_gc_object_pool[i]=c;
+			c->dt._idx=_gc_object_pool_len;
+			_gc_object_pool[_gc_object_pool_len]=c;
+			_gc_object_pool_len++;
 			c++;
 		}
-		_gc_object_pool_len=GC_OBJECT_POOL_SIZE;
-		addr_t e=ADDR(pg)+sizeof(gc_page_header_t)+((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)-1)*sizeof(sll_object_t);
-		c->dt._ptr.p=NULL;
-		_gc_next_object=c;
-		do{
-			c->rc=0;
-			c->_f=0;
-			c->dt._ptr.n=c+1;
-			c++;
-			c->dt._ptr.p=c-1;
-		} while (ADDR(c)<e);
-		c->rc=0;
-		c->_f=0;
-		c->dt._ptr.n=NULL;
 	}
 	GC_PAGE_HEADER_INCREASE(GC_MEMORY_PAGE_HEADER(o));
 	o->rc=1;
