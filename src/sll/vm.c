@@ -1103,7 +1103,22 @@ _load_new_thread:;
 					goto _load_new_thread;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_EXIT:
-				SLL_UNIMPLEMENTED();
+				{
+					sll_object_t* ret=*(thr->stack+thr->si-1);
+					SLL_ACQUIRE(ret);
+					while (thr->si){
+						thr->si--;
+						SLL_RELEASE(*(thr->stack+thr->si));
+					}
+					sll_thread_index_t idx=_scheduler_current_thread_index;
+					_thread_terminate(ret);
+					SLL_RELEASE(ret);
+					if (idx==tid){
+						goto _cleanup;
+					}
+					RELOAD_THREAD_DATA;
+					continue;
+				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING:
 				{
 					sll_object_t* sz_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);

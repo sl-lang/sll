@@ -101,7 +101,8 @@
 	(~ func_type) create_barrier
 	(~ func_type) create_lock
 	(~ func_type) create_semaphore
-	(~ func_type) currenct
+	(~ func_type) current
+	(~ func_type) exit
 	(~ func_type) get
 	(~ func_type) get_internal_data
 	(~ func_type) if_equal
@@ -139,7 +140,7 @@
 
 
 
-(= _thread_runner (,,, fn args sem
+(= _thread_wrapper (,,, fn args sem
 	(= thr nil)
 	(>- (= id (!.)) (=== thr nil)
 		(= thr (<- get id))
@@ -199,6 +200,13 @@
 
 (= current (,,,
 	(@@ (<- get (!.)))
+))
+
+(= exit (,,, ret
+	(= thr (<- get (!.)))
+	(= thr$return_value ret)
+	(= thr$state STATE_TERMINATED)
+	(!@@ ret)
 ))
 
 (= get (,,, id
@@ -290,7 +298,7 @@
 	(= fn (:: fn func_type))
 	(= sem (<- (... "sll:thread_create_semaphore") 0))
 	(= tid (<- (... "sll:thread_create")
-		_thread_runner
+		_thread_wrapper
 		[
 			fn
 			@@args@@
@@ -339,6 +347,7 @@
 	create_lock
 	create_semaphore
 	current
+	exit
 	get
 	get_internal_data
 	if_equal

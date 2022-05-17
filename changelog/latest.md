@@ -7,6 +7,7 @@
 - Implemented `path$join`
 - Implemented `sll_file_read_all` and `file$read` with no arguments
 - Implemented `sll_object_to_map`
+- Implemented `thread$exit`
 - Operator for returning from the current thread: `!@@`
 
 ## Changed
