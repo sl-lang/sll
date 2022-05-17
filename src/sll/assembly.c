@@ -568,6 +568,7 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
 		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
 		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
+		case SLL_NODE_TYPE_THREAD_EXIT:
 		case SLL_NODE_TYPE_READ_BLOCKING:
 		case SLL_NODE_TYPE_READ_BLOCKING_CHAR:
 			SLL_UNIMPLEMENTED();
@@ -1568,6 +1569,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
 		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
 		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
+		case SLL_NODE_TYPE_THREAD_EXIT:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_READ_BLOCKING:
 			{
@@ -1962,6 +1964,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 		case SLL_NODE_TYPE_THREAD_WAIT:
 		case SLL_NODE_TYPE_THREAD_LOCK:
 		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
+		case SLL_NODE_TYPE_THREAD_EXIT:
 			{
 				sll_assembly_instruction_type_t ai_t=(o->t-SLL_NODE_TYPE_THREAD_WAIT+SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT);
 				sll_arg_count_t l=o->dt.ac;

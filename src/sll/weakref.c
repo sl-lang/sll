@@ -86,10 +86,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_wea
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_object_t* o){
 	o->_f|=GC_FLAG_HAS_WEAKREF;
 	return _create_new(ADDR(o));
-
-
-
 }
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_weakref_delete(sll_weak_reference_t wr){
 	sll_array_length_t i=0;
 	weakref_key_pair_t** kp=_weakref_data;

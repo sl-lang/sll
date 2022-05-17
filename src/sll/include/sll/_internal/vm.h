@@ -13,4 +13,8 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 
 
 
+void _release_var_data(void);
+
+
+
 #endif

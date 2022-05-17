@@ -221,6 +221,18 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 
 
 
+void _release_var_data(void){
+	SLL_ASSERT(_vm_var_data);
+	sll_object_t** obj=_vm_var_data;
+	_vm_var_data=NULL;
+	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->vc;i++){
+		SLL_RELEASE(*(obj+i));
+	}
+	SLL_CRITICAL_ERROR(sll_platform_free_page(obj,SLL_ROUND_PAGE(sll_current_runtime_data->a_dt->vc*sizeof(sll_object_t*))));
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg){
 	if (_vm_var_data){
 		SLL_UNIMPLEMENTED();
@@ -243,11 +255,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
 	sll_audit(SLL_CHAR("sll.vm.init"),SLL_CHAR(""));
 	sll_return_code_t rc=_scheduler_run();
-	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
-		SLL_RELEASE(*(_vm_var_data+i));
-	}
-	SLL_CRITICAL_ERROR(sll_platform_free_page(_vm_var_data,SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*))));
-	_vm_var_data=NULL;
 	sll_current_runtime_data=NULL;
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
@@ -257,7 +264,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_execution_flags_t fl){
-	if (!sll_current_runtime_data||!sll_current_vm_config){
+	if (!sll_current_runtime_data||!sll_current_vm_config||!_vm_var_data){
 		return NULL;
 	}
 	sll_thread_index_t tid=sll_thread_create(fn_idx,al,all);
@@ -1095,6 +1102,8 @@ _load_new_thread:;
 					c_thr->_last_ai=ai;
 					goto _load_new_thread;
 				}
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_EXIT:
+				SLL_UNIMPLEMENTED();
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING:
 				{
 					sll_object_t* sz_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);

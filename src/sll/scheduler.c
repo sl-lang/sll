@@ -7,6 +7,7 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/semaphore.h>
 #include <sll/_internal/thread.h>
+#include <sll/_internal/vm.h>
 #include <sll/audit.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -168,7 +169,11 @@ sll_return_code_t _scheduler_run(void){
 		cpu_dt++;
 	}
 	_cpu_core_worker(NULL);
+	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->ret,sll_static_int[SLL_OBJECT_TYPE_INT]);
+	sll_return_code_t o=(sll_return_code_t)(rc_o->dt.i);
+	SLL_RELEASE(rc_o);
 	_cleanup_vm_exit_tables();
+	_release_var_data();
 	SLL_CRITICAL_ERROR(sll_platform_set_cpu(SLL_CPU_ANY));
 	cpu_dt=_scheduler_data_base;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.len;i++){
@@ -182,9 +187,6 @@ sll_return_code_t _scheduler_run(void){
 	}
 	SLL_CRITICAL(sll_platform_lock_delete(_scheduler_load_balancer.lck));
 	SLL_CRITICAL_ERROR(sll_platform_free_page(_scheduler_data_base,SLL_ROUND_PAGE(_scheduler_load_balancer.len*sizeof(scheduler_cpu_data_t))));
-	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->ret,sll_static_int[SLL_OBJECT_TYPE_INT]);
-	sll_return_code_t o=(sll_return_code_t)(rc_o->dt.i);
-	SLL_RELEASE(rc_o);
 	_barrier_deinit();
 	_lock_deinit();
 	_semaphore_deinit();

@@ -1380,13 +1380,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_EXIT
+ * \group assembly
+ * \subgroup assembly-instruction
+ * \desc Docs!
+ * \type sll_assembly_instruction_type_t
+ */
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_EXIT 110
+
+
+
+/**
+ * \flags macro var
  * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING
  * \group assembly
  * \subgroup assembly-instruction
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING 110
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING 111
 
 
 
@@ -1398,7 +1410,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR 111
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR 112
 
 
 
@@ -1410,7 +1422,7 @@
  * \desc Docs!
  * \type sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 112
+#define SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK 113
 
 
 

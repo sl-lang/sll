@@ -25,8 +25,7 @@ static void _cleanup_data(void){
 
 
 static void _call_user_array(sll_weak_reference_t wr,sll_object_t* obj,void* arg){
-	sll_object_t* dt=sll_weakref_get((sll_weak_reference_t)arg);
-	SLL_CRITICAL(sll_weakref_delete((sll_weak_reference_t)arg));
+	sll_object_t* dt=arg;
 	if (!dt){
 		return;
 	}
@@ -34,7 +33,10 @@ static void _call_user_array(sll_weak_reference_t wr,sll_object_t* obj,void* arg
 		dt,
 		obj
 	};
-	SLL_RELEASE(sll_execute_function(_weakref_cb_func,al,2,0));
+	sll_object_t* ret=sll_execute_function(_weakref_cb_func,al,2,0);
+	if (ret){
+		SLL_RELEASE(ret);
+	}
 }
 
 
@@ -76,5 +78,5 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_g
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_weak_reference_t wr,sll_object_t* cb){
-	sll_weakref_set_callback(wr,_call_user_array,sll_weakref_create(cb));
+	sll_weakref_set_callback(wr,_call_user_array,cb);
 }

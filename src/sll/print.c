@@ -579,6 +579,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
 			PRINT_STATIC_STRING("!<=",wf);
 			break;
+		case SLL_NODE_TYPE_THREAD_EXIT:
+			PRINT_STATIC_STRING("!@@",wf);
+			break;
 		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
 			PRINT_STATIC_STRING("!<>",wf);
 			break;
@@ -1008,6 +1011,9 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_GEQ:
 				PRINT_STATIC_STRING("THREAD_BARRIER_GEQ",wf);
+				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_EXIT:
+				PRINT_STATIC_STRING("THREAD_EXIT",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING:
 				PRINT_STATIC_STRING("READ_BLOCKING",wf);
