@@ -76,7 +76,6 @@ static gc_page_header_t* _get_page_header(void* ptr){
 static void _delete_page_header(void* ptr){
 	_get_page_header(ptr)->addr=0;
 	_gc_page_header_count--;
-	if (_gc_page_header_count==(_gc_page_header_bit_mask>>3))
 }
 
 
