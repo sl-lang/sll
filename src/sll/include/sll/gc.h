@@ -32,6 +32,19 @@
  * \desc Docs!
  * \arg sll_object_t* o
  */
+#ifdef DEBUG_BUILD
+#define SLL_RELEASE(o) \
+	do{ \
+		sll_object_t* __o=(o); \
+		if (!__o->rc){ \
+			sll__gc_error(__o); \
+		} \
+		__o->rc--; \
+		if (!__o->rc){ \
+			sll__release_object_internal(__o); \
+		} \
+	} while (0)
+#else
 #define SLL_RELEASE(o) \
 	do{ \
 		sll_object_t* __o=(o); \
@@ -40,6 +53,18 @@
 			sll__release_object_internal(__o); \
 		} \
 	} while (0)
+#endif
+
+
+
+/**
+ * \flags func
+ * \name sll__gc_error
+ * \group gc
+ * \desc Docs!
+ * \arg sll_object_t* o
+ */
+__SLL_EXTERNAL void sll__gc_error(sll_object_t* o);
 
 
 

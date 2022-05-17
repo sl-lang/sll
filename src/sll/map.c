@@ -379,21 +379,20 @@ __SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* m,sll_object_t* k,sll_map_t* o){
 	if (!m){
 		sll_map_length_t i=0;
-		while (i<o->l){
-			if (sll_operator_strict_equal(o->v[i<<1],k)){
-				SLL_RELEASE(o->v[i<<1]);
-				sll_object_t* v=o->v[(i<<1)+1];
-				i++;
-				while (i<o->l){
-					o->v[i<<1]=o->v[(i<<1)+2];
-					o->v[(i<<1)+1]=o->v[(i<<1)+3];
+		while (i<(o->l<<1)){
+			if (sll_operator_strict_equal(o->v[i],k)){
+				SLL_RELEASE(o->v[i]);
+				sll_object_t* v=o->v[i+1];
+				i+=2;
+				while (i<(o->l<<1)){
+					o->v[i-2]=o->v[i];
 					i++;
 				}
 				o->l--;
 				o->v=sll_reallocate(o->v,(o->l<<1)*sizeof(sll_object_t*));
 				return v;
 			}
-			i++;
+			i+=2;
 		}
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}

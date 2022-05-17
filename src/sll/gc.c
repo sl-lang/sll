@@ -67,6 +67,12 @@ void _gc_release_data(void){
 
 
 
+__SLL_EXTERNAL void sll__gc_error(sll_object_t* o){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 	SLL_ASSERT(!o->rc);
 	if (o->_f&GC_FLAG_HAS_WEAKREF){
@@ -108,6 +114,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		sll_deallocate(o->dt.p);
 	}
 	_gc_dealloc++;
+	return;
 	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER_ADDR(o);
 	pg->cnt--;
 	o->_f=0;

@@ -19,7 +19,7 @@
 
 
 
-#define GET_HASH_TABLE_OFFSET(dt,str) (ROTATE_BITS_RIGHT64((str)->c*((dt)->_rng),(dt)->_rng&63)&(dt)->_hash_table_len)
+#define GET_HASH_TABLE_OFFSET(dt,str) (ROTATE_BITS_RIGHT64((str)->c*((dt)->_rng),(dt)->_rng&63)&(dt)->_hash_table_bit_mask)
 
 
 
@@ -165,7 +165,7 @@ static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_st
 		return (STRING_EQUAL(f,&(dt->dt->nm))?0:SLL_MAX_ARG_COUNT);
 	}
 	sll_arg_count_t i=GET_HASH_TABLE_OFFSET(dt,f);
-	sll_arg_count_t l=dt->_hash_table_len+1;
+	sll_arg_count_t l=dt->_hash_table_bit_mask+1;
 	do{
 		sll_arg_count_t j=dt->_hash_table[i];
 		if (j!=SLL_MAX_ARG_COUNT&&STRING_EQUAL(f,&(dt->dt[j].nm))){
@@ -173,7 +173,7 @@ static sll_arg_count_t _get_offset(const sll_object_type_data_t* dt,const sll_st
 		}
 		l--;
 		if (!i){
-			i=dt->_hash_table_len;
+			i=dt->_hash_table_bit_mask;
 		}
 		else{
 			i--;
@@ -224,12 +224,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 _skip_next:;
 	}
 	n->l=l;
-	n->_hash_table_len=(l<2?0:1<<(FIND_LAST_SET_BIT(l)+(!!(l&(l-1)))));
-	n=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t)+n->_hash_table_len*sizeof(sll_arg_count_t));
-	if (n->_hash_table_len){
+	n->_hash_table_bit_mask=(l<2?0:1<<(FIND_LAST_SET_BIT(l)+(!!(l&(l-1)))));
+	n=sll_reallocate(n,sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t)+n->_hash_table_bit_mask*sizeof(sll_arg_count_t));
+	if (n->_hash_table_bit_mask){
 		n->_hash_table=PTR(ADDR(n)+sizeof(sll_object_type_data_t)+l*sizeof(sll_object_type_data_entry_t));
-		sll_set_memory(n->_hash_table,n->_hash_table_len*sizeof(sll_arg_count_t),0xff);
-		n->_hash_table_len--;
+		sll_set_memory(n->_hash_table,n->_hash_table_bit_mask*sizeof(sll_arg_count_t),0xff);
+		n->_hash_table_bit_mask--;
 		sll_platform_random(&(n->_rng),sizeof(__SLL_U64));
 		if (!(n->_rng>>6)){
 			n->_rng|=64;
@@ -252,7 +252,7 @@ _skip_next:;
 				}
 				SLL_ASSERT(n->_hash_table[j]!=SLL_MAX_ARG_COUNT);
 				do{
-					j=(j?j-1:n->_hash_table_len);
+					j=(j?j-1:n->_hash_table_bit_mask);
 				} while (n->_hash_table[j]!=SLL_MAX_ARG_COUNT);
 				n->_hash_table[j]=i;
 			}

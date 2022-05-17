@@ -226,7 +226,7 @@ typedef struct _SLL_OBJECT_TYPE_DATA_ENTRY{
  * \desc Docs!
  * \arg const sll_string_t nm
  * \arg sll_arg_count_t l
- * \arg __SLL_U32 _hash_table_len
+ * \arg __SLL_U32 _hash_table_bit_mask
  * \arg sll_arg_count_t* _hash_table
  * \arg __SLL_U64 _rng
  * \arg sll_integer_t* fn
@@ -235,7 +235,7 @@ typedef struct _SLL_OBJECT_TYPE_DATA_ENTRY{
 typedef struct _SLL_OBJECT_TYPE_DATA{
 	const sll_string_t nm;
 	sll_arg_count_t l;
-	__SLL_U32 _hash_table_len;
+	__SLL_U32 _hash_table_bit_mask;
 	sll_arg_count_t* _hash_table;
 	__SLL_U64 _rng;
 	sll_integer_t fn[SLL_MAX_OBJECT_FUNC+1];
