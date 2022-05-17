@@ -16,10 +16,11 @@
 #define GC_MEMORY_PAGE_SIZE (1ull<<GC_MEMORY_PAGE_SIZE_SHIFT)
 #define GC_MEMORY_PAGE_HEADER(o) ((gc_page_header_t*)PTR(ADDR(o)&(0-GC_MEMORY_PAGE_SIZE)))
 
-#define GC_OBJECT_POOL_SIZE 1024
+#define GC_OBJECT_POOL_SIZE 2048
+
+#define GC_PAGE_HEADER_DEALLOCATION_THRESHOLD 128
 
 #define GC_PAGE_HEADER_CAN_DELETE(pg) ((pg)->cnt==1)
-#define GC_PAGE_HEADER_DEALLOCATION_THRESHOLD 128
 #define GC_PAGE_HEADER_INCREASE(pg) \
 	do{ \
 		gc_page_header_t* __pg=(pg); \
