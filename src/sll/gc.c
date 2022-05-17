@@ -114,7 +114,6 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		sll_deallocate(o->dt.p);
 	}
 	_gc_dealloc++;
-	return;
 	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER_ADDR(o);
 	pg->cnt--;
 	o->_f=0;
