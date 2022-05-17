@@ -22,8 +22,6 @@
 
 static gc_page_header_t* _gc_page_ptr=NULL;
 static sll_object_t* _gc_next_object=NULL;
-static sll_size_t _gc_alloc=0;
-static sll_size_t _gc_dealloc=0;
 static void* _gc_page_pool[GC_PAGE_POOL_SIZE];
 static sll_array_length_t _gc_page_pool_len=0;
 static sll_object_t* _gc_object_pool[GC_OBJECT_POOL_SIZE];
@@ -32,9 +30,9 @@ static sll_array_length_t _gc_object_pool_len=0;
 
 
 void _gc_release_data(void){
-	if (_gc_alloc!=_gc_dealloc){
-		gc_page_header_t* pg=_gc_page_ptr;
-		while (pg){
+	gc_page_header_t* pg=_gc_page_ptr;
+	if (pg){
+		do{
 			sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(gc_page_header_t));
 			void* e=PTR(ADDR(pg)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
 			while (PTR(c)<e){
@@ -49,7 +47,7 @@ void _gc_release_data(void){
 				c++;
 			}
 			pg=pg->n;
-		}
+		} while (pg);
 		_force_exit_platform();
 	}
 	while (_gc_page_ptr){
@@ -61,8 +59,6 @@ void _gc_release_data(void){
 		_gc_page_pool_len--;
 		SLL_CRITICAL_ERROR(sll_platform_free_page(_gc_page_pool[_gc_page_pool_len],GC_MEMORY_PAGE_SIZE));
 	}
-	_gc_alloc=0;
-	_gc_dealloc=0;
 }
 
 
@@ -113,7 +109,6 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		}
 		sll_deallocate(o->dt.p);
 	}
-	_gc_dealloc++;
 	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER_ADDR(o);
 	pg->cnt--;
 	o->_f=0;
@@ -251,7 +246,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 	o->rc=1;
 	*((sll_object_type_t*)(&(o->t)))=t;
 	o->_f=0;
-	_gc_alloc++;
 	return o;
 }
 
