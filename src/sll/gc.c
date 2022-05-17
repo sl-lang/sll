@@ -46,7 +46,7 @@ void _gc_release_data(void){
 				}
 				c++;
 			}
-			pg=pg->n;
+			pg=pg->next;
 		} while (pg);
 		_force_exit_platform();
 	}
@@ -128,16 +128,16 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 	while (GC_MEMORY_PAGE_HEADER(_gc_next_object)==pg){
 		_gc_next_object=_gc_next_object->dt._ptr.n;
 	}
-	if (pg->p){
-		pg->p->n=pg->n;
+	if (pg->prev){
+		pg->prev->next=pg->next;
 		if (_gc_page_ptr==pg){
-			_gc_page_ptr=pg->p;
+			_gc_page_ptr=pg->prev;
 		}
 	}
-	if (pg->n){
-		pg->n->p=pg->p;
+	if (pg->next){
+		pg->next->prev=pg->prev;
 		if (_gc_page_ptr==pg){
-			_gc_page_ptr=pg->n;
+			_gc_page_ptr=pg->next;
 		}
 	}
 	if (_gc_page_ptr==pg){
@@ -217,10 +217,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		_gc_page_pool_len--;
 		pg=_gc_page_pool[_gc_page_pool_len];
 		if (_gc_page_ptr){
-			_gc_page_ptr->p=pg;
+			_gc_page_ptr->prev=pg;
 		}
-		pg->p=NULL;
-		pg->n=_gc_page_ptr;
+		pg->prev=NULL;
+		pg->next=_gc_page_ptr;
 		pg->cnt=0;
 		_gc_page_ptr=pg;
 		o=PTR(ADDR(pg)+sizeof(gc_page_header_t));
