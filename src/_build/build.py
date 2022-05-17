@@ -85,15 +85,13 @@ def build_sll(fl):
 			util.log("  Linking files (Release mode)...")
 			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-O3","-Werror","-o",f"build/sll-{util.version}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt)):
 				sys.exit(1)
-			if (util.system!="darwin" and "--debug" not in sys.argv):
+			if (util.system!="darwin" and not util.debug):
 				util.log("  Stripping executable...")
 				if (util.execute(["strip",f"build/sll-{util.version}.so","-s","-R",".note.*","-R",".comment"])):
 					sys.exit(1)
 		else:
-			link_opt=[]
 			if (len(os.getenv("GENERATE_COVERAGE",""))>0):
 				linux_opt.append("--coverage")
-				link_opt.append("--coverage")
 			util.log("  Compiling files...")
 			out_fl=[]
 			err=False
@@ -112,7 +110,7 @@ def build_sll(fl):
 			if (err):
 				sys.exit(1)
 			util.log("  Linking files...")
-			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/sll-{util.version}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt+link_opt)):
+			if (util.execute(["gcc","-fno-exceptions","-fno-stack-protector","-fdiagnostics-color=always","-shared","-fPIC","-fvisibility=hidden","-Wall","-Werror","-g","-O0","-o",f"build/sll-{util.version}.so"]+out_fl+["-lm","-ldl","-pthread"]+linux_opt)):
 				sys.exit(1)
 
 

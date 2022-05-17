@@ -24,5 +24,5 @@
 	(<- website$generate_website docs)
 	(@@)
 })
-; (<- build$build_sll)
-; (<- build$build_sll_cli)
+(<- build$build_sll)
+(<- build$build_sll_cli)

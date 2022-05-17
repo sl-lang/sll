@@ -9,12 +9,17 @@
 
 
 
+(= COMMAND_MARKER_INPUT (. (&:)))
+(= COMMAND_MARKER_OUTPUT (. (&:)))
+
 (= cli_options_types (&:
 	(~ int_type) BUNDLE
+	(~ int_type) COVERAGE
 	(~ int_type) DEBUG
 	(~ int_type) RELEASE
 	(~ int_type) TEST
 	(~ int_type) UPLOAD
+	(~ int_type) VERBOSE
 	(~ int_type) WEBSITE
 ))
 
@@ -24,6 +29,7 @@
 	(~ array_type) NASM_POST_COMPILATION_COMMAND
 	(~ array_type) LINK_COMMAND
 	(~ array_type) POST_LINK_COMMAND
+	(~ string_type) OUTPUT_PREFIX
 ))
 
 (= platform_cli_command_list_type (&:
@@ -32,6 +38,7 @@
 	(~ array_type) LINK_COMMAND
 	(~ array_type) LINK_HEADLESS_COMMAND
 	(~ array_type) POST_LINK_COMMAND
+	(~ string_type) OUTPUT_PREFIX
 ))
 
 (= config_module_type (&:
@@ -44,7 +51,8 @@
 	(~ int_type) BUILD_TIME
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
 	(~ map_type) CLI_SOURCE_FILE_PATH
-	(~ map_type) CLI_COMMANDS
+	(~ (:? COMMAND_MARKER_INPUT)) COMMAND_MARKER_INPUT
+	(~ (:? COMMAND_MARKER_OUTPUT)) COMMAND_MARKER_OUTPUT
 	(~ map_type) COMMANDS
 	(~ string_type) DOCUMENTATION_ROOT_DIRECTORY_PATH
 	(~ string_type) DOMAIN_ROOT
@@ -67,16 +75,48 @@
 
 
 
-(? (|: sys$ARGV "--verbose") (<- log$set_global (| log$FLAG_DO_NOT_HIDE log$FLAG_NO_HEADER) 1))
+(= _read_version (,,,
+	(= data (<- string$split
+		(<- string$replace
+			(<- file$read
+				(<- file$open config$VERSION_FILE_PATH "r")
+			)
+			"\r\n"
+			'\n'
+		)
+		'\n'
+	))
+	(= version ["0" "0" "0" nil])
+	(-> (= i 0) (< i ($ data))
+		(= line (<- string$trim (: data i)))
+		(? (<- string$starts line "#define SLL_VERSION_") {
+			(= line (<- string$split (>> line 20) ' '))
+			(= (: version (?:
+				(=== (: line 0) "MAJOR") 0
+				(=== (: line 0) "MINOR") 1
+				(=== (: line 0) "PATCH") 2
+				3
+			)) (: line 1))
+		})
+		(++ i)
+	)
+	(@@ (<- string$join "." (: version 0 3)))
+))
+
+
 
 (= options (. cli_options_types
 	(|: sys$ARGV "--bundle")
+	(|: sys$ARGV "--coverage")
 	(|: sys$ARGV "--debug")
 	(|: sys$ARGV "--release")
 	(|: sys$ARGV "--test")
 	(|: sys$ARGV "--upload")
+	(|: sys$ARGV "--verbose")
 	(|: sys$ARGV "--web")
 ))
+
+(? options$VERBOSE (<- log$set_global (| log$FLAG_DO_NOT_HIDE log$FLAG_NO_HEADER) 1))
 
 (= build_time (<- time$time_ns))
 
@@ -142,6 +182,10 @@
 	]
 ))
 
+(= version (<- _read_version))
+
+(= output_library (+ "build/sll-" version sys$LIBRARY_EXTENSION))
+
 
 
 (= config (. config_module_type
@@ -154,22 +198,82 @@
 	build_time
 	16
 	<
-		"darwin" "src/cli/linux.c"
-		"linux" "src/cli/linux.c"
-		"windows" "src/cli/windows.c"
+		"darwin" (. platform_cli_command_list_type
+			nil
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-D" "__SLL_BUILD_DARWIN" "-I" "build" "-o" COMMAND_MARKER_OUTPUT "src/cli/linux.c"]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" "build/sll" COMMAND_MARKER_INPUT "-ldl"]
+			nil
+			nil
+			""
+		)
+		"linux" (. platform_cli_command_list_type
+			nil
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-D" "__SLL_BUILD_LINUX" "-I" "build" "-o" COMMAND_MARKER_OUTPUT "src/cli/linux.c"]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" "build/sll" COMMAND_MARKER_INPUT "-ldl"]
+			nil
+			["strip" "build/sll" "-s" "-R" ".note.*" "-R" ".comment"]
+			""
+		)
+		"windows" (. platform_cli_command_list_type
+			["rc" "/r" "/fo" "build/app.res" "/nologo" "src/cli/rsrc/app.rc"]
+			["cl" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/D" "_WINDOWS" "/D" "__SLL_BUILD_WINDOWS" "/D" "_CRT_SECURE_NO_WARNINGS" "/D" "WIN32_LEAN_AND_MEAN" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" COMMAND_MARKER_OUTPUT "src/cli/windows.c"]
+			["link" COMMAND_MARKER_INPUT "build/app.res" "/OUT:build/sll.exe" "/DYNAMICBASE" "/MACHINE:X64" "/SUBSYSTEM:CONSOLE" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:REF" "/INCREMENTAL:NO" "/RELEASE"]
+			["link" COMMAND_MARKER_INPUT "build/app.res" "/OUT:build/sllw.exe" "/DYNAMICBASE" "/MACHINE:X64" "/SUBSYSTEM:WINDOWS" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:REF" "/INCREMENTAL:NO" "/RELEASE"]
+			nil
+			"/Fo"
+		)
 	>
+	COMMAND_MARKER_INPUT
+	COMMAND_MARKER_OUTPUT
 	<
-		"darwin" (. platformc_cli_command_list_type)
-		"linux" (. platformc_cli_command_list_type)
-		"windows" (. platformc_cli_command_list_type)
-	>
-	<
-		"darwin" (. platform_command_list_type)
-		"darwin_release" (. platform_command_list_type)
-		"linux" (. platform_command_list_type)
-		"linux_release" (. platform_command_list_type)
-		"windows" (. platform_command_list_type)
-		"windows_release" (. platform_command_list_type)
+		"darwin" (. platform_command_list_type
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "src/sll/include" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_LINUX" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "macho64" COMMAND_MARKER_INPUT]
+			nil
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"]
+			nil
+			""
+		)
+		"darwin_release" (. platform_command_list_type
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "src/sll/include" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_DARWIN" "-o" COMMAND_MARKER_OUTPUT "-O3" "-Wall" "-Werror" "-f" "macho64" COMMAND_MARKER_INPUT]
+			nil
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"]
+			nil
+			""
+		)
+		"linux" (. platform_command_list_type
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "src/sll/include" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
+			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_LINUX" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "elf64" COMMAND_MARKER_INPUT]
+			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"] (* ["--coverage"] options$COVERAGE))
+			nil
+			""
+		)
+		"linux_release" (. platform_command_list_type
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "src/sll/include" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
+			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_LINUX" "-o" COMMAND_MARKER_OUTPUT "-O3" "-Wall" "-Werror" "-f" "elf64" COMMAND_MARKER_INPUT]
+			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-mavx" "-mavx2" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"] (* ["-g"] options$DEBUG))
+			(* ["strip" output_library "-s" "-R" ".note.*" "-R" ".comment"] (! options$DEBUG))
+			""
+		)
+		"windows" (. platform_command_list_type
+			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "_DEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/Zi" "/Od" "/RTC1" "/MDd" "/I" "src/sll/include" "/Fdbuild/sll.pdb" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["nasm.exe" "-I" "src/sll/include" "-D__SLL_BUILD_WINDOWS" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gcv8" "-f" "win64" COMMAND_MARKER_INPUT]
+			nil
+			["link.exe" (+ "/OUT:" output_library) "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/DEBUG" "/INCREMENTAL:NO" "/RELEASE" "/PDB:build/sll.pdb" "advapi32.lib" "bcrypt.lib" COMMAND_MARKER_INPUT]
+			nil
+			"/Fo"
+		)
+		"windows_release" (. platform_command_list_type
+			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "src/sll/include" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["nasm.exe" "-I" "src/sll/include" "-D__SLL_BUILD_WINDOWS" "-o" COMMAND_MARKER_OUTPUT "-Ox" "-Wall" "-Werror" "-f" "win64" COMMAND_MARKER_INPUT]
+			nil
+			["link.exe" (+ "/OUT:" output_library) "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:NOREF" "/INCREMENTAL:NO" "/RELEASE" "advapi32.lib" "bcrypt.lib" COMMAND_MARKER_INPUT]
+			nil
+			"/Fo"
+		)
 	>
 	"src/sll/include/"
 	(?: (: sys$ENVIRONMENT "DOMAIN_ROOT") "" ".")

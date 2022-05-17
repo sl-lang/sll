@@ -14,7 +14,6 @@
 
 
 (= util_module_type (&:
-	(~ string_type) VERSION
 	(~ func_type) create_output_dir
 	(~ func_type) execute
 	(~ func_type) get_output_file_path
@@ -29,34 +28,6 @@
 	(?: config$options$RELEASE "_release" "")
 	(?: (|| config$options$DEBUG (! config$options$RELEASE)) "_debug" "")
 	'_'
-))
-
-(= VERSION (,
-	(= data (<- string$split
-		(<- string$replace
-			(<- file$read
-				(<- file$open config$VERSION_FILE_PATH "r")
-			)
-			"\r\n"
-			'\n'
-		)
-		'\n'
-	))
-	(= version ["0" "0" "0" nil])
-	(-> (= i 0) (< i ($ data))
-		(= line (<- string$trim (: data i)))
-		(? (<- string$starts line "#define SLL_VERSION_") {
-			(= line (<- string$split (>> line 20) ' '))
-			(= (: version (?:
-				(=== (: line 0) "MAJOR") 0
-				(=== (: line 0) "MINOR") 1
-				(=== (: line 0) "PATCH") 2
-				3
-			)) (: line 1))
-		})
-		(++ i)
-	)
-	(<- string$join "." (: version 0 3))
 ))
 
 
@@ -124,7 +95,6 @@
 
 
 (= util (. util_module_type
-	VERSION
 	create_output_dir
 	execute
 	get_output_file_path

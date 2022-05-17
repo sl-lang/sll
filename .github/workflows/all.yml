@@ -154,7 +154,7 @@ jobs:
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
-        run: ${{env.BUILD_COMMAND_LINUX}}
+        run: ${{env.BUILD_COMMAND_LINUX}} --coverage
         env:
           GENERATE_COVERAGE: 1
       - name: Prepare test
