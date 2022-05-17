@@ -10,6 +10,7 @@
 	"serial.sll"
 	"string.sll"
 	"sys.sll"
+	"thread.sll"
 	"time.sll"
 	"types.sll"
 )
@@ -45,12 +46,12 @@
 (= _expect_raw (,,, error_data error_string
 	(? (=== _test_results nil) {
 		(:> "Function 'expect_XXX' executed outside of function 'run'!\n")
-		(@@)
+		(<- thread$exit 1)
 	})
 	(= func_group (: (: (: (<- error$get_call_stack) -2) "return") "function"))
 	(? (=== (: func_group 0) '@') {
 		(:> "Function 'expect_XXX' executed outside of function prefixed with 'test_'!\n")
-		(@@)
+		(<- thread$exit 1)
 	})
 	(= func_group (<- string$lower_case (<- string$replace
 		(?: (<- string$starts func_group "test_") (>> func_group 5) func_group)
@@ -162,7 +163,7 @@
 (= run (,,, name fn
 	(? (!== _test_results nil) {
 		(:> "Function 'run' executed more than once!\n")
-		(@@)
+		(<- thread$exit 1)
 	})
 	(= name (:: name string_type))
 	(= fn (:: fn func_type))

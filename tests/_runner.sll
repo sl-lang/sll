@@ -7,6 +7,7 @@
 	"process.sll"
 	"string.sll"
 	"sys.sll"
+	"thread.sll"
 	"types.sll"
 )
 
@@ -38,7 +39,7 @@
 			(:> "::error file=tests/_runner.sll,title=Test runner::Test result file missing\n")
 		})
 		(:> "No test result file found!\n")
-		(@@ 1)
+		(<- thread$exit 1)
 	})
 	(@@ (<- json$parse (<- file$read f)))
 ))
