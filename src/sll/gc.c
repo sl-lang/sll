@@ -144,9 +144,9 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		_gc_page_ptr=NULL;
 	}
 	sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(gc_page_header_t));
-	void* e=PTR(ADDR(pg)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
+	addr_t e=ADDR(pg)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t);
 	sll_bool_t pool_shift=0;
-	while (PTR(c)<e){
+	while (ADDR(c)<e){
 		SLL_ASSERT(c!=_gc_next_object);
 		if (c->_f&GC_FLAG_IN_FAST_POOL){
 			_gc_object_pool[c->dt._idx]=NULL;
