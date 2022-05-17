@@ -1,3 +1,4 @@
+#include <sll/_internal/scheduler.h>
 #include <sll/_internal/thread.h>
 #include <sll/array.h>
 #include <sll/barrier.h>

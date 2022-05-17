@@ -7,7 +7,10 @@
 	"sys.sll"
 	"types.sll"
 )
-(--- "config.sll")
+(---
+	"config.sll"
+	"hashlist.sll"
+)
 
 
 
@@ -46,6 +49,25 @@
 			(: config$PREPROCESSOR_DEFINITIONS i)
 		])
 		(++ i)
+	)
+	(= command_list (: config$COMMANDS (+
+		sys$PLATFORM
+		(* "_release" config$RELEASE)
+	)))
+	(= output_files [])
+	(<- log$log "  Compiling files...")
+	(-> (= i 0) (< i ($ files))
+		(= file_path (: files i))
+		(++ i)
+		(= output_file_path (<- util$get_output_file_path file_path))
+		(? (! (<- hashlist$check output_file_path)) (<<<))
+		(<- log$log "    " file_path)
+		(? (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm") {
+			(:> "NASM\n")
+		} {
+			(:> "C\n")
+		})
+		(<- array$push output_files output_file_path)
 	)
 ))
 
