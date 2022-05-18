@@ -35,6 +35,12 @@ static gc_fast_object_pool_t _gc_fast_object_pool={
 
 
 void _gc_release_data(void){
+	while (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
+		GC_PAGE_HEADER_DECREASE(GC_MEMORY_PAGE_HEADER(_gc_fast_object_pool.data[_gc_fast_object_pool.read]));
+		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
+		_gc_fast_object_pool.space++;
+	}
+	SLL_ASSERT(_gc_fast_object_pool.read==_gc_fast_object_pool.write);
 	sll_bool_t err=0;
 	while (_gc_page_ptr){
 		sll_object_t* c=(sll_object_t*)(ADDR(_gc_page_ptr)+sizeof(gc_page_header_t));
