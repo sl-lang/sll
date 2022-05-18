@@ -192,22 +192,10 @@
  * \name  SLL_CLI_FLAG_RESERVED0
  * \group cli
  * \subgroup cli-flag
- * \desc Internally used as `CLI_FLAG_ASSEMBLY_GENERATED`
- * \type __SLL_U32
- */
-#define SLL_CLI_FLAG_RESERVED0 16384
-
-
-
-/**
- * \flags macro var
- * \name  SLL_CLI_FLAG_RESERVED1
- * \group cli
- * \subgroup cli-flag
  * \desc Internally used as `CLI_FLAG_SINGLE_OUTPUT`
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_RESERVED1 32768
+#define SLL_CLI_FLAG_RESERVED0 16384
 
 
 
