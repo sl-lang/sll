@@ -26,6 +26,7 @@ static void* _gc_page_pool[GC_PAGE_POOL_SIZE];
 static sll_array_length_t _gc_page_pool_len=0;
 static sll_object_t* _gc_object_pool[GC_OBJECT_POOL_SIZE];
 static sll_array_length_t _gc_object_pool_len=0;
+static gc_fast_object_pool_t _gc_fast_object_pool={.read=0,.write=0,.space=GC_FAST_OBJECT_POOL_SIZE};
 
 
 
@@ -109,6 +110,12 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		sll_deallocate(o->dt.p);
 	}
 	o->_f=0;
+	if (_gc_fast_object_pool.space){
+		_gc_fast_object_pool.data[_gc_fast_object_pool.write]=o;
+		_gc_fast_object_pool.write=(_gc_fast_object_pool.write+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
+		_gc_fast_object_pool.space--;
+		return;
+	}
 	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER(o);
 	GC_PAGE_HEADER_DECREASE(pg);
 	if (!GC_PAGE_HEADER_CAN_DELETE(pg)){
@@ -197,52 +204,59 @@ __SLL_EXTERNAL void sll_acquire_object(sll_object_t* o){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_type_t t){
 	sll_object_t* o;
-	if (_gc_object_pool_len){
-		_gc_object_pool_len--;
-		o=_gc_object_pool[_gc_object_pool_len];
-	}
-	else if (_gc_next_object){
-		o=_gc_next_object;
-		_gc_next_object=o->dt._ptr.n;
-		if (_gc_next_object){
-			_gc_next_object->dt._ptr.p=NULL;
-		}
+	if (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
+		o=_gc_fast_object_pool.data[_gc_fast_object_pool.read];
+		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
+		_gc_fast_object_pool.space++;
 	}
 	else{
-		if (!_gc_page_pool_len){
-			sll_array_length_t i=(_gc_page_ptr?GC_PAGE_DYNAMIC_POOL_SIZE:GC_PAGE_INIT_POOL_SIZE);
-			while (i){
-				i--;
-				gc_page_header_t* pg=sll_platform_allocate_page_aligned(GC_MEMORY_PAGE_SIZE,GC_MEMORY_PAGE_SIZE,NULL);
-				if (_gc_page_ptr){
-					_gc_page_ptr->prev=pg;
-				}
-				pg->prev=NULL;
-				pg->next=_gc_page_ptr;
-				pg->cnt=0;
-				_gc_page_ptr=pg;
-				_gc_page_pool[_gc_page_pool_len]=pg;
-				_gc_page_pool_len++;
+		if (_gc_object_pool_len){
+			_gc_object_pool_len--;
+			o=_gc_object_pool[_gc_object_pool_len];
+		}
+		else if (_gc_next_object){
+			o=_gc_next_object;
+			_gc_next_object=o->dt._ptr.n;
+			if (_gc_next_object){
+				_gc_next_object->dt._ptr.p=NULL;
 			}
 		}
-		_gc_page_pool_len--;
-		gc_page_header_t* pg=_gc_page_pool[_gc_page_pool_len];
-		o=PTR(ADDR(pg)+sizeof(gc_page_header_t));
-		SLL_ASSERT((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(sll_object_t))/sizeof(sll_object_t)<=GC_OBJECT_POOL_SIZE);
-		sll_object_t* c=o+1;
-		while (_gc_object_pool_len<(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(sll_object_t))/sizeof(sll_object_t)){
-			c->rc=0;
-			c->_f=GC_FLAG_IN_FAST_POOL;
-			c->dt._idx=_gc_object_pool_len;
-			_gc_object_pool[_gc_object_pool_len]=c;
-			_gc_object_pool_len++;
-			c++;
+		else{
+			if (!_gc_page_pool_len){
+				sll_array_length_t i=(_gc_page_ptr?GC_PAGE_DYNAMIC_POOL_SIZE:GC_PAGE_INIT_POOL_SIZE);
+				while (i){
+					i--;
+					gc_page_header_t* pg=sll_platform_allocate_page_aligned(GC_MEMORY_PAGE_SIZE,GC_MEMORY_PAGE_SIZE,NULL);
+					if (_gc_page_ptr){
+						_gc_page_ptr->prev=pg;
+					}
+					pg->prev=NULL;
+					pg->next=_gc_page_ptr;
+					pg->cnt=0;
+					_gc_page_ptr=pg;
+					_gc_page_pool[_gc_page_pool_len]=pg;
+					_gc_page_pool_len++;
+				}
+			}
+			_gc_page_pool_len--;
+			gc_page_header_t* pg=_gc_page_pool[_gc_page_pool_len];
+			o=PTR(ADDR(pg)+sizeof(gc_page_header_t));
+			SLL_ASSERT((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(sll_object_t))/sizeof(sll_object_t)<=GC_OBJECT_POOL_SIZE);
+			sll_object_t* c=o+1;
+			while (_gc_object_pool_len<(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(sll_object_t))/sizeof(sll_object_t)){
+				c->rc=0;
+				c->_f=GC_FLAG_IN_FAST_POOL;
+				c->dt._idx=_gc_object_pool_len;
+				_gc_object_pool[_gc_object_pool_len]=c;
+				_gc_object_pool_len++;
+				c++;
+			}
 		}
+		GC_PAGE_HEADER_INCREASE(GC_MEMORY_PAGE_HEADER(o));
+		o->_f=0;
 	}
-	GC_PAGE_HEADER_INCREASE(GC_MEMORY_PAGE_HEADER(o));
 	o->rc=1;
 	*((sll_object_type_t*)(&(o->t)))=t;
-	o->_f=0;
 	return o;
 }
 

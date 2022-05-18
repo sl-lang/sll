@@ -18,6 +18,8 @@
 
 #define GC_OBJECT_POOL_SIZE 2048
 
+#define GC_FAST_OBJECT_POOL_SIZE 32
+
 #define GC_PAGE_HEADER_DEALLOCATION_THRESHOLD 128
 
 #define GC_PAGE_HEADER_CAN_DELETE(pg) ((pg)->cnt==1)
@@ -41,6 +43,15 @@ typedef struct _GC_PAGE_HEADER{
 	struct _GC_PAGE_HEADER* prev;
 	struct _GC_PAGE_HEADER* next;
 } gc_page_header_t;
+
+
+
+typedef struct _GC_FAST_OBJECT_POOL{
+	sll_object_t* data[GC_FAST_OBJECT_POOL_SIZE];
+	__SLL_U8 read;
+	__SLL_U8 write;
+	__SLL_U8 space;
+} gc_fast_object_pool_t;
 
 
 
