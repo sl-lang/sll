@@ -16,9 +16,6 @@
 
 #define CLI_FLAG_SINGLE_OUTPUT SLL_CLI_FLAG_RESERVED0
 
-#define CLI_COMPILED_OBJECT 0
-#define CLI_ASSEMBLY 1
-
 #define CLI_LOG_IF_VERBOSE(t,...) \
 	if (fl&SLL_CLI_FLAG_VERBOSE){ \
 		SLL_LOG(t,##__VA_ARGS__); \

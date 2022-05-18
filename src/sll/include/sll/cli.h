@@ -33,7 +33,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_GENERATE_ASSEMBLY
+ * \name SLL_CLI_FLAG_GENERATE_ASSEMBLY
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -45,7 +45,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_GENERATE_BUNDLE
+ * \name SLL_CLI_FLAG_GENERATE_BUNDLE
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -57,7 +57,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT
+ * \name SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -69,7 +69,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_HELP
+ * \name SLL_CLI_FLAG_HELP
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -81,7 +81,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_NO_PATHS
+ * \name SLL_CLI_FLAG_NO_PATHS
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -93,7 +93,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_NO_RUN
+ * \name SLL_CLI_FLAG_NO_RUN
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -105,7 +105,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_PRINT_ASSEMBLY
+ * \name SLL_CLI_FLAG_PRINT_ASSEMBLY
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -117,7 +117,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_PRINT_NODES
+ * \name SLL_CLI_FLAG_PRINT_NODES
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -129,7 +129,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_RELEASE_MODE
+ * \name SLL_CLI_FLAG_RELEASE_MODE
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -141,7 +141,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_STRIP_DEBUG
+ * \name SLL_CLI_FLAG_STRIP_DEBUG
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -153,7 +153,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_STRIP_NAMES
+ * \name SLL_CLI_FLAG_STRIP_NAMES
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -165,7 +165,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_VERBOSE
+ * \name SLL_CLI_FLAG_VERBOSE
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -177,7 +177,7 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_VERSION
+ * \name SLL_CLI_FLAG_VERSION
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
@@ -189,13 +189,35 @@
 
 /**
  * \flags macro var
- * \name  SLL_CLI_FLAG_RESERVED0
+ * \name SLL_CLI_FLAG_RESERVED0
  * \group cli
  * \subgroup cli-flag
  * \desc Internally used as `CLI_FLAG_SINGLE_OUTPUT`
  * \type __SLL_U32
  */
 #define SLL_CLI_FLAG_RESERVED0 16384
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_LOADED_COMPILED_OBJECT
+ * \group cli
+ * \desc Docs!
+ * \type sll_bool_t
+ */
+#define SLL_LOADED_COMPILED_OBJECT 0
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_LOADED_ASSEMBLY
+ * \group cli
+ * \desc Docs!
+ * \type sll_bool_t
+ */
+#define SLL_LOADED_ASSEMBLY 1
 
 
 
@@ -209,6 +231,20 @@
  * \ret sll_return_code_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_length_t argc,const sll_char_t*const* argv);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_cli_lookup_file
+ * \group cli
+ * \desc Docs!
+ * \arg const sll_string_t* path
+ * \arg sll_assembly_data_t* a_dt
+ * \arg sll_compilation_data_t* c_dt
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_cli_lookup_file(const sll_string_t* path,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt);
 
 
 
