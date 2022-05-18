@@ -46,14 +46,14 @@ static sll_internal_function_table_t i_ft;
 
 
 
-static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_char_t* f_fp);
+static void _load_file(const sll_string_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_char_t* f_fp);
 
 
 
 static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o){
 	sll_assembly_data_t a_dt=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 	sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
-	_load_file(nm->v,&a_dt,o,f_fp);
+	_load_file(nm,&a_dt,o,f_fp);
 	if (fl&CLI_FLAG_ASSEMBLY_GENERATED){
 		sll_free_assembly_data(&a_dt);
 		SLL_WARN(SLL_CHAR("Importing assembly into compiled programs is not allowed"));
@@ -64,34 +64,29 @@ static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o)
 
 
 
-static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_char_t* f_fp){
+static void _load_file(const sll_string_t* f_nm,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt,sll_char_t* f_fp){
 	sll_audit(SLL_CHAR("sll.cli.find"),SLL_CHAR("S"),f_nm);
-	sll_string_length_t f_nm_l=sll_string_length(f_nm);
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	if (i_bl){
-		sll_string_t f_nm_str;
-		sll_string_from_pointer_length(f_nm,f_nm_l,&f_nm_str);
 		sll_array_length_t i=i_bl;
 		do{
 			i--;
 			cli_bundle_source_t* b_dt=*(i_b+i);
-			CLI_LOG_IF_VERBOSE("Trying to open file '%s/%s'...",b_dt->nm,f_nm);
-			if (sll_bundle_fetch(&(b_dt->b),&f_nm_str,c_dt)){
+			CLI_LOG_IF_VERBOSE("Trying to open file '%s/%s'...",b_dt->nm,f_nm->v);
+			if (sll_bundle_fetch(&(b_dt->b),f_nm,c_dt)){
 				CLI_LOG_IF_VERBOSE("File successfully read.");
-				sll_free_string(&f_nm_str);
 				return;
 			}
 		} while(i);
-		sll_free_string(&f_nm_str);
 	}
 	for (sll_string_length_t i=0;i<i_fpl;i++){
 		cli_include_dir_t* inc=*(i_fp+i);
-		if (inc->name.v){
-			SLL_UNIMPLEMENTED();
+		if (!sll_string_starts(f_nm,&(inc->name))){
+			continue;
 		}
 		sll_copy_data(inc->path.v,inc->path.l,bf);
-		sll_copy_data(f_nm,f_nm_l,bf+inc->path.l);
-		sll_string_length_t j=inc->path.l+f_nm_l;
+		sll_copy_data(f_nm->v+inc->name.l,f_nm->l-inc->name.l,bf+inc->path.l);
+		sll_string_length_t j=inc->path.l+f_nm->l-inc->name.l;
 		sll_copy_data(slc_suffix.v,slc_suffix.l+1,bf+j);
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",bf);
 		sll_file_t f;
@@ -138,8 +133,8 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		return;
 	}
 	if (l_fpl){
-		sll_copy_data(f_nm,f_nm_l,l_fp+l_fpl);
-		sll_copy_data(slc_suffix.v,slc_suffix.l+1,l_fp+l_fpl+f_nm_l);
+		sll_copy_data(f_nm->v,f_nm->l,l_fp+l_fpl);
+		sll_copy_data(slc_suffix.v,slc_suffix.l+1,l_fp+l_fpl+f_nm->l);
 		CLI_LOG_IF_VERBOSE("Trying to open file '%s'...",l_fp);
 		sll_file_t f;
 		if (sll_platform_path_exists(l_fp)){
@@ -157,7 +152,7 @@ static void _load_file(const sll_char_t* f_nm,sll_assembly_data_t* a_dt,sll_comp
 		}
 	}
 	SLL_WARN("Unable to find file '%s'",f_nm);
-	sll_init_compilation_data(f_nm,c_dt);
+	sll_init_compilation_data(f_nm->v,c_dt);
 }
 
 
@@ -212,6 +207,18 @@ static cli_include_dir_t* _alloc_include_dir(void){
 	cli_include_dir_t* o=sll_allocate(sizeof(cli_include_dir_t));
 	*(i_fp+i_fpl-1)=o;
 	return o;
+}
+
+
+
+static void _ensure_path_separator(const sll_char_t* str,sll_string_length_t len,sll_string_t* out){
+	sll_bool_t add=(*(str+len-1)!='\\'&&*(str+len-1)!='/');
+	sll_string_create(len+add,out);
+	sll_copy_data(str,len,out->v);
+	if (add){
+		out->v[len]=SLL_API_FILE_PATH_SEPARATOR;
+	}
+	sll_string_calculate_checksum(out);
 }
 
 
@@ -324,19 +331,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			sll_string_t tmp;
 			sll_string_from_pointer(e,&tmp);
 			if (tmp.l){
-				sll_string_length_t at_sym=sll_string_index_char(&tmp,'@',0,0);
-				if (at_sym&&at_sym!=SLL_MAX_STRING_LENGTH){
-					SLL_UNIMPLEMENTED();
+				sll_string_length_t split=sll_string_index_char(&tmp,'|',0,0);
+				if (split&&split!=SLL_MAX_STRING_LENGTH){
+					if (!sll_platform_path_is_directory(tmp.v+split+1)){
+						SLL_UNIMPLEMENTED();
+					}
+					inc=_alloc_include_dir();
+					_ensure_path_separator(tmp.v,split,&(inc->name));
+					_ensure_path_separator(tmp.v+split+1,tmp.l-split-1,&(inc->path));
 				}
 				else if (sll_platform_path_is_directory(e)){
 					inc=_alloc_include_dir();
 					SLL_INIT_STRING(&(inc->name));
-					if (tmp.v[tmp.l-1]!='\\'&&tmp.v[tmp.l-1]!='/'){
-						sll_string_concat_char(&tmp,SLL_API_FILE_PATH_SEPARATOR,&(inc->path));
-					}
-					else{
-						sll_string_clone(&tmp,&(inc->path));
-					}
+					_ensure_path_separator(tmp.v,tmp.l,&(inc->path));
 				}
 				else{
 					sll_file_t b_f;
@@ -599,7 +606,6 @@ _read_file_argument:
 			inc=*(i_fp+j);
 			if (inc->name.l){
 				SLL_LOG("  '%s@%s'",inc->name.v,inc->path.v);
-				SLL_UNIMPLEMENTED();
 			}
 			else{
 				SLL_LOG("  '%s'",inc->path.v);
@@ -628,7 +634,10 @@ _read_file_argument:
 		sll_source_file_t* a_dt_sf=NULL;
 		if (j<fpl){
 			sll_audit(SLL_CHAR("sll.cli.load"),SLL_CHAR("S"),argv[*(fp+j)]);
-			_load_file(argv[*(fp+j)],&a_dt,&c_dt,f_fp);
+			sll_string_t tmp;
+			sll_string_from_pointer(argv[*(fp+j)],&tmp);
+			_load_file(&tmp,&a_dt,&c_dt,f_fp);
+			sll_free_string(&tmp);
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 			CLI_EXPAND_PATH(argv[*(fp+j)],bf);
 			sll_set_argument(0,bf);

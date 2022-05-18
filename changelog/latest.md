@@ -2,6 +2,7 @@
 
 ## Added
 
+- CLI include directories can now be aliases pointing to directories (separated by `|`)
 - Fast object pool used in the GC
 - Hash descriptor type `hash$hash_type` now contains a field `type` containing the type returned by functions from the given descriptor
 - Implemented `path$join`

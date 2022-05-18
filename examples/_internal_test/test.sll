@@ -30,7 +30,7 @@
 	"vm.sll"
 	"weakref.sll"
 )
-(--- "background_audit_logger.sll")
+(--- "@internal/background_audit_logger.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {
@@ -61,7 +61,7 @@
 })
 (:> FACTORIAL "! = " i '\n')
 (< 10 5 (:> "This Should Never Happen"))
-(--- "import.sll")
+(--- "@internal/import.sll")
 (:> "Call: " (<- func 10 2) "\n")
 (:> "Current Time (Internal Call): " (<- time$time) "\n")
 (? true nil 2 (:> "Dead Code") (@@ 128 "False Exit"))
