@@ -5,7 +5,20 @@ import util
 
 
 
-def build_sll(fl):
+def build_sll():
+	files=[]
+	for r,_,fl in os.walk(util.PLATFORM_SOURCE_CODE[util.system]):
+		r=r.replace("\\","/").rstrip("/")+"/"
+		for f in fl:
+			if (f[-2:]==".c" or f[-4:]==".asm"):
+				files.append(r+f)
+	for r,_,fl in os.walk("src/sll"):
+		r=r.replace("\\","/").rstrip("/")+"/"
+		if ("/platform/" in r.lower()):
+			continue
+		for f in fl:
+			if (f[-2:]==".c" or f[-4:]==".asm"):
+				files.append(r+f)
 	def_l=["__SLL_COMPILATION__",f"__SLL_TIME_RAW__={util.BUILD_TIME}","__SLL_BUILD_"+util.system.upper()]
 	if (len(os.getenv("GITHUB_SHA",""))>0):
 		def_l.append(f"__SLL_SHA__=\"{os.getenv('GITHUB_SHA')[:7]}\"")
@@ -22,7 +35,7 @@ def build_sll(fl):
 			util.log("  Compiling files (Release mode)...")
 			out_fl=[]
 			err=False
-			for k in fl:
+			for k in files:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
 				if (hashlist.update(k,"src/sll/include")):
@@ -39,7 +52,7 @@ def build_sll(fl):
 			util.log("  Compiling files...")
 			out_fl=[]
 			err=False
-			for k in fl:
+			for k in files:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
 				if (hashlist.update(k,"src/sll/include")):
@@ -68,7 +81,7 @@ def build_sll(fl):
 			util.log("  Compiling files (Release mode)...")
 			out_fl=[]
 			err=False
-			for k in fl:
+			for k in files:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
 				if (hashlist.update(k,"src/sll/include")):
@@ -95,7 +108,7 @@ def build_sll(fl):
 			util.log("  Compiling files...")
 			out_fl=[]
 			err=False
-			for k in fl:
+			for k in files:
 				out_fp=util.output_file_path(k)
 				out_fl.append(out_fp)
 				if (hashlist.update(k,"src/sll/include")):

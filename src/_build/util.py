@@ -1,4 +1,3 @@
-import hashlib
 import os
 import platform
 import subprocess
@@ -63,33 +62,6 @@ def output_file_path(fp):
 
 
 
-def get_docs_files():
-	o=[]
-	for r,_,fl in os.walk("src/sll/include/sll"):
-		for k in fl:
-			o.append(os.path.join(r,k))
-	return o
-
-
-
-def get_sll_files():
-	o=[]
-	for r,_,fl in os.walk(PLATFORM_SOURCE_CODE[system]):
-		r=r.replace("\\","/").rstrip("/")+"/"
-		for f in fl:
-			if (f[-2:]==".c" or f[-4:]==".asm"):
-				o.append(r+f)
-	for r,_,fl in os.walk("src/sll"):
-		r=r.replace("\\","/").rstrip("/")+"/"
-		if ("/platform/" in r.lower()):
-			continue
-		for f in fl:
-			if (f[-2:]==".c" or f[-4:]==".asm"):
-				o.append(r+f)
-	return o
-
-
-
 def bundle():
 	with zipfile.ZipFile("build/sll.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
 		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],"build/sll-"+version+LIBRARY_EXTENSION[system],"build/lib/stdlib.slb","build/lib_debug/stdlib.slb"]:
@@ -97,15 +69,3 @@ def bundle():
 		if (system=="windows"):
 			zf.write("build/sllw.exe",arcname="sllw.exe")
 		zf.write("build/sll.h",arcname="include/sll.h")
-
-
-
-def hash_file(fp):
-	o=hashlib.sha256()
-	with open(fp,"rb") as rf:
-		while (True):
-			c=rf.read(16384)
-			if (len(c)==0):
-				break
-			o.update(c)
-	return o.hexdigest()
