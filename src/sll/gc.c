@@ -26,7 +26,11 @@ static void* _gc_page_pool[GC_PAGE_POOL_SIZE];
 static sll_array_length_t _gc_page_pool_len=0;
 static sll_object_t* _gc_object_pool[GC_OBJECT_POOL_SIZE];
 static sll_array_length_t _gc_object_pool_len=0;
-static gc_fast_object_pool_t _gc_fast_object_pool={.read=0,.write=0,.space=GC_FAST_OBJECT_POOL_SIZE};
+static gc_fast_object_pool_t _gc_fast_object_pool={
+	.read=0,
+	.write=0,
+	.space=GC_FAST_OBJECT_POOL_SIZE
+};
 
 
 
@@ -64,7 +68,7 @@ void _gc_release_data(void){
 
 
 __SLL_EXTERNAL void sll__gc_error(sll_object_t* o){
-	SLL_UNIMPLEMENTED();
+	SLL_CRITICAL_ERROR(o->rc);
 }
 
 
