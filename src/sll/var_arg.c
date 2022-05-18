@@ -43,14 +43,23 @@ sll_object_t* _var_arg_converter(sll_var_arg_list_t* va){
 
 
 addr_t _var_arg_get_pointer(sll_var_arg_list_t* va){
-	if (va->t!=VAR_ARG_LIST_TYPE_STRUCT){
-		SLL_UNREACHABLE();
+	if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+		return va_arg(*(va->dt.c),addr_t);
 	}
-	SLL_ASSERT(va->dt.s.l);
-	sll_size_t off=*(va->dt.s.off);
-	va->dt.s.off++;
-	va->dt.s.l--;
-	return ADDR(va->dt.s.ptr)+off;
+	if (va->t==VAR_ARG_LIST_TYPE_STRUCT){
+		SLL_ASSERT(va->dt.s.l);
+		sll_size_t off=*(va->dt.s.off);
+		va->dt.s.off++;
+		va->dt.s.l--;
+		return ADDR(va->dt.s.ptr)+off;
+	}
+	if (!va->dt.sll.l){
+		return 0;
+	}
+	addr_t o=ADDR(*(va->dt.sll.p));
+	va->dt.sll.p++;
+	va->dt.sll.l--;
+	return o;
 }
 
 

@@ -37,6 +37,13 @@
 
 
 
+typedef struct _CLI_INCLUDE_DIR{
+	sll_string_t name;
+	sll_string_t path;
+} cli_include_dir_t;
+
+
+
 typedef struct _CLI_BUNDLE_SOURCE{
 	sll_char_t* nm;
 	sll_bundle_t b;

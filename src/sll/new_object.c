@@ -220,9 +220,10 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			case 's':
 				{
 					if (!(fl&NEW_OBJECT_FLAG_ARRAY)){
-						return STRING_TO_OBJECT(sll_var_arg_get(va));
+						sll_string_t* ptr=PTR(_var_arg_get_pointer(va));
+						return (ptr?STRING_TO_OBJECT(ptr):EMPTY_STRING_TO_OBJECT());
 					}
-					const void* ptr=sll_var_arg_get(va);
+					const void* ptr=PTR(_var_arg_get_pointer(va));
 					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
 					if (!ptr||!len){
 						return sll_array_to_object(NULL);
@@ -237,10 +238,10 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 			case 'S':
 				{
 					if (!(fl&NEW_OBJECT_FLAG_ARRAY)){
-						const sll_char_t* ptr=sll_var_arg_get(va);
+						const sll_char_t* ptr=PTR(_var_arg_get_pointer(va));
 						return (ptr?STRING_POINTER_TO_OBJECT(ptr):EMPTY_STRING_TO_OBJECT());
 					}
-					const sll_char_t*const* ptr=sll_var_arg_get(va);
+					const sll_char_t*const* ptr=PTR(_var_arg_get_pointer(va));
 					sll_array_length_t len=(sll_array_length_t)sll_var_arg_get_int(va);
 					if (!ptr||!len){
 						return sll_array_to_object(NULL);
