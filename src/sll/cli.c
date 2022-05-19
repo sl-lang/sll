@@ -50,19 +50,19 @@ static sll_array_length_t _cli_resolver_table_size=0;
 
 
 
-static sll_bool_t _import_file(const sll_string_t* nm,sll_compilation_data_t* o){
+static sll_bool_t _import_file(const sll_string_t* path,sll_compilation_data_t* out){
 	sll_cli_lookup_data_t res_data;
-	sll_cli_lookup_result_t res=sll_cli_lookup_file(nm,1,&res_data);
+	sll_cli_lookup_result_t res=sll_cli_lookup_file(path,1,&res_data);
 	if (res==SLL_LOOKUP_RESULT_ASSEMBLY){
 		sll_free_assembly_data(&(res_data.data.assembly));
 		SLL_WARN(SLL_CHAR("Importing assembly into compiled programs is not allowed"));
 		return 0;
 	}
 	if (res==SLL_LOOKUP_RESULT_EMPTY){
-		SLL_WARN("Unable to find file '%s'",nm->v);
+		SLL_WARN("Unable to find file '%s'",path->v);
 		return 0;
 	}
-	*o=res_data.data.compiled_object;
+	*out=res_data.data.compiled_object;
 	return 1;
 }
 
