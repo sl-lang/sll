@@ -347,6 +347,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			if (lh){
 				sll_cli_path_resolver_t cb=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_PATH_RESOLVER_RESOLVE));
 				if (!cb){
+					SLL_WARN("Unable to load library '%s'",e);
 					SLL_CRITICAL_ERROR(sll_platform_unload_library(lh));
 				}
 				else{
@@ -359,6 +360,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					*(path_resolver_list+path_resolver_list_len-1)=lh;
 					sll_cli_register_path_resolver(cb);
 				}
+			}
+			else{
+				SLL_WARN("Unable to load library '%s'",e);
 			}
 		}
 		else if (nm=='h'||sll_string_compare_pointer(e,SLL_CHAR("--help"))==SLL_COMPARE_RESULT_EQUAL){
@@ -452,6 +456,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			if (lh){
 				sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_AUDIT_CALL));
 				if (!cb){
+					SLL_WARN("Unable to load library '%s'",e);
 					SLL_CRITICAL_ERROR(sll_platform_unload_library(lh));
 				}
 				else{
@@ -465,6 +470,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					(audit_library_list+audit_library_list_len-1)->lh=lh;
 					sll_audit_register_callback(cb);
 				}
+			}
+			else{
+				SLL_WARN("Unable to load library '%s'",e);
 			}
 		}
 		else if (nm=='n'||sll_string_compare_pointer(e,SLL_CHAR("--names-only"))==SLL_COMPARE_RESULT_EQUAL){
