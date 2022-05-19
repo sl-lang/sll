@@ -291,15 +291,14 @@ typedef sll_cli_lookup_result_t (*sll_cli_path_resolver_t)(const sll_string_t* p
 
 
 /**
- * \flags check_output func
- * \name sll_cli_main
+ * \flags func
+ * \name sll_cli_expand_path
  * \group cli
  * \desc Docs!
- * \arg sll_array_length_t argc
- * \arg const sll_char_t*const* argv
- * \ret sll_return_code_t
+ * \arg const sll_char_t* path
+ * \arg sll_char_t* out
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_length_t argc,const sll_char_t*const* argv);
+__SLL_EXTERNAL void sll_cli_expand_path(const sll_char_t* path,sll_char_t* out);
 
 
 
@@ -314,6 +313,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
  * \ret sll_cli_lookup_result_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(const sll_string_t* path,sll_bool_t use_custom_resolvers,sll_cli_lookup_data_t* out);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_cli_main
+ * \group cli
+ * \desc Docs!
+ * \arg sll_array_length_t argc
+ * \arg const sll_char_t*const* argv
+ * \ret sll_return_code_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_length_t argc,const sll_char_t*const* argv);
 
 
 
