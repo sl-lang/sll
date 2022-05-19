@@ -6,11 +6,11 @@
 - Fast object pool used in the GC
 - Hash descriptor type `hash$hash_type` now contains a field `type` containing the type returned by functions from the given descriptor
 - Implemented `path$join`
-- Implemented `sll_cli_lookup_result_t`, `sll_cli_lookup_data_t`, `sll_cli_path_resolver_t`, `sll_cli_expand_path`, `sll_cli_lookup_file` and `sll_cli_register_path_resolver`
+- Implemented `sll_cli_lookup_result_t`, `sll_cli_lookup_data_t`, `sll_cli_path_resolver_t`, `sll_cli_expand_path`, `sll_cli_lookup_file`, `sll_cli_register_path_resolver` and `sll_cli_unregister_path_resolver`
 - Implemented `sll_file_read_all` and `file$read` with no arguments
 - Implemented `sll_object_to_map`
 - Implemented `thread$exit`
-- Operator for returning from the current thread: `!@@`
+- Operator for ending execution of the current thread and returning a value: `!@@`
 
 ## Changed
 
