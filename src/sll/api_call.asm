@@ -94,14 +94,13 @@ __SLL_EXPORT _call_api_func_assembly
 	; rsi - Current bitmap
 	; xmm0 - Floating-point return value
 	; [rbp+16] - Return value structure pointer
-	test sil, sil
+	test esi, esi
 	jz ._write_integer_to_struct
-	sub sil, 1
+	cmp esi, 1
 	jz ._return
 	xorpd xmm0, xmm0
-	add rax, 1
+	cmp rax, 0xffffffffffffffff
 	jz ._return
-	sub rax, 1
 	mov rcx, 0x3ff0000000000000
 	movq xmm0, rcx
 ._write_integer_to_struct:
