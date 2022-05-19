@@ -104,7 +104,8 @@ __SLL_EXPORT _call_api_func_assembly
 	add rax, 1
 	jz ._return
 	sub rax, 1
-	movq xmm0, QWORD [._error_return_value]
+	mov rcx, 0x3ff0000000000000
+	movq xmm0, rcx
 ._register_return_value:
 	mov rcx, QWORD [rbp+16]
 	mov QWORD [rcx], rax
@@ -114,7 +115,3 @@ __SLL_EXPORT _call_api_func_assembly
 	mov rsi, QWORD [rbp-8]
 	leave
 	ret
-
-[SECTION .rodata]
-._error_return_value:
-	dq 0x3ff0000000000000
