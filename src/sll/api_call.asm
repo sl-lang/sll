@@ -81,10 +81,6 @@ __SLL_EXPORT _call_api_func_assembly
 
 	; [rbp+16] - Return value structure pointer
 	; [rbp+48] - Function pointer
-	xorpd xmm0, xmm0
-	xorpd xmm1, xmm1
-	xorpd xmm2, xmm2
-	xorpd xmm3, xmm3
 	mov rcx, QWORD [rsp]
 	mov rdx, QWORD [rsp+8]
 	mov r8, QWORD [rsp+16]
