@@ -66,6 +66,39 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_ABI_PATH_RESOLVER_DEINIT
+ * \group abi
+ * \desc Docs!
+ * \type __identifier__
+ */
+#define SLL_ABI_PATH_RESOLVER_DEINIT __sll_path_resolver_deinit
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ABI_PATH_RESOLVER_INIT
+ * \group abi
+ * \desc Docs!
+ * \type __identifier__
+ */
+#define SLL_ABI_PATH_RESOLVER_INIT __sll_path_resolver_init
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_ABI_PATH_RESOLVER_RESOLVE
+ * \group abi
+ * \desc Docs!
+ * \type __identifier__
+ */
+#define SLL_ABI_PATH_RESOLVER_RESOLVE __sll_path_resolver
+
+
+
+/**
  * \flags func macro
  * \name SLL_ABI_NAME
  * \group abi
