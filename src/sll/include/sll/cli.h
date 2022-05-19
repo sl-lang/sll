@@ -1,7 +1,10 @@
 #ifndef __SLL_CLI_H__
 #define __SLL_CLI_H__ 1
 #include <sll/_size_types.h>
+#include <sll/api/path.h>
+#include <sll/assembly.h>
 #include <sll/common.h>
+#include <sll/node.h>
 #include <sll/platform/process.h>
 #include <sll/types.h>
 /**
@@ -245,6 +248,49 @@ typedef __SLL_U8 sll_cli_lookup_result_t;
 
 
 /**
+ * \flags type union
+ * \name sll_cli_lookup_data_return_t
+ * \group cli
+ * \desc Docs!
+ * \arg sll_assembly_data_t assembly
+ * \arg sll_compilation_data_t compiled_object
+ */
+typedef union _SLL_CLI_LOOKUP_DATA_RETURN{
+	sll_assembly_data_t assembly;
+	sll_compilation_data_t compiled_object;
+} sll_cli_lookup_data_return_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_cli_lookup_data_t
+ * \group cli
+ * \desc Docs!
+ * \arg sll_char_t* path
+ * \arg sll_cli_lookup_data_return_t data
+ */
+typedef struct _SLL_CLI_LOOKUP_DATA{
+	sll_char_t path[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_cli_lookup_data_return_t data;
+} sll_cli_lookup_data_t;
+
+
+
+/**
+ * \flags func type
+ * \name sll_cli_path_resolver_t
+ * \group cli
+ * \desc Docs!
+ * \arg const sll_string_t* path
+ * \arg sll_cli_lookup_data_t* out
+ * \ret sll_cli_lookup_result_t
+ */
+typedef sll_cli_lookup_result_t (*sll_cli_path_resolver_t)(const sll_string_t* path,sll_cli_lookup_data_t* out);
+
+
+
+/**
  * \flags check_output func
  * \name sll_cli_main
  * \group cli
@@ -263,11 +309,34 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
  * \group cli
  * \desc Docs!
  * \arg const sll_string_t* path
- * \arg sll_assembly_data_t* a_dt
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_bool_t use_custom_resolvers
+ * \arg sll_cli_lookup_data_t* out
  * \ret sll_cli_lookup_result_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(const sll_string_t* path,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(const sll_string_t* path,sll_bool_t use_custom_resolvers,sll_cli_lookup_data_t* out);
+
+
+
+/**
+ * \flags func
+ * \name sll_cli_register_path_resolver
+ * \group cli
+ * \desc Docs!
+ * \arg sll_cli_path_resolver_t fn
+ */
+__SLL_EXTERNAL void sll_cli_register_path_resolver(sll_cli_path_resolver_t fn);
+
+
+
+/**
+ * \flags func
+ * \name sll_cli_unregister_path_resolver
+ * \group cli
+ * \desc Docs!
+ * \arg sll_cli_path_resolver_t fn
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL sll_bool_t sll_cli_unregister_path_resolver(sll_cli_path_resolver_t fn);
 
 
 
