@@ -60,9 +60,7 @@ __SLL_EXPORT _call_api_func_assembly
 	mov ecx, esi
 	and ecx, 3
 	lea rcx, [r8+rcx*8+8]
-	jnz ._skip_dereference
-	mov r8, QWORD [r8]
-._skip_dereference:
+	cmovz r8, QWORD [r8]
 	mov QWORD [r10], r8
 	shr rsi, 2
 	mov r8, rcx
