@@ -9,6 +9,7 @@
 - Implemented `path$join`
 - Implemented `SLL_ABI_PATH_RESOLVER_DEINIT`, `SLL_ABI_PATH_RESOLVER_INIT` and `SLL_ABI_PATH_RESOLVER_RESOLVE`
 - Implemented `sll_cli_lookup_result_t`, `sll_cli_lookup_data_t`, `sll_cli_path_resolver_t`, `sll_cli_expand_path`, `sll_cli_lookup_file`, `sll_cli_register_path_resolver` and `sll_cli_unregister_path_resolver`
+- Implemented `sll_compilation_data_from_source_file`
 - Implemented `sll_file_read_all` and `file$read` with no arguments
 - Implemented `sll_object_to_map`
 - Implemented `thread$exit`

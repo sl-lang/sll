@@ -11,6 +11,15 @@
 
 
 
+__SLL_EXTERNAL void sll_compilation_data_from_source_file(const sll_source_file_t* sf,sll_compilation_data_t* out){
+	out->l=1;
+	out->dt=sll_allocate(sizeof(sll_source_file_t*));
+	*(out->dt)=sll_allocate(sizeof(sll_source_file_t));
+	**(out->dt)=*sf;
+}
+
+
+
 __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
 	for (sll_source_file_index_t i=0;i<c_dt->l;i++){
 		sll_source_file_t* sf=*(c_dt->dt+i);

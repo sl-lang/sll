@@ -1437,6 +1437,18 @@ typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* path,sll_compila
 
 /**
  * \flags func
+ * \name sll_compilation_data_from_source_file
+ * \group node
+ * \desc Docs!
+ * \arg const sll_source_file_t* sf
+ * \arg sll_compilation_data_t* out
+ */
+__SLL_EXTERNAL void sll_compilation_data_from_source_file(const sll_source_file_t* sf,sll_compilation_data_t* out);
+
+
+
+/**
+ * \flags func
  * \name sll_free_compilation_data
  * \group node
  * \desc Docs!
