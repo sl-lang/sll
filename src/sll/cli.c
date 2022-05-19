@@ -628,13 +628,12 @@ _read_file_argument:
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_source_file_t* a_dt_sf=NULL;
 		sll_bool_t generated_type=SLL_LOADED_COMPILED_OBJECT;
+		_cli_enable_file_lookup=1;
 		if (j<fpl){
 			sll_audit(SLL_CHAR("sll.cli.load"),SLL_CHAR("S"),argv[*(fp+j)]);
 			sll_string_t tmp;
 			sll_string_from_pointer(argv[*(fp+j)],&tmp);
-			_cli_enable_file_lookup=1;
 			generated_type=_load_file(&tmp,&a_dt,&c_dt,f_fp);
-			_cli_enable_file_lookup=0;
 			sll_free_string(&tmp);
 			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 			CLI_EXPAND_PATH(argv[*(fp+j)],bf);
@@ -651,6 +650,7 @@ _read_file_argument:
 			CLI_LOG_IF_VERBOSE("Input successfully read.");
 			sll_set_argument(0,SLL_CHAR("@console"));
 		}
+		_cli_enable_file_lookup=0;
 		if (generated_type==SLL_LOADED_COMPILED_OBJECT){
 			if ((fl&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_PRINT_ASSEMBLY))||!(fl&SLL_CLI_FLAG_NO_RUN)){
 				CLI_LOG_IF_VERBOSE("Combining source files...");

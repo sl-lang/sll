@@ -1971,6 +1971,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_starts(const sll_string_
 	if (a->l==b->l){
 		return sll_string_equal(a,b);
 	}
+	if (!b->l){
+		return 1;
+	}
 	return _compare_data(a->v,b->v,b->l,1);
 }
 
