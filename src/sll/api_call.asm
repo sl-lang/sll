@@ -97,7 +97,7 @@ __SLL_EXPORT _call_api_func_assembly
 	; xmm0 - Floating-point return value
 	; [rbp+16] - Return value structure pointer
 	test sil, sil
-	jz ._register_return_value
+	jz ._write_integer_to_struct
 	sub sil, 1
 	jz ._return
 	xorpd xmm0, xmm0
@@ -106,7 +106,7 @@ __SLL_EXPORT _call_api_func_assembly
 	sub rax, 1
 	mov rcx, 0x3ff0000000000000
 	movq xmm0, rcx
-._register_return_value:
+._write_integer_to_struct:
 	mov rcx, QWORD [rbp+16]
 	mov QWORD [rcx], rax
 ._return:
