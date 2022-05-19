@@ -57,8 +57,8 @@ __SLL_EXPORT _call_api_func_assembly
 	test r9d, r9d
 	jz ._no_args
 ._next_arg:
-	mov rcx, rsi
-	and rcx, 3
+	mov ecx, esi
+	and ecx, 3
 	lea rcx, [r8+rcx*8+8]
 	jnz ._skip_dereference
 	mov r8, QWORD [r8]
@@ -99,16 +99,16 @@ __SLL_EXPORT _call_api_func_assembly
 	test sil, sil
 	jz ._register_return_value
 	sub sil, 1
-	jz ._cleanup
+	jz ._return
 	xorpd xmm0, xmm0
 	add rax, 1
-	jz ._cleanup
+	jz ._return
 	sub rax, 1
 	movq xmm0, QWORD [._error_return_value]
 ._register_return_value:
 	mov rcx, QWORD [rbp+16]
 	mov QWORD [rcx], rax
-._cleanup:
+._return:
 
 	; xmm0 - Floating-point return value
 	mov rsi, QWORD [rbp-8]
