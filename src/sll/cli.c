@@ -45,6 +45,8 @@ static sll_char_t l_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 static sll_string_length_t l_fpl;
 static sll_internal_function_table_t i_ft;
 static sll_bool_t _cli_enable_file_lookup=0;
+static sll_cli_path_resolver_t _cli_resolver_table[CLI_PATH_RESOLVER_TABLE_SIZE];
+static sll_array_length_t _cli_resolver_table_size=0;
 
 
 
@@ -233,7 +235,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		return SLL_LOOKUP_RESULT_EMPTY;
 	}
 	if (use_custom_resolvers){
-		SLL_UNIMPLEMENTED();
+		for (sll_array_length_t i=0;i<_cli_resolver_table_size;i++){
+			sll_cli_lookup_result_t res=_cli_resolver_table[i](path,out);
+			if (res!=SLL_LOOKUP_RESULT_EMPTY){
+				return res;
+			}
+		}
 	}
 	return _load_file(path,out);
 }
@@ -876,11 +883,30 @@ _cleanup:
 
 
 __SLL_EXTERNAL void sll_cli_register_path_resolver(sll_cli_path_resolver_t fn){
-	SLL_UNIMPLEMENTED();
+	if (_cli_resolver_table_size==CLI_PATH_RESOLVER_TABLE_SIZE){
+		return;
+	}
+	for (sll_array_length_t i=0;i<_cli_resolver_table_size;i++){
+		if (_cli_resolver_table[i]==fn){
+			return;
+		}
+	}
+	_cli_resolver_table[_cli_resolver_table_size]=fn;
+	_cli_resolver_table_size++;
 }
 
 
 
 __SLL_EXTERNAL sll_bool_t sll_cli_unregister_path_resolver(sll_cli_path_resolver_t fn){
-	SLL_UNIMPLEMENTED();
+	sll_array_length_t i=0;
+	for (;i<_cli_resolver_table_size;i++){
+		if (_cli_resolver_table[i]==fn){
+			for (i++;i<_cli_resolver_table_size;i++){
+				_cli_resolver_table[i-1]=_cli_resolver_table[i];
+			}
+			_cli_resolver_table_size--;
+			return 1;
+		}
+	}
+	return 0;
 }
