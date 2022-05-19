@@ -1,5 +1,6 @@
 #ifndef __SLL_CLI_H__
 #define __SLL_CLI_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/platform/process.h>
 #include <sll/types.h>
@@ -201,23 +202,45 @@
 
 /**
  * \flags macro var
- * \name SLL_LOADED_COMPILED_OBJECT
+ * \name SLL_LOOKUP_RESULT_COMPILED_OBJECT
  * \group cli
  * \desc Docs!
- * \type sll_bool_t
+ * \type sll_cli_lookup_result_t
  */
-#define SLL_LOADED_COMPILED_OBJECT 0
+#define SLL_LOOKUP_RESULT_COMPILED_OBJECT 0
 
 
 
 /**
  * \flags macro var
- * \name SLL_LOADED_ASSEMBLY
+ * \name SLL_LOOKUP_RESULT_ASSEMBLY
  * \group cli
  * \desc Docs!
- * \type sll_bool_t
+ * \type sll_cli_lookup_result_t
  */
-#define SLL_LOADED_ASSEMBLY 1
+#define SLL_LOOKUP_RESULT_ASSEMBLY 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_LOOKUP_RESULT_EMPTY
+ * \group cli
+ * \desc Docs!
+ * \type sll_cli_lookup_result_t
+ */
+#define SLL_LOOKUP_RESULT_EMPTY 2
+
+
+
+/**
+ * \flags type var
+ * \name sll_cli_lookup_result_t
+ * \group cli
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_cli_lookup_result_t;
 
 
 
@@ -242,9 +265,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
  * \arg const sll_string_t* path
  * \arg sll_assembly_data_t* a_dt
  * \arg sll_compilation_data_t* c_dt
- * \ret sll_bool_t
+ * \ret sll_cli_lookup_result_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_cli_lookup_file(const sll_string_t* path,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(const sll_string_t* path,sll_assembly_data_t* a_dt,sll_compilation_data_t* c_dt);
 
 
 
