@@ -49,7 +49,8 @@
 	(~ array_type) BUILD_CLEAR_FOLDERS
 	(~ array_type) BUILD_CREATE_FOLDERS
 	(~ int_type) BUILD_TIME
-	(~ string_type) BUILTIN_ROOT_FILE_PATH
+	(~ string_type) BUILTIN_LIBRARY_ROOT_FILE_PATH
+	(~ map_type) BUNDLE_FILE_LIST
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
 	(~ map_type) CLI_COMMANDS
 	(~ (:? COMMAND_MARKER_INPUT)) COMMAND_MARKER_INPUT
@@ -211,6 +212,11 @@
 	["build/lib/" "build/lib_debug/" "build/objects/"]
 	build_time
 	"src/sll/lib/"
+	<
+		"darwin" ["build/sll" output_library "build/lib/stdlib.slb" "build/lib_debug/stdlib.slb" "build/sll.h"]
+		"linux" ["build/sll" output_library "build/lib/stdlib.slb" "build/lib_debug/stdlib.slb" "build/sll.h"]
+		"windows" ["build/sll.exe" "build/sllw.exe" output_library "build/lib/stdlib.slb" "build/lib_debug/stdlib.slb" "build/sll.h"]
+	>
 	16
 	<
 		"darwin" (. platform_cli_command_list_type

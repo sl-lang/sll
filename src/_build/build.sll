@@ -56,7 +56,7 @@
 (= build_modules (,,,
 	(<- log$log "Compiling modules...")
 	(<- log$log "  Listing files...")
-	(= module_files (<- path$list_dir config$BUILTIN_ROOT_FILE_PATH false))
+	(= module_files (<- path$list_dir config$BUILTIN_LIBRARY_ROOT_FILE_PATH false))
 	(<- log$log "    Found " ($ module_files) " files")
 	(<- log$log "  Compiling files...")
 	(<- _execute_command config$MODULE_COMPILATION_COMMAND module_files nil)
