@@ -20,7 +20,6 @@
 	(~ int_type) RELEASE
 	(~ int_type) RUN
 	(~ int_type) TEST
-	(~ int_type) UPLOAD
 	(~ int_type) VERBOSE
 	(~ int_type) WEBSITE
 ))
@@ -121,7 +120,6 @@
 	(|: sys$ARGV "--release")
 	(|: sys$ARGV "--run")
 	(|: sys$ARGV "--test")
-	(|: sys$ARGV "--upload")
 	(|: sys$ARGV "--verbose")
 	(|: sys$ARGV "--web")
 ))
