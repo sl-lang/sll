@@ -44,7 +44,7 @@ def execute(args):
 
 
 def bundle():
-	with zipfile.ZipFile(f"build/{system}.zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
+	with zipfile.ZipFile(system+".zip","w",compression=zipfile.ZIP_DEFLATED) as zf:
 		for k in ["build/sll"+EXECUTABLE_EXTENSION[system],"build/sll-"+version+LIBRARY_EXTENSION[system],"build/lib/stdlib.slb","build/lib_debug/stdlib.slb"]:
 			zf.write(k,arcname=k[6:])
 		if (system=="windows"):
