@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import util
 
 
@@ -36,7 +37,7 @@ def _add_source_file(b_fp,fp,file_list,include_list,cycle):
 
 
 
-def generate_header(src_fp,out_fp):
+def generate_header(src_fp,out_fp,time):
 	util.log(f"Combining header files from '{src_fp}' to '{out_fp}'...\n  Listing files...")
 	src=""
 	file_list=[]
@@ -50,7 +51,7 @@ def generate_header(src_fp,out_fp):
 				include_name=os.path.join(r,f)[len(src_fp):].replace("\\","/")
 				src+=_add_source_file(src_fp,include_name,file_list,include_list,[])
 	util.log(f"    Found {len(file_list)} files\n  Preprocessing combined header files...")
-	defines={"__SLL_TIME_RAW__":str(util.BUILD_TIME),f"__SLL_BUILD_{util.system.upper()}":"1","NULL":"((void*)0)"}
+	defines={"__SLL_TIME_RAW__":time,f"__SLL_BUILD_{util.system.upper()}":"1","NULL":"((void*)0)"}
 	if (os.getenv("GITHUB_SHA") is not None):
 		defines["__SLL_SHA__"]="\""+os.getenv("GITHUB_SHA")[:7]+"\""
 		defines["__SLL_FULL_SHA__"]="\""+os.getenv("GITHUB_SHA")+"\""
@@ -124,4 +125,4 @@ def generate_header(src_fp,out_fp):
 
 
 if (__name__=="__main__"):
-	generate_header("src/sll/include","build/sll.h")
+	generate_header("src/sll/include","build/sll.h",sys.argv[1])
