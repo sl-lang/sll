@@ -225,10 +225,12 @@ void _release_var_data(void){
 	SLL_ASSERT(_vm_var_data);
 	sll_object_t** obj=_vm_var_data;
 	_vm_var_data=NULL;
-	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->vc;i++){
-		SLL_RELEASE(*(obj+i));
+	if (sll_current_runtime_data->a_dt->vc){
+		for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->vc;i++){
+			SLL_RELEASE(*(obj+i));
+		}
+		SLL_CRITICAL_ERROR(sll_platform_free_page(obj,SLL_ROUND_PAGE(sll_current_runtime_data->a_dt->vc*sizeof(sll_object_t*))));
 	}
-	SLL_CRITICAL_ERROR(sll_platform_free_page(obj,SLL_ROUND_PAGE(sll_current_runtime_data->a_dt->vc*sizeof(sll_object_t*))));
 }
 
 

@@ -1,3 +1,4 @@
+(--- "sys.sll")
 (---
 	"api.sll"
 	"assembly.sll"
@@ -24,5 +25,22 @@
 	(<- website$generate_website docs)
 	(@@)
 })
-; (<- build$build_sll)
-; (<- build$build_sll_cli)
+(<- util$execute (+ [(+ "python" sys$EXECUTABLE_EXTENSION) "src/_build/header.py"] (>> sys$ARGV 1)))
+(<- build$build_sll)
+(<- build$build_sll_cli)
+(<- build$build_modules)
+(= output_executable (+ "build/sll" sys$EXECUTABLE_EXTENSION))
+(? config$OPTIONS$TEST {
+	(<- util$execute [output_executable "tests/_runner.sll"])
+})
+(? config$OPTIONS$RUN {
+	(? (||
+		(<- util$execute [output_executable "-h"])
+		(<- util$execute (+ [output_executable "-v" "-c" "-o" "build/test" "-e" "-R" "examples/_internal_test/test.sll" "-I" "@internal|examples/_internal_test"] (* ["-r"] config$OPTIONS$RELEASE)))
+		(<- util$execute [output_executable "build/test.slc" "-v" "-e" "-a" "-c" "-o" "build/test2" "-R"])
+		(<- util$execute (+
+			(?: (: sys$ENVIRONMENT "SLL_DEBUGGER") (: config$DEBUGGER_COMMAND sys$PLATFORM) [])
+			[output_executable "build/test2.sla" "-v" "-P"]
+		))
+	) (<- util$fail_and_exit))
+})

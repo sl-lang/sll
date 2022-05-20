@@ -65,7 +65,7 @@
 ))
 
 (= execute (,,, args
-	(@@ (! (: (<- process$start (:: args array_type)) "return_code"))
+	(@@ (!! (: (<- process$start (:: args array_type)) "return_code"))
 ))
 
 (= fail_and_exit (,,,

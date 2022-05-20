@@ -18,6 +18,7 @@
 	(~ int_type) COVERAGE
 	(~ int_type) DEBUG
 	(~ int_type) RELEASE
+	(~ int_type) RUN
 	(~ int_type) TEST
 	(~ int_type) UPLOAD
 	(~ int_type) VERBOSE
@@ -39,7 +40,6 @@
 	(~ array_type) LINK_COMMAND
 	(~ array_type) LINK_HEADLESS_COMMAND
 	(~ array_type) POST_LINK_COMMAND
-	(~ string_type) OUTPUT_PREFIX
 ))
 
 (= config_module_type (&:
@@ -50,11 +50,13 @@
 	(~ array_type) BUILD_CLEAR_FOLDERS
 	(~ array_type) BUILD_CREATE_FOLDERS
 	(~ int_type) BUILD_TIME
+	(~ string_type) BUILTIN_ROOT_FILE_PATH
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
-	(~ map_type) CLI_SOURCE_FILE_PATH
+	(~ map_type) CLI_COMMANDS
 	(~ (:? COMMAND_MARKER_INPUT)) COMMAND_MARKER_INPUT
 	(~ (:? COMMAND_MARKER_OUTPUT)) COMMAND_MARKER_OUTPUT
 	(~ map_type) COMMANDS
+	(~ map_type) DEBUGGER_COMMAND
 	(~ string_type) DOCUMENTATION_ROOT_DIRECTORY_PATH
 	(~ string_type) DOMAIN_ROOT
 	(~ string_type) ERROR_HEADER_OUTPUT_DIRECTORY_PATH
@@ -62,6 +64,9 @@
 	(~ array_type) ERROR_HEADERS
 	(~ array_type) HASHLIST_FILE_EXTENSIONS
 	(~ string_type) HASHLIST_FILE_PATH
+	(~ array_type) MODULE_BUNDLE_GENERATION_COMMAND
+	(~ array_type) MODULE_DEBUG_BUNDLE_GENERATION_COMMAND
+	(~ array_type) MODULE_COMPILATION_COMMAND
 	(~ string_type) OPERATOR_PARSER_CONFIG_FILE_PATH
 	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
 	(~ cli_options_types) OPTIONS
@@ -114,6 +119,7 @@
 	(|: sys$ARGV "--coverage")
 	(|: sys$ARGV "--debug")
 	(|: sys$ARGV "--release")
+	(|: sys$ARGV "--run")
 	(|: sys$ARGV "--test")
 	(|: sys$ARGV "--upload")
 	(|: sys$ARGV "--verbose")
@@ -190,6 +196,11 @@
 
 (= output_library (+ "build/sll-" version sys$LIBRARY_EXTENSION))
 
+(= output_executable_args (+
+	[(+ "build/sll" sys$EXECUTABLE_EXTENSION)]
+	(* ["-v"] options$VERBOSE)
+))
+
 
 
 (= config (. config_module_type
@@ -200,31 +211,29 @@
 	["build/lib/" "build/lib_debug/" "build/web/"]
 	["build/lib/" "build/lib_debug/" "build/objects/"]
 	build_time
+	"src/sll/lib/"
 	16
 	<
 		"darwin" (. platform_cli_command_list_type
 			nil
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-D" "__SLL_BUILD_DARWIN" "-I" "build" "-o" COMMAND_MARKER_OUTPUT "src/cli/linux.c"]
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" "build/sll" COMMAND_MARKER_INPUT "-ldl"]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-D" "__SLL_BUILD_DARWIN" "-I" "build" "-o" "build/objects/darwin_cli.o" "src/cli/linux.c"]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" "build/sll" "build/objects/darwin_cli.o" "-ldl"]
 			nil
 			nil
-			""
 		)
 		"linux" (. platform_cli_command_list_type
 			nil
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-D" "__SLL_BUILD_LINUX" "-I" "build" "-o" COMMAND_MARKER_OUTPUT "src/cli/linux.c"]
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" "build/sll" COMMAND_MARKER_INPUT "-ldl"]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-D" "__SLL_BUILD_LINUX" "-I" "build" "-o" "build/objects/linux_cli.o" "src/cli/linux.c"]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" "build/sll" "build/objects/linux_cli.o" "-ldl"]
 			nil
 			["strip" "build/sll" "-s" "-R" ".note.*" "-R" ".comment"]
-			""
 		)
 		"windows" (. platform_cli_command_list_type
-			["rc" "/r" "/fo" "build/app.res" "/nologo" "src/cli/rsrc/app.rc"]
-			["cl" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/D" "_WINDOWS" "/D" "__SLL_BUILD_WINDOWS" "/D" "_CRT_SECURE_NO_WARNINGS" "/D" "WIN32_LEAN_AND_MEAN" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" COMMAND_MARKER_OUTPUT "src/cli/windows.c"]
-			["link" COMMAND_MARKER_INPUT "build/app.res" "/OUT:build/sll.exe" "/DYNAMICBASE" "/MACHINE:X64" "/SUBSYSTEM:CONSOLE" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:REF" "/INCREMENTAL:NO" "/RELEASE"]
-			["link" COMMAND_MARKER_INPUT "build/app.res" "/OUT:build/sllw.exe" "/DYNAMICBASE" "/MACHINE:X64" "/SUBSYSTEM:WINDOWS" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:REF" "/INCREMENTAL:NO" "/RELEASE"]
+			["rc.exe" "/r" "/fo" "build/app.res" "/nologo" "src/cli/rsrc/app.rc"]
+			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/D" "_WINDOWS" "/D" "__SLL_BUILD_WINDOWS" "/D" "_CRT_SECURE_NO_WARNINGS" "/D" "WIN32_LEAN_AND_MEAN" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" "/Fobuild/objects/windows_cli.o" "src/cli/windows.c"]
+			["link.exe" "build/objects/windows_cli.o" "build/app.res" "/OUT:build/sll.exe" "/DYNAMICBASE" "/MACHINE:X64" "/SUBSYSTEM:CONSOLE" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:REF" "/INCREMENTAL:NO" "/RELEASE"]
+			["link.exe" "build/objects/windows_cli.o" "build/app.res" "/OUT:build/sllw.exe" "/DYNAMICBASE" "/MACHINE:X64" "/SUBSYSTEM:WINDOWS" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:REF" "/INCREMENTAL:NO" "/RELEASE"]
 			nil
-			"/Fo"
 		)
 	>
 	COMMAND_MARKER_INPUT
@@ -279,6 +288,11 @@
 			"/Fo"
 		)
 	>
+	<
+		"darwin" ["lldb" "--"]
+		"linux" ["gdb" "-ex" "r" "-iex" "set pagination off" "--args"]
+		"windows" ["windbg"]
+	>
 	"src/sll/include/"
 	(?: (: sys$ENVIRONMENT "DOMAIN_ROOT") "" ".")
 	"src/sll/include/sll/generated/"
@@ -291,6 +305,9 @@
 	]
 	[".asm" ".c" ".h"]
 	"build/.files"
+	(+ output_executable_args ["-b" "-d" "-D" "-n" "-N" "/" "-R" "-O" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-b" "-n" "-N" "/" "-R" "-O" "build/lib_debug/stdlib.slb" COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-c" "-R" "-I" "build/lib" "-I" "src/sll/lib" "-o" "build/lib/" COMMAND_MARKER_INPUT])
 	"src/sll/data/operator_parser.txt"
 	"src/sll/include/sll/generated/operator_parser.h"
 	options

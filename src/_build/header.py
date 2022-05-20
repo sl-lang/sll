@@ -120,3 +120,8 @@ def generate_header(src_fp,out_fp):
 				k=nm.sub(v,k)
 			wf.write("\n"+k)
 		wf.write("\n#endif\n")
+
+
+
+if (__name__=="__main__"):
+	generate_header("src/sll/include","build/sll.h")

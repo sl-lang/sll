@@ -1,5 +1,6 @@
 (---
 	"array.sll"
+	"file.sll"
 	"log.sll"
 	"path.sll"
 	"process.sll"
@@ -16,6 +17,7 @@
 
 
 (= build_module_type (&:
+	(~ func_type) build_modules
 	(~ func_type) build_sll
 	(~ func_type) build_sll_cli
 ))
@@ -48,7 +50,33 @@
 		config$COMMAND_MARKER_OUTPUT
 		output
 	) (|| options [])))
-	(? (! (<- util$execute args)) (<- util$fail_and_exit))
+	(? (<- util$execute args) (<- util$fail_and_exit))
+))
+
+(= build_modules (,,,
+	(<- log$log "Compiling modules...")
+	(<- log$log "  Listing files...")
+	(= module_files (<- path$list_dir config$BUILTIN_ROOT_FILE_PATH false))
+	(<- log$log "    Found " ($ module_files) " files")
+	(<- log$log "  Compiling files...")
+	(<- _execute_command config$MODULE_COMPILATION_COMMAND module_files nil)
+	(= output_files ([> (= i 0) (< i ($ module_files))
+		(= name (: module_files i))
+		(++ i)
+		(? (=== (: name 0) '_') (<<<))
+		(+ "build/lib/" name ".slc")
+	))
+	(<- log$log "  Generating bundle...")
+	(<- _execute_command config$MODULE_BUNDLE_GENERATION_COMMAND output_files nil)
+	(<- log$log "  Generating debug bundle...")
+	(<- _execute_command config$MODULE_DEBUG_BUNDLE_GENERATION_COMMAND output_files nil)
+	(<- log$log "  Removing compilation files...")
+	(-> (= i 0) (< i ($ module_files))
+		(= file_path (+ "build/lib/" (: module_files i) ".slc"))
+		(<- log$log "    Removing '" file_path "'...")
+		(<- file$delete file_path)
+		(++ i)
+	)
 ))
 
 (= build_sll (,,,
@@ -94,24 +122,36 @@
 		(? (! (<- hashlist$check output_file_path)) (<<<))
 		(<- log$log "    " file_path)
 		(? (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm") {
-			(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path options)
+			(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path)
 			(<- _execute_command command_list$NASM_POST_COMPILATION_COMMAND file_path output_file_path)
 		} {
-			(<- _execute_command command_list$COMPILATION_COMMAND file_path output_file_path options)
+			(<- _execute_command command_list$COMPILATION_COMMAND file_path (+ command_list$OUTPUT_PREFIX output_file_path) options)
 		})
 	)
 	(<- log$log "  Linking files...")
-	(<- _execute_command command_list$LINK_COMMAND output_files nil options)
+	(<- _execute_command command_list$LINK_COMMAND output_files nil)
+	(<- log$log "  Executing post-link command...")
 	(<- _execute_command command_list$POST_LINK_COMMAND nil nil)
 ))
 
 (= build_sll_cli (,,,
 	(<- log$log "Compiling CLI...")
+	(= command_list (: config$CLI_COMMANDS sys$PLATFORM))
+	(<- log$log "  Executing pre-compilation command...")
+	(<- _execute_command command_list$PRE_COMPILATION_COMMAND nil nil)
+	(<- log$log "  Compiling files...")
+	(<- _execute_command command_list$COMPILATION_COMMAND nil nil)
+	(<- log$log "  Linking files...")
+	(<- _execute_command command_list$LINK_COMMAND nil nil)
+	(<- _execute_command command_list$LINK_HEADLESS_COMMAND nil nil)
+	(<- log$log "  Executing post-link command...")
+	(<- _execute_command command_list$POST_LINK_COMMAND nil nil)
 ))
 
 
 
 (= build (. build_module_type
+	build_modules
 	build_sll
 	build_sll_cli
 ))

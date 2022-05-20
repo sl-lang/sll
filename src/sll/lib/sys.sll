@@ -28,6 +28,7 @@
 	(~ int_type) CPU_COUNT
 	(~ map_type) ENVIRONMENT
 	(~ string_type) EXECUTABLE
+	(~ string_type) EXECUTABLE_EXTENSION
 	(~ string_type) LIBRARY
 	(~ string_type) LIBRARY_EXTENSION
 	(~ string_type) PLATFORM
@@ -51,6 +52,7 @@
 (= ENVIRONMENT (<- (... "sll:sys_get_env")))
 
 (= EXECUTABLE (<- (... "sll:sys_get_executable")))
+(= EXECUTABLE_EXTENSION (?: (=== _PLATFORM "windows") ".exe" ""))
 
 (= LIBRARY (<- (... "sll:sys_get_library")))
 (= LIBRARY_EXTENSION (?: (=== _PLATFORM "windows") ".dll" ".so"))
@@ -156,6 +158,7 @@
 	CPU_COUNT
 	ENVIRONMENT
 	EXECUTABLE
+	EXECUTABLE_EXTENSION
 	LIBRARY
 	LIBRARY_EXTENSION
 	_PLATFORM

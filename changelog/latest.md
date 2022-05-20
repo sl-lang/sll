@@ -12,6 +12,7 @@
 - Implemented `sll_compilation_data_from_source_file`
 - Implemented `sll_file_read_all` and `file$read` with no arguments
 - Implemented `sll_object_to_map`
+- Implemented `sys$EXECUTABLE_EXTENSION`
 - Implemented `thread$exit`
 - Operator for ending execution of the current thread and returning a value: `!@@`
 
