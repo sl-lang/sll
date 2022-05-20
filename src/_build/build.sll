@@ -22,6 +22,35 @@
 
 
 
+(= _replace_marker (,,, args marker value
+	(-> nil true
+		(= idx (<- array$index args marker))
+		(? (=== idx -1) (@@ args))
+		(= args (+
+			(: args 0 idx)
+			(?: (=== (:? value) string_type)
+				[value]
+				value
+			)
+			(>> args (+ idx 1))
+		))
+	)
+))
+
+(= _execute_command (,,, args input output options
+	(? (! args) (@@))
+	(= args (+ (<- _replace_marker
+		(<- _replace_marker
+			args
+			config$COMMAND_MARKER_INPUT
+			input
+		)
+		config$COMMAND_MARKER_OUTPUT
+		output
+	) (|| options [])))
+	(? (! (<- util$execute args)) (<- util$fail_and_exit))
+))
+
 (= build_sll (,,,
 	(<- log$log "Compiling...")
 	(<- log$log "  Listing files...")
@@ -65,12 +94,15 @@
 		(? (! (<- hashlist$check output_file_path)) (<<<))
 		(<- log$log "    " file_path)
 		(? (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm") {
-			(:> "NASM\n")
+			(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path options)
+			(<- _execute_command command_list$NASM_POST_COMPILATION_COMMAND file_path output_file_path)
 		} {
-			(:> "C\n")
+			(<- _execute_command command_list$COMPILATION_COMMAND file_path output_file_path options)
 		})
 	)
 	(<- log$log "  Linking files...")
+	(<- _execute_command command_list$LINK_COMMAND output_files nil options)
+	(<- _execute_command command_list$POST_LINK_COMMAND nil nil)
 ))
 
 (= build_sll_cli (,,,

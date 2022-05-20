@@ -4,9 +4,11 @@
 	"hash.sll"
 	"log.sll"
 	"path.sll"
+	"process.sll"
 	"sort.sll"
 	"string.sll"
 	"sys.sll"
+	"thread.sll"
 	"types.sll"
 )
 (--- "config.sll")
@@ -16,6 +18,7 @@
 (= util_module_type (&:
 	(~ func_type) create_output_dir
 	(~ func_type) execute
+	(~ func_type) fail_and_exit
 	(~ func_type) get_output_file_path
 	(~ func_type) hash_file
 ))
@@ -65,6 +68,10 @@
 	(@@ (! (: (<- process$start (:: args array_type)) "return_code"))
 ))
 
+(= fail_and_exit (,,,
+	(<- thread$exit 1)
+))
+
 (= get_output_file_path (,,, file_path
 	(@@ (+
 		_obj_file_prefix
@@ -97,6 +104,7 @@
 (= util (. util_module_type
 	create_output_dir
 	execute
+	fail_and_exit
 	get_output_file_path
 	hash_file
 ))
