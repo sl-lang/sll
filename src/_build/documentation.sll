@@ -125,7 +125,7 @@
 
 (= parse_documentation_files (,,,
 	(<- log$log "Listing documentation files...")
-	(= header_files (<- path$list_dir config$DOCUMENTATION_ROOT_DIRECTORY_PATH true))
+	(= header_files (<- path$list_dir config$INCLUDE_ROOT_DIRECTORY_PATH true))
 	(<- log$log "  Found " ($ header_files) " files")
 	(<- log$log "Parsing header files...")
 	(= out (. documentation_type))

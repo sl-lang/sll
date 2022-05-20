@@ -14,6 +14,11 @@
 
 
 
+(= file_state_type (&:
+	string_type hash
+	int_type state
+))
+
 (= hashlist_module_type (&:
 	(~ func_type) check
 	(~ func_type) fail
@@ -22,18 +27,62 @@
 
 
 
+(= STATE_UNKNOWN 0)
+(= STATE_UPDATE 1)
+(= STATE_NO_UPDATE 2)
+
 (= _hash_map <>)
 (= _changed_file_list [])
 
 
 
+(= _check_file_state (,,, file_path
+	(= state (: _hash_map file_path))
+	(? (! state) (@@ STATE_NO_UPDATE))
+	(? (!== state$state STATE_UNKNOWN) (@@ state$state))
+	(= data (<- string$split
+		(<- string$replace
+			(<- file$read
+				(<- file$open (<- util$get_source_file_path file_path) "r")
+			)
+			"\r\n"
+			'\n'
+		)
+		'\n'
+	))
+	(-> (= i 0) (< i ($ data))
+		(= line (<- string$trim (: data i)))
+		(? (<- string$starts line "#include") {
+			(= include_file_path (+
+				config$INCLUDE_ROOT_DIRECTORY_PATH
+				(>>
+					(<- string$trim
+						(: line 9 -1)
+					)
+					1
+				)
+			))
+			(? (&&
+				(<- path$exists include_file_path)
+				(=== (<- _check_file_state (<- util$get_output_file_path include_file_path)) STATE_UPDATE)
+			) {
+				(= state$state STATE_UPDATE)
+				(@@ STATE_UPDATE)
+			})
+		})
+		(++ i)
+	)
+	(= state$state STATE_NO_UPDATE)
+	(@@ STATE_NO_UPDATE)
+))
+
 (= _write_hash_list (,,,
 	(= fh (<- file$open config$HASHLIST_FILE_PATH "w"))
-	(= keys (:: _hash_map map_key_type))
-	(-> (= i 0) (< i ($ keys))
-		(= key (: keys i))
-		(= value (: _hash_map key))
-		(<- file$write fh (+ key value '\n'))
+	(= files (:: _hash_map map_key_type))
+	(-> (= i 0) (< i ($ files))
+		(= file_path (: files i))
+		(= state (: _hash_map file_path))
+		(<- file$write fh (+ file_path state$hash '\n'))
 		(++ i)
 	)
 	(<- file$close fh)
@@ -62,7 +111,10 @@
 			(= line (<- string$trim (: data i)))
 			(? line {
 				(= key (: line 0 -64))
-				(= (: _hash_map key) (>> line ($ key)))
+				(= (: _hash_map key) (. file_state_type
+					(>> line ($ key))
+					STATE_UNKNOWN
+				))
 			})
 			(++ i)
 		)
@@ -71,16 +123,32 @@
 	(<- log$log "    Loaded " ($ _hash_map) " hashes")
 	(<- log$log "  Checking for file changes...")
 	(= files (<- path$list_dir config$ROOT_SOURCE_FILE_PATH true))
+	(= current_file_list [])
 	(-> (= i 0) (< i ($ files))
 		(= file_path (: files i))
 		(++ i)
 		(? (! (|: config$HASHLIST_FILE_EXTENSIONS (>> file_path (<- string$index_reverse file_path '.')))) (<<<))
 		(= new_hash (<- util$hash_file file_path))
 		(= file_path (<- util$get_output_file_path file_path))
-		(? (!== (: _hash_map file_path) new_hash) (<- array$push _changed_file_list file_path))
-		(= (: _hash_map file_path) new_hash)
+		(<- array$push current_file_list file_path)
+		(= state (: _hash_map file_path))
+		(? (! state) {
+			(= state (. file_state_type
+				""
+				STATE_UNKNOWN
+			))
+			(= (: _hash_map file_path) state)
+		})
+		(? (!== state$hash new_hash) (= state$state STATE_UPDATE))
+		(= state$hash new_hash)
 	)
 	(<- _write_hash_list)
+	(-> (= i 0) (< i ($ current_file_list))
+		(= file_path (: current_file_list i))
+		(<- _check_file_state file_path)
+		(? (=== (: (: _hash_map file_path) "state") STATE_UPDATE) (<- array$push _changed_file_list file_path))
+		(++ i)
+	)
 ))
 
 

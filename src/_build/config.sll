@@ -57,13 +57,13 @@
 	(~ (:? COMMAND_MARKER_OUTPUT)) COMMAND_MARKER_OUTPUT
 	(~ map_type) COMMANDS
 	(~ map_type) DEBUGGER_COMMAND
-	(~ string_type) DOCUMENTATION_ROOT_DIRECTORY_PATH
 	(~ string_type) DOMAIN_ROOT
 	(~ string_type) ERROR_HEADER_OUTPUT_DIRECTORY_PATH
 	(~ string_type) ERROR_HEADER_SOURCE_DIRECTORY_PATH
 	(~ array_type) ERROR_HEADERS
 	(~ array_type) HASHLIST_FILE_EXTENSIONS
 	(~ string_type) HASHLIST_FILE_PATH
+	(~ string_type) INCLUDE_ROOT_DIRECTORY_PATH
 	(~ array_type) MODULE_BUNDLE_GENERATION_COMMAND
 	(~ array_type) MODULE_DEBUG_BUNDLE_GENERATION_COMMAND
 	(~ array_type) MODULE_COMPILATION_COMMAND
@@ -298,7 +298,6 @@
 		"linux" ["gdb" "-ex" "r" "-iex" "set pagination off" "--args"]
 		"windows" ["windbg"]
 	>
-	"src/sll/include/"
 	(?: (: sys$ENVIRONMENT "DOMAIN_ROOT") "" ".")
 	"src/sll/include/sll/generated/"
 	"src/sll/data/"
@@ -310,6 +309,7 @@
 	]
 	[".asm" ".c" ".h"]
 	"build/.files"
+	"src/sll/include/"
 	(+ output_executable_args ["-b" "-d" "-D" "-n" "-N" "/" "-R" "-O" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-b" "-n" "-N" "/" "-R" "-O" "build/lib_debug/stdlib.slb" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-c" "-R" "-I" "build/lib" "-I" "src/sll/lib" "-o" "build/lib/" COMMAND_MARKER_INPUT])
