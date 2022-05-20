@@ -65,7 +65,6 @@
 ))
 
 (= execute (,,, args
-	(<- log$log args)
 	(@@ (!! (: (<- process$start (:: args array_type)) "return_code"))
 ))
 

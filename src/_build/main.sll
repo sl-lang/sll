@@ -29,7 +29,7 @@
 (<- build$build_sll)
 (<- build$build_sll_cli)
 (<- build$build_modules)
-(= output_executable (+ "build/sll" sys$EXECUTABLE_EXTENSION))
+(= output_executable (+ "build/sll" (?: (=== sys$PLATFORM "windows") ".exe" "")))
 (? config$OPTIONS$TEST {
 	(<- util$execute [output_executable "tests/_runner.sll"])
 })
