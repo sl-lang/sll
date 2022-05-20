@@ -934,8 +934,10 @@ __SLL_EXTERNAL sll_bool_t sll_cli_unregister_path_resolver(sll_cli_path_resolver
 	sll_array_length_t i=0;
 	while (i<_cli_resolver_table_size){
 		if (_cli_resolver_table[i]==fn){
-			for (i++;i<_cli_resolver_table_size;i++){
+			i++;
+			while (i<_cli_resolver_table_size){
 				_cli_resolver_table[i-1]=_cli_resolver_table[i];
+				i++;
 			}
 			_cli_resolver_table_size--;
 			return 1;
