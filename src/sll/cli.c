@@ -130,6 +130,22 @@ static void _ensure_path_separator(const sll_char_t* str,sll_string_length_t len
 
 
 
+static sll_bool_t _starts_with_path_prefix(const sll_string_t* path,const sll_string_t* pfx){
+	if (pfx->l>path->l){
+		return 0;
+	}
+	for (sll_string_length_t i=0;i<pfx->l;i++){
+		sll_char_t a=path->v[i];
+		sll_char_t b=pfx->v[i];
+		if ((a=='\\'?'/':a)!=(b=='\\'?'/':b)){
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
+
 __SLL_EXTERNAL void sll_cli_expand_path(const sll_char_t* path,sll_char_t* out){
 	if (_cli_flags&SLL_CLI_FLAG_EXPAND_PATH){
 		sll_platform_absolute_path(path,out,SLL_API_MAX_FILE_PATH_LENGTH);
@@ -169,7 +185,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 	}
 	for (sll_string_length_t i=0;i<_cli_include_list_len;i++){
 		cli_include_dir_t* inc=*(_cli_include_list+i);
-		if (!sll_string_starts(path,&(inc->name))){
+		if (!_starts_with_path_prefix(path,&(inc->name))){
 			continue;
 		}
 		sll_copy_data(inc->path.v,inc->path.l,bf);
@@ -655,7 +671,7 @@ _read_file_argument:
 		for (sll_string_length_t j=0;j<_cli_include_list_len;j++){
 			inc=*(_cli_include_list+j);
 			if (inc->name.l){
-				SLL_LOG("  '%s@%s'",inc->name.v,inc->path.v);
+				SLL_LOG("  '%s' -> '%s'",inc->name.v,inc->path.v);
 			}
 			else{
 				SLL_LOG("  '%s'",inc->path.v);
