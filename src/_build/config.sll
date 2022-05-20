@@ -1,5 +1,6 @@
 (---
 	"array.sll"
+	"file.sll"
 	"log.sll"
 	"string.sll"
 	"sys.sll"
@@ -70,8 +71,11 @@
 	(~ string_type) ROOT_SOURCE_FILE_PATH
 	(~ array_type) SOURCE_FILE_EXTENSIONS
 	(~ map_type) WEBSITE_TYPE_REPLACEMENTS
-	(~ string_type) VERSION_FILE_PATH
 ))
+
+
+
+(= VERSION_FILE_PATH "src/sll/include/sll/version.h")
 
 
 
@@ -79,7 +83,7 @@
 	(= data (<- string$split
 		(<- string$replace
 			(<- file$read
-				(<- file$open config$VERSION_FILE_PATH "r")
+				(<- file$open VERSION_FILE_PATH "r")
 			)
 			"\r\n"
 			'\n'
@@ -317,6 +321,5 @@
 		"__SLL_S1" "signed char"
 		"__SLL_U1" "_Bool"
 	>
-	"src/sll/include/sll/version.h"
 ))
 (## config)

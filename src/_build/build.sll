@@ -10,6 +10,7 @@
 (---
 	"config.sll"
 	"hashlist.sll"
+	"util.sll"
 )
 
 
@@ -60,6 +61,7 @@
 		(= file_path (: files i))
 		(++ i)
 		(= output_file_path (<- util$get_output_file_path file_path))
+		(<- array$push output_files output_file_path)
 		(? (! (<- hashlist$check output_file_path)) (<<<))
 		(<- log$log "    " file_path)
 		(? (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm") {
@@ -67,8 +69,8 @@
 		} {
 			(:> "C\n")
 		})
-		(<- array$push output_files output_file_path)
 	)
+	(<- log$log "  Linking files...")
 ))
 
 (= build_sll_cli (,,,
