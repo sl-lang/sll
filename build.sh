@@ -11,4 +11,4 @@ if [ ! -d "build/_sll_runtime_$platform" ]; then
 	unzip -qq -o "build/_sll_runtime_$platform/$platform.zip" -d "build/_sll_runtime_$platform/"
 	rm -f "build/_sll_runtime_$platform/$platform.zip"
 fi
-python3 src/_build/main.py "$@"
+"build/_sll_runtime_$platform/sll" src/_build/main.sll -I src/sll/lib -I src/_build -A "$@"
