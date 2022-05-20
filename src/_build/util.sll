@@ -19,6 +19,7 @@
 	(~ func_type) create_output_dir
 	(~ func_type) execute
 	(~ func_type) fail_and_exit
+	(~ func_type) generate_bundle
 	(~ func_type) get_output_file_path
 	(~ func_type) hash_file
 ))
@@ -65,12 +66,15 @@
 ))
 
 (= execute (,,, args
-	(<- log$log args)
 	(@@ (!! (: (<- process$start (:: args array_type)) "return_code"))
 ))
 
 (= fail_and_exit (,,,
 	(<- thread$exit 1)
+))
+
+(= generate_bundle (,,,
+	(@@ (<- execute [(?: (=== sys$PLATFORM "windows") "python.exe" "python3") "src/_build/util.py" config$VERSION]))
 ))
 
 (= get_output_file_path (,,, file_path
@@ -106,6 +110,7 @@
 	create_output_dir
 	execute
 	fail_and_exit
+	generate_bundle
 	get_output_file_path
 	hash_file
 ))

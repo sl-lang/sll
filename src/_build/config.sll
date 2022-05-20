@@ -74,6 +74,7 @@
 	(~ map_type) ROOT_PLATFORM_SOURCE_FILE_PATH
 	(~ string_type) ROOT_SOURCE_FILE_PATH
 	(~ array_type) SOURCE_FILE_EXTENSIONS
+	(~ string_type) VERSION
 	(~ map_type) WEBSITE_TYPE_REPLACEMENTS
 ))
 
@@ -322,6 +323,7 @@
 	>
 	"src/sll/"
 	[".c" ".asm"]
+	version
 	<
 		"__SLL_S8" "signed char"
 		"__SLL_U8" "unsigned char"
